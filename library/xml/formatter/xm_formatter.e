@@ -1,6 +1,6 @@
 -- takes a XM_DOCUMENT and gives you the corresponding XML text
--- issues: instead of returning a string, streaming the output 
--- (through a general class) would be more space efficient for large 
+-- issues: instead of returning a string, streaming the output
+-- (through a general class) would be more space efficient for large
 -- documents.
 -- not fully standards compliant yet (patches accepted :)
 class
@@ -23,9 +23,9 @@ feature
       do
 	 !! last_string.make (0)
       end
-   
+
    last_string: UC_STRING
-   
+
    wipe_out is
       -- clear `last_string'
       do
@@ -41,14 +41,14 @@ feature {ANY} -- Debugging options
       ensure
 	 position_included: is_position_included = True
       end
-   
+
    exclude_position is
       do
 	 position_table := Void
       ensure
 	 position_included: is_position_included = False
       end
-   
+
    is_position_included: BOOLEAN is
       do
 	 Result := position_table /= Void
@@ -58,7 +58,7 @@ feature {ANY} -- standard processor routines
    process_element (el: XM_ELEMENT) is
       do
 	 try_process_position (el)
-	 if 
+	 if
 	    el.is_empty
 	  then
 	    process_empty_element (el)
@@ -74,7 +74,7 @@ feature {ANY} -- standard processor routines
 	 try_process_position (c)
 	 ucappend (c.content)
       end
-   
+
    process_processing_instruction (pi: XM_PROCESSING_INSTRUCTION) is
       do
 	 try_process_position (pi)
@@ -98,7 +98,7 @@ feature {ANY} -- standard processor routines
 	 ucappend (com.data)
 	 append ("-->")
       end
-   
+
    process_attributes (e: XM_ELEMENT) is
       local
 	 cs: DS_BILINEAR_CURSOR [XM_ATTRIBUTE]
@@ -118,7 +118,7 @@ feature {ANY} -- standard processor routines
 	    cs.forth
 	 end
       end
-   
+
    process_attribute_in_start_tag (att: XM_ATTRIBUTE) is
       do
 	 process_named (att)
@@ -126,14 +126,14 @@ feature {ANY} -- standard processor routines
 	 ucappend (att.value)
 	 append ("%"")
       end
-   
+
    process_attribute (att: XM_ATTRIBUTE) is
       do
       end
-   
-   
+
+
 feature {ANY} -- non standard processor routines
-   
+
    process_composite (c: XM_COMPOSITE) is
       require
 	 c_not_void: c /= Void
@@ -150,7 +150,7 @@ feature {ANY} -- non standard processor routines
 	    cs.forth
 	 end
       end
-   
+
    process_start_tag (el: XM_ELEMENT) is
       require
 	 el_not_void: el /= Void
@@ -161,7 +161,7 @@ feature {ANY} -- non standard processor routines
 	 process_attributes (el)
 	 append (">")
       end
-   
+
    try_process_position (node: XM_NODE) is
       require
 	 node_not_void: node /= Void
@@ -172,7 +172,7 @@ feature {ANY} -- non standard processor routines
 	    process_position (node)
 	 end
       end
-   
+
    process_position (node: XM_NODE) is
       require
 	 node_not_void: node /= Void
@@ -185,7 +185,7 @@ feature {ANY} -- non standard processor routines
 	  then
 	    pos := position_table.item (node)
 	 end
-	 
+
 	 append ("<!--")
 	 if
 	    pos /= Void
@@ -196,7 +196,7 @@ feature {ANY} -- non standard processor routines
 	 end
 	 append ("-->%N")
       end
-   
+
    process_empty_element (el: XM_ELEMENT) is
       require
 	 el_not_void: el /= Void
@@ -207,8 +207,8 @@ feature {ANY} -- non standard processor routines
 	 process_attributes (el)
 	 append ("/>")
       end
-	    
-   
+
+
    process_end_tag (el: XM_ELEMENT) is
       require
 	 el_not_void: el /= Void
@@ -217,7 +217,7 @@ feature {ANY} -- non standard processor routines
 	 process_named (el)
 	 append (">")
       end
-   
+
    process_named (n: XM_NAMED_NODE) is
       require
 	 n_not_void: n /= Void
@@ -236,9 +236,9 @@ feature {ANY} -- non standard processor routines
 	 end
 	 ucappend (n.name)
       end
-   
+
 feature {NONE} -- Implementation
-   
+
    ucappend (str: UC_STRING) is
       require
 	 str_not_void: str /= Void
@@ -246,7 +246,7 @@ feature {NONE} -- Implementation
       do
 	 last_string.append_ucstring (str)
       end
-   
+
    append (str: STRING) is
       require
 	 str_not_void: str /= Void

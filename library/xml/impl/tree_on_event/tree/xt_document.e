@@ -17,12 +17,12 @@ inherit
 	 occurrences,
 		cursor_off
       end
-   
+
    XT_COMPOSITE
-   
+
 creation
    make
-   
+
 end -- class XT_DOCUMENT
 --|-------------------------------------------------------------------------
 --| eXML, Eiffel XML Parser Toolkit

@@ -14,19 +14,19 @@ feature {ANY} -- Access
    name: UC_STRING
    ns_prefix: UC_STRING
    namespace: UC_STRING
-   
+
 feature {ANY} -- Element change
 
    set_name (n: UC_STRING) is
       do
 	 name := n
       end
-   
+
    set_namespace (n: UC_STRING) is
       do
 	 namespace := n
       end
-   
+
    set_prefix (n: UC_STRING) is
       do
 	 ns_prefix := n

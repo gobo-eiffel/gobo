@@ -6,7 +6,7 @@ indexing
    %been writen with DOM in mind. I prefer to have this %
    %parser follow the Eiffel design guide lines";
 class
-   
+
    XM_DEFAULT_POSITION
 
 inherit
@@ -33,19 +33,19 @@ feature {ANY} -- Initialisation
 	 column_set: column = a_column
 	 row_set: row = a_row
       end
-   
+
 feature {ANY} -- Access
    source: XM_SOURCE
-	 -- file that the element resides in.      
-   
+	 -- file that the element resides in.
+
    byte_index: INTEGER
 	 -- character position of token in file.
-   
+
    column: INTEGER
 	 -- column of token in file.
-   
+
    row: INTEGER
 	 -- column of token in file.
-   
+
 
 end -- class XM_DEFAULT_POSITION

@@ -8,13 +8,13 @@ deferred class
 
 inherit
    XI_COMPOSITE
-   
+
    XI_NAMED_NODE
-   
+
 feature {ANY} -- Access
-   
+
 feature {ANY} -- Element Change
-   
+
    add_attributes (a_attributes: DS_BILINEAR [DS_PAIR [DS_PAIR [UC_STRING, UC_STRING], UC_STRING]]; a_parent: XM_ELEMENT) is
 	 -- Add `a_attributes' to this element.
 	 -- `parent' is the parent of all attribute nodes added
@@ -40,4 +40,4 @@ end -- XI_ELEMENT
 --| email: nozone@sbox.tu-graz.ac.at
 --| www: http://exml.dhs.org
 --|-------------------------------------------------------------------------
-      
+

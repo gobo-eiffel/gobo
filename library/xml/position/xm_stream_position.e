@@ -4,7 +4,7 @@
 -- column
 -- row
 deferred class
-   
+
    XM_STREAM_POSITION
 
 inherit
@@ -14,24 +14,24 @@ inherit
       end
 
 feature {ANY} -- Access
-   
+
    byte_index: INTEGER is
 	 -- byte index of token in stream.
       deferred
       end
-   
+
    column: INTEGER is
 	 -- column of token in stream.
       deferred
-      end 
-   
+      end
+
    row: INTEGER is
 	 -- column of token in stream.
       deferred
-      end 
-   
+      end
+
 feature {ANY} -- Debug
-   
+
    out: STRING is
       do
 	 !! Result.make (0)
@@ -44,7 +44,7 @@ feature {ANY} -- Debug
 	 Result.append_string (" -> ")
 	 Result.append_string (source.out)
       end
-invariant   
+invariant
    byte_index_positive: byte_index > 0
    column_positive: column > 0
    row_positive: row > 0

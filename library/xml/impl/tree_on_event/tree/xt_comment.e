@@ -3,14 +3,14 @@ indexing
    status:	"See notice at end of class.";
    author:	"Andreas Leitner";
 
-class 
+class
    XT_COMMENT
 inherit
    XI_COMMENT
    XT_NODE
 creation
    make
-   
+
 feature {NONE} -- Initialisation
    make (a_parent: XM_COMPOSITE; a_data: UC_STRING) is
       require

@@ -6,7 +6,7 @@ indexing
    %been writen with DOM in mind. I prefer to have this %
    %parser follow the Eiffel design guide lines";
 class
-   
+
    XM_PARSER
 
 inherit
@@ -14,51 +14,51 @@ inherit
       redefine
 	 implementation
       end
-   
+
    XM_ERROR_CODES
    KL_IMPORTED_INPUT_STREAM_ROUTINES
    KL_IMPORTED_STRING_BUFFER_ROUTINES
-   
+
 feature {ANY} -- Access
 
    is_incremental: BOOLEAN is
-	 -- Can parser handle incremental feed? If yes, you can feed 
-	 -- the parser a document in several steps. You must use the 
-	 -- special parseing routines (the ones that contain 
-	 -- "incremental" in their name) to do this and call 
+	 -- Can parser handle incremental feed? If yes, you can feed
+	 -- the parser a document in several steps. You must use the
+	 -- special parseing routines (the ones that contain
+	 -- "incremental" in their name) to do this and call
 	 -- `set_end_of_document' after the last part has been fed.
       do
 	 Result := implementation.is_incremental
       end
-   
+
    source: XM_SOURCE is
 	 -- source of the xml document beeing parserd.
 	 -- if void the source is unkown.
       do
 	 Result := implementation.source
       end
-   
+
 
 feature {ANY} -- Element change
    set_source (a_source: XM_SOURCE) is
 	 -- set the source of the xml document to parse.
       do
-	implementation.set_source (a_source) 
+	implementation.set_source (a_source)
       end
 feature {ANY} -- Parsing
-   
+
    parse_from_file_name (a_file_name: UC_STRING) is
 	 -- Parse XML Document from file
 	 -- `source' will be automatically set
       require
 	 a_file_name_not_void: a_file_name /= Void
-	 -- file must exist and be readable (how to check that on a 
+	 -- file must exist and be readable (how to check that on a
 	 -- compiler independend way?)
       do
 	 implementation.parse_from_file_name (a_file_name)
       end
-   
-   
+
+
    parse_from_stream (a_stream: like INPUT_STREAM_TYPE) is
 	 -- Parse XML Document from GOBO input stream.
       require
@@ -66,16 +66,16 @@ feature {ANY} -- Parsing
       do
 	 implementation.parse_from_stream (a_stream)
       end
-   
+
    parse_from_string_buffer (a_buffer: like STRING_BUFFER_TYPE) is
-	 -- Parse XML Document from GOBO string buffer. This is 
+	 -- Parse XML Document from GOBO string buffer. This is
 	 -- faster that parsing from a regular STRING on some systems.
       require
 	 a_buffer_not_void: a_buffer /= Void
       do
 	 implementation.parse_from_string_buffer (a_buffer)
       end
-   
+
    parse_from_string (data: STRING) is
 	 -- Parse 'data'.
       require
@@ -85,7 +85,7 @@ feature {ANY} -- Parsing
       end
 
 feature {ANY} -- Incremental Parsing
-   
+
    parse_incremental_from_stream (a_stream: like INPUT_STREAM_TYPE) is
 	 -- Parse partial XML document from GOBO input stream.
 	 -- After the last part of the data has been fed into the parser,
@@ -96,18 +96,18 @@ feature {ANY} -- Incremental Parsing
       do
 	 implementation.parse_incremental_from_stream (a_stream)
       end
-   
+
    parse_incremental_from_string_buffer (a_buffer: like STRING_BUFFER_TYPE) is
 	 -- Parse partial XML document from GOBO input stream.
 	 -- After the last part of the data has been fed into the parser,
-	 -- Parse XML Document from GOBO string buffer. This is 
+	 -- Parse XML Document from GOBO string buffer. This is
 	 -- faster that parsing from a regular STRING on some systems.
       require
 	 a_buffer_not_void: a_buffer /= Void
       do
 	 implementation.parse_incremental_from_string_buffer (a_buffer)
       end
-   
+
    parse_incremental_from_string (data: STRING) is
 	 -- Parse partial XML document from 'data'.
 	 -- Note: You can call parse_string multiple times
@@ -132,7 +132,7 @@ feature {ANY} -- Incremental Parsing
       end
 
 
-   
+
 feature -- Status
    last_error: INTEGER is
 	 -- see XM_PARSE_ERROR_CODES
@@ -144,10 +144,10 @@ feature -- Status
 	 -- returns False if an error was detected
 	 -- by the parser
       do
-	 -- TODO: Either we use the same error codes for all parsers 
-	 -- than this feature can be implemented in the interface 
-	 -- simply by comparing to `last_error` with the error code 
-	 -- for no error. If we use parser dependent error codes we 
+	 -- TODO: Either we use the same error codes for all parsers
+	 -- than this feature can be implemented in the interface
+	 -- simply by comparing to `last_error` with the error code
+	 -- for no error. If we use parser dependent error codes we
 	 -- may need to do this query in the implementation.
 	 Result := last_error = Xml_err_none
       ensure
@@ -156,8 +156,8 @@ feature -- Status
       end
 
 
-   last_error_description: STRING is 
-	 -- gives a text that explain what the error reported by 
+   last_error_description: STRING is
+	 -- gives a text that explain what the error reported by
 	 -- 'last_error' was all about.
       do
 	 Result := implementation.last_error_description
@@ -165,7 +165,7 @@ feature -- Status
       end
 
    last_error_extended_description: STRING is
-	 -- extends `last_error_description' with information about 
+	 -- extends `last_error_description' with information about
 	 -- where the error occured.
       do
 	 !! Result.make (0)
@@ -180,8 +180,8 @@ feature -- Status
       do
 	 Result := implementation.position
       end
-   
-feature {NONE} -- Implementation   
+
+feature {NONE} -- Implementation
    implementation: XI_PARSER
 end -- class XM_PARSER
 --|-------------------------------------------------------------------------

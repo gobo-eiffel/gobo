@@ -19,7 +19,7 @@ inherit
 		end
 
 feature {NONE} -- Access
-   
+
 	make_from_implementation (imp: like implementation) is
 		do
 			!! namespaces.make (10)
@@ -123,9 +123,9 @@ feature {ANY} -- Access
 		ensure
 			result_not_void: has_element_by_name (a_name) = (Result /= Void)
 		end
-   
+
 	namespaces: XM_NAMESPACE_TABLE
-   
+
 feature {ANY} -- Status Report
 	valid_cursor (a_cursor: DS_CURSOR [XM_NODE]): BOOLEAN is
 			-- Is `a_cursor' a valid cursor?
@@ -191,7 +191,7 @@ feature {ANY} -- Basic Routines
 
 
 feature {ANY} -- Element change
-   
+
 	resolve_namespaces_start is
 		local
 			decls: XM_NAMESPACE_TABLE
@@ -199,7 +199,7 @@ feature {ANY} -- Element change
 			!! decls.make (10)
 			resolve_namespaces (decls)
 		end
-      
+
 	resolve_namespaces (decls: XM_NAMESPACE_TABLE) is
 			-- checks for "xmlns" attributes and sets
 			-- the correspondig namespace and namespace_declaration
@@ -224,7 +224,7 @@ feature {ANY} -- Element change
 				if
 					element /= Void
 				then
-					-- found an element, now let's check if it has "xmlns" 
+					-- found an element, now let's check if it has "xmlns"
 					-- attributes are defined
 					decls.override_with_list (element.namespace_declarations)
 					element.apply_namespace_declarations (decls)
@@ -238,8 +238,8 @@ feature {ANY} -- Element change
 				cs.forth
 			end
 		end
-   
-   
+
+
 	remove_namespace_declarations_from_attributes is
 			-- Removes all attributes that are namesapce declarations.
 			-- That is any attribute whos name starts with "xmlns".
@@ -257,14 +257,14 @@ feature {ANY} -- Element change
 				if
 					element /= Void
 				then
-					-- found an element, now let's check if it has "xmlns" 
+					-- found an element, now let's check if it has "xmlns"
 					-- attributes are defined
 					element.remove_namespace_declarations_from_attributes
 				end
 				cs.forth
 			end
 		end
-   
+
 	join_text_nodes is
 			-- joins sequences of text nodes
 		local
@@ -309,9 +309,9 @@ feature {ANY} -- Element change
 				end
 			end
 		end
-   
+
 	text: UC_STRING is
-			-- returns all text directly found in this element and 
+			-- returns all text directly found in this element and
 			-- returns it as one string
 		local
 			text_node: XM_CHARACTER_DATA
@@ -335,7 +335,7 @@ feature {ANY} -- Element change
 		ensure
 			result_not_void: Result /= Void
 		end
-   
+
 	put_first, force_first (v: XM_NODE) is
 			-- Add `v' to beginning of list.
 			-- Do not move cursors.
@@ -521,9 +521,9 @@ feature -- Removal
 		end
 
 feature {DP_IMPLEMENTATION, DP_INTERFACE} -- Implementation
-	
+
 	implementation: XI_COMPOSITE
-	
+
 	internal_cursor: like new_cursor is
 			-- Internal cursor
 		do

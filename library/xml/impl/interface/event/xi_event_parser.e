@@ -22,7 +22,7 @@ inherit
 		end
 
 feature {ANY} -- Status
-   
+
 	last_error: INTEGER is
 			-- see XM_PARSE_ERROR_CODES
 		deferred
@@ -36,7 +36,7 @@ feature {ANY} -- Status
 
 
 feature {NONE} -- Redefinable Callbacks
-   
+
 	on_element_declaration (name: UC_STRING) is
 		require
 			valid_name: name /= Void and not name.empty
@@ -44,29 +44,29 @@ feature {NONE} -- Redefinable Callbacks
 		do
 			interface.on_element_declaration (name)
 		end
-   
+
 	on_attribute_declaration (element_name, attribute_name, attribute_type, default_value: UC_STRING; is_required: BOOLEAN) is
 		do
 			interface.on_attribute_declaration (element_name, attribute_name, attribute_type, default_value, is_required)
 		end
-   
+
 	on_xml_declaration (xml_version, encoding: UC_STRING; standalone: BOOLEAN) is
 		do
 			interface.on_xml_declaration (xml_version, encoding, standalone)
 		end
-   
-	on_entity_declaration (entity_name: UC_STRING; 
-						   is_parameter_entity: BOOLEAN; 
-						   value: UC_STRING; 
-						   value_length: INTEGER; 
-						   base, 
-						   system_id, 
-						   public_id, 
+
+	on_entity_declaration (entity_name: UC_STRING;
+						   is_parameter_entity: BOOLEAN;
+						   value: UC_STRING;
+						   value_length: INTEGER;
+						   base,
+						   system_id,
+						   public_id,
 						   notation_name: UC_STRING) is
 		do
 			interface.on_entity_declaration (entity_name, is_parameter_entity, value, value_length, base, system_id, public_id, notation_name)
 		end
-   
+
 	on_start_tag (name, ns_prefix: UC_STRING; attributes: DS_BILINEAR [DS_PAIR [DS_PAIR [UC_STRING, UC_STRING], UC_STRING]]) is
 			-- called whenever the parser findes a start element
 		require
@@ -74,7 +74,7 @@ feature {NONE} -- Redefinable Callbacks
 		do
 			interface.on_start_tag (name, ns_prefix, attributes)
 		end
-   
+
 	on_end_tag (name, ns_prefix: UC_STRING) is
 			-- called whenever the parser findes an end element
 		require
@@ -82,7 +82,7 @@ feature {NONE} -- Redefinable Callbacks
 		do
 			interface.on_end_tag (name, ns_prefix)
 		end
-   
+
 	on_content (chr_data: UC_STRING) is
 			-- called whenever the parser findes character data
 		require
@@ -90,7 +90,7 @@ feature {NONE} -- Redefinable Callbacks
 		do
 			interface.on_content (chr_data)
 		end
-   
+
 	on_processing_instruction (target, data: UC_STRING) is
 			-- called whenever the parser findes a proccessing instruction.
 		require
@@ -107,12 +107,12 @@ feature {NONE} -- Redefinable Callbacks
 		do
 			interface.on_comment (com)
 		end
-   
+
 	on_start_cdata_section is
 		do
 			interface.on_start_cdata_section
 		end
-   
+
 	on_end_cdata_section is
 		do
 			interface.on_end_cdata_section
@@ -122,12 +122,12 @@ feature {NONE} -- Redefinable Callbacks
 		do
 			interface.on_default (data)
 		end
-   
+
 	on_default_expanded (data: UC_STRING) is
 		do
 			interface.on_default_expanded (data)
-		end   
-   
+		end
+
 	on_start_doctype (name, system_id, public_id: UC_STRING; has_internal_subset: BOOLEAN) is
 			-- This is called for the start of the DOCTYPE declaration, before
 			-- any DTD or internal subset is parsed.
@@ -136,40 +136,40 @@ feature {NONE} -- Redefinable Callbacks
 		do
 			interface.on_start_doctype (name, system_id, public_id, has_internal_subset)
 		end
-   
+
 	on_end_doctype is
 			-- This is called for the start of the DOCTYPE declaration when the
 			-- closing > is encountered, but after processing any external subset.
 		do
 			interface.on_end_doctype
 		end
-   
-	on_notation_declaration (notation_name, 
-							 base, 
-							 system_id, 
+
+	on_notation_declaration (notation_name,
+							 base,
+							 system_id,
 							 public_id: UC_STRING) is
 		do
 			interface.on_notation_declaration (notation_name, base, system_id, public_id)
 		end
-   
+
 	on_start_namespace_declaration (namespace_prefix, uri: UC_STRING) is
 		do
 			interface.on_start_namespace_declaration (namespace_prefix, uri)
 		end
-   
+
 	on_end_namespace_declaration (namespace_prefix: UC_STRING) is
 		do
 			interface.on_end_namespace_declaration (namespace_prefix)
 		end
-   
+
 	on_not_standalone: BOOLEAN is
 		do
 			Result := interface.on_not_standalone
 		end
-   
+
 
 feature {NONE} -- Implementation
-   
+
 	interface: XM_EVENT_PARSER
 
 end -- class XI_EVENT_PARSER

@@ -12,12 +12,12 @@ inherit
    XI_EVENT_PARSER
 
    XP_API
-   
+
    XP_CALLBACK
-   
+
    -- mainly here to silence SE warning about "Empty Cecil/Wrapper ..."
    XP_ENCODING_CALLBACK
-   
+
    MEMORY
       redefine
          dispose
@@ -35,8 +35,8 @@ inherit
    C_STRING_HELPER
 
 
-feature {NONE} -- gc 
-   
+feature {NONE} -- gc
+
    dispose is
       do
          if is_parser_created then
@@ -46,13 +46,13 @@ feature {NONE} -- gc
 
 
 feature {ANY} -- Access
-   
+
    is_incremental: BOOLEAN is True
-   
+
    source: XM_SOURCE
          -- source of the xml document beeing parsed.
          -- if void the source is unkown.
-   
+
    version: STRING is
          -- return the library version string (e.g. "expat_1.95.1").
       local
@@ -61,10 +61,10 @@ feature {ANY} -- Access
          ucversion := new_uc_string_from_c_utf8_zero_terminated_string (exml_XML_ExpatVersion)
          Result := ucversion.out
       end
-   
+
 
 feature {ANY} -- Element change
-   
+
    set_relative_URI_base (a_base: UC_STRING) is
          -- sets the base to be used for resolving URIs in system identifiers
          -- in declarations.
@@ -87,7 +87,7 @@ feature {ANY} -- Element change
       end
 
    relative_URI_base: UC_STRING is
-         -- returns the base.      
+         -- returns the base.
       require
          parser_created: is_parser_created
       local
@@ -98,16 +98,16 @@ feature {ANY} -- Element change
       ensure
          result_not_void: Result /= Void
       end
-   
+
    set_source (a_source: XM_SOURCE) is
          -- set the source of the xml document to parse.
       do
          source := a_source
       end
 
-   
-feature {ANY} -- Parsing   
-   
+
+feature {ANY} -- Parsing
+
    parse_from_file_name (a_file_name: UC_STRING) is
          -- Parse XML Document from file
       local
@@ -121,20 +121,20 @@ feature {ANY} -- Parsing
          parse_from_stream (in_file)
          INPUT_STREAM_.close (in_file)
       end
-   
+
    parse_from_stream (a_stream: like INPUT_STREAM_TYPE) is
       do
          create_new_parser
          parse_incremental_from_stream (a_stream)
          set_end_of_document
       end
-   
+
    parse_from_string_buffer (a_buffer: like STRING_BUFFER_TYPE) is
       do
          create_new_parser
          parse_incremental_from_string_buffer (a_buffer)
       end
-   
+
    parse_from_string (a_string: STRING) is
       do
          create_new_parser
@@ -144,7 +144,7 @@ feature {ANY} -- Parsing
 
 
 feature {ANY} -- Incremental Parsing
-   
+
    parse_incremental_from_stream (a_stream: like INPUT_STREAM_TYPE) is
          -- Parse partial XML document from GOBO input stream.
          -- After the last part of the data has been fed into the parser,
@@ -167,7 +167,7 @@ feature {ANY} -- Incremental Parsing
       do
 	 parse_string_buffer_and_set_error (a_buffer, False)
       end
-   
+
    parse_incremental_from_string (data: STRING) is
       do
 	 parse_string_and_set_error (data, False)
@@ -180,7 +180,7 @@ feature {ANY} -- Incremental Parsing
 
 
 feature {NONE} -- low level parsing
-   
+
    parse_string_and_set_error (data: STRING; is_final: BOOLEAN) is
 	 -- parse `data' (which may be empty).
 	 -- set the error flags according to result.
@@ -213,7 +213,7 @@ feature {NONE} -- low level parsing
 
    set_error_from_parse_result (i: INTEGER) is
 	 -- sets error flags according to `i',
-	 -- where `i' must be the result of a call to expats 
+	 -- where `i' must be the result of a call to expats
 	 -- XML_Parser function.
       local
 	 error: BOOLEAN
@@ -250,7 +250,7 @@ feature {ANY} -- Status
          -- currently parsed file. If information is not available or
          -- data does not origin from a file, this is void
 
-   
+
    last_error: INTEGER
 
    last_error_description: STRING is
@@ -285,20 +285,20 @@ feature {ANY} -- Status
       end
 
 
-feature {NONE} -- Implementation   
+feature {NONE} -- Implementation
 
    last_internal_error: INTEGER
          -- Expat specific error code
-   
+
    read_block_size: INTEGER is 10240
          -- 10 kB
 
-   
+
 feature {NONE} -- parser handle handling
 
    item: POINTER
          -- points to expat parser c-handle
-   
+
    create_default_parser is
          -- override to create other default parser
       do
@@ -314,9 +314,9 @@ feature {NONE} -- parser handle handling
          -- to set callback and at the same time with a known handle?
          register_default_callbacks
       ensure
-         created: is_parser_created         
+         created: is_parser_created
       end
-   
+
    create_new_parser is
          -- creates a new parser, existing parser is freed
       do
@@ -325,9 +325,9 @@ feature {NONE} -- parser handle handling
          end
          create_default_parser
       ensure
-         created: is_parser_created         
+         created: is_parser_created
       end
-   
+
    free_parser is
          -- free parser, make callback, if any, available to gc
       require
@@ -345,7 +345,7 @@ feature {NONE} -- parser handle handling
       ensure
          not_created: not is_parser_created
       end
-   
+
    set_callback_object is
          -- This attaches the current object to the user data of Expat.
          -- The C code has to make sure that this object isn't hit by
@@ -364,7 +364,7 @@ feature -- callback registering, should be in XI_EVENT_PARSER
       do
          Result := item /= default_pointer
       end
-   
+
    register_default_callbacks is
          -- default callbacks, override to register more or less handlers
       require
@@ -399,7 +399,7 @@ feature -- callback registering, should be in XI_EVENT_PARSER
          register_doctype_handler
          exml_register_XML_SetNotationDeclHandler (item)
          exml_register_XML_SetNamespaceDeclHandler (item)
-         exml_register_XML_SetNotStandaloneHandler (item)         
+         exml_register_XML_SetNotStandaloneHandler (item)
       end
 
    register_doctype_handler is
@@ -408,21 +408,21 @@ feature -- callback registering, should be in XI_EVENT_PARSER
       do
          exml_register_XML_SetDoctypeDeclHandler (item)
       end
-   
+
    register_element_declaration_handler is
       require
          created: is_parser_created
       do
          exml_register_XML_SetElementDeclHandler (item)
       end
-   
+
    register_attribute_declaration_handler is
       require
          created: is_parser_created
       do
          exml_register_XML_SetAttlistDeclHandler (item)
       end
-   
+
 
 feature -- callback unregistering, should be in XI_EVENT_PARSER
 
@@ -452,9 +452,9 @@ feature -- callback unregistering, should be in XI_EVENT_PARSER
          exml_unregister_XML_SetExternalEntityRefHandler (item)
       end
 
-   
+
 feature -- parsing parameter entities including the external DTD subset
-   
+
    disable_parameter_entity_parsing is
       require
          created: is_parser_created
@@ -464,7 +464,7 @@ feature -- parsing parameter entities including the external DTD subset
          r := exml_XML_SetParamEntityParsing (item, XML_PARAM_ENTITY_PARSING_NEVER)
          exml_unregister_XML_SetExternalEntityRefHandler (item)
       end
-   
+
    enable_parameter_entity_parsing is
       require
          created: is_parser_created
@@ -478,7 +478,7 @@ feature -- parsing parameter entities including the external DTD subset
          end
          exml_register_XML_SetExternalEntityRefHandler (item)
       end
-   
+
 
 feature {NONE} -- (low level) frozen callbacks (called from eXML clib)
 
@@ -503,7 +503,7 @@ feature {NONE} -- (low level) frozen callbacks (called from eXML clib)
          dflt := new_uc_string_from_c_utf8_zero_terminated_string_safe (dflt_ptr)
          on_attribute_declaration (elname, attname, att_type, dflt, is_required)
       end
-   
+
    frozen on_xml_declaration_procedure (version_ptr, encoding_ptr: POINTER; standalone: INTEGER) is
       local
          ucversion,
@@ -520,13 +520,13 @@ feature {NONE} -- (low level) frozen callbacks (called from eXML clib)
          on_xml_declaration (ucversion, ucencoding, bool_standalone)
       end
 
-   frozen on_entity_declaration_procedure (entity_name_ptr: POINTER; 
-                                           is_parameter_entity: BOOLEAN; 
-                                           value_ptr: POINTER; 
-                                           value_length: INTEGER; 
-                                           base_ptr, 
-                                           system_id_ptr, 
-                                           public_id_ptr, 
+   frozen on_entity_declaration_procedure (entity_name_ptr: POINTER;
+                                           is_parameter_entity: BOOLEAN;
+                                           value_ptr: POINTER;
+                                           value_length: INTEGER;
+                                           base_ptr,
+                                           system_id_ptr,
+                                           public_id_ptr,
                                            notation_name_ptr: POINTER) is
       local
          entity_name: UC_STRING
@@ -546,11 +546,11 @@ feature {NONE} -- (low level) frozen callbacks (called from eXML clib)
             new_uc_string_from_c_utf8_zero_terminated_string_safe (public_id_ptr)
          notation_name :=
             new_uc_string_from_c_utf8_zero_terminated_string_safe (notation_name_ptr)
-         on_entity_declaration (entity_name, is_parameter_entity, 
-                                value, value_length, 
-                                base, system_id, public_id, 
+         on_entity_declaration (entity_name, is_parameter_entity,
+                                value, value_length,
+                                base, system_id, public_id,
                                 notation_name)
-      end   
+      end
 
    frozen on_start_tag_procedure (tag_name_ptr, attribute_specifications_ptr: POINTER) is
       local
@@ -583,7 +583,7 @@ feature {NONE} -- (low level) frozen callbacks (called from eXML clib)
          chr_data := new_uc_string_from_c_utf8_runlength_string (chr_data_ptr, len)
          on_content (chr_data)
       end
-   
+
    frozen on_processing_instruction_procedure (target_ptr, data_ptr: POINTER) is
       local
          target, data: UC_STRING
@@ -615,7 +615,7 @@ feature {NONE} -- (low level) frozen callbacks (called from eXML clib)
       do
          on_end_cdata_section
       end
-   
+
    frozen on_default_procedure (data_ptr: POINTER; len: INTEGER) is
       local
          data: UC_STRING
@@ -623,7 +623,7 @@ feature {NONE} -- (low level) frozen callbacks (called from eXML clib)
          create data.make_from_utf8 (new_string_from_c_runlength_string (data_ptr, len))
          on_default (data)
       end
-   
+
    frozen on_default_expanded_procedure (data_ptr: POINTER; len: INTEGER) is
       local
          data: UC_STRING
@@ -643,21 +643,21 @@ feature {NONE} -- (low level) frozen callbacks (called from eXML clib)
          public_id := new_uc_string_from_c_utf8_zero_terminated_string_safe (pubid_ptr)
          on_start_doctype (name, system_id, public_id, has_internal_subset)
       end
-   
+
    frozen on_end_doctype_procedure  is
       do
          on_end_doctype
       end
-   
-   frozen on_notation_declaration_procedure (notation_name_ptr, 
-                                             base_ptr, 
-                                             system_id_ptr, 
+
+   frozen on_notation_declaration_procedure (notation_name_ptr,
+                                             base_ptr,
+                                             system_id_ptr,
                                              public_id_ptr: POINTER) is
       local
          notation_name: UC_STRING
          base: UC_STRING
          system_id: UC_STRING
-         public_id: UC_STRING         
+         public_id: UC_STRING
       do
          notation_name :=
             new_uc_string_from_c_utf8_zero_terminated_string (notation_name_ptr)
@@ -669,9 +669,9 @@ feature {NONE} -- (low level) frozen callbacks (called from eXML clib)
             new_uc_string_from_c_utf8_zero_terminated_string_safe (public_id_ptr)
          on_notation_declaration (notation_name, base, system_id, public_id)
       end
-   
+
    frozen on_start_namespace_declaration_procedure (prefix_ptr, uri_ptr: POINTER) is
-      local 
+      local
          ns_prefix: UC_STRING
          uri: UC_STRING
       do
@@ -683,14 +683,14 @@ feature {NONE} -- (low level) frozen callbacks (called from eXML clib)
       end
 
    frozen on_end_namespace_declaration_procedure (prefix_ptr: POINTER) is
-      local 
+      local
          ns_prefix: UC_STRING
       do
          ns_prefix :=
             new_uc_string_from_c_utf8_zero_terminated_string_safe (prefix_ptr)
          on_end_namespace_declaration (ns_prefix)
       end
-   
+
    frozen on_not_standalone_procedure: BOOLEAN is
       do
          Result := on_not_standalone
@@ -699,7 +699,7 @@ feature {NONE} -- (low level) frozen callbacks (called from eXML clib)
 
    frozen on_external_entity_reference_procedure (context_ptr, base_ptr, system_id_ptr, public_id_ptr: POINTER): BOOLEAN is
          -- return False if parsing of external entity was not
-         -- successfull. You only come here if you have called 
+         -- successfull. You only come here if you have called
          -- `enable_parameter_entity_parsing'.
          -- We recursively keep on sending events to this the parser,
          -- saving parents on the stack.
@@ -717,7 +717,7 @@ feature {NONE} -- (low level) frozen callbacks (called from eXML clib)
             -- raise ("Failure to create parser with XML_ExternalEntityParserCreate.")
             Result := False
          else
-            -- for now assume we simply encounter files, URI not 
+            -- for now assume we simply encounter files, URI not
             -- supported
             if system_id_ptr /= default_pointer then
                parent_source := source
@@ -745,18 +745,18 @@ feature {NONE} -- (low level) frozen callbacks (called from eXML clib)
 --           end
       end
 
-   
+
 feature {NONE} -- Encoding callback
-   
+
    on_unknown_encoding_procedure (name_ptr, info_ptr: POINTER): BOOLEAN is
       do
          -- yep, what now?
          Result := False
       end
 
-   
+
 feature {NONE} -- Implementation
-   
+
    new_attribute_list_from_c (attr_spec_ptr: POINTER) : DS_BILINKED_LIST [DS_PAIR[DS_PAIR [UC_STRING, UC_STRING], UC_STRING]] is
       require
          ptr_not_void: attr_spec_ptr /= Void
@@ -792,7 +792,7 @@ feature {NONE} -- Implementation
             ptr2 := ptr_contents (ptr1)
          end
       end
-   
+
    extract_name_and_prefix_from_name (a_name, ns_prefix: UC_STRING) is
          -- extracts name and prefix from `a_name'.
          -- Both `a_name' and `ns_prefix' will be modified
@@ -814,13 +814,13 @@ feature {NONE} -- Implementation
             a_name.append_uc_string (tmp.substring (colon_index + 1, tmp.count))
          end
       end
-   
+
    uc_colon: UC_STRING is
       once
          !! Result.make_from_string (":")
       end
-   
-   
+
+
 end -- XP_EVENT_PARSER
 
 --|-------------------------------------------------------------------------

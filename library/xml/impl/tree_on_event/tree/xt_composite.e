@@ -15,9 +15,9 @@ inherit
 	 copy,
 		cursor_off
       end
-   
+
    DS_LINKED_LIST [XM_NODE]
-   
+
    XT_NODE
       undefine
 	 copy,
@@ -25,11 +25,11 @@ inherit
       end
 
 feature {ANY} -- Access
-   
+
 --   parent: XM_COMPOSITE
 	 -- parent of this node. Only void
 	 -- if this node is the root node
-   
+
 feature {ANY} -- Element change
 
 --   set_parent (a_parent: XM_COMPOSITE) is
@@ -37,7 +37,7 @@ feature {ANY} -- Element change
 --      do
 --	 parent := a_parent
 --      end
-   
+
 end -- class XT_COMPOSITE
 
 --|-------------------------------------------------------------------------

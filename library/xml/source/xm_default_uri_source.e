@@ -14,5 +14,5 @@ feature
 feature
    uri: UC_STRING
 end -- class XM_DEFAULT_URI_SOURCE
-   
-   
+
+

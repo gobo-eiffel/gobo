@@ -24,12 +24,12 @@ feature {ANY} -- Access
    value: UC_STRING
 
 feature {ANY} -- Basic Routines
-	
+
 	set_value (v: UC_STRING) is
 		do
 			value := v
 		end
-	
+
 end -- class XT_ATTRIBUTE
 
 --|-------------------------------------------------------------------------

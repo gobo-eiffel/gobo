@@ -15,28 +15,28 @@ feature
       do
 	Result := ef_event_fact.is_available
       end
-   
+
    is_expat_event_available: BOOLEAN is
 	 -- is the Expat event parser compild in?
       do
 	 Result := ep_event_fact.is_available
       end
-   
+
    is_any_toe_tree_available: BOOLEAN is
       do
 	 Result := is_toe_expat_tree_available or is_toe_eiffel_tree_available
       end
-   
+
    is_toe_expat_tree_available: BOOLEAN is
       do
 	 Result := te_ep_tree_fact.is_available
       end
-   
+
    is_toe_eiffel_tree_available: BOOLEAN is
       do
 	 Result := te_ef_tree_fact.is_available
       end
-   
+
    new_eiffel_event_parser: XM_EVENT_PARSER is
       require
 	 is_eiffel_event_available: is_eiffel_event_available
@@ -45,7 +45,7 @@ feature
       ensure
 	 result_not_void: Result /= Void
       end
-   
+
    new_eiffel_event_parser_imp: XI_EVENT_PARSER is
       require
 	 is_eiffel_event_available: is_eiffel_event_available
@@ -54,7 +54,7 @@ feature
       ensure
 	 result_not_void: Result /= Void
       end
-   
+
    new_expat_event_parser: XM_EVENT_PARSER is
       require
 	 is_expat_event_available: is_expat_event_available
@@ -63,7 +63,7 @@ feature
       ensure
 	 result_not_void: Result /= Void
       end
-   
+
    new_expat_event_parser_imp: XI_EVENT_PARSER is
       require
 	 is_expat_event_available: is_expat_event_available
@@ -72,7 +72,7 @@ feature
       ensure
 	 result_not_void: Result /= Void
       end
-   
+
    new_toe_eiffel_tree_parser: XM_TREE_PARSER is
       require
 	 is_toe_eiffel_tree_available: is_toe_eiffel_tree_available
@@ -81,7 +81,7 @@ feature
       ensure
 	 result_not_void: Result /= Void
       end
-   
+
    new_toe_eiffel_tree_parser_imp: XI_TREE_PARSER is
       require
 	 is_toe_eiffel_tree_available: is_toe_eiffel_tree_available
@@ -90,7 +90,7 @@ feature
       ensure
 	 result_not_void: Result /= Void
       end
-   
+
    new_toe_expat_tree_parser: XM_TREE_PARSER is
       require
 	 is_toe_expat_tree_available: is_toe_expat_tree_available
@@ -99,16 +99,16 @@ feature
       ensure
 	 result_not_void: Result /= Void
       end
-   
+
    new_toe_expat_tree_parser_imp: XI_TREE_PARSER is
       require
 	 is_toe_expat_tree_available: is_toe_expat_tree_available
       do
-	 Result := te_ep_tree_fact.new_tree_parser_imp      
+	 Result := te_ep_tree_fact.new_tree_parser_imp
       ensure
 	 result_not_void: Result /= Void
       end
-   
+
 feature {NONE}
    ef_event_fact: expanded XF_EVENT_PARSER_FACTORY
    ep_event_fact: expanded XP_EVENT_PARSER_FACTORY

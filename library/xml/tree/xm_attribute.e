@@ -22,7 +22,7 @@ feature {ANY} -- Access
 		do
 			Result := implementation.value
 		end
-   
+
 	is_namespace_declaration: BOOLEAN is
 			-- is this attribute a namespace declaration ?
 		do
@@ -33,7 +33,7 @@ feature {ANY} -- Access
 				Result := True
 			end
 		end
-   
+
 	namespace_declaration: XM_NAMESPACE is
 		require
 			is_namespace_declaration: is_namespace_declaration
@@ -48,21 +48,21 @@ feature {ANY} -- Access
 			else
 				!! a_prefix.make (0)
 			end
-			if 
+			if
 				value.count > 0
 			then
 				a_uri := value
 			end
 			!! Result.make (a_prefix, a_uri)
 		end
-   
-feature {ANY} -- Basic Routines   
-	
+
+feature {ANY} -- Basic Routines
+
 	process (x: XM_NODE_PROCESSOR) is
 		do
 			x.process_attribute (Current)
 		end
-	  
+
 	set_value (a_value: UC_STRING) is
 			-- Set `foo' to `a_foo'.
 		require
@@ -74,19 +74,19 @@ feature {ANY} -- Basic Routines
 		end
 
 feature {DP_IMPLEMENTATION, DP_INTERFACE} -- Implementation
-	
+
 	implementation: XI_ATTRIBUTE
-   
-   
-feature {NONE}   
-	
+
+
+feature {NONE}
+
 	uc_xmlns: UC_STRING is
 		once
 			!! Result.make_from_string ("xmlns")
 		end
-   
+
 invariant
-	
+
 	value_not_void: value /= Void
 
 end -- class XM_ATTRIBUTE

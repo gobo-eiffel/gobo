@@ -3,7 +3,7 @@ indexing
    status:			"See notice at end of class.";
    author:			"Andreas Leitner";
 
-class 
+class
    XT_CHARACTER_DATA
 
 inherit
@@ -30,11 +30,11 @@ feature {ANY} -- Access
 
    content: UC_STRING
 	 -- the actual character data of this node.
-   
+
 feature {ANY} -- Element change
 
    append_content (other: XM_CHARACTER_DATA) is
-	 -- append the content of 'other' to 
+	 -- append the content of 'other' to
 	 -- the content of Current
       do
 	 content.append_ucstring (other.content)

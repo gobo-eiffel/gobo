@@ -1,5 +1,5 @@
 deferred class
-   XM_URI_SOURCE 
+   XM_URI_SOURCE
 inherit
    XM_SOURCE
       redefine

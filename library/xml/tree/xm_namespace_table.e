@@ -17,26 +17,26 @@ creation
    make
 
 feature {ANY} -- Access
-   
-   
+
+
    has_default: BOOLEAN is
 	 -- has table a default namespace?
-	 -- note: in any given table there must be at most one 
+	 -- note: in any given table there must be at most one
 	 -- default namespace
       do
 	 search (uc_empty)
 	 Result := found
       end
-   
+
    default_ns: UC_STRING is
 	 --  default namespace
       do
 	 search (uc_empty)
 	 Result := found_item
       end
-   
-feature {ANY} -- 
-   
+
+feature {ANY} --
+
    override_with_list (l: DS_BILINEAR [XM_NAMESPACE]) is
 	 -- take the namespace declarations from l and
 	 -- integrated them in this table, if `l' has
@@ -57,10 +57,10 @@ feature {ANY} --
 	    cs.forth
 	 end
       end
-   
-   
+
+
 feature {ANY} -- Removal
-   
+
 feature {NONE} -- Implementation
    uc_empty: UC_STRING is
       once

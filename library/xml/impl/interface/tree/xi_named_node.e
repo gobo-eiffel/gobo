@@ -14,33 +14,33 @@ feature {ANY} -- Access
 	 -- name of node
       deferred
       end
-   
+
    ns_prefix: UC_STRING is
       deferred
       end
-   
+
    namespace: UC_STRING is
       deferred
       end
 feature {ANY} -- Element Change
-   
+
    set_name (n: UC_STRING) is
       require
 	 n_not_void: n /= Void
       deferred
       end
-   
+
    set_namespace (n: UC_STRING) is
       deferred
       end
-   
+
    set_prefix (n: UC_STRING) is
       deferred
       end
-   
+
 invariant
    name_not_void: name /= Void
-   
+
 end -- XI_NAMED_NODE
 
 --|-------------------------------------------------------------------------

@@ -3,7 +3,7 @@ indexing
    status:	"See notice at end of class.";
    author:	"Andreas Leitner";
 
-deferred class 
+deferred class
    XI_COMMENT
 inherit
    XI_NODE
@@ -14,10 +14,10 @@ feature {ANY} -- Access
 	 -- the actual character data of this comment.
       deferred
       end
-   
-   
+
+
 invariant
-   data_not_void: data /= Void        
+   data_not_void: data /= Void
 end -- XI_COMMENT
 
 --|-------------------------------------------------------------------------

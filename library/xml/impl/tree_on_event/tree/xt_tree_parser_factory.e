@@ -14,22 +14,22 @@ feature
 	 event_parser_factory_set: event_parser_factory = a_event_parser_factory
       end
 feature
-   
+
    is_available: BOOLEAN is True
-   
+
    new_tree_parser: XM_TREE_PARSER is
       do
 	 !! Result.make_from_implementation (new_tree_parser_imp)
       end
-   
+
    new_tree_parser_imp: XI_TREE_PARSER is
       do
 	 !XT_TREE_PARSER! Result.make_from_implementation (event_parser_factory.new_event_parser_imp)
       end
 
 feature {NONE} -- Implementation
-   
+
    event_parser_factory: XM_EVENT_PARSER_FACTORY
-      
+
 end -- class XT_TREE_PARSER_FACTORY
 

@@ -33,19 +33,19 @@ feature {ANY} -- Access
 	 com_not_void: com /= Void
       do
       end
-   
+
    process_attributes (e: XM_ELEMENT) is
       require
 	 e_not_void: e /= Void
       do
       end
-   
+
    process_attribute (att: XM_ATTRIBUTE) is
       require
 	 att_not_void: att /= Void
       do
       end
-   
+
 end -- class XM_NODE_PROCESSOR
 
 --|-------------------------------------------------------------------------

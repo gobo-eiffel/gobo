@@ -10,7 +10,7 @@ class
 
 inherit
 	XI_TREE_PARSER
-   
+
 	XM_EVENT_PARSER
 		rename
 			implementation as event_implementation,
@@ -25,12 +25,12 @@ inherit
 			on_processing_instruction,
 			on_comment
 		end
-   
+
 creation
 	make_from_implementation
-   
+
 feature {NONE} -- Initialisation
-   
+
 	make_from_implementation (a_imp: XI_EVENT_PARSER) is
 		local
 			toe_document: XT_DOCUMENT
@@ -39,33 +39,33 @@ feature {NONE} -- Initialisation
 			!! toe_document.make
 			!! document.make_from_implementation (toe_document)
 		end
-   
+
 feature {ANY} -- Access
-   
+
 	document: XM_DOCUMENT
-   
-   
+
+
 	is_position_table_enabled: BOOLEAN is
 		do
 			Result := last_position_table /= Void
 		end
-   
+
 	last_position_table: XM_POSITION_TABLE
 
-feature {ANY} -- Basic Opertations   
-   
+feature {ANY} -- Basic Opertations
+
 	enable_position_table is
 		do
 			!! last_position_table.make
 		end
-   
+
 	disable_position_table is
 		do
 			last_position_table := Void
 		end
-   
+
 feature {NONE} -- call backs
-	--FIXME: Set current_element to Current before first callback is 
+	--FIXME: Set current_element to Current before first callback is
 	--beeing called (creation procedure?)
 	on_start_tag (name, ns_prefix: UC_STRING; attributes: DS_BILINEAR [DS_PAIR [DS_PAIR [UC_STRING, UC_STRING], UC_STRING]]) is
 			-- called whenever the parser findes a start element
@@ -76,8 +76,8 @@ feature {NONE} -- call backs
 			check
 				document_not_finished: document.root_element /= Void implies current_open_composite /= Void
 			end
-	 
-			if 
+
+			if
 				document.root_element = Void
 			then
 				-- this is the first element in the document
@@ -91,12 +91,12 @@ feature {NONE} -- call backs
 				!! element.make_from_implementation (toe_element)
 				current_open_composite.force_last (element)
 			end
-	 
+
 			handle_position (element)
-	 
 			-- add attributes
+			-- TODO: handle positions of attributes
 			element.add_attributes (attributes)
-	 
+
 			check
 				element_not_void: element /= Void
 			end
@@ -116,9 +116,9 @@ feature {NONE} -- call backs
 			!! toe.make (current_open_composite, chr_data)
 			!! xml.make_from_implementation (toe)
 			current_open_composite.force_last (xml)
-	 
+
 			handle_position (xml)
-	 
+
 			current_node := xml
 		end
 
@@ -132,7 +132,7 @@ feature {NONE} -- call backs
 			current_open_composite := next_open_composite (current_open_composite)
 			current_node := current_node.parent
 		end
-   
+
 	on_processing_instruction (target, data: UC_STRING) is
 			-- called whenever the parser findes a processing instruction.
 		local
@@ -148,12 +148,12 @@ feature {NONE} -- call backs
 			else
 				current_open_composite.force_last (xml)
 			end
-	 
+
 			handle_position (xml)
-	 
+
 			current_node := xml
 		end
-   
+
 	on_comment (com: UC_STRING) is
 			-- called whenever the parser finds a comment.
 		local
@@ -169,9 +169,9 @@ feature {NONE} -- call backs
 			else
 				current_open_composite.force_last (xml)
 			end
-	 
+
 			handle_position (xml)
-	 
+
 			current_node := xml
 		end
 
@@ -185,28 +185,27 @@ feature {NONE} -- Implementation
 		do
 			Result := composite.parent
 		end
-   
+
 	handle_position (node: XM_NODE) is
+			-- If desired, store position information of
+			-- node `node' in position table
 		require
 			node_not_void: node /= Void
 		do
-			if 
+			if
 				is_position_table_enabled
 			then
 				last_position_table.put (position, node)
 			end
 		end
-   
-   
-   
-   
+
 invariant
 	--TODO:
 	--inv1: (root_element /= Void) implies (current_node /= Void)
 	--inv2: (current_open_element = Void) implies (current_node = root_element)
 	--inv3: ((root_element /= Void) and then (current_node = root_element)) implies current_node.is_root
 
-   
+
 end -- class XT_TREE_PARSER
 --|-------------------------------------------------------------------------
 --| eXML, Eiffel XML Parser Toolkit

@@ -15,4 +15,4 @@ feature {ANY}
       end
 invariant
    source_not_void: source /= Void
-end   
+end

@@ -3,7 +3,7 @@ indexing
    status:			"See notice at end of class.";
    author:			"Andreas Leitner";
 
-class 
+class
    XM_PROCESSING_INSTRUCTION
 inherit
    XM_NODE
@@ -16,26 +16,26 @@ creation
 feature {ANY} -- Access
 
    target: UC_STRING is
-	 -- target of this processing instruction. XML defines this as being the 
+	 -- target of this processing instruction. XML defines this as being the
 	 -- first token following the markup that begins the processing instruction.
       do
 	 Result := implementation.target
       end
-   
+
    data: UC_STRING is
-	 -- content of this processing instruction. This is from the first non 
-	 -- white space character after the target to the character immediately 
-	 -- preceding the ?>. 
+	 -- content of this processing instruction. This is from the first non
+	 -- white space character after the target to the character immediately
+	 -- preceding the ?>.
       do
 	 Result := implementation.data
       end
-   
-feature {ANY} -- Basic Routines   
+
+feature {ANY} -- Basic Routines
    process (x: XM_NODE_PROCESSOR) is
       do
 	 x.process_processing_instruction (Current)
       end
-   
+
 feature {DP_IMPLEMENTATION, DP_INTERFACE} -- Implementation
    implementation: XI_PROCESSING_INSTRUCTION
 

@@ -17,7 +17,7 @@ inherit
 	 remove_namespace_declarations_from_attributes_recursive,
 	 resolve_namespaces_start
       end
-   
+
    XM_NAMED_NODE
       redefine
 	 implementation,
@@ -57,7 +57,7 @@ feature {ANY} -- Access
 	    cs.off
 	 loop
 	    att ?= cs.item
-	    if 
+	    if
 	       att /= Void and then
 	       equal (att.name, a_name)
 	     then
@@ -85,7 +85,7 @@ feature {ANY} -- Access
 	    cs.off or Result /= Void
 	 loop
 	    att ?= cs.item
-	    if 
+	    if
 	       att /= Void
 	     then
 	       if
@@ -97,12 +97,12 @@ feature {ANY} -- Access
 	    cs.forth
 	 end
       end
-   
-   
+
+
    namespace_declarations: DS_LINKED_LIST [XM_NAMESPACE] is
 	 -- namespaces declared directly in this element
 	 -- this list must contain at most one namespace with a
-	 -- void prefix. If such a namespace exists it is a declared 
+	 -- void prefix. If such a namespace exists it is a declared
 	 -- default namespace
       do
 	 if
@@ -112,7 +112,7 @@ feature {ANY} -- Access
 	 end
 	 result := namespace_declarations_cache
       end
-   
+
    attributes: DS_BILINEAR [XM_ATTRIBUTE] is
       local
 	 cs: like new_cursor
@@ -136,8 +136,8 @@ feature {ANY} -- Access
 	    cs.forth
 	 end
       end
-   
-      
+
+
 feature {ANY} -- Element Change
 
    add_attributes (a_attributes: DS_BILINEAR [DS_PAIR [DS_PAIR [UC_STRING, UC_STRING], UC_STRING]]) is
@@ -147,9 +147,9 @@ feature {ANY} -- Element Change
       do
 	 implementation.add_attributes (a_attributes, Current)
       end
-   
+
 feature {ANY} -- Removal
-   
+
    remove_attribute_by_name (n: UC_STRING) is
   	 -- removes attribute with name `n' from element.
       require
@@ -177,13 +177,13 @@ feature {ANY} -- Removal
 	    end
 	 end
       end
-   
+
    remove_namespace_declarations_from_attributes_recursive is
       do
 	 remove_namespace_declarations_from_attributes
 	 Precursor
       end
-   
+
    remove_namespace_declarations_from_attributes is
 	 -- remove all attributes that start with "xmlns:" permanently
       local
@@ -208,15 +208,15 @@ feature {ANY} -- Removal
 	    end
 	 end
       end
-   
+
 feature {ANY} -- Basic Operations
-   
+
    process (x: XM_NODE_PROCESSOR) is
       do
 	 x.process_element (Current)
       end
-   
-   
+
+
    resolve_namespaces_start is
       local
 	 decls: XM_NAMESPACE_TABLE
@@ -226,7 +226,7 @@ feature {ANY} -- Basic Operations
 	 apply_namespace_declarations (decls)
 	 resolve_namespaces (decls)
       end
-   
+
    apply_namespace_declarations (decls: XM_NAMESPACE_TABLE) is
 	 -- Apply namespace declaration.
       local
@@ -252,12 +252,12 @@ feature {ANY} -- Basic Operations
 	    cs.item.apply_namespace_declarations (decls)
 	    cs.forth
 	 end
-	 
+
       end
 
 
 feature {NONE} -- Implementation
-   
+
    get_namespace_declarations_from_attributes: DS_LINKED_LIST [XM_NAMESPACE] is
       local
 	 cs: like new_cursor
@@ -281,12 +281,12 @@ feature {NONE} -- Implementation
 	    cs.forth
 	 end
       end
-   
+
    namespace_declarations_cache: DS_LINKED_LIST [XM_NAMESPACE]
-   
+
 feature {NONE} -- Implementation
    implementation: XI_ELEMENT
-   
+
 end -- class XM_ELEMENT
 
 --|-------------------------------------------------------------------------

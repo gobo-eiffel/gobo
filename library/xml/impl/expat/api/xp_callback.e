@@ -15,18 +15,18 @@ deferred class
 
 feature {NONE}
 
-   on_element_declaration_procedure (name_ptr: POINTER; 
+   on_element_declaration_procedure (name_ptr: POINTER;
                                      model_ptr: POINTER) is
          -- This is called for an element declaration. It's the
          -- caller's responsibility to free model when finished with
          -- it.
       deferred
       end
-   
-   on_attribute_declaration_procedure (elname_ptr, 
-                                       attname_ptr, 
-                                       att_type_ptr, 
-                                       dflt_ptr: POINTER; 
+
+   on_attribute_declaration_procedure (elname_ptr,
+                                       attname_ptr,
+                                       att_type_ptr,
+                                       dflt_ptr: POINTER;
                                        is_required: BOOLEAN) is
          -- The Attlist declaration handler is called for *each*
          -- attribute. So a single Attlist declaration with multiple
@@ -39,8 +39,8 @@ feature {NONE}
       deferred
       end
 
-   on_xml_declaration_procedure (version_ptr, 
-                                 encoding_ptr: POINTER; 
+   on_xml_declaration_procedure (version_ptr,
+                                 encoding_ptr: POINTER;
                                  standalone: INTEGER) is
          -- The XML declaration handler is called for *both* XML
          -- declarations and text declarations. The way to distinguish
@@ -53,13 +53,13 @@ feature {NONE}
       deferred
       end
 
-   on_entity_declaration_procedure (entity_name_ptr: POINTER; 
-                                    is_parameter_entity: BOOLEAN; 
-                                    value_ptr: POINTER; 
-                                    value_length: INTEGER; 
-                                    base_ptr, 
-                                    system_id_ptr, 
-                                    public_id_ptr, 
+   on_entity_declaration_procedure (entity_name_ptr: POINTER;
+                                    is_parameter_entity: BOOLEAN;
+                                    value_ptr: POINTER;
+                                    value_length: INTEGER;
+                                    base_ptr,
+                                    system_id_ptr,
+                                    public_id_ptr,
                                     notation_name_ptr: POINTER) is
          -- This is called for entity declarations. The
          -- is_parameter_entity argument will be non-zero if the
@@ -113,7 +113,7 @@ feature {NONE}
    on_end_cdata_section_procedure is
       deferred
       end
-   
+
    on_default_procedure (data_ptr: POINTER; len: INTEGER) is
          -- This is called for any characters in the XML document for
          -- which there is no applicable handler.  This includes both
@@ -130,7 +130,7 @@ feature {NONE}
          -- comment might be split between multiple calls.
       deferred
       end
-   
+
    on_default_expanded_procedure (data_ptr: POINTER; len: INTEGER) is
          -- This is called for any characters in the XML document for
          -- which there is no applicable handler.  This includes both
@@ -153,7 +153,7 @@ feature {NONE}
          -- before any DTD or internal subset is parsed.
       deferred
       end
-   
+
    on_end_doctype_procedure is
          -- This is called for the start of the DOCTYPE declaration
          -- when the closing > is encountered, but after processing
@@ -161,16 +161,16 @@ feature {NONE}
       deferred
       end
 
-   on_notation_declaration_procedure (notation_name_ptr, 
-                                      base_ptr, 
-                                      system_id_ptr, 
+   on_notation_declaration_procedure (notation_name_ptr,
+                                      base_ptr,
+                                      system_id_ptr,
                                       public_id_ptr: POINTER) is
          -- This is called for a declaration of notation.
          -- The base argument is whatever was set by XM_SetBase.
          -- The notationName will never be null. The other arguments can be.
       deferred
       end
-   
+
    on_start_namespace_declaration_procedure (prefix_ptr, uri_ptr: POINTER) is
          -- When namespace processing is enabled, these are called
          -- once for each namespace declaration. The call to the start

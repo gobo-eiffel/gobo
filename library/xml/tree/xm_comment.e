@@ -3,7 +3,7 @@ indexing
    status:	"See notice at end of class.";
    author:	"Andreas Leitner";
 
-class 
+class
    XM_COMMENT
 inherit
    XM_NODE
@@ -20,13 +20,13 @@ feature {ANY} -- Access
       do
 	 Result := implementation.data
       end
-   
-feature {ANY} -- Basic Routines   
+
+feature {ANY} -- Basic Routines
    process (x: XM_NODE_PROCESSOR) is
       do
 	 x.process_comment (Current)
       end
-   
+
 feature {ANY} -- Element change
 
 
@@ -34,7 +34,7 @@ feature {DP_IMPLEMENTATION, DP_INTERFACE} -- Implementation
    implementation: XI_COMMENT
 
 invariant
-   data_not_void: data /= Void        
+   data_not_void: data /= Void
 end -- XM_COMMENT
 
 --|-------------------------------------------------------------------------

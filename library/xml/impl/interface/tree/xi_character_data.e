@@ -3,7 +3,7 @@ indexing
    status:			"See notice at end of class.";
    author:			"Andreas Leitner";
 
-deferred class 
+deferred class
    XI_CHARACTER_DATA
 
 inherit
@@ -15,12 +15,12 @@ feature {ANY} -- Access
 	 -- the actual character data of this node.
       deferred
       end
-   
-   
+
+
 feature {ANY} -- Element change
 
    append_content (other: XM_CHARACTER_DATA) is
-	 -- append the content of 'other' to 
+	 -- append the content of 'other' to
 	 -- the content of Current
       require
 	 other /= Void
@@ -28,7 +28,7 @@ feature {ANY} -- Element change
       end
 
 invariant
-   content_not_void: content /= Void        
+   content_not_void: content /= Void
 end -- XI_CHARACTER_DATA
 
 --|-------------------------------------------------------------------------

@@ -3,13 +3,13 @@ indexing
    status:			"See notice at end of class.";
    author:			"Andreas Leitner";
 
-class 
+class
    XT_PROCESSING_INSTRUCTION
 
 inherit
    XT_NODE
    XI_PROCESSING_INSTRUCTION
-   
+
 creation
    make
 
@@ -27,8 +27,8 @@ feature {ANY} -- Access
 
    target: UC_STRING
    data: UC_STRING
-      
-      
+
+
 end -- XT_PROCESSING_INSTRUCTION
 
 --|-------------------------------------------------------------------------

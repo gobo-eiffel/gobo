@@ -20,47 +20,47 @@ feature {ANY} -- Access
 		ensure
 			result_not_void: Result /= Void
 		end
-   
+
 	ns_prefix: UC_STRING is
 		do
 			Result := implementation.ns_prefix
 		end
-   
+
 	namespace: UC_STRING is
 		do
 			Result := implementation.namespace
 		end
-      
+
 	has_namespace: BOOLEAN is
 			-- does this node have a namespace defined
 		do
 			Result := namespace /= Void
 		end
-   
+
 	has_prefix: BOOLEAN is
 		do
 			Result := ns_prefix /= Void and then not ns_prefix.empty
 		end
 
 feature {ANY} -- Element Change
-   
+
 	set_name (n: UC_STRING) is
 		require
 			n_not_void: n /= Void
 		do
 			implementation.set_name (n)
 		end
-   
+
 	set_namespace (n: UC_STRING) is
 		do
 			implementation.set_namespace (n)
 		end
-   
+
 	set_prefix (n: UC_STRING) is
 		do
 			implementation.set_prefix (n)
 		end
-   
+
 	apply_namespace_declarations (decls: XM_NAMESPACE_TABLE) is
 			-- Apply namespace declaration.
 			-- This means the following:
@@ -68,7 +68,7 @@ feature {ANY} -- Element Change
 			-- 2) Name has prefix:
 			-- 2.1) Prefix has entry in decls -> set namespace
 			-- Note: this feature does not take care of default namespace
-			-- declarations (since default namespaces do not apply for 
+			-- declarations (since default namespaces do not apply for
 			-- all named nodes - they apply for elements, but not for attributes)
 		require
 			decls_not_void: decls /= Void
@@ -84,8 +84,8 @@ feature {ANY} -- Element Change
 				end
 			end
 		end
-   
-   
+
+
 feature {DP_IMPLEMENTATION, DP_INTERFACE} -- Implementation
 
 	implementation: XI_NAMED_NODE

@@ -16,35 +16,35 @@ inherit
 			occurrences,
 			cursor_off
 		end
-	
+
 	XT_NAMED_NODE
 		undefine
 			is_equal,
 			copy,
 			set_parent
 		end
-	
+
 creation
 	make_root,
 	make_child
-	
+
 feature {NONE} -- Implementation
 
 	make_root (a_name, a_ns_prefix: UC_STRING) is
-			-- make a new root element based on the information held in a 
+			-- make a new root element based on the information held in a
 			-- XM_START_TAG object. This will fill in the name and the attributes
 		require
 			a_name_not_void: a_name /= Void
 		do
 			name := a_name
 			ns_prefix := a_ns_prefix
-			internal_cursor := new_cursor	 
+			internal_cursor := new_cursor
 		ensure
 			name_set: equal (name, a_name)
 		end
-	
+
 	make_child (a_parent: XM_COMPOSITE; a_name, a_ns_prefix: UC_STRING) is
-			-- make a new child element based on the information held in a 
+			-- make a new child element based on the information held in a
 			-- XM_START_TAG object. This will fill in the name and the attributes
 		require
 			a_parent_not_void: a_parent /= Void
@@ -60,7 +60,7 @@ feature {NONE} -- Implementation
 feature {ANY} -- Access
 
 feature {ANY} -- Element Change
-	
+
 	add_attributes (a_attributes: DS_BILINEAR [DS_PAIR [DS_PAIR [UC_STRING, UC_STRING], UC_STRING]]; a_parent: XM_ELEMENT) is
 		local
 			cs: DS_BILINEAR_CURSOR [DS_PAIR[DS_PAIR [UC_STRING, UC_STRING], UC_STRING]]
@@ -79,7 +79,7 @@ feature {ANY} -- Element Change
 				cs.forth
 			end
 		end
-	
+
 
 end -- class XT_ELEMENT
 

@@ -3,7 +3,7 @@ indexing
    status:			"See notice at end of class.";
    author:			"Andreas Leitner";
 
-class 
+class
    XM_CHARACTER_DATA
 inherit
    XM_NODE
@@ -20,17 +20,17 @@ feature {ANY} -- Access
       do
 	 Result := implementation.content
       end
-   
-feature {ANY} -- Basic Routines   
+
+feature {ANY} -- Basic Routines
    process (x: XM_NODE_PROCESSOR) is
       do
 	 x.process_character_data (Current)
       end
-   
+
 feature {ANY} -- Element change
 
    append_content (other: like Current) is
-	 -- append the content of 'other' to 
+	 -- append the content of 'other' to
 	 -- the content of Current
       require
 	 other /= Void
@@ -42,5 +42,5 @@ feature {DP_IMPLEMENTATION, DP_INTERFACE} -- Implementation
    implementation: XI_CHARACTER_DATA
 
 invariant
-   content_not_void: content /= Void        
+   content_not_void: content /= Void
 end -- class XM_CHARACTER_DATA
