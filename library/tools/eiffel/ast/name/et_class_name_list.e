@@ -19,7 +19,6 @@ inherit
 			{ET_CLASS_NAME_LIST} storage
 		end
 		
-	ET_SHARED_CLASS_NAME_TESTER
 	ET_SHARED_TOKEN_CONSTANTS
 
 creation
@@ -68,7 +67,7 @@ feature -- Status report
 		do
 			nb := count - 1
 			from i := 0 until i > nb loop
-				if class_name_tester.test (a_name, storage.item (i).class_name) then
+				if a_name.same_class_name (storage.item (i).class_name) then
 					Result := True
 					i := nb + 1 -- Jump out of the loop.
 				else
