@@ -881,6 +881,47 @@ feature -- Element change
 			final: same_string (Result.substring (old a_string.count + 1, Result.count), old other.substring (s, e))
 		end
 
+	replaced_substring (a_string, other: STRING; start_index, end_index: INTEGER): STRING is
+			-- If the dynamic type of `other' is UC_STRING or one of
+			-- its descendants and `a_string' is not, then return a
+			-- new object with the same dynamic type as `other' and
+			-- which contains the characters of `a_string' from which
+			-- the substring from `start_index' to `end_index', inclusive,
+			-- has been replaced with `other'. Otherwise replace the
+			-- substring from `start_index' to `end_index', inclusive,
+			-- in `a_string' with `other' and return `a_string'.
+			-- Note: Use this routine instead of 'a_string.replace_substring (other)'
+			-- when `a_string' can be of dynamic type STRING and `other'
+			-- of dynamic type other than STRING such as UC_STRING, because
+			-- class STRING provided by the Eiffel compilers is not necessarily
+			-- aware of the implementation of UC_STRING and this may
+			-- lead to run-time errors or crashes.
+		require
+			a_string_not_void: a_string /= Void
+			other_not_void: other /= Void
+			valid_start_index: 1 <= start_index
+			valid_end_index: end_index <= a_string.count
+			meaningful_interval: start_index <= end_index + 1
+		local
+			uc_string: UC_STRING
+		do
+			if a_string.same_type (other) then
+				a_string.replace_substring (other, start_index, end_index)
+				Result := a_string
+			else
+				uc_string ?= a_string
+				if uc_string /= Void then
+					uc_string.replace_substring_by_string (other, start_index, end_index)
+					Result := uc_string
+				else
+					Result := appended_string (appended_string (a_string.substring (1, start_index - 1), other), a_string.substring (end_index + 1, a_string.count))
+				end
+			end
+		ensure
+			replaced_substring_not_void: Result /= Void
+			replaced: same_string (Result, old (appended_string (appended_string (a_string.substring (1, start_index - 1), other), a_string.substring (end_index + 1, a_string.count))))
+		end
+
 	append_substring_to_string (a_string: STRING; other: STRING; s, e: INTEGER) is
 			-- Append substring of `other' between indexes
 			-- `s' and `e' at end of `a_string'.

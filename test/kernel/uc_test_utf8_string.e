@@ -2746,6 +2746,152 @@ feature -- Test
 			assert_equal ("replaced6", "foototobar", a_string.out) 
 		end
 
+	test_replace_substring_by_string1 is
+			-- Test feature `replace_substring_by_string'.
+		local
+			a_string: UC_UTF8_STRING
+			a_string2: UC_STRING
+			a_string3: STRING
+			a_string4: UC_UTF8_STRING
+		do
+			create a_string.make_from_string ("foobar")
+			create a_string2.make_from_string ("toto")
+			a_string.replace_substring_by_string (a_string2, 1, 6)
+			assert_equal ("replaced1", "toto", a_string.out) 
+			create a_string.make_from_string ("foobar")
+			create a_string2.make_from_string ("toto")
+			a_string.replace_substring_by_string (a_string2, 1, 1)
+			assert_equal ("replaced2", "totooobar", a_string.out) 
+			create a_string.make_from_string ("foobar")
+			create a_string2.make_from_string ("toto")
+			a_string.replace_substring_by_string (a_string2, 4, 6)
+			assert_equal ("replaced3", "foototo", a_string.out) 
+			create a_string.make_from_string ("foobar")
+			create a_string2.make_from_string ("")
+			a_string.replace_substring_by_string (a_string2, 2, 4)
+			assert_equal ("replaced4", "far", a_string.out) 
+			create a_string.make_from_string ("foobar")
+			a_string.replace_substring_by_string (a_string, 4, 6)
+			assert_equal ("replaced5", "foofoobar", a_string.out) 
+			create a_string.make_from_string ("foobar")
+			create a_string2.make_from_string ("toto")
+			a_string.replace_substring_by_string (a_string2, 4, 3)
+			assert_equal ("replaced6", "foototobar", a_string.out) 
+			create a_string.make_from_string ("foobar")
+			a_string3 := "toto"
+			a_string.replace_substring_by_string (a_string3, 1, 6)
+			assert_equal ("replaced7", "toto", a_string.out) 
+			create a_string.make_from_string ("foobar")
+			a_string3 := "toto"
+			a_string.replace_substring_by_string (a_string3, 1, 1)
+			assert_equal ("replaced8", "totooobar", a_string.out) 
+			create a_string.make_from_string ("foobar")
+			a_string3 := "toto"
+			a_string.replace_substring_by_string (a_string3, 4, 6)
+			assert_equal ("replaced9", "foototo", a_string.out) 
+			create a_string.make_from_string ("foobar")
+			a_string3 := ""
+			a_string.replace_substring_by_string (a_string3, 2, 4)
+			assert_equal ("replaced10", "far", a_string.out) 
+			create a_string.make_from_string ("foobar")
+			a_string3 := "toto"
+			a_string.replace_substring_by_string (a_string3, 4, 3)
+			assert_equal ("replaced11", "foototobar", a_string.out) 
+			create a_string.make_from_string ("foobar")
+			create a_string4.make_from_string ("toto")
+			a_string.replace_substring_by_string (a_string4, 1, 6)
+			assert_equal ("replaced12", "toto", a_string.out) 
+			create a_string.make_from_string ("foobar")
+			create a_string4.make_from_string ("toto")
+			a_string.replace_substring_by_string (a_string4, 1, 1)
+			assert_equal ("replaced13", "totooobar", a_string.out) 
+			create a_string.make_from_string ("foobar")
+			create a_string4.make_from_string ("toto")
+			a_string.replace_substring_by_string (a_string4, 4, 6)
+			assert_equal ("replaced14", "foototo", a_string.out) 
+			create a_string.make_from_string ("foobar")
+			create a_string4.make_from_string ("")
+			a_string.replace_substring_by_string (a_string4, 2, 4)
+			assert_equal ("replaced15", "far", a_string.out) 
+			create a_string.make_from_string ("foobar")
+			create a_string4.make_from_string ("toto")
+			a_string.replace_substring_by_string (a_string4, 4, 3)
+			assert_equal ("replaced16", "foototobar", a_string.out) 
+		end
+
+	test_replace_substring_by_string2 is
+			-- Test feature `replace_substring_by_string'.
+		local
+			a_string: UC_STRING
+			a_string2: UC_STRING
+			a_string3: STRING
+			a_string4: UC_UTF8_STRING
+		do
+			create {UC_UTF8_STRING} a_string.make_from_string ("foobar")
+			create a_string2.make_from_string ("toto")
+			a_string.replace_substring_by_string (a_string2, 1, 6)
+			assert_equal ("replaced1", "toto", a_string.out) 
+			create {UC_UTF8_STRING} a_string.make_from_string ("foobar")
+			create a_string2.make_from_string ("toto")
+			a_string.replace_substring_by_string (a_string2, 1, 1)
+			assert_equal ("replaced2", "totooobar", a_string.out) 
+			create {UC_UTF8_STRING} a_string.make_from_string ("foobar")
+			create a_string2.make_from_string ("toto")
+			a_string.replace_substring_by_string (a_string2, 4, 6)
+			assert_equal ("replaced3", "foototo", a_string.out) 
+			create {UC_UTF8_STRING} a_string.make_from_string ("foobar")
+			create a_string2.make_from_string ("")
+			a_string.replace_substring_by_string (a_string2, 2, 4)
+			assert_equal ("replaced4", "far", a_string.out) 
+			create {UC_UTF8_STRING} a_string.make_from_string ("foobar")
+			a_string.replace_substring_by_string (a_string, 4, 6)
+			assert_equal ("replaced5", "foofoobar", a_string.out) 
+			create {UC_UTF8_STRING} a_string.make_from_string ("foobar")
+			create a_string2.make_from_string ("toto")
+			a_string.replace_substring_by_string (a_string2, 4, 3)
+			assert_equal ("replaced6", "foototobar", a_string.out) 
+			create {UC_UTF8_STRING} a_string.make_from_string ("foobar")
+			a_string3 := "toto"
+			a_string.replace_substring_by_string (a_string3, 1, 6)
+			assert_equal ("replaced7", "toto", a_string.out) 
+			create {UC_UTF8_STRING} a_string.make_from_string ("foobar")
+			a_string3 := "toto"
+			a_string.replace_substring_by_string (a_string3, 1, 1)
+			assert_equal ("replaced8", "totooobar", a_string.out) 
+			create {UC_UTF8_STRING} a_string.make_from_string ("foobar")
+			a_string3 := "toto"
+			a_string.replace_substring_by_string (a_string3, 4, 6)
+			assert_equal ("replaced9", "foototo", a_string.out) 
+			create {UC_UTF8_STRING} a_string.make_from_string ("foobar")
+			a_string3 := ""
+			a_string.replace_substring_by_string (a_string3, 2, 4)
+			assert_equal ("replaced10", "far", a_string.out) 
+			create {UC_UTF8_STRING} a_string.make_from_string ("foobar")
+			a_string3 := "toto"
+			a_string.replace_substring_by_string (a_string3, 4, 3)
+			assert_equal ("replaced11", "foototobar", a_string.out) 
+			create {UC_UTF8_STRING} a_string.make_from_string ("foobar")
+			create a_string4.make_from_string ("toto")
+			a_string.replace_substring_by_string (a_string4, 1, 6)
+			assert_equal ("replaced12", "toto", a_string.out) 
+			create {UC_UTF8_STRING} a_string.make_from_string ("foobar")
+			create a_string4.make_from_string ("toto")
+			a_string.replace_substring_by_string (a_string4, 1, 1)
+			assert_equal ("replaced13", "totooobar", a_string.out) 
+			create {UC_UTF8_STRING} a_string.make_from_string ("foobar")
+			create a_string4.make_from_string ("toto")
+			a_string.replace_substring_by_string (a_string4, 4, 6)
+			assert_equal ("replaced14", "foototo", a_string.out) 
+			create {UC_UTF8_STRING} a_string.make_from_string ("foobar")
+			create a_string4.make_from_string ("")
+			a_string.replace_substring_by_string (a_string4, 2, 4)
+			assert_equal ("replaced15", "far", a_string.out) 
+			create {UC_UTF8_STRING} a_string.make_from_string ("foobar")
+			create a_string4.make_from_string ("toto")
+			a_string.replace_substring_by_string (a_string4, 4, 3)
+			assert_equal ("replaced16", "foototobar", a_string.out) 
+		end
+
 	test_insert_unicode_character1 is
 			-- Test feature `insert_unicode_character'.
 		local

@@ -1936,6 +1936,13 @@ feature -- Element change
 			-- Replace the substring from `start_index' to `end_index',
 			-- inclusive, with `a_string'.
 			-- (ELKS 2001 STRING)
+		do
+			replace_substring_by_string (a_string, start_index, end_index)
+		end
+
+	replace_substring_by_string (a_string: STRING; start_index, end_index: INTEGER) is
+			-- Replace the substring from `start_index' to `end_index',
+			-- inclusive, with `a_string'.
 		local
 			a_string_count: INTEGER
 			k, nb: INTEGER

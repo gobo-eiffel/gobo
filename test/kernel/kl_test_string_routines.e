@@ -294,6 +294,269 @@ feature -- Test
 			assert ("new_string8", a_string /= uc_string2)
 		end
 
+	test_appended_string is
+			-- Test feature `appended_string'.
+		local
+			a_string, a_string1, a_string2: STRING
+			uc_string1, uc_string2, uc_string3: UC_UTF8_STRING
+		do
+			a_string1 := "foo"
+			a_string2 := "bar"
+			a_string := STRING_.appended_string (a_string1, a_string2)
+			assert_equal ("appended1", "foobar", a_string)
+			assert ("same_string1", a_string = a_string1)
+			assert ("new_string2", a_string /= a_string2)
+			a_string1 := "foo"
+			create uc_string1.make_from_string ("gobo")
+			uc_string1.put_code (345, 2)
+			create uc_string2.make_from_string ("foogobo")
+			uc_string2.put_code (345, 5)
+			a_string := STRING_.appended_string (a_string1, uc_string1)
+			assert_equal ("appended2", uc_string2, a_string)
+			assert ("new_string3", a_string /= a_string1)
+			assert ("new_string4", a_string /= uc_string1)
+			a_string1 := "foo"
+			create uc_string2.make_from_string ("gobofoo")
+			uc_string2.put_code (345, 2)
+			a_string := STRING_.appended_string (uc_string1, a_string1)
+			assert_equal ("appended3", uc_string2, a_string)
+			assert ("new_string5", a_string /= a_string1)
+			assert ("same_string6", a_string = uc_string1)
+			create uc_string1.make_from_string ("foo")
+			uc_string1.put_code (2345, 2)
+			create uc_string2.make_from_string ("bar")
+			uc_string2.put_code (453, 2)
+			create uc_string3.make_from_string ("foobar")
+			uc_string3.put_code (2345, 2)
+			uc_string3.put_code (453, 5)
+			a_string := STRING_.appended_string (uc_string1, uc_string2)
+			assert_equal ("appended4", uc_string3, a_string)
+			assert ("same_string7", a_string = uc_string1)
+			assert ("new_string8", a_string /= uc_string2)
+		end
+
+	test_replaced_substring1 is
+			-- Test feature `replaced_substring'.
+		local
+			a_string: STRING
+			a_string1: STRING
+			a_string2: UC_STRING
+			a_string3: STRING
+			a_string4: UC_UTF8_STRING
+		do
+			a_string1 := "foobar"
+			create a_string2.make_from_string ("toto")
+			a_string := STRING_.replaced_substring (a_string1, a_string2, 1, 6)
+			assert_equal ("replaced1", "toto", a_string.out) 
+			a_string1 := "foobar"
+			create a_string2.make_from_string ("toto")
+			a_string := STRING_.replaced_substring (a_string1, a_string2, 1, 1)
+			assert_equal ("replaced2", "totooobar", a_string.out) 
+			a_string1 := "foobar"
+			create a_string2.make_from_string ("toto")
+			a_string := STRING_.replaced_substring (a_string1, a_string2, 4, 6)
+			assert_equal ("replaced3", "foototo", a_string.out) 
+			a_string1 := "foobar"
+			create a_string2.make_from_string ("")
+			a_string := STRING_.replaced_substring (a_string1, a_string2, 2, 4)
+			assert_equal ("replaced4", "far", a_string.out) 
+			a_string1 := "foobar"
+			a_string := STRING_.replaced_substring (a_string1, a_string1, 4, 6)
+			assert_equal ("replaced5", "foofoobar", a_string.out) 
+			a_string1 := "foobar"
+			create a_string2.make_from_string ("toto")
+			a_string := STRING_.replaced_substring (a_string1, a_string2, 4, 3)
+			assert_equal ("replaced6", "foototobar", a_string.out) 
+			a_string1 := "foobar"
+			a_string3 := "toto"
+			a_string := STRING_.replaced_substring (a_string1, a_string3, 1, 6)
+			assert_equal ("replaced7", "toto", a_string.out) 
+			a_string1 := "foobar"
+			a_string3 := "toto"
+			a_string := STRING_.replaced_substring (a_string1, a_string3, 1, 1)
+			assert_equal ("replaced8", "totooobar", a_string.out) 
+			a_string1 := "foobar"
+			a_string3 := "toto"
+			a_string := STRING_.replaced_substring (a_string1, a_string3, 4, 6)
+			assert_equal ("replaced9", "foototo", a_string.out) 
+			a_string1 := "foobar"
+			a_string3 := ""
+			a_string := STRING_.replaced_substring (a_string1, a_string3, 2, 4)
+			assert_equal ("replaced10", "far", a_string.out) 
+			a_string1 := "foobar"
+			a_string3 := "toto"
+			a_string := STRING_.replaced_substring (a_string1, a_string3, 4, 3)
+			assert_equal ("replaced11", "foototobar", a_string.out) 
+			a_string1 := "foobar"
+			create a_string4.make_from_string ("toto")
+			a_string := STRING_.replaced_substring (a_string1, a_string4, 1, 6)
+			assert_equal ("replaced12", "toto", a_string.out) 
+			a_string1 := "foobar"
+			create a_string4.make_from_string ("toto")
+			a_string := STRING_.replaced_substring (a_string1, a_string4, 1, 1)
+			assert_equal ("replaced13", "totooobar", a_string.out) 
+			a_string1 := "foobar"
+			create a_string4.make_from_string ("toto")
+			a_string := STRING_.replaced_substring (a_string1, a_string4, 4, 6)
+			assert_equal ("replaced14", "foototo", a_string.out) 
+			a_string1 := "foobar"
+			create a_string4.make_from_string ("")
+			a_string := STRING_.replaced_substring (a_string1, a_string4, 2, 4)
+			assert_equal ("replaced15", "far", a_string.out) 
+			a_string1 := "foobar"
+			create a_string4.make_from_string ("toto")
+			a_string := STRING_.replaced_substring (a_string1, a_string4, 4, 3)
+			assert_equal ("replaced16", "foototobar", a_string.out) 
+		end
+
+	test_replaced_substring2 is
+			-- Test feature `replaced_substring'.
+		local
+			a_string: STRING
+			a_string1: UC_UTF8_STRING
+			a_string2: UC_STRING
+			a_string3: STRING
+			a_string4: UC_UTF8_STRING
+		do
+			create a_string1.make_from_string ("foobar")
+			create a_string2.make_from_string ("toto")
+			a_string := STRING_.replaced_substring (a_string1, a_string2, 1, 6)
+			assert_equal ("replaced1", "toto", a_string.out) 
+			create a_string1.make_from_string ("foobar")
+			create a_string2.make_from_string ("toto")
+			a_string := STRING_.replaced_substring (a_string1, a_string2, 1, 1)
+			assert_equal ("replaced2", "totooobar", a_string.out) 
+			create a_string1.make_from_string ("foobar")
+			create a_string2.make_from_string ("toto")
+			a_string := STRING_.replaced_substring (a_string1, a_string2, 4, 6)
+			assert_equal ("replaced3", "foototo", a_string.out) 
+			create a_string1.make_from_string ("foobar")
+			create a_string2.make_from_string ("")
+			a_string := STRING_.replaced_substring (a_string1, a_string2, 2, 4)
+			assert_equal ("replaced4", "far", a_string.out) 
+			create a_string1.make_from_string ("foobar")
+			a_string := STRING_.replaced_substring (a_string1, a_string1, 4, 6)
+			assert_equal ("replaced5", "foofoobar", a_string.out) 
+			create a_string1.make_from_string ("foobar")
+			create a_string2.make_from_string ("toto")
+			a_string := STRING_.replaced_substring (a_string1, a_string2, 4, 3)
+			assert_equal ("replaced6", "foototobar", a_string.out) 
+			create a_string1.make_from_string ("foobar")
+			a_string3 := "toto"
+			a_string := STRING_.replaced_substring (a_string1, a_string3, 1, 6)
+			assert_equal ("replaced7", "toto", a_string.out) 
+			create a_string1.make_from_string ("foobar")
+			a_string3 := "toto"
+			a_string := STRING_.replaced_substring (a_string1, a_string3, 1, 1)
+			assert_equal ("replaced8", "totooobar", a_string.out) 
+			create a_string1.make_from_string ("foobar")
+			a_string3 := "toto"
+			a_string := STRING_.replaced_substring (a_string1, a_string3, 4, 6)
+			assert_equal ("replaced9", "foototo", a_string.out) 
+			create a_string1.make_from_string ("foobar")
+			a_string3 := ""
+			a_string := STRING_.replaced_substring (a_string1, a_string3, 2, 4)
+			assert_equal ("replaced10", "far", a_string.out) 
+			create a_string1.make_from_string ("foobar")
+			a_string3 := "toto"
+			a_string := STRING_.replaced_substring (a_string1, a_string3, 4, 3)
+			assert_equal ("replaced11", "foototobar", a_string.out) 
+			create a_string1.make_from_string ("foobar")
+			create a_string4.make_from_string ("toto")
+			a_string := STRING_.replaced_substring (a_string1, a_string4, 1, 6)
+			assert_equal ("replaced12", "toto", a_string.out) 
+			create a_string1.make_from_string ("foobar")
+			create a_string4.make_from_string ("toto")
+			a_string := STRING_.replaced_substring (a_string1, a_string4, 1, 1)
+			assert_equal ("replaced13", "totooobar", a_string.out) 
+			create a_string1.make_from_string ("foobar")
+			create a_string4.make_from_string ("toto")
+			a_string := STRING_.replaced_substring (a_string1, a_string4, 4, 6)
+			assert_equal ("replaced14", "foototo", a_string.out) 
+			create a_string1.make_from_string ("foobar")
+			create a_string4.make_from_string ("")
+			a_string := STRING_.replaced_substring (a_string1, a_string4, 2, 4)
+			assert_equal ("replaced15", "far", a_string.out) 
+			create a_string1.make_from_string ("foobar")
+			create a_string4.make_from_string ("toto")
+			a_string := STRING_.replaced_substring (a_string1, a_string4, 4, 3)
+			assert_equal ("replaced16", "foototobar", a_string.out) 
+		end
+
+	test_replaced_substring3 is
+			-- Test feature `replaced_substring'.
+		local
+			a_string: STRING
+			a_string1: UC_STRING
+			a_string2: UC_STRING
+			a_string3: STRING
+			a_string4: UC_UTF8_STRING
+		do
+			create a_string1.make_from_string ("foobar")
+			create a_string2.make_from_string ("toto")
+			a_string := STRING_.replaced_substring (a_string1, a_string2, 1, 6)
+			assert_equal ("replaced1", "toto", a_string.out) 
+			create a_string1.make_from_string ("foobar")
+			create a_string2.make_from_string ("toto")
+			a_string := STRING_.replaced_substring (a_string1, a_string2, 1, 1)
+			assert_equal ("replaced2", "totooobar", a_string.out) 
+			create a_string1.make_from_string ("foobar")
+			create a_string2.make_from_string ("toto")
+			a_string := STRING_.replaced_substring (a_string1, a_string2, 4, 6)
+			assert_equal ("replaced3", "foototo", a_string.out) 
+			create a_string1.make_from_string ("foobar")
+			create a_string2.make_from_string ("")
+			a_string := STRING_.replaced_substring (a_string1, a_string2, 2, 4)
+			assert_equal ("replaced4", "far", a_string.out) 
+			create a_string1.make_from_string ("foobar")
+			a_string := STRING_.replaced_substring (a_string1, a_string1, 4, 6)
+			assert_equal ("replaced5", "foofoobar", a_string.out) 
+			create a_string1.make_from_string ("foobar")
+			create a_string2.make_from_string ("toto")
+			a_string := STRING_.replaced_substring (a_string1, a_string2, 4, 3)
+			assert_equal ("replaced6", "foototobar", a_string.out) 
+			create a_string1.make_from_string ("foobar")
+			a_string3 := "toto"
+			a_string := STRING_.replaced_substring (a_string1, a_string3, 1, 6)
+			assert_equal ("replaced7", "toto", a_string.out) 
+			create a_string1.make_from_string ("foobar")
+			a_string3 := "toto"
+			a_string := STRING_.replaced_substring (a_string1, a_string3, 1, 1)
+			assert_equal ("replaced8", "totooobar", a_string.out) 
+			create a_string1.make_from_string ("foobar")
+			a_string3 := "toto"
+			a_string := STRING_.replaced_substring (a_string1, a_string3, 4, 6)
+			assert_equal ("replaced9", "foototo", a_string.out) 
+			create a_string1.make_from_string ("foobar")
+			a_string3 := ""
+			a_string := STRING_.replaced_substring (a_string1, a_string3, 2, 4)
+			assert_equal ("replaced10", "far", a_string.out) 
+			create a_string1.make_from_string ("foobar")
+			a_string3 := "toto"
+			a_string := STRING_.replaced_substring (a_string1, a_string3, 4, 3)
+			assert_equal ("replaced11", "foototobar", a_string.out) 
+			create a_string1.make_from_string ("foobar")
+			create a_string4.make_from_string ("toto")
+			a_string := STRING_.replaced_substring (a_string1, a_string4, 1, 6)
+			assert_equal ("replaced12", "toto", a_string.out) 
+			create a_string1.make_from_string ("foobar")
+			create a_string4.make_from_string ("toto")
+			a_string := STRING_.replaced_substring (a_string1, a_string4, 1, 1)
+			assert_equal ("replaced13", "totooobar", a_string.out) 
+			create a_string1.make_from_string ("foobar")
+			create a_string4.make_from_string ("toto")
+			a_string := STRING_.replaced_substring (a_string1, a_string4, 4, 6)
+			assert_equal ("replaced14", "foototo", a_string.out) 
+			create a_string1.make_from_string ("foobar")
+			create a_string4.make_from_string ("")
+			a_string := STRING_.replaced_substring (a_string1, a_string4, 2, 4)
+			assert_equal ("replaced15", "far", a_string.out) 
+			create a_string1.make_from_string ("foobar")
+			create a_string4.make_from_string ("toto")
+			a_string := STRING_.replaced_substring (a_string1, a_string4, 4, 3)
+			assert_equal ("replaced16", "foototobar", a_string.out) 
+		end
+
 	test_elks_same_string is
 			-- Test feature `elks_same_string'.
 		local

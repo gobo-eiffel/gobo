@@ -555,7 +555,7 @@ feature -- Element change
 			-- Replace the substring from `start_index' to `end_index',
 			-- inclusive, with `s'.
 			-- (ELKS 2001 STRING)
-			-- Note: Use KL_STRING_ROUTINES.appended_string instead of
+			-- Note: Use KL_STRING_ROUTINES.replaced_substring instead of
 			-- this routine when `Current' can be of dynamic type STRING and
 			-- `s' of dynamic type other than STRING such as UC_STRING, because
 			-- class STRING provided by the Eiffel compilers is not necessarily
