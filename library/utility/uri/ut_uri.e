@@ -52,55 +52,53 @@ feature -- Initialization.
 		require
 			base_not_void: base /= Void
 			base_is_absolute_uri: base.is_absolute
-			base_is_hierarchical_uri: base.is_hierarchical
-			reference_not_void: a_reference /= Void
-			reference_valid: not uri_encoding.has_excluded_characters (a_reference)
+			a_reference_not_void: a_reference /= Void
+			a_reference_valid: not uri_encoding.has_excluded_characters (a_reference)
 		do
 			full_reference := a_reference
 			parse_reference
 			
-			-- See steps in RFC 2396, section 5.2
-			-- Step 1: parsing done
+			-- See steps in 
+			--  RFC 2396, section 5.2
+			--  RFC 2396bis, section 5.2.2
 
-			if is_relative then
-
-					check
-						scheme_empty: scheme = Void
-					end
-
-					-- Step 2:
-				if authority = Void and path_items.is_empty and not has_query then
-					scheme := base.scheme
-					authority := base.authority
-					has_absolute_path := base.has_absolute_path
-					create path_items.make_from_linear (base.path_items)
-
-				else
-						-- Step 3:
-					scheme := base.scheme
-
-						-- Step 4:
-					if authority = Void then
-						authority := base.authority
-							-- Step 5:
-						if not has_absolute_path then
-								-- Step 6:
-							if path_items.is_empty then
-								-- 1. we don't have a path, use path of parent, if any
-								has_absolute_path := base.has_absolute_path
-								create path_items.make_from_linear (base.path_items)
-							elseif not base.has_absolute_path then
-								-- 2. Parent doesn't have a path, make our path absolute
-								has_absolute_path := True
-							else
-								-- 3. Something to resolve
-								resolve_path (base)
-							end
-						end
-					end
+			if is_absolute then
+				-- keep scheme
+				-- keep authority
+				-- keep path
+				-- keep query
+			else
+				check
+					is_relative: is_relative
+					not_has_scheme: scheme_empty: scheme = Void
 				end
 
-					-- Step 7: build full reference from parsed components
+				if has_authority then
+					-- keep authority
+					-- keep path
+					-- keep query
+				else
+					if not has_absolute_path and path_items.is_empty then
+						has_absolute_path := base.has_absolute_path
+						create path_items.make_from_linear (base.path_items)
+						if has_query then
+							-- keep query
+						else
+							query := base.query
+						end
+					else
+						if has_absolute_path then
+							-- keep path
+						else
+							resolve_path (base)
+						end
+						-- keep query
+					end
+					authority := base.authority
+				end
+				scheme := base.scheme
+				
+					-- Build full reference from parsed components
 				full_reference := new_full_reference
 			end
 		ensure
@@ -157,7 +155,7 @@ feature -- Status
 	is_opaque: BOOLEAN is
 			-- Is this an opaque (non-hierarchical) URI?
 		do
-			Result := is_absolute and then (authority = Void) and (not has_absolute_path and path_items.is_empty)
+			Result := is_absolute and then (not has_authority and not has_absolute_path)
 		ensure
 			consistent: Result = not is_hierarchical
 		end
@@ -248,16 +246,31 @@ feature -- If URI has a hierarchical relationships within the namespace
 	path: STRING is
 			-- Create path from items.
 			-- (without handling URL encoding)
+		local
+			a_cursor: DS_LINEAR_CURSOR [STRING]
+			a_first_done: BOOLEAN
 		do
-			if is_opaque then
-				Result := scheme_specific_part
-			else
-				Result := hierarchical_path
+			create Result.make_empty
+			if has_absolute_path then
+				Result.append_character ('/')
+			end
+			from
+				a_cursor := path_items.new_cursor
+				a_cursor.start
+			until
+				a_cursor.after
+			loop
+				if a_first_done then
+					Result.append_character ('/')
+				end
+				a_first_done := True
+				Result := STRING_.appended_string (Result, a_cursor.item)
+				a_cursor.forth
 			end
 		ensure
 			result_not_void: Result /= Void
+			separator_numbers: Result.occurrences ('/') >= path_items.count - 1
 		end
-
 
 	query: STRING
 			-- Anything after the '?' if present, else Void
@@ -366,6 +379,7 @@ feature -- Setting
 		require
 			key_not_empty: key /= Void and then not key.is_empty
 			key_has_no_invalid_characters: not uri_encoding.has_excluded_characters (key)
+			hierarchical: is_hierarchical
 		do
 			if query = Void then
 				create query.make_from_string (key)
@@ -385,6 +399,7 @@ feature -- Setting
 		require
 			path_is_void_or_not_empty: a_path = Void or else not a_path.is_empty
 			no_invalid_characters: not uri_encoding.has_excluded_characters (a_path)
+			hierarchical: is_hierarchical
 		local
 			a_splitter: ST_SPLITTER
 		do
@@ -393,7 +408,7 @@ feature -- Setting
 			
 			if a_path.is_empty then
 				has_absolute_path := False
-				path_items := Void
+				path_items.wipe_out
 			elseif a_path.item (1) = '/' then
 				has_absolute_path := True
 				create path_items.make_from_linear (a_splitter.split_character (a_path.substring (2, a_path.count)))
@@ -412,6 +427,7 @@ feature -- Setting
 			a_query_is_void_or_not_empty: a_query = Void or else not a_query.is_empty
 			no_crosshatch: a_query /= Void implies not a_query.has ('#')
 			no_invalid_characters: not uri_encoding.has_excluded_characters (a_query)
+			hierarchical: is_hierarchical
 		do
 			query := a_query
 			full_reference := new_full_reference
@@ -444,39 +460,10 @@ feature -- Setting
 
 feature {NONE} -- Update cached attributes
 
-	hierarchical_path: STRING is
-			-- Create path from items.
-			-- (without handling URL encoding)
-		require
-			hierarchical: is_hierarchical
-		local
-			a_cursor: DS_LINEAR_CURSOR [STRING]
-			a_first_done: BOOLEAN
-		do
-			create Result.make_empty
-			if has_absolute_path then
-				Result.append_character ('/')
-			end
-			from
-				a_cursor := path_items.new_cursor
-				a_cursor.start
-			until
-				a_cursor.after
-			loop
-				if a_first_done then
-					Result.append_character ('/')
-				end
-				a_first_done := True
-				Result := STRING_.appended_string (Result, a_cursor.item)
-				a_cursor.forth
-			end
-		ensure
-			result_not_void: Result /= Void
-			separator_numbers: Result.occurrences ('/') >= path_items.count - 1
-		end
-
 	new_full_reference: STRING is
 			-- Reconstruct full URI from components.
+		require
+			hierarchical: is_hierarchical
 		do
 			create Result.make_empty
 			if is_absolute then
@@ -488,7 +475,7 @@ feature {NONE} -- Update cached attributes
 				Result.append_character ('/')
 				Result := STRING_.appended_string (Result, authority)
 			end
-			Result := STRING_.appended_string (Result, hierarchical_path)
+			Result := STRING_.appended_string (Result, path)
 			if has_query then
 				Result.append_character ('?')
 				Result := STRING_.appended_string (Result, query)
@@ -509,7 +496,6 @@ feature {NONE} -- URI parsing
 	State_path: INTEGER is 4
 	State_query: INTEGER is 5
 	State_fragment: INTEGER is 6
-	State_opaque: INTEGER is 7
 			-- States uses in parsing the URI
 
 	clear_url_parts is
@@ -559,7 +545,7 @@ feature {NONE} -- URI parsing
 						has_absolute_path := start < i
 						start := i
 						state := State_path
-					when State_authority, State_path, State_query, State_fragment, State_opaque then
+					when State_authority, State_path, State_query, State_fragment then
 					end
 				when '/' then
 					inspect state
@@ -583,7 +569,7 @@ feature {NONE} -- URI parsing
 					when State_path then
 						stop_path_item (start, i)
 						start := i + 1
-					when State_query, State_fragment, State_opaque then
+					when State_query, State_fragment then
 					end
 				when '?' then
 					inspect state
@@ -594,7 +580,7 @@ feature {NONE} -- URI parsing
 						stop_path_item (i, i)
 					when State_authority then
 						stop_authority (start, i)
-					when State_query, State_fragment, State_opaque then
+					when State_query, State_fragment then
 					end
 					start := i
 					state := State_query
@@ -609,21 +595,16 @@ feature {NONE} -- URI parsing
 						stop_authority (start, i)
 					when State_query then
 						stop_query (start, i)
-					when State_fragment, State_opaque then
+					when State_fragment then
 					end
 					start := i
 					state := State_fragment
 				else
 					inspect state
 					when State_authority_prefix then -- match for /.
-						if start = i then
-							state := State_opaque
-							check opaque: is_opaque end
-						else
-							has_absolute_path := start < i
-							start := i
-							state := State_path
-						end
+						has_absolute_path := start < i
+						start := i
+						state := State_path
 					else -- ok
 					end
 				end
@@ -647,7 +628,6 @@ feature {NONE} -- URI parsing
 				if start < i then
 					stop_fragment (start, i)
 				end
-			when State_opaque then
 			end
 		end
 
@@ -723,7 +703,7 @@ feature {NONE} -- Resolve a relative-path reference
 			-- compensated for.
 		require
 			a_base_path_not_void: a_base /= Void
-			-- `path' is relative
+			path_relative: not has_absolute_path
 		local
 			some_items: like path_items
 			segment: STRING
@@ -743,7 +723,9 @@ feature {NONE} -- Resolve a relative-path reference
 				-- All but the last segment of the base URI's path component is
 				-- copied to the buffer.  In other words, any characters after the
 				-- last (right-most) slash character, if any, are excluded.
-				some_items.remove_last
+				if some_items.count > 0 then
+					some_items.remove_last
+				end
 
 				from
 					a_cursor := path_items.new_cursor
