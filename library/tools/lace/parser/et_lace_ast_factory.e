@@ -74,7 +74,11 @@ feature -- Eiffel AST factory
 	new_error_handler: ET_ERROR_HANDLER is
 			-- New error handler for Eiffel parser
 		do
-			create Result.make_standard
+			if error_handler /= Void then
+				Result := error_handler
+			else
+				create Result.make_standard
+			end
 		ensure
 			error_handler_not_void: Result /= Void
 		end
@@ -85,6 +89,10 @@ feature -- Configuration
 			-- Return this AST factory in `new_ast_factory'
 			-- if not void
 
+	error_handler: ET_ERROR_HANDLER
+			-- Return this error handler in `new_error handler'
+			-- if not void
+
 feature -- Configuration setting
 
 	set_ast_factory (a_factory: like ast_factory) is
@@ -93,6 +101,14 @@ feature -- Configuration setting
 			ast_factory := a_factory
 		ensure
 			ast_factory_set: ast_factory = a_factory
+		end
+
+	set_error_handler (a_handler: like error_handler) is
+			-- Set `error_handler' to `a_handler'.
+		do
+			error_handler := a_handler
+		ensure
+			error_handler_set: error_handler = a_handler
 		end
 
 end
