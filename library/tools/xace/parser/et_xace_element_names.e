@@ -309,37 +309,4 @@ feature -- Constants
 			uc_unless_not_empty: Result.count > 0
 		end
 
-	uc_equal: UC_CHARACTER is
-			-- '=', which may occure in "if" or "unless"
-			-- attributes
-		once
-			Result := new_unicode_character ('=')
-		ensure
-			uc_equal_not_void: Result /= Void
-		end
-
-	uc_dollar: UC_CHARACTER is
-			-- '$', which occures in variable names
-		once
-			Result := new_unicode_character ('$')
-		ensure
-			uc_dollar_not_void: Result /= Void
-		end
-
-	uc_opening_curly_brace: UC_CHARACTER is
-			-- '{', which may occure in variable names
-		once
-			Result := new_unicode_character ('{')
-		ensure
-			uc_opening_curly_brace_not_void: Result /= Void
-		end
-
-	uc_closing_curly_brace: UC_CHARACTER is
-			-- '}', which may occure in variable names
-		once
-			Result := new_unicode_character ('}')
-		ensure
-			uc_closing_curly_brace_not_void: Result /= Void
-		end
-
 end

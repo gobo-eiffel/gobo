@@ -138,7 +138,7 @@ feature {NONE} -- Implementation
 			an_equal_occurences: INTEGER
 		do
 			Result := True
-			an_equal_occurences := a_string.occurrences (uc_equal)
+			an_equal_occurences := a_string.occurrences ('=')
 			if
 				an_equal_occurences = 1
 			then
@@ -149,12 +149,12 @@ feature {NONE} -- Implementation
 				-- expression is a variable
 				if
 					a_string.count > 1 and then
-					a_string.item (1).is_equal (uc_dollar)
+					a_string.item (1) = '$'
 				then
-					if a_string.item (2).is_equal (uc_opening_curly_brace) then
+					if a_string.item (2) = '{' then
 						if
 							a_string.count > 3 and then
-							a_string.item (a_string.count).is_equal (uc_closing_curly_brace)
+							a_string.item (a_string.count) = '}'
 						then
 						else
 							-- missing closing curly brace
@@ -186,10 +186,10 @@ feature {NONE} -- Implementation
 			equal_index: INTEGER
 		do
 			if
-				a_string.occurrences (uc_equal) > 0
+				a_string.occurrences ('=') > 0
 			then
 				-- expression is a comparsion of two constants or variables
-				equal_index := a_string.index_of (uc_equal, 1)
+				equal_index := a_string.index_of ('=', 1)
 				a_left_side := new_unicode_string_from_utf8 (variables.expanded_variables (a_string.substring (1, equal_index - 1).to_utf8))
 				if a_string.count > equal_index then
 					a_right_side := new_unicode_string_from_utf8 (variables.expanded_variables ((a_string.substring (equal_index + 1, a_string.count).to_utf8)))
@@ -201,12 +201,12 @@ feature {NONE} -- Implementation
 				-- expression is a variable
 				if
 					a_string.count > 1 and then
-					a_string.item (1).is_equal (uc_dollar)
+					a_string.item (1) = '$'
 				then
-					if a_string.item (2).is_equal (uc_opening_curly_brace) then
+					if a_string.item (2) = '{' then
 						if
 							a_string.count > 3 and then
-							a_string.item (a_string.count).is_equal (uc_closing_curly_brace)
+							a_string.item (a_string.count) = '}'
 						then
 							-- variable is of the form: ${FOO}
 							a_variable_name := a_string.substring (3, a_string.count - 1)
