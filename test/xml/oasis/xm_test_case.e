@@ -30,7 +30,7 @@ feature -- XML asserts
 		do
 			reset_parser
 			parser.parse_from_string (in)
-			assert (a_name, parser.is_correct)
+			assert (a_name, not error.has_error)
 		end
 
 	assert_invalid (a_name: STRING; in: STRING) is
@@ -41,7 +41,7 @@ feature -- XML asserts
 		do
 			reset_parser
 			parser.parse_from_string (in)
-			assert (a_name, not parser.is_correct)
+			assert (a_name, error.has_error)
 		end
 
 	assert_output (a_name: STRING; in: STRING; an_out: STRING) is
@@ -71,6 +71,9 @@ feature {NONE} -- Parser
 	output: UC_STRING
 			-- Output.
 
+	error: XM_STOP_ON_ERROR_FILTER
+			-- Error collector.
+			
 	new_parser: XM_PARSER is
 			-- New parser, can be redefined to test another parser.
 		do
@@ -80,16 +83,21 @@ feature {NONE} -- Parser
 	reset_parser is
 			-- Reset parser.
 		local
+			an_attribute: XM_ATTRIBUTE_DEFAULT_FILTER
 			a_printer: XM_CANONICAL_PRETTY_PRINT_FILTER
 		do
 			output := new_unicode_string ("")
 			parser := new_parser
+			error := new_stop_on_error
 			a_printer := new_canonical_pretty_print
 			a_printer.set_output_string (output)
-			
+			!! an_attribute.make_null
+			parser.set_dtd_callbacks (an_attribute)
 			parser.set_callbacks (callbacks_pipe (<<  
 				new_end_tag_checker,
-				new_stop_on_error,
+				new_unicode_validation,
+				an_attribute,
+				error,
 				a_printer >>))
 		ensure
 			not_void: parser /= Void and output /= Void
