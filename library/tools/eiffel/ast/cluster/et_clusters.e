@@ -39,6 +39,29 @@ feature {NONE} -- Initialization
 			is_empty: clusters.is_empty
 		end
 
+feature -- Status report
+
+	has_subcluster (a_cluster: ET_CLUSTER): BOOLEAN is
+			-- Is `a_cluster' (recursively) one of the subclusters
+			-- of current clusters?
+		require
+			a_cluster_not_void: a_cluster /= Void
+		local
+			i, nb: INTEGER
+			l_cluster: ET_CLUSTER
+		do
+			nb := clusters.count
+			from i := 1 until i > nb loop
+				l_cluster := clusters.item (i)
+				if l_cluster = a_cluster or else l_cluster.has_subcluster (a_cluster) then
+					Result := True
+					i := nb + 1
+				else
+					i := i + 1
+				end
+			end
+		end
+
 feature -- Access
 
 	cluster (i: INTEGER): ET_CLUSTER is

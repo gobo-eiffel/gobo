@@ -76,6 +76,17 @@ feature -- Status report
 			-- but is instead the result of the fact that its
 			-- parent is a recursive cluster?
 
+	has_subcluster (a_cluster: ET_CLUSTER): BOOLEAN is
+			-- Is `a_cluster' (recursively) one of the subclusters
+			-- of current cluster?
+		require
+			a_cluster_not_void: a_cluster /= Void
+		do
+			if subclusters /= Void then
+				Result := subclusters.has_subcluster (a_cluster)
+			end
+		end
+
 	is_valid_eiffel_filename (a_filename: STRING): BOOLEAN is
 			-- Is `a_filename' an Eiffel filename which has
 			-- not been excluded?
