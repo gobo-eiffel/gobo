@@ -57,6 +57,8 @@ feature -- Execution
 					is_flat := True
 				elseif equal (arg, "--compile") then
 					do_compile := True
+				elseif equal (arg, "--c_compile") then
+					do_c_compile := True
 				elseif equal (arg, "--push") then
 					push_dynamic_type_sets := True
 				elseif equal (arg, "--pull") then
@@ -126,6 +128,7 @@ feature -- Status report
 	is_forget: BOOLEAN
 	is_flat: BOOLEAN
 	do_compile: BOOLEAN
+	do_c_compile: BOOLEAN
 	push_dynamic_type_sets: BOOLEAN
 	pull_dynamic_type_sets: BOOLEAN
 	no_output: BOOLEAN
@@ -142,6 +145,7 @@ feature {NONE} -- Processing
 			an_ast_factory: ET_DECORATED_AST_FACTORY
 			a_null_error_handler: ET_NULL_ERROR_HANDLER
 			a_system: ET_SYSTEM
+			a_builder: ET_DYNAMIC_TYPE_SET_BUILDER
 		do
 			if all_breaks then
 				create an_ast_factory.make
@@ -175,13 +179,19 @@ feature {NONE} -- Processing
 			end
 			a_universe.set_forget_enabled (is_forget)
 			if do_compile then
+				create a_system.make (a_universe)
 				if push_dynamic_type_sets then
-					create a_system.make_push (a_universe)
+					create {ET_DYNAMIC_PUSH_TYPE_SET_BUILDER} a_builder.make (a_system)
+					a_system.set_dynamic_type_set_builder (a_builder)
 				elseif pull_dynamic_type_sets then
-					create a_system.make_pull (a_universe)
+					create {ET_DYNAMIC_PULL_TYPE_SET_BUILDER} a_builder.make (a_system)
+					a_system.set_dynamic_type_set_builder (a_builder)
 				else
-					create a_system.make (a_universe)
+					create {ET_DYNAMIC_TYPE_BUILDER} a_builder.make (a_system)
+					a_system.set_dynamic_type_set_builder (a_builder)
 				end
+				a_system.set_c_code_generation (True)
+				a_system.set_c_code_compilation (do_c_compile)
 				a_system.compile
 			else
 				a_universe.compile (is_flat)
