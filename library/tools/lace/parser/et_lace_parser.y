@@ -6,7 +6,7 @@ indexing
 		"Lace parsers"
   
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 1999-2002, Eric Bezault and others"
+	copyright: "Copyright (c) 1999-2004, Eric Bezault and others"
 	license: "Eiffel Forum License v2 (see forum.txt)"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -28,16 +28,16 @@ creation
 
 %}
 
-%token                 L_SYSTEM L_ROOT L_END L_CLUSTER
-%token                 L_DEFAULT L_EXTERNAL L_GENERATE L_OPTION
-%token                 L_ABSTRACT L_ALL L_EXCLUDE L_LIBRARY
 %token <ET_IDENTIFIER> L_IDENTIFIER L_STRING
-%token                 L_STRERR
+%token L_SYSTEM L_ROOT L_END L_CLUSTER
+%token L_DEFAULT L_EXTERNAL L_GENERATE L_OPTION
+%token L_ABSTRACT L_ALL L_EXCLUDE L_LIBRARY
+%token L_STRERR
 
-%type <ET_LACE_CLUSTER>		Cluster Nested_cluster Recursive_cluster Subcluster
-%type <ET_LACE_CLUSTERS>	Cluster_list Clusters_opt Subclusters_opt Subcluster_list
-%type <ET_LACE_EXCLUDE>		Excludes Exclude_list Cluster_options_opt
-%type <ET_IDENTIFIER>		Identifier
+%type <ET_LACE_CLUSTER> Cluster Nested_cluster Recursive_cluster Subcluster Qualified_subcluster
+%type <ET_LACE_CLUSTERS> Cluster_list Clusters_opt Subclusters_opt Subcluster_list
+%type <ET_LACE_EXCLUDE> Excludes Exclude_list Cluster_options_opt
+%type <ET_IDENTIFIER> Identifier
 
 %start Ace
 
@@ -94,19 +94,12 @@ Clusters_opt: -- Empty
 
 Cluster_list: Cluster
 		{ $$ := new_clusters ($1) }
-	| Identifier '(' Identifier ')' ':' Identifier Cluster_options_opt
-		{
-			add_subcluster ($1, $3, $6, $7)
-			-- TODO:
-			abort
-		}
+	| Qualified_subcluster
+		{ $$ := new_clusters ($1) }
 	| Cluster_list Cluster_separator Cluster
 		{ $$ := $1; $$.put_last ($3) }
-	| Cluster_list Cluster_separator Identifier '(' Identifier ')' ':' Identifier Cluster_options_opt
-		{
-			$$ := $1
-			add_subcluster ($3, $5, $8, $9)
-		}
+	| Cluster_list Cluster_separator Qualified_subcluster
+		{ $$ := $1; $$.put_last ($3) }
 	;
 
 Cluster: L_ABSTRACT Nested_cluster
@@ -117,6 +110,22 @@ Cluster: L_ABSTRACT Nested_cluster
 		{ $$ := $2; $$.set_recursive (True) }
 	| Nested_cluster
 		{ $$ := $1 }
+	;
+
+Qualified_subcluster: Identifier '(' Identifier ')' ':' Identifier Cluster_options_opt
+		{
+			$$ := new_qualified_subcluster ($1, $3, $6, $7)
+		}
+	| L_ALL Identifier '(' Identifier ')' ':' Identifier Cluster_options_opt
+		{
+			$$ := new_qualified_subcluster ($2, $4, $7, $8)
+			$$.set_recursive (True)
+		}
+	| L_LIBRARY Identifier '(' Identifier ')' ':' Identifier Cluster_options_opt
+		{
+			$$ := new_qualified_subcluster ($2, $4, $7, $8)
+			$$.set_recursive (True)
+		}
 	;
 
 Nested_cluster: Identifier ':' Identifier Cluster_options_opt Subclusters_opt

@@ -96,15 +96,36 @@ feature -- Access
 	ast_factory: ET_LACE_AST_FACTORY
 			-- Abstract Syntax Tree factory
 
-feature {NONE} -- Basic operations
+feature {NONE} -- AST factory
 
-	add_subcluster (a_name: ET_IDENTIFIER; a_parent: ET_IDENTIFIER;
-		a_pathname: ET_IDENTIFIER; an_exclude: ET_LACE_EXCLUDE) is
-			-- Add cluster named `a_name' with pathname `a_pathname' to
-			-- parent cluster named `a_parent'. The leading '$' sign in
-			-- `a_pathname' will be replaced by the full pathname of the
-			-- parent cluster. (This is the way to nest clusters in
-			-- ISE's LACE syntax.)
+	new_cluster (a_name: ET_IDENTIFIER; a_pathname: ET_IDENTIFIER): ET_LACE_CLUSTER is
+			-- New cluster
+		require
+			a_name_not_void: a_name /= Void
+		do
+			Result := ast_factory.new_cluster (a_name, a_pathname)
+			named_clusters.force_last (Result, a_name)
+		ensure
+			cluster_not_void: Result /= Void
+		end
+
+	new_clusters (a_cluster: ET_LACE_CLUSTER): ET_LACE_CLUSTERS is
+			-- New cluster list
+		require
+			a_cluster_not_void: a_cluster /= Void
+		do
+			Result := ast_factory.new_clusters (a_cluster)
+		ensure
+			clusters_not_void: Result /= Void
+		end
+
+	new_qualified_subcluster (a_name: ET_IDENTIFIER; a_parent: ET_IDENTIFIER;
+		a_pathname: ET_IDENTIFIER; an_exclude: ET_LACE_EXCLUDE): ET_LACE_CLUSTER is
+			-- New subcluster named `a_name' with pathname `a_pathname'
+			-- Add this subcluster to parent cluster named `a_parent'.
+			-- The leading '$' sign in `a_pathname' will be replaced by
+			-- the full pathname of the parent cluster.
+			-- (This is the way to nest clusters in ISE's LACE syntax.)
 		require
 			a_name_not_void: a_name /= Void
 			a_parent_not_void: a_parent /= Void
@@ -114,7 +135,6 @@ feature {NONE} -- Basic operations
 			a_parent_full_pathname: STRING
 			a_full_pathname: ET_IDENTIFIER
 			a_parent_cluster: ET_LACE_CLUSTER
-			a_cluster: ET_LACE_CLUSTER
 			nb: INTEGER
 		do
 			named_clusters.search (a_parent)
@@ -145,41 +165,22 @@ feature {NONE} -- Basic operations
 						end
 					end
 				end
-				a_cluster := new_cluster (a_name, a_full_pathname)
-				a_cluster.set_exclude (an_exclude)
+				Result := new_cluster (a_name, a_full_pathname)
+				Result.set_exclude (an_exclude)
 				if a_parent_cluster.subclusters /= Void then
-					a_parent_cluster.add_subcluster (a_cluster)
+					a_parent_cluster.add_subcluster (Result)
 				else
-					a_parent_cluster.set_subclusters (new_clusters (a_cluster))
+					a_parent_cluster.set_subclusters (new_clusters (Result))
 				end
 			else
 					-- TODO: better error handling
 				report_error ("Parent cluster '" + a_parent.name + "' not found.")
 				abort
+				Result := new_cluster (a_name, a_pathname)
+				Result.set_exclude (an_exclude)
 			end
-		end
-
-feature {NONE} -- AST factory
-
-	new_cluster (a_name: ET_IDENTIFIER; a_pathname: ET_IDENTIFIER): ET_LACE_CLUSTER is
-			-- New cluster
-		require
-			a_name_not_void: a_name /= Void
-		do
-			Result := ast_factory.new_cluster (a_name, a_pathname)
-			named_clusters.force_last (Result, a_name)
 		ensure
-			cluster_not_void: Result /= Void
-		end
-
-	new_clusters (a_cluster: ET_LACE_CLUSTER): ET_LACE_CLUSTERS is
-			-- New cluster list
-		require
-			a_cluster_not_void: a_cluster /= Void
-		do
-			Result := ast_factory.new_clusters (a_cluster)
-		ensure
-			clusters_not_void: Result /= Void
+			subcluster_not_void: Result /= Void
 		end
 
 	new_universe (a_clusters: ET_LACE_CLUSTERS): ET_LACE_UNIVERSE is
