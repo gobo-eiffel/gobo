@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<!DOCTYPE root [
+<!ELEMENT root EMPTY>
+<!ATTLIST root version CDATA #REQUIRED>
+<!ENTITY filename SYSTEM "myfile.e" NDATA gif>
+<!NOTATION gif SYSTEM "gimp">
+]>
+<?myinstruction mydata?>
+<!-- yes, this is XML -->
+<root version="1.0" xmlns:root="http://www.w3.org/2000/10/XMLSchema-instance" xsi:noNamespaceSchemaLocation="root.xsd">Hello World!</root>
