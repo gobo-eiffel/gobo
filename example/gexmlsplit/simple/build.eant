@@ -1,9 +1,9 @@
 <?xml version="1.0"?>
 
-<project name="gexmlsplit" default="help">
+<project name="gexmlsplit_simple" default="help">
 
 	<description>
-		system: "'gexmlsplit' example"
+		system: "'gexmlsplit' simple example"
 		copyright: "Copyright (c) 2002, Sven Ehrke and others"
 		license: "Eiffel Forum License v1 (see forum.txt)"
 		date: "$Date$"
@@ -13,20 +13,27 @@
 	<target name="help">
 		<echo message="usage:"/>
 		<echo message="   geant gexmlsplit"/>
+		<echo message="   geant install"/>
+		<echo message="   geant clean"/>
+		<echo message="   geant clobber"/>
 	</target>
 
 	<target name="gexmlsplit">
 		<description>
 			Split up xml file 'input.xml' split up into the three files:
-
 				* output1.xml
 				* output2.xml
 				* output3.xml
-
 		</description>
 		
 		<gexmlsplit input="input.xml"/>
+	</target>
 
+	<target name="install">
+		<description>
+			Install the 'gexmlsplit example.
+		</description>
+		<!-- do nothing -->
 	</target>
 
 	<target name="clean">
@@ -37,7 +44,14 @@
 		<delete file="output1.xml"/>
 		<delete file="output2.xml"/>
 		<delete file="output3.xml"/>
+	</target>
 
+	<target name="clobber">
+		<description>
+			Remove all generated files.
+		</description>
+
+		<geant target="clean"/>
 	</target>
 
 </project>
