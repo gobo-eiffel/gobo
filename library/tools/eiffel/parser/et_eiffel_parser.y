@@ -176,13 +176,13 @@ creation
 %type <ET_TOKEN>               Check Create Debug Else Elseif End Ensure From If Invariant
                                Loop Precursor Require Then Until Variant When Inspect Select
                                Rename Redefine Export Undefine All Creation As Do Once
-                               Rescue Like Bit Local Obsolete Inherit Class Agent
+                               Rescue Like Bit Local Obsolete Inherit Class Agent Feature
 %type <ET_TYPE>                Type Constraint_type
 %type <ET_VARIANT>             Variant_clause_opt
 %type <ET_WHEN_PART_LIST>      When_list When_list_opt
 %type <ET_WRITABLE>            Writable
 
-%expect 43
+%expect 45
 %start Class_declarations
 
 %%
@@ -1016,7 +1016,7 @@ Features: Feature_clause
 	| Features Feature_clause
 	;
 
-Feature_clause: E_FEATURE Clients_opt
+Feature_clause: Feature Clients_opt
 			{
 				if $2 = Void then
 					if new_any_clients ($1.position) = Void then end
@@ -2120,6 +2120,9 @@ Call_instruction: Identifier Actuals_opt
 		{ $$ := new_precursor_instruction ($1, $2) }
 	| Qualified_precursor_instruction
 		{ $$ := $1 }
+	| Feature Left_brace Type Right_brace Dot Identifier Actuals_opt
+			-- TODO:
+		{ $$ := new_call_instruction ($6, $7) }
 	;
 
 Qualified_precursor_instruction: Precursor Left_brace Class_name Right_brace Actuals_opt
@@ -2138,6 +2141,9 @@ Call_expression: Identifier Actuals_opt
 		{ $$ := new_call_expression ($1, $2) }
 	| Call_chain Dot Identifier Actuals_opt
 		{ $$ := new_qualified_call_expression ($1, $2, $3, $4) }
+	| Feature Left_brace Type Right_brace Dot Identifier Actuals_opt
+			-- TODO:
+		{ $$ := new_call_expression ($6, $7) }
 	;
 
 Precursor_expression: Precursor Actuals_opt
@@ -3133,6 +3139,17 @@ Expanded: E_EXPANDED
 Export: E_EXPORT
 		{ $$ := $1 }
 	| E_EXPORT E_BREAK
+		{
+			$$ := $1
+			if keep_all_breaks or keep_all_comments then
+				$$.set_break ($2)
+			end
+		}
+	;
+
+Feature: E_FEATURE
+		{ $$ := $1 }
+	| E_FEATURE E_BREAK
 		{
 			$$ := $1
 			if keep_all_breaks or keep_all_comments then
