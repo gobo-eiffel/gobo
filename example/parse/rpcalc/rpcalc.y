@@ -29,7 +29,7 @@ creation
 
 %%
 
-input: -- /* empty */
+input: -- Empty
 	| input line
 	;
 
@@ -37,13 +37,13 @@ line: '\n'
 	| exp '\n' { print ($1); print ('%N') }
 	;
 
-exp: NUM
-	| exp exp '+' { $$ := $1 + $2 }
-	| exp exp '-' { $$ := $1 - $2 }
-	| exp exp '*' { $$ := $1 * $2 }
-	| exp exp '/' { $$ := $1 / $2 }
+exp: NUM			{ $$ := $1 }
+	| exp exp '+'	{ $$ := $1 + $2 }
+	| exp exp '-'	{ $$ := $1 - $2 }
+	| exp exp '*'	{ $$ := $1 * $2 }
+	| exp exp '/'	{ $$ := $1 / $2 }
 		-- Unary minus
-	| exp 'n' { $$ := -$1 }
+	| exp 'n'		{ $$ := -$1 }
 	;
 
 %%
@@ -73,7 +73,7 @@ feature {NONE} -- Scanner
 				if has_pending_character then
 					c := pending_character
 					has_pending_character := False
-				else
+				elseif not INPUT_STREAM_.end_of_input (std.input) then
 					std.input.read_character
 					c := std.input.last_character
 				end
@@ -132,7 +132,7 @@ feature {NONE} -- Scanner
 				last_token := c.code
 			end
 		end
-	
+
 	last_token: INTEGER
 			-- Last token read
 
