@@ -92,10 +92,10 @@ feature -- Status report
 		do
 			classes.search (a_name)
 			if classes.found then
-				Result := classes.found_item.is_parsed
+				Result := classes.found_item.is_preparsed
 			end
 		ensure
-			is_parsed: Result implies eiffel_class (a_name).is_parsed
+			is_preparsed: Result implies eiffel_class (a_name).is_preparsed
 		end
 
 	is_preparsed: BOOLEAN

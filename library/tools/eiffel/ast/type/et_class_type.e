@@ -153,20 +153,31 @@ feature -- Validity
 		local
 			formals: ET_FORMAL_GENERIC_PARAMETERS
 		do
-			if not base_class.is_parsed then
+			if not base_class.is_preparsed then
+				base_class.universe.preparse
+			end
+			if not base_class.is_preparsed then
 				Result := False
 				an_heir.error_handler.report_vtct_error (an_heir, Current)
-			elseif base_class.has_syntax_error then
-					-- Error should already have been
-					-- reported somewhere else.
-				Result := False
 			else
-				formals := base_class.generic_parameters
-				if formals = Void or else formals.is_empty then
-					Result := True
-				else
+				if not base_class.is_parsed then
+					base_class.parse
+				end
+				if not base_class.is_parsed then
 					Result := False
-					an_heir.error_handler.report_vtug2_error (an_heir, Current)
+					an_heir.error_handler.report_vtct_error (an_heir, Current)
+				elseif base_class.has_syntax_error then
+						-- Error should already have been
+						-- reported somewhere else.
+					Result := False
+				else
+					formals := base_class.generic_parameters
+					if formals = Void or else formals.is_empty then
+						Result := True
+					else
+						Result := False
+						an_heir.error_handler.report_vtug2_error (an_heir, Current)
+					end
 				end
 			end
 		end
@@ -182,20 +193,31 @@ feature -- Validity
 		local
 			formals: ET_FORMAL_GENERIC_PARAMETERS
 		do
-			if not base_class.is_parsed then
+			if not base_class.is_preparsed then
+				base_class.universe.preparse
+			end
+			if not base_class.is_preparsed then
 				Result := False
 				a_class.error_handler.report_vtct_error (a_class, Current)
-			elseif base_class.has_syntax_error then
-					-- Error should already have been
-					-- reported somewhere else.
-				Result := False
 			else
-				formals := base_class.generic_parameters
-				if formals = Void or else formals.is_empty then
-					Result := True
-				else
+				if not base_class.is_parsed then
+					base_class.parse
+				end
+				if not base_class.is_parsed then
 					Result := False
-					a_class.error_handler.report_vtug2_error (a_class, Current)
+					a_class.error_handler.report_vtct_error (a_class, Current)
+				elseif base_class.has_syntax_error then
+						-- Error should already have been
+						-- reported somewhere else.
+					Result := False
+				else
+					formals := base_class.generic_parameters
+					if formals = Void or else formals.is_empty then
+						Result := True
+					else
+						Result := False
+						a_class.error_handler.report_vtug2_error (a_class, Current)
+					end
 				end
 			end
 		end

@@ -200,10 +200,20 @@ feature -- Genealogy
 		do
 			if a_class = Current then
 				Result := True
-			elseif is_parsed and then not has_syntax_error then
-				search_ancestors
-				if not has_ancestors_error then
-					Result := ancestors.has (a_class.id)
+			else
+				if not is_preparsed then
+					universe.preparse
+				end
+				if is_preparsed then
+					if not is_parsed then
+						parse
+					end
+					if is_parsed and then not has_syntax_error then
+						search_ancestors
+						if not has_ancestors_error then
+							Result := ancestors.has (a_class.id)
+						end
+					end
 				end
 			end
 		end
@@ -221,7 +231,20 @@ feature -- Genealogy
 			if a_class = Current then
 				Result := a_type
 			else
-				Result := ancestors.item (a_class.id)
+				if not is_preparsed then
+					universe.preparse
+				end
+				if is_preparsed then
+					if not is_parsed then
+						parse
+					end
+					if is_parsed and then not has_syntax_error then
+						search_ancestors
+						if not has_ancestors_error then
+							Result := ancestors.item (a_class.id)
+						end
+					end
+				end
 			end
 		ensure
 			ancestor_not_void: Result /= Void
@@ -533,7 +556,7 @@ feature -- Compilation: genealogy
 				from i := 1 until i > nb loop
 					a_class := sorted_anc.item (i)
 					a_parents := a_class.parents
-					if a_parents = Void then
+					if a_parents = Void or else a_parents.is_empty then
 						a_parents := any_parents
 					end
 					check sorted: a_parents.ancestors_searched end
@@ -548,7 +571,7 @@ feature -- Compilation: genealogy
 						-- cycle and their descendants are marked
 						-- with `has_ancestors_error'.
 					set_ancestors_error
-					if parents /= Void then
+					if parents /= Void and then not parents.is_empty then
 						parents.set_ancestors_error
 					else
 						any_parents.set_ancestors_error
@@ -563,7 +586,7 @@ feature -- Compilation: genealogy
 					a_class := sorted_anc.item (i)
 					if not a_class.has_ancestors_error then
 						a_parents := a_class.parents
-						if a_parents = Void then
+						if a_parents = Void or else a_parents.is_empty then
 							a_parents := any_parents
 						end
 						if a_parents.has_ancestors_error then
@@ -629,7 +652,7 @@ feature {ET_PARENTS, ET_CLASS} -- Compilation: genealogy
 							-- This error has already been reported
 							-- somewhere else.
 						set_ancestors_error
-					elseif parents = Void then
+					elseif parents = Void or else parents.is_empty then
 						if Current = universe.general_class then
 							!! ancestors.make_map (0)
 						elseif Current = universe.any_class then
@@ -760,7 +783,7 @@ feature -- Compilation: feature flattening
 			if not is_flattened then
 				if not has_ancestors_error then
 					a_flattener := universe.feature_flattener
-					if parents = Void then
+					if parents = Void or else parents.is_empty then
 						if Current = universe.general_class then
 							a_flattener.set_current_class (Current)
 							a_flattener.flatten

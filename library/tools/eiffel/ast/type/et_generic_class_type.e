@@ -152,35 +152,46 @@ feature -- Validity
 			formals: ET_FORMAL_GENERIC_PARAMETERS
 			actuals: ET_ACTUAL_GENERIC_PARAMETERS
 		do
-			if not base_class.is_parsed then
+			if not base_class.is_preparsed then
+				base_class.universe.preparse
+			end
+			if not base_class.is_preparsed then
 				Result := False
 				an_heir.error_handler.report_vtct_error (an_heir, Current)
-			elseif base_class.has_syntax_error then
-					-- Error should already have been
-					-- reported somewhere else.
-				Result := False
 			else
-				formals := base_class.generic_parameters
-				actuals := generic_parameters
-				if formals = Void or else formals.is_empty then
-					if is_generic then
-						Result := False
-						an_heir.error_handler.report_vtug1_error (an_heir, Current)
-					else
-						Result := True
-					end
-				elseif actuals.count /= formals.count then
+				if not base_class.is_parsed then
+					base_class.parse
+				end
+				if not base_class.is_parsed then
 					Result := False
-					an_heir.error_handler.report_vtug2_error (an_heir, Current)
+					an_heir.error_handler.report_vtct_error (an_heir, Current)
+				elseif base_class.has_syntax_error then
+						-- Error should already have been
+						-- reported somewhere else.
+					Result := False
 				else
-						-- Call `seach_ancestors' to check whether the
-						-- formal generic parameters `formals' are valid.
-					base_class.search_ancestors
-					if base_class.has_ancestors_error then
-							-- Error already reported in `search_ancestors'.
+					formals := base_class.generic_parameters
+					actuals := generic_parameters
+					if formals = Void or else formals.is_empty then
+						if is_generic then
+							Result := False
+							an_heir.error_handler.report_vtug1_error (an_heir, Current)
+						else
+							Result := True
+						end
+					elseif actuals.count /= formals.count then
 						Result := False
+						an_heir.error_handler.report_vtug2_error (an_heir, Current)
 					else
-						Result := actuals.check_parent_validity (formals, base_class, an_heir)
+							-- Call `seach_ancestors' to check whether the
+							-- formal generic parameters `formals' are valid.
+						base_class.search_ancestors
+						if base_class.has_ancestors_error then
+								-- Error already reported in `search_ancestors'.
+							Result := False
+						else
+							Result := actuals.check_parent_validity (formals, base_class, an_heir)
+						end
 					end
 				end
 			end
@@ -198,35 +209,46 @@ feature -- Validity
 			formals: ET_FORMAL_GENERIC_PARAMETERS
 			actuals: ET_ACTUAL_GENERIC_PARAMETERS
 		do
-			if not base_class.is_parsed then
+			if not base_class.is_preparsed then
+				base_class.universe.preparse
+			end
+			if not base_class.is_preparsed then
 				Result := False
 				a_class.error_handler.report_vtct_error (a_class, Current)
-			elseif base_class.has_syntax_error then
-					-- Error should already have been
-					-- reported somewhere else.
-				Result := False
 			else
-				formals := base_class.generic_parameters
-				actuals := generic_parameters
-				if formals = Void or else formals.is_empty then
-					if is_generic then
-						Result := False
-						a_class.error_handler.report_vtug1_error (a_class, Current)
-					else
-						Result := True
-					end
-				elseif actuals.count /= formals.count then
+				if not base_class.is_parsed then
+					base_class.parse
+				end
+				if not base_class.is_parsed then
 					Result := False
-					a_class.error_handler.report_vtug2_error (a_class, Current)
+					a_class.error_handler.report_vtct_error (a_class, Current)
+				elseif base_class.has_syntax_error then
+						-- Error should already have been
+						-- reported somewhere else.
+					Result := False
 				else
-						-- Call `seach_ancestors' to check whether the
-						-- formal generic parameters `formals' are valid.
-					base_class.search_ancestors
-					if base_class.has_ancestors_error then
-							-- Error already reported in `search_ancestors'.
+					formals := base_class.generic_parameters
+					actuals := generic_parameters
+					if formals = Void or else formals.is_empty then
+						if is_generic then
+							Result := False
+							a_class.error_handler.report_vtug1_error (a_class, Current)
+						else
+							Result := True
+						end
+					elseif actuals.count /= formals.count then
 						Result := False
+						a_class.error_handler.report_vtug2_error (a_class, Current)
 					else
-						Result := actuals.check_constraint_validity (formals, base_class, a_formal, a_class, a_sorter)
+							-- Call `seach_ancestors' to check whether the
+							-- formal generic parameters `formals' are valid.
+						base_class.search_ancestors
+						if base_class.has_ancestors_error then
+								-- Error already reported in `search_ancestors'.
+							Result := False
+						else
+							Result := actuals.check_constraint_validity (formals, base_class, a_formal, a_class, a_sorter)
+						end
 					end
 				end
 			end
