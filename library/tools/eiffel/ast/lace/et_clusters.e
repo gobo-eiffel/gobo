@@ -82,18 +82,6 @@ feature -- Element change
 			cluster_added: clusters.last = a_cluster
 		end
 
-feature -- Removal
-
-	remove (a_cluster: like cluster) is
-			-- Remove `a_cluster' from the list of clusters.
-		require
-			a_cluster_not_void: a_cluster /= Void
-		do
-			clusters.delete (a_cluster)
-		ensure
-			removed: not clusters.has (a_cluster)
-		end
-
 feature -- Parsing
 
 	preparse_shallow (a_universe: ET_UNIVERSE) is
