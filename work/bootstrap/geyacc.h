@@ -7,7 +7,7 @@ Release 1.0 (Friday December 6th 2002)
 Copyright (C), 1994-2002 - LORIA - UHP - INRIA - FRANCE
 Dominique COLNET and Suzanne COLLIN - SmartEiffel@loria.fr
 http://SmartEiffel.loria.fr
-C Compiler options used: -O2 -nologo -D"WIN32" -w
+C Compiler options used: 
 */
 
 /*
@@ -296,572 +296,551 @@ void* se_calloc(size_t nmemb, size_t size);
 #define SE_EXCEPTIONS 1
 
 /*C Header Pass 1 :*/
-typedef void*T517;
-typedef struct S578 T578;
-typedef struct S518 T518;
-typedef struct S445 T445;
-typedef struct S527 T527;
-typedef struct S159 T159;
-typedef struct S444 T444;
-typedef struct S542 T542;
-typedef void*T526;
-typedef struct S172 T172;
-typedef struct S364 T364;
-typedef void*T649;
-typedef struct S378 T378;
-typedef struct S544 T544;
-typedef struct S207 T207;
-typedef struct S241 T241;
-typedef struct S486 T486;
-typedef struct S231 T231;
-typedef struct S338 T338;
-typedef struct S565 T565;
-typedef struct S296 T296;
-typedef struct S541 T541;
-typedef struct S523 T523;
-typedef struct S206 T206;
-typedef struct S160 T160;
-typedef void*T646;
-typedef struct S298 T298;
-typedef struct S468 T468;
-typedef struct S212 T212;
-typedef struct S635 T635;
-typedef struct S645 T645;
-typedef void*T200;
-typedef struct S603 T603;
-typedef struct S76 T76;
-typedef struct S346 T346;
-typedef void*T483;
-typedef void*T554;
-typedef void*T165;
-typedef struct S345 T345;
-typedef void*T198;
-typedef void*T177;
+typedef void*T135;
 typedef struct S574 T574;
-typedef void*T397;
-typedef void*T650;
-typedef void*T127;
-typedef struct S282 T282;
-typedef struct S547 T547;
-typedef struct S611 T611;
-typedef struct S65 T65;
-typedef struct S179 T179;
-typedef struct S424 T424;
-typedef struct S610 T610;
-typedef struct S239 T239;
-typedef void*T242;
-typedef struct S429 T429;
-typedef void*T190;
-typedef void*T128;
-typedef void*T648;
-typedef struct S404 T404;
-typedef struct S309 T309;
-typedef struct S87 T87;
-typedef struct S21 T21;
-typedef struct S484 T484;
-typedef struct S513 T513;
-typedef struct S399 T399;
-typedef void*T194;
-typedef void*T74;
-typedef struct S162 T162;
-typedef struct S67 T67;
-typedef struct S238 T238;
-typedef struct S608 T608;
-typedef struct S621 T621;
-typedef void*T439;
-typedef struct S591 T591;
-typedef struct S609 T609;
-typedef struct S543 T543;
+typedef struct S73 T73;
+typedef struct S450 T450;
+typedef struct S519 T519;
+typedef struct S167 T167;
+typedef struct S449 T449;
+typedef struct S536 T536;
+typedef void*T523;
+typedef struct S178 T178;
+typedef struct S369 T369;
+typedef void*T642;
+typedef struct S383 T383;
+typedef struct S538 T538;
+typedef struct S213 T213;
+typedef struct S246 T246;
+typedef struct S492 T492;
+typedef struct S343 T343;
+typedef struct S559 T559;
 typedef struct S301 T301;
-typedef struct S86 T86;
-typedef void*T189;
-typedef struct S240 T240;
-typedef struct S78 T78;
-typedef struct S495 T495;
+typedef struct S535 T535;
+typedef struct S113 T113;
+typedef struct S212 T212;
+typedef struct S168 T168;
+typedef void*T639;
+typedef struct S303 T303;
+typedef struct S474 T474;
+typedef struct S634 T634;
+typedef void*T396;
+typedef struct S638 T638;
+typedef void*T400;
+typedef void*T589;
+typedef void*T206;
 typedef struct S599 T599;
-typedef struct S521 T521;
-typedef void*T593;
-typedef struct S625 T625;
-typedef struct S324 T324;
-typedef struct S367 T367;
-typedef void*T395;
-typedef struct S356 T356;
-typedef struct S644 T644;
-typedef struct S545 T545;
-typedef struct S80 T80;
-typedef struct S226 T226;
-typedef struct S299 T299;
-typedef struct S272 T272;
-typedef struct S41 T41;
-typedef struct S569 T569;
-typedef struct S615 T615;
-typedef void*T391;
-typedef struct S204 T204;
-typedef struct S575 T575;
-typedef struct S411 T411;
-typedef struct S606 T606;
-typedef struct S38 T38;
-typedef struct S133 T133;
-typedef struct S315 T315;
-typedef struct S558 T558;
-typedef struct S269 T269;
-typedef struct S549 T549;
-typedef struct S582 T582;
-typedef struct S655 T655;
-typedef struct S106 T106;
-typedef void*T170;
-typedef struct S546 T546;
-typedef struct S174 T174;
-typedef struct S637 T637;
-typedef struct S568 T568;
-typedef struct S398 T398;
-typedef struct S605 T605;
-typedef struct S7 T7;
-typedef struct S581 T581;
-typedef void*T209;
-typedef struct S335 T335;
-typedef void*T331;
-typedef struct S268 T268;
-typedef struct S557 T557;
-typedef struct S105 T105;
-typedef struct S44 T44;
-typedef struct S90 T90;
-typedef void*T284;
-typedef void*T512;
-typedef struct S394 T394;
-typedef struct S83 T83;
-typedef struct S416 T416;
-typedef struct S79 T79;
-typedef struct S561 T561;
-typedef struct S310 T310;
-typedef struct S375 T375;
-typedef struct S481 T481;
-typedef struct S471 T471;
-typedef struct S312 T312;
-typedef struct S12 T12;
-typedef struct S533 T533;
-typedef struct S392 T392;
-typedef struct S556 T556;
-typedef struct S270 T270;
+typedef void*T477;
+typedef struct S78 T78;
+typedef struct S351 T351;
+typedef void*T549;
+typedef struct S442 T442;
+typedef void*T173;
+typedef struct S350 T350;
+typedef void*T648;
+typedef void*T183;
+typedef struct S570 T570;
+typedef void*T402;
+typedef void*T643;
+typedef struct S287 T287;
+typedef struct S541 T541;
 typedef struct S607 T607;
-typedef void*T290;
-typedef void*T167;
+typedef struct S65 T65;
+typedef struct S185 T185;
+typedef struct S429 T429;
+typedef struct S606 T606;
+typedef struct S244 T244;
+typedef void*T331;
+typedef void*T247;
+typedef struct S434 T434;
+typedef void*T198;
+typedef void*T641;
+typedef struct S314 T314;
 typedef struct S89 T89;
-typedef struct S525 T525;
-typedef struct S358 T358;
 typedef void*T289;
-typedef struct S485 T485;
-typedef struct S551 T551;
-typedef void*T602;
-typedef void*T365;
-typedef struct S577 T577;
-typedef struct S604 T604;
-typedef struct S385 T385;
-typedef struct S109 T109;
-typedef struct S181 T181;
-typedef struct S45 T45;
-typedef void*T647;
-typedef void*T601;
-typedef struct S576 T576;
-typedef void*T426;
-typedef struct S532 T532;
-typedef struct S201 T201;
-typedef struct S332 T332;
-typedef void*T520;
-typedef struct S539 T539;
-typedef void*T415;
-typedef void*T450;
-typedef void*T225;
-typedef void*T169;
-typedef struct S548 T548;
-typedef void*T562;
-typedef struct S72 T72;
-typedef struct S195 T195;
-typedef void*T131;
-typedef struct S145 T145;
-typedef struct S563 T563;
-typedef void*T326;
-typedef struct S144 T144;
-typedef void*T564;
-typedef struct S572 T572;
-typedef struct S580 T580;
-typedef void*T618;
-typedef void*T410;
-typedef void*T522;
-typedef struct S641 T641;
-typedef void*T472;
-typedef struct S438 T438;
-typedef void*T112;
-typedef void*T524;
-typedef struct S422 T422;
-typedef struct S459 T459;
-typedef void*T386;
-typedef struct S202 T202;
-typedef struct S457 T457;
+typedef struct S22 T22;
+typedef struct S490 T490;
+typedef struct S515 T515;
+typedef struct S404 T404;
+typedef void*T202;
+typedef void*T76;
+typedef struct S67 T67;
 typedef struct S243 T243;
-typedef struct S123 T123;
-typedef struct S531 T531;
-typedef struct S196 T196;
-typedef struct S205 T205;
-typedef void*T651;
-typedef struct S255 T255;
-typedef struct S336 T336;
-typedef struct S579 T579;
+typedef struct S604 T604;
+typedef struct S619 T619;
+typedef struct S587 T587;
+typedef struct S605 T605;
+typedef struct S537 T537;
+typedef struct S316 T316;
+typedef void*T420;
+typedef struct S88 T88;
+typedef void*T197;
+typedef struct S245 T245;
+typedef struct S80 T80;
+typedef struct S501 T501;
+typedef struct S595 T595;
+typedef struct S169 T169;
+typedef struct S624 T624;
+typedef struct S329 T329;
+typedef struct S372 T372;
+typedef struct S361 T361;
+typedef struct S305 T305;
+typedef struct S637 T637;
+typedef struct S539 T539;
+typedef struct S82 T82;
+typedef struct S231 T231;
+typedef void*T390;
+typedef struct S304 T304;
+typedef void*T597;
+typedef struct S138 T138;
+typedef struct S42 T42;
+typedef struct S564 T564;
+typedef struct S612 T612;
+typedef struct S210 T210;
+typedef struct S571 T571;
+typedef struct S416 T416;
+typedef struct S602 T602;
+typedef struct S39 T39;
+typedef struct S276 T276;
+typedef struct S320 T320;
+typedef struct S552 T552;
+typedef struct S274 T274;
+typedef struct S543 T543;
+typedef struct S578 T578;
+typedef struct S650 T650;
+typedef struct S110 T110;
+typedef void*T176;
+typedef struct S540 T540;
+typedef struct S180 T180;
+typedef void*T443;
+typedef struct S563 T563;
+typedef struct S403 T403;
+typedef struct S601 T601;
+typedef struct S7 T7;
+typedef struct S577 T577;
+typedef void*T215;
+typedef struct S340 T340;
+typedef void*T336;
+typedef struct S273 T273;
+typedef struct S551 T551;
+typedef struct S109 T109;
+typedef struct S45 T45;
+typedef struct S216 T216;
+typedef struct S408 T408;
+typedef struct S92 T92;
+typedef void*T566;
+typedef struct S399 T399;
+typedef void*T558;
+typedef struct S421 T421;
+typedef struct S81 T81;
+typedef struct S556 T556;
+typedef struct S315 T315;
+typedef struct S380 T380;
+typedef struct S487 T487;
+typedef struct S84 T84;
+typedef struct S12 T12;
+typedef struct S235 T235;
+typedef struct S527 T527;
+typedef struct S397 T397;
+typedef struct S550 T550;
+typedef struct S275 T275;
+typedef struct S603 T603;
+typedef void*T187;
+typedef struct S91 T91;
+typedef struct S179 T179;
+typedef struct S363 T363;
+typedef void*T294;
+typedef struct S491 T491;
+typedef struct S545 T545;
+typedef void*T598;
+typedef void*T370;
+typedef struct S573 T573;
+typedef struct S600 T600;
+typedef struct S189 T189;
+typedef struct S46 T46;
+typedef void*T640;
+typedef struct S572 T572;
+typedef void*T431;
+typedef struct S526 T526;
+typedef struct S207 T207;
+typedef struct S337 T337;
+typedef void*T295;
+typedef struct S533 T533;
+typedef void*T455;
+typedef void*T230;
+typedef void*T175;
+typedef struct S542 T542;
+typedef struct S476 T476;
+typedef struct S203 T203;
+typedef void*T137;
+typedef struct S151 T151;
+typedef struct S391 T391;
+typedef struct S557 T557;
+typedef struct S150 T150;
+typedef struct S568 T568;
+typedef struct S576 T576;
+typedef void*T615;
+typedef void*T415;
+typedef void*T134;
+typedef void*T117;
+typedef void*T524;
+typedef struct S427 T427;
+typedef struct S465 T465;
+typedef void*T489;
+typedef struct S208 T208;
+typedef struct S463 T463;
+typedef struct S248 T248;
+typedef struct S525 T525;
+typedef struct S204 T204;
+typedef struct S211 T211;
+typedef struct S129 T129;
+typedef void*T644;
+typedef struct S260 T260;
+typedef struct S341 T341;
+typedef struct S575 T575;
 
 /*C Header Pass 2 :*/
-typedef T0**T164;
-typedef T0**T474;
-typedef T0**T303;
-typedef T0**T516;
-typedef T0**T252;
-typedef T0**T314;
-typedef T0**T657;
-typedef T10*T643;
-typedef T0**T441;
-typedef T0**T176;
-typedef T0**T135;
-typedef T0**T274;
-typedef T0**T125;
-typedef T0**T406;
+typedef T0**T172;
+typedef T0**T480;
+typedef T0**T308;
+typedef T0**T518;
+typedef T0**T257;
+typedef T0**T319;
+typedef T0**T652;
+typedef T0**T446;
+typedef T0**T182;
+typedef T0**T141;
+typedef T0**T279;
+typedef T0**T132;
+typedef T0**T411;
 typedef T3*T9;
-typedef T0**T85;
-typedef T1*T639;
-typedef T0**T233;
-typedef T0**T389;
-typedef T0**T214;
-typedef T2*T77;
-typedef T0**T530;
-typedef T0**T73;
+typedef T0**T87;
+typedef T0**T238;
+typedef T0**T394;
+typedef T0**T219;
+typedef T2*T79;
+typedef T0**T522;
+typedef T0**T75;
 
 /*C Header Pass 3 :*/
 
 /*C Header Pass 4 :*/
-struct S578{Tid id;T0* _parameters;};
-extern T578 M578;
-struct S518{T73 _storage;T2 _capacity;T2 _upper;};
-extern T518 M518;
-struct S445{T0* _item;T0* _right;};
-extern T445 M445;
-struct S527{T530 _storage;T2 _capacity;T2 _upper;};
-extern T527 M527;
-struct S444{Tid id;T0* _equality_tester;T2 _count;T0* _first_cell;T0* _last_cell;T0* _internal_cursor;};
-extern T444 M444;
-struct S542{Tid id;T0* _parameters;};
-extern T542 M542;
-struct S172{T2 _count;T2 _capacity;T0* _storage;T0* _fixed_array_;T0* _internal_cursor;};
-extern T172 M172;
-struct S364{T2 _count;T2 _capacity;T0* _storage;T0* _fixed_array_;};
-extern T364 M364;
-struct S378{T0* _equality_tester;T2 _count;T2 _capacity;T0* _storage;T0* _fixed_array_;};
-extern T378 M378;
-struct S544{Tid id;T0* _parameters;};
-extern T544 M544;
-struct S241{T0* _equality_tester;T2 _count;T0* _first_cell;T0* _last_cell;T0* _internal_cursor;};
-extern T241 M241;
-struct S486{Tid id;T0* _name;T0* _string_name;T3 _last_character;T6 _end_of_file;T0* _character_buffer;T0* _path;T3 _old_last_character;T6 _old_end_of_file;T6 _push_back_flag;T8 _input_stream;T9 _buffer;T6 _end_reached;T2 _buffer_position;T2 _buffer_size;T2 _capacity;};
-extern T486 M486;
-struct S231{Tid id;T233 _storage;T2 _capacity;T2 _upper;};
-extern T231 M231;
-struct S338{Tid id;T0* _container;T6 _after;T6 _before;T0* _current_cell;T0* _next_cursor;};
-extern T338 M338;
-struct S565{Tid id;T0* _equality_tester;T0* _key_equality_tester;T2 _count;T2 _capacity;T2 _last_position;T2 _modulus;T2 _free_slot;T2 _position;T2 _slots_position;T2 _clashes_previous_position;T2 _found_position;T0* _internal_cursor;T0* _items;T0* _keys;T0* _clashes;T0* _slots;T0* _fixed_item_array_;T0* _fixed_key_array_;};
-extern T565 M565;
-struct S296{Tid id;T0* _container;T2 _position;T0* _next_cursor;};
-extern T296 M296;
-struct S541{Tid id;T0* _parameters;};
-extern T541 M541;
-struct S523{T77 _storage;T2 _capacity;T2 _upper;};
-extern T523 M523;
-struct S206{T2 _count;T2 _capacity;T0* _storage;T0* _fixed_array_;T0* _internal_cursor;};
-extern T206 M206;
-struct S160{Tid id;T0* _equality_tester;T2 _count;T2 _capacity;T0* _storage;T0* _fixed_array_;T0* _internal_cursor;};
-extern T160 M160;
-struct S468{T0* _container;T2 _position;T0* _next_cursor;};
-extern T468 M468;
-struct S212{T214 _storage;T2 _capacity;T2 _upper;};
-extern T212 M212;
-struct S635{T0* _container;};
-extern T635 M635;
-struct S645{Tid id;T0* _parameters;};
-extern T645 M645;
-struct S207{Tid id;T0* _equality_tester;T2 _count;T2 _capacity;T0* _storage;T0* _fixed_array_;T0* _internal_cursor;};
-extern T207 M207;
-extern T200 M200;
-struct S603{Tid id;T0* _text;};
-extern T603 M603;
-struct S76{Tid id;T77 _storage;T2 _capacity;T2 _upper;T2 _lower;};
-extern T76 M76;
-struct S346{T0* _item;T0* _right;};
-extern T346 M346;
-extern T165 M165;
-struct S345{T2 _count;T0* _first_cell;T0* _last_cell;T0* _internal_cursor;};
-extern T345 M345;
-extern T198 M198;
-extern T177 M177;
 struct S574{Tid id;T0* _parameters;};
 extern T574 M574;
-struct S282{T0* _container;};
-extern T282 M282;
-struct S547{T164 _storage;T2 _capacity;T2 _upper;T2 _lower;};
-extern T547 M547;
-struct S611{Tid id;T6 _push_back_flag;T3 _old_last_character;T6 _old_end_of_file;T9 _buffer;T6 _end_reached;T2 _buffer_position;T2 _buffer_size;T2 _capacity;T0* _name;T3 _last_character;T6 _end_of_file;T0* _character_buffer;};
-extern T611 M611;
+struct S73{T75 _storage;T2 _capacity;T2 _upper;};
+extern T73 M73;
+struct S450{T0* _item;T0* _right;};
+extern T450 M450;
+struct S519{T522 _storage;T2 _capacity;T2 _upper;};
+extern T519 M519;
+struct S449{Tid id;T0* _equality_tester;T2 _count;T0* _first_cell;T0* _last_cell;T0* _internal_cursor;};
+extern T449 M449;
+struct S536{Tid id;T0* _parameters;};
+extern T536 M536;
+struct S178{T2 _count;T2 _capacity;T0* _storage;T0* _special_routines;T0* _internal_cursor;};
+extern T178 M178;
+struct S369{T2 _count;T2 _capacity;T0* _storage;T0* _special_;};
+extern T369 M369;
+struct S383{T0* _equality_tester;T2 _count;T2 _capacity;T0* _storage;T0* _special_;};
+extern T383 M383;
+struct S538{Tid id;T0* _parameters;};
+extern T538 M538;
+struct S246{T0* _equality_tester;T2 _count;T0* _first_cell;T0* _last_cell;T0* _internal_cursor;};
+extern T246 M246;
+struct S492{Tid id;T0* _name;T0* _string_name;T3 _last_character;T6 _end_of_file;T0* _character_buffer;T0* _path;T3 _old_last_character;T6 _old_end_of_file;T6 _push_back_flag;T8 _input_stream;T9 _buffer;T6 _end_reached;T2 _buffer_position;T2 _buffer_size;T2 _capacity;};
+extern T492 M492;
+struct S343{Tid id;T0* _container;T6 _after;T6 _before;T0* _current_cell;T0* _next_cursor;};
+extern T343 M343;
+struct S559{Tid id;T0* _equality_tester;T2 _count;T2 _capacity;T2 _last_position;T2 _modulus;T2 _free_slot;T2 _position;T2 _slots_position;T2 _clashes_previous_position;T2 _found_position;T0* _internal_cursor;T0* _key_equality_tester;T0* _items;T0* _keys;T0* _clashes;T0* _slots;T0* _special_item_routines;T0* _special_key_routines;};
+extern T559 M559;
+struct S301{Tid id;T0* _container;T2 _position;T0* _next_cursor;};
+extern T301 M301;
+struct S535{Tid id;T0* _parameters;};
+extern T535 M535;
+struct S113{T79 _storage;T2 _capacity;T2 _upper;};
+extern T113 M113;
+struct S212{T2 _count;T2 _capacity;T0* _storage;T0* _special_routines;T0* _internal_cursor;};
+extern T212 M212;
+struct S168{Tid id;T0* _equality_tester;T2 _count;T2 _capacity;T0* _storage;T0* _special_routines;T0* _internal_cursor;};
+extern T168 M168;
+struct S474{T0* _container;T2 _position;T0* _next_cursor;};
+extern T474 M474;
+struct S634{T0* _container;};
+extern T634 M634;
+struct S638{Tid id;T0* _parameters;};
+extern T638 M638;
+struct S213{Tid id;T0* _equality_tester;T2 _count;T2 _capacity;T0* _storage;T0* _special_routines;T0* _internal_cursor;};
+extern T213 M213;
+extern T206 M206;
+struct S599{Tid id;T0* _text;};
+extern T599 M599;
+struct S78{T79 _storage;T2 _capacity;T2 _upper;T2 _lower;};
+extern T78 M78;
+struct S351{T0* _item;T0* _right;};
+extern T351 M351;
+struct S442{T446 _storage;T2 _capacity;T2 _upper;};
+extern T442 M442;
+extern T173 M173;
+struct S350{T2 _count;T0* _first_cell;T0* _last_cell;T0* _internal_cursor;};
+extern T350 M350;
+extern T648 M648;
+extern T183 M183;
+struct S570{Tid id;T0* _parameters;};
+extern T570 M570;
+struct S287{T0* _container;};
+extern T287 M287;
+struct S541{T172 _storage;T2 _capacity;T2 _upper;T2 _lower;};
+extern T541 M541;
+struct S607{Tid id;T6 _push_back_flag;T3 _old_last_character;T6 _old_end_of_file;T9 _buffer;T6 _end_reached;T2 _buffer_position;T2 _buffer_size;T2 _capacity;T0* _name;T3 _last_character;T6 _end_of_file;T0* _character_buffer;};
+extern T607 M607;
 struct S65{Tid id;T6 _is_used;T0* _name;T2 _id;};
 extern T65 M65;
-struct S179{T0* _error_file;T0* _warning_file;T0* _info_file;};
-extern T179 M179;
-struct S424{T0* _item;T0* _right;};
-extern T424 M424;
-struct S610{T2 _count;T9 _area;T0* _area_string;};
-extern T610 M610;
-struct S239{T252 _storage;T2 _capacity;T2 _upper;T2 _lower;};
-extern T239 M239;
-struct S429{T0* _equality_tester;T2 _count;T2 _capacity;T0* _storage;T0* _fixed_array_;};
+struct S185{T0* _error_file;T0* _warning_file;T0* _info_file;};
+extern T185 M185;
+struct S429{T0* _item;T0* _right;};
 extern T429 M429;
-extern T190 M190;
-struct S404{T406 _storage;T2 _capacity;T2 _upper;};
-extern T404 M404;
-struct S309{Tid id;T0* _parameters;};
-extern T309 M309;
-struct S87{Tid id;T0* _equality_tester;T2 _count;T2 _capacity;T0* _storage;T0* _fixed_array_;T0* _internal_cursor;};
-extern T87 M87;
-struct S21{Tid id;T0* _name;T0* _string_name;T0* _path;T9 _buffer;T2 _buffer_position;T2 _capacity;T8 _output_stream;};
-extern T21 M21;
-struct S484{Tid id;T0* _container;T2 _position;T0* _next_cursor;};
-extern T484 M484;
-struct S513{T516 _storage;T2 _capacity;T2 _upper;};
-extern T513 M513;
-struct S399{T0* _equality_tester;T0* _key_equality_tester;T2 _count;T2 _capacity;T2 _last_position;T2 _modulus;T2 _free_slot;T2 _position;T2 _slots_position;T2 _clashes_previous_position;T2 _found_position;T0* _internal_cursor;T0* _items;T0* _keys;T0* _clashes;T0* _slots;T0* _fixed_item_array_;T0* _fixed_key_array_;};
-extern T399 M399;
-extern T194 M194;
-extern T74 M74;
-struct S162{T164 _storage;T2 _capacity;T2 _upper;};
-extern T162 M162;
-struct S608{Tid id;T0* _parameters;};
-extern T608 M608;
-struct S621{Tid id;T2 _position;T0* _container;};
-extern T621 M621;
-struct S591{T0* _container;};
-extern T591 M591;
-struct S609{Tid id;T0* _parameters;};
-extern T609 M609;
-struct S543{Tid id;T0* _parameters;};
-extern T543 M543;
-struct S301{T303 _storage;T2 _capacity;T2 _upper;};
-extern T301 M301;
-struct S86{T2 _id;T0* _lhs;T0* _rhs;T0* _error_actions;T0* _action;T2 _precedence;T2 _line_nb;T6 _is_useful;T2 _associativity;};
-extern T86 M86;
-extern T189 M189;
-struct S240{T0* _container;T6 _after;T6 _before;T0* _current_cell;T0* _next_cursor;};
-extern T240 M240;
-struct S495{T2 _error_count;T0* _yytranslate;T0* _yyr1;T0* _yydefact;T0* _yydefgoto;T0* _yypact;T0* _yypgoto;T0* _yytable;T0* _yycheck;T0* _yytypes1;T0* _yytypes2;T0* _yyss;T2 _yyssp;T6 _yy_lookahead_needed;T2 _yyerrstatus;T2 _yy_parsing_status;T2 _column;T2 _position;T2 _yy_start_state;T0* _yy_content;T0* _yy_content_area;T2 _yy_start;T2 _yy_column;T2 _yy_more_len;T2 _yy_last_accepting_state;T2 _yy_last_accepting_cpos;T0* _yy_nxt;T0* _yy_chk;T0* _yy_def;T0* _yy_ec;T0* _yy_accept;T0* _yy_acclist;T2 _yy_state_count;T2 _yy_looking_for_trail_begin;T0* _last_string_value;T2 _last_integer_value;T0* _yy_base;T6 _yy_rejected;T2 _yy_full_state;T0* _last_any_value;T2 _last_token;T0* _input_buffer;T2 _line;T2 _yy_end;T2 _yy_line;T2 _yy_position;T6 _yy_more_flag;T0* _yy_meta;T0* _yy_state_stack;T2 _yy_full_match;T2 _yy_lp;T2 _yy_full_lp;T6 _successful;T6 _old_typing;T0* _error_handler;T2 _line_nb;T0* _action_buffer;T2 _nb_open_brackets;T2 _last_error;T0* _rule;T0* _last_grammar;T0* _action_factory;T2 _precedence;T0* _precedence_token;T0* _type;T0* _start_symbol;T0* _terminal_symbols;T0* _nonterminal_symbols;T0* _types;T0* _yyvs1;T2 _yyvsc1;T2 _yyvsp1;T0* _yyspecial_routines1;T0* _yyvs2;T2 _yyvsc2;T2 _yyvsp2;T0* _yyspecial_routines2;T0* _yyvs3;T2 _yyvsc3;T2 _yyvsp3;T0* _yyspecial_routines3;T0* _yyvs4;T2 _yyvsc4;T2 _yyvsp4;T0* _yyspecial_routines4;T0* _yyvs5;T2 _yyvsc5;T2 _yyvsp5;T0* _yyspecial_routines5;T0* _yyvs6;T2 _yyvsc6;T2 _yyvsp6;T0* _yyspecial_routines6;};
-extern T495 M495;
-struct S599{T0* _container;};
-extern T599 M599;
-struct S521{T164 _storage;T2 _capacity;T2 _upper;};
-extern T521 M521;
-struct S625{Tid id;T2 _position;T0* _container;T0* _next_cursor;};
-extern T625 M625;
-struct S324{T0* _container;};
-extern T324 M324;
-struct S367{Tid id;T2 _count;T0* _first_cell;T0* _last_cell;T0* _internal_cursor;};
-extern T367 M367;
-struct S356{T0* _container;T2 _position;T0* _next_cursor;};
-extern T356 M356;
-struct S644{Tid id;T0* _parameters;};
-extern T644 M644;
-struct S545{Tid id;T0* _parameters;};
-extern T545 M545;
-struct S80{T2 _count;T2 _capacity;T0* _storage;T0* _fixed_array_;T0* _internal_cursor;};
-extern T80 M80;
-struct S226{T0* _comparator;};
-extern T226 M226;
-struct S299{T0* _equality_tester;T2 _count;T2 _capacity;T0* _storage;T0* _fixed_array_;T0* _internal_cursor;};
-extern T299 M299;
-struct S272{T274 _storage;T2 _capacity;T2 _upper;};
-extern T272 M272;
-struct S41{T0* _yytranslate;T0* _yyr1;T0* _yydefact;T0* _yydefgoto;T0* _yypact;T0* _yypgoto;T0* _yytable;T0* _yycheck;T0* _yytypes1;T0* _yytypes2;T2 _yyfinal;T2 _yyflag;T2 _yyntbase;T2 _yylast;T2 _yymax_token;T2 _yynsyms;T6 _old_typing;T0* _machine;T0* _input_filename;T2 _array_size;};
-extern T41 M41;
-struct S569{Tid id;T6 _is_used;T0* _name;T2 _id;};
-extern T569 M569;
-struct S615{Tid id;T2 _position;T0* _container;};
-extern T615 M615;
-struct S204{T6 _is_state;T2 _id;T0* _froms;T0* _tos;T2 _count;T2 _width;T2 _position;};
-extern T204 M204;
-struct S575{Tid id;T0* _parameters;};
-extern T575 M575;
-struct S411{T0* _comparator;};
-extern T411 M411;
-struct S606{Tid id;T0* _parameters;};
+struct S606{T2 _count;T9 _area;T0* _area_string;};
 extern T606 M606;
-struct S38{Tid id;T0* _parameters;};
-extern T38 M38;
-struct S133{Tid id;T135 _storage;T2 _capacity;T2 _upper;};
-extern T133 M133;
-struct S315{T11 _item;};
-extern T315 M315;
-struct S558{Tid id;T0* _equality_tester;T0* _key_equality_tester;T2 _count;T2 _capacity;T2 _last_position;T2 _modulus;T2 _free_slot;T2 _position;T2 _slots_position;T2 _clashes_previous_position;T2 _found_position;T0* _internal_cursor;T0* _items;T0* _keys;T0* _clashes;T0* _slots;T0* _fixed_item_array_;T0* _fixed_key_array_;};
-extern T558 M558;
-struct S269{T0* _rule;T0* _lookaheads;T0* _transitions;};
-extern T269 M269;
-struct S549{Tid id;T0* _parameters;};
-extern T549 M549;
-struct S582{Tid id;T0* _parameters;};
-extern T582 M582;
-struct S655{T657 _storage;T2 _capacity;T2 _upper;T2 _lower;};
-extern T655 M655;
-struct S106{Tid id;T0* _equality_tester;T0* _key_equality_tester;T2 _count;T2 _capacity;T2 _last_position;T2 _modulus;T2 _free_slot;T2 _position;T2 _slots_position;T2 _clashes_previous_position;T2 _found_position;T0* _internal_cursor;T0* _items;T0* _keys;T0* _clashes;T0* _slots;T0* _fixed_item_array_;T0* _fixed_key_array_;};
-extern T106 M106;
-extern T170 M170;
-struct S546{Tid id;T0* _parameters;};
-extern T546 M546;
-struct S174{T176 _storage;T2 _capacity;T2 _upper;};
-extern T174 M174;
-struct S637{Tid id;T639 _storage;T2 _capacity;T2 _upper;T2 _lower;};
-extern T637 M637;
-struct S568{Tid id;T0* _parameters;};
-extern T568 M568;
-struct S398{T85 _storage;T2 _capacity;T2 _upper;T2 _lower;};
-extern T398 M398;
-struct S605{Tid id;T0* _parameters;};
-extern T605 M605;
-struct S238{T2 _index;T0* _target;T0* _source;T0* _following_tokens;T0* _included_tokens;};
-extern T238 M238;
-struct S581{Tid id;T0* _parameters;};
-extern T581 M581;
-struct S335{Tid id;T0* _equality_tester;T2 _count;T0* _first_cell;T0* _last_cell;T0* _internal_cursor;};
-extern T335 M335;
-struct S268{T0* _item;T0* _right;};
-extern T268 M268;
-struct S557{T0* _first;T2 _second;};
-extern T557 M557;
-struct S159{Tid id;T6 _is_useful;T0* _name;T0* _type;T2 _id;T6 _is_declared;T2 _token_id;T2 _precedence;T0* _literal_string;T2 _associativity;};
-extern T159 M159;
-struct S105{Tid id;T2 _position;T0* _container;T0* _next_cursor;};
-extern T105 M105;
-struct S44{T0* _states;T0* _grammar;T0* _cached_states;};
-extern T44 M44;
-struct S90{Tid id;T2 _index;T6 _is_useful;T0* _name;T0* _type;T2 _id;T6 _is_nullable;T0* _rules;T0* _firsts;T0* _derives;T0* _transitions;};
-extern T90 M90;
-struct S394{Tid id;T0* _container;T2 _position;T0* _next_cursor;};
-extern T394 M394;
-struct S83{T85 _storage;T2 _capacity;T2 _upper;};
-extern T83 M83;
-struct S416{Tid id;T0* _container;T6 _after;T6 _before;T0* _current_cell;T0* _next_cursor;};
-extern T416 M416;
-struct S79{Tid id;T2 _id;T0* _accessing_symbol;T0* _positions;T0* _shifts;T0* _reductions;T0* _errors;T0* _error_action;T2 _hash_code;T6 _lookahead_needed;T6 _has_conflict;};
-extern T79 M79;
-struct S561{Tid id;T0* _parameters;};
-extern T561 M561;
-struct S310{T2 _count;T2 _capacity;T0* _storage;T0* _fixed_array_;T0* _internal_cursor;};
-extern T310 M310;
-struct S375{Tid id;T0* _container;T6 _after;T6 _before;T0* _current_cell;T0* _next_cursor;};
-extern T375 M375;
-struct S7{Tid id;T9 _storage;T2 _count;T2 _capacity;};
-extern T7 M7;
-struct S481{Tid id;T0* _container;T2 _position;T0* _next_cursor;};
-extern T481 M481;
-struct S471{T474 _storage;T2 _capacity;T2 _upper;};
-extern T471 M471;
-struct S312{T314 _storage;T2 _capacity;T2 _upper;};
-extern T312 M312;
-struct S12{T0* _input_filename;T0* _output_filename;T0* _token_classname;T0* _token_filename;T0* _verbose_filename;T6 _actions_separated;T6 _old_typing;T0* _grammar;T0* _error_handler;};
-extern T12 M12;
-struct S533{Tid id;T0* _content;T2 _count;T2 _capacity;T2 _position;T2 _column;T2 _line;T2 _index;T6 _beginning_of_line;T6 _filled;};
-extern T533 M533;
-struct S392{T0* _item;T0* _right;};
-extern T392 M392;
-struct S556{Tid id;T0* _parameters;};
-extern T556 M556;
-struct S270{Tid id;T2 _count;T2 _capacity;T0* _storage;T0* _fixed_array_;T0* _internal_cursor;};
-extern T270 M270;
-struct S607{Tid id;T0* _parameters;};
-extern T607 M607;
-extern T167 M167;
-struct S89{T0* _equality_tester;T2 _count;T2 _capacity;T0* _storage;T0* _fixed_array_;T0* _internal_cursor;};
+struct S244{T257 _storage;T2 _capacity;T2 _upper;T2 _lower;};
+extern T244 M244;
+struct S434{T0* _equality_tester;T2 _count;T2 _capacity;T0* _storage;T0* _special_;};
+extern T434 M434;
+extern T198 M198;
+struct S314{Tid id;T0* _parameters;};
+extern T314 M314;
+struct S89{Tid id;T0* _equality_tester;T2 _count;T2 _capacity;T0* _storage;T0* _special_routines;T0* _internal_cursor;};
 extern T89 M89;
-struct S525{T176 _storage;T2 _capacity;T2 _upper;};
-extern T525 M525;
-struct S358{T0* _container;T6 _after;T6 _before;T0* _current_cell;T0* _next_cursor;};
-extern T358 M358;
-struct S485{Tid id;T0* _parameters;};
-extern T485 M485;
-struct S551{Tid id;T0* _equality_tester;T0* _key_equality_tester;T2 _count;T2 _capacity;T2 _last_position;T2 _modulus;T2 _free_slot;T2 _position;T2 _slots_position;T2 _clashes_previous_position;T2 _found_position;T0* _internal_cursor;T0* _items;T0* _keys;T0* _clashes;T0* _slots;T0* _fixed_item_array_;T0* _fixed_key_array_;};
-extern T551 M551;
-extern T602 M602;
-struct S577{Tid id;T0* _parameters;};
-extern T577 M577;
+struct S22{Tid id;T0* _name;T0* _string_name;T0* _path;T9 _buffer;T2 _buffer_position;T2 _capacity;T8 _output_stream;};
+extern T22 M22;
+struct S490{Tid id;T0* _container;T2 _position;T0* _next_cursor;};
+extern T490 M490;
+struct S515{T518 _storage;T2 _capacity;T2 _upper;};
+extern T515 M515;
+struct S404{T0* _equality_tester;T2 _count;T2 _capacity;T2 _last_position;T2 _modulus;T2 _free_slot;T2 _position;T2 _slots_position;T2 _clashes_previous_position;T2 _found_position;T0* _internal_cursor;T0* _key_equality_tester;T0* _items;T0* _keys;T0* _clashes;T0* _slots;T0* _special_item_routines;T0* _special_key_routines;};
+extern T404 M404;
+extern T202 M202;
+extern T76 M76;
 struct S604{Tid id;T0* _parameters;};
 extern T604 M604;
-struct S385{T389 _storage;T2 _capacity;T2 _upper;};
-extern T385 M385;
-struct S109{Tid id;T77 _storage;T2 _capacity;T2 _upper;};
+struct S619{Tid id;T2 _position;T0* _container;};
+extern T619 M619;
+struct S587{T0* _container;};
+extern T587 M587;
+struct S605{Tid id;T0* _parameters;};
+extern T605 M605;
+struct S537{Tid id;T0* _parameters;};
+extern T537 M537;
+struct S316{T319 _storage;T2 _capacity;T2 _upper;};
+extern T316 M316;
+struct S88{T2 _id;T0* _lhs;T0* _rhs;T0* _error_actions;T0* _action;T2 _precedence;T2 _line_nb;T6 _is_useful;T2 _associativity;};
+extern T88 M88;
+extern T197 M197;
+struct S245{T0* _container;T6 _after;T6 _before;T0* _current_cell;T0* _next_cursor;};
+extern T245 M245;
+struct S501{T2 _yy_start_state;T2 _yy_column;T6 _yy_lookahead_needed;T0* _yy_nxt;T0* _yy_chk;T0* _yy_def;T0* _yy_ec;T0* _yy_acclist;T2 _yy_state_count;T2 _yy_looking_for_trail_begin;T0* _error_handler;T0* _rule;T0* _yytable;T0* _yycheck;T2 _yyerrstatus;T0* _yy_accept;T6 _old_typing;T0* _yytypes1;T0* _yytypes2;T2 _column;T0* _yy_content;T2 _yy_last_accepting_state;T2 _yy_last_accepting_cpos;T2 _last_integer_value;T2 _nb_open_brackets;T2 _last_error;T0* _yydefgoto;T0* _yy_content_area;T2 _yy_start;T0* _last_string_value;T2 _line_nb;T0* _yydefact;T2 _yy_more_len;T6 _yy_rejected;T0* _action_buffer;T2 _yyssp;T6 _successful;T0* _yyss;T2 _position;T0* _yyr1;T0* _yypact;T0* _yypgoto;T0* _input_buffer;T2 _yy_end;T2 _yy_position;T2 _error_count;T2 _last_token;T2 _line;T0* _yytranslate;T2 _yy_line;T6 _yy_more_flag;T2 _yy_parsing_status;T0* _yy_base;T2 _yy_full_state;T0* _last_any_value;T0* _yy_meta;T0* _yy_state_stack;T2 _yy_full_match;T2 _yy_lp;T2 _yy_full_lp;T0* _last_grammar;T0* _action_factory;T2 _precedence;T0* _precedence_token;T0* _type;T0* _start_symbol;T0* _terminal_symbols;T0* _nonterminal_symbols;T0* _types;T0* _yyvs1;T2 _yyvsc1;T2 _yyvsp1;T0* _yyspecial_routines1;T0* _yyvs2;T2 _yyvsc2;T2 _yyvsp2;T0* _yyspecial_routines2;T0* _yyvs3;T2 _yyvsc3;T2 _yyvsp3;T0* _yyspecial_routines3;T0* _yyvs4;T2 _yyvsc4;T2 _yyvsp4;T0* _yyspecial_routines4;T0* _yyvs5;T2 _yyvsc5;T2 _yyvsp5;T0* _yyspecial_routines5;T0* _yyvs6;T2 _yyvsc6;T2 _yyvsp6;T0* _yyspecial_routines6;};
+extern T501 M501;
+struct S595{T0* _container;};
+extern T595 M595;
+struct S169{T172 _storage;T2 _capacity;T2 _upper;};
+extern T169 M169;
+struct S624{Tid id;T2 _position;T0* _container;T0* _next_cursor;};
+extern T624 M624;
+struct S329{T0* _container;};
+extern T329 M329;
+struct S372{Tid id;T2 _count;T0* _first_cell;T0* _last_cell;T0* _internal_cursor;};
+extern T372 M372;
+struct S361{T0* _container;T2 _position;T0* _next_cursor;};
+extern T361 M361;
+struct S305{T308 _storage;T2 _capacity;T2 _upper;};
+extern T305 M305;
+struct S637{Tid id;T0* _parameters;};
+extern T637 M637;
+struct S539{Tid id;T0* _parameters;};
+extern T539 M539;
+struct S82{T2 _count;T2 _capacity;T0* _storage;T0* _special_routines;T0* _internal_cursor;};
+extern T82 M82;
+struct S231{T0* _comparator;};
+extern T231 M231;
+struct S304{T0* _equality_tester;T2 _count;T2 _capacity;T0* _storage;T0* _special_routines;T0* _internal_cursor;};
+extern T304 M304;
+struct S138{Tid id;T141 _storage;T2 _capacity;T2 _upper;};
+extern T138 M138;
+struct S42{T0* _yytranslate;T0* _yyr1;T0* _yydefact;T0* _yydefgoto;T0* _yypact;T0* _yypgoto;T0* _yytable;T0* _yycheck;T0* _yytypes1;T0* _yytypes2;T2 _yyfinal;T2 _yyflag;T2 _yyntbase;T2 _yylast;T2 _yymax_token;T2 _yynsyms;T6 _old_typing;T6 _line_pragma;T0* _machine;T0* _input_filename;T2 _array_size;};
+extern T42 M42;
+struct S564{Tid id;T6 _is_used;T0* _name;T2 _id;};
+extern T564 M564;
+struct S612{Tid id;T2 _position;T0* _container;};
+extern T612 M612;
+struct S210{T6 _is_state;T2 _id;T0* _froms;T0* _tos;T2 _count;T2 _width;T2 _position;};
+extern T210 M210;
+struct S571{Tid id;T0* _parameters;};
+extern T571 M571;
+struct S416{T0* _comparator;};
+extern T416 M416;
+struct S602{Tid id;T0* _parameters;};
+extern T602 M602;
+struct S39{Tid id;T0* _parameters;};
+extern T39 M39;
+struct S276{T279 _storage;T2 _capacity;T2 _upper;};
+extern T276 M276;
+struct S320{T11 _item;};
+extern T320 M320;
+struct S552{Tid id;T0* _equality_tester;T2 _count;T2 _capacity;T2 _last_position;T2 _modulus;T2 _free_slot;T2 _position;T2 _slots_position;T2 _clashes_previous_position;T2 _found_position;T0* _internal_cursor;T0* _key_equality_tester;T0* _items;T0* _keys;T0* _clashes;T0* _slots;T0* _special_item_routines;T0* _special_key_routines;};
+extern T552 M552;
+struct S274{T0* _rule;T0* _lookaheads;T0* _transitions;};
+extern T274 M274;
+struct S543{Tid id;T0* _parameters;};
+extern T543 M543;
+struct S578{Tid id;T0* _parameters;};
+extern T578 M578;
+struct S650{T652 _storage;T2 _capacity;T2 _upper;T2 _lower;};
+extern T650 M650;
+struct S110{Tid id;T0* _equality_tester;T2 _count;T2 _capacity;T2 _last_position;T2 _modulus;T2 _free_slot;T2 _position;T2 _slots_position;T2 _clashes_previous_position;T2 _found_position;T0* _internal_cursor;T0* _key_equality_tester;T0* _items;T0* _keys;T0* _clashes;T0* _slots;T0* _special_item_routines;T0* _special_key_routines;};
+extern T110 M110;
+extern T176 M176;
+struct S540{Tid id;T0* _parameters;};
+extern T540 M540;
+struct S180{T182 _storage;T2 _capacity;T2 _upper;};
+extern T180 M180;
+struct S563{Tid id;T0* _parameters;};
+extern T563 M563;
+struct S403{T87 _storage;T2 _capacity;T2 _upper;T2 _lower;};
+extern T403 M403;
+struct S601{Tid id;T0* _parameters;};
+extern T601 M601;
+struct S243{T2 _index;T0* _target;T0* _source;T0* _following_tokens;T0* _included_tokens;};
+extern T243 M243;
+struct S577{Tid id;T0* _parameters;};
+extern T577 M577;
+struct S340{Tid id;T0* _equality_tester;T2 _count;T0* _first_cell;T0* _last_cell;T0* _internal_cursor;};
+extern T340 M340;
+struct S273{T0* _item;T0* _right;};
+extern T273 M273;
+struct S551{T0* _first;T2 _second;};
+extern T551 M551;
+struct S167{Tid id;T6 _is_useful;T0* _name;T0* _type;T2 _id;T6 _is_declared;T2 _token_id;T2 _precedence;T0* _literal_string;T2 _associativity;};
+extern T167 M167;
+struct S109{Tid id;T2 _position;T0* _container;T0* _next_cursor;};
 extern T109 M109;
-struct S181{Tid id;T9 _storage;T2 _count;T2 _capacity;T2 _byte_count;T2 _last_byte_index_input;T2 _last_byte_index_result;};
-extern T181 M181;
-struct S45{T0* _tokens;T0* _variables;T0* _types;T0* _rules;T0* _start_symbol;T2 _expected_conflicts;T0* _eiffel_code;T0* _eiffel_header;};
+struct S45{T0* _states;T0* _grammar;T0* _cached_states;};
 extern T45 M45;
+struct S216{T219 _storage;T2 _capacity;T2 _upper;};
+extern T216 M216;
+struct S408{T411 _storage;T2 _capacity;T2 _upper;};
+extern T408 M408;
+struct S92{Tid id;T6 _is_useful;T2 _index;T0* _name;T0* _type;T2 _id;T6 _is_nullable;T0* _rules;T0* _firsts;T0* _derives;T0* _transitions;};
+extern T92 M92;
+struct S399{Tid id;T0* _container;T2 _position;T0* _next_cursor;};
+extern T399 M399;
+struct S421{Tid id;T0* _container;T6 _after;T6 _before;T0* _current_cell;T0* _next_cursor;};
+extern T421 M421;
+struct S81{Tid id;T2 _id;T0* _accessing_symbol;T0* _positions;T0* _shifts;T0* _reductions;T0* _errors;T0* _error_action;T2 _hash_code;T6 _lookahead_needed;T6 _has_conflict;};
+extern T81 M81;
+struct S556{Tid id;T0* _parameters;};
+extern T556 M556;
+struct S315{T2 _count;T2 _capacity;T0* _storage;T0* _special_routines;T0* _internal_cursor;};
+extern T315 M315;
+struct S380{Tid id;T0* _container;T6 _after;T6 _before;T0* _current_cell;T0* _next_cursor;};
+extern T380 M380;
+struct S7{Tid id;T9 _storage;T2 _count;T2 _capacity;};
+extern T7 M7;
+struct S487{Tid id;T0* _container;T2 _position;T0* _next_cursor;};
+extern T487 M487;
+struct S84{T87 _storage;T2 _capacity;T2 _upper;};
+extern T84 M84;
+struct S12{T0* _input_filename;T0* _output_filename;T0* _token_classname;T0* _token_filename;T0* _verbose_filename;T6 _actions_separated;T6 _old_typing;T6 _line_pragma;T0* _grammar;T0* _error_handler;};
+extern T12 M12;
+struct S235{Tid id;T238 _storage;T2 _capacity;T2 _upper;};
+extern T235 M235;
+struct S527{Tid id;T0* _content;T2 _count;T2 _capacity;T2 _position;T2 _column;T2 _line;T2 _index;T6 _beginning_of_line;T6 _filled;};
+extern T527 M527;
+struct S397{T0* _item;T0* _right;};
+extern T397 M397;
+struct S550{Tid id;T0* _parameters;};
+extern T550 M550;
+struct S275{Tid id;T2 _count;T2 _capacity;T0* _storage;T0* _special_routines;T0* _internal_cursor;};
+extern T275 M275;
+struct S603{Tid id;T0* _parameters;};
+extern T603 M603;
+extern T187 M187;
+struct S91{T0* _equality_tester;T2 _count;T2 _capacity;T0* _storage;T0* _special_routines;T0* _internal_cursor;};
+extern T91 M91;
+struct S179{T182 _storage;T2 _capacity;T2 _upper;};
+extern T179 M179;
+struct S363{T0* _container;T6 _after;T6 _before;T0* _current_cell;T0* _next_cursor;};
+extern T363 M363;
+struct S491{Tid id;T0* _parameters;};
+extern T491 M491;
+struct S545{Tid id;T0* _equality_tester;T2 _count;T2 _capacity;T2 _last_position;T2 _modulus;T2 _free_slot;T2 _position;T2 _slots_position;T2 _clashes_previous_position;T2 _found_position;T0* _internal_cursor;T0* _key_equality_tester;T0* _items;T0* _keys;T0* _clashes;T0* _slots;T0* _special_item_routines;T0* _special_key_routines;};
+extern T545 M545;
+extern T598 M598;
+struct S573{Tid id;T0* _parameters;};
+extern T573 M573;
+struct S600{Tid id;T0* _parameters;};
+extern T600 M600;
+struct S189{Tid id;T9 _storage;T2 _count;T2 _capacity;T2 _byte_count;T2 _last_byte_index_input;T2 _last_byte_index_result;};
+extern T189 M189;
+struct S46{T0* _tokens;T0* _variables;T0* _types;T0* _rules;T0* _start_symbol;T2 _expected_conflicts;T0* _eiffel_code;T0* _eiffel_header;};
+extern T46 M46;
+struct S572{Tid id;T0* _parameters;};
+extern T572 M572;
+struct S526{Tid id;T0* _content;T2 _count;T2 _capacity;T2 _position;T2 _column;T2 _line;T2 _index;T6 _beginning_of_line;T6 _filled;T6 _interactive;T0* _file;T6 _end_of_file;};
+extern T526 M526;
+struct S207{Tid id;T2 _buffer_position;T9 _buffer;T2 _capacity;T0* _name;};
+extern T207 M207;
+struct S337{T0* _state;T0* _rule;T0* _token;T0* _resolution;};
+extern T337 M337;
+struct S533{Tid id;T0* _name;};
+extern T533 M533;
+extern T175 M175;
+struct S542{Tid id;T0* _parameters;};
+extern T542 M542;
+struct S476{T480 _storage;T2 _capacity;T2 _upper;};
+extern T476 M476;
+struct S203{T182 _storage;T2 _capacity;T2 _upper;T2 _lower;};
+extern T203 M203;
+struct S151{Tid id;T0* _equality_tester;T2 _count;T2 _capacity;T2 _last_position;T2 _modulus;T2 _free_slot;T2 _position;T2 _slots_position;T2 _clashes_previous_position;T2 _found_position;T0* _internal_cursor;T0* _items;T0* _clashes;T0* _slots;T0* _special_item_routines;};
+extern T151 M151;
+struct S391{T394 _storage;T2 _capacity;T2 _upper;};
+extern T391 M391;
+struct S557{Tid id;T0* _container;T6 _after;T6 _before;T0* _current_cell;T0* _next_cursor;};
+extern T557 M557;
+struct S150{Tid id;T2 _position;T0* _container;T0* _next_cursor;};
+extern T150 M150;
+struct S80{Tid id;T0* _action;T2 _line_nb;};
+extern T80 M80;
+struct S67{Tid id;T0* _equality_tester;T2 _count;T2 _capacity;T0* _storage;T0* _special_routines;T0* _internal_cursor;};
+extern T67 M67;
+struct S568{Tid id;T0* _container;};
+extern T568 M568;
 struct S576{Tid id;T0* _parameters;};
 extern T576 M576;
-struct S532{Tid id;T0* _content;T2 _count;T2 _capacity;T2 _position;T2 _column;T2 _line;T2 _index;T6 _beginning_of_line;T6 _filled;T6 _interactive;T0* _file;T6 _end_of_file;};
-extern T532 M532;
-struct S201{Tid id;T2 _buffer_position;T9 _buffer;T2 _capacity;T0* _name;};
-extern T201 M201;
-struct S332{T0* _state;T0* _rule;T0* _token;T0* _resolution;};
-extern T332 M332;
-struct S539{Tid id;T0* _name;};
-extern T539 M539;
-extern T169 M169;
-struct S548{Tid id;T0* _parameters;};
-extern T548 M548;
-struct S72{T73 _storage;T2 _capacity;T2 _upper;};
-extern T72 M72;
-struct S195{T176 _storage;T2 _capacity;T2 _upper;T2 _lower;};
-extern T195 M195;
-struct S145{Tid id;T0* _equality_tester;T2 _count;T2 _capacity;T2 _last_position;T2 _modulus;T2 _free_slot;T2 _position;T2 _slots_position;T2 _clashes_previous_position;T2 _found_position;T0* _internal_cursor;T0* _items;T0* _clashes;T0* _slots;T0* _fixed_item_array_;};
-extern T145 M145;
-struct S563{Tid id;T0* _container;T6 _after;T6 _before;T0* _current_cell;T0* _next_cursor;};
-extern T563 M563;
-struct S144{Tid id;T2 _position;T0* _container;T0* _next_cursor;};
-extern T144 M144;
-struct S78{Tid id;T0* _action;T2 _line_nb;};
-extern T78 M78;
-struct S67{Tid id;T0* _equality_tester;T2 _count;T2 _capacity;T0* _storage;T0* _fixed_array_;T0* _internal_cursor;};
-extern T67 M67;
-struct S572{Tid id;T0* _container;};
-extern T572 M572;
-struct S580{Tid id;T0* _parameters;};
-extern T580 M580;
-struct S641{Tid id;T643 _storage;T2 _capacity;T2 _upper;T2 _lower;};
-extern T641 M641;
-struct S438{T441 _storage;T2 _capacity;T2 _upper;};
-extern T438 M438;
-struct S298{T0* _rule;T2 _index;};
-extern T298 M298;
-struct S422{Tid id;T0* _equality_tester;T2 _count;T0* _first_cell;T0* _last_cell;T0* _internal_cursor;};
-extern T422 M422;
-struct S459{T2 _count;T2 _capacity;T0* _storage;T0* _fixed_array_;T0* _internal_cursor;};
-extern T459 M459;
-struct S202{T2 _buffer_position;T9 _buffer;T2 _capacity;};
-extern T202 M202;
-struct S457{T2 _position;T0* _container;};
-extern T457 M457;
-struct S243{T0* _comparator;};
-extern T243 M243;
-struct S123{T125 _storage;T2 _capacity;T2 _upper;};
-extern T123 M123;
-struct S531{Tid id;T0* _parameters;};
-extern T531 M531;
-struct S196{T0* _program_name;};
-extern T196 M196;
-struct S205{Tid id;T2 _count;T2 _capacity;T0* _storage;T0* _fixed_array_;T0* _internal_cursor;};
-extern T205 M205;
-struct S255{Tid id;T0* _container;};
-extern T255 M255;
-struct S336{T0* _item;T0* _right;};
-extern T336 M336;
-struct S579{Tid id;T0* _parameters;};
-extern T579 M579;
+struct S303{T0* _rule;T2 _index;};
+extern T303 M303;
+struct S427{Tid id;T0* _equality_tester;T2 _count;T0* _first_cell;T0* _last_cell;T0* _internal_cursor;};
+extern T427 M427;
+struct S465{T2 _count;T2 _capacity;T0* _storage;T0* _special_routines;T0* _internal_cursor;};
+extern T465 M465;
+struct S208{T2 _buffer_position;T9 _buffer;T2 _capacity;};
+extern T208 M208;
+struct S463{T2 _position;T0* _container;};
+extern T463 M463;
+struct S248{T0* _comparator;};
+extern T248 M248;
+struct S525{Tid id;T0* _parameters;};
+extern T525 M525;
+struct S204{T0* _program_name;};
+extern T204 M204;
+struct S211{Tid id;T2 _count;T2 _capacity;T0* _storage;T0* _special_routines;T0* _internal_cursor;};
+extern T211 M211;
+struct S129{T132 _storage;T2 _capacity;T2 _upper;};
+extern T129 M129;
+struct S260{Tid id;T0* _container;};
+extern T260 M260;
+struct S341{T0* _item;T0* _right;};
+extern T341 M341;
+struct S575{Tid id;T0* _parameters;};
+extern T575 M575;
 /*
 -- This file is  free  software, which  comes  along  with  SmartEiffel. This
 -- software  is  distributed  in the hope that it will be useful, but WITHOUT
@@ -1056,93 +1035,83 @@ T2 r2min(T2 C,T2 a1);
 T2 r2hash_code(T2 C);
 /*INTEGER*/
 void r2append_in(T2 C,T0* a1);
-extern T0*oBC20tagged_out_memory;
+extern T0*oBC21tagged_out_memory;
 /*INTEGER_64*/
 T3 r11digit(T11 C);
 /*NATIVE_ARRAY[PR_TOKEN]*/
-T164 r164realloc(T164 C,T2 a1,T2 a2);
+T172 r172realloc(T172 C,T2 a1,T2 a2);
 /*NATIVE_ARRAY[PR_TOKEN]*/
-void r164set_all_with(T164 C,T0* a1,T2 a2);
+void r172set_all_with(T172 C,T0* a1,T2 a2);
 /*NATIVE_ARRAY[PR_TOKEN]*/
-void r164clear(T164 C,T2 a1,T2 a2);
+void r172clear(T172 C,T2 a1,T2 a2);
 /*NATIVE_ARRAY[PR_TOKEN]*/
-void r164copy_from(T164 C,T164 a1,T2 a2);
+void r172copy_from(T172 C,T172 a1,T2 a2);
 /*NATIVE_ARRAY[DS_ARRAYED_LIST[PR_VARIABLE]]*/
-void r474clear(T474 C,T2 a1,T2 a2);
+void r480clear(T480 C,T2 a1,T2 a2);
 /*NATIVE_ARRAY[PR_POSITION]*/
-T303 r303realloc(T303 C,T2 a1,T2 a2);
+T308 r308realloc(T308 C,T2 a1,T2 a2);
 /*NATIVE_ARRAY[PR_POSITION]*/
-void r303clear(T303 C,T2 a1,T2 a2);
+void r308clear(T308 C,T2 a1,T2 a2);
 /*NATIVE_ARRAY[PR_POSITION]*/
-void r303copy_from(T303 C,T303 a1,T2 a2);
+void r308copy_from(T308 C,T308 a1,T2 a2);
 /*NATIVE_ARRAY[DS_ARRAYED_LIST[PR_TYPE]]*/
-T516 r516realloc(T516 C,T2 a1,T2 a2);
+T518 r518realloc(T518 C,T2 a1,T2 a2);
 /*NATIVE_ARRAY[DS_ARRAYED_LIST[PR_TYPE]]*/
-void r516set_all_with(T516 C,T0* a1,T2 a2);
+void r518set_all_with(T518 C,T0* a1,T2 a2);
 /*NATIVE_ARRAY[DS_ARRAYED_LIST[PR_TYPE]]*/
-void r516clear(T516 C,T2 a1,T2 a2);
+void r518clear(T518 C,T2 a1,T2 a2);
 /*NATIVE_ARRAY[DS_ARRAYED_LIST[PR_TYPE]]*/
-void r516copy_from(T516 C,T516 a1,T2 a2);
+void r518copy_from(T518 C,T518 a1,T2 a2);
 /*NATIVE_ARRAY[PR_TRANSITION]*/
-void r252set_all_with(T252 C,T0* a1,T2 a2);
+void r257set_all_with(T257 C,T0* a1,T2 a2);
 /*NATIVE_ARRAY[PR_ERROR_ACTION]*/
-T314 r314realloc(T314 C,T2 a1,T2 a2);
+T319 r319realloc(T319 C,T2 a1,T2 a2);
 /*NATIVE_ARRAY[PR_ERROR_ACTION]*/
-void r314clear(T314 C,T2 a1,T2 a2);
+void r319clear(T319 C,T2 a1,T2 a2);
 /*NATIVE_ARRAY[PR_ERROR_ACTION]*/
-void r314copy_from(T314 C,T314 a1,T2 a2);
-/*NATIVE_ARRAY[INTEGER_16]*/
-T643 r643realloc(T643 C,T2 a1,T2 a2);
-/*NATIVE_ARRAY[INTEGER_16]*/
-void r643move(T643 C,T2 a1,T2 a2,T2 a3);
-/*NATIVE_ARRAY[INTEGER_16]*/
-void r643set_all_with(T643 C,T10 a1,T2 a2);
-/*NATIVE_ARRAY[INTEGER_16]*/
-void r643clear(T643 C,T2 a1,T2 a2);
-/*NATIVE_ARRAY[INTEGER_16]*/
-void r643copy_from(T643 C,T643 a1,T2 a2);
+void r319copy_from(T319 C,T319 a1,T2 a2);
 /*NATIVE_ARRAY[DS_NESTED_LIST[PR_RULE]]*/
-T441 r441realloc(T441 C,T2 a1,T2 a2);
+T446 r446realloc(T446 C,T2 a1,T2 a2);
 /*NATIVE_ARRAY[DS_NESTED_LIST[PR_RULE]]*/
-void r441clear(T441 C,T2 a1,T2 a2);
+void r446clear(T446 C,T2 a1,T2 a2);
 /*NATIVE_ARRAY[DS_NESTED_LIST[PR_RULE]]*/
-void r441copy_from(T441 C,T441 a1,T2 a2);
+void r446copy_from(T446 C,T446 a1,T2 a2);
 /*NATIVE_ARRAY[STRING]*/
-T176 r176realloc(T176 C,T2 a1,T2 a2);
+T182 r182realloc(T182 C,T2 a1,T2 a2);
 /*NATIVE_ARRAY[STRING]*/
-void r176set_all_with(T176 C,T0* a1,T2 a2);
+void r182set_all_with(T182 C,T0* a1,T2 a2);
 /*NATIVE_ARRAY[STRING]*/
-void r176clear(T176 C,T2 a1,T2 a2);
+void r182clear(T182 C,T2 a1,T2 a2);
 /*NATIVE_ARRAY[STRING]*/
-void r176copy_from(T176 C,T176 a1,T2 a2);
+void r182copy_from(T182 C,T182 a1,T2 a2);
 /*NATIVE_ARRAY[PR_RULE]*/
-void r135clear_all(T135 C,T2 a1);
+void r141clear_all(T141 C,T2 a1);
 /*NATIVE_ARRAY[PR_RULE]*/
-T135 r135realloc(T135 C,T2 a1,T2 a2);
+T141 r141realloc(T141 C,T2 a1,T2 a2);
 /*NATIVE_ARRAY[PR_RULE]*/
-T6 r135fast_memcmp(T135 C,T135 a1,T2 a2);
+T6 r141fast_memcmp(T141 C,T141 a1,T2 a2);
 /*NATIVE_ARRAY[PR_RULE]*/
-void r135clear(T135 C,T2 a1,T2 a2);
+void r141clear(T141 C,T2 a1,T2 a2);
 /*NATIVE_ARRAY[PR_RULE]*/
-void r135copy_from(T135 C,T135 a1,T2 a2);
+void r141copy_from(T141 C,T141 a1,T2 a2);
 /*NATIVE_ARRAY[PR_REDUCTION]*/
-T274 r274realloc(T274 C,T2 a1,T2 a2);
+T279 r279realloc(T279 C,T2 a1,T2 a2);
 /*NATIVE_ARRAY[PR_REDUCTION]*/
-void r274clear(T274 C,T2 a1,T2 a2);
+void r279clear(T279 C,T2 a1,T2 a2);
 /*NATIVE_ARRAY[PR_REDUCTION]*/
-void r274copy_from(T274 C,T274 a1,T2 a2);
+void r279copy_from(T279 C,T279 a1,T2 a2);
 /*NATIVE_ARRAY[PR_SYMBOL]*/
-T125 r125realloc(T125 C,T2 a1,T2 a2);
+T132 r132realloc(T132 C,T2 a1,T2 a2);
 /*NATIVE_ARRAY[PR_SYMBOL]*/
-void r125clear(T125 C,T2 a1,T2 a2);
+void r132clear(T132 C,T2 a1,T2 a2);
 /*NATIVE_ARRAY[PR_SYMBOL]*/
-void r125copy_from(T125 C,T125 a1,T2 a2);
+void r132copy_from(T132 C,T132 a1,T2 a2);
 /*NATIVE_ARRAY[DS_ARRAYED_LIST[PR_STATE]]*/
-T406 r406realloc(T406 C,T2 a1,T2 a2);
+T411 r411realloc(T411 C,T2 a1,T2 a2);
 /*NATIVE_ARRAY[DS_ARRAYED_LIST[PR_STATE]]*/
-void r406clear(T406 C,T2 a1,T2 a2);
+void r411clear(T411 C,T2 a1,T2 a2);
 /*NATIVE_ARRAY[DS_ARRAYED_LIST[PR_STATE]]*/
-void r406copy_from(T406 C,T406 a1,T2 a2);
+void r411copy_from(T411 C,T411 a1,T2 a2);
 /*NATIVE_ARRAY[CHARACTER]*/
 void r9copy_slice(T9 C,T2 a1,T9 a2,T2 a3,T2 a4);
 /*NATIVE_ARRAY[CHARACTER]*/
@@ -1158,71 +1127,57 @@ void r9clear(T9 C,T2 a1,T2 a2);
 /*NATIVE_ARRAY[CHARACTER]*/
 void r9copy_from(T9 C,T9 a1,T2 a2);
 /*NATIVE_ARRAY[PR_STATE]*/
-T85 r85realloc(T85 C,T2 a1,T2 a2);
+T87 r87realloc(T87 C,T2 a1,T2 a2);
 /*NATIVE_ARRAY[PR_STATE]*/
-void r85set_all_with(T85 C,T0* a1,T2 a2);
+void r87set_all_with(T87 C,T0* a1,T2 a2);
 /*NATIVE_ARRAY[PR_STATE]*/
-void r85clear(T85 C,T2 a1,T2 a2);
+void r87clear(T87 C,T2 a1,T2 a2);
 /*NATIVE_ARRAY[PR_STATE]*/
-void r85copy_from(T85 C,T85 a1,T2 a2);
-/*NATIVE_ARRAY[INTEGER_8]*/
-T639 r639realloc(T639 C,T2 a1,T2 a2);
-/*NATIVE_ARRAY[INTEGER_8]*/
-void r639move(T639 C,T2 a1,T2 a2,T2 a3);
-/*NATIVE_ARRAY[INTEGER_8]*/
-void r639set_all_with(T639 C,T1 a1,T2 a2);
-/*NATIVE_ARRAY[INTEGER_8]*/
-void r639clear(T639 C,T2 a1,T2 a2);
-/*NATIVE_ARRAY[INTEGER_8]*/
-void r639copy_from(T639 C,T639 a1,T2 a2);
+void r87copy_from(T87 C,T87 a1,T2 a2);
 /*NATIVE_ARRAY[PR_VARIABLE]*/
-void r233clear_all(T233 C,T2 a1);
+void r238clear_all(T238 C,T2 a1);
 /*NATIVE_ARRAY[PR_VARIABLE]*/
-T233 r233realloc(T233 C,T2 a1,T2 a2);
+T238 r238realloc(T238 C,T2 a1,T2 a2);
 /*NATIVE_ARRAY[PR_VARIABLE]*/
-T6 r233fast_memcmp(T233 C,T233 a1,T2 a2);
+T6 r238fast_memcmp(T238 C,T238 a1,T2 a2);
 /*NATIVE_ARRAY[PR_VARIABLE]*/
-void r233clear(T233 C,T2 a1,T2 a2);
+void r238clear(T238 C,T2 a1,T2 a2);
 /*NATIVE_ARRAY[PR_VARIABLE]*/
-void r233copy_from(T233 C,T233 a1,T2 a2);
+void r238copy_from(T238 C,T238 a1,T2 a2);
 /*NATIVE_ARRAY[DS_NESTED_LIST[PR_TOKEN]]*/
-T389 r389realloc(T389 C,T2 a1,T2 a2);
+T394 r394realloc(T394 C,T2 a1,T2 a2);
 /*NATIVE_ARRAY[DS_NESTED_LIST[PR_TOKEN]]*/
-void r389clear(T389 C,T2 a1,T2 a2);
+void r394clear(T394 C,T2 a1,T2 a2);
 /*NATIVE_ARRAY[DS_NESTED_LIST[PR_TOKEN]]*/
-void r389copy_from(T389 C,T389 a1,T2 a2);
+void r394copy_from(T394 C,T394 a1,T2 a2);
 /*NATIVE_ARRAY[PR_PORTION]*/
-void r214clear(T214 C,T2 a1,T2 a2);
+void r219clear(T219 C,T2 a1,T2 a2);
 /*NATIVE_ARRAY[INTEGER]*/
-void r77clear_all(T77 C,T2 a1);
+T79 r79realloc(T79 C,T2 a1,T2 a2);
 /*NATIVE_ARRAY[INTEGER]*/
-T77 r77realloc(T77 C,T2 a1,T2 a2);
+void r79move(T79 C,T2 a1,T2 a2,T2 a3);
 /*NATIVE_ARRAY[INTEGER]*/
-void r77move(T77 C,T2 a1,T2 a2,T2 a3);
+void r79set_all_with(T79 C,T2 a1,T2 a2);
 /*NATIVE_ARRAY[INTEGER]*/
-T6 r77fast_memcmp(T77 C,T77 a1,T2 a2);
+void r79clear(T79 C,T2 a1,T2 a2);
 /*NATIVE_ARRAY[INTEGER]*/
-void r77set_all_with(T77 C,T2 a1,T2 a2);
-/*NATIVE_ARRAY[INTEGER]*/
-void r77clear(T77 C,T2 a1,T2 a2);
-/*NATIVE_ARRAY[INTEGER]*/
-void r77copy_from(T77 C,T77 a1,T2 a2);
+void r79copy_from(T79 C,T79 a1,T2 a2);
 /*NATIVE_ARRAY[ANY]*/
-T530 r530realloc(T530 C,T2 a1,T2 a2);
+T522 r522realloc(T522 C,T2 a1,T2 a2);
 /*NATIVE_ARRAY[ANY]*/
-void r530set_all_with(T530 C,T0* a1,T2 a2);
+void r522set_all_with(T522 C,T0* a1,T2 a2);
 /*NATIVE_ARRAY[ANY]*/
-void r530clear(T530 C,T2 a1,T2 a2);
+void r522clear(T522 C,T2 a1,T2 a2);
 /*NATIVE_ARRAY[ANY]*/
-void r530copy_from(T530 C,T530 a1,T2 a2);
+void r522copy_from(T522 C,T522 a1,T2 a2);
 /*NATIVE_ARRAY[PR_TYPE]*/
-T73 r73realloc(T73 C,T2 a1,T2 a2);
+T75 r75realloc(T75 C,T2 a1,T2 a2);
 /*NATIVE_ARRAY[PR_TYPE]*/
-void r73set_all_with(T73 C,T0* a1,T2 a2);
+void r75set_all_with(T75 C,T0* a1,T2 a2);
 /*NATIVE_ARRAY[PR_TYPE]*/
-void r73clear(T73 C,T2 a1,T2 a2);
+void r75clear(T75 C,T2 a1,T2 a2);
 /*NATIVE_ARRAY[PR_TYPE]*/
-void r73copy_from(T73 C,T73 a1,T2 a2);
+void r75copy_from(T75 C,T75 a1,T2 a2);
 /*STRING*/
 void r7copy(T7* C,T0* a1);
 /*STRING*/
@@ -1252,6 +1207,8 @@ void r7append_string(T7* C,T0* a1);
 /*STRING*/
 void r7make_filled(T7* C,T3 a1,T2 a2);
 /*STRING*/
+T0* r7as_upper(T7* C);
+/*STRING*/
 T0* r7string(T7* C);
 /*STRING*/
 void r7extend(T7* C,T3 a1);
@@ -1259,6 +1216,8 @@ void r7extend(T7* C,T3 a1);
 T2 r7hash_code(T7* C);
 /*STRING*/
 T6 r7conforms_to(T7* C,T0* a1);
+/*STRING*/
+T0* r7as_lower(T7* C);
 /*STRING*/
 T2 r7to_integer(T7* C);
 /*STRING*/
@@ -1277,1213 +1236,1169 @@ T0* r7twin(T7* C);
 T0* r7_ix_43(T7* C,T0* a1);
 /*STRING*/
 void r7swap(T7* C,T2 a1,T2 a2);
-/*FIXED_ARRAY[PR_VARIABLE]*/
-void r231copy(T231* C,T0* a1);
-/*FIXED_ARRAY[PR_VARIABLE]*/
-T6 r231is_equal(T231* C,T0* a1);
-/*FIXED_ARRAY[PR_VARIABLE]*/
-T6 r231valid_index(T231* C,T2 a1);
-/*FIXED_ARRAY[PR_VARIABLE]*/
-void r231make(T231* C,T2 a1);
-/*FIXED_ARRAY[PR_VARIABLE]*/
-void r231resize(T231* C,T2 a1);
-/*FIXED_ARRAY[PR_VARIABLE]*/
-T0* r231twin(T231* C);
-/*FIXED_ARRAY[PR_PORTION]*/
-T6 r212valid_index(T212* C,T2 a1);
-/*FIXED_ARRAY[PR_PORTION]*/
-void r212make(T212* C,T2 a1);
 /*ARRAY[INTEGER]*/
-void r76clear_all(T76* C);
+T2 r78count(T78* C);
 /*ARRAY[INTEGER]*/
-T2 r76count(T76* C);
+T2 r78item(T78* C,T2 a1);
 /*ARRAY[INTEGER]*/
-T2 r76item(T76* C,T2 a1);
+T6 r78valid_index(T78* C,T2 a1);
 /*ARRAY[INTEGER]*/
-T6 r76valid_index(T76* C,T2 a1);
+void r78make(T78* C,T2 a1,T2 a2);
 /*ARRAY[INTEGER]*/
-void r76make(T76* C,T2 a1,T2 a2);
-/*ARRAY[INTEGER]*/
-void r76resize(T76* C,T2 a1,T2 a2);
+void r78resize(T78* C,T2 a1,T2 a2);
 /*ARRAY[PR_TOKEN]*/
-T0* r547item(T547* C,T2 a1);
+T0* r541item(T541* C,T2 a1);
 /*ARRAY[PR_TOKEN]*/
-T6 r547valid_index(T547* C,T2 a1);
+T6 r541valid_index(T541* C,T2 a1);
 /*ARRAY[PR_TOKEN]*/
-void r547make(T547* C,T2 a1,T2 a2);
+void r541make(T541* C,T2 a1,T2 a2);
 /*ARRAY[PR_TRANSITION]*/
-T0* r239item(T239* C,T2 a1);
+T0* r244item(T244* C,T2 a1);
 /*ARRAY[PR_TRANSITION]*/
-T6 r239valid_index(T239* C,T2 a1);
+T6 r244valid_index(T244* C,T2 a1);
 /*ARRAY[PR_TRANSITION]*/
-void r239make(T239* C,T2 a1,T2 a2);
-/*FIXED_ARRAY[DS_ARRAYED_LIST[PR_STATE]]*/
-T6 r404valid_index(T404* C,T2 a1);
-/*FIXED_ARRAY[DS_ARRAYED_LIST[PR_STATE]]*/
-void r404make(T404* C,T2 a1);
-/*FIXED_ARRAY[DS_ARRAYED_LIST[PR_STATE]]*/
-void r404resize(T404* C,T2 a1);
-/*FIXED_ARRAY[PR_TOKEN]*/
-T6 r162valid_index(T162* C,T2 a1);
-/*FIXED_ARRAY[PR_TOKEN]*/
-void r162make(T162* C,T2 a1);
-/*FIXED_ARRAY[PR_TOKEN]*/
-void r162resize(T162* C,T2 a1);
-/*FIXED_ARRAY[PR_POSITION]*/
-T6 r301valid_index(T301* C,T2 a1);
-/*FIXED_ARRAY[PR_POSITION]*/
-void r301make(T301* C,T2 a1);
-/*FIXED_ARRAY[PR_POSITION]*/
-void r301resize(T301* C,T2 a1);
-/*FIXED_ARRAY[PR_REDUCTION]*/
-T6 r272valid_index(T272* C,T2 a1);
-/*FIXED_ARRAY[PR_REDUCTION]*/
-void r272make(T272* C,T2 a1);
-/*FIXED_ARRAY[PR_REDUCTION]*/
-void r272resize(T272* C,T2 a1);
-/*FIXED_ARRAY[PR_RULE]*/
-void r133copy(T133* C,T0* a1);
-/*FIXED_ARRAY[PR_RULE]*/
-T6 r133is_equal(T133* C,T0* a1);
-/*FIXED_ARRAY[PR_RULE]*/
-T6 r133valid_index(T133* C,T2 a1);
-/*FIXED_ARRAY[PR_RULE]*/
-void r133make(T133* C,T2 a1);
-/*FIXED_ARRAY[PR_RULE]*/
-void r133resize(T133* C,T2 a1);
-/*FIXED_ARRAY[PR_RULE]*/
-T0* r133twin(T133* C);
+void r244make(T244* C,T2 a1,T2 a2);
 /*ARRAY[ARRAY[INTEGER]]*/
-T0* r655item(T655* C,T2 a1);
+T0* r650item(T650* C,T2 a1);
 /*FIXED_ARRAY[STRING]*/
-T6 r174valid_index(T174* C,T2 a1);
+T6 r180valid_index(T180* C,T2 a1);
 /*FIXED_ARRAY[STRING]*/
-void r174make(T174* C,T2 a1);
-/*FIXED_ARRAY[STRING]*/
-void r174resize(T174* C,T2 a1);
-/*ARRAY[INTEGER_8]*/
-T2 r637count(T637* C);
-/*ARRAY[INTEGER_8]*/
-T1 r637item(T637* C,T2 a1);
-/*ARRAY[INTEGER_8]*/
-T6 r637valid_index(T637* C,T2 a1);
-/*ARRAY[INTEGER_8]*/
-void r637make(T637* C,T2 a1,T2 a2);
-/*ARRAY[INTEGER_8]*/
-void r637resize(T637* C,T2 a1,T2 a2);
+void r180make(T180* C,T2 a1);
 /*ARRAY[PR_STATE]*/
-T0* r398item(T398* C,T2 a1);
+T0* r403item(T403* C,T2 a1);
 /*ARRAY[PR_STATE]*/
-T6 r398valid_index(T398* C,T2 a1);
+T6 r403valid_index(T403* C,T2 a1);
 /*ARRAY[PR_STATE]*/
-void r398make(T398* C,T2 a1,T2 a2);
-/*FIXED_ARRAY[PR_STATE]*/
-T6 r83valid_index(T83* C,T2 a1);
-/*FIXED_ARRAY[PR_STATE]*/
-void r83make(T83* C,T2 a1);
-/*FIXED_ARRAY[PR_STATE]*/
-void r83resize(T83* C,T2 a1);
-/*FIXED_ARRAY[DS_ARRAYED_LIST[PR_VARIABLE]]*/
-T6 r471valid_index(T471* C,T2 a1);
-/*FIXED_ARRAY[DS_ARRAYED_LIST[PR_VARIABLE]]*/
-void r471make(T471* C,T2 a1);
-/*FIXED_ARRAY[PR_ERROR_ACTION]*/
-T6 r312valid_index(T312* C,T2 a1);
-/*FIXED_ARRAY[PR_ERROR_ACTION]*/
-void r312make(T312* C,T2 a1);
-/*FIXED_ARRAY[PR_ERROR_ACTION]*/
-void r312resize(T312* C,T2 a1);
-/*FIXED_ARRAY[DS_NESTED_LIST[PR_TOKEN]]*/
-T6 r385valid_index(T385* C,T2 a1);
-/*FIXED_ARRAY[DS_NESTED_LIST[PR_TOKEN]]*/
-void r385make(T385* C,T2 a1);
-/*FIXED_ARRAY[DS_NESTED_LIST[PR_TOKEN]]*/
-void r385resize(T385* C,T2 a1);
-/*FIXED_ARRAY[INTEGER]*/
-void r109copy(T109* C,T0* a1);
-/*FIXED_ARRAY[INTEGER]*/
-T6 r109is_equal(T109* C,T0* a1);
-/*FIXED_ARRAY[INTEGER]*/
-T6 r109valid_index(T109* C,T2 a1);
-/*FIXED_ARRAY[INTEGER]*/
-void r109make(T109* C,T2 a1);
-/*FIXED_ARRAY[INTEGER]*/
-void r109resize(T109* C,T2 a1);
-/*FIXED_ARRAY[INTEGER]*/
-T0* r109twin(T109* C);
-/*FIXED_ARRAY[INTEGER]*/
-void r109with_capacity(T109* C,T2 a1);
-/*FIXED_ARRAY[INTEGER]*/
-void r109from_collection(T109* C,T0* a1);
-/*FIXED_ARRAY[PR_TYPE]*/
-T6 r72valid_index(T72* C,T2 a1);
-/*FIXED_ARRAY[PR_TYPE]*/
-void r72make(T72* C,T2 a1);
-/*FIXED_ARRAY[PR_TYPE]*/
-void r72resize(T72* C,T2 a1);
+void r403make(T403* C,T2 a1,T2 a2);
 /*ARRAY[STRING]*/
-T0* r195item(T195* C,T2 a1);
+T0* r203item(T203* C,T2 a1);
 /*ARRAY[STRING]*/
-T6 r195valid_index(T195* C,T2 a1);
+T6 r203valid_index(T203* C,T2 a1);
 /*ARRAY[STRING]*/
-void r195make(T195* C,T2 a1,T2 a2);
-/*ARRAY[INTEGER_16]*/
-T2 r641count(T641* C);
-/*ARRAY[INTEGER_16]*/
-T10 r641item(T641* C,T2 a1);
-/*ARRAY[INTEGER_16]*/
-T6 r641valid_index(T641* C,T2 a1);
-/*ARRAY[INTEGER_16]*/
-void r641make(T641* C,T2 a1,T2 a2);
-/*ARRAY[INTEGER_16]*/
-void r641resize(T641* C,T2 a1,T2 a2);
-/*FIXED_ARRAY[DS_NESTED_LIST[PR_RULE]]*/
-T6 r438valid_index(T438* C,T2 a1);
-/*FIXED_ARRAY[DS_NESTED_LIST[PR_RULE]]*/
-void r438make(T438* C,T2 a1);
-/*FIXED_ARRAY[DS_NESTED_LIST[PR_RULE]]*/
-void r438resize(T438* C,T2 a1);
-/*FIXED_ARRAY[PR_SYMBOL]*/
-T6 r123valid_index(T123* C,T2 a1);
-/*FIXED_ARRAY[PR_SYMBOL]*/
-void r123make(T123* C,T2 a1);
-/*FIXED_ARRAY[PR_SYMBOL]*/
-void r123resize(T123* C,T2 a1);
+void r203make(T203* C,T2 a1,T2 a2);
 /*KL_SPECIAL_ROUTINES[PR_TYPE]*/
-T0* r517make(T2 a1);
+T0* r135make(T2 a1);
 /*KL_SPECIAL_ROUTINES[PR_TYPE]*/
-T0* r517resize(T0* a1,T2 a2);
+T0* r135resize(T0* a1,T2 a2);
 /*SPECIAL[PR_TYPE]*/
-T6 r518valid_index(T518* C,T2 a1);
+T6 r73valid_index(T73* C,T2 a1);
 /*SPECIAL[PR_TYPE]*/
-void r518make(T518* C,T2 a1);
+void r73make(T73* C,T2 a1);
 /*SPECIAL[PR_TYPE]*/
-T0* r518resize(T518* C,T2 a1);
+T0* r73resize(T73* C,T2 a1);
 /*SPECIAL[PR_TYPE]*/
-void r518array_resize(T518* C,T2 a1);
+void r73array_resize(T73* C,T2 a1);
 /*SPECIAL[ANY]*/
-T6 r527valid_index(T527* C,T2 a1);
+T6 r519valid_index(T519* C,T2 a1);
 /*SPECIAL[ANY]*/
-void r527make(T527* C,T2 a1);
+void r519make(T519* C,T2 a1);
 /*SPECIAL[ANY]*/
-T0* r527resize(T527* C,T2 a1);
+T0* r519resize(T519* C,T2 a1);
 /*SPECIAL[ANY]*/
-void r527array_resize(T527* C,T2 a1);
+void r519array_resize(T519* C,T2 a1);
 /*DS_LINKED_LIST[PR_VARIABLE]*/
-T6 r444valid_cursor(T444* C,T0* a1);
+T6 r449valid_cursor(T449* C,T0* a1);
 /*DS_LINKED_LIST[PR_VARIABLE]*/
-T0* r444cursor_item(T0* a1);
+T0* r449cursor_item(T0* a1);
 /*DS_LINKED_LIST[PR_VARIABLE]*/
-void r444remove_traversing_cursor(T444* C,T0* a1);
+void r449remove_traversing_cursor(T449* C,T0* a1);
 /*DS_LINKED_LIST[PR_VARIABLE]*/
-void r444cursor_go_after(T444* C,T0* a1);
+void r449cursor_go_after(T449* C,T0* a1);
 /*DS_LINKED_LIST[PR_VARIABLE]*/
-void r444add_traversing_cursor(T444* C,T0* a1);
+void r449add_traversing_cursor(T449* C,T0* a1);
 /*DS_LINKED_LIST[PR_VARIABLE]*/
-void r444make(T444* C);
+void r449make(T449* C);
 /*DS_LINKED_LIST[PR_VARIABLE]*/
-T6 r444cursor_after(T0* a1);
+T6 r449cursor_after(T0* a1);
 /*DS_LINKED_LIST[PR_VARIABLE]*/
-T6 r444has(T444* C,T0* a1);
+T6 r449has(T449* C,T0* a1);
 /*DS_LINKED_LIST[PR_VARIABLE]*/
-void r444cursor_search_forth(T444* C,T0* a1,T0* a2);
+void r449cursor_search_forth(T449* C,T0* a1,T0* a2);
 /*DS_LINKED_LIST[PR_VARIABLE]*/
-void r444cursor_forth(T444* C,T0* a1);
+void r449cursor_forth(T449* C,T0* a1);
 /*DS_LINKED_LIST[PR_VARIABLE]*/
-void r444cursor_start(T444* C,T0* a1);
+void r449cursor_start(T449* C,T0* a1);
 /*DS_LINKED_LIST[PR_VARIABLE]*/
-void r444force_last(T444* C,T0* a1);
+void r449force_last(T449* C,T0* a1);
 /*DS_LINKED_LIST[PR_VARIABLE]*/
-T0* r444new_cursor(T444* C);
+T0* r449new_cursor(T449* C);
 /*DS_LINKED_LIST[PR_VARIABLE]*/
-T6 r444cursor_off(T0* a1);
+T6 r449cursor_off(T0* a1);
 /*KL_SPECIAL_ROUTINES[ANY]*/
-T0* r526make(T2 a1);
+T0* r523make(T2 a1);
 /*KL_SPECIAL_ROUTINES[ANY]*/
-T0* r526resize(T0* a1,T2 a2);
+T0* r523resize(T0* a1,T2 a2);
 /*DS_ARRAYED_LIST[STRING]*/
-T2 r172new_capacity(T2 a1);
+T2 r178new_capacity(T2 a1);
 /*DS_ARRAYED_LIST[STRING]*/
-T6 r172extendible(T172* C,T2 a1);
+T6 r178extendible(T178* C,T2 a1);
 /*DS_ARRAYED_LIST[STRING]*/
-void r172make(T172* C,T2 a1);
+void r178make(T178* C,T2 a1);
 /*DS_ARRAYED_LIST[STRING]*/
-void r172resize(T172* C,T2 a1);
+void r178resize(T178* C,T2 a1);
 /*DS_ARRAYED_LIST[STRING]*/
-void r172force_last(T172* C,T0* a1);
+void r178force_last(T178* C,T0* a1);
 /*DS_ARRAYED_LIST[STRING]*/
-T0* r172new_cursor(T172* C);
+T0* r178new_cursor(T178* C);
 /*DS_ARRAYED_STACK[PR_STATE]*/
-void r364clear_items(T364* C,T2 a1,T2 a2);
+void r369clear_items(T369* C,T2 a1,T2 a2);
 /*DS_ARRAYED_STACK[PR_STATE]*/
-T6 r364extendible(T364* C,T2 a1);
+T6 r369extendible(T369* C,T2 a1);
 /*DS_ARRAYED_STACK[PR_STATE]*/
-void r364wipe_out(T364* C);
+void r369wipe_out(T369* C);
 /*DS_ARRAYED_STACK[PR_STATE]*/
-void r364put(T364* C,T0* a1);
+void r369put(T369* C,T0* a1);
 /*DS_ARRAYED_STACK[PR_STATE]*/
-T0* r364item(T364* C);
+T0* r369item(T369* C);
 /*DS_ARRAYED_STACK[PR_STATE]*/
-void r364make(T364* C,T2 a1);
+void r369make(T369* C,T2 a1);
 /*DS_ARRAYED_STACK[PR_STATE]*/
-void r364remove(T364* C);
+void r369remove(T369* C);
 /*DS_ARRAYED_STACK[DS_NESTED_LIST[PR_TOKEN]]*/
-T2 r378new_capacity(T2 a1);
+T2 r383new_capacity(T2 a1);
 /*DS_ARRAYED_STACK[DS_NESTED_LIST[PR_TOKEN]]*/
-T6 r378extendible(T378* C,T2 a1);
+T6 r383extendible(T383* C,T2 a1);
 /*DS_ARRAYED_STACK[DS_NESTED_LIST[PR_TOKEN]]*/
-void r378force(T378* C,T0* a1);
+void r383force(T383* C,T0* a1);
 /*DS_ARRAYED_STACK[DS_NESTED_LIST[PR_TOKEN]]*/
-T0* r378item(T378* C);
+T0* r383item(T383* C);
 /*DS_ARRAYED_STACK[DS_NESTED_LIST[PR_TOKEN]]*/
-void r378make(T378* C,T2 a1);
+void r383make(T383* C,T2 a1);
 /*DS_ARRAYED_STACK[DS_NESTED_LIST[PR_TOKEN]]*/
-void r378remove(T378* C);
+void r383remove(T383* C);
 /*DS_ARRAYED_STACK[DS_NESTED_LIST[PR_TOKEN]]*/
-T6 r378has(T378* C,T0* a1);
+T6 r383has(T383* C,T0* a1);
 /*DS_ARRAYED_STACK[DS_NESTED_LIST[PR_TOKEN]]*/
-void r378resize(T378* C,T2 a1);
+void r383resize(T383* C,T2 a1);
 /*DS_LINKED_LIST[PR_TRANSITION]*/
-T6 r241valid_cursor(T241* C,T0* a1);
+T6 r246valid_cursor(T246* C,T0* a1);
 /*DS_LINKED_LIST[PR_TRANSITION]*/
-T0* r241cursor_item(T0* a1);
+T0* r246cursor_item(T0* a1);
 /*DS_LINKED_LIST[PR_TRANSITION]*/
-void r241remove_traversing_cursor(T241* C,T0* a1);
+void r246remove_traversing_cursor(T246* C,T0* a1);
 /*DS_LINKED_LIST[PR_TRANSITION]*/
-void r241cursor_go_after(T241* C,T0* a1);
+void r246cursor_go_after(T246* C,T0* a1);
 /*DS_LINKED_LIST[PR_TRANSITION]*/
-void r241add_traversing_cursor(T241* C,T0* a1);
+void r246add_traversing_cursor(T246* C,T0* a1);
 /*DS_LINKED_LIST[PR_TRANSITION]*/
-void r241make(T241* C);
+void r246make(T246* C);
 /*DS_LINKED_LIST[PR_TRANSITION]*/
-T6 r241cursor_after(T0* a1);
+T6 r246cursor_after(T0* a1);
 /*DS_LINKED_LIST[PR_TRANSITION]*/
-T6 r241has(T241* C,T0* a1);
+T6 r246has(T246* C,T0* a1);
 /*DS_LINKED_LIST[PR_TRANSITION]*/
-void r241cursor_search_forth(T241* C,T0* a1,T0* a2);
+void r246cursor_search_forth(T246* C,T0* a1,T0* a2);
 /*DS_LINKED_LIST[PR_TRANSITION]*/
-void r241cursor_forth(T241* C,T0* a1);
+void r246cursor_forth(T246* C,T0* a1);
 /*DS_LINKED_LIST[PR_TRANSITION]*/
-void r241cursor_start(T241* C,T0* a1);
+void r246cursor_start(T246* C,T0* a1);
 /*DS_LINKED_LIST[PR_TRANSITION]*/
-void r241force_last(T241* C,T0* a1);
+void r246force_last(T246* C,T0* a1);
 /*DS_LINKED_LIST[PR_TRANSITION]*/
-T0* r241new_cursor(T241* C);
+T0* r246new_cursor(T246* C);
 /*DS_LINKED_LIST[PR_TRANSITION]*/
-T6 r241cursor_off(T0* a1);
+T6 r246cursor_off(T0* a1);
 /*DS_LINKED_LIST_CURSOR[PR_TOKEN]*/
-void r338set(T338* C,T0* a1,T6 a2,T6 a3);
+void r343set(T343* C,T0* a1,T6 a2,T6 a3);
 /*DS_LINKED_LIST_CURSOR[PR_TOKEN]*/
-void r338make(T338* C,T0* a1);
+void r343make(T343* C,T0* a1);
 /*DS_LINKED_LIST_CURSOR[PR_TOKEN]*/
-void r338set_after(T338* C);
+void r343set_after(T343* C);
 /*DS_HASH_TABLE[PR_TYPE,STRING]*/
-T2 r565new_capacity(T2 a1);
+T2 r559new_capacity(T2 a1);
 /*DS_HASH_TABLE[PR_TYPE,STRING]*/
-void r565force(T565* C,T0* a1,T0* a2);
+void r559force(T559* C,T0* a1,T0* a2);
 /*DS_HASH_TABLE[PR_TYPE,STRING]*/
-void r565make_clashes(T565* C,T2 a1);
+void r559make_clashes(T559* C,T2 a1);
 /*DS_HASH_TABLE[PR_TYPE,STRING]*/
-void r565search_position(T565* C,T0* a1);
+void r559search_position(T559* C,T0* a1);
 /*DS_HASH_TABLE[PR_TYPE,STRING]*/
-void r565keys_resize(T565* C,T2 a1);
+void r559keys_resize(T559* C,T2 a1);
 /*DS_HASH_TABLE[PR_TYPE,STRING]*/
-T0* r565item(T565* C,T0* a1);
+T0* r559item(T559* C,T0* a1);
 /*DS_HASH_TABLE[PR_TYPE,STRING]*/
-void r565make_items(T565* C,T2 a1);
+void r559make_items(T559* C,T2 a1);
 /*DS_HASH_TABLE[PR_TYPE,STRING]*/
-void r565make(T565* C,T2 a1);
+void r559make(T559* C,T2 a1);
+extern T0*oBC104special_integer_;
 /*DS_HASH_TABLE[PR_TYPE,STRING]*/
-T6 r565has(T565* C,T0* a1);
+T6 r559has(T559* C,T0* a1);
 /*DS_HASH_TABLE[PR_TYPE,STRING]*/
-void r565make_keys(T565* C,T2 a1);
+void r559make_keys(T559* C,T2 a1);
 /*DS_HASH_TABLE[PR_TYPE,STRING]*/
-T2 r565hash_position(T565* C,T0* a1);
-extern T0*oBC101fixed_integer_array_;
+T2 r559hash_position(T559* C,T0* a1);
 /*DS_HASH_TABLE[PR_TYPE,STRING]*/
-void r565items_resize(T565* C,T2 a1);
+void r559items_resize(T559* C,T2 a1);
 /*DS_HASH_TABLE[PR_TYPE,STRING]*/
-void r565make_with_equality_testers(T565* C,T2 a1,T0* a2,T0* a3);
+void r559make_with_equality_testers(T559* C,T2 a1,T0* a2,T0* a3);
 /*DS_HASH_TABLE[PR_TYPE,STRING]*/
-void r565resize(T565* C,T2 a1);
+void r559resize(T559* C,T2 a1);
 /*DS_HASH_TABLE[PR_TYPE,STRING]*/
-void r565clashes_resize(T565* C,T2 a1);
+void r559make_sparse_container(T559* C,T2 a1);
 /*DS_HASH_TABLE[PR_TYPE,STRING]*/
-void r565slots_resize(T565* C,T2 a1);
+void r559clashes_resize(T559* C,T2 a1);
 /*DS_HASH_TABLE[PR_TYPE,STRING]*/
-T0* r565new_cursor(T565* C);
+void r559slots_resize(T559* C,T2 a1);
 /*DS_HASH_TABLE[PR_TYPE,STRING]*/
-void r565make_slots(T565* C,T2 a1);
+T0* r559new_cursor(T559* C);
 /*DS_HASH_TABLE[PR_TYPE,STRING]*/
-T2 r565new_modulus(T2 a1);
+void r559make_slots(T559* C,T2 a1);
+/*DS_HASH_TABLE[PR_TYPE,STRING]*/
+T2 r559new_modulus(T2 a1);
 /*DS_ARRAYED_LIST_CURSOR[PR_TOKEN]*/
-T6 r296valid_position(T296* C,T2 a1);
+T6 r301valid_position(T301* C,T2 a1);
 /*DS_ARRAYED_LIST_CURSOR[PR_TOKEN]*/
-T0* r296item(T296* C);
+T0* r301item(T301* C);
 /*DS_ARRAYED_LIST_CURSOR[PR_TOKEN]*/
-T6 r296after(T296* C);
+T6 r301after(T301* C);
 /*DS_ARRAYED_LIST_CURSOR[PR_TOKEN]*/
-T2 r296index(T296* C);
+T2 r301index(T301* C);
 /*DS_ARRAYED_LIST_CURSOR[PR_TOKEN]*/
-T6 r296off(T296* C);
+T6 r301off(T301* C);
 /*SPECIAL[INTEGER]*/
-T6 r523valid_index(T523* C,T2 a1);
+T6 r113valid_index(T113* C,T2 a1);
 /*SPECIAL[INTEGER]*/
-void r523make(T523* C,T2 a1);
+void r113make(T113* C,T2 a1);
 /*SPECIAL[INTEGER]*/
-T0* r523resize(T523* C,T2 a1);
+T0* r113resize(T113* C,T2 a1);
 /*SPECIAL[INTEGER]*/
-void r523array_resize(T523* C,T2 a1);
+void r113array_resize(T113* C,T2 a1);
+/*SPECIAL[INTEGER]*/
+void r113with_capacity(T113* C,T2 a1);
+/*SPECIAL[INTEGER]*/
+void r113from_collection(T113* C,T0* a1);
 /*DS_ARRAYED_LIST[PR_PORTION]*/
-T6 r206extendible(T206* C,T2 a1);
+T6 r212extendible(T212* C,T2 a1);
 /*DS_ARRAYED_LIST[PR_PORTION]*/
-void r206make(T206* C,T2 a1);
+void r212make(T212* C,T2 a1);
 /*DS_ARRAYED_LIST[PR_PORTION]*/
-T0* r206new_cursor(T206* C);
+T0* r212new_cursor(T212* C);
 /*DS_ARRAYED_LIST[PR_PORTION]*/
-void r206put_last(T206* C,T0* a1);
+void r212put_last(T212* C,T0* a1);
 /*DS_ARRAYED_LIST[PR_TOKEN]*/
-T2 r160new_capacity(T2 a1);
+T2 r168new_capacity(T2 a1);
 /*DS_ARRAYED_LIST[PR_TOKEN]*/
-void r160clear_items(T160* C,T2 a1,T2 a2);
+void r168clear_items(T168* C,T2 a1,T2 a2);
 /*DS_ARRAYED_LIST[PR_TOKEN]*/
-T6 r160valid_cursor(T160* C,T0* a1);
+T6 r168valid_cursor(T168* C,T0* a1);
 /*DS_ARRAYED_LIST[PR_TOKEN]*/
-T6 r160extendible(T160* C,T2 a1);
+T6 r168extendible(T168* C,T2 a1);
 /*DS_ARRAYED_LIST[PR_TOKEN]*/
-void r160wipe_out(T160* C);
+void r168wipe_out(T168* C);
 /*DS_ARRAYED_LIST[PR_TOKEN]*/
-T0* r160cursor_item(T160* C,T0* a1);
+T0* r168cursor_item(T168* C,T0* a1);
 /*DS_ARRAYED_LIST[PR_TOKEN]*/
-void r160remove_traversing_cursor(T160* C,T0* a1);
+void r168remove_traversing_cursor(T168* C,T0* a1);
 /*DS_ARRAYED_LIST[PR_TOKEN]*/
-void r160cursor_go_after(T160* C,T0* a1);
+void r168cursor_go_after(T168* C,T0* a1);
 /*DS_ARRAYED_LIST[PR_TOKEN]*/
-void r160move_all_cursors_after(T160* C);
+void r168move_all_cursors_after(T168* C);
 /*DS_ARRAYED_LIST[PR_TOKEN]*/
-void r160add_traversing_cursor(T160* C,T0* a1);
+void r168add_traversing_cursor(T168* C,T0* a1);
 /*DS_ARRAYED_LIST[PR_TOKEN]*/
-void r160move_left(T160* C,T2 a1,T2 a2);
+void r168move_left(T168* C,T2 a1,T2 a2);
 /*DS_ARRAYED_LIST[PR_TOKEN]*/
-T6 r160cursor_before(T0* a1);
+T6 r168cursor_before(T0* a1);
 /*DS_ARRAYED_LIST[PR_TOKEN]*/
-void r160make(T160* C,T2 a1);
+void r168make(T168* C,T2 a1);
 /*DS_ARRAYED_LIST[PR_TOKEN]*/
-void r160remove(T160* C,T2 a1);
+void r168remove(T168* C,T2 a1);
 /*DS_ARRAYED_LIST[PR_TOKEN]*/
-void r160move_cursors_left(T160* C,T2 a1);
+void r168move_cursors_left(T168* C,T2 a1);
 /*DS_ARRAYED_LIST[PR_TOKEN]*/
-void r160remove_last(T160* C);
+void r168remove_last(T168* C);
 /*DS_ARRAYED_LIST[PR_TOKEN]*/
-T6 r160cursor_after(T0* a1);
+T6 r168cursor_after(T0* a1);
 /*DS_ARRAYED_LIST[PR_TOKEN]*/
-T6 r160has(T160* C,T0* a1);
+T6 r168has(T168* C,T0* a1);
 /*DS_ARRAYED_LIST[PR_TOKEN]*/
-T2 r160cursor_index(T160* C,T0* a1);
+T2 r168cursor_index(T168* C,T0* a1);
 /*DS_ARRAYED_LIST[PR_TOKEN]*/
-void r160cursor_search_forth(T160* C,T0* a1,T0* a2);
+void r168cursor_search_forth(T168* C,T0* a1,T0* a2);
 /*DS_ARRAYED_LIST[PR_TOKEN]*/
-void r160cursor_forth(T160* C,T0* a1);
+void r168cursor_forth(T168* C,T0* a1);
 /*DS_ARRAYED_LIST[PR_TOKEN]*/
-void r160resize(T160* C,T2 a1);
+void r168resize(T168* C,T2 a1);
 /*DS_ARRAYED_LIST[PR_TOKEN]*/
-void r160move_last_cursors_after(T160* C);
+void r168move_last_cursors_after(T168* C);
 /*DS_ARRAYED_LIST[PR_TOKEN]*/
-void r160delete(T160* C,T0* a1);
+void r168delete(T168* C,T0* a1);
 /*DS_ARRAYED_LIST[PR_TOKEN]*/
-void r160cursor_start(T160* C,T0* a1);
+void r168cursor_start(T168* C,T0* a1);
 /*DS_ARRAYED_LIST[PR_TOKEN]*/
-void r160force_last(T160* C,T0* a1);
+void r168force_last(T168* C,T0* a1);
 /*DS_ARRAYED_LIST[PR_TOKEN]*/
-T0* r160new_cursor(T160* C);
+T0* r168new_cursor(T168* C);
 /*DS_ARRAYED_LIST[PR_TOKEN]*/
-void r160extend_last(T160* C,T0* a1);
+void r168extend_last(T168* C,T0* a1);
 /*DS_ARRAYED_LIST[PR_TOKEN]*/
-T6 r160is_full(T160* C);
+T6 r168is_full(T168* C);
 /*DS_ARRAYED_LIST[PR_TOKEN]*/
-void r160put_last(T160* C,T0* a1);
+void r168put_last(T168* C,T0* a1);
 /*DS_ARRAYED_LIST[PR_TOKEN]*/
-T6 r160cursor_off(T0* a1);
+T6 r168cursor_off(T0* a1);
 /*DS_ARRAYED_LIST_CURSOR[DS_ARRAYED_LIST[PR_VARIABLE]]*/
-T6 r468valid_position(T468* C,T2 a1);
+T6 r474valid_position(T474* C,T2 a1);
+/*KL_SPECIAL_ROUTINES[PR_STATE]*/
+T0* r396make(T2 a1);
+/*KL_SPECIAL_ROUTINES[PR_STATE]*/
+T0* r396resize(T0* a1,T2 a2);
 /*DS_ARRAYED_LIST[PR_VARIABLE]*/
-void r207copy(T207* C,T0* a1);
+void r213copy(T213* C,T0* a1);
 /*DS_ARRAYED_LIST[PR_VARIABLE]*/
-T6 r207valid_cursor(T207* C,T0* a1);
+T6 r213valid_cursor(T213* C,T0* a1);
 /*DS_ARRAYED_LIST[PR_VARIABLE]*/
-T6 r207extendible(T207* C,T2 a1);
+T6 r213extendible(T213* C,T2 a1);
 /*DS_ARRAYED_LIST[PR_VARIABLE]*/
-void r207move_cursors_right(T207* C,T2 a1,T2 a2);
+void r213move_cursors_right(T213* C,T2 a1,T2 a2);
 /*DS_ARRAYED_LIST[PR_VARIABLE]*/
-T0* r207last(T207* C);
+T0* r213last(T213* C);
 /*DS_ARRAYED_LIST[PR_VARIABLE]*/
-void r207put(T207* C,T0* a1,T2 a2);
+void r213put(T213* C,T0* a1,T2 a2);
 /*DS_ARRAYED_LIST[PR_VARIABLE]*/
-T0* r207cursor_item(T207* C,T0* a1);
+T0* r213cursor_item(T213* C,T0* a1);
 /*DS_ARRAYED_LIST[PR_VARIABLE]*/
-T6 r207is_equal(T207* C,T0* a1);
+T6 r213is_equal(T213* C,T0* a1);
 /*DS_ARRAYED_LIST[PR_VARIABLE]*/
-void r207remove_traversing_cursor(T207* C,T0* a1);
+void r213remove_traversing_cursor(T213* C,T0* a1);
 /*DS_ARRAYED_LIST[PR_VARIABLE]*/
-void r207cursor_go_after(T207* C,T0* a1);
+void r213cursor_go_after(T213* C,T0* a1);
 /*DS_ARRAYED_LIST[PR_VARIABLE]*/
-void r207move_all_cursors_after(T207* C);
+void r213move_all_cursors_after(T213* C);
 /*DS_ARRAYED_LIST[PR_VARIABLE]*/
-void r207add_traversing_cursor(T207* C,T0* a1);
+void r213add_traversing_cursor(T213* C,T0* a1);
 /*DS_ARRAYED_LIST[PR_VARIABLE]*/
-T6 r207se_assigned_from(T0* a1);
+T6 r213se_assigned_from(T0* a1);
 /*DS_ARRAYED_LIST[PR_VARIABLE]*/
-T0* r207clone(T0* a1);
+T0* r213clone(T0* a1);
 /*DS_ARRAYED_LIST[PR_VARIABLE]*/
-void r207move_left(T207* C,T2 a1,T2 a2);
+void r213move_left(T213* C,T2 a1,T2 a2);
 /*DS_ARRAYED_LIST[PR_VARIABLE]*/
-T6 r207cursor_before(T0* a1);
+T6 r213cursor_before(T0* a1);
 /*DS_ARRAYED_LIST[PR_VARIABLE]*/
-T6 r207same_type(T207* C,T0* a1);
+T6 r213same_type(T213* C,T0* a1);
 /*DS_ARRAYED_LIST[PR_VARIABLE]*/
-void r207make(T207* C,T2 a1);
+void r213make(T213* C,T2 a1);
 /*DS_ARRAYED_LIST[PR_VARIABLE]*/
-void r207remove(T207* C,T2 a1);
+void r213remove(T213* C,T2 a1);
 /*DS_ARRAYED_LIST[PR_VARIABLE]*/
-void r207move_cursors_left(T207* C,T2 a1);
+void r213move_cursors_left(T213* C,T2 a1);
 /*DS_ARRAYED_LIST[PR_VARIABLE]*/
-void r207remove_last(T207* C);
+void r213remove_last(T213* C);
 /*DS_ARRAYED_LIST[PR_VARIABLE]*/
-T6 r207cursor_after(T0* a1);
+T6 r213cursor_after(T0* a1);
 /*DS_ARRAYED_LIST[PR_VARIABLE]*/
-T6 r207conforms_to(T207* C,T0* a1);
+T6 r213conforms_to(T213* C,T0* a1);
 /*DS_ARRAYED_LIST[PR_VARIABLE]*/
-T6 r207has(T207* C,T0* a1);
+T6 r213has(T213* C,T0* a1);
 /*DS_ARRAYED_LIST[PR_VARIABLE]*/
-void r207move_right(T207* C,T2 a1,T2 a2);
+void r213move_right(T213* C,T2 a1,T2 a2);
 /*DS_ARRAYED_LIST[PR_VARIABLE]*/
-T2 r207cursor_index(T207* C,T0* a1);
+T2 r213cursor_index(T213* C,T0* a1);
 /*DS_ARRAYED_LIST[PR_VARIABLE]*/
-void r207cursor_search_forth(T207* C,T0* a1,T0* a2);
+void r213cursor_search_forth(T213* C,T0* a1,T0* a2);
 /*DS_ARRAYED_LIST[PR_VARIABLE]*/
-void r207cursor_forth(T207* C,T0* a1);
+void r213cursor_forth(T213* C,T0* a1);
 /*DS_ARRAYED_LIST[PR_VARIABLE]*/
-void r207resize(T207* C,T2 a1);
+void r213resize(T213* C,T2 a1);
 /*DS_ARRAYED_LIST[PR_VARIABLE]*/
-void r207move_last_cursors_after(T207* C);
+void r213move_last_cursors_after(T213* C);
 /*DS_ARRAYED_LIST[PR_VARIABLE]*/
-void r207cursor_start(T207* C,T0* a1);
+void r213cursor_start(T213* C,T0* a1);
 /*DS_ARRAYED_LIST[PR_VARIABLE]*/
-T0* r207twin(T207* C);
+T0* r213twin(T213* C);
 /*DS_ARRAYED_LIST[PR_VARIABLE]*/
-T0* r207new_cursor(T207* C);
+T0* r213new_cursor(T213* C);
 /*DS_ARRAYED_LIST[PR_VARIABLE]*/
-T6 r207is_full(T207* C);
+T6 r213is_full(T213* C);
 /*DS_ARRAYED_LIST[PR_VARIABLE]*/
-void r207put_last(T207* C,T0* a1);
+void r213put_last(T213* C,T0* a1);
 /*DS_ARRAYED_LIST[PR_VARIABLE]*/
-T6 r207cursor_off(T0* a1);
-/*KL_FIXED_ARRAY_ROUTINES[PR_VARIABLE]*/
-T0* r483make(T2 a1);
-/*KL_FIXED_ARRAY_ROUTINES[PR_VARIABLE]*/
-T0* r483resize(T0* a1,T2 a2);
+T6 r213cursor_off(T0* a1);
+/*KL_SPECIAL_ROUTINES[PR_REDUCTION]*/
+T0* r400make(T2 a1);
+/*KL_SPECIAL_ROUTINES[PR_REDUCTION]*/
+T0* r400resize(T0* a1,T2 a2);
+/*KL_SPECIAL_ROUTINES[PR_ERROR_ACTION]*/
+T0* r589make(T2 a1);
+/*KL_SPECIAL_ROUTINES[PR_ERROR_ACTION]*/
+T0* r589resize(T0* a1,T2 a2);
+/*KL_SPECIAL_ROUTINES[DS_ARRAYED_LIST[PR_VARIABLE]]*/
+T0* r477make(T2 a1);
 /*KL_EQUALITY_TESTER[STRING]*/
-T6 r554test(T0* a1,T0* a2);
+T6 r549test(T0* a1,T0* a2);
+/*SPECIAL[DS_NESTED_LIST[PR_RULE]]*/
+T6 r442valid_index(T442* C,T2 a1);
+/*SPECIAL[DS_NESTED_LIST[PR_RULE]]*/
+void r442make(T442* C,T2 a1);
+/*SPECIAL[DS_NESTED_LIST[PR_RULE]]*/
+T0* r442resize(T442* C,T2 a1);
+/*SPECIAL[DS_NESTED_LIST[PR_RULE]]*/
+void r442array_resize(T442* C,T2 a1);
 /*DS_LINKED_LIST[PR_CONFLICT]*/
-T6 r345valid_cursor(T345* C,T0* a1);
+T6 r350valid_cursor(T350* C,T0* a1);
 /*DS_LINKED_LIST[PR_CONFLICT]*/
-T0* r345cursor_item(T0* a1);
+T0* r350cursor_item(T0* a1);
 /*DS_LINKED_LIST[PR_CONFLICT]*/
-void r345remove_traversing_cursor(T345* C,T0* a1);
+void r350remove_traversing_cursor(T350* C,T0* a1);
 /*DS_LINKED_LIST[PR_CONFLICT]*/
-void r345add_traversing_cursor(T345* C,T0* a1);
+void r350add_traversing_cursor(T350* C,T0* a1);
 /*DS_LINKED_LIST[PR_CONFLICT]*/
-void r345make(T345* C);
+void r350make(T350* C);
 /*DS_LINKED_LIST[PR_CONFLICT]*/
-T6 r345cursor_after(T0* a1);
+T6 r350cursor_after(T0* a1);
 /*DS_LINKED_LIST[PR_CONFLICT]*/
-void r345cursor_forth(T345* C,T0* a1);
+void r350cursor_forth(T350* C,T0* a1);
 /*DS_LINKED_LIST[PR_CONFLICT]*/
-void r345cursor_start(T345* C,T0* a1);
+void r350cursor_start(T350* C,T0* a1);
 /*DS_LINKED_LIST[PR_CONFLICT]*/
-void r345force_last(T345* C,T0* a1);
+void r350force_last(T350* C,T0* a1);
 /*DS_LINKED_LIST[PR_CONFLICT]*/
-T0* r345new_cursor(T345* C);
+T0* r350new_cursor(T350* C);
 /*DS_LINKED_LIST[PR_CONFLICT]*/
-T6 r345cursor_off(T0* a1);
+T6 r350cursor_off(T0* a1);
 /*KL_EQUALITY_TESTER[PR_POSITION]*/
-T6 r397test(T0* a1,T0* a2);
-/*KL_FIXED_ARRAY_ROUTINES[INTEGER]*/
-T0* r127to_fixed_array(T0* a1);
-/*KL_FIXED_ARRAY_ROUTINES[INTEGER]*/
-T0* r127make(T2 a1);
-/*KL_FIXED_ARRAY_ROUTINES[INTEGER]*/
-T0* r127make_from_array(T0* a1);
-/*KL_FIXED_ARRAY_ROUTINES[INTEGER]*/
-T0* r127resize(T0* a1,T2 a2);
+T6 r402test(T0* a1,T0* a2);
+/*KL_SPECIAL_ROUTINES[PR_POSITION]*/
+T0* r331make(T2 a1);
+/*KL_SPECIAL_ROUTINES[PR_POSITION]*/
+T0* r331resize(T0* a1,T2 a2);
 /*KL_COMPARABLE_COMPARATOR[INTEGER]*/
-T6 r242less_than(T2 a1,T2 a2);
+T6 r247less_than(T2 a1,T2 a2);
 /*DS_ARRAYED_STACK[DS_NESTED_LIST[PR_RULE]]*/
-T2 r429new_capacity(T2 a1);
+T2 r434new_capacity(T2 a1);
 /*DS_ARRAYED_STACK[DS_NESTED_LIST[PR_RULE]]*/
-T6 r429extendible(T429* C,T2 a1);
+T6 r434extendible(T434* C,T2 a1);
 /*DS_ARRAYED_STACK[DS_NESTED_LIST[PR_RULE]]*/
-void r429force(T429* C,T0* a1);
+void r434force(T434* C,T0* a1);
 /*DS_ARRAYED_STACK[DS_NESTED_LIST[PR_RULE]]*/
-T0* r429item(T429* C);
+T0* r434item(T434* C);
 /*DS_ARRAYED_STACK[DS_NESTED_LIST[PR_RULE]]*/
-void r429make(T429* C,T2 a1);
+void r434make(T434* C,T2 a1);
 /*DS_ARRAYED_STACK[DS_NESTED_LIST[PR_RULE]]*/
-void r429remove(T429* C);
+void r434remove(T434* C);
 /*DS_ARRAYED_STACK[DS_NESTED_LIST[PR_RULE]]*/
-T6 r429has(T429* C,T0* a1);
+T6 r434has(T434* C,T0* a1);
 /*DS_ARRAYED_STACK[DS_NESTED_LIST[PR_RULE]]*/
-void r429resize(T429* C,T2 a1);
-/*KL_FIXED_ARRAY_ROUTINES[PR_TYPE]*/
-T0* r128make(T2 a1);
-/*KL_FIXED_ARRAY_ROUTINES[PR_TYPE]*/
-T0* r128resize(T0* a1,T2 a2);
+void r434resize(T434* C,T2 a1);
 /*DS_ARRAYED_LIST[PR_RULE]*/
-void r87copy(T87* C,T0* a1);
+void r89copy(T89* C,T0* a1);
 /*DS_ARRAYED_LIST[PR_RULE]*/
-T6 r87valid_cursor(T87* C,T0* a1);
+T6 r89valid_cursor(T89* C,T0* a1);
 /*DS_ARRAYED_LIST[PR_RULE]*/
-T6 r87extendible(T87* C,T2 a1);
-/*DS_ARRAYED_LIST[PR_RULE]*/
-T0* r87cursor_item(T87* C,T0* a1);
-/*DS_ARRAYED_LIST[PR_RULE]*/
-T6 r87is_equal(T87* C,T0* a1);
-/*DS_ARRAYED_LIST[PR_RULE]*/
-void r87remove_traversing_cursor(T87* C,T0* a1);
-/*DS_ARRAYED_LIST[PR_RULE]*/
-void r87cursor_go_after(T87* C,T0* a1);
-/*DS_ARRAYED_LIST[PR_RULE]*/
-void r87move_all_cursors_after(T87* C);
-/*DS_ARRAYED_LIST[PR_RULE]*/
-void r87add_traversing_cursor(T87* C,T0* a1);
-/*DS_ARRAYED_LIST[PR_RULE]*/
-T6 r87se_assigned_from(T0* a1);
-/*DS_ARRAYED_LIST[PR_RULE]*/
-T0* r87clone(T0* a1);
-/*DS_ARRAYED_LIST[PR_RULE]*/
-void r87move_left(T87* C,T2 a1,T2 a2);
-/*DS_ARRAYED_LIST[PR_RULE]*/
-T6 r87cursor_before(T0* a1);
-/*DS_ARRAYED_LIST[PR_RULE]*/
-T6 r87same_type(T87* C,T0* a1);
-/*DS_ARRAYED_LIST[PR_RULE]*/
-void r87make(T87* C,T2 a1);
-/*DS_ARRAYED_LIST[PR_RULE]*/
-void r87remove(T87* C,T2 a1);
-/*DS_ARRAYED_LIST[PR_RULE]*/
-void r87move_cursors_left(T87* C,T2 a1);
-/*DS_ARRAYED_LIST[PR_RULE]*/
-void r87remove_last(T87* C);
-/*DS_ARRAYED_LIST[PR_RULE]*/
-T6 r87cursor_after(T0* a1);
-/*DS_ARRAYED_LIST[PR_RULE]*/
-T6 r87conforms_to(T87* C,T0* a1);
-/*DS_ARRAYED_LIST[PR_RULE]*/
-T6 r87has(T87* C,T0* a1);
-/*DS_ARRAYED_LIST[PR_RULE]*/
-T2 r87cursor_index(T87* C,T0* a1);
-/*DS_ARRAYED_LIST[PR_RULE]*/
-void r87cursor_search_forth(T87* C,T0* a1,T0* a2);
-/*DS_ARRAYED_LIST[PR_RULE]*/
-void r87cursor_forth(T87* C,T0* a1);
-/*DS_ARRAYED_LIST[PR_RULE]*/
-void r87resize(T87* C,T2 a1);
-/*DS_ARRAYED_LIST[PR_RULE]*/
-void r87move_last_cursors_after(T87* C);
-/*DS_ARRAYED_LIST[PR_RULE]*/
-void r87cursor_start(T87* C,T0* a1);
-/*DS_ARRAYED_LIST[PR_RULE]*/
-T0* r87twin(T87* C);
-/*DS_ARRAYED_LIST[PR_RULE]*/
-T0* r87new_cursor(T87* C);
-/*DS_ARRAYED_LIST[PR_RULE]*/
-T6 r87is_full(T87* C);
-/*DS_ARRAYED_LIST[PR_RULE]*/
-void r87put_last(T87* C,T0* a1);
-/*DS_ARRAYED_LIST[PR_RULE]*/
-T6 r87cursor_off(T0* a1);
-/*DS_ARRAYED_LIST_CURSOR[PR_RULE]*/
-T6 r484valid_position(T484* C,T2 a1);
-/*DS_ARRAYED_LIST_CURSOR[PR_RULE]*/
-T0* r484item(T484* C);
-/*DS_ARRAYED_LIST_CURSOR[PR_RULE]*/
-T6 r484after(T484* C);
-/*DS_ARRAYED_LIST_CURSOR[PR_RULE]*/
-T2 r484index(T484* C);
-/*DS_ARRAYED_LIST_CURSOR[PR_RULE]*/
-T6 r484off(T484* C);
-/*SPECIAL[DS_ARRAYED_LIST[PR_TYPE]]*/
-T6 r513valid_index(T513* C,T2 a1);
-/*SPECIAL[DS_ARRAYED_LIST[PR_TYPE]]*/
-void r513make(T513* C,T2 a1);
-/*SPECIAL[DS_ARRAYED_LIST[PR_TYPE]]*/
-T0* r513resize(T513* C,T2 a1);
-/*SPECIAL[DS_ARRAYED_LIST[PR_TYPE]]*/
-void r513array_resize(T513* C,T2 a1);
-/*DS_HASH_TABLE[DS_ARRAYED_LIST[PR_STATE],INTEGER]*/
-void r399make_clashes(T399* C,T2 a1);
-/*DS_HASH_TABLE[DS_ARRAYED_LIST[PR_STATE],INTEGER]*/
-void r399put(T399* C,T0* a1,T2 a2);
-/*DS_HASH_TABLE[DS_ARRAYED_LIST[PR_STATE],INTEGER]*/
-void r399search_position(T399* C,T2 a1);
-/*DS_HASH_TABLE[DS_ARRAYED_LIST[PR_STATE],INTEGER]*/
-void r399keys_resize(T399* C,T2 a1);
-/*DS_HASH_TABLE[DS_ARRAYED_LIST[PR_STATE],INTEGER]*/
-T0* r399item(T399* C,T2 a1);
-/*DS_HASH_TABLE[DS_ARRAYED_LIST[PR_STATE],INTEGER]*/
-void r399make_items(T399* C,T2 a1);
-/*DS_HASH_TABLE[DS_ARRAYED_LIST[PR_STATE],INTEGER]*/
-void r399make(T399* C,T2 a1);
-/*DS_HASH_TABLE[DS_ARRAYED_LIST[PR_STATE],INTEGER]*/
-T6 r399has(T399* C,T2 a1);
-/*DS_HASH_TABLE[DS_ARRAYED_LIST[PR_STATE],INTEGER]*/
-void r399make_keys(T399* C,T2 a1);
-/*DS_HASH_TABLE[DS_ARRAYED_LIST[PR_STATE],INTEGER]*/
-T2 r399hash_position(T399* C,T2 a1);
-/*DS_HASH_TABLE[DS_ARRAYED_LIST[PR_STATE],INTEGER]*/
-void r399items_resize(T399* C,T2 a1);
-/*DS_HASH_TABLE[DS_ARRAYED_LIST[PR_STATE],INTEGER]*/
-void r399make_with_equality_testers(T399* C,T2 a1,T0* a2,T0* a3);
-/*DS_HASH_TABLE[DS_ARRAYED_LIST[PR_STATE],INTEGER]*/
-void r399resize(T399* C,T2 a1);
-/*DS_HASH_TABLE[DS_ARRAYED_LIST[PR_STATE],INTEGER]*/
-void r399clashes_resize(T399* C,T2 a1);
-/*DS_HASH_TABLE[DS_ARRAYED_LIST[PR_STATE],INTEGER]*/
-void r399slots_resize(T399* C,T2 a1);
-/*DS_HASH_TABLE[DS_ARRAYED_LIST[PR_STATE],INTEGER]*/
-T0* r399new_cursor(T399* C);
-/*DS_HASH_TABLE[DS_ARRAYED_LIST[PR_STATE],INTEGER]*/
-void r399make_slots(T399* C,T2 a1);
-/*DS_HASH_TABLE[DS_ARRAYED_LIST[PR_STATE],INTEGER]*/
-T6 r399is_full(T399* C);
-/*DS_HASH_TABLE[DS_ARRAYED_LIST[PR_STATE],INTEGER]*/
-T2 r399new_modulus(T2 a1);
-/*DS_HASH_TABLE_CURSOR[PR_VARIABLE,STRING]*/
-void r621make(T621* C,T0* a1);
-/*KL_FIXED_ARRAY_ROUTINES[DS_NESTED_LIST[PR_RULE]]*/
-T0* r439make(T2 a1);
-/*KL_FIXED_ARRAY_ROUTINES[DS_NESTED_LIST[PR_RULE]]*/
-T0* r439resize(T0* a1,T2 a2);
-/*DS_LINKED_LIST_CURSOR[PR_TRANSITION]*/
-void r240set(T240* C,T0* a1,T6 a2,T6 a3);
-/*DS_LINKED_LIST_CURSOR[PR_TRANSITION]*/
-void r240make(T240* C,T0* a1);
-/*DS_LINKED_LIST_CURSOR[PR_TRANSITION]*/
-void r240set_after(T240* C);
-/*SPECIAL[PR_TOKEN]*/
-T6 r521valid_index(T521* C,T2 a1);
-/*SPECIAL[PR_TOKEN]*/
-void r521make(T521* C,T2 a1);
-/*SPECIAL[PR_TOKEN]*/
-T0* r521resize(T521* C,T2 a1);
-/*SPECIAL[PR_TOKEN]*/
-void r521array_resize(T521* C,T2 a1);
-/*KL_FIXED_ARRAY_ROUTINES[PR_ERROR_ACTION]*/
-T0* r593make(T2 a1);
-/*KL_FIXED_ARRAY_ROUTINES[PR_ERROR_ACTION]*/
-T0* r593resize(T0* a1,T2 a2);
-/*DS_HASH_TABLE_CURSOR[PR_TOKEN,STRING]*/
-T6 r625valid_position(T625* C,T2 a1);
-/*DS_HASH_TABLE_CURSOR[PR_TOKEN,STRING]*/
-T0* r625item(T625* C);
-/*DS_HASH_TABLE_CURSOR[PR_TOKEN,STRING]*/
-T6 r625after(T625* C);
-/*DS_HASH_TABLE_CURSOR[PR_TOKEN,STRING]*/
-void r625make(T625* C,T0* a1);
-/*DS_HASH_TABLE_CURSOR[PR_TOKEN,STRING]*/
-T6 r625off(T625* C);
-/*DS_LINKED_LIST[PR_REDUCTION]*/
-T6 r367valid_cursor(T367* C,T0* a1);
-/*DS_LINKED_LIST[PR_REDUCTION]*/
-void r367append_last(T367* C,T0* a1);
-/*DS_LINKED_LIST[PR_REDUCTION]*/
-T0* r367cursor_item(T0* a1);
-/*DS_LINKED_LIST[PR_REDUCTION]*/
-void r367remove_traversing_cursor(T367* C,T0* a1);
-/*DS_LINKED_LIST[PR_REDUCTION]*/
-void r367add_traversing_cursor(T367* C,T0* a1);
-/*DS_LINKED_LIST[PR_REDUCTION]*/
-void r367make(T367* C);
-/*DS_LINKED_LIST[PR_REDUCTION]*/
-T6 r367cursor_after(T0* a1);
-/*DS_LINKED_LIST[PR_REDUCTION]*/
-void r367cursor_forth(T367* C,T0* a1);
-/*DS_LINKED_LIST[PR_REDUCTION]*/
-void r367make_from_linear(T367* C,T0* a1);
-/*DS_LINKED_LIST[PR_REDUCTION]*/
-void r367cursor_start(T367* C,T0* a1);
-/*DS_LINKED_LIST[PR_REDUCTION]*/
-T0* r367new_cursor(T367* C);
-/*DS_LINKED_LIST[PR_REDUCTION]*/
-T6 r367cursor_off(T0* a1);
-/*KL_FIXED_ARRAY_ROUTINES[PR_REDUCTION]*/
-T0* r395make(T2 a1);
-/*KL_FIXED_ARRAY_ROUTINES[PR_REDUCTION]*/
-T0* r395resize(T0* a1,T2 a2);
-/*DS_ARRAYED_LIST_CURSOR[PR_STATE]*/
-T6 r356valid_position(T356* C,T2 a1);
-/*DS_ARRAYED_LIST[PR_STATE]*/
-T2 r80new_capacity(T2 a1);
-/*DS_ARRAYED_LIST[PR_STATE]*/
-T6 r80extendible(T80* C,T2 a1);
-/*DS_ARRAYED_LIST[PR_STATE]*/
-void r80move_cursors_right(T80* C,T2 a1,T2 a2);
-/*DS_ARRAYED_LIST[PR_STATE]*/
-T0* r80last(T80* C);
-/*DS_ARRAYED_LIST[PR_STATE]*/
-void r80put(T80* C,T0* a1,T2 a2);
-/*DS_ARRAYED_LIST[PR_STATE]*/
-void r80move_left(T80* C,T2 a1,T2 a2);
-/*DS_ARRAYED_LIST[PR_STATE]*/
-void r80make(T80* C,T2 a1);
-/*DS_ARRAYED_LIST[PR_STATE]*/
-void r80remove(T80* C,T2 a1);
-/*DS_ARRAYED_LIST[PR_STATE]*/
-void r80move_cursors_left(T80* C,T2 a1);
-/*DS_ARRAYED_LIST[PR_STATE]*/
-void r80remove_last(T80* C);
-/*DS_ARRAYED_LIST[PR_STATE]*/
-void r80move_right(T80* C,T2 a1,T2 a2);
-/*DS_ARRAYED_LIST[PR_STATE]*/
-void r80resize(T80* C,T2 a1);
-/*DS_ARRAYED_LIST[PR_STATE]*/
-void r80move_last_cursors_after(T80* C);
-/*DS_ARRAYED_LIST[PR_STATE]*/
-void r80force_last(T80* C,T0* a1);
-/*DS_ARRAYED_LIST[PR_STATE]*/
-T0* r80new_cursor(T80* C);
-/*DS_ARRAYED_LIST[PR_STATE]*/
-void r80put_last(T80* C,T0* a1);
-/*DS_BUBBLE_SORTER[PR_PORTION]*/
-void r226subsort_with_comparator(T0* a1,T0* a2,T2 a3,T2 a4);
-/*DS_BUBBLE_SORTER[PR_PORTION]*/
-void r226sort_with_comparator(T0* a1,T0* a2);
-/*DS_ARRAYED_LIST[PR_POSITION]*/
-T6 r299extendible(T299* C,T2 a1);
-/*DS_ARRAYED_LIST[PR_POSITION]*/
-void r299make_equal(T299* C,T2 a1);
-/*DS_ARRAYED_LIST[PR_POSITION]*/
-void r299make(T299* C,T2 a1);
-/*DS_ARRAYED_LIST[PR_POSITION]*/
-T6 r299has(T299* C,T0* a1);
-/*DS_ARRAYED_LIST[PR_POSITION]*/
-void r299resize(T299* C,T2 a1);
-/*DS_ARRAYED_LIST[PR_POSITION]*/
-T0* r299new_cursor(T299* C);
-/*DS_ARRAYED_LIST[PR_POSITION]*/
-T6 r299is_full(T299* C);
-/*DS_ARRAYED_LIST[PR_POSITION]*/
-void r299put_last(T299* C,T0* a1);
-/*DS_HASH_TABLE_CURSOR[PR_TYPE,STRING]*/
-void r615make(T615* C,T0* a1);
-/*KL_FIXED_ARRAY_ROUTINES[PR_STATE]*/
-T0* r391make(T2 a1);
-/*KL_FIXED_ARRAY_ROUTINES[PR_STATE]*/
-T0* r391resize(T0* a1,T2 a2);
-/*DS_BUBBLE_SORTER[PR_POSITION]*/
-void r411subsort_with_comparator(T0* a1,T0* a2,T2 a3,T2 a4);
-/*DS_BUBBLE_SORTER[PR_POSITION]*/
-void r411sort_with_comparator(T0* a1,T0* a2);
-/*DS_HASH_TABLE[PR_VARIABLE,STRING]*/
-T2 r558new_capacity(T2 a1);
-/*DS_HASH_TABLE[PR_VARIABLE,STRING]*/
-void r558force(T558* C,T0* a1,T0* a2);
-/*DS_HASH_TABLE[PR_VARIABLE,STRING]*/
-void r558make_clashes(T558* C,T2 a1);
-/*DS_HASH_TABLE[PR_VARIABLE,STRING]*/
-void r558search_position(T558* C,T0* a1);
-/*DS_HASH_TABLE[PR_VARIABLE,STRING]*/
-void r558keys_resize(T558* C,T2 a1);
-/*DS_HASH_TABLE[PR_VARIABLE,STRING]*/
-T0* r558item(T558* C,T0* a1);
-/*DS_HASH_TABLE[PR_VARIABLE,STRING]*/
-void r558make_items(T558* C,T2 a1);
-/*DS_HASH_TABLE[PR_VARIABLE,STRING]*/
-void r558make(T558* C,T2 a1);
-/*DS_HASH_TABLE[PR_VARIABLE,STRING]*/
-T6 r558has(T558* C,T0* a1);
-/*DS_HASH_TABLE[PR_VARIABLE,STRING]*/
-void r558make_keys(T558* C,T2 a1);
-/*DS_HASH_TABLE[PR_VARIABLE,STRING]*/
-T2 r558hash_position(T558* C,T0* a1);
-/*DS_HASH_TABLE[PR_VARIABLE,STRING]*/
-void r558items_resize(T558* C,T2 a1);
-/*DS_HASH_TABLE[PR_VARIABLE,STRING]*/
-void r558make_with_equality_testers(T558* C,T2 a1,T0* a2,T0* a3);
-/*DS_HASH_TABLE[PR_VARIABLE,STRING]*/
-void r558resize(T558* C,T2 a1);
-/*DS_HASH_TABLE[PR_VARIABLE,STRING]*/
-void r558clashes_resize(T558* C,T2 a1);
-/*DS_HASH_TABLE[PR_VARIABLE,STRING]*/
-void r558slots_resize(T558* C,T2 a1);
-/*DS_HASH_TABLE[PR_VARIABLE,STRING]*/
-T0* r558new_cursor(T558* C);
-/*DS_HASH_TABLE[PR_VARIABLE,STRING]*/
-void r558make_slots(T558* C,T2 a1);
-/*DS_HASH_TABLE[PR_VARIABLE,STRING]*/
-T2 r558new_modulus(T2 a1);
-/*DS_HASH_TABLE[INTEGER,PR_TYPE]*/
-T6 r106valid_cursor(T106* C,T0* a1);
-/*DS_HASH_TABLE[INTEGER,PR_TYPE]*/
-void r106make_clashes(T106* C,T2 a1);
-/*DS_HASH_TABLE[INTEGER,PR_TYPE]*/
-T6 r106valid_slot(T106* C,T2 a1);
-/*DS_HASH_TABLE[INTEGER,PR_TYPE]*/
-T6 r106valid_position(T106* C,T2 a1);
-/*DS_HASH_TABLE[INTEGER,PR_TYPE]*/
-T2 r106cursor_item(T106* C,T0* a1);
-/*DS_HASH_TABLE[INTEGER,PR_TYPE]*/
-void r106search_position(T106* C,T0* a1);
-/*DS_HASH_TABLE[INTEGER,PR_TYPE]*/
-void r106remove_traversing_cursor(T106* C,T0* a1);
-/*DS_HASH_TABLE[INTEGER,PR_TYPE]*/
-T2 r106item(T106* C,T0* a1);
-/*DS_HASH_TABLE[INTEGER,PR_TYPE]*/
-void r106make_items(T106* C,T2 a1);
-/*DS_HASH_TABLE[INTEGER,PR_TYPE]*/
-void r106add_traversing_cursor(T106* C,T0* a1);
-/*DS_HASH_TABLE[INTEGER,PR_TYPE]*/
-void r106put_new(T106* C,T2 a1,T0* a2);
-/*DS_HASH_TABLE[INTEGER,PR_TYPE]*/
-T0* r106cursor_key(T106* C,T0* a1);
-/*DS_HASH_TABLE[INTEGER,PR_TYPE]*/
-T6 r106cursor_after(T0* a1);
-/*DS_HASH_TABLE[INTEGER,PR_TYPE]*/
-T6 r106has(T106* C,T0* a1);
-/*DS_HASH_TABLE[INTEGER,PR_TYPE]*/
-void r106make_keys(T106* C,T2 a1);
-/*DS_HASH_TABLE[INTEGER,PR_TYPE]*/
-T2 r106hash_position(T106* C,T0* a1);
-/*DS_HASH_TABLE[INTEGER,PR_TYPE]*/
-void r106cursor_forth(T106* C,T0* a1);
-/*DS_HASH_TABLE[INTEGER,PR_TYPE]*/
-void r106make_with_equality_testers(T106* C,T2 a1,T0* a2,T0* a3);
-/*DS_HASH_TABLE[INTEGER,PR_TYPE]*/
-T2 r106found_item(T106* C);
-/*DS_HASH_TABLE[INTEGER,PR_TYPE]*/
-T6 r106found(T106* C);
-/*DS_HASH_TABLE[INTEGER,PR_TYPE]*/
-void r106search(T106* C,T0* a1);
-/*DS_HASH_TABLE[INTEGER,PR_TYPE]*/
-void r106cursor_start(T106* C,T0* a1);
-/*DS_HASH_TABLE[INTEGER,PR_TYPE]*/
-T0* r106new_cursor(T106* C);
-/*DS_HASH_TABLE[INTEGER,PR_TYPE]*/
-void r106make_slots(T106* C,T2 a1);
-/*DS_HASH_TABLE[INTEGER,PR_TYPE]*/
-T6 r106is_full(T106* C);
-/*DS_HASH_TABLE[INTEGER,PR_TYPE]*/
-T2 r106new_modulus(T2 a1);
-/*DS_HASH_TABLE[INTEGER,PR_TYPE]*/
-T6 r106cursor_off(T0* a1);
-/*KL_ARRAY_ROUTINES[INTEGER]*/
-void r209subcopy(T0* a1,T0* a2,T2 a3,T2 a4,T2 a5);
-/*KL_ARRAY_ROUTINES[INTEGER]*/
-T0* r209subarray(T0* a1,T2 a2,T2 a3,T2 a4);
-/*DS_LINKED_LIST[PR_TOKEN]*/
-T6 r335valid_cursor(T335* C,T0* a1);
-/*DS_LINKED_LIST[PR_TOKEN]*/
-T0* r335cursor_item(T0* a1);
-/*DS_LINKED_LIST[PR_TOKEN]*/
-void r335remove_traversing_cursor(T335* C,T0* a1);
-/*DS_LINKED_LIST[PR_TOKEN]*/
-void r335cursor_go_after(T335* C,T0* a1);
-/*DS_LINKED_LIST[PR_TOKEN]*/
-void r335add_traversing_cursor(T335* C,T0* a1);
-/*DS_LINKED_LIST[PR_TOKEN]*/
-void r335make(T335* C);
-/*DS_LINKED_LIST[PR_TOKEN]*/
-T6 r335cursor_after(T0* a1);
-/*DS_LINKED_LIST[PR_TOKEN]*/
-T6 r335has(T335* C,T0* a1);
-/*DS_LINKED_LIST[PR_TOKEN]*/
-void r335cursor_search_forth(T335* C,T0* a1,T0* a2);
-/*DS_LINKED_LIST[PR_TOKEN]*/
-void r335cursor_forth(T335* C,T0* a1);
-/*DS_LINKED_LIST[PR_TOKEN]*/
-void r335cursor_start(T335* C,T0* a1);
-/*DS_LINKED_LIST[PR_TOKEN]*/
-void r335force_last(T335* C,T0* a1);
-/*DS_LINKED_LIST[PR_TOKEN]*/
-T0* r335new_cursor(T335* C);
-/*DS_LINKED_LIST[PR_TOKEN]*/
-T6 r335cursor_off(T0* a1);
-/*KL_EQUALITY_TESTER[PR_RULE]*/
-T6 r331test(T0* a1,T0* a2);
-/*DS_PAIR[STRING,INTEGER]*/
-void r557make(T557* C,T0* a1,T2 a2);
-/*DS_HASH_TABLE_CURSOR[INTEGER,PR_TYPE]*/
-T0* r105key(T105* C);
-/*DS_HASH_TABLE_CURSOR[INTEGER,PR_TYPE]*/
-T6 r105valid_position(T105* C,T2 a1);
-/*DS_HASH_TABLE_CURSOR[INTEGER,PR_TYPE]*/
-T2 r105item(T105* C);
-/*DS_HASH_TABLE_CURSOR[INTEGER,PR_TYPE]*/
-T6 r105after(T105* C);
-/*DS_HASH_TABLE_CURSOR[INTEGER,PR_TYPE]*/
-void r105make(T105* C,T0* a1);
-/*KL_FIXED_ARRAY_ROUTINES[PR_PORTION]*/
-T0* r284make(T2 a1);
-/*KL_SPECIAL_ROUTINES[DS_ARRAYED_LIST[PR_TYPE]]*/
-T0* r512make(T2 a1);
-/*KL_SPECIAL_ROUTINES[DS_ARRAYED_LIST[PR_TYPE]]*/
-T0* r512resize(T0* a1,T2 a2);
-/*DS_ARRAYED_LIST_CURSOR[PR_REDUCTION]*/
-T6 r394valid_position(T394* C,T2 a1);
-/*DS_ARRAYED_LIST_CURSOR[PR_REDUCTION]*/
-T0* r394item(T394* C);
-/*DS_ARRAYED_LIST_CURSOR[PR_REDUCTION]*/
-T6 r394after(T394* C);
-/*DS_ARRAYED_LIST_CURSOR[PR_REDUCTION]*/
-T6 r394off(T394* C);
-/*DS_LINKED_LIST_CURSOR[PR_RULE]*/
-void r416set(T416* C,T0* a1,T6 a2,T6 a3);
-/*DS_LINKED_LIST_CURSOR[PR_RULE]*/
-void r416make(T416* C,T0* a1);
-/*DS_LINKED_LIST_CURSOR[PR_RULE]*/
-void r416set_after(T416* C);
-/*DS_ARRAYED_LIST[PR_ERROR_ACTION]*/
-T6 r310extendible(T310* C,T2 a1);
-/*DS_ARRAYED_LIST[PR_ERROR_ACTION]*/
-void r310make(T310* C,T2 a1);
-/*DS_ARRAYED_LIST[PR_ERROR_ACTION]*/
-void r310resize(T310* C,T2 a1);
-/*DS_ARRAYED_LIST[PR_ERROR_ACTION]*/
-T0* r310new_cursor(T310* C);
-/*DS_ARRAYED_LIST[PR_ERROR_ACTION]*/
-T6 r310is_full(T310* C);
-/*DS_ARRAYED_LIST[PR_ERROR_ACTION]*/
-void r310put_last(T310* C,T0* a1);
-/*DS_LINKED_LIST_CURSOR[PR_REDUCTION]*/
-void r375set(T375* C,T0* a1,T6 a2,T6 a3);
-/*DS_LINKED_LIST_CURSOR[PR_REDUCTION]*/
-void r375make(T375* C,T0* a1);
-/*DS_ARRAYED_LIST_CURSOR[PR_VARIABLE]*/
-T6 r481valid_position(T481* C,T2 a1);
-/*DS_ARRAYED_LIST_CURSOR[PR_VARIABLE]*/
-T0* r481item(T481* C);
-/*DS_ARRAYED_LIST_CURSOR[PR_VARIABLE]*/
-T6 r481after(T481* C);
-/*DS_ARRAYED_LIST_CURSOR[PR_VARIABLE]*/
-T2 r481index(T481* C);
-/*DS_ARRAYED_LIST_CURSOR[PR_VARIABLE]*/
-T6 r481off(T481* C);
-/*DS_ARRAYED_LIST[PR_REDUCTION]*/
-T6 r270valid_cursor(T270* C,T0* a1);
-/*DS_ARRAYED_LIST[PR_REDUCTION]*/
-T6 r270extendible(T270* C,T2 a1);
-/*DS_ARRAYED_LIST[PR_REDUCTION]*/
-T0* r270cursor_item(T270* C,T0* a1);
-/*DS_ARRAYED_LIST[PR_REDUCTION]*/
-void r270remove_traversing_cursor(T270* C,T0* a1);
-/*DS_ARRAYED_LIST[PR_REDUCTION]*/
-void r270add_traversing_cursor(T270* C,T0* a1);
-/*DS_ARRAYED_LIST[PR_REDUCTION]*/
-T6 r270cursor_before(T0* a1);
-/*DS_ARRAYED_LIST[PR_REDUCTION]*/
-void r270make(T270* C,T2 a1);
-/*DS_ARRAYED_LIST[PR_REDUCTION]*/
-T6 r270cursor_after(T0* a1);
-/*DS_ARRAYED_LIST[PR_REDUCTION]*/
-void r270cursor_forth(T270* C,T0* a1);
-/*DS_ARRAYED_LIST[PR_REDUCTION]*/
-void r270resize(T270* C,T2 a1);
-/*DS_ARRAYED_LIST[PR_REDUCTION]*/
-void r270cursor_start(T270* C,T0* a1);
-/*DS_ARRAYED_LIST[PR_REDUCTION]*/
-T0* r270new_cursor(T270* C);
-/*DS_ARRAYED_LIST[PR_REDUCTION]*/
-void r270put_last(T270* C,T0* a1);
-/*DS_ARRAYED_LIST[PR_REDUCTION]*/
-T6 r270cursor_off(T0* a1);
-/*KL_FIXED_ARRAY_ROUTINES[PR_TOKEN]*/
-T0* r290make(T2 a1);
-/*KL_FIXED_ARRAY_ROUTINES[PR_TOKEN]*/
-T0* r290resize(T0* a1,T2 a2);
-/*DS_ARRAYED_LIST[PR_SYMBOL]*/
 T6 r89extendible(T89* C,T2 a1);
-/*DS_ARRAYED_LIST[PR_SYMBOL]*/
+/*DS_ARRAYED_LIST[PR_RULE]*/
+T0* r89cursor_item(T89* C,T0* a1);
+/*DS_ARRAYED_LIST[PR_RULE]*/
+T6 r89is_equal(T89* C,T0* a1);
+/*DS_ARRAYED_LIST[PR_RULE]*/
+void r89remove_traversing_cursor(T89* C,T0* a1);
+/*DS_ARRAYED_LIST[PR_RULE]*/
+void r89cursor_go_after(T89* C,T0* a1);
+/*DS_ARRAYED_LIST[PR_RULE]*/
+void r89move_all_cursors_after(T89* C);
+/*DS_ARRAYED_LIST[PR_RULE]*/
+void r89add_traversing_cursor(T89* C,T0* a1);
+/*DS_ARRAYED_LIST[PR_RULE]*/
+T6 r89se_assigned_from(T0* a1);
+/*DS_ARRAYED_LIST[PR_RULE]*/
+T0* r89clone(T0* a1);
+/*DS_ARRAYED_LIST[PR_RULE]*/
+void r89move_left(T89* C,T2 a1,T2 a2);
+/*DS_ARRAYED_LIST[PR_RULE]*/
+T6 r89cursor_before(T0* a1);
+/*DS_ARRAYED_LIST[PR_RULE]*/
+T6 r89same_type(T89* C,T0* a1);
+/*DS_ARRAYED_LIST[PR_RULE]*/
 void r89make(T89* C,T2 a1);
-/*DS_ARRAYED_LIST[PR_SYMBOL]*/
+/*DS_ARRAYED_LIST[PR_RULE]*/
+void r89remove(T89* C,T2 a1);
+/*DS_ARRAYED_LIST[PR_RULE]*/
+void r89move_cursors_left(T89* C,T2 a1);
+/*DS_ARRAYED_LIST[PR_RULE]*/
+void r89remove_last(T89* C);
+/*DS_ARRAYED_LIST[PR_RULE]*/
+T6 r89cursor_after(T0* a1);
+/*DS_ARRAYED_LIST[PR_RULE]*/
+T6 r89conforms_to(T89* C,T0* a1);
+/*DS_ARRAYED_LIST[PR_RULE]*/
 T6 r89has(T89* C,T0* a1);
-/*DS_ARRAYED_LIST[PR_SYMBOL]*/
+/*DS_ARRAYED_LIST[PR_RULE]*/
+T2 r89cursor_index(T89* C,T0* a1);
+/*DS_ARRAYED_LIST[PR_RULE]*/
+void r89cursor_search_forth(T89* C,T0* a1,T0* a2);
+/*DS_ARRAYED_LIST[PR_RULE]*/
+void r89cursor_forth(T89* C,T0* a1);
+/*DS_ARRAYED_LIST[PR_RULE]*/
 void r89resize(T89* C,T2 a1);
-/*DS_ARRAYED_LIST[PR_SYMBOL]*/
+/*DS_ARRAYED_LIST[PR_RULE]*/
+void r89move_last_cursors_after(T89* C);
+/*DS_ARRAYED_LIST[PR_RULE]*/
+void r89cursor_start(T89* C,T0* a1);
+/*DS_ARRAYED_LIST[PR_RULE]*/
+T0* r89twin(T89* C);
+/*DS_ARRAYED_LIST[PR_RULE]*/
 T0* r89new_cursor(T89* C);
-/*DS_ARRAYED_LIST[PR_SYMBOL]*/
+/*DS_ARRAYED_LIST[PR_RULE]*/
 T6 r89is_full(T89* C);
-/*DS_ARRAYED_LIST[PR_SYMBOL]*/
+/*DS_ARRAYED_LIST[PR_RULE]*/
 void r89put_last(T89* C,T0* a1);
+/*DS_ARRAYED_LIST[PR_RULE]*/
+T6 r89cursor_off(T0* a1);
+/*KL_SPECIAL_ROUTINES[PR_PORTION]*/
+T0* r289make(T2 a1);
+/*DS_ARRAYED_LIST_CURSOR[PR_RULE]*/
+T6 r490valid_position(T490* C,T2 a1);
+/*DS_ARRAYED_LIST_CURSOR[PR_RULE]*/
+T0* r490item(T490* C);
+/*DS_ARRAYED_LIST_CURSOR[PR_RULE]*/
+T6 r490after(T490* C);
+/*DS_ARRAYED_LIST_CURSOR[PR_RULE]*/
+T2 r490index(T490* C);
+/*DS_ARRAYED_LIST_CURSOR[PR_RULE]*/
+T6 r490off(T490* C);
+/*SPECIAL[DS_ARRAYED_LIST[PR_TYPE]]*/
+T6 r515valid_index(T515* C,T2 a1);
+/*SPECIAL[DS_ARRAYED_LIST[PR_TYPE]]*/
+void r515make(T515* C,T2 a1);
+/*SPECIAL[DS_ARRAYED_LIST[PR_TYPE]]*/
+T0* r515resize(T515* C,T2 a1);
+/*SPECIAL[DS_ARRAYED_LIST[PR_TYPE]]*/
+void r515array_resize(T515* C,T2 a1);
+/*DS_HASH_TABLE[DS_ARRAYED_LIST[PR_STATE],INTEGER]*/
+void r404make_clashes(T404* C,T2 a1);
+/*DS_HASH_TABLE[DS_ARRAYED_LIST[PR_STATE],INTEGER]*/
+void r404put(T404* C,T0* a1,T2 a2);
+/*DS_HASH_TABLE[DS_ARRAYED_LIST[PR_STATE],INTEGER]*/
+void r404search_position(T404* C,T2 a1);
+/*DS_HASH_TABLE[DS_ARRAYED_LIST[PR_STATE],INTEGER]*/
+void r404keys_resize(T404* C,T2 a1);
+/*DS_HASH_TABLE[DS_ARRAYED_LIST[PR_STATE],INTEGER]*/
+T0* r404item(T404* C,T2 a1);
+/*DS_HASH_TABLE[DS_ARRAYED_LIST[PR_STATE],INTEGER]*/
+void r404make_items(T404* C,T2 a1);
+/*DS_HASH_TABLE[DS_ARRAYED_LIST[PR_STATE],INTEGER]*/
+void r404make(T404* C,T2 a1);
+/*DS_HASH_TABLE[DS_ARRAYED_LIST[PR_STATE],INTEGER]*/
+T6 r404has(T404* C,T2 a1);
+/*DS_HASH_TABLE[DS_ARRAYED_LIST[PR_STATE],INTEGER]*/
+void r404make_keys(T404* C,T2 a1);
+/*DS_HASH_TABLE[DS_ARRAYED_LIST[PR_STATE],INTEGER]*/
+T2 r404hash_position(T404* C,T2 a1);
+/*DS_HASH_TABLE[DS_ARRAYED_LIST[PR_STATE],INTEGER]*/
+void r404items_resize(T404* C,T2 a1);
+/*DS_HASH_TABLE[DS_ARRAYED_LIST[PR_STATE],INTEGER]*/
+void r404make_with_equality_testers(T404* C,T2 a1,T0* a2,T0* a3);
+/*DS_HASH_TABLE[DS_ARRAYED_LIST[PR_STATE],INTEGER]*/
+void r404resize(T404* C,T2 a1);
+/*DS_HASH_TABLE[DS_ARRAYED_LIST[PR_STATE],INTEGER]*/
+void r404make_sparse_container(T404* C,T2 a1);
+/*DS_HASH_TABLE[DS_ARRAYED_LIST[PR_STATE],INTEGER]*/
+void r404clashes_resize(T404* C,T2 a1);
+/*DS_HASH_TABLE[DS_ARRAYED_LIST[PR_STATE],INTEGER]*/
+void r404slots_resize(T404* C,T2 a1);
+/*DS_HASH_TABLE[DS_ARRAYED_LIST[PR_STATE],INTEGER]*/
+T0* r404new_cursor(T404* C);
+/*DS_HASH_TABLE[DS_ARRAYED_LIST[PR_STATE],INTEGER]*/
+void r404make_slots(T404* C,T2 a1);
+/*DS_HASH_TABLE[DS_ARRAYED_LIST[PR_STATE],INTEGER]*/
+T6 r404is_full(T404* C);
+/*DS_HASH_TABLE[DS_ARRAYED_LIST[PR_STATE],INTEGER]*/
+T2 r404new_modulus(T2 a1);
+/*DS_HASH_TABLE_CURSOR[PR_VARIABLE,STRING]*/
+void r619make(T619* C,T0* a1);
+/*SPECIAL[PR_ERROR_ACTION]*/
+T6 r316valid_index(T316* C,T2 a1);
+/*SPECIAL[PR_ERROR_ACTION]*/
+void r316make(T316* C,T2 a1);
+/*SPECIAL[PR_ERROR_ACTION]*/
+T0* r316resize(T316* C,T2 a1);
+/*SPECIAL[PR_ERROR_ACTION]*/
+void r316array_resize(T316* C,T2 a1);
+/*KL_SPECIAL_ROUTINES[DS_ARRAYED_LIST[PR_STATE]]*/
+T0* r420make(T2 a1);
+/*KL_SPECIAL_ROUTINES[DS_ARRAYED_LIST[PR_STATE]]*/
+T0* r420resize(T0* a1,T2 a2);
+/*DS_LINKED_LIST_CURSOR[PR_TRANSITION]*/
+void r245set(T245* C,T0* a1,T6 a2,T6 a3);
+/*DS_LINKED_LIST_CURSOR[PR_TRANSITION]*/
+void r245make(T245* C,T0* a1);
+/*DS_LINKED_LIST_CURSOR[PR_TRANSITION]*/
+void r245set_after(T245* C);
+/*SPECIAL[PR_TOKEN]*/
+T6 r169valid_index(T169* C,T2 a1);
+/*SPECIAL[PR_TOKEN]*/
+void r169make(T169* C,T2 a1);
+/*SPECIAL[PR_TOKEN]*/
+T0* r169resize(T169* C,T2 a1);
+/*SPECIAL[PR_TOKEN]*/
+void r169array_resize(T169* C,T2 a1);
+/*DS_HASH_TABLE_CURSOR[PR_TOKEN,STRING]*/
+T6 r624valid_position(T624* C,T2 a1);
+/*DS_HASH_TABLE_CURSOR[PR_TOKEN,STRING]*/
+T0* r624item(T624* C);
+/*DS_HASH_TABLE_CURSOR[PR_TOKEN,STRING]*/
+T6 r624after(T624* C);
+/*DS_HASH_TABLE_CURSOR[PR_TOKEN,STRING]*/
+void r624make(T624* C,T0* a1);
+/*DS_HASH_TABLE_CURSOR[PR_TOKEN,STRING]*/
+T6 r624off(T624* C);
+/*DS_LINKED_LIST[PR_REDUCTION]*/
+T6 r372valid_cursor(T372* C,T0* a1);
+/*DS_LINKED_LIST[PR_REDUCTION]*/
+void r372append_last(T372* C,T0* a1);
+/*DS_LINKED_LIST[PR_REDUCTION]*/
+T0* r372cursor_item(T0* a1);
+/*DS_LINKED_LIST[PR_REDUCTION]*/
+void r372remove_traversing_cursor(T372* C,T0* a1);
+/*DS_LINKED_LIST[PR_REDUCTION]*/
+void r372add_traversing_cursor(T372* C,T0* a1);
+/*DS_LINKED_LIST[PR_REDUCTION]*/
+void r372make(T372* C);
+/*DS_LINKED_LIST[PR_REDUCTION]*/
+T6 r372cursor_after(T0* a1);
+/*DS_LINKED_LIST[PR_REDUCTION]*/
+void r372cursor_forth(T372* C,T0* a1);
+/*DS_LINKED_LIST[PR_REDUCTION]*/
+void r372cursor_start(T372* C,T0* a1);
+/*DS_LINKED_LIST[PR_REDUCTION]*/
+T0* r372new_cursor(T372* C);
+/*DS_LINKED_LIST[PR_REDUCTION]*/
+T6 r372cursor_off(T0* a1);
+/*DS_ARRAYED_LIST_CURSOR[PR_STATE]*/
+T6 r361valid_position(T361* C,T2 a1);
+/*SPECIAL[PR_POSITION]*/
+T6 r305valid_index(T305* C,T2 a1);
+/*SPECIAL[PR_POSITION]*/
+void r305make(T305* C,T2 a1);
+/*SPECIAL[PR_POSITION]*/
+T0* r305resize(T305* C,T2 a1);
+/*SPECIAL[PR_POSITION]*/
+void r305array_resize(T305* C,T2 a1);
+/*DS_ARRAYED_LIST[PR_STATE]*/
+T2 r82new_capacity(T2 a1);
+/*DS_ARRAYED_LIST[PR_STATE]*/
+T6 r82extendible(T82* C,T2 a1);
+/*DS_ARRAYED_LIST[PR_STATE]*/
+void r82move_cursors_right(T82* C,T2 a1,T2 a2);
+/*DS_ARRAYED_LIST[PR_STATE]*/
+T0* r82last(T82* C);
+/*DS_ARRAYED_LIST[PR_STATE]*/
+void r82put(T82* C,T0* a1,T2 a2);
+/*DS_ARRAYED_LIST[PR_STATE]*/
+void r82move_left(T82* C,T2 a1,T2 a2);
+/*DS_ARRAYED_LIST[PR_STATE]*/
+void r82make(T82* C,T2 a1);
+/*DS_ARRAYED_LIST[PR_STATE]*/
+void r82remove(T82* C,T2 a1);
+/*DS_ARRAYED_LIST[PR_STATE]*/
+void r82move_cursors_left(T82* C,T2 a1);
+/*DS_ARRAYED_LIST[PR_STATE]*/
+void r82remove_last(T82* C);
+/*DS_ARRAYED_LIST[PR_STATE]*/
+void r82move_right(T82* C,T2 a1,T2 a2);
+/*DS_ARRAYED_LIST[PR_STATE]*/
+void r82resize(T82* C,T2 a1);
+/*DS_ARRAYED_LIST[PR_STATE]*/
+void r82move_last_cursors_after(T82* C);
+/*DS_ARRAYED_LIST[PR_STATE]*/
+void r82force_last(T82* C,T0* a1);
+/*DS_ARRAYED_LIST[PR_STATE]*/
+T0* r82new_cursor(T82* C);
+/*DS_ARRAYED_LIST[PR_STATE]*/
+void r82put_last(T82* C,T0* a1);
+/*DS_BUBBLE_SORTER[PR_PORTION]*/
+void r231subsort_with_comparator(T0* a1,T0* a2,T2 a3,T2 a4);
+/*DS_BUBBLE_SORTER[PR_PORTION]*/
+void r231sort_with_comparator(T0* a1,T0* a2);
+/*KL_SPECIAL_ROUTINES[DS_NESTED_LIST[PR_TOKEN]]*/
+T0* r390make(T2 a1);
+/*KL_SPECIAL_ROUTINES[DS_NESTED_LIST[PR_TOKEN]]*/
+T0* r390resize(T0* a1,T2 a2);
+/*DS_ARRAYED_LIST[PR_POSITION]*/
+T6 r304extendible(T304* C,T2 a1);
+/*DS_ARRAYED_LIST[PR_POSITION]*/
+void r304make_equal(T304* C,T2 a1);
+/*DS_ARRAYED_LIST[PR_POSITION]*/
+void r304make(T304* C,T2 a1);
+/*DS_ARRAYED_LIST[PR_POSITION]*/
+T6 r304has(T304* C,T0* a1);
+/*DS_ARRAYED_LIST[PR_POSITION]*/
+void r304resize(T304* C,T2 a1);
+/*DS_ARRAYED_LIST[PR_POSITION]*/
+T0* r304new_cursor(T304* C);
+/*DS_ARRAYED_LIST[PR_POSITION]*/
+T6 r304is_full(T304* C);
+/*DS_ARRAYED_LIST[PR_POSITION]*/
+void r304put_last(T304* C,T0* a1);
+/*KL_SPECIAL_ROUTINES[PR_SYMBOL]*/
+T0* r597make(T2 a1);
+/*KL_SPECIAL_ROUTINES[PR_SYMBOL]*/
+T0* r597resize(T0* a1,T2 a2);
+/*SPECIAL[PR_RULE]*/
+void r138copy(T138* C,T0* a1);
+/*SPECIAL[PR_RULE]*/
+T6 r138is_equal(T138* C,T0* a1);
+/*SPECIAL[PR_RULE]*/
+T6 r138valid_index(T138* C,T2 a1);
+/*SPECIAL[PR_RULE]*/
+void r138make(T138* C,T2 a1);
+/*SPECIAL[PR_RULE]*/
+T0* r138resize(T138* C,T2 a1);
+/*SPECIAL[PR_RULE]*/
+void r138array_resize(T138* C,T2 a1);
+/*SPECIAL[PR_RULE]*/
+T0* r138twin(T138* C);
+/*DS_HASH_TABLE_CURSOR[PR_TYPE,STRING]*/
+void r612make(T612* C,T0* a1);
+/*DS_BUBBLE_SORTER[PR_POSITION]*/
+void r416subsort_with_comparator(T0* a1,T0* a2,T2 a3,T2 a4);
+/*DS_BUBBLE_SORTER[PR_POSITION]*/
+void r416sort_with_comparator(T0* a1,T0* a2);
+/*SPECIAL[PR_REDUCTION]*/
+T6 r276valid_index(T276* C,T2 a1);
+/*SPECIAL[PR_REDUCTION]*/
+void r276make(T276* C,T2 a1);
+/*SPECIAL[PR_REDUCTION]*/
+T0* r276resize(T276* C,T2 a1);
+/*SPECIAL[PR_REDUCTION]*/
+void r276array_resize(T276* C,T2 a1);
+/*DS_HASH_TABLE[PR_VARIABLE,STRING]*/
+T2 r552new_capacity(T2 a1);
+/*DS_HASH_TABLE[PR_VARIABLE,STRING]*/
+void r552force(T552* C,T0* a1,T0* a2);
+/*DS_HASH_TABLE[PR_VARIABLE,STRING]*/
+void r552make_clashes(T552* C,T2 a1);
+/*DS_HASH_TABLE[PR_VARIABLE,STRING]*/
+void r552search_position(T552* C,T0* a1);
+/*DS_HASH_TABLE[PR_VARIABLE,STRING]*/
+void r552keys_resize(T552* C,T2 a1);
+/*DS_HASH_TABLE[PR_VARIABLE,STRING]*/
+T0* r552item(T552* C,T0* a1);
+/*DS_HASH_TABLE[PR_VARIABLE,STRING]*/
+void r552make_items(T552* C,T2 a1);
+/*DS_HASH_TABLE[PR_VARIABLE,STRING]*/
+void r552make(T552* C,T2 a1);
+/*DS_HASH_TABLE[PR_VARIABLE,STRING]*/
+T6 r552has(T552* C,T0* a1);
+/*DS_HASH_TABLE[PR_VARIABLE,STRING]*/
+void r552make_keys(T552* C,T2 a1);
+/*DS_HASH_TABLE[PR_VARIABLE,STRING]*/
+T2 r552hash_position(T552* C,T0* a1);
+/*DS_HASH_TABLE[PR_VARIABLE,STRING]*/
+void r552items_resize(T552* C,T2 a1);
+/*DS_HASH_TABLE[PR_VARIABLE,STRING]*/
+void r552make_with_equality_testers(T552* C,T2 a1,T0* a2,T0* a3);
+/*DS_HASH_TABLE[PR_VARIABLE,STRING]*/
+void r552resize(T552* C,T2 a1);
+/*DS_HASH_TABLE[PR_VARIABLE,STRING]*/
+void r552make_sparse_container(T552* C,T2 a1);
+/*DS_HASH_TABLE[PR_VARIABLE,STRING]*/
+void r552clashes_resize(T552* C,T2 a1);
+/*DS_HASH_TABLE[PR_VARIABLE,STRING]*/
+void r552slots_resize(T552* C,T2 a1);
+/*DS_HASH_TABLE[PR_VARIABLE,STRING]*/
+T0* r552new_cursor(T552* C);
+/*DS_HASH_TABLE[PR_VARIABLE,STRING]*/
+void r552make_slots(T552* C,T2 a1);
+/*DS_HASH_TABLE[PR_VARIABLE,STRING]*/
+T2 r552new_modulus(T2 a1);
+/*DS_HASH_TABLE[INTEGER,PR_TYPE]*/
+T6 r110valid_cursor(T110* C,T0* a1);
+/*DS_HASH_TABLE[INTEGER,PR_TYPE]*/
+void r110make_clashes(T110* C,T2 a1);
+/*DS_HASH_TABLE[INTEGER,PR_TYPE]*/
+T6 r110valid_slot(T110* C,T2 a1);
+/*DS_HASH_TABLE[INTEGER,PR_TYPE]*/
+T6 r110valid_position(T110* C,T2 a1);
+/*DS_HASH_TABLE[INTEGER,PR_TYPE]*/
+T2 r110cursor_item(T110* C,T0* a1);
+/*DS_HASH_TABLE[INTEGER,PR_TYPE]*/
+void r110search_position(T110* C,T0* a1);
+/*DS_HASH_TABLE[INTEGER,PR_TYPE]*/
+void r110remove_traversing_cursor(T110* C,T0* a1);
+/*DS_HASH_TABLE[INTEGER,PR_TYPE]*/
+T2 r110item(T110* C,T0* a1);
+/*DS_HASH_TABLE[INTEGER,PR_TYPE]*/
+void r110make_items(T110* C,T2 a1);
+/*DS_HASH_TABLE[INTEGER,PR_TYPE]*/
+void r110add_traversing_cursor(T110* C,T0* a1);
+/*DS_HASH_TABLE[INTEGER,PR_TYPE]*/
+void r110put_new(T110* C,T2 a1,T0* a2);
+/*DS_HASH_TABLE[INTEGER,PR_TYPE]*/
+T0* r110cursor_key(T110* C,T0* a1);
+/*DS_HASH_TABLE[INTEGER,PR_TYPE]*/
+T6 r110cursor_after(T0* a1);
+/*DS_HASH_TABLE[INTEGER,PR_TYPE]*/
+T6 r110has(T110* C,T0* a1);
+/*DS_HASH_TABLE[INTEGER,PR_TYPE]*/
+void r110make_keys(T110* C,T2 a1);
+/*DS_HASH_TABLE[INTEGER,PR_TYPE]*/
+T2 r110hash_position(T110* C,T0* a1);
+/*DS_HASH_TABLE[INTEGER,PR_TYPE]*/
+void r110cursor_forth(T110* C,T0* a1);
+/*DS_HASH_TABLE[INTEGER,PR_TYPE]*/
+void r110make_with_equality_testers(T110* C,T2 a1,T0* a2,T0* a3);
+/*DS_HASH_TABLE[INTEGER,PR_TYPE]*/
+T2 r110found_item(T110* C);
+/*DS_HASH_TABLE[INTEGER,PR_TYPE]*/
+T6 r110found(T110* C);
+/*DS_HASH_TABLE[INTEGER,PR_TYPE]*/
+void r110make_sparse_container(T110* C,T2 a1);
+/*DS_HASH_TABLE[INTEGER,PR_TYPE]*/
+void r110search(T110* C,T0* a1);
+/*DS_HASH_TABLE[INTEGER,PR_TYPE]*/
+void r110cursor_start(T110* C,T0* a1);
+/*DS_HASH_TABLE[INTEGER,PR_TYPE]*/
+T0* r110new_cursor(T110* C);
+/*DS_HASH_TABLE[INTEGER,PR_TYPE]*/
+void r110make_slots(T110* C,T2 a1);
+/*DS_HASH_TABLE[INTEGER,PR_TYPE]*/
+T6 r110is_full(T110* C);
+/*DS_HASH_TABLE[INTEGER,PR_TYPE]*/
+T2 r110new_modulus(T2 a1);
+/*DS_HASH_TABLE[INTEGER,PR_TYPE]*/
+T6 r110cursor_off(T0* a1);
+/*KL_SPECIAL_ROUTINES[DS_NESTED_LIST[PR_RULE]]*/
+T0* r443make(T2 a1);
+/*KL_SPECIAL_ROUTINES[DS_NESTED_LIST[PR_RULE]]*/
+T0* r443resize(T0* a1,T2 a2);
+/*KL_ARRAY_ROUTINES[INTEGER]*/
+void r215subcopy(T0* a1,T0* a2,T2 a3,T2 a4,T2 a5);
+/*KL_ARRAY_ROUTINES[INTEGER]*/
+T0* r215subarray(T0* a1,T2 a2,T2 a3,T2 a4);
+/*DS_LINKED_LIST[PR_TOKEN]*/
+T6 r340valid_cursor(T340* C,T0* a1);
+/*DS_LINKED_LIST[PR_TOKEN]*/
+T0* r340cursor_item(T0* a1);
+/*DS_LINKED_LIST[PR_TOKEN]*/
+void r340remove_traversing_cursor(T340* C,T0* a1);
+/*DS_LINKED_LIST[PR_TOKEN]*/
+void r340cursor_go_after(T340* C,T0* a1);
+/*DS_LINKED_LIST[PR_TOKEN]*/
+void r340add_traversing_cursor(T340* C,T0* a1);
+/*DS_LINKED_LIST[PR_TOKEN]*/
+void r340make(T340* C);
+/*DS_LINKED_LIST[PR_TOKEN]*/
+T6 r340cursor_after(T0* a1);
+/*DS_LINKED_LIST[PR_TOKEN]*/
+T6 r340has(T340* C,T0* a1);
+/*DS_LINKED_LIST[PR_TOKEN]*/
+void r340cursor_search_forth(T340* C,T0* a1,T0* a2);
+/*DS_LINKED_LIST[PR_TOKEN]*/
+void r340cursor_forth(T340* C,T0* a1);
+/*DS_LINKED_LIST[PR_TOKEN]*/
+void r340cursor_start(T340* C,T0* a1);
+/*DS_LINKED_LIST[PR_TOKEN]*/
+void r340force_last(T340* C,T0* a1);
+/*DS_LINKED_LIST[PR_TOKEN]*/
+T0* r340new_cursor(T340* C);
+/*DS_LINKED_LIST[PR_TOKEN]*/
+T6 r340cursor_off(T0* a1);
+/*KL_EQUALITY_TESTER[PR_RULE]*/
+T6 r336test(T0* a1,T0* a2);
+/*DS_PAIR[STRING,INTEGER]*/
+void r551make(T551* C,T0* a1,T2 a2);
+/*DS_HASH_TABLE_CURSOR[INTEGER,PR_TYPE]*/
+T0* r109key(T109* C);
+/*DS_HASH_TABLE_CURSOR[INTEGER,PR_TYPE]*/
+T6 r109valid_position(T109* C,T2 a1);
+/*DS_HASH_TABLE_CURSOR[INTEGER,PR_TYPE]*/
+T2 r109item(T109* C);
+/*DS_HASH_TABLE_CURSOR[INTEGER,PR_TYPE]*/
+T6 r109after(T109* C);
+/*DS_HASH_TABLE_CURSOR[INTEGER,PR_TYPE]*/
+void r109make(T109* C,T0* a1);
+/*SPECIAL[PR_PORTION]*/
+T6 r216valid_index(T216* C,T2 a1);
+/*SPECIAL[PR_PORTION]*/
+void r216make(T216* C,T2 a1);
+/*SPECIAL[DS_ARRAYED_LIST[PR_STATE]]*/
+T6 r408valid_index(T408* C,T2 a1);
+/*SPECIAL[DS_ARRAYED_LIST[PR_STATE]]*/
+void r408make(T408* C,T2 a1);
+/*SPECIAL[DS_ARRAYED_LIST[PR_STATE]]*/
+T0* r408resize(T408* C,T2 a1);
+/*SPECIAL[DS_ARRAYED_LIST[PR_STATE]]*/
+void r408array_resize(T408* C,T2 a1);
+/*KL_SPECIAL_ROUTINES[DS_ARRAYED_LIST[PR_TYPE]]*/
+T0* r566make(T2 a1);
+/*KL_SPECIAL_ROUTINES[DS_ARRAYED_LIST[PR_TYPE]]*/
+T0* r566resize(T0* a1,T2 a2);
+/*DS_ARRAYED_LIST_CURSOR[PR_REDUCTION]*/
+T6 r399valid_position(T399* C,T2 a1);
+/*DS_ARRAYED_LIST_CURSOR[PR_REDUCTION]*/
+T0* r399item(T399* C);
+/*DS_ARRAYED_LIST_CURSOR[PR_REDUCTION]*/
+T6 r399after(T399* C);
+/*DS_ARRAYED_LIST_CURSOR[PR_REDUCTION]*/
+T6 r399off(T399* C);
+/*KL_SPECIAL_ROUTINES[PR_RULE]*/
+T0* r558make(T2 a1);
+/*KL_SPECIAL_ROUTINES[PR_RULE]*/
+T0* r558resize(T0* a1,T2 a2);
+/*DS_LINKED_LIST_CURSOR[PR_RULE]*/
+void r421set(T421* C,T0* a1,T6 a2,T6 a3);
+/*DS_LINKED_LIST_CURSOR[PR_RULE]*/
+void r421make(T421* C,T0* a1);
+/*DS_LINKED_LIST_CURSOR[PR_RULE]*/
+void r421set_after(T421* C);
+/*DS_ARRAYED_LIST[PR_ERROR_ACTION]*/
+T6 r315extendible(T315* C,T2 a1);
+/*DS_ARRAYED_LIST[PR_ERROR_ACTION]*/
+void r315make(T315* C,T2 a1);
+/*DS_ARRAYED_LIST[PR_ERROR_ACTION]*/
+void r315resize(T315* C,T2 a1);
+/*DS_ARRAYED_LIST[PR_ERROR_ACTION]*/
+T0* r315new_cursor(T315* C);
+/*DS_ARRAYED_LIST[PR_ERROR_ACTION]*/
+T6 r315is_full(T315* C);
+/*DS_ARRAYED_LIST[PR_ERROR_ACTION]*/
+void r315put_last(T315* C,T0* a1);
+/*DS_LINKED_LIST_CURSOR[PR_REDUCTION]*/
+void r380set(T380* C,T0* a1,T6 a2,T6 a3);
+/*DS_LINKED_LIST_CURSOR[PR_REDUCTION]*/
+void r380make(T380* C,T0* a1);
+/*DS_ARRAYED_LIST_CURSOR[PR_VARIABLE]*/
+T6 r487valid_position(T487* C,T2 a1);
+/*DS_ARRAYED_LIST_CURSOR[PR_VARIABLE]*/
+T0* r487item(T487* C);
+/*DS_ARRAYED_LIST_CURSOR[PR_VARIABLE]*/
+T6 r487after(T487* C);
+/*DS_ARRAYED_LIST_CURSOR[PR_VARIABLE]*/
+T2 r487index(T487* C);
+/*DS_ARRAYED_LIST_CURSOR[PR_VARIABLE]*/
+T6 r487off(T487* C);
+/*SPECIAL[PR_STATE]*/
+T6 r84valid_index(T84* C,T2 a1);
+/*SPECIAL[PR_STATE]*/
+void r84make(T84* C,T2 a1);
+/*SPECIAL[PR_STATE]*/
+T0* r84resize(T84* C,T2 a1);
+/*SPECIAL[PR_STATE]*/
+void r84array_resize(T84* C,T2 a1);
+/*SPECIAL[PR_VARIABLE]*/
+void r235copy(T235* C,T0* a1);
+/*SPECIAL[PR_VARIABLE]*/
+T6 r235is_equal(T235* C,T0* a1);
+/*SPECIAL[PR_VARIABLE]*/
+T6 r235valid_index(T235* C,T2 a1);
+/*SPECIAL[PR_VARIABLE]*/
+void r235make(T235* C,T2 a1);
+/*SPECIAL[PR_VARIABLE]*/
+T0* r235resize(T235* C,T2 a1);
+/*SPECIAL[PR_VARIABLE]*/
+void r235array_resize(T235* C,T2 a1);
+/*SPECIAL[PR_VARIABLE]*/
+T0* r235twin(T235* C);
+/*DS_ARRAYED_LIST[PR_REDUCTION]*/
+T6 r275valid_cursor(T275* C,T0* a1);
+/*DS_ARRAYED_LIST[PR_REDUCTION]*/
+T6 r275extendible(T275* C,T2 a1);
+/*DS_ARRAYED_LIST[PR_REDUCTION]*/
+T0* r275cursor_item(T275* C,T0* a1);
+/*DS_ARRAYED_LIST[PR_REDUCTION]*/
+void r275remove_traversing_cursor(T275* C,T0* a1);
+/*DS_ARRAYED_LIST[PR_REDUCTION]*/
+void r275add_traversing_cursor(T275* C,T0* a1);
+/*DS_ARRAYED_LIST[PR_REDUCTION]*/
+T6 r275cursor_before(T0* a1);
+/*DS_ARRAYED_LIST[PR_REDUCTION]*/
+void r275make(T275* C,T2 a1);
+/*DS_ARRAYED_LIST[PR_REDUCTION]*/
+T6 r275cursor_after(T0* a1);
+/*DS_ARRAYED_LIST[PR_REDUCTION]*/
+void r275cursor_forth(T275* C,T0* a1);
+/*DS_ARRAYED_LIST[PR_REDUCTION]*/
+void r275resize(T275* C,T2 a1);
+/*DS_ARRAYED_LIST[PR_REDUCTION]*/
+void r275cursor_start(T275* C,T0* a1);
+/*DS_ARRAYED_LIST[PR_REDUCTION]*/
+T0* r275new_cursor(T275* C);
+/*DS_ARRAYED_LIST[PR_REDUCTION]*/
+void r275put_last(T275* C,T0* a1);
+/*DS_ARRAYED_LIST[PR_REDUCTION]*/
+T6 r275cursor_off(T0* a1);
+/*DS_ARRAYED_LIST[PR_SYMBOL]*/
+T6 r91extendible(T91* C,T2 a1);
+/*DS_ARRAYED_LIST[PR_SYMBOL]*/
+void r91make(T91* C,T2 a1);
+/*DS_ARRAYED_LIST[PR_SYMBOL]*/
+T6 r91has(T91* C,T0* a1);
+/*DS_ARRAYED_LIST[PR_SYMBOL]*/
+void r91resize(T91* C,T2 a1);
+/*DS_ARRAYED_LIST[PR_SYMBOL]*/
+T0* r91new_cursor(T91* C);
+/*DS_ARRAYED_LIST[PR_SYMBOL]*/
+T6 r91is_full(T91* C);
+/*DS_ARRAYED_LIST[PR_SYMBOL]*/
+void r91put_last(T91* C,T0* a1);
 /*SPECIAL[STRING]*/
-T6 r525valid_index(T525* C,T2 a1);
+T6 r179valid_index(T179* C,T2 a1);
 /*SPECIAL[STRING]*/
-void r525make(T525* C,T2 a1);
+void r179make(T179* C,T2 a1);
 /*SPECIAL[STRING]*/
-T0* r525resize(T525* C,T2 a1);
+T0* r179resize(T179* C,T2 a1);
 /*SPECIAL[STRING]*/
-void r525array_resize(T525* C,T2 a1);
+void r179array_resize(T179* C,T2 a1);
 /*DS_LINKED_LIST_CURSOR[PR_CONFLICT]*/
-void r358set(T358* C,T0* a1,T6 a2,T6 a3);
+void r363set(T363* C,T0* a1,T6 a2,T6 a3);
 /*DS_LINKED_LIST_CURSOR[PR_CONFLICT]*/
-void r358make(T358* C,T0* a1);
+void r363make(T363* C,T0* a1);
 /*KL_EQUALITY_TESTER[PR_TOKEN]*/
-T6 r289test(T0* a1,T0* a2);
+T6 r294test(T0* a1,T0* a2);
 /*DS_HASH_TABLE[PR_TOKEN,STRING]*/
-T2 r551new_capacity(T2 a1);
+T2 r545new_capacity(T2 a1);
 /*DS_HASH_TABLE[PR_TOKEN,STRING]*/
-T6 r551valid_cursor(T551* C,T0* a1);
+T6 r545valid_cursor(T545* C,T0* a1);
 /*DS_HASH_TABLE[PR_TOKEN,STRING]*/
-void r551force(T551* C,T0* a1,T0* a2);
+void r545force(T545* C,T0* a1,T0* a2);
 /*DS_HASH_TABLE[PR_TOKEN,STRING]*/
-T6 r551valid_slot(T551* C,T2 a1);
+T6 r545valid_slot(T545* C,T2 a1);
 /*DS_HASH_TABLE[PR_TOKEN,STRING]*/
-void r551make_clashes(T551* C,T2 a1);
+void r545make_clashes(T545* C,T2 a1);
 /*DS_HASH_TABLE[PR_TOKEN,STRING]*/
-T6 r551valid_position(T551* C,T2 a1);
+T6 r545valid_position(T545* C,T2 a1);
 /*DS_HASH_TABLE[PR_TOKEN,STRING]*/
-T0* r551cursor_item(T551* C,T0* a1);
+T0* r545cursor_item(T545* C,T0* a1);
 /*DS_HASH_TABLE[PR_TOKEN,STRING]*/
-void r551search_position(T551* C,T0* a1);
+void r545search_position(T545* C,T0* a1);
 /*DS_HASH_TABLE[PR_TOKEN,STRING]*/
-void r551remove_traversing_cursor(T551* C,T0* a1);
+void r545remove_traversing_cursor(T545* C,T0* a1);
 /*DS_HASH_TABLE[PR_TOKEN,STRING]*/
-void r551keys_resize(T551* C,T2 a1);
+void r545keys_resize(T545* C,T2 a1);
 /*DS_HASH_TABLE[PR_TOKEN,STRING]*/
-void r551cursor_go_after(T551* C,T0* a1);
+void r545cursor_go_after(T545* C,T0* a1);
 /*DS_HASH_TABLE[PR_TOKEN,STRING]*/
-T0* r551item(T551* C,T0* a1);
+T0* r545item(T545* C,T0* a1);
 /*DS_HASH_TABLE[PR_TOKEN,STRING]*/
-void r551make_items(T551* C,T2 a1);
+void r545make_items(T545* C,T2 a1);
 /*DS_HASH_TABLE[PR_TOKEN,STRING]*/
-void r551add_traversing_cursor(T551* C,T0* a1);
+void r545add_traversing_cursor(T545* C,T0* a1);
 /*DS_HASH_TABLE[PR_TOKEN,STRING]*/
-T6 r551has_item(T551* C,T0* a1);
+T6 r545has_item(T545* C,T0* a1);
 /*DS_HASH_TABLE[PR_TOKEN,STRING]*/
-void r551make(T551* C,T2 a1);
+void r545make(T545* C,T2 a1);
 /*DS_HASH_TABLE[PR_TOKEN,STRING]*/
-T6 r551cursor_after(T0* a1);
+T6 r545cursor_after(T0* a1);
 /*DS_HASH_TABLE[PR_TOKEN,STRING]*/
-T6 r551has(T551* C,T0* a1);
+T6 r545has(T545* C,T0* a1);
 /*DS_HASH_TABLE[PR_TOKEN,STRING]*/
-void r551make_keys(T551* C,T2 a1);
+void r545make_keys(T545* C,T2 a1);
 /*DS_HASH_TABLE[PR_TOKEN,STRING]*/
-void r551cursor_search_forth(T551* C,T0* a1,T0* a2);
+void r545cursor_search_forth(T545* C,T0* a1,T0* a2);
 /*DS_HASH_TABLE[PR_TOKEN,STRING]*/
-T2 r551hash_position(T551* C,T0* a1);
+T2 r545hash_position(T545* C,T0* a1);
 /*DS_HASH_TABLE[PR_TOKEN,STRING]*/
-void r551cursor_forth(T551* C,T0* a1);
+void r545cursor_forth(T545* C,T0* a1);
 /*DS_HASH_TABLE[PR_TOKEN,STRING]*/
-void r551items_resize(T551* C,T2 a1);
+void r545items_resize(T545* C,T2 a1);
 /*DS_HASH_TABLE[PR_TOKEN,STRING]*/
-void r551make_with_equality_testers(T551* C,T2 a1,T0* a2,T0* a3);
+void r545make_with_equality_testers(T545* C,T2 a1,T0* a2,T0* a3);
 /*DS_HASH_TABLE[PR_TOKEN,STRING]*/
-void r551resize(T551* C,T2 a1);
+void r545resize(T545* C,T2 a1);
 /*DS_HASH_TABLE[PR_TOKEN,STRING]*/
-void r551cursor_start(T551* C,T0* a1);
+void r545make_sparse_container(T545* C,T2 a1);
 /*DS_HASH_TABLE[PR_TOKEN,STRING]*/
-void r551clashes_resize(T551* C,T2 a1);
+void r545cursor_start(T545* C,T0* a1);
 /*DS_HASH_TABLE[PR_TOKEN,STRING]*/
-void r551slots_resize(T551* C,T2 a1);
+void r545clashes_resize(T545* C,T2 a1);
 /*DS_HASH_TABLE[PR_TOKEN,STRING]*/
-T0* r551new_cursor(T551* C);
+void r545slots_resize(T545* C,T2 a1);
 /*DS_HASH_TABLE[PR_TOKEN,STRING]*/
-void r551make_slots(T551* C,T2 a1);
+T0* r545new_cursor(T545* C);
 /*DS_HASH_TABLE[PR_TOKEN,STRING]*/
-T2 r551new_modulus(T2 a1);
+void r545make_slots(T545* C,T2 a1);
 /*DS_HASH_TABLE[PR_TOKEN,STRING]*/
-T6 r551cursor_off(T0* a1);
+T2 r545new_modulus(T2 a1);
+/*DS_HASH_TABLE[PR_TOKEN,STRING]*/
+T6 r545cursor_off(T0* a1);
 /*DS_NESTED_LIST_FLATTENER[PR_TOKEN]*/
-void r365traverse(T0* a1,T0* a2);
+void r370traverse(T0* a1,T0* a2);
 /*DS_NESTED_LIST_FLATTENER[PR_TOKEN]*/
-void r365flatten(T0* a1);
-/*KL_FIXED_ARRAY_ROUTINES[PR_SYMBOL]*/
-T0* r601make(T2 a1);
-/*KL_FIXED_ARRAY_ROUTINES[PR_SYMBOL]*/
-T0* r601resize(T0* a1,T2 a2);
+void r370flatten(T0* a1);
 /*DS_NESTED_LIST_FLATTENER[PR_RULE]*/
-void r426traverse(T0* a1,T0* a2);
+void r431traverse(T0* a1,T0* a2);
 /*DS_NESTED_LIST_FLATTENER[PR_RULE]*/
-void r426flatten(T0* a1);
+void r431flatten(T0* a1);
 /*KL_SPECIAL_ROUTINES[PR_TOKEN]*/
-T0* r520make(T2 a1);
+T0* r295make(T2 a1);
 /*KL_SPECIAL_ROUTINES[PR_TOKEN]*/
-T0* r520resize(T0* a1,T2 a2);
-/*KL_FIXED_ARRAY_ROUTINES[DS_ARRAYED_LIST[PR_STATE]]*/
-T0* r415make(T2 a1);
-/*KL_FIXED_ARRAY_ROUTINES[DS_ARRAYED_LIST[PR_STATE]]*/
-T0* r415resize(T0* a1,T2 a2);
+T0* r295resize(T0* a1,T2 a2);
 /*KL_COMPARABLE_COMPARATOR[PR_PORTION]*/
-T6 r225less_than(T0* a1,T0* a2);
-/*KL_FIXED_ARRAY_ROUTINES[STRING]*/
-T0* r562make(T2 a1);
-/*KL_FIXED_ARRAY_ROUTINES[STRING]*/
-T0* r562resize(T0* a1,T2 a2);
+T6 r230less_than(T0* a1,T0* a2);
+/*SPECIAL[DS_ARRAYED_LIST[PR_VARIABLE]]*/
+T6 r476valid_index(T476* C,T2 a1);
+/*SPECIAL[DS_ARRAYED_LIST[PR_VARIABLE]]*/
+void r476make(T476* C,T2 a1);
 /*KL_EQUALITY_TESTER[INTEGER]*/
-T6 r131test(T2 a1,T2 a2);
+T6 r137test(T2 a1,T2 a2);
 /*DS_HASH_SET[PR_TYPE]*/
-T6 r145valid_cursor(T145* C,T0* a1);
+T6 r151valid_cursor(T151* C,T0* a1);
 /*DS_HASH_SET[PR_TYPE]*/
-T6 r145extendible(T145* C,T2 a1);
+T6 r151extendible(T151* C,T2 a1);
 /*DS_HASH_SET[PR_TYPE]*/
-void r145make_clashes(T145* C,T2 a1);
+T0* r151keys_item(T151* C,T2 a1);
 /*DS_HASH_SET[PR_TYPE]*/
-T6 r145valid_slot(T145* C,T2 a1);
+void r151make_clashes(T151* C,T2 a1);
 /*DS_HASH_SET[PR_TYPE]*/
-T6 r145valid_position(T145* C,T2 a1);
+T6 r151valid_slot(T151* C,T2 a1);
 /*DS_HASH_SET[PR_TYPE]*/
-void r145put(T145* C,T0* a1);
+T6 r151valid_position(T151* C,T2 a1);
 /*DS_HASH_SET[PR_TYPE]*/
-T0* r145cursor_item(T145* C,T0* a1);
+void r151put(T151* C,T0* a1);
 /*DS_HASH_SET[PR_TYPE]*/
-void r145search_position(T145* C,T0* a1);
+T0* r151cursor_item(T151* C,T0* a1);
 /*DS_HASH_SET[PR_TYPE]*/
-void r145remove_traversing_cursor(T145* C,T0* a1);
+void r151search_position(T151* C,T0* a1);
 /*DS_HASH_SET[PR_TYPE]*/
-void r145make_items(T145* C,T2 a1);
+void r151remove_traversing_cursor(T151* C,T0* a1);
 /*DS_HASH_SET[PR_TYPE]*/
-void r145add_traversing_cursor(T145* C,T0* a1);
+void r151make_items(T151* C,T2 a1);
 /*DS_HASH_SET[PR_TYPE]*/
-void r145make(T145* C,T2 a1);
+void r151add_traversing_cursor(T151* C,T0* a1);
 /*DS_HASH_SET[PR_TYPE]*/
-T6 r145cursor_after(T0* a1);
+void r151make(T151* C,T2 a1);
 /*DS_HASH_SET[PR_TYPE]*/
-T2 r145hash_position(T145* C,T0* a1);
+T6 r151cursor_after(T0* a1);
 /*DS_HASH_SET[PR_TYPE]*/
-T0* r145first(T145* C);
+T2 r151hash_position(T151* C,T0* a1);
 /*DS_HASH_SET[PR_TYPE]*/
-void r145cursor_forth(T145* C,T0* a1);
+T0* r151first(T151* C);
 /*DS_HASH_SET[PR_TYPE]*/
-void r145cursor_start(T145* C,T0* a1);
+void r151cursor_forth(T151* C,T0* a1);
 /*DS_HASH_SET[PR_TYPE]*/
-T0* r145new_cursor(T145* C);
+void r151cursor_start(T151* C,T0* a1);
 /*DS_HASH_SET[PR_TYPE]*/
-void r145make_slots(T145* C,T2 a1);
+T0* r151new_cursor(T151* C);
 /*DS_HASH_SET[PR_TYPE]*/
-T2 r145new_modulus(T2 a1);
+void r151make_slots(T151* C,T2 a1);
 /*DS_HASH_SET[PR_TYPE]*/
-T6 r145cursor_off(T0* a1);
+T2 r151new_modulus(T2 a1);
+/*DS_HASH_SET[PR_TYPE]*/
+T6 r151cursor_off(T0* a1);
+/*SPECIAL[DS_NESTED_LIST[PR_TOKEN]]*/
+T6 r391valid_index(T391* C,T2 a1);
+/*SPECIAL[DS_NESTED_LIST[PR_TOKEN]]*/
+void r391make(T391* C,T2 a1);
+/*SPECIAL[DS_NESTED_LIST[PR_TOKEN]]*/
+T0* r391resize(T391* C,T2 a1);
+/*SPECIAL[DS_NESTED_LIST[PR_TOKEN]]*/
+void r391array_resize(T391* C,T2 a1);
 /*DS_LINKED_LIST_CURSOR[PR_VARIABLE]*/
-void r563set(T563* C,T0* a1,T6 a2,T6 a3);
+void r557set(T557* C,T0* a1,T6 a2,T6 a3);
 /*DS_LINKED_LIST_CURSOR[PR_VARIABLE]*/
-void r563make(T563* C,T0* a1);
+void r557make(T557* C,T0* a1);
 /*DS_LINKED_LIST_CURSOR[PR_VARIABLE]*/
-void r563set_after(T563* C);
-/*KL_FIXED_ARRAY_ROUTINES[PR_POSITION]*/
-T0* r326make(T2 a1);
-/*KL_FIXED_ARRAY_ROUTINES[PR_POSITION]*/
-T0* r326resize(T0* a1,T2 a2);
+void r557set_after(T557* C);
 /*DS_HASH_SET_CURSOR[PR_TYPE]*/
-T6 r144valid_position(T144* C,T2 a1);
+T6 r150valid_position(T150* C,T2 a1);
 /*DS_HASH_SET_CURSOR[PR_TYPE]*/
-T0* r144item(T144* C);
+T0* r150item(T150* C);
 /*DS_HASH_SET_CURSOR[PR_TYPE]*/
-T6 r144after(T144* C);
+T6 r150after(T150* C);
 /*DS_HASH_SET_CURSOR[PR_TYPE]*/
-void r144make(T144* C,T0* a1);
-/*KL_FIXED_ARRAY_ROUTINES[PR_RULE]*/
-T0* r564make(T2 a1);
-/*KL_FIXED_ARRAY_ROUTINES[PR_RULE]*/
-T0* r564resize(T0* a1,T2 a2);
+void r150make(T150* C,T0* a1);
 /*DS_ARRAYED_LIST[PR_TYPE]*/
 T2 r67new_capacity(T2 a1);
 /*DS_ARRAYED_LIST[PR_TYPE]*/
@@ -2503,197 +2418,205 @@ T6 r67is_full(T67* C);
 /*DS_ARRAYED_LIST[PR_TYPE]*/
 void r67put_last(T67* C,T0* a1);
 /*KL_EQUALITY_TESTER[PR_VARIABLE]*/
-T6 r618test(T0* a1,T0* a2);
+T6 r615test(T0* a1,T0* a2);
 /*KL_COMPARABLE_COMPARATOR[PR_POSITION]*/
-T6 r410less_than(T0* a1,T0* a2);
+T6 r415less_than(T0* a1,T0* a2);
 /*KL_SPECIAL_ROUTINES[INTEGER]*/
-T0* r522make(T2 a1);
+T0* r134make(T2 a1);
 /*KL_SPECIAL_ROUTINES[INTEGER]*/
-T0* r522resize(T0* a1,T2 a2);
-/*KL_FIXED_ARRAY_ROUTINES[DS_ARRAYED_LIST[PR_VARIABLE]]*/
-T0* r472make(T2 a1);
+T0* r134make_from_array(T0* a1);
+/*KL_SPECIAL_ROUTINES[INTEGER]*/
+T0* r134resize(T0* a1,T2 a2);
+/*KL_SPECIAL_ROUTINES[INTEGER]*/
+T0* r134to_special(T0* a1);
 /*KL_EQUALITY_TESTER[PR_TYPE]*/
-T6 r112test(T0* a1,T0* a2);
+T6 r117test(T0* a1,T0* a2);
 /*KL_SPECIAL_ROUTINES[STRING]*/
 T0* r524make(T2 a1);
 /*KL_SPECIAL_ROUTINES[STRING]*/
 T0* r524resize(T0* a1,T2 a2);
 /*DS_LINKED_LIST[PR_RULE]*/
-T6 r422valid_cursor(T422* C,T0* a1);
+T6 r427valid_cursor(T427* C,T0* a1);
 /*DS_LINKED_LIST[PR_RULE]*/
-void r422append_last(T422* C,T0* a1);
+void r427append_last(T427* C,T0* a1);
 /*DS_LINKED_LIST[PR_RULE]*/
-T0* r422cursor_item(T0* a1);
+T0* r427cursor_item(T0* a1);
 /*DS_LINKED_LIST[PR_RULE]*/
-void r422remove_traversing_cursor(T422* C,T0* a1);
+void r427remove_traversing_cursor(T427* C,T0* a1);
 /*DS_LINKED_LIST[PR_RULE]*/
-void r422cursor_go_after(T422* C,T0* a1);
+void r427cursor_go_after(T427* C,T0* a1);
 /*DS_LINKED_LIST[PR_RULE]*/
-void r422add_traversing_cursor(T422* C,T0* a1);
+void r427add_traversing_cursor(T427* C,T0* a1);
 /*DS_LINKED_LIST[PR_RULE]*/
-void r422make(T422* C);
+void r427make(T427* C);
 /*DS_LINKED_LIST[PR_RULE]*/
-T6 r422cursor_after(T0* a1);
+T6 r427cursor_after(T0* a1);
 /*DS_LINKED_LIST[PR_RULE]*/
-T6 r422has(T422* C,T0* a1);
+T6 r427has(T427* C,T0* a1);
 /*DS_LINKED_LIST[PR_RULE]*/
-void r422cursor_search_forth(T422* C,T0* a1,T0* a2);
+void r427cursor_search_forth(T427* C,T0* a1,T0* a2);
 /*DS_LINKED_LIST[PR_RULE]*/
-void r422cursor_forth(T422* C,T0* a1);
+void r427cursor_forth(T427* C,T0* a1);
 /*DS_LINKED_LIST[PR_RULE]*/
-void r422make_from_linear(T422* C,T0* a1);
+void r427cursor_start(T427* C,T0* a1);
 /*DS_LINKED_LIST[PR_RULE]*/
-void r422cursor_start(T422* C,T0* a1);
+void r427force_last(T427* C,T0* a1);
 /*DS_LINKED_LIST[PR_RULE]*/
-void r422force_last(T422* C,T0* a1);
+T0* r427new_cursor(T427* C);
 /*DS_LINKED_LIST[PR_RULE]*/
-T0* r422new_cursor(T422* C);
-/*DS_LINKED_LIST[PR_RULE]*/
-T6 r422cursor_off(T0* a1);
+T6 r427cursor_off(T0* a1);
 /*DS_ARRAYED_LIST[DS_ARRAYED_LIST[PR_VARIABLE]]*/
-void r459clear_items(T459* C,T2 a1,T2 a2);
+void r465clear_items(T465* C,T2 a1,T2 a2);
 /*DS_ARRAYED_LIST[DS_ARRAYED_LIST[PR_VARIABLE]]*/
-T6 r459extendible(T459* C,T2 a1);
+T6 r465extendible(T465* C,T2 a1);
 /*DS_ARRAYED_LIST[DS_ARRAYED_LIST[PR_VARIABLE]]*/
-void r459wipe_out(T459* C);
+void r465wipe_out(T465* C);
 /*DS_ARRAYED_LIST[DS_ARRAYED_LIST[PR_VARIABLE]]*/
-void r459move_all_cursors_after(T459* C);
+void r465move_all_cursors_after(T465* C);
 /*DS_ARRAYED_LIST[DS_ARRAYED_LIST[PR_VARIABLE]]*/
-void r459make(T459* C,T2 a1);
+void r465make(T465* C,T2 a1);
 /*DS_ARRAYED_LIST[DS_ARRAYED_LIST[PR_VARIABLE]]*/
-T0* r459new_cursor(T459* C);
+T0* r465new_cursor(T465* C);
 /*DS_ARRAYED_LIST[DS_ARRAYED_LIST[PR_VARIABLE]]*/
-void r459put_last(T459* C,T0* a1);
-/*KL_FIXED_ARRAY_ROUTINES[DS_NESTED_LIST[PR_TOKEN]]*/
-T0* r386make(T2 a1);
-/*KL_FIXED_ARRAY_ROUTINES[DS_NESTED_LIST[PR_TOKEN]]*/
-T0* r386resize(T0* a1,T2 a2);
+void r465put_last(T465* C,T0* a1);
+/*KL_SPECIAL_ROUTINES[PR_VARIABLE]*/
+T0* r489make(T2 a1);
+/*KL_SPECIAL_ROUTINES[PR_VARIABLE]*/
+T0* r489resize(T0* a1,T2 a2);
 /*DS_HASH_TABLE_CURSOR[DS_ARRAYED_LIST[PR_STATE],INTEGER]*/
-void r457make(T457* C,T0* a1);
+void r463make(T463* C,T0* a1);
 /*DS_BUBBLE_SORTER[INTEGER]*/
-T6 r243sorted(T243* C,T0* a1);
+T6 r248sorted(T248* C,T0* a1);
 /*DS_BUBBLE_SORTER[INTEGER]*/
-T6 r243sorted_with_comparator(T0* a1,T0* a2);
+T6 r248sorted_with_comparator(T0* a1,T0* a2);
 /*DS_BUBBLE_SORTER[INTEGER]*/
-T6 r243subsorted_with_comparator(T0* a1,T0* a2,T2 a3,T2 a4);
+T6 r248subsorted_with_comparator(T0* a1,T0* a2,T2 a3,T2 a4);
 /*DS_ARRAYED_LIST[INTEGER]*/
-T6 r205extendible(T205* C,T2 a1);
+T6 r211extendible(T211* C,T2 a1);
 /*DS_ARRAYED_LIST[INTEGER]*/
-T2 r205last(T205* C);
+T2 r211last(T211* C);
 /*DS_ARRAYED_LIST[INTEGER]*/
-void r205make(T205* C,T2 a1);
+void r211make(T211* C,T2 a1);
 /*DS_ARRAYED_LIST[INTEGER]*/
-T6 r205sorted(T205* C,T0* a1);
+T6 r211sorted(T211* C,T0* a1);
 /*DS_ARRAYED_LIST[INTEGER]*/
-T0* r205new_cursor(T205* C);
+T0* r211new_cursor(T211* C);
 /*DS_ARRAYED_LIST[INTEGER]*/
-void r205put_last(T205* C,T2 a1);
+void r211put_last(T211* C,T2 a1);
+/*SPECIAL[PR_SYMBOL]*/
+T6 r129valid_index(T129* C,T2 a1);
+/*SPECIAL[PR_SYMBOL]*/
+void r129make(T129* C,T2 a1);
+/*SPECIAL[PR_SYMBOL]*/
+T0* r129resize(T129* C,T2 a1);
+/*SPECIAL[PR_SYMBOL]*/
+void r129array_resize(T129* C,T2 a1);
 /*KL_EQUALITY_TESTER[PR_TRANSITION]*/
-T6 r651test(T0* a1,T0* a2);
+T6 r644test(T0* a1,T0* a2);
 extern T0*oBC13string_;
 extern T0*oBC15arguments;
 extern int fBC15arguments;
 /*PR_STRING_TOKEN_DEFINED_TWICE_ERROR*/
-T0* r578arguments(void);
-/*PR_STRING_TOKEN_DEFINED_TWICE_ERROR*/
-void r578make(T578* C,T0* a1,T2 a2,T0* a3,T0* a4,T0* a5);
-/*PR_STRING_TOKEN_DEFINED_TWICE_ERROR*/
-T0* r578message(T578* C,T0* a1);
-/*PR_STRING_TOKEN_DEFINED_TWICE_ERROR*/
-T0* r578default_message(T578* C);
-/*PR_NULL_INTEGER_ERROR*/
-T0* r542arguments(void);
-/*PR_NULL_INTEGER_ERROR*/
-void r542make(T542* C,T0* a1,T2 a2);
-/*PR_NULL_INTEGER_ERROR*/
-T0* r542message(T542* C,T0* a1);
-/*PR_NULL_INTEGER_ERROR*/
-T0* r542default_message(T542* C);
-/*PR_INVALID_DOLLAR_DOLLAR_ERROR*/
-T0* r544arguments(void);
-/*PR_INVALID_DOLLAR_DOLLAR_ERROR*/
-void r544make(T544* C,T0* a1,T2 a2);
-/*PR_INVALID_DOLLAR_DOLLAR_ERROR*/
-T0* r544message(T544* C,T0* a1);
-/*PR_INVALID_DOLLAR_DOLLAR_ERROR*/
-T0* r544default_message(T544* C);
-/*KL_TEXT_INPUT_FILE*/
-T6 r486is_closed(T486* C);
-/*KL_TEXT_INPUT_FILE*/
-void r486old_close(T486* C);
-/*KL_TEXT_INPUT_FILE*/
-T2 r486read_to_string(T486* C,T0* a1,T2 a2,T2 a3);
-/*KL_TEXT_INPUT_FILE*/
-void r486open_read(T486* C);
-/*KL_TEXT_INPUT_FILE*/
-void r486old_read_character(T486* C);
-/*KL_TEXT_INPUT_FILE*/
-void r486read_character(T486* C);
-/*KL_TEXT_INPUT_FILE*/
-void r486fill_buffer(T486* C);
-/*KL_TEXT_INPUT_FILE*/
-void r486close(T486* C);
-/*KL_TEXT_INPUT_FILE*/
-void r486make(T486* C,T0* a1);
-/*KL_TEXT_INPUT_FILE*/
-T2 r486read_to_buffer(T486* C,T0* a1,T2 a2,T2 a3);
-/*KL_TEXT_INPUT_FILE*/
-void r486connect_to(T486* C,T0* a1);
-/*KL_TEXT_INPUT_FILE*/
-void r486old_open_read(T486* C);
-/*KL_TEXT_INPUT_FILE*/
-T2 r486_492Pread_to_buffer(T486* C,T0* a1,T2 a2,T2 a3);
-/*PR_MISSING_CHARACTERS_ERROR*/
-T0* r541arguments(void);
-/*PR_MISSING_CHARACTERS_ERROR*/
-void r541make(T541* C,T0* a1,T2 a2,T0* a3);
-/*PR_MISSING_CHARACTERS_ERROR*/
-T0* r541message(T541* C,T0* a1);
-/*PR_MISSING_CHARACTERS_ERROR*/
-T0* r541default_message(T541* C);
-/*UT_VERSION_NUMBER*/
-T0* r645arguments(void);
-/*UT_VERSION_NUMBER*/
-void r645make(T645* C,T0* a1);
-/*UT_VERSION_NUMBER*/
-T0* r645message(T645* C,T0* a1);
-/*UT_VERSION_NUMBER*/
-T0* r645default_message(T645* C);
-/*PR_ACTION*/
-T6 r603is_equal(T603* C,T0* a1);
-/*PR_ACTION*/
-T6 r603se_assigned_from(T0* a1);
-/*PR_ACTION*/
-void r603out_in_tagged_out_memory(T603* C);
-/*PR_ACTION*/
-T6 r603same_type(T603* C,T0* a1);
-/*PR_ACTION*/
-T6 r603conforms_to(T603* C,T0* a1);
-/*PR_TOKEN_DECLARED_TWICE_ERROR*/
 T0* r574arguments(void);
-/*PR_TOKEN_DECLARED_TWICE_ERROR*/
-void r574make(T574* C,T0* a1,T2 a2,T0* a3);
-/*PR_TOKEN_DECLARED_TWICE_ERROR*/
+/*PR_STRING_TOKEN_DEFINED_TWICE_ERROR*/
+void r574make(T574* C,T0* a1,T2 a2,T0* a3,T0* a4,T0* a5);
+/*PR_STRING_TOKEN_DEFINED_TWICE_ERROR*/
 T0* r574message(T574* C,T0* a1);
-/*PR_TOKEN_DECLARED_TWICE_ERROR*/
+/*PR_STRING_TOKEN_DEFINED_TWICE_ERROR*/
 T0* r574default_message(T574* C);
+/*PR_NULL_INTEGER_ERROR*/
+T0* r536arguments(void);
+/*PR_NULL_INTEGER_ERROR*/
+void r536make(T536* C,T0* a1,T2 a2);
+/*PR_NULL_INTEGER_ERROR*/
+T0* r536message(T536* C,T0* a1);
+/*PR_NULL_INTEGER_ERROR*/
+T0* r536default_message(T536* C);
+/*PR_INVALID_DOLLAR_DOLLAR_ERROR*/
+T0* r538arguments(void);
+/*PR_INVALID_DOLLAR_DOLLAR_ERROR*/
+void r538make(T538* C,T0* a1,T2 a2);
+/*PR_INVALID_DOLLAR_DOLLAR_ERROR*/
+T0* r538message(T538* C,T0* a1);
+/*PR_INVALID_DOLLAR_DOLLAR_ERROR*/
+T0* r538default_message(T538* C);
+/*KL_TEXT_INPUT_FILE*/
+T6 r492is_closed(T492* C);
+/*KL_TEXT_INPUT_FILE*/
+void r492old_close(T492* C);
+/*KL_TEXT_INPUT_FILE*/
+T2 r492read_to_string(T492* C,T0* a1,T2 a2,T2 a3);
+/*KL_TEXT_INPUT_FILE*/
+T2 r492_498Pread_to_buffer(T492* C,T0* a1,T2 a2,T2 a3);
+/*KL_TEXT_INPUT_FILE*/
+void r492open_read(T492* C);
+/*KL_TEXT_INPUT_FILE*/
+void r492old_read_character(T492* C);
+/*KL_TEXT_INPUT_FILE*/
+void r492read_character(T492* C);
+/*KL_TEXT_INPUT_FILE*/
+void r492fill_buffer(T492* C);
+/*KL_TEXT_INPUT_FILE*/
+void r492close(T492* C);
+/*KL_TEXT_INPUT_FILE*/
+void r492make(T492* C,T0* a1);
+/*KL_TEXT_INPUT_FILE*/
+T2 r492read_to_buffer(T492* C,T0* a1,T2 a2,T2 a3);
+/*KL_TEXT_INPUT_FILE*/
+void r492connect_to(T492* C,T0* a1);
+/*KL_TEXT_INPUT_FILE*/
+void r492old_open_read(T492* C);
+/*PR_MISSING_CHARACTERS_ERROR*/
+T0* r535arguments(void);
+/*PR_MISSING_CHARACTERS_ERROR*/
+void r535make(T535* C,T0* a1,T2 a2,T0* a3);
+/*PR_MISSING_CHARACTERS_ERROR*/
+T0* r535message(T535* C,T0* a1);
+/*PR_MISSING_CHARACTERS_ERROR*/
+T0* r535default_message(T535* C);
+/*UT_VERSION_NUMBER*/
+T0* r638arguments(void);
+/*UT_VERSION_NUMBER*/
+void r638make(T638* C,T0* a1);
+/*UT_VERSION_NUMBER*/
+T0* r638message(T638* C,T0* a1);
+/*UT_VERSION_NUMBER*/
+T0* r638default_message(T638* C);
+/*PR_ACTION*/
+T6 r599is_equal(T599* C,T0* a1);
+/*PR_ACTION*/
+T6 r599se_assigned_from(T0* a1);
+/*PR_ACTION*/
+void r599out_in_tagged_out_memory(T599* C);
+/*PR_ACTION*/
+T6 r599same_type(T599* C,T0* a1);
+/*PR_ACTION*/
+T6 r599conforms_to(T599* C,T0* a1);
+/*PR_TOKEN_DECLARED_TWICE_ERROR*/
+T0* r570arguments(void);
+/*PR_TOKEN_DECLARED_TWICE_ERROR*/
+void r570make(T570* C,T0* a1,T2 a2,T0* a3);
+/*PR_TOKEN_DECLARED_TWICE_ERROR*/
+T0* r570message(T570* C,T0* a1);
+/*PR_TOKEN_DECLARED_TWICE_ERROR*/
+T0* r570default_message(T570* C);
 /*KL_STDIN_FILE*/
-T2 r611read_to_string(T611* C,T0* a1,T2 a2,T2 a3);
+T2 r607read_to_string(T607* C,T0* a1,T2 a2,T2 a3);
 /*KL_STDIN_FILE*/
-void r611old_read_character(T611* C);
+T2 r607_498Pread_to_buffer(T607* C,T0* a1,T2 a2,T2 a3);
 /*KL_STDIN_FILE*/
-void r611read_character(T611* C);
+void r607old_read_character(T607* C);
 /*KL_STDIN_FILE*/
-void r611fill_buffer(T611* C);
+void r607read_character(T607* C);
 /*KL_STDIN_FILE*/
-void r611make(T611* C);
+void r607fill_buffer(T607* C);
 /*KL_STDIN_FILE*/
-T2 r611read_to_buffer(T611* C,T0* a1,T2 a2,T2 a3);
-extern T0*oBC20std_output;
+void r607make(T607* C);
 /*KL_STDIN_FILE*/
-void r611old_make(T611* C);
+T2 r607read_to_buffer(T607* C,T0* a1,T2 a2,T2 a3);
+extern T0*oBC21std_output;
 /*KL_STDIN_FILE*/
-T2 r611_492Pread_to_buffer(T611* C,T0* a1,T2 a2,T2 a3);
+void r607old_make(T607* C);
 /*PR_TYPE*/
 void r65print_create_yyvs(T65* C,T2 a1,T0* a2);
 /*PR_TYPE*/
@@ -2710,7 +2633,7 @@ void r65print_push_yyval(T65* C,T2 a1,T0* a2);
 void r65old_print_dollar_dollar_initialization(T65* C,T0* a1);
 /*PR_TYPE*/
 void r65print_push_last_value(T65* C,T2 a1,T0* a2);
-extern T0*oBC42integer_formatter_;
+extern T0*oBC43integer_formatter_;
 /*PR_TYPE*/
 void r65make_generic(T65* C,T2 a1,T0* a2,T0* a3);
 extern T0*oBC66character_;
@@ -2741,1173 +2664,1186 @@ void r65append_dollar_dollar_to_string(T65* C,T0* a1);
 /*PR_TYPE*/
 void r65make_anchored(T65* C,T2 a1,T0* a2);
 /*UT_ERROR_HANDLER*/
-void r179report_warning_message(T179* C,T0* a1);
+void r185report_warning_message(T185* C,T0* a1);
 extern T0*oBC14std;
 /*UT_ERROR_HANDLER*/
-T0* r179message(T0* a1);
+T0* r185message(T0* a1);
 /*UT_ERROR_HANDLER*/
-void r179report_info_message(T179* C,T0* a1);
+void r185report_info_message(T185* C,T0* a1);
 /*UT_ERROR_HANDLER*/
-void r179make_standard(T179* C);
+void r185make_standard(T185* C);
 /*UT_ERROR_HANDLER*/
-void r179report_error_message(T179* C,T0* a1);
+void r185report_error_message(T185* C,T0* a1);
 /*KL_CHARACTER_BUFFER*/
-T0* r610substring(T610* C,T2 a1,T2 a2);
+T0* r606substring(T606* C,T2 a1,T2 a2);
 /*KL_CHARACTER_BUFFER*/
-void r610fill_from_string(T610* C,T0* a1,T2 a2);
+void r606fill_from_string(T606* C,T0* a1,T2 a2);
 /*KL_CHARACTER_BUFFER*/
-T2 r610fill_from_stream(T610* C,T0* a1,T2 a2,T2 a3);
+T2 r606fill_from_stream(T606* C,T0* a1,T2 a2,T2 a3);
 /*KL_CHARACTER_BUFFER*/
-void r610move_left(T610* C,T2 a1,T2 a2,T2 a3);
+void r606move_left(T606* C,T2 a1,T2 a2,T2 a3);
 /*KL_CHARACTER_BUFFER*/
-void r610make(T610* C,T2 a1);
+void r606make(T606* C,T2 a1);
 /*KL_CHARACTER_BUFFER*/
-void r610resize(T610* C,T2 a1);
+void r606resize(T606* C,T2 a1);
 /*UT_MESSAGE*/
-T0* r309arguments(void);
+T0* r314arguments(void);
 /*UT_MESSAGE*/
-void r309make(T309* C,T0* a1);
+void r314make(T314* C,T0* a1);
 /*UT_MESSAGE*/
-T0* r309message(T309* C,T0* a1);
+T0* r314message(T314* C,T0* a1);
 /*UT_MESSAGE*/
-T0* r309default_message(T309* C);
+T0* r314default_message(T314* C);
 /*KL_TEXT_OUTPUT_FILE*/
-T6 r21is_closed(T21* C);
+T6 r22is_closed(T22* C);
 /*KL_TEXT_OUTPUT_FILE*/
-void r21old_close(T21* C);
+void r22old_close(T22* C);
 /*KL_TEXT_OUTPUT_FILE*/
-void r21old_open_write(T21* C);
+void r22old_open_write(T22* C);
 /*KL_TEXT_OUTPUT_FILE*/
-void r21close(T21* C);
+void r22close(T22* C);
 /*KL_TEXT_OUTPUT_FILE*/
-void r21make(T21* C,T0* a1);
+void r22make(T22* C,T0* a1);
 /*KL_TEXT_OUTPUT_FILE*/
-void r21old_put_string(T21* C,T0* a1);
+void r22old_put_string(T22* C,T0* a1);
 /*KL_TEXT_OUTPUT_FILE*/
-void r21old_put_character(T21* C,T3 a1);
+void r22old_put_character(T22* C,T3 a1);
 /*KL_TEXT_OUTPUT_FILE*/
-void r21connect_to(T21* C,T0* a1);
+void r22connect_to(T22* C,T0* a1);
 /*KL_TEXT_OUTPUT_FILE*/
-void r21put_integer(T21* C,T2 a1);
+void r22put_integer(T22* C,T2 a1);
 /*KL_TEXT_OUTPUT_FILE*/
-void r21put_line(T21* C,T0* a1);
+void r22put_line(T22* C,T0* a1);
 /*KL_TEXT_OUTPUT_FILE*/
-void r21old_make(T21* C);
+void r22old_make(T22* C);
 /*KL_TEXT_OUTPUT_FILE*/
-void r21open_write(T21* C);
+void r22open_write(T22* C);
 /*KL_TEXT_OUTPUT_FILE*/
-void r21write_buffer(T21* C);
+void r22write_buffer(T22* C);
 /*PR_PREC_SPECIFIED_TWICE_ERROR*/
-T0* r608arguments(void);
-/*PR_PREC_SPECIFIED_TWICE_ERROR*/
-void r608make(T608* C,T0* a1,T2 a2);
-/*PR_PREC_SPECIFIED_TWICE_ERROR*/
-T0* r608message(T608* C,T0* a1);
-/*PR_PREC_SPECIFIED_TWICE_ERROR*/
-T0* r608default_message(T608* C);
-/*PR_PREC_NOT_TOKEN_ERROR*/
-T0* r609arguments(void);
-/*PR_PREC_NOT_TOKEN_ERROR*/
-void r609make(T609* C,T0* a1,T2 a2,T0* a3);
-/*PR_PREC_NOT_TOKEN_ERROR*/
-T0* r609message(T609* C,T0* a1);
-/*PR_PREC_NOT_TOKEN_ERROR*/
-T0* r609default_message(T609* C);
-/*PR_INVALID_STRING_TOKEN_ERROR*/
-T0* r543arguments(void);
-/*PR_INVALID_STRING_TOKEN_ERROR*/
-void r543make(T543* C,T0* a1,T2 a2,T0* a3);
-/*PR_INVALID_STRING_TOKEN_ERROR*/
-T0* r543message(T543* C,T0* a1);
-/*PR_INVALID_STRING_TOKEN_ERROR*/
-T0* r543default_message(T543* C);
-/*PR_RULE*/
-void r86put_symbol(T86* C,T0* a1);
-/*PR_RULE*/
-T6 r86is_equal(T86* C,T0* a1);
-/*PR_RULE*/
-void r86old_print_action(T86* C,T0* a1,T0* a2);
-/*PR_RULE*/
-void r86print_rule(T86* C,T0* a1);
-/*PR_RULE*/
-void r86make(T86* C,T2 a1,T0* a2,T0* a3);
-/*PR_RULE*/
-void r86print_action(T86* C,T0* a1,T0* a2);
-/*PR_RULE*/
-T6 r86_ix_60(T86* C,T0* a1);
-/*PR_YACC_PARSER*/
-void r495report_multiple_start_declarations_error(T495* C);
-/*PR_YACC_PARSER*/
-void r495yy_do_action(T495* C,T2 a1);
-/*PR_YACC_PARSER*/
-void r495report_variable_declared_as_token_error(T495* C,T0* a1);
-/*PR_YACC_PARSER*/
-T0* r495cloned_string(T0* a1);
-extern T0*oBC504unknown_type;
-extern int fBC504unknown_type;
-/*PR_YACC_PARSER*/
-T0* r495unknown_type(T495* C);
-extern T0*oBC495yytable_template;
-extern int fBC495yytable_template;
-/*PR_YACC_PARSER*/
-T0* r495yytable_template(void);
-/*PR_YACC_PARSER*/
-T0* r495new_symbol(T495* C,T0* a1);
-/*PR_YACC_PARSER*/
-void r495make_parser_skeleton(T495* C);
-/*PR_YACC_PARSER*/
-void r495report_undefined_string_token_error(T495* C,T0* a1);
-/*PR_YACC_PARSER*/
-void r495report_start_symbol_token_error(T495* C);
-/*PR_YACC_PARSER*/
-T0* r495new_nonassoc_char_terminal(T495* C,T0* a1,T2 a2);
-/*PR_YACC_PARSER*/
-void r495fatal_error(T0* a1);
-/*PR_YACC_PARSER*/
-T0* r495new_type(T495* C,T0* a1);
-/*PR_YACC_PARSER*/
-void r495put_symbol(T495* C,T0* a1,T0* a2);
-/*PR_YACC_PARSER*/
-T2 r495start_condition(T495* C);
-/*PR_YACC_PARSER*/
-void r495yy_do_error_action(T495* C,T2 a1);
-extern T0*oBC504no_action;
-extern int fBC504no_action;
-/*PR_YACC_PARSER*/
-T0* r495no_action(T495* C);
-/*PR_YACC_PARSER*/
-void r495report_two_strings_token_error(T495* C,T0* a1,T0* a2,T0* a3);
-/*PR_YACC_PARSER*/
-void r495parse_file(T495* C,T0* a1);
-/*PR_YACC_PARSER*/
-void r495parse(T495* C);
-/*PR_YACC_PARSER*/
-void r495report_invalid_dollar_dollar_error(T495* C);
-/*PR_YACC_PARSER*/
-T0* r495new_rule(T495* C,T0* a1);
-/*PR_YACC_PARSER*/
-void r495report_dangerous_dollar_n_warning(T495* C,T2 a1);
-/*PR_YACC_PARSER*/
-T0* r495new_dummy_variable(T495* C);
-/*PR_YACC_PARSER*/
-void r495set_input_buffer(T495* C,T0* a1);
-/*PR_YACC_PARSER*/
-T0* r495new_char_terminal(T495* C,T0* a1,T0* a2);
-/*PR_YACC_PARSER*/
-void r495report_prec_not_token_error(T495* C,T0* a1);
-extern T0*oBC496yy_ec_template;
-extern int fBC496yy_ec_template;
-/*PR_YACC_PARSER*/
-T0* r495yy_ec_template(void);
-/*PR_YACC_PARSER*/
-T0* r495text_substring(T495* C,T2 a1,T2 a2);
-/*PR_YACC_PARSER*/
-void r495yy_execute_action(T495* C,T2 a1);
-extern T0*oBC495yytranslate_template;
-extern int fBC495yytranslate_template;
-/*PR_YACC_PARSER*/
-T0* r495yytranslate_template(void);
-extern T0*oBC496yy_def_template;
-extern int fBC496yy_def_template;
-/*PR_YACC_PARSER*/
-T0* r495yy_def_template(void);
-/*PR_YACC_PARSER*/
-void r495set_token_id(T495* C,T0* a1,T2 a2);
-/*PR_YACC_PARSER*/
-void r495process_dollar_n(T495* C,T2 a1,T2 a2,T0* a3);
-/*PR_YACC_PARSER*/
-T3 r495text_item(T495* C,T2 a1);
-/*PR_YACC_PARSER*/
-T0* r495new_anchored_type(T495* C,T0* a1);
-/*PR_YACC_PARSER*/
-void r495yy_push_last_value(T495* C,T2 a1);
-/*PR_YACC_PARSER*/
-void r495report_token_declared_twice_error(T495* C,T0* a1);
-/*PR_YACC_PARSER*/
-void r495yy_load_input_buffer(T495* C);
-/*PR_YACC_PARSER*/
-void r495yy_push_error_value(T495* C);
-/*PR_YACC_PARSER*/
-void r495report_undefined_symbol_error(T495* C,T0* a1);
-/*PR_YACC_PARSER*/
-void r495report_variable_declared_twice_error(T495* C,T0* a1);
-extern T0*oBC495yyr1_template;
-extern int fBC495yyr1_template;
-/*PR_YACC_PARSER*/
-T0* r495yyr1_template(void);
-/*PR_YACC_PARSER*/
-void r495make_with_buffer(T495* C,T0* a1);
-/*PR_YACC_PARSER*/
-T0* r495new_nonterminal(T495* C,T0* a1,T0* a2);
-/*PR_YACC_PARSER*/
-void r495process_rule(T495* C,T0* a1);
-extern T0*oBC495yytypes1_template;
-extern int fBC495yytypes1_template;
-/*PR_YACC_PARSER*/
-T0* r495yytypes1_template(void);
-/*PR_YACC_PARSER*/
-T2 r495yy_null_trans_state(T495* C,T2 a1);
-/*PR_YACC_PARSER*/
-T0* r495new_variable(T495* C,T0* a1);
-extern T0*oBC496yy_accept_template;
-extern int fBC496yy_accept_template;
-/*PR_YACC_PARSER*/
-T0* r495yy_accept_template(void);
-/*PR_YACC_PARSER*/
-T0* r495new_error_action(T495* C,T0* a1,T2 a2);
-/*PR_YACC_PARSER*/
-void r495read_token(T495* C);
-/*PR_YACC_PARSER*/
-void r495report_invalid_dollar_n_error(T495* C,T2 a1);
-/*PR_YACC_PARSER*/
-T0* r495new_token(T495* C,T0* a1);
-/*PR_YACC_PARSER*/
-T0* r495new_basic_type(T495* C,T0* a1);
-/*PR_YACC_PARSER*/
-void r495yy_init_value_stacks(T495* C);
-extern T0*oBC504no_type;
-extern int fBC504no_type;
-/*PR_YACC_PARSER*/
-T0* r495no_type(T495* C);
-/*PR_YACC_PARSER*/
-T2 r495yy_previous_state(T495* C);
-extern T0*oBC495yypgoto_template;
-extern int fBC495yypgoto_template;
-/*PR_YACC_PARSER*/
-T0* r495yypgoto_template(void);
-/*PR_YACC_PARSER*/
-void r495yy_refill_input_buffer(T495* C);
-extern T0*oBC495yytypes2_template;
-extern int fBC495yytypes2_template;
-/*PR_YACC_PARSER*/
-T0* r495yytypes2_template(void);
-/*PR_YACC_PARSER*/
-T0* r495yy_fixed_array(T0* a1);
-extern T0*oBC496yy_meta_template;
-extern int fBC496yy_meta_template;
-/*PR_YACC_PARSER*/
-T0* r495yy_meta_template(void);
-/*PR_YACC_PARSER*/
-void r495process_symbols(T495* C);
-/*PR_YACC_PARSER*/
-void r495report_prec_specified_twice_error(T495* C);
-/*PR_YACC_PARSER*/
-T6 r495is_terminal(T495* C,T0* a1);
-extern T0*oBC496yy_base_template;
-extern int fBC496yy_base_template;
-/*PR_YACC_PARSER*/
-T0* r495yy_base_template(void);
-/*PR_YACC_PARSER*/
-void r495initialize_grammar(T495* C);
-/*PR_YACC_PARSER*/
-void r495report_two_token_ids_token_error(T495* C,T0* a1,T2 a2,T2 a3);
-/*PR_YACC_PARSER*/
-T2 r495text_count(T495* C);
-/*PR_YACC_PARSER*/
-T0* r495new_file_buffer(T0* a1);
-/*PR_YACC_PARSER*/
-T0* r495new_string_token(T495* C,T0* a1);
-/*PR_YACC_PARSER*/
-void r495yy_initialize(T495* C);
-/*PR_YACC_PARSER*/
-T0* r495text(T495* C);
-/*PR_YACC_PARSER*/
-void r495report_token_id_used_twice_warning(T495* C,T0* a1,T0* a2);
-/*PR_YACC_PARSER*/
-void r495report_rule_declared_twice_warning(T495* C,T0* a1);
-/*PR_YACC_PARSER*/
-void r495report_no_rules_error(T495* C);
-/*PR_YACC_PARSER*/
-void r495set_start_symbol(T495* C);
-/*PR_YACC_PARSER*/
-void r495set_precedence(T495* C,T0* a1,T2 a2);
-/*PR_YACC_PARSER*/
-void r495make_yacc_scanner(T495* C,T0* a1);
-/*PR_YACC_PARSER*/
-void r495report_lhs_symbol_token_error(T495* C,T0* a1);
-/*PR_YACC_PARSER*/
-void r495yy_clear_value_stacks(T495* C);
-extern T0*oBC496yy_nxt_template;
-extern int fBC496yy_nxt_template;
-/*PR_YACC_PARSER*/
-T0* r495yy_nxt_template(void);
-/*PR_YACC_PARSER*/
-T0* r495new_left_char_terminal(T495* C,T0* a1,T2 a2);
-/*PR_YACC_PARSER*/
-void r495yy_build_parser_tables(T495* C);
-/*PR_YACC_PARSER*/
-void r495report_missing_characters_error(T495* C,T0* a1);
-/*PR_YACC_PARSER*/
-T6 r495valid_start_condition(T2 a1);
-/*PR_YACC_PARSER*/
-T0* r495new_generic_type(T495* C,T0* a1,T0* a2);
-/*PR_YACC_PARSER*/
-void r495report_unknown_start_symbol_error(T495* C);
-extern T0*oBC503empty_buffer;
-extern int fBC503empty_buffer;
-/*PR_YACC_PARSER*/
-T0* r495empty_buffer(void);
-/*PR_YACC_PARSER*/
-void r495report_error(T495* C,T0* a1);
-/*PR_YACC_PARSER*/
-void r495process_dollar_dollar(T495* C,T0* a1);
-/*PR_YACC_PARSER*/
-void r495report_token_declared_as_variable_error(T495* C,T0* a1);
-/*PR_YACC_PARSER*/
-T0* r495new_terminal(T495* C,T0* a1,T0* a2);
-/*PR_YACC_PARSER*/
-void r495report_invalid_error_n_error(T495* C,T2 a1);
-extern T0*oBC495yydefact_template;
-extern int fBC495yydefact_template;
-/*PR_YACC_PARSER*/
-T0* r495yydefact_template(void);
-/*PR_YACC_PARSER*/
-T0* r495new_nonassoc_terminal(T495* C,T0* a1,T2 a2);
-extern T0*oBC496yy_chk_template;
-extern int fBC496yy_chk_template;
-/*PR_YACC_PARSER*/
-T0* r495yy_chk_template(void);
-/*PR_YACC_PARSER*/
-void r495report_string_token_defined_twice_error(T495* C,T0* a1,T0* a2,T0* a3);
-/*PR_YACC_PARSER*/
-void r495set_literal_string(T495* C,T0* a1,T0* a2);
-extern T0*oBC495yycheck_template;
-extern int fBC495yycheck_template;
-/*PR_YACC_PARSER*/
-T0* r495yycheck_template(void);
-/*PR_YACC_PARSER*/
-T0* r495new_right_char_terminal(T495* C,T0* a1,T2 a2);
-/*PR_YACC_PARSER*/
-T0* r495new_char_token(T495* C,T0* a1);
-/*PR_YACC_PARSER*/
-T0* r495filename(T495* C);
-/*PR_YACC_PARSER*/
-void r495make(T495* C,T0* a1);
-/*PR_YACC_PARSER*/
-T0* r495yyfixed_array(T0* a1);
-extern T0*oBC495yydefgoto_template;
-extern int fBC495yydefgoto_template;
-/*PR_YACC_PARSER*/
-T0* r495yydefgoto_template(void);
-/*PR_YACC_PARSER*/
-void r495yy_pop_last_value(T495* C,T2 a1);
-/*PR_YACC_PARSER*/
-void r495yy_set_content(T495* C,T0* a1);
-/*PR_YACC_PARSER*/
-void r495put_action(T495* C,T0* a1,T0* a2);
-/*PR_YACC_PARSER*/
-void r495report_precedence_defined_twice_error(T495* C,T0* a1);
-extern T0*oBC495yypact_template;
-extern int fBC495yypact_template;
-/*PR_YACC_PARSER*/
-T0* r495yypact_template(void);
-/*PR_YACC_PARSER*/
-void r495report_invalid_string_token_error(T495* C,T0* a1);
-/*PR_YACC_PARSER*/
-void r495set_start_condition(T495* C,T2 a1);
-/*PR_YACC_PARSER*/
-void r495yy_execute_eof_action(T495* C,T2 a1);
-/*PR_YACC_PARSER*/
-T0* r495new_left_terminal(T495* C,T0* a1,T2 a2);
-/*PR_YACC_PARSER*/
-T6 r495is_nonterminal(T495* C,T0* a1);
-/*PR_YACC_PARSER*/
-void r495yy_build_tables(T495* C);
-/*PR_YACC_PARSER*/
-void r495report_null_integer_error(T495* C);
-/*PR_YACC_PARSER*/
-T0* r495new_right_terminal(T495* C,T0* a1,T2 a2);
-/*UT_USAGE_MESSAGE*/
-T0* r644arguments(void);
-/*UT_USAGE_MESSAGE*/
-void r644make(T644* C,T0* a1);
-/*UT_USAGE_MESSAGE*/
-T0* r644message(T644* C,T0* a1);
-/*UT_USAGE_MESSAGE*/
-T0* r644default_message(T644* C);
-/*PR_DANGEROUS_DOLLAR_N_ERROR*/
-T0* r545arguments(void);
-/*PR_DANGEROUS_DOLLAR_N_ERROR*/
-void r545make(T545* C,T0* a1,T2 a2,T2 a3);
-/*PR_DANGEROUS_DOLLAR_N_ERROR*/
-T0* r545message(T545* C,T0* a1);
-/*PR_DANGEROUS_DOLLAR_N_ERROR*/
-T0* r545default_message(T545* C);
-/*PR_PARSER_GENERATOR*/
-void r41build_action_tables(T41* C);
-/*PR_PARSER_GENERATOR*/
-void r41print_stack_declarations(T41* C,T0* a1);
-/*PR_PARSER_GENERATOR*/
-void r41print_separated_actions(T41* C,T0* a1);
-/*PR_PARSER_GENERATOR*/
-void r41print_constants(T41* C,T0* a1);
-extern T0*oBC42array_formatter_;
-/*PR_PARSER_GENERATOR*/
-void r41print_push_error_value(T41* C,T0* a1);
-extern T0*oBC41portion_sorter;
-extern int fBC41portion_sorter;
-/*PR_PARSER_GENERATOR*/
-T0* r41portion_sorter(void);
-/*PR_PARSER_GENERATOR*/
-void r41print_eiffel_array(T41* C,T0* a1,T0* a2,T0* a3);
-/*PR_PARSER_GENERATOR*/
-void r41print_push_last_value(T41* C,T0* a1);
-extern T0*oBC40integer_array_;
-extern T0*oBC42string_formatter_;
-/*PR_PARSER_GENERATOR*/
-void r41print_eiffel_header(T41* C,T0* a1);
-/*PR_PARSER_GENERATOR*/
-void r41print_init_value_stacks(T41* C,T0* a1);
-/*PR_PARSER_GENERATOR*/
-void r41print_eiffel_tables(T41* C,T0* a1);
-/*PR_PARSER_GENERATOR*/
-void r41build_yytypes1(T41* C);
-/*PR_PARSER_GENERATOR*/
-void r41build_yytypes2(T41* C);
-/*PR_PARSER_GENERATOR*/
-void r41print_pop_last_value(T41* C,T0* a1);
-/*PR_PARSER_GENERATOR*/
-void r41make(T41* C,T0* a1);
-/*PR_PARSER_GENERATOR*/
-void r41print_create_value_stacks(T0* a1);
-/*PR_PARSER_GENERATOR*/
-void r41build_yytranslate(T41* C);
-/*PR_PARSER_GENERATOR*/
-void r41put_yydefact(T41* C,T0* a1,T0* a2);
-/*PR_PARSER_GENERATOR*/
-void r41put_yydefgoto(T41* C,T0* a1,T0* a2);
-/*PR_PARSER_GENERATOR*/
-void r41old_print_conversion_routines(T41* C,T0* a1);
-/*PR_PARSER_GENERATOR*/
-void r41print_build_parser_tables(T0* a1);
-/*PR_PARSER_GENERATOR*/
-void r41print_eiffel_code(T41* C,T0* a1);
-/*PR_PARSER_GENERATOR*/
-void r41print_clear_value_stacks(T41* C,T0* a1);
-/*PR_PARSER_GENERATOR*/
-void r41print_parser(T41* C,T6 a1,T6 a2,T0* a3);
-/*PR_PARSER_GENERATOR*/
-void r41print_separated_error_actions(T41* C,T0* a1);
-/*PR_PARSER_GENERATOR*/
-void r41print_last_values(T41* C,T0* a1);
-/*PR_PARSER_GENERATOR*/
-void r41print_actions(T41* C,T0* a1);
-/*PR_PARSER_GENERATOR*/
-void r41build_yyr1(T41* C);
-/*PR_PARSER_GENERATOR*/
-void r41print_error_actions(T41* C,T0* a1);
-/*PR_PARSER_GENERATOR*/
-void r41print_token_class(T41* C,T0* a1,T0* a2,T0* a3);
-/*PR_PARSER_GENERATOR*/
-void r41print_token_codes(T41* C,T0* a1);
-/*PR_BASIC_TYPE*/
-void r569print_create_yyvs(T569* C,T2 a1,T0* a2);
-/*PR_BASIC_TYPE*/
-void r569append_dollar_n_to_string(T569* C,T2 a1,T2 a2,T0* a3,T0* a4);
-/*PR_BASIC_TYPE*/
-void r569old_append_dollar_dollar_to_string(T569* C,T0* a1);
-/*PR_BASIC_TYPE*/
-void r569print_resize_yyvs(T569* C,T2 a1,T0* a2);
-/*PR_BASIC_TYPE*/
-T6 r569is_equal(T569* C,T0* a1);
-/*PR_BASIC_TYPE*/
-void r569print_push_yyval(T569* C,T2 a1,T0* a2);
-/*PR_BASIC_TYPE*/
-void r569old_print_dollar_dollar_initialization(T569* C,T0* a1);
-/*PR_BASIC_TYPE*/
-void r569print_push_last_value(T569* C,T2 a1,T0* a2);
-/*PR_BASIC_TYPE*/
-void r569make_generic(T569* C,T2 a1,T0* a2,T0* a3);
-/*PR_BASIC_TYPE*/
-void r569print_increment_yyvsp(T569* C,T2 a1,T2 a2,T0* a3);
-/*PR_BASIC_TYPE*/
-void r569print_yyvs_declaration(T569* C,T2 a1,T0* a2);
-/*PR_BASIC_TYPE*/
-void r569print_pop_last_value(T569* C,T2 a1,T0* a2);
-/*PR_BASIC_TYPE*/
-void r569make(T569* C,T2 a1,T0* a2);
-/*PR_BASIC_TYPE*/
-T0* r569last_value_name(T569* C);
-/*PR_BASIC_TYPE*/
-void r569old_print_dollar_dollar_finalization(T569* C,T0* a1);
-/*PR_BASIC_TYPE*/
-void r569print_clear_yyvs(T569* C,T2 a1,T0* a2);
-/*PR_BASIC_TYPE*/
-void r569print_dollar_dollar_declaration(T569* C,T0* a1);
-/*PR_BASIC_TYPE*/
-void r569old_print_conversion_routine(T569* C,T0* a1);
-/*PR_BASIC_TYPE*/
-void r569print_indentation(T2 a1,T0* a2);
-/*PR_BASIC_TYPE*/
-void r569old_append_dollar_n_to_string(T569* C,T2 a1,T2 a2,T0* a3,T0* a4);
-/*PR_BASIC_TYPE*/
-void r569append_dollar_dollar_to_string(T569* C,T0* a1);
-/*PR_BASIC_TYPE*/
-void r569make_anchored(T569* C,T2 a1,T0* a2);
-/*PR_PORTION*/
-T6 r204order_is_equal(T204* C,T0* a1);
-/*PR_PORTION*/
-void r204make_state(T204* C,T2 a1,T0* a2,T0* a3);
-/*PR_PORTION*/
-void r204make_symbol(T204* C,T2 a1,T0* a2,T0* a3);
-extern T0*oBC204integer_sorter;
-extern int fBC204integer_sorter;
-/*PR_PORTION*/
-T0* r204integer_sorter(void);
-/*PR_PORTION*/
-T6 r204same_portion(T204* C,T0* a1);
-/*PR_PORTION*/
-T6 r204_ix_60(T204* C,T0* a1);
-/*PR_SYMBOL_DECLARED_VARIABLE_ERROR*/
-T0* r575arguments(void);
-/*PR_SYMBOL_DECLARED_VARIABLE_ERROR*/
-void r575make(T575* C,T0* a1,T2 a2,T0* a3);
-/*PR_SYMBOL_DECLARED_VARIABLE_ERROR*/
-T0* r575message(T575* C,T0* a1);
-/*PR_SYMBOL_DECLARED_VARIABLE_ERROR*/
-T0* r575default_message(T575* C);
-/*PR_INVALID_ERROR_N_ERROR*/
-T0* r606arguments(void);
-/*PR_INVALID_ERROR_N_ERROR*/
-void r606make(T606* C,T0* a1,T2 a2,T2 a3);
-/*PR_INVALID_ERROR_N_ERROR*/
-T0* r606message(T606* C,T0* a1);
-/*PR_INVALID_ERROR_N_ERROR*/
-T0* r606default_message(T606* C);
-/*UT_CANNOT_WRITE_TO_FILE_ERROR*/
-T0* r38arguments(void);
-/*UT_CANNOT_WRITE_TO_FILE_ERROR*/
-void r38make(T38* C,T0* a1);
-/*UT_CANNOT_WRITE_TO_FILE_ERROR*/
-T0* r38message(T38* C,T0* a1);
-/*UT_CANNOT_WRITE_TO_FILE_ERROR*/
-T0* r38default_message(T38* C);
-/*PR_REDUCTION*/
-void r269make(T269* C,T0* a1);
-/*PR_REDUCTION*/
-void r269build_lookaheads(T269* C);
-/*PR_TOKEN_ID_USED_TWICE_ERROR*/
-T0* r549arguments(void);
-/*PR_TOKEN_ID_USED_TWICE_ERROR*/
-void r549make(T549* C,T0* a1,T0* a2,T0* a3,T2 a4);
-/*PR_TOKEN_ID_USED_TWICE_ERROR*/
-T0* r549message(T549* C,T0* a1);
-/*PR_TOKEN_ID_USED_TWICE_ERROR*/
-T0* r549default_message(T549* C);
-/*PR_NO_RULES_ERROR*/
-T0* r582arguments(void);
-/*PR_NO_RULES_ERROR*/
-void r582make(T582* C,T0* a1);
-/*PR_NO_RULES_ERROR*/
-T0* r582message(T582* C,T0* a1);
-/*PR_NO_RULES_ERROR*/
-T0* r582default_message(T582* C);
-/*PR_INVALID_DOLLAR_N_ERROR*/
-T0* r546arguments(void);
-/*PR_INVALID_DOLLAR_N_ERROR*/
-void r546make(T546* C,T0* a1,T2 a2,T2 a3);
-/*PR_INVALID_DOLLAR_N_ERROR*/
-T0* r546message(T546* C,T0* a1);
-/*PR_INVALID_DOLLAR_N_ERROR*/
-T0* r546default_message(T546* C);
-/*PR_MULTIPLE_START_DECLARATIONS_ERROR*/
-T0* r568arguments(void);
-/*PR_MULTIPLE_START_DECLARATIONS_ERROR*/
-void r568make(T568* C,T0* a1,T2 a2);
-/*PR_MULTIPLE_START_DECLARATIONS_ERROR*/
-T0* r568message(T568* C,T0* a1);
-/*PR_MULTIPLE_START_DECLARATIONS_ERROR*/
-T0* r568default_message(T568* C);
-/*PR_RULE_DECLARED_TWICE_ERROR*/
-T0* r605arguments(void);
-/*PR_RULE_DECLARED_TWICE_ERROR*/
-void r605make(T605* C,T0* a1,T2 a2,T0* a3);
-/*PR_RULE_DECLARED_TWICE_ERROR*/
-T0* r605message(T605* C,T0* a1);
-/*PR_RULE_DECLARED_TWICE_ERROR*/
-T0* r605default_message(T605* C);
-/*PR_TRANSITION*/
-void r238make(T238* C,T0* a1,T0* a2);
-/*PR_VARIABLE_DECLARED_TWICE_ERROR*/
-T0* r581arguments(void);
-/*PR_VARIABLE_DECLARED_TWICE_ERROR*/
-void r581make(T581* C,T0* a1,T2 a2,T0* a3);
-/*PR_VARIABLE_DECLARED_TWICE_ERROR*/
-T0* r581message(T581* C,T0* a1);
-/*PR_VARIABLE_DECLARED_TWICE_ERROR*/
-T0* r581default_message(T581* C);
-/*PR_TOKEN*/
-T6 r159is_right_associative(T159* C);
-/*PR_TOKEN*/
-void r159print_token(T159* C,T0* a1,T0* a2);
-/*PR_TOKEN*/
-T6 r159is_non_associative(T159* C);
-/*PR_TOKEN*/
-T6 r159is_equal(T159* C,T0* a1);
-/*PR_TOKEN*/
-void r159make(T159* C,T2 a1,T0* a2,T0* a3);
-/*PR_TOKEN*/
-T6 r159has_identifier(T159* C);
-/*PR_TOKEN*/
-T6 r159is_left_associative(T159* C);
-/*PR_FSM*/
-void r44make_verbose(T44* C,T0* a1,T0* a2,T0* a3);
-/*PR_FSM*/
-void r44put_final_state(T44* C);
-/*PR_FSM*/
-void r44make_default(T44* C,T0* a1);
-/*PR_FSM*/
-void r44print_machine(T44* C,T0* a1);
-/*PR_FSM*/
-void r44resolve_conflicts(T44* C,T0* a1);
-/*PR_FSM*/
-void r44build_nondeterministic(T44* C);
-/*PR_FSM*/
-void r44make(T44* C,T0* a1,T0* a2);
-/*PR_FSM*/
-T6 r44equal(T0* a1,T0* a2);
-/*PR_FSM*/
-void r44set_error_actions_verbose(T44* C,T0* a1,T0* a2);
-/*PR_FSM*/
-void r44resolve_conflicts_verbose(T44* C,T0* a1,T0* a2);
-extern T0*oBC44no_type;
-extern int fBC44no_type;
-/*PR_FSM*/
-T0* r44no_type(T44* C);
-/*PR_FSM*/
-void r44put_closure_positions(T0* a1,T0* a2);
-/*PR_FSM*/
-void r44set_error_actions(T44* C,T0* a1);
-/*PR_FSM*/
-void r44build_transitions(T44* C,T0* a1);
-/*PR_FSM*/
-void r44build_deterministic(T44* C);
-/*PR_FSM*/
-void r44put_start_state(T44* C);
-/*PR_FSM*/
-void r44build_derives(T44* C);
-/*PR_FSM*/
-T0* r44new_state(T44* C,T0* a1);
-/*PR_VARIABLE*/
-void r90put_rule(T90* C,T0* a1);
-/*PR_VARIABLE*/
-T6 r90is_equal(T90* C,T0* a1);
-/*PR_VARIABLE*/
-T0* r90transition(T90* C,T0* a1);
-/*PR_VARIABLE*/
-void r90make(T90* C,T2 a1,T0* a2,T0* a3);
-/*PR_VARIABLE*/
-T0* r90twin(T90* C);
-/*PR_VARIABLE*/
-void r90print_variable(T90* C,T0* a1,T0* a2);
-/*PR_STATE*/
-void r79put_position(T79* C,T0* a1);
-extern T0*oBC79position_sorter;
-extern int fBC79position_sorter;
-/*PR_STATE*/
-T0* r79position_sorter(void);
-/*PR_STATE*/
-void r79remove_shift(T79* C,T0* a1);
-/*PR_STATE*/
-T6 r79has_shift(T79* C,T0* a1);
-/*PR_STATE*/
-void r79print_state(T79* C,T0* a1);
-/*PR_STATE*/
-T6 r79se_assigned_from(T0* a1);
-/*PR_STATE*/
-T0* r79resolve_conflicts(T79* C);
-/*PR_STATE*/
-T6 r79same_type(T79* C,T0* a1);
-/*PR_STATE*/
-void r79make(T79* C,T2 a1,T0* a2);
-/*PR_STATE*/
-void r79set_lookahead_needed(T79* C);
-/*PR_STATE*/
-void r79put_transition(T79* C,T0* a1,T0* a2);
-/*PR_STATE*/
-T2 r79reduce_reduce_count(T79* C);
-/*PR_STATE*/
-T6 r79conforms_to(T79* C,T0* a1);
-/*PR_STATE*/
-T0* r79shift(T79* C,T0* a1);
-/*PR_STATE*/
-T6 r79same_state(T79* C,T0* a1);
-/*PR_STATE*/
-void r79print_reductions(T79* C,T0* a1);
-/*PR_STATE*/
-T2 r79shift_reduce_count(T79* C);
-/*PR_UNKNOWN_START_SYMBOL_ERROR*/
-T0* r561arguments(void);
-/*PR_UNKNOWN_START_SYMBOL_ERROR*/
-void r561make(T561* C,T0* a1,T2 a2,T0* a3);
-/*PR_UNKNOWN_START_SYMBOL_ERROR*/
-T0* r561message(T561* C,T0* a1);
-/*PR_UNKNOWN_START_SYMBOL_ERROR*/
-T0* r561default_message(T561* C);
-/*YY_BUFFER*/
-void r533set_position(T533* C,T2 a1,T2 a2,T2 a3);
-/*YY_BUFFER*/
-void r533make(T533* C,T0* a1);
-/*YY_BUFFER*/
-void r533make_from_buffer(T533* C,T0* a1);
-/*YY_BUFFER*/
-T0* r533new_default_buffer(T2 a1);
-/*PR_START_SYMBOL_TOKEN_ERROR*/
-T0* r556arguments(void);
-/*PR_START_SYMBOL_TOKEN_ERROR*/
-void r556make(T556* C,T0* a1,T2 a2,T0* a3);
-/*PR_START_SYMBOL_TOKEN_ERROR*/
-T0* r556message(T556* C,T0* a1);
-/*PR_START_SYMBOL_TOKEN_ERROR*/
-T0* r556default_message(T556* C);
-/*PR_UNDEFINED_STRING_TOKEN_ERROR*/
-T0* r607arguments(void);
-/*PR_UNDEFINED_STRING_TOKEN_ERROR*/
-void r607make(T607* C,T0* a1,T2 a2,T0* a3);
-/*PR_UNDEFINED_STRING_TOKEN_ERROR*/
-T0* r607message(T607* C,T0* a1);
-/*PR_UNDEFINED_STRING_TOKEN_ERROR*/
-T0* r607default_message(T607* C);
-/*UT_CANNOT_READ_FILE_ERROR*/
-T0* r485arguments(void);
-/*UT_CANNOT_READ_FILE_ERROR*/
-void r485make(T485* C,T0* a1);
-/*UT_CANNOT_READ_FILE_ERROR*/
-T0* r485message(T485* C,T0* a1);
-/*UT_CANNOT_READ_FILE_ERROR*/
-T0* r485default_message(T485* C);
-/*PR_ACTION_FACTORY*/
-T0* r602new_action(T0* a1);
-/*PR_TWO_STRINGS_TOKEN_ERROR*/
-T0* r577arguments(void);
-/*PR_TWO_STRINGS_TOKEN_ERROR*/
-void r577make(T577* C,T0* a1,T2 a2,T0* a3,T0* a4,T0* a5);
-/*PR_TWO_STRINGS_TOKEN_ERROR*/
-T0* r577message(T577* C,T0* a1);
-/*PR_TWO_STRINGS_TOKEN_ERROR*/
-T0* r577default_message(T577* C);
-/*PR_LHS_SYMBOL_TOKEN_ERROR*/
 T0* r604arguments(void);
-/*PR_LHS_SYMBOL_TOKEN_ERROR*/
-void r604make(T604* C,T0* a1,T2 a2,T0* a3);
-/*PR_LHS_SYMBOL_TOKEN_ERROR*/
+/*PR_PREC_SPECIFIED_TWICE_ERROR*/
+void r604make(T604* C,T0* a1,T2 a2);
+/*PR_PREC_SPECIFIED_TWICE_ERROR*/
 T0* r604message(T604* C,T0* a1);
-/*PR_LHS_SYMBOL_TOKEN_ERROR*/
+/*PR_PREC_SPECIFIED_TWICE_ERROR*/
 T0* r604default_message(T604* C);
+/*PR_PREC_NOT_TOKEN_ERROR*/
+T0* r605arguments(void);
+/*PR_PREC_NOT_TOKEN_ERROR*/
+void r605make(T605* C,T0* a1,T2 a2,T0* a3);
+/*PR_PREC_NOT_TOKEN_ERROR*/
+T0* r605message(T605* C,T0* a1);
+/*PR_PREC_NOT_TOKEN_ERROR*/
+T0* r605default_message(T605* C);
+/*PR_INVALID_STRING_TOKEN_ERROR*/
+T0* r537arguments(void);
+/*PR_INVALID_STRING_TOKEN_ERROR*/
+void r537make(T537* C,T0* a1,T2 a2,T0* a3);
+/*PR_INVALID_STRING_TOKEN_ERROR*/
+T0* r537message(T537* C,T0* a1);
+/*PR_INVALID_STRING_TOKEN_ERROR*/
+T0* r537default_message(T537* C);
+/*PR_RULE*/
+void r88put_symbol(T88* C,T0* a1);
+/*PR_RULE*/
+T6 r88is_equal(T88* C,T0* a1);
+/*PR_RULE*/
+void r88old_print_action(T88* C,T0* a1,T6 a2,T0* a3);
+/*PR_RULE*/
+void r88print_rule(T88* C,T0* a1);
+/*PR_RULE*/
+void r88make(T88* C,T2 a1,T0* a2,T0* a3);
+/*PR_RULE*/
+void r88print_action(T88* C,T0* a1,T6 a2,T0* a3);
+/*PR_RULE*/
+T6 r88_ix_60(T88* C,T0* a1);
+/*PR_YACC_PARSER*/
+void r501report_multiple_start_declarations_error(T501* C);
+/*PR_YACC_PARSER*/
+void r501yy_do_action(T501* C,T2 a1);
+/*PR_YACC_PARSER*/
+void r501report_variable_declared_as_token_error(T501* C,T0* a1);
+/*PR_YACC_PARSER*/
+T0* r501cloned_string(T0* a1);
+extern T0*oBC510unknown_type;
+extern int fBC510unknown_type;
+/*PR_YACC_PARSER*/
+T0* r501unknown_type(T501* C);
+extern T0*oBC501yytable_template;
+extern int fBC501yytable_template;
+/*PR_YACC_PARSER*/
+T0* r501yytable_template(void);
+/*PR_YACC_PARSER*/
+T0* r501new_symbol(T501* C,T0* a1);
+/*PR_YACC_PARSER*/
+void r501make_parser_skeleton(T501* C);
+/*PR_YACC_PARSER*/
+void r501report_undefined_string_token_error(T501* C,T0* a1);
+/*PR_YACC_PARSER*/
+void r501report_start_symbol_token_error(T501* C);
+/*PR_YACC_PARSER*/
+T0* r501new_nonassoc_char_terminal(T501* C,T0* a1,T2 a2);
+/*PR_YACC_PARSER*/
+void r501fatal_error(T0* a1);
+/*PR_YACC_PARSER*/
+T0* r501new_type(T501* C,T0* a1);
+/*PR_YACC_PARSER*/
+void r501put_symbol(T501* C,T0* a1,T0* a2);
+/*PR_YACC_PARSER*/
+T2 r501start_condition(T501* C);
+/*PR_YACC_PARSER*/
+void r501yy_do_error_action(T501* C,T2 a1);
+extern T0*oBC510no_action;
+extern int fBC510no_action;
+/*PR_YACC_PARSER*/
+T0* r501no_action(T501* C);
+/*PR_YACC_PARSER*/
+void r501report_two_strings_token_error(T501* C,T0* a1,T0* a2,T0* a3);
+/*PR_YACC_PARSER*/
+void r501parse_file(T501* C,T0* a1);
+/*PR_YACC_PARSER*/
+void r501parse(T501* C);
+/*PR_YACC_PARSER*/
+void r501report_invalid_dollar_dollar_error(T501* C);
+/*PR_YACC_PARSER*/
+T0* r501new_rule(T501* C,T0* a1);
+/*PR_YACC_PARSER*/
+void r501report_dangerous_dollar_n_warning(T501* C,T2 a1);
+/*PR_YACC_PARSER*/
+T0* r501new_dummy_variable(T501* C);
+/*PR_YACC_PARSER*/
+void r501set_input_buffer(T501* C,T0* a1);
+/*PR_YACC_PARSER*/
+T0* r501new_char_terminal(T501* C,T0* a1,T0* a2);
+/*PR_YACC_PARSER*/
+void r501report_prec_not_token_error(T501* C,T0* a1);
+extern T0*oBC502yy_ec_template;
+extern int fBC502yy_ec_template;
+/*PR_YACC_PARSER*/
+T0* r501yy_ec_template(void);
+/*PR_YACC_PARSER*/
+T0* r501text_substring(T501* C,T2 a1,T2 a2);
+/*PR_YACC_PARSER*/
+void r501yy_execute_action(T501* C,T2 a1);
+extern T0*oBC501yytranslate_template;
+extern int fBC501yytranslate_template;
+/*PR_YACC_PARSER*/
+T0* r501yytranslate_template(void);
+extern T0*oBC502yy_def_template;
+extern int fBC502yy_def_template;
+/*PR_YACC_PARSER*/
+T0* r501yy_def_template(void);
+/*PR_YACC_PARSER*/
+void r501set_token_id(T501* C,T0* a1,T2 a2);
+/*PR_YACC_PARSER*/
+void r501process_dollar_n(T501* C,T2 a1,T2 a2,T0* a3);
+/*PR_YACC_PARSER*/
+T3 r501text_item(T501* C,T2 a1);
+/*PR_YACC_PARSER*/
+T0* r501new_anchored_type(T501* C,T0* a1);
+/*PR_YACC_PARSER*/
+void r501yy_push_last_value(T501* C,T2 a1);
+/*PR_YACC_PARSER*/
+void r501report_token_declared_twice_error(T501* C,T0* a1);
+/*PR_YACC_PARSER*/
+void r501yy_load_input_buffer(T501* C);
+/*PR_YACC_PARSER*/
+void r501yy_push_error_value(T501* C);
+/*PR_YACC_PARSER*/
+void r501report_undefined_symbol_error(T501* C,T0* a1);
+/*PR_YACC_PARSER*/
+void r501report_variable_declared_twice_error(T501* C,T0* a1);
+extern T0*oBC501yyr1_template;
+extern int fBC501yyr1_template;
+/*PR_YACC_PARSER*/
+T0* r501yyr1_template(void);
+/*PR_YACC_PARSER*/
+void r501make_with_buffer(T501* C,T0* a1);
+/*PR_YACC_PARSER*/
+T0* r501new_nonterminal(T501* C,T0* a1,T0* a2);
+/*PR_YACC_PARSER*/
+void r501process_rule(T501* C,T0* a1);
+extern T0*oBC501yytypes1_template;
+extern int fBC501yytypes1_template;
+/*PR_YACC_PARSER*/
+T0* r501yytypes1_template(void);
+/*PR_YACC_PARSER*/
+T2 r501yy_null_trans_state(T501* C,T2 a1);
+/*PR_YACC_PARSER*/
+T0* r501new_variable(T501* C,T0* a1);
+extern T0*oBC502yy_accept_template;
+extern int fBC502yy_accept_template;
+/*PR_YACC_PARSER*/
+T0* r501yy_accept_template(void);
+/*PR_YACC_PARSER*/
+T0* r501new_error_action(T501* C,T0* a1,T2 a2);
+/*PR_YACC_PARSER*/
+void r501read_token(T501* C);
+/*PR_YACC_PARSER*/
+void r501report_invalid_dollar_n_error(T501* C,T2 a1);
+/*PR_YACC_PARSER*/
+T0* r501new_token(T501* C,T0* a1);
+/*PR_YACC_PARSER*/
+T0* r501new_basic_type(T501* C,T0* a1);
+/*PR_YACC_PARSER*/
+void r501yy_init_value_stacks(T501* C);
+extern T0*oBC510no_type;
+extern int fBC510no_type;
+/*PR_YACC_PARSER*/
+T0* r501no_type(T501* C);
+/*PR_YACC_PARSER*/
+T2 r501yy_previous_state(T501* C);
+extern T0*oBC501yypgoto_template;
+extern int fBC501yypgoto_template;
+/*PR_YACC_PARSER*/
+T0* r501yypgoto_template(void);
+/*PR_YACC_PARSER*/
+void r501yy_refill_input_buffer(T501* C);
+extern T0*oBC501yytypes2_template;
+extern int fBC501yytypes2_template;
+/*PR_YACC_PARSER*/
+T0* r501yytypes2_template(void);
+/*PR_YACC_PARSER*/
+T0* r501yy_fixed_array(T0* a1);
+extern T0*oBC502yy_meta_template;
+extern int fBC502yy_meta_template;
+/*PR_YACC_PARSER*/
+T0* r501yy_meta_template(void);
+/*PR_YACC_PARSER*/
+void r501process_symbols(T501* C);
+/*PR_YACC_PARSER*/
+void r501report_prec_specified_twice_error(T501* C);
+/*PR_YACC_PARSER*/
+T6 r501is_terminal(T501* C,T0* a1);
+extern T0*oBC502yy_base_template;
+extern int fBC502yy_base_template;
+/*PR_YACC_PARSER*/
+T0* r501yy_base_template(void);
+/*PR_YACC_PARSER*/
+void r501initialize_grammar(T501* C);
+/*PR_YACC_PARSER*/
+void r501report_two_token_ids_token_error(T501* C,T0* a1,T2 a2,T2 a3);
+/*PR_YACC_PARSER*/
+T2 r501text_count(T501* C);
+/*PR_YACC_PARSER*/
+T0* r501new_file_buffer(T0* a1);
+/*PR_YACC_PARSER*/
+T0* r501new_string_token(T501* C,T0* a1);
+/*PR_YACC_PARSER*/
+void r501yy_initialize(T501* C);
+/*PR_YACC_PARSER*/
+T0* r501text(T501* C);
+/*PR_YACC_PARSER*/
+void r501report_token_id_used_twice_warning(T501* C,T0* a1,T0* a2);
+/*PR_YACC_PARSER*/
+void r501report_rule_declared_twice_warning(T501* C,T0* a1);
+/*PR_YACC_PARSER*/
+void r501report_no_rules_error(T501* C);
+/*PR_YACC_PARSER*/
+void r501set_start_symbol(T501* C);
+/*PR_YACC_PARSER*/
+void r501set_precedence(T501* C,T0* a1,T2 a2);
+/*PR_YACC_PARSER*/
+void r501make_yacc_scanner(T501* C,T0* a1);
+/*PR_YACC_PARSER*/
+void r501report_lhs_symbol_token_error(T501* C,T0* a1);
+/*PR_YACC_PARSER*/
+void r501yy_clear_value_stacks(T501* C);
+extern T0*oBC502yy_nxt_template;
+extern int fBC502yy_nxt_template;
+/*PR_YACC_PARSER*/
+T0* r501yy_nxt_template(void);
+/*PR_YACC_PARSER*/
+T0* r501new_left_char_terminal(T501* C,T0* a1,T2 a2);
+/*PR_YACC_PARSER*/
+void r501yy_build_parser_tables(T501* C);
+/*PR_YACC_PARSER*/
+void r501report_missing_characters_error(T501* C,T0* a1);
+/*PR_YACC_PARSER*/
+T6 r501valid_start_condition(T2 a1);
+/*PR_YACC_PARSER*/
+T0* r501new_generic_type(T501* C,T0* a1,T0* a2);
+/*PR_YACC_PARSER*/
+void r501report_unknown_start_symbol_error(T501* C);
+extern T0*oBC509empty_buffer;
+extern int fBC509empty_buffer;
+/*PR_YACC_PARSER*/
+T0* r501empty_buffer(void);
+/*PR_YACC_PARSER*/
+void r501report_error(T501* C,T0* a1);
+/*PR_YACC_PARSER*/
+void r501process_dollar_dollar(T501* C,T0* a1);
+/*PR_YACC_PARSER*/
+void r501report_token_declared_as_variable_error(T501* C,T0* a1);
+/*PR_YACC_PARSER*/
+T0* r501new_terminal(T501* C,T0* a1,T0* a2);
+/*PR_YACC_PARSER*/
+void r501report_invalid_error_n_error(T501* C,T2 a1);
+extern T0*oBC501yydefact_template;
+extern int fBC501yydefact_template;
+/*PR_YACC_PARSER*/
+T0* r501yydefact_template(void);
+/*PR_YACC_PARSER*/
+T0* r501new_nonassoc_terminal(T501* C,T0* a1,T2 a2);
+extern T0*oBC502yy_chk_template;
+extern int fBC502yy_chk_template;
+/*PR_YACC_PARSER*/
+T0* r501yy_chk_template(void);
+/*PR_YACC_PARSER*/
+void r501report_string_token_defined_twice_error(T501* C,T0* a1,T0* a2,T0* a3);
+/*PR_YACC_PARSER*/
+void r501set_literal_string(T501* C,T0* a1,T0* a2);
+extern T0*oBC501yycheck_template;
+extern int fBC501yycheck_template;
+/*PR_YACC_PARSER*/
+T0* r501yycheck_template(void);
+/*PR_YACC_PARSER*/
+T0* r501new_right_char_terminal(T501* C,T0* a1,T2 a2);
+/*PR_YACC_PARSER*/
+T0* r501new_char_token(T501* C,T0* a1);
+/*PR_YACC_PARSER*/
+T0* r501filename(T501* C);
+/*PR_YACC_PARSER*/
+void r501make(T501* C,T0* a1);
+/*PR_YACC_PARSER*/
+T0* r501yyfixed_array(T0* a1);
+extern T0*oBC501yydefgoto_template;
+extern int fBC501yydefgoto_template;
+/*PR_YACC_PARSER*/
+T0* r501yydefgoto_template(void);
+/*PR_YACC_PARSER*/
+void r501yy_pop_last_value(T501* C,T2 a1);
+/*PR_YACC_PARSER*/
+void r501yy_set_content(T501* C,T0* a1);
+/*PR_YACC_PARSER*/
+void r501put_action(T501* C,T0* a1,T0* a2);
+/*PR_YACC_PARSER*/
+void r501report_precedence_defined_twice_error(T501* C,T0* a1);
+extern T0*oBC501yypact_template;
+extern int fBC501yypact_template;
+/*PR_YACC_PARSER*/
+T0* r501yypact_template(void);
+/*PR_YACC_PARSER*/
+void r501report_invalid_string_token_error(T501* C,T0* a1);
+/*PR_YACC_PARSER*/
+void r501set_start_condition(T501* C,T2 a1);
+/*PR_YACC_PARSER*/
+void r501yy_execute_eof_action(T501* C,T2 a1);
+/*PR_YACC_PARSER*/
+T0* r501new_left_terminal(T501* C,T0* a1,T2 a2);
+/*PR_YACC_PARSER*/
+T6 r501is_nonterminal(T501* C,T0* a1);
+/*PR_YACC_PARSER*/
+void r501yy_build_tables(T501* C);
+/*PR_YACC_PARSER*/
+void r501report_null_integer_error(T501* C);
+/*PR_YACC_PARSER*/
+T0* r501new_right_terminal(T501* C,T0* a1,T2 a2);
+/*UT_USAGE_MESSAGE*/
+T0* r637arguments(void);
+/*UT_USAGE_MESSAGE*/
+void r637make(T637* C,T0* a1);
+/*UT_USAGE_MESSAGE*/
+T0* r637message(T637* C,T0* a1);
+/*UT_USAGE_MESSAGE*/
+T0* r637default_message(T637* C);
+/*PR_DANGEROUS_DOLLAR_N_ERROR*/
+T0* r539arguments(void);
+/*PR_DANGEROUS_DOLLAR_N_ERROR*/
+void r539make(T539* C,T0* a1,T2 a2,T2 a3);
+/*PR_DANGEROUS_DOLLAR_N_ERROR*/
+T0* r539message(T539* C,T0* a1);
+/*PR_DANGEROUS_DOLLAR_N_ERROR*/
+T0* r539default_message(T539* C);
+/*PR_PARSER_GENERATOR*/
+void r42build_action_tables(T42* C);
+/*PR_PARSER_GENERATOR*/
+void r42print_stack_declarations(T42* C,T0* a1);
+/*PR_PARSER_GENERATOR*/
+void r42print_separated_actions(T42* C,T0* a1);
+/*PR_PARSER_GENERATOR*/
+void r42print_constants(T42* C,T0* a1);
+extern T0*oBC43array_formatter_;
+/*PR_PARSER_GENERATOR*/
+void r42print_push_error_value(T42* C,T0* a1);
+extern T0*oBC42portion_sorter;
+extern int fBC42portion_sorter;
+/*PR_PARSER_GENERATOR*/
+T0* r42portion_sorter(void);
+/*PR_PARSER_GENERATOR*/
+void r42print_eiffel_array(T42* C,T0* a1,T0* a2,T0* a3);
+/*PR_PARSER_GENERATOR*/
+void r42print_push_last_value(T42* C,T0* a1);
+extern T0*oBC41integer_array_;
+extern T0*oBC43string_formatter_;
+/*PR_PARSER_GENERATOR*/
+void r42print_eiffel_header(T42* C,T0* a1);
+/*PR_PARSER_GENERATOR*/
+void r42print_init_value_stacks(T42* C,T0* a1);
+/*PR_PARSER_GENERATOR*/
+void r42print_eiffel_tables(T42* C,T0* a1);
+/*PR_PARSER_GENERATOR*/
+void r42build_yytypes1(T42* C);
+/*PR_PARSER_GENERATOR*/
+void r42build_yytypes2(T42* C);
+/*PR_PARSER_GENERATOR*/
+void r42print_pop_last_value(T42* C,T0* a1);
+/*PR_PARSER_GENERATOR*/
+void r42make(T42* C,T0* a1);
+/*PR_PARSER_GENERATOR*/
+void r42print_create_value_stacks(T0* a1);
+/*PR_PARSER_GENERATOR*/
+void r42build_yytranslate(T42* C);
+/*PR_PARSER_GENERATOR*/
+void r42put_yydefact(T42* C,T0* a1,T0* a2);
+/*PR_PARSER_GENERATOR*/
+void r42put_yydefgoto(T42* C,T0* a1,T0* a2);
+/*PR_PARSER_GENERATOR*/
+void r42old_print_conversion_routines(T42* C,T0* a1);
+/*PR_PARSER_GENERATOR*/
+void r42print_build_parser_tables(T0* a1);
+/*PR_PARSER_GENERATOR*/
+void r42print_eiffel_code(T42* C,T0* a1);
+/*PR_PARSER_GENERATOR*/
+void r42print_clear_value_stacks(T42* C,T0* a1);
+/*PR_PARSER_GENERATOR*/
+void r42print_parser(T42* C,T6 a1,T6 a2,T0* a3);
+/*PR_PARSER_GENERATOR*/
+void r42print_separated_error_actions(T42* C,T0* a1);
+/*PR_PARSER_GENERATOR*/
+void r42print_last_values(T42* C,T0* a1);
+/*PR_PARSER_GENERATOR*/
+void r42print_actions(T42* C,T0* a1);
+/*PR_PARSER_GENERATOR*/
+void r42build_yyr1(T42* C);
+/*PR_PARSER_GENERATOR*/
+void r42print_error_actions(T42* C,T0* a1);
+/*PR_PARSER_GENERATOR*/
+void r42print_token_class(T42* C,T0* a1,T0* a2,T0* a3);
+/*PR_PARSER_GENERATOR*/
+void r42print_token_codes(T42* C,T0* a1);
+/*PR_BASIC_TYPE*/
+void r564print_create_yyvs(T564* C,T2 a1,T0* a2);
+/*PR_BASIC_TYPE*/
+void r564append_dollar_n_to_string(T564* C,T2 a1,T2 a2,T0* a3,T0* a4);
+/*PR_BASIC_TYPE*/
+void r564old_append_dollar_dollar_to_string(T564* C,T0* a1);
+/*PR_BASIC_TYPE*/
+void r564print_resize_yyvs(T564* C,T2 a1,T0* a2);
+/*PR_BASIC_TYPE*/
+T6 r564is_equal(T564* C,T0* a1);
+/*PR_BASIC_TYPE*/
+void r564print_push_yyval(T564* C,T2 a1,T0* a2);
+/*PR_BASIC_TYPE*/
+void r564old_print_dollar_dollar_initialization(T564* C,T0* a1);
+/*PR_BASIC_TYPE*/
+void r564print_push_last_value(T564* C,T2 a1,T0* a2);
+/*PR_BASIC_TYPE*/
+void r564make_generic(T564* C,T2 a1,T0* a2,T0* a3);
+/*PR_BASIC_TYPE*/
+void r564print_increment_yyvsp(T564* C,T2 a1,T2 a2,T0* a3);
+/*PR_BASIC_TYPE*/
+void r564print_yyvs_declaration(T564* C,T2 a1,T0* a2);
+/*PR_BASIC_TYPE*/
+void r564print_pop_last_value(T564* C,T2 a1,T0* a2);
+/*PR_BASIC_TYPE*/
+void r564make(T564* C,T2 a1,T0* a2);
+/*PR_BASIC_TYPE*/
+T0* r564last_value_name(T564* C);
+/*PR_BASIC_TYPE*/
+void r564old_print_dollar_dollar_finalization(T564* C,T0* a1);
+/*PR_BASIC_TYPE*/
+void r564print_clear_yyvs(T564* C,T2 a1,T0* a2);
+/*PR_BASIC_TYPE*/
+void r564print_dollar_dollar_declaration(T564* C,T0* a1);
+/*PR_BASIC_TYPE*/
+void r564old_print_conversion_routine(T564* C,T0* a1);
+/*PR_BASIC_TYPE*/
+void r564print_indentation(T2 a1,T0* a2);
+/*PR_BASIC_TYPE*/
+void r564old_append_dollar_n_to_string(T564* C,T2 a1,T2 a2,T0* a3,T0* a4);
+/*PR_BASIC_TYPE*/
+void r564append_dollar_dollar_to_string(T564* C,T0* a1);
+/*PR_BASIC_TYPE*/
+void r564make_anchored(T564* C,T2 a1,T0* a2);
+/*PR_PORTION*/
+T6 r210order_is_equal(T210* C,T0* a1);
+/*PR_PORTION*/
+void r210make_state(T210* C,T2 a1,T0* a2,T0* a3);
+/*PR_PORTION*/
+void r210make_symbol(T210* C,T2 a1,T0* a2,T0* a3);
+extern T0*oBC210integer_sorter;
+extern int fBC210integer_sorter;
+/*PR_PORTION*/
+T0* r210integer_sorter(void);
+/*PR_PORTION*/
+T6 r210same_portion(T210* C,T0* a1);
+/*PR_PORTION*/
+T6 r210_ix_60(T210* C,T0* a1);
+/*PR_SYMBOL_DECLARED_VARIABLE_ERROR*/
+T0* r571arguments(void);
+/*PR_SYMBOL_DECLARED_VARIABLE_ERROR*/
+void r571make(T571* C,T0* a1,T2 a2,T0* a3);
+/*PR_SYMBOL_DECLARED_VARIABLE_ERROR*/
+T0* r571message(T571* C,T0* a1);
+/*PR_SYMBOL_DECLARED_VARIABLE_ERROR*/
+T0* r571default_message(T571* C);
+/*PR_INVALID_ERROR_N_ERROR*/
+T0* r602arguments(void);
+/*PR_INVALID_ERROR_N_ERROR*/
+void r602make(T602* C,T0* a1,T2 a2,T2 a3);
+/*PR_INVALID_ERROR_N_ERROR*/
+T0* r602message(T602* C,T0* a1);
+/*PR_INVALID_ERROR_N_ERROR*/
+T0* r602default_message(T602* C);
+/*UT_CANNOT_WRITE_TO_FILE_ERROR*/
+T0* r39arguments(void);
+/*UT_CANNOT_WRITE_TO_FILE_ERROR*/
+void r39make(T39* C,T0* a1);
+/*UT_CANNOT_WRITE_TO_FILE_ERROR*/
+T0* r39message(T39* C,T0* a1);
+/*UT_CANNOT_WRITE_TO_FILE_ERROR*/
+T0* r39default_message(T39* C);
+/*PR_REDUCTION*/
+void r274make(T274* C,T0* a1);
+/*PR_REDUCTION*/
+void r274build_lookaheads(T274* C);
+/*PR_TOKEN_ID_USED_TWICE_ERROR*/
+T0* r543arguments(void);
+/*PR_TOKEN_ID_USED_TWICE_ERROR*/
+void r543make(T543* C,T0* a1,T0* a2,T0* a3,T2 a4);
+/*PR_TOKEN_ID_USED_TWICE_ERROR*/
+T0* r543message(T543* C,T0* a1);
+/*PR_TOKEN_ID_USED_TWICE_ERROR*/
+T0* r543default_message(T543* C);
+/*PR_NO_RULES_ERROR*/
+T0* r578arguments(void);
+/*PR_NO_RULES_ERROR*/
+void r578make(T578* C,T0* a1);
+/*PR_NO_RULES_ERROR*/
+T0* r578message(T578* C,T0* a1);
+/*PR_NO_RULES_ERROR*/
+T0* r578default_message(T578* C);
+/*PR_INVALID_DOLLAR_N_ERROR*/
+T0* r540arguments(void);
+/*PR_INVALID_DOLLAR_N_ERROR*/
+void r540make(T540* C,T0* a1,T2 a2,T2 a3);
+/*PR_INVALID_DOLLAR_N_ERROR*/
+T0* r540message(T540* C,T0* a1);
+/*PR_INVALID_DOLLAR_N_ERROR*/
+T0* r540default_message(T540* C);
+/*PR_MULTIPLE_START_DECLARATIONS_ERROR*/
+T0* r563arguments(void);
+/*PR_MULTIPLE_START_DECLARATIONS_ERROR*/
+void r563make(T563* C,T0* a1,T2 a2);
+/*PR_MULTIPLE_START_DECLARATIONS_ERROR*/
+T0* r563message(T563* C,T0* a1);
+/*PR_MULTIPLE_START_DECLARATIONS_ERROR*/
+T0* r563default_message(T563* C);
+/*PR_RULE_DECLARED_TWICE_ERROR*/
+T0* r601arguments(void);
+/*PR_RULE_DECLARED_TWICE_ERROR*/
+void r601make(T601* C,T0* a1,T2 a2,T0* a3);
+/*PR_RULE_DECLARED_TWICE_ERROR*/
+T0* r601message(T601* C,T0* a1);
+/*PR_RULE_DECLARED_TWICE_ERROR*/
+T0* r601default_message(T601* C);
+/*PR_TRANSITION*/
+void r243make(T243* C,T0* a1,T0* a2);
+/*PR_VARIABLE_DECLARED_TWICE_ERROR*/
+T0* r577arguments(void);
+/*PR_VARIABLE_DECLARED_TWICE_ERROR*/
+void r577make(T577* C,T0* a1,T2 a2,T0* a3);
+/*PR_VARIABLE_DECLARED_TWICE_ERROR*/
+T0* r577message(T577* C,T0* a1);
+/*PR_VARIABLE_DECLARED_TWICE_ERROR*/
+T0* r577default_message(T577* C);
+/*PR_TOKEN*/
+T6 r167is_right_associative(T167* C);
+/*PR_TOKEN*/
+void r167print_token(T167* C,T0* a1,T0* a2);
+/*PR_TOKEN*/
+T6 r167is_non_associative(T167* C);
+/*PR_TOKEN*/
+T6 r167is_equal(T167* C,T0* a1);
+/*PR_TOKEN*/
+void r167make(T167* C,T2 a1,T0* a2,T0* a3);
+/*PR_TOKEN*/
+T6 r167has_identifier(T167* C);
+/*PR_TOKEN*/
+T6 r167is_left_associative(T167* C);
+/*PR_FSM*/
+void r45make_verbose(T45* C,T0* a1,T0* a2,T0* a3);
+/*PR_FSM*/
+void r45put_final_state(T45* C);
+/*PR_FSM*/
+void r45make_default(T45* C,T0* a1);
+/*PR_FSM*/
+void r45print_machine(T45* C,T0* a1);
+/*PR_FSM*/
+void r45resolve_conflicts(T45* C,T0* a1);
+/*PR_FSM*/
+void r45build_nondeterministic(T45* C);
+/*PR_FSM*/
+void r45make(T45* C,T0* a1,T0* a2);
+/*PR_FSM*/
+T6 r45equal(T0* a1,T0* a2);
+/*PR_FSM*/
+void r45set_error_actions_verbose(T45* C,T0* a1,T0* a2);
+/*PR_FSM*/
+void r45resolve_conflicts_verbose(T45* C,T0* a1,T0* a2);
+extern T0*oBC45no_type;
+extern int fBC45no_type;
+/*PR_FSM*/
+T0* r45no_type(T45* C);
+/*PR_FSM*/
+void r45put_closure_positions(T0* a1,T0* a2);
+/*PR_FSM*/
+void r45set_error_actions(T45* C,T0* a1);
+/*PR_FSM*/
+void r45build_transitions(T45* C,T0* a1);
+/*PR_FSM*/
+void r45build_deterministic(T45* C);
+/*PR_FSM*/
+void r45put_start_state(T45* C);
+/*PR_FSM*/
+void r45build_derives(T45* C);
+/*PR_FSM*/
+T0* r45new_state(T45* C,T0* a1);
+/*PR_VARIABLE*/
+void r92put_rule(T92* C,T0* a1);
+/*PR_VARIABLE*/
+T6 r92is_equal(T92* C,T0* a1);
+/*PR_VARIABLE*/
+T0* r92transition(T92* C,T0* a1);
+/*PR_VARIABLE*/
+void r92make(T92* C,T2 a1,T0* a2,T0* a3);
+/*PR_VARIABLE*/
+T0* r92twin(T92* C);
+/*PR_VARIABLE*/
+void r92print_variable(T92* C,T0* a1,T0* a2);
+/*PR_STATE*/
+void r81put_position(T81* C,T0* a1);
+extern T0*oBC81position_sorter;
+extern int fBC81position_sorter;
+/*PR_STATE*/
+T0* r81position_sorter(void);
+/*PR_STATE*/
+void r81remove_shift(T81* C,T0* a1);
+/*PR_STATE*/
+T6 r81has_shift(T81* C,T0* a1);
+/*PR_STATE*/
+void r81print_state(T81* C,T0* a1);
+/*PR_STATE*/
+T6 r81se_assigned_from(T0* a1);
+/*PR_STATE*/
+T0* r81resolve_conflicts(T81* C);
+/*PR_STATE*/
+T6 r81same_type(T81* C,T0* a1);
+/*PR_STATE*/
+void r81make(T81* C,T2 a1,T0* a2);
+/*PR_STATE*/
+void r81set_lookahead_needed(T81* C);
+/*PR_STATE*/
+void r81put_transition(T81* C,T0* a1,T0* a2);
+/*PR_STATE*/
+T2 r81reduce_reduce_count(T81* C);
+/*PR_STATE*/
+T6 r81conforms_to(T81* C,T0* a1);
+/*PR_STATE*/
+T0* r81shift(T81* C,T0* a1);
+/*PR_STATE*/
+T6 r81same_state(T81* C,T0* a1);
+/*PR_STATE*/
+void r81print_reductions(T81* C,T0* a1);
+/*PR_STATE*/
+T2 r81shift_reduce_count(T81* C);
+/*PR_UNKNOWN_START_SYMBOL_ERROR*/
+T0* r556arguments(void);
+/*PR_UNKNOWN_START_SYMBOL_ERROR*/
+void r556make(T556* C,T0* a1,T2 a2,T0* a3);
+/*PR_UNKNOWN_START_SYMBOL_ERROR*/
+T0* r556message(T556* C,T0* a1);
+/*PR_UNKNOWN_START_SYMBOL_ERROR*/
+T0* r556default_message(T556* C);
+/*YY_BUFFER*/
+void r527set_position(T527* C,T2 a1,T2 a2,T2 a3);
+/*YY_BUFFER*/
+void r527make(T527* C,T0* a1);
+/*YY_BUFFER*/
+void r527make_from_buffer(T527* C,T0* a1);
+/*YY_BUFFER*/
+T0* r527new_default_buffer(T2 a1);
+/*PR_START_SYMBOL_TOKEN_ERROR*/
+T0* r550arguments(void);
+/*PR_START_SYMBOL_TOKEN_ERROR*/
+void r550make(T550* C,T0* a1,T2 a2,T0* a3);
+/*PR_START_SYMBOL_TOKEN_ERROR*/
+T0* r550message(T550* C,T0* a1);
+/*PR_START_SYMBOL_TOKEN_ERROR*/
+T0* r550default_message(T550* C);
+/*PR_UNDEFINED_STRING_TOKEN_ERROR*/
+T0* r603arguments(void);
+/*PR_UNDEFINED_STRING_TOKEN_ERROR*/
+void r603make(T603* C,T0* a1,T2 a2,T0* a3);
+/*PR_UNDEFINED_STRING_TOKEN_ERROR*/
+T0* r603message(T603* C,T0* a1);
+/*PR_UNDEFINED_STRING_TOKEN_ERROR*/
+T0* r603default_message(T603* C);
+/*UT_CANNOT_READ_FILE_ERROR*/
+T0* r491arguments(void);
+/*UT_CANNOT_READ_FILE_ERROR*/
+void r491make(T491* C,T0* a1);
+/*UT_CANNOT_READ_FILE_ERROR*/
+T0* r491message(T491* C,T0* a1);
+/*UT_CANNOT_READ_FILE_ERROR*/
+T0* r491default_message(T491* C);
+/*PR_ACTION_FACTORY*/
+T0* r598new_action(T0* a1);
+/*PR_TWO_STRINGS_TOKEN_ERROR*/
+T0* r573arguments(void);
+/*PR_TWO_STRINGS_TOKEN_ERROR*/
+void r573make(T573* C,T0* a1,T2 a2,T0* a3,T0* a4,T0* a5);
+/*PR_TWO_STRINGS_TOKEN_ERROR*/
+T0* r573message(T573* C,T0* a1);
+/*PR_TWO_STRINGS_TOKEN_ERROR*/
+T0* r573default_message(T573* C);
+/*PR_LHS_SYMBOL_TOKEN_ERROR*/
+T0* r600arguments(void);
+/*PR_LHS_SYMBOL_TOKEN_ERROR*/
+void r600make(T600* C,T0* a1,T2 a2,T0* a3);
+/*PR_LHS_SYMBOL_TOKEN_ERROR*/
+T0* r600message(T600* C,T0* a1);
+/*PR_LHS_SYMBOL_TOKEN_ERROR*/
+T0* r600default_message(T600* C);
 /*UC_STRING*/
-void r181copy(T181* C,T0* a1);
+void r189copy(T189* C,T0* a1);
 /*UC_STRING*/
-T0* r181substring(T181* C,T2 a1,T2 a2);
+T0* r189substring(T189* C,T2 a1,T2 a2);
 /*UC_STRING*/
-void r181reset_byte_index_cache(T181* C);
+void r189reset_byte_index_cache(T189* C);
 /*UC_STRING*/
-void r181wipe_out(T181* C);
+void r189wipe_out(T189* C);
 /*UC_STRING*/
-T2 r181item_code(T181* C,T2 a1);
+T2 r189item_code(T189* C,T2 a1);
 /*UC_STRING*/
-T3 r181character_item_at_byte_index(T181* C,T2 a1);
+T3 r189character_item_at_byte_index(T189* C,T2 a1);
 /*UC_STRING*/
-void r181put(T181* C,T3 a1,T2 a2);
+void r189_7Pmake(T189* C,T2 a1);
 /*UC_STRING*/
-T6 r181is_equal(T181* C,T0* a1);
+void r189put(T189* C,T3 a1,T2 a2);
 /*UC_STRING*/
-T3 r181item(T181* C,T2 a1);
-extern T0*oBC171integer_;
+T6 r189is_equal(T189* C,T0* a1);
 /*UC_STRING*/
-void r181resize_byte_storage(T181* C,T2 a1);
+T3 r189item(T189* C,T2 a1);
+extern T0*oBC177integer_;
 /*UC_STRING*/
-T6 r181valid_index(T181* C,T2 a1);
+void r189resize_byte_storage(T189* C,T2 a1);
 /*UC_STRING*/
-void r181append(T181* C,T0* a1);
+T6 r189valid_index(T189* C,T2 a1);
 /*UC_STRING*/
-T6 r181se_assigned_from(T0* a1);
+void r189append(T189* C,T0* a1);
 /*UC_STRING*/
-T2 r181byte_index(T181* C,T2 a1);
+T6 r189se_assigned_from(T0* a1);
 /*UC_STRING*/
-T0* r181clone(T0* a1);
+T2 r189byte_index(T189* C,T2 a1);
 /*UC_STRING*/
-void r181move_bytes_right(T181* C,T2 a1,T2 a2);
+T0* r189clone(T0* a1);
 /*UC_STRING*/
-void r181set_count(T181* C,T2 a1);
+void r189make_from_string(T189* C,T0* a1);
 /*UC_STRING*/
-T2 r181next_byte_index(T181* C,T2 a1);
+void r189move_bytes_right(T189* C,T2 a1,T2 a2);
 /*UC_STRING*/
-T6 r181same_type(T181* C,T0* a1);
+void r189set_count(T189* C,T2 a1);
 /*UC_STRING*/
-void r181remove_tail(T181* C,T2 a1);
+T2 r189next_byte_index(T189* C,T2 a1);
 /*UC_STRING*/
-void r181make(T181* C,T2 a1);
+T6 r189same_type(T189* C,T0* a1);
 /*UC_STRING*/
-void r181old_make_filled(T181* C,T3 a1,T2 a2);
+void r189remove_tail(T189* C,T2 a1);
+extern T0*oBC189dummy_uc_string;
+extern int fBC189dummy_uc_string;
 /*UC_STRING*/
-void r181append_substring(T181* C,T0* a1,T2 a2,T2 a3);
+T0* r189dummy_uc_string(void);
 /*UC_STRING*/
-T2 r181item_code_at_byte_index(T181* C,T2 a1);
-extern T0*oBC166platform;
+void r189make(T189* C,T2 a1);
 /*UC_STRING*/
-T0* r181string(T181* C);
+void r189append_string(T189* C,T0* a1);
 /*UC_STRING*/
-void r181extend(T181* C,T3 a1);
+void r189make_filled(T189* C,T3 a1,T2 a2);
 /*UC_STRING*/
-T2 r181hash_code(T181* C);
+T0* r189as_upper(T189* C);
 /*UC_STRING*/
-T0* r181prefixed_string(T181* C,T0* a1);
+void r189append_substring(T189* C,T0* a1,T2 a2,T2 a3);
 /*UC_STRING*/
-T6 r181conforms_to(T181* C,T0* a1);
+T2 r189item_code_at_byte_index(T189* C,T2 a1);
 /*UC_STRING*/
-void r181keep_head(T181* C,T2 a1);
+T0* r189string(T189* C);
+extern T0*oBC174platform;
 /*UC_STRING*/
-T2 r181to_integer(T181* C);
+void r189extend(T189* C,T3 a1);
 /*UC_STRING*/
-T0* r181new_empty_string(T2 a1);
+T2 r189hash_code(T189* C);
 /*UC_STRING*/
-void r181append_character(T181* C,T3 a1);
+T0* r189prefixed_string(T189* C,T0* a1);
 /*UC_STRING*/
-void r181make_from_substring(T181* C,T0* a1,T2 a2,T2 a3);
+T6 r189conforms_to(T189* C,T0* a1);
 /*UC_STRING*/
-void r181put_code_at_byte_index(T181* C,T2 a1,T2 a2,T2 a3);
+void r189keep_head(T189* C,T2 a1);
 /*UC_STRING*/
-void r181fill_with(T181* C,T3 a1);
+T2 r189to_integer(T189* C);
 /*UC_STRING*/
-void r181put_character_at_byte_index(T181* C,T3 a1,T2 a2,T2 a3);
+T0* r189as_lower(T189* C);
 /*UC_STRING*/
-void r181resize(T181* C,T2 a1);
+T0* r189new_empty_string(T2 a1);
 /*UC_STRING*/
-void r181put_substring_at_byte_index(T181* C,T0* a1,T2 a2,T2 a3,T2 a4,T2 a5);
+void r189append_character(T189* C,T3 a1);
 /*UC_STRING*/
-void r181to_upper(T181* C);
-extern T0*oBC183utf8;
+void r189make_from_substring(T189* C,T0* a1,T2 a2,T2 a3);
 /*UC_STRING*/
-void r181move_bytes_left(T181* C,T2 a1,T2 a2);
+void r189put_code_at_byte_index(T189* C,T2 a1,T2 a2,T2 a3);
 /*UC_STRING*/
-void r181old_make(T181* C,T2 a1);
+void r189fill_with(T189* C,T3 a1);
 /*UC_STRING*/
-T8 r181to_external(T181* C);
+void r189put_character_at_byte_index(T189* C,T3 a1,T2 a2,T2 a3);
 /*UC_STRING*/
-void r181old_make_from_string(T181* C,T0* a1);
+void r189_7Pappend_string(T189* C,T0* a1);
 /*UC_STRING*/
-void r181to_lower(T181* C);
+void r189resize(T189* C,T2 a1);
 /*UC_STRING*/
-T0* r181twin(T181* C);
+void r189put_substring_at_byte_index(T189* C,T0* a1,T2 a2,T2 a3,T2 a4,T2 a5);
 /*UC_STRING*/
-T0* r181to_utf8(T181* C);
+void r189to_upper(T189* C);
+extern T0*oBC191utf8;
 /*UC_STRING*/
-T0* r181_ix_43(T181* C,T0* a1);
-extern T0*oBC168unicode;
+void r189move_bytes_left(T189* C,T2 a1,T2 a2);
 /*UC_STRING*/
-T2 r181_7Phash_code(T181* C);
+T8 r189to_external(T189* C);
 /*UC_STRING*/
-void r181swap(T181* C,T2 a1,T2 a2);
+void r189to_lower(T189* C);
+/*UC_STRING*/
+T0* r189twin(T189* C);
+/*UC_STRING*/
+T0* r189to_utf8(T189* C);
+/*UC_STRING*/
+T0* r189_ix_43(T189* C,T0* a1);
+extern T0*oBC188unicode;
+/*UC_STRING*/
+T2 r189_7Phash_code(T189* C);
+/*UC_STRING*/
+void r189swap(T189* C,T2 a1,T2 a2);
 /*PR_GRAMMAR*/
-void r45put_type(T45* C,T0* a1);
+void r46put_type(T46* C,T0* a1);
 /*PR_GRAMMAR*/
-void r45mark_useful_rules(T45* C);
+void r46mark_useful_rules(T46* C);
 /*PR_GRAMMAR*/
-void r45put_rule(T45* C,T0* a1);
+void r46put_rule(T46* C,T0* a1);
 /*PR_GRAMMAR*/
-void r45put_variable(T45* C,T0* a1);
+void r46put_variable(T46* C,T0* a1);
 /*PR_GRAMMAR*/
-T2 r45max_rhs(T45* C);
+T2 r46max_rhs(T46* C);
 /*PR_GRAMMAR*/
-T0* r45clone(T0* a1);
+T0* r46clone(T0* a1);
 /*PR_GRAMMAR*/
-void r45make(T45* C);
+void r46make(T46* C);
 /*PR_GRAMMAR*/
-void r45reduce_verbose(T45* C,T0* a1,T0* a2);
+void r46reduce_verbose(T46* C,T0* a1,T0* a2);
 /*PR_GRAMMAR*/
-void r45put_token(T45* C,T0* a1);
+void r46put_token(T46* C,T0* a1);
 /*PR_GRAMMAR*/
-void r45print_grammar(T45* C,T0* a1);
+void r46print_grammar(T46* C,T0* a1);
 /*PR_GRAMMAR*/
-void r45mark_useful_variables(T45* C);
+void r46mark_useful_variables(T46* C);
 /*PR_GRAMMAR*/
-void r45set_nullable(T45* C);
+void r46set_nullable(T46* C);
 /*PR_GRAMMAR*/
-void r45reduce(T45* C,T0* a1);
+void r46reduce(T46* C,T0* a1);
 /*PR_GRAMMAR*/
-void r45traverse_variable(T0* a1);
+void r46traverse_variable(T0* a1);
 /*PR_TWO_TOKEN_IDS_TOKEN_ERROR*/
+T0* r572arguments(void);
+/*PR_TWO_TOKEN_IDS_TOKEN_ERROR*/
+void r572make(T572* C,T0* a1,T2 a2,T0* a3,T2 a4,T2 a5);
+/*PR_TWO_TOKEN_IDS_TOKEN_ERROR*/
+T0* r572message(T572* C,T0* a1);
+/*PR_TWO_TOKEN_IDS_TOKEN_ERROR*/
+T0* r572default_message(T572* C);
+/*YY_FILE_BUFFER*/
+void r526fill(T526* C);
+/*YY_FILE_BUFFER*/
+void r526compact_left(T526* C);
+/*YY_FILE_BUFFER*/
+void r526set_position(T526* C,T2 a1,T2 a2,T2 a3);
+extern T2 oBC527default_capacity;
+/*YY_FILE_BUFFER*/
+void r526make_from_string(T526* C,T0* a1);
+/*YY_FILE_BUFFER*/
+void r526make_from_buffer(T526* C,T0* a1);
+/*YY_FILE_BUFFER*/
+void r526resize(T526* C);
+/*YY_FILE_BUFFER*/
+T0* r526new_default_buffer(T2 a1);
+/*YY_FILE_BUFFER*/
+void r526make_with_size(T526* C,T0* a1,T2 a2);
+/*YY_FILE_BUFFER*/
+void r526set_file(T526* C,T0* a1);
+/*YY_FILE_BUFFER*/
+void r526flush(T526* C);
+/*KL_STDOUT_FILE*/
+void r207make(T207* C);
+/*KL_STDOUT_FILE*/
+void r207old_put_string(T207* C,T0* a1);
+/*KL_STDOUT_FILE*/
+void r207old_put_character(T207* C,T3 a1);
+/*KL_STDOUT_FILE*/
+void r207put_integer(T207* C,T2 a1);
+/*KL_STDOUT_FILE*/
+void r207put_line(T207* C,T0* a1);
+/*KL_STDOUT_FILE*/
+void r207old_make(T207* C);
+/*KL_STDOUT_FILE*/
+void r207write_buffer(T207* C);
+/*KL_STDOUT_FILE*/
+void r207put_string(T207* C,T0* a1);
+/*PR_CONFLICT*/
+void r337print_conflict(T337* C,T0* a1);
+/*PR_CONFLICT*/
+void r337make(T337* C,T0* a1,T0* a2,T0* a3,T0* a4);
+/*KL_STDERR_FILE*/
+void r533make(T533* C);
+/*KL_STDERR_FILE*/
+void r533old_put_string(T0* a1);
+/*KL_STDERR_FILE*/
+void r533put_integer(T2 a1);
+/*KL_STDERR_FILE*/
+void r533put_line(T0* a1);
+/*KL_STDERR_FILE*/
+void r533put_string(T0* a1);
+/*PR_UNDEFINED_SYMBOL_ERROR*/
+T0* r542arguments(void);
+/*PR_UNDEFINED_SYMBOL_ERROR*/
+void r542make(T542* C,T0* a1,T0* a2);
+/*PR_UNDEFINED_SYMBOL_ERROR*/
+T0* r542message(T542* C,T0* a1);
+/*PR_UNDEFINED_SYMBOL_ERROR*/
+T0* r542default_message(T542* C);
+/*PR_ERROR_ACTION*/
+T6 r80is_equal(T80* C,T0* a1);
+/*PR_ERROR_ACTION*/
+T6 r80se_assigned_from(T0* a1);
+/*PR_ERROR_ACTION*/
+T6 r80same_type(T80* C,T0* a1);
+/*PR_ERROR_ACTION*/
+void r80make(T80* C,T0* a1,T2 a2);
+/*PR_ERROR_ACTION*/
+T6 r80conforms_to(T80* C,T0* a1);
+/*PR_ERROR_ACTION*/
+T0* r80twin(T80* C);
+/*PR_SYMBOL_DECLARED_TOKEN_ERROR*/
 T0* r576arguments(void);
-/*PR_TWO_TOKEN_IDS_TOKEN_ERROR*/
-void r576make(T576* C,T0* a1,T2 a2,T0* a3,T2 a4,T2 a5);
-/*PR_TWO_TOKEN_IDS_TOKEN_ERROR*/
+/*PR_SYMBOL_DECLARED_TOKEN_ERROR*/
+void r576make(T576* C,T0* a1,T2 a2,T0* a3);
+/*PR_SYMBOL_DECLARED_TOKEN_ERROR*/
 T0* r576message(T576* C,T0* a1);
-/*PR_TWO_TOKEN_IDS_TOKEN_ERROR*/
+/*PR_SYMBOL_DECLARED_TOKEN_ERROR*/
 T0* r576default_message(T576* C);
-/*YY_FILE_BUFFER*/
-void r532fill(T532* C);
-/*YY_FILE_BUFFER*/
-void r532compact_left(T532* C);
-/*YY_FILE_BUFFER*/
-void r532set_position(T532* C,T2 a1,T2 a2,T2 a3);
-/*YY_FILE_BUFFER*/
-void r532make_from_string(T532* C,T0* a1);
-/*YY_FILE_BUFFER*/
-void r532make_from_buffer(T532* C,T0* a1);
-/*YY_FILE_BUFFER*/
-void r532resize(T532* C);
-/*YY_FILE_BUFFER*/
-T0* r532new_default_buffer(T2 a1);
-/*YY_FILE_BUFFER*/
-void r532make_with_size(T532* C,T0* a1,T2 a2);
-/*YY_FILE_BUFFER*/
-void r532set_file(T532* C,T0* a1);
-/*YY_FILE_BUFFER*/
-void r532flush(T532* C);
-/*KL_STDOUT_FILE*/
-void r201make(T201* C);
-/*KL_STDOUT_FILE*/
-void r201old_put_string(T201* C,T0* a1);
-/*KL_STDOUT_FILE*/
-void r201old_put_character(T201* C,T3 a1);
-/*KL_STDOUT_FILE*/
-void r201put_integer(T201* C,T2 a1);
-/*KL_STDOUT_FILE*/
-void r201put_line(T201* C,T0* a1);
-/*KL_STDOUT_FILE*/
-void r201old_make(T201* C);
-/*KL_STDOUT_FILE*/
-void r201write_buffer(T201* C);
-/*KL_STDOUT_FILE*/
-void r201put_string(T201* C,T0* a1);
-/*PR_CONFLICT*/
-void r332print_conflict(T332* C,T0* a1);
-/*PR_CONFLICT*/
-void r332make(T332* C,T0* a1,T0* a2,T0* a3,T0* a4);
-/*KL_STDERR_FILE*/
-void r539make(T539* C);
-/*KL_STDERR_FILE*/
-void r539old_put_string(T0* a1);
-/*KL_STDERR_FILE*/
-void r539put_integer(T2 a1);
-/*KL_STDERR_FILE*/
-void r539put_line(T0* a1);
-/*KL_STDERR_FILE*/
-void r539put_string(T0* a1);
-/*PR_UNDEFINED_SYMBOL_ERROR*/
-T0* r548arguments(void);
-/*PR_UNDEFINED_SYMBOL_ERROR*/
-void r548make(T548* C,T0* a1,T0* a2);
-/*PR_UNDEFINED_SYMBOL_ERROR*/
-T0* r548message(T548* C,T0* a1);
-/*PR_UNDEFINED_SYMBOL_ERROR*/
-T0* r548default_message(T548* C);
-/*PR_ERROR_ACTION*/
-T6 r78is_equal(T78* C,T0* a1);
-/*PR_ERROR_ACTION*/
-T6 r78se_assigned_from(T0* a1);
-/*PR_ERROR_ACTION*/
-T6 r78same_type(T78* C,T0* a1);
-/*PR_ERROR_ACTION*/
-void r78make(T78* C,T0* a1,T2 a2);
-/*PR_ERROR_ACTION*/
-T6 r78conforms_to(T78* C,T0* a1);
-/*PR_ERROR_ACTION*/
-T0* r78twin(T78* C);
-/*PR_SYMBOL_DECLARED_TOKEN_ERROR*/
-T0* r580arguments(void);
-/*PR_SYMBOL_DECLARED_TOKEN_ERROR*/
-void r580make(T580* C,T0* a1,T2 a2,T0* a3);
-/*PR_SYMBOL_DECLARED_TOKEN_ERROR*/
-T0* r580message(T580* C,T0* a1);
-/*PR_SYMBOL_DECLARED_TOKEN_ERROR*/
-T0* r580default_message(T580* C);
 /*PR_POSITION*/
-T0* r298next(T298* C);
+T0* r303next(T303* C);
 /*PR_POSITION*/
-T6 r298is_equal(T298* C,T0* a1);
+T6 r303is_equal(T303* C,T0* a1);
 /*PR_POSITION*/
-T6 r298same_position(T298* C,T0* a1);
+T6 r303same_position(T303* C,T0* a1);
 /*PR_POSITION*/
-T0* r298error_action(T298* C);
+T0* r303error_action(T303* C);
 /*PR_POSITION*/
-T6 r298after(T298* C);
+T6 r303after(T303* C);
 /*PR_POSITION*/
-void r298make(T298* C,T0* a1,T2 a2);
+void r303make(T303* C,T0* a1,T2 a2);
 /*PR_POSITION*/
-T2 r298hash_code(T298* C);
+T2 r303hash_code(T303* C);
 /*PR_POSITION*/
-T0* r298symbol(T298* C);
+T0* r303symbol(T303* C);
 /*PR_POSITION*/
-void r298print_position(T298* C,T0* a1);
+void r303print_position(T303* C,T0* a1);
 /*PR_POSITION*/
-T6 r298_ix_60(T298* C,T0* a1);
+T6 r303_ix_60(T303* C,T0* a1);
 /*STD_OUTPUT*/
-void r202make(T202* C);
+void r208make(T208* C);
 /*STD_OUTPUT*/
-void r202flush(T202* C);
+void r208flush(T208* C);
 /*STD_OUTPUT*/
-void r202write_buffer(T202* C);
+void r208write_buffer(T208* C);
 /*UT_SYNTAX_ERROR*/
-T0* r531arguments(void);
+T0* r525arguments(void);
 /*UT_SYNTAX_ERROR*/
-void r531make(T531* C,T0* a1,T2 a2);
+void r525make(T525* C,T0* a1,T2 a2);
 /*UT_SYNTAX_ERROR*/
-T0* r531message(T531* C,T0* a1);
+T0* r525message(T525* C,T0* a1);
 /*UT_SYNTAX_ERROR*/
-T0* r531default_message(T531* C);
-extern T0*oBC20command_arguments;
-extern int fBC20command_arguments;
+T0* r525default_message(T525* C);
+extern T0*oBC21command_arguments;
+extern int fBC21command_arguments;
 /*KL_ARGUMENTS*/
-T0* r196command_arguments(void);
+T0* r204command_arguments(void);
 /*KL_ARGUMENTS*/
-T0* r196argument(T2 a1);
+T0* r204argument(T2 a1);
 /*PR_PRECEDENCE_DEFINED_TWICE_ERROR*/
-T0* r579arguments(void);
+T0* r575arguments(void);
 /*PR_PRECEDENCE_DEFINED_TWICE_ERROR*/
-void r579make(T579* C,T0* a1,T2 a2,T0* a3);
+void r575make(T575* C,T0* a1,T2 a2,T0* a3);
 /*PR_PRECEDENCE_DEFINED_TWICE_ERROR*/
-T0* r579message(T579* C,T0* a1);
+T0* r575message(T575* C,T0* a1);
 /*PR_PRECEDENCE_DEFINED_TWICE_ERROR*/
-T0* r579default_message(T579* C);
-extern T0*oBC200error;
-extern int fBC200error;
+T0* r575default_message(T575* C);
+extern T0*oBC206error;
+extern int fBC206error;
 /*KL_STANDARD_FILES*/
-T0* r200error(void);
-extern T0*oBC200input;
-extern int fBC200input;
+T0* r206error(void);
+extern T0*oBC206input;
+extern int fBC206input;
 /*KL_STANDARD_FILES*/
-T0* r200input(void);
-extern T0*oBC200output;
-extern int fBC200output;
+T0* r206input(void);
+extern T0*oBC206output;
+extern int fBC206output;
 /*KL_STANDARD_FILES*/
-T0* r200output(void);
+T0* r206output(void);
 /*KL_CHARACTER_ROUTINES*/
-T3 r165as_lower(T3 a1);
-extern T2 oBC198maximum_character_code;
-extern int fBC198maximum_character_code;
+T3 r173as_lower(T3 a1);
+extern T2 oBC648maximum_character_code;
+extern int fBC648maximum_character_code;
 /*KL_PLATFORM*/
-T2 r198maximum_character_code(T198* C);
-extern T0*oBC191lowercase_24;
-extern int fBC191lowercase_24;
+T2 r648maximum_character_code(T648* C);
+extern T0*oBC199lowercase_24;
+extern int fBC199lowercase_24;
 /*UC_UNICODE_ROUTINES*/
-T0* r190lowercase_24(void);
-extern T0*oBC191lowercase_21;
-extern int fBC191lowercase_21;
+T0* r198lowercase_24(void);
+extern T0*oBC199lowercase_21;
+extern int fBC199lowercase_21;
 /*UC_UNICODE_ROUTINES*/
-T0* r190lowercase_21(void);
-extern T0*oBC191lowercase_06;
-extern int fBC191lowercase_06;
+T0* r198lowercase_21(void);
+extern T0*oBC199lowercase_06;
+extern int fBC199lowercase_06;
 /*UC_UNICODE_ROUTINES*/
-T0* r190lowercase_06(void);
-extern T0*oBC191lowercase_05;
-extern int fBC191lowercase_05;
+T0* r198lowercase_06(void);
+extern T0*oBC199lowercase_05;
+extern int fBC199lowercase_05;
 /*UC_UNICODE_ROUTINES*/
-T0* r190lowercase_05(void);
-extern T0*oBC191lowercase_04;
-extern int fBC191lowercase_04;
+T0* r198lowercase_05(void);
+extern T0*oBC199lowercase_04;
+extern int fBC199lowercase_04;
 /*UC_UNICODE_ROUTINES*/
-T0* r190lowercase_04(void);
-extern T0*oBC191lowercase_03;
-extern int fBC191lowercase_03;
+T0* r198lowercase_04(void);
+extern T0*oBC199lowercase_03;
+extern int fBC199lowercase_03;
 /*UC_UNICODE_ROUTINES*/
-T0* r190lowercase_03(void);
-extern T0*oBC191lowercase_02;
-extern int fBC191lowercase_02;
+T0* r198lowercase_03(void);
+extern T0*oBC199lowercase_02;
+extern int fBC199lowercase_02;
 /*UC_UNICODE_ROUTINES*/
-T0* r190lowercase_02(void);
-extern T0*oBC191lowercase_01;
-extern int fBC191lowercase_01;
+T0* r198lowercase_02(void);
+extern T0*oBC199lowercase_01;
+extern int fBC199lowercase_01;
 /*UC_UNICODE_ROUTINES*/
-T0* r190lowercase_01(void);
-extern T0*oBC191lowercase_00;
-extern int fBC191lowercase_00;
+T0* r198lowercase_01(void);
+extern T0*oBC199lowercase_00;
+extern int fBC199lowercase_00;
 /*UC_UNICODE_ROUTINES*/
-T0* r190lowercase_00(void);
-extern T0*oBC192uppercase_1f;
-extern int fBC192uppercase_1f;
+T0* r198lowercase_00(void);
+extern T0*oBC200uppercase_1f;
+extern int fBC200uppercase_1f;
 /*UC_UNICODE_ROUTINES*/
-T0* r190uppercase_1f(void);
-extern T0*oBC192uppercase_1e;
-extern int fBC192uppercase_1e;
+T0* r198uppercase_1f(void);
+extern T0*oBC200uppercase_1e;
+extern int fBC200uppercase_1e;
 /*UC_UNICODE_ROUTINES*/
-T0* r190uppercase_1e(void);
+T0* r198uppercase_1e(void);
 /*UC_UNICODE_ROUTINES*/
-T2 r190upper_code(T2 a1);
-extern T0*oBC191lowercase_ff;
-extern int fBC191lowercase_ff;
+T2 r198upper_code(T2 a1);
+extern T0*oBC199lowercase_ff;
+extern int fBC199lowercase_ff;
 /*UC_UNICODE_ROUTINES*/
-T0* r190lowercase_ff(void);
-extern T0*oBC192uppercase_24;
-extern int fBC192uppercase_24;
+T0* r198lowercase_ff(void);
+extern T0*oBC200uppercase_24;
+extern int fBC200uppercase_24;
 /*UC_UNICODE_ROUTINES*/
-T0* r190uppercase_24(void);
-extern T0*oBC192uppercase_21;
-extern int fBC192uppercase_21;
+T0* r198uppercase_24(void);
+extern T0*oBC200uppercase_21;
+extern int fBC200uppercase_21;
 /*UC_UNICODE_ROUTINES*/
-T0* r190uppercase_21(void);
-extern T0*oBC192uppercase_06;
-extern int fBC192uppercase_06;
+T0* r198uppercase_21(void);
+extern T0*oBC200uppercase_06;
+extern int fBC200uppercase_06;
 /*UC_UNICODE_ROUTINES*/
-T0* r190uppercase_06(void);
-extern T0*oBC192uppercase_05;
-extern int fBC192uppercase_05;
+T0* r198uppercase_06(void);
+extern T0*oBC200uppercase_05;
+extern int fBC200uppercase_05;
 /*UC_UNICODE_ROUTINES*/
-T0* r190uppercase_05(void);
-extern T0*oBC192uppercase_04;
-extern int fBC192uppercase_04;
+T0* r198uppercase_05(void);
+extern T0*oBC200uppercase_04;
+extern int fBC200uppercase_04;
 /*UC_UNICODE_ROUTINES*/
-T0* r190uppercase_04(void);
-extern T0*oBC192uppercase_03;
-extern int fBC192uppercase_03;
+T0* r198uppercase_04(void);
+extern T0*oBC200uppercase_03;
+extern int fBC200uppercase_03;
 /*UC_UNICODE_ROUTINES*/
-T0* r190uppercase_03(void);
-extern T0*oBC192uppercase_02;
-extern int fBC192uppercase_02;
+T0* r198uppercase_03(void);
+extern T0*oBC200uppercase_02;
+extern int fBC200uppercase_02;
 /*UC_UNICODE_ROUTINES*/
-T0* r190uppercase_02(void);
-extern T0*oBC192uppercase_01;
-extern int fBC192uppercase_01;
+T0* r198uppercase_02(void);
+extern T0*oBC200uppercase_01;
+extern int fBC200uppercase_01;
 /*UC_UNICODE_ROUTINES*/
-T0* r190uppercase_01(void);
-extern T0*oBC192uppercase_00;
-extern int fBC192uppercase_00;
+T0* r198uppercase_01(void);
+extern T0*oBC200uppercase_00;
+extern int fBC200uppercase_00;
 /*UC_UNICODE_ROUTINES*/
-T0* r190uppercase_00(void);
-extern T0*oBC192uppercase;
-extern int fBC192uppercase;
+T0* r198uppercase_00(void);
+extern T0*oBC200uppercase;
+extern int fBC200uppercase;
 /*UC_UNICODE_ROUTINES*/
-T0* r190uppercase(void);
+T0* r198uppercase(void);
 /*UC_UNICODE_ROUTINES*/
-T2 r190lower_code(T2 a1);
+T2 r198lower_code(T2 a1);
 /*UC_UNICODE_ROUTINES*/
-T6 r190valid_code(T2 a1);
-extern T0*oBC191lowercase_1f;
-extern int fBC191lowercase_1f;
+T6 r198valid_code(T2 a1);
+extern T0*oBC199lowercase_1f;
+extern int fBC199lowercase_1f;
 /*UC_UNICODE_ROUTINES*/
-T0* r190lowercase_1f(void);
-extern T0*oBC191lowercase_1e;
-extern int fBC191lowercase_1e;
+T0* r198lowercase_1f(void);
+extern T0*oBC199lowercase_1e;
+extern int fBC199lowercase_1e;
 /*UC_UNICODE_ROUTINES*/
-T0* r190lowercase_1e(void);
-extern T0*oBC191lowercase;
-extern int fBC191lowercase;
+T0* r198lowercase_1e(void);
+extern T0*oBC199lowercase;
+extern int fBC199lowercase;
 /*UC_UNICODE_ROUTINES*/
-T0* r190lowercase(void);
-extern T0*oBC192uppercase_ff;
-extern int fBC192uppercase_ff;
+T0* r198lowercase(void);
+extern T0*oBC200uppercase_ff;
+extern int fBC200uppercase_ff;
 /*UC_UNICODE_ROUTINES*/
-T0* r190uppercase_ff(void);
+T0* r198uppercase_ff(void);
 /*UC_UTF8_ROUTINES*/
-T2 r194encoded_next_value(T3 a1);
+T2 r202encoded_next_value(T3 a1);
 /*UC_UTF8_ROUTINES*/
-T2 r194character_byte_count(T3 a1);
+T2 r202character_byte_count(T3 a1);
 /*UC_UTF8_ROUTINES*/
-T2 r194encoded_first_value(T3 a1);
+T2 r202encoded_first_value(T3 a1);
 /*UC_UTF8_ROUTINES*/
-T2 r194code_byte_count(T2 a1);
+T2 r202code_byte_count(T2 a1);
 /*UC_UTF8_ROUTINES*/
-T2 r194encoded_byte_count(T3 a1);
+T2 r202encoded_byte_count(T3 a1);
 /*UC_UTF8_ROUTINES*/
-T2 r194substring_byte_count(T0* a1,T2 a2,T2 a3);
+T2 r202substring_byte_count(T0* a1,T2 a2,T2 a3);
 /*UT_ARRAY_FORMATTER*/
-void r74put_integer_array(T0* a1,T0* a2,T2 a3,T2 a4);
+void r76put_integer_array(T0* a1,T0* a2,T2 a3,T2 a4);
 /*KL_INTEGER_ROUTINES*/
-T3 r189to_character(T2 a1);
+T3 r197to_character(T2 a1);
 /*UT_INTEGER_FORMATTER*/
-void r170append_decimal_integer(T0* a1,T2 a2);
+void r176append_decimal_integer(T0* a1,T2 a2);
 /*UT_INTEGER_FORMATTER*/
-void r170put_decimal_integer(T0* a1,T2 a2);
+void r176put_decimal_integer(T0* a1,T2 a2);
 /*GEYACC*/
 void r12read_command_line(T12* C);
 /*GEYACC*/
@@ -3928,86 +3864,78 @@ void r12report_version_number(T12* C);
 /*GEYACC*/
 void r12report_usage_error(T12* C);
 /*KL_STRING_ROUTINES*/
-T0* r167as_string(T0* a1);
+T0* r187as_string(T0* a1);
 /*KL_STRING_ROUTINES*/
-T0* r167clone(T0* a1);
+T0* r187clone(T0* a1);
 /*KL_STRING_ROUTINES*/
-T0* r167appended_string(T0* a1,T0* a2);
+T0* r187appended_string(T0* a1,T0* a2);
 /*KL_STRING_ROUTINES*/
-T6 r167is_integer(T0* a1);
+T6 r187is_integer(T0* a1);
 /*KL_STRING_ROUTINES*/
-T0* r167make(T2 a1);
+T0* r187appended_substring(T0* a1,T0* a2,T2 a3,T2 a4);
 /*KL_STRING_ROUTINES*/
-T0* r167string(T0* a1);
+T0* r187new_empty_string(T0* a1,T2 a2);
 /*KL_STRING_ROUTINES*/
-T0* r167appended_substring(T0* a1,T0* a2,T2 a3,T2 a4);
+T0* r187concat(T0* a1,T0* a2);
 /*KL_STRING_ROUTINES*/
-T0* r167new_empty_string(T0* a1,T2 a2);
-/*KL_STRING_ROUTINES*/
-T0* r167concat(T0* a1,T0* a2);
-/*KL_STRING_ROUTINES*/
-T0* r167to_upper(T0* a1);
-/*KL_STRING_ROUTINES*/
-T0* r167to_lower(T0* a1);
-/*KL_STRING_ROUTINES*/
-void r167append_substring_to_string(T0* a1,T0* a2,T2 a3,T2 a4);
+void r187append_substring_to_string(T0* a1,T0* a2,T2 a3,T2 a4);
 /*UT_STRING_FORMATTER*/
-void r169put_eiffel_string(T0* a1,T0* a2);
+void r175put_eiffel_string(T0* a1,T0* a2);
 extern T12*eiffel_root_object;
 extern int se_argc;
 extern char**se_argv;
-#define SE_MAXID 663
+#define SE_MAXID 658
 extern T7* g[];
 extern T7* t[];
 void std_output_flush(void);
 void initialize_eiffel_runtime(int argc,char*argv[]);
-extern T7*ms545_1821517345;
-extern T7*ms581_1822824531;
-extern T7*ms548_272755366;
-extern T7*ms17_1554;
-extern T7*ms575_1849034395;
-extern T7*ms41_279;
-extern T7*ms580_1729371669;
-extern T7*ms556_1291418954;
-extern T7*ms568_1383509722;
-extern T7*ms579_751424646;
-extern T7*ms539_10;
-extern T7*ms38_1606053737;
-extern T7*ms606_693578480;
-extern T7*ms201_10;
-extern T7*ms644_1515383187;
-extern T7*ms576_1151210642;
-extern T7*ms605_2110198733;
-extern T7*ms608_220658643;
-extern T7*ms544_727416569;
-extern T7*ms542_1319944131;
-extern T7*ms543_1349308461;
-extern T7*ms609_1956876694;
-extern T7*ms604_1049715130;
-extern T7*ms578_473369027;
-extern T7*ms645_1158552108;
-extern T7*ms577_88402782;
-extern T7*ms607_165116404;
-extern T7*ms541_559383313;
-extern T7*ms167_0;
-extern T7*ms309_229;
-extern T7*ms561_1366120531;
-extern T7*ms181_0;
+extern T7*ms42_1338085634;
+extern T7*ms535_559383313;
+extern T7*ms603_165116404;
+extern T7*ms571_1849034395;
+extern T7*ms638_1158552108;
+extern T7*ms533_10;
+extern T7*ms76_192;
+extern T7*ms76_279;
+extern T7*ms76_992;
+extern T7*ms542_272755366;
+extern T7*ms42_279;
+extern T7*ms572_1151210642;
+extern T7*ms601_2110198733;
+extern T7*ms543_2088248237;
+extern T7*ms539_1821517345;
+extern T7*ms207_10;
+extern T7*ms605_1956876694;
+extern T7*ms563_1383509722;
+extern T7*ms600_1049715130;
+extern T7*ms540_1454279890;
+extern T7*ms491_988446515;
+extern T7*ms39_1606053737;
+extern T7*ms27_250860571;
+extern T7*ms573_88402782;
+extern T7*ms18_1556;
+extern T7*ms575_751424646;
+extern T7*ms578_110467006;
+extern T7*ms202_0;
+extern T7*ms550_1291418954;
+extern T7*ms602_693578480;
+extern T7*ms536_1319944131;
+extern T7*ms538_727416569;
+extern T7*ms537_1349308461;
+extern T7*ms314_229;
+extern T7*ms556_1366120531;
 extern T7*ms12_331;
-extern T7*ms531_1449702436;
-extern T7*ms194_0;
-extern T7*ms41_1338085634;
-extern T7*ms485_988446515;
-extern T7*ms21_10;
-extern T7*ms549_2088248237;
-extern T7*ms26_250860571;
-extern T7*ms74_4992;
-extern T7*ms574_2038502230;
-extern T7*ms74_192;
-extern T7*ms74_279;
-extern T7*ms546_1454279890;
-extern T7*ms582_110467006;
-extern T7*ms74_992;
+extern T7*ms604_220658643;
+extern T7*ms187_0;
+extern T7*ms189_0;
+extern T7*ms637_1515383187;
+extern T7*ms22_10;
+extern T7*ms577_1822824531;
+extern T7*ms570_2038502230;
+extern T7*ms576_1729371669;
+extern T7*ms574_473369027;
+extern T7*ms76_4992;
+extern T7*ms525_1449702436;
 T7*se_ms(int c,char*e);
 T7*se_string(char*e);
 /*
@@ -4030,29 +3958,24 @@ T7*se_string(char*e);
 
 EIF_STRING se_ms_trace(int count, char* c_string, int li, int co, char* path);
 void se_msi1(void);
-void*se_ma637(int argc,...);
-void*se_ma641(int argc,...);
-void*se_ma655(int argc,...);
-void*se_ma76(int argc,...);
-T0* X419item(T0*C);
-T6 X419after(T0*C);
-void X419forth(T0*C);
-void X419start(T0*C);
-void X419go_after(T0*C);
-void X419search_forth(T0*C,T0* a1);
-void X76put(T0*C,T2 a1,T2 a2);
-T2 X76item(T0*C,T2 a1);
-void X76resize(T0*C,T2 a1,T2 a2);
-T0* X366item(T0*C);
-T6 X366after(T0*C);
-void X366forth(T0*C);
-void X366start(T0*C);
-T0* X291item(T0*C);
-T6 X291after(T0*C);
-void X291forth(T0*C);
-void X291start(T0*C);
-void X291go_after(T0*C);
-void X291search_forth(T0*C,T0* a1);
+void*se_ma650(int argc,...);
+void*se_ma78(int argc,...);
+T0* X424item(T0*C);
+T6 X424after(T0*C);
+void X424forth(T0*C);
+void X424start(T0*C);
+void X424go_after(T0*C);
+void X424search_forth(T0*C,T0* a1);
+T0* X371item(T0*C);
+T6 X371after(T0*C);
+void X371forth(T0*C);
+void X371start(T0*C);
+T0* X296item(T0*C);
+T6 X296after(T0*C);
+void X296forth(T0*C);
+void X296start(T0*C);
+void X296go_after(T0*C);
+void X296search_forth(T0*C,T0* a1);
 void X65append_dollar_n_to_string(T0*C,T2 a1,T2 a2,T0* a3,T0* a4);
 void X65old_append_dollar_dollar_to_string(T0*C,T0* a1);
 void X65print_resize_yyvs(T0*C,T2 a1,T0* a2);
@@ -4070,12 +3993,12 @@ void X65print_dollar_dollar_declaration(T0*C,T0* a1);
 void X65old_print_conversion_routine(T0*C,T0* a1);
 void X65old_append_dollar_n_to_string(T0*C,T2 a1,T2 a2,T0* a3,T0* a4);
 void X65append_dollar_dollar_to_string(T0*C,T0* a1);
-T0* X430item(T0*C);
-T6 X430after(T0*C);
-void X430forth(T0*C);
-void X430start(T0*C);
-void X430go_after(T0*C);
-void X430search_forth(T0*C,T0* a1);
+T0* X435item(T0*C);
+T6 X435after(T0*C);
+void X435forth(T0*C);
+void X435start(T0*C);
+void X435go_after(T0*C);
+void X435search_forth(T0*C,T0* a1);
 T0* X7substring(T0*C,T2 a1,T2 a2);
 void X7wipe_out(T0*C);
 T2 X7item_code(T0*C,T2 a1);
@@ -4087,9 +4010,11 @@ void X7set_count(T0*C,T2 a1);
 T6 X7same_type(T0*C,T0* a1);
 void X7remove_tail(T0*C,T2 a1);
 void X7append_string(T0*C,T0* a1);
+T0* X7as_upper(T0*C);
 T0* X7string(T0*C);
 void X7extend(T0*C,T3 a1);
 T2 X7hash_code(T0*C);
+T0* X7as_lower(T0*C);
 T2 X7to_integer(T0*C);
 void X7append_character(T0*C,T3 a1);
 void X7resize(T0*C,T2 a1);
@@ -4099,73 +4024,68 @@ void X7to_lower(T0*C);
 T0* X7twin(T0*C);
 T0* X7_ix_43(T0*C,T0* a1);
 void X7swap(T0*C,T2 a1,T2 a2);
-T0* X428cursor_item(T0*C,T0* a1);
-void X428cursor_go_after(T0*C,T0* a1);
-T6 X428cursor_after(T0*C,T0* a1);
-void X428cursor_search_forth(T0*C,T0* a1,T0* a2);
-void X428cursor_forth(T0*C,T0* a1);
-void X428cursor_start(T0*C,T0* a1);
-T0* X428new_cursor(T0*C);
-T6 X428cursor_off(T0*C,T0* a1);
-T0* X88name(T0*C);
-T6 X88is_equal(T0*C,T0* a1);
-T0* X88type(T0*C);
-T2 X88id(T0*C);
-T6 X88is_terminal(T0*C);
-T6 X88is_useful(T0*C);
-void X88set_useful(T0*C,T6 a1);
-T6 X18is_equal(T0*C,T0* a1);
-T0* X18twin(T0*C);
-T2 X287count(T0*C);
-T0* X287cursor_item(T0*C,T0* a1);
-void X287cursor_go_after(T0*C,T0* a1);
-T6 X287cursor_after(T0*C,T0* a1);
-T6 X287has(T0*C,T0* a1);
-void X287cursor_search_forth(T0*C,T0* a1,T0* a2);
-void X287cursor_forth(T0*C,T0* a1);
-void X287cursor_start(T0*C,T0* a1);
-T0* X287new_cursor(T0*C);
-T6 X287cursor_off(T0*C,T0* a1);
-T6 X20se_assigned_from(T0*C,T0* a1);
-T6 X20conforms_to(T0*C,T0* a1);
-void X37put_new_line(T0*C);
-void X37put_integer(T0*C,T2 a1);
-void X37put_line(T0*C,T0* a1);
-void X37put_character(T0*C,T3 a1);
-void X37put_string(T0*C,T0* a1);
-T0* X147container(T0*C);
-T0* X491name(T0*C);
-T2 X491read_to_string(T0*C,T0* a1,T2 a2,T2 a3);
-void X491read_character(T0*C);
-T2 X491read_to_buffer(T0*C,T0* a1,T2 a2,T2 a3);
-T6 X491end_of_input(T0*C);
-T3 X491last_character(T0*C);
-T0* X477container(T0*C);
-void X533fill(T0*C);
-T0* X370cursor_item(T0*C,T0* a1);
-T6 X370is_empty(T0*C);
-T6 X370cursor_after(T0*C,T0* a1);
-void X370cursor_forth(T0*C,T0* a1);
-void X370cursor_start(T0*C,T0* a1);
-T0* X370new_cursor(T0*C);
-T2 X640count(T0*C);
-T2 X640item(T0*C,T2 a1);
-T0* X120container(T0*C);
-void X34put_character(T0*C,T3 a1);
-void X34put_string(T0*C,T0* a1);
-T0* X329cursor_item(T0*C,T0* a1);
-void X329cursor_go_after(T0*C,T0* a1);
-T6 X329is_empty(T0*C);
-T6 X329cursor_after(T0*C,T0* a1);
-T6 X329has(T0*C,T0* a1);
-void X329cursor_search_forth(T0*C,T0* a1,T0* a2);
-void X329cursor_forth(T0*C,T0* a1);
-void X329cursor_start(T0*C,T0* a1);
-T0* X329new_cursor(T0*C);
-T6 X329cursor_off(T0*C,T0* a1);
-T0* X39default_message(T0*C);
-T0* X292container(T0*C);
-T0* T11toT315(T11 source);
+T0* X433cursor_item(T0*C,T0* a1);
+void X433cursor_go_after(T0*C,T0* a1);
+T6 X433cursor_after(T0*C,T0* a1);
+void X433cursor_search_forth(T0*C,T0* a1,T0* a2);
+void X433cursor_forth(T0*C,T0* a1);
+void X433cursor_start(T0*C,T0* a1);
+T0* X433new_cursor(T0*C);
+T6 X433cursor_off(T0*C,T0* a1);
+T0* X90name(T0*C);
+T6 X90is_equal(T0*C,T0* a1);
+T0* X90type(T0*C);
+T2 X90id(T0*C);
+T6 X90is_terminal(T0*C);
+T6 X19is_equal(T0*C,T0* a1);
+T0* X19twin(T0*C);
+T0* X292cursor_item(T0*C,T0* a1);
+void X292cursor_go_after(T0*C,T0* a1);
+T6 X292cursor_after(T0*C,T0* a1);
+T6 X292has(T0*C,T0* a1);
+void X292cursor_search_forth(T0*C,T0* a1,T0* a2);
+void X292cursor_forth(T0*C,T0* a1);
+void X292cursor_start(T0*C,T0* a1);
+T0* X292new_cursor(T0*C);
+T6 X292cursor_off(T0*C,T0* a1);
+T6 X21se_assigned_from(T0*C,T0* a1);
+T6 X21conforms_to(T0*C,T0* a1);
+void X38put_new_line(T0*C);
+void X38put_integer(T0*C,T2 a1);
+void X38put_line(T0*C,T0* a1);
+void X38put_character(T0*C,T3 a1);
+void X38put_string(T0*C,T0* a1);
+T0* X154container(T0*C);
+T0* X497name(T0*C);
+T2 X497read_to_string(T0*C,T0* a1,T2 a2,T2 a3);
+void X497read_character(T0*C);
+T2 X497read_to_buffer(T0*C,T0* a1,T2 a2,T2 a3);
+T6 X497end_of_input(T0*C);
+T3 X497last_character(T0*C);
+T0* X483container(T0*C);
+void X527fill(T0*C);
+T0* X375cursor_item(T0*C,T0* a1);
+T6 X375is_empty(T0*C);
+T6 X375cursor_after(T0*C,T0* a1);
+void X375cursor_forth(T0*C,T0* a1);
+void X375cursor_start(T0*C,T0* a1);
+T0* X375new_cursor(T0*C);
+T0* X127container(T0*C);
+void X35put_character(T0*C,T3 a1);
+void X35put_string(T0*C,T0* a1);
+T0* X334cursor_item(T0*C,T0* a1);
+void X334cursor_go_after(T0*C,T0* a1);
+T6 X334is_empty(T0*C);
+T6 X334cursor_after(T0*C,T0* a1);
+T6 X334has(T0*C,T0* a1);
+void X334cursor_search_forth(T0*C,T0* a1,T0* a2);
+void X334cursor_forth(T0*C,T0* a1);
+void X334cursor_start(T0*C,T0* a1);
+T0* X334new_cursor(T0*C);
+T6 X334cursor_off(T0*C,T0* a1);
+T0* X40default_message(T0*C);
+T0* X297container(T0*C);
+T0* T11toT320(T11 source);
 
 #ifdef __cplusplus
 }
