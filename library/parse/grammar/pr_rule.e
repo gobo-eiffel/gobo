@@ -224,7 +224,7 @@ feature -- Output
 			a_file.put_string (lhs.name)
 			a_file.put_string (" ->")
 			if rhs.is_empty then
-				a_file.put_string (" -- /* empty */")
+				a_file.put_string (" -- Empty")
 			else
 				nb := rhs.count
 				from i := 1 until i > nb loop
