@@ -8,8 +8,8 @@ releases.
 
 8 June 1997
 
-. Resize input buffer if a call to `unread_character' results in too much text being
-  pushed back (it presently raise an run-time error).
+. Resize input buffer if a call to `unread_character' results in too much
+  text being pushed back (it presently raise an run-time error).
 
 14 June 1997
 
@@ -27,3 +27,6 @@ releases.
 . Look at `fatal_error'. Try to avoid raising an exception.
 . Put precondition to `set_start_condition'.
 
+11 August 1998
+
+. Provide a better way to specify types of semantic values with geyacc.
