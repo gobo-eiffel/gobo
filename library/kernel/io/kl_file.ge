@@ -81,6 +81,11 @@ inherit
 		export
 			{NONE} all
 		end
+
+	KL_GREGORIAN_CALENDAR
+		export
+			{NONE} all
+		end
 #endif
 #ifdef VE
 	FILE
@@ -164,6 +169,10 @@ feature -- Access
 			rescued: BOOLEAN
 #ifdef SE
 			basic_time: TIME
+			y, m, d: INTEGER
+			h, mi, s: INTEGER
+			local_time: TIME
+			old_is_local: BOOLEAN
 #endif
 #ifdef VE
 			dos_datetime: INTEGER
@@ -181,7 +190,18 @@ feature -- Access
 						if operating_system.is_windows then
 							Result := epoch_time.elapsed_seconds (basic_time)
 						else
-							Result := epoch_time.elapsed_seconds (basic_time) - epoch_time_offset
+							old_is_local := basic_time.is_local_time
+							basic_time.set_universal_time
+							y := basic_time.year
+							m := basic_time.month
+							d := basic_time.day
+							h := basic_time.hour
+							mi := basic_time.minute
+							s := basic_time.second
+							Result := epoch_days (y, m, d) * Seconds_in_day + h * Seconds_in_hour + mi * Seconds_in_minute + s
+							if old_is_local then
+								basic_time.set_local_time
+							end
 						end
 						if Result < 0 then
 							Result := -1
@@ -573,7 +593,6 @@ feature -- Basic operations
 						from
 							if nb >= 512 then
 								a_source_file.read_string (512)
-								nb := nb - 512
 							elseif nb > 0 then
 								a_source_file.read_string (nb)
 							end
@@ -664,33 +683,6 @@ feature {NONE} -- Implementation
 			b: BOOLEAN
 		once
 			b := Result.set (1970, 1, 1, 0, 0, 0)
-		end
-
-	epoch_time_offset: INTEGER is
-			-- Number of seconds between UTC and
-			-- local time version of epoch time
-		local
-			b: BOOLEAN
-			y, m, d: INTEGER
-			h, mi, s: INTEGER
-			local_time: TIME
-			utc_time: TIME
-			old_is_local: BOOLEAN
-		do
-			local_time := epoch_time
-			old_is_local := local_time.is_local_time
-			local_time.set_universal_time
-			y := local_time.year
-			m := local_time.month
-			d := local_time.day
-			h := local_time.hour
-			mi := local_time.minute
-			s := local_time.second
-			b := utc_time.set (y, m, d, h, mi, s)
-			if old_is_local then
-				local_time.set_local_time
-			end
-			Result := utc_time.elapsed_seconds (local_time)
 		end
 
 #endif
