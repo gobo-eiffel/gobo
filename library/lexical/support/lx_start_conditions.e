@@ -16,7 +16,7 @@ inherit
 
 	DS_ARRAYED_LIST [LX_START_CONDITION]
 
-	KL_SHARED_STRING_ROUTINES
+	KL_IMPORTED_STRING_ROUTINES
 		undefine
 			is_equal, copy
 		end

@@ -2,15 +2,15 @@ indexing
 
 	description:
 
-		"Shared routines that ought to be in class HASHABLE"
+		"Imported routines that ought to be in class HASHABLE"
 
 	library:    "Gobo Eiffel Kernel Library"
 	author:     "Eric Bezault <ericb@gobo.demon.co.uk>"
-	copyright:  "Copyright (c) 1997, Eric Bezault"
+	copyright:  "Copyright (c) 1998, Eric Bezault"
 	date:       "$Date$"
 	revision:   "$Revision$"
 
-class KL_SHARED_HASHABLE_ROUTINES
+class KL_IMPORTED_HASHABLE_ROUTINES
 
 feature -- Access
 
@@ -22,4 +22,4 @@ feature -- Access
 			hashable_routines_not_void: Result /= Void
 		end
 
-end -- class KL_SHARED_HASHABLE_ROUTINES
+end -- class KL_IMPORTED_HASHABLE_ROUTINES

@@ -2,15 +2,15 @@ indexing
 
 	description:
 
-		"Shared routines that ought to be in class STRING"
+		"Imported routines that ought to be in class STRING"
 
 	library:    "Gobo Eiffel Kernel Library"
 	author:     "Eric Bezault <ericb@gobo.demon.co.uk>"
-	copyright:  "Copyright (c) 1997, Eric Bezault"
+	copyright:  "Copyright (c) 1998, Eric Bezault"
 	date:       "$Date$"
 	revision:   "$Revision$"
 
-class KL_SHARED_STRING_ROUTINES
+class KL_IMPORTED_STRING_ROUTINES
 
 feature -- Access
 
@@ -22,4 +22,4 @@ feature -- Access
 			string_routines_not_void: Result /= Void
 		end
 
-end -- class KL_SHARED_STRING_ROUTINES
+end -- class KL_IMPORTED_STRING_ROUTINES

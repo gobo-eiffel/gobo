@@ -29,9 +29,9 @@ inherit
 			{NONE} all
 		end
 
-	KL_SHARED_INTEGER_ROUTINES
+	KL_IMPORTED_INTEGER_ROUTINES
 
-	KL_SHARED_STRING_ROUTINES
+	KL_IMPORTED_STRING_ROUTINES
 
 	KL_SHARED_PLATFORM
 
@@ -1095,7 +1095,7 @@ else
 end
 else
 if yy_act = 184 then
---|#line 394
+--|#line 387
 last_token := text_item (1).code
 else
 --|#line 0

@@ -18,7 +18,7 @@ inherit
 			make as make_compressed_scanner_skeleton
 		end
 
-	KL_SHARED_STRING_ROUTINES
+	KL_IMPORTED_STRING_ROUTINES
 
 	KL_SHARED_ARGUMENTS
 

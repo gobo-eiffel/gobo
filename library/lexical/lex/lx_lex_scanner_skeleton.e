@@ -33,7 +33,7 @@ inherit
 			{NONE} all
 		end
 
-	KL_SHARED_STRING_ROUTINES
+	KL_IMPORTED_STRING_ROUTINES
 
 feature {NONE} -- Initialization
 

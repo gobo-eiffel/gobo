@@ -34,12 +34,12 @@ inherit
 			is_equal, copy
 		end
 
-	KL_SHARED_INTEGER_ROUTINES
+	KL_IMPORTED_INTEGER_ROUTINES
 		undefine
 			is_equal, copy
 		end
 
-	KL_SHARED_OUTPUT_STREAM_ROUTINES
+	KL_IMPORTED_OUTPUT_STREAM_ROUTINES
 		undefine
 			is_equal, copy
 		end

@@ -13,14 +13,11 @@ class GEGREP
 
 inherit
 
-	ARGUMENTS
-		export
-			{NONE} all
-		end
+	KL_SHARED_ARGUMENTS
 
 	KL_SHARED_EXCEPTIONS
 
-	KL_SHARED_INPUT_STREAM_ROUTINES
+	KL_IMPORTED_INPUT_STREAM_ROUTINES
 
 	KL_SHARED_STANDARD_FILES
 
@@ -38,13 +35,13 @@ feature -- Execution
 			a_filename: STRING
 			case_insensitive: BOOLEAN
 		do
-			nb := argument_count
+			nb := Arguments.argument_count
 			if nb = 0 then
 				std.error.put_string (Usage_message)
 				std.error.put_character ('%N')
 				Exceptions.die (1)
 			else
-				if argument (1).is_equal ("-i") then
+				if Arguments.argument (1).is_equal ("-i") then
 					case_insensitive := True
 					if nb = 1 then
 						std.error.put_string (Usage_message)
@@ -55,7 +52,7 @@ feature -- Execution
 				else
 					i := 1
 				end
-				!! regexp.compile (argument (i), case_insensitive)
+				!! regexp.compile (Arguments.argument (i), case_insensitive)
 				if not regexp.compiled then
 					std.error.put_string ("gegrep: invalid regular expression%N")
 					Exceptions.die (1)
@@ -65,7 +62,7 @@ feature -- Execution
 					when 0 then
 						parse_file (std.input, Void)
 					when 1 then
-						a_filename := argument (i)
+						a_filename := Arguments.argument (i)
 						a_file := INPUT_STREAM_.make_file_open_read (a_filename)
 						if INPUT_STREAM_.is_open_read (a_file) then
 							parse_file (a_file, Void)
@@ -78,7 +75,7 @@ feature -- Execution
 						end
 					else
 						from until i > nb loop
-							a_filename := argument (i)
+							a_filename := Arguments.argument (i)
 							a_file := INPUT_STREAM_.make_file_open_read (a_filename)
 							if INPUT_STREAM_.is_open_read (a_file) then
 								parse_file (a_file, a_filename)

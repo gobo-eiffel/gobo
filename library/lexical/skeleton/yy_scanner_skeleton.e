@@ -20,7 +20,7 @@ inherit
 			flush_input_buffer
 		end
 
-	KL_SHARED_ARRAY_ROUTINES
+	KL_IMPORTED_ARRAY_ROUTINES
 
 feature {NONE} -- Initialization
 
