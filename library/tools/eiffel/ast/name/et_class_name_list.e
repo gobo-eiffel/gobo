@@ -52,10 +52,10 @@ feature -- Status report
 			-- Does current client list contain at least
 			-- the class name "ANY"?
 		do
-			Result := has (tokens.any_class_name)
+			Result := has_class_name (tokens.any_class_name)
 		end
 
-	has (a_name: like class_name): BOOLEAN is
+	has_class_name (a_name: like class_name): BOOLEAN is
 			-- Does `a_name' appear in current list?
 		require
 			a_name_not_void: a_name /= Void
@@ -78,7 +78,7 @@ feature -- Status report
 		require
 			a_class_not_void: a_class /= Void
 		do
-			Result := has (a_class.name)
+			Result := has_class_name (a_class.name)
 		end
 
 	has_descendant (a_class: ET_CLASS; a_processor: ET_AST_PROCESSOR): BOOLEAN is
@@ -145,7 +145,7 @@ feature -- Comparison
 				Result := True
 				nb := count
 				from i := 1 until i > nb loop
-					if not other.has (class_name (i)) then
+					if not other.has_class_name (class_name (i)) then
 						Result := False
 						i := nb + 1 -- Jump out of the loop.
 					else
@@ -155,7 +155,7 @@ feature -- Comparison
 				if Result then
 					nb := other.count
 					from i := 1 until i > nb loop
-						if not has (other.class_name (i)) then
+						if not has_class_name (other.class_name (i)) then
 							Result := False
 							i := nb + 1 -- Jump out of the loop.
 						else
