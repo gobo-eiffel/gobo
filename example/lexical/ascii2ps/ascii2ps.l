@@ -154,6 +154,7 @@ feature {NONE} -- Initialization
 				end
 			end
 			if out_file /= Void and then not OUTPUT_STREAM_.is_closed (out_file) then
+				output_file := std.output
 				OUTPUT_STREAM_.close (out_file)
 			end
 		rescue
