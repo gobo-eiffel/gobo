@@ -144,11 +144,25 @@ goto exit
 	goto bootstrap
 
 :bootstrap
+	goto bootstrap1
+
+:bootstrap1
 	cd %GOBO%
 	geant bootstrap1
 	cd %BIN_DIR%
 	%RM% geant%EXE%
 	%MV% geant1%EXE% geant%EXE%
+	if .%EIF%. == .ve. goto vetuner
+	goto bootstrap2
+
+:vetuner
+	rem   Make sure that we don't run out of Eiffel heap memory
+	rem   when compiled with Visual Eiffel.
+	rem tune_huge geant%EXE%
+	vetuner -c -zone_1_reserved=67108864 -zone_2_reserved=67108864 -zone_3_reserved=67108864 -zone_4_reserved=67108864 -zone_5_reserved=67108864 -zone_6_reserved=67108864 -zone_7_reserved=67108864 -zone_8_reserved=67108864 -zone_9_reserved=67108864 -zone_10_reserved=67108864 -zone_11_reserved=134217728 -zone_12_reserved=67108864 -zone_1_committed=8192 -zone_2_committed=8192 -zone_3_committed=8192 -zone_4_committed=8192 -zone_5_committed=8192 -zone_6_committed=8192 -zone_7_committed=8192 -zone_8_committed=8192 -zone_9_committed=8192 -zone_10_committed=8192 -zone_11_committed=65536 -zone_12_committed=8192 geant%EXE%
+	goto bootstrap2
+
+:bootstrap2
 	cd %GOBO%
 	geant bootstrap2
 	goto exit
