@@ -74,8 +74,7 @@ feature -- Validity checking
 			a_compound_not_void: a_compound /= Void
 			a_feature_not_void: a_feature /= Void
 			a_class_not_void: a_class /= Void
-			implementation_checked: a_class /= a_feature.implementation_class implies
-				a_feature.implementation_feature.implementation_checked
+			implementation_checked: a_class /= a_feature.implementation_class implies implementation_checked (a_feature)
 		local
 			old_feature: ET_FEATURE
 			old_class: ET_CLASS
@@ -274,7 +273,6 @@ feature {NONE} -- Instruction validity
 		local
 			a_context: ET_NESTED_TYPE_CONTEXT
 			a_class_impl: ET_CLASS
-			a_feature_impl: ET_FEATURE
 			a_class: ET_CLASS
 			a_creation_named_type: ET_NAMED_TYPE
 			a_target_named_type: ET_NAMED_TYPE
@@ -312,8 +310,7 @@ feature {NONE} -- Instruction validity
 						a_class_impl := current_feature.implementation_class
 						if a_class_impl /= current_class then
 							set_fatal_error
-							a_feature_impl := current_feature.implementation_feature
-							if not a_feature_impl.has_implementation_error then
+							if not has_implementation_error (current_feature) then
 									-- Internal error: `a_name' should have been resolved in
 									-- the implementation feature.
 								error_handler.report_giacq_error
@@ -432,14 +429,13 @@ feature {NONE} -- Instruction validity
 							-- This is not a procedure.
 						set_fatal_error
 						a_class_impl := current_feature.implementation_class
-						a_feature_impl := current_feature.implementation_feature
 						if current_class = a_class_impl then
 							error_handler.report_vgcc6f_error (current_class, a_name, a_feature, a_class)
-						elseif not a_feature_impl.has_implementation_error then
+						elseif not has_implementation_error (current_feature) then
 								-- Internal error: this error should have been reported when
-								-- processing `a_feature_impl' or in the feature flattener
-								-- when redeclaring procedure `a_feature' to a function in
-								-- an ancestor of `a_class'.
+								-- processing the implementation of `current_feature' or in
+								-- the feature flattener when redeclaring procedure `a_feature'
+								-- to a function in an ancestor of `a_class'.
 							error_handler.report_giacr_error
 						end
 					end
@@ -896,14 +892,12 @@ feature {NONE} -- Instruction validity
 			an_instruction_not_void: an_instruction /= Void
 		local
 			a_class_impl: ET_CLASS
-			a_feature_impl: ET_FEATURE
 		do
 				-- The Retry instruction does not appear in a Rescue clause.
 			set_fatal_error
 			a_class_impl := current_feature.implementation_class
 			if a_class_impl /= current_class then
-				a_feature_impl := current_feature.implementation_feature
-				if not a_feature_impl.has_implementation_error then
+				if not has_implementation_error (current_feature) then
 						-- Internal error: the VXRT error should have been
 						-- reported in the implementation feature.
 					error_handler.report_giacs_error

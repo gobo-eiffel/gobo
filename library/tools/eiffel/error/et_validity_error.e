@@ -47,6 +47,7 @@ creation
 	make_vdpr3a,
 	make_vdpr3b,
 	make_vdpr3c,
+	make_vdpr3d,
 	make_vdpr4a,
 	make_vdpr4c,
 	make_vdpr4d,
@@ -1303,6 +1304,45 @@ feature {NONE} -- Initialization
 			-- dollar5: $5 = class name
 			-- dollar6: $6 = redefined feature name
 			-- dollar7: $7 = parent class name
+		end
+
+	make_vdpr3d (a_class: like current_class; a_precursor: ET_PRECURSOR; a_feature: ET_FEATURE) is
+			-- Create a new VDPR-3 error: `a_precursor' appears in `a_feature' in `a_class',
+			-- but `a_feature' is not a redeclared feature.
+			--
+			-- ETL3-4.82-00-00: p.215
+		require
+			a_class_not_void: a_class /= Void
+			a_class_preparsed: a_class.is_preparsed
+			a_precursor_not_void: a_precursor /= Void
+			a_feature_not_void: a_feature /= Void
+		do
+			code := vdpr3d_template_code
+			etl_code := vdpr3_etl_code
+			default_template := vdpr3d_default_template
+			current_class := a_class
+			class_impl := a_class
+			position := a_precursor.position
+			create parameters.make (1, 6)
+			parameters.put (etl_code, 1)
+			parameters.put (filename, 2)
+			parameters.put (position.line.out, 3)
+			parameters.put (position.column.out, 4)
+			parameters.put (current_class.name.name, 5)
+			parameters.put (a_feature.name.name, 6)
+			set_compilers (True)
+		ensure
+			current_class_set: current_class = a_class
+			class_impl_set: class_impl = a_class
+			all_reported: all_reported
+			all_fatal: all_fatal
+			-- dollar0: $0 = program name
+			-- dollar1: $1 = ETL code
+			-- dollar2: $2 = filename
+			-- dollar3: $3 = line
+			-- dollar4: $4 = column
+			-- dollar5: $5 = class name
+			-- dollar6: $6 = feature name
 		end
 
 	make_vdpr4a (a_class: like current_class; a_precursor: ET_PRECURSOR_KEYWORD; a_feature: ET_FEATURE; a_parent: ET_CLASS) is
@@ -8525,6 +8565,7 @@ feature {NONE} -- Implementation
 	vdpr3a_default_template: STRING is "[$1] class $5 ($3,$4): conflict in Precursor construct between effective features `$6' inherited from '$7' and `$8' inherited from '$9'."
 	vdpr3b_default_template: STRING is "[$1] class $5 ($3,$4): feature `$6' is not the redefinition of an effective feature."
 	vdpr3c_default_template: STRING is "[$1] class $5 ($3,$4): feature `$6' is not the redefinition of a feature from parent '$7'."
+	vdpr3d_default_template: STRING is "[$1] class $5 ($3,$4): feature `$6' is not the redeclaration of a feature."
 	vdpr4a_default_template: STRING is "[$1] class $5 ($3,$4): the number of actual arguments in Precursor call is not the same as the number of formal arguments of feature `$6' in class $7."
 	vdpr4c_default_template: STRING is "[$1] class $5 ($3,$4): the $8-th actual argument (of type '$9') does not conform to the corresponding formal argument (of type '$10') of feature `$6' in class $7."
 	vdpr4d_default_template: STRING is "[$1] class $5 ($6,$3,$4): the $9-th actual argument (of type '$10') does not conform to the corresponding formal argument (of type '$11') of feature `$7' in class $8."
@@ -8806,6 +8847,7 @@ feature {NONE} -- Implementation
 	vdpr3a_template_code: STRING is "vdpr3a"
 	vdpr3b_template_code: STRING is "vdpr3b"
 	vdpr3c_template_code: STRING is "vdpr3c"
+	vdpr3d_template_code: STRING is "vdpr3d"
 	vdpr4a_template_code: STRING is "vdpr4a"
 	vdpr4c_template_code: STRING is "vdpr4c"
 	vdpr4d_template_code: STRING is "vdpr4d"

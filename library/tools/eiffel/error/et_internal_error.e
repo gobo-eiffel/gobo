@@ -118,7 +118,14 @@ creation
 	make_giadt,
 	make_giadu,
 	make_giadv,
-	make_giadw
+	make_giadw,
+	make_giadx,
+	make_giady,
+	make_giadz,
+	make_giaea,
+	make_giaeb,
+	make_giaec,
+	make_giaed
 
 feature {NONE} -- Initialization
 
@@ -1435,6 +1442,97 @@ feature {NONE} -- Initialization
 			-- dollar1: $1 = ETL code
 		end
 
+	make_giadx is
+			-- Create a new GIADX error.
+		do
+			code := giadx_template_code
+			etl_code := giadx_etl_code
+			default_template := giadx_default_template
+			create parameters.make (1, 1)
+			parameters.put (etl_code, 1)
+		ensure
+			-- dollar0: $0 = program name
+			-- dollar1: $1 = ETL code
+		end
+
+	make_giady is
+			-- Create a new GIADY error.
+		do
+			code := giady_template_code
+			etl_code := giady_etl_code
+			default_template := giady_default_template
+			create parameters.make (1, 1)
+			parameters.put (etl_code, 1)
+		ensure
+			-- dollar0: $0 = program name
+			-- dollar1: $1 = ETL code
+		end
+
+	make_giadz is
+			-- Create a new GIADZ error.
+		do
+			code := giadz_template_code
+			etl_code := giadz_etl_code
+			default_template := giadz_default_template
+			create parameters.make (1, 1)
+			parameters.put (etl_code, 1)
+		ensure
+			-- dollar0: $0 = program name
+			-- dollar1: $1 = ETL code
+		end
+
+	make_giaea is
+			-- Create a new GIAEA error.
+		do
+			code := giaea_template_code
+			etl_code := giaea_etl_code
+			default_template := giaea_default_template
+			create parameters.make (1, 1)
+			parameters.put (etl_code, 1)
+		ensure
+			-- dollar0: $0 = program name
+			-- dollar1: $1 = ETL code
+		end
+
+	make_giaeb is
+			-- Create a new GIAEB error.
+		do
+			code := giaeb_template_code
+			etl_code := giaeb_etl_code
+			default_template := giaeb_default_template
+			create parameters.make (1, 1)
+			parameters.put (etl_code, 1)
+		ensure
+			-- dollar0: $0 = program name
+			-- dollar1: $1 = ETL code
+		end
+
+	make_giaec is
+			-- Create a new GIAEC error.
+		do
+			code := giaec_template_code
+			etl_code := giaec_etl_code
+			default_template := giaec_default_template
+			create parameters.make (1, 1)
+			parameters.put (etl_code, 1)
+		ensure
+			-- dollar0: $0 = program name
+			-- dollar1: $1 = ETL code
+		end
+
+	make_giaed is
+			-- Create a new GIAED error.
+		do
+			code := giaed_template_code
+			etl_code := giaed_etl_code
+			default_template := giaed_default_template
+			create parameters.make (1, 1)
+			parameters.put (etl_code, 1)
+		ensure
+			-- dollar0: $0 = program name
+			-- dollar1: $1 = ETL code
+		end
+
 feature {NONE} -- Implementation
 
 	giaaa_default_template: STRING is "[$1] internal error."
@@ -1538,6 +1636,13 @@ feature {NONE} -- Implementation
 	giadu_default_template: STRING is "[$1] internal error."
 	giadv_default_template: STRING is "[$1] internal error."
 	giadw_default_template: STRING is "[$1] internal error."
+	giadx_default_template: STRING is "[$1] internal error."
+	giady_default_template: STRING is "[$1] internal error."
+	giadz_default_template: STRING is "[$1] internal error."
+	giaea_default_template: STRING is "[$1] internal error."
+	giaeb_default_template: STRING is "[$1] internal error."
+	giaec_default_template: STRING is "[$1] internal error."
+	giaed_default_template: STRING is "[$1] internal error."
 			-- Default templates
 
 	giaaa_etl_code: STRING is "GIAAA"
@@ -1641,6 +1746,13 @@ feature {NONE} -- Implementation
 	giadu_etl_code: STRING is "GIADU"
 	giadv_etl_code: STRING is "GIADV"
 	giadw_etl_code: STRING is "GIADW"
+	giadx_etl_code: STRING is "GIADX"
+	giady_etl_code: STRING is "GIADY"
+	giadz_etl_code: STRING is "GIADZ"
+	giaea_etl_code: STRING is "GIAEA"
+	giaeb_etl_code: STRING is "GIAEB"
+	giaec_etl_code: STRING is "GIAEC"
+	giaed_etl_code: STRING is "GIAED"
 			-- ETL validity codes
 
 	giaaa_template_code: STRING is "giaaa"
@@ -1744,6 +1856,13 @@ feature {NONE} -- Implementation
 	giadu_template_code: STRING is "giadu"
 	giadv_template_code: STRING is "giadv"
 	giadw_template_code: STRING is "giadw"
+	giadx_template_code: STRING is "giadx"
+	giady_template_code: STRING is "giady"
+	giadz_template_code: STRING is "giadz"
+	giaea_template_code: STRING is "giaea"
+	giaeb_template_code: STRING is "giaeb"
+	giaec_template_code: STRING is "giaec"
+	giaed_template_code: STRING is "giaed"
 			-- Template error codes
 
 end

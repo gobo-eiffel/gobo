@@ -985,6 +985,25 @@ feature -- Validity errors
 			end
 		end
 
+	report_vdpr3d_error (a_class: ET_CLASS; a_precursor: ET_PRECURSOR; a_feature: ET_FEATURE) is
+			-- Report VDPR-3 error: `a_precursor' appears in `a_feature' in `a_class',
+			-- but `a_feature' is not a redeclared feature.
+			--
+			-- ETL3-4.82-00-00: p.215
+		require
+			a_class_not_void: a_class /= Void
+			a_class_preparsed: a_class.is_preparsed
+			a_precursor_not_void: a_precursor /= Void
+			a_feature_not_void: a_feature /= Void
+		local
+			an_error: ET_VALIDITY_ERROR
+		do
+			if reportable_vdpr3_error (a_class) then
+				create an_error.make_vdpr3d (a_class, a_precursor, a_feature)
+				report_validity_error (an_error)
+			end
+		end
+
 	report_vdpr4a_error (a_class: ET_CLASS; a_precursor: ET_PRECURSOR_KEYWORD; a_feature: ET_FEATURE; a_parent: ET_CLASS) is
 			-- Report VDPR-4A error: the number of actual arguments in
 			-- the precursor call `a_precursor' appearing in `a_class' is
@@ -6197,6 +6216,69 @@ feature -- Internal errors
 			an_error: ET_INTERNAL_ERROR
 		do
 			create an_error.make_giadw
+			report_internal_error (an_error)
+		end
+
+	report_giadx_error is
+			-- Report GIADX internal error.
+		local
+			an_error: ET_INTERNAL_ERROR
+		do
+			create an_error.make_giadx
+			report_internal_error (an_error)
+		end
+
+	report_giady_error is
+			-- Report GIADY internal error.
+		local
+			an_error: ET_INTERNAL_ERROR
+		do
+			create an_error.make_giady
+			report_internal_error (an_error)
+		end
+
+	report_giadz_error is
+			-- Report GIADZ internal error.
+		local
+			an_error: ET_INTERNAL_ERROR
+		do
+			create an_error.make_giadz
+			report_internal_error (an_error)
+		end
+
+	report_giaea_error is
+			-- Report GIAEA internal error.
+		local
+			an_error: ET_INTERNAL_ERROR
+		do
+			create an_error.make_giaea
+			report_internal_error (an_error)
+		end
+
+	report_giaeb_error is
+			-- Report GIAEB internal error.
+		local
+			an_error: ET_INTERNAL_ERROR
+		do
+			create an_error.make_giaeb
+			report_internal_error (an_error)
+		end
+
+	report_giaec_error is
+			-- Report GIAEC internal error.
+		local
+			an_error: ET_INTERNAL_ERROR
+		do
+			create an_error.make_giaec
+			report_internal_error (an_error)
+		end
+
+	report_giaed_error is
+			-- Report GIAED internal error.
+		local
+			an_error: ET_INTERNAL_ERROR
+		do
+			create an_error.make_giaed
 			report_internal_error (an_error)
 		end
 

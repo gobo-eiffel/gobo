@@ -40,6 +40,23 @@ feature -- Status report
 			-- Has a fatal error occurred when checking
 			-- validity of last instruction or expression?
 
+	implementation_checked (a_feature: ET_FEATURE): BOOLEAN is
+			-- Has the implementation of `a_feature' been checked?
+		require
+			a_feature_not_void: a_feature /= Void
+		do
+			Result := a_feature.implementation_feature.implementation_checked
+		end
+
+	has_implementation_error (a_feature: ET_FEATURE): BOOLEAN is
+			-- Has a fatal error occurred during checking
+			-- of implementation of `a_feature'?
+		require
+			a_feature_not_void: a_feature /= Void
+		do
+			Result := a_feature.implementation_feature.has_implementation_error
+		end
+
 feature {NONE} -- Validity checking
 
 	check_qualified_call_validity (a_target: ET_EXPRESSION; a_name: ET_FEATURE_NAME;
@@ -51,7 +68,6 @@ feature {NONE} -- Validity checking
 			a_context_not_void: a_context /= Void
 		local
 			a_class_impl: ET_CLASS
-			a_feature_impl: ET_FEATURE
 			a_class: ET_CLASS
 			a_feature: ET_FEATURE
 			a_type: ET_TYPE
@@ -67,8 +83,7 @@ feature {NONE} -- Validity checking
 				a_class_impl := current_feature.implementation_class
 				if a_class_impl /= current_class then
 					set_fatal_error
-					a_feature_impl := current_feature.implementation_feature
-					if not a_feature_impl.has_implementation_error then
+					if not has_implementation_error (current_feature) then
 							-- Internal error: `a_name' should have been resolved in
 							-- the implementation feature.
 						error_handler.report_giacf_error
@@ -147,14 +162,13 @@ feature {NONE} -- Validity checking
 								-- In a call expression, `a_feature' has to be a query.
 							set_fatal_error
 							a_class_impl := current_feature.implementation_class
-							a_feature_impl := current_feature.implementation_feature
 							if current_class = a_class_impl then
 								error_handler.report_vkcn2a_error (current_class, a_name, a_feature, a_class)
-							elseif not a_feature_impl.has_implementation_error then
+							elseif not has_implementation_error (current_feature) then
 									-- Internal error: this error should have been reported when
-									-- processing `a_feature_impl' or in the feature flattener
-									-- when redeclaring function `a_feature' to a procedure in
-									-- an ancestor of `a_class'.
+									-- processing the implementation of `current_feature' or in
+									-- the feature flattener when redeclaring function `a_feature'
+									-- to a procedure in an ancestor of `a_class'.
 								error_handler.report_giacg_error
 							end
 						elseif not has_fatal_error then
@@ -179,14 +193,13 @@ feature {NONE} -- Validity checking
 								-- In a call instruction, `a_feature' has to be a procedure.
 							set_fatal_error
 							a_class_impl := current_feature.implementation_class
-							a_feature_impl := current_feature.implementation_feature
 							if current_class = a_class_impl then
 								error_handler.report_vkcn1a_error (current_class, a_name, a_feature, a_class)
-							elseif not a_feature_impl.has_implementation_error then
+							elseif not has_implementation_error (current_feature) then
 									-- Internal error: this error should have been reported when
-									-- processing `a_feature_impl' or in the feature flattener
-									-- when redeclaring procedure `a_feature' to a function in
-									-- an ancestor of `a_class'.
+									-- processing the implementation of `current_feature' or in
+									-- the feature flattener when redeclaring procedure `a_feature'
+									-- to a function in an ancestor of `a_class'.
 								error_handler.report_giach_error
 							end
 						end
@@ -203,7 +216,6 @@ feature {NONE} -- Validity checking
 			a_context_not_void: a_context /= Void
 		local
 			a_class_impl: ET_CLASS
-			a_feature_impl: ET_FEATURE
 			a_feature: ET_FEATURE
 			a_type: ET_TYPE
 			a_seed: INTEGER
@@ -219,8 +231,7 @@ feature {NONE} -- Validity checking
 				a_class_impl := current_feature.implementation_class
 				if a_class_impl /= current_class then
 					set_fatal_error
-					a_feature_impl := current_feature.implementation_feature
-					if not a_feature_impl.has_implementation_error then
+					if not has_implementation_error (current_feature) then
 							-- Internal error: `a_name' should have been resolved in
 							-- the implementation feature.
 						error_handler.report_giaci_error
@@ -346,14 +357,13 @@ feature {NONE} -- Validity checking
 								-- In a call expression, `a_feature' has to be a query.
 							set_fatal_error
 							a_class_impl := current_feature.implementation_class
-							a_feature_impl := current_feature.implementation_feature
 							if current_class = a_class_impl then
 								error_handler.report_vkcn2c_error (current_class, a_name, a_feature)
-							elseif not a_feature_impl.has_implementation_error then
+							elseif not has_implementation_error (current_feature) then
 									-- Internal error: this error should have been reported when
-									-- processing `a_feature_impl' or in the feature flattener
-									-- when redeclaring function `a_feature' to a procedure in
-									-- an ancestor of `current_class'.
+									-- processing the implementation of `current_feature' or in
+									-- the feature flattener when redeclaring function `a_feature'
+									-- to a procedure in an ancestor of `current_class'.
 								error_handler.report_giacj_error
 							end
 						elseif not has_fatal_error then
@@ -378,14 +388,13 @@ feature {NONE} -- Validity checking
 								-- In a call instruction, `a_feature' has to be a procedure.
 							set_fatal_error
 							a_class_impl := current_feature.implementation_class
-							a_feature_impl := current_feature.implementation_feature
 							if current_class = a_class_impl then
 								error_handler.report_vkcn1c_error (current_class, a_name, a_feature)
-							elseif not a_feature_impl.has_implementation_error then
+							elseif not has_implementation_error (current_feature) then
 									-- Internal error: this error should have been reported when
-									-- processing `a_feature_impl' or in the feature flattener
-									-- when redeclaring procedure `a_feature' to a function in
-									-- an ancestor of `current_class'.
+									-- processing the implementation of `current_feature' or in
+									-- the feature flattener when redeclaring procedure `a_feature'
+									-- to a function in an ancestor of `current_class'.
 								error_handler.report_giack_error
 							end
 						end
@@ -407,63 +416,77 @@ feature {NONE} -- Validity checking
 			a_class: ET_CLASS
 			an_actuals: ET_ACTUAL_ARGUMENT_LIST
 		do
-				-- Make sure that `a_precursor' has been resolved.
 			a_class_impl := current_feature.implementation_class
-			a_class_impl.process (universe.feature_flattener)
-			if a_class_impl.has_flattening_error then
+			if current_feature.first_precursor = Void then
+					-- Immediate features cannot have Precursor.
 				set_fatal_error
-			else
-				a_parent_type := a_precursor.parent_type
-				if a_parent_type = Void then
-						-- Internal error: the Precursor construct should
-						-- already have been resolved when flattening the
-						-- features of `a_class_impl'.
-					set_fatal_error
-					error_handler.report_giaap_error
+				if a_class_impl /= current_class then
+					if not has_implementation_error (current_feature) then
+							-- Internal error: Precursor should have been resolved in
+							-- the implementation feature.
+						error_handler.report_giadx_error
+					end
 				else
-					a_precursor_keyword := a_precursor.precursor_keyword
-					a_class := a_parent_type.direct_base_class (universe)
-					a_feature := a_class.seeded_feature (a_precursor_keyword.seed)
-					if a_feature = Void then
+					error_handler.report_vdpr3d_error (current_class, a_precursor, current_feature)
+				end
+			else
+					-- Make sure that `a_precursor' has been resolved.
+				a_class_impl.process (universe.feature_flattener)
+				if a_class_impl.has_flattening_error then
+					set_fatal_error
+				else
+					a_parent_type := a_precursor.parent_type
+					if a_parent_type = Void then
 							-- Internal error: the Precursor construct should
 							-- already have been resolved when flattening the
 							-- features of `a_class_impl'.
 						set_fatal_error
-						error_handler.report_giabg_error
+						error_handler.report_giaap_error
 					else
-						if current_class = a_class_impl then
-							formal_context.reset (current_class)
-							formal_context.force_first (a_parent_type)
+						a_precursor_keyword := a_precursor.precursor_keyword
+						a_class := a_parent_type.direct_base_class (universe)
+						a_feature := a_class.seeded_feature (a_precursor_keyword.seed)
+						if a_feature = Void then
+								-- Internal error: the Precursor construct should
+								-- already have been resolved when flattening the
+								-- features of `a_class_impl'.
+							set_fatal_error
+							error_handler.report_giabg_error
 						else
-								-- Resolve generic parameters in the
-								-- context of `current_class'.
-							if a_parent_type.is_generic then
-								current_class.process (universe.ancestor_builder)
-								if current_class.has_ancestors_error then
-									set_fatal_error
-								else
-									an_ancestor := current_class.ancestor (a_parent_type, universe)
-									if an_ancestor = Void then
-											-- Internal error: `a_parent_type' is an ancestor
-											-- of `a_class_impl', and hence of `current_class'.
-										set_fatal_error
-										error_handler.report_giabx_error
-									else
-										formal_context.reset (current_class)
-										formal_context.force_first (an_ancestor)
-									end
-								end
-							else
+							if current_class = a_class_impl then
 								formal_context.reset (current_class)
 								formal_context.force_first (a_parent_type)
+							else
+									-- Resolve generic parameters in the
+									-- context of `current_class'.
+								if a_parent_type.is_generic then
+									current_class.process (universe.ancestor_builder)
+									if current_class.has_ancestors_error then
+										set_fatal_error
+									else
+										an_ancestor := current_class.ancestor (a_parent_type, universe)
+										if an_ancestor = Void then
+												-- Internal error: `a_parent_type' is an ancestor
+												-- of `a_class_impl', and hence of `current_class'.
+											set_fatal_error
+											error_handler.report_giabx_error
+										else
+											formal_context.reset (current_class)
+											formal_context.force_first (an_ancestor)
+										end
+									end
+								else
+									formal_context.reset (current_class)
+									formal_context.force_first (a_parent_type)
+								end
 							end
-						end
-						if not has_fatal_error then
-							an_actuals := a_precursor.arguments
-							check_arguments_validity (an_actuals, formal_context, a_precursor_keyword, a_feature, a_class)
-							if in_expression and then not has_fatal_error then
+							if not has_fatal_error then
+								an_actuals := a_precursor.arguments
+								check_arguments_validity (an_actuals, formal_context, a_precursor_keyword, a_feature, a_class)
+								if in_expression and then not has_fatal_error then
 -- TODO: like argument and get the type as it was in the parent.
-								a_context.force_first (current_feature.type)
+									a_context.force_first (current_feature.type)
+								end
 							end
 						end
 					end
@@ -478,7 +501,6 @@ feature {NONE} -- Validity checking
 			a_context_not_void: a_context /= Void
 		local
 			a_class_impl: ET_CLASS
-			a_feature_impl: ET_FEATURE
 			a_class: ET_CLASS
 			a_feature: ET_FEATURE
 			a_type: ET_TYPE
@@ -496,8 +518,7 @@ feature {NONE} -- Validity checking
 					a_class_impl := current_feature.implementation_class
 					if a_class_impl /= current_class then
 						set_fatal_error
-						a_feature_impl := current_feature.implementation_feature
-						if not a_feature_impl.has_implementation_error then
+						if not has_implementation_error (current_feature) then
 								-- Internal error: `a_name' should have been resolved in
 								-- the implementation feature.
 							error_handler.report_giacl_error
@@ -564,14 +585,13 @@ feature {NONE} -- Validity checking
 									-- In a call expression, `a_feature' has to be a query.
 								set_fatal_error
 								a_class_impl := current_feature.implementation_class
-								a_feature_impl := current_feature.implementation_feature
 								if current_class = a_class_impl then
 									error_handler.report_vkcn2a_error (current_class, a_name, a_feature, a_class)
-								elseif not a_feature_impl.has_implementation_error then
+								elseif not has_implementation_error (current_feature) then
 										-- Internal error: this error should have been reported when
-										-- processing `a_feature_impl' or in the feature flattener
-										-- when redeclaring function `a_feature' to a procedure in
-										-- an ancestor of `a_class'.
+										-- processing the implementation of `current_feature' or in
+										-- the feature flattener when redeclaring function `a_feature'
+										-- to a procedure in an ancestor of `a_class'.
 									error_handler.report_giacm_error
 								end
 							elseif not has_fatal_error then
@@ -584,14 +604,13 @@ feature {NONE} -- Validity checking
 									-- In a call instruction, `a_feature' has to be a procedure.
 								set_fatal_error
 								a_class_impl := current_feature.implementation_class
-								a_feature_impl := current_feature.implementation_feature
 								if current_class = a_class_impl then
 									error_handler.report_vkcn1a_error (current_class, a_name, a_feature, a_class)
-								elseif not a_feature_impl.has_implementation_error then
+								elseif not has_implementation_error (current_feature) then
 										-- Internal error: this error should have been reported when
-										-- processing `a_feature_impl' or in the feature flattener
-										-- when redeclaring procedure `a_feature' to a function in
-										-- an ancestor of `a_class'.
+										-- processing the implementation of `current_feature' or in
+										-- the feature flattener when redeclaring procedure `a_feature'
+										-- to a function in an ancestor of `a_class'.
 									error_handler.report_giacn_error
 								end
 							end
@@ -769,8 +788,7 @@ invariant
 
 	current_feature_not_void: current_feature /= Void
 	current_class_not_void: current_class /= Void
-	implementation_checked: current_class /= current_feature.implementation_class implies
-		current_feature.implementation_feature.implementation_checked
+	implementation_checked: current_class /= current_feature.implementation_class implies implementation_checked (current_feature)
 	type_checker_not_void: type_checker /= Void
 	formal_context_not_void: formal_context /= Void
 

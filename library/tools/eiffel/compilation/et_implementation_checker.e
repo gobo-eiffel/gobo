@@ -31,6 +31,8 @@ feature {NONE} -- Initialization
 		do
 			precursor (a_universe)
 			create feature_checker.make (a_universe)
+			create precondition_checker.make (a_universe)
+			create postcondition_checker.make (a_universe)
 			create invariant_checker.make (a_universe)
 		end
 
@@ -150,14 +152,58 @@ feature {NONE} -- Feature validity
 				a_feature := a_features.item (i)
 				feature_checker.check_feature_validity (a_feature, current_class)
 				if feature_checker.has_fatal_error then
-					set_fatal_error (current_class)
+--					set_fatal_error (current_class)
 				end
+				check_assertions_validity (a_feature)
 				i := i + 1
 			end
 		end
 
 	feature_checker: ET_FEATURE_CHECKER
 			-- Feature checker
+
+feature {NONE} -- Assertion validity
+
+	check_assertions_validity (a_feature: ET_FEATURE) is
+			-- Check validity of pre- and postconditions of `a_feature' in `current_class'.
+		require
+			a_feature_not_void: a_feature /= Void
+		local
+			a_preconditions: ET_PRECONDITIONS
+			a_postconditions: ET_POSTCONDITIONS
+			a_class_impl: ET_CLASS
+			had_error: BOOLEAN
+		do
+			a_preconditions := a_feature.preconditions
+			if a_preconditions /= Void then
+				precondition_checker.check_preconditions_validity (a_preconditions, a_feature, current_class)
+				if precondition_checker.has_fatal_error then
+					had_error := True
+--					set_fatal_error (current_class)
+				end
+			end
+			a_postconditions := a_feature.postconditions
+			if a_postconditions /= Void then
+				postcondition_checker.check_postconditions_validity (a_postconditions, a_feature, current_class)
+				if postcondition_checker.has_fatal_error then
+					had_error := True
+--					set_fatal_error (current_class)
+				end
+			end
+			a_class_impl := a_feature.implementation_class
+			if current_class = a_class_impl then
+				a_feature.set_assertions_checked
+				if had_error then
+					a_feature.set_assertions_error
+				end
+			end
+		end
+
+	precondition_checker: ET_PRECONDITION_CHECKER
+			-- Precondition checker
+
+	postcondition_checker: ET_POSTCONDITION_CHECKER
+			-- Postcondition checker
 
 feature {NONE} -- Invariant validity
 
@@ -170,7 +216,7 @@ feature {NONE} -- Invariant validity
 			if an_invariants /= Void then
 				invariant_checker.check_invariants_validity (an_invariants, current_class)
 				if invariant_checker.has_fatal_error then
-					set_fatal_error (current_class)
+--					set_fatal_error (current_class)
 				end
 			end
 		end
@@ -181,6 +227,8 @@ feature {NONE} -- Invariant validity
 invariant
 
 	feature_checker_not_void: feature_checker /= Void
+	precondition_checker_not_void: precondition_checker /= Void
+	postcondition_checker_not_void: postcondition_checker /= Void
 	invariant_checker_not_void: invariant_checker /= Void
 
 end

@@ -30,15 +30,13 @@ feature {NONE} -- Instruction validity
 			-- Check validity of `an_instruction'.
 		local
 			a_class_impl: ET_CLASS
-			a_feature_impl: ET_FEATURE
 		do
 				-- The Precursor instruction does not appear in a Routine_body.
 			set_fatal_error
 			a_class_impl := current_feature.implementation_class
-			a_feature_impl := current_feature.implementation_feature
 			if current_class = a_class_impl then
 				error_handler.report_vdpr1a_error (current_class, an_instruction)
-			elseif not a_feature_impl.has_implementation_error then
+			elseif not has_implementation_error (current_feature) then
 					-- Internal error: the VDPR-1 error should have been
 					-- reported in the implementation feature.
 				error_handler.report_giadj_error

@@ -47,9 +47,6 @@ feature {NONE} -- Initialization
 			current_feature := dummy_feature
 			create instruction_checker.make (a_universe)
 			create rescue_checker.make (a_universe)
-			create precondition_checker.make (a_universe)
-			create postcondition_checker.make (a_universe)
-			create assertion_context.make_with_capacity (current_class, 10)
 			create type_checker.make (a_universe)
 		end
 
@@ -231,24 +228,12 @@ feature {NONE} -- Feature validity
 			a_feature_not_void: a_feature /= Void
 		local
 			an_arguments: ET_FORMAL_ARGUMENT_LIST
-			a_preconditions: ET_PRECONDITIONS
-			a_postconditions: ET_POSTCONDITIONS
 		do
 			an_arguments := a_feature.arguments
 			if an_arguments /= Void then
 				check_arguments_validity (an_arguments)
 			end
 			check_type_validity (a_feature.type)
-			if not has_fatal_error then
-				a_preconditions := a_feature.preconditions
-				if a_preconditions /= Void then
-					check_preconditions_validity (a_preconditions)
-				end
-				a_postconditions := a_feature.postconditions
-				if a_postconditions /= Void then
-					check_postconditions_validity (a_postconditions)
-				end
-			end
 		end
 
 	check_deferred_procedure_validity (a_feature: ET_DEFERRED_PROCEDURE) is
@@ -257,22 +242,10 @@ feature {NONE} -- Feature validity
 			a_feature_not_void: a_feature /= Void
 		local
 			an_arguments: ET_FORMAL_ARGUMENT_LIST
-			a_preconditions: ET_PRECONDITIONS
-			a_postconditions: ET_POSTCONDITIONS
 		do
 			an_arguments := a_feature.arguments
 			if an_arguments /= Void then
 				check_arguments_validity (an_arguments)
-			end
-			if not has_fatal_error then
-				a_preconditions := a_feature.preconditions
-				if a_preconditions /= Void then
-					check_preconditions_validity (a_preconditions)
-				end
-				a_postconditions := a_feature.postconditions
-				if a_postconditions /= Void then
-					check_postconditions_validity (a_postconditions)
-				end
 			end
 		end
 
@@ -284,8 +257,6 @@ feature {NONE} -- Feature validity
 			an_arguments: ET_FORMAL_ARGUMENT_LIST
 			a_locals: ET_LOCAL_VARIABLE_LIST
 			a_compound: ET_COMPOUND
-			a_preconditions: ET_PRECONDITIONS
-			a_postconditions: ET_POSTCONDITIONS
 		do
 			an_arguments := a_feature.arguments
 			if an_arguments /= Void then
@@ -297,17 +268,9 @@ feature {NONE} -- Feature validity
 				check_locals_validity (a_locals)
 			end
 			if not has_fatal_error then
-				a_preconditions := a_feature.preconditions
-				if a_preconditions /= Void then
-					check_preconditions_validity (a_preconditions)
-				end
 				a_compound := a_feature.compound
 				if a_compound /= Void then
 					check_instructions_validity (a_compound)
-				end
-				a_postconditions := a_feature.postconditions
-				if a_postconditions /= Void then
-					check_postconditions_validity (a_postconditions)
 				end
 				a_compound := a_feature.rescue_clause
 				if a_compound /= Void then
@@ -324,8 +287,6 @@ feature {NONE} -- Feature validity
 			an_arguments: ET_FORMAL_ARGUMENT_LIST
 			a_locals: ET_LOCAL_VARIABLE_LIST
 			a_compound: ET_COMPOUND
-			a_preconditions: ET_PRECONDITIONS
-			a_postconditions: ET_POSTCONDITIONS
 		do
 			an_arguments := a_feature.arguments
 			if an_arguments /= Void then
@@ -336,17 +297,9 @@ feature {NONE} -- Feature validity
 				check_locals_validity (a_locals)
 			end
 			if not has_fatal_error then
-				a_preconditions := a_feature.preconditions
-				if a_preconditions /= Void then
-					check_preconditions_validity (a_preconditions)
-				end
 				a_compound := a_feature.compound
 				if a_compound /= Void then
 					check_instructions_validity (a_compound)
-				end
-				a_postconditions := a_feature.postconditions
-				if a_postconditions /= Void then
-					check_postconditions_validity (a_postconditions)
 				end
 				a_compound := a_feature.rescue_clause
 				if a_compound /= Void then
@@ -361,24 +314,12 @@ feature {NONE} -- Feature validity
 			a_feature_not_void: a_feature /= Void
 		local
 			an_arguments: ET_FORMAL_ARGUMENT_LIST
-			a_preconditions: ET_PRECONDITIONS
-			a_postconditions: ET_POSTCONDITIONS
 		do
 			an_arguments := a_feature.arguments
 			if an_arguments /= Void then
 				check_arguments_validity (an_arguments)
 			end
 			check_type_validity (a_feature.type)
-			if not has_fatal_error then
-				a_preconditions := a_feature.preconditions
-				if a_preconditions /= Void then
-					check_preconditions_validity (a_preconditions)
-				end
-				a_postconditions := a_feature.postconditions
-				if a_postconditions /= Void then
-					check_postconditions_validity (a_postconditions)
-				end
-			end
 		end
 
 	check_external_procedure_validity (a_feature: ET_EXTERNAL_PROCEDURE) is
@@ -387,22 +328,10 @@ feature {NONE} -- Feature validity
 			a_feature_not_void: a_feature /= Void
 		local
 			an_arguments: ET_FORMAL_ARGUMENT_LIST
-			a_preconditions: ET_PRECONDITIONS
-			a_postconditions: ET_POSTCONDITIONS
 		do
 			an_arguments := a_feature.arguments
 			if an_arguments /= Void then
 				check_arguments_validity (an_arguments)
-			end
-			if not has_fatal_error then
-				a_preconditions := a_feature.preconditions
-				if a_preconditions /= Void then
-					check_preconditions_validity (a_preconditions)
-				end
-				a_postconditions := a_feature.postconditions
-				if a_postconditions /= Void then
-					check_postconditions_validity (a_postconditions)
-				end
 			end
 		end
 
@@ -414,8 +343,6 @@ feature {NONE} -- Feature validity
 			an_arguments: ET_FORMAL_ARGUMENT_LIST
 			a_locals: ET_LOCAL_VARIABLE_LIST
 			a_compound: ET_COMPOUND
-			a_preconditions: ET_PRECONDITIONS
-			a_postconditions: ET_POSTCONDITIONS
 		do
 			an_arguments := a_feature.arguments
 			if an_arguments /= Void then
@@ -427,17 +354,9 @@ feature {NONE} -- Feature validity
 				check_locals_validity (a_locals)
 			end
 			if not has_fatal_error then
-				a_preconditions := a_feature.preconditions
-				if a_preconditions /= Void then
-					check_preconditions_validity (a_preconditions)
-				end
 				a_compound := a_feature.compound
 				if a_compound /= Void then
 					check_instructions_validity (a_compound)
-				end
-				a_postconditions := a_feature.postconditions
-				if a_postconditions /= Void then
-					check_postconditions_validity (a_postconditions)
 				end
 				a_compound := a_feature.rescue_clause
 				if a_compound /= Void then
@@ -454,8 +373,6 @@ feature {NONE} -- Feature validity
 			an_arguments: ET_FORMAL_ARGUMENT_LIST
 			a_locals: ET_LOCAL_VARIABLE_LIST
 			a_compound: ET_COMPOUND
-			a_preconditions: ET_PRECONDITIONS
-			a_postconditions: ET_POSTCONDITIONS
 		do
 			an_arguments := a_feature.arguments
 			if an_arguments /= Void then
@@ -466,17 +383,9 @@ feature {NONE} -- Feature validity
 				check_locals_validity (a_locals)
 			end
 			if not has_fatal_error then
-				a_preconditions := a_feature.preconditions
-				if a_preconditions /= Void then
-					check_preconditions_validity (a_preconditions)
-				end
 				a_compound := a_feature.compound
 				if a_compound /= Void then
 					check_instructions_validity (a_compound)
-				end
-				a_postconditions := a_feature.postconditions
-				if a_postconditions /= Void then
-					check_postconditions_validity (a_postconditions)
 				end
 				a_compound := a_feature.rescue_clause
 				if a_compound /= Void then
@@ -625,93 +534,6 @@ feature {NONE} -- Instructions validity
 	rescue_checker: ET_RESCUE_CHECKER
 			-- Rescue clause validity checker
 
-feature {NONE} -- Assertions validity
-
-	check_preconditions_validity (a_preconditions: ET_PRECONDITIONS) is
-			-- Check validity of `a_preconditions'.
-		require
-			a_preconditions_not_void: a_preconditions /= Void
-		local
-			i, nb: INTEGER
-			an_expression: ET_EXPRESSION
-			boolean_type: ET_CLASS_TYPE
-			a_class_impl: ET_CLASS
-			a_named_type: ET_NAMED_TYPE
-		do
-			boolean_type := universe.boolean_class
-			assertion_context.set_root_context (current_class)
-			nb := a_preconditions.count
-			from i := 1 until i > nb loop
-				an_expression := a_preconditions.assertion (i).expression
-				if an_expression /= Void then
-					precondition_checker.check_expression_validity (an_expression, assertion_context, boolean_type, current_feature, current_class)
-					if precondition_checker.has_fatal_error then
-						set_fatal_error
-					else
-						if not assertion_context.same_named_type (boolean_type, current_class, universe) then
-							set_fatal_error
-							a_named_type := assertion_context.named_type (universe)
-							a_class_impl := current_feature.implementation_class
-							if current_class = a_class_impl then
-								error_handler.report_vwbe0a_error (current_class, an_expression, a_named_type)
-							else
-								error_handler.report_vwbe0b_error (current_class, a_class_impl, an_expression, a_named_type)
-							end
-						end
-					end
-					assertion_context.wipe_out
-				end
-				i := i + 1
-			end
-		end
-
-	precondition_checker: ET_PRECONDITION_CHECKER
-			-- Checker for expressions in preconditions
-
-	check_postconditions_validity (a_postconditions: ET_POSTCONDITIONS) is
-			-- Check validity of `a_postconditions'.
-		require
-			a_postconditions_not_void: a_postconditions /= Void
-		local
-			i, nb: INTEGER
-			an_expression: ET_EXPRESSION
-			boolean_type: ET_CLASS_TYPE
-			a_class_impl: ET_CLASS
-			a_named_type: ET_NAMED_TYPE
-		do
-			boolean_type := universe.boolean_class
-			assertion_context.set_root_context (current_class)
-			nb := a_postconditions.count
-			from i := 1 until i > nb loop
-				an_expression := a_postconditions.assertion (i).expression
-				if an_expression /= Void then
-					postcondition_checker.check_expression_validity (an_expression, assertion_context, boolean_type, current_feature, current_class)
-					if postcondition_checker.has_fatal_error then
-						set_fatal_error
-					else
-						if not assertion_context.same_named_type (boolean_type, current_class, universe) then
-							set_fatal_error
-							a_named_type := assertion_context.named_type (universe)
-							a_class_impl := current_feature.implementation_class
-							if current_class = a_class_impl then
-								error_handler.report_vwbe0a_error (current_class, an_expression, a_named_type)
-							else
-								error_handler.report_vwbe0b_error (current_class, a_class_impl, an_expression, a_named_type)
-							end
-						end
-					end
-					assertion_context.wipe_out
-				end
-				i := i + 1
-			end
-		end
-
-	postcondition_checker: ET_POSTCONDITION_CHECKER
-			-- Checker for expressions in postconditions
-
-	assertion_context: ET_NESTED_TYPE_CONTEXT
-			-- Type context to check assertions
-
 feature {ET_AST_NODE} -- Processing
 
 	process_attribute (a_feature: ET_ATTRIBUTE) is
@@ -840,14 +662,13 @@ feature {NONE} -- Implementation
 			-- Dummy feature
 		local
 			a_name: ET_FEATURE_NAME
-			a_clients: ET_NONE_CLIENTS
 		once
 			create {ET_IDENTIFIER} a_name.make ("**dummy**")
-			create a_clients.make (tokens.left_brace_symbol, tokens.right_brace_symbol)
-			create {ET_DEFERRED_PROCEDURE} Result.make (a_name, Void, Void, Void, Void, a_clients, current_class)
+			create {ET_DEFERRED_PROCEDURE} Result.make (a_name, Void, Void, Void, Void, tokens.any_clients, current_class)
 		ensure
 			dummy_feature_not_void: Result /= Void
 		end
+
 
 invariant
 
@@ -855,9 +676,6 @@ invariant
 	current_class_not_void: current_class /= Void
 	instruction_checker_not_void: instruction_checker /= Void
 	rescue_checker_not_void: rescue_checker /= Void
-	precondition_checker_not_void: precondition_checker /= Void
-	postcondition_checker_not_void: postcondition_checker /= Void
-	assertion_context_not_void: assertion_context /= Void
 	type_checker_not_void: type_checker /= Void
 
 end

@@ -627,6 +627,12 @@ feature {NONE} -- Feature processing
 			l_has_redefine: BOOLEAN
 			l_preconditions: ET_PRECONDITIONS
 			l_postconditions: ET_POSTCONDITIONS
+			nb_precursors: INTEGER
+			l_precursor: ET_FEATURE
+			l_first_precursor: ET_FEATURE
+			l_other_precursors: ET_FEATURE_LIST
+			l_found: BOOLEAN
+			i, nb: INTEGER
 		do
 			l_flattened_feature := a_feature.flattened_feature
 			if a_feature.is_replicated then
@@ -637,9 +643,13 @@ feature {NONE} -- Feature processing
 				-- Check Feature_adaptation clause.
 			from
 				l_parent_feature := a_feature.parent_feature
+				l_precursor := l_parent_feature.precursor_feature
 			until
 				l_parent_feature = Void
 			loop
+				if not l_parent_feature.precursor_feature.same_version (l_precursor) then
+					nb_precursors := nb_precursors + 1
+				end
 				if l_parent_feature.has_redefine then
 					if l_has_redefine then
 						-- Warning: feature redefined twice.
@@ -656,8 +666,30 @@ feature {NONE} -- Feature processing
 				l_parent_feature = Void
 			loop
 				check_redeclaration_validity (l_parent_feature, l_flattened_feature, l_has_redefine)
+				l_precursor := l_parent_feature.precursor_feature
+				if l_first_precursor = Void then
+					l_first_precursor := l_precursor
+				elseif not l_precursor.same_version (l_first_precursor) then
+					from i := 1 until i > nb loop
+						if l_precursor.same_version (l_other_precursors.item (i)) then
+							l_found := True
+							i := nb + 1
+						else
+							i := i + 1
+						end
+					end
+					if not l_found then
+						if l_other_precursors = Void then
+							create l_other_precursors.make_with_capacity (nb_precursors)
+						end
+						l_other_precursors.put_first (l_precursor)
+						nb := nb + 1
+					end
+				end
 				l_parent_feature := l_parent_feature.merged_feature
 			end
+			l_flattened_feature.set_first_precursor (l_first_precursor)
+			l_flattened_feature.set_other_precursors (l_other_precursors)
 			l_preconditions := l_flattened_feature.preconditions
 			if l_preconditions /= Void and then not l_preconditions.is_require_else then
 					-- This is not a fatal error.
@@ -684,28 +716,37 @@ feature {NONE} -- Feature processing
 			l_first_seed: INTEGER
 			l_other_seeds: ET_FEATURE_IDS
 			l_keep_same_version: BOOLEAN
-			l_shared_feature: ET_FEATURE
 			l_duplication_needed: BOOLEAN
 			l_feature_found: BOOLEAN
 			l_duplicated: BOOLEAN
 			l_name: ET_FEATURE_NAME
 			l_parent: ET_PARENT
 			l_clients: ET_CLASS_NAME_LIST
+			nb_precursors: INTEGER
+			l_precursor: ET_FEATURE
+			l_first_precursor: ET_FEATURE
+			l_other_precursors: ET_FEATURE_LIST
+			l_found: BOOLEAN
+			i, nb: INTEGER
 		do
 			l_clients := inherited_clients (a_feature)
 			l_first_seed := a_feature.first_seed
 			l_other_seeds := a_feature.other_seeds
 			l_duplication_needed := a_feature.is_replicated
+			l_keep_same_version := not a_feature.is_replicated
 				-- Check Feature_adaptation clause.
 			from
 				l_parent_feature := a_feature.parent_feature
-				l_shared_feature := l_parent_feature.precursor_feature
+				l_precursor := l_parent_feature.precursor_feature
 			until
 				l_parent_feature = Void
 			loop
 				check_no_redeclaration_validity (l_parent_feature)
-				if l_parent_feature.precursor_feature /= l_shared_feature then
+				if not l_parent_feature.precursor_feature.same_version (l_precursor) then
+						-- Not sharing.
+					l_keep_same_version := False
 					l_duplication_needed := True
+					nb_precursors := nb_precursors + 1
 				end
 				if not l_parent_feature.is_deferred then
 					if l_effective /= Void and then not l_parent_feature.same_version (l_effective) then
@@ -731,21 +772,12 @@ feature {NONE} -- Feature processing
 				end
 				l_parent_feature := l_parent_feature.merged_feature
 			end
-			if l_effective /= Void then
-				l_parent_feature := l_effective
-				l_keep_same_version := True
-			else
-				l_keep_same_version := True
-				from
-					l_parent_feature := a_feature.parent_feature
-				until
-					l_parent_feature = Void
-				loop
-					if l_deferred /= Void and then not l_parent_feature.same_version (l_deferred) then
-							-- Not sharing.
-						l_keep_same_version := False
-						l_duplication_needed := True
-					end
+			from
+				l_parent_feature := a_feature.parent_feature
+			until
+				l_parent_feature = Void
+			loop
+				if l_effective = Void then
 					if not l_feature_found then
 						l_deferred := l_parent_feature
 						if not l_duplication_needed then
@@ -762,8 +794,32 @@ feature {NONE} -- Feature processing
 							end
 						end
 					end
-					l_parent_feature := l_parent_feature.merged_feature
 				end
+				l_precursor := l_parent_feature.precursor_feature
+				if l_first_precursor = Void then
+					l_first_precursor := l_precursor
+				elseif not l_precursor.same_version (l_first_precursor) then
+					from i := 1 until i > nb loop
+						if l_precursor.same_version (l_other_precursors.item (i)) then
+							l_found := True
+							i := nb + 1
+						else
+							i := i + 1
+						end
+					end
+					if not l_found then
+						if l_other_precursors = Void then
+							create l_other_precursors.make_with_capacity (nb_precursors)
+						end
+						l_other_precursors.put_first (l_precursor)
+						nb := nb + 1
+					end
+				end
+				l_parent_feature := l_parent_feature.merged_feature
+			end
+			if l_effective /= Void then
+				l_parent_feature := l_effective
+			else
 				l_parent_feature := l_deferred
 			end
 			l_flattened_feature := l_parent_feature.precursor_feature
@@ -771,9 +827,26 @@ feature {NONE} -- Feature processing
 			l_parent := l_parent_feature.parent
 			if l_parent_feature.has_undefine then
 				l_flattened_feature := l_flattened_feature.undefined_feature (l_name)
+				l_flattened_feature.reset_preconditions
+				l_flattened_feature.reset_postconditions
+				l_flattened_feature.set_implementation_feature (l_flattened_feature)
+				l_flattened_feature.set_implementation_class (current_class)
+				l_flattened_feature.set_first_precursor (l_first_precursor)
+				l_flattened_feature.set_other_precursors (l_other_precursors)
 				l_duplicated := True
 			elseif l_duplication_needed or not l_feature_found then
 				l_flattened_feature := l_flattened_feature.renamed_feature (l_name)
+				if l_other_precursors /= Void then
+						-- Merge or Join.
+						-- Otherwise it would have been a simple inheritance or sharing
+						-- and `l_flattened_feature' would have been duplicated just
+						-- because of renaming, or export status change, or signature
+						-- resolving.
+					l_flattened_feature.reset_preconditions
+					l_flattened_feature.reset_postconditions
+					l_flattened_feature.set_first_precursor (l_first_precursor)
+					l_flattened_feature.set_other_precursors (l_other_precursors)
+				end
 				l_duplicated := True
 			end
 			if l_duplicated then
