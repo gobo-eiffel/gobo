@@ -190,22 +190,22 @@ feature -- Optimization
 	promoted_expression (an_offer: XM_XPATH_PROMOTION_OFFER): XM_XPATH_EXPRESSION is
 			-- Offer promotion for this subexpression
 		local
-			an_expression: XM_XPATH_IF_EXPRESSION
+			an_expression: XM_XPATH_EXPRESSION
+			an_if_expression: XM_XPATH_IF_EXPRESSION
 		do
 			an_offer.accept (Current)
-			an_expression ?= an_offer.accepted_expression
-				check
-					an_expression_not_void: an_expression /= Void
-				end
-			if an_expression = Current then -- not accepted
-				an_expression := clone (Current)
-				an_expression.set_condition (condition.promoted_expression (an_offer))
+			an_expression := an_offer.accepted_expression
+			if an_expression /= Void then
+				Result := an_expression
+			else
+			an_if_expression := clone (Current)
+			an_if_expression.set_condition (condition.promoted_expression (an_offer))
 				if an_offer.action = Unordered or else an_offer.action = Inline_variable_references then
-					an_expression.set_then_expression (then_expression.promoted_expression (an_offer))
-					an_expression.set_else_expression (else_expression.promoted_expression (an_offer))
+					an_if_expression.set_then_expression (then_expression.promoted_expression (an_offer))
+					an_if_expression.set_else_expression (else_expression.promoted_expression (an_offer))
 				end
+				Result := an_if_expression
 			end
-			Result := an_expression
 		end
 
 feature -- Evaluation
@@ -217,7 +217,9 @@ feature -- Evaluation
 		do
 			last_evaluated_item := Void
 			a_boolean_value := condition.effective_boolean_value (a_context)
-			if not a_boolean_value.is_error and then a_boolean_value.value then
+			if a_boolean_value.is_error then
+				last_evaluated_item := a_boolean_value
+			elseif a_boolean_value.value then
 				then_expression.evaluate_item (a_context)
 			else
 				else_expression.evaluate_item (a_context)
@@ -230,7 +232,9 @@ feature -- Evaluation
 			a_boolean_value: XM_XPATH_BOOLEAN_VALUE
 		do
 			a_boolean_value := condition.effective_boolean_value (a_context)
-			if not a_boolean_value.is_error and then a_boolean_value.value then
+			if a_boolean_value.is_error then
+				create {XM_XPATH_INVALID_ITERATOR} Result.make (a_boolean_value.error_value)
+			elseif a_boolean_value.value then
 				Result := then_expression.iterator (a_context)
 			else
 				Result := else_expression.iterator (a_context)
@@ -269,13 +273,16 @@ feature -- Element change
 			else_set: else_expression = an_else_expression
 		end	
 
-feature {NONE} -- Implementation
+feature {XM_XPATH_EXPRESSION} -- Restrictes
 
 	compute_cardinality is
 			-- Compute cardinality.
 		do
-			todo ("compute-cardinality", False)
-			-- TODO
+			clone_cardinality (then_expression)
+			set_cardinalities (merged_cardinality (else_expression.cardinalities))
+			if cardinality_allows_zero and then cardinality_allows_many then
+				set_cardinality_zero_or_more
+			end
 		end
 	
 invariant

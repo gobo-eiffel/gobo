@@ -270,20 +270,20 @@
 	 </row>	
 	 <row>
 	   <entry>fn:true</entry>
-	   <entry>No</entry>
-	   <entry>No</entry>
+	   <entry>Yes</entry>
+	   <entry>Only incidentally</entry>
 	   <entry>No</entry>
 	 </row>	
 	 <row>
 	   <entry>fn:false</entry>
-	   <entry>No</entry>
-	   <entry>No</entry>
+	   <entry>Yes</entry>
+	   <entry>Only incidentally</entry>
 	   <entry>No</entry>
 	 </row>	
 	 <row>
 	   <entry>fn:not</entry>
-	   <entry>No</entry>
-	   <entry>No</entry>
+	   <entry>Yes</entry>
+	   <entry>Only incidentally</entry>
 	   <entry>No</entry>
 	 </row>	
 	 <row>

@@ -380,6 +380,21 @@ feature
 			assert ("Five evaluated_items", evaluated_items /= Void and then evaluated_items.count = 5)			
 		end
 	
+	test_conditional_expression is
+			-- Test union expression
+		local
+			an_evaluator: XM_XPATH_EVALUATOR
+			evaluated_items: DS_LINKED_LIST [XM_XPATH_ITEM]
+		do
+			create an_evaluator
+			an_evaluator.build_static_context ("./books.xml", False, False)
+			assert ("Build successfull", not an_evaluator.was_build_error)
+			an_evaluator.evaluate ("//ITEM[if ( @CAT eq 'S' ) then true() else false() ]")
+			assert ("No evaluation error", not an_evaluator.is_error)
+			evaluated_items := an_evaluator.evaluated_items
+			assert ("Three evaluated_items", evaluated_items /= Void and then evaluated_items.count = 3)			
+		end
+	
 
 	
 	-- Eventually, all errors should be tested here

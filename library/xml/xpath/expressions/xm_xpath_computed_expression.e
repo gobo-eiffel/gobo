@@ -163,11 +163,25 @@ feature -- Evaluation
 				else
 					a_boolean ?= an_item
 					if a_boolean /= Void then
-						create Result.make (a_boolean.value or else not an_iterator.after)
+						if a_boolean.value then
+							create Result.make (True)
+						elseif an_iterator.after then
+							create Result.make (False)
+						else
+							an_iterator.forth
+							create Result.make (not an_iterator.after)
+						end
 					else
 						a_string ?= an_item
 						if a_string /= Void then
-							create Result.make (a_string.string_value.count /= 0 or else not an_iterator.after)
+							if a_string.string_value.count /= 0 then
+								create Result.make (True)
+							elseif an_iterator.after then
+								create Result.make (False)
+							else
+								an_iterator.forth
+								create Result.make (not an_iterator.after)								
+							end
 						else
 							a_number ?= an_item
 							if a_number /= Void then

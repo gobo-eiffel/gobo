@@ -407,10 +407,11 @@ feature {NONE} -- Implementation
 							a_message := STRING_.appended_string (a_message, display_current_token)
 							report_parse_error (a_message, 3)
 						else
+							next_token ("In parse_if_expression after then: current token is ")
 							parse_expression
-							if  not is_parse_error then
+							if not is_parse_error then
 								a_then_expression := internal_last_parsed_expression
-								if tokenizer.last_token /= Right_parenthesis_token then
+								if tokenizer.last_token /= Else_token then
 									a_message := "expected %"else%", found "
 									a_message := STRING_.appended_string (a_message, display_current_token)
 									report_parse_error (a_message, 3)
