@@ -14,6 +14,8 @@ deferred class XM_PARSER
 
 inherit
 
+	XM_STRING_MODE
+	
 	XM_ERROR_CODES
 
 	XM_CALLBACKS_SOURCE
@@ -46,7 +48,7 @@ feature {ANY} -- Element change
 
 feature {ANY} -- Parsing
 
-	parse_from_file_name (a_file_name: UC_STRING) is
+	parse_from_file_name (a_file_name: STRING) is
 			-- Parse XML Document from file
 			-- `source' will be automatically set.
 		require
@@ -57,10 +59,10 @@ feature {ANY} -- Parsing
 			in_file: KL_TEXT_INPUT_FILE
 			a_source: XM_FILE_SOURCE
 		do
-			!! a_source.make (a_file_name.to_utf8)
+			!! a_source.make (a_file_name)
 			set_source (a_source)
-
-			!! in_file.make (a_file_name.to_utf8)
+			
+			!! in_file.make (a_file_name)
 			in_file.open_read
 			check
 				file_is_open: in_file.is_open_read

@@ -53,12 +53,12 @@ feature -- Parsing
 		end
 
 	parse_from_string (a: STRING) is
-			-- Parse from UTF8 string.
+			-- Parse from string.
 		local
 			a_stream: KL_STRING_INPUT_STREAM
 		do
 			!XM_STRING_SOURCE! source
-			!! a_stream.make (a)
+			!! a_stream.make (forced_unicode_string (a).to_utf8)
 			parse_stream (a_stream)
 		end
 
