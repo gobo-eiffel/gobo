@@ -46,6 +46,8 @@ feature {NONE} -- Initialization
 			current_class := a_universe.unknown_class
 			current_feature := dummy_feature
 			create instruction_checker.make (a_universe)
+			create precondition_checker.make (a_universe)
+			create postcondition_checker.make (a_universe)
 			create type_checker.make (a_universe)
 		end
 
@@ -108,22 +110,16 @@ feature {NONE} -- Feature validity
 		require
 			a_feature_not_void: a_feature /= Void
 		local
-			an_arguments: ET_FORMAL_ARGUMENT_LIST
 			a_preconditions: ET_PRECONDITIONS
 			a_postconditions: ET_POSTCONDITIONS
 		do
-			an_arguments := a_feature.arguments
-			if an_arguments /= Void then
-				an_arguments.process (Current)
-			end
-			a_feature.declared_type.process (Current)
 			a_preconditions := a_feature.preconditions
 			if a_preconditions /= Void then
-				a_preconditions.process (Current)
+				check_preconditions_validity (a_preconditions)
 			end
 			a_postconditions := a_feature.postconditions
 			if a_postconditions /= Void then
-				a_postconditions.process (Current)
+				check_postconditions_validity (a_postconditions)
 			end
 		end
 
@@ -132,21 +128,16 @@ feature {NONE} -- Feature validity
 		require
 			a_feature_not_void: a_feature /= Void
 		local
-			an_arguments: ET_FORMAL_ARGUMENT_LIST
 			a_preconditions: ET_PRECONDITIONS
 			a_postconditions: ET_POSTCONDITIONS
 		do
-			an_arguments := a_feature.arguments
-			if an_arguments /= Void then
-				an_arguments.process (Current)
-			end
 			a_preconditions := a_feature.preconditions
 			if a_preconditions /= Void then
-				a_preconditions.process (Current)
+				check_preconditions_validity (a_preconditions)
 			end
 			a_postconditions := a_feature.postconditions
 			if a_postconditions /= Void then
-				a_postconditions.process (Current)
+				check_postconditions_validity (a_postconditions)
 			end
 		end
 
@@ -158,11 +149,13 @@ feature {NONE} -- Feature validity
 			has_local_error: BOOLEAN
 			a_locals: ET_LOCAL_VARIABLE_LIST
 			a_compound: ET_COMPOUND
-
-			an_arguments: ET_FORMAL_ARGUMENT_LIST
 			a_preconditions: ET_PRECONDITIONS
 			a_postconditions: ET_POSTCONDITIONS
 		do
+			a_preconditions := a_feature.preconditions
+			if a_preconditions /= Void then
+				check_preconditions_validity (a_preconditions)
+			end
 			a_locals := a_feature.locals
 			if a_locals /= Void then
 				check_locals_validity (a_locals)
@@ -172,26 +165,15 @@ feature {NONE} -- Feature validity
 				if a_compound /= Void then
 					check_instructions_validity (a_compound)
 				end
-			end
-
-
-
-			an_arguments := a_feature.arguments
-			if an_arguments /= Void then
-				an_arguments.process (Current)
-			end
-			a_feature.declared_type.process (Current)
-			a_preconditions := a_feature.preconditions
-			if a_preconditions /= Void then
-				a_preconditions.process (Current)
-			end
-			a_postconditions := a_feature.postconditions
-			if a_postconditions /= Void then
-				a_postconditions.process (Current)
-			end
-			a_compound := a_feature.rescue_clause
-			if a_compound /= Void then
-				a_compound.process (Current)
+				a_postconditions := a_feature.postconditions
+				if a_postconditions /= Void then
+					check_postconditions_validity (a_postconditions)
+				end
+				a_compound := a_feature.rescue_clause
+				if a_compound /= Void then
+-- TODO
+					check_instructions_validity (a_compound)
+				end
 			end
 		end
 
@@ -203,11 +185,13 @@ feature {NONE} -- Feature validity
 			has_local_error: BOOLEAN
 			a_locals: ET_LOCAL_VARIABLE_LIST
 			a_compound: ET_COMPOUND
-
-			an_arguments: ET_FORMAL_ARGUMENT_LIST
 			a_preconditions: ET_PRECONDITIONS
 			a_postconditions: ET_POSTCONDITIONS
 		do
+			a_preconditions := a_feature.preconditions
+			if a_preconditions /= Void then
+				check_preconditions_validity (a_preconditions)
+			end
 			a_locals := a_feature.locals
 			if a_locals /= Void then
 				check_locals_validity (a_locals)
@@ -217,24 +201,15 @@ feature {NONE} -- Feature validity
 				if a_compound /= Void then
 					check_instructions_validity (a_compound)
 				end
-			end
-
-
-
-			an_arguments := a_feature.arguments
-			if an_arguments /= Void then
-				an_arguments.process (Current)
-			end
-			a_preconditions := a_feature.preconditions
-			if a_preconditions /= Void then
-				a_preconditions.process (Current)
-			end
-			if a_postconditions /= Void then
-				a_postconditions.process (Current)
-			end
-			a_compound := a_feature.rescue_clause
-			if a_compound /= Void then
-				a_compound.process (Current)
+				a_postconditions := a_feature.postconditions
+				if a_postconditions /= Void then
+					check_postconditions_validity (a_postconditions)
+				end
+				a_compound := a_feature.rescue_clause
+				if a_compound /= Void then
+-- TODO
+					check_instructions_validity (a_compound)
+				end
 			end
 		end
 
@@ -243,28 +218,16 @@ feature {NONE} -- Feature validity
 		require
 			a_feature_not_void: a_feature /= Void
 		local
-			an_arguments: ET_FORMAL_ARGUMENT_LIST
 			a_preconditions: ET_PRECONDITIONS
-			an_alias_clause: ET_EXTERNAL_ALIAS
 			a_postconditions: ET_POSTCONDITIONS
 		do
-			an_arguments := a_feature.arguments
-			if an_arguments /= Void then
-				an_arguments.process (Current)
-			end
-			a_feature.declared_type.process (Current)
 			a_preconditions := a_feature.preconditions
 			if a_preconditions /= Void then
-				a_preconditions.process (Current)
-			end
-			a_feature.language.process (Current)
-			an_alias_clause := a_feature.alias_clause
-			if an_alias_clause /= Void then
-				an_alias_clause.process (Current)
+				check_preconditions_validity (a_preconditions)
 			end
 			a_postconditions := a_feature.postconditions
 			if a_postconditions /= Void then
-				a_postconditions.process (Current)
+				check_postconditions_validity (a_postconditions)
 			end
 		end
 
@@ -273,27 +236,16 @@ feature {NONE} -- Feature validity
 		require
 			a_feature_not_void: a_feature /= Void
 		local
-			an_arguments: ET_FORMAL_ARGUMENT_LIST
 			a_preconditions: ET_PRECONDITIONS
-			an_alias_clause: ET_EXTERNAL_ALIAS
 			a_postconditions: ET_POSTCONDITIONS
 		do
-			an_arguments := a_feature.arguments
-			if an_arguments /= Void then
-				an_arguments.process (Current)
-			end
 			a_preconditions := a_feature.preconditions
 			if a_preconditions /= Void then
-				a_preconditions.process (Current)
-			end
-			a_feature.language.process (Current)
-			an_alias_clause := a_feature.alias_clause
-			if an_alias_clause /= Void then
-				an_alias_clause.process (Current)
+				check_preconditions_validity (a_preconditions)
 			end
 			a_postconditions := a_feature.postconditions
 			if a_postconditions /= Void then
-				a_postconditions.process (Current)
+				check_postconditions_validity (a_postconditions)
 			end
 		end
 
@@ -305,11 +257,13 @@ feature {NONE} -- Feature validity
 			has_local_error: BOOLEAN
 			a_locals: ET_LOCAL_VARIABLE_LIST
 			a_compound: ET_COMPOUND
-
-			an_arguments: ET_FORMAL_ARGUMENT_LIST
 			a_preconditions: ET_PRECONDITIONS
 			a_postconditions: ET_POSTCONDITIONS
 		do
+			a_preconditions := a_feature.preconditions
+			if a_preconditions /= Void then
+				check_preconditions_validity (a_preconditions)
+			end
 			a_locals := a_feature.locals
 			if a_locals /= Void then
 				check_locals_validity (a_locals)
@@ -319,26 +273,15 @@ feature {NONE} -- Feature validity
 				if a_compound /= Void then
 					check_instructions_validity (a_compound)
 				end
-			end
-
-
-
-			an_arguments := a_feature.arguments
-			if an_arguments /= Void then
-				an_arguments.process (Current)
-			end
-			a_feature.declared_type.process (Current)
-			a_preconditions := a_feature.preconditions
-			if a_preconditions /= Void then
-				a_preconditions.process (Current)
-			end
-			a_postconditions := a_feature.postconditions
-			if a_postconditions /= Void then
-				a_postconditions.process (Current)
-			end
-			a_compound := a_feature.rescue_clause
-			if a_compound /= Void then
-				a_compound.process (Current)
+				a_postconditions := a_feature.postconditions
+				if a_postconditions /= Void then
+					check_postconditions_validity (a_postconditions)
+				end
+				a_compound := a_feature.rescue_clause
+				if a_compound /= Void then
+-- TODO
+					check_instructions_validity (a_compound)
+				end
 			end
 		end
 
@@ -350,12 +293,13 @@ feature {NONE} -- Feature validity
 			has_local_error: BOOLEAN
 			a_locals: ET_LOCAL_VARIABLE_LIST
 			a_compound: ET_COMPOUND
-
-
-			an_arguments: ET_FORMAL_ARGUMENT_LIST
 			a_preconditions: ET_PRECONDITIONS
 			a_postconditions: ET_POSTCONDITIONS
 		do
+			a_preconditions := a_feature.preconditions
+			if a_preconditions /= Void then
+				check_preconditions_validity (a_preconditions)
+			end
 			a_locals := a_feature.locals
 			if a_locals /= Void then
 				check_locals_validity (a_locals)
@@ -365,25 +309,15 @@ feature {NONE} -- Feature validity
 				if a_compound /= Void then
 					check_instructions_validity (a_compound)
 				end
-			end
-
-
-
-			an_arguments := a_feature.arguments
-			if an_arguments /= Void then
-				an_arguments.process (Current)
-			end
-			a_preconditions := a_feature.preconditions
-			if a_preconditions /= Void then
-				a_preconditions.process (Current)
-			end
-			a_postconditions := a_feature.postconditions
-			if a_postconditions /= Void then
-				a_postconditions.process (Current)
-			end
-			a_compound := a_feature.rescue_clause
-			if a_compound /= Void then
-				a_compound.process (Current)
+				a_postconditions := a_feature.postconditions
+				if a_postconditions /= Void then
+					check_postconditions_validity (a_postconditions)
+				end
+				a_compound := a_feature.rescue_clause
+				if a_compound /= Void then
+-- TODO
+					check_instructions_validity (a_compound)
+				end
 			end
 		end
 
@@ -437,6 +371,62 @@ feature {NONE} -- Instructions validity
 
 	instruction_checker: ET_INSTRUCTION_CHECKER
 			-- Instruction validity checker
+
+feature {NONE} -- Assertions validity
+
+	check_preconditions_validity (a_preconditions: ET_PRECONDITIONS) is
+			-- Check validity of `a_preconditions'.
+		require
+			a_preconditions_not_void: a_preconditions /= Void
+		local
+			i, nb: INTEGER
+			had_error: BOOLEAN
+			an_expression: ET_EXPRESSION
+		do
+			nb := a_preconditions.count
+			from i := 1 until i > nb loop
+				an_expression := a_preconditions.assertion (i).expression
+				if an_expression /= Void then
+					precondition_checker.check_expression_validity (an_expression, current_feature, current_class)
+					if precondition_checker.has_fatal_error then
+						had_error := True
+					else
+-- TODO: check that it is a boolean expression
+					end
+				end
+				i := i + 1
+			end
+		end
+
+	precondition_checker: ET_PRECONDITION_CHECKER
+			-- Checker for expressions in preconditions
+
+	check_postconditions_validity (a_postconditions: ET_POSTCONDITIONS) is
+			-- Check validity of `a_postconditions'.
+		require
+			a_postconditions_not_void: a_postconditions /= Void
+		local
+			i, nb: INTEGER
+			had_error: BOOLEAN
+			an_expression: ET_EXPRESSION
+		do
+			nb := a_postconditions.count
+			from i := 1 until i > nb loop
+				an_expression := a_postconditions.assertion (i).expression
+				if an_expression /= Void then
+					postcondition_checker.check_expression_validity (an_expression, current_feature, current_class)
+					if postcondition_checker.has_fatal_error then
+						had_error := True
+					else
+-- TODO: check that it is a boolean expression
+					end
+				end
+				i := i + 1
+			end
+		end
+
+	postcondition_checker: ET_POSTCONDITION_CHECKER
+			-- Checker for expressions in postconditions
 
 feature {ET_AST_NODE} -- Processing
 
@@ -562,6 +552,8 @@ invariant
 	current_feature_not_void: current_feature /= Void
 	current_class_not_void: current_class /= Void
 	instruction_checker_not_void: instruction_checker /= Void
+	precondition_checker_not_void: precondition_checker /= Void
+	postcondition_checker_not_void: postcondition_checker /= Void
 	type_checker_not_void: type_checker /= Void
 
 end
