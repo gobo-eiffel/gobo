@@ -451,7 +451,15 @@ feature -- Compilation
 			a_signature_viewer: ET_SIGNATURE_VIEWER
 		do
 			activate_processors
+debug ("ericb")
+	print ("start preparsing...%N")
+	io.read_line
+end
 			preparse_single
+debug ("ericb")
+	print ("end preparsing.%N")
+	io.read_line
+end
 --			parse_all
 --debug ("ericb")
 --	print ("Parsed ")
