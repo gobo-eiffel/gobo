@@ -79,7 +79,7 @@ creation
 %token <ET_RETRY_INSTRUCTION>  E_RETRY
 %token <ET_SEPARATE_MARK>      E_SEPARATE
 
-%token E_CHARERR E_STRERR
+%token E_CHARERR E_STRERR E_INTERR
 
 %token <ET_TOKEN>              E_OLD
 %token <ET_SYMBOL>             '{' '}'
