@@ -20,14 +20,14 @@ deferred class DS_NESTED_LIST [G]
 
 feature -- Access
 
-	local_items: DS_LIST [G] is
+	local_items: DS_LINEAR [G] is
 			-- Items held locally
 		deferred
 		ensure
 			local_items_not_void: Result /= Void
 		end
 
-	remote_items: DS_LIST [DS_NESTED_LIST [G]] is
+	remote_items: DS_LINEAR [DS_NESTED_LIST [G]] is
 			-- Items held by other lists
 		deferred
 		ensure
@@ -47,6 +47,22 @@ feature {DS_NESTED_LIST_FLATTENER} -- Implementation
 			index := i
 		ensure
 			index_set: index = i
+		end
+
+	set_local_items (items: like local_items) is
+			-- Set `local_items' to `items'.
+		require
+			items_not_void: items /= Void
+		deferred
+		ensure
+			local_items_set: local_items = items
+		end
+
+	add_local_item (an_item: G) is
+			-- Add `an_item' to `local_items'.
+		deferred
+		ensure
+			item_added: local_items.has (an_item)
 		end
 
 end -- class DS_NESTED_LIST
