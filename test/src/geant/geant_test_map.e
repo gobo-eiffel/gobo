@@ -19,6 +19,9 @@ inherit
 			tear_down, set_up
 		end
 
+	KL_SHARED_STREAMS
+		export {NONE} all end
+
 feature -- Test
 
 	test_set_type is
@@ -136,6 +139,7 @@ feature -- Execution
 			!! a_variables.make
 			!! an_options.make
 			!! project.make (a_variables, an_options)
+			project.set_output_file (null_output_stream)
 		end
 
 	tear_down is
@@ -148,7 +152,7 @@ feature -- Execution
 feature {NONE} -- Implementation
 
 	project: GEANT_PROJECT
-		-- Dummy project for test
+			-- Dummy project for test
 
 	map: GEANT_MAP
 			-- Map under test
