@@ -14,11 +14,7 @@ deferred class XM_TEST_XMLTEST
 
 inherit
 
-	TS_TEST_CASE
-	
-	XM_CALLBACKS_FILTER_FACTORY
-	
-	UC_UNICODE_FACTORY
+	XM_TEST_CASE
 	
 	XMLCONF_XMLTEST_FILES
 		export
@@ -28,12 +24,14 @@ inherit
 feature -- Test
 	
 	test_extra is
+			-- Tests not categorized.
 		do
 			-- inverted validity as per 		
 			--assert_invalid ("xmltest, not well formed, stand alone, 094", xmltest_valid_sa_094)
 		end
 		
 	test_not_wf_sa is
+			-- Tests not well formed stand alone documents.
 		do
 
 			-- back to normal test
@@ -363,76 +361,5 @@ feature -- Test
 			assert_output ("xmltest, valid, stand alone, 119", xmltest_valid_sa_119, xmltest_valid_sa_out_119)
 		end
 		
-feature -- XML asserts
-
-	assert_valid (a_name: STRING; in: STRING) is
-			-- Assert valid.
-		require
-			name_not_void: a_name /= Void
-			in_not_void: in /= Void
-		do
-			reset_parser
-			parser.parse_from_string (in)
-			assert (a_name, parser.is_correct)
-		end
-		
-	assert_invalid (a_name: STRING; in: STRING) is
-			-- Assert invalid.
-		require
-			name_not_void: a_name /= Void
-			in_not_void: in /= Void
-		do
-			reset_parser
-			parser.parse_from_string (in)
-			assert (a_name, not parser.is_correct)
-		end
-		
-	assert_output (a_name: STRING; in: STRING; an_out: STRING) is
-			-- Assert valid output.
-		require
-			name_not_void: a_name /= Void
-			in_not_void: in /= Void
-			out_not_void: out /= Void
-		do
-			reset_parser
-			parser.parse_from_string (in)
-
-			debug ("xml_parser")
-				if not parser.is_correct then 
-					io.put_string (parser.last_error_description) 
-				end
-			end
-			assert ("Valid: " + a_name, parser.is_correct)
-			assert_equal ("Output: " + a_name, an_out, output.to_utf8)
-		end
-		
-		
-feature {NONE} -- Parser
-	
-	parser: XM_PARSER
-			-- Parser.
-			
-	output: UC_STRING
-			-- Output.
-			
-	new_parser: XM_PARSER is
-			-- New parser, can be redefined to test another parser.
-		do
-			!XM_EIFFEL_PARSER! Result.make
-		end
-		
-	reset_parser is
-			-- Reset parser.
-		do
-			output := new_unicode_string ("")
-			parser := new_parser
-			parser.set_callbacks (callbacks_pipe (<<  
-				new_end_tag_checker,
-				new_stop_on_error,
-				new_pretty_print_string(output) >>))
-		ensure
-			not_void: parser /= Void and output /= Void
-		end
-
 end
 
