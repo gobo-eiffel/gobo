@@ -3651,7 +3651,7 @@ feature {NONE} -- Implementation
 	vmss3a_default_template: STRING is "[$1] Class $5 ($3,$4): class name clash: first file '$7', second file '$9'."
 	vreg0a_default_template: STRING is "[$1] Class $5 ($3,$4): argument name '$6' appear twice in feature `$7'."
 	vrfa0a_default_template: STRING is "[$1] Class $5 ($3,$4): argument name '$6' in feature `$7' is also the final name of feature."
-	vscn0a_default_template: STRING is "[$1] Class $5: invalid type '$6': the anchor `$7' must be the final name of a query."
+	vscn0a_default_template: STRING is "[$1] Class $5: class appears in files '$7' and '$9'."
 	vtat1a_default_template: STRING is "[$1] Class $5 ($3,$4): invalid type '$6': the anchor `$7' must be the final name of a query."
 	vtat1b_default_template: STRING is "[$1] Class $5 ($3,$4): invalid type '$6': the anchor `$7' must be the final name of a query, or an argument of routine `$8'."
 	vtat1c_default_template: STRING is "[$1] Class $5 ($3,$4): invalid type '$6': the anchor `$7' must be the final name of a query."
