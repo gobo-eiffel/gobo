@@ -42,6 +42,17 @@ feature -- Parsing
 		deferred
 		end
 
+	parse_from_system (a_system: STRING) is
+			-- Parse from system identifier using resolver.
+		require
+			a_system_not_void: a_system /= Void
+		do
+			entity_resolver.resolve (a_system)
+			if not entity_resolver.has_error then
+				parse_from_stream (entity_resolver.last_stream)
+			end
+		end
+		
 feature -- Incremental parsing
 
 	parse_incremental_from_stream (a_stream: KI_CHARACTER_INPUT_STREAM) is
