@@ -186,9 +186,12 @@ feature -- Most generic URI components
 	has_valid_scheme: BOOLEAN is
 			-- Is scheme set and containing valid characters?
 		do
-			Result := scheme /= Void and then uri_encoding.is_valid_scheme (scheme)
+			Result := scheme /= Void 
+				and then not scheme.is_empty 
+					and uri_encoding.is_valid_scheme (scheme)
 		ensure
 			valid_scheme_not_void: Result implies scheme /= Void
+			valid_scheme_not_empty: Result implies not scheme.is_empty
 			valid_scheme_characters: Result implies uri_encoding.is_valid_scheme (scheme)
 		end
 	
@@ -436,10 +439,11 @@ feature {NONE} -- Update cached attributes
 feature {NONE} -- URI parsing
 
 	State_scheme: INTEGER is 1
-	State_authority: INTEGER is 2
-	State_path: INTEGER is 3
-	State_query: INTEGER is 4
-	State_fragment: INTEGER is 5
+	State_authority_prefix: INTEGER is 2
+	State_authority: INTEGER is 3
+	State_path: INTEGER is 4
+	State_query: INTEGER is 5
+	State_fragment: INTEGER is 6
 			-- States uses in parsing the URI
 
 	clear_url_parts is
@@ -464,7 +468,6 @@ feature {NONE} -- URI parsing
 			start: INTEGER
 			c: CHARACTER
 			state: INTEGER
-			something_left_to_parse: BOOLEAN
 		do
 			clear_url_parts
 			from
@@ -472,127 +475,87 @@ feature {NONE} -- URI parsing
 				state := State_scheme
 				i := 1
 			variant
-				(full_reference.count + 1) - i
+				full_reference.count + 1 - i
 			until
 				i > full_reference.count
 			loop
 				c := full_reference.item (i)
 
-				-- switch to next state when char encountered that is
-				-- forbidden in state.
-				-- If `c' is a valid start character for a state is
-				-- checked in the next block
 				inspect c
 				when ':' then
-					if state = State_scheme then
+					inspect state
+					when State_scheme then
 						stop_scheme (start, i)
 						start := i + 1
-						i := i + 1
-						c := full_reference.item (i)
-						state := State_authority
+						state := State_authority_prefix
+					when State_authority_prefix then
+						state := State_path -- match for : /:
+					when State_authority, State_path, State_query, State_fragment then
 					end
 				when '/' then
 					inspect state
 					when State_scheme then
 						if i = start then
-							state := State_authority
+							state := State_authority_prefix
 						else
 							state := State_path
 						end
-					when State_authority then
-						if i > start + 1 then
-							stop_authority (start, i)
-							start := i
-							state := State_path
+					when State_authority_prefix then
+						if i > start then
+							state := State_authority
 						end
-					else -- ok
+					when State_authority then
+						stop_authority (start, i)
+						start := i
+						state := State_path
+					when State_path, State_query, State_fragment then
 					end
 				when '?' then
 					inspect state
-					when State_scheme then
+					when State_scheme, State_authority_prefix then
 						stop_path (start, i)
 					when State_authority then
-						if i = start + 1 then
-							stop_path (start, i) -- match for /?
-						elseif i > start + 1 then
-							stop_authority (start, i)
-						end
+						stop_authority (start, i)
 					when State_path then
 						if i > start then
 							stop_path (start, i)
 						end
-					else -- ok
+					when State_query, State_fragment then
 					end
 					start := i
 					state := State_query
 				when '#' then
 					inspect state
-					when State_scheme then
+					when State_scheme, State_authority_prefix then
 						stop_path (start, i)
 					when State_authority then
-						if i = start + 1 then
-							stop_path (start, i) -- match for /#
-						elseif i > start + 1 then
-							stop_authority (start, i)
-						end
+						stop_authority (start, i)
 					when State_path then
 						stop_path (start, i)
 					when State_query then
 						stop_query (start, i)
-					else -- ok
+					when State_fragment then
 					end
 					start := i
 					state := State_fragment
-				else -- ok
-				end
-
-				-- check here required start characters for a state
-				-- move to next state if mismatch
-				if state = State_authority then
-					-- check if started with //
-					if c /= '/' and i < start + 2 then
-						state := State_path
-					end
-				end
-
-				if state = State_path then
-					-- check if started with /
-					if i = start and (c = '?' or c = '#') then
-						state := State_query
-					end
-				end
-
-				if state = State_query then
-					-- check if started with ?
-					if c /= '?' and i = start then
-						state := State_fragment
-					end
-				end
-
-				if state = State_fragment then
-					-- check if started with #
-					if c /= '#' and i = start then
-						-- what?? probably not parseable
+				else
+					inspect state
+					when State_authority_prefix then
+						state := state_path
+					else -- ok
 					end
 				end
 
 				i := i + 1
 			end
 
-			-- handle last part of string
-			something_left_to_parse := start < i
-			if something_left_to_parse then
+				-- Handle last part of string
+			if start < i then
 				inspect state
-				when State_scheme then
+				when State_scheme, State_authority_prefix, State_path then
 					stop_path (start, i)
 				when State_authority then
-					if i = start + 1 then
-						stop_path (start, i) -- got only a '/'
-					elseif i > start + 1 then
-						stop_authority (start, i)
-					end
-				when State_path then
-					stop_path (start, i)
+					stop_authority (start, i)
 				when State_query then
 					stop_query (start, i)
 				when State_fragment then
@@ -773,8 +736,6 @@ feature {NONE} -- Resolve a relative-path reference
 		end
 
 invariant
-
-	scheme_void_or_not_empty: scheme = Void or else not scheme.is_empty
 
 	either_absolute_or_relative: is_absolute xor is_relative
 	full_reference_not_empty: full_reference /= Void and then not full_reference.is_empty
