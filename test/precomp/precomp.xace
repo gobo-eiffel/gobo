@@ -3,7 +3,7 @@
 <library name="precomp">
 	<description>
 		system: "Gobo Eiffel Libraries precompilation"
-		copyright: "Copyright (c) 1999-2001, Eric Bezault and others"
+		copyright: "Copyright (c) 1999-2004, Eric Bezault and others"
 		license: "Eiffel Forum License v2 (see forum.txt)"
 		date: "$Date$"
 		revision: "$Revision$"
@@ -28,8 +28,6 @@
 	<mount location="${GOBO}/library/utility/library.xace"/>
 	<mount location="${GOBO}/library/xml/library.xace"/>
 	<mount location="${GOBO}/library/string/formatter/library.xace"/>
-
-	<cluster name="EiffelTime" location="${GOBO}/library/other/EiffelTime" if="${GOBO_EIFFEL}=ise"/>
-	<cluster name="EiffelBase" location="${GOBO}/library/other/EiffelBase" if="${GOBO_EIFFELBASE}"/>
+	<mount location="${GOBO}/library/other/library.xace" if="${GOBO_EIFFELBASE}"/>
 	<mount location="${GOBO}/library/kernel.xace"/>
 </library>
