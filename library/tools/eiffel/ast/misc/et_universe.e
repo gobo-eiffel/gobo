@@ -208,7 +208,6 @@ feature -- Initialization
 			l_cursor: DS_HASH_TABLE_CURSOR [ET_CLASS, ET_CLASS_NAME]
 			l_class: ET_CLASS
 		do
-			reset_feature_seeds
 			l_cursor := classes.new_cursor
 			from l_cursor.start until l_cursor.after loop
 				from
@@ -503,42 +502,6 @@ feature -- Feature setting
 			void_seed := a_seed
 		ensure
 			void_seed_set: void_seed = a_seed
-		end
-
-	set_feature_seeds is
-			-- Set kernel feature seeds.
-		local
-			a_feature: ET_FEATURE
-		do
-			a_feature := any_class.named_feature (tokens.default_create_feature_name)
-			if a_feature /= Void then
-				set_default_create_seed (a_feature.first_seed)
-			else
-				a_feature := general_class.named_feature (tokens.default_create_feature_name)
-				if a_feature /= Void then
-					set_default_create_seed (a_feature.first_seed)
-				else
--- TODO
-				end
-			end
-			a_feature := any_class.named_feature (tokens.void_feature_name)
-			if a_feature /= Void then
-				set_void_seed (a_feature.first_seed)
-			else
-				a_feature := general_class.named_feature (tokens.void_feature_name)
-				if a_feature /= Void then
-					set_void_seed (a_feature.first_seed)
-				else
--- TODO
-				end
-			end
-		end
-
-	reset_feature_seeds is
-			-- Reset kernel feature seeds.
-		do
-			set_default_create_seed (0)
-			set_void_seed (0)
 		end
 
 feature -- Feature registration
@@ -1418,7 +1381,6 @@ feature -- Compilation
 			a_class: ET_CLASS
 			nb: INTEGER
 		do
-			set_feature_seeds
 				-- Build ancestors.
 			a_cursor := classes.new_cursor
 			from a_cursor.start until a_cursor.after loop

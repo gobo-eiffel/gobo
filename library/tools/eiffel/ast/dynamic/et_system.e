@@ -509,7 +509,6 @@ feature -- Compilation
 							-- Error already reported.
 						set_fatal_error
 					else
-						universe.set_feature_seeds
 						l_name := universe.root_creation
 						if l_name /= Void then
 							l_feature := l_class.named_feature (l_name)

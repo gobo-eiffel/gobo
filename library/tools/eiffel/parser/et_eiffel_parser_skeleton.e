@@ -575,6 +575,8 @@ feature {NONE} -- Basic operations
 		a_feature_clauses: ET_FEATURE_CLAUSE_LIST; an_invariants: ET_INVARIANTS;
 		a_second_indexing: ET_INDEXING_LIST; an_end: ET_KEYWORD) is
 			-- Set various elements to `a_class'.
+		local
+			a_feature: ET_FEATURE
 		do
 			if a_class /= Void then
 				a_class.set_obsolete_message (an_obsolete)
@@ -586,6 +588,37 @@ feature {NONE} -- Basic operations
 				a_class.set_second_indexing (a_second_indexing)
 				if an_end /= Void then
 					a_class.set_end_keyword (an_end)
+				end
+				if a_class = universe.general_class then
+					a_feature := a_class.named_feature (tokens.default_create_feature_name)
+					if a_feature /= Void then
+						universe.set_default_create_seed (a_feature.first_seed)
+					else
+						universe.set_default_create_seed (0)
+					end
+					a_feature := a_class.named_feature (tokens.void_feature_name)
+					if a_feature /= Void then
+						universe.set_void_seed (a_feature.first_seed)
+					else
+						universe.set_void_seed (0)
+					end
+				elseif a_class = universe.any_class then
+					a_feature := a_class.named_feature (tokens.default_create_feature_name)
+					if a_feature /= Void then
+						universe.set_default_create_seed (a_feature.first_seed)
+					elseif a_parents = Void or else a_parents.is_empty then
+							-- If there is a parent class then the feature can be defined
+							-- in class GENERAL.
+						universe.set_default_create_seed (0)
+					end
+					a_feature := a_class.named_feature (tokens.void_feature_name)
+					if a_feature /= Void then
+						universe.set_void_seed (a_feature.first_seed)
+					elseif a_parents = Void or else a_parents.is_empty then
+							-- If there is a parent class then the feature can be defined
+							-- in class GENERAL.
+						universe.set_void_seed (0)
+					end
 				end
 			end
 		end
