@@ -77,7 +77,7 @@ feature {NONE} -- Initialization
 			entity_resolver := null_resolver
 			use_namespaces := True
 		ensure
-			string_mode_set_to_safe_ascii_only: is_string_mode_ascii
+			string_mode_set_to_safe_latin1_only: is_string_mode_latin1
 		end
 
 	null_resolver: XM_NULL_EXTERNAL_RESOLVER is
@@ -765,7 +765,45 @@ feature {NONE} -- String mode
 				force_error (Error_unicode_in_ascii_string_mode)
 			else
 				Result := new_unicode_string_from_utf8 (a_string)
+				if is_string_mode_latin1 then
+					if maximum_item_code (Result) > 255 then
+						force_error (Error_unicode_in_latin1_string_mode)
+					else
+						Result := STRING_.string (Result)
+					end
+				end
 			end
+		end
+		
+feature {NONE} -- String mode implementation
+
+	maximum_item_code (a_string: STRING): INTEGER is
+			-- Return the largest character code used in
+			-- `a_string'.
+		require
+			a_string_not_void: a_string /= Void
+		local
+			i: INTEGER
+			cnt: INTEGER
+			a_code: INTEGER
+		do
+			from
+				i := 1
+				cnt := a_string.count
+			variant
+				cnt - i + 1
+			until
+				i > cnt
+			loop
+				a_code := a_string.item_code (i)
+				if a_code > Result then
+					Result := a_code
+				end
+				i := i + 1
+			end
+		ensure
+			empty_zero: a_string.is_empty implies Result = 0
+			result_positive: Result >= 0
 		end
 		
 	shared_empty_string: STRING is

@@ -29,6 +29,14 @@ feature -- Status report
 			Result := string_mode = String_mode_ascii
 		end
 
+	is_string_mode_latin1: BOOLEAN is
+			-- Is string mode set to latin-1 only?
+			-- This means that all strings issued by this source
+			-- will be of dynamic type STRING.
+		do
+			Result := string_mode = String_mode_latin1
+		end
+
 	is_string_mode_mixed: BOOLEAN is
 			-- Is string mode set to polymorphic strings?
 			-- This means that strings issued by this source will
@@ -51,7 +59,7 @@ feature -- Status setting
 
 	set_string_mode_ascii is
 			-- Set all strings issued by this source to be ascii
-			-- (all characters <127) to be of dynamic type STRING.
+			-- (all characters <= 127) and be of dynamic type STRING.
 			-- The source will be in an error state if it has
 			-- characters that do not fit in a STRING.
 		do
@@ -60,6 +68,17 @@ feature -- Status setting
 			string_mode_set: is_string_mode_ascii
 		end
 
+	set_string_mode_latin1 is
+			-- Set all strings issued by this source to be latin-1
+			-- (all characters <= 255) and be of dynamic type STRING.
+			-- The source will be in an error state if it has
+			-- characters that do not fit in a STRING.
+		do
+			string_mode := String_mode_latin1
+		ensure
+			string_mode_set: is_string_mode_latin1
+		end
+			 
 	set_string_mode_mixed is
 			-- Set all strings issued by this source to be either of
 			-- type UC_STRING or descendant if they contain characters
@@ -111,13 +130,14 @@ feature {XM_STRING_MODE} -- Implementation
 
 feature {NONE} -- Implementation
 
-	String_mode_ascii: INTEGER is 0
+	String_mode_latin1: INTEGER is 0
 	String_mode_unicode: INTEGER is 1
 	String_mode_mixed: INTEGER is 2
+	String_mode_ascii: INTEGER is 3
 			-- Values
 
 invariant
 
-	mode_set: BOOLEAN_.nxor (<<is_string_mode_ascii, is_string_mode_mixed, is_string_mode_unicode>>)
+	mode_set: BOOLEAN_.nxor (<<is_string_mode_ascii, is_string_mode_mixed, is_string_mode_unicode, is_string_mode_latin1>>)
 
 end
