@@ -984,11 +984,11 @@ feature -- Conversion
 			i: INTEGER
 #endif
 #ifdef ISE || HACT
-			to_special: TO_SPECIAL [POINTER]
 			a_storage: SPECIAL [POINTER]
 			ptr_size: INTEGER
 #endif
 #ifdef ISE
+			to_special: TO_SPECIAL [POINTER]
 			ptr1, ptr2: POINTER
 #endif
 #ifdef HACT
@@ -1017,8 +1017,7 @@ feature -- Conversion
 #ifdef HACT
 				ptr_size := Platform.Pointer_bytes
 				nb := 10
-				!! to_special.make_area (nb)
-				a_storage := to_special.area
+				!! a_storage.make (nb)
 				i := 1
 				c_bcopy (attr_spec_ptr, $a_storage, i * ptr_size)
 				ptr := a_storage.item (i - 1)
@@ -1053,8 +1052,7 @@ feature -- Conversion
 				i := i + 1
 				if i > nb then
 					nb := nb + 10
-					!! to_special.make_area (nb)
-					a_storage := to_special.area
+					!! a_storage.make (nb)
 				end
 				c_bcopy (attr_spec_ptr, $a_storage, i * ptr_size)
 				ptr := a_storage.item (i - 1)
@@ -1082,8 +1080,7 @@ feature -- Conversion
 				i := i + 1
 				if i > nb then
 					nb := nb + 10
-					!! to_special.make_area (nb)
-					a_storage := to_special.area
+					!! a_storage.make (nb)
 				end
 				c_bcopy (attr_spec_ptr, $a_storage, i * ptr_size)
 				ptr := a_storage.item (i - 1)
