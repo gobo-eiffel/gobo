@@ -30,12 +30,13 @@ creation
 
 %token                 L_SYSTEM L_ROOT L_END L_CLUSTER
 %token                 L_DEFAULT L_EXTERNAL L_OPTION
-%token                 L_ABSTRACT
+%token                 L_ABSTRACT L_ALL L_EXCLUDE
 %token <ET_IDENTIFIER> L_IDENTIFIER L_STRING
 %token                 L_STRERR
 
-%type <ET_CLUSTER>			Cluster Nested_cluster
+%type <ET_CLUSTER>			Cluster Nested_cluster Recursive_cluster
 %type <ET_CLUSTERS>			Cluster_list Clusters_opt Sub_clusters_opt
+%type <ET_EXCLUDE>			Exclude_opt Exclude_list
 %type <ET_IDENTIFIER>		Identifier
 
 %start Ace
@@ -95,6 +96,8 @@ Cluster_list: Cluster Cluster_terminator
 
 Cluster: L_ABSTRACT Nested_cluster
 		{ $$ := $2; $$.set_abstract (True) }
+	| L_ALL Recursive_cluster
+		{ $$ := $2; $$.set_recursive (True) }
 	| Nested_cluster
 		{ $$ := $1 }
 	;
@@ -108,6 +111,13 @@ Nested_cluster: Identifier ':' Identifier Options_opt Sub_clusters_opt
 		{
 			$$ := new_cluster ($1, Void)
 			$$.set_subclusters ($3)
+		}
+	;
+
+Recursive_cluster: Identifier ':' Identifier Exclude_opt Options_opt
+		{
+			$$ := new_cluster ($1, $3)
+			$$.set_exclude ($4)
 		}
 	;
 
@@ -125,6 +135,20 @@ Sub_clusters_opt: -- Empty
 		-- { $$ := Void }
 	| L_CLUSTER Cluster_list L_END
 		{ $$ := $2 }
+	;
+
+Exclude_opt: -- Empty
+	| L_EXCLUDE L_END
+	| L_EXCLUDE Exclude_list L_END
+		{ $$ := $2 }
+	| L_EXCLUDE Exclude_list ';' L_END
+		{ $$ := $2 }
+	;
+
+Exclude_list: Identifier
+		{ !! $$.make $$.put_last ($1) }
+	| Exclude_list ';' Identifier
+		{ $$ := $1; $$.put_last ($3) }
 	;
 
 Options_opt: -- Empty

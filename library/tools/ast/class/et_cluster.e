@@ -42,6 +42,12 @@ feature -- Status report
 
 	is_abstract: BOOLEAN
 			-- Is there no classes in current cluster?
+			-- (i.e. 'abstract' keyword in HACT's LACE.)
+
+	is_recursive: BOOLEAN
+			-- Is current cluster recursive, in other words
+			-- should subdirectories be considered as subclusters?
+			-- (i.e. 'all' keyword in ISE's LACE.)
 
 feature -- Access
 
@@ -101,6 +107,11 @@ feature -- Nested
 	subclusters: ET_CLUSTERS
 			-- Subclusters
 
+feature -- Options
+
+	exclude: ET_EXCLUDE
+			-- Exclude clause
+
 feature -- Status setting
 
 	set_abstract (b: BOOLEAN) is
@@ -109,6 +120,14 @@ feature -- Status setting
 			is_abstract := b
 		ensure
 			abstract_set: is_abstract = b
+		end
+
+	set_recursive (b: BOOLEAN) is
+			-- Set `is_recursive' to `b'.
+		do
+			is_recursive := b
+		ensure
+			recursive_set: is_recursive = b
 		end
 
 feature -- Setting
@@ -127,7 +146,15 @@ feature -- Setting
 			subclusters_set: subclusters = a_subclusters
 		end
 
-feature {ET_CLUSTERS} -- Setting
+	set_exclude (an_exclude: like exclude ) is
+			-- Set `exclude' to `an_exclude'.
+		do
+			exclude := an_exclude
+		ensure
+			exclude_set: exclude = an_exclude
+		end
+
+feature {ET_CLUSTER, ET_CLUSTERS} -- Setting
 
 	set_parent (a_parent: like parent) is
 			-- Set `parent' to `a_parent'.
@@ -149,6 +176,8 @@ feature -- Parsing
 			dir_name: STRING
 			dir: KL_DIRECTORY
 			s: STRING
+			a_name: ET_IDENTIFIER
+			a_cluster: ET_CLUSTER
 		do
 			if not is_abstract then
 				dir_name := Execution_environment.interpreted_string (full_pathname)
@@ -157,15 +186,26 @@ feature -- Parsing
 				if dir.is_open_read then
 					from dir.read_entry until dir.end_of_input loop
 						s := dir.last_entry
-						if s.count > 2 and then (s.item (s.count) = 'e' and s.item (s.count - 1) = '.') then
-							a_filename := clone (dir_name)
-							a_filename.append_character ('/')
-							a_filename.append_string (s)
-							a_file := INPUT_STREAM_.make_file_open_read (a_filename)
-							if INPUT_STREAM_.is_open_read (a_file) then
-								a_universe.parse_file (a_file, a_filename, Current)
-								INPUT_STREAM_.close (a_file)
-							else
+						if has_eiffel_extension (s) then
+							if exclude = Void or else not exclude.has (s) then
+								a_filename := clone (dir_name)
+								a_filename.append_character ('/')
+								a_filename.append_string (s)
+								a_file := INPUT_STREAM_.make_file_open_read (a_filename)
+								if INPUT_STREAM_.is_open_read (a_file) then
+									a_universe.parse_file (a_file, a_filename, Current)
+									INPUT_STREAM_.close (a_file)
+								else
+								end
+							end
+						elseif is_recursive and then is_valid_directory_name (s) then
+							if exclude = Void or else not exclude.has (s) then
+								!! a_name.make (s, name.position)
+								!! a_cluster.make (a_name, Void)
+								a_cluster.set_parent (Current)
+								a_cluster.set_recursive (True)
+								a_cluster.set_exclude (exclude)
+								a_cluster.parse_all (a_universe)
 							end
 						end
 						dir.read_entry
@@ -225,6 +265,38 @@ feature {ET_CLUSTERS} -- Implementation
 		ensure
 			next_set: next = a_cluster
 		end
+
+feature {NONE} -- Implementation
+
+	has_eiffel_extension (a_filename: STRING): BOOLEAN is
+			-- Has `a_filename' an Eiffel extension (.e)?
+		require
+			a_filename_not_void: a_filename /= Void
+		local
+			nb: INTEGER
+		do
+			nb := a_filename.count
+			Result := nb > 2 and then
+				(a_filename.item (nb) = 'e' and
+				a_filename.item (nb - 1) = '.')
+		end
+
+	is_valid_directory_name (a_dirname: STRING): BOOLEAN is
+			-- Is `a_dirname' not empty and different
+			-- from "." and ".."?
+		require
+			a_dirname_not_void: a_dirname /= Void
+		do
+			Result := a_dirname.count > 0 and
+				not a_dirname.is_equal (dot_directory_name) and
+				not a_dirname.is_equal (dot_dot_directory_name)
+		end
+
+feature {NONE} -- Constants
+
+	dot_directory_name: STRING is "."
+	dot_dot_directory_name: STRING is ".."
+			-- Directory names
 
 invariant
 

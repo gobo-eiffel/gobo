@@ -51,9 +51,11 @@ creation
 ----------/** Reserved words **/------------------------------------------------
 
 [aA][bB][sS][tT][rR][aA][cC][tT]	last_token := L_ABSTRACT
+[aA][lL][lL]						last_token := L_ALL
 [cC][lL][uU][sS][tT][eE][rR]		last_token := L_CLUSTER
 [dD][eE][fF][aA][uU][lL][tT]		last_token := L_DEFAULT
 [eE][nN][dD]						last_token := L_END
+[eE][xX][cC][lL][uU][dD][eE]		last_token := L_EXCLUDE
 [eE][xX][tT][eE][rR][nN][aA][lL]	last_token := L_EXTERNAL
 [oO][pP][tT][iI][oO][nN]			last_token := L_OPTION
 [rR][oO][oO][tT]					last_token := L_ROOT
