@@ -76,11 +76,29 @@ feature -- Input
 			readable: a_stream.is_open_read
 		do
 			input_stream := a_stream
+			input_resolver := Void
 
 			create input_filter.make_from_stream (a_stream)
 			set_input_buffer (new_file_buffer (input_filter))
+		ensure
+			input_stream_set: input_stream = a_stream
+			input_resolver_reset: input_resolver = Void
 		end
 
+	set_input_from_resolver (a_resolver: XM_EXTERNAL_RESOLVER) is
+			-- Set input buffer from a resolver's last resolved
+			-- stream and remember resolver to close it. 
+		require
+			a_resolver_not_void: a_resolver /= Void
+			a_resolver_resolved: not has_error
+		do
+			set_input_stream (a_resolver.last_stream)
+			input_resolver := a_resolver
+		ensure
+			input_stream_set: input_stream = a_resolver.last_stream			
+			input_resolver_reset: input_resolver = a_resolver
+		end
+			
 	close_input is
 			-- Close input buffer if needed.
 		do
@@ -88,6 +106,11 @@ feature -- Input
 				if input_stream.is_closable then
 					input_stream.close
 				end
+				if input_resolver /= Void then
+					input_resolver.resolve_finish
+				end
+				input_stream := Void
+				input_resolver := Void
 			end
 		end
 
@@ -95,6 +118,9 @@ feature {NONE} -- Input
 
 	input_stream: KI_CHARACTER_INPUT_STREAM
 			-- Saved stream for closing on end of stream
+	
+	input_resolver: XM_EXTERNAL_RESOLVER
+			-- Saved resolver for closure.
 
 	input_filter: XM_EIFFEL_INPUT_STREAM
 			-- Saved filter for encoding changes
