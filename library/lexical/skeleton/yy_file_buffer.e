@@ -173,19 +173,17 @@ feature -- Element change
 						nb := Read_buffer_capacity
 					end
 #ifdef VE
-					from
+					from i := 1 until i > nb loop
 						file.read_character
-						i := 1
-					until
-						file__end_of_file (file) or
-						i > nb
-					loop
-						j := j + 1
-						buff.put (file.last_character, j)
-						file.read_character
-						i := i + 1
+						if not file__end_of_file (file) then
+							j := j + 1
+							buff.put (file.last_character, j)
+							i := i + 1
+						else
+							nb := i - 1
+						end
 					end
-					if i > 1 then
+					if nb > 0 then
 						filled := True
 					else
 						filled := False
