@@ -20,7 +20,11 @@ Version 3.2 - ?
 	  fields of the config file (needed by Guy Fokou).
 	* Better formatting of the message when `assert_equal' or
 	  `assert_not_equal' fail (suggested by Berend de Boer).
+	
+	Gobo Eiffel XML Library:
 
+	* Tree formatter now produces valid XML.
+	  
 Version 3.1 - 18 December 2002
 
 	gelex:
