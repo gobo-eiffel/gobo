@@ -31,12 +31,12 @@ feature {NONE} -- Initialization
 		require
 			an_error_handler_not_void: an_error_handler /= Void
 		local
-			a_factory: ET_XACE_AST_FACTORY
 			a_variables: ET_XACE_VARIABLES
+			a_factory: ET_XACE_AST_FACTORY
 		do
 			!! a_variables.make
 			!! a_factory.make (a_variables, an_error_handler)
-			make_with_factory (a_factory, an_error_handler)
+			make_with_factory_and_variables (a_factory, an_error_handler)
 		ensure
 			error_handler_set: error_handler = an_error_handler
 		end
@@ -45,6 +45,7 @@ feature {NONE} -- Initialization
 			-- Create a new Xace parser.
 		require
 			a_factory_not_void: a_factory /= Void
+			a_variables_not_void: a_variables /= Void
 			an_error_handler_not_void: an_error_handler /= Void
 		local
 			a_parser_factory: XM_PARSER_FACTORY
@@ -56,6 +57,7 @@ feature {NONE} -- Initialization
 				xml_parser := a_parser_factory.new_toe_eiffel_tree_parser
 				xml_parser.enable_position_table
 			end
+			!! xml_preprocessor.make (ast_factory.variables)
 			!! xml_validator.make (an_error_handler)
 		ensure
 			ast_factory_set: ast_factory = a_factory
@@ -81,11 +83,13 @@ feature -- Parsing
 					if a_root_name.is_equal (uc_system) then
 						xml_validator.validate_system_doc (xml_parser.document, xml_parser.last_position_table)
 						if not xml_validator.has_error then
+							xml_preprocessor.preprocess_composite (xml_parser.document)
 							a_system := ast_factory.new_universe (xml_parser.document.root_element)
 						end
 					elseif a_root_name.is_equal (uc_cluster) then
 						xml_validator.validate_cluster_doc (xml_parser.document, xml_parser.last_position_table)
 						if not xml_validator.has_error then
+							xml_preprocessor.preprocess_composite (xml_parser.document)
 							a_cluster := ast_factory.new_cluster (xml_parser.document.root_element)
 						end
 					else
@@ -106,7 +110,7 @@ feature -- Access
 
 	error_handler: ET_XACE_ERROR_HANDLER
 			-- Error handler
-
+	
 feature {NONE} -- Implementation
 
 	xml_parser: XM_TREE_PARSER
@@ -114,6 +118,9 @@ feature {NONE} -- Implementation
 
 	xml_validator: ET_XACE_VALIDATOR
 			-- XML validator
+	
+	xml_preprocessor: ET_XACE_PREPROCESSOR
+			-- XML preprocessor
 
 invariant
 
@@ -121,5 +128,6 @@ invariant
 	ast_factory_not_void: ast_factory /= Void
 	position_table_enabled: xml_parser /= Void implies xml_parser.is_position_table_enabled
 	xml_validator_not_void: xml_validator /= Void
+	xml_preprocessor_not_void: xml_preprocessor /= Void
 
 end -- class ET_XACE_PARSER

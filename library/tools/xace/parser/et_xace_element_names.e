@@ -258,4 +258,32 @@ feature -- Constants
 			uc_exclude_not_empty: not Result.empty
 		end
 
+	uc_if: UC_STRING is
+			-- "if" attribute name
+		once
+			!! Result.make_from_string ("if")
+		ensure
+			uc_if_not_void: Result /= Void
+			uc_if_not_empty: not Result.empty
+		end
+
+	uc_unless: UC_STRING is
+			-- "unless" attribute name
+		once
+			!! Result.make_from_string ("unless")
+		ensure
+			uc_unless_not_void: Result /= Void
+			uc_unless_not_empty: not Result.empty
+		end
+
+	uc_equal: UC_CHARACTER_REF is
+			-- "=", which may occure in "if" or "unless"
+			-- attributes
+		once
+			!! Result.make_from_character ('=')
+		ensure
+			uc_equal_not_void: Result /= Void
+			uc_equal_not_empty: not Result.empty
+		end
+
 end -- class ET_XACE_ELEMENT_NAMES

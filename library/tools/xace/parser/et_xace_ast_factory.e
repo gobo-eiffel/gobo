@@ -27,11 +27,10 @@ creation
 
 feature {NONE} -- Initialization
 
-	make (a_variables: like variables; an_error_handler: like error_handler) is
+	make (a_variables: like variables; an_error_handler: like error_handler) is	
 			-- Create a new AST factory.
-			-- Use `a_variables' for variable expansion.
 		require
-			a_variables_not_void: a_variables /= Void
+			a_variables_not_void: a_variables /= Void			
 			an_error_handler_not_void: an_error_handler /= Void
 		do
 			variables := a_variables
@@ -42,24 +41,24 @@ feature {NONE} -- Initialization
 		end
 
 feature -- Access
-
+	
 	variables: ET_XACE_VARIABLES
-			-- Dollar variables defined
-
+ 			-- Dollar variables defined
+	
 	error_handler: ET_XACE_ERROR_HANDLER
 			-- Error handler
 
 feature -- Setting
-
-	set_variables (a_variables: like variables) is
-			-- Set `variables' to `a_variables'.
-		require
-			a_variables_not_void: a_variables /= Void
-		do
-			variables := a_variables
-		ensure
-			variables_set: variables = a_variables
-		end
+ 
+ 	set_variables (a_variables: like variables) is
+ 			-- Set `variables' to `a_variables'.
+ 		require
+ 			a_variables_not_void: a_variables /= Void
+ 		do
+ 			variables := a_variables
+ 		ensure
+ 			variables_set: variables = a_variables
+ 		end
 
 feature -- AST factory
 
@@ -89,21 +88,19 @@ feature -- AST factory
 			if an_element.has_attribute_by_name (uc_name) then
 				a_value := an_element.attribute_by_name (uc_name).value
 				if a_value /= Void then
-					a_name := variables.expanded_variables (a_value.to_utf8)
+					a_name := a_value.to_utf8
 				end
 			end
 			if an_element.has_element_by_name (uc_root) then
 				a_root := an_element.element_by_name (uc_root)
 				if a_root.has_attribute_by_name (uc_class) then
 					a_value := a_root.attribute_by_name (uc_class).value
-					if a_value /= Void then
-						a_class := variables.expanded_variables (a_value.to_utf8)
-					end
+					a_class := a_value.to_utf8
 				end
 				if a_root.has_attribute_by_name (uc_creation) then
 					a_value := a_root.attribute_by_name (uc_creation).value
 					if a_value /= Void then
-						a_creation := variables.expanded_variables (a_value.to_utf8)
+						a_creation := a_value.to_utf8
 					end
 				end
 			end
@@ -173,12 +170,12 @@ feature -- AST factory
 			if an_element.has_attribute_by_name (uc_name) then
 				a_value := an_element.attribute_by_name (uc_name).value
 				if a_value /= Void then
-					a_name := variables.expanded_variables (a_value.to_utf8)
+					a_name := a_value.to_utf8
 					if a_name.count > 0 then
 						if an_element.has_attribute_by_name (uc_location) then
 							a_value := an_element.attribute_by_name (uc_location).value
 							if a_value /= Void then
-								a_pathname := variables.expanded_variables (a_value.to_utf8)
+								a_pathname := a_value.to_utf8
 							end
 						end
 					end
@@ -186,7 +183,7 @@ feature -- AST factory
 					if an_element.has_attribute_by_name (uc_abstract) then
 						a_value := an_element.attribute_by_name (uc_abstract).value
 						if a_value /= Void then
-							a_bool := variables.expanded_variables (a_value.to_utf8)
+							a_bool := a_value.to_utf8
 							if is_true (a_bool) then
 								Result.set_abstract (True)
 							elseif is_false (a_bool) then
@@ -256,7 +253,7 @@ feature -- AST factory
 			if an_element.has_attribute_by_name (uc_location) then
 				a_value := an_element.attribute_by_name (uc_location).value
 				if a_value /= Void then
-					a_pathname := variables.expanded_variables (a_value.to_utf8)
+					a_pathname := a_value.to_utf8
 					if a_pathname.count > 0 then
 						a_cursor := an_element.new_cursor
 						from a_cursor.start until a_cursor.after loop
@@ -269,7 +266,7 @@ feature -- AST factory
 											if an_excluded = Void then
 												!! an_excluded.make
 											end
-											an_excluded.force_last (variables.expanded_variables (a_value.to_utf8))
+											an_excluded.force_last (a_value.to_utf8)
 										end
 									end
 								end
@@ -317,7 +314,7 @@ feature -- AST factory
 						if a_child.has_attribute_by_name (uc_enable) then
 							a_value := a_child.attribute_by_name (uc_enable).value
 							if a_value /= Void then
-								a_bool := variables.expanded_variables (a_value.to_utf8)
+								a_bool := a_value.to_utf8
 								if is_true (a_bool) then
 									Result.set_require (True)
 								elseif is_false (a_bool) then
@@ -331,7 +328,7 @@ feature -- AST factory
 						if a_child.has_attribute_by_name (uc_enable) then
 							a_value := a_child.attribute_by_name (uc_enable).value
 							if a_value /= Void then
-								a_bool := variables.expanded_variables (a_value.to_utf8)
+								a_bool := a_value.to_utf8
 								if is_true (a_bool) then
 									Result.set_ensure (True)
 								elseif is_false (a_bool) then
@@ -345,7 +342,7 @@ feature -- AST factory
 						if a_child.has_attribute_by_name (uc_enable) then
 							a_value := a_child.attribute_by_name (uc_enable).value
 							if a_value /= Void then
-								a_bool := variables.expanded_variables (a_value.to_utf8)
+								a_bool := a_value.to_utf8
 								if is_true (a_bool) then
 									Result.set_invariant (True)
 								elseif is_false (a_bool) then
@@ -359,7 +356,7 @@ feature -- AST factory
 						if a_child.has_attribute_by_name (uc_enable) then
 							a_value := a_child.attribute_by_name (uc_enable).value
 							if a_value /= Void then
-								a_bool := variables.expanded_variables (a_value.to_utf8)
+								a_bool := a_value.to_utf8
 								if is_true (a_bool) then
 									Result.set_loop (True)
 								elseif is_false (a_bool) then
@@ -373,7 +370,7 @@ feature -- AST factory
 						if a_child.has_attribute_by_name (uc_enable) then
 							a_value := a_child.attribute_by_name (uc_enable).value
 							if a_value /= Void then
-								a_bool := variables.expanded_variables (a_value.to_utf8)
+								a_bool := a_value.to_utf8
 								if is_true (a_bool) then
 									Result.set_check (True)
 								elseif is_false (a_bool) then
@@ -387,7 +384,7 @@ feature -- AST factory
 						if a_child.has_attribute_by_name (uc_enable) then
 							a_value := a_child.attribute_by_name (uc_enable).value
 							if a_value /= Void then
-								a_bool := variables.expanded_variables (a_value.to_utf8)
+								a_bool := a_value.to_utf8
 								if is_true (a_bool) then
 									Result.set_optimize (True)
 								elseif is_false (a_bool) then
@@ -401,11 +398,11 @@ feature -- AST factory
 						if a_child.has_attribute_by_name (uc_name) then
 							a_value := a_child.attribute_by_name (uc_name).value
 							if a_value /= Void then
-								a_key := variables.expanded_variables (a_value.to_utf8)
+								a_key := a_value.to_utf8
 								if a_child.has_attribute_by_name (uc_enable) then
 									a_value := a_child.attribute_by_name (uc_enable).value
 									if a_value /= Void then
-										a_bool := variables.expanded_variables (a_value.to_utf8)
+										a_bool := a_value.to_utf8
 										if is_true (a_bool) then
 											Result.set_debug_key (a_key, True)
 										elseif is_false (a_bool) then
@@ -420,7 +417,7 @@ feature -- AST factory
 							if a_child.has_attribute_by_name (uc_enable) then
 								a_value := a_child.attribute_by_name (uc_enable).value
 								if a_value /= Void then
-									a_bool := variables.expanded_variables (a_value.to_utf8)
+									a_bool := a_value.to_utf8
 									if is_true (a_bool) then
 										Result.set_debug (True)
 									elseif is_false (a_bool) then
@@ -459,7 +456,7 @@ feature -- AST factory
 							end
 							a_value := a_child.attribute_by_name (uc_location).value
 							if a_value /= Void then
-								Result.put_link_library (variables.expanded_variables (a_value.to_utf8))
+								Result.put_link_library (a_value.to_utf8)
 							end
 						end
 					elseif a_child.name.is_equal (uc_include_dir) then
@@ -469,7 +466,7 @@ feature -- AST factory
 							end
 							a_value := a_child.attribute_by_name (uc_location).value
 							if a_value /= Void then
-								Result.put_include_directory (variables.expanded_variables (a_value.to_utf8))
+								Result.put_include_directory (a_value.to_utf8)
 							end
 						end
 					elseif a_child.name.is_equal (uc_export) then
@@ -501,7 +498,7 @@ feature -- AST factory
 			if an_element.has_attribute_by_name (uc_class) then
 				a_value := an_element.attribute_by_name (uc_class).value
 				if a_value /= Void then
-					a_name := variables.expanded_variables (a_value.to_utf8)
+					a_name := a_value.to_utf8
 					if a_name.count > 0 then
 						!! Result.make (a_name)
 						a_cursor := an_element.new_cursor
@@ -533,11 +530,11 @@ feature -- AST factory
 			if an_element.has_attribute_by_name (uc_name) then
 				a_value := an_element.attribute_by_name (uc_name).value
 				if a_value /= Void then
-					a_name := variables.expanded_variables (a_value.to_utf8)
+					a_name := a_value.to_utf8
 					if an_element.has_attribute_by_name (uc_alias) then
 						a_value := an_element.attribute_by_name (uc_alias).value
 						if a_value /= Void then
-							an_alias := variables.expanded_variables (a_value.to_utf8)
+							an_alias := a_value.to_utf8
 						else
 							an_alias := a_name
 						end
@@ -577,7 +574,6 @@ feature {NONE} -- Constant
 
 invariant
 
-	variables_not_void: variables /= Void
 	error_handler_not_void: error_handler /= Void
 
 end -- class ET_XACE_AST_FACTORY

@@ -35,6 +35,7 @@ feature -- Parsing
 				if xml_parser.is_correct then
 					xml_validator.validate_system_doc (xml_parser.document, xml_parser.last_position_table)
 					if not xml_validator.has_error then
+						xml_preprocessor.preprocess_composite (xml_parser.document)
 						last_universe := ast_factory.new_universe (xml_parser.document.root_element)
 					end
 				else
