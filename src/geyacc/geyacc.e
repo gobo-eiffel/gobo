@@ -258,6 +258,7 @@ feature {NONE} -- Implementation
 			et10: DS_EQUALITY_TESTER [PR_PORTION]
 			et11: DS_EQUALITY_TESTER [PR_CONFLICT]
 			et12: DS_EQUALITY_TESTER [DS_ARRAYED_LIST [PR_VARIABLE]]
+			et13: DS_EQUALITY_TESTER [DS_ARRAYED_LIST [PR_STATE]]
 		do
 			!! et1
 			!! et2
@@ -271,6 +272,7 @@ feature {NONE} -- Implementation
 			!! et10
 			!! et11
 			!! et12
+			!! et13
 		end
 
 invariant
