@@ -1,0 +1,9 @@
+<?xml version="1.1" encoding="UTF-8" ?>
+<CATEGORIES DESC="Miscellaneous categories">
+A list of categories
+	<CATEGORY CODE="S" DESC="Science"/>
+	<CATEGORY CODE="I" DESC="Science" NOTE="Limited Stock"/>
+	<CATEGORY CODE="C" DESC="Computing"/>
+	<CATEGORY CODE="X" DESC="Crime"/>
+	<CATEGORY CODE="F" DESC="Fiction"/>
+</CATEGORIES>

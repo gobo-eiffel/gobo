@@ -1,0 +1,10 @@
+<?xml version="1.0"?>
+<?xml-stylesheet type="text/xsl" href="../styles/books.xsl"?>
+<!DOCTYPE BOOKLIST SYSTEM "books.dtd"[
+<!ENTITY books SYSTEM "booklist.xml">
+<!ENTITY categories SYSTEM "categories.xml">
+]>
+<BOOKLIST>
+&books;
+&categories;
+</BOOKLIST>
