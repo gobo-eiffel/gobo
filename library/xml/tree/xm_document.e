@@ -38,11 +38,8 @@ feature {NONE} -- Initialization
 	
 	make is
 			-- Create root node.
-		local
-			a_ns: XM_NAMESPACE
 		do
-			create a_ns.make_default
-			make_with_root_named (Default_name, a_ns)
+			make_with_root_named (Default_name, Default_ns)
 		end
 
 	make_with_root_named (a_name: STRING; a_ns: XM_NAMESPACE) is
@@ -67,7 +64,7 @@ feature -- List
 	
 feature {NONE} -- Parent processing
 
-	before_addition (a_node: XM_DOCUMENT_NODE) is
+	before_addition (a_node: like last) is
 			-- Remove node from original parent if not us.
 		do
 			if a_node /= Void then
@@ -138,7 +135,7 @@ feature {NONE} -- Implementation
 	remove_previous_root_element is
 			-- Remove previous root element from composite:
 		local
-			a_cursor: DS_LIST_CURSOR[XM_DOCUMENT_NODE] 
+			a_cursor: like new_cursor 
 		do
 			from
 				a_cursor := new_cursor
