@@ -2,7 +2,7 @@ indexing
 
 	description:
 
-		"Interface for output files"
+		"Interface for text output files"
 
 	library:    "Gobo Eiffel Kernel Library"
 	author:     "Eric Bezault <ericb@gobosoft.com>"
@@ -15,7 +15,7 @@ deferred class KI_OUTPUT_FILE
 
 inherit
 
-	KI_CHARACTER_OUTPUT_STREAM
+	KI_TEXT_OUTPUT_STREAM
 		rename
 #ifdef SE
 			rename_file as se_rename_file,
@@ -23,66 +23,6 @@ inherit
 			is_writable as is_open_write
 		end
 
-feature {NONE} -- Initialization
-
-	make (a_name: like name) is
-			-- Create a new output file named `a_name'.
-		require
-			a_name_not_void: a_name /= Void
-			a_name_not_empty: a_name.count > 0
-		deferred
-		ensure
-			name_set: name = a_name
-			is_closed: is_closed
-		end
-
-feature -- Status report
-
-	is_closed: BOOLEAN is
-			-- Is file closed?
-		deferred
-		ensure
-			definition: Result = not is_open_write
-		end
-
-feature -- Basic operations
-
-	open_write is
-			-- Open current file in write-only mode if
-			-- it can be opened, let it closed otherwise.
-		require
-			is_closed: is_closed
-		deferred
-		end
-
-	close is
-			-- Close current file if it is closable,
-			-- let it open otherwise.
-		require
-			is_open: is_open_write
-		deferred
-		end
-
-	rename_file (new_name: STRING) is
-			-- Rename current file as `new_name'.
-			-- Do nothing if the file could not be renamed
-			-- or if it did not exist. Overwrite file
-			-- `new_name' if it existed. If renaming was
-			-- successful, then `name' is set to `new_name'.
-		require
-			is_closed: is_closed
-			new_name_not_void: new_name /= Void
-			new_name_not_empty: new_name.count > 0
-		deferred
-		end
-
-	delete is
-			-- Delete current file.
-			-- Do nothing if the file could not be
-			-- deleted or if it did not exist.
-		require
-			is_closed: is_closed
-		deferred
-		end
+	KI_BINARY_OUTPUT_FILE
 
 end -- class KI_OUTPUT_FILE
