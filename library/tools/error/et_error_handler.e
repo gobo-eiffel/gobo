@@ -53,7 +53,7 @@ feature -- Syntax errors
 			an_error: ET_SYNTAX_ERROR
 		do
 			!! an_error.make (p)
---			report_error (an_error)
+			report_error (an_error)
 		end
 
 	report_SCAC_error (p: ET_POSITION) is
@@ -63,6 +63,7 @@ feature -- Syntax errors
 		require
 			p_not_void: p /= Void
 		do
+			report_syntax_error (p)
 		end
 
 	report_SCAS_error (p: ET_POSITION) is
@@ -72,6 +73,7 @@ feature -- Syntax errors
 		require
 			p_not_void: p /= Void
 		do
+			report_syntax_error (p)
 		end
 
 	report_SCCU_error (p: ET_POSITION) is
@@ -81,6 +83,7 @@ feature -- Syntax errors
 		require
 			p_not_void: p /= Void
 		do
+			report_syntax_error (p)
 		end
 
 	report_SCEQ_error (p: ET_POSITION) is
@@ -89,6 +92,7 @@ feature -- Syntax errors
 		require
 			p_not_void: p /= Void
 		do
+			report_syntax_error (p)
 		end
 
 	report_SCQQ_error (p: ET_POSITION) is
@@ -97,6 +101,7 @@ feature -- Syntax errors
 		require
 			p_not_void: p /= Void
 		do
+			report_syntax_error (p)
 		end
 
 	report_SCSC_error (p: ET_POSITION) is
@@ -105,6 +110,7 @@ feature -- Syntax errors
 		require
 			p_not_void: p /= Void
 		do
+			report_syntax_error (p)
 		end
 
 	report_SCTQ_error (p: ET_POSITION) is
@@ -114,6 +120,7 @@ feature -- Syntax errors
 		require
 			p_not_void: p /= Void
 		do
+			report_syntax_error (p)
 		end
 
 	report_SIFU_error (p: ET_POSITION) is
@@ -123,6 +130,7 @@ feature -- Syntax errors
 		require
 			p_not_void: p /= Void
 		do
+			report_syntax_error (p)
 		end
 
 	report_SITD_error (p: ET_POSITION) is
@@ -133,6 +141,7 @@ feature -- Syntax errors
 		require
 			p_not_void: p /= Void
 		do
+			report_syntax_error (p)
 		end
 
 	report_SSAC_error (p: ET_POSITION) is
@@ -142,6 +151,7 @@ feature -- Syntax errors
 		require
 			p_not_void: p /= Void
 		do
+			report_syntax_error (p)
 		end
 
 	report_SSAS_error (p: ET_POSITION) is
@@ -151,6 +161,7 @@ feature -- Syntax errors
 		require
 			p_not_void: p /= Void
 		do
+			report_syntax_error (p)
 		end
 
 	report_SSCU_error (p: ET_POSITION) is
@@ -160,6 +171,7 @@ feature -- Syntax errors
 		require
 			p_not_void: p /= Void
 		do
+			report_syntax_error (p)
 		end
 
 	report_SSEL_error (p: ET_POSITION) is
@@ -171,7 +183,7 @@ feature -- Syntax errors
 			an_error: ET_SSEL_ERROR
 		do
 			!! an_error.make (p)
---			report_error (an_error)
+			report_error (an_error)
 		end
 
 	report_SSEQ_error (p: ET_POSITION) is
@@ -180,6 +192,7 @@ feature -- Syntax errors
 		require
 			p_not_void: p /= Void
 		do
+			report_syntax_error (p)
 		end
 
 	report_SSNL_error (p: ET_POSITION) is
@@ -188,6 +201,7 @@ feature -- Syntax errors
 		require
 			p_not_void: p /= Void
 		do
+			report_syntax_error (p)
 		end
 
 	report_SSNP_error (p: ET_POSITION) is
@@ -197,6 +211,7 @@ feature -- Syntax errors
 		require
 			p_not_void: p /= Void
 		do
+			report_syntax_error (p)
 		end
 
 	report_SSNS_error (p: ET_POSITION) is
@@ -206,6 +221,7 @@ feature -- Syntax errors
 		require
 			p_not_void: p /= Void
 		do
+			report_syntax_error (p)
 		end
 
 	report_SSSC_error (p: ET_POSITION) is
@@ -214,6 +230,7 @@ feature -- Syntax errors
 		require
 			p_not_void: p /= Void
 		do
+			report_syntax_error (p)
 		end
 
 feature -- Validity errors
