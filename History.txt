@@ -22,11 +22,18 @@ Version 3.2 - ?
 	  fields of the config file (needed by Guy Fokou).
 	* Better formatting of the message when `assert_equal' or
 	  `assert_not_equal' fail (suggested by Berend de Boer).
-	
+
 	Gobo Eiffel XML Library:
 
 	* Tree formatter now produces valid XML.
-	  
+	* The parent of the root element is now correctly set. So 
+	  XM_NODE.root_node returns the real root (XM_DOCUMENT) rather 
+	  than the root element. XM_NODE.level consequently offset by 1.
+	* XM_NAMESPACE_RESOLVER now issues empty strings (the default 
+	  namespace) rather than the parent element's namespace for 
+	  on_attribute events in the case of unprefixed attributes.
+	  (XML Names says unprefixed attributes have no namespace.)
+
 Version 3.1 - 18 December 2002
 
 	gelex:
