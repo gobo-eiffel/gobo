@@ -17,7 +17,7 @@
 	</option>
 	<option if="${DEBUG}">
 		<option name="assertion" value="all"/>
-		<option name="garbage_collector" value="none"/>
+		<option name="garbage_collector" value="internal"/>
 		<option name="finalize" value="false"/>
 	</option>
 
