@@ -13,21 +13,11 @@ indexing
 
 deferred class XM_NODE
 
-inherit
-
-	DP_INTERFACE
-		redefine
-			implementation
-		end
-
 feature {ANY} -- Access
 
-	parent: XM_COMPOSITE is
+	parent: XM_COMPOSITE
 			-- parent of this node. Only void
 			-- if this node is the root node
-		do
-			Result := implementation.parent
-		end
 
 	root_node: XM_COMPOSITE is
 			-- the root node of this node. In most cases this will be of
@@ -73,13 +63,9 @@ feature {ANY} -- Element change
 		require
 			a_parent_not_void: a_parent /= Void
 		do
-			implementation.set_parent (a_parent)
+			parent := a_parent
 		ensure
 			parent_set: parent = a_parent
 		end
-
-feature {DP_IMPLEMENTATION, DP_INTERFACE} -- Implementation
-
-	implementation: XI_NODE
 
 end -- class XM_NODE

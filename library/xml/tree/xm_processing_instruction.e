@@ -17,30 +17,33 @@ class XM_PROCESSING_INSTRUCTION
 inherit
 
 	XM_NODE
-		redefine
-			implementation
-		end
 
 creation
 
-	make_from_implementation
+	make
+
+feature {NONE} -- Initialisation
+
+	make (a_target, a_data: UC_STRING) is
+			-- Set target and data.
+		require
+			a_target_not_void: a_target /= Void
+			a_data_not_void: a_data /= Void
+		do
+			target := a_target
+			data := a_data
+		end
 
 feature {ANY} -- Access
 
-	target: UC_STRING is
+	target: UC_STRING
 			-- target of this processing instruction. XML defines this as being the
 			-- first token following the markup that begins the processing instruction.
-		do
-			Result := implementation.target
-		end
 
-	data: UC_STRING is
+	data: UC_STRING
 			-- content of this processing instruction. This is from the first non
 			-- white space character after the target to the character immediately
 			-- preceding the ?>.
-		do
-			Result := implementation.data
-		end
 
 feature {ANY} -- Basic routines
 
@@ -48,10 +51,6 @@ feature {ANY} -- Basic routines
 		do
 			x.process_processing_instruction (Current)
 		end
-
-feature {DP_IMPLEMENTATION, DP_INTERFACE} -- Implementation
-
-	implementation: XI_PROCESSING_INSTRUCTION
 
 invariant
 
