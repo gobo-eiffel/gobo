@@ -91,7 +91,7 @@ feature -- Access
 			else
 				Result := 0
 			end
-	end
+		end
 
 feature -- Constants
 

@@ -14,6 +14,8 @@ class PCRE
 
 inherit
 
+	ANY -- Needed for SE 2.1.
+
 	KL_SHARED_STANDARD_FILES
 
 creation
