@@ -347,15 +347,17 @@ feature -- Output
 			i, nb: INTEGER
 			a_type: ET_TYPE
 		do
-			nb := count
 			a_string.append_character ('[')
-			a_type := type (1)
-			a_type.append_to_string (a_string)
-			from i := 2 until i > nb loop
-				a_string.append_string (", ")
-				a_type := type (i)
+			nb := count
+			if nb >= 1 then
+				a_type := type (1)
 				a_type.append_to_string (a_string)
-				i := i + 1
+				from i := 2 until i > nb loop
+					a_string.append_string (", ")
+					a_type := type (i)
+					a_type.append_to_string (a_string)
+					i := i + 1
+				end
 			end
 			a_string.append_character (']')
 		end
