@@ -52,7 +52,7 @@ feature -- Access
 			-- First type that could go through assignment attempt
 			-- Void if no such type
 
-	other_types: DS_LINKABLE [ET_DYNAMIC_TYPE]
+	other_types: ET_DYNAMIC_TYPE_LIST
 			-- Other types that could go through assignment attempt
 			-- Void if zero or one such type
 
@@ -82,25 +82,26 @@ feature -- Element change
 		local
 			l_count: INTEGER
 			l_type: ET_DYNAMIC_TYPE
-			l_other_type: DS_LINKABLE [ET_DYNAMIC_TYPE]
+			l_other_types: ET_DYNAMIC_TYPE_LIST
 			i, nb: INTEGER
+			j, nb2: INTEGER
 		do
 			l_count := source_type.count
 			if l_count /= count then
 				nb := l_count - count
 				count := l_count
-				from
-					l_other_type := source_type.other_types
-				until
-					l_other_type = Void
-				loop
-					put_type (l_other_type.item, a_target, a_system)
-					i := i + 1
-					if i < nb then
-						l_other_type := l_other_type.right
-					else
-							-- Jump out of the loop.
-						l_other_type := Void
+				l_other_types := source_type.other_types
+				if l_other_types /= Void then
+					nb2 := l_other_types.count
+					from j := 1 until j > nb2 loop
+						put_type (l_other_types.item (j), a_target, a_system)
+						i := i + 1
+						if i < nb then
+							j := j + 1
+						else
+								-- Jump out of the loop.
+							j := nb2 + 1
+						end
 					end
 				end
 				if i < nb then
@@ -121,9 +122,6 @@ feature {NONE} -- Element change
 			a_type_not_void: a_type /= Void
 			a_target_not_void: a_target /= Void
 			a_system_not_void: a_system /= Void
-		local
-			l_other_type: DS_LINKABLE [ET_DYNAMIC_TYPE]
-			found: BOOLEAN
 		do
 			if not a_type.conforms_to_type (a_target.static_type, a_system) then
 				is_direct_assignment := False
@@ -132,28 +130,19 @@ feature {NONE} -- Element change
 					first_type := a_type
 					type_count := type_count + 1
 					a_target.put_type (a_type, a_system)
-				elseif a_type /= first_type then
-					from
-						l_other_type := other_types
-					until
-						l_other_type = Void
-					loop
-						if l_other_type.item = a_type then
-							found := True
-							l_other_type := Void
-						else
-							l_other_type := l_other_type.right
-						end
-					end
-					if not found then
-						type_count := type_count + 1
-						a_target.put_type (a_type, a_system)
-						create l_other_type.make (a_type)
-						if other_types /= Void then
-							l_other_type.put_right (other_types)
-						end
-						other_types := l_other_type
-					end
+				elseif a_type = first_type then
+					-- Do nothing.
+				elseif other_types = Void then
+					create other_types.make_with_capacity (15)
+					other_types.put_first (a_type)
+					type_count := type_count + 1
+					a_target.put_type (a_type, a_system)
+				elseif other_types.has (a_type) then
+					-- Do nothing.
+				else
+					other_types.force_first (a_type)
+					type_count := type_count + 1
+					a_target.put_type (a_type, a_system)
 				end
 			end
 		end

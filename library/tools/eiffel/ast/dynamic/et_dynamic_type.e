@@ -130,7 +130,7 @@ feature -- Access
 			definition: Result = Current
 		end
 
-	other_types: DS_LINKABLE [ET_DYNAMIC_TYPE] is
+	other_types: ET_DYNAMIC_TYPE_LIST is
 			-- Other types in current set;
 			-- Void if zero or one type in the set
 		do

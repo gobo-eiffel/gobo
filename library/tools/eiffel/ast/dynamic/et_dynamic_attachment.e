@@ -62,25 +62,26 @@ feature -- Element change
 		local
 			l_count: INTEGER
 			l_type: ET_DYNAMIC_TYPE
-			l_other_type: DS_LINKABLE [ET_DYNAMIC_TYPE]
+			l_other_types: ET_DYNAMIC_TYPE_LIST
 			i, nb: INTEGER
+			j, nb2: INTEGER
 		do
 			l_count := source_type.count
 			if l_count /= count then
 				nb := l_count - count
 				count := l_count
-				from
-					l_other_type := source_type.other_types
-				until
-					l_other_type = Void
-				loop
-					a_target.put_type (l_other_type.item, a_system)
-					i := i + 1
-					if i < nb then
-						l_other_type := l_other_type.right
-					else
-							-- Jump out of the loop.
-						l_other_type := Void
+				l_other_types := source_type.other_types
+				if l_other_types /= Void then
+					nb2 := l_other_types.count
+					from j := 1 until j > nb2 loop
+						a_target.put_type (l_other_types.item (j), a_system)
+						i := i + 1
+						if i < nb then
+							j := j + 1
+						else
+								-- Jump out of the loop.
+							j := nb2 + 1
+						end
 					end
 				end
 				if i < nb then

@@ -47,7 +47,7 @@ feature -- Access
 			-- First type in current set;
 			-- Void if no type in the set
 
-	other_types: DS_LINKABLE [ET_DYNAMIC_TYPE]
+	other_types: ET_DYNAMIC_TYPE_LIST
 			-- Other types in current set;
 			-- Void if zero or one type in the set
 
@@ -58,35 +58,22 @@ feature -- Element change
 
 	put_type (a_type: ET_DYNAMIC_TYPE; a_system: ET_SYSTEM) is
 			-- Add `a_type' to current set.
-		local
-			l_other_type: DS_LINKABLE [ET_DYNAMIC_TYPE]
-			found: BOOLEAN
 		do
 			if a_type /= a_system.none_type and then a_type.conforms_to_type (static_type, a_system) then
 				if first_type = Void then
 					first_type := a_type
 					count := count + 1
-				elseif a_type /= first_type then
-					from
-						l_other_type := other_types
-					until
-						l_other_type = Void
-					loop
-						if l_other_type.item = a_type then
-							found := True
-							l_other_type := Void
-						else
-							l_other_type := l_other_type.right
-						end
-					end
-					if not found then
-						count := count + 1
-						create l_other_type.make (a_type)
-						if other_types /= Void then
-							l_other_type.put_right (other_types)
-						end
-						other_types := l_other_type
-					end
+				elseif a_type = first_type then
+					-- Do nothing.
+				elseif other_types = Void then
+					create other_types.make_with_capacity (15)
+					other_types.put_first (a_type)
+					count := count + 1
+				elseif other_types.has (a_type) then
+					-- Do nothing.
+				else
+					other_types.force_first (a_type)
+					count := count + 1
 				end
 			end
 		end

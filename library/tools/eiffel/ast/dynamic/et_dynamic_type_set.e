@@ -18,23 +18,11 @@ feature -- Status report
 			-- Does current type set contain `a_type'?
 		require
 			a_type_not_void: a_type /= Void
-		local
-			l_other_type: DS_LINKABLE [ET_DYNAMIC_TYPE]
 		do
 			Result := (first_type = a_type)
 			if not Result then
-				from
-					l_other_type := other_types
-				until
-					l_other_type = Void
-				loop
-					if l_other_type.item = a_type then
-						Result := True
-							-- Jump out of the loop.
-						l_other_type := Void
-					else
-						l_other_type := l_other_type.right
-					end
+				if other_types /= Void then
+					Result := other_types.has (a_type)
 				end
 			end
 		end
@@ -54,12 +42,10 @@ feature -- Access
 		deferred
 		end
 
-	other_types: DS_LINKABLE [ET_DYNAMIC_TYPE] is
+	other_types: ET_DYNAMIC_TYPE_LIST is
 			-- Other types in current set;
 			-- Void if zero or one type in the set
 		deferred
-		ensure
-			no_void_type: Result /= Void implies Result.item /= Void
 		end
 
 	sources: ET_DYNAMIC_ATTACHMENT is

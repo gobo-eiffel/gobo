@@ -128,25 +128,26 @@ feature -- Element change
 		local
 			l_count: INTEGER
 			l_type: ET_DYNAMIC_TYPE
-			l_other_type: DS_LINKABLE [ET_DYNAMIC_TYPE]
+			l_other_types: ET_DYNAMIC_TYPE_LIST
 			i, nb: INTEGER
+			j, nb2: INTEGER
 		do
 			l_count := target_type.count
 			if l_count /= count then
 				nb := l_count - count
 				count := l_count
-				from
-					l_other_type := target_type.other_types
-				until
-					l_other_type = Void
-				loop
-					propagate_type (l_other_type.item, a_system)
-					i := i + 1
-					if i < nb then
-						l_other_type := l_other_type.right
-					else
-							-- Jump out of the loop.
-						l_other_type := Void
+				l_other_types := target_type.other_types
+				if l_other_types /= Void then
+					nb2 := l_other_types.count
+					from j := 1 until j > nb2 loop
+						propagate_type (l_other_types.item (j), a_system)
+						i := i + 1
+						if i < nb then
+							j := j + 1
+						else
+								-- Jump out of the loop.
+							j := nb2 + 1
+						end
 					end
 				end
 				if i < nb then
@@ -236,18 +237,19 @@ feature -- Validity checking
 			a_system_not_void: a_system /= Void
 		local
 			l_type: ET_DYNAMIC_TYPE
-			l_other_type: DS_LINKABLE [ET_DYNAMIC_TYPE]
+			l_other_types: ET_DYNAMIC_TYPE_LIST
+			i, nb: INTEGER
 		do
 			l_type := target_type.first_type
 			if l_type /= Void then
 				check_target_type_validity (l_type, a_system)
-				from
-					l_other_type := target_type.other_types
-				until
-					l_other_type = Void
-				loop
-					check_target_type_validity (l_other_type.item, a_system)
-					l_other_type := l_other_type.right
+				l_other_types := target_type.other_types
+				if l_other_types /= Void then
+					nb := l_other_types.count
+					from i := 1 until i > nb loop
+						check_target_type_validity (l_other_types.item (i), a_system)
+						i := i + 1
+					end
 				end
 			end
 		end
@@ -268,7 +270,8 @@ feature {NONE} -- Validity checking
 			i, nb: INTEGER
 			l_source: ET_DYNAMIC_ATTACHMENT
 			l_source_type_set: ET_DYNAMIC_TYPE_SET
-			l_other_type: DS_LINKABLE [ET_DYNAMIC_TYPE]
+			l_other_types: ET_DYNAMIC_TYPE_LIST
+			j, nb2: INTEGER
 			l_source_type: ET_DYNAMIC_TYPE
 			l_target_type: ET_DYNAMIC_TYPE
 		do
@@ -311,18 +314,18 @@ feature {NONE} -- Validity checking
 										if not l_source_type.conforms_to_type (l_target_type, a_system) then
 											report_catcall_error (a_type, l_dynamic_feature, i, l_target_type, l_source_type, l_source, a_system)
 										end
-										from
-											l_other_type := l_source_type_set.other_types
-										until
-											l_other_type = Void
-										loop
-											l_source_type := l_other_type.item
-											if l_source_type.base_type.conforms_to_type (l_formal_arguments.formal_argument (i).type, target_type.static_type.base_type, a_system.universe.any_class, a_system.universe) then
-												if not l_source_type.conforms_to_type (l_target_type, a_system) then
-													report_catcall_error (a_type, l_dynamic_feature, i, l_target_type, l_source_type, l_source, a_system)
+										l_other_types := l_source_type_set.other_types
+										if l_other_types /= Void then
+											nb2 := l_other_types.count
+											from j := 1 until j > nb2 loop
+												l_source_type := l_other_types.item (j)
+												if l_source_type.base_type.conforms_to_type (l_formal_arguments.formal_argument (i).type, target_type.static_type.base_type, a_system.universe.any_class, a_system.universe) then
+													if not l_source_type.conforms_to_type (l_target_type, a_system) then
+														report_catcall_error (a_type, l_dynamic_feature, i, l_target_type, l_source_type, l_source, a_system)
+													end
 												end
+												j := j + 1
 											end
-											l_other_type := l_other_type.right
 										end
 									end
 								end

@@ -979,7 +979,8 @@ feature {NONE} -- Instruction generation
 			an_instruction_not_void: an_instruction /= Void
 		local
 			l_dynamic_assignment: ET_DYNAMIC_ASSIGNMENT_ATTEMPT
-			l_other_type: DS_LINKABLE [ET_DYNAMIC_TYPE]
+			l_other_types: ET_DYNAMIC_TYPE_LIST
+			i, nb: INTEGER
 			l_local_index: INTEGER
 		do
 			l_dynamic_assignment := current_feature.dynamic_assignment_attempt (an_instruction)
@@ -1022,17 +1023,17 @@ feature {NONE} -- Instruction generation
 						current_file.put_integer (l_dynamic_assignment.first_type.id)
 						current_file.put_character (':')
 						current_file.put_new_line
-						from 
-							l_other_type := l_dynamic_assignment.other_types
-						until
-							l_other_type = Void
-						loop
-							print_indentation
-							current_file.put_string ("case ")
-							current_file.put_integer (l_other_type.item.id)
-							current_file.put_character (':')
-							current_file.put_new_line
-							l_other_type := l_other_type.right
+						l_other_types := l_dynamic_assignment.other_types
+						if l_other_types /= Void then
+							nb := l_other_types.count
+							from i := 1 until i > nb loop
+								print_indentation
+								current_file.put_string ("case ")
+								current_file.put_integer (l_other_types.item (i).id)
+								current_file.put_character (':')
+								current_file.put_new_line
+								i := i + 1
+							end
 						end
 						indent
 						print_indentation
@@ -2076,7 +2077,8 @@ feature {NONE} -- Expression generation
 			i, nb: INTEGER
 			l_call: ET_DYNAMIC_CALL
 			l_dynamic_type: ET_DYNAMIC_TYPE
-			l_other_dynamic_type: DS_LINKABLE [ET_DYNAMIC_TYPE]
+			l_other_dynamic_types: ET_DYNAMIC_TYPE_LIST
+			j, nb2: INTEGER
 			l_local_index: INTEGER
 		do
 			a_target := a_call.target
@@ -2092,7 +2094,7 @@ feature {NONE} -- Expression generation
 				a_feature := l_call.static_feature
 				a_seed := a_feature.first_seed
 				l_dynamic_type := l_call.target_type.first_type
-				l_other_dynamic_type := l_call.target_type.other_types
+				l_other_dynamic_types := l_call.target_type.other_types
 				if l_dynamic_type = Void then
 						-- Call on Void target.
 					if a_feature.is_procedure then
@@ -2143,7 +2145,7 @@ feature {NONE} -- Expression generation
 						current_file.put_string ("0")
 						current_file.put_character (')')
 					end
-				elseif l_other_dynamic_type = Void then
+				elseif l_other_dynamic_types = Void then
 						-- Static binding.
 					a_feature := l_dynamic_type.base_class.seeded_feature (a_seed)
 					if a_feature = Void then
@@ -2211,6 +2213,8 @@ feature {NONE} -- Expression generation
 						-- Dynamic binding.
 					if a_feature.is_procedure then
 						from
+							j := 1
+							nb2 := l_other_dynamic_types.count
 							local_count := local_count + 1
 							l_local_index := local_count
 							print_reference_local_declaration (l_local_index)
@@ -2264,11 +2268,11 @@ feature {NONE} -- Expression generation
 							current_file.put_string ("break;")
 							current_file.put_new_line
 							dedent
-							if l_other_dynamic_type /= Void then
-								l_dynamic_type := l_other_dynamic_type.item
-								l_other_dynamic_type := l_other_dynamic_type.right
-							else
+							if j > nb2 then
 								l_dynamic_type := Void
+							else
+								l_dynamic_type := l_other_dynamic_types.item (j)
+								j := j + 1
 							end
 						end
 						print_indentation
@@ -2277,6 +2281,8 @@ feature {NONE} -- Expression generation
 					else
 							-- Query.
 						from
+							j := 1
+							nb2 := l_other_dynamic_types.count
 							local_count := local_count + 1
 							l_local_index := local_count
 							print_reference_local_declaration (l_local_index)
@@ -2295,7 +2301,7 @@ feature {NONE} -- Expression generation
 						until
 							l_dynamic_type = Void
 						loop
-							if l_other_dynamic_type /= Void then
+							if j <= nb2 then
 								current_file.put_string ("(z")
 								current_file.put_integer (l_local_index)
 								current_file.put_string ("->id==")
@@ -2341,12 +2347,12 @@ feature {NONE} -- Expression generation
 								end
 								current_file.put_character (')')
 							end
-							if l_other_dynamic_type /= Void then
-								current_file.put_character (':')
-								l_dynamic_type := l_other_dynamic_type.item
-								l_other_dynamic_type := l_other_dynamic_type.right
-							else
+							if j > nb2 then
 								l_dynamic_type := Void
+							else
+								current_file.put_character (':')
+								l_dynamic_type := l_other_dynamic_types.item (j)
+								j := j + 1
 							end
 						end
 						current_file.put_character (')')
