@@ -328,22 +328,18 @@ feature {NONE} -- Helper functions
 
 	tmp_uc_pair: DS_PAIR [UC_STRING, UC_STRING]
 
-	uc_collon: UC_CHARACTER is
-		once
-			Result := new_unicode_character (':')
-		end
-
 	split_name_and_prefix (str: UC_STRING): DS_PAIR [UC_STRING, UC_STRING] is
 			-- seperate name from prefix and return a pair
 			-- (name, prefix)
 		require
 			str_not_void: str /= Void
+			has_colon: str.has (':')
 		local
 			n: INTEGER
 		do
-			n := str.index_of (uc_collon, 1)
+			n := str.index_of (':', 1)
 			check
-				n_not_zero: n /= 0
+				has_colon: n /= 0
 			end
 			!! Result.make (str.substring (n + 1, str.count), str.substring (1, n - 1))
 		end
