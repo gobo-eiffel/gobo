@@ -20,7 +20,6 @@ inherit
 			same_named_class_type,
 			same_base_class_type,
 			conforms_from_class_type,
-			convertible_from_class_type,
 			resolved_formal_parameters
 		end
 
@@ -251,7 +250,7 @@ feature -- Comparison
 			end
 		end
 
-feature {ET_TYPE} -- Comparison
+feature {ET_TYPE, ET_TYPE_CONTEXT} -- Comparison
 
 	same_syntactical_class_type (other: ET_CLASS_TYPE; other_context: ET_TYPE_CONTEXT;
 		a_context: ET_TYPE_CONTEXT; a_universe: ET_UNIVERSE): BOOLEAN is
@@ -424,7 +423,7 @@ feature -- Conformance
 			end
 		end
 
-feature {ET_TYPE} -- Conformance
+feature {ET_TYPE, ET_TYPE_CONTEXT} -- Conformance
 
 	conforms_from_class_type (other: ET_CLASS_TYPE; other_context: ET_TYPE_CONTEXT;
 		a_context: ET_TYPE_CONTEXT; a_universe: ET_UNIVERSE): BOOLEAN is
@@ -508,67 +507,6 @@ feature {ET_TYPE} -- Conformance
 						Result := an_ancestor.conforms_to_type (Current, a_context, other_context, a_universe)
 					end
 				end
-			end
-		end
-
-feature -- Convertibility
-
-	convertible_to_type (other: ET_TYPE; other_context: ET_TYPE_CONTEXT;
-		a_context: ET_TYPE_CONTEXT; a_universe: ET_UNIVERSE): BOOLEAN is
-			-- Is current type appearing in `a_context' convertible
-			-- to `other' type appearing in `other_context'?
-			-- (Note: 'a_universe.qualified_signature_resolver' is
-			-- used on classes whose qualified anchored types need
-			-- to be resolved in order to check convertibility.)
-		do
-			Result := other.convertible_from_class_type (Current, a_context, other_context, a_universe)
-		end
-
-feature {ET_TYPE} -- Convertibility
-
-	convertible_from_class_type (other: ET_CLASS_TYPE; other_context: ET_TYPE_CONTEXT;
-		a_context: ET_TYPE_CONTEXT; a_universe: ET_UNIVERSE): BOOLEAN is
-			-- Is `other' type appearing in `other_context' convertible
-			-- to current type appearing in `a_context'?
-			-- (Note: 'a_universe.qualified_signature_resolver' is
-			-- used on classes whose qualified anchored types need
-			-- to be resolved in order to check convertibility.)
-		local
-			other_base_class: ET_CLASS
-		do
-			other_base_class := other.direct_base_class (a_universe)
-			if other_base_class = a_universe.integer_8_class then
-				Result := eiffel_class = a_universe.integer_16_class or
-					eiffel_class = a_universe.integer_class or
-					eiffel_class = a_universe.integer_64_class or
-					eiffel_class = a_universe.real_class or
-					eiffel_class = a_universe.double_class
-			elseif other_base_class = a_universe.integer_16_class then
-				Result := eiffel_class = a_universe.integer_class or
-					eiffel_class = a_universe.integer_64_class or
-					eiffel_class = a_universe.real_class or
-					eiffel_class = a_universe.double_class
-			elseif other_base_class = a_universe.integer_class then
-				Result := eiffel_class = a_universe.integer_64_class or
-					eiffel_class = a_universe.real_class or
-					eiffel_class = a_universe.double_class or
-						-- Needed by ISE Eiffel 5.4.
-					eiffel_class = a_universe.integer_8_class or
-					eiffel_class = a_universe.integer_16_class
-			elseif other_base_class = a_universe.integer_64_class then
-				Result := eiffel_class = a_universe.real_class or
-					eiffel_class = a_universe.double_class
-			elseif other_base_class = a_universe.real_class then
-				Result := eiffel_class = a_universe.double_class
-			elseif other_base_class = a_universe.double_class then
-					-- Needed by ISE Eiffel 5.4.
-				Result := eiffel_class = a_universe.real_class
-			end
-			if not Result then
-				Result := eiffel_class.convert_from_feature (other, other_context, Current, a_context, a_universe) /= Void
-			end
-			if not Result then
-				Result := other_base_class.convert_to_feature (Current, a_context, other, other_context, a_universe) /= Void
 			end
 		end
 

@@ -41,8 +41,6 @@ inherit
 			conforms_from_class_type,
 			conforms_from_formal_parameter_type,
 			conforms_from_tuple_type,
-			convertible_from_class_type,
-			convertible_from_formal_parameter_type,
 			resolved_formal_parameters,
 			is_valid_context_type
 		end
@@ -677,7 +675,7 @@ feature -- Comparison
 			end
 		end
 
-feature {ET_TYPE} -- Comparison
+feature {ET_TYPE, ET_TYPE_CONTEXT} -- Comparison
 
 	same_syntactical_bit_type (other: ET_BIT_TYPE; other_context: ET_TYPE_CONTEXT;
 		a_context: ET_TYPE_CONTEXT; a_universe: ET_UNIVERSE): BOOLEAN is
@@ -1129,7 +1127,7 @@ feature -- Conformance
 			end
 		end
 
-feature {ET_TYPE} -- Conformance
+feature {ET_TYPE, ET_TYPE_CONTEXT} -- Conformance
 
 	conforms_from_bit_type (other: ET_BIT_TYPE; other_context: ET_TYPE_CONTEXT;
 		a_context: ET_TYPE_CONTEXT; a_universe: ET_UNIVERSE): BOOLEAN is
@@ -1323,95 +1321,6 @@ feature {ET_TYPE} -- Conformance
 					Result := False
 				else
 					Result := an_actual.conforms_from_tuple_type (other, other_context, a_context.root_context, a_universe)
-				end
-			else
-					-- Internal error: does current type really
-					-- appear in `a_context'?
-				Result := False
-			end
-		end
-
-feature -- Convertibility
-
-	convertible_to_type (other: ET_TYPE; other_context: ET_TYPE_CONTEXT;
-		a_context: ET_TYPE_CONTEXT; a_universe: ET_UNIVERSE): BOOLEAN is
-			-- Is current type appearing in `a_context' convertible
-			-- to `other' type appearing in `other_context'?
-			-- (Note: 'a_universe.qualified_signature_resolver' is
-			-- used on classes whose qualified anchored types need
-			-- to be resolved in order to check convertibility.)
-		local
-			an_actual: ET_NAMED_TYPE
-			a_formal_type: ET_FORMAL_PARAMETER_TYPE
-		do
-			if index <= a_context.base_type_actual_count (a_universe) then
-				an_actual := a_context.base_type_actual (index, a_universe)
-				a_formal_type ?= an_actual
-				if a_formal_type /= Void then
-						-- The actual parameter associated with current
-						-- type is itself a formal generic parameter.
-					Result := other.convertible_from_formal_parameter_type (a_formal_type, a_context.root_context, other_context, a_universe)
-				else
-					Result := an_actual.convertible_to_type (other, other_context, a_context.root_context, a_universe)
-				end
-			else
-					-- Internal error: does current type really
-					-- appear in `a_context'?
-				Result := False
-			end
-		end
-
-feature {ET_TYPE} -- Convertibility
-
-	convertible_from_class_type (other: ET_CLASS_TYPE; other_context: ET_TYPE_CONTEXT;
-		a_context: ET_TYPE_CONTEXT; a_universe: ET_UNIVERSE): BOOLEAN is
-			-- Is `other' type appearing in `other_context' convertible
-			-- to current type appearing in `a_context'?
-			-- (Note: 'a_universe.qualified_signature_resolver' is
-			-- used on classes whose qualified anchored types need
-			-- to be resolved in order to check convertibility.)
-		local
-			an_actual: ET_NAMED_TYPE
-			a_formal_type: ET_FORMAL_PARAMETER_TYPE
-		do
-			if index <= a_context.base_type_actual_count (a_universe) then
-				an_actual := a_context.base_type_actual (index, a_universe)
-				a_formal_type ?= an_actual
-				if a_formal_type /= Void then
-						-- No type other than itself conforms to
-						-- a formal generic type.
-					Result := False
-				else
-					Result := an_actual.convertible_from_class_type (other, other_context, a_context.root_context, a_universe)
-				end
-			else
-					-- Internal error: does current type really
-					-- appear in `a_context'?
-				Result := False
-			end
-		end
-
-	convertible_from_formal_parameter_type (other: ET_FORMAL_PARAMETER_TYPE;
-		other_context: ET_TYPE_CONTEXT; a_context: ET_TYPE_CONTEXT;
-		a_universe: ET_UNIVERSE): BOOLEAN is
-			-- Is `other' type appearing in `other_context' convertible
-			-- to current type appearing in `a_context'?
-			-- (Note: 'a_universe.qualified_signature_resolver' is
-			-- used on classes whose qualified anchored types need
-			-- to be resolved in order to check convertibility.)
-		local
-			an_actual: ET_NAMED_TYPE
-			a_formal_type: ET_FORMAL_PARAMETER_TYPE
-		do
-			if index <= a_context.base_type_actual_count (a_universe) then
-				an_actual := a_context.base_type_actual (index, a_universe)
-				a_formal_type ?= an_actual
-				if a_formal_type /= Void then
-						-- The actual parameter associated with current
-						-- type is itself a formal generic parameter.
-					Result := False
-				else
-					Result := an_actual.convertible_from_formal_parameter_type (other, other_context, a_context.root_context, a_universe)
 				end
 			else
 					-- Internal error: does current type really

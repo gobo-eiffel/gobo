@@ -113,6 +113,29 @@ feature -- Element change
 			first_set: first = an_item
 		end
 
+	force_first (an_item: like item) is
+			-- Put `an_item' at first position in list.
+			-- Resize list if necessary.
+		require
+			an_item_not_void: an_item /= Void
+		local
+			new_capacity: INTEGER
+		do
+			if count >= capacity then
+				new_capacity := (capacity + 1) * 2
+				if storage = Void then
+					storage := fixed_array.make (new_capacity)
+				else
+					storage := fixed_array.resize (storage, new_capacity)
+				end
+			end
+			storage.put (an_item, count)
+			count := count + 1
+		ensure
+			one_more: count = old count + 1
+			first_set: first = an_item
+		end
+
 	put (an_item: like item; i: INTEGER) is
 			-- Put `an_item' at index `i' in list.
 		require
@@ -127,6 +150,19 @@ feature -- Element change
 		end
 
 feature -- Removal
+
+	remove_first is
+			-- Remove first item.
+		require
+			not_empty: not is_empty
+		local
+			dead_item: like item
+		do
+			count := count - 1
+			storage.put (dead_item, count)
+		ensure
+			one_less: count = old count - 1
+		end
 
 	remove (i: INTEGER) is
 			-- Remove item at index `i'.
@@ -147,6 +183,21 @@ feature -- Removal
 			count := count - 1
 		ensure
 			one_less: count = old count - 1
+		end
+
+	wipe_out is
+			-- Remove all items.
+		local
+			i: INTEGER
+			dead_item: G
+		do
+			from i := count - 1 until i < 0 loop
+				storage.put (dead_item, i)
+				i := i - 1
+			end
+			count := 0
+		ensure
+			wiped_out: is_empty
 		end
 
 feature {NONE} -- Implementation

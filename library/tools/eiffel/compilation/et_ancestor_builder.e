@@ -34,7 +34,7 @@ feature {NONE} -- Initialization
 			create ancestors.make_map (10)
 			create parent_checker.make (a_universe)
 			create formal_parameter_checker.make (a_universe)
-			create parent_context.make (a_universe.any_class, a_universe.any_class)
+			create parent_context.make_with_capacity (a_universe.any_class, 1)
 		end
 
 feature -- Processing

@@ -35,7 +35,7 @@ inherit
 
 creation
 
-	make
+	make, make_with_expression_checker
 
 feature {NONE} -- Initialization
 
@@ -47,6 +47,22 @@ feature {NONE} -- Initialization
 			current_feature := dummy_feature
 			create expression_checker.make (a_universe)
 			create type_checker.make (a_universe)
+		end
+
+	make_with_expression_checker (an_expression_checker: like expression_checker) is
+			-- Create an new instruction validity checker using
+			-- `an_expression_checker' to check validity of expressions.
+		require
+			an_expression_checker_not_void: an_expression_checker /= Void
+		do
+			expression_checker := an_expression_checker
+			universe := an_expression_checker.universe
+			current_class := universe.unknown_class
+			current_feature := dummy_feature
+			create type_checker.make (universe)
+		ensure
+			expression_checker_set: expression_checker = an_expression_checker
+			universe_set: universe = an_expression_checker.universe
 		end
 
 feature -- Validity checking
@@ -99,33 +115,28 @@ feature {NONE} -- Instruction validity
 		local
 			a_target: ET_WRITABLE
 			a_target_type: ET_TYPE
-			a_target_context: ET_TYPE_CONTEXT
+			a_target_context: ET_NESTED_TYPE_CONTEXT
 			a_source: ET_EXPRESSION
-			a_source_type: ET_TYPE
-			a_source_context: ET_TYPE_CONTEXT
+			a_source_context: ET_NESTED_TYPE_CONTEXT
 			a_class_impl: ET_CLASS
 			a_source_named_type: ET_NAMED_TYPE
 			a_target_named_type: ET_NAMED_TYPE
 			a_convert_feature: ET_CONVERT_FEATURE
 			a_convert_expression: ET_CONVERT_EXPRESSION
 		do
+			a_target_context := new_type_context (current_class)
+			a_source_context := new_type_context (current_class)
 			a_target := an_instruction.target
-			expression_checker.check_writable_validity (a_target, current_feature, current_class)
+			expression_checker.check_writable_validity (a_target, a_target_context, current_feature, current_class)
 			if expression_checker.has_fatal_error then
 				set_fatal_error
-				a_target_type := universe.any_type
-				a_target_context := current_class
-			else
-				a_target_type := expression_checker.type
-				a_target_context := expression_checker.context
+				a_target_context.wipe_out
+				a_target_context.force_first (universe.any_type)
 			end
 			a_source := an_instruction.source
-			expression_checker.check_expression_validity (a_source, a_target_type, a_target_context, current_feature, current_class)
+			expression_checker.check_expression_validity (a_source, a_source_context, a_target_context, current_feature, current_class)
 			if expression_checker.has_fatal_error then
 				set_fatal_error
-			else
-				a_source_type := expression_checker.type
-				a_source_context := expression_checker.context
 			end
 			if not has_fatal_error then
 				a_convert_expression ?= a_source
@@ -133,26 +144,31 @@ feature {NONE} -- Instruction validity
 -- TODO
 -- Already converted in ancestor. Need to check that this conversion is still
 -- valid in current class.
-				elseif not a_source_type.conforms_to_type (a_target_type, a_target_context, a_source_context, universe) then
-					a_convert_feature := type_checker.convert_feature (a_source_type, a_source_context, a_target_type, a_target_context)
-					if a_convert_feature /= Void then
-						a_convert_expression := universe.ast_factory.new_convert_expression (a_source, a_convert_feature)
-						if a_convert_expression /= Void then
-							an_instruction.set_source (a_convert_expression)
-						end
-					else
-						a_source_named_type := a_source_type.named_type (a_source_context, universe)
-						a_target_named_type := a_target_type.named_type (a_target_context, universe)
-						a_class_impl := current_feature.implementation_class
-						set_fatal_error
-						if current_class = a_class_impl then
-							error_handler.report_vjar0a_error (current_class, an_instruction, a_source_named_type, a_target_named_type)
+				else
+					a_target_type := tokens.like_current
+					if not a_source_context.conforms_to_type (a_target_type, a_target_context, universe) then
+						a_convert_feature := type_checker.convert_feature (a_source_context, a_target_context)
+						if a_convert_feature /= Void then
+							a_convert_expression := universe.ast_factory.new_convert_expression (a_source, a_convert_feature)
+							if a_convert_expression /= Void then
+								an_instruction.set_source (a_convert_expression)
+							end
 						else
-							error_handler.report_vjar0b_error (current_class, a_class_impl, an_instruction, a_source_named_type, a_target_named_type)
+							a_source_named_type := a_source_context.named_type (universe)
+							a_target_named_type := a_target_context.named_type (universe)
+							a_class_impl := current_feature.implementation_class
+							set_fatal_error
+							if current_class = a_class_impl then
+								error_handler.report_vjar0a_error (current_class, an_instruction, a_source_named_type, a_target_named_type)
+							else
+								error_handler.report_vjar0b_error (current_class, a_class_impl, an_instruction, a_source_named_type, a_target_named_type)
+							end
 						end
 					end
 				end
 			end
+			recycle_type_context (a_target_context)
+			recycle_type_context (a_source_context)
 		end
 
 	check_assignment_attempt_validity (an_instruction: ET_ASSIGNMENT_ATTEMPT) is
@@ -161,30 +177,26 @@ feature {NONE} -- Instruction validity
 			an_instruction_not_void: an_instruction /= Void
 		local
 			a_target: ET_WRITABLE
-			a_target_type: ET_TYPE
-			a_target_context: ET_TYPE_CONTEXT
+			a_target_context: ET_NESTED_TYPE_CONTEXT
 			a_source: ET_EXPRESSION
-			a_source_type: ET_TYPE
-			a_source_context: ET_TYPE_CONTEXT
+			a_source_context: ET_NESTED_TYPE_CONTEXT
 		do
+			a_target_context := new_type_context (current_class)
+			a_source_context := new_type_context (current_class)
 			a_target := an_instruction.target
-			expression_checker.check_writable_validity (a_target, current_feature, current_class)
+			expression_checker.check_writable_validity (a_target, a_target_context, current_feature, current_class)
 			if expression_checker.has_fatal_error then
 				set_fatal_error
-				a_target_type := universe.any_type
-				a_target_context := current_class
-			else
-				a_target_type := expression_checker.type
-				a_target_context := expression_checker.context
+				a_target_context.wipe_out
+				a_target_context.force_first (universe.any_type)
 			end
 			a_source := an_instruction.source
-			expression_checker.check_expression_validity (a_source, a_target_type, a_target_context, current_feature, current_class)
+			expression_checker.check_expression_validity (a_source, a_source_context, a_target_context, current_feature, current_class)
 			if expression_checker.has_fatal_error then
 				set_fatal_error
-			else
-				a_source_type := expression_checker.type
-				a_source_context := expression_checker.context
 			end
+			recycle_type_context (a_target_context)
+			recycle_type_context (a_source_context)
 		end
 
 	check_bang_instruction_validity (an_instruction: ET_BANG_INSTRUCTION) is
@@ -201,9 +213,9 @@ feature {NONE} -- Instruction validity
 			an_instruction_not_void: an_instruction /= Void
 		do
 			if an_instruction.target = Void then
-				check_unqualified_call_validity (an_instruction.name, an_instruction.arguments)
+				check_unqualified_call_validity (an_instruction.name, an_instruction.arguments, Void)
 			else
-				check_qualified_call_validity (an_instruction.target, an_instruction.name, an_instruction.arguments)
+				check_qualified_call_validity (an_instruction.target, an_instruction.name, an_instruction.arguments, Void)
 			end
 		end
 
@@ -214,26 +226,24 @@ feature {NONE} -- Instruction validity
 		local
 			i, nb: INTEGER
 			an_expression: ET_EXPRESSION
+			a_context: ET_NESTED_TYPE_CONTEXT
 			boolean_type: ET_CLASS_TYPE
-			a_type: ET_TYPE
-			a_context: ET_TYPE_CONTEXT
 			a_class_impl: ET_CLASS
 			a_named_type: ET_NAMED_TYPE
 		do
 			boolean_type := universe.boolean_class
+			a_context := new_type_context (current_class)
 			a_class_impl := current_feature.implementation_class
 			nb := an_instruction.count
 			from i := 1 until i > nb loop
 				an_expression := an_instruction.assertion (i).expression
-				expression_checker.check_expression_validity (an_expression, boolean_type, current_class, current_feature, current_class)
+				expression_checker.check_expression_validity (an_expression, a_context, boolean_type, current_feature, current_class)
 				if expression_checker.has_fatal_error then
 					set_fatal_error
 				else
-					a_type := expression_checker.type
-					a_context := expression_checker.context
-					if not a_type.same_named_type (boolean_type, current_class, a_context, universe) then
+					if not a_context.same_named_type (boolean_type, current_class, universe) then
 						set_fatal_error
-						a_named_type := a_type.named_type (a_context, universe)
+						a_named_type := a_context.named_type (universe)
 						if current_class = a_class_impl then
 							error_handler.report_vwbe0a_error (current_class, an_expression, a_named_type)
 						else
@@ -241,8 +251,10 @@ feature {NONE} -- Instruction validity
 						end
 					end
 				end
+				a_context.wipe_out
 				i := i + 1
 			end
+			recycle_type_context (a_context)
 		end
 
 	check_create_instruction_validity (an_instruction: ET_CREATE_INSTRUCTION) is
@@ -271,17 +283,20 @@ feature {NONE} -- Instruction validity
 			a_class_type: ET_CLASS_TYPE
 			a_feature: ET_FEATURE
 			a_target_type: ET_TYPE
-			a_target_context: ET_TYPE_CONTEXT
+			a_target_context: ET_NESTED_TYPE_CONTEXT
 			a_creation_type: ET_TYPE
-			a_creation_context: ET_TYPE_CONTEXT
+			a_creation_context: ET_NESTED_TYPE_CONTEXT
 			a_seed: INTEGER
 			a_call: ET_QUALIFIED_CALL
 			a_name: ET_FEATURE_NAME
 		do
+			a_target_context := new_type_context (current_class)
+			a_creation_context := new_type_context (current_class)
 			a_class_impl := current_feature.implementation_class
 			a_creation_type := an_instruction.type
 			if a_creation_type /= Void then
-				a_creation_context := a_class_impl
+				a_creation_context.set_root_context (a_class_impl)
+				a_creation_context.force_first (a_creation_type)
 				check_type_validity (a_creation_type)
 			end
 			if not has_fatal_error then
@@ -293,15 +308,15 @@ feature {NONE} -- Instruction validity
 							-- We need to resolve `a_name' in the implementation
 							-- class of `current_feature' first.
 						if a_creation_type /= Void then
-							create a_context.make (a_creation_type, a_creation_context)
+							a_context := a_creation_context
 						else
-							expression_checker.check_writable_validity (an_instruction.target, current_feature, a_class_impl)
+							a_target_context.set_root_context (a_class_impl)
+							expression_checker.check_writable_validity (an_instruction.target, a_target_context, current_feature, a_class_impl)
 							if expression_checker.has_fatal_error then
 								set_fatal_error
 							else
-								a_target_type := expression_checker.type
-								a_target_context := expression_checker.context
-								create a_context.make (a_target_type, a_target_context)
+								a_target_type := tokens.like_current
+								a_context := a_target_context
 							end
 						end
 						if not has_fatal_error then
@@ -319,7 +334,6 @@ feature {NONE} -- Instruction validity
 											-- context of `current_class'.
 										a_feature := Void
 										a_target_type := Void
-										a_target_context := Void
 									end
 								else
 									set_fatal_error
@@ -339,18 +353,21 @@ feature {NONE} -- Instruction validity
 				if a_feature = Void then
 					if a_creation_type /= Void then
 						a_creation_type := resolved_formal_parameters (a_creation_type)
-						a_creation_context := current_class
+						a_creation_context.set_root_context (current_class)
+						a_creation_context.wipe_out
+						a_creation_context.force_first (a_creation_type)
 						if not has_fatal_error then
-							create a_context.make (a_creation_type, a_creation_context)
+							a_context := a_creation_context
 						end
 					else
-						expression_checker.check_writable_validity (an_instruction.target, current_feature, current_class)
+						a_target_context.set_root_context (current_class)
+						a_target_context.wipe_out
+						expression_checker.check_writable_validity (an_instruction.target, a_target_context, current_feature, current_class)
 						if expression_checker.has_fatal_error then
 							set_fatal_error
 						else
-							a_target_type := expression_checker.type
-							a_target_context := expression_checker.context
-							create a_context.make (a_target_type, a_target_context)
+							a_target_type := tokens.like_current
+							a_context := a_target_context
 						end
 					end
 					if not has_fatal_error then
@@ -377,18 +394,19 @@ feature {NONE} -- Instruction validity
 				end
 				if a_creation_type /= Void then
 					if a_target_type = Void then
-						expression_checker.check_writable_validity (an_instruction.target, current_feature, current_class)
+						a_target_context.set_root_context (current_class)
+						a_target_context.wipe_out
+						expression_checker.check_writable_validity (an_instruction.target, a_target_context, current_feature, current_class)
 						if expression_checker.has_fatal_error then
 							set_fatal_error
 						else
-							a_target_type := expression_checker.type
-							a_target_context := expression_checker.context
+							a_target_type := tokens.like_current
 						end
 					end
 					if not has_fatal_error then
-						if not a_creation_type.conforms_to_type (a_target_type, a_target_context, a_creation_context, universe) then
-							a_creation_named_type := a_creation_type.named_type (a_creation_context, universe)
-							a_target_named_type := a_target_type.named_type (a_target_context, universe)
+						if not a_creation_context.conforms_to_type (a_target_type, a_target_context, universe) then
+							a_creation_named_type := a_creation_context.named_type (universe)
+							a_target_named_type := a_target_context.named_type (universe)
 							set_fatal_error
 							if current_class = a_class_impl then
 								error_handler.report_vgcc3a_error (current_class, an_instruction, a_creation_named_type, a_target_named_type)
@@ -398,7 +416,7 @@ feature {NONE} -- Instruction validity
 						end
 					end
 				end
-				a_creation_named_type := a_context.type.named_type (a_context.context, universe)
+				a_creation_named_type := a_context.named_type (universe)
 				a_class_type ?= a_creation_named_type
 				if a_class_type /= Void then
 					check_creation_type_validity (a_class_type, an_instruction)
@@ -467,6 +485,8 @@ feature {NONE} -- Instruction validity
 					end
 				end
 			end
+			recycle_type_context (a_creation_context)
+			recycle_type_context (a_target_context)
 		end
 
 	check_debug_instruction_validity (an_instruction: ET_DEBUG_INSTRUCTION) is
@@ -494,22 +514,20 @@ feature {NONE} -- Instruction validity
 			an_elseif: ET_ELSEIF_PART
 			i, nb: INTEGER
 			had_error: BOOLEAN
-			a_type: ET_TYPE
-			a_context: ET_TYPE_CONTEXT
+			a_context: ET_NESTED_TYPE_CONTEXT
 			a_class_impl: ET_CLASS
 			a_named_type: ET_NAMED_TYPE
 		do
 			boolean_type := universe.boolean_class
+			a_context := new_type_context (current_class)
 			a_conditional := an_instruction.conditional.expression
-			expression_checker.check_expression_validity (a_conditional, boolean_type, current_class, current_feature, current_class)
+			expression_checker.check_expression_validity (a_conditional, a_context, boolean_type, current_feature, current_class)
 			if expression_checker.has_fatal_error then
 				had_error := True
 			else
-				a_type := expression_checker.type
-				a_context := expression_checker.context
-				if not a_type.same_named_type (boolean_type, current_class, a_context, universe) then
+				if not a_context.same_named_type (boolean_type, current_class, universe) then
 					had_error := True
-					a_named_type := a_type.named_type (a_context, universe)
+					a_named_type := a_context.named_type (universe)
 					a_class_impl := current_feature.implementation_class
 					if current_class = a_class_impl then
 						error_handler.report_vwbe0a_error (current_class, a_conditional, a_named_type)
@@ -531,15 +549,14 @@ feature {NONE} -- Instruction validity
 				from i := 1 until i > nb loop
 					an_elseif := an_elseif_parts.item (i)
 					a_conditional := an_elseif.conditional.expression
-					expression_checker.check_expression_validity (a_conditional, boolean_type, current_class, current_feature, current_class)
+					a_context.wipe_out
+					expression_checker.check_expression_validity (a_conditional, a_context, boolean_type, current_feature, current_class)
 					if expression_checker.has_fatal_error then
 						had_error := True
 					else
-						a_type := expression_checker.type
-						a_context := expression_checker.context
-						if not a_type.same_named_type (boolean_type, current_class, a_context, universe) then
+						if not a_context.same_named_type (boolean_type, current_class, universe) then
 							had_error := True
-							a_named_type := a_type.named_type (a_context, universe)
+							a_named_type := a_context.named_type (universe)
 							a_class_impl := current_feature.implementation_class
 							if current_class = a_class_impl then
 								error_handler.report_vwbe0a_error (current_class, a_conditional, a_named_type)
@@ -568,6 +585,7 @@ feature {NONE} -- Instruction validity
 			if had_error then
 				set_fatal_error
 			end
+			recycle_type_context (a_context)
 		end
 
 	check_inspect_instruction_validity (an_instruction: ET_INSPECT_INSTRUCTION) is
@@ -581,14 +599,19 @@ feature {NONE} -- Instruction validity
 			a_compound: ET_COMPOUND
 			i, nb: INTEGER
 			had_error: BOOLEAN
+			a_context: ET_NESTED_TYPE_CONTEXT
+			any_type: ET_CLASS_TYPE
 		do
+			any_type := universe.any_type
+			a_context := new_type_context (current_class)
 			a_conditional := an_instruction.conditional.expression
-			expression_checker.check_expression_validity (a_conditional, universe.boolean_class, current_class, current_feature, current_class)
+			expression_checker.check_expression_validity (a_conditional, a_context, any_type, current_feature, current_class)
 			if expression_checker.has_fatal_error then
 				had_error := True
 			else
 -- TODO: check that it is an integer or character expression
 			end
+			recycle_type_context (a_context)
 			a_when_parts := an_instruction.when_parts
 			if a_when_parts /= Void then
 				nb := a_when_parts.count
@@ -625,10 +648,10 @@ feature {NONE} -- Instruction validity
 			a_conditional: ET_EXPRESSION
 			a_compound: ET_COMPOUND
 			had_error: BOOLEAN
-			a_type: ET_TYPE
-			a_context: ET_TYPE_CONTEXT
+			a_context: ET_NESTED_TYPE_CONTEXT
 			a_class_impl: ET_CLASS
 			a_named_type: ET_NAMED_TYPE
+			boolean_type: ET_CLASS_TYPE
 		do
 			a_compound := an_instruction.from_compound
 			if a_compound /= Void then
@@ -637,17 +660,17 @@ feature {NONE} -- Instruction validity
 					had_error := True
 				end
 			end
+			boolean_type := universe.boolean_class
+			a_context := new_type_context (current_class)
 -- TODO: check invariant and variant
 			a_conditional := an_instruction.until_conditional.expression
-			expression_checker.check_expression_validity (a_conditional, universe.boolean_class, current_class, current_feature, current_class)
+			expression_checker.check_expression_validity (a_conditional, a_context, boolean_type, current_feature, current_class)
 			if expression_checker.has_fatal_error then
 				had_error := True
 			else
-				a_type := expression_checker.type
-				a_context := expression_checker.context
-				if not a_type.same_named_type (universe.boolean_class, current_class, a_context, universe) then
+				if not a_context.same_named_type (boolean_type, current_class, universe) then
 					had_error := True
-					a_named_type := a_type.named_type (a_context, universe)
+					a_named_type := a_context.named_type (universe)
 					a_class_impl := current_feature.implementation_class
 					if current_class = a_class_impl then
 						error_handler.report_vwbe0a_error (current_class, a_conditional, a_named_type)
@@ -656,6 +679,7 @@ feature {NONE} -- Instruction validity
 					end
 				end
 			end
+			recycle_type_context (a_context)
 			a_compound := an_instruction.loop_compound
 			if a_compound /= Void then
 				check_instructions_validity (a_compound, current_feature, current_class)
@@ -673,7 +697,7 @@ feature {NONE} -- Instruction validity
 		require
 			an_instruction_not_void: an_instruction /= Void
 		do
-			check_precursor_validity (an_instruction)
+			check_precursor_validity (an_instruction, Void)
 		end
 
 	check_retry_instruction_validity (an_instruction: ET_RETRY_INSTRUCTION) is
@@ -691,7 +715,7 @@ feature {NONE} -- Instruction validity
 		require
 			an_instruction_not_void: an_instruction /= Void
 		do
-			check_static_call_validity (an_instruction)
+			check_static_call_validity (an_instruction, Void)
 		end
 
 	expression_checker: ET_EXPRESSION_CHECKER

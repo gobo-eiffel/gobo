@@ -25,7 +25,7 @@ creation
 
 feature {NONE} -- Expression validity
 
-	check_precursor_expression_validity (an_expression: ET_PRECURSOR_EXPRESSION) is
+	check_precursor_expression_validity (an_expression: ET_PRECURSOR_EXPRESSION; a_context: ET_NESTED_TYPE_CONTEXT) is
 			-- Check validity of `an_expression'.
 		do
 				-- The Precursor expression does not appear in a Routine_body.

@@ -33,9 +33,7 @@ inherit
 			conforms_from_bit_type,
 			conforms_from_class_type,
 			conforms_from_formal_parameter_type,
-			conforms_from_tuple_type,
-			convertible_from_class_type,
-			convertible_from_formal_parameter_type
+			conforms_from_tuple_type
 		end
 
 feature -- Access
@@ -89,7 +87,7 @@ feature -- Access
 				if seeded_feature /= Void then
 					a_query_type := seeded_feature.type
 					if a_query_type /= Void then
-						create a_target_context.make (a_target_type, a_context)
+						a_target_context := a_context.new_type_context (a_target_type)
 						Result := a_query_type.base_class (a_target_context, a_universe)
 					else
 							-- Internal error: an inconsistency has been
@@ -131,7 +129,7 @@ feature -- Access
 				if seeded_feature /= Void then
 					a_query_type := seeded_feature.type
 					if a_query_type /= Void then
-						create a_target_context.make (a_target_type, a_context)
+						a_target_context := a_context.new_type_context (a_target_type)
 						Result := a_query_type.base_type (a_target_context, a_universe)
 					else
 							-- Internal error: an inconsistency has been
@@ -168,7 +166,7 @@ feature -- Access
 				if seeded_feature /= Void then
 					a_query_type := seeded_feature.type
 					if a_query_type /= Void then
-						create a_target_context.make (a_target_type, a_context)
+						a_target_context := a_context.new_type_context (a_target_type)
 						Result := a_query_type.base_type_actual (i, a_target_context, a_universe)
 					else
 							-- Internal error: an inconsistency has been
@@ -205,7 +203,7 @@ feature -- Access
 				if seeded_feature /= Void then
 					a_query_type := seeded_feature.type
 					if a_query_type /= Void then
-						create a_target_context.make (a_target_type, a_context)
+						a_target_context := a_context.new_type_context (a_target_type)
 						Result := a_query_type.base_type_actual_parameter (i, a_target_context, a_universe)
 					else
 							-- Internal error: an inconsistency has been
@@ -245,7 +243,7 @@ feature -- Access
 				if seeded_feature /= Void then
 					a_query_type := seeded_feature.type
 					if a_query_type /= Void then
-						create a_target_context.make (a_target_type, a_context)
+						a_target_context := a_context.new_type_context (a_target_type)
 						Result := a_query_type.named_type (a_target_context, a_universe)
 					else
 							-- Internal error: an inconsistency has been
@@ -305,7 +303,7 @@ feature -- Measurement
 				if seeded_feature /= Void then
 					a_query_type := seeded_feature.type
 					if a_query_type /= Void then
-						create a_target_context.make (a_target_type, a_context)
+						a_target_context := a_context.new_type_context (a_target_type)
 						Result := a_query_type.base_type_actual_count (a_target_context, a_universe)
 					else
 							-- Internal error: an inconsistency has been
@@ -348,7 +346,7 @@ feature -- Status report
 				if seeded_feature /= Void then
 					a_query_type := seeded_feature.type
 					if a_query_type /= Void then
-						create a_target_context.make (a_target_type, a_context)
+						a_target_context := a_context.new_type_context (a_target_type)
 						Result := a_query_type.is_type_expanded (a_target_context, a_universe)
 					else
 							-- Internal error: an inconsistency has been
@@ -385,7 +383,7 @@ feature -- Status report
 				if seeded_feature /= Void then
 					a_query_type := seeded_feature.type
 					if a_query_type /= Void then
-						create a_target_context.make (a_target_type, a_context)
+						a_target_context := a_context.new_type_context (a_target_type)
 						Result := a_query_type.is_cat_type (a_target_context, a_universe)
 					else
 							-- Internal error: an inconsistency has been
@@ -422,7 +420,7 @@ feature -- Status report
 				if seeded_feature /= Void then
 					a_query_type := seeded_feature.type
 					if a_query_type /= Void then
-						create a_target_context.make (a_target_type, a_context)
+						a_target_context := a_context.new_type_context (a_target_type)
 						Result := a_query_type.is_actual_cat_type (i, a_target_context, a_universe)
 					else
 							-- Internal error: an inconsistency has been
@@ -459,7 +457,7 @@ feature -- Status report
 				if seeded_feature /= Void then
 					a_query_type := seeded_feature.type
 					if a_query_type /= Void then
-						create a_target_context.make (a_target_type, a_context)
+						a_target_context := a_context.new_type_context (a_target_type)
 						Result := a_query_type.is_cat_parameter (a_target_context, a_universe)
 					else
 							-- Internal error: an inconsistency has been
@@ -496,7 +494,7 @@ feature -- Status report
 				if seeded_feature /= Void then
 					a_query_type := seeded_feature.type
 					if a_query_type /= Void then
-						create a_target_context.make (a_target_type, a_context)
+						a_target_context := a_context.new_type_context (a_target_type)
 						Result := a_query_type.is_actual_cat_parameter (i, a_target_context, a_universe)
 					else
 							-- Internal error: an inconsistency has been
@@ -533,7 +531,7 @@ feature -- Status report
 				if seeded_feature /= Void then
 					a_query_type := seeded_feature.type
 					if a_query_type /= Void then
-						create a_target_context.make (a_target_type, a_context)
+						a_target_context := a_context.new_type_context (a_target_type)
 						Result := a_query_type.has_formal_type (i, a_target_context, a_universe)
 					else
 							-- Internal error: an inconsistency has been
@@ -570,7 +568,7 @@ feature -- Status report
 				if seeded_feature /= Void then
 					a_query_type := seeded_feature.type
 					if a_query_type /= Void then
-						create a_target_context.make (a_target_type, a_context)
+						a_target_context := a_context.new_type_context (a_target_type)
 						Result := a_query_type.has_formal_types (a_target_context, a_universe)
 					else
 							-- Internal error: an inconsistency has been
@@ -646,7 +644,7 @@ feature -- Comparison
 				if seeded_feature /= Void then
 					a_query_type := seeded_feature.type
 					if a_query_type /= Void then
-						create a_target_context.make (a_target_type, a_context)
+						a_target_context := a_context.new_type_context (a_target_type)
 						Result := a_query_type.same_named_type (other, other_context, a_target_context, a_universe)
 					else
 							-- Internal error: an inconsistency has been
@@ -686,7 +684,7 @@ feature -- Comparison
 				if seeded_feature /= Void then
 					a_query_type := seeded_feature.type
 					if a_query_type /= Void then
-						create a_target_context.make (a_target_type, a_context)
+						a_target_context := a_context.new_type_context (a_target_type)
 						Result := a_query_type.same_base_type (other, other_context, a_target_context, a_universe)
 					else
 							-- Internal error: an inconsistency has been
@@ -703,7 +701,7 @@ feature -- Comparison
 			end
 		end
 
-feature {ET_TYPE} -- Comparison
+feature {ET_TYPE, ET_TYPE_CONTEXT} -- Comparison
 
 	same_syntactical_qualified_type (other: ET_QUALIFIED_TYPE;
 		other_context: ET_TYPE_CONTEXT; a_context: ET_TYPE_CONTEXT;
@@ -765,7 +763,7 @@ feature {ET_TYPE} -- Comparison
 				if seeded_feature /= Void then
 					a_query_type := seeded_feature.type
 					if a_query_type /= Void then
-						create a_target_context.make (a_target_type, a_context)
+						a_target_context := a_context.new_type_context (a_target_type)
 						Result := a_query_type.same_named_bit_type (other, other_context, a_target_context, a_universe)
 					else
 							-- Internal error: an inconsistency has been
@@ -803,7 +801,7 @@ feature {ET_TYPE} -- Comparison
 				if seeded_feature /= Void then
 					a_query_type := seeded_feature.type
 					if a_query_type /= Void then
-						create a_target_context.make (a_target_type, a_context)
+						a_target_context := a_context.new_type_context (a_target_type)
 						Result := a_query_type.same_named_class_type (other, other_context, a_target_context, a_universe)
 					else
 							-- Internal error: an inconsistency has been
@@ -842,7 +840,7 @@ feature {ET_TYPE} -- Comparison
 				if seeded_feature /= Void then
 					a_query_type := seeded_feature.type
 					if a_query_type /= Void then
-						create a_target_context.make (a_target_type, a_context)
+						a_target_context := a_context.new_type_context (a_target_type)
 						Result := a_query_type.same_named_formal_parameter_type (other, other_context, a_target_context, a_universe)
 					else
 							-- Internal error: an inconsistency has been
@@ -880,7 +878,7 @@ feature {ET_TYPE} -- Comparison
 				if seeded_feature /= Void then
 					a_query_type := seeded_feature.type
 					if a_query_type /= Void then
-						create a_target_context.make (a_target_type, a_context)
+						a_target_context := a_context.new_type_context (a_target_type)
 						Result := a_query_type.same_named_tuple_type (other, other_context, a_target_context, a_universe)
 					else
 							-- Internal error: an inconsistency has been
@@ -918,7 +916,7 @@ feature {ET_TYPE} -- Comparison
 				if seeded_feature /= Void then
 					a_query_type := seeded_feature.type
 					if a_query_type /= Void then
-						create a_target_context.make (a_target_type, a_context)
+						a_target_context := a_context.new_type_context (a_target_type)
 						Result := a_query_type.same_base_bit_type (other, other_context, a_target_context, a_universe)
 					else
 							-- Internal error: an inconsistency has been
@@ -956,7 +954,7 @@ feature {ET_TYPE} -- Comparison
 				if seeded_feature /= Void then
 					a_query_type := seeded_feature.type
 					if a_query_type /= Void then
-						create a_target_context.make (a_target_type, a_context)
+						a_target_context := a_context.new_type_context (a_target_type)
 						Result := a_query_type.same_base_class_type (other, other_context, a_target_context, a_universe)
 					else
 							-- Internal error: an inconsistency has been
@@ -995,7 +993,7 @@ feature {ET_TYPE} -- Comparison
 				if seeded_feature /= Void then
 					a_query_type := seeded_feature.type
 					if a_query_type /= Void then
-						create a_target_context.make (a_target_type, a_context)
+						a_target_context := a_context.new_type_context (a_target_type)
 						Result := a_query_type.same_base_formal_parameter_type (other, other_context, a_target_context, a_universe)
 					else
 							-- Internal error: an inconsistency has been
@@ -1033,7 +1031,7 @@ feature {ET_TYPE} -- Comparison
 				if seeded_feature /= Void then
 					a_query_type := seeded_feature.type
 					if a_query_type /= Void then
-						create a_target_context.make (a_target_type, a_context)
+						a_target_context := a_context.new_type_context (a_target_type)
 						Result := a_query_type.same_base_tuple_type (other, other_context, a_target_context, a_universe)
 					else
 							-- Internal error: an inconsistency has been
@@ -1087,7 +1085,7 @@ feature -- Conformance
 					if seeded_feature /= Void then
 						a_query_type := seeded_feature.type
 						if a_query_type /= Void then
-							create a_target_context.make (a_target_type, a_context)
+							a_target_context := a_context.new_type_context (a_target_type)
 							Result := a_query_type.conforms_to_type (other, other_context, a_target_context, a_universe)
 							if not Result then
 									-- Covers the case where only 'like {G}.a'
@@ -1110,7 +1108,7 @@ feature -- Conformance
 			end
 		end
 
-feature {ET_TYPE} -- Conformance
+feature {ET_TYPE, ET_TYPE_CONTEXT} -- Conformance
 
 	conforms_from_bit_type (other: ET_BIT_TYPE; other_context: ET_TYPE_CONTEXT;
 		a_context: ET_TYPE_CONTEXT; a_universe: ET_UNIVERSE): BOOLEAN is
@@ -1149,7 +1147,7 @@ feature {ET_TYPE} -- Conformance
 					if seeded_feature /= Void then
 						a_query_type := seeded_feature.type
 						if a_query_type /= Void then
-							create a_target_context.make (a_target_type, a_context)
+							a_target_context := a_context.new_type_context (a_target_type)
 							Result := a_query_type.conforms_from_bit_type (other, other_context, a_target_context, a_universe)
 						else
 								-- Internal error: an inconsistency has been
@@ -1204,7 +1202,7 @@ feature {ET_TYPE} -- Conformance
 					if seeded_feature /= Void then
 						a_query_type := seeded_feature.type
 						if a_query_type /= Void then
-							create a_target_context.make (a_target_type, a_context)
+							a_target_context := a_context.new_type_context (a_target_type)
 							Result := a_query_type.conforms_from_class_type (other, other_context, a_target_context, a_universe)
 						else
 								-- Internal error: an inconsistency has been
@@ -1260,7 +1258,7 @@ feature {ET_TYPE} -- Conformance
 					if seeded_feature /= Void then
 						a_query_type := seeded_feature.type
 						if a_query_type /= Void then
-							create a_target_context.make (a_target_type, a_context)
+							a_target_context := a_context.new_type_context (a_target_type)
 							Result := a_query_type.conforms_from_formal_parameter_type (other, other_context, a_target_context, a_universe)
 						else
 								-- Internal error: an inconsistency has been
@@ -1315,170 +1313,8 @@ feature {ET_TYPE} -- Conformance
 					if seeded_feature /= Void then
 						a_query_type := seeded_feature.type
 						if a_query_type /= Void then
-							create a_target_context.make (a_target_type, a_context)
+							a_target_context := a_context.new_type_context (a_target_type)
 							Result := a_query_type.conforms_from_tuple_type (other, other_context, a_target_context, a_universe)
-						else
-								-- Internal error: an inconsistency has been
-								-- introduced in the AST since we relsolved
-								-- current anchored type.
-							Result := False
-						end
-					else
-							-- Internal error: an inconsistency has been
-							-- introduced in the AST since we relsolved
-							-- current anchored type.
-						Result := False
-					end
-				end
-			end
-		end
-
-feature -- Convertibility
-
-	convertible_to_type (other: ET_TYPE; other_context: ET_TYPE_CONTEXT;
-		a_context: ET_TYPE_CONTEXT; a_universe: ET_UNIVERSE): BOOLEAN is
-			-- Is current type appearing in `a_context' convertible
-			-- to `other' type appearing in `other_context'?
-			-- (Note: 'a_universe.qualified_signature_resolver' is
-			-- used on classes whose qualified anchored types need
-			-- to be resolved in order to check convertibility.)
-		local
-			a_target_type: ET_TYPE
-			a_target_context: ET_NESTED_TYPE_CONTEXT
-			a_class: ET_CLASS
-			seeded_feature: ET_FEATURE
-			a_query_type: ET_TYPE
-		do
-			if other = Current and then other_context = a_context then
-				Result := True
-			else
-				if seed = 0 then
-						-- Qualified anchored type not resolved yet.
-						-- Try to resolve it now.
-					a_class := a_context.base_class (a_universe)
-					a_class.process (a_universe.qualified_signature_resolver)
-				end
-				if seed = 0 then
-						-- Qualified anchored type still not resolved.
-					Result := False
-				else
-					a_target_type := target_type
-					a_class := a_target_type.base_class (a_context, a_universe)
-					seeded_feature := a_class.seeded_feature (seed)
-					if seeded_feature /= Void then
-						a_query_type := seeded_feature.type
-						if a_query_type /= Void then
-							create a_target_context.make (a_target_type, a_context)
-							Result := a_query_type.convertible_to_type (other, other_context, a_target_context, a_universe)
-						else
-								-- Internal error: an inconsistency has been
-								-- introduced in the AST since we relsolved
-								-- current anchored type.
-							Result := False
-						end
-					else
-							-- Internal error: an inconsistency has been
-							-- introduced in the AST since we relsolved
-							-- current anchored type.
-						Result := False
-					end
-				end
-			end
-		end
-
-feature {ET_TYPE} -- Convertibility
-
-	convertible_from_class_type (other: ET_CLASS_TYPE; other_context: ET_TYPE_CONTEXT;
-		a_context: ET_TYPE_CONTEXT; a_universe: ET_UNIVERSE): BOOLEAN is
-			-- Is `other' type appearing in `other_context' convertible
-			-- to current type appearing in `a_context'?
-			-- (Note: 'a_universe.qualified_signature_resolver' is
-			-- used on classes whose qualified anchored types need
-			-- to be resolved in order to check convertibility.)
-		local
-			a_target_type: ET_TYPE
-			a_target_context: ET_NESTED_TYPE_CONTEXT
-			a_class: ET_CLASS
-			seeded_feature: ET_FEATURE
-			a_query_type: ET_TYPE
-		do
-			if seed = 0 then
-					-- Qualified anchored type not resolved yet.
-					-- Try to resolve it now.
-				a_class := a_context.base_class (a_universe)
-				a_class.process (a_universe.qualified_signature_resolver)
-			end
-			if seed = 0 then
-					-- Qualified anchored type still not resolved.
-				Result := False
-			else
-				a_target_type := target_type
-				if a_target_type.is_formal_type (a_context, a_universe) then
-						-- Current type is of the unfolded form 'like {G}.a'
-						-- and only 'like {G}.a' conforms to itself.
-					Result := False
-				else
-					a_class := a_target_type.base_class (a_context, a_universe)
-					seeded_feature := a_class.seeded_feature (seed)
-					if seeded_feature /= Void then
-						a_query_type := seeded_feature.type
-						if a_query_type /= Void then
-							create a_target_context.make (a_target_type, a_context)
-							Result := a_query_type.convertible_from_class_type (other, other_context, a_target_context, a_universe)
-						else
-								-- Internal error: an inconsistency has been
-								-- introduced in the AST since we relsolved
-								-- current anchored type.
-							Result := False
-						end
-					else
-							-- Internal error: an inconsistency has been
-							-- introduced in the AST since we relsolved
-							-- current anchored type.
-						Result := False
-					end
-				end
-			end
-		end
-
-	convertible_from_formal_parameter_type (other: ET_FORMAL_PARAMETER_TYPE;
-		other_context: ET_TYPE_CONTEXT; a_context: ET_TYPE_CONTEXT;
-		a_universe: ET_UNIVERSE): BOOLEAN is
-			-- Is `other' type appearing in `other_context' convertible
-			-- to current type appearing in `a_context'?
-			-- (Note: 'a_universe.qualified_signature_resolver' is
-			-- used on classes whose qualified anchored types need
-			-- to be resolved in order to check convertibility.)
-		local
-			a_target_type: ET_TYPE
-			a_target_context: ET_NESTED_TYPE_CONTEXT
-			a_class: ET_CLASS
-			seeded_feature: ET_FEATURE
-			a_query_type: ET_TYPE
-		do
-			if seed = 0 then
-					-- Qualified anchored type not resolved yet.
-					-- Try to resolve it now.
-				a_class := a_context.base_class (a_universe)
-				a_class.process (a_universe.qualified_signature_resolver)
-			end
-			if seed = 0 then
-					-- Qualified anchored type still not resolved.
-				Result := False
-			else
-				a_target_type := target_type
-				if a_target_type.is_formal_type (a_context, a_universe) then
-						-- Current type is of the unfolded form 'like {G}.a'
-						-- and only 'like {G}.a' conforms to itself.
-					Result := False
-				else
-					a_class := a_target_type.base_class (a_context, a_universe)
-					seeded_feature := a_class.seeded_feature (seed)
-					if seeded_feature /= Void then
-						a_query_type := seeded_feature.type
-						if a_query_type /= Void then
-							create a_target_context.make (a_target_type, a_context)
-							Result := a_query_type.convertible_from_formal_parameter_type (other, other_context, a_target_context, a_universe)
 						else
 								-- Internal error: an inconsistency has been
 								-- introduced in the AST since we relsolved

@@ -311,7 +311,6 @@ feature -- Comparison
 			other_context_valid: other_context.is_valid_context
 			a_context_not_void: a_context /= Void
 			a_context_valid: a_context.is_valid_context
-			same_root_context: other_context.same_root_context (a_context)
 			a_universe_not_void: a_universe /= Void
 			-- no_cycle: no cycle in anchored types involved.
 		deferred
@@ -329,7 +328,6 @@ feature -- Comparison
 			other_context_valid: other_context.is_valid_context
 			a_context_not_void: a_context /= Void
 			a_context_valid: a_context.is_valid_context
-			same_root_context: other_context.same_root_context (a_context)
 			a_universe_not_void: a_universe /= Void
 			-- no_cycle: no cycle in anchored types involved.
 		deferred
@@ -348,7 +346,6 @@ feature -- Comparison
 			other_context_valid: other_context.is_valid_context
 			a_context_not_void: a_context /= Void
 			a_context_valid: a_context.is_valid_context
-			same_root_context: other_context.same_root_context (a_context)
 			a_universe_not_void: a_universe /= Void
 			-- no_cycle: no cycle in anchored types involved.
 		deferred
@@ -357,7 +354,7 @@ feature -- Comparison
 			symmetric: Result = other.same_base_type (Current, a_context, other_context, a_universe)
 		end
 
-feature {ET_TYPE} -- Comparison
+feature {ET_TYPE, ET_TYPE_CONTEXT} -- Comparison
 
 	same_syntactical_bit_type (other: ET_BIT_TYPE; other_context: ET_TYPE_CONTEXT;
 		a_context: ET_TYPE_CONTEXT; a_universe: ET_UNIVERSE): BOOLEAN is
@@ -374,7 +371,6 @@ feature {ET_TYPE} -- Comparison
 			other_context_valid: other_context.is_valid_context
 			a_context_not_void: a_context /= Void
 			a_context_valid: a_context.is_valid_context
-			same_root_context: other_context.same_root_context (a_context)
 			a_universe_not_void: a_universe /= Void
 			-- no_cycle: no cycle in anchored types involved.
 		do
@@ -396,7 +392,6 @@ feature {ET_TYPE} -- Comparison
 			other_context_valid: other_context.is_valid_context
 			a_context_not_void: a_context /= Void
 			a_context_valid: a_context.is_valid_context
-			same_root_context: other_context.same_root_context (a_context)
 			a_universe_not_void: a_universe /= Void
 			-- no_cycle: no cycle in anchored types involved.
 		do
@@ -419,7 +414,6 @@ feature {ET_TYPE} -- Comparison
 			other_context_valid: other_context.is_valid_context
 			a_context_not_void: a_context /= Void
 			a_context_valid: a_context.is_valid_context
-			same_root_context: other_context.same_root_context (a_context)
 			a_universe_not_void: a_universe /= Void
 			-- no_cycle: no cycle in anchored types involved.
 		do
@@ -442,7 +436,6 @@ feature {ET_TYPE} -- Comparison
 			other_context_valid: other_context.is_valid_context
 			a_context_not_void: a_context /= Void
 			a_context_valid: a_context.is_valid_context
-			same_root_context: other_context.same_root_context (a_context)
 			a_universe_not_void: a_universe /= Void
 			-- no_cycle: no cycle in anchored types involved.
 		do
@@ -465,7 +458,6 @@ feature {ET_TYPE} -- Comparison
 			other_context_valid: other_context.is_valid_context
 			a_context_not_void: a_context /= Void
 			a_context_valid: a_context.is_valid_context
-			same_root_context: other_context.same_root_context (a_context)
 			a_universe_not_void: a_universe /= Void
 			-- no_cycle: no cycle in anchored types involved.
 		do
@@ -488,7 +480,6 @@ feature {ET_TYPE} -- Comparison
 			other_context_valid: other_context.is_valid_context
 			a_context_not_void: a_context /= Void
 			a_context_valid: a_context.is_valid_context
-			same_root_context: other_context.same_root_context (a_context)
 			a_universe_not_void: a_universe /= Void
 			-- no_cycle: no cycle in anchored types involved.
 		do
@@ -510,7 +501,6 @@ feature {ET_TYPE} -- Comparison
 			other_context_valid: other_context.is_valid_context
 			a_context_not_void: a_context /= Void
 			a_context_valid: a_context.is_valid_context
-			same_root_context: other_context.same_root_context (a_context)
 			a_universe_not_void: a_universe /= Void
 			-- no_cycle: no cycle in anchored types involved.
 		do
@@ -527,7 +517,6 @@ feature {ET_TYPE} -- Comparison
 			other_context_valid: other_context.is_valid_context
 			a_context_not_void: a_context /= Void
 			a_context_valid: a_context.is_valid_context
-			same_root_context: other_context.same_root_context (a_context)
 			a_universe_not_void: a_universe /= Void
 			-- no_cycle: no cycle in anchored types involved.
 		do
@@ -544,7 +533,6 @@ feature {ET_TYPE} -- Comparison
 			other_context_valid: other_context.is_valid_context
 			a_context_not_void: a_context /= Void
 			a_context_valid: a_context.is_valid_context
-			same_root_context: other_context.same_root_context (a_context)
 			a_universe_not_void: a_universe /= Void
 			-- no_cycle: no cycle in anchored types involved.
 		do
@@ -562,7 +550,6 @@ feature {ET_TYPE} -- Comparison
 			other_context_valid: other_context.is_valid_context
 			a_context_not_void: a_context /= Void
 			a_context_valid: a_context.is_valid_context
-			same_root_context: other_context.same_root_context (a_context)
 			a_universe_not_void: a_universe /= Void
 			-- no_cycle: no cycle in anchored types involved.
 		do
@@ -579,7 +566,6 @@ feature {ET_TYPE} -- Comparison
 			other_context_valid: other_context.is_valid_context
 			a_context_not_void: a_context /= Void
 			a_context_valid: a_context.is_valid_context
-			same_root_context: other_context.same_root_context (a_context)
 			a_universe_not_void: a_universe /= Void
 			-- no_cycle: no cycle in anchored types involved.
 		do
@@ -596,7 +582,6 @@ feature {ET_TYPE} -- Comparison
 			other_context_valid: other_context.is_valid_context
 			a_context_not_void: a_context /= Void
 			a_context_valid: a_context.is_valid_context
-			same_root_context: other_context.same_root_context (a_context)
 			a_universe_not_void: a_universe /= Void
 			-- no_cycle: no cycle in anchored types involved.
 		do
@@ -613,7 +598,6 @@ feature {ET_TYPE} -- Comparison
 			other_context_valid: other_context.is_valid_context
 			a_context_not_void: a_context /= Void
 			a_context_valid: a_context.is_valid_context
-			same_root_context: other_context.same_root_context (a_context)
 			a_universe_not_void: a_universe /= Void
 			-- no_cycle: no cycle in anchored types involved.
 		do
@@ -631,7 +615,6 @@ feature {ET_TYPE} -- Comparison
 			other_context_valid: other_context.is_valid_context
 			a_context_not_void: a_context /= Void
 			a_context_valid: a_context.is_valid_context
-			same_root_context: other_context.same_root_context (a_context)
 			a_universe_not_void: a_universe /= Void
 			-- no_cycle: no cycle in anchored types involved.
 		do
@@ -648,7 +631,6 @@ feature {ET_TYPE} -- Comparison
 			other_context_valid: other_context.is_valid_context
 			a_context_not_void: a_context /= Void
 			a_context_valid: a_context.is_valid_context
-			same_root_context: other_context.same_root_context (a_context)
 			a_universe_not_void: a_universe /= Void
 			-- no_cycle: no cycle in anchored types involved.
 		do
@@ -672,13 +654,12 @@ feature -- Conformance
 			other_context_valid: other_context.is_valid_context
 			a_context_not_void: a_context /= Void
 			a_context_valid: a_context.is_valid_context
-			same_root_context: other_context.same_root_context (a_context)
 			a_universe_not_void: a_universe /= Void
 			-- no_cycle: no cycle in anchored types involved.
 		deferred
 		end
 
-feature {ET_TYPE} -- Conformance
+feature {ET_TYPE, ET_TYPE_CONTEXT} -- Conformance
 
 	conforms_from_bit_type (other: ET_BIT_TYPE; other_context: ET_TYPE_CONTEXT;
 		a_context: ET_TYPE_CONTEXT; a_universe: ET_UNIVERSE): BOOLEAN is
@@ -695,7 +676,6 @@ feature {ET_TYPE} -- Conformance
 			other_context_valid: other_context.is_valid_context
 			a_context_not_void: a_context /= Void
 			a_context_valid: a_context.is_valid_context
-			same_root_context: other_context.same_root_context (a_context)
 			a_universe_not_void: a_universe /= Void
 			-- no_cycle: no cycle in anchored types involved.
 		do
@@ -717,7 +697,6 @@ feature {ET_TYPE} -- Conformance
 			other_context_valid: other_context.is_valid_context
 			a_context_not_void: a_context /= Void
 			a_context_valid: a_context.is_valid_context
-			same_root_context: other_context.same_root_context (a_context)
 			a_universe_not_void: a_universe /= Void
 			-- no_cycle: no cycle in anchored types involved.
 		do
@@ -741,7 +720,6 @@ feature {ET_TYPE} -- Conformance
 			other_context_is_root: other_context.is_root_context
 			a_context_not_void: a_context /= Void
 			a_context_valid: a_context.is_valid_context
-			same_root_context: other_context.same_root_context (a_context)
 			a_universe_not_void: a_universe /= Void
 			-- no_cycle: no cycle in anchored types involved.
 		do
@@ -763,112 +741,6 @@ feature {ET_TYPE} -- Conformance
 			other_context_valid: other_context.is_valid_context
 			a_context_not_void: a_context /= Void
 			a_context_valid: a_context.is_valid_context
-			same_root_context: other_context.same_root_context (a_context)
-			a_universe_not_void: a_universe /= Void
-			-- no_cycle: no cycle in anchored types involved.
-		do
-			-- Result := False
-		end
-
-feature -- Convertibility
-
-	convertible_to_type (other: ET_TYPE; other_context: ET_TYPE_CONTEXT;
-		a_context: ET_TYPE_CONTEXT; a_universe: ET_UNIVERSE): BOOLEAN is
-			-- Is current type appearing in `a_context' convertible
-			-- to `other' type appearing in `other_context'?
-			-- (Note: 'a_universe.qualified_signature_resolver' is
-			-- used on classes whose qualified anchored types need
-			-- to be resolved in order to check convertibility.)
-		require
-			other_not_void: other /= Void
-			other_context_not_void: other_context /= Void
-			other_context_valid: other_context.is_valid_context
-			a_context_not_void: a_context /= Void
-			a_context_valid: a_context.is_valid_context
-			same_root_context: other_context.same_root_context (a_context)
-			a_universe_not_void: a_universe /= Void
-			-- no_cycle: no cycle in anchored types involved.
-		deferred
-		end
-
-feature {ET_TYPE} -- Convertibility
-
-	convertible_from_bit_type (other: ET_BIT_TYPE; other_context: ET_TYPE_CONTEXT;
-		a_context: ET_TYPE_CONTEXT; a_universe: ET_UNIVERSE): BOOLEAN is
-			-- Is `other' type appearing in `other_context' convertible
-			-- to current type appearing in `a_context'?
-			-- (Note: 'a_universe.qualified_signature_resolver' is
-			-- used on classes whose qualified anchored types need
-			-- to be resolved in order to check convertibility.)
-		require
-			other_not_void: other /= Void
-			other_context_not_void: other_context /= Void
-			other_context_valid: other_context.is_valid_context
-			a_context_not_void: a_context /= Void
-			a_context_valid: a_context.is_valid_context
-			same_root_context: other_context.same_root_context (a_context)
-			a_universe_not_void: a_universe /= Void
-			-- no_cycle: no cycle in anchored types involved.
-		do
-			-- Result := False
-		end
-
-	convertible_from_class_type (other: ET_CLASS_TYPE; other_context: ET_TYPE_CONTEXT;
-		a_context: ET_TYPE_CONTEXT; a_universe: ET_UNIVERSE): BOOLEAN is
-			-- Is `other' type appearing in `other_context' convertible
-			-- to current type appearing in `a_context'?
-			-- (Note: 'a_universe.qualified_signature_resolver' is
-			-- used on classes whose qualified anchored types need
-			-- to be resolved in order to check convertibility.)
-		require
-			other_not_void: other /= Void
-			other_context_not_void: other_context /= Void
-			other_context_valid: other_context.is_valid_context
-			a_context_not_void: a_context /= Void
-			a_context_valid: a_context.is_valid_context
-			same_root_context: other_context.same_root_context (a_context)
-			a_universe_not_void: a_universe /= Void
-			-- no_cycle: no cycle in anchored types involved.
-		do
-			-- Result := False
-		end
-
-	convertible_from_formal_parameter_type (other: ET_FORMAL_PARAMETER_TYPE;
-		other_context: ET_TYPE_CONTEXT; a_context: ET_TYPE_CONTEXT;
-		a_universe: ET_UNIVERSE): BOOLEAN is
-			-- Is `other' type appearing in `other_context' convertible
-			-- to current type appearing in `a_context'?
-			-- (Note: 'a_universe.qualified_signature_resolver' is
-			-- used on classes whose qualified anchored types need
-			-- to be resolved in order to check convertibility.)
-		require
-			other_not_void: other /= Void
-			other_context_not_void: other_context /= Void
-			other_context_valid: other_context.is_valid_context
-			other_context_is_root: other_context.is_root_context
-			a_context_not_void: a_context /= Void
-			a_context_valid: a_context.is_valid_context
-			same_root_context: other_context.same_root_context (a_context)
-			a_universe_not_void: a_universe /= Void
-			-- no_cycle: no cycle in anchored types involved.
-		do
-			-- Result := False
-		end
-
-	convertible_from_tuple_type (other: ET_TUPLE_TYPE; other_context: ET_TYPE_CONTEXT;
-		a_context: ET_TYPE_CONTEXT; a_universe: ET_UNIVERSE): BOOLEAN is
-			-- Is `other' type appearing in `other_context' convertible
-			-- to current type appearing in `a_context'?
-			-- (Note: 'a_universe.qualified_signature_resolver' is
-			-- used on classes whose qualified anchored types need
-			-- to be resolved in order to check convertibility.)
-		require
-			other_not_void: other /= Void
-			other_context_not_void: other_context /= Void
-			other_context_valid: other_context.is_valid_context
-			a_context_not_void: a_context /= Void
-			a_context_valid: a_context.is_valid_context
-			same_root_context: other_context.same_root_context (a_context)
 			a_universe_not_void: a_universe /= Void
 			-- no_cycle: no cycle in anchored types involved.
 		do

@@ -5,7 +5,7 @@ indexing
 		"Eiffel call validity checkers"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2003, Eric Bezault and others"
+	copyright: "Copyright (c) 2003-2004, Eric Bezault and others"
 	license: "Eiffel Forum License v2 (see forum.txt)"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -27,38 +27,45 @@ feature -- Status report
 
 feature {NONE} -- Validity checking
 
-	check_qualified_call_validity (a_target: ET_EXPRESSION; a_name: ET_FEATURE_NAME; an_actuals: ET_ACTUAL_ARGUMENT_LIST) is
+	check_qualified_call_validity (a_target: ET_EXPRESSION; a_name: ET_FEATURE_NAME;
+		an_actuals: ET_ACTUAL_ARGUMENT_LIST; a_context: ET_NESTED_TYPE_CONTEXT) is
 			-- Check validity of qualified call.
 		require
 			a_target_not_void: a_target /= Void
 			a_name_not_void: a_name /= Void
 		local
-			a_context: ET_NESTED_TYPE_CONTEXT
+			l_context: ET_NESTED_TYPE_CONTEXT
 			a_class_impl: ET_CLASS
 			a_class: ET_CLASS
 			a_feature: ET_FEATURE
 			a_type: ET_TYPE
 			a_seed: INTEGER
-			a_target_type: ET_TYPE
 			a_like: ET_LIKE_FEATURE
+			any_type: ET_CLASS_TYPE
+			l_target_context: ET_NESTED_TYPE_CONTEXT
 		do
+			any_type := universe.any_type
 			a_class_impl := current_feature.implementation_class
 			a_seed := a_name.seed
 			if a_seed = 0 then
 					-- We need to resolve `a_name' in the implementation
 					-- class of `current_feature' first.
-				expression_checker.check_expression_validity (a_target, universe.any_type, a_class_impl, current_feature, a_class_impl)
+				if a_class_impl /= current_class or a_context = Void then
+					l_context := new_type_context (a_class_impl)
+					l_target_context := l_context
+				else
+					l_target_context := a_context
+				end
+				expression_checker.check_expression_validity (a_target, l_target_context, any_type, current_feature, a_class_impl)
 				if expression_checker.has_fatal_error then
 					set_fatal_error
 				else
-					a_target_type := expression_checker.type
-					if a_target_type = universe.string_type then
+					if not l_target_context.is_empty and then l_target_context.first = universe.string_type then
 							-- When a manifest string is the target of a call,
 							-- we consider it as non-cat type.
-						a_target_type := universe.string_class
+						l_target_context.put (universe.string_class, 1)
 					end
-					create a_context.make (a_target_type, expression_checker.context)
-					a_class := a_context.base_class (universe)
+					a_class := l_target_context.base_class (universe)
 					a_class.process (universe.interface_checker)
 					if a_class.has_interface_error then
 						set_fatal_error
@@ -83,18 +90,27 @@ feature {NONE} -- Validity checking
 			end
 			if not has_fatal_error and a_seed /= 0 then
 				if a_feature = Void then
-					expression_checker.check_expression_validity (a_target, universe.any_type, current_class, current_feature, current_class)
+					if a_context /= Void then
+						l_target_context := a_context
+					else
+						if l_context /= Void then
+							l_context.wipe_out
+							l_context.set_root_context (current_class)
+						else
+							l_context := new_type_context (current_class)
+						end
+						l_target_context := l_context
+					end
+					expression_checker.check_expression_validity (a_target, l_target_context, any_type, current_feature, current_class)
 					if expression_checker.has_fatal_error then
 						set_fatal_error
 					else
-						a_target_type := expression_checker.type
-						if a_target_type = universe.string_type then
+						if not l_target_context.is_empty and then l_target_context.first = universe.string_type then
 								-- When a manifest string is the target of a call,
 								-- we consider it as non-cat type.
-							a_target_type := universe.string_class
+							l_target_context.put (universe.string_class, 1)
 						end
-						create a_context.make (a_target_type, expression_checker.context)
-						a_class := a_context.base_class (universe)
+						a_class := l_target_context.base_class (universe)
 						a_class.process (universe.interface_checker)
 						if a_class.has_interface_error then
 							set_fatal_error
@@ -112,7 +128,7 @@ feature {NONE} -- Validity checking
 				if a_feature /= Void then
 					check
 						a_class_not_void: a_class /= Void
-						a_context_not_void: a_context /= Void
+						l_target_context_not_void: l_target_context /= Void
 					end
 					if not a_feature.is_exported_to (current_class, universe.ancestor_builder) then
 							-- The feature is not exported to `current_class'.
@@ -123,7 +139,9 @@ feature {NONE} -- Validity checking
 							error_handler.report_vuex2c_error (current_class, a_class_impl, a_name, a_feature, a_class)
 						end
 					end
-					check_arguments_validity (an_actuals, a_name, a_feature, a_context, a_class)
+					check_arguments_validity (an_actuals, a_name, a_feature, l_target_context, a_class)
+						-- Check whether `a_feature' satistfies CAT validity rules.
+					check_cat_validity (a_name, a_feature, l_target_context)
 					a_type := a_feature.type
 					if in_expression then
 						if a_type = Void then
@@ -134,18 +152,31 @@ feature {NONE} -- Validity checking
 							else
 								error_handler.report_vkcn2b_error (current_class, a_class_impl, a_name, a_feature, a_class)
 							end
-						elseif not has_fatal_error then
+						elseif not has_fatal_error and then a_context /= Void then
 -- TODO: like argument
 							if an_actuals /= Void and then an_actuals.count = 1 then
 								a_like ?= a_type
 								if a_like /= Void and then a_like.is_like_argument then
-										-- Keep the `type' and `context' found for the argument.
-									set_type_and_context (expression_checker.type, expression_checker.context)
+									if l_target_context /= a_context then
+										a_context.wipe_out
+										a_context.set_root_context (current_class)
+										l_target_context.force_first (a_feature.arguments.formal_argument (1).type)
+										expression_checker.check_expression_validity (an_actuals.expression (1), a_context, l_target_context, current_feature, current_class)
+										l_target_context.remove_first
+									else
+										l_target_context := new_type_context (current_class)
+										l_target_context.copy_type_context (a_context)
+										l_target_context.force_first (a_feature.arguments.formal_argument (1).type)
+										a_context.wipe_out
+										a_context.set_root_context (current_class)
+										expression_checker.check_expression_validity (an_actuals.expression (1), a_context, l_target_context, current_feature, current_class)
+										recycle_type_context (l_target_context)
+									end
 								else
-									set_type_and_context (a_type, a_context)
+									a_context.force_first (a_type)
 								end
 							else
-								set_type_and_context (a_type, a_context)
+								a_context.force_first (a_type)
 							end
 						end
 					else
@@ -159,13 +190,15 @@ feature {NONE} -- Validity checking
 							end
 						end
 					end
-						-- Check whether `a_feature' satistfies CAT validity rules.
-					check_cat_validity (a_name, a_feature, a_context)
 				end
+			end
+			if l_context /= Void then
+				recycle_type_context (l_context)
 			end
 		end
 
-	check_unqualified_call_validity (a_name: ET_FEATURE_NAME; an_actuals: ET_ACTUAL_ARGUMENT_LIST) is
+	check_unqualified_call_validity (a_name: ET_FEATURE_NAME;
+		an_actuals: ET_ACTUAL_ARGUMENT_LIST; a_context: ET_NESTED_TYPE_CONTEXT) is
 			-- Check validity of unqualified call.
 		require
 			a_name_not_void: a_name /= Void
@@ -179,6 +212,7 @@ feature {NONE} -- Validity checking
 			a_locals: ET_LOCAL_VARIABLE_LIST
 			a_like: ET_LIKE_FEATURE
 			already_checked: BOOLEAN
+			l_formal_context: ET_NESTED_TYPE_CONTEXT
 		do
 			a_class_impl := current_feature.implementation_class
 			a_seed := a_name.seed
@@ -205,8 +239,8 @@ feature {NONE} -- Validity checking
 										-- No need to check validity in the
 										-- context of `current_class' again.
 									already_checked := True
-									if not has_fatal_error then
-										set_type_and_context (an_arguments.formal_argument (a_seed).type, current_class)
+									if not has_fatal_error and then a_context /= Void then
+										a_context.force_first (an_arguments.formal_argument (a_seed).type)
 									end
 								end
 							else
@@ -236,8 +270,8 @@ feature {NONE} -- Validity checking
 											-- No need to check validity in the
 											-- context of `current_class' again.
 										already_checked := True
-										if not has_fatal_error then
-											set_type_and_context (resolved_formal_parameters (a_locals.local_variable (a_seed).type), current_class)
+										if not has_fatal_error and then a_context /= Void then
+											a_context.force_first (resolved_formal_parameters (a_locals.local_variable (a_seed).type))
 										end
 									end
 								else
@@ -290,8 +324,8 @@ feature {NONE} -- Validity checking
 						set_fatal_error
 						an_identifier := a_locals.local_variable (a_seed).name
 						error_handler.report_gvuaa0a_error (a_class_impl, an_identifier, current_feature)
-					else
-						set_type_and_context (an_arguments.formal_argument (a_seed).type, current_class)
+					elseif a_context /= Void then
+						a_context.force_first (an_arguments.formal_argument (a_seed).type)
 					end
 				elseif in_expression and then a_name.is_local then
 					a_locals := current_feature.locals
@@ -308,8 +342,8 @@ feature {NONE} -- Validity checking
 						set_fatal_error
 						an_identifier := a_locals.local_variable (a_seed).name
 						error_handler.report_gvual0a_error (a_class_impl, an_identifier, current_feature)
-					else
-						set_type_and_context (resolved_formal_parameters (a_locals.local_variable (a_seed).type), current_class)
+					elseif a_context /= Void then
+						a_context.force_first (resolved_formal_parameters (a_locals.local_variable (a_seed).type))
 					end
 				else
 					if a_feature = Void then
@@ -327,7 +361,9 @@ feature {NONE} -- Validity checking
 						end
 					end
 					if a_feature /= Void then
-						check_arguments_validity (an_actuals, a_name, a_feature, current_class, Void)
+						l_formal_context := new_type_context (current_class)
+						check_arguments_validity (an_actuals, a_name, a_feature, l_formal_context, Void)
+						recycle_type_context (l_formal_context)
 						a_type := a_feature.type
 						if in_expression then
 							if a_type = Void then
@@ -338,18 +374,21 @@ feature {NONE} -- Validity checking
 								else
 									error_handler.report_vkcn2d_error (current_class, a_class_impl, a_name, a_feature)
 								end
-							elseif not has_fatal_error then
+							elseif not has_fatal_error and then a_context /= Void then
 -- TODO: like argument
 								if an_actuals /= Void and then an_actuals.count = 1 then
 									a_like ?= a_type
 									if a_like /= Void and then a_like.is_like_argument then
 											-- Keep the `type' and `context' found for the argument.
-										set_type_and_context (expression_checker.type, expression_checker.context)
+										l_formal_context := new_type_context (current_class)
+										l_formal_context.force_first (a_feature.arguments.formal_argument (1).type)
+										expression_checker.check_expression_validity (an_actuals.expression (1), a_context, l_formal_context, current_feature, current_class)
+										recycle_type_context (l_formal_context)
 									else
-										set_type_and_context (a_type, current_class)
+										a_context.force_first (a_type)
 									end
 								else
-									set_type_and_context (a_type, current_class)
+									a_context.force_first (a_type)
 								end
 							end
 						else
@@ -368,7 +407,7 @@ feature {NONE} -- Validity checking
 			end
 		end
 
-	check_precursor_validity (a_precursor: ET_PRECURSOR) is
+	check_precursor_validity (a_precursor: ET_PRECURSOR; a_context: ET_NESTED_TYPE_CONTEXT) is
 			-- Check validity of `a_precursor'.
 		require
 			a_precursor_not_void: a_precursor /= Void
@@ -376,10 +415,10 @@ feature {NONE} -- Validity checking
 			a_class_impl: ET_CLASS
 			a_precursor_keyword: ET_PRECURSOR_KEYWORD
 			a_feature: ET_FEATURE
-			a_parent_type: ET_BASE_TYPE
+			a_parent_type, an_ancestor: ET_BASE_TYPE
 			a_class: ET_CLASS
 			an_actuals: ET_ACTUAL_ARGUMENT_LIST
-			a_context: ET_TYPE_CONTEXT
+			l_context: ET_NESTED_TYPE_CONTEXT
 		do
 				-- Make sure that `a_precursor' has been resolved.
 			a_class_impl := current_feature.implementation_class
@@ -406,7 +445,7 @@ feature {NONE} -- Validity checking
 						error_handler.report_giabg_error
 					else
 						if current_class = a_class_impl then
-							a_context := a_parent_type
+							l_context := new_type_context (a_parent_type)
 						else
 								-- Resolve generic parameters in the
 								-- context of `current_class'.
@@ -415,36 +454,40 @@ feature {NONE} -- Validity checking
 								if current_class.has_ancestors_error then
 									set_fatal_error
 								else
-									a_context := current_class.ancestor (a_parent_type, universe)
-									if a_context = Void then
+									an_ancestor := current_class.ancestor (a_parent_type, universe)
+									if an_ancestor = Void then
 											-- Internal error: `a_parent_type' is an ancestor
-											-- of `a_class_impl, and hence of `current_class'.
+											-- of `a_class_impl', and hence of `current_class'.
 										set_fatal_error
 										error_handler.report_giabx_error
+									else
+										l_context := new_type_context (an_ancestor)
 									end
 								end
 							else
-								a_context := a_parent_type
+								l_context := new_type_context (a_parent_type)
 							end
 						end
-						if a_context /= Void then
+						if l_context /= Void then
 							an_actuals := a_precursor.arguments
-							check_arguments_validity (an_actuals, a_precursor_keyword, a_feature, a_context, a_class)
-							if in_expression and then not has_fatal_error then
-								set_type_and_context (current_feature.type, current_class)
+							check_arguments_validity (an_actuals, a_precursor_keyword, a_feature, l_context, a_class)
+							if in_expression and then not has_fatal_error and then a_context /= Void then
+								a_context.force_first (current_feature.type)
 							end
+							recycle_type_context (l_context)
 						end
 					end
 				end
 			end
 		end
 
-	check_static_call_validity (a_call: ET_STATIC_FEATURE_CALL) is
+	check_static_call_validity (a_call: ET_STATIC_FEATURE_CALL; a_context: ET_NESTED_TYPE_CONTEXT) is
 			-- Check validity of `a_call'.
 		require
 			a_call_not_void: a_call /= Void
 		local
-			a_context: ET_NESTED_TYPE_CONTEXT
+			l_context: ET_NESTED_TYPE_CONTEXT
+			l_target_context: ET_NESTED_TYPE_CONTEXT
 			a_class_impl: ET_CLASS
 			a_class: ET_CLASS
 			a_feature: ET_FEATURE
@@ -461,8 +504,14 @@ feature {NONE} -- Validity checking
 				if a_seed = 0 then
 						-- We need to resolve `a_name' in the implementation
 						-- class of `current_feature' first.
-					create a_context.make (a_type, a_class_impl)
-					a_class := a_context.base_class (universe)
+					if a_class_impl /= current_class or a_context = Void then
+						l_context := new_type_context (a_class_impl)
+						l_target_context := l_context
+					else
+						l_target_context := a_context
+					end
+					l_target_context.force_first (a_type)
+					a_class := l_target_context.base_class (universe)
 					a_class.process (universe.interface_checker)
 					if a_class.has_interface_error then
 						set_fatal_error
@@ -488,8 +537,19 @@ feature {NONE} -- Validity checking
 					if a_feature = Void then
 						a_type := resolved_formal_parameters (a_type)
 						if not has_fatal_error then
-							create a_context.make (a_type, current_class)
-							a_class := a_context.base_class (universe)
+							if a_context /= Void then
+								l_target_context := a_context
+							else
+								if l_context /= Void then
+									l_context.wipe_out
+									l_context.set_root_context (current_class)
+								else
+									l_context := new_type_context (current_class)
+								end
+								l_target_context := l_context
+							end
+							l_target_context.force_first (a_type)
+							a_class := l_target_context.base_class (universe)
 							a_class.process (universe.interface_checker)
 							if a_class.has_interface_error then
 								set_fatal_error
@@ -507,7 +567,7 @@ feature {NONE} -- Validity checking
 					if a_feature /= Void then
 						check
 							a_class_not_void: a_class /= Void
-							a_context_not_void: a_context /= Void
+							l_target_context_not_void: l_target_context /= Void
 						end
 						if not a_feature.is_exported_to (current_class, universe.ancestor_builder) then
 								-- The feature is not exported to `current_class'.
@@ -518,7 +578,7 @@ feature {NONE} -- Validity checking
 								error_handler.report_vuex2c_error (current_class, a_class_impl, a_name, a_feature, a_class)
 							end
 						end
-						check_arguments_validity (a_call.arguments, a_name, a_feature, a_context, a_class)
+						check_arguments_validity (a_call.arguments, a_name, a_feature, l_target_context, a_class)
 						a_type := a_feature.type
 						if in_expression then
 -- TODO: check that `a_feature' is a constant attribute or an external function.
@@ -530,8 +590,8 @@ feature {NONE} -- Validity checking
 								else
 									error_handler.report_vkcn2b_error (current_class, a_class_impl, a_name, a_feature, a_class)
 								end
-							elseif not has_fatal_error then
-								set_type_and_context (a_type, a_context)
+							elseif not has_fatal_error and then a_context /= Void then
+								a_context.force_first (a_type)
 							end
 						else
 -- TODO: check that `a_feature' is an external procedure.
@@ -548,10 +608,13 @@ feature {NONE} -- Validity checking
 					end
 				end
 			end
+			if l_context /= Void then
+				recycle_type_context (l_context)
+			end
 		end
 
 	check_arguments_validity (an_actuals: ET_ACTUAL_ARGUMENT_LIST; a_name: ET_FEATURE_NAME;
-		a_feature: ET_FEATURE; a_context: ET_TYPE_CONTEXT; a_class: ET_CLASS) is
+		a_feature: ET_FEATURE; a_context: ET_NESTED_TYPE_CONTEXT; a_class: ET_CLASS) is
 			-- Check actual arguments validity when calling `a_feature' named `a_name'
 			-- in context of its target `a_context'. `a_class' is the base class of the
 			-- target, or void in case of an unqualified call.
@@ -566,13 +629,14 @@ feature {NONE} -- Validity checking
 			a_formal: ET_FORMAL_ARGUMENT
 			i, nb: INTEGER
 			had_error: BOOLEAN
-			an_actual_type: ET_TYPE
-			an_actual_context: ET_TYPE_CONTEXT
 			an_actual_named_type: ET_NAMED_TYPE
 			a_formal_named_type: ET_NAMED_TYPE
 			a_convert_feature: ET_CONVERT_FEATURE
 			a_convert_expression: ET_CONVERT_EXPRESSION
 			an_expression_comma: ET_EXPRESSION_COMMA
+			l_actual_context: ET_NESTED_TYPE_CONTEXT
+			l_formal_context: ET_NESTED_TYPE_CONTEXT
+			l_formal_type: ET_TYPE
 		do
 			a_class_impl := current_feature.implementation_class
 			a_formals := a_feature.arguments
@@ -625,24 +689,26 @@ feature {NONE} -- Validity checking
 					end
 				end
 			else
+				l_actual_context := new_type_context (current_class)
+				l_formal_context := a_context
+				l_formal_type := tokens.like_current
 				had_error := has_fatal_error
 				nb := an_actuals.count
 				from i := 1 until i > nb loop
 					an_actual := an_actuals.expression (i)
 					a_formal := a_formals.formal_argument (i)
-					expression_checker.check_expression_validity (an_actual, a_formal.type, a_context, current_feature, current_class)
+					l_formal_context.force_first (a_formal.type)
+					expression_checker.check_expression_validity (an_actual, l_actual_context, l_formal_context, current_feature, current_class)
 					if expression_checker.has_fatal_error then
 						had_error := True
 					else
-						an_actual_type := expression_checker.type
-						an_actual_context := expression_checker.context
 						a_convert_expression ?= an_actual
 						if a_convert_expression /= Void then
 -- TODO
 -- Already converted in ancestor. Need to check that this conversion is still
 -- valid in current class.
-						elseif not an_actual_type.conforms_to_type (a_formal.type, a_context, an_actual_context, universe) then
-							a_convert_feature := type_checker.convert_feature (an_actual_type, an_actual_context, a_formal.type, a_context)
+						elseif not l_actual_context.conforms_to_type (l_formal_type, l_formal_context, universe) then
+							a_convert_feature := type_checker.convert_feature (l_actual_context, l_formal_context)
 							if a_convert_feature /= Void then
 								a_convert_expression := universe.ast_factory.new_convert_expression (an_actual, a_convert_feature)
 								if a_convert_expression /= Void then
@@ -654,8 +720,8 @@ feature {NONE} -- Validity checking
 									end
 								end
 							else
-								an_actual_named_type := an_actual_type.named_type (an_actual_context, universe)
-								a_formal_named_type := a_formal.type.named_type (a_context, universe)
+								an_actual_named_type := l_actual_context.named_type (universe)
+								a_formal_named_type := l_formal_context.named_type (universe)
 								had_error := True
 								set_fatal_error
 								if a_class /= Void then
@@ -682,8 +748,11 @@ feature {NONE} -- Validity checking
 							end
 						end
 					end
+					l_formal_context.remove_first
+					l_actual_context.wipe_out
 					i := i + 1
 				end
+				recycle_type_context (l_actual_context)
 				if had_error then
 						-- The error status may have been reset
 						-- while checking the arguments.
@@ -796,21 +865,35 @@ feature {NONE} -- Access
 	current_class: ET_CLASS
 			-- Class to with `current_feature' belongs
 
+feature {NONE} -- Type context
+
+	new_type_context (a_context: ET_BASE_TYPE): ET_NESTED_TYPE_CONTEXT is
+			-- New nested type context
+		require
+			a_context_not_void: a_context /= Void
+			a_context_valid: a_context.is_valid_context
+		do
+			Result := expression_checker.new_type_context (a_context)
+		ensure
+			type_context_not_void: Result /= Void
+			root_context_set: Result.root_context = a_context
+			type_context_empty: Result.is_empty
+		end
+
+	recycle_type_context (a_context: ET_NESTED_TYPE_CONTEXT) is
+			-- Recycle `a_context'.
+		require
+			a_context_not_void: a_context /= Void
+		do
+			expression_checker.recycle_type_context (a_context)
+		end
+
 feature {NONE} -- Implementation
 
 	in_expression: BOOLEAN is
 			-- Are we processing an expression?
 		do
 			Result := False
-		end
-
-	set_type_and_context (a_type: ET_TYPE; a_context: ET_TYPE_CONTEXT) is
-			-- Set type to `a_type' and context to `a_context'.
-		require
-			in_exprssion: in_expression
-			a_type_not_void: a_type /= Void
-			a_context_not_void: a_context /= Void
-		do
 		end
 
 feature {NONE} -- Implementation

@@ -26,14 +26,14 @@ creation
 
 feature {NONE} -- Expression validity
 
-	check_old_expression_validity (an_expression: ET_OLD_EXPRESSION) is
+	check_old_expression_validity (an_expression: ET_OLD_EXPRESSION; a_context: ET_NESTED_TYPE_CONTEXT) is
 			-- Check validity of `an_expression'.
 		do
 				-- Check VAOL-2 (ETL2 p.124).
-			check_expression_validity (an_expression.expression, current_target_type, current_target_context, current_feature, current_class)
+			check_expression_validity (an_expression.expression, a_context, current_target_type, current_feature, current_class)
 		end
 
-	check_precursor_expression_validity (an_expression: ET_PRECURSOR_EXPRESSION) is
+	check_precursor_expression_validity (an_expression: ET_PRECURSOR_EXPRESSION; a_context: ET_NESTED_TYPE_CONTEXT) is
 			-- Check validity of `an_expression'.
 		do
 				-- The Precursor expression does not appear in a Routine_body.

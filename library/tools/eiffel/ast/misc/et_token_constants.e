@@ -180,6 +180,16 @@ feature -- Feature names
 			default_create_feature_name_not_void: Result /= Void
 		end
 
+feature -- Types
+
+	like_current: ET_LIKE_CURRENT is
+			-- Type 'like Current'
+		once
+			create Result.make
+		ensure
+			like_current_not_void: Result /= Void
+		end
+
 feature -- Conversion features
 
 	builtin_convert_feature: ET_CONVERT_FEATURE is

@@ -33,9 +33,7 @@ inherit
 			conforms_from_bit_type,
 			conforms_from_class_type,
 			conforms_from_formal_parameter_type,
-			conforms_from_tuple_type,
-			convertible_from_class_type,
-			convertible_from_formal_parameter_type
+			conforms_from_tuple_type
 		end
 
 creation
@@ -1112,7 +1110,7 @@ feature -- Comparison
 			end
 		end
 
-feature {ET_TYPE} -- Comparison
+feature {ET_TYPE, ET_TYPE_CONTEXT} -- Comparison
 
 	same_syntactical_like_feature (other: ET_LIKE_FEATURE;
 		other_context: ET_TYPE_CONTEXT; a_context: ET_TYPE_CONTEXT;
@@ -1666,7 +1664,7 @@ feature -- Conformance
 			end
 		end
 
-feature {ET_TYPE} -- Conformance
+feature {ET_TYPE, ET_TYPE_CONTEXT} -- Conformance
 
 	conforms_from_bit_type (other: ET_BIT_TYPE; other_context: ET_TYPE_CONTEXT;
 		a_context: ET_TYPE_CONTEXT; a_universe: ET_UNIVERSE): BOOLEAN is
@@ -1898,190 +1896,6 @@ feature {ET_TYPE} -- Conformance
 					a_query_type := seeded_feature.type
 					if a_query_type /= Void then
 						Result := a_query_type.conforms_from_tuple_type (other, other_context, a_context, a_universe)
-					else
-							-- Internal error: an inconsistency has been
-							-- introduced in the AST since we relsolved
-							-- current anchored type.
-						Result := False
-					end
-				else
-						-- Internal error: an inconsistency has been
-						-- introduced in the AST since we relsolved
-						-- current anchored type.
-					Result := False
-				end
-			end
-		end
-
-feature -- Convertibility
-
-	convertible_to_type (other: ET_TYPE; other_context: ET_TYPE_CONTEXT;
-		a_context: ET_TYPE_CONTEXT; a_universe: ET_UNIVERSE): BOOLEAN is
-			-- Is current type appearing in `a_context' convertible
-			-- to `other' type appearing in `other_context'?
-			-- (Note: 'a_universe.qualified_signature_resolver' is
-			-- used on classes whose qualified anchored types need
-			-- to be resolved in order to check convertibility.)
-		local
-			a_class: ET_CLASS
-			seeded_feature: ET_FEATURE
-			a_query_type: ET_TYPE
-			args: ET_FORMAL_ARGUMENT_LIST
-			an_index: INTEGER
-		do
-			if other = Current and then other_context = a_context then
-				Result := True
-			elseif seed = 0 then
-					-- Anchored type not resolved yet.
-				Result := False
-			elseif is_like_argument then
-				a_class := a_context.base_class (a_universe)
-				seeded_feature := a_class.seeded_feature (seed)
-				if seeded_feature /= Void then
-					args := seeded_feature.arguments
-					an_index := index
-					if args = Void or else an_index > args.count then
-							-- Internal error: an inconsistency has been
-							-- introduced in the AST since we relsolved
-							-- current anchored type.
-						Result := False
-					else
-						Result := args.item (an_index).type.convertible_to_type (other, other_context, a_context, a_universe)
-					end
-				else
-						-- Internal error: an inconsistency has been
-						-- introduced in the AST since we relsolved
-						-- current anchored type.
-					Result := False
-				end
-			else
-				a_class := a_context.base_class (a_universe)
-				seeded_feature := a_class.seeded_feature (seed)
-				if seeded_feature /= Void then
-					a_query_type := seeded_feature.type
-					if a_query_type /= Void then
-						Result := a_query_type.convertible_to_type (other, other_context, a_context, a_universe)
-					else
-							-- Internal error: an inconsistency has been
-							-- introduced in the AST since we relsolved
-							-- current anchored type.
-						Result := False
-					end
-				else
-						-- Internal error: an inconsistency has been
-						-- introduced in the AST since we relsolved
-						-- current anchored type.
-					Result := False
-				end
-			end
-		end
-
-feature {ET_TYPE} -- Convertibility
-
-	convertible_from_class_type (other: ET_CLASS_TYPE; other_context: ET_TYPE_CONTEXT;
-		a_context: ET_TYPE_CONTEXT; a_universe: ET_UNIVERSE): BOOLEAN is
-			-- Is `other' type appearing in `other_context' convertible
-			-- to current type appearing in `a_context'?
-			-- (Note: 'a_universe.qualified_signature_resolver' is
-			-- used on classes whose qualified anchored types need
-			-- to be resolved in order to check convertibility.)
-		local
-			a_class: ET_CLASS
-			seeded_feature: ET_FEATURE
-			a_query_type: ET_TYPE
-			args: ET_FORMAL_ARGUMENT_LIST
-			an_index: INTEGER
-		do
-			if seed = 0 then
-					-- Anchored type not resolved yet.
-				Result := False
-			elseif is_like_argument then
-				a_class := a_context.base_class (a_universe)
-				seeded_feature := a_class.seeded_feature (seed)
-				if seeded_feature /= Void then
-					args := seeded_feature.arguments
-					an_index := index
-					if args = Void or else an_index > args.count then
-							-- Internal error: an inconsistency has been
-							-- introduced in the AST since we relsolved
-							-- current anchored type.
-						Result := False
-					else
-						Result := args.item (an_index).type.convertible_from_class_type (other, other_context, a_context, a_universe)
-					end
-				else
-						-- Internal error: an inconsistency has been
-						-- introduced in the AST since we relsolved
-						-- current anchored type.
-					Result := False
-				end
-			else
-				a_class := a_context.base_class (a_universe)
-				seeded_feature := a_class.seeded_feature (seed)
-				if seeded_feature /= Void then
-					a_query_type := seeded_feature.type
-					if a_query_type /= Void then
-						Result := a_query_type.convertible_from_class_type (other, other_context, a_context, a_universe)
-					else
-							-- Internal error: an inconsistency has been
-							-- introduced in the AST since we relsolved
-							-- current anchored type.
-						Result := False
-					end
-				else
-						-- Internal error: an inconsistency has been
-						-- introduced in the AST since we relsolved
-						-- current anchored type.
-					Result := False
-				end
-			end
-		end
-
-	convertible_from_formal_parameter_type (other: ET_FORMAL_PARAMETER_TYPE;
-		other_context: ET_TYPE_CONTEXT; a_context: ET_TYPE_CONTEXT;
-		a_universe: ET_UNIVERSE): BOOLEAN is
-			-- Is `other' type appearing in `other_context' convertible
-			-- to current type appearing in `a_context'?
-			-- (Note: 'a_universe.qualified_signature_resolver' is
-			-- used on classes whose qualified anchored types need
-			-- to be resolved in order to check convertibility.)
-		local
-			a_class: ET_CLASS
-			seeded_feature: ET_FEATURE
-			a_query_type: ET_TYPE
-			args: ET_FORMAL_ARGUMENT_LIST
-			an_index: INTEGER
-		do
-			if seed = 0 then
-					-- Anchored type not resolved yet.
-				Result := False
-			elseif is_like_argument then
-				a_class := a_context.base_class (a_universe)
-				seeded_feature := a_class.seeded_feature (seed)
-				if seeded_feature /= Void then
-					args := seeded_feature.arguments
-					an_index := index
-					if args = Void or else an_index > args.count then
-							-- Internal error: an inconsistency has been
-							-- introduced in the AST since we relsolved
-							-- current anchored type.
-						Result := False
-					else
-						Result := args.item (an_index).type.convertible_from_formal_parameter_type (other, other_context, a_context, a_universe)
-					end
-				else
-						-- Internal error: an inconsistency has been
-						-- introduced in the AST since we relsolved
-						-- current anchored type.
-					Result := False
-				end
-			else
-				a_class := a_context.base_class (a_universe)
-				seeded_feature := a_class.seeded_feature (seed)
-				if seeded_feature /= Void then
-					a_query_type := seeded_feature.type
-					if a_query_type /= Void then
-						Result := a_query_type.convertible_from_formal_parameter_type (other, other_context, a_context, a_universe)
 					else
 							-- Internal error: an inconsistency has been
 							-- introduced in the AST since we relsolved

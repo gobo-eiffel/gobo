@@ -32,9 +32,7 @@ inherit
 			conforms_from_bit_type,
 			conforms_from_class_type,
 			conforms_from_formal_parameter_type,
-			conforms_from_tuple_type,
-			convertible_from_class_type,
-			convertible_from_formal_parameter_type
+			conforms_from_tuple_type
 		end
 
 creation
@@ -100,7 +98,7 @@ feature -- Access
 			-- new formal type in that case instead of the base
 			-- type of its constraint.
 		do
-			Result := a_context.type.named_type (a_context.context, a_universe)
+			Result := a_context.named_type (a_universe)
 		end
 
 	hash_code: INTEGER is
@@ -200,14 +198,14 @@ feature -- Status report
 			-- Does the named type of current type contain the formal generic parameter
 			-- with index `i' when viewed from `a_context' in `a_universe'?
 		do
-			Result := a_context.type.has_formal_type (i, a_context.context, a_universe)
+			Result := a_context.has_formal_type (i, a_universe)
 		end
 
 	has_formal_types (a_context: ET_TYPE_CONTEXT; a_universe: ET_UNIVERSE): BOOLEAN is
 			-- Does the named type of current type contain a formal generic parameter
 			-- when viewed from `a_context' in `a_universe'?
 		do
-			Result := a_context.type.has_formal_types (a_context.context, a_universe)
+			Result := a_context.has_formal_types (a_universe)
 		end
 
 	has_qualified_type (a_context: ET_TYPE_CONTEXT; a_universe: ET_UNIVERSE): BOOLEAN is
@@ -216,7 +214,7 @@ feature -- Status report
 			-- or do its actual generic parameters (recursively) contain qualified
 			-- types?
 		do
-			Result := a_context.type.has_qualified_type (a_context.context, a_universe)
+			Result := a_context.has_qualified_type (a_universe)
 		end
 
 feature -- Comparison
@@ -246,7 +244,7 @@ feature -- Comparison
 			if other = Current and then other_context = a_context then
 				Result := True
 			else
-				Result := a_context.type.same_named_type (other, other_context, a_context.context, a_universe)
+				Result := a_context.same_named_type (other, other_context, a_universe)
 			end
 		end
 
@@ -258,11 +256,11 @@ feature -- Comparison
 			if other = Current and then other_context = a_context then
 				Result := True
 			else
-				Result := a_context.type.same_base_type (other, other_context, a_context.context, a_universe)
+				Result := a_context.same_base_type (other, other_context, a_universe)
 			end
 		end
 
-feature {ET_TYPE} -- Comparison
+feature {ET_TYPE, ET_TYPE_CONTEXT} -- Comparison
 
 	same_syntactical_like_current (other: ET_LIKE_CURRENT;
 		other_context: ET_TYPE_CONTEXT; a_context: ET_TYPE_CONTEXT;
@@ -283,7 +281,7 @@ feature {ET_TYPE} -- Comparison
 			-- Do current type appearing in `a_context' and `other' type
 			-- appearing in `other_context' have the same named type?
 		do
-			Result := a_context.type.same_named_bit_type (other, other_context, a_context.context, a_universe)
+			Result := a_context.same_named_bit_type (other, other_context, a_universe)
 		end
 
 	same_named_class_type (other: ET_CLASS_TYPE; other_context: ET_TYPE_CONTEXT;
@@ -291,7 +289,7 @@ feature {ET_TYPE} -- Comparison
 			-- Do current type appearing in `a_context' and `other' type
 			-- appearing in `other_context' have the same named type?
 		do
-			Result := a_context.type.same_named_class_type (other, other_context, a_context.context, a_universe)
+			Result := a_context.same_named_class_type (other, other_context, a_universe)
 		end
 
 	same_named_formal_parameter_type (other: ET_FORMAL_PARAMETER_TYPE;
@@ -300,7 +298,7 @@ feature {ET_TYPE} -- Comparison
 			-- Do current type appearing in `a_context' and `other' type
 			-- appearing in `other_context' have the same named type?
 		do
-			Result := a_context.type.same_named_formal_parameter_type (other, other_context, a_context.context, a_universe)
+			Result := a_context.same_named_formal_parameter_type (other, other_context, a_universe)
 		end
 
 	same_named_tuple_type (other: ET_TUPLE_TYPE; other_context: ET_TYPE_CONTEXT;
@@ -308,7 +306,7 @@ feature {ET_TYPE} -- Comparison
 			-- Do current type appearing in `a_context' and `other' type
 			-- appearing in `other_context' have the same named type?
 		do
-			Result := a_context.type.same_named_tuple_type (other, other_context, a_context.context, a_universe)
+			Result := a_context.same_named_tuple_type (other, other_context, a_universe)
 		end
 
 	same_base_bit_type (other: ET_BIT_TYPE; other_context: ET_TYPE_CONTEXT;
@@ -316,7 +314,7 @@ feature {ET_TYPE} -- Comparison
 			-- Do current type appearing in `a_context' and `other' type
 			-- appearing in `other_context' have the same base type?
 		do
-			Result := a_context.type.same_base_bit_type (other, other_context, a_context.context, a_universe)
+			Result := a_context.same_base_bit_type (other, other_context, a_universe)
 		end
 
 	same_base_class_type (other: ET_CLASS_TYPE; other_context: ET_TYPE_CONTEXT;
@@ -324,7 +322,7 @@ feature {ET_TYPE} -- Comparison
 			-- Do current type appearing in `a_context' and `other' type
 			-- appearing in `other_context' have the same base type?
 		do
-			Result := a_context.type.same_base_class_type (other, other_context, a_context.context, a_universe)
+			Result := a_context.same_base_class_type (other, other_context, a_universe)
 		end
 
 	same_base_formal_parameter_type (other: ET_FORMAL_PARAMETER_TYPE;
@@ -333,7 +331,7 @@ feature {ET_TYPE} -- Comparison
 			-- Do current type appearing in `a_context' and `other' type
 			-- appearing in `other_context' have the same base type?
 		do
-			Result := a_context.type.same_base_formal_parameter_type (other, other_context, a_context.context, a_universe)
+			Result := a_context.same_base_formal_parameter_type (other, other_context, a_universe)
 		end
 
 	same_base_tuple_type (other: ET_TUPLE_TYPE; other_context: ET_TYPE_CONTEXT;
@@ -341,7 +339,7 @@ feature {ET_TYPE} -- Comparison
 			-- Do current type appearing in `a_context' and `other' type
 			-- appearing in `other_context' have the same base type?
 		do
-			Result := a_context.type.same_base_tuple_type (other, other_context, a_context.context, a_universe)
+			Result := a_context.same_base_tuple_type (other, other_context, a_universe)
 		end
 
 feature -- Conformance
@@ -359,11 +357,11 @@ feature -- Conformance
 			if other = Current and then other_context = a_context then
 				Result := True
 			else
-				Result := a_context.type.conforms_to_type (other, other_context, a_context.context, a_universe)
+				Result := a_context.conforms_to_type (other, other_context, a_universe)
 			end
 		end
 
-feature {ET_TYPE} -- Conformance
+feature {ET_TYPE, ET_TYPE_CONTEXT} -- Conformance
 
 	conforms_from_bit_type (other: ET_BIT_TYPE; other_context: ET_TYPE_CONTEXT;
 		a_context: ET_TYPE_CONTEXT; a_universe: ET_UNIVERSE): BOOLEAN is
@@ -375,7 +373,7 @@ feature {ET_TYPE} -- Conformance
 			-- is used on classes whose qualified anchored types need to be
 			-- resolved in order to check conformance.)
 		do
-			Result := a_context.type.conforms_from_bit_type (other, other_context, a_context.context, a_universe)
+			Result := a_context.conforms_from_bit_type (other, other_context, a_universe)
 		end
 
 	conforms_from_class_type (other: ET_CLASS_TYPE; other_context: ET_TYPE_CONTEXT;
@@ -388,7 +386,7 @@ feature {ET_TYPE} -- Conformance
 			-- is used on classes whose qualified anchored types need to be
 			-- resolved in order to check conformance.)
 		do
-			Result := a_context.type.conforms_from_class_type (other, other_context, a_context.context, a_universe)
+			Result := a_context.conforms_from_class_type (other, other_context, a_universe)
 		end
 
 	conforms_from_formal_parameter_type (other: ET_FORMAL_PARAMETER_TYPE;
@@ -402,7 +400,7 @@ feature {ET_TYPE} -- Conformance
 			-- is used on classes whose qualified anchored types need to be
 			-- resolved in order to check conformance.)
 		do
-			Result := a_context.type.conforms_from_formal_parameter_type (other, other_context, a_context.context, a_universe)
+			Result := a_context.conforms_from_formal_parameter_type (other, other_context, a_universe)
 		end
 
 	conforms_from_tuple_type (other: ET_TUPLE_TYPE; other_context: ET_TYPE_CONTEXT;
@@ -415,45 +413,7 @@ feature {ET_TYPE} -- Conformance
 			-- is used on classes whose qualified anchored types need to be
 			-- resolved in order to check conformance.)
 		do
-			Result := a_context.type.conforms_from_tuple_type (other, other_context, a_context.context, a_universe)
-		end
-
-feature -- Convertibility
-
-	convertible_to_type (other: ET_TYPE; other_context: ET_TYPE_CONTEXT;
-		a_context: ET_TYPE_CONTEXT; a_universe: ET_UNIVERSE): BOOLEAN is
-			-- Is current type appearing in `a_context' convertible
-			-- to `other' type appearing in `other_context'?
-			-- (Note: 'a_universe.qualified_signature_resolver' is
-			-- used on classes whose qualified anchored types need
-			-- to be resolved in order to check convertibility.)
-		do
-			Result := a_context.type.convertible_to_type (other, other_context, a_context.context, a_universe)
-		end
-
-feature {ET_TYPE} -- Convertibility
-
-	convertible_from_class_type (other: ET_CLASS_TYPE; other_context: ET_TYPE_CONTEXT;
-		a_context: ET_TYPE_CONTEXT; a_universe: ET_UNIVERSE): BOOLEAN is
-			-- Is `other' type appearing in `other_context' convertible
-			-- to current type appearing in `a_context'?
-			-- (Note: 'a_universe.qualified_signature_resolver' is
-			-- used on classes whose qualified anchored types need
-			-- to be resolved in order to check convertibility.)
-		do
-			Result := a_context.type.convertible_from_class_type (other, other_context, a_context.context, a_universe)
-		end
-
-	convertible_from_formal_parameter_type (other: ET_FORMAL_PARAMETER_TYPE;
-		other_context: ET_TYPE_CONTEXT; a_context: ET_TYPE_CONTEXT;
-		a_universe: ET_UNIVERSE): BOOLEAN is
-			-- Is `other' type appearing in `other_context' convertible
-			-- to current type appearing in `a_context'?
-			-- (Note: 'a_universe.qualified_signature_resolver' is
-			-- used on classes whose qualified anchored types need
-			-- to be resolved in order to check convertibility.)
-		do
-			Result := a_context.type.convertible_from_formal_parameter_type (other, other_context, a_context.context, a_universe)
+			Result := a_context.conforms_from_tuple_type (other, other_context, a_universe)
 		end
 
 feature -- Output

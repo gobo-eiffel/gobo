@@ -30,7 +30,7 @@ feature {NONE} -- Initialization
 			-- Create a new interface checker for classes in `a_universe'.
 		do
 			precursor (a_universe)
-			create parent_context.make (a_universe.any_class, a_universe.any_class)
+			create parent_context.make_with_capacity (a_universe.any_class, 1)
 			create parent_checker.make (a_universe)
 		end
 

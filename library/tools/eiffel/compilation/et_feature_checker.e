@@ -49,6 +49,7 @@ feature {NONE} -- Initialization
 			create rescue_checker.make (a_universe)
 			create precondition_checker.make (a_universe)
 			create postcondition_checker.make (a_universe)
+			create assertion_context.make_with_capacity (current_class, 10)
 			create type_checker.make (a_universe)
 		end
 
@@ -590,25 +591,22 @@ feature {NONE} -- Assertions validity
 			i, nb: INTEGER
 			an_expression: ET_EXPRESSION
 			boolean_type: ET_CLASS_TYPE
-			a_type: ET_TYPE
-			a_context: ET_TYPE_CONTEXT
 			a_class_impl: ET_CLASS
 			a_named_type: ET_NAMED_TYPE
 		do
 			boolean_type := universe.boolean_class
+			assertion_context.set_root_context (current_class)
 			nb := a_preconditions.count
 			from i := 1 until i > nb loop
 				an_expression := a_preconditions.assertion (i).expression
 				if an_expression /= Void then
-					precondition_checker.check_expression_validity (an_expression, boolean_type, current_class, current_feature, current_class)
+					precondition_checker.check_expression_validity (an_expression, assertion_context, boolean_type, current_feature, current_class)
 					if precondition_checker.has_fatal_error then
 						set_fatal_error
 					else
-						a_type := precondition_checker.type
-						a_context := precondition_checker.context
-						if not a_type.same_named_type (boolean_type, current_class, a_context, universe) then
+						if not assertion_context.same_named_type (boolean_type, current_class, universe) then
 							set_fatal_error
-							a_named_type := a_type.named_type (a_context, universe)
+							a_named_type := assertion_context.named_type (universe)
 							a_class_impl := current_feature.implementation_class
 							if current_class = a_class_impl then
 								error_handler.report_vwbe0a_error (current_class, an_expression, a_named_type)
@@ -617,6 +615,7 @@ feature {NONE} -- Assertions validity
 							end
 						end
 					end
+					assertion_context.wipe_out
 				end
 				i := i + 1
 			end
@@ -633,25 +632,22 @@ feature {NONE} -- Assertions validity
 			i, nb: INTEGER
 			an_expression: ET_EXPRESSION
 			boolean_type: ET_CLASS_TYPE
-			a_type: ET_TYPE
-			a_context: ET_TYPE_CONTEXT
 			a_class_impl: ET_CLASS
 			a_named_type: ET_NAMED_TYPE
 		do
 			boolean_type := universe.boolean_class
+			assertion_context.set_root_context (current_class)
 			nb := a_postconditions.count
 			from i := 1 until i > nb loop
 				an_expression := a_postconditions.assertion (i).expression
 				if an_expression /= Void then
-					postcondition_checker.check_expression_validity (an_expression, boolean_type, current_class, current_feature, current_class)
+					postcondition_checker.check_expression_validity (an_expression, assertion_context, boolean_type, current_feature, current_class)
 					if postcondition_checker.has_fatal_error then
 						set_fatal_error
 					else
-						a_type := postcondition_checker.type
-						a_context := postcondition_checker.context
-						if not a_type.same_named_type (boolean_type, current_class, a_context, universe) then
+						if not assertion_context.same_named_type (boolean_type, current_class, universe) then
 							set_fatal_error
-							a_named_type := a_type.named_type (a_context, universe)
+							a_named_type := assertion_context.named_type (universe)
 							a_class_impl := current_feature.implementation_class
 							if current_class = a_class_impl then
 								error_handler.report_vwbe0a_error (current_class, an_expression, a_named_type)
@@ -660,6 +656,7 @@ feature {NONE} -- Assertions validity
 							end
 						end
 					end
+					assertion_context.wipe_out
 				end
 				i := i + 1
 			end
@@ -667,6 +664,9 @@ feature {NONE} -- Assertions validity
 
 	postcondition_checker: ET_POSTCONDITION_CHECKER
 			-- Checker for expressions in postconditions
+
+	assertion_context: ET_NESTED_TYPE_CONTEXT
+			-- Type context to check assertions
 
 feature {ET_AST_NODE} -- Processing
 
@@ -813,6 +813,7 @@ invariant
 	rescue_checker_not_void: rescue_checker /= Void
 	precondition_checker_not_void: precondition_checker /= Void
 	postcondition_checker_not_void: postcondition_checker /= Void
+	assertion_context_not_void: assertion_context /= Void
 	type_checker_not_void: type_checker /= Void
 
 end

@@ -280,28 +280,24 @@ feature -- Validity checking
 
 feature -- Type conversion
 
-	convert_feature (a_source_type: ET_TYPE; a_source_context: ET_TYPE_CONTEXT;
-		a_target_type: ET_TYPE; a_target_context: ET_TYPE_CONTEXT): ET_CONVERT_FEATURE is
-			-- Feature to convert `a_source_type' in context `a_source_context'
-			-- to `a_target_type' in `a_target_context'; Void if no such feature
+	convert_feature (a_source_type: ET_TYPE_CONTEXT; a_target_type: ET_TYPE_CONTEXT): ET_CONVERT_FEATURE is
+			-- Feature to convert `a_source_type' to `a_target_type';
+			-- Void if no such feature
 		require
 			a_source_type_not_void: a_source_type /= Void
-			a_source_context_not_void: a_source_context /= Void
-			a_source_context_valid: a_source_context.is_valid_context
+			a_source_context_valid: a_source_type.is_valid_context
 			a_target_type_not_void: a_target_type /= Void
-			a_target_context_not_void: a_target_context /= Void
-			a_target_context_valid: a_target_context.is_valid_context
-			same_root_context: a_source_context.same_root_context (a_target_context)
+			a_target_context_valid: a_target_type.is_valid_context
 			-- no_cycle: no cycle in anchored types involved.
 		local
 			a_source_base_class: ET_CLASS
 			a_target_base_class: ET_CLASS
 		do
-			a_source_base_class := a_source_type.base_class (a_source_context, universe)
-			Result := a_source_base_class.convert_to_feature (a_target_type, a_target_context, a_source_type, a_source_context, universe)
+			a_source_base_class := a_source_type.base_class (universe)
+			Result := a_source_base_class.convert_to_feature (a_target_type, a_source_type, universe)
 			if Result = Void then
-				a_target_base_class := a_target_type.base_class (a_target_context, universe)
-				Result := a_target_base_class.convert_from_feature (a_source_type, a_source_context, a_target_type, a_target_context, universe)
+				a_target_base_class := a_target_type.base_class (universe)
+				Result := a_target_base_class.convert_from_feature (a_source_type, a_target_type, universe)
 			end
 			if Result = Void then
 				if a_source_base_class = universe.integer_8_class then

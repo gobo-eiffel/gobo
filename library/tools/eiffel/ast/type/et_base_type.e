@@ -15,8 +15,6 @@ deferred class ET_BASE_TYPE
 inherit
 
 	ET_NAMED_TYPE
-		undefine
-			type
 		redefine
 			is_named_type,
 			is_base_type,
@@ -39,13 +37,31 @@ inherit
 			base_type_actual as context_base_type_actual,
 			base_type_actual_parameter as context_base_type_actual_parameter,
 			base_type_actual_count as context_base_type_actual_count,
+			named_type as context_named_type,
 			is_cat_type as context_is_cat_type,
 			is_actual_cat_type as context_is_actual_cat_type,
 			is_cat_parameter as context_is_cat_parameter,
-			is_actual_cat_parameter as context_is_actual_cat_parameter
+			is_actual_cat_parameter as context_is_actual_cat_parameter,
+			same_named_type as context_same_named_type,
+			same_base_type as context_same_base_type,
+			same_named_bit_type as context_same_named_bit_type,
+			same_named_class_type as context_same_named_class_type,
+			same_named_formal_parameter_type as context_same_named_formal_parameter_type,
+			same_named_tuple_type as context_same_named_tuple_type,
+			same_base_bit_type as context_same_base_bit_type,
+			same_base_class_type as context_same_base_class_type,
+			same_base_formal_parameter_type as context_same_base_formal_parameter_type,
+			same_base_tuple_type as context_same_base_tuple_type,
+			conforms_to_type as context_conforms_to_type,
+			conforms_from_bit_type as context_conforms_from_bit_type,
+			conforms_from_class_type as context_conforms_from_class_type,
+			conforms_from_formal_parameter_type as context_conforms_from_formal_parameter_type,
+			conforms_from_tuple_type as context_conforms_from_tuple_type,
+			has_formal_type as context_has_formal_type,
+			has_formal_types as context_has_formal_types,
+			has_qualified_type as context_has_qualified_type
 		redefine
-			has_context, root_context, is_root_context,
-			context_base_class, context_base_type
+			is_root_context
 		end
 
 feature -- Access
@@ -244,7 +260,7 @@ feature -- Status report
 			end
 		end
 
-feature {ET_TYPE} -- Conformance
+feature {ET_TYPE, ET_TYPE_CONTEXT} -- Conformance
 
 	conforms_from_bit_type (other: ET_BIT_TYPE; other_context: ET_TYPE_CONTEXT;
 		a_context: ET_TYPE_CONTEXT; a_universe: ET_UNIVERSE): BOOLEAN is
@@ -359,24 +375,23 @@ feature -- Type processing
 
 feature -- Type context
 
-	type: ET_BASE_TYPE is
-			-- Type of current context
+	root_context: ET_BASE_TYPE is
+			-- Root context
 		do
 			Result := Current
 		ensure then
-			definition: Result = Current
+			is_root: Result = Current
 		end
 
-	context: ET_TYPE_CONTEXT is
-			-- Context in which `type' is viewed
+	new_type_context (a_type: ET_TYPE): ET_NESTED_TYPE_CONTEXT is
+			-- New type context made up of `a_type' in current context
 		do
-			Result := Current
-		ensure then
-			definition: Result = Current
+			create Result.make_with_capacity (Current, 1)
+			Result.put_first (a_type)
 		end
 
 	context_base_class (a_universe: ET_UNIVERSE): ET_CLASS is
-			-- Base class of `type' when it appears in `context' in `a_universe'
+			-- Base class of current context in `a_universe'
 		do
 			Result := direct_base_class (a_universe)
 		ensure then
@@ -384,20 +399,41 @@ feature -- Type context
 		end
 
 	context_base_type (a_universe: ET_UNIVERSE): ET_BASE_TYPE is
-			-- Base type of `type' when it appears in `context' in `a_universe'
+			-- Base type of current context in `a_universe'
 		do
 			Result := Current
 		ensure then
 			definition: Result = Current
 		end
 
-	root_context: ET_BASE_TYPE is
-			-- Context of `type', or recursively the context of
-			-- its context, such that it is its own context
+	context_base_type_actual (i: INTEGER; a_universe: ET_UNIVERSE): ET_NAMED_TYPE is
+			-- `i'-th actual generic parameter's type of `base_type'
+		do
+			Result := base_type_actual (i, Current, a_universe)
+		end
+
+	context_base_type_actual_parameter (i: INTEGER; a_universe: ET_UNIVERSE): ET_ACTUAL_PARAMETER is
+			-- `i'-th actual generic parameter of `base_type'
+		do
+			Result := base_type_actual_parameter (i, Current, a_universe)
+		end
+
+	context_base_type_actual_count (a_universe: ET_UNIVERSE): INTEGER is
+			-- Number of actual generic parameters of `base_type'
+		do
+			Result := base_type_actual_count (Current, a_universe)
+		end
+
+	context_named_type (a_universe: ET_UNIVERSE): ET_NAMED_TYPE is
+			-- Same as `base_type' except when the type is still
+			-- a formal generic parameter after having been replaced
+			-- by its actual counterpart in `a_universe'. Return this
+			-- new formal type in that case instead of the base
+			-- type of its constraint.
 		do
 			Result := Current
 		ensure then
-			is_root: Result = Current
+			definition: Result = Current
 		end
 
 	is_root_context: BOOLEAN is
@@ -406,11 +442,13 @@ feature -- Type context
 			Result := True
 		end
 
-	has_context (a_context: ET_TYPE_CONTEXT): BOOLEAN is
-			-- Is `a_context' current context, or
-			-- recursively the context of its context?
+	is_valid_context: BOOLEAN is
+			-- A context is valid if its `root_context' is only made up
+			-- of class names and formal generic parameter names, and if
+			-- the actual parameters of these formal parameters are
+			-- themselves
 		do
-			Result := a_context = Current
+			Result := is_valid_context_type (Current)
 		end
 
 	is_valid_context_type (a_root_context: ET_BASE_TYPE): BOOLEAN is
@@ -435,6 +473,185 @@ feature -- Type context
 					end
 				end
 			end
+		end
+
+	context_is_cat_type (a_universe: ET_UNIVERSE): BOOLEAN is
+			-- Is `base_type' a monomorphic type in `a_universe'?
+		do
+			Result := is_cat_type (Current, a_universe)
+		end
+
+	context_is_actual_cat_type (i: INTEGER; a_universe: ET_UNIVERSE): BOOLEAN is
+			-- Is actual generic parameter at index `i' in `base_type'
+			-- a monomorphic type in `a_universe'?
+		do
+			Result := is_actual_cat_type (i, Current, a_universe)
+		end
+
+	context_is_cat_parameter (a_universe: ET_UNIVERSE): BOOLEAN is
+			-- Is `base_type' a non-conforming actual
+			-- generic parameter in `a_universe'?
+		do
+			Result := is_cat_parameter (Current, a_universe)
+		end
+
+	context_is_actual_cat_parameter (i: INTEGER; a_universe: ET_UNIVERSE): BOOLEAN is
+			-- Is actual generic parameter at index `i' in `base_type'
+			-- a non-conforming parameter in `a_universe'?
+		do
+			Result := is_actual_cat_parameter (i, Current, a_universe)
+		end
+
+	context_has_formal_type (i: INTEGER; a_universe: ET_UNIVERSE): BOOLEAN is
+			-- Does the named type of current context in `a_universe'
+			-- contain the formal generic parameter with index `i'?
+		do
+			Result := has_formal_type (i, Current, a_universe)
+		end
+
+	context_has_formal_types (a_universe: ET_UNIVERSE): BOOLEAN is
+			-- Does the named type of current context in `a_universe'
+			-- contain a formal generic parameter?
+		do
+			Result := has_formal_types (Current, a_universe)
+		end
+
+	context_has_qualified_type (a_universe: ET_UNIVERSE): BOOLEAN is
+			-- Is the named type of current context a qualified anchored type
+			-- (other than of the form 'like Current.b'), or do its actual
+			-- generic parameters (recursively) contain qualified types?
+		do
+			Result := has_qualified_type (Current, a_universe)
+		end
+
+	context_same_named_type (other: ET_TYPE; other_context: ET_TYPE_CONTEXT; a_universe: ET_UNIVERSE): BOOLEAN is
+			-- Do current context and `other' type appearing in `other_context'
+			-- have the same named type?
+		do
+			Result := same_named_type (other, other_context, Current, a_universe)
+		end
+
+	context_same_base_type (other: ET_TYPE; other_context: ET_TYPE_CONTEXT; a_universe: ET_UNIVERSE): BOOLEAN is
+			-- Do current context and `other' type appearing in `other_context'
+			-- have the same base type?
+		do
+			Result := same_base_type (other, other_context, Current, a_universe)
+		end
+
+	context_conforms_to_type (other: ET_TYPE; other_context: ET_TYPE_CONTEXT; a_universe: ET_UNIVERSE): BOOLEAN is
+			-- Does current context conform to `other' type appearing in `other_context'?
+			-- (Note: 'a_universe.ancestor_builder' is used on the classes
+			-- whose ancestors need to be built in order to check for conformance,
+			-- and 'a_universe.qualified_signature_resolver' is used on classes
+			-- whose qualified anchored types need to be resolved in order to
+			-- check conformance.)
+		do
+			Result := conforms_to_type (other, other_context, Current, a_universe)
+		end
+
+feature {ET_TYPE, ET_TYPE_CONTEXT} -- Type context
+
+	context_same_named_bit_type (other: ET_BIT_TYPE; other_context: ET_TYPE_CONTEXT; a_universe: ET_UNIVERSE): BOOLEAN is
+			-- Do current context and `other' type appearing in
+			-- `other_context' have the same named type?
+		do
+			Result := same_named_bit_type (other, other_context, Current, a_universe)
+		end
+
+	context_same_named_class_type (other: ET_CLASS_TYPE; other_context: ET_TYPE_CONTEXT; a_universe: ET_UNIVERSE): BOOLEAN is
+			-- Do current context and `other' type appearing in
+			-- `other_context' have the same named type?
+		do
+			Result := same_named_class_type (other, other_context, Current, a_universe)
+		end
+
+	context_same_named_formal_parameter_type (other: ET_FORMAL_PARAMETER_TYPE;
+		other_context: ET_TYPE_CONTEXT; a_universe: ET_UNIVERSE): BOOLEAN is
+			-- Do current context and `other' type appearing in
+			-- `other_context' have the same named type?
+		do
+			Result := same_named_formal_parameter_type (other, other_context, Current, a_universe)
+		end
+
+	context_same_named_tuple_type (other: ET_TUPLE_TYPE; other_context: ET_TYPE_CONTEXT; a_universe: ET_UNIVERSE): BOOLEAN is
+			-- Do current context and `other' type appearing in
+			-- `other_context' have the same named type?
+		do
+			Result := same_named_tuple_type (other, other_context, Current, a_universe)
+		end
+
+	context_same_base_bit_type (other: ET_BIT_TYPE; other_context: ET_TYPE_CONTEXT; a_universe: ET_UNIVERSE): BOOLEAN is
+			-- Do current context and `other' type appearing in
+			-- `other_context' have the same base type?
+		do
+			Result := same_base_bit_type (other, other_context, Current, a_universe)
+		end
+
+	context_same_base_class_type (other: ET_CLASS_TYPE; other_context: ET_TYPE_CONTEXT; a_universe: ET_UNIVERSE): BOOLEAN is
+			-- Do current context and `other' type appearing in
+			-- `other_context' have the same base type?
+		do
+			Result := same_base_class_type (other, other_context, Current, a_universe)
+		end
+
+	context_same_base_formal_parameter_type (other: ET_FORMAL_PARAMETER_TYPE;
+		other_context: ET_TYPE_CONTEXT; a_universe: ET_UNIVERSE): BOOLEAN is
+			-- Do current context and `other' type appearing in
+			-- `other_context' have the same base type?
+		do
+			Result := same_base_formal_parameter_type (other, other_context, Current, a_universe)
+		end
+
+	context_same_base_tuple_type (other: ET_TUPLE_TYPE; other_context: ET_TYPE_CONTEXT; a_universe: ET_UNIVERSE): BOOLEAN is
+			-- Do current context and `other' type appearing in
+			-- `other_context' have the same base type?
+		do
+			Result := same_base_tuple_type (other, other_context, Current, a_universe)
+		end
+
+	context_conforms_from_bit_type (other: ET_BIT_TYPE; other_context: ET_TYPE_CONTEXT; a_universe: ET_UNIVERSE): BOOLEAN is
+			-- Does `other' type appearing in `other_context' conform to current context?
+			-- (Note: 'a_universe.ancestor_builder' is used on the classes
+			-- whose ancestors need to be built in order to check for conformance,
+			-- and 'a_universe.qualified_signature_resolver' is used on classes
+			-- whose qualified anchored types need to be resolved in order to
+			-- check conformance.)
+		do
+			Result := conforms_from_bit_type (other, other_context, Current, a_universe)
+		end
+
+	context_conforms_from_class_type (other: ET_CLASS_TYPE; other_context: ET_TYPE_CONTEXT; a_universe: ET_UNIVERSE): BOOLEAN is
+			-- Does `other' type appearing in `other_context' conform to current context?
+			-- (Note: 'a_universe.ancestor_builder' is used on the classes
+			-- whose ancestors need to be built in order to check for conformance,
+			-- and 'a_universe.qualified_signature_resolver' is used on classes
+			-- whose qualified anchored types need to be resolved in order to
+			-- check conformance.)
+		do
+			Result := conforms_from_class_type (other, other_context, Current, a_universe)
+		end
+
+	context_conforms_from_formal_parameter_type (other: ET_FORMAL_PARAMETER_TYPE;
+		other_context: ET_TYPE_CONTEXT; a_universe: ET_UNIVERSE): BOOLEAN is
+			-- Does `other' type appearing in `other_context' conform to current context?
+			-- (Note: 'a_universe.ancestor_builder' is used on the classes
+			-- whose ancestors need to be built in order to check for conformance,
+			-- and 'a_universe.qualified_signature_resolver' is used on classes
+			-- whose qualified anchored types need to be resolved in order to
+			-- check conformance.)
+		do
+			Result := conforms_from_formal_parameter_type (other, other_context, Current, a_universe)
+		end
+
+	context_conforms_from_tuple_type (other: ET_TUPLE_TYPE; other_context: ET_TYPE_CONTEXT; a_universe: ET_UNIVERSE): BOOLEAN is
+			-- Does `other' type appearing in `other_context' conform to current context?
+			-- (Note: 'a_universe.ancestor_builder' is used on the classes
+			-- whose ancestors need to be built in order to check for conformance,
+			-- and 'a_universe.qualified_signature_resolver' is used on classes
+			-- whose qualified anchored types need to be resolved in order to
+			-- check conformance.)
+		do
+			Result := conforms_from_tuple_type (other, other_context, Current, a_universe)
 		end
 
 invariant

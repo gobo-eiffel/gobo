@@ -238,7 +238,6 @@ feature -- Comparison
 			other_context_valid: other_context.is_valid_context
 			a_context_not_void: a_context /= Void
 			a_context_valid: a_context.is_valid_context
-			same_root_context: other_context.same_root_context (a_context)
 			a_universe_not_void: a_universe /= Void
 		local
 			i, nb: INTEGER
@@ -272,7 +271,6 @@ feature -- Comparison
 			other_context_valid: other_context.is_valid_context
 			a_context_not_void: a_context /= Void
 			a_context_valid: a_context.is_valid_context
-			same_root_context: other_context.same_root_context (a_context)
 			a_universe_not_void: a_universe /= Void
 		local
 			i, nb: INTEGER
@@ -313,7 +311,6 @@ feature -- Conformance
 			other_context_valid: other_context.is_valid_context
 			a_context_not_void: a_context /= Void
 			a_context_valid: a_context.is_valid_context
-			same_root_context: other_context.same_root_context (a_context)
 			a_universe_not_void: a_universe /= Void
 		local
 			i, nb: INTEGER
@@ -385,7 +382,6 @@ feature -- Conformance
 			other_context_valid: other_context.is_valid_context
 			a_context_not_void: a_context /= Void
 			a_context_valid: a_context.is_valid_context
-			same_root_context: other_context.same_root_context (a_context)
 			a_universe_not_void: a_universe /= Void
 		local
 			i, nb: INTEGER
@@ -432,7 +428,6 @@ feature -- Conformance
 			other_context_valid: other_context.is_valid_context
 			a_context_not_void: a_context /= Void
 			a_context_valid: a_context.is_valid_context
-			same_root_context: other_context.same_root_context (a_context)
 			a_universe_not_void: a_universe /= Void
 		local
 			i, nb: INTEGER
@@ -471,7 +466,6 @@ feature -- Conformance
 			other_context_valid: other_context.is_valid_context
 			a_context_not_void: a_context /= Void
 			a_context_valid: a_context.is_valid_context
-			same_root_context: other_context.same_root_context (a_context)
 			a_universe_not_void: a_universe /= Void
 		local
 			i, nb: INTEGER
@@ -543,7 +537,6 @@ feature -- Conformance
 			other_context_valid: other_context.is_valid_context
 			a_context_not_void: a_context /= Void
 			a_context_valid: a_context.is_valid_context
-			same_root_context: other_context.same_root_context (a_context)
 			a_universe_not_void: a_universe /= Void
 		local
 			i, nb: INTEGER
@@ -591,7 +584,6 @@ feature -- Conformance
 			other_context_valid: other_context.is_valid_context
 			a_context_not_void: a_context /= Void
 			a_context_valid: a_context.is_valid_context
-			same_root_context: other_context.same_root_context (a_context)
 			a_universe_not_void: a_universe /= Void
 		local
 			i, nb: INTEGER

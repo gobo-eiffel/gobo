@@ -615,33 +615,28 @@ feature -- Creation
 
 feature -- Conversion
 
-	convert_to_feature (other: ET_TYPE; other_context: ET_TYPE_CONTEXT; a_type: ET_TYPE;
-		a_context: ET_TYPE_CONTEXT; a_universe: ET_UNIVERSE): ET_CONVERT_FEATURE is
-			-- Conversion feature, if any, to convert `a_type' appearing in
-			-- `a_context' to `other' type appearing in `other_context'
+	convert_to_feature (other: ET_TYPE_CONTEXT; a_type: ET_TYPE_CONTEXT; a_universe: ET_UNIVERSE): ET_CONVERT_FEATURE is
+			-- Conversion feature, if any, to convert `a_type' to `other'
 		require
 			other_not_void: other /= Void
-			other_context_not_void: other_context /= Void
-			other_context_valid: other_context.is_valid_context
+			other_context_valid: other.is_valid_context
 			a_type_not_void: a_type /= Void
-			a_context_not_void: a_context /= Void
-			a_context_valid: a_context.is_valid_context
-			same_root_context: other_context.same_root_context (a_context)
+			a_type_context_valid: a_type.is_valid_context
 			a_universe_not_void: a_universe /= Void
 			-- no_cycle: no cycle in anchored types involved.
-			valid_type: a_type.base_class (a_context, a_universe) = Current
+			valid_type: a_type.base_class (a_universe) = Current
 		local
 			i, nb: INTEGER
 			a_feature: ET_CONVERT_FEATURE
-			a_convert_context: ET_NESTED_TYPE_CONTEXT
+			other_type: ET_TYPE
 		do
 			if convert_features /= Void then
+				other_type := tokens.like_current
 				nb := convert_features.count
-				create a_convert_context.make (a_type, a_context)
 				from i := 1 until i > nb loop
 					a_feature := convert_features.convert_feature (i)
 					if a_feature.is_convert_to then
-						if a_feature.types.has_named_type (other, other_context, a_convert_context, a_universe) then
+						if a_feature.types.has_named_type (other_type, other, a_type, a_universe) then
 							Result := a_feature
 							i := nb + 1 -- Jump out of the loop.
 						end
@@ -651,33 +646,28 @@ feature -- Conversion
 			end
 		end
 
-	convert_from_feature (other: ET_TYPE; other_context: ET_TYPE_CONTEXT; a_type: ET_TYPE;
-		a_context: ET_TYPE_CONTEXT; a_universe: ET_UNIVERSE): ET_CONVERT_FEATURE is
-			-- Conversion feature, if any, to convert `a_type' appearing in
-			-- `a_context' from `other' type appearing in `other_context'
+	convert_from_feature (other: ET_TYPE_CONTEXT; a_type: ET_TYPE_CONTEXT; a_universe: ET_UNIVERSE): ET_CONVERT_FEATURE is
+			-- Conversion feature, if any, to convert `a_type' from `other'
 		require
 			other_not_void: other /= Void
-			other_context_not_void: other_context /= Void
-			other_context_valid: other_context.is_valid_context
+			other_context_valid: other.is_valid_context
 			a_type_not_void: a_type /= Void
-			a_context_not_void: a_context /= Void
-			a_context_valid: a_context.is_valid_context
-			same_root_context: other_context.same_root_context (a_context)
+			a_type_context_valid: a_type.is_valid_context
 			a_universe_not_void: a_universe /= Void
 			-- no_cycle: no cycle in anchored types involved.
-			valid_type: a_type.base_class (a_context, a_universe) = Current
+			valid_type: a_type.base_class (a_universe) = Current
 		local
 			i, nb: INTEGER
 			a_feature: ET_CONVERT_FEATURE
-			a_convert_context: ET_NESTED_TYPE_CONTEXT
+			other_type: ET_TYPE
 		do
 			if convert_features /= Void then
+				other_type := tokens.like_current
 				nb := convert_features.count
-				create a_convert_context.make (a_type, a_context)
 				from i := 1 until i > nb loop
 					a_feature := convert_features.convert_feature (i)
 					if a_feature.is_convert_from then
-						if a_feature.types.has_named_type (other, other_context, a_convert_context, a_universe) then
+						if a_feature.types.has_named_type (other_type, other, a_type, a_universe) then
 							Result := a_feature
 							i := nb + 1 -- Jump out of the loop.
 						end
