@@ -25,15 +25,12 @@
 @rem	-- Gobo Eiffel Structure Library
 @echo %GOBO%\library\structure\container\>>			loadpath.se
 @echo %GOBO%\library\structure\cursor\>>			loadpath.se
-@echo %GOBO%\library\structure\cursor\spec\se\>>	loadpath.se
 @echo %GOBO%\library\structure\list\>>				loadpath.se
 @echo %GOBO%\library\structure\search\>>			loadpath.se
-@echo %GOBO%\library\structure\search\spec\se\>>	loadpath.se
 @echo %GOBO%\library\structure\sort\>>				loadpath.se
 @echo %GOBO%\library\structure\support\>>			loadpath.se
 @echo %GOBO%\library\structure\stack\>>				loadpath.se
 @echo %GOBO%\library\structure\table\>>				loadpath.se
-@echo %GOBO%\library\structure\table\spec\se\>>		loadpath.se
 
 @rem	-- SmallEiffel Kernel
 @echo %SmallEiffel%\lib_std\>>						loadpath.se
