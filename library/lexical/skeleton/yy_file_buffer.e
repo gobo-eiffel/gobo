@@ -23,13 +23,23 @@ inherit
 			fill, filled, flush
 		end
 
+	KL_FILE_ROUTINES
+		export
+			{NONE} all
+		end
+
+	KL_STRING_ROUTINES
+		export
+			{NONE} all
+		end
+
 creation
 
 	make, make_with_size
 
 feature -- Initialization
 
-	make (a_file: like file) is
+	make (a_file: like FILE_type) is
 			-- Create a new buffer for `a_file'.
 		require
 			a_file_not_void: a_file /= Void
@@ -42,7 +52,7 @@ feature -- Initialization
 			beginning_of_line: beginning_of_line
 		end
 		
-	make_with_size (a_file: like file; size: INTEGER) is
+	make_with_size (a_file: like FILE_type; size: INTEGER) is
 			-- Create a new buffer of capacity `size' for `a_file'.
 		require
 			a_file_not_void: a_file /= Void
@@ -53,18 +63,7 @@ feature -- Initialization
 				-- `content' has to be 2 characters longer
 				-- than the size given because we need to
 				-- put in 2 end-of-buffer characters.
-			!! content.make (size + 2)
-#ifndef VE
-				-- Set `content.count' to `size' + 2.
-#ifndef ISE || HACT
-			content.fill ('#')
-#else
-				--| `fill' is part of ELKS '95 but is not part of
-				--| ISE's kernel. Use `fill_blank' instead (which
-				--| is not in the standard).
-			content.fill_blank
-#endif
-#endif
+			content := string__make_buffer (size + 2)
 			set_file (a_file)
 		ensure
 			capacity_set: capacity = size
@@ -75,16 +74,12 @@ feature -- Initialization
 
 feature -- Access
 
-#ifdef ISE || HACT
-	file: IO_MEDIUM
-#else
-	file: FILE
-#endif
+	file: like FILE_type
 			-- Input file
 
 feature -- Setting
 
-	set_file (a_file: like file) is
+	set_file (a_file: like FILE_type) is
 			-- Set `file' to `a_file'.
 		require
 			a_file_not_void: a_file /= Void
@@ -153,18 +148,11 @@ feature -- Element change
 					if capacity = 0 then
 						capacity := Default_capacity
 					end
-						-- Include room for 2 EOB characters.
-					i := capacity + 2 - buff.count
 						-- Make sure `buffer.count' is big enough.
-					if i > 0 then
-						buff.resize (capacity + 2)
-#ifndef VE
+						-- Include room for 2 EOB characters.
+					if capacity + 2 - buff.count > 0 then
 							-- Set `content.count' to `capacity' + 2.
-						from until i = 0 loop
-							buff.append_character ('#')
-							i := i - 1
-						end
-#endif
+						string__resize_buffer (buff, capacity + 2)
 					end
 					nb := capacity - count
 				end
@@ -173,18 +161,14 @@ feature -- Element change
 						-- Read characters one by one.
 					file.read_character
 					char := file.last_character
-					if char.code /= End_of_file_code then
+					if file__end_of_file (file) then
 						j := j + 1
 						buff.put (char, j)
 						filled := True
 					else
 						filled := False
 					end
-#ifdef ISE || HACT
-				elseif file.readable then
-#else
-				elseif not file.end_of_file then
-#endif
+				elseif not file__end_of_file (file) then
 					if nb > Read_buffer_capacity then
 						nb := Read_buffer_capacity
 					end
@@ -193,7 +177,7 @@ feature -- Element change
 						file.read_character
 						i := 1
 					until
-						file.end_of_file or
+						file__end_of_file (file) or
 						i > nb
 					loop
 						j := j + 1
@@ -249,9 +233,6 @@ feature {NONE} -- Constants
 	Read_buffer_capacity: INTEGER is 8192
 			-- Maximum number of characters to 
 			-- be read at a time
-
-	End_of_file_code: INTEGER is 255
-			-- End of file character code
 
 invariant
 
