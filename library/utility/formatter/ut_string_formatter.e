@@ -15,8 +15,8 @@ class UT_STRING_FORMATTER
 inherit
 
 	KL_IMPORTED_STRING_ROUTINES
-
 	KL_IMPORTED_OUTPUT_STREAM_ROUTINES
+	UT_IMPORTED_FORMATTERS
 
 feature -- Access
 
@@ -88,7 +88,6 @@ feature -- String handling
 		local
 			i, nb: INTEGER
 			c: CHARACTER
-			f: expanded UT_INTEGER_FORMATTER
 		do
 			nb := a_string.count
 			from i := 1 until i > nb loop
@@ -116,7 +115,7 @@ feature -- String handling
 					a_target.append_string ("%%%"")
 				else
 					a_target.append_string ("%%/")
-					f.append_decimal_integer (a_string, c.code)
+					INTEGER_FORMATTER_.append_decimal_integer (a_string, c.code)
 					a_target.append_character ('/')
 				end
 				i := i + 1
@@ -170,7 +169,6 @@ feature -- File handling
 		local
 			i, nb: INTEGER
 			c: CHARACTER
-			f: expanded UT_INTEGER_FORMATTER
 		do
 			nb := a_string.count
 			from i := 1 until i > nb loop
@@ -198,7 +196,7 @@ feature -- File handling
 					a_file.put_string ("%%%"")
 				else
 					a_file.put_string ("%%/")
-					f.put_decimal_integer (a_file, c.code)
+					INTEGER_FORMATTER_.put_decimal_integer (a_file, c.code)
 					a_file.put_character ('/')
 				end
 				i := i + 1

@@ -15,8 +15,8 @@ class UT_CHARACTER_FORMATTER
 inherit
 
 	KL_IMPORTED_STRING_ROUTINES
-
 	KL_IMPORTED_OUTPUT_STREAM_ROUTINES
+	UT_IMPORTED_FORMATTERS
 
 feature -- Access
 
@@ -56,8 +56,6 @@ feature -- String handling
 			-- as described in ETL, section 25.15, page 422.
 		require
 			a_string_not_void: a_string /= Void
-		local
-			f: expanded UT_INTEGER_FORMATTER
 		do
 			inspect c
 			when ' ', '!', '#', '$', '&', '('..'~' then
@@ -82,7 +80,7 @@ feature -- String handling
 				a_string.append_string ("%%%"")
 			else
 				a_string.append_string ("%%/")
-				f.append_decimal_integer (a_string, c.code)
+				INTEGER_FORMATTER_.append_decimal_integer (a_string, c.code)
 				a_string.append_character ('/')
 			end
 		end
@@ -109,8 +107,6 @@ feature -- File handling
 		require
 			a_file_not_void: a_file /= Void
 			a_file_is_open_write: OUTPUT_STREAM_.is_open_write (a_file)
-		local
-			f: expanded UT_INTEGER_FORMATTER
 		do
 			inspect c
 			when ' ', '!', '#', '$', '&', '('..'~' then
@@ -135,7 +131,7 @@ feature -- File handling
 				a_file.put_string ("%%%"")
 			else
 				a_file.put_string ("%%/")
-				f.put_decimal_integer (a_file, c.code)
+				INTEGER_FORMATTER_.put_decimal_integer (a_file, c.code)
 				a_file.put_character ('/')
 			end
 		end
