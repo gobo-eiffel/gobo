@@ -11,7 +11,6 @@ indexing
 	date:       "$Date$"
 	revision:   "$Revision$"
 
-
 class GEANT_GEANT_TASK
 
 inherit
@@ -25,18 +24,16 @@ inherit
 
 creation
 
-	make, make_from_element
+	make_from_element
 
 feature {NONE} -- Initialization
 
-	make_from_element (a_target: GEANT_TARGET; an_element: GEANT_ELEMENT) is
+	make_from_element (a_project: GEANT_PROJECT; an_element: GEANT_ELEMENT) is
 			-- Create a new task with information held in `an_element'.
 		local
 			a_value: STRING
 		do
-			precursor (a_target, an_element)
-			make
-			set_project_variables (variables)
+			precursor (a_project, an_element)
 				-- filename:
 			if an_element.has_attribute (Filename_attribute_name) then
 				a_value := attribute_value (an_element, Filename_attribute_name.out)
@@ -50,10 +47,6 @@ feature {NONE} -- Initialization
 				if a_value.count > 0 then
 					set_start_target_name (a_value.out)
 				end
-			end
-				-- fork:
-			if has_uc_attribute (an_element, Fork_attribute_name) then
-				set_fork (uc_boolean_value(an_element, Fork_attribute_name))
 			end
 				-- reuse_variables:
 			if has_uc_attribute (an_element, Reuse_variables_attribute_name) then
@@ -76,15 +69,6 @@ feature {NONE} -- Constants
 			-- Name of xml attribute Start_target.
 		once
 			!! Result.make_from_string ("target")
-		ensure
-			attribute_name_not_void: Result /= Void
-			atribute_name_not_empty: not Result.empty
-		end
-
-	Fork_attribute_name: UC_STRING is
-			-- Name of xml attribute Fork.
-		once
-			!! Result.make_from_string ("fork")
 		ensure
 			attribute_name_not_void: Result /= Void
 			atribute_name_not_empty: not Result.empty

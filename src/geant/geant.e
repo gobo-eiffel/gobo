@@ -49,6 +49,7 @@ feature {NONE} -- Initialization
 			else
 				!! a_project.make (Void)
 			end
+
 			a_project.set_verbose (verbose)
 			a_project.load (start_target_name)
 			if a_project.targets /= Void then

@@ -17,26 +17,31 @@ class GEANT_GELEX_TASK
 inherit
 
 	GEANT_TASK
+		rename
+			make as task_make
 		redefine
 			make_from_element
 		end
 
 	GEANT_GELEX_COMMAND
+		select
+			make
+		end
+
 	KL_IMPORTED_STRING_ROUTINES
 
 creation
 
-	make, make_from_element
+	make_from_element
 
 feature {NONE} -- Initialization
 
-	make_from_element (a_target: GEANT_TARGET; an_element: GEANT_ELEMENT) is
+	make_from_element (a_project: GEANT_PROJECT; an_element: GEANT_ELEMENT) is
 			-- Create a new task with information held in `an_element'.
 		local
 			a_value: STRING
 		do
-			precursor (a_target, an_element)
-			make
+			precursor (a_project, an_element)
 				-- size:
 			if has_uc_attribute (an_element, Size_attribute_name) then
 				a_value := uc_attribute_value (an_element, Size_attribute_name).out

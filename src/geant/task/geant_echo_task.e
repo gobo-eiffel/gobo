@@ -25,17 +25,16 @@ inherit
 
 creation
 
-	make, make_from_element
+	make_from_element
 
 feature {NONE} -- Initialization
 
-	make_from_element (a_target: GEANT_TARGET; an_element: GEANT_ELEMENT) is
+	make_from_element (a_project: GEANT_PROJECT; an_element: GEANT_ELEMENT) is
 			-- Create a new task with information held in `an_element'.
 		local
 			a_value: STRING
 		do
-			precursor (a_target, an_element)
-			make
+			precursor (a_project, an_element)
 			if an_element.has_attribute (Message_attribute_name) then
 				a_value := attribute_value (an_element, Message_attribute_name.out)
 				set_message (a_value)

@@ -17,6 +17,9 @@ class GEANT_GEYACC_COMMAND
 inherit
 
 	GEANT_COMMAND
+		redefine
+			make
+		end
 
 creation
 
@@ -24,9 +27,10 @@ creation
 
 feature {NONE} -- Initialization
 
-	make is
+	make (a_project: GEANT_PROJECT) is
 			-- Create a new 'geyacc' command.
 		do
+			precursor (a_project)
 			output_filename := ""
 			input_filename := ""
 		end

@@ -21,6 +21,7 @@ inherit
 
 	KL_SHARED_ARGUMENTS
 	KL_SHARED_EXCEPTIONS
+	KL_SHARED_FILE_SYSTEM
 
 creation
 
@@ -42,6 +43,11 @@ feature {NONE} -- Initialization
 			a_filename_not_empty: not a_filename.empty
 		do
 			build_filename := a_filename
+			if not file_system.is_file_readable (build_filename.out) then
+				print ("cannot read build file '" + build_filename.out + "'")
+				Exceptions.die (1)
+			end
+
 			if a_variables = Void then
 				!! variables.make
 			else
@@ -52,7 +58,7 @@ feature {NONE} -- Initialization
 		ensure
 			build_filename_set: build_filename = a_filename
 			variables_set: a_variables /= Void implies variables = a_variables
-			variables_created: a_variables = Void implies variables /= Void and variables.count = 0
+			variables_created: a_variables = Void implies variables /= Void and variables.variables.count = 0
 		end
 
 feature -- Access
@@ -262,19 +268,31 @@ feature -- Processing
 				a_target := build_targets.item
 				if not executed_targets.has (a_target) then
 						-- Execute topmost target of `build_targets':
-					print("%N" + a_target.name)
-					if verbose then
-						print(" (stack item nr=" + build_targets.count.out + ")")
-					end
-					print(":%N%N")
-					a_target.execute
-					executed_targets.force_last (a_target)
+					execute_target (a_target)
 				end
 				build_targets.remove
 			end
 		end
 
-
+	execute_target (a_target: GEANT_TARGET) is
+			-- Execute `a_target';
+			-- Add `a_target' to `executed_targets'.
+		require
+			target_not_void: a_target = Void
+		do
+			current_target := a_target
+			print("%N" + a_target.name)
+			if verbose then
+				print(" (stack item nr=" + build_targets.count.out + ")")
+			end
+			print(":%N%N")
+			a_target.execute
+			executed_targets.force_last (a_target)
+			current_target := Void
+		ensure
+			target_added_toexecuted_targets: executed_targets.has (a_target)
+			current_target_void: current_target = Void
+		end
 
 
 	reset is
@@ -287,6 +305,12 @@ feature -- Processing
 
 	build_targets: DS_ARRAYED_STACK [GEANT_TARGET]
 			-- Targets to be executed
+
+feature {GEANT_COMMAND} -- Access GEANT_COMMAND
+
+	current_target: GEANT_TARGET
+		-- Currently executing target;
+		-- Set during processing `execute_target'
 
 feature {NONE} -- Implementation
 

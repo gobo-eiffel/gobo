@@ -23,14 +23,25 @@ creation
 
 	make
 
-feature {NONE} -- Initialization
+feature -- Status report
 
-	make is
-			-- Create a new 'mkdir' command.
+	is_file_executable: BOOLEAN is
+			-- Can command be executed on a file?
 		do
+			Result := file /= Void and then file.count > 0
+		ensure
+			file_not_void: Result implies file /= Void
+			file_not_empty: Result implies file.count > 0
 		end
 
-feature -- Status report
+	is_directory_executable: BOOLEAN is
+			-- Can command be executed on a directory?
+		do
+			Result := directory /= Void and then directory.count > 0
+		ensure
+			directory_not_void: Result implies directory /= Void
+			directory_not_empty: Result implies directory.count > 0
+		end
 
 	is_executable: BOOLEAN is
 			-- Can command be executed?
@@ -38,21 +49,13 @@ feature -- Status report
 			a_has_directory: BOOLEAN
 			a_has_file: BOOLEAN
 		do
+			Result := is_file_executable xor is_directory_executable
+
 			a_has_directory := directory /= Void and then directory.count > 0
 			a_has_file := file /= Void and then file.count > 0
 			Result := (a_has_directory and not a_has_file) or (not a_has_directory and a_has_file)
 		ensure then
-			directory_xor_file_based: Result implies (
-				(
-					(directory /= Void and directory.count > 0) and
-					(file = Void or else file.count = 0)
-				)
-				or
-				(
-					(file /= Void and file.count > 0) and
-					(directory = Void or else directory.count = 0)
-				)
-			)
+			file_xor_directory: Result implies (is_file_executable xor is_directory_executable)
 		end
 
 feature -- Access
@@ -92,10 +95,11 @@ feature -- Execution
 	execute is
 			-- Execute command.
 		do
-			log ("  [delete] " + directory + "%N")
 			if directory /= Void then
+				log ("  [delete] " + directory + "%N")
 				file_system.delete_directory (directory)
 			else
+				log ("  [delete] " + file + "%N")
 				file_system.delete_file (file)
 			end
 		end

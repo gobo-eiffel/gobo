@@ -17,6 +17,9 @@ class GEANT_GEXACE_COMMAND
 inherit
 
 	GEANT_COMMAND
+		redefine
+			make
+		end
 
 creation
 
@@ -24,9 +27,10 @@ creation
 
 feature {NONE} -- Initialization
 
-	make is
+	make (a_project: GEANT_PROJECT) is
 			-- Create a new 'gexace' command.
 		do
+			precursor (a_project)
 			options := ""
 			compile := False
 		end
@@ -64,16 +68,6 @@ feature -- Access
 			-- implementation note: do not use compile as name here, causes conflicts
 
 feature -- Setting
-
-	set_var (a_name, a_value: STRING) is
-			-- Set value `a_value' to variable `a_name'.
-		require
-			a_name_not_void: a_name /= Void
-			a_name_not_empty: a_name.count > 0
-			a_value_not_void: a_value /= Void
-		do
-			Variables.force (a_name, a_value)
-		end
 
 	set_options (an_options: like options) is
 			-- Set `options' to `an_options'.

@@ -17,6 +17,9 @@ class GEANT_GEPP_COMMAND
 inherit
 
 	GEANT_COMMAND
+		redefine
+			make
+		end
 
 creation
 
@@ -24,9 +27,10 @@ creation
 
 feature {NONE} -- Initialization
 
-	make is
+	make (a_project: GEANT_PROJECT) is
 			-- Create a new 'gepp' command.
 		do
+			precursor (a_project)
 			input_filename := ""
 			output_filename := ""
 			!! defines.make (10)

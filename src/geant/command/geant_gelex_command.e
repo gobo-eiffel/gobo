@@ -17,6 +17,9 @@ class GEANT_GELEX_COMMAND
 inherit
 
 	GEANT_COMMAND
+		redefine
+			make
+		end
 
 	KL_IMPORTED_STRING_ROUTINES
 
@@ -26,9 +29,10 @@ creation
 
 feature {NONE} -- Initialization
 
-	make is
+	make (a_project: GEANT_PROJECT) is
 			-- Create a new 'gelex' command.
 		do
+			precursor (a_project)
 			output_filename := ""
 			input_filename := ""
 				-- Set defaults:

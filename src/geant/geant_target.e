@@ -65,13 +65,13 @@ feature -- Access
 	has_dependencies: BOOLEAN is
 			-- Has current target dependent on other targets?
 		do
-			Result := target_element.has_attribute (Depends_attribute_name)
+			Result := target_element.has_attribute (Depend_attribute_name)
 		end
 
 	dependencies: UC_STRING is
 			-- UC_STRING representation of dependencies
 		do
-			Result := target_element.attribute_value_by_name (Depends_attribute_name)
+			Result := target_element.attribute_value_by_name (Depend_attribute_name)
 		end
 
 	name: STRING
@@ -169,43 +169,43 @@ feature -- Processing
 						-- Dispatch tasks:
 					if an_element.name.is_equal (Compile_se_task_name) then
 							-- compile_se: SmallEiffel compilation
-						!GEANT_COMPILE_SE_TASK! a_task.make_from_element (Current, an_element)
+						!GEANT_COMPILE_SE_TASK! a_task.make_from_element (project, an_element)
 					elseif an_element.name.is_equal (Exec_task_name) then
 							-- exec
-						!GEANT_EXEC_TASK! a_task.make_from_element (Current, an_element)
+						!GEANT_EXEC_TASK! a_task.make_from_element (project, an_element)
 					elseif an_element.name.is_equal (Lcc_task_name) then
 							-- lcc
-						!GEANT_LCC_TASK! a_task.make_from_element (Current, an_element)
+						!GEANT_LCC_TASK! a_task.make_from_element (project, an_element)
 					elseif an_element.name.is_equal (Var_task_name) then
 							-- var
-						!GEANT_VAR_TASK! a_task.make_from_element (Current, an_element)
+						!GEANT_VAR_TASK! a_task.make_from_element (project, an_element)
 					elseif an_element.name.is_equal (Gexace_task_name) then
 							-- gexace
-						!GEANT_GEXACE_TASK! a_task.make_from_element (Current, an_element)
+						!GEANT_GEXACE_TASK! a_task.make_from_element (project, an_element)
 					elseif an_element.name.is_equal (Gelex_task_name) then
 							-- gelex
-						!GEANT_GELEX_TASK! a_task.make_from_element (Current, an_element)
+						!GEANT_GELEX_TASK! a_task.make_from_element (project, an_element)
 					elseif an_element.name.is_equal (Geyacc_task_name) then
 							-- geyacc
-						!GEANT_GEYACC_TASK! a_task.make_from_element (Current, an_element)
+						!GEANT_GEYACC_TASK! a_task.make_from_element (project, an_element)
 					elseif an_element.name.is_equal (Gepp_task_name) then
 							-- gepp
-						!GEANT_GEPP_TASK! a_task.make_from_element (Current, an_element)
+						!GEANT_GEPP_TASK! a_task.make_from_element (project, an_element)
 					elseif an_element.name.is_equal (Getest_task_name) then
 							-- getest
-						!GEANT_GETEST_TASK! a_task.make_from_element (Current, an_element)
+						!GEANT_GETEST_TASK! a_task.make_from_element (project, an_element)
 					elseif an_element.name.is_equal (Geant_task_name) then
 							-- geant
-						!GEANT_GEANT_TASK! a_task.make_from_element (Current, an_element)
+						!GEANT_GEANT_TASK! a_task.make_from_element (project, an_element)
 					elseif an_element.name.is_equal (Echo_task_name) then
 							-- echo
-						!GEANT_ECHO_TASK! a_task.make_from_element (Current, an_element)
+						!GEANT_ECHO_TASK! a_task.make_from_element (project, an_element)
 					elseif an_element.name.is_equal (Mkdir_task_name) then
 							-- mkdir
-						!GEANT_MKDIR_TASK! a_task.make_from_element (Current, an_element)
+						!GEANT_MKDIR_TASK! a_task.make_from_element (project, an_element)
 					elseif an_element.name.is_equal (Delete_task_name) then
 							-- delete
-						!GEANT_DELETE_TASK! a_task.make_from_element (Current, an_element)
+						!GEANT_DELETE_TASK! a_task.make_from_element (project, an_element)
 					else
 							-- Default:
 						a_task := Void
@@ -360,10 +360,10 @@ feature {NONE} -- Implementation
 
 feature {NONE} -- Constants
 
-	Depends_attribute_name: UC_STRING is
-			-- "depends" attribute name
+	Depend_attribute_name: UC_STRING is
+			-- "depend" attribute name
 		once
-			!! Result.make_from_string ("depends")
+			!! Result.make_from_string ("depend")
 		ensure
 			attribute_name_not_void: Result /= Void
 			attribute_name_not_empty: not Result.empty

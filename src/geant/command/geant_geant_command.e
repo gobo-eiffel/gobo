@@ -11,7 +11,6 @@ indexing
 	date:       "$Date$"
 	revision:   "$Revision$"
 
-
 class GEANT_GEANT_COMMAND
 
 inherit
@@ -23,23 +22,32 @@ creation
 
 	make
 
-feature {NONE} -- Initialization
+feature -- Status report
 
-	make is
-			-- Create a new 'geant' command.
+	is_filename_executable: BOOLEAN is
+			-- Can command be executed on a project file?
 		do
+			Result := filename /= Void and then filename.count > 0
+		ensure
+			filename_not_void: Result implies filename /= Void
+			filename_not_empty: Result implies filename.count > 0
 		end
 
-feature -- Status report
+	is_target_executable: BOOLEAN is
+			-- Can command be executed on a target?
+		do
+			Result := start_target_name /= Void and then start_target_name.count > 0
+		ensure
+			target_not_void: Result implies start_target_name /= Void
+			target_not_empty: Result implies start_target_name.count > 0
+		end
 
 	is_executable: BOOLEAN is
 			-- Can command be executed?
 		do
 			Result := filename /= Void and then filename.count > 0
 		ensure then
-			filename_not_void: Result implies filename /= Void
-			filename_not_empty: Result implies filename.count > 0
-			project_variables_not_void: Result implies project_variables /= Void
+			project_or_target: Result implies is_filename_executable or is_target_executable
 		end
 
 feature -- Access
@@ -47,17 +55,11 @@ feature -- Access
 	filename: STRING
 			-- Geant build file to invoke.
 
-	fork: BOOLEAN
-			-- Start command in a new process?
-
 	reuse_variables: BOOLEAN
 			-- Are variables reused in new project?
 
 	start_target_name: STRING
 			-- Name of the target the build process starts with
-
-	project_variables: GEANT_VARIABLES
-			-- Project variables
 
 feature -- Setting
 
@@ -71,14 +73,6 @@ feature -- Setting
 			filename := a_filename
 		ensure
 			filename_set: filename = a_filename
-		end
-
-	set_fork(a_fork: BOOLEAN) is
-			-- Set `fork' to a_fork
-		do
-			fork := a_fork
-		ensure
-			fork_set: fork = a_fork
 		end
 
 	set_reuse_variables(a_reuse_variables: BOOLEAN) is
@@ -101,65 +95,43 @@ feature -- Setting
 			start_target_name_set: start_target_name = a_start_target_name
 		end
 
-	set_project_variables (a_project_variables: like project_variables) is
-			-- Set `project_variables' to `a_project_variables'.
-		require
-			a_project_variables_not_void: a_project_variables /= Void
-		do
-			project_variables := a_project_variables
-		ensure
-			project_variables_set: project_variables = a_project_variables
-		end
-
 feature -- Execution
 
 	execute is
 			-- Execute command.
 		local
-			cmd: STRING
 			a_project: GEANT_PROJECT
 			ucs: UC_STRING
 			a_variables: GEANT_VARIABLES
 		do
-			if fork then
-					-- Launch a new geant process:
-				cmd := clone ("geant ")
-				cmd.append_string ("-b ")
-				cmd.append_string (filename)
-				if start_target_name /= Void then
-					cmd.append_string (" ")
-					cmd.append_string (start_target_name)
-				end
-				log ("  [geant] " + cmd + "%N")
-				execute_shell (cmd)
+--!!			if not is_filename_executable then
+--!!				-- call target of current project:
+--!!			else
+				-- Create a new project and run it's build process:
+			if reuse_variables then
+				a_variables := project.variables
 			else
-					-- Create a new project and run it's build process:
-				if reuse_variables then
-					a_variables := project_variables
-				else
-					a_variables := Void
-				end
-				
-				if filename /= Void and then filename.count > 0 then
-					!! ucs.make_from_string (filename)
-					!! a_project.make_with_filename (ucs, a_variables)
-				else
-					!! a_project.make (a_variables)
-				end
+				a_variables := Void
+			end
+			
+			if filename /= Void and then filename.count > 0 then
+				!! ucs.make_from_string (filename)
+				!! a_project.make_with_filename (ucs, a_variables)
+			else
+				!! a_project.make (a_variables)
+			end
 
-					-- Load build configuration:
-				a_project.load (start_target_name)
+				-- Load build configuration:
+			a_project.load (start_target_name)
 
-					-- Start build process:
-				if a_project.targets /= Void then
-					a_project.build
-					if not a_project.build_successful then
-							--!! TODO: Report this to parent project
-						print ("Build FAILED!%N")
-						Exceptions.die (1)
-					end
+				-- Start build process:
+			if a_project.targets /= Void then
+				a_project.build
+				if not a_project.build_successful then
+						--!! TODO: Report this to parent project
+					print ("Build FAILED!%N")
+					Exceptions.die (1)
 				end
-
 			end
 		end
 

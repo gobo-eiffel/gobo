@@ -19,11 +19,38 @@ inherit
 	GEANT_SHARED_PROPERTIES
 		export {NONE} all end
 
+feature {NONE} -- Initialization
+
+	make (a_project: GEANT_PROJECT) is
+			-- Initialize command by setting `project' to `a_project'.
+		require
+			project_not_void: a_project /= Void
+		do
+			set_project (a_project)
+		ensure
+			project_set: project = a_project
+		end
+
 feature -- Status report
 
 	is_executable: BOOLEAN is
 			-- Can command be executed?
 		deferred
+		end
+
+feature -- Access
+
+	project: GEANT_PROJECT
+			-- Project to which this target belongs
+
+feature -- Setting
+
+	set_project (a_project: like project) is
+			-- Set `project' to `a_project'.
+		do
+			project := a_project
+		ensure
+			project_set: project = a_project
 		end
 
 feature -- Execution

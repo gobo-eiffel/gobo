@@ -22,13 +22,6 @@ creation
 
 	make
 
-feature {NONE} -- Initialization
-
-	make is
-			-- Create a new 'echo' command.
-		do
-		end
-
 feature -- Status report
 
 	is_executable: BOOLEAN is
