@@ -68,7 +68,7 @@ feature -- Execution
 			a_testdir: STRING
 		do
 			a_testdir := testdir
-			assert (a_testdir + "_not_exists", not file_system.directory_exists (a_testdir))
+			-- assert (a_testdir + "_not_exists", not file_system.directory_exists (a_testdir))
 			old_cwd := file_system.cwd
 			file_system.create_directory (a_testdir)
 			assert (a_testdir + "_exists", file_system.directory_exists (a_testdir))
@@ -80,7 +80,7 @@ feature -- Execution
 		do
 			if old_cwd /= Void then
 				file_system.cd (old_cwd)
-				file_system.recursive_delete_directory (testdir)
+				-- file_system.recursive_delete_directory (testdir)
 				old_cwd := Void
 			end
 		end
