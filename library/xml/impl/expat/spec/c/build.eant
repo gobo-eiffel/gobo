@@ -52,27 +52,27 @@
 	</target>
 
 	<target name="compile_gcc" depend="init" dir="${GOBO}/library/xml/impl/expat/spec/c">
-		<exec executable="gcc -c exml_helper.c -D${eiffel} ${gobo_eiffel_include} ${expat_include}"/> 
-		<exec executable="gcc -c exml_expat.c -D${eiffel} ${gobo_eiffel_include} ${expat_include}"/> 
+		<exec executable="gcc -c exml_helper.c -D${eiffel} ${gobo_eiffel_include} ${expat_include} ${c_defines}"/> 
+		<exec executable="gcc -c exml_expat.c -D${eiffel} ${gobo_eiffel_include} ${expat_include} ${c_defines}"/> 
 		<exec executable="ar rc libexml-expat-${eiffel}${lib} exml_helper${obj} exml_expat${obj}"/>
 		<exec executable="ranlib libexml-expat-${eiffel}${lib}"/>
    	</target>
 
 	<target name="compile_cl" depend="init" dir="${GOBO}/library/xml/impl/expat/spec/c">
-		<exec executable="cl -c exml_helper.c -D${eiffel} ${gobo_eiffel_include} ${expat_include}"/> 
-		<exec executable="cl -c exml_expat.c -D${eiffel} ${gobo_eiffel_include} ${expat_include}"/> 
+		<exec executable="cl -c exml_helper.c -D${eiffel} ${gobo_eiffel_include} ${expat_include} ${c_defines}"/> 
+		<exec executable="cl -c exml_expat.c -D${eiffel} ${gobo_eiffel_include} ${expat_include} ${c_defines}"/> 
 		<exec executable="lib /OUT:libexml-expat-${eiffel}${lib} exml_helper${obj} exml_expat${obj}"/>
    	</target>
 
 	<target name="compile_lcc" depend="init" dir="${GOBO}/library/xml/impl/expat/spec/c">
-		<exec executable="lcc -c exml_helper.c -D${eiffel} ${gobo_eiffel_include} ${expat_include}"/> 
-		<exec executable="lcc -c exml_expat.c -D${eiffel} ${gobo_eiffel_include} ${expat_include}"/> 
+		<exec executable="lcc -c exml_helper.c -D${eiffel} ${gobo_eiffel_include} ${expat_include} ${c_defines}"/> 
+		<exec executable="lcc -c exml_expat.c -D${eiffel} ${gobo_eiffel_include} ${expat_include} ${c_defines}"/> 
 		<exec executable="lcclib /OUT:libexml-expat-${eiffel}${lib} exml_helper${obj} exml_expat${obj}"/>
    	</target>
 
 	<target name="compile_bcc" depend="init" dir="${GOBO}/library/xml/impl/expat/spec/c">
-		<exec executable="bcc -c exml_helper.c -D${eiffel} ${gobo_eiffel_include} ${expat_include}"/> 
-		<exec executable="bcc -c exml_expat.c -D${eiffel} ${gobo_eiffel_include} ${expat_include}"/> 
+		<exec executable="bcc -c exml_helper.c -D${eiffel} ${gobo_eiffel_include} ${expat_include} ${c_defines}"/> 
+		<exec executable="bcc -c exml_expat.c -D${eiffel} ${gobo_eiffel_include} ${expat_include} ${c_defines}"/> 
 		<exec executable="tlib libexml-expat-${eiffel}${lib} exml_helper${obj} exml_expat${obj}"/>
    	</target>
 
@@ -86,8 +86,8 @@
 		<set name="eiffel" value="se"/>
 		<set name="cc" value="gcc"/>
 		<set name="expat_include" value=""/>
-		<set name="bench_name" value="bench"/>
 		<geant target="init_eiffel"/>
+		<geant target="init_c_defines"/>
 		<geant target="init_os"/>
 		<geant target="init_cc"/>
 		<geant target="init_expat"/>
@@ -95,6 +95,10 @@
 		<geant target="init_ve"/>
 		<geant target="init_ise"/>
 		<geant target="init_hact"/>
+	</target>
+
+	<target name="init_c_defines" if="${GOBO_C_DEBUG}">
+		<set name="c_defines" value="-DGOBO_DEBUG"/>
 	</target>
 
 	<target name="init_eiffel" if="${GOBO_EIFFEL}">
@@ -110,7 +114,11 @@
 	</target>
 
 	<target name="init_ise" if="${eiffel}=ise">
-		<set name="gobo_eiffel_include" value="-I${ISE_EIFFEL}/${bench_name}/spec/${PLATFORM}/include"/>
+		<!-- 
+				On the latest linux beta versions the dir bench has been renamed to studio.
+				Please make a symbolic link from studio to bench, to keep backward compatible.
+		-->
+		<set name="gobo_eiffel_include" value="-I${ISE_EIFFEL}/bench/spec/${PLATFORM}/include"/>
 	</target>
 
 	<target name="init_hact" if="${eiffel}=hact">
@@ -137,7 +145,6 @@
 		<set name="exe" value=""/>
 		<set name="obj" value=".o"/>
 		<set name="lib" value=".a"/>
-		<set name="bench_name" value="studio"/>
 	</target>
 
 	<target name="init_cc">

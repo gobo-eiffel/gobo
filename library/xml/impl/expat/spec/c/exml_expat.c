@@ -311,7 +311,7 @@ void exml_XML_SetUserData(EIF_POINTER parser, EIF_OBJECT callback)
   if (callback == NULL)
     {
       /* just for debugging purposes, will be removed */
-      eif_disable_visible_exception ();
+      // eif_disable_visible_exception ();
 
       protected_callback = XML_GetUserData(parser);
       if (protected_callback != NULL)
@@ -321,7 +321,7 @@ void exml_XML_SetUserData(EIF_POINTER parser, EIF_OBJECT callback)
   else
     {
       /* just for debugging purposes, will be removed */
-      //eif_enable_visible_exception ();
+      // eif_enable_visible_exception ();
 
       protected_callback = eif_adopt (callback);
       XML_SetUserData(parser, protected_callback);
@@ -401,13 +401,18 @@ void exml_on_element_declaration (void *eiffel_object,
 {
 #ifdef ise
   EIF_PROCEDURE ep;               
-	EIF_TYPE_ID tid;
-	tid = eif_type_id ("EP_EVENT_PARSER");              
-	ep = eif_procedure ("on_element_declaration_procedure", tid);
+  EIF_TYPE_ID tid;
+  tid = eif_type_id ("XP_EVENT_PARSER");              
+#ifdef GOBO_DEBUG
+  if (tid == EIF_NO_TYPE)
+	eif_panic ("Type XP_EVENT_PARSER not in system."); 
+#endif
+  ep = eif_procedure ("on_element_declaration_procedure", tid);
   if (ep == 0)
     { eif_panic ("on_element_declaration_procedure not found."); }
   else
     { (ep) (eif_access(eiffel_object), (void*) name, (void*) model); }
+  (ep) (eif_access(eiffel_object), (void*) name, (void*) model);
 #endif
 #ifdef se
   ((eif_exml_on_element_declaration_proc) (eiffel_object, (void*) name, (void*) model));
@@ -423,9 +428,13 @@ void exml_on_attribute_declaration (void *eiffel_object,
 {
 #ifdef ise
   EIF_PROCEDURE ep;               
-	EIF_TYPE_ID tid;
-	tid = eif_type_id ("EP_EVENT_PARSER");              
-	ep = eif_procedure ("on_attribute_declaration_procedure", tid);
+  EIF_TYPE_ID tid;
+  tid = eif_type_id ("XP_EVENT_PARSER");              
+#ifdef GOBO_DEBUG
+  if (tid == EIF_NO_TYPE)
+	eif_panic ("Type XP_EVENT_PARSER not in system."); 
+#endif
+  ep = eif_procedure ("on_attribute_declaration_procedure", tid);
   if (ep == 0)
     { eif_panic ("on_attribute_declaration_procedure not found."); }
   else
@@ -443,9 +452,13 @@ void exml_on_xml_declaration (void *eiffel_object,
 {
 #ifdef ise
   EIF_PROCEDURE ep;
-	EIF_TYPE_ID tid;
-	tid = eif_type_id ("EP_EVENT_PARSER");
-	ep = eif_procedure ("on_xml_declaration_procedure", tid);
+  EIF_TYPE_ID tid;
+  tid = eif_type_id ("XP_EVENT_PARSER");
+#ifdef GOBO_DEBUG
+  if (tid == EIF_NO_TYPE)
+	eif_panic ("Type XP_EVENT_PARSER not in system."); 
+#endif
+  ep = eif_procedure ("on_xml_declaration_procedure", tid);
   if (ep == 0)
     { eif_panic ("on_xml_declaration_procedure not found."); }
   (ep) (eif_access(eiffel_object), (void*) version, (void*) encoding, standalone);
@@ -467,9 +480,13 @@ void exml_on_entity_declaration (void *eiffel_object,
 {
 #ifdef ise
   EIF_PROCEDURE ep;
-	EIF_TYPE_ID tid;
-	tid = eif_type_id ("EP_EVENT_PARSER");              
-	ep = eif_procedure ("on_entity_declaration_procedure", tid);
+  EIF_TYPE_ID tid;
+  tid = eif_type_id ("XP_EVENT_PARSER");              
+#ifdef GOBO_DEBUG
+  if (tid == EIF_NO_TYPE)
+	eif_panic ("Type XP_EVENT_PARSER not in system."); 
+#endif
+  ep = eif_procedure ("on_entity_declaration_procedure", tid);
   if (ep == 0)
     { eif_panic ("on_entity_declaration_procedure not found."); }
   else
@@ -486,9 +503,13 @@ void exml_on_start_tag (void *eiffel_object,
 {
 #ifdef ise
   EIF_PROCEDURE ep;               
-	EIF_TYPE_ID tid;
-	tid = eif_type_id ("EP_EVENT_PARSER");              
-	ep = eif_procedure ("on_start_tag_procedure", tid);
+  EIF_TYPE_ID tid;
+  tid = eif_type_id ("XP_EVENT_PARSER");              
+#ifdef GOBO_DEBUG
+  if (tid == EIF_NO_TYPE)
+	eif_panic ("Type XP_EVENT_PARSER not in system."); 
+#endif
+  ep = eif_procedure ("on_start_tag_procedure", tid);
   if (ep == 0)
     { eif_panic ("on_start_tag_procedure not found."); }
   (ep) (eif_access(eiffel_object), (void*) name, (void*) atts);
@@ -503,9 +524,13 @@ void exml_on_end_tag (void *eiffel_object,
 {
 #ifdef ise
   EIF_PROCEDURE ep;               
-	EIF_TYPE_ID tid;
-	tid = eif_type_id ("EP_EVENT_PARSER");              
-	ep = eif_procedure ("on_end_tag_procedure", tid);
+  EIF_TYPE_ID tid;
+  tid = eif_type_id ("XP_EVENT_PARSER");              
+#ifdef GOBO_DEBUG
+  if (tid == EIF_NO_TYPE)
+	eif_panic ("Type XP_EVENT_PARSER not in system."); 
+#endif
+  ep = eif_procedure ("on_end_tag_procedure", tid);
   if (ep == 0)
     { eif_panic ("on_end_tag_procedure not found."); }
   (ep) (eif_access(eiffel_object), (void*) name);
@@ -521,9 +546,13 @@ void exml_on_content (void *eiffel_object,
 {
 #ifdef ise
   EIF_PROCEDURE ep;               
-	EIF_TYPE_ID tid;
-	tid = eif_type_id ("EP_EVENT_PARSER");              
-	ep = eif_procedure ("on_content_procedure", tid);
+  EIF_TYPE_ID tid;
+  tid = eif_type_id ("XP_EVENT_PARSER");              
+#ifdef GOBO_DEBUG
+  if (tid == EIF_NO_TYPE)
+	eif_panic ("Type XP_EVENT_PARSER not in system."); 
+#endif
+  ep = eif_procedure ("on_content_procedure", tid);
   if (ep == 0)
     { eif_panic ("on_content_procedure not found."); }
   (ep) (eif_access(eiffel_object), (void*) s, len);
@@ -539,9 +568,13 @@ void exml_on_processing_instruction (void *eiffel_object,
 {
 #ifdef ise
   EIF_PROCEDURE ep;               
-	EIF_TYPE_ID tid;
-	tid = eif_type_id ("EP_EVENT_PARSER");              
-	ep = eif_procedure ("on_processing_instruction_procedure", tid);
+  EIF_TYPE_ID tid;
+  tid = eif_type_id ("XP_EVENT_PARSER");              
+#ifdef GOBO_DEBUG
+  if (tid == EIF_NO_TYPE)
+	eif_panic ("Type XP_EVENT_PARSER not in system."); 
+#endif
+  ep = eif_procedure ("on_processing_instruction_procedure", tid);
   if (ep == 0)
     { eif_panic ("on_processing_instruction_procedure not found."); }
   else
@@ -557,9 +590,13 @@ void exml_on_comment (void *eiffel_object,
 {
 #ifdef ise
   EIF_PROCEDURE ep;               
-	EIF_TYPE_ID tid;
-	tid = eif_type_id ("EP_EVENT_PARSER");              
-	ep = eif_procedure ("on_comment_procedure", tid);
+  EIF_TYPE_ID tid;
+  tid = eif_type_id ("XP_EVENT_PARSER");              
+#ifdef GOBO_DEBUG
+  if (tid == EIF_NO_TYPE)
+	eif_panic ("Type XP_EVENT_PARSER not in system."); 
+#endif
+  ep = eif_procedure ("on_comment_procedure", tid);
   if (ep == 0)
     { eif_panic ("on_comment_procedure not found."); }
   else
@@ -574,9 +611,13 @@ void exml_on_start_cdata_section (void *eiffel_object)
 {
 #ifdef ise
   EIF_PROCEDURE ep;               
-	EIF_TYPE_ID tid;
-	tid = eif_type_id ("EP_EVENT_PARSER");              
-	ep = eif_procedure ("on_start_cdata_section_tag_procedure", tid);
+  EIF_TYPE_ID tid;
+  tid = eif_type_id ("XP_EVENT_PARSER");              
+#ifdef GOBO_DEBUG
+  if (tid == EIF_NO_TYPE)
+	eif_panic ("Type XP_EVENT_PARSER not in system."); 
+#endif
+  ep = eif_procedure ("on_start_cdata_section_tag_procedure", tid);
   if (ep == 0)
     { eif_panic ("on_start_cdata_section_tag_procedure not found."); }
   else
@@ -591,9 +632,13 @@ void exml_on_end_cdata_section (void *eiffel_object)
 {
 #ifdef ise
   EIF_PROCEDURE ep;               
-	EIF_TYPE_ID tid;
-	tid = eif_type_id ("EP_EVENT_PARSER");              
-	ep = eif_procedure ("on_end_cdata_section_tag_procedure", tid);
+  EIF_TYPE_ID tid;
+  tid = eif_type_id ("XP_EVENT_PARSER");              
+#ifdef GOBO_DEBUG
+  if (tid == EIF_NO_TYPE)
+	eif_panic ("Type XP_EVENT_PARSER not in system."); 
+#endif
+  ep = eif_procedure ("on_end_cdata_section_tag_procedure", tid);
   if (ep == 0)
     { eif_panic ("on_end_cdata_section_tag_procedure not found."); }
   else
@@ -610,9 +655,13 @@ void exml_on_default (void *eiffel_object,
 {
 #ifdef ise
   EIF_PROCEDURE ep;               
-	EIF_TYPE_ID tid;
-	tid = eif_type_id ("EP_EVENT_PARSER");              
-	ep = eif_procedure ("on_default_procedure", tid);
+  EIF_TYPE_ID tid;
+  tid = eif_type_id ("XP_EVENT_PARSER");              
+#ifdef GOBO_DEBUG
+  if (tid == EIF_NO_TYPE)
+	eif_panic ("Type XP_EVENT_PARSER not in system."); 
+#endif
+  ep = eif_procedure ("on_default_procedure", tid);
   if (ep == 0)
     { eif_panic ("on_default_procedure not found."); }
   else
@@ -629,9 +678,13 @@ void exml_on_default_expanded (void *eiffel_object,
 {
 #ifdef ise
   EIF_PROCEDURE ep;               
-	EIF_TYPE_ID tid;
-	tid = eif_type_id ("EP_EVENT_PARSER");              
-	ep = eif_procedure ("on_default_expanded_procedure", tid);
+  EIF_TYPE_ID tid;
+  tid = eif_type_id ("XP_EVENT_PARSER");              
+#ifdef GOBO_DEBUG
+  if (tid == EIF_NO_TYPE)
+	eif_panic ("Type XP_EVENT_PARSER not in system."); 
+#endif
+  ep = eif_procedure ("on_default_expanded_procedure", tid);
   if (ep == 0)
     { eif_panic ("on_default_expanded_procedure not found."); }
   else
@@ -650,9 +703,13 @@ void exml_on_start_doctype (void *eiffel_object,
 {
 #ifdef ise
   EIF_PROCEDURE ep;               
-	EIF_TYPE_ID tid;
-	tid = eif_type_id ("EP_EVENT_PARSER");              
-	ep = eif_procedure ("on_start_doctype_procedure", tid);
+  EIF_TYPE_ID tid;
+  tid = eif_type_id ("XP_EVENT_PARSER");              
+#ifdef GOBO_DEBUG
+  if (tid == EIF_NO_TYPE)
+	eif_panic ("Type XP_EVENT_PARSER not in system."); 
+#endif
+  ep = eif_procedure ("on_start_doctype_procedure", tid);
   if (ep == 0)
     { eif_panic ("on_start_doctype_procedure not found."); }
   else
@@ -667,9 +724,13 @@ void exml_on_end_doctype (void *eiffel_object)
 {
 #ifdef ise
   EIF_PROCEDURE ep;               
-	EIF_TYPE_ID tid;
-	tid = eif_type_id ("EP_EVENT_PARSER");              
-	ep = eif_procedure ("on_end_doctype_procedure", tid);
+  EIF_TYPE_ID tid;
+  tid = eif_type_id ("XP_EVENT_PARSER");              
+#ifdef GOBO_DEBUG
+  if (tid == EIF_NO_TYPE)
+	eif_panic ("Type XP_EVENT_PARSER not in system."); 
+#endif
+  ep = eif_procedure ("on_end_doctype_procedure", tid);
   if (ep == 0)
     { eif_panic ("on_end_doctype_procedure not found."); }
   else
@@ -684,9 +745,13 @@ void exml_on_notation_declaration (void *eiffel_object, const XML_Char *notation
 {
 #ifdef ise
   EIF_PROCEDURE ep;               
-	EIF_TYPE_ID tid;
-	tid = eif_type_id ("EP_EVENT_PARSER");              
-	ep = eif_procedure ("on_notation_declaration_procedure", tid);
+  EIF_TYPE_ID tid;
+  tid = eif_type_id ("XP_EVENT_PARSER");              
+#ifdef GOBO_DEBUG
+  if (tid == EIF_NO_TYPE)
+	eif_panic ("Type XP_EVENT_PARSER not in system."); 
+#endif
+  ep = eif_procedure ("on_notation_declaration_procedure", tid);
   if (ep == 0)
     { eif_panic ("on_notation_declaration_procedure not found."); }
   else
@@ -703,9 +768,13 @@ void exml_on_start_namespace_declaration (void *eiffel_object,
 {
 #ifdef ise
   EIF_PROCEDURE ep;               
-	EIF_TYPE_ID tid;
-	tid = eif_type_id ("EP_EVENT_PARSER");              
-	ep = eif_procedure ("on_start_namespace_declaration_procedure", tid);
+  EIF_TYPE_ID tid;
+  tid = eif_type_id ("XP_EVENT_PARSER");              
+#ifdef GOBO_DEBUG
+  if (tid == EIF_NO_TYPE)
+	eif_panic ("Type XP_EVENT_PARSER not in system."); 
+#endif
+  ep = eif_procedure ("on_start_namespace_declaration_procedure", tid);
   if (ep == 0)
     { eif_panic ("on_start_namespace_declaration_procedure not found."); }
   else
@@ -721,9 +790,13 @@ void exml_on_end_namespace_declaration (void *eiffel_object,
 {
 #ifdef ise
   EIF_PROCEDURE ep;               
-	EIF_TYPE_ID tid;
-	tid = eif_type_id ("EP_EVENT_PARSER");              
-	ep = eif_procedure ("on_end_namespace_declaration_procedure", tid);
+  EIF_TYPE_ID tid;
+  tid = eif_type_id ("XP_EVENT_PARSER");              
+#ifdef GOBO_DEBUG
+  if (tid == EIF_NO_TYPE)
+	eif_panic ("Type XP_EVENT_PARSER not in system."); 
+#endif
+  ep = eif_procedure ("on_end_namespace_declaration_procedure", tid);
   if (ep == 0)
     { eif_panic ("on_end_namespace_declaration_procedure not found."); }
   else
@@ -738,9 +811,13 @@ int exml_on_not_standalone_handler (void *eiffel_object)
 {
 #ifdef ise
   EIF_BOOLEAN_FUNCTION ep;               
-	EIF_TYPE_ID tid;
-	tid = eif_type_id ("EP_EVENT_PARSER");              
-	ep = eif_boolean_function ("on_not_standalone_procedure", tid);
+  EIF_TYPE_ID tid;
+  tid = eif_type_id ("XP_EVENT_PARSER");              
+#ifdef GOBO_DEBUG
+  if (tid == EIF_NO_TYPE)
+	eif_panic ("Type XP_EVENT_PARSER not in system."); 
+#endif
+  ep = eif_boolean_function ("on_not_standalone_procedure", tid);
   if (ep == 0)
     { eif_panic ("on_not_standalone_procedure not found."); }
   return ((ep) (eif_access(eiffel_object)));
@@ -758,11 +835,15 @@ int exml_on_external_entity_reference_handler (XML_Parser parser,
 {
 #ifdef ise
   EIF_BOOLEAN_FUNCTION ep;               
-	EIF_TYPE_ID tid;
+  EIF_TYPE_ID tid;
   void *eiffel_object;
   eiffel_object = XML_GetUserData(parser);
-	tid = eif_type_id ("EP_EVENT_PARSER");              
-	ep = eif_boolean_function ("on_external_entity_reference_procedure", tid);
+  tid = eif_type_id ("XP_EVENT_PARSER");              
+#ifdef GOBO_DEBUG
+  if (tid == EIF_NO_TYPE)
+	eif_panic ("Type XP_EVENT_PARSER not in system."); 
+#endif
+  ep = eif_boolean_function ("on_external_entity_reference_procedure", tid);
   if (ep == 0)
     { eif_panic ("on_external_entity_reference_procedure not found."); }
   return ((ep) (eif_access(eiffel_object), (void*) context, (void*) base, (void*) systemId, (void*) publicId));
@@ -780,9 +861,13 @@ int exml_on_unknown_encoding_handler (void *eiffel_object,
 {
 #ifdef ise
   EIF_BOOLEAN_FUNCTION ep;
-	EIF_TYPE_ID tid;
-	tid = eif_type_id ("EP_ENCODING_CALLBACK");              
-	ep = eif_boolean_function ("on_unknown_encoding_procedure", tid);
+  EIF_TYPE_ID tid;
+  tid = eif_type_id ("XP_ENCODING_CALLBACK");              
+#ifdef GOBO_DEBUG
+  if (tid == EIF_NO_TYPE)
+	eif_panic ("Type XP_EVENT_PARSER not in system."); 
+#endif
+  ep = eif_boolean_function ("on_unknown_encoding_procedure", tid);
   if (ep == 0)
     { eif_panic ("on_unknown_encoding_procedure not found."); }
   return ((ep) (eif_access(eiffel_object), (void*) name, (void*) info));
