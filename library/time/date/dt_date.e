@@ -100,7 +100,7 @@ feature -- Access
 			-- Month
 		do
 			if storage < 0 then
-				Result := Year_shift // Month_shift - ((-storage \\ Year_shift) // Month_shift)
+				Result := Year_shift // Month_shift - (((-storage) \\ Year_shift) // Month_shift)
 			else
 				Result := (storage \\ Year_shift) // Month_shift
 			end
@@ -113,7 +113,7 @@ feature -- Access
 			-- Day
 		do
 			if storage < 0 then
-				Result := Month_shift - (-storage \\ Month_shift)
+				Result := Month_shift - ((-storage) \\ Month_shift)
 			else
 				Result := storage \\ Month_shift
 			end
@@ -141,7 +141,7 @@ feature -- Access
 				-- 1 January 1970 is a Thursday.
 			d := day_count + 4 -- (Thursday - Sunday = 4)
 			if d < 0 then
-				Result := Saturday - (-(d + 1) \\ Days_in_week)
+				Result := Saturday - ((-(d + 1)) \\ Days_in_week)
 			else
 				Result := Sunday + d \\ Days_in_week
 			end
@@ -293,7 +293,7 @@ feature -- Setting
 		do
 			if storage < 0 then
 				if y < 0 then
-					storage := y * Year_shift - (-storage \\ Year_shift)
+					storage := y * Year_shift - ((-storage) \\ Year_shift)
 				else
 					st := -storage
 					mm := Year_shift // Month_shift - ((st \\ Year_shift) // Month_shift)

@@ -452,7 +452,7 @@ feature -- Status setting
 			if ms < 0 then
 				ms := -ms
 				d := day - ms // Milliseconds_in_day
-				ms := - ms \\ Milliseconds_in_day
+				ms := - (ms \\ Milliseconds_in_day)
 				if d > 0 and ms /= 0 then
 					d := d - 1
 					ms := Milliseconds_in_day + ms
@@ -544,7 +544,7 @@ feature -- Comparison
 			if ms < 0 then
 				ms := -ms
 				d := (day - other.day) - ms // Milliseconds_in_day
-				ms := - ms \\ Milliseconds_in_day
+				ms := -(ms \\ Milliseconds_in_day)
 				if d > 0 and ms /= 0 then
 					d := d - 1
 					ms := Milliseconds_in_day + ms
@@ -584,7 +584,7 @@ feature -- Comparison
 				if ms < 0 then
 					ms := -ms
 					d := (day - other.day) - ms // Milliseconds_in_day
-					ms := - ms \\ Milliseconds_in_day
+					ms := - (ms \\ Milliseconds_in_day)
 				else
 					d := (day - other.day) + ms // Milliseconds_in_day
 					ms := ms \\ Milliseconds_in_day
