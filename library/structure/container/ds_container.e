@@ -2,11 +2,12 @@ indexing
 
 	description:
 
-		"Structures that can hold zero or more items"
+		"Data structures that can hold zero or more items"
 
 	library:    "Gobo Eiffel Structure Library"
-	author:     "Eric Bezault <ericb@gobo.demon.co.uk>"
-	copyright:  "Copyright (c) 1997, Eric Bezault"
+	author:     "Eric Bezault <ericb@gobosoft.com>"
+	copyright:  "Copyright (c) 1999, Eric Bezault and others"
+	license:    "Eiffel Forum Freeware License v1 (see forum.txt)"
 	date:       "$Date$"
 	revision:   "$Revision$"
 
@@ -24,14 +25,14 @@ inherit
 feature -- Measurement
 
 	count: INTEGER is
-			-- Number of items in structure
+			-- Number of items in container
 		deferred
 		end
 
 feature -- Status report
 
 	is_empty: BOOLEAN is
-			-- Is structure empty?
+			-- Is container empty?
 		do
 			Result := count = 0
 		end
@@ -39,19 +40,23 @@ feature -- Status report
 feature -- Comparison
 
 	is_equal (other: like Current): BOOLEAN is
-			-- Is current structure equal to `other'?
+			-- Is current container equal to `other'?
 		deferred
 		ensure then
-			same_count: Result implies count = other.count
+				-- The following assertion has been commented out
+				-- because of a bug in SmallEiffel -0.77b2 (implicit
+				-- feature renaming in ACTIVE, COUNTABLE and LINEAR
+				-- in cluster $GOBO/library/structure/base).
+--			same_count: Result implies count = other.count
 		end
 
 feature -- Removal
 
 	wipe_out is
-			-- Remove all items from structure.
+			-- Remove all items from container.
 		deferred
 		ensure
-			wipe_out: is_empty
+			wiped_out: is_empty
 		end
 
 invariant
