@@ -561,13 +561,13 @@ feature {NONE} -- Feature flattening
 			if not current_class.has_flattening_error then
 				nb := named_features.count
 				create class_features.make_with_capacity (nb)
-				current_class.set_features (class_features, new_features_count)
 				from named_features.finish until named_features.before loop
 					a_feature := named_features.item_for_iteration
 					a_feature := flattened_feature (a_feature)
 					class_features.put_first (a_feature)
 					named_features.back
 				end
+				current_class.set_features (class_features, new_features_count)
 				nb := new_features_count
 				from i := 1 until i > nb loop
 					a_feature := class_features.item (i)
