@@ -30,7 +30,7 @@ feature {NONE} -- Initialization
 
 feature -- Basic operations
 
-	flatten (nested_lists: DS_LIST [DS_NESTED_LIST [G]]) is
+	flatten (nested_lists: DS_LINEAR [DS_NESTED_LIST [G]]) is
 			-- Make sure that for each list in `nested_lists'
 			-- all items are held locally, even those that
 			-- could be accessed remotely.
@@ -76,7 +76,7 @@ feature {NONE} -- Implementation
 			remote_cursor: DS_LINEAR_CURSOR [DS_NESTED_LIST [G]]
 			remote_items: DS_NESTED_LIST [G]
 			local_cursor: DS_LINEAR_CURSOR [G]
-			local_items: DS_LIST [G]
+			local_items: DS_LINEAR [G]
 			cyclic: BOOLEAN
 			index: INTEGER
 			an_item: G
@@ -87,27 +87,29 @@ feature {NONE} -- Implementation
 			remote_cursor := a_list.remote_items.new_cursor
 			from remote_cursor.start until remote_cursor.after loop
 				remote_items := remote_cursor.item
-				if remote_items.index = 0 then
-						-- `remove_items' has not been flattened
-						-- yet. Take care of that now.
-					traverse (remote_items, pending)
-				end
-				index := remote_items.index
-				if index > 0 and a_list.index > index then
-						-- We found a cycle in the di-graph
-						-- of nested lists.
-					cyclic := True
-						-- `a_list' depends on the list at
-						-- position `index' in `pending'.
-					a_list.set_index (index)
-				end
-				local_cursor := remote_items.local_items.new_cursor
-				from local_cursor.start until local_cursor.after loop
-					an_item := local_cursor.item
-					if not local_items.has (an_item) then
-						local_items.force_last (an_item)
+				if remote_items /= a_list then
+					if remote_items.index = 0 then
+							-- `remove_items' has not been flattened
+							-- yet. Take care of that now.
+						traverse (remote_items, pending)
 					end
-					local_cursor.forth
+					index := remote_items.index
+					if index > 0 and a_list.index > index then
+							-- We found a cycle in the di-graph
+							-- of nested lists.
+						cyclic := True
+							-- `a_list' depends on the list at
+							-- position `index' in `pending'.
+						a_list.set_index (index)
+					end
+					local_cursor := remote_items.local_items.new_cursor
+					from local_cursor.start until local_cursor.after loop
+						an_item := local_cursor.item
+						if not local_items.has (an_item) then
+							a_list.add_local_item (an_item)
+						end
+						local_cursor.forth
+					end
 				end
 				remote_cursor.forth
 			end
@@ -124,8 +126,7 @@ feature {NONE} -- Implementation
 				until
 					remote_items = a_list
 				loop
-					remote_items.local_items.wipe_out
-					remote_items.local_items.append_last (local_items)
+					remote_items.set_local_items (local_items)
 					remote_items := pending.item
 					remote_items.set_index (-1)
 					pending.remove
