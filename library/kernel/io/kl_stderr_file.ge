@@ -2,7 +2,9 @@ indexing
 
 	description:
 
-		"Standard error files"
+		"Standard error files. The character '%N' is automatically %
+		%converted to the line separtor of the underlying %
+		%file system when written to the standard error file."
 
 	library:    "Gobo Eiffel Kernel Library"
 	author:     "Eric Bezault <ericb@gobosoft.com>"
@@ -15,15 +17,23 @@ class KL_STDERR_FILE
 
 inherit
 
-	KI_CHARACTER_OUTPUT_STREAM
+	KI_TEXT_OUTPUT_STREAM
 		rename
 			is_writable as is_open_write
 		undefine
+#ifndef VE
+			put_new_line,
+#endif
 			put_integer
 #ifdef VE
 		redefine
-			put_boolean
+			put_boolean, put_new_line
 #endif
+		end
+
+	KL_OPERATING_SYSTEM
+		export
+			{NONE} all
 		end
 
 #ifdef ISE || HACT
@@ -55,11 +65,6 @@ inherit
 		export
 			{NONE} all
 		end
-
-	FILE_SYSTEM_CONSTANTS
-		export
-			{NONE} all
-		end
 #endif
 
 creation
@@ -87,9 +92,12 @@ feature {NONE} -- Initialization
 			is_open_write: is_open_write
 		end
 
-#ifdef SE
 feature -- Access
 
+	eol: STRING is "%N"
+			-- Line separator
+
+#ifdef SE
 	name: STRING
 			-- File name
 
@@ -100,7 +108,7 @@ feature -- Output
 	put_character (c: CHARACTER) is
 			-- Write `c' to standard error file.
 		do
-			if directory_separator = '\' and then c = '%N' then
+			if is_windows and then c = '%N' then
 					-- Windows.
 				ve_put_character ('%R')
 			end
@@ -113,7 +121,7 @@ feature -- Output
 			i, nb: INTEGER
 			c: CHARACTER
 		do
-			if directory_separator = '\' then
+			if is_windows then
 					-- Windows.
 				nb := a_string.count
 				from i := 1 until i > nb loop

@@ -2,7 +2,9 @@ indexing
 
 	description:
 
-		"Output files"
+		"Text output files. The character '%N' is automatically %
+		%converted to the line separtor of the underlying %
+		%file system when written to the file."
 
 	library:    "Gobo Eiffel Kernel Library"
 	author:     "Eric Bezault <ericb@gobosoft.com>"
@@ -17,11 +19,23 @@ inherit
 
 	KI_OUTPUT_FILE
 		undefine
+#ifndef VE
+			put_new_line,
+#endif
 			put_integer
 #ifdef VE
 		redefine
-			put_boolean
+			put_boolean, put_new_line
 #endif
+		end
+
+	KL_OPERATING_SYSTEM
+#ifdef SE
+		rename
+			rename_file as se_rename_file
+#endif
+		export
+			{NONE} all
 		end
 
 #ifdef ISE
@@ -82,11 +96,6 @@ inherit
 		export
 			{NONE} all
 		end
-
-	FILE_SYSTEM_CONSTANTS
-		export
-			{NONE} all
-		end
 #endif
 
 creation
@@ -111,9 +120,12 @@ feature {NONE} -- Initialization
 #endif
 		end
 
-#ifdef SE
 feature -- Access
 
+	eol: STRING is "%N"
+			-- Line separator
+
+#ifdef SE
 	name: STRING
 			-- File name
 
@@ -132,7 +144,7 @@ feature -- Output
 	put_character (c: CHARACTER) is
 			-- Write `c' to output file.
 		do
-			if directory_separator = '\' and then c = '%N' then
+			if is_windows and then c = '%N' then
 					-- Windows.
 				ve_put_character ('%R')
 			end
@@ -145,7 +157,7 @@ feature -- Output
 			i, nb: INTEGER
 			c: CHARACTER
 		do
-			if directory_separator = '\' then
+			if is_windows then
 					-- Windows.
 				nb := a_string.count
 				from i := 1 until i > nb loop
