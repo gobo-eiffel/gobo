@@ -44,25 +44,35 @@ feature -- Execution
 	execute is
 			-- Ask operating system to execute `command'.
 			-- Wait until termination.
-#ifdef HACT || ISE
 		local
+			retried: BOOLEAN
+#ifdef HACT || ISE
 			environment: expanded EXECUTION_ENVIRONMENT
-		do
-			environment.system (command)
 #else
 #ifdef VE
-		local
 			a_process: EXTERNAL_PROCESS
+#endif
+#endif
 		do
-			!! a_process.make (command)
-			a_process.execute
+			if not retried then
+#ifdef HACT || ISE
+				environment.system (command)
+#else
+#ifdef VE
+				!! a_process.make (command)
+				a_process.execute
 #else
 #ifdef SE
-		do
-			system (command)
+				system (command)
 #endif
 #endif
 #endif
+			end
+		rescue
+			if not retried then
+				retried := True
+				retry
+			end
 		end
 
 invariant
