@@ -33,6 +33,8 @@ Version 3.2 - ?
 	  namespace) rather than the parent element's namespace for 
 	  on_attribute events in the case of unprefixed attributes.
 	  (XML Names says unprefixed attributes have no namespace.)
+	* XM_ELEMENT.*attribute_by_name only look for unprefixed 
+	  attributes, for the same reason as above.
 
 Version 3.1 - 18 December 2002
 
