@@ -161,8 +161,6 @@ feature -- Operation(s)
 
 	bit_and (m, n: INTEGER): INTEGER is
 			-- Bitwise and between `m' and `n'.
-		require
-			eight_bit_shift: -128 <= n and then n <= 127
 		local
 #ifdef VE
 			i,j: BIT 32
@@ -177,14 +175,12 @@ feature -- Operation(s)
 			Result := m.bit_and (n)
 #endif
 #ifdef SE
-			Result := m.bit_and (n.to_integer_8)
-#endif						
+			Result := m.bit_and (n)
+#endif
 		end
 
 	bit_or (m, n: INTEGER): INTEGER is
 			-- Bitwise or between `m' and `n'.
-		require
-			eight_bit_shift: 0 <= n and then n <= 32
 		local
 #ifdef VE
 			i,j: BIT 32
@@ -199,14 +195,14 @@ feature -- Operation(s)
 			Result := m.bit_or (n)
 #endif
 #ifdef SE
-			Result := m.bit_or (n.to_integer_8)
-#endif						
+			Result := m.bit_or (n)
+#endif
 		end
 
 	bit_shift_left (m, n: INTEGER): INTEGER is
 			-- `m' shifted `n' bits to left.
 		require
-			eight_bit_shift: 0 <= n and then n <= 32
+			thrity_two_bit_shift: 0 <= n and n <= 32
 		local
 #ifdef VE
 			i: BIT 32
@@ -221,14 +217,14 @@ feature -- Operation(s)
 #endif
 #ifdef SE
 			Result := m.bit_shift_left (n.to_integer_8)
-#endif						
+#endif
 		end
 
 
 	bit_shift_right (m, n: INTEGER): INTEGER is
 			-- `m' shifted `n' bits to right.
 		require
-			eight_bit_shift: -128 <= n and then n <= 127
+			thrity_two_bit_shift: 0 <= n and n <= 32
 		local
 #ifdef VE
 			i: BIT 32
@@ -243,7 +239,7 @@ feature -- Operation(s)
 #endif
 #ifdef SE
 			Result := m.bit_shift_right (n.to_integer_8)
-#endif						
+#endif
 		end
 
 feature -- Status report
