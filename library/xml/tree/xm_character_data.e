@@ -15,14 +15,14 @@ class XM_CHARACTER_DATA
 inherit
 
 	XM_NODE
-
+	
 creation
 
 	make
 
 feature {NONE} -- Initialisation
 
-	make (a_parent: XM_COMPOSITE; c: UC_STRING) is
+	make (a_parent: XM_COMPOSITE; c: STRING) is
 			-- Make a new object from a string.
 		require
 			a_parent_not_void: a_parent /= Void
@@ -31,12 +31,12 @@ feature {NONE} -- Initialisation
 			parent := a_parent
 			content := c
 		ensure
-			content_set: equal (content, c)
+			content_set: same_string (content, c)
 		end
 
 feature {ANY} -- Access
 
-	content: UC_STRING
+	content: STRING
 			-- Actual character data of this node.
 
 feature {ANY} -- Basic routines
@@ -55,6 +55,9 @@ feature {ANY} -- Element change
 		require
 			other /= Void
 		do
+			if not is_unicode_string (content) and then is_unicode_string (other.content) then
+				content := forced_unicode_string (content)
+			end
 			content.append_string (other.content)
 		end
 

@@ -22,7 +22,7 @@ creation
 
 feature {NONE} -- Initialisation
 
-	make (a_target, a_data: UC_STRING) is
+	make (a_target, a_data: STRING) is
 			-- Set target and data.
 		require
 			a_target_not_void: a_target /= Void
@@ -34,11 +34,11 @@ feature {NONE} -- Initialisation
 
 feature {ANY} -- Access
 
-	target: UC_STRING
+	target: STRING
 			-- target of this processing instruction. XML defines this as being the
 			-- first token following the markup that begins the processing instruction.
 
-	data: UC_STRING
+	data: STRING
 			-- content of this processing instruction. This is from the first non
 			-- white space character after the target to the character immediately
 			-- preceding the ?>.

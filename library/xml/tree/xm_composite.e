@@ -26,19 +26,12 @@ inherit
 			make as make_list
 		end
 
-	UC_UNICODE_FACTORY
-		export
-			{NONE} all
-		undefine
-			copy, is_equal
-		end
-
 feature {NONE} -- Access
 
 	make_composite is
 			-- Initialisation specific to this node.
 		do
-			!! namespaces.make (10)
+			!! namespaces.make
 			make_list
 		end
 
@@ -63,7 +56,7 @@ feature {ANY} -- Access
 			-- !XM_ELEMENT_CURSOR! Result.make (new_cursor)
 			-- end
 
-	has_element_by_name (a_name: UC_STRING): BOOLEAN is
+	has_element_by_name (a_name: STRING): BOOLEAN is
 			-- Has this element at least 1 direct child element with the name `a_name'?
 		require
 			a_name_not_void: a_name /= Void
@@ -78,14 +71,14 @@ feature {ANY} -- Access
 				cs.off
 			loop
 				e ?= cs.item
-				if e /= Void and then equal (e.name, a_name) then
+				if e /= Void and then same_string (e.name, a_name) then
 					Result := True
 				end
 				cs.forth
 			end
 		end
 
-	element_by_name (a_name: UC_STRING): XM_ELEMENT is
+	element_by_name (a_name: STRING): XM_ELEMENT is
 			-- retrieve direct child element with name `a_name'.
 			-- if there are more than one elements with that name,
 			-- anyone may be returned.
@@ -103,7 +96,7 @@ feature {ANY} -- Access
 				cs.off
 			loop
 				e ?= cs.item
-				if e /= Void and then equal (e.name, a_name) then
+				if e /= Void and then same_string (e.name, a_name) then
 					Result := e
 				end
 				cs.forth
@@ -163,7 +156,7 @@ feature {ANY} -- Element change
 		local
 			decls: XM_NAMESPACE_TABLE
 		do
-			!! decls.make (10)
+			!! decls.make
 			resolve_namespaces (decls)
 		end
 
@@ -266,7 +259,7 @@ feature {ANY} -- Element change
 			end
 		end
 
-	text: UC_STRING is
+	text: STRING is
 			-- returns all text directly found in this element and
 			-- returns it as one string
 		local
@@ -274,14 +267,17 @@ feature {ANY} -- Element change
 			cs: like new_cursor
 		do
 			from
+				!! Result.make (0)
 				cs := new_cursor
 				cs.start
-				Result := new_unicode_string ("")
 			until
 				cs.off
 			loop
 				text_node ?= cs.item
 				if text_node /= Void then
+					if not is_unicode_string (Result) and is_unicode_string (text_node.content) then
+						Result := forced_unicode_string (Result) 
+					end
 					Result.append_string (text_node.content)
 				end
 				cs.forth

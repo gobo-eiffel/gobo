@@ -15,9 +15,8 @@ class XM_ATTRIBUTE
 inherit
 
 	XM_NAMED_NODE
-
-	UC_UNICODE_FACTORY
-		export {NONE} all end
+	
+	XM_MARKUP_CONSTANTS
 
 creation
 
@@ -25,7 +24,7 @@ creation
 
 feature {NONE} -- Initialisation
 
-	make (a_name, a_prefix, a_value: UC_STRING; a_parent: XM_ELEMENT) is
+	make (a_name, a_prefix, a_value: STRING; a_parent: XM_ELEMENT) is
 		do
 			--make_default
 			name := a_name
@@ -36,13 +35,13 @@ feature {NONE} -- Initialisation
 
 feature {ANY} -- Access
 
-	value: UC_STRING
+	value: STRING
 			-- The value of this attribute.
 
 	is_namespace_declaration: BOOLEAN is
 			-- Is this attribute a namespace declaration ?
 		do
-			if (has_prefix and then (equal (ns_prefix, uc_xmlns))) or equal (name, uc_xmlns) then
+			if has_prefix and then same_string (Xmlns, ns_prefix) or same_string (Xmlns, name) then
 				Result := True
 			end
 		end
@@ -53,13 +52,13 @@ feature {ANY} -- Access
 		require
 			is_namespace_declaration: is_namespace_declaration
 		local
-			a_prefix: UC_STRING
-			a_uri: UC_STRING
+			a_prefix: STRING
+			a_uri: STRING
 		do
 			if has_prefix then
 				a_prefix := name
 			else
-				a_prefix := new_unicode_string ("")
+				a_prefix := new_unicode_string_empty
 			end
 			if value.count > 0 then
 				a_uri := value
@@ -75,7 +74,7 @@ feature {ANY} -- Basic routines
 			x.process_attribute (Current)
 		end
 
-	set_value (a_value: UC_STRING) is
+	set_value (a_value: STRING) is
 			-- Set `a_value' to `value'.
 		require
 			a_value_not_void: a_value /= Void
@@ -83,13 +82,6 @@ feature {ANY} -- Basic routines
 			value := a_value
 		ensure
 			value_set: value = a_value
-		end
-
-feature {NONE} -- Constants
-
-	uc_xmlns: UC_STRING is
-		once
-			Result := new_unicode_string ("xmlns")
 		end
 
 invariant

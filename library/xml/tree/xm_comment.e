@@ -22,7 +22,7 @@ creation
 
 feature {NONE} -- Initialisation
 
-	make (a_parent: XM_COMPOSITE; a_data: UC_STRING) is
+	make (a_parent: XM_COMPOSITE; a_data: STRING) is
 		require
 			a_data_not_void: a_data /= Void
 			a_parent_not_void: a_parent /= Void
@@ -33,7 +33,7 @@ feature {NONE} -- Initialisation
 
 feature {ANY} -- Access
 
-	data: UC_STRING
+	data: STRING
 			--Actual character data of this comment.
 
 feature {ANY} -- Basic routines

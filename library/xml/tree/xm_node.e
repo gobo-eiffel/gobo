@@ -12,6 +12,16 @@ indexing
 
 deferred class XM_NODE
 
+inherit
+	
+	ANY
+	
+	UC_UNICODE_FACTORY
+		export {NONE} all end
+	
+	XM_UNICODE_STRUCTURE_FACTORY
+		export {NONE} all end
+	
 feature {ANY} -- Access
 
 	parent: XM_COMPOSITE

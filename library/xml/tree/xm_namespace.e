@@ -18,7 +18,7 @@ creation
 
 feature {NONE} -- Initialisation
 
-	make (a_prefix, a_uri: UC_STRING) is
+	make (a_prefix, a_uri: STRING) is
 		require
 			valid: (a_uri = Void implies a_prefix /= Void) and (a_prefix = Void implies a_uri /= Void)
 		do
@@ -28,10 +28,10 @@ feature {NONE} -- Initialisation
 
 feature {ANY} -- Access
 
-	ns_prefix: UC_STRING
+	ns_prefix: STRING
 			-- Prefix of this namespace
 
-	uri: UC_STRING
+	uri: STRING
 			-- Namespace URI
 
 	is_default: BOOLEAN is

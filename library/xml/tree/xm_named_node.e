@@ -18,14 +18,14 @@ inherit
 
 feature {ANY} -- Access
 
-	name: UC_STRING
+	name: STRING
 			-- Name of this node.
 
-	ns_prefix: UC_STRING
+	ns_prefix: STRING
 			-- Namespace prefix used to declare the namespace of the 
 			-- name of this node.
 
-	namespace: UC_STRING
+	namespace: STRING
 			-- Namespace of the name of this node.
 
 feature {ANY} -- Access
@@ -46,7 +46,7 @@ feature {ANY} -- Access
 
 feature {ANY} -- Element change
 
-	set_name (n: UC_STRING) is
+	set_name (n: STRING) is
 			-- Set `n' to be the name of this node.
 		require
 			n_not_void: n /= Void
@@ -54,13 +54,13 @@ feature {ANY} -- Element change
 			name := n
 		end
 
-	set_namespace (n: UC_STRING) is
+	set_namespace (n: STRING) is
 			-- Set `n' to be the namespace of the name of this node.
 		do
 			namespace := n
 		end
 
-	set_prefix (n: UC_STRING) is
+	set_prefix (n: STRING) is
 			-- Set `n' to be the prefix for the namespace of the name of this node
 		do
 			ns_prefix := n

@@ -22,14 +22,14 @@ inherit
 
 feature
 
-	uri: UC_STRING is
+	uri: STRING is
 			-- URI for the source of the XML document
 		deferred
 		end
 
 	out: STRING is
 		do
-			Result := clone (uri.to_utf8)
+			Result := uri
 		end
 
 end

@@ -37,7 +37,7 @@ creation
 
 feature {NONE} -- Implementation
 
-	make_root (a_name, a_ns_prefix: UC_STRING) is
+	make_root (a_name, a_ns_prefix: STRING) is
 			-- make a new root element based on the information held in a
 			-- XM_START_TAG object. This will fill in the name and the attributes
 		require
@@ -47,10 +47,10 @@ feature {NONE} -- Implementation
 			ns_prefix := a_ns_prefix
 			make_composite
 		ensure
-			name_set: equal (name, a_name)
+			name_set: same_string (name, a_name)
 		end
 
-	make_child (a_parent: XM_COMPOSITE; a_name, a_ns_prefix: UC_STRING) is
+	make_child (a_parent: XM_COMPOSITE; a_name, a_ns_prefix: STRING) is
 			-- make a new child element based on the information held in a
 			-- XM_START_TAG object. This will fill in the name and the attributes
 		require
@@ -60,7 +60,7 @@ feature {NONE} -- Implementation
 			make_root (a_name, a_ns_prefix)
 			parent := a_parent
 		ensure
-			name_set: equal (name, a_name)
+			name_set: same_string (name, a_name)
 		end
 
 	make_default is
@@ -71,7 +71,7 @@ feature {NONE} -- Implementation
 
 feature {ANY} -- Access
 
-	has_attribute_by_name (a_name: UC_STRING): BOOLEAN is
+	has_attribute_by_name (a_name: STRING): BOOLEAN is
 			-- is an attribute with the name `a_name' present in this
 			-- element?
 		require
@@ -87,7 +87,7 @@ feature {ANY} -- Access
 				cs.off
 			loop
 				att ?= cs.item
-				if att /= Void and then equal (att.name, a_name) then
+				if att /= Void and then same_string (att.name, a_name) then
 					Result := True
 					cs.go_after
 				else
@@ -96,7 +96,7 @@ feature {ANY} -- Access
 			end
 		end
 
-	attribute_by_name (a_name: UC_STRING): XM_ATTRIBUTE is
+	attribute_by_name (a_name: STRING): XM_ATTRIBUTE is
 			-- retrieves the attribute with the name `a_name' from element.
 			-- returns `Void' if no Attribute was found.
 		require
@@ -113,7 +113,7 @@ feature {ANY} -- Access
 			loop
 				att ?= cs.item
 				if att /= Void then
-					if equal (att.name, a_name) then
+					if same_string (att.name, a_name) then
 						Result := att
 					end
 				end
@@ -158,12 +158,12 @@ feature {ANY} -- Access
 
 feature {XM_PARSER} -- Element change
 
-	add_attributes (a_attributes: DS_BILINEAR [DS_PAIR [DS_PAIR [UC_STRING, UC_STRING], UC_STRING]]) is
+	add_attributes (a_attributes: DS_BILINEAR [DS_PAIR [DS_PAIR [STRING, STRING], STRING]]) is
 			-- Add `a_attributes' to this element.
 		require
 			a_attributes_not_void: a_attributes /= Void
 		local
-			cs: DS_BILINEAR_CURSOR [DS_PAIR [DS_PAIR [UC_STRING, UC_STRING], UC_STRING]]
+			cs: DS_BILINEAR_CURSOR [DS_PAIR [DS_PAIR [STRING, STRING], STRING]]
 		do
 			from
 				cs := a_attributes.new_cursor
@@ -176,7 +176,7 @@ feature {XM_PARSER} -- Element change
 			end
 		end
 
-	add_attribute (a_name, a_prefix, a_value: UC_STRING) is
+	add_attribute (a_name, a_prefix, a_value: STRING) is
 			-- Add one attribute to this element.
 		local
 			xml: XM_ATTRIBUTE
@@ -187,7 +187,7 @@ feature {XM_PARSER} -- Element change
 		
 feature {ANY} -- Removal
 
-	remove_attribute_by_name (n: UC_STRING) is
+	remove_attribute_by_name (n: STRING) is
 			-- removes attribute with name `n' from element.
 		require
 			n_not_void: n /= Void
@@ -203,7 +203,7 @@ feature {ANY} -- Removal
 				cs.off
 			loop
 				att ?= cs.item
-				if att /= Void and then equal (n, att.name) then
+				if att /= Void and then same_string (n, att.name) then
 					remove_at_cursor (cs)
 						-- `remove_at_cursor' does implicit `forth' for all cursors
 				else
@@ -254,7 +254,7 @@ feature {ANY} -- Basic operations
 		local
 			decls: XM_NAMESPACE_TABLE
 		do
-			!! decls.make (10)
+			!! decls.make
 			decls.override_with_list (namespace_declarations)
 			apply_namespace_declarations (decls)
 			resolve_namespaces (decls)

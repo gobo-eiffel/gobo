@@ -22,15 +22,15 @@ creation
 
 feature
 
-	make (a_uri: UC_STRING) is
+	make (a_uri: STRING) is
 		do
 			uri := a_uri
 		ensure
-			uri_set: equal (uri, a_uri)
+			uri_set: uri = a_uri
 		end
 
 feature
 
-	uri: UC_STRING
+	uri: STRING
 
 end

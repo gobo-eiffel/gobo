@@ -19,13 +19,6 @@ inherit
 			out
 		end
 
-	UC_UNICODE_FACTORY
-		export
-			{NONE} all
-		undefine
-			out
-		end
-
 creation
 
 	make
@@ -39,7 +32,7 @@ feature {NONE} -- Creation
 		do
 			file_name := a_file
 		ensure
-			set: file_name.is_equal (a_file)
+			set: same_string (file_name, a_file)
 		end
 
 feature -- Access
@@ -47,10 +40,10 @@ feature -- Access
 	file_name: STRING
 			-- File name.
 
-	uri: UC_STRING is
+	uri: STRING is
 			-- File URI.
 		do
-			Result := new_unicode_string ("file:" + file_name)
+			Result := string_.concat ("file:", file_name)
 		end
 
 feature -- Out
