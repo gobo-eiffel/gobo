@@ -29,7 +29,7 @@ feature -- Access
 			Result := c.next
 #endif
 		ensure
-			definition: Result.count = c.code + 1
+			definition: Result.code = c.code + 1
 		end
 
 	previous (c: CHARACTER): CHARACTER is
@@ -43,7 +43,7 @@ feature -- Access
 			Result := c.previous
 #endif
 		ensure
-			definition: Result.count = c.code - 1
+			definition: Result.code = c.code - 1
 		end
 
 feature -- Conversion
