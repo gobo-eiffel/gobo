@@ -6,7 +6,7 @@ indexing
 
 	library:    "Gobo Eiffel Lexical Library"
 	author:     "Eric Bezault <ericb@gobosoft.com>"
-	copyright:  "Copyright (c) 1999, Eric Bezault and others"
+	copyright:  "Copyright (c) 1999-2001, Eric Bezault and others"
 	license:    "Eiffel Forum Freeware License v1 (see forum.txt)"
 	date:       "$Date$"
 	revision:   "$Revision$"
@@ -21,30 +21,12 @@ inherit
 		redefine
 			build, resize, print_constants,
 			print_backing_up_report
-		select
-			resize, print_constants,
-			print_backing_up_report
-		end
-
-	LX_GENERATABLE_DFA
-		rename
-			make as make_generatable_dfa,
-			resize as generatable_dfa_resize,
-			print_constants as generatable_dfa_print_constants,
-			print_backing_up_report as generatable_dfa_print_backing_up_report
-		export
-			-- Bug in SE -0.81: Unable to load class NONE!
-			-- {NONE} all
-		redefine
-			build
 		end
 
 	LX_COMPRESSED_TABLES
 		export
 			{LX_COMPRESSED_TABLES} all;
 			{ANY} to_tables
-		undefine
-			is_equal, copy
 		end
 
 creation
@@ -80,7 +62,7 @@ feature -- Generation
 	print_backing_up_report (a_file: like OUTPUT_STREAM_TYPE) is
 			-- Print a backing up report to `a_file'.
 		do
-			generatable_dfa_print_backing_up_report (a_file)
+			Precursor (a_file)
 			a_file.put_string ("Compressed tables always back up.%N")
 		end
 
@@ -101,16 +83,18 @@ feature -- Access
 			i, j, k: INTEGER
 			a_state: LX_DFA_STATE
 			a_nfa_state: LX_NFA_STATE
+			nfa_states: DS_ARRAYED_LIST [LX_NFA_STATE]
 			acc_set: DS_ARRAYED_LIST [LX_RULE]
 		do
 			!! Result.make (yy_rules.count)
 			if yyVariable_trail_context then
-				from i := count until i < 1 loop
-					a_state := item (i)
+				from i := states.count until i < 1 loop
+					a_state := states.item (i)
 					if a_state.is_accepting_head then
 						acc_set := a_state.accepted_head_rules
-						from j := a_state.count until j < 1 loop
-							a_nfa_state := a_state.item (j)
+						nfa_states := a_state.states
+						from j := nfa_states.count until j < 1 loop
+							a_nfa_state := nfa_states.item (j)
 							if a_nfa_state.in_trail_context then
 								from
 									k := acc_set.count
@@ -225,7 +209,7 @@ feature {NONE} -- Generation
 			a_file.put_string ("%N%T%T%T-- Is `reject' called or is there a%N%
 				%%T%T%T-- regular expression with both leading%N%
 				%%T%T%T-- and trailing parts having variable length?%N%N")
-			generatable_dfa_print_constants (a_file)
+			Precursor (a_file)
 		end
 
 feature -- Building
@@ -250,8 +234,8 @@ feature -- Building
 				-- Allocate memory for compressed tables.
 			!! yy_nxt.make (0, Initial_max_xpairs)
 			!! yy_chk.make (0, Initial_max_xpairs)
-			!! yy_base.make (0, capacity)
-			!! yy_def.make (0, capacity)
+			!! yy_base.make (0, states.capacity)
+			!! yy_def.make (0, states.capacity)
 				-- The compressed table format jams by entering the
 				-- jam state, losing information about the previous
 				-- state in the process. In order to recover the
@@ -259,19 +243,19 @@ feature -- Building
 				-- to be kept.
 			backing_up_count := 1
 			from i := 1 until i > start_states_count loop
-				a_state := item (i)
+				a_state := states.item (i)
 				build_transitions (a_state)
 				put_state (a_state)
 				i := i + 1
 			end
 				-- Process end-of-buffer state.
-			a_state := item (i)
+			a_state := states.item (i)
 			build_transitions (a_state)
 				-- Make sure it jams on end of buffer.
 			!! singleton.make (a_state.id, Jam_id, 0, 0)
 			singletons.put_last (singleton)
-			from i := i + 1 until i > count loop
-				a_state := item (i)
+			from i := i + 1 until i > states.count loop
+				a_state := states.item (i)
 				build_transitions (a_state)
 				if not a_state.is_accepting then
 					backing_up_count := backing_up_count + 1
@@ -325,15 +309,15 @@ feature {NONE} -- Building
 	build_base_def_tables is
 			-- Build `yy_base' and `yy_def' tables.
 		require
-			valid_yy_base: yy_base.upper >= count + templates_count
-			valid_yy_def: yy_def.upper >= count + templates_count
+			valid_yy_base: yy_base.upper >= states.count + templates_count
+			valid_yy_def: yy_def.upper >= states.count + templates_count
 		local
 			yy_base_, yy_def_: ARRAY [INTEGER]
 			i, nb: INTEGER
 		do
 				-- `yy_base' and `yy_def' are indexed
 				-- from 1 to `count'+`templates_count'.
-			nb := count + templates_count
+			nb := states.count + templates_count
 			!! yy_base_.make (0, nb)
 			!! yy_def_.make (0, nb)
 			from i := 1 until i > nb loop
@@ -358,7 +342,7 @@ feature {NONE} -- Building
 			state: LX_DFA_STATE
 			yy_accept_, yy_acclist_: ARRAY [INTEGER]
 		do
-			nb := count
+			nb := states.count
 			if yyReject_used or yyVariable_trail_context then
 					-- Make room for the jam state accepting id, and
 					-- we put a "cap" on the table of associating list
@@ -372,7 +356,7 @@ feature {NONE} -- Building
 					-- array which will contain pointers into the
 					-- `yy_acclist' array.
 				from i := 1 until i > nb loop
-					state := item (i)
+					state := states.item (i)
 					j := j + state.accepted_rules.count
 					j := j + state.accepted_head_rules.count
 					i := i + 1
@@ -381,7 +365,7 @@ feature {NONE} -- Building
 				j := 1
 				from i := 1 until i > nb loop
 					yy_accept_.put (j, i)
-					state := item (i)
+					state := states.item (i)
 					acc_set := state.accepted_rules
 					acc_nb := acc_set.count
 					from k := 1 until k > acc_nb loop
@@ -423,7 +407,7 @@ feature {NONE} -- Building
 					-- (hence nb + 1).
 				!! yy_accept_.make (0, nb + 1)
 				from i := 1 until i > nb loop
-					state := item (i)
+					state := states.item (i)
 					if state.is_accepting then
 						yy_accept_.put (state.accepted_rules.first.id, i)
 					else
@@ -446,7 +430,7 @@ feature {NONE} -- Resizing
 			-- Resize DFA, `yy_base' and `yy_def' so that they can
 			-- contain upto `n' states. Do not lose any states.
 		do
-			generatable_dfa_resize (n)
+			states.resize (n)
 			yy_base.resize (0, n)
 			yy_def.resize (0, n)
 		end
@@ -465,7 +449,7 @@ feature {NONE} -- Compression
 			template: LX_TRANSITION_TABLE [LX_DFA_STATE]
 			trans_nb, symb_nb: INTEGER
 			i, j, nb: INTEGER
-			states: DS_ARRAYED_LIST [LX_DFA_STATE]
+			common_states: DS_ARRAYED_LIST [LX_DFA_STATE]
 			frequencies: DS_ARRAYED_LIST [INTEGER]
 			st_cursor: DS_ARRAYED_LIST_CURSOR [LX_DFA_STATE]
 			common_state: LX_DFA_STATE
@@ -483,10 +467,10 @@ feature {NONE} -- Compression
 				put_entry (state.id, Jam_id, transitions)
 			else
 					-- Search for the state which the most frequently targeted
-					-- by `transitions', and number of transitions to it
-				!! states.make (trans_nb)
+					-- by `transitions', and number of transitions to it.
+				!! common_states.make (trans_nb)
 				!! frequencies.make (trans_nb)
-				st_cursor := states.new_cursor
+				st_cursor := common_states.new_cursor
 				nb := maximum_symbol
 				from i := minimum_symbol until i > nb loop
 					common_state := transitions.target (i)
@@ -497,17 +481,17 @@ feature {NONE} -- Compression
 							j := st_cursor.index
 							frequencies.replace (frequencies.item (j) + 1, j)
 						else
-							states.put_last (common_state)
+							common_states.put_last (common_state)
 							frequencies.put_last (1)
 						end
 					end
 					i := i + 1
 				end
 				st_cursor.go_after -- Release cursor to GC.
-				nb := states.count
+				nb := common_states.count
 				from i := 1 until i > nb loop
 					if common_freq < frequencies.item (i) then
-						common_state := states.item (i)
+						common_state := common_states.item (i)
 						common_freq := frequencies.item (i)
 					end
 					i := i + 1
@@ -800,7 +784,7 @@ feature {NONE} -- Compression
 			template: LX_TRANSITION_TABLE [LX_DFA_STATE]
 			i, max_index: INTEGER
 		do
-			yyTemplate_mark := count + 2
+			yyTemplate_mark := states.count + 2
 			if meta_equiv_classes /= Void then
 				meta_equiv_classes.build
 				yy_meta := meta_equiv_classes.to_array (0, maximum_symbol)
@@ -808,13 +792,13 @@ feature {NONE} -- Compression
 				yy_meta := Void
 			end
 			templates_count := templates.count + 1
-			max_index := count + templates_count
-			if capacity < max_index then
+			max_index := states.count + templates_count
+			if states.capacity < max_index then
 				yy_base.resize (0, max_index)
 				yy_def.resize (0, max_index)
 			end
 				-- Leave room for the jam-state after the last real state.
-			i := count + 2
+			i := states.count + 2
 			cursor := templates.new_cursor
 			from cursor.start until cursor.after loop
 				template := templates.equiv_template (cursor.item)
@@ -854,13 +838,13 @@ feature {NONE} -- Compression
 		do
 			eob_state_id := start_states_count + 1
 				-- Set jam_base values.
-			yyJam_state := count + 1
+			yyJam_state := states.count + 1
 			yyJam_base := table_end + 1
 			jam_state := yyJam_state
 			jam_base := yyJam_base
 			yy_base_ := yy_base
 			yy_def_ := yy_def
-			nb := count
+			nb := states.count
 			from i := 1 until i > nb loop
 				if yy_base_.item (i) = Jam_id then
 					yy_base_.put (jam_base, i)
@@ -875,7 +859,7 @@ feature {NONE} -- Compression
 			end
 			yy_base_.put (jam_base, jam_state)
 			yy_def_.put (0, jam_state)
-			nb := count + templates_count
+			nb := states.count + templates_count
 			from i := i + 1 until i > nb loop
 				yy_def_.put (jam_state, i)
 				i := i + 1
