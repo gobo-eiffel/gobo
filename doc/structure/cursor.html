@@ -43,15 +43,16 @@ take into account is to allow a data structure to be traversed
 more than once at the same time. </p>
 
 <p>The use of the <em><strong>iterator pattern</strong></em> as
-described in <em>Design Patterns</em> solves the concerns
-expressed above. The key idea of this pattern is to take the
-responsibility for access and traversal out of the data structure
-and put it into a cursor object. This way, it is very
-straightforward to traverse the same data structure at once: each
-cursor just has to keep track of its own traversal state.
-Moreover the traversal algorithm being held in cursors, it is
-very easy to switch from one traversal policy to another for a
-given data structure just by using a different kind of cursor. </p>
+described in <a href="see_also.html#design_patterns"><em>Design
+Patterns</em></a> solves the concerns expressed above. The key
+idea of this pattern is to take the responsibility for access and
+traversal out of the data structure and put it into a cursor
+object. This way, it is very straightforward to traverse the same
+data structure at once: each cursor just has to keep track of its
+own traversal state. Moreover the traversal algorithm being held
+in cursors, it is very easy to switch from one traversal policy
+to another for a given data structure just by using a different
+kind of cursor. </p>
 
 <p>Typically, traversable structures are heirs of class <font
 color="#008080"><em><tt>DS_TRAVERSABLE</tt></em></font>. This
@@ -96,7 +97,8 @@ the container won't be valid any more.</p>
             <!--webbot bot="PurpleText"
             preview="
 $Date$ 
-$Revision$" --> 
+$Revision$"
+            --> 
         </address>
         </td>
         <td align="right" valign="top"><a
