@@ -14,6 +14,8 @@ class SINGLETON1
 
 inherit
 
+	ANY -- Needed for SE 2.1.
+
 	SHARED_SINGLETON1
 
 creation

@@ -21,6 +21,9 @@ inherit
 	SHARED_SINGLETON3
 	SHARED_SINGLETON4
 
+	KL_IMPORTED_ANY_ROUTINES
+		export {NONE} all end
+
 feature -- Tests
 
 	test_single_singleton is
@@ -62,15 +65,12 @@ feature -- Tests
 			-- Do two singleton accessors work?
 		local
 			first, second: SINGLETON4
-			s4: ANY
 		do
 			first := singleton4
 			assert ("singleton4_not_void", first /= Void)
 			second := singleton4
 			assert ("singleton4_pattern", first = second)
-				-- Workaround for VWEQ:
-			s4 := first
-			assert ("different_singletons", s4 /= singleton3)
+			assert ("different_singletons", not ANY_.same_objects (first, singleton3))
 		end
 
 end
