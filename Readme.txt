@@ -1,4 +1,4 @@
-Gobo Eiffel, version 1.6
+Gobo Eiffel, version 2.0
 
 One of the main concerns of Gobo Eiffel is to provide you with Eiffel
 libraries and tools that are portable across various Eiffel compilers
@@ -10,41 +10,45 @@ The software included in this package is copyrighted freeware distributed
 under the terms and conditions of the Eiffel Forum Freeware License as 
 specified in file License.txt.
 
-This package consists of five Eiffel libraries:
+This package consists of seven Eiffel libraries:
 
     . Gobo Eiffel Kernel Library
     . Gobo Eiffel Structure Library
     . Gobo Eiffel Lexical Library
     . Gobo Eiffel Parse Library
+    . Gobo Eiffel Test Library 
+    . Gobo Eiffel Time Library 
     . Gobo Eiffel Utility Library
 
-and three utilities:
+and four utilities:
 
-    . Gobo Eiffel Lex, version 1.6 (gelex)
-    . Gobo Eiffel Yacc, version 1.6 (geyacc)
-    . Gobo Eiffel Preprocessor, version 1.6 (gepp)
+    . Gobo Eiffel Lex, version 2.0 (gelex)
+    . Gobo Eiffel Yacc, version 2.0 (geyacc)
+    . Gobo Eiffel Test, version 2.0 (getest)
+    . Gobo Eiffel Preprocessor, version 2.0 (gepp)
 
 The software provided in this distribution should work on any platform
 where supported Eiffel compilers are available. However this software
-has only been tested under Windows NT. As a consequence, the directory
-separator used through out this distribution is \, following Windows
-convention. However, since most Eiffel compilers use the notation
-$NAME for environment variables in their Ace files (or equivalent),
-this convention has been used instead of the Windowish %NAME%.
+has only been tested under Windows NT and Linux RedHat 6.2. Since
+most Eiffel compilers use the notation $NAME for environment variables
+in their Ace files (or equivalent), this convention has been used instead
+of the Windowish %NAME%. Likewise, the directory separator used through
+out this distribution is /, following Unix/Linux convention instead of
+the Windows \ separator.
 
 To install this package, copy the files to a directory of your choice
 on your disk and set the environment variable GOBO to that directory,
-known as the distribution directory. Also put the directory $GOBO\bin
+known as the distribution directory. Also put the directory $GOBO/bin
 in your PATH.
 
-The supported Eiffel compilers, in alphabetical order, are:
-Halstenbach 3.0Beta 3, ISE Eiffel 4.5.020, SmallEiffel -0.76beta#4
-(14 July 2000), Visual Eiffel 3.3b (Build 2300). For more details about
-the supported Eiffel compilers, please see the file "Release_notes.txt".
-This software might work with other Eiffel compilers and/or other compiler
-versions, however no test has been made. To have a better understanding
-of the way this software has been designed and implemented, you can also
-have a look at "$GOBO\doc\portability".
+The supported Eiffel compilers, in alphabetical order, are: Halstenbach
+3.0Beta 3, ISE Eiffel 4.5.020, SmallEiffel -0.75beta#5 (19 February 2001),
+Visual Eiffel 3.3b (Build 2300). For more details about the supported Eiffel
+compilers, please see the file "Release_notes.txt". This software might
+work with other Eiffel compilers and/or other compiler versions, however
+no test has been done. To have a better understanding of the way this
+software has been designed and implemented, you can also have a look at
+"$GOBO/doc/portability".
 
 In this distribution:
 
@@ -77,7 +81,7 @@ Each of the above directories comes with a Readme file providing
 some basic information. Documentation is also available on the Web
 at http://www.gobosoft.com/. Check it out regularly for updates, bug
 fixes, workarounds and new releases. You can also subscribe to the
-Gobo Eiffel mailing list (http://www.egroups.com/group/gobo-eiffel/)
+Gobo Eiffel mailing list (http://groups.yahoo.com/group/gobo-eiffel/)
 and take part to the discussions or ask your questions there.
 
 Although the license allows you to do pretty much whatever you want with
@@ -88,7 +92,7 @@ your projects and how easy (or difficult) it was to adapt this software
 for your specific needs. Thank you in advance.
 
 --
-Copyright (c) 1997-2000, Eric Bezault
+Copyright (c) 1997-2001, Eric Bezault
 mailto:ericb@gobosoft.com
 http://www.gobosoft.com
-20 August 2000
+16 April 2001
