@@ -263,7 +263,17 @@ feature -- Conversion
 		do
 			check no_precursor: not is_precursor end
 		ensure
-			definition: Result = Current
+			definition: same_objects (Result, Current)
+		end
+
+feature {NONE} -- Implementation
+
+	same_objects (obj1, obj2: ANY): BOOLEAN is
+			-- Workaround for VWEQ when running Degree 3 in flat mode.
+		do
+			Result := (obj1 = obj2)
+		ensure
+			definition: Result = (obj1 = obj2)
 		end
 
 end

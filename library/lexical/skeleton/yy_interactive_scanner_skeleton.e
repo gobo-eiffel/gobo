@@ -103,13 +103,13 @@ feature -- Scanning
 					loop
 						if yy_ec /= Void then
 							if yy_content_area /= Void then
-								yy_c := yy_ec.item (yy_content_area.item (yy_cp - 1).code)
+								yy_c := yy_ec.item (yy_content_area.item (yy_cp).code)
 							else
 								yy_c := yy_ec.item (yy_content.item (yy_cp).code)
 							end
 						else
 							if yy_content_area /= Void then
-								yy_c := yy_content_area.item (yy_cp - 1).code
+								yy_c := yy_content_area.item (yy_cp).code
 							else
 								yy_c := yy_content.item (yy_cp).code
 							end

@@ -87,7 +87,7 @@ feature -- Access
 			-- `i'-th character of last token read
 		do
 			if yy_content_area /= Void then
-				Result := yy_content_area.item (yy_start + i - 2)
+				Result := yy_content_area.item (yy_start + i - 1)
 			else
 				Result := yy_content.item (yy_start + i - 1)
 			end
@@ -232,7 +232,7 @@ feature -- Element change
 			c: CHARACTER
 		do
 			if yy_content_area /= Void then
-				c := yy_content_area.item (yy_end - 1)
+				c := yy_content_area.item (yy_end)
 			else
 				c := yy_content.item (yy_end)
 			end
@@ -261,7 +261,7 @@ feature -- Element change
 			end
 			if not found then
 				if yy_content_area /= Void then
-					last_character := yy_content_area.item (yy_end - 1)
+					last_character := yy_content_area.item (yy_end)
 				else
 					last_character := yy_content.item (yy_end)
 				end
@@ -454,7 +454,7 @@ feature {NONE} -- Implementation
 			if yy_end > yy_start then
 				if yy_content_area /= Void then
 					input_buffer.set_beginning_of_line
-						(yy_content_area.item (yy_end - 2) = yyNew_line_character)
+						(yy_content_area.item (yy_end - 1) = yyNew_line_character)
 				else
 					input_buffer.set_beginning_of_line
 						(yy_content.item (yy_end - 1) = yyNew_line_character)
@@ -481,7 +481,7 @@ feature {NONE} -- Implementation
 				i < nb
 			loop
 				if yy_content_area /= Void then
-					c := yy_content_area.item (i - 1)
+					c := yy_content_area.item (i)
 				else
 					c := yy_content.item (i)
 				end
@@ -515,7 +515,7 @@ feature {NONE} -- Implementation
 				i < nb
 			loop
 				if yy_content_area /= Void then
-					c := yy_content_area.item (i - 1)
+					c := yy_content_area.item (i)
 				else
 					c := yy_content.item (i)
 				end
@@ -545,7 +545,7 @@ feature {NONE} -- Implementation
 				i < nb or new_line_found
 			loop
 				if yy_content_area /= Void then
-					c := yy_content_area.item (i - 1)
+					c := yy_content_area.item (i)
 				else
 					c := yy_content.item (i)
 				end
@@ -559,7 +559,7 @@ feature {NONE} -- Implementation
 			end
 			from until i < nb loop
 				if yy_content_area /= Void then
-					c := yy_content_area.item (i - 1)
+					c := yy_content_area.item (i)
 				else
 					c := yy_content.item (i)
 				end
@@ -595,7 +595,8 @@ feature {NONE} -- Implementation
 
 	yy_content_area: SPECIAL [CHARACTER]
 			-- Characters in `input_buffer';
-			-- More efficient than `yy_content' when not void
+			-- More efficient than `yy_content' when not void;
+			-- Characters are indexed starting at 1
 
 	yy_end: INTEGER
 			-- Current index in `yy_content'

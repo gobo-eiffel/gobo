@@ -18,7 +18,7 @@ indexing
 		%Use UC_UTF*_STRING to specify the encoding explicitly."
 
 	library: "Gobo Eiffel Kernel Library"
-	copyright: "Copyright (c) 2001-2002, Eric Bezault and others"
+	copyright: "Copyright (c) 2001-2004, Eric Bezault and others"
 	license: "Eiffel Forum License v2 (see forum.txt)"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -97,7 +97,9 @@ inherit
 				-- does not allow an ELKS compliant redefinition here.
 			infix "+" as old_infix_plus,
 #endif
+#ifndef ISE
 			make as old_make,
+#endif
 #ifndef (SE && ! SE_0_74)
 			empty as old_empty,
 #endif
@@ -113,6 +115,9 @@ inherit
 		export
 #ifdef SE
 			{UC_STRING_HANDLER} storage, compare;
+#endif
+#ifdef ISE
+			{STRING} share, area, old_is_empty, mirror;
 #endif
 			{NONE} all
 		undefine
@@ -156,6 +161,7 @@ inherit
 			substring_index,
 #endif
 #ifdef ISE
+			make,
 			count,
 			old_clear_all,
 			old_left_adjust,
@@ -205,7 +211,7 @@ inherit
 				-- in HACT 4.0.1 because it forgot the fact that HACT does
 				-- not support empty substrings.
 			substring_index as old_substring_index,
-			make as old_make,
+--ericb			make as old_make,
 			empty as old_empty,
 			make_from_string as old_make_from_string,
 				-- Note: The postcondition of `is_equal' in ELKS 2001 STRING
@@ -221,6 +227,7 @@ inherit
 		undefine
 			infix ">", infix "<=", infix ">=", max, min
 		redefine
+			make,
 			append_character,
 			substring, append_string, replace_substring,
 			index_of, has, occurrences, head, tail,
@@ -351,7 +358,11 @@ feature -- Initialization
 #ifdef HACT || ISE
 			count := 0
 #endif
+#ifdef ISE
+			precursor (suggested_capacity)
+#else
 			old_make (suggested_capacity)
+#endif
 #endif
 #ifdef ISE
 			set_count (byte_capacity)

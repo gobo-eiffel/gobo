@@ -5,7 +5,7 @@ indexing
 		"Character buffers"
 
 	library: "Gobo Eiffel Kernel Library"
-	copyright: "Copyright (c) 2001, Eric Bezault and others"
+	copyright: "Copyright (c) 2001-2004, Eric Bezault and others"
 	license: "Eiffel Forum License v2 (see forum.txt)"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -15,10 +15,6 @@ class KL_CHARACTER_BUFFER
 inherit
 
 	KI_CHARACTER_BUFFER
-#ifdef ISE
-		undefine
-			copy, is_equal, out
-#endif
 		redefine
 #ifdef ISE
 			as_special,
@@ -31,24 +27,11 @@ inherit
 		end
 
 #ifdef ISE
-	STRING
-		rename
-			make as string_make,
-			make_from_string as string_make_from_string,
-			put as string_put,
-			item as string_item,
-			substring as string_substring,
-			count as string_count,
-			resize as string_resize,
-			area as string_area
-		end
+	STRING_HANDLER
+		export {NONE} all end
 
 	KL_SHARED_OPERATING_SYSTEM
-		export
-			{NONE} all
-		undefine
-			copy, is_equal, out
-		end
+		export {NONE} all end
 
 #endif
 creation
@@ -62,8 +45,14 @@ feature {NONE} -- Initialization
 			-- to contain `n' characters.
 		do
 #ifdef ISE
-			string_make (n)
-			set_count (n)
+			if not operating_system.is_dotnet then
+				create area.make (n + 1)
+				area.set_count (n + 1)
+				as_special := area.area
+			else
+				create area.make (n)
+				area.set_count (n)
+			end
 #endif
 #ifdef VE
 			create area.make_filled ('%U', n)
@@ -86,7 +75,11 @@ feature -- Access
 			-- Item at position `i'
 		do
 #ifdef ISE
-			Result := string_item (i)
+			if as_special /= Void then
+				Result := as_special.item (i)
+			else
+				Result := area.item (i)
+			end
 #else
 			Result := area.item (i)
 #endif
@@ -95,10 +88,6 @@ feature -- Access
 	substring (s, e: INTEGER): STRING is
 			-- New string made up of characters held in
 			-- buffer between indexes `s' and `e'
-#ifdef ISE
-		local
-			nb: INTEGER
-#endif
 #ifdef SE || VE
 		local
 			i, nb: INTEGER
@@ -116,10 +105,11 @@ feature -- Access
 #endif
 			else
 #ifdef ISE
-				nb := e - s + 1
-				create Result.make (nb)
-				Result.set_count (nb)
-				Result.subcopy (Current, s, e, 1)
+				if as_special /= Void then
+					Result := area.substring (s + 1, e + 1)
+				else
+					Result := area.substring (s, e)
+				end
 #endif
 #ifdef SE
 				nb := e - s + 1
@@ -154,7 +144,11 @@ feature -- Measurement
 			-- Number of characters in buffer
 		do
 #ifdef ISE
-			Result := string_count
+			if as_special /= Void then
+				Result := area.count - 1
+			else
+				Result := area.count
+			end
 #else
 			Result := area.count
 #endif
@@ -164,15 +158,11 @@ feature -- Measurement
 #ifdef ISE
 feature -- Conversion
 
-	as_special: SPECIAL [CHARACTER] is
+	as_special: SPECIAL [CHARACTER]
 			-- 'SPECIAL [CHARACTER]' version of current character buffer;
+			-- Characters are indexed starting at 1;
 			-- May return void in some descendants, and the result may share
 			-- the internal data with `Current'
-		do
-			if not operating_system.is_dotnet then
-				Result := string_area
-			end
-		end
 
 #endif
 feature -- Element change
@@ -181,7 +171,11 @@ feature -- Element change
 			-- Replace character at position `i' by `v'.
 		do
 #ifdef ISE
-			string_put (v, i)
+			if as_special /= Void then
+				as_special.put (v, i)
+			else
+				area.put (v, i)
+			end
 #else
 			area.put (v, i)
 #endif
@@ -203,13 +197,24 @@ feature -- Element change
 				if new_count > a_string.capacity then
 					a_string.resize (new_count)
 				end
-				a_string.set_count (new_count)
 				if a_string.same_type (dummy_string) then
-					a_string.subcopy (Current, s, e, old_count + 1)
+					a_string.set_count (new_count)
+					if as_special /= Void then
+						a_string.subcopy (area, s + 1, e + 1, old_count + 1)
+					else
+						a_string.subcopy (area, s, e, old_count + 1)
+					end
 				else
-					from i := s until i > e loop
-						a_string.append_character (string_item (i))
-						i := i + 1
+					if as_special /= Void then
+						from i := s until i > e loop
+							a_string.append_character (as_special.item (i))
+							i := i + 1
+						end
+					else
+						from i := s until i > e loop
+							a_string.append_character (area.item (i))
+							i := i + 1
+						end
 					end
 				end
 			end
@@ -247,7 +252,11 @@ feature -- Element change
 			nb := a_string.count
 			if nb > 0 then
 #ifdef ISE
-				area.subcopy (a_string, 1, nb, pos)
+				if as_special /= Void then
+					area.subcopy (a_string, 1, nb, pos + 1)
+				else
+					area.subcopy (a_string, 1, nb, pos)
+				end
 #else
 				j := pos
 				from i := 1 until i > nb loop
@@ -267,7 +276,15 @@ feature -- Element change
 #ifdef SE
 			Result := a_stream.read_to_string (area_string, pos + 1, nb)
 #else
+#ifdef ISE
+			if as_special /= Void then
+				Result := a_stream.read_to_string (area, pos + 1, nb)
+			else
+				Result := a_stream.read_to_string (area, pos, nb)
+			end
+#else
 			Result := a_stream.read_to_string (area, pos, nb)
+#endif
 #endif
 		end
 
@@ -281,7 +298,11 @@ feature -- Element change
 		do
 			if nb > 0 then
 #ifdef ISE
-				area.subcopy (Current, old_pos, old_pos + nb - 1, new_pos)
+				if as_special /= Void then
+					area.subcopy (area, old_pos + 1, old_pos + nb, new_pos + 1)
+				else
+					area.subcopy (area, old_pos, old_pos + nb - 1, new_pos)
+				end
 #else
 				j := new_pos
 				nb2 := old_pos + nb - 1
@@ -304,7 +325,11 @@ feature -- Element change
 		do
 			if nb > 0 then
 #ifdef ISE
-				area.subcopy (Current, old_pos, old_pos + nb - 1, new_pos)
+				if as_special /= Void then
+					area.subcopy (area, old_pos + 1, old_pos + nb, new_pos + 1)
+				else
+					area.subcopy (area, old_pos, old_pos + nb - 1, new_pos)
+				end
 #else
 				j := new_pos + nb - 1
 				from i := old_pos + nb - 1 until i < old_pos loop
@@ -334,8 +359,14 @@ feature -- Resizing
 #endif
 #ifdef ISE
 		do
-			string_resize (n)
-			set_count (n)
+			if as_special /= Void then
+				area.resize (n + 1)
+				area.set_count (n + 1)
+				as_special := area.area
+			else
+				area.resize (n)
+				area.set_count (n)
+			end
 #endif
 #ifdef HACT
 		local
@@ -356,11 +387,8 @@ feature -- Resizing
 feature {NONE} -- Implementation
 
 #ifdef ISE
-	area: STRING is
+	area: STRING
 			-- Implementation
-		do
-			Result := Current
-		end
 #else
 #ifdef SE
 	area: NATIVE_ARRAY [CHARACTER]

@@ -100,7 +100,7 @@ feature -- Conversion
 		do
 			check is_immediate: is_immediate end
 		ensure
-			definition: Result = Current
+			definition: same_objects (Result, Current)
 		end
 
 	inherited_feature: ET_INHERITED_FEATURE is
@@ -110,7 +110,7 @@ feature -- Conversion
 		do
 			check is_inherited: is_inherited end
 		ensure
-			definition: Result = Current
+			definition: same_objects (Result, Current)
 		end
 
 	redeclared_feature: ET_REDECLARED_FEATURE is
@@ -120,7 +120,7 @@ feature -- Conversion
 		do
 			check is_redeclared: is_redeclared end
 		ensure
-			definition: Result = Current
+			definition: same_objects (Result, Current)
 		end
 
 	adapted_feature: ET_ADAPTED_FEATURE is
@@ -130,7 +130,17 @@ feature -- Conversion
 		do
 			check is_adapted: is_adapted end
 		ensure
-			definition: Result = Current
+			definition: same_objects (Result, Current)
+		end
+
+feature {NONE} -- Implementation
+
+	same_objects (obj1, obj2: ANY): BOOLEAN is
+			-- Workaround for VWEQ when running Degree 3 in flat mode.
+		do
+			Result := (obj1 = obj2)
+		ensure
+			definition: Result = (obj1 = obj2)
 		end
 
 end

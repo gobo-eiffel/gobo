@@ -8,7 +8,7 @@ indexing
 		%when written to the standard error file."
 
 	library: "Gobo Eiffel Kernel Library"
-	copyright: "Copyright (c) 2001, Eric Bezault and others"
+	copyright: "Copyright (c) 2001-2004, Eric Bezault and others"
 	license: "Eiffel Forum License v2 (see forum.txt)"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -47,6 +47,7 @@ inherit
 			append as old_append,
 			close as old_close
 		export
+			{CONSOLE} open_read, extendible, file_pointer, count, old_close, is_closed, old_put_string, old_is_open_write;
 			{NONE} all
 		end
 #endif

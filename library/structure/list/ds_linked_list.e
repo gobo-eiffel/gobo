@@ -489,13 +489,24 @@ feature -- Element change
 			-- Do not move cursors.
 			-- (Performance: O(other.count).)
 		local
-			linked_other: like Current
-			fcell, lcell: like first_cell
+			other_cursor: DS_LINEAR_CURSOR [G]
+			fcell, lcell, new_cell: like first_cell
 		do
 			if not other.is_empty then
-				create linked_other.make_from_linear (other)
-				fcell := linked_other.first_cell
-				lcell := linked_other.last_cell
+				from
+					other_cursor := other.new_cursor
+					other_cursor.start
+					create fcell.make (other_cursor.item)
+					lcell := fcell
+					other_cursor.forth
+				until
+					other_cursor.after
+				loop
+					create new_cell.make (other_cursor.item)
+					lcell.put_right (new_cell)
+					lcell := new_cell
+					other_cursor.forth
+				end
 				if is_empty then
 					first_cell := fcell
 					last_cell := lcell
@@ -513,13 +524,24 @@ feature -- Element change
 			-- Do not move cursors.
 			-- (Performance: O(other.count).)
 		local
-			linked_other: like Current
-			fcell, lcell: like first_cell
+			other_cursor: DS_LINEAR_CURSOR [G]
+			fcell, lcell, new_cell: like first_cell
 		do
 			if not other.is_empty then
-				create linked_other.make_from_linear (other)
-				fcell := linked_other.first_cell
-				lcell := linked_other.last_cell
+				from
+					other_cursor := other.new_cursor
+					other_cursor.start
+					create fcell.make (other_cursor.item)
+					lcell := fcell
+					other_cursor.forth
+				until
+					other_cursor.after
+				loop
+					create new_cell.make (other_cursor.item)
+					lcell.put_right (new_cell)
+					lcell := new_cell
+					other_cursor.forth
+				end
 				if is_empty then
 					first_cell := fcell
 					last_cell := lcell
@@ -537,9 +559,9 @@ feature -- Element change
 			-- Do not move cursors.
 			-- (Performance: O(i+other.count).)
 		local
-			linked_other: like Current
+			other_cursor: DS_LINEAR_CURSOR [G]
 			a_cell: like first_cell
-			fcell, lcell: like first_cell
+			fcell, lcell, new_cell: like first_cell
 			j: INTEGER
 		do
 			if i = 1 then
@@ -547,9 +569,20 @@ feature -- Element change
 			elseif i = count + 1 then
 				extend_last (other)
 			elseif not other.is_empty then
-				create linked_other.make_from_linear (other)
-				fcell := linked_other.first_cell
-				lcell := linked_other.last_cell
+				from
+					other_cursor := other.new_cursor
+					other_cursor.start
+					create fcell.make (other_cursor.item)
+					lcell := fcell
+					other_cursor.forth
+				until
+					other_cursor.after
+				loop
+					create new_cell.make (other_cursor.item)
+					lcell.put_right (new_cell)
+					lcell := new_cell
+					other_cursor.forth
+				end
 					-- Go to cell at index `i-1'.
 				a_cell := first_cell
 				from j := 2 until j = i loop
@@ -572,9 +605,9 @@ feature -- Element change
 			-- (Synonym of `a_cursor.extend_left (other)'.)
 			-- (Performance: O(other.count).)
 		local
-			linked_other: like Current
+			other_cursor: DS_LINEAR_CURSOR [G]
 			a_cell, new_cell, new_right: like first_cell
-			fcell, lcell: like first_cell
+			fcell, lcell, new_lcell: like first_cell
 		do
 			if a_cursor.after then
 				extend_last (other)
@@ -601,9 +634,20 @@ feature -- Element change
 						new_cell.put_right (new_right)
 					end
 				else
-					create linked_other.make_from_linear (other)
-					fcell := linked_other.first_cell
-					lcell := linked_other.last_cell
+					from
+						other_cursor := other.new_cursor
+						other_cursor.start
+						create fcell.make (other_cursor.item)
+						lcell := fcell
+						other_cursor.forth
+					until
+						other_cursor.after
+					loop
+						create new_lcell.make (other_cursor.item)
+						lcell.put_right (new_lcell)
+						lcell := new_lcell
+						other_cursor.forth
+					end
 					a_cell.put (fcell.item)
 					new_right := a_cell.right
 					a_cell.put_right (fcell.right)
@@ -629,13 +673,24 @@ feature -- Element change
 			-- (Synonym of `a_cursor.extend_right (other)'.)
 			-- (Performance: O(other.count).)
 		local
-			linked_other: like Current
-			old_cell, fcell, lcell: like first_cell
+			other_cursor: DS_LINEAR_CURSOR [G]
+			old_cell, fcell, lcell, new_lcell: like first_cell
 		do
 			if not other.is_empty then
-				create linked_other.make_from_linear (other)
-				fcell := linked_other.first_cell
-				lcell := linked_other.last_cell
+				from
+					other_cursor := other.new_cursor
+					other_cursor.start
+					create fcell.make (other_cursor.item)
+					lcell := fcell
+					other_cursor.forth
+				until
+					other_cursor.after
+				loop
+					create new_lcell.make (other_cursor.item)
+					lcell.put_right (new_lcell)
+					lcell := new_lcell
+					other_cursor.forth
+				end
 				if is_empty then
 					first_cell := fcell
 					last_cell := lcell

@@ -29,7 +29,7 @@ feature -- Access
 		do
 			check not_replicated: not has_replication end
 		ensure
-			definition: Result = Current
+			definition: same_objects (Result, Current)
 		end
 
 	first_feature: ET_ADAPTED_FEATURE is
@@ -44,6 +44,16 @@ feature -- Measurement
 	selected_count: INTEGER is
 			-- Number of selected features
 		deferred
+		end
+
+feature {NONE} -- Implementation
+
+	same_objects (obj1, obj2: ANY): BOOLEAN is
+			-- Workaround for VWEQ when running Degree 3 in flat mode.
+		do
+			Result := (obj1 = obj2)
+		ensure
+			definition: Result = (obj1 = obj2)
 		end
 
 invariant

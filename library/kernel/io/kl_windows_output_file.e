@@ -22,7 +22,10 @@ inherit
 		end
 
 	KL_BINARY_OUTPUT_FILE
-		export {NONE} all end
+		export
+			{KL_BINARY_OUTPUT_FILE} all -- Needed for flat Degree 3 with ISE.
+			-- {NONE} all
+		end
 
 creation
 

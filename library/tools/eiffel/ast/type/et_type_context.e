@@ -132,7 +132,7 @@ feature -- Status report
 		do
 			-- Result := False
 		ensure
-			definition: Result = (root_context = Current)
+			definition: Result = same_objects (root_context, Current)
 		end
 
 	same_root_context (other: ET_TYPE_CONTEXT): BOOLEAN is
@@ -519,6 +519,16 @@ feature {ET_TYPE, ET_TYPE_CONTEXT} -- Conformance
 			a_universe_not_void: a_universe /= Void
 			-- no_cycle: no cycle in anchored types involved.
 		deferred
+		end
+
+feature {NONE} -- Implementation
+
+	same_objects (obj1, obj2: ANY): BOOLEAN is
+			-- Workaround for VWEQ when running Degree 3 in flat mode.
+		do
+			Result := (obj1 = obj2)
+		ensure
+			definition: Result = (obj1 = obj2)
 		end
 
 end

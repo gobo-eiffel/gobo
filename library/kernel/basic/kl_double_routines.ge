@@ -14,6 +14,8 @@ class KL_DOUBLE_ROUTINES
 
 #ifdef ISE
 inherit
+	ANY
+
 	DOUBLE_MATH
 		rename
 			log as old_log,
@@ -26,6 +28,8 @@ inherit
 #endif
 #ifdef VE
 inherit
+	ANY
+
 	MATH
 		rename
 			log as old_log,

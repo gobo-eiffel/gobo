@@ -57,6 +57,7 @@ inherit
 			append as old_append,
 			close as old_close
 		export
+			{CONSOLE} open_read, extendible, file_pointer, count, old_close, is_closed, put_string, is_open_write;
 			{NONE} all
 		redefine
 			file_readable

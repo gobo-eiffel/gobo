@@ -67,14 +67,25 @@ feature -- Element change
 			-- (Synonym of `a_cursor.extend_left (other)'.)
 			-- (Performance: O(other.count).)
 		local
-			linked_other: like Current
+			other_cursor: DS_LINEAR_CURSOR [G]
 			old_cell: like first_cell
-			fcell, lcell: like first_cell
+			fcell, lcell, new_lcell: like first_cell
 		do
 			if not other.is_empty then
-				create linked_other.make_from_linear (other)
-				fcell := linked_other.first_cell
-				lcell := linked_other.last_cell
+				from
+					other_cursor := other.new_cursor
+					other_cursor.start
+					create fcell.make (other_cursor.item)
+					lcell := fcell
+					other_cursor.forth
+				until
+					other_cursor.after
+				loop
+					create new_lcell.make (other_cursor.item)
+					lcell.put_right (new_lcell)
+					lcell := new_lcell
+					other_cursor.forth
+				end
 				if is_empty then
 					first_cell := fcell
 					last_cell := lcell

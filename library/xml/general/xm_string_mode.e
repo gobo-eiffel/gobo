@@ -14,10 +14,10 @@ class XM_STRING_MODE
 
 inherit
 
+	ANY
+	
 	KL_IMPORTED_BOOLEAN_ROUTINES
-		export
-			{NONE} all
-		end
+		export {NONE} all end
 
 feature -- Status report
 
