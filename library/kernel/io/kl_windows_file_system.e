@@ -121,7 +121,10 @@ feature -- Pathname handling
 		do
 			nb := a_dirname.count
 			if nb >= 4 and then a_dirname.item (1) = directory_separator then
-					-- Maybe of the form \\hostname\foobar
+					-- Maybe of the form \\hostname\rootdir
+					-- Note that \\hostname and \\hostname\\rootdir are not
+					-- valid Windows pathname, but \\hostname\rootdir\ and
+					-- \\hostname\rootdir\\ are.
 				if
 					a_dirname.item (2) = directory_separator and
 					a_dirname.item (3) /= directory_separator
@@ -137,10 +140,45 @@ feature -- Pathname handling
 							i := i + 1
 						end
 					end
-					Result := (found and i = nb)
+					if found then
+						if i < nb and then a_dirname.item (i + 1) /= directory_separator then
+							from
+								found := False
+								i := i + 1
+							until
+								i > nb or found
+							loop
+								if a_dirname.item (i) = directory_separator then
+									found := True
+								else
+									i := i + 1
+								end
+							end
+							if found then
+									-- \\hostname\rootdir\
+								from
+									found := False
+									i := i + 1
+								until
+									i > nb or found
+								loop
+									if a_dirname.item (i) /= directory_separator then
+										found := True
+									else
+										i := i + 1
+									end
+								end
+								Result := not found
+							else
+									-- \\hostname\rootdir
+								Result := True
+							end
+						end
+					end
 				end
 			elseif nb >= 3 then
-					-- Maybe of the form C:\foobar
+					-- Maybe of the form C:\.
+					-- Note that C:\\ is not a valid Windows pathname.
 				c := a_dirname.item (1)
 				if c /= directory_separator and c /= ':' then
 					from
@@ -162,6 +200,7 @@ feature -- Pathname handling
 					end
 				end
 			elseif nb = 1 then
+					-- Note that \\ is not a valid Windows pathname.
 				Result := (a_dirname.item (1) = directory_separator)
 			end
 		end
@@ -248,7 +287,13 @@ feature -- Pathname handling
 					if i < 1 then
 						Result := root_directory
 					else
-						Result := a_pathname.substring (1, i)
+						if a_pathname.item (i) = ':' and then i < a_pathname.count then
+								-- We have something like that: "C:\foobar", so
+								-- the result is "C:\" and not just "C:".
+							Result := a_pathname.substring (1, i + 1)
+						else
+							Result := a_pathname.substring (1, i)
+						end
 					end
 				end
 			end

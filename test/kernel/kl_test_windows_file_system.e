@@ -1420,7 +1420,9 @@ feature -- Pathname handling
 			create a_file_system.make
 			assert ("root1", a_file_system.is_root_directory ("\"))
 			assert ("root2", a_file_system.is_root_directory ("c:\"))
-			assert ("root3", a_file_system.is_root_directory ("\\foo\"))
+			assert ("root3", a_file_system.is_root_directory ("\\foo\bar"))
+			assert ("root4", a_file_system.is_root_directory ("\\foo\bar\"))
+			assert ("root5", a_file_system.is_root_directory ("\\foo\bar\\"))
 			assert ("not_root1", not a_file_system.is_root_directory ("foo"))
 			assert ("not_root2", not a_file_system.is_root_directory ("\foo"))
 			assert ("not_root3", not a_file_system.is_root_directory ("/"))
@@ -1445,6 +1447,10 @@ feature -- Pathname handling
 			assert_equal ("basename9", "foo", a_file_system.basename ("foo\"))
 			assert_equal ("basename10", "foo", a_file_system.basename ("c:\foo\"))
 			assert_equal ("basename11", ".", a_file_system.basename ("."))
+			assert_equal ("basename12", "\", a_file_system.basename ("\\foo\bar"))
+			assert_equal ("basename13", "\", a_file_system.basename ("\\foo\bar\"))
+			assert_equal ("basename14", "toto", a_file_system.basename ("\\foo\bar\toto"))
+			assert_equal ("basename15", "foo", a_file_system.basename ("c:\foo"))
 		end
 
 	test_dirname is
@@ -1464,6 +1470,11 @@ feature -- Pathname handling
 			assert_equal ("dirname9", "foo", a_file_system.dirname ("foo\bar\"))
 			assert_equal ("dirname10", "\", a_file_system.dirname ("\foo\"))
 			assert_equal ("dirname11", ".", a_file_system.dirname ("."))
+			assert_equal ("dirname12", "c:\", a_file_system.dirname ("c:\foo"))
+			assert_equal ("dirname13", "\\foo\bar", a_file_system.dirname ("\\foo\bar"))
+			assert_equal ("dirname14", "\\foo\bar\", a_file_system.dirname ("\\foo\bar\"))
+			assert_equal ("dirname15", "\\foo\bar\\", a_file_system.dirname ("\\foo\bar\\"))
+			assert_equal ("dirname15", "\\foo\bar", a_file_system.dirname ("\\foo\bar\toto"))
 		end
 
 	test_pathname is
