@@ -50,6 +50,9 @@ inherit
 	XM_EIFFEL_UNICODE_STRUCTURE_FACTORY
 		export {NONE} all end
 
+	KL_IMPORTED_INTEGER_ROUTINES
+		export {NONE} all end
+		
 feature {NONE} -- Initialization
 
 	make is
@@ -60,9 +63,14 @@ feature {NONE} -- Initialization
 				-- Parser state:
 			stand_alone := False
 			in_external_dtd := False
+				-- Callbacks forwarding
+			!XM_CALLBACKS_NULL! callbacks.make
 				-- Entities:
 			entities := new_entities_table
 			pe_entities := new_entities_table
+				-- Resolvers
+			!XM_NULL_EXTERNAL_RESOLVER! dtd_resolver
+			entity_resolver := dtd_resolver
 		end
 
 feature -- Initialization
@@ -90,7 +98,7 @@ feature -- Parsing
 			-- Parse XML document from input stream.
 		do
 			reset
-			scanner.set_input_buffer (scanner.new_file_buffer (a_stream))
+			scanner.set_input_stream (a_stream)
 			on_start
 			parse
 			on_finish
@@ -335,7 +343,7 @@ feature {NONE} -- Entities
 		require
 			a_value_not_void: a_value /= Void
 		do
-			!! Result.make_external (a_value.system_id)
+			!! Result.make_external (entity_resolver, a_value.system_id)
 		ensure
 			entity_not_void: Result /= Void
 		end
@@ -348,11 +356,11 @@ feature {NONE} -- Entities
 			a_name_not_void: a_name /= Void
 		do
 			debug ("xml_parser")
-				std.output.put_string ("Entity declared: ")
-				std.output.put_string (a_name)
-				std.output.put_string (" value: ")
-				std.output.put_string (a_def.value)
-				std.output.put_new_line
+				std.error.put_string ("Entity declared: ")
+				std.error.put_string (a_name)
+				std.error.put_string (" value: ")
+				std.error.put_string (a_def.value)
+				std.error.put_new_line
 			end
 				-- 4.2: when multiple declaration first one is binding.
 			if a_def /= Void then
@@ -371,11 +379,11 @@ feature {NONE} -- Entities
 			a_def: XM_EIFFEL_PE_ENTITY_DEF
 		do
 			debug ("xml_parser")
-				std.output.put_string ("PE entity declared: ")
-				std.output.put_string (a_name)
-				std.output.put_string (" value: ")
-				std.output.put_string (in_def.value)
-				std.output.put_new_line
+				std.error.put_string ("PE entity declared: ")
+				std.error.put_string (a_name)
+				std.error.put_string (" value: ")
+				std.error.put_string (in_def.value)
+				std.error.put_new_line
 			end
 				-- 4.2: when multiple declaration take first one.
 			if in_def /= Void then
@@ -423,23 +431,42 @@ feature {NONE} -- Entities
 		require
 			a_sys_not_void: a_sys /= Void
 		local
-			a_file: XM_EIFFEL_UTF16_INPUT_STREAM
-			an_error: STRING
+			a_stream: XM_EIFFEL_UTF16_INPUT_STREAM
+			i: INTEGER
 		do
-			Result := clone (shared_empty_string)
-			!! a_file.make (a_sys)
-			if a_file.is_open_read then
-					-- Inefficient?
-				from until
-					a_file.end_of_input
+			entity_resolver.resolve (a_sys)
+			if not entity_resolver.has_error then
+				!! a_stream.make_from_stream (entity_resolver.last_stream)
+				a_stream.read_string (INTEGER_.Platform.Maximum_integer)
+				Result := a_stream.last_string
+				if entity_resolver.last_stream.is_closable then
+					entity_resolver.last_stream.close
+				end
+				
+				-- newline normalization XML1.0:2.11
+				-- TODO: should be done in scanner?
+				from
+					i := 1
+				until
+					i >= Result.count
 				loop
-					a_file.read_character
-					Result.append_character (a_file.last_character)
+					if Result.item (i) = '%R' and Result.item (i+1) = '%N' then
+						Result.remove (i)
+					end
+					i := i + 1
+				end
+				from
+					i := 1
+				until
+					i > Result.count
+				loop
+					if Result.item (i) = '%R' then
+						Result.put ('%N', i)
+					end
+					i := i + 1
 				end
 			else
-				an_error := STRING_.concat (Error_cannot_read_file, ": ")
-				an_error := STRING_.appended_string (an_error, a_sys)
-				force_error (an_error)
+				force_error (entity_resolver.last_error)
 			end
 		end
 
@@ -452,14 +479,17 @@ feature {NONE} -- DTD
 			has_system: a_system.system_id /= Void
 		do
 			debug ("xml_parser")
-				std.output.put_string ("[when_external_dtd]")
+				std.error.put_string ("[when_external_dtd]")
 			end
+				
+			dtd_resolver.resolve (a_system.system_id)
+			if not dtd_resolver.has_error then
 				-- Push old scanner.
-			scanners.force (scanner)
-			!XM_EIFFEL_SCANNER_DTD! scanner.make_scanner
-			scanner.set_input_file (a_system.system_id)
-			if not scanner.last_input_file_opened then
-				on_error (Error_cannot_open_external_dtd)
+				scanners.force (scanner)
+				!XM_EIFFEL_SCANNER_DTD! scanner.make_scanner
+				scanner.set_input_stream (dtd_resolver.last_stream)
+			else
+				on_error (dtd_resolver.last_error)
 			end
 		end
 
@@ -495,15 +525,19 @@ feature {NONE} -- Scanner implementation
 			last_token := scanner.last_token
 			last_value := scanner.last_value
 			debug ("xml_parser")
-				std.output.put_string (token_name (last_token))
-				std.output.put_string ("/")
+				
+				std.error.put_string (token_name (last_token))
+				std.error.put_string ("/")
 				if last_value /= Void then
-					std.output.put_string (last_value.out)
-					std.output.put_string ("!")
+					std.error.put_string (last_value.out)
+					std.error.put_string ("/")
 				end
+				std.error.put_string (scanner.text_count.out)
+				std.error.put_new_line
 			end
 				-- Unwind scanner stack if end of current one.
 			if scanner.end_of_file and not scanners.is_empty then
+				scanner.close_input
 				scanner := scanners.item
 				scanners.remove
 				read_token
@@ -517,7 +551,7 @@ feature {NONE} -- Scanner implementation
 				process_pe_entity (onstring_ascii (last_text))
 			elseif last_token = DOCTYPE_PEREFERENCE_UTF8 then
 				process_pe_entity (onstring_utf8 (last_text))
-				-- Same if content entity reference.
+
 			elseif last_token = CONTENT_ENTITY  then
 				process_entity (onstring_ascii (last_text))
 			elseif last_token = CONTENT_ENTITY_UTF8  then
@@ -585,6 +619,10 @@ feature {NONE} -- Scanner entity processing
 				force_error (a_def.last_error)
 			else
 					-- Push scanner.
+				debug ("xml_parser")
+					std.error.put_string ("Pushing entity scanner. Start condition: " + scanner.start_condition.out)
+					std.error.put_new_line
+				end
 				a_def.set_start_condition (scanner.start_condition)
 				scanners.force (scanner)
 				scanner := a_def

@@ -49,22 +49,26 @@ feature {NONE} -- Initialization
 		do
 			value := a_value
 			make_scanner
+			!XM_NULL_EXTERNAL_RESOLVER! resolver
 		ensure
 			is_literal: is_literal
 			value_set: value = a_value
 		end
 
-	make_external (a_value: STRING) is
+	make_external (a_resolver: like resolver; a_value: STRING) is
 			-- Create a new external entity definition from `a_value'.
 		require
+			a_resolver_not_void: a_resolver /= Void
 			a_value_not_void: a_value /= Void
 		do
 			is_external := True
+			resolver := a_resolver
 			value := a_value
 			make_scanner
 		ensure
 			is_external: is_external
 			value_set: value = a_value
+			resolver_set: resolver = a_resolver
 		end
 
 	make_def (other: XM_EIFFEL_ENTITY_DEF) is
@@ -73,7 +77,7 @@ feature {NONE} -- Initialization
 			other_not_void: other /= Void
 		do
 			if other.is_external then
-				make_external (other.value)
+				make_external (other.resolver, other.value)
 			else
 				make_literal (other.value)
 			end
@@ -83,6 +87,10 @@ feature {NONE} -- Initialization
 			value_set: value = other.value
 		end
 
+feature -- Resolver
+
+	resolver: XM_EXTERNAL_RESOLVER
+	
 feature -- Status report
 
 	is_external: BOOLEAN
@@ -137,10 +145,12 @@ feature -- Scanner: set input buffer
 			else
 					-- External entity in a file.
 				reset
-				set_input_file (external_value)
+				resolver.resolve (external_value)
+				if not resolver.has_error then
+					set_input_stream (resolver.last_stream)
 					-- `has_error'/`last_error' set by `set_input_file'.
-				if has_error then
-					fatal_error (Error_entity_unresolved_external)
+				else
+					fatal_error (resolver.last_error)
 				end
 			end
 		end
@@ -233,6 +243,7 @@ feature -- Scanner: initialization
 invariant
 
 	value_not_void: value /= Void
+	resolver_not_void: resolver /= Void
 	type: is_literal xor is_external
 
 end
