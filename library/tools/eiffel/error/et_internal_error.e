@@ -5,7 +5,7 @@ indexing
 		"Internal errors"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2003, Eric Bezault and others"
+	copyright: "Copyright (c) 2003-2004, Eric Bezault and others"
 	license: "Eiffel Forum License v2 (see forum.txt)"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -67,7 +67,14 @@ creation
 	make_giabu,
 	make_giabv,
 	make_giabw,
-	make_giabx
+	make_giabx,
+	make_giaby,
+	make_giabz,
+	make_giaca,
+	make_giacb,
+	make_giacc,
+	make_giacd,
+	make_giace
 
 feature {NONE} -- Initialization
 
@@ -721,6 +728,97 @@ feature {NONE} -- Initialization
 			-- dollar1: $1 = ETL code
 		end
 
+	make_giaby is
+			-- Create a new GIABY error.
+		do
+			code := giaby_template_code
+			etl_code := giaby_etl_code
+			default_template := giaby_default_template
+			create parameters.make (1, 1)
+			parameters.put (etl_code, 1)
+		ensure
+			-- dollar0: $0 = program name
+			-- dollar1: $1 = ETL code
+		end
+
+	make_giabz is
+			-- Create a new GIABZ error.
+		do
+			code := giabz_template_code
+			etl_code := giabz_etl_code
+			default_template := giabz_default_template
+			create parameters.make (1, 1)
+			parameters.put (etl_code, 1)
+		ensure
+			-- dollar0: $0 = program name
+			-- dollar1: $1 = ETL code
+		end
+
+	make_giaca is
+			-- Create a new GIACA error.
+		do
+			code := giaca_template_code
+			etl_code := giaca_etl_code
+			default_template := giaca_default_template
+			create parameters.make (1, 1)
+			parameters.put (etl_code, 1)
+		ensure
+			-- dollar0: $0 = program name
+			-- dollar1: $1 = ETL code
+		end
+
+	make_giacb is
+			-- Create a new GIACB error.
+		do
+			code := giacb_template_code
+			etl_code := giacb_etl_code
+			default_template := giacb_default_template
+			create parameters.make (1, 1)
+			parameters.put (etl_code, 1)
+		ensure
+			-- dollar0: $0 = program name
+			-- dollar1: $1 = ETL code
+		end
+
+	make_giacc is
+			-- Create a new GIACC error.
+		do
+			code := giacc_template_code
+			etl_code := giacc_etl_code
+			default_template := giacc_default_template
+			create parameters.make (1, 1)
+			parameters.put (etl_code, 1)
+		ensure
+			-- dollar0: $0 = program name
+			-- dollar1: $1 = ETL code
+		end
+
+	make_giacd is
+			-- Create a new GIACD error.
+		do
+			code := giacd_template_code
+			etl_code := giacd_etl_code
+			default_template := giacd_default_template
+			create parameters.make (1, 1)
+			parameters.put (etl_code, 1)
+		ensure
+			-- dollar0: $0 = program name
+			-- dollar1: $1 = ETL code
+		end
+
+	make_giace is
+			-- Create a new GIACE error.
+		do
+			code := giace_template_code
+			etl_code := giace_etl_code
+			default_template := giace_default_template
+			create parameters.make (1, 1)
+			parameters.put (etl_code, 1)
+		ensure
+			-- dollar0: $0 = program name
+			-- dollar1: $1 = ETL code
+		end
+
 feature {NONE} -- Implementation
 
 	giaaa_default_template: STRING is "[$1] internal error."
@@ -773,6 +871,13 @@ feature {NONE} -- Implementation
 	giabv_default_template: STRING is "[$1] internal error."
 	giabw_default_template: STRING is "[$1] internal error."
 	giabx_default_template: STRING is "[$1] internal error."
+	giaby_default_template: STRING is "[$1] internal error."
+	giabz_default_template: STRING is "[$1] internal error."
+	giaca_default_template: STRING is "[$1] internal error."
+	giacb_default_template: STRING is "[$1] internal error."
+	giacc_default_template: STRING is "[$1] internal error."
+	giacd_default_template: STRING is "[$1] internal error."
+	giace_default_template: STRING is "[$1] internal error."
 			-- Default templates
 
 	giaaa_etl_code: STRING is "GIAAA"
@@ -825,6 +930,13 @@ feature {NONE} -- Implementation
 	giabv_etl_code: STRING is "GIABV"
 	giabw_etl_code: STRING is "GIABW"
 	giabx_etl_code: STRING is "GIABX"
+	giaby_etl_code: STRING is "GIABY"
+	giabz_etl_code: STRING is "GIABZ"
+	giaca_etl_code: STRING is "GIACA"
+	giacb_etl_code: STRING is "GIACB"
+	giacc_etl_code: STRING is "GIACC"
+	giacd_etl_code: STRING is "GIACD"
+	giace_etl_code: STRING is "GIACE"
 			-- ETL validity codes
 
 	giaaa_template_code: STRING is "giaaa"
@@ -877,6 +989,13 @@ feature {NONE} -- Implementation
 	giabv_template_code: STRING is "giabv"
 	giabw_template_code: STRING is "giabw"
 	giabx_template_code: STRING is "giabx"
+	giaby_template_code: STRING is "giaby"
+	giabz_template_code: STRING is "giabz"
+	giaca_template_code: STRING is "giaca"
+	giacb_template_code: STRING is "giacb"
+	giacc_template_code: STRING is "giacc"
+	giacd_template_code: STRING is "giacd"
+	giace_template_code: STRING is "giace"
 			-- Template error codes
 
 end

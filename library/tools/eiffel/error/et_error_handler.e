@@ -2720,6 +2720,396 @@ feature -- Validity errors
 			end
 		end
 
+	report_vpca1a_error (a_class: ET_CLASS; a_name: ET_FEATURE_NAME) is
+			-- Report VPCA-1 error: `a_name', appearing in an unqualified
+			-- call agent in `a_class', is not the final name of a feature
+			-- in `a_class'.
+			--
+			-- ETL3 (4.82-00-00): p.581
+			--
+			-- Note: ISE Eiffel 5.4 reports this error as a VEEN.
+		require
+			a_class_not_void: a_class /= Void
+			a_class_preparsed: a_class.is_preparsed
+			a_name_not_void: a_name /= Void
+		local
+			an_error: ET_VALIDITY_ERROR
+		do
+			if reportable_vpca1_error (a_class) then
+				create an_error.make_vpca1a (a_class, a_name)
+				report_validity_error (an_error)
+			end
+		end
+
+	report_vpca1b_error (a_class: ET_CLASS; a_name: ET_FEATURE_NAME; a_target: ET_CLASS) is
+			-- Report VPCA-1 error: `a_name', appearing in a qualified
+			-- call agent in `a_class', is not the final name of a feature
+			-- in class `a_target'.
+			--
+			-- ETL3 (4.82-00-00): p.581
+			--
+			-- Note: ISE Eiffel 5.4 reports this error as a VEEN.
+		require
+			a_class_not_void: a_class /= Void
+			a_class_preparsed: a_class.is_preparsed
+			a_name_not_void: a_name /= Void
+			a_target_not_void: a_target /= Void
+		local
+			an_error: ET_VALIDITY_ERROR
+		do
+			if reportable_vpca1_error (a_class) then
+				create an_error.make_vpca1b (a_class, a_name, a_target)
+				report_validity_error (an_error)
+			end
+		end
+
+	report_vpca2a_error (a_class: ET_CLASS; a_name: ET_FEATURE_NAME; a_feature: ET_FEATURE; a_target: ET_CLASS) is
+			-- Report VPCA-2 error: `a_feature' of class `a_target',
+			-- is not exported to `a_class' where the qualified call 
+			-- agent `a_name' appears.
+			--
+			-- ETL3 (4.82-00-00): p.581
+		require
+			a_class_not_void: a_class /= Void
+			a_class_preparsed: a_class.is_preparsed
+			a_name_not_void: a_name /= Void
+			a_feature_not_void: a_feature /= Void
+			a_target_not_void: a_target /= Void
+		local
+			an_error: ET_VALIDITY_ERROR
+		do
+			if reportable_vpca2_error (a_class) then
+				create an_error.make_vpca2a (a_class, a_name, a_feature, a_target)
+				report_validity_error (an_error)
+			end
+		end
+
+	report_vpca2b_error (a_class, a_class_impl: ET_CLASS; a_name: ET_FEATURE_NAME; a_feature: ET_FEATURE; a_target: ET_CLASS) is
+			-- Report VPCA-2 error: `a_feature' of class `a_target'
+			-- is not exported to `a_class', one of the descendants
+			-- of `a_class_impl' where the qualified call agent
+			-- `a_name' appears.
+			--
+			-- ETL3 (4.82-00-00): p.581
+		require
+			a_class_not_void: a_class /= Void
+			a_class_impl_not_void: a_class_impl /= Void
+			a_class_impl_preparsed: a_class_impl.is_preparsed
+			a_name_not_void: a_name /= Void
+			a_feature_not_void: a_feature /= Void
+			a_target_not_void: a_target /= Void
+		local
+			an_error: ET_VALIDITY_ERROR
+		do
+			if reportable_vpca2_error (a_class) then
+				create an_error.make_vpca2b (a_class, a_class_impl, a_name, a_feature, a_target)
+				report_validity_error (an_error)
+			end
+		end
+
+	report_vpca3a_error (a_class: ET_CLASS; a_name: ET_FEATURE_NAME; a_feature: ET_FEATURE; a_target: ET_CLASS) is
+			-- Report VPCA-3 error: the number of actual arguments in
+			-- the qualified call agent `a_name' appearing in `a_class' is not the
+			-- same as the number of formal arguments of `a_feature' in
+			-- class `a_target'.
+			--
+			-- ETL3 (4.82-00-00): p.581
+		require
+			a_class_not_void: a_class /= Void
+			a_class_preparsed: a_class.is_preparsed
+			a_name_not_void: a_name /= Void
+			a_feature_not_void: a_feature /= Void
+			a_target_not_void: a_target /= Void
+		local
+			an_error: ET_VALIDITY_ERROR
+		do
+			if reportable_vpca3_error (a_class) then
+				create an_error.make_vpca3a (a_class, a_name, a_feature, a_target)
+				report_validity_error (an_error)
+			end
+		end
+
+	report_vpca3b_error (a_class, a_class_impl: ET_CLASS; a_name: ET_FEATURE_NAME; a_feature: ET_FEATURE; a_target: ET_CLASS) is
+			-- Report VPCA-3 error: the number of actual arguments in
+			-- the qualified call agent `a_name' appearing in `a_class_impl' and viewed
+			-- from one of its descendants `a_class' is not the same as the number
+			-- of formal arguments of `a_feature' in class `a_target'.
+			--
+			-- ETL3 (4.82-00-00): p.581
+		require
+			a_class_not_void: a_class /= Void
+			a_class_impl_not_void: a_class_impl /= Void
+			a_class_impl_preparsed: a_class_impl.is_preparsed
+			a_name_not_void: a_name /= Void
+			a_feature_not_void: a_feature /= Void
+			a_target_not_void: a_target /= Void
+		local
+			an_error: ET_VALIDITY_ERROR
+		do
+			if reportable_vpca3_error (a_class) then
+				create an_error.make_vpca3b (a_class, a_class_impl, a_name, a_feature, a_target)
+				report_validity_error (an_error)
+			end
+		end
+
+	report_vpca3c_error (a_class: ET_CLASS; a_name: ET_FEATURE_NAME; a_feature: ET_FEATURE) is
+			-- Report VPCA-3 error: the number of actual arguments in
+			-- the unqualified call agent `a_name' appearing in `a_class' is not the
+			-- same as the number of formal arguments of `a_feature' in `a_class'.
+			--
+			-- ETL3 (4.82-00-00): p.581
+		require
+			a_class_not_void: a_class /= Void
+			a_class_preparsed: a_class.is_preparsed
+			a_name_not_void: a_name /= Void
+			a_feature_not_void: a_feature /= Void
+		local
+			an_error: ET_VALIDITY_ERROR
+		do
+			if reportable_vpca3_error (a_class) then
+				create an_error.make_vpca3c (a_class, a_name, a_feature)
+				report_validity_error (an_error)
+			end
+		end
+
+	report_vpca3d_error (a_class, a_class_impl: ET_CLASS; a_name: ET_FEATURE_NAME; a_feature: ET_FEATURE) is
+			-- Report VPCA-3 error: the number of actual arguments in
+			-- the unqualified call agent `a_name' appearing in `a_class_impl' and
+			-- viewed from one of its descendants `a_class' is not the same as
+			-- the number of formal arguments of `a_feature' in `a_class_impl'.
+			--
+			-- ETL3 (4.82-00-00): p.581
+		require
+			a_class_not_void: a_class /= Void
+			a_class_impl_not_void: a_class_impl /= Void
+			a_class_impl_preparsed: a_class_impl.is_preparsed
+			a_name_not_void: a_name /= Void
+			a_feature_not_void: a_feature /= Void
+		local
+			an_error: ET_VALIDITY_ERROR
+		do
+			if reportable_vpca3_error (a_class) then
+				create an_error.make_vpca3d (a_class, a_class_impl, a_name, a_feature)
+				report_validity_error (an_error)
+			end
+		end
+
+	report_vpca4a_error (a_class: ET_CLASS; a_name: ET_FEATURE_NAME; a_feature: ET_FEATURE;
+		a_target: ET_CLASS; arg: INTEGER; an_actual, a_formal: ET_NAMED_TYPE) is
+			-- Report VPCA-4 error: the `arg'-th actual argument in the qualified
+			-- call agent `a_name' appearing in `a_class' does not conform to the corresponding
+			-- formal argument of `a_feature' in class `a_target'.
+			--
+			-- ETL3 (4.82-00-00): p.581
+		require
+			a_class_not_void: a_class /= Void
+			a_class_preparsed: a_class.is_preparsed
+			a_name_not_void: a_name /= Void
+			a_feature_not_void: a_feature /= Void
+			a_target_not_void: a_target /= Void
+			an_actual_not_void: an_actual /= Void
+			an_actual_named_type: an_actual.is_named_type
+			a_formal_not_void: a_formal /= Void
+			a_formal_named_type: a_formal.is_named_type
+		local
+			an_error: ET_VALIDITY_ERROR
+		do
+			if reportable_vpca4_error (a_class) then
+				create an_error.make_vpca4a (a_class, a_name, a_feature, a_target, arg, an_actual, a_formal)
+				report_validity_error (an_error)
+			end
+		end
+
+	report_vpca4b_error (a_class, a_class_impl: ET_CLASS; a_name: ET_FEATURE_NAME; a_feature: ET_FEATURE;
+		a_target: ET_CLASS; arg: INTEGER; an_actual, a_formal: ET_NAMED_TYPE) is
+			-- Report VPCA-4 error: the `arg'-th actual argument in the qualified
+			-- call agent `a_name' appearing in `a_class_impl' and viewed from one of its
+			-- descendants `a_class' does not conform to the corresponding formal
+			-- argument of `a_feature' in class `a_target'.
+			--
+			-- ETL3 (4.82-00-00): p.581
+		require
+			a_class_not_void: a_class /= Void
+			a_class_impl_not_void: a_class_impl /= Void
+			a_class_impl_preparsed: a_class_impl.is_preparsed
+			a_name_not_void: a_name /= Void
+			a_feature_not_void: a_feature /= Void
+			a_target_not_void: a_target /= Void
+			an_actual_not_void: an_actual /= Void
+			an_actual_named_type: an_actual.is_named_type
+			a_formal_not_void: a_formal /= Void
+			a_formal_named_type: a_formal.is_named_type
+		local
+			an_error: ET_VALIDITY_ERROR
+		do
+			if reportable_vpca4_error (a_class) then
+				create an_error.make_vpca4b (a_class, a_class_impl, a_name, a_feature, a_target, arg, an_actual, a_formal)
+				report_validity_error (an_error)
+			end
+		end
+
+	report_vpca4c_error (a_class: ET_CLASS; a_name: ET_FEATURE_NAME; a_feature: ET_FEATURE;
+		arg: INTEGER; an_actual, a_formal: ET_NAMED_TYPE) is
+			-- Report VPCA-4 error: the `arg'-th actual argument in the unqualified
+			-- call agent `a_name' appearing in `a_class' does not conform to the corresponding
+			-- formal argument of `a_feature' in `a_class'.
+			--
+			-- ETL3 (4.82-00-00): p.581
+		require
+			a_class_not_void: a_class /= Void
+			a_class_preparsed: a_class.is_preparsed
+			a_name_not_void: a_name /= Void
+			a_feature_not_void: a_feature /= Void
+			an_actual_not_void: an_actual /= Void
+			an_actual_named_type: an_actual.is_named_type
+			a_formal_not_void: a_formal /= Void
+			a_formal_named_type: a_formal.is_named_type
+		local
+			an_error: ET_VALIDITY_ERROR
+		do
+			if reportable_vpca4_error (a_class) then
+				create an_error.make_vpca4c (a_class, a_name, a_feature, arg, an_actual, a_formal)
+				report_validity_error (an_error)
+			end
+		end
+
+	report_vpca4d_error (a_class, a_class_impl: ET_CLASS; a_name: ET_FEATURE_NAME;
+		a_feature: ET_FEATURE; arg: INTEGER; an_actual, a_formal: ET_NAMED_TYPE) is
+			-- Report VPCA-4 error: the `arg'-th actual argument in the unqualified
+			-- call agent `a_name' appearing in `a_class_impl' and viewed from one of its
+			-- descendants `a_class' does not conform to the corresponding formal
+			-- argument of `a_feature' in `a_class_impl'.
+			--
+			-- ETL3 (4.82-00-00): p.581
+		require
+			a_class_not_void: a_class /= Void
+			a_class_impl_not_void: a_class_impl /= Void
+			a_class_impl_preparsed: a_class_impl.is_preparsed
+			a_name_not_void: a_name /= Void
+			a_feature_not_void: a_feature /= Void
+			an_actual_not_void: an_actual /= Void
+			an_actual_named_type: an_actual.is_named_type
+			a_formal_not_void: a_formal /= Void
+			a_formal_named_type: a_formal.is_named_type
+		local
+			an_error: ET_VALIDITY_ERROR
+		do
+			if reportable_vpca4_error (a_class) then
+				create an_error.make_vpca4d (a_class, a_class_impl, a_name, a_feature, arg, an_actual, a_formal)
+				report_validity_error (an_error)
+			end
+		end
+
+	report_vpca5a_error (a_class: ET_CLASS; a_name: ET_FEATURE_NAME; a_feature: ET_FEATURE;
+		a_target: ET_CLASS; arg: INTEGER; an_actual, a_formal: ET_NAMED_TYPE) is
+			-- Report VPCA-5 error: the type specified for the `arg'-th
+			-- actual argument in the qualified call agent `a_name' appearing
+			-- in `a_class' does not conform to the corresponding formal
+			-- argument of `a_feature' in class `a_target'.
+			--
+			-- ETL3 (4.82-00-00): p.581
+		require
+			a_class_not_void: a_class /= Void
+			a_class_preparsed: a_class.is_preparsed
+			a_name_not_void: a_name /= Void
+			a_feature_not_void: a_feature /= Void
+			a_target_not_void: a_target /= Void
+			an_actual_not_void: an_actual /= Void
+			an_actual_named_type: an_actual.is_named_type
+			a_formal_not_void: a_formal /= Void
+			a_formal_named_type: a_formal.is_named_type
+		local
+			an_error: ET_VALIDITY_ERROR
+		do
+			if reportable_vpca5_error (a_class) then
+				create an_error.make_vpca5a (a_class, a_name, a_feature, a_target, arg, an_actual, a_formal)
+				report_validity_error (an_error)
+			end
+		end
+
+	report_vpca5b_error (a_class, a_class_impl: ET_CLASS; a_name: ET_FEATURE_NAME; a_feature: ET_FEATURE;
+		a_target: ET_CLASS; arg: INTEGER; an_actual, a_formal: ET_NAMED_TYPE) is
+			-- Report VPCA-5 error: the type specified for the `arg'-th actual
+			-- argument in the qualified call agent `a_name' appearing in
+			-- `a_class_impl' and viewed from one of its descendants `a_class'
+			-- does not conform to the corresponding formal argument of `a_feature'
+			-- in class `a_target'.
+			--
+			-- ETL3 (4.82-00-00): p.581
+		require
+			a_class_not_void: a_class /= Void
+			a_class_impl_not_void: a_class_impl /= Void
+			a_class_impl_preparsed: a_class_impl.is_preparsed
+			a_name_not_void: a_name /= Void
+			a_feature_not_void: a_feature /= Void
+			a_target_not_void: a_target /= Void
+			an_actual_not_void: an_actual /= Void
+			an_actual_named_type: an_actual.is_named_type
+			a_formal_not_void: a_formal /= Void
+			a_formal_named_type: a_formal.is_named_type
+		local
+			an_error: ET_VALIDITY_ERROR
+		do
+			if reportable_vpca5_error (a_class) then
+				create an_error.make_vpca5b (a_class, a_class_impl, a_name, a_feature, a_target, arg, an_actual, a_formal)
+				report_validity_error (an_error)
+			end
+		end
+
+	report_vpca5c_error (a_class: ET_CLASS; a_name: ET_FEATURE_NAME; a_feature: ET_FEATURE;
+		arg: INTEGER; an_actual, a_formal: ET_NAMED_TYPE) is
+			-- Report VPCA-5 error: the type specified for the `arg'-th actual
+			-- argument in the unqualified call agent `a_name' appearing in
+			-- `a_class' does not conform to the corresponding formal argument
+			-- of `a_feature' in `a_class'.
+			--
+			-- ETL3 (4.82-00-00): p.581
+		require
+			a_class_not_void: a_class /= Void
+			a_class_preparsed: a_class.is_preparsed
+			a_name_not_void: a_name /= Void
+			a_feature_not_void: a_feature /= Void
+			an_actual_not_void: an_actual /= Void
+			an_actual_named_type: an_actual.is_named_type
+			a_formal_not_void: a_formal /= Void
+			a_formal_named_type: a_formal.is_named_type
+		local
+			an_error: ET_VALIDITY_ERROR
+		do
+			if reportable_vpca5_error (a_class) then
+				create an_error.make_vpca5c (a_class, a_name, a_feature, arg, an_actual, a_formal)
+				report_validity_error (an_error)
+			end
+		end
+
+	report_vpca5d_error (a_class, a_class_impl: ET_CLASS; a_name: ET_FEATURE_NAME;
+		a_feature: ET_FEATURE; arg: INTEGER; an_actual, a_formal: ET_NAMED_TYPE) is
+			-- Report VPCA-5 error: the type speciified for the `arg'-th actual
+			-- argument in the unqualified call agent `a_name' appearing in
+			-- `a_class_impl' and viewed from one of its descendants `a_class'
+			-- does not conform to the corresponding formal argument of `a_feature'
+			-- in `a_class_impl'.
+			--
+			-- ETL3 (4.82-00-00): p.581
+		require
+			a_class_not_void: a_class /= Void
+			a_class_impl_not_void: a_class_impl /= Void
+			a_class_impl_preparsed: a_class_impl.is_preparsed
+			a_name_not_void: a_name /= Void
+			a_feature_not_void: a_feature /= Void
+			an_actual_not_void: an_actual /= Void
+			an_actual_named_type: an_actual.is_named_type
+			a_formal_not_void: a_formal /= Void
+			a_formal_named_type: a_formal.is_named_type
+		local
+			an_error: ET_VALIDITY_ERROR
+		do
+			if reportable_vpca5_error (a_class) then
+				create an_error.make_vpca5d (a_class, a_class_impl, a_name, a_feature, arg, an_actual, a_formal)
+				report_validity_error (an_error)
+			end
+		end
+
 	report_vqmc1a_error (a_class: ET_CLASS; an_attribute: ET_CONSTANT_ATTRIBUTE) is
 			-- Report VQMC-1 error: `an_attribute' introduces a boolean constant
 			-- but its type is not "BOOLEAN".
@@ -4539,6 +4929,56 @@ feature -- Validity error status
 			Result := True
 		end
 
+	reportable_vpca1_error (a_class: ET_CLASS): BOOLEAN is
+			-- Can a VPCA-1 error be reported when it
+			-- appears in `a_class'?
+		require
+			a_class_not_void: a_class /= Void
+			a_class_preparsed: a_class.is_preparsed
+		do
+			Result := True
+		end
+
+	reportable_vpca2_error (a_class: ET_CLASS): BOOLEAN is
+			-- Can a VPCA-2 error be reported when it
+			-- appears in `a_class'?
+		require
+			a_class_not_void: a_class /= Void
+			a_class_preparsed: a_class.is_preparsed
+		do
+			Result := True
+		end
+
+	reportable_vpca3_error (a_class: ET_CLASS): BOOLEAN is
+			-- Can a VPCA-3 error be reported when it
+			-- appears in `a_class'?
+		require
+			a_class_not_void: a_class /= Void
+			a_class_preparsed: a_class.is_preparsed
+		do
+			Result := True
+		end
+
+	reportable_vpca4_error (a_class: ET_CLASS): BOOLEAN is
+			-- Can a VPCA-4 error be reported when it
+			-- appears in `a_class'?
+		require
+			a_class_not_void: a_class /= Void
+			a_class_preparsed: a_class.is_preparsed
+		do
+			Result := True
+		end
+
+	reportable_vpca5_error (a_class: ET_CLASS): BOOLEAN is
+			-- Can a VPCA-5 error be reported when it
+			-- appears in `a_class'?
+		require
+			a_class_not_void: a_class /= Void
+			a_class_preparsed: a_class.is_preparsed
+		do
+			Result := True
+		end
+
 	reportable_vqmc1_error (a_class: ET_CLASS): BOOLEAN is
 			-- Can a VQMC-1 error be reported when it
 			-- appears in `a_class'?
@@ -5349,6 +5789,69 @@ feature -- Internal errors
 			an_error: ET_INTERNAL_ERROR
 		do
 			create an_error.make_giabx
+			report_internal_error (an_error)
+		end
+
+	report_giaby_error is
+			-- Report GIABY internal error.
+		local
+			an_error: ET_INTERNAL_ERROR
+		do
+			create an_error.make_giaby
+			report_internal_error (an_error)
+		end
+
+	report_giabz_error is
+			-- Report GIABZ internal error.
+		local
+			an_error: ET_INTERNAL_ERROR
+		do
+			create an_error.make_giabz
+			report_internal_error (an_error)
+		end
+
+	report_giaca_error is
+			-- Report GIACA internal error.
+		local
+			an_error: ET_INTERNAL_ERROR
+		do
+			create an_error.make_giaca
+			report_internal_error (an_error)
+		end
+
+	report_giacb_error is
+			-- Report GIACB internal error.
+		local
+			an_error: ET_INTERNAL_ERROR
+		do
+			create an_error.make_giacb
+			report_internal_error (an_error)
+		end
+
+	report_giacc_error is
+			-- Report GIACC internal error.
+		local
+			an_error: ET_INTERNAL_ERROR
+		do
+			create an_error.make_giacc
+			report_internal_error (an_error)
+		end
+
+	report_giacd_error is
+			-- Report GIACD internal error.
+		local
+			an_error: ET_INTERNAL_ERROR
+		do
+			create an_error.make_giacd
+			report_internal_error (an_error)
+		end
+
+	report_giace_error is
+			-- Report GIACE internal error.
+		local
+			an_error: ET_INTERNAL_ERROR
+		do
+			create an_error.make_giace
 			report_internal_error (an_error)
 		end
 
