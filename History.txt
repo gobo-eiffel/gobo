@@ -1,3 +1,12 @@
+Version 2.1 - ?
+
+	gelex:
+
+	* Added feature `wipe_out' to YY_BUFFER and YY_FILE_BUFFER,
+	  which is useful in order to avoid invariant violation when
+	  reusing the same input buffer for subsequent scanning.
+	  (suggested by Emmanuel Stapf)
+
 Version 2.0 - 29 April 2001
 
 	geyacc:
