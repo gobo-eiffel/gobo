@@ -61,11 +61,11 @@ feature -- Access
 			-- Text of last token read
 			-- (Create a new string at each call.)
 		do
-			if yy_start_position = yy_position then
-				!! Result.make (0)
-			else
+			if yy_start_position < yy_position then
 				Result :=
 					yy_content.substring (yy_start_position, yy_position - 1)
+			else
+				!! Result.make (0)
 			end
 		end
 
