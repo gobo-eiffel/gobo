@@ -51,8 +51,10 @@ inherit
 
 	STRING
 		rename
-#ifndef VE
+#ifndef VE || SE
 			capacity as byte_capacity,
+#endif
+#ifndef VE
 			set_count as old_set_count,
 #endif
 #ifdef SE || VE || (ISE && ! ISE_5_1)
@@ -125,7 +127,7 @@ inherit
 			index_of, has, occurrences, head, tail,
 			hash_code, remove, to_lower, to_upper,
 			three_way_comparison, item_code,
-#ifndef VE
+#ifndef VE || SE
 			byte_capacity,
 #endif
 #ifdef SE || VE || HACT || (ISE && ! ISE_5_1)
@@ -1117,22 +1119,20 @@ feature -- Measurement
 	byte_count: INTEGER
 			-- Number of bytes in internal storage
 
-#ifdef SE
-	byte_capacity: INTEGER
-#else
 	byte_capacity: INTEGER is
-#endif
 			-- Maximum number of bytes that can be put in
 			-- internal storage
-#ifndef SE
 		do
+#ifdef SE
+			Result := capacity
+#else
 #ifdef VE
 			Result := storage.count
 #else
 			Result := precursor
 #endif
-		end
 #endif
+		end
 
 feature -- Status report
 
@@ -2037,7 +2037,7 @@ feature -- Duplication
 				if c > 0 then
 					if byte_capacity < c then
 						storage := storage.calloc (c)
-						byte_capacity := c
+						capacity := c
 					end
 					storage.copy_from (other.storage, c - 1)
 				end
@@ -2555,7 +2555,7 @@ feature {UC_STRING_HANDLER} -- Implementation
 				else
 					storage := storage.realloc (byte_capacity, n)
 				end
-				byte_capacity := n
+				capacity := n
 #endif
 #ifdef VE
 				storage.resize (n)
