@@ -88,8 +88,10 @@ feature {NONE} -- Implementation
 			shell_command: DP_SHELL_COMMAND
 		do
 			!! shell_command.make (a_command)
-			shell_command.execute
-			exit_code := shell_command.exit_code
+			if not project.no_exec then
+				shell_command.execute
+				exit_code := shell_command.exit_code
+			end
 		end
 
 invariant
