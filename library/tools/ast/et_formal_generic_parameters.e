@@ -77,13 +77,6 @@ feature -- Measurement
 
 feature -- Status report
 
-	is_valid: BOOLEAN
-			-- Are current formal generic paramaters valid?
-
-	validity_checked: BOOLEAN
-			-- Has validity of current formal generic
-			-- paramaters been checked?
-
 	has_generic_parameter (a_name: ET_IDENTIFIER): BOOLEAN is
 			-- Is `a_name' a formal generic parameter?
 		require
@@ -111,34 +104,131 @@ feature -- Validity
 		require
 			a_class_not_void: a_class /= Void
 		local
-			i, nb: INTEGER
+			i, j, nb: INTEGER
 			a_formal: like item
+			a_name: ET_IDENTIFIER
+			a_universe: ET_UNIVERSE
+			other_class: ET_CLASS
 			a_constraint: ET_TYPE
+			a_formal_constraint: ET_FORMAL_GENERIC_TYPE
+			nb_constraints: INTEGER
+			an_index: INTEGER
+			a_sorter: DS_TOPOLOGICAL_SORTER [ET_FORMAL_GENERIC_PARAMETER]
 		do
-			if not validity_checked then
-				validity_checked := True
-				Result := True
-				nb := count
+			Result := True
+			a_universe := a_class.universe
+			a_sorter := a_universe.formal_generic_parameter_sorter
+			a_sorter.wipe_out
+			nb := count
+			from i := 1 until i > nb loop
+				a_formal := item (i)
+				a_name := a_formal.name
+				if a_universe.has_class (a_name) then
+					other_class := a_universe.eiffel_class (a_name)
+					a_class.error_handler.report_vcfg1_error (a_class, a_formal, other_class)
+					Result := False
+				else
+					from j := 1 until j >= i loop
+						if item (j).name.same_identifier (a_name) then
+							a_class.error_handler.report_vcfg2_error (a_class, item (j), a_formal)
+							Result := False
+							j := nb + 1 -- Jump out of the inner loop.
+						end
+						j := j + 1
+					end
+					a_constraint := a_formal.constraint
+					if a_constraint /= Void then
+						nb_constraints := nb_constraints + 1
+						a_formal_constraint ?= a_constraint
+						if a_formal_constraint /= Void then
+							an_index := a_formal_constraint.index
+							if an_index = i then
+								a_class.error_handler.report_vcfg3a_error (a_class, a_formal, a_formal_constraint)
+								Result := False
+							elseif an_index < i then
+								a_sorter.force_relation (item (an_index), a_formal)
+								a_class.error_handler.report_vcfg3b_error (a_class, a_formal, a_formal_constraint)
+							elseif an_index > i then
+								a_sorter.force_relation (item (an_index), a_formal)
+								a_class.error_handler.report_vcfg3c_error (a_class, a_formal, a_formal_constraint)
+							end
+						end
+					end
+				end
+				i := i + 1
+			end
+			if a_sorter.count > 0 then
+				if Result then
+					a_sorter.sort
+					if a_sorter.has_cycle then
+						a_class.error_handler.report_vcfg3d_error (a_class, a_sorter.cycle)
+						Result := False
+					end
+				end
+				a_sorter.wipe_out
+			end
+			if Result and nb_constraints > 0 then
+				if a_class.error_handler.is_se then
+						-- The sorter is used to detect VCFG-3g, which is only useful
+						-- for SmallEiffel. Create a new sorter to avoid sharing between
+						-- recursive calls to `check_validity'.
+					!DS_HASH_TOPOLOGICAL_SORTER [ET_FORMAL_GENERIC_PARAMETER]! a_sorter.make (nb)
+				end
 				from i := 1 until i > nb loop
 					a_formal := item (i)
 					a_constraint := a_formal.constraint
 					if a_constraint /= Void then
-						if not a_constraint.check_constraint_validity (a_class) then
-								-- The error has already been reported
-								-- in `check_constraint_validity'.
-							Result := False
-							i := nb + 1 -- Jump out of the loop.
+						a_formal_constraint ?= a_constraint
+						if a_formal_constraint = Void then
+							if not a_constraint.check_constraint_validity (a_formal, a_class, a_sorter) then
+									-- The error has already been reported
+									-- in `check_constraint_validity'.
+									-- Set `has_ancestors_error' to True to avoid
+									-- recursive calls to `check_validity' with the
+									-- same class `a_class'.
+								a_class.set_ancestors_error (True)
+								Result := False
+							end
 						end
 					end
 					i := i + 1
 				end
-				is_valid := Result
-			else
-				Result := is_valid
+				if a_sorter.count > 0 then
+					if Result then
+						a_sorter.sort
+						if a_sorter.has_cycle then
+							a_class.error_handler.report_vcfg3g_error (a_class, a_sorter.cycle)
+						end
+					end
+					a_sorter.wipe_out
+				end
 			end
-		ensure
-			validity_checked: validity_checked
-			is_valid_set: is_valid = Result
+		end
+
+feature -- Type processing
+
+	resolve_named_types (a_class: ET_CLASS; ast_factory: ET_AST_FACTORY) is
+			-- Replace unresolved named types in constraints
+			-- of current formal generic parameters of class
+			-- `a_class' by corresponding class types or formal
+			-- generic parameter name.
+		require
+			a_class_not_void: a_class /= Void
+			ast_factory_not_void: ast_factory /= Void
+		local
+			i, nb: INTEGER
+			a_formal: ET_FORMAL_GENERIC_PARAMETER
+			a_constraint: ET_TYPE
+		do
+			nb := count
+			from i := 1 until i > nb loop
+				a_formal := item (i)
+				a_constraint := a_formal.constraint
+				if a_constraint /= Void then
+					a_formal.set_constraint (a_constraint.resolved_named_types (a_class, ast_factory))
+				end
+				i := i + 1
+			end
 		end
 
 feature -- Element change
