@@ -159,7 +159,11 @@ feature {NONE} -- Implementation/Processing
 			if a_dir.is_open_read then
 				from a_dir.read_entry until a_dir.end_of_input loop
 					a_name := a_dir.last_entry
-					if not a_name.is_equal (".") and not a_name.is_equal ("..") then
+
+					if
+						not a_name.is_equal (file_system.relative_current_directory) and
+						not a_name.is_equal (file_system.relative_parent_directory)
+					then
 						s := unix_file_system.pathname (a_directory_name, a_name)
 						if file_system.is_directory_readable (s) then
 							scan_internal (s)
