@@ -125,7 +125,7 @@ feature {NONE} -- Processing
 							a_parents := Void
 						elseif current_class = universe.any_class then
 								-- ISE Eiffel has no GENERAL class anymore.
-								-- Use ANY has class root now.
+								-- Use ANY as class root now.
 							a_parents := Void
 						else
 							a_parents := universe.any_parents

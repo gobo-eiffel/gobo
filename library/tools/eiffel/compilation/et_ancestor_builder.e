@@ -179,7 +179,7 @@ feature {NONE} -- Topological sort
 						a_class.set_ancestors_built
 					elseif a_class = universe.any_class then
 							-- ISE Eiffel has no GENERAL class anymore.
-							-- Use ANY has class root now.
+							-- Use ANY as class root now.
 						a_class.set_ancestors_built
 					elseif not class_sorter.has (a_class) then
 						any_class := universe.any_class
