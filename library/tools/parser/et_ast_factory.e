@@ -1037,4 +1037,16 @@ feature -- AST factory
 			unique_attribute_not_void: Result /= Void
 		end
 
+	new_universe (a_clusters: ET_CLUSTERS; a_factory: ET_AST_FACTORY;
+		an_error_handler: ET_ERROR_HANDLER): ET_UNIVERSE is
+			-- New class universe
+		require
+			a_factory_not_void: a_factory /= Void
+			an_error_handler_not_void: an_error_handler /= Void
+		do
+			!! Result.make (a_clusters, a_factory, an_error_handler)
+		ensure
+			universe_not_void: Result /= Void
+		end
+
 end -- class ET_AST_FACTORY
