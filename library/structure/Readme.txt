@@ -43,7 +43,7 @@ support
 table
     Structures whose items are accessible through keys. One possible
     implementation of tables is hash tables. No optimization effort
-    has been made when writing DS_HASHED_TABLE. In particular it
+    has been made when writing DS_HASH_TABLE. In particular it
     doesn't take advantage of the well known algorithm using prime
     numbers when collisions occur. The implementation used here is
     very simple and was deemed satisfactory enough for its usage in
