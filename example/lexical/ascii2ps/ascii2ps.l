@@ -426,7 +426,7 @@ feature -- Generation
 			output ("%T%T%% divide it into two documents and a title bar.%N")
 			if double_sided then
 				output ("%Tpagenb 2 idiv 2 mod 0 eq%N")
-				outputfile.put_string ("%T%T{%N%
+				output ("%T%T{%N%
 					%%T%T%T90 rotate%N%
 					%%T%T%T0 pagewidth neg translate%N%
 					%%T%T}%N")
