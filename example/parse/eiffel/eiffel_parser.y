@@ -27,7 +27,6 @@ inherit
 		end
 
 	KL_SHARED_EXCEPTIONS
-
 	KL_SHARED_ARGUMENTS
 
 creation
@@ -83,11 +82,11 @@ Creators_features_invariant_opt: Creators_opt Features_opt Invariant_opt
 
 --------------------------------------------------------------------------------
 
-Indexing_opt: -- /* empty */
+Indexing_opt: -- Empty
 	| E_INDEXING Index_list
 	;
 
-Index_list: -- /* empty */
+Index_list: -- Empty
 	| Index_list_with_no_terminator
 	| Index_list_with_no_terminator S
 	;
@@ -122,7 +121,7 @@ S: ';'
 Class_header: Header_mark_opt E_CLASS Identifier
 	;
 
-Header_mark_opt: -- /* empty */
+Header_mark_opt: -- Empty
 	| E_DEFERRED
 	| E_EXPANDED
 	| E_SEPARATE
@@ -130,22 +129,22 @@ Header_mark_opt: -- /* empty */
 
 --------------------------------------------------------------------------------
 
-Formal_generics_opt: -- /* empty */
+Formal_generics_opt: -- Empty
 	| '[' Formal_generic_list ']'
 	;
 
-Formal_generic_list: -- /* empty */
+Formal_generic_list: -- Empty
 	| Identifier Constraint_opt
 	| Formal_generic_list ',' Identifier Constraint_opt
 	;
 
-Constraint_opt: -- /* empty */
+Constraint_opt: -- Empty
 	| E_ARROW Class_type
 	;
 
 --------------------------------------------------------------------------------
 
-Obsolete_opt: -- /* empty */
+Obsolete_opt: -- Empty
 	| E_OBSOLETE E_STRING
 	;
 
@@ -178,7 +177,7 @@ Parents: Class_type
 	| Parents E_END ';' Class_type
 	;
 
-Feature_adaptation_opt: -- /* empty */
+Feature_adaptation_opt: -- Empty
 	| Feature_adaptation
 	;
 
@@ -215,7 +214,7 @@ Feature_adaptation5: Select E_END
 Rename: E_RENAME Rename_list
 	;
 
-Rename_list: -- /* empty */
+Rename_list: -- Empty
 	| Feature_name E_AS Feature_name
 	| Rename_list ',' Feature_name E_AS Feature_name
 	;
@@ -225,11 +224,11 @@ Rename_list: -- /* empty */
 New_exports: E_EXPORT New_export_list
 	;
 
-New_exports_opt: -- /* empty */
+New_exports_opt: -- Empty
 	| New_exports
 	;
 
-New_export_list: -- /* empty */
+New_export_list: -- Empty
 	| New_export_list_with_no_terminator
 	| New_export_list_with_no_terminator ';'
 	;
@@ -246,7 +245,7 @@ Feature_set: Feature_list
 	| E_ALL
 	;
 
-Feature_list: -- /* empty */
+Feature_list: -- Empty
 	| Feature_name
 	| Feature_list ',' Feature_name
 	;
@@ -256,11 +255,11 @@ Feature_list: -- /* empty */
 Clients: '{' Class_list '}'
 	;
 
-Clients_opt: -- /* empty */
+Clients_opt: -- Empty
 	| Clients
 	;
 
-Class_list: -- /* empty */
+Class_list: -- Empty
 	| Identifier
 	| Class_list ',' Identifier
 	;
@@ -270,27 +269,27 @@ Class_list: -- /* empty */
 Redefine: E_REDEFINE Feature_list
 	;
 
-Redefine_opt: -- /* empty */
+Redefine_opt: -- Empty
 	| Redefine
 	;
 
 Undefine: E_UNDEFINE Feature_list
 	;
 
-Undefine_opt: -- /* empty */
+Undefine_opt: -- Empty
 	| Undefine
 	;
 
 Select: E_SELECT Feature_list
 	;
 
-Select_opt: -- /* empty */
+Select_opt: -- Empty
 	| Select
 	;
 
 --------------------------------------------------------------------------------
 
-Creators_opt: -- /* empty */
+Creators_opt: -- Empty
 	| Creation_clause
 	| Creators_opt Creation_clause
 	;
@@ -300,14 +299,14 @@ Creation_clause: E_CREATION Clients_opt Procedure_list
 
 		-- Note: Does not support 'Header_comment'.
 
-Procedure_list: -- /* empty */
+Procedure_list: -- Empty
 	| Identifier
 	| Procedure_list ',' Identifier
 	;
 
 --------------------------------------------------------------------------------
 
-Features_opt: -- /* empty */
+Features_opt: -- Empty
 	| Feature_clause
 	| Features_opt Feature_clause
 	;
@@ -317,7 +316,7 @@ Feature_clause: E_FEATURE Clients_opt Feature_declaration_list
 
 		-- Note: Does not support 'Header_comment'.
 
-Feature_declaration_list: -- /* empty */
+Feature_declaration_list: -- Empty
 	| Feature_declaration_list_with_no_terminator
 	| Feature_declaration_list_with_no_terminator ';'
 	;
@@ -335,7 +334,7 @@ Feature_declaration: New_feature_list Declaration_body
 Declaration_body: Formal_arguments_opt Type_mark_opt Constant_or_routine_opt
 	;
 
-Constant_or_routine_opt: -- /* empty */
+Constant_or_routine_opt: -- Empty
 	| E_IS Feature_value
 	;
 
@@ -389,11 +388,11 @@ Infix_operator: E_STRPLUS
 
 --------------------------------------------------------------------------------
 
-Formal_arguments_opt: -- /* empty */
+Formal_arguments_opt: -- Empty
 	| '(' Entity_declaration_list ')'
 	;
 
-Entity_declaration_list: -- /* empty */
+Entity_declaration_list: -- Empty
 	| Entity_declaration_list_with_no_terminator
 	| Entity_declaration_list_with_no_terminator ';'
 	;
@@ -410,7 +409,7 @@ Identifier_list: Identifier
 	| Identifier_list ',' Identifier
 	;
 
-Type_mark_opt: -- /* empty */
+Type_mark_opt: -- Empty
 	| ':' Type
 	;
 
@@ -430,33 +429,33 @@ Routine_body: E_DEFERRED
 	| E_EXTERNAL E_STRING External_name_opt
 	;
 
-External_name_opt: -- /* empty */
+External_name_opt: -- Empty
 	| E_ALIAS E_STRING
 	;
 
 --------------------------------------------------------------------------------
 
-Local_declarations_opt: -- /* empty */
+Local_declarations_opt: -- Empty
 	| E_LOCAL Entity_declaration_list
 	;
 
 --------------------------------------------------------------------------------
 
-Precondition_opt: -- /* empty */
+Precondition_opt: -- Empty
 	| E_REQUIRE Assertion
 	| E_REQUIRE E_ELSE Assertion
 	;
 
-Postcondition_opt: -- /* empty */
+Postcondition_opt: -- Empty
 	| E_ENSURE Assertion
 	| E_ENSURE E_THEN Assertion
 	;
 
-Invariant_opt: -- /* empty */
+Invariant_opt: -- Empty
 	| E_INVARIANT Assertion
 	;
 
-Assertion: -- /* empty */
+Assertion: -- Empty
 	| Assertion_with_no_terminator
 	| Assertion_with_no_terminator ';'
 	;
@@ -476,7 +475,7 @@ Assertion_clause: Expression
 
 --------------------------------------------------------------------------------
 
-Rescue_opt: -- /* empty */
+Rescue_opt: -- Empty
 	| E_RESCUE Compound
 	;
 
@@ -497,18 +496,18 @@ Class_type: Class_name Actual_generics_opt
 Class_name: E_IDENTIFIER
 	;
 
-Actual_generics_opt: -- /* empty */
+Actual_generics_opt: -- Empty
 	| '[' Type_list ']'
 	;
 
-Type_list: -- /* empty */
+Type_list: -- Empty
 	| Type
 	| Type_list ',' Type
 	;
 
 --------------------------------------------------------------------------------
 
-Compound: -- /* empty */
+Compound: -- Empty
 	| Instruction
 	| Compound Instruction
 	;
@@ -531,7 +530,7 @@ Creation: '!' Type '!' Writable Creation_call_opt
 	| E_BANGBANG Writable Creation_call_opt
 	;
 
-Creation_call_opt: -- /* empty */
+Creation_call_opt: -- Empty
 	| '.' Identifier Actuals_opt
 	;
 
@@ -549,11 +548,11 @@ Assign_op: E_ASSIGN
 Conditional: E_IF Expression E_THEN Compound Elseif_list Else_part E_END
 	;
 
-Else_part: -- /* empty */
+Else_part: -- Empty
 	| E_ELSE Compound
 	;
 
-Elseif_list: -- /* empty */
+Elseif_list: -- Empty
 	| E_ELSEIF Expression E_THEN Compound
 	| Elseif_list E_ELSEIF Expression E_THEN Compound
 	;
@@ -563,12 +562,12 @@ Elseif_list: -- /* empty */
 Multi_branch: E_INSPECT Expression When_list Else_part E_END
 	;
 
-When_list: -- /* empty */
+When_list: -- Empty
 	| E_WHEN Choices E_THEN Compound
 	| When_list E_WHEN Choices E_THEN Compound
 	;
 
-Choices: -- /* empty */
+Choices: -- Empty
 	| Choice
 	| Choices ',' Choice
 	;
@@ -591,7 +590,7 @@ Loop: E_FROM Compound Invariant_opt Variant_opt E_UNTIL Expression
 		E_LOOP Compound E_END
 	;
 
-Variant_opt: -- /* empty */
+Variant_opt: -- Empty
 	| E_VARIANT			-- Not standard.
 	| E_VARIANT Expression
 	| E_VARIANT Identifier ':' Expression
@@ -602,11 +601,11 @@ Variant_opt: -- /* empty */
 Debug: E_DEBUG Debug_keys_opt Compound E_END
 	;
 
-Debug_keys_opt: -- /* empty */
+Debug_keys_opt: -- Empty
 	| '(' Debug_key_list ')'
 	;
 
-Debug_key_list: -- /* empty */
+Debug_key_list: -- Empty
 	| E_STRING
 	| Debug_key_list ',' E_STRING
 	;
@@ -634,11 +633,11 @@ Call_chain: Identifier Actuals_opt
 
 --------------------------------------------------------------------------------
 
-Actuals_opt: -- /* empty */
+Actuals_opt: -- Empty
 	| '(' Actual_list ')'
 	;
 
-Actual_list: -- /* empty */
+Actual_list: -- Empty
 	| Actual
 	| Actual_list ',' Actual
 	;
@@ -701,12 +700,12 @@ Expression: Call
 	| E_STRIP '(' Attribute_list ')'
 	;
 
-Attribute_list: -- /* empty */
+Attribute_list: -- Empty
 	| Identifier
 	| Attribute_list ',' Identifier
 	;
 
-Expression_list: -- /* empty */
+Expression_list: -- Empty
 	| Expression
 	| Expression_list ',' Expression
 	;
