@@ -32,7 +32,7 @@
 	</option>
 	<option name="exception_trace" value="true"/>
 	<option name="trace" value="false"/>
-	<option name="profile" value="true"/>
+	<option name="profile" value="false"/>
 
 	<!-- <option name="debug_tag" value="XPath content emitter"/> -->
 	<!-- <option name="debug_tag" value="XPath name pool - URIs"/>  -->
