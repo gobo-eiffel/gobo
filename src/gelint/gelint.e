@@ -59,16 +59,18 @@ feature -- Execution
 					do_compile := True
 				elseif equal (arg, "--no_output") then
 					no_output := True
+				elseif equal (arg, "--void") then
+					void_feature := True
 				elseif i = nb then
 					a_filename := arg
 				else
-					std.error.put_line ("usage: gelint [--verbose][--all_breaks][--cat][--forget][--flat] filename")
+					std.error.put_line ("usage: gelint [--verbose][--all_breaks][--void][--cat][--forget][--flat] filename")
 					Exceptions.die (1)
 				end
 				i := i + 1
 			end
 			if a_filename = Void then
-				std.error.put_line ("usage: gelint [--verbose][--all_breaks][--cat][--forget][--flat] filename")
+				std.error.put_line ("usage: gelint [--verbose][--all_breaks][--void][--cat][--forget][--flat] filename")
 				Exceptions.die (1)
 			else
 				create a_file.make (a_filename)
@@ -121,6 +123,7 @@ feature -- Status report
 	is_flat: BOOLEAN
 	do_compile: BOOLEAN
 	no_output: BOOLEAN
+	void_feature: BOOLEAN
 			-- Command-line options
 
 feature {NONE} -- Processing
@@ -153,7 +156,11 @@ feature {NONE} -- Processing
 			a_universe.set_use_convert_keyword (True)
 			a_universe.set_use_recast_keyword (False)
 			a_universe.set_use_reference_keyword (True)
-			a_universe.set_use_void_keyword (True)
+			if void_feature then
+				a_universe.set_use_void_keyword (False)
+			else
+				a_universe.set_use_void_keyword (True)
+			end
 			if is_cat then
 				a_universe.set_cat_enabled (True)
 				a_universe.set_anchored_cat_features (False)
