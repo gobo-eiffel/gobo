@@ -29,7 +29,8 @@ inherit
 
 creation
 
-	make, make_equal, make_from_linear, make_default
+	make, make_equal, make_default,
+	make_from_linear, make_from_array
 
 feature {NONE} -- Initialization
 
@@ -89,6 +90,33 @@ feature {NONE} -- Initialization
 			loop
 				storage.put (other_cursor.item, i)
 				other_cursor.forth
+				i := i + 1
+			end
+		ensure
+			count_set: count = other.count
+			capacity_set: capacity = count
+			before: before
+		end
+
+	make_from_array (other: ARRAY [G]) is
+			-- Create a new list and fill it with items of `other'.
+			-- Use `=' as comparison criterion.
+		require
+			other_not_void: other /= Void
+		local
+			i, j, nb: INTEGER
+		do
+			nb := other.count
+			make (nb)
+			count := nb
+			from
+				j := 1
+				i := other.lower
+			until
+				j > nb
+			loop
+				storage.put (other.item (i), j)
+				j := j + 1
 				i := i + 1
 			end
 		ensure
