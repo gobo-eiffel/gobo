@@ -39,18 +39,18 @@ feature -- Basic operations
 		local
 			a_cursor: DS_LINEAR_CURSOR [DS_NESTED_LIST [G]]
 			pending: DS_ARRAYED_STACK [DS_NESTED_LIST [G]]
-			processed: DS_ARRAYED_LIST [DS_NESTED_LIST [G]]
 			a_list: DS_NESTED_LIST [G]
-			nb: INTEGER
 		do
-			nb := nested_lists.count
-			!! pending.make (nb)
-			!! processed.make (nb)
 			a_cursor := nested_lists.new_cursor
 			from a_cursor.start until a_cursor.after loop
+				a_cursor.item.set_index (0)
+				a_cursor.forth
+			end
+			!! pending.make (nested_lists.count)
+			from a_cursor.start until a_cursor.after loop
 				a_list := a_cursor.item
-				if not processed.has (a_list) then
-					traverse (a_list, pending, processed)
+				if a_list.index = 0 then
+					traverse (a_list, pending)
 				end
 				a_cursor.forth
 			end
@@ -58,61 +58,55 @@ feature -- Basic operations
 
 feature {NONE} -- Implementation
 
-	traverse (a_list: DS_NESTED_LIST [G];
-		pending: DS_STACK [DS_NESTED_LIST [G]];
-		processed: DS_LIST [DS_NESTED_LIST [G]]) is
-			-- Traverse nested lists containing the remote
-			-- items of `a_list' and copy them locally.
-			-- `pending' is the stack of nested lists
-			-- currently being traversed and `processed'
-			-- keeps track of the nested lists already
-			-- traversed.
+	traverse (a_list: DS_NESTED_LIST [G]; pending: DS_STACK [DS_NESTED_LIST [G]]) is
+			-- Traverse nested lists containing the remote items
+			-- of `a_list' and copy them locally. `pending' is the
+			-- stack of nested lists currently being traversed.
+			-- Lists already processed have a negative `index'.
+			-- The `index' of lists being processed indicates
+			-- the position of another list in `pending' they
+			-- depend on (i.e. di-graph cycles).
 		require
 			a_list_not_void: a_list /= Void
 			pending_not_void: pending /= Void
 			no_void_pending: not pending.has (Void)
-			processed_not_void: processed /= Void
-			no_void_processed: not processed.has (Void)
 			a_list_not_pending: not pending.has (a_list)
-			a_list_not_processed: not processed.has (a_list)
 		local
 			remote_cursor: DS_LINEAR_CURSOR [DS_NESTED_LIST [G]]
 			remote_items: DS_NESTED_LIST [G]
 			local_cursor: DS_LINEAR_CURSOR [G]
 			local_items: DS_LIST [G]
 			cyclic: BOOLEAN
+			index: INTEGER
 			an_item: G
 		do
 			pending.force (a_list)
+			a_list.set_index (pending.count)
 			local_items := a_list.local_items
 			remote_cursor := a_list.remote_items.new_cursor
 			from remote_cursor.start until remote_cursor.after loop
 				remote_items := remote_cursor.item
-				if remote_items /= a_list then
-					if pending.has (remote_items) then
-							-- `remote_items' is being processed.
-							-- We found a cycle in the di-graph
-							-- of nested lists.
-						cyclic := True
-					elseif not processed.has (remote_items) then
-							-- `remove_items' has not been flattened
-							-- yet. Take care of that now.
-						traverse (remote_items, pending, processed)
-						if pending.has (remote_items) then
-								-- `remote_items' is being processed.
-								-- We found a cycle in the di-graph
-								-- of nested lists.
-							cyclic := True
-						end
+				if remote_items.index = 0 then
+						-- `remove_items' has not been flattened
+						-- yet. Take care of that now.
+					traverse (remote_items, pending)
+				end
+				index := remote_items.index
+				if index > 0 and a_list.index > index then
+						-- We found a cycle in the di-graph
+						-- of nested lists.
+					cyclic := True
+						-- `a_list' depends on the list at
+						-- position `index' in `pending'.
+					a_list.set_index (index)
+				end
+				local_cursor := remote_items.local_items.new_cursor
+				from local_cursor.start until local_cursor.after loop
+					an_item := local_cursor.item
+					if not local_items.has (an_item) then
+						local_items.force_last (an_item)
 					end
-					local_cursor := remote_items.local_items.new_cursor
-					from local_cursor.start until local_cursor.after loop
-						an_item := local_cursor.item
-						if not local_items.has (an_item) then
-							local_items.force_last (an_item)
-						end
-						local_cursor.forth
-					end
+					local_cursor.forth
 				end
 				remote_cursor.forth
 			end
@@ -124,7 +118,7 @@ feature {NONE} -- Implementation
 					-- Therefore they all have the same items.
 				from
 					remote_items := pending.item
-					processed.force_last (remote_items)
+					remote_items.set_index (-1)
 					pending.remove
 				until
 					remote_items = a_list
@@ -132,7 +126,7 @@ feature {NONE} -- Implementation
 					remote_items.local_items.wipe_out
 					remote_items.local_items.append_last (local_items)
 					remote_items := pending.item
-					processed.force_last (remote_items)
+					remote_items.set_index (-1)
 					pending.remove
 				end
 			end
