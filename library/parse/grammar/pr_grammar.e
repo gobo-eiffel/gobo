@@ -5,8 +5,9 @@ indexing
 		"Grammars for LALR(1) context-free languages."
 
 	library:    "Gobo Eiffel Parse Library"
-	author:     "Eric Bezault <ericb@gobo.demon.co.uk>"
-	copyright:  "Copyright (c) 1998, Eric Bezault"
+	author:     "Eric Bezault <ericb@gobosoft.com>"
+	copyright:  "Copyright (c) 1999, Eric Bezault and others"
+	license:    "Eiffel Forum Freeware License v1 (see forum.txt)"
 	date:       "$Date$"
 	revision:   "$Revision$"
 
@@ -291,7 +292,6 @@ feature -- Processing
 			a_file_open_write: OUTPUT_STREAM_.is_open_write (a_file)
 		local
 			old_variables: like variables
-			old_tokens: like tokens
 			old_rules: like rules
 			useless_variables: INTEGER
 			useless_tokens: INTEGER
@@ -303,11 +303,9 @@ feature -- Processing
 			i, j, nb, nb_rhs: INTEGER
 		do
 			old_variables := clone (variables)
-			old_tokens := clone (tokens)
 			old_rules := clone (rules)
 			reduce (error_handler)
 			useless_variables := old_variables.count - variables.count
-			useless_tokens := old_tokens.count - tokens.count
 			useless_rules := old_rules.count - rules.count
 			if useless_variables > 0 then
 				a_file.put_string ("Useless nonterminals:%N%N")
@@ -321,10 +319,11 @@ feature -- Processing
 					end
 					i := i + 1
 				end
+				a_file.put_character ('%N')
 			end
-			nb := old_tokens.count
+			nb := tokens.count
 			from i := 1 until i > nb loop
-				a_token := old_tokens.item (i)
+				a_token := tokens.item (i)
 				if not a_token.is_useful then
 					if useless_tokens = 0 then
 						a_file.put_string ("Terminals which are not used:%N%N")
@@ -335,6 +334,9 @@ feature -- Processing
 					a_file.put_character ('%N')
 				end
 				i := i + 1
+			end
+			if useless_tokens > 0 then
+				a_file.put_character ('%N')
 			end
 			if useless_rules > 0 then
 				a_file.put_string ("Useless rules:%N%N")
@@ -358,9 +360,10 @@ feature -- Processing
 					end
 					i := i + 1
 				end
+				a_file.put_character ('%N')
 			end
 			if useless_variables > 0 or useless_tokens > 0 or useless_rules > 0 then
-				a_file.put_string ("%N%N")
+				a_file.put_character ('%N')
 			end
 		end
 
