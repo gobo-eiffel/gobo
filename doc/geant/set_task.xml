@@ -1,0 +1,83 @@
+<?xml version="1.0"?> 
+
+<!--
+	description:
+
+		"Set Tasks"
+
+	library: "Gobo Eiffel Ant"
+	copyright: "Copyright (c) 2002, Sven Ehrke and others"
+	license: "Eiffel Forum License v1 (see forum.txt)"
+	date: "$Date$"
+	revision: "$Revision$"
+-->
+
+<chapter id="set_task">
+	<title>set</title>
+
+	<sect1 id="set_description">
+		<title>Description</title>
+		<para>
+			Set a variable’s value.
+		</para>
+	</sect1>
+
+	<sect1 id="set_parameters">
+		<title>Parameters</title>
+
+		<variablelist>
+			<varlistentry>
+				<term>name</term>
+				<listitem>
+					<para><emphasis>Description: </emphasis>Name of variable</para>
+				</listitem>
+				<listitem>
+					<para><emphasis>Domain: </emphasis>Identifier</para>
+				</listitem>
+				<listitem>
+					<para><emphasis>Default: </emphasis>-</para>
+				</listitem>
+			</varlistentry>
+
+			<varlistentry>
+				<term>value</term>
+				<listitem>
+					<para><emphasis>Description: </emphasis>Value to be assigned</para>
+				</listitem>
+				<listitem>
+					<para><emphasis>Domain: </emphasis>String</para>
+				</listitem>
+				<listitem>
+					<para><emphasis>Default: </emphasis>-</para>
+				</listitem>
+			</varlistentry>
+
+		</variablelist>
+
+	</sect1>
+
+	<sect1 id="set_specification">
+		<title>RNG Specification</title>
+
+		<programlisting><![CDATA[
+  <define name="set">
+    <element name="set">
+      <ref name="dir_if_unless"/>
+      <attribute name="name"/>
+      <attribute name="value"/>
+    </element>
+  </define>
+]]>
+		</programlisting>
+	</sect1>
+
+	<sect1 id="set_examples">
+		<title>Examples</title>
+
+		<programlisting><![CDATA[
+  <set name="directory" value="tmp"/>
+]]>
+		</programlisting>
+	</sect1>
+
+</chapter>

@@ -1,0 +1,138 @@
+<?xml version="1.0"?> 
+
+<!--
+	description:
+	
+		"Xslt Tasks"
+
+	library: "Gobo Eiffel Ant"
+	copyright: "Copyright (c) 2002, Sven Ehrke and others"
+	license: "Eiffel Forum License v1 (see forum.txt)"
+	date: "$Date$"
+	revision: "$Revision$"
+-->
+
+<chapter id="xslt_task">
+	<title>xslt</title>
+
+	<sect1 id="xslt_description">
+		<title>Description</title>
+		<para>
+			Invoke XSLT Processor.
+		</para>
+	</sect1>
+	
+	<sect1 id="xslt_parameters">
+		<title>Parameters</title>
+	
+		<variablelist>
+			<varlistentry>
+				<term>input</term>
+				<listitem>
+					<para><emphasis>Description: </emphasis>Name of XML input file</para>
+				</listitem>
+				<listitem>
+					<para><emphasis>Domain: </emphasis>Valid filename pointing to existing file</para>
+				</listitem>
+				<listitem>
+					<para><emphasis>Default: </emphasis>-</para>
+				</listitem>
+			</varlistentry>
+		
+			<varlistentry>
+				<term>xsl</term>
+				<listitem>
+					<para><emphasis>Description: </emphasis>Name of stylesheet (XSL) file</para>
+				</listitem>
+				<listitem>
+					<para><emphasis>Domain: </emphasis>Valid filename pointing to existing file</para>
+				</listitem>
+				<listitem>
+					<para><emphasis>Default: </emphasis>-</para>
+				</listitem>
+			</varlistentry>
+		
+			<varlistentry>
+				<term>output</term>
+				<listitem>
+					<para><emphasis>Description: </emphasis>Name of output file</para>
+				</listitem>
+				<listitem>
+					<para><emphasis>Domain: </emphasis>Valid filename</para>
+				</listitem>
+				<listitem>
+					<para><emphasis>Default: </emphasis>-</para>
+				</listitem>
+			</varlistentry>
+		
+		</variablelist>
+	</sect1>
+	
+	<sect1 id="xslt_specification">
+		<title>RNG Specification</title>
+		
+		<programlisting><![CDATA[
+  <define name="xslt">
+    <element name="xslt">
+      <ref name="dir_if_unless"/>
+      <attribute name="input"/>
+      <attribute name="output"/>
+      <attribute name="stylesheet"/>
+      <optional>
+        <attribute name="processor">
+          <!-- runtime evaluation
+          <choice>
+            <value>xalan_cpp</value>
+            <value>xalan_java</value>
+          </choice>
+          -->
+        </attribute>
+      </optional>
+      <optional>
+        <attribute name="indent"/> <!-- default: '4' -->
+      </optional>
+      <optional>
+        <attribute name="format"/>
+      </optional>
+      <zeroOrMore>
+        <element name="parameter">
+          <attribute name="name"/>
+          <attribute name="value"/>
+        </element>
+      </zeroOrMore>
+      <optional>
+        <attribute name="extdirs"/> <!-- if attribute 'processors' equals 'xalan_java' -->
+      </optional>
+      <optional>
+        <attribute name="classpath"/> <!-- if attribute 'processors' equals 'xalan_java' -->
+      </optional>
+    </element>
+  </define>
+]]>
+	</programlisting>
+	
+	</sect1>
+	
+	<sect1 id="xslt_examples">
+		<title>Examples</title>
+	<programlisting><![CDATA[
+  <xslt
+    input="${GOBO}/doc/structure/index.xml"
+    stylesheet="${GOBO}/doc/misc/gobo2db.xsl"
+    output="${GOBO}/doc/structure/index2.xml"
+  >
+
+  <xslt
+    input="${GOBO}/doc/structure/index.xml"
+    stylesheet="${GOBO}/doc/misc/gobo2html.xsl"
+    output="${GOBO}/doc/structure/index2.html"
+  >
+    <parameter name="previous" value="../license.html"/>
+    <parameter name="next" value="../time/index.html"/>
+    <parameter name="toc" value="../index.html"/>
+  </xslt>
+]]>
+	</programlisting>
+	</sect1>
+
+</chapter>

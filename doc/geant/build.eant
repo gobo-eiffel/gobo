@@ -45,6 +45,23 @@
 		<xslt input="exec_task.xml" output="exec_task.html" stylesheet="${GOBO}/doc/misc/gobo2html.xsl"/>
 		<xslt input="exit_task.xml" output="exit_task.html" stylesheet="${GOBO}/doc/misc/gobo2html.xsl"/>
 		<xslt input="geant_task.xml" output="geant_task.html" stylesheet="${GOBO}/doc/misc/gobo2html.xsl"/>
+		<xslt input="gelex_task.xml" output="gelex_task.html" stylesheet="${GOBO}/doc/misc/gobo2html.xsl"/>
+		<xslt input="geyacc_task.xml" output="geyacc_task.html" stylesheet="${GOBO}/doc/misc/gobo2html.xsl"/>
+		<xslt input="gepp_task.xml" output="gepp_task.html" stylesheet="${GOBO}/doc/misc/gobo2html.xsl"/>
+		<xslt input="getest_task.xml" output="getest_task.html" stylesheet="${GOBO}/doc/misc/gobo2html.xsl"/>
+		<xslt input="gexace_task.xml" output="gexace_task.html" stylesheet="${GOBO}/doc/misc/gobo2html.xsl"/>
+		<xslt input="gexmlsplit_task.xml" output="gexmlsplit_task.html" stylesheet="${GOBO}/doc/misc/gobo2html.xsl"/>
+		<xslt input="hact_task.xml" output="hact_task.html" stylesheet="${GOBO}/doc/misc/gobo2html.xsl"/>
+		<xslt input="ise_task.xml" output="ise_task.html" stylesheet="${GOBO}/doc/misc/gobo2html.xsl"/>
+		<xslt input="mkdir_task.xml" output="mkdir_task.html" stylesheet="${GOBO}/doc/misc/gobo2html.xsl"/>
+		<xslt input="outofdate_task.xml" output="outofdate_task.html" stylesheet="${GOBO}/doc/misc/gobo2html.xsl"/>
+		<xslt input="precursor_task.xml" output="precursor_task.html" stylesheet="${GOBO}/doc/misc/gobo2html.xsl"/>
+		<xslt input="se_task.xml" output="se_task.html" stylesheet="${GOBO}/doc/misc/gobo2html.xsl"/>
+		<xslt input="set_task.xml" output="set_task.html" stylesheet="${GOBO}/doc/misc/gobo2html.xsl"/>
+		<xslt input="setenv_task.xml" output="setenv_task.html" stylesheet="${GOBO}/doc/misc/gobo2html.xsl"/>
+		<xslt input="unset_task.xml" output="unset_task.html" stylesheet="${GOBO}/doc/misc/gobo2html.xsl"/>
+		<xslt input="ve_task.xml" output="ve_task.html" stylesheet="${GOBO}/doc/misc/gobo2html.xsl"/>
+		<xslt input="xslt_task.xml" output="xslt_task.html" stylesheet="${GOBO}/doc/misc/gobo2html.xsl"/>
 	</target>
 
 	<target name="clean">
@@ -75,8 +92,23 @@
 		<delete file="exec_task.html"/>
 		<delete file="exit_task.html"/>
 		<delete file="geant_task.html"/>
-
-		<delete file="hello_world.html"/>
+		<delete file="gelex_task.html"/>
+		<delete file="geyacc_task.html"/>
+		<delete file="gepp_task.html"/>
+		<delete file="getest_task.html"/>
+		<delete file="gexace_task.html"/>
+		<delete file="gexmlsplit_task.html"/>
+		<delete file="hact_task.html"/>
+		<delete file="ise_task.html"/>
+		<delete file="mkdir_task.html"/>
+		<delete file="outofdate_task.html"/>
+		<delete file="precursor_task.html"/>
+		<delete file="se_task.html"/>
+		<delete file="set_task.html"/>
+		<delete file="setenv_task.html"/>
+		<delete file="unset_task.html"/>
+		<delete file="ve_task.html"/>
+		<delete file="xslt_task.html"/>
 	</target>
 
 </project>

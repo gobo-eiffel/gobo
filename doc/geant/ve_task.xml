@@ -1,0 +1,152 @@
+<?xml version="1.0"?> 
+
+<!--
+	description:
+	
+		"ve Tasks"
+
+	library: "Gobo Eiffel Ant"
+	copyright: "Copyright (c) 2002, Sven Ehrke and others"
+	license: "Eiffel Forum License v1 (see forum.txt)"
+	date: "$Date$"
+	revision: "$Revision$"
+-->
+
+<chapter id="ve_task">
+	<title>ve</title>
+
+	<sect1 id="ve_description">
+		<title>Description</title>
+		<para>
+			Invoke Object Tools’s Visual Eiffel Compiler.
+		</para>
+	</sect1>
+
+	<sect1 id="ve_parameters">
+		<title>Parameters</title>
+
+		<variablelist>
+			<varlistentry>
+				<term>esd</term>
+				<listitem>
+					<para><emphasis>Description: </emphasis>Name of esd file</para>
+				</listitem>
+				<listitem>
+					<para><emphasis>Domain: </emphasis>Valid filename pointing to existing file</para>
+				</listitem>
+				<listitem>
+					<para><emphasis>Default: </emphasis>empty string</para>
+				</listitem>
+			</varlistentry>
+		
+			<varlistentry>
+				<term>recursive</term>
+				<listitem>
+					<para><emphasis>Description: </emphasis>recursive</para>
+				</listitem>
+				<listitem>
+					<para><emphasis>Domain: </emphasis>Boolean (true|false)</para>
+				</listitem>
+				<listitem>
+					<para><emphasis>Default: </emphasis>false</para>
+				</listitem>
+			</varlistentry>
+		
+			<varlistentry>
+				<term>tune</term>
+				<listitem>
+					<para><emphasis>Description: </emphasis>tune</para>
+				</listitem>
+				<listitem>
+					<para><emphasis>Domain: </emphasis>Boolean (true|false)</para>
+				</listitem>
+				<listitem>
+					<para><emphasis>Default: </emphasis>false</para>
+				</listitem>
+			</varlistentry>
+		
+			<varlistentry>
+				<term>level</term>
+				<listitem>
+					<para><emphasis>Description: </emphasis>level</para>
+				</listitem>
+				<listitem>
+					<para><emphasis>Domain: </emphasis>large|huge</para>
+				</listitem>
+				<listitem>
+					<para><emphasis>Default: </emphasis>-</para>
+				</listitem>
+			</varlistentry>
+		
+			<varlistentry>
+				<term>clean</term>
+				<listitem>
+					<para><emphasis>Description: </emphasis>clean</para>
+				</listitem>
+				<listitem>
+					<para><emphasis>Domain: </emphasis>valid system name</para>
+				</listitem>
+				<listitem>
+					<para><emphasis>Default: </emphasis>empty string</para>
+				</listitem>
+			</varlistentry>
+		
+		</variablelist>
+	
+		<para>
+			Note: In mode ’clean’ the directory ’eCluster’ and the files ’Result.out’, ’vec.xcp’ are
+			deleted as well if they exist. If ’recursive’ is set to ’true’ ’clean’ is applied to each
+			subdirectory recursively. In mode tune the Eiffel System is tuned with Visual Eiffel’s tuner.
+		</para>
+	
+	</sect1>
+	
+	<sect1 id="ve_specification">
+		<title>RNG Specification</title>
+		
+		<programlisting><![CDATA[
+  <define name="ve">
+    <element name="ve">
+      <ref name="dir_if_unless"/>
+      <choice>
+        <attribute name="esd"/>
+        <group>
+          <attribute name="clean"/>
+          <optional>
+            <attribute name="recursive"/>
+          </optional>
+        </group>
+        <group>
+          <attribute name="tune"/>
+          <optional>
+            <attribute name="level">
+              <!-- runtime evaluation
+              <choice>
+                <value>large</value>
+                <value>huge</value>
+              </choice>
+              -->
+            </attribute>
+          </optional>
+        </group>
+      </choice>
+    </element>
+  </define>
+]]>
+		</programlisting>
+	</sect1>
+
+	<sect1 id="ve_examples">
+		<title>Examples</title>
+		
+		<programlisting><![CDATA[
+  <ve esd="compile_ve.esd"/>
+
+  <ve clean="kernel" recursive="true"/>
+
+  <ve tune="${system}${exe}" level="${vetuner}" if="${vetuner}"/>
+]]>
+		</programlisting>
+	</sect1>
+
+</chapter>

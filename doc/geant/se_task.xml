@@ -1,0 +1,166 @@
+<?xml version="1.0"?> 
+
+<!--
+	description:
+	
+		"SE Tasks"
+
+	library: "Gobo Eiffel Ant"
+	copyright: "Copyright (c) 2002, Sven Ehrke and others"
+	license: "Eiffel Forum License v1 (see forum.txt)"
+	date: "$Date$"
+	revision: "$Revision$"
+-->
+
+<chapter id="se_task">
+	<title>se</title>
+
+	<sect1 id="se_description">
+		<title>Description</title>
+		<para>
+			Invoke SmartEiffel Compiler.
+		</para>
+	</sect1>
+
+	<sect1 id="se_parameters">
+		<title>Parameters</title>
+
+		<variablelist>
+			<varlistentry>
+				<term>ace</term>
+				<listitem>
+					<para><emphasis>Description: </emphasis>Name of ace file</para>
+				</listitem>
+				<listitem>
+					<para><emphasis>Domain: </emphasis>Valid filename pointing to existing file</para>
+				</listitem>
+				<listitem>
+					<para><emphasis>Default: </emphasis>empty string</para>
+				</listitem>
+			</varlistentry>
+		
+			<varlistentry>
+				<term>root_class</term>
+				<listitem>
+					<para><emphasis>Description: </emphasis>Root class</para>
+				</listitem>
+				<listitem>
+					<para><emphasis>Domain: </emphasis>valid classname</para>
+				</listitem>
+				<listitem>
+					<para><emphasis>Default: </emphasis>-</para>
+				</listitem>
+			</varlistentry>
+		
+			<varlistentry>
+				<term>creation_procedure</term>
+				<listitem>
+					<para><emphasis>Description: </emphasis>Creation procedure of root class</para>
+				</listitem>
+				<listitem>
+					<para><emphasis>Domain: </emphasis>valid creation prodedure of root_class</para>
+				</listitem>
+				<listitem>
+					<para><emphasis>Default: </emphasis>false</para>
+				</listitem>
+			</varlistentry>
+		
+			<varlistentry>
+				<term>executable</term>
+				<listitem>
+					<para><emphasis>Description: </emphasis>executable</para>
+				</listitem>
+				<listitem>
+					<para><emphasis>Domain: </emphasis>valid filename</para>
+				</listitem>
+				<listitem>
+					<para><emphasis>Default: </emphasis>-</para>
+				</listitem>
+			</varlistentry>
+		
+			<varlistentry>
+				<term>case_insensitive</term>
+				<listitem>
+					<para><emphasis>Description: </emphasis>case insensitive</para>
+				</listitem>
+				<listitem>
+					<para><emphasis>Domain: </emphasis>true|false</para>
+				</listitem>
+				<listitem>
+					<para><emphasis>Default: </emphasis>false</para>
+				</listitem>
+			</varlistentry>
+		
+			<varlistentry>
+				<term>no_style_warning</term>
+				<listitem>
+					<para><emphasis>Description: </emphasis>no_style_warning</para>
+				</listitem>
+				<listitem>
+					<para><emphasis>Domain: </emphasis>true|false</para>
+				</listitem>
+				<listitem>
+					<para><emphasis>Default: </emphasis>false</para>
+				</listitem>
+			</varlistentry>
+		
+			<varlistentry>
+				<term>clean</term>
+				<listitem>
+					<para><emphasis>Description: </emphasis>clean</para>
+				</listitem>
+				<listitem>
+					<para><emphasis>Domain: </emphasis>valid system name</para>
+				</listitem>
+				<listitem>
+					<para><emphasis>Default: </emphasis>empty string</para>
+				</listitem>
+			</varlistentry>
+		
+		</variablelist>
+	</sect1>
+	
+	<sect1 id="se_specification">
+		<title>RNG Specification</title>
+		
+		<programlisting><![CDATA[
+  <define name="se">
+    <element name="se">
+      <ref name="dir_if_unless"/>
+      <choice>
+        <attribute name="clean"/>
+        <attribute name="ace"/>
+        <group>
+          <attribute name="root_class"/>
+          <attribute name="executable"/>
+          <optional>
+            <attribute name="creation_procedure"/>
+          </optional>
+          <optional>
+            <attribute name="case_insensitive"/>
+          </optional>
+          <optional>
+            <attribute name="no_style_warning"/>
+          </optional>
+        </group>
+      </choice>
+    </element>
+  </define>
+]]>
+		</programlisting>
+	</sect1>
+
+	<sect1 id="se_examples">
+		<title>Examples</title>
+		
+		<programlisting><![CDATA[
+  <se ace="compile_se.ace"/>
+
+  <se clean="main"/>
+
+  <se clean="${system}"/>
+]]>
+		</programlisting>
+	</sect1>
+
+</chapter>

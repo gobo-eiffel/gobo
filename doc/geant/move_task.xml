@@ -1,0 +1,111 @@
+<?xml version="1.0"?> 
+
+<!--
+	description:
+	
+		"Move Tasks"
+
+	library: "Gobo Eiffel Ant"
+	copyright: "Copyright (c) 2002, Sven Ehrke and others"
+	license: "Eiffel Forum License v1 (see forum.txt)"
+	date: "$Date$"
+	revision: "$Revision$"
+-->
+
+<chapter id="move_task">
+	<title>move</title>
+
+	<sect1 id="move_description">
+		<title>Description</title>
+		<para>
+			Move a file or fileset to a new file or directory.
+		</para>
+	</sect1>
+	
+	<sect1 id="move_parameters">
+		<title>Parameters</title>
+	
+		<variablelist>
+			<varlistentry>
+				<term>file</term>
+				<listitem>
+					<para><emphasis>Description: </emphasis>File to be moved</para>
+				</listitem>
+				<listitem>
+					<para><emphasis>Domain: </emphasis>Valid filename pointing to existing file</para>
+				</listitem>
+				<listitem>
+					<para><emphasis>Default: </emphasis>-</para>
+				</listitem>
+			</varlistentry>
+		
+			<varlistentry>
+				<term>to_file</term>
+				<listitem>
+					<para><emphasis>Description: </emphasis>File to move to</para>
+				</listitem>
+				<listitem>
+					<para><emphasis>Domain: </emphasis>Valid filename</para>
+				</listitem>
+				<listitem>
+					<para><emphasis>Default: </emphasis>-</para>
+				</listitem>
+			</varlistentry>
+		
+			<varlistentry>
+				<term>to_directory</term>
+				<listitem>
+					<para><emphasis>Description: </emphasis>Directory to which file(s) should be moved to</para>
+				</listitem>
+				<listitem>
+					<para><emphasis>Domain: </emphasis>Valid directoryname pointing to existing directory</para>
+				</listitem>
+				<listitem>
+					<para><emphasis>Default: </emphasis>-</para>
+				</listitem>
+			</varlistentry>
+		</variablelist>
+	</sect1>
+	
+	<sect1 id="move_specification">
+		<title>RNG Specification</title>
+		
+		<programlisting><![CDATA[
+  <define name="move">
+    <element name="move">
+      <ref name="dir_if_unless"/>
+      <choice>
+        <group>
+          <attribute name="file"/>
+          <attribute name="to_file"/>
+        </group>
+        <group>
+          <attribute name="file"/>
+          <attribute name="to_directory"/>
+        </group>
+        <group>
+          <attribute name="to_directory"/>
+          <ref name="fileset"/>
+        </group>
+      </choice>
+    </element>
+  </define>
+]]>
+	</programlisting>
+	</sect1>
+	
+	<sect1 id="move_examples">
+		<title>Examples</title>
+	<programlisting><![CDATA[
+  <move file="readme.txt" to_file="readme1.txt"/>
+  
+  <move file="readme.txt" to_directory="/tmp"/>
+
+  <move to_directory="/tmp">
+    <fileset directory="kernel" include="@(**/*.ge)"/>
+  </move>
+]]>
+	</programlisting>
+	</sect1>
+
+</chapter>

@@ -1,0 +1,67 @@
+<?xml version="1.0"?> 
+
+<!--
+	description:
+	
+		"Gexmlsplit Tasks"
+
+	library: "Gobo Eiffel Ant"
+	copyright: "Copyright (c) 2002, Sven Ehrke and others"
+	license: "Eiffel Forum License v1 (see forum.txt)"
+	date: "$Date$"
+	revision: "$Revision$"
+-->
+
+<chapter id="gexmlsplit_task">
+	<title>gexmlsplit</title>
+
+	<sect1 id="gexmlsplit_description">
+		<title>Description</title>
+		<para>
+			Run gexmlsplit.
+		</para>
+	</sect1>
+
+	<sect1 id="gexmlsplit_parameters">
+		<title>Parameters</title>
+
+		<variablelist>
+			<varlistentry>
+				<term>input</term>
+				<listitem>
+					<para><emphasis>Description: </emphasis>name of xml input file</para>
+				</listitem>
+				<listitem>
+					<para><emphasis>Domain: </emphasis>Valid filename pointing to existing file</para>
+				</listitem>
+				<listitem>
+					<para><emphasis>Default: </emphasis>-</para>
+				</listitem>
+			</varlistentry>
+		</variablelist>
+	</sect1>
+	
+	<sect1 id="gexmlsplit_specification">
+		<title>RNG Specification</title>
+		
+		<programlisting><![CDATA[
+  <define name="gexmlsplit">
+    <element name="gexmlsplit">
+      <ref name="dir_if_unless"/>
+      <attribute name="input"/>
+    </element>
+  </define>
+]]>
+		</programlisting>
+	</sect1>
+
+	<sect1 id="gexmlsplit_examples">
+		<title>Examples</title>
+		
+		<programlisting><![CDATA[
+  <gexmlsplit input="input.xml"/>
+]]>
+		</programlisting>
+	</sect1>
+
+</chapter>

@@ -1,0 +1,136 @@
+<?xml version="1.0"?> 
+
+<!--
+	description:
+	
+		"ISE Tasks"
+
+	library: "Gobo Eiffel Ant"
+	copyright: "Copyright (c) 2002, Sven Ehrke and others"
+	license: "Eiffel Forum License v1 (see forum.txt)"
+	date: "$Date$"
+	revision: "$Revision$"
+-->
+
+<chapter id="ise_task">
+	<title>ise</title>
+
+	<sect1 id="ise_description">
+		<title>Description</title>
+		<para>
+			Invoke ISE’s Eiffel Compiler.
+		</para>
+	</sect1>
+
+	<sect1 id="ise_parameters">
+		<title>Parameters</title>
+
+		<variablelist>
+			<varlistentry>
+				<term>ace</term>
+				<listitem>
+					<para><emphasis>Description: </emphasis>Name of ace file</para>
+				</listitem>
+				<listitem>
+					<para><emphasis>Domain: </emphasis>Valid filename pointing to existing file</para>
+				</listitem>
+				<listitem>
+					<para><emphasis>Default: </emphasis>empty string</para>
+				</listitem>
+			</varlistentry>
+		
+			<varlistentry>
+				<term>system</term>
+				<listitem>
+					<para><emphasis>Description: </emphasis>System</para>
+				</listitem>
+				<listitem>
+					<para><emphasis>Domain: </emphasis>-</para>
+				</listitem>
+				<listitem>
+					<para><emphasis>Default: </emphasis>empty string</para>
+				</listitem>
+			</varlistentry>
+		
+			<varlistentry>
+				<term>finalize</term>
+				<listitem>
+					<para><emphasis>Description: </emphasis>finalize</para>
+				</listitem>
+				<listitem>
+					<para><emphasis>Domain: </emphasis>Boolean (true|false)</para>
+				</listitem>
+				<listitem>
+					<para><emphasis>Default: </emphasis>false</para>
+				</listitem>
+			</varlistentry>
+		
+			<varlistentry>
+				<term>finish_freezing</term>
+				<listitem>
+					<para><emphasis>Description: </emphasis>finish_freezing</para>
+				</listitem>
+				<listitem>
+					<para><emphasis>Domain: </emphasis>Boolean (true|false)</para>
+				</listitem>
+				<listitem>
+					<para><emphasis>Default: </emphasis>false</para>
+				</listitem>
+			</varlistentry>
+		
+			<varlistentry>
+				<term>clean</term>
+				<listitem>
+					<para><emphasis>Description: </emphasis>clean</para>
+				</listitem>
+				<listitem>
+					<para><emphasis>Domain: </emphasis>Boolean (true|false)</para>
+				</listitem>
+				<listitem>
+					<para><emphasis>Default: </emphasis>false</para>
+				</listitem>
+			</varlistentry>
+		
+		</variablelist>
+	</sect1>
+	
+	<sect1 id="ise_specification">
+		<title>RNG Specification</title>
+		
+		<programlisting><![CDATA[
+  <define name="ise">
+    <element name="ise">
+      <ref name="dir_if_unless"/>
+      <choice>
+        <group>
+          <attribute name="system"/>
+          <optional>
+            <attribute name="ace"/>
+          </optional>
+          <optional>
+            <attribute name="finalize"/>
+          </optional>
+          <optional>
+            <attribute name="finish_freezing"/>
+          </optional>
+        </group>
+        <attribute name="clean"/>
+      </choice>
+    </element>
+  </define>
+]]>
+		</programlisting>
+	</sect1>
+
+	<sect1 id="ise_examples">
+		<title>Examples</title>
+		
+		<programlisting><![CDATA[
+  <ise ace="compile_ise.ace" system="${system}" finalize="true" finish_freezing="true"/>
+
+  <ise clean="${system}"/>
+]]>
+		</programlisting>
+	</sect1>
+
+</chapter>

@@ -1,0 +1,162 @@
+<?xml version="1.0"?> 
+
+<!--
+	description:
+
+		"Outofdate Tasks"
+
+	library: "Gobo Eiffel Ant"
+	copyright: "Copyright (c) 2002, Sven Ehrke and others"
+	license: "Eiffel Forum License v1 (see forum.txt)"
+	date: "$Date$"
+	revision: "$Revision$"
+-->
+
+<chapter id="outofdate_task">
+	<title>outofdate</title>
+
+	<sect1 id="outofdate_description">
+		<title>Description</title>
+		<para>
+			Compare timestamps of files and set the value of a variable depending on the result.
+		</para>
+	</sect1>
+
+	<sect1 id="outofdate_parameters">
+		<title>Parameters</title>
+
+		<variablelist>
+			<varlistentry>
+				<term>source</term>
+				<listitem>
+					<para><emphasis>Description: </emphasis>filename</para>
+				</listitem>
+				<listitem>
+					<para><emphasis>Domain: </emphasis>Valid filename pointing to existing file</para>
+				</listitem>
+				<listitem>
+					<para><emphasis>Default: </emphasis>-</para>
+				</listitem>
+			</varlistentry>
+
+			<varlistentry>
+				<term>target</term>
+				<listitem>
+					<para><emphasis>Description: </emphasis>target file to compare to</para>
+				</listitem>
+				<listitem>
+					<para><emphasis>Domain: </emphasis>Valid filename</para>
+				</listitem>
+				<listitem>
+					<para><emphasis>Default: </emphasis>-</para>
+				</listitem>
+			</varlistentry>
+
+			<varlistentry>
+				<term>variable</term>
+				<listitem>
+					<para><emphasis>Description: </emphasis>variable which reflects the result of the comparison</para>
+				</listitem>
+				<listitem>
+					<para><emphasis>Domain: </emphasis>valid variable name</para>
+				</listitem>
+				<listitem>
+					<para><emphasis>Default: </emphasis>-</para>
+				</listitem>
+			</varlistentry>
+
+			<varlistentry>
+				<term>true_value</term>
+				<listitem>
+					<para><emphasis>Description: </emphasis>result value of positive comparison</para>
+				</listitem>
+				<listitem>
+					<para><emphasis>Domain: </emphasis>-</para>
+				</listitem>
+				<listitem>
+					<para><emphasis>Default: </emphasis>true</para>
+				</listitem>
+			</varlistentry>
+
+			<varlistentry>
+				<term>false_value</term>
+				<listitem>
+					<para><emphasis>Description: </emphasis>result value of negative comparison</para>
+				</listitem>
+				<listitem>
+					<para><emphasis>Domain: </emphasis>-</para>
+				</listitem>
+				<listitem>
+					<para><emphasis>Default: </emphasis>false</para>
+				</listitem>
+			</varlistentry>
+
+		</variablelist>
+	</sect1>
+
+	<sect1 id="outofdate_specification">
+		<title>RNG Specification</title>
+
+		<programlisting><![CDATA[
+  <define name="outofdate">
+    <element name="outofdate">
+      <ref name="dir_if_unless"/>
+      <choice>
+        <group>
+          <attribute name="source"/>
+          <attribute name="target"/>
+        </group>
+        <ref name="fileset"/>
+      </choice>
+      <attribute name="variable"/>
+      <optional>
+        <attribute name="true_value"/>
+      </optional>
+      <optional>
+        <attribute name="false_value"/>
+      </optional>
+    </element>
+  </define>
+]]>
+	</programlisting>
+	</sect1>
+
+	<sect1 id="outofdate_examples">
+		<title>Examples</title>
+	<programlisting><![CDATA[
+  <outofdate
+    variable="generate"
+    source="${gepp_in_dir}/${gepp_file}.ge"
+    target="${gepp_out_dir}/${gepp_file}.e"
+  />
+
+  <outofdate variable="generate" dir="${GOBO}/library/kernel">
+    <fileset directory="." include="@(**/*.ge)">
+      <map type="glob" from="*.ge" to="${GOBO}/example/geant/tmp/*.e">
+        <map type="flat"/>
+      </map>
+    </fileset>
+  </outofdate>
+
+  <outofdate variable="generate">
+    <fileset directory=".">
+      <include name="outofdate.eant"/>
+      <include name="build.eant"/>
+      <map type="merge" from="*" to="${gepp_out_dir}/toto.txt"/>
+    </fileset>
+  </outofdate>
+		
+  <outofdate variable="generate" dir="${GOBO}/library/kernel">
+    <fileset directory=".">
+    <include name="${gepp_in_dir}/${gepp_file}.ge"/>
+    <include name="${GOBO}/example/geant/misc/outofdate.eant)"/>
+    <map type="glob" from="*.ge" to="${gepp_out_dir}/*.e">
+      <map type="flat"/>
+    </map>
+    </fileset>
+  </outofdate>
+]]>
+	</programlisting>
+	</sect1>
+
+</chapter>

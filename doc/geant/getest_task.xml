@@ -1,0 +1,93 @@
+<?xml version="1.0"?> 
+
+<!--
+	description:
+	
+		"Getest Tasks"
+
+	library: "Gobo Eiffel Ant"
+	copyright: "Copyright (c) 2002, Sven Ehrke and others"
+	license: "Eiffel Forum License v1 (see forum.txt)"
+	date: "$Date$"
+	revision: "$Revision$"
+-->
+
+<chapter id="getest_task">
+	<title>getest</title>
+
+	<sect1 id="getest_description">
+		<title>Description</title>
+		<para>
+			Execute getest.
+		</para>
+	</sect1>
+	
+	<sect1 id="getest_parameters">
+		<title>Parameters</title>
+	
+		<variablelist>
+			<varlistentry>
+				<term>config</term>
+				<listitem>
+					<para><emphasis>Description: </emphasis>Name of configuration file</para>
+				</listitem>
+				<listitem>
+					<para><emphasis>Domain: </emphasis>Valid filename pointing to existing file</para>
+				</listitem>
+				<listitem>
+					<para><emphasis>Default: </emphasis>-</para>
+				</listitem>
+			</varlistentry>
+		
+			<varlistentry>
+				<term>output</term>
+				<listitem>
+					<para><emphasis>Description: </emphasis>compile</para>
+				</listitem>
+				<listitem>
+					<para><emphasis>Domain: </emphasis>Optional compilation command</para>
+				</listitem>
+				<listitem>
+					<para><emphasis>Default: </emphasis>-</para>
+				</listitem>
+			</varlistentry>
+		
+		</variablelist>
+	</sect1>
+	
+	<sect1 id="getest_specification">
+		<title>RNG Specification</title>
+		
+		<programlisting><![CDATA[
+  <define name="getest">
+    <element name="getest">
+      <ref name="dir_if_unless"/>
+      <attribute name="config"/>
+      <optional>
+        <attribute name="compile"/>
+      </optional>
+      <zeroOrMore>
+        <ref name="define"/>
+      </zeroOrMore>
+    </element>
+  </define>
+]]>
+	</programlisting>
+	
+	</sect1>
+	
+	<sect1 id="getest_examples">
+		<title>Examples</title>
+	<programlisting><![CDATA[
+  <getest
+    config="${system_dir}/getest.cfg"
+    compile="geant -b ${system_dir}/build.eant compile${debug_suffix}_${eiffel} &lt;compilation_log.txt"
+  >
+    <define name="debug" value="true" if="${debug}"/>
+  </getest>
+  
+]]>
+	</programlisting>
+	</sect1>
+
+</chapter>

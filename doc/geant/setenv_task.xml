@@ -1,0 +1,83 @@
+<?xml version="1.0"?> 
+
+<!--
+	description:
+
+		"Setenv Tasks"
+
+	library: "Gobo Eiffel Ant"
+	copyright: "Copyright (c) 2002, Sven Ehrke and others"
+	license: "Eiffel Forum License v1 (see forum.txt)"
+	date: "$Date$"
+	revision: "$Revision$"
+-->
+
+<chapter id="setenv_task">
+	<title>setenv</title>
+
+	<sect1 id="setenv_description">
+		<title>Description</title>
+		<para>
+			Set an environment variable’s value (for the current geant process).
+		</para>
+	</sect1>
+
+	<sect1 id="setenv_parameters">
+		<title>Parameters</title>
+
+		<variablelist>
+			<varlistentry>
+				<term>name</term>
+				<listitem>
+					<para><emphasis>Description: </emphasis>Name of variable</para>
+				</listitem>
+				<listitem>
+					<para><emphasis>Domain: </emphasis>Identifier</para>
+				</listitem>
+				<listitem>
+					<para><emphasis>Default: </emphasis>-</para>
+				</listitem>
+			</varlistentry>
+
+			<varlistentry>
+				<term>value</term>
+				<listitem>
+					<para><emphasis>Description: </emphasis>Value to be assigned</para>
+				</listitem>
+				<listitem>
+					<para><emphasis>Domain: </emphasis>String</para>
+				</listitem>
+				<listitem>
+					<para><emphasis>Default: </emphasis>-</para>
+				</listitem>
+			</varlistentry>
+
+		</variablelist>
+
+	</sect1>
+
+	<sect1 id="setenv_specification">
+		<title>RNG Specification</title>
+
+		<programlisting><![CDATA[
+  <define name="setenv">
+    <element name="setenv">
+      <ref name="dir_if_unless"/>
+      <attribute name="name"/>
+      <attribute name="value"/>
+    </element>
+  </define>
+]]>
+		</programlisting>
+	</sect1>
+
+	<sect1 id="setenv_examples">
+		<title>Examples</title>
+
+		<programlisting><![CDATA[
+  <setenv name="MY_ENV" value="some_value"/>
+]]>
+		</programlisting>
+	</sect1>
+
+</chapter>

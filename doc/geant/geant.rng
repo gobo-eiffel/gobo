@@ -431,6 +431,9 @@
 	</define>
 	<define name="precursor">
 		<element name="precursor">
+			<optional>
+				<attribute name="parent"/>
+			</optional>
 			<text/>
 		</element>
 	</define>

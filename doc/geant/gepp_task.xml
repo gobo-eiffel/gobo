@@ -1,0 +1,134 @@
+<?xml version="1.0"?> 
+
+<!--
+	description:
+	
+		"Gepp Tasks"
+
+	library: "Gobo Eiffel Ant"
+	copyright: "Copyright (c) 2002, Sven Ehrke and others"
+	license: "Eiffel Forum License v1 (see forum.txt)"
+	date: "$Date$"
+	revision: "$Revision$"
+-->
+
+<chapter id="gepp_task">
+	<title>gepp</title>
+
+	<sect1 id="gepp_description">
+		<title>Description</title>
+		<para>
+			Execute gepp.
+		</para>
+	</sect1>
+	
+	<sect1 id="gepp_parameters">
+		<title>Parameters</title>
+	
+		<variablelist>
+			<varlistentry>
+				<term>input</term>
+				<listitem>
+					<para><emphasis>Description: </emphasis>input</para>
+				</listitem>
+				<listitem>
+					<para><emphasis>Domain: </emphasis>Valid filename pointing to existing file</para>
+				</listitem>
+				<listitem>
+					<para><emphasis>Default: </emphasis>-</para>
+				</listitem>
+			</varlistentry>
+		
+			<varlistentry>
+				<term>output</term>
+				<listitem>
+					<para><emphasis>Description: </emphasis>output</para>
+				</listitem>
+				<listitem>
+					<para><emphasis>Domain: </emphasis>Valid filename</para>
+				</listitem>
+				<listitem>
+					<para><emphasis>Default: </emphasis>-</para>
+				</listitem>
+			</varlistentry>
+		
+			<varlistentry>
+				<term>lines</term>
+				<listitem>
+					<para><emphasis>Description: </emphasis>lines</para>
+				</listitem>
+				<listitem>
+					<para><emphasis>Domain: </emphasis>-</para>
+				</listitem>
+				<listitem>
+					<para><emphasis>Default: </emphasis>-</para>
+				</listitem>
+			</varlistentry>
+		
+			<varlistentry>
+				<term>to_directory</term>
+				<listitem>
+					<para><emphasis>Description: </emphasis>Path to directory into which output should be generated to</para>
+				</listitem>
+				<listitem>
+					<para><emphasis>Domain: </emphasis>-</para>
+				</listitem>
+				<listitem>
+					<para><emphasis>Default: </emphasis>-</para>
+				</listitem>
+			</varlistentry>
+		
+		</variablelist>
+	</sect1>
+	
+	<sect1 id="gepp_specification">
+		<title>RNG Specification</title>
+		
+		<programlisting><![CDATA[
+  <define name="gepp">
+    <element name="gepp">
+      <ref name="dir_if_unless"/>
+      <interleave>
+        <choice>
+          <group>
+            <attribute name="input"/>
+            <attribute name="output"/>
+          </group>
+          <ref name="fileset"/>
+        </choice>
+        <zeroOrMore>
+          <element name="define">
+            <ref name="if_unless"/>
+            <attribute name="name"/>
+          </element>
+        </zeroOrMore>
+      </interleave>
+      <optional>
+        <attribute name="to_directory"/>
+      </optional>
+      <optional>
+        <attribute name="lines"/>
+      </optional>
+    </element>
+  </define>
+]]>
+	</programlisting>
+	
+	</sect1>
+	
+	<sect1 id="gepp_examples">
+		<title>Examples</title>
+	<programlisting><![CDATA[
+  <gepp
+    input="${GOBO}/library/kernel/kl_array_routines.ge"
+	output="kl_array_routines.e"
+	to_directory="path/to/some/directory"
+  />
+    <define name="HACT" if="$HACT"/>
+  </gepp>
+  
+]]>
+	</programlisting>
+	</sect1>
+
+</chapter>

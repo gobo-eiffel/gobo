@@ -1,0 +1,188 @@
+<?xml version="1.0"?> 
+
+<!--
+	description:
+	
+		"Gexace Tasks"
+
+	library: "Gobo Eiffel Ant"
+	copyright: "Copyright (c) 2002, Sven Ehrke and others"
+	license: "Eiffel Forum License v1 (see forum.txt)"
+	date: "$Date$"
+	revision: "$Revision$"
+-->
+
+<chapter id="gexace_task">
+	<title>gexace</title>
+
+	<sect1 id="gexace_description">
+		<title>Description</title>
+		<para>
+			Execute gexace.
+		</para>
+	</sect1>
+	
+	<sect1 id="gexace_parameters">
+		<title>Parameters</title>
+	
+		<variablelist>
+			<varlistentry>
+				<term>validate</term>
+				<listitem>
+					<para><emphasis>Description: </emphasis>Should xace file be validated?</para>
+				</listitem>
+				<listitem>
+					<para><emphasis>Domain: </emphasis>Boolean (true|false)</para>
+				</listitem>
+				<listitem>
+					<para><emphasis>Default: </emphasis>-</para>
+				</listitem>
+			</varlistentry>
+		
+			<varlistentry>
+				<term>system</term>
+				<listitem>
+					<para><emphasis>Description: </emphasis>System</para>
+				</listitem>
+				<listitem>
+					<para><emphasis>Domain: </emphasis>hact|ise|se|ve|xml</para>
+				</listitem>
+				<listitem>
+					<para><emphasis>Default: </emphasis>-</para>
+				</listitem>
+			</varlistentry>
+		
+			<varlistentry>
+				<term>cluster</term>
+				<listitem>
+					<para><emphasis>Description: </emphasis>cluster (obsolete. Use 'library' instead)</para>
+				</listitem>
+				<listitem>
+					<para><emphasis>Domain: </emphasis>hact|ise|se|ve|xml</para>
+				</listitem>
+				<listitem>
+					<para><emphasis>Default: </emphasis>-</para>
+				</listitem>
+			</varlistentry>
+		
+			<varlistentry>
+				<term>library</term>
+				<listitem>
+					<para><emphasis>Description: </emphasis>library</para>
+				</listitem>
+				<listitem>
+					<para><emphasis>Domain: </emphasis>hact|ise|se|ve|xml</para>
+				</listitem>
+				<listitem>
+					<para><emphasis>Default: </emphasis>-</para>
+				</listitem>
+			</varlistentry>
+		
+			<varlistentry>
+				<term>verbose</term>
+				<listitem>
+					<para><emphasis>Description: </emphasis>verbose</para>
+				</listitem>
+				<listitem>
+					<para><emphasis>Domain: </emphasis>Boolean (true|false)</para>
+				</listitem>
+				<listitem>
+					<para><emphasis>Default: </emphasis>-</para>
+				</listitem>
+			</varlistentry>
+		
+			<varlistentry>
+				<term>xace</term>
+				<listitem>
+					<para><emphasis>Description: </emphasis>Xace file</para>
+				</listitem>
+				<listitem>
+					<para><emphasis>Domain: </emphasis>Valid filename pointing to existing file</para>
+				</listitem>
+				<listitem>
+					<para><emphasis>Default: </emphasis>-</para>
+				</listitem>
+			</varlistentry>
+		
+			<varlistentry>
+				<term>output</term>
+				<listitem>
+					<para><emphasis>Description: </emphasis>output filename</para>
+				</listitem>
+				<listitem>
+					<para><emphasis>Domain: </emphasis>Valid filename</para>
+				</listitem>
+				<listitem>
+					<para><emphasis>Default: </emphasis>-</para>
+				</listitem>
+			</varlistentry>
+		
+		</variablelist>
+	</sect1>
+	
+	<sect1 id="gexace_specification">
+		<title>RNG Specification</title>
+		
+		<programlisting><![CDATA[
+  <define name="gexace">
+    <element name="gexace">
+      <ref name="dir_if_unless"/>
+      <choice>
+        <attribute name="validate"/>
+        <attribute name="system">
+          <!-- runtime evaluation
+          <choice>
+            <value>ise</value>
+            <value>hact</value>
+            <value>se</value>
+            <value>ve</value>
+            <value>xml</value>
+          </choice>
+          -->
+        </attribute>
+        <attribute name="cluster">
+          <!-- runtime evaluation
+          <choice>
+            <value>ise</value>
+            <value>hact</value>
+            <value>se</value>
+            <value>ve</value>
+            <value>xml</value>
+          </choice>
+          -->
+        </attribute>
+      </choice>
+      <optional>
+        <attribute name="verbose"/>
+      </optional>
+      <optional>
+        <attribute name="xace"/>
+      </optional>
+      <optional>
+        <attribute name="output"/>
+      </optional>
+      <zeroOrMore>
+        <ref name="define"/>
+      </zeroOrMore>
+    </element>
+  </define>
+]]>
+	</programlisting>
+	
+	</sect1>
+	
+	<sect1 id="gexace_examples">
+		<title>Examples</title>
+	<programlisting><![CDATA[
+  <gexace system="se" xace="${system}.xace"/>
+
+  <gexace system="${eiffel}" output="${gexace_output}" xace="${system_dir}/system.xace">
+  
+  <gexace system="ise">
+    <define name="DEBUG" value="true" if="$DEBUG"/>
+  </gexace>
+]]>
+	</programlisting>
+	</sect1>
+
+</chapter>

@@ -1,0 +1,66 @@
+<?xml version="1.0"?> 
+
+<!--
+	description:
+	
+		"Precursor Tasks"
+
+	library: "Gobo Eiffel Ant"
+	copyright: "Copyright (c) 2002, Sven Ehrke and others"
+	license: "Eiffel Forum License v1 (see forum.txt)"
+	date: "$Date$"
+	revision: "$Revision$"
+-->
+
+<chapter id="precursor_task">
+	<title>precursor</title>
+
+	<sect1 id="precursor_description">
+		<title>Description</title>
+		<para>
+			Execute precursor of current target.
+		</para>
+	</sect1>
+
+	<sect1 id="precursor_parameters">
+		<title>Parameters</title>
+
+		<variablelist>
+			<varlistentry>
+				<term>parent</term>
+				<listitem>
+					<para><emphasis>Description: </emphasis>Parent for ambiguous cases in relation with multiple inheritance (not supported yet)</para>
+				</listitem>
+				<listitem>
+					<para><emphasis>Domain: </emphasis>valid parent</para>
+				</listitem>
+				<listitem>
+					<para><emphasis>Default: </emphasis>-</para>
+				</listitem>
+			</varlistentry>
+		</variablelist>
+	</sect1>
+	
+	<sect1 id="precursor_specification">
+		<title>RNG Specification</title>
+		
+		<programlisting><![CDATA[
+  <define name="precursor">
+    <element name="precursor">
+      <text/>
+    </element>
+  </define>
+]]>
+		</programlisting>
+	</sect1>
+
+	<sect1 id="precursor_examples">
+		<title>Examples</title>
+		
+		<programlisting><![CDATA[
+  <precursor/>
+]]>
+		</programlisting>
+	</sect1>
+
+</chapter>
