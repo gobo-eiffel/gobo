@@ -14,7 +14,7 @@ ISE 5.4/5.5 (ISE Eiffel)
 	    geant clobber
 	    geant install
 
-SE 2.1rc1 (SmartEiffel)
+SE 2.1 (SmartEiffel)
 
 	* The millisecond part of KL_SYSTEM_CLOCK, DT_SYSTEM_CLOCK and
 	  DT_UTC_SYSTEM_CLOCK may be stuck to zero under Windows.
