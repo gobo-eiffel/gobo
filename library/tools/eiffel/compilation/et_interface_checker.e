@@ -29,12 +29,12 @@ feature {NONE} -- Initialization
 			-- Create a new interface checker for classes in `a_universe'.
 		do
 			precursor (a_universe)
-			create qualified_type_resolver.make (Current)
+			create parent_context.make (a_universe.any_class, a_universe.any_class)
 		end
 
 feature -- Access
 
-	degree: STRING is "4.3"
+	degree: STRING is "4.4"
 			-- ISE's style degree of current processor
 
 feature -- Processing
@@ -52,6 +52,8 @@ print ("INTERNAL ERROR%N")
 				a_processor.process_class (a_class)
 			elseif a_class /= unknown_class then
 				internal_process_class (a_class)
+			else
+				set_fatal_error (a_class)
 			end
 		ensure then
 			interface_checked: a_class.interface_checked
@@ -83,9 +85,10 @@ feature {NONE} -- Processing
 			old_class := current_class
 			current_class := a_class
 			if not current_class.interface_checked then
-					-- Flatten features of `current_class' if not already done.
-				current_class.process (universe.feature_flattener)
-				if not current_class.has_flattening_error then
+					-- Resolve qualified anchored types in signatures of features
+					-- of `current_class' if not already done.
+				current_class.process (universe.qualified_signature_resolver)
+				if not current_class.has_qualified_signatures_error then
 					current_class.set_interface_checked
 						-- Process parents first.
 					a_parents := current_class.parents
@@ -120,7 +123,7 @@ feature {NONE} -- Processing
 						--check_parents_validity
 					end
 					if not current_class.has_interface_error then
-						resolve_qualified_type_signatures
+						check_signatures_validity
 					end
 				else
 					set_fatal_error (current_class)
@@ -133,63 +136,255 @@ feature {NONE} -- Processing
 
 feature {NONE} -- Signature validity
 
-	resolve_qualified_type_signatures is
-			-- Resolve qualified anchored types of the form
-			-- 'like a.b' or 'like {A}.b' in signatures of
-			-- all features written in `current_class'.
+	check_signatures_validity is
+			-- Check validity of redeclarations and joinings for all
+			-- feature signatures of `current_class' which could not
+			-- be checked before in the feature flattener because
+			-- of the presence of some qualified anchired types.
 		local
 			a_features: ET_FEATURE_LIST
-			a_feature: ET_FEATURE
+			a_feature: ET_ADAPTED_FEATURE
 			i, nb: INTEGER
 		do
 			a_features := current_class.features
 			nb := a_features.count
 			from i := 1 until i > nb loop
-				a_feature := a_features.item (i)
-				if a_feature.implementation_class = current_class then
-					resolve_qualified_type_signature (a_feature)
-					i := i + 1
-				else
-					 	-- The following features have been written
-					 	-- in parent classes, and their signatures have
-					 	-- already been taken care of in these classes.
-					 i := nb + 1 -- Jump out of the loop.
+				a_feature ?= a_features.item (i)
+				if a_feature /= Void then
+						-- The signature of this feature needs to be checked
+						-- again. It probably contains a qualified anchored type.
+					check_signature_validity (a_feature)
+					a_features.put (a_feature.flattened_feature, i)
 				end
+				i := i + 1
 			end
 		end
 
-	resolve_qualified_type_signature (a_feature: ET_FEATURE) is
-			-- Resolve qualified anchored types of the form
-			-- 'like a.b' or 'like {A}.b' in signature of
-			-- `a_feature'.
+	check_signature_validity (a_feature: ET_ADAPTED_FEATURE) is
+			-- Check signature validity for redeclarations and joinings.
 		require
 			a_feature_not_void: a_feature /= Void
 		local
-			a_type: ET_TYPE
-			args: ET_FORMAL_ARGUMENT_LIST
-			an_arg: ET_FORMAL_ARGUMENT
-			i, nb: INTEGER
+			a_flattened_feature: ET_FLATTENED_FEATURE
+			an_inherited_flattened_feature: ET_FEATURE
+			a_redeclared_feature: ET_REDECLARED_FEATURE
+			an_inherited_feature: ET_FEATURE
 		do
-			a_type := a_feature.type
-			if a_type /= Void then
-				qualified_type_resolver.resolve_type (a_type)
-			end
-			args := a_feature.arguments
-			if args /= Void then
-				nb := args.count
-				from i := 1 until i > nb loop
-					an_arg := args.formal_argument (i)
-					qualified_type_resolver.resolve_type (an_arg.type)
-					i := i + 1
+			if a_feature.is_redeclared then
+					-- Redeclaration.
+				a_redeclared_feature := a_feature.redeclared_feature
+				a_flattened_feature := a_feature.flattened_feature
+				from
+					an_inherited_feature := a_redeclared_feature.parent_feature
+				until
+					an_inherited_feature = Void
+				loop
+					check_redeclared_signature_validity (a_flattened_feature, an_inherited_feature)
+					an_inherited_feature := an_inherited_feature.merged_feature
+				end
+			elseif a_feature.is_inherited then
+				a_flattened_feature := a_feature.flattened_feature
+				an_inherited_flattened_feature := a_feature.inherited_feature.inherited_flattened_feature
+				if a_flattened_feature.is_deferred then
+						-- Joining (merging deferred features together).
+					from
+						an_inherited_feature := a_feature
+					until
+						an_inherited_feature = Void
+					loop
+						if not an_inherited_feature.same_version (an_inherited_flattened_feature.precursor_feature) then
+							check_joined_signature_validity (an_inherited_flattened_feature, an_inherited_feature)
+						end
+						an_inherited_feature := an_inherited_feature.merged_feature
+					end
+				else
+						-- Redeclaration (merging deferred features into
+						-- an effective one).
+					from
+						an_inherited_feature := a_feature
+					until
+						an_inherited_feature = Void
+					loop
+						if an_inherited_feature.is_deferred then
+							check_merged_signature_validity (a_feature, an_inherited_feature)
+						end
+						an_inherited_feature := an_inherited_feature.merged_feature
+					end
 				end
 			end
 		end
 
-	qualified_type_resolver: ET_QUALIFIED_TYPE_RESOLVER
-			-- Qualified anchored type resolver
+	check_redeclared_signature_validity (a_feature: ET_FLATTENED_FEATURE; other: ET_FEATURE) is
+			-- Check whether the signature of `a_feature' conforms
+			-- to the signature of `other'. This check has to be done
+			-- when `a_feature' is a redeclaration in `current_class'
+			-- of the inherited feature `other'.
+		require
+			a_feature_not_void: a_feature /= Void
+			other_not_void: other /= Void
+			other_inherited: other.is_inherited
+			other_not_redeclared: not other.is_redeclared
+		local
+			a_type: ET_TYPE
+			other_type: ET_TYPE
+			other_precursor: ET_FLATTENED_FEATURE
+			an_arguments: ET_FORMAL_ARGUMENT_LIST
+			other_arguments: ET_FORMAL_ARGUMENT_LIST
+			i, nb: INTEGER
+		do
+			a_type := a_feature.type
+			parent_context.set (other.parent.type, current_class)
+			other_precursor := other.precursor_feature
+			other_type := other_precursor.type
+			if a_type /= Void and other_type /= Void then
+				if not a_type.conforms_to_type (other_type, parent_context, current_class, universe) then
+					set_fatal_error (current_class)
+					error_handler.report_vdrd2a_error (current_class, a_feature, other.inherited_feature, universe)
+				end
+			else
+				-- This case has already been handled in the feature flattener.
+			end
+			an_arguments := a_feature.arguments
+			other_arguments := other_precursor.arguments
+			if an_arguments /= Void and other_arguments /= Void then
+				nb := an_arguments.count
+				if other_arguments.count = nb then
+					from i := 1 until i > nb loop
+						a_type := an_arguments.formal_argument (i).type
+						other_type := other_arguments.formal_argument (i).type
+						if not a_type.conforms_to_type (other_type, parent_context, current_class, universe) then
+							set_fatal_error (current_class)
+							error_handler.report_vdrd2a_error (current_class, a_feature, other.inherited_feature, universe)
+						end
+						i := i + 1
+					end
+				else
+					-- This case has already been handled in the feature flattener.
+				end
+			else
+				-- This case has already been handled in the feature flattener.
+			end
+		end
+
+	check_merged_signature_validity (a_feature, other: ET_FEATURE) is
+			-- Check whether the signature of `a_feature' conforms
+			-- to the signature of `other'. This check has to be done
+			-- when the inherited deferred feature `other' is merged
+			-- to the other inherted feature `a_feature'.
+		require
+			a_feature_not_void: a_feature /= Void
+			a_feature_inherited: a_feature.is_inherited
+			a_feature_flattened: not a_feature.is_redeclared
+			other_not_void: other /= Void
+			other_inherited: other.is_inherited
+			other_not_redeclared: not other.is_redeclared
+			other_deferred: other.is_deferred
+		local
+			a_type: ET_TYPE
+			other_type: ET_TYPE
+			a_flattened_feature: ET_FLATTENED_FEATURE
+			an_inherited_feature: ET_INHERITED_FEATURE
+			other_precursor: ET_FLATTENED_FEATURE
+			an_arguments: ET_FORMAL_ARGUMENT_LIST
+			other_arguments: ET_FORMAL_ARGUMENT_LIST
+			i, nb: INTEGER
+		do
+			a_flattened_feature := a_feature.flattened_feature
+			a_type := a_flattened_feature.type
+			parent_context.set (other.parent.type, current_class)
+			other_precursor := other.precursor_feature
+			other_type := other_precursor.type
+			if a_type /= Void and other_type /= Void then
+				if not a_type.conforms_to_type (other_type, parent_context, current_class, universe) then
+					set_fatal_error (current_class)
+					an_inherited_feature := a_feature.inherited_feature.inherited_flattened_feature.inherited_feature
+					error_handler.report_vdrd2b_error (current_class, an_inherited_feature, other.inherited_feature, universe)
+				end
+			else
+				-- This case has already been handled in the feature flattener.
+			end
+			an_arguments := a_flattened_feature.arguments
+			other_arguments := other_precursor.arguments
+			if an_arguments /= Void and other_arguments /= Void then
+				nb := an_arguments.count
+				if other_arguments.count = nb then
+					from i := 1 until i > nb loop
+						a_type := an_arguments.formal_argument (i).type
+						other_type := other_arguments.formal_argument (i).type
+						if not a_type.conforms_to_type (other_type, parent_context, current_class, universe) then
+							set_fatal_error (current_class)
+							an_inherited_feature := a_feature.inherited_feature.inherited_flattened_feature.inherited_feature
+							error_handler.report_vdrd2b_error (current_class, an_inherited_feature, other.inherited_feature, universe)
+						end
+						i := i + 1
+					end
+				else
+					-- This case has already been handled in the feature flattener.
+				end
+			else
+				-- This case has already been handled in the feature flattener.
+			end
+		end
+
+	check_joined_signature_validity (a_feature, other: ET_FEATURE) is
+			-- Check that `a_feature' and `other' have the same signature
+			-- when viewed from `current_class'. This check has to be done
+			-- when joining two or more deferred features, the `a_feature'
+			-- being the result of the join in `current_class' and `other'
+			-- being one of the other deferred features inherited from a
+			-- parent of `current_class'. (See ETL2 page 165 about Joining.)
+		require
+			a_feature_not_void: a_feature /= Void
+			a_feature_inherited: a_feature.is_inherited
+			a_feature_not_redeclared: not a_feature.is_redeclared
+			other_not_void: other /= Void
+			other_inherited: other.is_inherited
+			other_not_redeclared: not other.is_redeclared
+		local
+			a_joined_feature: ET_FLATTENED_FEATURE
+			other_precursor: ET_FLATTENED_FEATURE
+			an_arguments, other_arguments: ET_FORMAL_ARGUMENT_LIST
+			a_type, other_type: ET_TYPE
+			i, nb: INTEGER
+		do
+			a_joined_feature := a_feature.flattened_feature
+			a_type := a_joined_feature.type
+			other_precursor := other.precursor_feature
+			other_type := other_precursor.type
+			parent_context.set (other.parent.type, current_class)
+			if a_type /= Void and other_type /= Void then
+				if not a_type.same_syntactical_type (other_type, parent_context, current_class, universe) then
+					set_fatal_error (current_class)
+					error_handler.report_vdjr0c_error (current_class, a_feature.inherited_feature, other.inherited_feature)
+				end
+			else
+				-- This case has already been handled in the feature flattener.
+			end
+			an_arguments := a_joined_feature.arguments
+			other_arguments := other_precursor.arguments
+			if an_arguments /= Void and other_arguments /= Void then
+				nb := an_arguments.count
+				if other_arguments.count = nb then
+					from i := 1 until i > nb loop
+						if not an_arguments.formal_argument (i).type.same_syntactical_type (other_arguments.formal_argument (i).type, parent_context, current_class, universe) then
+							set_fatal_error (current_class)
+							error_handler.report_vdjr0b_error (current_class, a_feature.inherited_feature, other.inherited_feature, i)
+						end
+						i := i + 1
+					end
+				else
+					-- This case has already been handled in the feature flattener.
+				end
+			else
+				-- This case has already been handled in the feature flattener.
+			end
+		end
+
+	parent_context: ET_NESTED_TYPE_CONTEXT
+			-- Parent context for type conformance checking
 
 invariant
 
-	qualified_type_resolver_not_void: qualified_type_resolver /= Void
+	parent_context_not_void: parent_context /= Void
 
 end
