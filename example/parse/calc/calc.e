@@ -68,6 +68,9 @@ yyval := yyvs.item (yyvsp - 2) * yyvs.item (yyvsp)
 when 10 then
 --|#line 51
 yyval := yyvs.item (yyvsp - 2) / yyvs.item (yyvsp) 
+when 11 then
+--|#line 52
+yyval := -yyvs.item (yyvsp) 
 when 12 then
 --|#line 53
 yyval := yyvs.item (yyvsp - 1) 
@@ -129,7 +132,7 @@ feature {NONE} -- Tables
 		once
 			Result := INTEGER_ARRAY_.make_from_array (<<
 			    1,    0,    0,    3,    0,    6,    0,    2,    0,    0,
-			    0,    5,    4,    0,    0,    0,    0,   12,    0,    0,
+			   11,    5,    4,    0,    0,    0,    0,   12,    0,    0,
 			    0,    0,    0,    0>>, 0)
 		end
 
