@@ -231,7 +231,7 @@ feature {NONE} -- Processing (nondeterministic)
 	put_final_state is
 			-- Make sure that there is a shift transition
 			-- in start state (first state in `states')
-			-- that leads to a next-to_final state whose
+			-- that leads to a next-to-final state whose
 			-- `accessing_symbol' is the grammar's start
 			-- symbol. The next-to-final state has one shift
 			-- to the final state whose `accessing_symbol'
