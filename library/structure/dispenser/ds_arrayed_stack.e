@@ -116,6 +116,15 @@ feature -- Access
 			Result := storage.item (count)
 		end
 
+	i_th (i: INTEGER): G is
+			-- Item at index `i'
+		require
+			i_large_enough: i >= 1
+			i_small_enough: i <= count
+		do
+			Result := storage.item (i)
+		end
+
 feature -- Measurement
 
 	count: INTEGER
