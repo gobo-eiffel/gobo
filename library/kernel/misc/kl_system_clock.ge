@@ -1,0 +1,259 @@
+indexing
+
+	description:
+
+		"System clocks (precision to the second)"
+
+	library:    "Gobo Eiffel Kernel Library"
+	author:     "Eric Bezault <ericb@gobosoft.com>"
+	copyright:  "Copyright (c) 2001, Eric Bezault and others"
+	license:    "Eiffel Forum Freeware License v1 (see forum.txt)"
+	date:       "$Date$"
+	revision:   "$Revision$"
+
+class KL_SYSTEM_CLOCK
+
+inherit
+
+	KI_SYSTEM_CLOCK
+
+#ifdef HACT
+	SYSTEM_CLOCK
+		rename
+			ty as year,
+			tm as month,
+			td as day,
+			thr as hour,
+			tme as minute,
+			tsd as second,
+			january as  hact_january,
+			february as hact_february,
+			march as hact_march,
+			april as hact_april,
+			may as hact_may,
+			june as hact_june,
+			july as hact_july,
+			august as hact_august,
+			september as hact_september,
+			october as hact_october,
+			november as hact_november,
+			december as hact_december,
+			sunday as hact_sunday,
+			monday as hact_monday,
+			tuesday as hact_tueday,
+			wednesday as hact_wednesday,
+			thursday as hact_thursday,
+			friday as hact_friday,
+			saturday as hact_saturday
+		export
+			{NONE} all
+		end
+
+#endif
+#ifdef VE
+	TIMESTAMP
+		rename
+			set_local_time as old_set_local_time
+		export
+			{NONE} all
+		undefine
+			out
+		end
+
+#endif
+creation
+
+	make
+
+feature {NONE} -- Initialization
+
+	make is
+			-- Create a new system clock.
+		do
+#ifdef VE
+			set (1970, 1, 1, 0, 0, 0.0)
+#endif
+		end
+
+#ifndef HACT || VE
+feature -- Access
+
+	year: INTEGER
+			-- Year
+
+	month: INTEGER
+			-- Month
+
+	day: INTEGER
+			-- Day
+
+	hour: INTEGER
+			-- Hour
+
+	minute: INTEGER
+			-- Minute
+
+	second: INTEGER
+			-- Second
+
+#endif
+feature -- Setting
+
+	set_local_time is
+			-- Set clock to current local time.
+#ifdef ISE
+		local
+			tm_struct: POINTER
+			time_t: INTEGER
+#endif
+		do
+#ifdef SE
+			basic_time.set_local_time
+			basic_time.update
+			year := basic_time.year
+			month := basic_time.month
+			day := basic_time.day
+			hour := basic_time.hour
+			minute := basic_time.minute
+			second := basic_time.second
+#endif
+#ifdef VE
+			TIME_DATE_now (False, $year, $month, $day, $hour, $minute, $second, $millisecond)
+#endif
+#ifdef HACT
+			c_localtime (c_time, $year, $month, $day, $hour, $minute, $second, $tdst)
+#endif
+#ifdef ISE
+			time_t := c_time
+			tm_struct := tm_localtime ($time_t)
+			year := 1900 + tm_year (tm_struct)
+			month := tm_month (tm_struct) + 1
+			day := tm_day (tm_struct)
+			hour := tm_hour (tm_struct)
+			minute := tm_minute (tm_struct)
+			second := tm_second (tm_struct)
+#endif
+		end
+
+	set_utc_time is
+			-- Set clock to current UTC time.
+#ifdef ISE
+		local
+			tm_struct: POINTER
+			time_t: INTEGER
+#endif
+		do
+#ifdef SE
+			basic_time.set_universal_time
+			basic_time.update
+			year := basic_time.year
+			month := basic_time.month
+			day := basic_time.day
+			hour := basic_time.hour
+			minute := basic_time.minute
+			second := basic_time.second
+#endif
+#ifdef VE
+			TIME_DATE_now (True, $year, $month, $day, $hour, $minute, $second, $millisecond)
+#endif
+#ifdef HACT
+			c_utctime(c_time, $year, $month, $day, $hour, $minute, $second)
+#endif
+#ifdef ISE
+			time_t := c_time
+			tm_struct := tm_gmtime ($time_t)
+			year := 1900 + tm_year (tm_struct)
+			month := tm_month (tm_struct) + 1
+			day := tm_day (tm_struct)
+			hour := tm_hour (tm_struct)
+			minute := tm_minute (tm_struct)
+			second := tm_second (tm_struct)
+#endif
+		end
+
+#ifdef SE || ISE
+feature {NONE} -- Implementation
+
+#ifdef SE
+	basic_time: BASIC_TIME
+			-- System time
+
+#endif
+#ifdef ISE
+	c_time: INTEGER is
+			-- System time in seconds since 1 January 1970 at 00:00:00 UTC
+		external
+			"C [macro <time.h>]: EIF_INTEGER"
+		alias
+			"time(NULL)"
+		end
+
+	tm_localtime (t: POINTER): POINTER is
+			-- Convert `t' seconds since 1 January 1970 at 00:00:00 UTC
+			-- to local time 'struct tm*'
+		external
+			"C | <time.h>"
+		alias
+			"localtime"
+		end
+
+	tm_gmtime (t: POINTER): POINTER is
+			-- Convert `t' seconds since 1 January 1970 at 00:00:00 UTC
+			-- to Coordinated Universal Time (UTC) 'struct tm*'
+		external
+			"C | <time.h>"
+		alias
+			"gmtime"
+		end
+
+	tm_year (p: POINTER): INTEGER is
+			-- Years since 1900
+		external
+			"C [struct <time.h>] (struct tm): EIF_INTEGER"
+		alias
+			"tm_year"
+		end
+
+	tm_month (p: POINTER): INTEGER is
+			-- Months since January - [0,11]
+		external
+			"C [struct <time.h>] (struct tm): EIF_INTEGER"
+		alias
+			"tm_mon"
+		end
+
+	tm_day (p: POINTER): INTEGER is
+			-- Day of the month - [1,31]
+		external
+			"C [struct <time.h>] (struct tm): EIF_INTEGER"
+		alias
+			"tm_mday"
+		end
+
+	tm_hour (p: POINTER): INTEGER is
+			-- Hours since midnight - [0,23]
+		external
+			"C [struct <time.h>] (struct tm): EIF_INTEGER"
+		alias
+			"tm_hour"
+		end
+
+	tm_minute (p: POINTER): INTEGER is
+			-- Minutes after the hour - [0,59]
+		external
+			"C [struct <time.h>] (struct tm): EIF_INTEGER"
+		alias
+			"tm_min"
+		end
+
+	tm_second (p: POINTER): INTEGER is
+			-- Seconds after the minute - [0,61]
+		external
+			"C [struct <time.h>] (struct tm): EIF_INTEGER"
+		alias
+			"tm_sec"
+		end
+
+#endif
+#endif
+end -- class KL_SYSTEM_CLOCK
