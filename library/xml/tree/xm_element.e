@@ -197,7 +197,7 @@ feature -- Status report
 			from a_cursor.start until a_cursor.after loop
 				a_cursor.item.process (typer)
 				if typer.is_attribute and then 
-					typer.attribute.has_qualified_name (a_uri, a_name)
+					typer.xml_attribute.has_qualified_name (a_uri, a_name)
 				then
 					Result := True
 					a_cursor.go_after -- Jump out of the loop.
@@ -221,7 +221,7 @@ feature -- Status report
 			from a_cursor.start until a_cursor.after loop
 				a_cursor.item.process (typer)
 				if typer.is_attribute and then 
-					attribute_same_name (typer.attribute, a_name)
+					attribute_same_name (typer.xml_attribute, a_name)
 				then
 					Result := True
 					a_cursor.go_after -- Jump out of the loop.
@@ -366,9 +366,9 @@ feature -- Access
 			from a_cursor.start until a_cursor.after loop
 				a_cursor.item.process (typer)
 				if typer.is_attribute and then 
-					attribute_same_name (typer.attribute, a_name)
+					attribute_same_name (typer.xml_attribute, a_name)
 				then
-					Result := typer.attribute
+					Result := typer.xml_attribute
 					a_cursor.go_after -- Jump out of the loop.
 				else
 					a_cursor.forth
@@ -394,9 +394,9 @@ feature -- Access
 			from a_cursor.start until a_cursor.after loop
 				a_cursor.item.process (typer)
 				if typer.is_attribute and then 
-					typer.attribute.has_qualified_name (a_uri, a_name)
+					typer.xml_attribute.has_qualified_name (a_uri, a_name)
 				then
-					Result := typer.attribute
+					Result := typer.xml_attribute
 					a_cursor.go_after -- Jump out of the loop.
 				else
 					a_cursor.forth
@@ -425,8 +425,8 @@ feature -- Access
 				a_cursor := new_cursor
 				from a_cursor.start until a_cursor.after loop
 					a_cursor.item.process (typer)
-					if typer.is_attribute and then typer.attribute.is_namespace_declaration then
-						Result.force_last (typer.attribute.namespace_declaration)
+					if typer.is_attribute and then typer.xml_attribute.is_namespace_declaration then
+						Result.force_last (typer.xml_attribute.namespace_declaration)
 					end
 					a_cursor.forth
 				end
@@ -450,7 +450,7 @@ feature -- Access
 			from a_cursor.start until a_cursor.after loop
 				a_cursor.item.process (typer)
 				if typer.is_attribute then
-					Result.force_last (typer.attribute)
+					Result.force_last (typer.xml_attribute)
 				end
 				a_cursor.forth
 			end
@@ -490,7 +490,7 @@ feature -- Removal
 			from a_cursor.start until a_cursor.after loop
 				a_cursor.item.process (typer)
 				if typer.is_attribute and then 
-					attribute_same_name (typer.attribute, a_name)
+					attribute_same_name (typer.xml_attribute, a_name)
 				then
 					remove_at_cursor (a_cursor)
 				else
@@ -514,7 +514,7 @@ feature -- Removal
 			from a_cursor.start until a_cursor.after loop
 				a_cursor.item.process (typer)
 				if typer.is_attribute and then 
-					typer.attribute.has_qualified_name (a_uri, a_name)
+					typer.xml_attribute.has_qualified_name (a_uri, a_name)
 				then
 					remove_at_cursor (a_cursor)
 				else

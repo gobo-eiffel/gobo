@@ -263,7 +263,7 @@ feature {NONE} -- Walk assertions
 		do
 			node.process (typer)
 			assert ("attribute expected", typer.is_attribute)
-			an_attribute := typer.attribute
+			an_attribute := typer.xml_attribute
 			assert_equal ("attribute name", a_name, an_attribute.name)
 			assert_equal ("attribute value", a_value, an_attribute.value)
 			
@@ -293,7 +293,7 @@ feature {NONE} -- Walk assertions
 		do
 			assert_attribute (a_name, a_value)
 			node.process (typer)
-			assert ("has_qualified_name", typer.attribute.has_qualified_name (a_ns, a_name))
+			assert ("has_qualified_name", typer.xml_attribute.has_qualified_name (a_ns, a_name))
 			assert_equal ("attribute namespace", a_ns, typer.attribute.namespace.uri)
 		end
 		

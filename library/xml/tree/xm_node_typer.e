@@ -67,7 +67,7 @@ feature
 			-- Attribute.
 		do
 			reset
-			attribute := a
+			xml_attribute := a
 		end
 		
 feature -- Status report
@@ -135,10 +135,19 @@ feature -- Access
 		-- require type_ok: is_comment
 		-- ensure not_void: Result /= Void
 	
-	attribute: XM_ATTRIBUTE
+	xml_attribute: XM_ATTRIBUTE
 		-- Attribute
 		-- require type_ok: is_attribute
 		-- ensure not_void: Result /= Void
+
+	attribute: XM_ATTRIBUTE is
+		-- `xml_attribute' alias.
+		obsolete "renamed to xml_attribute to avoid conflict with future Eiffel keyword"
+		do
+			Result := xml_attribute
+		ensure
+			synonym: Result = xml_attribute
+		end
 
 feature -- Status report
 
@@ -167,7 +176,7 @@ feature {NONE} -- Implementation
 			processing_instruction := Void
 			document := Void
 			comment := Void
-			attribute := Void
+			xml_attribute := Void
 		
 			composite := Void
 		end
