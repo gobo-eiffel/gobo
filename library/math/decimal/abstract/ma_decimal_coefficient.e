@@ -130,6 +130,14 @@ feature -- Status report
 			Result := (index = count)
 		end
 
+	is_one : BOOLEAN is
+			-- Is Current one ?
+		do
+			Result := (msd_index = 0 and then item (0) = 1)
+		ensure
+			definition: Result = (msd_index = 0 and then item (0) = 1)
+		end
+		
 	is_significant : BOOLEAN is
 			-- Has current any non-zero digit?
 		do

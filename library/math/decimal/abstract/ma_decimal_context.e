@@ -184,7 +184,7 @@ feature -- Status report
 	exception_on_trap: BOOLEAN
 			-- Should an exception be raised when trap occurs?
 
-feature -- Status setting
+feature -- Element change
 
 	set_digits (some_digits: INTEGER) is
 			-- Set `digits' to `some_digits'.
@@ -366,9 +366,21 @@ feature {DECIMAL_TESTER, MA_DECIMAL_CONTEXT}
 	traps: ARRAY [BOOLEAN]
 			-- Signals trapped
 
+feature {MA_DECIMAL} -- Implementation
+
+	force_digits (d : INTEGER) is
+			-- Force digits to `d', just for do_underflow.
+		require
+			d_positive: d >= 0
+		do
+			digits := d
+		ensure
+			digits_set: digits = d
+		end
+		
 invariant
 
-	positive_digits: digits > 0
+	positive_digits: digits >= 0
 	rounding_mode_valid: rounding_mode = Round_ceiling or rounding_mode = Round_down
 		or rounding_mode = Round_floor or rounding_mode = Round_half_down
 		or rounding_mode = Round_half_even or rounding_mode = Round_half_up

@@ -98,13 +98,16 @@ feature {NONE} -- Initialization
 				is_negative := other.is_negative
 			end
 		ensure
-			is_equal_other: is_equal (other)
+			special_copy: special = other.special
+			coefficient_copy: coefficient.is_equal (other.coefficient)
+			sign_copy: sign = other.sign
+			exponent_copy: exponent = other.exponent
 		end
 
 	make_zero is
 			-- Make zero.
 		do
-			make (1)
+			coefficient := Special_coefficient
 		ensure
 			zero: is_zero
 		end
@@ -115,7 +118,8 @@ feature {NONE} -- Initialization
 			make (1)
 			coefficient.put (1, 0)
 		ensure
-			is_one: to_integer = 1
+			is_one: is_one
+			positive: not is_negative
 		end
 
 	make_from_integer (a_value: INTEGER) is
@@ -240,7 +244,7 @@ feature {NONE} -- Initialization
 			valid_code_special: code_special = Special_infinity or else code_special = Special_quiet_nan
 				or else code_special = Special_signaling_nan
 		do
-			coefficient := zero.coefficient
+			coefficient := special_coefficient
 			special := code_special
 		ensure
 			is_special: is_special
@@ -299,7 +303,8 @@ feature -- Constants
 		do
 			Result := once_one
 		ensure then
-			is_one: Result.to_integer = 1
+			one_is_one: Result.is_one
+			one_is_positive: not Result.is_negative
 		end
 
 	minus_one: MA_DECIMAL is
@@ -309,7 +314,7 @@ feature -- Constants
 			Result.set_negative
 		ensure
 			minus_one_not_void: Result /= Void
-			is_minus_one: Result.to_integer = -1
+			is_minus_one: Result.is_one and then Result.is_negative
 		end
 
 	zero: like Current is
@@ -323,7 +328,7 @@ feature -- Constants
 	negative_zero: MA_DECIMAL is
 			-- Negative zero
 		once
-			create Result.make_copy (zero)
+			create Result.make_zero
 			Result.set_negative
 		ensure
 			negative_zero_not_void: Result /= Void
@@ -491,6 +496,16 @@ feature -- Status report
 			definition: Result = (not is_special and then coefficient.is_zero)
 		end
 
+	is_one : BOOLEAN is
+			-- Is this a One ?
+		do
+			if not is_special and then exponent = 0 and then coefficient.is_one then
+				Result := True
+			end
+		ensure
+			definition: Result = (not is_special and then exponent = 0 and then coefficient.is_one)
+		end
+		
 feature -- Basic operations
 
 	infix "*" (other: like Current): like Current is
@@ -2121,7 +2136,7 @@ feature {MA_DECIMAL} -- Basic operations
 				if shared_digits < 0 then
 						-- Impossible to share any digit with `e_tiny'.
 					saved_digits := ctx.digits
-					ctx.set_digits (coefficient.count - 1)
+					ctx.force_digits (coefficient.count - 1)
 					value := 0
 					inspect ctx.rounding_mode
 					when Round_up then
@@ -2577,7 +2592,7 @@ feature {NONE} -- Implementation
 	once_zero: MA_DECIMAL is
 			-- Shared Zero
 		once
-			create Result.make_from_integer (0)
+			create Result.make_zero
 		ensure
 			zero_not_void: Result /= Void
 			is_zero: Result.is_zero
@@ -2586,15 +2601,25 @@ feature {NONE} -- Implementation
 	once_one: MA_DECIMAL is
 			-- Shared One
 		once
-			create Result.make_from_integer (1)
+			create Result.make_one
 		ensure
 			one_not_void: Result /= Void
-			is_one: Result.to_integer = 1
+			is_one: Result.is_one
 		end
 
+	special_coefficient : MA_DECIMAL_COEFFICIENT is
+		once
+			create {MA_DECIMAL_COEFFICIENT_IMP}Result.make (1)
+			Result.put (0,0)
+		ensure
+			special_coefficient_not_void: Result /= Void
+			zero: Result.is_zero
+		end
+		
 invariant
 
 	special_values: special >= Special_none and then special <= Special_quiet_nan
 	coefficient_not_void: coefficient /= Void
-	specials_share_coefficient_with_zero: is_special implies coefficient = zero.coefficient
+	specials_share_coefficient: is_special implies coefficient = special_coefficient
+	
 end

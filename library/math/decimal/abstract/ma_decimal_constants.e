@@ -93,7 +93,7 @@ feature -- Constants : signals
 feature -- Constants : limits
 
 	Minimum_digits: INTEGER is 1
-	Maximum_digits: INTEGER is 99_999_999
+	Maximum_digits: INTEGER is 999_999_999
 
 	Minimum_exponent: INTEGER is -999_999_999 
 			-- Minimum exponent allowed
@@ -103,16 +103,22 @@ feature -- Constants : limits
 
 	Minimum_integer_as_decimal: MA_DECIMAL is
 			-- Minimum value convertible to integer
+		local
+			ctx : MA_DECIMAL_CONTEXT
 		once
-			create Result.make_from_integer (Platform.Minimum_integer)
+			create ctx.make_double_extended
+			create Result.make_from_string_ctx (Platform.Minimum_integer.out, ctx)
 		ensure
 			minimum_integer_not_void: Result /= Void
 		end
 
 	Maximum_integer_as_decimal: MA_DECIMAL is
 			-- Maximum value convertible to integer
+		local
+			ctx : MA_DECIMAL_CONTEXT
 		once
-			create Result.make_from_integer (Platform.Maximum_integer)
+			create ctx.make_double_extended
+			create Result.make_from_string_ctx (Platform.Maximum_integer.out, ctx)
 		ensure
 			maximum_integer_not_void: Result /= Void
 		end
