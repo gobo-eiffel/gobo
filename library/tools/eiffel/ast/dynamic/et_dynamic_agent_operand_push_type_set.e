@@ -56,13 +56,6 @@ feature -- Access
 			-- Other types in current set;
 			-- Void if zero or one type in the set
 
-	targets: ET_DYNAMIC_TARGET_LIST is
-			-- Supersets of the current set
-		do
-		ensure then
-			no_target: Result = Void
-		end
-
 	sources: ET_DYNAMIC_ATTACHMENT is
 			-- Sub-sets of current type set
 		do
