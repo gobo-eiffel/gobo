@@ -15,6 +15,9 @@ deferred class XM_TEST_FORMATTER
 inherit
 	TS_TEST_CASE
 	
+	XM_MARKUP_CONSTANTS
+		export {NONE} all end
+	
 feature -- Tests
 
 	test_no_namespaces is
@@ -30,6 +33,14 @@ feature -- Tests
 						"<doc>%N</doc>", "<doc>%N</doc>")
 			assert_formatted ("empty_tag",
 						"<doc/>", "<doc></doc>")
+		end
+		
+	test_impplicit_namespace is
+			-- Test xml:
+		do
+			assert_formatted ("xml",
+				"<doc xml:space='default'/>",
+				"<doc xml:space=%"default%"></doc>") -- stays undeclared
 		end
 		
 	test_characters is
@@ -90,6 +101,28 @@ feature -- Tests
 						"<ns1:doc xmlns:ns1=%"root%" xmlns:ns2=%"abc%"><ns2:ele></ns2:ele></ns1:doc>")
 		end
 		
+	test_malformed is
+			-- The formatter should cope with prefix-inconsistent trees.
+		local
+			a_doc: XM_DOCUMENT
+			a_ns: XM_NAMESPACE			
+		do
+			create a_ns.make_default
+			create a_doc.make_with_root_named ("doc", a_ns)
+			
+			create a_ns.make ("pre", "uri1")
+			a_doc.root_element.add_attribute ("a1", a_ns, "v1")
+
+			create a_ns.make ("pre", "uri2")
+			a_doc.root_element.add_attribute ("a2", a_ns, "v2")
+			
+			make_formatter
+			a_doc.process (formatter)
+			
+			assert_equal ("malformed_attributes",
+				"<doc xmlns:pre=%"uri1%" xmlns:ns1=%"uri2%" pre:a1=%"v1%" ns1:a2=%"v2%"></doc>",
+				output.string)
+		end
 
 feature {NONE} -- Implementation
 		
@@ -121,11 +154,18 @@ feature {NONE} -- Implementation
 feature {NONE} -- Implementation
 				
 	make_parser is
+			-- Make parser.
 		do
 			create parser.make
 			create tree_pipe.make
 			parser.set_callbacks (tree_pipe.start)
 			
+			make_formatter
+		end
+	
+	make_formatter is
+			-- Make formatter
+		do
 			create formatter.make
 			create output.make_empty
 			formatter.set_output (output)
