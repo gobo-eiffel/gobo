@@ -33,6 +33,7 @@ feature {NONE} -- Initialization
 			valid_cardinality: is_valid_required_cardinality (card)
 		do
 			primary_type := type
+			content_type := Any_item
 			set_cardinality (card)
 		end
 
@@ -40,6 +41,7 @@ feature {NONE} -- Initialization
 			-- Create a general sequence
 		do
 			primary_type := Any_item
+			content_type := Any_item
 			create cardinalities.make (1, 3)
 			are_cardinalities_computed := True
 			cardinalities.put (True, 1)
@@ -51,6 +53,7 @@ feature {NONE} -- Initialization
 			-- Create a sequence that allows exactly one item
 		do
 			primary_type := Any_item
+			content_type := Any_item
 			create cardinalities.make (1, 3)
 			are_cardinalities_computed := True
 			cardinalities.put (True, 2)
@@ -60,6 +63,7 @@ feature {NONE} -- Initialization
 			-- Create a sequence that allows zero or one items
 		do
 			primary_type := Any_item
+			content_type := Any_item
 			create cardinalities.make (1, 3)
 			are_cardinalities_computed := True
 			cardinalities.put (True, 1)
@@ -70,6 +74,7 @@ feature {NONE} -- Initialization
 			-- Create a sequence that allows zero or one atomic items
 		do
 			primary_type := Atomic_type
+			content_type := Any_item
 			create cardinalities.make (1, 3)
 			are_cardinalities_computed := True
 			cardinalities.put (True, 1)
@@ -79,6 +84,7 @@ feature {NONE} -- Initialization
 	make_single_string is
 			-- Create a sequence that allows exactly one string
 		do
+			content_type := Any_item
 			primary_type := String_type
 			create cardinalities.make (1, 3)
 			are_cardinalities_computed := True
@@ -88,6 +94,7 @@ feature {NONE} -- Initialization
 	make_single_integer is
 			-- Create a sequence that allows exactly one integer
 		do
+			content_type := Any_item
 			primary_type := Integer_type
 			create cardinalities.make (1, 3)
 			are_cardinalities_computed := True
@@ -97,6 +104,7 @@ feature {NONE} -- Initialization
 	make_single_node is
 			-- Create a sequence that allows exactly one node
 		do
+			content_type := Any_item
 			primary_type := Any_node
 			create cardinalities.make (1, 3)
 			are_cardinalities_computed := True
@@ -106,6 +114,7 @@ feature {NONE} -- Initialization
 	make_node_sequence is
 			-- Create a sequence that allows zero or more node
 		do
+			content_type := Any_item
 			primary_type := Any_node
 			create cardinalities.make (1, 3)
 			are_cardinalities_computed := True
@@ -117,6 +126,9 @@ feature {NONE} -- Initialization
 feature -- Access
 
 	primary_type: INTEGER
-			-- Type of constiuent items
+			-- Type of constituent items
+
+	content_type: INTEGER
+			-- Type of contents (for Elements)
 
 end
