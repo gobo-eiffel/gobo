@@ -17,7 +17,7 @@ inherit
 
 	KI_CHARACTER_BUFFER
 		redefine
-#ifdef ISE
+#ifdef ISE || SE
 			append_substring_to_string,
 #endif
 			fill_from_string, fill_from_stream,
@@ -47,7 +47,10 @@ feature {NONE} -- Initialization
 			!! area.make_filled ('%U', n)
 #endif
 #ifdef SE
-			!! area.blank (n)
+			!! area_string.make_filled ('%U', n + 2)
+			area_string.remove_tail (1)
+			area := area.from_pointer (area_string.to_external)
+			count := n
 #endif
 #ifdef HACT
 			!! area.make (n)
@@ -72,6 +75,10 @@ feature -- Access
 			nb: INTEGER
 			p: POINTER
 #endif
+#ifdef SE
+		local
+			i, nb: INTEGER
+#endif
 		do
 			if e < s then
 					-- Empty string
@@ -89,13 +96,26 @@ feature -- Access
 				p.memory_copy (c_rtid ($area) + s, nb)
 				Result.set_count (nb)
 #else
+#ifdef SE
+				nb := e - s + 1
+				!! Result.make (nb)
+				from i := s until i > e loop
+					Result.append_character (area.item (i))
+					i := i + 1
+				end
+#else
 				Result := area.substring (s, e)
+#endif
 #endif
 			end
 		end
 
 feature -- Measurement
 
+#ifdef SE
+	count: INTEGER
+			-- Number of characters in buffer
+#else
 	count: INTEGER is
 			-- Number of characters in buffer
 		do
@@ -105,6 +125,7 @@ feature -- Measurement
 			Result := area.count
 #endif
 		end
+#endif
 
 feature -- Element change
 
@@ -114,10 +135,11 @@ feature -- Element change
 			area.put (v, i)
 		end
 
-#ifdef ISE
+#ifdef ISE || SE
 	append_substring_to_string (s, e: INTEGER; a_string: STRING) is
 			-- Append string made up of characters held in buffer
 			-- between indexes `s' and `e' to `a_string'.
+#ifdef ISE
 		local
 			nb, old_count, new_count: INTEGER
 			a: ANY
@@ -135,6 +157,25 @@ feature -- Element change
 				p.memory_move (c_rtid ($area) + s, nb)
 				a_string.set_count (new_count)
 			end
+#else
+		local
+			i, nb: INTEGER
+			old_count, new_count: INTEGER
+		do
+			if s <= e then
+				nb := e - s + 1
+				old_count := a_string.count
+				new_count := old_count + nb
+				if new_count > a_string.capacity then
+					a_string.resize (new_count)
+					a_string.keep_head (old_count)
+				end
+				from i := s until i > e loop
+					a_string.append_character (area.item (i))
+					i := i + 1
+				end
+			end
+#endif
 		end
 
 #endif
@@ -172,7 +213,7 @@ feature -- Element change
 			-- at most `nb' characters read from `a_stream'.
 			-- Return the number of characters actually read.
 		do
-#ifdef ISE
+#ifdef ISE || SE
 			Result := a_stream.read_to_string (area_string, pos + 1, nb)
 #else
 			Result := a_stream.read_to_string (area, pos, nb)
@@ -234,17 +275,11 @@ feature -- Resizing
 			area.resize (n)
 #endif
 #ifdef SE
-		local
-			i: INTEGER
 		do
-			from
-				i := n - count
-			until
-				i = 0
-			loop
-				area.append_character ('#')
-				i := i - 1
-			end
+			area_string.resize (n + 2)
+			area_string.remove_tail (1)
+			area := area.from_pointer (area_string.to_external)
+			count := n
 #endif
 #ifdef ISE
 		do
@@ -274,7 +309,12 @@ feature {NONE} -- Implementation
 	area: SPECIAL [CHARACTER]
 	area_string: STRING
 #else
+#ifdef SE
+	area: NATIVE_ARRAY [CHARACTER]
+	area_string: STRING
+#else
 	area: STRING
+#endif
 #endif
 			-- Implementation
 
@@ -291,8 +331,10 @@ feature {NONE} -- Implementation
 invariant
 
 	area_not_void: area /= Void
-#ifdef ISE
+#ifdef ISE || SE
 	area_string_not_void: area_string /= Void
+#endif
+#ifdef ISE
 	area_definition: area = area_string.area
 #endif
 

@@ -17,7 +17,7 @@ inherit
 
 	KI_TEXT_INPUT_FILE
 		undefine
-#ifdef ISE
+#ifdef ISE || SE || VE
 			read_to_string,
 #endif
 #ifdef VE

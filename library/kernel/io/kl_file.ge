@@ -290,10 +290,7 @@ feature -- Status report
 				Result := tmp_file2.is_readable
 #endif
 #ifdef VE
-				if old_exists then
-					tmp_file2.reset (name)
-					Result := tmp_file2.is_readable
-				end
+				Result := old_exists and then file_system_impl.has_readperm (name)
 #endif
 			end
 		end
