@@ -41,12 +41,12 @@ creation
 %type <STRING> namespace_name_second nm_token doctype_name doctype_system_token
 %type <STRING> char_data tagname_first tagname_atom name_token pi_target_token 
 %type <STRING> doctype_pe_reference entityvalue_pe_reference
-%type <STRING> entity_value entity_value_trail
+%type <STRING> entity_value entity_value_trail entity_value_trail_item
 %type <STRING> att_value att_value_trail att_value_trail_item
 %type <STRING> value_reference entity_value_reference
-%type <STRING> comment_content comment_content_item 
+%type <STRING> comment_content comment_content_trail comment_content_item 
 %type <STRING> pi_content pi_content_first pi_content_trail pi_content_item
-%type <STRING> cdata_body content_text
+%type <STRING> cdata_body cdata_body_item content_text
 %type <XM_DTD_EXTERNAL_ID> external_id public_id doctype_decl_external_name
 %type <STRING> ndata_decl doctype_name_space
 %type <XM_DTD_ELEMENT_CONTENT> content_spec children cp choice choice_trail seq seq_trail mixed mixed_trail
@@ -249,20 +249,24 @@ space_item: SPACE
 
 entity_value: VALUE_START VALUE_END
 		{ $$ := shared_empty_string }
+	| VALUE_START entity_value_trail_item VALUE_END
+		{ $$ := $2 }
 	| VALUE_START entity_value_trail VALUE_END
 		{ $$ := $2 }
 	;
 
-entity_value_trail: char_data
+entity_value_trail: entity_value_trail_item entity_value_trail_item
+		{ $$ := STRING_.concat ($1, $2) }
+	| entity_value_trail entity_value_trail_item
+		{ $$ := STRING_.appended_string ($1, $2) }
+	;
+
+entity_value_trail_item: char_data
 		{ $$ := $1 }
 	| entity_value_reference
 		{ $$ := $1 }
-	| entity_value_trail char_data
-		{ $$ := STRING_.concat ($1, $2) }
-	| entity_value_trail entity_value_reference
-		{ $$ := STRING_.concat ($1, $2) }
 	;
-
+	
 entity_value_reference: entityvalue_pe_reference
 		{ $$ := entity_referenced_in_entity_value ($1) }
 -- character_reference now char_data
@@ -271,14 +275,16 @@ entity_value_reference: entityvalue_pe_reference
 
 att_value: VALUE_START VALUE_END
 		{ $$ := shared_empty_string }
+	| VALUE_START att_value_trail_item VALUE_END
+		{ $$ := $2 }
 	| VALUE_START att_value_trail VALUE_END
 		{ $$ := $2 }
 	;
 
-att_value_trail: att_value_trail_item
-		{ $$ := $1 }
-	| att_value_trail att_value_trail_item
+att_value_trail: att_value_trail_item att_value_trail_item
 		{ $$ := STRING_.concat ($1, $2) }
+	| att_value_trail att_value_trail_item
+		{ $$ := STRING_.appended_string ($1, $2) }
 	;
 
 att_value_trail_item: char_data { $$ := $1 }
@@ -303,11 +309,17 @@ dtd_comment: COMMENT_START comment_content COMMENT_END
 	| COMMENT_START COMMENT_END
 		{ on_dtd_comment (shared_empty_string) }
 	;
-	
+
 comment_content: comment_content_item
 		{ $$ := $1 }
-	| comment_content comment_content_item
+	| comment_content_trail
+		{ $$ := $1 }
+	;
+
+comment_content_trail: comment_content_item comment_content_item
 		{ $$ := STRING_.concat ($1, $2) }
+	| comment_content_trail comment_content_item
+		{ $$ := STRING_.appended_string ($1, $2) }
 	;
 
 comment_content_item: char_data { $$ := $1 }
@@ -330,16 +342,18 @@ dtd_pi: PI_START pi_target_token req_space pi_content PI_END
 	| PI_RESERVED { force_error (Error_pi_xml_reserved) }
 	;
 
-pi_content: pi_content_first pi_content_trail
+pi_content: pi_content_first pi_content_item
+		{ $$ := STRING_.concat ($1, $2) }
+	| pi_content_first pi_content_trail
 		{ $$ := STRING_.concat ($1, $2) }
 	| pi_content_first
 		{ $$ := $1 }
 	;
 	
-pi_content_trail: pi_content_item
-		{ $$ := $1 }
-	| pi_content_trail pi_content_item
+pi_content_trail: pi_content_item pi_content_item
 		{ $$ := STRING_.concat ($1, $2) }
+	| pi_content_trail pi_content_item
+		{ $$ := STRING_.appended_string ($1, $2) }
 	;
 
 pi_content_item: char_data { $$ := $1 }
@@ -354,15 +368,15 @@ pi_content_first: char_data { $$ := $1 }
 -- 2.7 CDATA section
 
 cd_sect: CDATA_START CDATA_END
-		{ on_content (shared_empty_string) }
 	| CDATA_START cdata_body CDATA_END
-		{ on_content ($2) }
 	;
 
-cdata_body: char_data
-		{ $$ := $1 }
-	| cdata_body char_data
-		{ $$ := STRING_.concat ($1, $2) }
+cdata_body: cdata_body_item
+	| cdata_body cdata_body_item
+	;
+
+cdata_body_item: char_data
+		{ on_content ($1) }
 	;
 
 -- 2.8 Prolog and DTD
