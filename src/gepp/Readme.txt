@@ -21,7 +21,7 @@ To compile this program:
 
 3. Run Gepp using:
 
-       gepp [-M] [-Dname ...] [filename | -] [filename | -]
+       gepp [--version][--help][-hV?lM][--lines][-Dname ...][filename | -][filename | -]
 
 A small "User's Manual" documentation in HTML format is available in
 "$GOBO/doc/portability/gepp.html".

@@ -218,7 +218,7 @@ feature -- Error handling
 		once
 			!! Result.make
 				("[--version][--help][-hV?lM]%N%
-					%%T[-Dname ...][--lines][filename | -][filename | -]")
+					%%T[--lines][-Dname ...][filename | -][filename | -]")
 		ensure
 			usage_message_not_void: Result /= Void
 		end
