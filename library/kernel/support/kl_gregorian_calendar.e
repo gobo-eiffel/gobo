@@ -16,6 +16,9 @@ inherit
 
 	ANY -- Needed for SE 2.1b1.
 
+	KL_IMPORTED_INTEGER_ROUTINES
+		export {NONE} all end
+
 feature -- Year
 
 	leap_year (y: INTEGER): BOOLEAN is
@@ -222,8 +225,8 @@ feature -- Epoch
 			d_small_enough: d <= days_in_month (m, y)
 		do
 			Result := (y - Epoch_year) * Days_in_year +
-				((((y - 1) // 4) - ((y - 1) // 100) +
-				((y - 1) // 400)) - Epoch_leap_years) +
+				(((INTEGER_.div (y - 1, 4)) - (INTEGER_.div (y - 1, 100)) +
+				(INTEGER_.div (y - 1, 400))) - Epoch_leap_years) +
 				(days_at_month (m, y) - Epoch_days_at_month) +
 				(d - Epoch_day)
 		end

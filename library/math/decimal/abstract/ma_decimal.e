@@ -138,7 +138,7 @@ feature {NONE} -- Initialization
 			until
 				v = 0
 			loop
-				v := v // 10
+				v := INTEGER_.div (v, 10)
 				if v /= 0 then
 					ten_exponent := ten_exponent + 1
 				end
@@ -156,7 +156,7 @@ feature {NONE} -- Initialization
 					v = 0
 				loop
 					coefficient.put (- INTEGER_.mod (v, 10), index)
-					v := v // 10
+					v := INTEGER_.div (v, 10)
 					if v /= 0 then
 						index := index + 1
 					end
