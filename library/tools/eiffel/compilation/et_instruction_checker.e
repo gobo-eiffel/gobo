@@ -119,12 +119,14 @@ feature {NONE} -- Instruction validity
 			expression_checker.check_writable_validity (a_target, current_feature, current_class)
 			if expression_checker.has_fatal_error then
 				set_fatal_error
+				a_target_type := universe.any_type
+				a_target_context := current_class
 			else
 				a_target_type := expression_checker.type
 				a_target_context := expression_checker.context
 			end
 			a_source := an_instruction.source
-			expression_checker.check_expression_validity (a_source, current_feature, current_class)
+			expression_checker.check_expression_validity (a_source, a_target_type, a_target_context, current_feature, current_class)
 			if expression_checker.has_fatal_error then
 				set_fatal_error
 			else
@@ -164,12 +166,14 @@ feature {NONE} -- Instruction validity
 			expression_checker.check_writable_validity (a_target, current_feature, current_class)
 			if expression_checker.has_fatal_error then
 				set_fatal_error
+				a_target_type := universe.any_type
+				a_target_context := current_class
 			else
 				a_target_type := expression_checker.type
 				a_target_context := expression_checker.context
 			end
 			a_source := an_instruction.source
-			expression_checker.check_expression_validity (a_source, current_feature, current_class)
+			expression_checker.check_expression_validity (a_source, a_target_type, a_target_context, current_feature, current_class)
 			if expression_checker.has_fatal_error then
 				set_fatal_error
 			else
@@ -224,7 +228,7 @@ feature {NONE} -- Instruction validity
 			if a_seed = 0 then
 					-- We need to resolve `a_name' in the implementation
 					-- class of `current_feature' first.
-				expression_checker.check_expression_validity (a_target, current_feature, a_class_impl)
+				expression_checker.check_expression_validity (a_target, universe.any_type, a_class_impl, current_feature, a_class_impl)
 				if not expression_checker.has_fatal_error then
 					create a_context.make (expression_checker.type, expression_checker.context)
 					a_class := a_context.base_class (universe)
@@ -252,7 +256,7 @@ feature {NONE} -- Instruction validity
 			end
 			if not has_fatal_error and a_seed /= 0 then
 				if a_feature = Void then
-					expression_checker.check_expression_validity (a_target, current_feature, current_class)
+					expression_checker.check_expression_validity (a_target, universe.any_type, current_class, current_feature, current_class)
 					if not expression_checker.has_fatal_error then
 						create a_context.make (expression_checker.type, expression_checker.context)
 						a_class := a_context.base_class (universe)
@@ -306,13 +310,13 @@ feature {NONE} -- Instruction validity
 						nb := an_actuals.count
 						from i := 1 until i > nb loop
 							an_actual := an_actuals.expression (i)
-							expression_checker.check_expression_validity (an_actual, current_feature, current_class)
+							a_formal := a_formals.formal_argument (i)
+							expression_checker.check_expression_validity (an_actual, a_formal.type, a_context, current_feature, current_class)
 							if expression_checker.has_fatal_error then
 								set_fatal_error
 							else
 								an_actual_type := expression_checker.type
 								an_actual_context := expression_checker.context
-								a_formal := a_formals.formal_argument (i)
 								if not an_actual_type.conforms_to_type (a_formal.type, a_context, an_actual_context, universe) then
 									if not an_actual_type.convertible_to_type (a_formal.type, a_context, an_actual_context, universe) then
 										an_actual_named_type := an_actual_type.named_type (an_actual_context, universe)
@@ -395,6 +399,8 @@ feature {NONE} -- Instruction validity
 									end
 										-- Syntax error: a formal argument cannot be an instruction.
 									set_fatal_error
+										-- Note: ISE 5.4 reports a VKCN-1 here. However
+										-- `a_name' is not a function nor an attribute name.
 -- TODO
 									--error_handler.report_gvuaa0a_error (a_class_impl, an_identifier, current_feature)
 								end
@@ -465,13 +471,13 @@ feature {NONE} -- Instruction validity
 						nb := an_actuals.count
 						from i := 1 until i > nb loop
 							an_actual := an_actuals.expression (i)
-							expression_checker.check_expression_validity (an_actual, current_feature, current_class)
+							a_formal := a_formals.formal_argument (i)
+							expression_checker.check_expression_validity (an_actual, a_formal.type, current_class, current_feature, current_class)
 							if expression_checker.has_fatal_error then
 								set_fatal_error
 							else
 								an_actual_type := expression_checker.type
 								an_actual_context := expression_checker.context
-								a_formal := a_formals.formal_argument (i)
 								if not an_actual_type.conforms_to_type (a_formal.type, current_class, an_actual_context, universe) then
 									if not an_actual_type.convertible_to_type (a_formal.type, current_class, an_actual_context, universe) then
 										an_actual_named_type := an_actual_type.named_type (an_actual_context, universe)
@@ -514,7 +520,7 @@ feature {NONE} -- Instruction validity
 			nb := an_instruction.count
 			from i := 1 until i > nb loop
 				an_expression := an_instruction.assertion (i).expression
-				expression_checker.check_expression_validity (an_expression, current_feature, current_class)
+				expression_checker.check_expression_validity (an_expression, universe.boolean_class, current_class, current_feature, current_class)
 				if expression_checker.has_fatal_error then
 					had_error := True
 				else
@@ -776,13 +782,13 @@ feature {NONE} -- Instruction validity
 						nb := an_actuals.count
 						from i := 1 until i > nb loop
 							an_actual := an_actuals.expression (i)
-							expression_checker.check_expression_validity (an_actual, current_feature, current_class)
+							a_formal := a_formals.formal_argument (i)
+							expression_checker.check_expression_validity (an_actual, a_formal.type, a_context, current_feature, current_class)
 							if expression_checker.has_fatal_error then
 								set_fatal_error
 							else
 								an_actual_type := expression_checker.type
 								an_actual_context := expression_checker.context
-								a_formal := a_formals.formal_argument (i)
 								if not an_actual_type.conforms_to_type (a_formal.type, a_context, an_actual_context, universe) then
 									if not an_actual_type.convertible_to_type (a_formal.type, a_context, an_actual_context, universe) then
 										an_actual_named_type := an_actual_type.named_type (an_actual_context, universe)
@@ -829,7 +835,7 @@ feature {NONE} -- Instruction validity
 			had_error: BOOLEAN
 		do
 			a_conditional := an_instruction.conditional.expression
-			expression_checker.check_expression_validity (a_conditional, current_feature, current_class)
+			expression_checker.check_expression_validity (a_conditional, universe.boolean_class, current_class, current_feature, current_class)
 			if expression_checker.has_fatal_error then
 				had_error := True
 			else
@@ -848,7 +854,7 @@ feature {NONE} -- Instruction validity
 				from i := 1 until i > nb loop
 					an_elseif := an_elseif_parts.item (i)
 					a_conditional := an_elseif.conditional.expression
-					expression_checker.check_expression_validity (a_conditional, current_feature, current_class)
+					expression_checker.check_expression_validity (a_conditional, universe.boolean_class, current_class, current_feature, current_class)
 					if expression_checker.has_fatal_error then
 						had_error := True
 					else
@@ -889,7 +895,7 @@ feature {NONE} -- Instruction validity
 			had_error: BOOLEAN
 		do
 			a_conditional := an_instruction.conditional.expression
-			expression_checker.check_expression_validity (a_conditional, current_feature, current_class)
+			expression_checker.check_expression_validity (a_conditional, universe.boolean_class, current_class, current_feature, current_class)
 			if expression_checker.has_fatal_error then
 				had_error := True
 			else
@@ -941,7 +947,7 @@ feature {NONE} -- Instruction validity
 			end
 -- TODO: check invariant and variant
 			a_conditional := an_instruction.until_conditional.expression
-			expression_checker.check_expression_validity (a_conditional, current_feature, current_class)
+			expression_checker.check_expression_validity (a_conditional, universe.boolean_class, current_class, current_feature, current_class)
 			if expression_checker.has_fatal_error then
 				had_error := True
 			else
@@ -1099,13 +1105,13 @@ feature {NONE} -- Instruction validity
 							nb := an_actuals.count
 							from i := 1 until i > nb loop
 								an_actual := an_actuals.expression (i)
-								expression_checker.check_expression_validity (an_actual, current_feature, current_class)
+								a_formal := a_formals.formal_argument (i)
+								expression_checker.check_expression_validity (an_actual, a_formal.type, a_context, current_feature, current_class)
 								if expression_checker.has_fatal_error then
 									set_fatal_error
 								else
 									an_actual_type := expression_checker.type
 									an_actual_context := expression_checker.context
-									a_formal := a_formals.formal_argument (i)
 									if not an_actual_type.conforms_to_type (a_formal.type, a_context, an_actual_context, universe) then
 										if not an_actual_type.convertible_to_type (a_formal.type, a_context, an_actual_context, universe) then
 											an_actual_named_type := an_actual_type.named_type (an_actual_context, universe)

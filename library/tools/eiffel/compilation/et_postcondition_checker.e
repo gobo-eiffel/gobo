@@ -29,7 +29,7 @@ feature {NONE} -- Expression validity
 			-- Check validity of `an_expression'.
 		do
 				-- Check VAOL-2 (ETL2 p.124).
-			check_expression_validity (an_expression.expression, current_feature, current_class)
+			check_expression_validity (an_expression.expression, current_target_type, current_target_context, current_feature, current_class)
 		end
 
 end

@@ -68,6 +68,8 @@ feature {NONE} -- Initialization
 			universe := a_universe
 			current_class := a_universe.unknown_class
 			current_feature := dummy_feature
+			current_target_type := a_universe.any_type
+			current_target_context := a_universe.any_class
 			create type_checker.make (a_universe)
 		end
 
@@ -101,11 +103,13 @@ feature -- Setting
 
 feature -- Validity checking
 
-	check_expression_validity (an_expression: ET_EXPRESSION; a_feature: ET_FEATURE; a_class: ET_CLASS) is
-			-- Check validity of `an_expression' in `a_feature' of `a_class'.
-			-- Set `has_fatal_error' is a fatal error occurred. Otherwise
-			-- the type of `an_expression' and its type context are made
-			-- available in `type' and `context'.
+	check_expression_validity (an_expression: ET_EXPRESSION; a_target_type: ET_TYPE;
+		a_target_context: ET_TYPE_CONTEXT; a_feature: ET_FEATURE; a_class: ET_CLASS) is
+			-- Check validity of `an_expression' (whose target is of type
+			-- `a_target_type' in context `a_target_context') in `a_feature'
+			-- of `a_class'. Set `has_fatal_error' is a fatal error occurred.
+			-- Otherwise the type of `an_expression' and its type context
+			-- are made available in `type' and `context'.
 		require
 			an_expression_not_void: an_expression /= Void
 			a_feature_not_void: a_feature /= Void
@@ -113,12 +117,18 @@ feature -- Validity checking
 		local
 			old_feature: ET_FEATURE
 			old_class: ET_CLASS
+			old_target_type: ET_TYPE
+			old_target_context: ET_TYPE_CONTEXT
 		do
 			reset
 			old_feature := current_feature
 			current_feature := a_feature
 			old_class := current_class
 			current_class := a_class
+			old_target_type := current_target_type
+			current_target_type := a_target_type
+			old_target_context := current_target_context
+			current_target_context := a_target_context
 			internal_call := True
 			an_expression.process (Current)
 			if internal_call then
@@ -132,6 +142,8 @@ feature -- Validity checking
 			end
 			current_class := old_class
 			current_feature := old_feature
+			current_target_type := old_target_type
+			current_target_context := old_target_context
 		ensure
 			type_not_void: not has_fatal_error implies type /= Void
 			context_not_void: not has_fatal_error implies context /= Void
@@ -390,7 +402,7 @@ feature {NONE} -- Expression validity
 			if a_seed = 0 then
 					-- We need to resolve `a_name' in the implementation
 					-- class of `current_feature' first.
-				check_expression_validity (a_target, current_feature, a_class_impl)
+				check_expression_validity (a_target, universe.any_type, a_class_impl, current_feature, a_class_impl)
 				if not has_fatal_error then
 					create a_context.make (type, context)
 					a_class := a_context.base_class (universe)
@@ -418,7 +430,7 @@ feature {NONE} -- Expression validity
 			end
 			if not has_fatal_error and a_seed /= 0 then
 				if a_feature = Void then
-					check_expression_validity (a_target, current_feature, current_class)
+					check_expression_validity (a_target, universe.any_type, current_class, current_feature, current_class)
 					if not has_fatal_error then
 						create a_context.make (type, context)
 						a_class := a_context.base_class (universe)
@@ -473,11 +485,11 @@ feature {NONE} -- Expression validity
 						nb := an_actuals.count
 						from i := 1 until i > nb loop
 							an_actual := an_actuals.expression (i)
-							check_expression_validity (an_actual, current_feature, current_class)
+							a_formal := a_formals.formal_argument (i)
+							check_expression_validity (an_actual, a_formal.type, a_context, current_feature, current_class)
 							if has_fatal_error then
 								had_error := True
 							else
-								a_formal := a_formals.formal_argument (i)
 								if not type.conforms_to_type (a_formal.type, a_context, context, universe) then
 									if not type.convertible_to_type (a_formal.type, a_context, context, universe) then
 										if a_name.is_infix then
@@ -741,11 +753,11 @@ feature {NONE} -- Expression validity
 							nb := an_actuals.count
 							from i := 1 until i > nb loop
 								an_actual := an_actuals.expression (i)
-								check_expression_validity (an_actual, current_feature, current_class)
+								a_formal := a_formals.formal_argument (i)
+								check_expression_validity (an_actual, a_formal.type, current_class, current_feature, current_class)
 								if has_fatal_error then
 									had_error := True
 								else
-									a_formal := a_formals.formal_argument (i)
 									if not type.conforms_to_type (a_formal.type, current_class, context, universe) then
 										if not type.convertible_to_type (a_formal.type, current_class, context, universe) then
 											an_actual_type := type.named_type (context, universe)
@@ -978,11 +990,11 @@ feature {NONE} -- Expression validity
 						nb := an_actuals.count
 						from i := 1 until i > nb loop
 							an_actual := an_actuals.expression (i)
-							check_expression_validity (an_actual, current_feature, current_class)
+							a_formal := a_formals.formal_argument (i)
+							check_expression_validity (an_actual, a_formal.type, a_context, current_feature, current_class)
 							if has_fatal_error then
 								had_error := True
 							else
-								a_formal := a_formals.formal_argument (i)
 								if not type.conforms_to_type (a_formal.type, a_context, context, universe) then
 									if not type.convertible_to_type (a_formal.type, a_context, context, universe) then
 										an_actual_type := type.named_type (context, universe)
@@ -1044,11 +1056,11 @@ feature {NONE} -- Expression validity
 			left_named_type: ET_NAMED_TYPE
 			right_named_type: ET_NAMED_TYPE
 		do
-			check_expression_validity (an_expression.left, current_feature, current_class)
+			check_expression_validity (an_expression.left, universe.any_type, current_class, current_feature, current_class)
 			if not has_fatal_error then
 				left_type := type
 				left_context := context
-				check_expression_validity (an_expression.right, current_feature, current_class)
+				check_expression_validity (an_expression.right, universe.any_type, current_class, current_feature, current_class)
 				if not has_fatal_error then
 					right_type := type
 					right_context := context
@@ -1081,7 +1093,7 @@ feature {NONE} -- Expression validity
 					end
 				end
 			else
-				check_expression_validity (an_expression.right, current_feature, current_class)
+				check_expression_validity (an_expression.right, universe.any_type, current_class, current_feature, current_class)
 				set_fatal_error
 			end
 		end
@@ -1091,7 +1103,7 @@ feature {NONE} -- Expression validity
 		require
 			an_expression_not_void: an_expression /= Void
 		do
-			check_expression_validity (an_expression.expression, current_feature, current_class)
+			check_expression_validity (an_expression.expression, universe.any_type, current_class, current_feature, current_class)
 			if not has_fatal_error then
 				type := universe.pointer_class
 				context := current_class
@@ -1272,38 +1284,71 @@ feature {NONE} -- Expression validity
 			hybrid_type: BOOLEAN
 			an_actuals: ET_ACTUAL_PARAMETER_LIST
 			array_class: ET_CLASS
+			any_type: ET_CLASS_TYPE
+			an_array_type: ET_CLASS_TYPE
+			an_array_parameters: ET_ACTUAL_PARAMETER_LIST
+			an_array_parameter: ET_TYPE
 		do
-			nb := an_expression.count
-			from i := 1 until i > nb loop
-				check_expression_validity (an_expression.expression (i), current_feature, current_class)
-				if not has_fatal_error then
-					if not had_error then
-						if a_type = Void then
-							a_type := type.named_type (context, universe)
-						elseif not type.same_named_type (a_type, current_class, context, universe) then
-							hybrid_type := True
-						end
-					end
-				else
-					had_error := True
+			array_class := universe.array_class
+			an_array_type ?= current_target_type.named_type (current_target_context, universe)
+			if an_array_type /= Void and then an_array_type.direct_base_class (universe) = array_class then
+				an_array_parameters := an_array_type.actual_parameters
+				if an_array_parameters /= Void and then an_array_parameters.count = 1 then
+					an_array_parameter := an_array_parameters.type (1)
 				end
-				i := i + 1
 			end
-			if had_error then
-				set_fatal_error
-			else
--- TODO
-				if a_type = Void then
-					type := universe.array_none_type
-				elseif hybrid_type then
-					type := universe.array_none_type
-				else
-					array_class := universe.array_class
-					create an_actuals.make_with_capacity (1)
-					an_actuals.put_first (a_type)
-					create {ET_GENERIC_CLASS_TYPE} type.make (Void, array_class.name, an_actuals, array_class)
+			nb := an_expression.count
+			if an_array_parameter /= Void then
+				from i := 1 until i > nb loop
+					check_expression_validity (an_expression.expression (i), an_array_parameter, current_class, current_feature, current_class)
+					if not has_fatal_error then
+						if not type.conforms_to_type (an_array_parameter, current_class, context, universe) then
+							if not type.convertible_to_type (an_array_parameter, current_class, context, universe) then
+								an_array_type := universe.array_any_type
+							end
+						end
+					else
+						had_error := True
+					end
+					i := i + 1
 				end
-				context := current_class
+				if had_error then
+					set_fatal_error
+				else
+					type := an_array_type
+					context := current_class
+				end
+			else
+				any_type := universe.any_type
+				from i := 1 until i > nb loop
+					check_expression_validity (an_expression.expression (i), any_type, current_class, current_feature, current_class)
+					if not has_fatal_error then
+						if not had_error then
+							if a_type = Void then
+								a_type := type.named_type (context, universe)
+							elseif not type.same_named_type (a_type, current_class, context, universe) then
+								hybrid_type := True
+							end
+						end
+					else
+						had_error := True
+					end
+					i := i + 1
+				end
+				if had_error then
+					set_fatal_error
+				else
+					if a_type = Void then
+						type := universe.array_any_type
+					elseif hybrid_type then
+						type := universe.array_any_type
+					else
+						create an_actuals.make_with_capacity (1)
+						an_actuals.put_first (a_type)
+						create {ET_GENERIC_CLASS_TYPE} type.make (Void, array_class.name, an_actuals, array_class)
+					end
+					context := current_class
+				end
 			end
 		end
 
@@ -1312,14 +1357,34 @@ feature {NONE} -- Expression validity
 		require
 			an_expression_not_void: an_expression /= Void
 		local
-			i, nb: INTEGER
+			i, nb, nb2: INTEGER
 			had_error: BOOLEAN
 			an_actuals: ET_ACTUAL_PARAMETER_LIST
+			a_tuple_type: ET_TUPLE_TYPE
+			a_tuple_parameters: ET_ACTUAL_PARAMETER_LIST
+			any_type: ET_CLASS_TYPE
 		do
+			any_type := universe.any_type
+			a_tuple_type ?= current_target_type.named_type (current_target_context, universe)
+			if a_tuple_type /= Void then
+				a_tuple_parameters := a_tuple_type.actual_parameters
+				if a_tuple_parameters /= Void then
+					nb2 := a_tuple_parameters.count
+				end
+			end
 			nb := an_expression.count
 			create an_actuals.make_with_capacity (nb)
-			from i := nb until i < 1 loop
-				check_expression_validity (an_expression.expression (i), current_feature, current_class)
+			from i := nb until i <= nb2 loop
+				check_expression_validity (an_expression.expression (i), any_type, current_class, current_feature, current_class)
+				if not has_fatal_error then
+					an_actuals.put_first (type.named_type (context, universe))
+				else
+					had_error := True
+				end
+				i := i - 1
+			end
+			from until i < 1 loop
+				check_expression_validity (an_expression.expression (i), a_tuple_parameters.type (i), current_class, current_feature, current_class)
 				if not has_fatal_error then
 					an_actuals.put_first (type.named_type (context, universe))
 				else
@@ -1341,7 +1406,7 @@ feature {NONE} -- Expression validity
 			an_expression_not_void: an_expression /= Void
 		do
 				-- Check VAOL-2 (ETL2 p.124).
-			check_expression_validity (an_expression.expression, current_feature, current_class)
+			check_expression_validity (an_expression.expression, current_target_type, current_target_context, current_feature, current_class)
 				-- Check VAOL-1 (ETL2 p.124).
 			set_fatal_error
 			error_handler.report_vaol1a_error (current_feature.implementation_class, an_expression)
@@ -1352,7 +1417,7 @@ feature {NONE} -- Expression validity
 		require
 			an_expression_not_void: an_expression /= Void
 		do
-			check_expression_validity (an_expression.manifest_string, current_feature, current_class)
+			check_expression_validity (an_expression.manifest_string, current_target_type, current_target_context, current_feature, current_class)
 		end
 
 	check_parenthesized_expression_validity (an_expression: ET_PARENTHESIZED_EXPRESSION) is
@@ -1360,7 +1425,7 @@ feature {NONE} -- Expression validity
 		require
 			an_expression_not_void: an_expression /= Void
 		do
-			check_expression_validity (an_expression.expression, current_feature, current_class)
+			check_expression_validity (an_expression.expression, current_target_type, current_target_context, current_feature, current_class)
 		end
 
 	check_precursor_expression_validity (an_expression: ET_PRECURSOR_EXPRESSION) is
@@ -1579,11 +1644,11 @@ feature {NONE} -- Expression validity
 							nb := an_actuals.count
 							from i := 1 until i > nb loop
 								an_actual := an_actuals.expression (i)
-								check_expression_validity (an_actual, current_feature, current_class)
+								a_formal := a_formals.formal_argument (i)
+								check_expression_validity (an_actual, a_formal.type, a_context, current_feature, current_class)
 								if has_fatal_error then
 									had_error := True
 								else
-									a_formal := a_formals.formal_argument (i)
 									if not type.conforms_to_type (a_formal.type, a_context, context, universe) then
 										if not type.convertible_to_type (a_formal.type, a_context, context, universe) then
 											an_actual_type := type.named_type (context, universe)
@@ -2114,6 +2179,12 @@ feature {NONE} -- Access
 	current_class: ET_CLASS
 			-- Class to with `current_feature' belongs
 
+	current_target_type: ET_TYPE
+			-- Type of the target of expression being processed
+
+	current_target_context: ET_TYPE_CONTEXT
+			-- Context of `current_target_type'
+
 feature {NONE} -- Implementation
 
 	internal_call: BOOLEAN
@@ -2136,6 +2207,8 @@ invariant
 
 	current_feature_not_void: current_feature /= Void
 	current_class_not_void: current_class /= Void
+	current_target_type_not_void: current_target_type /= Void
+	current_target_context_not_void: current_target_context /= Void
 	type_checker_not_void: type_checker /= Void
 
 end

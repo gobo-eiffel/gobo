@@ -395,7 +395,7 @@ feature {NONE} -- Assertions validity
 			from i := 1 until i > nb loop
 				an_expression := a_preconditions.assertion (i).expression
 				if an_expression /= Void then
-					precondition_checker.check_expression_validity (an_expression, current_feature, current_class)
+					precondition_checker.check_expression_validity (an_expression, universe.boolean_class, current_class, current_feature, current_class)
 					if precondition_checker.has_fatal_error then
 						had_error := True
 					else
@@ -422,7 +422,7 @@ feature {NONE} -- Assertions validity
 			from i := 1 until i > nb loop
 				an_expression := a_postconditions.assertion (i).expression
 				if an_expression /= Void then
-					postcondition_checker.check_expression_validity (an_expression, current_feature, current_class)
+					postcondition_checker.check_expression_validity (an_expression, universe.boolean_class, current_class, current_feature, current_class)
 					if postcondition_checker.has_fatal_error then
 						had_error := True
 					else
