@@ -103,38 +103,43 @@ feature -- Execution
 			a_variables: GEANT_VARIABLES
 			a_target: GEANT_TARGET
 			a_filename: STRING
+			a_project_loader: GEANT_PROJECT_LOADER
 		do
 			exit_code := 0
 			if is_filename_executable then
 					-- Create a new project and run it's build process:
 				if reuse_variables then
 					a_variables := project.variables
+				else
+					create a_variables.make
 				end
 				a_filename := file_system.pathname_from_file_system (filename, unix_file_system)
 				ucs := new_unicode_string (a_filename)
-				!! a_project.make_with_filename (ucs, a_variables, Void)
-				a_project.set_verbose (project.verbose)
-				a_project.set_debug_mode (project.debug_mode)
-	
+
+				create a_project_loader.make (ucs)
+				a_project_loader.load (a_variables, project.options)
+				a_project := a_project_loader.project_element.project
+				a_project.merge_in_parent_projects
+
 					-- Load build configuration:
-				a_project.load (start_target_name)
-	
+				if start_target_name /= Void and then start_target_name.count > 0 then
+					a_project.set_start_target_name (start_target_name)
+				end
 					-- Start build process:
-				if a_project.targets /= Void then
-					a_project.build
-					if not a_project.build_successful then
-						exit_code := 1
-					end
+				a_project.build
+				if not a_project.build_successful then
+					exit_code := 1
 				end
 			else
 				check target_executable: is_target_executable end
+
 					-- call target of current project:
-				ucs := new_unicode_string (start_target_name)
-				a_target := project.target_with_name (ucs)
-				if a_target /= Void then
-					project.build_target (a_target)
+				if project.targets.has (start_target_name) then
+					a_target := project.targets.item (start_target_name)
+					a_target := a_target.final_target
+					a_target.project.build_target (a_target)
 				else
-					project.log ("  [geant] error: unknown target: " + start_target_name + "%N")
+					project.log ("  [geant] error: unknown target: `" + start_target_name + "'%N")
 					exit_code := 1
 				end
 			end
