@@ -16,6 +16,8 @@ deferred class KI_CHARACTER_BUFFER
 inherit
 
 	KI_BUFFER [CHARACTER]
+		undefine
+			put
 		redefine
 			fill_from_stream
 		end
