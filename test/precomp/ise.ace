@@ -1,5 +1,5 @@
 -- system:     "Gobo Eiffel Libraries precompilation"
--- compiler:   "ISE Eiffel 4.3"
+-- compiler:   "ISE Eiffel 4.4"
 -- author:     "Eric Bezault <ericb@gobo.demon.co.uk>"
 -- copyright:  "Copyright (c) 1998, Eric Bezault"
 -- date:       "$Date$"
@@ -46,33 +46,21 @@ cluster
 	kl_kernel_spec:		"$GOBO\library\kernel\spec\ise";
 
 		-- Gobo Eiffel Structure Library
+	ds_base:			"$GOBO\library\structure\base";
 	ds_container:		"$GOBO\library\structure\container";
 	ds_cursor:			"$GOBO\library\structure\cursor";
+	ds_dispenser:		"$GOBO\library\structure\dispenser";
 	ds_list:			"$GOBO\library\structure\list";
-	ds_search:			"$GOBO\library\structure\search";
 	ds_sort:			"$GOBO\library\structure\sort";
-	ds_stack:			"$GOBO\library\structure\stack";
 	ds_support:			"$GOBO\library\structure\support";
 	ds_table:			"$GOBO\library\structure\table";
 
 		-- EiffelBase
 	kernel:				"$EIFFEL4\library\base\kernel";
 	support:			"$EIFFEL4\library\base\support";
-	access:				"$EIFFEL4\library\base\structures\access";
-	cursors:			"$EIFFEL4\library\base\structures\cursors";
-	cursor_trees:		"$EIFFEL4\library\base\structures\cursor_tree";
-	dispenser:			"$EIFFEL4\library\base\structures\dispenser";
-	iteration:			"$EIFFEL4\library\base\structures\iteration";
-	list:				"$EIFFEL4\library\base\structures\list";
-	set:				"$EIFFEL4\library\base\structures\set";
-	sort:				"$EIFFEL4\library\base\structures\sort";
-	storage:			"$EIFFEL4\library\base\structures\storage";
-	table:				"$EIFFEL4\library\base\structures\table";
-	traversing:			"$EIFFEL4\library\base\structures\traversing";
-	tree:				"$EIFFEL4\library\base\structures\tree";
 
 external
 
-	include_path: "$(GOBO)\library\kernel\include"
+	include_path: "$GOBO\library\kernel\include"
 
 end
