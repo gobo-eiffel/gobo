@@ -1,0 +1,60 @@
+<?xml version="1.0"?>
+
+<project name="parse" default="help">
+
+	<description>
+		description: "Eiffel Ant file for the Gobo Eiffel Parse Library"
+		library:     "Gobo Eiffel Parse Library"
+		author:      "Eric Bezault [ericb@gobosoft.com]"
+		copyright:   "Copyright (c) 2001, Eric Bezault and others"
+		license:     "Eiffel Forum Freeware License v1 (see forum.txt)"
+		date:        "$Date$"
+		revision:    "$Revision$"
+	</description>
+
+	<target name="help">
+		<echo message="usage:"/>
+		<echo message="   geant install"/>
+		<echo message="   geant clean"/>
+		<echo message="   geant clobber"/>
+	</target>
+
+	<target name="install" dir="${GOBO}/library/parse">
+		<description>
+			Install the Gobo Eiffel Parse Library.
+			Generate scanner and parser files.
+		</description>
+
+		<geant target="yacc_scanner"/>
+		<geant target="yacc_parser"/>
+	</target>
+
+	<target name="clean" dir="${GOBO}/library/parse">
+		<description>
+			Remove intermediary generated files.
+		</description>
+		<!-- do nothing -->
+	</target>
+
+	<target name="clobber" dir="${GOBO}/library/parse">
+		<description>
+			Remove all generated files.
+		</description>
+
+		<delete file="yacc/pr_yacc_scanner.e"/>
+		<delete file="yacc/pr_yacc_parser.e"/>
+		<delete file="yacc/pr_yacc_tokens.e"/>
+	</target>
+
+
+<!-- Implementation -->
+
+	<target name="yacc_scanner" dir="yacc">
+		<gelex input="pr_yacc_scanner.l"/>
+	</target>
+
+	<target name="yacc_parser" dir="yacc">
+		<geyacc input="pr_yacc_parser.y" tokens="PR_YACC_TOKENS" output="pr_yacc_parser.e"/>
+	</target>
+
+</project>

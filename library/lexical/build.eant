@@ -1,0 +1,72 @@
+<?xml version="1.0"?>
+
+<project name="lexical" default="help">
+
+	<description>
+		description: "Eiffel Ant file for the Gobo Eiffel Lexical Library"
+		library:     "Gobo Eiffel Lexical Library"
+		author:      "Eric Bezault [ericb@gobosoft.com]"
+		copyright:   "Copyright (c) 2001, Eric Bezault and others"
+		license:     "Eiffel Forum Freeware License v1 (see forum.txt)"
+		date:        "$Date$"
+		revision:    "$Revision$"
+	</description>
+
+	<target name="help">
+		<echo message="usage:"/>
+		<echo message="   geant install"/>
+		<echo message="   geant clean"/>
+		<echo message="   geant clobber"/>
+	</target>
+
+	<target name="install" dir="${GOBO}/library/lexical">
+		<description>
+			Generate scanner and parser files.
+		</description>
+
+		<geant target="lex_scanner"/>
+		<geant target="lex_parser"/>
+		<geant target="regexp_scanner"/>
+		<geant target="regexp_parser"/>
+	</target>
+
+	<target name="clean" dir="${GOBO}/library/lexical">
+		<description>
+			Remove intermediary generated files.
+		</description>
+		<!-- do nothing -->
+	</target>
+
+	<target name="clobber" dir="${GOBO}/library/lexical">
+		<description>
+			Remove all generated files.
+		</description>
+
+		<delete file="lex/lx_lex_scanner.e"/>
+		<delete file="lex/lx_lex_parser.e"/>
+		<delete file="lex/lx_lex_tokens.e"/>
+		<delete file="regexp/lx_regexp_scanner.e"/>
+		<delete file="regexp/lx_regexp_parser.e"/>
+		<delete file="regexp/lx_regexp_tokens.e"/>
+	</target>
+
+
+<!-- Implementation -->
+
+	<target name="lex_scanner" dir="lex">
+		<gelex input="lx_lex_scanner.l"/>
+	</target>
+
+	<target name="lex_parser" dir="lex">
+		<geyacc input="lx_lex_parser.y" tokens="LX_LEX_TOKENS" output="lx_lex_parser.e"/>
+	</target>
+
+	<target name="regexp_scanner" dir="regexp">
+		<gelex input="lx_regexp_scanner.l"/>
+	</target>
+
+	<target name="regexp_parser" dir="regexp">
+		<geyacc input="lx_regexp_parser.y" tokens="LX_REGEXP_TOKENS" output="lx_regexp_parser.e"/>
+	</target>
+
+</project>

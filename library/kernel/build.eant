@@ -1,0 +1,198 @@
+<?xml version="1.0"?>
+
+<project name="kernel" default="help">
+
+	<description>
+		description: "Eiffel Ant file for the Gobo Eiffel Kernel Library"
+		library:     "Gobo Eiffel Kernel Library"
+		author:      "Eric Bezault [ericb@gobosoft.com]"
+		copyright:   "Copyright (c) 2001, Eric Bezault and others"
+		license:     "Eiffel Forum Freeware License v1 (see forum.txt)"
+		date:        "$Date$"
+		revision:    "$Revision$"
+	</description>
+
+	<target name="help">
+		<echo message="usage:"/>
+		<echo message="   geant install"/>
+		<echo message="   geant clean"/>
+		<echo message="   geant clobber"/>
+	</target>
+
+	<target name="install" dir="${GOBO}/library/kernel">
+		<description>
+			Install the Gobo Eiffel Kernel Library.
+			Generate Eiffel files from .ge files.
+		</description>
+
+		<geant target="install_root"/>
+		<geant target="install_io"/>
+		<geant target="install_misc"/>
+	</target>
+
+	<target name="clean" dir="${GOBO}/library/kernel">
+		<description>
+			Remove intermediary generated files.
+		</description>
+		<!-- do nothing -->
+	</target>
+
+	<target name="clobber" dir="${GOBO}/library/kernel">
+		<description>
+			Remove all generated files.
+		</description>
+
+		<delete directory="spec"/>
+	</target>
+
+<!-- Implementation -->
+
+	<target name="install_root">
+		<set name="gepp_dir" value="."/>
+		<set name="gepp_file" value="kl_array_routines"/>
+		<geant target="spec_eif"/>
+		<set name="gepp_file" value="kl_execution_environment"/>
+		<geant target="spec_eif"/>
+		<set name="gepp_file" value="kl_fixed_array_routines"/>
+		<geant target="spec_eif"/>
+		<set name="gepp_file" value="kl_hashable_routines"/>
+		<geant target="spec_eif"/>
+		<set name="gepp_file" value="kl_imported_fixed_array_routines"/>
+		<geant target="spec_eif"/>
+		<set name="gepp_file" value="kl_imported_fixed_array_type"/>
+		<geant target="spec_eif"/>
+		<set name="gepp_file" value="kl_imported_fixed_array_type2"/>
+		<geant target="spec_eif"/>
+		<set name="gepp_file" value="kl_imported_input_stream_routines"/>
+		<geant target="spec_eif"/>
+		<set name="gepp_file" value="kl_imported_output_stream_routines"/>
+		<geant target="spec_eif"/>
+		<set name="gepp_file" value="kl_imported_string_buffer_routines"/>
+		<geant target="spec_eif"/>
+		<set name="gepp_file" value="kl_input_stream_routines"/>
+		<geant target="spec_eif"/>
+		<set name="gepp_file" value="kl_integer_routines"/>
+		<geant target="spec_eif"/>
+		<set name="gepp_file" value="kl_output_stream_routines"/>
+		<geant target="spec_eif"/>
+		<set name="gepp_file" value="kl_platform"/>
+		<geant target="spec_eif"/>
+		<set name="gepp_file" value="kl_string_buffer_routines"/>
+		<geant target="spec_eif"/>
+		<set name="gepp_file" value="kl_string_routines"/>
+		<geant target="spec_eif"/>
+	</target>
+
+	<target name="install_io">
+		<set name="gepp_dir" value="io"/>
+		<set name="gepp_file" value="ki_binary_input_file"/>
+		<geant target="spec_eif"/>
+		<set name="gepp_file" value="ki_binary_output_file"/>
+		<geant target="spec_eif"/>
+		<set name="gepp_file" value="ki_file_system"/>
+		<geant target="spec_eif"/>
+		<set name="gepp_file" value="ki_input_file"/>
+		<geant target="spec_eif"/>
+		<set name="gepp_file" value="ki_output_file"/>
+		<geant target="spec_eif"/>
+		<set name="gepp_file" value="kl_binary_input_file"/>
+		<geant target="spec_eif"/>
+		<set name="gepp_file" value="kl_binary_output_file"/>
+		<geant target="spec_eif"/>
+		<set name="gepp_file" value="kl_character_buffer"/>
+		<geant target="spec_eif"/>
+		<set name="gepp_file" value="kl_directory"/>
+		<geant target="spec_eif"/>
+		<set name="gepp_file" value="kl_file_system"/>
+		<geant target="spec_eif"/>
+		<set name="gepp_file" value="kl_input_file"/>
+		<geant target="spec_eif"/>
+		<set name="gepp_file" value="kl_macos_input_file"/>
+		<geant target="spec_eif"/>
+		<set name="gepp_file" value="kl_output_file"/>
+		<geant target="spec_eif"/>
+		<set name="gepp_file" value="kl_stderr_file"/>
+		<geant target="spec_eif"/>
+		<set name="gepp_file" value="kl_stdin_file"/>
+		<geant target="spec_eif"/>
+		<set name="gepp_file" value="kl_stdout_file"/>
+		<geant target="spec_eif"/>
+		<set name="gepp_file" value="kl_unix_input_file"/>
+		<geant target="spec_eif"/>
+		<set name="gepp_file" value="kl_windows_input_file"/>
+		<geant target="spec_eif"/>
+	</target>
+
+	<target name="install_misc">
+		<set name="gepp_dir" value="misc"/>
+		<set name="gepp_file" value="kl_operating_system"/>
+		<geant target="spec_os"/>
+	</target>
+
+	<target name="spec_eif" depend="spec_hact,spec_ise,spec_se,spec_ve">
+		<gepp input="${gepp_dir}/${gepp_file}.ge" output="spec/hact/${gepp_file}.e">
+			<define name="HACT"/>
+		</gepp>
+		<gepp input="${gepp_dir}/${gepp_file}.ge" output="spec/ise/${gepp_file}.e">
+			<define name="ISE"/>
+		</gepp>
+		<gepp input="${gepp_dir}/${gepp_file}.ge" output="spec/se/${gepp_file}.e">
+			<define name="SE"/>
+		</gepp>
+		<gepp input="${gepp_dir}/${gepp_file}.ge" output="spec/ve/${gepp_file}.e">
+			<define name="VE"/>
+		</gepp>
+	</target>
+
+	<target name="spec_os" depend="spec_linux,spec_macos,spec_unix,spec_windows">
+		<gepp input="${gepp_dir}/${gepp_file}.ge" output="spec/linux/${gepp_file}.e">
+			<define name="LINUX"/>
+		</gepp>
+		<gepp input="${gepp_dir}/${gepp_file}.ge" output="spec/macos/${gepp_file}.e">
+			<define name="MACOS"/>
+		</gepp>
+		<gepp input="${gepp_dir}/${gepp_file}.ge" output="spec/unix/${gepp_file}.e">
+			<define name="UNIX"/>
+		</gepp>
+		<gepp input="${gepp_dir}/${gepp_file}.ge" output="spec/windows/${gepp_file}.e">
+			<define name="WINDOWS"/>
+		</gepp>
+	</target>
+
+	<target name="spec">
+		<mkdir directory="spec"/>
+	</target>
+
+	<target name="spec_hact" depend="spec">
+		<mkdir directory="spec/hact"/>
+	</target>
+
+	<target name="spec_ise" depend="spec">
+		<mkdir directory="spec/ise"/>
+	</target>
+
+	<target name="spec_se" depend="spec">
+		<mkdir directory="spec/se"/>
+	</target>
+
+	<target name="spec_ve" depend="spec">
+		<mkdir directory="spec/ve"/>
+	</target>
+
+	<target name="spec_linux" depend="spec">
+		<mkdir directory="spec/linux"/>
+	</target>
+
+	<target name="spec_macos" depend="spec">
+		<mkdir directory="spec/macos"/>
+	</target>
+
+	<target name="spec_unix" depend="spec">
+		<mkdir directory="spec/unix"/>
+	</target>
+
+	<target name="spec_windows" depend="spec">
+		<mkdir directory="spec/windows"/>
+	</target>
+
+</project>

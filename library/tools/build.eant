@@ -1,0 +1,73 @@
+<?xml version="1.0"?>
+
+<project name="tools" default="help">
+
+	<description>
+		description: "Eiffel Ant file for the Gobo Eiffel Tools Library"
+		library:     "Gobo Eiffel Tools Library"
+		author:      "Eric Bezault [ericb@gobosoft.com]"
+		copyright:   "Copyright (c) 2001, Eric Bezault and others"
+		license:     "Eiffel Forum Freeware License v1 (see forum.txt)"
+		date:        "$Date$"
+		revision:    "$Revision$"
+	</description>
+
+	<target name="help">
+		<echo message="usage:"/>
+		<echo message="   geant install"/>
+		<echo message="   geant clean"/>
+		<echo message="   geant clobber"/>
+	</target>
+
+	<target name="install" dir="${GOBO}/library/tools">
+		<description>
+			Install the Gobo Eiffel Tools Library.
+			Generate scanner and parser files.
+		</description>
+
+		<geant target="eiffel_scanner"/>
+		<geant target="eiffel_parser"/>
+		<geant target="lace_scanner"/>
+		<geant target="lace_parser"/>
+	</target>
+
+	<target name="clean" dir="${GOBO}/library/tools">
+		<description>
+			Remove intermediary generated files.
+		</description>
+		<!-- do nothing -->
+	</target>
+
+	<target name="clobber" dir="${GOBO}/library/tools">
+		<description>
+			Remove all generated files.
+		</description>
+
+		<delete file="eiffel/parser/et_eiffel_scanner.e"/>
+		<delete file="eiffel/parser/et_eiffel_parser.e"/>
+		<delete file="eiffel/parser/et_eiffel_tokens.e"/>
+		<delete file="lace/parser/et_lace_scanner.e"/>
+		<delete file="lace/parser/et_lace_parser.e"/>
+		<delete file="lace/parser/et_lace_tokens.e"/>
+	</target>
+
+
+<!-- Implementation -->
+
+	<target name="eiffel_scanner" dir="eiffel/parser">
+		<gelex input="et_eiffel_scanner.l"/>
+	</target>
+
+	<target name="eiffel_parser" dir="eiffel/parser">
+		<geyacc input="et_eiffel_parser.y" tokens="ET_EIFFEL_TOKENS" output="et_eiffel_parser.e"/>
+	</target>
+
+	<target name="lace_scanner" dir="lace/parser">
+		<gelex input="et_lace_scanner.l"/>
+	</target>
+
+	<target name="lace_parser" dir="lace/parser">
+		<geyacc input="et_lace_parser.y" tokens="ET_LACE_TOKENS" output="et_lace_parser.e"/>
+	</target>
+
+</project>

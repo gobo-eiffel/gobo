@@ -1,0 +1,90 @@
+<?xml version="1.0"?>
+
+<project name="utility" default="help">
+
+	<description>
+		description: "Eiffel Ant file for the Gobo Eiffel Utility Library"
+		library:     "Gobo Eiffel Utility Library"
+		author:      "Eric Bezault [ericb@gobosoft.com]"
+		copyright:   "Copyright (c) 2001, Eric Bezault and others"
+		license:     "Eiffel Forum Freeware License v1 (see forum.txt)"
+		date:        "$Date$"
+		revision:    "$Revision$"
+	</description>
+
+	<target name="help">
+		<echo message="usage:"/>
+		<echo message="   geant install"/>
+		<echo message="   geant clean"/>
+		<echo message="   geant clobber"/>
+	</target>
+
+	<target name="install" dir="${GOBO}/library/utility">
+		<description>
+			Install the Gobo Eiffel Utility Library.
+			Generate Eiffel files from .ge files.
+		</description>
+
+		<geant target="install_command"/>
+	</target>
+
+	<target name="clean" dir="${GOBO}/library/utility">
+		<description>
+			Remove intermediary generated files.
+		</description>
+		<!-- do nothing -->
+	</target>
+
+	<target name="clobber" dir="${GOBO}/library/utility">
+		<description>
+			Remove all generated files.
+		</description>
+
+		<delete directory="spec"/>
+	</target>
+
+
+<!-- Implementation -->
+
+	<target name="install_command">
+		<set name="gepp_dir" value="command"/>
+		<set name="gepp_file" value="ut_shell_command"/>
+		<geant target="spec_eif"/>
+	</target>
+
+	<target name="spec_eif" depends="spec_hact,spec_ise,spec_se,spec_ve">
+		<gepp input="${gepp_dir}/${gepp_file}.ge" output="spec/hact/${gepp_file}.e">
+			<define name="HACT"/>
+		</gepp>
+		<gepp input="${gepp_dir}/${gepp_file}.ge" output="spec/ise/${gepp_file}.e">
+			<define name="ISE"/>
+		</gepp>
+		<gepp input="${gepp_dir}/${gepp_file}.ge" output="spec/se/${gepp_file}.e">
+			<define name="SE"/>
+		</gepp>
+		<gepp input="${gepp_dir}/${gepp_file}.ge" output="spec/ve/${gepp_file}.e">
+			<define name="VE"/>
+		</gepp>
+	</target>
+
+	<target name="spec">
+		<mkdir directory="spec"/>
+	</target>
+
+	<target name="spec_hact" depends="spec">
+		<mkdir directory="spec/hact"/>
+	</target>
+
+	<target name="spec_ise" depends="spec">
+		<mkdir directory="spec/ise"/>
+	</target>
+
+	<target name="spec_se" depends="spec">
+		<mkdir directory="spec/se"/>
+	</target>
+
+	<target name="spec_ve" depends="spec">
+		<mkdir directory="spec/ve"/>
+	</target>
+
+</project>

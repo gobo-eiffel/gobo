@@ -1,0 +1,60 @@
+<?xml version="1.0"?>
+
+<project name="test" default="help">
+
+	<description>
+		description: "Eiffel Ant file for the Gobo Eiffel Test Library"
+		library:     "Gobo Eiffel Test Library"
+		author:      "Eric Bezault [ericb@gobosoft.com]"
+		copyright:   "Copyright (c) 2001, Eric Bezault and others"
+		license:     "Eiffel Forum Freeware License v1 (see forum.txt)"
+		date:        "$Date$"
+		revision:    "$Revision$"
+	</description>
+
+	<target name="help">
+		<echo message="usage:"/>
+		<echo message="   geant install"/>
+		<echo message="   geant clean"/>
+		<echo message="   geant clobber"/>
+	</target>
+
+	<target name="install" dir="${GOBO}/library/test">
+		<description>
+			Install the Gobo Eiffel Test Library.
+			Generate scanner and parser files.
+		</description>
+
+		<geant target="config_scanner"/>
+		<geant target="config_parser"/>
+	</target>
+
+	<target name="clean" dir="${GOBO}/library/test">
+		<description>
+			Remove intermediary generated files.
+		</description>
+		<!-- do nothing -->
+	</target>
+
+	<target name="clobber" dir="${GOBO}/library/test">
+		<description>
+			Remove all generated files.
+		</description>
+
+		<delete file="config/ts_config_scanner.e"/>
+		<delete file="config/ts_config_parser.e"/>
+		<delete file="config/ts_config_tokens.e"/>
+	</target>
+
+
+<!-- Implementation -->
+
+	<target name="config_scanner" dir="config">
+		<gelex input="ts_config_scanner.l"/>
+	</target>
+
+	<target name="config_parser" dir="config">
+		<geyacc input="ts_config_parser.y" tokens="TS_CONFIG_TOKENS" output="ts_config_parser.e"/>
+	</target>
+
+</project>
