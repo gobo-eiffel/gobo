@@ -28,4 +28,3 @@ feature -- Test
 		end
 
 end
-

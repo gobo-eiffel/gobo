@@ -105,4 +105,3 @@ invariant
 	mapped_filename_not_empty: mapped_filename.count > 0
 
 end
-

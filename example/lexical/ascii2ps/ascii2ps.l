@@ -674,4 +674,3 @@ invariant
 	output_open_write: output_file.is_open_write
 
 end
-

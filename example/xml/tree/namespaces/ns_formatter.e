@@ -210,13 +210,3 @@ feature {NONE} -- Implementation
 	position_table: XM_POSITION_TABLE
 
 end
-
-
-
-
-
-
-
-
-
-

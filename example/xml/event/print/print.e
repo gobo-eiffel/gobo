@@ -154,4 +154,3 @@ feature
 	file_name: STRING
 
 end
-

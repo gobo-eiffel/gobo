@@ -37,4 +37,3 @@ feature -- Basic operations
 		end
 
 end
-
