@@ -55,19 +55,20 @@ feature {NONE} -- Initialization
 			value_set: value = a_value
 		end
 
-	make_external (a_resolver: like resolver; a_value: STRING) is
+	make_external (a_resolver: like resolver; an_id: like external_id) is
 			-- Create a new external entity definition from `a_value'.
 		require
 			a_resolver_not_void: a_resolver /= Void
-			a_value_not_void: a_value /= Void
+			an_id_not_void: an_id /= Void
 		do
-			is_external := True
 			resolver := a_resolver
-			value := a_value
+			value := Void
+			external_id := an_id
 			make_scanner
 		ensure
 			is_external: is_external
-			value_set: value = a_value
+			value_set: value = Void
+			external_id_set: external_id = an_id
 			resolver_set: resolver = a_resolver
 		end
 
@@ -77,7 +78,7 @@ feature {NONE} -- Initialization
 			other_not_void: other /= Void
 		do
 			if other.is_external then
-				make_external (other.resolver, other.value)
+				make_external (other.resolver, other.external_id)
 			else
 				make_literal (other.value)
 			end
@@ -93,9 +94,12 @@ feature -- Resolver
 	
 feature -- Status report
 
-	is_external: BOOLEAN
+	is_external: BOOLEAN is
 			-- Is current entity an external entity?
-
+		do
+			Result := external_id /= Void
+		end
+		
 	is_literal: BOOLEAN is
 			-- Is current entity a literal entity?
 		do
@@ -109,14 +113,8 @@ feature -- Access
 	value: STRING
 			-- Value
 
-	external_value: STRING is
+	external_id: XM_DTD_EXTERNAL_ID
 			-- Resolve external value.
-			-- Place holder.
-		require
-			is_external: is_external
-		do
-			Result := value
-		end
 
 	hash_code: INTEGER is
 			-- Hash code value
@@ -148,9 +146,13 @@ feature -- Scanner: set input buffer
 			else
 					-- External entity in a file.
 				reset
-				resolver.resolve (external_value)
+				if external_id.is_public then
+					resolver.resolve_public (external_id.public_id, external_id.system_id)
+				else
+					resolver.resolve (external_id.system_id)
+				end
 				if not resolver.has_error then
-					set_input_stream (resolver.last_stream)
+					set_input_from_resolver (resolver)
 					-- `has_error'/`last_error' set by `set_input_file'.
 				else
 					fatal_error (resolver.last_error)
@@ -249,7 +251,7 @@ feature -- Scanner: initialization
 
 invariant
 
-	value_not_void: value /= Void
+	value_not_void: value /= Void or external_id /= Void
 	resolver_not_void: resolver /= Void
 	type: is_literal xor is_external
 

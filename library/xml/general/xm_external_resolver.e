@@ -21,6 +21,7 @@ feature -- Action(s)
 		deferred
 		ensure
 			--has_error_set:
+			--depth: not has_error implies resolve_depth = old resolve_depth + 1
 		end
 		
 	resolve_public (a_public: STRING; a_system: STRING) is
@@ -33,6 +34,18 @@ feature -- Action(s)
 			resolve (a_system)
 		ensure
 			--has_error_set:
+			--depth: not has_error implies resolve_depth = old resolve_depth + 1
+		end
+		
+	resolve_finish is
+			-- The client has finished with the last resolved entity.
+			-- The previously resolved entity becomes the last resolved one.
+			-- Note: last_stream is not required to be restored accordingly.
+		require
+			--balanced: resolve_depth > 0
+		do
+		ensure
+			--depth: resolve_depth = old resolve_depth - 1
 		end
 		
 feature -- Result
@@ -47,11 +60,12 @@ feature -- Result
 		end
 	
 	has_error: BOOLEAN is
-			-- Did the last resolution attempt?
+			-- Did the last resolution attempt succeed?
 		deferred
 		end
 		
 	last_error: STRING is
+			-- Last error message.
 		require
 			has_error: has_error
 		deferred

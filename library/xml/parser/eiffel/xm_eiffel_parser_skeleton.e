@@ -124,7 +124,7 @@ feature -- Parsing
 			create a_stream.make (utf8.to_utf8 (a_string))
 			parse_from_stream (a_stream)
 		end
-
+		
 feature -- Obsolete
 
 	parse_stream (a_stream: KI_CHARACTER_INPUT_STREAM) is
@@ -404,7 +404,7 @@ feature {NONE} -- Entities
 		require
 			a_value_not_void: a_value /= Void
 		do
-			create Result.make_external (entity_resolver, a_value.system_id)
+			create Result.make_external (entity_resolver, a_value)
 		ensure
 			entity_not_void: Result /= Void
 		end
@@ -483,11 +483,24 @@ feature {NONE} -- Entities
 					-- 4.4.5 Included in literal.
 				Result := a_def.value
 			else
-				Result := external_entity_to_string (a_def.value)
+				Result := external_entity_to_string (a_def.external_id)
 			end
 		end
 
-	external_entity_to_string (a_sys: STRING): STRING is
+	resolve_external_id (a_resolver: XM_EXTERNAL_RESOLVER; an_id: XM_DTD_EXTERNAL_ID) is
+			-- Apply `an_id' to resolver.
+		require
+			a_resolver_not_void: a_resolver /= Void
+			an_id_not_void: an_id /= Void
+		do
+			if an_id.is_public then
+				a_resolver.resolve_public (an_id.public_id, an_id.system_id)
+			else
+				a_resolver.resolve (an_id.system_id)
+			end
+		end
+		
+	external_entity_to_string (a_sys: XM_DTD_EXTERNAL_ID): STRING is
 			-- External entity to string
 		require
 			a_sys_not_void: a_sys /= Void
@@ -495,7 +508,7 @@ feature {NONE} -- Entities
 			a_stream: XM_EIFFEL_INPUT_STREAM
 			i: INTEGER
 		do
-			entity_resolver.resolve (a_sys)
+			resolve_external_id (entity_resolver, a_sys)
 			if not entity_resolver.has_error then
 				create a_stream.make_from_stream (entity_resolver.last_stream)
 				a_stream.read_string (INTEGER_.Platform.Maximum_integer)
@@ -503,7 +516,7 @@ feature {NONE} -- Entities
 				if entity_resolver.last_stream.is_closable then
 					entity_resolver.last_stream.close
 				end
-				
+				entity_resolver.resolve_finish
 				-- newline normalization XML1.0:2.11
 				-- TODO: should be done in scanner?
 				from
@@ -543,12 +556,12 @@ feature {NONE} -- DTD
 				std.error.put_string ("[when_external_dtd]")
 			end
 				
-			dtd_resolver.resolve (a_system.system_id)
+			resolve_external_id (dtd_resolver, a_system)
 			if not dtd_resolver.has_error then
 				-- Push old scanner.
 				scanners.force (scanner)
 				create {XM_EIFFEL_SCANNER_DTD} scanner.make_scanner
-				scanner.set_input_stream (dtd_resolver.last_stream)
+				scanner.set_input_from_resolver (dtd_resolver)
 			else
 				if dtd_resolver = null_resolver then
 					force_error (Error_doctype_external_no_resolver)
