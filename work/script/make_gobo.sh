@@ -43,8 +43,8 @@ echo ''; echo "#### Generate files in \$GOBO/library/tools/parser"
 cd $GOBO/library/tools/parser
 make parser scanner
 echo ''; echo "#### Generate files in \$GOBO/library/xml/eiffel/event"
-cd $GOBO/library/xml/impl/eiffel/event
-make parser scanner
+cd $GOBO/library/xml
+geant
 
 # Generate files in $GOBO/src.
 echo ''; echo "#### Generate files in \$GOBO/src/gelex"
