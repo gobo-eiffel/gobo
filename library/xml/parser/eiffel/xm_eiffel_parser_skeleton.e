@@ -256,7 +256,7 @@ feature -- Error
 	positions: DS_LIST [XM_POSITION] is
 			-- Current stack of positions, starting with the current entity.
 		do
-			if is_correct then
+			if error_positions = Void then
 				Result := new_positions
 			else
 				Result := error_positions
