@@ -113,7 +113,7 @@ creation
 %type <ET_CHOICE>              Choice
 %type <ET_CHOICE_CONSTANT>     Choice_constant
 %type <ET_CHOICE_LIST>         Choices Choices_opt
-%type <ET_CLASS>               Class_header Class_to_end
+%type <ET_CLASS>               Class_header Class_to_end Class_declaration
 %type <ET_CLIENTS>             Clients Clients_opt Client_list
 %type <ET_COMPOUND>            Compound Rescue_opt Do_compound Once_compound Then_compound
                                Else_compound Rescue_compound From_compound Loop_compound
@@ -198,12 +198,14 @@ creation
 %%
 ------------------------------------------------------------------------------------
 
-Class_declarations: Class_declaration
+Class_declarations: Break_opt Class_declaration
+		{ $2.set_leading_break ($1) }
 	;
 
 Class_declaration: Indexing_clause_opt Class_to_end
 		{
-			$2.set_first_indexing ($1)
+			$$ := $2
+			$$.set_first_indexing ($1)
 			remove_last_class
 		}
 	;
