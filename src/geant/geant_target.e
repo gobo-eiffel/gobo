@@ -288,7 +288,7 @@ feature -- Processing
 				loop
 					a_xml_element ?= cs.item
 					if a_xml_element /= Void then
-						if not a_xml_element.name.is_equal (Description_element_name) then
+						if not STRING_.same_string (a_xml_element.name, Description_element_name) then
 							execute_task (a_xml_element)
 						end
 					end
@@ -309,79 +309,79 @@ feature -- Processing
 		local
 			a_task: GEANT_TASK
 		do
-			if a_xml_element.name.is_equal (Se_task_name) then
+			if STRING_.same_string (a_xml_element.name, Se_task_name) then
 					-- se: SmallEiffel compilation
 				!GEANT_SE_TASK! a_task.make (project, a_xml_element)
-			elseif a_xml_element.name.is_equal (Ise_task_name) then
+			elseif STRING_.same_string (a_xml_element.name, Ise_task_name) then
 					-- ise: ISE Eiffel compilation
 				!GEANT_ISE_TASK! a_task.make (project, a_xml_element)
-			elseif a_xml_element.name.is_equal (Hact_task_name) then
+			elseif STRING_.same_string (a_xml_element.name, Hact_task_name) then
 					-- hact: Halstenbach Eiffel compilation
 				!GEANT_HACT_TASK! a_task.make (project, a_xml_element)
-			elseif a_xml_element.name.is_equal (Ve_task_name) then
+			elseif STRING_.same_string (a_xml_element.name, Ve_task_name) then
 					-- ve: Visual Eiffel compilation
 				!GEANT_VE_TASK! a_task.make (project, a_xml_element)
-			elseif a_xml_element.name.is_equal (Exec_task_name) then
+			elseif STRING_.same_string (a_xml_element.name, Exec_task_name) then
 					-- exec
 				!GEANT_EXEC_TASK! a_task.make (project, a_xml_element)
-			elseif a_xml_element.name.is_equal (Lcc_task_name) then
+			elseif STRING_.same_string (a_xml_element.name, Lcc_task_name) then
 					-- lcc
 				!GEANT_LCC_TASK! a_task.make (project, a_xml_element)
-			elseif a_xml_element.name.is_equal (Set_task_name) then
+			elseif STRING_.same_string (a_xml_element.name, Set_task_name) then
 					-- set
 				!GEANT_SET_TASK! a_task.make (project, a_xml_element)
-			elseif a_xml_element.name.is_equal (Unset_task_name) then
+			elseif STRING_.same_string (a_xml_element.name, Unset_task_name) then
 					-- unset
 				!GEANT_UNSET_TASK! a_task.make (project, a_xml_element)
-			elseif a_xml_element.name.is_equal (Gexace_task_name) then
+			elseif STRING_.same_string (a_xml_element.name, Gexace_task_name) then
 					-- gexace
 				!GEANT_GEXACE_TASK! a_task.make (project, a_xml_element)
-			elseif a_xml_element.name.is_equal (Gelex_task_name) then
+			elseif STRING_.same_string (a_xml_element.name, Gelex_task_name) then
 					-- gelex
 				!GEANT_GELEX_TASK! a_task.make (project, a_xml_element)
-			elseif a_xml_element.name.is_equal (Geyacc_task_name) then
+			elseif STRING_.same_string (a_xml_element.name, Geyacc_task_name) then
 					-- geyacc
 				!GEANT_GEYACC_TASK! a_task.make (project, a_xml_element)
-			elseif a_xml_element.name.is_equal (Gepp_task_name) then
+			elseif STRING_.same_string (a_xml_element.name, Gepp_task_name) then
 					-- gepp
 				!GEANT_GEPP_TASK! a_task.make (project, a_xml_element)
-			elseif a_xml_element.name.is_equal (Getest_task_name) then
+			elseif STRING_.same_string (a_xml_element.name, Getest_task_name) then
 					-- getest
 				!GEANT_GETEST_TASK! a_task.make (project, a_xml_element)
-			elseif a_xml_element.name.is_equal (Geant_task_name) then
+			elseif STRING_.same_string (a_xml_element.name, Geant_task_name) then
 					-- geant
 				!GEANT_GEANT_TASK! a_task.make (project, a_xml_element)
-			elseif a_xml_element.name.is_equal (Gexmlsplit_task_name) then
+			elseif STRING_.same_string (a_xml_element.name, Gexmlsplit_task_name) then
 					-- gexmlsplit
 				!GEANT_GEXMLSPLIT_TASK! a_task.make (project, a_xml_element)
-			elseif a_xml_element.name.is_equal (Echo_task_name) then
+			elseif STRING_.same_string (a_xml_element.name, Echo_task_name) then
 					-- echo
 				!GEANT_ECHO_TASK! a_task.make (project, a_xml_element)
-			elseif a_xml_element.name.is_equal (Mkdir_task_name) then
+			elseif STRING_.same_string (a_xml_element.name, Mkdir_task_name) then
 					-- mkdir
 				!GEANT_MKDIR_TASK! a_task.make (project, a_xml_element)
-			elseif a_xml_element.name.is_equal (Delete_task_name) then
+			elseif STRING_.same_string (a_xml_element.name, Delete_task_name) then
 					-- delete
 				!GEANT_DELETE_TASK! a_task.make (project, a_xml_element)
-			elseif a_xml_element.name.is_equal (Copy_task_name) then
+			elseif STRING_.same_string (a_xml_element.name, Copy_task_name) then
 					-- copy
 				!GEANT_COPY_TASK! a_task.make (project, a_xml_element)
-			elseif a_xml_element.name.is_equal (Move_task_name) then
+			elseif STRING_.same_string (a_xml_element.name, Move_task_name) then
 					-- move
 				!GEANT_MOVE_TASK! a_task.make (project, a_xml_element)
-			elseif a_xml_element.name.is_equal (Setenv_task_name) then
+			elseif STRING_.same_string (a_xml_element.name, Setenv_task_name) then
 					-- setenv
 				!GEANT_SETENV_TASK! a_task.make (project, a_xml_element)
-			elseif a_xml_element.name.is_equal (Xslt_task_name) then
+			elseif STRING_.same_string (a_xml_element.name, Xslt_task_name) then
 					-- xslt
 				!GEANT_XSLT_TASK! a_task.make (project, a_xml_element)
-			elseif a_xml_element.name.is_equal (Outofdate_task_name) then
+			elseif STRING_.same_string (a_xml_element.name, Outofdate_task_name) then
 					-- outofdate
 				!GEANT_OUTOFDATE_TASK! a_task.make (project, a_xml_element)
-			elseif a_xml_element.name.is_equal (Exit_task_name) then
+			elseif STRING_.same_string (a_xml_element.name, Exit_task_name) then
 					-- exit
 				!GEANT_EXIT_TASK! a_task.make (project, a_xml_element)
-			elseif a_xml_element.name.is_equal (Precursor_task_name) then
+			elseif STRING_.same_string (a_xml_element.name, Precursor_task_name) then
 					-- precursor
 				!GEANT_PRECURSOR_TASK! a_task.make (project, a_xml_element)
 			else
