@@ -30,7 +30,7 @@ creation
 
 %token                 L_SYSTEM L_ROOT L_END L_CLUSTER
 %token                 L_DEFAULT L_EXTERNAL L_GENERATE L_OPTION
-%token                 L_ABSTRACT L_ALL L_EXCLUDE
+%token                 L_ABSTRACT L_ALL L_EXCLUDE L_LIBRARY
 %token <ET_IDENTIFIER> L_IDENTIFIER L_STRING
 %token                 L_STRERR
 
@@ -111,6 +111,8 @@ Cluster_list: Cluster
 Cluster: L_ABSTRACT Nested_cluster
 		{ $$ := $2; $$.set_abstract (True) }
 	| L_ALL Recursive_cluster
+		{ $$ := $2; $$.set_recursive (True) }
+	| L_LIBRARY Recursive_cluster
 		{ $$ := $2; $$.set_recursive (True) }
 	| Nested_cluster
 		{ $$ := $1 }
