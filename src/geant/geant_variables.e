@@ -15,6 +15,7 @@ class GEANT_VARIABLES
 
 inherit
 
+	ANY
 	KL_IMPORTED_STRING_ROUTINES
 		export
 			{NONE} all
