@@ -19,7 +19,7 @@
 	</target>
 
 	<target name="gepp">
-		<gepp input="${GOBO}/library/kernel/kl_array_routines.ge" output="kl_array_routines.e" lines="true">
+		<gepp input="${GOBO}/library/kernel/basic/kl_array_routines.ge" output="kl_array_routines.e" lines="true">
 			<define name="HACT" if="$HACT"/>
 		</gepp>
 	</target>
