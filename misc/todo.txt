@@ -4,3 +4,10 @@
 . Review the ID counter in NFA states.
 . Resize input buffer if a call to `unput' results in too much text being
   pushed back (it presently raise an run-time error).
+
+14 June 1997
+
+. Add %option backupfile="filename" and corresponding command-line option.
+. Add features file__make_open_* in class KL_FILE_ROUTINES.
+. Add a feature in DS_ARRAYED_LIST to get rid of garbage (i.e. old items
+  at indexes count+1..capacity.
