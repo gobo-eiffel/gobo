@@ -242,25 +242,31 @@ feature -- Removal
 
 	remove is
 			-- Remove top item from stack.
+		local
+			dead_item: G
 		do
+			storage.put (dead_item, count)
 			count := count - 1
 		end
 
 	prune (n: INTEGER) is
 			-- Remove `n' items from stack.
 		do
+			clear_items (count - n + 1, count)
 			count := count - n
 		end
 
 	keep (n: INTEGER) is
 			-- Keep `n' items in stack.
 		do
+			clear_items (n + 1, count)
 			count := n
 		end
 
 	wipe_out is
 			-- Remove all items from stack.
 		do
+			clear_items (1, count)
 			count := 0
 		end
 
@@ -280,6 +286,22 @@ feature {DS_ARRAYED_STACK} -- Implementation
 			-- Storage for items of the stack
 
 feature {NONE} -- Implementation
+
+	clear_items (s, e: INTEGER) is
+			-- Clear items in `storage' within bounds `s'..`e'.
+		require
+			s_large_enough: s >= 1
+			e_small_enough: e <= capacity
+			valid_bound: s <= e + 1
+		local
+			dead_item: G
+			i: INTEGER
+		do
+			from i := s until i > e loop
+				storage.put (dead_item, i)
+				i := i + 1
+			end
+		end
 
 	FIXED_ARRAY_: KL_FIXED_ARRAY_ROUTINES [G]
 			-- Routines that ought to be in FIXED_ARRAY
