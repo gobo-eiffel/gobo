@@ -30,14 +30,10 @@ feature -- Access
 #endif
 #endif
 			-- Standard input file
+		once
 #ifdef SE
-		do
-				-- There is a bug in the precomputed once
-				-- function mechanism (when a once calls
-				-- another once), hence the 'do'.
 			Result := std_input
 #else
-		once
 			Result := io.input
 #endif
 		ensure
@@ -55,14 +51,10 @@ feature -- Access
 #endif
 #endif
 			-- Standard output file
+		once
 #ifdef SE
-		do
-				-- There is a bug in the precomputed once
-				-- function mechanism (when a once calls
-				-- another once), hence the 'do'.
 			Result := std_output
 #else
-		once
 			Result := io.output
 #endif
 		ensure
@@ -80,14 +72,10 @@ feature -- Access
 #endif
 #endif
 			-- Standard error file
+		once
 #ifdef SE
-		do
-				-- There is a bug in the precomputed once
-				-- function mechanism (when a once calls
-				-- another once), hence the 'do'.
 			Result := std_error
 #else
-		once
 			Result := io.error
 #endif
 		ensure

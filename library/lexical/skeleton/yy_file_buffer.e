@@ -97,13 +97,12 @@ feature -- Element change
 		local
 			i, j, nb: INTEGER
 			buff: STRING
-			char: CHARACTER
 		do
 				-- If the last call to `fill' failed to add
 				-- more characters, this means that the end of
 				-- file has already been reached. Do not attempt
 				-- to fill again the buffer in that case.
-			if filled then
+			if filled and not input_stream_.end_of_input (file) then
 				buff := content
 					-- First move last characters to start of buffer.
 					--| This should be done with a block copy.
@@ -132,27 +131,15 @@ feature -- Element change
 				end
 					-- Read in more data.
 				if interactive then
-						-- Read characters one by one.
-						--| The following piece of code does not
-						--| look nice, specially the test against
-						--| the end-of-file character. However
-						--| SmallEiffel implements 'read_character'
-						--| such a way that I could not easily
-						--| do better!
+					file.read_character
 					if not input_stream_.end_of_input (file) then
-						file.read_character
-						char := file.last_character
-						if char /= End_of_file_character then
-							j := j + 1
-							buff.put (char, j)
-							filled := True
-						else
-							filled := False
-						end
+						j := j + 1
+						buff.put (file.last_character, j)
+						filled := True
 					else
 						filled := False
 					end
-				elseif not input_stream_.end_of_input (file) then
+				else
 					if nb > Read_buffer_capacity then
 						nb := Read_buffer_capacity
 					end
@@ -163,12 +150,12 @@ feature -- Element change
 						filled := False
 					end
 					j := j + nb
-				else
-					filled := False
 				end
 				count := j
 				buff.put (End_of_buffer_character, j + 1)
 				buff.put (End_of_buffer_character, j + 2)
+			else
+				filled := False
 			end
 		end
 
@@ -177,9 +164,6 @@ feature {NONE} -- Constants
 	Read_buffer_capacity: INTEGER is 8192
 			-- Maximum number of characters to 
 			-- be read at a time
-
-	End_of_file_character: CHARACTER is '%/255/'
-			-- End-of-file character
 
 invariant
 

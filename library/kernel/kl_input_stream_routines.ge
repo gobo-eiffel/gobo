@@ -174,6 +174,8 @@ feature -- Input operations
 #endif
 		do
 #ifdef VE
+				-- In Visual Eiffel, `read_stream' cannot
+				-- read more that 2048 character at a time.
 			a_stream.read_stream (2048)
 			if a_stream.end_of_file then
 				Result := 0
@@ -189,24 +191,18 @@ feature -- Input operations
 			end
 #else
 #ifdef SE
-			Result := nb_char
-			j := pos
-			from i := 1 until i > Result loop
-				if not a_stream.end_of_input then
+			if not a_stream.end_of_input then
+				Result := nb_char
+				j := pos
+				from i := 1 until i > Result loop
 					a_stream.read_character
-					a_buffer.put (a_stream.last_character, j)
-					j := j + 1
-					i := i + 1
-				elseif j > pos and then a_buffer.item (j - 1) = '%/255/' then
-						-- This is a hack when `a_stream' is the
-						-- standard input file. SmallEiffel reads
-						-- one character ahead for regular files
-						-- to find out whether the end-of-file has
-						-- been reached but read one character at
-						-- a time from the standard input.
-					Result := i - 2
-				else
-					Result := i - 1
+					if not a_stream.end_of_input then
+						a_buffer.put (a_stream.last_character, j)
+						j := j + 1
+						i := i + 1
+					else
+						Result := i - 1
+					end
 				end
 			end
 #else
