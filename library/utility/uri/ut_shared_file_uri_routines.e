@@ -1,0 +1,25 @@
+indexing
+
+	description:
+
+		"Shared access to file: URI routines"
+
+	library: "Gobo Eiffel Utility Library"
+	copyright: "Copyright (c) 2004, Eric Bezault and others"
+	license: "Eiffel Forum License v2 (see forum.txt)"
+	date: "$Date$"
+	revision: "$Revision$"
+
+class UT_SHARED_FILE_URI_ROUTINES
+
+feature
+
+	File_uri: UT_FILE_URI_ROUTINES is
+			-- Shared file: URI routines
+		once
+			create Result
+		ensure
+			result_not_void: Result /= Void
+		end
+
+end
