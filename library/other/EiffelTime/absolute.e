@@ -44,7 +44,8 @@ feature -- Measurement
 		do
 			Result := relative_duration (origin)
 		ensure
-			definition: Result = relative_duration (origin)
+			duration_not_void: Result /= Void
+			definition: Result.is_equal (relative_duration (origin))
 		end
 
 feature -- Element change
