@@ -84,6 +84,7 @@ feature -- Execution
 			if not a_summary.is_successful then
 				a_file.put_new_line
 				a_summary.print_errors (a_file)
+				Exceptions.die (3)
 			end
 		end
 
