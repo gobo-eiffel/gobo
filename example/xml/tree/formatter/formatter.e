@@ -41,8 +41,13 @@ feature {ANY} -- Access
 			-- only if this is True, we write to STDOUT
 			-- otherwise we write to out_file_name
 
-	fact: expanded XM_PARSER_FACTORY
+	fact: XM_PARSER_FACTORY is
 			-- the parser factory
+		once
+			!! Result
+		ensure
+			factory_not_void: Result /= Void
+		end
 
 	tree_parser: XM_TREE_PARSER
 			-- this is the actual parser

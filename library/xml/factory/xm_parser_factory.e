@@ -130,9 +130,19 @@ feature
 
 feature {NONE}
 
-	ef_event_fact: expanded XF_EVENT_PARSER_FACTORY
+	ef_event_fact: XF_EVENT_PARSER_FACTORY is
+		once
+			!! Result
+		ensure
+			factory_not_void: Result /= Void
+		end
 
-	ep_event_fact: expanded XP_EVENT_PARSER_FACTORY
+	ep_event_fact: XP_EVENT_PARSER_FACTORY is
+		once
+			!! Result
+		ensure
+			factory_not_void: Result /= Void
+		end
 
 	te_ep_tree_fact: XT_TREE_PARSER_FACTORY
 

@@ -122,7 +122,12 @@ feature
 
 	tree_parser: XM_TREE_PARSER
 
-	fact: expanded XM_PARSER_FACTORY
+	fact: XM_PARSER_FACTORY is
+		once
+			!! Result
+		ensure
+			factory_not_void: Result /= Void
+		end
 
 feature
 

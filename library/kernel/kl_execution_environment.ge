@@ -35,21 +35,12 @@ feature -- Access
 			Result := environment.env_item (a_variable)
 #else
 #ifdef HACT || ISE
-		local
-			environment: expanded EXECUTION_ENVIRONMENT
 		do
-			Result := environment.get (a_variable)
-#else
-#ifdef TOWER
-		local
-			env_vars: expanded ENV_VARS
-		do
-			Result := env_vars.get (a_variable)
+			Result := environment_impl.get (a_variable)
 #else
 #ifdef SE
 		do
 			Result := get_environment_variable (a_variable)
-#endif
 #endif
 #endif
 #endif
@@ -71,22 +62,11 @@ feature -- Setting
 			environment.env_put (a_variable, a_value)
 #else
 #ifdef HACT || ISE
-		local
-			environment: expanded EXECUTION_ENVIRONMENT
 		do
-			environment.put (a_value, a_variable)
-#else
-#ifdef TOWER
-		local
-			env_vars: expanded ENV_VARS
-		do
-			if env_vars.put_supported then
-				env_vars.put (a_variable, a_value)
-			end
+			environment_impl.put (a_value, a_variable)
 #else
 		do
 			-- Not supported.
-#endif
 #endif
 #endif
 		ensure
@@ -184,4 +164,15 @@ feature -- Conversion
 			interpreted_string_not_void: Result /= Void
 		end
 
+#ifdef HACT || ISE
+feature {NONE} -- Implementation
+	environment_impl: EXECUTION_ENVIRONMENT is
+			-- Execution environment impl
+		once
+			!! Result
+		ensure
+			environment_impl_not_void: Result /= Void
+		end
+
+#endif
 end -- class KL_EXECUTION_ENVIRONMENT

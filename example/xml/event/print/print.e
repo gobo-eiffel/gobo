@@ -117,7 +117,12 @@ feature -- Checks we have to do before we can run
 
 feature
 
-	fact: expanded XM_PARSER_FACTORY
+	fact: XM_PARSER_FACTORY is
+		once
+			!! Result
+		ensure
+			factory_not_void: Result /= Void
+		end
 
 	event_parser: PRINT_EVENT_PARSER
 

@@ -11,7 +11,7 @@ indexing
 	date:		"$Date$"
 	revision:	"$Revision$"
 
-expanded class XM_ERROR_CODES
+class XM_ERROR_CODES
 
 feature {ANY} -- Constants
 
