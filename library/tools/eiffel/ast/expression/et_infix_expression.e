@@ -59,6 +59,10 @@ feature -- Initialization
 			l_cast ?= left
 			if l_cast /= Void then
 				left := l_cast.expression
+				l_convert ?= left
+				if l_convert /= Void then
+					left := l_convert.expression
+				end
 			end
 			left.reset
 			l_convert ?= right
