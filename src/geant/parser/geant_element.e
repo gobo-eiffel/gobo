@@ -2,7 +2,7 @@ indexing
 
 	description:
 
-		"XML elements"
+		"Geant elements"
 
 	library:    "Gobo Eiffel Ant"
 	author:     "Sven Ehrke <sven.ehrke@sven-ehrke.de>"
@@ -13,124 +13,325 @@ indexing
 
 class GEANT_ELEMENT
 
-inherit
-
-	GEANT_COMPOSITE [GEANT_ELEMENT]
-		rename
-			make as make_composite,
-			add as add_child,
-			has as has_child,
-			remove as remove_child
-		end
-
-	GEANT_ATTRIBUTE_HANDLER
-		rename
-			make as make_attribute_handler
-		end
-
 creation
 
 	make
 
 feature {NONE} -- Initialization
 
-	make (a_name: like name) is
-			-- Create a new element named `a_name'.
+	make (a_project: GEANT_PROJECT; a_xml_element: GEANT_XML_ELEMENT) is
+			-- Initialize element by setting `project' to `a_project'
+			-- and `xml_element' to 'a_xml_element'.
 		require
-			a_name_not_void: a_name /= Void
-			a_name_not_empty: not a_name.empty
+			a_project_not_void: a_project /= Void
+			a_xml_element_not_void: a_xml_element /= Void
 		do
-			make_composite
-			set_name (a_name)
-			make_attribute_handler
-			set_content (Empty_string)
+			set_project (a_project)
+			set_xml_element (a_xml_element)
 		ensure
-			name_set: name = a_name
+			project_set: project = a_project
+			xml_element_set: xml_element = a_xml_element
 		end
 
 feature -- Access
 
-	name: UC_STRING
-			-- Element name
+	project: GEANT_PROJECT
+			-- Project to which Current belongs to
 
-	content: UC_STRING
-			-- Content of element
+	xml_element: GEANT_XML_ELEMENT
+		-- XML Element defining current element
 
-	child_by_name (a_name: UC_STRING): GEANT_ELEMENT is
-			-- First child element with the local name
-			-- `a_name' and belonging to no namespace;
-			-- Void if not found
-		require
-			a_name_not_void: a_name /= Void
-			a_name_not_empty: not a_name.empty
+feature -- Status report
+
+	is_enabled: BOOLEAN is
+			-- Do conditions enable this `a_element'?
+			-- conditions is the boolean expression
+			-- "(xml attribute 'if') and not
+			-- (xml attribute 'unless')"
+			-- if xml attribute 'if' is missing it is assumed to be `True'
+			-- if xml attribute 'unless' is missing it is assumed to be `False'
 		local
-			i, nb: INTEGER
-			a_child: GEANT_ELEMENT
+			if_condition: BOOLEAN
+			unless_condition: BOOLEAN
+			ucs: UC_STRING
 		do
-			nb := children.count
-			from i := 1 until i > nb loop
-				a_child := children.item (i)
-				if a_child.name.is_equal (a_name) then
-					Result := a_child
-					i := nb + 1 -- Jump out of the loop.
-				else
-					i := i + 1
+				-- Set default execution conditions:
+			if_condition := true
+			unless_condition := false
+
+				-- Look for an 'if' XML attribute
+			if has_uc_attribute (If_attribute_name) then
+				ucs := xml_element.attribute_value_by_name (If_attribute_name)
+				if_condition := project.variables.boolean_condition_value (ucs.out)
+				debug ("geant")
+					print (" if    : '" + ucs.out + "'=" + if_condition.out + "%N")
 				end
 			end
-		ensure
-			not_void_if_exists: not children_by_name (a_name).is_empty implies Result /= Void
+
+				-- Look for an 'unless' XML attribute
+			if has_uc_attribute (Unless_attribute_name) then
+				ucs := xml_element.attribute_value_by_name (Unless_attribute_name)
+				unless_condition := project.variables.boolean_condition_value (ucs.out)
+				debug ("geant")
+					print (" unless: '" + ucs.out + "'=" + unless_condition.out + "%N")
+				end
+			end
+
+			Result := if_condition and not unless_condition
 		end
 
-	children_by_name (a_name: UC_STRING): DS_ARRAYED_LIST [GEANT_ELEMENT] is
-			-- All direct children named `a_name'
-		require
-			a_name_not_void: a_name /= Void
-			a_name_not_empty: not a_name.empty
+	has_description: BOOLEAN is
+			-- Does `xml_element' has a subelement named 'description'?
 		local
-			i, nb: INTEGER
-			a_child: GEANT_ELEMENT
+			children: DS_ARRAYED_LIST [GEANT_XML_ELEMENT]
+			an_element: GEANT_XML_ELEMENT
 		do
-			nb := children.count
-			!!Result.make (nb)
-			from i := 1 until i > nb loop
-				a_child := children.item (i)
-				if a_child.name.is_equal (a_name) then
-					Result.put_last (a_child)
-				end
-				i := i + 1
+			children := xml_element.children
+			if children.count > 0 then
+				an_element := children.item (1)
+				Result := an_element.name.is_equal (Description_element_name)
 			end
-		ensure
-			children_not_void: Result /= Void
-			no_void_children: not Result.has (Void)
+		end
+
+	description: STRING is
+			-- Description for current element
+		require
+			has_description: has_description
+		local
+			children: DS_ARRAYED_LIST [GEANT_XML_ELEMENT]
+		do
+			children := xml_element.children
+			Result := children.item (1).content.out
 		end
 
 feature -- Setting
 
-	set_name (a_name: like name) is
-			-- Set `name' to `a_name'.
-		require
-			a_name_not_void: a_name /= Void
-			a_name_not_empty: not a_name.empty
+	set_project (a_project: like project) is
+			-- Set `project' to `a_project'.
 		do
-			name := a_name
+			project := a_project
 		ensure
-			name_set: name = a_name
+			project_set: project = a_project
 		end
 
-	set_content (a_content: like content) is
-			-- Set `content' to `a_content'.
-		require
-			a_content_not_void: a_content /= Void
+	set_xml_element (a_xml_element: like xml_element) is
+			-- Set `xml_element' to `a_xml_element'.
 		do
-			content := a_content
+			xml_element := a_xml_element
 		ensure
-			content_set: content = a_content
+			xml_element_set: xml_element = a_xml_element
+		end
+
+feature -- Access/XML attribute values
+
+	attribute_value_or_default (an_attr_name: STRING; a_default_value: STRING): STRING is
+			-- Value of attribue `an_attr_name',
+			-- or `a_default_value' of no such attribute
+		require
+			an_attr_name_not_void: an_attr_name /= Void
+			an_attr_name_not_empty: an_attr_name.count > 0
+			a_default_value_not_void: a_default_value /= Void
+		local
+			uc_name: UC_STRING
+			uc_value: UC_STRING
+		do
+			!! uc_name.make_from_string (an_attr_name)
+			!! uc_value.make_from_string (a_default_value)
+			Result := uc_attribute_value_or_default (uc_name, uc_value).out
+		end
+
+	attribute_value (an_attr_name: STRING): STRING is
+			-- Value of attribue `an_attr_name'
+		require
+			an_attr_name_not_void: an_attr_name /= Void
+			an_attr_name_not_empty: an_attr_name.count > 0
+			has_attribute: has_attribute (an_attr_name)
+		local
+			uc_name: UC_STRING
+			s: STRING
+		do
+			!! uc_name.make_from_string(an_attr_name)
+			s := xml_element.attribute_value_by_name (uc_name).out
+			Result := project.variables.interpreted_string (s)
+		end
+
+	boolean_value_or_default (an_attr_name: STRING; a_default_value: BOOLEAN): BOOLEAN is
+			-- Value of attribue `an_attr_name',
+			-- or `a_default_value' of no such attribute
+		require
+			an_attr_name_not_void: an_attr_name /= Void
+			an_attr_name_not_empty: an_attr_name.count > 0
+		local
+			uc_name: UC_STRING
+		do
+			!! uc_name.make_from_string (an_attr_name)
+			Result := uc_boolean_value_or_default (uc_name, a_default_value)
+		end
+
+	boolean_value (an_attr_name: STRING): BOOLEAN is
+			-- Value of attribue `an_attr_name'
+		require
+			an_attr_name_not_void: an_attr_name /= Void
+			an_attr_name_not_empty: an_attr_name.count > 0
+			has_attribute: has_attribute (an_attr_name)
+		local
+			uc_name: UC_STRING
+		do
+			!! uc_name.make_from_string (an_attr_name)
+			Result := uc_boolean_value (uc_name)
+		end
+
+	has_attribute (an_attr_name: STRING): BOOLEAN is
+			-- Is `an_attr_name' an atttribute of Current element?
+		require
+			an_attr_name_not_void: an_attr_name /= Void
+			an_attr_name_not_empty: an_attr_name.count > 0
+		local
+			uc_name: UC_STRING
+		do
+			!! uc_name.make_from_string (an_attr_name)
+			Result := has_uc_attribute (uc_name)
+		end
+
+feature -- Access/XML attribute values (unicode)
+
+	uc_attribute_value_or_default (an_attr_name: UC_STRING; a_default_value: UC_STRING): UC_STRING is
+			-- Value of attribue `an_attr_name',
+			-- or `a_default_value' of no such attribute
+		require
+			an_attr_name_not_void: an_attr_name /= Void
+			an_attr_name_not_empty: not an_attr_name.empty
+			a_default_value_not_void: a_default_value /= Void
+		local
+			s: STRING
+		do
+			if xml_element.has_attribute (an_attr_name) then
+				s := project.variables.interpreted_string (
+					xml_element.attribute_value_by_name (an_attr_name).out)
+				!! Result.make_from_string (s)
+			else
+				Result := a_default_value
+			end
+		ensure
+			value_not_void: Result /= Void
+		end
+
+	uc_attribute_value (an_attr_name: UC_STRING): UC_STRING is
+			-- Value of attribue `an_attr_name'
+		require
+			an_attr_name_not_void: an_attr_name /= Void
+			an_attr_name_not_empty: not an_attr_name.empty
+			has_attribute: has_uc_attribute (an_attr_name)
+		local
+			s: STRING
+		do
+			s := project.variables.interpreted_string (
+				xml_element.attribute_value_by_name (an_attr_name).out)
+			!! Result.make_from_string (s)
+		ensure
+			value_not_void: Result /= Void
+		end
+
+	uc_boolean_value_or_default (an_attr_name: UC_STRING; a_default_value: BOOLEAN): BOOLEAN is
+			-- Value of attribue `an_attr_name',
+			-- or `a_default_value' of no such attribute
+		require
+			an_attr_name_not_void: an_attr_name /= Void
+			an_attr_name_not_empty: not an_attr_name.empty
+		do
+			if xml_element.has_attribute (an_attr_name) then
+				Result := uc_boolean_value (an_attr_name)
+			else
+				Result := a_default_value
+			end
+		end
+
+	uc_boolean_value (an_attr_name: UC_STRING): BOOLEAN is
+			-- Value of attribue `an_attr_name'
+		require
+			an_attr_name_not_void: an_attr_name /= Void
+			an_attr_name_not_empty: not an_attr_name.empty
+			has_attribute: has_uc_attribute (an_attr_name)
+		local
+			uc_value: UC_STRING
+		do
+			uc_value := uc_attribute_value (an_attr_name)
+			if True_attribute_value.is_equal (uc_value) then
+				Result := True
+			elseif False_attribute_value.is_equal (uc_value) then
+				Result := False
+			else
+				print ("WARNING: wrong value '" + uc_value.out + "' for attribute " + an_attr_name.out + " Valid values are `true' and `false'. Using `false'.%N")
+				Result := False
+			end
+		end
+
+	has_uc_attribute (an_attr_name: UC_STRING): BOOLEAN is
+			-- Is `an_attr_name' an atttribute of Current element?
+		require
+			an_attr_name_not_void: an_attr_name /= Void
+			an_attr_name_not_empty: not an_attr_name.empty
+		do
+			Result := xml_element.has_attribute (an_attr_name)
+		end
+
+feature {NONE} -- Constants
+
+	Dir_attribute_name: UC_STRING is
+			-- "dir" attribute name
+		once
+			!! Result.make_from_string ("dir")
+		ensure
+			attribute_name_not_void: Result /= Void
+			attribute_name_not_empty: not Result.empty
+		end
+
+	If_attribute_name: UC_STRING is
+			-- "if" attribute name
+		once
+			!! Result.make_from_string ("if")
+		ensure
+			attribute_name_not_void: Result /= Void
+			attribute_name_not_empty: not Result.empty
+		end
+
+	Unless_attribute_name: UC_STRING is
+			-- "unless" attribute name
+		once
+			!! Result.make_from_string ("unless")
+		ensure
+			attribute_name_not_void: Result /= Void
+			attribute_name_not_empty: not Result.empty
+		end
+
+	True_attribute_value: UC_STRING is
+			-- "true" attribute value
+		once
+			!! Result.make_from_string ("true")
+		ensure
+			attribute_value_not_void: Result /= Void
+		end
+
+	False_attribute_value: UC_STRING is
+			-- "false" attribute value
+		once
+			!! Result.make_from_string ("false")
+		ensure
+			attribute_value_not_void: Result /= Void
+		end
+
+	Description_element_name: UC_STRING is
+			-- "description" element name
+		once
+			!!Result.make_from_string ("description")
+		ensure
+			element_name_not_void: Result /= Void
+			element_name_not_empty: not Result.empty
 		end
 
 invariant
-
-	name_not_void: name /= Void
-	name_not_empty: not name.empty
-	content_not_void: content /= Void
+	project_not_void: project /= Void
+	xml_element_not_void: xml_element /= Void
 
 end -- class GEANT_ELEMENT
+

@@ -28,7 +28,7 @@ creation
 
 feature -- Access
 
-	root_element: GEANT_ELEMENT
+	root_element: GEANT_XML_ELEMENT
 			-- Root element
 
 feature -- Actions
@@ -36,8 +36,8 @@ feature -- Actions
 	on_start_tag (a_name, ns_prefix: UC_STRING; attributes: DS_BILINEAR [DS_PAIR [DS_PAIR [UC_STRING, UC_STRING], UC_STRING]]) is
 			-- Action executed on start tag.
 		local
-			an_element: GEANT_ELEMENT
-			current_element: GEANT_ELEMENT
+			an_element: GEANT_XML_ELEMENT
+			current_element: GEANT_XML_ELEMENT
 			attr_list: GEANT_ATTRIBUTE_LIST
 		do
 			debug ("trace_xml")
@@ -61,7 +61,7 @@ feature -- Actions
 				-- Make the new element the current element:
 			stack.force (an_element)
 		end
-   
+
 	on_end_tag (name, ns_prefix: UC_STRING) is
 			-- Action executed on end tag.
 		do
@@ -70,11 +70,11 @@ feature -- Actions
 			end
 			stack.remove
 		end
-   
+
 	on_content (chr_data: UC_STRING) is
 			-- Action executed on content.
 		local
-			an_element: GEANT_ELEMENT
+			an_element: GEANT_XML_ELEMENT
 		do
 			an_element := stack.item
 			an_element.set_content (clone (chr_data))
@@ -82,7 +82,7 @@ feature -- Actions
 
 feature {NONE} -- Implementation
 
-	stack: DS_ARRAYED_STACK [GEANT_ELEMENT] is
+	stack: DS_ARRAYED_STACK [GEANT_XML_ELEMENT] is
 			-- Stack of elements
 		once
 			!! Result.make (10)
@@ -91,3 +91,4 @@ feature {NONE} -- Implementation
 		end
 
 end -- class GEANT_PROJECT_PARSER
+

@@ -13,11 +13,6 @@ indexing
 
 class GEANT_ATTRIBUTE_HANDLER
 
-inherit
-
-	GEANT_ELEMENT_NAMES
-		export {NONE} all end
-
 creation
 
 	make
@@ -83,26 +78,6 @@ feature -- Access
 			attribute_value_not_void: Result /= Void
 		end
 
-	id_attribute_value: UC_STRING is
-			-- Value of attribute named ID
-		require
-			has_id_attribute: has_id_attribute
-		do
-			Result := attribute_value_by_name (Id_attribute_name)
-		ensure
-			attribute_value_not_void: Result /= Void
-		end
-
-	idref_attribute_value: UC_STRING is
-			-- Value of attribute named IDREF
-		require
-			has_idref_attribute: has_idref_attribute
-		do
-			Result := attribute_value_by_name (Idref_attribute_name)
-		ensure
-			attribute_value_not_void: Result /= Void
-		end
-
 feature -- Status report
 
 	has_attribute (a_name: UC_STRING): BOOLEAN is
@@ -131,20 +106,6 @@ feature -- Status report
 					i := i + 1
 				end
 			end
-		end
-
-	has_id_attribute: BOOLEAN is
-			-- Is there an attribute named ID
-			-- in `attributes'?
-		do
-			Result := has_attribute (Id_attribute_name)
-		end
-
-	has_idref_attribute: BOOLEAN is
-			-- Is there an attribute named IDREF
-			-- in `attributes'?
-		do
-			Result := has_attribute (Idref_attribute_name)
 		end
 
 feature -- Element change
