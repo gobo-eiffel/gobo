@@ -34,7 +34,7 @@ feature -- Status report
 			has_stack: not is_stack_empty
 		deferred
 		ensure
-			result_not_void: Result /= Void			
+			result_not_void: Result /= Void
 		end
 
 feature -- Element change
@@ -46,9 +46,20 @@ feature -- Element change
 		deferred
 		end
 
-	reset_uri_stack (a_uri: UT_URI ) is
-			-- Empty the stack then push `a_uri' onto the stack if not void.
+	clear_uri_stack is
+			-- Clear uri stack.
 		deferred
+		ensure
+			stack_empty: is_stack_empty
+		end
+		
+	reset_uri_stack (a_uri: UT_URI) is
+			-- Empty the stack then push `a_uri' onto the stack.
+		require
+			a_uri_not_void: a_uri /= Void
+		do
+			clear_uri_start
+			push_uri (a_uri)
 		end
 
 	register_scheme (a_scheme: XM_URI_RESOLVER) is

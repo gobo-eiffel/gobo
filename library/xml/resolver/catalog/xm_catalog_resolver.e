@@ -57,10 +57,10 @@ feature -- Element change
 			shared_catalog_manager.bootstrap_resolver.uri_scheme_resolver.push_uri (a_uri)
 		end
 
-	reset_uri_stack (a_uri: UT_URI ) is
+	clear_uri_stack is
 			-- Empty the stack then push `a_uri' onto the stack.
 		do
-			shared_catalog_manager.bootstrap_resolver.uri_scheme_resolver.reset_uri_stack (a_uri)
+			shared_catalog_manager.bootstrap_resolver.uri_scheme_resolver.clear_uri_stack
 		end
 	
 	register_scheme (a_scheme: XM_URI_RESOLVER) is

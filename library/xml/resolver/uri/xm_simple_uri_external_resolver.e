@@ -93,11 +93,10 @@ feature -- Element change
 			uris.put (a_uri)
 		end
 
-	reset_uri_stack (a_uri: UT_URI ) is
-			-- Empty the stack then push `a_uri' onto the stack.
+	clear_uri_stack is
+			-- Empty the URI stack.
 		do
 			uris.wipe_out
-			if a_uri /= Void then uris.put (a_uri) end
 		end
 
 feature -- Operation(s)
