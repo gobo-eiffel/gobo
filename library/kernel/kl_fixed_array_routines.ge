@@ -27,13 +27,18 @@ feature -- Initialization
 			non_negative_n: n >= 0
 #ifdef ISE
 		local
-			an_array: ARRAY [G]
+			to_special: TO_SPECIAL [G]
+#endif
 		do
-			!! an_array.make (0, n - 1)
-			Result := an_array.area
+#ifdef ISE
+			!! to_special.make_area (n)
+			Result := to_special.area
 #else
-		do
+#ifdef SE
+			!! Result.make (n)
+#else
 			!! Result.make (0, n - 1)
+#endif
 #endif
 		ensure
 			fixed_array_not_void: Result /= Void
@@ -45,18 +50,19 @@ feature -- Initialization
 			-- Create a new fixed array with items from `an_array'.
 		require
 			an_array_not_void: an_array /= Void
+#ifdef SE
+		do
+			!! Result.from_collection (an_array)
+#else
 		local
 			array_routines: KL_ARRAY_ROUTINES [G]
-#ifdef ISE
-			a: ARRAY [G]
-#endif
 		do
 			!! array_routines
 #ifdef ISE
-			a := array_routines.make_from_array (an_array, 0)
-			Result := a.area
+			Result := array_routines.make_from_array (an_array, 0).area
 #else
 			Result := array_routines.make_from_array (an_array, 0)
+#endif
 #endif
 		ensure
 			fixed_array_not_void: Result /= Void
@@ -78,11 +84,15 @@ feature -- Conversion
 #ifdef ISE
 			Result := an_array.area
 #else
+#ifdef SE
+			Result := make_from_array (an_array)
+#else
 			if an_array.lower = 0 then
 				Result := an_array
 			else
 				Result := make_from_array (an_array)
 			end
+#endif
 #endif
 		ensure
 			fixed_array_not_void: Result /= Void
@@ -94,12 +104,29 @@ feature -- Conversion
 
 feature -- Status report
 
+	has (an_array: like FIXED_ARRAY_TYPE; v: G): BOOLEAN is
+			-- Does `v' appear in `an_array'?
+		require
+			an_array_not_void: an_array /= Void
+		local
+			i: INTEGER
+		do
+			from
+				i := an_array.count - 1
+			until
+				Result or i < 0
+			loop
+				Result := an_array.item (i) = v
+				i := i - 1
+			end
+		end
+
 	valid_fixed_array (an_array: like FIXED_ARRAY_TYPE): BOOLEAN is
 			-- Make sure that the lower bound of `an_array' is zero.
 		require
 			an_array_not_void: an_array /= Void
 		do
-#ifdef ISE
+#ifdef ISE || SE
 			Result := True
 #else
 			Result := an_array.lower = 0
@@ -122,8 +149,13 @@ feature -- Resizing
 #ifdef ISE
 			Result := c_arycpy ($an_array, n, 0, an_array.count)
 #else
+#ifdef SE
+			Result := an_array
+			Result.resize (n)
+#else
 			Result := an_array
 			Result.resize (0, n - 1)
+#endif
 #endif
 		ensure
 			fixed_array_not_void: Result /= Void
@@ -138,7 +170,20 @@ feature -- Removal
 		require
 			an_array_not_void: an_array /= Void
 			valid_fixed_array: valid_fixed_array (an_array)
-#ifndef ISE || HACT || TOWER
+#ifdef ISE
+		do
+			c_spclearall ($an_array)
+#else
+#ifdef HACT || TOWER
+		do
+			an_array.clear_all
+#else
+#ifdef SE
+		local
+			v: G
+		do
+			an_array.set_all_with (v)
+#else
 		local
 			i, nb: INTEGER
 			v: G
@@ -148,12 +193,7 @@ feature -- Removal
 				an_array.put (v, i)
 				i := i + 1
 			end
-#else
-		do
-#ifdef ISE
-			c_spclearall ($an_array)
-#else
-			an_array.clear_all
+#endif
 #endif
 #endif
 		ensure
