@@ -77,7 +77,6 @@ feature -- Access
 		deferred
 		ensure
 			name_not_void: Result /= Void
-			name_not_empty: Result.count > 0
 		end
 
 	last_item: G is
