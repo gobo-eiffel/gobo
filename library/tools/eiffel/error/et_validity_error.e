@@ -5013,7 +5013,7 @@ feature {NONE} -- Initialization
 			parameters.put (position.line.out, 3)
 			parameters.put (position.column.out, 4)
 			parameters.put (current_class.name.name, 5)
-			parameters.put (a_class_impl.name.name, 5)
+			parameters.put (a_class_impl.name.name, 6)
 			parameters.put (a_target_type.to_text, 7)
 			set_compilers (True)
 		ensure
