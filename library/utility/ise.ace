@@ -3,4 +3,3 @@
 	ut_error:			"$GOBO/library/utility/error";
 	ut_formatter:		"$GOBO/library/utility/formatter";
 	ut_support:			"$GOBO/library/utility/support";
-	ut_spec:			"$GOBO/library/utility/spec/ise";
