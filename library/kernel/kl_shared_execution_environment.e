@@ -4,6 +4,7 @@ indexing
 
 		"Shared execution environment facilities"
 
+	pattern:    "Singleton"
 	library:    "Gobo Eiffel Kernel Library"
 	author:     "Eric Bezault <ericb@gobo.demon.co.uk>"
 	copyright:  "Copyright (c) 1997, Eric Bezault"

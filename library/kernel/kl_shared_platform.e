@@ -4,6 +4,7 @@ indexing
 
 		"Shared platform-dependent properties"
 
+	pattern:    "Singleton"
 	library:    "Gobo Eiffel Kernel Library"
 	author:     "Eric Bezault <ericb@gobo.demon.co.uk>"
 	copyright:  "Copyright (c) 1997, Eric Bezault"
@@ -14,12 +15,12 @@ class KL_SHARED_PLATFORM
 
 feature -- Access
 
-	platform_: KL_PLATFORM is
+	Platform: KL_PLATFORM is
 			-- Platform-dependent properties
 		once
 			!! Result
 		ensure
-			platform__not_void: Result /= Void
+			platform_not_void: Result /= Void
 		end
 
 end -- class KL_SHARED_PLATFORM
