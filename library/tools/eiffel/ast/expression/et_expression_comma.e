@@ -56,6 +56,18 @@ feature -- Access
 			Result := comma.break
 		end
 
+feature -- Setting
+
+	set_expression (an_expression: like expression) is
+			-- Set `expression' to `an_expression'.
+		require
+			an_expression_not_void: an_expression /= Void
+		do
+			expression := an_expression
+		ensure
+			expression_set: expression = an_expression
+		end
+
 feature -- Processing
 
 	process (a_processor: ET_AST_PROCESSOR) is

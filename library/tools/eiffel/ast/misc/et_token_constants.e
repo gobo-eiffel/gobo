@@ -154,6 +154,14 @@ feature -- Class names
 			pointer_class_name_not_void: Result /= Void
 		end
 
+	typed_pointer_class_name: ET_CLASS_NAME is
+			-- "TYPED_POINTER" class name
+		once
+			create {ET_IDENTIFIER} Result.make ("TYPED_POINTER")
+		ensure
+			typed_pointer_class_name_not_void: Result /= Void
+		end
+
 	unknown_class_name: ET_CLASS_NAME is
 			-- "*UNKNOWN*" class name
 		once
@@ -170,6 +178,16 @@ feature -- Feature names
 			create {ET_IDENTIFIER} Result.make ("default_create")
 		ensure
 			default_create_feature_name_not_void: Result /= Void
+		end
+
+feature -- Conversion features
+
+	builtin_convert_feature: ET_CONVERT_FEATURE is
+			-- Built-in conversion feature
+		once
+			create {ET_BUILTIN_CONVERT_FEATURE} Result.make
+		ensure
+			builtin_convert_feature_not_void: Result /= Void
 		end
 
 feature -- Symbols

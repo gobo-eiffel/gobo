@@ -98,6 +98,7 @@ feature {NONE} -- Initialization
 			real_class := eiffel_class (tokens.real_class_name)
 			double_class := eiffel_class (tokens.double_class_name)
 			pointer_class := eiffel_class (tokens.pointer_class_name)
+			typed_pointer_class := eiffel_class (tokens.typed_pointer_class_name)
 				-- Unknown class.
 			create unknown_class.make_unknown (tokens.unknown_class_name)
 				-- Type "ANY".
@@ -136,6 +137,7 @@ feature {NONE} -- Initialization
 			real_class_not_void: real_class /= Void
 			double_class_not_void: double_class /= Void
 			pointer_class_not_void: pointer_class /= Void
+			typed_pointer_class_not_void: typed_pointer_class /= Void
 			unknown_class_not_void: unknown_class /= Void
 			any_type_not_void: any_type /= Void
 			string_type_not_void: string_type /= Void
@@ -194,6 +196,9 @@ feature -- Access
 	error_handler: ET_ERROR_HANDLER
 			-- Error handler
 
+	ast_factory: ET_AST_FACTORY
+			-- Abstract Syntax Tree factory
+
 feature -- Basic classes
 
 	any_class: ET_CLASS
@@ -246,6 +251,9 @@ feature -- Basic classes
 
 	pointer_class: ET_CLASS
 			-- Class "POINTER"
+
+	typed_pointer_class: ET_CLASS
+			-- Class "TYPED_POINTER"
 
 	unknown_class: ET_CLASS
 			-- Class "*UNKNOWN*"
@@ -1173,9 +1181,6 @@ feature -- Processors
 
 feature {NONE} -- Implementation
 
-	ast_factory: ET_AST_FACTORY
-			-- Abstract Syntax Tree factory
-
 	internal_eiffel_preparser: ET_EIFFEL_PREPARSER
 			-- Eiffel preparser
 
@@ -1205,6 +1210,7 @@ invariant
 	real_class_not_void: real_class /= Void
 	double_class_not_void: double_class /= Void
 	pointer_class_not_void: pointer_class /= Void
+	typed_pointer_class_not_void: typed_pointer_class /= Void
 	unknown_class_not_void: unknown_class /= Void
 	any_type_not_void: any_type /= Void
 	none_type_not_void: none_type /= Void
