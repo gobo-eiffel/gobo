@@ -7,7 +7,7 @@ indexing
 
 	library:    "Gobo Eiffel Structure Library"
 	author:     "Eric Bezault <ericb@gobosoft.com>"
-	copyright:  "Copyright (c) 1999, Eric Bezault and others"
+	copyright:  "Copyright (c) 1999-2001, Eric Bezault and others"
 	license:    "Eiffel Forum Freeware License v1 (see forum.txt)"
 	date:       "$Date$"
 	revision:   "$Revision$"
@@ -17,6 +17,17 @@ deferred class DS_INDEXABLE [G]
 inherit
 
 	DS_SORTABLE [G]
+
+	DS_EXTENDIBLE [G]
+		rename
+			put as put_last,
+			force as force_last,
+			extend as extend_last,
+			append as append_last
+		redefine
+			put_last, force_last,
+			extend_last, append_last
+		end
 
 feature -- Access
 
@@ -45,15 +56,6 @@ feature -- Access
 			definition: Result = item (count)
 		end
 
-feature -- Status report
-
-	extendible (n: INTEGER): BOOLEAN is
-			-- May container be extended with `n' items?
-		require
-			positive_n: n >= 0
-		deferred
-		end
-
 feature -- Element change
 
 	put_first (v: G) is
@@ -68,10 +70,8 @@ feature -- Element change
 
 	put_last (v: G) is
 			-- Add `v' to end of container.
-		require
-			extendible: extendible (1)
 		deferred
-		ensure
+		ensure then
 			one_more: count = old count + 1
 			inserted: last = v
 		end
@@ -98,7 +98,7 @@ feature -- Element change
 	force_last (v: G) is
 			-- Add `v' to end of container.
 		deferred
-		ensure
+		ensure then
 			one_more: count = old count + 1
 			inserted: last = v
 		end
@@ -155,11 +155,8 @@ feature -- Element change
 	extend_last (other: DS_LINEAR [G]) is
 			-- Add items of `other' to end of container.
 			-- Keep items of `other' in the same order.
-		require
-			other_not_void: other /= Void
-			extendible: extendible (other.count)
 		deferred
-		ensure
+		ensure then
 			new_count: count = old count + other.count
 			same_order: (not other.is_empty) implies (item (old count + 1) = other.first)
 		end
@@ -191,10 +188,8 @@ feature -- Element change
 	append_last (other: DS_LINEAR [G]) is
 			-- Add items of `other' to end of container.
 			-- Keep items of `other' in the same order.
-		require
-			other_not_void: other /= Void
 		deferred
-		ensure
+		ensure then
 			new_count: count = old count + other.count
 			same_order: (not other.is_empty) implies (item (old count + 1) = other.first)
 		end

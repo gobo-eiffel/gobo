@@ -6,7 +6,7 @@ indexing
 
 	library:    "Gobo Eiffel Structure Library"
 	author:     "Eric Bezault <ericb@gobosoft.com>"
-	copyright:  "Copyright (c) 1999, Eric Bezault and others"
+	copyright:  "Copyright (c) 1999-2001, Eric Bezault and others"
 	license:    "Eiffel Forum Freeware License v1 (see forum.txt)"
 	date:       "$Date$"
 	revision:   "$Revision$"
@@ -15,15 +15,10 @@ deferred class DS_DISPENSER [G]
 
 inherit
 
-	DS_SEARCHABLE [G]
-
-feature -- Status report
-
-	extendible (n: INTEGER): BOOLEAN is
-			-- May dispenser be extended with `n' items?
-		require
-			positive_n: n >= 0
-		deferred
+	DS_EXTENDIBLE [G]
+		redefine
+			put, force,
+			extend, append
 		end
 
 feature -- Access
@@ -39,38 +34,31 @@ feature -- Element change
 
 	put (v: G) is
 			-- Add `v' to dispenser.
-		require
-			extendible: extendible (1)
 		deferred
-		ensure
+		ensure then
 			one_more: count = old count + 1
 		end
 
 	force (v: G) is
 			-- Add `v' to dispenser.
 		deferred
-		ensure
+		ensure then
 			one_more: count = old count + 1
 		end
 
 	extend (other: DS_LINEAR [G]) is
 			-- Add items of `other' to dispenser.
 			-- Add `other.first' first, etc.
-		require
-			other_not_void: other /= Void
-			extendible: extendible (other.count)
 		deferred
-		ensure
+		ensure then
 			new_count: count = old count + other.count
 		end
 
 	append (other: DS_LINEAR [G]) is
 			-- Add items of `other' to dispenser.
 			-- Add `other.first' first, etc.
-		require
-			other_not_void: other /= Void
 		deferred
-		ensure
+		ensure then
 			new_count: count = old count + other.count
 		end
 

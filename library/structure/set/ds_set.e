@@ -21,6 +21,16 @@ inherit
 			equality_tester_settable
 		end
 
+	DS_EXTENDIBLE [G]
+		rename
+			put as put_last,
+			force as force_last,
+			extend as extend_last,
+			append as append_last
+		undefine
+			equality_tester_settable
+		end
+
 feature -- Access
 
 	infix "@", item (v: G): G is
@@ -97,9 +107,115 @@ feature -- Measurement
 			not_has_v: not has (v) implies (Result = 0)
 		end
 
+feature -- Access
+
+	union (other: DS_SET [G]): like Current is
+			-- Clone of current set to which all items
+			-- of `other' have been added
+			-- (Use `equality_tester''s comparison criterion
+			-- if not void, use `=' criterion otherwise.)
+		require
+			other_not_void: other /= Void
+			same_equality_tester: same_equality_tester (other)
+		do
+			Result := clone (Current)
+			Result.merge (other)
+		ensure
+			union_not_void: Result /= Void
+			is_superset: Result.is_superset (other)
+		end
+
+	intersection (other: DS_SET [G]): like Current is
+			-- Clone of current set from with all items
+			-- not included in `other' have been removed
+			-- (Use `equality_tester''s comparison criterion
+			-- if not void, use `=' criterion otherwise.)
+		require
+			other_not_void: other /= Void
+			same_equality_tester: same_equality_tester (other)
+		do
+			Result := clone (Current)
+			Result.intersect (other)
+		ensure
+			intersection_not_void: Result /= Void
+			is_subset: Result.is_subset (other)
+		end
+
+	subtraction (other: DS_SET [G]): like Current is
+			-- Clone of current set from which all items
+			-- also included in `other' have been removed
+			-- (Use `equality_tester''s comparison criterion
+			-- if not void, use `=' criterion otherwise.)
+		require
+			other_not_void: other /= Void
+			same_equality_tester: same_equality_tester (other)
+		do
+			Result := clone (Current)
+			Result.subtract (other)
+		ensure
+			subtraction_not_void: Result /= Void
+			is_disjoint: Result.is_disjoint (other)
+		end
+
+	symdifference (other: DS_SET [G]): like Current is
+			-- Clone of current clone to which items of `other'
+			-- which are not included in current set have been
+			-- added and from which those which are current set
+			-- have been removed
+			-- (Use `equality_tester''s comparison criterion
+			-- if not void, use `=' criterion otherwise.)
+		require
+			other_not_void: other /= Void
+			same_equality_tester: same_equality_tester (other)
+		do
+			Result := clone (Current)
+			Result.symdif (other)
+		ensure
+			symdifference_not_void: Result /= Void
+		end
+
 feature -- Element change
 
 	put (v: G) is
+			-- Add `v' to set, replacing any existing item.
+			-- (Use `equality_tester''s comparison criterion
+			-- if not void, use `=' criterion otherwise.)
+		require
+			extendible: extendible (1)
+		deferred
+		ensure
+			inserted: has (v) and then item (v) = v
+			same_count: (old has (v)) implies (count = old count)
+			one_more: (not old has (v)) implies (count = old count + 1)
+		end
+
+	put_new (v: G) is
+			-- Add `v' to set.
+			-- (Use `equality_tester''s comparison criterion
+			-- if not void, use `=' criterion otherwise.)
+		require
+			extendible: extendible (1)
+			new_item: not has (v)
+		deferred
+		ensure
+			one_more: count = old count + 1
+			inserted: has (v) and then item (v) = v
+		end
+
+	put_last (v: G) is
+			-- Add `v' to set, replacing any existing item.
+			-- If `v' was not included yet, insert it at 
+			-- last position if implementation permits.
+			-- (Use `equality_tester''s comparison criterion
+			-- if not void, use `=' criterion otherwise.)
+		deferred
+		ensure then
+			inserted: has (v) and then item (v) = v
+			same_count: (old has (v)) implies (count = old count)
+			one_more: (not old has (v)) implies (count = old count + 1)
+		end
+
+	force (v: G) is
 			-- Add `v' to set, replacing any existing item.
 			-- (Use `equality_tester''s comparison criterion
 			-- if not void, use `=' criterion otherwise.)
@@ -108,6 +224,64 @@ feature -- Element change
 			inserted: has (v) and then item (v) = v
 			same_count: (old has (v)) implies (count = old count)
 			one_more: (not old has (v)) implies (count = old count + 1)
+		end
+
+	force_new (v: G) is
+			-- Add `v' to set.
+			-- (Use `equality_tester''s comparison criterion
+			-- if not void, use `=' criterion otherwise.)
+		require
+			new_item: not has (v)
+		deferred
+		ensure
+			one_more: count = old count + 1
+			inserted: has (v) and then item (v) = v
+		end
+
+	force_last (v: G) is
+			-- Add `v' to set, replacing any existing item.
+			-- If `v' was not included yet, insert it at 
+			-- last position if implementation permits.
+			-- (Use `equality_tester''s comparison criterion
+			-- if not void, use `=' criterion otherwise.)
+		deferred
+		ensure then
+			inserted: has (v) and then item (v) = v
+			same_count: (old has (v)) implies (count = old count)
+			one_more: (not old has (v)) implies (count = old count + 1)
+		end
+
+	extend (other: DS_LINEAR [G]) is
+			-- Add items of `other' to set, replacing any existing item.
+			-- Add `other.first' first, etc.
+		require
+			other_not_void: other /= Void
+			extendible: extendible (other.count)
+		deferred
+		end
+
+	extend_last (other: DS_LINEAR [G]) is
+			-- Add items of `other' to set, replacing any existing item.
+			-- Add `other.first' first, etc.
+			-- If items of `other' were not included yet, insert
+			-- them at last position if implementation permits.
+		deferred
+		end
+
+	append (other: DS_LINEAR [G]) is
+			-- Add items of `other' to set, replacing any existing item.
+			-- Add `other.first' first, etc.
+		require
+			other_not_void: other /= Void
+		deferred
+		end
+
+	append_last (other: DS_LINEAR [G]) is
+			-- Add items of `other' to set, replacing any existing item.
+			-- Add `other.first' first, etc.
+			-- If items of `other' were not included yet, insert
+			-- them at last position if implementation permits.
+		deferred
 		end
 
 feature -- Removal
@@ -125,7 +299,7 @@ feature -- Removal
 
 feature -- Basic operations
 
-	append (other: DS_SET [G]) is
+	merge (other: DS_SET [G]) is
 			-- Add all items of `other' to current set.
 			-- (Use `equality_tester''s comparison criterion
 			-- if not void, use `=' criterion otherwise.)
