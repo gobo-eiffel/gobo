@@ -88,10 +88,7 @@ feature -- Element
 				context.add_default (a_value)
 					-- Optionally do not eat xmlns attributes
 				if forward_xmlns then
-					next.on_attribute (Xmlns_namespace,
-						a_prefix,
-						a_local_part,
-						a_value)
+					attributes_force (a_prefix, a_local_part, a_value)
 				end	
 			elseif is_xmlns (a_prefix) then
 					-- Prefix declaration.
@@ -102,11 +99,8 @@ feature -- Element
 				end
 					-- Optionally do not eat xmlns: attributes
 				if forward_xmlns then
-					next.on_attribute (Xmlns_namespace,
-						a_prefix,
-						a_local_part,
-						a_value)
-				end	
+					attributes_force (a_prefix, a_local_part, a_value)
+				end
 			else
 					-- Queue ordinary attribute for when all namespace
 					-- declarations have been seen as they can be used
@@ -173,6 +167,12 @@ feature {NONE} -- Attribute events
 						next.on_attribute (Xml_prefix_namespace,
 							attributes_prefix.item,
 							attributes_local_part.item,
+							attributes_value.item)
+					elseif is_xmlns (attributes_prefix.item) then
+							-- xmlns: prefix has implicit namespace
+						next.on_attribute (Xmlns_namespace,
+							attributes_prefix.item,
+							attributes_local_part.item
 							attributes_value.item)
 					else
 						on_error (Undeclared_namespace_error)
