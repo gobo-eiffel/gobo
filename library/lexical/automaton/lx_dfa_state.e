@@ -2,12 +2,12 @@ indexing
 
 	description:
 
-		"Deterministic finite automaton states";
+		"Deterministic finite automaton states"
 
-	library:    "Gobo Eiffel Lexical Library";
-	author:     "Eric Bezault <ericb@gobo.demon.co.uk>";
-	copyright:  "Copyright (c) 1997, Eric Bezault";
-	date:       "$Date$";
+	library:    "Gobo Eiffel Lexical Library"
+	author:     "Eric Bezault <ericb@gobo.demon.co.uk>"
+	copyright:  "Copyright (c) 1997, Eric Bezault"
+	date:       "$Date$"
 	revision:   "$Revision$"
 
 class LX_DFA_STATE
@@ -18,23 +18,32 @@ inherit
 		undefine
 			copy
 		redefine
+#ifdef SE
+			hash_code,
+#endif
 			is_equal
 		select
 			is_equal
 		end
 
+#ifndef SE
 	HASHABLE
 		undefine
 			copy, is_equal
 		end
+#endif
 
 	DS_ARRAYED_LIST [LX_NFA_STATE]
 		rename
 			make as make_arrayed_list,
 			is_equal as arrayed_list_is_equal
 		export
-			{NONE} all
 			{ANY} item, count
+			{NONE} all
+#ifdef SE
+		redefine
+			hash_code
+#endif
 		end
 
 creation
