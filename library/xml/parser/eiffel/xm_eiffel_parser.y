@@ -44,7 +44,8 @@ creation
 %type <STRING> entity_value entity_value_trail
 %type <STRING> att_value att_value_trail att_value_trail_item
 %type <STRING> value_reference entity_value_reference
-%type <STRING> comment_content comment_content_item pi_content_first pi_content_trail pi_content_item
+%type <STRING> comment_content comment_content_item 
+%type <STRING> pi_content pi_content_first pi_content_trail pi_content_item
 %type <STRING> cdata_body content_text
 %type <XM_DTD_EXTERNAL_ID> external_id public_id doctype_decl_external_name
 %type <STRING> ndata_decl doctype_name_space
@@ -297,6 +298,12 @@ comment: COMMENT_START comment_content COMMENT_END
 		{ on_comment (shared_empty_string) }
 	;
 
+dtd_comment: COMMENT_START comment_content COMMENT_END
+		{ on_dtd_comment ($2) }
+	| COMMENT_START COMMENT_END
+		{ on_dtd_comment (shared_empty_string) }
+	;
+	
 comment_content: comment_content_item
 		{ $$ := $1 }
 	| comment_content comment_content_item
@@ -309,15 +316,26 @@ comment_content_item: char_data { $$ := $1 }
 
 -- 2.6 Processing instructions
 
-pi: PI_START pi_target_token req_space pi_content_first pi_content_trail PI_END
-		{ on_processing_instruction ($2, STRING_.concat ($4,$5)) }
-	| PI_START pi_target_token req_space pi_content_first PI_END
+pi: PI_START pi_target_token req_space pi_content PI_END
 		{ on_processing_instruction ($2, $4) }
 	| PI_START pi_target_token maybe_space PI_END
 		{ on_processing_instruction ($2, shared_empty_string) }
 	| PI_RESERVED { force_error (Error_pi_xml_reserved) }
 	;
 
+dtd_pi: PI_START pi_target_token req_space pi_content PI_END
+		{ on_dtd_processing_instruction ($2, $4) }
+	| PI_START pi_target_token maybe_space PI_END
+		{ on_dtd_processing_instruction ($2, shared_empty_string) }
+	| PI_RESERVED { force_error (Error_pi_xml_reserved) }
+	;
+
+pi_content: pi_content_first pi_content_trail
+		{ $$ := STRING_.concat ($1, $2) }
+	| pi_content_first
+		{ $$ := $1 }
+	;
+	
 pi_content_trail: pi_content_item
 		{ $$ := $1 }
 	| pi_content_trail pi_content_item
@@ -491,8 +509,8 @@ markup_decl: element_decl
 	| attlist_decl
 	| entity_decl
 	| notation_decl
-	| PI
-	| comment
+	| dtd_pi
+	| dtd_comment
 	| SPACE -- not in XML1.0:29?
 	| doctype_pe_reference
 	;

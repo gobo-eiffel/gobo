@@ -62,6 +62,24 @@ feature -- Document type definition callbacks
 		deferred
 		end
 		
+	on_dtd_processing_instruction (a_name: STRING; a_content: STRING) is
+			-- Processing instruction within DTD.
+			-- Warning: strings may be polymorphic, see XM_STRING_MODE.
+		require
+			name_not_void: a_name /= Void
+			content_not_void: a_content /= Void
+		deferred
+		end
+
+	on_dtd_comment (a_content: STRING) is
+			-- Processing a comment within DTD.
+			-- Atomic: single comment produces single event
+			-- Warning: strings may be polymorphic, see XM_STRING_MODE.
+		require
+			a_content_not_void: a_content /= Void
+		deferred
+		end
+
 	on_dtd_end is
 			-- End of DTD (last event in a document).
 		deferred

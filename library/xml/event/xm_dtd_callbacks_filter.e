@@ -66,6 +66,18 @@ feature -- Document type definition callbacks
 			next.on_notation_declaration (notation_name, an_id)
 		end
 	
+	on_dtd_processing_instruction (a_name, a_content: STRING) is
+			-- PI.
+		do
+			next.on_dtd_processing_instruction (a_name, a_content)
+		end
+
+	on_dtd_comment (a_content: STRING) is
+			-- Comment.
+		do
+			next.on_dtd_comment (a_content)
+		end
+		
 	on_dtd_end is
 			-- End of DTD.
 		do

@@ -90,6 +90,21 @@ feature -- DTD
 			-- Notation declaration.
 		do
 		end
+		
+	on_dtd_comment (a_comment: STRING) is
+			-- Comment.
+		do
+		end
+		
+	on_dtd_processing_instruction (a_target: STRING; a_content: STRING) is
+			-- PI.
+		do
+		end
+		
+	on_dtd_end is
+			-- Last DTD event.
+		do
+		end
 
 feature {NONE} -- DTD implementation
 
