@@ -216,19 +216,21 @@ feature -- System
 
 feature -- Type processing
 
-	has_formal_parameters (actual_parameters: ARRAY [ET_TYPE]): BOOLEAN is
+	has_formal_parameters (actual_parameters: ET_ACTUAL_GENERIC_PARAMETERS): BOOLEAN is
 			-- Does current feature contain formal generic parameter
-			-- types of index 'i' such that 'actual_parameters.item (i)'
-			-- is not void?
+			-- types whose corresponding actual parameter in
+			-- `actual_parameters' is different from the formal
+			-- parameter?
 		require
 			actual_parameters_not_void: actual_parameters /= Void
 		deferred
 		end
 
-	resolve_formal_parameters (actual_parameters: ARRAY [ET_TYPE]) is
+	resolve_formal_parameters (actual_parameters: ET_ACTUAL_GENERIC_PARAMETERS) is
 			-- Replace in current feature the formal generic parameter
-			-- types of index 'i' by 'actual_parameters.item (i)'
-			-- when these new parameters are not void.
+			-- types by those of `actual_parameters' when the 
+			-- corresponding actual parameter is different from
+			-- the formal parameter.
 		require
 			actual_parameters_not_void: actual_parameters /= Void
 		deferred

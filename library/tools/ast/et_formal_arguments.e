@@ -146,10 +146,11 @@ feature -- System
 
 feature -- Type processing
 
-	has_formal_parameters (actual_parameters: ARRAY [ET_TYPE]): BOOLEAN is
+	has_formal_parameters (actual_parameters: ET_ACTUAL_GENERIC_PARAMETERS): BOOLEAN is
 			-- Do types of current arguments contain formal
-			-- generic parameter types of index 'i' such that
-			-- 'actual_parameters.item (i)' is not void?
+			-- generic parameter types whose corresponding
+			-- actual parameter in `actual_parameters' is
+			-- different from the formal parameter?
 		require
 			actual_parameters_not_void: actual_parameters /= Void
 		local
@@ -165,11 +166,11 @@ feature -- Type processing
 			end
 		end
 
-	resolve_formal_parameters (actual_parameters: ARRAY [ET_TYPE]) is
+	resolve_formal_parameters (actual_parameters: ET_ACTUAL_GENERIC_PARAMETERS) is
 			-- Replace in types of current arguments the formal
-			-- generic parameter types of index 'i' by
-			-- 'actual_parameters.item (i)' when these
-			-- new parameters are not void.
+			-- generic parameter types by those of `actual_parameters'
+			-- when the corresponding actual parameter is different
+			-- from the formal parameter.
 		require
 			actual_parameters_not_void: actual_parameters /= Void
 		local

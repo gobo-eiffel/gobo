@@ -104,11 +104,10 @@ feature -- Genealogy
 			a_class: ET_CLASS
 			a_type, anc_type: ET_CLASS_TYPE
 			has_error: BOOLEAN
-			actual_parameters: ARRAY [ET_TYPE]
-			i, nb: INTEGER
 			an_actual: ET_TYPE
 			a_formal: ET_FORMAL_GENERIC_TYPE
 			generics: ET_ACTUAL_GENERIC_PARAMETERS
+			actual_parameters: ET_ACTUAL_GENERIC_PARAMETERS
 			a_cursor: DS_HASH_TABLE_CURSOR [ET_CLASS_TYPE, ET_CLASS]
 		do
 				-- Add current parent to the ancestors
@@ -127,19 +126,8 @@ feature -- Genealogy
 					-- Find out whether formal parameters have
 					-- been given actual derivations.
 				generics := type.generic_parameters
-				if generics /= Void then
-					nb := generics.count
-					from i := 1 until i > nb loop
-						an_actual := generics.item (i)
-						a_formal ?= a_type
-						if a_formal = Void or else a_formal.index /= i then
-							if actual_parameters = Void then
-								!! actual_parameters.make (1, nb)
-							end
-							actual_parameters.put (an_actual, i)
-						end
-						i := i + 1
-					end
+				if generics /= Void and then generics.has_derived_parameters then
+					actual_parameters := generics
 				end
 					-- Add proper ancestors of current parent
 					-- to the ancestors of `an_heir'.

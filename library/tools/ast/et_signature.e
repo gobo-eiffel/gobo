@@ -159,11 +159,12 @@ feature -- Status report
 
 feature -- Type processing
 
-	resolve_formal_parameters (actual_parameters: ARRAY [ET_TYPE]) is
-			-- Replace in current signature the formal generic parameter
-			-- types of index 'i' by 'actual_parameters.item (i)'
-			-- when these new parameters are not void.
-			-- (Warning: this is a side-effect function.)
+	resolve_formal_parameters (actual_parameters: ET_ACTUAL_GENERIC_PARAMETERS) is
+			-- Replace in current signature the formal generic
+			-- parameter types by those of `actual_parameters'
+			-- when the corresponding actual parameter is different
+			-- from the formal parameter. (Warning: this is a
+			-- side-effect function.)
 		require
 			actual_parameters_not_void: actual_parameters /= Void
 		local
@@ -176,8 +177,7 @@ feature -- Type processing
 			nb := arguments.count
 			from i := 1 until i > nb loop
 				a_type := arguments.item (i)
-				a_type := a_type.resolved_formal_parameters (actual_parameters)
-				arguments.put (a_type, i)
+				arguments.put (a_type.resolved_formal_parameters (actual_parameters), i)
 				i := i + 1
 			end
 		end
@@ -190,10 +190,12 @@ feature -- Duplication
 		local
 			i, nb: INTEGER
 		do
-			type := clone (type)
+			if type /= Void then
+				type := type.deep_cloned_type
+			end
 			nb := arguments.count
 			from i := 1 until i > nb loop
-				arguments.put (clone (arguments.item (i)), i)
+				arguments.put (arguments.item (i).deep_cloned_type, i)
 				i := i + 1
 			end
 		end
