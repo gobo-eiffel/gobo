@@ -15,11 +15,18 @@ class ET_FORMAL_GENERIC_TYPE
 
 inherit
 
-	ET_TYPE
+	ET_NAMED_TYPE
+		rename
+			make as make_named_type
 		redefine
+			same_syntactical_type,
+			syntactically_conforms_to,
+			check_parent_validity,
+			check_constraint_validity,
 			has_formal_parameters,
 			resolved_formal_parameters,
-			syntactically_conforms_to
+			resolved_named_types,
+			actual_type, deep_cloned_type
 		end
 
 creation
@@ -43,17 +50,8 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	name: ET_IDENTIFIER
-			-- Name of type
-
 	index: INTEGER
 			-- Position in list of generic parameters
-
-	position: ET_POSITION is
-			-- Position of current type in source code
-		do
-			Result := name.position
-		end
 
 feature -- Status report
 
@@ -102,21 +100,42 @@ feature -- Status report
 
 feature -- Validity
 
-	check_parent_validity1 (an_heir: ET_CLASS): BOOLEAN is
+	check_parent_validity (an_heir: ET_CLASS): BOOLEAN is
 			-- Check whether current type is valid when
 			-- it appears in parent clause of `an_heir'.
-			-- Do not check conformance to generic
-			-- constraints. Report errors if not valid.
+			-- Report errors if not valid.
 		do
 			Result := True
 		end
 
-	check_constraint_validity (a_class: ET_CLASS): BOOLEAN is
+	check_constraint_validity (a_formal: ET_FORMAL_GENERIC_PARAMETER; a_class: ET_CLASS;
+		a_sorter: DS_TOPOLOGICAL_SORTER [ET_FORMAL_GENERIC_PARAMETER]): BOOLEAN is
 			-- Check whether current type is valid when it
-			-- appears in a constraint of a formal generic
-			-- parameter of class `a_class'. Report errors
-			-- if not valid.
+			-- appears in a constraint of the formal generic
+			-- parameter `a_formal' in class `a_class'.
+			-- `a_sorter' is used to find possible cycle in
+			-- formal generic parameter declaration.
+			-- Report errors if not valid.
+		local
+			an_index: INTEGER
+			formals: ET_FORMAL_GENERIC_PARAMETERS
+			other_formal: ET_FORMAL_GENERIC_PARAMETER
 		do
+			an_index := a_formal.index
+			if an_index = index then
+				a_class.error_handler.report_vcfg3e_error (a_class, a_formal, Current)
+			else
+				if index > an_index then
+					a_class.error_handler.report_vcfg3f_error (a_class, a_formal, Current)
+				end
+				if a_class.error_handler.is_se then
+					formals := a_class.generic_parameters
+					if formals /= Void and then index <= formals.count then
+						other_formal := formals.item (index)
+						a_sorter.force_relation (other_formal, a_formal)
+					end
+				end
+			end
 			Result := True
 		end
 
@@ -158,6 +177,16 @@ feature -- Type processing
 			end
 		end
 
+	resolved_named_types (a_class: ET_CLASS; ast_factory: ET_AST_FACTORY): ET_TYPE is
+			-- Replace in current type unresolved named types
+			-- by corresponding class types or formal generic
+			-- parameter names. `a_class' is the class where
+			-- current type appears in the source code.
+			-- (Warning: this is a side-effect function.)
+		do
+			Result := Current
+		end
+
 feature -- Conversion
 
 	actual_type (a_feature: ET_FEATURE; a_base_type: ET_CLASS_TYPE): ET_TYPE is
@@ -165,10 +194,14 @@ feature -- Conversion
 			-- only made up of class names and generic formal parameters
 			-- when `a_base_type' in a generic type not fully derived
 		local
+			a_generic_class_type: ET_GENERIC_CLASS_TYPE
 			parameters: ET_ACTUAL_GENERIC_PARAMETERS
 			a_formal: ET_FORMAL_GENERIC_TYPE
 		do
-			parameters := a_base_type.generic_parameters
+			a_generic_class_type ?= a_base_type
+			if a_generic_class_type /= Void then
+				parameters := a_generic_class_type.generic_parameters
+			end
 			if parameters = Void or else index > parameters.count then
 -- Error already reported elsewhere.
 print (a_base_type.base_class.name.name)
@@ -198,18 +231,8 @@ feature -- Duplication
 			!! Result.make (name, index)
 		end
 
-feature -- Output
-
-	append_to_string (a_string: STRING) is
-			-- Append textual representation of
-			-- current type to `a_string'.
-		do
-			a_string.append_string (name.name)
-		end
-
 invariant
 
-	name_not_void: name /= Void
 	index_positive: index >= 1
 
 end -- class ET_FORMAL_GENERIC_TYPE
