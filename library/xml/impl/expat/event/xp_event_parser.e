@@ -495,7 +495,7 @@ feature {NONE} -- (low level) frozen callbacks (called from exml clib)
 				a_prefix := a_name.substring (1, colon_index - 1)
 				a_name := a_name.substring (colon_index + 1, a_name.count)
 			else
-				!! a_prefix.make (0)
+				!UC_UTF8_STRING! a_prefix.make (0)
 			end
 			att_list := new_attribute_list_from_c (attribute_specifications_ptr)
 			on_start_tag (a_name, a_prefix, att_list)
@@ -513,7 +513,7 @@ feature {NONE} -- (low level) frozen callbacks (called from exml clib)
 				a_prefix := a_name.substring (1, colon_index - 1)
 				a_name := a_name.substring (colon_index + 1, a_name.count)
 			else
-				!! a_prefix.make (0)
+				!UC_UTF8_STRING! a_prefix.make (0)
 			end
 			on_end_tag (a_name, a_prefix)
 		end
@@ -528,11 +528,12 @@ feature {NONE} -- (low level) frozen callbacks (called from exml clib)
 
 	frozen on_processing_instruction_procedure (target_ptr, data_ptr: POINTER) is
 		local
-			target, data: UC_STRING
+			target,
+			data: UC_STRING
 		do
 			target := new_uc_string_from_c_utf8_zero_terminated_string_safe (target_ptr)
 			if data_ptr = Void then
-				create data.make (0)
+				!UC_UTF8_STRING! data.make (0)
 			else
 				data := new_uc_string_from_c_utf8_zero_terminated_string (data_ptr)
 			end
