@@ -135,7 +135,7 @@ ve-precomp:
 	${MAKE} install-ve-precomp 'BIN_DIR=${BIN_DIR}'
 	${MAKE} clean-ve-precomp
 
-compile-ve-precomp: ve.esd
+compile-ve-precomp: ve.eld
 	${VE_COMPILER} ${VE_PRECOMP_CFLAGS} -p:ve.eld
 
 ve.eld: ${ROOT_DIR}/ve.eld
