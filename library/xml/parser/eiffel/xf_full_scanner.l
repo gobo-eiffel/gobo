@@ -703,7 +703,7 @@ SYSTEMLITERAL ((['][\r\n\t\x20-&(-\xFF]*['])|(["][\r\n\t\x20-!#-\xFF]*["]))
 	last_value := normalized_newline
 }
 
-[ \t]++ {
+[ \t]+ {
 	-- space not matched by newline normalization
 	set_last_token (SPACE)
 	last_value := text
