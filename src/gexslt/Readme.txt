@@ -19,7 +19,7 @@ To compile this program:
 
 2. Run gexslt using:
 
-       gelint 
+       gexslt
 
 This will give you the usage message.
 

@@ -32,7 +32,7 @@ feature -- Test
 
 	test_allocations is
 		local
-			uri_code, prefix_code: INTEGER -- should be INTEGER_16
+			a_uri_code, another_uri_code, prefix_code: INTEGER -- should be INTEGER_16
 			counter, namespace_code: INTEGER
 			uri: STRING
 		do
@@ -47,11 +47,10 @@ feature -- Test
 				assert ("URI code not allocated", not shared_name_pool.is_code_for_uri_allocated (uri))
 
 				shared_name_pool.allocate_code_for_uri (uri)
-				uri_code := shared_name_pool.last_uri_code
-				assert ("URI code 2", uri_code = 9 + counter)
+				a_uri_code := shared_name_pool.last_uri_code
 		
-				uri_code := shared_name_pool.code_for_uri (uri)
-				assert ("URI code 3", uri_code = 9 + counter)
+				another_uri_code := shared_name_pool.code_for_uri (uri)
+				assert ("Same URI code", a_uri_code = another_uri_code)
 				
 				counter:= counter + 1
 			end
@@ -105,7 +104,7 @@ feature -- Test
 			name_code, original_name_code: INTEGER
 			local_name: STRING
 		do
-			local_name := "ITEM"
+			local_name := "non-random-name-wHich-wont-occUr-in-OTHer-TesSts"
 			assert ("Item not allocated", not shared_name_pool.is_name_code_allocated ("", "", local_name))
 			shared_name_pool.allocate_name ("", "", local_name)
 			original_name_code := shared_name_pool.last_name_code

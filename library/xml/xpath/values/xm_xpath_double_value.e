@@ -213,6 +213,9 @@ feature -- Basic operations
 			a_double, another_double: DOUBLE
 			an_integer, another_integer: INTEGER
 		do
+			debug ("XPath Double values")
+				std.error.put_string ("Double arithmetic%N")
+			end
 			inspect
 				an_operator
 			when Plus_token then

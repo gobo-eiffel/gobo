@@ -1,11 +1,11 @@
 <?xml version="1.0"?>
 
-<project name="gexslt_documentation" default="help">
+<project name="gexslt_extensions" default="help">
 
 	<description>
-		description: "Eiffel Ant file for Gobo Eiffel XSLT Documentation"
-		system: "Gobo Eiffel XSLT Documentation"
-		copyright: "Copyright (c) 2004, Coli Adams and others"
+		description: "Eiffel Ant file for Gobo Eiffel XSLT Extensions"
+		system: "Gobo Eiffel XSLT Extensions"
+		copyright: "Copyright (c) 2004, Colin Adams and others"
 		license: "Eiffel Forum License v2 (see forum.txt)"
 		date: "$Date$"
 		revision: "$Revision$"
@@ -27,13 +27,7 @@
 
 
 		<set name="next" value="index"/>
-		<set name="input_wrapper" value="index_wrapper" unless="${GESTALT}"/>
-		<set name="input_wrapper" value="index_wrapper_2" if="${GESTALT}"/>
-		<set name="next_chapter" value="options"/>
-		<geant target="xslt"/>
-
-		<set name="input_wrapper" value="options_wrapper" unless="${GESTALT}"/>
-		<set name="input_wrapper" value="options_wrapper_2" if="${GESTALT}"/>
+		<set name="input" value="index"/>
 		<set name="next_chapter" value="index"/>
 		<geant target="xslt"/>
 
@@ -72,13 +66,14 @@
 
 		<xslt
 			processor="${xslt_processor}"
-			input="${input_wrapper}.xml"
+			input="${input}.xml"
 			output="${input}.html"
 			stylesheet="${GOBO}/doc/misc/gobo2html2.xsl"
 		>
 			<parameter name="previous" value="&quot;'${previous}.html'&quot;"/>
 			<parameter name="next" value="&quot;'${next}.html'&quot;"/>
 			<parameter name="toc" value="&quot;'index.html'&quot;"/>
+			<parameter name="images" value="'../../image/'"/>
 		</xslt>
 	</target>
 

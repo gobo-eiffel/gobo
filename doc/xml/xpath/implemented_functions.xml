@@ -30,7 +30,7 @@
    along with their implementation status.
   </para> 
   <para>The first column of the table gives the function's name, from <ulink url="http://www.w3.org/TR/xpath-functions/">XQuery 1.0 and XPath 2.0 Functions and Operators</ulink>.
-   The fn prefix represents the namespace uri http://www.w3.org/2003/11/xpath-functions.</para>
+   The fn prefix represents the namespace uri http://www.w3.org/2004/10/xpath-functions.</para>
   <para>To translate the function name into it's implementation class (which can be found in $GOBO/library/xml/xpath/functions/), remove
    the leading fn:, uppercase the remaining part of the name, and translate any hyphens into underscores. Then prefix it with XM_XPATH_.
    For example, the function fn:normalize-space, is implemented by <classname>XM_XPATH_NORMALIZE_SPACE</classname>.
@@ -78,7 +78,7 @@
 	  </row>
 	 <row>
 	   <entry>fn:string</entry>
-	   <entry>No</entry>
+	   <entry>Yes</entry>
 	   <entry>No</entry>
 	   <entry>No</entry>
 	 </row>	
@@ -156,25 +156,25 @@
 	 </row>	
 	 <row>
 	   <entry>fn:compare</entry>
-	   <entry>No</entry>
+	   <entry>Yes</entry>
 	   <entry>No</entry>
 	   <entry>No</entry>
 	 </row>	
 	 <row>
 	   <entry>fn:concat</entry>
-	   <entry>No</entry>
+	   <entry>Yes</entry>
 	   <entry>No</entry>
 	   <entry>No</entry>
 	 </row>	
 	 <row>
 	   <entry>fn:string-join</entry>
-	   <entry>No</entry>
+	   <entry>Yes</entry>
 	   <entry>No</entry>
 	   <entry>No</entry>
 	 </row>	
 	 <row>
 	   <entry>fn:string-length</entry>
-	   <entry>Partially</entry>
+	   <entry>Yes</entry>
 	   <entry>No</entry>
 	   <entry>No</entry>
 	 </row>	
@@ -198,13 +198,13 @@
 	 </row>	
 	 <row>
 	   <entry>fn:upper-case</entry>
-	   <entry>No</entry>
+	   <entry>Yes</entry>
 	   <entry>No</entry>
 	   <entry>No</entry>
 	 </row>	
 	 <row>
 	   <entry>fn:lower-case</entry>
-	   <entry>No</entry>
+	   <entry>Yes</entry>
 	   <entry>No</entry>
 	   <entry>No</entry>
 	 </row>	
@@ -228,7 +228,7 @@
 	 </row>	
 	 <row>
 	   <entry>fn:starts-with</entry>
-	   <entry>No</entry>
+	   <entry>Yes</entry>
 	   <entry>No</entry>
 	   <entry>No</entry>
 	 </row>	
@@ -456,7 +456,7 @@
 	 </row>	
 	 <row>
 	   <entry>fn:number</entry>
-	   <entry>Partially</entry>
+	   <entry>Yes</entry>
 	   <entry>No</entry>
 	   <entry>No</entry>
 	 </row>	
@@ -558,7 +558,7 @@
 	 </row>	
 	 <row>
 	   <entry>fn:count</entry>
-	   <entry>Partially</entry>
+	   <entry>Yes</entry>
 	   <entry>No</entry>
 	   <entry>No</entry>
 	 </row>	
@@ -618,25 +618,25 @@
 	 </row>	
 	 <row>
 	   <entry>fn:last</entry>
-	   <entry>Partially</entry>
+	   <entry>Yes</entry>
 	   <entry>No</entry>
 	   <entry>No</entry>
 	 </row>	
 	 <row>
 	   <entry>fn:current-dateTime</entry>
-	   <entry>Partially</entry>
+	   <entry>Yes</entry>
 	   <entry>No</entry>
 	   <entry>No</entry>
 	 </row>	
 	 <row>
 	   <entry>fn:current-date</entry>
-	   <entry>No</entry>
+	   <entry>Yes</entry>
 	   <entry>No</entry>
 	   <entry>No</entry>
 	 </row>	
 	 <row>
 	   <entry>fn:current-time</entry>
-	   <entry>No</entry>
+	   <entry>Yes</entry>
 	   <entry>No</entry>
 	   <entry>No</entry>
 	 </row>	

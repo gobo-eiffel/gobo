@@ -30,84 +30,45 @@ feature -- Evaluation
 			-- We only take this path if the type could not be determined statically.
 		local
 			an_atomic_value, another_atomic_value: XM_XPATH_ATOMIC_VALUE
-			an_integer_value, another_integer_value: XM_XPATH_INTEGER_VALUE
-		do
-			if operator = Integer_division_token then
-				first_operand.evaluate_item (a_context)
-				if first_operand.last_evaluated_item /= Void and then first_operand.last_evaluated_item.is_error then
-					last_evaluated_item := first_operand.last_evaluated_item
-				else
-					an_atomic_value ?= first_operand.last_evaluated_item
-					if an_atomic_value /= Void then
-						if an_atomic_value.is_convertible (type_factory.integer_type) then
-							an_integer_value ?= an_atomic_value.convert_to_type (type_factory.integer_type)
-							second_operand.evaluate_item (a_context)
-							another_atomic_value ?= second_operand.last_evaluated_item
-							if another_atomic_value /= Void then
-								if another_atomic_value.is_convertible (type_factory.integer_type) then
-									another_integer_value ?= another_atomic_value.convert_to_type (type_factory.integer_type)
-									last_evaluated_item := an_integer_value.arithmetic (operator, another_integer_value)
-								else
-									set_last_error_from_string ("Second argument to idiv must be an integer", "XP0006", Type_error)
-								end
-							else
-							last_evaluated_item := Void -- represents empty sequence
-							end
-						else
-							create {XM_XPATH_INVALID_ITEM} last_evaluated_item.make_from_string ("First argument to idiv must be an integer", "XP0006", Type_error)
-						end
-					else
-						last_evaluated_item := Void -- represents empty sequence
-					end
-				end
-			else
-				evaluate_for_non_integer_division (a_context)				
-			end
-		end
-
-feature {NONE} -- Implementation
-
-	evaluate_for_non_integer_division (a_context	: XM_XPATH_CONTEXT) is
-			-- Evaluate `Current' as a single item
-		require
-			not_integer_division: operator /= Integer_division_token
-			expression_not_in_error: not is_error
-		local
-			an_atomic_value, another_atomic_value: XM_XPATH_ATOMIC_VALUE
-			a_double_value, another_double_value: XM_XPATH_DOUBLE_VALUE
+			an_untyped_atomic_value: XM_XPATH_UNTYPED_ATOMIC_VALUE
+			a_numeric_value, another_numeric_value: XM_XPATH_NUMERIC_VALUE
+			a_string: STRING
 		do
 			first_operand.evaluate_item (a_context)
-			if first_operand.last_evaluated_item /= Void and then first_operand.last_evaluated_item.is_error then
-				last_evaluated_item := first_operand.last_evaluated_item
-			else
-				an_atomic_value ?= first_operand.last_evaluated_item
-				if an_atomic_value /= Void then
-					if an_atomic_value.is_convertible (type_factory.double_type) then
-						a_double_value ?= an_atomic_value.convert_to_type (type_factory.double_type) 
+			an_atomic_value ?= first_operand.last_evaluated_item
+			if an_atomic_value /= Void then
+				an_atomic_value := an_atomic_value.primitive_value
+				an_untyped_atomic_value ?= an_atomic_value
+				if an_untyped_atomic_value /= Void then
+					a_string := an_untyped_atomic_value.string_value
+					if a_string.is_double then
+						create {XM_XPATH_DOUBLE_VALUE} an_atomic_value.make_from_string (a_string)
 					else
-						create a_double_value.make_nan
+						create {XM_XPATH_DOUBLE_VALUE} an_atomic_value.make_nan
 					end
-					second_operand.evaluate_item (a_context)
-					if second_operand.last_evaluated_item /= Void and then second_operand.last_evaluated_item.is_error then
-						last_evaluated_item := second_operand.last_evaluated_item
-					else
-						another_atomic_value ?= second_operand.last_evaluated_item
-						if another_atomic_value /= Void then
-							if another_atomic_value.is_convertible (type_factory.double_type) then
-								another_double_value ?= another_atomic_value.convert_to_type (type_factory.double_type) 
-							else
-								create another_double_value.make_nan
-							end
-							last_evaluated_item := a_double_value.arithmetic (operator, another_double_value)
+				end
+				second_operand.evaluate_item (a_context)
+				another_atomic_value ?= second_operand.last_evaluated_item
+				if another_atomic_value /= Void then
+					another_atomic_value := another_atomic_value.primitive_value
+					an_untyped_atomic_value ?= another_atomic_value
+					if an_untyped_atomic_value /= Void then
+						a_string := an_untyped_atomic_value.string_value
+						if a_string.is_double then
+							create {XM_XPATH_DOUBLE_VALUE} another_atomic_value.make_from_string (a_string)
 						else
-							last_evaluated_item := Void -- represents empty sequence
+							create {XM_XPATH_DOUBLE_VALUE} another_atomic_value.make_nan
 						end
 					end
-				else
-					last_evaluated_item := Void -- represents empty sequence
+					a_numeric_value ?= an_atomic_value
+					another_numeric_value ?= another_atomic_value
+					if a_numeric_value /= Void and then another_numeric_value /= Void then
+						last_evaluated_item := a_numeric_value.arithmetic (operator, another_numeric_value)
+					end
 				end
 			end
 		end
 
 end
+
 	

@@ -229,6 +229,9 @@ feature -- Basic operations
 			an_integer: MA_DECIMAL
 			a_decimal_value, another_decimal_value: XM_XPATH_DECIMAL_VALUE
 		do
+			debug ("XPath Integer values")
+				std.error.put_string ("Integer arithmetic%N")
+			end
 			an_integer_value ?= other
 			if other /= void then
 				inspect

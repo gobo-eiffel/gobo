@@ -134,19 +134,10 @@
       <uri>http://www.gobosoft.com/eiffel/gobo/gexslt/extension/example</uri>.
     </para>
     <para>
-      <link linkend="output_extensions">Output extensions and additional serialization parameters</link>
+      <link linkend="output_extensions">Output extensions</link>
     </para>
     <para>
-      <link linkend="extension_attributes">Extension attributes (not yet written)</link>
-    </para>
-    <para>
-      <link linkend="extension_attributes">Extension instructions (not yet written)</link>
-    </para>
-    <para>
-      <link linkend="extension_functions">Additional XPath functions (not yet written)</link>
-    </para>
-    <para>
-      <link linkend="exslt">EXSLT (not yet written)</link>
+      <link linkend="../../gexslt/extension/index">Other extensions</link>
     </para>
   </section>
 </chapter>

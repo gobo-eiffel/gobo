@@ -57,7 +57,7 @@ feature -- Execution
 			create configuration.make_with_defaults
 			error_handler := configuration.error_reporter
 			error_listener := configuration.error_listener
-			Arguments.set_program_name ("gexslt")
+			Arguments.set_program_name (program_name)
 			nb := Arguments.argument_count
 			if nb = 0 then
 				report_usage_message
@@ -219,6 +219,14 @@ feature -- Setting
 
 feature -- Access
 
+	program_name: STRING is
+			-- Program name
+		do
+			Result := "gexslt"
+		ensure
+			program_name_not_void: Result /= Void
+		end
+
 	error_handler: UT_ERROR_HANDLER
 			-- Error handler
 
@@ -377,8 +385,8 @@ feature -- Error handling
 			-- Gexslt usage message.
 		once
 			create Result.make ("[--file=|--uri=]stylesheet-URI [--file=|--uri=]source-document-URI [option]* [parameter-name=value]* %N" +
-									  " or    gexslt --version%N" +
-									  " or    gexslt --help%N" +
+									  " or    " + program_name + " --version%N" +
+									  " or    " + program_name + " --help%N" +
 									  "       --output=local-file-name%N" +
 									  "       --errors=[local-file-name]%N" +
 									  "       --warnings=[local-file-name]%N" +

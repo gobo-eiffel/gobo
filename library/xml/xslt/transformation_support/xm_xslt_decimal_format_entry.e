@@ -62,7 +62,7 @@ feature -- Access
 	zero_digit: STRING
 			-- Zero digit symbol
 
-	digit: STRING
+	digit_sign: STRING
 			-- Digit sign
 
 	pattern_separator: STRING
@@ -85,7 +85,7 @@ feature -- Status report
 				or else not STRING_.same_string (percent, a_format.percent)
 				or else not STRING_.same_string (per_mille, a_format.per_mille)
 				or else not STRING_.same_string (zero_digit, a_format.zero_digit)
-				or else not STRING_.same_string (digit, a_format.digit)
+				or else not STRING_.same_string (digit_sign, a_format.digit_sign)
 		end
 
 	are_all_distinct: BOOLEAN is
@@ -122,7 +122,7 @@ feature -- Status report
 								Result := False
 							else
 								a_set.put (a_character_code)
-								a_character_code := digit.item_code (1)
+								a_character_code := digit_sign.item_code (1)
 							end
 							if a_set.has (a_character_code) then
 								Result := False
@@ -208,14 +208,14 @@ feature -- Element change
 		end
 	
 	
-	set_digit (a_digit: STRING) is
-			-- Set `digit'.
+	set_digit_sign (a_digit: STRING) is
+			-- Set `digit_sign'.
 		require
-			digit_is_one_character: a_digit /= Void and then a_digit.count = 1
+			digit_sign_is_one_character: a_digit /= Void and then a_digit.count = 1
 		do
-			digit := a_digit
+			digit_sign := a_digit
 		ensure
-			digit_set: digit = a_digit
+			digit_sign_set: digit_sign = a_digit
 		end
 	
 	set_infinity (an_infinity: STRING) is
@@ -248,7 +248,7 @@ feature -- Element change
 			percent := "%%"
 			per_mille := "?"
 			zero_digit := "0"
-			digit := "#"
+			digit_sign := "#"
 			infinity := "Infinity"
 			nan := "NaN"
 		end
@@ -262,7 +262,7 @@ invariant
 	percent: percent /= Void and then percent.count = 1
 	per_mille: per_mille /= Void and then per_mille.count = 1
 	zero_digit: zero_digit /= Void and then zero_digit.count = 1
-	digit: digit /= Void and then digit.count = 1
+	digit_sign: digit_sign /= Void and then digit_sign.count = 1
 	minus_sign: minus_sign /= Void and then minus_sign.count = 1
 	infinity: infinity /= Void
 	nan: nan /= Void

@@ -167,7 +167,7 @@ feature -- Element change
 				a_decimal_format.set_zero_digit (zero_digit)
 			end						
 			if digit /= Void then
-				a_decimal_format.set_digit (digit)
+				a_decimal_format.set_digit_sign (digit)
 			end
 			if infinity /= Void then
 				a_decimal_format.set_infinity (infinity)

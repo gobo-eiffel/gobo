@@ -3,10 +3,11 @@
 <xsl:stylesheet
  xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
  xmlns="http://www.w3.org/1999/xhtml"
- xmlns:gexslt="http://www.gobosoft.com/gexslt/eiffel-type"
+ xmlns:xs="http://www.w3.org/2001/XMLSchema"
+ xmlns:gexslt="http://www.gobosoft.com/eiffel/gobo/gexslt/extension"
  xmlns:gobodoc="http://www.gobosoft.com/eiffel/gobo/documentation"
  gexslt:explain="no"
- exclude-result-prefixes="gexslt gobodoc"
+ exclude-result-prefixes="xs gexslt gobodoc"
  version="2.0">
 
   <xsl:param name="previous"/>
@@ -1103,7 +1104,7 @@ table.header tbody tr td {
 </xsl:template>
 
 <xsl:template match="gobodoc:section/gobodoc:title">
-  <xsl:variable name="section_level" select="count(ancestor::gobodoc:section) + 1"/>
+  <xsl:variable  gexslt:explain="no" name="section_level" select="count(ancestor::gobodoc:section) + 1"/>
   <xsl:variable name="header_name">
     <xsl:choose>
       <xsl:when test="$section_level &lt; 7">h<xsl:value-of select="string($section_level)"/></xsl:when>

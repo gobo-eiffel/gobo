@@ -111,7 +111,6 @@ feature -- Status report
 
 feature -- Status setting
 
-
 	set_last_error (an_error_value: XM_XPATH_ERROR_VALUE) is
 			-- Set `error_value'.
 		require

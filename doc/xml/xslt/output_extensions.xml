@@ -32,55 +32,8 @@
   <section>
     <title>Additional serialization parameters</title>
     <para>
-      In addition to the standard attributes, the following attributes are available in the namespace
-      <uri>http://www.gobosoft.com/eiffel/gobo/gexslt/extension</uri>.
+      See <link linkend="../../gexslt/extension/index">Extensions</link>
     </para>
-    <variablelist>
-      <varlistentry>
-	<term><exmlsyntax>character-representation</exmlsyntax></term>
-	<listitem>
-	  <para>
-	    This tells the serializer how to serialize non-ASCII characters, and characters that are not representable
-	    in the selected encoding.
-	  </para>
-	  <para>
-	    When the output method is "xml" or "xhtml" <warning>(Hm.maybe xhtml should follow the html behaviour)</warning>,
-	    this parameter only effects characters that are not representable
-	    in the selected encoding. It can take on the value "hex" or "decimal", and it determines whether 
-	    the character is written out with a decimal character reference, or a hexadecimal 
-	    character reference (the default).
-	  </para>
-	  <para>
-	    When the output method is "html", then the value may hold two strings, separated by a semicolon.
-	    The first string defines how non-ASCII characters within the character encoding will be represented, 
-	    the values being "native", "entity", "decimal", or "hex". 
-	    The second string defines how characters outside the encoding will be represented, the values being 
-	    "entity", "decimal", or "hex". Here "native" means output the character as itself; "entity" means 
-	    use a defined entity reference (such as "&amp;eacute;") if known; "decimal" and "hex" refer to numeric 
-	    character references. For example "entity;decimal" (the default) means that with encoding="iso-8859-1", 
-	    characters in the range 160-255 will be represented using standard HTML entity references, while 
-	    Unicode characters above 255 will be represented as decimal character references.
-	  </para>
-	  <para>
-	    This parameter has no meaning when the output method is "text". For <exmlsyntax>QName</exmlsyntax> output methods,
-	    it's interpretation is up to the programmer of the method, but the possible values are those for the 
-	    "html" method.
-	  </para>
-	</listitem>
-      </varlistentry>
-      <varlistentry>
-	<term><exmlsyntax>indent-spaces</exmlsyntax></term>
-	<listitem>
-	  <para>
-	    This tells the serializer how many spaces to add for indentation when <xslt>indent="yes"</xslt> is specified.
-	    it is ignored when <xslt>indent="no"</xslt> is specified, or is omitted and the default
-	    for the serialization method is "no". If you omit this parameter, then three spaces are used 
-	    (but check the creation procedure for <classname>XM_XSLT_OUTPUT_PROPERTIES</classname> to confirm
-	    this, in case it gets changed and I forget to update the documentation).
-	  </para>
-	</listitem>
-      </varlistentry>
-    </variablelist>
     <para>
       You can also add your own serialization parameters in a namespace, for use
       with a <exmlsyntax>QName</exmlsyntax> output method that you have written. This must be a non-null namespace,

@@ -1,4 +1,4 @@
-<?xml version="1.0"?> 
+<?xml version="1.0" encoding="UTF-8"?> 
 
 <!--
 	description:
@@ -12,7 +12,7 @@
 	revision: "$Revision$"
 -->
 
-<chapter xmlns="http://www.gobosoft.com/eiffel/gobo/documentation" id="gexslt_introduction">
+
   <chapterinfo>
     <copyright>
       <year>2004</year>
@@ -25,24 +25,103 @@
     <email>colin@colina.demon.co.uk</email>
     <date>Tuesday, August 31st, 2004</date>
   </chapterinfo>
-  <title>Introduction to Gobo Eiffel XSLT</title>
-  <para>Gobo Eiffel XSLT is a command-line processor for the XSLT 2.0 language. 
+  <title>Introduction to &title;</title>
+  <para>&title; is a command-line processor for the XSLT 2.0 language. 
   It is very much still under development at the moment, and does not even implement the whole
   of XSLT 1.0 as yet, but it is capable of useful work. In fact, it is used to produce the XHTML pages
   for all of the Gobo documentation that is written in accordance with <filename class="schema">$GOBO/doc/misc/gobo.rng</filename>.
   </para> 
   <section>
-    <title>Using gexslt</title>
+    <title>Using &program_name;</title>
     <para>
       <link linkend="options">Command line options</link>
     </para>
-  </section>
-  <section>
-    <title>Credits</title>
-    <para>The architecture and algorithms of the Gobo Eiffel XSLT library, upon which Gobo Eiffel XSLT is built,
-    are derived from <ulink url="http://www.saxonica.com/index.html">Saxon</ulink>, an open source XSLT Processor written in Java, by Michael Kay. 
-    I am very grateful to Michael for making the source code available for study, and for
-    answering all  my questions.
+    <para>
+      <link linkend="extension/index">Extensions</link>
+    </para>
+    <para>
+      <link linkend="../xml/xslt/overview">The Eiffel programmers guide to the Gobo XSLT library</link>
     </para>
   </section>
-</chapter>
+  <section>
+    <title>Status and conformance</title>
+    <para>
+      &program_name_cased; is intended to conform to a Basic-level XSLT 2.0 Processor. However, no formal
+      conformance statement is provided yet. It implements whatever happens to work when you try it.
+      The static typing feature, the XML and Names 1.1 Feature, the backwards-compatible and serialization features are all implemented. Note however that
+      UTF-16 output is not yet supported, nor is Unicode normalization.
+    </para>
+    <para>
+      The implementation status of the core XPath functions can be found at
+      <link linkend="../xml/xpath/implemented_functions">Implemented XPath functions</link>
+    </para>
+    <para>
+      Of the XSLT additions to the core functions, the following are implemented:
+      <itemizedlist>
+	<listitem>
+	  <para>current</para>
+	</listitem>
+	<listitem>
+	  <para>current-group</para>
+	</listitem>
+	<listitem>
+	  <para>document</para>
+	</listitem>
+	<listitem>
+	  <para>function-available</para>
+	</listitem>
+	<listitem>
+	  <para>generate-id</para>
+	</listitem>
+	<listitem>
+	  <para>key</para>
+	</listitem>
+	<listitem>
+	  <para>system-property</para>
+	</listitem>
+      </itemizedlist>
+    </para>
+    <para>
+      Other functions may be recognized, but not fully implemented.
+    </para>
+    <para>
+      In general, if a message beginning with TODO appears on the standard error stream, then you should
+      not expect your stylesheet to execute correctly. If however, no errors or TODO messages are reported, then output
+      should be correct.
+    </para>
+    <para>
+      The following XSLT elements are not yet implemented:
+      <itemizedlist>
+	<listitem>
+	  <para>analyze-string</para>
+	</listitem>
+	<listitem>
+	  <para>apply-imports</para>
+	</listitem>
+	<listitem>
+	  <para>matching-substring</para>
+	</listitem>
+	<listitem>
+	  <para>next-match</para>
+	</listitem>
+	<listitem>
+	  <para>non-matching-substring</para>
+	</listitem>
+	<listitem>
+	  <para>perform-sort</para>
+	</listitem>
+      </itemizedlist>
+    </para>
+    <para>
+      Others may only be partly implemented.
+    </para>
+  </section>
+
+  <section>
+    <title>Credits</title>
+    <para>The architecture and algorithms of the Gobo Eiffel XSLT library, upon which &title; is built,
+    are largely derived from <ulink url="http://www.saxonica.com/index.html">Saxon</ulink>, an open source XSLT Processor written in Java, by Michael Kay. 
+    I am very grateful to Michael for making the source code available for study, and for answering all my questions.
+    </para>
+  </section>
+
