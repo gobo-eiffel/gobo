@@ -129,4 +129,4 @@ feature -- Access
 	eol: STRING is "%N"
 			-- Line separator
 
-end -- class KL_UNIX_INPUT_FILE
+end

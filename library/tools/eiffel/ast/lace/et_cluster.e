@@ -462,4 +462,4 @@ feature {NONE} -- Constants
 	dot_dot_directory_name: STRING is ".."
 			-- Directory names
 
-end -- class ET_CLUSTER
+end

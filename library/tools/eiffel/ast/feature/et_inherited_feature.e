@@ -345,4 +345,4 @@ invariant
 	parent_not_void: parent /= Void
 	signature_not_void: signature /= Void
 
-end -- class ET_INHERITED_FEATURE
+end

@@ -32,4 +32,4 @@ feature -- Access
 	eol: STRING is "%N"
 			-- Line separator
 
-end -- class KL_UNIX_OUTPUT_FILE
+end

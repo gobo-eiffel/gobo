@@ -32,4 +32,4 @@ feature -- System
 		do
 		end
 
-end -- class ET_INSTRUCTION
+end

@@ -22,4 +22,4 @@ feature -- Access
 			std_not_void: Result /= Void
 		end
 
-end -- class KL_SHARED_STANDARD_FILES
+end

@@ -56,4 +56,4 @@ invariant
 	-- dollar4: $4 = token1
 	-- dollar5: $5 = token2
 
-end -- class PR_STRING_TOKEN_DEFINED_TWICE_ERROR
+end

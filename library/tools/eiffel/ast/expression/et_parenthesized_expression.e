@@ -66,4 +66,4 @@ invariant
 	left_parenthesis_not_void: left_parenthesis /= Void
 	right_parenthesis: right_parenthesis /= Void
 
-end -- class ET_PARENTHESIZED_EXPRESSION
+end

@@ -104,4 +104,4 @@ feature -- Conversion
 			end
 		end
 
-end -- class ET_EXTERNAL_FUNCTION
+end

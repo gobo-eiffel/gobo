@@ -38,4 +38,4 @@ feature -- Sort
 			sorted: sorted (a_sorter)
 		end
 
-end -- class DS_SORTABLE
+end

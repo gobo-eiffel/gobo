@@ -23,4 +23,4 @@ feature -- Access
 			assertions_not_void: Result /= Void
 		end
 
-end -- class TS_SHARED_ASSERTIONS
+end

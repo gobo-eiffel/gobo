@@ -106,4 +106,4 @@ invariant
 
 	constant_not_void: constant /= Void
 
-end -- class ET_CONSTANT_ATTRIBUTE
+end

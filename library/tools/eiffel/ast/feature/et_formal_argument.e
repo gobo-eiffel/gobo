@@ -90,4 +90,4 @@ feature -- Type processing
 			type := type.resolved_identifier_types (a_feature, args, a_class)
 		end
 
-end -- class ET_FORMAL_ARGUMENT
+end

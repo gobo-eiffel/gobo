@@ -57,4 +57,4 @@ invariant
 	infix_keyword_not_void: infix_keyword /= Void
 	operator_name_not_void: operator_name /= Void
 
-end -- class ET_INFIX_NAME
+end

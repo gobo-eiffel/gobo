@@ -59,4 +59,4 @@ feature -- Access
 			array_formatter_not_void: Result /= Void
 		end
 
-end -- class UT_IMPORTED_FORMATTERS
+end

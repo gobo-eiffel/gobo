@@ -68,4 +68,4 @@ invariant
 	text_not_void: text /= Void
 	text_not_empty: text.count > 0
 
-end -- class ET_TOKEN
+end

@@ -601,4 +601,4 @@ invariant
 	no_void_state_list: not cached_states.has_item (Void)
 	-- no_void_cached_state: forall state_list in cached_states, forall state in state_list, state /= Void
 
-end -- class PR_FSM
+end

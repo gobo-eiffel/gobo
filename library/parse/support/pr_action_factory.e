@@ -37,4 +37,4 @@ feature -- Access
 			text_set: Result.text = a_text
 		end
 
-end -- class PR_ACTION_FACTORY
+end

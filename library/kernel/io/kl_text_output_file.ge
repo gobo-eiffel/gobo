@@ -159,4 +159,4 @@ feature {NONE} -- Implementation
 
 #endif
 #endif
-end -- class KL_TEXT_OUTPUT_FILE
+end

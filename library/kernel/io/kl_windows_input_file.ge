@@ -160,4 +160,4 @@ feature -- Access
 	eol: STRING is "%R%N"
 			-- Line separator
 
-end -- class KL_WINDOWS_INPUT_FILE
+end

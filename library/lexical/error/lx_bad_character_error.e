@@ -50,4 +50,4 @@ invariant
 	-- dollar2: $2 = line number
 	-- dollar3: $3 = character
 
-end -- class LX_BAD_CHARACTER_ERROR
+end

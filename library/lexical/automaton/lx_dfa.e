@@ -328,4 +328,4 @@ invariant
 	-- min_symbol: forall state in states, state.minimum_symbol = minimum_symbol
 	-- max_symbol: forall state in states, state.maximum_symbol = maximum_symbol
 
-end -- class LX_DFA
+end

@@ -35,4 +35,4 @@ feature -- Execution
 			-- Do nothing.
 		end
 
-end -- class DP_DO_NOTHING_COMMAND
+end

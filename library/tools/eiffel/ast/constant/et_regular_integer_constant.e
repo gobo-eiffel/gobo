@@ -72,4 +72,4 @@ invariant
 
 	-- valid_literal: regexp: [0-9]+
 
-end -- class ET_REGULAR_INTEGER_CONSTANT
+end

@@ -83,4 +83,4 @@ invariant
 	count_constraint: count <= capacity
 	full_definition: is_full = (count = capacity)
 
-end -- class DS_RESIZABLE
+end

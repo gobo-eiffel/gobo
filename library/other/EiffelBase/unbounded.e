@@ -34,4 +34,4 @@ invariant
 	empty_definition: empty = (count = 0)
 	non_negative_count: count >= 0
 
-end -- class UNBOUNDED
+end

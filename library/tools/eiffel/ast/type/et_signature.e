@@ -195,4 +195,4 @@ invariant
 	no_void_argument: not ANY_ARRAY_.has (arguments, Void)
 	arguments_lower: arguments.lower = 1
 
-end -- class ET_SIGNATURE
+end

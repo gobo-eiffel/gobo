@@ -731,4 +731,4 @@ invariant
 	yycheck_not_void: yycheck /= Void
 	fixed_array_routines_not_void: FIXED_ARRAY_ /= Void
 
-end -- class YY_PARSER_SKELETON
+end

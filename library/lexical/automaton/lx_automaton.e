@@ -21,4 +21,4 @@ feature -- Access
 			start_state_not_void: Result /= Void
 		end
 
-end -- class LX_AUTOMATON
+end

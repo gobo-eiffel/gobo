@@ -144,4 +144,4 @@ feature -- Comparison
 			end
 		end
 
-end -- class ET_MINUS_SYMBOL
+end

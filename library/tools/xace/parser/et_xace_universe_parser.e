@@ -52,4 +52,4 @@ feature -- Access
 	last_universe: ET_XACE_UNIVERSE
 			-- Universe being parsed
 
-end -- class ET_XACE_UNIVERSE_PARSER
+end

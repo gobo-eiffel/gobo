@@ -40,4 +40,4 @@ feature -- Conversion
 #endif
 		end
 
-end -- class KL_CHARACTER_ROUTINES
+end

@@ -154,4 +154,4 @@ feature {NONE} -- Implementation
 	str_: STRING
 			-- Used in semantic actions
 
-end -- class TS_CONFIG_SCANNER
+end

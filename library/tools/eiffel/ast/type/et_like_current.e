@@ -134,4 +134,4 @@ invariant
 	like_keyword_not_void: like_keyword /= Void
 	current_keyword_not_void: current_keyword /= Void
 
-end -- class ET_LIKE_CURRENT
+end

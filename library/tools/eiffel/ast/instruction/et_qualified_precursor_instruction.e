@@ -27,4 +27,4 @@ creation
 
 	make
 
-end -- class ET_QUALIFIED_PRECURSOR_INSTRUCTION
+end

@@ -28,4 +28,4 @@ feature -- Status report
 	is_reference: BOOLEAN is True
 			-- Is mark 'reference'?
 
-end -- class ET_REFERENCE_MARK
+end

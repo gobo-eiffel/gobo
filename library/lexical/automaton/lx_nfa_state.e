@@ -176,4 +176,4 @@ feature -- Status setting
 			not_in_trail_context: not in_trail_context
 		end
 
-end -- class LX_NFA_STATE
+end

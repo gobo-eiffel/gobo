@@ -130,4 +130,4 @@ invariant
 	container_not_void: container /= Void
 	empty_constraint: container.is_empty implies off
 
-end -- class DS_CURSOR
+end

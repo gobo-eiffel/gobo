@@ -75,4 +75,4 @@ invariant
 
 	semicolon_not_void: semicolon /= Void
 
-end -- class ET_FORMAL_ARGUMENT_SEMICOLON
+end

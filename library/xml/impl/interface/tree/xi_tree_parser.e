@@ -50,4 +50,4 @@ feature {ANY} -- Basic opertations
 		deferred
 		end
 
-end -- class XI_TREE_PARSER
+end

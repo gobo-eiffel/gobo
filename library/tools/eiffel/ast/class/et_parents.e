@@ -370,4 +370,4 @@ invariant
 
 	inherit_keyword_not_void: inherit_keyword /= Void
 
-end -- class ET_PARENTS
+end

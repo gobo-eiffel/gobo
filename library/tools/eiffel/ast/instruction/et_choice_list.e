@@ -92,4 +92,4 @@ invariant
 
 	not_empty: not is_empty
 
-end -- class ET_CHOICE_LIST
+end

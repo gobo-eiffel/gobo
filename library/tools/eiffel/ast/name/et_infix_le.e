@@ -41,4 +41,4 @@ feature -- Comparison
 			Result := other.is_infix_le
 		end
 
-end -- class ET_INFIX_LE
+end

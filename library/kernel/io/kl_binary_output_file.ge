@@ -167,4 +167,4 @@ feature {NONE} -- Implementation
 
 #endif
 #endif
-end -- class KL_BINARY_OUTPUT_FILE
+end

@@ -142,4 +142,4 @@ feature -- Status
 		deferred
 		end
 
-end -- class XM_PARSER
+end

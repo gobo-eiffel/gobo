@@ -158,4 +158,4 @@ feature {NONE} -- Implementation
 
 #endif
 #endif
-end -- class KL_BINARY_INPUT_FILE
+end

@@ -109,4 +109,4 @@ invariant
 
 	end_keyword_not_void: end_keyword /= Void
 
-end -- class ET_DEBUG_INSTRUCTION
+end

@@ -25,4 +25,4 @@ creation
 
 	make
 
-end -- class LINKABLE
+end

@@ -688,4 +688,4 @@ invariant
 	first_seed_definition: seeds /= Void implies first_seed = seeds.first
 	-- replicated_seeds: replicated_seeds /= Void implies forall a_seed in replicated_seeds, has_seed (a_seed)
 
-end -- class ET_FLATTENED_FEATURE
+end

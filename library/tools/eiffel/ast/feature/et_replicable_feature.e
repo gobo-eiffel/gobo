@@ -146,4 +146,4 @@ invariant
 	features_not_empty: not features.is_empty
 	-- seeded_features: forall `f' in `features', f.has_seed (seed)
 
-end -- class ET_REPLICABLE_FEATURE
+end

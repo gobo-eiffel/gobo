@@ -84,4 +84,4 @@ feature {NONE} -- Implementation
 		end
 
 #endif
-end -- class KL_OPERATING_SYSTEM
+end

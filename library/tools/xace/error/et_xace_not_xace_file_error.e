@@ -44,4 +44,4 @@ invariant
 
 	-- dollar1: $1 = a_filename
 
-end -- class ET_XACE_NOT_XACE_FILE_ERROR
+end

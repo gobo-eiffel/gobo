@@ -104,4 +104,4 @@ feature -- Sort
 			end
 		end
 
-end -- class DS_ARRAY_QUICK_SORTER
+end

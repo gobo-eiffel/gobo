@@ -37,4 +37,4 @@ invariant
 	implementation_not_void: implementation /= Void
 	valid_implementation: implementation.can_implement (Current)
 
-end -- class DP_INTERFACE
+end

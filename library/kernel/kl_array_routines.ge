@@ -144,4 +144,4 @@ feature -- Removal
 			--		an_array.item (i) = an_array.item (i).default
 		end
 
-end -- class KL_ARRAY_ROUTINES
+end

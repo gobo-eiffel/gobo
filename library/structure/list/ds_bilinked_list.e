@@ -381,4 +381,4 @@ invariant
 
 	first_constraint: first_cell /= Void implies first_cell.left = Void
 
-end -- class DS_BILINKED_LIST
+end

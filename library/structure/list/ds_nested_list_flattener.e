@@ -133,4 +133,4 @@ feature {NONE} -- Implementation
 			end
 		end
 
-end -- class DS_NESTED_LIST_FLATTENER
+end

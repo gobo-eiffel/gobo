@@ -51,4 +51,4 @@ feature -- Basic operations
 			not_eof: is_open_read implies not end_of_file
 		end
 
-end -- class KI_INPUT_FILE
+end

@@ -2511,4 +2511,4 @@ feature -- AST factory
 			when_part_list_not_void: Result /= Void
 		end
 
-end -- class ET_AST_FACTORY
+end

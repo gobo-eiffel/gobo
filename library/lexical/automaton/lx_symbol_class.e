@@ -164,4 +164,4 @@ invariant
 
 	sorted: not sort_needed implies sorted (sorter)
 
-end -- class LX_SYMBOL_CLASS 
+end

@@ -63,4 +63,4 @@ invariant
 
 	comparator_not_void: comparator /= Void
 
-end -- class DS_REVERSE_PART_COMPARATOR
+end

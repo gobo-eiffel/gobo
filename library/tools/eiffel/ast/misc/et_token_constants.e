@@ -188,4 +188,4 @@ feature -- Nodes
 		once
 		end
 
-end -- class ET_TOKEN_CONSTANTS
+end

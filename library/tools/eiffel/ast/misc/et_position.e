@@ -208,4 +208,4 @@ feature {NONE} -- Implementation
 			end
 		end
 
-end -- class ET_POSITION
+end

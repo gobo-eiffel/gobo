@@ -46,4 +46,4 @@ invariant
 	-- dollar1: $1 = filename
 	-- dollar2: $2 = line number
 
-end -- class LX_UNRECOGNIZED_RULE_ERROR
+end

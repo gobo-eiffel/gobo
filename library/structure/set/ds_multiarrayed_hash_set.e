@@ -47,4 +47,4 @@ feature {NONE} -- Implementation
 			end
 		end
 
-end -- class DS_MULTIARRAYED_HASH_SET
+end

@@ -245,4 +245,4 @@ invariant
 	redefines_constraint: redefines /= Void implies end_keyword /= Void
 	selects_constraint: selects /= Void implies end_keyword /= Void
 
-end -- class ET_PARENT
+end

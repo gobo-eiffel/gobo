@@ -268,4 +268,4 @@ invariant
 	class_name_not_void: class_name /= Void
 	base_class_not_void: base_class /= Void
 
-end -- class ET_CLASS_TYPE
+end

@@ -51,4 +51,4 @@ invariant
 	-- dollar2: $2 = line number
 	-- dollar3: $3 = token name
 
-end -- class PR_START_SYMBOL_TOKEN_ERROR
+end

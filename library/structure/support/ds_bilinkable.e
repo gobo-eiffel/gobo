@@ -79,4 +79,4 @@ feature {DS_BILINKABLE} -- Implementation
 			linked: left = other
 		end
 
-end -- class DS_BILINKABLE
+end

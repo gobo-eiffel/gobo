@@ -177,4 +177,4 @@ invariant
 	debug_keys_not_void: debug_keys /= Void
 	no_void_debug_key: not debug_keys.has (Void)
 
-end -- class ET_XACE_OPTIONS
+end

@@ -104,4 +104,4 @@ feature -- Access
 		deferred
 		end
 
-end -- class KI_INPUT_STREAM
+end

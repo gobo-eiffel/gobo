@@ -79,4 +79,4 @@ invariant
 	left_bang_not_void: left_bang /= Void
 	right_bang_not_void: right_bang /= Void
 
-end -- class ET_QUALIFIED_TYPED_BANG_INSTRUCTION
+end

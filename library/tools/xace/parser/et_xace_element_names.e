@@ -324,4 +324,4 @@ feature -- Constants
 			uc_closing_curly_brace_not_void: Result /= Void
 		end
 
-end -- class ET_XACE_ELEMENT_NAMES
+end

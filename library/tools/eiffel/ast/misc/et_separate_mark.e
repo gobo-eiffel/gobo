@@ -28,4 +28,4 @@ feature -- Status report
 	is_separate: BOOLEAN is True
 			-- Is mark 'separate'?
 
-end -- class ET_SEPARATE_MARK
+end

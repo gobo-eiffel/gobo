@@ -2581,4 +2581,4 @@ invariant
 	assertions_not_void: assertions /= Void
 	no_void_assertions: not assertions.has (Void)
 
-end -- class ET_EIFFEL_PARSER_SKELETON
+end

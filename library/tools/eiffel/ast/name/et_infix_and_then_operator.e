@@ -64,4 +64,4 @@ invariant
 	and_keyword_not_void: and_keyword /= Void
 	then_keyword_not_void: then_keyword /= Void
 
-end -- class ET_INFIX_AND_THEN_OPERATOR
+end

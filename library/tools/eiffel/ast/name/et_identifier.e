@@ -134,4 +134,4 @@ feature -- Comparison
 			end
 		end
 
-end -- class ET_IDENTIFIER
+end

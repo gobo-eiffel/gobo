@@ -92,4 +92,4 @@ invariant
 	label_not_void: label /= Void
 	label_sorted: not label.sort_needed
 
-end -- class LX_SYMBOL_CLASS_TRANSITION
+end

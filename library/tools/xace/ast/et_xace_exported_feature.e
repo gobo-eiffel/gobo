@@ -48,4 +48,4 @@ invariant
 	external_name_not_void: external_name /= Void
 	external_name_not_void: external_name.count > 0
 
-end -- class ET_XACE_EXPORTED_FEATURE
+end

@@ -1212,4 +1212,4 @@ invariant
 	capacity_definition: capacity = storage.count - 1
 	fixed_array_routines_not_void: FIXED_ARRAY_ /= Void
 
-end -- class DS_ARRAYED_LIST
+end

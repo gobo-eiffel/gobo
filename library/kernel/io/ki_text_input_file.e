@@ -21,4 +21,4 @@ inherit
 			read_to_string
 		end
 
-end -- class KI_TEXT_INPUT_FILE
+end

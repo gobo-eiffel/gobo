@@ -25,4 +25,4 @@ creation
 
 	make, make_with_position
 
-end -- class ET_INFIX_GT_OPERATOR
+end

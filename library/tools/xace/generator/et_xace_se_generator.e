@@ -488,4 +488,4 @@ feature {NONE} -- Output
 			end
 		end
 
-end -- class ET_XACE_SE_GENERATOR
+end

@@ -160,4 +160,4 @@ invariant
 	parameters_not_void: parameters /= Void
 	no_void_parameter: not STRING_ARRAY_.has (parameters, Void)
 
-end -- class UT_ERROR
+end

@@ -50,4 +50,4 @@ invariant
 	-- dollar0: $0 = program name
 	-- dollar1: $1 = position
 
-end -- class ET_SYNTAX_ERROR
+end

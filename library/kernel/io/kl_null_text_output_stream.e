@@ -68,4 +68,4 @@ invariant
 
 	is_open_write: is_open_write
 
-end -- class KL_NULL_TEXT_OUTPUT_STREAM
+end

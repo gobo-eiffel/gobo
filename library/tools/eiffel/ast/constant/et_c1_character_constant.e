@@ -54,4 +54,4 @@ feature -- Access
 	value: CHARACTER
 			-- Character value
 
-end -- class ET_C1_CHARACTER_CONSTANT
+end

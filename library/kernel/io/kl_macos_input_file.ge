@@ -129,4 +129,4 @@ feature -- Access
 	eol: STRING is "%R"
 			-- Line separator
 
-end -- class KL_MACOS_INPUT_FILE
+end

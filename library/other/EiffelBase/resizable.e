@@ -95,4 +95,4 @@ invariant
 	full_definition: full = (count = capacity)
 	increase_by_at_least_one: Minimal_increase >= 1
 
-end -- class RESIZABLE
+end

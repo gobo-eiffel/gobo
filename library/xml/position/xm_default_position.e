@@ -54,4 +54,4 @@ feature {ANY} -- Access
 	row: INTEGER
 			-- column of token in file.
 
-end -- class XM_DEFAULT_POSITION
+end

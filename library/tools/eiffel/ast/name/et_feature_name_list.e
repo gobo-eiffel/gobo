@@ -57,4 +57,4 @@ feature {NONE} -- Implementation
 			!! Result
 		end
 
-end -- class ET_FEATURE_NAME_LIST
+end

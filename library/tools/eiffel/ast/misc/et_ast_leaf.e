@@ -46,4 +46,4 @@ feature -- Setting
 			break_set: break = a_break
 		end
 
-end -- class ET_AST_LEAF
+end

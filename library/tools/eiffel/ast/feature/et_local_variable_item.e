@@ -32,4 +32,4 @@ feature -- Access
 			type_not_void: Result /= Void
 		end
 
-end -- class ET_LOCAL_VARIABLE_ITEM
+end

@@ -56,4 +56,4 @@ feature -- Output
 				%%T%Tend%N")
 		end
 
-end -- class PR_BASIC_TYPE
+end

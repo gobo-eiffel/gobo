@@ -112,4 +112,4 @@ feature {NONE} -- managing storage
 	 end
       end
 
-end -- class UC_REPRESENTATION_UTF32
+end

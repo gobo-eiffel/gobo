@@ -73,4 +73,4 @@ invariant
 	literal_not_void: literal /= Void
 	literal_position_not_void: literal_position /= Void
 
-end -- class ET_REAL_CONSTANT
+end

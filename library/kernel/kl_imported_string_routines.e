@@ -22,4 +22,4 @@ feature -- Access
 			string_routines_not_void: Result /= Void
 		end
 
-end -- class KL_IMPORTED_STRING_ROUTINES
+end

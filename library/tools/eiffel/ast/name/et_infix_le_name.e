@@ -25,4 +25,4 @@ creation
 
 	make
 
-end -- class ET_INFIX_LE_NAME
+end

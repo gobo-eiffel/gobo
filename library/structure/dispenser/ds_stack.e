@@ -45,4 +45,4 @@ feature -- Element change
 			replaced: item = v
 		end
 
-end -- class DS_STACK
+end

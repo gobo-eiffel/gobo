@@ -50,4 +50,4 @@ invariant
 
 	name_not_void: name /= Void
 
-end -- class ET_FEATURE_ADDRESS
+end

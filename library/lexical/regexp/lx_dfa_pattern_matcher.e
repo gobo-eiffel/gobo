@@ -168,4 +168,4 @@ feature {NONE} -- Engine Data
 	yyNb_rows: INTEGER
 			-- Number of rows in `yy_nxt'
 
-end -- class LX_DFA_PATTERN_MATCHER
+end

@@ -176,4 +176,4 @@ feature -- Element change
 			add_hours (h)
 		end
 
-end -- class TIME
+end

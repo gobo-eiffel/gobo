@@ -116,4 +116,4 @@ feature -- Status setting
 			equality_tester := Void
 		end
 
-end -- class LINKED_STACK
+end

@@ -498,4 +498,4 @@ feature {NONE} -- Implementation
 
 #endif
 #endif
-end -- class KL_STDIN_FILE
+end

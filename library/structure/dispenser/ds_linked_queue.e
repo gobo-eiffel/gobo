@@ -296,4 +296,4 @@ invariant
 	first_cell: is_empty = (first_cell = Void)
 	last_cell: is_empty = (last_cell = Void)
 
-end -- class DS_LINKED_QUEUE
+end

@@ -28,4 +28,4 @@ feature -- Access
 			Result := name_item.break
 		end
 
-end -- class ET_COMMA_LOCAL_VARIABLE
+end

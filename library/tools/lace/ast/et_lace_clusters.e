@@ -49,4 +49,4 @@ feature -- Output
 			end
 		end
 
-end -- class ET_LACE_CLUSTERS
+end

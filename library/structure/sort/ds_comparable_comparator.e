@@ -35,4 +35,4 @@ feature -- Status report
 			Result := (u < v)
 		end
 
-end -- class DS_COMPARABLE_COMPARATOR
+end

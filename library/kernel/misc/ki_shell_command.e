@@ -53,4 +53,4 @@ invariant
 	command_not_void: command /= Void
 	command_not_empty: command.count > 0
 
-end -- class KI_SHELL_COMMAND
+end

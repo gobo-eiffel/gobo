@@ -608,4 +608,4 @@ invariant
 	yy_column_positive: yy_column >= 1
 	yy_position_positive: yy_position >= 1
 
-end -- class YY_SCANNER_SKELETON
+end

@@ -32,4 +32,4 @@ invariant
 
 	dollar_not_void: dollar /= Void
 
-end -- class ET_ADDRESS_EXPRESSION
+end

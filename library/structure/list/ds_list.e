@@ -475,4 +475,4 @@ feature {DS_LIST_CURSOR} -- Cursor implementation
 			moved: cursor_index (a_cursor) = i
 		end
 
-end -- class DS_LIST
+end

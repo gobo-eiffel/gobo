@@ -45,4 +45,4 @@ invariant
 	features_not_void: features /= Void
 	no_void_feature: not features.has (Void)
 
-end -- class ET_XACE_EXPORTED_CLASS
+end

@@ -86,4 +86,4 @@ invariant
 
 	count_positive: count >= 0
 
-end -- class TS_ASSERTIONS
+end

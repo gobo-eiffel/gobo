@@ -25,4 +25,4 @@ feature -- Access
 			feature_name_item_not_void: Result /= Void
 		end
 
-end -- class ET_FEATURE_NAME_ITEM
+end

@@ -79,4 +79,4 @@ feature -- Status report
 			definition: Result = (vendor = ve_vendor)
 		end
 
-end -- class KL_EIFFEL_COMPILER
+end

@@ -51,4 +51,4 @@ invariant
 
 	test_not_void: test /= Void
 
-end -- class TS_RESULT
+end

@@ -25,4 +25,4 @@ feature -- Status report
 	is_not_equal: BOOLEAN is True
 			-- Is symbol '/='?
 
-end -- class ET_NOT_EQUAL_SYMBOL
+end

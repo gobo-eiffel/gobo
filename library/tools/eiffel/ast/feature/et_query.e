@@ -95,4 +95,4 @@ invariant
 
 	type_not_void: type /= Void
 
-end -- class ET_QUERY
+end

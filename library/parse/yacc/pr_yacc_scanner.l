@@ -224,4 +224,4 @@ ESC					\\(.|[0-7]{1,3}|x[0-9a-f]{1,2})
 
 %%
 
-end -- class PR_YACC_SCANNER
+end

@@ -75,4 +75,4 @@ feature -- Eiffel AST factory
 			error_handler_not_void: Result /= Void
 		end
 
-end -- class ET_LACE_AST_FACTORY
+end

@@ -159,4 +159,4 @@ feature -- Output
 		deferred
 		end
 
-end -- class ET_TYPE
+end

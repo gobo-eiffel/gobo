@@ -988,4 +988,4 @@ invariant
 	characters_count_positive: characters_count > 0
 	array_size_positive: array_size >= 0
 
-end -- class LX_GENERATABLE_DFA
+end

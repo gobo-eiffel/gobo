@@ -41,4 +41,4 @@ feature -- Comparison
 			Result := other.is_prefix_not
 		end
 
-end -- class ET_PREFIX_NOT
+end

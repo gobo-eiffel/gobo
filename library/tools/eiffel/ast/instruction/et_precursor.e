@@ -67,4 +67,4 @@ invariant
 
 	precursor_keyword_not_void: precursor_keyword /= Void
 
-end -- class ET_PRECURSOR
+end

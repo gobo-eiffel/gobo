@@ -349,4 +349,4 @@ invariant
 	area_definition: area = area_string.area
 #endif
 
-end -- class KL_CHARACTER_BUFFER
+end

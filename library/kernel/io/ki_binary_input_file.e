@@ -16,4 +16,4 @@ inherit
 
 	KI_INPUT_FILE
 
-end -- class KI_BINARY_INPUT_FILE
+end

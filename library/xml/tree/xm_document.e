@@ -67,4 +67,4 @@ feature {XM_PARSER,XM_CALLBACKS}
 			count: count = 1
 		end
 
-end -- class XM_DOCUMENT
+end

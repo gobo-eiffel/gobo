@@ -94,4 +94,4 @@ invariant
 	arrow_symbol_not_void: arrow_symbol /= Void
 	constraint_not_void: constraint /= Void
 
-end -- class ET_CONSTRAINED_FORMAL_GENERIC_PARAMETER
+end

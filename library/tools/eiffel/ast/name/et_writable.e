@@ -16,4 +16,4 @@ inherit
 
 	ET_AST_NODE
 
-end -- class ET_WRITABLE
+end

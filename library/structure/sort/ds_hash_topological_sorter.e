@@ -114,4 +114,4 @@ invariant
 	indexes_count: indexes.count = items.count
 	indexes_capacity: indexes.capacity = items.capacity
 
-end -- class DS_HASH_TOPOLOGICAL_SORTER
+end

@@ -116,4 +116,4 @@ invariant
 	name_not_void: name /= Void
 	feature_id_positive: feature_id > 0
 
-end -- class ET_BIT_FEATURE
+end

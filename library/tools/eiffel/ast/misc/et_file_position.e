@@ -77,4 +77,4 @@ invariant
 
 	filename_not_void: filename /= Void
 
-end -- class ET_FILE_POSITION
+end

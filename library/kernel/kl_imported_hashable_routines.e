@@ -22,4 +22,4 @@ feature -- Access
 			hashable_routines_not_void: Result /= Void
 		end
 
-end -- class KL_IMPORTED_HASHABLE_ROUTINES
+end

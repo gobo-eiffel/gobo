@@ -65,4 +65,4 @@ feature -- Output
 		do
 		end
 
-end -- class PR_NO_TYPE
+end

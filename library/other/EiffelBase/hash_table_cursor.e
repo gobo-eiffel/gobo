@@ -35,4 +35,4 @@ feature -- Access
 	position: INTEGER
 			-- Internal position in hash table
 
-end -- class HASH_TABLE_CURSOR
+end

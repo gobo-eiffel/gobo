@@ -934,5 +934,5 @@ feature{UC_CTYPE} -- Lowercase conversion tables
 
    --integer used: 3328
 
-end -- class UC_CTYPE_LOWERCASE
+end
 

@@ -68,4 +68,4 @@ feature -- Basic operations
 			unary_minus_not_void: Result /= Void
 		end
 
-end -- class DT_DURATION
+end

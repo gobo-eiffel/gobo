@@ -48,4 +48,4 @@ invariant
 	-- dollar1: $1 = filename
 	-- dollar2: $2 = line number
 
-end -- class LX_RULE_CANNOT_BE_MATCHED_ERROR
+end

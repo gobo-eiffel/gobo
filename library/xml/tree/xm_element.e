@@ -309,4 +309,4 @@ feature {NONE} -- Implementation
 
 	namespace_declarations_cache: DS_LINKED_LIST [XM_NAMESPACE]
 
-end -- class XM_ELEMENT
+end

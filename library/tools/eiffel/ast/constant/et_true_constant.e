@@ -29,4 +29,4 @@ invariant
 
 	is_true: is_true
 
-end -- class ET_TRUE_CONSTANT
+end

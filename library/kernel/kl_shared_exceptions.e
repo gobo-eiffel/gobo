@@ -35,4 +35,4 @@ feature -- Obsolete
 			exceptions__not_void: Result /= Void
 		end
 
-end -- class KL_SHARED_EXCEPTIONS
+end

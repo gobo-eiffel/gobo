@@ -45,4 +45,4 @@ feature -- Access
 	code: STRING is "XA0003"
 			-- Error code
 
-end -- class ET_XACE_MISSING_ATTRIBUTE_ERROR
+end

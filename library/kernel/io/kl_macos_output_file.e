@@ -32,4 +32,4 @@ feature -- Access
 	eol: STRING is "%R"
 			-- Line separator
 
-end -- class KL_MACOS_OUTPUT_FILE
+end

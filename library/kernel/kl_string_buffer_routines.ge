@@ -431,4 +431,4 @@ feature {NONE} -- Externals
 		end
 
 #endif
-end -- class KL_STRING_BUFFER_ROUTINES
+end

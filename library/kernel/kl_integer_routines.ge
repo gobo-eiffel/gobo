@@ -157,4 +157,4 @@ feature -- Status report
 			definition: Result = (an_int \\ 2 = 0)
 		end
 
-end -- class KL_INTEGER_ROUTINES
+end

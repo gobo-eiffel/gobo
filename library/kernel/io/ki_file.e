@@ -92,4 +92,4 @@ feature -- Basic operations
 		deferred
 		end
 
-end -- class KI_FILE
+end

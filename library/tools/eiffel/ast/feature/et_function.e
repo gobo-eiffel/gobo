@@ -136,4 +136,4 @@ feature -- Type processing
 			type := type.resolved_identifier_types (Current, arguments, a_class)
 		end
 
-end -- class ET_FUNCTION
+end

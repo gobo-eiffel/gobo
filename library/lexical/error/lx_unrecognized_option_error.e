@@ -50,4 +50,4 @@ invariant
 	-- dollar2: $2 = line number
 	-- dollar3: $3 = option
 
-end -- class LX_UNRECOGNIZED_OPTION_ERROR
+end

@@ -51,4 +51,4 @@ feature -- Comparison
 		deferred
 		end
 
-end -- class ET_CLASS_NAME
+end

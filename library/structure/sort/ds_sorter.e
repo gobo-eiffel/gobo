@@ -68,4 +68,4 @@ feature -- Sort
 			sorted: sorted_with_comparator (a_container, a_comparator)
 		end
 
-end -- class DS_SORTER
+end

@@ -56,4 +56,4 @@ feature -- Setting
 			a_date_time.set_precise_hour_minute_second (hour, minute, second, 0)
 		end
 
-end -- class DT_SYSTEM_CLOCK
+end

@@ -97,4 +97,4 @@ feature {NONE} -- Type anchors
 	cursor_anchor: TWO_WAY_LIST_CURSOR [G] is do end
 			-- Type anchor for `cursor'
 
-end -- class TWO_WAY_LIST
+end

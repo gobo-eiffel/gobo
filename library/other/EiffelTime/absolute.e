@@ -56,4 +56,4 @@ feature -- Element change
 		deferred
 		end
 
-end -- class ABSOLUTE
+end

@@ -127,4 +127,4 @@ feature {YY_PARSER_ACTION} -- Scanning
 		deferred
 		end
 
-end -- class YY_PARSER
+end

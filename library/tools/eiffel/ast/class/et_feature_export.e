@@ -99,4 +99,4 @@ invariant
 
 	clients_clause_not_void: clients_clause /= Void
 
-end -- class ET_FEATURE_EXPORT
+end

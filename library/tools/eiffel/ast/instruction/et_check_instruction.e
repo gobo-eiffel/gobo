@@ -82,4 +82,4 @@ invariant
 	check_keyword_not_void: check_keyword /= Void
 	end_keyword_not_void: end_keyword /= Void
 
-end -- class ET_CHECK_INSTRUCTION
+end

@@ -20,4 +20,4 @@ creation
 
 	make_standard, make_null
 
-end -- class ET_LACE_ERROR_HANDLER
+end

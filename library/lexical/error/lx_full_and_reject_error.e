@@ -41,4 +41,4 @@ invariant
 
 	-- dollar0: $0 = program name
 
-end -- class LX_FULL_AND_REJECT_ERROR
+end

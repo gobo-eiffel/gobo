@@ -1028,4 +1028,4 @@ invariant
 	yy_base_def_upper: yy_base.upper = yy_def.upper
 	yy_base_def_lower: yy_base.lower = yy_def.lower
 
-end -- class LX_COMPRESSED_DFA
+end

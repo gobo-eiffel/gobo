@@ -67,4 +67,4 @@ feature -- Element change
 		deferred
 		end
 
-end -- class DS_EXTENDIBLE
+end

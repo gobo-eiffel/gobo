@@ -100,4 +100,4 @@ invariant
 	left_brace_not_void: left_brace /= Void
 	right_brace_not_void: right_brace /= Void
 
-end -- class ET_QUALIFIED_PRECURSOR
+end

@@ -279,4 +279,4 @@ invariant
 	column_positive: column >= 1
 	position_positive: position >= 1
 
-end -- class YY_BUFFER
+end

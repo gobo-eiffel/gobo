@@ -281,4 +281,4 @@ invariant
 	accepted_head_rules_not_void: accepted_head_rules /= Void
 	no_void_accepted_head_rule: not accepted_head_rules.has (Void)
 
-end -- class LX_DFA_STATE
+end

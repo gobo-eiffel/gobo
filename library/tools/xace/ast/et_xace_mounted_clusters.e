@@ -137,4 +137,4 @@ invariant
 	clusters_not_void: clusters /= Void
 	not_void_cluster: not clusters.has (Void)
 
-end -- class ET_XACE_MOUNTED_CLUSTERS
+end

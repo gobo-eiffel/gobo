@@ -210,7 +210,7 @@ invariant
 	-- inv2: (current_open_element = Void) implies (current_node = root_element)
 	-- inv3: ((root_element /= Void) and then (current_node = root_element)) implies current_node.is_root
 
-end -- class XT_TREE_PARSER
+end
 --|-------------------------------------------------------------------------
 --| eXML, Eiffel XML Parser Toolkit
 --| Copyright (C) 1999	Andreas Leitner and others

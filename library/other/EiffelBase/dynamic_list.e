@@ -121,4 +121,4 @@ invariant
 
 	extendible: extendible
 
-end -- class DYNAMIC_LIST
+end

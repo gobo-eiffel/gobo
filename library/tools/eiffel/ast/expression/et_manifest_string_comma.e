@@ -60,4 +60,4 @@ invariant
 
 	comma_not_void: comma /= Void
 
-end -- class ET_MANIFEST_STRING_COMMA
+end

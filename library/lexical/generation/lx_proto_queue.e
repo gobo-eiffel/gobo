@@ -83,4 +83,4 @@ invariant
 
 	no_void_proto: not has (Void)
 
-end -- class LX_PROTO_QUEUE
+end

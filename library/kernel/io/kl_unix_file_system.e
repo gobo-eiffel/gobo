@@ -421,4 +421,4 @@ feature -- Pathname handling
 	directory_separator: CHARACTER is '/'
 			-- Directory separator
 
-end -- class KL_UNIX_FILE_SYSTEM
+end

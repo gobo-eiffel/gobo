@@ -46,4 +46,4 @@ feature {NONE} -- Implementation
 			end
 		end
 
-end -- class DS_HASH_TABLE
+end

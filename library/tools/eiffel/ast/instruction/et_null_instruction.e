@@ -17,4 +17,4 @@ inherit
 
 	ET_INSTRUCTION
 
-end -- class ET_NULL_INSTRUCTION
+end

@@ -16,4 +16,4 @@ inherit
 
 	UT_ERROR
 
-end -- class ET_ERROR
+end

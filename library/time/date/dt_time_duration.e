@@ -427,4 +427,4 @@ feature -- Conversion
 			same_duration: Result.is_equal (Current)
 		end
 
-end -- class DT_TIME_DURATION
+end

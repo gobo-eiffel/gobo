@@ -92,4 +92,4 @@ invariant
 
 	compressed_position_positive: compressed_position >= 0
 
-end -- class ET_COMPRESSED_POSITION
+end

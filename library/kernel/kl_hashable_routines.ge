@@ -50,4 +50,4 @@ feature -- Access
 			hash_value_positive: Result >= 0
 		end
 
-end -- class KL_HASHABLE_ROUTINES
+end

@@ -94,4 +94,4 @@ feature {NONE} -- Constants
 			-- Is `reject' called or is there a regular expression with
 			-- both leading and trailing parts having variable length?
 	
-end -- class LX_COMPRESSED_SCANNER
+end

@@ -104,4 +104,4 @@ invariant
 	yy_base_not_void: yy_base /= Void
 	yy_def_not_void: yy_def /= Void
 
-end -- class LX_COMPRESSED_TABLES
+end

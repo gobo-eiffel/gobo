@@ -60,4 +60,4 @@ feature -- Output
 			out_fine_not_void: Result /= Void
 		end
 
-end -- class TIME_VALUE
+end

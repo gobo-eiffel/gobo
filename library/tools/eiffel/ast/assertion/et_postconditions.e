@@ -98,4 +98,4 @@ invariant
 
 	ensure_keyword_not_void: ensure_keyword /= Void
 
-end -- class ET_POSTCONDITIONS
+end

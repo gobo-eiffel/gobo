@@ -57,4 +57,4 @@ invariant
 	prefix_keyword_not_void: prefix_keyword /= Void
 	operator_name_not_void: operator_name /= Void
 
-end -- class ET_PREFIX_NAME
+end

@@ -22,4 +22,4 @@ feature -- Access
 			tokens_not_void: Result /= Void
 		end
 
-end -- class ET_SHARED_TOKEN_CONSTANTS
+end

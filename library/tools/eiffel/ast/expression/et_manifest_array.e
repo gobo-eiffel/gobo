@@ -21,4 +21,4 @@ creation
 
 	make, make_with_capacity
 
-end -- class ET_MANIFEST_ARRAY
+end

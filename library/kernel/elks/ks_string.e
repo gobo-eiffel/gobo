@@ -757,4 +757,4 @@ invariant
 
 	non_negative_count: count >= 0
 
-end -- class KS_STRING
+end

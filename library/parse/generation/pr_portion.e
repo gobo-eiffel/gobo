@@ -213,4 +213,4 @@ invariant
 	count_positive: count > 0
 	width_definition: width = (froms.last - froms.first + 1)
 
-end -- class PR_PORTION
+end

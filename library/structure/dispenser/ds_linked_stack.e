@@ -285,4 +285,4 @@ invariant
 
 	first_cell: is_empty = (first_cell = Void)
 
-end -- class DS_LINKED_STACK
+end

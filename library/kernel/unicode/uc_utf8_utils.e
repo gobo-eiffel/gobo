@@ -353,6 +353,6 @@ feature {NONE} -- Compiler specific methods
 	 !!Result
       end
 
-end -- class UC_UTF8_UTILS
+end
 
 

@@ -21,4 +21,4 @@ creation
 
 	make
 
-end -- class ET_PRECURSOR_EXPRESSION
+end

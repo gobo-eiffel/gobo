@@ -34,4 +34,4 @@ feature -- Access
 	code: STRING is "SSEL"
 			-- Error code
 
-end -- class ET_SSEL_ERROR
+end

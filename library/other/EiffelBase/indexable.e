@@ -124,4 +124,4 @@ feature {NONE} -- Inapplicable
 
 	bag_put (v: G) is do end
 
-end -- class INDEXABLE
+end

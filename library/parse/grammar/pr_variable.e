@@ -241,4 +241,4 @@ invariant
 	no_void_first: not firsts.has (Void)
 	no_void_derive: not derives.has (Void)
 
-end -- class PR_VARIABLE
+end

@@ -146,4 +146,4 @@ invariant
 
 	off_definition: off = (current_cell = Void)
 
-end -- class DS_LINKED_LIST_CURSOR
+end

@@ -836,4 +836,4 @@ invariant
 	class_keyword_not_void: class_keyword /= Void
 	end_keyword_not_void: end_keyword /= Void
 
-end -- class ET_CLASS
+end

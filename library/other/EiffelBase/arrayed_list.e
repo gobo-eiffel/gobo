@@ -299,4 +299,4 @@ feature -- Status setting
 			equality_tester := Void
 		end
 
-end -- class ARRAYED_LIST
+end

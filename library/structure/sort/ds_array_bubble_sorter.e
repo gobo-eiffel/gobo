@@ -49,4 +49,4 @@ feature -- Sort
 			end
 		end
 
-end -- class DS_ARRAY_BUBBLE_SORTER
+end

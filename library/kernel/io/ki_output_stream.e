@@ -37,4 +37,4 @@ feature -- Access
 			name_not_void: Result /= Void
 		end
 
-end -- class KI_OUTPUT_STREAM
+end

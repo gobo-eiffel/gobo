@@ -95,4 +95,4 @@ invariant
 	not_both: not (after and before)
 	before_constraint: before implies off
 
-end -- class DS_BILINEAR_CURSOR
+end

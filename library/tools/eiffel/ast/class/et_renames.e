@@ -101,4 +101,4 @@ invariant
 
 	rename_keyword_not_void: rename_keyword /= Void
 
-end -- class ET_RENAMES
+end

@@ -63,4 +63,4 @@ feature {NONE} -- Constants
 	True_string: STRING is "true"
 	False_string: STRING is "false"
 
-end -- class UT_BOOLEAN_FORMATTER
+end

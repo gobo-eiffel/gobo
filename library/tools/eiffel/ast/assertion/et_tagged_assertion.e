@@ -71,4 +71,4 @@ invariant
 
 	tag_not_void: tag /= Void
 
-end -- class ET_TAGGED_ASSERTION
+end

@@ -207,5 +207,5 @@ feature {NONE}
 		deferred
 		end
 
-end -- class XP_CALLBACK
+end
 

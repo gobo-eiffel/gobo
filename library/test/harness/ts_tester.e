@@ -192,4 +192,4 @@ invariant
 	error_handler_not_void: error_handler /= Void
 	variables_not_void: variables /= Void
 
-end -- class TS_TESTER
+end

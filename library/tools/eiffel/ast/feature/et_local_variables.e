@@ -127,4 +127,4 @@ invariant
 
 	local_keyword_not_void: local_keyword /= Void
 
-end -- class ET_LOCAL_VARIABLES
+end

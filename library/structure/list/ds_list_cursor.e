@@ -232,4 +232,4 @@ feature {DS_LIST} -- Implementation
 			-- cursors (i.e. cursors associated with `container'
 			-- and which are not currently `off').)
 
-end -- class DS_LIST_CURSOR
+end

@@ -23,4 +23,4 @@ feature -- Acess
 			eiffel_compiler_not_void: Result /= Void
 		end
 
-end -- class KL_SHARED_EIFFEL_COMPILER
+end

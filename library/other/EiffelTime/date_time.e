@@ -262,4 +262,4 @@ feature {NONE} -- Implementation
 	time_impl: TIME
 			-- Implementation of `time'
 
-end -- class DATE_TIME
+end

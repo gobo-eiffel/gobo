@@ -45,4 +45,4 @@ feature {ANY} -- Access
 	code: STRING is "XA0002"
 			-- Error code
 
-end -- class ET_XACE_MISSING_ELEMENT_ERROR
+end

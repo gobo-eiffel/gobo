@@ -1534,4 +1534,4 @@ invariant
 	last_cell: is_empty = (last_cell = Void)
 	last_constraint: last_cell /= Void implies last_cell.right = Void
 
-end -- class DS_LINKED_LIST
+end

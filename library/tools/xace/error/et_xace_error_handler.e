@@ -212,4 +212,4 @@ feature -- Reporting
 			precursor (an_error)
 		end
 
-end -- class ET_XACE_ERROR_HANDLER
+end

@@ -215,4 +215,4 @@ invariant
 	components_lower: components.lower = 1
 	components_count: components.count >= count
 
-end -- class KL_PATHNAME
+end

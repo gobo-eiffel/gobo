@@ -533,4 +533,4 @@ invariant
 	storage_positive: storage >= 0
 	storage_small_enough: storage < Milliseconds_in_day
 
-end -- class DT_TIME
+end

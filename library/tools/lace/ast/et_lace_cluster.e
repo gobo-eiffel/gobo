@@ -154,4 +154,4 @@ invariant
 
 	name_id_not_void: name_id /= Void
 
-end -- class ET_LACE_CLUSTER
+end

@@ -176,4 +176,4 @@ invariant
 	like_keyword_not_void: like_keyword /= Void
 	name_not_void: name /= Void
 
-end -- class ET_LIKE_IDENTIFIER
+end

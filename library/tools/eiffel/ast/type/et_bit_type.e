@@ -281,4 +281,4 @@ invariant
 	bit_keyword_not_void: bit_keyword /= Void
 	constant_not_void: constant /= Void
 
-end -- class ET_BIT_TYPE
+end

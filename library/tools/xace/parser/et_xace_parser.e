@@ -169,4 +169,4 @@ invariant
 	xml_validator_not_void: xml_validator /= Void
 	xml_preprocessor_not_void: xml_preprocessor /= Void
 
-end -- class ET_XACE_PARSER
+end

@@ -79,4 +79,4 @@ feature {NONE} -- Implementation
 			Result := new_unicode_string ("")
 		end
 
-end -- class XM_NAMESPACE_TABLE
+end

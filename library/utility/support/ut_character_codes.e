@@ -307,4 +307,4 @@ invariant
 	-- Same thing for all other codes.
 	-- (see "note" in indexing clause.)
 
-end -- class UT_CHARACTER_CODES
+end

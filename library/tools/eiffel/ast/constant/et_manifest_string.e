@@ -65,4 +65,4 @@ invariant
 
 	literal_not_void: literal /= Void
 
-end -- class ET_MANIFEST_STRING
+end

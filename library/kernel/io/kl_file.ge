@@ -663,4 +663,4 @@ feature {NONE} -- Implementation
 			-- Empty name place-holder
 
 #endif
-end -- class KL_FILE
+end

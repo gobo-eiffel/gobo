@@ -121,4 +121,4 @@ invariant
 
 	generic_parameters_not_void: generic_parameters /= Void
 
-end -- class ET_GENERIC_NAMED_TYPE
+end

@@ -50,4 +50,4 @@ invariant
 
 	data_not_void: data /= Void
 
-end -- class XM_COMMENT
+end

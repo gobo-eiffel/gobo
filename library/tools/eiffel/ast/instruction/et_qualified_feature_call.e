@@ -63,4 +63,4 @@ invariant
 	target_not_void: target /= Void
 	dot_not_void: dot /= Void
 
-end -- class ET_QUALIFIED_FEATURE_CALL
+end

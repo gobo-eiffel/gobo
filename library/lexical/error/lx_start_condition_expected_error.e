@@ -47,4 +47,4 @@ invariant
 	-- dollar1: $1 = filename
 	-- dollar2: $2 = line number
 
-end -- class LX_START_CONDITION_EXPECTED_ERROR
+end

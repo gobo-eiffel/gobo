@@ -250,4 +250,4 @@ invariant
 
 	no_void_start_condition: not has (Void)
 
-end -- class LX_START_CONDITIONS
+end

@@ -56,4 +56,4 @@ invariant
 	column_positive: column > 0
 	row_positive: row > 0
 
-end -- class XM_STREAM_POSITION
+end

@@ -37,4 +37,4 @@ feature -- Access
 			text_set: Result.text = a_text
 		end
 
-end -- class LX_ACTION_FACTORY
+end

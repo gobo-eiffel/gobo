@@ -27,4 +27,4 @@ feature -- Access
 	rescue_clause: ET_COMPOUND
 			-- Rescue clause
 
-end -- class ET_INTERNAL_ROUTINE
+end

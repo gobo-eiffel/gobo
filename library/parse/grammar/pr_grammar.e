@@ -601,4 +601,4 @@ invariant
 	eiffel_header_not_void: eiffel_header /= Void
 	no_void_eiffel_header: not eiffel_header.has (Void)
 
-end -- class PR_GRAMMAR
+end

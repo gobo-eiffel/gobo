@@ -25,4 +25,4 @@ feature -- Access
 			assertion_item_not_void: Result /= Void
 		end
 
-end -- class ET_ASSERTION_ITEM
+end

@@ -262,4 +262,4 @@ invariant
 	left_parenthesis_not_void: left_parenthesis /= Void
 	right_parenthesis_not_void: right_parenthesis /= Void
 
-end -- class ET_FORMAL_ARGUMENTS
+end

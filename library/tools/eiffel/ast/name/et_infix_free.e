@@ -79,4 +79,4 @@ feature {NONE} -- Constants
 
 	infix_double_quote: STRING is "infix %""
 
-end -- class ET_INFIX_FREE
+end

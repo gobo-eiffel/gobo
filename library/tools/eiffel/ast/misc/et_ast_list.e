@@ -113,4 +113,4 @@ invariant
 	consistent_count: count <= capacity
 	storage_not_void: not is_empty implies storage /= Void
 
-end -- class ET_AST_LIST
+end

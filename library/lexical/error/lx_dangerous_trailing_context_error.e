@@ -48,4 +48,4 @@ invariant
 	-- dollar1: $1 = filename
 	-- dollar2: $2 = line number
 
-end -- class LX_DANGEROUS_TRAILING_CONTEXT_ERROR
+end

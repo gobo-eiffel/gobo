@@ -90,4 +90,4 @@ feature -- Removal
 			new_count: count = n
 		end
 
-end -- class DS_DISPENSER
+end

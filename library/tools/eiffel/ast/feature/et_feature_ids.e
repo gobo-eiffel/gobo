@@ -210,4 +210,4 @@ invariant
 	feature_ids_upper: feature_ids.upper >= count
 	--ids_positive: forall i in 1..count, feature_ids.item (i) > 0
 
-end -- class ET_FEATURE_IDS
+end

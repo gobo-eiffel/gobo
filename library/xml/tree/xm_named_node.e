@@ -90,4 +90,4 @@ invariant
 
 	name_not_void: name /= Void
 
-end -- class XM_NAMED_NODE
+end

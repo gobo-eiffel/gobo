@@ -170,4 +170,4 @@ feature -- BiDI
    bidi_no_information: INTEGER is -1
 	 -- BiDi Category
 
-end -- class UC_CONSTANTS
+end

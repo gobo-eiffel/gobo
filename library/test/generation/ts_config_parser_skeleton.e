@@ -324,4 +324,4 @@ invariant
 	compiled_class_regexp: class_regexp /= Void implies class_regexp.compiled
 	compiled_feature_regexp: feature_regexp /= Void implies feature_regexp.compiled
 
-end -- class TS_CONFIG_PARSER_SKELETON
+end

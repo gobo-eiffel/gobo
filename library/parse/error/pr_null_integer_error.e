@@ -47,4 +47,4 @@ invariant
 	-- dollar1: $1 = filename
 	-- dollar2: $2 = line number
 
-end -- class PR_NULL_INTEGER_ERROR
+end

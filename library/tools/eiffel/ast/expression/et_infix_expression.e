@@ -47,4 +47,4 @@ invariant
 
 	name_not_void: name /= Void
 
-end -- class ET_INFIX_EXPRESSION
+end

@@ -46,4 +46,4 @@ invariant
 
 	variables_not_void: variables /= Void
 
-end -- class TS_TEST
+end

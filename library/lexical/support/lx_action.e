@@ -71,4 +71,4 @@ invariant
 
 	text_not_void: text /= Void
 
-end -- class LX_ACTION
+end

@@ -197,4 +197,4 @@ invariant
 
 	comparator_not_void: comparator /= Void
 
-end -- class DS_INDEXABLE_SORTER
+end

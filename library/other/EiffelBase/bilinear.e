@@ -81,4 +81,4 @@ invariant
 	empty_property: empty implies (after or before)
 	before_constraint: before implies off
 
-end -- class BILINEAR
+end

@@ -96,4 +96,4 @@ invariant
 
 	value_not_void: value /= Void
 
-end -- class XM_ATTRIBUTE
+end

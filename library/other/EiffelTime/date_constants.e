@@ -26,4 +26,4 @@ feature -- Access
 	Max_weeks_in_year: INTEGER is 53
 				-- Maximun number of weeks in a year 
 
-end -- class DATE_CONSTANTS
+end

@@ -54,4 +54,4 @@ invariant
 	-- dollar4: $4 = id #1
 	-- dollar5: $5 = id string #2
 
-end -- class PR_TWO_TOKEN_IDS_TOKEN_ERROR
+end

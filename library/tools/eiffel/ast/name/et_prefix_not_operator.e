@@ -25,4 +25,4 @@ creation
 
 	make, make_with_position
 
-end -- class ET_PREFIX_NOT_OPERATOR
+end

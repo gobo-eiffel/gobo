@@ -204,4 +204,4 @@ invariant
 	empty_constraint: empty implies off
 	after_constraint: after implies off
 
-end -- class LINEAR
+end

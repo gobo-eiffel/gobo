@@ -243,4 +243,4 @@ feature {NONE} -- Implementation
 			-- Does current regular expression end with '$'?
 			-- ('$' matches at end of string as a whole.)
 
-end -- class LX_DFA_REGULAR_EXPRESSION
+end

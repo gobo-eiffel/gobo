@@ -60,4 +60,4 @@ invariant
 
 	semicolon_not_void: semicolon /= Void
 
-end -- class ET_ASSERTION_SEMICOLON
+end

@@ -43,4 +43,4 @@ feature -- Access
 	code: STRING is "XA0001"
 			-- Error code
 
-end -- class ET_XACE_WRONG_ROOT_ELEMENT_ERROR
+end

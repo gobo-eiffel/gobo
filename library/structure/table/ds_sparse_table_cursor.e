@@ -126,4 +126,4 @@ invariant
 
 --	valid_position: valid_position (position)
 
-end -- class DS_SPARSE_TABLE_CURSOR
+end

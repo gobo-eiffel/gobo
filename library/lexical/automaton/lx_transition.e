@@ -64,4 +64,4 @@ invariant
 
 	target_not_void: target /= Void
 
-end -- class LX_TRANSITION
+end

@@ -97,4 +97,4 @@ feature -- Conversion
 			end
 		end
 
-end -- class ET_EXTERNAL_PROCEDURE
+end

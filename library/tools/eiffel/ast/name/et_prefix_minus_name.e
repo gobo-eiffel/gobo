@@ -25,4 +25,4 @@ creation
 
 	make
 
-end -- class ET_PREFIX_MINUS_NAME
+end

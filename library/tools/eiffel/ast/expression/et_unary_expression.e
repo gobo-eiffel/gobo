@@ -31,4 +31,4 @@ invariant
 
 	expression_not_void: expression /= Void
 
-end -- class ET_UNARY_EXPRESSION
+end

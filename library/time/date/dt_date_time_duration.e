@@ -620,4 +620,4 @@ feature {NONE} -- Implementation
 			tmp_date_time_not_void: Result /= Void
 		end
 
-end -- class DT_DATE_TIME_DURATION
+end

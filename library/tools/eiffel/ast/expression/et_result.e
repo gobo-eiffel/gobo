@@ -22,4 +22,4 @@ creation
 
 	make, make_with_position
 
-end -- class ET_RESULT
+end

@@ -90,4 +90,4 @@ feature -- System
 			end
 		end
 
-end -- class ET_INTERNAL_FUNCTION
+end

@@ -28,4 +28,4 @@ invariant
 
 	language_not_void: language /= Void
 
-end -- class ET_EXTERNAL_ROUTINE
+end

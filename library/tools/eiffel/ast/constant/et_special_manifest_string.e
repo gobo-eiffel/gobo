@@ -81,4 +81,4 @@ invariant
 
 	-- valid_literal: regexp: \"([^"%\n]|%([^\n]|\/[0-9]+\/|[ \t\r]*\n[ \t\r\n]*%))*\"
 
-end -- class ET_SPECIAL_MANIFEST_STRING
+end

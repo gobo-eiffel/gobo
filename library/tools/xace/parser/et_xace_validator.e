@@ -330,4 +330,4 @@ invariant
 
 	error_handler_not_void: error_handler /= Void
 
-end -- class ET_XACE_VALIDATOR
+end

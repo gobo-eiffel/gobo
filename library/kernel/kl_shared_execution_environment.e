@@ -23,4 +23,4 @@ feature -- Access
 			execution_environment_not_void: Result /= Void
 		end
 
-end -- class KL_SHARED_EXECUTION_ENVIRONMENT
+end

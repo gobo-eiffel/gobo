@@ -63,4 +63,4 @@ feature {NONE} -- Implementation
 			!! Result
 		end
 
-end -- class UC_UNICODE_FACTORY
+end

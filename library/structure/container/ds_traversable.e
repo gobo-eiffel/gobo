@@ -179,4 +179,4 @@ invariant
 	internal_cursor_not_void: initialized implies (internal_cursor /= Void)
 	valid_internal_cursor: initialized implies valid_cursor (internal_cursor)
 
-end -- class DS_TRAVERSABLE
+end

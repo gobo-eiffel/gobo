@@ -178,4 +178,4 @@ CCL_CHAR			[^\\\n\]]|{ESC}
 
 %%
 
-end -- class LX_REGEXP_SCANNER
+end

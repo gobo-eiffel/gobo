@@ -45,4 +45,4 @@ invariant
 	-- dollar0: $0 = program name
 	-- dollar1: $1 = environment variable
 
-end -- class UT_UNDEFINED_ENVIRONMENT_VARIABLE_ERROR
+end

@@ -439,4 +439,4 @@ invariant
 	left_bracket_not_void: left_bracket /= Void
 	right_bracket_not_void: right_bracket /= Void
 
-end -- class ET_ACTUAL_GENERIC_PARAMETERS
+end

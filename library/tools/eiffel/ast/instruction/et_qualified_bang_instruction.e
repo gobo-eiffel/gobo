@@ -70,4 +70,4 @@ invariant
 
 	bangbang_not_void: bangbang /= Void
 
-end -- class ET_QUALIFIED_BANG_INSTRUCTION
+end

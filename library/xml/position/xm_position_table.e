@@ -83,4 +83,4 @@ feature {NONE}
 	table: DS_LINKED_LIST [DS_PAIR [XM_POSITION, XM_NODE]]
 			-- list of node, position pairs
 
-end -- class XM_POSITION_TABLE
+end

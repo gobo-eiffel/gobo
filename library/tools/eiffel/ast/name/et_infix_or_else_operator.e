@@ -64,4 +64,4 @@ invariant
 	or_keyword_not_void: or_keyword /= Void
 	else_keyword_not_void: else_keyword /= Void
 
-end -- class ET_INFIX_OR_ELSE_OPERATOR
+end

@@ -25,4 +25,4 @@ feature -- Access
 			Result := Current
 		end
 
-end -- class ET_EXPRESSION
+end

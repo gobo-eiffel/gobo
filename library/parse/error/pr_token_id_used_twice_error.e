@@ -53,4 +53,4 @@ invariant
 	-- dollar3: $3 = token2
 	-- dollar4: $4 = token id
 
-end -- class PR_TOKEN_ID_USED_TWICE_ERROR
+end

@@ -47,4 +47,4 @@ feature -- Element change
 			new_other: other.item = old item
 		end
 
-end -- class DS_DYNAMIC_CURSOR
+end

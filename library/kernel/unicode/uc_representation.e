@@ -104,4 +104,4 @@ feature
 	 count = (old count) + ocount;
       end
 
-end -- class UC_REPRESENTATION
+end

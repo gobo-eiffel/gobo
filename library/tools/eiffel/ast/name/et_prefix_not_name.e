@@ -25,4 +25,4 @@ creation
 
 	make
 
-end -- class ET_PREFIX_NOT_NAME
+end

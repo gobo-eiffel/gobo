@@ -21,4 +21,4 @@ inherit
 			out
 		end
 
-end -- class DATE_VALUE
+end

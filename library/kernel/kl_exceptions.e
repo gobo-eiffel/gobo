@@ -23,4 +23,4 @@ inherit
 
 	EXCEPTIONS
 
-end -- class KL_EXCEPTIONS
+end

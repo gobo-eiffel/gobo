@@ -92,4 +92,4 @@ invariant
 	abbreviation_not_void: abbreviation /= Void
 	offset_not_void: offset /= Void
 
-end -- class DT_TIME_ZONE
+end

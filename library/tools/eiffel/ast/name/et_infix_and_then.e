@@ -41,4 +41,4 @@ feature -- Comparison
 			Result := other.is_infix_and_then
 		end
 
-end -- class ET_INFIX_AND_THEN
+end

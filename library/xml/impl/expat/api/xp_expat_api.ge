@@ -1874,4 +1874,4 @@ feature {NONE} -- Implementation
 		end
 
 #endif
-end -- class XP_EXPAT_API
+end

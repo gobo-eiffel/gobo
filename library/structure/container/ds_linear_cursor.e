@@ -94,4 +94,4 @@ invariant
 
 	after_constraint: after implies off
 
-end -- class DS_LINEAR_CURSOR
+end

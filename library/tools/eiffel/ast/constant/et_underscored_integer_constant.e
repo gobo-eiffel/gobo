@@ -79,4 +79,4 @@ invariant
 
 	-- valid_literal: regexp: (_*[0-9]+_*)+
 
-end -- class ET_UNDERSCORED_INTEGER_CONSTANT
+end

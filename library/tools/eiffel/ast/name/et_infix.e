@@ -27,4 +27,4 @@ feature -- Status report
 			Result := True
 		end
 
-end -- class ET_INFIX
+end

@@ -118,4 +118,4 @@ invariant
 	variables_not_void: variables /= Void
 	error_handler_not_void: error_handler /= Void
 
-end -- class ET_XACE_GENERATOR
+end

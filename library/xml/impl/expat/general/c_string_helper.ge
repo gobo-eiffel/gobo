@@ -145,4 +145,4 @@ feature {NONE} -- C Strings to UC_STRING
    
    
    
-end -- class C_STRING_HELPER
+end

@@ -33,4 +33,4 @@ feature {DP_INTERFACE} -- Setting
 		do
 		end
 
-end -- class DP_IMPLEMENTATION
+end

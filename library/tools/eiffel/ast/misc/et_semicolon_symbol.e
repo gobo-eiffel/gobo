@@ -35,4 +35,4 @@ feature -- Status report
 	is_semicolon: BOOLEAN is True
 			-- Is current node a semicolon?
 
-end -- class ET_SEMICOLON_SYMBOL
+end

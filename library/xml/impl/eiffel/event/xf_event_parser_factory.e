@@ -18,5 +18,5 @@ feature
 			!XF_EVENT_PARSER! Result.make
 		end
 
-end -- class XF_EVENT_PARSER_FACTORY
+end
 

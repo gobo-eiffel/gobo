@@ -50,4 +50,4 @@ invariant
 	-- dollar2: $2 = line number
 	-- dollar3: $3 = start condition
 
-end -- class LX_BAD_START_CONDITION_ERROR
+end

@@ -154,4 +154,4 @@ feature -- Comparison
 			end
 		end
 
-end -- class KI_PATHNAME
+end

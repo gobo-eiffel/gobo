@@ -133,4 +133,4 @@ feature -- Basic operations
 			end
 		end
 
-end -- class ET_XACE_SYSTEM
+end

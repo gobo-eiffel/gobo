@@ -57,4 +57,4 @@ feature -- Access
 		end
 
 #endif
-end -- class KL_PLATFORM
+end

@@ -362,4 +362,4 @@ invariant
 	successors_count: successors.count = items.count
 	successors_capacity: successors.capacity = items.capacity
 
-end -- class DS_TOPOLOGICAL_SORTER
+end

@@ -683,4 +683,4 @@ feature {NONE} -- Encoding callback
 			Result := False
 		end
 
-end -- class XP_EVENT_PARSER
+end

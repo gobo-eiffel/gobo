@@ -807,4 +807,4 @@ feature {NONE} -- Encoding callback
 			Result := False
 		end
 
-end -- class XP_PARSER
+end

@@ -68,4 +68,4 @@ invariant
 	directory_separators_not_void: directory_separators /= Void
 	directory_separators_not_empty: directory_separators.count > 0
 
-end -- class UT_FILENAME_HANDLER
+end

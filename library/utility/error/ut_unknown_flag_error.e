@@ -45,4 +45,4 @@ invariant
 	-- dollar0: $0 = program name
 	-- dollar1: $1 = flag
 
-end -- class UT_UNKNOWN_FLAG_ERROR
+end

@@ -35,4 +35,4 @@ feature -- Status report
 			definition: Result = less_than (v, u)
 		end
 
-end -- class DS_PART_COMPARATOR
+end

@@ -43,4 +43,4 @@ feature -- Cursor movement
 			moved: index = i
 		end
 
-end -- class DS_INDEXED_CURSOR
+end

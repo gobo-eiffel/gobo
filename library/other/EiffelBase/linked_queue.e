@@ -117,4 +117,4 @@ feature -- Status setting
 			equality_tester := Void
 		end
 
-end -- class LINKED_QUEUE
+end

@@ -152,4 +152,4 @@ feature -- Element change
 			hour_set: hour = old hour + h
 		end
 
-end -- class TIME_DURATION
+end

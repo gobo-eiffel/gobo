@@ -67,4 +67,4 @@ feature {ANY} -- Element change
 			parent_set: parent = a_parent
 		end
 
-end -- class XM_NODE
+end

@@ -68,4 +68,4 @@ invariant
 	source_not_void: source /= Void
 	reverse_symbol_not_void: reverse_symbol /= Void
 
-end -- class ET_ASSIGNMENT_ATTEMPT
+end

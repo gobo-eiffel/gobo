@@ -96,4 +96,4 @@ invariant
 	clusters_not_void: clusters /= Void
 	no_void_cluster: not clusters.has (Void)
 
-end -- class TS_CONFIG
+end

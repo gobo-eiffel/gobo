@@ -80,4 +80,4 @@ feature -- Output
 			append_precise_time_to_string (a_string)
 		end
 
-end -- class DT_DATE_TIME_VALUE
+end

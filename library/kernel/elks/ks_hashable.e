@@ -22,4 +22,4 @@ feature -- Access
 			good_hash_value: Result >= 0
 		end
 
-end -- class KS_HASHABLE
+end

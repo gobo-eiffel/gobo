@@ -50,4 +50,4 @@ feature -- Access
 	last_cluster: ET_XACE_CLUSTER
 			-- Cluster being parsed
 
-end -- class ET_XACE_CLUSTER_PARSER
+end

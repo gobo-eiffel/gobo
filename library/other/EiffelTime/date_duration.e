@@ -132,4 +132,4 @@ feature {NONE} -- Implementation
 			!! Result.make (1, 1, 1)
 		end
 
-end -- class DATE_DURATION
+end

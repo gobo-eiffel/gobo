@@ -63,4 +63,4 @@ invariant
 
 	reason_not_void: reason /= Void
 
-end -- class TS_FAILED_RESULT
+end

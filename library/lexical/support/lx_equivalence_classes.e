@@ -335,4 +335,4 @@ invariant
 	positive_count: count >= 0
 	built_definition: built = (count /= 0)
 
-end -- class LX_EQUIVALENCE_CLASSES
+end

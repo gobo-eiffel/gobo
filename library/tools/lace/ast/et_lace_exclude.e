@@ -95,4 +95,4 @@ invariant
 	identifiers_not_void: identifiers /= Void
 	no_void_identifier: not identifiers.has (Void)
 
-end -- class ET_LACE_EXCLUDE
+end

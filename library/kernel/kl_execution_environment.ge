@@ -189,4 +189,4 @@ feature {NONE} -- Implementation
 		end
 
 #endif
-end -- class KL_EXECUTION_ENVIRONMENT
+end

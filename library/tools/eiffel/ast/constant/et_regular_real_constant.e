@@ -40,4 +40,4 @@ invariant
 
 	-- valid_literal: regexp: ([0-9]+\.[0-9]*|[0-9]*\.[0-9]+)([eE][+-]?[0-9]+)?
 
-end -- class ET_REGULAR_REAL_CONSTANT
+end

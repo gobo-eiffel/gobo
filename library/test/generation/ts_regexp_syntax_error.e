@@ -50,4 +50,4 @@ invariant
 	-- dollar2: $2 = filename
 	-- dollar3: $3 = line number
 
-end -- class TS_REGEXP_SYNTAX_ERROR
+end

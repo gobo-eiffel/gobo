@@ -117,4 +117,4 @@ feature {NONE} -- Implementation
 			character_token_name_not_void: Result /= Void
 		end
 
-end -- class YY_PARSER_TOKENS
+end

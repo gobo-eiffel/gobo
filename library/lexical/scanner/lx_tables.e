@@ -91,4 +91,4 @@ invariant
 	yy_start_conditions_not_void: yy_start_conditions /= Void
 	no_void_start_condition: not ANY_ARRAY_.has (yy_start_conditions, Void)
 
-end -- class LX_TABLES
+end

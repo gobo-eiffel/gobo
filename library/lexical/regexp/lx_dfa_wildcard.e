@@ -86,4 +86,4 @@ feature -- Element change
 			end
 		end
 
-end -- class LX_DFA_WILDCARD
+end

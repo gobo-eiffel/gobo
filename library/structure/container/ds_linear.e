@@ -227,4 +227,4 @@ invariant
 
 	after_constraint: initialized implies (after implies off)
 
-end -- class DS_LINEAR
+end

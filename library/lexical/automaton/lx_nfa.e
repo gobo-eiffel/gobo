@@ -421,4 +421,4 @@ invariant
 	--		state.epsilon_transition /= Void implies
 	--			states.has (state.epsilon_transition.target)
 
-end -- class LX_NFA
+end

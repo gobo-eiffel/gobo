@@ -563,4 +563,4 @@ invariant
 	directory_not_void: name.count > 0 implies directory /= Void
 #endif
 
-end -- class KL_DIRECTORY
+end

@@ -285,4 +285,4 @@ invariant
 	yy_nxt_not_void: yy_nxt /= Void
 	yy_accept_not_void: yy_accept /= Void
 
-end -- class YY_FULL_SCANNER_SKELETON
+end

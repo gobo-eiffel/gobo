@@ -58,4 +58,4 @@ invariant
 	tag_not_void: tag /= Void
 	colon_not_void: colon /= Void
 
-end -- class ET_TAGGED_EXPRESSION_VARIANT
+end

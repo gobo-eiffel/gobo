@@ -96,4 +96,4 @@ feature -- Duplication
 			type_not_void: Result /= Void
 		end
 
-end -- class ET_TYPE_ITEM
+end

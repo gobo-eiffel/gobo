@@ -38,4 +38,4 @@ feature {UC_SETTINGS} -- Implementation
          !!Result.make
       end
    
-end -- class UC_SETTINGS
+end

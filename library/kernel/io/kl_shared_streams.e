@@ -22,4 +22,4 @@ feature -- Access
 			null_output_stream_not_void: Result /= Void
 		end
 
-end -- class KL_SHARED_STREAMS
+end

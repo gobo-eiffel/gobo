@@ -41,4 +41,4 @@ invariant
 
 	-- dollar0: $0 = program name
 
-end -- class TS_EIFFEL_COMPILATION_ERROR
+end

@@ -22,4 +22,4 @@ feature -- Access
 			class_name_tester_not_void: Result /= Void
 		end
 
-end -- class ET_SHARED_CLASS_NAME_TESTER
+end

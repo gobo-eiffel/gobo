@@ -24,4 +24,4 @@ feature -- Status report
 	is_deferred: BOOLEAN is True
 			-- Is feature deferred?
 
-end -- class ET_DEFERRED_ROUTINE
+end

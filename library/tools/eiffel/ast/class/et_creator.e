@@ -140,4 +140,4 @@ invariant
 	creation_keyword_not_void: creation_keyword /= Void
 	clients_not_void: clients /= Void
 
-end -- class ET_CREATOR
+end

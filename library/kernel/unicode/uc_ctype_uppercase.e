@@ -934,4 +934,4 @@ feature {UC_CTYPE} -- Uppercase conversion tables
 
 	--integer used: 3328
 
-end -- class UC_CTYPE_UPPERCASE
+end

@@ -329,4 +329,4 @@ feature -- Resizing
 			count_set: a_string.count = n
 		end
 
-end -- class KL_STRING_ROUTINES
+end

@@ -2283,4 +2283,4 @@ feature {NONE}
 --			end
 		end
 
-end -- class ET_ERROR_HANDLER
+end

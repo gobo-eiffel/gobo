@@ -535,4 +535,4 @@ feature {NONE} -- Implementation
 			no_void_keyword: not STRING_ARRAY_.has (Result, Void)
 		end
 
-end -- class ET_XACE_HACT_GENERATOR
+end

@@ -403,4 +403,4 @@ feature {NONE}
 	 !!Result
       end
 
-end -- class UC_REPRESENTATION_UTF8
+end

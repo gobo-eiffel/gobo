@@ -247,4 +247,4 @@ invariant
 	error_handler_not_void: error_handler /= Void
 	action_buffer_not_void: action_buffer /= Void
 
-end -- class PR_YACC_SCANNER_SKELETON
+end

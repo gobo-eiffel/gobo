@@ -49,4 +49,4 @@ invariant
 	-- dollar2: $2 = line number
 	-- dollar3: $3 = definition name
 
-end -- class LX_UNDEFINED_DEFINITION_ERROR
+end

@@ -49,4 +49,4 @@ invariant
 	-- dollar1: $1 = filename
 	-- dollar2: $2 = symbol name
 
-end -- class PR_UNDEFINED_SYMBOL_ERROR
+end

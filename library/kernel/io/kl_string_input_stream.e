@@ -137,4 +137,4 @@ invariant
 	location_max: location <= string.count + 1
 	last_string_not_void: last_string /= Void
 	
-end -- class KL_STRING_INPUT_STREAM
+end

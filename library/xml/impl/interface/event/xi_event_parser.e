@@ -178,5 +178,5 @@ feature {NONE} -- Implementation
 
 	interface: XM_EVENT_PARSER
 
-end -- class XI_EVENT_PARSER
+end
 

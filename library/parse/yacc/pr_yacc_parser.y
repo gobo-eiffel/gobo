@@ -433,4 +433,4 @@ Identifier: T_IDENTIFIER
 
 %%
 
-end -- class PR_YACC_PARSER
+end

@@ -30,4 +30,4 @@ feature -- Access
 	postconditions: ET_POSTCONDITIONS
 			-- Postconditions
 
-end -- class ET_ROUTINE
+end

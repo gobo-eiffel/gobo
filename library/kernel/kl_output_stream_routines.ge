@@ -147,4 +147,4 @@ feature -- Element change
 #endif
 		end
 
-end -- class KL_OUTPUT_STREAM_ROUTINES
+end

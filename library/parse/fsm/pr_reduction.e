@@ -114,4 +114,4 @@ invariant
 	transitions_not_void: transitions /= Void
 	no_void_transition: not transitions.has (Void)
 
-end -- class PR_REDUCTION
+end

@@ -174,4 +174,4 @@ invariant
 	islast_definition: islast = ((not empty) and (index = count))
 	item_corresponds_to_index: (not off) implies (item = i_th (index))
 
-end -- class LIST
+end

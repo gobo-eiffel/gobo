@@ -51,4 +51,4 @@ invariant
 
 	old_keyword_not_void: old_keyword /= Void
 
-end -- class ET_OLD_EXPRESSION
+end

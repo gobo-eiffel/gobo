@@ -73,4 +73,4 @@ inherit
 
 	LX_PATTERN_MATCHER
 
-end -- class LX_REGULAR_EXPRESSION
+end

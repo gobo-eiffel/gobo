@@ -63,4 +63,4 @@ feature -- Basic operations
 		deferred
 		end
 
-end -- class KI_OUTPUT_FILE
+end

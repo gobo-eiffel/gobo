@@ -44,4 +44,4 @@ feature -- Access
 	code: STRING is "XA0004"
 			-- Error code
 
-end -- class ET_XACE_UNKNOWN_ELEMENT_ERROR
+end

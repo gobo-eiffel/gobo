@@ -25,4 +25,4 @@ creation
 
 	make
 
-end -- class ET_INFIX_DIVIDE_NAME
+end

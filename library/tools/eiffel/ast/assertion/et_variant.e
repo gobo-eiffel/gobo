@@ -54,4 +54,4 @@ invariant
 
 	variant_keyword_not_void: variant_keyword /= Void
 
-end -- class ET_VARIANT
+end

@@ -186,4 +186,4 @@ feature {NONE} -- Implementation
 	time_impl: TIME_DURATION
 			-- Implementation of `time'
 
-end -- class DATE_TIME_DURATION
+end

@@ -3876,5 +3876,5 @@ feature
 
    --integer used: 14080
 
-end -- class UC_CTYPE_BIDI
+end
 

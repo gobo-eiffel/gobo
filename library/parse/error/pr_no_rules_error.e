@@ -45,4 +45,4 @@ invariant
 	-- dollar0: $0 = program name
 	-- dollar1: $1 = filename
 
-end -- class PR_NO_RULES_ERROR
+end

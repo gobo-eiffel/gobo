@@ -20,4 +20,4 @@ creation
 
 	make
 
-end -- class LX_EPSILON_TRANSITION
+end

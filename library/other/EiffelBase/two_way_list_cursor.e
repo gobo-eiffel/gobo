@@ -28,4 +28,4 @@ feature -- Access
 	current_cell: DS_BILINKABLE [G]
 			-- Cell at cursor position
 
-end -- class TWO_WAY_LIST_CURSOR
+end

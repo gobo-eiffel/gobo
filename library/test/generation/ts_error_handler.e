@@ -74,4 +74,4 @@ feature -- Syntax errors
 			report_error (an_error)
 		end
 
-end -- class TS_ERROR_HANDLER
+end

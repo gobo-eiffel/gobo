@@ -43,4 +43,4 @@ feature -- Status report
 			-- TODO
 		end
 
-end -- class ET_AST_NODE
+end

@@ -433,4 +433,4 @@ invariant
 	input_buffer_not_void: input_buffer /= Void
 	valid_start_condition: valid_start_condition (start_condition)
 
-end -- class YY_SCANNER
+end

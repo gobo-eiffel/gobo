@@ -343,4 +343,4 @@ Section3: -- Empty
 
 %%
 
-end -- class LX_LEX_PARSER
+end

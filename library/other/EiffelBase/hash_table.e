@@ -504,4 +504,4 @@ feature {NONE} -- Inapplicable
 	extendible: BOOLEAN is False
 			-- May new items be added?
 
-end -- class HASH_TABLE
+end

@@ -52,4 +52,4 @@ feature -- File systems
 			file_system_not_void: Result /= Void
 		end
 
-end -- class KL_SHARED_FILE_SYSTEM
+end

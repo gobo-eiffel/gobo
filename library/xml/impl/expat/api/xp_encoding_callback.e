@@ -26,5 +26,5 @@ feature {NONE}
 		deferred
 		end
 
-end -- class XP_ENCODING_CALLBACK
+end
 

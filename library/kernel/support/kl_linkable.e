@@ -45,4 +45,4 @@ feature -- Element change
 			forgotten: right = Void
 		end
 
-end -- class KL_LINKABLE
+end

@@ -127,4 +127,4 @@ invariant
 	feature_regexp_compiled: feature_regexp.compiled
 	class_prefix_not_void: class_prefix /= Void
 
-end -- class TS_CLUSTER
+end

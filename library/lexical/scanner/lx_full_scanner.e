@@ -58,4 +58,4 @@ feature {NONE} -- Implementation
 			yy_accept := yy_fixed_array (yy_accept_template)
 		end
 
-end -- class LX_FULL_SCANNER
+end

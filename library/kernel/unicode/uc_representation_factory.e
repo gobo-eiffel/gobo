@@ -51,4 +51,4 @@ feature
    type: INTEGER
          -- current representation type
    
-end -- class UC_REPRESENTATION_FACTORY
+end

@@ -254,4 +254,4 @@ invariant
 	slots_not_void: slots /= Void
 	slots_count: slots.count = modulus + 1
 
-end -- class DS_ARRAYED_SPARSE_TABLE
+end

@@ -55,4 +55,4 @@ invariant
 
 	expression_not_void: expression /= Void
 
-end -- class ET_EXPRESSION_VARIANT
+end

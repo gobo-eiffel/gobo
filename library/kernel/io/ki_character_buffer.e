@@ -125,4 +125,4 @@ feature -- Element change
 			Result := a_stream.read_to_buffer (Current, pos, nb)
 		end
 
-end -- class KI_CHARACTER_BUFFER
+end

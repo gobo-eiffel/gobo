@@ -51,4 +51,4 @@ invariant
 	-- dollar2: $2 = line number
 	-- dollar3: $3 = `n' (as in $n)
 
-end -- class PR_INVALID_DOLLAR_N_ERROR
+end

@@ -110,4 +110,4 @@ feature {NONE} -- Inapplicable
 		do
 		end
 
-end -- class CONTAINER
+end

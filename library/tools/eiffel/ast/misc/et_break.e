@@ -44,4 +44,4 @@ invariant
 	text_not_void: text /= Void
 	position_not_void: position /= Void
 
-end -- class ET_BREAK
+end

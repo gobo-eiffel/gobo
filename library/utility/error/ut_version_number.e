@@ -44,4 +44,4 @@ invariant
 	-- dollar0: $0 = program name
 	-- dollar1: $1 = version number
 
-end -- class UT_VERSION_NUMBER
+end

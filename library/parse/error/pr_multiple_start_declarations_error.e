@@ -47,4 +47,4 @@ invariant
 	-- dollar1: $1 = filename
 	-- dollar2: $2 = line number
 
-end -- class PR_MULTIPLE_START_DECLARATIONS_ERROR
+end

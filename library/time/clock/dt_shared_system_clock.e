@@ -31,4 +31,4 @@ feature -- Access
 			utc_system_clock_not_void: Result /= Void
 		end
 
-end -- class DT_SHARED_SYSTEM_CLOCK
+end

@@ -89,4 +89,4 @@ invariant
 	tests_not_void: tests /= Void
 	no_void_test: not tests.has (Void)
 
-end -- class TS_TEST_SUITE
+end

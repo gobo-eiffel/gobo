@@ -216,4 +216,4 @@ feature -- File handling
 			a_file.put_string (hexadecimal_integer_out (an_int, uppercase))
 		end
 
-end -- class UT_INTEGER_FORMATTER
+end

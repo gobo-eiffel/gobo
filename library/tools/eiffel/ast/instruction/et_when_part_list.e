@@ -81,4 +81,4 @@ invariant
 
 	not_empty: not is_empty
 
-end -- class ET_WHEN_PART_LIST
+end

@@ -80,4 +80,4 @@ invariant
 
 	-- valid_literal: regexp: \"[^"%\n]*\"
 
-end -- class ET_REGULAR_MANIFEST_STRING
+end

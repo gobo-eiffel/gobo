@@ -26,4 +26,4 @@ feature -- Access
 			eiffel_buffer_not_void: Result /= Void
 		end
 
-end -- class ET_SHARED_EIFFEL_BUFFER
+end

@@ -83,4 +83,4 @@ invariant
 
 	string_not_void: string /= Void
 
-end -- class KL_STRING_OUTPUT_STREAM
+end

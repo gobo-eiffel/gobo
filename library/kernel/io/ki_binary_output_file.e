@@ -16,4 +16,4 @@ inherit
 
 	KI_OUTPUT_FILE
 
-end -- class KI_BINARY_OUTPUT_FILE
+end

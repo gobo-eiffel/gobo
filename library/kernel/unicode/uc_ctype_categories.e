@@ -4084,5 +4084,5 @@ feature {UC_CTYPE} -- General Category Tables
 
    -- integers used: 14848
 
-end -- class UC_CTYPE_CATEGORIES
+end
 

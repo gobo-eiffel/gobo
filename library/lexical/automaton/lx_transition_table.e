@@ -233,4 +233,4 @@ invariant
 	storage_not_void: storage /= Void
 	positive_count: count >= 0
 
-end -- class LX_TRANSITION_TABLE
+end

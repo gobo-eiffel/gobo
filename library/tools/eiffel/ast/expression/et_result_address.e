@@ -50,4 +50,4 @@ invariant
 
 	result_entity_not_void: result_entity /= Void
 
-end -- class ET_RESULT_ADDRESS
+end

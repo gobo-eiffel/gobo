@@ -65,4 +65,4 @@ invariant
 
 	yy_nxt_not_void: yy_nxt /= Void
 
-end -- class LX_FULL_TABLES
+end

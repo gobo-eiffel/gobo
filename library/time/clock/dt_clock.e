@@ -73,4 +73,4 @@ feature -- Setting
 		deferred
 		end
 
-end -- class DT_CLOCK
+end

@@ -44,4 +44,4 @@ invariant
 	-- dollar0: $0 = program name
 	-- dollar1: $1 = message
 
-end -- class UT_USAGE_MESSAGE
+end

@@ -25,4 +25,4 @@ feature -- Access
 			identifier_item_not_void: Result /= Void
 		end
 
-end -- class ET_LOCAL_NAME
+end

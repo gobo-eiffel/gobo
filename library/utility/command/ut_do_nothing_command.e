@@ -25,4 +25,4 @@ creation
 
 	make
 
-end -- class UT_DO_NOTHING_COMMAND
+end

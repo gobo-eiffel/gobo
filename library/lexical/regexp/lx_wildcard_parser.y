@@ -219,4 +219,4 @@ feature {NONE} -- Implementation
 			question_character_class_not_void: Result /= Void
 		end
 
-end -- class LX_WILDCARD_PARSER
+end

@@ -168,4 +168,4 @@ feature {NONE} -- Implementation
 			post_eof_action
 		end
 
-end -- class LX_SCANNER
+end

@@ -89,4 +89,4 @@ feature -- Setting
 			equality_tester_set: equality_tester = a_tester
 		end
 
-end -- class DS_SEARCHABLE
+end

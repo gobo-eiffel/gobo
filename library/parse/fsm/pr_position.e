@@ -154,4 +154,4 @@ invariant
 	index_large_enough: index >= 1
 	index_small_enough: index <= rule.rhs.count + 1
 
-end -- class PR_POSITION
+end

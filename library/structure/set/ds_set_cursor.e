@@ -34,4 +34,4 @@ feature {DS_SET} -- Implementation
 			-- cursors (i.e. cursors associated with `container'
 			-- and which are not currently `off').)
 
-end -- class DS_SET_CURSOR
+end

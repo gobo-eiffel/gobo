@@ -51,4 +51,4 @@ feature -- Status report
 			definition: Result = (greater_than (u, v) or order_equal (u, v))
 		end
 
-end -- class DS_COMPARATOR
+end

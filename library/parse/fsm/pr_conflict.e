@@ -82,4 +82,4 @@ invariant
 	token_not_void: token /= Void
 	resultion_not_void: resolution /= Void
 
-end -- class PR_CONFLICT
+end

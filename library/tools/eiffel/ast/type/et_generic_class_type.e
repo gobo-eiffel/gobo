@@ -379,4 +379,4 @@ invariant
 
 	generic_parameters_not_void: generic_parameters /= Void
 
-end -- class ET_GENERIC_CLASS_TYPE
+end

@@ -264,4 +264,4 @@ String: -- Empty
 
 %%
 
-end -- class LX_REGEXP_PARSER
+end

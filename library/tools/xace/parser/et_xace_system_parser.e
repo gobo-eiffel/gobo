@@ -50,4 +50,4 @@ feature -- Access
 	last_system: ET_XACE_SYSTEM
 			-- Xace system being parsed
 
-end -- class ET_XACE_SYSTEM_PARSER
+end

@@ -182,4 +182,4 @@ feature {NONE} -- GC
 		end
 
 #endif
-end -- class KL_STDERR_FILE
+end

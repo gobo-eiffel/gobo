@@ -571,4 +571,4 @@ invariant
 	slots_not_void: slots /= Void
 	slots_count: slots.count = (modulus // chunk_size) + 1
 
-end -- class DS_MULTIARRAYED_SPARSE_TABLE
+end

@@ -68,4 +68,4 @@ invariant
 	new_name_not_void: new_name /= Void
 	as_keyword_not_void: as_keyword /= Void
 
-end -- class ET_RENAME
+end

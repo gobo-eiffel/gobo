@@ -114,4 +114,4 @@ invariant
 	-- Note: Too memory consumming with SmallEiffel:
 	-- irreflexive_comparison: not (Current < Current)
 
-end -- class KS_COMPARABLE
+end

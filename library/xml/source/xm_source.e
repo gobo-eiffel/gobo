@@ -14,4 +14,4 @@ class XM_SOURCE
 
 feature
 
-end -- class XM_SOURCE
+end

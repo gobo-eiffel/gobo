@@ -66,4 +66,4 @@ invariant
 
 	semicolon_not_void: semicolon /= Void
 
-end -- class ET_LOCAL_VARIABLE_SEMICOLON
+end

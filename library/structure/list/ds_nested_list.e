@@ -64,4 +64,4 @@ feature {DS_NESTED_LIST_FLATTENER} -- Implementation
 			item_added: local_items.has (an_item)
 		end
 
-end -- class DS_NESTED_LIST
+end

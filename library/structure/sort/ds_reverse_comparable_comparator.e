@@ -31,4 +31,4 @@ feature -- Status report
 			Result := (v < u)
 		end
 
-end -- class DS_REVERSE_COMPARABLE_COMPARATOR
+end

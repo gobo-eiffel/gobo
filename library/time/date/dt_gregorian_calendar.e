@@ -246,4 +246,4 @@ feature {NONE} -- Epoch
 			Result := epoch_days (2000, 1, 1)
 		end
 
-end -- class DT_GREGORIAN_CALENDAR
+end

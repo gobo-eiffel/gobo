@@ -134,4 +134,4 @@ invariant
 	clusters_not_void: clusters /= Void
 	no_void_excluded: excluded /= Void implies not excluded.has (Void)
 
-end -- class ET_XACE_MOUNTED_CLUSTER
+end

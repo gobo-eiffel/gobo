@@ -631,4 +631,4 @@ feature {NONE} -- Constants
 	Year_shift: INTEGER is 512
 			-- 2^9 (= 16*32)
 
-end -- class DT_DATE
+end

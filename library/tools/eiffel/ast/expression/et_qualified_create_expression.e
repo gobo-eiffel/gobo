@@ -82,4 +82,4 @@ invariant
 	procedure_name_not_void: procedure_name /= Void
 	dot_not_void: dot /= Void
 
-end -- class ET_QUALIFIED_CREATE_EXPRESSION
+end

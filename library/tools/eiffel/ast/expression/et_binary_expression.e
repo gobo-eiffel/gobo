@@ -41,4 +41,4 @@ invariant
 	left_not_void: left /= Void
 	right_not_void: right /= Void
 
-end -- class ET_BINARY_EXPRESSION
+end

@@ -78,4 +78,4 @@ feature -- Setting
 		deferred
 		end
 
-end -- class KI_SYSTEM_CLOCK
+end

@@ -59,4 +59,4 @@ invariant
 
 	comma_not_void: comma /= Void
 
-end -- class ET_RENAME_COMMA
+end

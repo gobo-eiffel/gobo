@@ -135,4 +135,4 @@ invariant
 
 	no_void_template: not has (Void)
 
-end -- class LX_TEMPLATE_LIST
+end

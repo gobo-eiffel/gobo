@@ -17,4 +17,4 @@ inherit
 	ET_INFIX_OPERATOR
 	ET_TOKEN
 
-end -- class ET_INFIX_KEYWORD_OPERATOR
+end

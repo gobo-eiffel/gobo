@@ -47,4 +47,4 @@ invariant
 
 	bidirectional: interface /= Void implies interface.implementation = Current
 
-end -- class DP_CALLBACK_IMPLEMENTATION
+end

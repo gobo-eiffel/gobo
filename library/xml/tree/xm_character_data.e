@@ -62,4 +62,4 @@ invariant
 
 	content_not_void: content /= Void
 
-end -- class XM_CHARACTER_DATA
+end

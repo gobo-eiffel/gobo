@@ -53,4 +53,4 @@ feature {ANY} -- Access
 		do
 		end
 
-end -- class XM_NODE_PROCESSOR
+end

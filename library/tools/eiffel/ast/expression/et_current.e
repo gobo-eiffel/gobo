@@ -21,4 +21,4 @@ creation
 
 	make, make_with_position
 
-end -- class ET_CURRENT
+end

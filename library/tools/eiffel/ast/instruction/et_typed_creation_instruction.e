@@ -37,4 +37,4 @@ invariant
 
 	type_not_void: type /= Void
 
-end -- class ET_TYPED_CREATION_INSTRUCTION
+end

@@ -43,4 +43,4 @@ feature {NONE} -- Implementation
 			!! Result
 		end
 
-end -- class ET_ASSERTIONS
+end

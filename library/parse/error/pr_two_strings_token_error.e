@@ -56,4 +56,4 @@ invariant
 	-- dollar4: $4 = literal string #1
 	-- dollar5: $5 = literal string #2
 
-end -- class PR_TWO_STRINGS_TOKEN_ERROR
+end

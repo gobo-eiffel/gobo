@@ -47,4 +47,4 @@ invariant
 
 	operator_not_void: operator /= Void
 
-end -- class ET_EQUALITY_EXPRESSION
+end

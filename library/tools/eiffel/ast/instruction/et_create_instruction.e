@@ -57,4 +57,4 @@ invariant
 
 	create_keyword_not_void: create_keyword /= Void
 
-end -- class ET_CREATE_INSTRUCTION
+end

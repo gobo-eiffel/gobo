@@ -56,4 +56,4 @@ feature -- Comparison
 			definition: Result = ((other < Current) or is_equal (other))
 		end
 
-end -- class KL_PART_COMPARABLE
+end

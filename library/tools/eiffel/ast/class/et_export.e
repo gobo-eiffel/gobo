@@ -43,4 +43,4 @@ feature -- Status report
 			-- Result := False
 		end
 
-end -- class ET_EXPORT
+end

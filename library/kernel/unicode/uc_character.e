@@ -19,4 +19,4 @@ inherit
 
 feature -- To make ISE Eiffel happy
 
-end -- class UC_CHARACTER
+end

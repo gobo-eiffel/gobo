@@ -35,4 +35,4 @@ feature -- Access
 	position: INTEGER
 			-- Internal position in arrayed list
 
-end -- class ARRAYED_LIST_CURSOR
+end

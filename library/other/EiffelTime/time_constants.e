@@ -21,4 +21,4 @@ inherit
 			days_in_month as days_in_i_th_month
 		end
 
-end -- class TIME_CONSTANTS
+end

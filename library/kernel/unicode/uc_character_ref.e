@@ -345,4 +345,4 @@ feature -- new features
 	-- is this character a mirrored character? (one that should
 	-- be reversed if the text direction is reversed)
 
-end -- class UC_CHARACTER_REF
+end

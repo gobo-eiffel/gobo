@@ -44,4 +44,4 @@ invariant
 
 	-- dollar0: $0 = program name
 
-end -- class LX_FULL_AND_VARIABLE_TRAILING_CONTEXT_ERROR
+end

@@ -23,4 +23,4 @@ feature -- Access
 			arguments_not_void: Result /= Void
 		end
 
-end -- class KL_SHARED_ARGUMENTS
+end

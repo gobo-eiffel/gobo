@@ -64,4 +64,4 @@ invariant
 
 	name_item_not_void: name_item /= Void
 
-end -- class ET_LOCAL_VARIABLE
+end

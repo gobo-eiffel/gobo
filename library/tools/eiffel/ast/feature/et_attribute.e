@@ -92,4 +92,4 @@ feature -- Conversion
 			end
 		end
 
-end -- class ET_ATTRIBUTE
+end

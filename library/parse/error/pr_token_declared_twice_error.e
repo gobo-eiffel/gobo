@@ -50,4 +50,4 @@ invariant
 	-- dollar2: $2 = line number
 	-- dollar3: $3 = token name
 
-end -- class PR_TOKEN_DECLARED_TWICE_ERROR
+end

@@ -106,4 +106,4 @@ invariant
 	open_white_characters_not_void: open_white_characters /= Void
 	close_white_character_not_void: close_white_characters /= Void
 
-end -- class ET_VERBATIM_STRING
+end

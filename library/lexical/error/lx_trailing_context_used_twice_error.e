@@ -47,4 +47,4 @@ invariant
 	-- dollar1: $1 = filename
 	-- dollar2: $2 = line number
 
-end -- class LX_TRAILING_CONTEXT_USED_TWICE_ERROR
+end

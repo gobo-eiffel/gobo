@@ -341,4 +341,4 @@ feature -- Access
 	last_value: UC_STRING
 			-- Last value read (only valid for some tokens)
 
-end -- class XF_SCANNER
+end

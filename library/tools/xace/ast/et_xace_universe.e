@@ -53,4 +53,4 @@ feature -- Setting
 			end
 		end
 
-end -- class ET_XACE_UNIVERSE
+end

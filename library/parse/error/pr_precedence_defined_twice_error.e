@@ -50,4 +50,4 @@ invariant
 	-- dollar2: $2 = line number
 	-- dollar3: $3 = symbol name
 
-end -- class PR_PRECEDENCE_DEFINED_TWICE_ERROR
+end

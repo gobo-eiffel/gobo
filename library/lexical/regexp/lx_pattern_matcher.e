@@ -131,4 +131,4 @@ feature -- Multiple matching
 			end
 		end
 
-end -- class LX_PATTERN_MATCHER
+end

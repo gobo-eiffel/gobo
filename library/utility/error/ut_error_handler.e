@@ -143,4 +143,4 @@ invariant
 	message_file_not_void: message_file /= Void
 	message_file_open_write: message_file.is_open_write
 
-end -- class UT_ERROR_HANDLER
+end

@@ -478,4 +478,4 @@ invariant
 	no_void_eiffel_header: not eiffel_header.has (Void)
 	array_size_positive: array_size >= 0
 
-end -- class LX_DESCRIPTION
+end

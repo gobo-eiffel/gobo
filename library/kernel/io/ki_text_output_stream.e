@@ -47,4 +47,4 @@ feature -- Access
 			eol_not_empty: Result.count > 0
 		end
 
-end -- class KI_TEXT_OUTPUT_STREAM
+end

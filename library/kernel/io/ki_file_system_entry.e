@@ -110,4 +110,4 @@ feature -- Basic operations
 		deferred
 		end
 
-end -- class KI_FILE_SYSTEM_ENTRY
+end

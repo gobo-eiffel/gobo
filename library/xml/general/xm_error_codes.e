@@ -20,4 +20,4 @@ feature {ANY} -- Constants
 	Xml_err_unknown: INTEGER is 1
 			-- an unknown error occurred
 
-end -- class XM_ERROR_CODES
+end

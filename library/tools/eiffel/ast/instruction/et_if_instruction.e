@@ -100,4 +100,4 @@ invariant
 	then_compound_not_void: then_compound /= Void
 	end_keyword_not_void: end_keyword /= Void
 
-end -- class ET_IF_INSTRUCTION
+end

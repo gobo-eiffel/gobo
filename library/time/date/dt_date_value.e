@@ -81,4 +81,4 @@ feature -- Output
 			INTEGER_FORMATTER_.append_decimal_integer (a_string, day)
 		end
 
-end -- class DT_DATE_VALUE
+end

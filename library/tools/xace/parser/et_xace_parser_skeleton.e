@@ -618,4 +618,4 @@ invariant
 	ast_factory_not_void: ast_factory /= Void
 	error_handler_not_void: error_handler /= Void
 
-end -- class ET_XACE_PARSER_SKELETON
+end

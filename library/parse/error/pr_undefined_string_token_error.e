@@ -50,4 +50,4 @@ invariant
 	-- dollar2: $2 = line number
 	-- dollar3: $3 = undefined literal string token
 
-end -- class PR_UNDEFINED_STRING_TOKEN_ERROR
+end

@@ -70,4 +70,4 @@ invariant
 
 	create_keyword_not_void: create_keyword /= Void
 
-end -- class ET_QUALIFIED_CREATE_INSTRUCTION
+end

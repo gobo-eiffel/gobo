@@ -16,4 +16,4 @@ inherit
 
 	ET_EXPRESSION
 
-end -- class ET_CONSTANT
+end

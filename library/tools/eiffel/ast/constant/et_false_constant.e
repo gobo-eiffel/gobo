@@ -29,4 +29,4 @@ invariant
 
 	is_false: not is_true
 
-end -- class ET_FALSE_CONSTANT
+end

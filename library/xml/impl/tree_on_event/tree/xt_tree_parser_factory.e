@@ -59,5 +59,5 @@ feature {NONE} -- Implementation
 
 	event_parser_factory: XM_EVENT_PARSER_FACTORY
 
-end -- class XT_TREE_PARSER_FACTORY
+end
 

@@ -41,4 +41,4 @@ feature -- Access
 			file_open_write: Result.is_open_write
 		end
 
-end -- class KL_STANDARD_FILES
+end

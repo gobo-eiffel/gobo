@@ -25,4 +25,4 @@ feature -- Access
 			choice_item_not_void: Result /= Void
 		end
 
-end -- class ET_CHOICE_ITEM
+end

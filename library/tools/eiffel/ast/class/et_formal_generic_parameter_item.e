@@ -25,4 +25,4 @@ feature -- Access
 			formal_generic_parameter_item_not_void: Result /= Void
 		end
 
-end -- class ET_FORMAL_GENERIC_PARAMETER_ITEM
+end

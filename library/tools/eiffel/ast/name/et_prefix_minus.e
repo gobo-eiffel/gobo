@@ -55,4 +55,4 @@ feature {NONE} -- Implementation
 	prefix_name: STRING is "prefix %"-%""
 			-- Prefix name
 
-end -- class ET_PREFIX_MINUS
+end

@@ -157,4 +157,4 @@ invariant
 	link_libraries_not_void: link_libraries /= Void
 	no_void_link_library: not link_libraries.has (Void)
 
-end -- class ET_XACE_EXTERNALS
+end

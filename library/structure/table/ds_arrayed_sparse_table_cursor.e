@@ -36,4 +36,4 @@ feature {DS_ARRAYED_SPARSE_TABLE} -- Implementation
 			-- cursors (i.e. cursors associated with `container'
 			-- and which are not currently `off').)
 
-end -- class DS_ARRAYED_SPARSE_TABLE_CURSOR
+end

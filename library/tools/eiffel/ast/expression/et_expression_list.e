@@ -126,4 +126,4 @@ invariant
 	left_symbol_not_void: left_symbol /= Void
 	right_symbol_not_void: right_symbol /= Void
 
-end -- class ET_EXPRESSION_LIST
+end

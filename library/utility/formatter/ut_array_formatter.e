@@ -75,4 +75,4 @@ feature {NONE} -- Constants
 	Max_nb_colon: INTEGER is 10
 			-- Maximum number of entries per line
 
-end -- class UT_ARRAY_FORMATTER
+end

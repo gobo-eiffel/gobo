@@ -51,4 +51,4 @@ invariant
 	-- dollar2: $2 = line number
 	-- dollar3: $3 = start condition
 
-end -- class LX_MULTIPLE_EOF_RULES_ERROR
+end

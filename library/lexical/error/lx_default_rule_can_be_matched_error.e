@@ -48,4 +48,4 @@ invariant
 	-- dollar0: $0 = program name
 	-- dollar1: $1 = filename
 
-end -- class LX_DEFAULT_RULE_CAN_BE_MATCHED_ERROR
+end

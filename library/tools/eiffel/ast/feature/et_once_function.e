@@ -52,4 +52,4 @@ feature -- Conversion
 			end
 		end
 
-end -- class ET_ONCE_FUNCTION
+end

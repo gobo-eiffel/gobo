@@ -17,4 +17,4 @@ inherit
 	ET_PREFIX_OPERATOR
 	ET_SYMBOL
 
-end -- class ET_PREFIX_SYMBOL_OPERATOR
+end

@@ -42,4 +42,4 @@ feature -- Access
 	code: STRING is "XA0008"
 			-- Error code
 
-end -- class ET_XACE_INVALID_EXPRESSION_ERROR
+end

@@ -93,4 +93,4 @@ feature -- Status report
 			Result := True
 		end
 
-end -- class KI_CHARACTER_INPUT_STREAM
+end

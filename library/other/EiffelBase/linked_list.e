@@ -309,4 +309,4 @@ feature {NONE} -- Type anchors
 	cursor_anchor: LINKED_LIST_CURSOR [G] is do end
 			-- Type anchor for `cursor'
 
-end -- class LINKED_LIST
+end

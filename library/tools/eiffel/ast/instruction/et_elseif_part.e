@@ -69,4 +69,4 @@ invariant
 	expression_not_void: expression /= Void
 	then_compound_not_void: then_compound /= Void
 
-end -- class ET_ELSEIF_PART
+end

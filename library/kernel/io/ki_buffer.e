@@ -125,4 +125,4 @@ feature -- Resizing
 			count_set: count = n
 		end
 
-end -- class KI_BUFFER
+end

@@ -196,4 +196,4 @@ invariant
 	yy_count_definition: yy_count = yy_content.count
 	valid_yy_index: yy_index >= 1
 
-end -- class LX_SCANNER_SKELETON
+end

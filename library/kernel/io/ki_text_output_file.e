@@ -18,4 +18,4 @@ inherit
 
 	KI_TEXT_OUTPUT_STREAM
 
-end -- class KI_TEXT_OUTPUT_FILE
+end

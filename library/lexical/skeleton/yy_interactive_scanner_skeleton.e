@@ -395,4 +395,4 @@ invariant
 
 	interactive_buffer: input_buffer.interactive
 
-end -- class YY_INTERACTIVE_SCANNER_SKELETON
+end

@@ -16,5 +16,5 @@ feature
 		do
 		end
 
-end -- class XF_EVENT_PARSER_FACTORY
+end
 

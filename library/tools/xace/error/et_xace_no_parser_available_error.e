@@ -36,4 +36,4 @@ feature -- Access
 	code: STRING is "XA0006"
 			-- Error code
 
-end -- class ET_XACE_NO_PARSER_AVAILABLE_ERROR
+end

@@ -45,4 +45,4 @@ invariant
 	-- dollar0: $0 = program name
 	-- dollar1: $1 = filename
 
-end -- class UT_CANNOT_WRITE_TO_FILE_ERROR
+end

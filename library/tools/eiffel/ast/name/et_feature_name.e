@@ -195,4 +195,4 @@ feature -- Comparison
 		deferred
 		end
 
-end -- class ET_FEATURE_NAME
+end

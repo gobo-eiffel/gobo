@@ -21,4 +21,4 @@ feature -- Basic operations
 		deferred
 		end
 
-end -- class LX_DESCRIPTION_OVERRIDER
+end

@@ -656,4 +656,4 @@ invariant
 	yy_accept_not_void: yy_accept /= Void
 	yy_state_stack_not_void: yyReject_or_variable_trail_context implies yy_state_stack /= Void
 
-end -- class YY_COMPRESSED_SCANNER_SKELETON
+end

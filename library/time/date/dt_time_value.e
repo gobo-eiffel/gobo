@@ -134,4 +134,4 @@ feature -- Output
 			end
 		end
 
-end -- class DT_TIME_VALUE
+end

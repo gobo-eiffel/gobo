@@ -116,4 +116,4 @@ feature {NONE} -- Implementation
 	False_constant: STRING is "False"
 			-- String representation of boolean values
 
-end -- class KI_CHARACTER_OUTPUT_STREAM
+end

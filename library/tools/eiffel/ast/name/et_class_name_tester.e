@@ -33,4 +33,4 @@ feature -- Status report
 			end
 		end
 
-end -- class ET_CLASS_NAME_TESTER
+end

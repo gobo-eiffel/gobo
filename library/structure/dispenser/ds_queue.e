@@ -16,4 +16,4 @@ inherit
 
 	DS_DISPENSER [G]
 
-end -- class DS_QUEUE
+end

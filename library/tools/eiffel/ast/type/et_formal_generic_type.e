@@ -236,4 +236,4 @@ invariant
 
 	index_positive: index >= 1
 
-end -- class ET_FORMAL_GENERIC_TYPE
+end

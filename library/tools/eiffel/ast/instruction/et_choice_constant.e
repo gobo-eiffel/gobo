@@ -16,4 +16,4 @@ inherit
 
 	ET_CHOICE
 
-end -- class ET_CHOICE_CONSTANT
+end

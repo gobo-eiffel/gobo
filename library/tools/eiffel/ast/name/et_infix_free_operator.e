@@ -30,4 +30,4 @@ creation
 
 	make, make_with_position
 
-end -- class ET_INFIX_FREE_OPERATOR
+end

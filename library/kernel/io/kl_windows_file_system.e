@@ -576,4 +576,4 @@ feature -- Pathname handling
 			current_drive_not_void: Result /= Void
 		end
 
-end -- class KL_WINDOWS_FILE_SYSTEM
+end

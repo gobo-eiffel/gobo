@@ -358,4 +358,4 @@ invariant
 	first_precursor_definition: precursors /= Void implies first_precursor = precursors.first
 	implementation_class_not_void: implementation_class /= Void
 
-end -- class ET_FEATURE
+end

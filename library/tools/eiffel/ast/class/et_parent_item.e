@@ -25,4 +25,4 @@ feature -- Access
 			parent_item_not_void: Result /= Void
 		end
 
-end -- class ET_PARENT_ITEM
+end

@@ -83,4 +83,4 @@ invariant
 	no_void_variable_name: not variables.has (Void)
 	no_void_variable_value: not variables.has_item (Void)
 
-end -- class TS_VARIABLES
+end

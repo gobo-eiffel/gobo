@@ -125,4 +125,4 @@ feature {NONE} -- Implementation
 			name_not_void: Result /= Void
 		end
 
-end -- class TS_TEST_CASE
+end

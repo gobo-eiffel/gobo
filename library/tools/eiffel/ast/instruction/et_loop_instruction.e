@@ -96,4 +96,4 @@ invariant
 	loop_compound_not_void: loop_compound /= Void
 	end_keyword_not_void: end_keyword /= Void
 
-end -- class ET_LOOP_INSTRUCTION
+end

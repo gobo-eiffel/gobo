@@ -41,4 +41,4 @@ feature -- Comparison
 			Result := other.is_infix_mod
 		end
 
-end -- class ET_INFIX_MOD
+end

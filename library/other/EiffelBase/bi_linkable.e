@@ -27,4 +27,4 @@ creation
 
 	make
 
-end -- class BI_LINKABLE
+end

@@ -103,4 +103,4 @@ feature -- Removal
 			removed: not has (k)
 		end
 
-end -- class DS_TABLE
+end

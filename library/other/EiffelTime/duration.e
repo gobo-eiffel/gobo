@@ -35,4 +35,4 @@ feature -- Access
 			Result := a_time + Current
 		end
 
-end -- class DURATION
+end

@@ -37,4 +37,4 @@ feature -- Duplication
 			!! Result.make (name_item, type)
 		end
 
-end -- class ET_COMMA_FORMAL_ARGUMENT
+end

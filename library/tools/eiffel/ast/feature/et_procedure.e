@@ -105,4 +105,4 @@ feature -- Type processing
 			end
 		end
 
-end -- class ET_PROCEDURE
+end

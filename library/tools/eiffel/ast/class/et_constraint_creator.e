@@ -107,4 +107,4 @@ invariant
 	create_keyword_not_void: create_keyword /= Void
 	end_keyword_not_void: end_keyword /= Void
 
-end -- class ET_CONSTRAINT_CREATOR
+end

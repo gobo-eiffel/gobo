@@ -95,4 +95,4 @@ invariant
 	bol_patterns_not_void: bol_patterns /= Void
 	no_void_bol_pattern: not bol_patterns.has (Void)
 
-end -- class LX_START_CONDITION
+end

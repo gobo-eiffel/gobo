@@ -101,4 +101,4 @@ invariant
 
 	export_keyword_not_void: export_keyword /= Void
 
-end -- class ET_EXPORTS
+end

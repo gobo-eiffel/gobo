@@ -181,4 +181,4 @@ invariant
 	bit_keyword_not_void: bit_keyword /= Void
 	name_not_void: name /= Void
 
-end -- class ET_BIT_IDENTIFIER
+end

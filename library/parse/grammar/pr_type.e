@@ -234,4 +234,4 @@ invariant
 	name_not_void: name /= Void
 	name_long_enough: name.count > 0
 
-end -- class PR_TYPE
+end

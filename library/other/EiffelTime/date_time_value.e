@@ -42,4 +42,4 @@ feature -- Access
 		deferred
 		end
 
-end -- class DATE_TIME_VALUE
+end

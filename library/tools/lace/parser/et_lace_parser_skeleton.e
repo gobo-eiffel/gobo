@@ -206,4 +206,4 @@ invariant
 	named_clusters_not_void: named_clusters /= Void
 	no_void_named_cluster: not named_clusters.has_item (Void)
 
-end -- class ET_LACE_PARSER_SKELETON
+end

@@ -31,4 +31,4 @@ feature -- Element change
 			inserted: item = v
 		end
 
-end -- class KL_CELL
+end

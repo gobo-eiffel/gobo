@@ -213,4 +213,4 @@ invariant
 
 	comparator_not_void: comparator /= Void
 
-end -- class DS_ARRAY_SORTER
+end

@@ -511,4 +511,4 @@ invariant
 	character_classes_not_void: character_classes /= Void
 	no_void_character_class: not character_classes.has_item (Void)
 
-end -- class LX_LEX_SCANNER_SKELETON
+end

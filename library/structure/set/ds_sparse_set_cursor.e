@@ -112,4 +112,4 @@ invariant
 
 --	valid_position: valid_position (position)
 
-end -- class DS_SPARSE_SET_CURSOR
+end

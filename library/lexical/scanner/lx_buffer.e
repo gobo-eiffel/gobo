@@ -62,4 +62,4 @@ invariant
 	content_not_void: content /= Void
 	valid_index: index >= 1
 
-end -- class LX_BUFFER
+end

@@ -50,4 +50,4 @@ invariant
 
 	current_entity_not_void: current_entity /= Void
 
-end -- class ET_CURRENT_ADDRESS
+end

@@ -57,4 +57,4 @@ invariant
 
 	bangbang_not_void: bangbang /= Void
 
-end -- class ET_BANG_INSTRUCTION
+end

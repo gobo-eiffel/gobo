@@ -25,4 +25,4 @@ creation
 
 	make
 
-end -- class ET_INFIX_OR_ELSE_NAME
+end

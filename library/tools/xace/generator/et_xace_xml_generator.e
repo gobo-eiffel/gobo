@@ -370,4 +370,4 @@ feature {NONE} -- Output
 			end
 		end
 
-end -- class ET_XACE_XML_GENERATOR
+end

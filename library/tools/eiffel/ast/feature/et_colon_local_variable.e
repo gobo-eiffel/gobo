@@ -28,4 +28,4 @@ feature -- Access
 			Result := type.break
 		end
 
-end -- class ET_COLON_LOCAL_VARIABLE
+end

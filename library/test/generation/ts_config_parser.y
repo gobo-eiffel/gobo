@@ -108,4 +108,4 @@ Identifier: T_IDENTIFIER
 --------------------------------------------------------------------------------
 %%
 
-end -- class TS_CONFIG_PARSER
+end

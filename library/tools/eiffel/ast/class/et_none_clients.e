@@ -41,4 +41,4 @@ feature {NONE} -- Initialization
 			right_brace_set: right_brace = a_right
 		end
 
-end -- class ET_NONE_CLIENTS
+end

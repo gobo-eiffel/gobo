@@ -52,4 +52,4 @@ feature -- Sort
 			end
 		end
 
-end -- class DS_SHELL_SORTER
+end

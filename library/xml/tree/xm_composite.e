@@ -294,4 +294,4 @@ invariant
 
 	namespaces_not_void: namespaces /= Void
 
-end -- class XM_COMPOSITE
+end

@@ -36,4 +36,4 @@ feature {DS_MULTIARRAYED_HASH_SET} -- Implementation
 			-- cursors (i.e. cursors associated with `container'
 			-- and which are not currently `off').)
 
-end -- class DS_MULTIARRAYED_HASH_SET_CURSOR
+end

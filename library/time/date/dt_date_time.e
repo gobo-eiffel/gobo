@@ -328,4 +328,4 @@ feature -- Comparison
 				time_storage < other.time_storage)
 		end
 
-end -- class DT_DATE_TIME
+end

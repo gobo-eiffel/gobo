@@ -79,4 +79,4 @@ feature {NONE} -- Constants
 
 	prefix_double_quote: STRING is "prefix %""
 
-end -- class ET_PREFIX_FREE
+end

@@ -17,4 +17,4 @@ inherit
 	ET_PREFIX_OPERATOR
 	ET_TOKEN
 
-end -- class ET_PREFIX_KEYWORD_OPERATOR
+end

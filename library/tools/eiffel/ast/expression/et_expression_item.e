@@ -25,4 +25,4 @@ feature -- Access
 			expression_item_not_void: Result /= Void
 		end
 
-end -- class ET_EXPRESSION_ITEM
+end

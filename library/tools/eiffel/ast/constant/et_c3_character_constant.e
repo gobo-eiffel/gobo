@@ -64,4 +64,4 @@ invariant
 	literal_not_void: literal /= Void
 	-- valid_literal: regexp: [0-9]+
 
-end -- class ET_C3_CHARACTER_CONSTANT
+end

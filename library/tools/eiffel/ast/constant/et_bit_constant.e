@@ -70,4 +70,4 @@ invariant
 	literal_not_void: literal /= Void
 	-- valid_literal: regexp: [0-1]+[bB]
 
-end -- class ET_BIT_CONSTANT
+end

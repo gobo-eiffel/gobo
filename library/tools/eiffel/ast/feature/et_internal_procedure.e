@@ -83,4 +83,4 @@ feature -- System
 			end
 		end
 
-end -- class ET_INTERNAL_PROCEDURE
+end

@@ -232,4 +232,4 @@ feature {NONE} -- Constants
 	Max_xpairs_increment: INTEGER is 2000
 			-- Maximum number of next/check pairs for non-templates
 
-end -- class LX_FULL_DFA
+end

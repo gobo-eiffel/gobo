@@ -50,4 +50,4 @@ invariant
 	-- dollar2: $2 = line number
 	-- dollar3: $3 = invalid string
 
-end -- class PR_INVALID_STRING_TOKEN_ERROR
+end

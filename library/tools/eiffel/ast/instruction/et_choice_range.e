@@ -65,4 +65,4 @@ invariant
 	upper_not_void: upper /= Void
 	dotdot_not_void: dotdot /= Void
 
-end -- class ET_CHOICE_RANGE
+end

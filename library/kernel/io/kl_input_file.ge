@@ -440,4 +440,4 @@ feature {NONE} -- Implementation
 		end
 
 #endif
-end -- class KL_INPUT_FILE
+end

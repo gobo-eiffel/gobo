@@ -55,4 +55,4 @@ invariant
 	target_not_void: target /= Void
 	data_not_void: data /= Void
 
-end -- class XM_PROCESSING_INSTRUCTION
+end

@@ -266,4 +266,4 @@ feature -- Input operations
 			nb_char_read_small_enough: Result <= nb_char
 		end
 
-end -- class KL_INPUT_STREAM_ROUTINES
+end

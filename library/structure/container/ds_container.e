@@ -72,4 +72,4 @@ invariant
 	positive_count: count >= 0
 	empty_definition: is_empty = (count = 0)
 
-end -- class DS_CONTAINER
+end

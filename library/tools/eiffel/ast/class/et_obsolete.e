@@ -61,4 +61,4 @@ invariant
 	obsolete_keyword_not_void: obsolete_keyword /= Void
 	message_not_void: message /= Void
 
-end -- class ET_OBSOLETE
+end

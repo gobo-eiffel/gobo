@@ -162,4 +162,4 @@ invariant
 	file_not_void: file /= Void
 	file_open_read: not end_of_file implies file.is_open_read
 
-end -- class YY_FILE_BUFFER
+end

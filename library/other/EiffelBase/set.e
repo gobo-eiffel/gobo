@@ -79,4 +79,4 @@ feature -- Removal
 			only_on_empty: Result = empty
 		end
 
-end -- class SET
+end

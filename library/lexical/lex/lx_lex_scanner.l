@@ -454,4 +454,4 @@ CCL_CHAR			[^\\\n\]]|{ESC}
 
 %%
 
-end -- class LX_LEX_SCANNER
+end

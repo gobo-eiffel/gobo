@@ -1222,4 +1222,4 @@ invariant
 	start_condition_stack_not_void: start_condition_stack /= Void
 	action_factory_not_void: action_factory /= Void
 
-end -- class LX_LEX_PARSER_SKELETON
+end

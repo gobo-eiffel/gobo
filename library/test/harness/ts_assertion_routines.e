@@ -487,4 +487,4 @@ feature {NONE} -- Constants
 	Assertion_failure: STRING is "Gobo_assertion"
 			-- Developer exception message
 
-end -- class TS_ASSERTION_ROUTINES
+end

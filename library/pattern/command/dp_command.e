@@ -30,4 +30,4 @@ feature -- Execution
 		deferred
 		end
 
-end -- class DP_COMMAND
+end

@@ -126,4 +126,4 @@ feature -- Input
 			last_entry_not_empty: not end_of_input implies last_entry.count > 0
 		end
 
-end -- class KI_DIRECTORY
+end

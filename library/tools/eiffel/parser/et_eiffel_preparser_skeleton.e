@@ -168,4 +168,4 @@ invariant
 
 	universe_not_void: universe /= Void
 
-end -- class ET_EIFFEL_PREPARSER_SKELETON
+end

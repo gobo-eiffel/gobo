@@ -54,4 +54,4 @@ feature -- Element change
 			inserted: second = w
 		end
 
-end -- class DS_PAIR
+end

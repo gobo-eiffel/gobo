@@ -98,4 +98,4 @@ invariant
 
 	require_keyword_not_void: require_keyword /= Void
 
-end -- class ET_PRECONDITIONS
+end

@@ -75,4 +75,4 @@ invariant
 
 	invariant_keyword_not_void: invariant_keyword /= Void
 
-end -- class ET_INVARIANTS
+end

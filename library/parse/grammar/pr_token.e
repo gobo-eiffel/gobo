@@ -189,4 +189,4 @@ invariant
 	terminal: is_terminal
 	token_id_positive: token_id >= 0
 
-end -- class PR_TOKEN
+end

@@ -102,4 +102,4 @@ feature -- Sort
 			end
 		end
 
-end -- class DS_QUICK_SORTER
+end

@@ -65,4 +65,4 @@ feature {NONE} -- Implementation
 
 	implementation: XI_TREE_PARSER
 
-end -- class XM_TREE_PARSER
+end

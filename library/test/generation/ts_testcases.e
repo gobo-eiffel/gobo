@@ -281,4 +281,4 @@ invariant
 	-- class_prefix_not_void: forall item in testcases, item.second /= Void
 	error_handler_not_void: error_handler /= Void
 
-end -- class TS_TESTCASES
+end

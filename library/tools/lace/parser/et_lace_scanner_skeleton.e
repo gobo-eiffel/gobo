@@ -111,4 +111,4 @@ invariant
 	eif_buffer_not_void: eif_buffer /= Void
 	error_handler_not_void: error_handler /= Void
 
-end -- class ET_LACE_SCANNER_SKELETON
+end

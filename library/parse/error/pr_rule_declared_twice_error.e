@@ -50,4 +50,4 @@ invariant
 	-- dollar2: $2 = line number
 	-- dollar3: $3 = rule name
 
-end -- class PR_RULE_DECLARED_TWICE_ERROR
+end

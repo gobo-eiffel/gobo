@@ -19,4 +19,4 @@ feature -- Status report
 		deferred
 		end
 
-end -- class LX_STATE
+end

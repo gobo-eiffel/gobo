@@ -52,4 +52,4 @@ invariant
 	common_state_not_void: common_state /= Void
 	transitions_not_void: transitions /= Void
 
-end -- class LX_PROTO
+end

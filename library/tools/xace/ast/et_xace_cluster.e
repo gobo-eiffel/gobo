@@ -230,4 +230,4 @@ feature {NONE} -- Implementation
 			Result.set_recursive (True)
 		end
 
-end -- class ET_XACE_CLUSTER
+end

@@ -42,4 +42,4 @@ feature -- Duplication
 			argument_not_void: Result /= Void
 		end
 
-end -- class ET_FORMAL_ARGUMENT_ITEM
+end

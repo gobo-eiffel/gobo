@@ -216,4 +216,4 @@ invariant
 	action_not_void: action /= Void
 	pattern_not_void: pattern /= Void
 
-end -- class LX_RULE
+end

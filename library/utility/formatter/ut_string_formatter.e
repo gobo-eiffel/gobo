@@ -237,4 +237,4 @@ feature -- File handling
 			a_file.put_string (a_string)
 		end
 
-end -- class UT_STRING_FORMATTER
+end

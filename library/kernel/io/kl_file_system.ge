@@ -352,4 +352,4 @@ feature {NONE} -- Implementation
 		end
 
 #endif
-end -- class KL_FILE_SYSTEM
+end

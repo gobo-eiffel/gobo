@@ -511,4 +511,4 @@ invariant
 	replicable_features_not_void: replicable_features /= Void
 	no_void_replicable_feature: not replicable_features.has_item (Void)
 
-end -- class ET_FEATURE_FLATTENER
+end

@@ -585,4 +585,4 @@ feature -- Pathname handling
 			exe_extension_not_void: Result /= Void
 		end
 
-end -- class KI_FILE_SYSTEM
+end

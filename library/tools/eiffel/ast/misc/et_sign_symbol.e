@@ -23,4 +23,4 @@ feature -- Status report
 		deferred
 		end
 
-end -- class ET_SIGN_SYMBOL
+end

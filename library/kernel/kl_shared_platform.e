@@ -35,4 +35,4 @@ feature -- Obsolete
 			platform__not_void: Result /= Void
 		end
 
-end -- class KL_SHARED_PLATFORM
+end

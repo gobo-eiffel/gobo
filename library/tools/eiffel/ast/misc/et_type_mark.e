@@ -38,4 +38,4 @@ feature -- Status report
 			-- Result := False
 		end
 
-end -- class ET_TYPE_MARK
+end

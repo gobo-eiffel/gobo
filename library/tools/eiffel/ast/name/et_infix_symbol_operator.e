@@ -17,4 +17,4 @@ inherit
 	ET_INFIX_OPERATOR
 	ET_SYMBOL
 
-end -- class ET_INFIX_SYMBOL_OPERATOR
+end

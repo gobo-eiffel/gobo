@@ -26,4 +26,4 @@ inherit
 
 creation
 
-end -- class ET_CHARACTER_CONSTANT
+end

@@ -122,4 +122,4 @@ feature {NONE} -- Implementation
 			none_class_name_not_void: Result /= Void
 		end
 
-end -- class ET_CLASS_NAME_LIST
+end

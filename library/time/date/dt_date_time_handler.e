@@ -17,4 +17,4 @@ inherit
 	DT_DATE_HANDLER
 	DT_TIME_HANDLER
 
-end -- class DT_DATE_TIME_HANDLER
+end

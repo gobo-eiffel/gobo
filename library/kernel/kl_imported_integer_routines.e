@@ -22,4 +22,4 @@ feature -- Access
 			integer_routines_not_void: Result /= Void
 		end
 
-end -- class KL_IMPORTED_INTEGER_ROUTINES
+end

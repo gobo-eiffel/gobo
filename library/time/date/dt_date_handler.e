@@ -12,4 +12,4 @@ indexing
 
 class DT_DATE_HANDLER
 
-end -- class DT_DATE_HANDLER
+end

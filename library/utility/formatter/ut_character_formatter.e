@@ -149,4 +149,4 @@ feature -- File handling
 			a_file.put_character ('%'')
 		end
 
-end -- class UT_CHARACTER_FORMATTER
+end

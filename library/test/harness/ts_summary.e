@@ -240,4 +240,4 @@ invariant
 	results_not_void: results /= Void
 	no_void_result: not results.has (Void)
 
-end -- class TS_SUMMARY
+end

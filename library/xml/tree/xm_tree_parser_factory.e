@@ -33,4 +33,4 @@ feature {ANY}
 		deferred
 		end
 
-end -- class XM_TREE_PARSER_FACTORY
+end

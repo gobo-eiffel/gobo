@@ -163,4 +163,4 @@ invariant
 	name_not_void: name /= Void
 	index_positive: index >= 1
 
-end -- class ET_LIKE_ARGUMENT
+end

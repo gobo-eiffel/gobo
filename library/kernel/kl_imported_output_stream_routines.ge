@@ -39,4 +39,4 @@ feature -- Type anchors
 #endif
 			-- Type anchor
 
-end -- class KL_IMPORTED_OUTPUT_STREAM_ROUTINES
+end

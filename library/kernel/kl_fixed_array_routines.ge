@@ -223,4 +223,4 @@ feature {NONE} -- Externals
 		end
 
 #endif
-end -- class KL_FIXED_ARRAY_ROUTINES
+end

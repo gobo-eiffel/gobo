@@ -116,4 +116,4 @@ invariant
 
 	keyword_not_void: keyword /= Void
 
-end -- class ET_COMPOUND
+end

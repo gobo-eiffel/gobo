@@ -161,4 +161,4 @@ feature -- Element change
 			year_set: year = old year + y
 		end
 
-end -- class DATE
+end

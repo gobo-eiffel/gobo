@@ -28,4 +28,4 @@ feature -- Access
 	clusters: ET_LACE_CLUSTERS
 			-- Clusters
 
-end -- class ET_LACE_UNIVERSE
+end

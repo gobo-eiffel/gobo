@@ -21,4 +21,4 @@ feature -- types
    Representation_UTF32: INTEGER is 2
          -- representation as 32bit integer array
    
-end -- class UC_REPRESENTATION_TYPES
+end

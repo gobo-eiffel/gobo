@@ -75,4 +75,4 @@ invariant
 	clients_clause_not_void: clients_clause /= Void
 	all_keyword_not_void: all_keyword /= Void
 
-end -- class ET_ALL_EXPORT
+end

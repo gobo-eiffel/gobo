@@ -25,4 +25,4 @@ feature -- Access
 			manifest_string_item_not_void: Result /= Void
 		end
 
-end -- class ET_MANIFEST_STRING_ITEM
+end

@@ -111,4 +111,4 @@ invariant
 	no_void_defined_value: not defined_values.has_item (Void)
 	no_void_defined_name: not defined_values.has (Void)
 
-end -- class ET_XACE_VARIABLES
+end

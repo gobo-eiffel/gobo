@@ -23,4 +23,4 @@ feature -- Acess
 			operating_system_not_void: Result /= Void
 		end
 
-end -- class KL_SHARED_OPERATING_SYSTEM
+end

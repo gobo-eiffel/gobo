@@ -41,4 +41,4 @@ feature {DS_BILINKED_LIST} -- Implementation
 			-- cursors (i.e. cursors associated with `container'
 			-- and which are not currently `off').)
 
-end -- class DS_BILINKED_LIST_CURSOR
+end

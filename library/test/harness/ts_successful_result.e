@@ -50,4 +50,4 @@ feature -- Output
 			a_file.put_character (']')
 		end
 
-end -- class TS_SUCCESSFUL_RESULT
+end

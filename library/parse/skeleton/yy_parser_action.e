@@ -13,4 +13,4 @@ indexing
 
 class YY_PARSER_ACTION
 
-end -- class YY_PARSER_ACTION
+end

@@ -111,4 +111,4 @@ feature -- Status
 		deferred
 		end
 
-end -- class XI_PARSER
+end

@@ -55,4 +55,4 @@ feature {NONE} -- Implementation
 	infix_name: STRING is "infix %"+%""
 			-- Infix name
 
-end -- class ET_INFIX_PLUS
+end

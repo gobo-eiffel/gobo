@@ -12,4 +12,4 @@ indexing
 
 class DT_TIME_HANDLER
 
-end -- class DT_TIME_HANDLER
+end

@@ -668,4 +668,4 @@ invariant
 	any_type_not_void: any_type /= Void
 	any_parents_not_void: any_parents /= Void
 
-end -- class ET_UNIVERSE
+end

@@ -101,4 +101,4 @@ feature -- Conversion
 			end
 		end
 
-end -- class ET_DEFERRED_FUNCTION
+end

@@ -106,4 +106,4 @@ invariant
 	name_long_enough: name.count > 0
 	type_not_void: type /= Void
 
-end -- class PR_SYMBOL
+end

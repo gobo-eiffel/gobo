@@ -1517,4 +1517,4 @@ invariant
 	valid_position: position = No_position or else valid_position (position)
 	capacity_constraint: capacity < modulus
 
-end -- class DS_SPARSE_SET
+end

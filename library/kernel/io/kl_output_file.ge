@@ -201,4 +201,4 @@ feature {NONE} -- Implementation
 		end
 
 #endif
-end -- class KL_OUTPUT_FILE
+end

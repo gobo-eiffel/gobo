@@ -182,4 +182,4 @@ feature {NONE} -- GC
 		end
 
 #endif
-end -- class KL_STDOUT_FILE
+end

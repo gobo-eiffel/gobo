@@ -78,5 +78,5 @@ feature
 	 Result := category.item(ucc.code // 256+1).item(ucc.code \\ 256+1)
       end
 
-end -- class UC_CTYPE
+end
 

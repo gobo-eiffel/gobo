@@ -50,4 +50,4 @@ invariant
 	-- dollar2: $2 = line number
 	-- dollar3: $3 = variable name
 
-end -- class PR_VARIABLE_DECLARED_TWICE_ERROR
+end

@@ -56,4 +56,4 @@ invariant
 
 	program_name_not_void: program_name /= Void
 
-end -- class KL_ARGUMENTS
+end

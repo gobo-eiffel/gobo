@@ -67,4 +67,4 @@ invariant
 	when_keyword_not_void: when_keyword /= Void
 	then_compound_not_void: then_compound /= Void
 
-end -- class ET_WHEN_PART
+end

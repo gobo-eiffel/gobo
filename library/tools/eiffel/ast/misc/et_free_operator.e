@@ -145,4 +145,4 @@ feature -- Comparison
 			end
 		end
 
-end -- class ET_FREE_OPERATOR
+end

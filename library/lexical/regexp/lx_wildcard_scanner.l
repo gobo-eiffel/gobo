@@ -139,4 +139,4 @@ CCL_CHAR			[^\\\n\]]|{ESC}
 
 %%
 
-end -- class LX_WILDCARD_SCANNER
+end

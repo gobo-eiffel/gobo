@@ -94,4 +94,4 @@ feature -- Conversion
 			end
 		end
 
-end -- class ET_UNIQUE_ATTRIBUTE
+end

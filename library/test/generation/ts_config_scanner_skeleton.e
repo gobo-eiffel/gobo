@@ -102,4 +102,4 @@ invariant
 	buffer_not_void: buffer /= Void
 	error_handler_not_void: error_handler /= Void
 
-end -- class TS_CONFIG_SCANNER_SKELETON
+end

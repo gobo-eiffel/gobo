@@ -1031,4 +1031,4 @@ invariant
 
 	machine_not_void: machine /= Void
 
-end -- class PR_PARSER_GENERATOR
+end

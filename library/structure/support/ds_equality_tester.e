@@ -27,4 +27,4 @@ feature -- Status report
 			end
 		end
 
-end -- class DS_EQUALITY_TESTER
+end

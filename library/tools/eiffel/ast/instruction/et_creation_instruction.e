@@ -25,4 +25,4 @@ invariant
 
 	target_not_void: target /= Void
 
-end -- class ET_CREATION_INSTRUCTION
+end

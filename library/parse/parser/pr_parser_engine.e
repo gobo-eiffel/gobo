@@ -122,4 +122,4 @@ invariant
 	yycheck_lower: yycheck.lower = 0
 	yycheck_upper: yycheck.upper = yyLast
 
-end -- class PR_PARSER_ENGINE
+end

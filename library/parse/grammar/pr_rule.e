@@ -252,4 +252,4 @@ invariant
 	no_void_rhs: not rhs.has (Void)
 	action_not_void: action /= Void
 
-end -- class PR_RULE
+end

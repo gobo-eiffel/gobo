@@ -16,4 +16,4 @@ inherit
 
 	ET_INFIX
 
-end -- class ET_INFIX_OPERATOR
+end

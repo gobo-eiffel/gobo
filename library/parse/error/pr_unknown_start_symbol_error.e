@@ -50,4 +50,4 @@ invariant
 	-- dollar2: $2 = line number
 	-- dollar3: $3 = symbol name
 
-end -- class PR_UNKNOWN_START_SYMBOL_ERROR
+end

@@ -28,4 +28,4 @@ feature -- Status report
 			Result := (count = 1)
 		end
 
-end -- class ET_ACTUAL_ARGUMENTS
+end

@@ -36,4 +36,4 @@ feature -- Status report
 	full: BOOLEAN is True
 			-- The structure is complete
 
-end -- class COUNTABLE
+end

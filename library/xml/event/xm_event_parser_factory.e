@@ -33,4 +33,4 @@ feature {ANY}
 		deferred
 		end
 
-end -- class XM_EVENT_PARSER_FACTORY
+end

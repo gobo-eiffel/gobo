@@ -53,4 +53,4 @@ invariant
 	not_both: not (after and before)
 	off_definition: (after or before) = (current_cell = Void)
 
-end -- class LINKED_LIST_CURSOR
+end

@@ -68,4 +68,4 @@ invariant
 	source_not_void: source /= Void
 	assign_symbol_not_void: assign_symbol /= Void
 
-end -- class ET_ASSIGNMENT
+end

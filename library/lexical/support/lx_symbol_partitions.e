@@ -138,4 +138,4 @@ invariant
 	symbols_lower: symbols.lower = lower
 	symbols_upper: symbols.upper = upper
 
-end -- class LX_SYMBOL_PARTITIONS
+end

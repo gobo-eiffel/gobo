@@ -28,4 +28,4 @@ feature -- Status report
 	is_expanded: BOOLEAN is True
 			-- Is mark 'expanded'?
 
-end -- class ET_EXPANDED_MARK
+end

@@ -41,4 +41,4 @@ feature -- Comparison
 			Result := other.is_infix_power
 		end
 
-end -- class ET_INFIX_POWER
+end

@@ -62,4 +62,4 @@ invariant
 
 	colon_not_void: colon /= Void
 
-end -- class ET_IDENTIFIER_COLON
+end

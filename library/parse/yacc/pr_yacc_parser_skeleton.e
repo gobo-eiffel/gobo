@@ -1254,4 +1254,4 @@ invariant
 	start_symbol_name_not_void: start_symbol /= Void implies start_symbol.first /= Void
 	action_factory_not_void: action_factory /= Void
 
-end -- class PR_YACC_PARSER_SKELETON
+end

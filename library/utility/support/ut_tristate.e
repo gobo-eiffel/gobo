@@ -100,4 +100,4 @@ invariant
 	is_false_definition: is_false = not (is_true or is_undefined)
 	is_undefined_definition: is_undefined = not (is_true or is_false)
 
-end -- class UT_TRISTATE
+end

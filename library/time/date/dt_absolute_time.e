@@ -65,4 +65,4 @@ feature -- Element change
 		deferred
 		end
 
-end -- class DT_ABSOLUTE_TIME
+end

@@ -20,4 +20,4 @@ inherit
 
 	DP_COMMAND
 
-end -- class UT_COMMAND
+end

@@ -57,4 +57,4 @@ invariant
 	operator_name_computed: operator_name.computed
 	operator_name_not_empty: operator_name.value.count > 0
 
-end -- class ET_INFIX_FREE_NAME
+end

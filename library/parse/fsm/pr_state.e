@@ -765,4 +765,4 @@ invariant
 	errors_not_void: errors /= Void
 	no_void_error: not errors.has (Void)
 
-end -- class PR_STATE
+end

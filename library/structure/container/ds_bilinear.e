@@ -170,4 +170,4 @@ invariant
 	not_both: initialized implies (not (after and before))
 	before_constraint: initialized implies (before implies off)
 
-end -- class DS_BILINEAR
+end

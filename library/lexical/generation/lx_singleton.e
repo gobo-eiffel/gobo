@@ -46,4 +46,4 @@ feature -- Access
 	default_id: INTEGER
 			-- Default base entry
 
-end -- class LX_SINGLETON
+end

@@ -30,4 +30,4 @@ feature -- Access
 	comparator: DS_COMPARATOR [G]
 			-- Base comparator
 
-end -- class DS_REVERSE_COMPARATOR
+end

@@ -24,4 +24,4 @@ feature -- Status report
 		deferred
 		end
 
-end -- class ET_BOOLEAN_CONSTANT
+end

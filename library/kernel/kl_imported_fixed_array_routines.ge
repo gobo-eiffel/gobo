@@ -81,4 +81,4 @@ feature -- Type anchors
 #endif
 			-- Type anchors
 
-end -- class KL_IMPORTED_FIXED_ARRAY_ROUTINES
+end

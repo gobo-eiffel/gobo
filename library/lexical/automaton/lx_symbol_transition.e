@@ -78,4 +78,4 @@ feature -- Equivalence classes
 			Result := equiv_classes.valid_symbol (label)
 		end
 
-end -- class LX_SYMBOL_TRANSITION
+end
