@@ -2,11 +2,11 @@ indexing
 
 	description:
 
-		"Reverse comparators"
+		"Reverse total order comparators"
 
 	library:    "Gobo Eiffel Structure Library"
 	author:     "Eric Bezault <ericb@gobosoft.com>"
-	copyright:  "Copyright (c) 2000, Eric Bezault and others"
+	copyright:  "Copyright (c) 2001, Eric Bezault and others"
 	license:    "Eiffel Forum Freeware License v1 (see forum.txt)"
 	date:       "$Date$"
 	revision:   "$Revision$"
@@ -15,53 +15,20 @@ class DS_REVERSE_COMPARATOR [G]
 
 inherit
 
+	DS_REVERSE_PART_COMPARATOR [G]
+		redefine
+			comparator
+		end
+
 	DS_COMPARATOR [G]
 
 creation
 
 	make
 
-feature {NONE} -- Initialization
-
-	make (a_comparator: like comparator) is
-			-- Create a new reverse comparator based on `a_comparator'.
-		require
-			a_comparator_not_void: a_comparator /= Void
-		do
-			comparator := a_comparator
-		ensure
-			comparator_set: comparator = a_comparator
-		end
-
-feature -- Status report
-
-	less_than (u, v: G): BOOLEAN is
-			-- Is `u' considered less than `v'?
-		do
-			Result := comparator.less_than (v, u)
-		ensure then
-			definition: Result = comparator.less_than (v, u)
-		end
-
 feature -- Access
 
 	comparator: DS_COMPARATOR [G]
 			-- Base comparator
-
-feature -- Setting
-
-	set_comparator (a_comparator: like comparator) is
-			-- Set `comparator' to `a_comparator'.
-		require
-			a_comparator_not_void: a_comparator /= Void
-		do
-			comparator := a_comparator
-		ensure
-			comparator_set: comparator = a_comparator
-		end
-
-invariant
-
-	comparator_not_void: comparator /= Void
 
 end -- class DS_REVERSE_COMPARATOR

@@ -31,7 +31,7 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	comparator: DS_COMPARATOR [G]
+	comparator: DS_PART_COMPARATOR [G]
 			-- Comparison criterion
 
 feature -- Status report
@@ -45,7 +45,7 @@ feature -- Status report
 	reverse_sorted (a_container: DS_INDEXABLE [G]): BOOLEAN is
 			-- Is `a_container' sorted in decreasing order?
 		local
-			a_comparator: DS_REVERSE_COMPARATOR [G]
+			a_comparator: DS_REVERSE_PART_COMPARATOR [G]
 		do
 			if a_container.is_empty then
 				Result := True
@@ -55,7 +55,7 @@ feature -- Status report
 			end
 		end
 
-	sorted_with_comparator (a_container: DS_INDEXABLE [G]; a_comparator: DS_COMPARATOR [G]): BOOLEAN is
+	sorted_with_comparator (a_container: DS_INDEXABLE [G]; a_comparator: DS_PART_COMPARATOR [G]): BOOLEAN is
 			-- Is `a_container' sorted according to
 			-- `a_comparator''s comparison criterion?
 		do
@@ -84,13 +84,13 @@ feature -- Status report
 			valid_upper: 1 <= upper and upper <= a_container.count
 			valid_bounds: lower <= upper
 		local
-			a_comparator: DS_REVERSE_COMPARATOR [G]
+			a_comparator: DS_REVERSE_PART_COMPARATOR [G]
 		do
 			!! a_comparator.make (comparator)
 			Result := subsorted_with_comparator (a_container, a_comparator, lower, upper)
 		end
 
-	subsorted_with_comparator (a_container: DS_INDEXABLE [G]; a_comparator: DS_COMPARATOR [G]; lower, upper: INTEGER): BOOLEAN is
+	subsorted_with_comparator (a_container: DS_INDEXABLE [G]; a_comparator: DS_PART_COMPARATOR [G]; lower, upper: INTEGER): BOOLEAN is
 			-- Is `a_container' sorted according to `a_comparator''s
 			-- comparison criterion within bounds `lower'..`upper'?
 		require
@@ -132,7 +132,7 @@ feature -- Sort
 	reverse_sort (a_container: DS_INDEXABLE [G]) is
 			-- Sort `a_container' in decreasing order.
 		local
-			a_comparator: DS_REVERSE_COMPARATOR [G]
+			a_comparator: DS_REVERSE_PART_COMPARATOR [G]
 		do
 			if not a_container.is_empty then
 				!! a_comparator.make (comparator)
@@ -140,7 +140,7 @@ feature -- Sort
 			end
 		end
 
-	sort_with_comparator (a_container: DS_INDEXABLE [G]; a_comparator: DS_COMPARATOR [G]) is
+	sort_with_comparator (a_container: DS_INDEXABLE [G]; a_comparator: DS_PART_COMPARATOR [G]) is
 			-- Sort `a_container' according to
 			-- `a_comparator''s comparison criterion?
 		do
@@ -172,7 +172,7 @@ feature -- Sort
 			valid_upper: 1 <= upper and upper <= a_container.count
 			valid_bounds: lower <= upper
 		local
-			a_comparator: DS_REVERSE_COMPARATOR [G]
+			a_comparator: DS_REVERSE_PART_COMPARATOR [G]
 		do
 			!! a_comparator.make (comparator)
 			subsort_with_comparator (a_container, a_comparator, lower, upper)
@@ -180,7 +180,7 @@ feature -- Sort
 			subsorted: reverse_subsorted (a_container, lower, upper)
 		end
 
-	subsort_with_comparator (a_container: DS_INDEXABLE [G]; a_comparator: DS_COMPARATOR [G]; lower, upper: INTEGER) is
+	subsort_with_comparator (a_container: DS_INDEXABLE [G]; a_comparator: DS_PART_COMPARATOR [G]; lower, upper: INTEGER) is
 			-- Sort `a_container' according to `a_comparator''s
 			-- comparison criterion within bounds `lower'..`upper'?
 		require
