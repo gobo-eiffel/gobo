@@ -6,7 +6,7 @@ indexing
 
 	library:    "Gobo Eiffel Tools Library"
 	author:     "Eric Bezault <ericb@gobosoft.com>"
-	copyright:  "Copyright (c) 1999-2001, Eric Bezault and others"
+	copyright:  "Copyright (c) 1999-2002, Eric Bezault and others"
 	license:    "Eiffel Forum Freeware License v1 (see forum.txt)"
 	date:       "$Date$"
 	revision:   "$Revision$"
@@ -15,14 +15,21 @@ class ET_IDENTIFIER
 
 inherit
 
+	ET_FEATURE_NAME
+		redefine
+			is_identifier, is_equal
+		end
+
 	ET_WRITABLE
 		undefine
 			is_equal
 		end
 
-	ET_FEATURE_NAME
-		redefine
-			same_feature_name
+	ET_TOKEN
+		rename
+			text as name
+		undefine
+			is_equal
 		end
 
 	KL_IMPORTED_STRING_ROUTINES
@@ -32,32 +39,20 @@ inherit
 
 creation
 
-	make
-
-feature {NONE} -- Initialization
-
-	make (a_name: STRING; a_position: like position) is
-			-- Create a new identifier.
-		require
-			a_name_not_void: a_name /= Void
-			a_name_not_empty: a_name.count > 0
-			a_position_not_void: a_position /= Void
-		do
-			name := a_name
-			position := a_position
-			hash_code := STRING_.case_insensitive_hash_code (a_name)
-		ensure
-			name_set: name = a_name
-			position_set: position = a_position
-		end
+	make, make_with_position
 
 feature -- Access
 
-	name: STRING
-			-- Name of identifier
-
-	hash_code: INTEGER
+	hash_code: INTEGER is
 			-- Hash code value
+		do
+			Result := STRING_.case_insensitive_hash_code (name)
+		end
+
+feature -- Status report
+
+	is_identifier: BOOLEAN is True
+			-- Is current feature name an identifier?
 
 feature -- Comparison
 
@@ -69,9 +64,11 @@ feature -- Comparison
 		do
 			if other = Current then
 				Result := True
-			elseif same_type (other) then
+			elseif other.is_identifier then
 				id ?= other
-				Result := same_identifier (id)
+				if id /= Void then
+					Result := same_identifier (id)
+				end
 			end
 		end
 
@@ -88,9 +85,12 @@ feature -- Comparison
 			end
 		end
 
-invariant
-
-	name_not_void: name /= Void
-	name_not_empty: name.count > 0
+	is_equal (other: like Current): BOOLEAN is
+			-- Are current identifier and `other' considered equal?
+		do
+			if same_type (other) then
+				Result := same_identifier (other)
+			end
+		end
 
 end -- class ET_IDENTIFIER

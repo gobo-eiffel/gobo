@@ -87,7 +87,7 @@ feature -- AST factory
 		require
 			a_text_not_void: a_text /= Void
 		do
-			!! Result.make (a_text, current_position)
+			!! Result.make_with_position (a_text, line, column)
 		ensure
 			identifier_not_void: Result /= Void
 		end

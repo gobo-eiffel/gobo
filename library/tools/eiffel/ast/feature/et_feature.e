@@ -335,15 +335,16 @@ feature -- Type processing
 		deferred
 		end
 
-	resolve_identifier_types (a_flattener: ET_FEATURE_FLATTENER) is
-			-- Replace any 'like identifier' types that appear
-			-- in the implementation of current feature by the
-			-- corresponding 'like feature' or 'like argument'.
-			-- Also resolve 'BIT identifier' types and check
-			-- validity of arguments' name.
+	resolve_identifier_types (a_class: ET_CLASS) is
+			-- Replace any 'like identifier' types that appear in the
+			-- implementation of current feature in class `a_class' by
+			-- the corresponding 'like feature' or 'like argument'.
+			-- Also resolve 'BIT identifier' types and check validity
+			-- of arguments' name. Set `a_class.has_flatten_error' to
+			-- true if an error occurs.
 		require
-			a_flattener_not_void: a_flattener /= Void
-			immediate_or_redeclared: implementation_class = a_flattener.current_class
+			a_class_not_void: a_class /= Void
+			immediate_or_redeclared: implementation_class = a_class
 		deferred
 		end
 

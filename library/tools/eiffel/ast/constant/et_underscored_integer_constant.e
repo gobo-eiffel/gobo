@@ -6,7 +6,7 @@ indexing
 
 	library:    "Gobo Eiffel Tools Library"
 	author:     "Eric Bezault <ericb@gobosoft.com>"
-	copyright:  "Copyright (c) 1999, Eric Bezault and others"
+	copyright:  "Copyright (c) 1999-2002, Eric Bezault and others"
 	license:    "Eiffel Forum Freeware License v1 (see forum.txt)"
 	date:       "$Date$"
 	revision:   "$Revision$"
@@ -26,7 +26,7 @@ creation
 
 feature {NONE} -- Initialization
 
-	make (a_literal: like literal; a_position: like position) is
+	make (a_literal: like literal; a_position: like literal_position) is
 			-- Create a new Integer constant.
 		require
 			a_literal_not_void: a_literal /= Void
@@ -34,10 +34,10 @@ feature {NONE} -- Initialization
 			a_position_not_void: a_position /= Void
 		do
 			literal := a_literal
-			position := a_position
+			literal_position := a_position
 		ensure
 			literal_set: literal = a_literal
-			position_set: position = a_position
+			literal_position_set: literal_position = a_position
 		end
 
 feature -- Basic operations
@@ -54,18 +54,25 @@ feature -- Basic operations
 		do
 			has_value_error := False
 			nb := literal.count
-			from i := 1 until i > nb loop
-				c := literal.item (i)
-				if c /= '_' then
-					d := c.code - Zero_code
-					v := 10 * v + d
-				end
-				i := i + 1
-			end
+				-- TODO: deal with overflow and underflow.
 			if is_negative then
-				value := - v
+				from i := 1 until i > nb loop
+					c := literal.item (i)
+					if c /= '_' then
+						d := c.code - Zero_code
+						v := 10 * v - d
+					end
+					i := i + 1
+				end
 			else
-				value := v
+				from i := 1 until i > nb loop
+					c := literal.item (i)
+					if c /= '_' then
+						d := c.code - Zero_code
+						v := 10 * v + d
+					end
+					i := i + 1
+				end
 			end
 		end
 

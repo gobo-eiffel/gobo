@@ -6,7 +6,7 @@ indexing
 
 	library:    "Gobo Eiffel Tools Library"
 	author:     "Eric Bezault <ericb@gobosoft.com>"
-	copyright:  "Copyright (c) 1999, Eric Bezault and others"
+	copyright:  "Copyright (c) 1999-2002, Eric Bezault and others"
 	license:    "Eiffel Forum Freeware License v1 (see forum.txt)"
 	date:       "$Date$"
 	revision:   "$Revision$"
@@ -15,15 +15,16 @@ class ET_CHARACTER_CONSTANT
 
 inherit
 
-	ET_EXPRESSION
+	ET_CONSTANT
 
-feature -- Access
+	ET_CHOICE_CONSTANT
 
-	position: ET_POSITION
-			-- Position in source code
+	ET_AST_LEAF
+		rename
+			make as make_leaf,
+			make_with_position as make_leaf_with_position
+		end
 
-invariant
-
-	position_not_void: position /= Void
+creation
 
 end -- class ET_CHARACTER_CONSTANT

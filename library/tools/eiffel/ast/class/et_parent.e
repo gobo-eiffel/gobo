@@ -31,9 +31,6 @@ feature {NONE} -- Initialization
 			a_type_not_void: a_type /= Void
 			no_void_rename: a_renames /= Void implies not ANY_ARRAY_.has (a_renames, Void)
 			no_void_export: an_exports /= Void implies not ANY_ARRAY_.has (an_exports, Void)
-			no_void_undefine: an_undefines /= Void implies not ANY_ARRAY_.has (an_undefines, Void)
-			no_void_redefine: a_redefines /= Void implies not ANY_ARRAY_.has (a_redefines, Void)
-			no_void_select: a_selects /= Void implies not ANY_ARRAY_.has (a_selects, Void)
 		do
 			type := a_type
 			renames := a_renames
@@ -61,13 +58,13 @@ feature -- Access
 	exports: ARRAY [ET_EXPORT]
 			-- Export clause
 
-	undefines: ARRAY [ET_FEATURE_NAME]
+	undefines: ET_KEYWORD_FEATURE_NAME_LIST
 			-- Undefine clause
 
-	redefines: ARRAY [ET_FEATURE_NAME]
+	redefines: ET_KEYWORD_FEATURE_NAME_LIST
 			-- Redefine clause
 
-	selects: ARRAY [ET_FEATURE_NAME]
+	selects: ET_KEYWORD_FEATURE_NAME_LIST
 			-- Select clause
 
 	next: ET_PARENT
@@ -86,7 +83,7 @@ feature -- Access
 				nb := exports.upper
 				from until i > nb loop
 					an_export := exports.item (i)
-					if an_export.has_feature (a_feature_name) then
+					if an_export.has_feature_name (a_feature_name) then
 						if Result = Void then
 							Result := an_export.clients
 							need_twin := True
@@ -229,8 +226,5 @@ invariant
 	type_not_void: type /= Void
 	no_void_rename: renames /= Void implies not ANY_ARRAY_.has (renames, Void)
 	no_void_export: exports /= Void implies not ANY_ARRAY_.has (exports, Void)
-	no_void_undefine: undefines /= Void implies not ANY_ARRAY_.has (undefines, Void)
-	no_void_redefine: redefines /= Void implies not ANY_ARRAY_.has (redefines, Void)
-	no_void_select: selects /= Void implies not ANY_ARRAY_.has (selects, Void)
 
 end -- class ET_PARENT

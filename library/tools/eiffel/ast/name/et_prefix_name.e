@@ -2,11 +2,11 @@ indexing
 
 	description:
 
-		"Eiffel prefix feature names"
+		"Names of Eiffel prefix features"
 
 	library:    "Gobo Eiffel Tools Library"
 	author:     "Eric Bezault <ericb@gobosoft.com>"
-	copyright:  "Copyright (c) 1999-2001, Eric Bezault and others"
+	copyright:  "Copyright (c) 1999-2002, Eric Bezault and others"
 	license:    "Eiffel Forum Freeware License v1 (see forum.txt)"
 	date:       "$Date$"
 	revision:   "$Revision$"
@@ -15,26 +15,47 @@ deferred class ET_PREFIX_NAME
 
 inherit
 
-	ET_FEATURE_NAME
-		redefine
-			is_prefix
-		end
+	ET_PREFIX
 
 feature {NONE} -- Initialization
 
-	make (a_position: like position) is
-			-- Create a new infix feature name.
+	make (a_prefix: like prefix_keyword; an_operator: like operator_name) is
+			-- Create a new prefix feature name.
 		require
-			a_position_not_void: a_position /= Void
+			a_prefix_not_void: a_prefix /= Void
+			an_operator_not_void: an_operator /= Void
 		do
-			position := a_position
+			prefix_keyword := a_prefix
+			operator_name := an_operator
 		ensure
-			position_set: position = a_position
+			prefix_keyword_set: prefix_keyword = a_prefix
+			operator_name_set: operator_name = an_operator
 		end
 
-feature -- Status report
+feature -- Access
 
-	is_prefix: BOOLEAN is True
-			-- Is current feature name of the form 'prefix ...'?
+	prefix_keyword: ET_TOKEN
+			-- Prefix keyword
+
+	operator_name: ET_MANIFEST_STRING
+			-- Name of prefix operator
+
+	position: ET_POSITION is
+			-- Position of first character of
+			-- current node in source code
+		do
+			Result := prefix_keyword.position
+		end
+
+	break: ET_BREAK is
+			-- Break which appears just after current node
+		do
+			Result := operator_name.break
+		end
+
+invariant
+
+	prefix_keyword_not_void: prefix_keyword /= Void
+	operator_name_not_void: operator_name /= Void
 
 end -- class ET_PREFIX_NAME

@@ -80,33 +80,6 @@ feature -- Access
 			-- Void if not computed yet or if an error occurred
 			-- during compilation
 
-	integer_constant: ET_INTEGER_CONSTANT is
-			-- Constant value if current feature is an
-			-- integer constant attribute, Void otherwise
-		local
-			a_constant_attribute: ET_CONSTANT_ATTRIBUTE
-			a_cursor: DS_LINKED_LIST_CURSOR [ET_INHERITED_FEATURE]
-		do
-			a_constant_attribute ?= current_feature
-			if a_constant_attribute /= Void then
-				Result ?= a_constant_attribute.constant
-			end
-			if Result = Void then
-				a_cursor := inherited_features.new_cursor
-				from a_cursor.start until a_cursor.after loop
-					a_constant_attribute ?= a_cursor.item.inherited_feature
-					if a_constant_attribute /= Void then
-						Result ?= a_constant_attribute.constant
-					end
-					if Result /= Void then
-						a_cursor.go_after -- Jump out of the loop.
-					else
-						a_cursor.forth
-					end
-				end
-			end
-		end
-
 	inherited_feature_with_seed (a_seed: INTEGER): ET_INHERITED_FEATURE is
 			-- Inherited feature with seed `a_seed'
 		require
@@ -340,6 +313,19 @@ feature -- Compilation
 			signature_not_void: signature /= Void
 		end
 
+	resolve_identifier_types is
+			-- Replace any 'like identifier' types that appear in the
+			-- implementation of current feature by the corresponding
+			-- 'like feature' or 'like argument'. Also resolve
+			-- 'BIT identifier' types and check validity of arguments'
+			-- name. Set `a_class.has_flatten_error' to true if an error
+			-- occurs.
+		do
+			if current_feature /= Void then
+				current_feature.resolve_identifier_types (current_class)
+			end
+		end
+
 feature {NONE} -- Compilation
 
 	process_immediate_feature (a_flattener: ET_FEATURE_FLATTENER) is
@@ -349,7 +335,6 @@ feature {NONE} -- Compilation
 			immediate_feature: inherited_features.is_empty
 			a_flattener_not_void: a_flattener /= Void
 		do
-			current_feature.resolve_identifier_types (a_flattener)
 			flattened_feature := current_feature
 			signature := current_feature.signature
 		ensure
@@ -373,7 +358,6 @@ feature {NONE} -- Compilation
 			need_twin: BOOLEAN
 			a_seed, new_seed: INTEGER
 		do
-			current_feature.resolve_identifier_types (a_flattener)
 			flattened_feature := current_feature
 			if is_replicated then
 				new_seed := flattened_feature.id

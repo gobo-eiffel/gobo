@@ -6,7 +6,7 @@ indexing
 
 	library:    "Gobo Eiffel Tools Library"
 	author:     "Eric Bezault <ericb@gobosoft.com>"
-	copyright:  "Copyright (c) 1999, Eric Bezault and others"
+	copyright:  "Copyright (c) 1999-2002, Eric Bezault and others"
 	license:    "Eiffel Forum Freeware License v1 (see forum.txt)"
 	date:       "$Date$"
 	revision:   "$Revision$"
@@ -14,13 +14,6 @@ indexing
 class ET_INFIX_EXPRESSION
 
 inherit
-
-	ET_CALL_EXPRESSION
-		rename
-			make as make_call
-		redefine
-			name
-		end
 
 	ET_BINARY_EXPRESSION
 
@@ -37,9 +30,9 @@ feature {NONE} -- Initialization
 			a_name_not_void: a_name /= Void
 			a_right_not_void: a_right /= Void
 		do
-			target := a_left
+			left := a_left
 			name := a_name
-			!! arguments.make (a_right)
+			right := a_right
 		ensure
 			left_set: left = a_left
 			name_set: name = a_name
@@ -48,24 +41,11 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	name: ET_INFIX_NAME
+	name: ET_INFIX_OPERATOR
 			-- Feature name
-
-	left: ET_EXPRESSION is
-			-- Left-hand-side of binary expression
-		do
-			Result := target
-		end
-
-	right: ET_EXPRESSION is
-			-- Right-hand-side of binary expression
-		do
-			Result := arguments.arguments.expression
-		end
 
 invariant
 
-	target_not_void: target /= Void
-	arguments_not_void: arguments /= Void
+	name_not_void: name /= Void
 
 end -- class ET_INFIX_EXPRESSION

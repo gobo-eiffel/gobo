@@ -27,13 +27,15 @@ creation
 
 feature {NONE} -- Initialization
 
-	make (a_name: like name) is
+	make (a_type_mark: like type_mark; a_name: like name) is
 			-- Create a new named type.
 		require
 			a_name_not_void: a_name /= Void
 		do
+			type_mark := a_type_mark
 			name := a_name
 		ensure
+			type_mark_set: type_mark = a_type_mark
 			name_set: name = a_name
 		end
 
@@ -41,6 +43,9 @@ feature -- Access
 
 	name: ET_IDENTIFIER
 			-- Name of type
+
+	type_mark: ET_TYPE_MARK
+			-- 'expanded', 'reference' or 'separate' keyword
 
 	position: ET_POSITION is
 			-- Position of current type in source code
@@ -96,10 +101,13 @@ feature -- Type processing
 		do
 			a_parameter := a_class.generic_parameter (name)
 			if a_parameter /= Void then
+				if type_mark /= Void then
+					-- ERROR
+				end
 				Result := ast_factory.new_formal_generic_type (name, a_parameter.index)
 			else
 				a_base_class := a_class.universe.eiffel_class (name)
-				Result := ast_factory.new_class_type (name, a_base_class)
+				Result := ast_factory.new_class_type (type_mark, name, a_base_class)
 			end
 		end
 
@@ -128,6 +136,10 @@ feature -- Output
 			-- Append textual representation of
 			-- current type to `a_string'.
 		do
+			if type_mark /= Void then
+				a_string.append_string (type_mark.text)
+				a_string.append_character (' ')
+			end
 			a_string.append_string (name.name)
 		end
 

@@ -35,7 +35,7 @@ feature {NONE} -- Initialization
 
 feature -- Status report
 
-	has_feature (a_name: ET_FEATURE_NAME): BOOLEAN is
+	has_feature_name (a_name: ET_FEATURE_NAME): BOOLEAN is
 			-- Is `a_name' listed in current export clause?
 		do
 			Result := True

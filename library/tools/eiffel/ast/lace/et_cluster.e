@@ -169,6 +169,8 @@ feature -- Parsing
 
 	parse_all (a_universe: ET_UNIVERSE) is
 			-- Parse all classes in cluster.
+		require
+			a_universe_not_void: a_universe /= Void
 		local
 			a_filename: STRING
 			a_file: KL_TEXT_INPUT_FILE
@@ -209,6 +211,63 @@ feature -- Parsing
 			end
 			if subclusters /= Void then
 				subclusters.parse_all (a_universe)
+			end
+		end
+
+	parse_class (a_class: ET_CLASS; a_filename: STRING) is
+			-- Try to parse `a_class' in `a_filename' in current
+			-- cluster, or recursively in subclusters until the
+			-- class is found.
+		require
+			a_class_not_void: a_class /= Void
+			a_class_not_parsed: not a_class.is_parsed
+			a_filename_not_void: a_filename /= Void
+		local
+			a_full_filename: STRING
+			a_file: KL_TEXT_INPUT_FILE
+			dir_name: STRING
+			dir: KL_DIRECTORY
+			s: STRING
+			a_cluster: ET_CLUSTER
+		do
+			if not is_abstract then
+				dir_name := Execution_environment.interpreted_string (full_pathname)
+				if is_valid_eiffel_filename (a_filename) then
+					a_full_filename := clone (dir_name)
+					a_full_filename.append_character ('/')
+					a_full_filename.append_string (a_filename)
+					!! a_file.make (a_full_filename)
+					a_file.open_read
+					if a_file.is_open_read then
+						a_class.universe.parse_file (a_file, a_full_filename, Current)
+						a_file.close
+					end
+				end
+				if not a_class.is_parsed and is_recursive then
+					!! dir.make (dir_name)
+					dir.open_read
+					if dir.is_open_read then
+						from
+							dir.read_entry
+						until
+							a_class.is_parsed or
+							dir.end_of_input
+						loop
+							s := dir.last_entry
+							if is_valid_directory_name (s) then
+								a_cluster := new_recursive_cluster (s)
+								a_cluster.parse_class (a_class, a_filename)
+							end
+							dir.read_entry
+						end
+						dir.close
+					else
+						-- TODO.
+					end
+				end
+			end
+			if not a_class.is_parsed and subclusters /= Void then
+				subclusters.parse_class (a_class, a_filename)
 			end
 		end
 

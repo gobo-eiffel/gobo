@@ -2,11 +2,11 @@ indexing
 
 	description:
 
-		"Eiffel equality expressions (i.e. = and /=)"
+		"Eiffel equality expressions (i.e. '=' and '/=')"
 
 	library:    "Gobo Eiffel Tools Library"
 	author:     "Eric Bezault <ericb@gobosoft.com>"
-	copyright:  "Copyright (c) 1999, Eric Bezault and others"
+	copyright:  "Copyright (c) 1999-2002, Eric Bezault and others"
 	license:    "Eiffel Forum Freeware License v1 (see forum.txt)"
 	date:       "$Date$"
 	revision:   "$Revision$"
@@ -17,24 +17,35 @@ inherit
 
 	ET_BINARY_EXPRESSION
 
+creation
+
+	make
+
 feature {NONE} -- Initialization
 
-	make (l: like left; r: like right) is
+	make (a_left: like left; an_operator: like operator; a_right: like right) is
 			-- Create a new equality expression.
 		require
-			l_not_void: l /= Void
-			r_not_void: r /= Void
+			a_left_not_void: a_left /= Void
+			an_operator_not_void: an_operator /= Void
+			a_right_not_void: a_right /= Void
 		do
-			left := l
-			right := r
+			left := a_left
+			operator := an_operator
+			right := a_right
 		ensure
-			left_set: left = l
-			right_set: right = r
+			left_set: left = a_left
+			operator_set: operator = an_operator
+			right_set: right = a_right
 		end
 
 feature -- Access
 
-	left, right: ET_EXPRESSION
-			-- Left- and right-hand-sides
+	operator: ET_EQUALITY_SYMBOL
+			-- Operator symbol
+
+invariant
+
+	operator_not_void: operator /= Void
 
 end -- class ET_EQUALITY_EXPRESSION

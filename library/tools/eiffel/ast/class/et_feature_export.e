@@ -2,7 +2,7 @@ indexing
 
 	description:
 
-		"Eiffel feature export clauses"
+		"Eiffel feature set export clauses"
 
 	library:    "Gobo Eiffel Tools Library"
 	author:     "Eric Bezault <ericb@gobosoft.com>"
@@ -17,55 +17,76 @@ inherit
 
 	ET_EXPORT
 
-	KL_IMPORTED_ARRAY_ROUTINES
+	ET_FEATURE_NAME_LIST
+		rename
+			make as make_feature_name_list,
+			make_with_capacity as make_feature_name_list_with_capacity
+		end
 
 creation
 
-	make
+	make, make_with_capacity
 
 feature {NONE} -- Initialization
 
-	make (a_clients: like clients; a_feature_set: like feature_set) is
-			-- Create a new feature export clause.
+	make (a_clients: like clients) is
+			-- Create a new feature set export clause.
 		require
 			a_clients_not_void: a_clients /= Void
-			a_feature_set_not_void: a_feature_set /= Void
-			no_void_feature: not ANY_ARRAY_.has (a_feature_set, Void)
 		do
 			clients := a_clients
-			feature_set := a_feature_set
+			make_feature_name_list
 		ensure
 			clients_set: clients = a_clients
-			feature_set_set: feature_set = a_feature_set
+			is_empty: is_empty
+			capacity_set: capacity = 0
+		end
+
+	make_with_capacity (a_clients: like clients; nb: INTEGER) is
+			-- Create a new feature set export clause with capacity `nb'.
+		require
+			a_clients_not_void: a_clients /= Void
+			nb_positive: nb >= 0
+		do
+			clients := a_clients
+			make_feature_name_list_with_capacity (nb)
+		ensure
+			clients_set: clients = a_clients
+			is_empty: is_empty
+			capacity_set: capacity = nb
 		end
 
 feature -- Access
 
-	feature_set: ARRAY [ET_FEATURE_NAME]
-			-- Set of feature names associated with current export clause
-
-feature -- Status report
-
-	has_feature (a_name: ET_FEATURE_NAME): BOOLEAN is
-			-- Is `a_name' listed in current export clause?
-		local
-			i, nb: INTEGER
+	position: ET_POSITION is
+			-- Position of first character of
+			-- current node in source code
 		do
-			i := feature_set.lower
-			nb := feature_set.upper
-			from until i > nb loop
-				if a_name.same_feature_name (feature_set.item (i)) then
-					Result := True
-					i := nb + 1 -- Jump out of the loop.
-				else
-					i := i + 1
-				end
+-- TODO.
+--			Result := clients.position
+		end
+
+	break: ET_BREAK is
+			-- Break which appears just after current node
+		do
+			if is_empty then
+-- TODO
+--				Result := clients.break
+			else
+				Result := item (count).break
 			end
 		end
 
-invariant
+feature -- Setting
 
-	feature_set_not_void: feature_set /= Void
-	no_void_feature: not ANY_ARRAY_.has (feature_set, Void)
+	set_clients (a_clients: like clients) is
+			-- Set `clients' to `a_clients'.
+		require
+			a_clients_not_void: a_clients /= Void
+		do
+			clients := a_clients
+		ensure
+			clients_set: clients = a_clients
+		end
 
 end -- class ET_FEATURE_EXPORT

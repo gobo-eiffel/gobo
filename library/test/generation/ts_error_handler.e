@@ -40,27 +40,29 @@ feature -- Access
 
 feature -- Syntax errors
 
-	report_config_syntax_error (p: ET_POSITION) is
+	report_config_syntax_error (a_filename: STRING; p: ET_POSITION) is
 			-- Report a syntax error in configuration file.
 		require
 			p_not_void: p /= Void
+			a_filename_not_void: a_filename /= Void
 		local
 			an_error: UT_SYNTAX_ERROR
 		do
-			!! an_error.make (p.filename, p.line)
+			!! an_error.make (a_filename, p.line)
 			report_error (an_error)
 		end
 
-	report_regexp_syntax_error (a_regexp: ET_IDENTIFIER) is
+	report_regexp_syntax_error (a_regexp: ET_IDENTIFIER; a_filename: STRING) is
 			-- Report a syntax error in `a_regexp'.
 		require
 			a_regexp_not_void: a_regexp /= Void
+			a_filename_not_void: a_filename /= Void
 		local
 			an_error: TS_REGEXP_SYNTAX_ERROR
 			p: ET_POSITION
 		do
 			p := a_regexp.position
-			!! an_error.make (a_regexp.name, p.filename, p.line)
+			!! an_error.make (a_regexp.name, a_filename, p.line)
 			report_error (an_error)
 		end
 

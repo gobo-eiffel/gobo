@@ -81,13 +81,15 @@ feature -- Type processing
 			end
 		end
 
-	resolve_identifier_types (a_flattener: ET_FEATURE_FLATTENER) is
-			-- Replace any 'like identifier' types that appear
-			-- in the implementation of current feature by the
-			-- corresponding 'like feature' or 'like argument'.
-			-- Also resolve 'BIT identifier' types.
+	resolve_identifier_types (a_class: ET_CLASS) is
+			-- Replace any 'like identifier' types that appear in the
+			-- implementation of current feature in class `a_class' by
+			-- the corresponding 'like feature' or 'like argument'.
+			-- Also resolve 'BIT identifier' types and check validity
+			-- of arguments' name. Set `a_class.has_flatten_error' to
+			-- true if an error occurs.
 		do
-			type := type.resolved_identifier_types (Current, Void, a_flattener)
+			type := type.resolved_identifier_types (Current, Void, a_class)
 		end
 
 invariant

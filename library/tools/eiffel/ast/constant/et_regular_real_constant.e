@@ -6,7 +6,7 @@ indexing
 
 	library:    "Gobo Eiffel Tools Library"
 	author:     "Eric Bezault <ericb@gobosoft.com>"
-	copyright:  "Copyright (c) 1999, Eric Bezault and others"
+	copyright:  "Copyright (c) 1999-2002, Eric Bezault and others"
 	license:    "Eiffel Forum Freeware License v1 (see forum.txt)"
 	date:       "$Date$"
 	revision:   "$Revision$"
@@ -23,7 +23,7 @@ creation
 
 feature {NONE} -- Initialization
 
-	make (a_literal: like literal; a_position: like position) is
+	make (a_literal: like literal; a_position: like literal_position) is
 			-- Create a new Real constant.
 		require
 			a_literal_not_void: a_literal /= Void
@@ -31,10 +31,10 @@ feature {NONE} -- Initialization
 			a_position_not_void: a_position /= Void
 		do
 			literal := a_literal
-			position := a_position
+			literal_position := a_position
 		ensure
 			literal_set: literal = a_literal
-			position_set: position = a_position
+			literal_position_set: literal_position = a_position
 		end
 
 invariant

@@ -19,7 +19,8 @@ inherit
 
 	ET_EIFFEL_SCANNER
 		rename
-			make as make_eiffel_scanner
+			make as make_eiffel_scanner,
+			make_with_factory as make_eiffel_scanner_with_factory
 		undefine
 			reset
 		end
@@ -30,37 +31,63 @@ creation
 
 %}
 
-%token <ET_POSITION>           E_BANGBANG E_ARROW E_DOTDOT E_LARRAY E_RARRAY
-%token <ET_POSITION>           E_ASSIGN E_REVERSE E_ALIAS E_ALL E_AS E_CHECK
-%token <ET_POSITION>           E_CLASS E_CREATE E_CREATION E_DEBUG E_DEFERRED
-%token <ET_POSITION>           E_DO E_ELSE E_ELSEIF E_END E_ENSURE E_EXPANDED
-%token <ET_POSITION>           E_EXPORT E_EXTERNAL E_FEATURE E_FROM E_FROZEN
-%token <ET_POSITION>           E_IF E_INDEXING E_INFIX E_INHERIT E_INSPECT
-%token <ET_POSITION>           E_INVARIANT E_IS E_LIKE E_LOCAL E_LOOP E_OBSOLETE
-%token <ET_POSITION>           E_ONCE E_PREFIX E_REDEFINE E_RENAME E_REQUIRE
-%token <ET_POSITION>           E_RESCUE E_RETRY E_SELECT E_SEPARATE E_STRIP
-%token <ET_POSITION>           E_THEN E_UNDEFINE E_UNIQUE E_UNTIL E_VARIANT
-%token <ET_POSITION>           E_WHEN E_CURRENT E_RESULT E_PRECURSOR
+%token <ET_TOKEN>              E_ALIAS E_ALL E_AS E_CHECK
+%token <ET_TOKEN>              E_CLASS E_CREATE E_CREATION E_DEBUG E_DEFERRED
+%token <ET_TOKEN>              E_DO E_ELSE E_ELSEIF E_END E_ENSURE
+%token <ET_TOKEN>              E_EXPORT E_EXTERNAL E_FEATURE E_FROM E_FROZEN
+%token <ET_TOKEN>              E_IF E_INDEXING E_INFIX E_INHERIT E_INSPECT
+%token <ET_TOKEN>              E_INVARIANT E_IS E_LIKE E_LOCAL E_LOOP E_OBSOLETE
+%token <ET_TOKEN>              E_ONCE E_PREFIX E_REDEFINE E_RENAME E_REQUIRE
+%token <ET_TOKEN>              E_RESCUE E_SELECT E_STRIP
+%token <ET_TOKEN>              E_THEN E_UNDEFINE E_UNIQUE E_UNTIL E_VARIANT
+%token <ET_TOKEN>              E_WHEN E_PRECURSOR
+
+%token <ET_SYMBOL>             E_BANGBANG E_ARROW E_DOTDOT E_LARRAY E_RARRAY
+%token <ET_SYMBOL>             E_ASSIGN E_REVERSE
 %token <ET_POSITION>           E_UNKNOWN
 
 %token <ET_BIT_CONSTANT>       E_BIT
 %token <ET_BOOLEAN_CONSTANT>   E_FALSE E_TRUE
+%token <ET_BREAK>              E_BREAK
 %token <ET_CHARACTER_CONSTANT> E_CHARACTER
+%token <ET_CURRENT>            E_CURRENT
+%token <ET_EXPANDED_MARK>      E_EXPANDED
+%token <ET_FREE_OPERATOR>      E_FREEOP
 %token <ET_IDENTIFIER>         E_IDENTIFIER E_BITTYPE
+%token <ET_INFIX_AND_OPERATOR> E_AND
+%token <ET_INFIX_DIV_OPERATOR> E_DIV
+%token <ET_INFIX_DIVIDE_OPERATOR> '/'
+%token <ET_INFIX_GE_OPERATOR>  E_GE
+%token <ET_INFIX_GT_OPERATOR>  '>'
+%token <ET_INFIX_IMPLIES_OPERATOR>  E_IMPLIES
+%token <ET_INFIX_LE_OPERATOR>  E_LE
+%token <ET_INFIX_LT_OPERATOR>  '<'
+%token <ET_INFIX_MOD_OPERATOR> E_MOD
+%token <ET_INFIX_OR_OPERATOR>  E_OR
+%token <ET_INFIX_POWER_OPERATOR> '^'
+%token <ET_INFIX_TIMES_OPERATOR> '*'
+%token <ET_INFIX_XOR_OPERATOR> E_XOR
 %token <ET_INTEGER_CONSTANT>   E_INTEGER
 %token <ET_MANIFEST_STRING>    E_STRPLUS E_STRMINUS E_STRSTAR E_STRSLASH E_STRDIV
 %token <ET_MANIFEST_STRING>    E_STRMOD E_STRPOWER E_STRLT E_STRLE E_STRGT E_STRGE
 %token <ET_MANIFEST_STRING>    E_STRAND E_STROR E_STRXOR E_STRANDTHEN E_STRORELSE
 %token <ET_MANIFEST_STRING>    E_STRIMPLIES E_STRFREEOP E_STRNOT E_STRING
+%token <ET_PREFIX_NOT_OPERATOR> E_NOT
 %token <ET_REAL_CONSTANT>      E_REAL
-%token <ET_TOKEN>              E_FREEOP
+%token <ET_REFERENCE_MARK>     E_REFERENCE
+%token <ET_RESULT>             E_RESULT
+%token <ET_RETRY_INSTRUCTION>  E_RETRY
+%token <ET_SEPARATE_MARK>      E_SEPARATE
 
 %token E_CHARERR E_STRERR
 
-%token <ET_POSITION>           E_IMPLIES E_OR E_XOR E_AND '=' E_NE '<' '>'
-%token <ET_POSITION>           E_LE E_GE '+' '-' '*' '/' E_DIV E_MOD
-%token <ET_POSITION>           '^' E_NOT E_OLD
-%token <ET_POSITION>           '{'
+%token <ET_TOKEN>              E_OLD
+%token <ET_SYMBOL>             '{' '}'
+%token <ET_SYMBOL>             '(' ')' ';' ':' ',' '[' ']' '$' '.' '!'
+%token <ET_MINUS_SYMBOL>       '-'
+%token <ET_PLUS_SYMBOL>        '+'
+%token <ET_EQUAL_SYMBOL>       '='
+%token <ET_NOT_EQUAL_SYMBOL>   E_NE
 
 %left E_IMPLIES
 %left E_OR E_XOR
@@ -72,20 +99,29 @@ creation
 %left E_FREEOP
 %right E_NOT E_OLD
 
-%type <ET_ACTUAL_ARGUMENTS>    Actuals_opt Actual_list
+%type <ET_ACTUAL_ARGUMENTS>    Actuals_opt Actuals_expression_list
 %type <ET_ACTUAL_GENERIC_PARAMETERS>  Actual_generics_opt Type_list
                                Constraint_actual_generics_opt Constraint_type_list
-%type <ET_ASSERTION>           Assertion_clause
-%type <ET_ASSERTIONS>          Assertion_list Invariant_opt
+%type <ET_BIT_CONSTANT>        Bit_constant
 %type <ET_BOOLEAN_CONSTANT>    Boolean_constant
+%type <ET_BREAK>               Break_opt
+%type <ET_CALL_EXPRESSION>     Call_expression
 %type <ET_CHARACTER_CONSTANT>  Character_constant
+%type <ET_CHECK_ASSERTIONS>    Check_clause
+%type <ET_CHOICE>              Choice
+%type <ET_CHOICE_CONSTANT>     Choice_constant
 %type <ET_CLASS>               Class_header
 %type <ET_CLIENTS>             Clients Clients_opt Client_list
-%type <ET_COMPOUND>            Compound Non_empty_compound Else_part Rescue_opt
+%type <ET_COMPOUND>            Compound Non_empty_compound Rescue_opt
+%type <ET_CONSTANT>            Manifest_constant
 %type <ET_CREATOR>             Creation_clause
 %type <ET_CREATORS>            Creators Creators_opt
+%type <ET_CURRENT>             Current
+%type <ET_DEBUG_KEYS>          Debug_keys
+%type <ET_ELSE_PART>           Else_part
+%type <ET_EXPANDED_MARK>       Expanded
 %type <ET_EXPORT>              New_export_item
-%type <ET_EXPRESSION>          Expression Call_expression Qualified_call_chain
+%type <ET_EXPRESSION>          Expression Call_chain Precursor_expression
                                Address_mark Create_expression
 %type <ET_FEATURE>             Feature_declaration Single_feature_declaration
                                Attribute_declaration Constant_declaration Unique_declaration
@@ -93,33 +129,58 @@ creation
                                Deferred_procedure_declaration External_procedure_declaration
                                Do_function_declaration Once_function_declaration
                                Deferred_function_declaration External_function_declaration
-%type <ET_FEATURE_NAME>        Feature_name Feature_list_item Procedure_list_item
+%type <ET_FEATURE_EXPORT>      New_feature_export Export_feature_name_list
+%type <ET_FEATURE_NAME>        Feature_name Procedure_list_item
 %type <ET_FORMAL_ARGUMENTS>    Formal_arguments_opt Formal_argument_list
 %type <ET_FORMAL_GENERIC_PARAMETER>  Formal_generic
 %type <ET_FORMAL_GENERIC_PARAMETERS> Formal_generics_opt Formal_generic_list
 %type <ET_IDENTIFIER>          Identifier Class_name
-%type <ET_IF_INSTRUCTION>      Conditional If_elseif_list
-%type <ET_INSTRUCTION>         Instruction Creation_instruction Assignment
-                               Assignment_attempt Call_instruction Multi_branch
-                               Loop Debug Check Create_instruction
+%type <ET_IF_INSTRUCTION>      Conditional
+%type <ET_INSPECT_INSTRUCTION> Multi_branch
+%type <ET_INSTRUCTION>         Instruction Creation_instruction Call_instruction
+                               Debug_instruction Create_instruction
 %type <ET_INTEGER_CONSTANT>    Integer_constant
+%type <ET_INVARIANTS>          Invariant_clause Invariant_clause_opt
+%type <ET_KEYWORD_FEATURE_NAME_LIST> Keyword_feature_name_list Select_clause Select_clause_opt
+                               Undefine_clause Undefine_clause_opt Redefine_clause
+                               Redefine_clause_opt
 %type <ET_LOCAL_VARIABLES>     Local_declarations_opt Local_variable_list
+%type <ET_MANIFEST_ARRAY>      Manifest_array Manifest_array_expression_list
 %type <ET_MANIFEST_STRING>     Obsolete_opt Manifest_string External_name_opt
-%type <ET_NAMED_TYPE>          Named_type Constraint_named_type
+%type <ET_MANIFEST_TUPLE>      Manifest_tuple Manifest_tuple_expression_list
+%type <ET_PARENTHESIZED_EXPRESSION>  Parenthesized_expression
 %type <ET_PARENTS>             Parent_list_to_end Inheritance_to_end
-%type <ET_POSTCONDITIONS>      Postcondition_list Postcondition_opt
-%type <ET_PRECONDITIONS>       Precondition_list Precondition_opt
+%type <ET_POSTCONDITIONS>      Postcondition Postcondition_opt
+%type <ET_PRECONDITIONS>       Precondition Precondition_opt
+%type <ET_QUALIFIED_PRECURSOR_EXPRESSION>  Qualified_precursor_expression
+%type <ET_QUALIFIED_PRECURSOR_INSTRUCTION>  Qualified_precursor_instruction
 %type <ET_REAL_CONSTANT>       Real_constant
+%type <ET_REFERENCE_MARK>      Reference
 %type <ET_RENAME>              Rename_pair
+%type <ET_RESULT>              Result
+%type <ET_RETRY_INSTRUCTION>   Retry
+%type <ET_SEPARATE_MARK>       Separate
+%type <ET_SIGN_SYMBOL>         Plus_sign Minus_sign
+%type <ET_STRIP_EXPRESSION>    Strip_expression Strip_feature_name_list
+%type <ET_SYMBOL>              Assign Bang Bangbang Colon Comma Dollar Dot Left_array Right_array
+                               Left_brace Right_brace Left_bracket Right_bracket Left_parenthesis
+                               Right_parenthesis Reverse Semicolon Dotdot
+%type <ET_TOKEN>               Check Create Debug Else Elseif End Ensure From If Invariant
+                               Loop Precursor Require Then Until Variant When Inspect Select
+                               Rename, Redefine, Export, Undefine
 %type <ET_TYPE>                Type Constraint_type
+%type <ET_VARIANT>             Variant_clause_opt
 %type <ET_WRITABLE>            Writable
 
-%type <like new_export_list>     New_exports New_exports_opt New_export_list New_export_list_with_no_terminator
-%type <like new_feature_list>    Feature_list Select Select_opt Undefine Undefine_opt
-                                 Redefine Redefine_opt Procedure_list Procedure_list_opt
-%type <like new_rename_list>     Rename Rename_list
+%type <like new_choice_item_list>        Choices Choices_opt
+%type <like new_elseif_part_list>        Elseif_list
+%type <like new_export_list>             New_exports New_exports_opt New_export_list New_export_list_with_no_terminator
+%type <like new_feature_list>            Procedure_list Procedure_list_opt
+%type <like new_manifest_string_item_list>  Debug_key_list
+%type <like new_rename_list>             Rename_clause Rename_list
+%type <like new_when_part_list>          When_list When_list_opt
 
-%expect 21
+%expect 37
 %start Class_declarations
 
 %%
@@ -136,7 +197,7 @@ Class_declaration_opt: -- Empty
 	;
 
 Class_to_end: Class_header Formal_generics_opt Obsolete_opt
-		Creators_opt Features_opt Invariant_opt Indexing_opt E_END Class_declaration_opt
+		Creators_opt Features_opt Invariant_clause_opt Indexing_opt End Class_declaration_opt
 	| Class_header Formal_generics_opt Obsolete_opt Inheritance_to_end
 		{ $1.set_parents ($4) }
 	;
@@ -145,7 +206,7 @@ Class_to_end_opt: -- Empty
 	| Class_to_end
 	;
 
-Creators_features_invariant_opt: Creators_opt Features_opt Invariant_opt
+Creators_features_invariant_opt: Creators_opt Features_opt Invariant_clause_opt
 	;
 
 --------------------------------------------------------------------------------
@@ -187,12 +248,13 @@ Index_value: Identifier
 	| Integer_constant
 	| Real_constant
 	| Manifest_string
-	| E_BIT
+	| Bit_constant
+		{ $$ := $1 }
 	;
 
---S: ';'
---	| S ';'
---	;
+SS: -- Empty
+	| SS Semicolon
+	;
 
 --------------------------------------------------------------------------------
 
@@ -200,9 +262,9 @@ Class_header: E_CLASS Identifier
 		{ last_class := new_class ($2); $$ := last_class }
 	| E_DEFERRED E_CLASS Identifier
 		{ last_class := new_deferred_class ($3); $$ := last_class }
-	| E_EXPANDED E_CLASS Identifier
+	| Expanded E_CLASS Identifier
 		{ last_class := new_expanded_class ($3); $$ := last_class }
-	| E_SEPARATE E_CLASS Identifier
+	| Separate E_CLASS Identifier
 		{ last_class := new_separate_class ($3); $$ := last_class }
 	;
 
@@ -235,29 +297,25 @@ Formal_generic: Identifier
 	;
 
 Constraint_create_opt: -- Empty
-	| E_CREATE Procedure_list_opt E_END
+	| E_CREATE Procedure_list_opt End
 	;
 
-Constraint_type: Constraint_named_type
-		{ $$ := $1 }
-	| E_EXPANDED Constraint_named_type
-	-- TODO:
-		{ $$ := $2 }
-	| E_SEPARATE Constraint_named_type
-		-- TODO
-		{ $$ := $2 }
-	| E_LIKE E_CURRENT
-		{ $$ := new_like_current ($1) }
+Constraint_type: Class_name Constraint_actual_generics_opt
+		{ $$ := new_constraint_named_type (Void, $1, $2) }
+	| Expanded Class_name Constraint_actual_generics_opt
+		{ $$ := new_constraint_named_type ($1, $2, $3) }
+	| Separate Class_name Constraint_actual_generics_opt
+		{ $$ := new_constraint_named_type ($1, $2, $3) }
+	| Reference Class_name Constraint_actual_generics_opt
+		{ $$ := new_constraint_named_type ($1, $2, $3) }
+	| E_LIKE Current
+		{ $$ := new_like_current ($1.position) }
 	| E_LIKE Identifier
-		{ $$ := new_like_identifier ($2, $1) }
+		{ $$ := new_like_identifier ($2, $1.position) }
 	| E_BITTYPE Integer_constant
 		{ $$ := new_bit_type ($2, $1.position) }
 	| E_BITTYPE Identifier
 		{ $$ := new_bit_identifier ($2, $1.position)  }
-	;
-
-Constraint_named_type: Class_name Constraint_actual_generics_opt
-		{ $$ := new_constraint_named_type ($1, $2) }
 	;
 
 Constraint_actual_generics_opt: -- Empty
@@ -270,11 +328,11 @@ Constraint_actual_generics_opt: -- Empty
 	;
 
 Constraint_type_list: Constraint_type
-		{ $$ := new_actual_generics ($1) }
-	| Constraint_type_list ',' Constraint_type
+		{ $$ := new_actual_generics (new_type_item ($1)) }
+	| Constraint_type_list Comma Constraint_type
 		{
 			$$ := $1
-			$$.put ($3)
+			$$.put (new_type_item ($3))
 		}
 	;
 
@@ -288,61 +346,61 @@ Obsolete_opt: -- Empty
 
 --------------------------------------------------------------------------------
 
-Inheritance_to_end: E_INHERIT Creators_features_invariant_opt Indexing_opt E_END Class_declaration_opt
+Inheritance_to_end: E_INHERIT Creators_features_invariant_opt Indexing_opt End Class_declaration_opt
 		-- { $$ := Void }
 	| E_INHERIT Parent_list_to_end
 		{ $$ := $2 }
 	;
 
-Parent_list_to_end: E_IDENTIFIER Actual_generics_opt
-	  Rename New_exports_opt Undefine_opt Redefine_opt Select_opt E_END
-	  Parent_terminator Creators_features_invariant_opt Indexing_opt E_END Class_declaration_opt
+Parent_list_to_end: Class_name Actual_generics_opt
+	  Rename_clause New_exports_opt Undefine_clause_opt Redefine_clause_opt Select_clause_opt End
+	  Parent_terminator Creators_features_invariant_opt Indexing_opt End Class_declaration_opt
 		{ $$ := new_parents (new_parent ($1, $2, $3, $4, $5, $6, $7)) }
-	| E_IDENTIFIER Actual_generics_opt
-	  New_exports Undefine_opt Redefine_opt Select_opt E_END
-	  Parent_terminator Creators_features_invariant_opt Indexing_opt E_END Class_declaration_opt
+	| Class_name Actual_generics_opt
+	  New_exports Undefine_clause_opt Redefine_clause_opt Select_clause_opt End
+	  Parent_terminator Creators_features_invariant_opt Indexing_opt End Class_declaration_opt
 		{ $$ := new_parents (new_parent ($1, $2, Void, $3, $4, $5, $6)) }
-	| E_IDENTIFIER Actual_generics_opt Undefine Redefine_opt Select_opt E_END
-	  Parent_terminator Creators_features_invariant_opt Indexing_opt E_END Class_declaration_opt
+	| Class_name Actual_generics_opt Undefine_clause Redefine_clause_opt Select_clause_opt End
+	  Parent_terminator Creators_features_invariant_opt Indexing_opt End Class_declaration_opt
 		{ $$ := new_parents (new_parent ($1, $2, Void, Void, $3, $4, $5)) }
-	| E_IDENTIFIER Actual_generics_opt Redefine Select_opt E_END
-	  Parent_terminator Creators_features_invariant_opt Indexing_opt E_END Class_declaration_opt
+	| Class_name Actual_generics_opt Redefine_clause Select_clause_opt End
+	  Parent_terminator Creators_features_invariant_opt Indexing_opt End Class_declaration_opt
 		{ $$ := new_parents (new_parent ($1, $2, Void, Void, Void, $3, $4)) }
-	| E_IDENTIFIER Actual_generics_opt Select E_END
-	  Parent_terminator Creators_features_invariant_opt Indexing_opt E_END Class_declaration_opt
+	| Class_name Actual_generics_opt Select_clause End
+	  Parent_terminator Creators_features_invariant_opt Indexing_opt End Class_declaration_opt
 		{ $$ := new_parents (new_parent ($1, $2, Void, Void, Void, Void, $3)) }
-	| E_IDENTIFIER Actual_generics_opt E_END
-	  Parent_terminator Creators_features_invariant_opt Indexing_opt E_END Class_declaration_opt
+	| Class_name Actual_generics_opt End
+	  Parent_terminator Creators_features_invariant_opt Indexing_opt End Class_declaration_opt
 		{ $$ := new_parents (new_parent ($1, $2, Void, Void, Void, Void, Void)) }
-	| E_IDENTIFIER Actual_generics_opt
-	  Parent_terminator Creators_features_invariant_opt Indexing_opt E_END Class_declaration_opt
+	| Class_name Actual_generics_opt
+	  Parent_terminator Creators_features_invariant_opt Indexing_opt End Class_declaration_opt
 		{ $$ := new_parents (new_parent ($1, $2, Void, Void, Void, Void, Void)) }
-	| E_IDENTIFIER Actual_generics_opt E_END Indexing E_END Class_declaration_opt
+	| Class_name Actual_generics_opt End Indexing End Class_declaration_opt
 		{ $$ := new_parents (new_parent ($1, $2, Void, Void, Void, Void, Void)) }
-	| E_IDENTIFIER Actual_generics_opt E_END Indexing_opt Class_to_end_opt
+	| Class_name Actual_generics_opt End Indexing_opt Class_to_end_opt
 		{ $$ := new_parents (new_parent ($1, $2, Void, Void, Void, Void, Void)) }
 
-	| E_IDENTIFIER Actual_generics_opt
-	  Rename New_exports_opt Undefine_opt Redefine_opt Select_opt E_END
+	| Class_name Actual_generics_opt
+	  Rename_clause New_exports_opt Undefine_clause_opt Redefine_clause_opt Select_clause_opt End
 	  Parent_separator Parent_list_to_end
 		{ $$ := $10; $$.put_first (new_parent ($1, $2, $3, $4, $5, $6, $7)) }
-	| E_IDENTIFIER Actual_generics_opt
-	  New_exports Undefine_opt Redefine_opt Select_opt E_END
+	| Class_name Actual_generics_opt
+	  New_exports Undefine_clause_opt Redefine_clause_opt Select_clause_opt End
 	  Parent_separator Parent_list_to_end
 		{ $$ := $9; $$.put_first (new_parent ($1, $2, Void, $3, $4, $5, $6)) }
-	| E_IDENTIFIER Actual_generics_opt Undefine Redefine_opt Select_opt E_END
+	| Class_name Actual_generics_opt Undefine_clause Redefine_clause_opt Select_clause_opt End
 	  Parent_separator Parent_list_to_end
 		{ $$ := $8; $$.put_first (new_parent ($1, $2, Void, Void, $3, $4, $5)) }
-	| E_IDENTIFIER Actual_generics_opt Redefine Select_opt E_END
+	| Class_name Actual_generics_opt Redefine_clause Select_clause_opt End
 	  Parent_separator Parent_list_to_end
 		{ $$ := $7; $$.put_first (new_parent ($1, $2, Void, Void, Void, $3, $4)) }
-	| E_IDENTIFIER Actual_generics_opt Select E_END
+	| Class_name Actual_generics_opt Select_clause End
 	  Parent_separator Parent_list_to_end
 		{ $$ := $6; $$.put_first (new_parent ($1, $2, Void, Void, Void, Void, $3)) }
-	| E_IDENTIFIER Actual_generics_opt E_END
+	| Class_name Actual_generics_opt End
 	  Parent_separator Parent_list_to_end
 		{ $$ := $5; $$.put_first (new_parent ($1, $2, Void, Void, Void, Void, Void)) }
-	| E_IDENTIFIER Actual_generics_opt
+	| Class_name Actual_generics_opt
 	  Parent_separator Parent_list_to_end
 		{ $$ := $4; $$.put_first (new_parent ($1, $2, Void, Void, Void, Void, Void)) }
 	;
@@ -365,9 +423,9 @@ Parent_separator: -- Empty
 
 --------------------------------------------------------------------------------
 
-Rename: E_RENAME
+Rename_clause: Rename
 		-- { $$ := Void }
-	| E_RENAME Rename_list
+	| Rename Rename_list
 		{ $$ := $2 }
 	;
 
@@ -394,7 +452,7 @@ Rename_pair: Feature_name E_AS Feature_name
 
 --------------------------------------------------------------------------------
 
-New_exports: E_EXPORT New_export_list
+New_exports: Export New_export_list
 		{ $$ := $2 }
 	;
 
@@ -436,36 +494,44 @@ Semicolons_opt: -- Empty
 	| Semicolons
 	;
 
-New_export_item: Clients Feature_list
-		{
-			$$ := new_feature_export ($1, $2)
-			export_list_count := export_list_count + 1
-		}
-	| Clients E_ALL
+New_export_item: Clients E_ALL
 		{
 			$$ := new_all_export ($1)
 			export_list_count := export_list_count + 1
 		}
-	;
-
-Feature_list: Feature_list_item
-		{
-			$$ := new_feature_list (feature_list_count)
-			feature_list_count := feature_list_count - 1
-			$$.put ($1, feature_list_count)
-		}
-	| Feature_list_item ',' Feature_list
-		{
-			$$ := $3
-			feature_list_count := feature_list_count - 1
-			$$.put ($1, feature_list_count)
-		}
-	;
-
-Feature_list_item: Feature_name
+	| New_feature_export
 		{
 			$$ := $1
-			feature_list_count := feature_list_count + 1
+			export_list_count := export_list_count + 1
+		}
+	;
+	
+New_feature_export: Clients 
+		{ add_counter }
+	  Export_feature_name_list
+		{
+			$$ := $3
+			remove_counter
+		}
+	;
+
+Export_feature_name_list: Feature_name
+		{
+			$$ := new_feature_export_with_capacity (counter_value + 1)
+			$$.put_first ($1)
+		}
+	| Feature_name Comma
+		-- TODO: syntax error.
+		{
+			$$ := new_feature_export_with_capacity (counter_value + 1)
+			$$.put_first (new_feature_name_comma ($1, $2))
+		}
+	| Feature_name Comma 
+		{ increment_counter }
+	  Export_feature_name_list
+		{
+			$$ := $4
+			$$.put_first (new_feature_name_comma ($1, $2))
 		}
 	;
 
@@ -493,42 +559,80 @@ Client_list: Identifier
 		{ $$ := $2; $$.put_first (new_client ($1)) }
 	;
 
---------------------------------------------------------------------------------
+--DONE------------------------------------------------------------------------------
 
-Redefine: E_REDEFINE
-		-- { $$ := Void }
-	| E_REDEFINE Feature_list
-		{ $$ := $2 }
-	;
-
-Redefine_opt: -- Empty
-		-- { $$ := Void }
+Redefine_clause: Redefine
+		{ $$ := new_keyword_feature_name_list ($1) }
 	| Redefine
+		{ add_counter }
+	  Keyword_feature_name_list
+		{
+			$$ := $3
+			$$.set_keyword ($1)
+			remove_counter
+		}
+	;
+
+Redefine_clause_opt: -- Empty
+		-- { $$ := Void }
+	| Redefine_clause
 		{ $$ := $1 }
 	;
 
-Undefine: E_UNDEFINE
-		-- { $$ := Void }
-	| E_UNDEFINE Feature_list
-		{ $$ := $2 }
-	;
-
-Undefine_opt: -- Empty
-		-- { $$ := Void }
+Undefine_clause: Undefine
+		{ $$ := new_keyword_feature_name_list ($1) }
 	| Undefine
+		{ add_counter }
+	  Keyword_feature_name_list
+		{
+			$$ := $3
+			$$.set_keyword ($1)
+			remove_counter
+		}
+	;
+
+Undefine_clause_opt: -- Empty
+		-- { $$ := Void }
+	| Undefine_clause
 		{ $$ := $1 }
 	;
 
-Select: E_SELECT
-		-- { $$ := Void }
-	| E_SELECT Feature_list
-		{ $$ := $2 }
-	;
-
-Select_opt: -- Empty
-		-- { $$ := Void }
+Select_clause: Select
+		{ $$ := new_keyword_feature_name_list ($1) }
 	| Select
+		{ add_counter }
+	  Keyword_feature_name_list
+		{
+			$$ := $3
+			$$.set_keyword ($1)
+			remove_counter
+		}
+	;
+
+Select_clause_opt: -- Empty
+		-- { $$ := Void }
+	| Select_clause
 		{ $$ := $1 }
+	;
+
+Keyword_feature_name_list: Feature_name
+		{
+			$$ := new_keyword_feature_name_list_with_capacity (counter_value + 1)
+			$$.put_first ($1)
+		}
+	| Feature_name Comma
+		-- TODO: syntax error.
+		{
+			$$ := new_keyword_feature_name_list_with_capacity (counter_value + 1)
+			$$.put_first (new_feature_name_comma ($1, $2))
+		}
+	| Feature_name Comma 
+		{ increment_counter }
+	  Keyword_feature_name_list
+		{
+			$$ := $4
+			$$.put_first (new_feature_name_comma ($1, $2))
+		}
 	;
 
 --------------------------------------------------------------------------------
@@ -551,7 +655,7 @@ Creators: Creation_clause
 Creation_clause: E_CREATION Clients_opt Procedure_list_opt
 		{
 			if $2 = Void then
-				$$ := new_creator (new_any_clients ($1), $3)
+				$$ := new_creator (new_any_clients ($1.position), $3)
 			else
 				$$ := new_creator ($2, $3)
 			end
@@ -559,7 +663,7 @@ Creation_clause: E_CREATION Clients_opt Procedure_list_opt
 	| E_CREATE Clients_opt Procedure_list_opt
 		{
 			if $2 = Void then
-				$$ := new_creator (new_any_clients ($1), $3)
+				$$ := new_creator (new_any_clients ($1.position), $3)
 			else
 				$$ := new_creator ($2, $3)
 			end
@@ -608,7 +712,7 @@ Features: Feature_clause
 Feature_clause: E_FEATURE Clients_opt
 			{
 				if $2 = Void then
-					if new_any_clients ($1) = Void then end
+					if new_any_clients ($1.position) = Void then end
 				end
 			}
 		Feature_declaration_list
@@ -671,7 +775,7 @@ Attribute_declaration: Feature_name Formal_arguments_opt ':' Type
 	;
 
 Constant_declaration: Feature_name Formal_arguments_opt ':' Type E_IS Manifest_constant
-		{ $$ := new_constant_attribute ($1, $2, $4, $5) }
+		{ $$ := new_constant_attribute ($1, $2, $4, $6) }
 	;
 
 Unique_declaration: Feature_name Formal_arguments_opt ':' Type E_IS E_UNIQUE
@@ -680,47 +784,47 @@ Unique_declaration: Feature_name Formal_arguments_opt ':' Type E_IS E_UNIQUE
 
 Do_procedure_declaration: Feature_name Formal_arguments_opt E_IS
 	Obsolete_opt Precondition_opt Local_declarations_opt
-	E_DO Compound Postcondition_opt Rescue_opt E_END
+	E_DO Compound Postcondition_opt Rescue_opt End
 		{ $$ := new_do_procedure ($1, $2, $4, $5, $6, $8, $9, $10) }
 	;
 
 Once_procedure_declaration: Feature_name Formal_arguments_opt E_IS
 	Obsolete_opt Precondition_opt Local_declarations_opt
-	E_ONCE Compound Postcondition_opt Rescue_opt E_END
+	E_ONCE Compound Postcondition_opt Rescue_opt End
 		{ $$ := new_once_procedure ($1, $2, $4, $5, $6, $8, $9, $10) }
 	;
 
 Deferred_procedure_declaration: Feature_name Formal_arguments_opt E_IS
-	Obsolete_opt Precondition_opt E_DEFERRED Postcondition_opt E_END
+	Obsolete_opt Precondition_opt E_DEFERRED Postcondition_opt End
 		{ $$ := new_deferred_procedure ($1, $2, $4, $5, $7) }
 	;
 
 External_procedure_declaration: Feature_name Formal_arguments_opt E_IS
 	Obsolete_opt Precondition_opt E_EXTERNAL Manifest_string
-	External_name_opt Postcondition_opt E_END
+	External_name_opt Postcondition_opt End
 		{ $$ := new_external_procedure ($1, $2, $4, $5, $7, $8, $9) }
 	;
 
 Do_function_declaration: Feature_name Formal_arguments_opt ':' Type E_IS
 	Obsolete_opt Precondition_opt Local_declarations_opt
-	E_DO Compound Postcondition_opt Rescue_opt E_END
+	E_DO Compound Postcondition_opt Rescue_opt End
 		{ $$ := new_do_function ($1, $2, $4, $6, $7, $8, $10, $11, $12) }
 	;
 
 Once_function_declaration: Feature_name Formal_arguments_opt ':' Type E_IS
 	Obsolete_opt Precondition_opt Local_declarations_opt
-	E_ONCE Compound Postcondition_opt Rescue_opt E_END
+	E_ONCE Compound Postcondition_opt Rescue_opt End
 		{ $$ := new_once_function ($1, $2, $4, $6, $7, $8, $10, $11, $12) }
 	;
 
 Deferred_function_declaration: Feature_name Formal_arguments_opt ':' Type E_IS
-	Obsolete_opt Precondition_opt E_DEFERRED Postcondition_opt E_END
+	Obsolete_opt Precondition_opt E_DEFERRED Postcondition_opt End
 		{ $$ := new_deferred_function ($1, $2, $4, $6, $7, $9) }
 	;
 
 External_function_declaration: Feature_name Formal_arguments_opt ':' Type E_IS
 	Obsolete_opt Precondition_opt E_EXTERNAL Manifest_string
-	External_name_opt Postcondition_opt E_END
+	External_name_opt Postcondition_opt End
 		{ $$ := new_external_function ($1, $2, $4, $6, $7, $9, $10, $11) }
 	;
 
@@ -730,91 +834,329 @@ External_name_opt: -- Empty
 		{ $$ := $2 }
 	;
 
---------------------------------------------------------------------------------
+--DONE------------------------------------------------------------------------------
 
 Feature_name: Identifier
 		{ $$ := $1 }
-	| E_PREFIX E_STRNOT
-		{ $$ := new_prefix_not ($1) }
-	| E_PREFIX E_STRPLUS
-		{ $$ := new_prefix_plus ($1) }
-	| E_PREFIX E_STRMINUS
-		{ $$ := new_prefix_minus ($1) }
-	| E_PREFIX E_STRFREEOP
-		{ $$ := new_prefix_freeop ($2, $1) }
-	| E_INFIX E_STRPLUS
-		{ $$ := new_infix_plus ($1) }
-	| E_INFIX E_STRMINUS
-		{ $$ := new_infix_minus ($1) }
-	| E_INFIX E_STRSTAR
-		{ $$ := new_infix_times ($1) }
-	| E_INFIX E_STRSLASH
-		{ $$ := new_infix_divide ($1) }
-	| E_INFIX E_STRDIV
-		{ $$ := new_infix_div ($1) }
-	| E_INFIX E_STRMOD
-		{ $$ := new_infix_mod ($1) }
-	| E_INFIX E_STRPOWER
-		{ $$ := new_infix_power ($1) }
-	| E_INFIX E_STRLT
-		{ $$ := new_infix_lt ($1) }
-	| E_INFIX E_STRLE
-		{ $$ := new_infix_le ($1) }
-	| E_INFIX E_STRGT
-		{ $$ := new_infix_gt ($1) }
-	| E_INFIX E_STRGE
-		{ $$ := new_infix_ge ($1) }
-	| E_INFIX E_STRAND
-		{ $$ := new_infix_and ($1) }
-	| E_INFIX E_STRANDTHEN
-		{ $$ := new_infix_and_then ($1) }
-	| E_INFIX E_STROR
-		{ $$ := new_infix_or ($1) }
-	| E_INFIX E_STRORELSE
-		{ $$ := new_infix_or_else ($1) }
-	| E_INFIX E_STRIMPLIES
-		{ $$ := new_infix_implies ($1) }
-	| E_INFIX E_STRXOR
-		{ $$ := new_infix_xor ($1) }
-	| E_INFIX E_STRFREEOP
-		{ $$ := new_infix_freeop ($2, $1) }
+	| E_PREFIX Break_opt E_STRNOT Break_opt
+		{
+			if keep_all_breaks or keep_all_comments then
+				$1.set_break ($2)
+				$3.set_break ($4)
+			end
+			$$ := new_prefix_not_name ($1, $3)
+		}
+	| E_PREFIX Break_opt E_STRPLUS Break_opt
+		{
+			if keep_all_breaks or keep_all_comments then
+				$1.set_break ($2)
+				$3.set_break ($4)
+			end
+			$$ := new_prefix_plus_name ($1, $3)
+		}
+	| E_PREFIX Break_opt E_STRMINUS Break_opt
+		{
+			if keep_all_breaks or keep_all_comments then
+				$1.set_break ($2)
+				$3.set_break ($4)
+			end
+			$$ := new_prefix_minus_name ($1, $3)
+		}
+	| E_PREFIX Break_opt E_STRFREEOP Break_opt
+		{
+			if keep_all_breaks or keep_all_comments then
+				$1.set_break ($2)
+				$3.set_break ($4)
+			end
+			$$ := new_prefix_free_name ($1, $3)
+		}
+	| E_INFIX Break_opt E_STRPLUS Break_opt
+		{
+			if keep_all_breaks or keep_all_comments then
+				$1.set_break ($2)
+				$3.set_break ($4)
+			end
+			$$ := new_infix_plus_name ($1, $3)
+		}
+	| E_INFIX Break_opt E_STRMINUS Break_opt
+		{
+			if keep_all_breaks or keep_all_comments then
+				$1.set_break ($2)
+				$3.set_break ($4)
+			end
+			$$ := new_infix_minus_name ($1, $3)
+		}
+	| E_INFIX Break_opt E_STRSTAR Break_opt
+		{
+			if keep_all_breaks or keep_all_comments then
+				$1.set_break ($2)
+				$3.set_break ($4)
+			end
+			$$ := new_infix_times_name ($1, $3)
+		}
+	| E_INFIX Break_opt E_STRSLASH Break_opt
+		{
+			if keep_all_breaks or keep_all_comments then
+				$1.set_break ($2)
+				$3.set_break ($4)
+			end
+			$$ := new_infix_divide_name ($1, $3)
+		}
+	| E_INFIX Break_opt E_STRDIV Break_opt
+		{
+			if keep_all_breaks or keep_all_comments then
+				$1.set_break ($2)
+				$3.set_break ($4)
+			end
+			$$ := new_infix_div_name ($1, $3)
+		}
+	| E_INFIX Break_opt E_STRMOD Break_opt
+		{
+			if keep_all_breaks or keep_all_comments then
+				$1.set_break ($2)
+				$3.set_break ($4)
+			end
+			$$ := new_infix_mod_name ($1, $3)
+		}
+	| E_INFIX Break_opt E_STRPOWER Break_opt
+		{
+			if keep_all_breaks or keep_all_comments then
+				$1.set_break ($2)
+				$3.set_break ($4)
+			end
+			$$ := new_infix_power_name ($1, $3)
+		}
+	| E_INFIX Break_opt E_STRLT Break_opt
+		{
+			if keep_all_breaks or keep_all_comments then
+				$1.set_break ($2)
+				$3.set_break ($4)
+			end
+			$$ := new_infix_lt_name ($1, $3)
+		}
+	| E_INFIX Break_opt E_STRLE Break_opt
+		{
+			if keep_all_breaks or keep_all_comments then
+				$1.set_break ($2)
+				$3.set_break ($4)
+			end
+			$$ := new_infix_le_name ($1, $3)
+		}
+	| E_INFIX Break_opt E_STRGT Break_opt
+		{
+			if keep_all_breaks or keep_all_comments then
+				$1.set_break ($2)
+				$3.set_break ($4)
+			end
+			$$ := new_infix_gt_name ($1, $3)
+		}
+	| E_INFIX Break_opt E_STRGE Break_opt
+		{
+			if keep_all_breaks or keep_all_comments then
+				$1.set_break ($2)
+				$3.set_break ($4)
+			end
+			$$ := new_infix_ge_name ($1, $3)
+		}
+	| E_INFIX Break_opt E_STRAND Break_opt
+		{
+			if keep_all_breaks or keep_all_comments then
+				$1.set_break ($2)
+				$3.set_break ($4)
+			end
+			$$ := new_infix_and_name ($1, $3)
+		}
+	| E_INFIX Break_opt E_STRANDTHEN Break_opt
+		{
+			if keep_all_breaks or keep_all_comments then
+				$1.set_break ($2)
+				$3.set_break ($4)
+			end
+			$$ := new_infix_and_then_name ($1, $3)
+		}
+	| E_INFIX Break_opt E_STROR Break_opt
+		{
+			if keep_all_breaks or keep_all_comments then
+				$1.set_break ($2)
+				$3.set_break ($4)
+			end
+			$$ := new_infix_or_name ($1, $3)
+		}
+	| E_INFIX Break_opt E_STRORELSE Break_opt
+		{
+			if keep_all_breaks or keep_all_comments then
+				$1.set_break ($2)
+				$3.set_break ($4)
+			end
+			$$ := new_infix_or_else_name ($1, $3)
+		}
+	| E_INFIX Break_opt E_STRIMPLIES Break_opt
+		{
+			if keep_all_breaks or keep_all_comments then
+				$1.set_break ($2)
+				$3.set_break ($4)
+			end
+			$$ := new_infix_implies_name ($1, $3)
+		}
+	| E_INFIX Break_opt E_STRXOR Break_opt
+		{
+			if keep_all_breaks or keep_all_comments then
+				$1.set_break ($2)
+				$3.set_break ($4)
+			end
+			$$ := new_infix_xor_name ($1, $3)
+		}
+	| E_INFIX Break_opt E_STRFREEOP Break_opt
+		{
+			if keep_all_breaks or keep_all_comments then
+				$1.set_break ($2)
+				$3.set_break ($4)
+			end
+			$$ := new_infix_free_name ($1, $3)
+		}
 
-	| E_PREFIX E_STRING
-		{ $$ := new_invalid_prefix ($2, $1) }
-	| E_PREFIX E_STRSTAR
-		{ $$ := new_invalid_prefix ($2, $1) }
-	| E_PREFIX E_STRSLASH
-		{ $$ := new_invalid_prefix ($2, $1) }
-	| E_PREFIX E_STRDIV
-		{ $$ := new_invalid_prefix ($2, $1) }
-	| E_PREFIX E_STRMOD
-		{ $$ := new_invalid_prefix ($2, $1) }
-	| E_PREFIX E_STRPOWER
-		{ $$ := new_invalid_prefix ($2, $1) }
-	| E_PREFIX E_STRLT
-		{ $$ := new_invalid_prefix ($2, $1) }
-	| E_PREFIX E_STRLE
-		{ $$ := new_invalid_prefix ($2, $1) }
-	| E_PREFIX E_STRGT
-		{ $$ := new_invalid_prefix ($2, $1) }
-	| E_PREFIX E_STRGE
-		{ $$ := new_invalid_prefix ($2, $1) }
-	| E_PREFIX E_STRAND
-		{ $$ := new_invalid_prefix ($2, $1) }
-	| E_PREFIX E_STROR
-		{ $$ := new_invalid_prefix ($2, $1) }
-	| E_PREFIX E_STRXOR
-		{ $$ := new_invalid_prefix ($2, $1) }
-	| E_PREFIX E_STRANDTHEN
-		{ $$ := new_invalid_prefix ($2, $1) }
-	| E_PREFIX E_STRORELSE
-		{ $$ := new_invalid_prefix ($2, $1) }
-	| E_PREFIX E_STRIMPLIES
-		{ $$ := new_invalid_prefix ($2, $1) }
-	| E_INFIX E_STRING
-		{ $$ := new_invalid_infix ($2, $1) }
-	| E_INFIX E_STRNOT
-		{ $$ := new_invalid_infix ($2, $1) }
+	| E_PREFIX Break_opt E_STRING Break_opt
+		{
+			if keep_all_breaks or keep_all_comments then
+				$1.set_break ($2)
+				$3.set_break ($4)
+			end
+			$$ := new_invalid_prefix_name ($1, $3)
+		}
+	| E_PREFIX Break_opt E_STRSTAR Break_opt
+		{
+			if keep_all_breaks or keep_all_comments then
+				$1.set_break ($2)
+				$3.set_break ($4)
+			end
+			$$ := new_invalid_prefix_name ($1, $3)
+		}
+	| E_PREFIX Break_opt E_STRSLASH Break_opt
+		{
+			if keep_all_breaks or keep_all_comments then
+				$1.set_break ($2)
+				$3.set_break ($4)
+			end
+			$$ := new_invalid_prefix_name ($1, $3)
+		}
+	| E_PREFIX Break_opt E_STRDIV Break_opt
+		{
+			if keep_all_breaks or keep_all_comments then
+				$1.set_break ($2)
+				$3.set_break ($4)
+			end
+			$$ := new_invalid_prefix_name ($1, $3)
+		}
+	| E_PREFIX Break_opt E_STRMOD Break_opt
+		{
+			if keep_all_breaks or keep_all_comments then
+				$1.set_break ($2)
+				$3.set_break ($4)
+			end
+			$$ := new_invalid_prefix_name ($1, $3)
+		}
+	| E_PREFIX Break_opt E_STRPOWER Break_opt
+		{
+			if keep_all_breaks or keep_all_comments then
+				$1.set_break ($2)
+				$3.set_break ($4)
+			end
+			$$ := new_invalid_prefix_name ($1, $3)
+		}
+	| E_PREFIX Break_opt E_STRLT Break_opt
+		{
+			if keep_all_breaks or keep_all_comments then
+				$1.set_break ($2)
+				$3.set_break ($4)
+			end
+			$$ := new_invalid_prefix_name ($1, $3)
+		}
+	| E_PREFIX Break_opt E_STRLE Break_opt
+		{
+			if keep_all_breaks or keep_all_comments then
+				$1.set_break ($2)
+				$3.set_break ($4)
+			end
+			$$ := new_invalid_prefix_name ($1, $3)
+		}
+	| E_PREFIX Break_opt E_STRGT Break_opt
+		{
+			if keep_all_breaks or keep_all_comments then
+				$1.set_break ($2)
+				$3.set_break ($4)
+			end
+			$$ := new_invalid_prefix_name ($1, $3)
+		}
+	| E_PREFIX Break_opt E_STRGE Break_opt
+		{
+			if keep_all_breaks or keep_all_comments then
+				$1.set_break ($2)
+				$3.set_break ($4)
+			end
+			$$ := new_invalid_prefix_name ($1, $3)
+		}
+	| E_PREFIX Break_opt E_STRAND Break_opt
+		{
+			if keep_all_breaks or keep_all_comments then
+				$1.set_break ($2)
+				$3.set_break ($4)
+			end
+			$$ := new_invalid_prefix_name ($1, $3)
+		}
+	| E_PREFIX Break_opt E_STROR Break_opt
+		{
+			if keep_all_breaks or keep_all_comments then
+				$1.set_break ($2)
+				$3.set_break ($4)
+			end
+			$$ := new_invalid_prefix_name ($1, $3)
+		}
+	| E_PREFIX Break_opt E_STRXOR Break_opt
+		{
+			$1.set_break ($2)
+			$3.set_break ($4)
+			$$ := new_invalid_prefix_name ($1, $3)
+		}
+	| E_PREFIX Break_opt E_STRANDTHEN Break_opt
+		{
+			if keep_all_breaks or keep_all_comments then
+				$1.set_break ($2)
+				$3.set_break ($4)
+			end
+			$$ := new_invalid_prefix_name ($1, $3)
+		}
+	| E_PREFIX Break_opt E_STRORELSE Break_opt
+		{
+			if keep_all_breaks or keep_all_comments then
+				$1.set_break ($2)
+				$3.set_break ($4)
+			end
+			$$ := new_invalid_prefix_name ($1, $3)
+		}
+	| E_PREFIX Break_opt E_STRIMPLIES Break_opt
+		{
+			if keep_all_breaks or keep_all_comments then
+				$1.set_break ($2)
+				$3.set_break ($4)
+			end
+			$$ := new_invalid_prefix_name ($1, $3)
+		}
+	| E_INFIX Break_opt E_STRING Break_opt
+		{
+			if keep_all_breaks or keep_all_comments then
+				$1.set_break ($2)
+				$3.set_break ($4)
+			end
+			$$ := new_invalid_infix_name ($1, $3)
+		}
+	| E_INFIX Break_opt E_STRNOT Break_opt
+		{
+			if keep_all_breaks or keep_all_comments then
+				$1.set_break ($2)
+				$3.set_break ($4)
+			end
+			$$ := new_invalid_infix_name ($1, $3)
+		}
 	;
 
 --------------------------------------------------------------------------------
@@ -865,78 +1207,140 @@ Local_variable_list: Identifier ':' Type
 		{ $$ := $4; $$.put_first ($1, $3) }
 	;
 
---------------------------------------------------------------------------------
+--DONE------------------------------------------------------------------------------
 
 Precondition_opt: -- Empty
 		-- { $$ := Void }
-	| E_REQUIRE
-		{ $$ := new_preconditions (new_comment_assertion (Void)) }
-	| E_REQUIRE Precondition_list
-		{ $$ := $2 }
-	| E_REQUIRE E_ELSE
-		{ $$ := new_preconditions (new_comment_assertion (Void)); $$.set_require_else }
-	| E_REQUIRE E_ELSE Precondition_list
-		{ $$ := $3; $$.set_require_else }
+	| Precondition
+		{ $$ := $1 }
+	;
+
+Precondition: Require
+		{ $$ := new_preconditions ($1) }
+	| Require Else
+		{
+			$$ := new_preconditions ($1)
+			$$.set_else_keyword ($2)
+		}
+	| Precondition Expression
+		{
+			$$ := $1
+			add_expression_assertion ($$, $2, Void)
+		}
+	| Precondition Expression Semicolon
+		{
+			$$ := $1
+			add_expression_assertion ($$, $2, $3)
+		}
+	| Precondition Identifier Colon
+		{
+			$$ := $1
+			add_tagged_assertion ($$, $2, $3, Void)
+		}
+	| Precondition Identifier Colon Semicolon
+		{
+			$$ := $1
+			add_tagged_assertion ($$, $2, $3, $4)
+		}
 	;
 
 Postcondition_opt: -- Empty
 		-- { $$ := Void }
-	| E_ENSURE
-		{ $$ := new_postconditions (new_comment_assertion (Void)) }
-	| E_ENSURE Postcondition_list
-		{ $$ := $2 }
-	| E_ENSURE E_THEN
-		{ $$ := new_postconditions (new_comment_assertion (Void)); $$.set_ensure_then }
-	| E_ENSURE E_THEN Postcondition_list
-		{ $$ := $3; $$.set_ensure_then }
+	| Postcondition
+		{ $$ := $1 }
 	;
 
-Invariant_opt: -- Empty
-		-- { $$ := Void }
-	| E_INVARIANT
-		-- { $$ := Void }
-	| E_INVARIANT Assertion_list
-		{ $$ := $2 }
-	;
-
-Assertion_list: Assertion_clause
-		{ $$ := new_assertions ($1) }
-	| Assertion_clause ';'
-		{ $$ := new_assertions ($1) }
-	| Assertion_clause     Assertion_list
-		{ $$ := $2; $$.put_first ($1) }
-	| Assertion_clause ';' Assertion_list
-		{ $$ := $3; $$.put_first ($1) }
-	;
-
-Precondition_list: Assertion_clause
-		{ $$ := new_preconditions ($1) }
-	| Assertion_clause ';'
-		{ $$ := new_preconditions ($1) }
-	| Assertion_clause     Precondition_list
-		{ $$ := $2; $$.put_first ($1) }
-	| Assertion_clause ';' Precondition_list
-		{ $$ := $3; $$.put_first ($1) }
-	;
-
-Postcondition_list: Assertion_clause
+Postcondition: Ensure
 		{ $$ := new_postconditions ($1) }
-	| Assertion_clause ';'
-		{ $$ := new_postconditions ($1) }
-	| Assertion_clause     Postcondition_list
-		{ $$ := $2; $$.put_first ($1) }
-	| Assertion_clause ';' Postcondition_list
-		{ $$ := $3; $$.put_first ($1) }
+	| Ensure Then
+		{
+			$$ := new_postconditions ($1)
+			$$.set_then_keyword ($2)
+		}
+	| Postcondition Expression
+		{
+			$$ := $1
+			add_expression_assertion ($$, $2, Void)
+		}
+	| Postcondition Expression Semicolon
+		{
+			$$ := $1
+			add_expression_assertion ($$, $2, $3)
+		}
+	| Postcondition Identifier Colon
+		{
+			$$ := $1
+			add_tagged_assertion ($$, $2, $3, Void)
+		}
+	| Postcondition Identifier Colon Semicolon
+		{
+			$$ := $1
+			add_tagged_assertion ($$, $2, $3, $4)
+		}
 	;
 
-Assertion_clause: Expression
-		{ $$ := new_expression_assertion (Void, $1) }
-		-- Note: Does not support 'Comment' as assertion.
-		-- However, this is simulated by the following
-		-- production:
-	| Identifier ':'
-		{ $$ := new_comment_assertion ($1) }
-	--| Identifier ':' Expression
+Invariant_clause_opt: -- Empty
+		-- { $$ := Void }
+	| Invariant_clause
+		{ $$ := $1 }
+	;
+
+Invariant_clause: Invariant
+		{ $$ := new_invariants ($1) }
+	| Invariant_clause Expression
+		{
+			$$ := $1
+			add_expression_assertion ($$, $2, Void)
+		}
+	| Invariant_clause Expression Semicolon
+		{
+			$$ := $1
+			add_expression_assertion ($$, $2, $3)
+		}
+	| Invariant_clause Identifier Colon
+		{
+			$$ := $1
+			add_tagged_assertion ($$, $2, $3, Void)
+		}
+	| Invariant_clause Identifier Colon Semicolon
+		{
+			$$ := $1
+			add_tagged_assertion ($$, $2, $3, $4)
+		}
+	;
+
+Check_clause: Check
+		{ $$ := new_check_assertions ($1) }
+	| Check_clause Expression
+		{
+			$$ := $1
+			add_expression_assertion ($$, $2, Void)
+		}
+	| Check_clause Expression Semicolon
+		{
+			$$ := $1
+			add_expression_assertion ($$, $2, $3)
+		}
+	| Check_clause Identifier Colon
+		{
+			$$ := $1
+			add_tagged_assertion ($$, $2, $3, Void)
+		}
+	| Check_clause Identifier Colon Semicolon
+		{
+			$$ := $1
+			add_tagged_assertion ($$, $2, $3, $4)
+		}
+	;
+
+Variant_clause_opt: -- Empty
+		-- { $$ := Void }
+	| Variant -- Not standard.
+		{ $$ := new_variant ($1) }
+	| Variant Expression
+		{ $$ := new_expression_variant ($1, $2) }
+	| Variant Identifier Colon Expression
+		{ $$ := new_tagged_expression_variant ($1, $2, $3, $4) }
 	;
 
 --------------------------------------------------------------------------------
@@ -949,30 +1353,31 @@ Rescue_opt: -- Empty
 
 --------------------------------------------------------------------------------
 
-Type: Named_type
-		{ $$ := $1 }
-	| E_EXPANDED Named_type
-	-- TODO:
-		{ $$ := $2 }
-	| E_SEPARATE Named_type
-		-- TODO
-		{ $$ := $2 }
-	| E_LIKE E_CURRENT
-		{ $$ := new_like_current ($1) }
+Type: Class_name Actual_generics_opt
+		{ $$ := new_named_type (Void, $1, $2) }
+	| Expanded Class_name Actual_generics_opt
+		{ $$ := new_named_type ($1, $2, $3) }
+	| Separate Class_name Actual_generics_opt
+		{ $$ := new_named_type ($1, $2, $3) }
+	| Reference Class_name Actual_generics_opt
+		{ $$ := new_named_type ($1, $2, $3) }
+	| E_LIKE Current
+		{ $$ := new_like_current ($1.position) }
 	| E_LIKE Identifier
-		{ $$ := new_like_identifier ($2, $1) }
+		{ $$ := new_like_identifier ($2, $1.position) }
 	| E_BITTYPE Integer_constant
 		{ $$ := new_bit_type ($2, $1.position) }
 	| E_BITTYPE Identifier
 		{ $$ := new_bit_identifier ($2, $1.position)  }
 	;
 
-Named_type: Class_name Actual_generics_opt
-		{ $$ := new_named_type ($1, $2) }
-	;
-
 Class_name: E_IDENTIFIER
 		{ $$ := $1 }
+	| E_IDENTIFIER E_BREAK
+		{
+			$$ := $1
+			$$.set_break ($2)
+		}
 	;
 
 Actual_generics_opt: -- Empty
@@ -985,26 +1390,26 @@ Actual_generics_opt: -- Empty
 	;
 
 Type_list: Type
-		{ $$ := new_actual_generics ($1) }
+		{ $$ := new_actual_generics (new_type_item ($1)) }
 	| Type_list ',' Type
 		{
 			$$ := $1
-			$$.put ($3)
+			$$.put (new_type_item ($3))
 		}
 	;
 
---------------------------------------------------------------------------------
+--DONE------------------------------------------------------------------------------
 
-Compound: Empty_instruction
+Compound: -- Empty
 		-- { $$ := Void }
 	| Non_empty_compound
 		{ $$ := $1 }
 	;
 	
-Non_empty_compound: Empty_instruction Instruction Empty_instruction
-		{ $$ := new_compound ($2) }
-	| Empty_instruction Instruction Non_empty_compound
-		{ $$ := $3; $$.add_instruction ($2) }
+Non_empty_compound: Instruction
+		{ $$ := new_compound ($1) }
+	| Non_empty_compound Instruction
+		{ $$ := $1; $$.put_last ($2) }
 	;
 
 Instruction: Creation_instruction
@@ -1013,412 +1418,1468 @@ Instruction: Creation_instruction
 		{ $$ := $1 }
 	| Call_instruction
 		{ $$ := $1 }
-	| Assignment
-		{ $$ := $1 }
-	| Assignment_attempt
-		{ $$ := $1 }
+	| Writable Assign Expression
+		{ $$ := new_assignment ($1, $2, $3) }
+ 	| Writable Reverse Expression
+		{ $$ := new_assignment_attempt ($1, $2, $3) }
 	| Conditional
 		{ $$ := $1 }
 	| Multi_branch
 		{ $$ := $1 }
-	| Loop
+	| From Compound Invariant_clause_opt Variant_clause_opt
+	  Until Expression Loop Compound End
+		{ $$ := new_loop_instruction ($1, $2, $3, $4, $5, $6, $7, $8, $9) }
+	| Debug_instruction
 		{ $$ := $1 }
-	| Debug
+	| Check_clause End
+		{ $$ := new_check_instruction ($1, $2) }
+	| Retry
 		{ $$ := $1 }
-	| Check
-		{ $$ := $1 }
-	| E_RETRY
-		{ $$ := new_retry_instruction }
+	| Semicolon
+		{ $$ := new_null_instruction ($1) }
 	;
 
-Empty_instruction: -- Empty
-	| Empty_instruction ';'
+--DONE------------------------------------------------------------------------------
+
+Creation_instruction: Bang Type Bang Writable
+		{ $$ := new_typed_bang_instruction ($1, $2, $3, $4) }
+	| Bang Type Bang Writable Dot Identifier Actuals_opt
+		{ $$ := new_qualified_typed_bang_instruction ($1, $2, $3, $4, $5, $6, $7) }
+	| Bangbang Writable
+		{ $$ := new_bang_instruction ($1, $2) }
+	| Bangbang Writable Dot Identifier Actuals_opt
+		{ $$ := new_qualified_bang_instruction ($1, $2, $3, $4, $5) }
 	;
 
-SS: -- Empty
-	| SS ';'
+Create_instruction: Create Left_brace Type Right_brace Writable
+		{ $$ := new_typed_create_instruction ($1, $2, $3, $4, $5) }
+	| Create Left_brace Type Right_brace Writable Dot Identifier Actuals_opt
+		{ $$ := new_qualified_typed_create_instruction ($1, $2, $3, $4, $5, $6, $7, $8) }
+	| Create Writable
+		{ $$ := new_create_instruction ($1, $2) }
+	| Create Writable Dot Identifier Actuals_opt
+		{ $$ := new_qualified_create_instruction ($1, $2, $3, $4, $5) }
 	;
 
---------------------------------------------------------------------------------
-
-Creation_instruction: '!' Type '!' Writable Creation_call_opt
-		{ $$ := new_creation_instruction ($2, $4, $5) }
-	| E_BANGBANG Writable Creation_call_opt
-		{ $$ := new_creation_instruction (Void, $2, $3) }
+Create_expression: Create Left_brace Type Right_brace 
+		{ $$ := new_create_expression ($1, $2, $3, $4) }
+	| Create Left_brace Type Right_brace Dot Identifier Actuals_opt
+		{ $$ := new_qualified_create_expression ($1, $2, $3, $4, $5, $6, $7) }
 	;
 
-Creation_call_opt: -- Empty
-	| '.' Identifier Actuals_opt
+--DONE------------------------------------------------------------------------------
+
+Conditional: If Expression Then Compound End
+		{ $$ := new_if_instruction ($1, $2, $3, $4, $5) }
+	| If Expression Then Compound Else_part End
+		{
+			$$ := new_if_instruction ($1, $2, $3, $4, $6)
+			$$.set_else_part ($5)
+		}
+	| If Expression Then Compound Elseif_list End
+		{
+			$$ := new_if_instruction ($1, $2, $3, $4, $6)
+			$$.set_elseif_parts ($5)
+		}
+	| If Expression Then Compound Elseif_list Else_part End
+		{
+			$$ := new_if_instruction ($1, $2, $3, $4, $7)
+			$$.set_elseif_parts ($5)
+			$$.set_else_part ($6)
+		}
 	;
 
-Create_instruction: E_CREATE '{' Type '}' Writable Creation_call_opt
-		{ $$ := new_creation_instruction ($3, $5, $6) }
-	| E_CREATE Writable Creation_call_opt
-		{ $$ := new_creation_instruction (Void, $2, $3) }
+Elseif_list: Elseif Expression Then Compound
+		{
+			$$ := new_elseif_part_list
+			$$.force_last (new_elseif_part ($1, $2, $3, $4))
+		}
+	| Elseif_list Elseif Expression Then Compound
+		{
+			$$ := $1
+			$$.force_last (new_elseif_part ($2, $3, $4, $5))
+		}
 	;
 
-Create_expression: E_CREATE '{' Type '}' Creation_call_opt
-		-- TODO
-		{ $$ := new_current ($1) }
+Else_part: Else Compound
+		{ $$ := new_else_part ($1, $2) }
 	;
 
---------------------------------------------------------------------------------
+--DONE------------------------------------------------------------------------------
 
-Assignment: Writable E_ASSIGN Expression
-		{ $$ := new_assignment ($1, $3) }
-	;
-
-Assignment_attempt: Writable E_REVERSE Expression
-		{ $$ := new_assignment_attempt ($1, $3) }
-	;
-
---------------------------------------------------------------------------------
-
-Conditional: If_elseif_list E_END
-		{ $$ := $1 }
-	| If_elseif_list Else_part E_END
-		{ $$ := $1; $$.set_else_part ($2) }
-	;
-
-Else_part: E_ELSE Compound
-		{ $$ := $2 }
-	;
-
-If_elseif_list: E_IF Expression E_THEN Compound
-		{ $$ := new_if_instruction ($2, $4) }
-	| If_elseif_list E_ELSEIF Expression E_THEN Compound
-		{ $$ := $1; $$.add_conditional ($3, $5) }
-	;
-
---------------------------------------------------------------------------------
-
-Multi_branch: E_INSPECT Expression When_list_opt Else_part E_END
-		{ $$ := new_inspect_instruction }
-	| E_INSPECT Expression When_list_opt E_END
-		{ $$ := new_inspect_instruction }
+Multi_branch: Inspect Expression When_list_opt Else_part End
+		{
+			$$ := new_inspect_instruction ($1, $2, $5)
+			$$.set_when_parts ($3)
+			$$.set_else_part ($4)
+		}
+	| Inspect Expression When_list_opt End
+		{
+			$$ := new_inspect_instruction ($1, $2, $4)
+			$$.set_when_parts ($3)
+		}
 	;
 
 When_list_opt: -- Empty
+		-- { $$ := Void }
 	| When_list
+		{ $$ := $1 }
 	;
 
-When_list: E_WHEN Choices E_THEN Compound
-	| When_list E_WHEN Choices E_THEN Compound
+When_list: When Choices_opt Then Compound
+		{
+			$$ := new_when_part_list
+			$$.force_last (new_when_part ($1, $2, $3, $4))
+		}
+	| When_list When Choices_opt Then Compound
+		{
+			$$ := $1
+			$$.force_last (new_when_part ($2, $3, $4, $5))
+		}
 	;
 
-Choices: -- Empty
-	| Choice
-	| Choices ',' Choice
+Choices_opt: -- Empty
+		-- { $$ := Void }
+	| Choices
+		{ $$ := $1 }
+	;
+
+Choices: Choice
+		{
+			$$ := new_choice_item_list
+			$$.force_last (new_choice_item ($1))
+		}
+	| Choices Comma Choice
+		{
+			$$ := $1
+			$$.last.set_comma ($2)
+			$$.force_last (new_choice_item ($3))
+		}
 	;
 
 Choice: Choice_constant
-	| Choice_constant E_DOTDOT Choice_constant
+		{ $$ := $1 }
+	| Choice_constant Dotdot Choice_constant
+		{ $$ := new_choice_range ($1, $2, $3) }
 	;
 
 Choice_constant: Integer_constant
+		{ $$ := $1 }
 	| Character_constant
-		-- For Visual Eiffel and TowerEiffel
-		-- (not standard Eiffel!):
+		{ $$ := $1 }
+		-- For Visual Eiffel and TowerEiffel (not standard Eiffel,
+		-- should be 'Identifier' instead of 'Call_expression'):
 	| Call_expression
-	-- | Identifier
+		{ $$ := $1 }
 	;
 
---------------------------------------------------------------------------------
+--DONE------------------------------------------------------------------------------
 
-Loop: E_FROM Compound Invariant_opt Variant_opt
-	E_UNTIL Expression E_LOOP Compound E_END
-		{ $$ := new_loop_instruction }
+Debug_instruction: Debug Debug_keys Compound End
+		{ $$ := new_debug_instruction  ($1, $2, $3, $4) }
 	;
 
-Variant_opt: -- Empty
-	| E_VARIANT			-- Not standard.
-	| E_VARIANT Expression
-	| E_VARIANT Identifier ':' Expression
+Debug_keys: -- Empty
+		-- { $$ := Void }
+	| Left_parenthesis Right_parenthesis
+		{ $$ := new_debug_keys ($1, $2) }
+	| Left_parenthesis Debug_key_list Right_parenthesis
+		{
+			$$ := new_debug_keys ($1, $3)
+			$$.set_keys ($2)
+		}
 	;
 
---------------------------------------------------------------------------------
-
-Debug: E_DEBUG Debug_keys_opt Compound E_END
-		{ $$ := new_debug_instruction }
+Debug_key_list: Manifest_string
+		{
+			$$ := new_manifest_string_item_list
+			$$.force_last (new_manifest_string_item ($1))
+		}
+	| Debug_key_list Comma Manifest_string
+		{
+			$$ := $1
+			$$.last.set_comma ($2)
+			$$.force_last (new_manifest_string_item ($3))
+		}
 	;
 
-Debug_keys_opt: -- Empty
-	| '(' Debug_key_list ')'
-	;
-
-Debug_key_list: -- Empty
-	| Manifest_string
-	| Debug_key_list ',' Manifest_string
-	;
-
---------------------------------------------------------------------------------
-
-Check: E_CHECK Assertion_list E_END
-		{ $$ := new_check_instruction }
-	| E_CHECK E_END
-		{ $$ := new_check_instruction }
-	;
-
---------------------------------------------------------------------------------
+--DONE------------------------------------------------------------------------------
 
 Call_instruction: Identifier Actuals_opt
-		{ $$ := new_call_instruction (Void, $1, $2) }
-	| Qualified_call_chain Identifier Actuals_opt
-		{ $$ := new_call_instruction ($1, $2, $3) }
-	| E_PRECURSOR Actuals_opt
-		{ $$ := new_precursor_instruction (Void, $2) }
-	| E_PRECURSOR '{' Identifier '}' Actuals_opt
-		{ $$ := new_precursor_instruction ($3, $5) }
-	| '{' Identifier '}' E_PRECURSOR Actuals_opt
-		{ $$ := new_precursor_instruction ($2, $5) }
+		{ $$ := new_call_instruction ($1, $2) }
+	| Call_chain Dot Identifier Actuals_opt
+		{ $$ := new_qualified_call_instruction ($1, $2, $3, $4) }
+	| Precursor Actuals_opt
+		{ $$ := new_precursor_instruction ($1, $2) }
+	| Qualified_precursor_instruction
+		{ $$ := $1 }
+	;
+
+Qualified_precursor_instruction: Precursor Left_brace Identifier Right_brace Actuals_opt
+		{
+			$$ := new_qualified_precursor_instruction ($2, $3, $4, $1, $5)
+			$$.set_parent_prefixed (False)
+		}
+	| Left_brace Identifier Right_brace Precursor Actuals_opt
+		{
+			$$ := new_qualified_precursor_instruction ($1, $2, $3, $4, $5)
+			$$.set_parent_prefixed (True)
+		}
 	;
 
 Call_expression: Identifier Actuals_opt
-		{ $$ := new_call_expression (Void, $1, $2) }
-	| Qualified_call_chain Identifier Actuals_opt
-		{ $$ := new_call_expression ($1, $2, $3) }
-	| E_PRECURSOR Actuals_opt
-		{ $$ := new_precursor_expression (Void, $2) }
-	| E_PRECURSOR '{' Identifier '}' Actuals_opt
-		{ $$ := new_precursor_expression ($3, $5) }
-	| '{' Identifier '}' E_PRECURSOR Actuals_opt
-		{ $$ := new_precursor_expression ($2, $5) }
+		{ $$ := new_call_expression ($1, $2) }
+	| Call_chain Dot Identifier Actuals_opt
+		{ $$ := new_qualified_call_expression ($1, $2, $3, $4) }
 	;
 
-Qualified_call_chain: Identifier Actuals_opt '.'
-		{ $$ := new_call_expression (Void, $1, $2) }
-	| E_RESULT '.'
-		{ $$ := new_result ($1) }
-	| E_CURRENT '.'
-		{ $$ := new_current ($1) }
-	| '(' Expression ')' '.'
-		{ $$ := $2 }
-	| E_PRECURSOR Actuals_opt '.'
-		{ $$ := new_precursor_expression (Void, $2) }
-	| E_PRECURSOR '{' Identifier '}' Actuals_opt '.'
-		{ $$ := new_precursor_expression ($3, $5) }
-	| '{' Identifier '}' E_PRECURSOR Actuals_opt '.'
-		{ $$ := new_precursor_expression ($2, $5) }
-	| Qualified_call_chain Identifier Actuals_opt '.'
-		{ $$ := new_call_expression ($1, $2, $3) }
+Precursor_expression: Precursor Actuals_opt
+		{ $$ := new_precursor_expression ($1, $2) }
+	| Qualified_precursor_expression
+		{ $$ := $1 }
 	;
 
---------------------------------------------------------------------------------
+Qualified_precursor_expression: Precursor Left_brace Identifier Right_brace Actuals_opt
+		{
+			$$ := new_qualified_precursor_expression ($2, $3, $4, $1, $5)
+			$$.set_parent_prefixed (False)
+		}
+	| Left_brace Identifier Right_brace Precursor Actuals_opt
+		{
+			$$ := new_qualified_precursor_expression ($1, $2, $3, $4, $5)
+			$$.set_parent_prefixed (True)
+		}
+	;
+
+Call_chain: Identifier Actuals_opt
+		{ $$ := new_call_expression ($1, $2) }
+	| Result
+		{ $$ := $1 }
+	| Current
+		{ $$ := $1 }
+	| Parenthesized_expression
+		{ $$ := $1 }
+	| Precursor Actuals_opt
+		{ $$ := new_precursor_expression ($1, $2) }
+	| Qualified_precursor_expression
+		{ $$ := $1 }
+	| Call_chain Dot Identifier Actuals_opt
+		{ $$ := new_qualified_call_expression ($1, $2, $3, $4) }
+	;
+
+--DONE------------------------------------------------------------------------------
 
 Actuals_opt: -- Empty
 		-- { $$ := Void }
-	| '(' ')'
-		-- { $$ := Void }
-	| '(' Actual_list ')'
-		{ $$ := $2 }
+	| Left_parenthesis Right_parenthesis
+		{ $$ := new_actual_arguments ($1, $2) }
+	| Left_parenthesis
+		{ add_counter }
+	  Actuals_expression_list Right_parenthesis
+		{
+			$$ := $3
+			$$.set_left_symbol ($1)
+			$$.set_right_symbol ($4)
+			remove_counter
+		}
 	;
 
-Actual_list: Expression
-		{ $$ := new_actual_arguments ($1) }
-	| Expression ',' Actual_list
-		{ $$ := $3; $$.add_argument ($1) }
+Actuals_expression_list: Expression
+		{
+			$$ := new_actual_arguments_with_capacity (counter_value + 1)
+			$$.put_first ($1)
+		}
+	| Expression Comma
+		-- TODO: syntax error.
+		{
+			$$ := new_actual_arguments_with_capacity (counter_value + 1)
+			$$.put_first (new_expression_comma ($1, $2))
+		}
+	| Expression Comma 
+		{ increment_counter }
+	  Actuals_expression_list
+		{
+			$$ := $4
+			$$.put_first (new_expression_comma ($1, $2))
+		}
 	;
 
-Address_mark: '$' Feature_name
-		{ $$ := new_feature_address }
-	| '$' E_CURRENT
-		{ $$ := new_current_address }
-	| '$' E_RESULT
-		{ $$ := new_result_address }
+Address_mark: Dollar Feature_name
+		{ $$ := new_feature_address ($1, $2) }
+	| Dollar Current
+		{ $$ := new_current_address ($1, $2) }
+	| Dollar Result
+		{ $$ := new_result_address ($1, $2) }
 		-- Note: The following construct is an
 		-- extension of the Eiffel syntax provided
-		-- in ISE Eiffel 4 compiler.
-	| '$' '(' Expression ')'
-		{ $$ := new_expression_address ($3) }
+		-- in ISE Eiffel and Halstenbach compilers.
+	| Dollar Parenthesized_expression
+		{ $$ := new_expression_address ($1, $2) }
 	;
 
 Writable: Identifier
 		{ $$ := $1 }
-	| E_RESULT
-		{ $$ := new_result ($1) }
+	| Result
+		{ $$ := $1 }
 	;
 
---------------------------------------------------------------------------------
+--DONE------------------------------------------------------------------------------
 
 Expression: Call_expression
 		{ $$ := $1 }
+	| Precursor_expression
+		{ $$ := $1 }
 	| Create_expression
 		{ $$ := $1 }
-	| E_RESULT
-		{ $$ := new_result ($1) }
-	| E_CURRENT
-		{ $$ := new_current ($1) }
-	| '(' Expression ')'
-		{ $$ := $2 }
+	| Result
+		{ $$ := $1 }
+	| Current
+		{ $$ := $1 }
+	| Parenthesized_expression
+		{ $$ := $1 }
 	| Boolean_constant
 		{ $$ := $1 }
 	| Character_constant
 		{ $$ := $1 }
 	| E_INTEGER
 		{ $$ := $1 }
+	| E_INTEGER E_BREAK
+		{
+			if keep_all_breaks or keep_all_comments then
+				$1.set_break ($2)
+			end
+			$$ := $1
+		}
 	| E_REAL
 		{ $$ := $1 }
+	| E_REAL E_BREAK
+		{
+			if keep_all_breaks or keep_all_comments then
+				$1.set_break ($2)
+			end
+			$$ := $1
+		}
 	| Manifest_string
 		{ $$ := $1 }
-	| E_BIT
+	| Bit_constant
 		{ $$ := $1 }
-	| E_LARRAY Expression_list E_RARRAY
-		{ $$ := new_manifest_array }
-	| '[' Expression_list ']'
--- TODO
-		{ $$ := new_manifest_array }
-	| '+' Expression %prec E_NOT
-		{ $$ := new_prefix_plus_expression ($2, $1) }
-	| '-' Expression %prec E_NOT
-		{ $$ := new_prefix_minus_expression ($2, $1) }
-	| E_NOT Expression
-		{ $$ := new_prefix_not_expression ($2, $1) }
-	| E_FREEOP Expression %prec E_NOT
-		{ $$ := new_prefix_freeop_expression ($1, $2) }
-	| Expression E_FREEOP Expression
-		{ $$ := new_infix_freeop_expression ($1, $3, $2) }
-	| Expression '+' Expression
-		{ $$ := new_infix_plus_expression ($1, $3, $2) }
-	| Expression '-' Expression
-		{ $$ := new_infix_minus_expression ($1, $3, $2) }
-	| Expression '*' Expression
-		{ $$ := new_infix_times_expression ($1, $3, $2) }
-	| Expression '/' Expression
-		{ $$ := new_infix_divide_expression ($1, $3, $2) }
-	| Expression '^' Expression
-		{ $$ := new_infix_power_expression ($1, $3, $2) }
-	| Expression E_DIV Expression
-		{ $$ := new_infix_div_expression ($1, $3, $2) }
-	| Expression E_MOD Expression
-		{ $$ := new_infix_mod_expression ($1, $3, $2) }
-	| Expression '=' Expression
-		{ $$ := new_equal_expression ($1, $3) }
-	| Expression E_NE Expression
-		{ $$ := new_not_equal_expression ($1, $3) }
-	| Expression '<' Expression
-		{ $$ := new_infix_lt_expression ($1, $3, $2) }
-	| Expression '>' Expression
-		{ $$ := new_infix_gt_expression ($1, $3, $2) }
-	| Expression E_LE Expression
-		{ $$ := new_infix_le_expression ($1, $3, $2) }
-	| Expression E_GE Expression
-		{ $$ := new_infix_ge_expression ($1, $3, $2) }
-	| Expression E_AND Expression
-		{ $$ := new_infix_and_expression ($1, $3, $2) }
-	| Expression E_OR Expression
-		{ $$ := new_infix_or_expression ($1, $3, $2) }
-	| Expression E_XOR Expression
-		{ $$ := new_infix_xor_expression ($1, $3, $2) }
-	| Expression E_AND E_THEN Expression %prec E_AND
-		{ $$ := new_infix_and_then_expression ($1, $4, $2) }
-	| Expression E_OR E_ELSE Expression %prec E_OR
-		{ $$ := new_infix_or_else_expression ($1, $4, $2) }
-	| Expression E_IMPLIES Expression
-		{ $$ := new_infix_implies_expression ($1, $3, $2) }
-	| E_OLD Expression
-		{ $$ := new_old_expression ($2) }
-	| E_STRIP '(' Attribute_list ')'
-		{ $$ := new_strip_expression }
+	| Manifest_array
+		{ $$ := $1 }
+	| Manifest_tuple
+		{ $$ := $1 }
+	| '+' Break_opt Expression %prec E_NOT
+		{
+			if keep_all_breaks or keep_all_comments then
+				$1.set_break ($2)
+			end
+			$$ := new_prefix_expression ($1, $3)
+		}
+	| '-' Break_opt Expression %prec E_NOT
+		{
+			if keep_all_breaks or keep_all_comments then
+				$1.set_break ($2)
+			end
+			$$ := new_prefix_expression ($1, $3)
+		}
+	| E_NOT Break_opt Expression
+		{
+			if keep_all_breaks or keep_all_comments then
+				$1.set_break ($2)
+			end
+			$$ := new_prefix_expression ($1, $3)
+		}
+	| E_FREEOP Break_opt Expression %prec E_NOT
+		{
+			if keep_all_breaks or keep_all_comments then
+				$1.set_break ($2)
+			end
+			$$ := new_prefix_expression ($1, $3) }
+	| Expression E_FREEOP Break_opt Expression
+		{
+			if keep_all_breaks or keep_all_comments then
+				$2.set_break ($3)
+			end
+			$2.set_infix
+			$$ := new_infix_expression ($1, $2, $4)
+		}
+	| Expression '+' Break_opt Expression
+		{
+			if keep_all_breaks or keep_all_comments then
+				$2.set_break ($3)
+			end
+			$2.set_infix
+			$$ := new_infix_expression ($1, $2, $4)
+		}
+	| Expression '-' Break_opt Expression
+		{
+			if keep_all_breaks or keep_all_comments then
+				$2.set_break ($3)
+			end
+			$2.set_infix
+			$$ := new_infix_expression ($1, $2, $4)
+		}
+	| Expression '*' Break_opt Expression
+		{
+			if keep_all_breaks or keep_all_comments then
+				$2.set_break ($3)
+			end
+			$$ := new_infix_expression ($1, $2, $4)
+		}
+	| Expression '/' Break_opt Expression
+		{
+			if keep_all_breaks or keep_all_comments then
+				$2.set_break ($3)
+			end
+			$$ := new_infix_expression ($1, $2, $4)
+		}
+	| Expression '^' Break_opt Expression
+		{
+			if keep_all_breaks or keep_all_comments then
+				$2.set_break ($3)
+			end
+			$$ := new_infix_expression ($1, $2, $4)
+		}
+	| Expression E_DIV Break_opt Expression
+		{
+			if keep_all_breaks or keep_all_comments then
+				$2.set_break ($3)
+			end
+			$$ := new_infix_expression ($1, $2, $4)
+		}
+	| Expression E_MOD Break_opt Expression
+		{
+			if keep_all_breaks or keep_all_comments then
+				$2.set_break ($3)
+			end
+			$$ := new_infix_expression ($1, $2, $4)
+		}
+	| Expression '=' Break_opt Expression
+		{
+			if keep_all_breaks or keep_all_comments then
+				$2.set_break ($3)
+			end
+			$$ := new_equality_expression ($1, $2, $4)
+		}
+	| Expression E_NE Break_opt Expression
+		{
+			if keep_all_breaks or keep_all_comments then
+				$2.set_break ($3)
+			end
+			$$ := new_equality_expression ($1, $2, $4)
+		}
+	| Expression '<' Break_opt Expression
+		{
+			if keep_all_breaks or keep_all_comments then
+				$2.set_break ($3)
+			end
+			$$ := new_infix_expression ($1, $2, $4)
+		}
+	| Expression '>' Break_opt Expression
+		{
+			if keep_all_breaks or keep_all_comments then
+				$2.set_break ($3)
+			end
+			$$ := new_infix_expression ($1, $2, $4)
+		}
+	| Expression E_LE Break_opt Expression
+		{
+			if keep_all_breaks or keep_all_comments then
+				$2.set_break ($3)
+			end
+			$$ := new_infix_expression ($1, $2, $4)
+		}
+	| Expression E_GE Break_opt Expression
+		{
+			if keep_all_breaks or keep_all_comments then
+				$2.set_break ($3)
+			end
+			$$ := new_infix_expression ($1, $2, $4)
+		}
+	| Expression E_AND Break_opt Expression
+		{
+			if keep_all_breaks or keep_all_comments then
+				$2.set_break ($3)
+			end
+			$$ := new_infix_expression ($1, $2, $4)
+		}
+	| Expression E_OR Break_opt Expression
+		{
+			if keep_all_breaks or keep_all_comments then
+				$2.set_break ($3)
+			end
+			$$ := new_infix_expression ($1, $2, $4)
+		}
+	| Expression E_XOR Break_opt Expression
+		{
+			if keep_all_breaks or keep_all_comments then
+				$2.set_break ($3)
+			end
+			$$ := new_infix_expression ($1, $2, $4)
+		}
+	| Expression E_AND Break_opt E_THEN Break_opt Expression %prec E_AND
+		{
+			if keep_all_breaks or keep_all_comments then
+				$2.set_break ($3)
+				$4.set_break ($5)
+			end
+			$$ := new_infix_expression ($1, new_infix_and_then_operator ($2, $4), $6)
+		}
+	| Expression E_OR Break_opt E_ELSE Break_opt Expression %prec E_OR
+		{
+			if keep_all_breaks or keep_all_comments then
+				$2.set_break ($3)
+				$4.set_break ($5)
+			end
+			$$ := new_infix_expression ($1, new_infix_or_else_operator ($2, $4), $6)
+		}
+	| Expression E_IMPLIES Break_opt Expression
+		{
+			if keep_all_breaks or keep_all_comments then
+				$2.set_break ($3)
+			end
+			$$ := new_infix_expression ($1, $2, $4)
+		}
+	| E_OLD Break_opt Expression
+		{
+			if keep_all_breaks or keep_all_comments then
+				$1.set_break ($2)
+			end
+			$$ := new_old_expression ($1, $3)
+		}
+	| Strip_expression
+		{ $$ := $1 }
 	| Address_mark
 		{ $$ := $1 }
 	;
 
-Attribute_list: -- Empty
-	| Identifier
-	| Attribute_list ',' Identifier
+Parenthesized_expression: Left_parenthesis Expression Right_parenthesis
+		{ $$ := new_parenthesized_expression ($1, $2, $3) }
 	;
 
-Expression_list: -- Empty
-	| Expression
-	| Expression_list ',' Expression
+Manifest_array: Left_array Right_array
+		{ $$ := new_manifest_array ($1, $2) }
+	| Left_array
+		{ add_counter }
+	  Manifest_array_expression_list Right_array
+		{
+			$$ := $3
+			$$.set_left_symbol ($1)
+			$$.set_right_symbol ($4)
+			remove_counter
+		}
+	;
+
+Manifest_array_expression_list: Expression
+		{
+			$$ := new_manifest_array_with_capacity (counter_value + 1)
+			$$.put_first ($1)
+		}
+	| Expression Comma
+		-- TODO: syntax error.
+		{
+			$$ := new_manifest_array_with_capacity (counter_value + 1)
+			$$.put_first (new_expression_comma ($1, $2))
+		}
+	| Expression Comma 
+		{ increment_counter }
+	  Manifest_array_expression_list
+		{
+			$$ := $4
+			$$.put_first (new_expression_comma ($1, $2))
+		}
+	;
+
+Manifest_tuple: Left_bracket Right_bracket
+		{ $$ := new_manifest_tuple ($1, $2) }
+	| Left_bracket
+		{ add_counter }
+	  Manifest_tuple_expression_list Right_bracket
+		{
+			$$ := $3
+			$$.set_left_symbol ($1)
+			$$.set_right_symbol ($4)
+			remove_counter
+		}
+	;
+
+Manifest_tuple_expression_list: Expression
+		{
+			$$ := new_manifest_tuple_with_capacity (counter_value + 1)
+			$$.put_first ($1)
+		}
+	| Expression Comma
+		-- TODO: syntax error.
+		{
+			$$ := new_manifest_tuple_with_capacity (counter_value + 1)
+			$$.put_first (new_expression_comma ($1, $2))
+		}
+	| Expression Comma 
+		{ increment_counter }
+	  Manifest_tuple_expression_list
+		{
+			$$ := $4
+			$$.put_first (new_expression_comma ($1, $2))
+		}
+	;
+
+Strip_expression: E_STRIP Break_opt Left_parenthesis Right_parenthesis
+		{
+			if keep_all_breaks or keep_all_comments then
+				$1.set_break ($2)
+			end
+			$$ := new_strip_expression ($1, $3, $4)
+		}
+	| E_STRIP Break_opt Left_parenthesis
+		{ add_counter }
+	  Strip_feature_name_list Right_parenthesis
+		{
+			if keep_all_breaks or keep_all_comments then
+				$1.set_break ($2)
+			end
+			$$ := $5
+			$$.set_strip_keyword ($1)
+			$$.set_left_parenthesis ($3)
+			$$.set_right_parenthesis ($6)
+			remove_counter
+		}
+	;
+
+Strip_feature_name_list: Feature_name
+		{
+			$$ := new_strip_expression_with_capacity (counter_value + 1)
+			$$.put_first ($1)
+		}
+	| Feature_name Comma
+		-- TODO: syntax error.
+		{
+			$$ := new_strip_expression_with_capacity (counter_value + 1)
+			$$.put_first (new_feature_name_comma ($1, $2))
+		}
+	| Feature_name Comma 
+		{ increment_counter }
+	  Strip_feature_name_list
+		{
+			$$ := $4
+			$$.put_first (new_feature_name_comma ($1, $2))
+		}
 	;
 
 Manifest_constant: Boolean_constant
+		{ $$ := $1 }
 	| Character_constant
+		{ $$ := $1 }
 	| Integer_constant
+		{ $$ := $1 }
 	| Real_constant
+		{ $$ := $1 }
 	| Manifest_string
-	| E_BIT
+		{ $$ := $1 }
+	| Bit_constant
+		{ $$ := $1 }
 	;
+
+--DONE------------------------------------------------------------------------------
 
 Manifest_string: E_STRING
 		{ $$ := $1 }
+	| E_STRING E_BREAK
+		{
+			$$ := $1
+			$$.set_break ($2)
+		}
 	| E_STRPLUS
 		{ $$ := $1 }
+	| E_STRPLUS E_BREAK
+		{
+			$$ := $1
+			$$.set_break ($2)
+		}
 	| E_STRMINUS
 		{ $$ := $1 }
+	| E_STRMINUS E_BREAK
+		{
+			$$ := $1
+			$$.set_break ($2)
+		}
 	| E_STRSTAR
 		{ $$ := $1 }
+	| E_STRSTAR E_BREAK
+		{
+			$$ := $1
+			$$.set_break ($2)
+		}
 	| E_STRSLASH
 		{ $$ := $1 }
+	| E_STRSLASH E_BREAK
+		{
+			$$ := $1
+			$$.set_break ($2)
+		}
 	| E_STRDIV
 		{ $$ := $1 }
+	| E_STRDIV E_BREAK
+		{
+			$$ := $1
+			$$.set_break ($2)
+		}
 	| E_STRMOD
 		{ $$ := $1 }
+	| E_STRMOD E_BREAK
+		{
+			$$ := $1
+			$$.set_break ($2)
+		}
 	| E_STRPOWER
 		{ $$ := $1 }
+	| E_STRPOWER E_BREAK
+		{
+			$$ := $1
+			$$.set_break ($2)
+		}
 	| E_STRLT
 		{ $$ := $1 }
+	| E_STRLT E_BREAK
+		{
+			$$ := $1
+			$$.set_break ($2)
+		}
 	| E_STRLE
 		{ $$ := $1 }
+	| E_STRLE E_BREAK
+		{
+			$$ := $1
+			$$.set_break ($2)
+		}
 	| E_STRGT
 		{ $$ := $1 }
+	| E_STRGT E_BREAK
+		{
+			$$ := $1
+			$$.set_break ($2)
+		}
 	| E_STRGE
 		{ $$ := $1 }
+	| E_STRGE E_BREAK
+		{
+			$$ := $1
+			$$.set_break ($2)
+		}
 	| E_STRAND
 		{ $$ := $1 }
+	| E_STRAND E_BREAK
+		{
+			$$ := $1
+			$$.set_break ($2)
+		}
 	| E_STROR
 		{ $$ := $1 }
+	| E_STROR E_BREAK
+		{
+			$$ := $1
+			$$.set_break ($2)
+		}
 	| E_STRXOR
 		{ $$ := $1 }
+	| E_STRXOR E_BREAK
+		{
+			$$ := $1
+			$$.set_break ($2)
+		}
 	| E_STRANDTHEN
 		{ $$ := $1 }
+	| E_STRANDTHEN E_BREAK
+		{
+			$$ := $1
+			$$.set_break ($2)
+		}
 	| E_STRORELSE
 		{ $$ := $1 }
+	| E_STRORELSE E_BREAK
+		{
+			$$ := $1
+			$$.set_break ($2)
+		}
 	| E_STRIMPLIES
 		{ $$ := $1 }
+	| E_STRIMPLIES E_BREAK
+		{
+			$$ := $1
+			$$.set_break ($2)
+		}
 	| E_STRFREEOP
 		{ $$ := $1 }
+	| E_STRFREEOP E_BREAK
+		{
+			$$ := $1
+			$$.set_break ($2)
+		}
 	| E_STRNOT
 		{ $$ := $1 }
+	| E_STRNOT E_BREAK
+		{
+			$$ := $1
+			$$.set_break ($2)
+		}
 	| E_STRERR
 		{ abort }
 	;
 
+Bit_constant: E_BIT
+		{ $$ := $1 }
+	| E_BIT E_BREAK
+		{
+			$$ := $1
+			$$.set_break ($2)
+		}
+	;
+
 Character_constant: E_CHARACTER
 		{ $$ := $1 }
+	| E_CHARACTER E_BREAK
+		{
+			$$ := $1
+			$$.set_break ($2)
+		}
 	| E_CHARERR
 		{ abort }
 	;
 
 Boolean_constant: E_TRUE
 		{ $$ := $1 }
+	| E_TRUE E_BREAK
+		{
+			$$ := $1
+			$$.set_break ($2)
+		}
 	| E_FALSE
 		{ $$ := $1 }
+	| E_FALSE E_BREAK
+		{
+			$$ := $1
+			$$.set_break ($2)
+		}
 	;
 
 Integer_constant: E_INTEGER
 		{ $$ := $1 }
-	| '-' E_INTEGER
-		{ $$ := $2; $$.set_negative }
-	| '+' E_INTEGER
-		{ $$ := $2 }
+	| E_INTEGER E_BREAK
+		{
+			$$ := $1
+			$$.set_break ($2)
+		}
+	| Minus_sign E_INTEGER
+		{
+			$$ := $2
+			$$.set_sign ($1)
+		}
+	| Minus_sign E_INTEGER E_BREAK
+		{
+			$$ := $2
+			$$.set_sign ($1)
+			$$.set_break ($3)
+		}
+	| Plus_sign E_INTEGER
+		{
+			$$ := $2
+			$$.set_sign ($1)
+		}
+	| Plus_sign E_INTEGER E_BREAK
+		{
+			$$ := $2
+			$$.set_sign ($1)
+			$$.set_break ($3)
+		}
 	;
 
 Real_constant: E_REAL
 		{ $$ := $1 }
-	| '-' E_REAL
-		{ $$ := $2; $$.set_negative }
-	| '+' E_REAL
-		{ $$ := $2 }
+	| E_REAL E_BREAK
+		{
+			$$ := $1
+			$$.set_break ($2)
+		}
+	| Minus_sign E_REAL
+		{
+			$$ := $2
+			$$.set_sign ($1)
+		}
+	| Minus_sign E_REAL E_BREAK
+		{
+			$$ := $2
+			$$.set_sign ($1)
+			$$.set_break ($3)
+		}
+	| Plus_sign E_REAL
+		{
+			$$ := $2
+			$$.set_sign ($1)
+		}
+	| Plus_sign E_REAL E_BREAK
+		{
+			$$ := $2
+			$$.set_sign ($1)
+			$$.set_break ($3)
+		}
 	;
 
 Identifier: E_IDENTIFIER
 		{ $$ := $1 }
+	| E_IDENTIFIER E_BREAK
+		{
+			$$ := $1
+			$$.set_break ($2)
+		}
 	| E_BITTYPE
 		{
 				-- TO DO: reserved word `BIT'
 			$$ := $1
+		}
+	| E_BITTYPE E_BREAK
+		{
+				-- TO DO: reserved word `BIT'
+			$$ := $1
+			$$.set_break ($2)
+		}
+	;
+
+Break_opt: -- Empty
+		-- { $$ := Void }
+	| E_BREAK
+		{ $$ := $1 }
+	;
+
+--DONE------------------------------------------------------------------------------
+
+Check: E_CHECK
+		{ $$ := $1 }
+	| E_CHECK E_BREAK
+		{
+			$$ := $1
+			if keep_all_breaks or keep_all_comments then
+				$$.set_break ($2)
+			end
+		}
+	;
+
+Create: E_CREATE
+		{ $$ := $1 }
+	| E_CREATE E_BREAK
+		{
+			$$ := $1
+			if keep_all_breaks or keep_all_comments then
+				$$.set_break ($2)
+			end
+		}
+	;
+
+Current: E_CURRENT
+		{ $$ := $1 }
+	| E_CURRENT E_BREAK
+		{
+			$$ := $1
+			$$.set_break ($2)
+		}
+	;
+
+Debug: E_DEBUG
+		{ $$ := $1 }
+	| E_DEBUG E_BREAK
+		{
+			$$ := $1
+			if keep_all_breaks or keep_all_comments then
+				$$.set_break ($2)
+			end
+		}
+	;
+
+Else: E_ELSE
+		{ $$ := $1 }
+	| E_ELSE E_BREAK
+		{
+			$$ := $1
+			if keep_all_breaks or keep_all_comments then
+				$$.set_break ($2)
+			end
+		}
+	;
+
+Elseif: E_ELSEIF
+		{ $$ := $1 }
+	| E_ELSEIF E_BREAK
+		{
+			$$ := $1
+			if keep_all_breaks or keep_all_comments then
+				$$.set_break ($2)
+			end
+		}
+	;
+
+End: E_END
+		{ $$ := $1 }
+	| E_END E_BREAK
+		{
+			$$ := $1
+			if keep_all_breaks or keep_all_comments then
+				$$.set_break ($2)
+			end
+		}
+	;
+
+Ensure: E_ENSURE
+		{ $$ := $1 }
+	| E_ENSURE E_BREAK
+		{
+			$$ := $1
+			if keep_all_breaks or keep_all_comments then
+				$$.set_break ($2)
+			end
+		}
+	;
+
+Expanded: E_EXPANDED
+		{ $$ := $1 }
+	| E_EXPANDED E_BREAK
+		{
+			$$ := $1
+			if keep_all_breaks or keep_all_comments then
+				$$.set_break ($2)
+			end
+		}
+	;
+
+Export: E_EXPORT
+		{ $$ := $1 }
+	| E_EXPORT E_BREAK
+		{
+			$$ := $1
+			if keep_all_breaks or keep_all_comments then
+				$$.set_break ($2)
+			end
+		}
+	;
+
+From: E_FROM
+		{ $$ := $1 }
+	| E_FROM E_BREAK
+		{
+			$$ := $1
+			if keep_all_breaks or keep_all_comments then
+				$$.set_break ($2)
+			end
+		}
+	;
+
+If: E_IF
+		{ $$ := $1 }
+	| E_IF E_BREAK
+		{
+			$$ := $1
+			if keep_all_breaks or keep_all_comments then
+				$$.set_break ($2)
+			end
+		}
+	;
+
+Inspect: E_INSPECT
+		{ $$ := $1 }
+	| E_INSPECT E_BREAK
+		{
+			$$ := $1
+			if keep_all_breaks or keep_all_comments then
+				$$.set_break ($2)
+			end
+		}
+	;
+
+Invariant: E_INVARIANT
+		{ $$ := $1 }
+	| E_INVARIANT E_BREAK
+		{
+			$$ := $1
+			if keep_all_breaks or keep_all_comments then
+				$$.set_break ($2)
+			end
+		}
+	;
+
+Loop: E_LOOP
+		{ $$ := $1 }
+	| E_LOOP E_BREAK
+		{
+			$$ := $1
+			if keep_all_breaks or keep_all_comments then
+				$$.set_break ($2)
+			end
+		}
+	;
+
+Precursor: E_PRECURSOR
+		{ $$ := $1 }
+	| E_PRECURSOR E_BREAK
+		{
+			$$ := $1
+			if keep_all_breaks or keep_all_comments then
+				$$.set_break ($2)
+			end
+		}
+	;
+
+Redefine: E_REDEFINE
+		{ $$ := $1 }
+	| E_REDEFINE E_BREAK
+		{
+			$$ := $1
+			if keep_all_breaks or keep_all_comments then
+				$$.set_break ($2)
+			end
+		}
+	;
+
+Reference: E_REFERENCE
+		{ $$ := $1 }
+	| E_REFERENCE E_BREAK
+		{
+			$$ := $1
+			if keep_all_breaks or keep_all_comments then
+				$$.set_break ($2)
+			end
+		}
+	;
+
+Rename: E_RENAME
+		{ $$ := $1 }
+	| E_RENAME E_BREAK
+		{
+			$$ := $1
+			if keep_all_breaks or keep_all_comments then
+				$$.set_break ($2)
+			end
+		}
+	;
+
+Require: E_REQUIRE
+		{ $$ := $1 }
+	| E_REQUIRE E_BREAK
+		{
+			$$ := $1
+			if keep_all_breaks or keep_all_comments then
+				$$.set_break ($2)
+			end
+		}
+	;
+
+Result: E_RESULT
+		{ $$ := $1 }
+	| E_RESULT E_BREAK
+		{
+			$$ := $1
+			if keep_all_breaks or keep_all_comments then
+				$$.set_break ($2)
+			end
+		}
+	;
+
+Retry: E_RETRY
+		{ $$ := $1 }
+	| E_RETRY E_BREAK
+		{
+			$$ := $1
+			if keep_all_breaks or keep_all_comments then
+				$$.set_break ($2)
+			end
+		}
+	;
+
+Select: E_SELECT
+		{ $$ := $1 }
+	| E_SELECT E_BREAK
+		{
+			$$ := $1
+			if keep_all_breaks or keep_all_comments then
+				$$.set_break ($2)
+			end
+		}
+	;
+
+Separate: E_SEPARATE
+		{ $$ := $1 }
+	| E_SEPARATE E_BREAK
+		{
+			$$ := $1
+			if keep_all_breaks or keep_all_comments then
+				$$.set_break ($2)
+			end
+		}
+	;
+
+Then: E_THEN
+		{ $$ := $1 }
+	| E_THEN E_BREAK
+		{
+			$$ := $1
+			if keep_all_breaks or keep_all_comments then
+				$$.set_break ($2)
+			end
+		}
+	;
+
+Undefine: E_UNDEFINE
+		{ $$ := $1 }
+	| E_UNDEFINE E_BREAK
+		{
+			$$ := $1
+			if keep_all_breaks or keep_all_comments then
+				$$.set_break ($2)
+			end
+		}
+	;
+
+Until: E_UNTIL
+		{ $$ := $1 }
+	| E_UNTIL E_BREAK
+		{
+			$$ := $1
+			if keep_all_breaks or keep_all_comments then
+				$$.set_break ($2)
+			end
+		}
+	;
+
+Variant: E_VARIANT
+		{ $$ := $1 }
+	| E_VARIANT E_BREAK
+		{
+			$$ := $1
+			if keep_all_breaks or keep_all_comments then
+				$$.set_break ($2)
+			end
+		}
+	;
+
+When: E_WHEN
+		{ $$ := $1 }
+	| E_WHEN E_BREAK
+		{
+			$$ := $1
+			if keep_all_breaks or keep_all_comments then
+				$$.set_break ($2)
+			end
+		}
+	;
+
+--DONE------------------------------------------------------------------------------
+
+Minus_sign: '-'
+		{ $$ := $1 }
+	| '-' E_BREAK
+		{
+			$$ := $1
+			if keep_all_breaks or keep_all_comments then
+				$$.set_break ($2)
+			end
+		}
+	;
+
+Plus_sign: '+'
+		{ $$ := $1 }
+	| '+' E_BREAK
+		{
+			$$ := $1
+			if keep_all_breaks or keep_all_comments then
+				$$.set_break ($2)
+			end
+		}
+	;
+
+Left_parenthesis: '('
+		{ $$ := $1 }
+	| '(' E_BREAK
+		{
+			$$ := $1
+			if keep_all_breaks or keep_all_comments then
+				$$.set_break ($2)
+			end
+		}
+	;
+
+Right_parenthesis: ')'
+		{ $$ := $1 }
+	| ')' E_BREAK
+		{
+			$$ := $1
+			if keep_all_breaks or keep_all_comments then
+				$$.set_break ($2)
+			end
+		}
+	;
+
+Comma: ','
+		{ $$ := $1 }
+	| ',' E_BREAK
+		{
+			$$ := $1
+			if keep_all_breaks or keep_all_comments then
+				$$.set_break ($2)
+			end
+		}
+	;
+
+Colon: ':'
+		{ $$ := $1 }
+	| ':' E_BREAK
+		{
+			$$ := $1
+			if keep_all_breaks or keep_all_comments then
+				$$.set_break ($2)
+			end
+		}
+	;
+
+Semicolon: ';'
+		{ $$ := $1 }
+	| ';' E_BREAK
+		{
+			$$ := $1
+			$$.set_break ($2)
+		}
+	;
+
+Dot: '.'
+		{ $$ := $1 }
+	| '.' E_BREAK
+		{
+			$$ := $1
+			if keep_all_breaks or keep_all_comments then
+				$$.set_break ($2)
+			end
+		}
+	;
+
+Dollar: '$'
+		{ $$ := $1 }
+	| '$' E_BREAK
+		{
+			$$ := $1
+			if keep_all_breaks or keep_all_comments then
+				$$.set_break ($2)
+			end
+		}
+	;
+
+Left_brace: '{'
+		{ $$ := $1 }
+	| '{' E_BREAK
+		{
+			$$ := $1
+			if keep_all_breaks or keep_all_comments then
+				$$.set_break ($2)
+			end
+		}
+	;
+
+Right_brace: '}'
+		{ $$ := $1 }
+	| '}' E_BREAK
+		{
+			$$ := $1
+			$$.set_break ($2)
+		}
+	;
+
+Left_bracket: '['
+		{ $$ := $1 }
+	| '[' E_BREAK
+		{
+			$$ := $1
+			if keep_all_breaks or keep_all_comments then
+				$$.set_break ($2)
+			end
+		}
+	;
+
+Right_bracket: ']'
+		{ $$ := $1 }
+	| ']' E_BREAK
+		{
+			$$ := $1
+			$$.set_break ($2)
+		}
+	;
+
+Left_array: E_LARRAY 
+		{ $$ := $1 }
+	| E_LARRAY E_BREAK
+		{
+			$$ := $1
+			if keep_all_breaks or keep_all_comments then
+				$$.set_break ($2)
+			end
+		}
+	;
+
+Right_array: E_RARRAY 
+		{ $$ := $1 }
+	|  E_RARRAY E_BREAK
+		{
+			$$ := $1
+			if keep_all_breaks or keep_all_comments then
+				$$.set_break ($2)
+			end
+		}
+	;
+
+Assign: E_ASSIGN 
+		{ $$ := $1 }
+	|  E_ASSIGN E_BREAK
+		{
+			$$ := $1
+			if keep_all_breaks or keep_all_comments then
+				$$.set_break ($2)
+			end
+		}
+	;
+
+Reverse: E_REVERSE 
+		{ $$ := $1 }
+	|  E_REVERSE E_BREAK
+		{
+			$$ := $1
+			if keep_all_breaks or keep_all_comments then
+				$$.set_break ($2)
+			end
+		}
+	;
+
+Bang: '!' 
+		{ $$ := $1 }
+	|  '!' E_BREAK
+		{
+			$$ := $1
+			if keep_all_breaks or keep_all_comments then
+				$$.set_break ($2)
+			end
+		}
+	;
+
+Bangbang: E_BANGBANG 
+		{ $$ := $1 }
+	|  E_BANGBANG E_BREAK
+		{
+			$$ := $1
+			if keep_all_breaks or keep_all_comments then
+				$$.set_break ($2)
+			end
+		}
+	;
+
+Dotdot: E_DOTDOT 
+		{ $$ := $1 }
+	|  E_DOTDOT E_BREAK
+		{
+			$$ := $1
+			if keep_all_breaks or keep_all_comments then
+				$$.set_break ($2)
+			end
 		}
 	;
 

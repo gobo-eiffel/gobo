@@ -84,19 +84,19 @@ feature -- Validity
 
 feature -- Type processing
 
-	resolved_identifier_types (a_feature: ET_FEATURE; args: ET_FORMAL_ARGUMENTS;
-		a_flattener: ET_FEATURE_FLATTENER): ET_TYPE is
-			-- Replace any 'like identifier' types that appear
-			-- in the implementation of `a_feature' by the
-			-- corresponding 'like feature' or 'like argument'.
-			-- Also resolve 'BIT identifier' types.
+	resolved_identifier_types (a_feature: ET_FEATURE; args: ET_FORMAL_ARGUMENTS; a_class: ET_CLASS): ET_TYPE is
+			-- Replace any 'like identifier' types that appear in the
+			-- implementation of `a_feature in class `a_class' by
+			-- the corresponding 'like feature' or 'like argument'.
+			-- Also resolve 'BIT identifier' types. Set
+			-- `a_class.has_flatten_error' to true if an error occurs.
 			-- (Warning: this is a side-effect function.)
 		local
-			features: DS_HASH_TABLE [ET_FLATTENED_FEATURE, ET_FEATURE_NAME]
-			other_feature: ET_FLATTENED_FEATURE
+			features: DS_HASH_TABLE [ET_FEATURE, ET_FEATURE_NAME]
+			other_feature: ET_FEATURE
 			an_index: INTEGER
 		do
-			features := a_flattener.named_features
+			features := a_class.named_features
 			features.search (name)
 			if features.found then
 				other_feature := features.found_item
@@ -108,7 +108,7 @@ feature -- Type processing
 				end
 			end
 			if Result = Void then
-print (a_flattener.current_class.name.name)
+print (a_class.name.name)
 print (".")
 print (a_feature.name.name)
 print (": unknown identifier in 'like ")

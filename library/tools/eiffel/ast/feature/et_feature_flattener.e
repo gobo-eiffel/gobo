@@ -13,6 +13,10 @@ indexing
 
 class ET_FEATURE_FLATTENER
 
+inherit
+
+	ET_SHARED_FEATURE_NAME_TESTER
+
 creation
 
 	make
@@ -25,10 +29,15 @@ feature {NONE} -- Initialization
 			a_class_not_void: a_class /= Void
 		do
 			!! named_features.make (200)
+			named_features.set_key_equality_tester (feature_name_tester)
 			!! rename_table.make (10)
-			!! undefine_table.make_equal (10)
-			!! redefine_table.make_equal (10)
-			!! select_table.make_equal (10)
+			rename_table.set_key_equality_tester (feature_name_tester)
+			!! undefine_table.make (10)
+			undefine_table.set_equality_tester (feature_name_tester)
+			!! redefine_table.make (10)
+			redefine_table.set_equality_tester (feature_name_tester)
+			!! select_table.make (10)
+			select_table.set_equality_tester (feature_name_tester)
 			!! replicable_features.make_map (400)
 			set_current_class (a_class)
 		ensure
@@ -230,10 +239,17 @@ feature -- Compilation
 			process_replication
 			if not has_flatten_error then
 				!! class_seeded_features.make_map (nb_seeded_features)
+				class_named_features := current_class.named_features
+				class_named_features.wipe_out
+				nb := named_features.count
+				if class_named_features.capacity < nb then
+					class_named_features.resize (nb)
+				end
 				from named_features.start until named_features.after loop
 					a_named_feature := named_features.item_for_iteration
 					a_named_feature.process_flattened_feature (Current)
 					a_feature := a_named_feature.flattened_feature
+					class_named_features.put_last (a_feature, a_feature.name)
 					a_feature_seeds := a_feature.seeds
 					if a_feature_seeds = Void then
 						a_seed := a_feature.first_seed
@@ -250,25 +266,15 @@ feature -- Compilation
 				end
 				current_class.set_seeded_features (class_seeded_features)
 				from named_features.start until named_features.after loop
-					if not named_features.item_for_iteration.check_signature_validity then
+					a_named_feature := named_features.item_for_iteration
+					a_named_feature.resolve_identifier_types
+					if not a_named_feature.check_signature_validity then
 						set_flatten_error
 					end
 					named_features.forth
 				end
 			end
-			if not has_flatten_error then
-				class_named_features := current_class.named_features
-				class_named_features.wipe_out
-				nb := named_features.count
-				if class_named_features.capacity < nb then
-					class_named_features.resize (nb)
-				end
-				from named_features.start until named_features.after loop
-					a_feature := named_features.item_for_iteration.flattened_feature
-					class_named_features.put_last (a_feature, a_feature.name)
-					named_features.forth
-				end
-			else
+			if has_flatten_error then
 				current_class.set_flatten_error
 			end
 			named_features.wipe_out
@@ -386,7 +392,7 @@ feature {NONE} -- Element change
 			undefines_not_void: a_parent.undefines /= Void
 		local
 			i, nb: INTEGER
-			a_undefines: ARRAY [ET_FEATURE_NAME]
+			a_undefines: ET_KEYWORD_FEATURE_NAME_LIST
 			a_name: ET_FEATURE_NAME
 		do
 			undefine_table.wipe_out
@@ -395,8 +401,8 @@ feature {NONE} -- Element change
 			if undefine_table.capacity < nb then
 				undefine_table.resize (nb)
 			end
-			from until i = nb loop
-				a_name := a_undefines.item (i)
+			from i := 1 until i > nb loop
+				a_name := a_undefines.feature_name (i)
 				undefine_table.search (a_name)
 				if not undefine_table.found then
 					undefine_table.put_new (a_name)
@@ -414,7 +420,7 @@ feature {NONE} -- Element change
 			redefines_not_void: a_parent.redefines /= Void
 		local
 			i, nb: INTEGER
-			a_redefines: ARRAY [ET_FEATURE_NAME]
+			a_redefines: ET_KEYWORD_FEATURE_NAME_LIST
 			a_name: ET_FEATURE_NAME
 		do
 			redefine_table.wipe_out
@@ -423,8 +429,8 @@ feature {NONE} -- Element change
 			if redefine_table.capacity < nb then
 				redefine_table.resize (nb)
 			end
-			from until i = nb loop
-				a_name := a_redefines.item (i)
+			from i := 1 until i > nb loop
+				a_name := a_redefines.feature_name (i)
 				redefine_table.search (a_name)
 				if not redefine_table.found then
 					redefine_table.put_new (a_name)
@@ -442,7 +448,7 @@ feature {NONE} -- Element change
 			selects_not_void: a_parent.selects /= Void
 		local
 			i, nb: INTEGER
-			a_selects: ARRAY [ET_FEATURE_NAME]
+			a_selects: ET_KEYWORD_FEATURE_NAME_LIST
 			a_name: ET_FEATURE_NAME
 		do
 			select_table.wipe_out
@@ -451,8 +457,8 @@ feature {NONE} -- Element change
 			if select_table.capacity < nb then
 				select_table.resize (nb)
 			end
-			from until i = nb loop
-				a_name := a_selects.item (i)
+			from i := 1 until i > nb loop
+				a_name := a_selects.feature_name (i)
 				select_table.search (a_name)
 				if not select_table.found then
 					select_table.put_new (a_name)

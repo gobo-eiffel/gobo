@@ -85,23 +85,27 @@ feature -- Validity
 
 feature -- Type processing
 
-	resolved_identifier_types (a_feature: ET_FEATURE; args: ET_FORMAL_ARGUMENTS;
-		a_flattener: ET_FEATURE_FLATTENER): ET_TYPE is
-			-- Replace any 'like identifier' types that appear
-			-- in the implementation of `a_feature' by the
-			-- corresponding 'like feature' or 'like argument'.
-			-- Also resolve 'BIT identifier' types.
+	resolved_identifier_types (a_feature: ET_FEATURE; args: ET_FORMAL_ARGUMENTS; a_class: ET_CLASS): ET_TYPE is
+			-- Replace any 'like identifier' types that appear in the
+			-- implementation of `a_feature in class `a_class' by
+			-- the corresponding 'like feature' or 'like argument'.
+			-- Also resolve 'BIT identifier' types. Set
+			-- `a_class.has_flatten_error' to true if an error occurs.
 			-- (Warning: this is a side-effect function.)
 		local
-			features: DS_HASH_TABLE [ET_FLATTENED_FEATURE, ET_FEATURE_NAME]
-			other_feature: ET_FLATTENED_FEATURE
+			features: DS_HASH_TABLE [ET_FEATURE, ET_FEATURE_NAME]
+			other_feature: ET_FEATURE
+			a_constant_attribute: ET_CONSTANT_ATTRIBUTE
 			a_constant: ET_INTEGER_CONSTANT
 		do
-			features := a_flattener.named_features
+			features := a_class.named_features
 			features.search (name)
 			if features.found then
 				other_feature := features.found_item
-				a_constant := other_feature.integer_constant
+				a_constant_attribute ?= other_feature
+				if a_constant_attribute /= Void then
+					a_constant ?= a_constant_attribute.constant
+				end
 				if a_constant /= Void then
 					!ET_BIT_FEATURE! Result.make (a_constant, name, other_feature.first_seed, position)
 				else
@@ -109,7 +113,7 @@ feature -- Type processing
 					Result := Current
 				end
 			else
-print (a_flattener.current_class.name.name)
+print (a_class.name.name)
 print (".")
 print (a_feature.name.name)
 print (": unknown identifier in 'BIT ")

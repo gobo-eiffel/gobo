@@ -6,7 +6,7 @@ indexing
 
 	library:    "Gobo Eiffel Tools Library"
 	author:     "Eric Bezault <ericb@gobosoft.com>"
-	copyright:  "Copyright (c) 1999, Eric Bezault and others"
+	copyright:  "Copyright (c) 1999-2002, Eric Bezault and others"
 	license:    "Eiffel Forum Freeware License v1 (see forum.txt)"
 	date:       "$Date$"
 	revision:   "$Revision$"
@@ -15,7 +15,13 @@ deferred class ET_MANIFEST_STRING
 
 inherit
 
-	ET_EXPRESSION
+	ET_CONSTANT
+
+	ET_AST_LEAF
+		rename
+			make as make_leaf,
+			make_with_position as make_leaf_with_position
+		end
 
 feature -- Access
 
@@ -26,9 +32,6 @@ feature -- Access
 			-- Literal value
 		deferred
 		end
-
-	position: ET_POSITION
-			-- Position in source code
 
 feature -- Status report
 
@@ -54,6 +57,5 @@ feature -- Compilation
 invariant
 
 	literal_not_void: literal /= Void
-	position_not_void: position /= Void
 
 end -- class ET_MANIFEST_STRING

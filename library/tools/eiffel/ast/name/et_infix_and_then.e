@@ -6,20 +6,19 @@ indexing
 
 	library:    "Gobo Eiffel Tools Library"
 	author:     "Eric Bezault <ericb@gobosoft.com>"
-	copyright:  "Copyright (c) 1999-2001, Eric Bezault and others"
+	copyright:  "Copyright (c) 1999-2002, Eric Bezault and others"
 	license:    "Eiffel Forum Freeware License v1 (see forum.txt)"
 	date:       "$Date$"
 	revision:   "$Revision$"
 
-class ET_INFIX_AND_THEN
+deferred class ET_INFIX_AND_THEN
 
 inherit
 
-	ET_INFIX_NAME
-
-creation
-
-	make
+	ET_INFIX
+		redefine
+			is_infix_and_then
+		end
 
 feature -- Access
 
@@ -28,5 +27,19 @@ feature -- Access
 
 	hash_code: INTEGER is 2
 			-- Hash code
+
+feature -- Status report
+
+	is_infix_and_then: BOOLEAN is True
+			-- Is current feature name of the form 'infix "and then"'?
+
+feature -- Comparison
+
+	same_feature_name (other: ET_FEATURE_NAME): BOOLEAN is
+			-- Are feature name and `other' the same feature name?
+			-- (case insensitive)
+		do
+			Result := other.is_infix_and_then
+		end
 
 end -- class ET_INFIX_AND_THEN

@@ -111,6 +111,28 @@ feature -- Parsing
 			end
 		end
 
+	parse_class (a_class: ET_CLASS; a_filename: STRING) is
+			-- Try to parse `a_class' in `a_filename' in current
+			-- clusters, or recursively in subclusters until the
+			-- class is found.
+		require
+			a_class_not_void: a_class /= Void
+			a_class_not_parsed: not a_class.is_parsed
+			a_filename_not_void: a_filename /= Void
+		local
+			i, nb: INTEGER
+		do
+			nb := clusters.count
+			from i := 1 until i > nb loop
+				clusters.item (i).parse_class (a_class, a_filename)
+				if a_class.is_parsed then
+					i := nb + 1 -- Jump out of the loop.
+				else
+					i := i + 1
+				end
+			end
+		end
+
 feature {NONE} -- Constants
 
 	Initial_clusters_capacity: INTEGER is 50

@@ -56,17 +56,20 @@ creation
 
 feature {NONE} -- Initialization
 
-	make (a_name: like class_name; a_parameters: like generic_parameters; a_class: like base_class) is
+	make (a_type_mark: like type_mark; a_name: like class_name;
+		a_parameters: like generic_parameters; a_class: like base_class) is
 			-- Create a new generic class type.
 		require
 			a_name_not_void: a_name /= Void
 			a_parameters_not_void: a_parameters /= Void
 			a_class_not_void: a_class /= Void
 		do
+			type_mark := a_type_mark
 			class_name := a_name
 			generic_parameters := a_parameters
 			base_class := a_class
 		ensure
+			type_mark_set: type_mark = a_type_mark
 			class_name_set: class_name = a_name
 			generic_parameters_set: generic_parameters = a_parameters
 			base_class_set: base_class = a_class
@@ -74,8 +77,11 @@ feature {NONE} -- Initialization
 
 feature -- Status report
 
-	is_generic: BOOLEAN is True
+	is_generic: BOOLEAN is
 			-- Is current class type generic?
+		do
+			Result := generic_parameters.count > 0
+		end
 
 	same_syntactical_type (other: ET_TYPE): BOOLEAN is
 			-- Are current type and `other' syntactically
@@ -90,7 +96,11 @@ feature -- Status report
 			else
 				a_generic_class_type ?= other
 				if a_generic_class_type /= Void then
-					if base_class = a_generic_class_type.base_class then
+					if
+						base_class = a_generic_class_type.base_class and
+						is_expanded = a_generic_class_type.is_expanded and
+						is_separate = a_generic_class_type.is_separate
+					then
 						other_parameters := a_generic_class_type.generic_parameters
 						Result := generic_parameters.same_syntactical_types (other_parameters)
 					end
@@ -112,7 +122,15 @@ feature -- Status report
 			else
 				a_class_type ?= other
 				if a_class_type /= Void then
-					if base_class = a_class_type.base_class then
+					if a_class_type.is_expanded then
+						if base_class = a_class_type.base_class then
+							a_generic_class_type ?= other
+							if a_generic_class_type /= Void then
+								other_parameters := a_generic_class_type.generic_parameters
+								Result := generic_parameters.syntactically_conforms_to (other_parameters, a_class)
+							end
+						end
+					elseif base_class = a_class_type.base_class then
 						a_generic_class_type ?= other
 						if a_generic_class_type /= Void then
 							other_parameters := a_generic_class_type.generic_parameters
@@ -245,15 +263,15 @@ feature -- Type processing
 			Result := Current
 		end
 
-	resolved_identifier_types (a_feature: ET_FEATURE; args: ET_FORMAL_ARGUMENTS;
-		a_flattener: ET_FEATURE_FLATTENER): ET_TYPE is
-			-- Replace any 'like identifier' types that appear
-			-- in the implementation of `a_feature' by the
-			-- corresponding 'like feature' or 'like argument'.
-			-- Also resolve 'BIT identifier' types.
+	resolved_identifier_types (a_feature: ET_FEATURE; args: ET_FORMAL_ARGUMENTS; a_class: ET_CLASS): ET_TYPE is
+			-- Replace any 'like identifier' types that appear in the
+			-- implementation of `a_feature in class `a_class' by
+			-- the corresponding 'like feature' or 'like argument'.
+			-- Also resolve 'BIT identifier' types. Set
+			-- `a_class.has_flatten_error' to true if an error occurs.
 			-- (Warning: this is a side-effect function.)
 		do
-			generic_parameters.resolve_identifier_types (a_feature, args, a_flattener)
+			generic_parameters.resolve_identifier_types (a_feature, args, a_class)
 			Result := Current
 		end
 
@@ -274,32 +292,40 @@ feature -- Conversion
 			-- Type, in the context of `a_feature' in `a_type',
 			-- only made up of class names and generic formal parameters
 			-- when `a_type' in a generic type not fully derived
-			-- (Definition of base type in ETL2 p. 198)
+			-- (Definition of base type in ETL2 p.198)
 		local
 			parameters: like generic_parameters
-			a_parameter, an_actual: ET_TYPE
+			a_parameter, an_actual: ET_TYPE_ITEM
+			a_parameter_type, an_actual_type: ET_TYPE
 			duplication_needed: BOOLEAN
 			i, nb: INTEGER
 		do
 			nb := generic_parameters.count
 			from i := 1 until i > nb loop
 				a_parameter := generic_parameters.item (i)
+				a_parameter_type := a_parameter.type
 					-- `a_base_type' has been flattened and no
 					-- error occurred, so there is no loop in
 					-- anchored types.
-				an_actual := a_parameter.base_type (a_feature, a_type)
-				if a_parameter /= an_actual then
+				an_actual_type := a_parameter_type.base_type (a_feature, a_type)
+				if a_parameter_type /= an_actual_type then
 					duplication_needed := True
-				end
-				if i = 1 then
-					!! parameters.make_with_capacity (an_actual, nb)
+					!! an_actual.make (an_actual_type)
+					an_actual.set_comma (a_parameter.comma)
 				else
-					parameters.put (an_actual)
+					an_actual := a_parameter
+				end
+				if duplication_needed then
+					if i = 1 then
+						!! parameters.make_with_capacity (an_actual, nb)
+					else
+						parameters.put (an_actual)
+					end
 				end
 				i := i + 1
 			end
 			if duplication_needed then
-				!ET_GENERIC_CLASS_TYPE! Result.make (class_name, parameters, base_class)
+				!ET_GENERIC_CLASS_TYPE! Result.make (type_mark, class_name, parameters, base_class)
 			else
 				Result := Current
 			end
@@ -313,7 +339,7 @@ feature -- Duplication
 			generics: like generic_parameters
 		do
 			generics := generic_parameters.deep_cloned_actuals
-			!! Result.make (class_name, generics, base_class)
+			!! Result.make (type_mark, class_name, generics, base_class)
 		end
 
 invariant

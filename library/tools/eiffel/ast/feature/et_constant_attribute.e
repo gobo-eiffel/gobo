@@ -61,7 +61,7 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	constant: ANY
+	constant: ET_CONSTANT
 			-- Constant value
 
 feature -- Status report

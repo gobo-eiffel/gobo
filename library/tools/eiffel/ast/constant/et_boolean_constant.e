@@ -6,7 +6,7 @@ indexing
 
 	library:    "Gobo Eiffel Tools Library"
 	author:     "Eric Bezault <ericb@gobosoft.com>"
-	copyright:  "Copyright (c) 1999, Eric Bezault and others"
+	copyright:  "Copyright (c) 1999-2002, Eric Bezault and others"
 	license:    "Eiffel Forum Freeware License v1 (see forum.txt)"
 	date:       "$Date$"
 	revision:   "$Revision$"
@@ -15,12 +15,8 @@ deferred class ET_BOOLEAN_CONSTANT
 
 inherit
 
-	ET_EXPRESSION
-
-feature -- Access
-
-	position: ET_POSITION
-			-- Position in source code
+	ET_CONSTANT
+	ET_TOKEN
 
 feature -- Status report
 
@@ -28,9 +24,5 @@ feature -- Status report
 			-- Is boolean value true?
 		deferred
 		end
-
-invariant
-
-	position_not_void: position /= Void
 
 end -- class ET_BOOLEAN_CONSTANT

@@ -6,7 +6,7 @@ indexing
 
 	library:    "Gobo Eiffel Tools Library"
 	author:     "Eric Bezault <ericb@gobosoft.com>"
-	copyright:  "Copyright (c) 1999, Eric Bezault and others"
+	copyright:  "Copyright (c) 1999-2002, Eric Bezault and others"
 	license:    "Eiffel Forum Freeware License v1 (see forum.txt)"
 	date:       "$Date$"
 	revision:   "$Revision$"
@@ -23,19 +23,33 @@ creation
 
 feature {NONE} -- Initialization
 
-	make (e: like expression) is
+	make (an_old: like old_keyword; e: like expression) is
 			-- Create a new old expression.
 		require
+			an_old_not_void: an_old /= Void
 			e_not_void: e /= Void
 		do
+			old_keyword := an_old
 			expression := e
 		ensure
+			old_keyword_set: old_keyword = an_old
 			expression_set: expression = e
 		end
 
 feature -- Access
 
-	expression: ET_EXPRESSION
-			-- Expression
+	old_keyword: ET_TOKEN
+			-- "old" keyword
+
+	position: ET_POSITION is
+			-- Position of first character of
+			-- current node in source code
+		do
+			Result := old_keyword.position
+		end
+
+invariant
+
+	old_keyword_not_void: old_keyword /= Void
 
 end -- class ET_OLD_EXPRESSION

@@ -36,15 +36,17 @@ creation
 
 feature {NONE} -- Initialization
 
-	make (a_name: like class_name; a_class: like base_class) is
+	make (a_type_mark: like type_mark; a_name: like class_name; a_class: like base_class) is
 			-- Create a new class type.
 		require
 			a_name_not_void: a_name /= Void
 			a_class_not_void: a_class /= Void
 		do
+			type_mark := a_type_mark
 			class_name := a_name
 			base_class := a_class
 		ensure
+			type_mark_set: type_mark = a_type_mark
 			class_name_set: class_name = a_name
 			base_class_set: base_class = a_class
 		end
@@ -62,6 +64,26 @@ feature -- Status report
 			Result := False
 		end
 
+	is_expanded: BOOLEAN is
+			-- Is current type expanded?
+		do
+			if type_mark /= Void then
+				Result := type_mark.is_expanded
+			else
+				Result := base_class.is_expanded
+			end
+		end
+
+	is_separate: BOOLEAN is
+			-- Is current type separate?
+		do
+			if type_mark /= Void then
+				Result := type_mark.is_separate
+			else
+				Result := base_class.is_separate
+			end
+		end
+
 	same_syntactical_type (other: ET_TYPE): BOOLEAN is
 			-- Are current type and `other' syntactically
 			-- the same type (e.g. do not try to resolve
@@ -75,7 +97,9 @@ feature -- Status report
 				a_class_type ?= other
 				if a_class_type /= Void then
 					if base_class = a_class_type.base_class then
-						Result := not a_class_type.is_generic
+						Result := not a_class_type.is_generic and
+							is_expanded = a_class_type.is_expanded and
+							is_separate = a_class_type.is_separate
 					end
 				end
 			end
@@ -93,7 +117,9 @@ feature -- Status report
 			else
 				a_class_type ?= other
 				if a_class_type /= Void then
-					if base_class = a_class_type.base_class then
+					if a_class_type.is_expanded then
+						Result := base_class = a_class_type.base_class and not a_class_type.is_generic
+					elseif base_class = a_class_type.base_class then
 						Result := not a_class_type.is_generic
 					elseif base_class.has_ancestor (a_class_type.base_class) then
 						an_ancestor := base_class.ancestor (a_class_type)

@@ -6,7 +6,7 @@ indexing
 
 	library:    "Gobo Eiffel Tools Library"
 	author:     "Eric Bezault <ericb@gobosoft.com>"
-	copyright:  "Copyright (c) 1999, Eric Bezault and others"
+	copyright:  "Copyright (c) 1999-2002, Eric Bezault and others"
 	license:    "Eiffel Forum Freeware License v1 (see forum.txt)"
 	date:       "$Date$"
 	revision:   "$Revision$"
@@ -14,13 +14,6 @@ indexing
 class ET_PREFIX_EXPRESSION
 
 inherit
-
-	ET_CALL_EXPRESSION
-		rename
-			make as make_call
-		redefine
-			name
-		end
 
 	ET_UNARY_EXPRESSION
 
@@ -37,7 +30,7 @@ feature {NONE} -- Initialization
 			e_not_void: e /= Void
 		do
 			name := a_name
-			target := e
+			expression := e
 		ensure
 			name_set: name = a_name
 			expression_set: expression = e
@@ -45,18 +38,18 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	name: ET_PREFIX_NAME
+	name: ET_PREFIX_OPERATOR
 			-- Feature name
 
-	expression: ET_EXPRESSION is
-			-- Expression
+	position: ET_POSITION is
+			-- Position of first character of
+			-- current node in source code
 		do
-			Result := target
+			Result := name.position
 		end
 
 invariant
 
-	target_not_void: target /= Void
-	no_arguments: arguments = Void
+	name_not_void: name /= Void
 
 end -- class ET_PREFIX_EXPRESSION

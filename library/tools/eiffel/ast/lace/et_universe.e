@@ -13,6 +13,10 @@ indexing
 
 class ET_UNIVERSE
 
+inherit
+
+	KL_IMPORTED_STRING_ROUTINES
+
 creation
 
 	make, make_with_factory
@@ -47,7 +51,7 @@ feature {NONE} -- Initialization
 			ast_factory := a_factory
 			make_basic_classes
 			!! eiffel_parser.make_with_factory (Current, a_factory, an_error_handler)
-			eiffel_parser.set_create_keyword (True)
+			eiffel_parser.set_use_create_keyword (True)
 			!DS_HASH_TOPOLOGICAL_SORTER [ET_CLASS]! class_sorter.make_default
 			!DS_HASH_TOPOLOGICAL_SORTER [ET_FORMAL_GENERIC_PARAMETER]! formal_generic_parameter_sorter.make_default
 			!! feature_flattener.make (any_class)
@@ -61,17 +65,15 @@ feature {NONE} -- Initialization
 			-- Create basic classes.
 		local
 			id: ET_IDENTIFIER
-			p: ET_FILE_POSITION
 			any_parent: ET_PARENT
 		do
-			!! p.make ("", 0, 0)
-			!! id.make ("ANY", p)
+			!! id.make ("ANY")
 			any_class := eiffel_class (id)
-			!! id.make ("GENERAL", p)
+			!! id.make ("GENERAL")
 			general_class := eiffel_class (id)
-			!! id.make ("NONE", p)
+			!! id.make ("NONE")
 			none_class := eiffel_class (id)
-			!! any_type.make (any_class.name, any_class)
+			!! any_type.make (Void, any_class.name, any_class)
 			!! any_parent.make (any_type, Void, Void, Void, Void, Void)
 			!! any_parents.make (any_parent)
 		ensure
@@ -195,7 +197,7 @@ feature -- Factory
 			attribute_not_void: Result /= Void
 		end
 
-	new_constant_attribute (a_name: ET_FEATURE_NAME; a_type: ET_TYPE; a_constant: ANY;
+	new_constant_attribute (a_name: ET_FEATURE_NAME; a_type: ET_TYPE; a_constant: ET_CONSTANT;
 		a_clients: ET_CLIENTS; a_class: ET_CLASS): ET_CONSTANT_ATTRIBUTE is
 			-- New constant attribute feature for `a_class'
 		require
@@ -434,6 +436,38 @@ feature -- Parsing
 		do
 			if clusters /= Void then
 				clusters.parse_all (Current)
+			end
+		end
+
+	parse_system is
+			-- Parse whole system.
+		local
+			a_cursor: DS_HASH_TABLE_CURSOR [ET_CLASS, ET_IDENTIFIER]
+			a_class: ET_CLASS
+			a_classname: STRING
+			a_filename: STRING
+		do
+			if clusters /= Void then
+				a_cursor := classes.new_cursor
+				from a_cursor.start until a_cursor.after loop
+					a_class := a_cursor.item
+					if not a_class.is_parsed then
+						a_classname := a_class.name.name
+						a_filename := STRING_.make (a_classname.count + 2)
+						a_filename.append_string (a_classname)
+						a_filename.to_lower
+						a_filename.append_character ('.')
+						a_filename.append_character ('e')
+						clusters.parse_class (a_class, a_filename)
+					end
+					if not a_class.is_parsed then
+							-- TODO.
+						print ("Class ")
+						print (a_classname)
+						print (" not found.%N")
+					end
+					a_cursor.forth
+				end
 			end
 		end
 

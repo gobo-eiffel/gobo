@@ -6,7 +6,7 @@ indexing
 
 	library:    "Gobo Eiffel Tools Library"
 	author:     "Eric Bezault <ericb@gobosoft.com>"
-	copyright:  "Copyright (c) 2001, Eric Bezault and others"
+	copyright:  "Copyright (c) 2001-2002, Eric Bezault and others"
 	license:    "Eiffel Forum Freeware License v1 (see forum.txt)"
 	date:       "$Date$"
 	revision:   "$Revision$"
@@ -15,11 +15,19 @@ class ET_ACTUAL_GENERIC_PARAMETERS
 
 creation
 
-	make, make_with_capacity
+	make, make_empty, make_with_capacity
 
 feature {NONE} -- Initialization
 
-	make (a_type: ET_TYPE) is
+	make_empty is
+			-- Create an empty actual generic parameter list.
+		do
+			!! generic_parameters.make (1, 0)
+		ensure
+			empty: count = 0
+		end
+
+	make (a_type: ET_TYPE_ITEM) is
 			-- Create a new actual generic parameter list
 			-- with initially one actual parameter `a_type'.
 		require
@@ -31,7 +39,7 @@ feature {NONE} -- Initialization
 			inserted: item (1) = a_type
 		end
 
-	make_with_capacity (a_type: ET_TYPE; nb: INTEGER) is
+	make_with_capacity (a_type: ET_TYPE_ITEM; nb: INTEGER) is
 			-- Create a new actual generic parameter list
 			-- with initially one actual parameter `a_type'.
 		require
@@ -47,7 +55,7 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	item (i: INTEGER): ET_TYPE is
+	item (i: INTEGER): ET_TYPE_ITEM is
 			-- `i'-th actual generic parameter
 		require
 			i_large_enough: i >= 1
@@ -56,6 +64,26 @@ feature -- Access
 			Result := generic_parameters.item (i)
 		ensure
 			parameter_not_void: Result /= Void
+		end
+
+	type (i: INTEGER): ET_TYPE is
+			-- Type of `i'-th actual generic parameter
+		require
+			i_large_enough: i >= 1
+			i_small_enough: i <= count
+		do
+			Result := item (i).type
+		ensure
+			parameter_not_void: Result /= Void
+		end
+
+	comma (i: INTEGER): ET_SYMBOL is
+			-- Comma after the `i'-th actual generic parameter
+		require
+			i_large_enough: i >= 1
+			i_small_enough: i <= count
+		do
+			Result := item (i).comma
 		end
 
 feature -- Measurement
@@ -80,7 +108,7 @@ feature -- Status report
 				nb := count
 				Result := True
 				from i := 1 until i > nb loop
-					if not item (i).same_syntactical_type (other.item (i)) then
+					if not type (i).same_syntactical_type (other.type (i)) then
 						Result := False
 						i := nb + 1 -- Jump out of the loop.
 					else
@@ -111,8 +139,8 @@ feature -- Status report
 				nb := count
 				Result := True
 				from i := 1 until i > nb loop
-					a_type := item (i)
-					other_type := other.item (i)
+					a_type := type (i)
+					other_type := other.type (i)
 					if not a_type.syntactically_conforms_to (other_type, a_class) then
 						Result := False
 						i := nb + 1 -- Jump out of the loop.
@@ -149,7 +177,7 @@ feature -- Validity
 			Result := True
 			from i := 1 until i > nb loop
 				a_formal := formals.item (i)
-				an_actual := item (i)
+				an_actual := type (i)
 				if not an_actual.check_parent_validity (an_heir) then
 						-- The error has already been reported
 						-- in `check_parent_validity'.
@@ -199,7 +227,7 @@ feature -- Validity
 			nb := count
 			Result := True
 			from i := 1 until i > nb loop
-				an_actual := item (i)
+				an_actual := type (i)
 				if not an_actual.check_constraint_validity (a_formal, a_class, a_sorter) then
 						-- The error has already been reported
 						-- in `check_constraint_validity'.
@@ -225,7 +253,7 @@ feature -- Validity
 
 feature -- Element change
 
-	put (a_type: ET_TYPE) is
+	put (a_type: ET_TYPE_ITEM) is
 			-- Add actual generic parameter `a_type'
 			-- to actual generic parameter list.
 		require
@@ -249,9 +277,9 @@ feature -- System
 		local
 			i, nb: INTEGER
 		do
-			nb := generic_parameters.count
+			nb := count
 			from i := 1 until i > nb loop
-				generic_parameters.item (i).add_to_system
+				type (i).add_to_system
 				i := i + 1
 			end
 		end
@@ -268,7 +296,7 @@ feature -- Type processing
 		do
 			nb := count
 			from i := 1 until i > nb loop
-				a_formal ?= item (i)
+				a_formal ?= type (i)
 				if a_formal = Void or else a_formal.index /= i then
 					Result := True
 					i := nb + 1 -- Jump out of the loop.
@@ -289,9 +317,9 @@ feature -- Type processing
 			i, nb: INTEGER
 			a_type: ET_TYPE
 		do
-			nb := generic_parameters.count
+			nb := count
 			from i := 1 until i > nb loop
-				a_type := generic_parameters.item (i)
+				a_type := type (i)
 				if a_type.has_formal_parameters (actual_parameters) then
 					Result := True
 					i := nb + 1 -- Jump out of the loop.
@@ -310,36 +338,34 @@ feature -- Type processing
 			actual_parameters_not_void: actual_parameters /= Void
 		local
 			i, nb: INTEGER
-			a_type: ET_TYPE
+			an_item: ET_TYPE_ITEM
 		do
-			nb := generic_parameters.count
+			nb := count
 			from i := 1 until i > nb loop
-				a_type := generic_parameters.item (i)
-				a_type := a_type.resolved_formal_parameters (actual_parameters)
-				generic_parameters.put (a_type, i)
+				an_item := item (i)
+				an_item.set_type (an_item.type.resolved_formal_parameters (actual_parameters))
 				i := i + 1
 			end
 		end
 
-	resolve_identifier_types (a_feature: ET_FEATURE; args: ET_FORMAL_ARGUMENTS;
-		a_flattener: ET_FEATURE_FLATTENER) is
-			-- Replace any 'like identifier' types that appear
-			-- in the implementation of `a_feature' by the
-			-- corresponding 'like feature' or 'like argument'.
-			-- Also resolve 'BIT identifier' types.
+	resolve_identifier_types (a_feature: ET_FEATURE; args: ET_FORMAL_ARGUMENTS; a_class: ET_CLASS) is
+			-- Replace any 'like identifier' types that appear in the
+			-- implementation of `a_feature in class `a_class' by
+			-- the corresponding 'like feature' or 'like argument'.
+			-- Also resolve 'BIT identifier' types. Set
+			-- `a_class.has_flatten_error' to true if an error occurs.
 		require
 			a_feature_not_void: a_feature /= Void
-			a_flattener_not_void: a_flattener /= Void
-			immediate_or_redeclared: a_feature.implementation_class = a_flattener.current_class
+			a_class_not_void: a_class /= Void
+			immediate_or_redeclared: a_feature.implementation_class = a_class
 		local
 			i, nb: INTEGER
-			a_type: ET_TYPE
+			an_item: ET_TYPE_ITEM
 		do
-			nb := generic_parameters.count
+			nb := count
 			from i := 1 until i > nb loop
-				a_type := generic_parameters.item (i)
-				a_type := a_type.resolved_identifier_types (a_feature, args, a_flattener)
-				generic_parameters.put (a_type, i)
+				an_item := item (i)
+				an_item.set_type (an_item.type.resolved_identifier_types (a_feature, args, a_class))
 				i := i + 1
 			end
 		end
@@ -354,13 +380,12 @@ feature -- Type processing
 			ast_factory_not_void: ast_factory /= Void
 		local
 			i, nb: INTEGER
-			a_type: ET_TYPE
+			an_item: ET_TYPE_ITEM
 		do
-			nb := generic_parameters.count
+			nb := count
 			from i := 1 until i > nb loop
-				a_type := generic_parameters.item (i)
-				a_type := a_type.resolved_named_types (a_class, ast_factory)
-				generic_parameters.put (a_type, i)
+				an_item := item (i)
+				an_item.set_type (an_item.type.resolved_named_types (a_class, ast_factory))
 				i := i + 1
 			end
 		end
@@ -372,12 +397,22 @@ feature -- Duplication
 			-- parameter types
 		local
 			i, nb: INTEGER
+			an_item, a_cloned_item: ET_TYPE_ITEM
 		do
 			nb := count
-			!! Result.make_with_capacity (item (1).deep_cloned_type, nb)
-			from i := 2 until i > nb loop
-				Result.put (item (i).deep_cloned_type)
-				i := i + 1
+			if nb = 0 then
+			else
+				an_item := item (1)
+				!! a_cloned_item.make (an_item.type.deep_cloned_type)
+				a_cloned_item.set_comma (an_item.comma)
+				!! Result.make_with_capacity (a_cloned_item, nb)
+				from i := 2 until i > nb loop
+					an_item := item (i)
+					!! a_cloned_item.make (an_item.type.deep_cloned_type)
+					a_cloned_item.set_comma (an_item.comma)
+					Result.put (a_cloned_item)
+					i := i + 1
+				end
 			end
 		ensure
 			deep_cloned_not_void: Result /= Void
@@ -385,12 +420,12 @@ feature -- Duplication
 
 feature {NONE} -- Implementation
 
-	generic_parameters: ARRAY [ET_TYPE]
+	generic_parameters: ARRAY [ET_TYPE_ITEM]
 			-- Actual generic parameters
 
 invariant
 
-	not_empty: count > 0
+	not_empty: count >= 0
 	generic_parameters_not_void: generic_parameters /= Void
 	generic_parameters_lower: generic_parameters.lower = 1
 	generic_parameters_upper: generic_parameters.upper >= count

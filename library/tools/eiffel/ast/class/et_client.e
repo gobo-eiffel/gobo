@@ -38,7 +38,7 @@ feature {NONE} -- Initialization
 		local
 			a_name: like name
 		do
-			!! a_name.make (a_universe.none_class.name.name, a_position)
+			!! a_name.make_with_position (a_universe.none_class.name.name, a_position.line, a_position.column)
 			make (a_name)
 			is_none := True
 		ensure
@@ -54,7 +54,7 @@ feature {NONE} -- Initialization
 		local
 			a_name: like name
 		do
-			!! a_name.make (a_universe.any_class.name.name, a_position)
+			!! a_name.make_with_position (a_universe.any_class.name.name, a_position.line, a_position.column)
 			make (a_name)
 			is_any := True
 		ensure

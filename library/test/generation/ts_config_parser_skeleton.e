@@ -192,7 +192,7 @@ feature -- AST factory
 			!LX_DFA_REGULAR_EXPRESSION! Result.compile (a_regexp.name, True)
 			if not Result.compiled then
 				Result := Void
-				error_handler.report_regexp_syntax_error (a_regexp)
+				error_handler.report_regexp_syntax_error (a_regexp, filename)
 			end
 		ensure
 			compiled: Result /= Void implies Result.compiled
@@ -303,11 +303,9 @@ feature -- Defaults
 			class_prefix_not_void: class_prefix /= Void
 		local
 			a_name, a_pathname: ET_IDENTIFIER
-			a_position: ET_FILE_POSITION
 		do
-			!! a_position.make ("unknown file", 0, 0)
-			!! a_name.make ("root", a_position)
-			!! a_pathname.make (".", a_position)
+			!! a_name.make ("root")
+			!! a_pathname.make (".")
 			!! Result.make (a_name, a_pathname, class_regexp, feature_regexp, class_prefix)
 		ensure
 			cluster_not_void: Result /= Void
@@ -318,7 +316,7 @@ feature -- Error handling
 	report_error (a_message: STRING) is
 			-- Print error message.
 		do
-			error_handler.report_config_syntax_error (current_position)
+			error_handler.report_config_syntax_error (filename, current_position)
 		end
 
 invariant

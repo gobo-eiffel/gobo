@@ -126,7 +126,7 @@ feature {NONE} -- Implementation
 		local
 			a_name_id: ET_IDENTIFIER
 		do
-			!! a_name_id.make (a_name, name_id.position)
+			!! a_name_id.make_with_position (a_name, name_id.line, name_id.column)
 			!! Result.make (a_name_id, Void)
 			Result.set_parent (Current)
 			Result.set_recursive (True)

@@ -31,15 +31,17 @@ creation
 
 feature {NONE} -- Initialization
 
-	make (a_name: like name; a_parameters: like generic_parameters) is
+	make (a_type_mark: like type_mark; a_name: like name; a_parameters: like generic_parameters) is
 			-- Create a new generic named type.
 		require
 			a_name_not_void: a_name /= Void
 			a_parameters_not_void: a_parameters /= Void
 		do
+			type_mark := a_type_mark
 			name := a_name
 			generic_parameters := a_parameters
 		ensure
+			type_mark_set: type_mark = a_type_mark
 			name_set: name = a_name
 			generic_parameters_set: generic_parameters = a_parameters
 		end
@@ -68,7 +70,7 @@ feature -- Type processing
 			else
 				a_base_class := a_class.universe.eiffel_class (name)
 				generic_parameters.resolve_named_types (a_class, ast_factory)
-				Result := ast_factory.new_generic_class_type (name, generic_parameters, a_base_class)
+				Result := ast_factory.new_generic_class_type (type_mark, name, generic_parameters, a_base_class)
 			end
 		end
 
@@ -77,7 +79,7 @@ feature -- Duplication
 	deep_cloned_type: like Current is
 			-- Recursively cloned type
 		do
-			!! Result.make (name, generic_parameters.deep_cloned_actuals)
+			!! Result.make (type_mark, name, generic_parameters.deep_cloned_actuals)
 		end
 
 feature -- Output
@@ -89,18 +91,24 @@ feature -- Output
 			i, nb: INTEGER
 			a_type: ET_TYPE
 		do
-			a_string.append_string (name.name)
-			a_string.append_string (" [")
-			a_type := generic_parameters.item (1)
-			a_type.append_to_string (a_string)
-			nb := generic_parameters.count
-			from i := 2 until i > nb loop
-				a_string.append_string (", ")
-				a_type := generic_parameters.item (i)
-				a_type.append_to_string (a_string)
-				i := i + 1
+			if type_mark /= Void then
+				a_string.append_string (type_mark.text)
+				a_string.append_character (' ')
 			end
-			a_string.append_character (']')
+			a_string.append_string (name.name)
+			nb := generic_parameters.count
+			if nb > 0 then
+				a_string.append_string (" [")
+				a_type := generic_parameters.type (1)
+				a_type.append_to_string (a_string)
+					from i := 2 until i > nb loop
+					a_string.append_string (", ")
+					a_type := generic_parameters.type (i)
+					a_type.append_to_string (a_string)
+					i := i + 1
+				end
+				a_string.append_character (']')
+			end
 		end
 
 invariant

@@ -29,7 +29,7 @@ feature {NONE} -- Initialization
 			a_position_not_void: a_position /= Void
 		do
 			!! parameters.make (1, 1)
-			parameters.put (a_position.out, 1)
+			parameters.put (a_position.to_string, 1)
 		end
 
 feature -- Access

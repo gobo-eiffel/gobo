@@ -6,7 +6,7 @@ indexing
 
 	library:    "Gobo Eiffel Tools Library"
 	author:     "Eric Bezault <ericb@gobosoft.com>"
-	copyright:  "Copyright (c) 1999, Eric Bezault and others"
+	copyright:  "Copyright (c) 1999-2002, Eric Bezault and others"
 	license:    "Eiffel Forum Freeware License v1 (see forum.txt)"
 	date:       "$Date$"
 	revision:   "$Revision$"
@@ -15,22 +15,46 @@ deferred class ET_INTEGER_CONSTANT
 
 inherit
 
-	ET_EXPRESSION
+	ET_CONSTANT
+	ET_CHOICE_CONSTANT
 
 feature -- Access
 
 	literal: STRING
 			-- Literal integer absolute value
 
-	is_negative: BOOLEAN
+	is_negative: BOOLEAN is
 			-- Is integer value negative?
+		do
+			if sign /= Void then
+				Result := sign.is_negative
+			end
+		end
 
 	value: INTEGER
 			-- Integer value set by last call
 			-- to `compute_value'
 
-	position: ET_POSITION
-			-- Position in source code
+	sign: ET_SIGN_SYMBOL
+			-- Sign; Void if none
+
+	position: ET_POSITION is
+			-- Position of first character of
+			-- current node in source code
+		do
+			if sign /= Void then
+				Result := sign.position
+			else
+				Result := literal_position
+			end
+		end
+
+	literal_position: ET_POSITION
+			-- Position of first character of
+			-- `literal' in source code
+
+	break: ET_BREAK
+			-- Break which appears just after current node
 
 feature -- Status report
 
@@ -40,12 +64,20 @@ feature -- Status report
 
 feature -- Setting
 
-	set_negative is
-			-- Set `is_negative' to True.
+	set_sign (a_sign: like sign) is
+			-- Set `sign' to `a_sign'.
 		do
-			is_negative := True
+			sign := a_sign
 		ensure
-			is_negative: is_negative
+			sign_set: sign = a_sign
+		end
+
+	set_break (a_break: like break) is
+			-- Set `break' to `a_break'.
+		do
+			break := a_break
+		ensure
+			break_set: break = a_break
 		end
 
 feature -- Basic operations
@@ -61,6 +93,6 @@ feature -- Basic operations
 invariant
 
 	literal_not_void: literal /= Void
-	position_not_void: position /= Void
+	literal_position_not_void: literal_position /= Void
 
 end -- class ET_INTEGER_CONSTANT

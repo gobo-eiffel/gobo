@@ -169,7 +169,7 @@ feature -- Type processing
 		do
 			Result := Current
 			if index <= actual_parameters.count then
-				a_type := actual_parameters.item (index)
+				a_type := actual_parameters.type (index)
 				a_formal ?= a_type
 				if a_formal = Void or else a_formal.index /= index then
 					Result := a_type
@@ -211,7 +211,7 @@ print (index)
 print ("'%N")
 				Result := Current
 			else
-				Result := parameters.item (index)
+				Result := parameters.type (index)
 				a_formal ?= Result
 				if a_formal /= Void and then a_formal.index = index then
 					Result := Current

@@ -6,29 +6,30 @@ indexing
 
 	library:    "Gobo Eiffel Tools Library"
 	author:     "Eric Bezault <ericb@gobosoft.com>"
-	copyright:  "Copyright (c) 1999, Eric Bezault and others"
+	copyright:  "Copyright (c) 1999-2002, Eric Bezault and others"
 	license:    "Eiffel Forum Freeware License v1 (see forum.txt)"
 	date:       "$Date$"
 	revision:   "$Revision$"
 
-class ET_ASSERTION
+deferred class ET_ASSERTION
+
+inherit
+
+	ET_AST_NODE
 
 feature -- Access
 
-	tag: ET_IDENTIFIER
-			-- Tag
-
-	next: ET_ASSERTION
-			-- Next assertion in assertion list
+	semicolon: ET_SYMBOL
+			-- Semicolon separator
 
 feature -- Setting
 
-	set_next (an_assertion: like next) is
-			-- Set `next' to `an_assertion'.
+	set_semicolon (a_semicolon: like semicolon) is
+			-- Set `semicolon' to `a_semicolon'.
 		do
-			next := an_assertion
+			semicolon := a_semicolon
 		ensure
-			next_set: next = an_assertion
+			semicolon_set: semicolon = a_semicolon
 		end
 
 end -- class ET_ASSERTION

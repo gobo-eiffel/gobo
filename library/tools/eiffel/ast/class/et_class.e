@@ -16,6 +16,7 @@ class ET_CLASS
 inherit
 
 	HASHABLE
+	ET_SHARED_FEATURE_NAME_TESTER
 
 creation
 
@@ -34,6 +35,7 @@ feature {NONE} -- Initialization
 			id := an_id
 			universe := a_universe
 			!! named_features.make (100)
+			named_features.set_key_equality_tester (feature_name_tester)
 		ensure
 			name_set: name = a_name
 			id_set: id = an_id
@@ -59,7 +61,7 @@ feature -- Access
 	name: ET_IDENTIFIER
 			-- Class name
 
-	invariants: ET_ASSERTIONS
+	invariants: ET_INVARIANTS
 			-- Invariants
 
 	id: INTEGER
@@ -643,13 +645,14 @@ feature -- Compilation: feature flattening
 		do
 			set_flatten_error
 			!! named_features.make (0)
+			named_features.set_key_equality_tester (feature_name_tester)
 		ensure
 			is_flattened: is_flattened
 			has_flatten_error: has_flatten_error
 			wiped_out: named_features.is_empty
 		end
 
-feature {ET_FEATURE_FLATTENER} -- Compilation: feature flattening
+feature {ET_FEATURE_FLATTENER, ET_TYPE} -- Compilation: feature flattening
 
 	set_flatten_error is
 			-- Set `has_flatten_error' to True.
