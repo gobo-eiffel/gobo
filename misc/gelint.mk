@@ -29,6 +29,9 @@ HACT_FFLAGS=
 VE_COMPILER=vec
 VE_CFLAGS=-no
 
+# gelint
+GELINT=${GOBO}/bin/gelint
+
 # Miscellaneous
 TARGET_EXE=${TARGET}${EXE}
 
@@ -45,20 +48,23 @@ CREATION_ROUTINE=make
 # SmallEiffel
 
 se:
-	${MAKE} test-se
-	${MAKE} clean-se
+	if [ ! -r failed.se ]; then \
+		${MAKE} test-se ; \
+		${MAKE} clean-se ; \
+	else \
+		${ECHO} '${ROOT_DIR}: *** FAILED ***' ; \
+	fi
 
 test-se: loadpath.se
-	if ${SE_COMPILER} ${SE_CFLAGS} -o ${TARGET} ${ROOT_CLASS} ${CREATION_ROUTINE} > tmp11.txt 2>&1 ; then \
-		true; \
+	-${SE_COMPILER} ${SE_CFLAGS} -o ${TARGET} ${ROOT_CLASS} ${CREATION_ROUTINE} > tmp11.txt 2>&1
+	-if [ -x ./${TARGET} ]; then \
+		./${TARGET} >> tmp11.txt 2>&1 ; \
 	fi
-	if [ -x ./${TARGET} ]; then \
-		if ./${TARGET} >> tmp11.txt 2>&1 ; then \
-			true; \
-		fi ; \
-	fi
-	${GREP} -v "Error(s) during \`compile_to_c'." tmp11.txt | \
-		${SED} -e 's/(.*\([a-zA-Z0-9_]\+\.e\))/(\1)/g' > output.txt
+	-${GREP} -v "Error(s) during \`compile_to_c'." tmp11.txt | \
+		${SED} -e 's/(.*\([a-zA-Z0-9_]\+\.e\))/(\1)/g' | \
+		${SED} -e '/^Loading path is:/,/^\]/ d' | \
+		${SED} -e '/^Environment Variable \"SmallEiffel\" is:/,/\.$$/ d' | \
+		${GREP} -v "^${TARGET}.c" > output.txt
 	${ECHO} -n '${ROOT_DIR}: '
 	if ${DIFF} output.txt ${ROOT_DIR}/output.se > /dev/null 2>&1 ; then \
 		${ECHO} 'OK' ; \
@@ -70,7 +76,7 @@ loadpath.se: ${ROOT_DIR}/loadpath.se
 	${CP} ${ROOT_DIR}/loadpath.se loadpath.se
 
 clean-se:
-	${SE_CLEAN} ${ROOT_CLASS}
+	-${SE_CLEAN} ${ROOT_CLASS}
 	-${RM} -f tmp11.txt output.txt
 	-${RM} -f ${TARGET_EXE}
 
@@ -78,21 +84,25 @@ clean-se:
 #ISE Eiffel
 
 ise:
-	${MAKE} test-ise
-	${MAKE} clean-ise
+	if [ ! -r failed.ise ]; then \
+		${MAKE} test-ise ; \
+		${MAKE} clean-ise ; \
+	else \
+		${ECHO} '${ROOT_DIR}: *** FAILED ***' ; \
+	fi
 
 test-ise: ise.ace
-	if ${ISE_COMPILER} ${ISE_CFLAGS} -ace ise.ace > tmp11.txt 2>&1 ; then \
-		true; \
-	fi
+	-${ISE_COMPILER} ${ISE_CFLAGS} -ace ise.ace > tmp11.txt 2>&1
 	$(MAKE) ise_finish_freezing 'MAKEFLAGS=' > /dev/null 2>&1
-	cd EIFGEN/${ISE_CODEGEN} ; \
+	-cd EIFGEN/${ISE_CODEGEN} ; \
 		if [ -x ./${TARGET} ]; then \
-			if ./${TARGET} >> ../../tmp11.txt 2>&1 ; then \
-				true; \
-			fi ; \
+			./${TARGET} >> ../../tmp11.txt 2>&1 ; \
 		fi
-	${GREP} -v "(version" tmp11.txt | ${GREP} -v "] Degree " > output.txt
+	-${SED} -e 's/^<[0-9A-Fa-f]\+>/<>/g' tmp11.txt | \
+		${GREP} -v "(version" | \
+		${GREP} -v "] Degree " | \
+		${GREP} -v "] Generation of auxiliary files" | \
+		${GREP} -v "EIFGEN.${ISE_CODEGEN}" > output.txt
 	${ECHO} -n '${ROOT_DIR}: '
 	if ${DIFF} output.txt ${ROOT_DIR}/output.ise > /dev/null 2>&1 ; then \
 		${ECHO} 'OK' ; \
@@ -121,35 +131,49 @@ clean-ise:
 # Halstenbach
 
 hact:
-	${MAKE} test-hact
-	${MAKE} clean-hact
+	if [ ! -r failed.hact ]; then \
+		${MAKE} test-hact ; \
+		${MAKE} clean-hact ; \
+	else \
+		${ECHO} '${ROOT_DIR}: *** FAILED ***' ; \
+	fi
 
 test-hact: hact.ace
-	if ${HACT_COMPILER} ${HACT_CFLAGS} -ace hact.ace -project ${TARGET}.eif ; then \
-		true; \
-	fi
-	${MAKE} hact_fish 'MAKEFLAGS=' > /dev/null 2>&1
-	cd ${TARGET}_gen/${HACT_CODEGEN} ; \
+	-${HACT_COMPILER} ${HACT_CFLAGS} -ace hact.ace -project ${TARGET}.eif > tmp11.txt 2>&1
+	${MAKE} hact_fish 'MAKEFLAGS=' >> tmp11.txt 2>&1
+	-cd ${TARGET}_gen/${HACT_CODEGEN} ; \
 		if [ -x ./${TARGET} ]; then \
-			if ./${TARGET} >> ../../tmp11.txt 2>&1 ; then \
-				true; \
-			fi ; \
+			./${TARGET} >> ../../tmp11.txt 2>&1 ; \
 		fi
-	${GREP} -v "(version" tmp11.txt | ${GREP} -v "] Degree " > output.txt
+	-${SED} -e 's/^
+.*//g' tmp11.txt | \
+		${GREP} -v "==== iss-comp " | \
+		${GREP} -v "] Degree " | \
+		${GREP} -v "^Degree 5 cluster " | \
+		${GREP} -v "^Generating global files" | \
+		${GREP} -v "${TARGET}_gen.${HACT_CODEGEN}" > output.txt
 	${ECHO} -n '${ROOT_DIR}: '
-	if ${DIFF} output.txt ${ROOT_DIR}/output.hact > /dev/null 2>&1 ; then \
+	-${GREP} -v "^$$" output.txt > tmp12.txt
+	-if [ -r ${ROOT_DIR}/output.hact ]; then \
+		${GREP} -v "^$$" ${ROOT_DIR}/output.hact > tmp13.txt ; \
+	fi
+	if ${DIFF} tmp12.txt tmp13.txt > /dev/null 2>&1 ; then \
 		${ECHO} 'OK' ; \
 	else \
 		${ECHO} "*** FAILED ***" ; \
 	fi
+	-${RM} -f tmp12.txt tmp13.txt
 
 # Problem with ${MAKEFLAGS} when compiling under
 # Windows: 'nmake' (called by 'fish') does not
 # recognize option --unix.
 hact_fish:
 	cd ${TARGET}_gen/${HACT_CODEGEN} ; \
-		if [ -r Makefile.SH ]; then \
-			${HACT_FISH} ${HACT_FFLAGS} ; \
+		if [ -r fish.in ]; then \
+			${HACT_FISH} ${HACT_FFLAGS} > tmp99.txt 2>&1 ; \
+			if [ ! -x ./${TARGET} ]; then \
+				${ECHO} 'C compilation crashed' ; \
+			fi \
 		fi
 
 hact.ace: ${ROOT_DIR}/hact.ace
@@ -164,19 +188,19 @@ clean-hact:
 # Visual Eiffel
 
 ve:
-	${MAKE} test-ve
-	${MAKE} clean-ve
+	if [ ! -r failed.ve ]; then \
+		${MAKE} test-ve ; \
+		${MAKE} clean-ve ; \
+	else \
+		${ECHO} '${ROOT_DIR}: *** FAILED ***' ; \
+	fi
 
 test-ve: ve.esd
-	if ${VE_COMPILER} ${VE_CFLAGS} -a:ve.esd ; then \
-		true; \
+	-${VE_COMPILER} ${VE_CFLAGS} -a:ve.esd
+	-if [ -x ./${TARGET} ]; then \
+		./${TARGET} >> tmp11.txt 2>&1 ; \
 	fi
-	if [ -x ./${TARGET} ]; then \
-		if ./${TARGET} >> tmp11.txt 2>&1 ; then \
-			true; \
-		fi ; \
-	fi
-	cat tmp11.txt > output.txt
+	-${CP} tmp11.txt output.txt
 	${ECHO} -n '${ROOT_DIR}: '
 	if ${DIFF} output.txt ${ROOT_DIR}/output.ve > /dev/null 2>&1 ; then \
 		${ECHO} 'OK' ; \
@@ -188,6 +212,33 @@ ve.esd: ${ROOT_DIR}/ve.esd
 	${CP} ${ROOT_DIR}/ve.esd ve.esd
 
 clean-ve:
-	${VE_COMPILER} -eu -y -no
+	-${VE_COMPILER} -eu -y -no
 	-${RM} -f tmp11.txt output.txt
 	-${RM} -f ${TARGET_EXE}
+
+
+# gelint
+
+gelint:
+	if [ ! -r failed.gelint ]; then \
+		${MAKE} test-gelint ; \
+		${MAKE} clean-gelint ; \
+	else \
+		${ECHO} '${ROOT_DIR}: *** FAILED ***' ; \
+	fi
+
+test-gelint: gelint.ace
+	-${GELINT} gelint.ace > tmp11.txt 2>&1
+	-${GREP} -v "^Parsed " tmp11.txt | ${GREP} -v "^Flattened " > output.txt
+	${ECHO} -n '${ROOT_DIR}: '
+	if ${DIFF} output.txt ${ROOT_DIR}/output.gelint > /dev/null 2>&1 ; then \
+		${ECHO} 'OK' ; \
+	else \
+		${ECHO} "*** FAILED ***" ; \
+	fi
+
+gelint.ace: ${ROOT_DIR}/gelint.ace
+	${CP} ${ROOT_DIR}/gelint.ace gelint.ace
+
+clean-gelint:
+	-${RM} -f tmp11.txt output.txt
