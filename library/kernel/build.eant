@@ -80,9 +80,13 @@
 		<geant target="ge2e"/>
 		<set name="gepp_file" value="kl_native_array_routines"/>
 		<geant target="ge2e"/>
+		<set name="gepp_file" value="kl_special_routines"/>
+		<geant target="ge2e"/>
 		<set name="gepp_file" value="kl_string_buffer_routines"/>
 		<geant target="ge2e"/>
 		<set name="gepp_file" value="kl_string_routines"/>
+		<geant target="ge2e"/>
+		<set name="gepp_file" value="special"/>
 		<geant target="ge2e"/>
 	</target>
 
