@@ -25,7 +25,7 @@ inherit
 		undefine
 			out
 		end
-	
+
 	KL_IMPORTED_STRING_ROUTINES
 		export
 			{NONE} all
@@ -62,7 +62,7 @@ feature -- From ANY
 			else
 				Result := "?"
 			end
-			
+
 			-- type
 			Result := STRING_.concat (Result, " ")
 			if is_data then
@@ -82,7 +82,7 @@ feature -- From ANY
 				Result := STRING_.concat (Result, "S")
 			end
 			Result := STRING_.concat (Result, " ")
-			
+
 			-- default
 			if is_value_required then
 				Result := STRING_.concat (Result, "#REQUIRED")
@@ -92,9 +92,9 @@ feature -- From ANY
 				Result := STRING_.concat (Result, "#FIXED ")
 			end
 			if has_default_value then
-				Result := STRING_.concat (Result, " %"")	
+				Result := STRING_.concat (Result, " %"")
 				Result := STRING_.concat (Result, default_value)
-				Result := STRING_.concat (Result, "%"")  
+				Result := STRING_.concat (Result, "%"")
 			end
 		end
 
