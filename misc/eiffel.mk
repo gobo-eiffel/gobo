@@ -177,7 +177,7 @@ compile-hact-debug: hact-debug.ace
 # Windows: 'nmake' (called by 'fish') does not
 # recognize option --unix.
 hact_fish_debug:
-	cd ${TARGET}_gen/cd ${HACT_DEBUG_CODEGEN} ; ${HACT_FISH} ${HACT_DEBUG_FFLAGS}
+	cd ${TARGET}_gen/${HACT_DEBUG_CODEGEN} ; ${HACT_FISH} ${HACT_DEBUG_FFLAGS}
 
 include hact.dep
 
