@@ -1,7 +1,7 @@
 indexing
 
 	description:
-		
+
 		"Validation routines for UT_HOST_PORT"
 
 	library: "Gobo Eiffel Utility Library"
@@ -11,7 +11,7 @@ indexing
 
 class UT_HOST_PORT_ROUTINES
 
-feature -- Query
+feature -- Status report
 
 	is_valid_host_port (a_string: STRING): BOOLEAN is
 			-- Is the string a valid host name and port?
@@ -24,8 +24,7 @@ feature -- Query
 				i := a_string.index_of (Port_separator, 1)
 				if i > 1 then
 					a_port := a_string.substring (i + 1, a_string.count)
-					Result := a_port.is_integer 
-						and then is_valid_port (a_port.to_integer)
+					Result := a_port.is_integer and then is_valid_port (a_port.to_integer)
 				elseif i = 0 then
 					Result := a_string.count > 0
 				end
@@ -33,14 +32,14 @@ feature -- Query
 		end
 
 	is_valid_port (a_port: INTEGER): BOOLEAN is
-			-- Is this port number allowed.
+			-- Is this port number allowed?
 		do
 			Result := a_port >= 0 and a_port < Maximum_port
 		ensure
 			definition: Result = (a_port >= 0 and a_port < Maximum_port)
 		end
 
-feature {NONE} -- Implementation
+feature {NONE} -- Constants
 
 	Maximum_port: INTEGER is 65535
 			-- Maximum port number

@@ -1,8 +1,8 @@
 indexing
 
 	description:
-		
-		"Class that holds a TCP hostname and port number"
+
+		"Objects that holds a TCP hostname and port number"
 
 	library: "Gobo Eiffel Utility Library"
 	author: "Copyright (c) 2004, Franck Arnaud and others"
@@ -24,7 +24,7 @@ creation
 feature -- Setting
 
 	make, parse (a_string: STRING; a_default_port: INTEGER) is
-			-- Parse <hostname> [ ':' <port> ] (tolerant)
+			-- Parse <hostname> [ ':' <port> ] (tolerant).
 		require
 			a_string_not_void: a_string /= Void
 			a_default_port_valid: is_valid_port (a_default_port)
@@ -33,7 +33,6 @@ feature -- Setting
 			a_port: STRING
 		do
 			port := a_default_port
-			
 			i := a_string.index_of (Port_separator, 1) 
 			if i /= 0 then
 				host := a_string.substring (1, i - 1)
@@ -57,6 +56,8 @@ feature -- Setting
 			a_host_not_void: a_host /= Void
 		do
 			host := a_host
+		ensure
+			host_set: host = a_host
 		end
 
 	set_port (a_port: INTEGER) is
@@ -72,10 +73,10 @@ feature -- Setting
 feature -- Access
 
 	host: STRING
-			-- Host name (or numeric address expressed as text).
+			-- Host name (or numeric address expressed as text)
 
 	port: INTEGER
-			-- Port number.
+			-- Port number
 
 invariant
 
@@ -84,4 +85,3 @@ invariant
 	port_maximum: port < Maximum_port
 
 end
-

@@ -24,18 +24,18 @@ creation
 	make_decoded,
 	make_decoded_utf8
 
-feature {NONE} -- Creation
+feature {NONE} -- Initialization
 
 	make_empty is
-			-- Initialize empty string.
+			-- Create an empty string.
 		do
 			make_encoded ("")
 		ensure
 			definition: encoded.is_empty
 		end
-		
+
 	make_encoded (a_string: STRING) is
-			-- Initialize with encoded string.
+			-- Create with encoded `a_string'.
 		require
 			a_string_not_void: a_string /= Void
 			a_string_no_excluded_chars: not Url_encoding.has_excluded_characters (a_string)
@@ -46,7 +46,7 @@ feature {NONE} -- Creation
 		end
 
 	make_decoded (a_string: STRING) is
-			-- Initialize with string, where each character is 
+			-- Create with `a_string', where each character is 
 			-- percent-encoded directly.
 		require
 			a_string_not_void: a_string /= Void
@@ -56,7 +56,7 @@ feature {NONE} -- Creation
 		end
 
 	make_decoded_utf8 (a_string: STRING) is
-			-- Initialize with string, to be encoded as UTF and 
+			-- Create with `a_string', to be encoded as UTF and 
 			-- then percent-encoded.
 		require
 			a_string_not_void: a_string /= Void
@@ -68,18 +68,18 @@ feature {NONE} -- Creation
 feature -- Access
 
 	encoded: STRING
-			-- Percent-encoded string.
+			-- Percent-encoded string
 
 	decoded: STRING is
 			-- Decoded string where each %-encoded character 
-			-- give one item in the resulting string
+			-- gives one item in the resulting string
 		do
 			if decoded_impl = Void then
 				decoded_impl := Url_encoding.unescape_string (encoded)
 			end
 			Result := decoded_impl
 		ensure
-			result_not_void: Result /= Void
+			decoded_not_void: Result /= Void
 		end
 
 	decoded_utf8: STRING is
@@ -92,9 +92,9 @@ feature -- Access
 			end
 			Result := decoded_utf8_impl
 		ensure
-			result_not_void: Result /= Void
+			decoded_utf8_not_void: Result /= Void
 		end
-	
+
 feature {NONE} -- Implemenation
 
 	decoded_impl: STRING
@@ -108,4 +108,3 @@ invariant
 	encoded_not_void: encoded /= Void
 	
 end
-

@@ -12,14 +12,14 @@ indexing
 
 class UT_SHARED_FILE_URI_ROUTINES
 
-feature
+feature -- Access
 
 	File_uri: UT_FILE_URI_ROUTINES is
 			-- Shared file: URI routines
 		once
 			create Result
 		ensure
-			result_not_void: Result /= Void
+			file_uri_not_void: Result /= Void
 		end
 
 end
