@@ -41,6 +41,66 @@ feature -- Tests
 
 			create uri.make ("various.html#index")
 			check_uri (uri, Void, Void, "various.html", Void, "index")
+
+			create uri.make ("a/various.html")
+			check_uri (uri, Void, Void, "a/various.html", Void, Void)
+			
+			create uri.make ("empty:")
+			check_uri (uri, "empty", Void, Void, Void, Void)
+
+			create uri.make ("//www.invalid/abc")
+			check_uri (uri, Void, "www.invalid", "/abc", Void, Void)
+		end
+		
+	test_query is
+			-- Test query parsing.
+		local
+			uri: UT_URI
+		do
+			create uri.make ("/path?query")
+			check_uri (uri, Void, Void, "/path", "query", Void)
+			
+			create uri.make ("/?query")
+			check_uri (uri, Void, Void, "/", "query", Void)
+
+			create uri.make ("?q")
+			check_uri (uri, Void, Void, Void, "q", Void)
+			
+			create uri.make ("s:?query")
+			check_uri (uri, "s", Void, Void, "query", Void)
+		
+			create uri.make ("//invalid?q")
+			check_uri (uri, Void, "invalid", Void, "q", Void)
+
+			create uri.make ("?")
+			check_uri (uri, Void, Void, Void, "", Void)
+			
+			create uri.make ("abc?")
+			check_uri (uri, Void, Void, "abc", "", Void)
+		end
+		
+	test_fragment is
+			-- Test fragment.
+		local
+			uri: UT_URI
+		do
+			create uri.make ("/#fragment")
+			check_uri (uri, Void, Void, "/", Void, "fragment")
+			
+			create uri.make ("#fragment")
+			check_uri (uri, Void, Void, Void, Void, "fragment")
+
+			create uri.make ("s:#fragment")
+			check_uri (uri, "s", Void, Void, Void, "fragment")
+
+			create uri.make ("//www.invalid#fragment")
+			check_uri (uri, Void, "www.invalid", Void, Void, "fragment")
+
+			create uri.make ("#")
+			check_uri (uri, Void, Void, Void, Void, "")
+
+			create uri.make ("abc#")
+			check_uri (uri, Void, Void, "abc", Void, "")
 		end
 		
 	test_broken_parsing is
@@ -48,9 +108,17 @@ feature -- Tests
 		local
 			uri: UT_URI
 		do
+			create uri.make (":abc")
+			check_uri (uri, "", Void, "abc", Void, Void)
+			check_invalid_scheme (uri)
+
+			create uri.make (":")
+			check_uri (uri, "", Void, Void, Void, Void)
+			check_invalid_scheme (uri)
+			
 			create uri.make ("bro,ken:foo")
 			check_uri (uri, "bro,ken", Void, "foo", Void, Void)
-			assert ("invalid_scheme", not uri.has_valid_scheme)
+			check_invalid_scheme (uri)
 			assert_equal ("scheme_specific", "foo", uri.scheme_specific_part)
 		end
 			
@@ -69,4 +137,12 @@ feature {NONE} -- Implementation
 			assert_equal ("fragment", uri.fragment, fragment)
 		end
 
+	check_invalid_scheme (a_uri: UT_URI) is
+			-- Check invalid scheme.
+		require
+			a_uri_not_void: a_uri /= Void
+		do
+			assert ("invalid_scheme", not a_uri.has_valid_scheme)
+		end
+		
 end
