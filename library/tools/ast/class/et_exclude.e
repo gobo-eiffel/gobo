@@ -77,7 +77,7 @@ feature -- Element change
 		do
 			identifiers.force_last (an_item)
 		ensure
-			one_more: count = count + 1
+			one_more: count = old count + 1
 			inserted: item (count) = an_item
 		end
 
