@@ -1,9 +1,9 @@
-#	description: "Eiffel Xace RelaxNG specification"
-#	system: "Gobo Eiffel Xace"
-#	copyright: "Copyright (c) 2003, Berend de Boer and others"
-#	license: "Eiffel Forum License v2 (see forum.txt)"
-#	date: "$Date$"
-#	revision: "$Revision$"
+# description: "Eiffel Xace RelaxNG specification"
+# system: "Gobo Eiffel Xace"
+# copyright: "Copyright (c) 2003, Berend de Boer and others"
+# license: "Eiffel Forum License v2 (see forum.txt)"
+# date: "$Date$"
+# revision: "$Revision$"
 
 namespace xsd = "http://www.w3.org/2001/XMLSchema"
 
@@ -23,7 +23,8 @@ system =
     attribute name { text },
     description,
     element root {
-      attribute name { text }
+      attribute class { text },
+      attribute creation { text }
     },
     (option | cluster | mount)+
   }

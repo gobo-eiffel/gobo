@@ -1,12 +1,12 @@
 <?xml encoding="UTF-8"?>
 
 <!--
-	description: "Eiffel Xace RelaxNG specification"
-	system: "Gobo Eiffel Xace"
-	copyright: "Copyright (c) 2003, Berend de Boer and others"
-	license: "Eiffel Forum License v2 (see forum.txt)"
-	date: "$Date$"
-	revision: "$Revision$"
+description: "Eiffel Xace RelaxNG specification"
+system: "Gobo Eiffel Xace"
+copyright: "Copyright (c) 2003, Berend de Boer and others"
+license: "Eiffel Forum License v2 (see forum.txt)"
+date: "$Date$"
+revision: "$Revision$"
 -->
 
 <!-- An Xace file defines either a library or a system -->
@@ -23,6 +23,11 @@
 <!ELEMENT system (description,root,(option|cluster|mount)+)>
 <!ATTLIST system
   name CDATA #REQUIRED>
+
+<!ELEMENT root EMPTY>
+<!ATTLIST root
+  class CDATA #REQUIRED
+  creation CDATA #REQUIRED>
 
 <!-- Elements used in both libraries and systems -->
 

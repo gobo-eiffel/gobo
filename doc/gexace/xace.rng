@@ -49,7 +49,8 @@
 			<attribute name="name"/>
 			<ref name="description"/>
 			<element name="root">
-				<attribute name="name"/>
+				<attribute name="class"/>
+				<attribute name="creation"/>
 			</element>
 			<oneOrMore>
 				<choice>
