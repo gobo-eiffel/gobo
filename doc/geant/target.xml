@@ -124,12 +124,56 @@
 		</variablelist>
 	</sect1>
 
+	<sect1 id="fileset_nested_parameters">
+		<title>Parameters specified as nested elements</title>
+	
+		<variablelist>
+			<varlistentry>
+				<term>obsolete</term>
+				<listitem>
+					<para><emphasis>Description: </emphasis>If provided marks this target as obsolete.
+					The nested text is displayed if this target gets executed. The target list (shown by
+					invoking 'geant -t' will include this text as well next
+					to the target's description.
+					</para>
+				</listitem>
+				<listitem>
+					<para><emphasis>Domain: </emphasis>Text</para>
+				</listitem>
+				<listitem>
+					<para><emphasis>Default: </emphasis>-</para>
+				</listitem>
+			</varlistentry>
+
+			<varlistentry>
+				<term>description</term>
+				<listitem>
+					<para><emphasis>Description: </emphasis>A description of what this target does.
+					The target list (shown by invoking 'geant -t' will include this text next
+					to the target's name.
+					</para>
+				</listitem>
+				<listitem>
+					<para><emphasis>Domain: </emphasis>Text</para>
+				</listitem>
+				<listitem>
+					<para><emphasis>Default: </emphasis>-</para>
+				</listitem>
+			</varlistentry>
+		</variablelist>
+	</sect1>
+
 	<sect1 id="target_specification">
 		<title>RNG Specification</title>
 		
 		<programlisting><![CDATA[
   <define name="target">
     <element name="target">
+    <optional>
+      <element name="obsolete">
+        <text/>
+      </element>
+    </optional>
     <ref name="description"/>
     <attribute name="name"/>
     <optional>
