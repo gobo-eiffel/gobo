@@ -14,6 +14,6 @@ class GEANT_VERSION
 
 feature -- Constants
 
-	Version_number: STRING is "0.6"
+	Version_number: STRING is "3.0"
 
 end

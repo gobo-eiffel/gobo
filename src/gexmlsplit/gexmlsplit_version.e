@@ -2,14 +2,14 @@ indexing
 
 	description:
 
-		"Version of gepp"
+		"Version of gexmlsplit"
 
-	copyright: "Copyright (c) 1999-2001, Eric Bezault and others"
+	copyright: "Copyright (c) 2002, Eric Bezault and others"
 	license: "Eiffel Forum License v1 (see forum.txt)"
 	date: "$Date$"
 	revision: "$Revision$"
 
-class GEPP_VERSION
+class GEXMLSPLIT_VERSION
 
 feature -- Constants
 
