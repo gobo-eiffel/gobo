@@ -113,7 +113,7 @@ creation
 %type <ET_CONSTRAINT_TYPE> Constraint_type
 %type <ET_CONSTRAINT_TYPE_ITEM> Constraint_type_comma
 %type <ET_CREATOR> Creation_clause Creation_procedure_list
-%type <ET_CREATOR_LIST> Creators Creators_opt
+%type <ET_CREATOR_LIST> Creators Creators_opt Creators_list
 %type <ET_DEBUG_INSTRUCTION> Debug_instruction
 %type <ET_ELSEIF_PART> Elseif_part
 %type <ET_ELSEIF_PART_LIST> Elseif_list Elseif_part_list
@@ -1145,14 +1145,21 @@ Feature_name_comma: Feature_name ','
 
 Creators_opt: -- Empty
 		-- { $$ := Void }
-	| Add_counter Creators
+	| Add_counter Creators_list
 		{
 			$$ := $2
 			remove_counter
 		}
 	;
 
-Creators: Creation_clause
+Creators: Add_counter Creators_list
+		{
+			$$ := $2
+			remove_counter
+		}
+	;
+
+Creators_list: Creation_clause
 		{
 			if $1 /= Void then
 				$$ := ast_factory.new_creators (counter_value + 1)
@@ -1169,7 +1176,7 @@ Creators: Creation_clause
 				increment_counter
 			end
 		}
-	  Creators
+	  Creators_list
 		{
 			$$ := $3
 			if $$ /= Void and $1 /= Void then
