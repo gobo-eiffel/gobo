@@ -81,7 +81,7 @@ feature -- Evaluation
 			an_evaluation_context: XM_XSLT_EVALUATION_CONTEXT
 			a_dfm: XM_XSLT_DECIMAL_FORMAT_MANAGER
 			a_number: XM_XPATH_NUMERIC_VALUE
-			a_qname, a_format_name, a_uri, a_local_name: STRING
+			a_qname, a_uri, a_local_name: STRING
 			a_splitter: ST_SPLITTER
 			some_qname_parts: DS_LIST [STRING]
 			in_error: BOOLEAN
@@ -204,7 +204,7 @@ feature {XM_XPATH_FUNCTION_CALL} -- Restricted
 			-- Check arguments during parsing, when all the argument expressions have been read.
 		local
 			a_string_value: XM_XPATH_STRING_VALUE
-			a_qname, a_uri, an_xml_prefix, a_local_name: STRING
+			a_qname, a_uri, a_local_name: STRING
 			a_dfm: XM_XSLT_DECIMAL_FORMAT_MANAGER
 			an_expression_context: XM_XSLT_EXPRESSION_CONTEXT
 			a_fingerprint: INTEGER

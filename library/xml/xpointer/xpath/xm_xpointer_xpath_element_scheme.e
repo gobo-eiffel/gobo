@@ -56,7 +56,6 @@ feature -- Element change
 			-- Evaluate `some_data' against `a_resource' within `a_namespace_context'.
 		local
 			an_index, a_counter, a_child_number: INTEGER
-			in_error: BOOLEAN
 			an_element: XM_XPATH_ELEMENT
 			an_iterator: XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_NODE]
 		do
