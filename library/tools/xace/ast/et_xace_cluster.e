@@ -209,6 +209,9 @@ feature -- Status setting
 			-- Set `is_mounted' to `b'.
 		do
 			is_mounted := b
+			if subclusters /= Void then
+				subclusters.set_mounted (b)
+			end
 		ensure
 			mounted_set: is_mounted = b
 		end

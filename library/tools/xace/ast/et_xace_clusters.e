@@ -48,6 +48,19 @@ feature -- Setting
 			end
 		end
 
+	set_mounted (b: BOOLEAN) is
+			-- Set `is_mounted' in current clusters, and
+			-- recursively in the subclusters, to `b'.
+		local
+			i, nb: INTEGER
+		do
+			nb := clusters.count
+			from i := 1 until i > nb loop
+				clusters.item (i).set_mounted (b)
+				i := i + 1
+			end
+		end
+
 feature -- Basic operations
 
 	mount_libraries (a_clusters: ET_XACE_CLUSTERS; a_prefix: STRING) is
