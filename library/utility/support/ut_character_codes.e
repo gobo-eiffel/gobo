@@ -223,6 +223,9 @@ feature -- Access
 	Slash_code: INTEGER is 47
 			-- '/'
 
+	Backslash_code: INTEGER is 92
+			-- '\'
+
 	Caret_code: INTEGER is 94
 			-- '^'
 
@@ -279,6 +282,9 @@ feature -- Access
 
 	Right_brace_code: INTEGER is 125
 			-- '}'
+
+	Pound_code: INTEGER is 35
+			-- '#'
 
 	Bar_code: INTEGER is 124
 			-- '|'
