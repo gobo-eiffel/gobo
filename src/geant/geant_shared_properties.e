@@ -37,14 +37,18 @@ feature -- Access
 feature -- Processing
 
 	exit_application (a_code: INTEGER; a_message: STRING) is
-			-- Exit application with code 1;
+			-- Exit application with code `a_code';
 			-- if a_message /= Void log it.
 		do
 			if a_message /= Void then
 				print (a_message)
 			end
-			print ("%NBUILD FAILED!%N")
-			Exceptions.die (1)
+			if a_code /= 0 then
+				print ("%NBUILD FAILED!%N")
+			else
+				print ("%NBUILD SUCCESSFUL%N")
+			end
+			Exceptions.die (a_code)
 		end
 
 	string_tokens (a_string: UC_STRING; a_delimiter: CHARACTER): DS_ARRAYED_LIST [UC_STRING] is
