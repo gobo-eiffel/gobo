@@ -1,0 +1,31 @@
+<?xml version="1.0"?>
+
+<project name="geant" inherit="${GOBO}/misc/test.eant" default="help">
+
+	<description>
+		system:      "Gobo Eiffel Ant Tester"
+		author:      "Sven Ehrke [sven.ehrke@web.de]"
+		copyright:   "Copyright (c) 2002, Sven Ehrke and others"
+		license:     "Eiffel Forum Freeware License v1 (see forum.txt)"
+		date:        "$Date$"
+		revision:    "$Revision$"
+	</description>
+
+
+<!-- Implementation -->
+
+	<target name="other_clean" depend="init">
+		<description>
+			Remove other intermediary generated files.
+		</description>
+
+		<delete directory="Tgeant"/>
+	</target>
+
+	<target name="init_system">
+		<set name="system" value="xgeant"/>
+		<set name="tool" value="geant"/>
+		<set name="system_dir" value="${GOBO}/test/src/${tool}"/>
+	</target>
+
+</project>

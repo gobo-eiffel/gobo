@@ -1,0 +1,41 @@
+<?xml version="1.0"?>
+
+<system name="xgeant">
+	<description>
+		system:      "Gobo Eiffel Ant Tester"
+		author:      "Sven Ehrke [sven.ehrke@web.de]"
+		copyright:   "Copyright (c) 2002, Sven Ehrke and others"
+		license:     "Eiffel Forum Freeware License v1 (see forum.txt)"
+		date:        "$Date$"
+		revision:    "$Revision$"
+	</description>
+
+	<root class="XGEANT" creation="make"/>
+	<cluster>
+		<option unless="${DEBUG}">
+			<require enable="False"/>
+			<ensure enable="False"/>
+			<invariant enable="False"/>
+			<loop enable="False"/>
+			<check enable="False"/>
+			<optimize enable="True"/>
+		</option>
+		<option if="${DEBUG}">
+			<require enable="True"/>
+			<ensure enable="True"/>
+			<invariant enable="True"/>
+			<loop enable="True"/>
+			<check enable="True"/>
+			<optimize enable="False"/>
+		</option>
+
+		<cluster name="geant_tester" location="${GOBO}/test/src" abstract="True">
+			<cluster name="geant"/>
+			<cluster name="common"/>
+			<cluster name="testgen" location="TESTGEN"/>
+		</cluster>
+		<mount location="${GOBO}/library/cluster.xace"/>
+		<mount location="${GOBO}/library/kernel.xace"/>
+		<mount location="${GOBO}/src/geant/cluster.xace"/>
+	</cluster>
+</system>
