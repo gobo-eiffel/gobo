@@ -393,6 +393,22 @@ feature -- Containers
 			end
 		end
 
+feature -- Execution
+
+	assert_execute (a_shell_command: STRING) is
+			-- Execute `a_shell_command' and check whether the
+			-- exit status code is zero.
+		require
+			a_shell_command_not_void: a_shell_command /= Void
+			a_shell_command_not_empty: a_shell_command.count > 0
+		local
+			a_command: DP_SHELL_COMMAND
+		do
+			!! a_command.make (a_shell_command)
+			a_command.execute
+			assert (a_shell_command, a_command.exit_code = 0)
+		end
+
 feature {NONE} -- Messages
 
 	assert_equal_message (a_tag: STRING; expected, actual: ANY): STRING is
