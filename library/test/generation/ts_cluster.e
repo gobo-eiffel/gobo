@@ -74,7 +74,7 @@ feature -- Processing
 			a_clusters: ET_LACE_CLUSTERS
 			an_ast_factory: ET_AST_FACTORY
 			a_universe: ET_LACE_UNIVERSE
-			a_cursor: DS_HASH_TABLE_CURSOR [ET_CLASS, ET_IDENTIFIER]
+			a_cursor: DS_HASH_TABLE_CURSOR [ET_CLASS, ET_CLASS_NAME]
 		do
 			!! a_cluster.make (name, pathname)
 			!! a_clusters.make (a_cluster)
