@@ -1,0 +1,18 @@
+test
+
+	xtime
+
+default
+
+	class ("DT_TEST_[A-Z0-9_]*")
+	feature ("test_[a-z0-9_]*")
+	prefix ("X")
+	testgen ("TESTGEN")
+	compile ("bash -c %"vec -a:ve.esd -no ; vec -eu -y -no%"")
+	execute ("bash -c %"./xtime%"")
+
+cluster
+
+	time: "$GOBO/test/time"
+
+end

@@ -1,0 +1,38 @@
+-- system:     "Gobo Eiffel Structure Library Tester"
+-- library:    "Gobo Eiffel Structure Library"
+-- compiler:   "Visual Eiffel 3.3"
+-- author:     "Eric Bezault <ericb@gobosoft.com>"
+-- copyright:  "Copyright (c) 2000, Eric Bezault and others"
+-- license:    "Eiffel Forum Freeware License v1 (see forum.txt)"
+-- date:       "$Date$"
+-- revision:   "$Revision$"
+
+system
+
+	xstructure
+
+root
+
+	XSTRUCTURE
+
+creation
+
+	make
+
+cluster
+
+	[xstructure_project	"."] end
+	[ds_testgen			"TESTGEN"] end
+	[ds_tests			"$GOBO/test/structure"] end
+
+		-- Gobo Eiffel Library
+	[Gobo				"$GOBO/library"] end
+
+		-- Visual Eiffel Kernel
+	[Kernel				"$VE_LIB/kernel"] end
+
+option
+
+	target exe console
+
+end

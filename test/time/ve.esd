@@ -1,0 +1,38 @@
+-- system:     "Gobo Eiffel Time Library Tester"
+-- library:    "Gobo Eiffel Time Library"
+-- compiler:   "Visual Eiffel 3.3"
+-- author:     "Eric Bezault <ericb@gobosoft.com>"
+-- copyright:  "Copyright (c) 2000, Eric Bezault and others"
+-- license:    "Eiffel Forum Freeware License v1 (see forum.txt)"
+-- date:       "$Date$"
+-- revision:   "$Revision$"
+
+system
+
+	xtime
+
+root
+
+	XTIME
+
+creation
+
+	make
+
+cluster
+
+	[xtime_project		"."] end
+	[dt_testgen			"TESTGEN"] end
+	[dt_tests			"$GOBO/test/time"] end
+
+		-- Gobo Eiffel Library
+	[Gobo				"$GOBO/library"] end
+
+		-- Visual Eiffel Kernel
+	[Kernel				"$VE_LIB/kernel"] end
+
+option
+
+	target exe console
+
+end

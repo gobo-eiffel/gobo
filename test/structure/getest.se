@@ -1,0 +1,18 @@
+test
+
+	xstructure
+
+default
+
+	class ("DS_TEST_[A-Z0-9_]*")
+	feature ("test_[a-z0-9_]*")
+	prefix ("X")
+	testgen ("TESTGEN")
+	compile ("bash -c %"( compile -boost -no_split -no_style_warning -no_gc XSTRUCTURE make ) > tmp_compile.txt 2>&1%"")
+	execute ("bash -c %"./xstructure%"")
+
+cluster
+
+	time: "$GOBO/test/structure"
+
+end

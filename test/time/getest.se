@@ -1,0 +1,18 @@
+test
+
+	xtime
+
+default
+
+	class ("DT_TEST_[A-Z0-9_]*")
+	feature ("test_[a-z0-9_]*")
+	prefix ("X")
+	testgen ("TESTGEN")
+	compile ("bash -c %"( compile -boost -no_split -no_style_warning -no_gc XTIME make ) > tmp_compile.txt 2>&1%"")
+	execute ("bash -c %"./xtime%"")
+
+cluster
+
+	time: "$GOBO/test/time"
+
+end
