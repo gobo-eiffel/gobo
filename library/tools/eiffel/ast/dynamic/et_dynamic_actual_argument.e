@@ -53,6 +53,9 @@ feature -- Access
 			Result := actual_argument.position
 		end
 
+	description: STRING is "actual argument"
+			-- Kind of attachment
+
 invariant
 
 	actual_argument_not_void: actual_argument /= Void

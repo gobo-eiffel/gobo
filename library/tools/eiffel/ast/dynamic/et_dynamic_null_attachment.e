@@ -57,4 +57,7 @@ feature -- Access
 			Result := tokens.null_position
 		end
 
+	description: STRING is "null"
+			-- Kind of attachment
+
 end

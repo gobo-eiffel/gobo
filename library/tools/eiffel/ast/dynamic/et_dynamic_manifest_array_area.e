@@ -53,6 +53,9 @@ feature -- Access
 			Result := expression.position
 		end
 
+	description: STRING is "manifest array area"
+			-- Kind of attachment
+
 invariant
 
 	expression_not_void: expression /= Void

@@ -60,6 +60,13 @@ feature -- Access
 			position_not_void: Result /= Void
 		end
 
+	description: STRING is
+			-- Kind of attachment
+		deferred
+		ensure
+			description_not_void: Result /= Void
+		end
+
 feature -- Measurement
 
 	count: INTEGER

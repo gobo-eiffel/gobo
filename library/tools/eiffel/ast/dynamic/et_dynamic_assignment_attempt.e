@@ -53,6 +53,9 @@ feature -- Access
 			Result := assignment_attempt.source.position
 		end
 
+	description: STRING is "assignment attempt"
+			-- Kind of attachment
+
 invariant
 
 	assignment_attempt_not_void: assignment_attempt /= Void

@@ -46,4 +46,7 @@ feature -- Access
 			Result := current_feature.static_feature.position
 		end
 
+	description: STRING is "built-in"
+			-- Kind of attachment
+
 end

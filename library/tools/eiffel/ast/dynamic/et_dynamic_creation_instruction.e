@@ -53,6 +53,9 @@ feature -- Access
 			Result := creation_instruction.target.position
 		end
 
+	description: STRING is "creation instruction"
+			-- Kind of attachment
+
 invariant
 
 	creation_instruction_not_void: creation_instruction /= Void
