@@ -36,9 +36,20 @@ feature -- Initialization
 
 feature {ST_SCIENTIFIC_FORMAT} -- Type that can be formatted
 
-	anchor: POINTER_REF is
+	anchor: DS_CELL [POINTER] is
+		local
+			a_default_pointer: POINTER
 		once
-			create Result
+			create Result.make (a_default_pointer)
+		end
+		
+	is_value (a_value: ANY): BOOLEAN is
+			-- Is `a_value' a pointer cell?
+		local
+			a_cell: DS_CELL [POINTER]
+		do
+			a_cell ?= a_value
+			Result := a_cell /= Void
 		end
 
 feature -- Output

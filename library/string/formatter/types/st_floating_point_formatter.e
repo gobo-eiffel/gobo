@@ -87,10 +87,10 @@ feature -- Output
 
 			dot_and_after_dot := make_fract_part
 			integer_formatter.reset_options
-			integer_formatter.set_value (integer_part)
+			integer_formatter.set_integer_value (integer_part)
 			before_dot := integer_formatter.output
 			integer_formatter.reset_options
-			integer_formatter.set_value (exponent)
+			integer_formatter.set_integer_value (exponent)
 			integer_formatter.set_precision (2)
 			integer_formatter.set_sign_always (True)
 			after_exponent := integer_formatter.output

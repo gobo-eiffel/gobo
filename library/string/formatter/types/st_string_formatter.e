@@ -29,6 +29,15 @@ feature {ST_SCIENTIFIC_FORMAT} -- Type that can be formatted
 			Result := ""
 		end
 
+	is_value (a_value: ANY): BOOLEAN is
+			-- Is `a_value' a STRING?
+		local
+			a_string: STRING
+		do
+			a_string ?= a_value
+			Result := a_string /= Void
+		end
+		
 feature -- Output
 
 	output: STRING is

@@ -37,7 +37,7 @@ feature -- State
 	output_sign: BOOLEAN is
 			-- Should there be a `sign' in the output?
 		do
-			Result := sign_always or else value < 0
+			Result := sign_always or else value.item < 0
 		end
 
 	reset_options is
@@ -50,7 +50,7 @@ feature -- State
 	sign: CHARACTER is
 			-- The sign to output
 		do
-			if value < 0 then
+			if value.item < 0 then
 				Result := '-'
 			else
 				Result := '+'
