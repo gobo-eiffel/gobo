@@ -31,7 +31,7 @@
 				<option unless="${GOBO_OS}=windows">
 					<option name="header" value="${EXPAT}/include"/>
 					<option name="link" value="-lexpat" unless="${GOBO_EIFFEL}=ve"/>
-					<option name="link" value="/usr/local/lib/libexpat.a" if="${GOBO_EIFFEL}=ve"/>
+					<option name="link" value="${EXPAT}/lib/libexpat.a" if="${GOBO_EIFFEL}=ve"/>
 				</option>
 				<option if="${GOBO_OS}=windows">
 					<option name="header" value="${EXPAT}/Source/lib"/>
