@@ -668,7 +668,7 @@ feature {NONE} -- Implementation
 
 	epoch_time_offset: INTEGER is
 			-- Number of seconds between UTC and
-			-- local time version of epoch time.
+			-- local time version of epoch time
 		local
 			b: BOOLEAN
 			y, m, d: INTEGER
@@ -676,7 +676,7 @@ feature {NONE} -- Implementation
 			local_time: TIME
 			utc_time: TIME
 			old_is_local: BOOLEAN
-		once
+		do
 			local_time := epoch_time
 			old_is_local := local_time.is_local_time
 			local_time.set_universal_time
