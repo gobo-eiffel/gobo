@@ -549,6 +549,7 @@ feature -- Setting cardinality
 		do
 			if not are_cardinalities_computed then
 				create cardinalities.make (1,3)
+				cardinalities.put (True, 1)
 				are_cardinalities_computed := True
 			end
 		ensure

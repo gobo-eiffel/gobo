@@ -26,12 +26,18 @@ feature -- Creation
 		do
 			if STRING_.same_string (a_function_name, "current-group") then
 				create {XM_XSLT_CURRENT_GROUP} Result.make
+			elseif STRING_.same_string (a_function_name, "document") then
+				create {XM_XSLT_DOCUMENT} Result.make
 			elseif STRING_.same_string (a_function_name, "format-number") then
 				create {XM_XSLT_FORMAT_NUMBER} Result.make
+			elseif STRING_.same_string (a_function_name, "function-available") then
+				create {XM_XSLT_FUNCTION_AVAILABLE} Result.make				
 			elseif STRING_.same_string (a_function_name, "generate-id") then
 				create {XM_XSLT_GENERATE_ID} Result.make
 			elseif STRING_.same_string (a_function_name, "key") then
 				create {XM_XSLT_KEY_FUNCTION} Result.make
+			elseif STRING_.same_string (a_function_name, "unparsed-entity-uri") then
+				create {XM_XSLT_UNPARSED_ENTITY_URI} Result.make
 			else
 				Result := Precursor (a_function_name)
 			end

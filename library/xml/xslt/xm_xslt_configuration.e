@@ -38,9 +38,9 @@ feature {NONE} -- Initialization
 
 	make (an_entity_resolver: like entity_resolver;
 			a_uri_resolver: like uri_resolver;
-			an_error_listener: XM_XSLT_ERROR_LISTENER;
+			an_error_listener: like error_listener;
 			a_system_function_factory: XM_XSLT_SYSTEM_FUNCTION_FACTORY;
-			an_encoder_factory: XM_XSLT_ENCODER_FACTORY) is
+			an_encoder_factory: like encoder_factory) is
 			-- Establish invariant.
 		require
 			entity_resolver_not_void: an_entity_resolver /= Void

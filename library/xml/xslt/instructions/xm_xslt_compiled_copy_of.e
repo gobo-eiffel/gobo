@@ -11,10 +11,10 @@ indexing
 class XM_XSLT_COMPILED_COPY_OF
 
 inherit
-	
-	XM_XSLT_INSTRUCTION
 
-	XM_XPATH_TYPE
+	XM_XSLT_COPY_ROUTINES
+
+	XM_XSLT_INSTRUCTION
 
 	XM_XSLT_VALIDATION
 
@@ -105,7 +105,7 @@ feature {NONE} -- Implementation
 				a_validator := a_transformer.configuration.element_validator (a_receiver, a_node.name_code, Void, Validation_strip, Void)
 				a_node.copy_node (a_validator, which_namespaces, True)
 			when Attribute_node then
-				copy_attribute (a_node, a_transformer)
+				copy_attribute (a_node, a_transformer, Void, Validation_strip)
 			when Text_node then
 				a_receiver.notify_characters (a_node.string_value, 0)
 			when Processing_instruction_node then
@@ -122,18 +122,6 @@ feature {NONE} -- Implementation
 				a_validator := a_transformer.configuration.document_validator (a_receiver, a_node.base_uri, Validation_strip)
 				a_node.copy_node (a_validator, which_namespaces, True)
 			end
-		end
-
-	copy_attribute (a_node: XM_XPATH_NODE; a_transformer: XM_XSLT_TRANSFORMER) is
-			-- Copy an attribute.
-		require
-			attribute_node_not_void: a_node /= Void and then a_node.node_type = Attribute_node
-			transformer_not_void: a_transformer /= Void
-		do
-
-			-- Schema validation stuff omitted
-
-			a_transformer.current_receiver.notify_attribute (a_node.name_code, -1, a_node.string_value, 0)
 		end
 
 invariant

@@ -82,7 +82,7 @@ feature -- Access
 	uri_for_prefix (an_xml_prefix: STRING): STRING is
 			-- URI for a namespace prefix
 		do
-			todo ("uri-for-prefix", False)
+			Result := style_element.uri_for_prefix (an_xml_prefix, False)
 		end
 
 	is_backwards_compatible_mode: BOOLEAN
@@ -130,7 +130,7 @@ feature -- Status report
 	is_prefix_declared (an_xml_prefix: STRING): BOOLEAN is
 			-- Is `an_xml_prefix' allocated to a namespace?
 		do
-			todo ("is-prefix-declared", False)
+			Result := style_element.uri_code_for_prefix (an_xml_prefix) /=  -1
 		end
 
 	is_variable_declared (a_fingerprint: INTEGER): BOOLEAN is
@@ -197,7 +197,8 @@ feature -- Element change
 			if STRING_.same_string (a_uri, Xpath_functions_uri) then
 				bind_system_function (a_local_name, arguments)
 			else
-				todo ("bind-function - prefixed funtion name", True)
+				internal_last_function_binding_failure_message := "Non-system functions not yet supported"
+				todo ("bind-function (prefixed funtion name)", True)
 			end
 		end
 
@@ -206,7 +207,7 @@ feature -- Output
 	issue_warning (a_warning: STRING) is
 			-- Issue a warning message
 		do
-			todo ("issue-warning", False)
+			style_element.report_compile_warning (a_warning)
 		end
 
 feature {NONE} -- Implementation

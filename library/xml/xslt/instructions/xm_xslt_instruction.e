@@ -283,7 +283,7 @@ feature -- Element change
 
 feature {XM_XSLT_INSTRUCTION} -- local
 
-		instruction_indentation (a_level: INTEGER): STRING is
+	instruction_indentation (a_level: INTEGER): STRING is
 			-- Indentation string prefix, for diagnostic output
 		require
 			strictly_positive_level: a_level > 0

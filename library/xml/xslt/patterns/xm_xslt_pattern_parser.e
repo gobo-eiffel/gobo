@@ -328,7 +328,7 @@ feature {NONE} -- Implementation
 										finished := True
 									else
 										if tokenizer.last_token /= Right_parenthesis_token then
-											message := "expected %"%)%", found "
+											message := "expected %")%", found "
 											message := STRING_.appended_string (message, display_current_token)
 											report_parse_error (message, 3)
 											finished := True
@@ -402,7 +402,7 @@ feature {NONE} -- Implementation
 														finished := True
 													else
 														if tokenizer.last_token /= Right_parenthesis_token then
-															message := "expected %"%)%", found "
+															message := "expected %")%", found "
 															message := STRING_.appended_string (message, display_current_token)
 															report_parse_error (message, 3)
 															finished := True
@@ -553,8 +553,8 @@ feature {NONE} -- Implementation
 					parse_single_expression
 					if not is_parse_error then
 						a_qualifier := internal_last_parsed_expression
-						if tokenizer.last_token /= Right_parenthesis_token then
-							a_message := "expected %"%)%", found "
+						if tokenizer.last_token /= Right_square_bracket_token then
+							a_message := "expected %"]%", found "
 							a_message := STRING_.appended_string (a_message, display_current_token)
 							report_parse_error (a_message, 3)
 						else
@@ -601,7 +601,7 @@ feature {NONE} -- Implementation
 						else
 							a_namespace_test ?= an_xpath_node_test
 							if a_namespace_test /= Void then
-								todo ("xpath_to_xslt_node_test - namespace test", True)
+								create  {XM_XSLT_NAMESPACE_TEST} Result.make (a_namespace_test.node_kind, shared_name_pool.uri_from_uri_code(a_namespace_test.uri_code), a_namespace_test.original_text)
 							else
 								a_name_test ?= an_xpath_node_test
 								if a_name_test /= Void then

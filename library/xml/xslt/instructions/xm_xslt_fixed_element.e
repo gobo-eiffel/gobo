@@ -1,7 +1,7 @@
 indexing
 	description:
 
-		"Attributes whose name is known at compile time"
+		"Elements whose name is known at compile time"
 
 	library: "Gobo Eiffel XSLT Library"
 	copyright: "Copyright (c) 2004, Colin Adams and others"
@@ -21,7 +21,7 @@ creation
 
 feature {NONE} -- Initialization
 
-	make (an_executable: XM_XSLT_EXECUTABLE; a_name_code: INTEGER; a_namespace_code_list: DS_ARRAYED_LIST [INTEGER]; todo_list: ANY; a_simple_type: XM_XPATH_SCHEMA_TYPE; a_validation_action: INTEGER) is
+	make (an_executable: XM_XSLT_EXECUTABLE; a_name_code: INTEGER; a_namespace_code_list: DS_ARRAYED_LIST [INTEGER]; some_attribute_sets: DS_ARRAYED_LIST [XM_XSLT_COMPILED_ATTRIBUTE_SET]; a_simple_type: XM_XPATH_SCHEMA_TYPE; a_validation_action: INTEGER) is
 			-- Establish invariant.
 		require
 			executable_not_void: an_executable /= Void
@@ -31,12 +31,14 @@ feature {NONE} -- Initialization
 			create children.make (0)
 			make_expression_instruction
 			fixed_name_code := a_name_code
+			attribute_sets := some_attribute_sets
 			validation_action := a_validation_action
 			type := a_simple_type
 			namespace_code_list := a_namespace_code_list
 		ensure
 			executable_set: executable = an_executable
 			name_code_set: fixed_name_code = a_name_code
+			attribute_sets_set: attribute_sets = some_attribute_sets
 			validation_action_set: validation_action = a_validation_action
 			type_set: type = a_simple_type
 			namespace_codes_set: namespace_code_list = a_namespace_code_list

@@ -16,7 +16,7 @@ inherit
 
 	XM_EXTERNAL_RESOLVER
 		redefine
-			resolve_public
+			resolve_public, resolve_finish
 		end
 
 	XM_URI_REFERENCE_RESOLVER
@@ -553,7 +553,6 @@ feature -- Action(s)
 				a_system_id := a_system -- best effort
 				uri_scheme_resolver.resolve (a_system_id)
 				last_stream := uri_scheme_resolver.last_stream
-				uri_scheme_resolver.resolve_finish
 			end
 		end
 		
@@ -572,7 +571,6 @@ feature -- Action(s)
 			else
 				uri_scheme_resolver.resolve_public (a_public, a_system) -- best effort
 				last_stream := uri_scheme_resolver.last_stream
-				uri_scheme_resolver.resolve_finish
 			end
 		end
 		
@@ -588,9 +586,13 @@ feature -- Action(s)
 				a_system_id := a_uri_reference
 				uri_scheme_resolver.resolve (a_uri_reference)
 				last_uri_reference_stream := uri_scheme_resolver.last_stream
-				uri_scheme_resolver.resolve_finish
 			end
 			create last_system_id.make (a_system_id)
+		end
+
+	resolve_finish is
+		do
+			uri_scheme_resolver.resolve_finish
 		end
 
 feature -- Result

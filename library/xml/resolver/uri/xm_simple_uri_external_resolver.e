@@ -56,6 +56,12 @@ feature -- Status report
 			-- (A client or descendant may be entitled to put in and remove 
 			-- intermediate values directly.)
 
+	supports_registering_schemes: BOOLEAN is
+			-- Does `Current' support resgitering scheme resolvers?
+		do
+			Result := True
+		end
+
 	is_stack_empty: BOOLEAN is
 			-- Is URI stack empty?
 		do
@@ -75,8 +81,6 @@ feature -- Setting
 
 	register_scheme (a_scheme: XM_URI_RESOLVER) is
 			-- Register scheme.
-		require
-			a_scheme_not_void: a_scheme /= Void
 		do
 			schemes.force (a_scheme, a_scheme.scheme)
 		end

@@ -80,6 +80,9 @@ feature -- Access
 	static_context: XM_XSLT_EXPRESSION_CONTEXT
 			-- Static context
 
+	used_attribute_sets: DS_ARRAYED_LIST [XM_XSLT_COMPILED_ATTRIBUTE_SET]
+			-- Compiled attribute-sets used by `Current'
+
 	default_xpath_namespace_code: INTEGER is
 			-- Namespace code of default XPath namespace
 		local
@@ -1056,7 +1059,7 @@ feature -- Element change
 			prepare_attributes
 			if is_error then
 				if is_forwards_compatible_processing_enabled then
-					-- TODO
+					todo ("process_attributes (forward comptibility)", True)
 				end
 				todo ("process_attributes", True)
 			end
@@ -1330,7 +1333,7 @@ feature -- Element change
 		end
 
 	compile_children (an_executable: XM_XSLT_EXECUTABLE; an_instruction: XM_XSLT_INSTRUCTION) is
-			-- Compile the children of this instruction on the stylesheet tree, adding the
+			-- Compile the children of `an_instruction' on the stylesheet tree, adding the
 			--  subordinate instructions to the parent instruction on the execution tree.
 		require
 			executable_not_void: an_executable /= Void
@@ -1438,7 +1441,92 @@ feature -- Element change
 				create a_deferred_error.make (an_executable, a_style_element.validation_error_message, a_style_element.node_name)
 			end
 		end
-		
+
+	accumulate_attribute_sets (used_sets: STRING; a_usage_list: DS_ARRAYED_LIST [XM_XSLT_ATTRIBUTE_SET]) is
+			-- Accumulate attribute sets associated with `Current'
+		require
+			used_attribute_sets_not_void: used_sets /= Void
+		local
+			a_list: like a_usage_list
+			a_stylesheet: XM_XSLT_STYLESHEET
+			top_level_elements: DS_LINKED_LIST [XM_XSLT_STYLE_ELEMENT]
+			a_splitter: ST_SPLITTER
+			an_attribute_set_list: DS_LIST [STRING]
+			a_cursor: DS_LIST_CURSOR [STRING]
+			a_set_name: STRING
+			a_fingerprint: INTEGER
+			found: BOOLEAN
+			another_cursor: DS_LINKED_LIST_CURSOR [XM_XSLT_STYLE_ELEMENT]
+			an_attribute_set: XM_XSLT_ATTRIBUTE_SET
+			a_third_cursor: DS_ARRAYED_LIST_CURSOR [XM_XSLT_ATTRIBUTE_SET]
+		do
+			if a_usage_list = Void then
+				create a_list.make_default
+			else
+				a_list := a_usage_list
+			end
+			a_stylesheet := principal_stylesheet
+			top_level_elements := a_stylesheet.top_level_elements
+			create a_splitter.make
+			an_attribute_set_list := a_splitter.split (used_sets)
+			from
+				a_cursor := an_attribute_set_list.new_cursor; a_cursor.start
+			variant
+				an_attribute_set_list.count + 1 - a_cursor.index
+			until
+				a_cursor.after
+			loop
+				a_set_name := a_cursor.item
+				generate_name_code (a_set_name)
+				a_fingerprint := fingerprint_from_name_code (last_generated_name_code)
+				if a_fingerprint = -1 then
+					report_compile_error (error_message)
+					a_cursor.go_after
+				else
+					found := False
+
+					-- Ssearch for the named attribute set, using all of them if there are several with the same name
+					
+					from
+						another_cursor := top_level_elements.new_cursor; another_cursor.start
+					variant
+						top_level_elements.count + 1 - another_cursor.index
+					until
+						another_cursor.after
+					loop
+						an_attribute_set ?= another_cursor.item
+						if an_attribute_set /= Void and then an_attribute_set.qname_fingerprint = a_fingerprint then
+							found := True
+							a_list.force_last (an_attribute_set)
+						end
+						another_cursor.forth
+					end
+					if not found then
+						report_compile_error (STRING_.concat ("No attribute-set exists named ", a_set_name))
+						a_cursor.go_after
+					else
+						a_cursor.forth
+					end
+				end
+			end
+			if not any_compile_errors then
+				create used_attribute_sets.make (a_list.count)
+				from
+					a_third_cursor := a_list.new_cursor; a_third_cursor.start
+				variant
+					a_list.count + 1 - a_third_cursor.index
+				until
+					a_third_cursor.after
+				loop
+					a_third_cursor.item.increment_reference_count
+					used_attribute_sets.put_last (a_third_cursor.item.instruction)
+					a_third_cursor.forth
+				end
+			end
+		ensure
+			accumulated_list_not_void: not any_compile_errors implies used_attribute_sets /= Void
+		end
+
 feature {XM_XSLT_STYLE_ELEMENT} -- Local
 
 	is_local_variable_declared (a_fingerprint: INTEGER): BOOLEAN is

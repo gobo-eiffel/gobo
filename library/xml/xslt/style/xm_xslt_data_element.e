@@ -21,9 +21,20 @@ creation {XM_XSLT_NODE_FACTORY}
 
 	make
 
+feature -- Status report
+
+	is_parent_data_element: BOOLEAN is
+			-- Is `parent_node' a user-defined element?
+		local
+			a_user_defined_element: XM_XSLT_DATA_ELEMENT
+		do
+			a_user_defined_element ?= parent_node
+			Result := a_user_defined_element  /= Void
+		end
+
 invariant
 
-	namespace_uri_not_null: shared_name_pool.namespace_uri_from_name_code (fingerprint).count > 0
+	namespace_uri_not_null: (parent_node /= Void and then not is_parent_data_element) implies shared_name_pool.namespace_uri_from_name_code (fingerprint).count > 0
 
 end
 	

@@ -61,6 +61,13 @@ feature -- Output
 			last_output := Void
 		end
 
+	set_output_standard_error is
+			-- Set output to standard error.
+		do
+			output_stream := std.error
+			last_output := Void
+		end
+
 	last_output: STRING
 			-- Last output;
 			-- May be void if standard output or stream is used.

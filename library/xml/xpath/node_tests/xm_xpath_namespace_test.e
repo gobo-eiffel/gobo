@@ -47,8 +47,11 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-		node_kind: INTEGER
+	node_kind: INTEGER
 			-- Type of nodes to which this pattern applies
+
+	uri_code: INTEGER
+			-- The uri code
 
 feature -- Status report
 
@@ -72,10 +75,5 @@ feature -- Matching
 				Result := uri_code = shared_name_pool.uri_code_from_name_code (a_name_code)
 			end
 		end
-
-feature {NONE} -- Implementation
-
-	uri_code: INTEGER
-			-- The uri code
 	
 end

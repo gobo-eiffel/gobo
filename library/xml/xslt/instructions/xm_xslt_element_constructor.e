@@ -14,6 +14,8 @@ deferred class XM_XSLT_ELEMENT_CONSTRUCTOR
 
 inherit
 
+	XM_XSLT_ATTRIBUTE_SET_ROUTINES
+
 	XM_XSLT_EXPRESSION_INSTRUCTION
 		redefine
 			analyze, evaluate_item
@@ -105,7 +107,8 @@ feature -- Evaluation
 				if not a_transformer.is_error then
 
 					-- Apply the content of any attribute sets mentioned in use-attribute-sets.
-					--todo ("process_leaving_tail (use-attribute-sets) - it is safe to ignore this message", True)
+
+					if attribute_sets /= Void then expand_attribute_sets (attribute_sets, a_transformer) end
 
 					process_children (a_context)
 
@@ -116,7 +119,7 @@ feature -- Evaluation
 						a_validator.end_element
 					end
 				end
-				if a_saved_receiver /= void then
+				if a_saved_receiver /= Void then
 					todo ("process_leaving_tail - saved receiver", True)
 				end
 			end
@@ -163,6 +166,9 @@ feature {XM_XSLT_EXPRESSION_INSTRUCTION} -- Local
 feature {NONE} -- Implementation
 
 	type: XM_XPATH_SCHEMA_TYPE
+
+	attribute_sets: DS_ARRAYED_LIST [XM_XSLT_COMPILED_ATTRIBUTE_SET]
+			-- Used attribute sets
 
 invariant
 

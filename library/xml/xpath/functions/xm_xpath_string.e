@@ -2,7 +2,7 @@ indexing
 
 	description:
 
-		"Objects that implement the XPath string-length() function"
+		"Objects that implement the XPath string() function"
 
 	library: "Gobo Eiffel XPath Library"
 	copyright: "Copyright (c) 2004, Colin Adams and others"
@@ -10,13 +10,13 @@ indexing
 	date: "$Date$"
 	revision: "$Revision$"
 
-class XM_XPATH_STRING_LENGTH
+class XM_XPATH_STRING
 
 inherit
 
 	XM_XPATH_SYSTEM_FUNCTION
 		redefine
-			simplified_expression, evaluate_item
+			simplified_expression, analyze, evaluate_item
 		end
 
 creation
@@ -28,7 +28,7 @@ feature {NONE} -- Initialization
 	make is
 			-- Establish invariant
 		do
-			name := "string-length"
+			name := "string"
 			minimum_argument_count := 0
 			maximum_argument_count := 1
 			create arguments.make (1)
@@ -41,7 +41,7 @@ feature -- Access
 	item_type: XM_XPATH_ITEM_TYPE is
 			-- Data type of the expression, where known
 		do
-			Result := type_factory.integer_type
+			Result := type_factory.string_type
 			if Result /= Void then
 				-- Bug in SE 1.0 and 1.1: Make sure that
 				-- that `Result' is not optimized away.
@@ -53,30 +53,15 @@ feature -- Status report
 	required_type (argument_number: INTEGER): XM_XPATH_SEQUENCE_TYPE is
 			-- Type of argument number `argument_number'
 		do
-			create Result.make_optional_string
-		end
-
-	is_test_for_zero: BOOLEAN
-			-- If this is set we return 0 for a zero length string, 1 for any other;
-			-- Set by the optimizer.
-
-feature -- Status setting
-
-	set_test_for_zero is
-			-- Set `is_test_for_zero'.
-		do
-			is_test_for_zero := True
-		ensure
-			is_test_for_zero = True
+			create Result.make_optional_item
 		end
 
 feature -- Optimization
 
 		simplified_expression: XM_XPATH_EXPRESSION is
 			-- Simplified expression as a result of context-independent static optimizations
-			-- This default implementation does nothing.
 		local
-			a_result_expression: XM_XPATH_STRING_LENGTH
+			a_result_expression: XM_XPATH_STRING
 			a_simplifier: XM_XPATH_ARGUMENT_SIMPLIFIER
 		do
 			a_result_expression := clone (Current)
@@ -91,28 +76,32 @@ feature -- Optimization
 			Result := a_result_expression
 		end
 
+	analyze (a_context: XM_XPATH_STATIC_CONTEXT) is
+			-- Perform static analysis of an expression and its subexpressions
+		do
+			mark_unreplaced
+			Precursor (a_context)
+			if not is_error then
+				if arguments.item (1).item_type.is_same_type (type_factory.string_type)
+					and then arguments.item (1).cardinality_exactly_one then
+					set_replacement (arguments.item (1))
+				end
+			end
+		end
+
 feature -- Evaluation
 
 	evaluate_item (a_context: XM_XPATH_CONTEXT) is
 			-- Evaluate as a single item
 		local
-			an_atomic_value: XM_XPATH_ATOMIC_VALUE
-			a_string: STRING
+			an_argument: XM_XPATH_ITEM
 		do
 			arguments.item (1).evaluate_item (a_context)
-			an_atomic_value ?= arguments.item (1).last_evaluated_item
-			if an_atomic_value = Void then
-				create {XM_XPATH_STRING_VALUE} an_atomic_value.make ("")
-			end
-			a_string := an_atomic_value.string_value
-			if is_test_for_zero then
-				if a_string.count = 0 then
-					create {XM_XPATH_INTEGER_VALUE} last_evaluated_item.make_from_integer (0)
-				else
-					create {XM_XPATH_INTEGER_VALUE} last_evaluated_item.make_from_integer (1)
-				end
+			an_argument := arguments.item (1).last_evaluated_item
+			if an_argument = Void then
+				create {XM_XPATH_STRING_VALUE} last_evaluated_item.make ("")
 			else
-				create {XM_XPATH_INTEGER_VALUE} last_evaluated_item.make_from_integer (a_string.count)
+				create {XM_XPATH_STRING_VALUE} last_evaluated_item.make (an_argument.string_value)
 			end
 		end
 

@@ -31,7 +31,9 @@ inherit
 	XM_XPATH_SHARED_ANY_ITEM_TYPE
 
 	XM_XPATH_SHARED_ANY_NODE_TEST
-	
+
+	XM_XPATH_SHARED_NO_NODE_TEST
+
 	XM_XPATH_TYPE
 
 	XM_XPATH_AXIS
@@ -1507,6 +1509,9 @@ feature {NONE} -- Implementation
 		local
 			a_default_axis: INTEGER			
 		do
+			debug ("XPath Expression Parser")
+				std.error.put_string ("Entered parse_node_kind_step%N")
+			end
 			a_default_axis := Child_axis
 			if STRING_.same_string (tokenizer.last_token_value, "attribute") then
 				a_default_axis := Attribute_axis
@@ -1685,7 +1690,7 @@ feature {NONE} -- Implementation
 					if not is_parse_error then
 						a_sequence := internal_last_parsed_expression
 						if tokenizer.last_token /= Right_parenthesis_token then
-							a_message := "expected %"%)%", found "
+							a_message := "expected %")%", found "
 							a_message := STRING_.appended_string (a_message, display_current_token)
 							report_parse_error (a_message, 3)
 						else
@@ -1815,7 +1820,7 @@ feature {NONE} -- Implementation
 								end
 							end
 							if tokenizer.last_token /= Right_parenthesis_token then
-								a_message := "expected %"%)%", found "
+								a_message := "expected %")%", found "
 								a_message := STRING_.appended_string (a_message, display_current_token)
 								report_parse_error (a_message, 3)
 							end
@@ -1874,8 +1879,10 @@ feature {NONE} -- Implementation
 				next_token ("In parse_node_test: current token is ")
 				if tokenizer.is_lexical_error then
 					report_parse_error (tokenizer.last_lexical_error, 3)
-				else
+				elseif is_qname (a_token_value) then
 					generate_name_test (a_node_type, a_token_value, a_node_type = Element_node)
+				else
+					report_parse_error ("Invalid node test", 3)
 				end				
 			when Prefix_token then
 				next_token ("In parse_node_test - prefix: current token is ")
@@ -1910,7 +1917,6 @@ feature {NONE} -- Implementation
 					create {XM_XPATH_NODE_KIND_TEST} internal_last_parsed_node_test.make (a_node_type)
 				end
 			when Node_kind_token then
-				--create_node_kind_test
 				parse_node_kind_test
 			end
 		ensure
@@ -2032,11 +2038,72 @@ feature {NONE} -- Implementation
 
 	create_processing_instruction_node_kind_test (is_empty: BOOLEAN) is
 			-- Create a node kind test that matches the specified processing-instruction node(s).
+		local
+			a_splitter: ST_SPLITTER
+			qname_parts: DS_LIST [STRING]
+			a_name_code: INTEGER
+			a_message, an_original_text, a_local_name: STRING
 		do
+			an_original_text := tokenizer.last_token_value
 			if is_empty then
 				create {XM_XPATH_NODE_KIND_TEST} internal_last_parsed_node_test.make_processing_instruction_test
-			else
-				report_parse_error ("processing-instruction(...) is not yet implemented. Sorry.", 3)
+			elseif tokenizer.last_token = String_literal_token then
+				create a_splitter.make
+				a_splitter.set_separators (":")
+				qname_parts := a_splitter.split (tokenizer.last_token_value)
+				if qname_parts.count > 1 then
+					report_parse_warning ("No processing instruction name will ever contain a colon")
+					if not shared_name_pool.is_name_code_allocated ("fake-gexslt-prefix", "http://www.gobosoft.com/gexslt - fake-namespace", "gexslt ___invalid-name") then
+						shared_name_pool.allocate_name ("fake-gexslt-prefix", "http://www.gobosoft.com/gexslt - fake-namespace", "gexslt ___invalid-name")
+						a_name_code := shared_name_pool.last_name_code
+					else
+						a_name_code := shared_name_pool.name_code ("fake-gexslt-prefix", "http://www.gobosoft.com/gexslt - fake-namespace", "gexslt ___invalid-name")
+					end
+				else
+					if qname_parts.count = 0 then
+						a_local_name := ""
+						report_parse_warning ("No processing instruction name will ever be named by the empty string")
+					else
+						a_local_name := qname_parts.item (1)
+					end
+					if is_ncname (a_local_name) then
+						generate_name_code (a_local_name, False)
+						a_name_code := last_generated_name_code
+					else
+						a_name_code := -1
+					end
+				end
+			elseif tokenizer.last_token = Name_token then
+				create a_splitter.make
+				a_splitter.set_separators (":")
+				qname_parts := a_splitter.split (tokenizer.last_token_value)
+				if qname_parts.count > 1 then
+					report_parse_error ("Processing instruction name must not contain a colon", 3)
+				else
+					if is_qname (qname_parts.item (1)) then
+						generate_name_code (qname_parts.item (1), False)
+						a_name_code := last_generated_name_code
+					else
+						a_name_code := -1
+					end	
+				end
+			end
+			if not is_empty then
+				next_token ("In create_processing_instruction_node_kind_test")
+				if tokenizer.is_lexical_error then
+					report_parse_error (tokenizer.last_lexical_error, 3)
+				elseif tokenizer.last_token /= Right_parenthesis_token then
+					a_message := "expected %")%", found "
+			      a_message := STRING_.appended_string (a_message, display_current_token)
+					report_parse_error (a_message, 3)
+				else
+					next_token ("In create_processing_instruction_node_kind_test after RPAR: current token is ")
+					if a_name_code > -1 then
+						create {XM_XPATH_NAME_TEST} internal_last_parsed_node_test.make (Processing_instruction_node, a_name_code, an_original_text)
+					else
+						internal_last_parsed_node_test := empty_item
+					end
+				end
 			end
 		ensure
 			node_test: not is_parse_error implies internal_last_parsed_node_test /= Void
@@ -2124,6 +2191,33 @@ feature {NONE} -- Implementation
 		ensure
 			first_parse_error_not_void: first_parse_error /= Void
 			parse_error: is_parse_error
+		end
+
+	report_parse_warning (a_message: STRING) is
+			-- Report a parse warning.
+		require
+			a_message_not_void: a_message /= Void
+		local
+			s, line_info: STRING
+			l: INTEGER
+		do
+			l := tokenizer.line_number
+			if l = 1 then
+				line_info := ""
+			else
+				line_info := STRING_.appended_string ("on line ", l.out)
+				line_info := STRING_.appended_string (line_info, " ")
+			end
+			s := STRING_.appended_string ("Warning ", line_info)
+			if a_message.count > 2 and then STRING_.same_string (a_message.substring (1, 3), "...") then
+				s := STRING_.appended_string (s, "near")
+			else
+				s := STRING_.appended_string (s, "in")
+			end
+			s := STRING_.appended_string (s, " «")
+			s := STRING_.appended_string (s, tokenizer.recent_text)
+			s := STRING_.appended_string (s, "»:%N    ")
+			environment.issue_warning (STRING_.appended_string (s, a_message))
 		end
 
 	display_current_token: STRING is

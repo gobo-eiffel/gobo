@@ -533,6 +533,7 @@ feature -- Element change
 						end
 						a_module ?= a_child
 						if a_module /= Void then
+							a_module.create_static_context
 							a_module.process_attributes
 							if a_module.is_import then
 								if found_non_import then

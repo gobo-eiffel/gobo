@@ -301,6 +301,7 @@ feature -- Access
 	Select_attribute: STRING is "select"
 	Separator_attribute: STRING is "separator"
 	Standalone_attribute: STRING is "standalone"
+	Terminate_attribute: STRING is "terminate"
 	Test_attribute: STRING is "test"
 	Tunnel_attribute: STRING is "tunnel"
 	Type_attribute: STRING is "type"

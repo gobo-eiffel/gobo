@@ -45,7 +45,7 @@ feature -- Access
 			check_empty
 			check_top_level
 
-			if not is_error then
+			if not any_compile_errors then
 				a_stylesheet ?= parent_node
 				check
 					parent_is_stylesheet: a_stylesheet /= Void
@@ -58,11 +58,11 @@ feature -- Access
 				create a_uri.make_resolve (a_base_uri, href)
 				if a_uri.has_fragment then
 					-- TODO add an ID filter to support fragment identifiers
-					set_last_error_from_string ("Fragment identifier not supported", 0, Static_error)
+					report_compile_error ("Fragment identifier not supported")
 				else
 					a_uri_resolver.resolve_uri (a_uri.full_reference)
 					if a_uri_resolver.has_uri_reference_error then
-						set_last_error_from_string (a_uri_resolver.last_uri_reference_error, 0, Static_error)
+						report_compile_error (a_uri_resolver.last_uri_reference_error)
 					else
 						create a_source.make (a_uri_resolver.last_system_id.full_reference)
 						create a_node_factory.make (a_configuration.error_listener, a_configuration.are_external_functions_allowed)
@@ -93,7 +93,7 @@ feature -- Access
 				end
 			end
 		ensure
-			error_if_void: Result = Void implies is_error
+			error_if_void: Result = Void implies any_compile_errors
 		end
 
 feature -- Status report
@@ -105,7 +105,15 @@ feature -- Status report
 
 feature -- Element change
 
-		prepare_attributes is
+	create_static_context is
+			-- Create `static_context'
+		do
+			create static_context.make (Current)
+		ensure
+			static_context_created: static_context /= Void
+		end
+	
+	prepare_attributes is
 			-- Set the attribute list for the element.
 		local
 			a_cursor: DS_ARRAYED_LIST_CURSOR [INTEGER]

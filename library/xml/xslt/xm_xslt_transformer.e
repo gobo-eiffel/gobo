@@ -148,6 +148,9 @@ feature -- Access
 			positive_result: Result.is_positive
 		end
 
+	message_emitter: XM_XSLT_MESSAGE_EMITTER
+			-- Emitter for writing xsl:messages
+	
 feature -- Status report
 
 	is_tracing: BOOLEAN
@@ -267,6 +270,16 @@ feature -- Creation
 		end
 
 feature -- Element change
+
+	set_message_emitter (a_message_emitter: like message_emitter) is
+			-- Set `message_emitter'.
+		require
+			message_emitter_not_void: a_message_emitter /= Void
+		do
+			message_emitter := a_message_emitter
+		ensure
+			message_emitter_set: message_emitter = a_message_emitter
+		end
 
 	set_current_iterator (an_iterator: XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_ITEM]) is
 			-- Set `current_iterator'.

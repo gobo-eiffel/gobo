@@ -18,6 +18,11 @@ inherit
 
 feature -- Status report
 
+	supports_registering_schemes: BOOLEAN is
+			-- Does `Current' support resgitering scheme resolvers?
+		deferred
+		end
+
 	is_stack_empty: BOOLEAN is
 			-- Is URI stack empty?
 		deferred
@@ -41,5 +46,13 @@ feature -- Element change
 		deferred
 		end
 
+	register_scheme (a_scheme: XM_URI_RESOLVER) is
+			-- Register scheme.
+		require
+			a_scheme_not_void: a_scheme /= Void
+			registering_schemes_supported: supports_registering_schemes
+		deferred
+		end
+	
 end
 

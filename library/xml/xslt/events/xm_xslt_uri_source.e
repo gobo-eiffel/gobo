@@ -61,7 +61,6 @@ feature -- Events
 			a_parser.set_callbacks (start)
 			a_parser.set_dtd_callbacks (oasis_xml_catalog_filter)
 			a_parser.parse_from_system (system_id)
-			a_parser.entity_resolver.resolve_finish
 		end
 
 	send_from_stream (a_stream: KI_CHARACTER_INPUT_STREAM; a_system_id: UT_URI; a_parser: XM_PARSER; a_receiver: XM_XPATH_RECEIVER; is_stylesheet: BOOLEAN) is
@@ -94,7 +93,7 @@ feature -- Events
 			end
 			an_entity_resolver.push_uri (a_system_id)
 			a_parser.parse_from_stream (a_stream)
-			a_parser.entity_resolver.resolve_finish -- is this right?
+			a_parser.entity_resolver.resolve_finish
 		end
 
 feature -- Element change

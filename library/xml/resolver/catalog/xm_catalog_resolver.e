@@ -30,6 +30,13 @@ inherit
 
 feature -- Status report
 	
+	
+	supports_registering_schemes: BOOLEAN is
+			-- Does `Current' support resgitering scheme resolvers?
+		do
+			Result := True
+		end
+
 	is_stack_empty: BOOLEAN is
 			-- Is URI stack empty?
 		do
@@ -50,6 +57,13 @@ feature -- Element change
 			shared_catalog_manager.bootstrap_resolver.uri_scheme_resolver.push_uri (a_uri)
 		end
 
+	
+	register_scheme (a_scheme: XM_URI_RESOLVER) is
+			-- Register scheme.
+		do
+			shared_catalog_manager.bootstrap_resolver.uri_scheme_resolver.register_scheme (a_scheme)
+		end
+	
 feature -- Actions
 
 	resolve_uri (a_uri_reference: STRING) is

@@ -24,7 +24,8 @@ creation
 
 feature {NONE} -- Initialization
 
-	make (an_executable: XM_XSLT_EXECUTABLE; an_element_name, a_namespace: XM_XPATH_EXPRESSION; a_namespace_context: XM_XSLT_NAMESPACE_CONTEXT; todo_list: ANY; a_simple_type: XM_XPATH_SCHEMA_TYPE; a_validation_action: INTEGER) is
+	make (an_executable: XM_XSLT_EXECUTABLE; an_element_name, a_namespace: XM_XPATH_EXPRESSION; a_namespace_context: XM_XSLT_NAMESPACE_CONTEXT;
+			some_attribute_sets: DS_ARRAYED_LIST [XM_XSLT_COMPILED_ATTRIBUTE_SET]; a_simple_type: XM_XPATH_SCHEMA_TYPE; a_validation_action: INTEGER) is
 			-- Establish invariant.
 		require
 			executable_not_void: an_executable /= Void
@@ -37,11 +38,13 @@ feature {NONE} -- Initialization
 			element_name := an_element_name
 			namespace := a_namespace
 			namespace_context := a_namespace_context
+			attribute_sets := some_attribute_sets
 			validation_action := a_validation_action
 			type := a_simple_type
 		ensure
 			executable_set: executable = an_executable
 			element_name_set: element_name = an_element_name
+			attribute_sets_set: attribute_sets = some_attribute_sets
 			namespace_set: namespace = a_namespace
 			namespace_context_set: namespace_context = a_namespace_context
 			validation_action_set: validation_action = a_validation_action

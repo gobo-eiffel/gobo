@@ -60,13 +60,19 @@ feature -- Creation
 			elseif STRING_.same_string (a_function_name, "not") then
 				create {XM_XPATH_NOT} Result.make
 			elseif STRING_.same_string (a_function_name, "number") then
-				create {XM_XPATH_NORMALIZE_SPACE} Result.make				
+				create {XM_XPATH_NUMBER} Result.make				
 			elseif STRING_.same_string (a_function_name, "position") then
 				create {XM_XPATH_POSITION} Result.make
+			elseif STRING_.same_string (a_function_name, "starts-with") then
+				create {XM_XPATH_STARTS_WITH} Result.make
 			elseif STRING_.same_string (a_function_name, "string-length") then
-				create {XM_XPATH_STRING_LENGTH} Result.make
+				create {XM_XPATH_STRING_LENGTH} Result.make				
+			elseif STRING_.same_string (a_function_name, "string") then
+				create {XM_XPATH_STRING} Result.make
 			elseif STRING_.same_string (a_function_name, "string-join") then
 				create {XM_XPATH_STRING_JOIN} Result.make
+			elseif STRING_.same_string (a_function_name, "substring") then
+				create {XM_XPATH_SUBSTRING} Result.make
 			elseif STRING_.same_string (a_function_name, "substring-before") then
 				create {XM_XPATH_SUBSTRING_BEFORE} Result.make
 			elseif STRING_.same_string (a_function_name, "substring-after") then

@@ -141,7 +141,7 @@ feature -- Status setting
 			else
 				input_length := an_end - a_start + 1
 			end
-			look_ahead
+			if not is_input_stream_exhausted then look_ahead end
 			next
 		end
 
@@ -225,7 +225,7 @@ feature --Element change
 				-- No lookahead after encountering "<" at the start of an XML-like tag.
 				-- After an `Right_curly_token', the parser must do an explicit `look_ahead' to continue
 				-- tokenizing; otherwise it can continue with direct character reading
-			elseif not is_lexical_error then
+			elseif not is_lexical_error and then not is_input_stream_exhausted then
 				look_ahead
 					
 				if current_token = Name_token then
@@ -238,15 +238,15 @@ feature --Element change
 							current_token := operator_type
 						else
 							current_token := function_type (current_token_value)
-							if not is_lexical_error then look_ahead  end -- swallow the (
+							if not is_lexical_error and then not is_input_stream_exhausted then look_ahead  end -- swallow the (
 						end
 						
 					when Left_curly_token then
 						current_token := Keyword_curly_token
-						if not is_lexical_error then look_ahead  end -- swallow the (
+						if not is_lexical_error and then not is_input_stream_exhausted then look_ahead  end -- swallow the (
 						
 					when Colon_colon_token then
-						if not is_lexical_error then 
+						if not is_lexical_error and then not is_input_stream_exhausted then 
 							look_ahead
 							current_token := Axis_token
 							debug ("XPath tokens")
@@ -256,7 +256,7 @@ feature --Element change
 						end
 						
 					when Colon_star_token then
-						if not is_lexical_error then
+						if not is_lexical_error and then not is_input_stream_exhausted then
 							look_ahead
 							current_token := Prefix_token
 						end
@@ -299,9 +299,9 @@ feature --Element change
 							check
 								no_error_yet: not is_lexical_error
 							end
-							look_ahead
+							if not is_input_stream_exhausted then look_ahead end
 							
-							if not is_lexical_error then
+							if not is_lexical_error and then not is_input_stream_exhausted then
 								if next_token = Left_curly_token then
 									current_token := candidate
 									current_token_value := qname
@@ -329,7 +329,7 @@ feature --Element change
 							if double_keywords.has (composite) then
 								current_token := double_keywords.item (composite)
 								current_token_value := composite
-								look_ahead
+								if not is_input_stream_exhausted then look_ahead end
 							end
 						end
 					else
@@ -463,7 +463,7 @@ feature {NONE} -- Status setting
 								is_lexical_error := True
 								internal_last_lexical_error := "Unclosed XPath comment"
 							else
-								look_ahead
+								if not is_input_stream_exhausted then look_ahead end
 							end
 						else
 							next_token := Left_parenthesis_token
@@ -689,7 +689,7 @@ feature {NONE} -- Status setting
 							from
 								i := 1
 							variant
-								next_token_value.count + 1 - 1
+								next_token_value.count + 1 - i
 							until
 								i > next_token_value.count
 							loop
@@ -734,21 +734,23 @@ feature {NONE} -- Status setting
 									if nc = ':' then
 										next_token_value := input.substring (next_token_start_index, input_index - 1)
 										next_token := Axis_token
-										--input_index := input_index + 2
 										finished := True
 										finished_other := True
+										input_index := input_index + 2
 									elseif nc = '*' then
 										next_token_value := input.substring (next_token_start_index, input_index - 1)
 										next_token := Prefix_token
-										--input_index := input_index + 2
 										finished := True
+										finished_other := True
+										input_index := input_index + 2
 									elseif nc = '=' then
 
 										-- as in "let $x:=2"
 										
 										next_token_value := input.substring (next_token_start_index, input_index - 1)
 										next_token := Name_token
-										finished := True										
+										finished := True
+										finished_other := True
 									end
 								end
 							when '-', '_','.'  then
@@ -762,9 +764,11 @@ feature {NONE} -- Status setting
 							end
 							if not finished_other then input_index := input_index + 1 end
 						end
-						next_token_value := input.substring (next_token_start_index, input_index - 1)
-						next_token := Name_token
-						finished := True
+						if not finished then
+							next_token_value := input.substring (next_token_start_index, input_index - 1)
+							next_token := Name_token
+							finished := True
+						end
 					end
 				end
 			end

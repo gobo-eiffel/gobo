@@ -126,7 +126,7 @@ feature -- Element change
 		do
 			check_within_template
 			if use_attribute_sets /= Void then
-				todo ("validate (use-attribute-sets)", True)
+				accumulate_attribute_sets (use_attribute_sets, Void)
 			end
 			type_check_expression ("name", element_name)
 			if element_name.was_expression_replaced then
@@ -192,7 +192,7 @@ feature -- Element change
 					a_namespace_context := namespace_context
 				end
 
-				create an_element.make (an_executable, element_name, namespace, a_namespace_context, Void, Void, validation_action)
+				create an_element.make (an_executable, element_name, namespace, a_namespace_context, used_attribute_sets, Void, validation_action)
 				last_generated_instruction := an_element
 				compile_children (an_executable, last_generated_instruction)
 			end
@@ -276,7 +276,7 @@ feature {NONE} -- Implementation
 			some_namespace_codes: DS_ARRAYED_LIST [INTEGER]
 		do
 			create some_namespace_codes.make (0)
-			create a_fixed_element.make (an_executable, a_name_code, some_namespace_codes, Void, Void, validation_action)
+			create a_fixed_element.make (an_executable, a_name_code, some_namespace_codes, used_attribute_sets, Void, validation_action)
 			last_generated_instruction := a_fixed_element
 			compile_children (an_executable, last_generated_instruction)
 		end
