@@ -732,6 +732,30 @@ feature -- Interface checking status
 			has_interface_error: has_interface_error
 		end
 
+feature -- Implementation checking status
+
+	implementation_checked: BOOLEAN
+			-- Has the implementation of current class been checked?
+
+	has_implementation_error: BOOLEAN
+			-- Has a fatal error occurred during implementation checking?
+
+	set_implementation_checked is
+			-- Set `implementation_checked' to True.
+		do
+			implementation_checked := True
+		ensure
+			implementation_checked: implementation_checked
+		end
+
+	set_implementation_error is
+			-- Set `has_implementation_error' to True.
+		do
+			has_implementation_error := True
+		ensure
+			has_implementation_error: has_implementation_error
+		end
+
 feature -- Invariant
 
 	invariants: ET_INVARIANTS
@@ -767,6 +791,26 @@ feature -- Type context
 			-- formal parameters are themselves in current context
 		do
 			Result := True
+		end
+
+feature -- Error handling
+
+	set_fatal_error is
+			-- Set a fatal error corresponding to
+			-- the current stage of compilation of
+			-- current class.
+		do
+			if interface_checked then
+				set_interface_error
+			elseif qualified_signatures_resolved then
+				set_qualified_signatures_error
+			elseif features_flattened then
+				set_flattening_error
+			elseif ancestors_built then
+				set_ancestors_error
+			elseif is_parsed then
+				set_syntax_error
+			end
 		end
 
 feature -- Output
