@@ -594,6 +594,7 @@ feature -- Removal
 				a_cursor.after
 			loop
 				deleted.put_last (a_cursor.current_cell)
+				a_cursor.forth
 				a_searcher.search_forth (a_cursor, v)
 			end
 			if deleted.count = count then

@@ -488,6 +488,7 @@ feature -- removal
 			loop
 				move_left (a_cursor.index + 1, 1)
 				nb := nb + 1
+				a_cursor.back
 				a_searcher.search_back (a_cursor, v)
 			end
 			count := count - nb
