@@ -38,6 +38,8 @@ inherit
 
 	KL_IMPORTED_INTEGER_ROUTINES
 
+	UT_IMPORTED_FORMATTERS
+
 	KL_SHARED_STANDARD_FILES
 
 	KL_SHARED_PLATFORM
@@ -164,6 +166,13 @@ feature -- Status report
 			-- effect can also be achieved by appropriate constructs in the
 			-- pattern itself (^), which is the only way to do it in Perl.
 
+	is_more_strict: BOOLEAN
+			-- If true, the compiler checks the patterns more strictly, i.e.
+			-- an unknown escaped character is reported as an error. Otherwise
+			-- the character is treated as itself.
+			-- This option cannot be changed after compilation, you need to
+			-- reset the compiler.
+
 feature -- Access
 
 	byte_code: RX_BYTE_CODE
@@ -192,6 +201,7 @@ feature -- Status setting
 			set_eol (True)
 			set_anchored (False)
 			set_greedy (True)
+			set_more_strict (False)
 		ensure
 			caseless_set: is_caseless = False
 			multiline_set: is_multiline = False
@@ -203,6 +213,7 @@ feature -- Status setting
 			eol_set: is_eol = True
 			anchored_set: is_anchored = False
 			greedy_set: is_greedy = True
+			more_strict_set: is_more_strict = False
 		end
 
 	set_caseless (b: BOOLEAN) is
@@ -233,6 +244,16 @@ feature -- Status setting
 			is_greedy := b
 		ensure
 			greedy_set: is_greedy = b
+		end
+
+	set_more_strict (b: BOOLEAN) is
+			-- Set 'is_more_strict' to 'b'.
+		require
+			not_compiled: not is_compiled
+		do
+			is_more_strict := b
+		ensure
+			more_strict_set: is_more_strict = b
 		end
 
 	set_multiline (b: BOOLEAN) is
@@ -358,8 +379,8 @@ feature -- Compilation
 			first_character := -1
 			required_character := -1
 			regexp_countlits := -1
-			error_message := err_msg_99
-			error_position := pattern_position
+			start_bits := Void
+			set_error (err_msg_99, 99, pattern_position)
 			debug ("REGEXP")
 				std.output.put_string ("COMPILING PATTERN: ")
 				std.output.put_line (a_pattern)
@@ -371,14 +392,14 @@ feature -- Compilation
 
 			if error_message = err_msg_99 and then pattern_position <= pattern_count then
 					-- If not reached end of pattern on success, there's an excess bracket.
-				error_message := err_msg_22
+				set_error (err_msg_22, 22, pattern_position)
 			elseif maxbackrefs > subexpression_count then
 					-- Give an error if there's back reference to a non-existent
 					-- capturing subpattern.
-				error_message := err_msg_15
+				set_error (err_msg_15, 15, pattern_position)
 			end
 			if error_message = err_msg_99 then
-				error_message := err_msg_0
+				set_error (err_msg_0, 0, 0)
 					-- Fill in the terminating state.
 				byte_code.append_opcode (op_end)
 				an_option := ims_options
@@ -412,8 +433,6 @@ feature -- Compilation
 				if regexp_countlits <= 1 and then first_character >= 0 then
 					required_character := -1
 				end
-			else
-				error_position := pattern_position
 			end
 			debug ("REGEXP")
 				if (not is_compiled) then
@@ -426,7 +445,29 @@ feature -- Compilation
 						std.output.put_character (pattern.item (error_position))
 					end
 				end
-				print_compiled_pattern (std.output)
+				print_compiled_pattern_code (std.output, False)
+				print_compiled_pattern_info (std.output)
+				print_start_bits (std.output)
+			end
+		end
+
+	optimize is
+			-- This feature scans a compiled unanchored expression and attempts to build a
+			-- set of the initial characters. As time goes by, we may be able to get more clever
+			-- at doing this.
+		require
+			compiled: is_compiled
+		do
+				-- For an anchored pattern, or an unanchored pattern that has a first char, or a
+				-- multiline pattern that matches only at "line starts", no further processing at
+				-- present.
+			if not is_anchored and then first_character < 0 and then not is_startline then
+				if internal_start_bits = Void then
+					!! internal_start_bits.make_empty
+				else
+					internal_start_bits.wipe_out
+				end
+				set_start_bits (0, is_caseless)
 			end
 		end
 
@@ -435,17 +476,38 @@ feature -- Error report
 	error_message: STRING
 			-- State of last compilation
 
+	error_code: INTEGER
+			-- Error identification with an integral value
+
 	error_position: INTEGER
 			-- Position in pattern where an error was detected;
 			-- Result <= 0 implies no valid position was found
+
+feature {NONE} -- Error setting
+
+	set_error (a_message: like error_message; an_error_code, a_position: INTEGER) is
+			-- Set error reporting data.
+		require
+			a_message_not_void: a_message /= Void
+			valid_error_code: an_error_code >= 0 and an_error_code < 100
+		do
+			error_message := a_message
+			error_code := an_error_code
+			error_position := a_position
+		ensure
+			error_message_set: error_message = a_message
+			error_code_set: error_code = an_error_code
+			error_position_set: error_position = a_position
+		end
 
 feature -- Reset
 
 	reset is
 			-- Reset compiler.
 		do
-			error_message := err_msg_99
-			pattern.put ('%U', 1)
+			set_error (err_msg_99, 99, 0)
+			STRING_.wipe_out (pattern)
+			pattern.append_character ('%U')
 			pattern_count := 0
 		ensure
 			not_compiled: not is_compiled
@@ -454,41 +516,92 @@ feature -- Reset
 feature -- Debugging
 
 	print_options (a_file: KI_TEXT_OUTPUT_STREAM) is
-			-- Print options to `a_file'.
+			-- Print options to `a_file'. Only differences from
+			-- the default setting where stated.
 		require
 			a_file_not_void: a_file /= Void
 			a_file_open_write: a_file.is_open_write
 		do
-			a_file.put_string ("Options:")
-			if is_anchored then
-				a_file.put_string (" anchored")
+			if
+				not is_anchored and not is_caseless and
+				not is_extended and not is_multiline and
+				not is_dotall and not is_dollar_endonly and
+				is_greedy
+			then
+				a_file.put_string ("No options")
+			else
+				a_file.put_string ("Options:")
+				if is_anchored then
+					a_file.put_string (" anchored")
+				end
+				if is_caseless then
+					a_file.put_string (" caseless")
+				end
+				if is_extended then
+					a_file.put_string (" extended")
+				end
+				if is_multiline then
+					a_file.put_string (" multiline")
+				end
+				if is_dotall then
+					a_file.put_string (" dotall")
+				end
+				if is_dollar_endonly then
+					a_file.put_string (" dollar_endonly")
+				end
+				if not is_greedy then
+					a_file.put_string (" ungreedy")
+				end
 			end
-			if is_caseless then
-				a_file.put_string (" caseless")
-			end
+			a_file.put_new_line
 			if is_ichanged then
-				a_file.put_string (" ichanged")
+				a_file.put_line ("Case state changes")
 			end
-			if is_extended then
-				a_file.put_string (" extended")
-			end
-			if is_multiline then
-				a_file.put_string (" multiline")
-			end
-			if is_dotall then
-				a_file.put_string (" dotall")
-			end
-			if is_dollar_endonly then
-				a_file.put_string (" endonly")
-			end
-			if not is_greedy then
-				a_file.put_string (" ungreedy")
+		end
+
+	print_start_bits (a_file: KI_TEXT_OUTPUT_STREAM) is
+			-- Print the starting character set of a compiled
+			-- expression in a preformatted form to `a_file'.
+		require
+			a_file_not_void: a_file /= Void
+			a_file_open_write: a_file.is_open_write
+		local
+			i, j: INTEGER
+		do
+			if start_bits = Void then
+				a_file.put_string ("Study returned NULL")
+			else
+				a_file.put_string ("Starting character set: ")
+				from
+					i := 0
+					j := 24
+				until
+					i > 255
+				loop
+					if start_bits.has (i) then
+						if j > 75 then
+							a_file.put_new_line
+							a_file.put_string ("  ")
+							j := 2
+						end
+						if print_set.has (i) and then i /= 32 then
+							a_file.put_character (INTEGER_.to_character (i))
+							j := j + 2
+						else
+							a_file.put_string ("\x")
+							STRING_FORMATTER_.put_left_padded_string (a_file, INTEGER_.to_hexadecimal(i, False), 2, '0')
+							j := j + 5
+						end
+						a_file.put_character (' ')
+					end
+					i := i + 1
+				end
 			end
 			a_file.put_new_line
 		end
 
-	print_compiled_pattern (a_file: KI_TEXT_OUTPUT_STREAM) is
-			-- Print compiled pattern (options and byte code) to `a_file'.
+	print_compiled_pattern_code (a_file: KI_TEXT_OUTPUT_STREAM; a_native_code: BOOLEAN) is
+			-- Print the compiled code in a readable form to `a_file'.
 		require
 			a_file_not_void: a_file /= Void
 			a_file_open_write: a_file.is_open_write
@@ -500,72 +613,95 @@ feature -- Debugging
 			a_code: INTEGER
 			a_min, a_max: INTEGER
 			a_set: INTEGER
+			a_position: INTEGER
+			a_position_map: like new_position_map
 		do
-			a_file.put_string ("Length = ")
-			a_file.put_integer (byte_code.count)
-			a_file.put_new_line
-			a_file.put_string ("Subexpressions = ")
-			a_file.put_integer (subexpression_count)
-			a_file.put_new_line
-			a_file.put_string ("Max Backrefs = ")
-			a_file.put_integer (maxbackrefs)
-			a_file.put_new_line
-			print_options (a_file)
-			if first_character >= 0 then
-				a_file.put_string ("%Tfirst_character: ")
-				if first_character < 256 and then print_set.has (first_character) then
-					a_file.put_character (INTEGER_.to_character (first_character))
-				else
-					a_file.put_string ("\x")
-					a_file.put_string (INTEGER_.to_hexadecimal (first_character, True))
-				end
-				a_file.put_new_line
+			if not a_native_code then
+				a_position_map := new_position_map
+				fill_position_map (a_position_map)
 			end
-			if required_character >= 0 then
-				a_file.put_string ("%Trequired_character: ")
-				if required_character < 256 and then print_set.has (required_character) then
-					a_file.put_character (INTEGER_.to_character (required_character))
-				else
-					a_file.put_string ("\x")
-					a_file.put_string (INTEGER_.to_hexadecimal (required_character, True))
-				end
-				a_file.put_new_line
-			end
+			a_file.put_line ("------------------------------------------------------------------")
 			nb := byte_code.count - 1
 			from i := 0 until i > nb loop
-				a_file.put_string ("Pos:%T")
-				a_file.put_integer (i)
-				a_file.put_string ("%T%T")
+				if a_native_code then
+					a_position := i
+				else
+					a_position := map_position (i, a_position_map)
+				end
+				STRING_FORMATTER_.put_left_padded_string (a_file, a_position.out, 3, ' ')
+				a_file.put_character (' ')
 				an_op := byte_code.opcode_item (i)
 				if an_op >= op_bra then
 					if i + 1 <= nb then
-						a_file.put_integer (byte_code.integer_item (i + 1))
-						i := i + 1
+						if a_native_code then
+							a_position := byte_code.integer_item (i + 1)
+						else
+							a_position := map_position (i + byte_code.integer_item (i + 1), a_position_map) - map_position (i, a_position_map)
+						end
+						STRING_FORMATTER_.put_left_padded_string (a_file, a_position.out, 3, ' ')
 					else
 						a_file.put_string ("end-of-byte-code")
 					end
-					a_file.put_string ("%TBra%T")
+					a_file.put_string (" Bra ")
 					a_file.put_integer (an_op - op_bra)
+					i := i + 1
 				else
 					inspect an_op
-					when
-						op_opt, op_cond, op_cref, op_ketrmax, op_ketrmin, op_alt, op_ket,
-						op_assert, op_assert_not, op_assertback, op_assertback_not, op_once,
-						op_reverse
-					then
+					when op_alt then
 						if i + 1 <= nb then
-							a_file.put_integer (byte_code.integer_item (i + 1))
-							i := i + 1
+							if a_native_code then
+								a_position := byte_code.integer_item (i + 1)
+							else
+								a_position := map_position (i + byte_code.integer_item (i + 1), a_position_map) - map_position (i, a_position_map)
+							end
+							STRING_FORMATTER_.put_left_padded_string (a_file, a_position.out, 3, ' ')
 						else
 							a_file.put_string ("end-of-byte-code")
 						end
-						a_file.put_character ('%T')
+						a_file.put_character (' ')
 						a_file.put_string (op_name (an_op))
+						i := i + 1
+					when op_ket then
+						if i + 1 <= nb then
+							if a_native_code then
+								a_position := byte_code.integer_item (i + 1)
+							else
+								a_position := map_position (i, a_position_map) - map_position (i - byte_code.integer_item (i + 1), a_position_map)
+							end
+							STRING_FORMATTER_.put_left_padded_string (a_file, a_position.out, 3, ' ')
+						else
+							a_file.put_string ("end-of-byte-code")
+						end
+						a_file.put_character (' ')
+						a_file.put_string (op_name (an_op))
+						i := i + 1
+					when op_opt then
+						if i + 1 <= nb then
+							a_file.put_character (' ')
+							STRING_FORMATTER_.put_left_padded_string (a_file, INTEGER_.to_hexadecimal (byte_code.integer_item (i + 1), False), 2, '0')
+						else
+							a_file.put_string ("end-of-byte-code")
+						end
+						a_file.put_character (' ')
+						a_file.put_string (op_name (an_op))
+						i := i + 1
+					when
+						op_reverse, op_cond, op_cref, op_ketrmax, op_ketrmin,
+						op_assert, op_assert_not, op_assertback, op_assertback_not, op_once
+					then
+						if i + 1 <= nb then
+							STRING_FORMATTER_.put_left_padded_string (a_file, byte_code.integer_item (i + 1).out, 3, ' ')
+						else
+							a_file.put_string ("end-of-byte-code")
+						end
+						a_file.put_character (' ')
+						a_file.put_string (op_name (an_op))
+						i := i + 1
 					when op_chars then
 						if i + 1 <= nb then
 							len := byte_code.integer_item (i + 1)
-							a_file.put_integer (len)
-							a_file.put_character ('%T')
+							STRING_FORMATTER_.put_left_padded_string (a_file, len.out, 3, ' ')
+							a_file.put_character (' ')
 							i := i + 1
 							if i + len <= nb then
 								i := i + 1
@@ -575,7 +711,7 @@ feature -- Debugging
 										a_file.put_character (INTEGER_.to_character (a_code))
 									else
 										a_file.put_string ("\x")
-										a_file.put_string (INTEGER_.to_hexadecimal (a_code, True))
+										STRING_FORMATTER_.put_left_padded_string (a_file, INTEGER_.to_hexadecimal (a_code, False), 2, '0')
 									end
 									i := i + 1
 									len := len - 1
@@ -594,22 +730,24 @@ feature -- Debugging
 								a_file.put_character (INTEGER_.to_character (a_code))
 							else
 								a_file.put_string ("\x")
-								a_file.put_string (INTEGER_.to_hexadecimal (a_code, True))
+								STRING_FORMATTER_.put_left_padded_string (a_file, INTEGER_.to_hexadecimal (a_code, False), 2, '0')
 							end
 						else
 							a_file.put_string ("end-of-byte-code")
 						end
-						a_file.put_character ('%T')
+						a_file.put_character (' ')
 						a_file.put_string (op_name (an_op))
+						i := i + 1
 					when op_typestar, op_typeminstar, op_typeplus, op_typeminplus, op_typequery, op_typeminquery then
 						if i + 1 <= nb then
+							a_file.put_string ("    ")
 							a_file.put_string (op_name (byte_code.opcode_item (i + 1)))
-							i := i + 1
 						else
 							a_file.put_string ("end-of-byte-code")
 						end
-						a_file.put_character ('%T')
+--						a_file.put_character (' ')
 						a_file.put_string (op_name (an_op))
+						i := i + 1
 					when op_exact, op_upto, op_minupto then
 						if i + 2 <= nb then
 							a_code := byte_code.character_item (i + 2)
@@ -617,20 +755,20 @@ feature -- Debugging
 								a_file.put_character (INTEGER_.to_character (a_code))
 							else
 								a_file.put_string ("\x")
-								a_file.put_string (INTEGER_.to_hexadecimal (a_code, True))
+								STRING_FORMATTER_.put_left_padded_string (a_file, INTEGER_.to_hexadecimal (a_code, False), 2, '0')
 							end
 							a_file.put_character ('{')
 							if an_op /= op_exact then
 								a_file.put_string ("0,")
 							end
-							a_file.put_integer (byte_code.integer_item (i + 1))
+							STRING_FORMATTER_.put_left_padded_string (a_file, byte_code.integer_item (i + 1).out, 3, ' ')
 							if an_op = op_minupto then
 								a_file.put_character ('?')
 							end
 							a_file.put_character ('}')
 						else
 							a_file.put_string ("end-of-byte-code")
-							a_file.put_character ('%T')
+							a_file.put_character (' ')
 							a_file.put_string (op_name (an_op))
 						end
 						i := i + 2
@@ -641,14 +779,14 @@ feature -- Debugging
 							if an_op /= op_typeexact then
 								a_file.put_character (',')
 							end
-							a_file.put_integer (byte_code.integer_item (i + 1))
+							STRING_FORMATTER_.put_left_padded_string (a_file, byte_code.integer_item (i + 1).out, 3, ' ')
 							a_file.put_character (')')
 							if an_op = op_typeminupto then
 								a_file.put_character ('?')
 							end
 						else
 							a_file.put_string ("end-of-byte-code")
-							a_file.put_character ('%T')
+							a_file.put_character (' ')
 							a_file.put_string (op_name (an_op))
 						end
 						i := i + 2
@@ -660,13 +798,13 @@ feature -- Debugging
 								a_file.put_character (INTEGER_.to_character (a_code))
 							else
 								a_file.put_string ("\x")
-								a_file.put_string (INTEGER_.to_hexadecimal (a_code, True))
+								STRING_FORMATTER_.put_left_padded_string (a_file, INTEGER_.to_hexadecimal (a_code, False), 2, '0')
 							end
-							i := i + 1
 						else
 							a_file.put_string ("end-of-byte-code")
 						end
 						a_file.put_character (']')
+						i := i + 1
 					when op_notstar, op_notminstar, op_notplus, op_notminplus, op_notquery, op_notminquery then
 						a_file.put_string ("[^")
 						if i + 1 <= nb then
@@ -675,14 +813,14 @@ feature -- Debugging
 								a_file.put_character (INTEGER_.to_character (a_code))
 							else
 								a_file.put_string ("\x")
-								a_file.put_string (INTEGER_.to_hexadecimal (a_code, True))
+								STRING_FORMATTER_.put_left_padded_string (a_file, INTEGER_.to_hexadecimal (a_code, False), 2, '0')
 							end
-							i := i + 1
 						else
 							a_file.put_string ("end-of-byte-code")
 						end
 						a_file.put_character (']')
 						a_file.put_string (op_name (an_op))
+						i := i + 1
 					when op_notexact, op_notupto, op_notminupto then
 						a_file.put_string ("[^")
 						if i + 2 <= nb then
@@ -691,13 +829,13 @@ feature -- Debugging
 								a_file.put_character (INTEGER_.to_character (a_code))
 							else
 								a_file.put_string ("\x")
-								a_file.put_string (INTEGER_.to_hexadecimal (a_code, True))
+								STRING_FORMATTER_.put_left_padded_string (a_file, INTEGER_.to_hexadecimal (a_code, False), 2, '0')
 							end
 							a_file.put_string ("](")
 							if an_op /= op_notexact then
 								a_file.put_character (',')
 							end
-							a_file.put_integer (byte_code.integer_item (i + 1))
+							STRING_FORMATTER_.put_left_padded_string (a_file, byte_code.integer_item (i + 1).out, 3, ' ')
 							a_file.put_character (')')
 							if an_op = op_notminupto then
 								a_file.put_character ('?')
@@ -710,12 +848,12 @@ feature -- Debugging
 						if an_op = op_ref then
 							a_file.put_string (op_name (an_op))
 							if i + 1 <= nb then
-								a_file.put_integer (byte_code.integer_item (i + 1))
-								i := i + 1
+								STRING_FORMATTER_.put_left_padded_string (a_file, byte_code.integer_item (i + 1).out, 3, ' ')
 							end
+							i := i + 1
 						else
 							check op_class: an_op = op_class end
-							a_file.put_character ('[')
+							a_file.put_string ("    [")
 							if i + 1 <= nb then
 								a_set := byte_code.integer_item (i + 1)
 								if byte_code.valid_character_set (a_set) then
@@ -729,26 +867,20 @@ feature -- Debugging
 											loop
 												k := k + 1
 											end
-											if not alnum_set.has (j) then
-												a_file.put_character ('\')
-											end
 											if print_set.has (j) then
 												a_file.put_character (INTEGER_.to_character (j))
 											else
-												a_file.put_character ('x')
-												a_file.put_string (INTEGER_.to_hexadecimal (j, True))
+												a_file.put_string ("\x")
+												STRING_FORMATTER_.put_left_padded_string (a_file, INTEGER_.to_hexadecimal (j, False), 2, '0')
 											end
 											k := k - 1
 											if k > j then
 												a_file.put_character ('-')
-												if not alnum_set.has (k) then
-													a_file.put_character ('\')
-												end
 												if print_set.has (k) then
 													a_file.put_character (INTEGER_.to_character (k))
 												else
-													a_file.put_character ('x')
-													a_file.put_string (INTEGER_.to_hexadecimal (k, True))
+													a_file.put_string ("\x")
+													STRING_FORMATTER_.put_left_padded_string (a_file, INTEGER_.to_hexadecimal (k, False), 2, '0')
 												end
 											end
 											j := k
@@ -757,7 +889,7 @@ feature -- Debugging
 									end
 								else
 									a_file.put_string ("invalid character set: ")
-									a_file.put_integer (a_set)
+									STRING_FORMATTER_.put_left_padded_string (a_file, a_set.out, 3, ' ')
 								end
 								i := i + 1
 							else
@@ -775,10 +907,10 @@ feature -- Debugging
 									a_min := byte_code.integer_item (i + 2)
 									a_max := byte_code.integer_item (i + 3)
 									a_file.put_character ('{')
-									a_file.put_integer (a_min)
+									STRING_FORMATTER_.put_left_padded_string (a_file, a_min.out, 3, ' ')
 									a_file.put_character (',')
 									if a_max /= 0 then
-										a_file.put_integer (a_max)
+										STRING_FORMATTER_.put_left_padded_string (a_file, a_max.out, 3, ' ')
 									end
 									a_file.put_character ('}')
 									if byte_code.opcode_item (i + 1) = op_crminrange then
@@ -793,12 +925,188 @@ feature -- Debugging
 							end
 						end
 					else
+						a_file.put_string ("    ")
 						a_file.put_string (op_name (an_op))
-					end 
+					end
 				end
 				i := i + 1
 				a_file.put_new_line
 			end
+			a_file.put_line ("------------------------------------------------------------------")
+		end
+
+	print_compiled_pattern_info (a_file: KI_TEXT_OUTPUT_STREAM) is
+			-- Print the compiled pattern info to `a_file'.
+		require
+			a_file_not_void: a_file /= Void
+			a_file_open_write: a_file.is_open_write
+		do
+			a_file.put_string ("Capturing subpattern count = ")
+			a_file.put_integer (subexpression_count)
+			a_file.put_new_line
+			if maxbackrefs > 0 then
+				a_file.put_string ("Max back reference = ")
+				a_file.put_integer (maxbackrefs)
+				a_file.put_new_line
+			end
+			print_options (a_file)
+			if first_character >= 0 then
+				a_file.put_string ("First char = ")
+				if first_character < 256 and then print_set.has (first_character) then
+					a_file.put_character ('%'')
+					a_file.put_character (INTEGER_.to_character (first_character))
+					a_file.put_character ('%'')
+				elseif first_character < 32 then
+					a_file.put_integer (first_character)
+				else
+					a_file.put_string ("\x")
+					STRING_FORMATTER_.put_left_padded_string (a_file, INTEGER_.to_hexadecimal (first_character, False), 2, '0')
+				end
+				a_file.put_new_line
+			elseif is_startline then
+				a_file.put_line ("First char at start or follows \n")
+			else
+				a_file.put_line ("No first char")
+			end
+			if required_character >= 0 then
+				a_file.put_string ("Need char = ")
+				if required_character < 256 and then print_set.has (required_character) then
+					a_file.put_character ('%'')
+					a_file.put_character (INTEGER_.to_character (required_character))
+					a_file.put_character ('%'')
+				elseif required_character < 32 then
+					a_file.put_integer (required_character)
+				else
+					a_file.put_string ("\x")
+					STRING_FORMATTER_.put_left_padded_string (a_file, INTEGER_.to_hexadecimal (required_character, False), 2, '0')
+				end
+				a_file.put_new_line
+			else
+				a_file.put_line ("No need char")
+			end
+		end
+
+feature {NONE} -- Debug helpers
+
+	map_position (a_position: INTEGER; a_position_map: like new_position_map): INTEGER is
+			-- Position in the byte code of the original PCRE
+			-- package (coded with bytes) corresponding to 
+			-- `a position' in byte code of the Gobo version
+			-- (coded with int32).
+		require
+			a_position_map_not_void: a_position_map /= Void
+		do
+			a_position_map.search (a_position)
+			if a_position_map.found then
+				Result := a_position_map.found_item
+			else
+				Result := 10000 + a_position
+			end
+		end
+
+	fill_position_map (a_position_map: like new_position_map) is
+			-- Fill `a_position_map' with position mapping between
+			-- byte code in the original PCRE package (coded with bytes)
+			-- and the Gobo version (coded with int32).
+		require
+			a_position_map_not_void: a_position_map /= Void
+			a_position_map_empty: a_position_map.is_empty
+		local
+			i, nb: INTEGER
+			len: INTEGER
+			an_op: INTEGER
+			byte_offset: INTEGER
+		do
+			nb := byte_code.count - 1
+			from i := 0 until i > nb loop
+				a_position_map.force (byte_offset, i)
+				an_op := byte_code.opcode_item (i)
+				if an_op >= op_bra then
+					byte_offset := byte_offset + 3
+					i := i + 1
+				else
+					inspect an_op
+					when op_opt then
+						byte_offset := byte_offset + 2
+						i := i + 1
+					when op_cond then
+						byte_offset := byte_offset + 2
+						i := i + 1
+					when op_cref then
+						byte_offset := byte_offset + 2
+						i := i + 1
+					when op_chars then
+						len := byte_code.integer_item (i + 1)
+						byte_offset := byte_offset + len + 2
+						i := i + len + 1
+					when op_ketrmax, op_ketrmin, op_alt, op_ket, op_assert, op_assert_not,
+					     op_assertback, op_assertback_not, op_once then
+						byte_offset := byte_offset + 3
+						i := i + 1
+					when op_reverse then
+						byte_offset := byte_offset + 3
+						i := i + 1
+					when
+						op_star, op_minstar, op_plus, op_minplus, op_query, op_minquery, op_typestar,
+						op_typeminstar, op_typeplus, op_typeminplus, op_typequery, op_typeminquery
+					then
+						byte_offset := byte_offset + 2
+						i := i + 1
+					when op_exact, op_upto, op_minupto then
+						byte_offset := byte_offset + 4
+						i := i + 2
+					when op_typeexact, op_typeupto, op_typeminupto then
+						byte_offset := byte_offset + 4
+						i := i + 2
+					when op_not then
+						byte_offset := byte_offset + 2
+						i := i + 1
+					when op_notstar, op_notminstar, op_notplus, op_notminplus, op_notquery, op_notminquery then
+						byte_offset := byte_offset + 2
+						i := i + 1
+					when op_notexact, op_notupto, op_notminupto then
+						byte_offset := byte_offset + 4
+						i := i + 2
+					when op_ref then
+						inspect byte_code.opcode_item (i + 1)
+						when op_crstar, op_crminstar, op_crplus, op_crminplus, op_crquery, op_crminquery then
+							byte_offset := byte_offset + 3
+							i := i + 1
+						when op_crrange, op_crminrange then
+							byte_offset := byte_offset + 7
+							i := i + 3
+						else
+							byte_offset := byte_offset + 2
+						end
+					when op_class then
+						inspect byte_code.opcode_item (i + 1)
+						when op_crstar, op_crminstar, op_crplus, op_crminplus, op_crquery, op_crminquery then
+							byte_offset := byte_offset + 33
+							i := i + 1
+						when op_crrange, op_crminrange then
+							byte_offset := byte_offset + 37
+							i := i + 3
+						else
+							byte_offset := byte_offset + 32
+						end
+					else
+						byte_offset := byte_offset + 1
+					end
+				end
+				i := i + 1
+			end
+			a_position_map.force (byte_offset, i)
+		end
+
+	new_position_map: DS_HASH_TABLE [INTEGER, INTEGER] is
+			-- Position mapping between byte code in the original
+			-- PCRE package (coded with bytes) and the Gobo version
+			-- (coded with int32)
+		do
+			!! Result.make_map (50)
+		ensure
+			position_map_not_void: Result /= Void
+			position_map_empty: Result.is_empty
 		end
 
 feature {NONE} -- Status report
@@ -870,6 +1178,12 @@ feature {NONE} -- Access
 	maxbackrefs: INTEGER
 			-- Maximum number of back references
 
+	internal_start_bits: RX_CHARACTER_SET
+			-- To avoid repeated allocations of the `start_bits' character set
+
+	start_bits: RX_CHARACTER_SET
+			-- A set of starting characters. This will be filled in by the optimizer
+
 	first_character: INTEGER
 			-- First character in regular expression
 			-- if any; -1 otherwise
@@ -889,9 +1203,6 @@ feature {NONE} -- Access
 		require
 			a_position_large_enough: a_position >= 0
 			a_position_small_enough: a_position < byte_code.count - 2
-			is_bra: byte_code.opcode_item (a_position) >= op_bra or 
-				byte_code.opcode_item (a_position) = op_once or 
-				byte_code.opcode_item (a_position) = op_cond
 		local
 			cc, d, op: INTEGER
 			branchlength: INTEGER
@@ -1107,7 +1418,7 @@ feature {NONE} -- Compilation
 						length := find_fixed_code_length (last_branch)
 						byte_code.set_count (byte_code.count - 1)
 						if length < 0 then
-							error_message := err_msg_25
+							set_error (err_msg_25, 25, pattern_position)
 						else
 							byte_code.put_integer (length, reverse_count)
 						end
@@ -1120,7 +1431,7 @@ feature {NONE} -- Compilation
 						length := byte_code.count - start_bracket
 						byte_code.append_opcode (op_ket)
 						byte_code.append_integer (length)
-						if not is_option_undef (changed_options) then
+						if a_in_group and then not is_option_undef (changed_options) then
 							byte_code.append_opcode (op_opt)
 							byte_code.append_integer (old_options)
 						end
@@ -1246,6 +1557,7 @@ feature {NONE} -- Compilation
 								if tc > pattern_count then
 										-- Unexpeceted end of pattern.
 									pattern_position := tc - 1
+									set_error (err_msg_18, 18, tc)
 								else
 									pattern_position := tc
 								end
@@ -1272,17 +1584,17 @@ feature {NONE} -- Compilation
 										valid_position: pattern_position <= pattern.count
 									end
 									if pattern.item_code (pattern_position) /= Right_parenthesis_code then
-										error_message := err_msg_26
+										set_error (err_msg_26, 26, pattern_position)
 									end
 									if condref = 0 then
-										error_message := err_msg_35
+										set_error (err_msg_35, 35, pattern_position)
 									else
 										pattern_position := pattern_position + 1
 									end
 								else
 									tc := pattern_position
 									if pattern.item_code (tc) /= Question_mark_code then
-										error_message := err_msg_28
+										set_error (err_msg_28, 28, pattern_position)
 									else
 										check
 												-- The last character read was '?', and there is at
@@ -1293,7 +1605,7 @@ feature {NONE} -- Compilation
 										when Equal_code, Exclamation_code, Less_than_code then
 											-- Do nothing.
 										else
-											error_message := err_msg_28
+											set_error (err_msg_28, 28, pattern_position)
 										end
 									end
 									pattern_position := tc - 1
@@ -1325,7 +1637,7 @@ feature {NONE} -- Compilation
 									pattern_position := pattern_position + 1
 								else
 										-- Syntax error.
-									error_message := err_msg_24
+									set_error (err_msg_24, 24, pattern_position-3)
 								end
 							when Greater_than_code then
 									-- One-time brackets.
@@ -1369,10 +1681,12 @@ feature {NONE} -- Compilation
 										end
 									when Lower_x_code then
 										is_extended := flag
+									when Upper_x_code then
+										is_more_strict := flag
 									when Upper_u_code then
 										is_greedy := not flag
 									else
-										error_message := err_msg_12
+										set_error (err_msg_12, 12, pattern_position)
 									end
 									if error_message /= err_msg_99 then
 										c := 0
@@ -1385,9 +1699,6 @@ feature {NONE} -- Compilation
 										end
 										c := pattern.item_code (pattern_position)
 									end
-								end
-								if is_caseless /= is_option_caseless (newoptions) then
-									set_ichanged (True)
 								end
 								if c = Right_parenthesis_code then
 										-- If the options ended with ')' this is not the start of a nested
@@ -1404,10 +1715,13 @@ feature {NONE} -- Compilation
 												-- `newoptions' has been set from an ims.
 											newoptions_ims: is_option_ims (newoptions)
 										end
+										if is_caseless /= is_option_caseless (newoptions) then
+											set_ichanged (True)
+										end
 										if to_option_ims (opt) /= newoptions then
 											optchanged := newoptions
 											byte_code.append_opcode (op_opt)
-								    		byte_code.append_integer (optchanged)
+									    		byte_code.append_integer (optchanged)
 										end
 									else
 											-- We are on the top-level - all options are global.
@@ -1426,13 +1740,16 @@ feature {NONE} -- Compilation
 										-- the newoptions value is handled below.
 									bravalue := op_bra
 									pattern_position := pattern_position + 1
+									if is_caseless /= is_option_caseless (newoptions) then
+										set_ichanged (True)
+									end
 								end
 							end
 						else
 								-- Else we have a referencing group adjust the opcode.
 							subexpression_count := subexpression_count + 1
 							if subexpression_count > extract_max then
-								error_message := err_msg_13
+								set_error (err_msg_13, 13, pattern_position)
 							else
 								bravalue := op_bra + subexpression_count
 							end
@@ -1491,7 +1808,7 @@ feature {NONE} -- Compilation
 										tc := tc + byte_code.integer_item (tc + 1)
 									end
 									if condcount > 2 then
-										error_message := err_msg_27
+										set_error (err_msg_27, 27, pattern_position)
 									end
 								end
 									-- Handle updating of the required character. If the subpattern didn't
@@ -1516,7 +1833,7 @@ feature {NONE} -- Compilation
 								end
 								if pattern.item_code (pattern_position) /= Right_parenthesis_code then
 										-- Error if hit end of pattern.
-									error_message := err_msg_14
+									set_error (err_msg_14, 14, pattern_position)
 								end
 							end
 						end
@@ -1665,7 +1982,7 @@ feature {NONE} -- Compilation
 				(class_charcount > 0 and then c = Right_bracket_code) or else error_message /= err_msg_99
 			loop
 				if pattern_position > pattern_count then
-					error_message := err_msg_6
+					set_error (err_msg_6, 6, pattern_position)
 				else
 					tmp_pat_index := 0
 					if c = Left_bracket_code then
@@ -1676,7 +1993,7 @@ feature {NONE} -- Compilation
 						end
 						inspect pattern.item_code (pattern_position + 1)
 						when Colon_code, Dot_code, Equal_code then
-							tmp_pat_index := check_posix_syntax (class_set, pattern_position)
+							tmp_pat_index := check_posix_syntax (pattern_position)
 						else
 							-- Do nothing.
 						end
@@ -1689,7 +2006,7 @@ feature {NONE} -- Compilation
 							-- 5.6 does.
 						local_negate := False
 						if pattern.item_code (pattern_position + 1) /= Colon_code then
-							error_message := err_msg_31
+							set_error (err_msg_31, 31, pattern_position)
 						else
 							pattern_position := pattern_position + 2
 							if pattern.item_code (pattern_position) = Caret_code then
@@ -1698,7 +2015,7 @@ feature {NONE} -- Compilation
 							end
 							posix_class := check_posix_name (pattern_position, tmp_pat_index - pattern_position)
 							if posix_class < 0 then
-								error_message := err_msg_30
+								set_error (err_msg_30, 30, pattern_position)
 							else
 								if posix_class <= 3 and then is_caseless then
 										-- If matching is caseless, upper and lower are converted to
@@ -1748,7 +2065,7 @@ feature {NONE} -- Compilation
 								when esc_ucs then
 									class_set.add_negated_set (space_set)
 								else
-									error_message := err_msg_7
+									set_error (err_msg_7, 7, pattern_position)
 								end
 							else
 								c := val
@@ -1764,7 +2081,7 @@ feature {NONE} -- Compilation
 								-- here is treated as a literal.
 								pattern_position := pattern_position + 2
 								if pattern_position > pattern_count then
-									error_message := err_msg_6
+									set_error (err_msg_6, 6, pattern_position)
 								else
 									range_end := pattern.item_code (pattern_position)
 									tmp_pat_index := pattern_position
@@ -1786,7 +2103,7 @@ feature {NONE} -- Compilation
 										end
 									end
 									if range_end < c then
-										error_message := err_msg_8
+										set_error (err_msg_8, 8, pattern_position)
 									else
 										from
 												-- To make it for the `range_end' avoids endless loop.
@@ -1877,7 +2194,7 @@ feature {NONE} -- Compilation
 			repeat_max := a_max
 			previous := a_previous
 			if previous = 0 then
-				error_message := err_msg_9
+				set_error (err_msg_9, 9, pattern_position)
 			else
 					-- If the next character is '?' this is a minimizing repeat, by default,
 					-- but if PCRE_UNGREEDY is set, it works the other way round. Advance to the
@@ -2090,7 +2407,7 @@ feature {NONE} -- Compilation
 					end
 				else
 						-- Else there's some kind of shambles.
-					error_message := err_msg_11
+					set_error (err_msg_11, 11, pattern_position)
 				end
 			end
 		end
@@ -2187,7 +2504,7 @@ feature {NONE} -- Compilation
 			end
 			if min > 65535 then
 -- TODO: no such limitation anymore.
-				error_message := err_msg_5
+				set_error (err_msg_5, 5, i)
 			elseif i - pattern_position > 1 then
 					-- One or more digits seen.
 				if c = Right_brace_code then
@@ -2210,9 +2527,9 @@ feature {NONE} -- Compilation
 					if c = Right_brace_code then
 						if max > 65535 then
 -- TODO: no such limitation anymore.
-							error_message := err_msg_5
+							set_error (err_msg_5, 5, i)
 						elseif max >= 0 and then min > max then
-							error_message := err_msg_4
+							set_error (err_msg_4, 4, i)
 						else
 							Result := True
 						end
@@ -2227,18 +2544,18 @@ feature {NONE} -- Compilation
 
 feature {NONE} -- Posix character classes
 
-	check_posix_syntax (a_set: RX_CHARACTER_SET; a_pattern_position: INTEGER): INTEGER is
+	check_posix_syntax (a_pattern_position: INTEGER): INTEGER is
 			-- This function is called when the sequence "[:" or "[." or "[=" is
 			-- encountered in a character class. It checks whether this is followed by an
 			-- optional ^ and then a sequence of letters, terminated by a matching ":]" or
 			-- ".]" or "=]".
-		require
-			a_set_not_void: a_set /= Void
 		local
+			set: RX_CHARACTER_SET
 			i: INTEGER
 			terminator: INTEGER
 		do
 			from
+				set := alpha_set
 				i := a_pattern_position
 				terminator := pattern.item_code (i + 1)
 				if pattern.item_code (i + 2) = Caret_code then
@@ -2247,7 +2564,7 @@ feature {NONE} -- Posix character classes
 					i := i + 2
 				end
 			until
-				not a_set.has (pattern.item_code (i))
+				not set.has (pattern.item_code (i))
 			loop
 				i := i + 1
 			end
@@ -2343,7 +2660,7 @@ feature {NONE} -- Pattern scanning
 				c := pattern.item_code (pattern_position)
 			end
 		ensure
-			octal_position: Result >= 0
+			octal_positive: Result >= 0
 			new_pattern_position: pattern_position <= old pattern_position + a_max_len
 		end
 
@@ -2424,7 +2741,7 @@ feature {NONE} -- Pattern scanning
 			c := pattern.item_code (pattern_position)
 			if pattern_position > pattern_count then
 					-- If backslash is at the end of the pattern, it's an error.
-				error_message := err_msg_1
+				set_error (err_msg_1, 1, pattern_position)
 			elseif c < Zero_code or c > Lower_z_code then
 					-- Digits or letters may have special meaning;
 					-- all others are literals.
@@ -2461,7 +2778,7 @@ feature {NONE} -- Pattern scanning
 								if c >= Eight_code then
 									Result := 0
 								else
-									Result := scan_octal_number (3)
+									Result := scan_octal_number (3) \\ 256
 								end
 							end
 						elseif c >= Eight_code then
@@ -2470,12 +2787,11 @@ feature {NONE} -- Pattern scanning
 								-- Thus we have to pull back the pointer by one.
 							Result := 0
 						else
-							Result := scan_octal_number (3)
+							Result := scan_octal_number (3) \\ 256
 						end
 						pattern_position := pattern_position - 1
 					when Zero_code then
-						Result := scan_octal_number (3)
-						Result := Result \\ 256
+						Result := scan_octal_number (3) \\ 256
 						pattern_position := pattern_position - 1
 					when Lower_x_code then
 							-- Read just a single hex char.
@@ -2492,7 +2808,7 @@ feature {NONE} -- Pattern scanning
 						end
 						c := pattern.item_code (pattern_position)
 						if pattern_position > pattern_count then
-							error_message := err_msg_2
+							set_error (err_msg_2, 2, pattern_position)
 							Result := 0
 						else
 							if Lower_a_code <= c and c <= Lower_z_code then
@@ -2509,7 +2825,9 @@ feature {NONE} -- Pattern scanning
 							end
 						end
 					else
-						error_message := err_msg_3
+						if is_more_strict then
+							set_error (err_msg_3, 3, pattern_position)
+						end
 						Result := c
 					end
 				end
@@ -2645,7 +2963,7 @@ feature {NONE} -- Implementation
 					end
 				when op_exact, op_chars, op_plus, op_minplus then
 					if op = op_exact then
-						code_index := code_index + 2
+						code_index := code_index + 1
 					elseif op = op_chars then
 						code_index := code_index + 1
 					end
@@ -2748,6 +3066,252 @@ feature {NONE} -- Implementation
 					icode := icode + byte_code.integer_item (icode + 1)
 					op := byte_code.opcode_item (icode)
 				end
+			end
+		end
+
+	set_start_bits (a_code_index: INTEGER; a_caseless: BOOLEAN) is
+		local
+			i, nb: INTEGER
+			icode: INTEGER
+			tcode: INTEGER
+			op: INTEGER
+			ch: INTEGER
+			set: INTEGER
+			stop: BOOLEAN
+			caseless: BOOLEAN
+			success: BOOLEAN
+		do
+			from
+				success := True
+				caseless := a_caseless
+				op := op_alt
+				icode := a_code_index
+				nb := byte_code.count - 1
+			until
+				op /= op_alt or else tcode > nb
+			loop
+				tcode := icode + 2
+				from
+					stop := False
+				until
+					stop
+				loop
+					stop := True
+					op := byte_code.opcode_item (tcode)
+						-- If a branch starts with a bracket or a positive lookahead assertion,
+						-- recurse to set bits from within them. That's all for this branch.
+					if op >= op_bra or else op = op_assert then
+						set_start_bits (tcode, caseless)
+						if start_bits = Void then
+								-- Return without success.
+							success := False
+							check exit: stop = True and op /= op_alt end
+						else
+							-- Try the next alternative.
+						end
+					else
+						inspect op
+						when op_assert_not, op_assertback, op_assertback_not then
+							stop := False
+								-- Skip over lookbehind and negative lookahead assertions.
+							from
+								op := op_alt
+							until
+								op /= op_alt
+							loop
+								tcode := tcode + byte_code.integer_item (tcode + 1)
+								op := byte_code.integer_item (tcode)
+							end
+							tcode := tcode + 2
+						when op_opt then
+							stop := False
+								-- Skip over an option setting, changing the caseless flag.
+							caseless := is_option_caseless (byte_code.integer_item (tcode + 1))
+							tcode := tcode + 2
+						when op_brazero, op_braminzero then
+								-- BRAZERO does the bracket, but carries on.
+							tcode := tcode + 1
+							set_start_bits (tcode, caseless)
+							if start_bits = Void then
+									-- Return without success.
+								success := False
+								check exit: stop = True and op /= op_alt end
+							else
+								stop := False
+								from
+									op := op_alt
+								until
+									op /= op_alt
+								loop
+									tcode := tcode + byte_code.integer_item (tcode + 1)
+									op := byte_code.integer_item (tcode)
+								end
+								tcode := tcode + 2
+							end
+						when op_star, op_minstar, op_query, op_minquery then
+								-- Single-char * or ? sets the bit and tries the next item.
+							ch := byte_code.integer_item (tcode + 1)
+							internal_start_bits.add_character (ch)
+							if caseless then
+								internal_start_bits.add_character (character_case_mapping.flip_case (ch))
+							end
+							tcode := tcode + 2
+							stop := False
+						when op_upto, op_minupto then
+								-- Single-char upto sets the bit and tries the next.
+							ch := byte_code.integer_item (tcode + 2)
+							internal_start_bits.add_character (ch)
+							if caseless then
+								internal_start_bits.add_character (character_case_mapping.flip_case (ch))
+							end
+							tcode := tcode + 3
+							stop := False
+						when op_exact, op_chars then
+								-- At least one single char sets the bit and stops.
+							ch := byte_code.integer_item (tcode + 2)
+							internal_start_bits.add_character (ch)
+							if caseless then
+								internal_start_bits.add_character (character_case_mapping.flip_case (ch))
+							end
+							check stop = True and op /= op_alt end
+						when op_plus, op_minplus then
+								-- At least one single char sets the bit and stops.
+							ch := byte_code.integer_item (tcode + 1)
+							internal_start_bits.add_character (ch)
+							if caseless then
+								internal_start_bits.add_character (character_case_mapping.flip_case (ch))
+							end
+							check exit: stop = True and op /= op_alt end
+						when op_not_digit then
+								-- Single character type sets the bits and stops.
+							internal_start_bits.add_negated_set (digit_set)
+							check exit: stop = True and op /= op_alt end
+						when op_digit then
+								-- Single character type sets the bits and stops.
+							internal_start_bits.add_set (digit_set)
+							check exit: stop = True and op /= op_alt end
+						when op_not_whitespace then
+								-- Single character type sets the bits and stops.
+							internal_start_bits.add_negated_set (space_set)
+							check exit: stop = True and op /= op_alt end
+						when op_whitespace then
+								-- Single character type sets the bits and stops.
+							internal_start_bits.add_set (space_set)
+							check exit: stop = True and op /= op_alt end
+						when op_not_wordchar then
+								-- Single character type sets the bits and stops.
+							internal_start_bits.add_negated_set (word_set)
+							check exit: stop = True and op /= op_alt end
+						when op_wordchar then
+								-- Single character type sets the bits and stops.
+							internal_start_bits.add_set (word_set)
+							check stop = True and op /= op_alt end
+						when op_typeplus, op_typeminplus then
+								-- One or more character type fudges the pointer and restarts,
+								-- knowing it will hit a single character type and stop there.
+							tcode := tcode + 1
+							stop := False
+						when op_typeexact then
+								-- One or more character type fudges the pointer and restarts,
+								-- knowing it will hit a single character type and stop there.
+							tcode := tcode + 2
+							stop := False
+						when op_typeupto, op_typeminupto then
+								-- Zero or more repeats of character types set the bits and then
+								-- try again.
+							inspect byte_code.integer_item (tcode + 2)
+							when op_not_digit then
+									-- Single character type sets the bits and stops.
+								internal_start_bits.add_negated_set (digit_set)
+							when op_digit then
+									-- Single character type sets the bits and stops.
+								internal_start_bits.add_set (digit_set)
+							when op_not_whitespace then
+									-- Single character type sets the bits and stops.
+								internal_start_bits.add_negated_set (space_set)
+							when op_whitespace then
+									-- Single character type sets the bits and stops.
+								internal_start_bits.add_set (space_set)
+							when op_not_wordchar then
+									-- Single character type sets the bits and stops.
+								internal_start_bits.add_negated_set (word_set)
+							when op_wordchar then
+									-- Single character type sets the bits and stops.
+								internal_start_bits.add_set (word_set)
+							end
+							tcode := tcode + 3
+							stop := False
+						when op_typestar, op_typeminstar, op_typequery, op_typeminquery then
+								-- Zero or more repeats of character types set the bits and then
+								-- try again.
+							inspect byte_code.integer_item (tcode + 1)
+							when op_not_digit then
+									-- Single character type sets the bits and stops.
+								internal_start_bits.add_negated_set (digit_set)
+							when op_digit then
+									-- Single character type sets the bits and stops.
+								internal_start_bits.add_set (digit_set)
+							when op_not_whitespace then
+									-- Single character type sets the bits and stops.
+								internal_start_bits.add_negated_set (space_set)
+							when op_whitespace then
+									-- Single character type sets the bits and stops.
+								internal_start_bits.add_set (space_set)
+							when op_not_wordchar then
+									-- Single character type sets the bits and stops.
+								internal_start_bits.add_negated_set (word_set)
+							when op_wordchar then
+									-- Single character type sets the bits and stops.
+								internal_start_bits.add_set (word_set)
+							end
+							tcode := tcode + 2
+							stop := False
+						when op_class then
+								-- Character class: set the bits and either carry on or not,
+								-- according to the repeat count.
+							set := byte_code.integer_item (tcode + 1)
+							from i := 0 until i > 255 loop
+								if byte_code.character_set_has (set, i) then
+									internal_start_bits.add_character (i)
+								end
+								i := i + 1
+							end
+							inspect byte_code.integer_item (tcode + 2)
+							when op_crstar, op_crminstar, op_crquery, op_crminquery then
+								tcode := tcode + 3
+								stop := False
+							when op_crrange, op_crminrange then
+								if byte_code.integer_item (tcode + 3) = 0 then
+									tcode := tcode + 5
+									stop := False
+								else
+									tcode := tcode + 2
+								end
+							else
+								tcode := tcode + 2
+							end
+						when op_alt then
+								-- Return without success.
+							op := op_end
+							success := False
+							check exit: stop = True and op /= op_alt end
+						else
+								-- Return without success.
+							success := False
+							check exit: stop = True and op /= op_alt end
+						end
+					end
+				end
+				if success then
+						-- Advance to next branch.
+					icode := icode + byte_code.integer_item (icode + 1)
+					op := byte_code.opcode_item (icode)
+				end
+			end
+			if success then
+				start_bits := internal_start_bits
+			else
+				start_bits := Void
 			end
 		end
 

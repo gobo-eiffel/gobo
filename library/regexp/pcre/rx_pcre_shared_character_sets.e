@@ -108,6 +108,7 @@ feature -- Character sets
 				Result.add_character (i)
 				i := i + 1
 			end
+			Result.add_character (127)
 		ensure
 			cntrl_set_not_void: Result /= Void
 			cntrl_set_not_empty: not Result.is_empty
@@ -158,7 +159,7 @@ feature -- Character sets
 	space_set: RX_CHARACTER_SET is
 			-- Space character set
 		once
-			!! Result.make("%T%N%F%R ")
+			!! Result.make("%T%N%F%R%/11/ ")
 		ensure
 			space_set_not_void: Result /= Void
 			space_set_not_empty: not Result.is_empty

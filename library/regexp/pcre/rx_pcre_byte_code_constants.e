@@ -151,20 +151,20 @@ feature -- Maximizing and minimizing applied to single characters
 
 	op_upto: INTEGER is 24
 			-- From 0 to n matches;
-			-- This opcode is followed by an integer (originally an int16) 
+			-- This opcode is followed by an integer (originally an int16)
 			-- corresponding to the number of matches, and then a character
 			-- code (originally a character) corresponding to the character
 			-- this opcode is applied to.
 
 	op_minupto: INTEGER is 25
-			-- This opcode is followed by an integer (originally an int16) 
+			-- This opcode is followed by an integer (originally an int16)
 			-- corresponding to the number of matches, and then a character
 			-- code (originally a character) corresponding to the character
 			-- this opcode is applied to.
 
 	op_exact: INTEGER is 26
 			-- Exactly n matches;
-			-- This opcode is followed by an integer (originally an int16) 
+			-- This opcode is followed by an integer (originally an int16)
 			-- corresponding to the number of matches, and then a character
 			-- code (originally a character) corresponding to the character
 			-- this opcode is applied to.
@@ -203,20 +203,20 @@ feature -- Maximizing and minimizing applied to "not" single characters
 
 	op_notupto: INTEGER is 33
 			-- From 0 to n matches;
-			-- This opcode is followed by an integer (originally an int16) 
+			-- This opcode is followed by an integer (originally an int16)
 			-- corresponding to the number of matches, and then a character
 			-- code (originally a character) corresponding to the character
 			-- this opcode is applied to.
 
 	op_notminupto: INTEGER is 34
-			-- This opcode is followed by an integer (originally an int16) 
+			-- This opcode is followed by an integer (originally an int16)
 			-- corresponding to the number of matches, and then a character
 			-- code (originally a character) corresponding to the character
 			-- this opcode is applied to.
 
 	op_notexact: INTEGER is 35
 			-- Exactly n matches;
-			-- This opcode is followed by an integer (originally an int16) 
+			-- This opcode is followed by an integer (originally an int16)
 			-- corresponding to the number of matches, and then a character
 			-- code (originally a character) corresponding to the character
 			-- this opcode is applied to.
@@ -255,43 +255,43 @@ feature -- Maximizing and minimizing applied to character types such as \d
 
 	op_typeupto: INTEGER is 42
 			-- From 0 to n matches;
-			-- This opcode is followed by an integer (originally an int16) 
+			-- This opcode is followed by an integer (originally an int16)
 			-- corresponding to the number of matches, and then an opcode
 			-- (originally a character) corresponding to the character type
 			-- (such as \d) this opcode is applied to.
 
 	op_typeminupto: INTEGER is 43
-			-- This opcode is followed by an integer (originally an int16) 
+			-- This opcode is followed by an integer (originally an int16)
 			-- corresponding to the number of matches, and then an opcode
 			-- (originally a character) corresponding to the character type
 			-- (such as \d) this opcode is applied to.
 
 	op_typeexact: INTEGER is 44
 			-- Exactly n matches;
-			-- This opcode is followed by an integer (originally an int16) 
+			-- This opcode is followed by an integer (originally an int16)
 			-- corresponding to the number of matches, and then an opcode
 			-- (originally a character) corresponding to the character type
 			-- (such as \d) this opcode is applied to.
 
 feature -- Maximizing and minimizing applied to character classes and back refs
 
-	op_crstar: INTEGER is 45  
+	op_crstar: INTEGER is 45
 			-- This opcode is standalone (i.e. does not need to be followed
 			-- by something else in the byte code).
 
-	op_crminstar: INTEGER is 46  
+	op_crminstar: INTEGER is 46
 			-- This opcode is standalone (i.e. does not need to be followed
 			-- by something else in the byte code).
 
-	op_crplus: INTEGER is 47  
+	op_crplus: INTEGER is 47
 			-- This opcode is standalone (i.e. does not need to be followed
 			-- by something else in the byte code).
 
-	op_crminplus: INTEGER is 48  
+	op_crminplus: INTEGER is 48
 			-- This opcode is standalone (i.e. does not need to be followed
 			-- by something else in the byte code).
 
-	op_crquery: INTEGER is 49  
+	op_crquery: INTEGER is 49
 			-- This opcode is standalone (i.e. does not need to be followed
 			-- by something else in the byte code).
 
@@ -522,7 +522,11 @@ feature -- Access
 			when op_bra then
 				Result := "Bra"
 			else
-				Result := "unknown opcode"
+				if an_op > op_bra then
+					Result := "Bra" + (an_op - op_bra).out
+				else
+					Result := "unknown opcode"
+				end
 			end
 		ensure
 			op_name_not_void: Result /= Void

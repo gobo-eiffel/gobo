@@ -237,7 +237,13 @@ feature -- matcher commands
 		require
 			active_matcher: is_matcher_active
 		do
-			match_it (subject, subject_next_start, subject_end)
+			if offset_vector.item (0) >= offset_vector.item (1) and is_empty_allowed then
+				-- the last match was empty or doesnt exists. to avoid an infinit loop
+				-- we need to lead the matcher one step further
+				match_it (subject, subject_next_start + 1, subject_end)
+			else
+				match_it (subject, subject_next_start, subject_end)
+			end
 		end
 
 feature -- replace commands
@@ -450,6 +456,9 @@ feature {RX_PCRE_MATCHER} -- Implementation
 	subject_next_start: INTEGER
 		-- points after the last matched character
 
+	start_match: INTEGER
+		-- point to the first matched character
+
 feature {RX_PCRE_MATCHER}
 
 	offset_vector: like FIXED_INTEGER_ARRAY_TYPE
@@ -485,8 +494,6 @@ feature {NONE} -- Implementation
 			compiled: is_compiled
 			valid_subject: a_subject /= Void
 		local
-			start_match: INTEGER
-			start_bits: RX_CHARACTER_SET
 			first_char: INTEGER
 			req_char: INTEGER
 			req_char2: INTEGER
@@ -518,10 +525,6 @@ feature {NONE} -- Implementation
 					else
 						first_char := first_character
 					end
-				else
-	--				if not startline and then extra_index /= 0 and then extra_options.item(PCRE_STUDY_MAPPED_bit) then
-	--					start_bits := extra->start_bits
-	--				end
 				end
 			end
 
@@ -604,7 +607,7 @@ feature {NONE} -- Implementation
 					end
 
 					-- We don't need to repeat the search if we haven't yet reached the
-					--	place we found it at last time.
+					-- place we found it at last time.
 					if p > req_char_ptr then
 						if req_char = req_char2 then
 							-- Do a single test if no case difference is set up
@@ -643,8 +646,8 @@ feature {NONE} -- Implementation
 						stop := True
 					else
 						match_count := 0
-						start_match := start_match + 1
 						stop := is_anchored or else start_match > a_end
+						start_match := start_match + 1 -- yes, move at least one step behind the subject
 					end
 				end
 			end
