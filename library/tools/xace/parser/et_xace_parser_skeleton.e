@@ -5,7 +5,7 @@ indexing
 		"Xace parser skeletons"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2001-2002, Andreas Leitner and others"
+	copyright: "Copyright (c) 2001-2004, Andreas Leitner and others"
 	license: "Eiffel Forum License v2 (see forum.txt)"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -143,7 +143,6 @@ feature {NONE} -- AST factory
 			a_mount: ET_XACE_MOUNTED_LIBRARY
 			a_mounts: ET_XACE_MOUNTED_LIBRARIES
 			a_prefix: STRING
-			a_warning: UT_MESSAGE
 		do
 			if an_element.has_attribute_by_name (uc_name) then
 				a_name := an_element.attribute_by_name (uc_name).value
@@ -154,8 +153,7 @@ feature {NONE} -- AST factory
 						end
 						Result := ast_factory.new_cluster (a_name, a_pathname)
 						if an_element.has_attribute_by_name (uc_abstract) then
-							create a_warning.make (STRING_.concat ("Warning: attribute 'abstract' is obsolete, use <option name=%"abstract%" value=%"true/false%"/> instead%N", a_position_table.item (an_element).out))
-							error_handler.report_warning (a_warning)
+							error_handler.report_attribute_obsoleted_by_element_warning (an_element, uc_abstract, "<option name=%"abstract%" value=%"true/false%"/>", a_position_table.item (an_element))
 							a_bool := an_element.attribute_by_name (uc_abstract).value
 							if a_bool /= Void then
 								if is_true (a_bool) then
@@ -600,7 +598,6 @@ feature {NONE} -- Element change
 			a_clusters: ET_XACE_CLUSTERS
 			a_mount: ET_XACE_MOUNTED_LIBRARY
 			a_mounts: ET_XACE_MOUNTED_LIBRARIES
-			a_warning: UT_MESSAGE
 			a_pathname: STRING
 			i, nb: INTEGER
 			a_library_list: DS_ARRAYED_LIST [ET_XACE_MOUNTED_LIBRARY]
@@ -614,8 +611,7 @@ feature {NONE} -- Element change
 				end
 			end
 			if STRING_.same_string (an_element.name, uc_cluster) then
-				create a_warning.make (STRING_.concat ("Warning: <cluster> is obsolete, use <library> instead%N", a_position_table.item (an_element).out))
-				error_handler.report_warning (a_warning)
+				error_handler.report_element_obsoleted_by_element_warning (an_element, "<library>", a_position_table.item (an_element))
 				a_cluster := new_cluster (an_element, empty_prefix, a_position_table)
 				a_library.set_name (a_cluster.name)
 				a_pathname := a_cluster.pathname
@@ -710,7 +706,6 @@ feature {NONE} -- Element change
 			an_int: INTEGER
 			a_bool: STRING
 			a_key: STRING
-			a_warning: UT_MESSAGE
 		do
 			is_enclosing_option := True
 			if an_element.has_attribute_by_name (uc_name) then
@@ -1208,8 +1203,7 @@ feature {NONE} -- Element change
 					elseif STRING_.same_string (a_child.name, uc_option) then
 						fill_options (an_option, a_child, a_position_table)
 					elseif STRING_.same_string (a_child.name, uc_require) then
-						create a_warning.make (STRING_.concat ("Warning: <require> is obsolete, use <option name=%"assertion%" value=%"require%"/> instead%N", a_position_table.item (a_child).out))
-						error_handler.report_warning (a_warning)
+						error_handler.report_element_obsoleted_by_element_warning (a_child, "<option name=%"assertion%" value=%"require%"/>", a_position_table.item (a_child))
 						if a_child.has_attribute_by_name (uc_enable) then
 							a_bool := a_child.attribute_by_name (uc_enable).value
 							if a_bool /= Void then
@@ -1221,8 +1215,7 @@ feature {NONE} -- Element change
 							an_option.set_assertion (require_value)
 						end
 					elseif STRING_.same_string (a_child.name, uc_ensure) then
-						create a_warning.make (STRING_.concat ("Warning: <ensure> is obsolete, use <option name=%"assertion%" value=%"ensure%"/> instead%N", a_position_table.item (a_child).out))
-						error_handler.report_warning (a_warning)
+						error_handler.report_element_obsoleted_by_element_warning (a_child, "<option name=%"assertion%" value=%"ensure%"/>", a_position_table.item (a_child))
 						if a_child.has_attribute_by_name (uc_enable) then
 							a_bool := a_child.attribute_by_name (uc_enable).value
 							if a_bool /= Void then
@@ -1234,8 +1227,7 @@ feature {NONE} -- Element change
 							an_option.set_assertion (ensure_value)
 						end
 					elseif STRING_.same_string (a_child.name, uc_invariant) then
-						create a_warning.make (STRING_.concat ("Warning: <invariant> is obsolete, use <option name=%"assertion%" value=%"invariant%"/> instead%N", a_position_table.item (a_child).out))
-						error_handler.report_warning (a_warning)
+						error_handler.report_element_obsoleted_by_element_warning (a_child, "<option name=%"assertion%" value=%"invariant%"/>", a_position_table.item (a_child))
 						if a_child.has_attribute_by_name (uc_enable) then
 							a_bool := a_child.attribute_by_name (uc_enable).value
 							if a_bool /= Void then
@@ -1247,8 +1239,7 @@ feature {NONE} -- Element change
 							an_option.set_assertion (invariant_value)
 						end
 					elseif STRING_.same_string (a_child.name, uc_loop) then
-						create a_warning.make (STRING_.concat ("Warning: <loop> is obsolete, use <option name=%"assertion%" value=%"loop_[in]variant%"/> instead%N", a_position_table.item (a_child).out))
-						error_handler.report_warning (a_warning)
+						error_handler.report_element_obsoleted_by_element_warning (a_child, "<option name=%"assertion%" value=%"loop_[in]variant%"/>", a_position_table.item (a_child))
 						if a_child.has_attribute_by_name (uc_enable) then
 							a_bool := a_child.attribute_by_name (uc_enable).value
 							if a_bool /= Void then
@@ -1262,8 +1253,7 @@ feature {NONE} -- Element change
 							an_option.set_assertion (loop_variant_value)
 						end
 					elseif STRING_.same_string (a_child.name, uc_check) then
-						create a_warning.make (STRING_.concat ("Warning: <check> is obsolete, use <option name=%"assertion%" value=%"check%"/> instead%N", a_position_table.item (a_child).out))
-						error_handler.report_warning (a_warning)
+						error_handler.report_element_obsoleted_by_element_warning (a_child, "<option name=%"assertion%" value=%"check%"/>", a_position_table.item (a_child))
 						if a_child.has_attribute_by_name (uc_enable) then
 							a_bool := a_child.attribute_by_name (uc_enable).value
 							if a_bool /= Void then
@@ -1275,8 +1265,7 @@ feature {NONE} -- Element change
 							an_option.set_assertion (check_value)
 						end
 					elseif STRING_.same_string (a_child.name, uc_optimize) then
-						create a_warning.make (STRING_.concat ("Warning: <optimize> is obsolete, use <option name=%"finalize%" value=%"true%"/> instead%N", a_position_table.item (a_child).out))
-						error_handler.report_warning (a_warning)
+						error_handler.report_element_obsoleted_by_element_warning (a_child, "<option name=%"finalize%" value=%"true%"/>", a_position_table.item (a_child))
 						if a_child.has_attribute_by_name (uc_enable) then
 							a_bool := a_child.attribute_by_name (uc_enable).value
 							if a_bool /= Void then
@@ -1291,8 +1280,7 @@ feature {NONE} -- Element change
 						if a_child.has_attribute_by_name (uc_name) then
 							a_key := a_child.attribute_by_name (uc_name).value
 							if a_key /= Void then
-								create a_warning.make (STRING_.concat (STRING_.concat ("Warning: <debug> is obsolete, use <option name=%"debug_tag%" value=%"", a_key) + "%"/> instead%N", a_position_table.item (a_child).out))
-								error_handler.report_warning (a_warning)
+								error_handler.report_element_obsoleted_by_element_warning (a_child, STRING_.concat ("<option name=%"debug_tag%" value=%"", a_key) + "%"/>", a_position_table.item (a_child))
 								if a_child.has_attribute_by_name (uc_enable) then
 									a_bool := a_child.attribute_by_name (uc_enable).value
 									if a_bool /= Void then
@@ -1309,21 +1297,17 @@ feature {NONE} -- Element change
 								a_bool := a_child.attribute_by_name (uc_enable).value
 								if a_bool /= Void then
 									if is_true (a_bool) then
-										create a_warning.make (STRING_.concat ("Warning: <debug> is obsolete, use <option name=%"debug%" value=%"true%"/> instead%N", a_position_table.item (a_child).out))
-										error_handler.report_warning (a_warning)
+										error_handler.report_element_obsoleted_by_element_warning (a_child, "<option name=%"debug%" value=%"true%"/>", a_position_table.item (a_child))
 										an_option.set_debug_option (True)
 									elseif is_false (a_bool) then
-										create a_warning.make (STRING_.concat ("Warning: <debug> is obsolete, use <option name=%"debug%" value=%"false%"/> instead%N", a_position_table.item (a_child).out))
-										error_handler.report_warning (a_warning)
+										error_handler.report_element_obsoleted_by_element_warning (a_child, "<option name=%"debug%" value=%"false%"/>", a_position_table.item (a_child))
 										an_option.set_debug_option (False)
 									else
-										create a_warning.make (STRING_.concat ("Warning: <debug> is obsolete, use <option name=%"debug%" value=%"true/false%"/> instead%N", a_position_table.item (a_child).out))
-										error_handler.report_warning (a_warning)
+										error_handler.report_element_obsoleted_by_element_warning (a_child, "<option name=%"debug%" value=%"true/false%"/>", a_position_table.item (a_child))
 									end
 								end
 							else
-								create a_warning.make (STRING_.concat ("Warning: <debug> is obsolete, use <option name=%"debug%" value=%"true%"/> instead%N", a_position_table.item (a_child).out))
-								error_handler.report_warning (a_warning)
+								error_handler.report_element_obsoleted_by_element_warning (a_child, "<option name=%"debug%" value=%"true%"/>", a_position_table.item (a_child))
 								an_option.set_debug_option (True)
 							end
 						end

@@ -5,7 +5,7 @@ indexing
 		"Gobo Eiffel Xace"
 
 	system: "Gobo Eiffel Xace"
-	copyright: "Copyright (c) 2001-2002, Andreas Leitner and others"
+	copyright: "Copyright (c) 2001-2004, Andreas Leitner and others"
 	license: "Eiffel Forum License v2 (see forum.txt)"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -65,7 +65,7 @@ feature -- Access
 	variables: ET_XACE_VARIABLES
 			-- Defined variables
 
-	error_handler: ET_XACE_ERROR_HANDLER
+	error_handler: ET_XACE_DEFAULT_ERROR_HANDLER
 			-- Error handler
 
 feature {NONE} -- Command-line processing

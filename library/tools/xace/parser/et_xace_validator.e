@@ -5,7 +5,7 @@ indexing
 		"Xace XML validators"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2001-2002, Andreas Leitner and others"
+	copyright: "Copyright (c) 2001-2004, Andreas Leitner and others"
 	license: "Eiffel Forum License v2 (see forum.txt)"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -116,7 +116,6 @@ feature {NONE} -- Validation
 		local
 			a_cursor: DS_BILINEAR_CURSOR [XM_NODE]
 			a_child: XM_ELEMENT
-			a_warning: UT_MESSAGE
 		do
 			if not a_system.has_attribute_by_name (uc_name) then
 				has_error := True
@@ -142,8 +141,7 @@ feature {NONE} -- Validation
 						validate_named_cluster (a_child, a_position_table)
 					else
 							-- Old syntax.
-						create a_warning.make (STRING_.concat ("Warning: <cluster> is obsolete. Specify options, clusters and mounts directly under <system> instead%N", a_position_table.item (a_child).out))
-						error_handler.report_warning (a_warning)
+						error_handler.report_obsolete_cluster_element_warning (a_position_table.item (a_child))
 						validate_cluster (a_child, a_position_table)
 					end
 				elseif STRING_.same_string (a_child.name, uc_mount) then
@@ -152,8 +150,7 @@ feature {NONE} -- Validation
 					validate_option (a_child, a_position_table)
 				elseif STRING_.same_string (a_child.name, uc_external) then
 						-- Old syntax.
-					create a_warning.make (STRING_.concat ("Warning: <external> is obsolete, use <option name=%"header/link/export%" ...> instead%N", a_position_table.item (a_child).out))
-					error_handler.report_warning (a_warning)
+					error_handler.report_element_obsoleted_by_element_warning (a_child, "<option name=%"header/link/export%" ...>", a_position_table.item (a_child))
 					validate_external (a_child, a_position_table)
 				else
 					has_error := True
@@ -173,7 +170,6 @@ feature {NONE} -- Validation
 		local
 			a_cursor: DS_BILINEAR_CURSOR [XM_NODE]
 			a_child: XM_ELEMENT
-			a_warning: UT_MESSAGE
 		do
 			if not a_library.has_attribute_by_name (uc_name) then
 				has_error := True
@@ -194,8 +190,7 @@ feature {NONE} -- Validation
 					validate_option (a_child, a_position_table)
 				elseif STRING_.same_string (a_child.name, uc_external) then
 						-- Old syntax.
-					create a_warning.make (STRING_.concat ("Warning: <external> is obsolete, use <option name=%"header/link/export%" ...> instead%N", a_position_table.item (a_child).out))
-					error_handler.report_warning (a_warning)
+					error_handler.report_element_obsoleted_by_element_warning (a_child, "<option name=%"header/link/export%" ...>", a_position_table.item (a_child))
 					validate_external (a_child, a_position_table)
 				else
 					has_error := True
@@ -252,7 +247,6 @@ feature {NONE} -- Validation
 		local
 			a_cursor: DS_BILINEAR_CURSOR [XM_NODE]
 			a_child: XM_ELEMENT
-			a_warning: UT_MESSAGE
 		do
 			a_cursor := a_cluster.new_cursor
 			from a_cursor.start until a_cursor.after loop
@@ -271,8 +265,7 @@ feature {NONE} -- Validation
 					validate_class (a_child, a_position_table)
 				elseif STRING_.same_string (a_child.name, uc_external) then
 						-- Old syntax.
-					create a_warning.make (STRING_.concat ("Warning: <external> is obsolete, use <option name=%"header/link/export%" ...> instead%N", a_position_table.item (a_child).out))
-					error_handler.report_warning (a_warning)
+					error_handler.report_element_obsoleted_by_element_warning (a_child, "<option name=%"header/link/export%" ...>", a_position_table.item (a_child))
 					validate_external (a_child, a_position_table)
 				else
 					has_error := True
@@ -354,7 +347,6 @@ feature {NONE} -- Validation
 		local
 			a_cursor: DS_BILINEAR_CURSOR [XM_NODE]
 			a_child: XM_ELEMENT
-			a_warning: UT_MESSAGE
 		do
 			if not a_mount.has_attribute_by_name (uc_location) then
 				has_error := True
@@ -366,8 +358,7 @@ feature {NONE} -- Validation
 				if a_child = Void then
 						-- Not an element. Ignore.
 				elseif STRING_.same_string (a_child.name, uc_exclude) then
-					create a_warning.make (STRING_.concat ("Warning: <exclude> is obsolete, use if/unless attributes instead%N", a_position_table.item (a_child).out))
-					error_handler.report_warning (a_warning)
+					error_handler.report_obsolete_exclude_element_warning (a_position_table.item (a_child))
 					validate_exclude (a_child, a_position_table)
 				else
 					has_error := True
