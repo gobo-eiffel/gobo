@@ -45,7 +45,11 @@ feature {NONE} -- Initialization
 			-- Create a new directory object.
 		require
 			a_name_not_void: a_name /= Void
+#ifdef SE
+			a_name_not_empty: not a_name.is_empty
+#else
 			a_name_not_empty: not a_name.empty
+#endif
 #ifdef VE
 		local
 			a_mask: STRING
@@ -266,6 +270,10 @@ feature {NONE} -- Implementation
 invariant
 
 	name_not_void: name /= Void
+#ifdef SE
+	name_not_empty: not name.is_empty
+#else
 	name_not_empty: not name.empty
+#endif
 
 end -- class KL_DIRECTORY
