@@ -123,6 +123,9 @@
 		<set name="next_chapter" value="xslt_task"/>
 		<geant target="xslt"/>
 
+		<set name="next_chapter" value="introduction"/>
+		<geant target="xslt"/>
+
 	</target>
 
 	<target name="clean">
