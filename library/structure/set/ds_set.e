@@ -38,6 +38,41 @@ feature -- Access
 		deferred
 		end
 
+feature -- Status report
+
+	is_subset (other: DS_SET [G]): BOOLEAN is
+			-- Are all items of current set included in `other'?
+			-- (Use `equality_tester''s comparison criterion
+			-- if not void, use `=' criterion otherwise.)
+		require
+			other_not_void: other /= Void
+			same_equality_tester: same_equality_tester (other)
+		deferred
+		end
+
+	is_superset (other: DS_SET [G]): BOOLEAN is
+			-- Does current set include all items of `other'?
+			-- (Use `equality_tester''s comparison criterion
+			-- if not void, use `=' criterion otherwise.)
+		require
+			other_not_void: other /= Void
+			same_equality_tester: same_equality_tester (other)
+		do
+			Result := other.is_subset (Current)
+		ensure
+			definition: Result = other.is_subset (Current)
+		end
+
+	is_disjoint (other: DS_SET [G]): BOOLEAN is
+			-- Are none of the items of current set included in `other'?
+			-- (Use `equality_tester''s comparison criterion
+			-- if not void, use `=' criterion otherwise.)
+		require
+			other_not_void: other /= Void
+			same_equality_tester: same_equality_tester (other)
+		deferred
+		end
+
 feature -- Measurement
 
 	occurrences (v: G): INTEGER is
@@ -77,6 +112,55 @@ feature -- Removal
 			same_count: (not old has (v)) implies (count = old count)
 			one_less: (old has (v)) implies (count = old count - 1)
 			removed: not has (v)
+		end
+
+feature -- Basic operations
+
+	union (other: DS_SET [G]) is
+			-- Add all items of `other' to current set.
+			-- (Use `equality_tester''s comparison criterion
+			-- if not void, use `=' criterion otherwise.)
+		require
+			other_not_void: other /= Void
+			same_equality_tester: same_equality_tester (other)
+		deferred
+		ensure
+			is_superset: is_superset (other)
+		end
+
+	intersect (other: DS_SET [G]) is
+			-- Remove all items not included in `other'.
+			-- (Use `equality_tester''s comparison criterion
+			-- if not void, use `=' criterion otherwise.)
+		require
+			other_not_void: other /= Void
+			same_equality_tester: same_equality_tester (other)
+		deferred
+		ensure
+			is_subset: is_subset (other)
+		end
+
+	subtract (other: DS_SET [G]) is
+			-- Remove all items also included in `other'.
+			-- (Use `equality_tester''s comparison criterion
+			-- if not void, use `=' criterion otherwise.)
+		require
+			other_not_void: other /= Void
+			same_equality_tester: same_equality_tester (other)
+		deferred
+		ensure
+			is_disjoint: is_disjoint (other)
+		end
+
+	symdif (other: DS_SET [G]) is
+			-- Add items of `other' which are not included
+			-- in current set and remove those which are.
+			-- (Use `equality_tester''s comparison criterion
+			-- if not void, use `=' criterion otherwise.)
+		require
+			other_not_void: other /= Void
+			same_equality_tester: same_equality_tester (other)
+		deferred
 		end
 
 end -- class DS_SET
