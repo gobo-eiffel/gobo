@@ -507,6 +507,7 @@ feature {NONE} -- CAT-calls
 			l_visited_sources: DS_ARRAYED_LIST [ET_DYNAMIC_ATTACHMENT]
 			l_source_stack: DS_ARRAYED_STACK [ET_DYNAMIC_ATTACHMENT]
 			i, nb: INTEGER
+			j, nb2: INTEGER
 		do
 -- TODO: better error message reporting.
 			l_message := shared_error_message
@@ -537,26 +538,32 @@ feature {NONE} -- CAT-calls
 			l_visited_sources.wipe_out
 			l_source_stack := shared_source_stack
 			l_source_stack.wipe_out
-			l_message.append_string ("%TTarget type: '")
-			l_message.append_string (a_target_type.base_type.to_text)
-			l_message.append_string ("'%N")
 			from
+				nb := 0
+				l_message.append_string ("%TTarget type: '")
+				l_message.append_string (a_target_type.base_type.to_text)
+				l_message.append_string ("'%N")
 				l_type_set := a_call.target_type_set
 			until
 				l_type_set = Void
 			loop
-				from
-					l_source := l_type_set.sources
-					l_type_set := Void
-				until
-					l_source = Void
-				loop
-					if l_source.has_type (a_target_type) then
+				if l_type_set = a_target_type then
+					nb2 := 0
+					from i := 1 until i > nb loop
+						l_source := l_source_stack.i_th (i)
+						if not l_source.is_null_attachment then
+							nb2 := nb2 + 1
+						end
+						i := i + 1
+					end
+					nb := l_source_stack.count
+					from until i > nb loop
+						l_source := l_source_stack.i_th (i)
 						if not l_source.is_null_attachment then
 							l_message.append_string ("%T%T")
-							from i := 1 until i > nb loop
+							from j := 1 until j > nb2 loop
 								l_message.append_character ('.')
-								i := i + 1
+								j := j + 1
 							end
 							l_message.append_string ("class ")
 							l_message.append_string (l_source.current_type.base_type.to_text)
@@ -570,60 +577,72 @@ feature {NONE} -- CAT-calls
 							l_message.append_character (',')
 							l_message.append_string (l_source.position.column.out)
 							l_message.append_character (')')
+							l_message.append_character ('%N')
+							nb2 := nb2 + 1
 						end
-						if not l_visited_sources.has (l_source) then
-							if not l_source.is_null_attachment then
-								l_message.append_character ('%N')
-								nb := nb + 1
-							end
-							l_source_stack.force (l_source)
-							l_visited_sources.force_last (l_source)
-							l_type_set := l_source.source_type_set
-								-- Jump out of the loop.
-							l_source := Void
-						else
-							if not l_source.is_null_attachment then
-								l_message.append_string (" -- already visited%N")
-							end
-							from
-								l_source := Void
-							until
-								l_source_stack.is_empty or l_source /= Void
-							loop
-								l_source := l_source_stack.item
-								l_source_stack.remove
-								if not l_source.is_null_attachment then
-									nb := nb - 1
-								end
-								l_source := l_source.next_attachment
+						i := i + 1
+					end
+					from
+						l_source := Void
+					until
+						l_source /= Void or l_source_stack.is_empty
+					loop
+						l_source := l_source_stack.item.next_attachment
+						l_source_stack.remove
+						if nb > l_source_stack.count then
+							nb := l_source_stack.count
+						end
+					end
+				else
+					l_source := l_type_set.sources
+				end
+				from
+					l_type_set := Void
+				until
+					l_source = Void
+				loop
+					if l_visited_sources.has (l_source) then
+						from
+							l_source := l_source.next_attachment
+						until
+							l_source /= Void or l_source_stack.is_empty
+						loop
+							l_source := l_source_stack.item.next_attachment
+							l_source_stack.remove
+							if nb > l_source_stack.count then
+								nb := l_source_stack.count
 							end
 						end
+					elseif l_source.has_type (a_target_type) then
+						l_visited_sources.force_last (l_source)
+						l_source_stack.force (l_source)
+						l_type_set := l_source.source_type_set
+							-- Jump out of the loop.
+						l_source := Void
 					else
 						from
 							l_source := l_source.next_attachment
 						until
-							l_source_stack.is_empty or l_source /= Void
+							l_source /= Void or l_source_stack.is_empty
 						loop
-							l_source := l_source_stack.item
+							l_source := l_source_stack.item.next_attachment
 							l_source_stack.remove
-							if not l_source.is_null_attachment then
-								nb := nb - 1
+							if nb > l_source_stack.count then
+								nb := l_source_stack.count
 							end
-							l_source := l_source.next_attachment
 						end
 					end
 				end
 			end
 			l_visited_sources.wipe_out
 			l_source_stack.wipe_out
-			nb := 0
-			l_message.append_string ("%TArgument type: '")
-			l_message.append_string (an_actual_type.base_type.to_text)
-			l_message.append_string ("'%N")
 			from
+				nb := 0
+				l_message.append_string ("%TArgument type: '")
+				l_message.append_string (an_actual_type.base_type.to_text)
+				l_message.append_string ("'%N")
 				l_source := an_actual_source
 				l_visited_sources.force_last (l_source)
-				l_source_stack.force (l_source)
 				if not l_source.is_null_attachment then
 					l_message.append_string ("%T%Tclass ")
 					l_message.append_string (l_source.current_type.base_type.to_text)
@@ -637,24 +656,28 @@ feature {NONE} -- CAT-calls
 					l_message.append_character (',')
 					l_message.append_string (l_source.position.column.out)
 					l_message.append_string (")%N")
-					nb := nb + 1
 				end
 				l_type_set := l_source.source_type_set
 			until
 				l_type_set = Void
 			loop
-				from
-					l_source := l_type_set.sources
-					l_type_set := Void
-				until
-					l_source = Void
-				loop
-					if l_source.has_type (an_actual_type) then
+				if l_type_set = an_actual_type then
+					nb2 := 1
+					from i := 1 until i > nb loop
+						l_source := l_source_stack.i_th (i)
+						if not l_source.is_null_attachment then
+							nb2 := nb2 + 1
+						end
+						i := i + 1
+					end
+					nb := l_source_stack.count
+					from until i > nb loop
+						l_source := l_source_stack.i_th (i)
 						if not l_source.is_null_attachment then
 							l_message.append_string ("%T%T")
-							from i := 1 until i > nb loop
+							from j := 1 until j > nb2 loop
 								l_message.append_character ('.')
-								i := i + 1
+								j := j + 1
 							end
 							l_message.append_string ("class ")
 							l_message.append_string (l_source.current_type.base_type.to_text)
@@ -668,46 +691,59 @@ feature {NONE} -- CAT-calls
 							l_message.append_character (',')
 							l_message.append_string (l_source.position.column.out)
 							l_message.append_character (')')
+							l_message.append_character ('%N')
+							nb2 := nb2 + 1
 						end
-						if not l_visited_sources.has (l_source) then
-							if not l_source.is_null_attachment then
-								l_message.append_character ('%N')
-								nb := nb + 1
-							end
-							l_source_stack.force (l_source)
-							l_visited_sources.force_last (l_source)
-							l_type_set := l_source.source_type_set
-								-- Jump out of the loop.
-							l_source := Void
-						else
-							if not l_source.is_null_attachment then
-								l_message.append_string (" -- already visited%N")
-							end
-							from
-								l_source := Void
-							until
-								l_source_stack.is_empty or l_source /= Void
-							loop
-								l_source := l_source_stack.item
-								l_source_stack.remove
-								if not l_source.is_null_attachment then
-									nb := nb - 1
-								end
-								l_source := l_source.next_attachment
+						i := i + 1
+					end
+					from
+						l_source := Void
+					until
+						l_source /= Void or l_source_stack.is_empty
+					loop
+						l_source := l_source_stack.item.next_attachment
+						l_source_stack.remove
+						if nb > l_source_stack.count then
+							nb := l_source_stack.count
+						end
+					end
+				else
+					l_source := l_type_set.sources
+				end
+				from
+					l_type_set := Void
+				until
+					l_source = Void
+				loop
+					if l_visited_sources.has (l_source) then
+						from
+							l_source := l_source.next_attachment
+						until
+							l_source /= Void or l_source_stack.is_empty
+						loop
+							l_source := l_source_stack.item.next_attachment
+							l_source_stack.remove
+							if nb > l_source_stack.count then
+								nb := l_source_stack.count
 							end
 						end
+					elseif l_source.has_type (an_actual_type) then
+						l_visited_sources.force_last (l_source)
+						l_source_stack.force (l_source)
+						l_type_set := l_source.source_type_set
+							-- Jump out of the loop.
+						l_source := Void
 					else
 						from
 							l_source := l_source.next_attachment
 						until
-							l_source_stack.is_empty or l_source /= Void
+							l_source /= Void or l_source_stack.is_empty
 						loop
-							l_source := l_source_stack.item
+							l_source := l_source_stack.item.next_attachment
 							l_source_stack.remove
-							if not l_source.is_null_attachment then
-								nb := nb - 1
+							if nb > l_source_stack.count then
+								nb := l_source_stack.count
 							end
-							l_source := l_source.next_attachment
 						end
 					end
 				end
