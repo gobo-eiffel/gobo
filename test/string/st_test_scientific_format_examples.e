@@ -57,7 +57,7 @@ feature -- Basic tests
 				i > double_format_strings.upper
 			loop
 				format_string := "?" + double_format_strings.item (i)
-				assert_equal (format_string, double_results.item (i), format (format_string, <<double_value>>))
+				assert_equal (format_string, double_results.item (i), format (format_string, <<double_cell (double_value)>>))
 				i := i + 1
 			end
 		end

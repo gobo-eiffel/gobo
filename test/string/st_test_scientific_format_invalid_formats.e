@@ -39,27 +39,25 @@ feature -- Tests
 	test_bad_width is
 			-- Test width not present or not an integer.
 		do
-			-- Array with just INTEGER and DOUBLE together crashes VE
-			assert (bad_format_3, not is_correct_format_and_parameters (bad_format_3, <<integer_one, double_one_and_a_half>>))
-			assert (bad_format_3, not is_correct_format_and_parameters (bad_format_3, <<double_one_and_a_half, integer_one>>))
-			assert (bad_format_4, not is_correct_format_and_parameters (bad_format_4, <<1>>))
+			assert (bad_format_3, not is_correct_format_and_parameters (bad_format_3, <<integer_cell (1), double_cell (1.5)>>))
+			assert (bad_format_3, not is_correct_format_and_parameters (bad_format_3, <<double_cell (1.5), integer_cell (1)>>))
+			assert (bad_format_4, not is_correct_format_and_parameters (bad_format_4, <<integer_cell (1)>>))
 		end
 
 	test_bad_precision is
 			-- Test precision not present or not an integer.
 		do
-			-- Array with just INTEGER and DOUBLE together crashes VE
-			assert (bad_format_5, not is_correct_format_and_parameters (bad_format_5, <<integer_one, double_one_and_a_half>>))
-			assert (bad_format_6, not is_correct_format_and_parameters (bad_format_6, <<1>>))
-			assert (bad_format_7, not is_correct_format_and_parameters (bad_format_7, <<1>>))
+			assert (bad_format_5, not is_correct_format_and_parameters (bad_format_5, <<integer_cell (1), double_cell (1.5)>>))
+			assert (bad_format_6, not is_correct_format_and_parameters (bad_format_6, <<integer_cell (1)>>))
+			assert (bad_format_7, not is_correct_format_and_parameters (bad_format_7, <<integer_cell (1)>>))
 		end
 
 	test_bad_flags is
 			-- Test invalid combination of flags
 		do
-			assert (bad_format_8, not is_correct_format_and_parameters (bad_format_8, <<1>>))
-			assert (bad_format_9, not is_correct_format_and_parameters (bad_format_9, <<1>>))
-			assert (bad_format_10, not is_correct_format_and_parameters (bad_format_10, <<1>>))
+			assert (bad_format_8, not is_correct_format_and_parameters (bad_format_8, <<integer_cell (1)>>))
+			assert (bad_format_9, not is_correct_format_and_parameters (bad_format_9, <<integer_cell (1)>>))
+			assert (bad_format_10, not is_correct_format_and_parameters (bad_format_10, <<integer_cell (1)>>))
 		end
 
 feature {NONE} -- Format strings
@@ -83,19 +81,5 @@ feature {NONE} -- Format strings
 	bad_format_9: STRING is "?^-i"
 
 	bad_format_10: STRING is "?^^i"
-
-feature {NONE} -- Numbers as reference
-
-	integer_one: INTEGER_REF is
-		once
-			create Result
-			Result.set_item (1)
-		end
-
-	double_one_and_a_half: DOUBLE_REF is
-		once
-			create Result
-			Result.set_item (1.5)
-		end
 
 end
