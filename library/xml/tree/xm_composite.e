@@ -25,7 +25,17 @@ inherit
 			is_last as list_is_last
 		undefine
 			-- Descendants will bring in the DS_LINKED_LIST versions
-			has, search_forth, search_back, cursor_off, occurrences
+			has, search_forth, search_back, cursor_off, occurrences,
+			-- following required by Eiffel Studio
+			initialized, to_array,
+			equality_tester_settable, same_equality_tester,
+			set_equality_tester,
+			add_traversing_cursor, remove_traversing_cursor,
+			start, finish, back, forth, go_before, go_after, 
+			off, before, after, go_to, 
+			is_empty, item_for_iteration, valid_cursor, 
+			same_items, same_position,
+			list_is_first, list_is_last
 		end
 			
 	KL_IMPORTED_STRING_ROUTINES

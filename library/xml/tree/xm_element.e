@@ -20,6 +20,7 @@ inherit
 		undefine
 			root_node
 		redefine
+			equality_tester,
 			remove_namespace_declarations_from_attributes_recursive
 		end
 
@@ -38,6 +39,8 @@ inherit
 			make as make_list,
 			is_first as list_is_first,
 			is_last as list_is_last
+		redefine
+			equality_tester
 		end
 				
 creation
@@ -74,6 +77,10 @@ feature {NONE} -- Initialization
 			make (a_parent, a_name, a_ns)
 		end
 
+feature -- List
+
+	equality_tester: KL_EQUALITY_TESTER [XM_ELEMENT_NODE]
+	
 feature -- Status report
 
 	has_attribute_by_name (a_name: STRING): BOOLEAN is

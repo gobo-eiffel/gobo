@@ -16,6 +16,7 @@ inherit
 
 	XM_COMPOSITE
 		redefine
+			equality_tester,
 			root_node
 		end
 
@@ -24,6 +25,8 @@ inherit
 			make as make_list,
 			is_first as list_is_first,
 			is_last as list_is_last
+		redefine
+			equality_tester
 		end
 		
 creation
@@ -31,7 +34,7 @@ creation
 	make
 
 feature {NONE} -- Initialization
-
+	
 	make is
 			-- Create root node.
 		local
@@ -44,6 +47,10 @@ feature {NONE} -- Initialization
 		end
 
 	Default_name: STRING is "root"
+	
+feature -- List
+
+	equality_tester: KL_EQUALITY_TESTER [XM_DOCUMENT_NODE]
 	
 feature -- Access
 
