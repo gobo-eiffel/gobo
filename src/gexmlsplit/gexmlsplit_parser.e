@@ -22,7 +22,7 @@ inherit
 			on_end_tag
 		end
 
-	UC_UNICODE_FACTORY
+	KL_IMPORTED_STRING_ROUTINES
 		export {NONE} all end
 
 creation
@@ -45,7 +45,7 @@ feature {NONE} -- Initialization
 
 feature -- XML Callback handling
 
-	on_start_tag (a_namespace: UC_STRING; a_prefix: UC_STRING; a_local_part: UC_STRING) is
+	on_start_tag (a_namespace: STRING; a_prefix: STRING; a_local_part: STRING) is
 			-- Check for "element" start tags, be sure not to let
 			-- them through to the dispatcher, as they should not
 			-- appear in any of the output documents.
@@ -53,19 +53,19 @@ feature -- XML Callback handling
 			current_element_name := clone (a_local_part)
 			current_href_value := Void
 
-			if not a_local_part.is_equal (uc_document) then
+			if not STRING_.same_unicode_string (a_local_part, uc_document) then
 				Precursor (a_namespace, a_prefix, a_local_part)
 			end
 		end
 
-	on_attribute (a_namespace: UC_STRING; a_prefix: UC_STRING; a_local_part: UC_STRING; a_value: UC_STRING) is
+	on_attribute (a_namespace: STRING; a_prefix: STRING; a_local_part: STRING; a_value: STRING) is
 			-- Check for "href" attribute of "element" start tags, be
 			-- sure not to let any attributes of element "document"
 			-- through to the dispatcher, as they should not appear in
 			-- any of the output documents.
 		do
-			if current_element_name.is_equal (uc_document) then
-				if a_local_part.is_equal (uc_href) then
+			if STRING_.same_unicode_string (current_element_name, uc_document) then
+				if STRING_.same_unicode_string (a_local_part, uc_href) then
 					current_href_value := clone (a_value)
 				end
 			else
@@ -85,12 +85,12 @@ feature -- XML Callback handling
 			end
 		end
 
-	on_end_tag (a_namespace: UC_STRING; a_prefix: UC_STRING; a_local_part: UC_STRING) is
+	on_end_tag (a_namespace: STRING; a_prefix: STRING; a_local_part: STRING) is
 			-- Check of "element" end tags and be sure to not let
 			-- them through to the dispatcher as they should not
 			-- appear in any of the output documents.
 		do
-			if a_local_part.is_equal (uc_document) then
+			if STRING_.same_unicode_string (a_local_part, uc_document) then
 				gexmlsplit_dispatcher.remove
 			else
 				Precursor (a_namespace, a_prefix, a_local_part)
@@ -102,28 +102,28 @@ feature {NONE} -- Access
 	gexmlsplit_dispatcher: GEXMLSPLIT_DISPATCHER
 			-- Dispatcher to notify of found "document" elements
 
-	current_element_name: UC_STRING
+	current_element_name: STRING
 			-- Current element name in input document
 
-	current_href_value: UC_STRING
+	current_href_value: STRING
 			-- Current "href" attribute of "document" element in
 			-- input document
 
 feature {NONE} -- XML Element and Attibute names
 
-	uc_document: UC_STRING is
+	uc_document: STRING is
 			-- Constant for the "document" element
 		once
-			Result := new_unicode_string ("document")
+			Result := "document"
 		ensure
 			uc_document_not_void: Result /= Void
 			uc_document_not_empty: Result.count > 0
 		end
 
-	uc_href: UC_STRING is
+	uc_href: STRING is
 			-- Constant for the "href" attribute of the "document" element
 		once
-			Result := new_unicode_string ("href")
+			Result := "href"
 		ensure
 			uc_file_name_not_void: Result /= Void
 			uc_file_name_not_empty: Result.count > 0

@@ -84,6 +84,7 @@ feature -- Processing
 			error_handler.report_info_message ("parsing data...")
 
 			!XM_EIFFEL_PARSER! a_xml_parser.make
+			a_xml_parser.set_string_mode_mixed
 			!! a_gexmlsplit_dispatcher.make (error_handler)
 			!! a_gexmlsplit_parser.make (a_gexmlsplit_dispatcher)
 
