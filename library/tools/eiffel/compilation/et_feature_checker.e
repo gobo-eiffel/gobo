@@ -532,7 +532,7 @@ feature {NONE} -- Locals/Arguments validity
 			if type_checker.has_fatal_error then
 				set_fatal_error
 			else
-				if a_type.is_expanded_type (current_class, universe) then
+				if a_type.is_type_expanded (current_class, universe) then
 					a_class_type ?= a_type.named_type (current_class, universe)
 					if a_class_type /= Void then
 						type_checker.check_creation_type_validity (a_class_type, current_feature, current_class, a_type.position)

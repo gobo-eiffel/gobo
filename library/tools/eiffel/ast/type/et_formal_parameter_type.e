@@ -228,7 +228,7 @@ feature -- Access
 
 feature -- Status report
 
-	is_expanded_type (a_context: ET_TYPE_CONTEXT; a_universe: ET_UNIVERSE): BOOLEAN is
+	is_type_expanded (a_context: ET_TYPE_CONTEXT; a_universe: ET_UNIVERSE): BOOLEAN is
 			-- Is current type expanded when viewed from
 			-- `a_context' in `a_universe'?
 		do

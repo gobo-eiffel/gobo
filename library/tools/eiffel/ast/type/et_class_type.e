@@ -130,16 +130,6 @@ feature -- Status report
 			definition: Result = (actual_parameters /= Void and then not actual_parameters.is_empty)
 		end
 
-	is_expanded: BOOLEAN is
-			-- Is current type expanded?
-		do
-			if type_mark /= Void then
-				Result := type_mark.is_expanded
-			else
-				Result := eiffel_class.is_expanded
-			end
-		end
-
 	is_separate: BOOLEAN is
 			-- Is current type separate?
 		do
@@ -192,7 +182,17 @@ feature -- Status report
 			end
 		end
 
-	is_expanded_type (a_context: ET_TYPE_CONTEXT; a_universe: ET_UNIVERSE): BOOLEAN is
+	is_expanded: BOOLEAN is
+			-- Is current type expanded?
+		do
+			if type_mark /= Void then
+				Result := type_mark.is_expanded
+			else
+				Result := eiffel_class.is_expanded
+			end
+		end
+
+	is_type_expanded (a_context: ET_TYPE_CONTEXT; a_universe: ET_UNIVERSE): BOOLEAN is
 			-- Is current type expanded when viewed from
 			-- `a_context' in `a_universe'?
 		do

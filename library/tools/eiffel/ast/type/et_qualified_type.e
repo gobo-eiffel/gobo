@@ -214,7 +214,7 @@ feature -- Status report
 			-- Is this type a 'like argument' (rather than a
 			-- 'like feature' or a 'like *.feature')?
 
-	is_expanded_type (a_context: ET_TYPE_CONTEXT; a_universe: ET_UNIVERSE): BOOLEAN is
+	is_type_expanded (a_context: ET_TYPE_CONTEXT; a_universe: ET_UNIVERSE): BOOLEAN is
 			-- Is current type expanded when viewed from
 			-- `a_context' in `a_universe'?
 		local
@@ -235,7 +235,7 @@ feature -- Status report
 					a_query_type := seeded_feature.type
 					if a_query_type /= Void then
 						create a_target_context.make (a_target_type, a_context)
-						Result := a_query_type.is_expanded_type (a_target_context, a_universe)
+						Result := a_query_type.is_type_expanded (a_target_context, a_universe)
 					else
 							-- Internal error: an inconsistency has been
 							-- introduced in the AST since we relsolved
