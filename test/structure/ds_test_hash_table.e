@@ -25,7 +25,7 @@ feature -- Test
 		do
 			create a_table.make (10)
 			assert ("empty1", a_table.is_empty)
-			assert_equal ("capacity", 10, a_table.capacity)
+			assert_integers_equal ("capacity", 10, a_table.capacity)
 			a_table.put (1, 1)
 			a_table.force (2, 2)
 			a_table.put_new (3, 3)

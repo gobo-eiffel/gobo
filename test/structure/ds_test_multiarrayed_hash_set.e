@@ -25,7 +25,7 @@ feature -- Test
 		do
 			create a_set.make_with_chunk_size (10, 2)
 			assert ("empty1", a_set.is_empty)
-			assert_equal ("capacity", 10, a_set.capacity)
+			assert_integers_equal ("capacity", 10, a_set.capacity)
 			a_set.put (1)
 			a_set.force (2)
 			a_set.put_new (3)

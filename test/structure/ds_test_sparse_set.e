@@ -26,12 +26,12 @@ feature -- Test
 			create {DS_HASH_SET [INTEGER]} a_set.make (10)
 			assert ("not_void1", a_set /= Void)
 			assert ("empty1", a_set.is_empty)
-			assert_equal ("capacity", 10, a_set.capacity)
+			assert_integers_equal ("capacity", 10, a_set.capacity)
 			check_integer_set1 (a_set)
 			create {DS_MULTIARRAYED_HASH_SET [INTEGER]} a_set.make_with_chunk_size (10, 2)
 			assert ("not_void1", a_set /= Void)
 			assert ("empty1", a_set.is_empty)
-			assert_equal ("capacity", 10, a_set.capacity)
+			assert_integers_equal ("capacity", 10, a_set.capacity)
 			check_integer_set1 (a_set)
 		end
 
