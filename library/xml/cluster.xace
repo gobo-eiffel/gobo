@@ -51,10 +51,8 @@
 				<link_library location="expat"/>
 			</external>
 			<external if="${GOBO_OS}=windows">
-				<include_dir location="${EXPAT}/Source/lib"/>
-				<link_library_dir location="${EXPAT}/Libs" unless="${GOBO_SE_LCC}"/>
-				<link_library location="expat.lib" unless="${GOBO_SE_LCC}"/>
-				<link_library location="${EXPAT}\Libs\expat.lib" if="${GOBO_SE_LCC}"/>
+				<include_dir location="${EXPAT}\Source\lib"/>
+				<link_library location="${EXPAT}\Libs\expat.lib"/>
 			</external>
 		</cluster>
 		<cluster name="eiffel" abstract="True">
