@@ -113,7 +113,7 @@ feature -- Element change
 
 feature -- Convertion
 
-	convert (classes: LX_EQUIVALENCE_CLASSES) is
+	convert_to_equivalence (classes: LX_EQUIVALENCE_CLASSES) is
 			-- Convert symbol class to class made of its
 			-- symbols' equivalence classes.
 		require
