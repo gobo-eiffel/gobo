@@ -18,7 +18,7 @@ indexing
 	-- system literal accepts non-CHAR
 	-- use CONTENTCHAR+ for attribute value?
 
-class XF_FULL_SCANNER
+class XM_EIFFEL_SCANNER
 
 inherit
 
@@ -28,21 +28,14 @@ inherit
 		redefine
 			new_file_buffer,
 			set_input_buffer,
-			reset,
-			fatal_error
+			reset, fatal_error
 		end
 
-	XF_PARSER_TOKENS
-		export
-			{NONE} all
-		end
+	XM_EIFFEL_TOKENS
+		export {NONE} all end
 
-	XF_PARSER_ERRORS
-		export
-			{NONE} all
-		end
-
-	XF_UTF8_PRIVATE_ROUTINES
+	XM_EIFFEL_PARSER_ERRORS
+		export {NONE} all end
 
 creation
 
@@ -105,7 +98,7 @@ SYSTEMLITERAL ((['][\r\n\t\x20-&(-\xFF]*['])|(["][\r\n\t\x20-!#-\xFF]*["]))
 
 %%
 
--- useless rule for avoiding SmallEiffel empty-when bug.
+-- Useless rule for avoiding SmallEiffel empty-when bug.
 -- obsolete Gobo 2.0 and new smalleiffel
 --<*><<EOF>> { terminate }
 	
@@ -142,7 +135,7 @@ SYSTEMLITERAL ((['][\r\n\t\x20-&(-\xFF]*['])|(["][\r\n\t\x20-!#-\xFF]*["]))
 		}
 	}
 
--- Processing Instruction and XML Declaration
+-- Processing Instruction and XML Declaration.
 
 
 <initial,doctype>{
@@ -153,11 +146,11 @@ SYSTEMLITERAL ((['][\r\n\t\x20-&(-\xFF]*['])|(["][\r\n\t\x20-!#-\xFF]*["]))
 		}
 
 		"<?"[Xx][Mm][Ll]({SPACECHAR}+|"?>") {
-			-- "<?xml" matched by previous rule when allowed
+				-- "<?xml" matched by previous rule when allowed.
 			set_last_token (PI_RESERVED)
 		}
 		"<?" {
-			-- <?xml caught by previous rules
+				-- <?xml caught by previous rules.
 			set_last_token (PI_START)
 			push_start_condition (processinginstruction)
 		}
@@ -170,20 +163,20 @@ SYSTEMLITERAL ((['][\r\n\t\x20-&(-\xFF]*['])|(["][\r\n\t\x20-!#-\xFF]*["]))
 			pop_start_condition
 		}
 
-		-- Version declaration
+			-- Version declaration.
 		"version"{EQUAL}({APOS}"1.0"{APOS}|{QUOT}"1.0"{QUOT}) {
 			set_last_token (XMLDECLARATION_VERSION) 
 		}
 
-		-- Standalone declaration
+			-- Standalone declaration.
 		"standalone"{EQUAL}({APOS}"yes"{APOS}|{QUOT}"yes"{QUOT}) {
 			set_last_token (XMLDECLARATION_STANDALONE_YES) 
 		}
-		
+
 		"standalone"{EQUAL}({APOS}"no"{APOS}|{QUOT}"no"{QUOT}) {
 			set_last_token (XMLDECLARATION_STANDALONE_NO) 
 		}
-	
+
 		"encoding"{EQUAL}({APOS}{VALIDENCODING}{APOS}|{QUOT}{VALIDENCODING}{QUOT}) {
 			set_last_token (XMLDECLARATION_ENCODING)
 		}
@@ -208,7 +201,7 @@ SYSTEMLITERAL ((['][\r\n\t\x20-&(-\xFF]*['])|(["][\r\n\t\x20-!#-\xFF]*["]))
 			last_value := text
 		}
 		{NAMECHAR}+ {
-			-- get more than one at a time
+				-- Get more than one at a time.
 			set_last_token (CHARDATA)
 			last_value := text
 		}
@@ -217,8 +210,8 @@ SYSTEMLITERAL ((['][\r\n\t\x20-&(-\xFF]*['])|(["][\r\n\t\x20-!#-\xFF]*["]))
 			last_value := text
 		}
 	}
-		
--- CDATA section
+
+-- CDATA section.
 
 "<![CDATA[" {
 	set_last_token (CDATA_START)
@@ -232,12 +225,12 @@ SYSTEMLITERAL ((['][\r\n\t\x20-&(-\xFF]*['])|(["][\r\n\t\x20-!#-\xFF]*["]))
 			pop_start_condition
 		}
 		("\r\n"|"\r"|"\n") {
-	 		-- end of line handling XML1.0:2.11
+	 			-- End of line handling XML1.0:2.11.
 			set_last_token (CHARDATA)
 			last_value := normalized_newline
 		}
 		{CONTENTCHAR}+ {
-			-- big chunks in last_value
+				-- Big chunks in `last_value'.
 			set_last_token (CHARDATA)
 			last_value := text
 		}
@@ -310,21 +303,21 @@ SYSTEMLITERAL ((['][\r\n\t\x20-&(-\xFF]*['])|(["][\r\n\t\x20-!#-\xFF]*["]))
 			push_start_condition (doctype)
 		}
 	}
-	
+
 <doctype>
 	{
-		-- NAME matches: "SYSTEM" "PUBLIC"
-		
+		-- NAME matches: "SYSTEM" "PUBLIC".
+
 		"[" {
 			set_last_token (DOCTYPE_DECLARATION_START)
-			push_start_condition (doctype) -- same, but balances end
+			push_start_condition (doctype) -- Same, but balances end.
 		}
-		
+
 		"]" {
 			set_last_token (DOCTYPE_DECLARATION_END)
 			pop_start_condition
 		}
-		
+
 		"<!ELEMENT" {
 			set_last_token (DOCTYPE_ELEMENT)
 			push_start_condition (dtd_element)
@@ -351,7 +344,7 @@ SYSTEMLITERAL ((['][\r\n\t\x20-&(-\xFF]*['])|(["][\r\n\t\x20-!#-\xFF]*["]))
 			set_last_token (DOCTYPE_INCLUDE)
 			last_value := text
 		}
-		
+
 		"<![" {
 			set_last_token (DOCTYPE_CONDITIONAL_START)
 		}
@@ -365,7 +358,7 @@ SYSTEMLITERAL ((['][\r\n\t\x20-&(-\xFF]*['])|(["][\r\n\t\x20-!#-\xFF]*["]))
 	{
 		"<![" {
 			set_last_token (DOCTYPE_CONDITIONAL_START)
-			push_start_condition (dtd_ignore) -- self, for exit
+			push_start_condition (dtd_ignore) -- Self, for exit.
 		}
 
 		"]]>" {
@@ -377,7 +370,7 @@ SYSTEMLITERAL ((['][\r\n\t\x20-&(-\xFF]*['])|(["][\r\n\t\x20-!#-\xFF]*["]))
 			set_last_token (CHARDATA)
 		}
 	}
-	
+
 <dtd_element>
 	{
 		"#PCDATA" { set_last_token (DOCTYPE_PCDATA) }
@@ -386,7 +379,7 @@ SYSTEMLITERAL ((['][\r\n\t\x20-&(-\xFF]*['])|(["][\r\n\t\x20-!#-\xFF]*["]))
 			set_last_token (DOCTYPE_ELEMENT_EMPTY)
 			last_value := text
 		}
-		
+
 		"ANY" {
 			set_last_token (DOCTYPE_ELEMENT_ANY)
 			last_value := text
@@ -400,14 +393,14 @@ SYSTEMLITERAL ((['][\r\n\t\x20-&(-\xFF]*['])|(["][\r\n\t\x20-!#-\xFF]*["]))
 			last_value := text
 		}
 	}
-	
+
 <doctype, dtd_in, dtd_element, dtd_attlist, dtd_entity, dtd_notation> 
 	{
 		">" { 
 			set_last_token (DOCTYPE_END)
 			pop_start_condition
 		}
-		
+
 		{NAMECHAR_FIRST}{NAMECHAR}* { 
 			set_last_token (NAME) 
 			last_value := text
@@ -416,18 +409,18 @@ SYSTEMLITERAL ((['][\r\n\t\x20-&(-\xFF]*['])|(["][\r\n\t\x20-!#-\xFF]*["]))
 			set_last_token (SPACE)
 		}
 	}
-	
+
 <doctype, dtd_in, dtd_entity, dtd_notation> {
 
-		-- system_literal_text does microparsing of last quoted 
-		-- value. inelegant to do microparsing in a scanner, but 
+		-- `system_literal_text' does microparsing of last quoted 
+		-- value. Inelegant to do microparsing in a scanner, but 
 		-- PUBLIC and SYSTEM are not keywords and can also be 
 		-- names. PUBIDLITERAL and SYSTEMLITERAL also match quoted 
 		-- values which are not literals.
-		
-		-- problem: if declaration merged from processing entity 
-		-- (PE cuts on space token boundaries)
-		
+
+		-- Problem: if declaration merged from processing entity 
+		-- (PE cuts on space token boundaries).
+
 		"PUBLIC"{SPACECHAR}+{PUBIDLITERAL}{SPACECHAR}+{SYSTEMLITERAL} {
 			set_last_token (DOCTYPE_SYSTEM)
 			last_value := system_literal_text
@@ -453,7 +446,7 @@ SYSTEMLITERAL ((['][\r\n\t\x20-&(-\xFF]*['])|(["][\r\n\t\x20-!#-\xFF]*["]))
 		"?" { set_last_token (DOCTYPE_GROUP_ZEROONE) }
 		"*" { set_last_token (DOCTYPE_GROUP_ANY) }
 		"+" { set_last_token (DOCTYPE_GROUP_ONEMORE) }
-		
+
 		{NAMECHAR}+ {
 			set_last_token (NMTOKEN) 
 			last_value := text
@@ -475,7 +468,7 @@ SYSTEMLITERAL ((['][\r\n\t\x20-&(-\xFF]*['])|(["][\r\n\t\x20-!#-\xFF]*["]))
 		}
 	}
 
-<doctype,dtd_element,dtd_attlist> -- also entity/notation?
+<doctype,dtd_element,dtd_attlist> -- Also entity/notation?
 	{
 		"%"{NAMECHAR_FIRST}{NAMECHAR}*";" {
 			set_last_token (DOCTYPE_PEREFERENCE)
@@ -493,7 +486,7 @@ SYSTEMLITERAL ((['][\r\n\t\x20-&(-\xFF]*['])|(["][\r\n\t\x20-!#-\xFF]*["]))
 			last_value := text_substring (2, text_count - 1)
 		}
 	}
-	
+
 <doctype,dtd_element,dtd_attlist,entity_value_single,entity_value_double>
 	{
 		"%" {
@@ -501,7 +494,7 @@ SYSTEMLITERAL ((['][\r\n\t\x20-&(-\xFF]*['])|(["][\r\n\t\x20-!#-\xFF]*["]))
 		}
 	}
 
--- Elements
+-- Elements.
 
 "</" {
 	set_last_token (TAG_START_END)
@@ -552,13 +545,12 @@ SYSTEMLITERAL ((['][\r\n\t\x20-&(-\xFF]*['])|(["][\r\n\t\x20-!#-\xFF]*["]))
 			set_last_token (VALUE_START)
 			push_start_condition (attribute_value_double)
 		}
-
 	}
 
--- Entities
+-- Entities.
 
-	
--- named entities are not interpreted in an entity_value
+
+-- Named entities are not interpreted in an 'entity_value'.
 
 <initial,attribute_value_single,attribute_value_double>
 	{
@@ -591,15 +583,15 @@ SYSTEMLITERAL ((['][\r\n\t\x20-&(-\xFF]*['])|(["][\r\n\t\x20-!#-\xFF]*["]))
 				last_value := text_substring (2, text_count - 1)
 			}
 	}
-	
+
 <entity_value_single,entity_value_double>
 	{
 		"&"{NAMECHAR_FIRST}{NAMECHAR}*";" { 
 				set_last_token (CHARDATA) -- Bypassed
 				last_value := text
 			}
-			
-		-- double quote and single quote char entities not interpreted
+
+		-- Double quote and single quote char entities not interpreted
 		-- as char entities XML1.0:4.4.5
 		("&#34;"|"&#x22;"|"&#39;"|"&#x27;") {
 			set_last_token (CHARDATA)
@@ -615,16 +607,15 @@ SYSTEMLITERAL ((['][\r\n\t\x20-&(-\xFF]*['])|(["][\r\n\t\x20-!#-\xFF]*["]))
 			}
 
 		"<" {
-			set_last_token (ATTRIBUTE_LT) -- conformance error
+			set_last_token (ATTRIBUTE_LT) -- Conformance error.
 			last_value := text
 		}
 		{SPACECHAR}+ {
-			-- XML1.0:3.3.3 Attribute value normalisation
+				-- XML1.0:3.3.3 Attribute value normalization.
 			set_last_token (CHARDATA)
-			last_value := Normalized_space
+			last_value := normalized_space
 		}
 	}
-
 
 <initial,attribute_value_single,attribute_value_double,entity_value_single,entity_value_double>
 	{
@@ -632,7 +623,7 @@ SYSTEMLITERAL ((['][\r\n\t\x20-&(-\xFF]*['])|(["][\r\n\t\x20-!#-\xFF]*["]))
 			character_entity.from_decimal (text_substring (3, text_count - 1))
 			if character_entity.is_valid then
 				set_last_token (CHARDATA)
-				last_value := character_entity.as_string
+				last_value := character_entity.to_utf8
 			else
 				set_last_token (ENTITY_INVALID)
 			end
@@ -642,12 +633,12 @@ SYSTEMLITERAL ((['][\r\n\t\x20-&(-\xFF]*['])|(["][\r\n\t\x20-!#-\xFF]*["]))
 			character_entity.from_hexadecimal (text_substring (4, text_count - 1))
 			if character_entity.is_valid then
 				set_last_token (CHARDATA)
-				last_value := character_entity.as_string
+				last_value := character_entity.to_utf8
 			else
 				set_last_token (ENTITY_INVALID)
 			end
 		}
-			
+
 		"&" {
 			set_last_token (ENTITY_INVALID)
 			last_value := text
@@ -661,7 +652,7 @@ SYSTEMLITERAL ((['][\r\n\t\x20-&(-\xFF]*['])|(["][\r\n\t\x20-!#-\xFF]*["]))
 			pop_start_condition
 		}
 		{CHAR} {
-			-- after apos
+				-- After apos.
 			set_last_token (CHARDATA) 
 			last_value := text
 		}
@@ -674,22 +665,22 @@ SYSTEMLITERAL ((['][\r\n\t\x20-&(-\xFF]*['])|(["][\r\n\t\x20-!#-\xFF]*["]))
 			pop_start_condition
 		}
 		{CHAR} {
-			-- after quot
+				-- After quot.
 			set_last_token (CHARDATA) 
 			last_value := text
 		}
 	}
 
--- content
+-- Content.
 
 "]]>" {
-	-- XML1.0:14 ]]> not allowed in markup
+		-- XML1.0:14 ]]> not allowed in markup.
 	last_token := CONTENT_CONDITIONAL_END
 	last_value := text
 }
 
 \r\n {
-	 -- end of line handling XML1.0:2.11
+	 	-- End of line handling XML1.0:2.11.
 	set_last_token (SPACE)
 	last_value := normalized_newline
 }
@@ -705,35 +696,35 @@ SYSTEMLITERAL ((['][\r\n\t\x20-&(-\xFF]*['])|(["][\r\n\t\x20-!#-\xFF]*["]))
 }
 
 [ \t]+ {
-	-- space not matched by newline normalization
+		-- Space not matched by newline normalization.
 	set_last_token (SPACE)
 	last_value := text
 }
 
 {CONTENTCHAR}+ { 
-	-- get more than one at a time. could be more formal...
+		-- Get more than one at a time. Could be more formal...
 	set_last_token (CHARDATA)
 	last_value := text
 }
 
 {CHAR} { 
-	-- catch remaining correct characters
+		-- Catch remaining correct characters.
 	set_last_token (CHARDATA) 
 	last_value := text
 }
 
 <*>. {
-	-- default rule
+		-- Default rule.
 	set_last_token (INPUT_INVALID)
 	last_value := text
 }
 
 %%
 
-feature {NONE} -- Creation
+feature {NONE} -- Initialization
 
 	make_scanner is
-			-- Initialise.
+			-- Create a new scanner.
 		do
 			!! character_entity.make
 			make_with_buffer (Empty_buffer)
@@ -742,29 +733,31 @@ feature {NONE} -- Creation
 
 feature -- Reset
 
-	push_start_condition_dtd_ignore is
-		do
-			push_start_condition (dtd_ignore)
-		end
-
 	reset is
 			-- Reset.
 		do
 			Precursor
 			filename := "-"
+			!XM_FILE_SOURCE! source.make (filename)
 			last_error := Void
 			!! start_conditions.make
+		end
+
+	push_start_condition_dtd_ignore is
+			-- Push start condition 'dtd_ignore' to the stack.
+		do
+			push_start_condition (dtd_ignore)
 		end
 
 feature -- Input
 
 	set_input_file (a_name: STRING) is
-			-- Parse file.
-			-- Set `last _input_file_opened' to status.
+			-- Set `filename' to `a_name'.
+			-- Set `last_input_file_opened' to status.
 		require
-			not_void: a_name /= Void
+			a_name_not_void: a_name /= Void
 		local
-			a_file: XF_UTF16_INPUT_STREAM
+			a_file: XM_EIFFEL_UTF16_INPUT_STREAM
 			a_buffer: YY_FILE_BUFFER
 		do
 			!! a_file.make (a_name)
@@ -776,8 +769,9 @@ feature -- Input
 				fatal_error (Error_cannot_read_file)
 			end
 			filename := a_name
+			!XM_FILE_SOURCE! source.make (filename)
 		ensure
-			keep_copy: a_name = filename
+			filename_set: filename = a_name
 		end
 
 	set_input_buffer (a_buffer: like input_buffer) is
@@ -785,6 +779,7 @@ feature -- Input
 		do
 			Precursor (a_buffer)
 			filename := a_buffer.name
+			!XM_FILE_SOURCE! source.make (filename)
 		ensure then
 			filename_set: filename = a_buffer.name
 		end
@@ -792,21 +787,16 @@ feature -- Input
 	new_file_buffer (a_file: KI_CHARACTER_INPUT_STREAM): YY_FILE_BUFFER is
 			-- New input buffer for `a_file'
 		local
-			a_utf16: XF_UTF16_INPUT_STREAM
+			a_utf16: XM_EIFFEL_UTF16_INPUT_STREAM
 		do
 			!! a_utf16.make_from_stream (a_file)
 			Result := Precursor (a_utf16)
 		end
 
-	fatal_error (a_message: STRING) is
-			-- A fatal error occurred.
-		do
-			last_error := a_message
-		end
-
 	last_input_file_opened: BOOLEAN
+			-- Is last input file opened?
 
-feature -- Error reportring
+feature -- Error reporting
 
 	has_error: BOOLEAN is
 			-- Was there an error?
@@ -815,16 +805,28 @@ feature -- Error reportring
 		end
 
 	last_error: STRING
+			-- Last error
+
+	fatal_error (a_message: STRING) is
+			-- A fatal error occurred.
+		do
+			last_error := a_message
+		end
+
+feature -- Access
 
 	filename: STRING
+			-- Name of file being scanned
 
-feature -- Last value
+	source: XM_SOURCE
+			-- Source of the XML document beeing parsed
 
 	last_value: ANY
+			-- Semantic value of last token read
 
 feature {NONE} -- Character entity
 
-	character_entity: XF_CHARACTER_ENTITY
+	character_entity: XM_EIFFEL_CHARACTER_ENTITY
 			-- Character entity manager (class once)
 
 feature {NONE} -- Start condition stack
@@ -840,15 +842,17 @@ feature {NONE} -- Start condition stack
 			-- Restore previous start condition.
 		do
 			if not start_conditions.is_empty then
-				-- this would be a precondtion save for 
-				-- invalid input document
+					-- This would be a precondition save for 
+					-- invalid input document.
 				set_start_condition (start_conditions.item)
 				start_conditions.remove
-			-- else error, later in parser hopefully
+			else 
+				-- Error, to be reported later in parser hopefully.
 			end
 		end
 
-	start_conditions: DS_LINKED_STACK[INTEGER]
+	start_conditions: DS_LINKED_STACK [INTEGER]
+			-- Start conditions
 
 feature {NONE} -- System literal
 
@@ -880,15 +884,21 @@ feature {NONE} -- System literal
 feature {NONE} -- Constants
 
 	normalized_newline: STRING is
-			-- Newline normalised text (2.11)
-		once Result := "%N" end
-		
-	Normalized_space: STRING is
-		once Result := " " end
+			-- Newline normalized text (2.11)
+		once
+			Result := "%N"
+		ensure
+			normalized_newline_not_void: Result /= Void
+		end
+
+	normalized_space: STRING is " "
+			-- Normalized space
 
 invariant
 
-	start_not_void: start_conditions /= Void
+	start_conditions_not_void: start_conditions /= Void
 	character_entity_not_void: character_entity /= Void
-	
+	filename_not_void: filename /= Void
+	source_not_void: source /= Void
+
 end

@@ -10,11 +10,11 @@ indexing
 	date: "$Date$"
 	revision: "$Revision$"
 
-class XF_SCANNER_DTD
+class XM_EIFFEL_SCANNER_DTD
 
 inherit
 
-	XF_FULL_SCANNER
+	XM_EIFFEL_SCANNER
 		redefine
 			make_scanner,
 			read_token
@@ -24,7 +24,7 @@ creation
 
 	make_scanner
 
-feature {NONE} -- Creation
+feature {NONE} -- Initialization
 
 	make_scanner is
 			-- Make dtd scanner.
@@ -46,8 +46,10 @@ feature -- Input
 			-- token pair.
 		do
 			debug ("xml_parser")
-				io.put_string ("--dtd-scanner--")
-				if has_error then io.put_string (last_error) end
+				std.output.put_string ("--dtd-scanner--")
+				if has_error then
+					std.output.put_string (last_error)
+				end
 			end
 			if not decl_start_sent then
 				set_last_token (DOCTYPE_DECLARATION_START)

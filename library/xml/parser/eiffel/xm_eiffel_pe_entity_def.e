@@ -10,14 +10,13 @@ indexing
 	date: "$Date$"
 	revision: "$Revision$"
 
-class XF_PE_ENTITY_DEF
+class XM_EIFFEL_PE_ENTITY_DEF
 
 inherit
 
-	XF_ENTITY_DEF
+	XM_EIFFEL_ENTITY_DEF
 		redefine
-			read_token,
-			reset
+			read_token, reset
 		end
 
 creation
@@ -30,12 +29,12 @@ feature -- Scanner
 
 	read_token is
 			-- Redefine token routine to add space before and 
-			-- after PE entity
+			-- after PE entity.
 		do
 			if not pre_sent then
 				pre_sent := True
 				last_token := SPACE
-				last_value := Normalized_space
+				last_value := normalized_space
 			elseif post_sent then
 				terminate
 			else
@@ -43,13 +42,13 @@ feature -- Scanner
 				if end_of_file and not post_sent then
 					post_sent := True
 					last_token := SPACE
-					last_value := Normalized_space
+					last_value := normalized_space
 				end
 			end
 		end
 
 	reset is
-			-- Reset sent
+			-- Reset sent.
 		do
 			Precursor
 			reset_sent
@@ -58,7 +57,7 @@ feature -- Scanner
 feature {NONE} -- Implementation
 
 	reset_sent is
-			-- Reset _sent flags.
+			-- Reset `*_sent' flags.
 		do
 			pre_sent := False
 			post_sent := False

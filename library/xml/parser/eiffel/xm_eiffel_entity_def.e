@@ -18,16 +18,15 @@ indexing
 	date: "$Date$"
 	revision: "$Revision$"
 
-class XF_ENTITY_DEF
+class XM_EIFFEL_ENTITY_DEF
 
 inherit
 
 	HASHABLE
 
-	XF_FULL_SCANNER
+	XM_EIFFEL_SCANNER
 		redefine
-			reset,
-			read_token,
+			reset, read_token,
 			normalized_newline
 		end
 
@@ -37,52 +36,66 @@ creation
 	make_external,
 	make_def
 
-feature {NONE} -- Creation
+feature {NONE} -- Initialization
 
-	make_literal (a: STRING) is
-			-- Literal.
+	make_literal (a_value: STRING) is
+			-- Create a new literal entity definition from `a_value'.
 		require
-			not_void: a /= Void
+			a_value_not_void: a_value /= Void
 		do
-			value := a
+			value := a_value
 			make_scanner
+		ensure
+			is_literal: is_literal
+			value_set: value = a_value
 		end
 
-	make_external (a: STRING) is
-			-- External.
+	make_external (a_value: STRING) is
+			-- Create a new external entity definition from `a_value'.
 		require
-			not_void: a /= Void
+			a_value_not_void: a_value /= Void
 		do
 			is_external := True
-			value := a
+			value := a_value
 			make_scanner
+		ensure
+			is_external: is_external
+			value_set: value = a_value
 		end
 
-	make_def (a: XF_ENTITY_DEF) is
-			-- Make from other.
+	make_def (other: XM_EIFFEL_ENTITY_DEF) is
+			-- Create a new entity definition from `other'.
 		require
-			not_void: a /= Void
+			other_not_void: other /= Void
 		do
-			if a.is_external then
-				make_external (a.value)
+			if other.is_external then
+				make_external (other.value)
 			else
-				make_literal (a.value)
+				make_literal (other.value)
 			end
+		ensure
+			is_external: is_external = other.is_external
+			is_literal: is_literal = other.is_literal
+			value_set: value = other.value
+		end
+
+feature -- Status report
+
+	is_external: BOOLEAN
+			-- Is current entity an external entity?
+
+	is_literal: BOOLEAN is
+			-- Is current entity a literal entity?
+		do
+			Result := not is_external
+		ensure
+			definition: Result = not is_external
 		end
 
 feature -- Access
 
-	is_external: BOOLEAN
-			-- Is this an external entity.
-
-	is_literal: BOOLEAN is
-			-- Is this a literal entity.
-		do
-			Result := not is_external
-		end
-
 	value: STRING
-			-- Value.
+			-- Value
 
 	external_value: STRING is
 			-- Resolve external value.
@@ -93,10 +106,9 @@ feature -- Access
 			Result := value
 		end
 
-feature -- HASHABLE (on the entity name aspect)
-
 	hash_code: INTEGER is
-			-- Has
+			-- Hash code value
+			-- (on the entity name aspect)
 		do
 			Result := value.hash_code // 2
 			if is_external then
@@ -107,34 +119,35 @@ feature -- HASHABLE (on the entity name aspect)
 feature -- Scanner: set input buffer
 
 	apply_input_buffer is
-			-- Set input buffer
+			-- Set input buffer.
 		do
 			if in_use then
 				fatal_error (Error_recursive_entity)
 			elseif is_literal then
-				-- literal string
+					-- Literal string.
 				reset
 				set_input_buffer (new_string_buffer (value))
 			else
-				-- external entity in a file
+					-- External entity in a file.
 				reset
 				set_input_file (external_value)
-				-- has_error/last_error set by set_input_file
+					-- `has_error'/`last_error' set by `set_input_file'.
 				if has_error then
 					fatal_error (Error_entity_unresolved_external)
 				end
 			end
 		end
-		
-feature {NONE} -- Newline normalisation
+
+feature {NONE} -- Newline normalization
 
 	normalized_newline: STRING is
+			-- Newline normalized text (2.11)
 		do
-			-- newline normalisation has already been applied
-			-- to a literal entity and should not be applied 
-			-- again, eg for literal entities which contain 
-			-- character entities of newline characters which 
-			-- should get out as is.
+				-- Newline normalization has already been applied
+				-- to a literal entity and should not be applied 
+				-- again, e.g. for literal entities which contain 
+				-- character entities of newline characters which 
+				-- should get out as is.
 			if is_literal then
 				Result := text
 			else
@@ -148,22 +161,19 @@ feature -- Scanner: events
 			-- Has the first token been processed?
 
 	read_token is
-			-- Ignore XML declaration that may be at the start of am 
-			-- external entity.
-			-- Also  that places the content of an external 
-			-- DTD within a (DOCTYPE_DECL_START, DOCTYPE_DECL_END)
-			-- token pair.
+			-- Ignore XML declaration that may be at the start of an external entity.
+			-- Also that places the content of an external DTD within
+			-- a (DOCTYPE_DECL_START, DOCTYPE_DECL_END) token pair.
 		local
 			done: BOOLEAN
 			enc_count, vers_count: INTEGER
 		do
 			Precursor
 			if not in_use then
-				-- processing on first token read
+					-- Processing on first token read.
 				in_use := True
 				if is_external and last_token = XMLDECLARATION_START then
-
-					-- micro parser to skip xml declaration
+						-- Micro parser to skip xml declaration.
 					from until
 						end_of_file or done
 					loop
@@ -173,25 +183,27 @@ feature -- Scanner: events
 						elseif last_token = XMLDECLARATION_VERSION then
 							vers_count := vers_count + 1
 						elseif last_token = SPACE then
-							-- continue
+							-- Continue.
 						elseif last_token = XMLDECLARATION_END then
 							if enc_count = 1 and vers_count <= 1 then
-								-- valid, skip this else leave for error
+									-- Valid, skip this else leave for error.
 								Precursor
 							end
 							done := True
 						else
-							done := True -- exit and error
+								-- Exit and error.
+							done := True
 						end
 					end
 				end
 			end
-			
-			-- reset in use flag
+				-- Reset in use flag.
 			if end_of_file then
 				in_use := False
 			end
 		end
+
+feature -- Scanner: initialization
 
 	reset is
 			-- Reset first seen status.
@@ -199,10 +211,10 @@ feature -- Scanner: events
 			Precursor
 			in_use := False
 		end
-		
+
 invariant
 
-	not_void: value /= Void
+	value_not_void: value /= Void
 	type: is_literal xor is_external
 
 end

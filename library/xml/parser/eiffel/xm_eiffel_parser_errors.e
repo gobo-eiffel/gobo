@@ -10,7 +10,7 @@ indexing
 	date: "$Date$"
 	revision: "$Revision$"
 
-class XF_PARSER_ERRORS
+class XM_EIFFEL_PARSER_ERRORS
 
 feature -- Scanner errors
 
