@@ -90,7 +90,6 @@
 				<cluster name="set"/>
 			</cluster>
 			<cluster name="string" unless="${SE_1_0}">
-				<cluster name="internal"/>
 				<cluster name="low_level"/>
 			</cluster>
 			<cluster name="time">
