@@ -17,16 +17,13 @@ class GEANT_XSLT_TASK
 inherit
 
 	GEANT_TASK
-		rename
-			make as task_make
+		undefine
+			make
 		redefine
 			make_from_element
 		end
 
 	GEANT_XSLT_COMMAND
-		select
-			make
-		end
 
 creation
 

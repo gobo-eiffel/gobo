@@ -17,16 +17,13 @@ class GEANT_GEYACC_TASK
 inherit
 
 	GEANT_TASK
-		rename
-			make as task_make
+		undefine
+			make
 		redefine
 			make_from_element
 		end
 
 	GEANT_GEYACC_COMMAND
-		select
-			make
-		end
 
 creation
 

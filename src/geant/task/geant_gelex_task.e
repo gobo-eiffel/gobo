@@ -17,16 +17,13 @@ class GEANT_GELEX_TASK
 inherit
 
 	GEANT_TASK
-		rename
-			make as task_make
+		undefine
+			make
 		redefine
 			make_from_element
 		end
 
 	GEANT_GELEX_COMMAND
-		select
-			make
-		end
 
 	KL_IMPORTED_STRING_ROUTINES
 
