@@ -1,6 +1,6 @@
-# system:     ""
+# system:     "Makefile to run all tests, examples and tools"
 # author:     "Eric Bezault <ericb@gobosoft.com>"
-# copyright:  "Copyright (c) 2000, Eric Bezault and others"
+# copyright:  "Copyright (c) 2000-2001, Eric Bezault and others"
 # license:    "Eiffel Forum Freeware License v1 (see forum.txt)"
 # date:       "$Date$"
 # revision:   "$Revision$"
@@ -10,7 +10,8 @@ GOBO_LIBS= structure time
 GOBO_SRCS= gelex geyacc getest gepp
 GOBO_LEXICAL_EXAMPLES= ascii2ps eiffel_scanner gegrep
 GOBO_PARSE_EXAMPLES= eiffel_parser calc mcalc rpcalc
-GOBO_EXAMPLES= ${GOBO_LEXICAL_EXAMPLES} ${GOBO_PARSE_EXAMPLES}
+GOBO_TIME_EXAMPLES= system_clock
+GOBO_EXAMPLES= ${GOBO_LEXICAL_EXAMPLES} ${GOBO_PARSE_EXAMPLES} ${GOBO_TIME_EXAMPLES}
 
 all:
 	@${MAKE} -s test-all 'DEBUG=' 2> tmp_make.txt
@@ -23,6 +24,7 @@ test-all:
 	${MAKE} ${GOBO_SRCS}
 	${MAKE} ${GOBO_LEXICAL_EXAMPLES} 'EXAMPLE_DIR=lexical'
 	${MAKE} ${GOBO_PARSE_EXAMPLES} 'EXAMPLE_DIR=parse'
+	${MAKE} ${GOBO_TIME_EXAMPLES} 'EXAMPLE_DIR=time'
 
 ${GOBO_LIBS}:
 	${ECHO} ''
