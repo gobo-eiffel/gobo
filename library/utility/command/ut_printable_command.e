@@ -20,6 +20,13 @@ inherit
 			out
 		end
 
+	KL_FILE_ROUTINES
+		export
+			{NONE} all
+		redefine
+			out
+		end
+
 creation
 
 	make
@@ -38,11 +45,7 @@ feature {NONE} -- Initialization
 
 feature -- Print
 
-#ifndef ISE || HACT
-	print_to_file (a_file: FILE) is
-#else
-	print_to_file (a_file: IO_MEDIUM) is
-#endif
+	print_to_file (a_file: like FILE_type) is
 			-- Print current command textual representation
 			-- (i.e. `out') to `a_file'.
 		require
@@ -54,11 +57,7 @@ feature -- Print
 
 feature -- Execution
 
-#ifndef ISE || HACT
-	execute (a_file: FILE) is
-#else
-	execute (a_file: IO_MEDIUM) is
-#endif
+	execute (a_file: like FILE_type) is
 			-- Execute current command.
 		do
 			print_to_file (a_file)
@@ -69,11 +68,7 @@ feature -- Status report
 	executable (arg: ANY): BOOLEAN is
 			-- Can current command be executed with `arg'?
 		local
-#ifndef ISE || HACT
-			a_file: FILE
-#else
-			a_file: IO_MEDIUM
-#endif
+			a_file: like FILE_type
 		do
 			a_file ?= arg
 			Result := a_file /= Void and then a_file.is_open_read

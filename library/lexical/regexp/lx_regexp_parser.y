@@ -31,6 +31,11 @@ inherit
 			last_value, last_token
 		end
 
+	KL_FILE_ROUTINES
+		export
+			{NONE} all
+		end
+
 creation
 
 	make, make_from_description
@@ -307,11 +312,7 @@ feature -- Initialization
 
 feature -- Parsing
 
-#ifdef ISE || HACT
-	parse_file (a_file: IO_MEDIUM) is
-#else
-	parse_file (a_file: FILE) is
-#endif
+	parse_file (a_file: like FILE_type) is
 			-- Parse regular expression from `a_file'.
 		require
 			a_file_not_void: a_file /= Void

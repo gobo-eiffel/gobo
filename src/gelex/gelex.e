@@ -13,7 +13,7 @@ class GELEX
 
 inherit
 
-	UT_FILE_ROUTINES
+	KL_FILE_ROUTINES
 		export
 			{NONE} all
 		end
@@ -49,20 +49,16 @@ feature -- Processing
 		local
 			parser: LX_LEX_PARSER
 			filename: STRING
-#ifndef ISE || HACT
-			file: FILE
-#else
-			file: PLAIN_TEXT_FILE
-#endif
+			a_file: like FILE_type
 		do
 			!! parser.make_from_description (description, error_handler)
 			filename := description.input_filename
 			if filename /= Void then
-				!! file.make (filename)
-				file_open_read (file)
-				if file.is_open_read then
-					parser.parse_file (file)
-					file.close
+				a_file := file__make (filename)
+				file__open_read (a_file)
+				if a_file.is_open_read then
+					parser.parse_file (a_file)
+					a_file.close
 				else
 					error_handler.error_message
 						(<<"cannot read %'", filename, "%'">>)
@@ -91,19 +87,15 @@ feature -- Processing
 			dfa_not_void: dfa /= Void
 		local
 			filename: STRING
-#ifndef ISE || HACT
-			file: FILE
-#else
-			file: PLAIN_TEXT_FILE
-#endif
+			a_file: like FILE_type
 		do
 			filename := description.output_filename
 			if filename /= Void then
-				!! file.make (filename)
-				file_open_write (file)
-				if file.is_open_write then
-					dfa.print_scanner (file)
-					file.close
+				a_file := file__make (filename)
+				file__open_write (a_file)
+				if a_file.is_open_write then
+					dfa.print_scanner (a_file)
+					a_file.close
 				else
 					error_handler.error_message
 						(<<"cannot write to %'", filename, "%'">>)
@@ -119,20 +111,16 @@ feature -- Processing
 			dfa_not_void: dfa /= Void
 		local
 			filename: STRING
-#ifndef ISE || HACT
-			file: FILE
-#else
-			file: PLAIN_TEXT_FILE
-#endif
+			a_file: like FILE_type
 		do
 			if description.backing_up_report then
 				filename := description.backing_up_filename
 				if filename /= Void then
-					!! file.make (filename)
-					file_open_write (file)
-					if file.is_open_write then
-						dfa.print_backing_up_report (file)
-						file.close
+					a_file := file__make (filename)
+					file__open_write (a_file)
+					if a_file.is_open_write then
+						dfa.print_backing_up_report (a_file)
+						a_file.close
 					else
 						error_handler.error_message
 							(<<"cannot write to %'", filename, "%'">>)

@@ -31,6 +31,11 @@ inherit
 			yy_accept, yy_ec --, yy_null_trans
 		end
 
+	KL_FILE_ROUTINES
+		export
+			{NONE} all
+		end
+
 feature {NONE} -- Initialization
 
 	make (tables: like to_tables) is
@@ -43,11 +48,7 @@ feature {NONE} -- Initialization
 			make_scanner_skeleton
 		end
 
-#ifndef ISE || HACT
-	make_with_file (a_file: FILE; tables: like to_tables) is
-#else
-	make_with_file (a_file: IO_MEDIUM; tables: like to_tables) is
-#endif
+	make_with_file (a_file: like FILE_type; tables: like to_tables) is
 			-- Create a new scanner with `a_file' as input file.
 			-- Build the scanner with information contained in `tables'.
 		require

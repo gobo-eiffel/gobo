@@ -48,6 +48,16 @@ inherit
 			is_equal, copy
 		end
 
+	KL_FILE_ROUTINES
+		export
+			{NONE} all
+		undefine
+#ifdef ISE || HACT
+			consistent, setup,
+#endif
+			is_equal, copy
+		end
+
 creation
 
 	make
@@ -78,11 +88,7 @@ feature -- Generation
 			!! Result.make (Current)
 		end
 
-#ifndef ISE || HACT
-	print_backing_up_report (a_file: FILE) is
-#else
-	print_backing_up_report (a_file: IO_MEDIUM) is
-#endif
+	print_backing_up_report (a_file: like FILE_type) is
 			-- Print a backing up report to `a_file'.
 		do
 			generatable_dfa_print_backing_up_report (a_file)
@@ -91,11 +97,7 @@ feature -- Generation
 
 feature {NONE} -- Generation
 
-#ifndef ISE || HACT
-	print_build_tables (a_file: FILE) is
-#else
-	print_build_tables (a_file: IO_MEDIUM) is
-#endif
+	print_build_tables (a_file: like FILE_type) is
 			-- Print code for `yy_build_tables' to `a_file'.
 		do
 			a_file.put_string ("%Tyy_build_tables is%N%
@@ -125,11 +127,7 @@ feature {NONE} -- Generation
 			a_file.put_string ("%T%Tend%N")
 		end
 
-#ifndef ISE || HACT
-	print_eiffel_tables (a_file: FILE) is
-#else
-	print_eiffel_tables (a_file: IO_MEDIUM) is
-#endif
+	print_eiffel_tables (a_file: like FILE_type) is
 			-- Print Eiffel code for compressed tables to `a_file'.
 		do
 			print_eiffel_array ("yy_nxt_", yy_nxt, a_file)
@@ -155,11 +153,7 @@ feature {NONE} -- Generation
 			end
 		end
 
-#ifndef ISE || HACT
-	print_constants (a_file: FILE) is
-#else
-	print_constants (a_file: IO_MEDIUM) is
-#endif
+	print_constants (a_file: like FILE_type) is
 			-- Print code for constants to `a_file'.
 		do
 			a_file.put_string ("%TyyJam_base: INTEGER is ")

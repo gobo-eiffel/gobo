@@ -40,7 +40,17 @@ inherit
 			is_equal, copy
 		end
 
-	UT_INTEGER_ROUTINES
+	KL_INTEGER_ROUTINES
+		export
+			{NONE} all
+		undefine
+#ifdef ISE || HACT
+			consistent, setup,
+#endif
+			is_equal, copy
+		end
+
+	KL_FILE_ROUTINES
 		export
 			{NONE} all
 		undefine
@@ -112,11 +122,7 @@ feature -- Generation
 			scanner_not_void: Result /= Void
 		end
 
-#ifndef ISE || HACT
-	print_scanner (a_file: FILE) is
-#else
-	print_scanner (a_file: IO_MEDIUM) is
-#endif
+	print_scanner (a_file: like FILE_type) is
 			-- Print code for corresponding scanner to `a_file'.
 		require
 			a_file_not_void: a_file /= Void
@@ -137,11 +143,7 @@ feature -- Generation
 			print_eiffel_code (a_file)
 		end
 
-#ifndef ISE || HACT
-	print_backing_up_report (a_file: FILE) is
-#else
-	print_backing_up_report (a_file: IO_MEDIUM) is
-#endif
+	print_backing_up_report (a_file: like FILE_type) is
 			-- Print a backing-up report to `a_file'.
 		require
 			a_file_not_void: a_file /= Void
@@ -174,11 +176,7 @@ feature -- Generation
 
 feature {NONE} -- Generation
 
-#ifndef ISE || HACT
-	print_eiffel_header (a_file: FILE) is
-#else
-	print_eiffel_header (a_file: IO_MEDIUM) is
-#endif
+	print_eiffel_header (a_file: like FILE_type) is
 			-- Print user-defined eiffel header to `a_file'.
 		require
 			a_file_not_void: a_file /= Void
@@ -195,11 +193,7 @@ feature {NONE} -- Generation
 			end
 		end
 
-#ifndef ISE || HACT
-	print_build_tables (a_file: FILE) is
-#else
-	print_build_tables (a_file: IO_MEDIUM) is
-#endif
+	print_build_tables (a_file: like FILE_type) is
 			-- Print code for `yy_build_tables' to `a_file'.
 		require
 			a_file_not_void: a_file /= Void
@@ -207,11 +201,7 @@ feature {NONE} -- Generation
 		deferred
 		end
 
-#ifndef ISE || HACT
-	print_actions (a_file: FILE) is
-#else
-	print_actions (a_file: IO_MEDIUM) is
-#endif
+	print_actions (a_file: like FILE_type) is
 			-- Print code for actions to `a_file'.
 		require
 			a_file_not_void: a_file /= Void
@@ -308,11 +298,7 @@ feature {NONE} -- Generation
 				%%T%Tend%N")
 		end
 
-#ifndef ISE || HACT
-	print_eof_actions (a_file: FILE) is
-#else
-	print_eof_actions (a_file: IO_MEDIUM) is
-#endif
+	print_eof_actions (a_file: like FILE_type) is
 			-- Print code for end-of-file actions to `a_file'.
 		require
 			a_file_not_void: a_file /= Void
@@ -400,11 +386,7 @@ feature {NONE} -- Generation
 				%%T%Tend%N")
 		end
 
-#ifndef ISE || HACT
-	print_eiffel_tables (a_file: FILE) is
-#else
-	print_eiffel_tables (a_file: IO_MEDIUM) is
-#endif
+	print_eiffel_tables (a_file: like FILE_type) is
 			-- Print Eiffel code for DFA tables to `a_file'.
 		require
 			a_file_not_void: a_file /= Void
@@ -412,11 +394,7 @@ feature {NONE} -- Generation
 		deferred
 		end
 
-#ifndef ISE || HACT
-	print_constants (a_file: FILE) is
-#else
-	print_constants (a_file: IO_MEDIUM) is
-#endif
+	print_constants (a_file: like FILE_type) is
 			-- Print code for constants to `a_file'.
 		require
 			a_file_not_void: a_file /= Void
@@ -440,11 +418,7 @@ feature {NONE} -- Generation
 			a_file.put_string ("%T%T%T-- Start condition codes%N")
 		end
 
-#ifndef ISE || HACT
-	print_eiffel_code (a_file: FILE) is
-#else
-	print_eiffel_code (a_file: IO_MEDIUM) is
-#endif
+	print_eiffel_code (a_file: like FILE_type) is
 			-- Print user-defined eiffel code to `a_file'.
 		require
 			a_file_not_void: a_file /= Void
@@ -455,11 +429,7 @@ feature {NONE} -- Generation
 			end
 		end
 
-#ifndef ISE || HACT
-	print_array (a_table: ARRAY [INTEGER]; a_file: FILE) is
-#else
-	print_array (a_table: ARRAY [INTEGER]; a_file: IO_MEDIUM) is
-#endif
+	print_array (a_table: ARRAY [INTEGER]; a_file: like FILE_type) is
 			-- Print code for `a_table''s items to `a_file'.
 		require
 			a_table_not_void: a_table /= Void
@@ -503,13 +473,8 @@ feature {NONE} -- Generation
 			end
 		end
 
-#ifndef ISE || HACT
 	print_eiffel_array
-		(a_name: STRING; a_table: ARRAY [INTEGER]; a_file: FILE) is
-#else
-	print_eiffel_array
-		(a_name: STRING; a_table: ARRAY [INTEGER]; a_file: IO_MEDIUM) is
-#endif
+		(a_name: STRING; a_table: ARRAY [INTEGER]; a_file: like FILE_type) is
 			-- Print Eiffel code for `a_table' named `a_name' to `a_file'.
 		require
 			a_name_not_void: a_name /= Void
@@ -580,11 +545,7 @@ feature {NONE} -- Generation
 			end
 		end
 
-#ifndef ISE || HACT
-	print_rule_line_numbers (a_state: LX_DFA_STATE; a_file: FILE) is
-#else
-	print_rule_line_numbers (a_state: LX_DFA_STATE; a_file: IO_MEDIUM) is
-#endif
+	print_rule_line_numbers (a_state: LX_DFA_STATE; a_file: like FILE_type) is
 			-- Print the (sorted) list of the line numbers of 
 			-- the rules associated to the NFA states making up
 			-- `a_state' to `a_file'.
@@ -624,11 +585,7 @@ feature {NONE} -- Generation
 			a_file.put_character ('%N')
 		end
 
-#ifndef ISE || HACT
-	print_transitions (a_state: LX_DFA_STATE; a_file: FILE) is
-#else
-	print_transitions (a_state: LX_DFA_STATE; a_file: IO_MEDIUM) is
-#endif
+	print_transitions (a_state: LX_DFA_STATE; a_file: like FILE_type) is
 			-- Print out- and jam-transitions from `a_state'
 			-- in a human-readable form (i.e. not using
 			-- equivalence classes) to `a_file'.
@@ -717,11 +674,7 @@ feature {NONE} -- Generation
 			a_file.put_string ("]%N")
 		end
 
-#ifndef ISE || HACT
-	print_readable_character (i: INTEGER; a_file: FILE) is
-#else
-	print_readable_character (i: INTEGER; a_file: IO_MEDIUM) is
-#endif
+	print_readable_character (i: INTEGER; a_file: like FILE_type) is
 			-- Print a human-readable form of the character
 			-- of ASCII code `i' to `a_file'. Print octal value
 			-- if the corresponding character is not printable.
@@ -776,7 +729,7 @@ feature {NONE} -- Generation
 			elseif i = Space_code then
 				a_file.put_string ("' '")
 			else
-				a_file.put_character (integer_to_character (i))
+				a_file.put_character (integer__to_character (i))
 			end
 		end
 

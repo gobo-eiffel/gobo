@@ -18,12 +18,12 @@ inherit
 			{NONE} all
 		end
 
-	UT_FILE_ROUTINES
+	ARGUMENTS
 		export
 			{NONE} all
 		end
 
-	ARGUMENTS
+	KL_FILE_ROUTINES
 		export
 			{NONE} all
 		end
@@ -42,11 +42,7 @@ feature -- Processing
 			stop: BOOLEAN
 			i, nb, args_count: INTEGER
 			in_filename, out_filename: STRING
-#ifdef ISE || HACT
-			in_file, out_file: PLAIN_TEXT_FILE
-#else
-			in_file, out_file: FILE
-#endif
+			in_file, out_file: like FILE_type
 		do
 			!! a_parser.make
 			args_count:= argument_count
@@ -89,8 +85,8 @@ feature -- Processing
 			end
 				-- Preprocess.
 			if not out_filename.is_equal ("-") then
-				!! out_file.make (out_filename)
-				file_open_write (out_file)
+				out_file := file__make (out_filename)
+				file__open_write (out_file)
 				if out_file.is_open_write then
 					a_parser.set_output_file (out_file)
 				else
@@ -103,8 +99,8 @@ feature -- Processing
 			if in_filename.is_equal ("-") then
 				a_parser.parse_file (io.input)
 			else
-				!! in_file.make (in_filename)
-				file_open_read (in_file)
+				in_file := file__make (in_filename)
+				file__open_read (in_file)
 				if in_file.is_open_read then
 					a_parser.parse_file (in_file)
 					in_file.close
@@ -115,7 +111,7 @@ feature -- Processing
 					die (1)
 				end
 			end
-			if out_file /= Void and then out_file.is_open_write then
+			if out_file /= Void and then not out_file.is_closed then
 				out_file.close
 			end
 		rescue

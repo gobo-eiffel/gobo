@@ -12,6 +12,13 @@ indexing
 
 deferred class YY_SCANNER
 
+inherit
+
+	KL_FILE_ROUTINES
+		export
+			{NONE} all
+		end
+
 feature {NONE} -- Initialization
 
 	make is
@@ -21,11 +28,7 @@ feature {NONE} -- Initialization
 			make_with_file (io.input)
 		end
 
-#ifndef ISE || HACT
-	make_with_file (a_file: FILE) is
-#else
-	make_with_file (a_file: IO_MEDIUM) is
-#endif
+	make_with_file (a_file: like FILE_type) is
 			-- Create a new scanner with
 			-- `a_file' as input file.
 		require
@@ -218,11 +221,7 @@ feature -- Input
 			flushed: input_buffer.count = 0
 		end
 
-#ifndef ISE || HACT
-	new_file_buffer (a_file: FILE): YY_BUFFER is
-#else
-	new_file_buffer (a_file: IO_MEDIUM): YY_BUFFER is
-#endif
+	new_file_buffer (a_file: like FILE_type): YY_BUFFER is
 			-- New input buffer for `a_file'
 		require
 			a_file_not_void: a_file /= Void
@@ -245,14 +244,10 @@ feature -- Input
 
 feature -- Output
 
-#ifndef ISE || HACT
-	output_file: FILE
-#else
-	output_file: IO_MEDIUM
-#endif
+	output_file: like FILE_type
 			-- Output file
 
-	set_output_file (a_file: like output_file) is
+	set_output_file (a_file: like FILE_type) is
 			-- Set `output_file' to `a_file'.
 		require
 			a_file_not_void: a_file /= Void

@@ -13,17 +13,17 @@ class GEGREP
 
 inherit
 
-	UT_FILE_ROUTINES
-		export
-			{NONE} all
-		end
-
 	ARGUMENTS
 		export
 			{NONE} all
 		end
 
 	EXCEPTIONS
+		export
+			{NONE} all
+		end
+
+	KL_FILE_ROUTINES
 		export
 			{NONE} all
 		end
@@ -38,11 +38,7 @@ feature -- Execution
 			-- Start 'gegrep' execution.
 		local
 			i, nb: INTEGER
-#ifdef ISE || HACT
-			a_file: PLAIN_TEXT_FILE
-#else
-			a_file: FILE
-#endif
+			a_file: like FILE_type
 			a_filename: STRING
 			case_insensitive: BOOLEAN
 		do
@@ -74,8 +70,8 @@ feature -- Execution
 						parse_file (io.input, Void)
 					when 1 then
 						a_filename := argument (i)
-						!! a_file.make (a_filename)
-						file_open_read (a_file)
+						a_file := file__make (a_filename)
+						file__open_read (a_file)
 						if a_file.is_open_read then
 							parse_file (a_file, Void)
 							a_file.close
@@ -88,8 +84,8 @@ feature -- Execution
 					else
 						from until i > nb loop
 							a_filename := argument (i)
-							!! a_file.make (a_filename)
-							file_open_read (a_file)
+							a_file := file__make (a_filename)
+							file__open_read (a_file)
 							if a_file.is_open_read then
 								parse_file (a_file, a_filename)
 								a_file.close
@@ -111,7 +107,7 @@ feature -- Execution
 
 feature -- Parsing
 
-	parse_file (a_file: FILE; a_filename: STRING) is
+	parse_file (a_file: like FILE_type; a_filename: STRING) is
 			-- Parse `a_file'.
 		require
 			a_file_not_void: a_file /= Void
@@ -124,7 +120,7 @@ feature -- Parsing
 			from
 				a_file.read_line
 			until
-				a_file.end_of_file
+				file__end_of_file (a_file)
 			loop
 				a_line := a_file.last_string
 				if regexp.matches (a_line) then
