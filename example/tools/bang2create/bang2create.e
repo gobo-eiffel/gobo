@@ -61,14 +61,14 @@ feature -- Execution
 				Exceptions.die (1)
 			else
 				if out_filename.is_equal ("-") then
-					create a_printer.make (std.output)
+					create a_printer.make (std.output, a_universe)
 				else
 					create out_file.make (out_filename)
 					out_file.recursive_open_write
 					if out_file.is_open_write then
-						create a_printer.make (out_file)
+						create a_printer.make (out_file, a_universe)
 					else
-						create a_printer.make_null
+						create a_printer.make_null (a_universe)
 						report_cannot_write_error (out_filename)
 						Exceptions.die (1)
 					end
@@ -77,7 +77,7 @@ feature -- Execution
 				from a_cursor.start until a_cursor.after loop
 					a_class := a_cursor.item
 					if a_class.is_parsed then
-						a_printer.process_class (a_class)
+						a_class.process (a_printer)
 					end
 					a_cursor.forth
 				end

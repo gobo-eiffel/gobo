@@ -103,6 +103,10 @@ feature -- Processing
 			create a_clusters.make (a_cluster)
 			create an_ast_factory.make
 			create a_universe.make_with_factory (a_clusters, an_ast_factory, an_error_handler)
+			a_universe.set_use_attribute_keyword (False)
+			a_universe.set_use_convert_keyword (True)
+			a_universe.set_use_recast_keyword (True)
+			a_universe.set_use_reference_keyword (True)
 			a_universe.parse_all
 			a_cursor := a_universe.classes.new_cursor
 			from a_cursor.start until a_cursor.after loop
@@ -120,25 +124,23 @@ feature -- Processing
 			testcases_not_void: testcases /= Void
 		local
 			feature_names: DS_LINKED_LIST [STRING]
-			named_features: DS_HASH_TABLE [ET_FEATURE, ET_FEATURE_NAME]
-			a_cursor: DS_HASH_TABLE_CURSOR [ET_FEATURE, ET_FEATURE_NAME]
+			features: ET_FEATURE_LIST
+			i, nb: INTEGER
 			an_identifier: ET_IDENTIFIER
 			a_name: STRING
 		do
 			create feature_names.make
-			named_features := a_class.named_features
-			if named_features /= Void then
-				a_cursor := named_features.new_cursor
-				from a_cursor.start until a_cursor.after loop
-					an_identifier ?= a_cursor.key
-					if an_identifier /= Void then
-						a_name := an_identifier.name
-						if feature_regexp.recognizes (a_name) then
-							feature_names.put_last (a_name)
-						end
+			features := a_class.features
+			nb := features.count
+			from i := 1 until i > nb loop
+				an_identifier ?= features.item (i).name
+				if an_identifier /= Void then
+					a_name := an_identifier.name
+					if feature_regexp.recognizes (a_name) then
+						feature_names.put_last (a_name)
 					end
-					a_cursor.forth
 				end
+				i := i + 1
 			end
 			if not feature_names.is_empty then
 				testcases.put (a_class.name.name, feature_names, class_prefix)

@@ -42,6 +42,7 @@ feature -- Processing
 			gobo_eiffel: STRING
 			a_universe: ET_UNIVERSE
 			all_breaks: BOOLEAN
+			is_verbose: BOOLEAN
 			nb: INTEGER
 		do
 			inspect Arguments.argument_count
@@ -51,6 +52,32 @@ feature -- Processing
 				if equal (Arguments.argument (1), "--all_breaks") then
 					all_breaks := True
 					a_filename := Arguments.argument (2)
+				elseif equal (Arguments.argument (1), "--verbose") then
+					is_verbose := True
+					a_filename := Arguments.argument (2)
+				else
+					std.error.put_line ("usage: gelint filename")
+					Exceptions.die (1)
+				end
+			when 3 then
+				if equal (Arguments.argument (1), "--all_breaks") then
+					all_breaks := True
+					if equal (Arguments.argument (2), "--verbose") then
+						is_verbose := True
+						a_filename := Arguments.argument (3)
+					else
+						std.error.put_line ("usage: gelint filename")
+						Exceptions.die (1)
+					end
+				elseif equal (Arguments.argument (1), "--verbose") then
+					is_verbose := True
+					if equal (Arguments.argument (2), "--all_breaks") then
+						all_breaks := True
+						a_filename := Arguments.argument (3)
+					else
+						std.error.put_line ("usage: gelint filename")
+						Exceptions.die (1)
+					end
 				else
 					std.error.put_line ("usage: gelint filename")
 					Exceptions.die (1)
@@ -103,6 +130,9 @@ feature -- Processing
 						end
 					end
 					if a_universe /= Void then
+						if not is_verbose then
+							a_universe.error_handler.set_info_null
+						end
 						process_universe (a_universe)
 					end
 				else
@@ -111,7 +141,9 @@ feature -- Processing
 					std.error.put_line ("%'")
 				end
 			end
-io.read_line
+debug ("ericb")
+	io.read_line
+end
 		end
 
 	process_universe (a_universe: ET_UNIVERSE) is
@@ -119,19 +151,12 @@ io.read_line
 		require
 			a_universe_not_void: a_universe /= Void
 		do
-			a_universe.parse_all
---			a_universe.preparse_single
---			a_universe.parse_system
-print ("Parsed ")
-print (a_universe.classes.count)
-print (" classes%N")
-print (a_universe.features.count)
-print (" features%N")
-io.read_line
-			a_universe.compute_ancestors
-print ("Done.%N")
-print (a_universe.features.count)
-print (" features%N")
+--			a_universe.error_handler.set_compilers
+			a_universe.set_use_attribute_keyword (False)
+			a_universe.set_use_convert_keyword (True)
+			a_universe.set_use_recast_keyword (True)
+			a_universe.set_use_reference_keyword (False)
+			a_universe.compile
 		end
 
 end

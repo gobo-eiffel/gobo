@@ -63,8 +63,12 @@ feature -- Test
 			assert ("xace_parsed", not an_xace_error_handler.has_error)
 			a_universe := an_xace_parser.last_universe
 			assert ("universe_not_void", a_universe /= Void)
-			create a_printer.make_null
+			a_universe.set_use_attribute_keyword (False)
+			a_universe.set_use_convert_keyword (True)
+			a_universe.set_use_recast_keyword (True)
+			a_universe.set_use_reference_keyword (True)
 			a_universe.preparse_multiple
+			create a_printer.make_null (a_universe)
 			a_cursor := a_universe.classes.new_cursor
 			from a_cursor.start until a_cursor.after loop
 				a_class := a_cursor.item
@@ -76,7 +80,7 @@ feature -- Test
 								-- is contained in a file containing more than one class
 								-- text (allowed in VE). This is case is not handled by the
 								-- current test.
-							a_class.parse
+							a_class.process (a_universe.eiffel_parser)
 							assert (a_class.name.name + "_parsed", a_class.is_parsed)
 							assert (a_class.name.name + "_no_syntax_error", not a_class.has_syntax_error)
 							if eiffel_compiler.is_ve then
@@ -91,7 +95,7 @@ feature -- Test
 								a_file.open_write
 								assert ("is_open_write", a_file.is_open_write)
 								a_printer.set_file (a_file)
-								a_printer.process_class (a_class)
+								a_class.process (a_printer)
 								a_printer.set_null_file
 								a_file.close
 								assert_files_equal (a_class.name.name + "_diff", a_class.filename, "gobo.txt")
