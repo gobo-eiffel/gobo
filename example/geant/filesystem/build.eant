@@ -75,19 +75,19 @@
 	
 	<target name="copy_fs1b">
 		<description>
-			Like target 'copy_fs1a' additionally using attribute 'concat'.
+			Like target 'copy_fs1a' additionally using attribute 'mapped_filename_directory'.
 
-			Setting the value of attribute 'concat' to 'true' means that the concatenation of
-			the value of attribute 'directory' ('kernel' in this case) and
+			Setting the value of attribute 'mapped_filename_directory' means that the concatenation of
+			the value of attribute 'mapped_filename_directory' ('kernel' in this case) and
 			the value of the target filename (mapped if a map is provided) is added to the fileset.
 
-			Not specifying attribute 'concat' or setting it's value to 'false' means that
+			Not specifying attribute 'mapped_filename_directory' means that
 			only the value of the target filename (mapped if a map is provided) is added
 			to the fileset.
 		</description>
 
 		<copy to_directory="${GOBO}/example/geant/tmp" dir="${GOBO}/library">
-			<fileset directory="kernel" include="@(**/*.ge|**/*.?ace)" concat="true"/>
+			<fileset directory="kernel" include="@(**/*.ge|**/*.?ace)" mapped_filename_directory="kernel"/>
 		</copy>
 	</target>
 	
@@ -107,11 +107,11 @@
 
 	<target name="copy_fs2b" dir="${GOBO}/library">
 		<description>
-			Like target 'copy_fs2a' but using the 'concat' attribute.
+			Like target 'copy_fs2a' but using the 'mapped_filename_directory' attribute.
 		</description>
 
 		<copy to_directory="${GOBO}/example/geant/tmp">
-			<fileset directory="kernel" include="@(**/*.ge)" concat="true">
+			<fileset directory="kernel" include="@(**/*.ge)" mapped_filename_directory="kernel">
 				<map type="glob" from="*.ge" to="*.e"/>
 			</fileset>
 		</copy>
@@ -233,6 +233,30 @@
 		</outofdate>
 	</target>
 
+	<target name="test_fs2">
+		<description>
+			Demonstrate the usage of attributes
+			'filename_directory' and 'mapped_filename_directory
+			Note: task 'outofdate' is used here to use a fileset. Invoke
+			geant with the '-d' option to see the content of the fileset.
+		</description>
+
+		<outofdate variable="ood" dir="${GOBO}/library">
+			<fileset
+				directory="kernel"
+				include="@(**/*.xace)"
+			>
+			</fileset>
+		</outofdate>
+		<exec executable="echo ${fs.filename} ${fs.mapped_filename}" dir="${GOBO}/library">
+			<fileset
+				directory="kernel"
+				include="@(**/*.ge)"
+			>
+			</fileset>
+		</exec>
+	</target>
+
 	<!-- move -->	
 	<target name="move_file1">
 		<description>
@@ -270,7 +294,10 @@
 		</description>
 
 		<delete>
-			<fileset directory="${GOBO}/example/geant/tmp" include="@(**/*.ge|**/*.?ace)" concat="true"/>
+			<fileset
+				directory="${GOBO}/example/geant/tmp"
+				include="@(**/*.ge|**/*.?ace)"
+				mapped_filename_directory="${GOBO}/example/geant/tmp"/>
 		</delete>
 	</target>
 	
