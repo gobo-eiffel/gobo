@@ -52,6 +52,19 @@ feature -- Status report
 
 feature -- Compilation report
 
+	report_preparsing_status (a_cluster: ET_CLUSTER) is
+			-- Report that `a_cluster' is currently being preparsed.
+		require
+			a_cluster_not_void: a_cluster /= Void
+		do
+			if False then
+			if info_file /= Void then
+				info_file.put_string ("Degree 6 cluster ")
+				info_file.put_line (a_cluster.full_name ('.'))
+			end
+			end
+		end
+
 	report_compilation_status (a_processor: ET_AST_PROCESSOR; a_class: ET_CLASS) is
 			-- Report that `a_processor' is currently processing `a_class'.
 		require
@@ -65,28 +78,22 @@ feature -- Compilation report
 				a_universe := a_processor.universe
 				if a_processor = a_universe.eiffel_parser then
 					info_file.put_string ("Degree 5 class ")
-					info_file.put_string (a_class.name.name)
-					info_file.put_new_line
+					info_file.put_line (a_class.name.name)
 				elseif a_processor = a_universe.ancestor_builder then
 					info_file.put_string ("Degree 4.1 class ")
-					info_file.put_string (a_class.name.name)
-					info_file.put_new_line
+					info_file.put_line (a_class.name.name)
 				elseif a_processor = a_universe.feature_flattener then
 					info_file.put_string ("Degree 4.2 class ")
-					info_file.put_string (a_class.name.name)
-					info_file.put_new_line
+					info_file.put_line (a_class.name.name)
 				elseif a_processor = a_universe.qualified_signature_resolver then
 					info_file.put_string ("Degree 4.3 class ")
-					info_file.put_string (a_class.name.name)
-					info_file.put_new_line
+					info_file.put_line (a_class.name.name)
 				elseif a_processor = a_universe.interface_checker then
 					info_file.put_string ("Degree 4.4 class ")
-					info_file.put_string (a_class.name.name)
-					info_file.put_new_line
+					info_file.put_line (a_class.name.name)
 				elseif a_processor = a_universe.implementation_checker then
 					info_file.put_string ("Degree 3 class ")
-					info_file.put_string (a_class.name.name)
-					info_file.put_new_line
+					info_file.put_line (a_class.name.name)
 				end
 			end
 			end
