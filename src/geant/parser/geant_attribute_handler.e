@@ -34,7 +34,7 @@ feature -- Access
 			-- Attribute of name `a_name'
 		require
 			a_name_not_void: a_name /= Void
-			a_name_not_empty: not a_name.empty
+			a_name_not_empty: a_name.count > 0
 			has_attribute: has_attribute (a_name)
 		local
 			i, nb: INTEGER
@@ -58,7 +58,7 @@ feature -- Access
 			-- Value of attribute named `a_name'
 		require
 			a_name_not_void: a_name /= Void
-			a_name_not_empty: not a_name.empty
+			a_name_not_empty: a_name.count > 0
 			has_attribute: has_attribute (a_name)
 		local
 			i, nb: INTEGER
@@ -85,7 +85,7 @@ feature -- Status report
 			-- in `attributes'?
 		require
 			a_name_not_void: a_name /= Void
-			a_name_not_empty: not a_name.empty
+			a_name_not_empty: a_name.count > 0
 		local
 			i, nb: INTEGER
 			an_attribute: GEANT_ATTRIBUTE

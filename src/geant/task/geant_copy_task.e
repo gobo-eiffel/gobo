@@ -77,37 +77,37 @@ feature {NONE} -- Constants
 	File_attribute_name: UC_STRING is
 			-- Name of xml attribute file.
 		once
-			!! Result.make_from_string ("file")
+			Result := new_unicode_string ("file")
 		ensure
 			attribute_name_not_void: Result /= Void
-			atribute_name_not_empty: not Result.empty
+			atribute_name_not_empty: Result.count > 0
 		end
 
 	To_file_attribute_name: UC_STRING is
 			-- Name of xml attribute to_file.
 		once
-			!! Result.make_from_string ("to_file")
+			Result := new_unicode_string ("to_file")
 		ensure
 			attribute_name_not_void: Result /= Void
-			atribute_name_not_empty: not Result.empty
+			atribute_name_not_empty: Result.count > 0
 		end
 		
 	To_directory_attribute_name: UC_STRING is
 			-- Name of xml attribute to_directory.
 		once
-			!! Result.make_from_string ("to_directory")
+			Result := new_unicode_string ("to_directory")
 		ensure
 			attribute_name_not_void: Result /= Void
-			atribute_name_not_empty: not Result.empty
+			atribute_name_not_empty: Result.count > 0
 		end
 
 	Fileset_element_name: UC_STRING is
 			-- Name of xml subelement for fileset
 		once
-			!! Result.make_from_string ("fileset")
+			Result := new_unicode_string ("fileset")
 		ensure
 			element_name_not_void: Result /= Void
-			element_name_not_empty: not Result.empty
+			element_name_not_empty: Result.count > 0
 		end
 
 end -- class GEANT_COPY_TASK

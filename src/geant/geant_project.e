@@ -60,7 +60,7 @@ feature {NONE} -- Initialization
 			-- Set `child_project' to `a_child_project'.
 		require
 			a_filename_not_void: a_filename /= Void
-			a_filename_not_empty: not a_filename.empty
+			a_filename_not_empty: a_filename.count > 0
 		do
 			build_filename := a_filename
 			if not file_system.is_file_readable (build_filename.out) then
@@ -257,9 +257,9 @@ feature -- Processing
 
 					-- handle parent project if present:
 				if project_element.has_parent then
-					!! a_parent_project_filename.make_from_string (variables.interpreted_string (project_element.parent))
+					a_parent_project_filename := new_unicode_string (variables.interpreted_string (project_element.parent))
 					trace_debug ("inheriting from: " + a_parent_project_filename.out + "%N")
-					if not a_parent_project_filename.empty then
+					if a_parent_project_filename.count > 0 then
 						!! parent_project.make_with_filename (a_parent_project_filename, variables, Current)
 						parent_project.set_verbose (verbose)
 						parent_project.set_debug_mode (debug_mode)
@@ -280,7 +280,7 @@ feature -- Processing
 
 					-- Use passed start target if provided and exists:
 				if a_start_target_name /= Void and then a_start_target_name.count > 0 then
-					!! ucs.make_from_string (a_start_target_name)
+					ucs := new_unicode_string (a_start_target_name)
 					if target_with_name (ucs) /= Void then
 						tmp_start_target_name := ucs
 					else
@@ -291,7 +291,7 @@ feature -- Processing
 					-- Find start target:
 				if tmp_start_target_name = Void or else tmp_start_target_name.count = 0 then
 					if project_element.has_default_target_name then
-						!! ucs.make_from_string (project_element.default_target_name)
+						ucs := new_unicode_string (project_element.default_target_name)
 						if target_with_name (ucs) /= Void then
 							tmp_start_target_name := ucs
 						else
@@ -300,14 +300,14 @@ feature -- Processing
 					else
 							-- Use first target in project file for start_target_name:
 						if targets /= void and then targets.count > 0 then
-							!! tmp_start_target_name.make_from_string (targets.item (1).name)
+							tmp_start_target_name := new_unicode_string (targets.item (1).name)
 						end
 					end
 				end
 				if tmp_start_target_name = Void then
 					reset
 					print ("geant error: unknown target%N")
-				elseif tmp_start_target_name.empty then
+				elseif tmp_start_target_name.count = 0 then
 					reset
 					print ("geant error: unknown target%N")
 				else
@@ -477,16 +477,16 @@ feature {NONE} -- Constants
 	Default_build_filename: UC_STRING is
 			-- Default Name of build file
 		once
-			!! Result.make_from_string ("build.eant")
+			Result := new_unicode_string ("build.eant")
 		ensure
 			filename_not_void: Result /= Void
-			filename_not_empty: not Result.empty
+			filename_not_empty: Result.count > 0
 		end
 
 invariant
 
 	build_filename_not_void: build_filename /= Void
-	build_filename_not_empty: not build_filename.empty
+	build_filename_not_empty: build_filename.count > 0
 	no_void_target: targets /= Void implies not targets.has (Void)
 
 end -- class GEANT_PROJECT

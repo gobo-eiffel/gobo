@@ -180,8 +180,11 @@ feature {NONE} -- Output
 			assertions_off: BOOLEAN
 		do
 			if an_option.has_optimize.is_true then
-				print_indentation (indent, a_file)
-				a_file.put_line ("finalize on")
+				-- Inlining should be disabled otherwise features
+				-- `put and `item' from STRING are not dynamically
+				-- bound when redefined:
+				-- print_indentation (indent, a_file)
+				-- a_file.put_line ("finalize on")
 				print_indentation (indent, a_file)
 				a_file.put_line ("optimize leaves on")
 				print_indentation (indent, a_file)

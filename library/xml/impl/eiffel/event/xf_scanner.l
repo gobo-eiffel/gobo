@@ -25,6 +25,9 @@ inherit
 
    XF_TOKENS
 
+	UC_UNICODE_FACTORY
+		export {NONE} all end
+
 creation
 
    make
@@ -256,7 +259,7 @@ feature -- Access
 
 	handle_found_text is
 	        do
-		        !! last_value.make_from_string (text)
+		        last_value := new_unicode_string (text)
 	        end
 
 

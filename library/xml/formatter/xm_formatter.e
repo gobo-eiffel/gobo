@@ -26,6 +26,9 @@ inherit
 			process_attribute
 		end
 
+	UC_UNICODE_FACTORY
+		export {NONE} all end
+
 creation
 
 	make
@@ -34,7 +37,7 @@ feature
 
 	make is
 		do
-			!! last_string.make (0)
+			last_string := new_unicode_string ("")
 		end
 
 	last_string: UC_STRING
@@ -259,13 +262,3 @@ feature {NONE} -- Implementation
 	position_table: XM_POSITION_TABLE
 
 end
-
-
-
-
-
-
-
-
-
-

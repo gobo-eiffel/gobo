@@ -112,7 +112,7 @@ feature -- Execution
 					a_variables := project.variables
 				end
 				a_filename := file_system.pathname_from_file_system (filename, unix_file_system)
-				!! ucs.make_from_string (a_filename)
+				ucs := new_unicode_string (a_filename)
 				!! a_project.make_with_filename (ucs, a_variables, Void)
 				a_project.set_verbose (project.verbose)
 				a_project.set_debug_mode (project.debug_mode)
@@ -130,7 +130,7 @@ feature -- Execution
 			else
 				check target_executable: is_target_executable end
 					-- call target of current project:
-				!! ucs.make_from_string (start_target_name)
+				ucs := new_unicode_string (start_target_name)
 				a_target := project.target_with_name (ucs)
 				if a_target /= Void then
 					project.build_target (a_target)

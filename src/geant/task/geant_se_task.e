@@ -91,64 +91,64 @@ feature {NONE} -- Constants
 	Ace_attribute_name: UC_STRING is
 			-- Name of xml attribute for "ace"
 		once
-			!! Result.make_from_string ("ace")
+			Result := new_unicode_string ("ace")
 		ensure
 			attribute_name_not_void: Result /= Void
-			atribute_name_not_empty: not Result.empty
+			atribute_name_not_empty: Result.count > 0
 		end
 
 	Root_class_attribute_name: UC_STRING is
 			-- Name of xml attribute for root_class
 		once
-			!! Result.make_from_string ("root_class")
+			Result := new_unicode_string ("root_class")
 		ensure
 			attribute_name_not_void: Result /= Void
-			atribute_name_not_empty: not Result.empty
+			atribute_name_not_empty: Result.count > 0
 		end
 
 	Creation_procedure_attribute_name: UC_STRING is
 			-- Name of xml attribute for creation_procedure
 		once
-			!! Result.make_from_string ("creation_procedure")
+			Result := new_unicode_string ("creation_procedure")
 		ensure
 			attribute_name_not_void: Result /= Void
-			atribute_name_not_empty: not Result.empty
+			atribute_name_not_empty: Result.count > 0
 		end
 
 	Executable_attribute_name: UC_STRING is
 			-- Name of xml attribute for executable
 		once
-			!! Result.make_from_string ("executable")
+			Result := new_unicode_string ("executable")
 		ensure
 			attribute_name_not_void: Result /= Void
-			atribute_name_not_empty: not Result.empty
+			atribute_name_not_empty: Result.count > 0
 		end
 
 	Case_insensitive_attribute_name: UC_STRING is
 			-- Name of xml attribute for case_insensitive
 		once
-			!! Result.make_from_string ("case_insensitive")
+			Result := new_unicode_string ("case_insensitive")
 		ensure
 			attribute_name_not_void: Result /= Void
-			atribute_name_not_empty: not Result.empty
+			atribute_name_not_empty: Result.count > 0
 		end
 
 	No_style_warning_attribute_name: UC_STRING is
 			-- Name of xml attribute for no_style_warning
 		once
-			!! Result.make_from_string ("no_style_warning")
+			Result := new_unicode_string ("no_style_warning")
 		ensure
 			attribute_name_not_void: Result /= Void
-			atribute_name_not_empty: not Result.empty
+			atribute_name_not_empty: Result.count > 0
 		end
 
 	Clean_attribute_name: UC_STRING is
 			-- Name of xml attribute for "clean"
 		once
-			!! Result.make_from_string ("clean")
+			Result := new_unicode_string ("clean")
 		ensure
 			attribute_name_not_void: Result /= Void
-			atribute_name_not_empty: not Result.empty
+			atribute_name_not_empty: Result.count > 0
 		end
 
 end -- class GEANT_SE_TASK

@@ -87,47 +87,46 @@ feature {NONE} -- Constants
 	Name_attribute_name: UC_STRING is
 			-- "name" attribute name
 		once
-			!! Result.make_from_string ("name")
+			Result := new_unicode_string ("name")
 		ensure
 			attribute_name_not_void: Result /= Void
-			attribute_name_not_empty: not Result.empty
+			attribute_name_not_empty: Result.count > 0
 		end
 
 	Default_attribute_name: UC_STRING is
 			-- "default" attribute name
 		once
-			!! Result.make_from_string ("default")
+			Result := new_unicode_string ("default")
 		ensure
 			attribute_name_not_void: Result /= Void
-			attribute_name_not_empty: not Result.empty
+			attribute_name_not_empty: Result.count > 0
 		end
 
 	Inherit_attribute_name: UC_STRING is
 			-- "inherit" attribute name
 		once
-			!! Result.make_from_string ("inherit")
+			Result := new_unicode_string ("inherit")
 		ensure
 			attribute_name_not_void: Result /= Void
-			attribute_name_not_empty: not Result.empty
+			attribute_name_not_empty: Result.count > 0
 		end
 
 	Project_element_name: UC_STRING is
 			-- "project" element name
 		once
-			!!Result.make_from_string ("project")
+			Result := new_unicode_string ("project")
 		ensure
 			element_name_not_void: Result /= Void
-			element_name_not_empty: not Result.empty
+			element_name_not_empty: Result.count > 0
 		end
 
 	Target_element_name: UC_STRING is
 			-- "target" element name
 		once
-			!! Result.make_from_string ("target")
+			Result := new_unicode_string ("target")
 		ensure
 			element_name_not_void: Result /= Void
-			element_name_not_empty: not Result.empty
+			element_name_not_empty: Result.count > 0
 		end
 
 end -- class GEANT_PROJECT_ELEMENT
-

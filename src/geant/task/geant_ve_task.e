@@ -80,46 +80,46 @@ feature {NONE} -- Constants
 	Esd_attribute_name: UC_STRING is
 			-- Name of xml attribute for "esd"
 		once
-			!! Result.make_from_string ("esd")
+			Result := new_unicode_string ("esd")
 		ensure
 			attribute_name_not_void: Result /= Void
-			atribute_name_not_empty: not Result.empty
+			atribute_name_not_empty: Result.count > 0
 		end
 
 	Clean_attribute_name: UC_STRING is
 			-- Name of xml attribute for "clean"
 		once
-			!! Result.make_from_string ("clean")
+			Result := new_unicode_string ("clean")
 		ensure
 			attribute_name_not_void: Result /= Void
-			atribute_name_not_empty: not Result.empty
+			atribute_name_not_empty: Result.count > 0
 		end
 
 	Recursive_attribute_name: UC_STRING is
 			-- Name of xml attribute for "recursive"
 		once
-			!! Result.make_from_string ("recursive")
+			Result := new_unicode_string ("recursive")
 		ensure
 			attribute_name_not_void: Result /= Void
-			atribute_name_not_empty: not Result.empty
+			atribute_name_not_empty: Result.count > 0
 		end
 
 	Tune_attribute_name: UC_STRING is
 			-- Name of xml attribute for "tune"
 		once
-			!! Result.make_from_string ("tune")
+			Result := new_unicode_string ("tune")
 		ensure
 			attribute_name_not_void: Result /= Void
-			atribute_name_not_empty: not Result.empty
+			atribute_name_not_empty: Result.count > 0
 		end
 
 	Level_attribute_name: UC_STRING is
 			-- Name of xml attribute for "level"
 		once
-			!! Result.make_from_string ("level")
+			Result := new_unicode_string ("level")
 		ensure
 			attribute_name_not_void: Result /= Void
-			atribute_name_not_empty: not Result.empty
+			atribute_name_not_empty: Result.count > 0
 		end
 
 end -- class GEANT_VE_TASK

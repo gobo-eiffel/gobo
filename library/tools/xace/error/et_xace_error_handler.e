@@ -140,7 +140,7 @@ feature -- Reporting
 			-- expected root element `an_element_name'.
 		require
 			an_element_name_not_void: an_element_name /= Void
-			an_element_name_not_empty: not an_element_name.empty
+			an_element_name_not_empty: an_element_name.count > 0
 			a_position_not_void: a_position /= Void
 		local
 			an_error: ET_XACE_WRONG_ROOT_ELEMENT_ERROR
@@ -155,7 +155,7 @@ feature -- Reporting
 		require
 			a_containing_element_not_void: a_containing_element /= Void
 			an_attribute_name_not_void: an_attribute_name /= Void
-			an_attribute_name_not_empty: not an_attribute_name.empty
+			an_attribute_name_not_empty: an_attribute_name.count > 0
 			a_position_not_void: a_position /= Void
 		local
 			an_error: ET_XACE_MISSING_ATTRIBUTE_ERROR
@@ -170,7 +170,7 @@ feature -- Reporting
 		require
 			a_containing_element_not_void: a_containing_element /= Void
 			an_element_name_not_void: an_element_name /= Void
-			an_element_name_not_empty: not an_element_name.empty
+			an_element_name_not_empty: an_element_name.count > 0
 			a_position_not_void: a_position /= Void
 		local
 			an_error: ET_XACE_MISSING_ELEMENT_ERROR

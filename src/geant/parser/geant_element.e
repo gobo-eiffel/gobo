@@ -13,6 +13,13 @@ indexing
 
 class GEANT_ELEMENT
 
+inherit
+
+	ANY
+
+	UC_UNICODE_FACTORY
+		export {NONE} all end
+
 creation
 
 	make
@@ -147,8 +154,8 @@ feature -- Access/XML attribute values
 			uc_name: UC_STRING
 			uc_value: UC_STRING
 		do
-			!! uc_name.make_from_string (an_attr_name)
-			!! uc_value.make_from_string (a_default_value)
+			uc_name := new_unicode_string (an_attr_name)
+			uc_value := new_unicode_string (a_default_value)
 			Result := uc_attribute_value_or_default (uc_name, uc_value).out
 		end
 
@@ -162,7 +169,7 @@ feature -- Access/XML attribute values
 			uc_name: UC_STRING
 			s: STRING
 		do
-			!! uc_name.make_from_string(an_attr_name)
+			uc_name := new_unicode_string (an_attr_name)
 			s := xml_element.attribute_value_by_name (uc_name).out
 			Result := project.variables.interpreted_string (s)
 		end
@@ -176,7 +183,7 @@ feature -- Access/XML attribute values
 		local
 			uc_name: UC_STRING
 		do
-			!! uc_name.make_from_string (an_attr_name)
+			uc_name := new_unicode_string (an_attr_name)
 			Result := uc_boolean_value_or_default (uc_name, a_default_value)
 		end
 
@@ -189,7 +196,7 @@ feature -- Access/XML attribute values
 		local
 			uc_name: UC_STRING
 		do
-			!! uc_name.make_from_string (an_attr_name)
+			uc_name := new_unicode_string (an_attr_name)
 			Result := uc_boolean_value (uc_name)
 		end
 
@@ -201,7 +208,7 @@ feature -- Access/XML attribute values
 		local
 			uc_name: UC_STRING
 		do
-			!! uc_name.make_from_string (an_attr_name)
+			uc_name := new_unicode_string (an_attr_name)
 			Result := has_uc_attribute (uc_name)
 		end
 
@@ -212,7 +219,7 @@ feature -- Access/XML attribute values (unicode)
 			-- or `a_default_value' of no such attribute
 		require
 			an_attr_name_not_void: an_attr_name /= Void
-			an_attr_name_not_empty: not an_attr_name.empty
+			an_attr_name_not_empty: an_attr_name.count > 0
 			a_default_value_not_void: a_default_value /= Void
 		local
 			s: STRING
@@ -220,7 +227,7 @@ feature -- Access/XML attribute values (unicode)
 			if xml_element.has_attribute (an_attr_name) then
 				s := project.variables.interpreted_string (
 					xml_element.attribute_value_by_name (an_attr_name).out)
-				!! Result.make_from_string (s)
+				Result := new_unicode_string (s)
 			else
 				Result := a_default_value
 			end
@@ -232,14 +239,14 @@ feature -- Access/XML attribute values (unicode)
 			-- Value of attribue `an_attr_name'
 		require
 			an_attr_name_not_void: an_attr_name /= Void
-			an_attr_name_not_empty: not an_attr_name.empty
+			an_attr_name_not_empty: an_attr_name.count > 0
 			has_attribute: has_uc_attribute (an_attr_name)
 		local
 			s: STRING
 		do
 			s := project.variables.interpreted_string (
 				xml_element.attribute_value_by_name (an_attr_name).out)
-			!! Result.make_from_string (s)
+			Result := new_unicode_string (s)
 		ensure
 			value_not_void: Result /= Void
 		end
@@ -249,7 +256,7 @@ feature -- Access/XML attribute values (unicode)
 			-- or `a_default_value' of no such attribute
 		require
 			an_attr_name_not_void: an_attr_name /= Void
-			an_attr_name_not_empty: not an_attr_name.empty
+			an_attr_name_not_empty: an_attr_name.count > 0
 		do
 			if xml_element.has_attribute (an_attr_name) then
 				Result := uc_boolean_value (an_attr_name)
@@ -262,7 +269,7 @@ feature -- Access/XML attribute values (unicode)
 			-- Value of attribue `an_attr_name'
 		require
 			an_attr_name_not_void: an_attr_name /= Void
-			an_attr_name_not_empty: not an_attr_name.empty
+			an_attr_name_not_empty: an_attr_name.count > 0
 			has_attribute: has_uc_attribute (an_attr_name)
 		local
 			uc_value: UC_STRING
@@ -282,7 +289,7 @@ feature -- Access/XML attribute values (unicode)
 			-- Is `an_attr_name' an atttribute of Current element?
 		require
 			an_attr_name_not_void: an_attr_name /= Void
-			an_attr_name_not_empty: not an_attr_name.empty
+			an_attr_name_not_empty: an_attr_name.count > 0
 		do
 			Result := xml_element.has_attribute (an_attr_name)
 		end
@@ -292,34 +299,34 @@ feature {NONE} -- Constants
 	Dir_attribute_name: UC_STRING is
 			-- "dir" attribute name
 		once
-			!! Result.make_from_string ("dir")
+			Result := new_unicode_string ("dir")
 		ensure
 			attribute_name_not_void: Result /= Void
-			attribute_name_not_empty: not Result.empty
+			attribute_name_not_empty: Result.count > 0
 		end
 
 	If_attribute_name: UC_STRING is
 			-- "if" attribute name
 		once
-			!! Result.make_from_string ("if")
+			Result := new_unicode_string ("if")
 		ensure
 			attribute_name_not_void: Result /= Void
-			attribute_name_not_empty: not Result.empty
+			attribute_name_not_empty: Result.count > 0
 		end
 
 	Unless_attribute_name: UC_STRING is
 			-- "unless" attribute name
 		once
-			!! Result.make_from_string ("unless")
+			Result := new_unicode_string ("unless")
 		ensure
 			attribute_name_not_void: Result /= Void
-			attribute_name_not_empty: not Result.empty
+			attribute_name_not_empty: Result.count > 0
 		end
 
 	True_attribute_value: UC_STRING is
 			-- "true" attribute value
 		once
-			!! Result.make_from_string ("true")
+			Result := new_unicode_string ("true")
 		ensure
 			attribute_value_not_void: Result /= Void
 		end
@@ -327,7 +334,7 @@ feature {NONE} -- Constants
 	False_attribute_value: UC_STRING is
 			-- "false" attribute value
 		once
-			!! Result.make_from_string ("false")
+			Result := new_unicode_string ("false")
 		ensure
 			attribute_value_not_void: Result /= Void
 		end
@@ -335,10 +342,10 @@ feature {NONE} -- Constants
 	Description_element_name: UC_STRING is
 			-- "description" element name
 		once
-			!!Result.make_from_string ("description")
+			Result := new_unicode_string ("description")
 		ensure
 			element_name_not_void: Result /= Void
-			element_name_not_empty: not Result.empty
+			element_name_not_empty: Result.count > 0
 		end
 
 invariant

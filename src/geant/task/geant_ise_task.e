@@ -77,46 +77,46 @@ feature {NONE} -- Constants
 	Ace_attribute_name: UC_STRING is
 			-- Name of xml attribute for "ace"
 		once
-			!! Result.make_from_string ("ace")
+			Result := new_unicode_string ("ace")
 		ensure
 			attribute_name_not_void: Result /= Void
-			atribute_name_not_empty: not Result.empty
+			atribute_name_not_empty: Result.count > 0
 		end
 
 	System_attribute_name: UC_STRING is
 			-- Name of xml attribute for "system"
 		once
-			!! Result.make_from_string ("system")
+			Result := new_unicode_string ("system")
 		ensure
 			attribute_name_not_void: Result /= Void
-			atribute_name_not_empty: not Result.empty
+			atribute_name_not_empty: Result.count > 0
 		end
 
 	Finalize_attribute_name: UC_STRING is
 			-- Name of xml attribute for "finalize"
 		once
-			!! Result.make_from_string ("finalize")
+			Result := new_unicode_string ("finalize")
 		ensure
 			attribute_name_not_void: Result /= Void
-			atribute_name_not_empty: not Result.empty
+			atribute_name_not_empty: Result.count > 0
 		end
 
 	Finish_freezing_attribute_name: UC_STRING is
 			-- Name of xml attribute for "finish_freezing"
 		once
-			!! Result.make_from_string ("finish_freezing")
+			Result := new_unicode_string ("finish_freezing")
 		ensure
 			attribute_name_not_void: Result /= Void
-			atribute_name_not_empty: not Result.empty
+			atribute_name_not_empty: Result.count > 0
 		end
 
 	Clean_attribute_name: UC_STRING is
 			-- Name of xml attribute for "clean"
 		once
-			!! Result.make_from_string ("clean")
+			Result := new_unicode_string ("clean")
 		ensure
 			attribute_name_not_void: Result /= Void
-			atribute_name_not_empty: not Result.empty
+			atribute_name_not_empty: Result.count > 0
 		end
 
 end -- class GEANT_ISE_TASK

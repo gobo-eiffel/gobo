@@ -45,7 +45,7 @@ feature {NONE} -- Redefinable callbacks
 	on_element_declaration (name: UC_STRING) is
 			-- Called for an XML element declaration (DTD)
 		require
-			valid_name: name /= Void and not name.empty
+			valid_name: name /= Void and name.count > 0
 			-- valid_model: model /= default_pointer
 		do
 			interface.on_element_declaration (name)

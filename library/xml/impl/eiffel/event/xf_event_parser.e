@@ -43,7 +43,7 @@ feature {ANY}
 		local
 			a_filename: UC_STRING
 		do
-			!! a_filename.make_from_string (a_stream.name)
+			a_filename := new_unicode_string (a_stream.name)
 			!XM_DEFAULT_URI_SOURCE! source.make (a_filename)
 			reset
 			set_input_buffer (new_file_buffer (a_stream))

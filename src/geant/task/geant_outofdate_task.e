@@ -106,56 +106,55 @@ feature {NONE} -- Constants
 	Source_attribute_name: UC_STRING is
 			-- Name of xml attribute for source
 		once
-			!! Result.make_from_string ("source")
+			Result := new_unicode_string ("source")
 		ensure
 			attribute_name_not_void: Result /= Void
-			atribute_name_not_empty: not Result.empty
+			atribute_name_not_empty: Result.count > 0
 		end
 
 	Target_attribute_name: UC_STRING is
 			-- Name of xml attribute for target
 		once
-			!! Result.make_from_string ("target")
+			Result := new_unicode_string ("target")
 		ensure
 			attribute_name_not_void: Result /= Void
-			atribute_name_not_empty: not Result.empty
+			atribute_name_not_empty: Result.count > 0
 		end
 
 	Variable_attribute_name: UC_STRING is
 			-- Name of xml attribute for variable
 		once
-			!! Result.make_from_string ("variable")
+			Result := new_unicode_string ("variable")
 		ensure
 			attribute_name_not_void: Result /= Void
-			atribute_name_not_empty: not Result.empty
+			atribute_name_not_empty: Result.count > 0
 		end
 
 	True_value_attribute_name: UC_STRING is
 			-- Name of xml attribute for true_value
 		once
-			!! Result.make_from_string ("true_value")
+			Result := new_unicode_string ("true_value")
 		ensure
 			attribute_name_not_void: Result /= Void
-			atribute_name_not_empty: not Result.empty
+			atribute_name_not_empty: Result.count > 0
 		end
 
 	False_value_attribute_name: UC_STRING is
 			-- Name of xml attribute for false_value
 		once
-			!! Result.make_from_string ("false_value")
+			Result := new_unicode_string ("false_value")
 		ensure
 			attribute_name_not_void: Result /= Void
-			atribute_name_not_empty: not Result.empty
+			atribute_name_not_empty: Result.count > 0
 		end
 
 	Fileset_element_name: UC_STRING is
 			-- Name of xml subelement for fileset
 		once
-			!! Result.make_from_string ("fileset")
+			Result := new_unicode_string ("fileset")
 		ensure
 			element_name_not_void: Result /= Void
-			element_name_not_empty: not Result.empty
+			element_name_not_empty: Result.count > 0
 		end
 
 end -- class GEANT_OUTOFDATE_TASK
-

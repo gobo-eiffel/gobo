@@ -299,19 +299,19 @@ feature {NONE} -- Constants
 	Name_attribute_name: UC_STRING is
 			-- "name" attribute name
 		once
-			!! Result.make_from_string ("name")
+			Result := new_unicode_string ("name")
 		ensure
 			attribute_name_not_void: Result /= Void
-			attribute_name_not_empty: not Result.empty
+			attribute_name_not_empty: Result.count > 0
 		end
 
 	Depend_attribute_name: UC_STRING is
 			-- "depend" attribute name
 		once
-			!! Result.make_from_string ("depend")
+			Result := new_unicode_string ("depend")
 		ensure
 			attribute_name_not_void: Result /= Void
-			attribute_name_not_empty: not Result.empty
+			attribute_name_not_empty: Result.count > 0
 		end
 
 end -- class GEANT_TARGET

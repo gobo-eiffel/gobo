@@ -151,7 +151,7 @@ feature {ANY} -- Incremental parsing
 		local
 			uri: UC_STRING
 		do
-			!! uri.make_from_string (a_stream.name)
+			uri := new_unicode_string (a_stream.name)
 			!XM_DEFAULT_URI_SOURCE! source.make (uri)
 			from
 				a_stream.read_string (read_block_size)
@@ -167,7 +167,7 @@ feature {ANY} -- Incremental parsing
 		local
 			uri: UC_STRING
 		do
-			!! uri.make_from_string ("STRING")
+			uri := new_unicode_string ("STRING")
 			!XM_DEFAULT_URI_SOURCE! source.make (uri)
 			parse_string_and_set_error (data, False)
 		end
@@ -560,7 +560,7 @@ feature {NONE} -- (low level) frozen callbacks (called from exml clib)
 		local
 			data: UC_STRING
 		do
-			create data.make_from_utf8 (new_string_from_c_runlength_string (data_ptr, len))
+			data := new_unicode_string_from_utf8 (new_string_from_c_runlength_string (data_ptr, len))
 			on_default (data)
 		end
 
@@ -568,7 +568,7 @@ feature {NONE} -- (low level) frozen callbacks (called from exml clib)
 		local
 			data: UC_STRING
 		do
-			create data.make_from_utf8 (new_string_from_c_runlength_string (data_ptr, len))
+			data := new_unicode_string_from_utf8 (new_string_from_c_runlength_string (data_ptr, len))
 			on_default_expanded (data)
 		end
 

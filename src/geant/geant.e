@@ -50,7 +50,7 @@ feature {NONE} -- Initialization
 			read_command_line
 
 			if build_filename /= void and then build_filename.count > 0 then
-				!! ucs.make_from_string(build_filename)
+				ucs := new_unicode_string (build_filename)
 				!! a_project.make_with_filename(ucs, Void, Void)
 			else
 				!! a_project.make (Void)

@@ -20,6 +20,9 @@ inherit
 			implementation
 		end
 
+	UC_UNICODE_FACTORY
+		export {NONE} all end
+
 creation
 
 	make_from_implementation
@@ -52,7 +55,7 @@ feature {ANY} -- Access
 			if has_prefix then
 				a_prefix := name
 			else
-				!! a_prefix.make (0)
+				a_prefix := new_unicode_string ("")
 			end
 			if value.count > 0 then
 				a_uri := value
@@ -86,7 +89,7 @@ feature {NONE} -- Constants
 
 	uc_xmlns: UC_STRING is
 		once
-			!! Result.make_from_string ("xmlns")
+			Result := new_unicode_string ("xmlns")
 		end
 
 invariant

@@ -36,7 +36,7 @@ feature {DP_CALLBACK_IMPLEMENTATION} -- Redefinable callbacks
 	on_element_declaration (name: UC_STRING) is
 			-- Called for an XML element declaration (DTD)
 		require
-			valid_name: name /= Void and not name.empty
+			valid_name: name /= Void and name.count > 0
 			-- valid_model: model /= default_pointer
 		do
 			-- inherit from this class and redefine this feature to
@@ -46,10 +46,10 @@ feature {DP_CALLBACK_IMPLEMENTATION} -- Redefinable callbacks
 	on_attribute_declaration (element_name, attribute_name, attribute_type, default_value: UC_STRING; is_required: BOOLEAN) is
 			-- Called for an XML attribute declaration (DTD)
 		require
-			valid_element: element_name /= Void and not element_name.empty
-			valid_attribute: attribute_name /= Void and not attribute_name.empty
-			valid_type: attribute_type /= Void and not attribute_type.empty
-			valid_default: default_value = Void or else not default_value.empty
+			valid_element: element_name /= Void and element_name.count > 0
+			valid_attribute: attribute_name /= Void and attribute_name.count > 0
+			valid_type: attribute_type /= Void and attribute_type.count > 0
+			valid_default: default_value = Void or else default_value.count > 0
 		do
 			-- inherit from this class and redefine this feature to
 			-- handle this event.
@@ -67,7 +67,7 @@ feature {DP_CALLBACK_IMPLEMENTATION} -- Redefinable callbacks
 	on_entity_declaration (entity_name: UC_STRING; is_parameter_entity: BOOLEAN; value: UC_STRING; value_length: INTEGER; base, system_id, public_id, notation_name: UC_STRING) is
 			-- Called for an XML entity declaration (DTD)
 		require
-			valid_entity: entity_name /= Void and not entity_name.empty
+			valid_entity: entity_name /= Void and entity_name.count > 0
 		do
 			-- inherit from this class and redefine this feature to
 			-- handle this event.
@@ -168,7 +168,7 @@ feature {DP_CALLBACK_IMPLEMENTATION} -- Redefinable callbacks
 	on_notation_declaration (notation_name, base, system_id, public_id: UC_STRING) is
 			-- Called when the parser finds a XML notation declaration
 		require
-			valid_notation: notation_name /= Void and not notation_name.empty
+			valid_notation: notation_name /= Void and notation_name.count > 0
 		do
 			-- inherit from this class and redefine this feature
 			-- to handle this event.

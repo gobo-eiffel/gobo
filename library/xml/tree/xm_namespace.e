@@ -39,7 +39,7 @@ feature {ANY} -- Access
 			-- Is this a default namespace declaration?
 		do
 			Result := ns_prefix = Void or else
-				ns_prefix.empty
+				ns_prefix.count = 0
 		end
 
 invariant

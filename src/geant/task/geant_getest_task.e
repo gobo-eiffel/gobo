@@ -77,37 +77,37 @@ feature {NONE} -- Constants
 	Config_filename_attribute_name : UC_STRING is
 			-- Name of xml attribute for getest config_filename
 		once
-			!! Result.make_from_string ("config")
+			Result := new_unicode_string ("config")
 		ensure
 			attribute_name_not_void: Result /= Void
-			atribute_name_not_empty: not Result.empty
+			atribute_name_not_empty: Result.count > 0
 		end
 
 	Compile_attribute_name : UC_STRING is
 			-- Name of xml attribute for getest 'compile'
 		once
-			!! Result.make_from_string ("compile")
+			Result := new_unicode_string ("compile")
 		ensure
 			attribute_name_not_void: Result /= Void
-			atribute_name_not_empty: not Result.empty
+			atribute_name_not_empty: Result.count > 0
 		end
 
 	Define_element_name: UC_STRING is
 			-- Name of xml subelement for defines
 		once
-			!! Result.make_from_string ("define")
+			Result := new_unicode_string ("define")
 		ensure
 			attribute_name_not_void: Result /= Void
-			atribute_name_not_empty: not Result.empty
+			atribute_name_not_empty: Result.count > 0
 		end
 
 	Value_attribute_name: UC_STRING is
 			-- Name of xml attribute "value" of subelement <define>
 		once
-			!! Result.make_from_string ("value")
+			Result := new_unicode_string ("value")
 		ensure
 			attribute_name_not_void: Result /= Void
-			atribute_name_not_empty: not Result.empty
+			atribute_name_not_empty: Result.count > 0
 		end
 
 end -- class GEANT_GETEST_TASK

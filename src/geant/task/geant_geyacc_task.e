@@ -80,46 +80,46 @@ feature {NONE} -- Constants
 	Separate_actions_attribute_name: UC_STRING is
 			-- Name of xml attribute for separate_actions
 		once
-			!! Result.make_from_string ("separate_actions")
+			Result := new_unicode_string ("separate_actions")
 		ensure
 			attribute_name_not_void: Result /= Void
-			atribute_name_not_empty: not Result.empty
+			atribute_name_not_empty: Result.count > 0
 		end
 
 	Verbose_filename_attribute_name: UC_STRING is
 			-- Name of xml attribute for verbose_filename
 		once
-			!! Result.make_from_string ("verbose")
+			Result := new_unicode_string ("verbose")
 		ensure
 			attribute_name_not_void: Result /= Void
-			atribute_name_not_empty: not Result.empty
+			atribute_name_not_empty: Result.count > 0
 		end
 
 	Tokens_classname_attribute_name: UC_STRING is
 			-- Name of xml attribute for tokens_classname
 		once
-			!! Result.make_from_string ("tokens")
+			Result := new_unicode_string ("tokens")
 		ensure
 			attribute_name_not_void: Result /= Void
-			atribute_name_not_empty: not Result.empty
+			atribute_name_not_empty: Result.count > 0
 		end
 
 	Output_filename_attribute_name: UC_STRING is
 			-- Name of xml attribute for output_filename
 		once
-			!! Result.make_from_string ("output")
+			Result := new_unicode_string ("output")
 		ensure
 			attribute_name_not_void: Result /= Void
-			atribute_name_not_empty: not Result.empty
+			atribute_name_not_empty: Result.count > 0
 		end
 
 	Input_filename_attribute_name: UC_STRING is
 			-- Name of xml attribute for input_filename
 		once
-			!! Result.make_from_string ("input")
+			Result := new_unicode_string ("input")
 		ensure
 			attribute_name_not_void: Result /= Void
-			atribute_name_not_empty: not Result.empty
+			atribute_name_not_empty: Result.count > 0
 		end
 
 end -- class GEANT_GEYACC_TASK

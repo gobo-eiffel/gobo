@@ -29,7 +29,7 @@ feature {NONE} -- Initialization
 		require
 			a_containing_element_not_void: a_containing_element /= Void
 			an_element_name_not_void: an_element_name /= Void
-			an_element_name_not_empty: not an_element_name.empty
+			an_element_name_not_empty: an_element_name.count > 0
 			a_position_not_void: a_position /= Void
 		do
 			!! parameters.make (1, 3)

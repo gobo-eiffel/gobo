@@ -54,10 +54,10 @@ feature {NONE} -- Constants
 	Directory_attribute_name: UC_STRING is
 			-- Name of xml attribute directory.
 		once
-			!! Result.make_from_string ("directory")
+			Result := new_unicode_string ("directory")
 		ensure
 			attribute_name_not_void: Result /= Void
-			atribute_name_not_empty: not Result.empty
+			atribute_name_not_empty: Result.count > 0
 		end
 
 end -- class GEANT_MKDIR_TASK

@@ -15,6 +15,9 @@ inherit
 
 	KL_SHARED_EXCEPTIONS
 
+	UC_UNICODE_FACTORY
+		export {NONE} all end
+
 creation
 
 	make
@@ -80,7 +83,7 @@ feature
 				io.put_string (usage_string)
 				Exceptions.die (1)
 			end
-			!! file_name.make_from_string (Arguments.argument (2))
+			file_name := new_unicode_string (Arguments.argument (2))
 		ensure
 			file_name_not_void: file_name /= Void
 			event_parser_not_void: event_parser /= Void

@@ -25,6 +25,9 @@ inherit
 			valid_cursor
 		end
 
+	UC_UNICODE_FACTORY
+		export {NONE} all end
+
 feature {NONE} -- Access
 
 	make_from_implementation (imp: like implementation) is
@@ -301,7 +304,7 @@ feature {ANY} -- Element change
 			from
 				cs := new_cursor
 				cs.start
-				!! Result.make (100)
+				Result := new_unicode_string ("")
 			until
 				cs.off
 			loop

@@ -28,6 +28,9 @@ inherit
 			make as make_attribute_handler
 		end
 
+	UC_UNICODE_FACTORY
+		export {NONE} all end
+
 creation
 
 	make
@@ -38,7 +41,7 @@ feature {NONE} -- Initialization
 			-- Create a new element named `a_name'.
 		require
 			a_name_not_void: a_name /= Void
-			a_name_not_empty: not a_name.empty
+			a_name_not_empty: a_name.count > 0
 		do
 			make_composite
 			set_name (a_name)
@@ -62,7 +65,7 @@ feature -- Access
 			-- Void if not found
 		require
 			a_name_not_void: a_name /= Void
-			a_name_not_empty: not a_name.empty
+			a_name_not_empty: a_name.count > 0
 		local
 			i, nb: INTEGER
 			a_child: GEANT_XML_ELEMENT
@@ -85,7 +88,7 @@ feature -- Access
 			-- All direct children named `a_name'
 		require
 			a_name_not_void: a_name /= Void
-			a_name_not_empty: not a_name.empty
+			a_name_not_empty: a_name.count > 0
 		local
 			i, nb: INTEGER
 			a_child: GEANT_XML_ELEMENT
@@ -110,7 +113,7 @@ feature -- Setting
 			-- Set `name' to `a_name'.
 		require
 			a_name_not_void: a_name /= Void
-			a_name_not_empty: not a_name.empty
+			a_name_not_empty: a_name.count > 0
 		do
 			name := a_name
 		ensure
@@ -132,16 +135,16 @@ feature {NONE} -- Constants
 	Empty_string: UC_STRING is
 			-- Empty string
 		once
-			!! Result.make_from_string ("")
+			Result := new_unicode_string ("")
 		ensure
 			string_not_void: Result /= Void
-			string_empty: Result.empty
+			string_empty: Result.count = 0
 		end
 
 invariant
 
 	name_not_void: name /= Void
-	name_not_empty: not name.empty
+	name_not_empty: name.count > 0
 	content_not_void: content /= Void
 
 end -- class GEANT_XML_ELEMENT

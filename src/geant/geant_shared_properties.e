@@ -18,6 +18,9 @@ inherit
 	KL_SHARED_EXECUTION_ENVIRONMENT
 	KL_SHARED_EXCEPTIONS
 
+	UC_UNICODE_FACTORY
+		export {NONE} all end
+
 feature -- Access
 
 	Commandline_variables: DS_HASH_TABLE [STRING, STRING] is
@@ -54,28 +57,60 @@ feature -- Processing
 			p_start: INTEGER
 			p_end: INTEGER
 			nice_string: BOOLEAN
+			i, j, nb: INTEGER
+			stop: BOOLEAN
 		do
-			s := clone (a_string)
+			from
+				i := 1
+				nb := a_string.count
+			until
+				i > nb or stop
+			loop
+				inspect a_string.item (i).code
+				-- when ' ', '%T', '%R', '%N' then
+				when 32, 9, 13, 10 then
+					i := i + 1
+				else
+					stop := True
+				end
+			end
+			if not stop then
+				s := new_unicode_string ("")
+			else
+				from
+					stop := False
+					j := nb
+				until
+					stop
+				loop
+					inspect a_string.item (j).code
+					-- when ' ', '%T', '%R', '%N' then
+					when 32, 9, 13, 10 then
+						j := j - 1
+					else
+						stop := True
+					end
+				end
+				s := a_string.substring (i, j)
+			end
 			!! Result.make (5)
-			a_uc_delimiter.make_from_character (a_delimiter)
+			a_uc_delimiter := new_unicode_character (a_delimiter)
 
 				-- Cleanup String:
 			from
-				s.left_adjust
-				s.right_adjust
 			until
 				nice_string
 			loop
 				nice_string := True
 				if s.count > 0 then
-					if s.item (1) = a_uc_delimiter then
+					if s.item (1).is_equal (a_uc_delimiter) then
 						s.tail (s.count - 1)
 						nice_string := False
 					end
 				end
 	
 				if s.count > 0 then
-					if s.item (s.count) = a_uc_delimiter then
+					if s.item (s.count).is_equal (a_uc_delimiter) then
 						s.head (s.count - 1)
 						nice_string := False
 					end
@@ -90,9 +125,40 @@ feature -- Processing
 			until
 				p_end = 0 or p_start > s.count
 			loop
-				ucs := s.substring (p_start, p_end - 1)
-				ucs.left_adjust
-				ucs.right_adjust
+				from
+					i := p_start
+					nb := p_end - 1
+					stop := False
+				until
+					i > nb or stop
+				loop
+					inspect s.item (i).code
+					-- when ' ', '%T', '%R', '%N' then
+					when 32, 9, 13, 10 then
+						i := i + 1
+					else
+						stop := True
+					end
+				end
+				if not stop then
+					ucs := new_unicode_string ("")
+				else
+					from
+						stop := False
+						j := nb
+					until
+						stop
+					loop
+						inspect s.item (j).code
+						-- when ' ', '%T', '%R', '%N' then
+						when 32, 9, 13, 10 then
+							j := j - 1
+						else
+							stop := True
+						end
+					end
+					ucs := s.substring (i, j)
+				end
 				if ucs.count > 0 then
 					Result.force_last (ucs)
 				end
@@ -105,9 +171,40 @@ feature -- Processing
 
 				-- Append last token:
 			if p_start <= s.count then
-				ucs := s.substring (p_start, s.count)
-				ucs.left_adjust
-				ucs.right_adjust
+				from
+					i := p_start
+					nb := s.count
+					stop := False
+				until
+					i > nb or stop
+				loop
+					inspect s.item (i).code
+					-- when ' ', '%T', '%R', '%N' then
+					when 32, 9, 13, 10 then
+						i := i + 1
+					else
+						stop := True
+					end
+				end
+				if not stop then
+					ucs := new_unicode_string ("")
+				else
+					from
+						stop := False
+						j := nb
+					until
+						stop
+					loop
+						inspect s.item (j).code
+						-- when ' ', '%T', '%R', '%N' then
+						when 32, 9, 13, 10 then
+							j := j - 1
+						else
+							stop := True
+						end
+					end
+					ucs := s.substring (i, j)
+				end
 				if ucs.count > 0 then
 					Result.force_last (ucs)
 				end

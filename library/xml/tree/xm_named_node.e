@@ -54,7 +54,7 @@ feature {ANY} -- Access
 			-- could also be that the used namespace was the default namespace)
 		do
 			Result := ns_prefix /= Void and then
-				not ns_prefix.empty
+				ns_prefix.count > 0
 		end
 
 feature {ANY} -- Element change

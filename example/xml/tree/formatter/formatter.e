@@ -15,6 +15,9 @@ inherit
 
 	KL_SHARED_EXCEPTIONS
 
+	UC_UNICODE_FACTORY
+		export {NONE} all end
+
 creation
 
 	make
@@ -120,10 +123,10 @@ feature {ANY} -- Basic operations
 				io.put_string (usage_string)
 				Exceptions.die (1)
 			end
-			create in_file_name.make_from_string (Arguments.argument (2))
+			in_file_name := new_unicode_string (Arguments.argument (2))
 
 			if Arguments.argument_count > 2 then -- we got an output file as well
-				create out_file_name.make_from_string (Arguments.argument (3))
+				out_file_name := new_unicode_string (Arguments.argument (3))
 			else                  -- we use STDOUT instead
 				use_std_out := True
 			end

@@ -301,7 +301,7 @@ feature -- Access
 			s2: STRING
 			ucs: UC_STRING
 		do
-			!! ucs.make_from_string (a_condition)
+			ucs := new_unicode_string (a_condition)
 			a_tokens := string_tokens (ucs, '=')
 			if a_tokens.count = 1 then
 					-- a_condition should be in form "$foo";

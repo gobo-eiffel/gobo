@@ -21,6 +21,13 @@ inherit
 			make_equal as make
 		end
 
+	UC_UNICODE_FACTORY
+		export
+			{NONE} all
+		undefine
+			copy, is_equal
+		end
+
 creation
 
 	make
@@ -72,7 +79,7 @@ feature {NONE} -- Implementation
 
 	uc_empty: UC_STRING is
 		once
-			!! Result.make_from_string ("")
+			Result := new_unicode_string ("")
 		end
 
 end -- class XM_NAMESPACE_TABLE

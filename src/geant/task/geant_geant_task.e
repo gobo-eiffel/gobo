@@ -65,28 +65,28 @@ feature {NONE} -- Constants
 	Filename_attribute_name: UC_STRING is
 			-- Name of xml attribute filename.
 		once
-			!! Result.make_from_string ("file")
+			Result := new_unicode_string ("file")
 		ensure
 			attribute_name_not_void: Result /= Void
-			atribute_name_not_empty: not Result.empty
+			atribute_name_not_empty: Result.count > 0
 		end
 
 	Start_target_attribute_name: UC_STRING is
 			-- Name of xml attribute Start_target.
 		once
-			!! Result.make_from_string ("target")
+			Result := new_unicode_string ("target")
 		ensure
 			attribute_name_not_void: Result /= Void
-			atribute_name_not_empty: not Result.empty
+			atribute_name_not_empty: Result.count > 0
 		end
 
 	Reuse_variables_attribute_name: UC_STRING is
 			-- Name of xml attribute reuse_variables.
 		once
-			!! Result.make_from_string ("reuse_variables")
+			Result := new_unicode_string ("reuse_variables")
 		ensure
 			attribute_name_not_void: Result /= Void
-			atribute_name_not_empty: not Result.empty
+			atribute_name_not_empty: Result.count > 0
 		end
 
 end -- class GEANT_GEANT_TASK

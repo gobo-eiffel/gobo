@@ -103,100 +103,100 @@ feature {NONE} -- Constants
 	Size_attribute_name: UC_STRING is
 			-- Name of xml attribute for size
 		once
-			!! Result.make_from_string ("size")
+			Result := new_unicode_string ("size")
 		ensure
 			attribute_name_not_void: Result /= Void
-			atribute_name_not_empty: not Result.empty
+			atribute_name_not_empty: Result.count > 0
 		end
 
 	Backup_attribute_name: UC_STRING is
 			-- Name of xml attribute for backup
 		once
-			!! Result.make_from_string ("backup")
+			Result := new_unicode_string ("backup")
 		ensure
 			attribute_name_not_void: Result /= Void
-			atribute_name_not_empty: not Result.empty
+			atribute_name_not_empty: Result.count > 0
 		end
 
 	Ecs_attribute_name: UC_STRING is
 			-- Name of xml attribute for ecs
 		once
-			!! Result.make_from_string ("ecs")
+			Result := new_unicode_string ("ecs")
 		ensure
 			attribute_name_not_void: Result /= Void
-			atribute_name_not_empty: not Result.empty
+			atribute_name_not_empty: Result.count > 0
 		end
 
 	Full_attribute_name: UC_STRING is
 			-- Name of xml attribute for full
 		once
-			!! Result.make_from_string ("full")
+			Result := new_unicode_string ("full")
 		ensure
 			attribute_name_not_void: Result /= Void
-			atribute_name_not_empty: not Result.empty
+			atribute_name_not_empty: Result.count > 0
 		end
 
 	Case_insensitive_attribute_name: UC_STRING is
 			-- Name of xml attribute for case_insensitive
 		once
-			!! Result.make_from_string ("case_insensitive")
+			Result := new_unicode_string ("case_insensitive")
 		ensure
 			attribute_name_not_void: Result /= Void
-			atribute_name_not_empty: not Result.empty
+			atribute_name_not_empty: Result.count > 0
 		end
 
 	Meta_ecs_attribute_name: UC_STRING is
 			-- Name of xml attribute for meta_ecs
 		once
-			!! Result.make_from_string ("meta_ecs")
+			Result := new_unicode_string ("meta_ecs")
 		ensure
 			attribute_name_not_void: Result /= Void
-			atribute_name_not_empty: not Result.empty
+			atribute_name_not_empty: Result.count > 0
 		end
 
 	No_default_attribute_name: UC_STRING is
 			-- Name of xml attribute for no_default
 		once
-			!! Result.make_from_string ("no_default")
+			Result := new_unicode_string ("no_default")
 		ensure
 			attribute_name_not_void: Result /= Void
-			atribute_name_not_empty: not Result.empty
+			atribute_name_not_empty: Result.count > 0
 		end
 
 	No_warn_attribute_name: UC_STRING is
 			-- Name of xml attribute for no_warn
 		once
-			!! Result.make_from_string ("no_warn")
+			Result := new_unicode_string ("no_warn")
 		ensure
 			attribute_name_not_void: Result /= Void
-			atribute_name_not_empty: not Result.empty
+			atribute_name_not_empty: Result.count > 0
 		end
 
 	Separate_actions_attribute_name: UC_STRING is
 			-- Name of xml attribute for separate_actions
 		once
-			!! Result.make_from_string ("separate_actions")
+			Result := new_unicode_string ("separate_actions")
 		ensure
 			attribute_name_not_void: Result /= Void
-			atribute_name_not_empty: not Result.empty
+			atribute_name_not_empty: Result.count > 0
 		end
 
 	Output_filename_attribute_name: UC_STRING is
 			-- Name of xml attribute for output_filename
 		once
-			!! Result.make_from_string ("output")
+			Result := new_unicode_string ("output")
 		ensure
 			attribute_name_not_void: Result /= Void
-			atribute_name_not_empty: not Result.empty
+			atribute_name_not_empty: Result.count > 0
 		end
 
 	Input_filename_attribute_name: UC_STRING is
 			-- Name of xml attribute for input_filename
 		once
-			!! Result.make_from_string ("input")
+			Result := new_unicode_string ("input")
 		ensure
 			attribute_name_not_void: Result /= Void
-			atribute_name_not_empty: not Result.empty
+			atribute_name_not_empty: Result.count > 0
 		end
 
 end -- class GEANT_GELEX_TASK

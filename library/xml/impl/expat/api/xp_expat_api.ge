@@ -23,6 +23,14 @@ inherit
 	KL_SHARED_PLATFORM
 		export {NONE} all end
 
+	UC_UNICODE_FACTORY
+		export {NONE} all end
+
+#ifdef HACT
+	C_UTIL
+		export {NONE} all end
+
+#endif
 feature -- Initialization
 
 	init_api is
@@ -986,13 +994,11 @@ feature -- Conversion
 #ifdef ISE || HACT
 			a_storage: SPECIAL [POINTER]
 			ptr_size: INTEGER
+			ptr2: POINTER
 #endif
 #ifdef ISE
 			to_special: TO_SPECIAL [POINTER]
-			ptr1, ptr2: POINTER
-#endif
-#ifdef HACT
-			i, nb: INTEGER
+			ptr1: POINTER
 #endif
 #ifdef VE
 			a_storage: RTS_MEMORY_MAPPED_AREA_ARRAY [POINTER]
@@ -1016,11 +1022,10 @@ feature -- Conversion
 #endif
 #ifdef HACT
 				ptr_size := Platform.Pointer_bytes
-				nb := 10
-				!! a_storage.make (nb)
-				i := 1
-				c_bcopy (attr_spec_ptr, $a_storage, i * ptr_size)
-				ptr := a_storage.item (i - 1)
+				!! a_storage.make (1)
+				ptr2 := attr_spec_ptr
+				c_bcopy (ptr2, $a_storage, ptr_size)
+				ptr := a_storage.item (0)
 #endif
 #ifdef VE
 				i := 1
@@ -1030,7 +1035,7 @@ feature -- Conversion
 			until
 				ptr = default_pointer
 			loop
-				!! a_name.make_from_utf8 (new_string_from_c_zero_terminated_string (ptr))
+				a_name := new_unicode_string_from_utf8 (new_string_from_c_zero_terminated_string (ptr))
 				colon_index := a_name.substring_index (uc_colon, 1)
 				if colon_index /= 0 then
 					a_prefix := a_name.substring (1, colon_index - 1)
@@ -1049,20 +1054,16 @@ feature -- Conversion
 				ptr := a_storage.item (0)
 #endif
 #ifdef HACT
-				i := i + 1
-				if i > nb then
-					nb := nb + 10
-					!! a_storage.make (nb)
-				end
-				c_bcopy (attr_spec_ptr, $a_storage, i * ptr_size)
-				ptr := a_storage.item (i - 1)
+				ptr2 := integer_to_pointer (pointer_to_integer (ptr2) + ptr_size)
+				c_bcopy (ptr2, $a_storage, ptr_size)
+				ptr := a_storage.item (0)
 #endif
 #ifdef VE
 				i := i + 1
 				a_storage.resize (i)
 				ptr := a_storage.item (i)
 #endif
-				!! a_value.make_from_utf8 (new_string_from_c_zero_terminated_string (ptr))
+				a_value := new_unicode_string_from_utf8 (new_string_from_c_zero_terminated_string (ptr))
 				!! pair1.make (a_name, a_prefix)
 				!! pair2.make (pair1, a_value)
 				Result.force_last (pair2)
@@ -1077,13 +1078,9 @@ feature -- Conversion
 				ptr := a_storage.item (0)
 #endif
 #ifdef HACT
-				i := i + 1
-				if i > nb then
-					nb := nb + 10
-					!! a_storage.make (nb)
-				end
-				c_bcopy (attr_spec_ptr, $a_storage, i * ptr_size)
-				ptr := a_storage.item (i - 1)
+				ptr2 := integer_to_pointer (pointer_to_integer (ptr2) + ptr_size)
+				c_bcopy (ptr2, $a_storage, ptr_size)
+				ptr := a_storage.item (0)
 #endif
 #ifdef VE
 				i := i + 1
@@ -1099,7 +1096,7 @@ feature {NONE} -- Implementation
 
 	uc_colon: UC_STRING is
 		once
-			!! Result.make_from_string (":")
+			Result := new_unicode_string (":")
 		ensure
 			uc_colon_not_void: Result /= Void
 		end

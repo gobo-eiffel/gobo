@@ -75,7 +75,7 @@ xml_decl:
 xml_decl_version: T_WORD T_EQUAL T_DOUBLE_QUOTES xml_attr_text T_DOUBLE_QUOTES
 		{ $$ := $4 }
 	| T_WORD T_EQUAL T_DOUBLE_QUOTES T_DOUBLE_QUOTES
-		{ !! $$.make (0) }
+		{ $$ := new_unicode_string ("") }
 	;
 
 ----------------
@@ -182,17 +182,17 @@ xml_attr_name:
 xml_attr_value: T_DOUBLE_QUOTES xml_attr_text T_DOUBLE_QUOTES
 		{ $$ := $2 }
 	| T_DOUBLE_QUOTES T_DOUBLE_QUOTES
-		{ !! $$.make (0) }
+		{ $$ := new_unicode_string ("") }
 	;
 
 xml_attr_text: T_ATTR_TEXT
 		{ $$ := $1 }
 	| T_GT_ENTITY
-		{ !! $$.make_from_string (">") }
+		{ $$ := new_unicode_string (">") }
 	| T_LT_ENTITY
-		{ !! $$.make_from_string ("<") }
+		{ $$ := new_unicode_string ("<") }
 	| T_AMP_ENTITY
-		{ !! $$.make_from_string ("&") }
+		{ $$ := new_unicode_string ("&") }
 	| xml_attr_text T_ATTR_TEXT
 		{
 			$$ := $1
@@ -279,7 +279,7 @@ feature {NONE} -- Helper functions
 
 	uc_collon: UC_CHARACTER is
 		once
-			Result.make_from_character (':')
+			Result := new_unicode_character (':')
 		end
 
 	split_name_and_prefix (str: UC_STRING): DS_PAIR [UC_STRING, UC_STRING] is
@@ -299,7 +299,7 @@ feature {NONE} -- Helper functions
 
 	empty_ucstring: UC_STRING is
 		do
-			!! Result.make (0)
+			Result := new_unicode_string ("")
 		end
 
 feature {ANY} -- Access
