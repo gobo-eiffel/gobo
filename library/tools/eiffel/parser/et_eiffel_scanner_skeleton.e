@@ -203,16 +203,6 @@ feature -- Error handling
 	error_handler: ET_ERROR_HANDLER
 			-- Error handler
 
-	set_fatal_error (a_class: ET_CLASS) is
-			-- Report a fatal error to `a_class'.
-		do
-			a_class.set_parsed
-			a_class.set_syntax_error
-		ensure then
-			is_parsed: a_class.is_parsed
-			has_syntax_error: a_class.has_syntax_error
-		end
-
 feature -- Tokens
 
 	has_break: BOOLEAN is
