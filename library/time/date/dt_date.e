@@ -30,11 +30,16 @@ inherit
 			out
 		end
 
+	DT_DATE_HANDLER
+		undefine
+			out
+		end
+
 creation
 
 	make, make_from_day_count
 
-creation {DT_DATE_TIME}
+creation {DT_DATE_HANDLER}
 
 	make_from_storage
 
@@ -511,7 +516,7 @@ feature -- Output
 			INTEGER_FORMATTER_.append_decimal_integer (a_string, dd)
 		end
 
-feature {DT_DATE} -- Implementation
+feature {DT_DATE_HANDLER} -- Implementation
 
 	storage: INTEGER
 			-- Compact version of current date

@@ -52,9 +52,18 @@ inherit
 			append_precise_time_to_string
 		end
 
+	DT_DATE_TIME_HANDLER
+		undefine
+			out
+		end
+
 creation
 
 	make, make_precise, make_from_date_time, make_from_date
+
+creation {DT_DATE_TIME_HANDLER}
+
+	make_from_storage
 
 feature {NONE} -- Initialization
 
@@ -145,6 +154,17 @@ feature {NONE} -- Initialization
 			minute_set: minute = 0
 			second_set: second = 0
 			millisecond_set: millisecond = 0
+		end
+
+	make_from_storage (a_date_storage, a_time_storage: INTEGER) is
+			-- Create a new date time from `a_date_storage'
+			-- and `a_time_storage'.
+		do
+			date_storage := a_date_storage
+			time_storage := a_time_storage
+		ensure
+			date_storage_set: date_storage = a_date_storage
+			time_storage_set: time_storage = a_time_storage
 		end
 
 feature -- Access

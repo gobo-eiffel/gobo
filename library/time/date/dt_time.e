@@ -31,13 +31,18 @@ inherit
 			out
 		end
 
+	DT_TIME_HANDLER
+		undefine
+			out
+		end
+
 creation
 
 	make, make_precise,
 	make_from_second_count,
 	make_from_millisecond_count
 
-creation {DT_DATE_TIME}
+creation {DT_TIME_HANDLER}
 
 	make_from_storage
 
@@ -498,7 +503,7 @@ feature -- Output
 			end
 		end
 
-feature {DT_TIME} -- Implementation
+feature {DT_TIME_HANDLER} -- Implementation
 
 	storage: INTEGER
 			-- Compact version of current time
