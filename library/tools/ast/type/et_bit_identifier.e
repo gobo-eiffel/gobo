@@ -67,7 +67,7 @@ feature -- Validity
 			-- Report errors if not valid.
 		do
 			Result := False
-			an_heir.error_handler.report_vhpr3_error (an_heir, Current)
+			an_heir.error_handler.report_vhpr3_bit_name_error (an_heir, Current)
 		end
 
 	check_constraint_validity (a_formal: ET_FORMAL_GENERIC_PARAMETER; a_class: ET_CLASS;
@@ -80,7 +80,7 @@ feature -- Validity
 			-- Report errors if not valid.
 		do
 			Result := False
-			a_class.error_handler.report_vcfg3_error (a_class, Current)
+			a_class.error_handler.report_vcfg3_bit_name_error (a_class, Current)
 		end
 
 feature -- Type processing
@@ -97,9 +97,10 @@ feature -- Type processing
 			other_feature: ET_FLATTENED_FEATURE
 			a_constant: ET_INTEGER_CONSTANT
 		do
-			features := a_flattener.features
-			if features.has (name) then
-				other_feature := features.item (name)
+			features := a_flattener.named_features
+			features.search (name)
+			if features.found then
+				other_feature := features.found_item
 				a_constant := other_feature.integer_constant
 				if a_constant /= Void then
 					!ET_BIT_FEATURE! Result.make (a_constant, name, other_feature.seeds.first, position)
@@ -120,13 +121,14 @@ print ("'%N")
 
 feature -- Conversion
 
-	actual_type (a_feature: ET_FEATURE; a_base_type: ET_CLASS_TYPE): ET_TYPE is
-			-- Type, in the context of `a_feature' in `a_base_type',
+	base_type (a_feature: ET_FEATURE; a_type: ET_CLASS_TYPE): ET_TYPE is
+			-- Type, in the context of `a_feature' in `a_type',
 			-- only made up of class names and generic formal parameters
-			-- when `a_base_type' in a generic type not fully derived
+			-- when `a_type' in a generic type not fully derived
+			-- (Definition of base type in ETL2 p. 198)
 		do
 -- Error already reported by `resolved_identifier_types'.
-print (a_base_type.base_class.name.name)
+print (a_type.base_class.name.name)
 print (": unknown identifier in 'BIT ")
 print (name.name)
 print ("'%N")
@@ -138,7 +140,7 @@ feature -- Duplication
 	deep_cloned_type: like Current is
 			-- Recursively cloned type
 		do
-			!! Result.make (name, position)
+			Result := Current
 		end
 
 feature -- Output
@@ -147,14 +149,13 @@ feature -- Output
 			-- Append textual representation of
 			-- current type to `a_string'.
 		do
-			a_string.append_string (bit_keyword)
-			a_string.append_character (' ')
+			a_string.append_string (bit_space)
 			a_string.append_string (name.name)
 		end
 
 feature {NONE} -- Constants
 
-	bit_keyword: STRING is "BIT"
+	bit_space: STRING is "BIT "
 			-- Eiffel keywords
 
 invariant
