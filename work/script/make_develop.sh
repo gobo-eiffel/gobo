@@ -9,8 +9,7 @@ rootdir=`pwd`
 cvs checkout -P gobo
 
 # Set environment variable $GOBO.
-cd gobo
-GOBO=`pwd`
+GOBO=$rootdir/gobo
 GOBO=`echo $GOBO | sed "s/^\/\/\([a-zA-Z]\)\//\1:\//g"`
 export GOBO
 echo ''; echo "#### \$GOBO = $GOBO"
