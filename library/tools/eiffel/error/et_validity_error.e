@@ -8050,7 +8050,7 @@ feature {NONE} -- Initialization
 			current_class := a_class
 			class_impl := a_class_impl
 			position := a_position
-			create parameters.make (1, 9)
+			create parameters.make (1, 10)
 			parameters.put (etl_code, 1)
 			parameters.put (filename, 2)
 			parameters.put (position.line.out, 3)
