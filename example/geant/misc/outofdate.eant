@@ -1,39 +1,55 @@
 <?xml version="1.0" ?>
 
-<project name="geant_outofdate_test">
+<project name="geant_outofdate">
 	
-	<target name="ood1">
-		<set name="gepp_dir" value="${GOBO}/library/kernel/io"/>
+	<target name="init">
+		<set name="gepp_in_dir" value="${GOBO}/library/kernel/io"/>
+		<set name="gepp_out_dir" value="${GOBO}/example/geant/tmp"/>
 		<set name="gepp_file" value="kl_file_system"/>
-		
-		<outofdate
-			variable="generate"
-			source="${gepp_dir}/${gepp_file}.ge,${GOBO}/example/geant/misc/outofdate.eant"
-			target="${gepp_file}.e"
-		/>
-		<geant target="gepp"/>
-
 	</target>
 
-	<target name="ood2">
-		<set name="gepp_dir" value="${GOBO}/library/kernel/io"/>
-		<set name="gepp_file" value="kl_file_system"/>
-		
-		<echo message="generate: ${generate}"/>
+	<target name="ood1" depend="init">
 		<outofdate
 			variable="generate"
-			target="${gepp_file}.e"
-		>
-			<fileset directory="${GOBO}/library/kernel" include="**/*.ge"/>
+			source="${gepp_in_dir}/${gepp_file}.ge"
+			target="${gepp_out_dir}/${gepp_file}.e"
+		/>
+		<echo message="generate: ${generate}"/>
+		<geant target="gepp" if="${generate}=true"/>
+	</target>
+
+	<target name="ood2" depend="init">
+		<outofdate variable="generate" dir="${GOBO}/library/kernel">
+			<fileset directory="." include="@(**/*.ge)">
+				<map type="glob" from="*.ge" to="${GOBO}/example/geant/tmp/*.e">
+					<map type="flat"/>
+				</map>
+			</fileset>
 		</outofdate>
 		<echo message="generate: ${generate}"/>
-
-		<geant target="gepp"/>
-
 	</target>
 
+<!-- does not work yet, add 'entry' subelements to 'fileset' element
+	<target name="ood3" depend="init">
+		<outofdate variable="generate" dir="${GOBO}/library/kernel">
+			<fileset
+				directory="."
+				include="@(${gepp_in_dir}/${gepp_file}.ge|${GOBO}/example/geant/misc/outofdate.eant)"
+			>
+				<map type="glob" from="*.ge" to="${gepp_out_dir}/*.e">
+					<map type="flat"/>
+				</map>
+			</fileset>
+		</outofdate>
+		<echo message="generate: ${generate}"/>
+	</target>
+-->
+
 	<target name="gepp">
-		<gepp input="${gepp_dir}/${gepp_file}.ge" output="${GOBO}/example/geant/tmp/${gepp_file}.e" if="${generate}=true">
+		<gepp
+			input="${gepp_in_dir}/${gepp_file}.ge"
+			output="${gepp_out_dir}/${gepp_file}.e"
+		>
 			<define name="ISE"/>
 		</gepp>
 	</target>
