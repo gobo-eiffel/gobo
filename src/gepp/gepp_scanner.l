@@ -171,6 +171,7 @@ feature -- Output
 		do
 			output_file.put_string (a_text)
 		end
+
 invariant
 
 	output_not_void: output_file /= Void
