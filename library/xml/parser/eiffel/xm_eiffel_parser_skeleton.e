@@ -138,7 +138,7 @@ feature {NONE} -- Implementation
 				scanner.set_input_from_resolver (entity_resolver)
 				parse_with_events
 			else
-				force_error (Error_entity_unresolved_external)
+				force_error (entity_resolver.last_error)
 			end
 		end
 		
