@@ -1314,7 +1314,6 @@ feature -- Compilation
 		local
 			l_clock: DT_SHARED_SYSTEM_CLOCK
 			dt1: DT_DATE_TIME
-			a_signature_viewer: ET_SIGNATURE_VIEWER
 		do
 			activate_processors
 			debug ("ericb")
@@ -1363,10 +1362,6 @@ feature -- Compilation
 			compile_degree_3 (flat)
 			debug ("ericb")
 				print_time (dt1, "Degree 3")
-			end
-			debug ("ericb")
-				create a_signature_viewer.make (Current)
-				a_signature_viewer.execute
 			end
 		end
 
