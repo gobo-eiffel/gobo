@@ -37,6 +37,7 @@ feature {NONE} -- Initialization
 			!! eiffel_parser.make_with_factory (Current, a_factory, an_error_handler)
 			eiffel_parser.set_create_keyword (True)
 			!DS_HASH_TOPOLOGICAL_SORTER [ET_CLASS]! class_sorter.make_default
+			!DS_HASH_TOPOLOGICAL_SORTER [ET_FORMAL_GENERIC_PARAMETER]! formal_generic_parameter_sorter.make_default
 			make_basic_classes
 		ensure
 			clusters_set: clusters = a_clusters
@@ -57,7 +58,7 @@ feature {NONE} -- Initialization
 			general_class := eiffel_class (id)
 			!! id.make ("NONE", p)
 			none_class := eiffel_class (id)
-			!! any_type.make (any_class.name, Void, any_class)
+			!! any_type.make (any_class.name, any_class)
 			!! any_parent.make (any_type, Void, Void, Void, Void, Void)
 			!! any_parents.make (any_parent)
 		ensure
@@ -66,6 +67,22 @@ feature {NONE} -- Initialization
 			none_class_not_void: none_class /= Void
 			any_type_not_void: any_type /= Void
 			any_parents_not_void: any_parents /= Void
+		end
+
+feature -- Status report
+
+	has_class (a_name: ET_IDENTIFIER): BOOLEAN is
+			-- Is there a class named `a_name'
+			-- in current universe?
+		require
+			a_name_not_void: a_name /= Void
+		do
+			classes.search (a_name)
+			if classes.found then
+				Result := classes.found_item.is_parsed
+			end
+		ensure
+			is_parsed: Result implies eiffel_class (a_name).is_parsed
 		end
 
 feature -- Access
@@ -196,6 +213,11 @@ feature {ET_CLASS} -- Implementation
 	class_sorter: DS_TOPOLOGICAL_SORTER [ET_CLASS]
 			-- Class sorter
 
+feature {ET_FORMAL_GENERIC_PARAMETERS, ET_FORMAL_GENERIC_TYPE} -- Implementation
+
+	formal_generic_parameter_sorter: DS_TOPOLOGICAL_SORTER [ET_FORMAL_GENERIC_PARAMETER]
+			-- Formal generic parameter sorter
+
 invariant
 
 	classes_not_void: classes /= Void
@@ -204,6 +226,7 @@ invariant
 	eiffel_parser_not_void: eiffel_parser /= Void
 	ast_factory_not_void: ast_factory /= Void
 	class_sorter_not_void: class_sorter /= Void
+	formal_generic_parameter_sorter_not_void: formal_generic_parameter_sorter /= Void
 	any_class_not_void: any_class /= Void
 	general_class_not_void: general_class /= Void
 	none_class_not_void: none_class /= Void
