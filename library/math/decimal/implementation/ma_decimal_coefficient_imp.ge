@@ -91,6 +91,22 @@ feature -- Access
 			end
 		end
 
+	subcoefficient (index_start, index_end : INTEGER) : MA_DECIMAL_COEFFICIENT is
+			-- subcoefficient made of digits in range [index_start..index_end]
+		local
+			index : INTEGER
+		do
+			create {MA_DECIMAL_COEFFICIENT_IMP}Result.make (index_end - index_start + 1)
+			from
+				index := index_start
+			until
+				index > index_end
+			loop
+				Result.put (item (index), Result.count)
+				index := index + 1
+			end
+		end
+
 feature -- Measurement
 
 	count: INTEGER
@@ -120,7 +136,9 @@ feature -- Element change
 			c: CHARACTER
 			l_digits: like digits
 		do
-			grow (s.count)
+			if s.count > capacity then
+				grow (s.count)
+			end
 			l_digits := digits
 			from
 				i := coefficient_end
@@ -309,17 +327,13 @@ feature -- Basic operations
 			index: INTEGER
 			l_digits, l_other_digits: like digits
 		do
-			if other.count < count then
-				Result := False
-			elseif other.count > count then
-				Result := False
-			else -- other.count = count
+			if other.count = count then
 				from
 					index := count - 1
 					l_digits := digits
 					l_other_digits := other.digits
 				variant
-					index
+					index + 1
 				until
 #ifdef VE
 					index < lower or else l_digits.item (index).code /= l_other_digits.item (index).code
@@ -702,4 +716,8 @@ feature {MA_DECIMAL} -- Implementation
 			count := a_count
 		end
 
+invariant
+
+	digits_not_void: digits /= Void
+	
 end

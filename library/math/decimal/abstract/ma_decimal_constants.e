@@ -20,6 +20,8 @@ inherit
 			{NONE} all
 		end
 
+	KL_IMPORTED_ARRAY_ROUTINES
+	
 feature -- Constants
 
 	Round_up: INTEGER is 0 
@@ -98,6 +100,8 @@ feature -- Constants
 				Signal_invalid_operation ,
 				Signal_overflow,
 				Signal_underflow >>
+		ensure
+			default_traps_not_void: Result /= Void
 		end
 
 	Default_rounding_mode: INTEGER is
@@ -122,12 +126,55 @@ feature -- Constants
 	 		-- Minimum value convertible to integer
 	 	once
 	 		create Result.make_from_integer (Platform.Minimum_integer)
+	 	ensure
+	 		minimum_integer_not_void: Result /= Void
 	 	end
 
 	 Maximum_integer_as_decimal: MA_DECIMAL is
 	 		-- Maximum value convertible to integer
 	 	once
 	 		create Result.make_from_integer (Platform.Maximum_integer)
+	 	ensure
+	 		maximum_integer_not_void: Result /= Void
 	 	end
+
+feature -- Constants
+
+	Rounds: ARRAY [INTEGER] is
+			-- Rounding modes
+		once
+			Result := <<Round_half_up, Round_unnecessary, Round_ceiling, Round_down, Round_floor, Round_half_down, Round_half_even, Round_up>>
+		ensure
+			rounds_not_void: Result /= Void
+		end
+
+	Round_words: ARRAY [STRING] is
+			-- Textual representation of rounding modes
+		once
+			Result := <<"Round_up", "Round_down", "Round_ceiling", "Round_floor", "Round_half_up",
+				"Round_half_down", "Round_half_even", "Round_unnecessary">>
+		ensure
+			round_word_not_void: Result /= Void
+			no_void_round_words: not ANY_ARRAY_.has (Result, Void)
+		end
+
+	signals: ARRAY [INTEGER] is
+			-- Signals
+		once
+			Result := << Signal_division_by_zero, Signal_inexact, Signal_invalid_operation,
+				Signal_lost_digits, Signal_overflow, Signal_rounded, Signal_underflow, Signal_subnormal>>
+		ensure
+			signals_not_void: Result /= Void
+		end
+
+	Signal_words: ARRAY [STRING] is
+			-- Textual representation of signals
+		once
+			Result := << "division_by_zero", "inexact", "invalid_operation",
+				"lost_digits", "overflow", "rounded", "underflow", "subnormal">>
+		ensure
+			signal_words_not_void: Result /= Void
+			no_void_signal_words: not ANY_ARRAY_.has (Result, Void)
+		end
 
 end

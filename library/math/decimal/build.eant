@@ -36,7 +36,7 @@
 			Remove intermediary generated files.
 		</description>
 
-		<ve clean="kernel" recursive="true"/>
+		<ve clean="decimal" recursive="true"/>
 	</target>
 
 	<target name="clobber">

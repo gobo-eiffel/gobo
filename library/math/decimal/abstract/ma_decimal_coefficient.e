@@ -94,6 +94,17 @@ feature -- Measurement
 			definition: capacity >= count
 		end
 
+	subcoefficient (index_start, index_end : INTEGER) : MA_DECIMAL_COEFFICIENT is
+			-- subcoefficient made of digits in range [index_start..index_end]
+		require
+			index_start_big_enough: index_start >= 0
+			index_end_big_enough: index_end >= index_start
+			index_end_small_enough: index_end <= count - 1
+		deferred
+		ensure
+			result_not_void: Result /= Void
+		end
+		
 feature -- Status report
 
 	valid_index (index: INTEGER): BOOLEAN is
@@ -119,6 +130,14 @@ feature -- Status report
 			Result := (index = count)
 		end
 
+	is_significant : BOOLEAN is
+			-- Has current any non-zero digit?
+		do
+			Result := not is_zero
+		ensure
+			definition: Result = not is_zero
+		end
+		
 feature {MA_DECIMAL} -- Status setting
 
 	set_from_substring (s: STRING; coefficient_begin, coefficient_end: INTEGER) is
@@ -159,7 +178,7 @@ feature -- Comparison
 --			greater: True -- Result = -1 implies Current > other
 --		end
 
-feature {MA_DECIMAL, MA_DECIMAL_PARSER} -- Element change
+feature {MA_DECIMAL, MA_DECIMAL_PARSER, MA_DECIMAL_COEFFICIENT} -- Element change
 
 	put (v, index: INTEGER) is
 			-- Put `v' at `index'-th item.
@@ -178,7 +197,7 @@ feature {MA_DECIMAL, MA_DECIMAL_PARSER} -- Element change
 			a_capacity_large_enough: a_capacity >= count
 		deferred
 		ensure
-			definition: (old capacity <= a_capacity) implies capacity >= a_capacity
+			new_capacity: capacity >= a_capacity
 			adapted_count: count = a_capacity
 		end
 
@@ -188,6 +207,7 @@ feature -- Duplication
 			-- Cloned version of `Current'
 		deferred
 		ensure
+			twin_not_void: Result /= Void
 			twin_not_current: Result /= Current
 			tiwn_equal_current: Result.is_equal (Current)
 		end
@@ -278,7 +298,7 @@ feature {MA_DECIMAL, MA_DECIMAL_COEFFICIENT} -- Basic operations
 			index := msd_index
 			set_count (index + 1)
 		ensure
-			count: count /= 1 implies item (count - 1) /= 0
+			no_leading_zero: count > 1 implies item (count - 1) /= 0
 		end
 
 	shift_left (a_count: INTEGER) is
@@ -308,6 +328,7 @@ feature {MA_DECIMAL} -- Implementation
 			-- Set `count' to `a_count'.
 		require
 			a_count_small_enough: a_count <= capacity
+			a_count_large_enough: a_count >= 0
 		deferred
 		ensure
 			count_set: count = a_count
@@ -316,5 +337,7 @@ feature {MA_DECIMAL} -- Implementation
 invariant
 
 	count_less_or_equal_capacity: count <= capacity
-
+	count_not_negative: count >= 0
+	lower_upper_consistent: lower <= upper
+	
 end

@@ -29,6 +29,7 @@ feature -- Basic operations
 			-- Parse `a_string'.
 		require
 			a_string_not_void: a_string /= Void
+			a_string_not_empty: not a_string.is_empty
 		deferred
 		ensure
 			last_decimal_not_void_when_no_error: not error implies last_decimal /= Void

@@ -135,7 +135,6 @@ feature -- Basic operations
 			-- Parse `s'.
 		require else
 			s_not_void: s /= Void
-			s_not_empty: not s.is_empty
 		local
 			old_allowed: BOOLEAN
 		do
@@ -230,6 +229,10 @@ feature {MA_DECIMAL} -- Basic operations
 
 	process_start (c: CHARACTER; index: INTEGER; s: STRING) is 
 			-- Process `c' at `index' in `s' when in `state_start'.
+		require
+			state_start: state = State_start
+			s_not_void: s /= Void
+			index_in_s: index > 0 and then index <= s.count
 		do
 			inspect c
 			when '0'..'9' then
@@ -317,6 +320,8 @@ feature {MA_DECIMAL} -- Basic operations
 
 	process_integer_part (c: CHARACTER; index: INTEGER) is
 			-- Process `c' at `index' when in `state_integer_part'.
+		require
+			state_integer_part: state = State_integer_part
 		do
 			inspect c
 			when '0'..'9' then

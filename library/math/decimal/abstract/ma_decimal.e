@@ -180,12 +180,7 @@ feature {NONE} -- Initialization
 				end
 			else
 				if l_parser.is_infinity then
-					set_infinity
-					if parser.sign < 0 then
-						set_negative
-					else
-						set_positive
-					end
+					make_infinity (parser.sign)
 				elseif l_parser.is_snan then
 					make_snan
 				elseif l_parser.is_nan then
@@ -224,6 +219,46 @@ feature {NONE} -- Initialization
 			value_string_not_void: value_string /= Void --and then value_string.count > 0
 		do
 			make_from_string_ctx (value_string, shared_decimal_context)
+		end
+
+	make_special (code_special: INTEGER) is
+			-- Make special from code.
+		require
+			valid_code_special: code_special = Special_infinity or else code_special = Special_quiet_nan
+				or else code_special = Special_signaling_nan
+		do
+			coefficient := zero.coefficient
+			special := code_special
+		ensure
+			is_special: is_special
+		end
+
+	make_nan is
+			-- Make quiet 'Not a Number'.
+		do
+			make_special (Special_quiet_nan)
+		ensure
+			is_nan: is_quiet_nan
+		end
+
+	make_snan is
+			-- Make Signaling 'Not a Number'.
+		do
+			make_special (Special_signaling_nan)
+		ensure
+			is_snan: is_signaling_nan
+		end
+
+	make_infinity (a_sign: INTEGER) is
+			-- Make Infinity.
+		require
+			a_sign_valid: a_sign = -1 or else a_sign = 1
+		do
+			make_special (Special_infinity)
+			is_negative := a_sign < 0
+		ensure
+			is_infinity: is_infinity
+			sign_set: sign = a_sign
 		end
 
 feature -- Access
@@ -395,6 +430,8 @@ feature -- Status report
 			-- Is the number positive?
 		do
 			Result := not is_negative
+		ensure
+			definition: Result = not is_negative
 		end
 
 	is_nan: BOOLEAN is
@@ -522,8 +559,6 @@ feature -- Basic operations
 			if res.is_negative then
 				Result := True
 			end
-		ensure then
-			Result_exists: Result /= Void
 		end
 
 feature -- Measurement
@@ -569,28 +604,28 @@ feature -- Conversion
 			-- Printable representation
 		do
 			create Result.make (0)
-			Result.append ("[")
+			Result.append_string ("[")
 				-- Sign.
 			if is_negative then
-				Result.append ("1")
+				Result.append_string ("1")
 			else
-				Result.append ("0")
+				Result.append_string ("0")
 			end
 				-- Coefficient.
-			Result.append (",")
+			Result.append_string (",")
 			if is_infinity then
-				Result.append ("inf")
+				Result.append_string ("inf")
 			elseif is_signaling_nan then
-				Result.append ("sNaN")
+				Result.append_string ("sNaN")
 			elseif is_quiet_nan then
-				Result.append ("qNaN")
+				Result.append_string ("qNaN")
 			else
-				Result.append (coefficient.out)
+				Result.append_string (coefficient.out)
 					-- Exponent.
-				Result.append (",")
-				Result.append (exponent.out)
+				Result.append_string (",")
+				Result.append_string (exponent.out)
 			end
-			Result.append ("]")
+			Result.append_string ("]")
 		end
 
 	to_double: DOUBLE is
@@ -601,16 +636,15 @@ feature -- Conversion
 			str: STRING
 		do
 			str := to_scientific_string
-			if str.is_double then
-				Result := str.to_double
-			end
+			Result := str.to_double
 		end
 
 	to_integer: INTEGER is
 			-- `Current' as an INTEGER
 		require
 			is_integer: is_integer
-			within_limits: Current <= Maximum_integer_as_decimal or else Current >= Minimum_integer_as_decimal
+			large_enough: Current >= Minimum_integer_as_decimal
+			small_enough: Current <= Maximum_integer_as_decimal
 		local
 			ctx: MA_DECIMAL_CONTEXT
 		do
@@ -622,7 +656,8 @@ feature -- Conversion
 			-- `Current' as an INTEGER wrt `ctx'
 		require
 			is_integer: is_integer
-			within_limits: Current <= Maximum_integer_as_decimal or else Current >= Minimum_integer_as_decimal
+			large_enough: Current >= Minimum_integer_as_decimal
+			small_enough: Current <= Maximum_integer_as_decimal
 		local
 			temp: like Current
 			index: INTEGER
@@ -632,7 +667,7 @@ feature -- Conversion
 				index := temp.count - 1
 				Result := 0
 			variant
-				index
+				index + 1
 			until
 				index < 0
 			loop
@@ -648,12 +683,16 @@ feature -- Conversion
 			-- `Current' as a number in engineering notation
 		do
 			Result := to_string_general (True)
+		ensure
+			to_string_not_void: Result /= Void
 		end
 
 	to_scientific_string: STRING is
 			-- `Current' as a sting expressed in scientific notation
 		do
 			Result := to_string_general (False)
+		ensure
+			to_string_not_void: Result /= Void
 		end
 
 feature -- Duplication
@@ -713,7 +752,7 @@ feature -- Basic operations
 					Result := operand_a
 				end
 				if Result.is_zero then
-					if (Current.is_negative and then other.is_negative) or else (ctx.rounding_mode = Round_floor and then Current.sign /= other.sign) then
+					if (is_negative and then other.is_negative) or else (ctx.rounding_mode = Round_floor and then sign /= other.sign) then
 						Result.set_negative
 					else
 						Result.set_positive
@@ -781,7 +820,7 @@ feature -- Basic operations
 			else
 				if is_zero or else other.is_zero then
 					create Result.make (ctx.digits)
-					Result.set_exponent (Current.exponent + other.exponent)
+					Result.set_exponent (exponent + other.exponent)
 					if sign = other.sign then
 						Result.set_positive
 					else
@@ -854,10 +893,10 @@ feature -- Basic operations
 				if other.is_zero then
 					ctx.signal (Signal_invalid_operation, "Zero divisor in remainder")
 					Result := nan
-				elseif Current.is_zero then
+				elseif is_zero then
 					create Result.make_zero
 					if exponent < 0 then
-						Result.set_exponent (Current.exponent)
+						Result.set_exponent (exponent)
 					else
 						Result.set_exponent (0)
 					end
@@ -903,7 +942,7 @@ feature -- Basic operations
 						elseif shared_digits = 0 then
 								-- msd at new_exponent - 1. See if rounding shall carry some new_exponent digit.
 							result_count := ctx.digits + count
-						else  
+						else
 								-- shared_digits > 0 (and shared_digits <= ctx.digits).
 							result_count := ctx.digits + (count - shared_digits)
 						end
@@ -1007,9 +1046,9 @@ feature -- Basic operations
 			if new_exponent.is_special or else is_special then
 				if new_exponent.is_signaling_nan or else is_signaling_nan then
 					ctx.signal (Signal_invalid_operation, "sNaN as new exponent in 'rescale_decimal'")
-					Result := nan 
+					Result := nan
 				elseif new_exponent.is_quiet_nan then
-					Result := nan 
+					Result := nan
 				elseif new_exponent.is_infinity then
 					ctx.signal (Signal_invalid_operation, "Inf as new exponent in 'rescale_decimal'")
 					Result := nan
@@ -1045,6 +1084,8 @@ feature -- Basic operations
 
 	round_to_integer (ctx: MA_DECIMAL_CONTEXT): like Current is
 			-- Round to an integer with exponent 0
+		require
+			ctx_not_void: ctx /= Void
 		do
 			Result := rescale (0, ctx)
 		ensure
@@ -1054,11 +1095,13 @@ feature -- Basic operations
 
 	plus (ctx: MA_DECIMAL_CONTEXT): like Current is
 			-- Prefix "+" with respect to the `ctx' context
+		require
+			ctx_not_void: ctx /= Void
 		local
 			l_zero: like Current
 		do
 			create l_zero.make (ctx.digits + 1)
-			l_zero.set_exponent (Current.exponent)
+			l_zero.set_exponent (exponent)
 			Result := l_zero.add (Current, ctx)
 		ensure
 			plus_not_void: Result /= Void
@@ -1098,11 +1141,13 @@ feature -- Basic operations
 
 	minus (ctx: MA_DECIMAL_CONTEXT): like Current is
 			-- Prefix "-" with respect to the `ctx' context
+		require
+			ctx_not_void: ctx /= Void
 		local
 			l_zero: like Current
 		do
 			create l_zero.make (ctx.digits+1)
-			l_zero.set_exponent (Current.exponent)
+			l_zero.set_exponent (exponent)
 			Result := l_zero.subtract (Current, ctx)
 		ensure
 			minus_not_void: Result /= Void
@@ -1118,6 +1163,8 @@ feature -- Basic operations
 
 	abs_ctx (ctx: MA_DECIMAL_CONTEXT): like Current is
 			-- Absolute value of `Current' relative to `ctx'
+		require
+			ctx_not_void: ctx /= Void
 		do
 			if is_negative then
 				Result := minus (ctx)
@@ -1143,7 +1190,7 @@ feature -- Basic operations
 				end
 				Result := nan
 			else
-				comparison_result := Current.compare (other, ctx)
+				comparison_result := compare (other, ctx)
 				if comparison_result.is_negative then
 					Result := other
 				else
@@ -1169,13 +1216,13 @@ feature -- Basic operations
 				end
 				Result := nan
 			else
-				comparison_result := Current.compare (other, ctx)
+				comparison_result := compare (other, ctx)
 				if comparison_result.is_negative or comparison_result.is_zero then
 					Result := Current
 				else
 					Result := other
 				end
-				Result.clean_up (ctx) 
+				Result.clean_up (ctx)
 			end
 		ensure
 			min_ctx_not_void: Result /= Void
@@ -1311,13 +1358,13 @@ feature {MA_DECIMAL} -- Status setting
 	special: INTEGER
 			-- Special status
 
-	set_infinity is
-			-- Set to infinity.
-		do
-			special := Special_infinity
-		ensure
-			infinity: is_infinity
-		end
+--	set_infinity is
+--			-- Set to infinity.
+--		do
+--			special := Special_infinity
+--		ensure
+--			infinity: is_infinity
+--		end
 
 --	set_signaling_nan is
 --			-- Set to sNaN.
@@ -1330,7 +1377,8 @@ feature {MA_DECIMAL} -- Status setting
 	set_quiet_nan is
 			-- Set to qNaN.
 		do
-			special := Special_quiet_nan
+--	FIXME:delete--		special := Special_quiet_nan
+			make_nan
 		ensure
 			qnan: is_quiet_nan
 		end
@@ -1338,7 +1386,7 @@ feature {MA_DECIMAL} -- Status setting
 feature {MA_DECIMAL} -- Basic operations
 
 	add_special (other: like Current; ctx: MA_DECIMAL_CONTEXT): like Current is
-			-- Add special numbers
+			-- Add special numbers.
 		require
 			other_not_void: other /= Void
 			special: is_special or else other.is_special
@@ -1378,10 +1426,12 @@ feature {MA_DECIMAL} -- Basic operations
 					end
 				end
 			end
+		ensure
+			add_special_not_void: Result /= Void
 		end
 
 	subtract_special (other: like Current; ctx: MA_DECIMAL_CONTEXT): like Current is
-			-- Subtract special numbers
+			-- Subtract special numbers.
 		require
 			other_not_void: other /= Void
 			special: is_special or else other.is_special
@@ -1423,6 +1473,8 @@ feature {MA_DECIMAL} -- Basic operations
 					end
 				end
 			end
+		ensure
+			subtract_special_not_void: Result /= Void
 		end
 
 	unsigned_add (other: like Current; ctx: MA_DECIMAL_CONTEXT) is
@@ -1435,8 +1487,8 @@ feature {MA_DECIMAL} -- Basic operations
 			align_hint: INTEGER
 			msd: INTEGER
 		do
-				-- Avoid costly operations
-				-- Align
+			-- Avoid costly operations
+			-- Align
 			align_hint := align_and_hint (other, ctx.digits)
 			if align_hint = Align_hint_current then
 					-- Keep `Current'.
@@ -1496,7 +1548,7 @@ feature {MA_DECIMAL} -- Basic operations
 					coefficient.integer_subtract (other.coefficient)
 				else
 						-- other > Current
-					other.coefficient.integer_subtract (Current.coefficient)
+					other.coefficient.integer_subtract (coefficient)
 					coefficient.copy (other.coefficient)
 					set_negative
 				end
@@ -1555,10 +1607,10 @@ feature {MA_DECIMAL} -- Basic operations
 					-- Adjust each other's count?
 				new_count := count.max (other.count)
 				if new_count > count then
-					grow (new_count) -- - count)
+					grow (new_count)
 				end
 				if new_count > other.count then
-					other.grow (new_count) -- shift_left (new_count - other.count)
+					other.grow (new_count)
 				end
 				Result := Align_hint_both
 			elseif exponent > other.exponent then
@@ -1568,8 +1620,8 @@ feature {MA_DECIMAL} -- Basic operations
 					-- we only need to pad up to a length of `precision' + 1
 					--
 					-- except when `Current' is Zero. In this case `other' is returned, unchanged.
-				new_exponent := exponent.min (adjusted_exponent - (precision + 1)) --new_count := count + exponent - other.exponent
-				if new_exponent > other.adjusted_exponent then --new_count >= other.count + precision + 1 then
+				new_exponent := exponent.min (adjusted_exponent - (precision + 1))
+				if new_exponent > other.adjusted_exponent then
 						-- `other' shall not affect `Current'.
 					if is_zero then
 						Result := Align_hint_other_zero
@@ -1598,8 +1650,8 @@ feature {MA_DECIMAL} -- Basic operations
 			else
 					-- exponent < other.exponent
 					-- Need to pad other so that other.exponent = exponent
-				new_exponent := other.exponent.min (other.adjusted_exponent - (precision+1)) --new_count := count + exponent - other.exponent
-				if new_exponent > adjusted_exponent then --new_count >= other.count + precision + 1 then
+				new_exponent := other.exponent.min (other.adjusted_exponent - (precision+1))
+				if new_exponent > adjusted_exponent then
 						-- `Current' shall not affect `other',
 						-- except when `other' is Zero. In this case `Current' is returned, unchanged.
 					if other.is_zero then
@@ -1627,9 +1679,8 @@ feature {MA_DECIMAL} -- Basic operations
 				end
 			end
 		ensure
-			same_count: Result = Align_hint_both implies count = other.count
-			same_exponent: Result = Align_hint_both implies exponent = other.exponent
-			--limited_precision: (precision > 0 and Result = Align_hint_both) implies count = precision + 1
+			hint_both_is_same_count: Result = Align_hint_both implies count = other.count
+			hint_both_is_same_exponent: Result = Align_hint_both implies exponent = other.exponent
 		end
 
 	align_overlapped (other: like Current; precision: INTEGER) is
@@ -1638,11 +1689,8 @@ feature {MA_DECIMAL} -- Basic operations
 			other_not_void: other /= Void
 			exponent_greater: exponent > other.exponent
 		local
-			truncation_length, new_count, exponent_delta, new_digits: INTEGER
+			exponent_delta, new_digits: INTEGER
 		do
-			new_count := count + exponent - other.exponent
-			new_digits := new_count
-			truncation_length := new_count - new_digits
 				-- Adjust exponents.
 			exponent_delta := exponent - other.exponent
 			if exponent_delta > 0 then
@@ -1650,7 +1698,7 @@ feature {MA_DECIMAL} -- Basic operations
 			end
 			new_digits := count.max (other.count)
 				-- Adjust `count' to be `precision'.
-			if new_digits > other.count then 
+			if new_digits > other.count then
 				other.grow (new_digits)
 			end
 			if new_digits > count then
@@ -1688,6 +1736,9 @@ feature {MA_DECIMAL} -- Basic operations
 	shift_left (a_count: INTEGER) is
 			-- Shift the coefficient left `a_count' position and adjust `exponent'.
 			-- value still must be the same as with the original `exponent'.
+		require
+			not_special: not is_special
+			a_count_positive: a_count > 0
 		do
 			coefficient.shift_left (a_count)
 			exponent := exponent - a_count
@@ -1699,6 +1750,9 @@ feature {MA_DECIMAL} -- Basic operations
 	shift_right (a_count: INTEGER) is
 			-- Shift the coefficient right `a_count' position and adjust `exponent'.
 			-- Digits are lost.
+		require
+			not_special: not is_special
+			a_count_positive: a_count > 0
 		do
 			coefficient.shift_right (a_count)
 			exponent := exponent + a_count
@@ -1709,6 +1763,7 @@ feature {MA_DECIMAL} -- Basic operations
 	grow (a_count: INTEGER) is
 			-- Grow `coefficient' so that it can accommodate `a_count' digits.
 		require
+			not_special: not is_special
 			a_count_greater_zero: a_count > 0
 			a_count_less_10_000: a_count < 10_000
 		do
@@ -1719,6 +1774,8 @@ feature {MA_DECIMAL} -- Basic operations
 
 	do_round_up (ctx: MA_DECIMAL_CONTEXT) is
 			-- Round away from zero.
+		require
+			ctx_not_void: ctx /= Void
 		local
 			old_count, exponent_increment: INTEGER
 		do
@@ -1737,6 +1794,7 @@ feature {MA_DECIMAL} -- Basic operations
 	do_round_down (ctx: MA_DECIMAL_CONTEXT) is
 			-- Round towards zero.
 		require
+			ctx_not_void: ctx /= Void
 			positive_precision: ctx.digits >= 1
 		local
 			exponent_increment: INTEGER
@@ -1751,6 +1809,8 @@ feature {MA_DECIMAL} -- Basic operations
 
 	do_round_ceiling (ctx: MA_DECIMAL_CONTEXT) is
 			-- Round to a more positive number.
+		require
+			ctx_not_void: ctx /= Void
 		do
 			if is_negative or else not lost_digits (ctx) then
 				do_round_down (ctx)
@@ -1761,6 +1821,8 @@ feature {MA_DECIMAL} -- Basic operations
 
 	do_round_floor (ctx: MA_DECIMAL_CONTEXT) is
 			-- Round to a more negative number.
+		require
+			ctx_not_void: ctx /= Void
 		do
 			if is_positive or else not lost_digits (ctx) then
 				do_round_down (ctx)
@@ -1774,6 +1836,8 @@ feature {MA_DECIMAL} -- Basic operations
 			-- If the discarded digits represent greater than or equal to half (0.5 times) the value
 			-- of a one in the next position then the result should be rounded up (away from zero).
 			-- Otherwise the discarded digits are ignored.
+		require
+			ctx_not_void: ctx /= Void
 		do
 			inspect three_way_compare_discarded_to_half (ctx)
 			when 1, 0 then
@@ -1790,6 +1854,8 @@ feature {MA_DECIMAL} -- Basic operations
 			-- If the discarded digits represent greater than half (0.5 times)
 			-- the value of a one in the next position then the result should be
 			-- rounded up (away from zero). Otherwise the discarded digits are ignored.
+		require
+			ctx_not_void: ctx /= Void
 		do
 			inspect three_way_compare_discarded_to_half (ctx)
 			when -1 then
@@ -1806,6 +1872,8 @@ feature {MA_DECIMAL} -- Basic operations
 
 	three_way_compare_discarded_to_half (ctx: MA_DECIMAL_CONTEXT): INTEGER is
 			-- Compare discarded digits greater than 0.5
+		require
+			ctx_not_void: ctx /= Void
 		local
 			digit, index: INTEGER
 		do
@@ -1842,6 +1910,8 @@ feature {MA_DECIMAL} -- Basic operations
 			-- If they represent less than half, then the result should be rounded down.
 			-- Otherwise (they represent exactly half) the result is rounded down if its rightmost digit
 			-- is even, or rounded up if its rightmost digit is odd (to make an even digit).
+		require
+			ctx_not_void: ctx /= Void
 		do
 			inspect three_way_compare_discarded_to_half (ctx)
 			when -1 then
@@ -1861,7 +1931,9 @@ feature {MA_DECIMAL} -- Basic operations
 		end
 
 	lost_digits (ctx: MA_DECIMAL_CONTEXT) : BOOLEAN is
-			-- Are there non-zero digits after ctxdigits digits?
+			-- Should Current loose digits if rounded wrt `ctx'?
+		require
+			ctx_not_void: ctx /= Void
 		local
 			index: INTEGER
 		do
@@ -1874,10 +1946,13 @@ feature {MA_DECIMAL} -- Basic operations
 			end
 				-- True if found non-zero digits in [0..count-ctx.digits-1].
 			Result := index >= 0
+		ensure
+			definition1: (count - ctx.digits - 1) >= 0 implies Result = (coefficient.subcoefficient (0, count - ctx.digits - 1)).is_significant
+			definition2: (count - ctx.digits - 1) < 0 implies not Result
 		end
 
 	is_overflow (ctx: MA_DECIMAL_CONTEXT): BOOLEAN is
-			-- Is there an overflow condition?
+			-- Is there an overflow condition wrt `ctx'?
 		require
 			ctx_not_void: ctx /= Void
 		do
@@ -1887,7 +1962,7 @@ feature {MA_DECIMAL} -- Basic operations
 		end
 
 	is_underflow (ctx: MA_DECIMAL_CONTEXT): BOOLEAN is
-			-- Is there an underflow condition?
+			-- Is there an underflow condition wrt `ctx'?
 		require
 			ctx_not_void: ctx /= Void
 		do
@@ -1897,7 +1972,9 @@ feature {MA_DECIMAL} -- Basic operations
 		end
 
 	clean_up (ctx: MA_DECIMAL_CONTEXT) is
-			-- Clean up result, rounding it if necessary.
+			-- Clean up Current wrt `ctx', rounding it if necessary.
+		require
+			ctx_not_void: ctx /= Void
 		local
 			lost_digits_trap, lost_digits_flag: BOOLEAN
 		do
@@ -1968,13 +2045,7 @@ feature {MA_DECIMAL} -- Basic operations
 	promote_to_infinity (a_sign: INTEGER) is
 			-- Promote to infinity.
 		do
-			copy (zero)
-			set_infinity
-			if a_sign < 0 then
-				set_negative
-			else
-				set_positive
-			end
+			make_infinity (a_sign)
 		ensure
 			infinity: is_infinity
 			sign_set: sign = a_sign
@@ -1983,6 +2054,7 @@ feature {MA_DECIMAL} -- Basic operations
 	do_overflow (ctx: MA_DECIMAL_CONTEXT) is
 			-- Do overflow.
 		require
+			ctx_not_void: ctx /= Void
 			overflow: is_overflow (ctx)
 		do
 			if not is_zero then
@@ -2015,6 +2087,7 @@ feature {MA_DECIMAL} -- Basic operations
 	do_underflow (ctx: MA_DECIMAL_CONTEXT) is
 			-- Do underflow.
 		require
+			ctx_not_void: ctx /= Void
 			underflow: is_underflow (ctx)
 		local
 			e_tiny, shared_digits, subnormal_count, count_upto_elimit, saved_digits: INTEGER
@@ -2136,7 +2209,7 @@ feature {MA_DECIMAL} -- Basic operations
 				end
 			else
 				if other.is_zero then
-					if Current.is_zero then
+					if is_zero then
 						ctx.signal (Signal_invalid_operation, "Division Undefined : O/O")
 						Result := nan
 					else
@@ -2147,12 +2220,12 @@ feature {MA_DECIMAL} -- Basic operations
 							Result := negative_infinity
 						end
 					end
-				elseif Current.is_zero then
+				elseif is_zero then
 					create Result.make_zero
 					if integer_division then
 						Result.set_exponent (0)
 					else
-						Result.set_exponent (Current.exponent - other.adjusted_exponent)
+						Result.set_exponent (exponent - other.adjusted_exponent)
 					end
 					if sign = other.sign then
 						Result.set_positive
@@ -2170,6 +2243,8 @@ feature {MA_DECIMAL} -- Basic operations
 					Result.clean_up (ctx)
 				end
 			end
+		ensure
+			divide_not_void: Result /= Void
 		end
 
 	internal_divide (other: like Current; ctx: MA_DECIMAL_CONTEXT; division_type: INTEGER): like Current is
@@ -2315,7 +2390,7 @@ feature {MA_DECIMAL} -- Basic operations
 					if dividend.is_zero then
 						Result.set_exponent (original_dividend_exponent - (original_divisor_exponent + adjust))
 					else
-						Result.set_exponent (Current.exponent - (original_divisor_exponent + adjust))--(adjusted_exponent - other.adjusted_exponent) - Result.count) --Current.exponent - (other.exponent + adjust))
+						Result.set_exponent (exponent - (original_divisor_exponent + adjust))
 					end
 				when division_integer then
 					Result.set_exponent (0)
@@ -2347,6 +2422,8 @@ feature {MA_DECIMAL} -- Basic operations
 					end
 				end
 			end
+		ensure
+			divide_not_void: Result /= Void
 		end
 
 	do_rescale_special (ctx: MA_DECIMAL_CONTEXT) is
@@ -2381,19 +2458,19 @@ feature {MA_DECIMAL} -- Basic operations
 			create Result.make (0)
 			if is_special then
 				if is_quiet_nan then
-					Result.append ("NaN")
+					Result.append_string ("NaN")
 				elseif is_signaling_nan then
-					Result.append ("sNaN")
+					Result.append_string ("sNaN")
 				else
 					if is_negative then
-						Result.append ("-")
+						Result.append_string ("-")
 					end
-					Result.append ("Infinity")
+					Result.append_string ("Infinity")
 				end
 			else
 					-- Coefficient conversion.
 				if is_negative then
-					Result.append ("-")
+					Result.append_string ("-")
 				end
 				create str_coefficient.make (count)
 				from
@@ -2406,7 +2483,7 @@ feature {MA_DECIMAL} -- Basic operations
 				end
 					-- Determine if exponential notation shall be used.
 				the_exponent := adjusted_exponent
-				exponential := not (exponent <= 0 and then adjusted_exponent >= - 6) -- (exponent > 0 or else the_exponent < -6) --or else (exponent > 0 and then formatting_style /= Format_plain)
+				exponential := not (exponent <= 0 and then adjusted_exponent >= - 6) 
 				if exponential then
 					printed_exponent := the_exponent
 					if is_engineering then
@@ -2432,11 +2509,11 @@ feature {MA_DECIMAL} -- Basic operations
 						digits_before_point := 1
 					end
 					if str_coefficient.count > digits_before_point then
-						Result.append (str_coefficient.substring (1, digits_before_point))
+						Result.append_string (str_coefficient.substring (1, digits_before_point))
 						Result.append_character ('.')
-						Result.append (str_coefficient.substring (digits_before_point + 1, str_coefficient.count))
+						Result.append_string (str_coefficient.substring (digits_before_point + 1, str_coefficient.count))
 					else
-						Result.append (str_coefficient)
+						Result.append_string (str_coefficient)
 					end
 					if printed_exponent /= 0 then
 						Result.append_character ('E')
@@ -2445,29 +2522,31 @@ feature {MA_DECIMAL} -- Basic operations
 						else
 							Result.append_character ('+')
 						end
-						Result.append ((printed_exponent.abs).out)
+						Result.append_string ((printed_exponent.abs).out)
 					end
 				else
 					if exponent < 0 then
 						after_point_count := exponent.abs
 						if after_point_count > str_coefficient.count then
 							str_zero_pad := STRING_.make_filled ('0', after_point_count - str_coefficient.count)
-							Result.append ("0.")
-							Result.append (str_zero_pad)
-							Result.append (str_coefficient)
+							Result.append_string ("0.")
+							Result.append_string (str_zero_pad)
+							Result.append_string (str_coefficient)
 						elseif after_point_count = str_coefficient.count then
-							Result.append ("0.")
-							Result.append (str_coefficient)
+							Result.append_string ("0.")
+							Result.append_string (str_coefficient)
 						else
-							Result.append (str_coefficient.substring (1, str_coefficient.count - after_point_count))
-							Result.append (".")
-							Result.append (str_coefficient.substring (str_coefficient.count - after_point_count + 1, str_coefficient.count))
+							Result.append_string (str_coefficient.substring (1, str_coefficient.count - after_point_count))
+							Result.append_string (".")
+							Result.append_string (str_coefficient.substring (str_coefficient.count - after_point_count + 1, str_coefficient.count))
 						end
 					else
-						Result.append (str_coefficient)
+						Result.append_string (str_coefficient)
 					end
 				end
 			end
+		ensure
+			to_string_not_void: Result /= Void
 		end
 
 feature {NONE} -- Implementation
@@ -2476,37 +2555,8 @@ feature {NONE} -- Implementation
 			-- Decimal text parser
 		once
 			create Result
-		end
-
-	make_special (code_special: INTEGER) is
-			-- Make special from code.
-		require
-			valid_code_special: code_special = Special_infinity or else code_special = Special_quiet_nan 
-				or else code_special = Special_signaling_nan
-		do
-			coefficient := zero.coefficient
-			special := code_special
-		end
-
-	make_nan is
-			-- Make quiet 'Not a Number'.
-		do
-			make_special (Special_quiet_nan)
-		end
-
-	make_snan is
-			-- Make Signaling 'Not a Number'.
-		do
-			make_special (Special_signaling_nan)
-		end
-
-	make_infinity (a_sign: INTEGER) is
-			-- Make Infinity.
-		require
-			a_sign_valid: a_sign = -1 or else a_sign = 1
-		do
-			make_special (Special_infinity)
-			is_negative := a_sign < 0
+		ensure
+			parser_not_void: Result /= Void
 		end
 
 	once_zero: MA_DECIMAL is
@@ -2514,6 +2564,7 @@ feature {NONE} -- Implementation
 		once
 			create Result.make_from_integer (0)
 		ensure
+			zero_not_void: Result /= Void
 			is_zero: Result.is_zero
 		end
 
@@ -2522,12 +2573,13 @@ feature {NONE} -- Implementation
 		once
 			create Result.make_from_integer (1)
 		ensure
+			one_not_void: Result /= Void
 			is_one: Result.to_integer = 1
 		end
 
 invariant
 
 	special_values: special >= Special_none and then special <= Special_quiet_nan
-	coefficient: not is_special implies coefficient /= Void
-
+	coefficient_not_void: coefficient /= Void
+	specials_share_coefficient_with_zero: is_special implies coefficient = zero.coefficient
 end

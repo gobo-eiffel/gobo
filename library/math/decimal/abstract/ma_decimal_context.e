@@ -104,21 +104,13 @@ feature {NONE} -- Initialization
 		do
 			digits := a_digits
 			rounding_mode := a_rounding_mode
-			create traps.make (1, Signal_subnormal)
-			create flags.make (1, Signal_subnormal)
+			create traps.make (Signal_division_by_zero, Signal_subnormal)
+			create flags.make (Signal_division_by_zero, Signal_subnormal)
 			exponent_limit := Maximum_exponent
 		ensure
 			digits_set: digits = a_digits
 			rounding_mode_set: rounding_mode = a_rounding_mode
 			exponent_limit: exponent_limit = Maximum_exponent
-		end
-
-feature -- Constants
-
-	Rounds: ARRAY [INTEGER] is
-			-- Rounding modes
-		once
-			Result := <<Round_half_up, Round_unnecessary, Round_ceiling, Round_down, Round_floor, Round_half_down, Round_half_even, Round_up>>
 		end
 
 feature -- Access
@@ -161,6 +153,8 @@ feature -- Access
 			-- Default context for general purpose arithmetic
 		once
 			create Result.make_default
+		ensure
+			default_context_not_void: Result /= Void
 		end
 
 feature -- Status report
@@ -209,7 +203,6 @@ feature -- Status setting
 			-- Set `exponent_limit' to `a_limit'.
 		require
 			limit_positive: a_limit >= 0
---			IEEE854_3_1_constraint: a_limit >= 10 * digits
 		do
 			exponent_limit := a_limit
 		ensure
@@ -317,8 +310,6 @@ feature -- Conversion
 			create Result.make (30)
 			Result.append_string ("digits=")
 			Result.append_string (digits.out)
---			Result.append_string (" format=")
---			Result.append_string (Form_words.item (Form_words.lower + format))
 			Result.append_string (" rounding_mode=")
 			Result.append_string (Round_words.item (Round_words.lower + rounding_mode))
 		end
@@ -351,8 +342,8 @@ feature -- Basic operations
 			reason := a_message
 			if is_trapped (a_signal) and then exception_on_trap then
 				exception_message := clone (Signal_words.item (a_signal))
-				exception_message.append (" : ")
-				exception_message.append (a_message)
+				exception_message.append_string (" : ")
+				exception_message.append_string (a_message)
 				Exceptions.raise (exception_message)
 			end
 		ensure
@@ -370,30 +361,7 @@ feature -- Basic operations
 			traps.copy (other.traps)
 		end
 
-feature {NONE} -- Implementation
-
-	Round_words: ARRAY [STRING] is
-			-- Textual representation of rounding modes
-		once
-			Result := <<"Round_up", "Round_down", "Round_ceiling", "Round_floor", "Round_half_up",
-				"Round_half_down", "Round_half_even", "Round_unnecessary">>
-		end
-
-	signals: ARRAY [INTEGER] is
-			-- Signals
-		once
-			Result := << Signal_division_by_zero, Signal_inexact, Signal_invalid_operation,
-				Signal_lost_digits, Signal_overflow, Signal_rounded, Signal_underflow, Signal_subnormal>>
-		end
-
 feature {DECIMAL_TESTER, MA_DECIMAL_CONTEXT}
-
-	Signal_words: ARRAY [STRING] is
-			-- Textual representation of signals
-		once
-			Result := << "division_by_zero", "inexact", "invalid_operation",
-				"lost_digits", "overflow", "rounded", "underflow", "subnormal">>
-		end
 
 	flags: ARRAY [BOOLEAN]
 			-- Signals flagged
@@ -404,10 +372,16 @@ feature {DECIMAL_TESTER, MA_DECIMAL_CONTEXT}
 invariant
 
 	non_negative_digits: digits >= 0
---	format_valid: format = Format_plain or format = Format_scientific or format = Format_engineering
 	rounding_mode_valid: rounding_mode = Round_ceiling or rounding_mode = Round_down
 		or rounding_mode = Round_floor or rounding_mode = Round_half_down
 		or rounding_mode = Round_half_even or rounding_mode = Round_half_up
 		or rounding_mode = Round_unnecessary or rounding_mode = Round_up
 
+	flags_not_void: flags /= Void
+	flags_lower: flags.lower = Signal_division_by_zero
+	flags_upper: flags.upper = Signal_subnormal
+	traps_not_void: traps /= Void
+	traps_lower: traps.lower = Signal_division_by_zero
+	traps_upper: traps.upper = Signal_subnormal
+	
 end

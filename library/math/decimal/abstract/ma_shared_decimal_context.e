@@ -42,10 +42,9 @@ feature {NONE} -- Implementation
 		once
 			create new_context.make_default
 			create Result.make (new_context)
+		ensure
+			cell_not_void: Result /= Void
+			context_not_void: cell.item /= Void
 		end
-
-invariant
-
-	shared_context_not_void: shared_decimal_context /= Void
 
 end
