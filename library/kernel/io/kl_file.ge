@@ -336,7 +336,7 @@ feature -- Status report
 					if exists then
 						tmp_file1.reset (string_other_name)
 						if tmp_file1.exists then
-							if string_name.is_equal (string_other_name) then
+							if string_name.same_string (string_other_name) then
 								Result := True
 #ifdef ISE
 							else
@@ -354,12 +354,12 @@ feature -- Status report
 								else 
 									absolute_name1 := file_system.absolute_pathname (name)
 									absolute_name2 := file_system.absolute_pathname (other_name)
-									if absolute_name1.is_equal (absolute_name2) then
+									if STRING_.same_string (absolute_name1, absolute_name2) then
 										Result := True
 									else
 										canonical_name1 := file_system.canonical_pathname (absolute_name1)
 										canonical_name2 := file_system.canonical_pathname (absolute_name2)
-										if canonical_name1.is_equal (canonical_name2) then
+										if STRING_.same_string (canonical_name1, canonical_name2) then
 											Result := True
 										else
 											from
