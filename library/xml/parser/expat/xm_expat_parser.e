@@ -252,8 +252,9 @@ feature -- Error reporting
 			-- Current line number
 		do
 			if is_parser_created then
-				Result := exml_XML_GetCurrentLineNumber (item) + 1
-			else
+				Result := exml_XML_GetCurrentLineNumber (item)
+			end
+			if Result < 1 then
 				Result := 1
 			end
 		ensure
@@ -265,7 +266,8 @@ feature -- Error reporting
 		do
 			if is_parser_created then
 				Result := exml_XML_GetCurrentColumnNumber (item) + 1
-			else
+			end
+			if Result < 1 then
 				Result := 1
 			end
 		ensure
@@ -277,7 +279,8 @@ feature -- Error reporting
 		do
 			if is_parser_created then
 				Result := exml_XML_GetCurrentByteIndex (item) + 1
-			else
+			end
+			if Result < 1 then
 				Result := 1
 			end
 		ensure
