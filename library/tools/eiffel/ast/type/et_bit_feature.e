@@ -37,7 +37,7 @@ feature {NONE} -- Initialization
 		require
 			a_constant_not_void: a_constant /= Void
 			a_name_not_void: a_name /= Void
-			a_feature_id_positive: a_feature_id >= 0
+			a_feature_id_positive: a_feature_id > 0
 			p_not_void: p /= Void
 		do
 			constant := a_constant
@@ -108,6 +108,6 @@ feature -- Output
 invariant
 
 	name_not_void: name /= Void
-	feature_id_positive: feature_id >= 0
+	feature_id_positive: feature_id > 0
 
 end -- class ET_BIT_FEATURE

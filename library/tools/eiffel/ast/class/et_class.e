@@ -27,7 +27,7 @@ feature {NONE} -- Initialization
 			-- Create a new class.
 		require
 			a_name_not_void: a_name /= Void
-			an_id_positive: an_id >= 0
+			an_id_positive: an_id > 0
 			a_universe_not_void: a_universe /= Void
 		do
 			name := a_name
@@ -122,6 +122,31 @@ feature -- Genericity
 		ensure
 			has_generic_parameter: has_generic_parameter (a_name) = (Result /= Void)
 			same_name: Result /= Void implies Result.name.same_identifier (a_name)
+		end
+
+feature -- Creation
+
+	creators: ET_CREATORS
+			-- Creation clauses
+
+	set_creators (a_creators: like creators) is
+			-- Set `creators' to `a_creators'.
+		do
+			creators := a_creators
+		ensure
+			creators_set: creators = a_creators
+		end
+
+	is_creation_exported_to (a_name: ET_FEATURE_NAME; a_class: ET_CLASS): BOOLEAN is
+			-- Is feature name listed in current creation clauses
+			-- and is it exported to `a_class'?
+		require
+			a_name_not_void: a_name /= Void
+			a_class_not_void: a_class /= Void
+		do
+			if creators /= Void then
+				Result := creators.is_exported_to (a_name, a_class)
+			end
 		end
 
 feature -- Genealogy
@@ -305,7 +330,7 @@ feature {ET_EIFFEL_SCANNER_SKELETON} -- Compilation: parsing
 			a_name := a_feature.name
 			named_features.search (a_name)
 			if not named_features.found then
-				named_features.force_new (a_feature, a_name)
+				named_features.force_last (a_feature, a_name)
 			else
 				other_feature := named_features.found_item
 				error_handler.report_vmfna_error (Current, other_feature, a_feature)
@@ -652,7 +677,7 @@ feature {ET_FEATURE_FLATTENER} -- Compilation: feature flattening
 invariant
 
 	name_not_void: name /= Void
-	id_positive: id >= 0
+	id_positive: id > 0
 	universe_not_void: universe /= Void
 	named_features_not_void: named_features /= Void
 	no_void_feature: not named_features.has_item (Void)

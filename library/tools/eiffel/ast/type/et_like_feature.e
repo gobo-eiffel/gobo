@@ -27,7 +27,7 @@ feature {NONE} -- Initialization
 			-- Create a new 'like feature' type.
 		require
 			a_name_not_void: a_name /= Void
-			a_feature_id_positive: a_feature_id >= 0
+			a_feature_id_positive: a_feature_id > 0
 			p_not_void: p /= Void
 		do
 			name := a_name
@@ -149,6 +149,6 @@ feature {NONE} -- Constants
 invariant
 
 	name_not_void: name /= Void
-	feature_id_positive: feature_id >= 0
+	feature_id_positive: feature_id > 0
 
 end -- class ET_LIKE_FEATURE

@@ -6,7 +6,7 @@ indexing
 
 	library:    "Gobo Eiffel Tools Library"
 	author:     "Eric Bezault <ericb@gobosoft.com>"
-	copyright:  "Copyright (c) 1999-2001, Eric Bezault and others"
+	copyright:  "Copyright (c) 1999-2002, Eric Bezault and others"
 	license:    "Eiffel Forum Freeware License v1 (see forum.txt)"
 	date:       "$Date$"
 	revision:   "$Revision$"
@@ -58,11 +58,23 @@ feature -- Status report
 
 feature -- Conversion
 
-	undefined_feature (a_name: like name; an_id: INTEGER): ET_DEFERRED_FUNCTION is
+	undefined_feature (a_name: like name): ET_DEFERRED_FUNCTION is
 			-- Undefined version of current feature
 		do
-			!! Result.make_with_seeds (a_name, arguments, type, obsolete_message,
-				preconditions, postconditions, clients, implementation_class, seeds, an_id)
+			Result := universe.new_deferred_function (a_name,
+				arguments, type, obsolete_message, preconditions, postconditions,
+				clients, current_class)
+			Result.set_implementation_class (implementation_class)
+			if seeds /= Void then
+				Result.set_seeds (seeds)
+			else
+				Result.set_first_seed (first_seed)
+			end
+			if precursors /= Void then
+				Result.set_precursors (precursors)
+			else
+				Result.set_first_precursor (first_precursor)
+			end
 		end
 
 feature -- System

@@ -72,6 +72,7 @@ feature -- Initialization
 			precursor
 			feature_list_count := 0
 			rename_list_count := 0
+			export_list_count := 0
 			last_clients := Void
 			cluster := Void
 		end
@@ -165,10 +166,22 @@ feature -- AST factory
 			actual_generics_not_void: Result /= Void
 		end
 
-	new_any_clients: ET_CLIENTS is
-			-- Client list with only one client: ANY
+	new_all_export (a_clients: ET_CLIENTS): ET_ALL_EXPORT is
+			-- New 'all' export clause
+		require
+			a_clients_not_void: a_clients /= Void
 		do
-			Result := ast_factory.new_any_clients
+			Result := ast_factory.new_all_export (a_clients)
+		ensure
+			all_export_not_void: Result /= Void
+		end
+
+	new_any_clients (a_position: ET_POSITION): ET_CLIENTS is
+			-- Client list with only one client: ANY
+		require
+			a_position_not_void: a_position /= Void
+		do
+			Result := ast_factory.new_any_clients (a_position, universe)
 			last_clients := Result
 		ensure
 			clients_not_void: Result /= Void
@@ -214,11 +227,8 @@ feature -- AST factory
 			a_type_not_void: a_type /= Void
 			last_clients_not_void: last_clients /= Void
 			last_class_not_void: last_class /= Void
-		local
-			an_id: INTEGER
 		do
-			an_id := universe.next_feature_id
-			Result := ast_factory.new_attribute (a_name, a_type, last_clients, last_class, an_id)
+			Result := universe.new_attribute (a_name, a_type, last_clients, last_class)
 		ensure
 			attribute_not_void: Result /= Void
 		end
@@ -340,11 +350,8 @@ feature -- AST factory
 			a_constant_not_void: a_constant /= Void
 			last_clients_not_void: last_clients /= Void
 			last_class_not_void: last_class /= Void
-		local
-			an_id: INTEGER
 		do
-			an_id := universe.next_feature_id
-			Result := ast_factory.new_constant_attribute (a_name, a_type, a_constant, last_clients, last_class, an_id)
+			Result := universe.new_constant_attribute (a_name, a_type, a_constant, last_clients, last_class)
 		ensure
 			constant_attribute_not_void: Result /= Void
 		end
@@ -372,6 +379,27 @@ feature -- AST factory
 			Result := ast_factory.new_creation_instruction (a_type, a_target, a_call)
 		ensure
 			creation_instruction_not_void: Result /= Void
+		end
+
+	new_creator (a_clients: ET_CLIENTS; a_procedure_list: ARRAY [ET_FEATURE_NAME]): ET_CREATOR is
+			-- New creation clause
+		require
+			a_clients_not_void: a_clients /= Void
+			no_void_procedure: a_procedure_list /= Void implies not ANY_ARRAY_.has (a_procedure_list, Void)
+		do
+			Result := ast_factory.new_creator (a_clients, a_procedure_list)
+		ensure
+			creator_not_void: Result /= Void
+		end
+
+	new_creators (a_creator: ET_CREATOR): ET_CREATORS is
+			-- New creation clauses
+		require
+			a_creator_not_void: a_creator /= Void
+		do
+			Result := ast_factory.new_creators (a_creator)
+		ensure
+			creators_not_void: Result /= Void
 		end
 
 	new_current (a_position: ET_POSITION): ET_CURRENT is
@@ -422,13 +450,10 @@ feature -- AST factory
 			a_type_not_void: a_type /= Void
 			last_clients_not_void: last_clients /= Void
 			last_class_not_void: last_class /= Void
-		local
-			an_id: INTEGER
 		do
-			an_id := universe.next_feature_id
-			Result := ast_factory.new_deferred_function (a_name, args,
+			Result := universe.new_deferred_function (a_name, args,
 				a_type, an_obsolete, a_preconditions, a_postconditions,
-				last_clients, last_class, an_id)
+				last_clients, last_class)
 		ensure
 			deferred_function_not_void: Result /= Void
 		end
@@ -441,13 +466,10 @@ feature -- AST factory
 			a_name_not_void: a_name /= Void
 			last_clients_not_void: last_clients /= Void
 			last_class_not_void: last_class /= Void
-		local
-			an_id: INTEGER
 		do
-			an_id := universe.next_feature_id
-			Result := ast_factory.new_deferred_procedure (a_name, args,
+			Result := universe.new_deferred_procedure (a_name, args,
 				an_obsolete, a_preconditions, a_postconditions,
-				last_clients, last_class, an_id)
+				last_clients, last_class)
 		ensure
 			deferred_procedure_not_void: Result /= Void
 		end
@@ -462,14 +484,11 @@ feature -- AST factory
 			a_type_not_void: a_type /= Void
 			last_clients_not_void: last_clients /= Void
 			last_class_not_void: last_class /= Void
-		local
-			an_id: INTEGER
 		do
-			an_id := universe.next_feature_id
-			Result := ast_factory.new_do_function (a_name, args,
+			Result := universe.new_do_function (a_name, args,
 				a_type, an_obsolete, a_preconditions, a_locals,
 				a_compound, a_postconditions, a_rescue,
-				last_clients, last_class, an_id)
+				last_clients, last_class)
 		ensure
 			do_function_not_void: Result /= Void
 		end
@@ -483,13 +502,10 @@ feature -- AST factory
 			a_name_not_void: a_name /= Void
 			last_clients_not_void: last_clients /= Void
 			last_class_not_void: last_class /= Void
-		local
-			an_id: INTEGER
 		do
-			an_id := universe.next_feature_id
-			Result := ast_factory.new_do_procedure (a_name, args,
+			Result := universe.new_do_procedure (a_name, args,
 				an_obsolete, a_preconditions, a_locals, a_compound,
-				a_postconditions, a_rescue, last_clients, last_class, an_id)
+				a_postconditions, a_rescue, last_clients, last_class)
 		ensure
 			do_procedure_not_void: Result /= Void
 		end
@@ -559,13 +575,10 @@ feature -- AST factory
 			a_language_not_void: a_language /= Void
 			last_clients_not_void: last_clients /= Void
 			last_class_not_void: last_class /= Void
-		local
-			an_id: INTEGER
 		do
-			an_id := universe.next_feature_id
-			Result := ast_factory.new_external_function (a_name, args,
+			Result := universe.new_external_function (a_name, args,
 				a_type, an_obsolete, a_preconditions, a_language, an_alias,
-				a_postconditions, last_clients, last_class, an_id)
+				a_postconditions, last_clients, last_class)
 		ensure
 			external_function_not_void: Result /= Void
 		end
@@ -580,13 +593,10 @@ feature -- AST factory
 			a_language_not_void: a_language /= Void
 			last_clients_not_void: last_clients /= Void
 			last_class_not_void: last_class /= Void
-		local
-			an_id: INTEGER
 		do
-			an_id := universe.next_feature_id
-			Result := ast_factory.new_external_procedure (a_name, args,
+			Result := universe.new_external_procedure (a_name, args,
 				an_obsolete, a_preconditions, a_language, an_alias,
-				a_postconditions, last_clients, last_class, an_id)
+				a_postconditions, last_clients, last_class)
 		ensure
 			external_procedure_not_void: Result /= Void
 		end
@@ -597,6 +607,18 @@ feature -- AST factory
 			Result := ast_factory.new_feature_address
 		ensure
 			feature_address_not_void: Result /= Void
+		end
+
+	new_feature_export (a_clients: ET_CLIENTS; a_feature_set: ARRAY [ET_FEATURE_NAME]): ET_FEATURE_EXPORT is
+			-- New feature export clause
+		require
+			a_clients_not_void: a_clients /= Void
+			a_feature_set_not_void: a_feature_set /= Void
+			no_void_feature: not ANY_ARRAY_.has (a_feature_set, Void)
+		do
+			Result := ast_factory.new_feature_export (a_clients, a_feature_set)
+		ensure
+			feature_export_not_void: Result /= Void
 		end
 
 	new_feature_list (nb: INTEGER): ARRAY [ET_FEATURE_NAME] is
@@ -1214,10 +1236,12 @@ feature -- AST factory
 			named_type_not_void: Result /= Void
 		end
 
-	new_none_clients: ET_CLIENTS is
+	new_none_clients (a_position: ET_POSITION): ET_CLIENTS is
 			-- New client list with only one client: NONE
+		require
+			a_position_not_void: a_position /= Void
 		do
-			Result := ast_factory.new_none_clients
+			Result := ast_factory.new_none_clients (a_position, universe)
 			last_clients := Result
 		ensure
 			clients_not_void: Result /= Void
@@ -1254,13 +1278,10 @@ feature -- AST factory
 			a_type_not_void: a_type /= Void
 			last_clients_not_void: last_clients /= Void
 			last_class_not_void: last_class /= Void
-		local
-			an_id: INTEGER
 		do
-			an_id := universe.next_feature_id
-			Result := ast_factory.new_once_function (a_name, args,
+			Result := universe.new_once_function (a_name, args,
 				a_type, an_obsolete, a_preconditions, a_locals, a_compound,
-				a_postconditions, a_rescue, last_clients, last_class, an_id)
+				a_postconditions, a_rescue, last_clients, last_class)
 		ensure
 			once_function_not_void: Result /= Void
 		end
@@ -1274,13 +1295,10 @@ feature -- AST factory
 			a_name_not_void: a_name /= Void
 			last_clients_not_void: last_clients /= Void
 			last_class_not_void: last_class /= Void
-		local
-			an_id: INTEGER
 		do
-			an_id := universe.next_feature_id
-			Result := ast_factory.new_once_procedure (a_name, args,
+			Result := universe.new_once_procedure (a_name, args,
 				an_obsolete, a_preconditions, a_locals, a_compound,
-				a_postconditions, a_rescue, last_clients, last_class, an_id)
+				a_postconditions, a_rescue, last_clients, last_class)
 		ensure
 			once_procedure_not_void: Result /= Void
 		end
@@ -1530,11 +1548,8 @@ feature -- AST factory
 		require
 			a_name_not_void: a_name /= Void
 			a_feature_not_void: a_feature /= Void
-		local
-			an_id: INTEGER
 		do
-			an_id := universe.next_feature_id
-			Result := ast_factory.new_synonym_feature (a_name, a_feature, an_id)
+			Result := a_feature.synonym (a_name)
 		ensure
 			synonym_not_void: Result /= Void
 		end
@@ -1547,11 +1562,8 @@ feature -- AST factory
 			a_type_not_void: a_type /= Void
 			last_clients_not_void: last_clients /= Void
 			last_class_not_void: last_class /= Void
-		local
-			an_id: INTEGER
 		do
-			an_id := universe.next_feature_id
-			Result := ast_factory.new_unique_attribute (a_name, a_type, last_clients, last_class, an_id)
+			Result := universe.new_unique_attribute (a_name, a_type, last_clients, last_class)
 		ensure
 			unique_attribute_not_void: Result /= Void
 		end
@@ -1571,6 +1583,7 @@ feature {NONE} -- Implementation
 
 	feature_list_count: INTEGER
 	rename_list_count: INTEGER
+	export_list_count: INTEGER
 
 feature {NONE} -- Constants
 

@@ -6,7 +6,7 @@ indexing
 
 	library:    "Gobo Eiffel Tools Library"
 	author:     "Eric Bezault <ericb@gobosoft.com>"
-	copyright:  "Copyright (c) 1999-2001, Eric Bezault and others"
+	copyright:  "Copyright (c) 1999-2002, Eric Bezault and others"
 	license:    "Eiffel Forum Freeware License v1 (see forum.txt)"
 	date:       "$Date$"
 	revision:   "$Revision$"
@@ -77,20 +77,45 @@ feature -- Access
 			-- different from their corresponding formal
 			-- parameters
 
-	seeds: ET_FEATURE_SEEDS is
+	first_seed: INTEGER is
+			-- First seed
+		do
+			Result := inherited_feature.first_seed
+		ensure
+			first_seed_positive: Result > 0
+			first_seed_definition: seeds /= Void implies Result = seeds.first
+		end
+
+	seeds: ET_FEATURE_IDS is
 			-- Seeds (feature IDs of first declarations
-			-- of `inherited_feature')
+			-- of `inherited_feature'); May be Void if there
+			-- is only one seed (which is then accessible
+			-- through `first_seed')
 		do
 			Result := inherited_feature.seeds
+		end
+
+	id: INTEGER is
+			-- Feature ID
+		do
+			Result := inherited_feature.id
 		ensure
-			seeds_not_void: Result /= Void
+			id_positive: Result > 0
 		end
 
 	new_name: ET_RENAME
 			-- New name when feature is renamed
 
-	new_exports: ET_CLIENTS
-			-- New export status
+	clients: ET_CLIENTS is
+			-- Clients to which feature is exported
+		do
+			Result := parent.new_exports (name)
+			if Result = Void then
+				Result := inherited_feature.clients
+			end
+		ensure
+			clients_not_void: Result /= Void
+		end
 
 	undefine_name: ET_FEATURE_NAME
 			-- Name listed in undefine clause
@@ -106,60 +131,25 @@ feature -- Access
 
 feature -- Conversion
 
-	adapted_feature (new_version: BOOLEAN; a_class: ET_CLASS): ET_FEATURE is
+	adapted_feature (a_class: ET_CLASS): ET_FEATURE is
 			-- Inherited feature after feature adaptation
 			-- in class `a_class'
 		require
 			a_class_not_void: a_class /= Void
-		local
-			an_id: INTEGER
 		do
 			if is_undefined then
-				an_id := a_class.universe.next_feature_id
-				Result := inherited_feature.undefined_feature (name, an_id)
-			elseif is_renamed or new_version then
-				an_id := a_class.universe.next_feature_id
-				Result := inherited_feature.renamed_feature (name, an_id)
-			elseif actual_parameters /= Void and then inherited_feature.has_formal_parameters (actual_parameters) then
-					-- We need to update some formal generic parameters
-					-- in this inherited feature, hence a duplication
-					-- is needed.
-				an_id := a_class.universe.next_feature_id
-				Result := inherited_feature.renamed_feature (name, an_id)
+				Result := inherited_feature.undefined_feature (name)
 			else
-				Result := inherited_feature
+				Result := inherited_feature.renamed_feature (name)
 			end
-			if new_version then
-				Result.set_version (Result.id)
-			end
+			Result.set_current_class (a_class)
+			Result.set_version (Result.id)
 			if actual_parameters /= Void then
 				Result.resolve_formal_parameters (actual_parameters)
 			end
 		ensure
 			adapted_feature_not_void: Result /= Void
-			new_version: new_version implies (Result.version = Result.id)
-		end
-
-	replicated_feature (an_id: INTEGER; a_class: ET_CLASS): ET_FEATURE is
-			-- Inherited feature after feature adaptation
-			-- and replication in class `a_class'
-		require
-			an_id_positive: an_id >= 0
-			a_class_not_void: a_class /= Void
-		do
-			if is_undefined then
-				Result := inherited_feature.undefined_feature (name, an_id)
-			else
-				Result := inherited_feature.renamed_feature (name, an_id)
-			end
-			Result.set_version (an_id)
-			if actual_parameters /= Void then
-				Result.resolve_formal_parameters (actual_parameters)
-			end
-		ensure
-			replicated_feature_not_void: Result /= Void
-			id_set: Result.id = an_id
-			new_version: Result.version = an_id
+			version_set: Result.version = Result.id
 		end
 
 feature -- Status report
@@ -202,6 +192,19 @@ feature -- Status report
 			Result := inherited_feature.is_deferred or is_undefined
 		ensure
 			definition: Result = (inherited_feature.is_deferred or is_undefined)
+		end
+
+	has_seed (a_seed: INTEGER): BOOLEAN is
+			-- Does inherited feature have `a_seed'?
+		do
+			if first_seed = a_seed then
+				Result := True
+			elseif seeds /= Void then
+				Result := seeds.has (a_seed)
+			end
+		ensure
+			definition: Result = (first_seed = a_seed or
+				(seeds /= Void and then seeds.has (a_seed)))
 		end
 
 feature -- Comparison

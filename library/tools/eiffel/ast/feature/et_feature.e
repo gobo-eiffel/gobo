@@ -6,7 +6,7 @@ indexing
 
 	library:    "Gobo Eiffel Tools Library"
 	author:     "Eric Bezault <ericb@gobosoft.com>"
-	copyright:  "Copyright (c) 1999-2001, Eric Bezault and others"
+	copyright:  "Copyright (c) 1999-2002, Eric Bezault and others"
 	license:    "Eiffel Forum Freeware License v1 (see forum.txt)"
 	date:       "$Date$"
 	revision:   "$Revision$"
@@ -21,6 +21,9 @@ feature -- Access
 
 	name: ET_FEATURE_NAME
 			-- Feature name
+
+	current_class: ET_CLASS
+			-- Class to which current feature belongs
 
 	clients: ET_CLIENTS
 			-- Clients to which feature is exported
@@ -44,9 +47,26 @@ feature -- Access
 			-- Version (feature ID of last declaration
 			-- of current feature)
 
-	seeds: ET_FEATURE_SEEDS
+	first_seed: INTEGER
+			-- First seed
+
+	seeds: ET_FEATURE_IDS
 			-- Seeds (feature IDs of first declarations
-			-- of current feature)
+			-- of current feature); May be Void if there
+			-- is only one seed (which is then accessible
+			-- through `first_seed')
+
+	first_precursor: INTEGER
+			-- First precursor; 0 if current feature is
+			-- immediate (i.e. not inherited nor redeclared)
+
+	precursors: ET_FEATURE_IDS
+			-- Precursors (feature IDs of corresponding
+			-- to current feature in parents); Void if
+			-- current feature is immediate (i.e. not
+			-- inherited nor redeclared); May also be
+			-- Void if there is only one precursor (which
+			-- is then accessible through `first_precursor')
 
 	implementation_class: ET_CLASS
 			-- Class where implementation of current feature
@@ -61,6 +81,22 @@ feature -- Access
 		deferred
 		ensure
 			signature_not_void: Result /= Void
+		end
+
+	universe: ET_UNIVERSE is
+			-- Universe to which current feature belongs
+		do
+			Result := current_class.universe
+		ensure
+			universe_not_void: Result /= Void
+		end
+
+	error_handler: ET_ERROR_HANDLER is
+			-- Error handler
+		do
+			Result := universe.error_handler
+		ensure
+			error_handler_not_void: Result /= Void
 		end
 
 feature -- Status report
@@ -106,6 +142,23 @@ feature -- Status report
 			-- Result := False
 		end
 
+	is_exported_to (a_class: ET_CLASS): BOOLEAN is
+			-- Is current feature exported to `a_class'?
+		require
+			a_class_not_void: a_class /= Void
+		do
+			Result := clients.is_exported_to (a_class)
+		end
+
+	is_creation_exported_to (a_class: ET_CLASS): BOOLEAN is
+			-- Is current feature listed in the creation clauses
+			-- of `current_class' and exported to `a_class'?
+		require
+			a_class_not_void: a_class /= Void
+		do
+			Result := current_class.is_creation_exported_to (name, a_class)
+		end
+
 feature -- Comparison
 
 	same_version (other: ET_FEATURE): BOOLEAN is
@@ -120,6 +173,26 @@ feature -- Comparison
 		end
 
 feature -- Setting
+
+	set_current_class (a_class: like current_class) is
+			-- Set `current_class' to `a_class'.
+		require
+			a_class_not_void: a_class /= Void
+		do
+			current_class := a_class
+		ensure
+			current_class_set: current_class = a_class
+		end
+
+	set_clients (a_clients: like clients) is
+			-- Set `clients' to `a_clients'.
+		require
+			a_clients_not_void: a_clients /= Void
+		do
+			clients := a_clients
+		ensure
+			clients_set: clients = a_clients
+		end
 
 	set_version (a_version: INTEGER) is
 			-- Set `version' to `a_version'.
@@ -141,14 +214,50 @@ feature -- Setting
 			implementation_class_set: implementation_class = a_class
 		end
 
+	set_first_seed (a_seed: INTEGER) is
+			-- Set `first_seed' to `a_seed'.
+		require
+			a_seed_positive: a_seed > 0
+		do
+			seeds := Void
+			first_seed := a_seed
+		ensure
+			first_seed_set: first_seed = a_seed
+			only_one_seed: seeds = Void
+		end
+
 	set_seeds (a_seeds: like seeds) is
 			-- Set `seeds' to `a_seeds'.
 		require
 			a_seeds_not_void: a_seeds /= Void
 		do
+			first_seed := a_seeds.first
 			seeds := a_seeds
 		ensure
 			seeds_set: seeds = a_seeds
+		end
+
+	set_first_precursor (a_precursor: INTEGER) is
+			-- Set `first_precursor' to `a_precursor'.
+		do
+			precursors := Void
+			first_precursor := a_precursor
+		ensure
+			first_precursor_set: first_precursor = a_precursor
+			only_one_precursor: precursors = Void
+		end
+
+	set_precursors (a_precursors: like precursors) is
+			-- Set `precursors' to `a_precursors'.
+		do
+			if a_precursors /= Void then
+				first_precursor := a_precursors.first
+			else
+				first_precursor := -1
+			end
+			precursors := a_precursors
+		ensure
+			precursors_set: precursors = a_precursors
 		end
 
 feature -- Status setting
@@ -163,43 +272,37 @@ feature -- Status setting
 
 feature -- Duplication
 
-	synonym (a_name: like name; an_id: INTEGER): like Current is
+	synonym (a_name: like name): like Current is
 			-- Synonym feature
 		require
 			a_name_not_void: a_name /= Void
-			an_id_positive: an_id >= 0
 		deferred
 		ensure
 			synonym_not_void: Result /= Void
 			name_set: Result.name = a_name
-			id_set: Result.id = an_id
 		end
 
 feature -- Conversion
 
-	renamed_feature (a_name: like name; an_id: INTEGER): like Current is
+	renamed_feature (a_name: like name): like Current is
 			-- Renamed version of current feature
 		require
 			a_name_not_void: a_name /= Void
-			an_id_positive: an_id >= 0
 		deferred
 		ensure
 			renamed_feature_not_void: Result /= Void
 			name_set: Result.name = a_name
-			id_set: Result.id = an_id
 		end
 
-	undefined_feature (a_name: like name; an_id: INTEGER): ET_DEFERRED_ROUTINE is
+	undefined_feature (a_name: like name): ET_DEFERRED_ROUTINE is
 			-- Undefined version of current feature
 		require
 			a_name_not_void: a_name /= Void
-			an_id_positive: an_id >= 0
 		deferred
 		ensure
 			undefined_feature_not_void: Result /= Void
 			name_set: Result.name = a_name
-			version_set: Result.version = an_id
-			id_set: Result.id = an_id
+			version_set: Result.version = Result.id
 		end
 
 feature -- System
@@ -247,9 +350,12 @@ feature -- Type processing
 invariant
 
 	name_not_void: name /= Void
-	id_positive: id >= 0
+	id_positive: id > 0
+	current_class_not_void: current_class /= Void
 	clients_not_void: clients /= Void
-	seeds_not_void: seeds /= Void
+	first_seed_positive: first_seed > 0
+	first_seed_definition: seeds /= Void implies first_seed = seeds.first
+	first_precursor_definition: precursors /= Void implies first_precursor = precursors.first
 	implementation_class_not_void: implementation_class /= Void
 
 end -- class ET_FEATURE

@@ -5,12 +5,16 @@ indexing
 		"Eiffel Abstract Syntax Tree factories"
 
 	author:     "Eric Bezault <ericb@gobosoft.com>"
-	copyright:  "Copyright (c) 2001, Eric Bezault and others"
+	copyright:  "Copyright (c) 2001-2002, Eric Bezault and others"
 	license:    "Eiffel Forum Freeware License v1 (see forum.txt)"
 	date:       "$Date$"
 	revision:   "$Revision$"
 
 class ET_AST_FACTORY
+
+inherit
+
+	KL_IMPORTED_ARRAY_ROUTINES
 
 creation
 
@@ -46,10 +50,23 @@ feature -- AST factory
 			actual_generics_not_void: Result /= Void
 		end
 
-	new_any_clients: ET_CLIENTS is
-			-- Client list with only one client: ANY
+	new_all_export (a_clients: ET_CLIENTS): ET_ALL_EXPORT is
+			-- New 'all' export clause
+		require
+			a_clients_not_void: a_clients /= Void
 		do
-			!! Result.make_any
+			!! Result.make (a_clients)
+		ensure
+			all_export_not_void: Result /= Void
+		end
+
+	new_any_clients (a_position: ET_POSITION; a_universe: ET_UNIVERSE): ET_CLIENTS is
+			-- Client list with only one client: ANY
+		require
+			a_position_not_void: a_position /= Void
+			a_universe_not_void: a_universe /= Void
+		do
+			!! Result.make_any (a_position, a_universe)
 		ensure
 			clients_not_void: Result /= Void
 		end
@@ -96,7 +113,7 @@ feature -- AST factory
 			a_type_not_void: a_type /= Void
 			a_clients_not_void: a_clients /= Void
 			a_class_not_void: a_class /= Void
-			an_id_positive: an_id >= 0
+			an_id_positive: an_id > 0
 		do
 			!! Result.make (a_name, a_type, a_clients, a_class, an_id)
 		ensure
@@ -158,7 +175,7 @@ feature -- AST factory
 			-- New Eiffel class
 		require
 			a_name_not_void: a_name /= Void
-			an_id_positive: an_id >= 0
+			an_id_positive: an_id > 0
 		do
 			!! Result.make (a_name, an_id, a_universe)
 		ensure
@@ -225,7 +242,7 @@ feature -- AST factory
 			a_constant_not_void: a_constant /= Void
 			a_clients_not_void: a_clients /= Void
 			a_class_not_void: a_class /= Void
-			an_id_positive: an_id >= 0
+			an_id_positive: an_id > 0
 		do
 			!! Result.make (a_name, a_type, a_constant, a_clients, a_class, an_id)
 		ensure
@@ -238,6 +255,27 @@ feature -- AST factory
 			!! Result
 		ensure
 			creation_instruction_not_void: Result /= Void
+		end
+
+	new_creator (a_clients: ET_CLIENTS; a_procedure_list: ARRAY [ET_FEATURE_NAME]): ET_CREATOR is
+			-- New creation clause
+		require
+			a_clients_not_void: a_clients /= Void
+			no_void_procedure: a_procedure_list /= Void implies not ANY_ARRAY_.has (a_procedure_list, Void)
+		do
+			!! Result.make (a_clients, a_procedure_list)
+		ensure
+			creator_not_void: Result /= Void
+		end
+
+	new_creators (a_creator: ET_CREATOR): ET_CREATORS is
+			-- New creation clauses
+		require
+			a_creator_not_void: a_creator /= Void
+		do
+			!! Result.make (a_creator)
+		ensure
+			creators_not_void: Result /= Void
 		end
 
 	new_current (a_position: ET_POSITION): ET_CURRENT is
@@ -276,7 +314,7 @@ feature -- AST factory
 			a_type_not_void: a_type /= Void
 			a_clients_not_void: a_clients /= Void
 			a_class_not_void: a_class /= Void
-			an_id_positive: an_id >= 0
+			an_id_positive: an_id > 0
 		do
 			!! Result.make (a_name, args, a_type, an_obsolete,
 				a_preconditions, a_postconditions, a_clients, a_class, an_id)
@@ -293,7 +331,7 @@ feature -- AST factory
 			a_name_not_void: a_name /= Void
 			a_clients_not_void: a_clients /= Void
 			a_class_not_void: a_class /= Void
-			an_id_positive: an_id >= 0
+			an_id_positive: an_id > 0
 		do
 			!! Result.make (a_name, args, an_obsolete, a_preconditions,
 				a_postconditions, a_clients, a_class, an_id)
@@ -312,7 +350,7 @@ feature -- AST factory
 			a_type_not_void: a_type /= Void
 			a_clients_not_void: a_clients /= Void
 			a_class_not_void: a_class /= Void
-			an_id_positive: an_id >= 0
+			an_id_positive: an_id > 0
 		do
 			!! Result.make (a_name, args, a_type, an_obsolete, a_preconditions,
 				a_locals, a_compound, a_postconditions, a_rescue, a_clients, a_class, an_id)
@@ -330,7 +368,7 @@ feature -- AST factory
 			a_name_not_void: a_name /= Void
 			a_clients_not_void: a_clients /= Void
 			a_class_not_void: a_class /= Void
-			an_id_positive: an_id >= 0
+			an_id_positive: an_id > 0
 		do
 			!! Result.make (a_name, args, an_obsolete, a_preconditions,
 				a_locals, a_compound, a_postconditions, a_rescue, a_clients, a_class, an_id)
@@ -391,7 +429,7 @@ feature -- AST factory
 			a_language_not_void: a_language /= Void
 			a_clients_not_void: a_clients /= Void
 			a_class_not_void: a_class /= Void
-			an_id_positive: an_id >= 0
+			an_id_positive: an_id > 0
 		do
 			!! Result.make (a_name, args, a_type, an_obsolete,
 				a_preconditions, a_language, an_alias, a_postconditions,
@@ -411,7 +449,7 @@ feature -- AST factory
 			a_language_not_void: a_language /= Void
 			a_clients_not_void: a_clients /= Void
 			a_class_not_void: a_class /= Void
-			an_id_positive: an_id >= 0
+			an_id_positive: an_id > 0
 		do
 			!! Result.make (a_name, args, an_obsolete, a_preconditions,
 				a_language, an_alias, a_postconditions, a_clients,
@@ -426,6 +464,18 @@ feature -- AST factory
 			!! Result
 		ensure
 			feature_address_not_void: Result /= Void
+		end
+
+	new_feature_export (a_clients: ET_CLIENTS; a_feature_set: ARRAY [ET_FEATURE_NAME]): ET_FEATURE_EXPORT is
+			-- New feature export clause
+		require
+			a_clients_not_void: a_clients /= Void
+			a_feature_set_not_void: a_feature_set /= Void
+			no_void_feature: not ANY_ARRAY_.has (a_feature_set, Void)
+		do
+			!! Result.make (a_clients, a_feature_set)
+		ensure
+			feature_export_not_void: Result /= Void
 		end
 
 	new_feature_list (nb: INTEGER): ARRAY [ET_FEATURE_NAME] is
@@ -778,13 +828,17 @@ feature -- AST factory
 			named_type_not_void: Result /= Void
 		end
 
-	new_none_clients: ET_CLIENTS is
-			-- New client list with only one client: NONE
+	new_none_clients (a_position: ET_POSITION; a_universe: ET_UNIVERSE): ET_CLIENTS is
+			-- Client list with only one client: NONE
+		require
+			a_position_not_void: a_position /= Void
+			a_universe_not_void: a_universe /= Void
 		do
-			!! Result.make_none
+			!! Result.make_none (a_position, a_universe)
 		ensure
 			clients_not_void: Result /= Void
 		end
+
 
 	new_not_equal_expression (l, r: ET_EXPRESSION): ET_NOT_EQUAL_EXPRESSION is
 			-- New non-equality expression
@@ -818,7 +872,7 @@ feature -- AST factory
 			a_type_not_void: a_type /= Void
 			a_clients_not_void: a_clients /= Void
 			a_class_not_void: a_class /= Void
-			an_id_positive: an_id >= 0
+			an_id_positive: an_id > 0
 		do
 			!! Result.make (a_name, args, a_type, an_obsolete, a_preconditions,
 				a_locals, a_compound, a_postconditions, a_rescue, a_clients, a_class, an_id)
@@ -836,7 +890,7 @@ feature -- AST factory
 			a_name_not_void: a_name /= Void
 			a_clients_not_void: a_clients /= Void
 			a_class_not_void: a_class /= Void
-			an_id_positive: an_id >= 0
+			an_id_positive: an_id > 0
 		do
 			!! Result.make (a_name, args, an_obsolete, a_preconditions,
 				a_locals, a_compound, a_postconditions, a_rescue, a_clients, a_class, an_id)
@@ -1009,19 +1063,6 @@ feature -- AST factory
 			strip_expression_not_void: Result /= Void
 		end
 
-	new_synonym_feature (a_name: ET_FEATURE_NAME; a_feature: ET_FEATURE;
-		an_id: INTEGER): ET_FEATURE is
-			-- New synomym for feature `a_feature'
-		require
-			a_name_not_void: a_name /= Void
-			a_feature_not_void: a_feature /= Void
-			an_id_positive: an_id >= 0
-		do
-			Result := a_feature.synonym (a_name, an_id)
-		ensure
-			synonym_not_void: Result /= Void
-		end
-
 	new_unique_attribute (a_name: ET_FEATURE_NAME; a_type: ET_TYPE;
 		a_clients: ET_CLIENTS; a_class: ET_CLASS; an_id: INTEGER): ET_UNIQUE_ATTRIBUTE is
 			-- New unique attribute declaration
@@ -1030,7 +1071,7 @@ feature -- AST factory
 			a_type_not_void: a_type /= Void
 			a_clients_not_void: a_clients /= Void
 			a_class_not_void: a_class /= Void
-			an_id_positive: an_id >= 0
+			an_id_positive: an_id > 0
 		do
 			!! Result.make (a_name, a_type, a_clients, a_class, an_id)
 		ensure

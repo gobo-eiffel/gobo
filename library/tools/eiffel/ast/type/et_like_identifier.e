@@ -100,7 +100,7 @@ feature -- Type processing
 			features.search (name)
 			if features.found then
 				other_feature := features.found_item
-				!ET_LIKE_FEATURE! Result.make (name, other_feature.seeds.first, position)
+				!ET_LIKE_FEATURE! Result.make (name, other_feature.first_seed, position)
 			elseif args /= Void then
 				an_index := args.index_of (name)
 				if an_index /= 0 then

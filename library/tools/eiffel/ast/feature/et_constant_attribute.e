@@ -6,7 +6,7 @@ indexing
 
 	library:    "Gobo Eiffel Tools Library"
 	author:     "Eric Bezault <ericb@gobosoft.com>"
-	copyright:  "Copyright (c) 1999-2001, Eric Bezault and others"
+	copyright:  "Copyright (c) 1999-2002, Eric Bezault and others"
 	license:    "Eiffel Forum Freeware License v1 (see forum.txt)"
 	date:       "$Date$"
 	revision:   "$Revision$"
@@ -23,12 +23,12 @@ inherit
 
 creation
 
-	make, make_with_seeds
+	make
 
 feature {NONE} -- Initialization
 
 	make (a_name: like name; a_type: like type; a_constant: like constant;
-		a_clients: like clients; a_class: like implementation_class; an_id: INTEGER) is
+		a_clients: like clients; a_class: like current_class; an_id: INTEGER) is
 			-- Create a new constant attribute.
 		require
 			a_name_not_void: a_name /= Void
@@ -36,33 +36,7 @@ feature {NONE} -- Initialization
 			a_constant_not_void: a_constant /= Void
 			a_clients_not_void: a_clients /= Void
 			a_class_not_void: a_class /= Void
-			an_id_positive: an_id >= 0
-		do
-			!! seeds.make (an_id)
-			make_with_seeds (a_name, a_type, a_constant, a_clients,
-				a_class, seeds, an_id)
-		ensure
-			name_set: name = a_name
-			type_set: type = a_type
-			constant_set: constant = a_constant
-			clients_set: clients = a_clients
-			version_set: version = an_id
-			implementation_class_set: implementation_class = a_class
-			id_set: id = an_id
-		end
-
-	make_with_seeds (a_name: like name; a_type: like type;
-		a_constant: like constant; a_clients: like clients;
-		a_class: like implementation_class; a_seeds: like seeds; an_id: INTEGER) is
-			-- Create a new constant attribute.
-		require
-			a_name_not_void: a_name /= Void
-			a_type_not_void: a_type /= Void
-			a_constant_not_void: a_constant /= Void
-			a_clients_not_void: a_clients /= Void
-			a_class_not_void: a_class /= Void
-			a_seeds_not_void: a_seeds /= Void
-			an_id_positive: an_id >= 0
+			an_id_positive: an_id > 0
 		do
 			name := a_name
 			id := an_id
@@ -70,16 +44,18 @@ feature {NONE} -- Initialization
 			constant := a_constant
 			clients := a_clients
 			version := an_id
+			current_class := a_class
 			implementation_class := a_class
-			seeds := a_seeds
+			first_seed := an_id
 		ensure
 			name_set: name = a_name
 			type_set: type = a_type
 			constant_set: constant = a_constant
 			clients_set: clients = a_clients
 			version_set: version = an_id
+			first_seed_set: first_seed = an_id
+			current_class_set: current_class = a_class
 			implementation_class_set: implementation_class = a_class
-			seeds_set: seeds = a_seeds
 			id_set: id = an_id
 		end
 
@@ -99,19 +75,32 @@ feature -- Status report
 
 feature -- Duplication
 
-	synonym (a_name: like name; an_id: INTEGER): like Current is
+	synonym (a_name: like name): like Current is
 			-- Synonym feature
 		do
-			!! Result.make (a_name, type, constant, clients, implementation_class, an_id)
+			Result := universe.new_constant_attribute (a_name,
+				type, constant, clients, current_class)
 		end
 
 feature -- Conversion
 
-	renamed_feature (a_name: like name; an_id: INTEGER): like Current is
+	renamed_feature (a_name: like name): like Current is
 			-- Renamed version of current feature
 		do
-			!! Result.make_with_seeds (a_name, type, constant, clients, implementation_class, seeds, an_id)
+			Result := universe.new_constant_attribute (a_name,
+				type, constant, clients, current_class)
+			Result.set_implementation_class (implementation_class)
 			Result.set_version (version)
+			if seeds /= Void then
+				Result.set_seeds (seeds)
+			else
+				Result.set_first_seed (first_seed)
+			end
+			if precursors /= Void then
+				Result.set_precursors (precursors)
+			else
+				Result.set_first_precursor (first_precursor)
+			end
 		end
 
 invariant

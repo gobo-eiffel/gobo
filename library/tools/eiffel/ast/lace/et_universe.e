@@ -6,7 +6,7 @@ indexing
 
 	library:    "Gobo Eiffel Tools Library"
 	author:     "Eric Bezault <ericb@gobosoft.com>"
-	copyright:  "Copyright (c) 1999-2001, Eric Bezault and others"
+	copyright:  "Copyright (c) 1999-2002, Eric Bezault and others"
 	license:    "Eiffel Forum Freeware License v1 (see forum.txt)"
 	date:       "$Date$"
 	revision:   "$Revision$"
@@ -42,6 +42,7 @@ feature {NONE} -- Initialization
 		do
 			clusters := a_clusters
 			!! classes.make (3000)
+			!! features.make (100000)
 			error_handler := an_error_handler
 			ast_factory := a_factory
 			make_basic_classes
@@ -108,6 +109,9 @@ feature -- Access
 	classes: DS_HASH_TABLE [ET_CLASS, ET_IDENTIFIER]
 			-- Classes in universe
 
+	features: DS_ARRAYED_LIST [ET_FEATURE]
+			-- Features in universe, indexed by feature IDs
+
 	eiffel_class (a_name: ET_IDENTIFIER): ET_CLASS is
 			-- Class named `a_name' in universe
 		require
@@ -116,8 +120,8 @@ feature -- Access
 			if classes.has (a_name) then
 				Result := classes.item (a_name)
 			else
-				Result := ast_factory.new_class (a_name, classes.count, Current)
-				classes.force (Result, a_name)
+				Result := ast_factory.new_class (a_name, classes.count + 1, Current)
+				classes.force_last (Result, a_name)
 			end
 		ensure
 			class_not_void: Result /= Void
@@ -154,16 +158,6 @@ feature -- Access
 	error_handler: ET_ERROR_HANDLER
 			-- Error handler
 
-	next_feature_id: INTEGER is
-			-- Next feature ID
-		do
-			feature_counter := feature_counter + 1
-			Result := feature_counter
-		end
-
-	feature_counter: INTEGER
-			-- Feature ID counter
-
 feature -- Basic classes
 
 	any_class: ET_CLASS
@@ -180,6 +174,237 @@ feature -- Basic classes
 
 	any_parents: ET_PARENTS
 			-- Default parents
+
+feature -- Factory
+
+	new_attribute (a_name: ET_FEATURE_NAME; a_type: ET_TYPE;
+		a_clients: ET_CLIENTS; a_class: ET_CLASS): ET_ATTRIBUTE is
+			-- New attribute feature for `a_class'
+		require
+			a_name_not_void: a_name /= Void
+			a_type_not_void: a_type /= Void
+			a_clients_not_void: a_clients /= Void
+			a_class_not_void: a_class /= Void
+		local
+			an_id: INTEGER
+		do
+			an_id := features.count + 1
+			Result := ast_factory.new_attribute (a_name, a_type, a_clients, a_class, an_id)
+			features.force_last (Result)
+		ensure
+			attribute_not_void: Result /= Void
+		end
+
+	new_constant_attribute (a_name: ET_FEATURE_NAME; a_type: ET_TYPE; a_constant: ANY;
+		a_clients: ET_CLIENTS; a_class: ET_CLASS): ET_CONSTANT_ATTRIBUTE is
+			-- New constant attribute feature for `a_class'
+		require
+			a_name_not_void: a_name /= Void
+			a_type_not_void: a_type /= Void
+			a_constant_not_void: a_constant /= Void
+			a_clients_not_void: a_clients /= Void
+			a_class_not_void: a_class /= Void
+		local
+			an_id: INTEGER
+		do
+			an_id := features.count + 1
+			Result := ast_factory.new_constant_attribute (a_name, a_type, a_constant, a_clients, a_class, an_id)
+			features.force_last (Result)
+		ensure
+			constant_attribute_not_void: Result /= Void
+		end
+
+	new_deferred_function (a_name: ET_FEATURE_NAME; args: ET_FORMAL_ARGUMENTS;
+		a_type: ET_TYPE; an_obsolete: ET_MANIFEST_STRING; a_preconditions: ET_PRECONDITIONS;
+		a_postconditions: ET_POSTCONDITIONS; a_clients: ET_CLIENTS;
+		a_class: ET_CLASS): ET_DEFERRED_FUNCTION is
+			-- New deferred function feature for `a_class'
+		require
+			a_name_not_void: a_name /= Void
+			a_type_not_void: a_type /= Void
+			a_clients_not_void: a_clients /= Void
+			a_class_not_void: a_class /= Void
+		local
+			an_id: INTEGER
+		do
+			an_id := features.count + 1
+			Result := ast_factory.new_deferred_function (a_name, args, a_type, an_obsolete,
+				a_preconditions, a_postconditions, a_clients, a_class, an_id)
+			features.force_last (Result)
+		ensure
+			deferred_function_not_void: Result /= Void
+		end
+
+	new_deferred_procedure (a_name: ET_FEATURE_NAME; args: ET_FORMAL_ARGUMENTS;
+		an_obsolete: ET_MANIFEST_STRING; a_preconditions: ET_PRECONDITIONS;
+		a_postconditions: ET_POSTCONDITIONS; a_clients: ET_CLIENTS;
+		a_class: ET_CLASS): ET_DEFERRED_PROCEDURE is
+			-- New deferred procedure feature for `a_class'
+		require
+			a_name_not_void: a_name /= Void
+			a_clients_not_void: a_clients /= Void
+			a_class_not_void: a_class /= Void
+		local
+			an_id: INTEGER
+		do
+			an_id := features.count + 1
+			Result := ast_factory.new_deferred_procedure (a_name, args, an_obsolete, a_preconditions,
+				a_postconditions, a_clients, a_class, an_id)
+			features.force_last (Result)
+		ensure
+			deferred_procedure_not_void: Result /= Void
+		end
+
+	new_do_function (a_name: ET_FEATURE_NAME; args: ET_FORMAL_ARGUMENTS; a_type: ET_TYPE;
+		an_obsolete: ET_MANIFEST_STRING; a_preconditions: ET_PRECONDITIONS;
+		a_locals: ET_LOCAL_VARIABLES; a_compound: ET_COMPOUND;
+		a_postconditions: ET_POSTCONDITIONS; a_rescue: ET_COMPOUND;
+		a_clients: ET_CLIENTS; a_class: ET_CLASS): ET_DO_FUNCTION is
+			-- New do function feature for `a_class'
+		require
+			a_name_not_void: a_name /= Void
+			a_type_not_void: a_type /= Void
+			a_clients_not_void: a_clients /= Void
+			a_class_not_void: a_class /= Void
+		local
+			an_id: INTEGER
+		do
+			an_id := features.count + 1
+			Result := ast_factory.new_do_function (a_name, args, a_type, an_obsolete, a_preconditions,
+				a_locals, a_compound, a_postconditions, a_rescue, a_clients, a_class, an_id)
+			features.force_last (Result)
+		ensure
+			do_function_not_void: Result /= Void
+		end
+
+	new_do_procedure (a_name: ET_FEATURE_NAME; args: ET_FORMAL_ARGUMENTS;
+		an_obsolete: ET_MANIFEST_STRING; a_preconditions: ET_PRECONDITIONS;
+		a_locals: ET_LOCAL_VARIABLES; a_compound: ET_COMPOUND;
+		a_postconditions: ET_POSTCONDITIONS; a_rescue: ET_COMPOUND;
+		a_clients: ET_CLIENTS; a_class: ET_CLASS): ET_DO_PROCEDURE is
+			-- New do procedure feature for `a_class'
+		require
+			a_name_not_void: a_name /= Void
+			a_clients_not_void: a_clients /= Void
+			a_class_not_void: a_class /= Void
+		local
+			an_id: INTEGER
+		do
+			an_id := features.count + 1
+			Result := ast_factory.new_do_procedure (a_name, args, an_obsolete, a_preconditions,
+				a_locals, a_compound, a_postconditions, a_rescue, a_clients, a_class, an_id)
+			features.force_last (Result)
+		ensure
+			do_procedure_not_void: Result /= Void
+		end
+
+	new_external_function (a_name: ET_FEATURE_NAME; args: ET_FORMAL_ARGUMENTS;
+		a_type: ET_TYPE; an_obsolete: ET_MANIFEST_STRING; a_preconditions: ET_PRECONDITIONS;
+		a_language: ET_MANIFEST_STRING; an_alias: ET_MANIFEST_STRING;
+		a_postconditions: ET_POSTCONDITIONS; a_clients: ET_CLIENTS;
+		a_class: ET_CLASS): ET_EXTERNAL_FUNCTION is
+			-- New external function feature for `a_class'
+		require
+			a_name_not_void: a_name /= Void
+			a_type_not_void: a_type /= Void
+			a_language_not_void: a_language /= Void
+			a_clients_not_void: a_clients /= Void
+			a_class_not_void: a_class /= Void
+		local
+			an_id: INTEGER
+		do
+			an_id := features.count + 1
+			Result := ast_factory.new_external_function (a_name, args, a_type, an_obsolete,
+				a_preconditions, a_language, an_alias, a_postconditions,
+				a_clients, a_class, an_id)
+			features.force_last (Result)
+		ensure
+			external_function_not_void: Result /= Void
+		end
+
+	new_external_procedure (a_name: ET_FEATURE_NAME; args: ET_FORMAL_ARGUMENTS;
+		an_obsolete: ET_MANIFEST_STRING; a_preconditions: ET_PRECONDITIONS;
+		a_language: ET_MANIFEST_STRING; an_alias: ET_MANIFEST_STRING;
+		a_postconditions: ET_POSTCONDITIONS; a_clients: ET_CLIENTS;
+		a_class: ET_CLASS): ET_EXTERNAL_PROCEDURE is
+			-- New external procedure feature for `a_class'
+		require
+			a_name_not_void: a_name /= Void
+			a_language_not_void: a_language /= Void
+			a_clients_not_void: a_clients /= Void
+			a_class_not_void: a_class /= Void
+		local
+			an_id: INTEGER
+		do
+			an_id := features.count + 1
+			Result := ast_factory.new_external_procedure (a_name, args, an_obsolete, a_preconditions,
+				a_language, an_alias, a_postconditions, a_clients,
+				a_class, an_id)
+			features.force_last (Result)
+		ensure
+			external_procedure_not_void: Result /= Void
+		end
+
+	new_once_function (a_name: ET_FEATURE_NAME; args: ET_FORMAL_ARGUMENTS; a_type: ET_TYPE;
+		an_obsolete: ET_MANIFEST_STRING; a_preconditions: ET_PRECONDITIONS;
+		a_locals: ET_LOCAL_VARIABLES; a_compound: ET_COMPOUND;
+		a_postconditions: ET_POSTCONDITIONS; a_rescue: ET_COMPOUND;
+		a_clients: ET_CLIENTS; a_class: ET_CLASS): ET_ONCE_FUNCTION is
+			-- New once function feature for `a_class'
+		require
+			a_name_not_void: a_name /= Void
+			a_type_not_void: a_type /= Void
+			a_clients_not_void: a_clients /= Void
+			a_class_not_void: a_class /= Void
+		local
+			an_id: INTEGER
+		do
+			an_id := features.count + 1
+			Result := ast_factory.new_once_function (a_name, args, a_type, an_obsolete, a_preconditions,
+				a_locals, a_compound, a_postconditions, a_rescue, a_clients, a_class, an_id)
+			features.force_last (Result)
+		ensure
+			once_function_not_void: Result /= Void
+		end
+
+	new_once_procedure (a_name: ET_FEATURE_NAME; args: ET_FORMAL_ARGUMENTS;
+		an_obsolete: ET_MANIFEST_STRING; a_preconditions: ET_PRECONDITIONS;
+		a_locals: ET_LOCAL_VARIABLES; a_compound: ET_COMPOUND;
+		a_postconditions: ET_POSTCONDITIONS; a_rescue: ET_COMPOUND;
+		a_clients: ET_CLIENTS; a_class: ET_CLASS): ET_ONCE_PROCEDURE is
+			-- New once procedure feature for `a_class'
+		require
+			a_name_not_void: a_name /= Void
+			a_clients_not_void: a_clients /= Void
+			a_class_not_void: a_class /= Void
+		local
+			an_id: INTEGER
+		do
+			an_id := features.count + 1
+			Result := ast_factory.new_once_procedure (a_name, args, an_obsolete, a_preconditions,
+				a_locals, a_compound, a_postconditions, a_rescue, a_clients, a_class, an_id)
+			features.force_last (Result)
+		ensure
+			once_procedure_not_void: Result /= Void
+		end
+
+	new_unique_attribute (a_name: ET_FEATURE_NAME; a_type: ET_TYPE;
+		a_clients: ET_CLIENTS; a_class: ET_CLASS): ET_UNIQUE_ATTRIBUTE is
+			-- New unique attribute declaration for `a_class'
+		require
+			a_name_not_void: a_name /= Void
+			a_type_not_void: a_type /= Void
+			a_clients_not_void: a_clients /= Void
+			a_class_not_void: a_class /= Void
+		local
+			an_id: INTEGER
+		do
+			an_id := features.count + 1
+			Result := ast_factory.new_unique_attribute (a_name, a_type, a_clients, a_class, an_id)
+			features.force_last (Result)
+		ensure
+			unique_attribute_not_void: Result /= Void
+		end
 
 feature -- Setting
 
@@ -276,6 +501,8 @@ invariant
 
 	classes_not_void: classes /= Void
 	no_void_class: not classes.has_item (Void)
+	features_not_void: features /= Void
+	no_void_feature: not features.has (Void)
 	error_handler_not_void: error_handler /= Void
 	eiffel_parser_not_void: eiffel_parser /= Void
 	ast_factory_not_void: ast_factory /= Void

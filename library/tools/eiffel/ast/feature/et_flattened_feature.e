@@ -6,7 +6,7 @@ indexing
 
 	library:    "Gobo Eiffel Tools Library"
 	author:     "Eric Bezault <ericb@gobosoft.com>"
-	copyright:  "Copyright (c) 2001, Eric Bezault and others"
+	copyright:  "Copyright (c) 2001-2002, Eric Bezault and others"
 	license:    "Eiffel Forum Freeware License v1 (see forum.txt)"
 	date:       "$Date$"
 	revision:   "$Revision$"
@@ -29,6 +29,7 @@ feature {NONE} -- Initialization
 			current_feature := a_feature
 			current_class := a_class
 			!! inherited_features.make
+			first_seed := current_feature.first_seed
 			seeds := current_feature.seeds
 		ensure
 			current_feature_set: current_feature = a_feature
@@ -63,8 +64,12 @@ feature -- Access
 	current_class: ET_CLASS
 			-- Class where current feature is flattened
 
-	seeds: ET_FEATURE_SEEDS
-			-- Seeds
+	first_seed: INTEGER
+			-- First seed
+
+	seeds: ET_FEATURE_IDS
+			-- Seeds; May be Void if there is only one seed
+			-- (which is then accessible through `first_seed')
 
 	signature: ET_SIGNATURE
 			-- Signature of flattened feature;
@@ -105,7 +110,7 @@ feature -- Access
 	inherited_feature_with_seed (a_seed: INTEGER): ET_INHERITED_FEATURE is
 			-- Inherited feature with seed `a_seed'
 		require
-			has_seed: seeds.has (a_seed)
+			has_seed: has_seed (a_seed)
 			is_inherited: is_inherited_seed (a_seed)
 		local
 			a_cursor: DS_LINKED_LIST_CURSOR [ET_INHERITED_FEATURE]
@@ -114,7 +119,7 @@ feature -- Access
 			a_cursor := inherited_features.new_cursor
 			from a_cursor.start until a_cursor.after loop
 				a_feature := a_cursor.item
-				if a_feature.seeds.has (a_seed) then
+				if a_feature.has_seed (a_seed) then
 					Result := a_feature
 					a_cursor.go_after -- Jump out of the loop.
 				else
@@ -123,7 +128,7 @@ feature -- Access
 			end
 		ensure
 			inherited_feature_not_void: Result /= Void
-			has_seed: Result.seeds.has (a_seed)
+			has_seed: Result.has_seed (a_seed)
 		end
 
 	selected_name: ET_FEATURE_NAME is
@@ -148,6 +153,9 @@ feature -- Access
 			selected_name_not_void: Result /= Void
 		end
 
+	replicated_seeds: ET_FEATURE_IDS
+			-- Seeds involved when current feature has been replicated
+
 	error_handler: ET_ERROR_HANDLER is
 			-- Error handler
 		do
@@ -166,8 +174,13 @@ feature -- Status report
 			-- Has an inherited feature been selected
 			-- to solve a replication conflict?
 
-	is_replicated: BOOLEAN
+	is_replicated: BOOLEAN is
 			-- Has current feature been replicated?
+		do
+			Result := replicated_seeds /= Void
+		ensure
+			definition: Result = (replicated_seeds /= Void)
+		end
 
 	is_inherited: BOOLEAN is
 			-- Is current feature inherited from a parent?
@@ -177,10 +190,23 @@ feature -- Status report
 			definition: Result = not inherited_features.is_empty
 		end
 
+	has_seed (a_seed: INTEGER): BOOLEAN is
+			-- Does current feature have `a_seed'?
+		do
+			if first_seed = a_seed then
+				Result := True
+			elseif seeds /= Void then
+				Result := seeds.has (a_seed)
+			end
+		ensure
+			definition: Result = (first_seed = a_seed or
+				(seeds /= Void and then seeds.has (a_seed)))
+		end
+
 	is_inherited_seed (a_seed: INTEGER): BOOLEAN is
 			-- Has `a_seed' been inherited?
 		require
-			has_seed: seeds.has (a_seed)
+			has_seed: has_seed (a_seed)
 		local
 			a_cursor: DS_LINKED_LIST_CURSOR [ET_INHERITED_FEATURE]
 			a_feature: ET_INHERITED_FEATURE
@@ -191,7 +217,7 @@ feature -- Status report
 				a_cursor := inherited_features.new_cursor
 				from a_cursor.start until a_cursor.after loop
 					a_feature := a_cursor.item
-					if a_feature.seeds.has (a_seed) then
+					if a_feature.has_seed (a_seed) then
 						Result := True
 						a_cursor.go_after -- Jump out of the loop.
 					else
@@ -207,17 +233,13 @@ feature -- Status setting
 			-- Set `is_replicated' to True.
 			-- `a_seed' is the seed which needs replication.
 		require
-			has_seed: seeds.has (a_seed)
-		local
-			need_twin: BOOLEAN
+			has_seed: has_seed (a_seed)
 		do
-			is_replicated := True
-			feature_id := current_class.universe.next_feature_id
-			need_twin := (seeds = inherited_features.first.seeds)
-			if need_twin then
-				seeds := clone (seeds)
+			if replicated_seeds = Void then
+				!! replicated_seeds.make (a_seed)
+			elseif not replicated_seeds.has (a_seed) then
+				replicated_seeds.put (a_seed)
 			end
-			seeds.replace (a_seed, feature_id)
 		ensure
 			is_replicated: is_replicated
 		end
@@ -244,21 +266,41 @@ feature -- Element change
 			need_twin: BOOLEAN
 		do
 			if inherited_features.is_empty then
+				first_seed := a_feature.first_seed
 				seeds := a_feature.seeds
 			else
 				need_twin := (seeds = inherited_features.first.seeds)
-				other_seeds := a_feature.inherited_feature.seeds
-				nb := other_seeds.count
-				from i := 1 until i > nb loop
-					a_seed := other_seeds.item (i)
-					if not seeds.has (a_seed) then
-						if need_twin then
-							seeds := clone (seeds)
-							need_twin := False
+				other_seeds := a_feature.seeds
+				if other_seeds = Void then
+					a_seed := a_feature.first_seed
+					if not has_seed (a_seed) then
+						if seeds = Void then
+							!! seeds.make_with_capacity (first_seed, 2)
+						else
+							if need_twin then
+								seeds := clone (seeds)
+								need_twin := False
+							end
 						end
 						seeds.put (a_seed)
 					end
-					i := i + 1
+				else
+					nb := other_seeds.count
+					from i := 1 until i > nb loop
+						a_seed := other_seeds.item (i)
+						if not has_seed (a_seed) then
+							if seeds = Void then
+								!! seeds.make_with_capacity (first_seed, 2)
+							else
+								if need_twin then
+									seeds := clone (seeds)
+									need_twin := False
+								end
+							end
+							seeds.put (a_seed)
+						end
+						i := i + 1
+					end
 				end
 			end
 			inherited_features.put_last (a_feature)
@@ -325,14 +367,53 @@ feature {NONE} -- Compilation
 		local
 			a_feature: ET_INHERITED_FEATURE
 			is_deferred, has_redefined: BOOLEAN
+			a_first_precursor, a_precursor: INTEGER
+			a_precursors: ET_FEATURE_IDS
+			i, nb: INTEGER
+			need_twin: BOOLEAN
+			a_seed, new_seed: INTEGER
 		do
 			current_feature.resolve_identifier_types (a_flattener)
 			flattened_feature := current_feature
-			flattened_feature.set_seeds (seeds)
+			if is_replicated then
+				new_seed := flattened_feature.id
+				if seeds /= Void then
+					need_twin := (seeds = inherited_features.first.seeds)
+					if need_twin then
+						seeds := clone (seeds)
+					end
+					seeds.replace (replicated_seeds.first, new_seed)
+					nb := replicated_seeds.count
+					from i := 2 until i > nb loop
+						a_seed := replicated_seeds.item (i)
+						seeds.remove (a_seed)
+						i := i + 1
+					end
+					first_seed := seeds.first
+				else
+					first_seed := new_seed
+				end
+				replicated_seeds := Void
+			end
+			if seeds /= Void and then seeds.count > 1 then
+				flattened_feature.set_seeds (seeds)
+			else
+				flattened_feature.set_first_seed (first_seed)
+			end
 			signature := current_feature.signature
 				-- Check Feature_adaptation clause.
+			a_first_precursor := inherited_features.first.id
 			from inherited_features.start until inherited_features.after loop
 				a_feature := inherited_features.item_for_iteration
+				a_precursor := a_feature.id
+				if a_precursor = a_first_precursor then
+					-- Do nothing.
+				elseif a_precursors = Void or else not a_precursors.has (a_precursor) then
+					if a_precursors = Void then
+						!! a_precursors.make_with_capacity (a_first_precursor, inherited_features.count)
+					end
+					a_precursors.put (a_precursor)
+				end
 				if not a_feature.check_rename_clause (current_class) then
 					a_flattener.set_flatten_error
 				end
@@ -351,6 +432,11 @@ feature {NONE} -- Compilation
 					has_redefined := True
 				end
 				inherited_features.forth
+			end
+			if a_precursors /= Void and then a_precursors.count > 1 then
+				flattened_feature.set_precursors (a_precursors)
+			else
+				flattened_feature.set_first_precursor (a_first_precursor)
 			end
 			is_deferred := current_feature.is_deferred
 			from inherited_features.start until inherited_features.after loop
@@ -408,11 +494,38 @@ feature {NONE} -- Compilation
 			a_flattener_not_void: a_flattener /= Void
 		local
 			a_feature, effective, a_deferred: ET_INHERITED_FEATURE
-			same_version, duplication_needed: BOOLEAN
+			same_version: BOOLEAN
+			a_first_precursor, a_precursor: INTEGER
+			a_precursors: ET_FEATURE_IDS
+			i, nb: INTEGER
+			need_twin: BOOLEAN
+			a_seed, new_seed: INTEGER
+			a_clients: ET_CLIENTS
+			a_clients_need_twin: BOOLEAN
 		do
 				-- Check Feature_adaptation clause.
+			a_first_precursor := inherited_features.first.id
 			from inherited_features.start until inherited_features.after loop
 				a_feature := inherited_features.item_for_iteration
+				a_precursor := a_feature.id
+				if a_precursor = a_first_precursor then
+					-- Do nothing.
+				elseif a_precursors = Void or else not a_precursors.has (a_precursor) then
+					if a_precursors = Void then
+						!! a_precursors.make_with_capacity (a_first_precursor, inherited_features.count)
+					end
+					a_precursors.put (a_precursor)
+				end
+				if a_clients = Void then
+					a_clients := a_feature.clients
+					a_clients_need_twin := True
+				else
+					if a_clients_need_twin then
+						a_clients := clone (a_clients)
+						a_clients_need_twin := False
+					end
+					a_clients.append_last (a_feature.clients)
+				end
 				if not a_feature.check_rename_clause (current_class) then
 					a_flattener.set_flatten_error
 				end
@@ -448,7 +561,6 @@ feature {NONE} -- Compilation
 			end
 			if effective /= Void then
 				a_feature := effective
-				duplication_needed := False
 				same_version := True
 			else
 				same_version := True
@@ -470,23 +582,43 @@ feature {NONE} -- Compilation
 					inherited_features.forth
 				end
 				a_feature := a_deferred
-				duplication_needed := not same_version
 			end
+			flattened_feature := a_feature.adapted_feature (current_class)
 			if is_replicated then
-				flattened_feature := a_feature.replicated_feature (feature_id, current_class)
-			else
-				if not duplication_needed then
-						-- Force duplication when there is a
-						-- sharing of features but the seeds
-						-- have been extended.
-					duplication_needed := not a_feature.seeds.is_equal (seeds)
+				new_seed := flattened_feature.id
+				if seeds /= Void then
+					need_twin := (seeds = inherited_features.first.seeds)
+					if need_twin then
+						seeds := clone (seeds)
+					end
+					seeds.replace (replicated_seeds.first, new_seed)
+					nb := replicated_seeds.count
+					from i := 2 until i > nb loop
+						a_seed := replicated_seeds.item (i)
+						seeds.remove (a_seed)
+						i := i + 1
+					end
+					first_seed := seeds.first
+				else
+					first_seed := new_seed
 				end
-				flattened_feature := a_feature.adapted_feature (duplication_needed, current_class)
+				replicated_seeds := Void
+			else
 				if same_version then
 					flattened_feature.set_version (a_feature.inherited_feature.version)
 				end
 			end
-			flattened_feature.set_seeds (seeds)
+			flattened_feature.set_clients (a_clients)
+			if seeds /= Void and then seeds.count > 1 then
+				flattened_feature.set_seeds (seeds)
+			else
+				flattened_feature.set_first_seed (first_seed)
+			end
+			if a_precursors /= Void and then a_precursors.count > 1 then
+				flattened_feature.set_precursors (a_precursors)
+			else
+				flattened_feature.set_first_precursor (a_first_precursor)
+			end
 			signature := a_feature.signature
 		ensure
 			flattened_feature_not_void: flattened_feature /= Void
@@ -543,21 +675,14 @@ feature -- Validity
 			end
 		end
 
-feature {ET_REPLICABLE_FEATURE} -- Replication
-
-	feature_id: INTEGER
-			-- New feature ID when feature is replicated
---		require
---			is_replicated: is_replicated
---		ensure
---			id_positive: Result >= 0
-
 invariant
 
 	inherited_features_not_void: inherited_features /= Void
 	no_void_inherited_feature: not inherited_features.has (Void)
 	at_least_one: current_feature /= Void or else not inherited_features.is_empty
 	current_class_not_void: current_class /= Void
-	seeds_not_void: seeds /= Void
+	first_seed_positive: first_seed > 0
+	first_seed_definition: seeds /= Void implies first_seed = seeds.first
+	-- replicated_seeds: replicated_seeds /= Void implies forall a_seed in replicated_seeds, has_seed (a_seed)
 
 end -- class ET_FLATTENED_FEATURE

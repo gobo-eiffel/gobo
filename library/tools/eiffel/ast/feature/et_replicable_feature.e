@@ -23,7 +23,7 @@ feature {NONE} -- Initialization
 			-- Create a new replicable feature.
 		require
 			a_feature_not_void: a_feature /= Void
-			seeded_feature: a_feature.seeds.has (a_seed)
+			seeded_feature: a_feature.has_seed (a_seed)
 			is_inherited: a_feature.is_inherited_seed (a_seed)
 		do
 			seed := a_seed
@@ -46,6 +46,10 @@ feature -- Measurement
 	selected_count: INTEGER
 			-- Number of selected features
 
+	nb_seeded_features: INTEGER
+			-- Number of seeded features after replication
+			-- has been processed
+
 feature -- Status report
 
 	is_replicated: BOOLEAN is
@@ -60,7 +64,7 @@ feature -- Element change
 			-- Add `a_feature' to `features'.
 		require
 			a_feature_not_void: a_feature /= Void
-			seeded_feature: a_feature.seeds.has (seed)
+			seeded_feature: a_feature.has_seed (seed)
 			is_inherited: a_feature.is_inherited_seed (seed)
 		do
 			features.put_last (a_feature)
@@ -71,15 +75,14 @@ feature -- Element change
 
 feature -- Compilation
 
-	register_seeded_features (a_flattener: ET_FEATURE_FLATTENER) is
-			-- Add seeded features to `a_flattener'.
+	process_replication (a_flattener: ET_FEATURE_FLATTENER) is
+			-- Process replication.
 		require
 			a_flattener_not_void: a_flattener /= Void
 		local
 			a_feature: ET_FLATTENED_FEATURE
 			inherited_feature: ET_INHERITED_FEATURE
 			replicated_features: DS_ARRAYED_LIST [ET_INHERITED_FEATURE]
-			seeded_features: DS_HASH_TABLE [ET_FLATTENED_FEATURE, INTEGER]
 			a_class: ET_CLASS
 		do
 			if is_replicated then
@@ -97,15 +100,13 @@ feature -- Compilation
 					a_flattener.set_flatten_error
 				when 1 then
 						-- OK.
-					seeded_features := a_flattener.seeded_features
 					from features.start until features.after loop
+						nb_seeded_features := nb_seeded_features + 1
 						a_feature := features.item_for_iteration
 						if not a_feature.has_selected then
 							a_feature.set_replicated (seed)
-							seeded_features.force (a_feature, a_feature.feature_id)
 						else
 							a_feature.set_selected
-							seeded_features.force (a_feature, seed)
 						end
 						features.forth
 					end
@@ -125,9 +126,7 @@ feature -- Compilation
 					a_flattener.set_flatten_error
 				end
 			else
-				a_feature := features.first
-				seeded_features := a_flattener.seeded_features
-				seeded_features.force (a_feature, seed)
+				nb_seeded_features := nb_seeded_features + 1
 				if selected_count /= 0 then
 					-- There is still a chance that this feature was
 					-- listed in the Select subclause to resolve a
@@ -142,9 +141,10 @@ feature -- Compilation
 invariant
 
 	selected_count_positive: selected_count >= 0
+	nb_seeded_features_positive: nb_seeded_features >= 0
 	features_not_void: features /= Void
 	no_void_feature: not features.has (Void)
 	features_not_empty: not features.is_empty
-	-- seeded_features: forall `f' in `features', f.seeds.has (seed)
+	-- seeded_features: forall `f' in `features', f.has_seed (seed)
 
 end -- class ET_REPLICABLE_FEATURE

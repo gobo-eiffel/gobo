@@ -2,16 +2,16 @@ indexing
 
 	description:
 
-		"Eiffel feature seed lists (first declarations of a feature)"
+		"Eiffel feature id lists"
 
 	library:    "Gobo Eiffel Tools Library"
 	author:     "Eric Bezault <ericb@gobosoft.com>"
-	copyright:  "Copyright (c) 2001, Eric Bezault and others"
+	copyright:  "Copyright (c) 2001-2002, Eric Bezault and others"
 	license:    "Eiffel Forum Freeware License v1 (see forum.txt)"
 	date:       "$Date$"
 	revision:   "$Revision$"
 
-class ET_FEATURE_SEEDS
+class ET_FEATURE_IDS
 
 inherit
 
@@ -26,43 +26,48 @@ creation
 
 feature {NONE} -- Initialization
 
-	make (a_seed: INTEGER) is
-			-- Create a new feature seed list with
-			-- `a_seed' as first seed.
+	make (an_id: INTEGER) is
+			-- Create a new feature id list with
+			-- `an_id' as first id.
+		require
+			an_id_positive: an_id > 0
 		do
-			!! seeds.make (1, 1)
-			put (a_seed)
+			!! feature_ids.make (1, 1)
+			put (an_id)
 		ensure
 			count_set: count = 1
-			first_set: first = a_seed
+			first_set: first = an_id
 		end
 
-	make_with_capacity (a_seed: INTEGER; nb: INTEGER) is
-			-- Create a new feature seed list with
-			-- `a_seed' as first seed.
+	make_with_capacity (an_id: INTEGER; nb: INTEGER) is
+			-- Create a new feature id list with
+			-- `an_id' as first id.
 		require
+			an_id_positive: an_id > 0
 			nb_large_enough: nb > 1
 		do
-			!! seeds.make (1, nb)
-			put (a_seed)
+			!! feature_ids.make (1, nb)
+			put (an_id)
 		ensure
 			count_set: count = 1
-			first_set: first = a_seed
+			first_set: first = an_id
 		end
 
 feature -- Access
 
 	item (i: INTEGER): INTEGER is
-			-- `i'-th feature seed
+			-- `i'-th feature id
 		require
 			i_large_enough: i >= 1
 			i_small_enough: i <= count
 		do
-			Result := seeds.item (i)
+			Result := feature_ids.item (i)
+		ensure
+			item_positive: Result > 0
 		end
 
 	first: INTEGER is
-			-- First seed
+			-- First id
 		do
 			Result := item (1)
 		ensure
@@ -72,18 +77,18 @@ feature -- Access
 feature -- Measurement
 
 	count: INTEGER
-			-- Number of seeds
+			-- Number of ids
 
 feature -- Status report
 
-	has (a_seed: INTEGER): BOOLEAN is
-			-- Is `a_seed' included in the list of seeds?
+	has (an_id: INTEGER): BOOLEAN is
+			-- Is `an_id' included in the list of featire ids?
 		local
 			i, nb: INTEGER
 		do
 			nb := count
 			from i := 1 until i > nb loop
-				if seeds.item (i) = a_seed then
+				if feature_ids.item (i) = an_id then
 					Result := True
 					i := nb + 1  -- Jump out of loop.
 				else
@@ -94,35 +99,35 @@ feature -- Status report
 
 feature -- Element change
 
-	put (a_seed: INTEGER) is
-			-- Add `a_seed' to the list of seeds.
+	put (an_id: INTEGER) is
+			-- Add `an_id' to the list of feature ids.
 		require
-			not_has: not has (a_seed)
+			an_id_positive: an_id > 0
+			not_has: not has (an_id)
 		do
 			count := count + 1
-			if seeds.upper < count then
-				seeds.resize (1, count)
+			if feature_ids.upper < count then
+				feature_ids.resize (1, count)
 			end
-			seeds.put (a_seed, count)
+			feature_ids.put (an_id, count)
 		ensure
 			one_more: count = old count + 1
-			inserted: item (count) = a_seed
+			inserted: item (count) = an_id
 		end
 
-	replace (old_seed, new_seed: INTEGER) is
-			-- Replace `old_seed' by `new_seed'.
+	replace (old_id, new_id: INTEGER) is
+			-- Replace `old_id' by `new_id'.
 		require
-			old_seed_not_void: old_seed /= Void
-			has_old_seed: has (old_seed)
-			new_seed_not_void: new_seed /= Void
-			not_has_new_seed: not has (new_seed)
+			has_old_id: has (old_id)
+			new_id_positive: new_id > 0
+			not_has_new_id: not has (new_id)
 		local
 			i, nb: INTEGER
 		do
 			nb := count
 			from i := 1 until i > nb loop
-				if seeds.item (i) = old_seed then
-					seeds.put (new_seed, i)
+				if feature_ids.item (i) = old_id then
+					feature_ids.put (new_id, i)
 					i := nb + 1  -- Jump out of the loop.
 				else
 					i := i + 1
@@ -130,28 +135,27 @@ feature -- Element change
 			end
 		ensure
 			same_count: count = old count
-			not_has_old_seed: not has (old_seed)
-			has_new_seed: has (new_seed)
+			not_has_old_id: not has (old_id)
+			has_new_id: has (new_id)
 		end
 
 feature -- Removal
 
-	remove (a_seed: INTEGER) is
-			-- Remove `a_seed' from the list of seeds.
+	remove (an_id: INTEGER) is
+			-- Remove `an_id' from the list of feature ids.
 		require
-			a_seed_not_void: a_seed /= Void
-			has_seed: has (a_seed)
+			has_id: has (an_id)
 			count_large_enough: count > 1
 		local
 			i, j, nb: INTEGER
-			old_seed: INTEGER
+			old_id: INTEGER
 		do
 			j := 1
 			nb := count
 			from i := 1 until i > nb loop
-				old_seed := seeds.item (i)
-				if old_seed /= a_seed then
-					seeds.put (old_seed, j)
+				old_id := feature_ids.item (i)
+				if old_id /= an_id then
+					feature_ids.put (old_id, j)
 					j := j + 1
 				end
 				i := i + 1
@@ -159,7 +163,7 @@ feature -- Removal
 			count := count - 1
 		ensure
 			one_less: count = old count - 1
-			not_has_seed: not has (a_seed)
+			not_has_id: not has (an_id)
 		end
 
 feature -- Duplication
@@ -168,7 +172,7 @@ feature -- Duplication
 			-- Copy `other' to `Current'.
 		do
 			standard_copy (other)
-			seeds := clone (seeds)
+			feature_ids := clone (feature_ids)
 		end
 
 feature -- Comparison
@@ -196,14 +200,15 @@ feature -- Comparison
 
 feature {NONE} -- Implementation
 
-	seeds: ARRAY [INTEGER]
-			-- List of seeds
+	feature_ids: ARRAY [INTEGER]
+			-- List of feature ids
 
 invariant
 
 	not_empty: count > 0
-	seeds_not_void: seeds /= Void
-	seeds_lower: seeds.lower = 1
-	seeds_upper: seeds.upper >= count
+	feature_ids_not_void: feature_ids /= Void
+	feature_ids_lower: feature_ids.lower = 1
+	feature_ids_upper: feature_ids.upper >= count
+	--ids_positive: forall i in 1..count, feature_ids.item (i) > 0
 
-end -- class ET_FEATURE_SEEDS
+end -- class ET_FEATURE_IDS

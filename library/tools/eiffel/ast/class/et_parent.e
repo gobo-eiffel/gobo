@@ -73,6 +73,36 @@ feature -- Access
 	next: ET_PARENT
 			-- Next parent in parent list
 
+	new_exports (a_feature_name: ET_FEATURE_NAME): ET_CLIENTS is
+			-- New export status for `a_feature_name';
+			-- Void if this export status has not changed
+		local
+			i, nb: INTEGER
+			need_twin: BOOLEAN
+			an_export: ET_EXPORT
+		do
+			if exports /= Void then
+				i := exports.lower
+				nb := exports.upper
+				from until i > nb loop
+					an_export := exports.item (i)
+					if an_export.has_feature (a_feature_name) then
+						if Result = Void then
+							Result := an_export.clients
+							need_twin := True
+						else
+							if need_twin then
+								Result := clone (Result)
+								need_twin := False
+							end
+							Result.append_last (an_export.clients)
+						end
+					end
+					i := i + 1
+				end
+			end
+		end
+
 feature -- Genealogy status
 
 	ancestors_searched: BOOLEAN is

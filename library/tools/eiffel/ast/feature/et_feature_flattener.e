@@ -6,7 +6,7 @@ indexing
 
 	library:    "Gobo Eiffel Tools Library"
 	author:     "Eric Bezault <ericb@gobosoft.com>"
-	copyright:  "Copyright (c) 2001, Eric Bezault and others"
+	copyright:  "Copyright (c) 2001-2002, Eric Bezault and others"
 	license:    "Eiffel Forum Freeware License v1 (see forum.txt)"
 	date:       "$Date$"
 	revision:   "$Revision$"
@@ -25,7 +25,6 @@ feature {NONE} -- Initialization
 			a_class_not_void: a_class /= Void
 		do
 			!! named_features.make (200)
-			!! seeded_features.make_map (200)
 			!! rename_table.make (10)
 			!! undefine_table.make_equal (10)
 			!! redefine_table.make_equal (10)
@@ -44,8 +43,9 @@ feature -- Access
 	named_features: DS_HASH_TABLE [ET_FLATTENED_FEATURE, ET_FEATURE_NAME]
 			-- Features indexed by name
 
-	seeded_features: DS_HASH_TABLE [ET_FLATTENED_FEATURE, INTEGER]
-			-- Features indexed by seed
+	nb_seeded_features: INTEGER
+			-- Number of seeded features after replication
+			-- has been processed
 
 	error_handler: ET_ERROR_HANDLER is
 			-- Error handler
@@ -68,7 +68,7 @@ feature -- Setting
 		do
 			current_class := a_class
 			named_features.wipe_out
-			seeded_features.wipe_out
+			nb_seeded_features := 0
 			has_flatten_error := False
 			nb := current_class.named_features.count
 			if named_features.capacity < nb then
@@ -77,7 +77,7 @@ feature -- Setting
 			a_cursor := current_class.named_features.new_cursor
 			from a_cursor.start until a_cursor.after loop
 				!! a_feature.make (a_cursor.item, current_class)
-				named_features.put (a_feature, a_feature.name)
+				named_features.put_last (a_feature, a_feature.name)
 				a_cursor.forth
 			end
 		ensure
@@ -166,7 +166,7 @@ feature -- Element change
 					a_flattened_feature.put_inherited_feature (a_feature)
 				else
 					!! a_flattened_feature.make_inherited (a_feature, current_class)
-					named_features.put (a_flattened_feature, a_name)
+					named_features.put_last (a_flattened_feature, a_name)
 				end
 				a_cursor.forth
 			end
@@ -221,29 +221,40 @@ feature -- Compilation
 		local
 			class_named_features: DS_HASH_TABLE [ET_FEATURE, ET_FEATURE_NAME]
 			class_seeded_features: DS_HASH_TABLE [ET_FEATURE, INTEGER]
+			a_named_feature: ET_FLATTENED_FEATURE
+			a_feature_seeds: ET_FEATURE_IDS
 			a_feature: ET_FEATURE
 			a_seed: INTEGER
-			nb: INTEGER
+			i, nb: INTEGER
 		do
-			process_seeded_features
-			from named_features.start until named_features.after loop
-				named_features.item_for_iteration.process_flattened_feature (Current)
-				named_features.forth
-			end
-			!! class_seeded_features.make_map (seeded_features.count)
-			from seeded_features.start until seeded_features.after loop
-				a_feature := seeded_features.item_for_iteration.flattened_feature
-				a_seed := seeded_features.key_for_iteration
-				class_seeded_features.put (a_feature, a_seed)
-				seeded_features.forth
-			end
-			current_class.set_seeded_features (class_seeded_features)
-			seeded_features.wipe_out
-			from named_features.start until named_features.after loop
-				if not named_features.item_for_iteration.check_signature_validity then
-					set_flatten_error
+			process_replication
+			if not has_flatten_error then
+				!! class_seeded_features.make_map (nb_seeded_features)
+				from named_features.start until named_features.after loop
+					a_named_feature := named_features.item_for_iteration
+					a_named_feature.process_flattened_feature (Current)
+					a_feature := a_named_feature.flattened_feature
+					a_feature_seeds := a_feature.seeds
+					if a_feature_seeds = Void then
+						a_seed := a_feature.first_seed
+						class_seeded_features.put_new (a_feature, a_seed)
+					else
+						nb := a_feature_seeds.count
+						from i := 1 until i > nb loop
+							a_seed := a_feature_seeds.item (i)
+							class_seeded_features.put_new (a_feature, a_seed)
+							i := i + 1
+						end
+					end
+					named_features.forth
 				end
-				named_features.forth
+				current_class.set_seeded_features (class_seeded_features)
+				from named_features.start until named_features.after loop
+					if not named_features.item_for_iteration.check_signature_validity then
+						set_flatten_error
+					end
+					named_features.forth
+				end
 			end
 			if not has_flatten_error then
 				class_named_features := current_class.named_features
@@ -254,7 +265,7 @@ feature -- Compilation
 				end
 				from named_features.start until named_features.after loop
 					a_feature := named_features.item_for_iteration.flattened_feature
-					class_named_features.put (a_feature, a_feature.name)
+					class_named_features.put_last (a_feature, a_feature.name)
 					named_features.forth
 				end
 			else
@@ -277,50 +288,54 @@ feature {ET_REPLICABLE_FEATURE, ET_FLATTENED_FEATURE} -- Compilation
 
 feature {NONE} -- Processing
 
-	process_seeded_features is
-			-- Put features in `seeded_features', indexed by seeds.
+	process_replication is
 			-- Take care of selected features and replication.
 		local
 			a_feature: ET_FLATTENED_FEATURE
-			feature_seeds: ET_FEATURE_SEEDS
+			feature_seeds: ET_FEATURE_IDS
 			a_replicable_feature: ET_REPLICABLE_FEATURE
 			a_seed: INTEGER
 			i, nb: INTEGER
-			nb_seeds: INTEGER
 			inherited: BOOLEAN
 		do
 			replicable_features.wipe_out
-			nb := named_features.count
-			if seeded_features.capacity < nb then
-				seeded_features.resize (nb)
-			end
 			from named_features.start until named_features.after loop
 				a_feature := named_features.item_for_iteration
 				inherited := a_feature.is_inherited
 				feature_seeds := a_feature.seeds
-				nb := feature_seeds.count
-				from i := 1 until i > nb loop
-					a_seed := feature_seeds.item (i)
+				if feature_seeds = Void then
+					a_seed := a_feature.first_seed
 					if not inherited then
-						seeded_features.put (a_feature, a_seed)
-						nb_seeds := nb_seeds + 1
+						nb_seeded_features := nb_seeded_features + 1
 					elseif replicable_features.has (a_seed) then
 						a_replicable_feature := replicable_features.item (a_seed)
 						a_replicable_feature.put_feature (a_feature)
 					else
 						!! a_replicable_feature.make (a_seed, a_feature)
 						replicable_features.force_new (a_replicable_feature, a_seed)
-						nb_seeds := nb_seeds + 1
 					end
-					i := i + 1
+				else
+					nb := feature_seeds.count
+					from i := 1 until i > nb loop
+						a_seed := feature_seeds.item (i)
+						if not inherited then
+							nb_seeded_features := nb_seeded_features + 1
+						elseif replicable_features.has (a_seed) then
+							a_replicable_feature := replicable_features.item (a_seed)
+							a_replicable_feature.put_feature (a_feature)
+						else
+							!! a_replicable_feature.make (a_seed, a_feature)
+							replicable_features.force_new (a_replicable_feature, a_seed)
+						end
+						i := i + 1
+					end
 				end
 				named_features.forth
 			end
-			if seeded_features.capacity < nb_seeds then
-				seeded_features.resize (nb_seeds)
-			end
 			from replicable_features.start until replicable_features.after loop
-				replicable_features.item_for_iteration.register_seeded_features (Current)
+				a_replicable_feature := replicable_features.item_for_iteration
+				a_replicable_feature.process_replication (Current)
+				nb_seeded_features := nb_seeded_features + a_replicable_feature.nb_seeded_features
 				replicable_features.forth
 			end
 			replicable_features.wipe_out
@@ -470,8 +485,7 @@ invariant
 	current_class_not_void: current_class /= Void
 	named_features_not_void: named_features /= Void
 	no_void_named_feature: not named_features.has_item (Void)
-	seeded_features_not_void: seeded_features /= Void
-	no_void_seeded_feature: not seeded_features.has_item (Void)
+	nb_seeded_features_positive: nb_seeded_features >= 0
 	rename_table_not_void: rename_table /= Void
 	no_void_rename: not rename_table.has_item (Void)
 	no_void_rename_old_name: not rename_table.has (Void)

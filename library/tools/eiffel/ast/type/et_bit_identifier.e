@@ -103,7 +103,7 @@ feature -- Type processing
 				other_feature := features.found_item
 				a_constant := other_feature.integer_constant
 				if a_constant /= Void then
-					!ET_BIT_FEATURE! Result.make (a_constant, name, other_feature.seeds.first, position)
+					!ET_BIT_FEATURE! Result.make (a_constant, name, other_feature.first_seed, position)
 				else
 -- TODO: not an integer constant.
 					Result := Current

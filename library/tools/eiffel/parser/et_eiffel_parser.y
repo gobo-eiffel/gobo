@@ -6,7 +6,7 @@ indexing
 		"Eiffel parsers"
 
 	author:     "Eric Bezault <ericb@gobosoft.com>"
-	copyright:  "Copyright (c) 1999-2001, Eric Bezault and others"
+	copyright:  "Copyright (c) 1999-2002, Eric Bezault and others"
 	license:    "Eiffel Forum Freeware License v1 (see forum.txt)"
 	date:       "$Date$"
 	revision:   "$Revision$"
@@ -60,6 +60,7 @@ creation
 %token <ET_POSITION>           E_IMPLIES E_OR E_XOR E_AND '=' E_NE '<' '>'
 %token <ET_POSITION>           E_LE E_GE '+' '-' '*' '/' E_DIV E_MOD
 %token <ET_POSITION>           '^' E_NOT E_OLD
+%token <ET_POSITION>           '{'
 
 %left E_IMPLIES
 %left E_OR E_XOR
@@ -81,6 +82,9 @@ creation
 %type <ET_CLASS>               Class_header
 %type <ET_CLIENTS>             Clients Clients_opt Client_list
 %type <ET_COMPOUND>            Compound Non_empty_compound Else_part Rescue_opt
+%type <ET_CREATOR>             Creation_clause
+%type <ET_CREATORS>            Creators Creators_opt
+%type <ET_EXPORT>              New_export_item
 %type <ET_EXPRESSION>          Expression Call_expression Qualified_call_chain
                                Address_mark Create_expression
 %type <ET_FEATURE>             Feature_declaration Single_feature_declaration
@@ -89,7 +93,7 @@ creation
                                Deferred_procedure_declaration External_procedure_declaration
                                Do_function_declaration Once_function_declaration
                                Deferred_function_declaration External_function_declaration
-%type <ET_FEATURE_NAME>        Feature_name Feature_list_item
+%type <ET_FEATURE_NAME>        Feature_name Feature_list_item Procedure_list_item
 %type <ET_FORMAL_ARGUMENTS>    Formal_arguments_opt Formal_argument_list
 %type <ET_FORMAL_GENERIC_PARAMETER>  Formal_generic
 %type <ET_FORMAL_GENERIC_PARAMETERS> Formal_generics_opt Formal_generic_list
@@ -110,12 +114,12 @@ creation
 %type <ET_TYPE>                Type Constraint_type
 %type <ET_WRITABLE>            Writable
 
-%type <like new_export_list>     New_exports New_exports_opt New_export_list
+%type <like new_export_list>     New_exports New_exports_opt New_export_list New_export_list_with_no_terminator
 %type <like new_feature_list>    Feature_list Select Select_opt Undefine Undefine_opt
-                                 Redefine Redefine_opt
+                                 Redefine Redefine_opt Procedure_list Procedure_list_opt
 %type <like new_rename_list>     Rename Rename_list
 
-%expect 20
+%expect 21
 %start Class_declarations
 
 %%
@@ -231,7 +235,7 @@ Formal_generic: Identifier
 	;
 
 Constraint_create_opt: -- Empty
-	| E_CREATE Procedure_list E_END
+	| E_CREATE Procedure_list_opt E_END
 	;
 
 Constraint_type: Constraint_named_type
@@ -391,28 +395,57 @@ Rename_pair: Feature_name E_AS Feature_name
 --------------------------------------------------------------------------------
 
 New_exports: E_EXPORT New_export_list
+		{ $$ := $2 }
 	;
 
 New_exports_opt: -- Empty
 	| New_exports
+		{ $$ := $1 }
 	;
 
 New_export_list: -- Empty
-	| New_export_list_with_no_terminator
-	| New_export_list_with_no_terminator ';'
+	| Semicolons_opt New_export_list_with_no_terminator Semicolons_opt
+		{ $$ := $2 }
 	;
 
 New_export_list_with_no_terminator: New_export_item
-	| New_export_list_with_no_terminator New_export_item
-	| New_export_list_with_no_terminator ';' New_export_item
+		{
+			$$ := new_export_list (export_list_count)
+			export_list_count := export_list_count - 1
+			$$.put ($1, export_list_count)
+		}
+	| New_export_item New_export_list_with_no_terminator
+		{
+			$$ := $2
+			export_list_count := export_list_count - 1
+			$$.put ($1, export_list_count)
+		}
+	| New_export_item Semicolons New_export_list_with_no_terminator
+		{
+			$$ := $3
+			export_list_count := export_list_count - 1
+			$$.put ($1, export_list_count)
+		}
 	;
 
-New_export_item: Clients Feature_set
+Semicolons: ';'
+	| Semicolons ';'
 	;
 
-Feature_set: -- Empty
-	| Feature_list
-	| E_ALL
+Semicolons_opt: -- Empty
+	| Semicolons
+	;
+
+New_export_item: Clients Feature_list
+		{
+			$$ := new_feature_export ($1, $2)
+			export_list_count := export_list_count + 1
+		}
+	| Clients E_ALL
+		{
+			$$ := new_all_export ($1)
+			export_list_count := export_list_count + 1
+		}
 	;
 
 Feature_list: Feature_list_item
@@ -441,11 +474,11 @@ Feature_list_item: Feature_name
 Clients: '{' Client_list '}'
 		{ $$ := $2 }
 	| '{' '}'
-		{ $$ := new_none_clients }
+		{ $$ := new_none_clients ($1) }
 	;
 
 Clients_opt: -- Empty
-		{ $$ := new_any_clients }
+		-- { $$ := Void }
 	| Clients
 		{ $$ := $1 }
 	;
@@ -501,22 +534,65 @@ Select_opt: -- Empty
 --------------------------------------------------------------------------------
 
 Creators_opt: -- Empty
+		-- { $$ := Void }
 	| Creators
+		{ $$ := $1 }
 	;
 
 Creators: Creation_clause
+		{ $$ := new_creators ($1) }
 	| Creators Creation_clause
+		{
+			$$ := $1
+			$$.put_last ($2)
+		}
 	;
 
-Creation_clause: E_CREATION Clients_opt Procedure_list
-	| E_CREATE Clients_opt Procedure_list
+Creation_clause: E_CREATION Clients_opt Procedure_list_opt
+		{
+			if $2 = Void then
+				$$ := new_creator (new_any_clients ($1), $3)
+			else
+				$$ := new_creator ($2, $3)
+			end
+		}
+	| E_CREATE Clients_opt Procedure_list_opt
+		{
+			if $2 = Void then
+				$$ := new_creator (new_any_clients ($1), $3)
+			else
+				$$ := new_creator ($2, $3)
+			end
+		}
 	;
 
 		-- Note: Does not support 'Header_comment'.
 
-Procedure_list: -- Empty
-	| Identifier
-	| Procedure_list ',' Identifier
+Procedure_list_opt: -- Empty
+		-- { $$ := Void }
+	| Procedure_list
+		{ $$ := $1 }
+	;
+
+Procedure_list: Procedure_list_item
+		{
+			$$ := new_feature_list (feature_list_count)
+			feature_list_count := feature_list_count - 1
+			$$.put ($1, feature_list_count)
+		}
+	| Procedure_list_item ',' Procedure_list
+		{
+			$$ := $3
+			feature_list_count := feature_list_count - 1
+			$$.put ($1, feature_list_count)
+		}
+	;
+
+Procedure_list_item: Identifier
+		{
+			$$ := $1
+			feature_list_count := feature_list_count + 1
+		}
 	;
 
 --------------------------------------------------------------------------------
@@ -529,7 +605,13 @@ Features: Feature_clause
 	| Features Feature_clause
 	;
 
-Feature_clause: E_FEATURE Clients_opt Feature_declaration_list
+Feature_clause: E_FEATURE Clients_opt
+			{
+				if $2 = Void then
+					if new_any_clients ($1) = Void then end
+				end
+			}
+		Feature_declaration_list
 	;
 
 		-- Note: Does not support 'Header_comment'.
