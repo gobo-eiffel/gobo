@@ -49,7 +49,8 @@ feature {NONE} -- Implementation
 				clashes_previous_position := No_position
 			elseif
 				position = No_position or else
-				not equal (k, keys.item (position))
+				keys.item (position) = Void or else
+				not k.is_equal (keys.item (position))
 			then
 				from
 					slots_position := hash_position (k)
