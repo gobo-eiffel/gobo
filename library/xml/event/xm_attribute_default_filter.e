@@ -253,9 +253,9 @@ feature {NONE} -- Content implementation
 		do
 			if has_prefix (a_prefix) then
 				Result := new_unicode_string ("")
-				Result.append_uc_string (a_prefix)
-				Result.append_uc_character (Colon_char)
-				Result.append_uc_string (a_local)
+				Result.append_string (a_prefix)
+				Result.append_character (Colon_char)
+				Result.append_string (a_local)
 			else
 				Result := a_local
 			end

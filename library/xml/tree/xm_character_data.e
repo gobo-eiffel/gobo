@@ -55,7 +55,7 @@ feature {ANY} -- Element change
 		require
 			other /= Void
 		do
-			content.append_uc_string (other.content)
+			content.append_string (other.content)
 		end
 
 invariant

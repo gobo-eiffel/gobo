@@ -282,7 +282,7 @@ feature {ANY} -- Element change
 			loop
 				text_node ?= cs.item
 				if text_node /= Void then
-					Result.append_uc_string (text_node.content)
+					Result.append_string (text_node.content)
 				end
 				cs.forth
 			end

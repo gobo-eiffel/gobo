@@ -61,7 +61,7 @@ feature -- Output, interface to descendants
 			s_not_void: s /= Void
 		do
 			if last_output /= Void then
-				last_output.append_uc_string (s)
+				last_output.append_string (s)
 			else
 				std.output.put_string (s.to_utf8)
 			end

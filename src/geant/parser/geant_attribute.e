@@ -77,9 +77,9 @@ feature -- Conversion
 			-- XML representation
 		do
 			Result := new_unicode_string ("")
-			Result.append_uc_string (name)
+			Result.append_string (name)
 			Result.append_string ("=%"")
-			Result.append_uc_string (value)
+			Result.append_string (value)
 			Result.append_string ("%"")
 		ensure
 			as_xml_not_void: Result /= Void

@@ -244,7 +244,7 @@ xml_attr_text: T_ATTR_TEXT
 	| xml_attr_text T_ATTR_TEXT
 		{
 			$$ := $1
-			$$.append_uc_string ($2)
+			$$.append_string ($2)
 		}
 	| xml_attr_text T_GT_ENTITY
 		{
