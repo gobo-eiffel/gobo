@@ -6,13 +6,15 @@
 <title>Description</title>
 <para>
 (NOT FINISHED)
+</para>
+<para>
 A fileset is a group of files. The files included in the fileset are
 defined through a directory representing the start point in a filesystem
 and patterns describing which files in or underneath that directory should
 be included in the fileset respectively excluded from the fileset.
 As a fileset is not a task but a general element it cannot be used
 on its own. It can only be used by tasks supporting filesets as
-nested elements.
+nested element.
 </para>
 </sect1>
 
@@ -23,10 +25,13 @@ nested elements.
 			<varlistentry>
 				<term>directory</term>
 				<listitem>
-					<para><emphasis>Description: </emphasis>File to be copied</para>
+					<para><emphasis>Description: </emphasis>
+						The directory taken as root to find files matching the given criteria `include'
+						and `exclude'
+					</para>
 				</listitem>
 				<listitem>
-					<para><emphasis>Domain: </emphasis>Valid filename pointing to existing file</para>
+					<para><emphasis>Domain: </emphasis>Valid directoryname</para>
 				</listitem>
 				<listitem>
 					<para><emphasis>Default: </emphasis>-</para>
@@ -36,10 +41,10 @@ nested elements.
 			<varlistentry>
 				<term>include</term>
 				<listitem>
-					<para><emphasis>Description: </emphasis>File to copy to</para>
+					<para><emphasis>Description: </emphasis>Pattern for names of files to be included in fileset</para>
 				</listitem>
 				<listitem>
-					<para><emphasis>Domain: </emphasis>Valid filename</para>
+					<para><emphasis>Domain: </emphasis>Valid LX DFA Wildcard (see below)</para>
 				</listitem>
 				<listitem>
 					<para><emphasis>Default: </emphasis>-</para>
@@ -49,40 +54,103 @@ nested elements.
 			<varlistentry>
 				<term>exclude</term>
 				<listitem>
-					<para><emphasis>Description: </emphasis>Directory to which file(s) should be copied to</para>
+					<para><emphasis>Description: </emphasis>Pattern for names of files to be excluded from fileset</para>
 				</listitem>
 				<listitem>
-					<para><emphasis>Domain: </emphasis>Valid directoryname pointing to existing directory</para>
+					<para><emphasis>Domain: </emphasis>Valid LX DFA Wildcard (see below)</para>
 				</listitem>
 				<listitem>
 					<para><emphasis>Default: </emphasis>-</para>
 				</listitem>
 			</varlistentry>
-		
-			<varlistentry>
-				<term>concat</term>
-				<listitem>
-					<para><emphasis>Description: </emphasis>Directory to which file(s) should be copied to</para>
-				</listitem>
-				<listitem>
-					<para><emphasis>Domain: </emphasis>Valid directoryname pointing to existing directory</para>
-				</listitem>
-				<listitem>
-					<para><emphasis>Default: </emphasis>-</para>
-				</listitem>
 		
 			<varlistentry>
 				<term>force</term>
 				<listitem>
-					<para><emphasis>Description: </emphasis>Directory to which file(s) should be copied to</para>
+					<para>
+						<emphasis>Description: </emphasis>Include matched filenames even when the
+						matched file is not out of date.
+					</para>
 				</listitem>
 				<listitem>
-					<para><emphasis>Domain: </emphasis>Valid directoryname pointing to existing directory</para>
+					<para>
+						<emphasis>Details: </emphasis>Usually (when this attribute is not specified
+						or it's value is set to 'false') The file named as determined by
+						'filename' is compared to the file named as determined by
+						'mapped_filename'. If the file named 'filename' for example is newer than the file
+						named 'mapped_filename' or the file named 'mapped_filename' does not exist at all
+						an entry consisting of the filename pair ['filename', 'mapped_filename']
+						is added to the fileset. Setting the attribute 'force' to 'true' turns the
+						checking off so that for each matched filename a
+						filename pair ['filename', 'mapped_filename'] is added to the fileset.
+						Note that the comparison is is looking for files related to
+						the current working directory using 'filename' and not related to the
+						value given with the attribute 'directory'. [TODO: NOT IMPLEMENTED YET: Use fileset's attribute 'dir'
+						if you have to change the current working directory only for constructing
+						the fileset.]
+					</para>
+				</listitem>
+				<listitem>
+					<para><emphasis>Domain: </emphasis>Boolean (true|false)</para>
+				</listitem>
+				<listitem>
+					<para><emphasis>Default: </emphasis>false</para>
+				</listitem>
+			</varlistentry>
+		
+			<varlistentry>
+				<term>filename_directory</term>
+				<listitem>
+					<para><emphasis>Description: </emphasis>Prepend value of this attribute
+					before determined `filename' which is used for the entry in the
+					fileset (['filename', 'mapped_filename']).
+					</para>
+				</listitem>
+				<listitem>
+					<para><emphasis>Domain: </emphasis>Valid directoryname</para>
 				</listitem>
 				<listitem>
 					<para><emphasis>Default: </emphasis>-</para>
 				</listitem>
 			</varlistentry>
+		
+			<varlistentry>
+				<term>mapped_filename_directory</term>
+				<listitem>
+					<para><emphasis>Description: </emphasis>Prepend value of this attribute
+					before determined `mapped_filename' which is used for the entry in the
+					fileset (['filename', 'mapped_filename']).
+					</para>
+				</listitem>
+				<listitem>
+					<para><emphasis>Domain: </emphasis>Valid directoryname</para>
+				</listitem>
+				<listitem>
+					<para><emphasis>Default: </emphasis>-</para>
+				</listitem>
+			</varlistentry>
+		
+		</variablelist>
+	</sect1>
+	
+	<sect1 id="obsolete_fileset_parameters">
+		<title>Obsolete Parameters</title>
+	
+		<variablelist>
+			<varlistentry>
+				<term>concat</term>
+				<listitem>
+					<para>
+						<emphasis>Obsolete</emphasis>: Use attribute `mapped_filename_directory' instead
+					</para>
+					<para><emphasis>Description: </emphasis>Prepend value of attribute `directory' before determined `mapped_filename'</para>
+				</listitem>
+				<listitem>
+					<para><emphasis>Domain: </emphasis>Boolean (true|false)</para>
+				</listitem>
+				<listitem>
+					<para><emphasis>Default: </emphasis>false</para>
+				</listitem>
 			</varlistentry>
 		</variablelist>
 	</sect1>
@@ -94,7 +162,7 @@ nested elements.
 			<varlistentry>
 				<term>include</term>
 				<listitem>
-					<para><emphasis>Description: </emphasis>File to be copied</para>
+					<para><emphasis>Description: </emphasis>Name of individual file to be included in fileset</para>
 				</listitem>
 				<listitem>
 					<para><emphasis>Domain: </emphasis>Valid filename pointing to existing file</para>
@@ -107,10 +175,10 @@ nested elements.
 			<varlistentry>
 				<term>exclude</term>
 				<listitem>
-					<para><emphasis>Description: </emphasis>File to be copied</para>
+					<para><emphasis>Description: </emphasis>Name of individual file to be excluded from fileset</para>
 				</listitem>
 				<listitem>
-					<para><emphasis>Domain: </emphasis>Valid filename pointing to existing file</para>
+					<para><emphasis>Domain: </emphasis>Valid filename</para>
 				</listitem>
 				<listitem>
 					<para><emphasis>Default: </emphasis>-</para>
@@ -120,10 +188,22 @@ nested elements.
 			<varlistentry>
 				<term>map</term>
 				<listitem>
-					<para><emphasis>Description: </emphasis>File to be copied</para>
+					<para><emphasis>Description: </emphasis>Map element used to determine 'mapped_filename'</para>
 				</listitem>
 				<listitem>
-					<para><emphasis>Domain: </emphasis>Valid filename pointing to existing file</para>
+					<para>
+						<emphasis>Details: </emphasis>When this subelement is not specified
+						the entries in the fileset consist of ['filename', 'mapped_filename'] pairs
+						where 'mapped_filename' equals 'filename'. The same is true for a map element
+						of type 'identity'. But a 'map' element of any other type will produce
+						['filename', 'mapped_filename'] pairs where 'mapped_filename' is produced
+						from 'filename' by applying the rules of the defined 'map' element. Using a
+						glob-map element for example it is possible to map 'filename''s matching '*.ge'
+						to 'mapped_filename''s of '*.e'.
+					</para>
+				</listitem>
+				<listitem>
+					<para><emphasis>Domain: </emphasis>Valid map element</para>
 				</listitem>
 				<listitem>
 					<para><emphasis>Default: </emphasis>-</para>
@@ -144,9 +224,6 @@ nested elements.
         <attribute name="exclude"/>
       </optional>
       <optional>
-        <attribute name="concat"/>
-      </optional>
-      <optional>
         <attribute name="force">
           <!-- runtime evaluation
           <choice>
@@ -155,6 +232,15 @@ nested elements.
           </choice>
           -->
         </attribute>
+      </optional>
+      <optional>
+        <attribute name="filename_directory"/>
+      </optional>
+      <optional>
+        <choice>
+          <attribute name="mapped_filename_directory"/>
+          <attribute name="concat"/> <!-- obsolete -->
+        </choice>
       </optional>
       <zeroOrMore>
         <element name="include">
@@ -181,7 +267,7 @@ nested elements.
 	<programlisting><![CDATA[
   <fileset directory="kernel" include="@(**/*.ge|**/*.?ace)"/>
   
-  <fileset directory="kernel" include="@(**/*.ge|**/*.?ace)" concat="true"/>
+  <fileset directory="kernel" include="@(**/*.ge|**/*.?ace)" mapped_filename_directory="kernel"/>
 
   <fileset directory="kernel" include="@(**/*.ge)">
     <map type="glob" from="*.ge" to="*.e"/>
@@ -193,6 +279,49 @@ nested elements.
     </map>
   </fileset>
 ]]>
+	</programlisting>
+	</sect1>
+
+	<sect1 id="lx_dfa_wildcard">
+		<title>LX DFA Wildcards</title>
+		<para>
+			To specify the attributes `include' and `exclude' you have to use special
+			wildcard expressions which are very close to the wildcards used by Linux'
+			bash. In addition it provides the means to match filenames in any directory
+			depth by using the '**' wildcard.
+		</para>
+		<para>
+			Here is the pattern syntax of LX DFA Wildcards (implemented in GOBO's class LX_DFA_WILDCARD):
+		</para>
+	<programlisting>
+    x          match the character 'x'.
+    ?          any character except '/'.
+    *          zero or more occurrences of any character except '/'.
+    **/        zero or more occurrences of (one or more characters other
+               than '/', followed by '/').
+    \X         if 'X' is an 'a', 'b', 'f', 'n', 'r', 't', or 'v', then
+               the ANSI-C interpretation of \X. Otherwise, a literal 'X'
+               (used to escape operators such as '*').
+    \0         a null character (ASCII code 0).
+    \123       the character with octal value 123.
+    \x2a       the character with hexadecimal value 2a.
+    [xyz]      a character class; in this case, the pattern matches
+               either an 'x', a 'y' or a 'z'.
+    [abj-oZ]   a character class with a range in it; matches an 'a', a
+               'b', any letter from 'j' through 'o', or a 'Z'.
+    [^A-Z]     a negated character class, i.e., any character but those
+               in the class. In this case, any character except an
+               uppercase letter.
+    [^A-Z\n]   any character except an uppercase letter or a newline.
+    wv         the wildcard w followed by the wildcard v; called
+               concatenation.
+    %"[xyz]\%"foo%"     the literal string: '[xyz]%"foo'.
+    ?(pattern-list)  zero or one occurrence of the given patterns.
+    *(pattern-list)  zero or more occurrences of the given patterns.
+    +(pattern-list)  one or more occurrences of the given patterns.
+    @(pattern-list)  exactly one of the given patterns.
+                     where pattern-list is a list of one or more
+                     patterns separated by a '|'.
 	</programlisting>
 	</sect1>
 
