@@ -92,7 +92,7 @@ feature {NONE} -- Initialization
 	make is
 			-- Create a new scanner.
 		do
-			make_compressed_scanner_skeleton
+			make_with_buffer (Empty_buffer)
 			output_file := std.output
 			line_nb := 1
 		end
