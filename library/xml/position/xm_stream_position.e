@@ -19,6 +19,13 @@ inherit
 			out
 		end
 
+	KL_IMPORTED_STRING_ROUTINES
+		export
+			{NONE} all
+		undefine
+			out
+		end
+		
 feature {ANY} -- Access
 
 	byte_index: INTEGER is
@@ -40,14 +47,10 @@ feature {ANY} -- Debug
 
 	out: STRING is
 		do
-			Result := clone (" ln: ")
-			Result.append_string (row.out)
-			Result.append_string (" cl: ")
-			Result.append_string (column.out)
-			Result.append_string (" byte: ")
-			Result.append_string (byte_index.out)
-			Result.append_string (" -> ")
-			Result.append_string (source.out)
+			Result := string_.concat (
+				" ln: " + row.out + " cl: " + column.out + 
+					" byte: " + byte_index.out + " -> ",
+				source.out)
 		end
 
 invariant

@@ -32,11 +32,13 @@ inherit
 			dispose
 		end
 
-	EXCEPTIONS
-
 	XM_ERROR_CODES
 
-	KL_IMPORTED_STRING_ROUTINES
+	EXCEPTIONS
+		export {NONE} all end
+	
+	XM_UNICODE_STRUCTURE_FACTORY
+		export {NONE} all end
 
 feature {NONE} -- Initialization
 
@@ -58,7 +60,7 @@ feature {NONE} -- Gc
 feature {NONE} -- Orphan expat events
 	-- TODO: should be in a separate class?
 
-	on_xml_declaration (a_version: UC_STRING; an_encoding: UC_STRING; a_standalone: BOOLEAN) is
+	on_xml_declaration (a_version: STRING; an_encoding: STRING; a_standalone: BOOLEAN) is
 			-- XML declaration.
 		do
 		end
@@ -72,19 +74,19 @@ feature {NONE} -- Orphan expat events
 		do
 		end
 
-	on_start_namespace_declaration (a_prefix: UC_STRING; a_uri: UC_STRING) is
+	on_start_namespace_declaration (a_prefix: STRING; a_uri: STRING) is
 		do
 		end
 
-	on_end_namespace_declaration (a_prefix: UC_STRING) is
+	on_end_namespace_declaration (a_prefix: STRING) is
 		do
 		end
 
-	on_default (a_data: UC_STRING) is
+	on_default (a_data: STRING) is
 		do
 		end
 
-	on_default_expanded (a_data: UC_STRING) is
+	on_default_expanded (a_data: STRING) is
 		do
 		end
 
@@ -106,16 +108,13 @@ feature {ANY} -- Access
 
 	version: STRING is
 			-- return the library version string (e.g. "expat_1.95.1").
-		local
-			ucversion: UC_STRING
 		do
-			ucversion := new_uc_string_from_c_utf8_zero_terminated_string (exml_XML_ExpatVersion)
-			Result := ucversion.out
+			Result := new_uc_string_from_c_utf8_zero_terminated_string (exml_XML_ExpatVersion)
 		end
 
 feature {ANY} -- Element change
 
-	set_relative_URI_base (a_base: UC_STRING) is
+	set_relative_URI_base (a_base: STRING) is
 			-- sets the base to be used for resolving URIs in system identifiers
 			-- in declarations.
 			-- NOTE: Is this applicable to all the different parsers out
@@ -133,10 +132,10 @@ feature {ANY} -- Element change
 				raise ("Expat out of memory.%N")
 			end
 		ensure
-			a_base.is_equal (relative_URI_base)
+			same_string (relative_URI_base)
 		end
 
-	relative_URI_base: UC_STRING is
+	relative_URI_base: STRING is
 			-- returns the base.
 		require
 			parser_created: is_parser_created
@@ -181,11 +180,8 @@ feature {ANY} -- Incremental parsing
 			-- Parse partial XML document from GOBO input stream.
 			-- After the last part of the data has been fed into the parser,
 			-- call set_end_of_document to get any pending error messages.
-		local
-			uri: UC_STRING
 		do
-			uri := new_unicode_string (a_stream.name)
-			!XM_DEFAULT_URI_SOURCE! source.make (uri)
+			!XM_DEFAULT_URI_SOURCE! source.make (new_unicode_string (a_stream.name))
 			from
 				a_stream.read_string (read_block_size)
 			until
@@ -197,11 +193,8 @@ feature {ANY} -- Incremental parsing
 		end
 
 	parse_incremental_from_string (data: STRING) is
-		local
-			uri: UC_STRING
 		do
-			uri := new_unicode_string ("STRING")
-			!XM_DEFAULT_URI_SOURCE! source.make (uri)
+			!XM_DEFAULT_URI_SOURCE! source.make (new_unicode_string ("STRING"))
 			parse_string_and_set_error (data, False)
 		end
 
@@ -244,7 +237,7 @@ feature {NONE} -- Low level parsing
 
 feature {ANY} -- Status
 
-	file_name: UC_STRING
+	file_name: STRING
 			-- currently parsed file. If information is not available or
 			-- data does not origin from a file, this is void
 
@@ -468,17 +461,14 @@ feature -- Parsing parameter entities including the external dtd subset
 feature {NONE} -- (low level) frozen callbacks (called from exml clib)
 
 	frozen on_element_declaration_procedure (name_ptr: POINTER; model_ptr: POINTER) is
-		local
-			name: UC_STRING
 		do
-			name := new_uc_string_from_c_utf8_zero_terminated_string (name_ptr)
 			-- TODO: must convert model ptr to XM_DTD_ELEMENT_ATTRIBUTE
-			on_element_declaration (name, Void)
+			on_element_declaration (new_uc_string_from_c_utf8_zero_terminated_string (name_ptr), Void)
 		end
 
 	frozen on_attribute_declaration_procedure (elname_ptr, attname_ptr, att_type_ptr, dflt_ptr: POINTER; is_required: BOOLEAN) is
 		local
-			elname, attname, dflt: UC_STRING
+			elname, attname, dflt: STRING
 			att_type: STRING
 			a_model: XM_DTD_ATTRIBUTE_CONTENT
 		do
@@ -504,26 +494,26 @@ feature {NONE} -- (low level) frozen callbacks (called from exml clib)
 			end
 
 			-- type
-			if att_type.is_equal ("CDATA") then
+			if same_string (string_att_type,"CDATA") then
 				a_model.set_data
-			elseif att_type.is_equal ("ID") then
+			elseif same_string (att_type, "ID") then
 				a_model.set_id
-			elseif att_type.is_equal ("IDREF") then
+			elseif same_string (att_type, "IDREF") then
 				a_model.set_id_ref
-			elseif att_type.is_equal ("IDREFS") then
+			elseif same_string (att_type, "IDREFS") then
 				a_model.set_id_ref
 				a_model.set_list_type
-			elseif att_type.is_equal ("ENTITY") then
+			elseif same_string (att_type, "ENTITY") then
 				a_model.set_entity
-			elseif att_type.is_equal ("ENTITIES") then
+			elseif same_string (att_type, "ENTITIES") then
 				a_model.set_entity
 				a_model.set_list_type
-			elseif att_type.is_equal ("NMTOKEN") then
+			elseif same_string (att_type, "NMTOKEN") then
 				a_model.set_token
-			elseif att_type.is_equal ("ENTITIES") then
+			elseif same_string (att_type, "ENTITIES") then
 				a_model.set_token
 				a_model.set_list_type
-			elseif att_type.is_equal ("NOTATION") then
+			elseif same_string (att_type, "NOTATION") then
 				a_model.set_notation
 			else
 				a_model.set_enumeration
@@ -533,29 +523,18 @@ feature {NONE} -- (low level) frozen callbacks (called from exml clib)
 		end
 
 	frozen on_xml_declaration_procedure (version_ptr, encoding_ptr: POINTER; standalone: INTEGER) is
-		local
-			ucversion, ucencoding: UC_STRING
-			bool_standalone: BOOLEAN
 		do
-			ucversion := new_uc_string_from_c_utf8_zero_terminated_string (version_ptr)
-			ucencoding := new_uc_string_from_c_utf8_zero_terminated_string_safe (encoding_ptr)
-			if standalone = 1 then
-				bool_standalone := True
-			end
-			on_xml_declaration (ucversion, ucencoding, bool_standalone)
+			on_xml_declaration (new_uc_string_from_c_utf8_zero_terminated_string (version_ptr), 
+					new_uc_string_from_c_utf8_zero_terminated_string_safe (encoding_ptr), 
+					standalone = 1)
 		end
 
 	frozen on_entity_declaration_procedure (entity_name_ptr: POINTER; is_parameter_entity: BOOLEAN; value_ptr: POINTER; value_length: INTEGER; base_ptr, system_id_ptr, public_id_ptr, notation_name_ptr: POINTER) is
 		local
-			entity_name: UC_STRING
-			value: UC_STRING
-			notation_name: UC_STRING
 			an_id: XM_DTD_EXTERNAL_ID
 		do
-			entity_name := new_uc_string_from_c_utf8_zero_terminated_string (entity_name_ptr)
 			-- does value_lenght means that value can contain zero, or is it to
 			-- prevent seeking to zero?
-			value := new_uc_string_from_c_utf8_zero_terminated_string_safe (value_ptr)
 
 			!! an_id.make
 			an_id.set_base (new_uc_string_from_c_utf8_zero_terminated_string_safe (base_ptr))
@@ -564,20 +543,23 @@ feature {NONE} -- (low level) frozen callbacks (called from exml clib)
 			if an_id.base = Void and an_id.system_id = Void and an_id.public_id = Void then
 				an_id := Void
 			end
-			notation_name := new_uc_string_from_c_utf8_zero_terminated_string_safe (notation_name_ptr)
-			on_entity_declaration (entity_name, is_parameter_entity, value, an_id, notation_name)
+			on_entity_declaration (new_uc_string_from_c_utf8_zero_terminated_string (entity_name_ptr), 
+					is_parameter_entity,
+					new_uc_string_from_c_utf8_zero_terminated_string_safe (value_ptr), 
+					an_id, 
+					new_uc_string_from_c_utf8_zero_terminated_string_safe (notation_name_ptr))
 		end
 
 	frozen on_start_tag_procedure (tag_name_ptr, attribute_specifications_ptr: POINTER) is
 		local
-			a_name: UC_STRING
-			a_prefix: UC_STRING
+			a_name: STRING
+			a_prefix: STRING
 			colon_index: INTEGER
-			att_list: DS_BILINKED_LIST [DS_PAIR [DS_PAIR [UC_STRING, UC_STRING], UC_STRING]]
-			it: DS_LINEAR_CURSOR [DS_PAIR [DS_PAIR [UC_STRING, UC_STRING], UC_STRING]]
+			att_list: DS_BILINKED_LIST [DS_PAIR [DS_PAIR [STRING, STRING], STRING]]
+			it: DS_LINEAR_CURSOR [DS_PAIR [DS_PAIR [STRING, STRING], STRING]]
 		do
 			a_name := new_uc_string_from_c_utf8_zero_terminated_string (tag_name_ptr)
-			colon_index := a_name.substring_index (uc_colon, 1)
+			colon_index := a_name.index_of (':', 1)
 			if colon_index /= 0 then
 				a_prefix := a_name.substring (1, colon_index - 1)
 				a_name := a_name.substring (colon_index + 1, a_name.count)
@@ -607,12 +589,12 @@ feature {NONE} -- (low level) frozen callbacks (called from exml clib)
 
 	frozen on_end_tag_procedure (tag_name_ptr: POINTER) is
 		local
-			a_name: UC_STRING
-			a_prefix: UC_STRING
+			a_name: STRING
+			a_prefix: STRING
 			colon_index: INTEGER
 		do
 			a_name := new_uc_string_from_c_utf8_zero_terminated_string (tag_name_ptr)
-			colon_index := a_name.substring_index (uc_colon, 1)
+			colon_index := a_name.index_of (':', 1)
 			if colon_index /= 0 then
 				a_prefix := a_name.substring (1, colon_index - 1)
 				a_name := a_name.substring (colon_index + 1, a_name.count)
@@ -623,33 +605,26 @@ feature {NONE} -- (low level) frozen callbacks (called from exml clib)
 		end
 
 	frozen on_content_procedure (chr_data_ptr: POINTER; len: INTEGER) is
-		local
-			chr_data: UC_STRING
 		do
-			chr_data := new_uc_string_from_c_utf8_runlength_string (chr_data_ptr, len)
-			on_content (chr_data)
+			on_content (new_uc_string_from_c_utf8_runlength_string (chr_data_ptr, len))
 		end
 
 	frozen on_processing_instruction_procedure (target_ptr, data_ptr: POINTER) is
 		local
-			target, data: UC_STRING
+			data: STRING
 		do
-			target := new_uc_string_from_c_utf8_zero_terminated_string_safe (target_ptr)
 			if data_ptr = Void then
-				data := new_unicode_string ("")
+				data := new_unicode_string_empty
 			else
 				data := new_uc_string_from_c_utf8_zero_terminated_string (data_ptr)
 			end
-			on_processing_instruction (target, data)
+			on_processing_instruction (new_uc_string_from_c_utf8_zero_terminated_string_safe (target_ptr), data)
 		end
 
 	frozen on_comment_procedure (data_ptr: POINTER) is
 			-- data is a 0 terminated C string
-		local
-			comment: UC_STRING
 		do
-			comment := new_uc_string_from_c_utf8_zero_terminated_string (data_ptr)
-			on_comment (comment)
+			on_comment (new_uc_string_from_c_utf8_zero_terminated_string (data_ptr))
 		end
 
 	frozen on_start_cdata_section_procedure is
@@ -663,31 +638,24 @@ feature {NONE} -- (low level) frozen callbacks (called from exml clib)
 		end
 
 	frozen on_default_procedure (data_ptr: POINTER; len: INTEGER) is
-		local
-			data: UC_STRING
 		do
-			data := new_unicode_string_from_utf8 (new_string_from_c_runlength_string (data_ptr, len))
-			on_default (data)
+			on_default (new_unicode_string_from_utf8 (new_string_from_c_runlength_string (data_ptr, len)))
 		end
 
 	frozen on_default_expanded_procedure (data_ptr: POINTER; len: INTEGER) is
-		local
-			data: UC_STRING
 		do
-			data := new_unicode_string_from_utf8 (new_string_from_c_runlength_string (data_ptr, len))
-			on_default_expanded (data)
+			on_default_expanded (new_unicode_string_from_utf8 (new_string_from_c_runlength_string (data_ptr, len)))
 		end
 
 	frozen on_start_doctype_procedure (doctype_name_ptr, sysid_ptr, pubid_ptr: POINTER; has_internal_subset: BOOLEAN) is
 		local
-			name: UC_STRING
 			an_id: XM_DTD_EXTERNAL_ID
 		do
-			name := new_uc_string_from_c_utf8_zero_terminated_string (doctype_name_ptr)
 			!! an_id.make
 			an_id.set_system (new_uc_string_from_c_utf8_zero_terminated_string_safe (sysid_ptr))
 			an_id.set_public (new_uc_string_from_c_utf8_zero_terminated_string_safe (pubid_ptr))
-			on_doctype (name, an_id, has_internal_subset)
+			on_doctype (new_uc_string_from_c_utf8_zero_terminated_string (doctype_name_ptr), 
+					an_id, has_internal_subset)
 		end
 
 	frozen on_end_doctype_procedure is
@@ -697,34 +665,26 @@ feature {NONE} -- (low level) frozen callbacks (called from exml clib)
 
 	frozen on_notation_declaration_procedure (notation_name_ptr, base_ptr, system_id_ptr, public_id_ptr: POINTER) is
 		local
-			notation_name: UC_STRING
 			an_id: XM_DTD_EXTERNAL_ID
 		do
-			notation_name := new_uc_string_from_c_utf8_zero_terminated_string (notation_name_ptr)
-
 			!! an_id.make
 			an_id.set_base (new_uc_string_from_c_utf8_zero_terminated_string_safe (base_ptr))
 			an_id.set_system (new_uc_string_from_c_utf8_zero_terminated_string_safe (system_id_ptr))
 			an_id.set_public (new_uc_string_from_c_utf8_zero_terminated_string_safe (public_id_ptr))
-			on_notation_declaration (notation_name, an_id)
+			on_notation_declaration (new_uc_string_from_c_utf8_zero_terminated_string (notation_name_ptr), an_id)
 		end
 
 	frozen on_start_namespace_declaration_procedure (prefix_ptr, uri_ptr: POINTER) is
-		local
-			ns_prefix: UC_STRING
-			uri: UC_STRING
 		do
-			ns_prefix := new_uc_string_from_c_utf8_zero_terminated_string_safe (prefix_ptr)
-			uri := new_uc_string_from_c_utf8_zero_terminated_string_safe (uri_ptr)
-			on_start_namespace_declaration (ns_prefix, uri)
+			on_start_namespace_declaration (
+					new_uc_string_from_c_utf8_zero_terminated_string_safe (prefix_ptr),
+					new_uc_string_from_c_utf8_zero_terminated_string_safe (uri_ptr))
 		end
 
 	frozen on_end_namespace_declaration_procedure (prefix_ptr: POINTER) is
-		local
-			ns_prefix: UC_STRING
 		do
-			ns_prefix := new_uc_string_from_c_utf8_zero_terminated_string_safe (prefix_ptr)
-			on_end_namespace_declaration (ns_prefix)
+			on_end_namespace_declaration (
+					new_uc_string_from_c_utf8_zero_terminated_string_safe (prefix_ptr))
 		end
 
 	frozen on_not_standalone_procedure: BOOLEAN is
