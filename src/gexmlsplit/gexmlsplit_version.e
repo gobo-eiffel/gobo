@@ -4,15 +4,15 @@ indexing
 
 		"Version of gexmlsplit"
 
-	copyright: "Copyright (c) 2002, Eric Bezault and others"
+	copyright: "Copyright (c) 2002-2004, Eric Bezault and others"
 	license: "Eiffel Forum License v2 (see forum.txt)"
 	date: "$Date$"
 	revision: "$Revision$"
 
 class GEXMLSPLIT_VERSION
 
-feature -- Constants
+inherit
 
-	Version_number: STRING is "3.3"
+	KL_GOBO_VERSION
 
 end

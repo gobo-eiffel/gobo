@@ -5,15 +5,15 @@ indexing
 		"Version of geant"
 
 	library: "Gobo Eiffel Ant"
-	copyright: "Copyright (c) 2001, Sven Ehrke and others"
+	copyright: "Copyright (c) 2001-2004, Sven Ehrke and others"
 	license: "Eiffel Forum License v2 (see forum.txt)"
 	date: "$Date$"
 	revision: "$Revision$"
 
 class GEANT_VERSION
 
-feature -- Constants
+inherit
 
-	Version_number: STRING is "3.3"
+	KL_GOBO_VERSION
 
 end

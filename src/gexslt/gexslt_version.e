@@ -11,8 +11,8 @@ indexing
 
 class GEXSLT_VERSION
 
-feature -- Constants
+inherit
 
-	Version_number: STRING is "3.3"
+	KL_GOBO_VERSION
 
 end
