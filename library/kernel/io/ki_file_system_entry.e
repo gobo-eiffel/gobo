@@ -16,9 +16,30 @@ feature {NONE} -- Initialization
 
 	make (a_name: STRING) is
 			-- Create a new file system entry object.
+			-- (`a_name' should follow the pathname convention
+			-- of the underlying platform. For pathname conversion
+			-- use KI_FILE_SYSTEM.pathname_from_file_system.)
 		require
 			a_name_not_void: a_name /= Void
 		deferred
+		ensure
+			name_set: name = a_name
+			is_closed: is_closed
+		end
+
+feature -- Initialization
+
+	reset (a_name: STRING) is
+			-- Reuse current Eiffel object memory to
+			-- represent a new file system entry.
+			-- (`a_name' should follow the pathname convention
+			-- of the underlying platform. For pathname conversion
+			-- use KI_FILE_SYSTEM.pathname_from_file_system.)
+		require
+			a_name_not_void: a_name /= Void
+			is_closed: is_closed
+		do
+			make (a_name)
 		ensure
 			name_set: name = a_name
 			is_closed: is_closed

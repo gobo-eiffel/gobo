@@ -26,8 +26,18 @@ feature -- Basic operations
 			-- If renaming was successful, then `name' is set to
 			-- `new_name'.
 		require
-			is_closed: is_closed
 			new_name_not_void: new_name /= Void
+			is_closed: is_closed
+		deferred
+		end
+
+	copy_file (new_name: STRING) is
+			-- Copy current file to `new_name'.
+			-- Do nothing if the file could not be copied, if it
+			-- did not exist or if `new_name' already existed.
+		require
+			new_name_not_void: new_name /= Void
+			is_closed: is_closed
 		deferred
 		end
 
