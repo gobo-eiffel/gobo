@@ -289,10 +289,10 @@ feature -- Task names
 			task_name_not_empty: not Result.empty
 		end
 
-	Gedoc_task_name: UC_STRING is
-			-- "gedoc" task name
+	Xslt_task_name: UC_STRING is
+			-- "xslt" task name
 		once
-			!! Result.make_from_string ("gedoc")
+			!! Result.make_from_string ("xslt")
 		ensure
 			task_name_not_void: Result /= Void
 			task_name_not_empty: not Result.empty
