@@ -142,16 +142,23 @@ feature -- Status report
 	has_parent_with_name (a_name: STRING): BOOLEAN is
 			-- Does current project have a parent project named `a_name'?
 		local
-			i: INTEGER
+			i, nb: INTEGER
 			a_parent_project: GEANT_PROJECT
+			a_parents: DS_ARRAYED_LIST [GEANT_PARENT]
 		do
 			if inherit_clause /= Void then
-				from i := 1 until Result or else i > inherit_clause.parents.count loop
-					a_parent_project := inherit_clause.parents.item (i).parent_project
-
-					Result := a_parent_project.name.is_equal (a_name)
-					if not Result then
-						Result := a_parent_project.has_parent_with_name (a_name)
+				a_parents := inherit_clause.parents
+				nb := a_parents.count
+				from i := 1 until i > nb loop
+					a_parent_project := a_parents.item (i).parent_project
+					if a_parent_project /= Void then
+						if STRING_.same_string (a_parent_project.name, a_name) then
+							Result := True
+							i := nb + 1 -- Jump out of the loop.
+						elseif a_parent_project.has_parent_with_name (a_name) then
+							Result := True
+							i := nb + 1 -- Jump out of the loop.
+						end
 					end
 					i := i + 1
 				end

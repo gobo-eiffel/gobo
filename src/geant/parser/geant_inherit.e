@@ -347,5 +347,6 @@ feature -- Status report
 invariant
 
 	parents_not_void: parents /= Void
+	no_void_parent: not parents.has (Void)
 
 end
