@@ -155,8 +155,6 @@ feature {NONE} -- Implementation
 
 	make_namespaces is
 			-- Initialise namespace tables.
-		local
-			a_default: XM_NAMESPACE
 		do
 			create namespaces.make_default
 			create prefixes.make_default
