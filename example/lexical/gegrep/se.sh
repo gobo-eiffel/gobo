@@ -13,7 +13,7 @@ echo ${GOBO}/example/lexical/gegrep/>				loadpath.se
 #		-- Gobo Eiffel Lexical Library
 echo ${GOBO}/library/lexical/automaton/>>			loadpath.se
 echo ${GOBO}/library/lexical/error/>>				loadpath.se
-echo ${GOBO}\library/lexical/lex/>>					loadpath.se
+echo ${GOBO}/library/lexical/lex/>>					loadpath.se
 echo ${GOBO}/library/lexical/generation/>>			loadpath.se
 echo ${GOBO}/library/lexical/regexp/>>				loadpath.se
 echo ${GOBO}/library/lexical/scanner/>>				loadpath.se

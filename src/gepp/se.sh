@@ -8,7 +8,7 @@
 # revision:   "$Revision$"
 
 
-@echo ${GOBO}/src/gepp/>							loadpath.se
+echo ${GOBO}/src/gepp/>								loadpath.se
 
 #		-- Gobo Eiffel Lexical Library
 echo ${GOBO}/library/lexical/skeleton/>>			loadpath.se
