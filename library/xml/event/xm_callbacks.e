@@ -114,7 +114,7 @@ feature -- Support
 	has_prefix (a: STRING): BOOLEAN is
 			-- Is prefix in use?
 		do
-			Result := a /= Void
+			Result := a /= Void and then a.count > 0
 		end
 
 	has_namespace (a: STRING): BOOLEAN is
