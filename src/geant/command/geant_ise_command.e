@@ -141,14 +141,14 @@ feature -- Execution
 				cmd.append_string (" -finalize")
 			end
 			a_filename := system_name + ".epr"
-			if file_system.file_exists (a_filename) then
+			eifgen := "EIFGEN"
+			if file_system.file_exists (a_filename) and file_system.directory_exists (eifgen) then
 				cmd.append_string (" -project ")
 				cmd := STRING_.appended_string (cmd, a_filename)
 			end
 			project.trace (<<"  [ise] ", cmd>>)
 			execute_shell (cmd)
 			if exit_code = 0 and then finish_freezing then
-				eifgen := "EIFGEN"
 				if finalize_mode then
 					project_dir := file_system.pathname (eifgen, "F_code")
 				else
