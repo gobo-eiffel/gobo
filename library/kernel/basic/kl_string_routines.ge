@@ -239,7 +239,7 @@ feature -- Access
 			uc_string: UC_STRING
 		do
 			if a_string.same_type (dummy_string) then
-				Result := make (n)
+				create Result.make (n)
 			else
 				uc_string ?= a_string
 				if uc_string /= Void then
@@ -317,7 +317,6 @@ feature -- Access
 			other_unicode: UC_STRING
 			k, end_index: INTEGER
 			found: BOOLEAN
-			uc_string: UC_STRING
 			max_code: INTEGER
 			other_count: INTEGER
 		do
@@ -960,7 +959,7 @@ feature -- Conversion
 				if uc_string /= Void then
 					Result := uc_string.as_string
 				else
-					Result := string (a_string)
+					Result := a_string.string
 				end
 			end
 		ensure
@@ -1114,7 +1113,7 @@ feature -- Removal
 					nb := 0
 				end
 			end
-			remove_head (a_string, i - 1)
+			a_string.remove_head (i - 1)
 		ensure
 			left_adjusted: (a_string.count /= 0) implies
 				((a_string.item_code (1) /= (' ').code) and
@@ -1144,7 +1143,7 @@ feature -- Removal
 					i := nb + 1
 				end
 			end
-			keep_head (a_string, nb)
+			a_string.keep_head (nb)
 		ensure
 			right_adjusted: (a_string.count /= 0) implies
 				((a_string.item_code (a_string.count) /= (' ').code) and
