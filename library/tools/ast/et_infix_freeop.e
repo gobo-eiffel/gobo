@@ -6,7 +6,7 @@ indexing
 
 	library:    "Gobo Eiffel Tools Library"
 	author:     "Eric Bezault <ericb@gobosoft.com>"
-	copyright:  "Copyright (c) 1999, Eric Bezault and others"
+	copyright:  "Copyright (c) 1999-2001, Eric Bezault and others"
 	license:    "Eiffel Forum Freeware License v1 (see forum.txt)"
 	date:       "$Date$"
 	revision:   "$Revision$"
@@ -39,17 +39,17 @@ feature {NONE} -- Initialization
 			a_name_not_void: a_name /= Void
 			a_position_not_void: a_position /= Void
 		do
-			name := a_name
+			operator_name := a_name
 			position := a_position
 			hash_code := STRING_.case_insensitive_hash_code (a_name)
 		ensure
-			name_set: name = a_name
+			operator_name_set: operator_name = a_name
 			position_set: position = a_position
 		end
 
 feature -- Access
 
-	name: STRING
+	operator_name: STRING
 			-- Name of free-operator
 
 	hash_code: INTEGER
@@ -67,12 +67,12 @@ feature -- Comparison
 				Result := True
 			elseif same_type (other) then
 				op ?= other
-				Result := STRING_.same_case_insensitive (name, op.name)
+				Result := STRING_.same_case_insensitive (operator_name, op.operator_name)
 			end
 		end
 
 invariant
 
-	name_not_void: name /= Void
+	operator_name_not_void: operator_name /= Void
 
 end -- class ET_INFIX_FREEOP

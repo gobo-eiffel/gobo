@@ -29,4 +29,9 @@ feature {NONE} -- Initialization
 			position_set: position = a_position
 		end
 
+feature -- Access
+
+	name: STRING is "infix"
+			-- Name of feature
+
 end -- class ET_INFIX_NAME
