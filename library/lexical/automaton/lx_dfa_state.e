@@ -34,6 +34,11 @@ inherit
 			copy
 		redefine
 			is_equal
+#ifdef VE
+--| Bug in VE (970520a)
+		select
+			is_equal
+#endif
 		end
 
 	DS_ARRAYED_LIST [LX_NFA_STATE]
