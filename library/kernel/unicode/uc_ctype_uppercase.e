@@ -4,8 +4,8 @@ indexing
    
 		"Database for mapping to uppercase"
 
-	library: "Gobo Eiffel Unicode Library"
-	copyright: "Copyright (c) 2001, michael kretschmar and others"
+	library: "Gobo Eiffel Kernel Library"
+	copyright: "Copyright (c) 2001, Michael Kretschmar and others"
 	license: "Eiffel Forum License v1 (see forum.txt)"
 	date: "$Date$"
 	revision: "$Revision$"

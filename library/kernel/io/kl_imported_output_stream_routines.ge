@@ -12,6 +12,10 @@ indexing
 
 class KL_IMPORTED_OUTPUT_STREAM_ROUTINES
 
+obsolete
+
+	"[020502] Use descendants of KI_OUTPUT_STREAM instead."
+
 feature -- Access
 
 	OUTPUT_STREAM_: KL_OUTPUT_STREAM_ROUTINES is

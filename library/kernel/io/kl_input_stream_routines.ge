@@ -12,6 +12,10 @@ indexing
 
 class KL_INPUT_STREAM_ROUTINES
 
+obsolete
+
+	"[020502] Use descendants of KI_INPUT_STREAM instead."
+
 inherit
 
 	KL_IMPORTED_INPUT_STREAM_ROUTINES
