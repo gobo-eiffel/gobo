@@ -102,6 +102,5 @@ feature -- Access
 invariant
 
 	tree_not_void: tree /= Void
-	error_not_void: error /= Void
 
 end

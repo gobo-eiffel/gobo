@@ -81,16 +81,16 @@ feature -- Element change
 				make_parser (a_source_uri, use_tiny_tree_model)
 				parser.parse_from_stream (input_stream)
 				if use_tiny_tree_model then
-					has_error := tiny_tree_pipe.error.has_error
+					has_error := tiny_tree_pipe.tree.has_error
 				else
-					has_error := tree_pipe.error.has_error
+					has_error := tree_pipe.tree.has_error
 				end
 				if has_error then
 					was_build_error := True
 					if use_tiny_tree_model then
-						internal_error_message := tiny_tree_pipe.error.last_error
+						internal_error_message := tiny_tree_pipe.tree.last_error
 					else
-						internal_error_message := tree_pipe.error.last_error
+						internal_error_message := tree_pipe.tree.last_error
 					end
 				else
 					if use_tiny_tree_model then

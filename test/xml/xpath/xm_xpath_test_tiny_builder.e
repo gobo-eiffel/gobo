@@ -41,7 +41,7 @@ feature
 			conformance.set_basic_xslt_processor
 			make_parser ("")
 			parser.parse_from_string ("<doc><a/><b/></doc>")
-			assert ("No parsing error", not tree_pipe.error.has_error)
+			assert ("No parsing error", not tree_pipe.tree.has_error)
 			document := tree_pipe.document
 			assert ("Document not void", document /= Void)
 
@@ -109,7 +109,7 @@ feature
 			input_stream.open_read
 			assert ("Inout file open", input_stream.is_open_read)
 			parser.parse_from_stream (input_stream)
-			assert ("No parsing error", not tree_pipe.error.has_error)
+			assert ("No parsing error", not tree_pipe.tree.has_error)
 			document := tree_pipe.document
 			assert ("Document not void", document /= Void)
 
@@ -303,7 +303,7 @@ feature
 			input_stream.open_read
 			assert ("Inout file open", input_stream.is_open_read)
 			parser.parse_from_stream (input_stream)
-			assert ("No parsing error", not tree_pipe.error.has_error)
+			assert ("No parsing error", not tree_pipe.tree.has_error)
 			document := tree_pipe.document
 			assert ("Document not void", document /= Void)
 
@@ -321,7 +321,7 @@ feature
 			conformance.set_basic_xslt_processor
 			make_parser ("")
 			parser.parse_from_string ("<doc><a><b/></doc>")
-			assert ("Parsing error", tree_pipe.error.has_error)
+			assert ("Parsing error", tree_pipe.tree.has_error)
 		end
 
 feature {NONE} -- Implementation

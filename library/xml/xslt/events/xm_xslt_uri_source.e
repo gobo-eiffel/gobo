@@ -16,6 +16,8 @@ inherit
 
 	XM_XSLT_SOURCE
 
+	XM_STRING_MODE
+
 	KL_IMPORTED_STRING_ROUTINES
 
 creation
@@ -48,44 +50,20 @@ feature -- Events
 
 	send (a_configuration: XM_XSLT_CONFIGURATION; a_receiver: XM_XPATH_RECEIVER; a_name_pool: XM_XPATH_NAME_POOL; is_stylesheet: BOOLEAN) is
 			-- Generate and send  events to `a_receiver'
-		local
-			an_input_stream: KL_TEXT_INPUT_FILE
 		do
-			is_error := False
 			create content_emitter.make (a_receiver, a_name_pool)
-			create error.set_next (content_emitter)
-			create namespace_resolver.set_next (error)
+			create namespace_resolver.set_next (content_emitter)
 			namespace_resolver.set_forward_xmlns (True)
 			create attributes.set_next (namespace_resolver)
 			create start.set_next (attributes)
 			create entity_resolver.make
+			create entity_resolver.make
 			create parser.make
 			parser.set_resolver (entity_resolver)
+			parser.copy_string_mode (Current)
 			parser.set_callbacks (start)
 			parser.set_dtd_callbacks (content_emitter)
-			create an_input_stream.make (system_id)
-			an_input_stream.open_read
-			if an_input_stream.is_open_read then
-				parser.parse_from_stream (an_input_stream)
-				if error.has_error then
-					is_error := True
-					internal_error_message := error.last_error
-				end
-			else
-				is_error := True
-				internal_error_message := "Unable to open " + system_id
-			end
-		end
-
-feature -- Status report
-
-	is_error: BOOLEAN
-			-- Is `Current' in an error state?
-
-	error_message: STRING is
-			-- Last error message
-		do
-			Result := internal_error_message
+			parser.parse_from_system (system_id)
 		end
 
 feature -- Element change
@@ -97,17 +75,7 @@ feature -- Element change
 		end
 
 feature {NONE} -- Implementation
-
-	make_parser is
-		local
-			
-		do
-			-- TODO
-		end
 		
-	internal_error_message: like error_message
-			-- Text of last error
-
 	parser: XM_EIFFEL_PARSER
 			-- Eiffel parse
 	
@@ -119,9 +87,6 @@ feature {NONE} -- Implementation
 
 	start: XM_UNICODE_VALIDATION_FILTER
 			-- Starting point for XM_CALLBACKS_SOURCE (e.g. parser)
-
-	error: XM_STOP_ON_ERROR_FILTER
-		-- Error collector
 
 	namespace_resolver: XM_NAMESPACE_RESOLVER
 			-- Namespace resolver

@@ -2,7 +2,7 @@ indexing
 
 	description:
 
-		"Element nodes in an XSLT stylesheet"
+		"xsl:when element nodes"
 
 	library: "Gobo Eiffel XSLT Library"
 	copyright: "Copyright (c) 2004, Colin Adams and others"
@@ -10,21 +10,21 @@ indexing
 	date: "$Date$"
 	revision: "$Revision$"
 
-deferred class XM_XSLT_STYLE_ELEMENT
+class XM_XSLT_WHEN
 
 inherit
 
-	XM_XPATH_TREE_ELEMENT
-	
+	XM_XSLT_STYLE_ELEMENT
+
+creation
+
+	make
+
 feature -- Status setting
 
 	prepare_attributes is
 			-- TODO
-		deferred
-		end
-
-	allocate_slots (an_expr: XM_XPATH_EXPRESSION) is
-			-- TODO
 		do
 		end
+
 end

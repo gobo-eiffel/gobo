@@ -19,8 +19,6 @@ inherit
 			start_element, end_element, notify_comment, notify_characters, notify_processing_instruction
 		end
 
-	XM_STRING_MODE
-
 	-- This class also concatenates text nodes split by comments and processing instructions
 
 creation
@@ -80,18 +78,13 @@ feature {NONE} -- Implementation
 	character_buffer: STRING
 			-- Accumulated character data
 	
-	an_estimated_character_count: INTEGER is 2048
-			-- Guess for size of `character_buffer'
-
 	flush is
 			-- Flush `character_buffer'.
 		do
-			base_receiver.	notify_characters (character_buffer, 0)
-			if is_string_mode_ascii then
-				create character_buffer.make (an_estimated_character_count)
-			else
-				create {UC_UTF8_STRING} character_buffer.make (an_estimated_character_count)
+			if character_buffer /= Void and then not character_buffer.is_empty then
+				base_receiver.notify_characters (character_buffer, 0)
 			end
+			create character_buffer.make (80)
 		end
 
 end

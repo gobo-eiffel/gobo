@@ -49,11 +49,29 @@ feature -- Access
 	system_id: STRING
 			-- The SYSTEM id of the document being processed
 
+feature -- Status report
+
+	has_error: BOOLEAN
+			-- Has an error occurred?
+
+	last_error: STRING
+			-- Error message
+
 feature -- Events
+
+	on_error (a_message: STRING) is
+			-- Event producer detected an error.
+		do
+			has_error := True
+			last_error := a_message
+		end
 
 	start_document is
 			-- Notify the start of the document
 		do
+			has_error := False
+			last_error := Void
+
 			-- TODO add timing information
 			if defaults_overridden then
 				create document.make (estimated_node_count, estimated_attribute_count, estimated_namespace_count, estimated_character_count, name_pool, system_id)

@@ -28,6 +28,12 @@ feature -- Access
 
 feature -- Events
 
+	on_error (a_message: STRING) is
+			-- Event producer detected an error.
+		do
+			base_receiver.on_error (a_message)
+		end
+
 	start_document is
 			-- New document
 		do

@@ -36,22 +36,6 @@ feature -- Events
 			
 		end
 
-feature -- Status report
-
-	is_error: BOOLEAN is
-			-- Is `Current' in an error state?
-		deferred
-		end
-
-	error_message: STRING is
-			-- Last error message
-		require
-			in_error: is_error
-		deferred
-		ensure
-			error_message_not_void: Result /= Void
-		end
-
 feature -- Element change
 
 	set_system_id (a_system_id: STRING) is

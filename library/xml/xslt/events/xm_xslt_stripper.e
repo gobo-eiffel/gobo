@@ -45,7 +45,7 @@ feature {NONE} -- Initialization
 				transformer.name_pool.allocate_name ("xml", Xml_uri, "space")
 				xml_space_code := transformer.name_pool.last_name_code
 			end
-			create element.make_dummy
+			create element.make_dummy (transformer.name_pool)
 		ensure
 			transformer_set: transformer = a_transformer
 			mode_set: stripper_mode = a_stripper_mode

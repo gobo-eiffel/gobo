@@ -123,6 +123,8 @@ feature {XM_XPATH_TREE_BUILDER} -- Restricted
 			-- Add a child node to this node.
 			-- Note: normalizing adjacent text nodes
 			--  is the responsibility of the caller
+		require
+			child_not_void: a_child /= Void
 		do
 			if not children.extendible (1) then
 				children.resize (2 * children.count)

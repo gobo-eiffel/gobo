@@ -39,17 +39,17 @@ feature {NONE} -- Initialization
 		require
 			system_id_not_void: a_system_id /= Void
 		local
-			a_dummy: XM_CALLBACKS
-			namespace_resolver: XM_NAMESPACE_RESOLVER
+			a_namespace_resolver: XM_NAMESPACE_RESOLVER
+			a_node_factory: XM_XPATH_NODE_FACTORY
 		do
 			shared_pool := default_pool.default_pool
-			create tree.make (shared_pool)
+			create a_node_factory
+			create tree.make (shared_pool, a_node_factory)
 			tree.set_system_id (a_system_id)
 			create emitter.make (tree, shared_pool)
-			create error.set_next (emitter)
-			create namespace_resolver.set_next (error)
-			namespace_resolver.set_forward_xmlns (True)
-			create attributes.set_next (namespace_resolver)
+			create a_namespace_resolver.set_next (emitter)
+			a_namespace_resolver.set_forward_xmlns (True)
+			create attributes.set_next (a_namespace_resolver)
 			create content.set_next (attributes)
 			create whitespace.set_next (content)
 			create start.set_next (whitespace)
@@ -72,9 +72,6 @@ feature -- Access
 	attributes: XM_ATTRIBUTE_DEFAULT_FILTER
 			-- Set attribute defaults from the DTD
 
-	error: XM_STOP_ON_ERROR_FILTER
-			-- Error collector
-
 	emitter: XM_XPATH_CONTENT_EMITTER
 			-- Couples pipeline to the tree-builder
 
@@ -84,7 +81,7 @@ feature -- Access
 	document: XM_XPATH_TREE_DOCUMENT is
 			-- Document (from tree building filter)
 		require
-			not_error: not error.has_error
+			not_error: not tree.has_error
 		do
 			Result := tree.document
 		end
@@ -92,9 +89,9 @@ feature -- Access
 	last_error: STRING is
 			-- Error (from error filter)
 		require
-			error: error.has_error
+			error: tree.has_error
 		do
-			Result := error.last_error
+			Result := tree.last_error
 		ensure
 			last_error_not_void: Result /= Void
 		end
@@ -102,6 +99,5 @@ feature -- Access
 invariant
 
 	tree_not_void: tree /= Void
-	error_not_void: error /= Void
 
 end

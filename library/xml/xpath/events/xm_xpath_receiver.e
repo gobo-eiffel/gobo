@@ -29,6 +29,13 @@ feature -- Access
 
 feature -- Events
 
+	on_error (a_message: STRING) is
+			-- Event producer detected an error.
+		require
+			not_void: a_message /= Void
+		deferred
+		end
+
 	start_document is
 			-- New document
 		deferred

@@ -28,30 +28,41 @@ inherit
 			name_code
 		end
 
+	XM_XPATH_ERROR_TYPES
+
 creation {XM_XSLT_STRIPPER}
 
 	make_dummy
 
 creation {XM_XPATH_NODE_FACTORY}
 
-	make
+	make, make_in_error_state
 
 feature {NONE} -- Initialization
 
-	make (a_document: XM_XPATH_TREE_DOCUMENT; a_name_code: INTEGER; a_sequence_number: INTEGER; a_line_number: INTEGER; a_base_uri: STRING) is
+	make (a_document: XM_XPATH_TREE_DOCUMENT;  a_parent: XM_XPATH_TREE_COMPOSITE_NODE; an_attribute_collection: XM_XPATH_ATTRIBUTE_COLLECTION; a_namespace_list:  DS_ARRAYED_LIST [INTEGER];
+			a_name_code: INTEGER; a_sequence_number: INTEGER; a_line_number: INTEGER; a_base_uri: STRING) is
 			-- Establish invariant.
 		require
+			document_not_void: a_document /= Void
 			strictly_positive_sequence_number: a_sequence_number > 0
 			base_uri_not_void: a_base_uri /= Void
 		do
 			document := a_document
+			parent_node := a_parent
 			node_type := Element_node
 			name_code := a_name_code
 			create children.make (5)
-			create attribute_name_codes.make (5)
-			create attribute_type_codes.make (5)
-			create attribute_values.make (5)
-			create namespace_code_list.make (5)
+			if an_attribute_collection = Void then
+				create attribute_collection.make (document.name_pool)
+			else
+				attribute_collection := an_attribute_collection
+			end
+			if a_namespace_list /= Void then
+				namespace_code_list := a_namespace_list
+			else
+				create namespace_code_list.make (5)
+			end
 			sequence_number_high_word := a_sequence_number
 			-- TODO root.set_line_number (a_line_number, a_sequence_number)
 			-- TODO root.set_system_id (a_base_uri, a_sequence_number)
@@ -59,17 +70,33 @@ feature {NONE} -- Initialization
 			name_code_set: name_code = a_name_code
 		end
 
-	make_dummy is
+	make_dummy (a_name_pool: XM_XPATH_NAME_POOL) is
 			-- Create a dummy element
+		require
+			name_pool_not_void: a_name_pool /= Void
 		do
 			node_type := Element_node
 			name_code := -1
 			create children.make (5)
-			create attribute_name_codes.make (5)
-			create attribute_type_codes.make (5)
-			create attribute_values.make (5)
+			create attribute_collection.make (a_name_pool)
 			create namespace_code_list.make (5)
-			sequence_number_high_word := -1
+			sequence_number_high_word := 50000
+		end
+
+	make_in_error_state (a_document: XM_XPATH_TREE_DOCUMENT; a_message: STRING) is
+			-- Create an element in an error state (used for reporting errors by the node factory).
+		require
+			document_not_void: a_document /= Void
+			message_not_void: a_message /= Void
+		do
+			document := a_document
+			node_type := Element_node
+			name_code := -1
+			create children.make (0)
+			create attribute_collection.make (document.name_pool)
+			create namespace_code_list.make (0)
+			sequence_number_high_word := 50000
+			set_last_error_from_string (a_message, 0, Static_error)
 		end
 
 feature -- Access
@@ -79,24 +106,14 @@ feature -- Access
 
 	attribute_value (a_fingerprint: INTEGER): STRING is
 			-- Value of attribute identified by `a_fingerprint'
-		local
-			an_index: INTEGER
 		do
-			an_index := attribute_index (a_fingerprint)
-			if an_index /= -1 then
-				Result := attribute_values.item (an_index)
-			end
+			Result := attribute_collection.attribute_value (a_fingerprint)
 		end
 	
 	attribute_value_by_name (a_uri: STRING; a_local_name:STRING): STRING is
 			-- Value of named attribute
-		local
-			a_fingerprint: INTEGER
 		do
-			a_fingerprint := document.name_pool.fingerprint (a_uri, a_local_name)
-			if a_fingerprint /= -1 then
-				Result := attribute_value (a_fingerprint)
-			end
+			Result := attribute_collection.attribute_value_by_name (a_uri, a_local_name)
 		end
 
 feature -- Status setting
@@ -127,22 +144,18 @@ feature -- Element change
 		require
 			valid_name_code: document.name_pool.is_valid_name_code (a_name_code)
 			value_not_void: a_value /= Void
-		local
-			new_size: INTEGER
 		do
-			if not attribute_name_codes.extendible (1) then
-				new_size := 2* attribute_name_codes.count
-				attribute_name_codes.resize (new_size)
-				attribute_type_codes.resize (new_size)
-				attribute_values.resize (new_size)
-			end
-			attribute_name_codes.put_last (a_name_code)
-			attribute_type_codes.put_last (a_type_code)
-			attribute_values.put_last (a_value)
+			attribute_collection.add_attribute (a_name_code, a_type_code, a_value)
+		end
+
+	set_attribute_collection (an_attribute_collection: XM_XPATH_ATTRIBUTE_COLLECTION) is
+			-- Set all attributes.
+		require
+			attribute_collection_not_void: an_attribute_collection /= Void
+		do
+			attribute_collection := an_attribute_collection
 		ensure
-			attribute_name_code_added: attribute_name_codes.has (a_name_code)
-			attribute_typee_code_added: attribute_type_codes.has (a_type_code)
-			attribute_value_added: attribute_values.has (a_value)
+			attribute_collection_set: attribute_collection = an_attribute_collection
 		end
 
 feature {XM_XPATH_NODE} -- Restricted
@@ -157,14 +170,14 @@ feature {XM_XPATH_TREE_ATTRIBUTE, XM_XPATH_TREE_ATTRIBUTE_ENUMERATION} -- Restri
 
 	is_attribute_index_valid (an_attribute_index: INTEGER): BOOLEAN is
 		do
-			Result := an_attribute_index > 0 and then an_attribute_index <= attribute_values.count
+			Result := attribute_collection.is_attribute_index_valid (an_attribute_index)
 		end
 
 	attribute_value_by_index (an_attribute_index: INTEGER): STRING is
 		require
 			valid_attribute_index: is_attribute_index_valid (an_attribute_index)
 		do
-			Result := attribute_values.item (an_attribute_index)
+			Result := attribute_collection.attribute_value_by_index (an_attribute_index)
 		ensure
 			attribute_value_not_void: Result /= Void
 		end
@@ -173,64 +186,29 @@ feature {XM_XPATH_TREE_ATTRIBUTE, XM_XPATH_TREE_ATTRIBUTE_ENUMERATION} -- Restri
 		require
 			valid_attribute_index: is_attribute_index_valid (an_attribute_index)
 		do
-			Result := attribute_name_codes.item (an_attribute_index)
+			Result := attribute_collection.attribute_name_code (an_attribute_index)
 		end
 
 	attribute_type_code (an_attribute_index: INTEGER): INTEGER is
 		require
 			valid_attribute_index: is_attribute_index_valid (an_attribute_index)
 		do
-			Result := attribute_type_codes.item (an_attribute_index)
+			Result := attribute_collection.attribute_type_code (an_attribute_index)
 		end
 
 feature {NONE} -- Implementation
 
-	-- The next three lists are triples - i.e. item number n in all three lists forms a triple
-	
-	attribute_name_codes: DS_ARRAYED_LIST [INTEGER]
-			-- Name codes of attributes
-
-	attribute_type_codes: DS_ARRAYED_LIST [INTEGER]
-			-- Type codes of attributes
-
-	attribute_values: DS_ARRAYED_LIST [STRING]
-			-- Values of attributes
+	attribute_collection: XM_XPATH_ATTRIBUTE_COLLECTION
+			-- Attributes
 
 	namespace_code_list: DS_ARRAYED_LIST [INTEGER]
 			-- Name codes for all namespaces defined on this element;
 			-- (NOT all namespaces in scope - must scan up the parent chain for that)
 
-	attribute_index (a_fingerprint: INTEGER): INTEGER is
-			-- Index number of attribute with fingerprint `a_fingerprint'
-		local
-			a_cursor: DS_ARRAYED_LIST_CURSOR [INTEGER]
-			found: BOOLEAN
-		do
-			from
-				a_cursor := attribute_name_codes.new_cursor
-				a_cursor.start
-			variant
-				attribute_name_codes.count + 1 - a_cursor.index
-			until
-				found or else a_cursor.after
-			loop
-				if document.name_pool.fingerprint_from_name_code (a_cursor.item) = a_fingerprint then
-					found := true
-					Result := a_cursor.index
-				end
-				a_cursor.forth
-			end
-			if not found then Result := -1 end
-		ensure
-			nearly_positive_result: Result > -2
-		end
-
 invariant
 
-	attribute_name_codes_not_void: attribute_name_codes /= Void
-	attribute_type_codes_not_void: attribute_type_codes /= Void
-	attribute_values_not_void: attribute_values /= Void
 	namespace_list_not_void: namespace_code_list /= Void
+	attribute_collection_not_void: attribute_collection /= Void
 
 end
 	

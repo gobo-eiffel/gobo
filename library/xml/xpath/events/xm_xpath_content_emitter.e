@@ -34,7 +34,6 @@ inherit
 		--  XM_CONTENT_CONCATENATOR
 		--  XM_ATTRIBUTE_DEFAULT_FILTER (optional - may omit if no DTDs are used)
 		--  XM_NAMESPACE_RESOLVER
-		--  XM_STOP_ON_ERROR_FILTER
 
 		-- This class makes some attempt to assign type-codes to attributes,
 		--  based on the DTD.
@@ -183,9 +182,7 @@ feature -- Errors
 	on_error (a_message: STRING) is
 			-- Event producer detected an error.
 		do
-			std.error.put_string ("XML parse error: ")
-			std.error.put_string (a_message)
-			std.error.put_new_line
+			receiver.on_error (a_message)
 		end
 
 feature -- Meta

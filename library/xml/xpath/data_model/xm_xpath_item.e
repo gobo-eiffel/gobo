@@ -110,7 +110,6 @@ invariant
 
 	no_error_value_without_error: not is_error implies error_value = Void
 	item_in_error: is_error implies error_value /= Void
-	no_static_errors: error_value /= Void implies error_value.type /= Static_error
 
 end
 	
