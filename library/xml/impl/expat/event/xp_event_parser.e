@@ -8,8 +8,9 @@ indexing
 	author: "Leitner"
 
 class XP_EVENT_PARSER
-	-- TODO: this is a duplicate of XP_EVENT_PARSER which
-	-- it should replace.
+	-- TODO: this is a duplicate of XP_PARSER which replaces it.
+
+obsolete "Use XM_EIFFEL_PARSER or XM_EXPAT_PARSER(_FACTORY)"
 
 inherit
 
