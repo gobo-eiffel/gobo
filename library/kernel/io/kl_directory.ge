@@ -27,6 +27,7 @@ inherit
 			make as old_make,
 			open_read as old_open_read,
 			is_readable as old_is_readable,
+			exists as old_exists,
 			close as old_close,
 			delete as old_delete,
 			recursive_delete as old_recursive_delete
@@ -156,7 +157,21 @@ feature -- Status report
 	is_readable: BOOLEAN is
 			-- Can directory be opened in read mode?
 		do
-			Result := file_system.is_directory_readable (name)
+			if name.count > 0 then
+#ifdef ISE || HACT
+				Result := old_exists and then old_is_readable
+#else
+				if is_open_read then
+					Result := True
+				else
+					open_read
+					if is_open_read then
+						Result := True
+						close
+					end
+				end
+#endif
+			end
 		end
 
 feature -- Basic operations
@@ -173,7 +188,7 @@ feature -- Basic operations
 					entry_buffer := Void
 					end_of_input := False
 #ifdef ISE || HACT
-					if exists and then old_is_readable then
+					if old_exists and then old_is_readable then
 						old_open_read
 						if directory_pointer = default_pointer then
 							mode := Close_directory
@@ -242,7 +257,7 @@ feature -- Basic operations
 					file_system.create_directory (name)
 #endif
 #ifdef ISE || HACT
-					if not exists then
+					if not old_exists then
 						create_dir
 					end
 #endif
@@ -304,9 +319,9 @@ feature -- Basic operations
 #endif
 #ifdef ISE || HACT
 #ifdef ISE
-					if exists and then is_empty then
+					if old_exists and then is_empty then
 #else
-					if exists and then empty then
+					if old_exists and then empty then
 #endif
 						old_delete
 					end
@@ -359,7 +374,7 @@ feature -- Basic operations
 					delete
 #endif
 #ifdef ISE || HACT
-					if exists then
+					if old_exists then
 						old_recursive_delete
 					end
 #endif

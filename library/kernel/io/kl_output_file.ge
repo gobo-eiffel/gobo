@@ -1,0 +1,114 @@
+indexing
+
+	description:
+
+		"Output files"
+
+	library:    "Gobo Eiffel Kernel Library"
+	author:     "Eric Bezault <ericb@gobosoft.com>"
+	copyright:  "Copyright (c) 2001, Eric Bezault and others"
+	license:    "Eiffel Forum Freeware License v1 (see forum.txt)"
+	date:       "$Date$"
+	revision:   "$Revision$"
+
+deferred class KL_OUTPUT_FILE
+
+inherit
+
+	KI_OUTPUT_FILE
+#ifdef VE
+		undefine
+				-- Make sure that this deferred class
+				-- has a deferred routine.
+			put_boolean
+		end
+#endif
+
+	KL_FILE
+		rename
+			open as open_write,
+			is_open as is_open_write
+		end
+
+#ifdef SE
+	TEXT_FILE_WRITE
+		rename
+			make as old_make,
+			is_connected as old_is_open_write,
+			put_character as old_put_character,
+			put_string as old_put_string,
+			put_integer as old_put_integer,
+			put_boolean as old_put_boolean,
+			put_new_line as old_put_new_line,
+			disconnect as old_close,
+			flush as old_flush
+		export
+			{NONE} all
+		end
+
+#endif
+feature -- Status report
+
+	is_open_write: BOOLEAN is
+			-- Is file opened in write mode?
+		do
+			Result := old_is_open_write
+		end
+
+feature -- Output
+
+	put_character (c: CHARACTER) is
+			-- Write `c' to output file.
+		do
+			old_put_character (c)
+		end
+
+	put_string (a_string: STRING) is
+			-- Write `a_string' to output file.
+		do
+			old_put_string (a_string)
+		end
+
+feature -- Basic operations
+
+	open_write is
+			-- Open current file in write-only mode if
+			-- it can be opened, let it closed otherwise.
+		local
+			rescued: BOOLEAN
+		do
+			if not rescued then
+				if name.count > 0 then
+					old_open_write
+				end
+			elseif not is_closed then
+				close
+			end
+		rescue
+			if not rescued then
+				rescued := True
+				retry
+			end
+		end
+
+	flush is
+			-- Flush buffered data to disk.
+		do
+#ifndef VE
+			old_flush
+#endif
+		end
+
+#ifdef SE
+feature {NONE} -- Implementation
+
+	old_open_write is
+			-- Open file in write mode.
+		require
+			name_not_void: name /= Void
+			name_not_empty: name.count > 0
+		deferred
+		end
+
+#endif
+end -- class KL_OUTPUT_FILE

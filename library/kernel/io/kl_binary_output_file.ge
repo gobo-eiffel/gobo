@@ -17,263 +17,70 @@ inherit
 
 	KI_BINARY_OUTPUT_FILE
 
-	KL_SHARED_FILE_SYSTEM
-		export
-			{NONE} all
+	KL_OUTPUT_FILE
+#ifdef ISE || HACT
+		rename
+			index as position
+#ifdef HACT
+		undefine
+			medium_table_type
+#endif
+		redefine
+			file_reopen, file_open, file_dopen
 		end
+#endif
 
 #ifdef ISE || HACT
 	RAW_FILE
 		rename
 			make as old_make,
 			name as old_name,
+			exists as old_exists,
+			is_readable as old_is_readable,
+			is_open_read as old_is_open_read,
+			is_open_write as old_is_open_write,
+			end_of_file as old_end_of_file,
+			is_closed as old_is_closed,
+			open_read as old_open_read,
 			open_write as old_open_write,
-			close as old_close,
-			delete as old_delete,
-			put_new_line as old_put_new_line,
-			put_integer as old_put_integer,
-			put_boolean as old_put_boolean,
 			put_character as old_put_character,
 			put_string as old_put_string,
+			put_integer as old_put_integer,
+			put_boolean as old_put_boolean,
+			put_new_line as old_put_new_line,
+			read_character as old_read_character,
+			read_stream as old_read_stream,
+			read_line as old_read_line,
+			change_name as old_change_name,
 			flush as old_flush,
-			is_open_write as old_is_open_write,
-			is_closed as old_is_closed,
-			change_name as old_change_name
-		export
-			{NONE} all
-		end
-#endif
-#ifdef SE
-	TEXT_FILE_WRITE
-		rename
-			make as old_make,
-			is_connected as old_is_open_write,
-			disconnect as old_close,
-			put_new_line as old_put_new_line,
-			put_integer as old_put_integer,
-			put_boolean as old_put_boolean,
-			put_character as old_put_character,
-			put_string as old_put_string,
-			flush as old_flush
-		export
-			{NONE} all
-		end
-
-	FILE_TOOLS
-		rename
-			delete as old_delete,
-			tmp_string as old_tmp_string
-		export
-			{NONE} all
-		end
-#endif
-#ifdef VE
-	FILE
-		rename
-			make as old_make,
-			name as old_name,
-			open_write as old_open_write,
-			is_open_write as old_is_open_write,
-			is_closed as old_is_closed,
 			close as old_close,
-			delete as old_delete,
-			put_integer as old_put_integer,
-			put_boolean as old_put_boolean,
-			put_character as old_put_character,
-			put_string as old_put_string
+			delete as old_delete
 		export
 			{NONE} all
+		undefine
+			file_readable
+		redefine
+			file_reopen, file_open, file_dopen
 		end
-#endif
 
+#endif
 creation
 
 	make
 
-feature {NONE} -- Initialization
-
-	make (a_name: like name) is
-			-- Create a new output file named `a_name'.
-		do
-			name := a_name
-#ifdef ISE || HACT
-			if a_name.count > 0 then
-				old_name := a_name
-			else
-				old_name := Empty_name
-			end
-			mode := Closed_file
-#endif
-#ifdef SE
-			old_make
-#endif
-#ifdef VE
-			if a_name.count > 0 then
-				old_make (a_name)
-			else
-				old_make (Empty_name)
-			end
-#endif
-		end
-
-feature -- Access
-
-	name: STRING
-			-- File name
-
-feature -- Status report
-
-	is_open_write: BOOLEAN is
-			-- Is file opened in write mode?
-		do
-			Result := old_is_open_write
-		end
-
-	is_closed: BOOLEAN is
-			-- Is file closed?
-		do
-#ifdef SE
-			Result := not old_is_open_write
-#else
-			Result := old_is_closed
-#endif
-		end
-
-feature -- Output
-
-	put_character (c: CHARACTER) is
-			-- Write `c' to output file.
-		do
-			old_put_character (c)
-		end
-
-	put_string (a_string: STRING) is
-			-- Write `a_string' to output file.
-		do
-			old_put_string (a_string)
-		end
-
-feature -- Basic operations
-
-	open_write is
-			-- Open current file in write-only mode if
-			-- it can be opened, let it closed otherwise.
-		local
-			rescued: BOOLEAN
-		do
-			if not rescued then
-				if name.count > 0 then
-#ifdef SE
-					output_stream := basic_io_binary_file_write_open (name.to_external)
-					if output_stream.is_not_null then
-						path := name
-					end
-#else
-					old_open_write
-#endif
-				end
-			elseif not is_closed then
-				close
-			end
-		rescue
-			if not rescued then
-				rescued := True
-				retry
-			end
-		end
-
-	flush is
-			-- Flush buffered data to disk.
-		do
-#ifndef VE
-			old_flush
-#endif
-		end
-
-	close is
-			-- Close current file if it is closable,
-			-- let it open otherwise.
-		local
-			rescued: BOOLEAN
-		do
-			if not rescued then
-				old_close
-			end
-		rescue
-			if not rescued then
-				rescued := True
-				retry
-			end
-		end
-
-	change_name (new_name: STRING) is
-			-- Rename current file as `new_name'.
-			-- Do nothing if the file could not be renamed, if
-			-- it did not exist or if `new_name' already existed.
-			-- If renaming was successful, then `name' is set to
-			-- `new_name'.
-#ifndef SE
-		local
-			a_name: STRING
-#endif
-		do
-			if new_name.count > 0 then
-#ifdef SE
-				if not file_exists (new_name) then
-#else
-				a_name := old_name
-				old_name := new_name
-				if exists then
-					old_name := a_name
-				else
-					old_name := a_name
-#endif
-					file_system.rename_file (name, new_name)
-#ifdef SE
-					if file_exists (new_name) then
-						name := new_name
-#else
-					a_name := old_name
-					old_name := new_name
-					if exists then
-						name := new_name
-					else
-						old_name := a_name
-#endif
-					end
-				end
-			end
-		end
-
-	delete is
-			-- Delete current file.
-			-- Do nothing if the file could not be
-			-- deleted or if it did not exist.
-		local
-			rescued: BOOLEAN
-		do
-			if not rescued then
-				if name.count > 0 then
-#ifdef SE
-					old_delete (name)
-#endif
-#ifdef ISE || HACT || VE
-					if exists then
-						old_delete
-					end
-#endif
-				end
-			end
-		rescue
-			if not rescued then
-				rescued := True
-				retry
-			end
-		end
-
+#ifdef SE || HACT || ISE
 feature {NONE} -- Implementation
 
 #ifdef SE
+	old_open_write is
+			-- Open file in write mode.
+		do
+			output_stream := basic_io_binary_file_write_open (name.to_external)
+			if output_stream.is_not_null then
+				path := name
+			end
+		end
+
 	basic_io_binary_file_write_open (path_pointer: POINTER): POINTER is
 			-- Open file in binary write mode.
 		external
@@ -281,9 +88,61 @@ feature {NONE} -- Implementation
 		end
 
 #endif
-#ifdef ISE || HACT || VE
-	Empty_name: STRING is "empty_name"
-			-- Empty name place-holder
+#ifdef ISE
+	file_open (f_name: POINTER; how: INTEGER): POINTER is
+			-- File pointer for file `f_name', in mode `how'.
+		external
+			"C | %"eif_file.h%""
+		alias
+			"file_binary_open"
+		end
 
+	file_dopen (fd, how: INTEGER): POINTER is
+			-- File pointer for file of descriptor `fd' in mode `how'
+			-- (which must fit the way `fd' was obtained).
+		external
+			"C | %"eif_file.h%""
+		alias
+			"file_binary_dopen"
+		end
+
+	file_reopen (f_name: POINTER; how: INTEGER; file: POINTER): POINTER is
+			-- File pointer to `file', reopened to have new name `f_name'
+			-- in a mode specified by `how'.
+		external
+			"C (char *, EIF_INTEGER, FILE *): EIF_POINTER | %"eif_file.h%""
+		alias
+			"file_binary_reopen"
+		end
+
+#endif
+#ifdef HACT
+	file_open (f_name: POINTER; how: INTEGER): POINTER is
+			-- File pointer for file `f_name', in mode `how'.
+		external
+			"C | <eif_file.h>"
+		alias
+			"file_binary_open"
+		end
+
+	file_dopen (fd, how: INTEGER): POINTER is
+			-- File pointer for file of descriptor `fd' in mode `how'
+			-- (which must fit the way `fd' was obtained).
+		external
+			"C | <eif_file.h>"
+		alias
+			"file_binary_dopen"
+		end
+
+	file_reopen (f_name: POINTER; how: INTEGER; file: POINTER): POINTER is
+		   -- File pointer to `file', reopened to have new name `f_name'
+		   -- in a mode specified by `how'.
+		external
+			"C | <eif_file.h>"
+		alias
+			"file_binary_reopen"
+		end
+
+#endif
 #endif
 end -- class KL_BINARY_OUTPUT_FILE
