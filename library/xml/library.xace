@@ -41,7 +41,6 @@
 			</cluster>
 			<cluster name="no_expat" unless="${GOBO_XML_EXPAT}"/>
 		</cluster>
-<!--
 		<cluster name="xpath">
 		  <cluster name="data_model"/>
 		  <cluster name="tinytree"/>
@@ -57,6 +56,5 @@
 		  <cluster name="patterns"/>
 		  <cluster name="style"/>
 		</cluster>
--->
 	</cluster>
 </library>
