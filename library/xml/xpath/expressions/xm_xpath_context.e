@@ -75,7 +75,14 @@ feature -- Access
 			available_documents_not_void: not is_restricted implies Result /= Void
 			restricted_implies_none_available: is_restricted implies Result = Void
 		end
-			
+
+	security_manager: XM_XPATH_SECURITY_MANAGER is
+			-- Security manager
+		deferred
+		ensure
+			security_namager_not_void: Result /= Void
+		end
+
 	current_date_time: DT_DATE_TIME is
 			-- Current date-time
 		do

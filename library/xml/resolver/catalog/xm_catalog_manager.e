@@ -52,7 +52,7 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	System_default_catalog: STRING is "/etc/xml/catalog"
+	System_default_catalog: STRING is "file:///etc/xml/catalog"
 
 	unescaped_uri_characters: DS_HASH_SET [CHARACTER] is
 			-- Default character set not to escape
@@ -333,16 +333,6 @@ feature {XM_CATALOG, TS_TEST_CASE} -- Implementation
 				parse_catalog_file (a_base_uri)
 				if all_known_catalogs.has (a_system_id) then
 					Result := all_known_catalogs.item (a_system_id)
-				else
-						-- Loading a_catalog_name failed as a URI, so let's 
-						-- try again assuming a_catalog_name is a local 
-						-- filesystem name.
-					create a_base_uri.make_resolve_uri (current_directory_base, File_uri.filename_to_uri (a_catalog_name))
-					a_system_id := a_base_uri.full_reference
-					parse_catalog_file (a_base_uri)
-					if all_known_catalogs.has (a_system_id) then
-						Result := all_known_catalogs.item (a_system_id)
-					end
 				end
 			end
 		ensure
@@ -581,6 +571,8 @@ feature {NONE} -- Implementation
 			xml_catalog_files: STRING
 			a_splitter: ST_SPLITTER
 			a_list: DS_LIST [STRING]
+			a_base_URI: UT_URI
+			a_cursor: DS_LIST_CURSOR [STRING]
 		do
 			xml_catalog_files := Execution_environment.variable_value ("XML_CATALOG_FILES")
 			if xml_catalog_files /= Void then
@@ -591,6 +583,20 @@ feature {NONE} -- Implementation
 			if a_list /= Void then
 				system_catalog_files := a_list
 				system_catalog_files.set_equality_tester (string_equality_tester)
+
+				-- Now convert the names to absolute URIs
+
+				from
+					a_cursor := system_catalog_files.new_cursor; a_cursor.start
+				variant
+					system_catalog_files.count + 1 - a_cursor.index
+				until
+					a_cursor.after
+				loop
+					create a_base_uri.make_resolve_uri (current_directory_base, File_uri.filename_to_uri (a_cursor.item))
+					a_cursor.replace (a_base_uri.full_reference)
+					a_cursor.forth
+				end
 			end
 			if not is_system_default_catalog_suppressed and then system_catalog_files.count = 0 then
 				system_catalog_files.force_last (System_default_catalog)

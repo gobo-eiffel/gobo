@@ -178,9 +178,6 @@ feature {NONE} -- Implementation
 								end
 							end
 						end
-
-						-- Now go round the loop again, to get the next item from `base_iterator' or `results'
-
 					else
 						results := Void
 						item := Void

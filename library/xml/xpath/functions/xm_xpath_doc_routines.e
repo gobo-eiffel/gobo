@@ -44,6 +44,9 @@ feature -- Evaluation
 				create a_uri.make_resolve (a_base_uri, a_uri_reference)
 				if a_context.is_restricted then
 					last_evaluated_document := Void
+				elseif not a_context.security_manager.is_uri_permitted (a_uri) then
+					create {XM_XPATH_INVALID_ITEM} last_evaluated_document.make_from_string (STRING_.concat ("Security manager refused permission to read from ", a_uri.full_reference),
+																													 Gexslt_eiffel_type_uri, "SECURITY", Dynamic_error)
 				elseif a_context.available_documents.is_mapped (a_uri.full_reference) then
 					last_evaluated_document := a_context.available_documents.document (a_uri.full_reference)
 				else
