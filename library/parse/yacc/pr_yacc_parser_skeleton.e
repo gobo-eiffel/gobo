@@ -635,7 +635,19 @@ feature {NONE} -- Implementation
 		require
 			an_action_not_void: an_action /= Void
 			a_rule_not_void: a_rule /= Void
+		local
+			dummy_rule: PR_RULE
+			dummy_variable: PR_VARIABLE
 		do
+			if a_rule.action /= No_action then
+					-- A mid-rule action has been detected.
+				dummy_variable := new_dummy_variable
+				dummy_rule := new_rule (dummy_variable)
+				dummy_rule.set_action (a_rule.action)
+				dummy_rule.set_line_nb (a_rule.line_nb)
+				put_rule (dummy_rule)
+				a_rule.put_symbol (dummy_variable)
+			end
 			a_rule.set_action (an_action)
 		ensure
 			inserted: a_rule.action = an_action
