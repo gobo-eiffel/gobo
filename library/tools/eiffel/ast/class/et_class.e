@@ -265,18 +265,40 @@ feature -- Class header
 			-- validity rule has been relaxed in ETL3.
 		do
 			Result := has_deferred_mark or has_deferred_features
+		ensure
+			definition: Result = (has_deferred_mark or has_deferred_features)
 		end
 
 	is_expanded: BOOLEAN is
 			-- Is current class expanded?
 		do
 			Result := has_expanded_mark
+		ensure then
+			definition: Result = has_expanded_mark
 		end
 
 	is_separate: BOOLEAN is
 			-- Is current class separate?
 		do
 			Result := has_separate_mark
+		ensure then
+			definition: Result = has_separate_mark
+		end
+
+	is_frozen: BOOLEAN is
+			-- Is current class frozen?
+		do
+			Result := has_frozen_mark
+		ensure
+			definition: Result = has_external_mark
+		end
+
+	is_external: BOOLEAN is
+			-- Is current class external?
+		do
+			Result := has_external_mark
+		ensure
+			definition: Result = has_external_mark
 		end
 
 	has_deferred_features: BOOLEAN
@@ -314,6 +336,22 @@ feature -- Class header
 			definition: Result = (class_mark /= Void and then class_mark.is_separate)
 		end
 
+	has_frozen_mark: BOOLEAN is
+			-- Has class been declared as frozen?
+		do
+			Result := frozen_keyword /= Void
+		ensure
+			definition: Result = (frozen_keyword /= Void)
+		end
+
+	has_external_mark: BOOLEAN is
+			-- Has class been declared as external?
+		do
+			Result := external_keyword /= Void
+		ensure
+			definition: Result = (external_keyword /= Void)
+		end
+
 	class_mark: ET_KEYWORD
 			-- 'deferred', 'expanded', 'reference' or 'separate' keyword
 
@@ -323,6 +361,28 @@ feature -- Class header
 			class_mark := a_mark
 		ensure
 			class_mark_set: class_mark = a_mark
+		end
+
+	frozen_keyword: ET_KEYWORD
+			-- 'frozen' keyword
+
+	set_frozen_keyword (a_frozen: like frozen_keyword) is
+			-- Set `frozen_keyword' to `a_frozen'.
+		do
+			frozen_keyword := a_frozen
+		ensure
+			frozen_keyword_set: frozen_keyword = a_frozen
+		end
+
+	external_keyword: ET_KEYWORD
+			-- 'external' keyword
+
+	set_external_keyword (an_external: like external_keyword) is
+			-- Set `external_keyword' to `an_external'.
+		do
+			external_keyword := an_external
+		ensure
+			external_keyword_set: external_keyword = an_external
 		end
 
 	set_has_deferred_features (b: BOOLEAN) is

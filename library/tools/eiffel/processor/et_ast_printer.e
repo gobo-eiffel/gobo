@@ -388,7 +388,9 @@ feature {ET_AST_NODE} -- Processing
 			-- Process `a_class'.
 		local
 			an_indexing: ET_INDEXING_LIST
+			a_frozen: ET_KEYWORD
 			a_class_mark: ET_KEYWORD
+			an_external: ET_KEYWORD
 			a_formal_parameters: ET_FORMAL_PARAMETER_LIST
 			an_obsolete_message: ET_OBSOLETE
 			a_parents: ET_PARENT_LIST
@@ -400,9 +402,17 @@ feature {ET_AST_NODE} -- Processing
 			if an_indexing /= Void then
 				an_indexing.process (Current)
 			end
+			a_frozen := a_class.frozen_keyword
+			if a_frozen /= Void then
+				a_frozen.process (Current)
+			end
 			a_class_mark := a_class.class_mark
 			if a_class_mark /= Void then
 				a_class_mark.process (Current)
+			end
+			an_external := a_class.external_keyword
+			if an_external /= Void then
+				an_external.process (Current)
 			end
 			a_class.class_keyword.process (Current)
 			a_class.name.process (Current)

@@ -146,6 +146,7 @@ creation
 %type <ET_INSTRUCTION> Instruction Creation_instruction Call_instruction Create_instruction
 %type <ET_INTEGER_CONSTANT> Integer_constant
 %type <ET_INVARIANTS> Invariant_clause Invariant_clause_opt
+%type <ET_KEYWORD> Frozen_opt External_opt
 %type <ET_KEYWORD_FEATURE_NAME_LIST> Keyword_feature_name_list Select_clause Select_clause_opt
 %type <ET_KEYWORD_FEATURE_NAME_LIST> Undefine_clause Undefine_clause_opt Redefine_clause Redefine_clause_opt
 %type <ET_LIKE_TYPE> Anchored_type
@@ -401,41 +402,61 @@ Index_value_comma: Index_value ','
 
 --------------------------------------------------------------------------------
 
-Class_header: E_CLASS Identifier
+Class_header: Frozen_opt External_opt E_CLASS Identifier
 		{
-			$$ := new_class ($2)
+			$$ := new_class ($4)
 			if $$ /= Void then
-				$$.set_class_keyword ($1)
+				$$.set_class_keyword ($3)
+				$$.set_frozen_keyword ($1)
+				$$.set_external_keyword ($2)
 			end
 			last_class := $$
 		}
-	| E_DEFERRED E_CLASS Identifier
+	| Frozen_opt E_DEFERRED External_opt E_CLASS Identifier
 		{
-			$$ := new_class ($3)
+			$$ := new_class ($5)
 			if $$ /= Void then
-				$$.set_class_keyword ($2)
-				$$.set_class_mark ($1)
+				$$.set_class_keyword ($4)
+				$$.set_class_mark ($2)
+				$$.set_frozen_keyword ($1)
+				$$.set_external_keyword ($3)
 			end
 			last_class := $$
 		}
-	| E_EXPANDED E_CLASS Identifier
+	| Frozen_opt E_EXPANDED External_opt E_CLASS Identifier
 		{
-			$$ := new_class ($3)
+			$$ := new_class ($5)
 			if $$ /= Void then
-				$$.set_class_keyword ($2)
-				$$.set_class_mark ($1)
+				$$.set_class_keyword ($4)
+				$$.set_class_mark ($2)
+				$$.set_frozen_keyword ($1)
+				$$.set_external_keyword ($3)
 			end
 			last_class := $$
 		}
-	| E_SEPARATE E_CLASS Identifier
+	| Frozen_opt E_SEPARATE External_opt E_CLASS Identifier
 		{
-			$$ := new_class ($3)
+			$$ := new_class ($5)
 			if $$ /= Void then
-				$$.set_class_keyword ($2)
-				$$.set_class_mark ($1)
+				$$.set_class_keyword ($4)
+				$$.set_class_mark ($2)
+				$$.set_frozen_keyword ($1)
+				$$.set_external_keyword ($3)
 			end
 			last_class := $$
 		}
+	;
+
+Frozen_opt: -- Empty.
+		-- { $$ := Void }
+	| E_FROZEN
+		{ $$ := $1 }
+	;
+
+External_opt: -- Empty.
+		-- { $$ := Void }
+	| E_EXTERNAL
+		{ $$ := $1 }
 	;
 
 ------------------------------------------------------------------------------------
