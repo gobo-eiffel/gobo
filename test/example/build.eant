@@ -45,6 +45,7 @@
 		</description>
 
 		<set name="target" value="test"/>
+		<set name="do_clean" value="true"/>
 		<geant target="do_all"/>
 	</target>
 
@@ -54,6 +55,7 @@
 		</description>
 
 		<set name="target" value="test_ise"/>
+		<set name="do_clean" value="true"/>
 		<geant target="do_all"/>
 	</target>
 
@@ -63,6 +65,7 @@
 		</description>
 
 		<set name="target" value="test_hact"/>
+		<set name="do_clean" value="true"/>
 		<geant target="do_all"/>
 	</target>
 
@@ -72,6 +75,7 @@
 		</description>
 
 		<set name="target" value="test_ve"/>
+		<set name="do_clean" value="true"/>
 		<geant target="do_all"/>
 	</target>
 
@@ -81,6 +85,7 @@
 		</description>
 
 		<set name="target" value="test_se"/>
+		<set name="do_clean" value="true"/>
 		<geant target="do_all"/>
 	</target>
 
@@ -92,6 +97,7 @@
 		</description>
 
 		<set name="target" value="test_debug"/>
+		<set name="do_clean" value="true"/>
 		<geant target="do_all"/>
 	</target>
 
@@ -101,6 +107,7 @@
 		</description>
 
 		<set name="target" value="test_debug_ise"/>
+		<set name="do_clean" value="true"/>
 		<geant target="do_all"/>
 	</target>
 
@@ -110,6 +117,7 @@
 		</description>
 
 		<set name="target" value="test_debug_hact"/>
+		<set name="do_clean" value="true"/>
 		<geant target="do_all"/>
 	</target>
 
@@ -119,6 +127,7 @@
 		</description>
 
 		<set name="target" value="test_debug_ve"/>
+		<set name="do_clean" value="true"/>
 		<geant target="do_all"/>
 	</target>
 
@@ -128,6 +137,7 @@
 		</description>
 
 		<set name="target" value="test_debug_se"/>
+		<set name="do_clean" value="true"/>
 		<geant target="do_all"/>
 	</target>
 
@@ -138,6 +148,7 @@
 
 		<set name="target" value="clean"/>
 		<geant target="do_all"/>
+		<ve clean="example" recursive="true" dir="common"/>
 	</target>
 
 	<target name="clobber" depend="init">
@@ -147,6 +158,7 @@
 
 		<set name="target" value="clobber"/>
 		<geant target="do_all"/>
+		<ve clean="example" recursive="true" dir="common"/>
 	</target>
 
 
@@ -163,9 +175,13 @@
 		</description>
 
 		<geant file="build.eant" target="${target}" dir="lexical"/>
+		<geant file="build.eant" target="clean" dir="lexical" if="${do_clean}"/>
 		<geant file="build.eant" target="${target}" dir="parse"/>
+		<geant file="build.eant" target="clean" dir="parse" if="${do_clean}"/>
 		<geant file="build.eant" target="${target}" dir="test"/>
+		<geant file="build.eant" target="clean" dir="test" if="${do_clean}"/>
 		<geant file="build.eant" target="${target}" dir="time"/>
+		<geant file="build.eant" target="clean" dir="time" if="${do_clean}"/>
 	</target>
 
 </project>

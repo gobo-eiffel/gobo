@@ -45,6 +45,7 @@
 		</description>
 
 		<set name="target" value="test"/>
+		<set name="do_clean" value="true"/>
 		<geant target="do_all"/>
 	</target>
 
@@ -54,6 +55,7 @@
 		</description>
 
 		<set name="target" value="test_ise"/>
+		<set name="do_clean" value="true"/>
 		<geant target="do_all"/>
 	</target>
 
@@ -63,6 +65,7 @@
 		</description>
 
 		<set name="target" value="test_hact"/>
+		<set name="do_clean" value="true"/>
 		<geant target="do_all"/>
 	</target>
 
@@ -72,6 +75,7 @@
 		</description>
 
 		<set name="target" value="test_ve"/>
+		<set name="do_clean" value="true"/>
 		<geant target="do_all"/>
 	</target>
 
@@ -81,6 +85,7 @@
 		</description>
 
 		<set name="target" value="test_se"/>
+		<set name="do_clean" value="true"/>
 		<geant target="do_all"/>
 	</target>
 
@@ -92,6 +97,7 @@
 		</description>
 
 		<set name="target" value="test_debug"/>
+		<set name="do_clean" value="true"/>
 		<geant target="do_all"/>
 	</target>
 
@@ -101,6 +107,7 @@
 		</description>
 
 		<set name="target" value="test_debug_ise"/>
+		<set name="do_clean" value="true"/>
 		<geant target="do_all"/>
 	</target>
 
@@ -110,6 +117,7 @@
 		</description>
 
 		<set name="target" value="test_debug_hact"/>
+		<set name="do_clean" value="true"/>
 		<geant target="do_all"/>
 	</target>
 
@@ -119,6 +127,7 @@
 		</description>
 
 		<set name="target" value="test_debug_ve"/>
+		<set name="do_clean" value="true"/>
 		<geant target="do_all"/>
 	</target>
 
@@ -128,6 +137,7 @@
 		</description>
 
 		<set name="target" value="test_debug_se"/>
+		<set name="do_clean" value="true"/>
 		<geant target="do_all"/>
 	</target>
 
@@ -163,12 +173,19 @@
 		</description>
 
 		<geant file="build.eant" target="${target}" dir="lexical"/>
+		<geant file="build.eant" target="clean" dir="lexical" if="${do_clean}"/>
 		<geant file="build.eant" target="${target}" dir="kernel"/>
+		<geant file="build.eant" target="clean" dir="kernel" if="${do_clean}"/>
 		<geant file="build.eant" target="${target}" dir="structure"/>
+		<geant file="build.eant" target="clean" dir="structure" if="${do_clean}"/>
 		<geant file="build.eant" target="${target}" dir="time"/>
+		<geant file="build.eant" target="clean" dir="time" if="${do_clean}"/>
 		<geant file="build.eant" target="${target}" dir="example"/>
+		<geant file="build.eant" target="clean" dir="example" if="${do_clean}"/>
 		<geant file="build.eant" target="${target}" dir="src"/>
+		<geant file="build.eant" target="clean" dir="src" if="${do_clean}"/>
 		<geant file="build.eant" target="${target}" dir="precomp"/>
+		<geant file="build.eant" target="clean" dir="precomp" if="${do_clean}"/>
 	</target>
 
 </project>
