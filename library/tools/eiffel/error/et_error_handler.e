@@ -354,6 +354,66 @@ feature -- Validity errors
 			end
 		end
 
+	report_vcch1a_error (a_class: ET_CLASS; f: ET_FLATTENED_FEATURE) is
+			-- Report VCCH-1 error: `a_class' has deferred features
+			-- but is not declared as deferred. `f' is one of these deferred
+			-- feature, written in `a_class'.
+			--
+			-- ETL2: p.51
+		require
+			a_class_not_void: a_class /= Void
+			a_class_preparsed: a_class.is_preparsed
+			a_class_not_deferred: not a_class.has_deferred_mark
+			f_not_void: f /= Void
+			f_deferred: f.is_deferred
+		local
+			an_error: ET_VALIDITY_ERROR
+		do
+			if reportable_vcch1_error (a_class) then
+				create an_error.make_vcch1a (a_class, f)
+				report_validity_error (an_error)
+			end
+		end
+
+	report_vcch1b_error (a_class: ET_CLASS; f: ET_INHERITED_FEATURE) is
+			-- Report VCCH-1 error: `a_class' has deferred features
+			-- but is not declared as deferred. `f' is one of these deferred
+			-- feature, inherited from a parent of `a_class'.
+			--
+			-- ETL2: p.51
+		require
+			a_class_not_void: a_class /= Void
+			a_class_preparsed: a_class.is_preparsed
+			a_class_not_deferred: not a_class.has_deferred_mark
+			f_not_void: f /= Void
+			f_deferred: f.is_deferred
+		local
+			an_error: ET_VALIDITY_ERROR
+		do
+			if reportable_vcch1_error (a_class) then
+				create an_error.make_vcch1b (a_class, f)
+				report_validity_error (an_error)
+			end
+		end
+
+	report_vcch2a_error (a_class: ET_CLASS) is
+			-- Report VCCH-2 error: `a_class' is marked as deferred
+			-- but has no deferred feature.
+			--
+			-- ETL2: p.51
+		require
+			a_class_not_void: a_class /= Void
+			a_class_preparsed: a_class.is_preparsed
+			a_class_deferred: a_class.has_deferred_mark
+		local
+			an_error: ET_VALIDITY_ERROR
+		do
+			if reportable_vcch2_error (a_class) then
+				create an_error.make_vcch2a (a_class)
+				report_validity_error (an_error)
+			end
+		end
+
 	report_vcfg1a_error (a_class: ET_CLASS; a_formal: ET_FORMAL_PARAMETER; other_class: ET_CLASS) is
 			-- Report VCFG-1 error: the formal generic parameter `a_formal'
 			-- in `a_class' has the same name as class `other_class' in the
@@ -1453,6 +1513,46 @@ feature -- Validity errors
 			end
 		end
 
+	report_vreg0a_error (a_class: ET_CLASS; arg1, arg2: ET_FORMAL_ARGUMENT; f: ET_FLATTENED_FEATURE) is
+			-- Report VREG error: `arg1' and `arg2' have the same
+			-- name in feature `f' in `a_class'.
+			--
+			-- ETL2: p.110
+		require
+			a_class_not_void: a_class /= Void
+			a_class_preparsed: a_class.is_preparsed
+			arg1_not_void: arg1 /= Void
+			arg2_not_void: arg2 /= Void
+			f_not_void: f /= Void
+		local
+			an_error: ET_VALIDITY_ERROR
+		do
+			if reportable_vreg_error (a_class) then
+				create an_error.make_vreg0a (a_class, arg1, arg2, f)
+				report_validity_error (an_error)
+			end
+		end
+
+	report_vrfa0a_error (a_class: ET_CLASS; arg: ET_FORMAL_ARGUMENT; f1, f2: ET_FLATTENED_FEATURE) is
+			-- Report VRFA error: `arg' in feature `f1' has
+			-- the same name as feature `f2' in `a_class'.
+			--
+			-- ETL2: p.110
+		require
+			a_class_not_void: a_class /= Void
+			a_class_preparsed: a_class.is_preparsed
+			arg_not_void: arg /= Void
+			f1_not_void: f1 /= Void
+			f2_not_void: f2 /= Void
+		local
+			an_error: ET_VALIDITY_ERROR
+		do
+			if reportable_vrfa_error (a_class) then
+				create an_error.make_vrfa0a (a_class, arg, f1, f2)
+				report_validity_error (an_error)
+			end
+		end
+
 	report_vscn0a_error (a_class: ET_CLASS; other_cluster: ET_CLUSTER; other_filename: STRING) is
 			-- Report VSCN error: `a_class' also appears in
 			-- `other_cluster'.
@@ -1811,6 +1911,26 @@ feature -- Validity errors
 
 feature -- Validity error status
 
+	reportable_vcch1_error (a_class: ET_CLASS): BOOLEAN is
+			-- Can a VCCH-1 error be reported when it
+			-- appears in `a_class'?
+		require
+			a_class_not_void: a_class /= Void
+			a_class_preparsed: a_class.is_preparsed
+		do
+			Result := True
+		end
+
+	reportable_vcch2_error (a_class: ET_CLASS): BOOLEAN is
+			-- Can a VCCH-2 error be reported when it
+			-- appears in `a_class'?
+		require
+			a_class_not_void: a_class /= Void
+			a_class_preparsed: a_class.is_preparsed
+		do
+			Result := True
+		end
+
 	reportable_vcfg1_error (a_class: ET_CLASS): BOOLEAN is
 			-- Can a VCFG-1 error be reported when it
 			-- appears in `a_class'?
@@ -2063,6 +2183,26 @@ feature -- Validity error status
 
 	reportable_vmss3_error (a_class: ET_CLASS): BOOLEAN is
 			-- Can a VMSS-3 error be reported when it
+			-- appears in `a_class'?
+		require
+			a_class_not_void: a_class /= Void
+			a_class_preparsed: a_class.is_preparsed
+		do
+			Result := True
+		end
+
+	reportable_vreg_error (a_class: ET_CLASS): BOOLEAN is
+			-- Can a VREG error be reported when it
+			-- appears in `a_class'?
+		require
+			a_class_not_void: a_class /= Void
+			a_class_preparsed: a_class.is_preparsed
+		do
+			Result := True
+		end
+
+	reportable_vrfa_error (a_class: ET_CLASS): BOOLEAN is
+			-- Can a VRFA error be reported when it
 			-- appears in `a_class'?
 		require
 			a_class_not_void: a_class /= Void
