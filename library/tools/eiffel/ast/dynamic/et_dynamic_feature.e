@@ -214,6 +214,14 @@ feature -- Setting
 			dynamic_assignment_attempts_set: dynamic_assignment_attempts = a_dynamic_assignment_attempts
 		end
 
+	set_result_type (a_result_type: like result_type) is
+			-- Set `result_type' to `a_result_type'.
+		do
+			result_type := a_result_type
+		ensure
+			result_type_set: result_type = a_result_type
+		end
+
 	set_id (i: INTEGER) is
 			-- Set `id' to `i'.
 		do

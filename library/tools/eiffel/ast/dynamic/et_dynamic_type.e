@@ -53,6 +53,12 @@ feature -- Status report
 			definition: Result = base_type.is_expanded
 		end
 
+	is_special: BOOLEAN is
+			-- Is current type a SPECIAL type?
+		do
+			-- Result := False
+		end
+
 	has_static: BOOLEAN
 			-- Does current type contain features that are used as static features?
 
@@ -97,26 +103,6 @@ feature -- Status setting
 		end
 
 feature -- Access
-
-	typed_pointer_type (a_system: ET_SYSTEM): ET_DYNAMIC_TYPE is
-			-- Typed pointer type of current type
-		require
-			a_system_not_void: a_system /= Void
-		local
-			a_typed_pointer_type: ET_GENERIC_CLASS_TYPE
-			a_typed_pointer_class: ET_CLASS
-			an_actuals: ET_ACTUAL_PARAMETER_LIST
-			a_universe: ET_UNIVERSE
-		do
-			a_universe := a_system.universe
-			create an_actuals.make_with_capacity (1)
-			an_actuals.put_first (base_type)
-			a_typed_pointer_class := a_universe.typed_pointer_class
-			create a_typed_pointer_type.make (Void, a_typed_pointer_class.name, an_actuals, a_typed_pointer_class)
-			Result := a_system.dynamic_type (a_typed_pointer_type, a_universe.any_class)
-		ensure
-			typed_pointer_type_not_void: Result /= Void
-		end
 
 	base_type: ET_BASE_TYPE
 			-- Base type
@@ -185,8 +171,9 @@ feature -- Features
 			l_dynamic_feature: ET_DYNAMIC_FEATURE
 		do
 			if features = Void then
-				create features.make_with_capacity (base_class.features.count)
-				create Result.make (a_feature, Current, a_system)
+--				create features.make_with_capacity (base_class.features.count)
+				create features.make_with_capacity (10)
+				Result := new_dynamic_feature (a_feature, a_system)
 				features.put_first (Result)
 			else
 				nb := features.count
@@ -200,7 +187,7 @@ feature -- Features
 					end
 				end
 				if Result = Void then
-					create Result.make (a_feature, Current, a_system)
+					Result := new_dynamic_feature (a_feature, a_system)
 					features.force_first (Result)
 				end
 			end
@@ -248,6 +235,21 @@ feature -- Link
 			next_type := a_type
 		ensure
 			next_type_set: next_type = a_type
+		end
+
+feature {NONE} -- Implementation
+
+	new_dynamic_feature (a_feature: ET_FEATURE; a_system: ET_SYSTEM): ET_DYNAMIC_FEATURE is
+			-- Run-time feature associated with `a_feature';
+			-- Create a new object at each call.
+		require
+			a_feature_not_void: a_feature /= Void
+			valid_feature: base_class.features.has (a_feature)
+			a_system_not_void: a_system /= Void
+		do
+			create Result.make (a_feature, Current, a_system)
+		ensure
+			new_dynamic_feature_not_void: Result /= Void
 		end
 
 invariant

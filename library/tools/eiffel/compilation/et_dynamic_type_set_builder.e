@@ -696,27 +696,69 @@ feature {NONE} -- Event handling
 			end
 		end
 
-	report_manifest_array (an_expression: ET_MANIFEST_ARRAY; a_type: ET_TYPE; a_context: ET_TYPE_CONTEXT) is
-			-- Report that a manifest array of type `a_type' 
-			-- in `a_context' has been processed.
+	report_manifest_array (an_expression: ET_MANIFEST_ARRAY; a_type: ET_TYPE) is
+			-- Report that a manifest array of type `a_type' in context
+			-- of `current_type' has been processed.
 		local
 			l_type: ET_DYNAMIC_TYPE
+			i, nb: INTEGER
+			l_actual_parameters: ET_ACTUAL_PARAMETER_LIST
+			l_generic_class_type: ET_GENERIC_CLASS_TYPE
+			l_special_class: ET_CLASS
+			l_special_type: ET_DYNAMIC_SPECIAL_TYPE
+			l_item_type_set: ET_NESTED_DYNAMIC_TYPE_SET
+			l_expression: ET_EXPRESSION
+			l_dynamic_type_set: ET_DYNAMIC_TYPE_SET
+			l_attachment: ET_DYNAMIC_MANIFEST_ARRAY_ITEM
 		do
 			if current_type = current_dynamic_type.base_type then
-				l_type := current_system.dynamic_type (a_type, a_context)
+				l_type := current_system.dynamic_type (a_type, current_type)
 				l_type.set_alive (True)
 				set_dynamic_type_set (l_type, an_expression)
+				l_actual_parameters := l_type.base_type.actual_parameters
+				if l_actual_parameters = Void then
+						-- Internal error: an array type should have one generic parameter.
+					set_fatal_error
+					error_handler.report_gibcq_error
+				else
+					l_special_class := universe.special_class
+					create l_generic_class_type.make (Void, l_special_class.name, l_actual_parameters, l_special_class)
+					l_special_type ?= current_system.dynamic_type (l_generic_class_type, current_type)
+					if l_special_type = Void then
+							-- Internal error: we just built a special type.
+						set_fatal_error
+						error_handler.report_gibch_error
+					else
+						l_special_type.set_alive (True)
+						l_item_type_set := l_special_type.item_type
+						nb := an_expression.count
+						from i := 1 until i > nb loop
+							l_expression := an_expression.expression (i)
+							l_dynamic_type_set := dynamic_type_set (l_expression)
+							if l_dynamic_type_set = Void then
+									-- Internal error: the dynamic type set of the expressions
+									-- in the manifest array should be known at this stage.
+								set_fatal_error
+								error_handler.report_gibcf_error
+							else
+								create l_attachment.make (l_dynamic_type_set, l_expression, current_feature, current_type)
+								l_item_type_set.put_source (l_attachment, current_system)
+							end
+							i := i + 1
+						end
+					end
+				end
 			end
 		end
 
-	report_manifest_tuple (an_expression: ET_MANIFEST_TUPLE; a_type: ET_TYPE; a_context: ET_TYPE_CONTEXT) is
-			-- Report that a manifest tuple of type `a_type' 
-			-- in `a_context' has been processed.
+	report_manifest_tuple (an_expression: ET_MANIFEST_TUPLE; a_type: ET_TYPE) is
+			-- Report that a manifest tuple of type `a_type' in context of
+			-- `current_type' has been processed.
 		local
 			l_type: ET_DYNAMIC_TYPE
 		do
 			if current_type = current_dynamic_type.base_type then
-				l_type := current_system.dynamic_type (a_type, a_context)
+				l_type := current_system.dynamic_type (a_type, current_type)
 				l_type.set_alive (True)
 				set_dynamic_type_set (l_type, an_expression)
 			end

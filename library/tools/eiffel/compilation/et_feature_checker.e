@@ -3915,7 +3915,7 @@ feature {NONE} -- Expression validity
 		local
 			i, nb: INTEGER
 			had_error: BOOLEAN
-			a_type: ET_TYPE
+			an_item_type: ET_TYPE
 			hybrid_type: BOOLEAN
 			an_actuals: ET_ACTUAL_PARAMETER_LIST
 			array_class: ET_CLASS
@@ -3958,7 +3958,7 @@ feature {NONE} -- Expression validity
 				if had_error then
 					set_fatal_error
 				else
-					report_manifest_array (an_expression, an_array_type, a_context)
+					report_manifest_array (an_expression, an_array_type)
 					a_context.force_first (an_array_type)
 				end
 			else
@@ -3969,10 +3969,10 @@ feature {NONE} -- Expression validity
 					if has_fatal_error then
 						had_error := True
 					elseif not had_error then
-						if a_type = Void then
-							a_type := expression_context.named_type (universe)
+						if an_item_type = Void then
+							an_item_type := expression_context.named_type (universe)
 						elseif not hybrid_type then
-							hybrid_type := not expression_context.same_named_type (a_type, current_type, universe)
+							hybrid_type := not expression_context.same_named_type (an_item_type, current_type, universe)
 						end
 					end
 					expression_context.wipe_out
@@ -3980,21 +3980,21 @@ feature {NONE} -- Expression validity
 				end
 				if had_error then
 					set_fatal_error
-				elseif a_type = Void then
+				elseif an_item_type = Void then
 					an_array_type := universe.array_any_type
-					report_manifest_array (an_expression, an_array_type, a_context)
+					report_manifest_array (an_expression, an_array_type)
 					a_context.force_first (an_array_type)
 				elseif hybrid_type then
 					an_array_type := universe.array_any_type
-					report_manifest_array (an_expression, an_array_type, a_context)
+					report_manifest_array (an_expression, an_array_type)
 					a_context.force_first (an_array_type)
 				else
 					create an_actuals.make_with_capacity (1)
-					an_actuals.put_first (a_type)
+					an_actuals.put_first (an_item_type)
 					create a_generic_class_type.make (Void, array_class.name, an_actuals, array_class)
 					a_generic_class_type.set_cat_keyword (universe.array_any_type.cat_keyword)
 					a_generic_class_type.set_unresolved_type (universe.array_any_type)
-					report_manifest_array (an_expression, a_generic_class_type, a_context)
+					report_manifest_array (an_expression, a_generic_class_type)
 					a_context.force_first (a_generic_class_type)
 				end
 			end
@@ -4053,7 +4053,7 @@ feature {NONE} -- Expression validity
 				set_fatal_error
 			else
 				create a_tuple_type.make (an_actuals)
-				report_manifest_tuple (an_expression, a_tuple_type, a_context)
+				report_manifest_tuple (an_expression, a_tuple_type)
 				a_context.force_first (a_tuple_type)
 			end
 		end
@@ -6387,27 +6387,23 @@ feature {NONE} -- Event handling
 		do
 		end
 
-	report_manifest_array (an_expression: ET_MANIFEST_ARRAY; a_type: ET_TYPE; a_context: ET_TYPE_CONTEXT) is
-			-- Report that a manifest array of type `a_type' 
-			-- in `a_context' has been processed.
+	report_manifest_array (an_expression: ET_MANIFEST_ARRAY; a_type: ET_TYPE) is
+			-- Report that a manifest array of type `a_type' in context
+			-- of `current_type' has been processed.
 		require
 			no_error: not has_fatal_error
 			an_expression_not_void: an_expression /= Void
 			a_type_not_void: a_type /= Void
-			a_context_not_void: a_context /= Void
-			a_context_valid: a_context.is_valid_context
 		do
 		end
 
-	report_manifest_tuple (an_expression: ET_MANIFEST_TUPLE; a_type: ET_TYPE; a_context: ET_TYPE_CONTEXT) is
-			-- Report that a manifest tuple of type `a_type' 
-			-- in `a_context' has been processed.
+	report_manifest_tuple (an_expression: ET_MANIFEST_TUPLE; a_type: ET_TYPE) is
+			-- Report that a manifest tuple of type `a_type' in context of
+			-- `current_type' has been processed.
 		require
 			no_error: not has_fatal_error
 			an_expression_not_void: an_expression /= Void
 			a_type_not_void: a_type /= Void
-			a_context_not_void: a_context /= Void
-			a_context_valid: a_context.is_valid_context
 		do
 		end
 
@@ -7231,7 +7227,7 @@ feature {NONE} -- Access
 			-- Feature being processed
 
 	current_type: ET_BASE_TYPE
-			-- Type where `current_feature' belongs
+			-- Type from which `current_feature' is processed
 
 	current_class: ET_CLASS
 			-- Base class of `current_type'

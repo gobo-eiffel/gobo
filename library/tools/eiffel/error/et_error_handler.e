@@ -7931,8 +7931,5 @@ feature -- Internal errors
 --									error_handler.report_gibcn_error
 --								error_handler.report_gibco_error
 --									error_handler.report_gibcp_error
---							error_handler.report_gibcq_error
---					error_handler.report_gibch_error
---					error_handler.report_gibcf_error
 
 end

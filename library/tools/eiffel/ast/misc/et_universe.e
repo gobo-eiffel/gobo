@@ -102,6 +102,8 @@ feature {NONE} -- Initialization
 			string_class.set_in_system (True)
 			array_class := eiffel_class (tokens.array_class_name)
 			array_class.set_in_system (True)
+			special_class := eiffel_class (tokens.special_class_name)
+			special_class.set_in_system (True)
 			boolean_class := eiffel_class (tokens.boolean_class_name)
 			boolean_class.set_in_system (True)
 			character_class := eiffel_class (tokens.character_class_name)
@@ -167,6 +169,7 @@ feature {NONE} -- Initialization
 			bit_class_not_void: bit_class /= Void
 			string_class_not_void: string_class /= Void
 			array_class_not_void: array_class /= Void
+			special_class_not_void: special_class /= Void
 			boolean_class_not_void: boolean_class /= Void
 			character_class_not_void: character_class /= Void
 			wide_character_class_not_void: wide_character_class /= Void
@@ -379,6 +382,9 @@ feature -- Basic classes
 
 	array_class: ET_CLASS
 			-- Class "ARRAY"
+
+	special_class: ET_CLASS
+			-- Class "SPECIAL"
 
 	boolean_class: ET_CLASS
 			-- Class "BOOLEAN"
@@ -2080,6 +2086,7 @@ invariant
 	bit_class_not_void: bit_class /= Void
 	string_class_not_void: string_class /= Void
 	array_class_not_void: array_class /= Void
+	special_class_not_void: special_class /= Void
 	boolean_class_not_void: boolean_class /= Void
 	character_class_not_void: character_class /= Void
 	wide_character_class_not_void: wide_character_class /= Void

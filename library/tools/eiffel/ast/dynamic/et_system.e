@@ -158,9 +158,11 @@ feature -- Types
 		local
 			i: INTEGER
 			l_type: ET_DYNAMIC_TYPE
+			l_item_type: ET_DYNAMIC_TYPE
 			l_any: ET_CLASS_TYPE
 			l_base_type: ET_BASE_TYPE
 			l_base_class: ET_CLASS
+			l_actual_parameters: ET_ACTUAL_PARAMETER_LIST
 		do
 			l_base_class := a_type.base_class (a_context, universe)
 			i := l_base_class.index
@@ -181,7 +183,18 @@ feature -- Types
 							Result := l_type
 						elseif l_type.next_type = Void then
 							l_base_type := a_type.base_type (a_context, universe)
-							create Result.make (l_base_type, l_base_class)
+							if l_base_class = universe.special_class then
+								l_actual_parameters := l_base_type.actual_parameters
+								if l_actual_parameters /= Void and then l_actual_parameters.count = 1 then
+										-- Class SPECIAL should have exactly one generic parameter.
+									l_item_type := dynamic_type (l_actual_parameters.type (1), universe.any_class)
+									create {ET_DYNAMIC_SPECIAL_TYPE} Result.make (l_base_type, l_base_class, l_item_type)
+								else
+									create Result.make (l_base_type, l_base_class)
+								end
+							else
+								create Result.make (l_base_type, l_base_class)
+							end
 							dynamic_types.force_last (Result)
 							l_type.set_next_type (Result)
 						else
@@ -196,7 +209,18 @@ feature -- Types
 					-- of its associated index.
 				l_base_class.process (universe.interface_checker)
 				l_base_type := a_type.base_type (a_context, universe)
-				create Result.make (l_base_type, l_base_class)
+				if l_base_class = universe.special_class then
+					l_actual_parameters := l_base_type.actual_parameters
+					if l_actual_parameters /= Void and then l_actual_parameters.count = 1 then
+							-- Class SPECIAL should have exactly one generic parameter.
+						l_item_type := dynamic_type (l_actual_parameters.type (1), universe.any_class)
+						create {ET_DYNAMIC_SPECIAL_TYPE} Result.make (l_base_type, l_base_class, l_item_type)
+					else
+						create Result.make (l_base_type, l_base_class)
+					end
+				else
+					create Result.make (l_base_type, l_base_class)
+				end
 				dynamic_types.force_last (Result)
 				l_base_class.set_index (dynamic_types.count)
 			end

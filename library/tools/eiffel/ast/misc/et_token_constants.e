@@ -74,6 +74,14 @@ feature -- Class names
 			array_class_name_not_void: Result /= Void
 		end
 
+	special_class_name: ET_CLASS_NAME is
+			-- "SPECIAL" class name
+		once
+			create {ET_IDENTIFIER} Result.make (capitalized_special_name)
+		ensure
+			special_class_name_not_void: Result /= Void
+		end
+
 	boolean_class_name: ET_CLASS_NAME is
 			-- "BOOLEAN" class name
 		once
@@ -218,6 +226,30 @@ feature -- Feature names
 			create {ET_IDENTIFIER} Result.make (capitalized_void_keyword_name)
 		ensure
 			default_create_feature_name_not_void: Result /= Void
+		end
+
+	put_feature_name: ET_FEATURE_NAME is
+			-- 'put' feature name
+		once
+			create {ET_IDENTIFIER} Result.make (put_name)
+		ensure
+			put_feature_name_not_void: Result /= Void
+		end
+
+	item_feature_name: ET_FEATURE_NAME is
+			-- 'item' feature name
+		once
+			create {ET_IDENTIFIER} Result.make (item_name)
+		ensure
+			item_feature_name_not_void: Result /= Void
+		end
+
+	infix_at_feature_name: ET_FEATURE_NAME is
+			-- 'infix "@"' feature name
+		once
+			create {ET_FREE_OPERATOR} Result.make_infix (at_symbol_name)
+		ensure
+			infix_at_feature_name_not_void: Result /= Void
 		end
 
 	invariant_feature_name: ET_FEATURE_NAME is
@@ -910,6 +942,7 @@ feature -- Keyword and symbol names
 	capitalized_procedure_name: STRING is "PROCEDURE"
 	capitalized_real_name: STRING is "REAL"
 	capitalized_routine_name: STRING is "ROUTINE"
+	capitalized_special_name: STRING is "SPECIAL"
 	capitalized_string_name: STRING is "STRING"
 	capitalized_tuple_name: STRING is "TUPLE"
 	capitalized_typed_pointer_name: STRING is "TYPED_POINTER"
@@ -918,6 +951,8 @@ feature -- Keyword and symbol names
 		-- Eiffel class names
 
 	default_create_name: STRING is "default_create"
+	item_name: STRING is "item"
+	put_name: STRING is "put"
 		-- Eiffel feature names
 
 	capitalized_current_keyword_name: STRING is "Current"
@@ -1000,6 +1035,7 @@ feature -- Keyword and symbol names
 	arrow_symbol_name: STRING is "->"
 	assign_symbol_name: STRING is ":="
 	assign_attempt_symbol_name: STRING is "?="
+	at_symbol_name: STRING is "@"
 	bang_symbol_name: STRING is "!"
 	colon_symbol_name: STRING is ":"
 	comma_symbol_name: STRING is ","
