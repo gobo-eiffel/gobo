@@ -55,7 +55,7 @@ cd $GOBO
 rm -rf BINGEN
 
 # Generate files in $GOBO/example.
-cd $GOBO/example/lexical/ascii
+cd $GOBO/example/lexical/ascii2ps
 make depend ise.ace hact.ace
 make scanner
 cd $GOBO/example/lexical/calculator
