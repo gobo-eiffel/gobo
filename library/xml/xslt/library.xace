@@ -1,0 +1,28 @@
+<?xml version="1.0"?>
+
+<library name="xslt" prefix="xm_">
+	<description>
+		description: "Xace file for the Gobo Eiffel XML XSLT Library"
+		library: "Gobo Eiffel XML Library"
+		copyright: "Copyright (c) 2001-2005, Eric Bezault and others"
+		license: "Eiffel Forum License v2 (see forum.txt)"
+		date: "$Date$"
+		revision: "$Revision$"
+	</description>
+
+	<cluster name="xml_xslt" location="${GOBO}/library/xml/xslt">
+		<cluster name="patterns"/>
+		<cluster name="xslt_functions" location="functions" relative="true"/>
+		<cluster name="instructions"/>
+		<cluster name="style"/>
+		<cluster name="tracing"/>
+		<cluster name="number"/>
+		<cluster name="xslt_sort" location="sort" relative="true"/>
+		<cluster name="xslt_events" location="events" relative="true"/>
+		<cluster name="transformation_support"/>
+	</cluster>
+
+	<mount location="${GOBO}/library/xml/library_core.xace"/>
+	<mount location="${GOBO}/library/xml/xpath/library.xace"/>
+
+</library>
