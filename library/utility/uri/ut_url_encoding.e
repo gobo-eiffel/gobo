@@ -28,7 +28,8 @@ inherit
 feature -- Escape/unescape data characters
 
 	unescape_string (a_string: STRING): STRING is
-			-- Replace the URI hexadecimal escape sequences in `in' with their characters.
+			-- Replace the URI hexadecimal escape sequences in `a_string' 
+			-- with the corresponding characters.
 		require
 			a_string_not_void: a_string /= Void
 		local
@@ -64,7 +65,7 @@ feature -- Escape/unescape data characters
 		end
 
 	unescape_utf8 (a_string: STRING): STRING is
-			-- Unescape string, and convert UTF8 encoded result to string.
+			-- Unescape `a_string', and convert UTF8 encoded result to string.
 		require
 			a_string_not_void: a_string /= Void
 		do
@@ -84,7 +85,7 @@ feature -- Escape/unescape data characters
 			a_string_not_void: a_string /= Void
 			no_high_characters: maximum_character_code_in_string (a_string) < 256
 		do
-			Result := escape_custom (a_string, Default_escaped, True)
+			Result := escape_custom (a_string, Default_unescaped, True)
 		ensure
 			encoded_string_not_void: Result /= Void
 			no_spaces: not Result.has (' ')
@@ -92,22 +93,22 @@ feature -- Escape/unescape data characters
 		end
 		
 	escape_utf8 (a_string: STRING): STRING is
-			-- Escape reserved characters in `in' and return a new
+			-- Escape reserved characters in `a_string' and return a new
 			-- string. Characters above 128 are converted to UTF8 
 			-- representation before being encoded.
 		require
 			a_string_not_void: a_string /= Void
 		do
-			Result := escape_custom (utf8.to_utf8 (a_string), Default_escaped, True)
+			Result := escape_custom (utf8.to_utf8 (a_string), Default_unescaped, True)
 		ensure
 			encoded_string_not_void: Result /= Void
 			no_spaces: not Result.has (' ')
 			encoded_string_cannot_be_smaller: Result.count >= a_string.count
 		end
 		
-	escape_custom (a_string: STRING; unescaped_chars: DS_HASH_SET [CHARACTER]; escape_space_as_plus: BOOLEAN): STRING is
-			-- Escape all characters except those in 'unescaped_chars' `in' 
-			-- and return a new string.
+	escape_custom (a_string: STRING; unescaped_chars: DS_SET [CHARACTER]; escape_space_as_plus: BOOLEAN): STRING is
+			-- Escape all characters except those in `unescaped_chars' in 
+			-- `a_string' and return a new string.
 		require
 			a_string_not_void: a_string /= Void
 			unescaped_chars_not_void: unescaped_chars /= Void
@@ -166,7 +167,7 @@ feature -- Character sets
 		end
 		
 	new_character_set (some_characters: STRING): DS_HASH_SET [CHARACTER] is
-			-- Create set of characters for use with 'escape_custom'.
+			-- Create set of characters for use with `escape_custom'.
 		require
 			some_characters_not_void: some_characters /= Void
 			--occurrences: for all c in some_characters: some_characters.occurrences (c) = 1
@@ -187,8 +188,8 @@ feature -- Character sets
 			count: some_characters.count = Result.count
 		end
 		
-	Default_escaped: DS_HASH_SET [CHARACTER] is
-			-- Default character set to escape.
+	Default_unescaped: DS_HASH_SET [CHARACTER] is
+			-- Default character set not to escape
 		once
 			Result := new_character_set (Rfc_lowalpha_characters 
 					+ Rfc_upalpha_characters
@@ -211,6 +212,9 @@ feature -- Character sets
 	Rfc_reserved_characters: STRING is ";/?:@&=+$,"
 			-- RFC 2396 'reserved' characters
 
+	Rfc_extra_reserved_characters: STRING is "[]"
+			-- RFC 2732 addition to 'reserved' characters
+			
 feature {NONE} -- Implementation
 
 	to_hexadecimal_2 (a_value: INTEGER): STRING is
@@ -271,7 +275,7 @@ feature -- Valid characters
 		end
 
 	is_valid_scheme (a_scheme: STRING): BOOLEAN is
-			-- Is `scheme' a valid scheme?
+			-- Is `a_scheme' a valid scheme?
 		local
 			i: INTEGER
 			c: CHARACTER
@@ -279,7 +283,6 @@ feature -- Valid characters
 			Result := a_scheme /= Void
 			if Result then
 				from
-					Result := True
 					i := 1
 				until
 					not Result or else
