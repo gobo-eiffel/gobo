@@ -10,8 +10,9 @@ indexing
 		%a DS_NESTED_LIST_FLATTENER."
 
 	library:    "Gobo Eiffel Structure Library"
-	author:     "Eric Bezault <ericb@gobo.demon.co.uk>"
-	copyright:  "Copyright (c) 1998, Eric Bezault"
+	author:     "Eric Bezault <ericb@gobosoft.com>"
+	copyright:  "Copyright (c) 1998, Eric Bezault and others"
+	license:    "Eiffel Forum Freeware License v1 (see forum.txt)"
 	date:       "$Date$"
 	revision:   "$Revision$"
 
@@ -31,6 +32,7 @@ feature -- Access
 		deferred
 		ensure
 			remote_items_not_void: Result /= Void
+			no_void_remote: not Result.has (Void)
 		end
 
 feature {DS_NESTED_LIST_FLATTENER} -- Implementation
