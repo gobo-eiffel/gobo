@@ -119,9 +119,9 @@ feature -- Status report
 			-- Is there an explicit prefix?
 			-- (not a default namespace declaration)
 		do
-			Result := (ns_prefix /= Void and then ns_prefix.count >= 0)
+			Result := (ns_prefix /= Void and then ns_prefix.count > 0)
 		ensure
-			definition: Result = (ns_prefix /= Void and then ns_prefix.count >= 0)
+			definition: Result = (ns_prefix /= Void and then ns_prefix.count > 0)
 		end
 		
 	is_default_namespace: BOOLEAN is
