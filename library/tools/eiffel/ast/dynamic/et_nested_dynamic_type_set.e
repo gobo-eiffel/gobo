@@ -24,12 +24,18 @@ feature {NONE} -- Initialization
 
 	make (a_type: like static_type) is
 			-- Create a new empty dynamic type set.
+			-- Set `first_type' to `a_type' if it is expanded.
 		require
 			a_type_not_void: a_type /= Void
 		do
 			static_type := a_type
+			if a_type.is_expanded then
+				first_type := a_type
+				count := 1
+			end
 		ensure
 			static_type_set: static_type = a_type
+			first_expanded_type: a_type.is_expanded implies first_type = a_type
 		end
 
 feature -- Access
