@@ -6,7 +6,7 @@ indexing
 
 	library:    "Gobo Eiffel Lexical Library"
 	author:     "Eric Bezault <ericb@gobo.demon.co.uk>"
-	copyright:  "Copyright (c) 1997, Eric Bezault"
+	copyright:  "Copyright (c) 1999, Eric Bezault"
 	date:       "$Date$"
 	revision:   "$Revision$"
 
@@ -17,8 +17,6 @@ inherit
 	YY_BUFFER
 		rename
 			make as make_from_string
-		export
-			{NONE} make_from_string, make_from_buffer
 		redefine
 			fill
 		end
@@ -29,7 +27,7 @@ creation
 
 	make, make_with_size
 
-feature -- Initialization
+feature {NONE} -- Initialization
 
 	make (a_file: like INPUT_STREAM_TYPE) is
 			-- Create a new buffer for `a_file'.
@@ -55,7 +53,7 @@ feature -- Initialization
 				-- `content' has to be 2 characters longer
 				-- than the size given because we need to
 				-- put in 2 end-of-buffer characters.
-			content := STRING_.make_buffer (size + 2)
+			content := STRING_BUFFER_.make (size + 2)
 			set_file (a_file)
 		ensure
 			capacity_set: capacity = size
@@ -69,6 +67,11 @@ feature -- Access
 	file: like INPUT_STREAM_TYPE
 			-- Input file
 
+feature -- Status report
+
+	end_of_file: BOOLEAN
+			-- Has end-of-file been reached?
+
 feature -- Setting
 
 	set_file (a_file: like INPUT_STREAM_TYPE) is
@@ -77,6 +80,7 @@ feature -- Setting
 			a_file_not_void: a_file /= Void
 			a_file_open_read: INPUT_STREAM_.is_open_read (a_file)
 		do
+			end_of_file := False
 			flush
 			file := a_file
 		ensure
@@ -93,65 +97,47 @@ feature -- Element change
 			-- Resize buffer if necessary. Set `filled' to True
 			-- if characters have been added to buffer.
 		local
-			i, j, nb: INTEGER
-			buff: STRING
+			nb, nb2: INTEGER
+			buff: like content
 		do
 				-- If the last call to `fill' failed to add
 				-- more characters, this means that the end of
 				-- file has already been reached. Do not attempt
 				-- to fill again the buffer in that case.
-			if filled and not INPUT_STREAM_.end_of_input (file) then
+			if filled and not end_of_file then
+					-- First move last characters to start of buffer
+					-- and eventually resize `content' if necessary.
+				compact_left
 				buff := content
-					-- First move last characters to start of buffer.
-					--| This should be done with a block copy.
-				nb := count
-				from i := position until i > nb loop
-					j := j + 1
-					buff.put (buff.item (i), j)
-					i := i + 1
-				end
-				count := j
-				position := 1
 				nb := capacity - count
-				if nb = 0 then
-						-- Buffer is full. Resize it.
-					capacity := capacity * 2
-					if capacity = 0 then
-						capacity := Default_capacity
-					end
-						-- Make sure `buffer.count' is big enough.
-						-- Include room for 2 EOB characters.
-					if capacity + 2 - buff.count > 0 then
-							-- Set `content.count' to `capacity' + 2.
-						STRING_.resize_buffer (buff, capacity + 2)
-					end
-					nb := capacity - count
-				end
 					-- Read in more data.
 				if interactive then
 					file.read_character
 					if not INPUT_STREAM_.end_of_input (file) then
-						j := j + 1
-						buff.put (file.last_character, j)
+						upper := upper + 1
+						buff.put (file.last_character, upper)
 						filled := True
 					else
 						filled := False
+						end_of_file := True
 					end
 				else
-					if nb > Read_buffer_capacity then
-						nb := Read_buffer_capacity
+--					if nb > Read_buffer_capacity then
+--						nb := Read_buffer_capacity
+--					end
+					nb2 := STRING_BUFFER_.copy_from_stream (buff, upper + 1, file, nb)
+					if nb2 < nb then
+						end_of_file := True
 					end
-					nb := INPUT_STREAM_.read_stream (file, buff, j + 1, nb)
-					if nb > 0 then
+					if nb2 > 0 then
 						filled := True
 					else
 						filled := False
 					end
-					j := j + nb
+					upper := upper + nb2
 				end
-				count := j
-				buff.put (End_of_buffer_character, j + 1)
-				buff.put (End_of_buffer_character, j + 2)
+				buff.put (End_of_buffer_character, upper + 1)
+				buff.put (End_of_buffer_character, upper + 2)
 			else
 				filled := False
 			end
@@ -166,6 +152,6 @@ feature {NONE} -- Constants
 invariant
 
 	file_not_void: file /= Void
-	file_open_read: INPUT_STREAM_.is_open_read (file)
+	file_open_read: not end_of_file implies INPUT_STREAM_.is_open_read (file)
 
 end -- class YY_FILE_BUFFER
