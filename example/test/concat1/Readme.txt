@@ -54,7 +54,7 @@ if you use 'geant' just add the following line in the target
    <set name="compilation_log" value=""/>
 
 As far as I know the redirections > and 2>&1 should work at least
-under Windows NT 4.0 and Unix/Linux Bourne shell and bash. 
+under Windows NT 4.0 and XP, and Unix/Linux Bourne shell and bash. 
 
 --
 Copyright (c) 2001, Eric Bezault and others
