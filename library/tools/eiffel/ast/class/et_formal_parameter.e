@@ -5,7 +5,7 @@ indexing
 		"Eiffel formal generic parameters"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2001-2003, Eric Bezault and others"
+	copyright: "Copyright (c) 2001-2004, Eric Bezault and others"
 	license: "Eiffel Forum License v2 (see forum.txt)"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -22,7 +22,7 @@ inherit
 		undefine
 			type, actual_parameter
 		redefine
-			process
+			process, position
 		end
 
 	HASHABLE
@@ -45,6 +45,9 @@ feature {NONE} -- Initialization
 		end
 
 feature -- Access
+
+	type_mark: ET_KEYWORD
+			-- 'expanded', 'reference' keyword
 
 	cat_keyword: ET_KEYWORD
 			-- 'cat' keyword
@@ -80,6 +83,17 @@ feature -- Access
 			Result := index
 		end
 
+	position: ET_POSITION is
+			-- Position of first character of
+			-- current node in source code
+		do
+			if type_mark /= Void then
+				Result := type_mark.position
+			else
+				Result := name.position
+			end
+		end
+
 	formal_parameter: ET_FORMAL_PARAMETER is
 			-- Formal generic parameter in comma-separated list
 		do
@@ -87,6 +101,18 @@ feature -- Access
 		end
 
 feature -- Status report
+
+	is_expanded: BOOLEAN is
+			-- Has formal parameter been declared as expanded?
+		do
+			Result := type_mark /= Void and then type_mark.is_expanded
+		end
+
+	is_reference: BOOLEAN is
+			-- Has formal parameter been declared as reference?
+		do
+			Result := type_mark /= Void and then type_mark.is_reference
+		end
 
 	is_cat: BOOLEAN is
 			-- Will actual parameters associatied with current formal
@@ -105,6 +131,14 @@ feature -- Setting
 			index := an_index
 		ensure
 			index_set: index = an_index
+		end
+
+	set_type_mark (a_keyword: like type_mark) is
+			-- Set `type_mark' to `a_keyword'.
+		do
+			type_mark := a_keyword
+		ensure
+			type_mark_set: type_mark = a_keyword
 		end
 
 	set_cat_keyword (a_cat: like cat_keyword) is

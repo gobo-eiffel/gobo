@@ -39,6 +39,7 @@ inherit
 			base_type_actual_count as context_base_type_actual_count,
 			named_type as context_named_type,
 			is_type_expanded as context_is_type_expanded,
+			is_type_reference as context_is_type_reference,
 			is_cat_type as context_is_cat_type,
 			is_actual_cat_type as context_is_actual_cat_type,
 			is_cat_parameter as context_is_cat_parameter,
@@ -499,6 +500,12 @@ feature -- Type context
 			-- already the name of a feature in SmartEiffel's GENERAL.)
 		do
 			Result := is_type_expanded (Current, a_universe)
+		end
+
+	context_is_type_reference (a_universe: ET_UNIVERSE): BOOLEAN is
+			-- Is `base_type' reference in `a_universe'?
+		do
+			Result := is_type_reference (Current, a_universe)
 		end
 
 	context_is_cat_type (a_universe: ET_UNIVERSE): BOOLEAN is

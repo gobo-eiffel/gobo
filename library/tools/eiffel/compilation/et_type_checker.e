@@ -567,10 +567,21 @@ feature {NONE} -- Validity checking
 						nb := an_actuals.count
 						from i := 1 until i > nb loop
 							an_actual := an_actuals.type (i)
+							a_formal := a_formals.formal_parameter (i)
+							if a_formal.is_expanded then
+								if not an_actual.is_type_expanded (current_type, universe) then
+									error_handler.report_gvtcg5b_error (current_class, an_actual, a_formal)
+									set_fatal_error
+								end
+							elseif a_formal.is_reference then
+								if not an_actual.is_type_reference (current_type, universe) then
+									error_handler.report_gvtcg5a_error (current_class, an_actual, a_formal)
+									set_fatal_error
+								end
+							end
 							internal_call := True
 							an_actual.process (Current)
 							internal_call := False
-							a_formal := a_formals.formal_parameter (i)
 							if a_formal.is_cat then
 								if not an_actual.is_cat_type (current_type, universe) then
 									if universe.searching_dog_types then

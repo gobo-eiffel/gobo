@@ -5,7 +5,7 @@ indexing
 		"Eiffel formal generic parameter types"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2001-2003, Eric Bezault and others"
+	copyright: "Copyright (c) 2001-2004, Eric Bezault and others"
 	license: "Eiffel Forum License v2 (see forum.txt)"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -19,6 +19,7 @@ inherit
 			named_type,
 			named_type_has_class,
 			name, is_formal_type,
+			is_type_reference,
 			has_anchored_type,
 			has_formal_type,
 			has_formal_types,
@@ -365,6 +366,8 @@ feature -- Status report
 		local
 			an_actual: ET_NAMED_TYPE
 			a_formal_type: ET_FORMAL_PARAMETER_TYPE
+			a_formal_index: INTEGER
+			a_formal_parameters: ET_FORMAL_PARAMETER_LIST
 		do
 			if index <= a_context.base_type_actual_count (a_universe) then
 				an_actual := a_context.base_type_actual (index, a_universe)
@@ -372,9 +375,51 @@ feature -- Status report
 				if a_formal_type /= Void then
 						-- The actual parameter associated with current
 						-- type is itself a formal generic parameter.
-					Result := False
+					a_formal_index := a_formal_type.index
+					a_formal_parameters := a_context.root_context.direct_base_class (a_universe).formal_parameters
+					if a_formal_parameters /= Void and then a_formal_index <= a_formal_parameters.count then
+						Result := a_formal_parameters.formal_parameter (a_formal_index).is_expanded
+					else
+							-- Internal error: does current type really
+							-- appear in `a_context'?
+						Result := False
+					end
 				else
 					Result := an_actual.is_type_expanded (a_context.root_context, a_universe)
+				end
+			else
+					-- Internal error: does current type really
+					-- appear in `a_context'?
+				Result := False
+			end
+		end
+
+	is_type_reference (a_context: ET_TYPE_CONTEXT; a_universe: ET_UNIVERSE): BOOLEAN is
+			-- Is current type reference when viewed from
+			-- `a_context' in `a_universe'?
+		local
+			an_actual: ET_NAMED_TYPE
+			a_formal_type: ET_FORMAL_PARAMETER_TYPE
+			a_formal_index: INTEGER
+			a_formal_parameters: ET_FORMAL_PARAMETER_LIST
+		do
+			if index <= a_context.base_type_actual_count (a_universe) then
+				an_actual := a_context.base_type_actual (index, a_universe)
+				a_formal_type ?= an_actual
+				if a_formal_type /= Void then
+						-- The actual parameter associated with current
+						-- type is itself a formal generic parameter.
+					a_formal_index := a_formal_type.index
+					a_formal_parameters := a_context.root_context.direct_base_class (a_universe).formal_parameters
+					if a_formal_parameters /= Void and then a_formal_index <= a_formal_parameters.count then
+						Result := a_formal_parameters.formal_parameter (a_formal_index).is_reference
+					else
+							-- Internal error: does current type really
+							-- appear in `a_context'?
+						Result := False
+					end
+				else
+					Result := an_actual.is_type_reference (a_context.root_context, a_universe)
 				end
 			else
 					-- Internal error: does current type really
@@ -407,7 +452,7 @@ feature -- Status report
 						Result := False
 					else
 						a_formal := a_formals.formal_parameter (an_index)
-						Result := a_formal.is_cat
+						Result := a_formal.is_cat or a_formal.is_expanded
 					end
 				else
 					Result := an_actual.is_cat_type (a_context.root_context, a_universe)
@@ -452,7 +497,7 @@ feature -- Status report
 					else
 						a_formal := a_formals.formal_parameter (an_index)
 						a_constraint_base_type := a_formal.constraint_base_type
-						Result := a_formal.is_cat or (a_constraint_base_type /= Void and then a_constraint_base_type.is_cat_parameter (a_context, a_universe))
+						Result := a_formal.is_cat or a_formal.is_expanded or (a_constraint_base_type /= Void and then a_constraint_base_type.is_cat_parameter (a_context, a_universe))
 					end
 				else
 					Result := an_actual.is_cat_parameter (a_context.root_context, a_universe)
@@ -477,9 +522,6 @@ feature -- Status report
 		local
 			an_actual: ET_NAMED_TYPE
 			a_formal_type: ET_FORMAL_PARAMETER_TYPE
-			a_formal: ET_FORMAL_PARAMETER
-			a_formals: ET_FORMAL_PARAMETER_LIST
-			an_index: INTEGER
 		do
 			if index <= a_context.base_type_actual_count (a_universe) then
 				an_actual := a_context.base_type_actual (index, a_universe)
@@ -487,16 +529,7 @@ feature -- Status report
 				if a_formal_type /= Void then
 						-- The actual parameter associated with current
 						-- type is itself a formal generic parameter.
-					an_index := a_formal_type.index
-					a_formals := a_context.root_context.direct_base_class (a_universe).formal_parameters
-					if a_formals = Void or else an_index > a_formals.count then
-							-- Internal error: does current type really
-							-- appear in `a_context'?
-						Result := False
-					else
-						a_formal := a_formals.formal_parameter (an_index)
-						Result := False
-					end
+					Result := False
 				else
 					Result := an_actual.has_forget_feature (a_feature, a_context.root_context, a_universe)
 				end

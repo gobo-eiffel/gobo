@@ -1541,12 +1541,15 @@ feature -- AST nodes
 			end
 		end
 
-	new_constrained_formal_parameter (a_name: ET_IDENTIFIER; an_arrow: ET_SYMBOL; a_constraint: ET_TYPE;
+	new_constrained_formal_parameter (a_type_mark: ET_KEYWORD; a_name: ET_IDENTIFIER; an_arrow: ET_SYMBOL; a_constraint: ET_TYPE;
 		a_creation: ET_CONSTRAINT_CREATOR): ET_CONSTRAINED_FORMAL_PARAMETER is
 			-- New constrained formal generic parameter
 		do
 			if a_name /= Void and a_constraint /= Void then
 				create Result.make (a_name, a_constraint, a_creation)
+				if a_type_mark /= Void then
+					Result.set_type_mark (a_type_mark)
+				end
 				if an_arrow /= Void then
 					Result.set_arrow_symbol (an_arrow)
 				end

@@ -1552,7 +1552,7 @@ feature {NONE} -- Instruction validity
 				had_error := True
 				a_target_context.wipe_out
 				a_target_context.force_first (universe.any_type)
-			elseif a_target_context.is_type_expanded (universe) then
+			elseif not a_target_context.is_type_reference (universe) then
 				set_fatal_error
 				a_target_named_type := a_target_context.named_type (universe)
 				a_class_impl := current_feature.implementation_class

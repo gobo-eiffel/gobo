@@ -226,6 +226,8 @@ creation
 	make_gvagp0a,
 	make_gvhpr4a,
 	make_gvhpr5a,
+	make_gvtcg5a,
+	make_gvtcg5b,
 	make_gvuaa0a,
 	make_gvual0a,
 	make_gvuia0a,
@@ -9445,6 +9447,86 @@ feature {NONE} -- Initialization
 			-- dollar6: $6 = parent
 		end
 
+	make_gvtcg5a (a_class: like current_class; an_actual: ET_TYPE; a_formal: ET_FORMAL_PARAMETER) is
+			-- Create a new GVTCG-5 error: actual generic paramater `an_actual' in
+			-- `a_class' is not a reference type but the corresponding formal parameter
+			-- `a_formal' is marked as reference.
+			--
+			-- Not in ETL
+		require
+			a_class_not_void: a_class /= Void
+			a_class_preparsed: a_class.is_preparsed
+			an_actual_not_void: an_actual /= Void
+			a_formal_not_void: a_formal /= Void
+		do
+			code := gvtcg5a_template_code
+			etl_code := gvtcg5_etl_code
+			default_template := gvtcg5a_default_template
+			current_class := a_class
+			class_impl := a_class
+			position := an_actual.position
+			create parameters.make (1, 6)
+			parameters.put (etl_code, 1)
+			parameters.put (filename, 2)
+			parameters.put (position.line.out, 3)
+			parameters.put (position.column.out, 4)
+			parameters.put (current_class.name.name, 5)
+			parameters.put (an_actual.to_text, 6)
+			set_compilers (True)
+		ensure
+			current_class_set: current_class = a_class
+			class_impl_set: class_impl = a_class
+			all_reported: all_reported
+			all_fatal: all_fatal
+			-- dollar0: $0 = program name
+			-- dollar1: $1 = ETL code
+			-- dollar2: $2 = filename
+			-- dollar3: $3 = line
+			-- dollar4: $4 = column
+			-- dollar5: $5 = class name
+			-- dollar6: $6 = actual generic parameter
+		end
+
+	make_gvtcg5b (a_class: like current_class; an_actual: ET_TYPE; a_formal: ET_FORMAL_PARAMETER) is
+			-- Create a new GVTCG-5 error: actual generic paramater `an_actual' in
+			-- `a_class' is not expanded type but the corresponding formal parameter
+			-- `a_formal' is marked as expanded.
+			--
+			-- Not in ETL
+		require
+			a_class_not_void: a_class /= Void
+			a_class_preparsed: a_class.is_preparsed
+			an_actual_not_void: an_actual /= Void
+			a_formal_not_void: a_formal /= Void
+		do
+			code := gvtcg5b_template_code
+			etl_code := gvtcg5_etl_code
+			default_template := gvtcg5b_default_template
+			current_class := a_class
+			class_impl := a_class
+			position := an_actual.position
+			create parameters.make (1, 6)
+			parameters.put (etl_code, 1)
+			parameters.put (filename, 2)
+			parameters.put (position.line.out, 3)
+			parameters.put (position.column.out, 4)
+			parameters.put (current_class.name.name, 5)
+			parameters.put (an_actual.to_text, 6)
+			set_compilers (True)
+		ensure
+			current_class_set: current_class = a_class
+			class_impl_set: class_impl = a_class
+			all_reported: all_reported
+			all_fatal: all_fatal
+			-- dollar0: $0 = program name
+			-- dollar1: $1 = ETL code
+			-- dollar2: $2 = filename
+			-- dollar3: $3 = line
+			-- dollar4: $4 = column
+			-- dollar5: $5 = class name
+			-- dollar6: $6 = actual generic parameter
+		end
+
 	make_gvuaa0a (a_class: like current_class; a_name: ET_IDENTIFIER; a_feature: ET_FEATURE) is
 			-- Create a new GVUAA error: `a_name' is a formal argument of
 			-- `a_feature' in `a_class', and hence cannot have actual
@@ -9855,6 +9937,8 @@ feature {NONE} -- Implementation
 	gvagp0a_default_template: STRING is "[$1] class $5: ancestors with generic parameter mismatch: '$6' and '$7'."
 	gvhpr4a_default_template: STRING is "[$1] class $5: cannot inherit from Bit_type '$6'."
 	gvhpr5a_default_template: STRING is "[$1] class $5: cannot inherit from Tuple_type '$6'."
+	gvtcg5a_default_template: STRING is "[$1] class $5 ($3,$4): actual generic parameter '$6' is not a reference type but the corresponding formal parameter is marked as reference."
+	gvtcg5b_default_template: STRING is "[$1] class $5 ($3,$4): actual generic parameter '$6' is not expanded type but the corresponding formal parameter is marked as expanded."
 	gvuaa0a_default_template: STRING is "[$1] class $5 ($3,$4): `$6' is a formal argument of feature `$7' and hence cannot have actual arguments."
 	gvual0a_default_template: STRING is "[$1] class $5 ($3,$4): `$6' is a local variable of feature `$7' and hence cannot have actual arguments."
 	gvuia0a_default_template: STRING is "[$1] class $5 ($3,$4): `$6' is a formal argument of feature `$7' and hence cannot be an instruction."
@@ -9963,6 +10047,7 @@ feature {NONE} -- Implementation
 	gvagp_etl_code: STRING is "GVAGP"
 	gvhpr4_etl_code: STRING is "GVHPR-4"
 	gvhpr5_etl_code: STRING is "GVHPR-5"
+	gvtcg5_etl_code: STRING is "GVTCG-5"
 	gvuaa_etl_code: STRING is "GVUAA"
 	gvual_etl_code: STRING is "GVUAL"
 	gvuia_etl_code: STRING is "GVUIA"
@@ -10174,6 +10259,8 @@ feature {NONE} -- Implementation
 	gvagp0a_template_code: STRING is "gvagp0a"
 	gvhpr4a_template_code: STRING is "gvhpr4a"
 	gvhpr5a_template_code: STRING is "gvhpr5a"
+	gvtcg5a_template_code: STRING is "gvtcg5a"
+	gvtcg5b_template_code: STRING is "gvtcg5b"
 	gvuaa0a_template_code: STRING is "gvuaa0a"
 	gvual0a_template_code: STRING is "gvual0a"
 	gvuia0a_template_code: STRING is "gvuia0a"

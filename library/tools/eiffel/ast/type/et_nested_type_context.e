@@ -256,6 +256,24 @@ feature -- Status report
 			end
 		end
 
+	is_type_reference (a_universe: ET_UNIVERSE): BOOLEAN is
+			-- Is `base_type' reference in `a_universe'?
+		local
+			l_type: ET_TYPE
+		do
+			inspect count
+			when 0 then
+				Result := root_context.context_is_type_reference (a_universe)
+			when 1 then
+				Result := first.is_type_reference (root_context, a_universe)
+			else
+				l_type := first
+				remove_first
+				Result := l_type.is_type_reference (Current, a_universe)
+				put_first (l_type)
+			end
+		end
+
 	is_cat_type (a_universe: ET_UNIVERSE): BOOLEAN is
 			-- Is `base_type' a monomorphic type in `a_universe'?
 		local

@@ -918,11 +918,11 @@ feature {NONE} -- AST factory
 			end
 		end
 
-	new_constrained_formal_parameter (a_name: ET_IDENTIFIER; an_arrow: ET_SYMBOL; a_constraint: ET_TYPE;
-		a_creation: ET_CONSTRAINT_CREATOR): ET_CONSTRAINED_FORMAL_PARAMETER is
+	new_constrained_formal_parameter (a_type_mark: ET_KEYWORD; a_name: ET_IDENTIFIER; an_arrow: ET_SYMBOL;
+		a_constraint: ET_TYPE; a_creation: ET_CONSTRAINT_CREATOR): ET_CONSTRAINED_FORMAL_PARAMETER is
 			-- New constrained formal generic parameter
 		do
-			Result := ast_factory.new_constrained_formal_parameter (a_name, an_arrow, a_constraint, a_creation)
+			Result := ast_factory.new_constrained_formal_parameter (a_type_mark, a_name, an_arrow, a_constraint, a_creation)
 			if Result /= Void then
 				if universe.cat_enabled then
 					Result.set_cat_keyword (tokens.cat_keyword)
@@ -951,10 +951,10 @@ feature {NONE} -- AST factory
 			last_formal_arguments := Result
 		end
 
-	new_formal_parameter (a_name: ET_IDENTIFIER): ET_FORMAL_PARAMETER is
+	new_formal_parameter (a_type_mark: ET_KEYWORD; a_name: ET_IDENTIFIER): ET_FORMAL_PARAMETER is
 			-- New formal generic parameter
 		do
-			Result := ast_factory.new_formal_parameter (a_name)
+			Result := ast_factory.new_formal_parameter (a_type_mark, a_name)
 			if Result /= Void then
 				if universe.cat_enabled then
 					Result.set_cat_keyword (tokens.cat_keyword)

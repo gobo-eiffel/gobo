@@ -191,6 +191,18 @@ feature -- Status report
 		deferred
 		end
 
+	is_type_reference (a_context: ET_TYPE_CONTEXT; a_universe: ET_UNIVERSE): BOOLEAN is
+			-- Is current type reference when viewed from
+			-- `a_context' in `a_universe'?
+		require
+			a_context_not_void: a_context /= Void
+			a_context_valid: a_context.is_valid_context
+			a_universe_not_void: a_universe /= Void
+			-- no_cycle: no cycle in anchored types involved.
+		do
+			Result := not is_type_expanded (a_context, a_universe)
+		end
+
 	is_cat_type (a_context: ET_TYPE_CONTEXT; a_universe: ET_UNIVERSE): BOOLEAN is
 			-- Is current type monomorphic when viewed from
 			-- `a_context' in `a_universe'?

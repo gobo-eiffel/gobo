@@ -536,23 +536,65 @@ Formal_parameter_comma: Formal_parameter ','
 
 Formal_parameter: Identifier
 		{
-			$$ := new_formal_parameter ($1)
+			$$ := new_formal_parameter (Void, $1)
+			if $$ /= Void then
+				register_constraint (Void)
+			end
+		}
+	| E_EXPANDED Identifier
+		{
+			$$ := new_formal_parameter ($1, $2)
+			if $$ /= Void then
+				register_constraint (Void)
+			end
+		}
+	| E_REFERENCE Identifier
+		{
+			$$ := new_formal_parameter ($1, $2)
 			if $$ /= Void then
 				register_constraint (Void)
 			end
 		}
 	| Identifier E_ARROW Constraint_type
 		{
-			$$ := new_constrained_formal_parameter ($1, $2, dummy_constraint ($3), Void)
+			$$ := new_constrained_formal_parameter (Void, $1, $2, dummy_constraint ($3), Void)
 			if $$ /= Void then
 				register_constraint ($3)
 			end
 		}
+	| E_EXPANDED Identifier E_ARROW Constraint_type
+		{
+			$$ := new_constrained_formal_parameter ($1, $2, $3, dummy_constraint ($4), Void)
+			if $$ /= Void then
+				register_constraint ($4)
+			end
+		}
+	| E_REFERENCE Identifier E_ARROW Constraint_type
+		{
+			$$ := new_constrained_formal_parameter ($1, $2, $3, dummy_constraint ($4), Void)
+			if $$ /= Void then
+				register_constraint ($4)
+			end
+		}
 	| Identifier E_ARROW Constraint_type Constraint_create
 		{
-			$$ := new_constrained_formal_parameter ($1, $2, dummy_constraint ($3), $4)
+			$$ := new_constrained_formal_parameter (Void, $1, $2, dummy_constraint ($3), $4)
 			if $$ /= Void then
 				register_constraint ($3)
+			end
+		}
+	| E_EXPANDED Identifier E_ARROW Constraint_type Constraint_create
+		{
+			$$ := new_constrained_formal_parameter ($1, $2, $3, dummy_constraint ($4), $5)
+			if $$ /= Void then
+				register_constraint ($4)
+			end
+		}
+	| E_REFERENCE Identifier E_ARROW Constraint_type Constraint_create
+		{
+			$$ := new_constrained_formal_parameter ($1, $2, $3, dummy_constraint ($4), $5)
+			if $$ /= Void then
+				register_constraint ($4)
 			end
 		}
 	;

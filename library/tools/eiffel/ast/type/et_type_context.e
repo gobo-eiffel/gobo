@@ -155,6 +155,14 @@ feature -- Status report
 		deferred
 		end
 
+	is_type_reference (a_universe: ET_UNIVERSE): BOOLEAN is
+			-- Is `base_type' reference in `a_universe'?
+		require
+			a_universe_not_void: a_universe /= Void
+			-- no_cycle: no cycle in anchored types involved.
+		deferred
+		end
+
 	is_cat_type (a_universe: ET_UNIVERSE): BOOLEAN is
 			-- Is `base_type' a monomorphic type in `a_universe'?
 		require

@@ -4836,6 +4836,46 @@ feature -- Validity errors
 			end
 		end
 
+	report_gvtcg5a_error (a_class: ET_CLASS; an_actual: ET_TYPE; a_formal: ET_FORMAL_PARAMETER) is
+			-- Report GVTCG-5 error: actual generic paramater `an_actual' in
+			-- `a_class' is not a reference type but the corresponding formal parameter
+			-- `a_formal' is marked as reference.
+			--
+			-- Not in ETL
+		require
+			a_class_not_void: a_class /= Void
+			a_class_preparsed: a_class.is_preparsed
+			an_actual_not_void: an_actual /= Void
+			a_formal_not_void: a_formal /= Void
+		local
+			an_error: ET_VALIDITY_ERROR
+		do
+			if reportable_gvtcg5_error (a_class) then
+				create an_error.make_gvtcg5a (a_class, an_actual, a_formal)
+				report_validity_error (an_error)
+			end
+		end
+
+	report_gvtcg5b_error (a_class: ET_CLASS; an_actual: ET_TYPE; a_formal: ET_FORMAL_PARAMETER) is
+			-- Report GVTCG-5 error: actual generic paramater `an_actual' in
+			-- `a_class' is not expanded type but the corresponding formal parameter
+			-- `a_formal' is marked as expanded.
+			--
+			-- Not in ETL
+		require
+			a_class_not_void: a_class /= Void
+			a_class_preparsed: a_class.is_preparsed
+			an_actual_not_void: an_actual /= Void
+			a_formal_not_void: a_formal /= Void
+		local
+			an_error: ET_VALIDITY_ERROR
+		do
+			if reportable_gvtcg5_error (a_class) then
+				create an_error.make_gvtcg5b (a_class, an_actual, a_formal)
+				report_validity_error (an_error)
+			end
+		end
+
 	report_gvuaa0a_error (a_class: ET_CLASS; a_name: ET_IDENTIFIER; a_feature: ET_FEATURE) is
 			-- Report GVUAA error: `a_name' is a formal argument of
 			-- `a_feature' in `a_class', and hence cannot have actual
@@ -5902,6 +5942,16 @@ feature -- Validity error status
 
 	reportable_gvhpr5_error (a_class: ET_CLASS): BOOLEAN is
 			-- Can a GVHPR-5 error be reported when it
+			-- appears in `a_class'?
+		require
+			a_class_not_void: a_class /= Void
+			a_class_preparsed: a_class.is_preparsed
+		do
+			Result := True
+		end
+
+	reportable_gvtcg5_error (a_class: ET_CLASS): BOOLEAN is
+			-- Can a GVTCG-5 error be reported when it
 			-- appears in `a_class'?
 		require
 			a_class_not_void: a_class /= Void

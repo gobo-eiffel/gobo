@@ -481,7 +481,12 @@ feature {ET_AST_NODE} -- Processing
 			-- Process `a_parameter'.
 		local
 			a_creation_procedures: ET_CONSTRAINT_CREATOR
+			a_type_mark: ET_KEYWORD
 		do
+			a_type_mark := a_parameter.type_mark
+			if a_type_mark /= Void then
+				a_type_mark.process (Current)
+			end
 			a_parameter.name.process (Current)
 			a_parameter.arrow_symbol.process (Current)
 			a_parameter.constraint.process (Current)
@@ -1202,7 +1207,13 @@ feature {ET_AST_NODE} -- Processing
 
 	process_formal_parameter (a_parameter: ET_FORMAL_PARAMETER) is
 			-- Process `a_parameter'.
+		local
+			a_type_mark: ET_KEYWORD
 		do
+			a_type_mark := a_parameter.type_mark
+			if a_type_mark /= Void then
+				a_type_mark.process (Current)
+			end
 			a_parameter.name.process (Current)
 		end
 
