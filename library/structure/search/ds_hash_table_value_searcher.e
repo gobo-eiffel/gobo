@@ -2,15 +2,19 @@ indexing
 
 	description:
 
-		"Hash table searchers using value comparison criterion";
+		"Hash table searchers using value comparison criterion"
 
-	library:    "Gobo Eiffel Structure Library";
-	author:     "Eric Bezault <ericb@gobo.demon.co.uk>";
-	copyright:  "Copyright (c) 1997, Eric Bezault";
-	date:       "$Date$";
+	library:    "Gobo Eiffel Structure Library"
+	author:     "Eric Bezault <ericb@gobo.demon.co.uk>"
+	copyright:  "Copyright (c) 1997, Eric Bezault"
+	date:       "$Date$"
 	revision:   "$Revision$"
 
+#ifdef SE
+class DS_HASH_TABLE_VALUE_SEARCHER [G, K]
+#else
 class DS_HASH_TABLE_VALUE_SEARCHER [G, K -> HASHABLE]
+#endif
 
 inherit
 
