@@ -24,11 +24,11 @@ feature
 			-- DOCTYPE at the end in result because on_doctype is after end
 			-- of prolog declaration, so after the DTD body for internal DTDs.
 			assert_parsed ("<!DOCTYPE doc [ <!ELEMENT  doc  EMPTY> ]><doc/>",
-				"<!ELEMENT doc EMPTY>%N<!DOCTYPE doc>%N")
+				"<!DOCTYPE doc>%N<!ELEMENT doc EMPTY>%N")
 			assert_parsed ("<!DOCTYPE doc [ <!--comment --> <!ELEMENT  doc  EMPTY> ]><doc/>",
-				"<!ELEMENT doc EMPTY>%N<!DOCTYPE doc>%N")
+				"<!DOCTYPE doc>%N<!ELEMENT doc EMPTY>%N")
 			assert_parsed ("<!DOCTYPE doc [ <!ELEMENT doc EMPTY> <!-- com -->]><doc/>",
-				"<!ELEMENT doc EMPTY>%N<!DOCTYPE doc>%N")
+				"<!DOCTYPE doc>%N<!ELEMENT doc EMPTY>%N")
 		end
 	
 	test_attribute is
@@ -36,25 +36,25 @@ feature
 		do
 			assert_parsed (
 				"<!DOCTYPE doc [ <!ELEMENT doc EMPTY><!ATTLIST doc a CDATA #IMPLIED>]><doc/>",
-				"<!ELEMENT doc EMPTY>%N<!ATTLIST doc a CDATA #IMPLIED>%N<!DOCTYPE doc>%N")
+				"<!DOCTYPE doc>%N<!ELEMENT doc EMPTY>%N<!ATTLIST doc a CDATA #IMPLIED>%N")
 			assert_parsed (
 				"<!DOCTYPE doc [ <!ELEMENT doc EMPTY><!ATTLIST doc a CDATA #REQUIRED>]><doc a='a'/>",
-				"<!ELEMENT doc EMPTY>%N<!ATTLIST doc a CDATA #REQUIRED>%N<!DOCTYPE doc>%N")
+				"<!DOCTYPE doc>%N<!ELEMENT doc EMPTY>%N<!ATTLIST doc a CDATA #REQUIRED>%N")
 			assert_parsed (
 				"<!DOCTYPE doc [ <!ELEMENT doc EMPTY><!ATTLIST doc a ID #IMPLIED>]><doc/>",
-				"<!ELEMENT doc EMPTY>%N<!ATTLIST doc a ID #IMPLIED>%N<!DOCTYPE doc>%N")
+				"<!DOCTYPE doc>%N<!ELEMENT doc EMPTY>%N<!ATTLIST doc a ID #IMPLIED>%N")
 			assert_parsed (
 				"<!DOCTYPE doc [ <!ELEMENT doc EMPTY><!ATTLIST doc a IDREF #IMPLIED>]><doc/>",
-				"<!ELEMENT doc EMPTY>%N<!ATTLIST doc a IDREF #IMPLIED>%N<!DOCTYPE doc>%N")
+				"<!DOCTYPE doc>%N<!ELEMENT doc EMPTY>%N<!ATTLIST doc a IDREF #IMPLIED>%N")
 			assert_parsed (
 				"<!DOCTYPE doc [ <!ELEMENT doc EMPTY><!ATTLIST doc a ENTITY #IMPLIED>]><doc/>",
-				"<!ELEMENT doc EMPTY>%N<!ATTLIST doc a ENTITY #IMPLIED>%N<!DOCTYPE doc>%N")
+				"<!DOCTYPE doc>%N<!ELEMENT doc EMPTY>%N<!ATTLIST doc a ENTITY #IMPLIED>%N")
 			assert_parsed (
 				"<!DOCTYPE doc [ <!ELEMENT doc EMPTY><!ATTLIST doc a NMTOKEN #IMPLIED>]><doc/>",
-				"<!ELEMENT doc EMPTY>%N<!ATTLIST doc a NMTOKEN #IMPLIED>%N<!DOCTYPE doc>%N")
+				"<!DOCTYPE doc>%N<!ELEMENT doc EMPTY>%N<!ATTLIST doc a NMTOKEN #IMPLIED>%N")
 			assert_parsed (
 				"<!DOCTYPE doc [ <!ELEMENT doc EMPTY><!ATTLIST doc a (x | y|z) #IMPLIED>]><doc/>",
-				"<!ELEMENT doc EMPTY>%N<!ATTLIST doc a (x|y|z) #IMPLIED>%N<!DOCTYPE doc>%N")
+				"<!DOCTYPE doc>%N<!ELEMENT doc EMPTY>%N<!ATTLIST doc a (x|y|z) #IMPLIED>%N")
 		end
 	
 	test_element_repetition is
@@ -62,13 +62,13 @@ feature
 		do
 			assert_parsed (
 				"<!DOCTYPE doc [<!ELEMENT doc (doc+)>]><doc/>",
-				"<!ELEMENT doc (doc+)>%N<!DOCTYPE doc>%N")
+				"<!DOCTYPE doc>%N<!ELEMENT doc (doc+)>%N")
 			assert_parsed (
 				"<!DOCTYPE doc [<!ELEMENT doc (doc*)>]><doc/>",
-				"<!ELEMENT doc (doc*)>%N<!DOCTYPE doc>%N")
+				"<!DOCTYPE doc>%N<!ELEMENT doc (doc*)>%N")
 			assert_parsed (
 				"<!DOCTYPE doc [<!ELEMENT doc (doc?)>]><doc/>",
-				"<!ELEMENT doc (doc?)>%N<!DOCTYPE doc>%N")
+				"<!DOCTYPE doc>%N<!ELEMENT doc (doc?)>%N")
 		end
 		
 	test_element_group is
@@ -76,13 +76,13 @@ feature
 		do
 			assert_parsed (
 				"<!DOCTYPE doc [<!ELEMENT a1 EMPTY><!ELEMENT a2 EMPTY><!ELEMENT doc (a1|a2)>]><doc/>",
-				"<!ELEMENT a1 EMPTY>%N<!ELEMENT a2 EMPTY>%N<!ELEMENT doc (a1|a2)>%N<!DOCTYPE doc>%N")
+				"<!DOCTYPE doc>%N<!ELEMENT a1 EMPTY>%N<!ELEMENT a2 EMPTY>%N<!ELEMENT doc (a1|a2)>%N")
 			assert_parsed (
 				"<!DOCTYPE doc [<!ELEMENT a1 EMPTY><!ELEMENT a2 EMPTY><!ELEMENT doc (a1,a2)>]><doc/>",
-				"<!ELEMENT a1 EMPTY>%N<!ELEMENT a2 EMPTY>%N<!ELEMENT doc (a1,a2)>%N<!DOCTYPE doc>%N")
+				"<!DOCTYPE doc>%N<!ELEMENT a1 EMPTY>%N<!ELEMENT a2 EMPTY>%N<!ELEMENT doc (a1,a2)>%N")
 			assert_parsed (
 				"<!DOCTYPE doc [<!ELEMENT a1 EMPTY><!ELEMENT a2 EMPTY><!ELEMENT doc (a1,(a1|a2))>]><doc/>",
-				"<!ELEMENT a1 EMPTY>%N<!ELEMENT a2 EMPTY>%N<!ELEMENT doc (a1,(a1|a2))>%N<!DOCTYPE doc>%N")
+				"<!DOCTYPE doc>%N<!ELEMENT a1 EMPTY>%N<!ELEMENT a2 EMPTY>%N<!ELEMENT doc (a1,(a1|a2))>%N")
 		end
 		
 
