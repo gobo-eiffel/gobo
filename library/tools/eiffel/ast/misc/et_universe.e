@@ -850,9 +850,9 @@ feature -- Parsing
 		end
 
 	repreparse_shallow is
-			-- Traverse all clusters again and rebuild the mapping between class names
-			-- and filenames in each cluster. Modified classes are reset and left
-			-- unparsed. New classes are added to `classes', but are not parsed.
+			-- Traverse all non-read-only clusters again and rebuild the mapping between
+			-- class names and filenames in each cluster. Modified classes are reset and
+			-- left unparsed. New classes are added to `classes', but are not parsed.
 			-- Filenames are supposed to be of the form 'classname.e'.
 		local
 			a_cursor: DS_HASH_TABLE_CURSOR [ET_CLASS, ET_CLASS_NAME]
@@ -874,7 +874,10 @@ feature -- Parsing
 						a_class2 = Void
 					loop
 						if a_class2.is_preparsed then
-							if a_class2.cluster.is_abstract then
+							if a_class2.cluster.is_read_only then
+								a_class1 := a_class2
+								a_class2 := a_class1.overridden_class
+							elseif a_class2.cluster.is_abstract then
 								a_class2 := a_class2.overridden_class
 								a_class1.set_overridden_class (a_class2)
 							elseif a_class2.is_parsed then
@@ -899,7 +902,9 @@ feature -- Parsing
 						end
 					end
 					if a_class.is_preparsed then
-						if a_class.cluster.is_abstract then
+						if a_class.cluster.is_read_only then
+							-- Do nothing.
+						elseif a_class.cluster.is_abstract then
 							a_modified := True
 							a_class2 := a_class.overridden_class
 							if a_class2 /= Void then
@@ -944,16 +949,16 @@ feature -- Parsing
 				if a_modified then
 					reset_classes
 				end
-				eiffel_preparser.repreparse_clusters_shallow (clusters, False)
+				eiffel_preparser.repreparse_clusters_shallow (clusters, False, False)
 			end
 		ensure
 			preparsed: is_preparsed
 		end
 
 	repreparse_single is
-			-- Traverse all clusters again and rebuild the mapping between class names
-			-- and filenames in each cluster. Modified classes are reset and left
-			-- unparsed. New classes are added to `classes', but are not parsed.
+			-- Traverse all non-read-only clusters again and rebuild the mapping between
+			-- class names and filenames in each cluster. Modified classes are reset and
+			-- left unparsed. New classes are added to `classes', but are not parsed.
 			-- Each Eiffel file is supposed to contain exactly one class.
 		local
 			a_cursor: DS_HASH_TABLE_CURSOR [ET_CLASS, ET_CLASS_NAME]
@@ -976,7 +981,10 @@ feature -- Parsing
 						a_class2 = Void
 					loop
 						if a_class2.is_preparsed then
-							if a_class2.cluster.is_abstract then
+							if a_class2.cluster.is_read_only then
+								a_class1 := a_class2
+								a_class2 := a_class1.overridden_class
+							elseif a_class2.cluster.is_abstract then
 								a_class2 := a_class2.overridden_class
 								a_class1.set_overridden_class (a_class2)
 							else
@@ -995,7 +1003,9 @@ feature -- Parsing
 						end
 					end
 					if a_class.is_preparsed then
-						if a_class.cluster.is_abstract then
+						if a_class.cluster.is_read_only then
+							-- Do nothing.
+						elseif a_class.cluster.is_abstract then
 							a_modified := True
 							a_class2 := a_class.overridden_class
 							if a_class2 /= Void then
@@ -1032,16 +1042,16 @@ feature -- Parsing
 				if a_modified then
 					reset_classes
 				end
-				eiffel_preparser.repreparse_clusters_single (clusters, False)
+				eiffel_preparser.repreparse_clusters_single (clusters, False, False)
 			end
 		ensure
 			preparsed: is_preparsed
 		end
 
 	repreparse_multiple is
-			-- Traverse all clusters again and rebuild the mapping between class names
-			-- and filenames in each cluster. Modified classes are reset and left
-			-- unparsed. New classes are added to `classes', but are not parsed.
+			-- Traverse all non-read-only clusters again and rebuild the mapping between
+			-- class names and filenames in each cluster. Modified classes are reset and
+			-- left unparsed. New classes are added to `classes', but are not parsed.
 			-- Each Eiffel file can contain more than one class.
 		local
 			a_cursor: DS_HASH_TABLE_CURSOR [ET_CLASS, ET_CLASS_NAME]
@@ -1067,7 +1077,10 @@ feature -- Parsing
 						a_class2 = Void
 					loop
 						if a_class2.is_preparsed then
-							if a_class2.cluster.is_abstract then
+							if a_class2.cluster.is_read_only then
+								a_class1 := a_class2
+								a_class2 := a_class1.overridden_class
+							elseif a_class2.cluster.is_abstract then
 								a_class2 := a_class2.overridden_class
 								a_class1.set_overridden_class (a_class2)
 							else
@@ -1086,7 +1099,9 @@ feature -- Parsing
 						end
 					end
 					if a_class.is_preparsed then
-						if a_class.cluster.is_abstract then
+						if a_class.cluster.is_read_only then
+							-- Do nothing.
+						elseif a_class.cluster.is_abstract then
 							a_modified := True
 							a_class2 := a_class.overridden_class
 							if a_class2 /= Void then
@@ -1123,16 +1138,16 @@ feature -- Parsing
 				if a_modified then
 					reset_classes
 				end
-				eiffel_preparser.repreparse_clusters_multiple (clusters, False)
+				eiffel_preparser.repreparse_clusters_multiple (clusters, False, False)
 			end
 		ensure
 			preparsed: is_preparsed
 		end
 
 	repreparse_override_shallow is
-			-- Traverse all override clusters again and rebuild the mapping between class
-			-- names and filenames in each cluster. Modified classes are reset and left
-			-- unparsed. New classes are added to `classes', but are not parsed.
+			-- Traverse all non-read-only override clusters again and rebuild the mapping
+			-- between class names and filenames in each cluster. Modified classes are reset
+			-- and left unparsed. New classes are added to `classes', but are not parsed.
 			-- Filenames are supposed to be of the form 'classname.e'.
 		local
 			a_cursor: DS_HASH_TABLE_CURSOR [ET_CLASS, ET_CLASS_NAME]
@@ -1153,7 +1168,7 @@ feature -- Parsing
 					until
 						a_class2 = Void
 					loop
-						if a_class2.is_preparsed and then a_class2.cluster.is_override then
+						if a_class2.is_preparsed and then a_class2.cluster.is_override and then not a_class2.cluster.is_read_only then
 							if a_class2.cluster.is_abstract then
 								a_class2 := a_class2.overridden_class
 								a_class1.set_overridden_class (a_class2)
@@ -1178,7 +1193,7 @@ feature -- Parsing
 							a_class2 := a_class1.overridden_class
 						end
 					end
-					if a_class.is_preparsed and then a_class.cluster.is_override then
+					if a_class.is_preparsed and then a_class.cluster.is_override and then not a_class.cluster.is_read_only then
 						if a_class.cluster.is_abstract then
 							a_modified := True
 							a_class2 := a_class.overridden_class
@@ -1213,16 +1228,16 @@ feature -- Parsing
 				if a_modified then
 					reset_classes
 				end
-				eiffel_preparser.repreparse_clusters_shallow (clusters, True)
+				eiffel_preparser.repreparse_clusters_shallow (clusters, True, False)
 			end
 		ensure
 			preparsed: is_preparsed
 		end
 
 	repreparse_override_single is
-			-- Traverse all override clusters again and rebuild the mapping between class
-			-- names and filenames in each cluster. Modified classes are reset and left
-			-- unparsed. New classes are added to `classes', but are not parsed.
+			-- Traverse all non-read-only override clusters again and rebuild the mapping
+			-- between class names and filenames in each cluster. Modified classes are reset
+			-- and left unparsed. New classes are added to `classes', but are not parsed.
 			-- Each Eiffel file is supposed to contain exactly one class.
 		local
 			a_cursor: DS_HASH_TABLE_CURSOR [ET_CLASS, ET_CLASS_NAME]
@@ -1244,7 +1259,7 @@ feature -- Parsing
 					until
 						a_class2 = Void
 					loop
-						if a_class2.is_preparsed and then a_class2.cluster.is_override then
+						if a_class2.is_preparsed and then a_class2.cluster.is_override and then not a_class2.cluster.is_read_only then
 							if a_class2.cluster.is_abstract then
 								a_class2 := a_class2.overridden_class
 								a_class1.set_overridden_class (a_class2)
@@ -1263,7 +1278,7 @@ feature -- Parsing
 							a_class2 := a_class1.overridden_class
 						end
 					end
-					if a_class.is_preparsed and then a_class.cluster.is_override then
+					if a_class.is_preparsed and then a_class.cluster.is_override and then not a_class.cluster.is_read_only then
 						if a_class.cluster.is_abstract then
 							a_modified := True
 							a_class2 := a_class.overridden_class
@@ -1290,16 +1305,16 @@ feature -- Parsing
 				if a_modified then
 					reset_classes
 				end
-				eiffel_preparser.repreparse_clusters_single (clusters, True)
+				eiffel_preparser.repreparse_clusters_single (clusters, True, False)
 			end
 		ensure
 			preparsed: is_preparsed
 		end
 
 	repreparse_override_multiple is
-			-- Traverse all override clusters again and rebuild the mapping between class
-			-- names and filenames in each cluster. Modified classes are reset and left
-			-- unparsed. New classes are added to `classes', but are not parsed.
+			-- Traverse all non-read-only override clusters again and rebuild the mapping
+			-- between class names and filenames in each cluster. Modified classes are reset
+			-- and left unparsed. New classes are added to `classes', but are not parsed.
 			-- Each Eiffel file can contain more than one class.
 		local
 			a_cursor: DS_HASH_TABLE_CURSOR [ET_CLASS, ET_CLASS_NAME]
@@ -1324,7 +1339,7 @@ feature -- Parsing
 					until
 						a_class2 = Void
 					loop
-						if a_class2.is_preparsed and then a_class2.cluster.is_override then
+						if a_class2.is_preparsed and then a_class2.cluster.is_override and then not a_class2.cluster.is_read_only then
 							if a_class2.cluster.is_abstract then
 								a_class2 := a_class2.overridden_class
 								a_class1.set_overridden_class (a_class2)
@@ -1343,7 +1358,7 @@ feature -- Parsing
 							a_class2 := a_class1.overridden_class
 						end
 					end
-					if a_class.is_preparsed and then a_class.cluster.is_override then
+					if a_class.is_preparsed and then a_class.cluster.is_override and then not a_class.cluster.is_read_only then
 						if a_class.cluster.is_abstract then
 							a_modified := True
 							a_class2 := a_class.overridden_class
@@ -1370,7 +1385,7 @@ feature -- Parsing
 				if a_modified then
 					reset_classes
 				end
-				eiffel_preparser.repreparse_clusters_multiple (clusters, True)
+				eiffel_preparser.repreparse_clusters_multiple (clusters, True, False)
 			end
 		ensure
 			preparsed: is_preparsed
@@ -1391,7 +1406,7 @@ feature -- Parsing
 		end
 
 	reparse_all is
-			-- Parse whole universe again.
+			-- Parse all classes in non-read-only clusters again.
 			-- There is not need to call one of the preparse routines
 			-- beforehand since the current routine will traverse all
 			-- clusters and parse all Eiffel files anyway.
@@ -1419,7 +1434,10 @@ feature -- Parsing
 						a_class2 = Void
 					loop
 						if a_class2.is_preparsed and a_class2.is_parsed then
-							if a_class2.cluster.is_abstract then
+							if a_class2.cluster.is_read_only then
+								a_class1 := a_class2
+								a_class2 := a_class1.overridden_class
+							elseif a_class2.cluster.is_abstract then
 								a_class2 := a_class2.overridden_class
 								a_class1.set_overridden_class (a_class2)
 							else
@@ -1438,7 +1456,9 @@ feature -- Parsing
 						end
 					end
 					if a_class.is_preparsed and a_class.is_parsed then
-						if a_class.cluster.is_abstract then
+						if a_class.cluster.is_read_only then
+							-- Do nothing.
+						elseif a_class.cluster.is_abstract then
 							a_modified := True
 							a_class2 := a_class.overridden_class
 							if a_class2 /= Void then
@@ -1472,14 +1492,14 @@ feature -- Parsing
 				if a_modified then
 					reset_classes
 				end
-				eiffel_parser.reparse_clusters (clusters, False)
+				eiffel_parser.reparse_clusters (clusters, False, False)
 			end
 		ensure
 			preparsed: is_preparsed
 		end
 
 	reparse_override_all is
-			-- Parse all classes in override clusters again.
+			-- Parse all classes in non-read-only override clusters again.
 			-- There is not need to call one of the preparse routines
 			-- beforehand since the current routine will traverse all
 			-- clusters and parse all Eiffel files anyway.
@@ -1506,7 +1526,7 @@ feature -- Parsing
 					until
 						a_class2 = Void
 					loop
-						if a_class2.is_preparsed and a_class2.is_parsed and then a_class2.cluster.is_override then
+						if a_class2.is_preparsed and a_class2.is_parsed and then a_class2.cluster.is_override and then not a_class2.cluster.is_read_only then
 							if a_class2.cluster.is_abstract then
 								a_class2 := a_class2.overridden_class
 								a_class1.set_overridden_class (a_class2)
@@ -1525,7 +1545,7 @@ feature -- Parsing
 							a_class2 := a_class1.overridden_class
 						end
 					end
-					if a_class.is_preparsed and a_class.is_parsed and then a_class.cluster.is_override then
+					if a_class.is_preparsed and a_class.is_parsed and then a_class.cluster.is_override and then not a_class.cluster.is_read_only then
 						if a_class.cluster.is_abstract then
 							a_modified := True
 							a_class2 := a_class.overridden_class
@@ -1552,7 +1572,7 @@ feature -- Parsing
 				if a_modified then
 					reset_classes
 				end
-				eiffel_parser.reparse_clusters (clusters, True)
+				eiffel_parser.reparse_clusters (clusters, True, False)
 			end
 		ensure
 			preparsed: is_preparsed

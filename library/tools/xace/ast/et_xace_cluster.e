@@ -362,6 +362,7 @@ feature {NONE} -- Implementation
 			Result.set_recursive (True)
 			Result.set_implicit (True)
 			Result.set_override (is_override)
+			Result.set_read_only (is_read_only)
 		end
 
 	has_case_insensitive (a_set: DS_HASH_SET [STRING]; v: STRING): BOOLEAN is

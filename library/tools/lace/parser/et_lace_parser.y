@@ -125,7 +125,11 @@ Cluster: L_ABSTRACT Nested_cluster
 	| L_ALL Recursive_cluster
 		{ $$ := $2; $$.set_recursive (True) }
 	| L_LIBRARY Recursive_cluster
-		{ $$ := $2; $$.set_recursive (True) }
+		{
+			$$ := $2;
+			$$.set_recursive (True)
+			$$.set_read_only (True)
+		}
 	| Nested_cluster
 		{ $$ := $1 }
 	;
@@ -143,6 +147,7 @@ Qualified_subcluster: Identifier '(' Identifier ')' ':' Identifier Cluster_optio
 		{
 			$$ := new_qualified_subcluster ($2, $4, $7, $8)
 			$$.set_recursive (True)
+			$$.set_read_only (True)
 		}
 	;
 

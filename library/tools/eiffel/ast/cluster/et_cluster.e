@@ -65,6 +65,12 @@ feature -- Status report
 			-- clusters take precedence over classes with same names but in
 			-- non-override cluster? (see 'override_cluster' in ISE's LACE.)
 
+	is_read_only: BOOLEAN
+			-- Is current cluster a read-only cluster?
+			-- In other words, are changes in this cluster and in its classes
+			-- not taken into account when repreparsing or reparsing
+			-- the universe? (see 'library' in ISE's LACE.)
+
 	is_implicit: BOOLEAN
 			-- Has current cluster not been explicitly declared
 			-- but is instead the result of the fact that its
@@ -241,6 +247,14 @@ feature -- Status setting
 			is_override := b
 		ensure
 			override_set: is_override = b
+		end
+
+	set_read_only (b: BOOLEAN) is
+			-- Set `is_read_only' to `b'.
+		do
+			is_read_only := b
+		ensure
+			read_only_set: is_read_only = b
 		end
 
 	set_implicit (b: BOOLEAN) is

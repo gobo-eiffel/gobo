@@ -162,6 +162,7 @@ feature {NONE} -- Implementation
 			Result.set_recursive (True)
 			Result.set_implicit (True)
 			Result.set_override (is_override)
+			Result.set_read_only (is_read_only)
 			Result.set_exclude (exclude)
 		end
 

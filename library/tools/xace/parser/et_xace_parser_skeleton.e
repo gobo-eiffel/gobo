@@ -217,6 +217,9 @@ feature {NONE} -- AST factory
 							if an_option.is_recursive_declared then
 								Result.set_recursive (an_option.recursive)
 							end
+							if an_option.is_read_only_declared then
+								Result.set_read_only (an_option.read_only)
+							end
 						end
 						Result.set_options (an_option)
 						Result.set_subclusters (subclusters)
