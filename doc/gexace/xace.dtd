@@ -1,0 +1,51 @@
+<!-- DTD for Eiffel XACE specification -->
+<!-- $Id$ -->
+
+<!ELEMENT system (description, root, cluster+)>
+<!ATTLIST system
+  name CDATA #REQUIRED>
+
+<!ELEMENT description (#PCDATA)>
+
+<!ELEMENT root EMPTY>
+<!ATTLIST root
+  class CDATA #REQUIRED
+  creation CDATA #REQUIRED>
+
+<!ELEMENT cluster (description*, option*, cluster*, mount*)>
+<!ATTLIST cluster
+  name CDATA #IMPLIED
+  location CDATA #IMPLIED>
+
+<!ELEMENT option (require?, ensure?, invariant?, loop?, check?, optimize?)>
+<!ATTLIST option
+  unless CDATA #IMPLIED
+  if CDATA #IMPLIED>
+
+<!ELEMENT require EMPTY>
+<!ATTLIST require
+  enable (True|False) "True">
+
+<!ELEMENT ensure EMPTY>
+<!ATTLIST ensure
+  enable (True|False) "True">
+
+<!ELEMENT invariant EMPTY>
+<!ATTLIST invariant
+  enable (True|False) "True">
+
+<!ELEMENT loop EMPTY>
+<!ATTLIST loop
+  enable (True|False) "True">
+
+<!ELEMENT check EMPTY>
+<!ATTLIST check
+  enable (True|False) "True">
+
+<!ELEMENT optimize EMPTY>
+<!ATTLIST optimize
+  enable (True|False) "True">
+
+<!ELEMENT mount EMPTY>
+<!ATTLIST mount
+  location CDATA #REQUIRED>
