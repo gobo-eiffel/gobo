@@ -72,7 +72,6 @@ feature -- Initialization
 			pending_rules.wipe_out
 			start_condition_stack.wipe_out
 			equiv_classes := Void
-			transitions := Void
 		end
 
 feature -- Parsing
@@ -104,10 +103,6 @@ feature -- Access
 	start_condition_stack: LX_START_CONDITIONS
 			-- Start condition containing
 			-- the rule currently being parsed
-
-	transitions: DS_ARRAYED_LIST [LX_SYMBOL_TRANSITION [LX_NFA_STATE]]
-			-- Symbol transitions kept for later renumbering
-			-- using equivalence classes
 
 	action_factory: LX_ACTION_FACTORY
 			-- Semantic action factory
@@ -166,15 +161,27 @@ feature {NONE} -- Factory
 			-- New NFA made of two states and a
 			-- symbol transition labeled `symbol'
 		local
-			transition: LX_SYMBOL_TRANSITION [LX_NFA_STATE]
+			a_name: STRING
+			a_character_class: LX_SYMBOL_CLASS
 		do
-			!! Result.make_symbol (symbol, in_trail_context)
 			if equiv_classes /= Void then
-				equiv_classes.put (symbol)
-					-- Keep track of symbol transition for later
-					-- renumbering using equivalence classes
-				transition ?= Result.start_state.transition
-				transitions.force_last (transition)
+					-- Use a transition with a character class
+					-- containing only `symbol' instead of a
+					-- simple symbol transition labeled `symbol'.
+					-- This is to allow later symbol renumbering
+					-- using equivalence classes.
+				a_name := symbol.out
+				if character_classes.has (a_name) then
+					Result := new_symbol_class_nfa (character_classes.item (a_name))
+				else
+					!! a_character_class.make (1)
+					a_character_class.put (symbol)
+					equiv_classes.add (a_character_class)
+					character_classes.force (a_character_class, a_name)
+					Result := new_symbol_class_nfa (a_character_class)
+				end
+			else
+				!! Result.make_symbol (symbol, in_trail_context)
 			end
 		ensure
 			nfa_not_void: Result /= Void
@@ -718,9 +725,6 @@ feature {NONE} -- Implementation
 		require
 			equiv_classes_not_void: equiv_classes /= Void
 		local
-			i, nb: INTEGER
-			label: INTEGER
-			transition: LX_SYMBOL_TRANSITION [LX_NFA_STATE]
 			cursor: DS_HASH_TABLE_CURSOR [LX_SYMBOL_CLASS, STRING]
 		do
 			equiv_classes.build
@@ -728,13 +732,6 @@ feature {NONE} -- Implementation
 			from cursor.start until cursor.after loop
 				cursor.item.convert (equiv_classes)
 				cursor.forth
-			end
-			nb := transitions.count
-			from i := 1 until i > nb loop
-				transition := transitions.item (i)
-				label := equiv_classes.equivalence_class (transition.label)
-				transition.set_label (label)
-				i := i + 1
 			end
 		ensure
 			built: equiv_classes.built
@@ -936,9 +933,6 @@ feature {NONE} -- Constants
 	Initial_max_pending_rules: INTEGER is 10
 			-- Maximum number of pending rules
 
-	Initial_max_transitions: INTEGER is 1000
-			-- Maximum number of symbol transitions
-
 	Eof_nfa: LX_NFA is
 			-- End-of-file NFA
 		once
@@ -952,7 +946,6 @@ invariant
 	pending_rules_not_void: pending_rules /= Void
 	no_void_pending_rule: not pending_rules.has (Void)
 	start_condition_stack_not_void: start_condition_stack /= Void
-	transitions_not_void: equiv_classes /= Void implies transitions /= Void
 	action_factory_not_void: action_factory /= Void
 
 end -- class LX_LEX_PARSER_SKELETON
