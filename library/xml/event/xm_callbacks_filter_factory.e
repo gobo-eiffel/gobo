@@ -49,6 +49,7 @@ feature -- Filters
 
 	new_end_tag_checker: XM_END_TAG_CHECKER is
 			-- New end tag checker filter
+		obsolete "End tag checking is built into parser"
 		do
 			create Result.make_null
 		ensure
@@ -137,7 +138,7 @@ feature -- Pipes
 			a_last: XM_CALLBACKS_FILTER
 		do
 			a_last := new_stop_on_error
-			Result := callbacks_pipe (<< new_end_tag_checker, new_namespace_resolver, a_last >>)
+			Result := callbacks_pipe (<< new_namespace_resolver, a_last >>)
 			if a.count > 0 then
 				a_last.set_next (callbacks_pipe (a))
 			end
