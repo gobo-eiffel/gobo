@@ -910,6 +910,15 @@ feature -- Eiffel symbols
 			Result.set_position (a_scanner.line, a_scanner.column)
 		end
 
+	new_tilde_symbol (a_scanner: ET_EIFFEL_SCANNER_SKELETON): ET_SYMBOL is
+			-- New '~' symbol
+		require
+			a_scanner_not_void: a_scanner /= Void
+		do
+			!! Result.make_tilde
+			Result.set_position (a_scanner.line, a_scanner.column)
+		end
+
 	new_times_symbol (a_scanner: ET_EIFFEL_SCANNER_SKELETON): ET_SYMBOL_OPERATOR is
 			-- New '*' symbol
 		require

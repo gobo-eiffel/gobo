@@ -298,6 +298,9 @@ feature -- Access
 	Bar_code: INTEGER is 124
 			-- '|'
 
+	Tilde_code: INTEGER is 126
+			-- '~'
+
 	Space_code: INTEGER is 32
 			-- ' '
 

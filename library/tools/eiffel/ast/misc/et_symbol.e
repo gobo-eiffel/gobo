@@ -44,7 +44,8 @@ creation
 	make_right_array,
 	make_right_brace,
 	make_right_bracket,
-	make_right_parenthesis
+	make_right_parenthesis,
+	make_tilde
 
 feature {NONE} -- Initialization
 
@@ -389,6 +390,17 @@ feature {NONE} -- Initialization
 			column_set: column = no_column
 		end
 
+	make_tilde is
+			-- Create a new '~' symbol.
+		do
+			code := tokens.tilde_symbol_code
+			make_leaf
+		ensure
+			is_tilde: is_tilde
+			line_set: line = no_line
+			column_set: column = no_column
+		end
+
 	make_times is
 			-- Create a new '*' symbol.
 		do
@@ -472,6 +484,8 @@ feature -- Access
 				Result := tokens.right_parenthesis_symbol_name
 			when semicolon_symbol_code then
 				Result := tokens.semicolon_symbol_name
+			when tilde_symbol_code then
+				Result := tokens.tilde_symbol_name
 			when infix_times_code then
 				Result := tokens.times_symbol_name
 			else
@@ -669,6 +683,12 @@ feature -- Status report
 			-- Is current symbol ';'?
 		do
 			Result := (code = tokens.semicolon_symbol_code)
+		end
+
+	is_tilde: BOOLEAN is
+			-- Is current symbol '~'?
+		do
+			Result := (code = tokens.tilde_symbol_code)
 		end
 
 	is_times: BOOLEAN is

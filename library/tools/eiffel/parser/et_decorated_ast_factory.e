@@ -107,6 +107,7 @@ inherit
 			new_right_bracket_symbol,
 			new_right_parenthesis_symbol,
 			new_semicolon_symbol,
+			new_tilde_symbol,
 			new_times_symbol,
 			new_bit_constant,
 			new_break,
@@ -1071,6 +1072,14 @@ feature -- Eiffel symbols
 			!! Result.make
 			Result.set_position (a_scanner.line, a_scanner.column)
 			Result.set_break (last_break (True, a_scanner))
+		end
+
+	new_tilde_symbol (a_scanner: ET_EIFFEL_SCANNER_SKELETON): ET_SYMBOL is
+			-- New '~' symbol
+		do
+			!! Result.make_tilde
+			Result.set_position (a_scanner.line, a_scanner.column)
+			Result.set_break (last_break (False, a_scanner))
 		end
 
 	new_times_symbol (a_scanner: ET_EIFFEL_SCANNER_SKELETON): ET_SYMBOL_OPERATOR is

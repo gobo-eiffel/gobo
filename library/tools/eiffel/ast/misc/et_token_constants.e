@@ -156,12 +156,28 @@ feature -- Symbols
 			symbol_not_void: Result /= Void
 		end
 
+	tilde_symbol: ET_SYMBOL is
+			-- '~' symbol
+		once
+			!! Result.make_tilde
+		ensure
+			symbol_not_void: Result /= Void
+		end
+
 feature -- Keywords
 
 	keyword: ET_KEYWORD is
 			-- Dummy keyword
 		once
 			Result := strip_keyword
+		ensure
+			keyword_not_void: Result /= Void
+		end
+
+	agent_keyword: ET_KEYWORD is
+			-- 'agent' keyword
+		once
+			!! Result.make_agent
 		ensure
 			keyword_not_void: Result /= Void
 		end
@@ -598,6 +614,7 @@ feature -- Keyword and symbol names
 	right_bracket_symbol_name: STRING is "]"
 	right_parenthesis_symbol_name: STRING is ")"
 	semicolon_symbol_name: STRING is ";"
+	tilde_symbol_name: STRING is "~"
 	times_symbol_name: STRING is "*"
 			-- Eiffel symbol names
 

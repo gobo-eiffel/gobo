@@ -1909,6 +1909,9 @@ feature {NONE} -- Processing
 			when '$' then
 				last_token := Dollar_code
 				last_value := ast_factory.new_dollar_symbol (Current)
+			when '~' then
+				last_token := Tilde_code
+				last_value := ast_factory.new_tilde_symbol (Current)
 			else
 				last_token := E_UNKNOWN
 				last_value := current_position

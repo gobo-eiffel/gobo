@@ -171,7 +171,7 @@ creation
 %type <ET_WHEN_PART_LIST> When_list When_list_opt
 %type <ET_WRITABLE> Writable
 
-%expect 40
+%expect 44
 %start Class_declarations
 
 %%
@@ -2602,6 +2602,14 @@ Call_agent: E_AGENT Feature_name Agent_actuals_opt
 		{ $$ := new_call_agent ($1) }
 	| E_AGENT '{' Type '}' '.' Feature_name Agent_actuals_opt
 		{ $$ := new_call_agent ($1) }
+	| '~' Feature_name Agent_actuals_opt
+		{ $$ := new_call_agent (tokens.agent_keyword) }
+	| '~' Identifier '.' Feature_name Agent_actuals_opt
+		{ $$ := new_call_agent (tokens.agent_keyword) }
+	| '~' Parenthesized_expression '.' Feature_name Agent_actuals_opt
+		{ $$ := new_call_agent (tokens.agent_keyword) }
+	| '~' '{' Type '}' '.' Feature_name Agent_actuals_opt
+		{ $$ := new_call_agent (tokens.agent_keyword) }
 	;
 
 Agent_actuals_opt: -- Empty

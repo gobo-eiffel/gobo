@@ -122,6 +122,7 @@ feature -- Keyword and symbol codes
 	right_bracket_symbol_code: CHARACTER is '%/89/'
 	right_parenthesis_symbol_code: CHARACTER is '%/90/'
 	semicolon_symbol_code: CHARACTER is '%/91/'
+	tilde_symbol_code: CHARACTER is '%/92/'
 			-- Eiffel symbol codes
 
 end

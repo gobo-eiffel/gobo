@@ -29,18 +29,18 @@ creation
 
 ----------/** Eiffel symbols **/------------------------------------------------
 
-[-+*/^=><.;,:!?(){}[\]$]	{
+[-+*/^=><.;,:!?(){}[\]$~]	{
 				last_break_end := 0
 				last_comment_end := 0
 				process_one_char_symbol (text_item (1))
 			}
-[-+*/^=><.;,:!?(){}[\]$][ \t\r\n]+	{
+[-+*/^=><.;,:!?(){}[\]$~][ \t\r\n]+	{
 				last_text_count := 1
 				last_break_end := text_count
 				last_comment_end := 0
 				process_one_char_symbol (text_item (1))
 			}
-[-+*/^=><.;,:!?(){}[\]$]([ \t\r\n]|"--".*)+	{
+[-+*/^=><.;,:!?(){}[\]$~]([ \t\r\n]|"--".*)+	{
 				last_text_count := 1
 				last_break_end := 0
 				last_comment_end := text_count
