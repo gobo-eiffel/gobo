@@ -29,13 +29,24 @@
 		<echo message="generate: ${generate}"/>
 	</target>
 
-<!-- does not work yet, add 'entry' subelements to 'fileset' element
 	<target name="ood3" depend="init">
+		<mkdir directory="${gepp_out_dir}"/>
+		<outofdate variable="generate">
+			<fileset directory=".">
+				<include name="outofdate.eant"/>
+				<include name="build.eant"/>
+				<map type="merge" from="*" to="${gepp_out_dir}/toto.txt"/>
+			</fileset>
+		</outofdate>
+		<echo message="generate: ${generate}"/>
+		<copy file="outofdate.eant" to_file="${gepp_out_dir}/toto.txt" if="${generate}=true"/>
+	</target>
+
+	<target name="ood4" depend="init">
 		<outofdate variable="generate" dir="${GOBO}/library/kernel">
-			<fileset
-				directory="."
-				include="@(${gepp_in_dir}/${gepp_file}.ge|${GOBO}/example/geant/misc/outofdate.eant)"
-			>
+			<fileset directory=".">
+				<include name="${gepp_in_dir}/${gepp_file}.ge"/>
+				<include name="${GOBO}/example/geant/misc/outofdate.eant)"/>
 				<map type="glob" from="*.ge" to="${gepp_out_dir}/*.e">
 					<map type="flat"/>
 				</map>
@@ -43,7 +54,6 @@
 		</outofdate>
 		<echo message="generate: ${generate}"/>
 	</target>
--->
 
 	<target name="gepp">
 		<gepp
@@ -54,6 +64,9 @@
 		</gepp>
 	</target>
 
+	<target name="clean" depend="init">
+		<delete directory="${gepp_out_dir}"/>
+	</target>
 
 </project>
 
