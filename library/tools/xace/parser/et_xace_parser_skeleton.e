@@ -70,6 +70,16 @@ feature -- Access
 
 feature {NONE} -- AST factory
 
+	new_system (an_element: XM_ELEMENT): ET_XACE_SYSTEM is
+			-- New Xace system build from `an_element'
+		require
+			an_element_not_void: an_element /= Void
+			is_system: an_element.name.is_equal (uc_system)
+		do
+			Result := ast_factory.new_system (Void)
+			fill_system (Result, an_element)
+		end
+
 	new_universe (an_element: XM_ELEMENT): ET_XACE_UNIVERSE is
 			-- New class universe build from `an_element'
 		require
@@ -78,82 +88,11 @@ feature {NONE} -- AST factory
 		local
 			an_error_handler: ET_ERROR_HANDLER
 			a_factory: ET_AST_FACTORY
-			a_name: STRING
-			a_root: XM_ELEMENT
-			a_class: STRING
-			a_creation: STRING
-			a_root_cluster: XM_ELEMENT
-			a_cursor: DS_BILINEAR_CURSOR [XM_NODE]
-			a_child: XM_ELEMENT
-			a_cluster: ET_XACE_CLUSTER
-			an_option: ET_XACE_OPTIONS
-			an_external: ET_XACE_EXTERNALS
-			a_clusters: ET_XACE_CLUSTERS
-			a_mount: ET_XACE_MOUNTED_CLUSTER
-			a_mounts: ET_XACE_MOUNTED_CLUSTERS
-			a_value: UC_STRING
 		do
-			if an_element.has_attribute_by_name (uc_name) then
-				a_value := an_element.attribute_by_name (uc_name).value
-				if a_value /= Void then
-					a_name := a_value.to_utf8
-				end
-			end
-			if an_element.has_element_by_name (uc_root) then
-				a_root := an_element.element_by_name (uc_root)
-				if a_root.has_attribute_by_name (uc_class) then
-					a_value := a_root.attribute_by_name (uc_class).value
-					a_class := a_value.to_utf8
-				end
-				if a_root.has_attribute_by_name (uc_creation) then
-					a_value := a_root.attribute_by_name (uc_creation).value
-					if a_value /= Void then
-						a_creation := a_value.to_utf8
-					end
-				end
-			end
-			if an_element.has_element_by_name (uc_cluster) then
-				a_root_cluster := an_element.element_by_name (uc_cluster)
-				a_cursor := a_root_cluster.new_cursor
-				from a_cursor.start until a_cursor.after loop
-					a_child ?= a_cursor.item
-					if a_child /= Void then
-						if a_child.name.is_equal (uc_cluster) then
-							a_cluster := new_cluster (a_child)
-							if a_cluster /= Void then
-								if a_clusters = Void then
-									a_clusters := ast_factory.new_clusters (a_cluster)
-								else
-									a_clusters.put_last (a_cluster)
-								end
-							end
-						elseif a_child.name.is_equal (uc_mount) then
-							a_mount := new_mount (a_child)
-							if a_mount /= Void then
-								if a_mounts = Void then
-									a_mounts := ast_factory.new_mounted_clusters (a_mount)
-								else
-									a_mounts.put_last (a_mount)
-								end
-							end
-						elseif a_child.name.is_equal (uc_option) then
-							an_option := new_options (a_child)
-						elseif a_child.name.is_equal (uc_external) then
-							an_external := new_externals (a_child)
-						end
-					end
-					a_cursor.forth
-				end
-			end
 			an_error_handler := ast_factory.new_error_handler
 			a_factory := ast_factory.new_ast_factory
-			Result := ast_factory.new_universe (a_clusters, a_factory, an_error_handler)
-			Result.set_system_name (a_name)
-			Result.set_root_class_name (a_class)
-			Result.set_creation_procedure_name (a_creation)
-			Result.set_options (an_option)
-			Result.set_externals (an_external)
-			Result.set_mounted_clusters (a_mounts)
+			Result := ast_factory.new_universe (Void, a_factory, an_error_handler)
+			fill_system (Result, an_element)
 		end
 
 	new_cluster (an_element: XM_ELEMENT): ET_XACE_CLUSTER is
@@ -565,7 +504,92 @@ feature {NONE} -- AST factory
 			end
 		end
 
-feature {NONE} -- Implementation
+feature {NONE} -- Element change
+
+	fill_system (a_system: ET_XACE_SYSTEM; an_element: XM_ELEMENT) is
+			-- Fill Xace system `a_system' with data found in `an_element'.
+		require
+			a_system_not_void: a_system /= Void
+			an_element_not_void: an_element /= Void
+			is_system: an_element.name.is_equal (uc_system)
+		local
+			a_name: STRING
+			a_root: XM_ELEMENT
+			a_class: STRING
+			a_creation: STRING
+			a_root_cluster: XM_ELEMENT
+			a_cursor: DS_BILINEAR_CURSOR [XM_NODE]
+			a_child: XM_ELEMENT
+			a_cluster: ET_XACE_CLUSTER
+			an_option: ET_XACE_OPTIONS
+			an_external: ET_XACE_EXTERNALS
+			a_clusters: ET_XACE_CLUSTERS
+			a_mount: ET_XACE_MOUNTED_CLUSTER
+			a_mounts: ET_XACE_MOUNTED_CLUSTERS
+			a_value: UC_STRING
+		do
+			if an_element.has_attribute_by_name (uc_name) then
+				a_value := an_element.attribute_by_name (uc_name).value
+				if a_value /= Void then
+					a_name := a_value.to_utf8
+				end
+			end
+			if an_element.has_element_by_name (uc_root) then
+				a_root := an_element.element_by_name (uc_root)
+				if a_root.has_attribute_by_name (uc_class) then
+					a_value := a_root.attribute_by_name (uc_class).value
+					a_class := a_value.to_utf8
+				end
+				if a_root.has_attribute_by_name (uc_creation) then
+					a_value := a_root.attribute_by_name (uc_creation).value
+					if a_value /= Void then
+						a_creation := a_value.to_utf8
+					end
+				end
+			end
+			if an_element.has_element_by_name (uc_cluster) then
+				a_root_cluster := an_element.element_by_name (uc_cluster)
+				a_cursor := a_root_cluster.new_cursor
+				from a_cursor.start until a_cursor.after loop
+					a_child ?= a_cursor.item
+					if a_child /= Void then
+						if a_child.name.is_equal (uc_cluster) then
+							a_cluster := new_cluster (a_child)
+							if a_cluster /= Void then
+								if a_clusters = Void then
+									a_clusters := ast_factory.new_clusters (a_cluster)
+								else
+									a_clusters.put_last (a_cluster)
+								end
+							end
+						elseif a_child.name.is_equal (uc_mount) then
+							a_mount := new_mount (a_child)
+							if a_mount /= Void then
+								if a_mounts = Void then
+									a_mounts := ast_factory.new_mounted_clusters (a_mount)
+								else
+									a_mounts.put_last (a_mount)
+								end
+							end
+						elseif a_child.name.is_equal (uc_option) then
+							an_option := new_options (a_child)
+						elseif a_child.name.is_equal (uc_external) then
+							an_external := new_externals (a_child)
+						end
+					end
+					a_cursor.forth
+				end
+			end
+			a_system.set_clusters (a_clusters)
+			a_system.set_system_name (a_name)
+			a_system.set_root_class_name (a_class)
+			a_system.set_creation_procedure_name (a_creation)
+			a_system.set_options (an_option)
+			a_system.set_externals (an_external)
+			a_system.set_mounted_clusters (a_mounts)
+		end
+
+feature {NONE} -- Status report
 
 	is_true (a_string: STRING): BOOLEAN is
 			-- Is `a_string' equal to "true" (case-insensitive)?

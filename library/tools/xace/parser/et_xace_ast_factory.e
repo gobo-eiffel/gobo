@@ -108,6 +108,14 @@ feature -- AST factory
 			options_not_void: Result /= Void
 		end
 
+	new_system (a_clusters: ET_XACE_CLUSTERS): ET_XACE_SYSTEM is
+			-- New Xace system
+		do
+			!! Result.make (a_clusters)
+		ensure
+			system_not_void: Result /= Void
+		end
+
 	new_universe (a_clusters: ET_XACE_CLUSTERS; a_factory: ET_AST_FACTORY;
 		an_error_handler: ET_ERROR_HANDLER): ET_XACE_UNIVERSE is
 			-- New class universe

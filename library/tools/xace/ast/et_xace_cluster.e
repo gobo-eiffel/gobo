@@ -128,7 +128,7 @@ feature {ET_XACE_MOUNTED_CLUSTER} -- Mount
 			mounted_parent_set: mounted_parent = a_parent
 		end
 
-	mount_root (a_universe: ET_XACE_UNIVERSE) is
+	mount_root (a_universe: ET_XACE_SYSTEM) is
 			-- Mount current cluster at the root of `a_universe'.
 		require
 			a_universe_not_void: a_universe /= Void
@@ -170,7 +170,7 @@ feature {ET_XACE_MOUNTED_CLUSTER} -- Mount
 			mounted_parent_unset: mounted_parent = Void
 		end
 
-	unmount_root (a_universe: ET_XACE_UNIVERSE) is
+	unmount_root (a_universe: ET_XACE_SYSTEM) is
 			-- Unmount current cluster from the root of `a_universe'.
 		require
 			a_universe_not_void: a_universe /= Void

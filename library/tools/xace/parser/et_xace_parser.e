@@ -117,7 +117,7 @@ feature -- Parsing
 			a_file_open_read: a_file.is_open_read
 		local
 			a_root_name: UC_STRING
-			a_system: ET_XACE_UNIVERSE
+			a_system: ET_XACE_SYSTEM
 			a_cluster: ET_XACE_CLUSTER
 		do
 			if xml_parser /= Void then
@@ -128,7 +128,7 @@ feature -- Parsing
 						xml_validator.validate_system_doc (xml_parser.document, xml_parser.last_position_table)
 						if not xml_validator.has_error then
 							xml_preprocessor.preprocess_composite (xml_parser.document, xml_parser.last_position_table)
-							a_system := new_universe (xml_parser.document.root_element)
+							a_system := new_system (xml_parser.document.root_element)
 						end
 					elseif a_root_name.is_equal (uc_cluster) then
 						xml_validator.validate_cluster_doc (xml_parser.document, xml_parser.last_position_table)

@@ -33,7 +33,7 @@ feature -- Processing
 			a_file: KL_TEXT_INPUT_FILE
 			a_lace_parser: ET_LACE_PARSER
 			a_lace_error_handler: ET_LACE_ERROR_HANDLER
-			a_xace_parser: ET_XACE_SYSTEM_PARSER
+			a_xace_parser: ET_XACE_UNIVERSE_PARSER
 			a_xace_error_handler: ET_XACE_ERROR_HANDLER
 			a_xace_variables: ET_XACE_VARIABLES
 			gobo_eiffel: STRING

@@ -44,7 +44,7 @@ feature -- Execution
 			-- Execute 'system' command.
 		local
 			a_parser: ET_XACE_SYSTEM_PARSER
-			a_system: ET_XACE_UNIVERSE
+			a_system: ET_XACE_SYSTEM
 			a_file: KL_TEXT_INPUT_FILE
 		do
 			!! a_parser.make_with_variables (variables, error_handler)
@@ -53,7 +53,7 @@ feature -- Execution
 			if a_file.is_open_read then
 				a_parser.parse_file (a_file)
 				a_file.close
-				a_system := a_parser.last_universe
+				a_system := a_parser.last_system
 				if
 					a_system /= Void and then
 					(a_system.system_name /= Void and
@@ -67,7 +67,7 @@ feature -- Execution
 			end
 		end
 
-	execute_generators (a_system: ET_XACE_UNIVERSE) is
+	execute_generators (a_system: ET_XACE_SYSTEM) is
 			-- Execute Ace file generators.
 		require
 			a_system_not_void: a_system /= Void

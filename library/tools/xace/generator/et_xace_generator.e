@@ -55,7 +55,7 @@ feature -- Setting
 
 feature -- Output
 
-	generate_system (a_system: ET_XACE_UNIVERSE) is
+	generate_system (a_system: ET_XACE_SYSTEM) is
 			-- Generate a new Ace file from `a_system'.
 		require
 			a_system_not_void: a_system /= Void

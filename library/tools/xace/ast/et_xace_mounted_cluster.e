@@ -81,7 +81,7 @@ feature {ET_XACE_MOUNTED_CLUSTERS} -- Basic operations
 			end
 		end
 
-	mount_root (a_universe: ET_XACE_UNIVERSE) is
+	mount_root (a_universe: ET_XACE_SYSTEM) is
 			-- Mount clusters at the root of `a_universe'.
 		require
 			a_universe_not_void: a_universe /= Void
@@ -111,7 +111,7 @@ feature {ET_XACE_MOUNTED_CLUSTERS} -- Basic operations
 			end
 		end
 
-	unmount_root (a_universe: ET_XACE_UNIVERSE) is
+	unmount_root (a_universe: ET_XACE_SYSTEM) is
 			-- Unmount clusters from the root of `a_universe'.
 		require
 			a_universe_not_void: a_universe /= Void

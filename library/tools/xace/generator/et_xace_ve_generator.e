@@ -33,7 +33,7 @@ feature -- Access
 
 feature -- Output
 
-	generate_system (a_system: ET_XACE_UNIVERSE) is
+	generate_system (a_system: ET_XACE_SYSTEM) is
 			-- Generate a new ESD file from `a_system'.
 		local
 			a_filename: STRING
@@ -84,7 +84,7 @@ feature -- Output
 
 feature {NONE} -- Output
 
-	print_esd_file (a_system: ET_XACE_UNIVERSE; a_file: KI_TEXT_OUTPUT_STREAM) is
+	print_esd_file (a_system: ET_XACE_SYSTEM; a_file: KI_TEXT_OUTPUT_STREAM) is
 			-- Print ESD `a_system' to `a_file'.
 		require
 			a_system_not_void: a_system /= Void

@@ -115,9 +115,14 @@ feature {NONE} -- Basic operations
 					if nb = 1 then
 						a_full_pathname_string := a_parent_full_pathname
 					else
-						a_full_pathname_string := STRING_.make (a_parent_full_pathname.count + nb - 1)
-						a_full_pathname_string.append_string (a_parent_full_pathname)
-						a_full_pathname_string.append_string (a_pathname_string.substring (2, nb))
+						inspect a_pathname_string.item (2)
+						when '/', '\' then
+							a_full_pathname_string := STRING_.make (a_parent_full_pathname.count + nb - 1)
+							a_full_pathname_string.append_string (a_parent_full_pathname)
+							a_full_pathname_string.append_string (a_pathname_string.substring (2, nb))
+						else
+							a_full_pathname := a_pathname
+						end
 					end
 					!! a_full_pathname.make_with_position (a_full_pathname_string, a_pathname.line, a_pathname.column)
 				end
