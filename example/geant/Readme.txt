@@ -324,8 +324,9 @@ cd to examples/gexace.
 		geant
 
 		Note: Since the default target of the project is 'compile' this starts the build
-				process with the 'compile' target.
-				Currently only SmallEiffel is used !
+				process with the 'compile' target. Currently only SmallEiffel is used !
+				And since the name of the buildfile is 'build.eant' we do not have to
+				provide the -b option on the commandline.
 
 	output:
 
@@ -365,4 +366,192 @@ cd to examples/gexace.
 
 	Note: the 'del' command is windows specific. In future os independent special tasks
 		will be provided like <del>.
+
+
+
+
+condidional/if,unless:
+Demonstrates the optional 'if' and 'unless' XML attributes of targets.
+
+cd to examples/conditional.
+
+	buildfile if1.eant:
+
+		<project name="if_demo" default="C" >
+			<target name="A" if="runa" >
+				<echo message="A" />
+			</target>
+			<target name="B" if="runb" >
+				<echo message="B" />
+			</target>
+			<target name="C" depends="A,B" >
+				<echo message="C" />
+			</target>
+		</project>
+
+	call:
+
+		geant -b if1.eant
+
+	output:
+
+		A:
+		
+		
+		B:
+		
+		
+		C:
+		
+		  [echo] C
+
+
+	As values of the 'if' and 'unless' XML attributes of target elements you can use
+	variable values and environmentvariables. The '${}' syntax is not used for these
+	attributes since we do not want to evaluate the variables but only check if they
+	are defined. This means the 'if' attribute returns true if the variable is defined
+	otherwise true. The value of the variable does not matter. The same is true for
+	'unless' except that it returns true if it is not defined.
+
+	Since the variables 'runa' and 'runb' are not defined target 'A' and target 'B' do
+	not produce any output.
+
+	If we call it like this:
+
+	call:
+
+		geant -b if1.eant -Druna=any_value_you_like
+
+	we get the following
+
+	output:
+
+		A:
+		
+		  [echo] A
+		
+		B:
+		
+		
+		C:
+		
+		  [echo] C
+
+	If we call it like this:
+
+	call:
+
+		geant -b if1.eant -Druna=any_value_you_like -Drunb=another_value_you_like
+
+	we get the following
+
+	output:
+
+		A:
+		
+		  [echo] A
+		
+		B:
+		
+		  [echo] B
+		
+		C:
+		
+		  [echo] C
+
+	As you can see the if's return true and targets 'A' respectively 'B' get executed.
+
+
+	The file unless1.eant contains the same examples but the if's have been replaced with unless's.
+
+condidional/if2:
+Demonstrates how we can use 'if' and 'unless' to create a os independent buildfile.
+
+cd to examples/conditional.
+
+	buildfile if2.eant:
+
+		<project name="if_demo" default="list" >
+			<target name="list_for_windows" if="env.windir" >
+				<exec executable="dir" />
+			</target>
+			<target name="list_for_unix" unless="env.windir" >
+				<exec executable="ls -l" />
+			</target>
+			<target name="list" depends="list_for_windows,list_for_unix" >
+			</target>
+		</project>
+
+	call:
+
+		geant -b if2.eant
+
+	output (windows):
+
+		list_for_windows:
+		
+		  [exec] dir
+		 Volume in drive D has no label.
+		 Volume Serial Number is 72CB-0D64
+		
+		 Directory of D:\cvsstuff\gobo-eiffel\gobo\example\geant\conditional
+		
+		07/20/01  08:06p        <DIR>          .
+		07/20/01  08:06p        <DIR>          ..
+		07/20/01  07:13p                   264 if1.eant
+		07/20/01  08:04p                   328 if2.eant
+		07/20/01  08:03p                   611 if3.eant
+		07/20/01  07:45p                   272 unless1.eant
+		               6 File(s)          1,475 bytes
+		                          2,103,660,544 bytes free
+		
+		list_for_unix:
+		
+		
+		list:
+
+	output (unix):
+
+		list_for_windows:
+		
+		
+		list_for_unix:
+		
+		  [exec] ls -l
+		    D:\cvsstuff\gobo-eiffel\gobo\example\geant\conditional\*.*
+		--a--       264 Fri Jul 20 19:13:51 2001 if1.eant
+		--a--       328 Fri Jul 20 20:04:55 2001 if2.eant
+		--a--       611 Fri Jul 20 20:03:19 2001 if3.eant
+		--a--       272 Fri Jul 20 19:45:30 2001 unless1.eant
+		    1475 (1475) bytes in 4 files
+		
+		list:
+
+
+	Note: for simplicity we assume here that if a environmentvariable 'windir' exists
+		that we are in a windows environment. Otherwise we are on unix. This should
+		be ok for most situations.
+
+	File if3.eant basically has the same behaviour but introduces an additional abstraction
+	layer by introducing some variables defining the operating system:
+
+		<project name="if_demo" default="list" >
+			<target name="windows" if="env.windir" >
+				<var name="os.windows" value="true" />
+			</target>
+			<target name="unix" unless="env.windir" >
+				<var name="os.unix" value="true" />
+			</target>
+			<target name="init" depends="windows,unix" >
+			</target>
+			<target name="list_for_windows" depends="init" if="os.windows" >
+				<exec executable="dir" />
+			</target>
+			<target name="list_for_unix" depends="init"  if="os.unix" >
+				<exec executable="ls -l" />
+			</target>
+			<target name="list" depends="list_for_windows,list_for_unix" >
+			</target>
+		</project>
+
 
