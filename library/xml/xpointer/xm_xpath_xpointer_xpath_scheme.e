@@ -126,13 +126,12 @@ feature {NONE} -- Implementation
 			a_document_pool: XM_XPATH_DOCUMENT_POOL
 			a_context: XM_XPATH_STAND_ALONE_DYNAMIC_CONTEXT
 			a_sequence_iterator: XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_ITEM]
-			an_item: XM_XPATH_ITEM
 		do
 			create a_document_pool.make
 			a_document_pool.add (a_document, a_document.base_uri)
 			create a_context.make (a_document, a_document_pool, function_library)
 			a_context.set_string_mode_mixed
-			a_sequence_iterator := an_expression.iterator (a_context)			
+			a_sequence_iterator := an_expression.iterator (a_context)
 			if a_sequence_iterator.is_error then
 				is_error := True
 				create {XM_XPATH_INVALID_VALUE} value.make (a_sequence_iterator.error_value)
