@@ -73,8 +73,8 @@ echo ''; echo "#### Generate files in \$GOBO/example/lexical/calculator"
 cd $GOBO/example/lexical/calculator
 make depend hact.ace
 make scanner
-echo ''; echo "#### Generate files in \$GOBO/example/lexical/eiffel"
-cd $GOBO/example/lexical/eiffel
+echo ''; echo "#### Generate files in \$GOBO/example/lexical/eiffel_scanner"
+cd $GOBO/example/lexical/eiffel_scanner
 make depend ise.ace hact.ace
 make scanner
 echo ''; echo "#### Generate files in \$GOBO/example/lexical/gegrep"
@@ -84,8 +84,8 @@ echo ''; echo "#### Generate files in \$GOBO/example/parse/calc"
 cd $GOBO/example/parse/calc
 make depend ise.ace hact.ace
 make parser
-echo ''; echo "#### Generate files in \$GOBO/example/parse/eiffel"
-cd $GOBO/example/parse/eiffel
+echo ''; echo "#### Generate files in \$GOBO/example/parse/eiffel_parser"
+cd $GOBO/example/parse/eiffel_parser
 make depend ise.ace hact.ace
 make parser scanner
 echo ''; echo "#### Generate files in \$GOBO/example/parse/mcalc"
