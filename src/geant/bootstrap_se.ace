@@ -76,7 +76,7 @@ cluster
 		option
 	;
 
-	exml_formater: "${EXML}/library/formater"
+	exml_formatter: "${EXML}/library/formatter"
 		default
 			assertion (no)
 		option
