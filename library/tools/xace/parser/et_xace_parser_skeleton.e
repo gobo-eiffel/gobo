@@ -34,11 +34,9 @@ feature {NONE} -- Initialization
 			-- Create a new Xace parser.
 		require
 			an_error_handler_not_void: an_error_handler /= Void
-		local
-			a_factory: ET_XACE_AST_FACTORY
 		do
-			create a_factory.make
-			make_with_factory (a_factory, an_error_handler)
+			create ast_factory.make
+			make_with_factory (ast_factory, an_error_handler)
 		ensure
 			error_handler_set: error_handler = an_error_handler
 		end
@@ -89,23 +87,6 @@ feature {NONE} -- AST factory
 			a_position_table_not_void: a_position_table /= Void
 		do
 			Result := ast_factory.new_system (Void)
-			fill_system (Result, an_element, a_position_table)
-			Result.mount_libraries
-		end
-
-	new_universe (an_element: XM_ELEMENT; a_position_table: XM_POSITION_TABLE): ET_XACE_UNIVERSE is
-			-- New class universe build from `an_element'
-		require
-			an_element_not_void: an_element /= Void
-			is_system: STRING_.same_string (an_element.name, uc_system)
-			a_position_table_not_void: a_position_table /= Void
-		local
-			an_error_handler: ET_ERROR_HANDLER
-			a_factory: ET_AST_FACTORY
-		do
-			an_error_handler := ast_factory.new_error_handler
-			a_factory := ast_factory.new_ast_factory
-			Result := ast_factory.new_universe (Void, a_factory, an_error_handler)
 			fill_system (Result, an_element, a_position_table)
 			Result.mount_libraries
 		end

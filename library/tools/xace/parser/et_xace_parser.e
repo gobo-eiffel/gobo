@@ -33,11 +33,10 @@ feature {NONE} -- Initialization
 			an_error_handler_not_void: an_error_handler /= Void
 		local
 			a_variables: ET_XACE_VARIABLES
-			a_factory: ET_XACE_AST_FACTORY
 		do
 			create a_variables.make
-			create a_factory.make
-			make_with_variables_and_factory (a_variables, a_factory, an_error_handler)
+			create ast_factory.make
+			make_with_variables_and_factory (a_variables, ast_factory, an_error_handler)
 		ensure
 			error_handler_set: error_handler = an_error_handler
 		end
@@ -62,11 +61,9 @@ feature {NONE} -- Initialization
 		require
 			a_variables_not_void: a_variables /= Void
 			an_error_handler_not_void: an_error_handler /= Void
-		local
-			a_factory: ET_XACE_AST_FACTORY
 		do
-			create a_factory.make
-			make_with_variables_and_factory (a_variables, a_factory, an_error_handler)
+			create ast_factory.make
+			make_with_variables_and_factory (a_variables, ast_factory, an_error_handler)
 		ensure
 			error_handler_set: error_handler = an_error_handler
 		end
