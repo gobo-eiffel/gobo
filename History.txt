@@ -9,6 +9,9 @@ Version 1.6 -
 
 	gelex:
 
+	* Added redefinable routine `default_action' to YY_SCANNER
+	  when default rule is matched (suggested by David Massart).
+
 	Gobo Eiffel Structure Library:
 
 	* DS_TRAVERSABLE: removed postcondition from routine
