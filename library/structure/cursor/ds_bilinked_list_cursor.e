@@ -40,8 +40,8 @@ feature -- Cursor movement
 		do
 			if after then
 				was_off := True
-				after := False
 				current_cell := container.last_cell
+				after := False
 			else
 				current_cell := current_cell.left
 			end
