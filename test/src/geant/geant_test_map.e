@@ -29,16 +29,10 @@ feature -- Test
 
 			map.set_type (map.Type_attribute_value_glob)
 			assert_equal ("set_type2", "glob", map.type) 
-
---!!		map.set_type ("bla")
---!!		assert_equal ("set_type2", "identity", map.type)
-			
 		end
 
 	test_set_source_pattern is
 			-- Test feature `set_source_pattern'.
-		local
-			a_string: STRING
 		do
 			map.set_source_pattern ("*.ge")
 			assert_equal ("set_source_pattern1", "*.ge", map.source_pattern)
@@ -49,8 +43,6 @@ feature -- Test
 
 	test_set_target_pattern is
 			-- Test feature `set_target_pattern'.
-		local
-			a_string: STRING
 		do
 			map.set_target_pattern ("*.e")
 			assert_equal ("set_target_pattern1", "*.e", map.target_pattern)
@@ -61,8 +53,6 @@ feature -- Test
 
 	test_is_executable is
 			-- Test feature `is_executable'.
-		local
-			a_string: STRING
 		do
 			assert ("is_executable1", map.is_executable)	-- default type is identity
 
