@@ -12,15 +12,24 @@ Library is primarily used to develop Gobo Eiffel Lint (gelint).
 
 Clusters:
 
-ast
-    Abstract syntax tree classes.
-error
-    Error message classes used throughout this library.
-parser
-    LACE and Eiffel parsers.
+eiffel
+  ast
+      Abstract syntax tree classes.
+  compilation
+      Eiffel code analysis.
+  error
+      Error message classes used throughout this library.
+  parser
+      Eiffel parsers.
+  processor
+      AST visitors.
+lace
+    LACE parser.
+xace
+    Xace parser.
 
 A more detailed documentation for this library will be provided in
 future releases.
 
 --
-Copyright (c) 2000-2002, Eric Bezault and others
+Copyright (c) 2000-2005, Eric Bezault and others
