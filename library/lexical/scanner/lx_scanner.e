@@ -64,6 +64,14 @@ feature {NONE} -- Initialization
 			input_buffer_set: input_buffer = a_buffer
 		end
 
+feature -- Status report
+
+	valid_start_condition (sc: INTEGER): BOOLEAN is
+			-- Is `sc' a valid start condition?
+		do
+			Result := (0 <= sc and sc <= (yy_start_conditions.count - 1))
+		end
+
 feature {NONE} -- Implementation
 
 	yy_execute_action (yy_act: INTEGER) is
@@ -92,6 +100,7 @@ feature {NONE} -- Implementation
 				end
 				yy_rule.action.execute
 			else
+				last_token := yyError_token
 				fatal_error ("fatal scanner internal error: no action found")
 			end
 		end
