@@ -17,6 +17,7 @@ inherit
 	KL_SHARED_ARGUMENTS
 
 	XM_CALLBACKS_FILTER_FACTORY
+		export {NONE} all end
 
 creation
 
@@ -27,46 +28,46 @@ feature {NONE} -- Initialization
 	make is
 			-- Run.
 		do
+			Arguments.set_program_name ("print")
+			!! error_handler.make_standard
 			process_arguments
 			if not has_error then
-				check_file_readable
-				if not has_error then
-					process_data_file
-				end
+				process_data_file
 			end
 		end
 
-feature
+feature -- Processing
 
 	process_data_file is
 			-- Parse file.
 		require
-			file_name_not_void: file_name /= Void
+			filename_not_void: filename /= Void
 			event_parser_not_void: event_parser /= Void
 		local
 			a_file: KL_TEXT_INPUT_FILE
 			a_parser: XM_PARSER
+			cannot_read: UT_CANNOT_READ_FILE_ERROR
 		do
-			io.put_string ("parsing data...%N")
-
-			!! a_file.make (file_name)
+			error_handler.report_info_message ("parsing data...")
+			!! a_file.make (filename)
 			a_file.open_read
-
-			a_parser := event_parser
-
-			a_parser.set_callbacks (
-					standard_callbacks_pipe (<<new_pretty_print>>))
-			a_parser.parse_from_stream (a_file)
-
-			if not a_parser.is_correct then
-				io.put_string (a_parser.last_error_extended_description)
-				io.put_new_line
+			if not a_file.is_open_read then
+				!! cannot_read.make (filename)
+				error_handler.report_error (cannot_read)
+				has_error := True
 			else
-				io.put_string ("parsing ok.%N")
+				a_parser := event_parser
+				a_parser.set_callbacks (standard_callbacks_pipe (<<new_pretty_print>>))
+				a_parser.parse_from_stream (a_file)
+				if not a_parser.is_correct then
+					error_handler.report_error_message (a_parser.last_error_extended_description)
+					has_error := True
+				else
+					error_handler.report_info_message ("parsing ok.")
+				end
+				a_file.close
+				error_handler.report_info_message ("exiting...")
 			end
-
-			a_file.close
-			io.put_string ("exiting...%N")
 		end
 
 	process_arguments is
@@ -75,57 +76,36 @@ feature
 			parser_switch: STRING
 		do
 			if Arguments.argument_count /= 2 then
-				io.put_string (usage_string)
+				error_handler.report_error (Usage_message)
 				has_error := True
 			else
 				parser_switch := Arguments.argument (1)
-				file_name := Arguments.argument (2)
+				filename := Arguments.argument (2)
 				if parser_switch.is_equal ("--expat") then
 					if not fact.is_expat_available then
-						io.put_string ("expat is not availabe, please choose %
-							%other parser backend")
-						io.put_new_line
+						error_handler.report_error_message ("expat is not availabe, please choose other parser backend")
 						has_error := True
 					else
-						io.put_string ("Using expat parser%N")
+						error_handler.report_info_message ("Using expat parser")
 						event_parser := fact.new_expat_parser
 					end
 				elseif parser_switch.is_equal ("--eiffel") then
-					io.put_string ("Using eiffel parser%N")
+					error_handler.report_info_message ("Using eiffel parser")
 					!XM_EIFFEL_PARSER! event_parser.make
 				else
-					io.put_string (usage_string)
+					error_handler.report_error (Usage_message)
 					has_error := True
 				end
 			end
 		ensure
-			file_name_not_void: (not has_error) implies file_name /= Void
+			filename_not_void: (not has_error) implies filename /= Void
 			event_parser_not_void: (not has_error) implies event_parser /= Void
-		end
-
-feature -- Checks we have to do before we can run
-
-	check_file_readable is
-			-- check if file_name is readable
-		local
-			s: KL_TEXT_INPUT_FILE
-		do
-			!! s.make (file_name)
-			s.open_read
-			if not s.is_open_read then
-				io.put_string ("Unable to open input file:")
-				io.put_string (file_name)
-				io.put_string ("%N")
-				has_error := True
-			else
-				s.close
-			end
 		end
 
 feature -- Parser
 
 	fact: XM_EXPAT_PARSER_FACTORY is
-			-- Expat factory.
+			-- Expat XML parser factory
 		once
 			!! Result
 		ensure
@@ -133,27 +113,38 @@ feature -- Parser
 		end
 
 	event_parser: XM_PARSER
-			-- Parser.
+			-- XML parser
 
 feature -- Access
 
 	has_error: BOOLEAN
-			-- Has error occurred?
+			-- Has an error occurred?
 
-	file_name: STRING
-			-- Name of file to read.
+	filename: STRING
+			-- Name of file to read
+
+	error_handler: UT_ERROR_HANDLER
+			-- Error handler
 
 feature {NONE} -- Implementation
 
-	usage_string: STRING is
-			-- Command line usage.
+	Usage_message: UT_USAGE_MESSAGE is
+			-- Usage message
+		local
+			a_message: STRING
 		once
-			Result := clone ("usage: print ( ")
+			a_message := clone ("(")
 			if fact.is_expat_available then
-				Result.append_string ("--expat|")
+				a_message.append_string ("--expat|")
 			end
-			Result.append_string ("--eiffel )")
-			Result.append_string (" <input-file>%N")
+			a_message.append_string ("--eiffel) <input-file>")
+			!! Result.make (a_message)
+		ensure
+			usage_message_not_void: Result /= Void
 		end
+
+invariant
+
+	error_handler_not_void: error_handler /= Void
 
 end
