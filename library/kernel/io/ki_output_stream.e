@@ -56,7 +56,7 @@ feature -- Status report
 		do
 			Result := False
 		ensure
-			is_open: is_open_write implies Result
+			is_open: Result implies is_open_write
 		end
 
 feature -- Access
