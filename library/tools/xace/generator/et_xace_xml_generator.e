@@ -363,6 +363,16 @@ feature {NONE} -- Output
 					a_cursor.forth
 				end
 			end
+			if an_option.is_include_declared then
+				a_cursor := an_option.include.new_cursor
+				from a_cursor.start until a_cursor.after loop
+					print_indentation (indent, a_file)
+					a_file.put_string ("<option name=%"include%" value=%"")
+					print_quote_escaped_string (a_cursor.item, a_file)
+					a_file.put_line ("%"/>")
+					a_cursor.forth
+				end
+			end
 			if an_option.is_export_option_declared then
 				print_indentation (indent, a_file)
 				a_file.put_string ("<option name=%"export%" value=%"")
@@ -767,7 +777,7 @@ feature {NONE} -- Output
 				end
 				a_cluster_prefix := a_cluster.cluster_prefix
 				a_parent := a_cluster.parent
-				if a_parent = Void then
+				if a_parent = Void or else not STRING_.same_string (a_parent.cluster_prefix, a_cluster_prefix) then
 					a_library_prefix := a_cluster.library_prefix
 					if not a_library_prefix.is_empty and (a_cluster.is_mounted or is_flat) then
 						a_file.put_string ("%" prefix=%"")
@@ -779,9 +789,6 @@ feature {NONE} -- Output
 						a_file.put_string ("%" prefix=%"")
 						print_quote_escaped_string (a_cluster_prefix, a_file)
 					end
-				elseif not STRING_.same_string (a_parent.cluster_prefix, a_cluster_prefix) then
-					a_file.put_string ("%" prefix=%"")
-					print_quote_escaped_string (a_cluster_prefix, a_file)
 				end
 				an_option := a_cluster.options
 				a_class_options := a_cluster.class_options
@@ -878,10 +885,12 @@ feature {NONE} -- Output
 			nb := library_list.count
 			from i := 1 until i > nb loop
 				a_library := library_list.item (i)
-				print_indentation (indent, a_file)
-				a_file.put_string ("<mount location=%"")
-				print_quote_escaped_string (a_library.pathname, a_file)
-				a_file.put_line ("%"/>")
+				if a_library.is_root then
+					print_indentation (indent, a_file)
+					a_file.put_string ("<mount location=%"")
+					print_quote_escaped_string (a_library.pathname, a_file)
+					a_file.put_line ("%"/>")
+				end
 				i := i + 1
 			end
 		end
