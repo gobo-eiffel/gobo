@@ -21,14 +21,12 @@ inherit
 			root_node
 		redefine
 			remove_namespace_declarations_from_attributes_recursive,
-			resolve_namespaces, make_default
+			make_default
 		end
 
 	XM_NAMED_NODE
 		undefine
 			copy, is_equal
-		redefine
-			apply_namespace_declarations
 		end
 
 creation
@@ -37,7 +35,7 @@ creation
 
 feature {NONE} -- Initialization
 
-	make_root (a_name: like name; a_prefix: like ns_prefix) is
+	make_root (a_name: like name; a_ns: like namespace) is
 			-- Create a new root element based on the information held in a
 			-- XM_START_TAG object. This will fill in the name and the attributes.
 		require
@@ -45,25 +43,25 @@ feature {NONE} -- Initialization
 			a_name_not_empty: a_name.count > 0
 		do
 			name := a_name
-			ns_prefix := a_prefix
+			namespace := a_ns
 			make_composite
 		ensure
 			name_set: name = a_name
-			ns_prefix_set: ns_prefix = a_prefix
+			ns_prefix_set: namespace = a_ns
 		end
 
-	make_child (a_parent: like parent; a_name: like name; a_prefix: like ns_prefix) is
+	make_child (a_parent: like parent; a_name: like name; a_ns: like namespace) is
 			-- Create a new child element based on the information held in a
 			-- XM_START_TAG object. This will fill in the name and the attributes.
 		require
 			a_parent_not_void: a_parent /= Void
 			a_name_not_void: a_name /= Void
 		do
-			make_root (a_name, a_prefix)
+			make_root (a_name, a_ns)
 			parent := a_parent
 		ensure
 			name_set: name = a_name
-			ns_prefix_set: ns_prefix = a_prefix
+			ns_prefix_set: namespace = a_ns
 			parent_set: parent = a_parent
 		end
 
@@ -83,12 +81,15 @@ feature -- Status report
 			a_name_not_void: a_name /= Void
 		local
 			a_cursor: like new_cursor
-			att: XM_ATTRIBUTE
+			typer: XM_NODE_TYPER
 		do
+			!! typer
 			a_cursor := new_cursor
 			from a_cursor.start until a_cursor.after loop
-				att ?= a_cursor.item
-				if att /= Void and then same_string (att.name, a_name) then
+				a_cursor.item.process (typer)
+				if typer.is_attribute and then 
+					named_same_name (typer.attribute, a_name)
+				then
 					Result := True
 					a_cursor.go_after -- Jump out of the loop.
 				else
@@ -97,6 +98,15 @@ feature -- Status report
 			end
 		end
 
+feature {NONE} -- Name comparison with namespace.
+
+	named_same_name (a_named: XM_NAMED_NODE; a_name: STRING): BOOLEAN is
+			-- Has 'a_named' same name as 'a_name' and 
+			-- same namespace as current node?
+		do
+			Result := same_string (a_named.name, a_name) and same_namespace (a_named)
+		end
+		
 feature -- Access
 
 	attribute_by_name (a_name: STRING): XM_ATTRIBUTE is
@@ -106,13 +116,16 @@ feature -- Access
 			a_name_not_void: a_name /= Void
 		local
 			a_cursor: like new_cursor
-			att: XM_ATTRIBUTE
+			typer: XM_NODE_TYPER
 		do
+			!! typer
 			a_cursor := new_cursor
 			from a_cursor.start until a_cursor.after loop
-				att ?= a_cursor.item
-				if att /= Void and then same_string (att.name, a_name) then
-					Result := att
+				a_cursor.item.process (typer)
+				if typer.is_attribute and then 
+					named_same_name (typer.attribute, a_name)
+				then
+					Result := typer.attribute
 					a_cursor.go_after -- Jump out of the loop.
 				else
 					a_cursor.forth
@@ -120,6 +133,7 @@ feature -- Access
 			end
 		ensure
 			attribute_not_void: has_attribute_by_name (a_name) = (Result /= Void)
+			namespace: Result /= Void implies same_namespace (Result)
 		end
 
 	namespace_declarations: DS_LINKED_LIST [XM_NAMESPACE] is
@@ -130,17 +144,18 @@ feature -- Access
 			-- (Return the same list object at each call.)
 		local
 			a_cursor: like new_cursor
-			att: XM_ATTRIBUTE
+			typer: XM_NODE_TYPER
 		do
+			!! typer
 			if namespace_declarations_cache /= Void then
 				Result := namespace_declarations_cache
 			else
 				!! Result.make
 				a_cursor := new_cursor
 				from a_cursor.start until a_cursor.after loop
-					att ?= a_cursor.item
-					if att /= Void and then att.is_namespace_declaration then
-						Result.force_last (att.namespace_declaration)
+					a_cursor.item.process (typer)
+					if typer.is_attribute and then typer.attribute.is_namespace_declaration then
+						Result.force_last (typer.attribute.namespace_declaration)
 					end
 					a_cursor.forth
 				end
@@ -156,14 +171,15 @@ feature -- Access
 			-- (Create a new list at each call.)
 		local
 			a_cursor: like new_cursor
-			att: XM_ATTRIBUTE
+			typer: XM_NODE_TYPER
 		do
+			!! typer
 			!DS_BILINKED_LIST [XM_ATTRIBUTE]! Result.make
 			a_cursor := new_cursor
 			from a_cursor.start until a_cursor.after loop
-				att ?= a_cursor.item
-				if att /= Void then
-					Result.force_last (att)
+				a_cursor.item.process (typer)
+				if typer.is_attribute then
+					Result.force_last (typer.attribute)
 				end
 				a_cursor.forth
 			end
@@ -171,22 +187,7 @@ feature -- Access
 
 feature {XM_PARSER} -- Element change
 
-	add_attributes (an_attributes: DS_BILINEAR [DS_PAIR [DS_PAIR [STRING, STRING], STRING]]) is
-			-- Add `an_attributes' to current element.
-		require
-			an_attributes_not_void: an_attributes /= Void
-			-- no void pairs nor strings in `an_attributes'
-		local
-			a_cursor: DS_BILINEAR_CURSOR [DS_PAIR [DS_PAIR [STRING, STRING], STRING]]
-		do
-			a_cursor := an_attributes.new_cursor
-			from a_cursor.start until a_cursor.after loop
-				add_attribute (a_cursor.item.first.first, a_cursor.item.first.second, a_cursor.item.second)
-				a_cursor.forth
-			end
-		end
-
-	add_attribute (a_name, a_prefix, a_value: STRING) is
+	add_attribute (a_name: STRING; a_ns: XM_NAMESPACE; a_value: STRING) is
 			-- Add an attribute to current element.
 		require
 			a_name_not_void: a_name /= Void
@@ -195,7 +196,7 @@ feature {XM_PARSER} -- Element change
 		local
 			an_attribute: XM_ATTRIBUTE
 		do
-			!! an_attribute.make (a_name, a_prefix, a_value, Current)
+			!! an_attribute.make (a_name, a_ns, a_value, Current)
 			force_last (an_attribute)
 		ensure
 			attribute_added: has_attribute_by_name (a_name)
@@ -210,12 +211,15 @@ feature -- Removal
 			has_attribute: has_attribute_by_name (a_name)
 		local
 			a_cursor: like new_cursor
-			att: XM_ATTRIBUTE
+			typer: XM_NODE_TYPER
 		do
+			!! typer
 			a_cursor := new_cursor
 			from a_cursor.start until a_cursor.after loop
-				att ?= a_cursor.item
-				if att /= Void and then same_string (a_name, att.name) then
+				a_cursor.item.process (typer)
+				if typer.is_attribute and then 
+					named_same_name (typer.attribute, a_name)
+				then
 					remove_at_cursor (a_cursor)
 				else
 					a_cursor.forth
@@ -228,59 +232,24 @@ feature -- Removal
 			-- in current element and all child-elements recursively.
 		do
 			remove_namespace_declarations_from_attributes
-			precursor
+			Precursor
 		end
 
 	remove_namespace_declarations_from_attributes is
 			-- Remove all attributes that start with "xmlns:".
 		local
 			a_cursor: like new_cursor
-			att: XM_ATTRIBUTE
+			typer: XM_NODE_TYPER
 		do
+			!! typer
 			a_cursor := new_cursor
 			from a_cursor.start until a_cursor.after loop
-				att ?= a_cursor.item
-				if att /= Void and then att.is_namespace_declaration then
+				a_cursor.item.process (typer)
+				if typer.is_attribute and then typer.attribute.is_namespace_declaration then
 					remove_at_cursor (a_cursor)
 				else
 					a_cursor.forth
 				end
-			end
-		end
-
-feature -- Namespaces
-
-	resolve_namespaces is
-			-- Check for "xmlns" attributes and set the corresponding namespace
-			-- and namespace_declaration features in elements and attributes.
-			-- Additionally the prefixes are removed from the attribute names
-			-- (except for "xmlns", see `remove_namespace_declaration_from_attributes'
-			-- to remove those as well).
-		local
-			decls: XM_NAMESPACE_TABLE
-		do
-			!! decls.make
-			decls.override_with_list (namespace_declarations)
-			apply_namespace_declarations (decls)
-			resolve_namespaces_impl (decls)
-		end
-
-	apply_namespace_declarations (decls: XM_NAMESPACE_TABLE) is
-			-- Apply namespace declarations.
-		local
-			a_cursor: DS_BILINEAR_CURSOR [XM_ATTRIBUTE]
-		do
-			if has_prefix then
-				precursor (decls)
-			else
-				if decls.has_default then
-					set_namespace (decls.default_ns)
-				end
-			end
-			a_cursor := attributes.new_cursor
-			from a_cursor.start until a_cursor.after loop
-				a_cursor.item.apply_namespace_declarations (decls)
-				a_cursor.forth
 			end
 		end
 
