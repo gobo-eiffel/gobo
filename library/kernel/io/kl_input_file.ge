@@ -46,6 +46,11 @@ inherit
 
 #endif
 	KL_IMPORTED_ANY_ROUTINES
+#ifdef VE
+		undefine
+			copy
+		end
+#endif
 
 #ifdef SE || ISE
 feature -- Access
