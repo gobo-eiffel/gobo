@@ -27,7 +27,8 @@ inherit
 	XM_EIFFEL_SCANNER
 		redefine
 			reset, read_token,
-			normalized_newline
+			normalized_newline,
+			has_normalized_newline
 		end
 
 creation
@@ -153,6 +154,17 @@ feature {NONE} -- Newline normalization
 			else
 				Result := Precursor
 			end
+		end
+
+	has_normalized_newline: BOOLEAN is
+			-- Has newline normalization already been applied?
+		do
+				-- Newline normalization has already been applied
+				-- to a literal entity and should not be applied 
+				-- again, e.g. for literal entities which contain 
+				-- character entities of newline characters which 
+				-- should get out as is.
+			Result := is_literal
 		end
 
 feature -- Scanner: events

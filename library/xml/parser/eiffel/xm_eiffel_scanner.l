@@ -225,7 +225,7 @@ SYSTEMLITERAL ((['][\r\n\t\x20-&(-\xFF]*['])|(["][\r\n\t\x20-!#-\xFF]*["]))
 			pop_start_condition
 		}
 		("\r\n"|"\r"|"\n") {
-	 			-- End of line handling XML1.0:2.11.
+				-- End of line handling XML1.0:2.11.
 			set_last_token (CHARDATA)
 			last_value := normalized_newline
 		}
@@ -610,7 +610,16 @@ SYSTEMLITERAL ((['][\r\n\t\x20-&(-\xFF]*['])|(["][\r\n\t\x20-!#-\xFF]*["]))
 			set_last_token (ATTRIBUTE_LT) -- Conformance error.
 			last_value := text
 		}
-		{SPACECHAR}+ {
+		"\r\n" {
+				-- XML1.0:3.3.3 Attribute value normalization.
+			set_last_token (CHARDATA)
+			if has_normalized_newline then
+				last_value := two_normalized_spaces
+			else
+				last_value := normalized_space
+			end
+		}
+		{SPACECHAR} {
 				-- XML1.0:3.3.3 Attribute value normalization.
 			set_last_token (CHARDATA)
 			last_value := normalized_space
@@ -644,6 +653,15 @@ SYSTEMLITERAL ((['][\r\n\t\x20-&(-\xFF]*['])|(["][\r\n\t\x20-!#-\xFF]*["]))
 			last_value := text
 		}
 	}
+
+<entity_value_single, entity_value_double>
+	{
+		("\r\n"|"\r"|"\n") {
+				-- End of line handling XML1.0:2.11.
+			set_last_token (CHARDATA)
+			last_value := normalized_newline
+		}
+}
 
 <attribute_value_single, entity_value_single>
 	{
@@ -891,8 +909,17 @@ feature {NONE} -- Constants
 			normalized_newline_not_void: Result /= Void
 		end
 
+	has_normalized_newline: BOOLEAN is
+			-- Has newline normalization already been applied?
+		do
+			Result := False
+		end
+
 	normalized_space: STRING is " "
 			-- Normalized space
+
+	two_normalized_spaces: STRING is "  "
+			-- Two normalized spaces
 
 invariant
 
