@@ -282,30 +282,31 @@ feature {NONE} -- various
 --        external "C"
 --        end
    
-   exml_XML_SetBase_string (parser_handle: POINTER; base: STRING): BOOLEAN is
-         -- Sets the base to be used for resolving relative URIs in
-         -- system identifiers in declarations.  Resolving relative
-         -- identifiers is left to the application: this value will be
-         -- passed through as the base argument to the
-         -- XM_ExternalEntityRefHandler, XML_NotationDeclHandler and
-         -- XM_UnparsedEntityDeclHandler. The base argument will be
-         -- copied.
-         -- Returns zero if out of memory, non-zero otherwise.
-      require
-         parser_handle_not_null: parser_handle /= default_pointer
-         base_not_void: base /= Void
+	exml_XML_SetBase_string (parser_handle: POINTER; base: STRING): BOOLEAN is
+			-- Sets the base to be used for resolving relative URIs in
+			-- system identifiers in declarations.  Resolving relative
+			-- identifiers is left to the application: this value will be
+			-- passed through as the base argument to the
+			-- XM_ExternalEntityRefHandler, XML_NotationDeclHandler and
+			-- XM_UnparsedEntityDeclHandler. The base argument will be
+			-- copied.
+			-- Returns zero if out of memory, non-zero otherwise.
+		require
+			parser_handle_not_null: parser_handle /= default_pointer
+			base_not_void: base /= Void
 #ifdef ISE
-      local
-	 c_str: ANY
+		local
+			c_str: ANY
 #endif
-      do
+		do
 #ifdef ISE
-	 c_str := str.to_c
-	 Result := ext_exml_XML_SetBase (parser_handle, $c_str)
+			c_str := str.to_c
+			Result := ext_exml_XML_SetBase (parser_handle, $c_str)
 #endif
 #ifdef SE
-	Result := ext_exml_XML_SetBase (parser_handle, str.to_external)
+			Result := ext_exml_XML_SetBase (parser_handle, str.to_external)
 #endif
+		end
 
    ext_exml_XML_SetBase (parser_handle: POINTER; base: POINTER): BOOLEAN is
          -- Sets the base to be used for resolving relative URIs in
