@@ -117,21 +117,19 @@ feature -- Test
 			test_date_time (dtd1, dt, a_file)
 			test_is_definite (dtd1, a_file)
 			test_is_canonical (dtd1, dt, a_file)
-			test_is_time_duration_canonical (dtd1, a_file)
+			test_is_time_canonical (dtd1, a_file)
 			test_to_definite (dtd1, dt, a_file)
 			test_to_canonical (dtd1, dt, a_file)
 			test_to_time_canonical (dtd1, a_file)
-			test_time_duration_to_canonical (dtd1, a_file)
 			test_date_to_date_time_duration (dtd1, a_file)
 			test_time_to_date_time_duration (dtd1, a_file)
 			!! dtd1.make (0, 0, 472, 45, 6, 1)
 			test_is_definite (dtd1, a_file)
 			test_is_canonical (dtd1, dt, a_file)
-			test_is_time_duration_canonical (dtd1, a_file)
+			test_is_time_canonical (dtd1, a_file)
 			test_to_definite (dtd1, dt, a_file)
 			test_to_canonical (dtd1, dt, a_file)
 			test_to_time_canonical (dtd1, a_file)
-			test_time_duration_to_canonical (dtd1, a_file)
 			test_date_to_date_time_duration (dtd1, a_file)
 			test_time_to_date_time_duration (dtd1, a_file)
 			!! dt.make (2000, 2, 29, 12, 44, 3)
@@ -139,20 +137,19 @@ feature -- Test
 			test_date_time (dtd1, dt, a_file)
 			test_is_definite (dtd1, a_file)
 			test_is_canonical (dtd1, dt, a_file)
-			test_is_time_duration_canonical (dtd1, a_file)
+			test_is_time_canonical (dtd1, a_file)
 			test_to_definite (dtd1, dt, a_file)
 			test_to_canonical (dtd1, dt, a_file)
 			test_to_time_canonical (dtd1, a_file)
-			test_time_duration_to_canonical (dtd1, a_file)
 			test_date_to_date_time_duration (dtd1, a_file)
 			test_time_to_date_time_duration (dtd1, a_file)
 			!! dtd1.make (0, 1, 2, 12, 3, 12)
 			test_is_definite (dtd1, a_file)
 			test_is_canonical (dtd1, dt, a_file)
-			test_is_time_duration_canonical (dtd1, a_file)
+			test_is_time_canonical (dtd1, a_file)
 			test_to_definite (dtd1, dt, a_file)
 			test_to_canonical (dtd1, dt, a_file)
-			test_time_duration_to_canonical (dtd1, a_file)
+			test_to_time_canonical (dtd1, a_file)
 			test_date_to_date_time_duration (dtd1, a_file)
 			test_time_to_date_time_duration (dtd1, a_file)
 			!! dt.make (2000, 2, 1, 6, 32, 12)
@@ -160,10 +157,10 @@ feature -- Test
 			test_date_time (dtd1, dt, a_file)
 			test_is_definite (dtd1, a_file)
 			test_is_canonical (dtd1, dt, a_file)
-			test_is_time_duration_canonical (dtd1, a_file)
+			test_is_time_canonical (dtd1, a_file)
 			test_to_definite (dtd1, dt, a_file)
 			test_to_canonical (dtd1, dt, a_file)
-			test_time_duration_to_canonical (dtd1, a_file)
+			test_to_time_canonical (dtd1, a_file)
 			test_date_to_date_time_duration (dtd1, a_file)
 			test_time_to_date_time_duration (dtd1, a_file)
 			!! dt.make (2000, 4, 30, 20, 25, 4)
@@ -171,11 +168,10 @@ feature -- Test
 			test_date_time (dtd1, dt, a_file)
 			test_is_definite (dtd1, a_file)
 			test_is_canonical (dtd1, dt, a_file)
-			test_is_time_duration_canonical (dtd1, a_file)
+			test_is_time_canonical (dtd1, a_file)
 			test_to_definite (dtd1, dt, a_file)
 			test_to_canonical (dtd1, dt, a_file)
 			test_to_time_canonical (dtd1, a_file)
-			test_time_duration_to_canonical (dtd1, a_file)
 			test_date_to_date_time_duration (dtd1, a_file)
 			test_time_to_date_time_duration (dtd1, a_file)
 
@@ -385,8 +381,8 @@ feature -- Test
 			a_file.put_character ('%N')
 		end
 
-	test_is_time_duration_canonical (d: DT_DATE_TIME_DURATION; a_file: like OUTPUT_STREAM_TYPE) is
-			-- Test feature `is_time_duration_canonical' of class DT_DATE_TIME_DURATION.
+	test_is_time_canonical (d: DT_DATE_TIME_DURATION; a_file: like OUTPUT_STREAM_TYPE) is
+			-- Test feature `is_time_canonical' of class DT_DATE_TIME_DURATION.
 			-- Make results of test available in `a_file'.
 		require
 			a_file_not_void: a_file /= Void
@@ -395,8 +391,8 @@ feature -- Test
 		do
 			a_file.put_string ("%T(")
 			a_file.put_string (d.out)
-			a_file.put_string (").is_time_duration_canonical: ")
-			if d.is_time_duration_canonical then
+			a_file.put_string (").is_time_canonical: ")
+			if d.is_time_canonical then
 				a_file.put_string ("True")
 			else
 				a_file.put_string ("False")
@@ -503,21 +499,6 @@ feature -- Test
 			a_file.put_string (dtd.out)
 			a_file.put_string (").to_time_canonical: ")
 			a_file.put_string (dtd.to_time_canonical.out)
-			a_file.put_character ('%N')
-		end
-
-	test_time_duration_to_canonical (d: DT_DATE_TIME_DURATION; a_file: like OUTPUT_STREAM_TYPE) is
-			-- Test feature `time_duration_to_canonical' of class DT_DATE_TIME_DURATION.
-			-- Make results of test available in `a_file'.
-		require
-			a_file_not_void: a_file /= Void
-			a_file_open_write: OUTPUT_STREAM_.is_open_write (a_file)
-			d_not_void: d /= Void
-		do
-			a_file.put_string ("%T(")
-			a_file.put_string (d.out)
-			a_file.put_string (").time_duration_to_canonical: ")
-			a_file.put_string (d.time_duration_to_canonical.out)
 			a_file.put_character ('%N')
 		end
 

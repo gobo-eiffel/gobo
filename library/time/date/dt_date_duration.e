@@ -38,6 +38,10 @@ creation
 
 	make, make_definite
 
+creation {DT_DATE}
+
+	make_canonical_from_dates
+
 feature {NONE} -- Initialization
 
 	make (y, m, d: INTEGER) is
@@ -61,6 +65,55 @@ feature {NONE} -- Initialization
 		ensure
 			is_definite: is_definite
 			day_set: day = d
+		end
+
+	make_canonical_from_dates (date_from, date_to: like date) is
+			-- Create a new canonical duration between
+			-- `date_from' and `date_to'.
+		require
+			date_from_not_void: date_from /= Void
+			date_to_not_void: date_to /= Void
+		local
+			yy, mm, dd: INTEGER
+			od, d: INTEGER
+			dipm, dicm: INTEGER
+		do
+			yy := date_to.year - date_from.year
+			mm := date_to.month - date_from.month
+			d := date_to.day
+			od := date_from.day
+			dd := d - od
+			if date_from < date_to then
+				if dd < 0 then
+					mm := mm - 1
+					dipm := date_to.days_in_previous_month
+					if dipm < od then
+						dd := dd + od
+					else
+						dd := dd + dipm
+					end
+				end
+				if mm < 0 then
+					yy := yy - 1
+					mm := Months_in_year + mm
+				end
+			else
+				dicm := date_to.days_in_current_month
+				if dd > 0 then
+					mm := mm + 1
+					dd := dd - dicm
+				elseif dicm < od then
+					dd := dd + od - dicm
+				end
+				if mm > 0 then
+					yy := yy + 1
+					mm := mm - Months_in_year
+				end
+			end
+			make (yy, mm, dd)
+		ensure
+			canonical_duration: is_canonical (date_from)
+			definition: (date_from + Current).is_equal (date_to)
 		end
 
 feature -- Access
@@ -110,7 +163,9 @@ feature -- Status report
 		local
 			final_date: like date
 		do
-			final_date := a_date + Current
+			final_date := tmp_date
+			final_date.set_date (a_date)
+			final_date.add_duration (Current)
 			if a_date <= final_date then
 				if year >= 0 and month >= 0 and month < Months_in_year and day >= 0 then
 					if day >= final_date.day then
@@ -135,10 +190,48 @@ feature -- Status report
 				day <= 0 and day > -(a_date + Current).days_in_current_month))
 		end
 
+feature -- Status setting
+
+	set_definite (a_date: like date) is
+			-- Set current duration to be definite
+			-- when to be added to `a_date'.
+		require
+			a_date_not_void: a_date /= Void
+		local
+			final_date: like tmp_date
+		do
+			if not is_definite then
+				final_date := tmp_date
+				final_date.set_date (a_date)
+				final_date.add_date_duration (Current)
+				make_definite (final_date.day_count - a_date.day_count)
+			end
+		ensure
+			is_definite: is_definite
+			same_duration: (a_date + Current).is_equal (a_date + old clone (Current))
+		end
+
+	set_canonical (a_date: like date) is
+			-- Set current duration to be canonical
+			-- when to be added to `a_date'.
+		require
+			a_date_not_void: a_date /= Void
+		local
+			final_date: like date
+		do
+			final_date := tmp_date
+			final_date.set_date (a_date)
+			final_date.add_duration (Current)
+			make_canonical_from_dates (a_date, final_date)
+		ensure
+			is_canonical: is_canonical (a_date)
+			same_duration: (a_date + Current).is_equal (a_date + old clone (Current))
+		end
+
 feature -- Setting
 
 	set_year_month_day (y, m, d: INTEGER) is
-			-- Set `y' to `year', `m' to `month' and `d' to `day'.
+			-- Set `year' to `y', `month' to `m' and `day' to `d'.
 		do
 			year := y
 			month := m
@@ -150,7 +243,7 @@ feature -- Setting
 		end
 
 	set_year (y: INTEGER) is
-			-- Set `y' to `year'.
+			-- Set `year' to `y'.
 		do
 			year := y
 		ensure
@@ -301,7 +394,8 @@ feature -- Conversion
 		require
 			a_date_not_void: a_date /= Void
 		do
-			Result := (a_date + Current).canonical_duration (a_date)
+			Result := clone (Current)
+			Result.set_canonical (a_date)
 		ensure
 			canonical_duration_not_void: Result /= Void
 			is_canonical: Result.is_canonical (a_date)
@@ -314,11 +408,22 @@ feature -- Conversion
 		require
 			a_date_not_void: a_date /= Void
 		do
-			Result := (a_date + Current).duration (a_date)
+			Result := clone (Current)
+			Result.set_definite (a_date)
 		ensure
 			definite_duration_not_void: Result /= Void
 			is_definite: Result.is_definite
 			same_duration: (a_date + Current).is_equal (a_date + Result)
+		end
+
+feature {NONE} -- Implementation
+
+	tmp_date: DT_DATE is
+			-- Temporary date
+		once
+			!! Result.make (1, 1, 1)
+		ensure
+			tmp_date_not_void: Result /= Void
 		end
 
 end -- class DT_DATE_DURATION

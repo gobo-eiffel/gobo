@@ -1,0 +1,336 @@
+<!DOCTYPE HTML PUBLIC "-//IETF//DTD HTML//EN">
+<html>
+
+<head>
+<meta http-equiv="Content-Type"
+content="text/html; charset=iso-8859-1">
+<meta name="GENERATOR" content="Microsoft FrontPage 2.0">
+<title>Durations</title>
+</head>
+
+<body bgcolor="#FFFFFF">
+
+<table border="0" width="100%">
+    <tr>
+        <td><font size="6"><strong>Durations</strong></font></td>
+        <td align="right"><a href="absolute.html"><img
+        src="../image/previous.gif" alt="Previous" border="0"
+        width="40" height="40"></a><a href="base.html"><img
+        src="../image/next.gif" alt="Next" border="0" width="40"
+        height="40"></a></td>
+    </tr>
+</table>
+
+<hr size="1">
+
+<p align="center"><img src="image/duration.gif"></p>
+
+<p>A duration is an amount of time between two dates, two times
+or two date/times. Durations can therefore be added to an <a
+href="absolute.html">absolute time</a> and hence get a new
+absolute time shifted on the oriented time axis by the
+corresponding amount of time. Although time durations can be
+compared using a total order relationship, we will see that this
+is not the case for date durations and date/time durations for
+which the order relationship is only partial because of the
+irregularities in the Gregorian calendar. Therefore class <a
+href="flatshort/dt_duration.html"><font color="#008080"><em><tt>DT_DURATION</tt></em></font></a>
+is a descendant of <font color="#008080"><em><tt>KL_PART_COMPARABLE</tt></em></font>.
+It also inherits from <font color="#008080"><em><tt>HASHABLE</tt></em></font>
+in order to allow dates and times to be used as keys in hash
+tables. Durations can be added together or subtracted using the
+operators <a href="flatshort/dt_duration.html#infix_plus"><font
+color="#008080"><em><strong><tt>infix</tt></strong></em><em><tt> </tt></em><tt>&quot;+&quot;</tt></font></a>,
+<a href="flatshort/dt_duration.html#infix_minus"><font
+color="#008080"><em><strong><tt>infix</tt></strong></em><em><tt> </tt></em><tt>&quot;-&quot;</tt></font></a>,
+<a href="flatshort/dt_duration.html#prefix_plus"><font
+color="#008080"><em><strong><tt>prefix</tt></strong></em><em><tt>
+</tt></em><tt>&quot;+&quot;</tt></font></a> and <a
+href="flatshort/dt_duration.html#prefix_minus"><font
+color="#008080"><em><strong><tt>prefix</tt></strong></em><em><tt>
+</tt></em><tt>&quot;-&quot;</tt></font></a>. There are three
+kinds of durations. Time durations, instances of class <a
+href="flatshort/dt_time_duration.html"><font color="#008080"><em><tt>DT_TIME_DURATION</tt></em></font></a>,
+represent the amount of time between two <a
+href="absolute.html#time">times</a> such as 2 hours and 30
+mnutes. Date durations, instances of class <a
+href="flatshort/dt_date_duration.html"><font color="#008080"><em><tt>DT_DATE_DURATION</tt></em></font></a>,
+are amounts of time between two <a href="absolute.html#date">dates</a>
+such as 1 year and 3 months. And date/time durations, instances
+of class <a href="flatshort/dt_date_time_duration.html"><font
+color="#008080"><em><tt>DT_DATE_TIME_DURATION</tt></em></font></a>,
+are amounts of time between two <a href="absolute.html#date_time">date/times</a>
+such as 5 days and 10 hours.</p>
+
+<h2><a name="time">Time</a> Duration</h2>
+
+<p>Time durations are made up of <a
+href="flatshort/dt_time_duration.html#hour"><font color="#008080"><em><tt>hour</tt></em></font></a>,
+<a href="flatshort/dt_time_duration.html#minute"><font
+color="#008080"><em><tt>minute</tt></em></font></a> and <a
+href="flatshort/dt_time_duration.html#second"><font
+color="#008080"><em><tt>second</tt></em></font></a>. Contrary to
+time objects, these features can have arbitrary values such as 36
+hours, -6 minutes and 70 seconds. Precision up to the millisecond
+is also available thanks to the feature <a
+href="flatshort/dt_time_duration.html#millisecond"><font
+color="#008080"><em><tt>millisecond</tt></em></font></a>. These
+four fields of class <font color="#008080"><em><tt>DT_TIME_DURATION</tt></em></font>
+can be set individually or together with the following routines: <a
+href="flatshort/dt_time_duration.html#set_hour"><font
+color="#008080"><em><tt>set_hour</tt></em></font></a>, <a
+href="flatshort/dt_time_duration.html#set_minute"><font
+color="#008080"><em><tt>set_minute</tt></em></font></a>, <a
+href="flatshort/dt_time_duration.html#set_second"><font
+color="#008080"><em><tt>set_second</tt></em></font></a>, <a
+href="flatshort/dt_time_duration.html#set_millisecond"><font
+color="#008080"><em><tt>set_millisecond</tt></em></font></a>, <a
+href="flatshort/dt_time_duration.html#set_hour_minute_second"><font
+color="#008080"><em><tt>set_hour_minute_second</tt></em></font></a>
+and <a
+href="flatshort/dt_time_duration.html#set_precise_hour_minute_second"><font
+color="#008080"><em><tt>set_precise_hour_minute_second</tt></em></font></a>.
+The <font color="#008080"><em><tt>precise</tt></em></font> prefix
+in feature names implies that the <font color="#008080"><em><tt>millisecond</tt></em></font>
+field is involved. Two other routines, <a
+href="flatshort/dt_time_duration.html#second_count"><font
+color="#008080"><em><tt>second_count</tt></em></font></a> and <a
+href="flatshort/dt_time_duration.html#millisecond_count"><font
+color="#008080"><em><tt>millisecond_count</tt></em></font></a>,
+return the total number of seconds and milliseconds making up the
+duration.</p>
+
+<p>Although the fields of a time duration can have arbitrary
+values, there is one specifal form called canonical where all
+fields have the same sign and where the absolute value of the
+number of minutes is between 0 and 59 and absolute value of the
+number of seconds is between 0 and 59. One can check whether a
+time duration is canonical using the boolean query <a
+href="flatshort/dt_time_duration.html#is_canonical"><font
+color="#008080"><em><tt>is_canonical</tt></em></font></a>.
+Furthermore, given a time duration, there is one and only one
+equivalent canonical duration. For example the canonical form of
+48 hours, -5 minutes and 61 seconds is 47 hours, 56 minutes and 1
+second. There are three ways to get a canonical time duration:
+either call the setting routine <a
+href="flatshort/dt_time_duration.html#set_canonical"><font
+color="#008080"><em><tt>set_canonical</tt></em></font></a>, call
+the conversion routine <a
+href="flatshort/dt_time_duration.html#to_canonical"><font
+color="#008080"><em><tt>to_canonical</tt></em></font></a> to get
+a new duration object corresponding to the canonical version of
+the current duration, or call <a
+href="flatshort/dt_time.html#canonical_duration"><font
+color="#008080"><em><tt>canonical_duration</tt></em></font></a>
+in class <a href="flatshort/dt_time.html"><font color="#008080"><em><tt>DT_TIME</tt></em></font></a>.
+For time duration comparison, the canonical form is used. For
+example the duration 65 seconds and the other duration 1 minute
+and 5 seconds are considered equal, whereas 30 minutes is less
+than -1 hour and 120 minutes because the canonical form of the
+latter is 1 hour.</p>
+
+<p>Four creation procedures are provided. <a
+href="flatshort/dt_time_duration.html#make"><font color="#008080"><em><tt>make</tt></em></font></a>
+requires three arguments to set the hour, minute and second,
+whereas <a href="flatshort/dt_time_duration.html#make_precise"><font
+color="#008080"><em><tt>make_precise</tt></em></font></a> needs
+an extra argument to set the millisecond precision. On the other
+hand <a href="flatshort/dt_time_duration.html#make_canonical"><font
+color="#008080"><em><tt>make_canonical</tt></em></font></a> and <a
+href="flatshort/dt_time_duration.html#make_precise_canonical"><font
+color="#008080"><em><tt>make_precise_canonical</tt></em></font></a>
+create a new canonical time duration based on its total number of
+seconds or milliseconds.</p>
+
+<p>It is possible to add or subtract hours, minutes, seconds
+and/or milliseconds to a time duration using features <a
+href="flatshort/dt_time_duration.html#add_hours"><font
+color="#008080"><em><tt>add_hours</tt></em></font></a>, <a
+href="flatshort/dt_time_duration.html#add_minutes"><font
+color="#008080"><em><tt>add_minutes</tt></em></font></a>, <a
+href="flatshort/dt_time_duration.html#add_seconds"><font
+color="#008080"><em><tt>add_seconds</tt></em></font></a>, <a
+href="flatshort/dt_time_duration.html#add_milliseconds"><font
+color="#008080"><em><tt>add_milliseconds</tt></em></font></a>, <a
+href="flatshort/dt_time_duration.html#add_hours_minutes_seconds"><font
+color="#008080"><em><tt>add_hours_minutes_seconds</tt></em></font></a>
+and <a
+href="flatshort/dt_time_duration.html#add_precise_hours_minutes_seconds"><font
+color="#008080"><em><tt>add_precise_hours_minutes_seconds</tt></em></font></a>
+with positive or negative arguments. Fields are added field by
+field. For example adding 25 minutes to the duration 14 hours, 44
+minutes and 10 seconds yields 14 hours, 69 minutes and 10
+seconds. Conversion routines described above can then be used in
+order to get a canonical form.</p>
+
+<h2><a name="date">Date</a> Duration</h2>
+
+<p>Date objects are made up of <a
+href="flatshort/dt_date_duration.html#year"><font color="#008080"><em><tt>year</tt></em></font></a>,
+<a href="flatshort/dt_date_duration.html#month"><font
+color="#008080"><em><tt>month</tt></em></font></a> and <a
+href="flatshort/dt_date_duration.html#day"><font color="#008080"><em><tt>day</tt></em></font></a>.
+Contrary to date objects, these features can have arbitrary
+values such as 2 years, -18 months and 3 days. These four fields
+of class <font color="#008080"><em><tt>DT_DATE_DURATION</tt></em></font>
+can be set individually or together with the following routines: <a
+href="flatshort/dt_date_duration.html#set_year"><font
+color="#008080"><em><tt>set_year</tt></em></font></a>, <a
+href="flatshort/dt_date_duration.html#set_month"><font
+color="#008080"><em><tt>set_month</tt></em></font></a>, <a
+href="flatshort/dt_date_duration.html#set_day"><font
+color="#008080"><em><tt>set_day</tt></em></font></a> and <a
+href="flatshort/dt_date_duration.html#set_year_month_day"><font
+color="#008080"><em><tt>set_year_month_day</tt></em></font></a>.</p>
+
+<p>Because of the irregularities in the Gregorian calendar, the
+months in a year don't have the same number of days. For example
+there are 31 days in January whereas there are only 30 days in
+April and 28 or 29 days in Februay depending on whether the year
+is a leap year or not. As a consequence a duration of 1 month is
+either made up of 28, 29, 30 or 31 days depending on the date to
+which the duration is to be added. For example adding 1 month to
+the date 20 April 2000 is equivalent to adding 30 days whereas
+adding 1 month to the date 5 May 2000 is equivalent to adding 31
+days. Therefore date duration are not deterministic. One way to
+address this problem is to use definite durations. A date
+duration is said to be definite when it is expressed only in
+terms of days, leaving the year and month parts empty. For
+example the duration 40 days is definite where as 2 months and 3
+days is not. One can check whether a date duration is definite or
+not by calling the boolean query <a
+href="flatshort/dt_date_duration.html#is_definite"><font
+color="#008080"><em><tt>is_definite</tt></em></font></a>. There
+are three ways to get a definite date duration: either call the
+setting routine <a
+href="flatshort/dt_date_duration.html#set_definite"><font
+color="#008080"><em><tt>set_definite</tt></em></font></a>, call
+the conversion routine <a
+href="flatshort/dt_date_duration.html#to_definite"><font
+color="#008080"><em><tt>to_definite</tt></em></font></a><font
+color="#008080"><em><tt> </tt></em></font>to get a new duration
+object corresponding to the defnite version of the current
+duration, or call <a href="flatshort/dt_date.html#duration"><font
+color="#008080"><em><tt>duration</tt></em></font></a> in class <a
+href="flatshort/dt_date.html"><font color="#008080"><em><tt>DT_DATE</tt></em></font></a>.
+Note that the first two routines need a date as argument. This is
+used as origin in order to make the duration deterministic before
+the conversion.</p>
+
+<p>As for time duration, canonical forms are also available for
+date duration. A date duration is canonical when its fields have
+all the same sign and when the absolute value of the number of
+days is smaller as possible and the absolute value of the number
+of months is between 0 and 11. Here again, because of the
+irregularities in the Gregorian calendar, the canonical form
+depends on the date to which the duration is to be added. For
+example the canonical form of the duration 34 days when to be
+added to the date 23 September 2000 is 1 month and 4 days,
+whereas it will only be 1 month and 3 days when to be added to
+the date 12 October 2000. Note that this might become tricky in
+some cases. For example the canonical duration between 31 May
+2000 and 30 June 2000 is one month and not 30 days! Indeed, if we
+follow the definition of canonical duration, 0 day is smaller
+than 30 days and adding one month to 31 May 2000 yields the
+expected date thanks to the truncation of the day which occurs in
+the addition routines of class <font color="#008080"><em><tt>DT_DATE</tt></em></font>.
+There are three ways to get a canonical date duration: either
+call the setting routine <a
+href="flatshort/dt_date_duration.html#set_canonical"><font
+color="#008080"><em><tt>set_canonical</tt></em></font></a>, call
+the conversion routine <a
+href="flatshort/dt_date_duration.html#to_canonical"><font
+color="#008080"><em><tt>to_canonical</tt></em></font></a> to get
+a new duration object corresponding to the canonical version of
+the current duration, or call <a
+href="flatshort/dt_date.html#canonical_duration"><font
+color="#008080"><em><tt>canonical_duration</tt></em></font></a>
+in class <font color="#008080"><em><tt>DT_DATE</tt></em></font>.
+Note that for the same reason as for definite durations, the
+first two routines need a date as argument.</p>
+
+<p>Two creation procedures are provided. <a
+href="flatshort/dt_date_duration.html#make"><font color="#008080"><em><tt>make</tt></em></font></a>
+requires three arguments to set the year, month and day. On the
+other hand <a
+href="flatshort/dt_date_duration.html#make_definite"><font
+color="#008080"><em><tt>make_definite</tt></em></font></a> just
+needs the number of days since the number of years and months
+will be set to zero in order to get a definite date duration.</p>
+
+<p>It is possible to add or subtract years, months and/or days to
+a date using features <a
+href="flatshort/dt_date_duration.html#add_years"><font
+color="#008080"><em><tt>add_years</tt></em></font></a>, <a
+href="flatshort/dt_date_duration.html#add_months"><font
+color="#008080"><em><tt>add_months</tt></em></font></a>, <a
+href="flatshort/dt_date_duration.html#add_days"><font
+color="#008080"><em><tt>add_days</tt></em></font></a> and <a
+href="flatshort/dt_date_duration.html#add_years_months_days"><font
+color="#008080"><em><tt>add_years_months_days</tt></em></font></a>
+with positive or negative arguments. For example adding 8 months
+to the date duration 3 years, 11 months and 23 days yields 3
+years, 19 months and 23 days.</p>
+
+<p>Since a month is not always equivalent to the same number of
+days, the comparison of date duration is a partial order
+relationship. For example it is impossible to say whether 1 month
+is less than, equal to or greater to 30 days. it depends of the
+date that we use as origin for the operations with these
+durations. Therefore <font color="#008080"><em><tt>DT_DATE_DURATION</tt></em></font>
+is not a descendant of <font color="#008080"><em><tt>COMPARABLE</tt></em></font>
+but inherits from <font color="#008080"><em><tt>KL_PART_COMPARABLE</tt></em></font>
+instead. The comparison routines are implemented as follows. On
+one side we compare the day part of the two date durations. On
+the other side we convert the year part into months (one year
+yields 12 months), add them to the month part and then compare
+the results. If the comparisons on both sides give the same
+results, then this is the result of the global comparison
+routine, otherwise we return false. For example the duration 2
+years and 2 days is equal to 1 year, 12 months and 2 days; the
+duration 2 months and 5 days is less than 1 year and 10 days.
+However we cannot say much about the duration 2 months and 1 day
+and the other duration 1 month and 31 days. On one side the day
+part is smaller, but on the other side the combination of the
+month and year parts is larger. Without the hint of the date to
+which these durations will be added we have no choice but return
+false in all comparison routines.</p>
+
+<h2><a name="date_time">Date Time</a> Duration</h2>
+
+<hr size="1">
+
+<table border="0" width="100%">
+    <tr>
+        <td><address>
+            <font size="2"><b>Copyright © 2000</b></font><font
+            size="1"><b>, </b></font><font size="2"><strong>Eric
+            Bezault</strong></font><strong> </strong><font
+            size="2"><br>
+            <strong>mailto:</strong></font><a
+            href="mailto:ericb@gobosoft.com"><font size="2">ericb@gobosoft.com</font></a><font
+            size="2"><br>
+            <strong>http:</strong></font><a
+            href="http://www.gobosoft.com"><font size="2">//www.gobosoft.com</font></a><font
+            size="2"><br>
+            <strong>Last Updated:</strong> 24 April 2000</font><br>
+            <!--webbot bot="PurpleText"
+            preview="
+$Date$ 
+$Revision$" --> 
+        </address>
+        </td>
+        <td align="right" valign="top"><a
+        href="http://www.gobosoft.com"><img
+        src="../image/home.gif" alt="Home" border="0" width="40"
+        height="40"></a><a href="index.html"><img
+        src="../image/toc.gif" alt="Toc" border="0" width="40"
+        height="40"></a><a href="absolute.html"><img
+        src="../image/previous.gif" alt="Previous" border="0"
+        width="40" height="40"></a><a href="base.html"><img
+        src="../image/next.gif" alt="Next" border="0" width="40"
+        height="40"></a></td>
+    </tr>
+</table>
+</body>
+</html>

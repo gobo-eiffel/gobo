@@ -146,44 +146,8 @@ feature -- Access
 			-- Canonical duration between `other' and current date
 		require
 			other_not_void: other /= Void
-		local
-			yy, mm, dd: INTEGER
-			od, d: INTEGER
-			dipm, dicm: INTEGER
 		do
-			yy := year - other.year
-			mm := month - other.month
-			d := day
-			od := other.day
-			dd := d - od
-			if other < Current then
-				if dd < 0 then
-					mm := mm - 1
-					dipm := days_in_previous_month
-					if dipm < od then
-						dd := dd + od
-					else
-						dd := dd + dipm
-					end
-				end
-				if mm < 0 then
-					yy := yy - 1
-					mm := Months_in_year + mm
-				end
-			else
-				dicm := days_in_current_month
-				if dd > 0 then
-					mm := mm + 1
-					dd := dd - dicm
-				elseif dicm < od then
-					dd := dd + od - dicm
-				end
-				if mm > 0 then
-					yy := yy + 1
-					mm := mm - Months_in_year
-				end
-			end
-			!! Result.make (yy, mm, dd)
+			!! Result.make_canonical_from_dates (other, Current)
 		ensure
 			duration_not_void: Result /= Void
 			canonical_duration: Result.is_canonical (other)
@@ -265,8 +229,20 @@ feature -- Status report
 
 feature -- Setting
 
+	set_date (a_date: DT_DATE) is
+			-- Set `year', `month' and `day' from `a_date'.
+		require
+			a_date_not_void: a_date /= Void
+		do
+			storage := a_date.storage
+		ensure
+			year_set: year = a_date.year
+			month_set: month = a_date.month
+			day_set: day = a_date.day
+		end
+
 	set_year_month_day (y, m, d: INTEGER) is
-			-- Set `y' to `year', `m' to `month' and `d' to `day'.
+			-- Set `year' to `y', `month' to `m' and `day' to `d'.
 		require
 			m_large_enough: m >= January
 			m_small_enough: m <= December
@@ -287,7 +263,7 @@ feature -- Setting
 		end
 
 	set_year (y: INTEGER) is
-			-- Set `y' to `year'.
+			-- Set `year' to `y'.
 		require
 			leap_year_aware: day <= days_in_month (month, y)
 		local

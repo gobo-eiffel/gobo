@@ -137,14 +137,16 @@ feature -- Status report
 					millisecond <= 0 and millisecond > -1000)
 			end
 		ensure
-			positive_definition: Result implies (millisecond_count >= 0 implies (hour >= 0 and
-				minute >= 0 and minute < Minutes_in_hour and
-				second >= 0 and second < Seconds_in_minute and
-				millisecond >= 0 and millisecond < 1000))
-			negative_definition: Result implies (millisecond_count <= 0 implies (hour <= 0 and
-				minute <= 0 and minute > -Minutes_in_hour and
-				second <= 0 and second > -Seconds_in_minute and
-				millisecond <= 0 and millisecond > -1000))
+			positive_definition: Result implies
+				(millisecond_count >= 0 implies (hour >= 0 and
+					minute >= 0 and minute < Minutes_in_hour and
+					second >= 0 and second < Seconds_in_minute and
+					millisecond >= 0 and millisecond < 1000))
+			negative_definition: Result implies
+				(millisecond_count <= 0 implies (hour <= 0 and
+					minute <= 0 and minute > -Minutes_in_hour and
+					second <= 0 and second > -Seconds_in_minute and
+					millisecond <= 0 and millisecond > -1000))
 		end
 
 feature -- Access
@@ -195,6 +197,17 @@ feature -- Access
 			-- (Create a new object at each call.)
 		do
 			Result := a_time + Current
+		end
+
+feature -- Status setting
+
+	set_canonical is
+			-- Set time duration to be canonical.
+		do
+			make_precise_canonical (millisecond_count)
+		ensure
+			is_canonical: is_canonical
+			same_duration: is_equal (old clone (Current))
 		end
 
 feature -- Setting
@@ -402,14 +415,17 @@ feature -- Conversion
 			millisecond_set: Result.millisecond = millisecond
 		end
 
-	to_canonical: DT_TIME_DURATION is
+	to_canonical: like Current is
 			-- Canonical version of current time duration
 		do
 			!! Result.make_precise_canonical (millisecond_count)
 		ensure
 			canonical_duration_not_void: Result /= Void
-			is_canonical: Result.is_canonical
-			same_duration: Result.same_time_duration (Current)
+				-- The following assertion has been commented out
+				-- because of a bug in SmallEiffel -0.76b1 (implicit
+				-- feature renaming in DT_DATE_TIME).
+--			is_canonical: Result.is_canonical
+			same_duration: Result.is_equal (Current)
 		end
 
 end -- class DT_TIME_DURATION

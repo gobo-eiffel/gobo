@@ -25,7 +25,6 @@ inherit
 			out, append_to_string
 		redefine
 			add_duration, duration,
-			canonical_duration,
 			infix "<", hash_code
 		end
 
@@ -179,71 +178,6 @@ feature -- Access
 				second - other.second, millisecond - other.millisecond)
 		end
 
-	canonical_duration (other: like Current): like duration is
-			-- Canonical duration between `other' and current date time
-		local
-			yy, mm, dd: INTEGER
-			tt, h, mi, s, ms: INTEGER
-			od, d: INTEGER
-			dipm, dicm: INTEGER
-		do
-			yy := year - other.year
-			mm := month - other.month
-			d := day
-			od := other.day
-			dd := d - od
-			tt := millisecond_count - other.millisecond_count
-			if other < Current then
-				if tt < 0 then
-					dd := dd - 1
-					tt := tt + Milliseconds_in_day
-				end
-				ms := tt \\ 1000
-				tt := tt // 1000
-				s := tt \\ Seconds_in_minute
-				tt := tt // Seconds_in_minute
-				mi := tt \\ Minutes_in_hour
-				h := tt // Minutes_in_hour
-				if dd < 0 then
-					mm := mm - 1
-					dipm := days_in_previous_month
-					if dipm < od then
-						dd := dd + od
-					else
-						dd := dd + dipm
-					end
-				end
-				if mm < 0 then
-					yy := yy - 1
-					mm := Months_in_year + mm
-				end
-			else
-				if tt > 0 then
-					dd := dd + 1
-					tt := tt - Milliseconds_in_day
-				end
-				tt := -tt
-				ms := -(tt \\ 1000)
-				tt := tt // 1000
-				s := -(tt \\ Seconds_in_minute)
-				tt := tt // Seconds_in_minute
-				mi := -(tt \\ Minutes_in_hour)
-				h := -(tt // Minutes_in_hour)
-				dicm := days_in_current_month
-				if dd > 0 then
-					mm := mm + 1
-					dd := dd - dicm
-				elseif dicm < od then
-					dd := dd + od - dicm
-				end
-				if mm > 0 then
-					yy := yy + 1
-					mm := mm - Months_in_year
-				end
-			end
-			!! Result.make_precise (yy, mm, dd, h, mi, s, ms)
-		end
-
 	hash_code: INTEGER is
 			-- Hash code
 		do
@@ -251,33 +185,6 @@ feature -- Access
 			if Result < 0 then
 				Result := -(Result + 1)
 			end
-		end
-
-feature -- Setting
-
-	set_date (a_date: like date) is
-			-- Set date part of current date time.
-		require
-			a_date_not_void: a_date /= Void
-		do
-			date_storage := a_date.storage
-		ensure
-			year_set: year = a_date.year
-			month_set: month = a_date.month
-			day_set: day = a_date.day
-		end
-
-	set_time (a_time: like time) is
-			-- Set time part of current date time.
-		require
-			a_time_not_void: a_time /= Void
-		do
-			time_storage := a_time.storage
-		ensure
-			hour_set: hour = a_time.hour
-			minute_set: minute = a_time.minute
-			second_set: second = a_time.second
-			millisecond_set: millisecond = a_time.millisecond
 		end
 
 feature -- Element change

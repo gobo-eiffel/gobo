@@ -46,57 +46,53 @@
 	(0/0/4 2:53:3).date_time (2000/01/31 15:23:45): 2000/02/04 18:16:48
 	(0/0/4 2:53:3).is_definite: True
 	(0/0/4 2:53:3).is_canonical (2000/01/31 15:23:45): True
-	(0/0/4 2:53:3).is_time_duration_canonical: True
-	(0/0/4 2:53:3).to_definite (2000/01/31 15:23:45): 0/0/4 3:-7:3
+	(0/0/4 2:53:3).is_time_canonical: True
+	(0/0/4 2:53:3).to_definite (2000/01/31 15:23:45): 0/0/4 2:53:3
 	(0/0/4 2:53:3).to_canonical (2000/01/31 15:23:45): 0/0/4 2:53:3
 	(0/0/4 2:53:3).to_time_canonical: 0/0/4 2:53:3
-	(0/0/4 2:53:3).time_duration_to_canonical: 2:53:3
 	(0/0/4 2:53:3).date_to_date_time_duration: 0/0/4 0:0:0
 	(0/0/4 2:53:3).time_to_date_time_duration: 0/0/0 2:53:3
 	(0/0/472 45:6:1).is_definite: True
 	(0/0/472 45:6:1).is_canonical (2000/01/31 15:23:45): False
-	(0/0/472 45:6:1).is_time_duration_canonical: True
-	(0/0/472 45:6:1).to_definite (2000/01/31 15:23:45): 0/0/474 -3:6:1
+	(0/0/472 45:6:1).is_time_canonical: False
+	(0/0/472 45:6:1).to_definite (2000/01/31 15:23:45): 0/0/472 45:6:1
 	(0/0/472 45:6:1).to_canonical (2000/01/31 15:23:45): 1/3/18 21:6:1
 	(0/0/472 45:6:1).to_time_canonical: 0/0/473 21:6:1
-	(0/0/472 45:6:1).time_duration_to_canonical: 45:6:1
 	(0/0/472 45:6:1).date_to_date_time_duration: 0/0/472 0:0:0
 	(0/0/472 45:6:1).time_to_date_time_duration: 0/0/0 45:6:1
 	(0/0/30 2:4:12).date_time (2000/02/29 12:44:03): 2000/03/30 14:48:15
 	(0/0/30 2:4:12).is_definite: True
 	(0/0/30 2:4:12).is_canonical (2000/02/29 12:44:03): False
-	(0/0/30 2:4:12).is_time_duration_canonical: True
+	(0/0/30 2:4:12).is_time_canonical: True
 	(0/0/30 2:4:12).to_definite (2000/02/29 12:44:03): 0/0/30 2:4:12
 	(0/0/30 2:4:12).to_canonical (2000/02/29 12:44:03): 0/1/1 2:4:12
 	(0/0/30 2:4:12).to_time_canonical: 0/0/30 2:4:12
-	(0/0/30 2:4:12).time_duration_to_canonical: 2:4:12
 	(0/0/30 2:4:12).date_to_date_time_duration: 0/0/30 0:0:0
 	(0/0/30 2:4:12).time_to_date_time_duration: 0/0/0 2:4:12
 	(0/1/2 12:3:12).is_definite: False
 	(0/1/2 12:3:12).is_canonical (2000/02/29 12:44:03): True
-	(0/1/2 12:3:12).is_time_duration_canonical: True
-	(0/1/2 12:3:12).to_definite (2000/02/29 12:44:03): 0/0/32 -12:3:12
+	(0/1/2 12:3:12).is_time_canonical: True
+	(0/1/2 12:3:12).to_definite (2000/02/29 12:44:03): 0/0/31 12:3:12
 	(0/1/2 12:3:12).to_canonical (2000/02/29 12:44:03): 0/1/2 12:3:12
-	(0/1/2 12:3:12).time_duration_to_canonical: 12:3:12
+	(0/1/2 12:3:12).to_time_canonical: 0/1/2 12:3:12
 	(0/1/2 12:3:12).date_to_date_time_duration: 0/1/2 0:0:0
 	(0/1/2 12:3:12).time_to_date_time_duration: 0/0/0 12:3:12
 	(0/1/30 10:20:3).date_time (2000/02/01 06:32:12): 2000/03/31 16:52:15
 	(0/1/30 10:20:3).is_definite: False
 	(0/1/30 10:20:3).is_canonical (2000/02/01 06:32:12): True
-	(0/1/30 10:20:3).is_time_duration_canonical: True
+	(0/1/30 10:20:3).is_time_canonical: True
 	(0/1/30 10:20:3).to_definite (2000/02/01 06:32:12): 0/0/59 10:20:3
 	(0/1/30 10:20:3).to_canonical (2000/02/01 06:32:12): 0/1/30 10:20:3
-	(0/1/30 10:20:3).time_duration_to_canonical: 10:20:3
+	(0/1/30 10:20:3).to_time_canonical: 0/1/30 10:20:3
 	(0/1/30 10:20:3).date_to_date_time_duration: 0/1/30 0:0:0
 	(0/1/30 10:20:3).time_to_date_time_duration: 0/0/0 10:20:3
 	(0/0/-30 0:3:0).date_time (2000/04/30 20:25:04): 2000/03/31 20:28:04
 	(0/0/-30 0:3:0).is_definite: True
 	(0/0/-30 0:3:0).is_canonical (2000/04/30 20:25:04): False
-	(0/0/-30 0:3:0).is_time_duration_canonical: True
+	(0/0/-30 0:3:0).is_time_canonical: False
 	(0/0/-30 0:3:0).to_definite (2000/04/30 20:25:04): 0/0/-30 0:3:0
 	(0/0/-30 0:3:0).to_canonical (2000/04/30 20:25:04): 0/0/-29 -23:-57:0
 	(0/0/-30 0:3:0).to_time_canonical: 0/0/-29 -23:-57:0
-	(0/0/-30 0:3:0).time_duration_to_canonical: 0:3:0
 	(0/0/-30 0:3:0).date_to_date_time_duration: 0/0/-30 0:0:0
 	(0/0/-30 0:3:0).time_to_date_time_duration: 0/0/0 0:3:0
 	(2/8/30 2:12:43).set_year_month_day (10, 3, 23): 10/3/23 2:12:43

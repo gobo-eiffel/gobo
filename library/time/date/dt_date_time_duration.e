@@ -25,7 +25,9 @@ inherit
 			out, append_to_string, is_equal
 		redefine
 			infix "<", infix "+", infix "-", prefix "-",
-			hash_code, is_canonical, date_time
+			hash_code, is_canonical, date_time,
+			make_canonical_from_dates,
+			set_canonical
 		end
 
 	DT_TIME_DURATION
@@ -35,13 +37,17 @@ inherit
 			make_canonical as make_canonical_time_duration,
 			make_precise_canonical as make_precise_canonical_time_duration,
 			to_date_time_duration as time_to_date_time_duration,
-			is_canonical as is_time_duration_canonical,
-			to_canonical as time_duration_to_canonical,
+			is_canonical as is_time_canonical,
+			to_canonical as to_time_canonical,
+			set_canonical as  set_time_canonical,
 			time as date_time
 		undefine
 			infix "<", infix "+", infix "-", prefix "-",
 			hash_code, out, precise_out, append_to_string,
 			append_precise_to_string, is_equal, date_time
+		redefine
+			is_time_canonical, set_time_canonical,
+			to_time_canonical
 		end
 
 	DT_DATE_TIME_VALUE
@@ -61,6 +67,10 @@ creation
 	make_precise_canonical_definite,
 	make_from_date_duration,
 	make_from_date_time_duration
+
+creation {DT_DATE_TIME}
+
+	make_canonical_from_dates
 
 feature {NONE} -- Initialization
 
@@ -216,6 +226,72 @@ feature {NONE} -- Initialization
 			millisecond_set: millisecond = 0
 		end
 
+	make_canonical_from_dates (date_from, date_to: like date_time) is
+			-- Create a new canonical duration between
+			-- `date_from' and `date_to'.
+		local
+			yy, mm, dd: INTEGER
+			tt, h, mi, s, ms: INTEGER
+			od, d: INTEGER
+			dipm, dicm: INTEGER
+		do
+			yy := date_to.year - date_from.year
+			mm := date_to.month - date_from.month
+			d := date_to.day
+			od := date_from.day
+			dd := d - od
+			tt := date_to.millisecond_count - date_from.millisecond_count
+			if date_from < date_to then
+				if tt < 0 then
+					dd := dd - 1
+					tt := tt + Milliseconds_in_day
+				end
+				ms := tt \\ 1000
+				tt := tt // 1000
+				s := tt \\ Seconds_in_minute
+				tt := tt // Seconds_in_minute
+				mi := tt \\ Minutes_in_hour
+				h := tt // Minutes_in_hour
+				if dd < 0 then
+					mm := mm - 1
+					dipm := date_to.days_in_previous_month
+					if dipm < od then
+						dd := dd + od
+					else
+						dd := dd + dipm
+					end
+				end
+				if mm < 0 then
+					yy := yy - 1
+					mm := Months_in_year + mm
+				end
+			else
+				if tt > 0 then
+					dd := dd + 1
+					tt := tt - Milliseconds_in_day
+				end
+				tt := -tt
+				ms := -(tt \\ 1000)
+				tt := tt // 1000
+				s := -(tt \\ Seconds_in_minute)
+				tt := tt // Seconds_in_minute
+				mi := -(tt \\ Minutes_in_hour)
+				h := -(tt // Minutes_in_hour)
+				dicm := date_to.days_in_current_month
+				if dd > 0 then
+					mm := mm + 1
+					dd := dd - dicm
+				elseif dicm < od then
+					dd := dd + od - dicm
+				end
+				if mm > 0 then
+					yy := yy + 1
+					mm := mm - Months_in_year
+				end
+			end
+			make_precise (yy, mm, dd, h, mi, s, ms)
+		end
+
 feature -- Status report
 
 	is_canonical (a_date_time: like date_time): BOOLEAN is
@@ -224,7 +300,10 @@ feature -- Status report
 		local
 			final_date_time: like date_time
 		do
-			final_date_time := a_date_time + Current
+			final_date_time := tmp_date_time
+			final_date_time.set_date (a_date_time)
+			final_date_time.set_time (a_date_time)
+			final_date_time.add_duration (Current)
 			if a_date_time <= final_date_time then
 				if
 					hour >= 0 and hour < Hours_in_day and
@@ -272,6 +351,38 @@ feature -- Status report
 					day <= 0 and day > -(a_date_time + Current).days_in_current_month))
 		end
 
+	is_time_canonical: BOOLEAN is
+			-- Has date time duration a canonical time part
+			-- and has the time part same sign as the day part?
+		do
+			if millisecond_count > 0 then
+				Result := (hour >= 0 and hour < Hours_in_day and
+					minute >= 0 and minute < Minutes_in_hour and
+					second >= 0 and second < Seconds_in_minute and
+					millisecond >= 0 and millisecond < 1000 and
+					day >= 0)
+			else
+				Result := (hour <= 0 and hour > -Hours_in_day and
+					minute <= 0 and minute > -Minutes_in_hour and
+					second <= 0 and second > -Seconds_in_minute and
+					millisecond <= 0 and millisecond > -1000 and
+					day <= 0)
+			end
+		ensure then
+			positive_definition: Result implies
+				(millisecond_count >= 0 implies
+					(hour >= 0 and hour < Hours_in_day and
+					minute >= 0 and minute < Minutes_in_hour and
+					second >= 0 and second < Seconds_in_minute and
+					millisecond >= 0 and millisecond < 1000 and day >= 0))
+			negative_definition: Result implies
+				(millisecond_count <= 0 implies
+					(hour <= 0 and hour > -Hours_in_day and
+					minute <= 0 and minute > -Minutes_in_hour and
+					second <= 0 and second > -Seconds_in_minute and
+					millisecond <= 0 and millisecond > -1000 and day <= 0))
+		end
+
 feature -- Access
 
 	date_duration: DT_DATE_DURATION is
@@ -310,6 +421,54 @@ feature -- Access
 			-- (Create a new object at each call.)
 		do
 			Result := a_date_time + Current
+		end
+
+feature -- Status setting
+
+	set_canonical (a_date_time: like date_time) is
+			-- Set current duration to be canonical
+			-- when to be added to `a_date_time'.
+		local
+			final_date_time: like date_time
+		do
+			final_date_time := tmp_date_time
+			final_date_time.set_date (a_date_time)
+			final_date_time.set_time (a_date_time)
+			final_date_time.add_duration (Current)
+			make_canonical_from_dates (a_date_time, final_date_time)
+		end
+
+	set_time_canonical is
+			-- Set duration with its time part canonical
+			-- and with the same sign as its day part.
+		local
+			d, ms: INTEGER
+			m, y: INTEGER
+		do
+			y := year
+			m := month
+			ms := millisecond_count
+			if ms < 0 then
+				ms := -ms
+				d := day - ms // Milliseconds_in_day
+				ms := - ms \\ Milliseconds_in_day
+				if d > 0 and ms /= 0 then
+					d := d - 1
+					ms := Milliseconds_in_day + ms
+				end
+			else
+				d := day + ms // Milliseconds_in_day
+				ms := ms \\ Milliseconds_in_day
+				if d < 0 and ms /= 0 then
+					d := d + 1
+					ms := ms - Milliseconds_in_day
+				end
+			end
+			make_precise_canonical_definite (ms)
+			set_year_month_day (y, m, d)
+		ensure then
+			same_year: year = old year
+			same_month: month = old month
 		end
 
 feature -- Setting
@@ -442,35 +601,22 @@ feature -- Conversion
 	to_time_canonical: like Current is
 			-- Version of current duration where the time part
 			-- is canonical and has the same sign as the day part
-		require
-			is_definite: is_definite
-		local
-			d, ms: INTEGER
 		do
-			ms := millisecond_count
-			if ms < 0 then
-				ms := -ms
-				d := day - ms // Milliseconds_in_day
-				ms := - ms \\ Milliseconds_in_day
-				if d > 0 and ms /= 0 then
-					d := d - 1
-					ms := Milliseconds_in_day + ms
-				end
-			else
-				d := day + ms // Milliseconds_in_day
-				ms := ms \\ Milliseconds_in_day
-				if d < 0 and ms /= 0 then
-					d := d + 1
-					ms := ms - Milliseconds_in_day
-				end
-			end
-			!! Result.make_precise_canonical_definite (ms)
-			Result.set_day (d)
+			Result := clone (Current)
+			Result.set_time_canonical
+		ensure then
+			same_year: Result.year = year
+			same_month: Result.month = month
+		end
+
+feature {NONE} -- Implementation
+
+	tmp_date_time: DT_DATE_TIME is
+			-- Temporary date time
+		once
+			!! Result.make (1, 1, 1, 0, 0, 0)
 		ensure
-			duration_not_void: Result /= Void
-			is_definite: Result.is_definite
-			time_is_canonical: Result.time_duration.is_canonical
-			same_duration: Result.is_equal (Current)
+			tmp_date_time_not_void: Result /= Void
 		end
 
 end -- class DT_DATE_TIME_DURATION

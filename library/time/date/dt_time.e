@@ -222,6 +222,19 @@ feature -- Access
 
 feature -- Setting
 
+	set_time (a_time: DT_TIME) is
+			-- Set `hour', `minute', `second' and `millisecond' from `a_time'.
+		require
+			a_time_not_void: a_time /= Void
+		do
+			storage := a_time.storage
+		ensure
+			hour_set: hour = a_time.hour
+			minute_set: minute = a_time.minute
+			second_set: second = a_time.second
+			millisecond_set: millisecond = a_time.millisecond
+		end
+
 	set_hour_minute_second (h, m, s: INTEGER) is
 			-- Set `hour' to `h', `minute' to `m' and `second' to `s'.
 		require
