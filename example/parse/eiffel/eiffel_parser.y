@@ -63,7 +63,7 @@ creation
 %left E_FREEOP
 %right E_NOT E_OLD
 
-%expect 253
+%expect 24
 %start Class_declarations
 
 %%
@@ -100,9 +100,6 @@ Index_list_with_no_terminator: Index_clause
 
 Index_clause: Index_terms
 	| Identifier ':' Index_terms
-		-- Note: Eiffel says that the Index_terms list 
-		-- should not be empty, but VE allows that!
-	| Identifier ':'
 	;
 
 Index_terms: Index_value
@@ -218,10 +215,10 @@ Feature_adaptation5: Select E_END
 --------------------------------------------------------------------------------
 
 Rename: E_RENAME Rename_list
+	| E_RENAME
 	;
 
-Rename_list: -- Empty
-	| Feature_name E_AS Feature_name
+Rename_list: Feature_name E_AS Feature_name
 	| Rename_list ',' Feature_name E_AS Feature_name
 	;
 
@@ -296,12 +293,15 @@ Select_opt: -- Empty
 --------------------------------------------------------------------------------
 
 Creators_opt: -- Empty
-	| Creation_clause
-	| Creators_opt Creation_clause
+	| Creators
+	;
+
+Creators: Creation_clause
+	| Creators Creation_clause
 	;
 
 Creation_clause: E_CREATION Clients_opt Procedure_list
-		-- Only supported by ISE:
+		-- New language extension from ISE:
 	| E_CREATE Clients_opt Procedure_list
 	;
 
@@ -315,8 +315,11 @@ Procedure_list: -- Empty
 --------------------------------------------------------------------------------
 
 Features_opt: -- Empty
-	| Feature_clause
-	| Features_opt Feature_clause
+	| Features
+	;
+
+Features: Feature_clause
+	| Features Feature_clause
 	;
 
 Feature_clause: E_FEATURE Clients_opt Feature_declaration_list
@@ -516,13 +519,14 @@ Type_list: -- Empty
 --------------------------------------------------------------------------------
 
 Compound: -- Empty
-	| Instruction
-	| Compound Instruction
+	| Instructions
+	;
+
+Instructions: Instruction
+	| Instructions Instruction
 	;
 
 Instruction: Creation_instruction
-		-- Only supported by ISE:
-	| Create_instruction
 	| Call
 	| Assignment
 	| Conditional
@@ -532,6 +536,8 @@ Instruction: Creation_instruction
 	| Check
 	| E_RETRY
 	| ';'
+		-- New language extension from ISE:
+	| Create_instruction
 	;
 
 --------------------------------------------------------------------------------
@@ -544,7 +550,7 @@ Creation_call_opt: -- Empty
 	| '.' Identifier Actuals_opt
 	;
 
-		-- Only supported by ISE:
+		-- New language extension from ISE:
 
 Create_instruction: E_CREATE '{' Type '}' Writable Creation_call_opt
 	| E_CREATE Writable Creation_call_opt
@@ -646,12 +652,13 @@ Call: Call_chain
 			-- reduce/reduce conflict with Agent_expression:
 	| '{' Type '}' E_PRECURSOR Actuals_opt
 	| '{' Type '}' E_PRECURSOR Actuals_opt '.' Call_chain
-		-- Only supported by ISE:
+		-- New language extension from ISE:
 	| E_PRECURSOR '{' Type '}' Actuals_opt
 	| E_PRECURSOR '{' Type '}' Actuals_opt '.' Call_chain
+
 --	| '{' Identifier '}' E_PRECURSOR Actuals_opt
 --	| '{' Identifier '}' E_PRECURSOR Actuals_opt '.' Call_chain
-		-- Only supported by ISE:
+		-- New language extension from ISE:
 --	| E_PRECURSOR '{' Identifier '}' Actuals_opt
 --	| E_PRECURSOR '{' Identifier '}' Actuals_opt '.' Call_chain
 	;
@@ -691,10 +698,6 @@ Writable: Identifier
 --------------------------------------------------------------------------------
 
 Expression: Call
-		-- Only supported by ISE:
-	| Create_expression
-		-- Only supported by ISE (Agents):
-	| Agent_expression
 	| E_RESULT
 	| E_CURRENT
 	| '(' Expression ')'
@@ -705,8 +708,6 @@ Expression: Call
 	| E_STRING
 	| E_BIT
 	| E_LARRAY Expression_list E_RARRAY
-		-- Only supported by ISE (Tuple_expression):
-	| '[' Expression_list ']'
 	| '+' Expression %prec E_NOT
 	| '-' Expression %prec E_NOT
 	| E_NOT Expression
@@ -733,11 +734,15 @@ Expression: Call
 	| Expression E_IMPLIES Expression
 	| E_OLD Expression
 	| E_STRIP '(' Attribute_list ')'
+		-- New language extensions from ISE:
+	| Create_expression
+	| Agent_expression
+	| '[' Expression_list ']'	-- Tuple_expression
 	;
 
 --------------------------------------------------------------------------------
 
-		-- Only supported by ISE (Agents):
+	-- New language extension from ISE:
 
 Agent_expression: Identifier Agent_unqualified
 	| E_CURRENT Agent_unqualified
