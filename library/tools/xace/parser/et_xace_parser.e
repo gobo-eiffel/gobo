@@ -15,6 +15,8 @@ class ET_XACE_PARSER
 
 inherit
 
+	ANY
+
 	ET_XACE_ELEMENT_NAMES
 		export {NONE} all end
 
@@ -58,7 +60,10 @@ feature {NONE} -- Initialization
 			!! xml_preprocessor.make (a_variables, error_handler)
 			!! xml_validator.make (an_error_handler)
 			!! a_parser_factory.make
-			if a_parser_factory.is_toe_eiffel_tree_available then
+			if a_parser_factory.is_toe_expat_tree_available then
+				xml_parser := a_parser_factory.new_toe_expat_tree_parser
+				xml_parser.enable_position_table
+			elseif a_parser_factory.is_toe_eiffel_tree_available then
 				xml_parser := a_parser_factory.new_toe_eiffel_tree_parser
 				xml_parser.enable_position_table
 			else

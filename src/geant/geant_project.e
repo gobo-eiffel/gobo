@@ -204,6 +204,7 @@ feature -- Processing
 			-- When set use `a_start_target_name' for first target to execute
 		local
 			xml_parser: GEANT_PROJECT_PARSER
+			xml_parser_impl: XI_EVENT_PARSER
 			ucs: UC_STRING
 			tmp_start_target_name: UC_STRING
 			target_elements: DS_ARRAYED_LIST [GEANT_XML_ELEMENT]
@@ -218,7 +219,14 @@ feature -- Processing
 				print("Loading Project's configuration from " + build_filename.out + "%N")
 			end
 				-- Create xml parser:
-			!! xml_parser.make_from_implementation (Parser_factory.new_eiffel_event_parser_imp)
+			if Parser_factory.is_expat_event_available then
+				xml_parser_impl := Parser_factory.new_expat_event_parser_imp
+			elseif Parser_factory.is_eiffel_event_available then
+				xml_parser_impl := Parser_factory.new_eiffel_event_parser_imp
+			else
+				exit_application (1, "geant error: no XML parser available%N")
+			end
+			!! xml_parser.make_from_implementation (xml_parser_impl)
 			xml_parser.parse_from_file_name (build_filename)
 
 				-- Setup project's root element:
