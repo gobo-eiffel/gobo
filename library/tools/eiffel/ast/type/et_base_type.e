@@ -37,9 +37,12 @@ inherit
 			base_class as context_base_class,
 			base_type as context_base_type,
 			base_type_actual as context_base_type_actual,
+			base_type_actual_parameter as context_base_type_actual_parameter,
 			base_type_actual_count as context_base_type_actual_count,
 			is_cat_type as context_is_cat_type,
-			is_actual_cat_type as context_is_actual_cat_type
+			is_actual_cat_type as context_is_actual_cat_type,
+			is_cat_parameter as context_is_cat_parameter,
+			is_actual_cat_parameter as context_is_actual_cat_parameter
 		redefine
 			has_context, root_context, is_root_context,
 			context_base_class, context_base_type
@@ -65,7 +68,7 @@ feature -- Access
 		end
 
 	base_type_actual (i: INTEGER; a_context: ET_TYPE_CONTEXT; a_universe: ET_UNIVERSE): ET_NAMED_TYPE is
-			-- `i'-th actual generic parameter of the base type of current
+			-- `i'-th actual generic parameter's type of the base type of current
 			-- type when it appears in `a_context' in `a_universe'
 		local
 			an_actual: ET_TYPE
@@ -79,6 +82,23 @@ feature -- Access
 			end
 			if Result = Void then
 				Result := an_actual.named_type (a_context, a_universe)
+			end
+		end
+
+	base_type_actual_parameter (i: INTEGER; a_context: ET_TYPE_CONTEXT; a_universe: ET_UNIVERSE): ET_ACTUAL_PARAMETER is
+			-- `i'-th actual generic parameter of the base type of current
+			-- type when it appears in `a_context' in `a_universe'
+		local
+			an_actual: ET_ACTUAL_PARAMETER
+		do
+			an_actual := actual_parameters.actual_parameter (i)
+			if a_context = Current then
+					-- The current type is its own context,
+					-- therefore it is its own base type (i.e all
+					-- its actual generic parameters are named).
+				Result := an_actual
+			else
+				Result := an_actual.named_parameter (a_context, a_universe)
 			end
 		end
 
@@ -154,6 +174,13 @@ feature -- Status report
 			-- type a monomorphic type when viewed from `a_context' in `a_universe'?
 		do
 			Result := actual_parameters.type (i).is_cat_type (a_context, a_universe)
+		end
+
+	is_actual_cat_parameter (i: INTEGER; a_context: ET_TYPE_CONTEXT; a_universe: ET_UNIVERSE): BOOLEAN is
+			-- Is actual generic parameter at index `i' in the base type of current
+			-- type a non-conforming parameter when viewed from `a_context' in `a_universe'?
+		do
+			Result := actual_parameters.actual_parameter (i).is_cat_parameter (a_context, a_universe)
 		end
 
 	has_anchored_type (a_context: ET_TYPE_CONTEXT; a_universe: ET_UNIVERSE): BOOLEAN is

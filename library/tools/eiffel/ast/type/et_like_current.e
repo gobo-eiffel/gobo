@@ -80,10 +80,17 @@ feature -- Access
 		end
 
 	base_type_actual (i: INTEGER; a_context: ET_TYPE_CONTEXT; a_universe: ET_UNIVERSE): ET_NAMED_TYPE is
-			-- `i'-th actual generic parameter of the base type of current
+			-- `i'-th actual generic parameter's type of the base type of current
 			-- type when it appears in `a_context' in `a_universe'
 		do
 			Result := a_context.base_type_actual (i, a_universe)
+		end
+
+	base_type_actual_parameter (i: INTEGER; a_context: ET_TYPE_CONTEXT; a_universe: ET_UNIVERSE): ET_ACTUAL_PARAMETER is
+			-- `i'-th actual generic parameter of the base type of current
+			-- type when it appears in `a_context' in `a_universe'
+		do
+			Result := a_context.base_type_actual_parameter (i, a_universe)
 		end
 
 	named_type (a_context: ET_TYPE_CONTEXT; a_universe: ET_UNIVERSE): ET_NAMED_TYPE is
@@ -171,6 +178,22 @@ feature -- Status report
 			-- type a monomorphic type when viewed from `a_context' in `a_universe'?
 		do
 			Result := a_context.is_actual_cat_type (i, a_universe)
+		end
+
+	is_cat_parameter (a_context: ET_TYPE_CONTEXT; a_universe: ET_UNIVERSE): BOOLEAN is
+			-- Is current actual parameter a non-conforming parameter
+			-- when viewed from `a_context' in `a_universe'?
+		do
+				-- Unless we can declare the base class as frozen,
+				-- 'like Current' is not monomorphic.
+			Result := a_context.is_cat_parameter (a_universe)
+		end
+
+	is_actual_cat_parameter (i: INTEGER; a_context: ET_TYPE_CONTEXT; a_universe: ET_UNIVERSE): BOOLEAN is
+			-- Is actual generic parameter at index `i' in the base type of current
+			-- type a non-conforming parameter when viewed from `a_context' in `a_universe'?
+		do
+			Result := a_context.is_actual_cat_parameter (i, a_universe)
 		end
 
 	has_formal_type (i: INTEGER; a_context: ET_TYPE_CONTEXT; a_universe: ET_UNIVERSE): BOOLEAN is

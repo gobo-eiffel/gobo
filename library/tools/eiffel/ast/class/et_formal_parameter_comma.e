@@ -58,7 +58,7 @@ feature -- Access
 
 feature -- Type processing
 
-	resolved_formal_parameters (actual_parameters: ET_ACTUAL_PARAMETER_LIST): ET_TYPE_COMMA is
+	resolved_formal_parameters (actual_parameters: ET_ACTUAL_PARAMETER_LIST): ET_ACTUAL_PARAMETER_COMMA is
 			-- Replace in current type the formal generic parameter
 			-- types by those of `actual_parameters' when the 
 			-- corresponding actual parameter is different from
@@ -74,24 +74,6 @@ feature -- Type processing
 				create Result.make (formal_parameter, comma)
 			end
 		end
-
-feature -- Conversion
-
---	base_type (a_feature: ET_FEATURE; a_type: ET_CLASS_TYPE): ET_TYPE_COMMA is
---			-- Type, in the context of `a_feature' in `a_type',
---			-- only made up of class names and generic formal parameters
---			-- when `a_type' in a generic type not fully derived
---			-- (Definition of base type in ETL2 p.198)
---		local
---			a_base_type: ET_TYPE
---		do
---			a_base_type := formal_parameter.base_type (a_feature, a_type)
---			if a_base_type /= formal_parameter then
---				create Result.make (a_base_type, comma)
---			else
---				create Result.make (formal_parameter, comma)
---			end
---		end
 
 feature -- Processing
 

@@ -354,7 +354,193 @@ feature {NONE} -- Basic operations
 			end
 		end
 
+feature {ET_CONSTRAINT_ACTUAL_PARAMETER_ITEM, ET_CONSTRAINT_ACTUAL_PARAMETER_LIST} -- Generic constraints
+
+	resolved_constraint_actual_parameter_comma (a_constraint: ET_CONSTRAINT_ACTUAL_PARAMETER_COMMA;
+		a_formals: ET_FORMAL_PARAMETER_LIST): ET_ACTUAL_PARAMETER_ITEM is
+			-- Version of `a_constraint', appearing in the constraint
+			-- of one of the formal generic parameters in `a_formals', where
+			-- class names and formal generic parameter names have been
+			-- resolved (i.e. replaced by the corresponding Class_type,
+			-- Tuple_type and Formal_parameter_type)
+		require
+			a_constraint_not_void: a_constraint /= Void
+			a_formals_not_void: a_formals /= Void
+		local
+			a_parameter: ET_ACTUAL_PARAMETER
+		do
+			a_parameter := a_constraint.actual_parameter.resolved_syntactical_constraint (a_formals, Current)
+			if a_parameter /= Void then
+				Result := ast_factory.new_actual_parameter_comma (a_parameter, a_constraint.comma)
+			end
+		end
+
+	resolved_constraint_qualified_actual_parameter (a_constraint: ET_CONSTRAINT_QUALIFIED_ACTUAL_PARAMETER;
+		a_formals: ET_FORMAL_PARAMETER_LIST): ET_ACTUAL_PARAMETER is
+			-- Version of `a_constraint', appearing in the constraint
+			-- of one of the formal generic parameters in `a_formals', where
+			-- class names and formal generic parameter names have been
+			-- resolved (i.e. replaced by the corresponding Class_type,
+			-- Tuple_type and Formal_parameter_type)
+		require
+			a_constraint_not_void: a_constraint /= Void
+			a_formals_not_void: a_formals /= Void
+		local
+			a_type: ET_TYPE
+			a_qualified_parameter: ET_QUALIFIED_ACTUAL_PARAMETER
+		do
+			a_type := a_constraint.type.resolved_syntactical_constraint (a_formals, Current)
+			if a_type /= Void then
+				create a_qualified_parameter.make (a_type)
+				a_qualified_parameter.set_cat_keyword (a_constraint.cat_keyword)
+				Result := a_qualified_parameter
+			end
+		end
+
+	resolved_constraint_named_type (a_constraint: ET_CONSTRAINT_NAMED_TYPE;
+		a_formals: ET_FORMAL_PARAMETER_LIST): ET_TYPE is
+			-- Version of `a_constraint', appearing in the constraint of
+			-- one of the formal generic parameters in `a_formals', where
+			-- class names and formal generic parameter names have been
+			-- resolved (i.e. replaced by the corresponding Class_type,
+			-- Tuple_type and Formal_parameter_type)
+		require
+			a_constraint_not_void: a_constraint /= Void
+			a_formals_not_void: a_formals /= Void
+		local
+			a_name: ET_IDENTIFIER
+			a_formal: ET_FORMAL_PARAMETER
+			a_type_mark: ET_KEYWORD
+			a_base_class: ET_CLASS
+			a_class_type: ET_CLASS_TYPE
+		do
+			a_name := a_constraint.name
+			a_type_mark := a_constraint.type_mark
+			a_formal := a_formals.formal_parameter_by_name (a_name)
+			if a_formal /= Void then
+				if a_type_mark /= Void then
+						-- A formal parameter cannot be prefixed by
+						-- 'expanded' or 'reference'.
+					report_syntax_error (a_type_mark.position)
+				end
+				Result := ast_factory.new_formal_parameter_type (a_name, a_formal.index)
+			else
+				a_base_class := universe.eiffel_class (a_name)
+				if a_base_class = universe.tuple_class then
+					if a_type_mark /= Void then
+							-- A TUPLE type is not a class type. It cannot
+							-- be prefixed by 'expanded' or 'reference'.
+						report_syntax_error (a_type_mark.position)
+					end
+					Result := ast_factory.new_tuple_type (a_name, Void)
+				else
+					a_base_class.set_in_system (True)
+					a_class_type := ast_factory.new_class_type (a_type_mark, a_name, a_base_class)
+					if universe.cat_enabled and a_class_type /= Void and then not a_class_type.is_expanded then
+						a_class_type.set_cat_keyword (tokens.cat_keyword)
+					end
+					Result := a_class_type
+				end
+			end
+		end
+
+	resolved_constraint_generic_named_type (a_constraint: ET_CONSTRAINT_GENERIC_NAMED_TYPE;
+		a_formals: ET_FORMAL_PARAMETER_LIST): ET_TYPE is
+			-- Version `a_constraint', appearing in the constraint of
+			-- one of the formal generic parameters in `a_formals', where
+			-- class names and formal generic parameter names have been
+			-- resolved (i.e. replaced by the corresponding Class_type,
+			-- Tuple_type and Formal_parameter_type)
+		require
+			a_constraint_not_void: a_constraint /= Void
+			a_formals_not_void: a_formals /= Void
+		local
+			a_name: ET_IDENTIFIER
+			a_type_mark: ET_KEYWORD
+			a_formal: ET_FORMAL_PARAMETER
+			a_base_class: ET_CLASS
+			a_parameters: ET_ACTUAL_PARAMETER_LIST
+			a_class_type: ET_CLASS_TYPE
+		do
+			a_name := a_constraint.name
+			a_type_mark := a_constraint.type_mark
+			a_formal := a_formals.formal_parameter_by_name (a_name)
+			if a_formal /= Void then
+				if a_type_mark /= Void then
+						-- A formal parameter cannot be prefixed by
+						-- 'expanded' or 'reference'.
+					report_syntax_error (a_type_mark.position)
+				end
+					-- A formal parameter cannot have actual generic parameters.
+				report_syntax_error (a_constraint.actual_parameters.position)
+				Result := ast_factory.new_formal_parameter_type (a_name, a_formal.index)
+			else
+				a_base_class := universe.eiffel_class (a_name)
+				a_parameters := a_constraint.actual_parameters.resolved_syntactical_constraint (a_formals, Current)
+				if a_parameters /= Void then
+					if a_base_class = universe.tuple_class then
+						if a_type_mark /= Void then
+								-- A TUPLE type is not a class type. It cannot
+								-- be prefixed by 'expanded' or 'reference'.
+							report_syntax_error (a_type_mark.position)
+						end
+						Result := ast_factory.new_tuple_type (a_name, a_parameters)
+					else
+						a_base_class.set_in_system (True)
+						a_class_type := ast_factory.new_generic_class_type (a_type_mark, a_name, a_parameters, a_base_class)
+						if universe.cat_enabled and a_class_type /= Void and then not a_class_type.is_expanded then
+							a_class_type.set_cat_keyword (tokens.cat_keyword)
+						end
+						Result := a_class_type
+					end
+				end
+			end
+		end
+
+	resolved_constraint_actual_parameter_list (a_constraint: ET_CONSTRAINT_ACTUAL_PARAMETER_LIST;
+		a_formals: ET_FORMAL_PARAMETER_LIST): ET_ACTUAL_PARAMETER_LIST is
+			-- Version of `a_constraint', appearing in the constraint of
+			-- one of the formal generic parameters in `a_formals', where
+			-- class names and formal generic parameter names have been
+			-- resolved (i.e. replaced by the corresponding Class_type,
+			-- Tuple_type and Formal_parameter_type)
+		require
+			a_constraint_not_void: a_constraint /= Void
+			a_formals_not_void: a_formals /= Void
+		local
+			i, nb: INTEGER
+			a_parameter: ET_ACTUAL_PARAMETER_ITEM
+		do
+			nb := a_constraint.count
+			Result := ast_factory.new_actual_parameters (a_constraint.left_bracket, a_constraint.right_bracket, nb)
+			if Result /= Void then
+				from i := nb until i < 1 loop
+					a_parameter := a_constraint.item (i).resolved_syntactical_constraint (a_formals, Current)
+					if a_parameter /= Void then
+						Result.put_first (a_parameter)
+					end
+					i := i - 1
+				end
+			end
+		end
+
 feature {NONE} -- AST factory
+
+	new_actual_parameter (a_type: ET_TYPE): ET_ACTUAL_PARAMETER is
+			-- New actual parameter
+		local
+			a_qualified_parameter: ET_QUALIFIED_ACTUAL_PARAMETER
+		do
+			if universe.cat_enabled then
+				if a_type /= Void then
+					create a_qualified_parameter.make (a_type)
+					a_qualified_parameter.set_cat_keyword (tokens.cat_keyword)
+					Result := a_qualified_parameter
+				end
+			else
+				Result := ast_factory.new_actual_parameter (a_type)
+			end
+		end
 
 	new_bit_n (a_bit: ET_IDENTIFIER; an_int: ET_INTEGER_CONSTANT): ET_BIT_N is
 			-- New 'BIT N' type
@@ -400,6 +586,34 @@ feature {NONE} -- AST factory
 			end
 		end
 
+	new_constraint_actual_parameter (a_type: ET_CONSTRAINT_TYPE): ET_CONSTRAINT_ACTUAL_PARAMETER is
+			-- New actual parameter appearing in a generic constraint
+		local
+			a_qualified_parameter: ET_CONSTRAINT_QUALIFIED_ACTUAL_PARAMETER
+		do
+			if universe.cat_enabled then
+				if a_type /= Void then
+					create a_qualified_parameter.make (a_type)
+					a_qualified_parameter.set_cat_keyword (tokens.cat_keyword)
+					Result := a_qualified_parameter
+				end
+			else
+				Result := ast_factory.new_constraint_actual_parameter (a_type)
+			end
+		end
+
+	new_constrained_formal_parameter (a_name: ET_IDENTIFIER; an_arrow: ET_SYMBOL; a_constraint: ET_TYPE;
+		a_creation: ET_CONSTRAINT_CREATOR): ET_CONSTRAINED_FORMAL_PARAMETER is
+			-- New constrained formal generic parameter
+		do
+			Result := ast_factory.new_constrained_formal_parameter (a_name, an_arrow, a_constraint, a_creation)
+			if Result /= Void then
+				if universe.cat_enabled then
+					Result.set_cat_keyword (tokens.cat_keyword)
+				end
+			end
+		end
+
 	new_constraint_named_type (a_type_mark: ET_KEYWORD; a_name: ET_IDENTIFIER;
 		a_parameters: ET_CONSTRAINT_ACTUAL_PARAMETER_LIST): ET_CONSTRAINT_NAMED_TYPE is
 			-- New Eiffel class type or formal generic paramater
@@ -409,6 +623,17 @@ feature {NONE} -- AST factory
 				Result := ast_factory.new_constraint_generic_named_type (a_type_mark, a_name, a_parameters)
 			else
 				Result := ast_factory.new_constraint_named_type (a_type_mark, a_name)
+			end
+		end
+
+	new_formal_parameter (a_name: ET_IDENTIFIER): ET_FORMAL_PARAMETER is
+			-- New formal generic parameter
+		do
+			Result := ast_factory.new_formal_parameter (a_name)
+			if Result /= Void then
+				if universe.cat_enabled then
+					Result.set_cat_keyword (tokens.cat_keyword)
+				end
 			end
 		end
 

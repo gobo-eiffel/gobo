@@ -16,9 +16,15 @@ inherit
 
 	ET_TYPE_ITEM
 
-	ET_CONSTRAINT_TYPE
+	ET_ACTUAL_PARAMETER
 		redefine
-			type
+			resolved_formal_parameters,
+			resolved_syntactical_constraint
+		end
+
+	ET_CONSTRAINT_TYPE
+		undefine
+			actual_parameter
 		end
 
 	ET_DECLARED_TYPE
@@ -75,6 +81,24 @@ feature -- Access
 		end
 
 	base_type_actual (i: INTEGER; a_context: ET_TYPE_CONTEXT; a_universe: ET_UNIVERSE): ET_NAMED_TYPE is
+			-- `i'-th actual generic parameter's type of the base type of current
+			-- type when it appears in `a_context' in `a_universe'
+		require
+			a_context_not_void: a_context /= Void
+			a_context_valid: a_context.is_valid_context
+			a_universe_not_void: a_universe /= Void
+			-- no_cycle: no cycle in anchored types involved.
+			i_large_enough: i >= 1
+			i_small_enough: i <= base_type_actual_count (a_context, a_universe)
+		deferred
+		ensure
+			base_type_actualnot_void: Result /= Void
+			definition: Result.same_named_type (base_type (a_context, a_universe).actual_parameters.type (i), a_context.root_context, a_context.root_context, a_universe)
+			actual_parameter_type: Result.same_named_type (base_type_actual_parameter (i, a_context, a_universe).type, a_context.root_context, a_context.root_context, a_universe)
+			named_type_named: Result.is_named_type
+		end
+
+	base_type_actual_parameter (i: INTEGER; a_context: ET_TYPE_CONTEXT; a_universe: ET_UNIVERSE): ET_ACTUAL_PARAMETER is
 			-- `i'-th actual generic parameter of the base type of current
 			-- type when it appears in `a_context' in `a_universe'
 		require
@@ -86,8 +110,9 @@ feature -- Access
 			i_small_enough: i <= base_type_actual_count (a_context, a_universe)
 		deferred
 		ensure
-			definition: Result = base_type (a_context, a_universe).actual_parameters.type (i)
-			named_type_named: Result.is_named_type
+			base_type_actual_parameter_not_void: Result /= Void
+			--definition: Result.same_actual_parameter (base_type (a_context, a_universe).actual_parameters.actual_parameter (i), a_context.root_context, a_context.root_context, a_universe)
+			named_type_named: Result.type.is_named_type
 		end
 
 	named_type (a_context: ET_TYPE_CONTEXT; a_universe: ET_UNIVERSE): ET_NAMED_TYPE is
@@ -106,6 +131,13 @@ feature -- Access
 		ensure
 			named_type_not_void: Result /= Void
 			named_type_named: Result.is_named_type
+		end
+
+	named_parameter (a_context: ET_TYPE_CONTEXT; a_universe: ET_UNIVERSE): ET_ACTUAL_PARAMETER is
+			-- Same as current actual parameter but its type
+			-- replaced by its named type
+		do
+			Result := named_type (a_context, a_universe)
 		end
 
 	type: ET_TYPE is
@@ -181,6 +213,21 @@ feature -- Status report
 		deferred
 		ensure
 			definition: Result = base_type_actual (i, a_context, a_universe).is_cat_type (a_context, a_universe)
+		end
+
+	is_actual_cat_parameter (i: INTEGER; a_context: ET_TYPE_CONTEXT; a_universe: ET_UNIVERSE): BOOLEAN is
+			-- Is actual generic parameter at index `i' in the base type of current
+			-- type a non-conforming parameter when viewed from `a_context' in `a_universe'?
+		require
+			a_context_not_void: a_context /= Void
+			a_context_valid: a_context.is_valid_context
+			a_universe_not_void: a_universe /= Void
+			-- no_cycle: no cycle in anchored types involved.
+			i_large_enough: i >= 1
+			i_small_enough: i <= base_type_actual_count (a_context, a_universe)
+		deferred
+		ensure
+			definition: Result = base_type_actual (i, a_context, a_universe).is_cat_parameter (a_context, a_universe)
 		end
 
 	has_anchored_type (a_context: ET_TYPE_CONTEXT; a_universe: ET_UNIVERSE): BOOLEAN is

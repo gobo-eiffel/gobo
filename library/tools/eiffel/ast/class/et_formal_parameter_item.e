@@ -14,13 +14,19 @@ deferred class ET_FORMAL_PARAMETER_ITEM
 
 inherit
 
-	ET_TYPE_ITEM
+	ET_ACTUAL_PARAMETER_ITEM
 
 feature -- Access
 
 	formal_parameter: ET_FORMAL_PARAMETER is
 			-- Formal generic parameter in comma-separated list
 		deferred
+		end
+
+	actual_parameter: ET_ACTUAL_PARAMETER is
+			-- Actual parameter in comma-separated list
+		do
+			Result := type
 		end
 
 	type: ET_FORMAL_PARAMETER is

@@ -373,7 +373,7 @@ feature {NONE} -- Instruction validity
 							nb2 := a_formals.count
 							nb := a_context.base_type_actual_count (universe)
 							from i := 1 until i > nb loop
-								if not a_context.is_actual_cat_type (i, universe) then
+								if not a_context.is_actual_cat_parameter (i, universe) then
 									from j := 1 until j > nb2 loop
 										a_formal := a_formals.formal_argument (j)
 										if a_formal.type.has_formal_type (i, a_context, universe) then

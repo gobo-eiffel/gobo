@@ -18,7 +18,8 @@ inherit
 		redefine
 			arguments,
 			preconditions,
-			postconditions
+			postconditions,
+			obsolete_message
 		end
 
 feature -- Access

@@ -143,6 +143,13 @@ feature -- Status report
 			Result := True
 		end
 
+	is_cat_parameter (a_context: ET_TYPE_CONTEXT; a_universe: ET_UNIVERSE): BOOLEAN is
+			-- Is current actual parameter a non-conforming parameter
+			-- when viewed from `a_context' in `a_universe'?
+		do
+			Result := False
+		end
+
 feature -- Comparison
 
 	same_syntactical_type (other: ET_TYPE; other_context: ET_TYPE_CONTEXT;
@@ -308,8 +315,6 @@ feature {ET_TYPE} -- Conformance
 		local
 			a_parameters: like actual_parameters
 			other_parameters: ET_ACTUAL_PARAMETER_LIST
-			a_type, other_type: ET_TYPE
-			i, nb: INTEGER
 		do
 			if other = Current and other_context = a_context then
 				Result := True
@@ -321,20 +326,7 @@ feature {ET_TYPE} -- Conformance
 				elseif other_parameters = Void then
 					Result := a_parameters.is_empty
 				else
-					nb := a_parameters.count
-					if nb <= other_parameters.count then
-						Result := True
-						from i := 1 until i > nb loop
-							other_type := other_parameters.type (i)
-							a_type := a_parameters.type (i)
-							if not other_type.conforms_to_type (a_type, a_context, other_context, a_universe) then
-								Result := False
-								i := nb + 1 -- Jump out of the loop.
-							else
-								i := i + 1
-							end
-						end
-					end
+					Result := other_parameters.tuple_conforms_to_types (a_parameters, a_context, other_context, a_universe)
 				end
 			end
 		end

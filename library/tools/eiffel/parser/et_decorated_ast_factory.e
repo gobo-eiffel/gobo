@@ -130,6 +130,7 @@ inherit
 			new_underscored_real_constant,
 			new_verbatim_string,
 			new_actual_arguments,
+			new_actual_parameter_comma,
 			new_actual_parameters,
 			new_agent_actual_argument_comma,
 			new_agent_actual_arguments,
@@ -153,9 +154,9 @@ inherit
 			new_conditional,
 			new_constant_attribute,
 			new_constrained_formal_parameter,
+			new_constraint_actual_parameter_comma,
 			new_constraint_actual_parameters,
 			new_constraint_creator,
-			new_constraint_type_comma,
 			new_convert_feature_comma,
 			new_convert_features,
 			new_convert_function,
@@ -1278,6 +1279,16 @@ feature -- AST nodes
 			end
 		end
 
+	new_actual_parameter_comma (a_parameter: ET_ACTUAL_PARAMETER; a_comma: ET_SYMBOL): ET_ACTUAL_PARAMETER_ITEM is
+			-- New actual_parameter-comma
+		do
+			if a_comma = Void then
+				Result := a_parameter
+			elseif a_parameter /= Void then
+				create {ET_ACTUAL_PARAMETER_COMMA} Result.make (a_parameter, a_comma)
+			end
+		end
+
 	new_actual_parameters (a_left, a_right: ET_SYMBOL; nb: INTEGER): ET_ACTUAL_PARAMETER_LIST is
 			-- New actual generic parameter list with given capacity
 		do
@@ -1531,6 +1542,16 @@ feature -- AST nodes
 			end
 		end
 
+	new_constraint_actual_parameter_comma (a_parameter: ET_CONSTRAINT_ACTUAL_PARAMETER; a_comma: ET_SYMBOL): ET_CONSTRAINT_ACTUAL_PARAMETER_ITEM is
+			-- New constraint_actual_parameter-comma
+		do
+			if a_comma = Void then
+				Result := a_parameter
+			elseif a_parameter /= Void then
+				create {ET_CONSTRAINT_ACTUAL_PARAMETER_COMMA} Result.make (a_parameter, a_comma)
+			end
+		end
+
 	new_constraint_actual_parameters (a_left, a_right: ET_SYMBOL; nb: INTEGER): ET_CONSTRAINT_ACTUAL_PARAMETER_LIST is
 			-- New constraint actual generic parameter list with given capacity
 		do
@@ -1552,16 +1573,6 @@ feature -- AST nodes
 			end
 			if an_end /= Void then
 				Result.set_end_keyword (an_end)
-			end
-		end
-
-	new_constraint_type_comma (a_type: ET_CONSTRAINT_TYPE; a_comma: ET_SYMBOL): ET_CONSTRAINT_TYPE_ITEM is
-			-- New constraint_type-comma
-		do
-			if a_comma = Void then
-				Result := a_type
-			elseif a_type /= Void then
-				create {ET_CONSTRAINT_TYPE_COMMA} Result.make (a_type, a_comma)
 			end
 		end
 

@@ -600,7 +600,7 @@ feature {NONE} -- Expression validity
 								nb2 := a_formals.count
 								nb := a_context.base_type_actual_count (universe)
 								from i := 1 until i > nb loop
-									if not a_context.is_actual_cat_type (i, universe) then
+									if not a_context.is_actual_cat_parameter (i, universe) then
 										from j := 1 until j > nb2 loop
 											a_formal := a_formals.formal_argument (j)
 											if a_formal.type.has_formal_type (i, a_context, universe) then
@@ -1414,6 +1414,7 @@ feature {NONE} -- Expression validity
 						an_actuals.put_first (a_type)
 						create a_generic_class_type.make (Void, array_class.name, an_actuals, array_class)
 						a_generic_class_type.set_cat_keyword (universe.array_any_type.cat_keyword)
+						a_generic_class_type.set_unresolved_type (universe.array_any_type)
 						type := a_generic_class_type
 					end
 					context := current_class

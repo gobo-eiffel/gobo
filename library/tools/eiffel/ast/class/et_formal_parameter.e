@@ -20,7 +20,7 @@ inherit
 		rename
 			make as make_type
 		undefine
-			type
+			type, actual_parameter
 		redefine
 			process
 		end
@@ -45,6 +45,9 @@ feature {NONE} -- Initialization
 		end
 
 feature -- Access
+
+	cat_keyword: ET_KEYWORD
+			-- 'cat' keyword
 
 	constraint: ET_TYPE is
 			-- Generic constraint
@@ -83,6 +86,15 @@ feature -- Access
 			Result := Current
 		end
 
+feature -- Status report
+
+	is_cat: BOOLEAN is
+			-- Will actual parameters associatied with current formal
+			-- generic parameter be all monomorphic types?
+		do
+			Result := cat_keyword /= Void
+		end
+
 feature -- Setting
 
 	set_index (an_index: INTEGER) is
@@ -93,6 +105,14 @@ feature -- Setting
 			index := an_index
 		ensure
 			index_set: index = an_index
+		end
+
+	set_cat_keyword (a_cat: like cat_keyword) is
+			-- Set `cat_keyword' to `a_cat'.
+		do
+			cat_keyword := a_cat
+		ensure
+			cat_keyword_set: cat_keyword = a_cat
 		end
 
 	set_constraint_base_type (a_type: like constraint_base_type) is

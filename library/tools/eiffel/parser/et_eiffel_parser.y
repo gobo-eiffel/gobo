@@ -89,7 +89,9 @@ creation
 %right E_NOT E_OLD
 
 %type <ET_ACTUAL_ARGUMENT_LIST> Actuals_opt Actuals_expression_list
-%type <ET_ACTUAL_PARAMETER_LIST> Actual_parameters_opt Type_list Actual_parameters
+%type <ET_ACTUAL_PARAMETER> Actual_parameter
+%type <ET_ACTUAL_PARAMETER_ITEM> Actual_parameter_comma
+%type <ET_ACTUAL_PARAMETER_LIST> Actual_parameters_opt Actual_parameter_list Actual_parameters
 %type <ET_AGENT_ACTUAL_ARGUMENT> Agent_actual
 %type <ET_AGENT_ACTUAL_ARGUMENT_ITEM> Agent_actual_comma
 %type <ET_AGENT_ACTUAL_ARGUMENT_LIST> Agent_actuals_opt Agent_actual_list
@@ -108,10 +110,11 @@ creation
 %type <ET_COMPOUND> Compound Rescue_opt Do_compound Once_compound Then_compound
 %type <ET_COMPOUND> Else_compound Rescue_compound From_compound Loop_compound
 %type <ET_CONSTANT> Manifest_constant
-%type <ET_CONSTRAINT_ACTUAL_PARAMETER_LIST> Constraint_actual_parameters_opt Constraint_type_list
+%type <ET_CONSTRAINT_ACTUAL_PARAMETER> Constraint_actual_parameter
+%type <ET_CONSTRAINT_ACTUAL_PARAMETER_ITEM> Constraint_actual_parameter_comma
+%type <ET_CONSTRAINT_ACTUAL_PARAMETER_LIST> Constraint_actual_parameters_opt Constraint_actual_parameter_list
 %type <ET_CONSTRAINT_CREATOR> Constraint_create Constraint_create_procedure_list
 %type <ET_CONSTRAINT_TYPE> Constraint_type
-%type <ET_CONSTRAINT_TYPE_ITEM> Constraint_type_comma
 %type <ET_CONVERT_FEATURE> Convert_feature
 %type <ET_CONVERT_FEATURE_ITEM> Convert_feature_comma
 %type <ET_CONVERT_FEATURE_LIST> Convert_clause_opt Convert_clause Convert_list
@@ -526,21 +529,21 @@ Formal_parameter_comma: Formal_parameter ','
 
 Formal_parameter: Identifier
 		{
-			$$ := ast_factory.new_formal_parameter ($1)
+			$$ := new_formal_parameter ($1)
 			if $$ /= Void then
 				register_constraint (Void)
 			end
 		}
 	| Identifier E_ARROW Constraint_type
 		{
-			$$ := ast_factory.new_constrained_formal_parameter ($1, $2, dummy_constraint ($3), Void)
+			$$ := new_constrained_formal_parameter ($1, $2, dummy_constraint ($3), Void)
 			if $$ /= Void then
 				register_constraint ($3)
 			end
 		}
 	| Identifier E_ARROW Constraint_type Constraint_create
 		{
-			$$ := ast_factory.new_constrained_formal_parameter ($1, $2, dummy_constraint ($3), $4)
+			$$ := new_constrained_formal_parameter ($1, $2, dummy_constraint ($3), $4)
 			if $$ /= Void then
 				register_constraint ($3)
 			end
@@ -618,7 +621,7 @@ Constraint_actual_parameters_opt: -- Empty
 			add_symbol ($1)
 			add_counter
 		}
-	  Constraint_type_list
+	  Constraint_actual_parameter_list
 		{
 			$$ := $3
 			remove_symbol
@@ -626,7 +629,7 @@ Constraint_actual_parameters_opt: -- Empty
 		}
 	;
 
-Constraint_type_list: Constraint_type ']'
+Constraint_actual_parameter_list: Constraint_actual_parameter ']'
 		{
 			if $1 /= Void then
 				$$ := ast_factory.new_constraint_actual_parameters (last_symbol, $2, counter_value + 1)
@@ -637,7 +640,7 @@ Constraint_type_list: Constraint_type ']'
 				$$ := ast_factory.new_constraint_actual_parameters (last_symbol, $2, counter_value)
 			end
 		}
-	| Constraint_type_comma Constraint_type_list
+	| Constraint_actual_parameter_comma Constraint_actual_parameter_list
 		{
 			$$ := $2
 			if $$ /= Void and $1 /= Void then
@@ -646,9 +649,13 @@ Constraint_type_list: Constraint_type ']'
 		}
 	;
 
-Constraint_type_comma: Constraint_type ','
+Constraint_actual_parameter: Constraint_type
+		{ $$ := new_constraint_actual_parameter ($1) }
+	;
+
+Constraint_actual_parameter_comma: Constraint_actual_parameter ','
 		{
-			$$ := ast_factory.new_constraint_type_comma ($1, $2)
+			$$ := ast_factory.new_constraint_actual_parameter_comma ($1, $2)
 			if $$ /= Void then
 				increment_counter
 			end
@@ -1388,6 +1395,15 @@ Convert_type_list: Type '}'
 		}
 	;
 
+Type_comma: Type ','
+		{
+			$$ := ast_factory.new_type_comma ($1, $2)
+			if $$ /= Void then
+				increment_counter
+			end
+		}
+	;
+
 --------------------------------------------------------------------------------
 
 Features_opt: -- Empty
@@ -1975,7 +1991,7 @@ Actual_parameters: '[' ']'
 			add_symbol ($1)
 			add_counter
 		}
-	  Type_list
+	  Actual_parameter_list
 		{
 			$$ := $3
 			remove_symbol
@@ -1983,7 +1999,7 @@ Actual_parameters: '[' ']'
 		}
 	;
 
-Type_list: Type ']'
+Actual_parameter_list: Actual_parameter ']'
 		{
 			if $1 /= Void then
 				$$ := ast_factory.new_actual_parameters (last_symbol, $2, counter_value + 1)
@@ -1994,7 +2010,7 @@ Type_list: Type ']'
 				$$ := ast_factory.new_actual_parameters (last_symbol, $2, counter_value)
 			end
 		}
-	| Type_comma Type_list
+	| Actual_parameter_comma Actual_parameter_list
 		{
 			$$ := $2
 			if $$ /= Void and $1 /= Void then
@@ -2003,9 +2019,13 @@ Type_list: Type ']'
 		}
 	;
 
-Type_comma: Type ','
+Actual_parameter: Type
+		{ $$ := new_actual_parameter ($1) }
+	;
+
+Actual_parameter_comma: Actual_parameter ','
 		{
-			$$ := ast_factory.new_type_comma ($1, $2)
+			$$ := ast_factory.new_actual_parameter_comma ($1, $2)
 			if $$ /= Void then
 				increment_counter
 			end

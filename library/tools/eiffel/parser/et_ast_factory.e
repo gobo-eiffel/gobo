@@ -1140,6 +1140,18 @@ feature -- AST nodes
 			end
 		end
 
+	new_actual_parameter (a_type: ET_TYPE): ET_ACTUAL_PARAMETER is
+			-- New actual parameter
+		do
+			Result := a_type
+		end
+
+	new_actual_parameter_comma (a_parameter: ET_ACTUAL_PARAMETER; a_comma: ET_SYMBOL): ET_ACTUAL_PARAMETER_ITEM is
+			-- New actual_parameter-comma
+		do
+			Result := a_parameter
+		end
+
 	new_actual_parameters (a_left, a_right: ET_SYMBOL; nb: INTEGER): ET_ACTUAL_PARAMETER_LIST is
 			-- New actual generic parameter list with given capacity
 		require
@@ -1399,6 +1411,18 @@ feature -- AST nodes
 			end
 		end
 
+	new_constraint_actual_parameter (a_type: ET_CONSTRAINT_TYPE): ET_CONSTRAINT_ACTUAL_PARAMETER is
+			-- New actual parameter appearing in a generic constraint
+		do
+			Result := a_type
+		end
+
+	new_constraint_actual_parameter_comma (a_parameter: ET_CONSTRAINT_ACTUAL_PARAMETER; a_comma: ET_SYMBOL): ET_CONSTRAINT_ACTUAL_PARAMETER_ITEM is
+			-- New constraint_actual_parameter-comma
+		do
+			Result := a_parameter
+		end
+
 	new_constraint_actual_parameters (a_left, a_right: ET_SYMBOL; nb: INTEGER): ET_CONSTRAINT_ACTUAL_PARAMETER_LIST is
 			-- New constraint actual generic parameter list with given capacity
 		require
@@ -1435,12 +1459,6 @@ feature -- AST nodes
 			if a_name /= Void then
 				create Result.make (a_type_mark, a_name)
 			end
-		end
-
-	new_constraint_type_comma (a_type: ET_CONSTRAINT_TYPE; a_comma: ET_SYMBOL): ET_CONSTRAINT_TYPE_ITEM is
-			-- New constraint_type-comma
-		do
-			Result := a_type
 		end
 
 	new_convert_feature_comma (a_convert_feature: ET_CONVERT_FEATURE; a_comma: ET_SYMBOL): ET_CONVERT_FEATURE_ITEM is

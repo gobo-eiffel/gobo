@@ -59,7 +59,7 @@ feature -- Access
 feature -- Setting
 
 	set_unresolved_type (a_type: like unresolved_type) is
-			-- Set `origin_type' to `a_type'.
+			-- Set `unresolved_type' to `a_type'.
 		do
 			unresolved_type := a_type
 		ensure

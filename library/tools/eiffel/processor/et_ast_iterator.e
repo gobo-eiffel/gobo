@@ -36,6 +36,13 @@ feature {ET_AST_NODE} -- Processing
 			a_list.right_symbol.process (Current)
 		end
 
+	process_actual_parameter_comma (a_parameter: ET_ACTUAL_PARAMETER_COMMA) is
+			-- Process `a_parameter'.
+		do
+			a_parameter.actual_parameter.process (Current)
+			a_parameter.comma.process (Current)
+		end
+
 	process_actual_parameter_list (a_list: ET_ACTUAL_PARAMETER_LIST) is
 			-- Process `a_list'.
 		local

@@ -14,7 +14,9 @@ class ET_ACTUAL_PARAMETER_LIST
 
 inherit
 
-	ET_TYPE_LIST
+	ET_AST_NODE
+
+	ET_AST_LIST [ET_ACTUAL_PARAMETER_ITEM]
 		redefine
 			make, make_with_capacity
 		end
@@ -43,6 +45,28 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
+	actual_parameter (i: INTEGER): ET_ACTUAL_PARAMETER is
+			-- Actual parameter of `i'-th item in list
+		require
+			i_large_enough: i >= 1
+			i_small_enough: i <= count
+		do
+			Result := item (i).actual_parameter
+		ensure
+			actual_parameter_not_void: Result /= Void
+		end
+
+	type (i: INTEGER): ET_TYPE is
+			-- Type of `i'-th item in list
+		require
+			i_large_enough: i >= 1
+			i_small_enough: i <= count
+		do
+			Result := item (i).type
+		ensure
+			type_not_void: Result /= Void
+		end
+
 	left_bracket: ET_SYMBOL
 			-- Left bracket
 
@@ -50,7 +74,7 @@ feature -- Access
 			-- Right bracket
 
 	named_types (a_context: ET_TYPE_CONTEXT; a_universe: ET_UNIVERSE): ET_ACTUAL_PARAMETER_LIST is
-			-- Base types of current types, when they appear in `a_context'
+			-- Base types of current parameters, when they appear in `a_context'
 			-- in `a_universe', only made up of class names and generic
 			-- formal parameters when the root type of `a_context' is a
 			-- generic type not fully derived (Definition of base type in
@@ -62,24 +86,24 @@ feature -- Access
 			a_universe_not_void: a_universe /= Void
 		local
 			i, j: INTEGER
-			a_type: ET_TYPE
-			a_named_type: ET_NAMED_TYPE
+			a_parameter: ET_ACTUAL_PARAMETER
+			a_named_parameter: ET_ACTUAL_PARAMETER
 		do
 			Result := Current
 			from i := count until i < 1 loop
-				a_type := type (i)
-				a_named_type := a_type.named_type (a_context, a_universe)
+				a_parameter := actual_parameter (i)
+				a_named_parameter := a_parameter.named_parameter (a_context, a_universe)
 				if Result /= Current then
-					Result.put_first (a_named_type)
-				elseif a_type /= a_named_type then
+					Result.put_first (a_named_parameter)
+				elseif a_parameter /= a_named_parameter then
 					create Result.make_with_capacity (count)
 					Result.set_left_bracket (left_bracket)
 					Result.set_right_bracket (right_bracket)
 					from j := count until j <= i loop
-						Result.put_first (item (j))
+						Result.put_first (actual_parameter (j))
 						j := j - 1
 					end
-					Result.put_first (a_named_type)
+					Result.put_first (a_named_parameter)
 				end
 				i := i - 1
 			end
@@ -276,8 +300,127 @@ feature -- Conformance
 
 	conforms_to_types (other: ET_ACTUAL_PARAMETER_LIST; other_context: ET_TYPE_CONTEXT;
 		a_context: ET_TYPE_CONTEXT; a_universe: ET_UNIVERSE): BOOLEAN is
-			-- Does current types appearing in `a_context' conform
-			-- to `other' types appearing in `other_context'?
+			-- Does current actual parameters appearing in `a_context' conform
+			-- to `other' actual parameters appearing in `other_context'?
+			-- (Note: 'a_universe.ancestor_builder' is used on classes on
+			-- the classes whose ancestors need to be built in order to check
+			-- for conformance, and 'a_universe.qualified_type_resolver' is
+			-- used on classes whose qualified anchored types need to be
+			-- resolved in order to check conformance.)
+		require
+			other_not_void: other /= Void
+			other_context_not_void: other_context /= Void
+			other_context_valid: other_context.is_valid_context
+			a_context_not_void: a_context /= Void
+			a_context_valid: a_context.is_valid_context
+			same_root_context: other_context.same_root_context (a_context)
+			a_universe_not_void: a_universe /= Void
+		local
+			i, nb: INTEGER
+			other_parameter: ET_ACTUAL_PARAMETER
+			other_qualified_parameter: ET_QUALIFIED_ACTUAL_PARAMETER
+		do
+			Result := cat_conforms_to_types (other, other_context, a_context, a_universe)
+			if not Result and then a_universe.searching_dog_types then
+				if non_cat_conforms_to_types (other, other_context, a_context, a_universe) then
+					Result := True
+					nb := count
+					from i := 1 until i > nb loop
+						other_parameter := other.actual_parameter (i)
+						if other_parameter.has_cat_parameter_mark then
+							if not actual_parameter (i).is_cat_parameter (a_context, a_universe) then
+								other_qualified_parameter ?= other_parameter
+								if other_qualified_parameter /= Void then
+									if other_qualified_parameter.cat_keyword /= Void then
+										other_qualified_parameter.set_cat_keyword (Void)
+										a_universe.set_dog_type_count (a_universe.dog_type_count + 1)
+									end
+								end
+								if not type (i).conforms_to_type (other.type (i), other_context, a_context, a_universe) then
+									Result := False
+									i := nb + 1 -- Jump out of the loop.
+								else
+									i := i + 1
+								end
+							elseif not type (i).same_named_type (other.type (i), other_context, a_context, a_universe) then
+								other_qualified_parameter ?= other_parameter
+								if other_qualified_parameter /= Void then
+									if other_qualified_parameter.cat_keyword /= Void then
+										other_qualified_parameter.set_cat_keyword (Void)
+										a_universe.set_dog_type_count (a_universe.dog_type_count + 1)
+									end
+								end
+								if not type (i).conforms_to_type (other.type (i), other_context, a_context, a_universe) then
+									Result := False
+									i := nb + 1 -- Jump out of the loop.
+								else
+									i := i + 1
+								end
+							else
+								i := i + 1
+							end
+						elseif not type (i).conforms_to_type (other.type (i), other_context, a_context, a_universe) then
+							Result := False
+							i := nb + 1 -- Jump out of the loop.
+						else
+							i := i + 1
+						end
+					end
+				end
+			end
+		end
+
+	cat_conforms_to_types (other: ET_ACTUAL_PARAMETER_LIST; other_context: ET_TYPE_CONTEXT;
+		a_context: ET_TYPE_CONTEXT; a_universe: ET_UNIVERSE): BOOLEAN is
+			-- Does current actual parameters appearing in `a_context' conform
+			-- to `other' actual parameters appearing in `other_context'?
+			-- (Note: 'a_universe.ancestor_builder' is used on classes on
+			-- the classes whose ancestors need to be built in order to check
+			-- for conformance, and 'a_universe.qualified_type_resolver' is
+			-- used on classes whose qualified anchored types need to be
+			-- resolved in order to check conformance.)
+		require
+			other_not_void: other /= Void
+			other_context_not_void: other_context /= Void
+			other_context_valid: other_context.is_valid_context
+			a_context_not_void: a_context /= Void
+			a_context_valid: a_context.is_valid_context
+			same_root_context: other_context.same_root_context (a_context)
+			a_universe_not_void: a_universe /= Void
+		local
+			i, nb: INTEGER
+		do
+			if other = Current and then other_context = a_context then
+				Result := True
+			elseif other.count /= count then
+					-- Validity error VTUG-2.
+				Result := False
+			else
+				Result := True
+				nb := count
+				from i := 1 until i > nb loop
+					if other.actual_parameter (i).has_cat_parameter_mark then
+						Result := actual_parameter (i).is_cat_parameter (a_context, a_universe) and then
+							type (i).same_named_type (other.type (i), other_context, a_context, a_universe)
+						if Result then
+							i := i + 1
+						else
+							i := nb + 1 -- Jump out of the loop.
+						end
+					elseif not type (i).conforms_to_type (other.type (i), other_context, a_context, a_universe) then
+						Result := False
+						i := nb + 1 -- Jump out of the loop.
+					else
+						i := i + 1
+					end
+				end
+			end
+		end
+
+	non_cat_conforms_to_types (other: ET_ACTUAL_PARAMETER_LIST; other_context: ET_TYPE_CONTEXT;
+		a_context: ET_TYPE_CONTEXT; a_universe: ET_UNIVERSE): BOOLEAN is
+			-- Does current actual parameters appearing in `a_context' conform
+			-- to `other' actual parameters appearing in `other_context'?
 			-- (Note: 'a_universe.ancestor_builder' is used on classes on
 			-- the classes whose ancestors need to be built in order to check
 			-- for conformance, and 'a_universe.qualified_type_resolver' is
@@ -313,6 +456,166 @@ feature -- Conformance
 			end
 		end
 
+	tuple_conforms_to_types (other: ET_ACTUAL_PARAMETER_LIST; other_context: ET_TYPE_CONTEXT;
+		a_context: ET_TYPE_CONTEXT; a_universe: ET_UNIVERSE): BOOLEAN is
+			-- Does current actual parameters (of a Tuple_type) appearing in `a_context'
+			-- conform to `other' actual parameters appearing in `other_context'?
+			-- (Note: 'a_universe.ancestor_builder' is used on classes on
+			-- the classes whose ancestors need to be built in order to check
+			-- for conformance, and 'a_universe.qualified_type_resolver' is
+			-- used on classes whose qualified anchored types need to be
+			-- resolved in order to check conformance.)
+		require
+			other_not_void: other /= Void
+			other_context_not_void: other_context /= Void
+			other_context_valid: other_context.is_valid_context
+			a_context_not_void: a_context /= Void
+			a_context_valid: a_context.is_valid_context
+			same_root_context: other_context.same_root_context (a_context)
+			a_universe_not_void: a_universe /= Void
+		local
+			i, nb: INTEGER
+			other_parameter: ET_ACTUAL_PARAMETER
+			other_qualified_parameter: ET_QUALIFIED_ACTUAL_PARAMETER
+		do
+			Result := cat_tuple_conforms_to_types (other, other_context, a_context, a_universe)
+			if not Result and then a_universe.searching_dog_types then
+				if non_cat_tuple_conforms_to_types (other, other_context, a_context, a_universe) then
+					Result := True
+					nb := other.count
+					from i := 1 until i > nb loop
+						other_parameter := other.actual_parameter (i)
+						if other_parameter.has_cat_parameter_mark then
+							if not actual_parameter (i).is_cat_parameter (a_context, a_universe) then
+								other_qualified_parameter ?= other_parameter
+								if other_qualified_parameter /= Void then
+									if other_qualified_parameter.cat_keyword /= Void then
+										other_qualified_parameter.set_cat_keyword (Void)
+										a_universe.set_dog_type_count (a_universe.dog_type_count + 1)
+									end
+								end
+								if not type (i).conforms_to_type (other.type (i), other_context, a_context, a_universe) then
+									Result := False
+									i := nb + 1 -- Jump out of the loop.
+								else
+									i := i + 1
+								end
+							elseif not type (i).same_named_type (other.type (i), other_context, a_context, a_universe) then
+								other_qualified_parameter ?= other_parameter
+								if other_qualified_parameter /= Void then
+									if other_qualified_parameter.cat_keyword /= Void then
+										other_qualified_parameter.set_cat_keyword (Void)
+										a_universe.set_dog_type_count (a_universe.dog_type_count + 1)
+									end
+								end
+								if not type (i).conforms_to_type (other.type (i), other_context, a_context, a_universe) then
+									Result := False
+									i := nb + 1 -- Jump out of the loop.
+								else
+									i := i + 1
+								end
+							else
+								i := i + 1
+							end
+						elseif not type (i).conforms_to_type (other.type (i), other_context, a_context, a_universe) then
+							Result := False
+							i := nb + 1 -- Jump out of the loop.
+						else
+							i := i + 1
+						end
+					end
+				end
+			end
+		end
+
+	cat_tuple_conforms_to_types (other: ET_ACTUAL_PARAMETER_LIST; other_context: ET_TYPE_CONTEXT;
+		a_context: ET_TYPE_CONTEXT; a_universe: ET_UNIVERSE): BOOLEAN is
+			-- Does current actual parameters (of a Tuple_type) appearing in `a_context'
+			-- conform to `other' actual parameters appearing in `other_context'?
+			-- (Note: 'a_universe.ancestor_builder' is used on classes on
+			-- the classes whose ancestors need to be built in order to check
+			-- for conformance, and 'a_universe.qualified_type_resolver' is
+			-- used on classes whose qualified anchored types need to be
+			-- resolved in order to check conformance.)
+		require
+			other_not_void: other /= Void
+			other_context_not_void: other_context /= Void
+			other_context_valid: other_context.is_valid_context
+			a_context_not_void: a_context /= Void
+			a_context_valid: a_context.is_valid_context
+			same_root_context: other_context.same_root_context (a_context)
+			a_universe_not_void: a_universe /= Void
+		local
+			i, nb: INTEGER
+		do
+			if other = Current and then other_context = a_context then
+				Result := True
+			else
+				nb := other.count
+				if nb <= count then
+					Result := True
+					from i := 1 until i > nb loop
+						if other.actual_parameter (i).has_cat_parameter_mark then
+							Result := actual_parameter (i).is_cat_parameter (a_context, a_universe) and then
+								type (i).same_named_type (other.type (i), other_context, a_context, a_universe)
+							if Result then
+								i := i + 1
+							else
+								i := nb + 1 -- Jump out of the loop.
+							end
+						elseif not type (i).conforms_to_type (other.type (i), other_context, a_context, a_universe) then
+							Result := False
+							i := nb + 1 -- Jump out of the loop.
+						else
+							i := i + 1
+						end
+					end
+				else
+					Result := False
+				end
+			end
+		end
+
+	non_cat_tuple_conforms_to_types (other: ET_ACTUAL_PARAMETER_LIST; other_context: ET_TYPE_CONTEXT;
+		a_context: ET_TYPE_CONTEXT; a_universe: ET_UNIVERSE): BOOLEAN is
+			-- Does current actual parameters (of a Tuple_type) appearing in `a_context'
+			-- conform to `other' actual parameters appearing in `other_context'?
+			-- (Note: 'a_universe.ancestor_builder' is used on classes on
+			-- the classes whose ancestors need to be built in order to check
+			-- for conformance, and 'a_universe.qualified_type_resolver' is
+			-- used on classes whose qualified anchored types need to be
+			-- resolved in order to check conformance.)
+		require
+			other_not_void: other /= Void
+			other_context_not_void: other_context /= Void
+			other_context_valid: other_context.is_valid_context
+			a_context_not_void: a_context /= Void
+			a_context_valid: a_context.is_valid_context
+			same_root_context: other_context.same_root_context (a_context)
+			a_universe_not_void: a_universe /= Void
+		local
+			i, nb: INTEGER
+		do
+			if other = Current and then other_context = a_context then
+				Result := True
+			else
+				nb := other.count
+				if nb <= count then
+					Result := True
+					from i := 1 until i > nb loop
+						if not type (i).conforms_to_type (other.type (i), other_context, a_context, a_universe) then
+							Result := False
+							i := nb + 1 -- Jump out of the loop.
+						else
+							i := i + 1
+						end
+					end
+				else
+					Result := False
+				end
+			end
+		end
+
 feature -- Type processing
 
 	has_derived_parameters: BOOLEAN is
@@ -343,15 +646,15 @@ feature -- Type processing
 			a_parameters_not_void: a_parameters /= Void
 		local
 			i, j: INTEGER
-			a_type, a_resolved_type: ET_TYPE_ITEM
+			a_parameter, a_resolved_parameter: ET_ACTUAL_PARAMETER_ITEM
 		do
 			Result := Current
 			from i := count until i < 1 loop
-				a_type := item (i)
-				a_resolved_type := a_type.resolved_formal_parameters (a_parameters)
+				a_parameter := item (i)
+				a_resolved_parameter := a_parameter.resolved_formal_parameters (a_parameters)
 				if Result /= Current then
-					Result.put_first (a_resolved_type)
-				elseif a_type /= a_resolved_type then
+					Result.put_first (a_resolved_parameter)
+				elseif a_parameter /= a_resolved_parameter then
 					create Result.make_with_capacity (count)
 					Result.set_left_bracket (left_bracket)
 					Result.set_right_bracket (right_bracket)
@@ -359,7 +662,7 @@ feature -- Type processing
 						Result.put_first (item (j))
 						j := j - 1
 					end
-					Result.put_first (a_resolved_type)
+					Result.put_first (a_resolved_parameter)
 				end
 				i := i - 1
 			end
@@ -422,6 +725,14 @@ feature -- Processing
 			-- Process current node.
 		do
 			a_processor.process_actual_parameter_list (Current)
+		end
+
+feature {NONE} -- Implementation
+
+	fixed_array: KL_SPECIAL_ROUTINES [ET_ACTUAL_PARAMETER_ITEM] is
+			-- Fixed array routines
+		once
+			create Result
 		end
 
 invariant

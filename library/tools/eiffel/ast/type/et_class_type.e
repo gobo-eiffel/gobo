@@ -194,6 +194,13 @@ feature -- Status report
 			Result := is_cat
 		end
 
+	is_cat_parameter (a_context: ET_TYPE_CONTEXT; a_universe: ET_UNIVERSE): BOOLEAN is
+			-- Is current actual parameter a non-conforming parameter
+			-- when viewed from `a_context' in `a_universe'?
+		do
+			Result := is_cat
+		end
+
 feature -- Comparison
 
 	same_syntactical_type (other: ET_TYPE; other_context: ET_TYPE_CONTEXT;

@@ -17,12 +17,13 @@ class ET_CONSTRAINT_ACTUAL_PARAMETER_LIST
 
 inherit
 
-	ET_AST_LIST [ET_CONSTRAINT_TYPE_ITEM]
+	ET_AST_LIST [ET_CONSTRAINT_ACTUAL_PARAMETER_ITEM]
 		redefine
 			make, make_with_capacity
 		end
 
 	ET_SHARED_TOKEN_CONSTANTS
+		export {NONE} all end
 
 creation
 
@@ -95,26 +96,16 @@ feature -- Conversion
 			-- class names and formal generic parameter names have been
 			-- resolved (i.e. replaced by the corresponding Class_type,
 			-- Tuple_type and Formal_parameter_type)
-		local
-			i, nb: INTEGER
-			a_type: ET_TYPE_ITEM
+		require
+			a_formals_not_void: a_formals /= Void
+			a_parser_not_void: a_parser /= Void
 		do
-			nb := count
-			Result := a_parser.ast_factory.new_actual_parameters (left_bracket, right_bracket, nb)
-			if Result /= Void then
-				from i := nb until i < 1 loop
-					a_type := item (i).resolved_syntactical_constraint (a_formals, a_parser)
-					if a_type /= Void then
-						Result.put_first (a_type)
-					end
-					i := i - 1
-				end
-			end
+			Result := a_parser.resolved_constraint_actual_parameter_list (Current, a_formals)
 		end
 
 feature {NONE} -- Implementation
 
-	fixed_array: KL_SPECIAL_ROUTINES [ET_CONSTRAINT_TYPE_ITEM] is
+	fixed_array: KL_SPECIAL_ROUTINES [ET_CONSTRAINT_ACTUAL_PARAMETER_ITEM] is
 			-- Fixed array routines
 		once
 			create Result

@@ -48,6 +48,13 @@ feature {ET_AST_NODE} -- Processing
 		deferred
 		end
 
+	process_actual_parameter_comma (a_parameter: ET_ACTUAL_PARAMETER_COMMA) is
+			-- Process `a_parameter'.
+		require
+			a_parameter_not_void: a_parameter /= Void
+		deferred
+		end
+
 	process_actual_parameter_list (a_list: ET_ACTUAL_PARAMETER_LIST) is
 			-- Process `a_list'.
 		require

@@ -27,6 +27,11 @@ feature {ET_AST_NODE} -- Processing
 		do
 		end
 
+	process_actual_parameter_comma (a_parameter: ET_ACTUAL_PARAMETER_COMMA) is
+			-- Process `a_parameter'.
+		do
+		end
+
 	process_actual_parameter_list (a_list: ET_ACTUAL_PARAMETER_LIST) is
 			-- Process `a_list'.
 		do

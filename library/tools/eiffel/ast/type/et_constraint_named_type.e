@@ -65,39 +65,8 @@ feature -- Conversion
 			-- class names and formal generic parameter names have been
 			-- resolved (i.e. replaced by the corresponding Class_type,
 			-- Tuple_type and Formal_parameter_type)
-		local
-			a_formal: ET_FORMAL_PARAMETER
-			a_base_class: ET_CLASS
-			a_universe: ET_UNIVERSE
-			a_class_type: ET_CLASS_TYPE
 		do
-			a_formal := a_formals.formal_parameter_by_name (name)
-			if a_formal /= Void then
-				if type_mark /= Void then
-						-- A formal parameter cannot be prefixed by
-						-- 'expanded' or 'reference'.
-					a_parser.report_syntax_error (type_mark.position)
-				end
-				Result := a_parser.ast_factory.new_formal_parameter_type (name, a_formal.index)
-			else
-				a_universe := a_parser.universe
-				a_base_class := a_universe.eiffel_class (name)
-				if a_base_class = a_universe.tuple_class then
-					if type_mark /= Void then
-							-- A TUPLE type is not a class type. It cannot
-							-- be prefixed by 'expanded' or 'reference'.
-						a_parser.report_syntax_error (type_mark.position)
-					end
-					Result := a_parser.ast_factory.new_tuple_type (name, Void)
-				else
-					a_base_class.set_in_system (True)
-					a_class_type := a_parser.ast_factory.new_class_type (type_mark, name, a_base_class)
-					if a_universe.cat_enabled and a_class_type /= Void and then not a_class_type.is_expanded then
-						a_class_type.set_cat_keyword (tokens.cat_keyword)
-					end
-					Result := a_class_type
-				end
-			end
+			Result := a_parser.resolved_constraint_named_type (Current, a_formals)
 		end
 
 invariant

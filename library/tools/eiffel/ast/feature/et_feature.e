@@ -54,6 +54,11 @@ feature -- Access
 		do
 		end
 
+	obsolete_message: ET_OBSOLETE is
+			-- Obsolete message
+		do
+		end
+
 	locals: ET_LOCAL_VARIABLE_LIST is
 			-- Local variables;
 			-- Void if not an internal routine or a routine with no local variables

@@ -149,7 +149,7 @@ feature -- Access
 		end
 
 	base_type_actual (i: INTEGER; a_context: ET_TYPE_CONTEXT; a_universe: ET_UNIVERSE): ET_NAMED_TYPE is
-			-- `i'-th actual generic parameter of the base type of current
+			-- `i'-th actual generic parameter's type of the base type of current
 			-- type when it appears in `a_context' in `a_universe'
 		local
 			a_class: ET_CLASS
@@ -170,6 +170,43 @@ feature -- Access
 					if a_query_type /= Void then
 						create a_target_context.make (a_target_type, a_context)
 						Result := a_query_type.base_type_actual (i, a_target_context, a_universe)
+					else
+							-- Internal error: an inconsistency has been
+							-- introduced in the AST since we relsolved
+							-- current anchored type.
+						Result := a_universe.unknown_class
+					end
+				else
+						-- Internal error: an inconsistency has been
+						-- introduced in the AST since we relsolved
+						-- current anchored type.
+					Result := a_universe.unknown_class
+				end
+			end
+		end
+
+	base_type_actual_parameter (i: INTEGER; a_context: ET_TYPE_CONTEXT; a_universe: ET_UNIVERSE): ET_ACTUAL_PARAMETER is
+			-- `i'-th actual generic parameter of the base type of current
+			-- type when it appears in `a_context' in `a_universe'
+		local
+			a_class: ET_CLASS
+			seeded_feature: ET_FEATURE
+			a_query_type: ET_TYPE
+			a_target_type: ET_TYPE
+			a_target_context: ET_NESTED_TYPE_CONTEXT
+		do
+			if seed = 0 then
+					-- Anchored type not resolved yet.
+				Result := a_universe.unknown_class
+			else
+				a_target_type := target_type
+				a_class := a_target_type.base_class (a_context, a_universe)
+				seeded_feature := a_class.seeded_feature (seed)
+				if seeded_feature /= Void then
+					a_query_type := seeded_feature.type
+					if a_query_type /= Void then
+						create a_target_context.make (a_target_type, a_context)
+						Result := a_query_type.base_type_actual_parameter (i, a_target_context, a_universe)
 					else
 							-- Internal error: an inconsistency has been
 							-- introduced in the AST since we relsolved
@@ -387,6 +424,80 @@ feature -- Status report
 					if a_query_type /= Void then
 						create a_target_context.make (a_target_type, a_context)
 						Result := a_query_type.is_actual_cat_type (i, a_target_context, a_universe)
+					else
+							-- Internal error: an inconsistency has been
+							-- introduced in the AST since we relsolved
+							-- current anchored type.
+						Result := False
+					end
+				else
+						-- Internal error: an inconsistency has been
+						-- introduced in the AST since we relsolved
+						-- current anchored type.
+					Result := False
+				end
+			end
+		end
+
+	is_cat_parameter (a_context: ET_TYPE_CONTEXT; a_universe: ET_UNIVERSE): BOOLEAN is
+			-- Is current actual parameter a non-conforming parameter
+			-- when viewed from `a_context' in `a_universe'?
+		local
+			a_class: ET_CLASS
+			seeded_feature: ET_FEATURE
+			a_query_type: ET_TYPE
+			a_target_type: ET_TYPE
+			a_target_context: ET_NESTED_TYPE_CONTEXT
+		do
+			if seed = 0 then
+					-- Anchored type not resolved yet.
+				Result := False
+			else
+				a_target_type := target_type
+				a_class := a_target_type.base_class (a_context, a_universe)
+				seeded_feature := a_class.seeded_feature (seed)
+				if seeded_feature /= Void then
+					a_query_type := seeded_feature.type
+					if a_query_type /= Void then
+						create a_target_context.make (a_target_type, a_context)
+						Result := a_query_type.is_cat_parameter (a_target_context, a_universe)
+					else
+							-- Internal error: an inconsistency has been
+							-- introduced in the AST since we relsolved
+							-- current anchored type.
+						Result := False
+					end
+				else
+						-- Internal error: an inconsistency has been
+						-- introduced in the AST since we relsolved
+						-- current anchored type.
+					Result := False
+				end
+			end
+		end
+
+	is_actual_cat_parameter (i: INTEGER; a_context: ET_TYPE_CONTEXT; a_universe: ET_UNIVERSE): BOOLEAN is
+			-- Is actual generic parameter at index `i' in the base type of current
+			-- type a non-conforming parameter when viewed from `a_context' in `a_universe'?
+		local
+			a_class: ET_CLASS
+			seeded_feature: ET_FEATURE
+			a_query_type: ET_TYPE
+			a_target_type: ET_TYPE
+			a_target_context: ET_NESTED_TYPE_CONTEXT
+		do
+			if seed = 0 then
+					-- Anchored type not resolved yet.
+				Result := False
+			else
+				a_target_type := target_type
+				a_class := a_target_type.base_class (a_context, a_universe)
+				seeded_feature := a_class.seeded_feature (seed)
+				if seeded_feature /= Void then
+					a_query_type := seeded_feature.type
+					if a_query_type /= Void then
+						create a_target_context.make (a_target_type, a_context)
+						Result := a_query_type.is_actual_cat_parameter (i, a_target_context, a_universe)
 					else
 							-- Internal error: an inconsistency has been
 							-- introduced in the AST since we relsolved

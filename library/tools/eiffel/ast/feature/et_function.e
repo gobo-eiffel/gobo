@@ -18,7 +18,8 @@ inherit
 		undefine
 			arguments,
 			preconditions,
-			postconditions
+			postconditions,
+			obsolete_message
 		redefine
 			is_prefixable, is_infixable,
 			undefined_feature,
