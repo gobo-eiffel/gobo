@@ -12,6 +12,10 @@ indexing
 
 deferred class ET_TYPE_CONTEXT
 
+inherit
+
+	ANY -- Needed for SE 2.1.
+
 feature -- Access
 
 	root_context: ET_BASE_TYPE is

@@ -12,6 +12,10 @@ indexing
 
 deferred class ET_REPLICABLE_FEATURE
 
+inherit
+
+	ANY -- Needed for SE 2.1.
+
 feature -- Status report
 
 	has_replication: BOOLEAN is

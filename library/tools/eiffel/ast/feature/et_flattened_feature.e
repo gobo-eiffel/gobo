@@ -12,6 +12,10 @@ indexing
 
 deferred class ET_FLATTENED_FEATURE
 
+inherit
+
+	ANY -- Needed for SE 2.1.
+
 feature -- Status report
 
 	is_immediate: BOOLEAN is
