@@ -20,8 +20,7 @@ inherit
 		undefine
 			root_node
 		redefine
-			remove_namespace_declarations_from_attributes_recursive,
-			make_default
+			remove_namespace_declarations_from_attributes_recursive
 		end
 
 	XM_NAMED_NODE
@@ -31,13 +30,30 @@ inherit
 
 creation
 
-	make_root, make_child
+	make
 
 feature {NONE} -- Initialization
 
+	make (a_parent: like parent; a_name: like name; a_ns: like namespace) is
+			-- Create a new child element.
+		require
+			a_parent_not_void: a_parent /= Void
+			a_name_not_void: a_name /= Void
+		do
+			name := a_name
+			namespace := a_ns
+			make_composite
+			parent := a_parent
+		ensure
+			name_set: name = a_name
+			ns_prefix_set: namespace = a_ns
+			parent_set: parent = a_parent
+		end
+
 	make_root (a_name: like name; a_ns: like namespace) is
-			-- Create a new root element based on the information held in a
-			-- XM_START_TAG object. This will fill in the name and the attributes.
+			-- Create a new root element.
+		obsolete
+			"Document is parent of root element"
 		require
 			a_name_not_void: a_name /= Void
 			a_name_not_empty: a_name.count > 0
@@ -49,27 +65,16 @@ feature {NONE} -- Initialization
 			name_set: name = a_name
 			ns_prefix_set: namespace = a_ns
 		end
-
+		
 	make_child (a_parent: like parent; a_name: like name; a_ns: like namespace) is
-			-- Create a new child element based on the information held in a
-			-- XM_START_TAG object. This will fill in the name and the attributes.
+			-- Create a new child element.
+		obsolete
+			"Use make"
 		require
 			a_parent_not_void: a_parent /= Void
 			a_name_not_void: a_name /= Void
 		do
-			make_root (a_name, a_ns)
-			parent := a_parent
-		ensure
-			name_set: name = a_name
-			ns_prefix_set: namespace = a_ns
-			parent_set: parent = a_parent
-		end
-
-	make_default is
-			-- Default creation for empty container.
-			-- Meaningless in the current context.
-		do
-			make_root ("dummy", Void)
+			make (a_parent, a_name, a_ns)
 		end
 
 feature -- Status report

@@ -15,9 +15,6 @@ class XM_DOCUMENT
 inherit
 
 	XM_COMPOSITE
-		redefine
-			make_default
-		end
 
 creation
 
@@ -29,12 +26,6 @@ feature {NONE} -- Initialization
 			-- Create root node.
 		do
 			make_composite
-		end
-
-	make_default is
-			-- Create root node.
-		do
-			make
 		end
 
 feature -- Access

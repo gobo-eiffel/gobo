@@ -82,16 +82,16 @@ feature -- Element
 		do
 			check
 				document_not_void: document /= Void
-				document_not_finished: document.root_element /= Void implies current_open_composite /= Void
+				document_not_finished: current_open_composite /= Void
 			end
+			
+			create current_element.make (current_open_composite, a_name, new_namespace (namespace, ns_prefix))
+			
 			if document.root_element = Void then
 					-- This is the first element in the document.
-				create current_element.make_root (a_name, new_namespace (namespace, ns_prefix))
-					-- Add root element.
 				document.set_root_element (current_element)
 			else
-					-- This is not the first element in the document
-				create current_element.make_child (current_open_composite, a_name, new_namespace (namespace, ns_prefix))
+					-- This is not the first element in the parent.
 				current_open_composite.force_last (current_element)
 			end
 			handle_position (current_element)
