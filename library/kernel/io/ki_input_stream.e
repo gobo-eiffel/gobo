@@ -92,7 +92,7 @@ feature -- Status report
 		do
 			Result := False
 		ensure
-			is_open: Result implies is_open_read
+			is_open: is_open_read implies Result
 		end
 
 feature -- Access
