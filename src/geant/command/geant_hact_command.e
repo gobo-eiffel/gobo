@@ -131,7 +131,7 @@ feature -- Execution
 			is_compilable: is_compilable
 		local
 			cmd: STRING
-			old_pwd: STRING
+			old_cwd: STRING
 			project_dir: STRING
 			old_name, new_name: STRING
 		do
@@ -151,7 +151,7 @@ feature -- Execution
 			execute_shell (cmd)
 
 			if fish then
-				old_pwd := file_system.pwd
+				old_cwd := file_system.cwd
 				project_dir := system_name + "_gen"
 				if finalize then
 					project_dir.append_string ("/F_code")
@@ -164,7 +164,7 @@ feature -- Execution
 				log ("  [hact] " + cmd + "%N")
 				execute_shell (cmd)
 				old_name := clone (system_name)
-				old_name.append_string (file_system.exe_file_extension)
+				old_name.append_string (file_system.exe_extension)
 				new_name := clone ("../../")
 				new_name.append_string (old_name)
 				log ("  [hact] copy " + old_name + " " + new_name + "%N")
@@ -177,8 +177,8 @@ feature -- Execution
 					log ("  [hact] copy " + old_name + " " + new_name + "%N")
 					file_system.copy_file (old_name, new_name)
 				end
-				log ("  [hact] cd " + old_pwd + "%N")
-				file_system.cd (old_pwd)
+				log ("  [hact] cd " + old_cwd + "%N")
+				file_system.cd (old_cwd)
 			end
 		end
 

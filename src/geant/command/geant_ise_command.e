@@ -131,7 +131,7 @@ feature -- Execution
 			is_compilable: is_compilable
 		local
 			cmd: STRING
-			old_pwd: STRING
+			old_cwd: STRING
 			old_name, new_name: STRING
 		do
 			cmd := clone ("ec -batch")
@@ -146,7 +146,7 @@ feature -- Execution
 			execute_shell (cmd)
 
 			if finish_freezing then
-				old_pwd := file_system.pwd
+				old_cwd := file_system.cwd
 				if finalize then
 					log ("  [ise] cd EIFGEN/F_code%N")
 					file_system.cd ("EIFGEN/F_code")
@@ -158,7 +158,7 @@ feature -- Execution
 				log ("  [ise] " + cmd + "%N")
 				execute_shell (cmd)
 				old_name := clone (system_name)
-				old_name.append_string (file_system.exe_file_extension)
+				old_name.append_string (file_system.exe_extension)
 				new_name := clone ("../../")
 				new_name.append_string (old_name)
 				log ("  [ise] copy " + old_name + " " + new_name + "%N")
@@ -171,8 +171,8 @@ feature -- Execution
 					log ("  [ise] copy " + old_name + " " + new_name + "%N")
 					file_system.copy_file (old_name, new_name)
 				end
-				log ("  [ise] cd " + old_pwd + "%N")
-				file_system.cd (old_pwd)
+				log ("  [ise] cd " + old_cwd + "%N")
+				file_system.cd (old_cwd)
 			end
 		end
 

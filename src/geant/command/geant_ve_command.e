@@ -115,17 +115,17 @@ feature -- Execution
 			is_cleanable: is_cleanable
 		local
 			cmd: STRING
-			old_pwd: STRING
+			old_cwd: STRING
 			a_name: STRING
 			a_dir: KL_DIRECTORY
 		do
-			old_pwd := file_system.pwd
+			old_cwd := file_system.cwd
 			if file_system.is_directory_readable ("eCluster") then
 					-- Execute the command only if the Visual Eiffel
 					-- compiler has been used to compile this system.
 				cmd := clone ("vec -dc -y -no")
 				if recursive_clean then
-					log ("  [ve] [" + old_pwd + "] " + cmd + "%N")
+					log ("  [ve] [" + old_cwd + "] " + cmd + "%N")
 				else
 					log ("  [ve] " + cmd + "%N")
 				end
@@ -133,7 +133,7 @@ feature -- Execution
 			end
 			if file_system.is_file_readable ("Result.out") then
 				if recursive_clean then
-					log ("  [ve] delete " + old_pwd + "/Result.out%N")
+					log ("  [ve] delete " + old_cwd + "/Result.out%N")
 				else
 					log ("  [ve] delete Result.out%N")
 				end
@@ -141,14 +141,14 @@ feature -- Execution
 			end
 			if file_system.is_file_readable ("vec.xcp") then
 				if recursive_clean then
-					log ("  [ve] delete " + old_pwd + "/vec.xcp%N")
+					log ("  [ve] delete " + old_cwd + "/vec.xcp%N")
 				else
 					log ("  [ve] delete vec.xcp%N")
 				end
 				file_system.delete_file ("vec.xcp")
 			end
 			if recursive_clean then
-				!! a_dir.make (old_pwd)
+				!! a_dir.make (old_cwd)
 				a_dir.open_read
 				if a_dir.is_open_read then
 					from a_dir.read_entry until a_dir.end_of_input loop
@@ -157,7 +157,7 @@ feature -- Execution
 							if file_system.is_directory_readable (a_name) then
 								file_system.cd (a_name)
 								execute_clean
-								file_system.cd (old_pwd)
+								file_system.cd (old_cwd)
 							end
 						end
 						a_dir.read_entry
