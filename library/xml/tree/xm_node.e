@@ -116,6 +116,16 @@ feature {XM_COMPOSITE} -- Element change
 			parent_set: parent = a_parent
 		end
 
+feature {NONE} -- Implementation
+
+	Default_ns: XM_NAMESPACE is
+			-- Shared default namespace constant object.
+		once
+			!! Result.make_default
+		ensure
+			definition: Result.uri.count = 0
+		end
+		
 feature -- Processing
 
 	process (a_processor: XM_NODE_PROCESSOR) is

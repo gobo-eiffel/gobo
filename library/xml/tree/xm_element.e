@@ -117,7 +117,7 @@ feature -- List
 
 feature -- Element change
 
-	force_last (v: XM_ELEMENT_NODE) is
+	force_last (v: like last) is
 			-- `force_last' with parent removal and optimisation for 
 			-- force_last (last).
 		do
@@ -128,7 +128,7 @@ feature -- Element change
 			end
 		end
 		
-	put_last (v: XM_ELEMENT_NODE) is
+	put_last (v: like last) is
 			-- `put_last' with parent removal and optimisation for 
 			-- put_last (last).
 		do
@@ -141,7 +141,7 @@ feature -- Element change
 		
 feature {NONE} -- Parent processing
 
-	before_addition (a_node: XM_ELEMENT_NODE) is
+	before_addition (a_node: like last) is
 			-- Remove node from original parent if not us.
 		do
 			if a_node /= Void then
@@ -456,22 +456,46 @@ feature -- Access
 			end
 		end
 
-feature {XM_PARSER} -- Element change
+feature -- Element change
 
-	add_attribute (a_name: STRING; a_ns: XM_NAMESPACE; a_value: STRING) is
-			-- Add an attribute to current element.
-		obsolete "Use force_last with an attribute node parameter"
+	add_unqualified_attribute (a_name: STRING; a_value: STRING) is
+			-- Add an attribute without a specific namespace.
 		require
 			a_name_not_void: a_name /= Void
 			a_name_not_empty: a_name.count > 0
 			a_value_not_void: a_value /= Void
-		local
-			an_attribute: XM_ATTRIBUTE
 		do
-			create an_attribute.make (a_name, a_ns, a_value, Current)
-			force_last (an_attribute)
+			add_attribute (a_name, Default_ns, a_value)
 		ensure
 			attribute_added: has_attribute_by_name (a_name)
+		end
+		
+	add_attribute (a_name: STRING; a_ns: XM_NAMESPACE; a_value: STRING) is
+			-- Add an attribute to current element.
+			-- (at end if last is an attribute, at beginning otherwise)
+		require
+			a_name_not_void: a_name /= Void
+			a_name_not_empty: a_name.count > 0
+			a_ns_not_void: a_ns /= Void
+			a_value_not_void: a_value /= Void
+		local
+			an_attribute: XM_ATTRIBUTE
+			typer: XM_NODE_TYPER
+		do
+			create an_attribute.make (a_name, a_ns, a_value, Current)
+			if count = 0 then
+				force_last (an_attribute)
+			else
+				create typer
+				last.process (typer) 
+				if typer.is_attribute then
+					force_last (an_attribute)
+				else
+					force_first (an_attribute)
+				end
+			end
+		ensure
+			attribute_added: has_attribute_by_qualified_name (a_ns.uri, a_name)
 		end
 
 feature -- Removal
