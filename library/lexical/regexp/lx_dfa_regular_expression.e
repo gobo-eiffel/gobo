@@ -4,9 +4,66 @@ indexing
 
 		"Regular expressions implemented with DFA engines"
 
+	note:
+
+		"Pattern syntax:                                                       %
+		% x          match the character 'x'.                                  %
+		% .          any character except new-line.                            %
+		%            than '/', followed by '/').                               %
+		% \X         if 'X' is an 'a', 'b', 'f', 'n', 'r', 't', or 'v', then   %
+		%            the ANSI-C interpretation of \X. Otherwise, a literal 'X' %
+		%            (used to escape operators such as '*').                   %
+		% \0         a null character (ASCII code 0).                          %
+		% \123       the character with octal value 123.                       %
+		% \x2a       the character with hexadecimal value 2a.                  %
+		% [xyz]      a character class; in this case, the pattern matches      %
+		%            either an 'x', a 'y' or a 'z'.                            %
+		% [abj-oZ]   a character class with a range in it; matches an 'a', a   %
+		%            'b', any letter from 'j' through 'o', or a 'Z'.           %
+		% [^A-Z]     a negated character class, i.e., any character but those  %
+		%            in the class. In this case, any character except an       %
+		%            uppercase letter.                                         %
+		% [^A-Z\n]   any character except an uppercase letter or a newline.    %
+		% r*         zero or more r's, where r is any regular expression.      %
+		% r+         one or more r's.                                          %
+		% r?         zero or one r's (that is, "an optional r").               %
+		% r{2,5}     anywhere from two to five r's.                            %
+		% r{2,}      two or more r's.                                          %
+		% r{4}       exactly four r's.                                         %
+		% %"[xyz]\%"foo%"     the literal string: '[xyz]%"foo'.                %
+		% (r)        match an r; parentheses are used to override precedence.  %
+		% rs         the regular expression r followed by the regular          %
+		%            expression s; called concatenation.                       %
+		% -------------------------------------------------------------------- %
+		% r|s        either an r or an s.                                      %
+		% -------------------------------------------------------------------- %
+		% r/s        an r but only if it is followed by an s. The text matched %
+		%            by s is included when determining whether this rule is    %
+		%            the "longest match", but is not taken into account by     %
+		%            `matched_position'. So `matched_position' only sees the   %
+		%            text matched by r. This type of pattern is called         %
+		%            trailing context. (There are some combinations of r/s     %
+		%            that the regexp cannot match correctly, such as in        %
+		%            zx*/xy. See $GOBO/doc/gelex/limitations.html for details.)%
+		% ^r         an r, but only at the beginning of the input string or of %
+		%            a line (i.e., when just starting to scan, or right after  %
+		%            a newline has been scanned).                              %
+		% r$         an r, but only at the end of a line (i.e., just before a  %
+		%            new-line) or at the end of the input string. Equivalent   %
+		%            to r/\n. Note that regexp's notion of "newline" is        %
+		%            exactly whatever the Eiffel compiler used to compile the  %
+		%            regexp interprets %%N as; in particular, on some DOS      %
+		%            systems you must either filter out \r's in the input      %
+		%            yourself, or explicitly use r/\r\n for r$.                %
+		%                                                                      %
+		% The regular expressions listed above are grouped according to        %
+		% precedence, from highest precedence at the top to lowest at the      %
+		% bottom. Those grouped together have equal precedence. For more       %
+		% details, see $GOBO/doc/gelex/patterns.html.                          "
+
 	library:    "Gobo Eiffel Lexical Library"
 	author:     "Eric Bezault <ericb@gobosoft.com>"
-	copyright:  "Copyright (c) 1999, Eric Bezault and others"
+	copyright:  "Copyright (c) 1999-2001, Eric Bezault and others"
 	license:    "Eiffel Forum Freeware License v1 (see forum.txt)"
 	date:       "$Date$"
 	revision:   "$Revision$"
@@ -17,9 +74,14 @@ inherit
 
 	LX_REGULAR_EXPRESSION
 
+	LX_DFA_PATTERN_MATCHER
+		redefine
+			matches, matched_position
+		end
+
 creation
 
-	compile
+	make, compile
 
 feature -- Element change
 
@@ -90,13 +152,6 @@ feature -- Element change
 
 feature -- Status report
 
-	compiled: BOOLEAN is
-			-- Has current regular expression
-			-- been sucessfully compiled?
-		do
-			Result := yy_nxt /= Void
-		end
-
 	matches (a_string: STRING): BOOLEAN is
 			-- Does `a_string' include a token of the language
 			-- described by current regular expression?
@@ -112,32 +167,25 @@ feature -- Status report
 				end
 			else
 				if has_dollar then
-					from
-						i := 1
-					until
-						Result or i > nb
-					loop
-						Result := longest_end_position (a_string, i) = nb
-						i := i + 1
+					from i := 1 until i > nb loop
+						if longest_end_position (a_string, i) = nb then
+							Result := True
+							i := nb + 1 -- Jump out of the loop.
+						else
+							i := i + 1
+						end
 					end
 				else
-					from
-						i := 1
-					until
-						Result or i > nb
-					loop
-						Result := smallest_end_position (a_string, i) /= -1
-						i := i + 1
+					from i := 1 until i > nb loop
+						if smallest_end_position (a_string, i) /= -1 then
+							Result := True
+							i := nb + 1 -- Jump out of the loop.
+						else
+							i := i + 1
+						end
 					end
 				end
 			end
-		end
-
-	recognizes (a_string: STRING): BOOLEAN is
-			-- Is `a_string' a token of the language
-			-- described by current regular expression?
-		do
-			Result := longest_end_position (a_string, 1) = a_string.count
 		end
 
 feature -- Access
@@ -163,27 +211,21 @@ feature -- Access
 				end
 			else
 				if has_dollar then
-					from
-						i := 1
-					until
-						Result /= Void or i > nb
-					loop
+					from i := 1 until i > nb loop
 						e := longest_end_position (a_string, i)
 						if e = nb then
 							!! Result.make (i, e)
+							i := nb + 1 -- Jump out of the loop.
 						else
 							i := i + 1
 						end
 					end
 				else
-					from
-						i := 1
-					until
-						Result /= Void or i > nb
-					loop
+					from i := 1 until i > nb loop
 						e := longest_end_position (a_string, i)
 						if e /= -1 then
 							!! Result.make (i, e)
+							i := nb + 1 -- Jump out of the loop.
 						else
 							i := i + 1
 						end
@@ -192,94 +234,7 @@ feature -- Access
 			end
 		end
 
-feature {NONE} -- Matching
-
-	smallest_end_position (a_string: STRING; start_pos: INTEGER): INTEGER is
-			-- Position of the last character of the longest
-			-- token in `a_string' starting at position `start_pos'
-			-- and matched by current regular expression;
-			-- -1 if no such token exists
-		require
-			compiled: compiled
-			a_string_not_void: a_string /= Void
-			valid_start_pos: start_pos >= 1 and start_pos <= a_string.count + 1
-		local
-			i, nb: INTEGER
-			a_state: INTEGER
-			a_symbol: INTEGER
-		do
-			from
-				i := start_pos
-				nb := a_string.count
-				a_state := 1
-				if yy_accept.item (a_state) /= 0 then
-					Result := i - 1
-				else
-					Result := -1
-				end
-			until
-				Result /= -1 or i > nb
-			loop
-				a_symbol := a_string.item (i).code
-				a_state := yy_nxt.item (a_state * yyNb_rows + a_symbol)
-				if a_state > 0 then
-					if yy_accept.item (a_state) /= 0 then
-						Result := i
-					else
-						i := i + 1
-					end
-				else
-					i := nb + 1
-				end
-			end
-		ensure
-			valid_position: Result /= -1 implies
-				(start_pos <= Result + 1 and Result <= a_string.count)
-		end
-
-	longest_end_position (a_string: STRING; start_pos: INTEGER): INTEGER is
-			-- Position of the last character of the longest
-			-- token in `a_string' starting at position `start_pos'
-			-- and matched by current regular expression;
-			-- -1 if no such token exists
-		require
-			compiled: compiled
-			a_string_not_void: a_string /= Void
-			valid_start_pos: start_pos >= 1 and start_pos <= a_string.count + 1
-		local
-			i, nb: INTEGER
-			a_state: INTEGER
-			a_symbol: INTEGER
-		do
-			from
-				i := start_pos
-				nb := a_string.count
-				a_state := 1
-				if yy_accept.item (a_state) /= 0 then
-					Result := i - 1  
-				else
-					Result := -1
-				end
-			until
-				i > nb
-			loop
-				a_symbol := a_string.item (i).code
-				a_state := yy_nxt.item (a_state * yyNb_rows + a_symbol)
-				if a_state > 0 then
-					if yy_accept.item (a_state) /= 0 then
-						Result := i
-					end
-					i := i + 1
-				else
-					i := nb + 1
-				end
-			end
-		ensure
-			valid_position: Result /= -1 implies
-				(start_pos <= Result + 1 and Result <= a_string.count)
-		end
-
-feature {NONE} -- Engine Data
+feature {NONE} -- Implementation
 
 	has_caret: BOOLEAN
 			-- Does current regular expression start with '^'?
@@ -288,15 +243,5 @@ feature {NONE} -- Engine Data
 	has_dollar: BOOLEAN
 			-- Does current regular expression end with '$'?
 			-- ('$' matches at end of string as a whole.)
-
-	yy_nxt: ARRAY [INTEGER]
-			-- States to enter upon reading symbol;
-			-- indexed by (current_state_id * yyNb_rows + symbol)
-
-	yy_accept: ARRAY [INTEGER]
-			-- Accepting ids indexed by state ids
-
-	yyNb_rows: INTEGER
-			-- Number of rows in `yy_nxt'
 
 end -- class LX_DFA_REGULAR_EXPRESSION

@@ -100,6 +100,7 @@ Rule: Regular_expression2 Regular_expression
 			head_count := regexp_count
 			head_line := regexp_line
 			head_column := regexp_column
+			trail_count := 0
 		}
 	| Regular_expression2 Regular_expression2
 		{
