@@ -68,19 +68,26 @@ feature {ET_TYPE} -- Conformance
 		a_context: ET_TYPE_CONTEXT; a_universe: ET_UNIVERSE): BOOLEAN is
 			-- Does `other' type appearing in `other_context' conform
 			-- to current type appearing in `a_context'?
-			-- (Note: 'a_universe.ancestor_builder' is used on classes on
-			-- the classes whose ancestors need to be built in order to check
-			-- for conformance, and 'a_universe.qualified_signature_resolver'
-			-- is used on classes whose qualified anchored types need to be
-			-- resolved in order to check conformance.)
+			-- (Note: 'a_universe.ancestor_builder' is used on the classes
+			-- whose ancestors need to be built in order to check for conformance,
+			-- and 'a_universe.qualified_signature_resolver' is used on classes
+			-- whose qualified anchored types need to be resolved in order to
+			-- check conformance.)
 		local
+			a_base_class: ET_CLASS
 			any_type: ET_CLASS_TYPE
 		do
-				-- See VNCB-1 (ETL2 p.229).
-				-- "BIT N" conforms to "ANY", so "BIT N" conforms to current
-				-- class type if "ANY" conforms to it.
-			any_type := a_universe.any_type
-			Result := conforms_from_class_type (any_type, other_context, a_context, a_universe)
+			a_base_class := other.direct_base_class (a_universe)
+			if a_base_class.is_preparsed then
+				Result := conforms_from_class_type (a_base_class, other_context, a_context, a_universe)
+			end
+			if not Result then
+					-- See VNCB-1 (ETL2 p.229).
+					-- "BIT N" conforms to "ANY", so "BIT N" conforms to current
+					-- class type if "ANY" conforms to it.
+				any_type := a_universe.any_class
+				Result := conforms_from_class_type (any_type, other_context, a_context, a_universe)
+			end
 		end
 
 	conforms_from_formal_parameter_type (other: ET_FORMAL_PARAMETER_TYPE;
@@ -88,11 +95,11 @@ feature {ET_TYPE} -- Conformance
 		a_universe: ET_UNIVERSE): BOOLEAN is
 			-- Does `other' type appearing in `other_context' conform
 			-- to current type appearing in `a_context'?
-			-- (Note: 'a_universe.ancestor_builder' is used on classes on
-			-- the classes whose ancestors need to be built in order to check
-			-- for conformance, and 'a_universe.qualified_signature_resolver'
-			-- is used on classes whose qualified anchored types need to be
-			-- resolved in order to check conformance.)
+			-- (Note: 'a_universe.ancestor_builder' is used on the classes
+			-- whose ancestors need to be built in order to check for conformance,
+			-- and 'a_universe.qualified_signature_resolver' is used on classes
+			-- whose qualified anchored types need to be resolved in order to
+			-- check conformance.)
 		local
 			an_index: INTEGER
 			a_formal: ET_FORMAL_PARAMETER
@@ -137,18 +144,25 @@ feature {ET_TYPE} -- Conformance
 		a_context: ET_TYPE_CONTEXT; a_universe: ET_UNIVERSE): BOOLEAN is
 			-- Does `other' type appearing in `other_context' conform
 			-- to current type appearing in `a_context'?
-			-- (Note: 'a_universe.ancestor_builder' is used on classes on
-			-- the classes whose ancestors need to be built in order to check
-			-- for conformance, and 'a_universe.qualified_signature_resolver'
-			-- is used on classes whose qualified anchored types need to be
-			-- resolved in order to check conformance.)
+			-- (Note: 'a_universe.ancestor_builder' is used on the classes
+			-- whose ancestors need to be built in order to check for conformance,
+			-- and 'a_universe.qualified_signature_resolver' is used on classes
+			-- whose qualified anchored types need to be resolved in order to
+			-- check conformance.)
 		local
+			a_base_class: ET_CLASS
 			any_type: ET_CLASS_TYPE
 		do
-				-- Tuple_type conforms to "ANY", so Tuple_type conforms
-				-- to current class type if "ANY" conforms to it.
-			any_type := a_universe.any_type
-			Result := conforms_from_class_type (any_type, other_context, a_context, a_universe)
+			a_base_class := other.direct_base_class (a_universe)
+			if a_base_class.is_preparsed then
+				Result := conforms_from_class_type (a_base_class, other_context, a_context, a_universe)
+			end
+			if not Result then
+					-- Tuple_type conforms to "ANY", so Tuple_type conforms
+					-- to current class type if "ANY" conforms to it.
+				any_type := a_universe.any_class
+				Result := conforms_from_class_type (any_type, other_context, a_context, a_universe)
+			end
 		end
 
 feature -- Type processing
