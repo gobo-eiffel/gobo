@@ -16,6 +16,7 @@ inherit
 
 	ET_CLUSTER
 		redefine
+			prefixed_name,
 			parent, subclusters
 		end
 
@@ -32,14 +33,17 @@ feature {NONE} -- Initialization
 			a_name_not_empty: a_name.count > 0
 		do
 			name := a_name
-			prefixed_name := a_name
 			pathname := a_pathname
 			is_relative := (a_pathname = Void)
+			library_prefix := empty_prefix
+			cluster_prefix := empty_prefix
 		ensure
 			name_set: name = a_name
 			pathname_set: pathname = a_pathname
 			prefixed_name_set: prefixed_name = a_name
 			is_relative: is_relative = (a_pathname = Void)
+			no_library_prefix: library_prefix.count = 0
+			no_cluster_prefix: cluster_prefix.count = 0
 		end
 
 feature -- Access
@@ -47,8 +51,38 @@ feature -- Access
 	name: STRING
 			-- Name
 
-	prefixed_name: STRING
-			-- Prefixed cluster name
+	prefixed_name: STRING is
+			-- Cluster name with possible prefixes
+		do
+			if library_prefix.count > 0 then
+				if cluster_prefix.count > 0 then
+					Result := STRING_.make (library_prefix.count + cluster_prefix.count + name.count)
+					Result.append_string (library_prefix)
+					Result.append_string (cluster_prefix)
+					Result.append_string (name)
+				else
+					Result := STRING_.make (library_prefix.count + name.count)
+					Result.append_string (library_prefix)
+					Result.append_string (name)
+				end
+			else
+				if cluster_prefix.count > 0 then
+					Result := STRING_.make (cluster_prefix.count + name.count)
+					Result.append_string (cluster_prefix)
+					Result.append_string (name)
+				else
+					Result := name
+				end
+			end
+		ensure then
+			definition: Result.is_equal (library_prefix + cluster_prefix + name)
+		end
+
+	library_prefix: STRING
+			-- Cluster name prefix specified in <mount>
+
+	cluster_prefix: STRING
+			-- Cluster name prefix specified in <cluster>
 
 	pathname: STRING
 			-- Directory pathname (may be Void)
@@ -74,13 +108,6 @@ feature -- Nested
 
 	subclusters: ET_XACE_CLUSTERS
 			-- Subclusters
-
-	mounted_parent: ET_XACE_CLUSTER
-			-- Mounted parent cluster
-			-- (Void if current cluster has not been mounted)
-
-	mounted_subclusters: ET_XACE_MOUNTED_CLUSTERS
-			-- Mounted subclusters
 
 feature -- Setting
 
@@ -108,37 +135,28 @@ feature -- Setting
 			externals_set: externals = an_externals
 		end
 
-	set_mounted_subclusters (a_subclusters: like mounted_subclusters) is
-			-- Set `mounted_subclusters' to `a_subclusters'.
+	set_library_prefix (a_prefix: STRING) is
+			-- Set `library_prefix' to `a_prefix',
+			-- and recursively in the subclusters.
+		require
+			a_prefix_not_void: a_prefix /= Void
 		do
-			if mounted_subclusters /= Void then
-				mounted_subclusters.unmount
-			end
-			mounted_subclusters := a_subclusters
-			if mounted_subclusters /= Void then
-				mounted_subclusters.mount (Current)
+			library_prefix := a_prefix
+			if subclusters /= Void then
+				subclusters.set_library_prefix (a_prefix)
 			end
 		ensure
-			mounted_subclusters_set: mounted_subclusters = a_subclusters
+			library_prefix_set: library_prefix = a_prefix
 		end
 
-	set_name_prefix (a_prefix: STRING) is
-			-- Prepend `a_prefix' to cluster name, and recursively
-			-- to the name of the subclusters.
+	set_cluster_prefix (a_prefix: STRING) is
+			-- Set `cluster_prefix' to `a_prefix'.
+		require
+			a_prefix_not_void: a_prefix /= Void
 		do
-			if a_prefix = Void then
-				prefixed_name := name
-			else
-				prefixed_name := STRING_.make (a_prefix.count + name.count)
-				prefixed_name.append_string (a_prefix)
-				prefixed_name.append_string (name)
-			end
-			if subclusters /= Void then
-				subclusters.set_name_prefix (a_prefix)
-			end
+			cluster_prefix := a_prefix
 		ensure
-			prefixed_name_set: a_prefix /= Void implies prefixed_name.is_equal (a_prefix + name)
-			non_prefixed_name_set: a_prefix = Void implies prefixed_name = name
+			cluster_prefix_set: cluster_prefix = a_prefix
 		end
 
 feature -- Status setting
@@ -149,105 +167,6 @@ feature -- Status setting
 			is_mounted := b
 		ensure
 			mounted_set: is_mounted = b
-		end
-
-feature {ET_XACE_MOUNTED_CLUSTER} -- Mount
-
-	mount (a_parent: like mounted_parent) is
-			-- Mount current cluster to `a_parent'.
-		require
-			a_parent_not_void: a_parent /= Void
-		local
-			a_subclusters: like subclusters
-		do
-			mounted_parent := a_parent
-			is_mounted := True
-			a_subclusters := a_parent.subclusters
-			if a_subclusters = Void then
-				!! a_subclusters.make_empty
-				a_parent.set_subclusters (a_subclusters)
-			end
-			a_subclusters.put_last (Current)
-		ensure
-			mounted: is_mounted
-			mounted_parent_set: mounted_parent = a_parent
-		end
-
-	mount_root (a_universe: ET_XACE_SYSTEM) is
-			-- Mount current cluster at the root of `a_universe'.
-		require
-			a_universe_not_void: a_universe /= Void
-		local
-			a_clusters: like subclusters
-		do
-			mounted_parent := Void
-			is_mounted := True
-			a_clusters := a_universe.clusters
-			if a_clusters = Void then
-				!! a_clusters.make (Current)
-				a_universe.set_clusters (a_clusters)
-			else
-				a_clusters.put_last (Current)
-			end
-		ensure
-			mounted: is_mounted
-			mounted_parent_set: mounted_parent = Void
-		end
-
-	unmount is
-			-- Unmount current cluster.
-		local
-			a_subclusters: like subclusters
-		do
-			if mounted_parent /= Void then
-				a_subclusters := mounted_parent.subclusters
-				if a_subclusters /= Void then
-					a_subclusters.remove (Current)
-					if a_subclusters.clusters.is_empty then
-						mounted_parent.set_subclusters (Void)
-					end
-				end
-				mounted_parent := Void
-			end
-			is_mounted := False
-		ensure
-			unmounted: not is_mounted
-			mounted_parent_unset: mounted_parent = Void
-		end
-
-	unmount_root (a_universe: ET_XACE_SYSTEM) is
-			-- Unmount current cluster from the root of `a_universe'.
-		require
-			a_universe_not_void: a_universe /= Void
-		local
-			a_clusters: like subclusters
-		do
-			a_clusters := a_universe.clusters
-			if a_clusters /= Void then
-				a_clusters.remove (Current)
-				if a_clusters.clusters.is_empty then
-					a_universe.set_clusters (Void)
-				end
-			end
-			mounted_parent := Void
-			is_mounted := False
-		ensure
-			unmounted: not is_mounted
-			mounted_parent_unset: mounted_parent = Void
-		end
-
-feature -- Removal
-
-	remove_cluster (a_cluster_name: STRING) is
-			-- Remove cluster `a_cluster_name' from `subclusters'.
-			-- `a_cluster_name' is the dot-separated full name
-			-- of the cluster.
-		require
-			a_cluster_name_not_void: a_cluster_name /= Void
-		do
-			if subclusters /= Void then
-				subclusters.remove_cluster (a_cluster_name)
-			end
 		end
 
 feature -- Basic operations
@@ -290,9 +209,14 @@ feature {NONE} -- Implementation
 			Result.set_recursive (True)
 		end
 
+feature {NONE} -- Constants
+
+	empty_prefix: STRING is ""
+			-- Empty prefix
+
 invariant
 
-	prefixed_name_not_void: prefixed_name /= Void
-	prefixed_name_not_empty: prefixed_name.count > 0
+	library_prefix_not_void: library_prefix /= Void
+	cluster_prefix_not_void: cluster_prefix /= Void
 
 end
