@@ -1,5 +1,5 @@
 -- system:     "Gobo Eiffel Libraries precompilation"
--- compiler:   "ISE Eiffel 4.2"
+-- compiler:   "ISE Eiffel 4.3"
 -- author:     "Eric Bezault <ericb@gobo.demon.co.uk>"
 -- copyright:  "Copyright (c) 1998, Eric Bezault"
 -- date:       "$Date$"
@@ -44,7 +44,6 @@ cluster
 		-- Gobo Eiffel Kernel Library
 	kl_kernel:			"$GOBO\library\kernel";
 	kl_kernel_spec:		"$GOBO\library\kernel\spec\ise";
-	kl_obsolete:		"$GOBO\library\kernel\obsolete";
 
 		-- Gobo Eiffel Structure Library
 	ds_container:		"$GOBO\library\structure\container";
@@ -71,5 +70,9 @@ cluster
 	table:				"$EIFFEL4\library\base\structures\table";
 	traversing:			"$EIFFEL4\library\base\structures\traversing";
 	tree:				"$EIFFEL4\library\base\structures\tree";
+
+external
+
+	include_path: "$(GOBO)\library\kernel\include"
 
 end
