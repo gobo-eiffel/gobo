@@ -88,8 +88,8 @@ feature -- Setting
 
 feature {NONE} -- Implementation
 
-	gcaaa_default_template: STRING is "[$1] Cluster $2: cannot read cluster directory '$3'."
-	gcaab_default_template: STRING is "[$1] Cluster $2: cannot read Eiffel file '$3'."
+	gcaaa_default_template: STRING is "[$1] cluster $2: cannot read cluster directory '$3'."
+	gcaab_default_template: STRING is "[$1] cluster $2: cannot read Eiffel file '$3'."
 			-- Default templates
 
 	gcaaa_etl_code: STRING is "GCAAA"
