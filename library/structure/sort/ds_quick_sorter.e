@@ -22,13 +22,15 @@ feature -- Sort
 			-- Sort `container' in increasing order
 			-- within bounds `lower'..`upper'.
 		local
-			l, u, nb: INTEGER
+			l, u, m: INTEGER
 			pivot: G
 		do
 			l := lower
 			u := upper
 			if l < u then
-				pivot := container.item (u)
+				m := (lower + upper) // 2
+				pivot := container.item (m)
+				container.replace (container.item (upper), m)
 				from until l >= u loop
 					from
 					until
@@ -47,7 +49,8 @@ feature -- Sort
 						container.swap (l, u)
 					end
 				end
-				container.swap (l, upper)
+				container.replace (container.item (l), upper)
+				container.replace (pivot, l)
 				if l - 1 > lower then
 					subsort (container, lower, l - 1)
 				end
