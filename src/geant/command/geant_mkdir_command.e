@@ -65,6 +65,10 @@ feature -- Execution
 
 			! KL_DIRECTORY ! a_directory.make (a_name)
 			a_directory.recursive_create_directory
+			if not file_system.is_directory_readable (a_name) then
+					log ("  [mkdir] error: cannot create directory '" + a_name + "'%N")
+				exit_code := 1
+			end
 		end
 
 end -- class GEANT_MKDIR_COMMAND

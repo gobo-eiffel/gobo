@@ -94,11 +94,20 @@ feature -- Execution
 				trace ("  [delete] " + directory + "%N")
 				!! a_directory.make (directory)
 				a_directory.recursive_delete
+				if file_system.is_directory_readable (directory) then
+					log ("  [delete] error: cannot delete directory '" + directory + "'%N")
+					exit_code := 1
+				end
 			else
 				check is_file_executable: is_file_executable end
 				trace ("  [delete] " + file + "%N")
 				file_system.delete_file (file)
+				if file_system.is_file_readable (file) then
+					log ("geant error: cannot delete file '" + file + "'%N")
+					exit_code := 1
+				end
 			end
 		end
 
 end -- class GEANT_DELETE_COMMAND
+

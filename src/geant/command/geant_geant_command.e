@@ -122,8 +122,7 @@ feature -- Execution
 				if a_project.targets /= Void then
 					a_project.build
 					if not a_project.build_successful then
-							--!! TODO: Report this to parent project
-						exit_application (1, Void)
+						exit_code := 1
 					end
 				end
 			else
@@ -134,7 +133,8 @@ feature -- Execution
 				if a_target /= Void then
 					project.build_target (a_target)
 				else
-					exit_application (1, "geant error: unknown target: " + start_target_name + "%N")
+					log ("  [geant] error: unknown target: " + start_target_name + "%N")
+					exit_code := 1
 				end
 			end
 		end

@@ -250,6 +250,9 @@ feature -- Processing
 							end
 
 							a_task.execute
+							if a_task.exit_code /= 0 then
+								exit_application (a_task.exit_code, Void)
+							end
 
 								-- change back to previous directory if "dir" attribute is provided:
 							if a_task.element.has_attribute (a_task.Dir_attribute_name) then

@@ -109,12 +109,37 @@ feature -- Execution
 				a_basename := unix_file_system.basename (file)
 				a_to_file := unix_file_system.pathname (to_directory, a_basename)
 
-				trace ("  [move] " + file + " to " + a_to_file + "%N")
-				file_system.rename_file (file, a_to_file)
 			else
 				check is_to_file_executable: is_to_file_executable end
-				trace ("  [move] " + file + " to " + to_file + "%N")
-				file_system.rename_file (file, to_file)
+				a_to_file := to_file
+			end
+			trace ("  [move] " + file + " to " + a_to_file + "%N")
+
+				-- Check that source file exists:
+			if not file_system.is_file_readable (file) then
+				log ("  [move] error: cannot find file '" + file + "'%N")
+				exit_code := 1
+			end
+				-- Check that target file does not exist:
+			if exit_code = 0 and then file_system.is_file_readable (a_to_file) then
+				log ("  [move] error: file '" + a_to_file + "' already exists%N")
+				exit_code := 1
+			end
+
+			if exit_code = 0 then
+				file_system.rename_file (file, a_to_file)
+			end
+
+				-- Check that new file has been created:
+			if exit_code = 0 and then not file_system.is_file_readable (a_to_file) then
+				log ("  [move] error: cannot move file '" + file + "' to file '" + a_to_file + "'%N")
+				exit_code := 1
+			end
+
+				-- Check that old file has been removed:
+			if exit_code = 0 and then file_system.is_file_readable (file) then
+				log ("  [move] error: cannot remove file '" + file + "'%N")
+				exit_code := 1
 			end
 
 		end

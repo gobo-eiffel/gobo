@@ -120,7 +120,6 @@ feature -- Execution
 	execute is
 			-- Execute command.
 		local
-			cmd: STRING
 			i, nb: INTEGER
 			a_source_file: KI_FILE
 			a_target_file: KI_FILE
@@ -130,41 +129,37 @@ feature -- Execution
 			a_old_verbose: BOOLEAN
 			a_name: STRING
 		do
-			cmd := clone ("outofdate")
-
 			! KL_TEXT_INPUT_FILE ! a_target_file.make (target_filename)
 
 			a_target_time := a_target_file.time_stamp
 
 				-- Check timestamps:
 			nb := source_filenames.count
-			from i := 1 until i > nb or else is_out_of_date loop
+			from i := 1 until i > nb or else is_out_of_date or else exit_code /= 0 loop
 				a_name := file_system.pathname_from_file_system (source_filenames.item (i), unix_file_system)
 				! KL_TEXT_INPUT_FILE ! a_source_file.make (a_name)
 				a_source_time := a_source_file.time_stamp
 				if a_source_time = -1 then
-					exit_application (1, "  [outofdate] " + a_name + " not accessible.")
+					log ("  [outofdate] error: '" + a_name + "'  not accessible.%N")
+					exit_code := 1
 				end
-				if a_target_time < a_source_time then
-					is_out_of_date := True
-				else
-					is_out_of_date := False
-				end
+				is_out_of_date := (a_target_time < a_source_time)
 
 				i := i + 1
 			end
-			!! a_set_command.make (project)
-			a_set_command.set_name (variable_name)
-			a_old_verbose := project.verbose
-			project.set_verbose (False)
-			if is_out_of_date then
-				a_set_command.set_value (true_value)
-			else
-				a_set_command.set_value (false_value)
+			if exit_code = 0 then
+				!! a_set_command.make (project)
+				a_set_command.set_name (variable_name)
+				a_old_verbose := project.verbose
+				project.set_verbose (False)
+				if is_out_of_date then
+					a_set_command.set_value (true_value)
+				else
+					a_set_command.set_value (false_value)
+				end
+				a_set_command.execute
+				project.set_verbose (a_old_verbose)
 			end
-			a_set_command.execute
-			project.set_verbose (a_old_verbose)
-
 		end
 
 invariant

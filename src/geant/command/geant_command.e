@@ -45,6 +45,9 @@ feature -- Status report
 		deferred
 		end
 
+	exit_code: INTEGER
+			-- Exit code of last execution
+
 feature -- Access
 
 	project: GEANT_PROJECT
@@ -58,6 +61,14 @@ feature -- Setting
 			project := a_project
 		ensure
 			project_set: project = a_project
+		end
+
+	set_exit_code (a_exit_code: like exit_code) is
+			-- Set `exit_code' to `a_exit_code'.
+		do
+			exit_code := a_exit_code
+		ensure
+			exit_code_set: exit_code = a_exit_code
 		end
 
 feature -- Output
@@ -101,9 +112,7 @@ feature {NONE} -- Implementation
 		do
 			!! shell_command.make (a_command)
 			shell_command.execute
-			if shell_command.exit_code /= 0 then
-				exit_application (shell_command.exit_code, Void)
-			end
+			exit_code := shell_command.exit_code
 		end
 
 end -- class GEANT_COMMAND
