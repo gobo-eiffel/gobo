@@ -71,6 +71,7 @@ creation
 
 %type <ET_ACTUAL_ARGUMENTS>    Actuals_opt Actual_list
 %type <ET_ACTUAL_GENERIC_PARAMETERS>  Actual_generics_opt Type_list
+                               Constraint_actual_generics_opt Constraint_type_list
 %type <ET_ASSERTION>           Assertion_clause
 %type <ET_ASSERTIONS>          Assertion_list Invariant_opt
 %type <ET_BOOLEAN_CONSTANT>    Boolean_constant
@@ -97,12 +98,13 @@ creation
 %type <ET_INTEGER_CONSTANT>    Integer_constant
 %type <ET_LOCAL_VARIABLES>     Local_declarations_opt Local_variable_list
 %type <ET_MANIFEST_STRING>     Obsolete_opt Manifest_string External_name_opt
+%type <ET_NAMED_TYPE>          Named_type Constraint_named_type
 %type <ET_PARENTS>             Parent_list_to_end
 %type <ET_POSTCONDITIONS>      Postcondition_list Postcondition_opt
 %type <ET_PRECONDITIONS>       Precondition_list Precondition_opt
 %type <ET_REAL_CONSTANT>       Real_constant
 %type <ET_RENAME>              Rename_pair
-%type <ET_TYPE>                Type Class_type
+%type <ET_TYPE>                Type Constraint_type
 %type <ET_WRITABLE>            Writable
 
 %type <like new_export_list>     New_exports New_exports_opt New_export_list
@@ -191,7 +193,7 @@ Formal_generics_opt: -- Empty
 		-- Warning!
 		-- { $$ := Void }
 	| '[' Formal_generic_list ']'
-		{ last_class.set_generic_parameters ($2) }
+		{ set_formal_generic_parameters ($2) }
 	;
 
 Formal_generic_list: Formal_generic
@@ -207,8 +209,48 @@ Formal_generic_list: Formal_generic
 
 Formal_generic: Identifier
 		{ $$ := new_formal_generic ($1, Void) }
-	| Identifier E_ARROW Class_type
+	| Identifier E_ARROW Constraint_named_type
 		{ $$ := new_formal_generic ($1, $3) }
+	;
+
+Constraint_type: Constraint_named_type
+		{ $$ := $1 }
+	| E_EXPANDED Constraint_named_type
+	-- TODO:
+		{ $$ := $2 }
+	| E_SEPARATE Constraint_named_type
+		-- TODO
+		{ $$ := $2 }
+	| E_LIKE E_CURRENT
+		{ $$ := new_like_current ($1) }
+	| E_LIKE Identifier
+		{ $$ := new_like_identifier ($2, $1) }
+	| E_BITTYPE Integer_constant
+		{ $$ := new_bit_type ($2, $1.position) }
+	| E_BITTYPE Identifier
+		{ $$ := new_bit_identifier ($2, $1.position)  }
+	;
+
+Constraint_named_type: Class_name Constraint_actual_generics_opt
+		{ $$ := new_constraint_named_type ($1, $2) }
+	;
+
+Constraint_actual_generics_opt: -- Empty
+		-- { $$ := Void }
+	| '[' ']'
+		-- Warning:
+		-- { $$ := Void }
+	| '[' Constraint_type_list ']'
+		{ $$ := $2 }
+	;
+
+Constraint_type_list: Constraint_type
+		{ $$ := new_actual_generics ($1) }
+	| Constraint_type_list ',' Constraint_type
+		{
+			$$ := $1
+			$$.put ($3)
+		}
 	;
 
 --------------------------------------------------------------------------------
@@ -801,12 +843,12 @@ Rescue_opt: -- Empty
 
 --------------------------------------------------------------------------------
 
-Type: Class_type
+Type: Named_type
 		{ $$ := $1 }
-	| E_EXPANDED Class_type
+	| E_EXPANDED Named_type
 	-- TODO:
 		{ $$ := $2 }
-	| E_SEPARATE Class_type
+	| E_SEPARATE Named_type
 		-- TODO
 		{ $$ := $2 }
 	| E_LIKE E_CURRENT
@@ -819,8 +861,8 @@ Type: Class_type
 		{ $$ := new_bit_identifier ($2, $1.position)  }
 	;
 
-Class_type: Class_name Actual_generics_opt
-		{ $$ := new_class_type ($1, $2) }
+Named_type: Class_name Actual_generics_opt
+		{ $$ := new_named_type ($1, $2) }
 	;
 
 Class_name: E_IDENTIFIER
