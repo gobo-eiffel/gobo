@@ -240,7 +240,7 @@
 
 <xsd:complexType name="quote-type" mixed="true">
 	<xsd:choice minOccurs="0" maxOccurs="unbounded">
-		<xsd:element name="emphasis" type="xsl:string"/>
+		<xsd:element name="emphasis" type="xsd:string"/>
 	</xsd:choice>
 </xsd:complexType>
 
