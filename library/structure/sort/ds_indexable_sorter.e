@@ -2,11 +2,12 @@ indexing
 
 	description:
 
-		"Indexable structure sorters"
+		"Indexable data structure sorters"
 
 	library:    "Gobo Eiffel Structure Library"
-	author:     "Eric Bezault <ericb@gobo.demon.co.uk>"
-	copyright:  "Copyright (c) 1997, Eric Bezault"
+	author:     "Eric Bezault <ericb@gobosoft.com>"
+	copyright:  "Copyright (c) 1997, Eric Bezault and others"
+	license:    "Eiffel Forum Freeware License v1 (see forum.txt)"
 	date:       "$Date$"
 	revision:   "$Revision$"
 
@@ -30,8 +31,8 @@ feature -- Status report
 			-- within bounds `lower'..`upper'?
 		require
 			a_container_not_void: a_container /= Void
-			valid_lower: a_container.valid_entry (lower)
-			valid_upper: a_container.valid_entry (upper)
+			valid_lower: 1 <= lower and lower <= a_container.count
+			valid_upper: 1 <= upper and upper <= a_container.count
 			constraint: lower <= upper
 		local
 			i: INTEGER
@@ -62,8 +63,8 @@ feature -- Sort
 			-- within bounds `lower'..`upper'?
 		require
 			a_container_not_void: a_container /= Void
-			valid_lower: a_container.valid_entry (lower)
-			valid_upper: a_container.valid_entry (upper)
+			valid_lower: 1 <= lower and lower <= a_container.count
+			valid_upper: 1 <= upper and upper <= a_container.count
 			constraint: lower <= upper
 		deferred
 		ensure
