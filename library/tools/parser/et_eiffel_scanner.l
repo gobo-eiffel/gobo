@@ -543,9 +543,12 @@ creation
 <VS>{
 	[ \t\r]*\]\"	{
 				last_token := E_STRING
+					-- TODO.
+				last_value := new_manifest_string ("")
 				set_start_condition (INITIAL)
 			}
 	([^\"\n]*|\".*|.*[^\]\n]\".*)\n?	{
+					-- TODO.
 			}
 	<<EOF>>	{
 					-- Syntax error: 

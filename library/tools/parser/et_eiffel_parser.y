@@ -20,6 +20,8 @@ inherit
 	ET_EIFFEL_SCANNER
 		rename
 			make as make_eiffel_scanner
+		undefine
+			reset
 		end
 
 creation
@@ -974,6 +976,8 @@ Create_instruction: E_CREATE '{' Type '}' Writable Creation_call_opt
 	;
 
 Create_expression: E_CREATE '{' Type '}' Creation_call_opt
+		-- TODO
+		{ $$ := new_current ($1) }
 	;
 
 --------------------------------------------------------------------------------
@@ -1180,7 +1184,7 @@ Expression: Call_expression
 		{ $$ := new_manifest_array }
 	| '[' Expression_list ']'
 -- TODO
-		{  }
+		{ $$ := new_manifest_array }
 	| '+' Expression %prec E_NOT
 		{ $$ := new_prefix_plus_expression ($2, $1) }
 	| '-' Expression %prec E_NOT
