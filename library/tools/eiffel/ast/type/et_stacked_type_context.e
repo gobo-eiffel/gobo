@@ -33,7 +33,6 @@ feature {NONE} -- Initialization
 			a_current_valid: a_current.is_valid_context
 			a_previous_not_void: a_previous /= Void
 			a_previous_valid: a_previous.is_valid_context
-			no_cycle: not a_previous.has_stacked_context (a_current)
 		do
 			current_context := a_current
 			previous_stacked_context := a_previous

@@ -77,15 +77,20 @@ feature -- Status report
 			end
 		end
 
-	same_context (other: ET_TYPE_CONTEXT): BOOLEAN is
+	same_context (other: ET_TYPE_CONTEXT; a_universe: ET_UNIVERSE): BOOLEAN is
 			-- Are current context and `other' considered the same?
 		require
 			other_not_void: other /= Void
 			same_root: same_root_context (other)
+			a_universe_not_void: a_universe /= Void
 		do
-			Result := other = Current
+			if other = Current then
+				Result := True
+			else
+				Result := type.same_base_type (other.type, other.context, context, a_universe)
+			end
 		ensure
-			identity: (other = Current) implies Result
+			definition: Result = type.same_base_type (other.type, other.context, context, a_universe)
 		end
 
 	same_root_context (other: ET_TYPE_CONTEXT): BOOLEAN is
@@ -106,17 +111,18 @@ feature -- Stacked contexts
 			-- Result := Void
 		end
 
-	has_stacked_context (a_context: ET_TYPE_CONTEXT) : BOOLEAN is
+	has_stacked_context (a_context: ET_TYPE_CONTEXT; a_universe: ET_UNIVERSE): BOOLEAN is
 			-- Is `a_context' the same context as current context,
 			-- or recursively the same context as the context of
 			-- `previous_stacked_context'?
 		require
 			a_context_not_void: a_context /= Void
+			a_universe_not_void: a_universe /= Void
 		do
-			if same_context (a_context) then
+			if same_context (a_context, a_universe) then
 				Result := True
 			elseif previous_stacked_context /= Void then
-				Result := previous_stacked_context.has_stacked_context (a_context)
+				Result := previous_stacked_context.has_stacked_context (a_context, a_universe)
 			end
 		end
 
