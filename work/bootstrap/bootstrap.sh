@@ -145,7 +145,9 @@ cd $BIN_DIR
 $MV geant$EXE geant1$EXE
 cd $GOBO
 geant1 $VERBOSE bootstrap1
+if [ $? -gt 0 ]; then exit 1; fi
 cd $BIN_DIR
 $RM geant1$EXE
 cd $GOBO
 geant $VERBOSE bootstrap2
+if [ $? -gt 0 ]; then exit 1; fi
