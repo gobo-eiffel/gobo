@@ -68,7 +68,7 @@
 
 	<target name="test_se" depend="init">
 		<description>
-			Test Gobo tools with SmallEiffel.
+			Test Gobo tools with SmartEiffel.
 		</description>
 
 		<set name="target" value="test_se"/>
@@ -110,7 +110,7 @@
 
 	<target name="test_debug_se" depend="init">
 		<description>
-			Test Gobo tools with SmallEiffel in debug mode.
+			Test Gobo tools with SmartEiffel in debug mode.
 		</description>
 
 		<set name="target" value="test_debug_se"/>

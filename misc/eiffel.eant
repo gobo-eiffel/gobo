@@ -106,7 +106,7 @@
 
 	<target name="compile_se" depend="prepare_compile">
 		<description>
-			Compile '${system}' with SmallEiffel.
+			Compile '${system}' with SmartEiffel.
 			Compile in debug mode if ${debug} is defined.
 		</description>
 
@@ -152,7 +152,7 @@
 
 	<target name="compile_debug_se" depend="prepare_compile">
 		<description>
-			Compile '${system}' with SmallEiffel in debug mode.
+			Compile '${system}' with SmartEiffel in debug mode.
 		</description>
 
 		<set name="eiffel" value="se"/>
@@ -162,7 +162,7 @@
 
 	<target name="bootstrap" depend="init">
 		<description>
-			Compile '${system}' with SmallEiffel in bootstrap mode.
+			Compile '${system}' with SmartEiffel in bootstrap mode.
 		</description>
 
 		<set name="eiffel" value="se"/>

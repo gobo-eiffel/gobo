@@ -225,7 +225,7 @@ feature -- Error handling
 feature {NONE} -- Implementation
 
 	resurrect_code is
-			-- Make sure that SmallEiffel does not complain about possible
+			-- Make sure that SmartEiffel does not complain about possible
 			-- "calls on a Void target in the living Eiffel code".
 		local
 			et1: KL_EQUALITY_TESTER [STRING]

@@ -26,7 +26,7 @@
 
 	<target name="se_short" depend="prepare">
 		<description>
-			Call SmallEiffel's 'short' command on a fileset. The 'exec' command is
+			Call SmartEiffel's 'short' command on a fileset. The 'exec' command is
 			executed for each entry in the fileset. By default only files which
 			are newer than their corresponding target files are included in the list.
 			We also call those files to be 'out of date'.

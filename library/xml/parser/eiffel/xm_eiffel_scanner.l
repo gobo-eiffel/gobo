@@ -120,8 +120,8 @@ NOQUOTSYSLITCHAR [\r\n\t\x20-!#-\x7F]
 
 %%
 
--- Useless rule for avoiding SmallEiffel empty-when bug.
--- obsolete Gobo 2.0 and new SmallEiffel
+-- Useless rule for avoiding SmartEiffel empty-when bug.
+-- obsolete Gobo 2.0 and new SmartEiffel
 --<*><<EOF>> { terminate }
 
 -- Comment

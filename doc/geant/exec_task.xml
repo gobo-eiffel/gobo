@@ -169,7 +169,7 @@
 	</programlisting>
 
 	<para>
-		Here is another example which uses SmallEiffel's 'short' command on a fileset.
+		Here is another example which uses SmartEiffel's 'short' command on a fileset.
 		The 'exec' command is executed for each entry in the fileset. By default only files which
 		are newer than their corresponding target files are included in the list.
 	</para>

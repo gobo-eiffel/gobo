@@ -11,7 +11,7 @@ To compile this program:
    'geant scanner' to generate class GEPP_SCANNER if necessary.
 
 2. Use your favorite Eiffel compiler to compile the Eiffel system using
-   the provided Ace file (ISE Eiffel: ise.ace, SmallEiffel: se.ace) or
+   the provided Ace file (ISE Eiffel: ise.ace, SmartEiffel: se.ace) or
    ESD file (Visual Eiffel: ve.esd). Alternatively you can use 'geant'
    to launch the compilation:
    

@@ -8,7 +8,7 @@ routines to the singleton class as if it was a regular class.
 To compile this example:
 
 1. Use your favorite Eiffel compiler to compile the Eiffel system using
-   the provided Ace file (ISE Eiffel: ise.ace, SmallEiffel: se.ace) or
+   the provided Ace file (ISE Eiffel: ise.ace, SmartEiffel: se.ace) or
    ESD file (Visual Eiffel: ve.esd). Alternatively you can use 'geant'
    to launch the compilation:
    

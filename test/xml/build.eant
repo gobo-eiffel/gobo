@@ -68,7 +68,7 @@
 
 	<target name="test_se" depend="init">
 		<description>
-			Test the Gobo Eiffel XML Library with SmallEiffel.
+			Test the Gobo Eiffel XML Library with SmartEiffel.
 		</description>
 
 		<set name="target" value="test_se"/>
@@ -110,7 +110,7 @@
 
 	<target name="test_debug_se" depend="init">
 		<description>
-			Test the Gobo Eiffel XML Library with SmallEiffel in debug mode.
+			Test the Gobo Eiffel XML Library with SmartEiffel in debug mode.
 		</description>
 
 		<set name="target" value="test_debug_se"/>

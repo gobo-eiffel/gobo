@@ -384,8 +384,8 @@ ___________________________________________________________
 
 invoke 'geant'
 
-	<gexace> calls the gexace tool which generates a SmallEiffel ace file.
-	<se> then will compile our system using SmallEiffel
+	<gexace> calls the gexace tool which generates a SmartEiffel ace file.
+	<se> then will compile our system using SmartEiffel
 
 	Now we could simply invoke the hello program from the commandline
 	but since this would be too easy simply invoke 'geant -v run' which

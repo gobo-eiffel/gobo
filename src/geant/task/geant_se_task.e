@@ -2,7 +2,7 @@ indexing
 
 	description:
 
-		"Compilation tasks for SmallEiffel"
+		"Compilation tasks for SmartEiffel"
 
 	library: "Gobo Eiffel Ant"
 	copyright: "Copyright (c) 2001, Sven Ehrke and others"
@@ -88,7 +88,7 @@ feature {NONE} -- Initialization
 feature -- Access
 
 	command: GEANT_SE_COMMAND
-			-- Compilation commands for SmallEiffel
+			-- Compilation commands for SmartEiffel
 
 feature {NONE} -- Constants
 

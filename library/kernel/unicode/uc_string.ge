@@ -335,7 +335,7 @@ feature {NONE} -- Initialization
 				end
 			end
 		ensure
-			-- Note: Too memory and time consumming with SmallEiffel:
+			-- Note: Too memory and time consumming with SmartEiffel:
 			-- initialized: same_unicode_string (a_string.substring (start_index, end_index))
 		end
 

@@ -255,7 +255,7 @@ feature -- Status report
 
 	exists: BOOLEAN is
 			-- Does file physically exist on disk?
-			-- (Note that with SmallEiffel this routine
+			-- (Note that with SmartEiffel this routine
 			-- actually returns `is_readable'.)
 		local
 			rescued: BOOLEAN

@@ -111,7 +111,7 @@ feature -- Comparison
 
 invariant
 
-	-- Note: Too memory consumming with SmallEiffel:
+	-- Note: Too memory consumming with SmartEiffel:
 	-- irreflexive_comparison: not (Current < Current)
 
 end

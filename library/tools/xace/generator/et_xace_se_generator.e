@@ -2,7 +2,7 @@ indexing
 
 	description:
 
-		"Ace file generators for SmallEiffel"
+		"Ace file generators for SmartEiffel"
 
 	library: "Gobo Eiffel Tools Library"
 	copyright: "Copyright (c) 2001-2002, Andreas Leitner and others"

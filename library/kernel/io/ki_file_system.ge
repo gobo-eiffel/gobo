@@ -50,7 +50,7 @@ feature -- File handling
 
 	file_exists (a_filename: STRING): BOOLEAN is
 			-- Does file named `a_filename' physically exist on disk?
-			-- (Note that with SmallEiffel this routine actually returns `is_readable'.)
+			-- (Note that with SmartEiffel this routine actually returns `is_readable'.)
 			-- (`a_filename' should follow the pathname convention
 			-- of the underlying platform. For pathname conversion
 			-- use KI_FILE_SYSTEM.pathname_from_file_system.)
@@ -246,7 +246,7 @@ feature -- Directory handling
 
 	directory_exists (a_dirname: STRING): BOOLEAN is
 			-- Does directory named `a_dirname' physically exist on disk?
-			-- (Note that with SmallEiffel this routine actually returns `is_readable'.)
+			-- (Note that with SmartEiffel this routine actually returns `is_readable'.)
 			-- (`a_dirname' should follow the pathname convention
 			-- of the underlying platform. For pathname conversion
 			-- use KI_FILE_SYSTEM.pathname_from_file_system.)

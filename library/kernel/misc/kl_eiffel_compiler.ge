@@ -44,7 +44,7 @@ feature -- Access
 		end
 
 	se_vendor: STRING is "se"
-			-- SmallEiffel vendor
+			-- SmartEiffel vendor
 
 	ve_vendor: STRING is "ve"
 			-- Visual Eiffel vendor
@@ -70,7 +70,7 @@ feature -- Status report
 		end
 
 	is_se: BOOLEAN is
-			-- Has this program been compiled with SmallEiffel?
+			-- Has this program been compiled with SmartEiffel?
 		once
 			Result := (vendor = se_vendor)
 		ensure

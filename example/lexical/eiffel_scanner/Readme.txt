@@ -18,10 +18,10 @@ To compile this example:
 
 2. Choose either `execute' or `benchmark' as the creation procedure of
    the root class EIFFEL_SCANNER in your Ace file (ISE Eiffel: ise.ace,
-   SmallEiffel: se.ace) or your ESD file (Visual Eiffel: ve.esd).
+   SmartEiffel: se.ace) or your ESD file (Visual Eiffel: ve.esd).
 
 3. Use your favorite Eiffel compiler to compile the Eiffel system using
-   the provided Ace file (ISE Eiffel: ise.ace, SmallEiffel: se.ace) or
+   the provided Ace file (ISE Eiffel: ise.ace, SmartEiffel: se.ace) or
    ESD file (Visual Eiffel: ve.esd). Alternatively you can use 'geant'
    to launch the compilation:
    

@@ -33,7 +33,7 @@ DESCRIPTION: Enable expressions of the form '$(s.to_c)' instead
   insides, since using this syntax illegally can lead to bugs
   very hard to trace.
 NOTE: This form of syntax is not supported in Visual Eiffel and
-  SmallEiffel.
+  SmartEiffel.
 
 ISE:
   true -> address_expression (yes)

@@ -155,7 +155,7 @@ Visual Eiffel allows to have several classes in the same file,
 but the other Eiffel compilers don't. So each file should contain
 only one class.
 
-Likewise, SmallEiffel expects by default to have a one-to-one
+Likewise, SmartEiffel expects by default to have a one-to-one
 relation between the name of the class and the name of the
 enclosing file. Therefore the name of the file should be the
 name of the class followed by the extension .e, all in lower
@@ -178,7 +178,7 @@ cluster 'spec', compiler-dependent classes should have
 the same name and put into the four following clusters:
 
   spec/ise        -- Implementation for ISE Eiffel
-  spec/se         -- Implementation for SmallEiffel
+  spec/se         -- Implementation for SmartEiffel
   spec/ve         -- Implementation for Visual Eiffel
 
 Only one of these clusters will be included in the Ace
@@ -234,7 +234,7 @@ unless well accepted and understood in the domain of
 expertise of the class. Names of constants can possibly
 have upper-case letters, but in that case please make sure
 that all calls to this constant use the same letter-case
-in order to be compilable by SmallEiffel without requiring
+in order to be compilable by SmartEiffel without requiring
 the -no_case_sensitive command-line option.
 
 Names of procedures should be verbs as they describe actions
@@ -519,9 +519,9 @@ only places where they are used are:
        foo.bar;
        (baz).do_something
 
-  * SmallEiffel emits a warning when semicolons are missing
+  * SmartEiffel emits a warning when semicolons are missing
     in the Export subclause of the Feature_adaptation clause.
-    Semicolons can be added here in order to keep SmallEiffel
+    Semicolons can be added here in order to keep SmartEiffel
     quiet.
 
 
@@ -611,7 +611,7 @@ the tests.
 The purpose of these tests is to make sure that the library
 classes work as expected (i.e. as specified by the assertions)
 and also to make sure that they compile correctly with compilers
-such as SmallEiffel which compiles only alive code.
+such as SmartEiffel which compiles only alive code.
 
 These tests are also useful for library maintainers who have
 not access to all supported Eiffel compilers or to some

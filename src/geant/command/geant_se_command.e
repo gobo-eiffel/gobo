@@ -2,7 +2,7 @@ indexing
 
 	description:
 
-		"Compilation commands for SmallEiffel"
+		"Compilation commands for SmartEiffel"
 
 	library: "Gobo Eiffel Ant"
 	copyright: "Copyright (c) 2001, Sven Ehrke and others"
@@ -175,7 +175,7 @@ feature -- Execution
 				cmd := new_clean_cmdline
 				a_name := clean + ".id"
 				if file_system.file_exists (a_name) then
-						-- Execute the command only if the SmallEiffel
+						-- Execute the command only if the SmartEiffel
 						-- compiler has been used to compile this system.
 					project.trace (<<"  [se] ", cmd>>)
 					execute_shell (cmd)

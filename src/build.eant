@@ -65,7 +65,7 @@
 
 	<target name="compile_se" depend="init">
 		<description>
-			Compile Gobo tools with SmallEiffel.
+			Compile Gobo tools with SmartEiffel.
 		</description>
 
 		<set name="target" value="compile_se"/>
@@ -103,7 +103,7 @@
 
 	<target name="compile_debug_se" depend="init">
 		<description>
-			Compile Gobo tools with SmallEiffel in debug mode.
+			Compile Gobo tools with SmartEiffel in debug mode.
 		</description>
 
 		<set name="target" value="compile_debug_se"/>

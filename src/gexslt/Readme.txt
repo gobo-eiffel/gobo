@@ -10,7 +10,7 @@ To compile this program:
 
 1. Use your favorite Eiffel compiler to compile the Eiffel system using
    the provided Ace file (ISE Eiffel: ise.ace,
-   SmallEiffel: se.ace) or ESD file (Visual Eiffel: ve.esd). Alternatively
+   SmartEiffel: se.ace) or ESD file (Visual Eiffel: ve.esd). Alternatively
    you can use 'geant' to launch the compilation:
    
        geant compile_<compiler>

@@ -59,7 +59,7 @@ feature -- Test
 		end
 
 	test_se is
-			-- Test precompilation with SmallEiffel.
+			-- Test precompilation with SmartEiffel.
 		do
 			if eiffel_compiler.is_se then
 				precomp_se
@@ -153,7 +153,7 @@ feature {NONE} -- Precompilation
 		end
 
 	precomp_se is
-			-- Test precompilation with SmallEiffel.
+			-- Test precompilation with SmartEiffel.
 		local
 			a_file: KL_TEXT_INPUT_FILE
 			a_dir: KL_DIRECTORY

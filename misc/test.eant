@@ -85,7 +85,7 @@
 
 	<target name="test_se" depend="init">
 		<description>
-			Test '${system}' with SmallEiffel.
+			Test '${system}' with SmartEiffel.
 			Compile in debug mode if ${debug} is defined.
 		</description>
 
@@ -126,7 +126,7 @@
 
 	<target name="test_debug_se" depend="init">
 		<description>
-			Test '${system}' with SmallEiffel in debug mode.
+			Test '${system}' with SmartEiffel in debug mode.
 		</description>
 
 		<set name="eiffel" value="se"/>

@@ -721,7 +721,7 @@ feature {NONE} -- Generation
 			a_rule: PR_RULE
 			a_type: PR_TYPE
 		do
-				-- SmallEiffel generates C code which trigger a
+				-- SmartEiffel generates C code which trigger a
 				-- stack overflow of the C compiler if there are
 				-- too many branches in an inspect instruction.
 				-- Therefore, split the inspect instruction into
@@ -942,7 +942,7 @@ feature {NONE} -- Generation
 			a_state: PR_STATE
 			an_action: PR_ERROR_ACTION
 		do
-				-- SmallEiffel generates C code which trigger a
+				-- SmartEiffel generates C code which trigger a
 				-- stack overflow of the C compiler if there are
 				-- too many branches in an inspect instruction.
 				-- Therefore, split the inspect instruction into
