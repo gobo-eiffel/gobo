@@ -48,7 +48,11 @@
 
 		<set name="debug_suffix" value="_debug" if="${debug}"/>
 		<set name="debug_suffix" value="" unless="${debug}"/>
-		<getest config="getest.cfg" compile="geant compile${debug_suffix}_${eiffel} ${compilation_log}"/>
+		<echo message=""/>
+		<echo message="Testing ${system}..."/>
+		<getest config="${system_dir}/getest.cfg" compile="geant -b ${system_dir}/build.eant compile${debug_suffix}_${eiffel} ${compilation_log}">
+			<define name="debug" value="true" if="${debug}"/>
+		</getest>
 	</target>
 
 	<target name="test_ise" depend="init">
@@ -151,6 +155,10 @@
 		<hact clean="${system}"/>
 		<se clean="${system}"/>
 		<ve clean="${system}" recursive="true"/>
+		<delete file="compile_ise.ace"/>
+		<delete file="compile_hact.ace"/>
+		<delete file="compile_se.ace"/>
+		<delete file="compile_ve.esd"/>
 		<delete file="${system}${exe}"/>
 		<delete file="${system}.melted"/>
 		<delete file="${system}.h2o"/>
