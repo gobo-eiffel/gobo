@@ -131,6 +131,7 @@ feature -- Resizing
 				i := i - 1
 			end
 #else
+		do
 			a_string.resize (n)
 #endif
 		ensure

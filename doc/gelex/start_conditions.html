@@ -42,10 +42,10 @@ color="#008080">-- handle an escape ...
 color="#800000"><tt>STRING</tt></font>, or <font color="#800000"><tt>QUOTE</tt></font>.</p>
 
 <p>Start conditions are declared in the <a
-href="input.html#declarations">declarations section</a> of the
-input using unindented lines beginning with either <font
+href="description.html#declarations">declarations section</a> of
+the input using unindented lines beginning with either <font
 color="#0000FF"><tt>%s</tt></font> or <font color="#0000FF"><tt>%x</tt></font>
-followed by a white space-separated list of names. The former
+followed by a whitespace-separated list of names. The former
 declares <strong>inclusive</strong> start conditions, the latter <strong>exclusive</strong><em>
 </em>start conditions. The name of the start conditions are
 case-insensitive and are made up of a letter followed by zero or
@@ -126,9 +126,10 @@ color="#008080"><em>do_something</em></font>
 color="#008080"><em>something_else</em></font></pre>
 </blockquote>
 
-<p>The default rule (to <font color="#008080"><em><tt>echo</tt></em></font>
-any unmatched character) remains active in start conditions. It
-is equivalent to:</p>
+<p>The <a href="matching_rules.html#default_rule">default rule</a>
+(to <font color="#008080"><em><tt>echo</tt></em></font> any
+unmatched character) remains active in start conditions. It is
+equivalent to:</p>
 
 <blockquote>
     <pre><font color="#800000">&lt;*&gt;</font><font

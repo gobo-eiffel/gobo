@@ -49,16 +49,16 @@ regular expressions. These are:</p>
         <dd>exactly four <tt>r</tt>'s</dd>
         <dt><font color="#FF0000"><tt>{name}</tt></font></dt>
         <dd>the expansion of the &quot;<tt>name</tt>&quot; <a
-            href="input.html#definitions">definition</a></dd>
+            href="description.html#definitions">definition</a></dd>
         <dt><font color="#FF0000"><tt>&quot;[xyz]\&quot;foo&quot;</tt></font></dt>
         <dd>the literal string: <tt>[xyz]&quot;foo</tt></dd>
-        <dt><tt>\X</tt></dt>
+        <dt><font color="#FF0000"><tt>\X</tt></font></dt>
         <dd>if <tt>X</tt> is an '<tt>a</tt>', '<tt>b</tt>', '<tt>f</tt>',
             '<tt>n</tt>', '<tt>r</tt>', '<tt>t</tt>', or '<tt>v</tt>',
             then the ANSI-C interpretation of <tt>\x</tt>.
             Otherwise, a literal '<tt>X</tt>' (used to escape
             operators such as '<tt>*</tt>')</dd>
-        <dt><tt>\0</tt></dt>
+        <dt><font color="#FF0000"><tt>\0</tt></font></dt>
         <dd>a null character (ASCII code <tt>0</tt>)</dd>
         <dt><font color="#FF0000"><tt>\123</tt></font></dt>
         <dd>the character with octal value <tt>123</tt></dd>
@@ -107,13 +107,16 @@ regular expressions. These are:</p>
     </dl>
     <hr size="1" width="75%">
     <dl>
-        <dt><tt>&lt;s&gt;</tt><font color="#FF0000"><tt>r</tt></font></dt>
+        <dt><font color="#800000"><tt>&lt;s&gt;</tt></font><font
+            color="#FF0000"><tt>r</tt></font></dt>
         <dd>an <tt>r</tt>, but only in start condition <tt>s</tt>
             (see below for discussion of start conditions)</dd>
-        <dt><tt>&lt;s1,s2,s3&gt;</tt><font color="#FF0000"><tt>r</tt></font></dt>
+        <dt><font color="#800000"><tt>&lt;s1,s2,s3&gt;</tt></font><font
+            color="#FF0000"><tt>r</tt></font></dt>
         <dd>same, but in any of start conditions <tt>s1</tt>, <tt>s2</tt>,
             or <tt>s3</tt></dd>
-        <dt><tt>&lt;*&gt;</tt><font color="#FF0000"><tt>r</tt></font></dt>
+        <dt><font color="#800000"><tt>&lt;*&gt;</tt></font><font
+            color="#FF0000"><tt>r</tt></font></dt>
         <dd>an <tt>r</tt> in any start condition, even an
             exclusive one.</dd>
     </dl>
@@ -121,7 +124,8 @@ regular expressions. These are:</p>
     <dl>
         <dt><font color="#FF0000"><tt>&lt;&lt;EOF&gt;&gt;</tt></font></dt>
         <dd>an end-of-file</dd>
-        <dt><tt>&lt;s1,s2&gt;</tt><font color="#FF0000"><tt>&lt;&lt;EOF&gt;&gt;</tt></font></dt>
+        <dt><font color="#800000"><tt>&lt;s1,s2&gt;</tt></font><font
+            color="#FF0000"><tt>&lt;&lt;EOF&gt;&gt;</tt></font></dt>
         <dd>an end-of-file when in start condition <tt>s1</tt> or
             <tt>s2</tt></dd>
     </dl>
@@ -138,13 +142,13 @@ top to lowest at the bottom. Those grouped together have equal
 precedence. For example,</p>
 
 <blockquote>
-    <p><tt>foo|bar*</tt></p>
+    <p><font color="#FF0000"><tt>foo|bar*</tt></font></p>
 </blockquote>
 
 <p>is the same as</p>
 
 <blockquote>
-    <p><tt>(foo)|(ba(r*))</tt></p>
+    <p><font color="#FF0000"><tt>(foo)|(ba(r*))</tt></font></p>
 </blockquote>
 
 <p>since the '<tt>*</tt>' operator has higher precedence than
@@ -155,26 +159,27 @@ To match &quot;<tt>foo</tt>&quot; or zero-or-more &quot;<tt>bar</tt>&quot;'s,
 use:</p>
 
 <blockquote>
-    <p><tt>foo|(bar)*</tt></p>
+    <p><font color="#FF0000"><tt>foo|(bar)*</tt></font></p>
 </blockquote>
 
 <p>and to match zero-or-more &quot;<tt>foo</tt>&quot;'s-or-&quot;<tt>bar</tt>&quot;'s:</p>
 
 <blockquote>
-    <p><tt>(foo|bar)*</tt></p>
+    <p><font color="#FF0000"><tt>(foo|bar)*</tt></font></p>
 </blockquote>
 
 <h3>Some notes on patterns:</h3>
 
-<p>A negated character class such as the example &quot;<tt>[^A-Z]</tt>&quot;
-above will match a newline unless &quot;<tt>\n</tt>&quot; (or an
-equivalent escape sequence) is one of the characters explicitly
-present in the negated character class (e.g., &quot;<tt>[^A-Z\n]</tt>&quot;).
+<p>A negated character class such as the example <font
+color="#FF0000"><tt>[^A-Z]</tt></font> above will match a newline
+unless &quot;<tt>\n</tt>&quot; (or an equivalent escape sequence)
+is one of the characters explicitly present in the negated
+character class (e.g., <font color="#FF0000"><tt>[^A-Z\n]</tt></font>).
 This is unlike how many other regular expression tools treat
 negated character classes, but unfortunately the inconsistency is
 historically entrenched. Matching newlines means that a pattern
-like <tt>[^&quot;]*</tt> can match the entire input unless
-there's<br>
+like <font color="#FF0000"><tt>[^&quot;]*</tt></font> can match
+the entire input unless there's<br>
 another quote in the input.</p>
 
 <p>A rule can have at most one instance of trailing context (the
@@ -190,27 +195,30 @@ normal character.</p>
 <p>The following are illegal:</p>
 
 <blockquote>
-    <p><tt>foo/bar$<br>
-    &lt;sc1&gt;foo&lt;sc2&gt;bar</tt></p>
+    <p><font color="#FF0000"><tt>foo/bar$</tt></font><tt><br>
+    </tt><font color="#800000"><tt>&lt;sc1&gt;</tt></font><font
+    color="#FF0000"><tt>foo</tt></font><font color="#800000"><tt>&lt;sc2&gt;</tt></font><font
+    color="#FF0000"><tt>bar</tt></font></p>
 </blockquote>
 
-<p>Note that the first of these, can be written &quot;<tt>foo/bar\n</tt>&quot;.</p>
+<p>Note that the first of these, can be written <font
+color="#FF0000"><tt>foo/bar\n</tt></font>.</p>
 
 <p>The following will result in '<tt>$</tt>' or '<tt>^</tt>'
 being treated as a normal character:</p>
 
 <blockquote>
-    <p><tt>foo|(bar$)<br>
-    foo|^bar</tt></p>
+    <p><font color="#FF0000"><tt>foo|(bar$)<br>
+    foo|^bar</tt></font></p>
 </blockquote>
 
 <p>If what's wanted is a &quot;<tt>foo</tt>&quot; or a <tt>bar</tt>-followed-by-a-newline,
-the following could be used (the special '<tt>|</tt>' action is
-explained below):</p>
+the following could be used (the special '<font color="#0000FF"><tt>|</tt></font>'
+action is explained below):</p>
 
 <blockquote>
-    <pre>foo	|
-bar$	-- action goes here</pre>
+    <pre><font color="#FF0000">foo</font>	<font color="#0000FF">|</font>
+<font color="#FF0000">bar$</font>	<font color="#008080">-- action goes here</font></pre>
 </blockquote>
 
 <p>A similar trick will work for matching a <tt>foo</tt> or a <tt>bar</tt>-at-the-beginning-of-a-line.</p>
