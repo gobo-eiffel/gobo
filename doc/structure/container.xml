@@ -6,7 +6,7 @@
 		"General Abstractions"
 
 	library: "Gobo Eiffel Structure Library"
-	copyright: "Copyright (c) 1997-2001, Eric Bezault and others"
+	copyright: "Copyright (c) 1997-2005, Eric Bezault and others"
 	license: "Eiffel Forum License v2 (see forum.txt)"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -15,14 +15,14 @@
 <chapter id="structure/container">
 <chapterinfo>
 	<copyright>
-		<year>1999-2001</year>
+		<year>1999-2005</year>
 		<holder>Eric Bezault</holder>
 	</copyright>
 	<author>
 		<firstname>Eric</firstname><surname>Bezault</surname>
 	</author>
 	<email>ericb@gobosoft.com</email>
-	<date>21 August 1999</date>
+	<date>12 February 2005</date>
 </chapterinfo>
 
 <title>General Abstractions</title>
@@ -71,7 +71,7 @@ the number of items in the container, and
 checking whether there is any item held in the container. Also
 available is feature
 <featurename flatshort="ds_container">wipe_out</featurename>,
-which empty the container putting it back to a state similar to
+which empties the container putting it back to a state similar to
 what it was just after its creation.
 </para>
 
@@ -103,7 +103,7 @@ check whether a given object appears in a list (using Eiffel's
 '<featurename>=</featurename>' comparison criterion) or whether a
 similar object is included (using the redefinable feature
 <featurename>is_equal</featurename> from class
-<classname>GENERAL</classname> as equality criterion).
+<classname>ANY</classname> as equality criterion).
 In order to achieve this flexibility, the class
 <classname>DS_SEARCHABLE</classname> can
 be configured with an instance of class
@@ -117,7 +117,7 @@ When no <featurename>equality_tester</featurename> has been specified,
 the Eiffel's '<featurename>=</featurename>' comparison criterion is used.
 By default, <classname>DS_EQUALITY_TESTER</classname> is
 implemented using feature <featurename>equal</featurename> from
-class <classname>GENERAL</classname>, but descendant
+class <classname>ANY</classname>, but descendant
 classes can be easily written to provide user-defined comparison
 criteria.
 </para>
@@ -138,7 +138,7 @@ provided by the cursor classes of the
 <para>
 Some containers can provide facilities in order to inspect
 their items one after another. This traversal mechanism is quite
-complex since there is different schools of thought for the
+complex since there are different schools of thought for the
 design and implementation of such pattern and hence deserves a
 <link linkend="traversal">chapter of its own</link> in this
 documentation.
@@ -173,14 +173,14 @@ whose items are indexed from 1 to
 <featurename flatshort="ds_indexable">count</featurename>.
 The basic feature of this class is of course the access routine
 <featurename flatshort="ds_indexable">item</featurename>
-(for analogy to class <classname>ARRAY</classname> and other classes
+(by analogy to class <classname>ARRAY</classname> and other classes
 from <libraryname>EiffelBase</libraryname>, feature
 <infixname>@</infixname> has been added as a synomym of
 <featurename>item</featurename>), but it is also equipped with commands to
 add and remove items at given index positions, such as
 <featurename flatshort="ds_indexable">put</featurename>
 or <featurename flatshort="ds_indexable">remove</featurename>.
-There is also convenience features to access the first (at index
+There are also convenience features to access the first (at index
 1) and last (at index <featurename>count</featurename>)
 items of the container, such as
 <featurename flatshort="ds_indexable">first</featurename>,

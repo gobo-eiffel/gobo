@@ -6,7 +6,7 @@
 		"Traversable Containers"
 
 	library: "Gobo Eiffel Structure Library"
-	copyright: "Copyright (c) 1997-2001, Eric Bezault and others"
+	copyright: "Copyright (c) 1997-2005, Eric Bezault and others"
 	license: "Eiffel Forum License v2 (see forum.txt)"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -15,14 +15,14 @@
 <chapter id="structure/traversal">
 <chapterinfo>
 	<copyright>
-		<year>1999-2001</year>
+		<year>1999-2005</year>
 		<holder>Eric Bezault</holder>
 	</copyright>
 	<author>
 		<firstname>Eric</firstname><surname>Bezault</surname>
 	</author>
 	<email>ericb@gobosoft.com</email>
-	<date>21 August 1999</date>
+	<date>12 February 2005</date>
 </chapterinfo>
 
 <title>Traversable Containers</title>
@@ -148,7 +148,7 @@ This means that they should be kept synchronized with their data
 structure, especially when the container is modified. For example
 a cursor pointing to an item which has been removed from the
 container won't be valid any more and should be resynchronized.
-It is the responsibility of the procedure that alter the
+It is the responsibility of the procedure that alters the
 container to keep the cursors (both internal and external) valid
 in a deterministic way. Each such procedure in descendant classes
 of <classname>DS_TRAVERSABLE</classname> will
@@ -325,7 +325,7 @@ loop before the first iteration.
 <para>
 <warning>
 We saw in the previous section that it
-was the responsibility of the container to keep uptodate the
+was the responsibility of the container to keep up-to-date the
 cursors currently traversing its items. This implies that the
 container internally keeps track of such cursors. Therefore,
 after a traversal and/or when the cursor is not needed anymore,

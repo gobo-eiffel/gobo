@@ -57,7 +57,7 @@ href="flatshort/ds_container.html#is_empty"><font color="#008080"><em><tt>is_emp
 checking whether there is any item held in the container. Also
 available is feature <a
 href="flatshort/ds_container.html#wipe_out"><font color="#008080"><em><tt>wipe_out</tt></em></font></a>,
-which empty the container putting it back to a state similar to
+which empties the container putting it back to a state similar to
 what it was just after its creation.</p>
 
 <p>The most direct descendant classes of <font color="#008080"><em><tt>DS_CONTAINER
@@ -83,7 +83,7 @@ check whether a given object appears in a list (using Eiffel's '<font
 color="#008080"><tt>=</tt></font>' comparison criterion) or
 whether a similar object is included (using the redefinable
 feature <font color="#008080"><em><tt>is_equal</tt></em></font>
-from class <font color="#008080"><em><tt>GENERAL</tt></em></font>
+from class <font color="#008080"><em><tt>ANY</tt></em></font>
 as equality criterion). In order to achieve this flexibility, the
 class <font color="#008080"><em><tt>DS_SEARCHABLE </tt></em></font>can
 be configured with an instance of class <a
@@ -100,7 +100,7 @@ has been specified, the Eiffel's '<font color="#008080"><tt>=</tt></font>'
 comparison criterion is used. By default, <font color="#008080"><em><tt>DS_EQUALITY_TESTER
 </tt></em></font>is implemented using feature <font
 color="#008080"><em><tt>equal</tt></em></font> from class <font
-color="#008080"><em><tt>GENERAL</tt></em></font>, but descendant
+color="#008080"><em><tt>ANY</tt></em></font>, but descendant
 classes can be easily written to provide user-defined comparison
 criteria.</p>
 
@@ -120,7 +120,7 @@ mechanism</a>.</p>
 
 <p>Some containers can provide facilities in order to inspect
 their items one after another. This traversal mechanism is quite
-complex since there is different schools of thought for the
+complex since there are different schools of thought for the
 design and implementation of such pattern and hence deserves a <a
 href="traversal.html">chapter of its own</a> in this
 documentation.</p>
@@ -148,7 +148,7 @@ whose items are indexed from 1 to <a
 href="flatshort/ds_indexable.html#count"><font color="#008080"><em><tt>count</tt></em></font></a>.
 The basic feature of this class is of course the access routine <a
 href="flatshort/ds_indexable.html#item"><font color="#008080"><em><tt>item</tt></em></font></a><font
-color="#008080"><em><tt> </tt></em></font>(for analogy to class <font
+color="#008080"><em><tt> </tt></em></font>(by analogy to class <font
 color="#008080"><em><tt>ARRAY</tt></em></font> and other classes
 from <em>EiffelBase</em>, feature <font color="#008080"><em><strong><tt>infix</tt></strong></em><em><tt>
 &quot;@&quot;</tt></em></font> has been added as a synomym of <font
@@ -157,7 +157,7 @@ equipped with commands to add and remove items at given index
 positions, such as <a href="flatshort/ds_indexable.html#put"><font
 color="#008080"><em><tt>put</tt></em></font></a> or <a
 href="flatshort/ds_indexable.html#remove"><font color="#008080"><em><tt>remove</tt></em></font></a>.
-There is also convenience features to access the first (at index
+There are also convenience features to access the first (at index
 1) and last (at index <font color="#008080"><em><tt>count</tt></em></font>)
 items of the container, such as <a
 href="flatshort/ds_indexable.html#first"><font color="#008080"><em><tt>first</tt></em></font></a>,
@@ -195,7 +195,7 @@ limit.</p>
 <table border="0" width="100%">
     <tr>
         <td><address>
-            <font size="2"><b>Copyright © 1999</b></font><font
+            <font size="2"><b>Copyright © 1999-2005</b></font><font
             size="1"><b>, </b></font><font size="2"><strong>Eric
             Bezault</strong></font><strong> </strong><font
             size="2"><br>
@@ -205,7 +205,7 @@ limit.</p>
             <strong>http:</strong></font><a
             href="http://www.gobosoft.com"><font size="2">//www.gobosoft.com</font></a><font
             size="2"><br>
-            <strong>Last Updated:</strong> 21 August 1999</font><br>
+            <strong>Last Updated:</strong> 12 February 2005</font><br>
             <!--webbot bot="PurpleText"
             preview="
 $Date$ 
