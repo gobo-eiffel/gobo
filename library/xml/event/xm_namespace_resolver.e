@@ -16,6 +16,7 @@ inherit
 
 	XM_CALLBACKS_FILTER
 		redefine
+			on_finish,
 			on_start,
 			on_start_tag,
 			on_attribute,
@@ -29,13 +30,25 @@ inherit
 	XM_UNICODE_STRUCTURE_FACTORY
 		export {NONE} all end
 
+creation
+
+	make_null,
+	set_next
+
 feature -- Document
+
+	on_finish is
+			-- Forward to `next'.
+		do
+			next.on_finish
+		end
 
 	on_start is
 			-- Initialize document variables.
 		do
 			!! context.make
 			attributes_make
+			next.on_start
 		end
 
 feature -- Element
@@ -61,11 +74,11 @@ feature -- Element
 				if context.shallow_has (a_prefix) then
 					on_error (Duplicate_namespace_declaration_error)
 				else
-					context.add (a_value, a_prefix)
+					context.add (a_value, a_local_part)
 				end
 			else
-					-- Queue ordinary attribute for when all namespace 
-					-- declarations have been seen as they can be used 
+					-- Queue ordinary attribute for when all namespace
+					-- declarations have been seen as they can be used
 					-- to declare attributes prefixes.
 				attributes_force (a_prefix, a_local_part, a_value)
 			end
@@ -87,7 +100,7 @@ feature -- Element
 			else
 				an_element_namespace := context.resolve_default
 			end
-			next.on_start_tag (an_element_namespace, element_prefix, element_local_part) 
+			next.on_start_tag (an_element_namespace, element_prefix, element_local_part)
 				-- Resolve attributes.
 			from
 			until
