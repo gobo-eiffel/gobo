@@ -53,7 +53,7 @@ feature -- Access
 		
 	signaling_not_a_number : MA_DECIMAL is
 		once
-			Result := zero.Snan
+			Result := zero.snan
 		end
 		
 end

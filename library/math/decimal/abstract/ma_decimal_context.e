@@ -101,7 +101,7 @@ feature {NONE} -- Initialization
 			-- Creation of a math context.
 		require
 			good_digits : a_digits >= Minimum_digits and a_digits <= Maximum_digits
-			good_rounding_mode: Integer_array_.has (Rounds, a_rounding_mode)
+			good_rounding_mode: INTEGER_ARRAY_.has (Rounds, a_rounding_mode)
 		do
 			digits := a_digits
 			rounding_mode := a_rounding_mode
@@ -118,7 +118,7 @@ feature {NONE} -- Initialization
 
  	Rounds : ARRAY[INTEGER] is
  		once
- 			Result := <<ROUND_HALF_UP,ROUND_UNNECESSARY,ROUND_CEILING,ROUND_DOWN,ROUND_FLOOR,ROUND_HALF_DOWN,ROUND_HALF_EVEN,ROUND_UP>>
+ 			Result := <<Round_half_up,Round_unnecessary,Round_ceiling,Round_down,Round_floor,Round_half_down,Round_half_even,Round_up>>
  		end
 
  feature -- Access
@@ -183,7 +183,7 @@ feature -- Status report
 	valid_signal (a_signal : INTEGER) : BOOLEAN is
 			-- Is `a_signal' a valid one ?
 		do
-			Result := Integer_array_.has (signals, a_signal)
+			Result := INTEGER_ARRAY_.has (signals, a_signal)
 		end
 
 	is_extended : BOOLEAN
@@ -280,7 +280,7 @@ feature -- Status setting
 	set_rounding_mode (a_mode : INTEGER) is
 			-- Set `rounding_mode' to `a_mode'.
 		require
-			valid_mode: Integer_array_.has (Rounds, a_mode)
+			valid_mode: INTEGER_ARRAY_.has (Rounds, a_mode)
 		do
 			rounding_mode := a_mode
 		ensure
@@ -330,7 +330,7 @@ feature -- Basic operations
 			set_flag (a_signal)
 			reason := a_message
 			if is_trapped (a_signal) and then exception_on_trap then
-				exception_message := clone (signal_words.item (a_signal))
+				exception_message := clone (Signal_words.item (a_signal))
 				exception_message.append (" : ")
 				exception_message.append (a_message)
 				raise (exception_message)
@@ -383,7 +383,7 @@ invariant
 	rounding_mode_valid: rounding_mode = Round_ceiling or rounding_mode = Round_down
 			or rounding_mode = Round_floor or rounding_mode = Round_half_down
 			or rounding_mode = Round_half_even or rounding_mode = Round_half_up
-			or rounding_mode = Round_unnecessary or Rounding_mode = Round_up
+			or rounding_mode = Round_unnecessary or rounding_mode = Round_up
 
 end
 

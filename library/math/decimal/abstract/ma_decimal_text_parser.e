@@ -168,7 +168,7 @@ feature {MA_DECIMAL} -- Basic operations
 		do
 			from
 				-- initializations
-				state := state_start
+				state := State_start
 				sign := 1
 				exponent_sign := 1
 				exponent_as_double := 0
@@ -181,29 +181,29 @@ feature {MA_DECIMAL} -- Basic operations
 				decimal_point_index := 0
 				decimal_point_is_comma := False
 			until
-				state = state_error or else index > s.count
+				state = State_error or else index > s.count
 			loop
 				c := s.item (index)
 				inspect state
-				when state_start then
+				when State_start then
 					process_start (c, index, s)
-				when state_sign then
+				when State_sign then
 					process_sign (c, index, s)
-				when state_integer_part then
+				when State_integer_part then
 					process_integer_part (c, index)
-				when state_starting_point then
+				when State_starting_point then
 					process_starting_point (c, index)
-				when state_point then
+				when State_point then
 					process_point (c, index)
-				when state_comma then
+				when State_comma then
 					process_comma (c, index)
-				when state_fractional_part then
+				when State_fractional_part then
 					process_fractional_part (c, index)
-				when state_start_exponent then
+				when State_start_exponent then
 					process_start_exponent (c, index)
-				when state_exponent_sign then
+				when State_exponent_sign then
 					process_exponent_sign (c, index)
-				when state_exponent then
+				when State_exponent then
 					process_exponent (c, index)
 				when State_infinity, State_snan, State_nan then
 					index := s.count
@@ -213,8 +213,8 @@ feature {MA_DECIMAL} -- Basic operations
 				index := index + 1
 			end
 			inspect state
-			when state_start, state_sign, state_comma, 
-				 		state_start_exponent, state_exponent_sign, state_starting_point then
+			when State_start, State_sign, State_comma, 
+				 		State_start_exponent, State_exponent_sign, State_starting_point then
 				state := State_error
 			else
 				do_nothing
@@ -242,14 +242,14 @@ feature {MA_DECIMAL} -- Basic operations
 				if case_insensitive_substring_equal (s, index + 1, s.count, "an") then
 					state := State_nan
 				else
-					state := state_error
+					state := State_error
 					error_code := Error_invalid_value
 				end
 			when 's', 'S' then
 				if case_insensitive_substring_equal (s, index + 1, s.count, "nan") then
 					state := State_snan
 				else
-					state := state_error
+					state := State_error
 					error_code := Error_invalid_value
 				end
 			when 'i','I' then
@@ -260,7 +260,7 @@ feature {MA_DECIMAL} -- Basic operations
 				decimal_point_index := index
 				state := State_starting_point
 			else
-				state := state_error
+				state := State_error
 				error_code := Error_invalid_character
 			end
 		ensure
@@ -277,7 +277,7 @@ feature {MA_DECIMAL} -- Basic operations
 				if (s.count - index + 1)= 3 or else case_insensitive_substring_equal (s, index + 3, s.count, "inity") then
 					state := State_infinity
 				else
-					state := state_error
+					state := State_error
 					error_code := Error_invalid_value
 				end
 			end			
@@ -288,7 +288,7 @@ feature {MA_DECIMAL} -- Basic operations
 	process_sign (c : CHARACTER; index : INTEGER; s : STRING) is 
 			-- process `c' at `index' in `s'
 		require
-			state_sign: state = state_sign
+			state_sign: state = State_sign
 			s_exists: s /= Void
 			index_in_s: index > 0 and then index <= s.count
 		do
@@ -305,7 +305,7 @@ feature {MA_DECIMAL} -- Basic operations
 				decimal_point_index := index
 				state := State_starting_point
 			else
-				state := state_error
+				state := State_error
 				error_code := Error_invalid_character
 			end
 		end
@@ -328,7 +328,7 @@ feature {MA_DECIMAL} -- Basic operations
 				decimal_point_is_comma := True
 				state := State_comma
 			else
-				state := state_error
+				state := State_error
 				error_code := Error_invalid_character_in_integer_part
 			end
 		end
@@ -336,7 +336,7 @@ feature {MA_DECIMAL} -- Basic operations
 	process_starting_point(c : CHARACTER; index : INTEGER) is
 			-- Process `c' at `index' when at state_starting_point
 		require
-			state_starting_point: state = state_starting_point
+			state_starting_point: state = State_starting_point
 		do
 			inspect c
 			when '0'..'9' then
@@ -344,7 +344,7 @@ feature {MA_DECIMAL} -- Basic operations
 				coefficient_end := index
 				state := State_fractional_part
 			else
-				state := state_error
+				state := State_error
 				error_code := Error_invalid_character
 			end
 		end
@@ -352,7 +352,7 @@ feature {MA_DECIMAL} -- Basic operations
 	process_point (c : CHARACTER; index : INTEGER) is
 			-- Process `c' at `index' when in state_point.
 		require
-			state_point: state = state_point
+			state_point: state = State_point
 		do  
 			inspect c
 			when '0'..'9' then
@@ -361,7 +361,7 @@ feature {MA_DECIMAL} -- Basic operations
 			when 'e','E' then
 				state := State_start_exponent
 			else
-				state := state_error
+				state := State_error
 				error_code := Error_invalid_character
 			end
 		end
@@ -369,14 +369,14 @@ feature {MA_DECIMAL} -- Basic operations
 	process_comma (c : CHARACTER; index : INTEGER) is 
 			-- process `c' at `index' when in state_comma
 		require
-			state_comma: state = state_comma
+			state_comma: state = State_comma
 		do
 			inspect c
 			when '0'..'9' then
 				coefficient_end := coefficient_end + 1
 				state := State_fractional_part
 			else
-				state := state_error
+				state := State_error
 				error_code := Error_invalid_character
 			end
 		end
@@ -392,7 +392,7 @@ feature {MA_DECIMAL} -- Basic operations
 			when 'e','E' then
 				state := State_start_exponent
 			else
-				state := state_error
+				state := State_error
 				error_code := Error_invalid_character_in_decimal_part
 			end
 		end
@@ -419,7 +419,7 @@ feature {MA_DECIMAL} -- Basic operations
 				end
 				state := State_exponent_sign
 			else
-				state := state_error
+				state := State_error
 				error_code := Error_invalid_character_in_exponent
 			end
 		end
@@ -439,7 +439,7 @@ feature {MA_DECIMAL} -- Basic operations
 				end
 				state := State_exponent
 			else
-				state := state_error
+				state := State_error
 				error_code := Error_invalid_character_in_exponent
 			end
 		end
@@ -458,7 +458,7 @@ feature {MA_DECIMAL} -- Basic operations
 				end
 				state := State_exponent
 			else
-				state := state_error
+				state := State_error
 				error_code := Error_invalid_character_in_exponent
 			end
 		end
@@ -475,7 +475,7 @@ feature {MA_DECIMAL} -- Basic operations
 				i := i_begin
 				j := 1
 			until
-				i > s.count or else j > t.count or else i > i_end or else Character_.as_lower (s.item (i)) /= Character_.as_lower (t.item (j))
+				i > s.count or else j > t.count or else i > i_end or else CHARACTER_.as_lower (s.item (i)) /= CHARACTER_.as_lower (t.item (j))
 			loop
 				i := i + 1; j := j + 1
 			end
@@ -486,26 +486,26 @@ feature {MA_DECIMAL} -- Basic operations
 		
 feature -- Constants
 
-	state_start,
-	state_NaN,
-	state_sNaN,
-	state_starting_point,
-	state_infinity,
-	state_integer_part,
-	state_point,
-	state_fractional_part,
-	state_exponent,
-	state_sign,
-	state_comma,
-	state_start_exponent,
-	state_exponent_sign, state_error : INTEGER is unique
+	State_start,
+	State_nan,
+	State_snan,
+	State_starting_point,
+	State_infinity,
+	State_integer_part,
+	State_point,
+	State_fractional_part,
+	State_exponent,
+	State_sign,
+	State_comma,
+	State_start_exponent,
+	State_exponent_sign, State_error : INTEGER is unique
 
 feature {NONE} -- Implementation
 
-	error_invalid_value, error_invalid_character, error_invalid_character_in_integer_part,
-	error_invalid_character_in_decimal_part,
-	error_invalid_character_in_exponent,
-	error_invalid_state : INTEGER is unique
+	Error_invalid_value, Error_invalid_character, Error_invalid_character_in_integer_part,
+	Error_invalid_character_in_decimal_part,
+	Error_invalid_character_in_exponent,
+	Error_invalid_state : INTEGER is unique
 	
 invariant
 

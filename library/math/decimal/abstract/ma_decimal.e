@@ -772,9 +772,9 @@ feature -- Basic operations
 						Result := nan
 					else
 						if sign = other.sign then
-							Result := Infinity						
+							Result := infinity						
 						else
-							Result := Negative_infinity
+							Result := negative_infinity
 						end
 					end
 				end
@@ -1344,24 +1344,24 @@ feature {MA_DECIMAL} -- Basic operations
 					Result := nan
 				else
 					if is_negative then
-						Result := Negative_infinity
+						Result := negative_infinity
 					else
-						Result := Infinity
+						Result := infinity
 					end
 				end
 			elseif is_infinity or else other.is_infinity then
 				if is_infinity then
 					if is_negative then
-						Result := Negative_infinity
+						Result := negative_infinity
 					else
-						Result := Infinity
+						Result := infinity
 					end
 				else
 					--|other is Inf
 					if other.is_negative then
-						Result := Negative_infinity
+						Result := negative_infinity
 					else
-						Result := Infinity
+						Result := infinity
 					end
 				end
 			end
@@ -1387,26 +1387,26 @@ feature {MA_DECIMAL} -- Basic operations
 					Result := nan
 				else
 					if is_negative then
-						Result := Negative_infinity
+						Result := negative_infinity
 					else
-						Result := Infinity
+						Result := infinity
 					end
 				end
 			elseif is_infinity or else other.is_infinity then
-				Result := Infinity
+				Result := infinity
 				if is_infinity then
 					if is_negative then
 						-- -Inf - x = -Inf
-						Result := Negative_infinity
+						Result := negative_infinity
 					end
 				else
 					--|other is Inf
 					if other.is_positive then
 						--| x - +Inf = -Inf
-						Result := Negative_infinity
+						Result := negative_infinity
 					else
 						--| x - -Inf = +Inf
-						Result := Infinity
+						Result := infinity
 					end
 				end
 			end
@@ -2097,9 +2097,9 @@ feature {MA_DECIMAL} -- Basic operations
 					Result := nan
 				elseif is_infinity then
 					if sign = other.sign then
-						Result := Infinity
+						Result := infinity
 					else
-						Result := Negative_infinity
+						Result := negative_infinity
 					end
 					if other.is_zero then
 						ctx.signal (Signal_division_by_zero, "[+-] Inf / [+-] 0")
@@ -2119,9 +2119,9 @@ feature {MA_DECIMAL} -- Basic operations
 					else
 						ctx.signal (Signal_division_by_zero, "Division by zero")
 						if sign = other.sign then
-							Result := Infinity
+							Result := infinity
 						else
-							Result := Negative_infinity
+							Result := negative_infinity
 						end
 					end
 				elseif Current.is_zero then
@@ -2328,8 +2328,8 @@ feature {MA_DECIMAL} -- Basic operations
 			-- Rescale special numbers.
 		require
 			is_special: is_special
-			not_constant_infinity: Current /= Infinity
-			not_constant_negative_infinity: Current /= Negative_infinity
+			not_constant_infinity: Current /= infinity
+			not_constant_negative_infinity: Current /= negative_infinity
 			not_constant_nan: Current /= nan
 			not_constant_snan: Current /= snan
 		do
