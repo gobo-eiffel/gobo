@@ -171,6 +171,9 @@
 		<delete file="${system}${exe}"/>
 		<delete file="${system}.melted"/>
 		<delete file="lib${system}.dll"/>
+		<delete>
+			<fileset include="@(${system}_module_*.dll)"/>
+		</delete>
 		<delete file="${system}.h2o"/>
 		<delete directory="TESTGEN"/>
 		<delete file="xcompile.log"/>
