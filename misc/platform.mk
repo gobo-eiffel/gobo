@@ -6,7 +6,7 @@
 # revision:   "$Revision$"
 
 
-#GOBO_PLATFORM=linux
-GOBO_PLATFORM=windows
+GOBO_PLATFORM=linux
+#GOBO_PLATFORM=windows
 
 include ${GOBO}/misc/${GOBO_PLATFORM}.mk
