@@ -209,7 +209,7 @@ feature {NONE} -- Implementation
 					-- returning different results for round(()) depending on whether the arg value
 					-- is known statically or not.
 					
-					a_number_function ?= Function_factory.make_system_function ("number")
+					a_number_function ?= function_factory.make_system_function ("number")
 						check
 							number_function: a_number_function /= Void
 						end

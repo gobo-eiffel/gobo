@@ -14,7 +14,7 @@ class XM_XPATH_SHARED_FUNCTION_FACTORY
 
 feature -- Access
 
-	Function_factory: XM_XPATH_FUNCTION_FACTORY is
+	function_factory: XM_XPATH_FUNCTION_FACTORY is
 			-- Function factory
 		once
 			create Result

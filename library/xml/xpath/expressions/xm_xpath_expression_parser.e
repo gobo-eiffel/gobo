@@ -24,6 +24,8 @@ inherit
 
 	XM_XPATH_SHARED_EXPRESSION_TESTER
 
+	XM_XPATH_SHARED_EXPRESSION_FACTORY
+
 	XM_XPATH_TYPE
 
 	XM_XPATH_AXIS
@@ -2018,12 +2020,6 @@ feature {NONE} -- Implementation
 	
 	environment: XM_XPATH_STATIC_CONTEXT
 			-- Current static context
-
-	expression_factory: XM_XPATH_EXPRESSION_FACTORY is
-			-- Expression factory
-		once
-			create Result
-		end
 
 	internal_last_parse_error: STRING
 			-- Text of last parse error encountered

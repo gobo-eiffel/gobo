@@ -134,7 +134,7 @@ feature -- Evaluation
 				if not first_operand.ordered_nodeset then
 					a_node_iterator ?= an_iterator
 					if a_node_iterator /= Void then
-						create {XM_XPATH_DOCUMENT_ORDER_ITERATOR} an_iterator.make (a_node_iterator, Global_order_comparer)
+						create {XM_XPATH_DOCUMENT_ORDER_ITERATOR} an_iterator.make (a_node_iterator, global_order_comparer)
 					else
 						do_nothing -- must be an empty iterator, but we won't bother to check this
 					end
@@ -146,7 +146,7 @@ feature -- Evaluation
 					if not second_operand.ordered_nodeset then
 						a_node_iterator ?= an_iterator
 						if a_node_iterator /= Void then
-							create {XM_XPATH_DOCUMENT_ORDER_ITERATOR} another_iterator.make (a_node_iterator, Global_order_comparer)
+							create {XM_XPATH_DOCUMENT_ORDER_ITERATOR} another_iterator.make (a_node_iterator, global_order_comparer)
 						else
 							do_nothing -- must be an empty iterator, but we won't bother to check this
 						end
@@ -154,11 +154,11 @@ feature -- Evaluation
 					inspect
 						operator
 					when Union_token then
-						create {XM_XPATH_UNION_ENUMERATION} Result.make (an_iterator, another_iterator, Global_order_comparer)
+						create {XM_XPATH_UNION_ENUMERATION} Result.make (an_iterator, another_iterator, global_order_comparer)
 					when Intersect_token then
-						create {XM_XPATH_INTERSECTION_ENUMERATION} Result.make (an_iterator, another_iterator, Global_order_comparer)
+						create {XM_XPATH_INTERSECTION_ENUMERATION} Result.make (an_iterator, another_iterator, global_order_comparer)
 					when Except_token then
-						create {XM_XPATH_DIFFERENCE_ENUMERATION} Result.make (an_iterator, another_iterator, Global_order_comparer)
+						create {XM_XPATH_DIFFERENCE_ENUMERATION} Result.make (an_iterator, another_iterator, global_order_comparer)
 					end
 				end
 			end
@@ -401,7 +401,7 @@ feature {NONE} -- Implementation
 				when Intersect_token then
 					create {XM_XPATH_BOOLEAN_EXPRESSION} an_expression.make (a_filter_expression.filter, And_token, another_filter_expression.filter)
 				when Except_token then
-					a_not_function ?= Function_factory.make_system_function ("not")
+					a_not_function ?= function_factory.make_system_function ("not")
 					create arguments.make (1)
 					arguments.put (another_filter_expression.filter, 1)
 					a_not_function.set_arguments (arguments)

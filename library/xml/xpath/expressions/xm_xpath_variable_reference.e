@@ -16,7 +16,7 @@ inherit
 
 	XM_XPATH_COMPUTED_EXPRESSION
 		redefine
-			same_expression, promote, iterator, evaluate_item
+			same_expression, promote, iterator, evaluate_item, lazily_evaluate
 		end
 
 	XM_XPATH_BINDING_REFERENCE
@@ -164,6 +164,12 @@ feature -- Evaluation
 		do
 			binding.evaluate_variable (a_context)
 			last_evaluated_binding := binding.last_evaluated_binding
+		end
+
+	lazily_evaluate (a_context: XM_XPATH_CONTEXT) is
+			-- Lazily evaluate `Current'.
+		do
+			eagerly_evaluate (a_context)
 		end
 
 feature -- Element change

@@ -162,9 +162,9 @@ feature {NONE} -- Implementation
 			when Is_token then
 				Result := a_node.is_same_node (another_node)
 			when Precedes_token then
-				Result := Global_order_comparer.three_way_comparison (a_node, another_node) < 0
+				Result := global_order_comparer.three_way_comparison (a_node, another_node) < 0
 			when Follows_token then
-				Result := Global_order_comparer.three_way_comparison (a_node, another_node) > 0
+				Result := global_order_comparer.three_way_comparison (a_node, another_node) > 0
 			end
 		end
 

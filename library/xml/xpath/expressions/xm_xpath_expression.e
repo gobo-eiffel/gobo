@@ -325,35 +325,29 @@ feature -- Evaluation
 			--  which is a wrapper around an iterator over the value of the expression.
 		require
 			expression_not_in_error: not is_error
-		local
-			a_variable_reference: XM_XPATH_VARIABLE_REFERENCE
 		do
-			a_variable_reference ?= Current; if a_variable_reference /= Void then
-				a_variable_reference.eagerly_evaluate (a_context)
+			if a_context = Void then
+
+				-- We are evaluating a value
+				
+				eagerly_evaluate (Void)
+			elseif not cardinality_allows_many then
+				
+				-- Singletons are always evaluated eagerly
+				
+				eagerly_evaluate (a_context)
+			elseif depends_upon_position or else depends_upon_last
+				or else depends_upon_current_item or else depends_upon_current_group then
+				
+				-- We can't save these values in the closure, so we evaluate
+				-- the expression now if they are needed
+				
+				eagerly_evaluate (Void)
 			else
-				if a_context = Void then
-
-					-- We are evaluating a value
-
-					eagerly_evaluate (Void)
-				elseif not cardinality_allows_many then
-
-					-- Singletons are always evaluated eagerly
-
-					eagerly_evaluate (a_context)
-				elseif depends_upon_position or else depends_upon_last
-					or else depends_upon_current_item or else depends_upon_current_group then
-
-					-- We can't save these values in the closure, so we evaluate
-					-- the expression now if they are needed
-
-					eagerly_evaluate (Void)
-				else
-
-					-- Create a Closure, a wrapper for the expression and its context
-
-					last_evaluation := Expression_factory.created_closure (Current, a_context)
-				end
+				
+				-- Create a Closure, a wrapper for the expression and its context
+				
+				last_evaluation := expression_factory.created_closure (Current, a_context)
 			end
 		ensure
 			evaluated: last_evaluation /= Void

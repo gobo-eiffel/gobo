@@ -270,14 +270,14 @@ feature {NONE} -- Implementation
 						
 					-- Rewrite count(x)=0 as empty(x).
 						
-					an_empty_function ?= Function_factory.make_system_function ("empty")
+					an_empty_function ?= function_factory.make_system_function ("empty")
 					an_empty_function.set_arguments (a_count_function.arguments)
 					an_expression := an_empty_function
 				elseif operator = Fortran_not_equal_token or else operator = Fortran_greater_than_token then
 						
 					-- Rewrite count(x)!=0, count(x)>0 as exists(x)
 						
-					an_exists_function ?= Function_factory.make_system_function ("exists")
+					an_exists_function ?= function_factory.make_system_function ("exists")
 					an_exists_function.set_arguments (a_count_function.arguments)
 					an_expression := an_exists_function
 				elseif operator = Fortran_greater_equal_token then
@@ -304,7 +304,7 @@ feature {NONE} -- Implementation
 					
 					an_integer := an_integer_value.value
 					if operator = Fortran_greater_than_token then an_integer := an_integer + 1	end
-					an_exists_function ?= Function_factory.make_system_function ("exists")
+					an_exists_function ?= function_factory.make_system_function ("exists")
 					create new_arguments.make (1)
 					create an_integer_value.make (an_integer)
 					create a_filter_expression.make (a_count_function.arguments.item(1), an_integer_value)

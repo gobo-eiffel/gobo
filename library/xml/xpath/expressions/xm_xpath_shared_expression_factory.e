@@ -14,7 +14,7 @@ class XM_XPATH_SHARED_EXPRESSION_FACTORY
 	
 feature -- Access
 
-	Expression_factory: XM_XPATH_EXPRESSION_FACTORY is
+	expression_factory: XM_XPATH_EXPRESSION_FACTORY is
 			-- Expression equality tester
 		once
 			create Result

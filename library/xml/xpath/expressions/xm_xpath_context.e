@@ -22,17 +22,20 @@ creation
 
 feature {NONE} -- Initialization
 
-	make (a_controller: XM_XPATH_CONTROLLER) is
+	make (a_context_item: XM_XPATH_ITEM; a_reserved_slot_count: INTEGER) is
 			-- Establish invariant.
 		require
-			controller_not_void: a_controller /= Void
+			context_item_not_void: a_context_item /= Void
+			positive_reserved_slots_count: a_reserved_slot_count >= 0
 		do
-			controller := a_controller
+			reserved_slot_count := a_reserved_slot_count
 			cached_last := -1
-			current_iterator := a_controller.current_iterator
-			local_variable_frame := a_controller.local_variable_frame
+			create {XM_XPATH_SINGLETON_ITERATOR [XM_XPATH_ITEM]} current_iterator.make (a_context_item)
+			current_iterator.start
+			create local_variable_frame.make (1, 50)
 		ensure
-			controller_set: controller = a_controller
+			reserved_slot_count_set: reserved_slot_count = a_reserved_slot_count
+			context_item_set: current_iterator /= Void and then current_iterator.item = a_context_item
 		end
 
 feature -- Access
@@ -130,9 +133,6 @@ feature 	-- Element change
 
 feature {NONE} -- Implementation
 
-	controller: XM_XPATH_CONTROLLER
-			-- XPath controller
-
 	cached_last: INTEGER
 			-- Used by `last'
 
@@ -155,7 +155,6 @@ feature {NONE} -- Implementation
 
 invariant
 
-	controller_not_void: controller /= Void
 	reserved_slots: reserved_slot_count >= 0
 	local_variables_frame: local_variable_frame /= Void and then local_variable_frame.count - reserved_slot_count >= 0
 

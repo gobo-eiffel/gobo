@@ -354,7 +354,7 @@ feature -- Evaluation
 						a_position_range ?= filter
 						if a_position_range /= Void then
 							
-							Result := Expression_factory.created_item_position_iterator (a_base_iterator, a_position_range.minimum_position, a_position_range.maximum_position)
+							Result := expression_factory.created_item_position_iterator (a_base_iterator, a_position_range.minimum_position, a_position_range.maximum_position)
 						elseif filter_is_positional then
 							create {XM_XPATH_FILTER_ITERATOR} Result.make (a_base_iterator, filter, a_context)
 						else
@@ -465,7 +465,7 @@ feature {NONE} -- Implementation
 		do
 			create args.make (1)
 			args.put (an_expression, 1)
-			a_function_call := Function_factory.make_system_function ("boolean")
+			a_function_call := function_factory.make_system_function ("boolean")
 				check
 					function_call_not_void: a_function_call /= Void
 					-- as boolean must exist
@@ -494,7 +494,7 @@ feature {NONE} -- Implementation
 				if a_number.is_whole_number then
 					a_position := a_number.as_integer
 					if a_position >= 1 then
-						Result := Expression_factory.created_item_position_iterator (a_base_iterator, a_position, a_position)
+						Result := expression_factory.created_item_position_iterator (a_base_iterator, a_position, a_position)
 					else
 					
 						-- Index is less than one, no items will be selected
