@@ -4,6 +4,10 @@ indexing
 
 		"Execution environment facilities"
 
+	usage:      "This class should not be used directly through %
+				%inheritance and client/supplier relationship. %
+				%Inherit from KL_SHARED_EXECUTION_ENVIRONMENT instead."
+	pattern:    "Singleton"
 	library:    "Gobo Eiffel Kernel Library"
 	author:     "Eric Bezault <ericb@gobo.demon.co.uk>"
 	copyright:  "Copyright (c) 1997, Eric Bezault"
@@ -11,6 +15,10 @@ indexing
 	revision:   "$Revision$"
 
 class KL_EXECUTION_ENVIRONMENT
+
+inherit
+
+	KL_SHARED_STRING_ROUTINES
 
 feature -- Access
 
@@ -118,7 +126,7 @@ feature -- Conversion
 	interpreted_string (a_string: STRING): STRING is
 			-- String where the environment variables have been
 			-- replaced by their values. The environment variables
-			-- are considered to be either ${.*} or $[a-zA-Z0-9_]
+			-- are considered to be either ${[^}]*} or $[a-zA-Z0-9_]+
 			-- and the dollar sign is escaped using $$. Non defined
 			-- environment variables are replaced by empty strings.
 			-- The result is not defined when `a_string' does not
@@ -127,82 +135,76 @@ feature -- Conversion
 		require
 			a_string_not_void: a_string /= Void
 		local
-			s1: STRING
-			i, j: INTEGER
-			stop : BOOLEAN
+			str: STRING
+			i, j, nb: INTEGER
+			c: CHARACTER
+			stop: BOOLEAN
 		do
 			from
-				Result := clone (a_string)
 				i := 1
+				nb := a_string.count
+				Result := STRING_.make (nb)
 			until
-				i > Result.count
+				i > nb
 			loop
-				if Result.item (i) = '$' then
-						-- Found beginning of a environment variable
-						-- It is either ${VAR} or $VAR.
-					if i > 1 then
-						s1 := Result.substring (1, i - 1)
+				c := a_string.item (i)
+				i := i + 1
+				if c /= '$' then
+					Result.append_character (c)
+				elseif i > nb then
+						-- Dollar at the end of `a_string'.
+						-- Leave it as it is.
+					Result.append_character ('$')
+				else
+					c := a_string.item (i)
+					if c = '$' then
+							-- Escaped dollar character.
+						Result.append_character ('$')
+						i := i + 1
 					else
-						!! s1.make (0)
-					end
-					i := i + 1
-					inspect Result.item (i)
-					when '{' then
-							-- Looking for a right brace.
-						from
-							i := i + 1
-							j := i
-						until
-							j > Result.count or else Result.item (j) = '}'
-						loop
-							j := j + 1
-						end
-						if j > Result.count then
-							j := Result.count
-						end
-					when '$' then
-						j := i
-					else
-							-- Looking for a non-alphanumeric character
-							-- (i.e. [^a-zA-Z0-9_]).
-						from
-							j := i
-							stop := False
-						until
-							j > Result.count or else stop
-						loop
-							inspect Result.item (j)
-							when 'a'..'z', 'A'..'Z', '0'..'9', '_' then
-								j := j + 1
-							else
-								stop := True
+							-- Found beginning of a environment variable
+							-- It is either ${VAR} or $VAR.
+						str := STRING_.make (5)
+						if c = '{' then
+								-- Looking for a right brace.
+							from
+								i := i + 1
+								stop := False
+							until
+								i > nb or stop
+							loop
+								c := a_string.item (i)
+								if c = '}' then
+									stop := True
+								else
+									str.append_character (c)
+								end
+								i := i + 1
+							end
+						else
+								-- Looking for a non-alphanumeric character
+								-- (i.e. [^a-zA-Z0-9_]).
+							from
+								stop := False
+							until
+								i > nb or stop
+							loop
+								c := a_string.item (i)
+								inspect c
+								when 'a'..'z', 'A'..'Z', '0'..'9', '_' then
+									str.append_character (c)
+									i := i + 1
+								else
+									stop := True
+								end
 							end
 						end
-							-- We've been one char too far.
-						j := j - 1
-					end
-					check
-						j_large_enough: j >= i
-						j_small_enough: j <= Result.count
-					end
-					if Result.item (j) = '$' then
-						s1.append_character ('$')
-					elseif Result.item (j) = '}' then
-						if j - 1 >= i then
-							s1.append_string
-								(variable_value (Result.substring (i, j - 1)))
+						str := variable_value (str)
+						if str /= Void then
+							Result := Result.append_string (str)
 						end
-					elseif j >= i then
-						s1.append_string
-							(variable_value (Result.substring (i, j)))
 					end
-					i := s1.count + 1
-					if j < Result.count then
-						s1.append (Result.substring (j + 1, Result.count))
-					end
-					Result := s1
 				end
-				i := i + 1
 			end
 		ensure
 			interpreted_string_not_void: Result /= Void
@@ -213,14 +215,14 @@ feature {NONE} -- Externals
 
 	c_getenv (s: POINTER): POINTER is
 		external
-			"C [macro <eiffel.h>]"
+			"C [macro <eif_eiffel.h>]"
 		alias
 			"getenv"
 		end
 
 	c_putenv (s: POINTER): INTEGER is
 		external
-			"C [macro <eiffel.h>]"
+			"C [macro <eif_eiffel.h>]"
 		alias
 			"putenv"
 		end
