@@ -292,6 +292,14 @@ feature -- Feature names
 			reference_item_feature_name_not_void: Result /= Void
 		end
 
+	set_operands_feature_name: ET_FEATURE_NAME is
+			-- 'set_operands' feature name
+		once
+			create {ET_IDENTIFIER} Result.make (set_operands_name)
+		ensure
+			set_operands_feature_name_not_void: Result /= Void
+		end
+
 	upper_feature_name: ET_FEATURE_NAME is
 			-- 'upper' feature name
 		once
@@ -1006,6 +1014,7 @@ feature -- Keyword and symbol names
 	put_name: STRING is "put"
 	put_reference_name: STRING is "put_reference"
 	reference_item_name: STRING is "reference_item"
+	set_operands_name: STRING is "set_operands"
 	upper_name: STRING is "upper"
 		-- Eiffel feature names
 

@@ -380,6 +380,7 @@ feature {NONE} -- String handler
 			Result.force_new (-1, tokens.put_name)
 			Result.force_new (-1, tokens.put_reference_name)
 			Result.force_new (-1, tokens.reference_item_name)
+			Result.force_new (-1, tokens.set_operands_name)
 			Result.force_new (-1, tokens.upper_name)
 			Result.force_new (-1, tokens.capitalized_current_keyword_name)
 			Result.force_new (-1, tokens.capitalized_false_keyword_name)
