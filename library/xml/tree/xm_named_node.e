@@ -16,6 +16,8 @@ inherit
 
 	XM_NODE
 
+	KL_IMPORTED_STRING_ROUTINES
+	
 feature -- Status report
 
 	has_namespace: BOOLEAN is
@@ -34,19 +36,57 @@ feature -- Status report
 		ensure
 			definition: Result = (ns_prefix /= Void and then ns_prefix.count > 0)
 		end
+		
+	same_namespace (other: XM_NAMED_NODE): BOOLEAN is
+			-- Has current node same namespace as other?
+		do
+			Result := ((not has_namespace) and (not other.has_namespace))
+				or ((has_namespace and other.has_namespace) and then namespace.is_equal (other.namespace))
+		ensure
+			equal_namespaces: Result implies (((not has_namespace) and (not other.has_namespace))
+				or else namespace.is_equal (other.namespace))
+		end
+	
+	same_name (other: XM_NAMED_NODE): BOOLEAN is
+			-- Has current node same name and namespace as other?
+		do
+			Result := same_namespace (other) and
+				STRING_.same_string (name, other.name)
+		ensure
+			definition: Result = (same_namespace (other) and same_name (other))
+		end
 
 feature -- Access
 
 	name: STRING
 			-- Name
 
-	ns_prefix: STRING
+	namespace: XM_NAMESPACE
+			-- Namespace of the name of current node
+	
+feature -- Access
+
+	ns_prefix: STRING is
 			-- Namespace prefix used to declare the namespace of the 
 			-- name of current node
-
-	namespace: STRING
-			-- Namespace of the name of current node
-
+		require
+			has_ns: has_namespace
+		do
+			Result := namespace.ns_prefix
+		ensure
+			definition: Result = namespace.ns_prefix
+		end
+		
+	ns_uri: STRING is
+			-- URI of namespace.
+		require
+			has_ns: has_namespace
+		do
+			Result := namespace.uri
+		ensure
+			definition: Result = namespace.uri
+		end
+		
 feature -- Element change
 
 	set_name (a_name: like name) is
@@ -66,34 +106,6 @@ feature -- Element change
 			namespace := a_namespace
 		ensure
 			namespace_set: namespace = a_namespace
-		end
-
-	set_prefix (a_prefix: like ns_prefix) is
-			-- Set `ns_prefix' to `a_prefix'.
-		do
-			ns_prefix := a_prefix
-		ensure
-			ns_prefix_set: ns_prefix = a_prefix
-		end
-
-	apply_namespace_declarations (decls: XM_NAMESPACE_TABLE) is
-			-- Apply the namespace declaration `decls'.
-			-- This means the following:
-			-- 1) Name has no prfix -> done
-			-- 2) Name has prefix:
-			-- 2.1) Prefix has entry in decls -> set namespace
-			-- Note: this feature does not take care of default namespace
-			-- declarations (since default namespaces do not apply for all
-			-- named nodes - they apply for elements, but not for attributes)
-		require
-			decls_not_void: decls /= Void
-		do
-			if has_prefix then
-				decls.search (ns_prefix)
-				if decls.found then
-					set_namespace (decls.found_item)
-				end
-			end
 		end
 
 invariant
