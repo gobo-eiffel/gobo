@@ -34,6 +34,7 @@ inherit
 	KL_SHARED_PLATFORM
 	KL_SHARED_EIFFEL_COMPILER
 	ET_SHARED_TOKEN_CONSTANTS
+	KL_SHARED_STRING_EQUALITY_TESTER
 
 feature {NONE} -- Initialization
 
@@ -341,12 +342,9 @@ feature {NONE} -- String handler
 	strings: DS_HASH_TABLE [INTEGER, STRING] is
 			-- Strings known by the current scanner, and the associated
 			-- hash codes when they are used as identifier
-		local
-			l_string_equality_tester: KL_STRING_EQUALITY_TESTER
 		once
 			create Result.make_map (100000)
-			create l_string_equality_tester
-			Result.set_key_equality_tester (l_string_equality_tester)
+			Result.set_key_equality_tester (string_equality_tester)
 				-- Insert basic strings in `strings'.
 			Result.force_new (-1, tokens.capitalized_any_name)
 			Result.force_new (-1, tokens.capitalized_array_name)
