@@ -7,7 +7,7 @@ mkdir spec/ve
 mkdir spec/se
 GOBO_UNIX=`echo $GOBO | sed "s/\\\\\\/\//g"`
 export GOBO_UNIX
-for file in `ls $GOBO_UNIX/library/kernel/*.ge` ; do
+for file in `ls $GOBO_UNIX/library/kernel/*.ge; ls $GOBO_UNIX/library/kernel/*/*.ge` ; do
 	./gepp -DISE $file spec/ise/`basename $file .ge`.e > tmp1.txt
 	./gepp -DHACT $file spec/hact/`basename $file .ge`.e >> tmp1.txt
 	./gepp -DSE $file spec/se/`basename $file .ge`.e >> tmp1.txt
