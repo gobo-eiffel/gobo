@@ -171,6 +171,7 @@ feature -- Output
 
 	to_string: STRING is
 			-- Textual representation of current type
+			-- (Create a new string at each call.)
 		do
 			Result := STRING_.make (15)
 			append_to_string (Result)
