@@ -30,7 +30,7 @@ creation
 feature {NONE} -- Initialization
 
 	make (a_project: GEANT_PROJECT; an_xml_element: GEANT_XML_ELEMENT) is
-			-- Create a new task with information held in `an_element'.
+			-- Create a new task with information held in `an_xml_element'.
 		local
 			a_value: STRING
 			a_bool: BOOLEAN
