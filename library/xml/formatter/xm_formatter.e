@@ -114,7 +114,7 @@ feature -- Standard processor routines
 			-- Process character data `c'.
 		do
 			try_process_position (c)
-			append (c.content)
+			append_escaped (c.content)
 		end
 
 	process_processing_instruction (a_pi: XM_PROCESSING_INSTRUCTION) is
@@ -168,7 +168,7 @@ feature -- Standard processor routines
 			process_named (att)
 			append (Eq_s)
 			append (Quot_s)
-			append (att.value)
+			append_escaped (att.value)
 			append (Quot_s)
 		end
 
@@ -290,10 +290,86 @@ feature {NONE} -- Implementation
 		do
 			last_output.put_string (a_string)
 		end
+		
 
 	position_table: XM_POSITION_TABLE
 			-- Position table
 
+feature {NONE} -- Escaping
+
+	append_escaped (a_string: STRING) is
+			-- Append `a_string' to output, escaping markup characters.
+		require
+			a_string_not_void: a_string /= Void
+		local
+			i: INTEGER
+			cnt: INTEGER
+			a_last_escaped: INTEGER
+		do
+			from
+				i := 1
+				cnt := a_string.count
+				a_last_escaped := 0
+			variant
+				cnt - i + 1
+			until
+				i > cnt
+			loop
+				if is_escapable (a_string.item_code (i)) then
+					-- process previous unescaped characters
+					if a_last_escaped < i - 1 then
+						append (a_string.substring (a_last_escaped + 1, i - 1))
+					end
+					a_last_escaped := i
+					
+					append (escaped (a_string.item_code (i)))
+				end
+
+				i := i + 1
+			end
+			
+				-- End of loop cleanup
+			if a_last_escaped = 0 then
+				append (a_string)
+			elseif a_last_escaped < a_string.count then
+				append (a_string.substring (a_last_escaped + 1, a_string.count))
+			end
+		end
+		
+	is_escapable (a_code: INTEGER): BOOLEAN is
+			-- Is `a_code' for a control character to be escaped?
+		require
+			positive: a_code > 0
+		do
+			Result := a_code = Lt_char.code
+				or a_code = Gt_char.code
+				or a_code = Amp_char.code
+				or a_code = Quot_char.code
+				or (a_code < Space_char.code and a_code /= Tab_char.code and a_code /= Cr_char.code and a_code /= Lf_char.code)
+		end
+		
+	escaped (a_code: INTEGER): STRING is
+			-- Escaped version of an XML control character.
+		require
+			positive: a_code > 0
+			escapable: is_escapable (a_code)
+		do
+			if a_code = Lt_char.code then
+				Result := Lt_entity
+			elseif a_code = Gt_char.code then
+				Result := Gt_entity
+			elseif a_code = Quot_char.code then
+				Result := Quot_entity
+			elseif a_code = Amp_char.code then
+				Result := Amp_entity
+			else
+					-- XML 1.1 allows encoded control chars
+				Result := Char_entity_prefix + a_code.out + Entity_suffix
+			end
+		ensure
+			result_not_void: Result /= Void
+		end
+		
 invariant
 
 	last_output_not_void: last_output /= Void
