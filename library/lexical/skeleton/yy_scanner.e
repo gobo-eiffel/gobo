@@ -100,7 +100,7 @@ feature -- Access
 		deferred
 		ensure
 			text_substring_not_void: Result /= Void
-			text_substring_empty: (s > e) implies Result.empty
+			text_substring_empty: (s > e) implies (Result.count = 0)
 			definition: s <= e implies Result.is_equal (text.substring (s, e))
 		end
 
@@ -119,22 +119,25 @@ feature -- Measurement
 		end
 
 	line: INTEGER is
-			-- Line number of last token read
+			-- Line number of last token read when
+			-- '%option line' has been specified
 		deferred
 		ensure
 			line_positive: Result >= 1
 		end
 
 	column: INTEGER is
-			-- Column number of last token read
+			-- Column number of last token read when
+			-- '%option line' has been specified
 		deferred
 		ensure
 			column_positive: Result >= 1
 		end
 
 	position: INTEGER is
-			-- Position of last token read (i.e. number of characters
-			-- from the start of the input source)
+			-- Position of last token read (i.e. number of
+			-- characters from the start of the input source)
+			-- when '%option position' has been specified
 		deferred
 		ensure
 			position_positive: Result >= 1
@@ -362,7 +365,7 @@ feature -- Action
 
 	pre_action is
 			-- Action executed before every semantic action
-			-- when %option pre-action has been specified.
+			-- when '%option pre-action' has been specified.
 			-- (Note: this routine can be redefined in descendant
 			-- classes. Default: do nothing.)
 		do
@@ -370,7 +373,7 @@ feature -- Action
 
 	post_action is
 			-- Action executed after every semantic action
-			-- when %option post-action has been specified.
+			-- when '%option post-action' has been specified.
 			-- (Note: this routine can be redefined in descendant
 			-- classes. Default: do nothing.)
 		do
@@ -378,7 +381,7 @@ feature -- Action
 
 	pre_eof_action is
 			-- Action executed before every end-of-file semantic action
-			-- (i.e. <<EOF>>) when %option pre-eof-action has been specified.
+			-- (i.e. <<EOF>>) when '%option pre-eof-action' has been specified.
 			-- (Note: this routine can be redefined in descendant classes.
 			-- Default: do nothing.)
 		do
@@ -386,7 +389,7 @@ feature -- Action
 
 	post_eof_action is
 			-- Action executed after every end-of-file semantic action
-			-- (i.e. <<EOF>>) when %option post-eof-action has been specified.
+			-- (i.e. <<EOF>>) when '%option post-eof-action' has been specified.
 			-- (Note: this routine can be redefined in descendant classes.
 			-- Default: do nothing.)
 		do
