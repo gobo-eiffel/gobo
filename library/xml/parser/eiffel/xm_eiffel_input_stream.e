@@ -67,15 +67,12 @@ feature -- Encoding
 
 	is_valid_encoding (an_encoding: STRING): BOOLEAN is
 			-- Is this encoding known?
-		local
-			lower_encoding: STRING
 		do
 			if an_encoding /= Void then
-				lower_encoding := STRING_.as_lower (an_encoding)
-				Result := lower_encoding.is_equal (Encoding_latin_1)
-					or lower_encoding.is_equal (Encoding_us_ascii)
-					or lower_encoding.is_equal (Encoding_utf_8)
-					or lower_encoding.is_equal (Encoding_utf_16)
+				Result := STRING_.same_case_insensitive (an_encoding, Encoding_latin_1)
+					or STRING_.same_case_insensitive (an_encoding, Encoding_us_ascii)
+					or STRING_.same_case_insensitive (an_encoding, Encoding_utf_8)
+					or STRING_.same_case_insensitive (an_encoding, Encoding_utf_16)
 			end
 		end
 
@@ -83,23 +80,20 @@ feature -- Encoding
 			-- Can the current encoding be switched to `an_encoding'?
 		require
 			valid: is_valid_encoding (an_encoding)
-		local
-			lower_encoding: STRING
 		do
 			if encoding = Undetected then
 				Result := True
 			else
-				lower_encoding := STRING_.as_lower (an_encoding)
 				if
-					lower_encoding.is_equal (Encoding_latin_1) or
-					lower_encoding.is_equal (Encoding_us_ascii)
+					STRING_.same_case_insensitive (an_encoding, Encoding_latin_1) or
+					STRING_.same_case_insensitive (an_encoding, Encoding_us_ascii)
 				then
 					Result := encoding = Utf_8_or_compatible
 						or encoding = Utf_8 or encoding = Latin_1
-				elseif lower_encoding.is_equal (Encoding_utf_8) then
+				elseif STRING_.same_case_insensitive (an_encoding, Encoding_utf_8) then
 					Result := encoding = Utf_8_or_compatible
 						or encoding = Utf_8
-				elseif lower_encoding.is_equal (Encoding_utf_16) then
+				elseif STRING_.same_case_insensitive (an_encoding, Encoding_utf_16) then
 					Result := encoding = Utf16_msb_first or encoding = Utf16_msb_last
 				end
 			end
@@ -116,9 +110,9 @@ feature -- Encoding
 				std.output.put_string (an_encoding)
 				std.output.put_new_line
 			end
-			if STRING_.as_lower (an_encoding).is_equal (Encoding_latin_1) then
+			if STRING_.same_case_insensitive (an_encoding, Encoding_latin_1) then
 				encoding := Latin_1
-			elseif STRING_.as_lower (an_encoding).is_equal (Encoding_utf_16) then
+			elseif STRING_.same_case_insensitive (an_encoding, Encoding_utf_16) then
 				check encoding_ok: encoding = Utf16_msb_first or encoding = Utf16_msb_last end
 			else
 				-- FIXME: own mode for us-ascii?
@@ -166,7 +160,10 @@ feature -- Input
 
 			debug ("xml_input_stream")
 				if not end_of_input then
-					std.output.put_string ("read_character: " + last_character.code.out + " " + last_character.out)
+					std.output.put_string ("read_character: ")
+					std.output.put_string (last_character.code.out)
+					std.output.put_string (" ")
+					std.output.put_string (last_character.out)
 					std.output.put_new_line
 				end
 			end
@@ -221,7 +218,9 @@ feature -- Input
 				Result := Precursor (a_string, pos, nb)
 			end
 			debug ("xml_input_stream")
-				std.output.put_string ("read_to_string: " + Result.out + " chars read")
+				std.output.put_string ("read_to_string: ")
+				std.output.put_string (Result.out)
+				std.output.put_string (" chars read")
 				std.output.put_new_line
 			end
 		end

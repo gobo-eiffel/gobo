@@ -130,7 +130,8 @@ feature {NONE} -- Escaped
 			elseif a_char = Quot_char.code then
 				Result := Quot_entity
 			else
-				Result := "&#"+a_char.out+";"
+				Result := STRING_.concat ("&#", a_char.out)
+				Result := STRING_.concat (Result, ";")
 			end
 		end
 

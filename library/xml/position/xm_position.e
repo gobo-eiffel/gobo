@@ -53,15 +53,15 @@ feature -- Output
 	out: STRING is
 			-- Textual representation
 		do
-			Result := STRING_.make (40)
-			Result.append_string (" ln: ")
-			Result.append_string (STRING_.as_string (row.out))
-			Result.append_string (" cl: ")
-			Result.append_string (STRING_.as_string (column.out))
-			Result.append_string (" byte: ")
-			Result.append_string (STRING_.as_string (byte_index.out))
-			Result.append_string (" -> ")
-			Result.append_string (STRING_.as_string (source_name))
+			create Result.make_empty
+			Result := STRING_.appended_string (Result, " ln: ")
+			Result := STRING_.appended_string (Result, row.out)
+			Result := STRING_.appended_string (Result, " cl: ")
+			Result := STRING_.appended_string (Result, column.out)
+			Result := STRING_.appended_string (Result, " byte: ")
+			Result := STRING_.appended_string (Result, byte_index.out)
+			Result := STRING_.appended_string (Result, " -> ")
+			Result := STRING_.appended_string (Result, source_name)
 		end
 
 feature -- Obsolete

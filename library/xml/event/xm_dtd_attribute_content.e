@@ -72,19 +72,19 @@ feature -- Output
 				-- Type.
 			Result.append_character (' ')
 			if is_data then
-				Result.append_string ("CDATA")
+				Result := STRING_.appended_string (Result, "CDATA")
 			elseif is_id then
-				Result.append_string ("ID")
+				Result := STRING_.appended_string (Result, "ID")
 			elseif is_id_ref then
-				Result.append_string ("IDREF")
+				Result := STRING_.appended_string (Result, "IDREF")
 			elseif is_entity then
-				Result.append_string ("ENTITY")
+				Result := STRING_.appended_string (Result, "ENTITY")
 			elseif is_token then
-				Result.append_string ("NMTOKEN")
+				Result := STRING_.appended_string (Result, "NMTOKEN")
 			elseif is_notation then
-				Result.append_string ("NOTATION")
+				Result := STRING_.appended_string (Result, "NOTATION")
 			elseif is_enumeration then
-				Result.append_string ("(")
+				Result.append_character ('(')
 				from
 					a_cursor := enumeration.new_cursor
 					a_cursor.start
@@ -92,28 +92,29 @@ feature -- Output
 					a_cursor.after
 				loop
 					if not a_cursor.is_first then
-						Result.append_string ("|")
+						Result.append_character ('|')
 					end
 					Result := STRING_.appended_string (Result, a_cursor.item)
 					a_cursor.forth
 				end
-				Result.append_string (")")
+				Result.append_character (')')
 			end
 			if is_list_type then
-				Result.append_string ("S")
+				Result.append_character ('S')
 			end
 			Result.append_character (' ')
 				-- Default.
 			if is_value_required then
-				Result.append_string ("#REQUIRED")
+				Result := STRING_.appended_string (Result, "#REQUIRED")
 			elseif is_value_implied then
-				Result.append_string ("#IMPLIED")
+				Result := STRING_.appended_string (Result, "#IMPLIED")
 			elseif is_value_fixed then
-				Result.append_string ("#FIXED ")
+				Result := STRING_.appended_string (Result, "#FIXED ")
 			end
 			if has_default_value then
-				Result.append_string (" %"")
-				Result.append_string (STRING_.as_string (default_value))
+				Result.append_character (' ')
+				Result.append_character ('%"')
+				Result := STRING_.appended_string (Result, default_value)
 				Result.append_character ('%"')
 			end
 		end

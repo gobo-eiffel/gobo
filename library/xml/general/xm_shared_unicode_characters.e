@@ -19,16 +19,19 @@ inherit
 	XM_MARKUP_CONSTANTS
 		export {NONE} all end
 		
+	KL_IMPORTED_STRING_ROUTINES
+		export {NONE} all end
+
 feature -- Access
 
 	is_known_version (a_version: STRING): BOOLEAN is
 			-- Is this an XML version string for which the 
 			-- character classes are known?
 		do
-			Result := a_version.is_equal (Xml_version_1_0) or a_version.is_equal (Xml_version_1_1)
+			Result := STRING_.same_string (a_version, Xml_version_1_0) or STRING_.same_string (a_version, Xml_version_1_1)
 		ensure
-			known_1_0: a_version.is_equal (Xml_version_1_0) implies Result
-			known_1_1: a_version.is_equal (Xml_version_1_1) implies Result
+			known_1_0: STRING_.same_string (a_version, Xml_version_1_0) implies Result
+			known_1_1: STRING_.same_string (a_version, Xml_version_1_1) implies Result
 		end
 		
 	characters (a_version: STRING): XM_UNICODE_CHARACTERS is
@@ -36,7 +39,7 @@ feature -- Access
 		require
 			known_version: is_known_version (a_version)
 		do
-			if a_version.is_equal (Xml_version_1_0) then
+			if STRING_.same_string (a_version, Xml_version_1_0) then
 				Result := characters_1_0
 			else
 				Result := characters_1_1

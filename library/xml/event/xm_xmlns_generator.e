@@ -59,8 +59,8 @@ feature {NONE} -- Unique prefix
 			-- Unique prefix.
 		do
 			create Result.make_empty
-			Result.append_string ("ns")
-			Result.append_string (last_unique_prefix.out)
+			Result := STRING_.appended_string (Result, "ns")
+			Result := STRING_.appended_string (Result, last_unique_prefix.out)
 		ensure
 			result_not_void: Result /= Void
 			not_implicit: not is_implicit (Result)
