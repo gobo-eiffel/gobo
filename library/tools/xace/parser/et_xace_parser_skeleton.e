@@ -613,7 +613,7 @@ feature {NONE} -- Element change
 					end
 				end
 			end
-			if an_element.name.is_equal (uc_cluster) then
+			if STRING_.same_string (an_element.name, uc_cluster) then
 				create a_warning.make (STRING_.concat ("Warning: <cluster> is obsolete, use <library> instead%N", a_position_table.item (an_element).out))
 				error_handler.report_warning (a_warning)
 				a_cluster := new_cluster (an_element, empty_prefix, a_position_table)
@@ -661,7 +661,7 @@ feature {NONE} -- Element change
 							else
 								an_option := new_options (a_child, a_position_table)
 							end
-						elseif a_child.name.is_equal (uc_external) then
+						elseif STRING_.same_string (a_child.name, uc_external) then
 							if an_option = Void then
 								an_option := ast_factory.new_options
 							end
