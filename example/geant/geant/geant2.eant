@@ -1,0 +1,23 @@
+<project name="geant" default="one" >
+
+	<target name="init" >
+		<description>dummy initialization target</description>
+		<echo message="initializing" />
+	</target>
+
+	<target name="one" >
+		<description>call other targets</description>
+
+		<var name="who" value="World" />
+		<geant target="print_who" />
+
+		<var name="who" value="you" />
+		<geant target="print_who" />
+	</target>
+
+	<target name="print_who" depend="init">
+		<description>print value in ${who}</description>
+		<echo message="Hello ${who}" />
+	</target>
+
+</project>
