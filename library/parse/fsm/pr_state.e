@@ -319,12 +319,12 @@ feature -- Conflicts
 									lookaheads.delete (a_token)
 									!! a_conflict.make (Current, a_rule, a_token, "shift")
 									Result.force_last (a_conflict)
-								elseif a_token.is_right_associative then
+								elseif a_token.is_left_associative then
 										-- Keep only the reduction.
 									tokens.remove (j)
 									!! a_conflict.make (Current, a_rule, a_token, "reduce")
 									Result.force_last (a_conflict)
-								elseif a_token.is_left_associative then
+								elseif a_token.is_right_associative then
 										-- Keep only the shift.
 									lookaheads.delete (a_token)
 									!! a_conflict.make (Current, a_rule, a_token, "shift")
