@@ -414,7 +414,7 @@ feature {NONE} -- Implementation
 				when Intersect_token then
 					create {XM_XPATH_BOOLEAN_EXPRESSION} an_expression.make (a_filter_expression.filter, And_token, another_filter_expression.filter)
 				when Except_token then
-					a_not_function ?= function_factory.make_system_function ("not")
+					a_not_function ?= function_factory.system_function ("not")
 					create arguments.make (1)
 					arguments.put (another_filter_expression.filter, 1)
 					a_not_function.set_arguments (arguments)

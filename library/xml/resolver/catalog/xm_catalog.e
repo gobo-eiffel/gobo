@@ -591,13 +591,13 @@ feature {NONE} -- Implementation
 				is_error := True
 				shared_catalog_manager.debug_message (1, "Missing 'systemId' attribute from 'system'", system_id)
 			else
-				a_system_id := escape_custom (a_system_id, shared_catalog_manager.unescaped_uri_characters, False)
+				a_system_id := escape_custom (utf8.to_utf8 (a_system_id), shared_catalog_manager.unescaped_uri_characters, False)
 			end
 			if a_target_uri = Void then
 				is_error := True
 				shared_catalog_manager.debug_message (1, "Missing 'uri' attribute from 'system'", system_id)
 			else
-				a_target_uri := escape_custom (a_target_uri, shared_catalog_manager.unescaped_uri_characters, False)
+				a_target_uri := escape_custom (utf8.to_utf8 (a_target_uri), shared_catalog_manager.unescaped_uri_characters, False)
 				create a_target.make_resolve (a_base_uri, a_target_uri)
 				if a_target.has_fragment then
 					is_error := True
@@ -660,13 +660,13 @@ feature {NONE} -- Implementation
 				is_error := True
 				shared_catalog_manager.debug_message (1, "Missing 'name' attribute from 'uri'", system_id)
 			else
-				a_uri := escape_custom (a_uri, shared_catalog_manager.unescaped_uri_characters, False)
+				a_uri := escape_custom (utf8.to_utf8 (a_uri), shared_catalog_manager.unescaped_uri_characters, False)
 			end
 			if a_target_uri = Void then
 				is_error := True
 				shared_catalog_manager.debug_message (1, "Missing 'uri' attribute from 'uri'", system_id)
 			else
-				a_target_uri := escape_custom (a_target_uri, shared_catalog_manager.unescaped_uri_characters, False)
+				a_target_uri := escape_custom (utf8.to_utf8 (a_target_uri), shared_catalog_manager.unescaped_uri_characters, False)
 				create a_target.make_resolve (a_base_uri, a_target_uri)
 			end
 			if not is_error then
@@ -734,7 +734,7 @@ feature {NONE} -- Implementation
 				is_error := True
 				shared_catalog_manager.debug_message (1, "Missing 'uri' attribute from 'public'", system_id)
 			else
-				a_target_uri := escape_custom (a_target_uri, shared_catalog_manager.unescaped_uri_characters, False)
+				a_target_uri := escape_custom (utf8.to_utf8 (a_target_uri), shared_catalog_manager.unescaped_uri_characters, False)
 				create a_target.make_resolve (a_base_uri, a_target_uri)
 				if a_target.has_fragment then
 					is_error := True
@@ -863,7 +863,7 @@ feature {NONE} -- Implementation
 				is_error := True
 				shared_catalog_manager.debug_message (1, "Missing 'systemIdStartString' attribute from 'rewriteSystem'", system_id)
 			else
-				a_start_string := escape_custom (a_start_string, shared_catalog_manager.unescaped_uri_characters, False)
+				a_start_string := escape_custom (utf8.to_utf8 (a_start_string), shared_catalog_manager.unescaped_uri_characters, False)
 				create a_target.make_resolve (a_base_uri, a_rewrite_prefix)
 				shared_catalog_manager.debug_message (5, "Rewrite prefix from 'rewriteSystem'", a_target.full_reference)
 				shared_catalog_manager.debug_message (5, "SystemIdStartString from 'rewriteSystem'", a_start_string)
@@ -920,7 +920,7 @@ feature {NONE} -- Implementation
 				is_error := True
 				shared_catalog_manager.debug_message (1, "Missing 'uriStartString' attribute from 'rewriteUri'", system_id)
 			else
-				a_start_string := escape_custom (a_start_string, shared_catalog_manager.unescaped_uri_characters, False)
+				a_start_string := escape_custom (utf8.to_utf8 (a_start_string), shared_catalog_manager.unescaped_uri_characters, False)
 				create a_target.make_resolve (a_base_uri, a_rewrite_prefix)
 				shared_catalog_manager.debug_message (5, "Rewrite prefix from 'rewriteUri'", a_target.full_reference)
 				shared_catalog_manager.debug_message (5, "UriStartString from 'rewriteUri'", a_start_string)
@@ -977,7 +977,7 @@ feature {NONE} -- Implementation
 				is_error := True
 				shared_catalog_manager.debug_message (1, "Missing 'systemIdStartString' attribute from 'delegateSystem'", system_id)
 			else
-				a_start_string := escape_custom (a_start_string, shared_catalog_manager.unescaped_uri_characters, False)
+				a_start_string := escape_custom (utf8.to_utf8 (a_start_string), shared_catalog_manager.unescaped_uri_characters, False)
 				create a_target.make_resolve (a_base_uri, a_catalog_name)
 				shared_catalog_manager.debug_message (5, "Catalog name from 'delegateSystem'", a_catalog_name)
 			end
@@ -1033,7 +1033,7 @@ feature {NONE} -- Implementation
 				is_error := True
 				shared_catalog_manager.debug_message (1, "Missing 'uriStartString' attribute from 'delegateSystem'", system_id)
 			else
-				a_start_string := escape_custom (a_start_string, shared_catalog_manager.unescaped_uri_characters, False)
+				a_start_string := escape_custom (utf8.to_utf8 (a_start_string), shared_catalog_manager.unescaped_uri_characters, False)
 				create a_target.make_resolve (a_base_uri, a_catalog_name)
 				shared_catalog_manager.debug_message (5, "Catalog name from 'delegateSystem'", a_catalog_name)
 			end

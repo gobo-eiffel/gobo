@@ -128,6 +128,8 @@ feature {NONE} -- Implementation
 				create {XM_XSLT_ATTRIBUTE_SET} Result.make_style_element (error_listener, a_document, Void, an_attribute_collection, a_namespace_list, a_name_code, a_sequence_number)				
 			when Xslt_call_template_type_code then
 				create {XM_XSLT_CALL_TEMPLATE} Result.make_style_element (error_listener, a_document, Void, an_attribute_collection, a_namespace_list, a_name_code, a_sequence_number)
+			when Xslt_character_map_type_code then
+				create {XM_XSLT_CHARACTER_MAP} Result.make_style_element (error_listener, a_document, Void, an_attribute_collection, a_namespace_list, a_name_code, a_sequence_number)
 			when Xslt_choose_type_code then
 				create {XM_XSLT_CHOOSE} Result.make_style_element (error_listener, a_document, Void, an_attribute_collection, a_namespace_list, a_name_code, a_sequence_number)
 			when Xslt_comment_type_code then
@@ -163,7 +165,9 @@ feature {NONE} -- Implementation
 			when Xslt_otherwise_type_code then
 				create {XM_XSLT_OTHERWISE} Result.make_style_element (error_listener, a_document, Void, an_attribute_collection, a_namespace_list, a_name_code, a_sequence_number)				
 			when Xslt_output_type_code then
-				create {XM_XSLT_OUTPUT} Result.make_style_element (error_listener, a_document, Void, an_attribute_collection, a_namespace_list, a_name_code, a_sequence_number)				
+				create {XM_XSLT_OUTPUT} Result.make_style_element (error_listener, a_document, Void, an_attribute_collection, a_namespace_list, a_name_code, a_sequence_number)
+			when Xslt_output_character_type_code then
+				create {XM_XSLT_OUTPUT_CHARACTER} Result.make_style_element (error_listener, a_document, Void, an_attribute_collection, a_namespace_list, a_name_code, a_sequence_number)								
 			when Xslt_param_type_code then
 				create {XM_XSLT_PARAM} Result.make_style_element (error_listener, a_document, Void, an_attribute_collection, a_namespace_list, a_name_code, a_sequence_number)
 			when Xslt_preserve_space_type_code, Xslt_strip_space_type_code then

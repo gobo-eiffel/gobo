@@ -41,6 +41,7 @@ feature {NONE} -- Initialization
 			stripper_rules := a_mode
 			is_strips_whitespace := strips_whitespace
 			module_list := a_module_list
+			create character_map_index.make_default
 		ensure
 			configuration_set: configuration = a_configuration
 			rule_manager_set: rule_manager = a_rule_manager
@@ -76,7 +77,10 @@ feature -- Access
 	
 	compiled_templates_index: DS_HASH_TABLE [XM_XSLT_COMPILED_TEMPLATE, INTEGER]
 			-- Index of named templates by `template_fingerprint'
-	
+
+	character_map_index: DS_HASH_TABLE [DS_HASH_TABLE [STRING, INTEGER], INTEGER]
+			-- Index of named character maps
+
 	static_context: XM_XSLT_EXPRESSION_CONTEXT
 			-- Static context of principal stylesheet
 
@@ -200,6 +204,7 @@ invariant
 	default_collation_name: default_collation_name /= Void
 	collation_map: collation_map /= Void
 	module_list_not_void: module_list /= Void
+	character_map_index_not_void: character_map_index /= Void
 
 end
 	

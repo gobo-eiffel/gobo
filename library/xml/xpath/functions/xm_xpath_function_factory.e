@@ -34,6 +34,22 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
+	is_function_available (a_uri, a_local_name: STRING; an_arity: INTEGER): BOOLEAN is
+			-- Is {`a_uri'}`a_local_name' with `an_arity' an available function ?
+		require
+			uri_not_void: a_uri /= Void
+			valid_local_name: a_local_name /= Void and then a_local_name.count > 0
+			nearly_positive_arity: an_arity >= -1
+		do
+			if STRING_.same_string (a_uri, Xpath_functions_uri) then
+				Result := is_system_function (a_local_name, an_arity)
+			elseif is_reserved_namespace (a_uri) then
+				Result := False
+			else
+				Result := is_extension_function (a_uri, a_local_name, an_arity)
+			end
+		end
+
 	is_extension_function (a_uri, a_local_name: STRING; an_arity: INTEGER): BOOLEAN is
 			-- Does `a_uri', `a_local_name' represent a known extension function?
 			-- If `an_arity' = -1, then ignore `an_arity' (any match for `a_local_name' will do)
@@ -65,6 +81,27 @@ feature -- Access
 			Result := an_extension_function_factory.function (a_local_name, an_arity)
 		ensure
 			extension_function_not_void: Result /= Void
+		end
+
+	is_system_function (a_function_name: STRING; an_arity: INTEGER): BOOLEAN is
+			-- Is `a_function_name' sn available system function?
+			-- If `an_arity' = -1, then ignore `an_arity' (any match for `a_function_name' will do)
+		require
+			valid_function_name: a_function_name /= Void and then is_ncname (a_function_name)
+			system_function_factory_registered: is_system_function_factory_registered
+			nearly_positive_arity: an_arity >= -1												
+		do
+			Result := system_function_factory.has (a_function_name, an_arity)
+		end
+
+	system_function (a_function_name: STRING): XM_XPATH_FUNCTION_CALL is
+			-- Function named `a_function_name' in the XPath functions namespace
+		require
+			valid_function_name: a_function_name /= Void and then is_ncname (a_function_name)
+			system_function_factory_registered: is_system_function_factory_registered
+			is_system_function: is_system_function (a_function_name, -1)
+		do
+			Result := system_function_factory.system_function (a_function_name)
 		end
 
 feature -- Status report
@@ -107,17 +144,6 @@ feature -- Status setting
 			correct_factory: extension_function_factories.item (a_uri) = an_extension_function_factory
 		end
 	
-feature -- Creation
-	
-	make_system_function (a_function_name: STRING): XM_XPATH_FUNCTION_CALL is
-			--  Create an XM_XPATH_FUNCTION_CALL object for `a_function_name
-		require
-			valid_function_name: a_function_name /= Void and then is_ncname (a_function_name)
-			system_function_factory_registered: is_system_function_factory_registered
-		do
-			Result := system_function_factory.make_system_function (a_function_name)
-		end
-
 feature {NONE} -- Implementation
 
 	system_function_factory: XM_XPATH_SYSTEM_FUNCTION_FACTORY

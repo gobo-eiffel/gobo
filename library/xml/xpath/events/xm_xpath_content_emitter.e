@@ -325,6 +325,9 @@ feature -- Tag
 				std.error.put_string (a_local_part)
 				std.error.put_string (", value is ")
 				std.error.put_string (a_value)
+				std.error.put_string (", which is ")
+				std.error.put_string (a_value.count.out)
+				std.error.put_string (" characters long.")
 				std.error.put_new_line
 			end
 			if a_namespace = Void then

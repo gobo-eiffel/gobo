@@ -18,10 +18,90 @@ inherit
 
 	KL_IMPORTED_STRING_ROUTINES
 
-feature -- Creation
-	
-	make_system_function (a_function_name: STRING): XM_XPATH_SYSTEM_FUNCTION is
-			--  Create an XM_XPATH_FUNCTION_CALL object for `a_function_name'
+feature -- Access
+
+	has (a_function_name: STRING; an_arity: INTEGER): BOOLEAN is
+			-- Does `a_function_name' represent a known system function?
+			-- If `an_arity' = -1, then ignore `an_arity' (any match for `a_function_name' will do)
+		require
+			valid_function_name: a_function_name /= Void and then a_function_name.count > 0
+			nearly_positive_arity: an_arity >= -1
+		do
+			if STRING_.same_string (a_function_name, "boolean") then
+				Result := an_arity = -1 or else an_arity = 1
+			elseif STRING_.same_string (a_function_name, "concat") then
+				Result := an_arity = -1 or else an_arity > 1
+			elseif STRING_.same_string (a_function_name, "contains") then
+				Result := an_arity = -1 or else an_arity = 2 or else an_arity = 3
+			elseif STRING_.same_string (a_function_name, "count") then
+				Result := an_arity = -1 or else an_arity = 1
+			elseif STRING_.same_string (a_function_name, "current-date") then
+				Result := an_arity = -1 or else an_arity = 0
+			elseif STRING_.same_string (a_function_name, "current-dateTime") then
+				Result := an_arity = -1 or else an_arity = 0
+			elseif STRING_.same_string (a_function_name, "current-time") then
+				Result := an_arity = -1 or else an_arity = 0
+			elseif STRING_.same_string (a_function_name, "doc") then
+				Result := an_arity = -1 or else an_arity = 1				
+			elseif STRING_.same_string (a_function_name, "empty") then
+				Result := an_arity = -1 or else an_arity = 1
+			elseif STRING_.same_string (a_function_name, "exists") then
+				Result := an_arity = -1 or else an_arity = 1								
+			elseif STRING_.same_string (a_function_name, "false") then
+				Result := an_arity = -1 or else an_arity = 0								
+			elseif STRING_.same_string (a_function_name, "id") then
+				Result := an_arity = -1 or else an_arity = 1	or else an_arity = 2
+			elseif STRING_.same_string (a_function_name, "in-scope-prefixes") then
+				Result := an_arity = -1 or else an_arity = 1
+			elseif STRING_.same_string (a_function_name, "last") then
+				Result := an_arity = -1 or else an_arity = 0
+			elseif STRING_.same_string (a_function_name, "local-name") then
+				Result := an_arity = -1 or else an_arity = 0	or else an_arity = 1
+			elseif STRING_.same_string (a_function_name, "name") then
+				Result := an_arity = -1 or else an_arity = 0	or else an_arity = 1
+			elseif STRING_.same_string (a_function_name, "namespace-uri") then
+				Result := an_arity = -1 or else an_arity = 0	or else an_arity = 1
+			elseif STRING_.same_string (a_function_name, "namespace-uri-for-prefix") then
+				Result := an_arity = -1 or else an_arity = 2
+			elseif STRING_.same_string (a_function_name, "normalize-space") then
+				Result := an_arity = -1 or else an_arity = 0	or else an_arity = 1
+			elseif STRING_.same_string (a_function_name, "not") then
+				Result := an_arity = -1 or else an_arity = 1
+			elseif STRING_.same_string (a_function_name, "number") then
+				Result := an_arity = -1 or else an_arity = 0	or else an_arity = 1
+			elseif STRING_.same_string (a_function_name, "position") then
+				Result := an_arity = -1 or else an_arity = 0
+			elseif STRING_.same_string (a_function_name, "starts-with") then
+				Result := an_arity = -1 or else an_arity = 2 or else an_arity = 3
+			elseif STRING_.same_string (a_function_name, "string-length") then
+				Result := an_arity = -1 or else an_arity = 0	or else an_arity = 1
+			elseif STRING_.same_string (a_function_name, "string") then
+				Result := an_arity = -1 or else an_arity = 0	or else an_arity = 1
+			elseif STRING_.same_string (a_function_name, "string-join") then
+				Result := an_arity = -1 or else an_arity = 2
+			elseif STRING_.same_string (a_function_name, "substring") then
+				Result := an_arity = -1 or else an_arity = 2 or else an_arity = 3
+			elseif STRING_.same_string (a_function_name, "substring-before") then
+				Result := an_arity = -1 or else an_arity = 2 or else an_arity = 3
+			elseif STRING_.same_string (a_function_name, "substring-after") then
+				Result := an_arity = -1 or else an_arity = 2 or else an_arity = 3
+			elseif STRING_.same_string (a_function_name, "sum") then
+				Result := an_arity = -1 or else an_arity = 1 or else an_arity = 2
+			elseif STRING_.same_string (a_function_name, "tokenize") then
+				Result := an_arity = -1 or else an_arity = 2 or else an_arity = 3
+			elseif STRING_.same_string (a_function_name, "translate") then
+				Result := an_arity = -1 or else an_arity = 3
+			elseif STRING_.same_string (a_function_name, "true") then
+				Result := an_arity = -1 or else an_arity = 0								
+			elseif STRING_.same_string (a_function_name, "upper-case") then
+				Result := an_arity = -1 or else an_arity = 1
+			elseif STRING_.same_string (a_function_name, "lower-case") then
+				Result := an_arity = -1 or else an_arity = 1
+			end
+		end
+
+	system_function (a_function_name: STRING): XM_XPATH_SYSTEM_FUNCTION is
+			--  XM_XPATH_FUNCTION_CALL object for `a_function_name'
 		require
 			valid_function_name: a_function_name /= Void and then is_ncname (a_function_name)
 		do

@@ -137,10 +137,10 @@ feature -- Element change
 				end
 			end
 			if standalone /= Void then
-				if STRING_.same_string (standalone, "yes") or else STRING_.same_string (standalone, "no") then
+				if STRING_.same_string (standalone, "yes") or else STRING_.same_string (standalone, "no") or else STRING_.same_string (standalone, "omit") then
 					-- OK
 				else
-					report_compile_error ("standalone must be 'yes' or 'no'")
+					report_compile_error ("standalone must be 'yes' or 'no' or 'omit'")
 				end
 			end
 			if cdata_section_elements /= Void then
@@ -155,9 +155,6 @@ feature -- Element change
 				else
 					report_compile_error ("undeclare-namespaces must be 'yes' or 'no'")
 				end
-			end
-			if use_character_maps /= Void then
-				report_compile_error ("Character maps are not supported yet")
 			end
 			if include_content_type /= Void then
 				if STRING_.same_string (include_content_type, "yes") or else STRING_.same_string (include_content_type, "no") then
@@ -196,7 +193,14 @@ feature -- Element change
 			property_set_not_in_error: not a_property_set.is_error
 			validated: validated
 		local
-			an_import_precedence: INTEGER
+			a_stylesheet: XM_XSLT_STYLESHEET
+			some_used_character_maps: DS_ARRAYED_LIST [STRING]
+			an_import_precedence, a_fingerprint: INTEGER
+			a_splitter: ST_SPLITTER
+			some_character_maps, qname_parts: DS_LIST [STRING]
+			a_cursor: DS_LIST_CURSOR [STRING]
+			a_qname, a_uri, an_xml_prefix, a_local_name, a_message, an_expanded_name: STRING
+			a_character_map: XM_XSLT_CHARACTER_MAP
 		do
 			an_import_precedence := precedence
 			if method /= Void then
@@ -320,8 +324,68 @@ feature -- Element change
 					end
 				end					
 			end
-			if use_character_maps /= Void then
-				report_compile_error ("Character maps are not supported yet")
+			if use_character_maps /= Void and then not a_property_set.is_error then
+				a_stylesheet := principal_stylesheet
+				some_used_character_maps := a_property_set.used_character_maps
+				create a_splitter.make
+				some_character_maps := a_splitter.split (use_character_maps)
+				from
+					a_cursor := some_character_maps.new_cursor; a_cursor.start
+					create a_splitter.make
+					a_splitter.set_separators (":")
+				variant
+					some_character_maps.count + 1 - a_cursor.index
+				until
+					a_cursor.after
+				loop
+					a_qname := a_cursor.item
+					qname_parts := a_splitter.split (a_qname)
+					if qname_parts.count = 0 or else qname_parts.count > 2 then
+						a_message := STRING_.concat ("XT1590: ", a_qname)
+						a_message := STRING_.appended_string (a_message, " is not a lexical QName.")
+						report_compile_error (a_message)
+						a_cursor.go_after
+					else
+						if qname_parts.count = 1 then
+							an_xml_prefix := ""
+							a_uri := ""
+							a_local_name := qname_parts.item (1)
+						else
+							an_xml_prefix := qname_parts.item (1)
+							a_uri := uri_for_prefix (an_xml_prefix, False)
+							a_local_name := qname_parts.item (2)
+						end
+						if shared_name_pool.is_name_code_allocated (an_xml_prefix, a_uri, a_local_name) then
+							a_fingerprint := shared_name_pool.name_code (an_xml_prefix, a_uri, a_local_name)
+						else
+							shared_name_pool.allocate_name (an_xml_prefix, a_uri, a_local_name)
+							a_fingerprint := shared_name_pool.last_name_code
+						end
+						if a_fingerprint = -1 then
+							a_message := STRING_.concat ("XT1590: ", a_qname)
+							a_message := STRING_.appended_string (a_message, " is not a lexical QName.")
+							report_compile_error (a_message)
+							a_cursor.go_after
+						else
+							a_fingerprint := shared_name_pool.fingerprint_from_name_code (a_fingerprint)
+							a_character_map := a_stylesheet.character_map (a_fingerprint)
+							if a_character_map = Void then
+								a_message := STRING_.concat ("XT1590: No character-map named ", a_qname)
+								a_message := STRING_.appended_string (a_message, " has been defined.")
+								report_compile_error (a_message)
+								a_cursor.go_after
+							else
+								an_expanded_name := STRING_.concat ("{", a_uri)
+								an_expanded_name := STRING_.appended_string (an_expanded_name, "}")
+								an_expanded_name := STRING_.appended_string (an_expanded_name, a_local_name)
+								if not some_used_character_maps.has (an_expanded_name) then
+									some_used_character_maps.force_last (an_expanded_name)
+								end
+								a_cursor.forth
+							end
+						end
+					end
+				end
 			end
 			if character_representation /= Void and then not a_property_set.is_error then
 				if a_property_set.is_valid_character_representation (character_representation) then

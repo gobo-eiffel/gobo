@@ -384,7 +384,7 @@ feature {NONE} -- Implementation
 		local
 			a_function_call: XM_XPATH_FUNCTION_CALL
 		do
-			a_function_call := function_factory.make_system_function (a_name)
+			a_function_call := function_factory.system_function (a_name)
 			if a_function_call = Void then
 				was_last_function_bound := False
 				set_bind_function_failure_message (STRING_.appended_string ("Unknown system function: ", a_name))

@@ -50,19 +50,24 @@ feature -- Events
 			-- Special characters are not escaped
 		local
 			a_bad_character: INTEGER
-			a_message: STRING
+			a_message, a_mapped_string: STRING
 		do
 			if not is_error then
-				if not are_no_special_characters (properties) then
+				if not are_no_special_characters (properties) and then character_map_expander = Void then
 					a_bad_character := bad_character_code (chars)
 					if a_bad_character = 0 then
-						output (chars)
+						output (normalized_string (chars))
 					else
 						a_message := STRING_.concat ("Output character not available in this encoding (decimal ", a_bad_character.out)
 						a_message := STRING_.appended_string (a_message, ")")
 						transformer.report_fatal_error (a_message, Void)
 						is_error := True
 					end
+				elseif character_map_expander /= Void then
+					a_mapped_string := character_map_expander.mapped_string (chars)
+					output_escape (normalized_string (a_mapped_string), False)
+				else
+					output_escape (normalized_string (a_mapped_string), False)
 				end
 			end
 		end

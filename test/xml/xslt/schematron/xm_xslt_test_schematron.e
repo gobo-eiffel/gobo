@@ -40,8 +40,8 @@ feature
 			a_transformer: XM_XSLT_TRANSFORMER
 			a_uri_source, another_uri_source: XM_XSLT_URI_SOURCE
 			an_error_listener: XM_XSLT_DEFAULT_ERROR_LISTENER
-			an_output: XM_OUTPUT
-			a_transform_string, a_report_string, a_test_string: STRING
+			an_output, another_output: XM_OUTPUT
+			a_test_string: STRING
 			a_result: XM_XSLT_TRANSFORMATION_RESULT
 			a_catalog_resolver: XM_CATALOG_RESOLVER
 			a_string_resolver: XM_STRING_URI_RESOLVER
@@ -61,8 +61,7 @@ feature
 			assert ("transformer", a_transformer /= Void)
 			create another_uri_source.make ("./wai.xml")
 			create an_output
-			create a_transform_string.make (0)
-			an_output.set_output_string (a_transform_string)
+			an_output.set_output_to_string
 			create a_result.make (an_output, "string:/transform")
 			a_transformer.transform (another_uri_source, a_result)
 			assert ("Transform successfull", not a_transformer.is_error)
@@ -76,7 +75,7 @@ feature
 				-- because `make_with_defaults'
 			end
 			shared_catalog_manager.bootstrap_resolver.well_known_system_ids.resize (2)
-			shared_catalog_manager.bootstrap_resolver.well_known_system_ids.put (a_transform_string, "string:/transform")
+			shared_catalog_manager.bootstrap_resolver.well_known_system_ids.put (an_output.last_output, "string:/transform")
 
 			-- now use the generated transform to produce a report
 
@@ -88,10 +87,9 @@ feature
 			a_transformer := a_stylesheet_compiler.new_transformer
 			assert ("transformer 2", a_transformer /= Void)
 			create another_uri_source.make ("./evil_wai.xml")
-			create an_output
-			create a_report_string.make (0)
-			an_output.set_output_string (a_report_string)
-			create a_result.make (an_output, "string:/report")
+			create another_output
+			another_output.set_output_to_string
+			create a_result.make (another_output, "string:/report")
 			a_transformer.transform (another_uri_source, a_result)
 			assert ("Transform successfull", not a_transformer.is_error)
 			create a_test_file.make ("./expected_report.txt")
@@ -108,7 +106,7 @@ feature
 				a_test_string := STRING_.appended_string (a_test_string, a_test_file.last_string)
 			end
 			a_test_file.close
-			assert ("Results same as test file", STRING_.same_string (a_test_string, a_report_string))	
+			assert ("Results same as test file", STRING_.same_string (a_test_string, another_output.last_output))	
 		end
 
 	test_schematron_conformance is

@@ -855,6 +855,14 @@ feature -- Implementation
 			an_xml_indenter: XM_XSLT_XML_INDENTER
 			an_uncommitted_emitter: XM_XSLT_UNCOMMITTED_EMITTER
 			a_method: STRING
+			some_character_maps: DS_ARRAYED_LIST [STRING]
+			a_cursor: DS_ARRAYED_LIST_CURSOR [STRING]
+			a_character_map_list: DS_ARRAYED_LIST [DS_HASH_TABLE [STRING, INTEGER]]
+			a_fingerprint: INTEGER
+			a_character_map: DS_HASH_TABLE [STRING, INTEGER]
+			a_character_map_expander: XM_XSLT_CHARACTER_MAP_EXPANDER
+			null_characters_used: BOOLEAN
+			a_character_map_index: DS_HASH_TABLE [DS_HASH_TABLE [STRING, INTEGER], INTEGER]
 		do
 			if a_result.is_emitter then
 				an_emitter := a_result.emitter
@@ -874,16 +882,50 @@ feature -- Implementation
 				--  that actually generates characters or bytes that are written to `a_result.stream'
 				
 				a_method := some_properties.method
-
-				-- TODO: add character map stuff
+				some_character_maps := some_properties.used_character_maps
+				if some_character_maps.count > 0 then
+					a_character_map_index := executable.character_map_index
+					check
+						character_map_index: a_character_map_index /= Void
+						-- as it will have been compiled in - we have already checked
+						-- that the xsl:character-maps have been declared.
+					end
+					create a_character_map_list.make (some_character_maps.count)
+					from
+						a_cursor := some_character_maps.new_cursor; a_cursor.start
+					variant
+						some_character_maps.count + 1 - a_cursor.index
+					until
+						a_cursor.after
+					loop
+						a_fingerprint := shared_name_pool.fingerprint_from_expanded_name (a_cursor.item)
+						check
+							valid_character_map_fingerprint: a_fingerprint > -1
+						end
+						check
+							character_map_compiled: a_character_map_index.has (a_fingerprint)
+						end
+						a_character_map := a_character_map_index.item (a_fingerprint)
+						check
+							valid_character_map: a_character_map /= Void
+						end
+						a_character_map_list.put_last (a_character_map)
+						a_cursor.forth
+					end
+					if not STRING_.same_string (a_method, "text") then
+						null_characters_used := True
+						-- TODO - QName support
+					end
+					create a_character_map_expander.make (a_character_map_list, null_characters_used)
+				end
 
 				if a_method.count = 0 then
-					create an_uncommitted_emitter.make (Current, a_result.stream, some_properties)
+					create an_uncommitted_emitter.make (Current, a_result.stream, some_properties, a_character_map_expander)
 					a_target := an_uncommitted_emitter
 
 					-- TODO character map expander
 				elseif STRING_.same_string (a_method, "html") then
-					create an_html_emitter.make (Current, a_result.stream, some_properties)
+					create an_html_emitter.make (Current, a_result.stream, some_properties, a_character_map_expander)
 					a_target := an_html_emitter
 					if some_properties.indent then
 						create an_html_indenter.make (Current, an_html_emitter, some_properties)
@@ -891,7 +933,7 @@ feature -- Implementation
 					end
 					-- TODO - character map expander stuff
 				elseif STRING_.same_string (a_method, "xml") then
-					create an_xml_emitter.make (Current, a_result.stream, some_properties)
+					create an_xml_emitter.make (Current, a_result.stream, some_properties, a_character_map_expander)
 					a_target := an_xml_emitter
 					if some_properties.indent then
 						create an_xml_indenter.make (Current, an_xml_emitter, some_properties)
@@ -900,7 +942,7 @@ feature -- Implementation
 					-- TODO: character map expander stuff and CDATA filter
 					
 				elseif STRING_.same_string (a_method, "xhtml") then
-					create an_xhtml_emitter.make (Current, a_result.stream, some_properties)
+					create an_xhtml_emitter.make (Current, a_result.stream, some_properties, a_character_map_expander)
 					a_target := an_xhtml_emitter
 					if some_properties.indent then
 						create an_html_indenter.make (Current, an_xhtml_emitter, some_properties)
@@ -908,7 +950,7 @@ feature -- Implementation
 					end
 					-- TODO: character map expander stuff
 				elseif STRING_.same_string (a_method, "text") then
-					create a_text_emitter.make (Current, a_result.stream, some_properties)
+					create a_text_emitter.make (Current, a_result.stream, some_properties, a_character_map_expander)
 					a_target := a_text_emitter
 					-- TODO: character map expander stuff
 				else

@@ -47,7 +47,6 @@ feature -- Test
 			an_output: XM_OUTPUT
 			a_resolver: XM_URI_EXTERNAL_RESOLVER
 			a_result: XM_XSLT_TRANSFORMATION_RESULT
-			an_output_string: STRING
 		do
 			conformance.set_basic_xslt_processor
 			create a_configuration.make_with_defaults
@@ -60,15 +59,14 @@ feature -- Test
 			assert ("Stylesheet not void", a_stylesheet_compiler.last_loaded_module /= Void)
 			a_transformer := a_stylesheet_compiler.new_transformer
 			assert ("transformer", a_transformer /= Void)
-			create an_output
-			create an_output_string.make (0)
 			a_transformer.set_initial_template ("first")
 			assert ("Initial template set", a_transformer.initial_template /= Void)
-			an_output.set_output_string (an_output_string)
+			create an_output
+			an_output.set_output_to_string
 			create a_result.make (an_output, "string:")
 			a_transformer.transform (Void, a_result)
 			assert ("Transform successfull", not a_transformer.is_error)
-			assert ("Correct result", STRING_.same_string (an_output_string, Reversed_output_string))
+			assert ("Correct result", STRING_.same_string (an_output.last_output, Reversed_output_string))
 		end
 
 	test_xslt_reverse is
@@ -87,7 +85,6 @@ feature -- Test
 			an_output: XM_OUTPUT
 			a_resolver: XM_URI_EXTERNAL_RESOLVER
 			a_result: XM_XSLT_TRANSFORMATION_RESULT
-			an_output_string: STRING
 		do
 			conformance.set_basic_xslt_processor
 			create a_configuration.make_with_defaults
@@ -100,15 +97,14 @@ feature -- Test
 			assert ("Stylesheet not void", a_stylesheet_compiler.last_loaded_module /= Void)
 			a_transformer := a_stylesheet_compiler.new_transformer
 			assert ("transformer", a_transformer /= Void)
-			create an_output
-			create an_output_string.make (0)
 			a_transformer.set_initial_template ("first")
 			assert ("Initial template set", a_transformer.initial_template /= Void)
-			an_output.set_output_string (an_output_string)
+			create an_output
+			an_output.set_output_to_string
 			create a_result.make (an_output, "string:")
 			a_transformer.transform (Void, a_result)
 			assert ("Transform successfull", not a_transformer.is_error)
-			assert ("Correct result", STRING_.same_string (an_output_string, Reversed_output_string))
+			assert ("Correct result", STRING_.same_string (an_output.last_output, Reversed_output_string))
 		end
 
 end

@@ -33,7 +33,7 @@ creation
 
 feature {NONE} -- Initialization
 
-	make (a_transformer: XM_XSLT_TRANSFORMER; an_outputter: XM_OUTPUT; some_output_properties: XM_XSLT_OUTPUT_PROPERTIES) is
+	make (a_transformer: XM_XSLT_TRANSFORMER; an_outputter: XM_OUTPUT; some_output_properties: XM_XSLT_OUTPUT_PROPERTIES; a_character_map_expander: XM_XSLT_CHARACTER_MAP_EXPANDER) is
 			-- Establish invariant.
 		require
 			transformer_not_void: a_transformer /= Void
@@ -43,12 +43,14 @@ feature {NONE} -- Initialization
 			transformer := a_transformer
 			outputter := an_outputter
 			output_properties := some_output_properties
+			character_map_expander := a_character_map_expander
 			system_id := "" -- TODO - set_system_id
 		ensure
 			not_yet_committed: not committed
 			transformer_set: transformer = a_transformer
 			outputter_set: outputter = an_outputter
 			output_properties_set: output_properties = some_output_properties
+			character_map_expander_set: character_map_expander = a_character_map_expander
 		end
 
 feature -- Events
@@ -228,7 +230,7 @@ feature {NONE} -- Implementation
 			an_xml_indenter: XM_XSLT_XML_INDENTER
 		do
 			output_properties.set_xml_defaults (0)
-			create an_xml_emitter.make (transformer, outputter, output_properties)
+			create an_xml_emitter.make (transformer, outputter, output_properties, character_map_expander)
 			base_receiver := an_xml_emitter
 			if output_properties.indent then
 				create an_xml_indenter.make (transformer, an_xml_emitter, output_properties)
@@ -250,7 +252,7 @@ feature {NONE} -- Implementation
 			an_html_indenter: XM_XSLT_HTML_INDENTER
 		do
 			output_properties.set_html_defaults (0)
-			create an_html_emitter.make (transformer, outputter, output_properties)
+			create an_html_emitter.make (transformer, outputter, output_properties, character_map_expander)
 			base_receiver := an_html_emitter
 			if output_properties.indent then
 				create an_html_indenter.make (transformer, an_html_emitter, output_properties)
@@ -270,7 +272,7 @@ feature {NONE} -- Implementation
 			an_html_indenter: XM_XSLT_HTML_INDENTER
 		do
 			output_properties.set_xhtml_defaults (0)
-			create an_xhtml_emitter.make (transformer, outputter, output_properties)
+			create an_xhtml_emitter.make (transformer, outputter, output_properties, character_map_expander)
 			base_receiver := an_xhtml_emitter
 			if output_properties.indent then
 				create an_html_indenter.make (transformer, an_xhtml_emitter, output_properties)

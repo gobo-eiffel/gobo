@@ -472,7 +472,7 @@ feature {NONE} -- Implementation
 		do
 			create args.make (1)
 			args.put (an_expression, 1)
-			a_function_call := function_factory.make_system_function ("boolean")
+			a_function_call := function_factory.system_function ("boolean")
 				check
 					function_call_not_void: a_function_call /= Void
 					-- as boolean must exist

@@ -193,7 +193,37 @@ feature -- Access
 		ensure
 			output_properties_not_void: Result /= Void
 		end
-			
+
+	character_map (a_fingerprint: INTEGER): XM_XSLT_CHARACTER_MAP is
+			-- Character map named by `a_fingerprint'
+		require
+			positive_fingerprint: a_fingerprint >= 0
+		local
+			a_cursor: DS_BILINKED_LIST_CURSOR [XM_XSLT_STYLE_ELEMENT]
+			a_character_map: XM_XSLT_CHARACTER_MAP 
+		do
+
+			-- Note that we process backwards, so as to find highest
+			--  import precedence definitions first.
+			-- This makes error reporting easier.
+
+			from
+				a_cursor := top_level_elements.new_cursor; a_cursor.finish
+			variant
+				a_cursor.index
+			until
+				a_cursor.before
+			loop
+				a_character_map ?= a_cursor.item
+				if a_character_map /= Void and then a_character_map.character_map_fingerprint = a_fingerprint then
+					Result := a_character_map
+					a_cursor.go_before
+				else
+					a_cursor.back
+				end
+			end
+		end
+
 feature -- Status report
 
 	any_compile_errors: BOOLEAN
@@ -664,6 +694,10 @@ feature -- Element change
 			another_cursor: DS_HASH_TABLE_CURSOR [XM_XSLT_TEMPLATE, INTEGER]
 			a_property_set: XM_XSLT_OUTPUT_PROPERTIES
 			a_message, a_system_id: STRING
+			a_character_map_index: DS_HASH_TABLE [DS_HASH_TABLE [STRING, INTEGER], INTEGER]
+			a_character_map: XM_XSLT_CHARACTER_MAP
+			a_character_code_map: DS_HASH_TABLE [STRING, INTEGER]
+			a_fingerprint: INTEGER
 		do
 			create last_compiled_executable.make (a_configuration, rule_manager, key_manager, decimal_format_manager, default_collation_name, collation_map, stripper_rules, strips_whitespace, module_list)
 
@@ -711,7 +745,27 @@ feature -- Element change
 					end
 					last_compiled_executable.set_named_template_table (a_compiled_templates_index)
 				end
-				-- TODO todo ("compile_stylesheet (character maps not yet supported)", True)
+
+				-- Build the index of named character maps.
+
+				a_character_map_index := last_compiled_executable.character_map_index
+				from
+					a_cursor := top_level_elements.new_cursor
+					a_cursor.start
+				variant
+					top_level_elements.count + 1 - a_cursor.index
+				until
+					a_cursor.after
+				loop
+					a_character_map ?= a_cursor.item
+					if a_character_map /= Void and then not a_character_map.is_redundant then
+						a_fingerprint := a_character_map.character_map_fingerprint
+						create a_character_code_map.make_with_equality_testers (10, string_equality_tester, Void)
+						a_character_map.assemble (a_character_code_map)
+						a_character_map_index.force (a_character_code_map, a_fingerprint)
+					end
+					a_cursor.forth
+				end
 			end
 		end
 

@@ -33,14 +33,14 @@ creation
 
 feature {NONE} -- Initialization
 
-	make (a_transformer: XM_XSLT_TRANSFORMER; an_outputter: XM_OUTPUT; some_output_properties: XM_XSLT_OUTPUT_PROPERTIES) is
+	make (a_transformer: XM_XSLT_TRANSFORMER; an_outputter: XM_OUTPUT; some_output_properties: XM_XSLT_OUTPUT_PROPERTIES; a_character_map_expander: XM_XSLT_CHARACTER_MAP_EXPANDER) is
 			-- Establish invariant.
 		require
 			transformer_not_void: a_transformer /= Void
 			outputter_not_void: an_outputter /= Void
 			output_properties_not_void: some_output_properties /= Void
 		do
-			make_xml (a_transformer, an_outputter, some_output_properties)
+			make_xml (a_transformer, an_outputter, some_output_properties, a_character_map_expander)
 			make_boolean_attributes
 			make_url_attributes
 		ensure

@@ -26,13 +26,15 @@ inherit
 
 	UC_SHARED_STRING_EQUALITY_TESTER
 
+	UT_URL_ENCODING
+
 creation
 
 	make
 
 feature {NONE} -- Initialization
 
-	make (a_transformer: XM_XSLT_TRANSFORMER; an_outputter: XM_OUTPUT; some_output_properties: XM_XSLT_OUTPUT_PROPERTIES) is
+	make (a_transformer: XM_XSLT_TRANSFORMER; an_outputter: XM_OUTPUT; some_output_properties: XM_XSLT_OUTPUT_PROPERTIES; a_character_map_expander: XM_XSLT_CHARACTER_MAP_EXPANDER) is
 			-- Establish invariant.
 		require
 			transformer_not_void: a_transformer /= Void
@@ -42,6 +44,7 @@ feature {NONE} -- Initialization
 			transformer := a_transformer
 			raw_outputter := an_outputter
 			output_properties := some_output_properties
+			character_map_expander := a_character_map_expander
 			is_empty := True
 			create element_qname_stack.make_default
 			element_qname_stack.set_equality_tester (string_equality_tester)
@@ -53,6 +56,7 @@ feature {NONE} -- Initialization
 			transformer_set: transformer = a_transformer
 			outputter_set: raw_outputter = an_outputter
 			output_properties_set: output_properties = some_output_properties
+			character_map_expander_set: character_map_expander = a_character_map_expander
 		end
 
 feature -- Events
@@ -203,6 +207,7 @@ feature -- Events
 			-- Notify character data.
 		local
 			a_bad_character: INTEGER
+			a_mapped_string: STRING
 		do
 			if not is_error then
 				if not is_open then
@@ -231,8 +236,11 @@ feature -- Events
 							output_escape (chars, False)
 						end
 					end
+				elseif character_map_expander /= Void then
+					a_mapped_string := character_map_expander.mapped_string (chars)
+					output_escape (normalized_string (a_mapped_string), False)
 				else
-					output_escape (chars, False)
+					output_escape (normalized_string (chars), False)					
 				end
 			end
 		end
@@ -467,30 +475,35 @@ feature {NONE} -- Implementation
 			value_not_void: a_value /= Void
 			document_opened: is_open
 		local
-			a_delimiter: STRING
+			a_delimiter, a_mapped_string: STRING
 		do
 			if not is_error then
 				output (an_attribute_qname)
 				if not is_error then
-					if are_no_special_characters (properties) then
+					if character_map_expander = Void then
+						a_mapped_string := a_value
+					else
+						a_mapped_string := character_map_expander.mapped_string (a_value)
+					end
+					if a_mapped_string = a_value and then are_no_special_characters (properties) then
 						output ("=")
 						if not is_error then output ("%"") end
-						if not is_error then output (a_value) end
+						if not is_error then output (normalized_string (a_value)) end
 						if not is_error then output ("%"") end
-					elseif are_null_markers_used (properties) then
-
+					elseif a_mapped_string /= a_value then
+						
 						-- Null (0) characters will be used before and after any section of
 						--  the value where escaping is to be disabled
 
 						output ("=")
 						if not is_error then
-							if a_value.index_of ('%"', 1) = 0 then
+							if a_mapped_string.index_of ('%"', 1) = 0 then
 								a_delimiter := "%""
 							else
 								a_delimiter := "'"
 							end
 							output (a_delimiter)
-							if not is_error then output_escape (a_value, True) end
+							if not is_error then output_escape (a_mapped_string, True) end
 							if not is_error then output (a_delimiter) end
 						end
 					else
@@ -535,8 +548,8 @@ feature {NONE} -- Implementation
 					elseif disabled then
 						output (a_character_string.substring (a_beyond_index, a_beyond_index))
 					elseif a_code > 127 then -- non-ASCII
-						todo ("output_escape (surrogates", True)
-						-- TODO - deal with (high?) surrogate characters
+						--todo ("output_escape (surrogates", True)
+						-- TODO - deal with (high?) surrogate characters ?? - I don't think so
 						output_character_reference (a_code)
 					else -- ASCII character needs escaping
 						if a_code = 60 then
@@ -587,9 +600,9 @@ feature {NONE} -- Implementation
 					else
 						an_index := an_index + 1
 					end
-				-- TODO: (high) surrogates
+				-- TODO: (high) surrogates - I don't think so.
 				elseif outputter.is_bad_character_code (a_code) then
-					todo ("maximal_ordinary_string (surrogate characters)", True)
+					--todo ("maximal_ordinary_string (surrogate characters)", True)
 					finished := True
 				else
 					an_index := an_index + 1
@@ -780,6 +793,20 @@ feature {NONE} -- Implementation
 			url_combinations_set.put ((an_element + "+" + an_attribute).as_lower)
 		end
 
+	unescaped_uri_characters: DS_HASH_SET [CHARACTER] is
+			-- Default character set not to escape
+		local
+			a_character_set: STRING
+		once
+			a_character_set := STRING_.concat (Rfc_lowalpha_characters, Rfc_upalpha_characters)
+			a_character_set := STRING_.appended_string (a_character_set, Rfc_digit_characters)
+			a_character_set := STRING_.appended_string (a_character_set, Rfc_mark_characters)
+			a_character_set := STRING_.appended_string (a_character_set, Rfc_reserved_characters)
+			a_character_set := STRING_.appended_string (a_character_set, Rfc_extra_reserved_characters)
+			a_character_set := STRING_.appended_string (a_character_set, "#")
+			Result := new_character_set (a_character_set)
+		end
+
 	escaped_url (a_url: STRING): STRING is
 			-- Escaped version of `a_url'.
 		require
@@ -787,24 +814,11 @@ feature {NONE} -- Implementation
 		local
 			an_index, a_code: INTEGER
 		do
-			create Result.make (a_url.count)
-			from
-				an_index := 1
-			variant
-				a_url.count + 1 - an_index
-			until
-				an_index > a_url.count
-			loop
-				a_code := a_url.item_code (an_index)
-				if a_code < 32 or else a_code > 126 then
-					todo ("escaped_url", True)
-				else
-					Result.append_character (a_url.item (an_index))
-				end
-				an_index := an_index + 1
-			end
-		ensure
-			escaped_url_not_void: Result /= Void
+
+			-- NULs are added to prevent further escaping
+
+			Result := STRING_.concat ("%U", escape_custom (utf8.to_utf8 (a_url), unescaped_uri_characters, False))
+			Result := STRING_.appended_string (Result, "%U")
 		end
 
 invariant

@@ -36,7 +36,7 @@ feature
 			a_uri_source, another_uri_source: XM_XSLT_URI_SOURCE
 			an_error_listener: XM_XSLT_DEFAULT_ERROR_LISTENER
 			an_output: XM_OUTPUT
-			an_output_string, a_test_string: STRING
+			a_test_string: STRING
 			a_resolver: XM_URI_EXTERNAL_RESOLVER
 			a_result: XM_XSLT_TRANSFORMATION_RESULT
 			a_test_file: KL_TEXT_INPUT_FILE
@@ -55,8 +55,7 @@ feature
 			assert ("transformer", a_transformer /= Void)
 			create another_uri_source.make ("./data/structure-index.xml")
 			create an_output
-			create an_output_string.make (0)
-			an_output.set_output_string (an_output_string)
+			an_output.set_output_to_string
 			create a_result.make (an_output, "string:")
 			a_transformer.transform (another_uri_source, a_result)
 			assert ("Transform successfull", not a_transformer.is_error)
@@ -74,7 +73,7 @@ feature
 				a_test_string := STRING_.appended_string (a_test_string, a_test_file.last_string)
 			end
 			a_test_file.close
-			assert ("Results same as test file", STRING_.same_string (a_test_string, an_output_string))
+			assert ("Results same as test file", STRING_.same_string (a_test_string, an_output.last_output))
 		end
 
 	test_transform2xml is
@@ -86,7 +85,7 @@ feature
 			a_uri_source, another_uri_source: XM_XSLT_URI_SOURCE
 			an_error_listener: XM_XSLT_DEFAULT_ERROR_LISTENER
 			an_output: XM_OUTPUT
-			an_output_string, a_test_string: STRING
+			a_test_string: STRING
 			a_resolver: XM_URI_EXTERNAL_RESOLVER
 			a_result: XM_XSLT_TRANSFORMATION_RESULT
 			a_test_file: KL_BINARY_INPUT_FILE
@@ -105,8 +104,7 @@ feature
 			assert ("transformer", a_transformer /= Void)
 			create another_uri_source.make ("./data/structure-index.xml")
 			create an_output
-			create an_output_string.make (0)
-			an_output.set_output_string (an_output_string)
+			an_output.set_output_to_string
 			create a_result.make (an_output, "string:")
 			a_transformer.transform (another_uri_source, a_result)
 			assert ("Transform successfull", not a_transformer.is_error)
@@ -124,7 +122,7 @@ feature
 				a_test_string := STRING_.appended_string (a_test_string, a_test_file.last_string)
 			end
 			a_test_file.close
-			assert ("Results same as test file", STRING_.same_string (a_test_string, an_output_string))
+			assert ("Results same as test file", STRING_.same_string (a_test_string, an_output.last_output))
 		end
 
 	test_transform2xhtml is
@@ -136,7 +134,7 @@ feature
 			a_uri_source, another_uri_source: XM_XSLT_URI_SOURCE
 			an_error_listener: XM_XSLT_DEFAULT_ERROR_LISTENER
 			an_output: XM_OUTPUT
-			an_output_string, a_test_string: STRING
+			a_test_string: STRING
 			a_resolver: XM_URI_EXTERNAL_RESOLVER
 			a_result: XM_XSLT_TRANSFORMATION_RESULT
 			a_test_file: KL_BINARY_INPUT_FILE
@@ -155,8 +153,7 @@ feature
 			assert ("transformer", a_transformer /= Void)
 			create another_uri_source.make ("./data/structure-index.xml")
 			create an_output
-			create an_output_string.make (0)
-			an_output.set_output_string (an_output_string)
+			an_output.set_output_to_string
 			create a_result.make (an_output, "string:")
 			a_transformer.transform (another_uri_source, a_result)
 			assert ("Transform successfull", not a_transformer.is_error)
@@ -174,7 +171,7 @@ feature
 				a_test_string := STRING_.appended_string (a_test_string, a_test_file.last_string)
 			end
 			a_test_file.close
-			assert ("Results same as test file", STRING_.same_string (a_test_string, an_output_string))
+			assert ("Results same as test file", STRING_.same_string (a_test_string, an_output.last_output))
 		end
 
 end

@@ -75,7 +75,7 @@ feature -- Evaluation
 				an_outputter.set_output_standard_error
 				create some_output_properties.make (-1000000)
 				some_output_properties.set_omit_xml_declaration (True, -1000000)
-				create a_message_emitter.make (a_transformer, an_outputter, some_output_properties)
+				create a_message_emitter.make (a_transformer, an_outputter, some_output_properties, Void)
 				a_transformer.set_message_emitter (a_message_emitter)
 			end
 			a_message_emitter.set_output_properties (some_output_properties)

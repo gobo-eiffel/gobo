@@ -40,7 +40,6 @@ feature -- Test
 			an_output: XM_OUTPUT
 			a_resolver: XM_URI_EXTERNAL_RESOLVER
 			a_result: XM_XSLT_TRANSFORMATION_RESULT
-			an_output_string: STRING
 		do
 			conformance.set_basic_xslt_processor
 			create a_configuration.make_with_defaults
@@ -53,8 +52,7 @@ feature -- Test
 			assert ("transformer", a_transformer /= Void)
 			create another_uri_source.make ("./data/document.xhtml")
 			create an_output
-			create an_output_string.make (0)
-			an_output.set_output_string (an_output_string)
+			an_output.set_output_to_string
 			create a_result.make (an_output, "string:")
 			a_transformer.transform (another_uri_source, a_result)
 			assert ("Transform successfull", not a_transformer.is_error)
@@ -78,7 +76,6 @@ feature -- Test
 			an_output: XM_OUTPUT
 			a_resolver: XM_URI_EXTERNAL_RESOLVER
 			a_result: XM_XSLT_TRANSFORMATION_RESULT
-			an_output_string: STRING
 		do
 			conformance.set_basic_xslt_processor
 			create a_configuration.make_with_defaults
@@ -91,8 +88,7 @@ feature -- Test
 			assert ("transformer", a_transformer /= Void)
 			create another_uri_source.make ("./data/document.xhtml")
 			create an_output
-			create an_output_string.make (0)
-			an_output.set_output_string (an_output_string)
+			an_output.set_output_to_string
 			create a_result.make (an_output, "string:")
 			a_transformer.transform (another_uri_source, a_result)
 			assert ("Transform not successfull", a_transformer.is_error)
@@ -112,7 +108,6 @@ feature -- Test
 			an_output: XM_OUTPUT
 			a_resolver: XM_URI_EXTERNAL_RESOLVER
 			a_result: XM_XSLT_TRANSFORMATION_RESULT
-			an_output_string: STRING
 		do
 			conformance.set_basic_xslt_processor
 			create a_configuration.make_with_defaults
@@ -125,8 +120,7 @@ feature -- Test
 			assert ("transformer", a_transformer /= Void)
 			create another_uri_source.make ("./data/document.xhtml")
 			create an_output
-			create an_output_string.make (0)
-			an_output.set_output_string (an_output_string)
+			an_output.set_output_to_string
 			create a_result.make (an_output, "string:")
 			a_transformer.transform (another_uri_source, a_result)
 			assert ("Transform not successfull", a_transformer.is_error)

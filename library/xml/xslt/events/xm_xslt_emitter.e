@@ -26,8 +26,21 @@ feature -- Access
 	output_properties: XM_XSLT_OUTPUT_PROPERTIES
 			-- Output properties
 
-	-- TODO character_set: XM_XSLT_CHARACTER_SET
-	
+	character_map_expander: XM_XSLT_CHARACTER_MAP_EXPANDER
+			-- Optional character-map expander 
+
+	normalized_string (a_value: STRING) : STRING is
+			-- Unicode-normalized version of `a_value'
+		require
+			value_not_void: a_value /= Void
+			-- and then URI escaping and character mapping has not been performed
+		do
+
+			-- TODO
+
+			Result := a_value
+		end
+
 feature -- Status report
 
 	is_error: BOOLEAN

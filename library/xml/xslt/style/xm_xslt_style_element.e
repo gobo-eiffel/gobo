@@ -1338,6 +1338,9 @@ feature -- Element change
 								report_compile_error ("In exclude-result-prefixes, cannot mix #all with other values")
 								a_cursor.go_after
 							end
+							if not shared_name_pool.is_code_for_prefix_allocated (an_exclusion) then
+								shared_name_pool.allocate_code_for_prefix (an_exclusion)
+							end
 							excluded_namespaces.put_last (uri_code_for_prefix (an_exclusion))
 							a_cursor.forth
 						end

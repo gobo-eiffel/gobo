@@ -38,6 +38,8 @@ feature {NONE} -- Initialization
 
 	make_secondary_stream (a_stream: XM_OUTPUT; an_output_stream: KI_CHARACTER_OUTPUT_STREAM; a_system_id:STRING) is
 			-- Create a stream result.
+			-- This is used by XM_XSLT_OUTPUT_URI_FILE_SCHEME_RESOLVER
+			--  so that the file can be closed correctly.
 		require
 			stream_not_void: a_stream /= Void
 			system_id_not_void: a_system_id /= Void

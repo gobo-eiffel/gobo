@@ -410,7 +410,7 @@ feature {XM_CATALOG, XM_TEST_BOOTSTRAP_RESOLVER, TS_TEST_CASE} -- Implementation
 			a_cursor_2: DS_ARRAYED_LIST_CURSOR [STRING]
 			a_catalog: XM_CATALOG
 		do
-			an_fsi := escape_custom (a_system_id, unescaped_uri_characters, False)
+			an_fsi := escape_custom (utf8.to_utf8 (a_system_id), unescaped_uri_characters, False)
 			debug_message (8, "Fsi normalized to", an_fsi)
 			
 			-- first search the system catalogs
@@ -478,7 +478,7 @@ feature {XM_CATALOG, XM_TEST_BOOTSTRAP_RESOLVER, TS_TEST_CASE} -- Implementation
 			a_cursor_2: DS_ARRAYED_LIST_CURSOR [STRING]
 			a_catalog: XM_CATALOG
 		do
-			a_uri := escape_custom (a_uri_reference, unescaped_uri_characters, False)
+			a_uri := escape_custom (utf8.to_utf8 (a_uri_reference), unescaped_uri_characters, False)
 			debug_message (8, "URI normalized to", a_uri)
 			
 			-- first search the system catalogs

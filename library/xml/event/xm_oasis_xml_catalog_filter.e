@@ -2,10 +2,10 @@ indexing
 
 	description:
 
-		"Pretty printers as in James Clark's canonical XML"
+	"Filters that read oasis-xml-catalog PIs and update the catalog manager."
 
 	library: "Gobo Eiffel XML Library"
-	copyright: "Copyright (c) 2002, Eric Bezault and others"
+	copyright: "Copyright (c) 2004, Colin Adams and others"
 	license: "Eiffel Forum License v2 (see forum.txt)"
 	date: "$Date$"
 	revision: "$Revision$"

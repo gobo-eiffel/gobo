@@ -34,8 +34,7 @@ feature
 			a_transformer: XM_XSLT_TRANSFORMER
 			a_uri_source, another_uri_source: XM_XSLT_URI_SOURCE
 			an_error_listener: XM_XSLT_DEFAULT_ERROR_LISTENER
-			an_output: XM_OUTPUT
-			an_output_string, another_output_string: STRING
+			an_output, another_output: XM_OUTPUT
 			a_result: XM_XSLT_TRANSFORMATION_RESULT
 		do
 			conformance.set_basic_xslt_processor
@@ -51,24 +50,20 @@ feature
 			assert ("transformer", a_transformer /= Void)
 			create another_uri_source.make ("./data/test1.xml")
 			create an_output
-			create an_output_string.make (0)
-			an_output.set_output_string (an_output_string)
-			create a_result.make (an_output, "string:")
+			an_output.set_output_to_string
+			create a_result.make (an_output, "string:/one")
 			a_transformer.transform (another_uri_source, a_result)
 			assert ("Transform successfull", not a_transformer.is_error)
 			a_configuration.use_tiny_tree_model (True)
 			a_transformer := a_stylesheet_compiler.new_transformer
 			assert ("transformer", a_transformer /= Void)
 			create another_uri_source.make ("./data/test1.xml")
-			create an_output
-			create another_output_string.make (0)
-			an_output.set_output_string (another_output_string)
-			create a_result.make (an_output, "string:")
+			create another_output
+			another_output.set_output_to_string
+			create a_result.make (another_output, "string:/two")
 			a_transformer.transform (another_uri_source, a_result)
 			assert ("Transform successfull", not a_transformer.is_error)
---			print (an_output_string);print ("%N%N")
---			print (another_output_string);print ("%N%N")
-			assert ("Files are canonically the same", STRING_.same_string (an_output_string, another_output_string))
+			assert ("Files are canonically the same", STRING_.same_string (an_output.last_output, another_output.last_output))
 		end
 
 end

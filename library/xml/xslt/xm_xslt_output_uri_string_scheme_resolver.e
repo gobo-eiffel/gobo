@@ -44,11 +44,9 @@ feature -- Action
 			-- Resolve `a_uri'.
 		local
 			a_stream: XM_OUTPUT
-			a_string: STRING
 		do
 			create a_stream
-			create a_string.make(0)
-			a_stream.set_output_string (a_string)
+			a_stream.set_output_to_string
 			create last_result.make (a_stream, a_uri.full_reference)
 		end
 
