@@ -4,7 +4,7 @@ indexing
 
 		"Extendible containers"
 
-	note:
+	remark:
 
 		"When implementation permits, items inserted with the %
 		%routines provided in this class will be internally stored %

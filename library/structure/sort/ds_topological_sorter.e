@@ -4,7 +4,7 @@ indexing
 
 		"Topological sorters"
 
-	note:
+	remark:
 
 		"Use the algorithm described by D. Knuth in 'The Art of %
 		%Computer Programming', Vol.1 3rd ed. p.265. The detection %

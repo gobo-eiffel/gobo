@@ -4,7 +4,7 @@ indexing
 
 		"PCRE byte code constants"
 
-	note:
+	remark:
 
 		"The maximizing and minimizing versions of opcodes (e.g. 'op_foo' %
 		%and 'op_minfoo') must come in pair, with the minimizing in second %

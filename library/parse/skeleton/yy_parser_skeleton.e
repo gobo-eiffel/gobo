@@ -4,7 +4,7 @@ indexing
 
 		"Skeletons for parsers implemented with tables"
 
-	note:
+	remark:
 
 		"To be used with 'geyacc --old_typing'. Use YY_NEW_PARSER_SKELETON and %
 		%'geyacc --new_typing' instead, or switch to YY_OLD_PARSER_SKELETON."

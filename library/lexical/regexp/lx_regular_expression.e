@@ -4,7 +4,7 @@ indexing
 
 		"Regular expressions"
 
-	note:
+	remark:
 
 		"Pattern syntax:                                                       %
 		% x          match the character 'x'.                                  %

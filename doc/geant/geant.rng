@@ -401,7 +401,7 @@
 				</attribute>
 				<choice>
 					<attribute name="cluster">
-						<!-- NOTE: this attribute is obsolete. Use attribute 'library' instead -->
+						<!-- Note: this attribute is obsolete. Use attribute 'library' instead -->
 						<!-- runtime evaluation
 						<choice>
 							<value>ise</value>

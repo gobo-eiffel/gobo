@@ -1261,13 +1261,13 @@ SE:
   false -> wedit (no)
 -------------------------------------------------------------
 
-Note: When precompiling with Visual Eiffel, only the
+NOTE: When precompiling with Visual Eiffel, only the
 following options are supported by the compiler:
 
 . assertions on/off
 . debug on/off
 
-Note2: the following ISE Eiffel options are not supported
+NOTE2: the following ISE Eiffel options are not supported
 yet by 'gexace':
 
 . disabled_debug (...)

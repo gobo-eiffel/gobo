@@ -42,7 +42,7 @@
 				<term>exit_code_variable</term>
 				<listitem>
 					<para><emphasis>Description: </emphasis>Name of variable holding the process's return code after it's run
-						NOTE: This attribute can only be used when no fileset is used as nested argument
+						Note: This attribute can only be used when no fileset is used as nested argument
 					</para>
 				</listitem>
 				<listitem>
@@ -56,7 +56,7 @@
 				<term>accept_errors</term>
 				<listitem>
 					<para><emphasis>Description: </emphasis>Should executable return codes different from zero be accepted?
-						NOTE: Use this attribute only if a nested fileset is specified. Usage without one is still supported
+						Note: Use this attribute only if a nested fileset is specified. Usage without one is still supported
 						but obsolete. Use attribute 'exit_code_variable' instead and set it to a dummy value if you are not
 						interested in the return code.
 					</para>

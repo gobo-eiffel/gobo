@@ -42,7 +42,7 @@ feature -- Access
 
 			a_level := document.depth_of (node_number)
 			
-			-- note, we can't rely on the value being contiguously stored because of whitespace
+			-- Note, we can't rely on the value being contiguously stored because of whitespace
 			-- nodes: the data for these may still be present
 			-- Also there may be processing-instruction and comment nodes present.
 

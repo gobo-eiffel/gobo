@@ -4,7 +4,7 @@ indexing
 
 		"Time durations"
 
-	note: "Do not take leap seconds into account"
+	remark: "Do not take leap seconds into account"
 	library: "Gobo Eiffel Time Library"
 	copyright: "Copyright (c) 2000-2005, Eric Bezault and others"
 	license: "Eiffel Forum License v2 (see forum.txt)"

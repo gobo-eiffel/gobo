@@ -221,8 +221,8 @@ feature {NONE} -- Implementation
 			checked_expression := a_supplied_expression
 
 			-- Unless the required item type and content type are Any_item (no constraints)
-			--  check the static item type against the supplied expression.
-			-- NOTE: we don't currently do any static inference regarding the content type
+			-- check the static item type against the supplied expression.
+			-- Note: we don't currently do any static inference regarding the content type
 
 			if not item_type_ok then
 				supplied_item_type := a_supplied_expression.item_type

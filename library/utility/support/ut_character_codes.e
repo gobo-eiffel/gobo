@@ -4,7 +4,8 @@ indexing
 
 		"Character codes"
 
-	note:
+	remark:
+
 		"Character codes are declared as integer constants such as %
 		% Lower_a_code: INTEGER is 97 %
 		%rather than once functions such as %

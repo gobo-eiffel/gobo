@@ -4,7 +4,7 @@ indexing
 
 		"Wildcards used in filename pattern matching"
 
-	note:
+	remark:
 
 		"Pattern syntax:                                                       %
 		% x          match the character 'x'.                                  %

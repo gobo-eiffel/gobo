@@ -4,7 +4,7 @@ indexing
 
 		"Regular expressions implemented with DFA engines"
 
-	note:
+	remark:
 
 		"Pattern syntax:                                                       %
 		% x          match the character 'x'.                                  %

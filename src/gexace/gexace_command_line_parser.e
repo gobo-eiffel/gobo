@@ -113,7 +113,7 @@ feature -- Matching
 	match_long_option (an_option_name: STRING): BOOLEAN is
 			-- Is there a next option on the command-line and
 			-- is this option a long option whose name is
-			-- `an_option_name' (note that `an_option_name'
+			-- `an_option_name' (Note that `an_option_name'
 			-- does not contain the leading '--' characters)?
 		require
 			an_option_name_not_void: an_option_name /= Void

@@ -94,7 +94,7 @@
 				<listitem>
 					<para><emphasis>Description: </emphasis>Should target be executed only once?
 						If set to 'true' this target will be executed only on it's first invocation.
-						NOTE: Use this attribute instead of the obsolete attribute 'depend'
+						Note: Use this attribute instead of the obsolete attribute 'depend'
 					</para>
 				</listitem>
 				<listitem>

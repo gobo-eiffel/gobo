@@ -4,7 +4,7 @@ indexing
 
 		"Skeletons for parsers implemented with tables"
 
-	note:
+	remark:
 
 		"To be used with 'geyacc --new_typing'."
 

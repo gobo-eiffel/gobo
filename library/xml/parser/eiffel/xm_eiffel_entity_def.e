@@ -4,7 +4,7 @@ indexing
 
 		"Entity definition and scanner"
 
-	note:
+	remark:
 
 		"This class represents an entity name/type and also a scanner for this %
 		%entity. The two concepts could be distinct, but this helps enforcing %

@@ -4,7 +4,7 @@ indexing
 
 		"UTC system clocks (precision to the millisecond)"
 
-	note:
+	remark:
 
 		"With SmartEiffel under Windows the millisecond part may be stuck to zero."
 

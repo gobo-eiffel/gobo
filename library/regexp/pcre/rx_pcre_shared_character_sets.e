@@ -4,7 +4,7 @@ indexing
 
 		"PCRE shared character sets"
 
-	note:
+	remark:
 
 		"Each regexp compiler and matcher uses these character sets to %
 		%classify a character type. Make your own changes to these sets %
