@@ -54,18 +54,22 @@ feature -- Execution
 					is_verbose := True
 				elseif equal (arg, "--cat") then
 					is_cat := True
+				elseif equal (arg, "--forget") then
+					is_forget := True
 				elseif equal (arg, "--flat") then
 					is_flat := True
+				elseif equal (arg, "--compile") then
+					do_compile := True
 				elseif i = nb then
 					a_filename := arg
 				else
-					std.error.put_line ("usage: gelint [--verbose][--all_breaks][--cat][--flat] filename")
+					std.error.put_line ("usage: gelint [--verbose][--all_breaks][--cat][--forget][--flat] filename")
 					Exceptions.die (1)
 				end
 				i := i + 1
 			end
 			if a_filename = Void then
-				std.error.put_line ("usage: gelint [--verbose][--all_breaks][--cat][--flat] filename")
+				std.error.put_line ("usage: gelint [--verbose][--all_breaks][--cat][--forget][--flat] filename")
 				Exceptions.die (1)
 			else
 				create a_file.make (a_filename)
@@ -81,10 +85,10 @@ feature -- Execution
 						end
 						if all_breaks then
 							create an_xace_ast_factory.make
+							create an_xace_parser.make_with_variables_and_factory (an_xace_variables, an_xace_ast_factory, an_xace_error_handler)
 							create an_eiffel_ast_factory.make
 							an_eiffel_ast_factory.set_keep_all_breaks (True)
-							an_xace_ast_factory.set_ast_factory (an_eiffel_ast_factory)
-							create an_xace_parser.make_with_variables_and_factory (an_xace_variables, an_xace_ast_factory, an_xace_error_handler)
+							an_xace_parser.set_eiffel_ast_factory (an_eiffel_ast_factory)
 						else
 							create an_xace_parser.make_with_variables (an_xace_variables, an_xace_error_handler)
 						end
@@ -120,6 +124,7 @@ feature -- Execution
 				end
 			end
 			debug ("stop")
+				std.output.put_line ("Press Enter...")
 				io.read_line
 			end
 		end
@@ -129,7 +134,9 @@ feature -- Status report
 	all_breaks: BOOLEAN
 	is_verbose: BOOLEAN
 	is_cat: BOOLEAN
+	is_forget: BOOLEAN
 	is_flat: BOOLEAN
+	do_compile: BOOLEAN
 			-- Command-line options
 
 feature {NONE} -- Processing
@@ -157,6 +164,7 @@ feature {NONE} -- Processing
 			else
 				a_universe.set_cat_enabled (False)
 			end
+			a_universe.set_forget_enabled (is_forget)
 			a_universe.compile (is_flat)
 		end
 
