@@ -57,6 +57,28 @@ feature -- Access
 	local_keyword: ET_KEYWORD
 			-- 'local' keyword
 
+	index_of (a_name: ET_IDENTIFIER): INTEGER is
+			-- Index of local variable `a_name';
+			-- 0 if it does not exist
+		require
+			a_name_not_void: a_name /= Void
+		local
+			i, nb: INTEGER
+		do
+			nb := count
+			from i := 1 until i > nb loop
+				if local_variable (i).name.same_identifier (a_name) then
+					Result := i
+					i := nb + 1 -- Jump out of the loop.
+				else
+					i := i + 1
+				end
+			end
+		ensure
+			index_large_enough: Result >= 0
+			index_small_enough: Result <= count
+		end
+
 	position: ET_POSITION is
 			-- Position of first character of
 			-- current node in source code
