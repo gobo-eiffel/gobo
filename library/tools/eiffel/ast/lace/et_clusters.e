@@ -97,8 +97,60 @@ feature -- Removal
 
 feature -- Parsing
 
+	preparse_shallow (a_universe: ET_UNIVERSE) is
+			-- Traverse current clusters and build a mapping between
+			-- class names and filenames in each cluster. Classes
+			-- are added to `a_universe.classes', but are not parsed.
+			-- Filenames are supposed to be of the form 'classname.e'.
+		require
+			a_universe_not_void: a_universe /= Void
+		local
+			i, nb: INTEGER
+		do
+			nb := clusters.count
+			from i := 1 until i > nb loop
+				clusters.item (i).preparse_shallow (a_universe)
+				i := i + 1
+			end
+		end
+
+	preparse_single (a_universe: ET_UNIVERSE) is
+			-- Traverse current clusters and build a mapping between
+			-- class names and filenames in each cluster. Classes
+			-- are added to `a_universe.classes', but are not parsed.
+			-- Each Eiffel file is supposed to contain exactly
+			-- one class.
+		require
+			a_universe_not_void: a_universe /= Void
+		local
+			i, nb: INTEGER
+		do
+			nb := clusters.count
+			from i := 1 until i > nb loop
+				clusters.item (i).preparse_single (a_universe)
+				i := i + 1
+			end
+		end
+
+	preparse_multiple (a_universe: ET_UNIVERSE) is
+			-- Traverse current clusters and build a mapping between
+			-- class names and filenames in each cluster. Classes
+			-- are added to `a_universe.classes', but are not parsed.
+			-- Each Eiffel file can contain more than one class.
+		require
+			a_universe_not_void: a_universe /= Void
+		local
+			i, nb: INTEGER
+		do
+			nb := clusters.count
+			from i := 1 until i > nb loop
+				clusters.item (i).preparse_multiple (a_universe)
+				i := i + 1
+			end
+		end
+
 	parse_all (a_universe: ET_UNIVERSE) is
-			-- Parse all clusters in `a_universe'.
+			-- Parse all classes in current clusters.
 		require
 			a_universe_not_void: a_universe /= Void
 		local
@@ -108,28 +160,6 @@ feature -- Parsing
 			from i := 1 until i > nb loop
 				clusters.item (i).parse_all (a_universe)
 				i := i + 1
-			end
-		end
-
-	parse_class (a_class: ET_CLASS; a_filename: STRING) is
-			-- Try to parse `a_class' in `a_filename' in current
-			-- clusters, or recursively in subclusters until the
-			-- class is found.
-		require
-			a_class_not_void: a_class /= Void
-			a_class_not_parsed: not a_class.is_parsed
-			a_filename_not_void: a_filename /= Void
-		local
-			i, nb: INTEGER
-		do
-			nb := clusters.count
-			from i := 1 until i > nb loop
-				clusters.item (i).parse_class (a_class, a_filename)
-				if a_class.is_parsed then
-					i := nb + 1 -- Jump out of the loop.
-				else
-					i := i + 1
-				end
 			end
 		end
 

@@ -6,7 +6,7 @@
 		description: "Eiffel Ant file for the Gobo Eiffel Tools Library"
 		library:     "Gobo Eiffel Tools Library"
 		author:      "Eric Bezault [ericb@gobosoft.com]"
-		copyright:   "Copyright (c) 2001, Eric Bezault and others"
+		copyright:   "Copyright (c) 2001-2002, Eric Bezault and others"
 		license:     "Eiffel Forum Freeware License v1 (see forum.txt)"
 		date:        "$Date$"
 		revision:    "$Revision$"
@@ -27,6 +27,7 @@
 
 		<geant target="eiffel_scanner"/>
 		<geant target="eiffel_parser"/>
+		<geant target="eiffel_preparser"/>
 		<geant target="lace_scanner"/>
 		<geant target="lace_parser"/>
 	</target>
@@ -48,6 +49,7 @@
 		<delete file="eiffel/parser/et_eiffel_scanner.e"/>
 		<delete file="eiffel/parser/et_eiffel_parser.e"/>
 		<delete file="eiffel/parser/et_eiffel_tokens.e"/>
+		<delete file="eiffel/parser/et_eiffel_preparser.e"/>
 		<delete file="lace/parser/et_lace_scanner.e"/>
 		<delete file="lace/parser/et_lace_parser.e"/>
 		<delete file="lace/parser/et_lace_tokens.e"/>
@@ -62,6 +64,10 @@
 
 	<target name="eiffel_parser" dir="eiffel/parser">
 		<geyacc input="et_eiffel_parser.y" tokens="ET_EIFFEL_TOKENS" output="et_eiffel_parser.e" separate_actions="true"/>
+	</target>
+
+	<target name="eiffel_preparser" dir="eiffel/parser">
+		<gelex input="et_eiffel_preparser.l"/>
 	</target>
 
 	<target name="lace_scanner" dir="lace/parser">

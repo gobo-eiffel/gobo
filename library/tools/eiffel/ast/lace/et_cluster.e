@@ -203,8 +203,160 @@ feature {ET_CLUSTER, ET_CLUSTERS} -- Setting
 
 feature -- Parsing
 
+	preparse_shallow (a_universe: ET_UNIVERSE) is
+			-- Traverse current cluster and build a mapping between
+			-- class names and filenames. Classes are added to
+			-- `a_universe.classes', but are not parsed.
+			-- Filenames are supposed to be of the form 'classname.e'.
+		require
+			a_universe_not_void: a_universe /= Void
+		local
+			a_filename: STRING
+			dir_name: STRING
+			dir: KL_DIRECTORY
+			s: STRING
+			a_classname: ET_IDENTIFIER
+			a_class: ET_CLASS
+			a_cluster: ET_CLUSTER
+		do
+			if not is_abstract then
+				dir_name := Execution_environment.interpreted_string (full_pathname)
+				!! dir.make (dir_name)
+				dir.open_read
+				if dir.is_open_read then
+					from dir.read_entry until dir.end_of_input loop
+						s := dir.last_entry
+						if is_valid_eiffel_filename (s) and has_eiffel_extension (s) then
+							!! a_classname.make (s.substring (1, s.count - 2))
+							a_class := a_universe.eiffel_class (a_classname)
+							if a_class.is_preparsed then
+								-- TODO:
+							else
+								a_filename := clone (dir_name)
+								a_filename.append_character ('/')
+								a_filename.append_string (s)
+								a_class.set_filename (a_filename)
+								a_class.set_cluster (Current)
+							end
+						elseif is_recursive and then is_valid_directory_name (s) then
+							a_cluster := new_recursive_cluster (s)
+							a_cluster.preparse_shallow (a_universe)
+						end
+						dir.read_entry
+					end
+					dir.close
+				else
+					-- TODO.
+				end
+			end
+			if subclusters /= Void then
+				subclusters.preparse_shallow (a_universe)
+			end
+		end
+
+	preparse_single (a_universe: ET_UNIVERSE) is
+			-- Traverse current cluster and build a mapping between
+			-- class names and filenames. Classes are added to 
+			-- `a_universe.classes', but are not parsed.
+			-- Each Eiffel file is supposed to contain exactly
+			-- one class.
+		require
+			a_universe_not_void: a_universe /= Void
+		local
+			a_filename: STRING
+			a_file: KL_TEXT_INPUT_FILE
+			dir_name: STRING
+			dir: KL_DIRECTORY
+			s: STRING
+			a_cluster: ET_CLUSTER
+		do
+			if not is_abstract then
+				dir_name := Execution_environment.interpreted_string (full_pathname)
+				!! dir.make (dir_name)
+				dir.open_read
+				if dir.is_open_read then
+					from dir.read_entry until dir.end_of_input loop
+						s := dir.last_entry
+						if is_valid_eiffel_filename (s) then
+							a_filename := clone (dir_name)
+							a_filename.append_character ('/')
+							a_filename.append_string (s)
+							!! a_file.make (a_filename)
+							a_file.open_read
+							if a_file.is_open_read then
+								a_universe.preparse_single_file (a_file, a_filename, Current)
+								a_file.close
+							else
+								-- TODO.
+							end
+						elseif is_recursive and then is_valid_directory_name (s) then
+							a_cluster := new_recursive_cluster (s)
+							a_cluster.preparse_single (a_universe)
+						end
+						dir.read_entry
+					end
+					dir.close
+				else
+					-- TODO.
+				end
+			end
+			if subclusters /= Void then
+				subclusters.preparse_single (a_universe)
+			end
+		end
+
+	preparse_multiple (a_universe: ET_UNIVERSE) is
+			-- Traverse current cluster and build a mapping between
+			-- class names and filenames. Classes are added to
+			-- `a_universe.classes', but are not parsed.
+			-- Each Eiffel file can contain more than one class.
+		require
+			a_universe_not_void: a_universe /= Void
+		local
+			a_filename: STRING
+			a_file: KL_TEXT_INPUT_FILE
+			dir_name: STRING
+			dir: KL_DIRECTORY
+			s: STRING
+			a_cluster: ET_CLUSTER
+		do
+			if not is_abstract then
+				dir_name := Execution_environment.interpreted_string (full_pathname)
+				!! dir.make (dir_name)
+				dir.open_read
+				if dir.is_open_read then
+					from dir.read_entry until dir.end_of_input loop
+						s := dir.last_entry
+						if is_valid_eiffel_filename (s) then
+							a_filename := clone (dir_name)
+							a_filename.append_character ('/')
+							a_filename.append_string (s)
+							!! a_file.make (a_filename)
+							a_file.open_read
+							if a_file.is_open_read then
+								a_universe.preparse_multiple_file (a_file, a_filename, Current)
+								a_file.close
+							else
+								-- TODO.
+							end
+						elseif is_recursive and then is_valid_directory_name (s) then
+							a_cluster := new_recursive_cluster (s)
+							a_cluster.preparse_multiple (a_universe)
+						end
+						dir.read_entry
+					end
+					dir.close
+				else
+					-- TODO.
+				end
+			end
+			if subclusters /= Void then
+				subclusters.preparse_multiple (a_universe)
+			end
+		end
+
 	parse_all (a_universe: ET_UNIVERSE) is
-			-- Parse all classes in cluster.
+			-- Parse all classes in current cluster.
 		require
 			a_universe_not_void: a_universe /= Void
 		local
@@ -250,63 +402,6 @@ feature -- Parsing
 			end
 		end
 
-	parse_class (a_class: ET_CLASS; a_filename: STRING) is
-			-- Try to parse `a_class' in `a_filename' in current
-			-- cluster, or recursively in subclusters until the
-			-- class is found.
-		require
-			a_class_not_void: a_class /= Void
-			a_class_not_parsed: not a_class.is_parsed
-			a_filename_not_void: a_filename /= Void
-		local
-			a_full_filename: STRING
-			a_file: KL_TEXT_INPUT_FILE
-			dir_name: STRING
-			dir: KL_DIRECTORY
-			s: STRING
-			a_cluster: ET_CLUSTER
-		do
-			if not is_abstract then
-				dir_name := Execution_environment.interpreted_string (full_pathname)
-				if is_valid_eiffel_filename (a_filename) then
-					a_full_filename := clone (dir_name)
-					a_full_filename.append_character ('/')
-					a_full_filename.append_string (a_filename)
-					!! a_file.make (a_full_filename)
-					a_file.open_read
-					if a_file.is_open_read then
-						a_class.universe.parse_file (a_file, a_full_filename, Current)
-						a_file.close
-					end
-				end
-				if not a_class.is_parsed and is_recursive then
-					!! dir.make (dir_name)
-					dir.open_read
-					if dir.is_open_read then
-						from
-							dir.read_entry
-						until
-							a_class.is_parsed or
-							dir.end_of_input
-						loop
-							s := dir.last_entry
-							if is_valid_directory_name (s) then
-								a_cluster := new_recursive_cluster (s)
-								a_cluster.parse_class (a_class, a_filename)
-							end
-							dir.read_entry
-						end
-						dir.close
-					else
-						-- TODO.
-					end
-				end
-			end
-			if not a_class.is_parsed and subclusters /= Void then
-				subclusters.parse_class (a_class, a_filename)
-			end
-		end
-
 feature {NONE} -- Implementation
 
 	new_recursive_cluster (a_name: STRING): like Current is
@@ -333,6 +428,10 @@ feature {NONE} -- Implementation
 			Result := nb > 2 and then
 				(a_filename.item (nb) = 'e' and
 				a_filename.item (nb - 1) = '.')
+		ensure
+			definition: Result = (a_filename.count > 2 and then
+				(a_filename.item (a_filename.count) = 'e' and
+				a_filename.item (a_filename.count - 1) = '.'))
 		end
 
 	is_valid_eiffel_filename (a_filename: STRING): BOOLEAN is

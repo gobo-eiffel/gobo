@@ -54,6 +54,8 @@ feature {NONE} -- Initialization
 			make_basic_classes
 			!! eiffel_parser.make_with_factory (Current, a_factory, an_error_handler)
 			eiffel_parser.set_use_create_keyword (True)
+			!! eiffel_preparser.make_with_factory (Current, a_factory, an_error_handler)
+			eiffel_preparser.set_use_create_keyword (True)
 			!DS_HASH_TOPOLOGICAL_SORTER [ET_CLASS]! class_sorter.make_default
 			!DS_HASH_TOPOLOGICAL_SORTER [ET_FORMAL_GENERIC_PARAMETER]! formal_generic_parameter_sorter.make_default
 			!! feature_flattener.make (any_class)
@@ -121,8 +123,9 @@ feature -- Access
 		require
 			a_name_not_void: a_name /= Void
 		do
-			if classes.has (a_name) then
-				Result := classes.item (a_name)
+			classes.search (a_name)
+			if classes.found then
+				Result := classes.found_item
 			else
 				Result := ast_factory.new_class (a_name, classes.count + 1, Current)
 				classes.force_last (Result, a_name)
@@ -433,8 +436,83 @@ feature -- Setting
 
 feature -- Parsing
 
+	preparse is
+			-- Traverse all clusters and build a mapping between
+			-- class names and filenames in each cluster. Classes
+			-- are added to `classes', but are not parsed.
+			-- Use `preparse_multiple' policy by default (this
+			-- can be redefined in descendants).
+		do
+			preparse_multiple
+		end
+
+	preparse_shallow is
+			-- Traverse all clusters and build a mapping between
+			-- class names and filenames in each cluster. Classes
+			-- are added to `classes', but are not parsed.
+			-- Filenames are supposed to be of the form 'classname.e'.
+		do
+			if clusters /= Void then
+				clusters.preparse_shallow (Current)
+			end
+		end
+
+	preparse_single is
+			-- Traverse all clusters and build a mapping between
+			-- class names and filenames in each cluster. Classes
+			-- are added to `classes', but are not parsed.
+			-- Each Eiffel file is supposed to contain exactly
+			-- one class.
+		do
+			if clusters /= Void then
+				clusters.preparse_single (Current)
+			end
+		end
+
+	preparse_multiple is
+			-- Traverse all clusters and build a mapping between
+			-- class names and filenames in each cluster. Classes
+			-- are added to `classes', but are not parsed.
+			-- Each Eiffel file can contain more than one class.
+		do
+			if clusters /= Void then
+				clusters.preparse_multiple (Current)
+			end
+		end
+
+	preparse_single_file (a_file: KI_CHARACTER_INPUT_STREAM; a_filename: STRING; a_cluster: ET_CLUSTER) is
+			-- Scan Eiffel file `a_file' to find the name of the class it
+			-- contains. The file is supposed to contain exactly one class.
+			-- Add the class to `classes', but do not parse it.
+			-- `a_filename' is the filename of `a_file'.
+		require
+			a_file_not_void: a_file /= Void
+			a_file_open_read: a_file.is_open_read
+			a_filename_not_void: a_filename /= Void
+			a_cluster_not_void: a_cluster /= Void
+		do
+			eiffel_preparser.preparse_single (a_file, a_filename, a_cluster)
+		end
+
+	preparse_multiple_file (a_file: KI_CHARACTER_INPUT_STREAM; a_filename: STRING; a_cluster: ET_CLUSTER) is
+			-- Scan Eiffel file `a_file' to find the names of the classes
+			-- it contains. The file can contain more than one class. Add
+			-- the classes to `classes', but do not parse them.
+			-- `a_filename' is the filename of `a_file'.
+		require
+			a_file_not_void: a_file /= Void
+			a_file_open_read: a_file.is_open_read
+			a_filename_not_void: a_filename /= Void
+			a_cluster_not_void: a_cluster /= Void
+		do
+			eiffel_preparser.preparse_multiple (a_file, a_filename, a_cluster)
+		end
+
 	parse_all is
 			-- Parse whole universe.
+			-- There is not need to call one of the preparse routines
+			-- beforehand since the current routine will traverse all
+			-- clusters and parse all Eiffel files anyway.
 		do
 			if clusters /= Void then
 				clusters.parse_all (Current)
@@ -446,35 +524,42 @@ feature -- Parsing
 		local
 			a_cursor: DS_HASH_TABLE_CURSOR [ET_CLASS, ET_CLASS_NAME]
 			a_class: ET_CLASS
-			a_classname: STRING
-			a_filename: STRING
+			not_done: BOOLEAN
 		do
-			if clusters /= Void then
-				a_cursor := classes.new_cursor
-				from a_cursor.start until a_cursor.after loop
-					a_class := a_cursor.item
-					if not a_class.is_parsed then
-						a_classname := a_class.name.name
-						a_filename := STRING_.make (a_classname.count + 2)
-						a_filename.append_string (a_classname)
-						a_filename.to_lower
-						a_filename.append_character ('.')
-						a_filename.append_character ('e')
-						clusters.parse_class (a_class, a_filename)
+			if root_class /= Void then
+				if not root_class.is_preparsed then
+					preparse
+				end
+				if not root_class.is_preparsed then
+						-- TODO.
+					print ("Class ")
+					print (root_class.name.name)
+					print (" not found.%N")
+				else
+					root_class.add_to_system
+					root_class.parse
+					a_cursor := classes.new_cursor
+					not_done := True
+					from until not not_done loop
+						not_done := False
+						from a_cursor.start until a_cursor.after loop
+							a_class := a_cursor.item
+							if a_class.in_system and then not a_class.is_parsed then
+								if a_class.is_preparsed then
+									a_class.parse
+									not_done := True
+								end
+							end
+							a_cursor.forth
+						end
 					end
-					if not a_class.is_parsed then
-							-- TODO.
-						print ("Class ")
-						print (a_classname)
-						print (" not found.%N")
-					end
-					a_cursor.forth
 				end
 			end
 		end
 
 	parse_file (a_file: KI_CHARACTER_INPUT_STREAM; a_filename: STRING; a_cluster: ET_CLUSTER) is
-			-- Parse all classes in `a_file'.
+			-- Parse all classes in `a_file' within cluster `a_cluster'.
+			-- `a_filename' is the filename of `a_file'.
 		require
 			a_file_not_void: a_file /= Void
 			a_file_open_read: a_file.is_open_read
@@ -498,13 +583,13 @@ feature -- Compilation
 			a_cursor := classes.new_cursor
 			from a_cursor.start until a_cursor.after loop
 				a_class := a_cursor.item
---				if a_class.in_system then
+				if a_class.in_system then
 					nb := nb + 1
 					if a_class.is_parsed and then not a_class.has_syntax_error then
 						a_class.flatten
 --						a_class.search_ancestors
 					end
---				end
+				end
 				a_cursor.forth
 			end
 			print ("Flattened ")
@@ -516,6 +601,9 @@ feature {NONE} -- Implementation
 
 	eiffel_parser: ET_EIFFEL_PARSER
 			-- Eiffel parser
+
+	eiffel_preparser: ET_EIFFEL_PREPARSER
+			-- Eiffel preparser
 
 	ast_factory: ET_AST_FACTORY
 			-- Abstract Syntax Tree factory
@@ -541,6 +629,7 @@ invariant
 	no_void_feature: not features.has (Void)
 	error_handler_not_void: error_handler /= Void
 	eiffel_parser_not_void: eiffel_parser /= Void
+	eiffel_preparser_not_void: eiffel_preparser /= Void
 	ast_factory_not_void: ast_factory /= Void
 	class_sorter_not_void: class_sorter /= Void
 	feature_flattener_not_void: feature_flattener /= Void

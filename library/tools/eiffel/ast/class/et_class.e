@@ -248,18 +248,47 @@ feature -- System
 
 feature -- Compilation: parsing status
 
-	is_parsed: BOOLEAN is
-			-- Has current class been parsed?
+	is_preparsed: BOOLEAN is
+			-- Has current class been preparsed (i.e. its filename
+			-- and cluster are already known but the class has not
+			-- necessarily been parsed yet)?
 		do
 			Result := (filename /= Void and cluster /= Void)
 		ensure
 			definition: Result = (filename /= Void and cluster /= Void)
+			true_if_parsed: is_parsed implies is_preparsed
 		end
+
+	is_parsed: BOOLEAN
+			-- Has current class been parsed?
 
 	has_syntax_error: BOOLEAN
 			-- Has a fatal syntax error been detected?
 
-feature {ET_EIFFEL_SCANNER_SKELETON} -- Compilation: parsing
+feature -- Compilation: parsing
+
+	parse is
+			-- Parse current class.
+			-- The class may end up not being parsed if `filename'
+			-- didn't contain this class after all (i.e. if the
+			-- preparsing phase gave errouneous result).
+		require
+			is_preparsed: is_preparsed
+			no_parsed: not is_parsed
+		local
+			a_file: KL_TEXT_INPUT_FILE
+		do
+			!! a_file.make (filename)
+			a_file.open_read
+			if a_file.is_open_read then
+				universe.parse_file (a_file, filename, cluster)
+				a_file.close
+			else
+				-- TODO:
+			end
+		end
+
+feature {ET_CLUSTER, ET_EIFFEL_SCANNER_SKELETON} -- Compilation: parsing
 
 	set_filename (a_name: STRING) is
 			-- Set `filename' to `a_name'.
@@ -279,6 +308,18 @@ feature {ET_EIFFEL_SCANNER_SKELETON} -- Compilation: parsing
 			cluster := a_cluster
 		ensure
 			cluster_set: cluster = a_cluster
+		end
+
+feature {ET_EIFFEL_SCANNER_SKELETON} -- Compilation: parsing
+
+	set_parsed is
+			-- Set `is_parsed' to True.
+		require
+			is_preparsed: is_preparsed
+		do
+			is_parsed := True
+		ensure
+			is_parsed: is_parsed
 		end
 
 	set_deferred is
@@ -471,41 +512,67 @@ feature {ET_PARENTS, ET_CLASS} -- Compilation: genealogy
 		do
 			if not ancestors_searched then
 				has_ancestors_error := False
-				if not is_parsed then
+				if not is_preparsed then
+					universe.preparse
+				end
+				if not is_preparsed then
 						-- Error: class not in universe
 						-- (VTCT, ETL2 p.199).
 					error_handler.report_vtct_error (an_heir, a_type)
 					set_ancestors_error
-				elseif has_syntax_error then
-						-- This error has already been reported
-						-- somewhere else.
-					set_ancestors_error
-				elseif parents = Void then
-					if Current = universe.general_class then
-						!! ancestors.make_map (0)
-					elseif Current = universe.any_class then
-							-- ISE Eiffel has no GENERAL class anymore.
-							-- Use ANY has class root now.
-						!! ancestors.make_map (0)
-					elseif not a_sorter.has (Current) then
-						any_class := universe.any_class
-						if not any_class.is_parsed then
-								-- Error: class ANY not in universe
-								-- (VTCT, ETL2 p.199).
-							error_handler.report_vtct_any_error (Current)
-							set_ancestors_error
-						elseif any_class.has_syntax_error then
-								-- This error has already been reported
-								-- somewhere else.
-							set_ancestors_error
-						else
-							a_sorter.force (Current)
-							universe.any_parents.add_to_sorter (Current, a_sorter)
-						end
+				else
+					if not is_parsed then
+						parse
 					end
-				elseif not a_sorter.has (Current) then
-					a_sorter.force (Current)
-					parents.add_to_sorter (Current, a_sorter)
+					if not is_parsed then
+							-- Error: class not in universe
+							-- (VTCT, ETL2 p.199).
+						error_handler.report_vtct_error (an_heir, a_type)
+						set_ancestors_error
+					elseif has_syntax_error then
+							-- This error has already been reported
+							-- somewhere else.
+						set_ancestors_error
+					elseif parents = Void then
+						if Current = universe.general_class then
+							!! ancestors.make_map (0)
+						elseif Current = universe.any_class then
+								-- ISE Eiffel has no GENERAL class anymore.
+								-- Use ANY has class root now.
+							!! ancestors.make_map (0)
+						elseif not a_sorter.has (Current) then
+							any_class := universe.any_class
+							if not any_class.is_preparsed then
+								universe.preparse
+							end
+							if not any_class.is_preparsed then
+									-- Error: class ANY not in universe
+									-- (VTCT, ETL2 p.199).
+								error_handler.report_vtct_any_error (Current)
+								set_ancestors_error
+							else
+								if not any_class.is_parsed then
+									any_class.parse
+								end
+								if not any_class.is_parsed then
+										-- Error: class ANY not in universe
+										-- (VTCT, ETL2 p.199).
+									error_handler.report_vtct_any_error (Current)
+									set_ancestors_error
+								elseif any_class.has_syntax_error then
+										-- This error has already been reported
+										-- somewhere else.
+									set_ancestors_error
+								else
+									a_sorter.force (Current)
+									universe.any_parents.add_to_sorter (Current, a_sorter)
+								end
+							end
+						end
+					elseif not a_sorter.has (Current) then
+						a_sorter.force (Current)
+						parents.add_to_sorter (Current, a_sorter)
+					end
 				end
 			end
 		end
