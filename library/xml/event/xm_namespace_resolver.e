@@ -135,6 +135,12 @@ feature {NONE} -- Attribute events
 						next.on_attribute (context.resolve (attributes_prefix.item),
 							attributes_prefix.item, attributes_local_part.item,
 							attributes_value.item)
+					elseif is_xml (attributes_prefix.item) then
+							-- xml: prefix has implicit namespace
+						next.on_attribute (Xml_prefix_namespace,
+							attributes_prefix.item,
+							attributes_local_part.item,
+							attributes_value.item)
 					else
 						on_error (Undeclared_namespace_error)
 					end
@@ -156,12 +162,22 @@ feature {NONE} -- Context
 feature {NONE} -- Context
 
 	is_xmlns (a: STRING): BOOLEAN is
-			-- Is this an xmlns declaration?
+			-- Is this an xmlns[:] declaration?
 		do
 			Result := a /= Void and then same_string (Xmlns, a)
 		end
 
-	Unprefixed_attribute_namespace: STRING is ""
+	is_xml (a: STRING): BOOLEAN is
+			-- Is this a xml: declaration?
+		do
+			Result := a /= Void and then same_string (Xml_prefix, a)
+		end
+		
+	Unprefixed_attribute_namespace: STRING is
+			-- Namespace used for unprefixed attributes.
+		do
+			Result := Default_namespace
+		end
 
 feature {NONE} -- Element
 
