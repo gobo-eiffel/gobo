@@ -758,7 +758,7 @@ feature {NONE} -- Instruction generation
 			if l_dynamic_assignment = Void then
 -- TODO: error
 			else
-				current_assignment_attempt := l_dynamic_assignment.next
+				current_assignment_attempt := l_dynamic_assignment.next_assignment_attempt
 				if l_dynamic_assignment.is_direct_assignment then
 					print_writable (an_instruction.target)
 					current_file.put_character (' ')
@@ -1316,7 +1316,7 @@ feature {NONE} -- Expression generation
 						current_file.put_character (',')
 						current_file.put_character (' ')
 					end
-					print_expression (an_actuals.expression (i))
+					print_expression (an_actuals.actual_argument (i))
 					i := i + 1
 				end
 			end
@@ -1585,7 +1585,7 @@ feature {NONE} -- Expression generation
 									current_file.put_character (',')
 									current_file.put_character (' ')
 								end
-								print_expression (an_actuals.expression (i))
+								print_expression (an_actuals.actual_argument (i))
 								i := i + 1
 							end
 						end
@@ -1628,13 +1628,13 @@ feature {NONE} -- Expression generation
 			if l_call = Void then
 -- TODO: error
 			else
-				current_feature_call := l_call.next
+				current_feature_call := l_call.next_call
 				a_feature := l_call.static_feature
 				a_seed := a_feature.first_seed
 				if a_feature.is_procedure then
-					l_other_dynamic_type := l_call.other_types
+					l_other_dynamic_type := l_call.target_type.other_types
 					if l_other_dynamic_type = Void then
-						l_dynamic_type := l_call.first_type
+						l_dynamic_type := l_call.target_type.first_type
 						if l_dynamic_type /= Void then
 							a_feature := l_dynamic_type.base_class.seeded_feature (a_seed)
 							if a_feature = Void then
@@ -1648,7 +1648,7 @@ feature {NONE} -- Expression generation
 									from i := 1 until i > nb loop
 										current_file.put_character (',')
 										current_file.put_character (' ')
-										print_expression (an_actuals.expression (i))
+										print_expression (an_actuals.actual_argument (i))
 										i := i + 1
 									end
 								end
@@ -1662,14 +1662,16 @@ feature {NONE} -- Expression generation
 -- TODO.
 					end
 				else
+-- TODO.
 					if a_feature.is_attribute then
-						print_attribute_name (current_type.dynamic_feature (a_feature, current_system), current_type)
+						print_attribute_name (l_call.target_type.static_type.dynamic_feature (a_feature, current_system), current_type)
 					elseif a_feature.is_constant_attribute then
 -- TODO.
 					elseif a_feature.is_unique_attribute then
 -- TODO.
 					else
-						print_routine_name (current_type.dynamic_feature (a_feature, current_system), current_type)
+-- TODO.
+						print_routine_name (l_call.target_type.static_type.dynamic_feature (a_feature, current_system), current_type)
 						current_file.put_character ('(')
 						current_file.put_character ('C')
 						if an_actuals /= Void then
@@ -1677,7 +1679,7 @@ feature {NONE} -- Expression generation
 							from i := 1 until i > nb loop
 								current_file.put_character (',')
 								current_file.put_character (' ')
-								print_expression (an_actuals.expression (i))
+								print_expression (an_actuals.actual_argument (i))
 								i := i + 1
 							end
 						end
@@ -1810,7 +1812,7 @@ feature {NONE} -- Expression generation
 					from i := 1 until i > nb loop
 						current_file.put_character (',')
 						current_file.put_character (' ')
-						print_expression (an_actuals.expression (i))
+						print_expression (an_actuals.actual_argument (i))
 						i := i + 1
 					end
 				end
@@ -1832,7 +1834,7 @@ feature {NONE} -- Expression generation
 						from i := 1 until i > nb loop
 							current_file.put_character (',')
 							current_file.put_character (' ')
-							print_expression (an_actuals.expression (i))
+							print_expression (an_actuals.actual_argument (i))
 							i := i + 1
 						end
 					end
