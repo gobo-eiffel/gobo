@@ -147,13 +147,12 @@ feature -- Execution
 
 			if finish_freezing then
 				old_pwd := file_system.pwd
-				file_system.cd ("EIFGEN")
 				if finalize then
 					log ("  [ise] cd EIFGEN/F_code%N")
-					file_system.cd ("F_code")
+					file_system.cd ("EIFGEN/F_code")
 				else
 					log ("  [ise] cd EIFGEN/W_code%N")
-					file_system.cd ("W_code")
+					file_system.cd ("EIFGEN/W_code")
 				end
 				cmd := clone ("finish_freezing -silent")
 				log ("  [ise] " + cmd + "%N")
@@ -162,16 +161,17 @@ feature -- Execution
 				old_name.append_string (file_system.exe_file_extension)
 				new_name := clone ("../../")
 				new_name.append_string (old_name)
-				log ("  [ise] cp " + old_name + " " + new_name + "%N")
+				log ("  [ise] copy " + old_name + " " + new_name + "%N")
 				file_system.copy_file (old_name, new_name)
 				if not finalize then
 					old_name := clone (system_name)
 					old_name.append_string (".melted")
 					new_name := clone ("../../")
 					new_name.append_string (old_name)
-					log ("  [ise] cp " + old_name + " " + new_name + "%N")
+					log ("  [ise] copy " + old_name + " " + new_name + "%N")
 					file_system.copy_file (old_name, new_name)
 				end
+				log ("  [ise] cd " + old_pwd + "%N")
 				file_system.cd (old_pwd)
 			end
 		end
@@ -187,14 +187,16 @@ feature -- Execution
 			a_name := clone (clean)
 			a_name.append_string (".epr")
 			if file_system.is_file_readable (a_name) then
-					-- Execute the command only if the ISE Eiffel
-					-- compiler has been used to compile this system.
 				log ("  [ise] delete " + a_name + "%N")
 				file_system.delete_file (a_name)
-				a_name := clone (clean)
-				a_name.append_string (".rc")
+			end
+			a_name := clone (clean)
+			a_name.append_string (".rc")
+			if file_system.is_file_readable (a_name) then
 				log ("  [ise] delete " + a_name + "%N")
 				file_system.delete_file (a_name)
+			end
+			if file_system.is_directory_readable ("EIFGEN") then
 				!! a_dir.make ("EIFGEN")
 				log ("  [ise] delete EIFGEN%N")
 				a_dir.recursive_delete

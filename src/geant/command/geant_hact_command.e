@@ -153,14 +153,13 @@ feature -- Execution
 			if fish then
 				old_pwd := file_system.pwd
 				project_dir := system_name + "_gen"
-				file_system.cd (project_dir)
 				if finalize then
-					log ("  [hact] cd " + project_dir + "/F_code%N")
-					file_system.cd ("F_code")
+					project_dir.append_string ("/F_code")
 				else
-					log ("  [hact] cd " + project_dir + "/W_code%N")
-					file_system.cd ("W_code")
+					project_dir.append_string ("/W_code")
 				end
+				log ("  [hact] cd " + project_dir + "%N")
+				file_system.cd (project_dir)
 				cmd := clone ("fish")
 				log ("  [hact] " + cmd + "%N")
 				execute_shell (cmd)
@@ -168,16 +167,17 @@ feature -- Execution
 				old_name.append_string (file_system.exe_file_extension)
 				new_name := clone ("../../")
 				new_name.append_string (old_name)
-				log ("  [hact] cp " + old_name + " " + new_name + "%N")
+				log ("  [hact] copy " + old_name + " " + new_name + "%N")
 				file_system.copy_file (old_name, new_name)
 				if not finalize then
 					old_name := clone (system_name)
 					old_name.append_string (".h2o")
 					new_name := clone ("../../")
 					new_name.append_string (old_name)
-					log ("  [hact] cp " + old_name + " " + new_name + "%N")
+					log ("  [hact] copy " + old_name + " " + new_name + "%N")
 					file_system.copy_file (old_name, new_name)
 				end
+				log ("  [hact] cd " + old_pwd + "%N")
 				file_system.cd (old_pwd)
 			end
 		end
@@ -196,8 +196,10 @@ feature -- Execution
 				!! a_dir.make (a_name)
 				log ("  [hact] delete " + a_name + "%N")
 				a_dir.recursive_delete
-				a_name := clone (clean)
-				a_name.append_string (".eif")
+			end
+			a_name := clone (clean)
+			a_name.append_string (".eif")
+			if file_system.is_file_readable (a_name) then
 				log ("  [hact] delete " + a_name + "%N")
 				file_system.delete_file (a_name)
 			end
