@@ -789,7 +789,7 @@
 	<sect1>
 		<xsl:if test="@id">
 			<xsl:attribute name="id">
-				<xsl:value-of select="translate(concat(concat(ancestor-or-self::chapter/@id,'.'),@id),'_/','-.')"/>
+				<xsl:value-of select="translate(concat(ancestor-or-self::chapter/@id,'.',@id),'_/','-.')"/>
 			</xsl:attribute>
 		</xsl:if>
 		<xsl:apply-templates/>
