@@ -62,11 +62,6 @@ feature -- Access
 
 feature -- Status report
 
-	is_readable: BOOLEAN is
-			-- Can directory be opened in read mode?
-		deferred
-		end
-
 	valid_unread_entry (an_entry: STRING): BOOLEAN is
 			-- Can `an_entry' be put back in input stream?
 		do
