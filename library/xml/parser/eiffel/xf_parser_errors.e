@@ -71,5 +71,7 @@ feature -- Parser errors
 	Error_markup_declaration_in_prolog: STRING is "Markup declaration in prolog"
 	Error_markup_in_external_dtd: STRING is "Markup in external DTD"
 	Error_cannot_parse_external_dtd: STRING is "Cannot parse external DTD"
+	
+	Error_unicode_in_ascii_string_mode: STRING is "Unexpected non-ASCII character in ASCII-only mode"
 
 end
