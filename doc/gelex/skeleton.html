@@ -65,8 +65,11 @@ name="make_with_buffer"><em>make_with_buffer</em></a><em> </em>(<em>a_buffer</em
 </em><em><strong>feature</strong></em><em> </em>-- Access<em>
 
     </em><a href="actions.html#last_token" name="last_token"><em>last_token</em></a><em>: INTEGER
-            </em>-- Code of last token read<em>
-
+            </em>-- Code of last token read
+            -- (0 means that the end-of-input has been reached,
+            -- non-positive values mean that an error occurred
+            -- (see header-comment of <em>scanning_error</em>.))
+<em>
     </em><a href="actions.html#text" name="text"><em>text</em></a>:<em> STRING
             </em>-- Text of last token read
             -- (Create a new string at each call.)<em>
@@ -107,7 +110,25 @@ name="text_substring"><em>text_substring</em></a><em> </em>(<em>s</em>,<em> e</e
 name="start_condition"><em>start_condition</em></a>:<em> INTEGER
             </em>-- Start condition<em>
 
-</em><em><strong>feature</strong></em><em> </em>-- Setting<em>
+</em><em><strong>feature </strong></em>-- Status report<em>
+
+    </em><a href="actions.html#end_of_file" name="end_of_file"><em>end_of_file</em></a>:<em> BOOLEAN
+            </em>-- Has the end of input buffer been reached?<em>
+            </em>-- This means that <em>last_token</em> has been set
+            -- to 0 indicating &quot;all done&quot;.<em>
+
+    </em><a href="actions.html#scanning_error"
+name="scanning_error"><em>scanning_error</em></a>:<em> BOOLEAN
+            </em>-- Has an error occurred during scanning?<em>
+            </em>-- This can occur when too many <em>reject</em> are called (and hence
+            -- nothing can be matched anymore) or when the option &quot;nodefault&quot;
+            -- (or option -s) has been specified but the default rule is
+            -- matched nevertheless.<em>
+
+    valid_start_condition </em>(<em>sc</em>:<em> INTEGER</em>):<em> BOOLEAN
+            </em>-- Is <em>sc</em> a valid start condition?<em>
+</em><em><strong>
+feature</strong></em><em> </em>-- Setting<em>
 
     </em><a href="actions.html#set_last_token"
 name="set_last_token"><em>set_last_token</em></a><em> </em>(<em>a_token</em>:<em> INTEGER</em>)<em>
@@ -118,6 +139,8 @@ name="set_last_token"><em>set_last_token</em></a><em> </em>(<em>a_token</em>:<em
     </em><a href="actions.html#set_start_condition"
 name="set_start_condition"><em>set_start_condition</em></a><em> </em>(<em>a_start_condition</em>:<em> INTEGER</em>)<em>
             </em>-- Set <em>start_condition</em> to <em>a_start_condition</em>.<em>
+        </em><em><strong>require</strong></em><em>
+            valid_start_condition</em>:<em> valid_start_condition </em>(<em>a_start_condition</em>)<em>
         </em><em><strong>ensure</strong></em><em>
             start_condition_set</em>:<em> start_condition </em>=<em> a_start_condition
 
@@ -126,7 +149,7 @@ name="set_start_condition"><em>set_start_condition</em></a><em> </em>(<em>a_star
     </em><a href="scanner.html#scan" name="scan"><em>scan</em></a><em>
            </em> -- Scan <em>input_buffer</em> until end of file is found.<em>
         </em><em><strong>ensure</strong></em><em>
-            end_of_file</em>:<em> last_token</em> = <em>0
+            end_of_file</em>:<em> </em><em><strong>not</strong></em><em> scanning_error </em><em><strong>implies</strong></em><em> end_of_file
 
     </em><a href="scanner.html#read_token" name="read_token"><em>read_token</em></a><em>
             </em>-- Read a token from <em>input_buffer</em>.
@@ -251,13 +274,14 @@ name="new_string_buffer"><em>new_string_buffer</em></a><em> </em>(<em>a_string</
 
     </em><a name="fatal_error"><em>fatal_error</em></a><em> </em>(<em>a_message</em>:<em> STRING</em>)<em>
             </em>-- A fatal error occurred.
-            -- Print <em>a_message</em> and raise an exception.<em>
+            -- Print <em>a_message</em>.<em>
         </em><em><strong>require</strong></em><em>
             a_message_not_void</em>:<em> a_message</em> /=<em> Void
 
 </em><em><strong>invariant</strong></em><em>
 
     input_buffer_not_void</em>:<em> input_buffer </em>/=<em> Void
+    valid_start_condition</em>:<em> valid_start_condition </em>(<em>start_condition</em>)<em>
 
 </em><em><strong>end</strong></em> -- class YY_SCANNER</pre>
 
@@ -276,7 +300,7 @@ name="new_string_buffer"><em>new_string_buffer</em></a><em> </em>(<em>a_string</
             <strong>http:</strong></font><a
             href="http://www.gobo.demon.co.uk"><font size="2">//www.gobo.demon.co.uk</font></a><font
             size="2"><br>
-            <strong>Last Updated:</strong> 20 February 1999</font><br>
+            <strong>Last Updated:</strong> 22 March 1999</font><br>
             <!--webbot bot="PurpleText"
             preview="
 $Date$ 

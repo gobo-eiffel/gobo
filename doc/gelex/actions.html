@@ -122,9 +122,18 @@ can be used in actions:</p>
         parser routine) to inspect this code. Each time <font
         color="#008080"><em><tt>read_token</tt></em></font> is
         called again it continues processing tokens from where it
-        last left off until it either reaches the end of the file
-        or <font color="#008080"><em><tt>last_token</tt></em></font>
-        is given a non-negative value again.</dd>
+        last left off until either <font color="#008080"><em><tt>last_token</tt></em></font>
+        is given a non-negative value again or the end of the
+        file is reached (yielding a null value). Non-positive
+        values are reserved by <font color="#008080"><em><tt>read_token
+        </tt></em></font>to indicate internal errors which can
+        occur when too many <font color="#008080"><em><tt>reject </tt></em></font>are
+        called (and hence nothing can be matched anymore) or when
+        the option <a href="options.html#nodefault"><font
+        color="#800000"><tt>nodefault</tt></font></a> (or option <font
+        color="#800000"><tt>-s</tt></font>) has been specified
+        but the <a href="matching_rules.html#default_rule">default
+        rule</a> is matched nevertheless.</dd>
     <dt><a href="skeleton.html#less" name="less"><font
         color="#008080"><em><tt>less</tt></em></font></a><font
         color="#008080"><em><tt> </tt></em><tt>(</tt><em><tt>n</tt></em><tt>:</tt><em><tt>
@@ -406,6 +415,33 @@ color="#0000FF">{</font>
         stream with an end-of-file.</dd>
 </dl>
 
+<p>In addition to the above routines which can be called in
+semantic actions, the following routines can be called after the
+routine <font color="#008080"><em><tt>read_token </tt></em></font>has
+returned:</p>
+
+<dl>
+    <dt><a href="skeleton.html#end_of_file" name="end_of_file"><font
+        color="#008080"><em><tt>end_of_file</tt></em></font></a><font
+        color="#008080"><tt>:</tt><em><tt> BOOLEAN</tt></em></font></dt>
+    <dd>Has the end of input buffer been reached? This is the
+        case when <font color="#008080"><em><tt>last_token </tt></em></font>has
+        been set to 0.</dd>
+    <dt><a href="skeleton.html#scanning_error"
+        name="scanning_error"><font color="#008080"><em><tt>scanning_error</tt></em></font></a><font
+        color="#008080"><tt>:</tt><em><tt> BOOLEAN</tt></em></font></dt>
+    <dd>Has an error occurred during scanning? This is the case
+        when <font color="#008080"><em><tt>last_token </tt></em></font>has
+        been given a non-positive value. It can occur when too
+        many <font color="#008080"><em><tt>reject </tt></em></font>are
+        called (and hence nothing can be matched anymore) or when
+        the option <a href="options.html#nodefault"><font
+        color="#800000"><tt>nodefault</tt></font></a> (or option <font
+        color="#800000"><tt>-s</tt></font>) has been specified
+        but the <a href="matching_rules.html#default_rule">default
+        rule</a> is matched nevertheless.</dd>
+</dl>
+
 <hr size="1">
 
 <table border="0" width="100%">
@@ -421,7 +457,7 @@ color="#0000FF">{</font>
             <strong>http:</strong></font><a
             href="http://www.gobo.demon.co.uk"><font size="2">//www.gobo.demon.co.uk</font></a><font
             size="2"><br>
-            <strong>Last Updated:</strong> 20 February 1999</font><br>
+            <strong>Last Updated:</strong> 22 March 1999</font><br>
             <!--webbot bot="PurpleText"
             preview="
 $Date$ 
