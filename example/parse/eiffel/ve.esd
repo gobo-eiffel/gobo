@@ -21,23 +21,13 @@ creation
 cluster
 
 	[eiffel_parser_project	"."] end
-	[eiffel_parser			"$GOBO\example\parse\eiffel"] end
+	[eiffel_parser			"$GOBO/example/parse/eiffel"] end
 
-		-- Gobo Eiffel Parse Library
-	[pr_skeleton			"$GOBO\library\parse\skeleton"] end
-
-		-- Gobo Eiffel Lexical Library
-	[lx_skeleton			"$GOBO\library\lexical\skeleton"] end
-
-		-- Gobo Eiffel Utility Library
-	[ut_support				"$GOBO\library\utility\support"] end
-
-		-- Gobo Eiffel Kernel Library
-	[kl_kernel				"$GOBO\library\kernel"] end
-	[kl_kernel_spec			"$GOBO\library\kernel\spec\ve"] end
+		-- Gobo Eiffel Library
+	[Gobo				"$GOBO/library"] end
 
 		-- Kernel
-	[Kernel					"$VE_LIB\kernel"] end
+	[Kernel					"$VE_LIB/kernel"] end
 
 option
 

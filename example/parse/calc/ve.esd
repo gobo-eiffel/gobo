@@ -21,17 +21,13 @@ creation
 cluster
 
 	[calc_project			"."] end
-	[calc					"$GOBO\example\parse\calc"] end
+	[calc					"$GOBO/example/parse/calc"] end
 
-		-- Gobo Eiffel Parse Library
-	[pr_skeleton			"$GOBO\library\parse\skeleton"] end
-
-		-- Gobo Eiffel Kernel Library
-	[kl_kernel				"$GOBO\library\kernel"] end
-	[kl_kernel_spec			"$GOBO\library\kernel\spec\ve"] end
+		-- Gobo Eiffel Library
+	[Gobo				"$GOBO/library"] end
 
 		-- Kernel
-	[Kernel					"$VE_LIB\kernel"] end
+	[Kernel					"$VE_LIB/kernel"] end
 
 option
 

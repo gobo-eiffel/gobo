@@ -21,17 +21,13 @@ creation
 cluster
 
 	[ascii2ps_project	"."] end
-	[ascii2ps			"$GOBO\example\lexical\ascii2ps"] end
+	[ascii2ps			"$GOBO/example/lexical/ascii2ps"] end
 
-		-- Gobo Eiffel Lexical Library
-	[lx_skeleton		"$GOBO\library\lexical\skeleton"] end
-
-		-- Gobo Eiffel Kernel Library
-	[kl_kernel			"$GOBO\library\kernel"] end
-	[kl_kernel_spec		"$GOBO\library\kernel\spec\ve"] end
+		-- Gobo Eiffel Library
+	[Gobo				"$GOBO/library"] end
 
 		-- Visual Eiffel Kernel
-	[Kernel				"$VE_LIB\kernel"] end
+	[Kernel				"$VE_LIB/kernel"] end
 
 option
 

@@ -21,41 +21,13 @@ creation
 cluster
 
 	[gelex_project		"."] end
-	[gelex				"$GOBO\src\gelex"] end
+	[gelex				"$GOBO/src/gelex"] end
 
-		-- Gobo Eiffel Lexical Library
-	[lx_automaton		"$GOBO\library\lexical\automaton"] end
-	[lx_error			"$GOBO\library\lexical\error"] end
-	[lx_lex				"$GOBO\library\lexical\lex"] end
-	[lx_generation		"$GOBO\library\lexical\generation"] end
-	[lx_scanner			"$GOBO\library\lexical\scanner"] end
-	[lx_skeleton		"$GOBO\library\lexical\skeleton"] end
-	[lx_support			"$GOBO\library\lexical\support"] end
-
-		-- Gobo Eiffel Parse Library
-	[pr_skeleton		"$GOBO\library\parse\skeleton"] end
-
-		-- Gobo Eiffel Utility Library
-	[ut_command			"$GOBO\library\utility\command"] end
-	[ut_error			"$GOBO\library\utility\error"] end
-	[ut_formatter		"$GOBO\library\utility\formatter"] end
-	[ut_support			"$GOBO\library\utility\support"] end
-
-		-- Gobo Eiffel Kernel Library
-	[kl_kernel			"$GOBO\library\kernel"] end
-	[kl_kernel_spec		"$GOBO\library\kernel\spec\ve"] end
-
-		-- Gobo Eiffel Structure Library
-	[ds_container		"$GOBO\library\structure\container"] end
-	[ds_cursor			"$GOBO\library\structure\cursor"] end
-	[ds_dispenser		"$GOBO\library\structure\dispenser"] end
-	[ds_list			"$GOBO\library\structure\list"] end
-	[ds_sort			"$GOBO\library\structure\sort"] end
-	[ds_support			"$GOBO\library\structure\support"] end
-	[ds_table			"$GOBO\library\structure\table"] end
+		-- Gobo Eiffel Library
+	[Gobo				"$GOBO/library"] end
 
 		-- Visual Eiffel Kernel
-	[Kernel				"$VE_LIB\kernel"] end
+	[Kernel				"$VE_LIB/kernel"] end
 
 option
 
