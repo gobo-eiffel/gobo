@@ -23,7 +23,7 @@ default
 	--assertion (all);
 #endif
 	--precompiled ("$ISS_BASE/spec/$PLATFORM/precomp/base")
-	garbage_collector ("boehm")
+	--garbage_collector ("boehm")
 
 cluster
 
