@@ -17,6 +17,7 @@ inherit
 	KL_TEST_CASE
 
 	KL_IMPORTED_STRING_ROUTINES
+	KL_SHARED_PLATFORM
 
 feature -- Test
 
@@ -54,7 +55,7 @@ feature -- Test
 			assert ("string_type2", a_string.same_type ("")) 
 			assert ("new_string2", a_string /= uc_string) 
 			assert_equal ("same_string2", "bar", a_string) 
-			uc_string.put_code (2343, 2)
+			uc_string.put_code (too_big_character, 2)
 			a_string := STRING_.make_from_string (uc_string)
 			assert ("not_void3", a_string /= Void) 
 			assert ("string_type3", a_string.same_type ("")) 
@@ -121,16 +122,16 @@ feature -- Test
 			assert ("not_has1", not STRING_.has_substring (a_string1, "gobo")) 
 			!! uc_string1.make_from_string ("bar")
 			assert ("has5", STRING_.has_substring (a_string1, uc_string1)) 
-			uc_string1.put_code (786, 2)
+			uc_string1.put_code (too_big_character, 2)
 			assert ("not_has2", not STRING_.has_substring (a_string1, uc_string1)) 
 			a_string1.put ('%U', 5)
 			assert ("has6", STRING_.has_substring (a_string1, uc_string1)) 
 			!! uc_string1.make_from_string ("gobo-eiffel")
-			uc_string1.put_code (555, 5)
+			uc_string1.put_code (too_big_character, 5)
 			assert ("has7", STRING_.has_substring (uc_string1, "gobo")) 
 			assert ("has8", STRING_.has_substring (uc_string1, "")) 
 			!! uc_string2.make_from_string ("boteif")
-			uc_string2.put_code (888, 3)
+			uc_string2.put_code (too_big_character2, 3)
 			assert ("has9", STRING_.has_substring (uc_string1, uc_string2)) 
 			uc_string2.put ('-', 3)
 			assert ("not_has3", not STRING_.has_substring (uc_string1, uc_string2)) 
@@ -187,7 +188,7 @@ feature -- Test
 			assert ("not_void2", a_string2 /= Void)
 			assert ("string_type2", a_string2.same_type ("")) 
 			assert_equal ("value2", "bar", a_string2) 
-			uc_string.put_code (1234, 2)
+			uc_string.put_code (too_big_character, 2)
 			a_string2 := STRING_.string (uc_string)
 			assert ("not_void3", a_string2 /= Void)
 			assert ("string_type3", a_string2.same_type ("")) 
@@ -313,12 +314,12 @@ feature -- Test
 			!! uc_string1.make_from_string ("foo")
 			assert ("same3", STRING_.elks_same_string (a_string1, uc_string1))
 			assert ("same4", STRING_.elks_same_string (uc_string1, a_string1))
-			uc_string1.put_code (9876, 3)
+			uc_string1.put_code (too_big_character, 3)
 			assert ("not_same2", not STRING_.elks_same_string (a_string1, uc_string1))
 			assert ("not_same3", not STRING_.elks_same_string (uc_string1, a_string1))
 			!! uc_string2.make_from_string ("foo")
 			assert ("not_same4", not STRING_.elks_same_string (uc_string1, uc_string2))
-			uc_string2.put_code (2852, 3)
+			uc_string2.put_code (too_big_character2, 3)
 			assert ("same5", STRING_.elks_same_string (uc_string1, uc_string2))
 		end
 
@@ -571,6 +572,25 @@ feature -- Test
 			assert ("same6", STRING_.same_case_insensitive (uc_string1, uc_string1))
 			!! uc_string2.make_from_string ("bar")
 			assert ("not_same2", not STRING_.same_case_insensitive (uc_string1, uc_string2))
+		end
+
+feature {NONE} -- Implementation
+
+	too_big_character: INTEGER is
+			-- Code of a character that does not fit into a CHARACTER
+		once
+			Result := Platform.Maximum_character_code + 1
+		ensure
+			too_big: Result > Platform.Maximum_character_code
+		end
+
+	too_big_character2: INTEGER is
+			-- Code of a character that does not fit into a CHARACTER
+		once
+			Result := Platform.Maximum_character_code + 2
+		ensure
+			too_big: Result > Platform.Maximum_character_code
+			different: Result /= too_big_character
 		end
 
 end

@@ -15,6 +15,7 @@ deferred class UC_TEST_STRING
 inherit
 
 	KL_TEST_CASE
+	KL_SHARED_PLATFORM
 
 feature -- Test
 
@@ -309,7 +310,7 @@ feature -- Test
 			assert_equal ("item1", 'b', a_string.item (1)) 
 			assert_equal ("item2", 'a', a_string.item (2)) 
 			assert_equal ("item3", 'r', a_string.item (3)) 
-			a_string.put_code (835, 2)
+			a_string.put_code (too_big_character, 2)
 			assert_equal ("item4", '%U', a_string.item (2)) 
 		end
 
@@ -325,7 +326,7 @@ feature -- Test
 			assert_equal ("item3", 'r', a_string.item (3)) 
 			uc_string ?= a_string
 			assert ("uc_string", uc_string /= Void)
-			uc_string.put_code (835, 2)
+			uc_string.put_code (too_big_character, 2)
 			assert_equal ("item4", '%U', a_string.item (2)) 
 		end
 
@@ -338,7 +339,7 @@ feature -- Test
 			assert_equal ("item1", 'b', a_string @ 1) 
 			assert_equal ("item2", 'a', a_string @ 2) 
 			assert_equal ("item3", 'r', a_string @ 3) 
-			a_string.put_code (835, 2)
+			a_string.put_code (too_big_character, 2)
 			assert_equal ("item4", '%U', a_string @ 2) 
 		end
 
@@ -354,7 +355,7 @@ feature -- Test
 			assert_equal ("item3", 'r', a_string @ 3) 
 			uc_string ?= a_string
 			assert ("uc_string", uc_string /= Void)
-			uc_string.put_code (835, 2)
+			uc_string.put_code (too_big_character, 2)
 			assert_equal ("item4", '%U', a_string @ 2) 
 		end
 
@@ -811,7 +812,7 @@ feature -- Test
 			a_string: UC_STRING
 		do
 			!! a_string.make_from_string ("bar")
-			a_string.put_code (456, 2)
+			a_string.put_code (too_big_character, 2)
 			assert_equal ("index_of_b1", 1, a_string.index_of ('b', 1)) 
 			assert_equal ("index_of_b2", 0, a_string.index_of ('b', 2)) 
 			assert_equal ("index_of_b3", 0, a_string.index_of ('b', 3)) 
@@ -846,7 +847,7 @@ feature -- Test
 			!UC_STRING! a_string.make_from_string ("bar")
 			uc_string ?= a_string
 			assert ("uc_string", uc_string /= Void)
-			uc_string.put_code (567, 2)
+			uc_string.put_code (too_big_character, 2)
 			assert_equal ("index_of_b1", 1, a_string.index_of ('b', 1)) 
 			assert_equal ("index_of_b2", 0, a_string.index_of ('b', 2)) 
 			assert_equal ("index_of_b3", 0, a_string.index_of ('b', 3)) 
@@ -932,7 +933,7 @@ feature -- Test
 			a_string: UC_STRING
 		do
 			!! a_string.make_from_string ("bar")
-			a_string.append_code (347)
+			a_string.append_code (too_big_character)
 			assert ("has_b", a_string.has ('b')) 
 			assert ("has_a", a_string.has ('a')) 
 			assert ("has_r", a_string.has ('r')) 
@@ -951,7 +952,7 @@ feature -- Test
 			!UC_STRING! a_string.make_from_string ("bar")
 			uc_string ?= a_string
 			assert ("uc_string", uc_string /= Void)
-			uc_string.append_code (347)
+			uc_string.append_code (too_big_character)
 			assert ("has_b", a_string.has ('b')) 
 			assert ("has_a", a_string.has ('a')) 
 			assert ("has_r", a_string.has ('r')) 
@@ -1033,9 +1034,9 @@ feature -- Test
 			a_string: UC_STRING
 		do
 			!! a_string.make_from_string ("foobar")
-			a_string.append_code (988)
-			a_string.append_code (988)
-			a_string.append_code (988)
+			a_string.append_code (too_big_character)
+			a_string.append_code (too_big_character)
+			a_string.append_code (too_big_character)
 			assert_equal ("b", 1, a_string.occurrences ('b')) 
 			assert_equal ("a", 1, a_string.occurrences ('a')) 
 			assert_equal ("r", 1, a_string.occurrences ('r')) 
@@ -1057,9 +1058,9 @@ feature -- Test
 			!UC_STRING! a_string.make_from_string ("foobar")
 			uc_string ?= a_string
 			assert ("uc_string", uc_string /= Void)
-			uc_string.append_code (988)
-			uc_string.append_code (988)
-			uc_string.append_code (988)
+			uc_string.append_code (too_big_character)
+			uc_string.append_code (too_big_character)
+			uc_string.append_code (too_big_character)
 			assert_equal ("b", 1, a_string.occurrences ('b')) 
 			assert_equal ("a", 1, a_string.occurrences ('a')) 
 			assert_equal ("r", 1, a_string.occurrences ('r')) 
@@ -1274,10 +1275,10 @@ feature -- Test
 			!! a_string2.make_from_string ("foobar")
 			assert ("same3", a_string.same_string (a_string2))
 			!! a_string.make_from_string ("foo")
-			a_string.append_code (345)
+			a_string.append_code (too_big_character)
 			a_string.append_string ("bar")
 			!! a_string2.make_from_string ("foo")
-			a_string2.append_code (278)
+			a_string2.append_code (too_big_character2)
 			a_string2.append_string ("bar")
 			assert ("same4", a_string.same_string (a_string2))
 				-- HACT 4.0.1 does not support null characters
@@ -1302,15 +1303,15 @@ feature -- Test
 			!! a_string2.make_from_string ("foobar")
 			assert ("same3", a_string.same_unicode_string (a_string2))
 			!! a_string.make_from_string ("foo")
-			a_string.append_code (345)
+			a_string.append_code (too_big_character)
 			a_string.append_string ("bar")
 			!! a_string2.make_from_string ("foo")
-			a_string2.append_code (278)
+			a_string2.append_code (too_big_character2)
 			a_string2.append_string ("bar")
 			assert ("not_same3", not a_string.same_unicode_string (a_string2))
 			assert ("not_same4", not a_string.same_unicode_string ("foo%Ubar"))
 			!! a_string2.make_from_string ("foo")
-			a_string2.append_code (345)
+			a_string2.append_code (too_big_character)
 			a_string2.append_string ("bar")
 			assert ("same4", a_string.same_unicode_string (a_string2))
 		end
@@ -1324,7 +1325,7 @@ feature -- Test
 			!! a_string.make_from_string ("foobar")
 			assert_equal ("string1", "foobar", a_string.string)
 			!! a_string.make_from_string ("foo")
-			a_string.append_code (345)
+			a_string.append_code (too_big_character)
 			a_string.append_string ("bar")
 				-- HACT 4.0.1 does not support null characters
 				-- in manifest strings.
@@ -1421,10 +1422,10 @@ feature -- Test
 			assert_equal ("index25", 0, a_string.unicode_substring_index (a_string, 3)) 
 			assert_equal ("index26", 0, a_string.unicode_substring_index (a_string, 4)) 
 			!! a_string.make_from_string ("foo")
-			a_string.append_code (986)
+			a_string.append_code (too_big_character)
 			a_string.append_string ("bar")
 			!! a_string2.make_from_string ("o")
-			a_string2.append_code (986)
+			a_string2.append_code (too_big_character)
 			a_string2.append_string ("b")
 			assert_equal ("index27", 3, a_string.unicode_substring_index (a_string2, 1)) 
 			assert_equal ("index28", 3, a_string.unicode_substring_index (a_string2, 2)) 
@@ -1473,10 +1474,10 @@ feature -- Test
 			assert_equal ("index25", 0, a_string.substring_index (a_string, 3)) 
 			assert_equal ("index26", 0, a_string.substring_index (a_string, 4)) 
 			!! a_string.make_from_string ("foo")
-			a_string.append_code (986)
+			a_string.append_code (too_big_character)
 			a_string.append_string ("bar")
 			!! a_string2.make_from_string ("o")
-			a_string2.append_code (986)
+			a_string2.append_code (too_big_character)
 			a_string2.append_string ("b")
 			assert_equal ("index27", 3, a_string.substring_index (a_string2, 1)) 
 			assert_equal ("index28", 3, a_string.substring_index (a_string2, 2)) 
@@ -1487,10 +1488,10 @@ feature -- Test
 			assert_equal ("index33", 0, a_string.substring_index (a_string2, 7)) 
 			assert_equal ("index34", 0, a_string.substring_index (a_string2, 8)) 
 			!! a_string.make_from_string ("foo")
-			a_string.append_code (986)
+			a_string.append_code (too_big_character)
 			a_string.append_string ("bar")
 			!! a_string2.make_from_string ("o")
-			a_string2.append_code (555)
+			a_string2.append_code (too_big_character2)
 			a_string2.append_string ("b")
 			assert_equal ("index35", 3, a_string.substring_index (a_string2, 1)) 
 			assert_equal ("index36", 3, a_string.substring_index (a_string2, 2)) 
@@ -1518,10 +1519,10 @@ feature -- Test
 			assert ("has3", a_string.has_unicode_substring ("")) 
 			assert ("has4", a_string.has_unicode_substring (a_string)) 
 			!! a_string.make_from_string ("foo")
-			a_string.append_code (986)
+			a_string.append_code (too_big_character)
 			a_string.append_string ("bar")
 			!! a_string2.make_from_string ("o")
-			a_string2.append_code (986)
+			a_string2.append_code (too_big_character)
 			a_string2.append_string ("b")
 			assert ("has5", a_string.has_unicode_substring (a_string2)) 
 		end
@@ -1542,17 +1543,17 @@ feature -- Test
 			assert ("has3", a_string.has_substring ("")) 
 			assert ("has4", a_string.has_substring (a_string)) 
 			!! a_string.make_from_string ("foo")
-			a_string.append_code (986)
+			a_string.append_code (too_big_character)
 			a_string.append_string ("bar")
 			!! a_string2.make_from_string ("o")
-			a_string2.append_code (986)
+			a_string2.append_code (too_big_character)
 			a_string2.append_string ("b")
 			assert ("has5", a_string.has_substring (a_string2)) 
 			!! a_string.make_from_string ("foo")
-			a_string.append_code (986)
+			a_string.append_code (too_big_character)
 			a_string.append_string ("bar")
 			!! a_string2.make_from_string ("o")
-			a_string2.append_code (22222)
+			a_string2.append_code (too_big_character2)
 			a_string2.append_string ("b")
 			assert ("has6", a_string.has_substring (a_string2)) 
 		end
@@ -2291,6 +2292,25 @@ feature -- Test
 			a_string.append_code (130)
 			a_string.append_string ("bar")
 			assert ("not_is_ascii1", not a_string.is_ascii)
+		end
+
+feature {NONE} -- Implementation
+
+	too_big_character: INTEGER is
+			-- Code of a character that does not fit into a CHARACTER
+		once
+			Result := Platform.Maximum_character_code + 1
+		ensure
+			too_big: Result > Platform.Maximum_character_code
+		end
+
+	too_big_character2: INTEGER is
+			-- Code of a character that does not fit into a CHARACTER
+		once
+			Result := Platform.Maximum_character_code + 2
+		ensure
+			too_big: Result > Platform.Maximum_character_code
+			different: Result /= too_big_character
 		end
 
 end
