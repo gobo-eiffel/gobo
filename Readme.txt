@@ -178,4 +178,4 @@ for your specific needs. Thank you in advance.
 
 --
 Copyright (c) 1997-2002, Eric Bezault and others
-31 August 2002
+1 September 2002
