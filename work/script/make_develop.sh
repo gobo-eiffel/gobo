@@ -39,6 +39,9 @@ make parser scanner
 echo ''; echo "#### Generate files in \$GOBO/library/utility"
 cd $GOBO/library/utility
 make depend spec
+echo ''; echo "#### Generate files in \$GOBO/library/test/generation"
+cd $GOBO/library/test/generation
+make parser scanner
 echo ''; echo "#### Generate files in \$GOBO/library/tools/parser"
 cd $GOBO/library/tools/parser
 make parser scanner
