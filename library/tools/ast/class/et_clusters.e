@@ -23,34 +23,34 @@ creation
 
 feature {NONE} -- Initialization
 
-	make (a_cluster: like clusters) is
+	make (a_cluster: ET_CLUSTER) is
 			-- Create a new cluster list with initially
 			-- one cluster `a_cluster'.
 		require
 			a_cluster_not_void: a_cluster /= Void
 		do
-			clusters := a_cluster
+			!! clusters.make (Initial_clusters_capacity)
+			clusters.put_last (a_cluster)
 		ensure
-			clusters_set: clusters = a_cluster
+			clusters_set: clusters.last = a_cluster
 		end
 
 feature -- Access
 
-	clusters: ET_CLUSTER
+	clusters: DS_ARRAYED_LIST [ET_CLUSTER]
 			-- Clusters
 
 feature -- Element change
 
-	put_first (a_cluster: like clusters) is
+	put_last (a_cluster: ET_CLUSTER) is
 			-- Add `a_cluster' to the list of clusters.
 		require
 			a_cluster_not_void: a_cluster /= Void
 		do
-			a_cluster.set_next (clusters)
-			clusters := a_cluster
+			clusters.force_last (a_cluster)
 		ensure
-			one_more: clusters.next = old clusters
-			cluster_added: clusters = a_cluster
+			one_more: clusters.count = old clusters.count + 1
+			cluster_added: clusters.last = a_cluster
 		end
 
 feature -- Parsing
@@ -60,15 +60,12 @@ feature -- Parsing
 		require
 			a_universe_not_void: a_universe /= Void
 		local
-			a_cluster: ET_CLUSTER
+			i, nb: INTEGER
 		do
-			from
-				a_cluster := clusters
-			until
-				a_cluster = Void
-			loop
-				a_cluster.parse_all (a_universe)
-				a_cluster := a_cluster.next
+			nb := clusters.count
+			from i := 1 until i > nb loop
+				clusters.item (i).parse_all (a_universe)
+				i := i + 1
 			end
 		end
 
@@ -77,15 +74,12 @@ feature {ET_CLUSTER} -- Setting
 	set_parent (a_parent: ET_CLUSTER) is
 			-- Set parent of all clusters to `a_parent'.
 		local
-			a_cluster: ET_CLUSTER
+			i, nb: INTEGER
 		do
-			from
-				a_cluster := clusters
-			until
-				a_cluster = Void
-			loop
-				a_cluster.set_parent (a_parent)
-				a_cluster := a_cluster.next
+			nb := clusters.count
+			from i := 1 until i > nb loop
+				clusters.item (i).set_parent (a_parent)
+				i := i + 1
 			end
 		end
 
@@ -98,20 +92,24 @@ feature -- Output
 			a_file_not_void: a_file /= Void
 			a_file_open_write: OUTPUT_STREAM_.is_open_write (a_file)
 		local
-			a_cluster: ET_CLUSTER
+			i, nb: INTEGER
 		do
-			from
-				a_cluster := clusters
-			until
-				a_cluster = Void
-			loop
-				a_cluster.print_flat_cluster (a_file)
-				a_cluster := a_cluster.next
+			nb := clusters.count
+			from i := 1 until i > nb loop
+				clusters.item (i).print_flat_cluster (a_file)
+				i := i + 1
 			end
 		end
+
+feature {NONE} -- Constants
+
+	Initial_clusters_capacity: INTEGER is 50
+			-- Initial capacity for `clusters'
 
 invariant
 
 	clusters_not_void: clusters /= Void
+	not_void_cluster: not clusters.has (Void)
+	clusters_not_empty: not clusters.is_empty
 
 end -- class ET_CLUSTERS

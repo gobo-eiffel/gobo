@@ -84,14 +84,14 @@ Clusters_opt: -- Empty
 		-- { $$ := Void }
 	| L_CLUSTER
 		-- { $$ := Void }
-	| L_CLUSTER Cluster_list
+	| L_CLUSTER Cluster_list Cluster_terminator
 		{ $$ := $2 }
 	;
 
-Cluster_list: Cluster Cluster_terminator
+Cluster_list: Cluster
 		{ $$ := new_clusters ($1) }
-	| Cluster Cluster_separator Cluster_list
-		{ $$ := $3; $$.put_first ($1) }
+	| Cluster_list Cluster_separator Cluster
+		{ $$ := $1; $$.put_last ($3) }
 	;
 
 Cluster: L_ABSTRACT Nested_cluster
