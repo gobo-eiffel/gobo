@@ -111,6 +111,7 @@ feature -- Access
 	Right_bracket_code: INTEGER is 93			-- ']'
 	Left_brace_code: INTEGER is 123				-- '{'
 	Right_brace_code: INTEGER is 125			-- '}'
+	Bar_code: INTEGER is 124					-- '|'
 
 	Space_code: INTEGER is 32					-- ' '
 	Tabulation_code: INTEGER is 9				-- '%T'
