@@ -31,7 +31,7 @@ and three utilities:
 The originality of this software compared to other already existing lex and
 yacc programs for Eiffel, apart from its portability on many Eiffel compilers,
 is that gelex is entirely written in Eiffel using the lexical library, making
-it possible to include gelex functionalities in your programs.
+it possible to include gelex functionalities in your own programs.
 
 The software provided in this distribution should work on any platform
 where supported Eiffel compilers are available. However this software
