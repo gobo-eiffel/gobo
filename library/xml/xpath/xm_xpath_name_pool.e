@@ -409,14 +409,6 @@ feature -- Access
 			valid_name_code: Result > 0 and Result <= bits_28 -- 28 bits = 8-bit prefix-index + 20-bit fingerprint
 		end
 
-	is_document_allocated (doc: XM_XPATH_TINY_DOCUMENT): BOOLEAN is
-			--	Is a document number associated with `doc'
-		require
-			document_not_void: doc /= Void
-		do
-			Result := document_number_map.has (doc)
-		end
-
 	document_number (doc: XM_XPATH_TINY_DOCUMENT): INTEGER is
 			--	Document number associated with `doc'
 		require
@@ -425,6 +417,20 @@ feature -- Access
 		do
 				Result := document_number_map.item (doc)
 		end
+
+	last_name_code: INTEGER
+			-- The last name code allocated by `allocate_name_using_uri_code' or `allocate_name'
+
+	last_uri_code: INTEGER -- should be INTEGER_16
+			-- The last URI code allocated by `allocate_code_for_uri'
+
+	last_prefix_code: INTEGER -- should be INTEGER_16
+			-- The last prefix code allocated by `allocate_code_for_prefix'
+
+	last_namespace_code: INTEGER
+			-- The last namespace code allocated by `allocate_namespace_code'
+
+feature -- Status report
 
 	is_code_for_uri_allocated (uri: STRING): BOOLEAN is
 			-- Has a code been allocated for `uri'?
@@ -541,6 +547,7 @@ feature -- Access
 							if STRING_.same_string (the_name_entry.local_name, local_name) and the_name_entry.uri_code = uri_code then
 								finished := True
 								Result := True
+								depth := depth + 1
 							else
 								next := the_name_entry.next
 								depth := depth + 1
@@ -555,20 +562,14 @@ feature -- Access
 				end
 			end
 		end
-	
-	last_name_code: INTEGER
-			-- The last name code allocated by `allocate_name_using_uri_code' or `allocate_name'
 
-	last_uri_code: INTEGER -- should be INTEGER_16
-			-- The last URI code allocated by `allocate_code_for_uri'
-
-	last_prefix_code: INTEGER -- should be INTEGER_16
-			-- The last prefix code allocated by `allocate_code_for_prefix'
-
-	last_namespace_code: INTEGER
-			-- The last namespace code allocated by `allocate_namespace_code'
-	
-feature -- Status report
+	is_document_allocated (doc: XM_XPATH_TINY_DOCUMENT): BOOLEAN is
+			--	Is a document number associated with `doc'
+		require
+			document_not_void: doc /= Void
+		do
+			Result := document_number_map.has (doc)
+		end
 
 	diagnostic_dump is
 			-- Diagnostic print of the namepool contents

@@ -187,6 +187,9 @@ feature -- Tag
 			if a_namespace = Void then
 				Exceptions.raise ("XM_XPATH_CONTENT_EMITTER requires namespace to be resolved")
 			end
+			if a_local_part = Void then
+				Exceptions.raise ("XM_XPATH_CONTENT_EMITTER requires a_local_part to be non-void")
+			end			
 			if ns_prefix = Void then
 				a_prefix := ""
 			else
@@ -204,9 +207,9 @@ feature -- Tag
 			receiver.start_element (name_code, 0, 0)
 
 			if a_prefix.count = 0 then
-				create element_qname.make_from_string (a_local_part)
+				element_qname := a_local_part
 			else
-				create element_qname.make_from_string (a_prefix)
+				element_qname := a_prefix
 				element_qname.append_character (':')
 				element_qname.append_string (a_local_part)
 			end
