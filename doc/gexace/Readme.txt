@@ -353,6 +353,7 @@ Example:
 
 
 =====================================================
+
 Subject: Re: [gobo-eiffel-develop] Xace: attribute "prefix" in <cluster>
 Date: Sat, 27 Apr 2002 00:09:00 +0200
 From: Eric Bezault <gobosoft@ifrance.com>
@@ -492,6 +493,37 @@ Wouldn't it look nicer to have:
 ------------
 
 and have the prefix applied recursively to the subclusters?
+
+--
+Eric Bezault
+mailto:ericb@gobosoft.com
+http://www.gobosoft.com
+
+=====================================================
+
+Subject: Re: [gobo-eiffel-develop] Xace: attribute "prefix" in <cluster>
+Date: Mon, 29 Apr 2002 22:08:48 +0200
+From: Eric Bezault <gobosoft@ifrance.com>
+Reply-To: ericb@gobosoft.com
+Organization: Gobo
+To: gobo-eiffel-develop@lists.sourceforge.net
+
+Eric Bezault wrote:
+>
+> Yes, I have a similar pattern in $GOBO/library/tools/library.xace
+> with similar cluster names for eiffel/lace/xace parsers and AST
+> classes. I have now implemented the "prefix" attribute in <cluster>
+> in my working version (not committed yet to CVS) and the Xace file
+> is much simplier now. I also added an attribute "prefix" to
+> <library> to provide a default prefix value to be overwritten
+> by the "prefix" attribute of <mount>. Here again the Xace files
+> are simplier because there is no need to repeat a possible prefix
+> in <mount> in many Xace files when the default value provided
+> in <library> is OK.
+
+The attribute "prefix" in <cluster> and <library> are now
+available in CVS. You need to run the bootstrap to take
+advantage of it.
 
 --
 Eric Bezault
