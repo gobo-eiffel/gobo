@@ -154,7 +154,7 @@ feature -- Duplication
 feature -- Comparison
 
 	is_equal (other: like Current): BOOLEAN is
-			-- Is stack equal to `other'?
+			-- Is current queue equal to `other'?
 		local
 			a_cell, other_cell: like first_cell
 		do
@@ -200,6 +200,7 @@ feature -- Element change
 
 	extend, append (other: DS_LINEAR [G]) is
 			-- Add items of `other' to back of queue.
+			-- Add `other.first' first, etc.
 		local
 			a_cell, new_last, new_first: like first_cell
 			other_cursor: DS_LINEAR_CURSOR [G]

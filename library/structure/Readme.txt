@@ -31,7 +31,7 @@ cursor
     simultaneous traversals without any side-effects between different
     traversals.
 dispenser
-    FIFO (e.g. queues) and FILO (e.g. stacks) containers.
+    FIFO (e.g. queues) and LIFO (e.g. stacks) containers.
 list
     Traversable lists.
 sort
@@ -39,7 +39,7 @@ sort
 support
     Support classes such as cells, pairs or linkable cells.
 table
-    Structures whose items are accessible through keys. One possible
+    Structures whose items are accessible by keys. One possible
     implementation of tables is hash tables.
 
 A more detailed documentation for this library, in HTML format, is

@@ -6,7 +6,7 @@ indexing
 
 	library:    "Gobo Eiffel Structure Library"
 	author:     "Eric Bezault <ericb@gobosoft.com>"
-	copyright:  "Copyright (c) 1997, Eric Bezault and others"
+	copyright:  "Copyright (c) 1999, Eric Bezault and others"
 	license:    "Eiffel Forum Freeware License v1 (see forum.txt)"
 	date:       "$Date$"
 	revision:   "$Revision$"
@@ -19,8 +19,8 @@ inherit
 
 feature -- Sort
 
-	subsort (container: DS_INDEXABLE [G]; lower, upper: INTEGER) is
-			-- Sort `container' in increasing order
+	subsort (a_container: DS_INDEXABLE [G]; lower, upper: INTEGER) is
+			-- Sort `a_container' in increasing order
 			-- within bounds `lower'..`upper'.
 		local
 			i, j, nb: INTEGER
@@ -29,11 +29,11 @@ feature -- Sort
 		do
 			from i := upper until i <= lower loop
 				from j := lower until j >= i loop
-					v1 := container.item (j)
-					v2 := container.item (j + 1)
+					v1 := a_container.item (j)
+					v2 := a_container.item (j + 1)
 					if v2 < v1 then
-						container.replace (v2, j)
-						container.replace (v1, j + 1)
+						a_container.replace (v2, j)
+						a_container.replace (v1, j + 1)
 						flipped := True
 					end
 					j := j + 1

@@ -717,7 +717,7 @@ feature -- removal
 feature -- Resizing
 
 	resize (n: INTEGER) is
-			-- Resize container so that it can contain
+			-- Resize list so that it can contain
 			-- at least `n' items. Do not lose any item.
 		do
 			storage := FIXED_ARRAY_.resize (storage, n + 1)

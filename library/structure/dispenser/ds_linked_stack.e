@@ -6,7 +6,7 @@ indexing
 
 	library:    "Gobo Eiffel Structure Library"
 	author:     "Eric Bezault <ericb@gobosoft.com>"
-	copyright:  "Copyright (c) 1997, Eric Bezault and others"
+	copyright:  "Copyright (c) 1999, Eric Bezault and others"
 	license:    "Eiffel Forum Freeware License v1 (see forum.txt)"
 	date:       "$Date$"
 	revision:   "$Revision$"
@@ -153,7 +153,7 @@ feature -- Duplication
 feature -- Comparison
 
 	is_equal (other: like Current): BOOLEAN is
-			-- Is stack equal to `other'?
+			-- Is current stack equal to `other'?
 		local
 			a_cell, other_cell: like first_cell
 		do
@@ -201,6 +201,7 @@ feature -- Element change
 
 	extend, append (other: DS_LINEAR [G]) is
 			-- Add items of `other' to stack.
+			-- Add `other.first' first, etc.
 		local
 			a_cell, new_first: like first_cell
 			other_cursor: DS_LINEAR_CURSOR [G]
