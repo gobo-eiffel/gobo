@@ -92,11 +92,11 @@ feature -- Processing
 print ("Parsed ")
 print (a_universe.classes.count)
 print (" classes%N")
-print (a_universe.feature_counter)
+print (a_universe.features.count)
 print (" features%N")
 			a_universe.compute_ancestors
 print ("Done.%N")
-print (a_universe.feature_counter)
+print (a_universe.features.count)
 print (" features%N")
 		end
 
