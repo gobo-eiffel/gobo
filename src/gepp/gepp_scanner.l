@@ -6,7 +6,7 @@ indexing
 		"Scanners for 'gepp' preprocessors"
 
 	author:     "Eric Bezault <ericb@gobo.demon.co.uk>"
-	copyright:  "Copyright (c) 1997, Eric Bezault"
+	copyright:  "Copyright (c) 1998, Eric Bezault"
 	date:       "$Date$"
 	revision:   "$Revision$"
 
@@ -141,7 +141,7 @@ feature -- Element change
 				set_input_buffer (include_stack.item)
 				include_stack.remove
 				if old_buffer /= Void then
-					input_stream_.close (old_buffer.file)
+					INPUT_STREAM_.close (old_buffer.file)
 				end
 				set_start_condition (INITIAL)
 			else

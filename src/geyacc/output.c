@@ -267,7 +267,7 @@ output_token_translations()
 \tyyNsyms: INTEGER is %d\n\n", max_user_token_number, nsyms);
 	fprintf(ftable,
 		"\tyytranslate_: ARRAY [INTEGER] is\n\
-\t\tonce\n\t\t\tResult := integer_array_.make_from_array (<<0");
+\t\tonce\n\t\t\tResult := INTEGER_ARRAY_.make_from_array (<<0");
 
       j = 10;
       for (i = 1; i <= max_user_token_number; i++)
@@ -404,7 +404,7 @@ output_rule_data()
 /* GOBO: alot of DEBUG removed */
 
   fprintf(ftable, "\tyyr1_: ARRAY [INTEGER] is\n\
-\t\tonce\n\t\t\tResult := integer_array_.make_from_array (<<0");
+\t\tonce\n\t\t\tResult := INTEGER_ARRAY_.make_from_array (<<0");
 
   j = 10;
   for (i = 1; i <= nrules; i++)
@@ -427,7 +427,7 @@ output_rule_data()
   FREE(rlhs + 1);
 
   fprintf(ftable, ">>, 0)\n\t\tend\n\n\tyyr2_: ARRAY [INTEGER] is\n\
-\t\tonce\n\t\t\tResult := integer_array_.make_from_array (<<0");
+\t\tonce\n\t\t\tResult := INTEGER_ARRAY_.make_from_array (<<0");
 
   j = 10;
   for (i = 1; i < nrules; i++)
@@ -516,7 +516,7 @@ token_actions()
 
   k = action_row(0);
   fprintf(ftable, "\tyydefact_: ARRAY [INTEGER] is\n\
-\t\tonce\n\t\t\tResult := integer_array_.make_from_array (<<%6d", k);
+\t\tonce\n\t\t\tResult := INTEGER_ARRAY_.make_from_array (<<%6d", k);
   save_row(0);
 
   j = 10;
@@ -776,7 +776,7 @@ goto_actions()
 
   k = default_goto(ntokens);
   fprintf(ftable, "\tyydefgoto_: ARRAY [INTEGER] is\n\
-\t\tonce\n\t\t\tResult := integer_array_.make_from_array (<<%6d", k);
+\t\tonce\n\t\t\tResult := INTEGER_ARRAY_.make_from_array (<<%6d", k);
   save_column(ntokens, k);
 
   j = 10;
@@ -1096,7 +1096,7 @@ output_base()
   register int j;
 
   fprintf(ftable, "\tyypact_: ARRAY [INTEGER] is\n\
-\t\tonce\n\t\t\tResult := integer_array_.make_from_array (<<%6d", base[0]);
+\t\tonce\n\t\t\tResult := INTEGER_ARRAY_.make_from_array (<<%6d", base[0]);
 
   j = 10;
   for (i = 1; i < nstates; i++)
@@ -1117,7 +1117,7 @@ output_base()
     }
 
   fprintf(ftable, ">>, 0)\n\t\tend\n\n\tyypgoto_: ARRAY [INTEGER] is\n\
-\t\tonce\n\t\t\tResult := integer_array_.make_from_array (<<%6d", base[nstates]);
+\t\tonce\n\t\t\tResult := INTEGER_ARRAY_.make_from_array (<<%6d", base[nstates]);
 
   j = 10;
   for (i = nstates + 1; i < nvectors; i++)
@@ -1150,7 +1150,7 @@ output_table()
 
   fprintf(ftable, "\tyyLast: INTEGER is %d\n\n", high);
   fprintf(ftable, "\tyytable_: ARRAY [INTEGER] is\n\
-\t\tonce\n\t\t\tResult := integer_array_.make_from_array (<<%6d", table[0]);
+\t\tonce\n\t\t\tResult := INTEGER_ARRAY_.make_from_array (<<%6d", table[0]);
 
   j = 10;
   for (i = 1; i <= high; i++)
@@ -1182,7 +1182,7 @@ output_check()
   register int j;
 
   fprintf(ftable, "\tyycheck_: ARRAY [INTEGER] is\n\
-\t\tonce\n\t\t\tResult := integer_array_.make_from_array (<<%6d", check[0]);
+\t\tonce\n\t\t\tResult := INTEGER_ARRAY_.make_from_array (<<%6d", check[0]);
 
   j = 10;
   for (i = 1; i <= high; i++)
