@@ -74,7 +74,8 @@ inherit
 			change_name as old_change_name,
 			flush as old_flush,
 			close as old_close,
-			delete as old_delete
+			delete as old_delete,
+			reset as old_reset
 		export
 			{NONE} all
 		undefine
@@ -108,7 +109,7 @@ feature -- Input
 			elseif old_end_of_file then
 				end_of_file := True
 			else
-				if is_windows then
+				if operating_system.is_windows then
 						-- Windows.
 					old_read_character
 					if not old_end_of_file then
@@ -140,7 +141,7 @@ feature -- Input
 			i, j: INTEGER
 			a_target: STRING
 		do
-			if is_windows then
+			if operating_system.is_windows then
 					-- Windows.
 				if last_string = Void then
 					!! last_string.make (nb)

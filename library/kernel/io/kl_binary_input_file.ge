@@ -60,7 +60,8 @@ inherit
 			change_name as old_change_name,
 			flush as old_flush,
 			close as old_close,
-			delete as old_delete
+			delete as old_delete,
+			reset as old_reset
 		export
 			{NONE} all
 		undefine
