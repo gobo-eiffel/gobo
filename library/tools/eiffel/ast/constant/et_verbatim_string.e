@@ -113,6 +113,7 @@ feature -- Processing
 
 invariant
 
+	value_not_void: value /= Void
 	marker_not_void: marker /= Void
 	open_white_characters_not_void: open_white_characters /= Void
 	close_white_character_not_void: close_white_characters /= Void

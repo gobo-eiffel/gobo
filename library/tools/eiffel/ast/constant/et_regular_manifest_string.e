@@ -90,5 +90,6 @@ feature -- Processing
 invariant
 
 	-- valid_literal: regexp: \"[^"%\n]*\"
+	value_not_void: value /= Void
 
 end
