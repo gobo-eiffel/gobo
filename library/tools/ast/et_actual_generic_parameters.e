@@ -125,112 +125,99 @@ feature -- Status report
 
 feature -- Validity
 
-	check_parent_validity1 (an_heir: ET_CLASS): BOOLEAN is
-			-- Check whether current types are valid when
-			-- it appears in parent clause of `an_heir'.
-			-- Do not check conformance to generic constraints.
-			-- Report errors if not valid.
-		require
-			an_heir_not_void: an_heir /= Void
-		local
-			i, nb: INTEGER
-		do
-			nb := count
-			Result := True
-			from i := 1 until i > nb loop
-				if not item (i).check_parent_validity1 (an_heir) then
-					Result := False
-				end
-				i := i + 1
-			end
-		end
-
-	check_parent_validity2 (formals: ET_FORMAL_GENERIC_PARAMETERS;
+	check_parent_validity (formals: ET_FORMAL_GENERIC_PARAMETERS;
 		formal_class, an_heir: ET_CLASS): BOOLEAN is
 			-- Check whether current actual generic parameters
 			-- are a valid generic derivation of `formals' when
 			-- they appear in a constraint of a formal generic
 			-- parameter of class `a_class'. `formal_class' is
-			-- the class where `formals' are declared. Report
-			-- errors if not valid.
+			-- the class where `formals' are declared.
+			-- Report errors if not valid.
 		require
+			formals_not_void: formals /= Void
+			same_count: formals.count = count
+			formal_class_not_void: formal_class /= Void
+			valid_formals: formal_class.ancestors_searched and then not formal_class.has_ancestors_error
 			an_heir_not_void: an_heir /= Void
 		local
 			i, nb: INTEGER
 			a_formal: ET_FORMAL_GENERIC_PARAMETER
 			an_actual, a_constraint: ET_TYPE
 		do
-			Result := formals.check_validity (formal_class)
-			if Result then
-				nb := count
-				from i := 1 until i > nb loop
-					a_formal := formals.item (i)
-					an_actual := item (i)
-					if not an_actual.check_parent_validity2 (an_heir) then
-							-- The error has already been reported
-							-- in `check_parent_validity2'.
-						Result := False
-					else
-						a_constraint := a_formal.constraint
-						if a_constraint /= Void then
-							if not a_constraint.check_constraint_validity (formal_class) then
-									-- The error has already been reported
-									-- in `check_constraint_validity'.
-								Result := False
-							elseif not an_actual.syntactically_conforms_to (a_constraint, an_heir) then
-								Result := False
-								an_heir.error_handler.report_vtcg_error (an_heir, an_actual, a_constraint)
+			nb := count
+			Result := True
+			from i := 1 until i > nb loop
+				a_formal := formals.item (i)
+				an_actual := item (i)
+				if not an_actual.check_parent_validity (an_heir) then
+						-- The error has already been reported
+						-- in `check_parent_validity'.
+					Result := False
+				else
+					a_constraint := a_formal.constraint
+					if a_constraint /= Void then
+						if has_derived_parameters then
+							if a_constraint.has_formal_parameters (Current) then
+								a_constraint := a_constraint.deep_cloned_type
+								a_constraint := a_constraint.resolved_formal_parameters (Current)
 							end
 						end
+						if not an_actual.syntactically_conforms_to (a_constraint, an_heir) then
+							Result := False
+							an_heir.error_handler.report_vtcg_error (an_heir, an_actual, a_constraint)
+						end
 					end
-					i := i + 1
 				end
+				i := i + 1
 			end
 		end
 
-	check_constraint_validity (formals: ET_FORMAL_GENERIC_PARAMETERS;
-		formal_class, a_class: ET_CLASS): BOOLEAN is
-			-- Check whether current actual generic parameters
-			-- are a valid generic derivation of `formals' when
-			-- they appear in a constraint of a formal generic
-			-- parameter of class `a_class'. `formal_class' is
-			-- the class where `formals' are declared. Report
-			-- errors if not valid.
+	check_constraint_validity (formals: ET_FORMAL_GENERIC_PARAMETERS; formal_class: ET_CLASS;
+		a_formal: ET_FORMAL_GENERIC_PARAMETER; a_class: ET_CLASS;
+		a_sorter: DS_TOPOLOGICAL_SORTER [ET_FORMAL_GENERIC_PARAMETER]): BOOLEAN is
+			-- Check whether current actual generic parameters are
+			-- a valid generic derivation of `formals' when they
+			-- appear in a constraint of the formal generic parameter
+			-- `a_formal' in class `a_class'. `formal_class' is the
+			-- class where `formals' are declared. `a_sorter' is used
+			-- to find possible cycle in formal generic parameter
+			-- declaration. Report errors if not valid.
 		require
 			formals_not_void: formals /= Void
 			same_count: formals.count = count
 			formal_class_not_void: formal_class /= Void
+			valid_formals: formal_class.ancestors_searched and then not formal_class.has_ancestors_error
+			a_formal_not_void: a_formal /= Void
 			a_class_not_void: a_class /= Void
+			a_sorter_not_void: a_sorter /= Void
 		local
 			i, nb: INTEGER
-			a_formal: ET_FORMAL_GENERIC_PARAMETER
 			an_actual, a_constraint: ET_TYPE
 		do
-			Result := formals.check_validity (formal_class)
-			if Result then
-				nb := count
-				from i := 1 until i > nb loop
-					a_formal := formals.item (i)
-					an_actual := item (i)
-					if not an_actual.check_constraint_validity (a_class) then
-							-- The error has already been reported
-							-- in `check_constraint_validity'.
-						Result := False
-					else
-						a_constraint := a_formal.constraint
-						if a_constraint /= Void then
-							if not a_constraint.check_constraint_validity (formal_class) then
-									-- The error has already been reported
-									-- in `check_constraint_validity'.
-								Result := False
-							elseif not an_actual.syntactically_conforms_to (a_constraint, a_class) then
-								Result := False
-								a_class.error_handler.report_vtcg_error (a_class, an_actual, a_constraint)
+			nb := count
+			Result := True
+			from i := 1 until i > nb loop
+				an_actual := item (i)
+				if not an_actual.check_constraint_validity (a_formal, a_class, a_sorter) then
+						-- The error has already been reported
+						-- in `check_constraint_validity'.
+					Result := False
+				else
+					a_constraint := formals.item (i).constraint
+					if a_constraint /= Void then
+						if has_derived_parameters then
+							if a_constraint.has_formal_parameters (Current) then
+								a_constraint := a_constraint.deep_cloned_type
+								a_constraint := a_constraint.resolved_formal_parameters (Current)
 							end
 						end
+						if not an_actual.syntactically_conforms_to (a_constraint, a_class) then
+							Result := False
+							a_class.error_handler.report_vtcg_error (a_class, an_actual, a_constraint)
+						end
 					end
-					i := i + 1
 				end
+				i := i + 1
 			end
 		end
 
@@ -350,6 +337,27 @@ feature -- Type processing
 			from i := 1 until i > nb loop
 				a_type := generic_parameters.item (i)
 				a_type := a_type.resolved_identifier_types (a_feature, args, a_flattener)
+				generic_parameters.put (a_type, i)
+				i := i + 1
+			end
+		end
+
+	resolve_named_types (a_class: ET_CLASS; ast_factory: ET_AST_FACTORY) is
+			-- Replace in current types unresolved named types
+			-- by corresponding class types or formal generic
+			-- parameter names. `a_class' is the class where
+			-- current types appear in the source code.
+		require
+			a_class_not_void: a_class /= Void
+			ast_factory_not_void: ast_factory /= Void
+		local
+			i, nb: INTEGER
+			a_type: ET_TYPE
+		do
+			nb := generic_parameters.count
+			from i := 1 until i > nb loop
+				a_type := generic_parameters.item (i)
+				a_type := a_type.resolved_named_types (a_class, ast_factory)
 				generic_parameters.put (a_type, i)
 				i := i + 1
 			end
