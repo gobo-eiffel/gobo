@@ -453,7 +453,7 @@ feature {NONE} -- Output
 				print_indentation (indent, a_file)
 				a_file.put_line ("optimize leaves off")
 			end
-			if an_option.linker.is_equal (options.microsoft_value) then
+			if STRING_.same_string (an_option.linker, options.microsoft_value) then
 				print_indentation (indent, a_file)
 				a_file.put_line ("linker microsoft")
 			else
@@ -497,13 +497,13 @@ feature {NONE} -- Output
 				a_file.put_new_line
 			end
 			a_target := an_option.target
-			if a_target.is_equal (options.exe_value) then
+			if STRING_.same_string (a_target, options.exe_value) then
 				print_indentation (indent, a_file)
 				a_file.put_string ("target exe ")
-			elseif a_target.is_equal (options.dll_value) then
+			elseif STRING_.same_string (a_target, options.dll_value) then
 				print_indentation (indent, a_file)
 				a_file.put_string ("target dll ")
-			elseif a_target.is_equal (options.com_value) then
+			elseif STRING_.same_string (a_target, options.com_value) then
 				print_indentation (indent, a_file)
 				a_file.put_string ("target com ")
 			else

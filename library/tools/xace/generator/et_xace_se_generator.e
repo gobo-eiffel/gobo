@@ -226,7 +226,7 @@ feature {NONE} -- Output
 				a_file.put_line ("%")")
 				a_debug_tag_cursor.forth
 			end
-			if an_option.garbage_collector.is_equal (options.internal_value) then
+			if STRING_.same_string (an_option.garbage_collector, options.internal_value) then
 				print_indentation (indent, a_file)
 				a_file.put_line ("collect (yes)")
 			else
@@ -262,17 +262,17 @@ feature {NONE} -- Output
 				a_file.put_line ("verbose (no)")
 			end
 			a_warning := an_option.warning
-			if a_warning.is_equal (options.style_value) then
+			if STRING_.same_string (a_warning, options.style_value) then
 				print_indentation (indent, a_file)
 				a_file.put_line ("no_style_warning (no)")
 				print_indentation (indent, a_file)
 				a_file.put_line ("no_warning (yes)")
-			elseif a_warning.is_equal (options.default_value) then
+			elseif STRING_.same_string (a_warning, options.default_value) then
 				print_indentation (indent, a_file)
 				a_file.put_line ("no_style_warning (yes)")
 				print_indentation (indent, a_file)
 				a_file.put_line ("no_warning (no)")
-			elseif a_warning.is_equal (options.all_value) then
+			elseif STRING_.same_string (a_warning, options.all_value) then
 				print_indentation (indent, a_file)
 				a_file.put_line ("no_style_warning (no)")
 				print_indentation (indent, a_file)
@@ -321,7 +321,7 @@ feature {NONE} -- Output
 				print_indentation (indent, a_file)
 				a_file.put_line ("no_strip (yes)")
 			end
-			if an_option.target.is_equal (options.exe_value) then
+			if STRING_.same_string (an_option.target, options.exe_value) then
 				print_indentation (indent, a_file)
 				a_file.put_line ("no_main (no)")
 			else

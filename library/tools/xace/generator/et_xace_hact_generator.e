@@ -372,7 +372,7 @@ feature {NONE} -- Output
 			if not is_version_3 then
 					-- This option has been introduced in HACT 4.0 and
 					-- are not supported in HACT 3.
-				if an_option.garbage_collector.is_equal (options.boehm_value) then
+				if STRING_.same_string (an_option.garbage_collector, options.boehm_value) then
 					print_indentation (indent, a_file)
 					a_file.put_line ("garbage_collector (%"boehm%");")
 				else
@@ -452,10 +452,10 @@ feature {NONE} -- Output
 					-- This option has been introduced in HACT 4.0 and
 					-- are not supported in HACT 3.
 				a_warning := an_option.warning
-				if a_warning.is_equal (options.default_value) then
+				if STRING_.same_string (a_warning, options.default_value) then
 					print_indentation (indent, a_file)
 					a_file.put_line ("warning_level (%"default%");")
-				elseif a_warning.is_equal (options.all_value) then
+				elseif STRING_.same_string (a_warning, options.all_value) then
 					print_indentation (indent, a_file)
 					a_file.put_line ("warning_level (all);")
 				else

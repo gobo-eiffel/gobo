@@ -482,7 +482,7 @@ feature {NONE} -- Output
 				a_file.put_line ("%")")
 			end
 			a_target := an_option.target
-			if a_target.is_equal (options.dll_value) then
+			if STRING_.same_string (a_target, options.dll_value) then
 				print_indentation (indent, a_file)
 				a_file.put_line ("msil_generation_type (%"dll%")")
 			else
