@@ -54,6 +54,7 @@ feature -- Parser errors
 
 	Error_doctype_declaration: STRING is "Misformed DOCTYPE declaration"
 	Error_doctype_entity_defined_twice: STRING is "Entity defined twice"
+	Error_doctype_external_no_resolver: STRING is "Parser is not configured to support external DTDs"
 	Error_doctype_undefined_pe_entity: STRING is "Undefined PE entity"
 	Error_doctype_element: STRING is "Misformed element type declaration"
 	Error_doctype_attribute: STRING is "Misformed attribute list declaration"

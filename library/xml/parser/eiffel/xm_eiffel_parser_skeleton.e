@@ -68,10 +68,16 @@ feature {NONE} -- Initialization
 			entities := new_entities_table
 			pe_entities := new_entities_table
 				-- Resolvers
-			create {XM_NULL_EXTERNAL_RESOLVER} dtd_resolver
-			entity_resolver := dtd_resolver
+			dtd_resolver := null_resolver
+			entity_resolver := null_resolver
 		end
 
+	null_resolver: XM_NULL_EXTERNAL_RESOLVER is
+			-- Null resolver.
+		once
+			create Result
+		end
+		
 feature -- Initialization
 
 	reset is
@@ -501,7 +507,11 @@ feature {NONE} -- DTD
 				create {XM_EIFFEL_SCANNER_DTD} scanner.make_scanner
 				scanner.set_input_stream (dtd_resolver.last_stream)
 			else
-				on_error (dtd_resolver.last_error)
+				if dtd_resolver = null_resolver then
+					force_error (Error_doctype_external_no_resolver)
+				else
+					force_error (dtd_resolver.last_error)
+				end
 			end
 		end
 

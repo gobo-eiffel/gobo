@@ -10,7 +10,6 @@ EXPAT:
 
 EIFFEL:
 
-- Better error message when failing to resolve DTD
 - xml declaration for entities event and parsing (rm special scanner?)
 - Check that stand alone handling makes some sense
 - Parse ":" name in pedantic XML 1.0 mode for tests
@@ -19,6 +18,7 @@ EIFFEL:
 
 GENERAL:
 
+- XM_FORMATTER escaping of lt and amp and apos/quot in attributes
 - check XM_FORMATTER handling of namespaces
 - Tree pipe to include concatenation and comment filters
 - Tree attribute make require not duplicate attribute, or invariant
