@@ -4,6 +4,12 @@ indexing
 
 		"Routines that ought to be in class STRING"
 
+	note:
+
+		"Unless otherwise specified in their preconditions, %
+		%the features of this class can deal with UC_STRING %
+		%whenever a STRING is expected."
+
 	library: "Gobo Eiffel Kernel Library"
 	copyright: "Copyright (c) 1999-2002, Eric Bezault and others"
 	license: "Eiffel Forum License v1 (see forum.txt)"
@@ -12,11 +18,22 @@ indexing
 
 class KL_STRING_ROUTINES
 
+inherit
+
+	KL_SHARED_PLATFORM
+
+	KL_IMPORTED_CHARACTER_ROUTINES
+	UC_IMPORTED_UNICODE_ROUTINES
+
 feature -- Initialization
 
 	make (n: INTEGER): STRING is
 			-- Create an empty string. Try to allocate space
 			-- for at least `n' characters.
+			-- (ELKS 2001 STRING)
+			-- Note: This routine should be made obsolete as soon
+			-- as VE implements is correctly, which is not the case
+			-- as of VE 4.0.
 		require
 			non_negative_n: n >= 0
 		do
@@ -27,7 +44,128 @@ feature -- Initialization
 #endif
 		ensure
 			string_not_void: Result /= Void
+			string_type: Result.same_type ("")
 			empty_string: Result.count = 0
+		end
+
+	make_from_string (s: STRING): STRING is
+			-- Initialize from the character sequence of `s'.
+			-- `s' is considered with its characters which do not fit
+			-- in a CHARACTER replaced by a '%U'.
+			-- (ELKS 2001 STRING)
+			-- Note: Use this routine instead of '!! Result.make (s)' when
+			-- `s' is of dynamic type other than STRING (e.g. UC_STRING)
+			-- because the class STRING provided with the Eiffel compilers
+			-- is not necessarily aware of the implementation of UC_STRING
+			-- and this may lead to run-time crashes.
+		require
+			s_not_void: s /= Void
+		local
+			i, j, nb: INTEGER
+			uc_string: UC_STRING
+		do
+#ifdef VE
+			if s.same_type (dummy_string) then
+				!! Result.make_from_string (s)
+			else
+				nb := s.count
+				!! Result.make_filled ('%U', nb)
+				uc_string ?= s
+				if uc_string /= Void then
+					nb := uc_string.byte_count
+					from j := 1 until j > nb loop
+						i := i + 1
+						Result.put (uc_string.character_item_at_byte_index (j), i)
+						j := uc_string.next_byte_index (j)
+					end
+				else
+					from i := 1 until i > nb loop
+						Result.put (s.item (i), i)
+						i := i + 1
+					end
+				end
+			end
+#endif
+#ifdef SE
+			if s.same_type (dummy_string) then
+				!! Result.make_from_string (s)
+			else
+				nb := s.count
+				!! Result.make (nb)
+				uc_string ?= s
+				if uc_string /= Void then
+					nb := uc_string.byte_count
+					from j := 1 until j > nb loop
+						Result.append_character (uc_string.character_item_at_byte_index (j))
+						j := uc_string.next_byte_index (j)
+					end
+				else
+					from i := 1 until i > nb loop
+						Result.append_character (s.item (i))
+						i := i + 1
+					end
+				end
+			end
+#endif
+#ifdef ISE || HACT
+			nb := s.count
+			!! Result.make (nb)
+			uc_string ?= s
+			if uc_string /= Void then
+				nb := uc_string.byte_count
+				from j := 1 until j > nb loop
+					Result.append_character (uc_string.character_item_at_byte_index (j))
+					j := uc_string.next_byte_index (j)
+				end
+			else
+				from i := 1 until i > nb loop
+					Result.append_character (s.item (i))
+					i := i + 1
+				end
+			end
+#endif
+		ensure
+			string_not_void: Result /= Void
+			new_string: Result /= s
+			string_type: Result.same_type ("")
+			initialized: same_string (Result, s)
+		end
+
+	make_empty: STRING is
+			-- Create empty string.
+			-- (ELKS 2001 STRING)
+			-- Note: This routine should be made obsolete as soon
+			-- as it is supported by ISE and HACT, which is not the
+			-- case in ISE 5.1.14 and HACT 4.0.1.
+		do
+			Result := make (0)
+		ensure
+			string_not_void: Result /= Void
+			string_type: Result.same_type ("")
+			empty: Result.count = 0
+		end
+
+	make_filled (c: CHARACTER; n: INTEGER): STRING is
+			-- Create string of length `n' filled with `c'.
+			-- (ELKS 2001 STRING)
+			-- Note: This routine should be made obsolete as soon
+			-- as it is supported by ISE and HACT, which is not the
+			-- case in ISE 5.1.14 and HACT 4.0.1.
+		require
+			valid_count: n >= 0
+		do
+#ifdef VE || SE
+			!! Result.make_filled (c, n)
+#endif
+#ifdef ISE || HACT
+			!! Result.make (n)
+			Result.fill_character (c)
+#endif
+		ensure
+			string_not_void: Result /= Void
+			string_type: Result.same_type ("")
+			count_set: Result.count = n
+			filled: Result.occurrences (c) = Result.count
 		end
 
 	make_buffer (n: INTEGER): STRING is
@@ -37,53 +175,69 @@ feature -- Initialization
 		do
 #ifdef VE
 			!! Result.make_filled ('%U', n)
-#else
+#endif
 #ifdef SE
 			!! Result.blank (n)
-#else
-			!! Result.make (n)
-#ifdef TOWER
-			Result.set_count (n)
-#else
+#endif
 #ifdef ISE || HACT
+			!! Result.make (n)
 			Result.fill_blank
-#else
-			Result.fill ('#')
-#endif
-#endif
-#endif
 #endif
 		ensure
 			string_not_void: Result /= Void
+			string_type: Result.same_type ("")
 			count_set: Result.count = n
 		end
 
 feature -- Status report
 
+	has_substring (a_string, other: STRING): BOOLEAN is
+			-- Does `a_string' contain `other'? `a_string' and `other'
+			-- are considered with their characters which do not fit
+			-- in a CHARACTER replaced by a '%U'.
+			-- (Extended from ELKS 2001 STRING)
+			-- Note: Use this feature instead of 'a_string.has_substring
+			-- (other)' when `a_string' can be of dynamic type STRING and
+			-- `other' of dynamic type other than STRING such as UC_STRING,
+			-- because class STRING provided by the Eiffel compilers is
+			-- not necessarily aware of the implementation of UC_STRING
+			-- and this may lead to run-time crashes.
+		require
+			a_string_not_void: a_string /= Void
+			other_not_void: other /= Void
+		do
+			Result := substring_index (a_string, other, 1) /= 0
+		ensure
+			false_if_too_small: a_string.count < other.count implies not Result
+			true_if_initial: (a_string.count >= other.count and then
+				same_string (other, substring (a_string, 1, other.count))) implies Result
+			recurse: (a_string.count >= other.count and then
+				not same_string (other, substring (a_string, 1, other.count))) implies
+				(Result = has_substring (substring (a_string, 2, a_string.count), other))
+		end
+
 	is_integer (a_string: STRING): BOOLEAN is
 			-- Is `a_string' only made up of digits?
 		require
 			a_string_not_void: a_string /= Void
-#ifdef VE || TOWER
 		local
 			i: INTEGER
 			c: CHARACTER
-#endif
 		do
-#ifdef VE || TOWER
-			from
-				i := a_string.count
-				Result := True
-			until
-				not Result or i = 0
-			loop
-				c := a_string.item (i)
-				Result := c >= '0' and c <= '9'
-				i := i - 1
+			i := a_string.count
+			if i = 0 then
+				Result := False
+			else
+				from
+					Result := True
+				until
+					not Result or i = 0
+				loop
+					c := a_string.item (i)
+					Result := c >= '0' and c <= '9'
+					i := i - 1
+				end
 			end
-#else
-			Result := a_string.is_integer
-#endif
 		end
 
 	is_hexadecimal (a_string: STRING): BOOLEAN is
@@ -95,21 +249,209 @@ feature -- Status report
 			i: INTEGER
 			c: CHARACTER
 		do
-			from
-				i := a_string.count
-				Result := True
-			until
-				not Result or i = 0
-			loop
-				c := a_string.item (i)
-				Result := (c >= '0' and c <= '9')
-					or (c >= 'a' and c <= 'f')
-					or (c >= 'A' and c <= 'F')
-				i := i - 1
+			i := a_string.count
+			if i = 0 then
+				Result := False
+			else
+				from
+					Result := True
+				until
+					not Result or i = 0
+				loop
+					c := a_string.item (i)
+					Result := (c >= '0' and c <= '9')
+						or (c >= 'a' and c <= 'f')
+						or (c >= 'A' and c <= 'F')
+					i := i - 1
+				end
 			end
 		end
-		
+
 feature -- Access
+
+	string (a_string: STRING): STRING is
+			-- New STRING having the same character sequence as `a_string'
+			-- where characters which do not fit in a CHARACTER are
+			-- replaced by a '%U'
+			-- (Extended from ELKS 2001 STRING)
+			-- Note: This routine should be made obsolete as soon
+			-- as it is supported by ISE and HACT, which is not the
+			-- case in ISE 5.1.14 and HACT 4.0.1.
+		require
+			a_string_not_void: a_string /= Void
+		local
+			uc_string: UC_STRING
+#ifdef ISE || HACT
+			i, nb: INTEGER
+#endif
+		do
+			uc_string ?= a_string
+			if uc_string /= Void then
+				Result := uc_string.string
+			else
+#ifdef SE || VE
+				Result := a_string.string
+#endif
+#ifdef ISE || HACT
+				nb := a_string.count
+				!! Result.make (nb)
+				from i := 1 until i > nb loop
+					Result.append_character (a_string.item (i))
+					i := i + 1
+				end
+#endif
+			end
+		ensure
+			string_not_void: Result /= Void
+			string_type: Result.same_type ("")
+			first_item: a_string.count > 0 implies Result.item (1) = a_string.item (1)
+			recurse: a_string.count > 1 implies substring (Result, 2, a_string.count).is_equal (string (substring (a_string, 2, a_string.count)))
+		end
+
+	substring (a_string: STRING; start_index, end_index: INTEGER): like a_string is
+			-- New object containing all characters of `a_string'
+			-- from `start_index' to `end_index' inclusive
+			-- (ELKS 2001 STRING)
+			-- Note: This routine should be made obsolete as soon
+			-- as HACT supports empty substrings, which is not yet
+			-- the case as of HACT 4.0.1.
+		require
+			a_string_not_void: a_string /= Void
+			valid_start_index: 1 <= start_index
+			valid_end_index: end_index <= a_string.count
+			meaningful_interval: start_index <= end_index + 1
+#ifdef HACT
+		local
+			a_unicode: UC_STRING
+		do
+			if start_index <= end_index then
+				Result := a_string.substring (start_index, end_index)
+			elseif a_string.same_type (dummy_string) then
+				Result := make (0)
+			else
+				a_unicode ?= a_string
+				if a_unicode /= Void then
+					Result := a_unicode.substring (start_index, end_index)
+				else
+					Result := clone (a_string)
+					Result.wipe_out
+				end
+			end
+#else
+		do
+			Result := a_string.substring (start_index, end_index)
+#endif
+		ensure
+			substring_not_void: Result /= Void
+			substring_count: Result.count = end_index - start_index + 1
+			first_item: Result.count > 0 implies Result.item (1) = a_string.item (start_index)
+			-- Note: Too time and memory consumming with SE -0.74:
+			-- recurse: Result.count > 0 implies substring (Result, 2, Result.count).is_equal
+			--	(substring (a_string, start_index + 1, end_index))
+		end
+
+	substring_index (a_string, other: STRING; start_index: INTEGER): INTEGER is
+			-- Index of first occurrence of `other' at or after `start_index' in
+			-- `a_string'; 0 if none. `a_string' and `other' are considered with
+			-- their characters which do not fit in a CHARACTER replaced by a '%U'.
+			-- (ELKS 2001 STRING)
+			-- Note: Use this feature instead of 'a_string.substring_index (other,
+			-- start_index)' when `a_string' can be of dynamic type STRING and
+			-- `other' of dynamic type other than STRING such as UC_STRING, because
+			-- class STRING provided by the Eiffel compilers is not necessarily
+			-- aware of the implementation of UC_STRING and this may lead to
+			-- run-time crashes.
+		require
+			a_string_not_void: a_string /= Void
+			other_not_void: other /= Void
+			valid_start_index: start_index >= 1 and start_index <= a_string.count + 1
+		local
+			i, j, nb: INTEGER
+			a_code: INTEGER
+			other_unicode: UC_STRING
+			k, end_index: INTEGER
+			found: BOOLEAN
+			uc_string: UC_STRING
+		do
+				-- Note: ISE Eiffel 5.1 is more constraining than ELKS 2001:
+				-- other_not_empty: other.count > 0
+				-- start_index_large_enough: start_index >= 1
+				-- start_index_small_enough: start_index <= a_string.count
+			if other.count = 0 then
+				Result := start_index
+			elseif start_index = a_string.count + 1 then
+				Result := 0
+			elseif a_string.same_type (dummy_string) then
+				if other.same_type (dummy_string) then
+					Result := a_string.substring_index (other, start_index)
+				else
+					end_index := a_string.count - other.count + 1
+					if start_index <= end_index then
+						other_unicode ?= other
+						if other_unicode /= Void then
+							nb := other_unicode.byte_count
+							from k := start_index until k > end_index loop
+								j := k
+								found := True
+								from i := 1 until i > nb loop
+									a_code := other_unicode.item_code_at_byte_index (i)
+									if a_code > Platform.Maximum_character_code then
+										a_code := 0
+									end
+									if a_string.item_code (j) /= a_code then
+										found := False
+										i := nb + 1 -- Jump out of the loop.
+									else
+										j := j + 1
+										i := other_unicode.next_byte_index (i)
+									end
+								end
+								if found then
+									Result := k
+									k := end_index + 1 -- Jump out of the loop.
+								else
+									k := k + 1
+								end
+							end
+						else
+							nb := other.count
+							from k := start_index until k > end_index loop
+								j := k
+								found := True
+								from i := 1 until i > nb loop
+									if a_string.item (j) /= other.item (i) then
+										found := False
+										i := nb + 1 -- Jump out of the loop.
+									else
+										j := j + 1
+										i := i + 1
+									end
+								end
+								if found then
+									Result := k
+									k := end_index + 1 -- Jump out of the loop.
+								else
+									k := k + 1
+								end
+							end
+						end
+					end
+				end
+			else
+				uc_string ?= a_string
+				if uc_string /= Void then
+					Result := uc_string.substring_index (other, start_index)
+				else
+					Result := a_string.substring_index (other, start_index)
+				end
+			end
+		ensure
+			valid_result: Result = 0 or else (start_index <= Result and Result <= a_string.count - other.count + 1)
+			zero_if_absent: (Result = 0) = not has_substring (substring (a_string, start_index, a_string.count), other)
+			at_this_index: Result >= start_index implies same_string (other, substring (a_string, Result, Result + other.count - 1))
+			none_before: Result > start_index implies not
+				has_substring (substring (a_string, start_index, Result + other.count - 2), other)
+		end
 
 	case_insensitive_hash_code (a_string: STRING): INTEGER is
 			-- Hash code value of `a_string' which doesn't
@@ -151,7 +493,69 @@ feature -- Access
 			hash_code_positive: Result >= 0
 		end
 
+	concat (a_string, other: STRING): STRING is
+			-- New object which contains the characters of `a_string'
+			-- followed by the characters of `other'; If `other' is
+			-- of dynamic type UC_STRING or one of its descendants and
+			-- `a_string' is not, then the dynamic type of the result
+			-- is the same as the dynamic type of `other'. Otherwise
+			-- the result is similar to 'a_string + other';
+			-- Note: Use this routine instead of 'a_string + other' or
+			-- 'a_string.append_string (other)' when when `a_string'
+			-- can be of dynamic type STRING and `other' of dynamic
+			-- type other than STRING such as UC_STRING, because class
+			-- STRING provided by the Eiffel compilers is not necessarily
+			-- aware of the implementation of UC_STRING and this may
+			-- lead to run-time crashes.
+		require
+			a_string_not_void: a_string /= Void
+			other_not_void: other /= Void
+		local
+			uc_string: UC_STRING
+		do
+			uc_string ?= a_string
+			if uc_string /= Void then
+				Result := uc_string + other
+			else
+				uc_string ?= other
+				if uc_string /= Void then
+					Result := uc_string.prefixed_string (a_string)
+				else
+					Result := a_string + other
+				end
+			end
+		ensure
+			concat_not_void: Result /= Void
+			concat_count: Result.count = a_string.count + other.count
+			initial: same_string (substring (Result, 1, a_string.count), a_string)
+			final: same_string (substring (Result, a_string.count + 1, Result.count), other)
+		end
+
 feature -- Comparison
+
+	same_string (a_string, other: STRING): BOOLEAN is
+			-- Do `a_string' and `other' have the same character sequence?
+			-- `a_string' and `other' are considered with their characters
+			-- which do not fit in a CHARACTER replaced by a '%U'.
+			-- (Extended from ELKS 2001 STRING)
+			-- Note: Use this feature instead of 'a_string.same_string
+			-- (other)' when `a_string' can be of dynamic type STRING and
+			-- `other' of dynamic type other than STRING such as UC_STRING,
+			-- because class STRING provided by the Eiffel compilers is
+			-- not necessarily aware of the implementation of UC_STRING
+			-- and this may lead to run-time crashes.
+		require
+			a_string_not_void: a_string /= Void
+			other_not_void: other /= Void
+		do
+			if other = a_string then
+				Result := True
+			elseif other.count = a_string.count then
+				Result := (substring_index (a_string, other, 1) = 1)
+			end
+		ensure
+			definition: Result = string (a_string).is_equal (string (other))
+		end
 
 	same_case_insensitive (s1, s2: STRING): BOOLEAN is
 			-- Are `s1' and `s2' made up of the same
@@ -161,38 +565,121 @@ feature -- Comparison
 			s2_not_void: s2 /= Void
 		local
 			c1, c2: CHARACTER
+			a_code1, a_code2: INTEGER
 			i: INTEGER
 		do
 			if s1 = s2 then
 				Result := True
 			elseif s1.count = s2.count then
 				Result := True
-				from i := s1.count until i < 1 loop
-					c1 := s1.item (i)
-					c2 := s2.item (i)
-					if c1 = c2 then
-						i := i - 1
+				if not (s1.same_type (dummy_string) and s2.same_type (dummy_string)) then
+					from i := s1.count until i < 1 loop
+						a_code1 := s1.item_code (i)
+						a_code2 := s2.item_code (i)
+						if a_code1 = a_code2 then
+							i := i - 1
+						elseif unicode.lower_code (a_code1) = unicode.lower_code (a_code2) then
+							i := i - 1
+						else
+							Result := False
+							i := 0  -- Jump out of the loop
+						end
+					end
+				else
+					from i := s1.count until i < 1 loop
+						c1 := s1.item (i)
+						c2 := s2.item (i)
+						if c1 = c2 then
+							i := i - 1
 #ifdef ISE || HACT
-					elseif c1.lower = c2.lower then
+						elseif c1.lower = c2.lower then
 #endif
 #ifdef SE
-					elseif c1.to_lower = c2.to_lower then
+						elseif c1.to_lower = c2.to_lower then
 #endif
 #ifdef VE
-					elseif c1.as_lower = c2.as_lower then
+						elseif c1.as_lower = c2.as_lower then
 #endif
-						i := i - 1
-					else
-						Result := False
-						i := 0  -- Jump out of the loop
+							i := i - 1
+						else
+							Result := False
+							i := 0  -- Jump out of the loop
+						end
 					end
 				end
 			end
 		end
 
+feature -- Element change
+
+	fill_with (a_string: STRING; c: CHARACTER) is
+			-- Replace every character in `a_string' with `c'.
+			-- (ELKS 2001 STRING)
+			-- Note: This routine should be made obsolete as soon
+			-- as it is supported by ISE and HACT, which is not the
+			-- case in ISE 5.1.14 and HACT 4.0.1.
+		require
+			a_string_not_void: a_string /= Void
+#ifdef HACT || ISE
+		local
+			i, nb: INTEGER
+		do
+			nb := a_string.count
+			from i := 1 until i > nb loop
+				a_string.put (c, i)
+				i := i + 1
+			end
+#endif
+#ifdef SE || VE
+		do
+			a_string.fill_with (c)
+#endif
+		ensure
+			same_count: old a_string.count = a_string.count
+			filled: a_string.occurrences (c) = a_string.count
+		end
+
+	insert_character (a_string: STRING; c: CHARACTER; i: INTEGER) is
+			-- Insert `c' at index `i' in `a_string', shifting characters
+			-- between ranks `i' and `count' rightwards.
+			-- (ELKS 2001 STRING)
+			-- Note: This routine should be made obsolete as soon
+			-- as it is supported by ISE, which is not the
+			-- case in ISE 5.1.14.
+		require
+			a_string_not_void: a_string /= Void
+			valid_insertion_index: 1 <= i and i <= a_string.count + 1
+#ifdef ISE
+		local
+			uc_string: UC_STRING
+			j, nb: INTEGER
+		do
+			uc_string ?= a_string
+			if uc_string /= Void then
+				uc_string.insert_character (c, i)
+			else
+				a_string.append_character (c)
+				from j := a_string.count until j = i loop
+					a_string.put (a_string.item (j - 1), j)
+					j := j - 1
+				end
+				a_string.put (c, i)
+			end
+#endif
+#ifdef SE || VE || HACT
+		do
+			a_string.insert_character (c, i)
+#endif
+		ensure
+			one_more_character: a_string.count = old a_string.count + 1
+			inserted: a_string.item (i) = c
+			stable_before_i: substring (a_string, 1, i - 1).is_equal (old substring (a_string, 1, i - 1))
+			stable_after_i: substring (a_string, i + 1, a_string.count).is_equal (old substring (a_string, i, a_string.count))
+		end
+
 feature -- Conversion
 
-	to_lower (a_string: STRING): STRING is
+	to_lower (a_string: STRING): like a_string is
 			-- Lower case version of `a_string'
 			-- (Do not alter `a_string'.)
 		require
@@ -207,7 +694,7 @@ feature -- Conversion
 			--	Result.item (i) = a_string.item (i).to_lower
 		end
 
-	to_upper (a_string: STRING): STRING is
+	to_upper (a_string: STRING): like a_string is
 			-- Upper case version of `a_string'
 			-- (Do not alter `a_string'.)
 		require
@@ -220,6 +707,42 @@ feature -- Conversion
 			same_count: Result.count = a_string.count
 			-- definition: forall i in 1..a_string.count,
 			--	Result.item (i) = a_string.item (i).to_upper
+		end
+
+	as_lower (a_string: STRING): like a_string is
+			-- New object with all letters in lower case
+			-- (Extended from ELKS 2001 STRING)
+			-- Note: This routine should be made obsolete as soon
+			-- as it is supported by ISE and HACT, which is not the
+			-- case in ISE 5.1.14 and HACT 4.0.1.
+		require
+			a_string_not_void: a_string /= Void
+		do
+			Result := clone (a_string)
+			Result.to_lower
+		ensure
+			as_lower_not_void: Result /= Void
+			length: Result.count = a_string.count
+			anchor: a_string.count > 0 implies Result.item (1) = CHARACTER_.as_lower (a_string.item (1))
+			recurse: a_string.count > 1 implies Result.substring (2, a_string.count).is_equal (as_lower (a_string.substring (2, a_string.count)))
+		end
+
+	as_upper (a_string: STRING): like a_string is
+			-- New object with all letters in upper case
+			-- (Extended from ELKS 2001 STRING)
+			-- Note: This routine should be made obsolete as soon
+			-- as it is supported by ISE and HACT, which is not the
+			-- case in ISE 5.1.14 and HACT 4.0.1.
+		require
+			a_string_not_void: a_string /= Void
+		do
+			Result := clone (a_string)
+			Result.to_upper
+		ensure
+			as_upper_not_void: Result /= Void
+			length: Result.count = a_string.count
+			anchor: a_string.count > 0 implies Result.item (1) = CHARACTER_.as_upper (a_string.item (1))
+			recurse: a_string.count > 1 implies Result.substring (2, a_string.count).is_equal (as_upper (a_string.substring (2, a_string.count)))
 		end
 
 	hexadecimal_to_integer (a_string: STRING): INTEGER is
@@ -267,6 +790,10 @@ feature -- Removal
 	keep_head (a_string: STRING; n: INTEGER) is
 			-- Remove all the characters of `a_string' except for the first `n';
 			-- if `n' > `a_string.count', do nothing.
+			-- (ELKS 2001 STRING)
+			-- Note: This routine should be made obsolete as soon as
+			-- ISE and HACT supports it, which is not yet the case
+			-- as of ISE 5.1 and HACT 4.0.1.
 		require
 			a_string_not_void: a_string /= Void
 			n_non_negative: n >= 0
@@ -277,12 +804,16 @@ feature -- Removal
 			a_string.keep_head (n)
 #endif
 		ensure
-			kept: a_string.is_equal (old a_string.substring (1, n.min (a_string.count)))
+			kept: a_string.is_equal (old substring (a_string, 1, n.min (a_string.count)))
 		end
 
 	keep_tail (a_string: STRING; n: INTEGER) is
 			-- Remove all the characters of `a_string' except for the last `n';
 			-- if `n' > `a_string.count', do nothing.
+			-- (ELKS 2001 STRING)
+			-- Note: This routine should be made obsolete as soon as
+			-- ISE and HACT supports it, which is not yet the case
+			-- as of ISE 5.1 and HACT 4.0.1.
 		require
 			a_string_not_void: a_string /= Void
 			n_non_negative: n >= 0
@@ -293,7 +824,38 @@ feature -- Removal
 			a_string.keep_tail (n)
 #endif
 		ensure
-			kept: a_string.is_equal (old a_string.substring (a_string.count - n.min (a_string.count) + 1, a_string.count))
+			kept: a_string.is_equal (old substring (a_string, a_string.count - n.min (a_string.count) + 1, a_string.count))
+		end
+
+	remove_substring (a_string: STRING; start_index, end_index: INTEGER) is
+			-- Remove all characters of `a_string' from `start_index'
+			-- to `end_index' inclusive.
+			-- (ELKS 2001 STRING)
+			-- Note: This routine should be made obsolete as soon as
+			-- ISE and HACT supports it, which is not yet the case
+			-- as of ISE 5.1 and HACT 4.0.1.
+		require
+			a_string_not_void: a_string /= Void
+			valid_start_index: 1 <= start_index
+			valid_end_index: end_index <= a_string.count
+			meaningful_interval: start_index <= end_index + 1
+#ifdef ISE || HACT
+		local
+			uc_string: UC_STRING
+		do
+			uc_string ?= a_string
+			if uc_string /= Void then
+				uc_string.remove_substring (start_index, end_index)
+			elseif start_index <= end_index then
+				a_string.replace_substring ("", start_index, end_index)
+			end
+#endif
+#ifdef VE || SE
+		do
+			a_string.remove_substring (start_index, end_index)
+#endif
+		ensure
+			removed: a_string.is_equal (old substring (a_string, 1, start_index - 1) + old substring (a_string, end_index + 1, a_string.count))
 		end
 
 	wipe_out (a_string: STRING) is
@@ -322,15 +884,16 @@ feature -- Resizing
 			-- Do not lose any previously entered characters.
 		require
 			a_string_not_void: a_string /= Void
+			is_string: a_string.same_type ("")
 			n_large_enough: n >= a_string.count
-#ifndef VE || TOWER
+#ifndef VE
 		local
 			i: INTEGER
 #endif
 		do
 #ifdef VE
 			a_string.resize (n)
-#else
+#endif
 #ifdef SE
 			from
 				i := n - a_string.count
@@ -340,11 +903,8 @@ feature -- Resizing
 				a_string.append_character ('#')
 				i := i - 1
 			end
-#else
-#ifdef TOWER
-			a_string.resize (n)
-			a_string.set_count (n)
-#else
+#endif
+#ifdef ISE || HACT
 			from
 				i := n - a_string.count
 				a_string.resize (n)
@@ -355,10 +915,13 @@ feature -- Resizing
 				i := i - 1
 			end
 #endif
-#endif
-#endif
 		ensure
 			count_set: a_string.count = n
 		end
+
+feature {NONE} -- Implementation
+
+	dummy_string: STRING is ""
+			-- Dummy string
 
 end
