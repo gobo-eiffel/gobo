@@ -23,7 +23,7 @@ inherit
 
 feature {DP_INTERFACE} -- Status report
 
-	can_implement (an_interface: DP_INTERFACE) is
+	can_implement (an_interface: DP_INTERFACE): BOOLEAN is
 			-- Can current implementation implement `an_interface'?
 		do
 			Result := (interface = Void or else interface = an_interface)
