@@ -68,10 +68,10 @@ can be used in actions:</p>
         name="append_text_to_string"><font color="#008080"><em><tt>append_text_to_string</tt></em></font></a><font
         color="#008080"><em><tt> </tt></em><tt>(</tt><em><tt>a_string</tt></em><tt>:</tt><em><tt>
         STRING</tt></em><tt>)</tt></font></dt>
-    <dd>Append <font color="#008080"><em><tt>text</tt></em></font>
+    <dd>Append <a href="#text"><font color="#008080"><em><tt>text</tt></em></font></a>
         at end of <font color="#008080"><em><tt>a_string</tt></em></font>.
         For efficiency reason, this feature can bypass the call
-        to <font color="#008080"><em><tt>text</tt></em></font>
+        to <a href="#text"><font color="#008080"><em><tt>text</tt></em></font></a>
         and directly copy the characters from the input buffer.</dd>
     <dt><a href="skeleton.html#append_text_substring_to_string"
         name="append_text_substring_to_string"><font
@@ -79,10 +79,10 @@ can be used in actions:</p>
         color="#008080"><em><tt> </tt></em><tt>(</tt><em><tt>s</tt></em><tt>,</tt><em><tt>
         e</tt></em><tt>:</tt><em><tt> INTEGER</tt></em><tt>;</tt><em><tt>
         a_string</tt></em><tt>:</tt><em><tt> STRING</tt></em><tt>)</tt></font></dt>
-    <dd>Append <font color="#008080"><em><tt>text_substring </tt></em></font>at
+    <dd>Append <a href="#text_substring"><font color="#008080"><em><tt>text_substring </tt></em></font></a>at
         end of <font color="#008080"><em><tt>a_string</tt></em></font>.
         For efficiency reason, this feature can bypass the call
-        to <font color="#008080"><em><tt>text_substring</tt></em></font>
+        to <a href="#text_substring"><font color="#008080"><em><tt>text_substring</tt></em></font></a>
         and directly copy the characters from the input buffer.</dd>
     <dt><a href="skeleton.html#column" name="column"><font
         color="#008080"><em><tt>column</tt></em></font></a><font
@@ -93,15 +93,17 @@ can be used in actions:</p>
         color="#800000"><tt> </tt></font>will have to be set.</dd>
     <dt><a href="skeleton.html#echo" name="echo"><font
         color="#008080"><em><tt>echo</tt></em></font></a></dt>
-    <dd>Copy <font color="#008080"><em><tt>text</tt></em></font>
-        to the scanner's output file using <font color="#008080"><em><tt>output</tt></em></font>.</dd>
+    <dd>Copy <a href="#text"><font color="#008080"><em><tt>text</tt></em></font></a>
+        to the scanner's output file using <a href="#output"><font 
+        color="#008080"><em><tt>output</tt></em></font></a>.</dd>
     <dt><a href="skeleton.html#Empty_buffer" name="Empty_buffer"><font
         color="#008080"><em><tt>Empty_buffer</tt></em></font></a><font
         color="#008080"><tt>:</tt><em><tt> YY_BUFFER</tt></em></font></dt>
     <dd>Empty input buffer (once function). When input sources
         are not known yet at the creation time of a scanner, this
         input buffer can be used by default with the creation
-        routine <font color="#008080"><em><tt>make_with_buffer</tt></em></font>.</dd>
+        routine <a href="skeleton.html#make_with_buffer"><font 
+        color="#008080"><em><tt>make_with_buffer</tt></em></font></a>.</dd>
     <dt><a href="skeleton.html#flush_input_buffer"
         name="flush_input_buffer"><font color="#008080"><em><tt>flush_input_buffer</tt></em></font></a></dt>
     <dd>Flush the scanner's internal buffer so that the next time
@@ -112,28 +114,32 @@ can be used in actions:</p>
         color="#008080"><tt>: </tt><em><tt>YY_BUFFER</tt></em></font></dt>
     <dd>Input buffer of the scanner. By default the input buffer
         is filled from the standard input. To avoid unexpected
-        behaviors, the routine <font color="#008080"><em><tt>set_input_buffer</tt></em></font>
+        behaviors, the routine <a href="#set_input_buffer"><font 
+        color="#008080"><em><tt>set_input_buffer</tt></em></font></a>
         should be used to switch to other input buffers.</dd>
     <dt><a href="skeleton.html#last_character"
         name="last_character"><font color="#008080"><em><tt>last_character</tt></em></font></a><font
         color="#008080"><tt>:</tt><em><tt> CHARACTER</tt></em></font></dt>
-    <dd><font size="3">Last character read by </font><font
-        color="#008080"><em><tt>read_character</tt></em></font>.</dd>
+    <dd>Last character read by <a href="#read_character"><font
+        color="#008080"><em><tt>read_character</tt></em></font></a>.</dd>
     <dt><a href="skeleton.html#last_token" name="last_token"><font
         color="#008080"><em><tt>last_token</tt></em></font></a><font
         color="#008080"><tt>:</tt><em><tt> INTEGER</tt></em></font></dt>
     <dd>Code of the last token read. When this attribute is given
-        a non-negative value the procedure <font color="#008080"><em><tt>read_token</tt></em></font>
+        a non-negative value the procedure <a href="skeleton.html#read_token"><font 
+        color="#008080"><em><tt>read_token</tt></em></font></a>
         stops, giving the opportunity to its caller (e.g. a
-        parser routine) to inspect this code. Each time <font
-        color="#008080"><em><tt>read_token</tt></em></font> is
+        parser routine) to inspect this code. Each time <a href="skeleton.html#read_token"><font
+        color="#008080"><em><tt>read_token</tt></em></font></a> is
         called again it continues processing tokens from where it
-        last left off until either <font color="#008080"><em><tt>last_token</tt></em></font>
+        last left off until either <font 
+        color="#008080"><em><tt>last_token</tt></em></font>
         is given a non-negative value again or the end of the
         file is reached (yielding a null value). Non-positive
-        values are reserved by <font color="#008080"><em><tt>read_token
-        </tt></em></font>to indicate internal errors which can
-        occur when too many <font color="#008080"><em><tt>reject </tt></em></font>are
+        values are reserved by <a href="skeleton.html#read_token"><font 
+        color="#008080"><em><tt>read_token</tt></em></font></a> to indicate internal errors which can
+        occur when too many <a href="#reject"><font 
+        color="#008080"><em><tt>reject</tt></em></font></a> are
         called (and hence nothing can be matched anymore) or when
         the option <a href="options.html#nodefault"><font
         color="#800000"><tt>nodefault</tt></font></a> (or option <font
@@ -147,10 +153,11 @@ can be used in actions:</p>
     <dd>Return all but the first <font color="#008080" size="2"
         face="Courier New"><em>n</em></font> characters of the
         current token back to the input stream, where they will
-        be rescanned when the scanner looks for the next match. <font
-        color="#008080"><em><tt>text</tt></em></font> and <font
-        color="#008080"><em><tt>text_count</tt></em></font> are
-        adjusted appropriately (e.g., <font color="#008080"><em><tt>text_count</tt></em></font>
+        be rescanned when the scanner looks for the next match. <a href="#text"><font
+        color="#008080"><em><tt>text</tt></em></font></a> and <a href="#text_count"><font
+        color="#008080"><em><tt>text_count</tt></em></font></a> are
+        adjusted appropriately (e.g., <a href="#text_count"><font 
+        color="#008080"><em><tt>text_count</tt></em></font></a>
         will now be equal to <font color="#008080"><em><tt>n</tt></em></font>).
         For example, on the input &quot;<tt>foobar</tt>&quot; the
         following will write out &quot;<tt>foobarbar</tt>&quot;:<br>
@@ -165,7 +172,8 @@ can be used in actions:</p>
         color="#008080"><em><tt>less</tt></em></font> will cause
         the entire current input string to be scanned again.
         Unless the way the scanner subsequently process its input
-        has been changed (using <font color="#008080"><em><tt>set_start_condition</tt></em></font>,
+        has been changed (using <a href="#set_start_condition"><font 
+        color="#008080"><em><tt>set_start_condition</tt></em></font></a>,
         for example), this will result in an endless loop.</dd>
     <dt><a href="skeleton.html#line" name="line"><font
         color="#008080"><em><tt>line</tt></em></font></a><font
@@ -178,7 +186,7 @@ can be used in actions:</p>
         color="#008080"><em><tt>more</tt></em></font></a></dt>
     <dd>Tell the scanner that the next time it matches a rule,
         the corresponding token should be appended onto the
-        current value of<em> </em><font color="#008080"><em><tt>text</tt></em></font>
+        current value of<em> </em><a href="#text"><font color="#008080"><em><tt>text</tt></em></font></a>
         rather than replacing it. For example, given the input
         &quot;<tt>mega-kludge</tt>&quot; the following will write
         &quot;<tt>mega-mega-kludge</tt>&quot; to the output:<br>
@@ -192,8 +200,8 @@ can be used in actions:</p>
     <dd>First &quot;<tt>mega-</tt>&quot; is matched and echoed to
         the output. Then &quot;<tt>kludge</tt>&quot; is matched,
         but the previous &quot;<tt>mega-</tt>&quot; is still
-        hanging around at the beginning of <font color="#008080"><em><tt>text</tt></em></font>
-        so the <font color="#008080"><em><tt>echo</tt></em></font>
+        hanging around at the beginning of <a href="#text"><font color="#008080"><em><tt>text</tt></em></font></a>
+        so the <a href="#echo"><font color="#008080"><em><tt>echo</tt></em></font></a>
         for the &quot;<tt>kludge</tt>&quot; rule will actually
         write &quot;<tt>mega-kludge</tt>&quot;.</dd>
     <dt><a href="skeleton.html#new_file_buffer"
@@ -201,21 +209,21 @@ can be used in actions:</p>
         color="#008080"><em><tt> </tt></em><tt>(</tt><em><tt>a_file</tt></em><tt>:</tt><em><tt>
         FILE</tt></em><tt>):</tt><em><tt> YY_FILE_BUFFER</tt></em></font></dt>
     <dd>Create an input buffer for <font color="#008080"><em><tt>a_file</tt></em></font>.
-        This routine is convenient when used with <font
-        color="#008080"><em><tt>set_input_buffer</tt></em></font>.</dd>
+        This routine is convenient when used with <a href="#set_input_buffer"><font
+        color="#008080"><em><tt>set_input_buffer</tt></em></font></a>.</dd>
     <dt><a href="skeleton.html#new_string_buffer"
         name="new_string_buffer"><font color="#008080"><em><tt>new_string_buffer</tt></em></font></a><font
         color="#008080"><em><tt> </tt></em><tt>(</tt><em><tt>a_string</tt></em><tt>:</tt><em><tt>
         STRING</tt></em><tt>):</tt><em><tt> YY_BUFFER</tt></em></font></dt>
     <dd>Create an input buffer for <font color="#008080"><em><tt>a_string</tt></em></font>.
-        This routine is convenient when used with <font
-        color="#008080"><em><tt>set_input_buffer</tt></em></font>.</dd>
+        This routine is convenient when used with <a href="#set_input_buffer"><font
+        color="#008080"><em><tt>set_input_buffer</tt></em></font></a>.</dd>
     <dt><a href="skeleton.html#output" name="output"><font
         color="#008080"><em><tt>output</tt></em></font></a><font
         color="#008080"><em><tt> </tt></em><tt>(</tt><em><tt>a_text</tt></em><tt>:</tt><em><tt>
-        </tt></em><em><strong><tt>like</tt></strong></em><em><tt>
-        text</tt></em><tt>)</tt></font></dt>
-    <dd>Writes <font color="#008080"><em><tt>a_text </tt></em></font>to
+        </tt></em><em><strong><tt>like </tt></strong></em><em><a href="#text"><font
+        color="#008080"><tt>text</tt></a></font></em><tt>)</tt></font></dt>
+    <dd>Write <font color="#008080"><em><tt>a_text </tt></em></font>to
         the standard output by default. This behavior can easily
         be modified through redefinition.</dd>
     <dt><a href="skeleton.html#position" name="position"><font
@@ -229,7 +237,7 @@ can be used in actions:</p>
         color="#800000"><tt> </tt></font>will have to be set.</dd>
     <dt><a href="skeleton.html#print_last_token"
         name="print_last_token"><font color="#008080"><em><tt>print_last_token</tt></em></font></a></dt>
-    <dd>Routine called at the end of <font color="#008080"><em><tt>read_token</tt></em></font>
+    <dd>Routine called at the end of <a href="skeleton.html#read_token"><font color="#008080"><em><tt>read_token</tt></em></font></a>
         when <a href="stages.html#debug">debugging instructions</a>
         are enabled. Print to standard error debug information
         about the last token read. This routine can be redefined
@@ -240,7 +248,7 @@ can be used in actions:</p>
     <dt><a href="skeleton.html#read_character"
         name="read_character"><font color="#008080"><em><tt>read_character</tt></em></font></a></dt>
     <dd>Read the next character from the input stream. Make the
-        result available in <font color="#008080"><em><tt>last_character</tt></em></font>.
+        result available in <a href="#last_character"><font color="#008080"><em><tt>last_character</tt></em></font></a>.
         For example, the following is one way to eat up C
         comments:<dl>
             <dd><pre>
@@ -283,9 +291,9 @@ color="#0000FF">{</font>
     <dd>Direct the scanner to proceed on to the &quot;second
         best&quot; rule which matched the input (or a prefix of
         the input). The rule is chosen as described in <a
-        href="matching_rules.html">Matching Rules</a>, and <font
-        color="#008080"><em><tt>text</tt></em></font> and <font
-        color="#008080"><em><tt>text_count</tt></em></font>
+        href="matching_rules.html">Matching Rules</a>, and <a href="#text"><font
+        color="#008080"><em><tt>text</tt></em></font></a> and <a href="#text_count"><font
+        color="#008080"><em><tt>text_count</tt></em></font></a>
         return the appropriate values. It may either be one which
         matched as much text as the originally chosen rule but
         came later in the <em>gelex</em> input file, or one which
@@ -336,8 +344,8 @@ color="#0000FF">{</font>
     <dt><a href="skeleton.html#set_input_buffer"
         name="set_input_buffer"><font color="#008080"><em><tt>set_input_buffer</tt></em></font></a><font
         color="#008080"><em><tt> </tt></em><tt>(</tt><em><tt>a_buffer</tt></em><tt>:</tt><em><tt>
-        </tt></em><em><strong><tt>like</tt></strong></em><em><tt>
-        input_buffer</tt></em><tt>)</tt></font></dt>
+        </tt></em><em><strong><tt>like </tt></strong></em><em><a 
+        href="#input_buffer"><font color="#008080"><tt>input_buffer</tt></font></a></em><tt>)</tt></font></dt>
     <dd>Switch the scanner's input buffer so that subsequent
         tokens will come from <font color="#008080"><em><tt>a_buffer</tt></em></font>.
         This routine can be used to continue scanning another
@@ -354,7 +362,7 @@ color="#0000FF">{</font>
         name="set_last_token"><font color="#008080"><em><tt>set_last_token</tt></em></font></a><font
         color="#008080"><em><tt> </tt></em><tt>(</tt><em><tt>a_token</tt></em><tt>:</tt><em><tt>
         INTEGER</tt></em><tt>)</tt></font></dt>
-    <dd>Set <font color="#008080"><em><tt>last_token</tt></em></font>
+    <dd>Set <a href="#last_token"><font color="#008080"><em><tt>last_token</tt></em></font></a>
         to <font color="#008080"><em><tt>a_token</tt></em></font>.</dd>
     <dt><a href="skeleton.html#set_start_condition"
         name="set_start_condition"><font color="#008080"><em><tt>set_start_condition</tt></em></font></a><font
@@ -367,13 +375,13 @@ color="#0000FF">{</font>
         name="start_condition"><font color="#008080"><em><tt>start_condition</tt></em></font></a><font
         color="#008080"><tt>:</tt><em><tt> INTEGER</tt></em></font></dt>
     <dd>Current start condition. This value can subsequently be
-        used with <font color="#008080"><em><tt>set_start_condition</tt></em></font>
+        used with <a href="#set_start_condition"><font color="#008080"><em><tt>set_start_condition</tt></em></font></a>
         to return to that start condition. See discussion on <a
         href="start_conditions.html">start conditions</a> for
         further details.</dd>
     <dt><a href="skeleton.html#terminate" name="terminate"><font
         color="#008080"><em><tt>terminate</tt></em></font></a></dt>
-    <dd>Terminate the scanner and set <font color="#008080"><em><tt>last_token</tt></em></font>
+    <dd>Terminate the scanner and set <a href="#last_token"><font color="#008080"><em><tt>last_token</tt></em></font></a>
         to <em><tt>0</tt></em>, indicating &quot;all done&quot;.
         By default, <font color="#008080"><em><tt>terminate</tt></em></font>
         is also called when an end-of-file is encountered.</dd>
@@ -397,19 +405,19 @@ color="#0000FF">{</font>
         color="#008080"><em><tt>text_item</tt></em></font></a><font
         color="#008080"><em><tt> </tt></em><tt>(</tt><em><tt>i</tt></em><tt>:</tt><em><tt>
         INTEGER</tt></em><tt>):</tt><em><tt> CHARACTER</tt></em></font></dt>
-    <dd>Character at a given index in <font color="#008080"><em><tt>text</tt></em></font>.
+    <dd>Character at a given index in <a href="#text"><font color="#008080"><em><tt>text</tt></em></font></a>.
         For efficiency reason, this function bypasses the call to
-        <font color="#008080"><em><tt>text</tt></em></font> and
+        <a href="#text"><font color="#008080"><em><tt>text</tt></em></font></a> and
         reads the character directly from the input buffer.</dd>
     <dt><a href="skeleton.html#text_substring"
         name="text_substring"><font color="#008080"><em><tt>text_substring</tt></em></font></a><font
         color="#008080"><em><tt> </tt></em><tt>(</tt><em><tt>s</tt></em><tt>,</tt><em><tt>
         e</tt></em><tt>:</tt><em><tt> INTEGER</tt></em><tt>):</tt><em><tt>
         STRING</tt></em></font></dt>
-    <dd>Substring of <font color="#008080"><em><tt>text</tt></em></font>.
+    <dd>Substring of <a href="#text"><font color="#008080"><em><tt>text</tt></em></font></a>.
         This function creates a new string each time it is
         called. For efficiency reason, this function bypasses the
-        call to <font color="#008080"><em><tt>text</tt></em></font>
+        call to <a href="#text"><font color="#008080"><em><tt>text</tt></em></font></a>
         and creates the substring directly from the input buffer.</dd>
     <dt><a href="skeleton.html#unread_character"
         name="unread_character"><font color="#008080"><em><tt>unread_character</tt></em></font></a><font
@@ -439,7 +447,7 @@ color="#0000FF">{</font>
         back-to-front. An important potential problem when using <font
         color="#008080"><em><tt>unread_character</tt></em></font>
         is that it alters the input stream. If you need the value
-        of <font color="#008080"><em><tt>text</tt></em></font>
+        of <a href="#text"><font color="#008080"><em><tt>text</tt></em></font></a>
         after a call to <font color="#008080"><em><tt>unread_character</tt></em></font>
         (as in the above example), you must first save it
         elsewhere. Finally, note that you cannot put back <tt>EOF</tt>
@@ -449,7 +457,7 @@ color="#0000FF">{</font>
 
 <p>In addition to the above routines which can be called in
 semantic actions, the following routines can be called after the
-routine <font color="#008080"><em><tt>read_token </tt></em></font>has
+routine <a href="skeleton.html#read_token"><font color="#008080"><em><tt>read_token</tt></em></font></a> has
 returned:</p>
 
 <dl>
@@ -457,13 +465,13 @@ returned:</p>
         color="#008080"><em><tt>end_of_file</tt></em></font></a><font
         color="#008080"><tt>:</tt><em><tt> BOOLEAN</tt></em></font></dt>
     <dd>Has the end of input buffer been reached? This is the
-        case when <font color="#008080"><em><tt>last_token </tt></em></font>has
+        case when <a href="#last_token"><font color="#008080"><em><tt>last_token</tt></em></font></a> has
         been set to 0.</dd>
     <dt><a href="skeleton.html#scanning_error"
         name="scanning_error"><font color="#008080"><em><tt>scanning_error</tt></em></font></a><font
         color="#008080"><tt>:</tt><em><tt> BOOLEAN</tt></em></font></dt>
     <dd>Has an error occurred during scanning? This is the case
-        when <font color="#008080"><em><tt>last_token </tt></em></font>has
+        when <a href="#last_token"><font color="#008080"><em><tt>last_token</tt></em></font></a> has
         been given a non-positive value. It can occur when too
         many <font color="#008080"><em><tt>reject </tt></em></font>are
         called (and hence nothing can be matched anymore) or when
@@ -514,7 +522,7 @@ generated scanner class.</p>
 <table border="0" width="100%">
     <tr>
         <td><address>
-            <font size="2"><b>Copyright © 2000</b></font><font
+            <font size="2"><b>Copyright © 2000-2005</b></font><font
             size="1"><b>, </b></font><font size="2"><strong>Eric
             Bezault</strong></font><strong> </strong><font
             size="2"><br>
@@ -524,7 +532,7 @@ generated scanner class.</p>
             <strong>http:</strong></font><a
             href="http://www.gobosoft.com"><font size="2">//www.gobosoft.com</font></a><font
             size="2"><br>
-            <strong>Last Updated:</strong> 24 March 2000</font><br>
+            <strong>Last Updated:</strong> 22 February 2005</font><br>
             <!--webbot bot="PurpleText"
             preview="
 $Date$ 
