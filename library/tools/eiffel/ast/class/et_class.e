@@ -1099,6 +1099,21 @@ feature -- Interface checking status
 			no_interface_error: not has_interface_error
 		end
 
+feature -- Suppliers
+
+	suppliers: DS_HASH_SET [ET_CLASS]
+			-- Supplier classes of current class
+
+	set_suppliers (a_suppliers: like suppliers) is
+			-- Set `suppliers' to `a_suppliers'.
+		require
+			no_void_supplier: a_suppliers /= Void implies not a_suppliers.has (Void)
+		do
+			suppliers := a_suppliers
+		ensure
+			suppliers_set: suppliers = a_suppliers
+		end
+
 feature -- Implementation checking status
 
 	implementation_checked: BOOLEAN
@@ -1130,9 +1145,11 @@ feature -- Implementation checking status
 		do
 			has_implementation_error := False
 			implementation_checked := False
+			suppliers := Void
 		ensure
 			implementation_not_checked: not implementation_checked
 			no_implementation_error: not has_implementation_error
+			suppliers_reset: suppliers = Void
 		end
 
 feature -- Invariant
@@ -1272,6 +1289,7 @@ invariant
 	end_keyword_not_void: end_keyword /= Void
 	named_type: is_named_type
 	valid_context: is_valid_context
+	no_void_supplier: suppliers /= Void implies not suppliers.has (Void)
 	ancestors_error: has_ancestors_error implies ancestors_built
 	flattening_error: has_flattening_error implies features_flattened
 	qualified_signatures_error: has_qualified_signatures_error implies qualified_signatures_resolved
