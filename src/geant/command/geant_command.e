@@ -63,7 +63,7 @@ feature -- Setting
 			project_set: project = a_project
 		end
 
-	set_exit_code (a_exit_code: like exit_code) is
+	set_exit_code (a_exit_code: INTEGER) is
 			-- Set `exit_code' to `a_exit_code'.
 		do
 			exit_code := a_exit_code
