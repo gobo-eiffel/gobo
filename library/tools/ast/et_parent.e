@@ -91,7 +91,8 @@ feature -- Genealogy status
 
 feature -- Genealogy
 
-	add_to_ancestors (an_heir: ET_CLASS; anc: DS_HASH_TABLE [ET_CLASS_TYPE, ET_CLASS]) is
+	add_to_ancestors (an_heir: ET_CLASS;
+		anc: DS_HASH_TABLE [ET_CLASS_TYPE, INTEGER]) is
 			-- Add current parent and its ancestors to the
 			-- list of ancestors `anc' of class `an_heir'.
 		require
@@ -102,18 +103,20 @@ feature -- Genealogy
 			no_ancestors_error: not has_ancestors_error
 		local
 			a_class: ET_CLASS
+			a_class_id: INTEGER
 			a_type, anc_type: ET_CLASS_TYPE
 			has_error: BOOLEAN
 			an_actual: ET_TYPE
 			a_formal: ET_FORMAL_GENERIC_TYPE
 			generics: ET_ACTUAL_GENERIC_PARAMETERS
 			actual_parameters: ET_ACTUAL_GENERIC_PARAMETERS
-			a_cursor: DS_HASH_TABLE_CURSOR [ET_CLASS_TYPE, ET_CLASS]
+			a_cursor: DS_HASH_TABLE_CURSOR [ET_CLASS_TYPE, INTEGER]
 		do
 				-- Add current parent to the ancestors
 				-- of `an_heir'.
 			a_class := type.base_class
-			anc.search (a_class)
+			a_class_id := a_class.id
+			anc.search (a_class_id)
 			if anc.found then
 				anc_type := anc.found_item
 				if not anc_type.same_syntactical_type (type) then
@@ -122,7 +125,7 @@ feature -- Genealogy
 				end
 			end
 			if not has_error then
-				anc.force (type, a_class)
+				anc.force (type, a_class_id)
 					-- Find out whether formal parameters have
 					-- been given actual derivations.
 				generics := type.generic_parameters
@@ -138,8 +141,8 @@ feature -- Genealogy
 						a_type := a_type.deep_cloned_type
 						a_type := a_type.resolved_formal_parameters (actual_parameters)
 					end
-					a_class := a_type.base_class
-					anc.search (a_class)
+					a_class_id := a_type.base_class.id
+					anc.search (a_class_id)
 					if anc.found then
 						anc_type := anc.found_item
 						if not anc_type.same_syntactical_type (a_type) then
@@ -149,7 +152,7 @@ feature -- Genealogy
 						end
 					end
 					if not has_error then
-						anc.force (a_type, a_class)
+						anc.force (a_type, a_class_id)
 						a_cursor.forth
 					end
 				end

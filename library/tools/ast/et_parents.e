@@ -115,24 +115,24 @@ feature -- Genealogy
 			an_heir_not_void: an_heir /= Void
 			ancestors_searched: ancestors_searched
 		local
-			anc: DS_HASH_TABLE [ET_CLASS_TYPE, ET_CLASS]
+			anc: DS_HASH_TABLE [ET_CLASS_TYPE, INTEGER]
 			a_parent: ET_PARENT
 			a_class: ET_CLASS
 			a_type: ET_CLASS_TYPE
 		do
-			!! anc.make (10)
+			!! anc.make_map (10)
 			an_heir.set_ancestors_error (False)
 			from a_parent := parents until a_parent = Void loop
 				a_type := a_parent.type
 				a_class := a_type.base_class
 				if a_class.has_ancestors_error then
-					!! anc.make (0)
+					!! anc.make_map (0)
 					an_heir.set_ancestors_error (True)
 					a_parent := Void -- Jump out of the loop.
 				else
 					a_parent.add_to_ancestors (an_heir, anc)
 					if an_heir.has_ancestors_error then
-						!! anc.make (0)
+						!! anc.make_map (0)
 						a_parent := Void -- Jump out of the loop.
 					else
 							-- ET_TYPE.check_parent_validity does not
@@ -152,7 +152,7 @@ feature -- Genealogy
 								-- The error has already been reported
 								-- in `check_parent_validity1'.
 							an_heir.set_ancestors_error (True)
-							!! anc.make (0)
+							!! anc.make_map (0)
 							a_parent := Void -- Jump out of the loop.
 						else
 							a_parent := a_parent.next
@@ -170,12 +170,12 @@ feature -- Genealogy
 			-- parents (and recursively to their parents)
 			-- whose ancestors have not been searched yet.
 		local
-			anc: DS_HASH_TABLE [ET_CLASS_TYPE, ET_CLASS]
+			anc: DS_HASH_TABLE [ET_CLASS_TYPE, INTEGER]
 			a_parent: ET_PARENT
 			a_class: ET_CLASS
 			grand_parents: ET_PARENTS
 		do
-			!! anc.make (0)
+			!! anc.make_map (0)
 			from a_parent := parents until a_parent = Void loop
 				a_class := a_parent.type.base_class
 				if not a_class.ancestors_searched then

@@ -68,18 +68,22 @@ feature -- Access
 	parents: ET_PARENTS
 			-- Parents
 
-	ancestors: DS_HASH_TABLE [ET_CLASS_TYPE, ET_CLASS]
-			-- Proper ancestors, indexed by base class
+	ancestors: DS_HASH_TABLE [ET_CLASS_TYPE, INTEGER]
+			-- Proper ancestors, indexed by base class ID
 
 	ancestor (a_type: ET_CLASS_TYPE): ET_CLASS_TYPE is
+			-- Ancestor of `a_type'
 		require
 			a_type_not_void: a_type /= Void
 			has_ancestor: has_ancestor (a_type.base_class)
+		local
+			a_class: ET_CLASS
 		do
-			if a_type.base_class = Current then
+			a_class := a_type.base_class
+			if a_class = Current then
 				Result := a_type
 			else
-				Result := ancestors.item (a_type.base_class)
+				Result := ancestors.item (a_class.id)
 			end
 		end
 
@@ -87,7 +91,7 @@ feature -- Access
 			-- Features indexed by name
 
 	seeds: DS_HASH_TABLE [ET_FEATURE, INTEGER]
-			-- Features indexed by seed
+			-- Features indexed by seed ID
 
 	invariants: ET_ASSERTIONS
 			-- Invariants
@@ -151,9 +155,9 @@ feature -- Status report
 		do
 			if a_class = Current then
 				Result := True
-			elseif is_parsed and not has_syntax_error then
+			elseif is_parsed and then not has_syntax_error then
 				search_ancestors
-				Result := ancestors.has (a_class)
+				Result := ancestors.has (a_class.id)
 			end
 		end
 
@@ -334,7 +338,7 @@ feature -- Genealogy
 						-- Make sure that all classes envolved in the
 						-- cycle and their descendants are marked
 						-- with `has_ancestors_error'.
-					!! ancestors.make (0)
+					!! ancestors.make_map (0)
 					set_ancestors_error (True)
 					if parents /= Void then
 						parents.set_ancestors_error
@@ -374,32 +378,32 @@ feature {ET_PARENTS, ET_PARENT, ET_CLASS} -- Genealogy
 						-- Error: class not in universe
 						-- (VTCT, ETL2 p.199).
 					error_handler.report_vtct_error (an_heir, a_type)
-					!! ancestors.make (0)
+					!! ancestors.make_map (0)
 					has_ancestors_error := True
 				elseif has_syntax_error then
 						-- This error has already been reported
 						-- somewhere else.
-					!! ancestors.make (0)
+					!! ancestors.make_map (0)
 					has_ancestors_error := True
 				elseif parents = Void then
 					if Current = universe.general_class then
-						!! ancestors.make (0)
+						!! ancestors.make_map (0)
 					elseif Current = universe.any_class then
 							-- ISE Eiffel has no GENERAL class anymore.
 							-- Use ANY has class root now.
-						!! ancestors.make (0)
+						!! ancestors.make_map (0)
 					elseif not a_sorter.has (Current) then
 						any_class := universe.any_class
 						if not any_class.is_parsed then
 								-- Error: class ANY not in universe
 								-- (VTCT, ETL2 p.199).
 							error_handler.report_vtct_any_error (Current)
-							!! ancestors.make (0)
+							!! ancestors.make_map (0)
 							has_ancestors_error := True
 						elseif any_class.has_syntax_error then
 								-- This error has already been reported
 								-- somewhere else.
-							!! ancestors.make (0)
+							!! ancestors.make_map (0)
 							has_ancestors_error := True
 						else
 							a_sorter.force (Current)
