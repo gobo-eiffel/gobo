@@ -30,6 +30,6 @@ To compile this example:
    filenames containing Eiffel classes and `nb' is an integer.
 
 --
-Copyright (c) 1998, Eric Bezault
-mailto:ericb@gobo.demon.co.uk
-http://www.gobo.demon.co.uk
+Copyright (c) 1999, Eric Bezault
+mailto:ericb@gobosoft.com
+http://www.gobosoft.com

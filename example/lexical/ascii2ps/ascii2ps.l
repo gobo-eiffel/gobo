@@ -5,8 +5,9 @@ indexing
 
 		"Pretty printer using PostScript facilities"
 
-	author:     "Eric Bezault <ericb@gobo.demon.co.uk>"
-	copyright:  "Copyright (c) 1997, Eric Bezault"
+	author:     "Eric Bezault <ericb@gobosoft.com>"
+	copyright:  "Copyright (c) 1999, Eric Bezault and others"
+	license:    "Eiffel Forum Freeware License v1 (see forum.txt)"
 	date:       "$Date$"
 	revision:   "$Revision$"
 
@@ -34,7 +35,7 @@ creation
 
 %%
 
-"\n"				output ("%Tnewline%N")
+\r?\n				output ("%Tnewline%N")
 " "					output ("%T( ) show%N")
 "\t"				output ("%Tprinttab%N")
 ""				output ("%Tnewpage%N")

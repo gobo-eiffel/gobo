@@ -16,5 +16,5 @@ To compile this example:
 
 --
 Copyright (c) 1999, Eric Bezault
-mailto:ericb@gobo.demon.co.uk
-http://www.gobo.demon.co.uk
+mailto:ericb@gobosoft.com
+http://www.gobosoft.com

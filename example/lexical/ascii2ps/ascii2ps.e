@@ -4,8 +4,9 @@ indexing
 
 		"Pretty printer using PostScript facilities"
 
-	author:     "Eric Bezault <ericb@gobo.demon.co.uk>"
-	copyright:  "Copyright (c) 1997, Eric Bezault"
+	author:     "Eric Bezault <ericb@gobosoft.com>"
+	copyright:  "Copyright (c) 1999, Eric Bezault and others"
+	license:    "Eiffel Forum Freeware License v1 (see forum.txt)"
 	date:       "$Date$"
 	revision:   "$Revision$"
 
@@ -56,32 +57,32 @@ feature {NONE} -- Implementation
 if yy_act <= 4 then
 if yy_act <= 2 then
 if yy_act = 1 then
---|#line 37
+--|#line 38
 output ("%Tnewline%N")
 else
---|#line 38
+--|#line 39
 output ("%T( ) show%N")
 end
 else
 if yy_act = 3 then
---|#line 39
+--|#line 40
 output ("%Tprinttab%N")
 else
---|#line 40
+--|#line 41
 output ("%Tnewpage%N")
 end
 end
 else
 if yy_act <= 6 then
 if yy_act = 5 then
---|#line 41
+--|#line 42
 
 					output ("%T(")
 					output (text)
 					output (") printword%N")
 				
 else
---|#line 46
+--|#line 47
 
 					output ("%T(\")
 					output (text_item (1).out)
@@ -112,9 +113,9 @@ feature {NONE} -- Table templates
 			-- but once functions cannot be declared with anchored types.
 		once
 			Result := yy_fixed_array (<<
-			    0,    4,    5,    6,    7,    8,    9,    9,    9,   10,
-			   10,   11,    3,   11,   11,   11,   11,   11,   11,   11,
-			   11>>)
+			    0,    4,    5,    6,    7,    8,    9,   10,   10,   10,
+			   11,   12,   13,    3,   13,   13,   13,   13,   13,   13,
+			   13,   13,   13>>)
 		end
 
 	yy_chk_template: ANY is
@@ -122,9 +123,9 @@ feature {NONE} -- Table templates
 			-- but once functions cannot be declared with anchored types.
 		once
 			Result := yy_fixed_array (<<
-			    0,    1,    1,    1,    1,    1,    1,    1,    1,   10,
-			    4,    3,   11,   11,   11,   11,   11,   11,   11,   11,
-			   11>>)
+			    0,    1,    1,    1,    1,    1,    1,    1,    1,    1,
+			   14,    8,    3,   13,   13,   13,   13,   13,   13,   13,
+			   13,   13,   13>>)
 		end
 
 	yy_base_template: ANY is
@@ -132,8 +133,8 @@ feature {NONE} -- Table templates
 			-- but once functions cannot be declared with anchored types.
 		once
 			Result := yy_fixed_array (<<
-			    0,    0,    0,   11,    9,   12,   12,   12,   12,   12,
-			    8,   12>>)
+			    0,    0,    0,   12,    0,   13,   13,   13,    8,   13,
+			   13,    0,   13,   13,    9>>)
 		end
 
 	yy_def_template: ANY is
@@ -141,8 +142,8 @@ feature {NONE} -- Table templates
 			-- but once functions cannot be declared with anchored types.
 		once
 			Result := yy_fixed_array (<<
-			    0,   11,    1,   11,   11,   11,   11,   11,   11,   11,
-			   11,    0>>)
+			    0,   13,    1,   13,   14,   13,   13,   13,   14,   13,
+			   13,   14,   13,    0,   13>>)
 		end
 
 	yy_ec_template: ANY is
@@ -151,15 +152,15 @@ feature {NONE} -- Table templates
 		once
 			Result := yy_fixed_array (<<
 			    0,    1,    1,    1,    1,    1,    1,    1,    1,    2,
-			    3,    1,    4,    1,    1,    1,    1,    1,    1,    1,
+			    3,    1,    4,    5,    1,    1,    1,    1,    1,    1,
 			    1,    1,    1,    1,    1,    1,    1,    1,    1,    1,
-			    1,    1,    5,    1,    1,    1,    1,    1,    1,    1,
-			    6,    7,    1,    1,    1,    1,    1,    1,    1,    1,
-			    1,    1,    1,    1,    1,    1,    1,    1,    1,    1,
-			    1,    1,    1,    1,    1,    1,    1,    1,    1,    1,
+			    1,    1,    6,    1,    1,    1,    1,    1,    1,    1,
+			    7,    8,    1,    1,    1,    1,    1,    1,    1,    1,
 			    1,    1,    1,    1,    1,    1,    1,    1,    1,    1,
 			    1,    1,    1,    1,    1,    1,    1,    1,    1,    1,
-			    1,    1,    8,    1,    1,    1,    1,    1,    1,    1,
+			    1,    1,    1,    1,    1,    1,    1,    1,    1,    1,
+			    1,    1,    1,    1,    1,    1,    1,    1,    1,    1,
+			    1,    1,    9,    1,    1,    1,    1,    1,    1,    1,
 
 			    1,    1,    1,    1,    1,    1,    1,    1,    1,    1,
 			    1,    1,    1,    1,    1,    1,    1,    1,    1,    1,
@@ -185,7 +186,7 @@ feature {NONE} -- Table templates
 			-- but once functions cannot be declared with anchored types.
 		once
 			Result := yy_fixed_array (<<
-			    0,    1,    1,    1,    1,    1,    1,    1,    1>>)
+			    0,    1,    2,    2,    2,    1,    2,    2,    2,    2>>)
 		end
 
 	yy_accept_template: ANY is
@@ -193,20 +194,20 @@ feature {NONE} -- Table templates
 			-- but once functions cannot be declared with anchored types.
 		once
 			Result := yy_fixed_array (<<
-			    0,    0,    0,    8,    5,    3,    1,    4,    2,    6,
-			    5,    0>>)
+			    0,    0,    0,    8,    5,    3,    1,    4,    5,    2,
+			    6,    5,    1,    0>>)
 		end
 
 feature {NONE} -- Constants
 
-	yyJam_base: INTEGER is 12
+	yyJam_base: INTEGER is 13
 			-- Position in `yy_nxt'/`yy_chk' tables
 			-- where default jam table starts
 
-	yyJam_state: INTEGER is 11
+	yyJam_state: INTEGER is 13
 			-- State id corresponding to jam state
 
-	yyTemplate_mark: INTEGER is 12
+	yyTemplate_mark: INTEGER is 14
 			-- Mark between normal states and templates
 
 	yyNull_equiv_class: INTEGER is 1
