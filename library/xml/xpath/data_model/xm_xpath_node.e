@@ -65,16 +65,16 @@ feature -- Access
 			-- The root node for `Current';
 			-- This is not necessarily a Document node.
 		local
-			parent_node: XM_XPATH_NODE
+			a_parent_node: XM_XPATH_NODE
 		do
 			from
 				Result := Current
-				parent_node := parent
+				a_parent_node := parent
 			until
-				parent_node = Void
+				a_parent_node = Void
 			loop
-				Result := parent_node
-				parent_node := parent_node.parent
+				Result := a_parent_node
+				a_parent_node := a_parent_node.parent
 			end
 		ensure
 			root_node_not_void: Result /= Void
@@ -104,22 +104,22 @@ feature -- Access
 			-- The document node for `Current';
 			-- If `Current' is in a document fragment, then return Void
 		local
-			the_root: XM_XPATH_DOCUMENT
+			a_root: XM_XPATH_DOCUMENT
 		do
-			the_root ?= root
-			if the_root = Void then
+			a_root ?= root
+			if a_root = Void then
 				debug ("XPath abstract node")
 					std.error.put_string ("Document node is void%N")
 				end
 			else
 				debug ("XPath abstract node")
 					std.error.put_string ("Document node kind is ")
-					std.error.put_string (the_root.node_kind)
+					std.error.put_string (a_root.node_kind)
 					std.error.put_new_line
 				end
 			end
-			if the_root /= Void and then the_root.node_kind.is_equal ("document") then
-				Result := the_root
+			if a_root /= Void and then a_root.node_kind.is_equal ("document") then
+				Result := a_root
 			end
 		end
 
@@ -127,57 +127,57 @@ feature -- Access
 			-- The first child of this node;
 			-- If there are no children, return `Void'
 		local
-			iterator: XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_NODE]
+			an_iterator: XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_NODE]
 		do
-			iterator := new_axis_iterator (Child_axis)
-			if iterator.before and then not iterator.after then
-				iterator.forth
+			an_iterator := new_axis_iterator (Child_axis)
+			if an_iterator.before and then not an_iterator.after then
+				an_iterator.forth
 			end
-			if not iterator.before then Result := iterator.item_for_iteration end
+			if not an_iterator.before then Result := an_iterator.item_for_iteration end
 		end
 
 	last_child: XM_XPATH_NODE is
 			-- The last child of this node;
 			-- If there are no children, return `Void'
 		local
-			iterator: XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_NODE]
+			an_iterator: XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_NODE]
 		do
-			iterator := new_axis_iterator (Child_axis)
+			an_iterator := new_axis_iterator (Child_axis)
 			from
 			until
-				iterator.after
+				an_iterator.after
 			loop
-				if not iterator.after then
-					iterator.forth
+				if not an_iterator.after then
+					an_iterator.forth
 				end
 			end
-			if not iterator.before then Result := iterator.item_for_iteration end
+			if not an_iterator.before then Result := an_iterator.item_for_iteration end
 		end
 
 	previous_sibling: XM_XPATH_NODE is
 			-- The previous sibling of this node;
 			-- If there is no such node, return `Void'
 		local
-			iterator: XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_NODE]
+			an_iterator: XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_NODE]
 		do
-			iterator := new_axis_iterator (Preceding_sibling_axis)
-			if iterator.before and not iterator.after then
-				iterator.forth
+			an_iterator := new_axis_iterator (Preceding_sibling_axis)
+			if an_iterator.before and not an_iterator.after then
+				an_iterator.forth
 			end
-			if not iterator.before then Result := iterator.item_for_iteration end
+			if not an_iterator.before then Result := an_iterator.item_for_iteration end
 		end
 	
 	next_sibling: XM_XPATH_NODE is
 			-- The next sibling of this node;
 			-- If there is no such node, return `Void'
 		local
-			iterator: XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_NODE]
+			an_iterator: XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_NODE]
 		do
-			iterator := new_axis_iterator (Following_sibling_axis)
-			if iterator.before and not iterator.after then
-				iterator.forth
+			an_iterator := new_axis_iterator (Following_sibling_axis)
+			if an_iterator.before and not an_iterator.after then
+				an_iterator.forth
 			end
-			if not iterator.before then Result := iterator.item_for_iteration end
+			if not an_iterator.before then Result := an_iterator.item_for_iteration end
 		end
 	
 	document_element: XM_XPATH_ELEMENT is
@@ -186,27 +186,27 @@ feature -- Access
 			-- (i.e. it is a document fragment), then
 			-- return the last element child of the document root.
 		local
-			the_root: XM_XPATH_DOCUMENT
-			iterator: XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_NODE]
-			element_node_test: XM_XPATH_NODE_KIND_TEST
+			a_root: XM_XPATH_DOCUMENT
+			an_iterator: XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_NODE]
+			an_element_node_test: XM_XPATH_NODE_KIND_TEST
 		do
-			the_root := document_root
-			if the_root = Void then
+			a_root := document_root
+			if a_root = Void then
 				debug ("XPath abstract node")
 					std.error.put_string ("Document root is void%N")
 				end
 				Result := Void
 			else
-				create element_node_test.make (Element_node)
-				iterator := the_root.new_axis_iterator_with_node_test (Child_axis, element_node_test)
+				create an_element_node_test.make (Element_node)
+				an_iterator := a_root.new_axis_iterator_with_node_test (Child_axis, an_element_node_test)
 				debug ("XPath abstract node")
 					std.error.put_string ("Document element: iterator is after? ")
-					std.error.put_string (iterator.after.out)
+					std.error.put_string (an_iterator.after.out)
 					std.error.put_new_line
 				end
-				if iterator.before and then not iterator.after then
-					iterator.forth
-					Result ?= iterator.item_for_iteration
+				if an_iterator.before and then not an_iterator.after then
+					an_iterator.forth
+					Result ?= an_iterator.item_for_iteration
 						check
 							node_is_element: Result /= Void
 						end
@@ -217,38 +217,37 @@ feature -- Access
 	typed_value: XM_XPATH_VALUE is
 			-- Typed value
 		local
-			the_type: INTEGER
-			value_as_string: STRING
+			a_type: INTEGER
 			a_string_value: XM_XPATH_STRING_VALUE
 		do
-			the_type := type_annotation
-			if the_type = Untyped_atomic_type then
+			a_type := type_annotation
+			if a_type = Untyped_atomic_type then
 				create {XM_XPATH_UNTYPED_ATOMIC_VALUE} Result.make (string_value)
-			elseif the_type = Untyped_type then
+			elseif a_type = Untyped_type then
 				create {XM_XPATH_UNTYPED_ATOMIC_VALUE} Result.make (string_value)
 			else
 				-- TODO complex types should be dealt with properly
 				create a_string_value.make (string_value)
 				-- This is wrong, as convert requires and yields an atomic type
-				-- Result := a_string_value.convert (the_type)
+				-- Result := a_string_value.convert (a_type)
 			end
 		end
 
-	new_axis_iterator (axis_type: INTEGER): XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_NODE] is
-			-- An enumeration over the nodes reachable by `axis_type' from this node
+	new_axis_iterator (an_axis_type: INTEGER): XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_NODE] is
+			-- An enumeration over the nodes reachable by `an_axis_type' from this node
 		require
-			valid_axis: is_axis_valid (axis_type)
+			valid_axis: is_axis_valid (an_axis_type)
 		deferred
 		ensure
 			result_not_void: Result /= Void
 		end
 
-	new_axis_iterator_with_node_test (axis_type: INTEGER; test: XM_XPATH_NODE_TEST): XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_NODE] is
-			-- An enumeration over the nodes reachable by `axis_type' from this node;
+	new_axis_iterator_with_node_test (an_axis_type: INTEGER; test: XM_XPATH_NODE_TEST): XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_NODE] is
+			-- An enumeration over the nodes reachable by `an_axis_type' from this node;
 			-- Only nodes that match the pattern specified by `test' will be selected.
 		require
 			test_not_void: test /= Void
-			valid_axis: is_axis_valid (axis_type)
+			valid_axis: is_axis_valid (an_axis_type)
 		deferred
 		ensure
 			result_not_void: Result /= Void
@@ -273,7 +272,7 @@ feature -- Status report
 		deferred
 		end
 
-feature {XM_XPATH_NODE} -- Access
+feature {XM_XPATH_NODE} -- Local
 
 	identity: INTEGER -- TODO: change to INTEGER_64 when all compilers support this
 			-- Unique identifier within the document

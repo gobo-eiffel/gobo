@@ -23,7 +23,7 @@ creation
 
 feature {NONE} -- Initialization
 
-	make (seq: XM_XPATH_EXPRESSION) is
+	make (a_sequence: XM_XPATH_EXPRESSION) is
 			-- TODO
 		do
 		end
@@ -41,18 +41,19 @@ feature -- Access
 	
 feature -- Status report
 
-	display (level: INTEGER; pool: XM_XPATH_NAME_POOL) is
+	display (a_level: INTEGER; a_pool: XM_XPATH_NAME_POOL) is
 			-- Diagnostic print of expression structure to `std.error'
 		do
-			std.error.put_string (STRING_.appended_string (indent (level), "atomize"))
+			std.error.put_string (STRING_.appended_string (indent (a_level), "atomize"))
 			std.error.put_new_line
 		end
 
 feature -- Optimization
 
-	analyze (env: XM_XPATH_STATIC_CONTEXT): XM_XPATH_EXPRESSION is
+	analyze (a_context: XM_XPATH_STATIC_CONTEXT): XM_XPATH_EXPRESSION is
 			-- Perform static analysis of an expression and its subexpressions
 		do
+			-- TODO
 		end
 
 feature {NONE} -- Implementation

@@ -27,18 +27,18 @@ creation
 
 feature {NONE} -- Initialization
 
-	make (declaration: XM_XPATH_VARIABLE_DECLARATION) is
-			-- Register `Current' with `declaration'
+	make (a_declaration: XM_XPATH_VARIABLE_DECLARATION) is
+			-- Register `Current' with `a_declaration'
 			-- When the variable declaration is compiled,
 			--  the declaration will call our fix_up routine.
 			-- Note that the object does not retain a pointer
 			--  to the variable declaration, which would cause the
 			--  stylesheet to be locked in memory.
 		require
-			declaration_not_void: declaration /= Void
+			declaration_not_void: a_declaration /= Void
 		do
-			declaration.register_reference (Current)
-			display_name := declaration.name
+			a_declaration.register_reference (Current)
+			display_name := a_declaration.name
 		end
 
 feature -- Access
@@ -61,31 +61,6 @@ feature -- Access
 			-- Binding for variable;
 			-- will be `Void' until `fix_up' is called.
 
-feature -- Status report
-
-	may_analyze: BOOLEAN is
-			-- OK to call analyze?
-		do
-			Result := constant_value /= Void or else static_type /= Void
-		end
-
-	display (level: INTEGER; pool: XM_XPATH_NAME_POOL) is
-			-- Diagnostic print of expression structure to `std.error'
-		local
-			a_string: STRING
-		do
-			if display_name = Void then
-				a_string := STRING_.appended_string (indent (level), "$(unbound variable)")
-				std.error.put_string (a_string)
-				std.error.put_new_line
-			else
-				a_string := STRING_.appended_string (indent (level), "$")
-				a_string := STRING_.appended_string (a_string, display_name)				
-				std.error.put_string (a_string)
-				std.error.put_new_line
-				
-			end
-		end
 
 feature -- Comparison
 
@@ -102,17 +77,36 @@ feature -- Comparison
 			end
 		end
 
+feature -- Status report
+
+	may_analyze: BOOLEAN is
+			-- OK to call `analyze'?
+		do
+			Result := constant_value /= Void or else static_type /= Void
+		end
+
+	display (a_level: INTEGER; a_pool: XM_XPATH_NAME_POOL) is
+			-- Diagnostic print of expression structure to `std.error'
+		local
+			a_string: STRING
+		do
+			if display_name = Void then
+				a_string := STRING_.appended_string (indent (a_level), "$(unbound variable)")
+				std.error.put_string (a_string)
+				std.error.put_new_line
+			else
+				a_string := STRING_.appended_string (indent (a_level), "$")
+				a_string := STRING_.appended_string (a_string, display_name)				
+				std.error.put_string (a_string)
+				std.error.put_new_line
+				
+			end
+		end
+
 feature -- Optimization
 
-		analyze (env: XM_XPATH_STATIC_CONTEXT): XM_XPATH_EXPRESSION is
-			-- Perform static analysis of an expression and its subexpressions;		
-			-- This checks statically that the operands of the expression have the correct type;
-			-- If necessary it generates code to do run-time type checking or type conversion;
-			-- A static type error is reported only if execution cannot possibly succeed, that
-			-- is, if a run-time type error is inevitable. The call may return a modified form of the expression;
-			-- This routine is called after all references to functions and variables have been resolved
-			-- to the declaration of the function or variable. However, the types of such functions and
-			-- variables will only be accurately known if they have been explicitly declared
+		analyze (a_context: XM_XPATH_STATIC_CONTEXT): XM_XPATH_EXPRESSION is
+			-- Perform static analysis of `Current' and its subexpressions;		
 		do
 			if constant_value /= Void then
 				Result := constant_value
@@ -123,21 +117,21 @@ feature -- Optimization
 
 feature -- Element change
 
-	set_static_type (type: XM_XPATH_SEQUENCE_TYPE; value: XM_XPATH_VALUE; properties: INTEGER) is
+	set_static_type (a_type: XM_XPATH_SEQUENCE_TYPE; a_constant_value: XM_XPATH_VALUE; properties: INTEGER) is
 			-- Fix up the static type of this variable reference;
 			-- Optionally, supply a constant value for the variable.
 			-- Also supplies other static properties of the expression to which the variable is bound,
 			--  for example whether it is an ordered node-set.
 		do
-			static_type := type
-			constant_value := value
+			static_type := a_type
+			constant_value := a_constant_value
 			-- TODO - static properties
 		end
 
-	fix_up (required_binding: XM_XPATH_BINDING) is
+	fix_up (a_required_binding: XM_XPATH_BINDING) is
 			-- Fix up this binding reference to a binding.
 		do
-			binding := required_binding
+			binding := a_required_binding
 		end
 
 feature {NONE} -- Implementation

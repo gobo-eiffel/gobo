@@ -25,18 +25,18 @@ creation
 
 feature {NONE} -- Initialization
 
-	make (nm: STRING; fp: INTEGER; rt: XM_XPATH_SEQUENCE_TYPE) is
+	make (a_name: STRING; a_fingerprint: INTEGER; a_required_type: XM_XPATH_SEQUENCE_TYPE) is
 			-- Establish invariant
 		require
-			name_not_void: nm /= Void and then nm.count > 0
-			required_type_not_void: rt /= Void
+			name_not_void: a_name /= Void and then a_name.count > 0
+			required_type_not_void: a_required_type /= Void
 		do
 			create references.make_equal (5)
-			name := nm
-			fingerprint := fp
-			required_type := rt
+			name := a_name
+			fingerprint := a_fingerprint
+			required_type := a_required_type
 		ensure
-			name_set: name = nm
+			name_set: name = a_name
 		end
 
 feature -- Access
@@ -52,28 +52,23 @@ feature -- Access
 	
 feature -- Element change
 
-	register_reference (ref: XM_XPATH_BINDING_REFERENCE) is
-			-- Register `ref' as a reference to this variable for fix-up.
-			-- This routine is called by the XPath parser when
-			-- each reference to the variable is enountered.
-			-- At some time after parsing and before execution of the expression,
-			-- `Current' is responsible for calling the two routines set_static_type
-			-- and fixup on each xm_xpath_binding_reference that has been registered with it.
+	register_reference (a_reference: XM_XPATH_BINDING_REFERENCE) is
+			-- Register `a_reference' as a reference to this variable for fix-up.
 		do
 			if not references.extendible (1) then
 				references.resize (2* references.count)
 			end
-			references.put_last (ref)
+			references.put_last (a_reference)
 		end
 
-	set_required_type (req: XM_XPATH_SEQUENCE_TYPE) is
+	set_required_type (a_required_type: XM_XPATH_SEQUENCE_TYPE) is
 			-- Set `required_type.
 		require
-			required_type_not_void: req /= Void
+			required_type_not_void: a_required_type /= Void
 		do
-			required_type := req
+			required_type := a_required_type
 		ensure
-			required_type_set: required_type = req
+			required_type_set: required_type = a_required_type
 		end
 
 feature {NONE} -- Implementation

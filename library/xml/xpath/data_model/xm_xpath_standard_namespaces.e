@@ -64,18 +64,18 @@ feature -- Access
 
 feature -- Status report
 
-	is_reserved_namespace (uri: STRING): BOOLEAN is
-			-- Is `uri' a reserved namespace?
+	is_reserved_namespace (a_uri: STRING): BOOLEAN is
+			-- Is `a_uri' a reserved namespace?
 		require
-			uri_not_void: uri /= Void
+			uri_not_void: a_uri /= Void
 		do
-			Result := STRING_.same_string (uri, Xslt_uri)
-				or else STRING_.same_string (uri, Xpath_functions_uri)
-				or else STRING_.same_string (uri, Xml_uri)
-				or else STRING_.same_string (uri, Xml_schema_uri)
-				or else STRING_.same_string (uri, Xml_schema_datatypes_uri)
-				or else STRING_.same_string (uri, Xpath_defined_datatypes_uri)
-				or else STRING_.same_string (uri, Xml_schema_instance_uri)
+			Result := STRING_.same_string (a_uri, Xslt_uri)
+				or else STRING_.same_string (a_uri, Xpath_functions_uri)
+				or else STRING_.same_string (a_uri, Xml_uri)
+				or else STRING_.same_string (a_uri, Xml_schema_uri)
+				or else STRING_.same_string (a_uri, Xml_schema_datatypes_uri)
+				or else STRING_.same_string (a_uri, Xpath_defined_datatypes_uri)
+				or else STRING_.same_string (a_uri, Xml_schema_instance_uri)
 		end
 
 end

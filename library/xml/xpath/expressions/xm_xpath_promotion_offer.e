@@ -30,26 +30,26 @@ creation
 
 feature {NONE} -- Initialization
 
-	make (requested_action: INTEGER; binding: XM_XPATH_BINDING; containing: XM_XPATH_EXPRESSION; eliminate: BOOLEAN; dependent: BOOLEAN) is
-			-- Set defaults
+	make (a_requested_action: INTEGER; a_binding: XM_XPATH_BINDING; containing: XM_XPATH_EXPRESSION; eliminate: BOOLEAN; dependent: BOOLEAN) is
+			-- Set defaults.
 		require
-			action: requested_action = Range_independent
-				or else requested_action = Focus_independent
-				or else requested_action = Inline_variable_references
-				or else requested_action = Unordered
-			binding:	requested_action = Range_independent implies binding /= Void
-			containing: requested_action /= Unordered implies containing /= Void
+			action: a_requested_action = Range_independent
+				or else a_requested_action = Focus_independent
+				or else a_requested_action = Inline_variable_references
+				or else a_requested_action = Unordered
+			binding:	a_requested_action = Range_independent implies a_binding /= Void
+			containing: a_requested_action /= Unordered implies containing /= Void
 		do
-			action := requested_action
-			binding_expression := binding
+			action := a_requested_action
+			binding_expression := a_binding
 			containing_expression := containing
 			must_eliminate_duplicates := eliminate
 			promote_document_dependent := dependent
 		ensure
 			eliminate_duplicates_set: must_eliminate_duplicates = eliminate
 			promote_document_dependent_set: promote_document_dependent = dependent
-			action_set: action = requested_action
-			binding_set: binding_expression = binding
+			action_set: action = a_requested_action
+			binding_set: binding_expression = a_binding
 			containing_set: containing_expression = containing
 		end
 
@@ -84,10 +84,10 @@ feature -- Status report
 
 feature -- Optimization
 
-	accept (child: XM_XPATH_EXPRESSION): XM_XPATH_EXPRESSION is
+	accept (a_child_expression: XM_XPATH_EXPRESSION): XM_XPATH_EXPRESSION is
 			-- Test whether a subexpression qualifies for promotion, and if so, accept the promotion
 		require
-			sub_expression_dependencies_and_cardinalities_computed: child /= Void and then child.are_dependencies_computed and then child.are_cardinalities_computed
+			sub_expression_dependencies_and_cardinalities_computed: a_child_expression /= Void and then a_child_expression.are_dependencies_computed and then a_child_expression.are_cardinalities_computed
 		local
 			variable_reference: XM_XPATH_VARIABLE_REFERENCE
 			reverser: XM_XPATH_REVERSER
@@ -96,39 +96,39 @@ feature -- Optimization
 			inspect
 				action
 			when Range_independent then
-				if depends_upon_variable (child, binding_expression) then
-					Result := child
+				if depends_upon_variable (a_child_expression, binding_expression) then
+					Result := a_child_expression
 				else
-					Result := promote (child)
+					Result := promote (a_child_expression)
 				end
 			when Focus_independent then
-				if not child.depends_upon_focus then
-					Result := promote (child)
-				elseif promote_document_dependent and not child.depends_upon_non_document_focus then
-					Result := promote (child)
+				if not a_child_expression.depends_upon_focus then
+					Result := promote (a_child_expression)
+				elseif promote_document_dependent and not a_child_expression.depends_upon_non_document_focus then
+					Result := promote (a_child_expression)
 				else
-					Result := child
+					Result := a_child_expression
 				end
 			when Inline_variable_references then
-				variable_reference ?= child
+				variable_reference ?= a_child_expression
 				if variable_reference /= Void and then variable_reference.binding.is_equal (binding_expression) then
 					Result := containing_expression
 				else
-					Result := child
+					Result := a_child_expression
 				end
 			when Unordered then
-				reverser ?= child
+				reverser ?= a_child_expression
 				if reverser /= Void then
 					Result := reverser.base_expression
 				elseif not must_eliminate_duplicates then
-					document_sorter ?= child
+					document_sorter ?= a_child_expression
 					if document_sorter /= Void then
 						Result := document_sorter.base_expression
 					else
-						Result := child
+						Result := a_child_expression
 					end
 				else
-					Result := child
+					Result := a_child_expression
 				end
 			end			
 		end
@@ -147,55 +147,55 @@ feature -- Element change
 
 feature {NONE} -- Implementation
 
-	promote (child: XM_XPATH_EXPRESSION): XM_XPATH_EXPRESSION is
-			-- Promote `child'
+	promote (a_child_expression: XM_XPATH_EXPRESSION): XM_XPATH_EXPRESSION is
+			-- Promote `a_child_expression'
 		require
-			sub_expression_cardinalities_computed: child /= Void and then child.are_cardinalities_computed
+			sub_expression_cardinalities_computed: a_child_expression /= Void and then a_child_expression.are_cardinalities_computed
 		local
-			declaration: XM_XPATH_RANGE_VARIABLE_DECLARATION
-			variable: XM_XPATH_VARIABLE_REFERENCE
-			type: XM_XPATH_SEQUENCE_TYPE
-			variable_name: STRING
-			clock: DT_SYSTEM_CLOCK
-			let: XM_XPATH_LET_EXPRESSION
+			a_range_variable: XM_XPATH_RANGE_VARIABLE_DECLARATION
+			a_variable: XM_XPATH_VARIABLE_REFERENCE
+			a_type: XM_XPATH_SEQUENCE_TYPE
+			a_variable_name: STRING
+			a_clock: DT_SYSTEM_CLOCK
+			a_let_expression: XM_XPATH_LET_EXPRESSION
 		do
-			create type.make (child.item_type, child.cardinality)
-			create clock.make
-			variable_name := clock.time_now.out
-			variable_name := STRING_.appended_string ("zz:",variable_name)
-			create declaration.make (variable_name, -1, type)
+			create a_type.make (a_child_expression.item_type, a_child_expression.cardinality)
+			create a_clock.make
+			a_variable_name := a_clock.time_now.out
+			a_variable_name := STRING_.appended_string ("zz:",a_variable_name)
+			create a_range_variable.make (a_variable_name, -1, a_type)
 
-			create variable.make (declaration)
-			Result := variable
+			create a_variable.make (a_range_variable)
+			Result := a_variable
 
-			create let.make (declaration, child, containing_expression)
-			containing_expression := let
+			create a_let_expression.make (a_range_variable, a_child_expression, containing_expression)
+			containing_expression := a_let_expression
 		end
 
-	depends_upon_variable (child: XM_XPATH_EXPRESSION; binding: XM_XPATH_BINDING):BOOLEAN is
-			-- Does `child' depend upon `binding'?
+	depends_upon_variable (a_child_expression: XM_XPATH_EXPRESSION; a_binding: XM_XPATH_BINDING):BOOLEAN is
+			-- Does `a_child_expression' depend upon `a_binding'?
 		require
-			child_not_void: child /= Void
-			binding_not_void: binding /= Void
+			child_not_void: a_child_expression /= Void
+			binding_not_void: a_binding /= Void
 		local
-			variable: XM_XPATH_VARIABLE_REFERENCE
+			a_variable: XM_XPATH_VARIABLE_REFERENCE
 			children: DS_ARRAYED_LIST [XM_XPATH_EXPRESSION]
 			finished: BOOLEAN
 			an_index: INTEGER
 		do
-			variable ?= child
-			if variable /= Void then
-				Result := variable.binding.is_equal (binding)
+			a_variable ?= a_child_expression
+			if a_variable /= Void then
+				Result := a_variable.binding.is_equal (a_binding)
 			else
 				from
-					children := child.sub_expressions
+					children := a_child_expression.sub_expressions
 					an_index := 1
 				variant
 					children.count + 1 - an_index
 				until
 					finished or else an_index > children.count
 				loop
-					if depends_upon_variable (children.item (an_index), binding) then
+					if depends_upon_variable (children.item (an_index), a_binding) then
 						Result := True
 						finished := True
 					end

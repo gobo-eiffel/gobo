@@ -46,14 +46,6 @@ feature -- Status report
 			Result := before or else after
 		end
 
-feature -- Duplication
-
-	another: like Current is
-			-- Another iterator that iterates over the same items as the original;
-			-- The new iterator will be repositioned at the start of the sequence
-		deferred
-		end
-
 feature -- Cursor movement
 
 	forth is
@@ -64,6 +56,14 @@ feature -- Cursor movement
 		ensure
 			not_before: before = False
 			one_more: index = old index + 1
+		end
+
+feature -- Duplication
+
+	another: like Current is
+			-- Another iterator that iterates over the same items as the original;
+			-- The new iterator will be repositioned at the start of the sequence
+		deferred
 		end
 
 invariant

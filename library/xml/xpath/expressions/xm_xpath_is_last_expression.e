@@ -43,21 +43,22 @@ feature -- Access
 
 feature -- Status report
 
-	display (level: INTEGER; pool: XM_XPATH_NAME_POOL) is
+	display (a_level: INTEGER; a_pool: XM_XPATH_NAME_POOL) is
 			-- Diagnostic print of expression structure to `std.error'
 		local
 			a_string: STRING
 		do
-			a_string := STRING_.appended_string (indent (level), "isLast()")
+			a_string := STRING_.appended_string (indent (a_level), "isLast()")
 			std.error.put_string (a_string)
 			std.error.put_new_line
 			end
 
 feature -- Optimization
 
-	analyze (env: XM_XPATH_STATIC_CONTEXT): XM_XPATH_EXPRESSION is
-			-- Perform static analysis of an expression and its subexpressions
+	analyze (a_context: XM_XPATH_STATIC_CONTEXT): XM_XPATH_EXPRESSION is
+			-- Perform static analysis of `Current' and its subexpressions
 		do
+			-- TODO
 		end
 
 feature {NONE} -- Implementation

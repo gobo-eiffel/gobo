@@ -39,6 +39,7 @@ feature -- Access
 		end
 
 invariant
+
 	type: item_type = Text_node
 	
 end

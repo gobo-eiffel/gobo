@@ -22,23 +22,23 @@ creation
 
 feature {NONE} -- Initialization
 
-	make (op: INTEGER; rv: XM_XPATH_RANGE_VARIABLE_DECLARATION; seq: XM_XPATH_EXPRESSION; act: XM_XPATH_EXPRESSION) is
+	make (an_operator: INTEGER; a_range_variable: XM_XPATH_RANGE_VARIABLE_DECLARATION; a_sequence_expression: XM_XPATH_EXPRESSION; an_action: XM_XPATH_EXPRESSION) is
 			-- Establish invariant
 		require
-			valid_operator: op = Every_token or op = Some_token
-			range_variable_not_void: rv /= Void
-			sequence_not_void: seq /= Void
-			action_not_void: act /= Void
+			valid_operator: an_operator = Every_token or an_operator = Some_token
+			range_variable_not_void: a_range_variable /= Void
+			sequence_not_void: a_sequence_expression /= Void
+			action_not_void: an_action /= Void
 		do
-			operator := op
-			declaration := rv
-			sequence := seq
-			action := act
+			operator := an_operator
+			declaration := a_range_variable
+			sequence := a_sequence_expression
+			action := an_action
 		ensure
-			operator_set: operator = op
-			range_variable_set: declaration = rv
-			sequence_set: sequence = seq
-			action_set: action = act
+			operator_set: operator = an_operator
+			range_variable_set: declaration = a_range_variable
+			sequence_set: sequence = a_sequence_expression
+			action_set: action = an_action
 		end
 
 feature -- Access
@@ -61,58 +61,51 @@ feature -- Access
 
 feature -- Status report
 
-	display (level: INTEGER; pool: XM_XPATH_NAME_POOL) is
+	display (a_level: INTEGER; a_pool: XM_XPATH_NAME_POOL) is
 			-- Diagnostic print of expression structure to `std.error'
 		local
 			a_string: STRING
 		do
-			a_string := STRING_.appended_string (indent (level), token_name (operator))
+			a_string := STRING_.appended_string (indent (a_level), token_name (operator))
 			a_string := STRING_.appended_string (a_string, " $")
 			a_string := STRING_.appended_string (a_string, declaration.name)
 			a_string := STRING_.appended_string (a_string, " in")
 			std.error.put_string (a_string)
 			std.error.put_new_line
-			sequence.display (level + 1, pool)
-			a_string := STRING_.appended_string (indent (level), "satisfies")
+			sequence.display (a_level + 1, a_pool)
+			a_string := STRING_.appended_string (indent (a_level), "satisfies")
 			std.error.put_string (a_string)
 			std.error.put_new_line
-			action.display (level + 1, pool)
+			action.display (a_level + 1, a_pool)
 		end
 
 feature -- Optimization
 
-	analyze (env: XM_XPATH_STATIC_CONTEXT): XM_XPATH_EXPRESSION is
-			-- Perform static analysis of an expression and its subexpressions;		
-			-- This checks statically that the operands of the expression have the correct type;
-			-- If necessary it generates code to do run-time type checking or type conversion;
-			-- A static type error is reported only if execution cannot possibly succeed, that
-			-- is, if a run-time type error is inevitable. The call may return a modified form of the expression;
-			-- This routine is called after all references to functions and variables have been resolved
-			-- to the declaration of the function or variable. However, the types of such functions and
-			-- variables will only be accurately known if they have been explicitly declared
+	analyze (a_context: XM_XPATH_STATIC_CONTEXT): XM_XPATH_EXPRESSION is
+			-- Perform static analysis of `Current' and its subexpressions		
 		local
-			analyzed_expression: XM_XPATH_QUANTIFIED_EXPRESSION
-			declaration_type, sequence_type: XM_XPATH_SEQUENCE_TYPE
+			an_analyzed_expression: XM_XPATH_QUANTIFIED_EXPRESSION
+			a_declaration_type, a_sequence_type: XM_XPATH_SEQUENCE_TYPE
 		do
 			
 			-- The order of events is critical here. First we ensure that the type of the
 			-- sequence expression is established. This is used to establish the type of the variable,
 			-- which in turn is required when type-checking the action part.
 
-			analyzed_expression := clone (Current)
+			an_analyzed_expression := clone (Current)
 			if sequence.may_analyze then
-				analyzed_expression.set_sequence (sequence.analyze (env))
+				an_analyzed_expression.set_sequence (sequence.analyze (a_context))
 			end
 
 			-- "some" and "every" have no ordering constraints
 
-			analyzed_expression.set_sequence (analyzed_expression.sequence.unsorted (False))
-			declaration_type := declaration.required_type
-			create sequence_type.make (declaration_type.primary_type, Required_cardinality_zero_or_more)
+			an_analyzed_expression.set_sequence (an_analyzed_expression.sequence.unsorted (False))
+			a_declaration_type := declaration.required_type
+			create a_sequence_type.make (a_declaration_type.primary_type, Required_cardinality_zero_or_more)
 
 			-- TODO - more code to write
 			
-			Result := analyzed_expression
+			Result := an_analyzed_expression
 			declaration := Void -- Now the GC can reclaim it, and analysis cannot be performed again
 		end
 

@@ -30,12 +30,12 @@ feature {NONE} -- Initialization
 
 feature -- Status report
 
-	display (level: INTEGER; pool: XM_XPATH_NAME_POOL) is
+	display (a_level: INTEGER; a_pool: XM_XPATH_NAME_POOL) is
 			-- Diagnostic print of expression structure to `std.error'
 		local
 			a_string: STRING
 		do
-			a_string := STRING_.appended_string (indent (level), "/")
+			a_string := STRING_.appended_string (indent (a_level), "/")
 			std.error.put_string (a_string)
 			std.error.put_new_line
 		end

@@ -29,7 +29,7 @@ feature -- Access
 
 feature -- Element change
 
-	register_reference (ref: XM_XPATH_BINDING_REFERENCE) is
+	register_reference (a_reference: XM_XPATH_BINDING_REFERENCE) is
 			-- Register `ref' as a reference to this variable for fix-up.
 			-- This routine is called by the XPath parser when
 			-- each reference to the variable is enountered.
@@ -37,7 +37,7 @@ feature -- Element change
 			-- `Current' is responsible for calling the two routines set_static_type
 			-- and fixup on each xm_xpath_binding_reference that has been registered with it.
 		require
-			reference_not_void: ref /= Void
+			reference_not_void: a_reference /= Void
 		deferred
 		end
 

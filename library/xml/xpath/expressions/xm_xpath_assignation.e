@@ -38,9 +38,6 @@ feature -- Access
 	sub_expressions: DS_ARRAYED_LIST [XM_XPATH_EXPRESSION] is
 			-- Immediate sub-expressions of `Current'
 		do
-			-- Default implementation returns an empty list;
-			-- Suitable for an expression without sub-expressions.
-			
 			create Result.make (2)
 			Result.set_equality_tester (expression_tester)
 			Result.put (sequence, 1)
@@ -48,88 +45,79 @@ feature -- Access
 		end
 
 feature -- Status report
-
 	
 	may_analyze: BOOLEAN is
-			-- OK to call analyze?
+			-- OK to call `analyze'?
 		do
 			Result := declaration /= Void
 		end
 
-feature -- Evaluation
-
-	evaluate (context: XM_XPATH_CONTEXT): XM_XPATH_VALUE is
-			-- Evaluate variable
-		do
-			Result := context.evaluate_local_variable (slot_number)
-		end
-
-	
 feature -- Optimization
 
 	simplify: XM_XPATH_EXPRESSION is
-			-- Simplify an expression;
-			-- This performs any static optimization 
-			--  (by rewriting the expression as a different expression);
+			-- Simplify an expression
 		local
-			simplified: XM_XPATH_ASSIGNATION
+			a_simplified_assignation: XM_XPATH_ASSIGNATION
 		do
-			simplified := clone (Current)
-			simplified.set_sequence (sequence.simplify)
-			simplified.set_action (action.simplify)
-			Result := simplified
+			a_simplified_assignation := clone (Current)
+			a_simplified_assignation.set_sequence (sequence.simplify)
+			a_simplified_assignation.set_action (action.simplify)
+			Result := a_simplified_assignation
 		end
 
-	promote (offer: XM_XPATH_PROMOTION_OFFER): XM_XPATH_EXPRESSION is
+	promote (an_offer: XM_XPATH_PROMOTION_OFFER): XM_XPATH_EXPRESSION is
 			-- Offer promotion for this subexpression
-			-- The offer will be accepted if the subexpression is not dependent on
-			-- the factors (e.g. the context item) identified in the PromotionOffer.
-			-- By default the offer is not accepted - this is appropriate in the case of simple expressions
-			-- such as constant values and variable references where promotion would give no performance
-			-- advantage. This method is always called at compile time.
 		local
-			promotion: XM_XPATH_EXPRESSION
+			a_promotion: XM_XPATH_EXPRESSION
 		do
-			promotion := offer.accept (Current)
-			if promotion /= Void then
-				Result := promotion
+			a_promotion := an_offer.accept (Current)
+			if a_promotion /= Void then
+				Result := a_promotion
 			else
-				sequence := sequence.promote (offer)
-				if offer.action = Inline_variable_references or else offer.action = Unordered then
+				sequence := sequence.promote (an_offer)
+				if an_offer.action = Inline_variable_references or else an_offer.action = Unordered then
 
 					-- Don't pass on other requests. We could pass them on, but only after augmenting
 					-- them to say we are interested in subexpressions that don't depend on either the
 					-- outer context or the inner context.
 					
-					action := action.promote (offer)
+					action := action.promote (an_offer)
 				end
 				Result := Current
 			end
 		end
 
+feature -- Evaluation
+
+	evaluate (a_context: XM_XPATH_CONTEXT): XM_XPATH_VALUE is
+			-- Evaluate variable
+		do
+			Result := a_context.evaluate_local_variable (slot_number)
+		end
+
 feature -- Element change
 
-	set_sequence (seq: XM_XPATH_EXPRESSION) is
-			-- Set `sequence' to `seq'.
+	set_sequence (a_sequence: XM_XPATH_EXPRESSION) is
+			-- Set `sequence.
 		require
-			sequence_not_void: seq /= Void
+			sequence_not_void: a_sequence /= Void
 		do
-			sequence := seq
+			sequence := a_sequence
 		ensure
-			sequence_set: sequence = seq
+			sequence_set: sequence = a_sequence
 		end
 
-	set_action (act: XM_XPATH_EXPRESSION) is
-			-- Set `action' to `act'.
+	set_action (an_action: XM_XPATH_EXPRESSION) is
+			-- Set `action'.
 		require
-			action_not_void: act /= Void
+			action_not_void: an_action /= Void
 		do
-			action := act
+			action := an_action
 		ensure
-			action_set: action = act
+			action_set: action = an_action
 		end
 
-feature {XM_XPATH_ASSIGNATION} -- Implementation
+feature {XM_XPATH_ASSIGNATION} -- Local
 
 	sequence: XM_XPATH_EXPRESSION
 			-- Sequence expression

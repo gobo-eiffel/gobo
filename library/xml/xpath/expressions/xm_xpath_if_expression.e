@@ -25,20 +25,20 @@ creation
 
 feature {NONE} -- Initialization
 
-	make (con_exp: XM_XPATH_EXPRESSION; then_exp: XM_XPATH_EXPRESSION; else_exp: XM_XPATH_EXPRESSION) is
+	make (a_condition: XM_XPATH_EXPRESSION; a_then_expression: XM_XPATH_EXPRESSION; an_else_expression: XM_XPATH_EXPRESSION) is
 			-- Establish invariant.
 		require
-				condition_not_void: con_exp /= Void
-				else_not_void: else_exp /= Void
-				then_not_void: then_exp /= Void
+				condition_not_void: a_condition /= Void
+				else_not_void: an_else_expression /= Void
+				then_not_void: a_then_expression /= Void
 		do
-			set_condition (con_exp)
-			set_else_expression (else_exp)
-			set_then_expression (then_exp)
+			set_condition (a_condition)
+			set_else_expression (an_else_expression)
+			set_then_expression (a_then_expression)
 		ensure
-				condition_set: condition = con_exp
-				else_set: else_expression = else_exp
-				then_set: then_expression = then_exp
+				condition_set: condition = a_condition
+				else_set: else_expression = an_else_expression
+				then_set: then_expression = a_then_expression
 		end
 
 feature -- Access
@@ -72,44 +72,41 @@ feature -- Access
 			Result.put (else_expression, 3)
 		end
 
-	iterator (context: XM_XPATH_CONTEXT): XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_ITEM] is
-			-- Yields an iterator to iterate over the values of a sequence
+	iterator (a_context: XM_XPATH_CONTEXT): XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_ITEM] is
+			-- Iterates over the values of a sequence
 		do
-			if condition.effective_boolean_value (context) then
-				Result := then_expression.iterator (context)
+			if condition.effective_boolean_value (a_context) then
+				Result := then_expression.iterator (a_context)
 			else
-				Result := else_expression.iterator (context)
+				Result := else_expression.iterator (a_context)
 			end
 		end
 
 feature -- Status report
 
-	display (level: INTEGER; pool: XM_XPATH_NAME_POOL) is
+	display (a_level: INTEGER; a_pool: XM_XPATH_NAME_POOL) is
 			-- Diagnostic print of expression structure to `std.error'
 		local
 			a_string: STRING
 		do
-			a_string := STRING_.appended_string (indent (level), "if (")
+			a_string := STRING_.appended_string (indent (a_level), "if (")
 			std.error.put_string (a_string)
 			std.error.put_new_line
-			condition.display (level + 1, pool)
-			a_string := STRING_.appended_string (indent (level), "then")
+			condition.display (a_level + 1, a_pool)
+			a_string := STRING_.appended_string (indent (a_level), "then")
 			std.error.put_string (a_string)
 			std.error.put_new_line
-			then_expression.display (level + 1, pool)
-			a_string := STRING_.appended_string (indent (level), "else")
+			then_expression.display (a_level + 1, a_pool)
+			a_string := STRING_.appended_string (indent (a_level), "else")
 			std.error.put_string (a_string)
 			std.error.put_new_line
-			else_expression.display (level + 1, pool)				
+			else_expression.display (a_level + 1, a_pool)				
 		end
 
 feature -- Optimization
 
 	simplify: XM_XPATH_EXPRESSION is
-			-- Simplify an expression;
-			-- This performs any static optimization 
-			--  (by rewriting the expression as a different expression);
-			-- The default implementation does nothing.
+			-- Simplify `Current'
 		local
 			a_value: XM_XPATH_VALUE
 			an_expression: XM_XPATH_IF_EXPRESSION
@@ -130,45 +127,33 @@ feature -- Optimization
 			Result := an_expression
 		end
 
-	analyze (env: XM_XPATH_STATIC_CONTEXT): XM_XPATH_EXPRESSION is
-			-- Perform static analysis of an expression and its subexpressions;		
-			-- This checks statically that the operands of the expression have the correct type;
-			-- If necessary it generates code to do run-time type checking or type conversion;
-			-- A static type error is reported only if execution cannot possibly succeed, that
-			-- is, if a run-time type error is inevitable. The call may return a modified form of the expression;
-			-- This routine is called after all references to functions and variables have been resolved
-			-- to the declaration of the function or variable. However, the types of such functions and
-			-- variables will only be accurately known if they have been explicitly declared
+	analyze (a_context: XM_XPATH_STATIC_CONTEXT): XM_XPATH_EXPRESSION is
+			-- Perform static analysis of an expression and its subexpressions	
 		local
 			an_expression: XM_XPATH_IF_EXPRESSION
 		do
 			an_expression := clone (Current)
-			an_expression.set_condition (condition.analyze (env))
-			an_expression.set_then_expression (then_expression.analyze (env))
-			an_expression.set_else_expression (else_expression.analyze (env))
+			an_expression.set_condition (condition.analyze (a_context))
+			an_expression.set_then_expression (then_expression.analyze (a_context))
+			an_expression.set_else_expression (else_expression.analyze (a_context))
 			Result := an_expression.simplify
 		end
 
-	promote (offer: XM_XPATH_PROMOTION_OFFER): XM_XPATH_EXPRESSION is
+	promote (an_offer: XM_XPATH_PROMOTION_OFFER): XM_XPATH_EXPRESSION is
 			-- Offer promotion for this subexpression
-			-- The offer will be accepted if the subexpression is not dependent on
-			-- the factors (e.g. the context item) identified in the PromotionOffer.
-			-- By default the offer is not accepted - this is appropriate in the case of simple expressions
-			-- such as constant values and variable references where promotion would give no performance
-			-- advantage. This method is always called at compile time.
 		local
 			an_expression: XM_XPATH_IF_EXPRESSION
 		do
-			an_expression ?= offer.accept (Current)
+			an_expression ?= an_offer.accept (Current)
 				check
 					an_expression_not_void: an_expression /= Void
 				end
 			if an_expression = Current then -- not accepted
 				an_expression := clone (Current)
-				an_expression.set_condition (condition.promote (offer))
-				if offer.action = Unordered or else offer.action = Inline_variable_references then
-					an_expression.set_then_expression (then_expression.promote (offer))
-					an_expression.set_else_expression (else_expression.promote (offer))
+				an_expression.set_condition (condition.promote (an_offer))
+				if an_offer.action = Unordered or else an_offer.action = Inline_variable_references then
+					an_expression.set_then_expression (then_expression.promote (an_offer))
+					an_expression.set_else_expression (else_expression.promote (an_offer))
 				end
 			end
 			Result := an_expression
@@ -176,51 +161,46 @@ feature -- Optimization
 
 feature -- Evaluation
 
-	evaluate_item (context: XM_XPATH_CONTEXT): XM_XPATH_ITEM is
-			-- Evaluate an expression as a single item;
-			-- This always returns either a single Item or Void
-			-- (denoting the empty sequence). No conversion is done. This method should not be
-			-- used unless the static type of the expression is a subtype of "item" or "item?": that is,
-			-- it should not be called if the expression may return a sequence. There is no guarantee that
-			-- this condition will be detected.
+	evaluate_item (a_context: XM_XPATH_CONTEXT): XM_XPATH_ITEM is
+			-- Evaluate `Current' as a single item
 		do
-			if condition.effective_boolean_value (context) then
-				Result := then_expression.evaluate_item (context)
+			if condition.effective_boolean_value (a_context) then
+				Result := then_expression.evaluate_item (a_context)
 			else
-				Result := else_expression.evaluate_item (context)
+				Result := else_expression.evaluate_item (a_context)
 			end
 		end
 
 feature -- Element change
 
-	set_condition (cond: XM_XPATH_EXPRESSION) is
+	set_condition (a_condition: XM_XPATH_EXPRESSION) is
 			-- Set `condition'.
 		require
-			condition_not_void: cond /= Void
+			condition_not_void: a_condition /= Void
 		do
-			condition := cond
+			condition := a_condition
 		ensure
-			condition_set: condition = cond
+			condition_set: condition = a_condition
 		end
 
-	set_then_expression (then_exp: XM_XPATH_EXPRESSION) is
+	set_then_expression (a_then_expression: XM_XPATH_EXPRESSION) is
 			-- Set `then_expression'.
 		require
-			then_not_void: then_exp /= Void
+			then_not_void: a_then_expression /= Void
 		do
-			then_expression := then_exp
+			then_expression := a_then_expression
 		ensure
-			then_set: then_expression = then_exp
+			then_set: then_expression = a_then_expression
 		end
 
-	set_else_expression (else_exp: XM_XPATH_EXPRESSION) is
+	set_else_expression (an_else_expression: XM_XPATH_EXPRESSION) is
 			-- Set `else_expression'.
 		require
-			else_not_void: else_exp /= Void
+			else_not_void: an_else_expression /= Void
 		do
-			else_expression := else_exp
+			else_expression := an_else_expression
 		ensure
-			else_set: else_expression = else_exp
+			else_set: else_expression = an_else_expression
 		end	
 
 feature {NONE} -- Implementation

@@ -27,12 +27,12 @@ creation
 
 feature {NONE} -- Initialization
 
-	make (base_iter: XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_ITEM]; a_filter: XM_XPATH_EXPRESSION;a_context: XM_XPATH_CONTEXT) is
+	make (a_base_iterator: XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_ITEM]; a_filter: XM_XPATH_EXPRESSION;a_context: XM_XPATH_CONTEXT) is
 			-- TDOD
 		do
 		end
 
-	make_non_numeric (base_iter: XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_ITEM]; a_filter: XM_XPATH_EXPRESSION;a_context: XM_XPATH_CONTEXT) is
+	make_non_numeric (a_base_iterator: XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_ITEM]; a_filter: XM_XPATH_EXPRESSION;a_context: XM_XPATH_CONTEXT) is
 			-- TDOD
 		do
 		end
@@ -53,18 +53,18 @@ feature -- Status report
 			-- TODO
 		end
 
-feature -- Duplication
-
-	another: like Current is
-			-- Another iterator that iterates over the same items as the original
-		do
-			-- TODO
-		end
-
 feature -- Cursor movement
 
 	forth is
 			-- Move to next position
+		do
+			-- TODO
+		end
+
+feature -- Duplication
+
+	another: like Current is
+			-- Another iterator that iterates over the same items as the original
 		do
 			-- TODO
 		end

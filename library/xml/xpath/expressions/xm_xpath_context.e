@@ -2,7 +2,7 @@ indexing
 
 	description:
 
-		"XPath evaluation context for an expression"
+		"XPath evaluation contexts for an expression"
 
 	library: "Gobo Eiffel XPath Library"
 	copyright: "Copyright (c) 2004, Colin Adams and others"
@@ -36,22 +36,22 @@ feature -- Access
 
 feature -- Evaluation
 
-	evaluate_local_variable (slot_number: INTEGER): XM_XPATH_VALUE is
+	evaluate_local_variable (a_slot_number: INTEGER): XM_XPATH_VALUE is
 			-- Value of a local variable, identified by its slot number
 		require
-			strictly_positive_slot_number: slot_number > 0
+			strictly_positive_slot_number: a_slot_number > 0
 		do
 			-- TODO
 		end
 	
 feature 	-- Element change
 
-	set_current_iterator (it: XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_ITEM]) is
+	set_current_iterator (an_iterator: XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_ITEM]) is
 			-- Set `current_iterator'.
 		do
-			current_iterator := it
+			current_iterator := an_iterator
 		ensure
-			set: current_iterator = it
+			set: current_iterator = an_iterator
 		end
 
 feature {NONE} -- Implementation

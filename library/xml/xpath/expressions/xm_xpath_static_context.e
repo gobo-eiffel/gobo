@@ -51,11 +51,11 @@ feature -- Access
 			positive_namespace_code: Result >= 0
 		end
 
-	uri_for_prefix (xml_prefix: STRING): STRING is
+	uri_for_prefix (an_xml_prefix: STRING): STRING is
 			-- URI for a namespace prefix;
 			-- The default namespace is NOT used when the prefix is empty.
 		require
-			valid_prefix: 	xml_prefix /= Void and then is_ncname (xml_prefix) and then is_declared_prefix (xml_prefix)
+			valid_prefix: 	an_xml_prefix /= Void and then is_ncname (an_xml_prefix) and then is_declared_prefix (an_xml_prefix)
 		deferred
 		ensure
 			uri_not_void: Result /= Void
@@ -63,10 +63,10 @@ feature -- Access
 
 feature -- Status report
 
-	is_declared_prefix (xml_prefix: STRING): BOOLEAN is
-			-- Is `xml_prefix' allocated to a namespace?
+	is_declared_prefix (an_xml_prefix: STRING): BOOLEAN is
+			-- Is `an_xml_prefix' allocated to a namespace?
 		require
-			valid_prefix: xml_prefix /= Void and then is_ncname (xml_prefix)
+			valid_prefix: an_xml_prefix /= Void and then is_ncname (an_xml_prefix)
 		deferred
 		end
 
@@ -78,17 +78,17 @@ feature -- Status report
 
 feature -- Element change
 	
-	bind_variable (fingerprint: INTEGER) is
+	bind_variable (a_fingerprint: INTEGER) is
 			-- Bind variable to it's declaration.
 		deferred
 		ensure
 			variable_bound: was_last_variable_bound implies last_bound_variable /= Void
 		end
 
-	bind_function (qname: STRING; arguments: DS_ARRAYED_LIST [XM_XPATH_EXPRESSION]) is
+	bind_function (a_qname: STRING; arguments: DS_ARRAYED_LIST [XM_XPATH_EXPRESSION]) is
 			-- Identify a function appearing in an expression.
 		require
-			valid_qname: qname /= Void and then is_qname (qname)
+			valid_qname: a_qname /= Void and then is_qname (a_qname)
 			arguments_not_void: arguments /= Void
 		deferred
 		ensure

@@ -47,15 +47,6 @@ feature -- Status report
 			Result := index > list.count
 		end
 
-feature -- Duplication
-
-	another: like Current is
-			-- Another iterator that iterates over the same items as the original;
-			-- The new iterator will be repositioned at the start of the sequence
-		do
-			create Result.make (list)
-		end
-
 feature -- Cursor movement
 
 	forth is
@@ -63,6 +54,15 @@ feature -- Cursor movement
 		do
 			index := index + 1
 			list.forth
+		end
+
+feature -- Duplication
+
+	another: like Current is
+			-- Another iterator that iterates over the same items as the original;
+			-- The new iterator will be repositioned at the start of the sequence
+		do
+			create Result.make (list)
 		end
 
 feature {NONE} -- Implementation

@@ -24,10 +24,10 @@ feature -- Access
 
 feature -- Evaluation
 
-	evaluate (context: XM_XPATH_CONTEXT): XM_XPATH_VALUE is
+	evaluate (a_context: XM_XPATH_CONTEXT): XM_XPATH_VALUE is
 			-- Evaluate variable
 		require
-			context_not_void: context /= Void
+			context_not_void: a_context /= Void
 		deferred
 		end
 

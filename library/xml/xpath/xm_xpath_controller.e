@@ -27,12 +27,12 @@ feature -- Access
 	
 feature 	-- Element change
 
-	set_current_iterator (it: XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_ITEM]) is
+	set_current_iterator (an_iter: XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_ITEM]) is
 			-- Set `current_iterator'.
 		do
-			current_iterator := it
+			current_iterator := an_iter
 		ensure
-			set: current_iterator = it
+			set: current_iterator = an_iter
 		end
 
 end

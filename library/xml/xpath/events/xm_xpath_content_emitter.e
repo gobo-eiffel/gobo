@@ -48,7 +48,7 @@ creation
 
 	make
 
-feature -- Initialization
+feature {NONE} -- Initialization
 
 	make (a_receiver: XM_XPATH_RECEIVER; a_name_pool: XM_XPATH_NAME_POOL) is
 		-- Establish invariant
@@ -77,64 +77,64 @@ feature -- Document type definition callbacks
 	on_element_declaration (a_name: STRING; a_model: XM_DTD_ELEMENT_CONTENT) is
 			-- Element declaration.
 		local
-			attribute_table: DS_HASH_TABLE [XM_DTD_ATTRIBUTE_CONTENT, STRING]
-			exception_message: STRING
+			an_attribute_table: DS_HASH_TABLE [XM_DTD_ATTRIBUTE_CONTENT, STRING]
+			an_exception_message: STRING
 		do
 			if attribute_types.has (a_name) then
-				exception_message := "Attribute table already present for element "
-				exception_message.append_string (a_name)
-				Exceptions.raise (exception_message)
+				an_exception_message := "Attribute table already present for element "
+				an_exception_message.append_string (a_name)
+				Exceptions.raise (an_exception_message)
 			end	
-			create attribute_table.make_equal (7)
+			create an_attribute_table.make_equal (7)
 			if attribute_types.is_full then
 				attribute_types.resize (attribute_types.count * 2)
 			end
-			attribute_types.put (attribute_table, a_name)
+			attribute_types.put (an_attribute_table, a_name)
 			-- In the future add support for element typing?
 		end
 
 	on_attribute_declaration (an_element_name, a_name: STRING; a_model: XM_DTD_ATTRIBUTE_CONTENT) is
 			-- Attribute declaration, one event per attribute.
 		local
-			attribute_table: DS_HASH_TABLE [XM_DTD_ATTRIBUTE_CONTENT, STRING]
-			exception_message, attribute_type: STRING
+			an_attribute_table: DS_HASH_TABLE [XM_DTD_ATTRIBUTE_CONTENT, STRING]
+			an_exception_message: STRING
 		do
 			if not attribute_types.has (an_element_name) then
-				exception_message := "Attribute table not present for element "
-				exception_message.append_string (an_element_name)
-				Exceptions.raise (exception_message)
+				an_exception_message := "Attribute table not present for element "
+				an_exception_message.append_string (an_element_name)
+				Exceptions.raise (an_exception_message)
 			end
-			attribute_table := attribute_types.item (an_element_name)
+			an_attribute_table := attribute_types.item (an_element_name)
 				check
-					attribute_table_not_void: attribute_table /= Void
+					attribute_table_not_void: an_attribute_table /= Void
 					-- because has() returned `True'
 				end
-			if attribute_table.has (a_name) then
-				exception_message := "Attribute "
-				exception_message.append_string (a_name)
-				exception_message.append_string (" already present for element ")
-				exception_message.append_string (an_element_name)
-				Exceptions.raise (exception_message)
+			if an_attribute_table.has (a_name) then
+				an_exception_message := "Attribute "
+				an_exception_message.append_string (a_name)
+				an_exception_message.append_string (" already present for element ")
+				an_exception_message.append_string (an_element_name)
+				Exceptions.raise (an_exception_message)
 			end
-			if attribute_table.is_full then
-				attribute_table.resize (attribute_table.count * 2)
+			if an_attribute_table.is_full then
+				an_attribute_table.resize (an_attribute_table.count * 2)
 			end
-			attribute_table.put (a_model, a_name)
+			an_attribute_table.put (a_model, a_name)
 		end
 
-	on_entity_declaration (entity_name: STRING; is_parameter: BOOLEAN; value: STRING;
-		an_id: XM_DTD_EXTERNAL_ID; notation_name: STRING) is
+	on_entity_declaration (an_entity_name: STRING; is_parameter: BOOLEAN; a_value: STRING;
+		an_id: XM_DTD_EXTERNAL_ID; a_notation_name: STRING) is
 			-- Entity declaration.
 		do
-			if an_id /= Void and then notation_name /= Void then
+			if an_id /= Void and then a_notation_name /= Void then
 					check
 						not_a_parameter_declaration: is_parameter = False
 					end
-				receiver.set_unparsed_entity (entity_name, an_id.system_id, an_id.public_id)
+				receiver.set_unparsed_entity (an_entity_name, an_id.system_id, an_id.public_id)
 			end
 		end
 
-	on_notation_declaration (notation_name: STRING; an_id: XM_DTD_EXTERNAL_ID) is
+	on_notation_declaration (a_notation_name: STRING; an_id: XM_DTD_EXTERNAL_ID) is
 			-- Notation declaration.
 		do
 			do_nothing
@@ -158,7 +158,7 @@ feature -- Document type definition callbacks
 			do_nothing
 		end
 		
-feature -- Document
+feature -- Document events
 
 	on_start is
 			-- Called when parsing starts.
@@ -206,11 +206,11 @@ feature -- Meta
 
 feature -- Tag
 
-	on_start_tag (a_namespace: STRING; ns_prefix: STRING; a_local_part: STRING) is
+	on_start_tag (a_namespace: STRING; an_ns_prefix: STRING; a_local_part: STRING) is
 			-- Start of start tag.
 		local
-			name_code: INTEGER
-			element_qname, a_prefix: STRING
+			a_name_code: INTEGER
+			an_element_qname, a_prefix: STRING
 		do
 			before_dtd := False
 			if a_namespace = Void then
@@ -219,120 +219,120 @@ feature -- Tag
 			if a_local_part = Void then
 				Exceptions.raise ("XM_XPATH_CONTENT_EMITTER requires a_local_part to be non-void")
 			end			
-			if ns_prefix = Void then
+			if an_ns_prefix = Void then
 				a_prefix := ""
 			else
-				a_prefix := ns_prefix
+				a_prefix := an_ns_prefix
 			end
 			
 			if not name_pool.is_name_code_allocated (a_prefix, a_namespace, a_local_part) then
 				name_pool.allocate_name (a_prefix, a_namespace, a_local_part)
-				name_code := name_pool.last_name_code
+				a_name_code := name_pool.last_name_code
 			else
-				name_code := name_pool.name_code (a_prefix, a_namespace, a_local_part) 
+				a_name_code := name_pool.name_code (a_prefix, a_namespace, a_local_part) 
 			end
 
 			-- Element typing is not yet supported
-			receiver.start_element (name_code, 0, 0)
+			receiver.start_element (a_name_code, 0, 0)
 
 			if a_prefix.count = 0 then
-				element_qname := a_local_part
+				an_element_qname := a_local_part
 			else
-				element_qname := clone (a_prefix)
-				element_qname.append_character (':')
-				element_qname.append_string (a_local_part)
+				an_element_qname := clone (a_prefix)
+				an_element_qname.append_character (':')
+				an_element_qname.append_string (a_local_part)
 			end
 
-			current_element_name := element_qname
+			current_element_name := an_element_qname
 		end
 
-	on_attribute (a_namespace: STRING; ns_prefix: STRING; a_local_part: STRING; a_value: STRING) is
+	on_attribute (a_namespace: STRING; an_ns_prefix: STRING; a_local_part: STRING; a_value: STRING) is
 			-- Start of attribute or namespace declaration
 		local
-			name_code, namespace_code: INTEGER
-			the_type_code: INTEGER -- should be INTEGER_16
-			attribute_qname, a_prefix, namespace_prefix: STRING
-			attribute_table: DS_HASH_TABLE [XM_DTD_ATTRIBUTE_CONTENT, STRING]
-			attribute_model: XM_DTD_ATTRIBUTE_CONTENT
+			a_name_code, a_namespace_code: INTEGER
+			a_type_code: INTEGER -- should be INTEGER_16
+			an_attribute_qname, a_prefix, a_namespace_prefix: STRING
+			an_attribute_table: DS_HASH_TABLE [XM_DTD_ATTRIBUTE_CONTENT, STRING]
+			an_attribute_model: XM_DTD_ATTRIBUTE_CONTENT
 		do
 			if a_namespace = Void then
 				Exceptions.raise ("XM_XPATH_TINY_BUILDER requires namespace to be resolved")
 			end
-			if ns_prefix = Void then
+			if an_ns_prefix = Void then
 				a_prefix := ""
 			else
-				a_prefix := ns_prefix
+				a_prefix := an_ns_prefix
 			end
 			
 			if not name_pool.is_name_code_allocated (a_prefix, a_namespace, a_local_part) then
 				name_pool.allocate_name (a_prefix, a_namespace, a_local_part)
-				name_code := name_pool.last_name_code
+				a_name_code := name_pool.last_name_code
 			else
-				name_code := name_pool.name_code (a_prefix, a_namespace, a_local_part) 
+				a_name_code := name_pool.name_code (a_prefix, a_namespace, a_local_part) 
 			end
 
 			debug ("XPath content emitter")
 				std.error.put_string ("On_attribute: local name is ")
 				std.error.put_string (a_local_part)
 				std.error.put_string (", name code is ")
-				std.error.put_string (name_code.out)
+				std.error.put_string (a_name_code.out)
 				std.error.put_new_line
 			end
 			if is_namespace_declaration (a_prefix, a_local_part) then
 				-- Notify a namespace declaration
 				if STRING_.same_string (a_local_part, "xmlns") then
-					namespace_prefix := "" -- default namespace
+					a_namespace_prefix := "" -- default namespace
 				else
-					namespace_prefix := a_local_part
+					a_namespace_prefix := a_local_part
 				end
-				if name_pool.is_namespace_code_allocated (namespace_prefix, a_value) then
-					namespace_code := name_pool.namespace_code (namespace_prefix, a_value)
+				if name_pool.is_namespace_code_allocated (a_namespace_prefix, a_value) then
+					a_namespace_code := name_pool.namespace_code (a_namespace_prefix, a_value)
 				else
-					name_pool.allocate_namespace_code (namespace_prefix, a_value)
-					namespace_code := name_pool.last_namespace_code
+					name_pool.allocate_namespace_code (a_namespace_prefix, a_value)
+					a_namespace_code := name_pool.last_namespace_code
 				end
-				receiver.namespace (namespace_code, 0)
+				receiver.namespace (a_namespace_code, 0)
 			else
 				-- Notify an attribute
 				if attribute_types.has (current_element_name) then
-					attribute_table := attribute_types.item (current_element_name)
+					an_attribute_table := attribute_types.item (current_element_name)
 						check
-							attribute_table_not_void: attribute_table /= Void
+							attribute_table_not_void: an_attribute_table /= Void
 							-- because `has' returned `True'
 						end
 					if a_prefix.count = 0 then
-						attribute_qname := clone (a_local_part)
+						an_attribute_qname := clone (a_local_part)
 					else
-						attribute_qname := clone (a_prefix)
-						attribute_qname.append_character (':')
-						attribute_qname.append_string (a_local_part)
+						an_attribute_qname := clone (a_prefix)
+						an_attribute_qname.append_character (':')
+						an_attribute_qname.append_string (a_local_part)
 					end
 					
-					if attribute_table.has (attribute_qname) then
-						attribute_model := attribute_table.item (attribute_qname)
+					if an_attribute_table.has (an_attribute_qname) then
+						an_attribute_model := an_attribute_table.item (an_attribute_qname)
 							check
-								attribute_model_not_void: attribute_model /= Void
+								attribute_model_not_void: an_attribute_model /= Void
 								-- because `has' returned `True'
 							end
 
-						if attribute_model.is_id then
-							the_type_code := Id_type
-						elseif attribute_model.is_id_ref then
-							the_type_code := Idref_type
-						elseif attribute_model.is_token then
-							the_type_code := Nmtoken_type
-						elseif attribute_model.is_entity then
-							the_type_code := Entity_type
-						elseif attribute_model.is_notation then
-							the_type_code := Notation_type
+						if an_attribute_model.is_id then
+							a_type_code := Id_type
+						elseif an_attribute_model.is_id_ref then
+							a_type_code := Idref_type
+						elseif an_attribute_model.is_token then
+							a_type_code := Nmtoken_type
+						elseif an_attribute_model.is_entity then
+							a_type_code := Entity_type
+						elseif an_attribute_model.is_notation then
+							a_type_code := Notation_type
 						else
 							-- Ignore CDATA (it basically means "anySimpleType")
 							-- Ignore NMTOKENS, ENTITIES, IDREFS: we can't handle list types yet
-							the_type_code := 0 -- not a valid type code
+							a_type_code := 0 -- not a valid type code
 						end
 					end
 				end
-				receiver.attribute (name_code, the_type_code, a_value, 0)
+				receiver.attribute (a_name_code, a_type_code, a_value, 0)
 			end
 		end
 
@@ -377,22 +377,22 @@ feature {NONE} -- Implementation
 	before_dtd: BOOLEAN
 			-- Has DTD been seen yet?
 
-	is_namespace_declaration (ns_prefix, a_local_part: STRING): BOOLEAN is
+	is_namespace_declaration (an_ns_prefix, a_local_part: STRING): BOOLEAN is
 			-- xmlns= or xmlns
 		require
-			prefix_not_void: ns_prefix /= Void
+			prefix_not_void: an_ns_prefix /= Void
 			local_part_not_void: a_local_part /= Void
 		do
 			debug ("XPath content emitter")
 				std.error.put_string ("Is_namespace_declaration: local name is ")
 				std.error.put_string (a_local_part)
 				std.error.put_string (", prefix is ")
-				std.error.put_string (ns_prefix)
+				std.error.put_string (an_ns_prefix)
 				std.error.put_new_line
 			end			
-			if ns_prefix.count = 0 and then STRING_.same_string (a_local_part, "xmlns") then
+			if an_ns_prefix.count = 0 and then STRING_.same_string (a_local_part, "xmlns") then
 				Result := True
-			elseif STRING_.same_string (ns_prefix, "xmlns") then
+			elseif STRING_.same_string (an_ns_prefix, "xmlns") then
 				Result := True
 			end
 			debug ("XPath content emitter")

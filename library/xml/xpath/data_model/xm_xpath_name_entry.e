@@ -16,16 +16,16 @@ creation
 
 	make
 
-feature -- Initialization
+feature {NONE} -- Initialization
 
-	make (code: INTEGER; local_n: STRING) is
+	make (a_code: INTEGER; a_local_name: STRING) is
 			-- Establish invariant
 		require
 			positive_code: uri_code >= 0 and uri_code < 32000
-			local_name_not_void: local_n /= Void and then local_n.count > 0
+			local_name_not_void: a_local_name /= Void and then a_local_name.count > 0
 		do
-			local_name := local_n
-			uri_code := code
+			local_name := a_local_name
+			uri_code := a_code
 			next := Void
 		ensure
 			no_next_entry: next = Void
@@ -44,12 +44,12 @@ feature -- Access
 
 feature -- Element change
 
-	set_next (next_entry: XM_XPATH_NAME_ENTRY) is
-			-- Set the `next' field to `next_entry'
+	set_next (a_next_entry: XM_XPATH_NAME_ENTRY) is
+			-- Set the `next' field to `a_next_entry'
 		do
-			next := next_entry
+			next := a_next_entry
 		ensure
-			next_set: next = next_entry
+			next_set: next = a_next_entry
 		end
 	
 invariant

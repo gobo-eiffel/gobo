@@ -27,7 +27,7 @@ feature {NONE} -- Initialization
 		do
 		end
 
-	make_from_sequence_type (a_source: XM_XPATH_EXPRESSION; target: XM_XPATH_SEQUENCE_TYPE) is
+	make_from_sequence_type (a_source: XM_XPATH_EXPRESSION; a_target: XM_XPATH_SEQUENCE_TYPE) is
 			-- TODO
 		do
 		end
@@ -43,21 +43,21 @@ feature -- Access
 
 feature -- Status report
 
-	display (level: INTEGER; pool: XM_XPATH_NAME_POOL) is
+	display (a_level: INTEGER; a_pool: XM_XPATH_NAME_POOL) is
 			-- Diagnostic print of expression structure to `std.error'
 		local
 			a_string: STRING
 		do
-			a_string := STRING_.appended_string (indent (level), "cast as ")
+			a_string := STRING_.appended_string (indent (a_level), "cast as ")
 			a_string := STRING_.appended_string (a_string, type_name (target_type))
 			std.error.put_string (a_string)
 			std.error.put_new_line
-			source.display (level + 1, pool)
+			source.display (a_level + 1, a_pool)
 		end
 
 feature -- Optimization	
 
-	analyze (env: XM_XPATH_STATIC_CONTEXT): XM_XPATH_EXPRESSION is
+	analyze (a_context: XM_XPATH_STATIC_CONTEXT): XM_XPATH_EXPRESSION is
 			-- Perform static analysis of an expression and its subexpressions
 		do
 			-- TODO

@@ -23,21 +23,21 @@ inherit
 
 feature {NONE} -- Initialization
 
-	make (operand_1: XM_XPATH_EXPRESSION; token: INTEGER; operand_2: XM_XPATH_EXPRESSION) is
+	make (an_operand_one: XM_XPATH_EXPRESSION; token: INTEGER; an_operand_two: XM_XPATH_EXPRESSION) is
 			-- Establish invariant
 		require
-			operand_1_not_void: operand_1 /= Void
-			operand_2_not_void: operand_2 /= Void
+			operand_1_not_void: an_operand_one /= Void
+			operand_2_not_void: an_operand_two /= Void
 			-- TODO: is_binary_op?
 		do
 			operator := token
 			create operands.make (1,2)
-			operands.put (operand_1, 1)
-			operands.put (operand_2, 2)
+			operands.put (an_operand_one, 1)
+			operands.put (an_operand_two, 2)
 		ensure
 			operator_set: operator = token
-			operand_1_set: operands /= Void and then operands.item (1).same_expression (operand_1)
-			operand_2_set: operands.item (2).same_expression (operand_2)
+			operand_1_set: operands /= Void and then operands.item (1).same_expression (an_operand_one)
+			operand_2_set: operands.item (2).same_expression (an_operand_two)
 		end
 
 feature -- Access
@@ -55,37 +55,6 @@ feature -- Access
 			Result.set_equality_tester (expression_tester)
 			Result.put (operands.item (1), 1)
 			Result.put (operands.item (2), 2)
-		end
-
-
-feature -- Status report
-
-	is_commutative (oper: INTEGER): BOOLEAN is
-			-- Is `oper' a commutative operator?
-		do
-			Result := oper = And_token
-				or else oper = Or_token
-				or else oper = Union_token
-				or else oper = Intersect_token
-				or else oper = Plus_token
-				or else oper = Multiply_token
-				or else oper = Equals_token
-				or else oper = Fortran_equal_token
-				or else oper = Not_equal_token
-				or else oper = Fortran_not_equal_token
-		end
-
-	display (level: INTEGER; pool: XM_XPATH_NAME_POOL) is
-			-- Diagnostic print of expression structure to `std.error'
-		local
-			a_string: STRING
-		do
-			a_string := STRING_.appended_string (indent (level), "operator ")
-			a_string := STRING_.appended_string (a_string, display_operator)
-			std.error.put_string (a_string)
-			std.error.put_new_line
-			operands.item (1).display (level + 1, pool)
-			operands.item (2).display (level + 1, pool)
 		end
 
 feature -- Comparison
@@ -112,44 +81,59 @@ feature -- Comparison
 			end
 		end
 
+feature -- Status report
+
+	is_commutative (an_operator: INTEGER): BOOLEAN is
+			-- Is `an_operator' a commutative operator?
+		do
+			Result := an_operator = And_token
+				or else an_operator = Or_token
+				or else an_operator = Union_token
+				or else an_operator = Intersect_token
+				or else an_operator = Plus_token
+				or else an_operator = Multiply_token
+				or else an_operator = Equals_token
+				or else an_operator = Fortran_equal_token
+				or else an_operator = Not_equal_token
+				or else an_operator = Fortran_not_equal_token
+		end
+
+	display (a_level: INTEGER; a_pool: XM_XPATH_NAME_POOL) is
+			-- Diagnostic print of expression structure to `std.error'
+		local
+			a_string: STRING
+		do
+			a_string := STRING_.appended_string (indent (a_level), "operator ")
+			a_string := STRING_.appended_string (a_string, display_operator)
+			std.error.put_string (a_string)
+			std.error.put_new_line
+			operands.item (1).display (a_level + 1, a_pool)
+			operands.item (2).display (a_level + 1, a_pool)
+		end
+
 feature -- Optimization	
 
 	simplify: XM_XPATH_EXPRESSION is
-			-- Simplify an expression;
-			-- This performs any static optimization 
-			--  (by rewriting the expression as a different expression);
+			-- Simplify an expression
 		local
-			binary_expression: XM_XPATH_BINARY_EXPRESSION
+			a_binary_expression: XM_XPATH_BINARY_EXPRESSION
 		do
-			binary_expression := clone (Current)
-			binary_expression.operands.put (operands.item (1).simplify, 1)
-			binary_expression.operands.put (operands.item (2).simplify, 2)
-			Result := binary_expression
+			a_binary_expression := clone (Current)
+			a_binary_expression.operands.put (operands.item (1).simplify, 1)
+			a_binary_expression.operands.put (operands.item (2).simplify, 2)
+			Result := a_binary_expression
 		end
 
-	analyze (env: XM_XPATH_STATIC_CONTEXT): XM_XPATH_EXPRESSION is
-			-- Perform static analysis of an expression and its subexpressions;		
-			-- This checks statically that the operands of the expression have the correct type;
-			-- If necessary it generates code to do run-time type checking or type conversion;
-			-- A static type error is reported only if execution cannot possibly succeed, that
-			-- is, if a run-time type error is inevitable. The call may return a modified form of the expression;
-			-- This routine is called after all references to functions and variables have been resolved
-			-- to the declaration of the function or variable. However, the types of such functions and
-			-- variables will only be accurately known if they have been explicitly declared
+	analyze (a_context: XM_XPATH_STATIC_CONTEXT): XM_XPATH_EXPRESSION is
+			-- Perform static analysis of an expression and its subexpressions
 		do
-			-- TODO: requires expression tool, and dynamic error handling
+			-- TODO
 		end
-
 	
-	promote (offer: XM_XPATH_PROMOTION_OFFER): XM_XPATH_EXPRESSION is
+	promote (an_offer: XM_XPATH_PROMOTION_OFFER): XM_XPATH_EXPRESSION is
 			-- Offer promotion for this subexpression
-			-- The offer will be accepted if the subexpression is not dependent on
-			-- the factors (e.g. the context item) identified in the PromotionOffer.
-			-- By default the offer is not accepted - this is appropriate in the case of simple expressions
-			-- such as constant values and variable references where promotion would give no performance
-			-- advantage. This method is always called at compile time.
 		do
-			-- TODO: requires promotion offer features
+			-- TODO
 		end
 
 feature {NONE} -- Implementation

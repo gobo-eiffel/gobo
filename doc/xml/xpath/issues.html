@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN" "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" >
+  <head>
+    <title>Issues</title>
+    <style type="text/css" >
+      th { background-color: #80ffff; }
+      td { background-color: #f5dcb3; text-align: center;}
+      td.left { text-align: left;}
+    </style>
+  </head>
+  <body>
+    <h1>Issues</h1>
+    <div id="entities">
+      <h2>Entity resolution, location information and SYSTEM ids.</h2>
+      <p>Several problems with the architecture of the Gobo XML parser, involving the resolution of external entities,
+      the provision of base URIs, and location information for errors, will cause me problems.</p>
+      <p>In addition, I need a means to make absolute URIs given a relative URI and a base URI.
+      Berend's EPX_URI class will do just that.</p>
+      <p>These two issues are related, as the latter will be needed by the former.</p>
+      <p>Awaiting Eric to review EPX_URI for inclusion in Gobo, and Franck to find a solution to
+      the first problem (I have a solution sketched out in my mind).</p>
+    </div>
+    <div>
+      <h2>Numbers</h2>
+      <p>A basic XSLT processor must support xs:decimal, xs:integer and xs:double. The first two
+      require at least 18 digits of precision (but could be unlimited. The latter is the IEEE double-precision type. DOUBLE should support
+      this, though the compilers lack routines such as is_nan, for instance.</p>
+      <p>Eric has emailed Paul Crismer re. incorporating EDA into gobo.</p>
+    </div>
+    <div>
+      <h2>Style</h2>
+      <p>I am trying to be more consitent with my coding style. In addition to the Gobo guidelines,
+      I name all parameters an local variables by prefixing with the indefinite article, except
+      for booleans and plurals, plus a few notable exceptions (such as other).</p>
+      <p>In addition, I am trying to stick to a fixed order for features:</p>
+      <ul>
+	<li>{NONE} -- Initialization</li>
+	<li>Access</li>
+	<li>Events</li>
+	<li>Measurement</li>
+	<li>Comparison</li>
+	<li>Status report</li>
+	<li>Status setting</li>
+	<li>Cursor Movement</li>
+	<li>Parsers</li>
+	<li>Creation (i.e. factory routines</li>
+	<li>Optimization</li>
+	<li>Evaluation</li>
+	<li>Matching</li>
+	<li>Element change</li>
+	<li>Removal</li>
+	<li>Resizing</li>
+	<li>Conversion</li>
+	<li>Duplication</li>
+	<li>Restricted (features exported to other classes)</li>
+	<li>Local (features exported only to this class)</li>
+	<li>{NONE} -- Implementation</li>
+      </ul>
+    </div>
+    <div>
+      <h2>TODO</h2>
+      <p>The following need looking at at some time:</p>
+      <ul>
+	<li>Investigate need for set_location. This may depend upon <a href="#entities">Entity resolution, location information and SYSTEM ids.</a></li>
+	<li>Review commenting style - this has been done to some extent.</li>
+	<li>Review unsafe string features.</li>
+	<li>Change remaining data model infoset properties into implementation stuff.</li>
+      </ul>
+    </div>
+    <div>
+      <h2>Changes</h2>
+      <p>This section should be ignored. It consists solely of my notes
+      with which to form the comments for the next cvs check-in operation.</p>
+      <pre>
+
+      </pre>
+    </div>
+    <div >
+      <p>
+        <a href="http://sourceforge.net"><img
+        src="http://sourceforge.net/sflogo.php?group_id=77393&amp;type=7"
+        width="210" height="62" alt="SourceForge.net Logo" /></a>
+
+        <a href="http://validator.w3.org/check/referer"><img
+        src="http://www.w3.org/Icons/valid-xhtml11"
+        alt="Valid XHTML 1.1!" height="31" width="88" /></a>
+      </p>        
+    </div>
+  </body>
+</html>

@@ -34,20 +34,20 @@ feature -- Status report
 			-- TODO
 		end
 
-feature -- Duplication
-
-	another: like Current is
-			-- Another iterator that iterates over the same items as the original
-		do
-			-- TODOcreate Result.make (base_iterator, min, max)
-		end
-
 feature -- Cursor movement
 
 	forth is
 			-- Move to next position
 		do
 			-- TODO
+		end
+
+feature -- Duplication
+
+	another: like Current is
+			-- Another iterator that iterates over the same items as the original
+		do
+			-- TODOcreate Result.make (base_iterator, min, max)
 		end
 
 feature {NONE} -- Implementation

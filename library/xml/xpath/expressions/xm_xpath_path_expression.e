@@ -41,7 +41,7 @@ feature {NONE} -- Initialization
 			start_not_void: a_start /= Void
 			step_not_void: a_step /= Void
 		local
-			step_path: XM_XPATH_PATH_EXPRESSION
+			a_step_path: XM_XPATH_PATH_EXPRESSION
 		do
 			start := a_start
 			step := a_step
@@ -55,12 +55,12 @@ feature {NONE} -- Initialization
 		  -- appear, e.g. //b/../<d/>. So we only do this rewrite if the step is a path
 		  -- expression in which both operands are axis expression optionally with predicates
 
-			step_path ?= step
-			if step_path /= Void then
-				if is_filtered_axis_path (step_path.start) and then is_filtered_axis_path (step_path.start) then
-					create {XM_XPATH_PATH_EXPRESSION} start.make (start, step_path.start)
+			a_step_path ?= step
+			if a_step_path /= Void then
+				if is_filtered_axis_path (a_step_path.start) and then is_filtered_axis_path (a_step_path.start) then
+					create {XM_XPATH_PATH_EXPRESSION} start.make (start, a_step_path.start)
 					-- TODO - copy location information
-					step := step_path.step
+					step := a_step_path.step
 				end
 			end
 		end
@@ -70,11 +70,11 @@ feature -- Access
 	item_type: INTEGER is
 			--Determine the data type of the expression, if possible
 		local
-			step_type: INTEGER
+			a_step_type: INTEGER
 		do
-			step_type := step.item_type
-			if is_node_type (step_type) then
-				Result := step_type
+			a_step_type := step.item_type
+			if is_node_type (a_step_type) then
+				Result := a_step_type
 			else
 
 				-- rely on dynamic typing to ensure that it always returns nodes
@@ -93,20 +93,6 @@ feature -- Access
 			Result.put (step, 2)
 		end
 
-feature -- Status report
-
-	display (level: INTEGER; pool: XM_XPATH_NAME_POOL) is
-			-- Diagnostic print of expression structure to `std.error'
-		local
-			a_string: STRING
-		do
-			a_string := STRING_.appended_string (indent (level), "path /")
-			std.error.put_string (a_string)
-			std.error.put_new_line
-			start.display (level + 1, pool)
-			step.display (level + 1, pool)
-		end
-
 feature -- Comparison
 
 	same_expression (other: XM_XPATH_EXPRESSION): BOOLEAN is
@@ -120,14 +106,24 @@ feature -- Comparison
 			end
 		end
 
+feature -- Status report
+
+	display (a_level: INTEGER; a_pool: XM_XPATH_NAME_POOL) is
+			-- Diagnostic print of expression structure to `std.error'
+		local
+			a_string: STRING
+		do
+			a_string := STRING_.appended_string (indent (a_level), "path /")
+			std.error.put_string (a_string)
+			std.error.put_new_line
+			start.display (a_level + 1, a_pool)
+			step.display (a_level + 1, a_pool)
+		end
+
 feature -- Status setting
 
 	compute_dependencies is
 			-- Compute dependencies on context.
-		local
-			sub: DS_ARRAYED_LIST [XM_XPATH_EXPRESSION]
-			an_index: INTEGER
-			value: BOOLEAN
 		do
 			if not are_intrinsic_dependencies_computed then compute_intrinsic_dependencies end
 			create dependencies.make (1, 6)
@@ -143,56 +139,56 @@ feature -- Status setting
 feature -- Optimization
 
 	simplify: XM_XPATH_EXPRESSION is
-			-- Simplify an expression
+			-- Simplify `Current'
 		local
-			expr1: XM_XPATH_EXPRESSION
-			empty_seq: XM_XPATH_EMPTY_SEQUENCE
-			context_item: XM_XPATH_CONTEXT_ITEM_EXPRESSION
-			root: XM_XPATH_ROOT_EXPRESSION
-			parent_step: XM_XPATH_PARENT_NODE_EXPRESSION
-			result_expression, step_path, start_path, a_path: XM_XPATH_PATH_EXPRESSION
+			an_expression: XM_XPATH_EXPRESSION
+			an_empty_sequence: XM_XPATH_EMPTY_SEQUENCE
+			a_context_item: XM_XPATH_CONTEXT_ITEM_EXPRESSION
+			a_root: XM_XPATH_ROOT_EXPRESSION
+			a_parent_step: XM_XPATH_PARENT_NODE_EXPRESSION
+			a_result_expression, a_step_path, a_start_path, a_path: XM_XPATH_PATH_EXPRESSION
 		do
-			result_expression := clone (Current)
-			expr1 := start.simplify
+			a_result_expression := clone (Current)
+			an_expression := start.simplify
 			if not start.is_static_type_error then
-				result_expression.set_start (expr1)
-				expr1 := step.simplify
+				a_result_expression.set_start (an_expression)
+				an_expression := step.simplify
 				if not step.is_static_type_error then
-					result_expression.set_step (expr1)
+					a_result_expression.set_step (an_expression)
 				
-					empty_seq ?= result_expression.start
-					if empty_seq /= Void then
+					an_empty_sequence ?= a_result_expression.start
+					if an_empty_sequence /= Void then
 						
 						-- if the start expression is an empty node-set, then the whole path-expression is empty
 						
-						Result := empty_seq
+						Result := an_empty_sequence
 					else
 						
 						-- Remove a redundant "." from the path.
 						-- Note: we are careful not to do this unless the other operand is naturally sorted.
 						-- In other cases, ./E (or E/.) is not a no-op, because it forces sorting.
 						
-						context_item ?= result_expression.start
-						step_path ?= result_expression.step
-						if context_item /= Void and then step_path /= Void and then step_path.Ordered_nodeset then
-							result_expression := step_path
+						a_context_item ?= a_result_expression.start
+						a_step_path ?= a_result_expression.step
+						if a_context_item /= Void and then a_step_path /= Void and then a_step_path.Ordered_nodeset then
+							a_result_expression := a_step_path
 						else
-							context_item ?= result_expression.step
-							start_path ?= result_expression.start
-							if context_item /= Void and then start_path /= Void and then start_path.Ordered_nodeset then
-								result_expression := start_path
+							a_context_item ?= a_result_expression.step
+							a_start_path ?= a_result_expression.start
+							if a_context_item /= Void and then a_start_path /= Void and then a_start_path.Ordered_nodeset then
+								a_result_expression := a_start_path
 							else
 								
 								-- the expression /.. is sometimes used to represent the empty node-set
 								
-								root ?= result_expression.start
-								parent_step ?= result_expression.step
-								if root /= Void and then parent_step /= Void then
+								a_root ?= a_result_expression.start
+								a_parent_step ?= a_result_expression.step
+								if a_root /= Void and then a_parent_step /= Void then
 									create {XM_XPATH_EMPTY_SEQUENCE} Result.make
 								end
 							end
 						end
-						if Result = Void then Result := result_expression end
+						if Result = Void then Result := a_result_expression end
 					end
 				else
 					is_static_type_error := True
@@ -204,44 +200,44 @@ feature -- Optimization
 			end
 		end
 
-	analyze (env: XM_XPATH_STATIC_CONTEXT): XM_XPATH_EXPRESSION is
-			-- Perform static analysis of an expression and its subexpressions
+	analyze (a_context: XM_XPATH_STATIC_CONTEXT): XM_XPATH_EXPRESSION is
+			-- Perform static analysis of `Current' and its subexpressions
 		local
-			expr1, expr2: XM_XPATH_EXPRESSION
-			result_expression, a_path: XM_XPATH_PATH_EXPRESSION
-			role0, role1: XM_XPATH_ROLE_LOCATOR
-			any_node_sequence: XM_XPATH_SEQUENCE_TYPE
-			offer: XM_XPATH_PROMOTION_OFFER
-			let: XM_XPATH_LET_EXPRESSION
+			an_expression, another_expression: XM_XPATH_EXPRESSION
+			a_result_expression, a_path: XM_XPATH_PATH_EXPRESSION
+			a_role, another_role: XM_XPATH_ROLE_LOCATOR
+			a_node_sequence: XM_XPATH_SEQUENCE_TYPE
+			an_offer: XM_XPATH_PROMOTION_OFFER
+			a_let_expression: XM_XPATH_LET_EXPRESSION
 			path_not_void: BOOLEAN
 		do
-			result_expression := clone (Current)
-			expr1 := start.analyze (env)
+			a_result_expression := clone (Current)
+			an_expression := start.analyze (a_context)
 			if not start.is_static_type_error then
-				result_expression.set_start (expr1)
-				expr1 := step.analyze (env)
-				if not expr1.is_static_type_error then
-					result_expression.set_step (expr1)
+				a_result_expression.set_start (an_expression)
+				an_expression := step.analyze (a_context)
+				if not an_expression.is_static_type_error then
+					a_result_expression.set_step (an_expression)
 					
 					-- We don't need the operands to be sorted;
 					--  any sorting that's needed will be done at the top level
 					
-					result_expression.set_start (result_expression.start.unsorted (False))
-					result_expression.set_step (result_expression.step.unsorted (False))
+					a_result_expression.set_start (a_result_expression.start.unsorted (False))
+					a_result_expression.set_step (a_result_expression.step.unsorted (False))
 					
 					-- Both operands must be of type node()*
 					
-					create role0.make (Binary_expression_role, "/", 0)
-					create any_node_sequence.make_node_sequence
-					result_expression.set_start (static_type_check(result_expression.start, any_node_sequence, False, role0))
+					create a_role.make (Binary_expression_role, "/", 0)
+					create a_node_sequence.make_node_sequence
+					a_result_expression.set_start (static_type_check(a_result_expression.start, a_node_sequence, False, a_role))
 					if not is_static_type_check_error then
-						create role1.make (Binary_expression_role, "/", 1)
-						result_expression.set_step (static_type_check (result_expression.step, any_node_sequence, False, role1))
+						create another_role.make (Binary_expression_role, "/", 1)
+						a_result_expression.set_step (static_type_check (a_result_expression.step, a_node_sequence, False, another_role))
 						if not is_static_type_check_error then
 							
 							-- Try to simplify expressions such as a//b
 
-							a_path := simplify_descendant_path (result_expression)
+							a_path := simplify_descendant_path (a_result_expression)
 							path_not_void := a_path /= Void
 							if path_not_void then
 								a_path ?= a_path.simplify
@@ -253,7 +249,7 @@ feature -- Optimization
 										check
 											path_not_void: a_path /= Void
 										end
-									a_path ?= a_path.analyze (env)
+									a_path ?= a_path.analyze (a_context)
 									if is_static_type_check_error then
 										is_static_type_error := True
 										set_last_static_type_error (static_type_check_error_message)
@@ -269,24 +265,24 @@ feature -- Optimization
 									-- If any subexpressions within the step are not dependent on the focus, promote them:
 									-- this causes them to be evaluated once, outside the path  expression.
 
-									create offer.make (Focus_independent, Void, result_expression, False, result_expression.start.Context_document_nodeset)
-									expr1 := result_expression.step.promote (offer)
-									result_expression.set_step (expr1)
-									let ?= offer.containing_expression
-									if let /= Void then
-										expr2 := let.analyze (env)
-										if let.is_static_type_error then
+									create an_offer.make (Focus_independent, Void, a_result_expression, False, a_result_expression.start.Context_document_nodeset)
+									an_expression := a_result_expression.step.promote (an_offer)
+									a_result_expression.set_step (an_expression)
+									a_let_expression ?= an_offer.containing_expression
+									if a_let_expression /= Void then
+										another_expression := a_let_expression.analyze (a_context)
+										if a_let_expression.is_static_type_error then
 											is_static_type_error := True
-											set_last_static_type_error (let.last_static_type_error)
+											set_last_static_type_error (a_let_expression.last_static_type_error)
 										else
-											offer.set_containing_expression (expr2)
+											an_offer.set_containing_expression (another_expression)
 										end
 										
 										-- Decide whether the result needs to be wrapped in a sorting
 										-- expression to deliver the results in document order
 										
 										if not is_static_type_error then
-											a_path ?= offer.containing_expression
+											a_path ?= an_offer.containing_expression
 											if a_path = Void then
 												if a_path.Ordered_nodeset then
 													Result := a_path
@@ -296,7 +292,7 @@ feature -- Optimization
 													create {XM_XPATH_DOCUMENT_SORTER} Result.make (a_path)
 												end
 											else
-												Result := offer.containing_expression
+												Result := an_offer.containing_expression
 											end
 										end
 									end
@@ -320,28 +316,59 @@ feature -- Optimization
 			end
 		end
 
-	promote (offer: XM_XPATH_PROMOTION_OFFER): XM_XPATH_EXPRESSION is
-			-- Offer promotion for this subexpression
+	promote (an_offer: XM_XPATH_PROMOTION_OFFER): XM_XPATH_EXPRESSION is
+			-- Offer promotion for `Current'
 		local
-			result_expression: XM_XPATH_PATH_EXPRESSION
+			a_result_expression: XM_XPATH_PATH_EXPRESSION
 		do
-			result_expression ?= offer.accept (Current)
-			if result_expression = Void then
-				result_expression := clone (Current)
-				result_expression.set_start (start.promote (offer))
-				if offer.action = Inline_variable_references then
+			a_result_expression ?= an_offer.accept (Current)
+			if a_result_expression = Void then
+				a_result_expression := clone (Current)
+				a_result_expression.set_start (start.promote (an_offer))
+				if an_offer.action = Inline_variable_references then
 
 					-- Don't pass on other requests. We could pass them on, but only after augmenting
 					--  them to say we are interested in subexpressions that don't depend on either the
 					--  outer context or the inner context.
 
-					result_expression.set_step (step.promote (offer))
+					a_result_expression.set_step (step.promote (an_offer))
 				end
 			end
-			Result := result_expression
+			Result := a_result_expression
 		end
 
-feature {XM_XPATH_PATH_EXPRESSION} -- Implementation
+feature {XM_XPATH_EXPRESSION} -- Restricted
+	
+	compute_cardinality is
+			-- Compute cardinality.
+		local
+			c1, c2, c3: INTEGER
+			an_expression: XM_XPATH_COMPUTED_EXPRESSION
+		do
+			if not start.are_cardinalities_computed then
+				an_expression ?= start
+					check
+						start_is_computed: an_expression /= Void
+						-- as it can't be a value
+					end
+				an_expression.compute_cardinality
+			end
+			if not step.are_cardinalities_computed then
+				an_expression ?= step
+					check
+						step_is_computed: an_expression /= Void
+						-- as it can't be a value
+					end
+				an_expression.compute_cardinality
+			end
+			c1 := start.cardinality
+			c2 := step.cardinality
+			c3 := multiply_cardinality (c1, c2)
+			set_cardinality (c3)
+			are_cardinalities_computed := True
+		end
+
+feature {XM_XPATH_PATH_EXPRESSION} -- Local
 
 	start: XM_XPATH_EXPRESSION
 			-- Starting node-set
@@ -368,37 +395,6 @@ feature {XM_XPATH_PATH_EXPRESSION} -- Implementation
 		ensure
 			step_set: step = a_step
 		end
-
-feature {XM_XPATH_EXPRESSION} -- Implementation
-	
-	compute_cardinality is
-			-- Compute cardinality.
-		local
-			c1, c2, c3: INTEGER
-			an_expr: XM_XPATH_COMPUTED_EXPRESSION
-		do
-			if not start.are_cardinalities_computed then
-				an_expr ?= start
-					check
-						start_is_computed: an_expr /= Void
-						-- as it can't be a value
-					end
-				an_expr.compute_cardinality
-			end
-			if not step.are_cardinalities_computed then
-				an_expr ?= step
-					check
-						step_is_computed: an_expr /= Void
-						-- as it can't be a value
-					end
-				an_expr.compute_cardinality
-			end
-			c1 := start.cardinality
-			c2 := step.cardinality
-			c3 := multiply_cardinality (c1, c2)
-			set_cardinality (c3)
-			are_cardinalities_computed := True
-		end
 	
 feature {NONE} -- Implementation
 
@@ -407,110 +403,110 @@ feature {NONE} -- Implementation
 		require
 			expression_not_void: exp /= Void
 		local
-			axis: XM_XPATH_AXIS_EXPRESSION
-			filter: XM_XPATH_FILTER_EXPRESSION
-			expr1: XM_XPATH_EXPRESSION
+			an_axis: XM_XPATH_AXIS_EXPRESSION
+			a_filter: XM_XPATH_FILTER_EXPRESSION
+			an_expression: XM_XPATH_EXPRESSION
 		do
-			axis ?= exp
-			if axis /= Void then
+			an_axis ?= exp
+			if an_axis /= Void then
 				Result := True
 			else
 				from
-					expr1 := exp
-					filter ?= expr1
+					an_expression := exp
+					a_filter ?= an_expression
 				until
-					filter = Void
+					a_filter = Void
 				loop
-					expr1 := filter.base_expression
-					filter ?= expr1
+					an_expression := a_filter.base_expression
+					a_filter ?= an_expression
 				end
-				axis ?= expr1
-				Result := axis /= Void
+				an_axis ?= an_expression
+				Result := an_axis /= Void
 			end
 		end
 
-	simplify_descendant_path (expr1: XM_XPATH_PATH_EXPRESSION): XM_XPATH_PATH_EXPRESSION is
+	simplify_descendant_path (an_expression: XM_XPATH_PATH_EXPRESSION): XM_XPATH_PATH_EXPRESSION is
 		local
 			st: XM_XPATH_EXPRESSION
-			axis: XM_XPATH_AXIS_EXPRESSION
-			cie: XM_XPATH_CONTEXT_ITEM_EXPRESSION
-			path: XM_XPATH_PATH_EXPRESSION
-			test: XM_XPATH_NODE_TEST
+			an_axis: XM_XPATH_AXIS_EXPRESSION
+			a_context_item_expression: XM_XPATH_CONTEXT_ITEM_EXPRESSION
+			a_path: XM_XPATH_PATH_EXPRESSION
+			a_test: XM_XPATH_NODE_TEST
 			any_node_test: XM_XPATH_ANY_NODE_TEST
-			filter: XM_XPATH_FILTER_EXPRESSION
+			a_filter: XM_XPATH_FILTER_EXPRESSION
 			any_positional_filter: BOOLEAN
-			new_step: XM_XPATH_COMPUTED_EXPRESSION
-			node_kind_test: XM_XPATH_NODE_KIND_TEST
+			a_new_step: XM_XPATH_COMPUTED_EXPRESSION
+			a_node_kind_test: XM_XPATH_NODE_KIND_TEST
 		do
-			st := expr1.start
+			st := an_expression.start
 
 			-- Detect .//x as a special case; this will appear as descendant-or-self::node()/x
 
-			axis ?= st
-			if axis /= Void and then axis.axis /= Descendant_or_self_axis then
+			an_axis ?= st
+			if an_axis /= Void and then an_axis.axis /= Descendant_or_self_axis then
 			else
-				if axis /= Void then
-					create cie.make -- TODO copy location information
-					create {XM_XPATH_PATH_EXPRESSION} st.make (cie, axis)	-- TODO copy location information
+				if an_axis /= Void then
+					create a_context_item_expression.make -- TODO copy location information
+					create {XM_XPATH_PATH_EXPRESSION} st.make (a_context_item_expression, an_axis)	-- TODO copy location information
 				end
-				path ?= st
-				if path = Void then
+				a_path ?= st
+				if a_path = Void then
 					Result := Void
 				else
-					axis ?= path.step
-					if axis = Void then
+					an_axis ?= a_path.step
+					if an_axis = Void then
 						Result := Void
-					elseif axis.axis /= Descendant_or_self_axis then
+					elseif an_axis.axis /= Descendant_or_self_axis then
 						Result := Void
 					else
-						test ?= axis
-						any_node_test ?= axis
-						if test = Void or else any_node_test /= Void then
+						a_test ?= an_axis
+						any_node_test ?= an_axis
+						if a_test = Void or else any_node_test /= Void then
 							Result := Void
 						else
 							from
 								any_positional_filter := False
-								filter ?= expr1.step
+								a_filter ?= an_expression.step
 							until
-								any_positional_filter or else filter = Void
+								any_positional_filter or else a_filter = Void
 							loop
-								if filter.is_positional then
+								if a_filter.is_positional then
 									Result := Void
 									any_positional_filter := True
 								else
-									filter ?= filter.base_expression
-									axis ?= filter.base_expression
+									a_filter ?= a_filter.base_expression
+									an_axis ?= a_filter.base_expression
 								end
 							end
 							if not any_positional_filter then
-								if axis = Void then
+								if an_axis = Void then
 									Result := Void
 								else
-									if axis.axis = Child_axis then
-										create {XM_XPATH_AXIS_EXPRESSION} new_step.make (Descendant_axis, axis.node_test )	-- TODO copy location information
+									if an_axis.axis = Child_axis then
+										create {XM_XPATH_AXIS_EXPRESSION} a_new_step.make (Descendant_axis, an_axis.node_test )	-- TODO copy location information
 										from
-											filter ?= expr1.step
+											a_filter ?= an_expression.step
 										until
-											filter = Void
+											a_filter = Void
 										loop
 
 											-- Add any filters to the new expression. We know they aren't
 											-- positional, so the order of the filters doesn't matter.
 
-											create {XM_XPATH_FILTER_EXPRESSION} new_step.make (new_step, filter.filter)	-- TODO copy location information
-											filter ?= filter.base_expression
+											create {XM_XPATH_FILTER_EXPRESSION} a_new_step.make (a_new_step, a_filter.filter)	-- TODO copy location information
+											a_filter ?= a_filter.base_expression
 										end
-										create path.make (path.start, new_step)	-- TODO copy location information
-										Result := path
-									elseif axis.axis = Attribute_axis then
+										create a_path.make (a_path.start, a_new_step)	-- TODO copy location information
+										Result := a_path
+									elseif an_axis.axis = Attribute_axis then
 
 										-- turn the expression a//@b into a/descendant-or-self::*/@b
 
-										create node_kind_test.make (Element_node)
-										create {XM_XPATH_AXIS_EXPRESSION} new_step.make (Descendant_or_self_axis, node_kind_test )	-- TODO copy location information
-										create path.make (path.start, new_step)
-										create path.make (path, expr1.step)	-- TODO copy location information
-										Result := path
+										create a_node_kind_test.make (Element_node)
+										create {XM_XPATH_AXIS_EXPRESSION} a_new_step.make (Descendant_or_self_axis, a_node_kind_test )	-- TODO copy location information
+										create a_path.make (a_path.start, a_new_step)
+										create a_path.make (a_path, an_expression.step)	-- TODO copy location information
+										Result := a_path
 									end
 								end
 							end
@@ -523,7 +519,7 @@ feature {NONE} -- Implementation
 	compute_special_properties is
 			-- Compute special properties.
 		local
-			an_expr: XM_XPATH_COMPUTED_EXPRESSION
+			an_expression: XM_XPATH_COMPUTED_EXPRESSION
 		do
 			create special_properties.make (1, 6)
 
@@ -531,20 +527,20 @@ feature {NONE} -- Implementation
 
 			if not are_cardinalities_computed then compute_cardinality end
 			if not start.are_special_properties_computed then
-				an_expr ?= start
+				an_expression ?= start
 					check
-						start_is_computed: an_expr /= Void
+						start_is_computed: an_expression /= Void
 						-- as it can't be a value
 					end
-				an_expr.compute_special_properties
+				an_expression.compute_special_properties
 			end
 			if not step.are_special_properties_computed then
-				an_expr ?= step
+				an_expression ?= step
 					check
-						step_is_computed: an_expr /= Void
+						step_is_computed: an_expression /= Void
 						-- as it can't be a value
 					end
-				an_expr.compute_special_properties
+				an_expression.compute_special_properties
 			end
 			if not start.cardinality_allows_many then
 				start.set_ordered_nodeset

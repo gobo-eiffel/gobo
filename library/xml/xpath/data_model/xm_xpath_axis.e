@@ -107,8 +107,8 @@ feature -- Access
 		end
 
 	axis_principal_node_type (an_axis: INTEGER): INTEGER is
-	require
-		valid_axis: is_axis_valid (an_axis)
+		require
+			valid_axis: is_axis_valid (an_axis)
 		do
 			if	an_axis = Attribute_axis then
 				Result := Attribute_node

@@ -26,26 +26,7 @@ feature -- Access
 
 	name_pool: XM_XPATH_NAME_POOL
 			-- The name pool in which all name codes can be found
-	
-feature -- Element change
 
-	set_name_pool (a_name_pool: XM_XPATH_NAME_POOL) is
-			-- Set the name pool in which all name codes can be found
-		require
-			name_pool_not_void: a_name_pool /= Void
-		do
-			name_pool := a_name_pool
-		ensure
-			name_pool_set: name_pool = a_name_pool
-		end
-
-	set_system_id (system_id: STRING) is
-			-- Set the system-id of the destination tree
-		require
-			system_id_not_void: system_id /= Void
-		deferred
-		end
-	
 feature -- Events
 
 	start_document is
@@ -53,12 +34,12 @@ feature -- Events
 		deferred
 		end
 
-	set_unparsed_entity (name: STRING; system_id: STRING; public_id: STRING) is
+	set_unparsed_entity (a_name: STRING; a_system_id: STRING; a_public_id: STRING) is
 			-- Notify an unparsed entity URI
 		require
-			name_not_void: name /= Void
-			system_id_not_void: system_id /= Void
-			public_id_not_void: public_id /= Void
+			name_not_void: a_name /= Void
+			system_id_not_void: a_system_id /= Void
+			public_id_not_void: a_public_id /= Void
 		deferred
 		end
 
@@ -78,12 +59,12 @@ feature -- Events
 		deferred
 		end
 
-	attribute (a_name_code: INTEGER; a_type_code: INTEGER; value: STRING; properties: INTEGER) is
+	attribute (a_name_code: INTEGER; a_type_code: INTEGER; a_value: STRING; properties: INTEGER) is
 			-- Notify an attribute;
 			-- Attributes are notified after the `start_element' event, and before any
 			--  children. Namespaces and attributes may be intermingled
 		require
-			value_not_void: value /= Void
+			value_not_void: a_value /= Void
 		deferred
 		end
 
@@ -111,19 +92,19 @@ feature -- Events
 		deferred
 		end
 
-	processing_instruction (name: STRING; data: STRING; properties: INTEGER) is
+	processing_instruction (a_name: STRING; a_data_string: STRING; properties: INTEGER) is
 			-- Notify a processing instruction
 		require
-			name_not_void: name /= Void
-			data_not_void: data /= Void
+			name_not_void: a_name /= Void
+			data_not_void: a_data_string /= Void
 		deferred
 		end
 	
-	comment (content: STRING; properties: INTEGER) is
+	comment (a_content_string: STRING; properties: INTEGER) is
 			-- Notify a comment;
 			-- Comments are only notified if they are outside the DTD.
 		require
-			content_not_void: content /= Void
+			content_not_void: a_content_string /= Void
 		deferred
 		end
 
@@ -131,6 +112,26 @@ feature -- Events
 			-- Notify the end of the document
 		deferred
 		end
+
+feature -- Element change
+
+	set_name_pool (a_name_pool: XM_XPATH_NAME_POOL) is
+			-- Set the name pool in which all name codes can be found
+		require
+			name_pool_not_void: a_name_pool /= Void
+		do
+			name_pool := a_name_pool
+		ensure
+			name_pool_set: name_pool = a_name_pool
+		end
+
+	set_system_id (a_system_id: STRING) is
+			-- Set the system-id of the destination tree
+		require
+			system_id_not_void: a_system_id /= Void
+		deferred
+		end
+	
 end
 
 

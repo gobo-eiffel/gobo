@@ -49,7 +49,7 @@ feature -- Access
 
 feature -- Status report
 
-	display (level: INTEGER; pool: XM_XPATH_NAME_POOL) is
+	display (a_level: INTEGER; a_pool: XM_XPATH_NAME_POOL) is
 			-- Diagnostic print of expression structure to `std.error'
 		local
 			a_string, test_string: STRING
@@ -59,7 +59,7 @@ feature -- Status report
 			else
 				test_string := node_test.original_text
 			end
-			a_string := STRING_.appended_string (indent (level), axis_name (axis))
+			a_string := STRING_.appended_string (indent (a_level), axis_name (axis))
 			a_string := STRING_.appended_string (a_string, "::")
 			a_string := STRING_.appended_string (a_string, test_string)
 			std.error.put_string (a_string)
@@ -68,9 +68,10 @@ feature -- Status report
 
 feature -- Optimization
 
-	analyze (env: XM_XPATH_STATIC_CONTEXT): XM_XPATH_EXPRESSION is
+	analyze (a_context: XM_XPATH_STATIC_CONTEXT): XM_XPATH_EXPRESSION is
 			-- Perform static analysis of an expression and its subexpressions
 		do
+			-- TODO
 		end
 
 feature {NONE} -- Implementation

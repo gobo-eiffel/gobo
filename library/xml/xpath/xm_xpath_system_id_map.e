@@ -14,7 +14,7 @@ class XM_XPATH_SYSTEM_ID_MAP
 
 feature -- Access
 
-	system_id (node_number: INTEGER): STRING is
+	system_id (a_node_number: INTEGER): STRING is
 			-- System-id
 		do
 			-- TODO

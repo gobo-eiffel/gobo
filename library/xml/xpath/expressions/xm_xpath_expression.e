@@ -42,21 +42,29 @@ feature -- Access
 		deferred
 		end
 
-	-- TODO - check the return generic-type-parameter on the next line
-	iterator (context: XM_XPATH_CONTEXT): XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_ITEM] is
-			-- Yields an iterator to iterate over the values of a sequence
+	iterator (a_context: XM_XPATH_CONTEXT): XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_ITEM] is
+			-- An iterator over the values of a sequence
 		require
-			context_not_void: context /= Void
+			context_not_void: a_context /= Void
 		deferred
 		ensure
 			iterator_not_void: Result /= Void
 		end
 
-	effective_boolean_value (context: XM_XPATH_CONTEXT): BOOLEAN is
-			-- Effective boolean value of the expression;
+	effective_boolean_value (a_context: XM_XPATH_CONTEXT): BOOLEAN is
+			-- Effective boolean value;
 			-- This returns `False' if the value is the empty sequence,
 			-- a zero-length string, a number equal to zero, or the boolean
 			-- `False'. Otherwise it returns `True'.
+		deferred
+		end
+
+feature -- Comparison
+
+	same_expression (other: XM_XPATH_EXPRESSION): BOOLEAN is
+			-- Are `Current' and `other' the same expression?
+		require
+			other_not_void: other /= Void
 		deferred
 		end
 
@@ -75,22 +83,22 @@ feature -- Status report
 		end
 
 	may_analyze: BOOLEAN is
-			-- OK to call analyze?
+			-- OK to call `analyze'?
 		do
 			Result := True
 		end
 
-	display (level: INTEGER; pool: XM_XPATH_NAME_POOL) is
+	display (a_level: INTEGER; a_pool: XM_XPATH_NAME_POOL) is
 			-- Diagnostic print of expression structure to `std.error'
 		require
-			name_pool_not_void: pool /= Void
+			name_pool_not_void: a_pool /= Void
 		deferred
 		end
 
-	indent (level: INTEGER): STRING is
+	indent (a_level: INTEGER): STRING is
 			-- Construct indent string, for diagnostic output
 		require
-			strictly_positive_level: level > 0
+			strictly_positive_level: a_level > 0
 		local
 			counter: INTEGER
 		do
@@ -98,9 +106,9 @@ feature -- Status report
 			from
 				counter := 1
 			variant
-				level + 1 - counter
+				a_level + 1 - counter
 			until
-				counter > level
+				counter > a_level
 			loop
 				Result := STRING_.appended_string (Result, " ")
 				counter := counter + 1
@@ -119,15 +127,6 @@ feature -- Status setting
 			set: STRING_.same_string (last_static_type_error, msg)
 		end
 
-feature -- Comparison
-
-	same_expression (other: XM_XPATH_EXPRESSION): BOOLEAN is
-			-- Are `Current' and `other' the same expression?
-		require
-			other_not_void: other /= Void
-		deferred
-		end
-
 feature -- Optimization
 
 	simplify: XM_XPATH_EXPRESSION is
@@ -142,8 +141,8 @@ feature -- Optimization
 			expression_not_void: Result /= Void
 		end
 
-	analyze (env: XM_XPATH_STATIC_CONTEXT): XM_XPATH_EXPRESSION is
-			-- Perform static analysis of an expression and its subexpressions;		
+	analyze (a_context: XM_XPATH_STATIC_CONTEXT): XM_XPATH_EXPRESSION is
+			-- Perform static analysis of `Current' and its subexpressions;		
 			-- This checks statically that the operands of the expression have the correct type;
 			-- If necessary it generates code to do run-time type checking or type conversion;
 			-- A static type error is reported only if execution cannot possibly succeed, that
@@ -152,7 +151,7 @@ feature -- Optimization
 			-- to the declaration of the function or variable. However, the types of such functions and
 			-- variables will only be accurately known if they have been explicitly declared
 		require
-			context_not_void: env /= Void
+			context_not_void: a_context /= Void
 			ok_to_analyze: may_analyze
 			no_previous_type_error: not is_static_type_error
 		deferred
@@ -160,15 +159,15 @@ feature -- Optimization
 			expression_not_void: not is_static_type_error implies Result /= Void
 		end
 
-	promote (offer: XM_XPATH_PROMOTION_OFFER): XM_XPATH_EXPRESSION is
+	promote (an_offer: XM_XPATH_PROMOTION_OFFER): XM_XPATH_EXPRESSION is
 			-- Offer promotion for this subexpression
 			-- The offer will be accepted if the subexpression is not dependent on
 			-- the factors (e.g. the context item) identified in the PromotionOffer.
 			-- By default the offer is not accepted - this is appropriate in the case of simple expressions
 			-- such as constant values and variable references where promotion would give no performance
-			-- advantage. This method is always called at compile time.
+			-- advantage. This routine is always called at compile time.
 		require
-			offer_not_void: offer /= Void
+			offer_not_void: an_offer /= Void
 		deferred
 		ensure
 			expression_not_void: Result /= Void
@@ -176,19 +175,19 @@ feature -- Optimization
 
 feature -- Evaluation
 
-	evaluate_item (context: XM_XPATH_CONTEXT): XM_XPATH_ITEM is
-			-- Evaluate an expression as a single item;
+	evaluate_item (a_context: XM_XPATH_CONTEXT): XM_XPATH_ITEM is
+			-- Evaluate as a single item;
 			-- This always returns either a single Item or Void
-			-- (denoting the empty sequence). No conversion is done. This method should not be
+			-- (denoting the empty sequence). No conversion is done. This routine should not be
 			-- used unless the static type of the expression is a subtype of "item" or "item?": that is,
 			-- it should not be called if the expression may return a sequence. There is no guarantee that
 			-- this condition will be detected.
 		require
-			context_not_void: context /= Void
+			context_not_void: a_context /= Void
 		deferred
 		end
 
-	evaluate_as_string (context: XM_XPATH_CONTEXT): STRING is
+	evaluate_as_string (a_context: XM_XPATH_CONTEXT): STRING is
 			-- Evaluate an expression as a String
 			-- This function must only be called in contexts where it is known
 			-- that the expression will return a single string (or where an empty sequence
@@ -197,21 +196,21 @@ feature -- Evaluation
 			-- evaluate expressions produced by compiling an attribute value template.
 		require
 			-- TODO - turn the above into pre-conditions.
-			context_not_void: context /= Void
+			context_not_void: a_context /= Void
 		deferred
 		ensure
 			string_not_void: Result /= Void
 		end
 
-feature {XM_XPATH_EXPRESSION} -- Helper routines
+feature {XM_XPATH_EXPRESSION} -- Local
 
 	unsorted (eliminate_duplicates: BOOLEAN): XM_XPATH_EXPRESSION is
 			-- Remove unwanted sorting from an expression, at compile time
 		local
-			offer: XM_XPATH_PROMOTION_OFFER
+			an_offer: XM_XPATH_PROMOTION_OFFER
 		do
-			create offer.make (Unordered, Void, Void, eliminate_duplicates, False)
-			Result := Current.promote (offer)
+			create an_offer.make (Unordered, Void, Void, eliminate_duplicates, False)
+			Result := Current.promote (an_offer)
 		ensure
 			result_not_void: Result /= Void
 		end

@@ -38,14 +38,14 @@ feature -- Access
 			
 feature -- Status report
 
-	is_valid_required_cardinality (request: INTEGER): BOOLEAN is
-			-- Is `request' a valid cardinality requirement?
+	is_valid_required_cardinality (a_request: INTEGER): BOOLEAN is
+			-- Is `a_request' a valid cardinality requirement?
 		do
-			Result := request = Required_cardinality_empty
-				or else request = Required_cardinality_optional
-				or else request = Required_cardinality_exactly_one
-				or else request = Required_cardinality_one_or_more
-				or else request = Required_cardinality_zero_or_more
+			Result := a_request = Required_cardinality_empty
+				or else a_request = Required_cardinality_optional
+				or else a_request = Required_cardinality_exactly_one
+				or else a_request = Required_cardinality_one_or_more
+				or else a_request = Required_cardinality_zero_or_more
 		end
 
 end

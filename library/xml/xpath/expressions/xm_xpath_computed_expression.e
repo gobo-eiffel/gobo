@@ -13,8 +13,8 @@ indexing
 deferred class XM_XPATH_COMPUTED_EXPRESSION
 
 	-- There are two principal routines for evaluating an expression:
-	--  iterator, which yields an iterator over the result of the expression
-	--  as a sequence, and evaluate_item, which returns an XM_XPATH_ITEM.
+	--  `iterator', which yields an iterator over the result of the expression
+	--  as a sequence, and `evaluate_item', which returns an XM_XPATH_ITEM.
 	-- Both routines take an XM_XPATH_CONTEXT object to supply the evaluation context;
 	--  for an expression that is a Value, this argument is ignored and may be `Void'.
 	-- This base class provides an implementation of iterator in terms of evaluate_item
@@ -29,7 +29,7 @@ inherit
 
 feature {NONE} -- Initialization
 
-	initialize is
+	initialize is -- TODO - all creation routines should call this
 			-- Initialize attributes.
 		do
 			line_number := -1
@@ -50,7 +50,7 @@ feature -- Access
 			Result.set_equality_tester (expression_tester)
 		end
 
-	iterator (context: XM_XPATH_CONTEXT): XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_ITEM] is
+	iterator (a_context: XM_XPATH_CONTEXT): XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_ITEM] is
 			-- Yields an iterator to iterate over the values of a sequence
 		local
 			an_item: XM_XPATH_ITEM
@@ -62,8 +62,9 @@ feature -- Access
 			--  provide its own implementation.
 				check
 					singleton_expression: not Cardinality_allows_many
+					-- Not a prefect check, as cardinality may not have been set!
 				end
-			an_item := evaluate_item (context)
+			an_item := evaluate_item (a_context)
 			if an_item = Void then
 				Result := empty_abstract_item_iterator
 			else
@@ -71,7 +72,7 @@ feature -- Access
 			end
 		end
 
-	effective_boolean_value (context: XM_XPATH_CONTEXT): BOOLEAN is
+	effective_boolean_value (a_context: XM_XPATH_CONTEXT): BOOLEAN is
 			-- Effective boolean value of the expression;
 			-- This returns `False' if the value is the empty sequence,
 			-- a zero-length string, a number equal to zero, or the boolean
@@ -85,7 +86,7 @@ feature -- Access
 			a_number: XM_XPATH_NUMERIC_VALUE
 			a_double: XM_XPATH_DOUBLE_VALUE
 		do
-			an_iterator := iterator (context)
+			an_iterator := iterator (a_context)
 			if an_iterator.after then
 				Result := False
 			else
@@ -134,6 +135,14 @@ feature -- Access
 			end
 		end
 
+feature -- Comparison
+
+	same_expression (other: XM_XPATH_EXPRESSION): BOOLEAN is
+			-- Are `Current' and `other' the same expression?
+		do
+			Result := Current = other
+		end
+
 feature -- Status report
 
 	last_static_type_error: STRING is
@@ -150,20 +159,12 @@ feature -- Status report
 			are_special_properties_computed
 		end
 
-feature -- Comparison
-
-	same_expression (other: XM_XPATH_EXPRESSION): BOOLEAN is
-			-- Are `Current' and `other' the same expression?
-		do
-			Result := Current = other
-		end
-
 feature -- Status setting
 
-	set_last_static_type_error (msg: STRING) is
+	set_last_static_type_error (a_message: STRING) is
 			-- Set result of `last_static_type_error'.
 		do
-			internal_last_static_type_error := msg
+			internal_last_static_type_error := a_message
 		end
 
 	frozen compute_static_properties is
@@ -201,22 +202,22 @@ feature -- Status setting
 		require
 			not_yet_computed: not are_dependencies_computed
 		local
-			sub: DS_ARRAYED_LIST [XM_XPATH_EXPRESSION]
+			sub_exprs: DS_ARRAYED_LIST [XM_XPATH_EXPRESSION]
 			an_index: INTEGER
-			value: BOOLEAN
+			a_value: BOOLEAN
 		do
 			if not are_intrinsic_dependencies_computed then compute_intrinsic_dependencies end
 			create dependencies.make (1, 6)
 			from
-				sub := sub_expressions
+				sub_exprs := sub_expressions
 				an_index := 1
 			variant
-				sub.count + 1 - an_index
+				sub_exprs.count + 1 - an_index
 			until
-				an_index > sub.count
+				an_index > sub_exprs.count
 			loop
-				value := dependencies.item (an_index) or else intrinsic_dependencies.item (an_index)
-				dependencies.put (value, an_index)
+				a_value := dependencies.item (an_index) or else intrinsic_dependencies.item (an_index)
+				dependencies.put (a_value, an_index)
 				an_index := an_index + 1
 			end
 			
@@ -236,7 +237,7 @@ feature -- Optimization
 			Result := Current
 		end
 
-	promote (offer: XM_XPATH_PROMOTION_OFFER): XM_XPATH_EXPRESSION is
+	promote (an_offer: XM_XPATH_PROMOTION_OFFER): XM_XPATH_EXPRESSION is
 			-- Offer promotion for this subexpression
 			-- The offer will be accepted if the subexpression is not dependent on
 			-- the factors (e.g. the context item) identified in the PromotionOffer.
@@ -249,7 +250,7 @@ feature -- Optimization
 
 feature -- Evaluation
 
-	evaluate_item (context: XM_XPATH_CONTEXT): XM_XPATH_ITEM is
+	evaluate_item (a_context: XM_XPATH_CONTEXT): XM_XPATH_ITEM is
 			-- Evaluate an expression as a single item;
 			-- This always returns either a single Item or Void
 			-- (denoting the empty sequence). No conversion is done. This routine should not be
@@ -262,7 +263,7 @@ feature -- Evaluation
 				check
 					singleton_expression: not Cardinality_allows_many
 				end
-			an_iterator := iterator (context)
+			an_iterator := iterator (a_context)
 			if an_iterator.after then
 				Result := Void
 			else
@@ -274,7 +275,7 @@ feature -- Evaluation
 			end
 		end
 
-	evaluate_as_string (context: XM_XPATH_CONTEXT): STRING is
+	evaluate_as_string (a_context: XM_XPATH_CONTEXT): STRING is
 			-- Evaluate an expression as a String
 			-- This function must only be called in contexts where it is known
 			-- that the expression will return a single string (or where an empty sequence
@@ -285,7 +286,7 @@ feature -- Evaluation
 			an_item: XM_XPATH_ITEM
 			a_string: XM_XPATH_STRING_VALUE
 		do
-			an_item := evaluate_item (context)
+			an_item := evaluate_item (a_context)
 			if an_item = Void then
 				Result := ""
 			else
@@ -310,7 +311,7 @@ feature -- Element change
 			set: line_number = a_line_number
 		end
 
-feature {XM_XPATH_EXPRESSION} -- Implementation
+feature {XM_XPATH_EXPRESSION} -- Restricted
 
 	compute_cardinality is
 			-- Compute cardinality.

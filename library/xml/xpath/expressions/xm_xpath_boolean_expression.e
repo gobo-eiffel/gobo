@@ -25,11 +25,7 @@ creation
 feature -- Access
 
 		item_type: INTEGER is
-			--Determine the data type of the expression, if possible;
-			-- All expression return sequences, in general;
-			-- This method determines the type of the items within the
-			-- sequence, assuming that (a) this is known in advance,
-			-- and (b) it is the same for all items in the sequence.
+			--Determine the data type of the expression, if possible
 		do
 			Result := Boolean_type
 		end

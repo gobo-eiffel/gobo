@@ -22,7 +22,7 @@ creation
 
 	make
 
-feature -- Initialization
+feature {NONE} -- Initialization
 
 	make (a_value: G) is
 		do
@@ -71,15 +71,6 @@ feature -- Status report
 			Result := gone
 		end
 
-feature -- Duplication
-
-	another: like Current is
-			-- Another iterator that iterates over the same items as the original;
-			-- The new iterator will be repositioned at the start of the sequence
-		do
-			create Result.make (value)
-		end
-
 feature -- Cursor movement
 
 	forth is
@@ -87,6 +78,15 @@ feature -- Cursor movement
 		do
 			gone := True
 			index := index + 1
+		end
+
+feature -- Duplication
+
+	another: like Current is
+			-- Another iterator that iterates over the same items as the original;
+			-- The new iterator will be repositioned at the start of the sequence
+		do
+			create Result.make (value)
 		end
 
 feature {NONE} -- Implementation

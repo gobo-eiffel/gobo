@@ -26,7 +26,7 @@ creation
 
 	make
 
-feature -- Initialization
+feature {NONE} -- Initialization
 
 	make is
 		do
@@ -60,6 +60,14 @@ feature -- Status report
 			Result := True
 		end
 
+feature -- Cursor movement
+
+	forth is
+			-- Move to next position
+		do
+			do_nothing
+		end
+
 feature -- Duplication
 
 	another: like Current is
@@ -67,14 +75,6 @@ feature -- Duplication
 			-- The new iterator will be repositioned at the start of the sequence
 		do
 			Result := Current
-		end
-
-feature -- Cursor movement
-
-	forth is
-			-- Move to next position
-		do
-			do_nothing
 		end
 
 end

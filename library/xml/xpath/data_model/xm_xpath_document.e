@@ -48,17 +48,17 @@ feature -- Access
 			Result := Document_node
 		end
 	
-	unparsed_entity_system_id (entity_name: STRING): STRING is
+	unparsed_entity_system_id (an_entity_name: STRING): STRING is
 			-- System identifier of an unparsed external entity
 		require
-			entity_name_not_void: entity_name /= Void
+			entity_name_not_void: an_entity_name /= Void
 		deferred
 		end
 
-	unparsed_entity_public_id (entity_name: STRING): STRING is
+	unparsed_entity_public_id (an_entity_name: STRING): STRING is
 			-- Public identifier of an unparsed external entity
 		require
-			entity_name_not_void: entity_name /= Void		
+			entity_name_not_void: an_entity_name /= Void		
 		deferred
 		end
 
@@ -67,10 +67,10 @@ feature -- Access
 		deferred
 		end
 
-	select_id (id: STRING): XM_XPATH_ELEMENT is
+	select_id (an_id: STRING): XM_XPATH_ELEMENT is
 			-- Element with ID value of `id'
 		require
-			id_not_void: id /= Void
+			id_not_void: an_id /= Void
 		deferred
 		end
 

@@ -16,7 +16,7 @@ creation
 
 	make
 	
-feature -- Initialization
+feature {NONE} -- Initialization
 
 	make is
 			-- Establish invariant
@@ -31,14 +31,14 @@ feature -- Access
 	
 feature -- Element change
 
-	set_default_pool (new_pool: XM_XPATH_NAME_POOL) is -- used when loading a compiled stylesheet
-			-- Set the globally-shared default pool to `new_pool'
+	set_default_pool (a_new_pool: XM_XPATH_NAME_POOL) is -- used when loading a compiled stylesheet
+			-- Set the globally-shared default pool to `a_new_pool'
 		require
-			new_pool_not_void: new_pool /= Void
+			new_pool_not_void: a_new_pool /= Void
 		do
-			default_pool := new_pool
+			default_pool := a_new_pool
 		ensure
-			default_pool_set: default_pool = new_pool
+			default_pool_set: default_pool = a_new_pool
 		end
 
 invariant

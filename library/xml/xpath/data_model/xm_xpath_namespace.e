@@ -50,11 +50,11 @@ feature -- Access
 			Result := clone (uri_property)
 		end
 
---	typed_value: DS_ARRAYED_LIST [XM_XPATH_ANY_ATOMIC_VALUE] is
+--	typed_value: DS_ARRAYED_LIST [??] is
 			-- Typed value
 --		do
 --			create Result.make (1)
-			-- TODO: Result.put_first (create {XM_XPATH_ANY_ATOMIC_VALUE}.make_untyped (string_value))
+			-- TODO: Result.put_first (create {???}.make_untyped (string_value))
 --		end
 
 feature {NONE} -- Access

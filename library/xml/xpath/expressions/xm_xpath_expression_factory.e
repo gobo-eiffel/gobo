@@ -12,7 +12,11 @@ indexing
 
 class XM_XPATH_EXPRESSION_FACTORY
 
-feature -- Expression creation
+inherit
+
+	KL_SHARED_STANDARD_FILES
+
+feature -- Creation
 
 	make_expression (an_expression: STRING; a_context: XM_XPATH_STATIC_CONTEXT): XM_XPATH_EXPRESSION is
 			-- Parse an expression;
@@ -32,25 +36,26 @@ feature -- Expression creation
 			if not a_parser.is_parse_error then
 				an_expr := a_parser.last_parsed_expression
 				debug ("XPath expressions")
-					print ("After parsing:%N%N")
+					std.error.put_string ("After parsing:%N%N")
 					an_expr.display (1, a_context.name_pool)
-					print ("%N")
+					std.error.put_new_line
 				end
 				Result := an_expr.simplify
 				if an_expr.is_static_type_error then
 					-- TODO
 					debug ("XPath expressions")
-						print ("Simplification failed!%N")
+						std.error.put_string ("Simplification failed!%N")
 					end					
 				else
 					debug ("XPath expressions")
-						print ("After simplication:%N%N")
+						std.error.put_string ("After simplication:%N%N")
 						Result.display (1, a_context.name_pool)
-						print ("%N")
+						std.error.put_new_line
 					end					
 				end
 			else
-				print (a_parser.last_parse_error)
+				std.error.put_string (a_parser.last_parse_error)
+				std.error.put_new_line
 				-- TODO - above should be an XM_XPATH_ERROR_EXPRESSION??
 			end
 		ensure

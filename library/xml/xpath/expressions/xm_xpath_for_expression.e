@@ -22,21 +22,21 @@ creation
 
 feature {NONE} -- Initialization
 
-	make (rv: XM_XPATH_RANGE_VARIABLE_DECLARATION; seq: XM_XPATH_EXPRESSION; act: XM_XPATH_EXPRESSION) is
+	make (a_range_variable: XM_XPATH_RANGE_VARIABLE_DECLARATION; a_sequence_expression: XM_XPATH_EXPRESSION; an_action: XM_XPATH_EXPRESSION) is
 			-- Establish invariant
 		require
-			range_variable_not_void: rv /= Void
-			sequence_not_void: seq /= Void
-			action_not_void: act /= Void
+			range_variable_not_void: a_range_variable /= Void
+			sequence_not_void: a_sequence_expression /= Void
+			action_not_void: an_action /= Void
 		do
 			operator := For_token
-			declaration := rv
-			sequence := seq
-			action := act
+			declaration := a_range_variable
+			sequence := a_sequence_expression
+			action := an_action
 		ensure
-			range_variable_set: declaration = rv
-			sequence_set: sequence = seq
-			action_set: action = act
+			range_variable_set: declaration = a_range_variable
+			sequence_set: sequence = a_sequence_expression
+			action_set: action = an_action
 		end
 	
 feature -- Access
@@ -62,12 +62,12 @@ feature -- Access
 	
 feature -- Status report
 
-	display (level: INTEGER; pool: XM_XPATH_NAME_POOL) is
+	display (a_level: INTEGER; a_pool: XM_XPATH_NAME_POOL) is
 			-- Diagnostic print of expression structure to `std.error'
 		local
 			a_string: STRING
 		do
-			a_string := STRING_.appended_string (indent (level), "for $")
+			a_string := STRING_.appended_string (indent (a_level), "for $")
 			a_string := STRING_.appended_string (a_string, variable_name)
 			-- TODO
 			std.error.put_string (a_string)
@@ -76,15 +76,8 @@ feature -- Status report
 
 feature -- Optimization
 
-	analyze (env: XM_XPATH_STATIC_CONTEXT): XM_XPATH_EXPRESSION is
-			-- Perform static analysis of an expression and its subexpressions;		
-			-- This checks statically that the operands of the expression have the correct type;
-			-- If necessary it generates code to do run-time type checking or type conversion;
-			-- A static type error is reported only if execution cannot possibly succeed, that
-			-- is, if a run-time type error is inevitable. The call may return a modified form of the expression;
-			-- This routine is called after all references to functions and variables have been resolved
-			-- to the declaration of the function or variable. However, the types of such functions and
-			-- variables will only be accurately known if they have been explicitly declared
+	analyze (a_context: XM_XPATH_STATIC_CONTEXT): XM_XPATH_EXPRESSION is
+			-- Perform static analysis of an expression and its subexpressions
 		do
 			-- TODO
 		end
