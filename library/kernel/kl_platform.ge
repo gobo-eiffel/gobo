@@ -27,12 +27,22 @@ inherit
 		end
 #endif
 
-#ifdef ISE || HACT || SE
 feature -- Access
 
+#ifdef ISE || HACT || SE
 	Minimum_character_code: INTEGER is 0
 	Maximum_character_code: INTEGER is 255
 			-- Smallest and largest supported codes for CHARACTER values
+
+#endif
+#ifdef HACT || VE || SE
+	Pointer_bytes: INTEGER is
+			-- Number of bytes in a value of type `POINTER'
+		once
+			Result := Pointer_bits // 8
+		ensure
+			pointer_bytes_positive: Result > 0
+		end
 
 #endif
 end -- class KL_PLATFORM
