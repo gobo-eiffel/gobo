@@ -114,7 +114,7 @@ feature -- Access
 			end
 		end
 
-	expanded_variable_value(a_value : STRING) : STRING is
+	expanded_variable_value (a_value : STRING) : STRING is
 			-- Expanded variable value of `a_value'
 		require
 			a_value_not_void: a_value /= Void
@@ -134,6 +134,16 @@ feature -- Access
 			expanded_variable_value_not_void : Result /= Void
 		end
 
+	remove_variable (a_name: STRING) is
+			-- Remove variable `a_name' from `variables'.
+		require
+			a_name_not_void: a_name /= Void
+			a_name_not_empty: a_name.count > 0
+		do
+			variables.remove (a_name)
+--!!	ensure
+			--!! variable_removed: not variables.has (a_name) --!! equality check required
+		end
 
 	interpreted_string (a_string: STRING): STRING is
 			-- String where the environment variables have been

@@ -191,6 +191,9 @@ feature -- Processing
 					elseif an_element.name.is_equal (Set_task_name) then
 							-- set
 						!GEANT_SET_TASK! a_task.make_from_element (project, an_element)
+					elseif an_element.name.is_equal (Unset_task_name) then
+							-- unset
+						!GEANT_UNSET_TASK! a_task.make_from_element (project, an_element)
 					elseif an_element.name.is_equal (Gexace_task_name) then
 							-- gexace
 						!GEANT_GEXACE_TASK! a_task.make_from_element (project, an_element)
