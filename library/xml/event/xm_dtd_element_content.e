@@ -166,7 +166,9 @@ feature -- Output
 		do
 			if is_name then
 				Result := name
-				Result.append_character (repetition)
+				if not is_one then
+					Result.append_character (repetition)
+				end
 			elseif is_content_any then
 				Result := "ANY"
 			elseif is_content_empty then
@@ -186,7 +188,9 @@ feature -- Output
 					end
 				end
 				Result.append_character (')')
-				Result.append_character (repetition)
+				if not is_one then
+					 Result.append_character (repetition)
+				end
 			end
 		end
 
