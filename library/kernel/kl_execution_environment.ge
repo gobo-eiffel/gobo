@@ -33,16 +33,18 @@ feature -- Access
 			environment: expanded ENVIRONMENT
 		do
 			Result := environment.env_item (a_variable)
-#else
-#ifdef HACT || ISE
+#endif
+#ifdef ISE
 		do
 			Result := environment_impl.get (a_variable)
-#else
+#endif
+#ifdef HACT
+		do
+			Result := environment_impl.variables.item (a_variable)
+#endif
 #ifdef SE
 		do
-			Result := get_environment_variable (a_variable)
-#endif
-#endif
+			Result := environment_impl.get_environment_variable (a_variable)
 #endif
 		end
 
@@ -60,14 +62,18 @@ feature -- Setting
 			environment: expanded ENVIRONMENT
 		do
 			environment.env_put (a_variable, a_value)
-#else
-#ifdef HACT || ISE
+#endif
+#ifdef ISE
 		do
 			environment_impl.put (a_value, a_variable)
-#else
-		do
-			-- Not supported.
 #endif
+#ifdef HACT
+		do
+			environment_impl.variables.put (a_value, a_variable)
+#endif
+#ifdef SE
+		do
+			environment_impl.set_environment_variable (a_variable, a_value)
 #endif
 		ensure
 			-- (This setting may fail on certain platforms, hence the
@@ -164,9 +170,15 @@ feature -- Conversion
 			interpreted_string_not_void: Result /= Void
 		end
 
-#ifdef HACT || ISE
+#ifdef HACT || ISE || SE
 feature {NONE} -- Implementation
+
+#ifdef HACT || ISE
 	environment_impl: EXECUTION_ENVIRONMENT is
+#endif
+#ifdef SE
+	environment_impl: SYSTEM is
+#endif
 			-- Execution environment impl
 		once
 			!! Result

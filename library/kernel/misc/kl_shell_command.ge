@@ -17,9 +17,21 @@ inherit
 
 	KI_SHELL_COMMAND
 
-#ifdef ISE || HACT
+#ifdef ISE
 	EXECUTION_ENVIRONMENT
 		export {NONE} all end
+
+#endif
+#ifdef HACT
+	SHELL
+		rename
+			make as old_make,
+			command as old_command,
+			execute as old_execute,
+			exit_code as old_exit_code
+		export
+			{NONE} all
+		end
 
 #endif
 #ifdef SE
@@ -63,6 +75,9 @@ feature {NONE} -- Initialization
 				make_shell (a_command)
 			end
 #endif
+#ifdef HACT
+			old_make (a_command)
+#endif
 			command := a_command
 		end
 
@@ -87,9 +102,13 @@ feature -- Execution
 			retried: BOOLEAN
 		do
 			if not retried then
-#ifdef HACT || ISE
+#ifdef ISE
 				system (command)
 				exit_code := return_code
+#endif
+#ifdef HACT
+				old_execute
+				exit_code := old_exit_code
 #endif
 #ifdef VE
 				if operating_system.is_windows then
