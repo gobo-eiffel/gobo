@@ -93,7 +93,9 @@ ise:
 
 test-ise: ise.ace
 	-${ISE_COMPILER} ${ISE_CFLAGS} -ace ise.ace > tmp11.txt 2>&1
-	$(MAKE) ise_finish_freezing 'MAKEFLAGS=' > /dev/null 2>&1
+	if ! $(MAKE) ise_finish_freezing 'MAKEFLAGS=' > /dev/null 2>&1 ; then \
+		${ECHO} 'finish_freezing failed!' >> tmp11.txt ; \
+	fi
 	-cd EIFGEN/${ISE_CODEGEN} ; \
 		if [ -x ./${TARGET} ]; then \
 			./${TARGET} >> ../../tmp11.txt 2>&1 ; \
