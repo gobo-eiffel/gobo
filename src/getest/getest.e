@@ -5,7 +5,7 @@ indexing
 		"Gobo Eiffel Test"
 
 	author:     "Eric Bezault <ericb@gobosoft.com>"
-	copyright:  "Copyright (c) 2000, Eric Bezault and others"
+	copyright:  "Copyright (c) 2000-2001, Eric Bezault and others"
 	license:    "Eiffel Forum Freeware License v1 (see forum.txt)"
 	date:       "$Date$"
 	revision:   "$Revision$"
@@ -22,7 +22,6 @@ inherit
 	KL_SHARED_EXECUTION_ENVIRONMENT
 
 	KL_IMPORTED_INPUT_STREAM_ROUTINES
-	KL_IMPORTED_OUTPUT_STREAM_ROUTINES
 
 creation
 
@@ -44,11 +43,15 @@ feature -- Processing
 			a_file := INPUT_STREAM_.make_file_open_read (config_filename)
 			if INPUT_STREAM_.is_open_read (a_file) then
 				if must_generate then
-					std.output.put_string ("Preparing Test Cases%N")
+					std.output.put_string ("Preparing Test Cases")
+					std.output.put_new_line
 				elseif must_compile then
-					std.output.put_string ("Compiling Test Cases%N")
+					std.output.put_string ("Compiling Test Cases")
+					std.output.put_new_line
 				elseif must_execute then
-					std.output.put_string ("Running Test Cases%N%N")
+					std.output.put_string ("Running Test Cases")
+					std.output.put_new_line
+					std.output.put_new_line
 				end
 				!! config_parser.make (error_handler)
 				config_parser.parse (a_file)
@@ -159,7 +162,8 @@ feature -- Processing
 		do
 			if not error_handler.error_reported then
 				if need_header then
-					std.output.put_string ("Preparing Test Cases%N")
+					std.output.put_string ("Preparing Test Cases")
+					std.output.put_new_line
 				end
 				!! testcases.make (a_config.testgen, error_handler)
 				a_config.process (testcases, error_handler)
@@ -173,18 +177,22 @@ feature -- Processing
 		require
 			a_config_not_void: a_config /= Void
 		local
-			a_command: UT_SHELL_COMMAND
+			a_command: DP_SHELL_COMMAND
 			a_command_name: STRING
 		do
 			if not error_handler.error_reported then
 				if need_header then
-					std.output.put_string ("Compiling Test Cases%N")
+					std.output.put_string ("Compiling Test Cases")
+					std.output.put_new_line
 				end
 				a_command_name := a_config.compile
 				if a_command_name.count > 0 then
-					OUTPUT_STREAM_.flush (std.output)
+					std.output.flush
 					!! a_command.make (a_command_name)
 					a_command.execute
+					if a_command.exit_code /= 0 then
+						report_eiffel_compilation_error
+					end
 				end
 			end
 		end
@@ -194,18 +202,23 @@ feature -- Processing
 		require
 			a_config_not_void: a_config /= Void
 		local
-			a_command: UT_SHELL_COMMAND
+			a_command: DP_SHELL_COMMAND
 			a_command_name: STRING
 		do
 			if not error_handler.error_reported then
 				if need_header then
-					std.output.put_string ("Running Test Cases%N%N")
+					std.output.put_string ("Running Test Cases")
+					std.output.put_new_line
+					std.output.put_new_line
 				end
 				a_command_name := a_config.execute
 				if a_command_name.count > 0 then
-					OUTPUT_STREAM_.flush (std.output)
+					std.output.flush
 					!! a_command.make (a_command_name)
 					a_command.execute
+					if a_command.exit_code /= 0 then
+						Exceptions.die (1)
+					end
 				end
 			end
 		end
@@ -249,6 +262,14 @@ feature {NONE} -- Error handling
 		do
 			!! an_error.make (a_variable)
 			error_handler.report_error (an_error)
+			Exceptions.die (1)
+		end
+
+	report_eiffel_compilation_error is
+			-- Report that an Eiffel compilation error occurred
+			-- and then terminate with exit status 1.
+		do
+			error_handler.report_eiffel_compilation_error
 			Exceptions.die (1)
 		end
 
