@@ -34,7 +34,7 @@ feature -- Access
 	usage: STRING is "usage: gelex [-bcdefimosVw] [-o filename] filename"
 			-- Command line Usage
 
-	version: STRING is "gelex version 0.2"
+	version: STRING is "gelex version 1.0"
 			-- Version number
 
 end -- class GELEX_ERROR_HANDLER
