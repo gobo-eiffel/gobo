@@ -391,7 +391,7 @@ feature -- Element change
 	add_hours (h: INTEGER) is
 			-- Add `h' hours to `Current'.
 		do
-			if h /= Void then
+			if h /= 0 then
 				storage := storage + h * Hour_shift
 				if storage < 0 then
 					storage := Day_shift - ((-storage) \\ Day_shift)
@@ -417,7 +417,7 @@ feature -- Element change
 	add_seconds (s: INTEGER) is
 			-- Add `s' seconds to `Current'.
 		do
-			if s /= Void then
+			if s /= 0 then
 				storage := storage + s * Second_shift
 				if storage < 0 then
 					storage := Day_shift - ((-storage) \\ Day_shift)
