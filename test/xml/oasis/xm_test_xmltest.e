@@ -74,7 +74,7 @@ feature -- Deviant tests
 		end
 		
 	test_deviant_invalid is
-			-- Detection of invalid fragmenation with PE entities, 
+			-- Detection of invalid fragmentation with PE entities, 
 			-- when not strictly necessary for a non validating parser.
 		do
 			assert_invalid_external ("xmltest, invalid but well formed, 001", xmltest_invalid_001, invalid_externals)
