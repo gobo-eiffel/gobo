@@ -12,7 +12,7 @@ indexing
 	
 deferred class XM_UNICODE_CHARACTERS
 
-feature -- Status
+feature -- Strings
 
 	is_string (a_string: STRING): BOOLEAN is
 			-- Is `a_string' a string containing no invalid XML characters?
@@ -44,7 +44,7 @@ feature -- Status
 		do
 			nb := a_name.count
 				-- First.
-			if nb = 0 or else is_name_first (a_name.item_code (1)) then
+			if nb > 0 and then is_name_first (a_name.item_code (1)) then
 				Result := True
 					-- Tail.
 				from i := 2 until i > nb loop
@@ -56,6 +56,8 @@ feature -- Status
 					end
 				end
 			end
+		ensure
+			empty_not_name: a_name.is_empty implies not Result
 		end
 
 	is_nmtoken (a_name: STRING): BOOLEAN is
@@ -75,6 +77,31 @@ feature -- Status
 					i := i + 1
 				end
 			end
+		end
+		
+	is_ncname (a_name: STRING): BOOLEAN is
+			-- Is `a_name' a valid XML Namespace 'NCName'?
+		require
+			a_name_not_void: a_name /= Void
+		local
+			i, nb: INTEGER
+		do
+			nb := a_name.count
+				-- First.
+			if nb > 0 and then is_ncname_first (a_name.item_code (1)) then
+				Result := True
+					-- Tail.
+				from i := 2 until i > nb loop
+					if not is_ncname_char (a_name.item_code (i)) then
+						Result := False
+						i := nb + 1 -- Jump out of the loop.
+					else
+						i := i + 1
+					end
+				end
+			end
+		ensure
+			empty_not_name: a_name.is_empty implies not Result
 		end
 
 feature -- Characters
@@ -97,6 +124,24 @@ feature -- Characters
 	is_space (a: INTEGER): BOOLEAN is
 			-- Space character?
 		deferred
+		end
+
+feature -- Namespace characters
+
+	is_ncname_char (a: INTEGER): BOOLEAN is
+			-- Is this a valid 'NCName' character?
+		do
+			Result := a /= (':').code and is_name_char (a)
+		ensure
+			definition: Result = (a /= (':').code and is_name_char (a))
+		end
+
+	is_ncname_first(a: INTEGER): BOOLEAN is
+			-- Is this a valid first character of a 'NCName'?
+		do
+			Result := a /= (':').code and is_name_first (a)
+		ensure
+			definition: Result = (a /= (':').code and is_name_first (a))
 		end
 
 end
