@@ -93,16 +93,14 @@ feature -- Access
 			iterator: XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_ABSTRACT_NODE]
 		do
 			iterator := new_axis_iterator (Child_axis)
-			if not iterator.after then
+			if iterator.before and then not iterator.after then
 				iterator.forth
-				if not iterator.after then
-					Result := iterator.item_for_iteration
-				end
 			end
+			if not iterator.before then Result := iterator.item_for_iteration end
 		end
 
 	last_child: XM_XPATH_ABSTRACT_NODE is
-			-- The lsst child of this node;
+			-- The last child of this node;
 			-- If there are no children, return `Void'
 		local
 			iterator: XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_ABSTRACT_NODE]
@@ -112,11 +110,11 @@ feature -- Access
 			until
 				iterator.after
 			loop
-				iterator.forth
 				if not iterator.after then
-					Result := iterator.item_for_iteration
+					iterator.forth
 				end
 			end
+			if not iterator.before then Result := iterator.item_for_iteration end
 		end
 
 	previous_sibling: XM_XPATH_ABSTRACT_NODE is
@@ -126,12 +124,10 @@ feature -- Access
 			iterator: XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_ABSTRACT_NODE]
 		do
 			iterator := new_axis_iterator (Preceding_sibling_axis)
-			if not iterator.after then
+			if iterator.before and not iterator.after then
 				iterator.forth
-				if not iterator.after then
-					Result := iterator.item_for_iteration
-				end
-			end			
+			end
+			if not iterator.before then Result := iterator.item_for_iteration end
 		end
 	
 	next_sibling: XM_XPATH_ABSTRACT_NODE is
@@ -140,13 +136,11 @@ feature -- Access
 		local
 			iterator: XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_ABSTRACT_NODE]
 		do
-			iterator := new_axis_iterator (Preceding_sibling_axis)
-			if not iterator.after then
+			iterator := new_axis_iterator (Following_sibling_axis)
+			if iterator.before and not iterator.after then
 				iterator.forth
-				if not iterator.after then
-					Result := iterator.item_for_iteration
-				end
-			end			
+			end
+			if not iterator.before then Result := iterator.item_for_iteration end
 		end
 	
 	document_element: XM_XPATH_ELEMENT is

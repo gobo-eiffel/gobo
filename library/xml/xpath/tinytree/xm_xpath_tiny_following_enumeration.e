@@ -30,7 +30,7 @@ feature -- Initialization
 			node_test_not_void: test /= Void
 		local
 			depth: INTEGER
-			done_once, finished: BOOLEAN
+			finished: BOOLEAN
 		do
 			document := doc
 			starting_node := start
@@ -47,12 +47,13 @@ feature -- Initialization
 			else
 				from
 				until
-					finished or else (done_once and then not (doc.depth_of (next_node_number) > depth))
+					finished
 				loop
-					done_once := True
 					next_node_number := next_node_number + 1
 					if next_node_number > doc.last_node_added then
 						next_node_number := -1
+						finished := True
+					elseif not (doc.depth_of (next_node_number) > depth) then
 						finished := True
 					end
 				end
@@ -116,16 +117,17 @@ feature {NONE} -- Implemnentation
 	advance is
 			-- Move to the next matching node
 		local
-			done_once, finished: BOOLEAN
+			finished: BOOLEAN
 		do
 			from
 			until
-				finished or else (done_once and then node_test.matches_node (document.retrieve_node_kind (next_node_number), document.name_code_for_node (next_node_number), document.element_annotation (next_node_number)))
+				finished 
 			loop
-				done_once := True
 				next_node_number := next_node_number + 1
 				if next_node_number > document.last_node_added then
 					next_node_number := -1
+					finished := True
+				elseif node_test.matches_node (document.retrieve_node_kind (next_node_number), document.name_code_for_node (next_node_number), document.element_annotation (next_node_number)) then
 					finished := True
 				end
 			end

@@ -25,7 +25,7 @@ inherit
 
 feature -- Status report
 
-		has_child_nodes: BOOLEAN is
+	has_child_nodes: BOOLEAN is
 			-- Does `Current' have any children?
 		do
 			Result := node_number + 1 < document.last_node_added

@@ -63,8 +63,8 @@ feature -- Events
 			document.add_node (Document_node, current_depth, -1, -1, -1)
 			create previously_at_depth.make (100)
 			previously_at_depth.put_first (1) -- i.e. depth one is node 1 - the document node
-			previously_at_depth.put_first (-1) -- i.e. no previous sibling
-			document.set_next_sibling (0, 1) -- i.e. node one has next sibling 0 (no next sibling)
+			previously_at_depth.put_first (1) -- i.e. no previous sibling
+			document.set_next_sibling (-1, 1) -- i.e. node one has next sibling 0 (no next sibling)
 			current_depth := current_depth + 1
 			document.set_name_pool (name_pool)
 		end
@@ -82,16 +82,54 @@ feature -- Events
 		do
 			document.add_node (Element_node, current_depth, -1, -1, a_name_code)
 			node_number := document.last_node_added
+
 			if a_type_code /= 0 then
 				-- TODO
 			end
 
 			previous_sibling := previously_at_depth.item (current_depth)
+
 			owner_node := previously_at_depth.item (current_depth - 1)
 			if previous_sibling > 0 then
+				debug ("XPath tiny builder")
+					print ("Setting next sibling for ")
+					print (previous_sibling.out)
+					print (" to element node ")
+					print (node_number.out)
+					print (" when at depth ")
+					print (current_depth.out)
+					print ("%N")
+				end
 				document.set_next_sibling (node_number, previous_sibling)
 			end
+
+			debug ("XPath tiny builder")
+				print ("Found an element with local name: ")
+				print (name_pool.local_name_from_name_code (a_name_code))
+				print (", node number is: ")
+				print (node_number.out)
+				print (", at depth ")
+				print (current_depth.out)
+				print (". Previous sibling is: ")
+				print (previous_sibling.out)
+				print (", owner is: ")
+				print (owner_node.out)
+				print ("%N")
+				print ("Name code is ")
+				print (a_name_code.out)
+				print ("%N")
+			end
+			debug ("XPath tiny builder")
+				print ("Setting owner for element ")
+					print (node_number.out)
+					print (" to ")
+					print (owner_node.out)
+					print (" when at depth ")
+					print (current_depth.out)
+					print ("%N")
+			end
 			document.set_next_sibling (owner_node, node_number) -- owner pointer in last sibling
+			
 			previously_at_depth.put (node_number, current_depth)
 			current_depth := current_depth + 1
 			previously_at_depth.force (-1, current_depth) -- no previous sibling
@@ -147,8 +185,26 @@ feature -- Events
 
 			previous_sibling := previously_at_depth.item (current_depth)
 			if previous_sibling > 0 then
+				debug ("XPath tiny builder")
+					print ("Setting next sibling for ")
+					print (previous_sibling.out)
+					print (" to text node ")
+					print (node_number.out)
+					print (" when at depth ")
+					print (current_depth.out)
+					print ("%N")
+				end				
 				document.set_next_sibling (node_number, previous_sibling)
 			end
+			debug ("XPath tiny builder")
+				print ("Setting owner for text node ")
+				print (node_number.out)
+				print (" to ")
+				print (node_number.out)
+				print (" when at depth ")
+				print (previously_at_depth.item (current_depth - 1).out)
+				print ("%N")
+			end			
 			document.set_next_sibling (previously_at_depth.item (current_depth - 1), node_number) -- owner pointer in last sibling
 			previously_at_depth.force (node_number, current_depth)
 		end
@@ -171,8 +227,26 @@ feature -- Events
 			
 			previous_sibling := previously_at_depth.item (current_depth)
 			if previous_sibling > 0 then
+				debug ("XPath tiny builder")
+					print ("Setting next sibling for ")
+					print (previous_sibling.out)
+					print (" to PI node ")
+					print (node_number.out)
+					print (" when at depth ")
+					print (current_depth.out)
+					print ("%N")
+				end
 				document.set_next_sibling (node_number, previous_sibling)
 			end
+			debug ("XPath tiny builder")
+				print ("Setting owner for PI node ")
+				print (node_number.out)
+				print (" to ")
+				print (node_number.out)
+				print (" when at depth ")
+				print (previously_at_depth.item (current_depth - 1).out)
+				print ("%N")
+			end		
 			document.set_next_sibling (previously_at_depth.item (current_depth - 1), node_number) -- owner pointer in last sibling
 			previously_at_depth.force (node_number, current_depth)		
 		end
@@ -189,8 +263,26 @@ feature -- Events
 			
 			previous_sibling := previously_at_depth.item (current_depth)
 			if previous_sibling > 0 then
+				debug ("XPath tiny builder")
+					print ("Setting next sibling for ")
+					print (previous_sibling.out)
+					print (" to comment node ")
+					print (node_number.out)
+					print (" when at depth ")
+					print (current_depth.out)
+					print ("%N")
+				end				
 				document.set_next_sibling (node_number, previous_sibling)
 			end
+			debug ("XPath tiny builder")
+				print ("Setting owner for comment node ")
+				print (node_number.out)
+				print (" to ")
+				print (node_number.out)
+				print (" when at depth ")
+				print (previously_at_depth.item (current_depth - 1).out)
+				print ("%N")
+			end					
 			document.set_next_sibling (previously_at_depth.item (current_depth - 1), node_number) -- owner pointer in last sibling
 			previously_at_depth.force (node_number, current_depth)
 		end

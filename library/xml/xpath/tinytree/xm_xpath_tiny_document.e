@@ -36,6 +36,10 @@ inherit
 
 	KL_IMPORTED_STRING_ROUTINES
 
+	KL_SHARED_STANDARD_FILES
+
+	UT_STRING_FORMATTER
+	
 	HASHABLE
 	
 creation
@@ -331,6 +335,49 @@ feature -- Access
 		do
 			Result := depth.item (a_node_number)
 		end
+
+	all_elements (a_fingerprint: INTEGER): DS_ARRAYED_LIST [XM_XPATH_TINY_ELEMENT] is
+			-- An enumeration of all elements with a given name;
+			-- This is implemented as a memo function:
+			--  the first time it is called for a particular
+			--  element type, it remembers the result for next time.
+		local
+			a_list: DS_ARRAYED_LIST [XM_XPATH_TINY_ELEMENT]
+			an_index, stored_name_code, another_fingerprint, top_bits: INTEGER
+			an_element: XM_XPATH_TINY_ELEMENT
+		do
+			if element_list = Void then
+				create element_list.make (1)
+			end
+			if not element_list.has (a_fingerprint) then
+				create a_list.make_default
+			end
+
+			from
+				an_index := 1
+			variant
+				last_node_added - an_index + 1
+			until
+				an_index > last_node_added
+			loop
+				stored_name_code := name_codes.item (an_index)
+				top_bits := (stored_name_code // bits_20) * bits_20
+				another_fingerprint := stored_name_code - top_bits
+				if node_kinds.item (an_index) = Element_node
+					and then  another_fingerprint = a_fingerprint then
+					an_element ?= retrieve_node (an_index)
+						check
+							element_not_void: an_element /= Void
+						end
+					a_list.force_last (an_element)
+				end
+				an_index := an_index + 1
+			end
+			
+			element_list.force (a_list, fingerprint)
+
+			Result := a_list
+		end
 	
 	last_node_added: INTEGER
 			-- Last node created with `add_node'
@@ -354,7 +401,33 @@ feature -- Status report
 		do
 			Result := attribute_values.count
 		end
-	
+
+	diagnostic_dump is
+			-- Produce diagnostic print of main tree arrays
+		local
+			index: INTEGER
+		do
+			std.error.put_string ("    node    type   depth    next   alpha    beta    name%N")
+			from
+				index := 1
+			variant
+				last_node_added - index + 1
+			until
+				index > last_node_added
+			loop
+				std.error.put_string (left_padded_string_out (index.out, 8, ' '))
+				std.error.put_string (left_padded_string_out (type_name (node_kinds.item (index)), 8, ' ').substring (1,8))
+				std.error.put_string (left_padded_string_out (depth.item (index).out, 8, ' '))
+				std.error.put_string (left_padded_string_out (next_sibling_indices.item (index).out, 8, ' '))
+				std.error.put_string (left_padded_string_out (alpha.item (index).out, 8, ' '))
+				std.error.put_string (left_padded_string_out (beta.item (index).out, 8, ' '))
+				std.error.put_string (left_padded_string_out (name_codes.item (index).out, 8, ' '))
+				std.error.put_new_line
+				index := index + 1
+			end
+				
+		end
+		
 feature {XM_XPATH_NODE} -- Access
 
 	is_possible_child: BOOLEAN is
@@ -381,8 +454,15 @@ feature -- Element change
 			alpha.force (alpha_val, number_of_nodes)
 			beta.force (beta_val, number_of_nodes)
 			name_codes.force (new_name_codes, number_of_nodes) 
-			set_next_sibling (0, number_of_nodes) -- safety precaution
+			set_next_sibling (-1, number_of_nodes) -- safety precaution
 			last_node_added := number_of_nodes
+			debug ("XPath tiny document")
+				print ("Add_node: Node  ")
+				print (last_node_added.out)
+				print (" of type  ")
+				print (type_name (new_node_type))
+				print ("%N")
+			end
 		ensure
 			one_more_node: number_of_nodes = old number_of_nodes + 1 and last_node_added = number_of_nodes
 			correct_node_kinds: node_kinds.item (number_of_nodes) = new_node_type
@@ -390,7 +470,7 @@ feature -- Element change
 			correct_alpha: alpha.item (number_of_nodes) = alpha_val
 			correct_beta: beta.item (number_of_nodes) = beta_val
 			correct_name_codes: name_codes.item (number_of_nodes) = new_name_codes
-			no_next_sibling: next_sibling_indices.item (number_of_nodes) = 0
+			no_next_sibling: next_sibling_indices.item (number_of_nodes) = -1
 		end
 	
 	set_next_sibling (next: INTEGER; which_node: INTEGER) is
@@ -399,7 +479,24 @@ feature -- Element change
 			valid_current_node: which_node > 0
 			valid_next_sibling: next >= -1 -- -1 means no next sibling
 		do
+			if next_sibling_indices.count > 4 then
+				print ("Next sibling for node 5 is now ")
+				print (next_sibling_indices.item (5).out)
+				print ("%N")
+			end
+			debug ("XPath tiny document")
+				print ("Set_next_sibling: Node ")
+				print (which_node.out)
+				print (" set to ")
+				print (next.out)
+				print ("%N")
+			end
 			next_sibling_indices.force (next, which_node)
+			if next_sibling_indices.count > 4 then
+				print ("Next sibling for node 5 is now ")
+				print (next_sibling_indices.item (5).out)
+				print ("%N")
+			end
 		ensure
 			next_sibling_set: next_sibling_indices.item (which_node) = next
 		end
@@ -408,8 +505,6 @@ feature -- Element change
 			-- Add `characters' to the document's content
 		require
 			characters_not_void: characters /= Void
-		local
-			counter: INTEGER
 		do
 			character_buffer := STRING_.appended_string (character_buffer, characters)
 		end
@@ -514,23 +609,25 @@ feature -- Status setting
 			from
 				prior_index := 1
 			variant
-				last_node_added - prior_index
+				last_node_added - prior_index + 1
 			until
 				prior_index > last_node_added
-			loop
+			loop	
 				prior.put (-1, prior_index)
+				prior_index := prior_index + 1
 			end
 			from
 				prior_index := 1
 			variant
-				last_node_added - prior_index
+				last_node_added - prior_index + 1
 			until
 				prior_index > last_node_added
 			loop
 				next_node := next_sibling_indices.item (prior_index)
 				if next_node > prior_index then
-					prior.put (prior_index, next_node)
+					prior.force (prior_index, next_node)
 				end
+				prior_index := prior_index + 1
 			end
 		ensure
 			prior_index_built: prior /= Void
@@ -624,7 +721,7 @@ feature {NONE} -- Implementation
 
 	system_id_map: XM_XPATH_SYSTEM_ID_MAP
 			-- Maps element sequence numbers to system-ids
-
+			
 invariant
 
 	node_kinds_not_void: node_kinds /= Void

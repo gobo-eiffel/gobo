@@ -322,6 +322,15 @@ feature -- Access
 		do
 			the_prefix_index :=  prefix_index (code_for_uri (uri), xml_prefix)
 			Result := (the_prefix_index * bits_20) + fingerprint (uri, a_local_name)
+			debug ("XPath name pool")
+				std.error.put_string ("Name_code: prefix index is ")
+				std.error.put_string (the_prefix_index.out)
+				std.error.put_string (", fingerprint is ")
+				std.error.put_string (fingerprint (uri, a_local_name).out)
+				std.error.put_string (", result is ")
+				std.error.put_string (result.out)
+				std.error.put_new_line
+			end	
 		end
 	
 	fingerprint (uri: STRING; a_local_name: STRING): INTEGER is
@@ -379,7 +388,16 @@ feature -- Access
 						end
 						depth := depth + 1
 					end
-					Result := (depth * bits_10) + hash_code
+					Result := ((depth - 1) * bits_10) + hash_code
+			debug ("XPath name pool")
+				std.error.put_string ("Fingerprint: depth is ")
+				std.error.put_string ((depth - 1).out)
+				std.error.put_string (", hash_code is ")
+				std.error.put_string (hash_code.out)
+				std.error.put_string (", result is ")
+				std.error.put_string (result.out)
+				std.error.put_new_line
+			end					
 				end
 			end
 		ensure
@@ -864,6 +882,19 @@ feature -- Element change
 				end
 			end
 			last_name_code := (the_prefix_index * bits_20) + (depth * bits_10) + hash_code
+			debug ("XPath name pool")
+				std.error.put_string ("Allocate_name: prefix index is ")
+				std.error.put_string (the_prefix_index.out)
+				std.error.put_string (", depth is ")
+				std.error.put_string (depth.out)
+				std.error.put_string (", hash_code is ")
+				std.error.put_string (hash_code.out)
+				std.error.put_string (", equivalent fingerprint is ")
+				std.error.put_string (((depth * bits_10) + hash_code).out)
+				std.error.put_string (", result is ")
+				std.error.put_string (last_name_code.out)
+				std.error.put_new_line
+			end	
 		ensure
 			name_allocated: is_name_code_allocated_using_uri_code (xml_prefix, uri_code, a_local_name)
 		end

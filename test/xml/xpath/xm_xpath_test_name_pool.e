@@ -107,6 +107,20 @@ feature -- Test
 			assert ("Prefix 2",  xml_prefix /= Void and then xml_prefix.is_equal ("test3"))
 		end
 
+	test_name_code_consistency is
+		local
+			name_code, original_name_code: INTEGER
+			local_name: STRING
+		do
+			local_name := "ITEM"
+			assert ("Item not allocated", not default_pool.is_name_code_allocated ("", "", local_name))
+			default_pool.allocate_name ("", "", local_name)
+			original_name_code := default_pool.last_name_code
+			assert ("Item is allocated", default_pool.is_name_code_allocated ("", "", local_name))
+			name_code := default_pool.name_code ("", "", local_name)
+			assert ("Name codes equal", name_code = original_name_code)
+		end
+	
 	test_miscellaneous is
 		local
 			suggestion: STRING

@@ -97,13 +97,12 @@ feature {NONE} -- Implementation
 	advance is
 			-- Move to the next matching node
 		local
-			done_once: BOOLEAN
+			finished: BOOLEAN
 		do
 			from
 			until
-				done_once and then (next_node_number = 0 or else node_test.matches_node (document.retrieve_node_kind (next_node_number), document.name_code_for_node (next_node_number), document.element_annotation (next_node_number)))
+				finished
 			loop
-				done_once := True
 				next_node_number := next_node_number - 1
 				if not include_ancestors then
 				-- skip over ancestors
@@ -114,6 +113,10 @@ feature {NONE} -- Implementation
 						next_ancestor_depth := next_ancestor_depth - 1
 						next_node_number := next_node_number - 1
 					end
+				end
+				if next_node_number = 0
+					or else node_test.matches_node (document.retrieve_node_kind (next_node_number), document.name_code_for_node (next_node_number), document.element_annotation (next_node_number)) then
+					finished := True
 				end
 			end
 		end

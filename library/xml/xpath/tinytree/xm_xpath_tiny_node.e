@@ -15,9 +15,6 @@ deferred class XM_XPATH_TINY_NODE
 inherit
 
 	XM_XPATH_ABSTRACT_NODE
---		redefine
---			parent
---		end
 
 feature -- Access
 
@@ -38,7 +35,7 @@ feature -- Access
 			when Processing_instruction_node then
 				Result := local_part
 			else
-				Result := Void
+				Result := ""
 			end
 		end
 
@@ -107,18 +104,16 @@ feature -- Access
 
 	new_axis_iterator (axis_type: INTEGER): XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_ABSTRACT_NODE] is
 			-- An enumeration over the nodes reachable by `axis_type' from this node
-		local
-			test: XM_XPATH_ANY_NODE_TEST
 		do
 			-- Fast path for child axis
 			if axis_type = Child_axis then
 				if has_child_nodes then
-					-- TODO create a sibling enumeration
+					create  {XM_XPATH_TINY_SIBLING_ENUMERATION} Result.make (document, Current, Void, True)					
 				else
-					-- TODO create an empty iterator
+					Result := empty_abstract_node_iterator
 				end
 			else
-				Result := new_axis_iterator_with_node_test (axis_type, test)
+				Result := new_axis_iterator_with_node_test (axis_type, any_node_test)
 			end
 		end
 
@@ -129,6 +124,7 @@ feature -- Access
 			the_item_type: INTEGER
 			name_test: XM_XPATH_NAME_TEST
 			parent_node: XM_XPATH_TINY_NODE
+			the_document: XM_XPATH_TINY_DOCUMENT
 		do
 			the_item_type := item_type
 			inspect
@@ -158,13 +154,7 @@ feature -- Access
 					create {XM_XPATH_TINY_ATTRIBUTE_ENUMERATION} Result.make (document, node_number, test)
 				end
 			when Child_axis then
-				debug ("XPath tiny node")
-					print ("Child axis%N")
-				end
 				if has_child_nodes then
-					debug ("XPath tiny node")
-						print ("Has child nodes = true%N")
-					end
 					create  {XM_XPATH_TINY_SIBLING_ENUMERATION} Result.make (document, Current, test, True)
 				else
 					Result := empty_abstract_node_iterator
@@ -172,13 +162,17 @@ feature -- Access
 			when Descendant_axis then
 				name_test ?= test
 				if the_item_type = Document_node and then name_test /= Void and then name_test.item_type = Element_node then
-					-- TODO
+					the_document ?= Current
+						check
+							document_not_void: document /= Void
+						end
+					create {XM_XPATH_ARRAY_LIST_ITERATOR [XM_XPATH_TINY_ELEMENT]} Result.make (the_document.all_elements (test.fingerprint))
 				else
 					Result := empty_abstract_node_iterator
 				end
 			when Descendant_or_self_axis then
 				if has_child_nodes then
-					-- TODO
+					create {XM_XPATH_TINY_DESCENDANT_ENUMERATION} Result.make (document, Current, test, True)
 				elseif test.matches_node (the_item_type, fingerprint, Any_item) then
 					create {XM_XPATH_SINGLETON_ITERATOR [XM_XPATH_TINY_NODE]} Result.make (Current)
 				else
@@ -275,7 +269,13 @@ feature {NONE} -- Implementation
 		once
 			create Result.make
 		end
-	
+
+	any_node_test: XM_XPATH_ANY_NODE_TEST is
+			-- share any_node test
+		once
+			create Result.make
+		end
+
 invariant
 
 	positive_node_number: node_number > 0

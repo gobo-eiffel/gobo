@@ -29,7 +29,6 @@ feature -- Initialization
 			starting_node_not_void: start /= Void
 		local
 			depth: INTEGER
-			done_once, finished: BOOLEAN
 		do
 			document := doc
 			starting_node := start
@@ -50,7 +49,14 @@ feature -- Initialization
 				parent_node := starting_node.parent
 				-- move to next sibling
 				next_node_number := document.retrieve_next_sibling (starting_node.node_number)
-				if next_node_number < starting_node.node_number then
+				debug ("XPath tiny sibling enumeration")
+					print ("Starting node number is ")
+					print (starting_node.node_number.out)
+					print (", and it's next sibling is  ")
+					print (next_node_number.out)
+					print ("%N")
+				end
+				if next_node_number < starting_node.node_number then -- owner pointer
 					next_node_number := -1
 				end
 			end
@@ -152,7 +158,7 @@ feature {NONE} -- Implemnentation
 		require
 			need_to_advance: need_to_advance
 		local
-			done_once: BOOLEAN
+			finished: BOOLEAN
 		do
 			this_node := next_node_number
 			if node_test = Void then
@@ -160,11 +166,13 @@ feature {NONE} -- Implemnentation
 			else
 				from
 				until
-					done_once and then (next_node_number < this_node or else
-											  node_test.matches_node (document.retrieve_node_kind (next_node_number), document.name_code_for_node (next_node_number), document.element_annotation (next_node_number)))
+					finished
 				loop
-					done_once := True
 					next_node_number := document.retrieve_next_sibling (next_node_number)
+					if next_node_number < this_node or else
+						node_test.matches_node (document.retrieve_node_kind (next_node_number), document.name_code_for_node (next_node_number), document.element_annotation (next_node_number)) then
+						finished := True
+					end
 				end
 			end
 			need_to_advance := False
