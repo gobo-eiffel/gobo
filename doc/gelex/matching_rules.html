@@ -22,12 +22,14 @@ first in the <em>gelex</em> description file is chosen.</p>
 
 <p>Once the match is determined, the text corresponding to the
 match (called the <em>token</em>) is made available through
-function <font color="#008080" size="2" face="Courier New"><em>text</em></font>,
-and its length through function <font color="#008080" size="2"
-face="Courier New"><em>text_count</em></font> from class <font
-color="#008080" size="2" face="Courier New"><em>YY_SCANNER</em></font>.
-The action corresponding to the matched pattern is then executed
-(a more detailed description of <a href="actions.html">actions</a>
+function <a href="actions.html#text"><font color="#008080"
+size="2" face="Courier New"><em>text</em></font></a>, and its
+length through function <a href="actions.html#text_count"><font
+color="#008080" size="2" face="Courier New"><em>text_count</em></font></a>
+from class <a href="skeleton.html"><font color="#008080" size="2"
+face="Courier New"><em>YY_SCANNER</em></font></a>. The action
+corresponding to the matched pattern is then executed (a more
+detailed description of <a href="actions.html">actions</a>
 follows), and then the remaining input is scanned for another
 match.</p>
 
@@ -49,5 +51,147 @@ color="#0000FF"><tt>
 
 <p>which generates a scanner that simply copies its input (one
 character at a time) to its output.</p>
+
+<h2><a name="eof_rules">End-of-file Rules</a></h2>
+
+<p><font size="3">When the scanner receives an end-of-file
+indication from its input buffer, it then checks the </font><a
+href="skeleton.html#wrap"><font color="#008080" size="2"
+face="Courier New"><em>wrap</em></font></a><font size="3">
+function. If </font><font color="#008080" size="2"
+face="Courier New"><em>wrap</em></font><font size="3"> returns
+false, then it is assumed that the function has gone ahead and
+set up the scanner to point to another input buffer using </font><a
+href="actions.html#set_input_buffer"><font color="#008080"
+size="2" face="Courier New"><em>set_input_buffer</em></font></a><font
+size="3">, and scanning continues. If it returns true, then there
+is no further files to process. By default, </font><font
+color="#008080" size="2" face="Courier New"><em>wrap</em></font><font
+size="3"> returns true, but this routine can be redefined as in
+the following example:</font></p>
+
+<blockquote>
+    <pre><font color="#0000FF" size="3">%{</font><font size="3">
+</font><font color="#008080" size="3"><em><strong>class</strong></em><em> MY_SCANNER
+
+</em><em><strong>inherit</strong></em><em>
+
+    YY_COMPRESSED_SCANNER_SKELETON
+        </em><em><strong>rename</strong></em><em>
+            ...
+        </em><em><strong>redefine</strong></em><em>
+            wrap, ...
+        </em><em><strong>end</strong></em><em>
+
+</em><em><strong>creation</strong></em><em>
+
+    make</em></font><font size="3">
+</font><font color="#0000FF" size="3">%}</font><font size="3">
+...
+</font><font color="#0000FF" size="3">%%</font><font size="3">
+...
+</font><font color="#0000FF" size="3">%%</font><font size="3">
+
+    </font><font color="#008080" size="3"><em>wrap</em>:<em> BOOLEAN </em><em><strong>is</strong></em><em>
+            </em>-- Should current scanner terminate when end of file is reached?<em>
+        </em><em><strong>do</strong></em><em>
+            </em><em><strong>if </strong></em><em>other_file_available </em><em><strong>then</strong></em><em>
+                set_input_buffer </em>(<em>new_file_buffer </em>(<em>other_file</em>))<em>
+            </em><em><strong>else</strong></em><em>
+                Result </em>:=<em> True
+            </em><em><strong>end</strong></em><em>
+        </em><em><strong>end</strong></em><em>
+
+    ...
+
+</em><em><strong>end</strong></em><em> </em>-- class MY_SCANNER</font></pre>
+</blockquote>
+
+<p><font size="3">Note that in either case, the </font><a
+href="start_conditions.html"><font size="3">start condition</font></a><font
+size="3"> remains unchanged; it does not revert to </font><font
+color="#800000" size="2" face="Courier New">INITIAL</font><font
+size="3">.</font></p>
+
+<p><font size="3">The special rule </font><font color="#FF0000"
+size="2" face="Courier New">&lt;&lt;EOF&gt;&gt;</font><font
+size="3"> indicates actions which are to be taken when an
+end-of-file is encountered and </font><font color="#008080"
+size="2" face="Courier New"><em>wrap</em></font><font size="3">
+returns true. The action must finish by doing one of three
+things:</font></p>
+
+<ul>
+    <li><font size="3">setting </font><a
+        href="actions.html#last_token"><font color="#008080"
+        size="2" face="Courier New"><em>last_token</em></font></a><font
+        size="3"> to a non-negative value</font></li>
+    <li><font size="3">calling the special action </font><a
+        href="actions.html#terminate"><font color="#008080"
+        size="2" face="Courier New"><em>terminate</em></font></a></li>
+    <li><font size="3">switching to a new buffer using </font><font
+        color="#008080" size="2" face="Courier New"><em>set_input_buffer</em></font><font
+        size="3">.</font></li>
+</ul>
+
+<p><font color="#FF0000" size="2" face="Courier New">&lt;&lt;EOF&gt;&gt;</font><font
+size="3"> rules may not be used with other patterns; they may
+only be qualified with a list of start conditions. If an
+unqualified </font><font color="#FF0000" size="2"
+face="Courier New">&lt;&lt;EOF&gt;&gt;</font><font size="3"> rule
+is given, it applies to all start conditions which do not already
+have </font><font color="#FF0000" size="2" face="Courier New">&lt;&lt;EOF&gt;&gt;</font><font
+size="3"> actions. If a start condition has no </font><font
+color="#FF0000" size="2" face="Courier New">&lt;&lt;EOF&gt;&gt;</font><font
+size="3"> action associated with it, it will by default execute
+the </font><font color="#008080" size="2" face="Courier New"><em>terminate</em></font><font
+size="3"> action. To specify an </font><font color="#FF0000"
+size="2" face="Courier New">&lt;&lt;EOF&gt;&gt;</font><font
+size="3"> rule for only the initial start condition, use</font></p>
+
+<blockquote>
+    <pre><font color="#800000" size="3">&lt;INITIAL&gt;</font><font
+color="#FF0000" size="3">&lt;&lt;EOF&gt;&gt;</font></pre>
+</blockquote>
+
+<p><font size="3">These rules are useful for catching things like
+unclosed comments. An example:</font></p>
+
+<blockquote>
+    <pre><font color="#0000FF" size="3">%x</font><font size="3"> </font><font
+color="#800000" size="3">quote</font><font size="3"
+face="Times New Roman">
+</font><font color="#0000FF" size="3">%%</font><font size="3"
+face="Times New Roman">
+</font><font size="3">...other rules for dealing with quotes...
+</font><font color="#800000" size="3">&lt;quote&gt;</font><font
+color="#FF0000" size="3">&lt;&lt;EOF&gt;&gt;</font><font size="3"> </font><font
+color="#0000FF" size="3">{</font><font size="3"
+face="Times New Roman">
+                   </font><font color="#008080" size="3"><em>io.error.put_string</em> (<em>&quot;unterminated quote%N&quot;</em>)<em>
+       terminate</em></font><font size="3" face="Times New Roman">
+            </font><font color="#0000FF" size="3">}</font><font
+size="3" face="Times New Roman">
+</font><font color="#FF0000" size="3">&lt;&lt;EOF&gt;&gt;</font><font
+size="3"> </font><font color="#0000FF" size="3">{</font><font
+size="3">
+       </font><font color="#008080" size="3"><em><strong>if</strong></em><em> </em><em><strong>not</strong></em><em> file_list.after </em><em><strong>then</strong></em><em>
+           set_input_buffer </em>(<em>new_file_buffer </em>(<em>file_list.item</em>))<em>
+           file_list.forth
+       </em><em><strong>else</strong></em><em>
+           terminate
+       </em><em><strong>end</strong></em></font><font size="3">
+     </font><font color="#0000FF" size="3">}</font>
+<font color="#0000FF">%%</font></pre>
+</blockquote>
+
+<hr size="1">
+
+<p align="center"><font size="2"><b>- Copyright © 1997</b></font><font
+size="1"><b>, </b></font><font size="2"><strong>Eric Bezault</strong></font><strong>
+</strong><font size="2"><strong>-</strong> <br>
+Send comments to </font><a href="mailto:ericb@gobo.demon.co.uk"><font
+size="2">ericb@gobo.demon.co.uk</font></a><font size="2"> <br>
+<i>$Date$ </i></font></p>
 </body>
 </html>

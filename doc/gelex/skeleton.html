@@ -23,18 +23,20 @@ content="text/html; charset=iso-8859-1">
 
 </em><em><strong>creation</strong></em><em>
 
-    </em><a name="make"><em>make</em></a><em>
+    </em><a href="scanner.html#make" name="make"><em>make</em></a><em>
            </em> -- Create a new scanner with
             -- standard input as input file.<em>
 
-    </em><a name="make_with_file"><em>make_with_file</em></a><em> </em>(<em>a_file</em>:<em> FILE</em>)<em>
+    </em><a href="scanner.html#make_with_file"
+name="make_with_file"><em>make_with_file</em></a><em> </em>(<em>a_file</em>:<em> FILE</em>)<em>
             </em>-- Create a new scanner with<em>
             </em>-- <em>a_file</em> as input file.<em>
         </em><em><strong>require</strong></em><em>
             a_file_not_void</em>:<em> a_file </em>/= <em>Void
             a_file_open_read</em>:<em> a_file.is_open_read
 
-    </em><a name="make_with_buffer"><em>make_with_buffer</em></a><em> </em>(<em>a_buffer</em>:<em> </em><em><strong>like</strong></em><em> input_buffer</em>)<em>
+    </em><a href="scanner.html#make_with_buffer"
+name="make_with_buffer"><em>make_with_buffer</em></a><em> </em>(<em>a_buffer</em>:<em> </em><em><strong>like</strong></em><em> input_buffer</em>)<em>
             </em>-- Create a new scanner with
             -- <em>a_buffer</em> as input buffer.<em>
         </em><em><strong>require</strong></em><em>
@@ -44,7 +46,7 @@ content="text/html; charset=iso-8859-1">
 
 </em><em><strong>feature</strong></em><em> </em>-- Initialization<em>
 
-    </em><a name="reset"><em>reset</em></a><em>
+    </em><a href="scanner.html#reset" name="reset"><em>reset</em></a><em>
             </em>-- Reset scanner before scanning next input source.
             -- (This routine can be called in <em>wrap</em> before scanning
             -- another input buffer.)<em>
@@ -107,12 +109,12 @@ name="set_start_condition"><em>set_start_condition</em></a><em> </em>(<em>a_star
 
 </em><em><strong>feature</strong></em><em> </em>-- Scanning<em>
 
-    </em><a name="scan"><em>scan</em></a><em>
+    </em><a href="scanner.html#scan" name="scan"><em>scan</em></a><em>
            </em> -- Scan <em>input_buffer</em> until end of file is found.<em>
         </em><em><strong>ensure</strong></em><em>
             end_of_file</em>:<em> last_token</em> = <em>0
 
-    </em><a name="read_token"><em>read_token</em></a><em>
+    </em><a href="scanner.html#read_token" name="read_token"><em>read_token</em></a><em>
             </em>-- Read a token from <em>input_buffer</em>.
             -- Make result available in <em>last_token</em>.<em>
 
@@ -122,7 +124,7 @@ name="set_start_condition"><em>set_start_condition</em></a><em> </em>(<em>a_star
             </em>-- Terminate scanner and set <em>last_token</em>
             -- to 0 indicating &quot;all done&quot;.<em>
 
-    </em><a name="wrap"><em>wrap</em></a>:<em> BOOLEAN
+    </em><a href="matching_rules.html#eof_rules" name="wrap"><em>wrap</em></a>:<em> BOOLEAN
             </em>-- Should current scanner terminate when end of file is reached?
             -- This function can be redefined to switch to another input
             -- buffer (but don't forget to update <em>start_condition</em>).<em>
@@ -223,5 +225,14 @@ name="set_output_file"><em>set_output_file</em></a><em> </em>(<em>a_file: </em><
     output_open_write</em>:<em> output_file.is_open_write
 
 </em><em><strong>end</strong></em> -- class YY_SCANNER</pre>
+
+<hr size="1">
+
+<p align="center"><font size="2"><b>- Copyright © 1997</b></font><font
+size="1"><b>, </b></font><font size="2"><strong>Eric Bezault</strong></font><strong>
+</strong><font size="2"><strong>-</strong> <br>
+Send comments to </font><a href="mailto:ericb@gobo.demon.co.uk"><font
+size="2">ericb@gobo.demon.co.uk</font></a><font size="2"> <br>
+<i>$Date$ </i></font></p>
 </body>
 </html>

@@ -1,0 +1,46 @@
+-- system:     "'ascii2ps' pretty-printer"
+-- compiler:   "ISE Eiffel 4.0"
+-- author:     "Eric Bezault <ericb@gobo.demon.co.uk>"
+-- copyright:  "Copyright (c) 1997, Eric Bezault"
+-- date:       "$Date$"
+-- revision:   "$Revision$"
+
+system
+
+	ascii2ps
+
+root
+
+	ASCII2PS: "make"
+		
+default
+
+	--debug (yes);
+	--assertion (all);
+	--precompiled ("$EIFFEL4\precomp\spec\$PLATFORM\base")
+
+cluster
+
+	ascii2ps:		"$GOBO\example\ascii2ps";
+	spec:			"$GOBO\spec\ise";
+
+		-- Gobo Eiffel Lexical Library
+	lx_skeleton:	"$GOBO\library\lexical\skeleton";
+
+		-- EiffelBase
+	kernel:			"$EIFFEL4\library\base\kernel";
+	support:		"$EIFFEL4\library\base\support";
+	access:			"$EIFFEL4\library\base\structures\access";
+	cursors:		"$EIFFEL4\library\base\structures\cursors";
+	cursor_trees:	"$EIFFEL4\library\base\structures\cursor_tree";
+	dispenser:		"$EIFFEL4\library\base\structures\dispenser";
+	iteration:		"$EIFFEL4\library\base\structures\iteration";
+	list:			"$EIFFEL4\library\base\structures\list";
+	set:			"$EIFFEL4\library\base\structures\set";
+	sort:			"$EIFFEL4\library\base\structures\sort";
+	storage:		"$EIFFEL4\library\base\structures\storage";
+	table:			"$EIFFEL4\library\base\structures\table";
+	traversing:		"$EIFFEL4\library\base\structures\traversing";
+	tree:			"$EIFFEL4\library\base\structures\tree";
+
+end

@@ -1,0 +1,37 @@
+-- system:     "'ascii2ps' pretty-printer"
+-- compiler:   "Visual Eiffel 2.0"
+-- author:     "Eric Bezault <ericb@gobo.demon.co.uk>"
+-- copyright:  "Copyright (c) 1997, Eric Bezault"
+-- date:       "$Date$"
+-- revision:   "$Revision$"
+
+system
+
+	ascii2ps
+
+root
+
+	ASCII2PS
+
+creation
+
+	make
+		
+cluster
+
+	[ascii2ps_project "."] end
+	[ascii2ps "$GOBO\example\ascii2ps"] end
+	[spec "$GOBO\spec\ve"] end
+
+		-- Gobo Eiffel Lexical Library
+	[lx_skeleton "$GOBO\library\lexical\skeleton"] end
+
+		-- Kernel
+	[Kernel "$VE_LIB\kernel"] end
+
+option
+
+	target exe console
+	code native
+
+end
