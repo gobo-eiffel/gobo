@@ -35,12 +35,12 @@ feature {NONE} -- Initialization
 			parameters.put (a_mount1.pathname, 1)
 			a_prefix := a_mount1.library_prefix
 			if a_prefix = Void then
-				a_prefix := ""
+				a_prefix := "no-prefix"
 			end
 			parameters.put (a_prefix, 2)
 			a_prefix := a_mount2.library_prefix
 			if a_prefix = Void then
-				a_prefix := ""
+				a_prefix := "no-prefix"
 			end
 			parameters.put (a_prefix, 3)
 			parameters.put (a_mount1.position.out, 4)
