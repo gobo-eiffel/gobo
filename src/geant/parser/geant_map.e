@@ -177,9 +177,9 @@ feature -- Access
 					target_postfix := glob_postfix (target_pattern)
 	
 					filename_prefix := clone (a_map_filename)
-					filename_prefix.head (source_prefix.count)
+					STRING_.keep_head (filename_prefix, source_prefix.count)
 					filename_postfix := clone (a_map_filename)
-					filename_postfix.tail (source_postfix.count)
+					STRING_.keep_tail (filename_postfix, source_postfix.count)
 	
 					if
 						filename_prefix.is_equal (source_prefix) and
