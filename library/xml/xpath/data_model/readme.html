@@ -1,0 +1,143 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN" "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" >
+  <head>
+    <title>Notes on the XPath 2.0 and XQuery Data Model</title>
+    <style type="text/css" >
+      th { background-color: #80ffff; }
+      td { background-color: #f5dcb3; text-align: center;}
+      td.left { text-align: left;}
+    </style>
+  </head>
+  <body>
+    <h1>Notes on the XPath 2.0 and XQuery Data Model</h1>
+    <div>
+      <p>The purpose of this document is to express the requirements of
+      the XPath data model in Eiffel terms. This makes it easier to see
+      what is needed, and whether compatibility with the exisiting
+      tree structure can be maintained.</p>
+      <p>I have written a class skeleton for each of the seven XPath
+      node types. In addition, I have factored commonalities out into 
+      separate classes. These may or may not form a basis for 
+      implementation classes. I am thinking of copying Saxon's tinytree 
+      which implements the flyweight design pattern.</p>
+      <h2>Event interface</h2>
+      <p>Need to write an whitespace stripper filter.</p>
+    </div>
+    <div>
+      <h2>Infoset items</h2>
+      <p>The following infoset items must be creatable from the events:</p>
+      <div>
+        <h3>Document</h3>
+        <ul>
+          <li>Document information item</li>
+          <li>children</li>
+          <li>base URI</li>
+          <li>unparsed entities (optional)</li>
+        </ul>
+      </div>
+      <div>
+        <h3>Element</h3>
+        <ul>
+          <li>Element information items</li>
+          <li>namespace name</li>
+          <li>local name</li>
+          <li>children</li>
+          <li>attributes</li>
+          <li>in-scope namespaces</li>
+          <li>base URI</li>
+          <li>parent</li>
+          <li>The nilled property is assumed to be false.</li>
+        </ul>
+      </div>
+      <div>
+        <h3>Attribute</h3>
+        <ul>
+          <li>Attribute information items</li>
+          <li>namespace name</li>
+          <li>local name</li>
+          <li>normalized value</li>
+          <li>attribute type</li>
+          <li>owner element (as parent property)</li>
+        </ul>
+      </div>
+      <div>
+        <h3>Namespace</h3>
+        <ul>
+          <li>Namespace information items</li>
+          <li>prefix</li>
+          <li>namespace name</li>
+          <li>parent</li>
+        </ul>
+      </div>
+      <div>
+        <h3>Processing Instruction</h3>
+        <ul>
+          <li>Processing Instruction items (optional)</li>
+          <li>target</li>
+          <li>content</li>
+	  <li>base URI</li>
+          <li>parent</li>
+        </ul>
+      </div>
+      <div>
+        <h3>Comment</h3>
+        <ul>
+          <li>Comment items (optional)</li>
+          <li>content</li>
+          <li>parent</li>
+        </ul>
+      </div>
+     <div>
+        <h3>Text</h3>
+        <ul>
+          <li>Character information items</li>
+          <li>characcter code</li>
+          <li>parent</li>
+          <li>element content white space (optional)</li>
+        </ul>
+      </div>
+    </div>
+    <div>
+      <h2>Node Tree</h2>
+      <p>In many cases, types are tentative:.</p>
+      <ul>
+        <li>Other types have just be provisionally named for the
+        moment, and do not actually exist. E.g. XM_EXPANDED_QNAME 
+        for the type xs:QName, ANY_ATOMIC and ANY_URI. Further 
+        investigation may show that a suitable type already exists.
+        </li>
+        <li>Where empty-or-singleton lists are shown as a result
+        type, I have taken this literally for the moment. Review 
+        this later in the implementation.
+        </li>
+      </ul>
+    </div>
+    <h1>Miscellaneous Notes (to be moved elsewhere in the near future)</h1>
+    <div>
+      <h2>Compatibility</h2>
+      <p>XPath 2.0 deprecates the namespace axis, and XQuery does not support it at all. 
+      Implementations are allowed to drop support for the namespace axis. I have never seen
+      it used, and indeed DocBook does not make use of it, so let us
+      drop it.</p>
+      <p>Allows id function in basic mode?<a
+      href="http://www.w3.org/TR/2003/WD-xslt20-20031112/#id-in-data-model">DTD
+      Validation</a></p>
+      <p>Do not support disable output escaping (it's evil).</p>
+      <p>Basic XSLT processor.</p>
+      <p>Support serialization option.</p>
+      <p>Retain original namespace prefix.</p>
+    </div>
+    <div >
+      <p>
+        <a href="http://sourceforge.net"><img
+        src="http://sourceforge.net/sflogo.php?group_id=77393&amp;type=7"
+        width="210" height="62" alt="SourceForge.net Logo" /></a>
+
+        <a href="http://validator.w3.org/check/referer"><img
+        src="http://www.w3.org/Icons/valid-xhtml11"
+        alt="Valid XHTML 1.1!" height="31" width="88" /></a>
+      </p>        
+    </div>
+  </body>
+</html>
