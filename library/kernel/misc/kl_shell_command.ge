@@ -31,7 +31,7 @@ inherit
 
 #endif
 #ifdef VE
-	KL_VE_SHELL_COMMAND
+	EXTERNAL_PROCESS
 		rename
 			make as old_make,
 			command as old_command,
@@ -101,12 +101,8 @@ feature -- Execution
 				exit_code := return_code
 #endif
 #ifdef VE
-				if operating_system.is_windows then
-					old_execute
-					exit_code := old_exit_code
-				else
-					exit_code := system (string_command)
-				end
+				old_execute
+				exit_code := old_exit_code
 #endif
 #ifdef SE
 				exit_code := execute_command (string_command)
