@@ -22,6 +22,9 @@ inherit
 	XM_MARKUP_CONSTANTS
 		export {NONE} all end
 
+	UC_SHARED_STRING_EQUALITY_TESTER
+		export {NONE} all end
+
 creation
 
 	make
