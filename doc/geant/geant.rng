@@ -540,7 +540,7 @@
 				<attribute name="indent"/> <!-- default: '4' -->
 			</optional>
 			<optional>
-				<attribute name="format"/>
+				<attribute name="format"/> <!-- if attribute 'processor' equals 'xalan_java' -->
 			</optional>
 			<zeroOrMore>
 				<element name="parameter">
@@ -549,10 +549,10 @@
 				</element>
 			</zeroOrMore>
 			<optional>
-				<attribute name="extdirs"/> <!-- if attribute 'processors' equals 'xalan_java' -->
+				<attribute name="extdirs"/> <!-- if attribute 'processor' equals 'xalan_java' -->
 			</optional>
 			<optional>
-				<attribute name="classpath"/> <!-- if attribute 'processors' equals 'xalan_java' -->
+				<attribute name="classpath"/> <!-- if attribute 'processor' equals 'xalan_java' -->
 			</optional>
 		</element>
 	</define>

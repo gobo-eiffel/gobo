@@ -27,6 +27,19 @@
 	
 		<variablelist>
 			<varlistentry>
+				<term>processor</term>
+				<listitem>
+					<para><emphasis>Description: </emphasis>Name XSLT processor</para>
+				</listitem>
+				<listitem>
+					<para><emphasis>Domain: </emphasis>xalan_cpp|xalan_java</para>
+				</listitem>
+				<listitem>
+					<para><emphasis>Default: </emphasis>xalan_cpp</para>
+				</listitem>
+			</varlistentry>
+		
+			<varlistentry>
 				<term>input</term>
 				<listitem>
 					<para><emphasis>Description: </emphasis>Name of XML input file</para>
@@ -65,6 +78,19 @@
 				</listitem>
 			</varlistentry>
 		
+			<varlistentry>
+				<term>indent</term>
+				<listitem>
+					<para><emphasis>Description: </emphasis>Number of spaces for indentation of child elements</para>
+				</listitem>
+				<listitem>
+					<para><emphasis>Domain: </emphasis>Integer</para>
+				</listitem>
+				<listitem>
+					<para><emphasis>Default: </emphasis>4</para>
+				</listitem>
+			</varlistentry>
+		
 		</variablelist>
 	</sect1>
 	
@@ -92,7 +118,7 @@
         <attribute name="indent"/> <!-- default: '4' -->
       </optional>
       <optional>
-        <attribute name="format"/>
+        <attribute name="format"/> <!-- if attribute 'processor' equals 'xalan_java' -->
       </optional>
       <zeroOrMore>
         <element name="parameter">
@@ -101,10 +127,10 @@
         </element>
       </zeroOrMore>
       <optional>
-        <attribute name="extdirs"/> <!-- if attribute 'processors' equals 'xalan_java' -->
+        <attribute name="extdirs"/> <!-- if attribute 'processor' equals 'xalan_java' -->
       </optional>
       <optional>
-        <attribute name="classpath"/> <!-- if attribute 'processors' equals 'xalan_java' -->
+        <attribute name="classpath"/> <!-- if attribute 'processor' equals 'xalan_java' -->
       </optional>
     </element>
   </define>
