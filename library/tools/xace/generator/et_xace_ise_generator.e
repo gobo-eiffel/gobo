@@ -167,7 +167,6 @@ feature {NONE} -- Output
 			a_file.put_line ("system")
 			a_file.put_new_line
 			print_indentation (1, a_file)
-			a_file.put_line (a_library.name)
 			print_escaped_name (a_library.name, a_file)
 			a_file.put_new_line
 			a_file.put_new_line
