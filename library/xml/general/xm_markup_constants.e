@@ -18,6 +18,8 @@ feature -- Constants
 	Stag_end: STRING is once Result := ">" end
 	Etag_start: STRING is once Result := "</" end
 	Etag_end: STRING is once Result := Stag_end end
+	Emptytag_start: STRING is once Result := Stag_start end
+	Emptytag_end: STRING is once Result := "/>" end
 
 	Pi_start: STRING is once Result := "<?" end
 	Pi_end: STRING is once Result := "?>" end
