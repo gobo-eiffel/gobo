@@ -133,13 +133,11 @@ feature -- Basic operations
 		end
 
 	rewind is
-			-- Move input positionto the beginning of stream.
+			-- Move input position to the beginning of stream.
 		require
 			can_rewind: is_rewindable
 		do
 			-- nothing
-		ensure
-			not_end_of_input: not end_of_input
 		end
 
 end
