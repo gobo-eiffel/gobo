@@ -24,6 +24,7 @@ feature -- Conversion
 			date_not_void: a_date /= Void
 		deferred
 		ensure
+			date_string_not_void: Result /= Void
 			valid_date_string: is_date (Result)
 		end
 
@@ -33,6 +34,7 @@ feature -- Conversion
 			zoned_date_not_void: a_date /= Void
 		deferred
 		ensure
+			zoned_date_string_not_void: Result /= Void
 			valid_zoned_date_string: is_zoned_date (Result)
 		end
 
@@ -42,6 +44,7 @@ feature -- Conversion
 			date_time_not_void: a_date_time /= Void
 		deferred
 		ensure
+			date_time_string_not_void: Result /= Void
 			valid_date_time_string: is_date_time (Result)
 		end
 
@@ -51,6 +54,7 @@ feature -- Conversion
 			zoned_date_time_not_void: a_date_time /= Void
 		deferred
 		ensure
+			zoned_date_time_string_not_void: Result /= Void
 			valid_zoned_date_time_string: is_zoned_date_time (Result)
 		end
 
@@ -60,6 +64,7 @@ feature -- Conversion
 			time_not_void: a_time /= Void
 		deferred
 		ensure
+			time_string_not_void: Result /= Void
 			valid_time_string: is_time (Result)
 		end
 
@@ -69,6 +74,7 @@ feature -- Conversion
 			zoned_time_not_void: a_time /= Void
 		deferred
 		ensure
+			zoned_time_string_not_void: Result /= Void
 			valid_zoned_time_string: is_zoned_time (Result)
 		end
 
