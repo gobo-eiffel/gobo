@@ -61,7 +61,7 @@ feature {NONE} -- Initialization
 			
 			!XM_CALLBACKS_NULL! callbacks.make
 			
-			!XM_NULL_PARSER_RESOLVER! dtd_resolver
+			!XM_NULL_EXTERNAL_RESOLVER! dtd_resolver
 			entity_resolver := dtd_resolver
 		end
 
