@@ -19,31 +19,29 @@ inherit
 	UC_UNICODE_FACTORY
 		export {NONE} all end
 
+	KL_SHARED_STANDARD_FILES
+		export
+			{NONE} all
+		end
+
 creation
 
 	make
 
 feature {NONE} -- Initialization
 
-	make (a_project: GEANT_PROJECT; a_xml_element: GEANT_XML_ELEMENT) is
-			-- Initialize element by setting `project' to `a_project'
-			-- and `xml_element' to 'a_xml_element'.
+	make (a_xml_element: GEANT_XML_ELEMENT) is
+			-- Initialize element by setting `xml_element' to 'a_xml_element'.
 		require
-			a_project_not_void: a_project /= Void
 			a_xml_element_not_void: a_xml_element /= Void
 			valid_xml_element: valid_xml_element (a_xml_element)
 		do
-			set_project (a_project)
 			set_xml_element (a_xml_element)
 		ensure
-			project_set: project = a_project
 			xml_element_set: xml_element = a_xml_element
 		end
 
 feature -- Access
-
-	project: GEANT_PROJECT
-			-- Project to which Current belongs to
 
 	xml_element: GEANT_XML_ELEMENT
 			-- XML Element defining current element
@@ -62,39 +60,6 @@ feature -- Access
 		end
 
 feature -- Status report
-
-	is_enabled: BOOLEAN is
-			-- Do conditions enable this `a_element'?
-			-- conditions is the boolean expression
-			-- "(xml attribute 'if') and not
-			-- (xml attribute 'unless')"
-			-- if xml attribute 'if' is missing it is assumed to be `True'
-			-- if xml attribute 'unless' is missing it is assumed to be `False'
-		local
-			if_condition: BOOLEAN
-			unless_condition: BOOLEAN
-			ucs: UC_STRING
-		do
-				-- Set default execution conditions:
-			if_condition := true
-			unless_condition := false
-
-				-- Look for an 'if' XML attribute
-			if has_uc_attribute (If_attribute_name) then
-				ucs := xml_element.attribute_value_by_name (If_attribute_name)
-				if_condition := project.variables.boolean_condition_value (ucs.out)
-				project.trace_debug (" if: '" + ucs.out + "': " + if_condition.out + "%N")
-			end
-
-				-- Look for an 'unless' XML attribute
-			if has_uc_attribute (Unless_attribute_name) then
-				ucs := xml_element.attribute_value_by_name (Unless_attribute_name)
-				unless_condition := project.variables.boolean_condition_value (ucs.out)
-				project.trace_debug (" unless: '" + ucs.out + "'=" + unless_condition.out + "%N")
-			end
-
-			Result := if_condition and not unless_condition
-		end
 
 	has_description: BOOLEAN is
 			-- Does `xml_element' has a subelement named 'description'?
@@ -118,16 +83,6 @@ feature -- Status report
 		end
 
 feature -- Setting
-
-	set_project (a_project: like project) is
-			-- Set `project' to `a_project'.
-		require
-			a_project_not_void: a_project /= Void
-		do
-			project := a_project
-		ensure
-			project_set: project = a_project
-		end
 
 	set_xml_element (a_xml_element: like xml_element) is
 			-- Set `xml_element' to `a_xml_element'.
@@ -166,11 +121,9 @@ feature -- Access/XML attribute values
 			has_attribute: has_attribute (an_attr_name)
 		local
 			uc_name: UC_STRING
-			s: STRING
 		do
 			uc_name := new_unicode_string (an_attr_name)
-			s := xml_element.attribute_value_by_name (uc_name).out
-			Result := project.variables.interpreted_string (s)
+			Result := xml_element.attribute_value_by_name (uc_name).out
 		end
 
 	boolean_value_or_default (an_attr_name: STRING; a_default_value: BOOLEAN): BOOLEAN is
@@ -220,13 +173,9 @@ feature -- Access/XML attribute values (unicode)
 			an_attr_name_not_void: an_attr_name /= Void
 			an_attr_name_not_empty: an_attr_name.count > 0
 			a_default_value_not_void: a_default_value /= Void
-		local
-			s: STRING
 		do
 			if xml_element.has_attribute (an_attr_name) then
-				s := project.variables.interpreted_string (
-					xml_element.attribute_value_by_name (an_attr_name).out)
-				Result := new_unicode_string (s)
+				Result := xml_element.attribute_value_by_name (an_attr_name)
 			else
 				Result := a_default_value
 			end
@@ -240,12 +189,8 @@ feature -- Access/XML attribute values (unicode)
 			an_attr_name_not_void: an_attr_name /= Void
 			an_attr_name_not_empty: an_attr_name.count > 0
 			has_attribute: has_uc_attribute (an_attr_name)
-		local
-			s: STRING
 		do
-			s := project.variables.interpreted_string (
-				xml_element.attribute_value_by_name (an_attr_name).out)
-			Result := new_unicode_string (s)
+			Result := xml_element.attribute_value_by_name (an_attr_name)
 		ensure
 			value_not_void: Result /= Void
 		end
@@ -279,7 +224,7 @@ feature -- Access/XML attribute values (unicode)
 			elseif False_attribute_value.is_equal (uc_value) then
 				Result := False
 			else
-				print ("WARNING: wrong value '" + uc_value.out + "' for attribute '" + an_attr_name.out + "'. Valid values are `true' and `false'. Using `false'.%N")
+				std.error.put_string ("WARNING: wrong value '" + uc_value.out + "' for attribute '" + an_attr_name.out + "'. Valid values are `true' and `false'. Using `false'.%N")
 				Result := False
 			end
 		end
@@ -295,31 +240,13 @@ feature -- Access/XML attribute values (unicode)
 
 feature {NONE} -- Constants
 
-	Dir_attribute_name: UC_STRING is
-			-- "dir" attribute name
+	Description_element_name: UC_STRING is
+			-- "description" element name
 		once
-			Result := new_unicode_string ("dir")
+			Result := new_unicode_string ("description")
 		ensure
-			attribute_name_not_void: Result /= Void
-			attribute_name_not_empty: Result.count > 0
-		end
-
-	If_attribute_name: UC_STRING is
-			-- "if" attribute name
-		once
-			Result := new_unicode_string ("if")
-		ensure
-			attribute_name_not_void: Result /= Void
-			attribute_name_not_empty: Result.count > 0
-		end
-
-	Unless_attribute_name: UC_STRING is
-			-- "unless" attribute name
-		once
-			Result := new_unicode_string ("unless")
-		ensure
-			attribute_name_not_void: Result /= Void
-			attribute_name_not_empty: Result.count > 0
+			element_name_not_void: Result /= Void
+			element_name_not_empty: Result.count > 0
 		end
 
 	True_attribute_value: UC_STRING is
@@ -338,18 +265,8 @@ feature {NONE} -- Constants
 			attribute_value_not_void: Result /= Void
 		end
 
-	Description_element_name: UC_STRING is
-			-- "description" element name
-		once
-			Result := new_unicode_string ("description")
-		ensure
-			element_name_not_void: Result /= Void
-			element_name_not_empty: Result.count > 0
-		end
-
 invariant
 
-	project_not_void: project /= Void
 	xml_element_not_void: xml_element /= Void
 	valid_xml_element: valid_xml_element (xml_element)
 
