@@ -14,7 +14,10 @@ To compile getest:
 
 2. Run getest using:
 
-       getest [-ceghV?][--help][--version][--compile=<command>][--se|--ise|--hact|--ve|<filename>]
+       getest [-ceghV?][--help][--version]
+            [-D <name>=<value>|--define=<name>=<value>]*
+            [-C <command>|--compile=<command>]
+            [--se|--ise|--hact|--ve|<filename>]
 
 A "User's Manual" documentation for getest, in HTML format, is provided
 in "$GOBO/doc/getest".

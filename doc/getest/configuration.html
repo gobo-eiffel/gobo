@@ -159,20 +159,23 @@ href="options.html#hact"><font color="#800000"><tt>hact</tt></font></a>,
 color="#800000"><tt>se</tt></font></a> or <font color="#800000"><tt>--</tt></font><a
 href="options.html#ve"><font color="#800000"><tt>ve</tt></font></a>.</p>
 
-<h2>Running Test Cases</h2>
+<h2><a name="execute">Running Test Cases</a></h2>
 
 <p>After the generated test suite program has been compiled, <em>getest</em>
 executes it using the command specified in the <font
 color="#000080"><em><strong><tt>execute </tt></strong></em></font>clause
 of the <font color="#000080"><em><strong><tt>default</tt></strong></em></font>
 section. By default the value of the <font color="#000080"><em><strong><tt>execute
-</tt></strong></em></font>clause is <font color="#800000"><tt>&quot;my_test&quot;</tt></font>,
-where <font color="#008080"><em><tt>my_test</tt></em></font> is
-the name of the test suite specified in the <font color="#000080"><em><strong><tt>test
-</tt></strong></em></font>section. But it can easily be changed
-to <font color="#800000"><tt>&quot;cd EIFGEN/W_code;
-./my_test&quot;</tt></font> when using the ISE Eiffel compiler
-for example.</p>
+</tt></strong></em></font>clause is <font color="#800000"><tt>&quot;./my_test
+[-D name=value]*&quot; </tt></font>(or <font color="#800000"><tt>&quot;.\my_test.exe
+[-D name=value]*&quot;</tt></font> under Windows), where <font
+color="#800000"><tt>my_test</tt></font> is the name of the test
+suite specified in the <font color="#000080"><em><strong><tt>test
+</tt></strong></em></font>section and <font color="#800000"><tt>[-D
+name=value]*</tt></font> are the <a href="options.html#define">variables</a>
+defined on the command-line. But it can easily be changed to <font
+color="#800000"><tt>&quot;cd EIFGEN/W_code; ./my_test&quot;</tt></font>
+when using the ISE Eiffel compiler for example.</p>
 
 <hr size="1">
 
@@ -189,7 +192,7 @@ for example.</p>
             <strong>http:</strong></font><a
             href="http://www.gobosoft.com"><font size="2">//www.gobosoft.com</font></a><font
             size="2"><br>
-            <strong>Last Updated:</strong> 25 October 2001</font><br>
+            <strong>Last Updated:</strong> 10 November 2001</font><br>
             <!--webbot bot="PurpleText"
             preview="
 $Date$ 

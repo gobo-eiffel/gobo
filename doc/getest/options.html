@@ -158,6 +158,7 @@ which configuration file to use:</p>
         color="#000080"><em><strong><tt> </tt></strong></em></font>field
         of the configuration file is set to <font color="#800000"><tt>&quot;geant
         compile_ve&quot;</tt></font>.</dd>
+    <dt><font color="#800000"><tt>-C &lt;command&gt;</tt></font></dt>
     <dt><font color="#800000"><tt>--</tt></font><a name="compile"><font
         color="#800000"><tt>compile</tt></font></a><font
         color="#800000"><tt>=&lt;command&gt;</tt></font></dt>
@@ -165,6 +166,16 @@ which configuration file to use:</p>
         color="#000080"><em><strong><tt>compile</tt></strong></em></font></a><font
         color="#000080"><em><strong><tt> </tt></strong></em></font>field
         of the configuration file.</dd>
+    <dt><font color="#800000"><tt>-D &lt;name&gt;[=&lt;value&gt;]</tt></font></dt>
+    <dt><font color="#800000"><tt>--</tt></font><a name="define"><font
+        color="#800000"><tt>define</tt></font></a><font
+        color="#800000"><tt>=&lt;name&gt;[=&lt;value&gt;]</tt></font></dt>
+    <dd>Define variable <font color="#800000"><tt>name</tt></font>
+        and set it to <font color="#800000"><tt>value</tt></font>
+        if specified. This option may appear several times on the
+        command-line to define different variables. By default
+        these variables are passed to the command <a
+        href="configuration.html#execute">running the test cases</a>.</dd>
     <dt><font color="#800000"><tt>-g</tt></font></dt>
     <dd>Testcase generation only. Do not compile nor run the
         generated test.</dd>
@@ -191,7 +202,7 @@ which configuration file to use:</p>
             <strong>http:</strong></font><a
             href="http://www.gobosoft.com"><font size="2">//www.gobosoft.com</font></a><font
             size="2"><br>
-            <strong>Last Updated:</strong> 25 October 2001</font><br>
+            <strong>Last Updated:</strong> 10 November 2001</font><br>
             <!--webbot bot="PurpleText"
             preview="
 $Date$ 
