@@ -1,9 +1,3 @@
--- Special stack for lalr1_parser.
--- Has direct access to all elements relative to top element.
-
-indexing
-	author: "Andreas Auras"
-
 class PARSER_STACK [G]
 
 creation
@@ -77,14 +71,3 @@ feature {NONE}
 	array: ARRAY[G]		-- array to store items
 
 end -- class PARSER_STACK
-
---|-------------------------------------------------------------------
---| ibyacc V1.0    : A yacc parser generator for Eiffel
---|
---| Copyright (C) 1995-1996 Halstenbach ACT GmbH
---| Breidenbrucherstr 2
---| D - 51674 Wiehl
---| Tel +49 2261 99020      Fax +49 2261 990299
---| Customer support e-mail <support@halstenbach.de>
---| All rights reserved. Duplication and distribution prohibited.
---|-------------------------------------------------------------------
