@@ -5,7 +5,7 @@ indexing
 		"Shell commands"
 
 	library: "Gobo Eiffel Kernel Library"
-	copyright: "Copyright (c) 2001, Eric Bezault and others"
+	copyright: "Copyright (c) 2001-2002, Eric Bezault and others"
 	license: "Eiffel Forum License v1 (see forum.txt)"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -53,10 +53,12 @@ inherit
 			{NONE} all
 		end
 
+#endif
 	KL_SHARED_OPERATING_SYSTEM
 		export {NONE} all end
 
-#endif
+	KL_IMPORTED_STRING_ROUTINES
+
 creation
 
 	make
@@ -66,13 +68,14 @@ feature {NONE} -- Initialization
 	make (a_command: like command) is
 			-- Create a new shell command.
 		do
+			string_command := STRING_.as_string (a_command)
 #ifdef VE
 			if operating_system.is_windows then
-				make_shell (a_command)
+				make_shell (string_command)
 			end
 #endif
 #ifdef HACT
-			old_make (a_command)
+			old_make (string_command)
 #endif
 			command := a_command
 		end
@@ -80,33 +83,39 @@ feature {NONE} -- Initialization
 feature -- Access
 
 	command: STRING
-			-- Command to be executed from the shell
+			-- Command to be executed from the shell;
+			-- Note: If `command' is a UC_STRING or descendant, then
+			-- the bytes of its associated UTF unicode encoding will
+			-- be used to invoke the command through the operating
+			-- system.
+
+feature -- Status report
 
 	exit_code: INTEGER
-			-- Exit status code of the last execution
-			-- of `command' in shell
+			-- Exit status code of the last execution of `command';
+			-- Its meaning depends on the value of `is_user_code'
+			-- and `is_system_code'.
+
+	is_system_code: BOOLEAN
+			-- Has `exit_code' been set by the system because of
+			-- an abnormal termination of `command' or because
+			-- it could not be launched correctly?
 
 feature -- Execution
 
 	execute is
-			-- Ask operating system to execute `command'.
-			-- Wait until termination. Make exit status
-			-- code available in `exit_code' (Note that
-			-- under Windows 95/98 the exit status code
-			-- returned is always 0).
+			-- Ask operating system to execute `command'. Wait until
+			-- termination. Make exit status available in `exit_code',
+			-- `is_user_code' and `is_system_code'.
+			-- (Note that under Windows 95/98 the exit status code
+			-- returned is always 0 when `is_user_code' is true.).
 		local
 			retried: BOOLEAN
 		do
 			if not retried then
 #ifdef ISE
-				system (command)
+				system (string_command)
 				exit_code := return_code
-					-- Under Linux `system' seems to
-					-- always return 256*exit_code instead of
-					-- just exit_code.
-				if (exit_code \\ 256) = 0 then
-					exit_code := exit_code // 256
-				end
 #endif
 #ifdef HACT
 				old_execute
@@ -117,20 +126,28 @@ feature -- Execution
 					old_execute
 					exit_code := old_exit_code
 				else
-					exit_code := system (command)
+					exit_code := system (string_command)
 				end
 #endif
 #ifdef SE
-				exit_code := execute_command (command)
-					-- Under Linux `execute_command' seems to
-					-- always return 256*exit_code instead of
-					-- just exit_code.
-				if (exit_code \\ 256) = 0 then
-					exit_code := exit_code // 256
-				end
+				exit_code := execute_command (string_command)
 #endif
+				if operating_system.is_windows then
+					is_system_code := False
+				else
+						-- Under Lunix, system codes are stored on the first
+						-- 8 bits, and user codes on the higher bits.
+					if (exit_code \\ 256) = 0 then
+						exit_code := exit_code // 256
+						is_system_code := False
+					else
+						exit_code := exit_code \\ 256
+						is_system_code := True
+					end
+				end
 			else
 				exit_code := -1
+				is_system_code := True
 			end
 		rescue
 			if not retried then
@@ -138,5 +155,16 @@ feature -- Execution
 				retry
 			end
 		end
+
+feature {NONE} -- Implementation
+
+	string_command: STRING
+			-- STRING version of `command'
+
+invariant
+
+	string_command_not_void: string_command /= Void
+	string_command_is_string: string_command.same_type ("")
+	string_command_not_empty: string_command.count > 0
 
 end
