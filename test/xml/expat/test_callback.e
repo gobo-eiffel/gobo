@@ -43,6 +43,7 @@ inherit
 		end
 
 	KL_IMPORTED_STRING_ROUTINES
+	KL_SHARED_OPERATING_SYSTEM
 
 feature -- Execution
 
@@ -55,10 +56,19 @@ feature -- Execution
 feature -- Tests
 
 	test_callback is
+		do
+			if not operating_system.is_dotnet then
+				do_test_callback
+			end
+		end
+
+feature {NONE} -- Test
+
+	do_test_callback is
 		local
 			a_file: KL_TEXT_INPUT_FILE
 		do
-			-- report version
+				-- report version
 			assert ("Expat version", version /= Void)
 
 			!! a_file.make ("test.xml")
@@ -67,7 +77,7 @@ feature -- Tests
 			parse_from_stream (a_file)
 			assert ("parsing is correct.", is_correct)
 
-			-- report results
+				-- report results
 			assert ("on_xml_declaration called.", on_xml_declaration_called)
 			assert ("on_xml_declaration matches input.", on_xml_declaration_matches)
 
