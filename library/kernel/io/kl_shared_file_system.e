@@ -16,7 +16,7 @@ class KL_SHARED_FILE_SYSTEM
 
 inherit
 
-	KL_OPERATING_SYSTEM
+	KL_SHARED_OPERATING_SYSTEM
 		export {NONE} all end
 
 feature -- File systems
@@ -24,9 +24,9 @@ feature -- File systems
 	file_system: KL_FILE_SYSTEM is
 			-- Underlying file system
 		once
-			if is_windows then
+			if operating_system.is_windows then
 				Result := windows_file_system
-			elseif is_unix or is_linux then
+			elseif operating_system.is_unix then
 				Result := unix_file_system
 			else
 					-- Use Unix-like file system by default.
