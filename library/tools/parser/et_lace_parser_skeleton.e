@@ -5,7 +5,7 @@ indexing
 		"Lace parser skeletons"
 
 	author:     "Eric Bezault <ericb@gobosoft.com>"
-	copyright:  "Copyright (c) 1999, Eric Bezault and others"
+	copyright:  "Copyright (c) 1999-2001, Eric Bezault and others"
 	license:    "Eiffel Forum Freeware License v1 (see forum.txt)"
 	date:       "$Date$"
 	revision:   "$Revision$"
@@ -33,10 +33,26 @@ feature {NONE} -- Initialization
 			-- Create a new Lace parser.
 		require
 			an_error_handler_not_void: an_error_handler /= Void
+		local
+			a_factory: ET_AST_FACTORY
 		do
+			!! a_factory.make
+			make_with_factory (a_factory, an_error_handler)
+		ensure
+			error_handler_set: error_handler = an_error_handler
+		end
+
+	make_with_factory (a_factory: like ast_factory; an_error_handler: like error_handler) is
+			-- Create a new Lace parser.
+		require
+			a_factory_not_void: a_factory /= Void
+			an_error_handler_not_void: an_error_handler /= Void
+		do
+			ast_factory := a_factory
 			make_lace_scanner ("unknown file", an_error_handler)
 			make_parser_skeleton
 		ensure
+			ast_factory_set: ast_factory = a_factory
 			error_handler_set: error_handler = an_error_handler
 		end
 
@@ -59,13 +75,15 @@ feature -- Access
 	last_universe: ET_UNIVERSE
 			-- Universe being parsed
 
+	ast_factory: ET_AST_FACTORY
+			-- Abstract Syntax Tree factory
+
 feature -- AST factory
 
 	new_cluster (a_name: ET_IDENTIFIER; a_pathname: ET_IDENTIFIER): ET_CLUSTER is
 			-- New cluster
 		require
 			a_name_not_void: a_name /= Void
-			a_pathname_not_void: a_pathname /= Void
 		do
 			!! Result.make (a_name, a_pathname)
 		ensure
@@ -85,7 +103,7 @@ feature -- AST factory
 	new_universe (a_clusters: ET_CLUSTERS): ET_UNIVERSE is
 			-- New class universe
 		do
-			!! Result.make (a_clusters, error_handler)
+			!! Result.make (a_clusters, ast_factory, error_handler)
 		ensure
 			universe_not_void: Result /= Void
 		end
@@ -109,5 +127,9 @@ feature -- Error handling
 			std.error.put_string (a_message)
 			std.error.put_character ('%N')
 		end
+
+invariant
+
+	ast_factory_not_void: ast_factory /= Void
 
 end -- class ET_LACE_PARSER_SKELETON
