@@ -190,12 +190,12 @@ feature -- Element change
 			else
 				if a_format_manager.has (a_fingerprint) then
 					if not a_format_manager.is_duplicate_format (a_decimal_format) then
+						a_message := STRING_.appended_string ("Cannot define xsl:decimal-format named ", name)
+						a_message := STRING_.appended_string (a_message, " twice, unless all values are identical")
 						report_compile_error (a_message)
 					end
 				else
-					a_message := STRING_.appended_string ("Cannot define xsl:decimal-format named ", name)
-					a_message := STRING_.appended_string (a_message, " twice, unless all values are identical")
-					a_format_manager.add_named_format (a_decimal_format)
+					a_format_manager.set_named_format (a_decimal_format)
 				end
 			end
 		end

@@ -181,19 +181,26 @@ feature -- Access
 feature -- Comparison
 
 
-	is_same_node (other: XM_XPATH_TINY_NODE): BOOLEAN is
+	is_same_node (other: XM_XPATH_NODE): BOOLEAN is
 			-- Does `Current' represent the same node in the tree as `other'?
+		local
+			a_tiny_node: XM_XPATH_TINY_NODE
 		do
 			if other = Current then
 				Result := True
-			elseif document /= other.document then
-				Result := False
-			elseif node_number /= other.node_number then
-				Result := False
-			elseif node_type /= other.node_type then
-				Result := False
 			else
-				Result := True
+				a_tiny_node ?= other
+				if a_tiny_node /= Void then
+					if document /= a_tiny_node.document then
+						Result := False
+					elseif node_number /= a_tiny_node.node_number then
+						Result := False
+					elseif node_type /= a_tiny_node.node_type then
+						Result := False
+					else
+						Result := True
+					end
+				end
 			end
 		end
 

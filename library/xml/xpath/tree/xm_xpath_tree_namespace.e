@@ -16,14 +16,14 @@ inherit
 	
 	XM_XPATH_NAMESPACE
 		undefine
-			document_element, next_sibling, previous_sibling, local_part
+			document_element, local_part
 		end
 
 	XM_XPATH_TREE_NODE
 		undefine
-			base_uri
+			base_uri, next_sibling, previous_sibling
 		redefine
-			string_value, is_same_node, name_code, local_part, previous_node_in_document_order, next_node_in_document_order
+			is_same_node, name_code, local_part, previous_node_in_document_order, next_node_in_document_order
 		end
 
 	XM_XPATH_RECEIVER_OPTIONS
@@ -70,7 +70,7 @@ feature -- Access
 feature -- Comparison
 
 
-	is_same_node (other: XM_XPATH_TREE_NODE): BOOLEAN is
+	is_same_node (other: XM_XPATH_NODE): BOOLEAN is
 			-- Does `Current' represent the same node in the tree as `other'?
 		local
 			another_namespace: XM_XPATH_TREE_NAMESPACE

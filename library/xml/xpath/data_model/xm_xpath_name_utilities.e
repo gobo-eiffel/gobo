@@ -127,5 +127,10 @@ feature -- Conversion
 			Result := a_namespace_code - 	(prefix_code_from_namespace_code (a_namespace_code) * bits_16)
 		end
 
+	created_namespace_code (a_uri_code, a_prefix_code: INTEGER): INTEGER is -- arguments should be INTEGER_16
+			-- Namespace code from it's constituents
+		do
+			Result := (a_prefix_code * bits_16) + a_uri_code
+		end
 end
 	

@@ -15,6 +15,9 @@ class XM_XPATH_TEXT_FRAGMENT_VALUE
 inherit
 
 	XM_XPATH_DOCUMENT
+		redefine
+			hash_code
+		end
 
 creation
 
@@ -33,7 +36,6 @@ feature {NONE} -- Initialization
 			system_id := a_system_id
 			name_pool := a_name_pool
 			name_pool.allocate_document_number (Current)
-			document_number := name_pool.document_number (Current)
 		ensure
 			text_set: text = a_value
 			system_id_set: system_id = a_system_id

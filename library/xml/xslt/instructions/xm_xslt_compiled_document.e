@@ -176,7 +176,7 @@ feature -- Evaluation
 			an_evaluation_context ?= a_context
 			check
 				evaluation_context: an_evaluation_context /= Void
-				-- as it is the only supported form of dynamicx context for XSLT in the library
+				-- as it is the only supported form of dynamic context for XSLT in the library
 			end
 			a_transformer := an_evaluation_context.transformer
 			if is_text_only then

@@ -33,6 +33,12 @@ feature -- Access
 			string_value_not_void: Result /= Void
 		end
 
+	hash_code: INTEGER is
+			-- Hash code value
+		do
+			Result := string_value.hash_code
+		end
+
 	typed_value: XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_ATOMIC_VALUE] is
 			-- Typed value
 		require

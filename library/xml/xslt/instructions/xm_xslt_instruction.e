@@ -126,6 +126,9 @@ feature -- Status report
 			an_expression: XM_XPATH_EXPRESSION
 			a_cursor: DS_ARRAYED_LIST_CURSOR [XM_XSLT_INSTRUCTION]
 		do
+			a_message := STRING_.appended_string (instruction_indentation (a_level), instruction_name)
+			std.error.put_string (a_message)
+			std.error.put_new_line
 			from
 				a_cursor := children.new_cursor
 				a_cursor.start
@@ -136,11 +139,12 @@ feature -- Status report
 			loop
 				an_expression ?= a_cursor.item
 				if an_expression /= Void then
-					an_expression.display (a_level, a_pool)
+					an_expression.display (a_level + 1, a_pool)
 				else
-					a_message := STRING_.appended_string (instruction_indentation (a_level), a_cursor.item.instruction_name)
+					a_message := STRING_.appended_string (instruction_indentation (a_level + 1), a_cursor.item.instruction_name)
 					std.error.put_string (a_message)
 					std.error.put_new_line
+					a_cursor.item.display_children (a_level + 2, a_pool)
 				end
 				a_cursor.forth
 			end

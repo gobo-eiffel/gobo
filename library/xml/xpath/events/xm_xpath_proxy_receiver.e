@@ -89,7 +89,6 @@ feature -- Events
 	
 	notify_comment (a_content_string: STRING; properties: INTEGER) is
 			-- Notify a comment.
-
 		do
 			base_receiver.	notify_comment (a_content_string, properties)
 		end

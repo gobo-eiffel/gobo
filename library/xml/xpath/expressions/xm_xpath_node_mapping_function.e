@@ -17,7 +17,7 @@ deferred class XM_XPATH_NODE_MAPPING_FUNCTION
 
 feature -- Evaluation
 
-	map (an_item: XM_XPATH_NODE; a_context: XM_XPATH_CONTEXT; an_information_object: ANY): XM_XPATH_MAPPED_NODE is
+	map (an_item: XM_XPATH_ITEM; a_context: XM_XPATH_CONTEXT; an_information_object: ANY): XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_NODE] is
 			-- Map `an_item' to a sequence
 		require
 			item_not_void: an_item /= Void

@@ -1,0 +1,187 @@
+indexing
+
+	description:
+
+		"XPath orphan attribute/namespace/text/processing-instruction or comment nodes with no parent or children."
+
+	library: "Gobo Eiffel XML Library"
+	copyright: "Copyright (c) 2003, Colin Adams and others"
+	license: "Eiffel Forum License v2 (see forum.txt)"
+	date: "$Date$"
+	revision: "$Revision$"
+
+class XM_XPATH_ORPHAN
+
+inherit
+
+	XM_XPATH_NODE
+		redefine
+			base_uri, typed_value
+		end
+
+creation
+
+	make
+
+feature {NONE} -- Initialization
+
+	make (a_name_pool: XM_XPATH_NAME_POOL; a_node_type: INTEGER; a_string_value: STRING) is
+			-- Establsh invariant.
+		require
+			name_pool_not_void: a_name_pool /= Void
+			valid_node_kind: a_node_type = Attribute_node or else
+			a_node_type = Namespace_node or else
+			a_node_type = Text_node or else
+			a_node_type = Comment_node or else
+			a_node_type = Processing_instruction_node
+			string_value_not_void: a_string_value /= Void
+		do
+			name_pool := a_name_pool
+			node_type := a_node_type
+			string_value := a_string_value
+			system_id := ""
+			name_code := -1
+		ensure
+			name_pool_set: name_pool = a_name_pool
+			node_type_set: node_type = a_node_type
+			string_value_set: string_value = a_string_value
+		end
+
+feature -- Access
+
+	name_pool: XM_XPATH_NAME_POOL
+			-- Name pool
+
+	item_type: XM_XPATH_ITEM_TYPE is
+			-- Type
+		do
+			-- TODO
+		end
+
+	document: XM_XPATH_DOCUMENT
+			-- Document that owns this node
+
+	sequence_number: XM_XPATH_64BIT_NUMERIC_CODE is
+			-- Node sequence number (in document order).
+		do
+			create Result.make (0, 0)
+		end
+	
+	document_number: INTEGER
+
+	string_value: STRING
+			-- String value
+
+	base_uri: STRING is
+			-- Base URI
+		do
+			Result := system_id
+		end
+
+	system_id: STRING
+		
+	line_number: INTEGER is -1
+
+
+	node_kind: STRING is
+			-- "attribute",
+			-- "namespace", "processing-instruction",
+			-- "comment", or "text".
+		do
+			inspect
+				node_type
+			when Attribute_node then
+				Result := "attribute"
+			when Namespace_node then
+				Result := "namespace"
+			when Processing_instruction_node then
+				Result := "processing-instruction"
+			when Text_node then
+				Result := "text"
+			when Comment_node then
+				Result := "comment"
+			end
+		end
+
+	parent: XM_XPATH_COMPOSITE_NODE
+			-- Parent of current node
+	
+	root: XM_XPATH_NODE is
+			-- The root node for `Current'
+		do
+			Result := Current
+		end
+	
+	name_code: INTEGER
+			-- Name code this node - used in displaying names
+
+	node_name: STRING is
+			-- Qualified name
+		do
+			if name_code = -1 then
+				Result := ""
+			else
+				Result := name_pool.display_name_from_name_code (name_code)
+			end
+		end
+
+	document_root: XM_XPATH_DOCUMENT is
+			-- The document node for `Current'
+		do
+			Result := Void
+		end
+
+	typed_value: XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_ATOMIC_VALUE] is
+			-- Typed value
+		local
+			a_type: INTEGER
+			a_string_value: XM_XPATH_STRING_VALUE
+			an_untyped_atomic_value: XM_XPATH_UNTYPED_ATOMIC_VALUE
+		do
+			todo ("typed_value", True)
+		end
+
+	new_axis_iterator (an_axis_type: INTEGER): XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_NODE] is
+			-- An enumeration over the nodes reachable by `an_axis_type' from this node
+		do
+			todo ("new_axis_iterator", False)
+		end
+
+	new_axis_iterator_with_node_test (an_axis_type: INTEGER; a_node_test: XM_XPATH_NODE_TEST): XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_NODE] is
+			-- An enumeration over the nodes reachable by `an_axis_type' from this node;
+			-- Only nodes that match the pattern specified by `a_node_test' will be selected.
+		do
+			todo ("new_axis_iterator with node test", False)
+		end
+
+feature -- Comparison
+
+	is_same_node (other: XM_XPATH_NODE): BOOLEAN is
+			-- Does `Current' represent the same node in the tree as `other'?
+		do
+			Result := Current = other
+		end
+
+feature -- Duplication
+
+	copy_node (a_receiver: XM_XPATH_RECEIVER; which_namespaces: INTEGER; copy_annotations: BOOLEAN) is
+			-- Copy `Current' to `a_receiver'.
+		do
+			todo ("copy_node", False)
+		end
+
+feature {XM_XPATH_NODE} -- Local
+	
+	is_possible_child: BOOLEAN
+
+invariant
+
+	no_document: document = Void
+	valid_node_type: node_type = Attribute_node or else
+	node_type = Namespace_node or else
+	node_type = Text_node or else
+	node_type = Comment_node or else
+	node_type = Processing_instruction_node
+	no_parent: parent = Void
+
+end

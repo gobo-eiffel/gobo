@@ -97,20 +97,22 @@ feature -- Matching
 				loop
 					a_key := an_iter.item.string_value
 					create a_key_value.make (a_key)
-					nodes := a_km.select_by_key (key_fingerprint, a_doc, a_key_value, a_transformer)
-					from
+					nodes := a_km.sequence_by_key (key_fingerprint, a_doc, a_key_value, a_transformer)
+					if not a_transformer.is_error then
+						from
 							check
 								before: nodes.before
 							end
-						nodes.forth
-					until
-						finished or else nodes.after
-					loop
-						if nodes.item.is_same_node (a_node) then
-							Result := True
-							finished := True
+							nodes.forth
+						until
+							finished or else nodes.after
+						loop
+							if nodes.item.is_same_node (a_node) then
+								Result := True
+								finished := True
+							end
+							nodes.forth
 						end
-						nodes.forth
 					end
 					an_iter.forth
 				end

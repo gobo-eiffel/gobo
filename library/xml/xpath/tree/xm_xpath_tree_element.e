@@ -46,6 +46,8 @@ feature {NONE} -- Initialization
 		require
 			document_not_void: a_document /= Void
 			strictly_positive_sequence_number: a_sequence_number > 0
+		local
+			a_cursor: DS_ARRAYED_LIST_CURSOR [INTEGER]
 		do
 			document := a_document
 			parent_node := a_parent
@@ -170,77 +172,6 @@ feature -- Access
 			nearly_positive_result: Result > -2
 		end
 	
-	namespace_codes_in_scope:  DS_ARRAYED_LIST [INTEGER] is
-			-- Namespace codes in scope;
-			-- WARNING - this routine is NOT pure - it is a memo function.
-		local
-			a_parent: XM_XPATH_TREE_ELEMENT
-			a_parent_list: DS_ARRAYED_LIST [INTEGER]
-			a_cursor: DS_ARRAYED_LIST_CURSOR [INTEGER]
-			a_namespace_code, a_prefix_code: INTEGER
-		do
-			if cached_namespace_codes_in_scope /= Void then
-				do_nothing
-			else
-				create cached_namespace_codes_in_scope.make_from_linear (namespace_code_list)
-				a_parent ?= parent
-				if a_parent /= Void then
-					a_parent_list := a_parent.namespace_codes_in_scope
-					create cached_prefix_code_list.make (cached_namespace_codes_in_scope.count + a_parent_list.count)
-					from
-						a_cursor := cached_namespace_codes_in_scope.new_cursor
-						a_cursor.start
-					variant
-						cached_namespace_codes_in_scope.count + 1 - a_cursor.index
-					until
-						a_cursor.after
-					loop
-						a_prefix_code := 	prefix_code_from_namespace_code (a_cursor.item)
-						cached_prefix_code_list.put_last (a_prefix_code)
-						a_cursor.forth
-					end
-					if not cached_namespace_codes_in_scope.extendible (a_parent_list.count) then
-						cached_namespace_codes_in_scope.resize (cached_namespace_codes_in_scope.count + a_parent_list.count)
-					end
-
-					-- Add in all codes from the parent list, unless we already have a match for the prefix
-					
-					from
-						a_cursor := a_parent_list.new_cursor
-						a_cursor.start
-					variant
-						a_parent_list.count + 1 - a_cursor.index
-					until
-						a_cursor.after
-					loop
-						a_namespace_code := a_cursor.item
-						a_prefix_code := 	prefix_code_from_namespace_code (a_namespace_code)
-						if not cached_prefix_code_list.has (a_prefix_code) then
-							cached_prefix_code_list.put_last (a_prefix_code)
-							cached_namespace_codes_in_scope.put_last (a_namespace_code)
-						end
-						a_cursor.forth
-					end
-				else
-					
-					-- Add the XML namespace
-
-					if not cached_namespace_codes_in_scope.extendible (1) then
-						cached_namespace_codes_in_scope.resize (cached_namespace_codes_in_scope.count + 1)
-					end
-					check
-						xml_prefix_code_is_one: document.name_pool.code_for_prefix ("xml") = 1
-						-- Architectural definition
-					end
-					cached_namespace_codes_in_scope.put_last (Xml_uri_code + bits_16) -- bits_16 = 1 << 16
-				end
-			end
-			Result := cached_namespace_codes_in_scope
-		ensure
-        result_not_void: Result /= Void
-		end
-
-																																	
 	output_namespace_nodes (a_receiver: XM_XPATH_RECEIVER; include_ancestors: BOOLEAN) is
 			-- Output all namespace nodes associated with this element.
 		local
@@ -252,8 +183,10 @@ feature -- Access
 			until
 					a_cursor.after
 			loop
+				if a_cursor.item >= 0 then -- drop any excluded namespaces
 					a_receiver.notify_namespace (a_cursor.item, 0)
-					a_cursor.forth
+				end
+				a_cursor.forth
 			end
 
 			-- Now add the namespaces defined on the ancestor nodes.
@@ -266,7 +199,30 @@ feature -- Access
 				end
 			end
 		end
-																																	
+
+	accumulated_namespace_nodes: DS_ARRAYED_LIST [XM_XPATH_TREE_NAMESPACE]
+			-- Namespace nodes in scope
+
+	namespace_codes_in_scope: DS_ARRAYED_LIST [INTEGER] is
+			-- Namespace codes in scope for `Current'
+		require
+			namespaces_accumulated: accumulated_namespace_nodes /= Void
+		local
+			a_cursor: DS_ARRAYED_LIST_CURSOR [XM_XPATH_TREE_NAMESPACE]
+		do
+			create Result.make (accumulated_namespace_nodes.count)
+			from
+				a_cursor := accumulated_namespace_nodes.new_cursor; a_cursor.start
+			variant
+				accumulated_namespace_nodes.count + 1 - a_cursor.index
+			until
+				a_cursor.after
+			loop
+				Result.put (a_cursor.item.namespace_code, a_cursor.index)
+				a_cursor.forth
+			end
+		end
+		
 feature -- Measurement
 
 	number_of_attributes: INTEGER is
@@ -286,7 +242,72 @@ feature -- Status setting
 		end
 
 feature -- Element change
-	
+
+	accumulate_namespace_nodes (an_owner: XM_XPATH_TREE_ELEMENT; an_accumulation_list: DS_ARRAYED_LIST [XM_XPATH_TREE_NAMESPACE]; add_xml: BOOLEAN) is
+			-- Accumulate namespace nodes in scope.
+		require
+			list_owner_not_void: an_owner /= Void
+			accumulation_list: an_accumulation_list /= Void
+			non_empty_accumulation_list: an_accumulation_list.count > 0 implies an_owner /= Current
+		local
+			a_code_cursor: DS_ARRAYED_LIST_CURSOR [INTEGER]
+			a_node_cursor: DS_ARRAYED_LIST_CURSOR [XM_XPATH_TREE_NAMESPACE]
+			a_namespace_code: INTEGER
+			a_namespace: XM_XPATH_TREE_NAMESPACE
+			a_prefix_code: INTEGER -- _16
+			found: BOOLEAN
+			a_parent_element: XM_XPATH_TREE_ELEMENT
+		do
+			from
+				a_code_cursor := namespace_code_list.new_cursor; a_code_cursor.start
+			variant
+				namespace_code_list.count + 1 - a_code_cursor.index
+			until
+				a_code_cursor.after
+			loop
+				a_namespace_code := a_code_cursor.item
+				a_prefix_code := prefix_code_from_namespace_code (a_namespace_code)
+				found := False
+
+				-- Don't add a node if the prefix is already in the list
+
+				from
+					a_node_cursor := an_accumulation_list.new_cursor; a_node_cursor.start
+				variant
+					an_accumulation_list.count + 1 - a_node_cursor.index
+				until
+					a_node_cursor.after
+				loop
+					if prefix_code_from_namespace_code (a_node_cursor.item.namespace_code) = a_prefix_code then
+						found := True
+						a_node_cursor.go_after
+					else
+						a_node_cursor.forth
+					end
+				end
+				if not found then
+					create a_namespace.make (an_owner.document, an_owner, a_namespace_code, an_accumulation_list.count + 1)
+					an_accumulation_list.force_last (a_namespace)
+				end
+				a_code_cursor.forth
+			end
+
+			-- Now add the namespaces defined on the ancestor nodes.
+
+			if parent.node_type /= Document_node then
+				a_parent_element ?= parent
+				check
+					parent_is_element: a_parent_element /= Void
+				end
+				a_parent_element.accumulate_namespace_nodes (an_owner, an_accumulation_list, False)
+			end
+
+			if add_xml then
+				a_namespace_code := created_namespace_code (Xml_uri_code, Xml_prefix_index - 1)
+				create a_namespace.make (an_owner.document, an_owner, a_namespace_code, an_accumulation_list.count + 1)
+			end
+		end
+
 	add_namespace (a_namespace_code: INTEGER) is
 			-- Add a namespace definition.
 		require
@@ -422,12 +443,6 @@ feature {NONE} -- Implementation
 	namespace_code_list: DS_ARRAYED_LIST [INTEGER]
 			-- Namespace codes for all namespaces defined on this element;
 			-- (NOT all namespaces in scope - must scan up the parent chain for that)
-
-	cached_prefix_code_list: DS_ARRAYED_LIST [INTEGER]
-			-- Prefix codes for all namespacesin scope for `Current'
-
-	cached_namespace_codes_in_scope:  DS_ARRAYED_LIST [INTEGER]
-			-- Namespace codes in scope for `Current'
 
 invariant
 

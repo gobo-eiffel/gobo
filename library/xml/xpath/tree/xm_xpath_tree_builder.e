@@ -119,14 +119,18 @@ feature -- Events
 				if conformance.basic_xslt_processor then
 					a_new_type_code := Untyped_atomic_type_code
 				else
-						check
-							Only_basic_xslt_processors_are_supported: False
-						end
+					check
+						Only_basic_xslt_processors_are_supported: False
+					end
 				end
-				if pending_attributes = Void then
-					create pending_attributes.make (name_pool)
+				if is_output_escaping_disabled (properties) then
+					on_error ("Cannot disable output escaping when writing to a tree")
+				else
+					if pending_attributes = Void then
+						create pending_attributes.make (name_pool)
+					end
+					pending_attributes.add_attribute (a_name_code, a_new_type_code, a_value)
 				end
-				pending_attributes.add_attribute (a_name_code, a_new_type_code, a_value)
 			end
 		end
 
@@ -176,8 +180,12 @@ feature -- Events
 		do
 			if not has_error then
 				if a_character_string.count > 0 then
-					create a_text_node.make (tree_document, a_character_string)
-					current_composite_node.add_child (a_text_node)
+					if is_output_escaping_disabled (properties) then
+						on_error ("Cannot disable output escaping when writing to a tree")
+					else
+						create a_text_node.make (tree_document, a_character_string)
+						current_composite_node.add_child (a_text_node)
+					end
 				end
 			end
 		end

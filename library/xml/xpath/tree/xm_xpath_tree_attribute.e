@@ -83,7 +83,7 @@ feature -- Access
 
 feature -- Comparison
 
-	is_same_node (other: XM_XPATH_TREE_NODE): BOOLEAN is
+	is_same_node (other: XM_XPATH_NODE): BOOLEAN is
 			-- Does `Current' represent the same node in the tree as `other'?
 		local
 			another_attribute: XM_XPATH_TREE_ATTRIBUTE

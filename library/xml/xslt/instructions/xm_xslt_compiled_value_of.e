@@ -18,7 +18,9 @@ inherit
 		redefine
 			display, promote_instruction, evaluate_item
 		end
-		
+
+	XM_XPATH_RECEIVER_OPTIONS
+
 	XM_XPATH_SHARED_NODE_KIND_TESTS
 
 creation
@@ -27,7 +29,7 @@ creation
 
 feature {NONE} -- Initialization
 
-	make (an_executable: XM_XSLT_EXECUTABLE; a_select_expression: XM_XPATH_EXPRESSION) is
+	make (an_executable: XM_XSLT_EXECUTABLE; a_select_expression: XM_XPATH_EXPRESSION; disabled: BOOLEAN) is
 			-- Establish invariant.
 		require
 			executable_not_void: an_executable /= Void
@@ -39,6 +41,9 @@ feature {NONE} -- Initialization
 			make_expression_instruction
 			set_cardinality_exactly_one
 			select_expression := a_select_expression
+			if disabled then
+				receiver_options := Disable_escaping
+			end
 		ensure
 			executable_set: executable = an_executable
 			select_set: select_expression = a_select_expression
@@ -104,9 +109,15 @@ feature -- Evaluation
 	process_leaving_tail (a_context: XM_XSLT_EVALUATION_CONTEXT) is
 			-- Execute `Current', writing results to the current `XM_XPATH_RECEIVER'.
 		do
-			a_context.transformer.current_receiver.notify_characters (expanded_string_value (a_context), 0)
+			a_context.transformer.current_receiver.notify_characters (expanded_string_value (a_context), receiver_options)
 			last_tail_call := Void
 		end
+
+
+feature {NONE} -- Implementation
+
+	receiver_options: INTEGER
+			-- Receiver options
 
 end
 	

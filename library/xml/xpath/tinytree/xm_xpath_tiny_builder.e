@@ -145,11 +145,15 @@ feature -- Events
 			if conformance.basic_xslt_processor then
 				a_new_type_code := Untyped_atomic_type_code
 			else
-					check
-						Only_basic_xslt_processors_are_supported: False
-					end
+				check
+					Only_basic_xslt_processors_are_supported: False
+				end
 			end
+			if is_output_escaping_disabled (properties) then
+				on_error ("Cannot disable output escaping when writing to a tree")
+			else
 				tiny_document.add_attribute (node_number, a_name_code, a_new_type_code, a_value)
+			end
 		end
 
 	start_content is
@@ -170,17 +174,21 @@ feature -- Events
 		local
 			a_buffer_start, a_previous_sibling: INTEGER
 		do
-			a_buffer_start := tiny_document.character_buffer_length
-			tiny_document.append_characters (a_character_string)
-			tiny_document.add_node (Text_node, current_depth, a_buffer_start, a_character_string.count, -1)
-			node_number := tiny_document.last_node_added
-
-			a_previous_sibling := previously_at_depth.item (current_depth)
-			if a_previous_sibling > 0 then
-				tiny_document.set_next_sibling (node_number, a_previous_sibling)
+			if is_output_escaping_disabled (properties) then
+					on_error ("Cannot disable output escaping when writing to a tree")
+				else
+					a_buffer_start := tiny_document.character_buffer_length
+					tiny_document.append_characters (a_character_string)
+					tiny_document.add_node (Text_node, current_depth, a_buffer_start, a_character_string.count, -1)
+					node_number := tiny_document.last_node_added
+					
+					a_previous_sibling := previously_at_depth.item (current_depth)
+				if a_previous_sibling > 0 then
+					tiny_document.set_next_sibling (node_number, a_previous_sibling)
+				end
+				tiny_document.set_next_sibling (previously_at_depth.item (current_depth - 1), node_number) -- owner pointer in last sibling
+				previously_at_depth.put (node_number, current_depth)
 			end
-			tiny_document.set_next_sibling (previously_at_depth.item (current_depth - 1), node_number) -- owner pointer in last sibling
-			previously_at_depth.put (node_number, current_depth)
 		end
 	
 	notify_processing_instruction (a_target: STRING; a_data_string: STRING; properties: INTEGER) is

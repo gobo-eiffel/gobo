@@ -21,12 +21,18 @@ inherit
 
 	XM_XPATH_SEQUENCE_VALUE
 		undefine
-			copy, is_equal
+			copy, is_equal, item
 		redefine
 			item_type, effective_boolean_value
 		end
 
-	DS_SORTABLE [XM_XPATH_ITEM]
+	DS_ARRAYED_LIST [XM_XPATH_ITEM]
+		rename
+			make as make_array,
+			make_default as make_array_default
+		undefine
+			is_equal
+		end
 
 creation
 
@@ -40,20 +46,17 @@ feature {NONE} -- Initialization
 			iterator_before: an_iterator /= Void and then an_iterator.before
 		local
 			counter, another_counter: INTEGER
-			a_value: like value
+			a_value: DS_ARRAYED_LIST [XM_XPATH_ITEM]
 		do
 			make_value
-			create a_value.make (1, Estimated_item_count)
+			create a_value.make (Estimated_item_count)
 			from
 				counter := 1
 				an_iterator.start
 			until
 				an_iterator.after
 			loop
-				if counter > a_value.count then
-					a_value.resize (1, 2 * value.count)
-				end
-				a_value.put (an_iterator.item, counter)
+				a_value.force_last (an_iterator.item)
 
 				counter := counter + 1
 				an_iterator.forth
@@ -61,18 +64,18 @@ feature {NONE} -- Initialization
 
 			-- Drop all trailing `Void' entries to preserve semantics of item_at and iterator
 
-			create value.make (1, counter - 1)
+			make_array (counter - 1)
 			from
 				another_counter := 1
 			until
 				another_counter = counter 
 			loop
-				value.put (a_value.item (another_counter), another_counter)
+				put (a_value.item (another_counter), another_counter)
 				another_counter := another_counter + 1
 			end
-			if value.count = 0 then
+			if count = 0 then
 				set_cardinality_empty
-			elseif value.count = 1 then
+			elseif count = 1 then
 				set_cardinality_exactly_one
 			else
 				set_cardinality_one_or_more
@@ -89,26 +92,15 @@ feature {NONE} -- Initialization
 			-- Create from a list of items.
 		require
 			list_not_void: a_list /= Void
-		local
-			a_cursor: DS_LIST_CURSOR [XM_XPATH_ITEM]
 		do
-			create value.make (1, a_list.count)
-			from
-				a_cursor := a_list.new_cursor; a_cursor.start
-			variant
-				a_list.count + 1 - a_cursor.index
-			until
-				a_cursor.after
-			loop
-				value.put (a_cursor.item, a_cursor.index)
-				a_cursor.forth
-			end
+			make_from_linear (a_list)
 		end
 
 	make_default is
         -- Create an empty container.
 		do
-			create value.make (1, 1)
+			make_value
+			make_array_default
 		end
 
 feature -- Access
@@ -122,7 +114,7 @@ feature -- Access
 				if count = 1 then
 					Result := any_item
 				else
-					cached_item_type := value.item (1).item_type
+					cached_item_type := item (1).item_type
 					from
 						counter := 2
 					variant
@@ -133,7 +125,7 @@ feature -- Access
 						if cached_item_type = any_item then
 							counter := count + 1 -- make a quick exit
 						else
-							cached_item_type := common_super_type (cached_item_type, value.item (counter).item_type)
+							cached_item_type := common_super_type (cached_item_type, item (counter).item_type)
 							counter := counter + 1
 						end
 					end
@@ -156,9 +148,9 @@ feature -- Access
 				from
 					counter := 1
 				until
-					counter > value.count
+					counter > count
 				loop
-					an_item := value.item (counter)
+					an_item := item (counter)
 					if an_item = Void then
 						std.error.put_string ("Item number ")
 						std.error.put_string (counter.out)
@@ -167,10 +159,10 @@ feature -- Access
 					counter := counter + 1
 				end
 			end
-			if value.count = 0 then
+			if count = 0 then
 				create {XM_XPATH_EMPTY_ITERATOR [XM_XPATH_ITEM]} Result.make
 			else
-				create {XM_XPATH_ARRAY_ITERATOR [XM_XPATH_ITEM]} Result.make (value, 1, value.count)
+				create {XM_XPATH_ARRAY_LIST_ITERATOR [XM_XPATH_ITEM]} Result.make (Current)
 			end
 		end
 
@@ -179,16 +171,9 @@ feature -- Access
 		require
 			index_in_range: an_index > 0 and then an_index <= count
 		do
-			Result := value.item (an_index)
+			Result := item (an_index)
 		ensure
 			item_not_void: Result /= void
-		end
-
-feature -- Measurement
-
-	count: INTEGER is
-		do
-			Result := value.count
 		end
 
 feature -- Comparison
@@ -256,36 +241,13 @@ feature -- Evaluation
 			todo ("effective-boolean-value" ,False)
 		end
 
-feature -- Duplication
-
-	copy (other: like Current) is
-			-- Copy other to current container.
-		do
-			value.copy (other.value)
-		end
-
-feature -- Removal
-
-	wipe_out is
-			-- Remove all items from container
-		do
-			value.clear_all
-		end
-
 feature {XM_XPATH_SEQUENCE_EXTENT} -- Implementation
 
 	Estimated_item_count: INTEGER is 20
 			-- Guess at number of items in sequence
 
-	value: ARRAY [XM_XPATH_ITEM]
-			-- Value
-	
 	cached_item_type: XM_XPATH_ITEM_TYPE
 			-- Cached result for `item_type'
-
-invariant
-
-	value_not_void: value /= Void -- and then all values are non-void
 
 end
 	

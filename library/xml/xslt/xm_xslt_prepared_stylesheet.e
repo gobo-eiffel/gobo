@@ -136,13 +136,20 @@ feature -- Compilation
 		local
 			a_stylesheet_document: XM_XPATH_TREE_DOCUMENT
 			a_stylesheet: XM_XSLT_STYLESHEET
+			a_top_node: XM_XSLT_LITERAL_RESULT_ELEMENT
 		do
 			a_stylesheet_document := a_document
 			node_factory := a_node_factory
 			if target_name_pool = Void then
 				target_name_pool := default_pool.default_pool
 			end
-			todo ("create_style_sheet_executable - literal result stylesheet facility", True)
+
+			-- If top-level node is a literal result element, stitch it into a skeleton stylesheet
+
+			a_top_node ?= a_stylesheet_document.document_element
+			if a_top_node /= Void then
+				todo ("create_style_sheet_executable (literal result stylesheet facility is not yet supported)", True)
+			end
 			a_stylesheet ?= a_stylesheet_document.document_element
 			if a_stylesheet = Void then
 				todo ("Top-level element of stylesheet is not xsl:stylesheet or xsl:transform or literal result element", True)

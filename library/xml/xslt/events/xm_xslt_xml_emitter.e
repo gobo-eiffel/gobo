@@ -1,0 +1,691 @@
+indexing
+
+	description:
+
+	"Emitters that write XML."
+
+library: "Gobo Eiffel XSLT Library"
+copyright: "Copyright (c) 2004, Colin Adams and others"
+license: "Eiffel Forum License v2 (see forum.txt)"
+date: "$Date$"
+revision: "$Revision$"
+
+class XM_XSLT_XML_EMITTER
+
+inherit
+
+	XM_XSLT_EMITTER
+
+	XM_UNICODE_CHARACTERS_1_1
+
+	KL_IMPORTED_INTEGER_ROUTINES
+
+	KL_IMPORTED_STRING_ROUTINES
+
+	XM_XPATH_DEBUGGING_ROUTINES
+
+creation
+
+	make
+
+feature {NONE} -- Initialization
+
+	make (a_transformer: XM_XSLT_TRANSFORMER; an_outputter: XM_OUTPUT; some_output_properties: XM_XSLT_OUTPUT_PROPERTIES) is
+			-- Establish invariant.
+		require
+			transformer_not_void: a_transformer /= Void
+			outputter_not_void: an_outputter /= Void
+			output_properties_not_void: some_output_properties /= Void
+		do
+			transformer := a_transformer
+			name_pool := transformer.name_pool
+			raw_outputter := an_outputter
+			output_properties := some_output_properties
+			is_empty := True
+			create element_qname_stack.make_default
+			create name_lookup_table.make (0, 1023)
+			make_specials
+			system_id := ""
+			encoder_factory := transformer.configuration.encoder_factory
+		ensure
+			transformer_set: transformer = a_transformer
+			name_pool_set: name_pool = transformer.name_pool
+			outputter_set: raw_outputter = an_outputter
+			output_properties_set: output_properties = some_output_properties
+		end
+
+feature -- Events
+
+	start_document is
+			-- New document
+		do
+			--  Nothing is done at this stage: the opening of the output
+			--  file is deferred until some content is written to it.
+		end
+
+	end_document is
+			-- Notify the end of the document
+		do
+			-- Nothing to do
+		end
+
+	start_element (a_name_code: INTEGER; a_type_code: INTEGER; properties: INTEGER) is
+			-- Notify the start of an element
+		local
+			a_display_name, a_system_id, a_public_id: STRING
+			a_bad_character_code: INTEGER
+		do
+			if not is_error then
+				if not is_open then
+					open_document
+				end
+				
+				-- Have we've seen this name before?
+
+				if a_name_code < 1024 then
+					a_display_name := name_lookup_table.item (a_name_code)
+				end
+				if a_display_name = Void then
+					a_display_name := name_pool.display_name_from_name_code (a_name_code)
+					if a_name_code < 1024 then
+						name_lookup_table.put (a_display_name, a_name_code)
+					end
+					a_bad_character_code := bad_character_code (a_display_name)
+					if a_bad_character_code /= 0 then
+						on_error ("Element name contains a character (decimal" + a_bad_character_code.out + ") not available in the selected encoding")
+					end
+				end
+				if not is_error then
+					element_qname_stack.force (a_display_name)
+					current_element_name_code := a_name_code
+					if is_empty then
+						a_system_id := output_properties.doctype_system
+						a_public_id := output_properties.doctype_public
+						if a_system_id /= Void then write_doctype (a_display_name, a_system_id, a_public_id) end
+						is_empty := False
+					end
+					if is_open_start_tag then
+						close_start_tag (a_display_name, False)
+					end
+					output ("<")
+					output (a_display_name)
+					is_open_start_tag := True
+				end
+			end
+		end
+
+	notify_namespace (a_namespace_code: INTEGER; properties: INTEGER) is
+		local
+			a_namespace_prefix, a_namespace_uri: STRING
+			a_bad_character: INTEGER
+		do
+			if is_open and then not is_error then
+				a_namespace_prefix := name_pool.prefix_from_namespace_code (a_namespace_code)
+				a_namespace_uri := name_pool.uri_from_namespace_code (a_namespace_code)
+
+				if a_namespace_prefix.count = 0 then
+					output (" ")
+					output_attribute (current_element_name_code, "xmlns", a_namespace_uri, 0)
+				else
+					a_bad_character := bad_character_code (a_namespace_prefix)
+					if a_bad_character /= 0 then
+						on_error ("Namespace prefix contains a character (decimal + "
+									 + a_bad_character.out + ") not available in the selected encoding")
+					else
+						if allow_undeclare_namespaces or else a_namespace_uri.count /= 0 then
+							output (" ")
+							output_attribute (current_element_name_code, STRING_.concat ("xmlns:", a_namespace_prefix), a_namespace_uri, 0)
+						end
+					end
+				end
+			end
+		end
+
+	notify_attribute (a_name_code: INTEGER; a_type_code: INTEGER; a_value: STRING; properties: INTEGER) is
+			-- Notify an attribute;
+		local
+			a_display_name: STRING
+			a_bad_character: INTEGER
+		do
+			if is_open and then not is_error then
+
+				-- Have we've seen this name before?
+
+				if a_name_code < 1024 then
+					a_display_name := name_lookup_table.item (a_name_code)
+				end
+				if a_display_name = Void then
+					a_display_name := name_pool.display_name_from_name_code (a_name_code)
+					if a_name_code < 1024 then
+						name_lookup_table.put (a_display_name, a_name_code)
+					end
+					a_bad_character := bad_character_code (a_display_name)
+					if a_bad_character /= 0 then
+						on_error ("Attribute name contains a character (decimal" + a_bad_character.out + ") not available in the selected encoding")
+					end
+				end
+				if not is_error then
+					output (" ")
+					if not is_error then output_attribute (current_element_name_code, a_display_name, a_value, properties) end
+				end
+			end
+		end
+	
+
+	start_content is
+			-- Notify the start of the content, that is, the completion of all attributes and namespaces.
+		do
+			-- Don't add ">" to the start tag until we know whether the element has content.
+		end
+
+	end_element is
+			-- Notify the end of an element.
+		local
+			a_display_name: STRING
+		do
+			if is_open and then not is_error then
+				a_display_name := element_qname_stack.item
+				element_qname_stack.remove
+				if is_open_start_tag then
+					close_start_tag (a_display_name, False)
+				else
+					output ("</")
+					if not is_error then output (a_display_name) end
+					if not is_error then output (">") end
+				end
+			end
+		end
+
+	notify_characters (chars: STRING; properties: INTEGER) is
+			-- Notify character data.
+		local
+			a_bad_character: INTEGER
+		do
+			if not is_error then
+				if not is_open then
+					open_document
+				end
+				if is_open_start_tag then
+					close_start_tag ("", False)
+				end
+				if is_output_escaping_disabled (properties) then
+					a_bad_character := bad_character_code (chars)
+					if a_bad_character = 0 then
+						output (chars)
+					else
+
+						-- Recoverable error: using disable output escaping with characters
+                  --  that are not available in the target encoding
+
+						if not warning_issued then
+							transformer.report_recoverable_error ("disable-output-escaping is ignored for characters not available in the chosen encoding", Void)
+							warning_issued := True
+							if transformer.is_error then
+								is_error := True
+							end
+						end
+						if not is_error then
+							output_escape (chars, False)
+						end
+					end
+				else
+					output_escape (chars, False)
+				end
+			end
+		end
+
+	notify_processing_instruction (a_name: STRING; a_data_string: STRING; properties: INTEGER) is
+			-- Notify a processing instruction.
+		local
+			a_string: STRING
+		do
+			if not is_error then
+				if not is_open then
+					open_document
+				end
+				if is_open_start_tag then
+					close_start_tag ("", False)
+				end
+				a_string := STRING_.concat ("<?", a_name)
+				if a_data_string.count > 0 then
+					a_string := STRING_.appended_string (a_string, " ")
+					a_string := STRING_.appended_string (a_string, a_data_string)
+				end
+				a_string := STRING_.appended_string (a_string, "?>")
+				output (a_string)
+			end
+		end
+
+	notify_comment (a_content_string: STRING; properties: INTEGER) is
+			-- Notify a comment.
+		do
+			if not is_error then
+				if not is_open then
+					open_document
+				end
+				if is_open_start_tag then
+					close_start_tag ("", False)
+				end
+				output ("<!--")
+				if not is_error then output (a_content_string) end
+				if not is_error then output ("-->") end
+			end
+		end
+
+
+feature {XM_XSLT_HTML_INDENTER} -- Restricted
+
+	element_qname_stack: DS_ARRAYED_STACK [STRING]
+			-- QNames of open elements in scope
+
+feature {NONE} -- Implementation
+
+	is_open: BOOLEAN
+			-- Has the output document been opened yet
+
+	is_declaration_written: BOOLEAN
+			-- Has the XML declaration been written yet?
+
+	is_empty: BOOLEAN
+			-- Has the document element been written yet?
+
+	is_open_start_tag: BOOLEAN
+			-- Is a start tag open?
+
+	raw_outputter: XM_OUTPUT
+			-- Writer of encoded strings
+
+	encoder_factory: XM_XSLT_ENCODER_FACTORY
+			-- Encoder factory
+
+	encoding: STRING
+			-- Actual encoding to be used
+
+	current_element_name_code: INTEGER
+			-- Name code of the current element
+
+	is_hex_preferred: BOOLEAN
+			-- When writing characters entities, is hexadecimal notation preferred?
+
+	allow_undeclare_namespaces: BOOLEAN
+			-- Are namespace declarations allowed?
+
+	name_lookup_table: ARRAY [STRING]
+			-- Cache for standard QNames, indexed by name code
+
+	warning_issued: BOOLEAN
+			-- Has a warning for disabled character escaping problems been issued?
+
+	specials_in_text: ARRAY [BOOLEAN] is
+			-- Lookup table for ASCII characters that need escaping in text
+		once
+			create Result.make (0, 127)
+		end
+
+	specials_in_attributes: ARRAY [BOOLEAN] is
+			-- Lookup table for ASCII characters that need escaping in attributes
+		once
+			create Result.make (0, 127)
+		end
+
+	make_specials is
+			-- Initialize `specials_in_text' and `specials_in_attributes'.
+		once
+			specials_in_text.put (True, 0)
+			specials_in_text.put (True, 13) -- CR
+			specials_in_text.put (True, 60) -- '<'
+			specials_in_text.put (True, 62) -- '>'
+			specials_in_text.put (True, 38) -- '&'
+			specials_in_attributes.put (True, 0)
+			specials_in_attributes.put (True, 13) -- CR
+			specials_in_attributes.put (True, 60) -- '<'
+			specials_in_attributes.put (True, 62) -- '>'
+			specials_in_attributes.put (True, 38) -- '&'
+			specials_in_attributes.put (True, 10) -- 'LF'
+			specials_in_attributes.put (True, 9) -- 'TAB'
+			specials_in_attributes.put (True, 34) -- '"'
+		end
+
+	write_declaration is
+			-- Write XML declaration
+		require
+			not_yet_written: not is_declaration_written
+		local
+			omit: BOOLEAN
+		do
+			if output_properties.byte_order_mark_required then
+				output_ignoring_error (byte_order_mark)
+			end
+			omit := output_properties.omit_xml_declaration
+			if omit and then
+				not (encoding.is_equal ("UTF-8") or else
+					  encoding.is_equal ("UTF-16") or else
+					  encoding.is_equal ("US-ASCII") or else
+					  encoding.is_equal ("ASCII")) then
+				omit := False 
+			end
+			
+			if not omit then
+				output ("<?xml version=%"" + output_properties.version + "%" " + "encoding=%"" + encoding + "%"")
+				if output_properties.standalone /= Void then
+					output (" standalone=%"" + output_properties.standalone + "%"")
+				end
+				output ("?>")
+
+				-- Don't write a newline character: it's wrong if the output is an
+            --  external general parsed entity
+				
+			end
+			is_declaration_written := True
+		ensure
+			written: is_declaration_written
+		end
+
+	output (a_character_string: STRING) is
+			-- Output `a_character_string'.
+		require
+			valid_string: outputter.is_valid_string (a_character_string)
+			document_opened: is_open
+		do
+			if not is_error then
+				outputter.output (a_character_string)
+				if outputter.is_error then
+					on_error ("Failed to write to output stream")
+				end
+			end
+		end
+
+	output_ignoring_error (a_character_string: STRING) is
+			-- Output `a_character_string', ignoring any error.
+		require
+			valid_string: outputter.is_valid_string (a_character_string)
+			document_opened: is_open
+		do
+			outputter.output_ignoring_error (a_character_string)
+		end
+
+	output_attribute (an_element_name_code: INTEGER; an_attribute_qname: STRING; a_value: STRING; properties: INTEGER) is
+			-- Output attribute.
+		require
+			attribute_name_is_qname: an_attribute_qname /= Void and then is_qname (an_attribute_qname)
+			value_not_void: a_value /= Void
+			document_opened: is_open
+		local
+			a_delimiter: STRING
+		do
+			if not is_error then
+				output (an_attribute_qname)
+				if not is_error then
+					if are_no_special_characters (properties) then
+						output ("=")
+						if not is_error then output ("%"") end
+						if not is_error then output ("a_value") end
+						if not is_error then output ("%"") end
+					elseif are_null_markers_used (properties) then
+
+						-- Null (0) characters will be used before and after any section of
+						--  the value where escaping is to be disabled
+
+						output ("=")
+						if not is_error then
+							if a_value.index_of ('%"', 1) = 0 then
+								a_delimiter := "%""
+							else
+								a_delimiter := "'"
+							end
+							output (a_delimiter)
+							if not is_error then output_escape (a_value, True) end
+							if not is_error then output (a_delimiter) end
+						end
+					else
+						output ("=%"")
+						if not is_error then output_escape (a_value, True) end
+						if not is_error then output ("%"") end
+					end
+				end
+			end
+		end
+
+	output_escape (a_character_string: STRING; is_attribute: BOOLEAN) is
+			-- Output `a_character_string', escaping special characters.
+		require
+			string_not_void: a_character_string /= Void
+			document_opened: is_open
+		local
+			disabled: BOOLEAN
+			a_start_index, a_beyond_index, a_code: INTEGER
+			special_characters: ARRAY [BOOLEAN]
+		do
+			if is_attribute then
+				special_characters := specials_in_attributes
+			else
+				special_characters := specials_in_text
+			end
+			from
+				a_start_index := 1;
+			variant
+				a_character_string.count + 2 - a_start_index
+			until
+				a_start_index > a_character_string.count
+			loop
+				a_beyond_index := maximal_ordinary_string (a_character_string, a_start_index, special_characters)
+				if a_beyond_index > a_start_index then
+					output (a_character_string.substring (a_start_index, a_beyond_index - 1))
+				end
+				if a_beyond_index <= a_character_string.count then
+					a_code := a_character_string.item_code (a_beyond_index)
+					if a_code = 0 then -- enable/disable escaping toggle
+						disabled := not disabled
+					elseif disabled then
+						output (a_character_string.substring (a_beyond_index, a_beyond_index))
+					elseif a_code > 127 then -- non-ASCII
+						todo ("output_escape (surrogates", True)
+						-- TODO - deal with (high?) surrogate characters
+						output_character_reference (a_code)
+					else -- ASCII character needs escaping
+						if a_code = 60 then
+							output ("&lt;")
+						elseif a_code = 62 then
+							output ("&gt;")
+						elseif a_code = 38 then
+							output ("&amp;")
+						elseif a_code = 34 then
+							output ("&#34;")
+						elseif a_code = 10 then
+							output ("&#xA;")
+						elseif a_code = 13 then
+							output ("&#xD;")
+						elseif a_code = 9 then
+							output ("&#0;")
+						else
+							check
+								error_in_escaping_logic: False
+							end
+						end
+					end
+				end
+				a_start_index := a_beyond_index + 1
+			end
+		end
+
+	maximal_ordinary_string (a_character_string: STRING; a_start_index: INTEGER; special_characters: ARRAY [BOOLEAN]): INTEGER is
+			-- Maximal sequence of ordinary characters
+		require
+			string_not_void: a_character_string /= Void
+			special_characters_not_void: special_characters /= Void
+			strictly_positive_start_index: a_start_index > 0
+			document_opened: is_open
+		local
+			an_index, a_code: INTEGER
+			finished: BOOLEAN
+		do
+			from
+				an_index := a_start_index
+			until
+				finished or else an_index > a_character_string.count
+			loop
+				a_code := a_character_string.item_code (an_index)
+				if a_code < 128 then -- ASCII
+					if special_characters.item (a_code) then
+						finished := True
+					else
+						an_index := an_index + 1
+					end
+				-- TODO: (high) surrogates
+				elseif outputter.is_bad_character_code (a_code) then
+					todo ("maximal_ordinary_string (surrogate characters)", True)
+					finished := True
+				else
+					an_index := an_index + 1
+				end
+			end
+			Result := an_index
+		end
+
+	output_character_reference (a_code: INTEGER) is
+			-- Output a character reference.
+		require
+			strictly_positive_code: a_code > 0
+			document_opened: is_open
+		local
+			a_string: STRING
+		do
+			if not is_error then
+				create a_string.make (10)
+				if is_hex_preferred then
+					a_string := "&#x"
+					a_string.append_string (INTEGER_.to_hexadecimal (a_code, True))
+				else
+					a_string := "&#x"
+					a_string.append_string (a_code.out)
+				end
+				output (a_string)
+			end
+		end
+
+	open_document is
+			-- Open output document.
+		require
+			document_not_yet_opened: not is_open
+		local
+			a_character_representation: STRING
+		do
+			encoding := STRING_.to_upper (output_properties.encoding)
+			if not encoding.is_equal ("UTF-8") then
+				on_error ("Only UTF-8 is supported as an encoding for the moment")
+				encoding := "UTF-8"
+			end
+
+			outputter := encoder_factory.outputter (encoding, raw_outputter)
+			if outputter = Void then
+				on_error ("Unable to open output stream for encoding " + encoding)
+			else
+				is_open := True
+				write_declaration
+			
+				a_character_representation := output_properties.character_representation
+				if a_character_representation.is_equal ("hex") then
+					is_hex_preferred := True
+				elseif not a_character_representation.is_equal ("decimal") then
+					on_error ("Illegal value for gexslt:character-representation: " + a_character_representation)
+				end
+			
+				if output_properties.version.is_equal ("1.1") then
+					allow_undeclare_namespaces := output_properties.undeclare_namespaces
+				end
+			end
+		ensure
+			document_opened: is_error or else is_open
+		end
+
+	byte_order_mark: STRING is
+			-- XML BOM
+		once
+			Result := code_to_string (254 * 256 + 255) -- FEFF
+		end
+
+	write_doctype (a_type, a_system_id, a_public_id: STRING ) is
+			-- Write DOCTYPE.
+		require
+			doctype_not_void: a_type /= Void
+		do
+			if is_declaration_written then
+				output ("%N")
+			end
+			output ("<!DOCTYPE ")
+			output (a_type)
+			output ("%N")
+			if a_system_id /= Void then
+				if a_public_id = Void then
+					output (" SYSTEM %"")
+					output (a_system_id)
+					output ("%">%N")
+				else
+					output (" PUBLIC %"")
+					output (a_public_id)
+					output (" %"")
+					output (a_system_id)
+					output ("%">%N")
+				end
+			elseif a_public_id /= Void then -- for HTML
+				output (" PUBLIC %"")
+				output (a_system_id)
+				output ("%">%N")
+			end
+		end
+
+	bad_character_code (a_character_string: STRING): INTEGER is
+			-- Code point of first bad character in `a_character_string' (or 0)
+		require
+			string_not_void: a_character_string /= Void
+		local
+			an_index, a_code, another_code: INTEGER
+			finished: BOOLEAN
+		do
+			from
+				an_index := 1
+			variant
+				a_character_string.count + 1 - an_index
+			until
+				finished or else an_index > a_character_string.count
+			loop
+				a_code := a_character_string.item_code (an_index)
+				if a_code > 127 then
+					if outputter.is_bad_character_code (a_code) then
+						Result := a_code
+						finished := True
+					end
+				end
+				an_index := an_index + 1
+			end
+		end
+
+	close_start_tag (a_name: STRING; empty_tag: BOOLEAN) is
+		-- Close start tag.
+		require
+			name_not_void: a_name /= Void
+			start_tag_open: is_open_start_tag
+		do
+			if empty_tag then
+				output (empty_element_tag_closer (a_name))
+			else
+				output (">")
+			end
+			is_open_start_tag := False
+		end
+
+	empty_element_tag_closer (a_name: STRING): STRING is
+			-- String to close an empty tag
+		require
+			name_not_void: a_name /= Void
+		do
+			output ("/>")
+		end
+
+invariant
+
+	outputter_not_void: is_open implies outputter /= Void
+	encoder_factory_not_void: encoder_factory /= Void
+
+end
+	

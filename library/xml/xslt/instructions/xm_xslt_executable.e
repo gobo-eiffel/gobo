@@ -41,6 +41,7 @@ feature {NONE} -- Initialization
 			stripper_rules := a_mode
 			is_strips_whitespace := strips_whitespace
 			module_list := a_module_list
+			create default_output_properties.make_html  -- TODO: bodge - change this back to make
 		ensure
 			configuration_set: configuration = a_configuration
 			rule_manager_set: rule_manager = a_rule_manager
@@ -71,6 +72,9 @@ feature -- Access
 	default_collation_name: STRING
 			-- Default collation name
 
+	default_output_properties: XM_XSLT_OUTPUT_PROPERTIES
+			-- Default output properties (for the unnamed output format)
+	
 	compiled_templates_index: DS_HASH_TABLE [XM_XSLT_COMPILED_TEMPLATE, INTEGER]
 			-- Index of named templates by `template_fingerprint'
 
@@ -173,6 +177,7 @@ invariant
 	default_collation_name: default_collation_name /= Void
 	collation_map: collation_map /= Void
 	module_list_not_void: module_list /= Void
+	default_output_properties_not_void: default_output_properties /= Void -- ??
 
 end
 	

@@ -18,6 +18,8 @@ inherit
 
 	XM_XPATH_SHARED_ANY_ITEM_TYPE
 
+	XM_XPATH_STANDARD_NAMESPACES
+
 feature -- Access
 
 	-- The following are the DOM node type definitions for those nodes
@@ -44,11 +46,11 @@ feature -- Access
 			a_no_node_test: XM_XPATH_NO_NODE_TEST
 		do
 			a_no_node_test ?= t1
-			if a_no_node_test = Void then
+			if a_no_node_test /= Void then
 				Result := t2
 			else
 				a_no_node_test ?= t2
-				if a_no_node_test = Void then
+				if a_no_node_test /= Void then
 					Result := t1
 				elseif t1 = t2 then
 					Result := t1
@@ -158,6 +160,39 @@ feature -- Status report
 		do
 			if is_sub_type (a_source_type, type_factory.decimal_type) then
 				Result := a_target_type = type_factory.double_type
+			end
+		end
+
+	are_types_comparable (a_type, another_type: INTEGER): BOOLEAN is
+			-- Is `a_type' comparable with `another_type'?
+		local
+			t1, t2: INTEGER
+		do
+			if a_type = Any_atomic_type_code or else
+				another_type = Any_atomic_type_code then
+				Result := True -- as far as we know
+			else
+				t1 := a_type
+				t2 := another_type
+				if t1 = Untyped_atomic_type_code then
+					t1 := String_type_code
+				end
+				if t2 = Untyped_atomic_type_code then
+					t2 := String_type_code
+				end
+				if t1 = Double_type_code or else
+					t1 = Decimal_type_code or else
+					t1 = Float_type_code or else
+					t1 = Integer_type_code then
+					t1 := Numeric_type_code
+				end
+				if t2 = Integer_type_code or else
+					t2 = Decimal_type_code or else
+					t2 = Float_type_code or else
+					t2 = Double_type_code then
+					t2 := Numeric_type_code
+				end
+				Result := t1 = t2
 			end
 		end
 

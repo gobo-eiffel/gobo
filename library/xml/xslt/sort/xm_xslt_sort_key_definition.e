@@ -51,10 +51,7 @@ feature -- Access
 			-- Sort key
 
 	reduced_definition (a_context: XM_XSLT_EVALUATION_CONTEXT):  XM_XSLT_FIXED_SORT_KEY_DEFINITION is
-			-- Sort key definition without any dependencies on the context;
-			-- For the sort key select expression, this means things that
-			--  don't depend on the individual node: specifically, variables
-			--  and current-group().
+			-- Sort key definition without any dependencies on the context except for the sort key itself;
 			-- For the AVTs used to select data type, case order, language, it means
 			--  all dependencies: after reduction, these values will be constants.
 		require

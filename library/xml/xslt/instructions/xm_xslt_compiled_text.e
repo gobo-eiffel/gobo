@@ -16,7 +16,8 @@ inherit
 
 	XM_XSLT_TEXT_CONSTRUCTOR
 
-		
+	XM_XPATH_RECEIVER_OPTIONS
+
 	XM_XPATH_SHARED_NODE_KIND_TESTS
 
 creation
@@ -25,7 +26,7 @@ creation
 
 feature {NONE} -- Initialization
 
-	make (an_executable: XM_XSLT_EXECUTABLE) is
+	make (an_executable: XM_XSLT_EXECUTABLE; disabled: BOOLEAN) is
 			-- Establish invariant.
 		require
 			executable_not_void: an_executable /= Void
@@ -35,6 +36,9 @@ feature {NONE} -- Initialization
 			create children.make (0)
 			make_expression_instruction
 			set_cardinality_exactly_one
+			if disabled then
+				receiver_options := Disable_escaping
+			end
 		ensure
 			executable_set: executable = an_executable
 		end
@@ -75,9 +79,14 @@ feature -- Evaluation
 			a_string: STRING
 		do
 			a_string := expanded_string_value (a_context)
-			a_context.transformer.current_receiver.notify_characters (a_string, 0)
+			a_context.transformer.current_receiver.notify_characters (a_string, receiver_options)
 			last_tail_call := Void
 		end
+
+feature {NONE} -- Implementation
+
+	receiver_options: INTEGER
+			-- Receiver options
 
 end
 	

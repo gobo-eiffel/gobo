@@ -48,6 +48,14 @@ feature -- Access
 	style_element: XM_XSLT_STYLE_ELEMENT
 			-- Style element that provides the context
 
+	style_sheet: XM_XSLT_STYLESHEET is
+			-- Principal style sheet
+		do
+			Result := style_element.principal_stylesheet
+		ensure
+			style_sheet_not_void: Result /= Void
+		end
+
 	host_language: STRING is
 			-- Name of host language
 		do

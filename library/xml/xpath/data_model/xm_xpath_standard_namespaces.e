@@ -28,17 +28,17 @@ feature -- Access
 	Xml_prefix_index: INTEGER is 2
 			-- Numeric code representing the XML namespace
 
-	Xslt_prefix_index: INTEGER is 3
-			-- Numeric code representing the XSLT namespace
-
-	Xml_schema_prefix_index: INTEGER is 4
+	Xml_schema_prefix_index: INTEGER is 3
 			-- Numeric code representing the XML Schema namespace
 	
-	Xpath_defined_datatypes_prefix_index: INTEGER is 5
+	Xpath_defined_datatypes_prefix_index: INTEGER is 4
 			-- Numeric code representing the XPath datatypes namespace
 
-	Gexslt_uri_prefix_index: INTEGER is 6
+	Gexslt_uri_prefix_index: INTEGER is 5
 			-- Numeric code representing the gexslt namespace
+
+	Xslt_prefix_index: INTEGER is 6
+			-- Numeric code representing the XSLT namespace
 
 	Xml_schema_instance_prefix_index: INTEGER is 7
 			-- Numeric code representing the XML Schema instance namespace

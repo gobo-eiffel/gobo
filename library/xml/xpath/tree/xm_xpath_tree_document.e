@@ -18,11 +18,13 @@ inherit
 		undefine
 			document_element, next_sibling, previous_sibling, has_child_nodes,
 			first_child, last_child
+		redefine
+			hash_code
 		end
 
 	XM_XPATH_TREE_COMPOSITE_NODE
 		undefine
-			document_number, base_uri, local_part, system_id, line_number
+			document_number, base_uri, local_part, system_id, line_number, hash_code
 		redefine
 			document_element, next_sibling, previous_sibling, root, document_root
 		end
@@ -47,7 +49,6 @@ feature {NONE} -- Initialization
 			name_pool := a_name_pool
 			set_system_id (a_system_id)
 			name_pool.allocate_document_number (Current)
-			document_number := name_pool.document_number (Current)
 		ensure
 			name_pool_set: name_pool = a_name_pool
 			base_uri_set: STRING_.same_string (base_uri, a_system_id)

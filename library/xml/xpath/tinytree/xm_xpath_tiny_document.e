@@ -26,12 +26,12 @@ inherit
 		undefine
 			has_child_nodes, first_child
 		redefine
-			node_kind
+			node_kind, hash_code
 		end
 
 	XM_XPATH_TINY_COMPOSITE_NODE
 		undefine
-			document_number, base_uri, local_part
+			document_number, base_uri, local_part, hash_code
 		redefine
 			root, document_root, system_id, line_number
 		end
@@ -54,7 +54,10 @@ creation
 
 feature {NONE} -- Initialization
 
-	make (an_estimated_node_count: INTEGER; an_estimated_attribute_count: INTEGER; an_estimated_namespace_count: INTEGER; an_estimated_character_count: INTEGER; a_name_pool: XM_XPATH_NAME_POOL; a_system_id: STRING) is
+	make (an_estimated_node_count: INTEGER;
+			an_estimated_attribute_count: INTEGER; an_estimated_namespace_count:
+			INTEGER; an_estimated_character_count: INTEGER; a_name_pool:
+			XM_XPATH_NAME_POOL; a_system_id: STRING) is
 			-- Establish invariant
 		require
 			positive_node_count: an_estimated_node_count > 0
@@ -88,7 +91,6 @@ feature {NONE} -- Initialization
 			name_pool := a_name_pool
 			set_system_id (a_system_id)
 			name_pool.allocate_document_number (Current)
-			document_number := name_pool.document_number (Current)
 		ensure
 			name_pool_set: name_pool = a_name_pool
 			--base_uri_set: STRING_.same_string (base_uri, a_system_id)

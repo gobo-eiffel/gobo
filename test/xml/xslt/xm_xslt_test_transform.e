@@ -22,8 +22,6 @@ inherit
 
 	XM_XPATH_SHARED_NAME_POOL
 
-	XM_XPATH_SHARED_FUNCTION_FACTORY
-
 
 	XM_RESOLVER_FACTORY
 	
@@ -36,17 +34,14 @@ feature
 			a_configuration: XM_XSLT_CONFIGURATION
 			a_transformer: XM_XSLT_TRANSFORMER
 			a_uri_source, another_uri_source: XM_XSLT_URI_SOURCE
-			a_system_function_factory: XM_XSLT_SYSTEM_FUNCTION_FACTORY
 			an_error_listener: XM_XSLT_DEFAULT_ERROR_LISTENER
 			a_builder: XM_XPATH_BUILDER
 			a_parser: XM_EIFFEL_PARSER
 			a_document: XM_XPATH_DOCUMENT
-
+			an_output: XM_OUTPUT
 			a_resolver: XM_URI_EXTERNAL_RESOLVER
 		do
 			conformance.set_basic_xslt_processor
-			create a_system_function_factory
-			function_factory.register_system_function_factory (a_system_function_factory)
 			create a_configuration.make_with_defaults
 			a_configuration.set_string_mode_ascii   -- make_with_defaults sets to mixed
 			create a_stylesheet.make (a_configuration)
@@ -64,9 +59,11 @@ feature
 			a_document := a_builder.document
 			assert ("No error", not a_builder.has_error)
 			assert ("Document", a_document /= Void)
-			-- a_transformer.register_document (a_document, another_uri_source.system_id)
-			a_transformer.create_new_context (a_document)
-			a_transformer.perform_transformation (a_document)
+			a_transformer.register_document (a_document, another_uri_source.system_id)
+			--a_transformer.create_new_context (a_document)
+			--a_transformer.perform_transformation (a_document)
+			create an_output
+			a_transformer.transform_document (a_document, an_output)
 		end
 
 end

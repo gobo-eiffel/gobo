@@ -189,11 +189,14 @@ feature -- Events
 
 	notify_characters (chars: STRING; properties: INTEGER) is
 			-- Notify character data.
+		local
+			an_orphan: XM_XPATH_ORPHAN
 		do
 			if chars.count /= 0 then
 				if in_start_tag then start_content end
 				if tree = Void then
-					todo ("notify_characters", true)
+					create an_orphan.make (name_pool, Text_node, chars)
+					append_item (an_orphan)
 				else
 					tree.notify_characters (chars, properties)
 				end

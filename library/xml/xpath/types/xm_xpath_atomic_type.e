@@ -97,6 +97,12 @@ feature -- Access
 			end
 		end
 
+	atomized_item_type: XM_XPATH_ATOMIC_TYPE is
+			-- Type of atomic values that will be produced when an item of this type is atomized
+		do
+			Result := Current
+		end
+
 feature -- Comparison
 
 	is_same_type (other: XM_XPATH_ITEM_TYPE): BOOLEAN is

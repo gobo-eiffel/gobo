@@ -2,7 +2,7 @@ indexing
 
 	description:
 
-		"Objects that indicate the type of an atomic item"
+		"Objects that indicate the type of a list item"
 
 	library: "Gobo Eiffel XPath Library"
 	copyright: "Copyright (c) 2004, Colin Adams and others"
@@ -38,6 +38,12 @@ feature -- Access
 			an_atomic_type: XM_XPATH_ATOMIC_TYPE
 		do
 			-- TODO
+		end
+
+	atomized_item_type: XM_XPATH_ATOMIC_TYPE is
+			-- Type of atomic values that will be produced when an item of this type is atomized
+		do
+			Result := type_factory.any_atomic_type
 		end
 
 feature -- Comparison

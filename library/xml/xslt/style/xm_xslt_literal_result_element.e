@@ -101,6 +101,8 @@ feature -- Element change
 				if should_namespaces_be_omitted (an_element_uri_code, a_name_pool) then
 					create namespace_codes.make (0)
 				else
+					create accumulated_namespace_nodes.make_default
+					accumulate_namespace_nodes (Current, accumulated_namespace_nodes, True)
 					namespace_codes := namespace_codes_in_scope
 					apply_namespace_aliases (an_element_uri_code, a_name_pool, a_stylesheet)
 				end
@@ -191,7 +193,7 @@ feature -- Element change
 					if not direct_children.extendible (attributes.count) then
 						direct_children.resize (direct_children.count + attributes.count)
 					end
-					direct_children.extend_last (attributes)
+					direct_children.extend_first (attributes) -- TODO this is inefficient
 				end
 
 				last_generated_instruction := a_fixed_element

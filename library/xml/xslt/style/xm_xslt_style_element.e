@@ -1354,7 +1354,7 @@ feature -- Element change
 			loop
 				a_node := an_iterator.item
 				if a_node.node_type = Text_node then
-					create a_text_instruction.make (an_executable)
+					create a_text_instruction.make (an_executable, False)
 					create a_string_value.make (a_node.string_value)
 					a_text_instruction.set_select_expression (a_string_value)
 					check

@@ -18,6 +18,8 @@ inherit
 
 	XM_XPATH_TYPE
 
+	XM_XPATH_SHARED_TYPE_FACTORY
+
 creation {XM_XPATH_SHARED_ANY_ITEM_TYPE}
 
 	make
@@ -50,6 +52,12 @@ feature -- Access
 			-- fingerprint of primitive type corresponding to this item type
 		do
 			Result := Any_item_fingerprint
+		end
+
+	atomized_item_type: XM_XPATH_ATOMIC_TYPE is
+			-- Type of atomic values that will be produced when an item of this type is atomized
+		do
+			Result := type_factory.any_atomic_type
 		end
 
 feature -- Comparison

@@ -93,7 +93,9 @@ feature {XM_XSLT_ELEMENT_CREATOR} -- Local
 			until
 				a_cursor.after
 			loop
-				a_receiver.notify_namespace (a_cursor.item, 0)
+				if a_cursor.item >= 0 then -- drop excluded namespaces
+					a_receiver.notify_namespace (a_cursor.item, 0)
+				end
 				a_cursor.forth
 			end
 		end

@@ -91,6 +91,10 @@ feature -- Evaluation
 				if a_transformer.is_tracing then
 					todo ("process_leaving_tail", True)
 				else
+--					if not first_processed then
+--						first_processed := True
+--						body.display_children (1, a_transformer.name_pool)
+--					end
 					body.process_leaving_tail (a_transformer.new_xpath_context)
 					last_tail_call := body.last_tail_call
 				end
@@ -117,5 +121,6 @@ feature {NONE} -- Implementation
 	body: XM_XSLT_SEQUENCE_INSTRUCTION
 			-- Optional template body
 
+	first_processed: BOOLEAN
 
 end

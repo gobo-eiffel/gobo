@@ -133,7 +133,7 @@ feature -- Evaluation
 						an_expression.evaluate_item (an_evaluation_context)
 						an_atomic_value ?= an_expression.last_evaluated_item
 						if an_atomic_value /= Void then
-							Result := a_transformer.key_manager.select_by_key (a_fingerprint, a_context_document, an_atomic_value, a_transformer)
+							Result := a_transformer.key_manager.sequence_by_key (a_fingerprint, a_context_document, an_atomic_value, a_transformer)
 						else
 							create {XM_XPATH_EMPTY_ITERATOR [XM_XPATH_ITEM]} Result.make
 						end
@@ -156,10 +156,27 @@ feature -- Evaluation
 			set_replacement (Current)
 		end
 
-	map (an_item: XM_XPATH_NODE; a_context: XM_XPATH_CONTEXT; an_information_object: ANY): XM_XPATH_MAPPED_NODE is
+	map (an_item: XM_XPATH_ITEM; a_context: XM_XPATH_CONTEXT; an_information_object: ANY): XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_NODE] is
 			-- Map `an_item' to a sequence
+		local
+			a_key_context_information: XM_XSLT_KEY_CONTEXT_INFORMATION
+			a_key_manager: XM_XSLT_KEY_MANAGER
+			a_key_value: XM_XPATH_ATOMIC_VALUE
 		do
-			todo ("map", False)
+			a_key_context_information ?= an_information_object
+			check
+				key_context_information: a_key_context_information /= Void
+				-- See `iterator'.
+			end
+			a_key_manager := a_key_context_information.transformer.key_manager
+			a_key_value ?= an_item
+			check
+				key_value_is_atomic: a_key_value /= Void
+				-- By definition.
+			end
+			Result := a_key_manager.sequence_by_key (a_key_context_information.key_fingerprint,
+																			a_key_context_information.document, a_key_value,
+																			a_key_context_information.transformer)
 		end
 
 feature {XM_XPATH_FUNCTION_CALL} -- Restricted

@@ -99,14 +99,14 @@ feature -- Evaluation
 				end
 				a_receiver.start_element (a_name_code, -1, 0)
 
-				-- Output the required namespace nodes via a call-bac
+				-- Output the required namespace nodes via a call-back
 
 				output_namespace_nodes (a_context, a_validator)
 				if not a_transformer.is_error then
 
 					-- Apply the content of any attribute sets mentioned in use-attribute-sets.
 					todo ("process_leaving_tail - use-attribute-sets", True)
-					
+
 					process_children (a_context)
 
 					if not a_transformer.is_error then

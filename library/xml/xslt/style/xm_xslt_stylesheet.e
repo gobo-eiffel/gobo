@@ -539,6 +539,7 @@ feature -- Element change
 				end
 				a_cursor.forth
 			end
+			decimal_format_manager.fixup_default_default
 			last_compiled_executable.set_slot_space (number_of_variables, largest_stack_frame)
 
 			create a_compiled_templates_index.make (named_templates_index.count)
@@ -552,7 +553,7 @@ feature -- Element change
 			end
 			last_compiled_executable.set_named_template_table (a_compiled_templates_index)
 
-			todo ("compile_stylesheet", True) -- Build character maps index
+			todo ("compile_stylesheet (character maps not yet supported)", True)
 		end
 
 feature {XM_XSLT_STYLE_ELEMENT} -- Local

@@ -65,6 +65,7 @@ feature -- Element change
 				if STRING_.same_string (a_disable_attribute, "no") then
 					do_nothing
 				elseif STRING_.same_string (a_disable_attribute, "yes") then
+					-- TODO - allow "yes" - perhaps as an option??
 					report_compile_error ("This processor does not support setting 'disable-output-escaping' to 'yes'")
 				else
 					report_compile_error ("The 'disable-output-escaping' attribute must be either 'yes' or 'no' (and this processor only supports 'no'")
@@ -122,7 +123,7 @@ feature -- Element change
 					create {XM_XPATH_STRING_VALUE} seperator_expression.make (" ")
 				end
 			end
-			create a_value_of.make (an_executable, select_expression)
+			create a_value_of.make (an_executable, select_expression, False)
 			compile_content (an_executable, a_value_of)
 			a_value_of.set_separator_expression (seperator_expression)
 			last_generated_instruction := a_value_of

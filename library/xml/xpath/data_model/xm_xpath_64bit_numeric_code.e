@@ -14,6 +14,8 @@ class	XM_XPATH_64BIT_NUMERIC_CODE
 
 inherit
 
+	HASHABLE
+
 	KL_SHARED_PLATFORM
 
 creation
@@ -88,6 +90,12 @@ feature -- Access
 		high_word, low_word: INTEGER
 			-- Component integers
 
+		hash_code: INTEGER is
+			-- Hash code value
+		do
+			Result := high_word.hash_code // 2 + low_word.hash_code // 2
+		end
+		
 feature -- Comparison
 
 
@@ -117,6 +125,14 @@ feature -- Comparison
 			end
 		ensure
 			definition: Result = (other < Current)
+		end
+
+	ie_equal (other:  XM_XPATH_64BIT_NUMERIC_CODE): BOOLEAN is
+			-- Is `other` equal to `Current'?
+		require
+			other_exists: other /= void
+		do
+			Result := other.high_word = high_word and then other.low_word = low_word
 		end
 
 feature -- Status report

@@ -21,6 +21,8 @@ inherit
 			as_value
 		end
 
+	HASHABLE
+
 feature {NONE} -- Initialization
 
 	make_atomic_value is

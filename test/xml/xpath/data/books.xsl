@@ -6,6 +6,8 @@
 
  gexslt:explain="no"
 
+ exclude-result-prefixes="gexslt"
+
  version="2.0"
 
 >

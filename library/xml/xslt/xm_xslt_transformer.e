@@ -24,6 +24,8 @@ inherit
 
 	XM_XSLT_CONFIGURATION_CONSTANTS
 
+	XM_XSLT_VALIDATION
+
 creation
 
 	make
@@ -49,11 +51,6 @@ feature {NONE} -- Initialization
 			create document_pool.make
 			initial_mode := -1
 			recovery_policy := Recover_with_warnings
-
-			-- Temporary Bodge
-
-			create {XM_XSLT_NULL_SEQUENCE_RECEIVER} current_receiver
-			initialize_transformer
 		ensure
 			configuration_set: configuration = a_configuration
 			prepared_stylesheet_set: prepared_stylesheet = a_prepared_stylesheet
@@ -67,8 +64,15 @@ feature -- Access
 	configuration: XM_XSLT_CONFIGURATION
 			-- User-selectable configuration parameters
 
-	key_manager: XM_XSLT_KEY_MANAGER
+	key_manager: XM_XSLT_KEY_MANAGER is
 			-- Key manager
+		require
+			executable_not_void: executable /= Void
+		do
+			Result := executable.key_manager
+		ensure
+			key_manager_not_void: Result /= Void
+		end
 
 	current_iterator: XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_ITEM]
 			--Current iterator
@@ -78,6 +82,9 @@ feature -- Access
 
 	current_template: XM_XSLT_COMPILED_TEMPLATE
 			-- Current template
+
+	initial_template: XM_XSLT_COMPILED_TEMPLATE
+			-- Initial template
 
 	current_item: XM_XPATH_ITEM is
 			-- Current item
@@ -343,15 +350,13 @@ feature -- Element change
 	reset_output_destination (a_receiver: XM_XSLT_SEQUENCE_RECEIVER) is
 			-- Close the current receiver, and revert to a previous receiver.
 		require
-			receiver_not_void: a_receiver /= Void
-			strictly_positive_temporary_destination_depth: temporary_destination_depth > 0
+			current_receiver_not_void: current_receiver /= Void
 		do
-			temporary_destination_depth := temporary_destination_depth - 1
+			if temporary_destination_depth > 0 then temporary_destination_depth := temporary_destination_depth - 1 end
 			current_receiver.end_document
 			current_receiver := a_receiver
 		ensure
 			receiver_set: current_receiver = a_receiver
-			temporary_destination_depth_decreased_by_one: temporary_destination_depth = old temporary_destination_depth - 1
 		end
 	
 	change_to_sequence_output_destination (a_receiver: XM_XSLT_SEQUENCE_RECEIVER) is
@@ -377,6 +382,41 @@ feature -- Element change
 			temporary_destination_depth_increased_by_one: temporary_destination_depth = old temporary_destination_depth + 1
 		end
 
+	change_output_destination (properties: XM_XSLT_OUTPUT_PROPERTIES; an_outputter: XM_OUTPUT; -- TODO: change this last parameter
+										is_final: BOOLEAN; validation: INTEGER; a_schema_type: XM_XPATH_SCHEMA_TYPE) is
+			-- Set a new output destination, supplying the output format details.
+		require
+			outputter_not_void: an_outputter /= void
+			schema_type_not_yet_supported: a_schema_type = Void
+		local
+			a_complex_outputter: XM_XSLT_COMPLEX_CONTENT_OUTPUTTER
+			some_properties: XM_XSLT_OUTPUT_PROPERTIES
+			a_receiver: XM_XPATH_RECEIVER
+			a_namespace_reducer: XM_XSLT_NAMESPACE_REDUCER
+		do
+			if is_final and then temporary_destination_depth > 0 then
+				report_fatal_error ("Cannot switch to a final result destination while writing a temporary tree", Void)
+			else
+				if not is_final then temporary_destination_depth := temporary_destination_depth + 1 end
+				if properties = Void then
+					create some_properties.make
+				else
+					some_properties := properties
+				end
+				-- set_output_properties?? TODO
+				a_receiver := selected_receiver (an_outputter, some_properties)
+
+				-- TODO: add a validator to the pipeline if required
+
+				-- Add a filter to remove duplicate namespaces
+
+				create a_namespace_reducer.make (name_pool, a_receiver)
+				create a_complex_outputter.make (name_pool, a_namespace_reducer)
+				a_complex_outputter.start_document
+				current_receiver := a_complex_outputter
+			end
+		end
+
 	reset_global_context is
 			-- Reset the context to point to the root of the principal source document as the singleton focus.
 		local
@@ -393,6 +433,37 @@ feature -- Element change
 
 feature -- Transformation
 
+	transform_document (a_start_node: XM_XPATH_NODE; an_outputter: XM_OUTPUT -- this last will change
+							  ) is
+			-- Transform document supplied as in-memory tree.
+		require
+			executable_not_void: executable /= Void
+			start_node_not_void: a_start_node /= Void
+			destination_stream_not_void: an_outputter /= Void
+		local
+			properties: XM_XSLT_OUTPUT_PROPERTIES
+		do
+			initialize_transformer
+			properties := executable.default_output_properties
+
+			-- TODO: overlay properties defined by API
+			-- TODO: stylesheet chaining
+
+			change_output_destination (properties, an_outputter, True, Validation_preserve, Void)
+
+			-- Process the source document using the handlers that have been set up.
+
+			if initial_template = Void then
+				perform_transformation (a_start_node)
+			else
+				-- TODO
+			end
+
+			reset_output_destination (Void)
+
+			-- close output stream?
+		end
+		
 	perform_transformation (a_start_node: XM_XPATH_NODE) is
 			--  Perform transformation.
 		require
@@ -529,12 +600,63 @@ feature -- Implementation
 
 			end
 		end
-		
-	-- Remove the next line when this class is more developed:
-feature {XM_XSLT_TEST_TRANSFORM} -- Implementation
+
+	selected_receiver (an_outputter: XM_OUTPUT; -- this will change
+							 some_properties: XM_XSLT_OUTPUT_PROPERTIES): XM_XPATH_RECEIVER is
+			-- Receiver selected according to inputs
+		require
+			outputter_not_void: an_outputter /= Void
+			properties_not_void: some_properties /= Void
+		local
+			a_target: XM_XPATH_RECEIVER
+			an_emitter: XM_XSLT_EMITTER
+			an_html_emitter: XM_XSLT_HTML_EMITTER
+			an_html_indenter: XM_XSLT_HTML_INDENTER
+			a_method: STRING
+		do
+
+			-- `a_target is the start of the output pipeline, the receiver that
+			--  instructions will actually write to (except that other things like a
+			--  namespace reducer may get added in front of it).
+			-- `an_emitter' is the last thing in the output pipeline, the receiver
+			--  that actually generates characters or bytes that are written to `an_outputter'
+
+			a_method := some_properties.method
+
+			-- TODO: add character map stuff
+
+			if a_method = Void then
+				todo ("selected_receiver - void method", True)
+			elseif STRING_.same_string (a_method, "html") then
+				create an_html_emitter.make (Current, an_outputter, some_properties)
+				a_target := an_html_emitter
+				if some_properties.indent then
+					create an_html_indenter.make (Current, an_html_emitter, some_properties)
+					a_target := an_html_indenter
+				end
+				-- TODO - character map stuff
+			elseif STRING_.same_string (a_method, "xml") then
+				create {XM_XSLT_XML_EMITTER} an_emitter.make (Current, an_outputter, some_properties)
+				a_target := an_emitter
+
+				-- TODO: indenter and character map stuff
+				
+			elseif STRING_.same_string (a_method, "xhtml") then
+				todo ("selected_receiver - xhtml method", True)
+			elseif STRING_.same_string (a_method, "text") then
+				todo ("selected_receiver - text method", True)
+			else
+				todo ("selected_receiver - QName method", True)
+			end
+			Result := a_target
+		ensure
+			selected_receiver_not_void: Result /= Void			
+		end
 
 	initialize_transformer is
 			-- Initialize inpreparation for a transformation.
+		require
+			executable_not_void: executable /= Void
 		do
 			-- TODO: open trace listener
 
@@ -558,7 +680,7 @@ invariant
 	decimal_format_manager_not_void: decimal_format_manager /= Void
 	positive_temporary_destination_depth: temporary_destination_depth >= 0
 	error_listener_not_void: error_listener /= Void
-	reporting_policy:
+	reporting_policy: -- TODO
 
 end
 	

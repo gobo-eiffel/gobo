@@ -73,7 +73,7 @@ feature {NONE} -- Initialization
 	make is
 			-- Establish invariant
 		do
-			create document_number_map.make_map (10)
+			create documents.make_default
 			create hash_slots.make (0, 1023)
 			
 			create prefixes.make (100)
@@ -93,10 +93,6 @@ feature {NONE} -- Initialization
 			uris.put (Xml_uri, Xml_prefix_index)
 			prefixes_for_uri.put ("xml ", Xml_prefix_index)
 
-			prefixes.put ("xsl", Xslt_prefix_index)
-			uris.put (Xslt_uri, Xslt_prefix_index)			
-			prefixes_for_uri.put ("xsl ", Xslt_prefix_index)
-			
 			prefixes.put ("xs", Xml_schema_prefix_index)
 			uris.put (Xml_schema_uri, Xml_schema_prefix_index)			
 			prefixes_for_uri.put ("xs ", Xml_schema_prefix_index)
@@ -109,12 +105,17 @@ feature {NONE} -- Initialization
 			uris.put (Gexslt_eiffel_type_uri, Gexslt_uri_prefix_index)			
 			prefixes_for_uri.put ("gexslt ", Gexslt_uri_prefix_index)
 
-			prefixes.put ("xsi", Xml_schema_instance_uri_code)
-			uris.put (Xml_schema_instance_uri, Xml_schema_instance_uri_code)			
-			prefixes_for_uri.put ("xsi ", Xml_schema_instance_uri_code)
+			prefixes.put ("xsl", Xslt_prefix_index)
+			uris.put (Xslt_uri, Xslt_prefix_index)
+			prefixes_for_uri.put ("xsl ", Xslt_prefix_index)
 			
+			prefixes.put ("xsi", Xml_schema_instance_prefix_index)
+			uris.put (Xml_schema_instance_uri, Xml_schema_instance_prefix_index)			
+			prefixes_for_uri.put ("xsi ", Xml_schema_instance_prefix_index)
+
 			prefixes_used := 7
 			uris_used := 7
+
 		end
 	
 feature -- Access
@@ -186,6 +187,7 @@ feature -- Access
 				end
 		ensure
 			valid_uri_code: is_valid_uri_code (Result)
+			correct_uri: STRING_.same_string (uris.item (Result + 1), a_uri)
 		end
 
 	code_for_prefix (an_xml_prefix: STRING): INTEGER is -- should be INTEGER_16
@@ -433,13 +435,16 @@ feature -- Access
 			valid_name_code: Result = -1 or else is_valid_name_code (Result)
 		end
 
+
 	document_number (a_doc: XM_XPATH_DOCUMENT): INTEGER is
-			--	Document number associated with `a_doc'
+			-- Document number associated with `a_doc'
 		require
 			document_not_void: a_doc /= Void
 			document_is_allocated: is_document_allocated (a_doc)
 		do
-				Result := document_number_map.item (a_doc)
+			Result := a_doc.document_number
+		ensure
+			document_number_positive: Result >= 1
 		end
 
 	last_name_code: INTEGER
@@ -458,12 +463,10 @@ feature -- Status report
 
 	is_valid_namespace_code (a_namespace_code: INTEGER): BOOLEAN is
 			-- Does `a_namespace_code' represent a URI in `Current'?
-		local
-			a_uri_code, top_bits: INTEGER -- should be INTEGER_16
 		do
-			top_bits := (a_namespace_code // bits_16) * bits_16
-			a_uri_code := a_namespace_code - top_bits
-			Result :=  is_valid_uri_code (a_uri_code)
+			Result :=  is_valid_uri_code (uri_code_from_namespace_code (a_namespace_code))
+		ensure
+			positive_true_result: Result implies a_namespace_code >= 0
 		end
 
 	is_valid_name_code (a_name_code: INTEGER): BOOLEAN is
@@ -673,9 +676,9 @@ feature -- Status report
 		require
 			document_not_void: a_doc /= Void
 		do
-			Result := document_number_map.has (a_doc)
+			Result := a_doc.document_number /= 0
 		end
-
+	
 	is_name_pool_full (a_uri, a_local_name: STRING): BOOLEAN is
 			--	Is `Current' full for `a_local_name', taking `a_uri' into consideration?
 		require
@@ -883,20 +886,20 @@ feature -- Status report
 feature -- Element change
 
 	allocate_document_number (a_doc: XM_XPATH_DOCUMENT) is
-			--	Add a document to the pool, and allocate a document number;
-			-- WARNING - this code is not thread safe
+			-- Add a document to the pool, and allocate a document number.
 		require
 			document_not_void: a_doc /= Void
 			document_not_allocated: not is_document_allocated (a_doc)
 		do
-			if document_number_map.is_full then
-				document_number_map.resize (2 * document_number_map.count)
+			if documents.is_full then
+				documents.resize (2 * documents.count)
 			end
-			document_number_map.put (document_number_map.count + 1, a_doc)
+			a_doc.set_document_number (documents.count + 1)
+			documents.put_last (a_doc)
 		ensure
 			document_allocated: is_document_allocated (a_doc)
 		end
-
+	
 	allocate_namespace_code (an_xml_prefix: STRING; a_uri: STRING) is
 			--	Allocate the namespace code for a namespace prefix/URI pair;
 			-- WARNING - this code is not thread safe
@@ -1485,8 +1488,8 @@ feature {NONE} -- Implementation
 			prefix_allocated: prefix_index (a_uri_code, an_xml_prefix) > -1
 		end
 
-	document_number_map: DS_HASH_TABLE [INTEGER, XM_XPATH_DOCUMENT] -- TODO - ought to be DS_WEAK_HASH_TABLE, if/when one exists
-			-- Maps documents to document numbers
+	documents: DS_ARRAYED_LIST [XM_XPATH_DOCUMENT]
+			-- Documents indexed by document numbers
 	
 	hash_slots: ARRAY [XM_XPATH_NAME_ENTRY]
 			-- Fixed size hash table
@@ -1508,7 +1511,7 @@ feature {NONE} -- Implementation
 	
 invariant
 
-	document_map_not_void: document_number_map /= Void
+	documentsnot_void: documents /= Void
 	fixed_hash_slots: hash_slots /= Void and then hash_slots.count = 1024
 	prefixes_not_void: prefixes /= Void
 	prefixes_used: prefixes_used >= 3

@@ -57,7 +57,7 @@ feature -- Events
 	start_element (a_name_code: INTEGER; a_type_code: INTEGER; properties: INTEGER) is
 			-- Notify the start of an element.
 		require
-			zero_properties: properties = 0 -- reserved for future use
+			positive_name_code: a_name_code >= 0
 		deferred
 		end
 
@@ -67,6 +67,8 @@ feature -- Events
 			--  any children for the element. The namespaces that are reported are only required
 			--  to include those that are different from the parent element; however, duplicates may be reported.
 			-- A namespace must not conflict with any namespaces already used for element or attribute names.
+		require
+			positive_namespace_code: a_namespace_code >= 0
 		deferred
 		end
 
@@ -75,6 +77,7 @@ feature -- Events
 			-- Attributes are notified after the `start_element' event, and before any
 			--  children. Namespaces and attributes may be intermingled
 		require
+			positive_name_code: a_name_code >= 0
 			value_not_void: a_value /= Void
 		deferred
 		end
@@ -139,6 +142,10 @@ feature -- Element change
 			locator_not_void: a_locator /= Void
 		deferred
 		end
+
+invariant
+
+--	name_pool: name_pool /= Void
 
 end
 

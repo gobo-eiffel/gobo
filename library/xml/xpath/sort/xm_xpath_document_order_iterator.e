@@ -67,7 +67,15 @@ feature -- Cursor movement
 			finished: BOOLEAN
 		do
 			if before then
-				sequence_iterator.forth
+				if sequence_iterator.before then
+					sequence_iterator.start
+				else
+					sequence_iterator.forth
+				end
+				current_node ?= sequence_iterator.item
+				check
+					is_a_node: current_node /= Void
+				end
 			else
 				from
 				until

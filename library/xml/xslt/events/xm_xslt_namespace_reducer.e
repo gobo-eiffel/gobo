@@ -39,7 +39,7 @@ feature {NONE} -- Initialization
 	make (a_name_pool: XM_XPATH_NAME_POOL; an_underlying_receiver: XM_XPATH_RECEIVER) is
 			-- Establish invariant.
 		require
-			name_pool_not_void: name_pool /= Void
+			name_pool_not_void: a_name_pool /= Void
 			underlying_receiver_not_void: an_underlying_receiver /= Void
 		do
 			name_pool := a_name_pool

@@ -113,8 +113,7 @@ feature {NONE} -- Implementation
 			-- Move to the next matching node
 		local
 			finished: BOOLEAN
-			next_source: like item
-			a_mapped_item: XM_XPATH_MAPPED_NODE
+			next_source: XM_XPATH_ITEM
 		do
 			from
 			until
@@ -147,37 +146,23 @@ feature {NONE} -- Implementation
 						base_iterator.forth
 					end
 					if not base_iterator.after then
-						next_source ?= base_iterator.item
-						check
-							item_is_node: next_source /= Void
-							-- Not provable
-						end
+						next_source := base_iterator.item
 						
 						-- Call the supplied mapping function
 
-						a_mapped_item := mapping_function.map (next_source, context, information_object)
-
-						if a_mapped_item /= Void then
-							if not a_mapped_item.is_sequence then
-								results := Void
-								finished := True
-								item := a_mapped_item.item
-							else
-								results := a_mapped_item.sequence
-								if results.before then
-									results.start
-								elseif not results.after then
-									results.forth
-								end
-								if not results.after then
-									item ?= results.item
-									check
-										item_is_node: item /= Void
-										-- Not provable
-									end
-									finished := True
-								end
+						results := mapping_function.map (next_source, context, information_object)
+						if results.before then
+							results.start
+						elseif not results.after then
+							results.forth
+						end
+						if not results.after then
+							item ?= results.item
+							check
+								item_is_node: item /= Void
+								-- Not provable
 							end
+							finished := True
 						end
 
 						-- Now go round the loop again, to get the next item from `base_iterator' or `results'

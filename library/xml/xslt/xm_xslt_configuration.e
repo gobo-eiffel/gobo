@@ -24,35 +24,54 @@ inherit
 
 	XM_XSLT_VALIDATION
 
+	MA_SHARED_DECIMAL_CONTEXT
+
+	MA_DECIMAL_CONSTANTS
+
+	XM_XPATH_SHARED_FUNCTION_FACTORY
+
 creation
 
 	make, make_with_defaults
 
 feature {NONE} -- Initialization
 
-	make (an_entity_resolver: XM_URI_EXTERNAL_RESOLVER; an_error_listener: XM_XSLT_ERROR_LISTENER) is
+	make (an_entity_resolver: XM_URI_EXTERNAL_RESOLVER;
+			an_error_listener: XM_XSLT_ERROR_LISTENER;
+			a_system_function_factory: XM_XSLT_SYSTEM_FUNCTION_FACTORY;
+			an_encoder_factory: XM_XSLT_ENCODER_FACTORY) is
 			-- Establish invariant.
 		require
 			entity_resolver_not_void: an_entity_resolver /= Void
 			error_listener_not_void: an_error_listener /= Void
+			system_function_factory: a_system_function_factory /= Void
+			encoder_factory_not_void: 	an_encoder_factory /= Void
 		do
+			function_factory.register_system_function_factory (a_system_function_factory)
+			encoder_factory := an_encoder_factory
 			set_string_mode_mixed
 			entity_resolver := an_entity_resolver
 			name_pool := default_pool.default_pool
 			recovery_policy := Recover_with_warnings
 			error_listener := an_error_listener
+			shared_decimal_context.set_digits (18)
 		ensure
 			entity_resolver_set: entity_resolver = an_entity_resolver
 			error_listener_set: error_listener = an_error_listener
+			encoder_factory_set: encoder_factory = an_encoder_factory
 		end
 
 	make_with_defaults is
 			-- Establish invariant using defaults.
 		local
+			a_system_function_factory: XM_XSLT_SYSTEM_FUNCTION_FACTORY
 			an_error_listener: XM_XSLT_DEFAULT_ERROR_LISTENER
+			an_encoder_factory: XM_XSLT_ENCODER_FACTORY 
 		do
+			create an_encoder_factory
+			create a_system_function_factory
 			create an_error_listener.make
-			make (new_file_resolver_current_directory, an_error_listener)
+			make (new_file_resolver_current_directory, an_error_listener, a_system_function_factory, an_encoder_factory)
 		end
 
 feature -- Access
@@ -68,6 +87,9 @@ feature -- Access
 
 	name_pool: XM_XPATH_NAME_POOL
 			-- Name pool
+
+	encoder_factory: XM_XSLT_ENCODER_FACTORY
+			-- Encoder factory
 
 	is_line_numbering: BOOLEAN
 			-- Is line-numbering turned on?
@@ -102,7 +124,17 @@ feature -- Access
 		end
 
 feature -- Element change
-	
+
+	set_digits (digits: INTEGER) is
+			-- Set the preceision for decimal and integer arithmetic.
+		require
+			sufficient_precision: digits = 0 or else digits >= 18
+		do
+			shared_decimal_context.set_digits (digits)
+		ensure
+			digits_set: shared_decimal_context.digits = digits
+		end
+			
 	set_line_numbering (on_or_off: BOOLEAN) is
 			-- Turn line numbering `on_or_off'.
 		do
@@ -141,5 +173,6 @@ invariant
 
 	entity_resolver_not_void: entity_resolver /= Void
 	error_listener_not_void: error_listener /= Void
+	encoder_factory_not_void: 	encoder_factory /= Void
 
 end
