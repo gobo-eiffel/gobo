@@ -5,8 +5,9 @@ indexing
 		"Cursors for hash table traversals"
 
 	library:    "Gobo Eiffel Structure Library"
-	author:     "Eric Bezault <ericb@gobo.demon.co.uk>"
-	copyright:  "Copyright (c) 1997, Eric Bezault"
+	author:     "Eric Bezault <ericb@gobosoft.com>"
+	copyright:  "Copyright (c) 1999, Eric Bezault and others"
+	license:    "Eiffel Forum Freeware License v1 (see forum.txt)"
 	date:       "$Date$"
 	revision:   "$Revision$"
 
@@ -15,6 +16,9 @@ class DS_HASH_TABLE_CURSOR [G, K -> HASHABLE]
 inherit
 
 	DS_BILINEAR_CURSOR [G]
+		redefine
+			off
+		end
 
 	DS_DYNAMIC_CURSOR [G]
 
@@ -24,15 +28,15 @@ creation
 
 feature {NONE} -- Initialization
 
-	make (hash_table: like container) is
-			-- Create a new cursor for `hash_table'.
+	make (a_hash_table: like container) is
+			-- Create a new cursor for `a_hash_table'.
 		require
-			hash_table_not_void: hash_table /= Void
+			a_hash_table_not_void: a_hash_table /= Void
 		do
-			container := hash_table
-			position := -1
+			container := a_hash_table
+			position := Before_position
 		ensure
-			container_set: container = hash_table
+			container_set: container = a_hash_table
 			before: before
 		end
 
@@ -46,33 +50,10 @@ feature -- Access
 
 	key: K is
 			-- Key at cursor position
+		require
+			not_off: not off
 		do
 			Result := container.storage.item (position).second
-		end
-
-	index: INTEGER is
-			-- Current cursor position
-		local
-			i, nb: INTEGER
-			hash_table: like container
-		do
-			if before then
-				Result := 0
-			elseif after then
-				Result := container.count + 1
-			else
-				from
-					nb := position
-					hash_table := container
-				until
-					i > nb
-				loop
-					if hash_table.valid_position (i) then
-						Result := Result + 1
-					end
-					i := i + 1
-				end
-			end
 		end
 
 	container: DS_HASH_TABLE [G, K]
@@ -83,11 +64,17 @@ feature -- Status report
 	after: BOOLEAN is
 			-- Is there no valid position to right of cursor?
 		do
-			Result := position > container.capacity
+			Result := position = After_position
 		end
 
 	before: BOOLEAN is
 			-- Is there no valid position to left of cursor?
+		do
+			Result := position = Before_position
+		end
+
+	off: BOOLEAN is
+			-- Is there no item at cursor position?
 		do
 			Result := position < 0
 		end
@@ -102,11 +89,11 @@ feature -- Status report
 				from
 					hash_table := container
 				until
-					hash_table.valid_position (i)
+					hash_table.valid_slot (i)
 				loop
 					i := i + 1
 				end
-				Result := position = i
+				Result := (position = i)
 			end
 		end
 
@@ -119,21 +106,20 @@ feature -- Status report
 			if not container.is_empty then
 				from
 					hash_table := container
-					i := hash_table.capacity
+					i := hash_table.slots
 				until
-					hash_table.valid_position (i)
+					hash_table.valid_slot (i)
 				loop
 					i := i - 1
 				end
-				Result := position = i
+				Result := (position = i)
 			end
 		end
 
-	is_valid: BOOLEAN is
-			-- Is cursor valid?
+	same_position (other: like Current): BOOLEAN is
+			-- Is current cursor at same position as `other'?
 		do
-			Result := off or else
-				container.valid_position (position)
+			Result := position = other.position
 		end
 
 feature -- Cursor movement
@@ -143,18 +129,30 @@ feature -- Cursor movement
 		local
 			i: INTEGER
 			hash_table: like container
+			was_off: BOOLEAN
 		do
 			if container.is_empty then
-				position := container.capacity + 1
+				position := After_position
 			else
+				was_off := off
 				from
 					hash_table := container
 				until
-					hash_table.valid_position (i)
+					hash_table.valid_slot (i)
 				loop
 					i := i + 1
 				end
-				position := i
+				if i > container.slots then
+					position := After_position
+					if not was_off then
+						container.remove_traversing_cursor (Current)
+					end
+				else
+					position := i
+					if was_off then
+						container.add_traversing_cursor (Current)
+					end
+				end
 			end
 		end
 
@@ -163,19 +161,31 @@ feature -- Cursor movement
 		local
 			i: INTEGER
 			hash_table: like container
+			was_off: BOOLEAN
 		do
 			if container.is_empty then
-				position := -1
+				position := Before_position
 			else
+				was_off := off
 				from
 					hash_table := container
-					i := hash_table.capacity
+					i := hash_table.slots
 				until
-					hash_table.valid_position (i)
+					hash_table.valid_slot (i)
 				loop
 					i := i - 1
 				end
-				position := i
+				if i < 0 then
+					position := Before_position
+					if not was_off then
+						container.remove_traversing_cursor (Current)
+					end
+				else
+					position := i
+					if was_off then
+						container.add_traversing_cursor (Current)
+					end
+				end
 			end
 		end
 
@@ -184,17 +194,34 @@ feature -- Cursor movement
 		local
 			i, nb: INTEGER
 			hash_table: like container
+			was_off: BOOLEAN
 		do
-			from
+			if position = Before_position then
+				was_off := True
+				-- i := 0
+			else
+				-- was_off := False
 				i := position + 1
+			end
+			from
 				hash_table := container
-				nb := hash_table.capacity
+				nb := hash_table.slots
 			until
-				i > nb or else hash_table.valid_position (i)
+				i > nb or else hash_table.valid_slot (i)
 			loop
 				i := i + 1
 			end
-			position := i
+			if i > nb then
+				position := After_position
+				if not was_off then
+					container.remove_traversing_cursor (Current)
+				end
+			else
+				position := i
+				if was_off then
+					container.add_traversing_cursor (Current)
+				end
+			end
 		end
 
 	back is
@@ -202,54 +229,186 @@ feature -- Cursor movement
 		local
 			i: INTEGER
 			hash_table: like container
+			was_off: BOOLEAN
 		do
-			from
+			hash_table := container
+			if position = After_position then
+				was_off := True
+				i := hash_table.slots
+			else
+				-- was_off := False
 				i := position - 1
-				hash_table := container
+			end
+			from
 			until
-				i < 0 or else hash_table.valid_position (i)
+				i < 0 or else hash_table.valid_slot (i)
 			loop
 				i := i - 1
 			end
-			position := i
+			if i < 0 then
+				position := Before_position
+				if not was_off then
+					container.remove_traversing_cursor (Current)
+				end
+			else
+				position := i
+				if was_off then
+					container.add_traversing_cursor (Current)
+				end
+			end
 		end
 
-	go_to (i: INTEGER) is
-			-- Move cursor to `i'-th position.
+	search_forth (v: G) is
+			-- Move to first position at or after current
+			-- position where `item' and `v' are equal.
+			-- (Use `equality_tester''s criterion from `container'
+			-- if not void, use `=' criterion otherwise.)
+			-- Move `after' if not found.
 		local
-			j, k: INTEGER
-			hash_table: like container
+			a_tester: DS_EQUALITY_TESTER [G]
 		do
-			if i = 0 then
-				position := -1
-			elseif i = container.count + 1 then
-				position := container.capacity + 1
-			else
-				from
-					hash_table := container
-				until
-					j = i
+			a_tester := container.equality_tester
+			if a_tester /= Void then
+				from until
+					after or else a_tester.test (item, v)
 				loop
-					if hash_table.valid_position (k) then
-						j := j + 1
-					end
-					k := k + 1
+					forth
 				end
-				position := k - 1
+			else
+					-- Use `=' as comparison criterion.
+				from until
+					after or else item = v
+				loop
+					forth
+				end
+			end
+		end
+
+	search_back (v: G) is
+			-- Move to first position at or before current
+			-- position where `item' and `v' are equal.
+			-- (Use `equality_tester''s criterion from `container'
+			-- if not void, use `=' criterion otherwise.)
+			-- Move `before' if not found.
+		local
+			a_tester: DS_EQUALITY_TESTER [G]
+		do
+			a_tester := container.equality_tester
+			if a_tester /= Void then
+				from until
+					before or else a_tester.test (item, v)
+				loop
+					back
+				end
+			else
+					-- Use `=' as comparison criterion.
+				from until
+					before or else item = v
+				loop
+					back
+				end
+			end
+		end
+
+	go_after is
+			-- Move cursor to `after' position.
+		local
+			was_off: BOOLEAN
+		do
+			was_off := off
+			position := After_position
+			if not was_off then
+				container.remove_traversing_cursor (Current)
+			end
+		end
+
+	go_before is
+			-- Move cursor to `before' position.
+		local
+			was_off: BOOLEAN
+		do
+			was_off := off
+			position := Before_position
+			if not was_off then
+				container.remove_traversing_cursor (Current)
+			end
+		end
+
+	go_to (other: like Current) is
+			-- Move cursor to `other''s position.
+		local
+			was_off: BOOLEAN
+		do
+			was_off := off
+			position := other.position
+			if not off then
+				if was_off then
+					container.add_traversing_cursor (Current)
+				end
+			elseif not was_off then
+				container.remove_traversing_cursor (Current)
 			end
 		end
 
 feature -- Element change
 
-	put (v: G) is
+	replace (v: G) is
 			-- Replace item at cursor position by `v'.
 		do
 			container.storage.item (position).put_first (v)
 		end
 
-feature {DS_HASH_TABLE} -- Implementation
+feature {DS_HASH_TABLE, DS_HASH_TABLE_CURSOR} -- Implementation
 
 	position: INTEGER
 			-- Internal position in hash table
+
+feature {DS_HASH_TABLE} -- Implementation
+
+	set_position (p: INTEGER) is
+			-- Set `position' to `p'.
+		require
+			valid_p: valid_position (p)
+		do
+			position := p
+		ensure
+			position_set: position = p
+		end
+
+	set_after is
+			-- Set `position' to after position
+		do
+			position := After_position
+		ensure
+			after: after
+		end
+
+	valid_position (p: INTEGER): BOOLEAN is
+			-- Is `p' a valid value for `position'?
+		do
+			Result := (p = Before_position or p = After_position) or
+				(container.valid_position (p) and then container.valid_slot (p))
+		ensure
+			not_off: (container.valid_position (p) and then container.valid_slot (p)) implies Result
+			before: (p = Before_position) implies Result
+			after: (p = After_position) implies Result
+			valid_slot: (Result and container.valid_position (p)) implies container.valid_slot (p)
+		end
+
+feature {NONE} -- Implementation
+
+	Before_position: INTEGER is -1
+	After_position: INTEGER is -2
+			-- Special values for before and after positions
+
+invariant
+
+-- The following assertion are commented out because
+-- some Eiffel compilers check invariants even when the
+-- execution of the creation procedure is not completed.
+-- (In this case, this is `container' which is not fully
+-- created yet, breaking its invariant.)
+
+--	valid_position: valid_position (position)
 
 end -- class DS_HASH_TABLE_CURSOR

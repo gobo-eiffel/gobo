@@ -2,11 +2,12 @@ indexing
 
 	description:
 
-		"Cursors for structures that can be traversed forward"
+		"Cursors for data structures that can be traversed forward"
 
 	library:    "Gobo Eiffel Structure Library"
-	author:     "Eric Bezault <ericb@gobo.demon.co.uk>"
-	copyright:  "Copyright (c) 1997, Eric Bezault"
+	author:     "Eric Bezault <ericb@gobosoft.com>"
+	copyright:  "Copyright (c) 1999, Eric Bezault and others"
+	license:    "Eiffel Forum Freeware License v1 (see forum.txt)"
 	date:       "$Date$"
 	revision:   "$Revision$"
 
@@ -14,7 +15,7 @@ deferred class DS_LINEAR_CURSOR [G]
 
 inherit
 
-	DS_INDEXED_CURSOR [G]
+	DS_CURSOR [G]
 		redefine
 			container
 		end
@@ -22,7 +23,7 @@ inherit
 feature -- Access
 
 	container: DS_LINEAR [G] is
-			-- Structure traversed
+			-- Data structure traversed
 		deferred
 		end
 
@@ -30,8 +31,6 @@ feature -- Status report
 
 	is_first: BOOLEAN is
 			-- Is cursor on first item?
-		require
-			valid_cursor: is_valid
 		deferred
 		ensure
 			not_empty: Result implies not container.is_empty
@@ -41,8 +40,6 @@ feature -- Status report
 
 	after: BOOLEAN is
 			-- Is there no valid position to right of cursor?
-		require
-			valid_cursor: is_valid
 		deferred
 		end
 
@@ -52,18 +49,10 @@ feature -- Status report
 			Result := after
 		end
 
-	valid_index (i: INTEGER): BOOLEAN is
-			-- Is `i' a valid index value?
-		do
-			Result := 1 <= i and i <= container.count + 1
-		end
-
 feature -- Cursor movement
 
 	start is
 			-- Move cursor to first position.
-		require
-			valid_cursor: is_valid
 		deferred
 		ensure
 			empty_behavior: container.is_empty implies after
@@ -73,7 +62,6 @@ feature -- Cursor movement
 	forth is
 			-- Move cursor to next position.
 		require
-			valid_cursor: is_valid
 			not_after: not after
 		deferred
 		end
@@ -81,18 +69,23 @@ feature -- Cursor movement
 	search_forth (v: G) is
 			-- Move to first position at or after current
 			-- position where `item' and `v' are equal.
-			-- (Use `searcher''s comparison criterion from `container'.)
+			-- (Use `equality_tester''s criterion from `container'
+			-- if not void, use `=' criterion otherwise.)
 			-- Move `after' if not found.
 		require
-			valid_cursor: is_valid
 			not_off: not off or after
-		do
-			container.searcher.search_forth (Current, v)
+		deferred
+		end
+
+	go_after is
+			-- Move cursor to `after' position.
+		deferred
+		ensure
+			after: after
 		end
 
 invariant
 
 	after_constraint: after implies off
-	empty_property: container.is_empty implies off
 
 end -- class DS_LINEAR_CURSOR

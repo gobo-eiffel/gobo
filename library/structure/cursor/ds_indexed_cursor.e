@@ -2,11 +2,12 @@ indexing
 
 	description:
 
-		"Indexed cursors for structure traversals"
+		"Indexed cursors for data structure traversals"
 
 	library:    "Gobo Eiffel Structure Library"
-	author:     "Eric Bezault <ericb@gobo.demon.co.uk>"
-	copyright:  "Copyright (c) 1997, Eric Bezault"
+	author:     "Eric Bezault <ericb@gobosoft.com>"
+	copyright:  "Copyright (c) 1999, Eric Bezault and others"
+	license:    "Eiffel Forum Freeware License v1 (see forum.txt)"
 	date:       "$Date$"
 	revision:   "$Revision$"
 
@@ -20,8 +21,6 @@ feature -- Access
 
 	index: INTEGER is
 			-- Index of current position
-		require
-			valid_cursor: is_valid
 		deferred
 		ensure
 			valid_index: valid_index (Result)
@@ -36,10 +35,9 @@ feature -- Status report
 
 feature -- Cursor movement
 
-	go_to (i: INTEGER) is
+	go_i_th (i: INTEGER) is
 			-- Move cursor to `i'-th position.
 		require
-			valid_cursor: is_valid
 			valid_index: valid_index (i)
 		deferred
 		ensure

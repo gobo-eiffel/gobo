@@ -2,11 +2,12 @@ indexing
 
 	description:
 
-		"Cursors for structures that may be traversed forward and backward"
+		"Cursors for data structures that may be traversed forward and backward"
 
 	library:    "Gobo Eiffel Structure Library"
-	author:     "Eric Bezault <ericb@gobo.demon.co.uk>"
-	copyright:  "Copyright (c) 1997, Eric Bezault"
+	author:     "Eric Bezault <ericb@gobosoft.com>"
+	copyright:  "Copyright (c) 1999, Eric Bezault and others"
+	license:    "Eiffel Forum Freeware License v1 (see forum.txt)"
 	date:       "$Date$"
 	revision:   "$Revision$"
 
@@ -16,14 +17,13 @@ inherit
 
 	DS_LINEAR_CURSOR [G]
 		redefine
-			container, off,
-			valid_index
+			container, off
 		end
 
 feature -- Access
 
 	container: DS_BILINEAR [G] is
-			-- Structure to be traversed
+			-- Data structure traversed
 		deferred
 		end
 
@@ -31,8 +31,6 @@ feature -- Status report
 
 	is_last: BOOLEAN is
 			-- Is cursor on last item?
-		require
-			valid_cursor: is_valid
 		deferred
 		ensure
 			not_empty: Result implies not container.is_empty
@@ -42,8 +40,6 @@ feature -- Status report
 
 	before: BOOLEAN is
 			-- Is there no valid position to left of cursor?
-		require
-			valid_cursor: is_valid
 		deferred
 		end
 
@@ -53,18 +49,10 @@ feature -- Status report
 			Result := after or before
 		end
 
-	valid_index (i: INTEGER): BOOLEAN is
-			-- Is `i' a valid index value?
-		do
-			Result := 0 <= i and i <= container.count + 1
-		end
-
 feature -- Cursor movement
 
 	finish is
 			-- Move cursor to last position.
-		require
-			valid_cursor: is_valid
 		deferred
 		ensure
 			empty_behavior: container.is_empty implies before
@@ -74,7 +62,6 @@ feature -- Cursor movement
 	back is
 			-- Move cursor to previous position.
 		require
-			valid_cursor: is_valid
 			not_before: not before
 		deferred
 		end
@@ -82,13 +69,19 @@ feature -- Cursor movement
 	search_back (v: G) is
 			-- Move to first position at or before current
 			-- position where `item' and `v' are equal.
-			-- (Use `searcher''s comparison criterion from `container'.)
+			-- (Use `equality_tester''s criterion from `container'
+			-- if not void, use `=' criterion otherwise.)
 			-- Move `before' if not found.
 		require
-			valid_cursor: is_valid
 			not_off: not off or before
-		do
-			container.searcher.search_back (Current, v)
+		deferred
+		end
+
+	go_before is
+			-- Move cursor to `before' position.
+		deferred
+		ensure
+			before: before
 		end
 
 invariant
