@@ -72,8 +72,6 @@ feature -- Access
 
 	is_date (a_formatted_date: STRING): BOOLEAN is
 			-- Is `a_formatted_date' a valid date?
-		local
-			a_plus_index, a_hyphen_index: INTEGER
 		do
 			negative_sign_present := False
 			if are_expanded_representations_used then
@@ -377,7 +375,7 @@ feature {NONE} -- Implementation
 			no_hyphen: a_formatted_date.index_of ('-', 1) = 0
 			is_standard_date_without_hyphen (a_formatted_date)
 		local
-			a_count, a_year_count, a_year, a_month, a_day: INTEGER
+			a_count, a_year_count, a_year, a_day: INTEGER
 		do
 			a_year_count := 4 + extra_year_digits
 			a_count := a_formatted_date.count
