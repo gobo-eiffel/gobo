@@ -1223,7 +1223,7 @@ feature {NONE} -- Type checking
 			-- valid type by itself (call `check_type_validity' for that).
 		require
 			a_type_not_void: a_type /= Void
-			a_type_base_type: a_type.is_base_type
+			a_type_named_type: a_type.is_named_type
 			a_creation_not_void: a_creation /= Void
 		local
 			a_position: ET_POSITION

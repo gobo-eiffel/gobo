@@ -88,7 +88,7 @@ feature -- Validity checking
 			-- an error occurred.
 		require
 			a_type_not_void: a_type /= Void
-			a_type_base_type: a_type.is_base_type
+			a_type_named_type: a_type.is_named_type
 			a_feature_not_void: a_feature /= Void
 			a_class_not_void: a_class /= Void
 			a_position_not_void: a_position /= Void
@@ -201,7 +201,7 @@ feature -- Validity checking
 							a_class_type ?= an_actual
 							if a_class_type /= Void then
 								check
-									is_base_type: a_class_type.is_base_type
+									is_named_type: a_class_type.is_named_type
 								end
 								had_error := has_fatal_error
 								check_creation_type_validity (a_class_type, a_feature, a_class, a_position)
@@ -217,7 +217,7 @@ feature -- Validity checking
 							a_class_type ?= an_actual
 							if a_class_type /= Void and then a_class_type.is_expanded then
 								check
-									is_base_type: a_class_type.is_base_type
+									is_named_type: a_class_type.is_named_type
 								end
 								had_error := has_fatal_error
 								check_creation_type_validity (a_class_type, a_feature, a_class, a_position)
