@@ -1,0 +1,19 @@
+This program has been produced with a demo or non-commercial version
+of ISE EiffelStudio, the full lifecycle object-oriented development
+environment from Eiffel Software.
+This version is reserved for non-production use of Eiffel. Any other
+use requires purchase of a license.
+
+Eiffel Software offers commercial and academic licenses and
+support/maintenance contracts covering diverse needs.
+
+For more information please contact
+Eiffel Software at the address below or consult the Eiffel products page
+at http://www.eiffel.com/products/.
+
+	Eiffel Software
+	356 Storke Road
+	Goleta CA 93117 USA 
+	Telephone 805-685-1006, Fax 805-685-6869
+	E-mail sales@eiffel.com
+	http://www.eiffel.com

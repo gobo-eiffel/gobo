@@ -22,7 +22,14 @@ feature -- Test
 		do
 			compile_program
 			assert_execute (program_exe + output_log)
-			assert_equal ("no_output_log", 0, file_system.file_count (output_log_filename))
+			if file_system.file_count (output_log_filename) = 0 then
+				assert ("no_output_log", True)
+			elseif file_system.same_text_files (freeise_log_filename, output_log_filename) then
+					-- Free version of ISE Eiffel?
+				assert ("freeise_no_output_log", True)
+			else
+				assert_equal ("no_output_log2", 0, file_system.file_count (output_log_filename))
+			end
 			assert_equal ("no_error_log", 0, file_system.file_count (error_log_filename))
 			assert_files_equal ("diff1", testoutput1_filename, "out1")
 			assert_files_equal ("diff2", testoutput2_filename, "out2")
@@ -38,7 +45,7 @@ feature {NONE} -- Filenames
 
 	program_dirname: STRING is
 			-- Name of program source directory
-		do
+		once
 			Result := file_system.nested_pathname ("${GOBO}", <<"test", "regexp", program_name>>)
 			Result := Execution_environment.interpreted_string (Result)
 		end

@@ -42,21 +42,87 @@ feature -- Test
 			assert_not_exit_code_execute ("geant -b " + a_geant_filename + " test_" + a_debug + eiffel_compiler.vendor + " " + output_log, 0)
 				-- Check result.
 			file_system.concat_files (output_log_filename, error_log_filename)
-			assert_files_equal ("output", expected_output, output_log_filename)
+			file_system.delete_file (expected_output)
+			file_system.concat_files (expected_output, expected_output1)
+			file_system.concat_files (expected_output, expected_output2)
+			file_system.concat_files (expected_output, expected_output3)
+			if file_system.same_text_files (expected_output, output_log_filename) then
+				assert ("output", True)
+			else
+					-- Free version of ISE Eiffel?
+				file_system.delete_file (expected_output)
+				file_system.concat_files (expected_output, expected_output1)
+				file_system.concat_files (expected_output, expected_output2)
+				file_system.concat_files (expected_output, freeise_log_filename)
+				file_system.concat_files (expected_output, expected_output3)
+				if file_system.same_text_files (expected_output, output_log_filename) then
+					assert ("freeise_output1", True)
+				else
+					file_system.delete_file (expected_output)
+					file_system.concat_files (expected_output, expected_output1)
+					file_system.concat_files (expected_output, freeise_log_filename)
+					file_system.concat_files (expected_output, expected_output2)
+					file_system.concat_files (expected_output, freeise_log_filename)
+					file_system.concat_files (expected_output, expected_output3)
+					if file_system.same_text_files (expected_output, output_log_filename) then
+						assert ("freeise_output2", True)
+					else
+						file_system.delete_file (expected_output)
+						file_system.concat_files (expected_output, freeise_log_filename)
+						file_system.concat_files (expected_output, expected_output1)
+						file_system.concat_files (expected_output, freeise_log_filename)
+						file_system.concat_files (expected_output, expected_output2)
+						file_system.concat_files (expected_output, freeise_log_filename)
+						file_system.concat_files (expected_output, expected_output3)
+						if file_system.same_text_files (expected_output, output_log_filename) then
+							assert ("freeise_output3", True)
+						else
+							file_system.delete_file (expected_output)
+							file_system.concat_files (expected_output, expected_output1)
+							file_system.concat_files (expected_output, expected_output2)
+							file_system.concat_files (expected_output, expected_output3)
+							assert_files_equal ("output2", expected_output, output_log_filename)
+						end
+					end
+				end
+			end
 				-- Clean.
 			assert_execute ("geant -b " + a_geant_filename + " clean" + output_log)
 		end
 
 feature {NONE} -- Implementation
 
-	expected_output: STRING is
+	expected_output: STRING is "output2.log"
 			-- Name of file containing expected output
+
+	expected_output1: STRING is
+			-- Name of file containing first part expected output
 		once
-			Result := file_system.nested_pathname ("${GOBO}", <<"test", "example", "test", "data", "concat1.log">>)
+			Result := file_system.nested_pathname ("${GOBO}", <<"test", "example", "test", "data", "concat1a.log">>)
 			Result := Execution_environment.interpreted_string (Result)
 		ensure
-			expected_output_not_void: Result /= Void
-			expected_output_not_empty: Result.count > 0
+			expected_output1_not_void: Result /= Void
+			expected_output1_not_empty: Result.count > 0
+		end
+
+	expected_output2: STRING is
+			-- Name of file containing second part of expected output
+		once
+			Result := file_system.nested_pathname ("${GOBO}", <<"test", "example", "test", "data", "concat1b.log">>)
+			Result := Execution_environment.interpreted_string (Result)
+		ensure
+			expected_output2_not_void: Result /= Void
+			expected_output2_not_empty: Result.count > 0
+		end
+
+	expected_output3: STRING is
+			-- Name of file containing third part of expected output
+		once
+			Result := file_system.nested_pathname ("${GOBO}", <<"test", "example", "test", "data", "concat1c.log">>)
+			Result := Execution_environment.interpreted_string (Result)
+		ensure
+			expected_output3_not_void: Result /= Void
+			expected_output3_not_empty: Result.count > 0
 		end
 
 end

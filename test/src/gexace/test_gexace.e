@@ -35,7 +35,14 @@ feature -- Test
 			xace_filename := file_system.pathname (sample_dirname, "system1.xace")
 			ace_filename := file_system.pathname (sample_dirname, "ise1.ace")
 			assert_execute (gexace_exe + " --system=ise " + xace_filename + output_log)
-			assert_equal ("no_output_log1", 0, file_system.file_count (output_log_filename))
+			if file_system.file_count (output_log_filename) = 0 then
+				assert ("no_output_log1", True)
+			elseif file_system.same_text_files (freeise_log_filename, output_log_filename) then
+					-- Free version of ISE Eiffel?
+				assert ("freeise_no_output_log", True)
+			else
+				assert_equal ("no_output_log2", 0, file_system.file_count (output_log_filename))
+			end
 			assert_equal ("no_error_log1", 0, file_system.file_count (error_log_filename))
 			assert_files_equal ("diff1", ace_filename, "ise.ace")
 		end

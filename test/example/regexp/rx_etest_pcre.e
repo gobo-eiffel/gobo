@@ -36,7 +36,19 @@ feature -- Test
 			pcre_exe := program_exe
 			assert_execute (pcre_exe + output_log)
 			assert_equal ("no_error_log", 0, file_system.file_count (error_log_filename))
-			assert_files_equal ("diff", pcre_filename, output_log_filename)
+			if file_system.same_text_files (pcre_filename, output_log_filename) then
+				assert ("diff", True)
+			else
+					-- Free version of ISE Eiffel?
+				file_system.delete_file (freeise_pcre_filename)
+				file_system.concat_files (freeise_pcre_filename, freeise_log_filename)
+				file_system.concat_files (freeise_pcre_filename, pcre_filename)
+				if file_system.same_text_files (freeise_pcre_filename, output_log_filename) then
+					assert ("freeise_diff", True)
+				else
+					assert_files_equal ("diff2", pcre_filename, output_log_filename)
+				end
+			end
 		end
 
 feature {NONE} -- Implementation
@@ -59,5 +71,10 @@ feature {NONE} -- Implementation
 			pcre_filename_not_void: Result /= Void
 			pcre_filename_not_empty: Result.count > 0
 		end
+
+	freeise_pcre_filename: STRING is "output2.log"
+			-- Name of file containing expected output
+			-- when run with the free version of ISE Eiffel
+			-- under Linux/Unix
 
 end

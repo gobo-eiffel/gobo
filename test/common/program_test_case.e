@@ -139,4 +139,16 @@ feature {NONE} -- Implementation
 			output_log_not_empty: Result.count > 0
 		end
 
+	freeise_log_filename: STRING is
+			-- Name of file containing message displayed
+			-- by programs compiled with the free version
+			-- of ISE Eiffel under Linux/Unix
+		once
+			Result := file_system.nested_pathname ("${GOBO}", <<"test", "common", "data", "freeise.txt">>)
+			Result := Execution_environment.interpreted_string (Result)
+		ensure
+			freeise_log_filename_not_void: Result /= Void
+			freeise_log_filename_not_empty: Result.count > 0
+		end
+
 end

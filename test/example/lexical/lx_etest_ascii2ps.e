@@ -35,7 +35,14 @@ feature -- Test
 				-- Run example.
 			ascii2ps_exe := program_exe
 			assert_execute (ascii2ps_exe + " " + sample_e_filename + " toto.ps" + output_log)
-			assert_equal ("no_output_log", 0, file_system.file_count (output_log_filename))
+			if file_system.file_count (output_log_filename) = 0 then
+				assert ("no_output_log", True)
+			elseif file_system.same_text_files (freeise_log_filename, output_log_filename) then
+					-- Free version of ISE Eiffel?
+				assert ("freeise_no_output_log", True)
+			else
+				assert_equal ("no_output_log2", 0, file_system.file_count (output_log_filename))
+			end
 			assert_equal ("no_error_log", 0, file_system.file_count (error_log_filename))
 			assert_files_equal ("diff", sample_ps_filename, "toto.ps")
 		end
