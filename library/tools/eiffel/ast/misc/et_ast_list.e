@@ -217,6 +217,24 @@ feature -- Removal
 			wiped_out: is_empty
 		end
 
+feature -- Resizing
+
+	resize (nb: INTEGER) is
+			-- Resize to accommodate at least `n' items.
+		require
+			nb_positive: nb >= 0
+		do
+			if nb > capacity then
+				if storage = Void then
+					storage := fixed_array.make (nb)
+				else
+					storage := fixed_array.resize (storage, nb)
+				end
+			end
+		ensure
+			resized: capacity >= nb
+		end
+
 feature {NONE} -- Implementation
 
 	storage: SPECIAL [like item]
