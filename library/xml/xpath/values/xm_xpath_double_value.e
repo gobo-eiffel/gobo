@@ -167,7 +167,7 @@ feature -- Conversion
 			elseif  a_required_type = type_factory.double_type then
 				Result := Current
 			elseif  a_required_type = type_factory.decimal_type then
-				create {XM_XPATH_DECIMAL_VALUE} Result.make (value)
+				create {XM_XPATH_DECIMAL_VALUE} Result.make_from_string (value.out)
 			elseif  a_required_type = type_factory.string_type then
 				create {XM_XPATH_STRING_VALUE} Result.make (string_value)
 			end

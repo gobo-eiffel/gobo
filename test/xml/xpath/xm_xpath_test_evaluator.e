@@ -38,7 +38,7 @@ feature
 			an_evaluator: XM_XPATH_EVALUATOR
 			evaluated_items: DS_LINKED_LIST [XM_XPATH_ITEM]
 		do
-			create an_evaluator
+			create an_evaluator.make (18)
 			an_evaluator.set_string_mode_unicode
 			an_evaluator.build_static_context ("./books.xml", False, False, False, True)
 			assert ("Build successfull", not an_evaluator.was_build_error)
@@ -57,7 +57,7 @@ feature
 			evaluated_items: DS_LINKED_LIST [XM_XPATH_ITEM]
 			a_node: XM_XPATH_NODE
 		do
-			create an_evaluator
+			create an_evaluator.make (18)
 			an_evaluator.set_string_mode_unicode
 			an_evaluator.build_static_context ("./books.xml", False, False, True, True)
 			assert ("Build successfull", not an_evaluator.was_build_error)
@@ -77,7 +77,7 @@ feature
 			evaluated_items: DS_LINKED_LIST [XM_XPATH_ITEM]
 			a_node: XM_XPATH_NODE
 		do
-			create an_evaluator
+			create an_evaluator.make (18)
 			an_evaluator.set_string_mode_unicode
 			an_evaluator.build_static_context ("./books.xml", False, False, False, True)
 			assert ("Build successfull", not an_evaluator.was_build_error)
@@ -97,7 +97,7 @@ feature
 			evaluated_items: DS_LINKED_LIST [XM_XPATH_ITEM]
 			a_node: XM_XPATH_NODE
 		do
-			create an_evaluator
+			create an_evaluator.make (18)
 			an_evaluator.set_string_mode_unicode
 			an_evaluator.build_static_context ("./books.xml", False, False, True, True)
 			assert ("Build successfull", not an_evaluator.was_build_error)
@@ -116,7 +116,7 @@ feature
 			evaluated_items: DS_LINKED_LIST [XM_XPATH_ITEM]
 			an_integer_value: XM_XPATH_INTEGER_VALUE
 		do
-			create an_evaluator
+			create an_evaluator.make (18)
 			an_evaluator.set_string_mode_unicode
 			an_evaluator.build_static_context ("./books.xml", False, False, False, True)
 			assert ("Build successfull", not an_evaluator.was_build_error)
@@ -135,7 +135,7 @@ feature
 			evaluated_items: DS_LINKED_LIST [XM_XPATH_ITEM]
 			an_integer_value: XM_XPATH_INTEGER_VALUE
 		do
-			create an_evaluator
+			create an_evaluator.make (18)
 			an_evaluator.set_string_mode_unicode
 			an_evaluator.build_static_context ("./books.xml", False, False, True, True)
 			assert ("Build successfull", not an_evaluator.was_build_error)
@@ -154,7 +154,7 @@ feature
 			evaluated_items: DS_LINKED_LIST [XM_XPATH_ITEM]
 			a_boolean_value: XM_XPATH_BOOLEAN_VALUE
 		do
-			create an_evaluator
+			create an_evaluator.make (18)
 			an_evaluator.set_string_mode_unicode
 			an_evaluator.build_static_context ("./books.xml", False, False, False, True)
 			assert ("Build successfull", not an_evaluator.was_build_error)
@@ -173,7 +173,7 @@ feature
 			evaluated_items: DS_LINKED_LIST [XM_XPATH_ITEM]
 			a_boolean_value: XM_XPATH_BOOLEAN_VALUE
 		do
-			create an_evaluator
+			create an_evaluator.make (18)
 			an_evaluator.set_string_mode_unicode
 			an_evaluator.build_static_context ("./books.xml", False, False, True, True)
 			assert ("Build successfull", not an_evaluator.was_build_error)
@@ -192,7 +192,7 @@ feature
 			evaluated_items: DS_LINKED_LIST [XM_XPATH_ITEM]
 			a_boolean_value: XM_XPATH_BOOLEAN_VALUE
 		do
-			create an_evaluator
+			create an_evaluator.make (18)
 			an_evaluator.set_string_mode_unicode
 			an_evaluator.build_static_context ("./books.xml", False, False, False, True)
 			assert ("Build successfull", not an_evaluator.was_build_error)
@@ -211,7 +211,7 @@ feature
 			evaluated_items: DS_LINKED_LIST [XM_XPATH_ITEM]
 			a_boolean_value: XM_XPATH_BOOLEAN_VALUE
 		do
-			create an_evaluator
+			create an_evaluator.make (18)
 			an_evaluator.set_string_mode_unicode
 			an_evaluator.build_static_context ("./books.xml", False, False, True, True)
 			assert ("Build successfull", not an_evaluator.was_build_error)
@@ -230,7 +230,7 @@ feature
 			evaluated_items: DS_LINKED_LIST [XM_XPATH_ITEM]
 			a_boolean_value: XM_XPATH_BOOLEAN_VALUE
 		do
-			create an_evaluator
+			create an_evaluator.make (18)
 			an_evaluator.set_string_mode_unicode
 			an_evaluator.build_static_context ("./books.xml", False, False, False, True)
 			assert ("Build successfull", not an_evaluator.was_build_error)
@@ -249,7 +249,7 @@ feature
 			evaluated_items: DS_LINKED_LIST [XM_XPATH_ITEM]
 			a_boolean_value: XM_XPATH_BOOLEAN_VALUE
 		do
-			create an_evaluator
+			create an_evaluator.make (18)
 			an_evaluator.set_string_mode_unicode
 			an_evaluator.build_static_context ("./books.xml", False, False, True, True)
 			assert ("Build successfull", not an_evaluator.was_build_error)
@@ -269,7 +269,7 @@ feature
 			evaluated_items: DS_LINKED_LIST [XM_XPATH_ITEM]
 			a_boolean_value: XM_XPATH_BOOLEAN_VALUE
 		do
-			create an_evaluator
+			create an_evaluator.make (18)
 			an_evaluator.set_string_mode_unicode
 			an_evaluator.build_static_context ("./books.xml", False, False, False, True)
 			assert ("Build successfull", not an_evaluator.was_build_error)
@@ -284,7 +284,7 @@ feature
 			evaluated_items: DS_LINKED_LIST [XM_XPATH_ITEM]
 			a_boolean_value: XM_XPATH_BOOLEAN_VALUE
 		do
-			create an_evaluator
+			create an_evaluator.make (18)
 			an_evaluator.set_string_mode_unicode
 			an_evaluator.build_static_context ("./books.xml", False, False, True, True)
 			assert ("Build successfull", not an_evaluator.was_build_error)
@@ -302,7 +302,7 @@ feature
 		local
 			an_evaluator: XM_XPATH_EVALUATOR
 		do
-			create an_evaluator
+			create an_evaluator.make (18)
 			an_evaluator.set_string_mode_unicode
 			an_evaluator.build_static_context ("./books.xml", False, False, False, True)
 			assert ("Build successfull", not an_evaluator.was_build_error)
@@ -315,7 +315,7 @@ feature
 		local
 			an_evaluator: XM_XPATH_EVALUATOR
 		do
-			create an_evaluator
+			create an_evaluator.make (18)
 			an_evaluator.set_string_mode_unicode
 			an_evaluator.build_static_context ("./books.xml", False, False, True, True)
 			assert ("Build successfull", not an_evaluator.was_build_error)
@@ -329,7 +329,7 @@ feature
 			an_evaluator: XM_XPATH_EVALUATOR
 			evaluated_items: DS_LINKED_LIST [XM_XPATH_ITEM]
 		do
-			create an_evaluator
+			create an_evaluator.make (18)
 			an_evaluator.set_string_mode_unicode
 			an_evaluator.build_static_context ("./books.xml", False, False, False, True)
 			assert ("Build successfull", not an_evaluator.was_build_error)
@@ -345,7 +345,7 @@ feature
 			an_evaluator: XM_XPATH_EVALUATOR
 			evaluated_items: DS_LINKED_LIST [XM_XPATH_ITEM]
 		do
-			create an_evaluator
+			create an_evaluator.make (18)
 			an_evaluator.set_string_mode_unicode
 			an_evaluator.build_static_context ("./books.xml", False, False, True, True)
 			assert ("Build successfull", not an_evaluator.was_build_error)
@@ -361,7 +361,7 @@ feature
 			an_evaluator: XM_XPATH_EVALUATOR
 			evaluated_items: DS_LINKED_LIST [XM_XPATH_ITEM]
 		do
-			create an_evaluator
+			create an_evaluator.make (18)
 			an_evaluator.set_string_mode_unicode
 			an_evaluator.build_static_context ("./books.xml", False, False, False, True)
 			assert ("Build successfull", not an_evaluator.was_build_error)
@@ -377,7 +377,7 @@ feature
 			an_evaluator: XM_XPATH_EVALUATOR
 			evaluated_items: DS_LINKED_LIST [XM_XPATH_ITEM]
 		do
-			create an_evaluator
+			create an_evaluator.make (18)
 			an_evaluator.set_string_mode_unicode
 			an_evaluator.build_static_context ("./books.xml", False, False, True, True)
 			assert ("Build successfull", not an_evaluator.was_build_error)
@@ -393,7 +393,7 @@ feature
 			an_evaluator: XM_XPATH_EVALUATOR
 			evaluated_items: DS_LINKED_LIST [XM_XPATH_ITEM]
 		do
-			create an_evaluator
+			create an_evaluator.make (18)
 			an_evaluator.set_string_mode_unicode
 			an_evaluator.build_static_context ("./books.xml", False, False, False, True)
 			assert ("Build successfull", not an_evaluator.was_build_error)
@@ -409,7 +409,7 @@ feature
 			an_evaluator: XM_XPATH_EVALUATOR
 			evaluated_items: DS_LINKED_LIST [XM_XPATH_ITEM]
 		do
-			create an_evaluator
+			create an_evaluator.make (18)
 			an_evaluator.set_string_mode_unicode
 			an_evaluator.build_static_context ("./books.xml", False, False, True, True)
 			assert ("Build successfull", not an_evaluator.was_build_error)
@@ -426,7 +426,7 @@ feature
 			evaluated_items: DS_LINKED_LIST [XM_XPATH_ITEM]
 			a_boolean_value: XM_XPATH_BOOLEAN_VALUE
 		do
-			create an_evaluator
+			create an_evaluator.make (18)
 			an_evaluator.set_string_mode_unicode
 			an_evaluator.build_static_context ("./books.xml", False, False, False, True)
 			assert ("Build successfull", not an_evaluator.was_build_error)
@@ -446,7 +446,7 @@ feature
 			evaluated_items: DS_LINKED_LIST [XM_XPATH_ITEM]
 			a_boolean_value: XM_XPATH_BOOLEAN_VALUE
 		do
-			create an_evaluator
+			create an_evaluator.make (18)
 			an_evaluator.set_string_mode_unicode
 			an_evaluator.build_static_context ("./books.xml", False, False, True, True)
 			assert ("Build successfull", not an_evaluator.was_build_error)
@@ -465,7 +465,7 @@ feature
 			evaluated_items: DS_LINKED_LIST [XM_XPATH_ITEM]
 			a_boolean_value: XM_XPATH_BOOLEAN_VALUE
 		do
-			create an_evaluator
+			create an_evaluator.make (18)
 			an_evaluator.set_string_mode_unicode
 			an_evaluator.build_static_context ("./books.xml", False, False, False, True)
 			assert ("Build successfull", not an_evaluator.was_build_error)
@@ -484,7 +484,7 @@ feature
 			evaluated_items: DS_LINKED_LIST [XM_XPATH_ITEM]
 			a_boolean_value: XM_XPATH_BOOLEAN_VALUE
 		do
-			create an_evaluator
+			create an_evaluator.make (18)
 			an_evaluator.set_string_mode_unicode
 			an_evaluator.build_static_context ("./books.xml", False, False, True, True)
 			assert ("Build successfull", not an_evaluator.was_build_error)
@@ -503,7 +503,7 @@ feature
 			evaluated_items: DS_LINKED_LIST [XM_XPATH_ITEM]
 			a_boolean_value: XM_XPATH_BOOLEAN_VALUE
 		do
-			create an_evaluator
+			create an_evaluator.make (18)
 			an_evaluator.set_string_mode_unicode
 			an_evaluator.build_static_context ("./books.xml", False, False, False, True)
 			assert ("Build successfull", not an_evaluator.was_build_error)
@@ -526,7 +526,7 @@ feature
 			a_boolean_value: XM_XPATH_BOOLEAN_VALUE
 			an_integer_value: XM_XPATH_INTEGER_VALUE
 		do
-			create an_evaluator
+			create an_evaluator.make (18)
 			an_evaluator.set_string_mode_unicode
 			an_evaluator.build_static_context ("./books.xml", False, False, True, True)
 			assert ("Build successfull", not an_evaluator.was_build_error)
@@ -549,7 +549,7 @@ feature
 		local
 			an_evaluator: XM_XPATH_EVALUATOR			
 		do
-			create an_evaluator
+			create an_evaluator.make (18)
 			an_evaluator.set_string_mode_unicode
 			an_evaluator.build_static_context ("./books.xml", False, False, False, True)
 			assert ("Build successfull", not an_evaluator.was_build_error)
@@ -564,7 +564,7 @@ feature
 		local
 			an_evaluator: XM_XPATH_EVALUATOR			
 		do
-			create an_evaluator
+			create an_evaluator.make (18)
 			an_evaluator.set_string_mode_unicode
 			an_evaluator.build_static_context ("./books.xml", False, False, True, True)
 			assert ("Build successfull", not an_evaluator.was_build_error)
@@ -579,7 +579,7 @@ feature
 			evaluated_items: DS_LINKED_LIST [XM_XPATH_ITEM]
 			a_string_value: XM_XPATH_STRING_VALUE
 		do
-			create an_evaluator
+			create an_evaluator.make (18)
 			an_evaluator.set_string_mode_unicode
 			an_evaluator.build_static_context ("./books.xml", False, False, False, True)
 			assert ("Build successfull", not an_evaluator.was_build_error)
@@ -594,7 +594,7 @@ feature
 		local
 			an_evaluator: XM_XPATH_EVALUATOR			
 		do
-			create an_evaluator
+			create an_evaluator.make (18)
 			an_evaluator.set_string_mode_unicode
 			an_evaluator.build_static_context ("./books.xml", False, False, True, True)
 			assert ("Build successfull", not an_evaluator.was_build_error)
@@ -608,7 +608,7 @@ feature
 		local
 			an_evaluator: XM_XPATH_EVALUATOR			
 		do
-			create an_evaluator
+			create an_evaluator.make (18)
 			an_evaluator.set_string_mode_unicode
 			an_evaluator.build_static_context ("./books.xml", False, False, False, True)
 			assert ("Build successfull", not an_evaluator.was_build_error)
@@ -622,7 +622,7 @@ feature
 		local
 			an_evaluator: XM_XPATH_EVALUATOR			
 		do
-			create an_evaluator
+			create an_evaluator.make (18)
 			an_evaluator.set_string_mode_unicode
 			an_evaluator.build_static_context ("./books.xml", False, False, True, True)
 			assert ("Build successfull", not an_evaluator.was_build_error)
@@ -637,7 +637,7 @@ feature
 --			an_evaluator: XM_XPATH_EVALUATOR
 --			evaluated_items: DS_LINKED_LIST [XM_XPATH_ITEM]
 --		do
---			create an_evaluator
+--			create an_evaluator.make (18)
 --			an_evaluator.build_static_context ("./books.xml", False, False, False, True)
 --			assert ("Build successfull", not an_evaluator.was_build_error)
 --			an_evaluator.evaluate ("'fred' eq 'jim' cast as xs:date")
@@ -652,7 +652,7 @@ feature
 		local
 			an_evaluator: XM_XPATH_EVALUATOR			
 		do
-			create an_evaluator
+			create an_evaluator.make (18)
 			an_evaluator.set_string_mode_unicode
 			an_evaluator.build_static_context ("./books.xml", False, False, True, True)
 			assert ("Build successfull", not an_evaluator.was_build_error)

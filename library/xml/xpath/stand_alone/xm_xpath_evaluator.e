@@ -21,9 +21,25 @@ inherit
 	XM_STRING_MODE
 
 	KL_SHARED_STANDARD_FILES
-	
-	-- TODO: need to add a white-space stripper
 
+	MA_SHARED_DECIMAL_CONTEXT
+
+creation
+
+	make
+
+feature {NONE} -- Initializtion
+
+	make (digits: INTEGER) is
+			-- Set precision for decimal arithmetic.
+		require
+			sufficient_precision: digits = 0 or else digits >= 18
+		do
+			shared_decimal_context.set_digits (digits)
+		ensure
+			precision_set: shared_decimal_context.digits = digits
+		end
+	
 feature -- Access
 
 	static_context: XM_XPATH_STAND_ALONE_CONTEXT

@@ -48,9 +48,9 @@
   </para> 
   <sect1 id="xpath_stand_alone_invoke_create_evaluator">
     <title>Creating an evaluator</title>
-    <para>Currently, <classname>XM_XPATH_EVALUATOR</classname> has no creation procedures 
-    <emphasis role="todo">(TODO)</emphasis>, so just call <featurecall><featurename>create</featurename></featurecall> on the object.
-    <warning>This will probably change.</warning>
+    <para>Call creation procedure <featurecall><featurename>make (digits)</featurename></featurecall> from class <classname>XM_XPATH_EVALUATOR</classname>.
+    <featurename>Digits</featurename> is the precision for decimal arithmetic. It should be at least 18 (or 0, for infinite precision).
+    <warning>This may change.</warning>
     </para>
     <para><classname>XM_XPATH_EVALUATOR</classname> inherits from <classname>XM_STRING_MODE</classname>, so you should then
     call one of the string-mode setting procedures from that class on the evaluator. It will in turn

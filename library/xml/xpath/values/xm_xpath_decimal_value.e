@@ -21,13 +21,13 @@ inherit
 
 creation
 
-	make, make_from_string
+	make, make_from_string, make_from_integer
 
 		-- TODO The whole class needs re-working to use some kind of decimal arithmetic type
 
 feature {NONE} -- Initialization
 
-	make (a_value: DOUBLE) is -- TODO
+	make (a_value: MA_DECIMAL) is
 		do
 			make_atomic_value
 			value := a_value
@@ -35,29 +35,33 @@ feature {NONE} -- Initialization
 			value_set: value = a_value
 		end
 
-	make_from_string (a_value: STRING) is
-		require
-			is_double: a_value.is_double -- TODO
+	make_from_integer (a_value: INTEGER) is
 		do
 			make_atomic_value
-			value := a_value.to_double
-		ensure
-			value_set: value = a_value.to_double
+			create value.make_from_integer (a_value)
+		end
+
+	make_from_string (a_value: STRING) is
+		require
+			is_decimal: a_value /= Void and then is_string_a_decimal (a_value)
+		do
+			make_atomic_value
+			create value.make_from_string (a_value)
 		end
 	
 feature -- Access
 
-	value: DOUBLE -- TODO
+	value: MA_DECIMAL
 
-	as_integer: INTEGER is -- TODO should be INTEGER_64, or EDA_INTEGER or something
+	as_integer: INTEGER is -- TODO should be MA_INTEGER or something
 		do
-			Result := value.truncated_to_integer
+			Result := value.to_integer
 		end
 
 	as_double: DOUBLE is
 			-- Value converted to a double
 		do
-			Result := value
+			Result := value.to_double
 		end
 
 	item_type: XM_XPATH_ITEM_TYPE is
@@ -74,7 +78,7 @@ feature -- Access
 	string_value: STRING is
 			--Value of the item as a string
 		do
-			Result := value.out
+			Result := value.to_scientific_string -- TODO - check the standard
 		end
 
 feature -- Comparison
@@ -149,28 +153,40 @@ feature -- Status report
 			end
 		end
 
+	is_string_a_decimal (a_value: STRING): BOOLEAN is
+			-- Does `a_value' represent a decimal number?
+		require
+			string_not_void: a_value /= Void
+		local
+			a_parser: MA_DECIMAL_TEXT_PARSER
+		do
+			create a_parser
+			a_parser.parse (a_value)
+			Result := not a_parser.error
+		end
+
 	is_whole_number: BOOLEAN is
 			-- Is value integral?
 		do
-			todo ("is-whole-number", False)
+			Result := value.is_integer
 		end
 
 	is_nan: BOOLEAN is
 			-- Is value Not-a-number?
 		do
-			todo ("is-nan", False)
+			Result := value.is_nan
 		end
 
 	is_zero: BOOLEAN is
 			-- Is value zero?
 		do
-			todo ("is-zero", False)
+			Result := value.is_zero
 		end
 
 	is_infinite: BOOLEAN is
 			-- Is value infinite?
 		do
-			todo ("is-infinite", False)
+			Result := value.is_infinity
 		end
 	
 feature -- Evaluation
@@ -178,7 +194,7 @@ feature -- Evaluation
 		effective_boolean_value (a_context: XM_XPATH_CONTEXT): XM_XPATH_BOOLEAN_VALUE is
 			-- Effective boolean value
 		do
-			create Result.make (value /= 0.0)
+			create Result.make (not value.is_zero)
 		end
 
 feature -- Conversion
@@ -190,15 +206,15 @@ feature -- Conversion
 		local
 		do
 			if a_required_type = type_factory.boolean_type  then
-				create {XM_XPATH_BOOLEAN_VALUE} Result.make (value /= 0.0)
+				create {XM_XPATH_BOOLEAN_VALUE} Result.make (not value.is_zero)
 			elseif a_required_type = type_factory.any_atomic_type  then
 				Result := Current
 			elseif a_required_type = any_item  then
 				Result := Current
 			elseif  a_required_type = type_factory.integer_type then
-				create {XM_XPATH_INTEGER_VALUE} Result.make (value.truncated_to_integer)
+				create {XM_XPATH_INTEGER_VALUE} Result.make (value.to_integer)
 			elseif  a_required_type = type_factory.double_type then
-				create {XM_XPATH_DOUBLE_VALUE} Result.make (value)
+				create {XM_XPATH_DOUBLE_VALUE} Result.make (value.to_double)
 			elseif  a_required_type = type_factory.decimal_type then
 				Result := Current
 			elseif  a_required_type = type_factory.string_type then
@@ -210,8 +226,43 @@ feature -- Basic operations
 
 	arithmetic (an_operator: INTEGER; other: XM_XPATH_NUMERIC_VALUE): XM_XPATH_NUMERIC_VALUE is
 			-- Arithmetic calculation
+		local
+			another_decimal: XM_XPATH_DECIMAL_VALUE
+			an_integer_value: XM_XPATH_INTEGER_VALUE
+			a_numeric_value: XM_XPATH_NUMERIC_VALUE
 		do
-			todo ("aritmetic", False)
+			another_decimal ?= other
+			if another_decimal /= Void then
+				inspect
+					an_operator
+				when Plus_token then
+					create {XM_XPATH_DECIMAL_VALUE} Result.make (value + another_decimal.value)
+				when Minus_token then
+					create {XM_XPATH_DECIMAL_VALUE} Result.make (value - another_decimal.value)
+				when Multiply_token then
+					create {XM_XPATH_DECIMAL_VALUE} Result.make (value * another_decimal.value)
+				when Division_token then
+					create {XM_XPATH_DECIMAL_VALUE} Result.make (value / another_decimal.value)
+				when Modulus_token then
+					create {XM_XPATH_DECIMAL_VALUE} Result.make (value \\ another_decimal.value)
+				else
+					an_integer_value ?= other
+					if an_integer_value /= Void then
+						another_decimal ?= other.convert_to_type (type_factory.decimal_type)
+						check
+							converted_to_decimal: another_decimal /= Void
+							-- as integers will always convert to decimals
+						end
+						Result := arithmetic (an_operator, another_decimal)
+					else
+						a_numeric_value ?= convert_to_type (other.item_type)
+						if an_integer_value /= Void then
+							Result := a_numeric_value.arithmetic (an_operator, other)
+						else
+							create {XM_XPATH_DECIMAL_VALUE} Result.make (value.nan)
+						end
+					end
+				end
+			end
 		end
-
 end

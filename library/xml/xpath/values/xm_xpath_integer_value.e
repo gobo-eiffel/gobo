@@ -185,7 +185,7 @@ feature -- Conversions
 			elseif  a_required_type = type_factory.double_type then
 				create {XM_XPATH_DOUBLE_VALUE} Result.make (value)
 			elseif  a_required_type = type_factory.decimal_type then
-				create {XM_XPATH_DECIMAL_VALUE} Result.make (value)
+				create {XM_XPATH_DECIMAL_VALUE} Result.make_from_integer (value)
 			elseif  a_required_type = type_factory.string_type then
 				create {XM_XPATH_STRING_VALUE} Result.make (string_value)
 			end
@@ -232,8 +232,8 @@ feature -- Basic operations
 					if a_quotient /= 0 and then value \\ a_quotient = 0 then
 						create {XM_XPATH_INTEGER_VALUE} Result.make (value // a_quotient)
 					else
-						create a_decimal_value.make (value)
-						create another_decimal_value.make (an_integer_value.value)
+						create a_decimal_value.make_from_integer (value)
+						create another_decimal_value.make_from_integer (an_integer_value.value)
 						Result := a_decimal_value.arithmetic ( Division_token, another_decimal_value)
 					end
 				when Modulus_token then

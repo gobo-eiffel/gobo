@@ -16,7 +16,7 @@
     <option name="finalize" value="true" unless="${GOBO_EIFFEL}=ve"/>
   </option>
   <option if="${DEBUG}">
-    <option name="case_insensitive" value="false" />
+    <option name="case_insensitive" value="true" />
     <option name="trace" value="false" />
     <option name="assertion" value="all"/>
     <option name="garbage_collector" value="internal"/> 
@@ -49,4 +49,5 @@
   <mount location="${GOBO}/library/xml/library.xace"/>
   <mount location="${GOBO}/library/kernel.xace" />
   <mount location="${GOBO}/library/string/library.xace"/>
+  <mount location="${GOBO}/library/math/decimal/library.xace"/>
 </system>
