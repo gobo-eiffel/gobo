@@ -30,17 +30,25 @@ Version 2.0 -
 	  SmallEiffel mailing list).
 	* Added class DS_TOPOLOGICAL_SORTER to sort partially
 	  ordered items.
-	* Added DS_SET and descendant classes such as DS_HASH_SET.
+	* Added DS_SET and descendant classes such as DS_HASH_SET
+	  and DS_MULTIARRAYED_HASH_SET.
 	* DS_HASH_TABLE: added creation routine `make_map' in
 	  order to compare keys with '=' instead of `equal'.
-	* DS_HASH_TABLE: added features `remove_found_item' and
-	  `found_key'.
+	* DS_HASH_TABLE: added features `remove_found_item',
+	  `found_key' and `force_last'.
+	* Added class DS_MULTIARRAYED_HASH_TABLE with the same
+	  interface as DS_HASH_TABLE but implemented with a
+	  sequence of fixed size arrays instead of a single array.
+	  This might be useful for hash tables containing a very
+	  large number of items.
 	* Fixed bug in DS_LINKED_LIST.delete (reported by Emmanuel
 	  Bouyer).
 	* Fixed bug in QUEUE.{force, put, extend}: removed erroneous
 	  postcondition "item_pushed" (reported by Emmanuel Bouyer).
 	* Moved $GOBO/library/structure/base to $GOBO/library/
 	  structure/other/EiffelBase.
+	* Moved cursor classes next to their associated containers
+	  and removed cluster $GOBO/library/structure/cursor.
 
 	Miscellaneous:
 
