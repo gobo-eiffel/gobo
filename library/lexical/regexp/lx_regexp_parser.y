@@ -50,7 +50,6 @@ Init_pattern: -- /* empty */
 		{
 			if equiv_classes_used then
 				!! equiv_classes.make (1, characters_count)
-				!! transitions.make (Initial_max_transitions)
 			end
 				-- Initialize for a parse of one pattern.
 			variable_trail_rule := False
