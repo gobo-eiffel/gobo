@@ -158,11 +158,13 @@ feature -- Element change
 						-- Make sure `buffer.count' is big enough.
 					if i > 0 then
 						buff.resize (capacity + 2)
+#ifndef VE
 							-- Set `content.count' to `capacity' + 2.
 						from until i = 0 loop
 							buff.append_character ('#')
 							i := i - 1
 						end
+#endif
 					end
 					nb := capacity - count
 				end
@@ -178,10 +180,33 @@ feature -- Element change
 					else
 						filled := False
 					end
+#ifdef ISE || HACT
 				elseif file.readable then
+#else
+				elseif not file.end_of_file then
+#endif
 					if nb > Read_buffer_capacity then
 						nb := Read_buffer_capacity
 					end
+#ifdef VE
+					from
+						file.read_character
+						i := 1
+					until
+						file.end_of_file or
+						i > nb
+					loop
+						j := j + 1
+						buff.put (file.last_character, j)
+						file.read_character
+						i := i + 1
+					end
+					if i > 1 then
+						filled := True
+					else
+						filled := False
+					end
+#else
 					file.read_stream (nb)
 					str := file.last_string
 					nb := str.count
@@ -195,6 +220,7 @@ feature -- Element change
 					else
 						filled := False
 					end
+#endif
 				else
 					filled := False
 				end
