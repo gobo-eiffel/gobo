@@ -109,30 +109,13 @@ feature -- Access
 			else
 				Result := ""
 			end
-		end
+		end		
 
-	namespace_code_for_node (a_node_number: INTEGER): INTEGER is
-			-- Namespace code for `a_node_number'
-		require
-			node_number_in_range: is_node_number_valid (a_node_number)
-		do
-			Result := namespace_codes.item (a_node_number)
-		end			
-
-		
 	hash_code: INTEGER is
 		do
 			Result := document_number \\ 7
 		end
 
-	name_code_for_node (a_node_number: INTEGER): INTEGER is
-			-- Fetch the name code for `a_node_number'
-		require
-			node_number_in_range: is_node_number_valid (a_node_number)
-		do
-			Result := name_codes.item (a_node_number)
-		end
-	
 	character_buffer_length: INTEGER is
 			-- Length of `character_buffer'
 		do
@@ -229,7 +212,7 @@ feature -- Access
 	attribute_parent (an_index: INTEGER): INTEGER is
 			-- Index of parent element
 		require
-			index_is_valid: an_index <= number_of_attributes
+			index_is_valid: is_attribute_number_valid ( an_index )
 		do
 			Result := attribute_parents.item (an_index)
 		end
@@ -237,7 +220,7 @@ feature -- Access
 	attribute_name_code  (an_index: INTEGER): INTEGER is
 			-- Attribute name code for `an_index'
 		require
-			index_is_valid: an_index <= number_of_attributes
+			index_is_valid: is_attribute_number_valid ( an_index )
 		do
 			Result := attribute_codes.item (an_index)
 		end
@@ -417,15 +400,17 @@ feature -- Status report
 	diagnostic_dump is
 			-- Produce diagnostic print of main tree arrays
 		local
-			index: INTEGER
+			index, limit: INTEGER
+			a_prefix, a_uri: STRING
 		do
 			std.error.put_string ("    node    type   depth    next   alpha    beta    name%N")
 			from
 				index := 1
+				limit := last_node_added
 			variant
-				last_node_added - index + 1
+				limit - index + 1
 			until
-				index > last_node_added
+				index > limit
 			loop
 				std.error.put_string (left_padded_string_out (index.out, 8, ' '))
 				std.error.put_string (left_padded_string_out (type_name (node_kinds.item (index)), 8, ' ').substring (1,8))
@@ -437,17 +422,127 @@ feature -- Status report
 				std.error.put_new_line
 				index := index + 1
 			end
-				
+
+			std.error.put_string ("    attr  parent    name    value%N")
+			from
+				index := 1
+				limit := attribute_values.count
+			variant
+				limit - index + 1
+			until
+				index > limit
+			loop
+				std.error.put_string (left_padded_string_out (index.out, 8, ' '))
+				std.error.put_string (left_padded_string_out (attribute_parents.item (index).out, 8, ' '))
+				std.error.put_string (left_padded_string_out (name_pool.display_name_from_name_code (attribute_name_code (index)), 8, ' ').substring (1,8))
+				std.error.put_string ("    ")
+				std.error.put_string (attribute_value (index))
+				std.error.put_new_line
+				index := index + 1
+			end
+			
+			std.error.put_string ("      ns  parent  prefix     uri%N")
+			from
+				index := 1
+				limit := namespace_codes.count
+			variant
+				limit - index + 1
+			until
+				index > limit
+			loop
+				std.error.put_string (left_padded_string_out (index.out, 8, ' '))
+				std.error.put_string (left_padded_string_out (namespace_parents.item (index).out, 8, ' '))
+				std.error.put_string (left_padded_string_out (name_pool.prefix_from_namespace_code (namespace_codes.item (index)), 8, ' '))
+				std.error.put_string ("    ")
+				std.error.put_string (name_pool.uri_from_namespace_code (namespace_codes.item (index)))
+				std.error.put_new_line
+				index := index + 1
+			end				
 		end
+
 		
-feature {XM_XPATH_NODE} -- Access
+feature -- Status setting
 
-	is_possible_child: BOOLEAN is
-			-- Can this node be a child of a document or element node?
+	set_name_pool (new_pool: XM_XPATH_NAME_POOL) is
+			-- Set the name pool used by this builder
+		require
+			pool_not_void: new_pool /= Void
 		do
-			Result := False
+			name_pool := new_pool
+			add_namespace (node_number, name_pool.namespace_code ("xml", Xml_uri))
+			name_pool.allocate_document_number (Current)
+			document_number := name_pool.document_number (Current)
+		ensure
+			pool_set: name_pool = new_pool
 		end
 
+	ensure_prior_index is
+			-- On demand, ensure existence of index for quick access to preceding-sibling nodes
+		do
+			if prior = Void then make_prior_index end
+		ensure
+			prior_index_built: prior /= Void
+		end
+	
+	make_prior_index is
+			-- On demand, make an index for quick access to preceding-sibling nodes
+		local
+			prior_index, next_node: INTEGER
+		do
+			create prior.make (1, last_node_added)
+			from
+				prior_index := 1
+			variant
+				last_node_added - prior_index + 1
+			until
+				prior_index > last_node_added
+			loop	
+				prior.put (-1, prior_index)
+				prior_index := prior_index + 1
+			end
+			from
+				prior_index := 1
+			variant
+				last_node_added - prior_index + 1
+			until
+				prior_index > last_node_added
+			loop
+				next_node := next_sibling_indices.item (prior_index)
+				if next_node > prior_index then
+					prior.put (prior_index, next_node)
+				end
+				prior_index := prior_index + 1
+			end
+		ensure
+			prior_index_built: prior /= Void
+		end
+	
+feature -- Conversions
+
+	namespace_code_for_node (a_node_number: INTEGER): INTEGER is
+			-- Namespace code for `a_node_number'
+		require
+			node_number_in_range: is_node_number_valid (a_node_number)
+		do
+			Result := namespace_codes.item (a_node_number)
+		end
+
+	name_code_for_node (a_node_number: INTEGER): INTEGER is
+			-- Fetch the name code for `a_node_number'
+		require
+			node_number_in_range: is_node_number_valid (a_node_number)
+		do
+			Result := name_codes.item (a_node_number)
+		end
+
+	attribute_code_for_node (a_node_number: INTEGER): INTEGER is
+			-- Fetch the name code for attribute `a_node_number'
+		require
+			attribute_number_in_range: is_attribute_number_valid (a_node_number)
+		do
+			Result := attribute_codes.item (a_node_number)
+		end
+	
 feature -- Element change
 
 	add_node (new_node_type: INTEGER; depth_value: INTEGER; alpha_val: INTEGER;  beta_val: INTEGER; new_name_codes: INTEGER) is
@@ -555,6 +650,19 @@ feature -- Element change
 			attribute_values.put_last (value)
 			attribute_codes.put_last (a_name_code)
 
+			debug ("XPath tiny document")
+				print ("Add_attribute: name code is ")
+				print (a_name_code.out)
+				print (", value is ")
+				print (value.out)
+				print ("%N")
+				print ("Attribute_values count is ")
+				print (attribute_values.count.out)
+				print (", attribute_codes count is ")
+				print (attribute_codes.count.out)
+				print ("%N")
+			end
+			
 			if a_type_code = 0 then
 				a_type_code2 := Untyped_atomic_type
 			else
@@ -610,61 +718,13 @@ feature -- Element change
 			comment_buffer_created: comment_buffer /= Void
 		end
 	
-		
-feature -- Status setting
 
-	set_name_pool (new_pool: XM_XPATH_NAME_POOL) is
-			-- Set the name pool used by this builder
-		require
-			pool_not_void: new_pool /= Void
-		do
-			name_pool := new_pool
-			add_namespace (node_number, name_pool.namespace_code ("xml", Xml_uri))
-			name_pool.allocate_document_number (Current)
-			document_number := name_pool.document_number (Current)
-		ensure
-			pool_set: name_pool = new_pool
-		end
+feature {XM_XPATH_NODE} -- Access
 
-	ensure_prior_index is
-			-- On demand, ensure existence of index for quick access to preceding-sibling nodes
+	is_possible_child: BOOLEAN is
+			-- Can this node be a child of a document or element node?
 		do
-			if prior = Void then make_prior_index end
-		ensure
-			prior_index_built: prior /= Void
-		end
-	
-	make_prior_index is
-			-- On demand, make an index for quick access to preceding-sibling nodes
-		local
-			prior_index, next_node: INTEGER
-		do
-			create prior.make (1, last_node_added)
-			from
-				prior_index := 1
-			variant
-				last_node_added - prior_index + 1
-			until
-				prior_index > last_node_added
-			loop	
-				prior.put (-1, prior_index)
-				prior_index := prior_index + 1
-			end
-			from
-				prior_index := 1
-			variant
-				last_node_added - prior_index + 1
-			until
-				prior_index > last_node_added
-			loop
-				next_node := next_sibling_indices.item (prior_index)
-				if next_node > prior_index then
-					prior.put (prior_index, next_node)
-				end
-				prior_index := prior_index + 1
-			end
-		ensure
-			prior_index_built: prior /= Void
+			Result := False
 		end
 	
 feature {NONE} -- Implementation

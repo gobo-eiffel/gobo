@@ -216,11 +216,11 @@ feature -- Status report
 
 feature -- Status report
 
---	is_same_node (other: XM_XPATH_NODE) is
---			-- Does `Current' represent the same node in the tree as `other'?
---		require
---			other_node_not_void: other /= Void
---		deferred
---		end
+	is_same_node (other: XM_XPATH_NODE): BOOLEAN is
+			-- Does `Current' represent the same node in the tree as `other'?
+		require
+			other_node_not_void: other /= Void
+		deferred
+		end
 
 end

@@ -27,9 +27,9 @@ feature -- Access
 			inspect
 				item_type
 			when Attribute_node then
-				Result := document.name_pool.display_name_from_name_code (document.name_code_for_node (node_number))
+				Result := document.name_pool.display_name_from_name_code (name_code)
 			when Element_node then
-				Result := document.name_pool.display_name_from_name_code (document.name_code_for_node (node_number))
+				Result := document.name_pool.display_name_from_name_code (name_code)
 			when Namespace_node then
 				Result := local_part
 			when Processing_instruction_node then
@@ -55,7 +55,6 @@ feature -- Access
 
 	name_code: INTEGER is
 			-- Name code this node - used in displaying names;
-			-- Overridden (TODO) for namespace and attribute nodes 
 		do
 			Result := document.name_code_for_node (node_number)
 		end
@@ -71,9 +70,9 @@ feature -- Access
 				cached_parent_node := Void
 				Result := Void
 			elseif cached_parent_node /= Void then
-				Result := Parent
+				Result := cached_parent_node
 			else
-				-- if parent_node is unknown, follow the preceding-sibling axis backwards
+				-- if parent_node is unknown, follow the next-sibling axis backwards
 				-- until we find the owner pointer
 				from
 					p := document.retrieve_next_sibling (node_number)
@@ -242,6 +241,22 @@ feature -- Status report
 		do
 			Result := False -- overriden in XM_XPATH_TINY_COMPOSITE_NODE
 		end
+
+	is_same_node (other: XM_XPATH_TINY_NODE): BOOLEAN is
+			-- Does `Current' represent the same node in the tree as `other'?
+		do
+			if other = Current then
+				Result := True
+			elseif document /= other.document then
+				Result := False
+			elseif node_number /= other.node_number then
+				Result := False
+			elseif item_type /= other.item_type then
+				Result := False
+			else
+				Result := True
+			end
+		end
 	
 feature -- Element change
 
@@ -253,11 +268,14 @@ feature -- Element change
 			parent_node_set: cached_parent_node = a_node
 		end
 	
-feature {NONE} -- Implementation
 
+feature {XM_XPATH_TINY_NODE} -- Implementation
+	
 	document: XM_XPATH_TINY_DOCUMENT
 			-- Document that owns this node
-
+	
+feature {NONE} -- Implementation
+	
 	cached_parent_node: XM_XPATH_TINY_NODE
 			-- Cached parent node
 	

@@ -16,9 +16,6 @@ inherit
 
 	XM_XPATH_AXIS_ITERATOR [XM_XPATH_TINY_NODE]
 
-		-- This class also implements an extra Axis, preceding-or-ancestor,
-		-- which is used internally by xsl:number level="any"
-	
 creation
 
 	make

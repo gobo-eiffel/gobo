@@ -110,7 +110,7 @@ feature {NONE} -- Implemnentation
 			until
 				next_node = Void or else node_test.matches_node (next_node.item_type, next_node.fingerprint, next_node.type_annotation)
 			loop
-				do_nothing
+				next_node := next_node.parent
 			end
 		end
 	

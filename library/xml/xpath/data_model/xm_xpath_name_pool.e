@@ -1047,11 +1047,11 @@ feature {NONE} -- Implementation
 			hash_code := name_code_to_hash_code (a_name_code)
 			entry := hash_slots.item (hash_code)
 			from
-				counter := 1
+				counter := 0
 			variant
 				depth - counter + 1
 			until
-				counter + 1 > depth or found = True
+				counter = depth or found = True
 			loop
 				if entry = Void then
 					found := True
@@ -1059,6 +1059,15 @@ feature {NONE} -- Implementation
 					entry := entry.next
 					counter := counter + 1
 				end
+			end
+			debug ("XPath name pool")
+				std.error.put_string ("Name_entry: name code is ")
+				std.error.put_string (a_name_code.out)
+				std.error.put_string (",depth is ")
+				std.error.put_string (depth.out)
+				std.error.put_string (",counter is ")
+				std.error.put_string (counter.out)
+std.error.put_new_line
 			end
 			Result := entry
 		end

@@ -271,6 +271,13 @@ feature -- Tag
 				name_code := name_pool.name_code (a_prefix, a_namespace, a_local_part) 
 			end
 
+			debug ("XPath content emitter")
+				std.error.put_string ("On_attribute: local name is ")
+				std.error.put_string (a_local_part)
+				std.error.put_string (", name code is ")
+				std.error.put_string (name_code.out)
+				std.error.put_new_line
+			end
 			if is_namespace_declaration (a_prefix, a_local_part) then
 				-- Notify a namespace declaration
 				if name_pool.is_namespace_code_allocated (a_prefix, a_namespace) then

@@ -17,7 +17,10 @@ inherit
 	XM_XPATH_ATTRIBUTE
 
 	XM_XPATH_TINY_NODE
-
+		redefine
+			name_code
+		end
+	
 creation
 
 	make
@@ -41,6 +44,12 @@ feature -- Access
 			Result := document.attribute_value (node_number)
 		end
 
+	name_code: INTEGER is
+			-- Name code this node - used in displaying names;
+		do
+			Result := document.attribute_code_for_node (node_number)
+		end
+	
 feature {XM_XPATH_NODE} -- Access
 
 	is_possible_child: BOOLEAN is

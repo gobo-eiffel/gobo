@@ -35,7 +35,7 @@ feature -- Initialization
 			parent_element := element
 			node_test := test
 
-			attribute_index := doc.alpha_value (element) -- first_attibute
+			attribute_index := doc.alpha_value (element) -- first_attribute
 			index := 0
 			advance
 		ensure

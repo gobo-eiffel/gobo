@@ -39,7 +39,18 @@ feature -- Initialization
 			include_ancestors := ancestors
 
 			next_ancestor_depth := doc.depth_of (next_node_number) - 1
+			debug ("XPath preceding enumeration")
+				print ("Starting node number is ")
+				print (next_node_number)
+				print ("%NNext ancestor's depth is ")
+				print (next_ancestor_depth.out)
+			end
 			advance
+			debug ("XPath preceding enumeration")
+				print ("%Nprior to calling forth, next node number is ")
+				print (next_node_number)
+				print ("%N")
+			end	
 		ensure
 			document_set: document = doc
 			starting_node_set: starting_node = start
@@ -104,17 +115,30 @@ feature {NONE} -- Implementation
 				finished
 			loop
 				next_node_number := next_node_number - 1
+				debug ("XPath preceding enumeration")
+					print ("Next node number is now ")
+					print (next_node_number)
+					print ("%N")
+				end
 				if not include_ancestors then
 				-- skip over ancestors
 					from
 					until
-						next_node_number = 0 or else document. depth_of (next_node_number) = next_ancestor_depth
+						next_node_number <= 1 or else document.depth_of (next_node_number) /= next_ancestor_depth
 					loop
+						debug ("XPath preceding enumeration")
+							print ("Next node depth is now ")
+							print (document.depth_of (next_node_number))
+							print ("%N")
+							print ("Next ancestor depth is now ")
+							print (next_ancestor_depth)
+							print ("%N")							
+						end
 						next_ancestor_depth := next_ancestor_depth - 1
 						next_node_number := next_node_number - 1
 					end
 				end
-				if next_node_number = 0
+				if next_node_number <= 1
 					or else node_test.matches_node (document.retrieve_node_kind (next_node_number), document.name_code_for_node (next_node_number), document.element_annotation (next_node_number)) then
 					finished := True
 				end

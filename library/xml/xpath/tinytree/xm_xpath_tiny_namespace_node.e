@@ -18,7 +18,7 @@ inherit
 
 	XM_XPATH_TINY_NODE
 		redefine
-			local_part
+			local_part, name_code
 		end
 
 creation
@@ -35,10 +35,10 @@ feature {NONE} -- Initialization
 			document := doc
 			node_number := a_node_number
 			if document.name_pool.is_name_code_allocated ("", "", local_part) then
-				my_name_code := document.name_pool.name_code  ("", "", local_part)
+				the_name_code := document.name_pool.name_code  ("", "", local_part)
 			else
 				document.name_pool.allocate_name  ("", "", local_part)
-				my_name_code := document.name_pool.last_name_code
+				the_name_code := document.name_pool.last_name_code
 			end
 		ensure
 			document_set: document = doc
@@ -52,6 +52,12 @@ feature -- Access
 		do
 			Result := document.name_pool.prefix_from_namespace_code (document.namespace_code_for_node (node_number))
 		end
+
+		name_code: INTEGER is
+			-- Name code this node - used in displaying names;
+			do
+			Result := the_name_code
+		end
 	
 feature {XM_XPATH_NODE} -- Access
 
@@ -63,7 +69,7 @@ feature {XM_XPATH_NODE} -- Access
 
 feature {NONE} -- Implementation
 
-	my_name_code: INTEGER
+	the_name_code: INTEGER
 			-- The name code from the name pool
 	
 end
