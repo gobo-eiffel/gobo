@@ -15,6 +15,9 @@ deferred class XM_XPATH_NODE
 inherit
 
 	XM_XPATH_ITEM
+		redefine
+			as_value
+		end
 
 	XM_XPATH_AXIS
 
@@ -346,6 +349,14 @@ feature -- Status setting
 		do
 			is_error := True
 			create error_value.make_from_string (a_message, a_code, an_error_type)
+		end
+
+feature -- Conversion
+	
+	as_value: XM_XPATH_VALUE is
+			-- Convert to a value
+		do
+			create {XM_XPATH_SINGLETON_NODE} Result.make (Current)
 		end
 
 feature {XM_XPATH_NODE} -- Local

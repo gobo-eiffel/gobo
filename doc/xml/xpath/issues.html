@@ -84,10 +84,8 @@
 	<li>Change loops to use external cursors (ongoing - done?)</li>
 	<li>Make use of UT_URI for base URI etc.</li>
 	<li>CAST_EXPRESSION needs fixing; CASTABLE, TREAT and constructor functions need implementing and testing.</li>
-	<li>Feature expression_tester is initial lower case, whereas Expression_factory is initial upper case. Make all lower case.</li>
 	<li>Better XML parser messages wanted (i.e. line and column positions, etc.)</li>
 	<li>Review test suite.</li>
-	<li>A whitespace-stripper is needed.</li>
 	<li>How to get dynamic error messages out of declare_variable and (?can't remember?)?</li>
 	<li>Implement and use SHARED_EMPTY_ITERATOR</li>
 	<li>Review assignment attempts</li>
@@ -98,10 +96,11 @@
       <p>This section should be ignored. It consists solely of my notes
       with which to form the comments for the next cvs check-in operation.</p>
       <pre>
-	Fixed sub-expression promotions. Changed promoted_expression to promote.
-	Fixed dependencies computation.
-	Eliminated may_analyze, as it breaks promotion. changed unsorted to set_unsorted.
-	Implemented set_XXX routines for dependencies and intrinsic dependencies.
+	Made all once routines start in lower case.
+	Redefined two routines to avoid assignment attempts.
+	Scrapped the CONTROLLER. Replaced by TRANSFORMER (for XSLT only).
+	Defined STRIPPER.
+	Implemented fn:boolean().
       </pre>
     </div>
     <div >

@@ -61,6 +61,16 @@ feature -- Status report
 			Result := nilled_property
 		end	
 
+feature -- Status setting
+
+	set_name_code (a_name_code: INTEGER) is
+			-- Set `name_code'.
+			-- Needed (indirectly, through `XM_XPATH_TINY_ELEMENT') by `XM_XSLT_STRIPPER'.
+		require
+			valid_name_code: a_name_code >= -1
+		deferred
+		end
+
 feature {NONE} -- Access
 
 	-- TODO - scrap this

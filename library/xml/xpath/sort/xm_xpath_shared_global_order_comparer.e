@@ -14,7 +14,7 @@ class XM_XPATH_SHARED_GLOBAL_ORDER_COMPARER
 
 feature -- Access
 
-	Global_order_comparer: XM_XPATH_GLOBAL_ORDER_COMPARER is
+	global_order_comparer: XM_XPATH_GLOBAL_ORDER_COMPARER is
 			-- Shared singleton instance
 		once
 			create Result

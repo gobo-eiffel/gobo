@@ -136,13 +136,13 @@ feature -- Evaluation
 			a_system_function_factory: XM_XPATH_SYSTEM_FUNCTION_FACTORY
 		do
 			create a_system_function_factory
-			Function_factory.register_system_function_factory (a_system_function_factory)
-			Expression_factory.make_expression (an_expression_text, static_context)
-			if Expression_factory.is_parse_error then
+			function_factory.register_system_function_factory (a_system_function_factory)
+			expression_factory.make_expression (an_expression_text, static_context)
+			if expression_factory.is_parse_error then
 				is_error := True
-				internal_error_value := Expression_factory.parsed_error_value
+				internal_error_value := expression_factory.parsed_error_value
 			else
-				an_expression := Expression_factory.parsed_expression
+				an_expression := expression_factory.parsed_expression
 				an_expression.analyze (static_context)
 				if an_expression.is_error then
 					is_error := True
@@ -204,17 +204,11 @@ feature {NONE} -- Implementation
 		require
 			expression_analyzed_without_error: an_expression /= Void and then not an_expression.is_error
 		local
-			a_controller: XM_XPATH_CONTROLLER
 			a_context: XM_XPATH_CONTEXT
 			a_sequence_iterator: XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_ITEM]
 				an_item: XM_XPATH_ITEM
 		do
-			create a_controller.make (context_item, static_context)
-			a_context := a_controller.new_xpath_context
-			a_context.set_current_iterator (a_controller.current_iterator)
-				check
-					context_set: a_context.context_item = context_item
-				end
+			create a_context.make (context_item, 0)
 			a_sequence_iterator := an_expression.iterator (a_context)
 			
 			if a_sequence_iterator.is_error then

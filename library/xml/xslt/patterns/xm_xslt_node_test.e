@@ -33,7 +33,7 @@ feature -- Access
 
 feature -- Matching
 
-	frozen matches (a_node: XM_XPATH_NODE; a_controller: XM_XSLT_CONTROLLER): BOOLEAN is
+	frozen matches (a_node: XM_XPATH_NODE;  a_transformer: XM_XSLT_TRANSFORMER): BOOLEAN is
 			-- Determine whether this Pattern matches the given Node;
 		do
 			Result := matches_node (a_node.item_type, a_node.fingerprint, a_node.type_annotation) 

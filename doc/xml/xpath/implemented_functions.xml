@@ -491,6 +491,12 @@
 	   <entry>No</entry>
 	 </row>	
 	 <row>
+	   <entry>fn:boolean</entry>
+	   <entry>Yes</entry>
+	   <entry>No</entry>
+	   <entry>No</entry>
+	 </row>	
+	 <row>
 	   <entry>fn:index-of</entry>
 	   <entry>No</entry>
 	   <entry>No</entry>
@@ -612,8 +618,8 @@
 	 </row>	
 	 <row>
 	   <entry>fn:last</entry>
-	   <entry>Yes</entry>
-	   <entry>Only incidentally</entry>
+	   <entry>Partially</entry>
+	   <entry>No</entry>
 	   <entry>No</entry>
 	 </row>	
 	 <row>

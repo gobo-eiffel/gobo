@@ -97,17 +97,10 @@ feature -- Conversion
 			an_atomic_value: XM_XPATH_ATOMIC_VALUE
 			a_node: XM_XPATH_NODE
 		do
-			an_atomic_value ?= Current
-			if an_atomic_value /= Void then
-				Result := an_atomic_value
-			else
-				a_node ?= Current
-				if a_node /= Void then
-					create {XM_XPATH_SINGLETON_NODE} Result.make (a_node)
-				else
-					create {XM_XPATH_EMPTY_SEQUENCE} Result.make
-				end
-			end
+
+			-- This default version is re-defined by NODE and ATOMIC_VALUE
+
+			create {XM_XPATH_EMPTY_SEQUENCE} Result.make
 		ensure
 			value_not_void: Result /= Void
 		end

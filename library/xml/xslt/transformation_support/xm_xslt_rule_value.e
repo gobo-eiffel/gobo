@@ -2,7 +2,7 @@ indexing
 
 	description:
 
-		"XSLT key managers"
+		"Objects that can be returned from {XM_XSLT_MODE}.rule"
 
 	library: "Gobo Eiffel XSLT Library"
 	copyright: "Copyright (c) 2004, Colin Adams and others"
@@ -10,17 +10,22 @@ indexing
 	date: "$Date$"
 	revision: "$Revision$"
 
-class XM_XSLT_KEY_MANAGER
+class	XM_XSLT_RULE_VALUE
 
 feature -- Access
 
-	select_by_key (a_key_fingerprint: INTEGER; a_document: XM_XPATH_DOCUMENT; a_key_value: XM_XPATH_STRING_VALUE; a_controller: XM_XSLT_CONTROLLER): XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_NODE] is
+	as_boolean: BOOLEAN is
+			-- Value as a BOOLEAN
 		require
-			-- TODO
+			is_boolean: is_boolean
 		do
 			-- TODO
-		ensure
 		end
+
+feature -- Status report
+
+	is_boolean: BOOLEAN
+			-- Is `Current' a BOOLEAN?
 
 end
 	

@@ -2,7 +2,7 @@ indexing
 
 	description:
 	
-		"Standard pipe of callbacks filter leading to construction of ax XM_XPATH_TINY_DOCUMENT"
+		"Standard pipe of callbacks filter leading to construction of an XM_XPATH_TINY_DOCUMENT"
 	
 	library: "Gobo Eiffel XPath Library"
 	copyright: "Copyright (c) 2002, Colin Adams and others"
@@ -19,6 +19,11 @@ inherit
 	XM_CALLBACKS_FILTER_FACTORY
 		export {NONE} all end
 
+		-- This pipeline is suitable for use by a stand-alone XPath evaluator.
+		-- It is not particularly suitable for use by documents to be used as input to
+		-- XSLT, as XSLT has more stringent white-space stripping rules, and
+		-- in addition, stylesheets must have their comments and PIs stripped.
+		
 creation
 
 	make

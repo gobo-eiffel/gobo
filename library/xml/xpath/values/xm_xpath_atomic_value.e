@@ -17,6 +17,9 @@ inherit
 	XM_XPATH_VALUE
 
 	XM_XPATH_ITEM
+		redefine
+			as_value
+		end
 
 feature {NONE} -- Initialization
 
@@ -109,6 +112,12 @@ feature -- Conversion
 			-- Convert to an item
 		do
 			Result := Current
+		end
+	
+	as_value: XM_XPATH_VALUE is
+			-- Convert to a value
+		do
+				Result := Current
 		end
 
 end

@@ -226,20 +226,20 @@ feature -- Optimization
 
 feature -- Matching
 
-	matches (a_node: XM_XPATH_NODE; a_controller: XM_XSLT_CONTROLLER): BOOLEAN is
+	matches (a_node: XM_XPATH_NODE; a_transformer: XM_XSLT_TRANSFORMER): BOOLEAN is
 			-- Determine whether this Pattern matches the given Node;
 		local
 			a_saved_iterator: XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_ITEM]
 			a_singleton_iterator: XM_XPATH_SINGLETON_ITERATOR [XM_XPATH_NODE]
 		do
 			if uses_current then
-				a_saved_iterator := a_controller.current_iterator
+				a_saved_iterator := a_transformer.current_iterator
 				create a_singleton_iterator.make (a_node)
-				a_controller.set_current_iterator (a_singleton_iterator)
-				Result := internal_matches (a_node, a_controller)
-				a_controller.set_current_iterator (a_saved_iterator)
+				a_transformer.set_current_iterator (a_singleton_iterator)
+				Result := internal_matches (a_node, a_transformer)
+				a_transformer.set_current_iterator (a_saved_iterator)
 			else
-				Result := internal_matches (a_node, a_controller)
+				Result := internal_matches (a_node, a_transformer)
 			end
 		end
 
@@ -416,7 +416,7 @@ feature {NONE} -- Implementation
 
 feature {XM_XSLT_PATTERN} -- Implementation
 
-	internal_matches (a_node: XM_XPATH_NODE; a_controller: XM_XSLT_CONTROLLER): BOOLEAN is
+	internal_matches (a_node: XM_XPATH_NODE; a_transformer: XM_XSLT_TRANSFORMER): BOOLEAN is
 			-- Determine whether this Pattern matches the given Node
 		local
 			a_parent, an_ancestor, another_node: XM_XPATH_NODE
@@ -432,7 +432,7 @@ feature {XM_XSLT_PATTERN} -- Implementation
 				if parent_pattern /= Void then
 					a_parent := a_node.parent
 					if a_parent /= Void then
-						if parent_pattern.internal_matches (a_parent, a_controller) then
+						if parent_pattern.internal_matches (a_parent, a_transformer) then
 							if ancestor_pattern /= Void then
 								an_ancestor := a_node.parent
 								from
@@ -440,7 +440,7 @@ feature {XM_XSLT_PATTERN} -- Implementation
 								until
 									Result = True or else an_ancestor = Void
 								loop
-									if ancestor_pattern.internal_matches (an_ancestor, a_controller) then
+									if ancestor_pattern.internal_matches (an_ancestor, a_transformer) then
 										Result := True
 									end
 									an_ancestor := an_ancestor.parent
@@ -459,7 +459,7 @@ feature {XM_XSLT_PATTERN} -- Implementation
 											-- `a_node' is a member of the nodeset obtained by evaluating the
 											-- equivalent expression
 
-											a_new_context := a_controller.new_xpath_context
+											a_new_context := a_transformer.new_xpath_context
 											create a_singleton_iterator.make (a_node)
 											a_new_context.set_current_iterator (a_singleton_iterator)
 											a_nsv := equivalent_expression.iterator (a_new_context)
@@ -478,7 +478,7 @@ feature {XM_XSLT_PATTERN} -- Implementation
 											end
 										end
 									elseif filters /= Void then
-										a_new_context := a_controller.new_xpath_context
+										a_new_context := a_transformer.new_xpath_context
 										create a_singleton_iterator.make (a_node)
 										a_new_context.set_current_iterator (a_singleton_iterator)
 

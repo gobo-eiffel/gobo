@@ -84,10 +84,10 @@ feature -- Analysis
 
 feature -- Matching
 
-	matches (a_node: XM_XPATH_NODE; a_controller: XM_XSLT_CONTROLLER): BOOLEAN is
+	matches (a_node: XM_XPATH_NODE; a_transformer: XM_XSLT_TRANSFORMER): BOOLEAN is
 			-- Determine whether this Pattern matches the given Node;
 		do
-			Result := left_hand_side.matches (a_node, a_controller) or else right_hand_side.matches (a_node, a_controller)
+			Result := left_hand_side.matches (a_node, a_transformer) or else right_hand_side.matches (a_node, a_transformer)
 		end
 
 feature {NONE} -- Implementation

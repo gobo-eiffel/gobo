@@ -54,13 +54,14 @@ creation
 
 feature {NONE} -- Initialization
 
-	make (an_estimated_node_count: INTEGER; an_estimated_attribute_count: INTEGER; an_estimated_namespace_count: INTEGER; an_estimated_character_count: INTEGER) is
+	make (an_estimated_node_count: INTEGER; an_estimated_attribute_count: INTEGER; an_estimated_namespace_count: INTEGER; an_estimated_character_count: INTEGER; a_name_pool: XM_XPATH_NAME_POOL) is
 			-- Establish invariant
 		require
 			positive_node_count: an_estimated_node_count > 0
 			attribute_count: an_estimated_attribute_count >= 0
 			namespace_count: an_estimated_namespace_count >= 0
 			character_count: an_estimated_character_count >= 0
+			name_pool_not_void: a_name_pool /= Void
 		do
 			root_node := 1
 			node_number := 1
@@ -86,12 +87,19 @@ feature {NONE} -- Initialization
 			else
 				create {UC_UTF8_STRING} character_buffer.make (an_estimated_character_count)
 			end
+			name_pool := a_name_pool
+		ensure
+			name_pool_set: name_pool = a_name_pool
 		end
 
-	make_with_defaults is
+	make_with_defaults (a_name_pool: XM_XPATH_NAME_POOL) is
 			-- Create with default parameter settings
+		require
+			name_pool_not_void: a_name_pool /= Void
 		do
-			make (4000, 100, 20, 4000)
+			make (4000, 100, 20, 4000, a_name_pool)
+		ensure
+			name_pool_set: name_pool = a_name_pool
 		end
 
 feature -- Access
@@ -480,13 +488,16 @@ feature -- Status report
 		
 feature -- Status setting
 
-	set_name_pool (a_new_pool: XM_XPATH_NAME_POOL) is
-			-- Set the name pool used by this builder
+	set_name_code_for_node (a_name_code, a_node_number: INTEGER) is
+			-- Set `name_code' for `a_node_number.
+			-- Needed (indirectly, through `XM_XPATH_TINY_ELEMENT') by `XM_XSLT_STRIPPER'.
+		require
+			node_number_in_range: is_node_number_valid (a_node_number)
+			valid_name_code: name_pool.is_valid_name_code (a_name_code)
 		do
-			name_pool := a_new_pool
-			add_namespace (node_number, name_pool.namespace_code ("xml", Xml_uri))
-			name_pool.allocate_document_number (Current)
-			document_number := name_pool.document_number (Current)
+			name_codes.put (a_name_code, a_node_number)
+		ensure
+			name_code_set: name_code_for_node (a_node_number) = a_name_code
 		end
 
 	ensure_prior_index is
@@ -529,7 +540,19 @@ feature -- Status setting
 		ensure
 			a_prior_index_built: prior /= Void
 		end
-	
+
+feature -- Creation
+
+	created_orphan_element: XM_XPATH_ELEMENT is
+			-- New orphan element;
+			-- Used by XM_XSLT_STRIPPER.
+		do
+			add_node (Element_node, 1, -1, -1, -1)
+			create {XM_XPATH_TINY_ELEMENT} Result.make (Current, last_node_added)
+		ensure then
+			one_more_node: number_of_nodes = old number_of_nodes + 1 and last_node_added = number_of_nodes
+		end
+
 feature -- Element change
 
 
@@ -538,10 +561,10 @@ feature -- Element change
 		require
 			valid_node_type: a_new_node_type = Document_node or a_new_node_type = Element_node or
 				a_new_node_type = Text_node or a_new_node_type = Comment_node or a_new_node_type = Processing_instruction_node
-			positive_depth: a_depth_value > 0
+			strictly_positive_depth: a_depth_value > 0
 			valid_alpha: an_alpha_value >= -1
 			valid_beta: a_beta_value >= -1
-			valid_name_codes: a_new_name_code >= -1
+			valid_name_code: a_new_name_code = -1 or else name_pool.is_valid_name_code (a_new_name_code)
 		local
 			a_new_size: INTEGER
 		do

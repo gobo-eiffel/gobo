@@ -67,7 +67,7 @@ feature -- Optimization
 
 feature -- Matching
 
-	matches (a_node: XM_XPATH_NODE; a_controller: XM_XSLT_CONTROLLER): BOOLEAN is
+	matches (a_node: XM_XPATH_NODE; a_transformer: XM_XSLT_TRANSFORMER): BOOLEAN is
 			-- Determine whether this Pattern matches the given Node;
 		local
 			a_doc: XM_XPATH_DOCUMENT
@@ -82,11 +82,11 @@ feature -- Matching
 			if a_doc = Void then
 				Result := False
 			else
-				a_km := a_controller.key_manager
+				a_km := a_transformer.key_manager
 
 				-- TODO: allow keys of any data type; atomize the supplied value
 
-				an_iter := key_expression.iterator (a_controller.new_xpath_context)
+				an_iter := key_expression.iterator (a_transformer.new_xpath_context)
 
 				from
 						check
@@ -98,7 +98,7 @@ feature -- Matching
 				loop
 					a_key := an_iter.item.string_value
 					create a_key_value.make (a_key)
-					nodes := a_km.select_by_key (key_fingerprint, a_doc, a_key_value, a_controller)
+					nodes := a_km.select_by_key (key_fingerprint, a_doc, a_key_value, a_transformer)
 					from
 							check
 								before: nodes.before

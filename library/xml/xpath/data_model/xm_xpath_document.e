@@ -81,16 +81,19 @@ feature -- Access
 	name_pool: XM_XPATH_NAME_POOL
 			-- The name pool used to build `Current'
 
+feature -- Creation
 
-feature -- Element change
-
-	set_name_pool (a_name_pool: XM_XPATH_NAME_POOL) is
-			-- Set the name pool.
-		require
-			name_pool_not_void: a_name_pool /= Void
+	created_orphan_element: XM_XPATH_ELEMENT is
+			-- New orphan element;
+			-- Used by XM_XSLT_STRIPPER.
 		deferred
 		ensure
-			name_pool_set: name_pool = a_name_pool
+			created_element_not_void: Result /= Void
+			orphan: Result.parent = Void
 		end
-		
+
+invariant
+
+	name_pool_not_void: name_pool /= Void
+
 end

@@ -29,13 +29,15 @@ feature -- Access
 
 feature -- Events
 
-	start_document is
-			-- Notify the start of the document
+	start_document: XM_XPATH_DOCUMENT is
+			-- New document
 		deferred
+		ensure
+			document_not_void: Result /= Void
 		end
 
 	set_unparsed_entity (a_name: STRING; a_system_id: STRING; a_public_id: STRING) is
-			-- Notify an unparsed entity URI
+			-- Notify an unparsed entity URI.
 		require
 			name_not_void: a_name /= Void
 			system_id_not_void: a_system_id /= Void
@@ -44,14 +46,14 @@ feature -- Events
 		end
 
 	start_element (a_name_code: INTEGER; a_type_code: INTEGER; properties: INTEGER) is
-			-- Notify the start of an element
+			-- Notify the start of an element.
 		require
 			zero_properties: properties = 0 -- reserved for future use
 		deferred
 		end
 
-	namespace (a_namespace_code: INTEGER; properties: INTEGER) is
-			-- Notify a namespace;
+	notify_namespace (a_namespace_code: INTEGER; properties: INTEGER) is
+			-- Notify a namespace.
 			-- Namespaces are notified after the `start_element' event, and before
 			--  any children for the element. The namespaces that are reported are only required
 			--  to include those that are different from the parent element; however, duplicates may be reported.
@@ -59,7 +61,7 @@ feature -- Events
 		deferred
 		end
 
-	attribute (a_name_code: INTEGER; a_type_code: INTEGER; a_value: STRING; properties: INTEGER) is
+	notify_attribute (a_name_code: INTEGER; a_type_code: INTEGER; a_value: STRING; properties: INTEGER) is
 			-- Notify an attribute;
 			-- Attributes are notified after the `start_element' event, and before any
 			--  children. Namespaces and attributes may be intermingled
@@ -69,7 +71,7 @@ feature -- Events
 		end
 
 	start_content is
-			-- Notify the start of the content, that is, the completion of all attributes and namespaces;
+			-- Notify the start of the content, that is, the completion of all attributes and namespaces.
 			-- Note that the initial receiver of output from XSLT instructions will not receive this event,
 			--  it has to detect it itself. Note that this event is reported for every element even if it has
 			--  no attributes, no namespaces, and no content.
@@ -83,8 +85,8 @@ feature -- Events
 		deferred
 		end
 
-	characters (chars: STRING; properties: INTEGER) is
-			-- Notify character data;
+	notify_characters (chars: STRING; properties: INTEGER) is
+			-- Notify character data.
 			-- Note that some receivers may require the character data to be
 			--  sent in a single event, but in general this is not a requirement.
 		require
@@ -92,16 +94,16 @@ feature -- Events
 		deferred
 		end
 
-	processing_instruction (a_name: STRING; a_data_string: STRING; properties: INTEGER) is
-			-- Notify a processing instruction
+	notify_processing_instruction (a_name: STRING; a_data_string: STRING; properties: INTEGER) is
+			-- Notify a processing instruction.
 		require
 			name_not_void: a_name /= Void
 			data_not_void: a_data_string /= Void
 		deferred
 		end
 	
-	comment (a_content_string: STRING; properties: INTEGER) is
-			-- Notify a comment;
+	notify_comment (a_content_string: STRING; properties: INTEGER) is
+			-- Notify a comment.
 			-- Comments are only notified if they are outside the DTD.
 		require
 			content_not_void: a_content_string /= Void
@@ -109,14 +111,14 @@ feature -- Events
 		end
 
 	end_document is
-			-- Notify the end of the document
+			-- Notify the end of the document.
 		deferred
 		end
 
 feature -- Element change
 
 	set_name_pool (a_name_pool: XM_XPATH_NAME_POOL) is
-			-- Set the name pool in which all name codes can be found
+			-- Set the name pool in which all name codes can be found.
 		require
 			name_pool_not_void: a_name_pool /= Void
 		do
@@ -126,7 +128,7 @@ feature -- Element change
 		end
 
 	set_system_id (a_system_id: STRING) is
-			-- Set the system-id of the destination tree
+			-- Set the system-id of the destination tree.
 		require
 			system_id_not_void: a_system_id /= Void
 		deferred

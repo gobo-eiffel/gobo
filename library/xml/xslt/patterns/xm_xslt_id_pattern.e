@@ -71,7 +71,7 @@ feature -- Optimization
 
 feature -- Matching
 
-	matches (a_node: XM_XPATH_NODE; a_controller: XM_XSLT_CONTROLLER): BOOLEAN is
+	matches (a_node: XM_XPATH_NODE; a_transformer: XM_XSLT_TRANSFORMER): BOOLEAN is
 			-- Determine whether this Pattern matches the given Node;
 		local
 			a_doc: XM_XPATH_DOCUMENT
@@ -87,7 +87,7 @@ feature -- Matching
 				if a_doc = Void then
 					Result := False
 				else
-					id_expression.evaluate_item (a_controller.new_xpath_context)
+					id_expression.evaluate_item (a_transformer.new_xpath_context)
 					an_id_value ?= id_expression.last_evaluated_item
 					if an_id_value = Void then
 						Result := False						

@@ -116,11 +116,11 @@ feature -- Optimization
 
 feature -- Matching
 
-	matches (a_node: XM_XPATH_NODE; a_controller: XM_XSLT_CONTROLLER): BOOLEAN is
+	matches (a_node: XM_XPATH_NODE; a_transformer: XM_XSLT_TRANSFORMER): BOOLEAN is
 			-- Determine whether this Pattern matches the given Node;
 			-- This is the main external interface for matching patterns;
 			--  it sets the result of current() to `a_node'.
-			-- The controller is only relevant if the pattern
+			-- The transformer is only relevant if the pattern
 			--  uses variables, or contains calls on functions such as document() or key().
 		require
 			valid_node: a_node /= Void
@@ -129,7 +129,7 @@ feature -- Matching
 
 feature {XM_XSLT_PATTERN} -- Local
 
-	internal_matches (a_node: XM_XPATH_NODE; a_controller: XM_XSLT_CONTROLLER): BOOLEAN is
+	internal_matches (a_node: XM_XPATH_NODE;  a_transformer: XM_XSLT_TRANSFORMER): BOOLEAN is
 			-- Determine whether this Pattern matches the given Node;
 			-- This is an internal interface used for matching sub-patterns;
 			--  it does not alter current().
@@ -137,7 +137,7 @@ feature {XM_XSLT_PATTERN} -- Local
 		require
 			valid_node: a_node /= Void
 		do
-			Result := matches (a_node, a_controller)
+			Result := matches (a_node, a_transformer)
 		end
 end
 	

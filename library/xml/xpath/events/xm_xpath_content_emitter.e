@@ -160,8 +160,10 @@ feature -- Document events
 
 	on_start is
 			-- Called when parsing starts.
+		local
+			a_document: XM_XPATH_DOCUMENT
 		do
-			receiver.start_document
+			a_document := receiver.start_document
 		end
 
 		on_finish is
@@ -194,13 +196,13 @@ feature -- Meta
 			if before_dtd and STRING_.same_string (a_name, "xml-stylesheet") then
 				-- TODO `a_content' names the stylesheet to use in the href pseudo-attribute
 			end
-			receiver.processing_instruction (a_name, a_content, 0)
+			receiver.notify_processing_instruction (a_name, a_content, 0)
 		end
 
 	on_comment (a_content: STRING) is
 			-- Processing a comment.
 		do
-			receiver.comment (a_content, 0)
+			receiver.notify_comment (a_content, 0)
 		end
 
 feature -- Tag
@@ -303,7 +305,7 @@ feature -- Tag
 					name_pool.allocate_namespace_code (a_namespace_prefix, a_value)
 					a_namespace_code := name_pool.last_namespace_code
 				end
-				receiver.namespace (a_namespace_code, 0)
+				receiver.notify_namespace (a_namespace_code, 0)
 			else
 				notify_attribute (a_name_code, a_prefix, a_local_part, a_value)
 			end
@@ -329,7 +331,7 @@ feature -- Content
 			--  earlier in the event chain, so this event is
 			--  atomic
 		do
-			receiver.characters (a_content, 0)
+			receiver.notify_characters (a_content, 0)
 		end
 
 feature {NONE} -- Implementation
@@ -423,7 +425,7 @@ feature {NONE} -- Implementation
 					end
 				end
 			end
-			receiver.attribute (a_name_code, a_type_code, a_value, 0)
+			receiver.notify_attribute (a_name_code, a_type_code, a_value, 0)
 		end
 
 invariant

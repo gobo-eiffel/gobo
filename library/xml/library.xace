@@ -55,6 +55,8 @@
 		<cluster name="xslt">
 		  <cluster name="patterns"/>
 		  <cluster name="style"/>
+		  <cluster name="events"/>
+		  <cluster name="transformation_support"/>
 		</cluster>
 	</cluster>
 </library>

@@ -45,14 +45,14 @@ feature -- Access
 
 feature -- Events
 
-	start_document is
+	start_document: XM_XPATH_DOCUMENT is
 			-- Notify the start of the document
 		do
 			-- TODO add timing information
 			if defaults_overridden then
-				create document.make (estimated_node_count, estimated_attribute_count, estimated_namespace_count, estimated_character_count)
+				create document.make (estimated_node_count, estimated_attribute_count, estimated_namespace_count, estimated_character_count, name_pool)
 			else
-				create document.make_with_defaults
+				create document.make_with_defaults (name_pool)
 			end
 			current_depth := 1
 			document.add_node (Document_node, current_depth, -1, -1, -1)
@@ -61,7 +61,8 @@ feature -- Events
 			previously_at_depth.put (0, 2) 
 			document.set_next_sibling (-1, 1) -- i.e. node one has next sibling 0 (no next sibling)
 			current_depth := current_depth + 1
-			document.set_name_pool (name_pool)
+			Result := document
+			
 		end
 
 	set_unparsed_entity (a_name: STRING; a_system_id: STRING; a_public_id: STRING) is
@@ -108,20 +109,14 @@ feature -- Events
 			-- TODO - locator stuff
 		end
 
-	namespace (a_namespace_code: INTEGER; properties: INTEGER) is
-			-- Notify a namespace;
-			-- Namespaces are notified after the `start_element' event, and before
-			--  any children for the element. The namespaces that are reported are only required
-			--  to include those that are different from the parent element; however, duplicates may be reported.
-			-- A namespace must not conflict with any namespaces already used for element or attribute names.
+	notify_namespace (a_namespace_code: INTEGER; properties: INTEGER) is
+			-- Notify a namespace.
 		do
 				document.add_namespace (node_number + 1, a_namespace_code)			
 		end
 
-	attribute (a_name_code: INTEGER; a_type_code: INTEGER; a_value: STRING; properties: INTEGER) is
-			-- Notify an attribute;
-			-- Attributes are notified after the `start_element' event, and before any
-			--  children. Namespaces and attributes may be intermingled
+	notify_attribute (a_name_code: INTEGER; a_type_code: INTEGER; a_value: STRING; properties: INTEGER) is
+			-- Notify an attribute.
 		local
 			a_new_type_code: like a_type_code
 		do
@@ -137,25 +132,20 @@ feature -- Events
 		end
 
 	start_content is
-			-- Notify the start of the content, that is, the completion of all attributes and namespaces;
-			-- Note that the initial receiver of output from XSLT instructions will not receive this event,
-			--  it has to detect it itself. Note that this event is reported for every element even if it has
-			--  no attributes, no namespaces, and no content.
+			-- Notify the start of the content, that is, the completion of all attributes and namespaces.
 		do
 			node_number := node_number + 1
 		end
 	
 	end_element is
-			-- Notify the end of an element;
-			-- The receiver must maintain a stack if it needs to know which
-			--  element is ending.
+			-- Notify the end of an element.
 		do
 			previously_at_depth.put (-1, current_depth)
 			current_depth := current_depth - 1			
 		end
 
-	characters (a_character_string: STRING; properties: INTEGER) is
-			-- Notify character data
+	notify_characters (a_character_string: STRING; properties: INTEGER) is
+			-- Notify character data.
 		local
 			a_buffer_start, a_previous_sibling: INTEGER
 		do
@@ -172,8 +162,8 @@ feature -- Events
 			previously_at_depth.put (node_number, current_depth)
 		end
 	
-	processing_instruction (a_target: STRING; a_data_string: STRING; properties: INTEGER) is
-			-- Notify a processing instruction
+	notify_processing_instruction (a_target: STRING; a_data_string: STRING; properties: INTEGER) is
+			-- Notify a processing instruction.
 		local
 			a_name_code, a_previous_sibling: INTEGER
 		do
@@ -198,9 +188,8 @@ feature -- Events
 			previously_at_depth.put (node_number, current_depth)		
 		end
 
-	comment (a_content_string: STRING; properties: INTEGER) is
-			-- Notify a comment;
-			-- Comments are only notified if they are outside the DTD.
+	notify_comment (a_content_string: STRING; properties: INTEGER) is
+			-- Notify a comment.
 		local
 			a_previous_sibling: INTEGER
 		do

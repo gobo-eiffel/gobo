@@ -72,6 +72,17 @@ feature -- Access
 			end
 		end
 
+feature -- Status setting
+
+	set_name_code (a_name_code: INTEGER) is
+			-- Set `name_code'.
+			-- Needed (indirectly, through `XM_XPATH_TINY_ELEMENT') by `XM_XSLT_STRIPPER'.
+		do
+			document.set_name_code_for_node (a_name_code, node_number)
+		ensure then
+			name_code_set: document.name_code_for_node (node_number) = a_name_code
+		end
+
 feature {XM_XPATH_NODE} -- Restricted
 
 	is_possible_child: BOOLEAN is
