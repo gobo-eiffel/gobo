@@ -334,7 +334,7 @@ feature {NONE} -- Walk assertions
 			assert_attribute (a_name, a_value)
 			node.process (typer)
 			assert ("has_qualified_name", typer.xml_attribute.has_qualified_name (a_ns, a_name))
-			assert_equal ("attribute namespace", a_ns, typer.attribute.namespace.uri)
+			assert_equal ("attribute namespace", a_ns, typer.xml_attribute.namespace.uri)
 		end
 		
 	assert_last is

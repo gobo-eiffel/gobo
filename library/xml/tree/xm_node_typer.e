@@ -105,7 +105,7 @@ feature -- Status report
 	is_attribute: BOOLEAN is
 			-- Attribute?
 		do
-			Result := attribute /= Void
+			Result := xml_attribute /= Void
 		end
 
 feature -- Access
