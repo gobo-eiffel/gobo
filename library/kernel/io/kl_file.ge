@@ -146,8 +146,8 @@ feature -- Access
 		local
 			rescued: BOOLEAN
 #ifdef SE
-			basic_time: BASIC_TIME
-			utc_time: BASIC_TIME
+			basic_time: TIME
+			utc_time: TIME
 			y, m, d: INTEGER
 			h, mi, s: INTEGER
 			b: BOOLEAN
@@ -175,7 +175,7 @@ feature -- Access
 							h := basic_time.hour
 							mi := basic_time.minute
 							s := basic_time.second
-								-- Bug in postcondition of BASIC_TIME.set
+								-- Bug in postcondition of TIME.set
 								-- in SE -0.74b11. Workaround: call
 								-- `set_local_time' before.
 							utc_time.set_local_time
@@ -594,12 +594,12 @@ feature {NONE} -- Implementation
 		deferred
 		end
 
-	epoch_time: BASIC_TIME is
+	epoch_time: TIME is
 			-- Epoch time (1 Jan 1970 at 00:00:00)
 		local
 			b: BOOLEAN
 		once
-				-- Bug in postcondition of BASIC_TIME.set
+				-- Bug in postcondition of TIME.set
 				-- in SE -0.74b11. Workaround: call
 				-- `set_local_time' before.
 			Result.set_local_time
