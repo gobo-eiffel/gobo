@@ -16,6 +16,9 @@ class ET_DYNAMIC_AGENT_IMPLICIT_ACTUAL_ARGUMENT
 inherit
 
 	ET_DYNAMIC_ATTACHMENT
+		rename
+			attachment as feature_name
+		end
 
 creation
 

@@ -15,6 +15,9 @@ class ET_DYNAMIC_AGENT_ACTUAL_ARGUMENT
 inherit
 
 	ET_DYNAMIC_ATTACHMENT
+		rename
+			attachment as actual_argument
+		end
 
 creation
 
