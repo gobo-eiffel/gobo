@@ -203,6 +203,9 @@ feature {NONE} -- Generation
 				print_binary_search_actions
 					(a_file, yy_rules.lower, yy_rules.upper)
 			end
+			if bol_needed then
+				a_file.put_string ("%T%T%Tyy_set_beginning_of_line%N")
+			end
 			a_file.put_string ("%T%Tend%N")
 		end
 
@@ -246,7 +249,6 @@ feature {NONE} -- Generation
 							not_shared := True
 						end
 					end
-					a_file.put_string (" then%N")
 				else
 						-- `rule' has trailing context.
 					i := i + 1
@@ -256,43 +258,9 @@ feature {NONE} -- Generation
 			-- Warning: ("action duplicated due to trailing context")
 						end
 					end
-					a_file.put_string (" then%N")
-					if rule.trail_count > 0 then
-							-- The trail has a fixed size.
-						a_file.put_string ("%Tyy_position := yy_position - ")
-						a_file.put_integer (rule.trail_count)
-						a_file.put_character ('%N')
-					elseif rule.head_count > 0 then
-							-- The head has a fixed size.
-						a_file.put_string
-							("%Tyy_position := yy_start_position + ")
-						a_file.put_integer (rule.head_count)
-						a_file.put_character ('%N')
-					else
-							-- The rule has trailing context and both
-							-- the head and trail have variable size.
-							-- The work is done using another mechanism
-							-- (variable_trail_context).
-						-- (report performance degradation)
-					end
 				end
-				if bol_needed then
-					a_file.put_string
-						("%Tif yy_position > yy_start_position then%N%
-						%%T%Tinput_buffer.set_beginning_of_line %
-						%(yy_content.item (yy_position - 1) = '%%N')%N%
-						%%Tend%N")
-				end
-				if user_action_used then
-					a_file.put_string ("%Tuser_action%N")
-				end
-				a_file.put_string ("--|#line ")
-				a_file.put_integer (rule.line_nb)
-				a_file.put_character ('%N')
-				if rule.action /= Void then
-					a_file.put_string (rule.action.out)
-					a_file.put_character ('%N')
-				end
+				a_file.put_string (" then%N")
+				print_action (a_file, rule)
 			end
 			a_file.put_string ("%T%T%Telse%N%T%T%T%Tfatal_error %
 				%(%"fatal scanner internal error: no action found%")%N%
@@ -362,13 +330,6 @@ feature {NONE} -- Generation
 						-- (variable_trail_context).
 					-- (report performance degradation)
 				end
-			end
-			if bol_needed then
-				a_file.put_string
-					("%Tif yy_position > yy_start_position then%N%
-					%%T%Tinput_buffer.set_beginning_of_line %
-					%(yy_content.item (yy_position - 1) = '%%N')%N%
-					%%Tend%N")
 			end
 			if user_action_used then
 				a_file.put_string ("%Tuser_action%N")
