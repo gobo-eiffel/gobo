@@ -64,23 +64,21 @@ feature -- Access
 
 	unparsed_entity_system_id (entity_name: STRING): STRING is
 			-- System identifier of an unparsed external entity
+		require
+			entity_name_not_void: entity_name /= Void
 		deferred
-		ensure
-			unparsed_entity_system_id_not_void: Result /= Void
 		end
 
 	unparsed_entity_public_id (entity_name: STRING): STRING is
 			-- Public identifier of an unparsed external entity
+		require
+			entity_name_not_void: entity_name /= Void		
 		deferred
-		ensure
-			unparsed_entity_public_id_not_void: Result /= Void
 		end
 
 	document_uri: STRING is
 			-- Absoulte URI of the source from which the document was constructed
 		deferred
-		ensure
-			document_uri_not_void: Result /= Void -- ?? Really? Maybe not known. TODO: Review this and the above.
 		end
 
 end -- class XM_XPATH_DOCUMENT
