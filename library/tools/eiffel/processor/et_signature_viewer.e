@@ -62,7 +62,7 @@ feature -- Execution
 				output_file.put_string ("Enter class name: ")
 				input_file.read_line
 				if not input_file.end_of_input then
-					a_name := clone (input_file.last_string)
+					create a_name.make_from_string (input_file.last_string)
 					if a_name.is_empty then
 						stop := True
 					else
@@ -96,7 +96,7 @@ feature {ET_AST_NODE} -- Processing
 				output_file.put_string ("Enter feature name: ")
 				input_file.read_line
 				if not input_file.end_of_input then
-					a_name := clone (input_file.last_string)
+					create a_name.make_from_string (input_file.last_string)
 					if a_name.is_empty then
 						stop := True
 					elseif a_name.is_equal ("all") then
