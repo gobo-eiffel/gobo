@@ -1,22 +1,37 @@
 #!/bin/sh
 
-# usage: test_harness.sh [--version] compiler exename
+# usage: test_harness.sh [--getest][--version] compiler exename
 
-if [ "$1" = "--version" ]; then
-	version=$1
-	compiler=$2
-	exename=$3
+
+if [ "$1" = "--getest" ]; then
+	getest=$1
+	if [ "$2" = "--version" ]; then
+		version=$2
+		compiler=$3
+		exename=$4
+	else
+		version=""
+		compiler=$2
+		exename=$3
+	fi
 else
-	version=""
-	compiler=$1
-	exename=$2
+	getest=""
+	if [ "$1" = "--version" ]; then
+		version=$1
+		compiler=$2
+		exename=$3
+	else
+		version=""
+		compiler=$1
+		exename=$2
+	fi
 fi
 
 echo "Running Test Cases"
-if [ -x $exename ]; then
-	if [ "$version" = "--version" ]; then
-		./$exename --version
-	fi
+if [ -x $exename -a "$version" = "--version" ]; then
+	./$exename --version
+fi
+if [ -x $exename -o "$getest" = "--getest" ]; then
 	$GOBO/test/all/common/test_${exename}.sh $compiler > tmp_exe.txt 2>&1
 	if [ -s tmp_exe.txt ]; then
 		if [ "$verbose" = "--verbose" ]; then
