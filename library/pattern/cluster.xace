@@ -12,6 +12,7 @@
 		revision:    "$Revision$"
 	</description>
 
+	<cluster name="command"/>
 	<cluster name="bridge"/>
 
 </cluster>
