@@ -102,7 +102,7 @@ feature {NONE} -- Implementation
 	tool_exe: STRING is
 			-- Name of tool executable filename
 		do
-			Result := tool + file_system.exe_extension
+			Result := file_system.pathname (file_system.relative_current_directory, tool + file_system.exe_extension)
 		ensure
 			tool_exe_not_void: Result /= Void
 			tool_exe_not_empty: Result.count > 0

@@ -110,7 +110,7 @@ feature {NONE} -- Implementation
 	example_exe: STRING is
 			-- Name of example executable filename
 		do
-			Result := example + file_system.exe_extension
+			Result := file_system.pathname (file_system.relative_current_directory, example + file_system.exe_extension)
 		ensure
 			tool_exe_not_void: Result /= Void
 			tool_exe_not_empty: Result.count > 0
