@@ -1,7 +1,8 @@
 -- system:     "Gobo Eiffel Lex: lexical analyzer generator"
 -- compiler:   "Halstenbach ISS-BASE 3.0"
--- author:     "Eric Bezault <ericb@gobo.demon.co.uk>"
--- copyright:  "Copyright (c) 1998, Eric Bezault"
+-- author:     "Eric Bezault <ericb@gobosoft.com>"
+-- copyright:  "Copyright (c) 1999, Eric Bezault and others"
+-- license:    "Eiffel Forum Freeware License v1 (see forum.txt)"
 -- date:       "$Date$"
 -- revision:   "$Revision$"
 
@@ -11,7 +12,7 @@ system
 
 root
 
-	GELEX: "execute"
+	GELEX: execute
 
 default
 
@@ -48,10 +49,9 @@ cluster
 		-- Gobo Eiffel Structure Library
 	ds_container:		"$GOBO\library\structure\container";
 	ds_cursor:			"$GOBO\library\structure\cursor";
+	ds_dispenser:		"$GOBO\library\structure\dispenser";
 	ds_list:			"$GOBO\library\structure\list";
-	ds_search:			"$GOBO\library\structure\search";
 	ds_sort:			"$GOBO\library\structure\sort";
-	ds_stack:			"$GOBO\library\structure\stack";
 	ds_support:			"$GOBO\library\structure\support";
 	ds_table:			"$GOBO\library\structure\table";
 

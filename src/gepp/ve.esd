@@ -1,7 +1,8 @@
 -- system:     "'gepp' preprocessor"
--- compiler:   "Visual Eiffel 3.0"
--- author:     "Eric Bezault <ericb@gobo.demon.co.uk>"
--- copyright:  "Copyright (c) 1998, Eric Bezault"
+-- compiler:   "Visual Eiffel 3.1"
+-- author:     "Eric Bezault <ericb@gobosoft.com>"
+-- copyright:  "Copyright (c) 1999, Eric Bezault and others"
+-- license:    "Eiffel Forum Freeware License v1 (see forum.txt)"
 -- date:       "$Date$"
 -- revision:   "$Revision$"
 
@@ -39,10 +40,9 @@ cluster
 		-- Gobo Eiffel Structure Library
 	[ds_container		"$GOBO\library\structure\container"] end
 	[ds_cursor			"$GOBO\library\structure\cursor"] end
+	[ds_dispenser		"$GOBO\library\structure\dispenser"] end
 	[ds_list			"$GOBO\library\structure\list"] end
-	[ds_search			"$GOBO\library\structure\search"] end
 	[ds_sort			"$GOBO\library\structure\sort"] end
-	[ds_stack			"$GOBO\library\structure\stack"] end
 	[ds_support			"$GOBO\library\structure\support"] end
 	[ds_table			"$GOBO\library\structure\table"] end
 
@@ -52,6 +52,5 @@ cluster
 option
 
 	target exe console
-	code native
 
 end
