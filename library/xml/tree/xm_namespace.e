@@ -107,14 +107,6 @@ feature -- Status report
 				(ns_prefix = other.ns_prefix or else STRING_.same_string (ns_prefix, other.ns_prefix))
 		end
 		
-	is_default: BOOLEAN is
-			-- `is_default_declaration'.
-		obsolete
-			"use clearer `not has_prefix'"
-		do
-			Result := not has_prefix
-		end
-		
 	has_prefix: BOOLEAN is
 			-- Is there an explicit prefix?
 			-- (not a default namespace declaration)
