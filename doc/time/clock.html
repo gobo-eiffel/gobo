@@ -68,44 +68,25 @@ color="#008080"><em><tt>DT_SHARED_SYSTEM_CLOCK</tt></em></font></a><font
 color="#008080"><em><tt> </tt></em></font>and call the once
 function <a
 href="flatshort/dt_shared_system_clock.html#system_clock"><font
-color="#008080"><em><tt>system_clock</tt></em></font></a>.</p>
+color="#008080"><em><tt>system_clock</tt></em></font></a>.
+Alternatively, class <a href="flatshort/dt_utc_system_clock.html"><font
+color="#008080"><em><tt>DT_UTC_SYSTEM_CLOCK</tt></em></font></a><font
+color="#008080"><em><tt> </tt></em></font>provides the current
+UTC (Coordinated Universal Time) time of the system. It is
+available through the once function <a
+href="flatshort/dt_shared_system_clock.html#utc_system_clock"><font
+color="#008080"><em><tt>utc_system_clock</tt></em></font></a> in
+class <font color="#008080"><em><tt>DT_SHARED_SYSTEM_CLOCK</tt></em></font>.</p>
 
-<p><font color="#008080"><em><tt>DT_SYSTEM_CLOCK </tt></em></font>is
+<p><font color="#008080"><em><tt>DT_SYSTEM_CLOCK </tt></em></font>and
+<font color="#008080"><em><tt>DT_UTC_SYSTEM_CLOCK </tt></em></font>are
 implemented using the time facilities provided by each supported
-Eiffel compiler. With <em>SmallEiffel</em> it uses class <font
-color="#008080"><em><tt>BASIC_TIME</tt></em></font> which is in
-the <font color="#800000"><tt>lib_std</tt></font> cluster. This
-cluster also contains the kernel classes so it should already be
-included in your loadpath file. With <em>Visual Eiffel</em> it
-uses class <font color="#008080"><em><tt>TIMESTAMP</tt></em></font>
-from <font color="#800000"><tt>$VE_LIB/TimeDate</tt></font>. This
-cluster has been added to <font color="#800000"><em><tt>$</tt></em><tt>GOBO/library/cluster.es</tt></font>,
-therefore having a line as follows in the ESD file should be
-enough:</p>
-
-<blockquote>
-    <pre><font color="#800000">    -- Gobo Eiffel Library
-[Gobo    &quot;$GOBO/library&quot;] end</font></pre>
-</blockquote>
-
-<p>With <em>Halstenbach</em> it uses external C functions used in
-class <font color="#008080"><em><tt>SYSTEM_CLOCK</tt></em></font>
-and already included in the Eiffel runtime. There is therefore no
-other addition needed to the Ace file. Finally with <em>ISE
-Eiffel</em> it uses C functions which are available in <font
-color="#800000"><tt>$GOBO/library/time/include</tt></font>. So
-the following lines should be added to the external clause of the
-Ace file:</p>
-
-<blockquote>
-    <pre><font color="#800000" size="3">external
-    include_path: &quot;$GOBO/library/time/include&quot;</font> </pre>
-</blockquote>
+Eiffel compiler. The corresponding clusters have been added to <font
+color="#800000"><em><tt>$</tt></em><tt>GOBO/library/kernel.xace</tt></font>.
+There is therefore no other addition needed to the Xace files.</p>
 
 <p>There is an example using system clock in <font
-color="#800000"><tt>$GOBO/example/time/clock</tt></font>. You can
-have a look at it to see the various Ace files, ESD files and
-loadpath files and possibly use them as a starting point.</p>
+color="#800000"><tt>$GOBO/example/time/clock</tt></font>.</p>
 
 <h2>Customizable Clocks</h2>
 
@@ -125,9 +106,9 @@ Another application of customizable clocks is a clock which runs
 at the same speed as the system clock, but returns dates and
 times in the past or in the future. This could have been used for
 example to check that a program was Y2K compliant just by
-readjusting the clock to just before midnight on 31 December 1999.
-There are certainly many other examples where customizable clocks
-can be useful.</p>
+readjusting the clock to just before midnight on 31 December
+1999. There are certainly many other examples where customizable
+clocks can be useful.</p>
 
 <hr size="1">
 
