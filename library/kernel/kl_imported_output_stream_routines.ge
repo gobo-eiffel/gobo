@@ -22,7 +22,7 @@ feature -- Access
 			output_stream_routines_not_void: Result /= Void
 		end
 
-feature -- Anchor types
+feature -- Type anchors
 
 #ifdef ISE || HACT
 	OUTPUT_STREAM_TYPE: IO_MEDIUM is do end
@@ -37,6 +37,6 @@ feature -- Anchor types
 #endif
 #endif
 #endif
-			-- Anchor type
+			-- Type anchor
 
 end -- class KL_IMPORTED_OUTPUT_STREAM_ROUTINES
