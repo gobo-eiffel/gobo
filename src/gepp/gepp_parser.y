@@ -14,7 +14,7 @@ class GEPP_PARSER
 
 inherit
 
-	YY_NEW_PARSER_SKELETON
+	YY_PARSER_SKELETON
 		rename
 			make as make_parser_skeleton
 		redefine

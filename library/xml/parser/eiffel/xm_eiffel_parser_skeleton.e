@@ -22,7 +22,7 @@ inherit
 
 	XM_FORWARD_DTD_CALLBACKS
 
-	YY_NEW_PARSER_SKELETON
+	YY_PARSER_SKELETON
 		rename
 			make as make_parser
 		redefine

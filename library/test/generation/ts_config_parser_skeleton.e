@@ -14,7 +14,7 @@ deferred class TS_CONFIG_PARSER_SKELETON
 
 inherit
 
-	YY_NEW_PARSER_SKELETON
+	YY_PARSER_SKELETON
 		rename
 			make as make_parser_skeleton,
 			parse as yyparse
