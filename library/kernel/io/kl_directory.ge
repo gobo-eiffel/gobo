@@ -33,17 +33,8 @@ inherit
 		export
 			{NONE} all
 		end
-#endif
-#ifdef VE
-	DIRECTORY_INPUT_STREAM
-		rename
-			make as ve_make,
-			close as do_close
-		export
-			{NONE} all
-		end
-#endif
 
+#endif
 creation
 
 	make
@@ -52,35 +43,16 @@ feature {NONE} -- Initialization
 
 	make (a_name: STRING) is
 			-- Create a new directory object.
-#ifdef ISE || HACT
 		do
+#ifdef ISE || HACT
 			ise_make (a_name)
 #endif
 #ifdef SE
-		do
 			name := a_name
 #endif
 #ifdef VE
-		local
-			rescued: BOOLEAN
-			a_dir: DIRECTORY
-		do
-			if not rescued then
-				name := a_name
-				!! a_dir.make (a_name)
-				ve_make (a_dir)
-				if not is_closed then
-					do_close
-				end
-			else
-				name := a_name
-				!! directory.make (a_name)
-			end
-		rescue
-			if not rescued then
-				rescued := True
-				retry
-			end
+			name := a_name
+			!! directory.make (a_name)
 #endif
 		end
 
@@ -103,7 +75,7 @@ feature -- Access
 			Result := clone (basic_directory.last_entry)
 #endif
 #ifdef VE
-			Result := last_string
+			Result := directory_stream.last_string
 #endif
 		end
 
@@ -120,7 +92,7 @@ feature -- Access
 					!! Result.make (1, 0)
 					from read_entry until end_of_input loop
 						a_name := last_entry
-						if file_system.is_file_readable (name + "/" + a_name) then
+						if file_system.is_file_readable (file_system.pathname (name, a_name)) then
 							Result.force (a_name, Result.count + 1)
 						end
 						read_entry
@@ -148,9 +120,9 @@ feature -- Access
 					from read_entry until end_of_input loop
 						a_name := last_entry
 						if
-							not a_name.is_equal (".") and then
-							not a_name.is_equal ("..") and then
-							file_system.is_directory_readable (name + "/" + a_name)
+							not a_name.is_equal (file_system.relative_current_directory) and then
+							not a_name.is_equal (file_system.relative_parent_directory) and then
+							file_system.is_directory_readable (file_system.pathname (name, a_name))
 						then
 							Result.force (a_name, Result.count + 1)
 						end
@@ -177,11 +149,15 @@ feature -- Status report
 #endif
 		end
 
-#ifdef SE
+#ifdef SE || VE
 	is_closed: BOOLEAN is
 			-- Is directory closed?
 		do
+#ifdef SE
 			Result := not basic_directory.is_connected
+#else
+			Result := (directory_stream = Void)
+#endif
 		end
 
 #endif
@@ -195,7 +171,7 @@ feature -- Status report
 			Result := basic_directory.end_of_input
 #endif
 #ifdef VE
-			Result := is_exhausted
+			Result := directory_stream.is_exhausted
 #endif
 		end
 
@@ -230,8 +206,7 @@ feature -- Basic operations
 					basic_directory.connect_to (name)
 #endif
 #ifdef VE
-					is_exhausted := False
-					ve_make (directory)
+					!! directory_stream.make (directory)
 #endif
 				end
 			elseif not is_closed then
@@ -253,11 +228,14 @@ feature -- Basic operations
 			if not rescued then
 #ifdef SE
 				basic_directory.disconnect
-#else
-				do_close
+#endif
 #ifdef ISE || HACT 
+				do_close
 				lastentry := Void
 #endif
+#ifdef VE
+				directory_stream.close
+				directory_stream := Void
 #endif
 			end
 		rescue
@@ -295,6 +273,34 @@ feature -- Basic operations
 			if not rescued then
 				rescued := True
 				retry
+			end
+		end
+
+	recursive_create_directory is
+			-- Create current directory on disk.
+			-- Create its subdirectories if they do not exist yet.
+			-- Do nothing if the directory could not be created,
+			-- if it already existed or `name' is a nested directory
+			-- name and its parent directory does not exist and 
+			-- could not be created.
+		local
+			a_dirname: STRING
+			a_pathname: STRING
+			a_dir: KL_DIRECTORY
+		do
+			create_directory
+			if not is_readable then
+				a_pathname := file_system.canonical_pathname (name)
+				a_dirname := file_system.dirname (a_pathname)
+				if not a_dirname.is_equal (a_pathname) then
+					!! a_dir.make (a_dirname)
+					if not a_dir.is_readable then
+						a_dir.recursive_create_directory
+						if a_dir.is_readable then
+							create_directory
+						end
+					end
+				end
 			end
 		end
 
@@ -352,8 +358,11 @@ feature -- Basic operations
 					if is_open_read then
 						from read_entry until end_of_input loop
 							a_name := last_entry
-							if not (a_name.is_equal (".") or a_name.is_equal ("..")) then
-								a_pathname := name + "/" + a_name
+							if
+								not a_name.is_equal (file_system.relative_current_directory) and then
+								not a_name.is_equal (file_system.relative_parent_directory)
+							then
+								a_pathname := file_system.pathname (name, a_name)
 								if file_system.is_file_readable (a_pathname) then
 									file_system.delete_file (a_pathname)
 								else
@@ -394,13 +403,16 @@ feature -- Cursor movement
 			basic_directory.read_entry
 #endif
 #ifdef VE
-			read_line
+			directory_stream.read_line
 #endif
 		end
 
-#ifdef SE || ISE || HACT
 feature {NONE} -- Implementation
 
+#ifdef VE
+	directory: DIRECTORY
+	directory_stream: DIRECTORY_INPUT_STREAM
+#endif
 #ifdef SE
 	basic_directory: BASIC_DIRECTORY
 			-- Internal data
@@ -409,6 +421,11 @@ feature {NONE} -- Implementation
 	Dummy_entry: STRING is ""
 			-- Dummy entry name
 #endif
+
+#ifdef VE
+invariant
+
+	directory_not_void: directory /= Void
 
 #endif
 end -- class KL_DIRECTORY
