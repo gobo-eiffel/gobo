@@ -8,17 +8,24 @@
 # revision:    "$Revision$"
 
 
-# usage: bootstrap.sh <c_compiler> <eiffel_compiler>
+# usage: bootstrap.sh [-v] <c_compiler> <eiffel_compiler>
 
-
-CC=$1
-EIF=$2
 
 gobo_usage() {
-	echo "usage: bootstrap.sh <c_compiler> <eiffel_compiler>"
+	echo "usage: bootstrap.sh [-v] <c_compiler> <eiffel_compiler>"
 	echo "   c_compiler:  cl | bcc32 | lcc | gcc | no_c"
 	echo "   elffel_compiler:  ise | hact | se | ve"
 }
+
+if [ "$1" = "-v" ]; then
+	VERBOSE=-v
+	CC=$2
+	EIF=$3
+else
+	VERBOSE=
+	CC=$1
+	EIF=$2
+fi
 
 if [ "$GOBO" = "" ]; then
 	echo "Environment variable GOBO must be set"
@@ -137,8 +144,8 @@ fi
 cd $BIN_DIR
 $MV geant$EXE geant1$EXE
 cd $GOBO
-geant1 bootstrap1
+geant1 $VERBOSE bootstrap1
 cd $BIN_DIR
 $RM geant1$EXE
 cd $GOBO
-geant bootstrap2
+geant $VERBOSE bootstrap2

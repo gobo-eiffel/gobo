@@ -8,14 +8,27 @@ rem date:        "$Date$"
 rem revision:    "$Revision$"
 
 
-rem usage: bootstrap.bat <c_compiler> <eiffel_compiler>
+rem usage: bootstrap.bat [-v] <c_compiler> <eiffel_compiler>
 
 
-set CC=%1
-set EIF=%2
+if .%1. == .-v. goto verbose
+goto no_verbose
 
-if .%GOBO%. == .. goto gobo
-goto windows
+:no_verbose
+	set VERBOSE=
+	set CC=%1
+	set EIF=%2
+	goto do_it
+
+:verbose
+	set VERBOSE=-v
+	set CC=%2
+	set EIF=%3
+	goto do_it
+
+:do_it:
+	if .%GOBO%. == .. goto gobo
+	goto windows
 
 :gobo
 	echo Environment variable GOBO must be set
@@ -147,15 +160,15 @@ goto exit
 	cd %BIN_DIR%
 	%MV% geant%EXE% geant1%EXE%
 	cd %GOBO%
-	geant1 bootstrap1
+	geant1 %VERBOSE% bootstrap1
 	cd %BIN_DIR%
 	%RM% geant1%EXE%
 	cd %GOBO%
-	geant bootstrap2
+	geant %VERBOSE% bootstrap2
 	goto exit
 
 :usage
-	echo "usage: bootstrap.bat <c_compiler> <eiffel_compiler>"
+	echo "usage: bootstrap.bat [-v] <c_compiler> <eiffel_compiler>"
 	echo "   c_compiler:  cl | bcc32 | lcc | gcc | no_c"
 	echo "   elffel_compiler:  ise | hact | se | ve"
 	goto exit
