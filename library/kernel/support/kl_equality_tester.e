@@ -22,8 +22,10 @@ feature -- Status report
 			-- Are `v' and `u' considered equal?
 			-- (Use `equal' by default.)
 		do
-			if v = Void then
-				Result := (u = Void)
+			if v = u then
+				Result := True
+			elseif v = Void then
+				Result := False
 			elseif u = Void then
 				Result := False
 			else
