@@ -40,8 +40,7 @@ ISE 4.2F (ISE Eiffel)
       This bug prevents some of the examples using IO input (such as the
       calculator examples) from working.
 
-SE -0.81 (SmallEiffel)
+SE -0.80 (SmallEiffel)
 
-VE 2.3 (Visual Eiffel)
+VE 2.5 (Visual Eiffel)
 
-    . Make sure that you have the Service Pack 2 installed.

@@ -38,7 +38,7 @@ Gobo Eiffel package (see "$GOBO\doc\gelex\stages.html" and
 
 The software provided in this distribution should work on any platform
 where supported Eiffel compilers are available. However this software
-has only been tested under Windows 95. As a consequence, the directory
+has only been tested under Windows NT. As a consequence, the directory
 separator used through out this distribution is \, following Windows
 convention. However, since most Eiffel compilers use the notation
 $NAME for environment variables in their Ace files (or equivalent),
@@ -50,16 +50,15 @@ known as the distribution directory. Also put the directory $GOBO\bin
 in your PATH.
 
 The supported Eiffel compilers, in alphabetical order, are:
-Halstenbach 2.0 CL1, ISE Eiffel 4.2F, SmallEiffel -0.81, Visual Eiffel
-2.3 Service Pack 2.  An effort has been made to port this package to
-TowerEiffel 2.0, however this compiler is not supported yet because of
-problems with manifest arrays (which are extensively used in gelex and
-geyacc). For more details about the supported Eiffel compilers, please
-see the file "Release_notes.txt". This software might work with other
-Eiffel compilers and/or other compiler versions, however no test has
-been made.  To have a better understanding of the way this software has
-been designed and implemented, you can also have a look at
-"$GOBO\doc\portability".
+Halstenbach 2.0CL1, ISE Eiffel 4.2F, SmallEiffel -0.80, Visual Eiffel
+2.5. An effort has been made to port this package to TowerEiffel 2.0,
+however this compiler is not supported yet because of problems with
+manifest arrays (which are extensively used in gelex and geyacc). For
+more details about the supported Eiffel compilers, please see the file
+"Release_notes.txt". This software might work with other Eiffel compilers
+and/or other compiler versions, however no test has been made. To have
+a better understanding of the way this software has been designed and
+implemented, you can also have a look at "$GOBO\doc\portability".
 
 In this distribution:
 
@@ -68,7 +67,7 @@ In this distribution:
     doc\gelex                   gelex documentation in HTML format
     doc\geyacc                  geyacc documentation in HTML format
     doc\portability             discussion about portability issues, in HTML
-    doc\struture                GE Structure Library documentation, in HTML
+    doc\structure               GE Structure Library documentation, in HTML
     example\lexical\ascii2ps    pretty-printer
     example\lexical\calculator  simple calculator (interface with iss-yacc)
     example\lexical\eiffel      scanner for the Eiffel language
@@ -94,7 +93,7 @@ bug fixes, workarounds and new releases.
 Although the license allows you to do pretty much whatever you want with
 this software, I would be grateful to get your feedbacks, bug reports
 and/or bug fixes, improvements, etc. so that others could benefit from
-your work and ideas as well. I would also be interested to hear about
+your work and ideas as well. I would also be interested in hearing about
 your projects and how easy (or difficult) it was to adapt this software
 for your specific needs. Thank you in advance.
 
