@@ -5,7 +5,7 @@
 	<description>
 		description: "Eiffel Ant file for Gobo Eiffel Ant Documentation"
 		system: "Gobo Eiffel Ant Documentation"
-		copyright: "Copyright (c) 2002, Sven Ehrke and others"
+		copyright: "Copyright (c) 2002-2003, Sven Ehrke and others"
 		license: "Eiffel Forum License v2 (see forum.txt)"
 		date: "$Date$"
 		revision: "$Revision$"
@@ -29,18 +29,24 @@
 			<!-- Concepts: -->
 		<xslt
 			processor="${xslt_processor}"
-			input="introduction.xml"
-			output="introduction.html"
+			input="overview.xml"
+			output="overview.html"
 			stylesheet="${GOBO}/doc/misc/gobo2html.xsl"
 		/>
 
-		<set name="input" value="introduction"/>
-		<set name="next" value="introduction"/>
+		<set name="input" value="overview"/>
+		<set name="next" value="overview"/>
 
-		<set name="next_chapter" value="tasks"/>
+		<set name="next_chapter" value="introduction"/>
 		<geant target="xslt"/>
 
-		<set name="next_chapter" value="hello_world"/>
+		<set name="next_chapter" value="examples"/>
+		<geant target="xslt"/>
+
+		<set name="next_chapter" value="builtin_variables"/>
+		<geant target="xslt"/>
+
+		<set name="next_chapter" value="tasks"/>
 		<geant target="xslt"/>
 
 		<set name="next_chapter" value="fileset_element"/>
@@ -145,14 +151,17 @@
 		</description>
 
 			<!-- Concepts: -->
-		<delete file="hello_world.html"/>
+		<delete file="overview.html"/>
 		<delete file="introduction.html"/>
+		<delete file="examples.html"/>
+		<delete file="builtin_variables.html"/>
 		<delete file="tasks.html"/>
 
 			<!-- Elements: -->
 		<delete file="fileset_element.html"/>
 		<delete file="map_element.html"/>
 
+		<delete file="available_task.html"/>
 		<delete file="copy_task.html"/>
 		<delete file="delete_task.html"/>
 		<delete file="echo_task.html"/>
@@ -199,7 +208,7 @@
 		>
 			<parameter name="previous" value="${previous}.html"/>
 			<parameter name="next" value="${next}.html"/>
-			<parameter name="toc" value="introduction.html"/>
+			<parameter name="toc" value="overview.html"/>
 		</xslt>
 	</target>
 
