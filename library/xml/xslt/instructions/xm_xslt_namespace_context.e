@@ -14,7 +14,7 @@ class XM_XSLT_NAMESPACE_CONTEXT
 
 inherit
 
-	XM_XSLT_NAMESPACE_RESOLVER
+	XM_XPATH_NAMESPACE_RESOLVER
 
 	KL_IMPORTED_STRING_ROUTINES
 
@@ -42,7 +42,7 @@ feature -- Access
 	namespace_code_list: DS_ARRAYED_LIST [INTEGER]
 			-- List of namespace codes
 
-	uri_for_prefix (a_prefix: STRING; use_default_namespace: BOOLEAN): STRING is
+	uri_for_defaulted_prefix (a_prefix: STRING; use_default_namespace: BOOLEAN): STRING is
 			-- Namespace URI corresponding to a given prefix
 		local
 			a_cursor: DS_ARRAYED_LIST_CURSOR [INTEGER]
@@ -88,10 +88,10 @@ feature -- Access
 			a_string_splitter.set_separators (":")
 			qname_parts := a_string_splitter.split (a_qname)
 			if qname_parts.count = 1 then
-				a_uri := uri_for_prefix ("", use_default_namespace)
+				a_uri := uri_for_defaulted_prefix ("", use_default_namespace)
 				Result := shared_name_pool.fingerprint (a_uri, qname_parts.item (1))
 			else
-				a_uri := uri_for_prefix (qname_parts.item (1), use_default_namespace)
+				a_uri := uri_for_defaulted_prefix (qname_parts.item (1), use_default_namespace)
 				Result := shared_name_pool.fingerprint (a_uri, qname_parts.item (2))
 			end
 		end

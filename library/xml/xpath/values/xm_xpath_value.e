@@ -75,12 +75,12 @@ feature -- Conversion
 			is_convertible_to_item (a_context)
 		deferred
 		end
-	
+
 feature {NONE} -- Implementation
 
-		trim_white_space (a_string: STRING): STRING is
+	trim_white_space (a_string: STRING): STRING is
 			-- Remove all leading and trailing characters below character code 33;
-			-- Onlu ysable for values that do not permit internal white space
+			-- Only usable for values that do not permit internal white space
 		require
 			string_not_void: a_string /= Void
 		local
@@ -94,7 +94,7 @@ feature {NONE} -- Implementation
 			until
 				counter > a_string.count 
 			loop
-				if a_string.item_code (counter) < 21 then
+				if a_string.item_code (counter) < 33 then
 					if started then
 						finished := True
 						finish_position := counter - 1

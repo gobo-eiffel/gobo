@@ -96,8 +96,6 @@ feature -- Access
 
 	fingerprint (a_qname: STRING; use_default_namespace: BOOLEAN): INTEGER is
 			-- Fingerprint for `a_qname', using this as the context for namespace resolution
-		require
-			valid_qname: a_qname /= Void and then is_qname (a_qname)
 		local
 			a_string_splitter: ST_SPLITTER
 			qname_parts: DS_LIST [STRING]
@@ -121,14 +119,18 @@ feature -- Access
 				a_uri := uri_for_prefix (an_xml_prefix)
 			end
 			Result := shared_name_pool.fingerprint (a_uri, a_local_name)
-		ensure
-			nearly_positive_result: Result > -2
 		end
 
 	namespace_context: XM_XSLT_NAMESPACE_CONTEXT is
 			-- Namespace context
 		do
 			Result := style_element.namespace_context
+		end
+
+	namespace_resolver: XM_XPATH_NAMESPACE_RESOLVER is
+			-- Resolver for lexical QNames
+		do
+			Result := namespace_context
 		end
 
 feature -- Status report

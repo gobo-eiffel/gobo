@@ -97,8 +97,6 @@ feature -- Optimization
 
 	simplify is
 			-- Perform context-independent static optimizations.
-		local
-			an_atomic_value: XM_XPATH_ATOMIC_VALUE
 		do
 			source.simplify
 			if source.is_error then
@@ -106,10 +104,6 @@ feature -- Optimization
 			else
 				if source.was_expression_replaced then
 					set_source (source.replacement_expression)
-				end
-				an_atomic_value ?= source
-				if	an_atomic_value /= Void and then an_atomic_value.is_convertible (target_type) then
-					set_replacement (an_atomic_value.convert_to_type (target_type))
 				end
 			end
 		end

@@ -4,13 +4,13 @@ indexing
 
 		"Objects that support lookup of a lexical QName to get the expanded QName"
 
-	library: "Gobo Eiffel XSLT Library"
+	library: "Gobo Eiffel XPath Library"
 	copyright: "Copyright (c) 2004, Colin Adams and others"
 	license: "Eiffel Forum License v2 (see forum.txt)"
 	date: "$Date$"
 	revision: "$Revision$"
 
-deferred class XM_XSLT_NAMESPACE_RESOLVER
+deferred class XM_XPATH_NAMESPACE_RESOLVER
 
 inherit
 
@@ -20,7 +20,7 @@ inherit
 
 feature -- Access
 
-	uri_for_prefix (a_prefix: STRING; use_default_namespace: BOOLEAN): STRING is
+	uri_for_defaulted_prefix (a_prefix: STRING; use_default_namespace: BOOLEAN): STRING is
 			-- Namespace URI corresponding to a given prefix
 		require
 			prefix_not_void: a_prefix /= Void

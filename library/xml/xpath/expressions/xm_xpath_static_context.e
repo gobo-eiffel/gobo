@@ -93,6 +93,13 @@ feature -- Access
 			uri_not_void: Result /= Void
 		end
 
+	namespace_resolver: XM_XPATH_NAMESPACE_RESOLVER is
+			-- Resolver for lexical QNames
+		deferred
+		ensure
+			namespace_resolver_not_void: Result /= Void
+		end
+
 	bound_variables_count: INTEGER
 			-- Number of variables bound in this context
 

@@ -22,6 +22,8 @@ inherit
 
 	XM_XPATH_STANDARD_NAMESPACES
 
+	XM_XPATH_NAMESPACE_RESOLVER
+
 	XM_XPATH_TYPE
 
 	XM_XPATH_SHARED_FUNCTION_FACTORY
@@ -106,8 +108,35 @@ feature -- Access
 			Result := namespaces.item (an_xml_prefix)
 		end
 
-		is_backwards_compatible_mode: BOOLEAN
+	uri_for_defaulted_prefix (a_prefix: STRING; use_default_namespace: BOOLEAN): STRING is
+			-- Namespace URI corresponding to a given prefix
+		do
+			if a_prefix.count = 0 and then not use_default_namespace then
+				Result := ""
+			elseif namespaces.has (a_prefix) then
+				Result := namespaces.item (a_prefix)
+			end
+		end
+
+	
+	fingerprint (a_qname: STRING; use_default_namespace: BOOLEAN): INTEGER is
+			-- Fingerprint of `a_qname'
+		do
+			Result := qname_to_fingerprint (a_qname)
+
+			-- N.B. effectively, `use_default_namespace' is ignored (assumed `False').
+			-- But this routine is not called by the stand-alone evaluator anyway
+
+		end
+
+	is_backwards_compatible_mode: BOOLEAN
 			-- Is Backwards Compatible Mode used?
+
+	namespace_resolver: XM_XPATH_NAMESPACE_RESOLVER is
+			-- Resolver for lexical QNames
+		do
+			Result := Current
+		end
 
 feature -- Status report
 
@@ -217,6 +246,7 @@ feature -- Element change
 			declare_namespace ("xml", Xml_uri)
 			declare_namespace ("xsl", Xslt_uri)
 			declare_namespace ("xs", Xml_schema_uri)
+			declare_namespace ("xdt", Xpath_defined_datatypes_uri)
 			declare_namespace ("", Null_uri)
 		end
 
@@ -306,11 +336,11 @@ feature -- Element change
 							
 							if function_factory.is_extension_function (a_uri, a_local_name, arguments.count) then
 								set_last_bound_function (function_factory.extension_function (a_uri, a_local_name, arguments.count))
+							else
+								was_last_function_bound := False
+								set_bind_function_failure_message (STRING_.concat ("Could not find a binding for ", a_qname))
 							end
 						end
-						
-						was_last_function_bound := False
-						set_bind_function_failure_message ("Constructor functions not implemented yet.")
 					end
 				else
 					was_last_function_bound := False

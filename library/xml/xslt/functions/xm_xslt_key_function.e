@@ -238,7 +238,7 @@ feature {NONE} -- Implementation
 	key_fingerprint: INTEGER
 			-- Fingerprint of key-name
 
-	namespace_context: XM_XSLT_NAMESPACE_RESOLVER
+	namespace_context: XM_XPATH_NAMESPACE_RESOLVER
 			-- Namespace context
 
 end

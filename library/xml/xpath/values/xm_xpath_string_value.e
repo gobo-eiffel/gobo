@@ -138,22 +138,30 @@ feature -- Status report
 					Result := a_string.is_integer
 				end
 			elseif a_required_type = type_factory.double_type then
+				a_string := trim_white_space (value)
 				Result := a_string.is_double
 			elseif a_required_type = type_factory.integer_type then
+				a_string := trim_white_space (value)
 				Result := a_string.is_integer
 			elseif a_required_type = type_factory.decimal_type then
-				Result := True -- but you may get NaN TODO
-				todo ("is-convertible (to decimal)", True)
+				a_string := trim_white_space (value)
+				create last_decimal.make_from_string (a_string)
+				Result := not (last_decimal.is_nan)
 			elseif a_required_type = type_factory.untyped_atomic_type
 				or else a_required_type = type_factory.string_type
 				or else a_required_type = type_factory.any_atomic_type
+				or else a_required_type = type_factory.any_simple_type
 				or else a_required_type = any_item then
 				Result := True
+			elseif a_required_type = type_factory.any_uri_type then
+				Result := True
+			elseif a_required_type = type_factory.qname_type then
+				Result := False -- not done directly, as a static context is necessary
 			elseif a_required_type = type_factory.date_type then
-				Result := False
+				Result := False				
 				todo ("is-convertible (xs:date)", True)
 			else
-				Result := False -- TODO Any_uri, qname, dtd type, dates and times
+				Result := False -- TODO qname, dtd type, dates and times
 				todo ("is-convertible", True)
 			end
 		end
@@ -193,11 +201,16 @@ feature -- Conversion
 			elseif a_required_type = type_factory.integer_type then
 				create {XM_XPATH_INTEGER_VALUE} Result.make_from_string (a_value)
 			elseif a_required_type = type_factory.decimal_type then
-				create {XM_XPATH_DECIMAL_VALUE} Result.make_from_string (a_value)
+				create {XM_XPATH_DECIMAL_VALUE} Result.make (last_decimal)
+			elseif a_required_type = type_factory.any_uri_type then
+				create {XM_XPATH_ANY_URI_VALUE} Result.make (value)
 			elseif a_required_type = type_factory.string_type or else
 				a_required_type = type_factory.any_atomic_type or else
 				a_required_type = any_item then
 				Result := Current
+			elseif a_required_type = type_factory.untyped_atomic_type or else
+				a_required_type = type_factory.any_simple_type then
+				create {XM_XPATH_UNTYPED_ATOMIC_VALUE} Result.make (value)
 			else
 				-- TODO
 				todo ("convert-to-type" ,True)				
@@ -209,6 +222,9 @@ feature {NONE} -- Implementation
 	value: STRING
 			-- The actual string-value
 
+	last_decimal: MA_DECIMAL
+			-- Cached value from `is_convertible (type_factory.decimal_type)'
+	
 invariant
 	value_not_void: value /= Void
 
