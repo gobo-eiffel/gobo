@@ -462,127 +462,137 @@ feature -- Type conversion
 					then
 						Result := universe.double_convert_feature
 					end
-				elseif a_target_base_class = universe.any_class then
+				elseif a_source_base_class = universe.boolean_class then
 						-- Needed by ISE Eiffel 5.6.
 					if
-						a_source_base_class = universe.boolean_class or
-						a_source_base_class = universe.character_class or
-						a_source_base_class = universe.wide_character_class or
-						a_source_base_class = universe.integer_class or
-						a_source_base_class = universe.integer_8_class or
-						a_source_base_class = universe.integer_16_class or
-						a_source_base_class = universe.integer_64_class or
-						a_source_base_class = universe.real_class or
-						a_source_base_class = universe.double_class or
-						a_source_base_class = universe.pointer_class
+						a_target_base_class = universe.boolean_ref_class or
+						a_target_base_class = universe.hashable_class or
+						a_target_base_class = universe.any_class
 					then
-						Result := universe.any_convert_feature
+						Result := universe.boolean_convert_feature
 					end
-				elseif a_target_base_class = universe.numeric_class then
+				elseif a_source_base_class = universe.character_class then
 						-- Needed by ISE Eiffel 5.6.
 					if
-						a_source_base_class = universe.integer_class or
-						a_source_base_class = universe.integer_8_class or
-						a_source_base_class = universe.integer_16_class or
-						a_source_base_class = universe.integer_64_class or
-						a_source_base_class = universe.real_class or
-						a_source_base_class = universe.double_class
+						a_target_base_class = universe.character_ref_class or
+						a_target_base_class = universe.hashable_class or
+						a_target_base_class = universe.comparable_class or
+						a_target_base_class = universe.part_comparable_class or
+						a_target_base_class = universe.any_class
 					then
-						Result := universe.numeric_convert_feature
+						Result := universe.character_convert_feature
 					end
-				elseif a_target_base_class = universe.comparable_class then
+				elseif a_source_base_class = universe.wide_character_class then
 						-- Needed by ISE Eiffel 5.6.
 					if
-						a_source_base_class = universe.character_class or
-						a_source_base_class = universe.wide_character_class or
-						a_source_base_class = universe.integer_class or
-						a_source_base_class = universe.integer_8_class or
-						a_source_base_class = universe.integer_16_class or
-						a_source_base_class = universe.integer_64_class or
-						a_source_base_class = universe.real_class or
-						a_source_base_class = universe.double_class
+						a_target_base_class = universe.wide_character_ref_class or
+						a_target_base_class = universe.hashable_class or
+						a_target_base_class = universe.comparable_class or
+						a_target_base_class = universe.part_comparable_class or
+						a_target_base_class = universe.any_class
 					then
-						Result := universe.comparable_convert_feature
+						Result := universe.wide_character_convert_feature
 					end
-				elseif a_target_base_class = universe.part_comparable_class then
+				elseif a_source_base_class = universe.integer_class then
 						-- Needed by ISE Eiffel 5.6.
 					if
-						a_source_base_class = universe.character_class or
-						a_source_base_class = universe.wide_character_class or
-						a_source_base_class = universe.integer_class or
-						a_source_base_class = universe.integer_8_class or
-						a_source_base_class = universe.integer_16_class or
-						a_source_base_class = universe.integer_64_class or
-						a_source_base_class = universe.real_class or
-						a_source_base_class = universe.double_class
+						a_target_base_class = universe.integer_ref_class or
+						a_target_base_class = universe.numeric_class or
+						a_target_base_class = universe.hashable_class or
+						a_target_base_class = universe.comparable_class or
+						a_target_base_class = universe.part_comparable_class or
+						a_target_base_class = universe.any_class
 					then
-						Result := universe.part_comparable_convert_feature
+						Result := universe.integer_convert_feature
 					end
-				elseif a_target_base_class = universe.hashable_class then
+				elseif a_source_base_class = universe.integer_8_class then
 						-- Needed by ISE Eiffel 5.6.
 					if
-						a_source_base_class = universe.boolean_class or
-						a_source_base_class = universe.character_class or
-						a_source_base_class = universe.wide_character_class or
-						a_source_base_class = universe.integer_class or
-						a_source_base_class = universe.integer_8_class or
-						a_source_base_class = universe.integer_16_class or
-						a_source_base_class = universe.integer_64_class or
-						a_source_base_class = universe.real_class or
-						a_source_base_class = universe.double_class or
-						a_source_base_class = universe.pointer_class
+						a_target_base_class = universe.integer_8_ref_class or
+						a_target_base_class = universe.numeric_class or
+						a_target_base_class = universe.hashable_class or
+						a_target_base_class = universe.comparable_class or
+						a_target_base_class = universe.part_comparable_class or
+						a_target_base_class = universe.any_class
 					then
-						Result := universe.hashable_convert_feature
+						Result := universe.integer_8_convert_feature
 					end
-				elseif a_target_base_class = universe.boolean_ref_class then
+				elseif a_source_base_class = universe.integer_16_class then
 						-- Needed by ISE Eiffel 5.6.
-					if a_source_base_class = universe.boolean_class then
-						Result := universe.boolean_ref_convert_feature
+					if
+						a_target_base_class = universe.integer_16_ref_class or
+						a_target_base_class = universe.numeric_class or
+						a_target_base_class = universe.hashable_class or
+						a_target_base_class = universe.comparable_class or
+						a_target_base_class = universe.part_comparable_class or
+						a_target_base_class = universe.any_class
+					then
+						Result := universe.integer_16_convert_feature
 					end
-				elseif a_target_base_class = universe.character_ref_class then
+				elseif a_source_base_class = universe.integer_64_class then
 						-- Needed by ISE Eiffel 5.6.
-					if a_source_base_class = universe.character_class then
-						Result := universe.character_ref_convert_feature
+					if
+						a_target_base_class = universe.integer_64_ref_class or
+						a_target_base_class = universe.numeric_class or
+						a_target_base_class = universe.hashable_class or
+						a_target_base_class = universe.comparable_class or
+						a_target_base_class = universe.part_comparable_class or
+						a_target_base_class = universe.any_class
+					then
+						Result := universe.integer_64_convert_feature
 					end
-				elseif a_target_base_class = universe.wide_character_ref_class then
+				elseif a_source_base_class = universe.real_class then
 						-- Needed by ISE Eiffel 5.6.
-					if a_source_base_class = universe.wide_character_class then
-						Result := universe.wide_character_ref_convert_feature
+					if
+						a_target_base_class = universe.real_ref_class or
+						a_target_base_class = universe.numeric_class or
+						a_target_base_class = universe.hashable_class or
+						a_target_base_class = universe.comparable_class or
+						a_target_base_class = universe.part_comparable_class or
+						a_target_base_class = universe.any_class
+					then
+						Result := universe.real_convert_feature
 					end
-				elseif a_target_base_class = universe.integer_ref_class then
+				elseif a_source_base_class = universe.double_class then
 						-- Needed by ISE Eiffel 5.6.
-					if a_source_base_class = universe.integer_class then
-						Result := universe.integer_ref_convert_feature
+					if
+						a_target_base_class = universe.double_ref_class or
+						a_target_base_class = universe.numeric_class or
+						a_target_base_class = universe.hashable_class or
+						a_target_base_class = universe.comparable_class or
+						a_target_base_class = universe.part_comparable_class or
+						a_target_base_class = universe.any_class
+					then
+						Result := universe.double_convert_feature
 					end
-				elseif a_target_base_class = universe.integer_8_ref_class then
+				elseif a_source_base_class = universe.pointer_class then
 						-- Needed by ISE Eiffel 5.6.
-					if a_source_base_class = universe.integer_8_class then
-						Result := universe.integer_8_ref_convert_feature
+					if
+						a_target_base_class = universe.pointer_ref_class or
+						a_target_base_class = universe.hashable_class or
+						a_target_base_class = universe.any_class
+					then
+						Result := universe.pointer_convert_feature
 					end
-				elseif a_target_base_class = universe.integer_16_ref_class then
+				elseif a_source_base_class = universe.boolean_ref_class then
 						-- Needed by ISE Eiffel 5.6.
-					if a_source_base_class = universe.integer_16_class then
-						Result := universe.integer_16_ref_convert_feature
+					if a_target_base_class = universe.boolean_class then
+						Result := universe.boolean_convert_feature
 					end
-				elseif a_target_base_class = universe.integer_64_ref_class then
+				elseif a_source_base_class = universe.character_ref_class then
 						-- Needed by ISE Eiffel 5.6.
-					if a_source_base_class = universe.integer_64_class then
-						Result := universe.integer_64_ref_convert_feature
+					if a_target_base_class = universe.character_class then
+						Result := universe.character_convert_feature
 					end
-				elseif a_target_base_class = universe.real_ref_class then
+				elseif a_source_base_class = universe.wide_character_ref_class then
 						-- Needed by ISE Eiffel 5.6.
-					if a_source_base_class = universe.real_class then
-						Result := universe.real_ref_convert_feature
+					if a_target_base_class = universe.wide_character_class then
+						Result := universe.wide_character_convert_feature
 					end
-				elseif a_target_base_class = universe.double_ref_class then
+				elseif a_source_base_class = universe.pointer_ref_class then
 						-- Needed by ISE Eiffel 5.6.
-					if a_source_base_class = universe.double_class then
-						Result := universe.double_ref_convert_feature
-					end
-				elseif a_target_base_class = universe.pointer_ref_class then
-						-- Needed by ISE Eiffel 5.6.
-					if a_source_base_class = universe.pointer_class then
-						Result := universe.pointer_ref_convert_feature
+					if a_target_base_class = universe.pointer_class then
+						Result := universe.pointer_convert_feature
 					end
 				end
 			end

@@ -193,21 +193,10 @@ feature {NONE} -- Initialization
 			comparable_class := eiffel_class (tokens.comparable_class_name)
 			part_comparable_class := eiffel_class (tokens.part_comparable_class_name)
 			hashable_class := eiffel_class (tokens.hashable_class_name)
-			create boolean_ref_convert_feature.make (boolean_ref_class)
-			create character_ref_convert_feature.make (character_ref_class)
-			create wide_character_ref_convert_feature.make (wide_character_ref_class)
-			create integer_ref_convert_feature.make (integer_ref_class)
-			create integer_8_ref_convert_feature.make (integer_8_ref_class)
-			create integer_16_ref_convert_feature.make (integer_16_ref_class)
-			create integer_64_ref_convert_feature.make (integer_64_ref_class)
-			create real_ref_convert_feature.make (real_ref_class)
-			create double_ref_convert_feature.make (double_ref_class)
-			create pointer_ref_convert_feature.make (pointer_ref_class)
-			create any_convert_feature.make (any_class)
-			create numeric_convert_feature.make (numeric_class)
-			create comparable_convert_feature.make (comparable_class)
-			create part_comparable_convert_feature.make (part_comparable_class)
-			create hashable_convert_feature.make (hashable_class)
+			create boolean_convert_feature.make (boolean_class)
+			create character_convert_feature.make (character_class)
+			create wide_character_convert_feature.make (wide_character_class)
+			create pointer_convert_feature.make (pointer_class)
 		ensure
 			any_class_not_void: any_class /= Void
 			general_class_not_void: general_class /= Void
@@ -271,20 +260,10 @@ feature {NONE} -- Initialization
 			comparable_class_not_void: comparable_class /= Void
 			part_comparable_class_not_void: part_comparable_class /= Void
 			hashable_class_not_void: hashable_class /= Void
-			boolean_ref_convert_feature_not_void: boolean_ref_convert_feature /= Void
-			character_ref_convert_feature_not_void: character_ref_convert_feature /= Void
-			wide_character_ref_convert_feature_not_void: wide_character_ref_convert_feature /= Void
-			integer_ref_convert_feature_not_void: integer_ref_convert_feature /= Void
-			integer_8_ref_convert_feature_not_void: integer_8_ref_convert_feature /= Void
-			integer_16_ref_convert_feature_not_void: integer_16_ref_convert_feature /= Void
-			integer_64_ref_convert_feature_not_void: integer_64_ref_convert_feature /= Void
-			real_ref_convert_feature_not_void: real_ref_convert_feature /= Void
-			double_ref_convert_feature_not_void: double_ref_convert_feature /= Void
-			any_convert_feature_not_void: any_convert_feature /= Void
-			numeric_convert_feature_not_void: numeric_convert_feature /= Void
-			comparable_convert_feature_not_void: comparable_convert_feature /= Void
-			part_comparable_convert_feature_not_void: part_comparable_convert_feature /= Void
-			hashable_convert_feature_not_void: hashable_convert_feature /= Void
+			boolean_convert_feature_not_void: boolean_convert_feature /= Void
+			character_convert_feature_not_void: character_convert_feature /= Void
+			wide_character_convert_feature_not_void: wide_character_convert_feature /= Void
+			pointer_convert_feature_not_void: pointer_convert_feature /= Void
 		end
 
 feature -- Initialization
@@ -651,50 +630,17 @@ feature -- Feature access
 
 feature -- Feature access (for compatibility with 5.6.0610, to be removed later)
 
-	boolean_ref_convert_feature: ET_BUILTIN_CONVERT_FEATURE
-			-- Built-in conversion feature to BOOLEAN_REF
+	boolean_convert_feature: ET_BUILTIN_CONVERT_FEATURE
+			-- Built-in conversion feature to BOOLEAN
 
-	character_ref_convert_feature: ET_BUILTIN_CONVERT_FEATURE
-			-- Built-in conversion feature to CHARACTER_REF
+	character_convert_feature: ET_BUILTIN_CONVERT_FEATURE
+			-- Built-in conversion feature to CHARACTER
 
-	wide_character_ref_convert_feature: ET_BUILTIN_CONVERT_FEATURE
-			-- Built-in conversion feature to WIDE_CHARACTER_REF
+	wide_character_convert_feature: ET_BUILTIN_CONVERT_FEATURE
+			-- Built-in conversion feature to WIDE_CHARACTER
 
-	integer_ref_convert_feature: ET_BUILTIN_CONVERT_FEATURE
-			-- Built-in conversion feature to INTEGER_REF
-
-	integer_8_ref_convert_feature: ET_BUILTIN_CONVERT_FEATURE
-			-- Built-in conversion feature to INTEGER_8_REF
-
-	integer_16_ref_convert_feature: ET_BUILTIN_CONVERT_FEATURE
-			-- Built-in conversion feature to INTEGER_16_REF
-
-	integer_64_ref_convert_feature: ET_BUILTIN_CONVERT_FEATURE
-			-- Built-in conversion feature to INTEGER_64_REF
-
-	real_ref_convert_feature: ET_BUILTIN_CONVERT_FEATURE
-			-- Built-in conversion feature to REAL_REF
-
-	double_ref_convert_feature: ET_BUILTIN_CONVERT_FEATURE
-			-- Built-in conversion feature to DOUBLE_REF
-
-	pointer_ref_convert_feature: ET_BUILTIN_CONVERT_FEATURE
-			-- Built-in conversion feature to POINTER_REF
-
-	any_convert_feature: ET_BUILTIN_CONVERT_FEATURE
-			-- Built-in conversion feature to ANY
-
-	numeric_convert_feature: ET_BUILTIN_CONVERT_FEATURE
-			-- Built-in conversion feature to NUMERIC
-
-	comparable_convert_feature: ET_BUILTIN_CONVERT_FEATURE
-			-- Built-in conversion feature to COMPARABLE
-
-	part_comparable_convert_feature: ET_BUILTIN_CONVERT_FEATURE
-			-- Built-in conversion feature to PART_COMPARABLE
-
-	hashable_convert_feature: ET_BUILTIN_CONVERT_FEATURE
-			-- Built-in conversion feature to HASHABLE
+	pointer_convert_feature: ET_BUILTIN_CONVERT_FEATURE
+			-- Built-in conversion feature to POINTER
 
 feature -- Feature setting
 
@@ -2407,19 +2353,9 @@ invariant
 	comparable_class_not_void: comparable_class /= Void
 	part_comparable_class_not_void: part_comparable_class /= Void
 	hashable_class_not_void: hashable_class /= Void
-	boolean_ref_convert_feature_not_void: boolean_ref_convert_feature /= Void
-	character_ref_convert_feature_not_void: character_ref_convert_feature /= Void
-	wide_character_ref_convert_feature_not_void: wide_character_ref_convert_feature /= Void
-	integer_ref_convert_feature_not_void: integer_ref_convert_feature /= Void
-	integer_8_ref_convert_feature_not_void: integer_8_ref_convert_feature /= Void
-	integer_16_ref_convert_feature_not_void: integer_16_ref_convert_feature /= Void
-	integer_64_ref_convert_feature_not_void: integer_64_ref_convert_feature /= Void
-	real_ref_convert_feature_not_void: real_ref_convert_feature /= Void
-	double_ref_convert_feature_not_void: double_ref_convert_feature /= Void
-	any_convert_feature_not_void: any_convert_feature /= Void
-	numeric_convert_feature_not_void: numeric_convert_feature /= Void
-	comparable_convert_feature_not_void: comparable_convert_feature /= Void
-	part_comparable_convert_feature_not_void: part_comparable_convert_feature /= Void
-	hashable_convert_feature_not_void: hashable_convert_feature /= Void
+	boolean_convert_feature_not_void: boolean_convert_feature /= Void
+	character_convert_feature_not_void: character_convert_feature /= Void
+	wide_character_convert_feature_not_void: wide_character_convert_feature /= Void
+	pointer_convert_feature_not_void: pointer_convert_feature /= Void
 
 end
