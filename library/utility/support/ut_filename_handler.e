@@ -39,7 +39,7 @@ feature -- Access
 			a_dirname_not_void: a_dirname /= Void
 			a_filename_not_void: a_filename /= Void
 		do
-			Result := string_.make (a_dirname.count + a_filename.count + 1)
+			Result := STRING_.make (a_dirname.count + a_filename.count + 1)
 			Result.append_string (a_dirname)
 			Result.append_character (directory_separators.item (1))
 			Result.append_string (a_filename)
@@ -58,9 +58,9 @@ feature -- Setting
 			separators_not_void: separators /= Void
 			separators_not_empty: not separators.empty
 		do
-			directory_separators := a_separators
+			directory_separators := separators
 		ensure
-			directory_separators_set: directory_separactors = a_separators
+			directory_separators_set: directory_separators = separators
 		end
 
 invariant
