@@ -66,7 +66,10 @@
 		<set name="gexace_output" value="compile_ise.ace"/>
 		<geant target="xace"/>
 		<ise ace="compile_ise.ace" system="${system}" finalize="true" finish_freezing="true" unless="${debug}"/>
+		<move file="EIFGEN/F_code/${system}${exe}" to_directory="." unless="${debug}"/>
 		<ise ace="compile_ise.ace" system="${system}" finalize="false" finish_freezing="true" if="${debug}"/>
+		<move file="EIFGEN/W_code/${system}${exe}" to_directory="." if="${debug}"/>
+		<move file="EIFGEN/W_code/${system}.melted" to_directory="." if="${debug}"/>
 	</target>
 
 	<target name="compile_hact" depend="init">
@@ -79,7 +82,10 @@
 		<set name="gexace_output" value="compile_hact.ace"/>
 		<geant target="xace"/>
 		<hact ace="compile_hact.ace" system="${system}" finalize="true" fish="true" unless="${debug}"/>
+		<move file="${system}_gen/F_code/${system}${exe}" to_directory="." unless="${debug}"/>
 		<hact ace="compile_hact.ace" system="${system}" finalize="false" fish="true" if="${debug}"/>
+		<move file="${system}_gen/W_code/${system}${exe}" to_directory="." if="${debug}"/>
+		<move file="${system}_gen/W_code/${system}.h2o" to_directory="." if="${debug}"/>
 	</target>
 
 	<target name="compile_ve" depend="init">
@@ -201,10 +207,10 @@
 			necessary.
 		</description>
 
-		<gexace command="build" command_options="${eiffel}" output="${gexace_output}" xace="${system_dir}/system.xace" if="${gexace_output}">
+		<gexace system="${eiffel}" output="${gexace_output}" xace="${system_dir}/system.xace" if="${gexace_output}">
 			<define name="DEBUG" value="${debug}" if="${debug}"/>
 		</gexace>
-		<gexace command="build" command_options="${eiffel}" xace="${system_dir}/system.xace" unless="${gexace_output}">
+		<gexace system="${eiffel}" xace="${system_dir}/system.xace" unless="${gexace_output}">
 			<define name="DEBUG" value="${debug}" if="${debug}"/>
 		</gexace>
 	</target>
