@@ -70,7 +70,7 @@ feature -- Initialization.
 			else
 				check
 					is_relative: is_relative
-					not_has_scheme: scheme_empty: scheme = Void
+					not_has_scheme: scheme = Void
 				end
 
 				if has_authority then
@@ -171,7 +171,20 @@ feature -- Status
 feature -- Access
 
 	full_reference: STRING
-			-- The entire URI.
+			-- Full URI reference (including fragment)
+
+	full_uri: STRING is
+			-- Full URI (without fragment)
+		do
+			if has_fragment then
+				Result := new_full_uri
+			else
+				Result := full_reference
+			end
+		ensure
+			result_not_void: Result /= Void
+			no_fragment_is_reference: not has_fragment implies STRING_.same_string (Result, full_reference)
+		end
 
 feature -- Access
 
@@ -371,7 +384,7 @@ feature -- If authority is <userinfo>@<host>:<port>
 			definition: port = host_port.port
 		end
 		
-feature -- Setting
+feature {NONE} -- Setting
 
 	add_key_value (key, value: STRING) is
 			-- Add a key=value pair to `query'. `value' is added in
@@ -460,10 +473,8 @@ feature -- Setting
 
 feature {NONE} -- Update cached attributes
 
-	new_full_reference: STRING is
-			-- Reconstruct full URI from components.
-		require
-			hierarchical: is_hierarchical
+	new_full_uri: STRING is
+			-- Reconstructed full URI (without fragment) from components
 		do
 			create Result.make_empty
 			if is_absolute then
@@ -480,6 +491,14 @@ feature {NONE} -- Update cached attributes
 				Result.append_character ('?')
 				Result := STRING_.appended_string (Result, query)
 			end
+		ensure
+			result_not_void: Result /= Void
+		end
+		
+	new_full_reference: STRING is
+			-- Reconstructed full reference from components
+		do
+			Result := new_full_uri
 			if has_fragment then
 				Result.append_character ('#')
 				Result := STRING_.appended_string (Result, fragment)
