@@ -62,7 +62,11 @@ feature {NONE} -- Initialization
 				a_project.set_start_target_name (start_target_name)
 			end
 
-			a_project.build
+			if show_target_info then
+				a_project.show_target_info
+			else
+				a_project.build
+			end
 
 			if not a_project.build_successful then
 				exit_application (1, Void)
@@ -87,6 +91,9 @@ feature -- Access
 	debug_mode: BOOLEAN
 			-- Print additional, internal information during build process?
 
+	show_target_info: BOOLEAN
+			-- Print list of name and description for all targets of project?
+
 	no_exec: BOOLEAN
 			-- Do not execute commands (only show what they would do)?
 
@@ -110,6 +117,9 @@ feature -- Access
 					set_no_exec (true)
 				elseif arg.is_equal ("--debug") or arg.is_equal ("-d") then
 					set_debug_mode (true)
+				elseif arg.is_equal ("--rules") or arg.is_equal ("-r") or
+					arg.is_equal ("--targets") or arg.is_equal ("-t") then
+					set_show_target_info (true)
 				elseif arg.is_equal ("--help") or arg.is_equal ("-h") or arg.is_equal ("-?") then
 					report_usage_message
 				elseif arg.is_equal ("-b") then
@@ -158,6 +168,14 @@ feature -- Setting
 			debug_mode := a_debug_mode
 		ensure
 			debug_mode_set: debug_mode = a_debug_mode
+		end
+
+	set_show_target_info (a_show_target_info: BOOLEAN) is
+			-- Set `show_target_info' to `a_show_target_info'
+		do
+			show_target_info := a_show_target_info
+		ensure
+			show_target_info_set: show_target_info = a_show_target_info
 		end
 
 	set_no_exec (a_no_exec: BOOLEAN) is
