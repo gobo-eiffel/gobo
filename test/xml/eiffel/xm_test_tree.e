@@ -147,6 +147,7 @@ feature
 			create an_element.make (a_doc, "doc", a_namespace)
 			a_doc.set_root_element (an_element)
 			an_element.add_unqualified_attribute ("attr1", "v1") 
+			create a_namespace.make ("p2", "uri2")
 			an_element.add_attribute ("attr2", a_namespace, "v2")
 			
 			create a_sub.make_last (an_element, "child", a_namespace)
@@ -166,9 +167,9 @@ feature
 			go_next
 			assert_attribute ("attr1", "v1")
 			go_next
-			assert_ns_attribute ("uri1", "attr2", "v2")
+			assert_ns_attribute ("uri2", "attr2", "v2")
 			go_next
-			assert_ns_element ("uri1", "child")
+			assert_ns_element ("uri2", "child")
 			assert_last
 			go_up
 		end
