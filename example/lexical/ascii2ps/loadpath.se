@@ -1,0 +1,3 @@
+${GOBO}/example/lexical/ascii2ps/
+${GOBO}/library/lexical/skeleton/
+${GOBO}/library/kernel/loadpath.se

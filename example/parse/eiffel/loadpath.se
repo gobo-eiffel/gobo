@@ -1,0 +1,5 @@
+${GOBO}/example/parse/eiffel/
+${GOBO}/library/parse/skeleton/
+${GOBO}/library/lexical/skeleton/
+${GOBO}/library/utility/loadpath.se
+${GOBO}/library/kernel/loadpath.se

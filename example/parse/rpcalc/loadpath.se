@@ -1,0 +1,3 @@
+${GOBO}/example/parse/rpcalc/
+${GOBO}/library/parse/skeleton/
+${GOBO}/library/kernel/loadpath.se
