@@ -6,25 +6,46 @@ indexing
 
 	library:    "Gobo Eiffel Structure Library"
 	author:     "Eric Bezault <ericb@gobosoft.com>"
-	copyright:  "Copyright (c) 1999, Eric Bezault and others"
+	copyright:  "Copyright (c) 1999-2000, Eric Bezault and others"
 	license:    "Eiffel Forum Freeware License v1 (see forum.txt)"
 	date:       "$Date$"
 	revision:   "$Revision$"
 
-deferred class DS_SPARSE_SET_CURSOR [G]
+class DS_SPARSE_SET_CURSOR [G]
 
 inherit
 
-	DS_SET_CURSOR [G]
+	DS_BILINEAR_CURSOR [G]
 		redefine
-			off, container
+			off
 		end
 
-	DS_BILINEAR_CURSOR [G]
+	DS_SET_CURSOR [G]
 		undefine
 			off
-		redefine
-			container
+		end
+
+	KL_IMPORTED_FIXED_ARRAY_ROUTINES
+		undefine
+			is_equal, copy
+		end
+
+creation
+
+	make
+
+feature {NONE} -- Initialization
+
+	make (a_set: like container) is
+			-- Create a new cursor for `a_set'.
+		require
+			a_set_not_void: a_set /= Void
+		do
+			container := a_set
+			position := Before_position
+		ensure
+			container_set: container = a_set
+			before: before
 		end
 
 feature -- Access
@@ -32,13 +53,11 @@ feature -- Access
 	item: G is
 			-- Item at cursor position
 		do
-			Result := container.storage.item (position).item
+			Result := container.items.item (position)
 		end
 
-	container: DS_SPARSE_SET [G] is
+	container: DS_SPARSE_SET [G]
 			-- Set traversed
-		deferred 
-		end
 
 feature -- Status report
 
@@ -64,13 +83,13 @@ feature -- Status report
 			-- Is cursor on the first item?
 		local
 			i: INTEGER
-			a_set: like container
+			clashes: like FIXED_INTEGER_ARRAY_TYPE
 		do
 			if not container.is_empty then
 				from
-					a_set := container
+					clashes := container.clashes
 				until
-					a_set.valid_slot (i)
+					clashes.item (i) > Free_watermark
 				loop
 					i := i + 1
 				end
@@ -82,14 +101,14 @@ feature -- Status report
 			-- Is cursor on the last item?
 		local
 			i: INTEGER
-			a_set: like container
+			clashes: like FIXED_INTEGER_ARRAY_TYPE
 		do
 			if not container.is_empty then
 				from
-					a_set := container
-					i := a_set.slots
+					clashes := container.clashes
+					i := clashes.count - 1
 				until
-					a_set.valid_slot (i)
+					clashes.item (i) > Free_watermark
 				loop
 					i := i - 1
 				end
@@ -108,8 +127,9 @@ feature -- Cursor movement
 	start is
 			-- Move cursor to first position.
 		local
-			i: INTEGER
+			i, nb: INTEGER
 			a_set: like container
+			clashes: like FIXED_INTEGER_ARRAY_TYPE
 			was_off: BOOLEAN
 		do
 			if container.is_empty then
@@ -118,12 +138,15 @@ feature -- Cursor movement
 				was_off := off
 				from
 					a_set := container
+					clashes := a_set.clashes
+					nb := a_set.capacity - 1
 				until
-					a_set.valid_slot (i)
+					i > nb or else
+					clashes.item (i) > Free_watermark
 				loop
 					i := i + 1
 				end
-				if i > a_set.slots then
+				if i > nb then
 					position := After_position
 					if not was_off then
 						a_set.remove_traversing_cursor (Current)
@@ -142,6 +165,7 @@ feature -- Cursor movement
 		local
 			i: INTEGER
 			a_set: like container
+			clashes: like FIXED_INTEGER_ARRAY_TYPE
 			was_off: BOOLEAN
 		do
 			if container.is_empty then
@@ -150,9 +174,11 @@ feature -- Cursor movement
 				was_off := off
 				from
 					a_set := container
-					i := a_set.slots
+					clashes := a_set.clashes
+					i := a_set.capacity - 1
 				until
-					a_set.valid_slot (i)
+					i < 0 or else
+					clashes.item (i) > Free_watermark
 				loop
 					i := i - 1
 				end
@@ -175,6 +201,7 @@ feature -- Cursor movement
 		local
 			i, nb: INTEGER
 			a_set: like container
+			clashes: like FIXED_INTEGER_ARRAY_TYPE
 			was_off: BOOLEAN
 		do
 			if position = Before_position then
@@ -186,9 +213,11 @@ feature -- Cursor movement
 			end
 			from
 				a_set := container
-				nb := a_set.slots
+				clashes := a_set.clashes
+				nb := a_set.capacity - 1
 			until
-				i > nb or else a_set.valid_slot (i)
+				i > nb or else
+				clashes.item (i) > Free_watermark
 			loop
 				i := i + 1
 			end
@@ -210,19 +239,22 @@ feature -- Cursor movement
 		local
 			i: INTEGER
 			a_set: like container
+			clashes: like FIXED_INTEGER_ARRAY_TYPE
 			was_off: BOOLEAN
 		do
 			a_set := container
+			clashes := a_set.clashes
 			if position = After_position then
 				was_off := True
-				i := a_set.slots
+				i := a_set.capacity - 1
 			else
 				-- was_off := False
 				i := position - 1
 			end
 			from
 			until
-				i < 0 or else a_set.valid_slot (i)
+				i < 0 or else
+				clashes.item (i) > Free_watermark
 			loop
 				i := i - 1
 			end
@@ -373,6 +405,10 @@ feature {NONE} -- Implementation
 	Before_position: INTEGER is -1
 	After_position: INTEGER is -2
 			-- Special values for before and after positions
+
+	Free_watermark: INTEGER is -2
+			-- Limit between free and occupied slots in
+			-- `container.clashes'
 
 invariant
 
