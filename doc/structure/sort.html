@@ -24,14 +24,18 @@ content="text/html; charset=iso-8859-1">
 <hr size="1">
 
 <p align="center"><!--webbot bot="ImageMap" startspan
-rectangle=" (318,160) (430, 191)  flatshort/ds_shell_sorter.html"
-rectangle=" (169,159) (287, 190)  flatshort/ds_quick_sorter.html"
-rectangle=" (20,159) (139, 191)  flatshort/ds_bubble_sorter.html"
-rectangle=" (161,84) (295, 115)  flatshort/ds_indexable_sorter.html"
-rectangle=" (179,10) (276, 40)  flatshort/ds_sorter.html"
-rectangle=" (17,10) (114, 42)  flatshort/ds_sortable.html"
-src="image/sort.gif" border="0" width="446" height="206" --><MAP NAME="FrontPageMap0"><AREA SHAPE="RECT" COORDS="318, 160, 430, 191" HREF="flatshort/ds_shell_sorter.html"><AREA SHAPE="RECT" COORDS="169, 159, 287, 190" HREF="flatshort/ds_quick_sorter.html"><AREA SHAPE="RECT" COORDS="20, 159, 139, 191" HREF="flatshort/ds_bubble_sorter.html"><AREA SHAPE="RECT" COORDS="161, 84, 295, 115" HREF="flatshort/ds_indexable_sorter.html"><AREA SHAPE="RECT" COORDS="179, 10, 276, 40" HREF="flatshort/ds_sorter.html"><AREA SHAPE="RECT" COORDS="17, 10, 114, 42" HREF="flatshort/ds_sortable.html"></MAP><img src="image/sort.gif" border="0" width="446" height="206" usemap="#FrontPageMap0"><!--webbot
-bot="ImageMap" i-checksum="38625" endspan --></p>
+rectangle=" (323,300) (552, 331)  flatshort/ds_reverse_comparable_comparator.html"
+rectangle=" (355,224) (520, 256)  flatshort/ds_comparable_comparator.html"
+rectangle=" (449,135) (598, 166)  flatshort/ds_reverse_comparator.html"
+rectangle=" (386,14) (485, 45)  flatshort/ds_comparator.html"
+rectangle=" (308,166) (420, 197)  flatshort/ds_shell_sorter.html"
+rectangle=" (159,166) (277, 197)  flatshort/ds_quick_sorter.html"
+rectangle=" (11,165) (130, 197)  flatshort/ds_bubble_sorter.html"
+rectangle=" (154,90) (288, 121)  flatshort/ds_indexable_sorter.html"
+rectangle=" (170,17) (267, 47)  flatshort/ds_sorter.html"
+rectangle=" (9,15) (106, 47)  flatshort/ds_sortable.html"
+src="image/sort.gif" border="0" width="612" height="345" --><MAP NAME="FrontPageMap0"><AREA SHAPE="RECT" COORDS="323, 300, 552, 331" HREF="flatshort/ds_reverse_comparable_comparator.html"><AREA SHAPE="RECT" COORDS="355, 224, 520, 256" HREF="flatshort/ds_comparable_comparator.html"><AREA SHAPE="RECT" COORDS="449, 135, 598, 166" HREF="flatshort/ds_reverse_comparator.html"><AREA SHAPE="RECT" COORDS="386, 14, 485, 45" HREF="flatshort/ds_comparator.html"><AREA SHAPE="RECT" COORDS="308, 166, 420, 197" HREF="flatshort/ds_shell_sorter.html"><AREA SHAPE="RECT" COORDS="159, 166, 277, 197" HREF="flatshort/ds_quick_sorter.html"><AREA SHAPE="RECT" COORDS="11, 165, 130, 197" HREF="flatshort/ds_bubble_sorter.html"><AREA SHAPE="RECT" COORDS="154, 90, 288, 121" HREF="flatshort/ds_indexable_sorter.html"><AREA SHAPE="RECT" COORDS="170, 17, 267, 47" HREF="flatshort/ds_sorter.html"><AREA SHAPE="RECT" COORDS="9, 15, 106, 47" HREF="flatshort/ds_sortable.html"></MAP><img src="image/sort.gif" border="0" width="612" height="345" usemap="#FrontPageMap0"><!--webbot
+bot="ImageMap" i-checksum="43885" endspan --></p>
 
 <h2>Class <em><tt>DS_SORTABLE</tt></em></h2>
 
@@ -67,10 +71,54 @@ color="#008080"><em><tt>sort</tt></em></font></a><font
 color="#008080"><em><tt> </tt></em></font>and <a
 href="flatshort/ds_sorter.html#sorted"><font color="#008080"><em><tt>sorted</tt></em></font></a>,
 which are called by delegation from their counterparts in <font
-color="#008080"><em><tt>DS_SORTABLE</tt></em></font>. <font
+color="#008080"><em><tt>DS_SORTABLE</tt></em></font>. In addition
+to these two routines, <font color="#008080"><em><tt>DS_SORTER </tt></em></font>provides
+two other sets of routines: <a
+href="flatshort/ds_sorter.html#reverse_sort"><font
+color="#008080"><em><tt>reverse_sort</tt></em></font></a> and <a
+href="flatshort/ds_sorter.html#reverse_sorted"><font
+color="#008080"><em><tt>reverse_sorted</tt></em></font></a> for
+sorting the items in the data structure in decreasing order, and <a
+href="flatshort/ds_sorter.html#sort_with_comparator"><font
+color="#008080"><em><tt>sort_with_comparator</tt></em></font></a>
+and <a href="flatshort/ds_sorter.html#sorted_with_comparator"><font
+color="#008080"><em><tt>sorted_with_comparator</tt></em></font></a>
+for sorting the items using the comparison criterion provided by
+an instance of class <a href="flatshort/ds_comparator.html"><font
+color="#008080"><em><tt>DS_COMPARATOR</tt></em></font></a>. <font
 color="#008080"><em><tt>DS_SORTER </tt></em></font>is a deferred
 class, various sorting algorithms being implemented in its
 descendant classes.</p>
+
+<h2>Class <em><tt>DS_COMPARATOR</tt></em></h2>
+
+<p>Class <a href="flatshort/ds_comparator.html"><font
+color="#008080"><em><tt>DS_COMPARATOR</tt></em></font></a><font
+color="#008080"><em><tt> </tt></em></font>and its descendants
+provide sorters with a comparison criterion. The boolean query <a
+href="flatshort/ds_comparator.html#less_than"><font
+color="#008080"><em><tt>less_than</tt></em></font></a> compares
+two objects and returns true if the first one is considered
+smaller than the second one. This routine is deferred in <font
+color="#008080"><em><tt>DS_COMPARATOR</tt></em></font> but is
+given a concrete implementation in <a
+href="flatshort/ds_comparable_comparator.html"><font
+color="#008080"><em><tt>DS_COMPARABLE_COMPARATOR</tt></em></font></a>
+based on the fact that the objects involved in the comparison are
+of type <font color="#008080"><em><tt>COMPARABLE</tt></em></font>.
+It is easy to write other descendant classes of <font
+color="#008080"><em><tt>DS_COMPARATOR </tt></em></font>in order
+to customize the comparison criterion used in sorters.</p>
+
+<p>When one wants to sort the items in a data structure in
+decreasing order, one can use <a
+href="flatshort/ds_reverse_comparator.html"><font color="#008080"><em><tt>DS_REVERSE_COMPARATOR</tt></em></font></a><font
+color="#008080"><em><tt> </tt></em></font>in order to reverse the
+comparison criterion of a given comparator. The class <a
+href="flatshort/ds_reverse_comparable_comparator.html"><font
+color="#008080"><em><tt>DS_REVERSE_COMPARABLE_COMPARATOR</tt></em></font></a><em><tt>
+</tt></em>is also available as a shorthand when the objects to be
+compared are of type <font color="#008080"><em><tt>COMPARABLE</tt></em></font>.</p>
 
 <h2>Class <em><tt>DS_INDEXABLE_SORTER</tt></em></h2>
 
@@ -94,10 +142,39 @@ href="flatshort/ds_indexable_sorter.html#subsort"><font
 color="#008080"><em><tt>subsort</tt></em></font></a> and <a
 href="flatshort/ds_indexable_sorter.html#subsorted"><font
 color="#008080"><em><tt>subsorted</tt></em></font></a>. A call to<font
-color="#008080"><em><tt> sort </tt></em><tt>(</tt><em><tt>a_contanier</tt></em><tt>)</tt></font>
+color="#008080"><em><tt> sort </tt></em><tt>(</tt><em><tt>a_container</tt></em><tt>)</tt></font>
 is therefore equivalent to<font color="#008080"><em><tt> subsort</tt></em><tt>
-(</tt><em><tt>a_contanier</tt></em><tt>,</tt><em><tt> 1</tt></em><tt>,</tt><em><tt>
-a_container</tt></em><tt>.</tt><em><tt>count</tt></em><tt>)</tt></font>.</p>
+(</tt><em><tt>a_container</tt></em><tt>,</tt><em><tt> 1</tt></em><tt>,</tt><em><tt>
+a_container</tt></em><tt>.</tt><em><tt>count</tt></em><tt>)</tt></font>.
+Similarly there are routines to sort ranges of items in reverse
+order or using a <font color="#008080"><em><tt>DS_COMPARATOR</tt></em></font>
+comparison criterion: <a
+href="flatshort/ds_indexable_sorter.html#reverse_subsort"><font
+color="#008080"><em><tt>reverse_subsort</tt></em></font></a>, <a
+href="flatshort/ds_indexable_sorter.html#reverse_subsorted"><font
+color="#008080"><em><tt>reverse_subsorted</tt></em></font></a>, <a
+href="flatshort/ds_indexable_sorter.html#subsort_with_comparator"><font
+color="#008080"><em><tt>subsort_with_comparator</tt></em></font></a>
+and <a
+href="flatshort/ds_indexable_sorter.html#subsorted_with_comparator"><font
+color="#008080"><em><tt>subsorted_with_comparator</tt></em></font></a>.</p>
+
+<p>Routines <font color="#008080"><em><tt>sort</tt></em></font>, <font
+color="#008080"><em><tt>sorted</tt></em></font>, <font
+color="#008080"><em><tt>subsort</tt></em></font> and <font
+color="#008080"><em><tt>subsorted </tt></em></font>use <a
+href="flatshort/ds_indexable_sorter.html#comparator"><font
+color="#008080"><em><tt>comparator</tt></em></font></a> as their
+comparison criterion. This attribute is typically set by the
+creation procedure of the sorter in descendant classes of <font
+color="#008080"><em><tt>DS_INDEXABLE_SORTER</tt></em></font>. On
+the other hand <font color="#008080"><em><tt>reverse_sort</tt></em></font>,
+<font color="#008080"><em><tt>reverse_sorted</tt></em></font>, <font
+color="#008080"><em><tt>reverse_subsort</tt></em></font> and <font
+color="#008080"><em><tt>reverse_subsorted </tt></em></font>rely
+on the <a href="flatshort/ds_reverse_comparator.html"><font
+color="#008080"><em><tt>DS_REVERSE_COMPARATOR</tt></em></font></a>
+version of<font color="#008080"><em><tt> comparator</tt></em></font>.</p>
 
 <p>Note that the implementation of the sorting algorithms in <font
 color="#008080"><em><tt>DS_INDEXABLE_SORTER</tt></em></font> and
@@ -144,7 +221,7 @@ implements the shell sort algorithm.</p>
 <table border="0" width="100%">
     <tr>
         <td><address>
-            <font size="2"><b>Copyright © 1999</b></font><font
+            <font size="2"><b>Copyright © 1999-2001</b></font><font
             size="1"><b>, </b></font><font size="2"><strong>Eric
             Bezault</strong></font><strong> </strong><font
             size="2"><br>
@@ -154,7 +231,7 @@ implements the shell sort algorithm.</p>
             <strong>http:</strong></font><a
             href="http://www.gobosoft.com"><font size="2">//www.gobosoft.com</font></a><font
             size="2"><br>
-            <strong>Last Updated:</strong> 26 September 1999</font><br>
+            <strong>Last Updated:</strong> 31 March 2001</font><br>
             <!--webbot bot="PurpleText"
             preview="
 $Date$ 
