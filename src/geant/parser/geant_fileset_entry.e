@@ -20,11 +20,19 @@ inherit
 		end
 
 	KL_SHARED_FILE_SYSTEM
-		export{NONE} all end
+		export
+			{NONE} all
+		undefine
+			is_equal
+		end
 
 	KL_IMPORTED_STRING_ROUTINES
-		export{NONE} all end
-	
+		export
+			{NONE} all
+		undefine
+			is_equal
+		end
+
 creation
 
 	make

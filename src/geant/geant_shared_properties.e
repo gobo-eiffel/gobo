@@ -165,14 +165,14 @@ feature -- Processing
 				nice_string := True
 				if s.count > 0 then
 					if s.item (1) = a_delimiter then
-						s.keep_tail (s.count - 1)
+						STRING_.keep_tail (s, s.count - 1)
 						nice_string := False
 					end
 				end
 	
 				if s.count > 0 then
 					if s.item (s.count) = a_delimiter then
-						s.keep_head (s.count - 1)
+						STRING_.keep_head (s, s.count - 1)
 						nice_string := False
 					end
 				end
