@@ -95,6 +95,7 @@ Version ?
 	  note that with SmartEiffel under Windows the millisecond part
 	  may be stuck to zero.
 	* Better support for days of the week.
+	* Added support of week number of dates.
 
 	Gobo Eiffel Utility Library:
 
