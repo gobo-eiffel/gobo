@@ -1,6 +1,97 @@
 <chapter id="using_xml_parser">
 <title>Using the XML parser</title>
 
+<sect1 id="first_xml_example">
+<title>A first example: counting tags</title>
+
+<para>
+Let's start with a simple example of an XML parser that counts the number of tags in an input file. This example has two classes, the main class that opens the file and creates the parser, and a descendant of the callbacks class that receives events from the parser. The main class will connect this event consumer with the parser. 
+</para>
+
+<para>
+The base class for events is <classname>XM_CALLBACKS</classname> which has all features deferred. For this example, only a couple of events are needed, so <classname>XM_CALLBACKS_NULL</classname> which provides empty bodies for all events is used for convenience. The events we redefine are routines called when the parser is started, and whenever it encounters a start (opening) XML tag.
+</para>
+
+<programlisting>
+class TAGCOUNT_CALLBACKS
+
+inherit
+
+	XM_CALLBACKS_NULL
+		redefine
+			on_start,
+			on_start_tag
+		end
+
+creation
+
+	make
+
+feature -- Events
+	
+	on_start is
+			-- Reset tag count.
+		do
+			count := 0
+		end
+		
+	on_start_tag (a_namespace: STRING; a_prefix: STRING; a_local_part: STRING) is
+			-- Count start tags.
+		do
+			count := count + 1
+		end
+	
+feature -- Access
+	
+	count: INTEGER
+			-- Number of tags seen.
+			
+end
+</programlisting>
+
+<para>
+The main class creates the parser, the routines that read the command line and open the 
+file are standard and omitted here, which leaves the main routine that sets up 
+and starts the parser, and prints the result:
+</para>
+
+<programlisting>
+	parse_stream (a_stream: KI_CHARACTER_INPUT_STREAM) is
+			-- Parse open stream.
+		require
+			a_stream_not_void: a_stream /= Void
+			a_stream_open: a_stream.is_open_read
+		local
+			a_parser: XM_PARSER
+			a_consumer: TAGCOUNT_CALLBACKS
+		do
+			-- Create the parser. 
+			-- It is left in the default state, which means: 
+			-- ascii only, no external entities or DTDs, 
+			-- no namespace resolving.
+			create {XM_EIFFEL_PARSER} a_parser.make
+			
+			-- Create the event consumer that counts start tags. 
+			create {TAGCOUNT_CALLBACKS} a_consumer.make	
+			a_parser.set_callbacks (a_consumer)
+			
+			-- Parse and display result
+			a_parser.parse_from_stream (a_stream)
+			if not a_parser.is_correct then
+				error_handler.report_error_message (a_parser.last_error_extended_description)
+			else
+				error_handler.report_info_message ("Number of tags found: " + a_consumer.count.out)
+			end
+		end
+</programlisting>
+
+<para>
+The full example is available at <filename>example/xml/event/tagcount</filename>.
+</para>
+
+</sect1>
+
+
 <sect1 id="xml_event_interfaces">
 <title>Event interfaces</title>
 
@@ -18,10 +109,10 @@ DTD events are covered separately, for parsers that support them, using <classna
 </sect1>
 
 <sect1 id="xml_parsers">
-<title>XML parser</title>
+<title>The XML parser interface</title>
 
 <para>
-The public interface of XML parsers is represented in the deferred class <classname>XM_PARSER</classname>. Parsers are event sources, inheriting from the event sources classes to provide <featurename>set_callbacks</featurename> and <featurename>set_dtd_callbacks</featurename>. The input document is set using <featurename>parse_from_stream</featurename> and similar features. Incremental parsing routines are available to parse a document a chunk at a time, if the parser supports it, which can be checked with <featurename>is_incremental</featurename>. 
+The public interface of XML parsers is represented in the deferred class <classname>XM_PARSER</classname>. Parsers are event sources, inheriting from the event sources classes to provide <featurename>set_callbacks</featurename> and <featurename>set_dtd_callbacks</featurename>. An input document is parsed using <featurename>parse_from_stream</featurename> and similar features, which accept strings or IO streams from the Gobo Kernel library. Incremental parsing routines are available to parse a document a chunk at a time, if the parser supports it, which can be checked with <featurename>is_incremental</featurename>. 
 </para>
 
 <para>
@@ -29,11 +120,57 @@ Errors can be collected but are also forwarded to the event interface. Because a
 </para>
 
 <para>
-Several concrete parsers are available, which are descendants of this interface. The pure Eiffel parser is <classname>XM_EIFFEL_PARSER</classname>. The parser making use of the Expat C library is <classname>XM_EXPAT_PARSER</classname>. These classes can be created directly.
+The parsers have a <emphasis>string mode</emphasis>. Because XML documents can contain unicode characters that do not fit in most Eiffel compilers' <classname>CHARACTER</classname> and <classname>STRING</classname> types, the Gobo Eiffel library provides a Unicode string class, that inherits from <classname>STRING</classname>. The base class of Gobo's unicode string classes is <classname>UC_STRING</classname>. There are some subtle issues with polymorphism, for instance:
+</para>
+
+<programlisting>
+"hello".append_string (a_uc_string)
+</programlisting>
+
+<para>
+will not work because the call target is of dynamic type <classname>STRING</classname> which does not know about <string>UC_STRING</string>. A library routine, <classname>KL_STRING_ROUTINES</classname>'s <featurename>appended_string</featurename>, that copes with polymorphism is provided to replace the original routine. Other polymorphic routines are treated similarly. The Gobo Unicode facilities are described in more detail elsewhere along with the rationale for this design. <!-- FIXME: reference to Gobo Unicode doc! -->
 </para>
 
 <para>
-Because Expat introduces external dependencies in the library, a factory class is available: <classname>XM_EXPAT_PARSER_FACTORY</classname>. The value of <featurename>is_expat_available</featurename> depends on whether Expat has been compiled in or not, and code may portably act accordingly, for instance falling back to the Eiffel parser.
+As this potential polymorphism puts a burden of care on the client, and could lead to hard to detect problems for unprepared clients, the XML parsers default to a safe mode, where only instances of <classname>STRING</classname> are produced, and a parsing error occurs if the XML input contains some characters that do not fit in <classname>STRING</classname>. If the application input is only ASCII files, nothing else needs to be done. Otherwise, it may be necessary to set the string mode to some other mode, such as producing exclusively <classname>UC_STRING</classname> descendants, or producing them only when needed. These string mode settings are contained in the class <classname>XM_STRING_MODE</classname>, a parent of the parser classes.
+</para>
+
+<para>
+Another setting a parser user may want to change from the default relates to external references, described below.
+</para>
+
+</sect1>
+
+<sect1 id="concrete_xml_parsers">
+<title>Concrete parsers</title>
+
+<para>
+Several concrete parsers are available, which are descendants of this interface. The pure Eiffel parser is <classname>XM_EIFFEL_PARSER</classname>. The parser making use of and depending on the Expat C library is <classname>XM_EXPAT_PARSER</classname>. These classes can be created directly.
+</para>
+
+<para>
+Because Expat introduces external dependencies in the library, a factory class is available to allow the same client code to work independently of whether or not the Expat parser is compiled in: <classname>XM_EXPAT_PARSER_FACTORY</classname>. The value of <featurename>is_expat_available</featurename> depends on whether Expat is available, and code may portably act accordingly, for instance falling back to the Eiffel parser.
+</para>
+
+</sect1>
+
+<sect1 id="external_resolvers">
+<title>Resolution of external entities</title>
+
+<para>
+By default, the parsers do not resolve external entities and produce an error if an external entity or an external DTD is used. These external references are loosely defined as a URI reference in the XML specification, and thus can be virtually anything, so a customisable resolving facility is provided.
+</para>
+
+<para>
+To use entities, an external resolver must be set, using the parser's <featurename>set_resolver</featurename> routine. It sets a single resolver for use both for external DTDs and entities, there are routines to set each of these separately, <featurename>set_entity_resolver</featurename> and  <featurename>set_dtd_resolver</featurename>.
+</para>
+
+<para>
+A resolver is a class that opens a <classname>KI_CHARACTER_INPUT_STREAM</classname> given a system identifier (a string). An error is produced if no corresponding stream can be found. It is the responsibility of the client to close the stream.
+</para>
+
+<para>
+Default concrete resolvers are provided: <classname>XM_FILE_EXTERNAL_RESOLVER</classname> for using system identifiers as local file names, and <classname>XM_STRING_EXTERNAL_RESOLVER</classname> for resolving in memory using a hash table of strings. There is also a null resolver, which always fails. It is the default resolver of a parser.
 </para>
 
 </sect1>
@@ -67,7 +204,7 @@ All events of <classname>XM_CALLBACKS</classname> that take names of tags or att
 </para>
 
 <para>
-To make the interface consistently simple, it has only atomic events whose parameters are only strings and not data structures. Data structures are build downstream, or as intermediary internal structures of a specific filter. In particular, this means there is one event per attribute.
+To make the interface consistently simple, it has only atomic events whose parameters are only strings and not data structures. Data structures are built downstream, or as intermediary internal structures of a specific filter. In particular, this means there is one event per attribute.
 </para>
 
 </sect1>
@@ -80,11 +217,15 @@ A set of standard content event filters is available in the library. There is a 
 </para>
 
 <para>
-<classname>XM_PRETTY_PRINT_FILTER</classname> is a filter that prints out the event stream as an XML document, to the standard output, or a string. It can be placed anywhere in the stream, which may be convenient for debugging.
+The namespace resolving filter <classname>XM_NAMESPACE_RESOLVER</classname> will be in most standard pipes. It reads XML namespace declaration attributes (these events are not forwarded downstream) and adds a resolved namespace URI to all outgoing names.
 </para>
 
 <para>
-Validation and namespace resolving filters will be in most standard pipes: <classname>XM_END_TAG_CHECKER</classname> generates an error event if an end tag does not match the start tag, and <classname>XM_NAMESPACE_RESOLVER</classname> reads XML namespace declaration attributes (these events are not forwarded downstream) and adds a resolved namespace URI to all outgoing names.
+For completely correct validation of unicode character classes in XML names, the filter <classname>XM_UNICODE_VALIDATION_FILTER</classname> should be used. It is transparent unless an error occurs when it issues an error event, so an error filter should be connected later in the pipe.
+</para>
+
+<para>
+The atomicity of content events is not guaranteed by the parser, that is two or more <featurename>on_content</featurename> events may follow each other. The <classname>XM_CONTENT_CONCATENATOR</classname> filter turns succeeding content events into one. It will be usually be preceded by a <classname>XM_NO_COMMENT_FILTER</classname> filter which removes comment events, because otherwise events placed in the middle of content will also contribute  non-atomic content events separated by comment events.
 </para>
 
 <para>
@@ -92,11 +233,15 @@ Without <classname>XM_STOP_ON_ERROR_FILTER</classname> the event flow may contin
 </para>
 
 <para>
+<classname>XM_PRETTY_PRINT_FILTER</classname> is a filter that prints out the event stream as an XML document, to the standard output, or a string. It can be placed anywhere in the stream, which may be convenient for debugging.
+</para>
+
+<para>
 To produce the output in a tree structure (descendants from <classname>XM_NODE</classname>), the filter <classname>XM_CALLBACKS_TO_TREE_FILTER</classname> is used. It expects resolved namespaces.
 </para>
 
 <para>
-<classname>XM_SHARED_STRINGS_FILTER</classname> saves memory and possibly comparison time by making all equal strings point to a single instance. The downstream events must then consider strings immutable. This sharing is across event categories (if a content happens to be the same as an element name, it will be the same string for instance).
+<classname>XM_SHARED_STRINGS_FILTER</classname> saves memory and possibly comparison time by making all equal strings point to a single instance. The downstream events must then consider strings immutable. This sharing is across event categories: for example, if a content happens to be the same as an element name, it will be the same string.
 </para>
 
 <para>
@@ -112,35 +257,20 @@ inherit
 a_parser: XM_PARSER
 ...
 
-a_parser.set_callbacks (callabacks_pipe (
-		&lt;&lt;	new_end_tag_checker,
-			new_namespace_resolver,
+a_parser.set_callbacks (callbacks_pipe (
+		&lt;&lt; new_namespace_resolver,
 			new_stop_on_error,
-			new_tree_builder >>)
+			new_tree_builder >>))
 ...
 </programlisting>
 
 <para>
-In a real program, references may be kept to individual filters, to recover the result or check their state after processing. <classname>XM_TREE_CALLBACKS_PIPE</classname> provides a standard pipe with attributes for the interesting component filters.
+In a real program, references may be kept to individual filters, to recover the result or check their state after processing. <classname>XM_TREE_CALLBACKS_PIPE</classname> provides a standard pipe for tree creation with attributes for the interesting component filters.
 </para>
 
 </sect1>
 <!-- sect1 DTD events -->
-<sect1>
-<title>Resolution of external entities</title>
 
-<para>
-By default, the parsers do not resolve external entities and produce an error if an external entity or a DTD is used. To use entities, an external resolver must be set, using the parser's <featurename>set_resolver</featurename> routine. This one sets a single resolver for use both for external DTDs and entities, there are routines to set each of these separately.
-</para>
-
-<para>
-A resolver is a class that opens a <classname>KI_CHARACTER_INPUT_STREAM</classname> given a system identifier (a string). An error is produced if no corresponding stream can be found. It is the responsability of the client to close the stream.
-</para>
-
-<para>
-Default concrete resolvers are provided: <classname>XM_FILE_EXTERNAL_RESOLVER</classname> for using system identifiers as local file names, and <classname>XM_STRING_EXTERNAL_RESOLVER</classname> for resolving in memory using a hash table of strings. Therse is also a null resolver, which the default resolver of a parser.
-</para>
-
-</sect1>
+<!-- summary! -->
 
 </chapter>
