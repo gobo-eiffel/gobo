@@ -82,7 +82,7 @@ Eiffel and Halstenbach:</p>
     <em>Maximum_character_code</em>: <em>INTEGER</em> <em><strong>is</strong></em> <em>255</em>
             -- Smallest and largest supported codes for CHARACTER values
 
-<em><strong>end</strong></em> -- class KL_PLATFORM</font></pre>
+<em><strong>end</strong></em></font></pre>
 </blockquote>
 
 <p>and the following form in all other clusters:</p>
@@ -94,7 +94,7 @@ Eiffel and Halstenbach:</p>
 
     <em>PLATFORM</em>
 
-<em><strong>end</strong></em> -- class KL_PLATFORM</font></pre>
+<em><strong>end</strong></em></font></pre>
 </blockquote>
 
 <p>That way, a call to <font color="#008080"><em><tt>Minimum_character_code</tt></em></font>
@@ -124,7 +124,7 @@ following class:</p>
             <em>die_with_code</em> (<em>a_code</em>)
         <em><strong>end</strong></em>
 
-<em><strong>end</strong></em> -- class KL_EXCEPTIONS</font></pre>
+<em><strong>end</strong></em></font></pre>
 </blockquote>
 
 <p>whereas clusters for other compilers already supporting this
@@ -137,7 +137,7 @@ facility will contain this simple class:</p>
 
     <em>EXCEPTIONS</em>
 
-<em><strong>end</strong></em> -- class KL_EXCEPTIONS</font></pre>
+<em><strong>end</strong></em></font></pre>
 </blockquote>
 
 <p>Sometimes, the required functionality will be provided but
@@ -160,7 +160,7 @@ should be used instead:</p>
             <em>new_die </em><em><strong>as</strong></em><em> die</em>
         <em><strong>end</strong></em>
 
-<em><strong>end</strong></em> -- class KL_EXCEPTIONS</font></pre>
+<em><strong>end</strong></em></font></pre>
 </blockquote>
 
 <p>Finally, some useful features are missing from the standard.
@@ -207,8 +207,8 @@ to <font color="#008080"><em><tt>ARRAY</tt></em></font>). To
 solve this problem, one would then have to write:</p>
 
 <blockquote>
-    <pre><font color="#008080">!!<em> my_string</em>.<em>make_from_string</em> (&quot;<em>Hello World!</em>&quot;)
-!! <em>my_array</em>.<em>make_from_array</em> (&lt;&lt;<em>1</em>, <em>2</em>, <em>3</em>&gt;&gt;)</font></pre>
+    <pre><font color="#008080"><em><strong>create</strong> my_string</em>.<em>make_from_string</em> (&quot;<em>Hello World!</em>&quot;)
+<em><strong>create</strong> my_array</em>.<em>make_from_array</em> (&lt;&lt;<em>1</em>, <em>2</em>, <em>3</em>&gt;&gt;)</font></pre>
 </blockquote>
 
 <p>which is cumbersome and inefficient with some compilers.</p>
@@ -241,7 +241,7 @@ the client/supplier relationship, gets around these problems.</p>
 <table border="0" width="100%">
     <tr>
         <td><address>
-            <font size="2"><b>Copyright © 1998</b></font><font
+            <font size="2"><b>Copyright © 1998-2005</b></font><font
             size="1"><b>, </b></font><font size="2"><strong>Eric
             Bezault</strong></font><strong> </strong><font
             size="2"><br>
@@ -251,7 +251,7 @@ the client/supplier relationship, gets around these problems.</p>
             <strong>http:</strong></font><a
             href="http://www.gobosoft.com"><font size="2">//www.gobosoft.com</font></a><font
             size="2"><br>
-            <strong>Last Updated:</strong> 10 August 1998</font><br>
+            <strong>Last Updated:</strong> 10 February 2005</font><br>
             <!--webbot bot="PurpleText"
             preview="
 $Date$ 
