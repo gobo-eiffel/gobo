@@ -704,11 +704,13 @@ feature {NONE} -- Resolve a relative-path reference
 				-- See rfc2396, section 5.2 step 6 for an implementation
 				-- I use a different one
 			
-				-- Absolute path as in base
-			has_absolute_path := a_base.has_absolute_path
+				-- Resolved path is absolute
+			has_absolute_path := True
+
+				-- Path items
 			create some_items.make_from_linear (a_base.path_items)
 			
-			if has_path and not (path_items.count = 1 and path_items.first.is_empty) then
+			if has_path and not (path_items.count = 1 and then path_items.first.is_empty) then
 
 				-- All but the last segment of the base URI's path component is
 				-- copied to the buffer.  In other words, any characters after the
@@ -762,6 +764,7 @@ feature {NONE} -- Resolve a relative-path reference
 			
 			path_items := some_items
 		ensure
+			absolute: has_absolute_path
 			path_resolved: is_path_resolved
 		end
 	
