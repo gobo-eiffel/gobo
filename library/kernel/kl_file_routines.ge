@@ -30,6 +30,181 @@ feature -- Initialization
 			file_closed: Result.is_closed
 		end
 
+	file__make_open_read (a_filename: STRING): like FILE_type is
+			-- Create a new file object with `a_filename' as
+			-- file name and open it in read-only mode.
+			-- `Result.is_open_read' is set to True
+			-- if operation was successful.
+		require
+			a_filename_not_void: a_filename /= Void
+			a_filename_not_empty: not a_filename.empty
+		local
+			rescued: BOOLEAN
+#ifdef ISE || HACT
+			openable_file: FILE
+#endif
+		do
+			if not rescued then
+#ifdef ISE || HACT
+				!PLAIN_TEXT_FILE! openable_file.make (a_filename)
+				Result := openable_file
+				openable_file.open_read
+#else
+				!! Result.make (a_filename)
+				Result.open_read
+#endif
+			elseif not Result.is_closed then
+				Result.close
+			end
+		ensure
+			file_not_void: Result /= Void
+		rescue
+			if not rescued then
+				rescued := True
+				retry
+			end
+		end
+
+	file__make_open_write (a_filename: STRING): like FILE_type is
+			-- Create a new file object with `a_filename' as
+			-- file name and open it in write-only mode.
+			-- `Result.is_open_write' is set to True
+			-- if operation was successful.
+		require
+			a_filename_not_void: a_filename /= Void
+			a_filename_not_empty: not a_filename.empty
+		local
+			rescued: BOOLEAN
+#ifdef ISE || HACT
+			openable_file: FILE
+#endif
+		do
+			if not rescued then
+#ifdef ISE || HACT
+				!PLAIN_TEXT_FILE! openable_file.make (a_filename)
+				Result := openable_file
+				openable_file.open_write
+#else
+				!! Result.make (a_filename)
+				Result.open_write
+#endif
+			elseif not Result.is_closed then
+				Result.close
+			end
+		ensure
+			file_not_void: Result /= Void
+		rescue
+			if not rescued then
+				rescued := True
+				retry
+			end
+		end
+
+	file__make_open_append (a_filename: STRING): like FILE_type is
+			-- Create a new file object with `a_filename' as
+			-- file name and open it in append mode.
+			-- `Result.is_open_append' is set to True
+			-- if operation was successful.
+		require
+			a_filename_not_void: a_filename /= Void
+			a_filename_not_empty: not a_filename.empty
+		local
+			rescued: BOOLEAN
+#ifdef ISE || HACT
+			openable_file: FILE
+#endif
+		do
+			if not rescued then
+#ifdef ISE || HACT
+				!PLAIN_TEXT_FILE! openable_file.make (a_filename)
+				Result := openable_file
+				openable_file.open_append
+#else
+				!! Result.make (a_filename)
+				Result.open_append
+#endif
+			elseif not Result.is_closed then
+				Result.close
+			end
+		ensure
+			file_not_void: Result /= Void
+		rescue
+			if not rescued then
+				rescued := True
+				retry
+			end
+		end
+
+	file__make_open_read_write (a_filename: STRING): like FILE_type is
+			-- Create a new file object with `a_filename' as
+			-- file name and open it in read-write mode.
+			-- `Result.is_open_read' and `Result.is_open_write'
+			-- are set to True if operation was successful.
+		require
+			a_filename_not_void: a_filename /= Void
+			a_filename_not_empty: not a_filename.empty
+		local
+			rescued: BOOLEAN
+#ifdef ISE || HACT
+			openable_file: FILE
+#endif
+		do
+			if not rescued then
+#ifdef ISE || HACT
+				!PLAIN_TEXT_FILE! openable_file.make (a_filename)
+				Result := openable_file
+				openable_file.open_read_write
+#else
+				!! Result.make (a_filename)
+				Result.open_read_write
+#endif
+			elseif not Result.is_closed then
+				Result.close
+			end
+		ensure
+			file_not_void: Result /= Void
+		rescue
+			if not rescued then
+				rescued := True
+				retry
+			end
+		end
+
+	file__make_open_read_append (a_filename: STRING): like FILE_type is
+			-- Create a new file object with `a_filename' as
+			-- file name and open it in read-append mode.
+			-- `Result.is_open_read' and `Result.is_open_append'
+			-- are set to True if operation was successful.
+		require
+			a_filename_not_void: a_filename /= Void
+			a_filename_not_empty: not a_filename.empty
+		local
+			rescued: BOOLEAN
+#ifdef ISE || HACT
+			openable_file: FILE
+#endif
+		do
+			if not rescued then
+#ifdef ISE || HACT
+				!PLAIN_TEXT_FILE! openable_file.make (a_filename)
+				Result := openable_file
+				openable_file.open_read_append
+#else
+				!! Result.make (a_filename)
+				Result.open_read_append
+#endif
+			elseif not Result.is_closed then
+				Result.close
+			end
+		ensure
+			file_not_void: Result /= Void
+		rescue
+			if not rescued then
+				rescued := True
+				retry
+			end
+		end
+
 feature -- Status report
 
 	file__end_of_file (a_file: like FILE_type): BOOLEAN is
@@ -111,6 +286,149 @@ feature -- Element change
 			end
 		end
 
+	file__open_append (a_file: like FILE_type) is
+			-- Open `a_file' in append mode.
+			-- `a_file.is_open_append' is set to True
+			-- if operation was successful.
+		require
+			a_file_not_void: a_file /= Void
+			a_file_is_closed: a_file.is_closed
+		local
+			rescued: BOOLEAN
+#ifdef ISE || HACT
+			openable_file: FILE
+#endif
+		do
+			if not rescued then
+#ifdef ISE || HACT
+				openable_file ?= a_file
+				if openable_file /= Void then
+					openable_file.open_append
+				end
+#else
+				a_file.open_append
+#endif
+			elseif not a_file.is_closed then
+				a_file.close
+			end
+		rescue
+			if not rescued then
+				rescued := True
+				retry
+			end
+		end
+
+	file__open_read_write (a_file: like FILE_type) is
+			-- Open `a_file' in read-write mode.
+			-- `a_file.is_open_read' and `a_file.is_open_write'
+			-- are set to True if operation was successful.
+		require
+			a_file_not_void: a_file /= Void
+			a_file_is_closed: a_file.is_closed
+		local
+			rescued: BOOLEAN
+#ifdef ISE || HACT
+			openable_file: FILE
+#endif
+		do
+			if not rescued then
+#ifdef ISE || HACT
+				openable_file ?= a_file
+				if openable_file /= Void then
+					openable_file.open_read_write
+				end
+#else
+				a_file.open_read_write
+#endif
+			elseif not a_file.is_closed then
+				a_file.close
+			end
+		rescue
+			if not rescued then
+				rescued := True
+				retry
+			end
+		end
+
+	file__open_read_append (a_file: like FILE_type) is
+			-- Open `a_file' in read-append mode.
+			-- `a_file.is_open_read' and `a_file.is_open_append'
+			-- are set to True if operation was successful.
+		require
+			a_file_not_void: a_file /= Void
+			a_file_is_closed: a_file.is_closed
+		local
+			rescued: BOOLEAN
+#ifdef ISE || HACT
+			openable_file: FILE
+#endif
+		do
+			if not rescued then
+#ifdef ISE || HACT
+				openable_file ?= a_file
+				if openable_file /= Void then
+					openable_file.open_read_append
+				end
+#else
+				a_file.open_read_append
+#endif
+			elseif not a_file.is_closed then
+				a_file.close
+			end
+		rescue
+			if not rescued then
+				rescued := True
+				retry
+			end
+		end
+
+	file__read_stream (a_file: like FILE_type;
+		a_buffer: STRING; pos, nb_char: INTEGER): INTEGER is
+			-- Fill `a_buffer', starting at position `pos' with
+			-- at most `nb_char' characters read from `a_file'.
+			-- Return the number of characters actually read.
+		require
+			a_file_not_void: a_file /= Void
+			a_file_open_read: a_file.is_open_read
+			a_buffer_not_void: a_buffer /= Void
+			valid_position: a_buffer.valid_index (pos)
+			nb_char_large_enough: nb_char >= 0
+			nb_char_small_enough: nb_char <= a_buffer.count - pos + 1
+		local
+			i, j: INTEGER
+#ifndef VE
+			a_string: STRING
+#endif
+		do
+#ifndef VE
+			a_file.read_stream (nb_char)
+			a_string := a_file.last_string
+			Result := a_string.count
+			j := pos
+			from i := 1 until i > Result loop
+				a_buffer.put (a_string.item (i), j)
+				j := j + 1
+				i := i + 1
+			end
+#else
+			Result := nb_char
+			j := pos
+			from i := 1 until i > Result loop
+				a_file.read_character
+				if not a_file.end_of_file then
+					a_buffer.put (a_file.last_character, j)
+					j := j + 1
+					i := i + 1
+				else
+					Result := i - 1
+				end
+			end		
+#endif
+		ensure
+			nb_char_read_large_enough: Result >= 0
+			nb_char_read_small_enough: Result <= nb_char
+		end
+
 feature -- Anchor types
 
 #ifdef ISE || HACT
@@ -118,5 +436,6 @@ feature -- Anchor types
 #else
 	FILE_type: FILE is do end
 #endif
+			-- Anchor type
 
 end -- class KL_FILE_ROUTINES
