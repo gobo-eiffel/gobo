@@ -32,37 +32,73 @@ feature {NONE} -- Initialization
 			a_value: STRING
 			a_xml_subelement: XM_ELEMENT
 			a_map_element: GEANT_MAP_ELEMENT
+			a_elements: DS_LINKED_LIST [XM_ELEMENT]
+			cs: DS_LINKED_LIST_CURSOR [XM_ELEMENT]
+				-- 'misuse' of GEANT_DEFINE_ELEMENT for 'include' and 'exclude' subelements:
+			a_element: GEANT_DEFINE_ELEMENT
 		do
 			precursor (a_project, a_xml_element)
 			!! fileset.make (project)
 
-			if has_uc_attribute (Directory_attribute_name) then
+			if has_attribute (Directory_attribute_name) then
 				a_value := uc_attribute_value (Directory_attribute_name).out
 				if a_value.count > 0 then
 					fileset.set_directory_name (a_value)
 				end
 			end
 
-			if has_uc_attribute (Include_attribute_name) then
+			if has_attribute (Include_attribute_name) then
 				a_value := uc_attribute_value (Include_attribute_name).out
 				if a_value.count > 0 then
 					fileset.set_include_wc_string (a_value)
 				end
 			end
 
-			if has_uc_attribute (Exclude_attribute_name) then
+			if has_attribute (Exclude_attribute_name) then
 				a_value := uc_attribute_value (Exclude_attribute_name).out
 				if a_value.count > 0 then
 					fileset.set_exclude_wc_string (a_value)
 				end
 			end
 
-			if has_uc_attribute (Force_attribute_name) then
-				fileset.set_force (uc_boolean_value (Force_attribute_name))
+			if has_attribute (Force_attribute_name) then
+				fileset.set_force (boolean_value (Force_attribute_name))
 			end
 
-			if has_uc_attribute (Concat_attribute_name) then
-				fileset.set_concat (uc_boolean_value (Concat_attribute_name))
+			if has_attribute (Concat_attribute_name) then
+				fileset.set_concat (boolean_value (Concat_attribute_name))
+			end
+
+				-- add 'include' elements to fileset:
+			a_elements := elements_by_name (Include_element_name)
+			from
+				cs := a_elements.new_cursor
+				cs.start
+			until
+				cs.off
+			loop
+				create a_element.make (project, cs.item)
+				if a_element.is_enabled and then a_element.has_name and then
+					a_element.name.count > 0 then
+					fileset.add_single_include (a_element.name)
+				end
+				cs.forth
+			end
+
+				-- remove 'exclude' elements from fileset:
+			a_elements := elements_by_name (Exclude_element_name)
+			from
+				cs := a_elements.new_cursor
+				cs.start
+			until
+				cs.off
+			loop
+				create a_element.make (project, cs.item)
+				if a_element.is_enabled and then a_element.has_name and then
+					a_element.name.count > 0 then
+					fileset.add_single_exclude (a_element.name)
+				end
+				cs.forth
 			end
 
 			a_xml_subelement := xml_element.element_by_name (Map_element_name)
@@ -123,6 +159,24 @@ feature {NONE} -- Constants
 		ensure
 			attribute_name_not_void: Result /= Void
 			atribute_name_not_empty: Result.count > 0
+		end
+
+	Include_element_name: STRING is
+			-- Name of xml subelement for include
+		once
+			Result := "include"
+		ensure
+			element_name_not_void: Result /= Void
+			element_name_not_empty: Result.count > 0
+		end
+
+	Exclude_element_name: STRING is
+			-- Name of xml subelement for exclude
+		once
+			Result := "exclude"
+		ensure
+			element_name_not_void: Result /= Void
+			element_name_not_empty: Result.count > 0
 		end
 
 	Map_element_name: STRING is

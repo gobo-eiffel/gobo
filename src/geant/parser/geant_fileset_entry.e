@@ -15,12 +15,16 @@ class GEANT_FILESET_ENTRY
 inherit
 
 	HASHABLE
-
-	KL_SHARED_FILE_SYSTEM
-		export
-			{NONE} all
+		redefine
+			is_equal
 		end
 
+	KL_SHARED_FILE_SYSTEM
+		export{NONE} all end
+
+	KL_IMPORTED_STRING_ROUTINES
+		export{NONE} all end
+	
 creation
 
 	make
@@ -71,6 +75,15 @@ feature -- Access
 			-- Hash code value
 		do
 			Result := filename.hash_code
+		end
+
+feature -- Comparison
+
+	is_equal (other: like Current): BOOLEAN is
+			-- Is `other' attached to an object considered equal
+			-- to current object?
+		do
+			Result := STRING_.same_unicode_string (filename, other.filename)
 		end
 
 feature -- Setting

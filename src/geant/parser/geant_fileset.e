@@ -17,9 +17,7 @@ inherit
 	ANY
 
 	KL_SHARED_FILE_SYSTEM
-		export
-			{NONE} all
-		end
+		export{NONE} all end
 
 creation
 
@@ -32,6 +30,9 @@ feature {NONE} -- Initialization
 		do
 			project := a_project
 			!DS_HASH_SET [GEANT_FILESET_ENTRY]! filenames.make_equal (20)
+			!DS_HASH_SET [STRING]! single_includes.make_equal (20)
+			!DS_HASH_SET [STRING]! single_excludes.make_equal (20)
+
 			set_filename_variable_name (clone ("fs.filename"))
 			set_mapped_filename_variable_name (clone ("fs.mapped_filename"))
 			force := True
@@ -320,6 +321,65 @@ feature -- Setting
 			mapped_filename_variable_name_set: mapped_filename_variable_name.is_equal (a_mapped_filename_variable_name)
 		end
 
+feature -- Element change
+
+	add_fileset_entry_if_necessary (a_filename: STRING) is
+			-- Add new GEANT_FILESET_ENTRY created from `a_filename'
+			-- to `filenames'.
+			-- If force is set to 'false' do this only if the file named
+			--   `map.mapped_filename (a_filename)' (if map /= Void)
+			--   `a_filename' (if map = Void)
+			-- is older than the file name `a_filename'.
+		require
+			a_filename_not_void: a_filename /= Void
+			a_filename_not_empty: a_filename.count > 0
+		local
+			a_entry: GEANT_FILESET_ENTRY
+			an_filename: STRING
+			an_mapped_filename: STRING
+		do
+			project.trace_debug ("  [*fileset] trying to add: '" + a_filename + "'%N")
+			an_filename := a_filename
+			if map /= Void then
+				an_mapped_filename := map.mapped_filename (an_filename)
+			else
+				an_mapped_filename := clone (an_filename)
+			end
+			if concat then
+				an_mapped_filename := unix_file_system.pathname (directory_name, an_mapped_filename)
+			end
+			if force or else map = Void or else is_file_outofdate (an_filename, an_mapped_filename) then
+				!! a_entry.make (an_filename, an_mapped_filename)
+				filenames.force_last (a_entry)
+			end
+		end
+
+	remove_fileset_entry (a_filename: STRING) is
+			-- Remove entry with name equal to `a_filename' if existing
+		local
+			a_entry: GEANT_FILESET_ENTRY
+		do
+			project.trace_debug ("  [*fileset] removing: '" + a_filename + "'%N")
+			create a_entry.make (a_filename, a_filename)
+			filenames.remove (a_entry)
+		end
+
+	add_single_include (a_filename: STRING) is
+			-- Add `a_filename' to list of single filenames to include into fileset
+		require
+			a_filename_not_void: a_filename /= Void
+		do
+			single_includes.force_last (a_filename)
+		end
+
+	add_single_exclude (a_filename: STRING) is
+			-- Add `a_filename' to list of single filenames to exclude from fileset
+		require
+			a_filename_not_void: a_filename /= Void
+		do
+			single_excludes.force_last (a_filename)
+		end
+
 feature -- Cursor movement
 
 	start is
@@ -349,12 +409,50 @@ feature -- Execution
 			-- Populate `filenames'.
 		local
 			al_directory_name: STRING
+			cs: DS_SET_CURSOR [STRING]
 		do
 			project.trace_debug ("  [*fileset] directory_name: " + directory_name + "%N")
 			project.trace_debug ("  [*fileset] include_wc_string: " + include_wc_string + "%N")
 
 			al_directory_name := unix_file_system.canonical_pathname (directory_name)
+
+				-- add entries from filesystem scan:
 			scan_internal (al_directory_name)
+
+				-- add single includes:
+			from
+				cs := single_includes.new_cursor
+				cs.start
+			until
+				cs.off
+			loop
+				add_fileset_entry_if_necessary (cs.item)
+				cs.forth
+			end
+
+				-- remove single excludes:
+			from
+				cs := single_excludes.new_cursor
+				cs.start
+			until
+				cs.off
+			loop
+				remove_fileset_entry (cs.item)
+				cs.forth
+			end
+
+			if project.options.debug_mode then
+				from
+					start
+				until
+					after
+				loop
+					project.trace_debug ("  [*fileset] entry: [" + item_filename + ", " + item_mapped_filename + "]%N")
+
+					forth
+				end
+			end
+
 		end
 
 	include_wildcard: LX_WILDCARD
@@ -373,6 +471,12 @@ feature {NONE} -- Implementation/Access
 			-- expressions in `exclude_wc_string' with their corresponding
 			-- mapped filename if `has_map';
 			-- available after execute has been performed.
+
+	single_includes: DS_SET [STRING]
+			-- Filnames to be included in `filenames'
+
+	single_excludes: DS_SET [STRING]
+			-- Filnames to be excluded from `filenames'
 
 feature {NONE} -- Implementation/Processing
 
@@ -406,51 +510,19 @@ feature {NONE} -- Implementation/Processing
 --!!							project.trace_debug ("filename: " + s + "%N")
 							smatch := s.substring (directory_name.count + 2, s.count)	-- 2 because of '/'
 --!!							project.trace_debug ("  trying to match: " + smatch + "%N")
-							if include_wildcard = Void then
-								if exclude_wildcard = Void or else not exclude_wildcard.recognizes (smatch) then
-									add_fileset_entry_if_necessary (smatch)
-								end
-							elseif include_wildcard.recognizes (smatch) then
-								if exclude_wildcard = Void or else not exclude_wildcard.recognizes (smatch) then
-									add_fileset_entry_if_necessary (smatch)
-								end
+
+							if include_wildcard /= Void and then include_wildcard.recognizes (smatch) then
+								add_fileset_entry_if_necessary (smatch)
 							end
+							if exclude_wildcard /= Void and then exclude_wildcard.recognizes (smatch) then
+								remove_fileset_entry (smatch)
+							end
+
 						end
 					end
 					a_dir.read_entry
 				end
 				a_dir.close
-			end
-		end
-
-	add_fileset_entry_if_necessary (a_filename: STRING) is
-			-- Add new GEANT_FILESET_ENTRY created from `a_filename'
-			-- to `filenames'.
-			-- If force is set to 'false' do this only if the file named
-			--   `map.mapped_filename (a_filename)' (if map /= Void)
-			--   `a_filename' (if map = Void)
-			-- is older than the file name `a_filename'.
-		require
-			a_filename_not_void: a_filename /= Void
-			a_filename_not_empty: a_filename.count > 0
-		local
-			a_entry: GEANT_FILESET_ENTRY
-			an_filename: STRING
-			an_mapped_filename: STRING
-		do
-			an_filename := a_filename
-			if map /= Void then
-				an_mapped_filename := map.mapped_filename (an_filename)
-			else
-				an_mapped_filename := clone (an_filename)
-			end
-			if concat then
-				an_mapped_filename := unix_file_system.pathname (directory_name, an_mapped_filename)
-			end
-			if force or else map = Void or else is_file_outofdate (an_filename, an_mapped_filename) then
-				project.trace_debug ("  [*fileset] adding entry: [" + an_filename + ", " + an_mapped_filename + "]%N")
-				!! a_entry.make (an_filename, an_mapped_filename)
-				filenames.force_last (a_entry)
 			end
 		end
 
