@@ -78,7 +78,7 @@ CCL_CHAR			[^\\\n\]]|{ESC}
 				}
 	^"%s"			set_start_condition (SCNAME)
 	^"%x"			set_start_condition (XSCNAME)
-	^"%option"		set_start_condition (OPTION);
+	^"%option"		set_start_condition (OPTION)
 	^{NAME}		{
 						-- Keep track of the definition name.
 					last_string := text
@@ -192,7 +192,7 @@ CCL_CHAR			[^\\\n\]]|{ESC}
 
 <DEFINITION>{
 	{WS}|{C}		-- Separates name and definition.
-	[^ \t\n\r].*	{
+	[^ \t\n\r][^\n\r]*	{
 					check last_string_not_void: last_string /= Void end
 					process_name_definition (last_string, text)
 					set_start_condition (INITIAL)
