@@ -4,11 +4,11 @@ indexing
 
 		"Variables for GEANT"
 
-	author:		"Sven Ehrke (sven.ehrke@sven-ehrke.de)"
-	copyright:	"Sven Ehrke and others"
-	license:		"Eiffel Forum Freeware License v1 (see forum.txt)"
-	date:			"$Date$"
-	revision:	"$Revision$"
+	author:    "Sven Ehrke (sven.ehrke@sven-ehrke.de)"
+	copyright: "Sven Ehrke and others"
+	license:   "Eiffel Forum Freeware License v1 (see forum.txt)"
+	date:      "$Date$"
+	revision:  "$Revision$"
 
 
 class GEANT_VARIABLES
@@ -60,12 +60,18 @@ feature {NONE} -- Initialization
 				if not has_variable ("is_windows") then
 					set_variable_value ("is_windows", "true")
 				end
+				if not has_variable ("path_separator") then
+					set_variable_value ("path_separator", "\")
+				end
 			elseif operating_system.is_unix then
 				if not has_variable ("GOBO_OS") then
 					set_variable_value ("GOBO_OS", "unix")
 				end
 				if not has_variable ("is_unix") then
 					set_variable_value ("is_unix", "true")
+				end
+				if not has_variable ("path_separator") then
+					set_variable_value ("path_separator", "/")
 				end
 			end
 
