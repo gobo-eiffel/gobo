@@ -68,6 +68,18 @@ feature -- Result
 			Result := last_error /= Void
 		end
 
+	has_media_type: BOOLEAN is
+			-- Is the media type available.
+		do
+			Result := False
+		end
+
+	last_media_type: UT_MEDIA_TYPE is
+			-- Media type, if available.
+		do
+			-- pre-condition is never met
+		end
+
 feature {NONE} -- Error messages
 	
 	System_id_not_known_error: STRING is "SYSTEM id not known to bootstrap resolver "

@@ -41,7 +41,11 @@ feature {NONE} -- Initialization
 			a_resolver_factory: XM_RESOLVER_FACTORY
 		do
 			create a_resolver_factory
-			uri_scheme_resolver := a_resolver_factory.new_resolver_current_directory
+			uri_scheme_resolver ?= a_resolver_factory.new_resolver_current_directory
+			check
+				uri_scheme_resolver_not_void: uri_scheme_resolver /= Void
+				-- as the factory does indeed create an XM_SIMPLE_URI_EXTERNAL_RESOLVER
+			end
 			create well_known_system_ids.make_with_equality_testers (1, string_equality_tester, string_equality_tester)
 			well_known_system_ids.put (Xml_catalog_dtd, Xml_catalog_system_id)
 			create well_known_public_ids.make_with_equality_testers (1, string_equality_tester, string_equality_tester)
@@ -53,7 +57,7 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	uri_scheme_resolver: XM_URI_EXTERNAL_RESOLVER
+	uri_scheme_resolver: XM_SIMPLE_URI_EXTERNAL_RESOLVER
 			-- Resolver used for opening streams
 
 	Xml_catalog_xsd_id: STRING is "http://www.oasis-open.org/committees/entity/release/1.0/catalog.xsd"
@@ -580,11 +584,19 @@ feature -- Action(s)
 			a_system_id: STRING
 		do
 			if well_known_uri_references.has (a_uri_reference) then
+
+				-- TODO: the following two lines will need to change if we implement `Current' as a general-purpose resolver-cache
+
+				has_media_type := False
+				last_media_type := Void
+
 				a_system_id := well_known_uri_references.item (a_uri_reference)
 				create {KL_STRING_INPUT_STREAM} last_uri_reference_stream.make (a_system_id)
 			else
 				a_system_id := a_uri_reference
 				uri_scheme_resolver.resolve (a_uri_reference)
+				has_media_type := uri_scheme_resolver.has_media_type
+				last_media_type := uri_scheme_resolver.last_media_type
 				last_uri_reference_stream := uri_scheme_resolver.last_stream
 			end
 			create last_system_id.make (a_system_id)
@@ -629,6 +641,12 @@ feature -- Result
 		do
 			Result := uri_scheme_resolver.last_error
 		end
+	
+	has_media_type: BOOLEAN
+			-- Is the media type available.
+
+	last_media_type: UT_MEDIA_TYPE
+			-- Media type, if available.
 
 end
 

@@ -15,10 +15,6 @@ class
 
 	XM_DATA_URI_RESOLVER
 
-		-- TODO: This class decodes the media-type, but at present it can do nothing
-		--       with it. Likewise, it makes no attempt to do any transcoding
-		--       (except for base64 decoding).
-
 inherit
 
 	XM_URI_RESOLVER
@@ -73,13 +69,19 @@ feature -- Result
 	last_stream: KI_CHARACTER_INPUT_STREAM
 			-- Matching stream
 
+	has_media_type: BOOLEAN is
+			-- Is the media type available.
+		do
+			Result := not has_error 
+		end
+
+	last_media_type: UT_MEDIA_TYPE
+			-- Media type, if available.
+
 feature {NONE} -- Implementation
 
 	data: STRING
 			-- Actual data
-
-	media_type: UT_MEDIA_TYPE
-			--	Media-type
 
 	is_base_64: BOOLEAN
 			-- Is `data' base-64 encoded?
@@ -106,7 +108,7 @@ feature {NONE} -- Implementation
 			comma_index: INTEGER
 		do
 			data := Void
-			media_type := Void
+			last_media_type := Void
 			is_base_64 := False
 			opaque_part := a_uri.scheme_specific_part
 			comma_index := opaque_part.index_of (',', 1)
@@ -117,13 +119,13 @@ feature {NONE} -- Implementation
 				if comma_index > 1 then
 					parse_parameters (opaque_part.substring (1, comma_index - 1))
 				else
-					create media_type.make ("text", "plain")
-					media_type.add_parameter ("charset", "US-ASCII")
+					create last_media_type.make ("text", "plain")
+					last_media_type.add_parameter ("charset", "US-ASCII")
 				end
 			end
 		ensure
 			data_set_or_error: not has_error implies data /= Void
-			media_type_set_or_error: not has_error implies media_type /= Void
+			media_type_set_or_error: not has_error implies last_media_type /= Void
 		end
 
 	parse_parameters (a_parameter_string: STRING) is
@@ -146,7 +148,7 @@ feature {NONE} -- Implementation
 			if some_components.count /= 2 then
 				set_last_error ("Content-type must contain exactly one /")
 			else
-				create media_type.make (some_components.item (1), some_components.item (2))
+				create last_media_type.make (some_components.item (1), some_components.item (2))
 				if some_parameters.count > 1 then
 					some_parameters.remove_first
 					if STRING_.same_case_insensitive (some_parameters.item (some_parameters.count), "base64") then
@@ -166,7 +168,7 @@ feature {NONE} -- Implementation
 							set_last_error (a_cursor.item + " is not valid syntax for a Content-type parameter.")
 							a_cursor.go_after
 						else
-							media_type.add_parameter (a_parameter_pair.item (1), a_parameter_pair.item (2))
+							last_media_type.add_parameter (a_parameter_pair.item (1), a_parameter_pair.item (2))
 							a_cursor.forth
 						end
 					end

@@ -68,6 +68,18 @@ feature -- Result
 			Result := last_error /= Void
 		end
 
+	has_media_type: BOOLEAN is
+			-- Is the media type available.
+		do
+			Result := False
+		end
+
+	last_media_type: UT_MEDIA_TYPE is
+			-- Media type, if available.
+		do
+			-- pre-condition is never met
+		end
+
 feature {NONE} -- Error messages
 
 	Cannot_open_file_error: STRING is "Cannot open file "

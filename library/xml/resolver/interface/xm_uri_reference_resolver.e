@@ -55,5 +55,19 @@ feature -- Result
 			not_void: Result /= Void
 		end
 
+	has_media_type: BOOLEAN is
+			-- Is the media type available.
+		deferred
+		end
+
+	last_media_type: UT_MEDIA_TYPE is
+			-- Media type, if available.
+		require
+			has_media_type: has_media_type
+		deferred
+		ensure
+			result_not_void: Result /= Void
+		end
+
 end
 	

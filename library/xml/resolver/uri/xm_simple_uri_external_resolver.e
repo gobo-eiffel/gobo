@@ -151,7 +151,7 @@ feature -- Operation(s)
 				io.put_new_line
 			end
 		end
-		
+
 feature -- URI
 
 	resolve_absolute_uri (an_uri: UT_URI) is
@@ -222,7 +222,19 @@ feature -- Result
 		do
 			Result := last_error
 		end
-	
+
+	has_media_type: BOOLEAN is
+			-- Is the media type available.
+		do
+			Result := last_resolver.has_media_type
+		end
+
+	last_media_type: UT_MEDIA_TYPE is
+			-- Media type, if available.
+		do
+			Result := last_resolver.last_media_type
+		end
+
 feature {NONE} -- Errors
 
 	Unknown_scheme_error: STRING is "No handler for URL scheme"
