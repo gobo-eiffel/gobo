@@ -173,6 +173,8 @@
 
 		<geant file="build.eant" target="${target}" dir="oasis"/>
 		<geant file="build.eant" target="clean" dir="oasis" if="${do_clean}"/>
+		<geant file="build.eant" target="${target}" dir="expat"/>
+		<geant file="build.eant" target="clean" dir="expat" if="${do_clean}"/>
 	</target>
 
 </project>
