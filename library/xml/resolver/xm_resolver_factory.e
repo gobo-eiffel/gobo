@@ -53,9 +53,11 @@ feature -- Access
 			-- Resolver for "file:" scheme with default set
 			-- to the current directory
 		local
+			a_string: STRING
 			a_uri: UT_URI
 		do
-			create a_uri.make (STRING_.concat ("file:", file_system.current_working_directory))
+			a_string := STRING_.concat ("file://", file_system.current_working_directory)
+			create a_uri.make (STRING_.concat (a_string, "/"))
 			Result := new_file_resolver_with_uri (a_uri)
 		ensure
 			result_not_void: Result /= Void
