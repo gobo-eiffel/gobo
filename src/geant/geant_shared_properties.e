@@ -18,16 +18,24 @@ inherit
 	KL_SHARED_EXECUTION_ENVIRONMENT
 	KL_SHARED_EXCEPTIONS
 
+	KL_SHARED_FILE_SYSTEM
+		export
+			{NONE} all
+		end
+
 feature -- Access
 
 	Commandline_variables: DS_HASH_TABLE [STRING, STRING] is
-		-- Variables specified on the commandline using -D
-		-- example: -Dname=value
+			-- Variables specified on the commandline using -D
+			-- example: -Dname=value
 		once
 			!! Result.make (10)
 		ensure
 			Commandline_variables_not_void: Result /= Void
 		end
+
+	startup_working_directory: STRING
+			-- Name of directory from which geant has been invoked
 
 feature -- Processing
 
@@ -39,6 +47,7 @@ feature -- Processing
 				print (a_message)
 			end
 			print ("%NBUILD FAILED!%N")
+			file_system.set_current_working_directory (startup_working_directory)
 			Exceptions.die (1)
 		end
 

@@ -33,6 +33,11 @@ inherit
 			{NONE} all
 		end
 
+	KL_SHARED_FILE_SYSTEM
+		export
+			{NONE} all
+		end
+
 creation
 
 	make
@@ -46,6 +51,7 @@ feature {NONE} -- Initialization
 			ucs: UC_STRING
 		do
 			Arguments.set_program_name ("geant")
+			startup_working_directory := file_system.current_working_directory
 			!! error_handler.make_standard
 			read_command_line
 
@@ -79,7 +85,7 @@ feature -- Access
 			-- Name of the target the build process starts with
 
 	verbose: BOOLEAN
-		-- Print additional information during build process?
+			-- Print additional information during build process?
 
 	read_command_line is
 			-- Read command line arguments.
