@@ -12,6 +12,8 @@ content="text/html; charset=iso-8859-1">
 
 <h1>Context Dependencies</h1>
 
+<hr size="1">
+
 <p>The <em>geyacc</em> paradigm is to parse tokens first, then
 group them into larger syntactic units. In many languages, the
 meaning of a token is affected by its context. Although this
@@ -116,7 +118,7 @@ program. The difference is here the information is global, and is
 used for other purposes in the program. A true lexical tie-in has
 a special-purpose flag controlled by the syntactic context.</p>
 
-<h2>Lexical Tie-ins</h2>
+<h2><a name="tie_in">Lexical Tie-ins</a></h2>
 
 <p>One way to handle context-dependency is the <em>lexical tie-in</em>:
 a flag which is set by <em>geyacc</em> actions, whose purpose is
@@ -247,12 +249,22 @@ this kind. Each rule must be such that you can be sure that it
 always will, or always won't, have to clear the flag.</p>
 
 <hr size="1">
+<div align="left">
 
-<center><font size="2"><b>- Copyright © 1997</b></font><font
-size="1"><b>, </b></font><font size="2"><strong>Eric Bezault</strong></font><strong>
-</strong><font size="2"><strong>-</strong> <br>
-Send comments to </font><a href="mailto:ericb@gobo.demon.co.uk"><font
-size="2">ericb@gobo.demon.co.uk</font></a><font size="2"> <br>
-<i>$Date$ </i></font></center>
+<address>
+    <font size="2"><b>Copyright © 1997</b></font><font size="1"><b>,
+    </b></font><font size="2"><strong>Eric Bezault</strong></font><strong>
+    </strong><font size="2"><br>
+    </font><a href="mailto:ericb@gobo.demon.co.uk"><font size="2">ericb@gobo.demon.co.uk</font></a><font
+    size="2"> <br>
+    </font><a href="http://www.gobo.demon.co.uk"><font size="2">http://www.gobo.demon.co.uk</font></a><font
+    size="2"><br>
+    <strong>Last Updated:</strong> 7 September 1997</font><br>
+    <!--webbot bot="PurpleText"
+    preview="
+$Date$ 
+$Revision$" --> 
+</address>
+</div>
 </body>
 </html>
