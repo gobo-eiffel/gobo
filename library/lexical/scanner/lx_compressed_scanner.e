@@ -19,7 +19,7 @@ inherit
 			yy_ec as yy_ec_template,
 			yy_accept as yy_accept_template
 		undefine
-			reset
+			reset, yy_set_content
 		redefine
 			yy_initialize
 		select
@@ -32,8 +32,6 @@ inherit
 			make_with_file as make_scanner_with_file_skeleton,
 			make_with_buffer as make_scanner_with_buffer_skeleton,
 			yy_initialize as yy_initialize_skeleton
-		redefine
-			yy_build_tables
 		end
 
 	LX_COMPRESSED_TABLES

@@ -27,8 +27,6 @@ inherit
 			make as make_scanner_skeleton,
 			make_with_file as make_scanner_with_file_skeleton,
 			make_with_buffer as make_scanner_with_buffer_skeleton
-		redefine
-			yy_build_tables
 		end
 
 	LX_FULL_TABLES
