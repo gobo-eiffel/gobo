@@ -41,16 +41,12 @@ feature -- Test
 				assert_integers_equal ("same_items2", 0, l_ai2.count)
 				assert_integers_equal ("lower_set2", 6, l_ai2.lower)
 				assert_integers_equal ("upper_set2", 5, l_ai2.upper)
-					-- Precondition violation when asking for the subarray
-					-- of an empty array with SE 2.1rc1 (Bug #470).
-				if not eiffel_compiler.is_se then
-						-- Subarray of an empty array.
-					create l_ai1.make (4, 3)
-					l_ai2 := l_ai1.subarray (4, 3)
-					assert_integers_equal ("same_items3", 0, l_ai2.count)
-					assert_integers_equal ("lower_set3", 4, l_ai2.lower)
-					assert_integers_equal ("upper_set3", 3, l_ai2.upper)
-				end
+					-- Subarray of an empty array.
+				create l_ai1.make (4, 3)
+				l_ai2 := l_ai1.subarray (4, 3)
+				assert_integers_equal ("same_items3", 0, l_ai2.count)
+				assert_integers_equal ("lower_set3", 4, l_ai2.lower)
+				assert_integers_equal ("upper_set3", 3, l_ai2.upper)
 			end
 		end
 
