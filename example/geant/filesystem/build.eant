@@ -5,6 +5,7 @@
 	<target name="mkdir1">
 		<description>creates a directory</description>
 		<mkdir directory="testdirectory" />
+		<mkdir directory="testdirectory/subdirectory" />
 	</target>
 
 	<target name="deldir1">
