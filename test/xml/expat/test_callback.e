@@ -1,17 +1,16 @@
 indexing
 
 	description:
-		"Test Expat callbacks through well-known XML file."
 
-	library: "Gobo Eiffel XML Library test"
+		"Test Expat callbacks through well-known XML file"
+
+	library: "Gobo Eiffel XML Library"
 	copyright: "Copyright (c) 2002, Berend de Boer and others"
 	license: "Eiffel Forum License v1 (see forum.txt)"
 	date: "$Date$"
 	revision: "$Revision$"
 
-deferred class
-
-	TEST_CALLBACK
+deferred class TEST_CALLBACK
 
 inherit
 
@@ -45,12 +44,15 @@ inherit
 
 	KL_IMPORTED_STRING_ROUTINES
 
-feature -- Tests
+feature -- Execution
 
 	set_up is
+			-- Setup for a test.
 		do
 			make_expat
 		end
+
+feature -- Tests
 
 	test_callback is
 		do
@@ -97,7 +99,6 @@ feature -- Tests
 			assert ("on_content called.",  on_content_called)
 			assert ("on_content did match input.",  on_content_matches)
 		end
-
 
 feature -- State
 
@@ -197,7 +198,6 @@ feature -- State
 			create Result.make_from_string (" yes, this is XML ")
 		end
 
-
 feature -- Handlers
 
 	on_element_declaration (a_name: STRING; a_model: XM_DTD_ELEMENT_CONTENT) is
@@ -205,7 +205,7 @@ feature -- Handlers
 			on_element_declaration_called := True
 			if on_element_declaration_matches then
 				-- declaration for other
-				assert ("expected other", STRING_.same_unicode_string (a_name, "other"))
+				assert ("expected other", STRING_.same_string (a_name, "other"))
 				assert ("expected sequence", a_model.is_sequence)
 				assert ("expected 4 children", a_model.items.count = 4)
 				assert ("repeat <a> just once", a_model.items.item (1).is_one)
@@ -214,7 +214,7 @@ feature -- Handlers
 				assert ("repeat <d> one or more", a_model.items.item (4).is_one_or_more)
 			else
 				on_element_declaration_matches :=
-					STRING_.same_unicode_string (a_name, Root) and
+					STRING_.same_string (a_name, Root) and
 					a_model.is_content_empty
 			end
 		end
@@ -223,7 +223,7 @@ feature -- Handlers
 		do
 			on_attribute_declaration_called := True
 			on_attribute_declaration_matches :=
-				STRING_.same_unicode_string (an_element_name, Root)
+				STRING_.same_string (an_element_name, Root)
 		end
 
 	on_xml_declaration (xml_version, encoding: STRING; is_standalone: BOOLEAN) is
@@ -232,8 +232,8 @@ feature -- Handlers
 			register_all_callbacks
 			on_xml_declaration_called := True
 			on_xml_declaration_matches :=
-				STRING_.same_unicode_string (xml_version, Version10) and
-				STRING_.same_unicode_string (encoding, ISO_8859_1) and
+				STRING_.same_string (xml_version, Version10) and
+				STRING_.same_string (encoding, ISO_8859_1) and
 				not is_standalone
 		end
 
@@ -246,48 +246,48 @@ feature -- Handlers
 		do
 			on_entity_declaration_called := True
 			on_entity_declaration_matches :=
-				STRING_.same_unicode_string (entity_name, EntityName) and
-				STRING_.same_unicode_string (notation_name, Entity_notation)
+				STRING_.same_string (entity_name, EntityName) and
+				STRING_.same_string (notation_name, Entity_notation)
 		end
 
 	on_start_tag (a_namespace, a_prefix, a_local_part: STRING) is
 		do
 			on_start_tag_called := True
-			on_start_tag_matches := STRING_.same_unicode_string (a_local_part, Root)
+			on_start_tag_matches := STRING_.same_string (a_local_part, Root)
 		end
 
 	on_end_tag (a_namespace, a_prefix, a_local_part: STRING) is
 			-- called whenever the parser findes an end element
 		do
 			on_end_tag_called := True
-			on_end_tag_matches := STRING_.same_unicode_string (a_local_part, Root)
+			on_end_tag_matches := STRING_.same_string (a_local_part, Root)
 		end
 
 	on_content (chr_data: STRING) is
 		do
 			on_content_called := True
-			on_content_matches := STRING_.same_unicode_string (chr_data, HelloWorld)
+			on_content_matches := STRING_.same_string (chr_data, HelloWorld)
 		end
 
 	on_processing_instruction (target, data: STRING) is
 		do
 			on_processing_instruction_called := True
 			on_processing_instruction_matches :=
-				STRING_.same_unicode_string (target, MyInstruction) and
-				STRING_.same_unicode_string (data, MyData)
+				STRING_.same_string (target, MyInstruction) and
+				STRING_.same_string (data, MyData)
 		end
 
 	on_comment (com: STRING) is
 		do
 			on_comment_called := True
-			on_comment_matches := STRING_.same_unicode_string (com, Comment)
+			on_comment_matches := STRING_.same_string (com, Comment)
 		end
 
 	on_doctype (name: STRING; an_id: XM_DTD_EXTERNAL_ID; has_internal_subset: BOOLEAN) is
 		do
 			on_doctype_called := True
 			on_doctype_matches :=
-				STRING_.same_unicode_string (name, Root) and
+				STRING_.same_string (name, Root) and
 				an_id.system_id = Void and an_id.public_id = Void and
 				has_internal_subset
 		end
@@ -301,8 +301,8 @@ feature -- Handlers
 		do
 			on_notation_declaration_called := True
 			on_notation_declaration_matches :=
-				STRING_.same_unicode_string (notation_name, Entity_notation) and
-				STRING_.same_unicode_string (an_id.system_id, Gimp)
+				STRING_.same_string (notation_name, Entity_notation) and
+				STRING_.same_string (an_id.system_id, Gimp)
 		end
 
 	on_not_standalone: BOOLEAN is
@@ -311,6 +311,5 @@ feature -- Handlers
 			on_not_standalone_called := True
 			Result := True
 		end
-
 
 end

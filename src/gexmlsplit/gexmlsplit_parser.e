@@ -53,7 +53,7 @@ feature -- XML Callback handling
 			current_element_name := clone (a_local_part)
 			current_href_value := Void
 
-			if not STRING_.same_unicode_string (a_local_part, uc_document) then
+			if not STRING_.same_string (a_local_part, uc_document) then
 				Precursor (a_namespace, a_prefix, a_local_part)
 			end
 		end
@@ -64,8 +64,8 @@ feature -- XML Callback handling
 			-- through to the dispatcher, as they should not appear in
 			-- any of the output documents.
 		do
-			if STRING_.same_unicode_string (current_element_name, uc_document) then
-				if STRING_.same_unicode_string (a_local_part, uc_href) then
+			if STRING_.same_string (current_element_name, uc_document) then
+				if STRING_.same_string (a_local_part, uc_href) then
 					current_href_value := clone (a_value)
 				end
 			else
@@ -90,7 +90,7 @@ feature -- XML Callback handling
 			-- them through to the dispatcher as they should not
 			-- appear in any of the output documents.
 		do
-			if STRING_.same_unicode_string (a_local_part, uc_document) then
+			if STRING_.same_string (a_local_part, uc_document) then
 				gexmlsplit_dispatcher.remove
 			else
 				Precursor (a_namespace, a_prefix, a_local_part)
