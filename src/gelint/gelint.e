@@ -33,38 +33,69 @@ feature -- Processing
 			a_file: KL_TEXT_INPUT_FILE
 			a_lace_parser: ET_LACE_PARSER
 			a_lace_error_handler: ET_LACE_ERROR_HANDLER
-			a_xace_parser: ET_XACE_UNIVERSE_PARSER
-			a_xace_error_handler: ET_XACE_ERROR_HANDLER
-			a_xace_variables: ET_XACE_VARIABLES
+			a_lace_ast_factory: ET_LACE_AST_FACTORY
+			an_xace_parser: ET_XACE_UNIVERSE_PARSER
+			an_xace_error_handler: ET_XACE_ERROR_HANDLER
+			an_xace_ast_factory: ET_XACE_AST_FACTORY
+			an_eiffel_ast_factory: ET_DECORATED_AST_FACTORY
+			an_xace_variables: ET_XACE_VARIABLES
 			gobo_eiffel: STRING
 			a_universe: ET_UNIVERSE
+			all_breaks: BOOLEAN
 			nb: INTEGER
 		do
-			if Arguments.argument_count /= 1 then
+			inspect Arguments.argument_count
+			when 1 then
+				a_filename := Arguments.argument (1)
+			when 2 then
+				if equal (Arguments.argument (1), "--all_breaks") then
+					all_breaks := True
+					a_filename := Arguments.argument (2)
+				else
+					std.error.put_line ("usage: gelint filename")
+					Exceptions.die (1)
+				end
+			else
 				std.error.put_line ("usage: gelint filename")
 				Exceptions.die (1)
-			else
-				a_filename := Arguments.argument (1)
+			end
+			if a_filename /= Void then
 				!! a_file.make (a_filename)
 				a_file.open_read
 				if a_file.is_open_read then
 					nb := a_filename.count
 					if nb > 5 and then a_filename.substring (nb - 4, nb).is_equal (".xace") then
-						!! a_xace_error_handler.make_standard
-						!! a_xace_variables.make
+						!! an_xace_error_handler.make_standard
+						!! an_xace_variables.make
 						gobo_eiffel := Execution_environment.variable_value ("GOBO_EIFFEL")
 						if gobo_eiffel /= Void then
-							a_xace_variables.define_value ("GOBO_EIFFEL", gobo_eiffel)
+							an_xace_variables.define_value ("GOBO_EIFFEL", gobo_eiffel)
 						end
-						!! a_xace_parser.make_with_variables (a_xace_variables, a_xace_error_handler)
-						a_xace_parser.parse_file (a_file)
+						if all_breaks then
+							!! an_xace_ast_factory.make
+							!! an_eiffel_ast_factory.make
+							an_eiffel_ast_factory.set_keep_all_breaks (True)
+							an_xace_ast_factory.set_ast_factory (an_eiffel_ast_factory)
+							!! an_xace_parser.make_with_variables_and_factory (an_xace_variables, an_xace_ast_factory, an_xace_error_handler)
+						else
+							!! an_xace_parser.make_with_variables (an_xace_variables, an_xace_error_handler)
+						end
+						an_xace_parser.parse_file (a_file)
 						a_file.close
-						if not a_xace_error_handler.has_error then
-							a_universe := a_xace_parser.last_universe
+						if not an_xace_error_handler.has_error then
+							a_universe := an_xace_parser.last_universe
 						end
 					else
 						!! a_lace_error_handler.make_standard
-						!! a_lace_parser.make (a_lace_error_handler)
+						if all_breaks then
+							!! a_lace_ast_factory.make
+							!! an_eiffel_ast_factory.make
+							an_eiffel_ast_factory.set_keep_all_breaks (True)
+							a_lace_ast_factory.set_ast_factory (an_eiffel_ast_factory)
+							!! a_lace_parser.make_with_factory (a_lace_ast_factory, a_lace_error_handler)
+						else
+							!! a_lace_parser.make (a_lace_error_handler)
+						end
 						a_lace_parser.parse (a_file)
 						a_file.close
 						if not a_lace_parser.syntax_error then
