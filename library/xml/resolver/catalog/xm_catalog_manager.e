@@ -69,7 +69,6 @@ feature -- Access
 		require
 			public_id_not_void: a_public_id /= Void
 			system_id_not_void: a_system_id /= Void
-			at_least_one_identifier_present: a_public_id.count > 0 or else a_system_id.count > 0
 		local
 			an_fpi, another_fpi: STRING
 		do
@@ -146,6 +145,11 @@ feature -- Status report
 	are_processing_instructions_allowed: BOOLEAN
 			-- Are oasis-xml-catalog PIs allowed?
 
+	are_catalogs_disabled: BOOLEAN
+			-- Is all usage of catalog files disabled?
+			-- This flag is for consultation by external software (such as XM_CATALOG_RESOLVER);
+			-- It is not used internally.
+
 	is_system_default_catalog_suppressed: BOOLEAN
 			-- Should use of `System_default_catalog' be suppressed?
 
@@ -164,6 +168,8 @@ feature -- Status setting
 			-- Suppress use of `System_default_catalog'.
 		do
 			is_system_default_catalog_suppressed := True
+			reinit
+			debug_message (2, "System default catalog suppressed", System_default_catalog)
 		ensure
 			suppressed: is_system_default_catalog_suppressed
 		end
@@ -172,14 +178,22 @@ feature -- Status setting
 			-- Prefer passed fsi to fpi.
 		do
 			prefer_public := False
+			debug_message (3, "System/public preference", "system")
 		ensure
 			prefer_system: not prefer_public
+		end
+
+	suppress_catalogs is
+			-- Turn off catalog file access.
+		do
+			are_catalogs_disabled := True
 		end
 
 	suppress_processing_instructions is
 			-- Do not allow oasis-xml-catalog PIs to be used.
 		do
 			are_processing_instructions_allowed := False
+			debug_message (3, "Per-document catalogs", "<disallowed>")
 		ensure
 			processing_instructions_disallowed: not are_processing_instructions_allowed
 		end
@@ -206,6 +220,7 @@ feature -- Element change
 			-- Clear `pi_catalog_files'.
 		do
 			pi_catalog_files.wipe_out
+			debug_message (8, "Per-document catalogs reset to", "<empty>")
 		ensure
 			pi_catalog_list_empty: pi_catalog_files.is_empty
 		end
@@ -217,6 +232,7 @@ feature -- Element change
 			catalog_name_not_void: a_catalog_name /= Void
 		do
 			pi_catalog_files.force_last (a_catalog_name)
+			debug_message (2, "Per-document catalog added", a_catalog_name)
 		ensure
 			catalog_name_added: pi_catalog_files.has (a_catalog_name)
 		end
@@ -322,7 +338,7 @@ feature {XM_CATALOG, XM_TEST_BOOTSTRAP_RESOLVER, TS_TEST_CASE} -- Implementation
 		do
 			debug_message (9, "Resolved_fpi passed ", a_public_id)
 			an_fpi := normalized_fpi (a_public_id)
-			debug_message (8, "Fpi mormalized to", an_fpi)
+			debug_message (8, "Fpi normalized to", an_fpi)
 			
 			-- first search the system catalogs
 			
@@ -387,7 +403,7 @@ feature {XM_CATALOG, XM_TEST_BOOTSTRAP_RESOLVER, TS_TEST_CASE} -- Implementation
 		do
 			debug_message (9, "Resolved_fsi passed ", a_system_id)
 			an_fsi := escape_custom (a_system_id, unescaped_uri_characters, False)
-			debug_message (8, "Fsi mormalized to", an_fsi)
+			debug_message (8, "Fsi normalized to", an_fsi)
 			
 			-- first search the system catalogs
 
@@ -452,7 +468,7 @@ feature {XM_CATALOG, XM_TEST_BOOTSTRAP_RESOLVER, TS_TEST_CASE} -- Implementation
 		do
 			debug_message (9, "Resolved_uri passed ", a_uri_reference)
 			a_uri := escape_custom (a_uri_reference, unescaped_uri_characters, False)
-			debug_message (8, "URI mormalized to", a_uri)
+			debug_message (8, "URI normalized to", a_uri)
 			
 			-- first search the system catalogs
 

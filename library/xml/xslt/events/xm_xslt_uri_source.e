@@ -16,6 +16,8 @@ inherit
 
 	XM_XSLT_SOURCE
 
+	XM_SHARED_CATALOG_MANAGER
+
 	KL_IMPORTED_STRING_ROUTINES
 
 creation
@@ -44,14 +46,16 @@ feature -- Events
 	send (a_parser: XM_PARSER; a_receiver: XM_XPATH_RECEIVER; is_stylesheet: BOOLEAN) is
 			-- Generate and send  events to `a_receiver'
 		do
+			shared_catalog_manager.reset_pi_catalogs
 			create content_emitter.make (a_receiver)
 			create namespace_resolver.set_next (content_emitter)
 			namespace_resolver.set_forward_xmlns (True)
 			create attributes.set_next (namespace_resolver)
 			create content.set_next (attributes)
-			create start.set_next (content)
+			create oasis_xml_catalog_filter.set_next (content, content_emitter)
+			create start.set_next (oasis_xml_catalog_filter)
 			a_parser.set_callbacks (start)
-			a_parser.set_dtd_callbacks (content_emitter)
+			a_parser.set_dtd_callbacks (oasis_xml_catalog_filter)
 			a_parser.parse_from_system (system_id)
 			a_parser.entity_resolver.resolve_finish
 		end
@@ -65,7 +69,10 @@ feature -- Element change
 		end
 
 feature {NONE} -- Implementation
-		
+
+	oasis_xml_catalog_filter: XM_OASIS_XML_CATALOG_FILTER
+			-- Filter for oasis-xml-catalog PIs
+
 	content_emitter :XM_XPATH_CONTENT_EMITTER
 			-- Content emitter
 

@@ -128,8 +128,7 @@ feature -- Action(s)
 				a_system_id := a_system -- best effort
 			end
 			uri_scheme_resolver.resolve (a_system_id)
-			
-			
+			resolve_finish
 		end
 		
 	resolve_public (a_public: STRING; a_system: STRING) is
@@ -147,6 +146,7 @@ feature -- Action(s)
 			else
 				uri_scheme_resolver.resolve_public (a_public, a_system) -- best effort
 			end
+			resolve_finish
 		end
 		
 	resolve_finish is
@@ -168,6 +168,7 @@ feature -- Action(s)
 				a_system_id := a_uri_reference
 			end
 			uri_scheme_resolver.resolve (a_uri_reference)
+			resolve_finish
 		end
 
 feature -- Result

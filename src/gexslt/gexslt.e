@@ -27,7 +27,10 @@ inherit
 
 	XM_XPATH_NAME_UTILITIES
 
-	XM_RESOLVER_FACTORY
+	XM_SHARED_CATALOG_MANAGER
+
+	KL_SHARED_FILE_SYSTEM
+		export {NONE} all end
 
 	KL_IMPORTED_STRING_ROUTINES
 
@@ -275,6 +278,17 @@ feature -- Error handling
 			error_handler.report_info (a_message)
 		end
 	
+	report_general_message (a_message_string: STRING) is
+			-- Report a miscellaneous message.
+		require
+			message_not_void: a_message_string /= Void
+		local
+			an_error: UT_MESSAGE
+		do
+			create an_error.make (a_message_string)
+			error_handler.report_error (an_error)
+		end
+	
 	Usage_message: UT_USAGE_MESSAGE is
 			-- Gexslt usage message.
 		once
@@ -284,6 +298,11 @@ feature -- Error handling
 									  "       --output=local-file-name%N" +
 									  "       --no-line-numbers%N" +
 									  "       --no-gc%N" +
+									  "       --no-catalogs%N" +
+									  "       --no-catalog-pi%N" +
+									  "       --prefer-system%N" +
+									  "       --no-default-catalog%N" +
+									  "       --catalog-debug-level=[0-10]%N" +
 									  "       --tiny-tree%N" +
 									  "       --param=name=string-value%N" +
 									  "       --xpath-param=name=xpath-expression%N")
@@ -297,6 +316,9 @@ feature {NONE} -- Implementation
 			-- Process `an_option'.
 		require
 			plausible_option: an_option /= Void and then an_option.count > 0
+		local
+			an_integer: INTEGER
+			a_number: STRING
 		do
 			if an_option.is_equal ("no-line-numbers") then
 				is_line_numbering := False
@@ -318,11 +340,29 @@ feature {NONE} -- Implementation
 			elseif an_option.is_equal ("no-gc") then
 				collection_off
 			elseif an_option.substring_index ("xpath-param=", 1) = 1 then
-					report_not_yet_implemented ("XPath expressions in parameters")
+				report_not_yet_implemented ("XPath expressions in parameters")
 			elseif an_option.substring_index ("param=", 1) = 1 and then an_option.count > 6 then
-					set_string_parameter (an_option.substring (7, an_option.count))
+				set_string_parameter (an_option.substring (7, an_option.count))
 			elseif an_option.substring_index ("file=", 1) = 1 and then an_option.count > 5 then
-					process_file (an_option.substring (6, an_option.count))
+				process_file (an_option.substring (6, an_option.count))
+			elseif an_option.is_equal ("no-catalogs") then
+				shared_catalog_manager.suppress_catalogs
+			elseif an_option.is_equal ("no-catalog-pi") then
+				shared_catalog_manager.suppress_processing_instructions
+			elseif an_option.is_equal ("no-default-catalog") then
+				shared_catalog_manager.suppress_default_system_catalog_file
+			elseif an_option.is_equal ("prefer-system") then
+				shared_catalog_manager.set_prefer_system
+			elseif an_option.substring_index ("catalog-debug-level=", 1) = 1 and then an_option.count > 20 then
+				a_number := an_option.substring (21, an_option.count)
+				if a_number.is_integer then
+					an_integer := a_number.to_integer
+					shared_catalog_manager.set_debug_level (an_integer)
+				else
+					report_general_message ("Catalog-debug-level must specify an integer between 0 and 10 inclusive")
+					report_usage_message
+					Exceptions.die (1)
+				end
 			elseif an_option.substring_index ("uri=", 1) = 1 and then an_option.count > 4 then
 					process_uri (an_option.substring (5, an_option.count))
 			else

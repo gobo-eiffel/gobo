@@ -127,6 +127,69 @@
 	</listitem>
       </varlistentry>
       <varlistentry>
+	<term>--no-catalogs</term>
+	<listitem>
+	  <para>
+	    Do not use OASIS ERTC XML Catalogs for entity resolution or
+	    URI reference resolution.
+	  </para>
+	</listitem>
+      </varlistentry>
+      <varlistentry>
+	<term>--no-default-catalog</term>
+	<listitem>
+	  <para>
+	    Do not use the system default catalog.
+	  </para>
+	  <para>
+	    In this case, only catalogs specified in <featurename>XM_CATALOG_FILES</featurename>,
+	    plus any per-document-catalogs named in <featurename>oasis-xml-catalog</featurename> 
+	    processing instructions, are searched.
+	  </para>
+	</listitem>
+      </varlistentry>
+      <varlistentry>
+	<term>--prefer-system</term>
+	<listitem>
+	  <para>
+	    Prefer <featurename>SYSTEM</featurename> ids to <featurename>PUBLIC</featurename> ids when both are given.
+	    The catalog resolver only attempts to match on <featurename>PUBLIC</featurename> ids
+	    when there is either no <featurename>SYSTEM</featurename> id given, or else the catalog resolver
+	    fails to find a match for the <featurename>SYSTEM</featurename> id.
+	  </para>
+	  <para>
+	    In the latter case, when this option is given,
+	    <featurename>PUBLIC</featurename> entries are only considered for a match if
+	    they were defined when <featurename>prefer="system"</featurename> was in effect.
+	  </para>
+	  <para>
+	    The default is to always consider <featurename>PUBLIC</featurename> ids, when no
+	    match is found for the <featurename>SYSTEM</featurename> id.
+	  </para>
+	  <para>
+	    If no SYSTEM id is given, then this option has no effect.
+	  </para>
+	</listitem>
+      </varlistentry>
+      <varlistentry>
+	<term>--no-catalog-pi</term>
+	<listitem>
+	  <para>
+	    Ignore any <featurename>oasis-xml-catalog</featurename> processing instructions in source
+	    documents and stylesheets.
+	  </para>
+	</listitem>
+      </varlistentry>
+      <varlistentry>
+	<term>--catalog-debug-level=&lt;0-10&gt;</term>
+	<listitem>
+	  <para>
+	    Set the level of debugging messages produced by the catalog resolver.
+	    0 means no messages. 10 Means maximum verbosity.
+	  </para>
+	</listitem>
+      </varlistentry>
+      <varlistentry>
 	<term>--tiny-tree</term>
 	<listitem>
 	  <para>

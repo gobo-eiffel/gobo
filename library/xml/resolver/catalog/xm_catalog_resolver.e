@@ -35,35 +35,23 @@ feature -- Actions
 		local
 			a_resolved_uri: STRING
 			a_uri: UT_URI
-			a_string: STRING
-			a_cwd: STRING
-			a_pathname: KI_PATHNAME
-			a_drive: STRING
 		do
-			a_resolved_uri := shared_catalog_manager.resolved_uri_reference (a_uri_reference)
-			if STRING_.same_string (a_resolved_uri, a_uri_reference) then
-
-				-- Failure - try making it an absolute URI
-
-				create a_uri.make (a_uri_reference)
-				if a_uri.is_relative then
-					a_cwd := file_system.current_working_directory
-					if file_system /= unix_file_system then
-						a_pathname := file_system.string_to_pathname (a_cwd)
-						a_cwd := unix_file_system.pathname_to_string (a_pathname)
-						a_drive := a_pathname.drive
-						if a_drive /= Void then
-							a_cwd := STRING_.concat (a_drive, a_cwd)
-							a_cwd := STRING_.concat ("/", a_cwd)
-						end
+			if shared_catalog_manager.are_catalogs_disabled then
+				shared_catalog_manager.bootstrap_resolver.uri_scheme_resolver.resolve (a_resolved_uri)
+			else
+				a_resolved_uri := shared_catalog_manager.resolved_uri_reference (a_uri_reference)
+				if STRING_.same_string (a_resolved_uri, a_uri_reference) then
+					
+					-- Failure - try making it an absolute URI
+					
+					create a_uri.make (a_uri_reference)
+					if a_uri.is_relative then
+						create a_uri.make_resolve (shared_catalog_manager.bootstrap_resolver.uri_scheme_resolver.uri, a_uri_reference)
+						a_resolved_uri := shared_catalog_manager.resolved_uri_reference (a_uri.full_reference)
 					end
-					a_string := STRING_.concat ("file://", a_cwd)
-					create a_uri.make (STRING_.concat (a_string, "/"))
-					create a_uri.make_resolve (a_uri, a_uri_reference)
-					a_resolved_uri := shared_catalog_manager.resolved_uri_reference (a_uri.full_reference)
 				end
+				shared_catalog_manager.bootstrap_resolver.uri_scheme_resolver.resolve (a_resolved_uri)
 			end
-			shared_catalog_manager.bootstrap_resolver.uri_scheme_resolver.resolve (a_resolved_uri)			
 		end
 
 	resolve (a_system: STRING) is
@@ -79,35 +67,23 @@ feature -- Actions
 		local
 			a_resolved_uri: STRING
 			a_uri: UT_URI
-			a_string: STRING
-			a_cwd: STRING
-			a_pathname: KI_PATHNAME
-			a_drive: STRING
 		do
-			a_resolved_uri := shared_catalog_manager.resolved_external_entity (a_public, a_system)
-			if STRING_.same_string (a_resolved_uri, a_system) then
-				
-				-- Failure - try making it an absolute URI
-
-				create a_uri.make (a_system)
-				if a_uri.is_relative then
-					a_cwd := file_system.current_working_directory
-					if file_system /= unix_file_system then
-						a_pathname := file_system.string_to_pathname (a_cwd)
-						a_cwd := unix_file_system.pathname_to_string (a_pathname)
-						a_drive := a_pathname.drive
-						if a_drive /= Void then
-							a_cwd := STRING_.concat (a_drive, a_cwd)
-							a_cwd := STRING_.concat ("/", a_cwd)
-						end
+			if shared_catalog_manager.are_catalogs_disabled then
+				shared_catalog_manager.bootstrap_resolver.uri_scheme_resolver.resolve_public (a_public, a_system)
+			else
+				a_resolved_uri := shared_catalog_manager.resolved_external_entity (a_public, a_system)
+				if STRING_.same_string (a_resolved_uri, a_system) then
+					
+					-- Failure - try making it an absolute URI
+					
+					create a_uri.make (a_system)
+					if a_uri.is_relative then
+						create a_uri.make_resolve (shared_catalog_manager.bootstrap_resolver.uri_scheme_resolver.uri, a_system)
+						a_resolved_uri := shared_catalog_manager.resolved_external_entity (a_public, a_uri.full_reference)
 					end
-					a_string := STRING_.concat ("file://", a_cwd)
-					create a_uri.make (STRING_.concat (a_string, "/"))
-					create a_uri.make_resolve (a_uri, a_system)
-					a_resolved_uri := shared_catalog_manager.resolved_external_entity (a_public, a_uri.full_reference)
 				end
+				shared_catalog_manager.bootstrap_resolver.uri_scheme_resolver.resolve (a_resolved_uri)
 			end
-			shared_catalog_manager.bootstrap_resolver.uri_scheme_resolver.resolve (a_resolved_uri)	
 		end
 		
 	resolve_finish is
