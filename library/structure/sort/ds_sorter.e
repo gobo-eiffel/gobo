@@ -2,11 +2,12 @@ indexing
 
 	description:
 
-		"Structure sorters"
+		"Data structure sorters"
 
 	library:    "Gobo Eiffel Structure Library"
-	author:     "Eric Bezault <ericb@gobo.demon.co.uk>"
-	copyright:  "Copyright (c) 1997, Eric Bezault"
+	author:     "Eric Bezault <ericb@gobosoft.com>"
+	copyright:  "Copyright (c) 1999, Eric Bezault and others"
+	license:    "Eiffel Forum Freeware License v1 (see forum.txt)"
 	date:       "$Date$"
 	revision:   "$Revision$"
 
@@ -14,22 +15,22 @@ deferred class DS_SORTER [G]
 
 feature -- Status report
 
-	sorted (container: DS_SORTABLE [G]): BOOLEAN is
-			-- Is `container' sorted?
+	sorted (a_container: DS_SORTABLE [G]): BOOLEAN is
+			-- Is `a_container' sorted?
 		require
-			container_not_void: container /= Void
+			a_container_not_void: a_container /= Void
 		deferred
 		end
 
 feature -- Sort
 
-	sort (container: DS_SORTABLE [G]) is
-			-- Sort `container'.
+	sort (a_container: DS_SORTABLE [G]) is
+			-- Sort `a_container'.
 		require
-			container_not_void: container /= Void
+			a_container_not_void: a_container /= Void
 		deferred
 		ensure
-			sorted: sorted (container)
+			sorted: sorted (a_container)
 		end
 
 end -- class DS_SORTER
