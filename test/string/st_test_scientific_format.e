@@ -21,6 +21,9 @@ inherit
 
 	ST_FORMAT_ROUTINES
 
+	KL_IMPORTED_ANY_ROUTINES
+		export {NONE} all end
+
 
 feature -- Basic tests
 
@@ -151,11 +154,11 @@ feature -- Basic tests
 			assert_equal (format_string_other_2,
 				" -3.141593_    -3.142_-3.142    _        -3_ -3.141593_-3.141593e+00_ -3.14e+00_  ",
 				format (format_string_other_2, <<pi_cell, pi_cell, pi_cell, pi_cell, pi_cell, pi_cell, pi_cell>>))
-			assert_equal (format_string_other_3, 
+			assert_equal (format_string_other_3,
 				" -3.141593_    -3.142_    -3.142_        -3_ -3.141593_-3.141593e+00_0-3.14e+00_  ",
 				format (format_string_other_3, <<pi_cell, pi_cell, pi_cell, pi_cell, pi_cell, pi_cell, pi_cell>>))
 			assert_equal (format_string_other_4,
-				"programmer_programmers_   program_program   _      prog_programmer_pro  ", 
+				"programmer_programmers_   program_program   _      prog_programmer_pro  ",
 				format (format_string_other_4, <<s,  s1, s, s, s, s, s>>))
 
 	------------------------------------------------------------
@@ -164,7 +167,7 @@ feature -- Basic tests
 	------------------------------------------------------------
 
 			assert_equal (format_string_other_5,
-				"-123 100 400 123 c true some string 3.141593e+00 3.141593 ", 
+				"-123 100 400 123 c true some string 3.141593e+00 3.141593 ",
 				format (format_string_other_5, << integer_cell (-123), integer_cell (256), integer_cell (256), integer_cell (123), character_cell ('c'), boolean_cell (True), "some string", double_cell (3.1415934563), double_cell (3.1415934563)>>))
 
 	------------------------------------------------------------
@@ -204,10 +207,10 @@ feature -- Basic tests
 	-----------------------------------------------------------------------
 
 			assert_equal (format_string_other_7,
-				"0123- 0100    400 123 c True som 3.14159e+00 4.41593451 ", 
+				"0123- 0100    400 123 c True som 3.14159e+00 4.41593451 ",
 				format (format_string_other_7, <<integer_cell (-123), integer_cell (256), integer_cell (256), integer_cell (123), character_cell ('c'), boolean_cell (True), "some string", double_cell (3.1415934563), double_cell (3.1415934563)>>))
 			assert_equal (format_string_other_8,
-				"(   abc    ) (   123    ) (1.230000e+00) ", 
+				"(   abc    ) (   123    ) (1.230000e+00) ",
 				format (format_string_other_8, <<"abc", integer_cell (123), double_cell (1.23)>>))
 
 	------------------------------------------------------------
@@ -233,6 +236,20 @@ feature -- Basic tests
 			assert_equal (format_string_custom_1, "     00123", format (format_string_custom_1, <<width, precision, integer_cell (123) >>))
 			assert_equal (format_string_custom_2, "       123", format (format_string_custom_2, <<width,  integer_cell (123) >>))
 			assert_equal (format_string_custom_3, "00123", format (format_string_custom_3, <<precision, integer_cell (123) >>))
+		end
+
+	test_unicode_format is
+		do
+			assert (uc_format_string_1, STRING_.same_string ("hello", format (uc_format_string_1, <<"hello">>)))
+			assert ("unicode string returned", ANY_.same_types (uc_format_string_1, format (uc_format_string_1, <<"hello">>)))
+			assert_equal (uc_format_string_1, uc_parameter_1, format (uc_format_string_1, <<uc_parameter_1>>))
+		end
+
+	test_unicode_parameter is
+			-- Test if unicode strings in parameters are flattened to
+			-- UTF8 encoded strings.
+		do
+			assert (uc_format_string_1, STRING_.same_string (uc_parameter_1_utf8, format (format_string_1, <<uc_parameter_1>>)))
 		end
 
 	test_wrong_formats is
@@ -308,6 +325,18 @@ feature {NONE} -- Format strings
 	format_string_custom_1: STRING is "?*.*i"
 	format_string_custom_2: STRING is "?*i"
 	format_string_custom_3: STRING is "?.*i"
+
+	uc_format_string_1: UC_STRING is
+		once
+			create Result.make_from_string ("?s")
+		end
+
+	uc_parameter_1: UC_STRING is
+		once
+			create Result.make_from_utf8 (uc_parameter_1_utf8)
+		end
+
+	uc_parameter_1_utf8: STRING is "RAVEL MÃÂBLE"
 
 
 feature {NONE} -- Implementation
