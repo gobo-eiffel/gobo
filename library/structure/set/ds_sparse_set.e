@@ -578,6 +578,13 @@ feature {NONE} -- Implementation
 			Result := equality_tester
 		end
 
+	internal_set_key_equality_tester (a_tester: like key_equality_tester) is
+			-- Set `key_equality_tester' to `a_tester'.
+			-- (No precondition, to be used internally only.)
+		do
+			equality_tester := a_tester
+		end
+
 	make_keys (n: INTEGER) is
 			-- Create storage for keys of the set indexed
 			-- from 0 to `n-1' (position 0 is not used).

@@ -490,6 +490,14 @@ feature {NONE} -- Implementation
 		deferred
 		end
 
+	internal_set_key_equality_tester (a_tester: like key_equality_tester) is
+			-- Set `key_equality_tester' to `a_tester'.
+			-- (No precondition, to be used internally only.)
+		deferred
+		ensure
+			key_equality_tester_set: key_equality_tester = a_tester
+		end
+		
 	hash_position (k: K): INTEGER is
 			-- Hash position of `k' in `slots'
 		deferred
@@ -508,6 +516,7 @@ feature {NONE} -- Implementation
 			dead_item: G
 			k, dead_key: K
 			h: INTEGER
+			a_tester: like key_equality_tester
 		do
 			if i /= position then
 				k := keys_item (i)
@@ -517,7 +526,10 @@ feature {NONE} -- Implementation
 					slots_position := h
 					clashes_previous_position := No_position
 				else
+					a_tester := key_equality_tester
+					internal_set_key_equality_tester (Void)
 					search_position (k)
+					internal_set_key_equality_tester (a_tester)
 				end
 			end
 			move_cursors_forth (position)

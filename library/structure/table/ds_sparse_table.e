@@ -483,6 +483,15 @@ feature -- Element change
 			last: (not old has (k)) implies last = v
 		end
 
+feature {NONE} -- Implementation
+
+	internal_set_key_equality_tester (a_tester: like key_equality_tester) is
+			-- Set `key_equality_tester' to `a_tester'.
+			-- (No precondition, to be used internally only.)
+		do
+			key_equality_tester := a_tester
+		end
+
 feature {DS_SPARSE_TABLE_CURSOR} -- Cursor implementation
 
 	cursor_key (a_cursor: like new_cursor): K is
