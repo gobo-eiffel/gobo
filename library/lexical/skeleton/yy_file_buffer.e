@@ -96,7 +96,7 @@ feature -- Element change
 			-- if characters have been added to buffer.
 		local
 			i, j, nb: INTEGER
-			buff, str: STRING
+			buff: STRING
 			char: CHARACTER
 		do
 				-- If the last call to `fill' failed to add
