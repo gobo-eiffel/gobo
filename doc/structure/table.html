@@ -142,7 +142,7 @@ color="#000080"><em><strong>then</strong></em></font><em>
                 </em><font color="#008080"><em>Result</em></font><em> </em>:=<em> modulus
             </em><font color="#000080"><em><strong>end</strong></em></font><em>
         </em><font color="#000080"><em><strong>end
-end</strong></em></font><em> </em><font color="#008000">-- class ASSIGNMENTS</font></pre>
+end</strong></em></font><em> </em></pre>
 </blockquote>
 
 <p>The keys are directly stored in the hash table without being
@@ -165,7 +165,7 @@ not be recognized properly anymore within this hash table.
 Needless to say that if two keys are considered equal, they
 should have the same hash code. The solution when the hash code
 or equality criteria of a key are likely to vary while the key is
-stored in the hash table is clone that key when inserting an item
+stored in the hash table is to clone that key when inserting an item
 associated with it.</p>
 
 <p>The class <font color="#008080"><em><tt>DS_HASH_TABLE </tt></em></font>provides
@@ -174,7 +174,7 @@ href="traversal.html#DS_BILINEAR"><font color="#008080"><em><tt>DS_BILINEAR</tt>
 Although all items will be visited once and only once during a
 traversal, they will be traversed in an unpredictable order and
 subsequent traversals may traverse the items in different orders.
-This is because a hash table is not an ordered containter as can
+This is because a hash table is not an ordered container as can
 a list be. Items are not inserted before or after other items in
 the hash table but based on a hashing mechanism and
 collision-resolution algorithm. The only way to get a guaranteed
@@ -271,7 +271,7 @@ having to resize big arrays.</p>
 <table border="0" width="100%">
     <tr>
         <td><address>
-            <font size="2"><b>Copyright © 2000-2001</b></font><font
+            <font size="2"><b>Copyright © 2000-2005</b></font><font
             size="1"><b>, </b></font><font size="2"><strong>Eric
             Bezault</strong></font><strong> </strong><font
             size="2"><br>
@@ -281,7 +281,7 @@ having to resize big arrays.</p>
             <strong>http:</strong></font><a
             href="http://www.gobosoft.com"><font size="2">//www.gobosoft.com</font></a><font
             size="2"><br>
-            <strong>Last Updated:</strong> 3 April 2001</font><br>
+            <strong>Last Updated:</strong> 13 February 2005</font><br>
             <!--webbot bot="PurpleText"
             preview="
 $Date$ 

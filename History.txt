@@ -16,7 +16,7 @@ Version ?
 	gexace:
 
 	* Removed support for 'hact'.
-	* Add support VE 5.0: 've' now generates Xace files for VE 5.0.
+	* Added support VE 5.0: 've' now generates Xace files for VE 5.0.
 	  In order to generate ESD for VE 4.1 use 've41' instead.
 
 	gelex:
@@ -515,8 +515,8 @@ Version 1.6 - 20 August 2000
 	  (i.e. old items at indexes count+1..capacity) in
 	  removal features.
 	* DS_TABLE, DS_SPARSE_TABLE, DS_HASH_TABLE: added
-	  fetaure `put_new'.
-	* DS_SPARSE_TABLE, DS_HASH_TABLE: added fetaure
+	  feature `put_new'.
+	* DS_SPARSE_TABLE, DS_HASH_TABLE: added feature
 	  `replace_found_item'.
 	* DS_SPARSE_TABLE, DS_HASH_TABLE: new optimized
 	  implementation (requested by Jacques Bouchard).
@@ -605,7 +605,7 @@ Version 1.4 - 14 April 1999
 	  in class YY_SCANNER.
 	* Resize input buffer if a call to `unread_character'
 	  results in too much text being pushed back (it was
-	  raising an run-time error in previous releases).
+	  raising a run-time error in previous releases).
 	* Added command-line option -x to gelex and geyacc
 	  to allow the generation of semantic actions in
 	  separate routines.
