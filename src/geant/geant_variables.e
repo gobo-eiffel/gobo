@@ -308,7 +308,7 @@ feature -- Access
 					Result := has_variable (s)
 				elseif s.count > 1 and then s.item (1) = '$' and then s.item (2) /= '{' then
 						-- handle "$bar" form:
-					s.tail (s.count - 1)
+					s := s.substring (2, s.count)
 					Result := has_variable (s)
 				else
 					exit_application (1, "geant: incorrect conditional: '" + a_condition + "'%N")

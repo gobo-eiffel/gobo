@@ -43,20 +43,37 @@ feature -- Element change
 			a_description.set_full_table (True)
 			a_description.set_case_insensitive (i)
 			!! a_parser.make_from_description (a_description, an_error_handler)
-			a_string := clone (a_regexp)
-			nb := a_string.count
-			if nb > 0 and then a_string.item (1) = '^' then
+			nb := a_regexp.count
+			if nb > 0 and then a_regexp.item (1) = '^' then
 				has_caret := True
-				a_string.tail (nb - 1)
-				nb := nb - 1
 			else
 				has_caret := False
 			end
-			if nb > 0 and then a_string.item (nb) = '$' then
+			if nb > 0 and then a_regexp.item (nb) = '$' then
 				has_dollar := True
-				a_string.head (nb - 1)
 			else
 				has_dollar := False
+			end
+			if has_caret and has_dollar then
+				if nb > 2 then
+					a_string := a_regexp.substring (2, nb - 1)
+				else
+					a_string := ""
+				end
+			elseif has_caret then
+				if nb > 1 then
+					a_string := a_regexp.substring (2, nb)
+				else
+					a_string := ""
+				end
+			elseif has_dollar then
+				if nb > 1 then
+					a_string := a_regexp.substring (1, nb - 1)
+				else
+					a_string := ""
+				end
+			else
+				a_string := a_regexp
 			end
 			a_parser.parse_string (a_string)
 			if a_parser.successful then
