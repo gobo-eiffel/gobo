@@ -828,7 +828,7 @@ NOQUOTSYSLITCHAR [\r\n\t\x20-!#-\x7F]
 			set_last_token (CHARDATA)
 			last_value := normalized_newline
 		}
-		{SPACECHAR} {
+		{SPACECHAR}+ {
 			set_last_token (CHARDATA)
 			last_value := text
 		}
