@@ -95,9 +95,6 @@ feature {NONE} -- Namespaces
 	namespaces: XM_UNIQUE_NAMESPACE_PREFIXES
 			-- Prefixes collection.
 			
-	root_namespace: XM_NAMESPACE
-			-- Namespace of root element.
-		
 feature -- Standard processor routines
 
 	process_element (el: XM_ELEMENT) is
@@ -168,7 +165,7 @@ feature -- Standard processor routines
 		require
 			att_not_void: att /= Void
 		do
-			process_named_attribute (att)
+			process_named (att)
 			append (Eq_s)
 			append (Quot_s)
 			append (att.value)
@@ -189,16 +186,10 @@ feature {NONE} -- Non standard processor routines
 			root_element: an_element.parent.is_root_node
 		local
 			a_cursor: DS_HASH_TABLE_CURSOR [XM_NAMESPACE, STRING]
-		do
-			-- set root namespace (ignoring original prefix)
-			create root_namespace.make (Void, an_element.namespace.uri)
-			
+		do			
 			append (Stag_start)
-			process_named_element (an_element)
+			process_named (an_element)
 
-			-- xmlns: root
-			append (Space_s)
-			append (namespaces.namespace_declaration (root_namespace))
 			from
 				a_cursor := namespaces.namespaces.new_cursor
 				a_cursor.start
@@ -220,7 +211,7 @@ feature {NONE} -- Non standard processor routines
 			el_not_void: el /= Void
 		do
 			append (Stag_start)
-			process_named_element (el)
+			process_named (el)
 			process_attributes (el)
 			append (Stag_end)
 		end
@@ -261,52 +252,37 @@ feature {NONE} -- Non standard processor routines
 			el_not_void: el /= Void
 		do
 			append (Etag_start)
-			process_named_element (el)
+			process_named (el)
 			append (Etag_end)
 		end
 
-	process_named_element (a_node: XM_ELEMENT) is
+	process_named (a_node: XM_NAMED_NODE) is
 			-- Process named node `a_node'.
 		require
 			a_node_not_void: a_node /= Void
 		do
 			check
-				root_namespace_not_void: root_namespace /= Void
 				namespaces_not_void: namespaces /= Void
 			end
 
-			if not a_node.namespace.uri.is_equal (root_namespace.uri) then
-				append (namespaces.ns_prefix (a_node.namespace))
-				append (Prefix_separator)
-			end
-			append (a_node.name)
-		end
-		
-	process_named_attribute (a_node: XM_ATTRIBUTE) is
-			-- Process named node `a_node'.
-		require
-			a_node_not_void: a_node /= Void
-		local
-			a_typer: XM_NODE_TYPER
-		do
-			check
-				root_namespace_not_void: root_namespace /= Void
-				namespaces_not_void: namespaces /= Void
-			end
-
-			create a_typer
-			a_node.parent.process (a_typer)
-			check a_typer.is_element end
-			
-			if not a_node.namespace.is_equal (a_typer.element.namespace) then
-				append (namespaces.ns_prefix (a_node.namespace))
-				append (Prefix_separator)
-			end
+			append_prefix (a_node.namespace)
 			append (a_node.name)
 		end
 		
 feature {NONE} -- Implementation
 
+	append_prefix (a_namespace: XM_NAMESPACE) is
+			-- Append prefix for namespace if it is not 
+			-- undefined (empty URI).
+		require
+			a_namespace_not_void: a_namespace /= Void
+		do
+			if not a_namespace.uri.is_empty then
+				append (namespaces.ns_prefix (a_namespace))
+				append (Prefix_separator)
+			end
+		end
+		
 	append (a_string: STRING) is
 			-- Append `a_string' to `last_output'.
 		require
