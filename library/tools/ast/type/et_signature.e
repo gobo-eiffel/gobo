@@ -23,13 +23,13 @@ creation
 
 feature {NONE} -- Initialization
 
-	make (args: ET_FORMAL_ARGUMENTS; a_type: like type) is
+	make (args: ET_FORMAL_ARGUMENTS; a_result: like result_type) is
 			-- Create a new signature.
 		local
 			i: INTEGER
 			arg: ET_FORMAL_ARGUMENT
 		do
-			type := a_type
+			result_type := a_result
 			if args = Void then
 				!! arguments.make (1, 0)
 			else
@@ -46,10 +46,10 @@ feature {NONE} -- Initialization
 				end
 			end
 		ensure
-			type_set: type = a_type
+			result_type_set: result_type = a_result
 		end
 
-	make_from_array (args: like arguments; a_type: like type) is
+	make_from_array (args: like arguments; a_result: like result_type) is
 			-- Create a new signature.
 		require
 			args_not_void: args /= Void
@@ -57,10 +57,10 @@ feature {NONE} -- Initialization
 			args_lower: args.lower = 1
 		do
 			arguments := args
-			type := a_type
+			result_type := a_result
 		ensure
 			arguments_set: arguments = args
-			type_set: type = a_type
+			result_type_set: result_type = a_result
 		end
 
 feature -- Access
@@ -68,45 +68,41 @@ feature -- Access
 	arguments: ARRAY [ET_TYPE]
 			-- Arguments type
 
-	type: ET_TYPE
+	result_type: ET_TYPE
 			-- Result type
 
 feature -- Status report
 
-	same_syntactical_signature (other: ET_SIGNATURE): BOOLEAN is
-			-- Is current signature syntactically the
-			-- same signature as `other' (e.g. do not
-			-- try to resolve anchored types)?
+	same_signature (other: ET_SIGNATURE): BOOLEAN is
+			-- Is current signature the same signature as `other'?
 		require
 			other_not_void: other /= Void
 		do
-			Result := same_syntactical_type (other) and
-				same_syntactical_arguments (other)
+			Result := same_result_type (other) and
+				same_arguments (other)
 		end
 
-	same_syntactical_type (other: ET_SIGNATURE): BOOLEAN is
-			-- Are the types of current signature and
-			-- `other' syntactically the same types (e.g.
-			-- do not try to resolve anchored types)?
+	same_result_type (other: ET_SIGNATURE): BOOLEAN is
+			-- Are the result types of current signature and
+			-- `other' the same types?
 		require
 			other_not_void: other /= Void
 		local
 			other_type: ET_TYPE
 		do
-			other_type := other.type
-			if type = Void then
+			other_type := other.result_type
+			if result_type = Void then
 				Result := other_type = Void
 			elseif other_type = Void then
 				Result := False
 			else
-				Result := type.same_syntactical_type (other_type)
+				Result := result_type.same_syntactical_type (other_type)
 			end
 		end
 
-	same_syntactical_arguments (other: ET_SIGNATURE): BOOLEAN is
+	same_arguments (other: ET_SIGNATURE): BOOLEAN is
 			-- Are the arguments of current signature and
-			-- `other' syntactically the same (e.g. do not
-			-- try to resolve anchored types)?
+			-- `other' the same?
 		require
 			other_not_void: other /= Void
 		do
@@ -123,19 +119,19 @@ feature -- Status report
 		require
 			other_not_void: other /= Void
 		do
-			Result := type_conforms_to (other) and
+			Result := result_type_conforms_to (other) and
 				arguments_conform_to (other)
 		end
 
-	type_conforms_to (other: ET_SIGNATURE): BOOLEAN is
-			-- Does the type of current signature
-			-- conform to the type of `other'?
+	result_type_conforms_to (other: ET_SIGNATURE): BOOLEAN is
+			-- Does the result type of current signature
+			-- conform to the result type of `other'?
 		require
 			other_not_void: other /= Void
 		do
-			if type = Void then
-				Result := other.type = Void
-			elseif other.type = Void then
+			if result_type = Void then
+				Result := other.result_type = Void
+			elseif other.result_type = Void then
 				Result := False
 			else
 					-- TODO: Test type.
@@ -171,8 +167,8 @@ feature -- Type processing
 			i, nb: INTEGER
 			a_type: ET_TYPE
 		do
-			if type /= Void then
-				type := type.resolved_formal_parameters (actual_parameters)
+			if result_type /= Void then
+				result_type := result_type.resolved_formal_parameters (actual_parameters)
 			end
 			nb := arguments.count
 			from i := 1 until i > nb loop
@@ -186,12 +182,12 @@ feature -- Duplication
 
 	duplicate_types is
 			-- Recursively duplicate all types
-			-- in `arguments' and `type'.
+			-- in `arguments' and `result_type'.
 		local
 			i, nb: INTEGER
 		do
-			if type /= Void then
-				type := type.deep_cloned_type
+			if result_type /= Void then
+				result_type := result_type.deep_cloned_type
 			end
 			nb := arguments.count
 			from i := 1 until i > nb loop
