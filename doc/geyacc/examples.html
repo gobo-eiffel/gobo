@@ -411,7 +411,7 @@ indicating that an error occurred in the lexical analysis.)</p>
                 </em>-- Process numbers<em>
             last_token </em>:=<em> NUM
             </em><em><strong>from</strong></em><em>
-                </em>!!<em> buffer.make </em>(<em>10</em>)<em>
+                </em><em><strong>create</strong> buffer.make </em>(<em>10</em>)<em>
                 buffer.append_character </em>(<em>c</em>)<em>
                 io.read_character
                 c </em>:= <em>io.last_character
@@ -575,7 +575,7 @@ color="#0000FF"> $2 }
         <em><strong>end</strong></em>
 ...
 
-<em><strong>end</strong></em> -- class CALC</font></pre>
+<em><strong>end</strong></em></font></pre>
 </blockquote>
 
 <p>The routine <font color="#008080"><em><tt>read_token</tt></em></font>
@@ -595,11 +595,13 @@ associativity.)</p>
 <p><a href="precedence.html">Operator precedence</a> is
 determined by the line ordering of the declarations; the higher
 the line number of the declaration (lower on the page or screen),
-the higher the precedence. Hence, unary minus (<font
-color="#FF0000"><tt>NEG</tt></font>) has the highest precedence, <font
-color="#FF0000"><tt>'*'</tt></font> and <font color="#FF0000"><tt>'/'</tt></font>
-are next, followed by <font color="#FF0000"><tt>'+'</tt></font>
-and <font color="#FF0000"><tt>'-'</tt></font>.</p>
+the higher the precedence. Hence, exponentiation (<font
+color="#FF0000"><tt>'^'</tt></font>) has the highest precedence;
+unary minus (<font color="#FF0000"><tt>NEG</tt></font>) is next,
+followed by <font color="#FF0000"><tt>'*'</tt></font> and <font
+color="#FF0000"><tt>'/'</tt></font>; <font
+color="#FF0000"><tt>'+'</tt></font> and <font
+color="#FF0000"><tt>'-'</tt></font> have the lowest precedence.</p>
 
 <p>The other important new feature is the <a
 href="precedence.html#context"><font color="#0000FF"><tt>%prec</tt></font></a>
@@ -862,7 +864,7 @@ character.</p>
     <pre><font color="#008080"><em>read_token </em><em><strong>is</strong></em><em>
         </em>-- Lexical analyzer returns a double floating point
         -- number on the stack and the token NUM, a STRING and
-        -- and the token VAR, a token ASSIGN, or the ASCII 
+        -- and the token VAR, a token ASSIGN, or the ASCII
         -- character read if not a number. Skips all blanks
         -- and tabs, returns 0 for EOF.<em>
     </em><em><strong>local</strong></em><em>
@@ -894,7 +896,7 @@ character.</p>
         </em><em><strong>            </strong></em>-- Process numbers<em>
                 last_token </em>:=<em> NUM
                 </em><em><strong>from</strong></em><em>
-                    </em>!!<em> buffer.make </em>(<em>10</em>)<em>
+                    </em><em><strong>create</strong> buffer.make </em>(<em>10</em>)<em>
                     buffer.append_character </em>(<em>c</em>)<em>
                     io.read_character
                     c </em>:= <em>io.last_character
@@ -929,7 +931,7 @@ character.</p>
                     </em>-- Process variables.<em>
                 last_token </em>:=<em> VAR
                 </em><em><strong>from</strong></em><em>
-                    </em>!!<em> buffer.make </em>(<em>10</em>)<em>
+                    </em><em><strong>create</strong> buffer.make </em>(<em>10</em>)<em>
                     buffer.append_character </em>(<em>c</em>)<em>
                     io.read_character
                     c </em>:= <em>io.last_character
@@ -963,7 +965,7 @@ character.</p>
                     </em><em><strong>end</strong></em><em>
                 </em><em><strong>else</strong></em><em>
                     </em>    -- Return single character<em>
-                    last_token </em>:= (<em>':'</em>)<em>.code 
+                    last_token </em>:= (<em>':'</em>)<em>.code
                 </em><em><strong>end
             else</strong></em><em>
                     </em>-- Return single character<em>
@@ -985,7 +987,7 @@ memory management of <tt>mcalc</tt>.</p>
             </em>-- Create a new calculator with memory.<em>
         </em><em><strong>do</strong></em><em>
             make_parser_skeleton
-            </em>!!<em> memory_values.make </em>(<em>10</em>)<em>
+            </em><em><strong>create</strong> memory_values.make </em>(<em>10</em>)<em>
         </em><em><strong>end
 
 feature</strong></em><em> </em>-- Memory management<em>
@@ -1022,7 +1024,7 @@ feature</strong></em><em> </em>-- Memory management<em>
 
     memory_values_not_void</em>:<em> memory_values </em>/= <em>Void
 </em>
-<em><strong>end</strong></em> -- class MCALC</font></pre>
+<em><strong>end</strong></em></font></pre>
 </blockquote>
 
 <hr size="1">
@@ -1030,7 +1032,7 @@ feature</strong></em><em> </em>-- Memory management<em>
 <table border="0" width="100%">
     <tr>
         <td><address>
-            <font size="2"><b>Copyright © 1999</b></font><font
+            <font size="2"><b>Copyright © 1999-2005</b></font><font
             size="1"><b>, </b></font><font size="2"><strong>Eric
             Bezault</strong></font><strong> </strong><font
             size="2"><br>
@@ -1040,12 +1042,12 @@ feature</strong></em><em> </em>-- Memory management<em>
             <strong>http:</strong></font><a
             href="http://www.gobosoft.com"><font size="2">//www.gobosoft.com</font></a><font
             size="2"><br>
-            <strong>Last Updated:</strong> 25 March 1999</font><br>
+            <strong>Last Updated:</strong> 22 February 2005</font><br>
             <!--webbot bot="PurpleText"
             preview="
-$Date$ 
+$Date$
 $Revision$"
-            --> 
+            -->
         </address>
         </td>
         <td align="right" valign="top"><a
