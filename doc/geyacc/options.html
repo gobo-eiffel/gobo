@@ -57,8 +57,11 @@ alphabetized by short option:</p>
         (in upper-case) containing integer constants for the
         token type names defined in the grammar. This class is
         saved in file <font color="#800000"><tt>classname.e</tt></font>
-        (in lower-case). This class is essential if you wish to
-        put the definition of routine <font color="#008080"><em><tt>read_token</tt></em></font>
+        (in lower-case) unless the option <a href="#-k"><font
+        color="#800000"><tt>-k</tt></font></a> or <font
+        color="#800000"><tt>--tokens-file</tt></font> has been
+        specified. This class is essential if you wish to put the
+        definition of routine <font color="#008080"><em><tt>read_token</tt></em></font>
         in a separate class, because <font color="#008080"><em><tt>read_token</tt></em></font><font
         color="#008080" size="2" face="Courier New"><em> </em></font>needs
         to be able to refer to token type codes. This class also
@@ -72,6 +75,15 @@ alphabetized by short option:</p>
         are still available for compatibility with previous
         version of <em>geyacc</em>. These options will be removed
         in future releases.]</dd>
+    <dt><a name="-k"><font color="#800000"><tt>-k</tt></font></a><font
+        color="#800000"><tt> filename<br>
+        --tokens-file=filename</tt></font></dt>
+    <dd>Name of the file where the extra class containing integer
+        constants for the token type names will be written. If
+        the <a href="#-t"><font color="#800000"><tt>-t</tt></font></a>
+        or <font color="#800000"><tt>--tokens</tt></font> option
+        has not been specified, then nothing will be written to
+        that file.</dd>
     <dt><font color="#800000"><tt>-h<br>
         -?<br>
         --help</tt></font></dt>
@@ -118,7 +130,7 @@ alphabetized by short option:</p>
             <strong>http:</strong></font><a
             href="http://www.gobosoft.com"><font size="2">//www.gobosoft.com</font></a><font
             size="2"><br>
-            <strong>Last Updated:</strong> 25 March 2001</font><br>
+            <strong>Last Updated:</strong> 15 July 2001</font><br>
             <!--webbot bot="PurpleText"
             preview="
 $Date$ 
