@@ -15,7 +15,10 @@ deferred class GEANT_COMMAND
 
 inherit
 
-	ANY
+	DP_COMMAND
+		undefine
+			is_executable
+		end
 
 	GEANT_SHARED_PROPERTIES
 		export {NONE} all end
@@ -24,6 +27,9 @@ inherit
 		export {NONE} all end
 
 	KL_SHARED_EXCEPTIONS
+		export {NONE} all end
+
+	KL_SHARED_STANDARD_FILES
 		export {NONE} all end
 
 feature {NONE} -- Initialization
@@ -39,11 +45,6 @@ feature {NONE} -- Initialization
 		end
 
 feature -- Status report
-
-	is_executable: BOOLEAN is
-			-- Can command be executed?
-		deferred
-		end
 
 	exit_code: INTEGER
 			-- Exit code of last execution
@@ -79,7 +80,8 @@ feature -- Output
 			message_not_void: a_message /= Void
 		do
 			if project.verbose then
-				print (a_message)
+				std.output.put_string (a_message)
+				std.output.flush
 			end
 		end
 
@@ -88,16 +90,8 @@ feature -- Output
 		require
 			message_not_void: a_message /= Void
 		do
-			print (a_message)
-		end
-
-feature -- Execution
-
-	execute is
-			-- Execute command.
-		require
-			is_executable: is_executable
-		deferred
+			std.output.put_string (a_message)
+			std.output.flush
 		end
 
 feature {NONE} -- Implementation
