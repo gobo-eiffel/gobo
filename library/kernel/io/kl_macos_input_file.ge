@@ -1,0 +1,132 @@
+indexing
+
+	description:
+
+		"MacOS-like text input files"
+
+	library:    "Gobo Eiffel Kernel Library"
+	author:     "Eric Bezault <ericb@gobosoft.com>"
+	copyright:  "Copyright (c) 2001, Eric Bezault and others"
+	license:    "Eiffel Forum Freeware License v1 (see forum.txt)"
+	date:       "$Date$"
+	revision:   "$Revision$"
+
+class KL_MACOS_INPUT_FILE
+
+inherit
+
+	KI_INPUT_FILE
+		undefine
+#ifdef ISE
+			read_to_string,
+#endif
+			read_to_buffer
+		end
+
+	KL_BINARY_INPUT_FILE
+
+creation
+
+	make
+
+feature -- Input
+
+	read_line is
+			-- Read characters from input file until a line separator
+			-- or end of file is reached. Make the characters that have
+			-- been read available in `last_string' and discard the line
+			-- separator characters from the input file.
+		local
+			done: BOOLEAN
+			a_target: STRING
+			c: CHARACTER
+		do
+			if last_string = Void then
+#ifdef VE
+				!! last_string.make (0)
+#else
+				!! last_string.make (256)
+#endif
+			else
+#ifdef ISE
+				last_string.clear_all
+#endif
+#ifdef SE
+				last_string.clear
+#endif
+#ifdef HACT
+				last_string.set_count (0)
+#endif
+#ifdef VE
+				last_string.wipe_out
+#endif
+			end
+			a_target := last_string
+			from until done loop
+				read_character
+				if end_of_file then
+					done := True
+				else
+					c := last_character
+					if c = '%R' then
+						done := True
+					else
+						last_string.append_character (c)
+					end
+				end
+			end
+		end
+
+	read_new_line is
+			-- Read a line separator from input file.
+			-- Make the characters making up the recognized
+			-- line separator available in `last_string',
+			-- or make `last_string' empty and leave the
+			-- input file unchanged if no line separator
+			-- was found.
+		do
+			if last_string = Void then
+#ifdef VE
+				!! last_string.make (0)
+#else
+				!! last_string.make (256)
+#endif
+			else
+#ifdef ISE
+				last_string.clear_all
+#endif
+#ifdef SE
+				last_string.clear
+#endif
+#ifdef HACT
+				last_string.set_count (0)
+#endif
+#ifdef VE
+				last_string.wipe_out
+#endif
+			end
+			read_character
+			if not end_of_file then
+				if last_character = '%R' then
+					last_string.append_character ('%R')
+				else
+						-- Put character back to input file.
+#ifdef ISE || HACT
+					back
+#endif
+#ifdef SE
+					unread_character
+#endif
+#ifdef VE
+					has_buffered_character := True
+#endif
+				end
+			end
+		end
+
+feature -- Access
+
+	eol: STRING is "%R"
+			-- Line separator
+
+end -- class KL_MACOS_INPUT_FILE
