@@ -191,15 +191,35 @@ feature {NONE} -- Generation
 			a_file_not_void: a_file /= Void
 			a_file_open_write: output_stream_.is_open_write (a_file)
 		local
+			inspect_used: BOOLEAN
+		do
+			a_file.put_string ("%Tyy_execute_action (yy_act: INTEGER) is%N%
+				%%T%T%T-- Execute semantic action.%N%
+				%%T%Tdo%N")
+			if inspect_used then
+				print_inspect_actions (a_file)
+			else
+				print_binary_search_actions
+					(a_file, yy_rules.lower, yy_rules.upper)
+			end
+			a_file.put_string ("%T%Tend%N")
+		end
+
+
+	print_inspect_actions (a_file: like OUTPUT_STREAM_TYPE) is
+			-- Print code for actions to `a_file'.
+			-- The generated code uses an inspect instruction
+			-- to find out which action to execute.
+		require
+			a_file_not_void: a_file /= Void
+			a_file_open_write: output_stream_.is_open_write (a_file)
+		local
 			i, nb: INTEGER
 			rule, next_rule: LX_RULE
 			action: UT_PRINTABLE_COMMAND
 			not_shared: BOOLEAN
 		do
-			a_file.put_string ("%Tyy_execute_action (yy_act: INTEGER) is%N%
-				%%T%T%T-- Execute semantic action.%N%
-				%%T%Tdo%N%
-				%%T%T%Tinspect yy_act%N")
+			a_file.put_string ("%T%T%Tinspect yy_act%N")
 			nb := yy_rules.upper
 			from i := yy_rules.lower until i > nb loop
 				rule := yy_rules.item (i)
@@ -278,8 +298,93 @@ feature {NONE} -- Generation
 			end
 			a_file.put_string ("%T%T%Telse%N%T%T%T%Tfatal_error %
 				%(%"fatal scanner internal error: no action found%")%N%
-				%%T%T%Tend%N%
-				%%T%Tend%N")
+				%%T%T%Tend%N")
+		end
+
+	print_binary_search_actions
+		(a_file: like OUTPUT_STREAM_TYPE; l, u: INTEGER) is
+			-- Print code for actions indexed from `l' to `u'
+			-- to `a_file'. The generated code uses binary search
+			-- to find out which action to execute.
+		require
+			a_file_not_void: a_file /= Void
+			a_file_open_write: output_stream_.is_open_write (a_file)
+			l_large_enough: l >= yy_rules.lower
+			l_small_enough: l <= u
+			u_small_enough: u <= yy_rules.upper
+		local
+			t: INTEGER
+		do
+			if l = u then
+				print_action (a_file, yy_rules.item (l))
+			elseif l + 1 = u then
+				a_file.put_string ("if yy_act = ")
+				a_file.put_integer (l)
+				a_file.put_string (" then%N")
+				print_action (a_file, yy_rules.item (l))
+				a_file.put_string ("else%N")
+				print_action (a_file, yy_rules.item (u))
+				a_file.put_string ("end%N")
+			else
+				t := l + (u - l) // 2
+				a_file.put_string ("if yy_act <= ")
+				a_file.put_integer (t)
+				a_file.put_string (" then%N")
+				print_binary_search_actions (a_file, l, t)
+				a_file.put_string ("else%N")
+				print_binary_search_actions (a_file, t + 1, u)
+				a_file.put_string ("end%N")
+			end
+		end
+
+	print_action (a_file: like OUTPUT_STREAM_TYPE; a_rule: LX_RULE) is
+			-- Print code for `a_rule's action to `a_file'.
+		require
+			a_file_not_void: a_file /= Void
+			a_file_open_write: output_stream_.is_open_write (a_file)
+			a_rule_not_void: a_rule /= Void
+		local
+			action: UT_PRINTABLE_COMMAND
+		do
+			if a_rule.has_trail_context then
+						-- `rule' has trailing context.
+				if a_rule.trail_count > 0 then
+						-- The trail has a fixed size.
+					a_file.put_string ("%Tyy_position := yy_position - ")
+					a_file.put_integer (a_rule.trail_count)
+					a_file.put_character ('%N')
+				elseif a_rule.head_count > 0 then
+						-- The head has a fixed size.
+					a_file.put_string
+						("%Tyy_position := yy_start_position + ")
+					a_file.put_integer (a_rule.head_count)
+					a_file.put_character ('%N')
+				else
+						-- The rule has trailing context and both
+						-- the head and trail have variable size.
+						-- The work is done using another mechanism
+						-- (variable_trail_context).
+					-- (report performance degradation)
+				end
+			end
+			if bol_needed then
+				a_file.put_string
+					("%Tif yy_position > yy_start_position then%N%
+					%%T%Tinput_buffer.set_beginning_of_line %
+					%(yy_content.item (yy_position - 1) = '%%N')%N%
+					%%Tend%N")
+			end
+			if user_action_used then
+				a_file.put_string ("%Tuser_action%N")
+			end
+			a_file.put_string ("--|#line ")
+			a_file.put_integer (a_rule.line_nb)
+			a_file.put_character ('%N')
+			action ?= a_rule.action
+			if action /= Void then
+				action.print_to_file (a_file)
+				a_file.put_character ('%N')
+			end
 		end
 
 	print_eof_actions (a_file: like OUTPUT_STREAM_TYPE) is
