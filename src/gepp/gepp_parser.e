@@ -37,100 +37,130 @@ feature {NONE} -- Implementation
 	yy_build_parser_tables is
 			-- Build parser tables.
 		do
-			yytranslate := yytranslate_
-			yyr1 := yyr1_
-			yyr2 := yyr2_
-			yydefact := yydefact_
-			yydefgoto := yydefgoto_
-			yypact := yypact_
-			yypgoto := yypgoto_
-			yytable := yytable_
-			yycheck := yycheck_
+			yytranslate ?= yytranslate_template
+			yyr1 ?= yyr1_template
+			yyr2 ?= yyr2_template
+			yydefact ?= yydefact_template
+			yydefgoto ?= yydefgoto_template
+			yypact ?= yypact_template
+			yypgoto ?= yypgoto_template
+			yytable ?= yytable_template
+			yycheck ?= yycheck_template
 		end
 
 feature {NONE} -- Semantic actions
 
 	yy_do_action (yy_act: INTEGER) is
 			-- Execute semantic action.
+		local
+			yyval1: STRING
+			yyval2: BOOLEAN
 		do
 			inspect yy_act
 when 7 then
---|#line 60
+--|#line 63
+			yyval := yyval_default;
 			if not ignored then
-				define_value ("", dollar_to_string (yyvs.item (yyvsp - 1)))
+				define_value ("", yytype1 (yyvs.item (yyvsp - 1)))
 			end
 		
+
 when 8 then
---|#line 66
+--|#line 69
+			yyval := yyval_default;
 			if not ignored then
-				undefine_value (dollar_to_string (yyvs.item (yyvsp - 1)))
+				undefine_value (yytype1 (yyvs.item (yyvsp - 1)))
 			end
 		
+
 when 9 then
---|#line 72
+--|#line 75
+			yyval := yyval_default;
 			if not ignored then
-				process_include (dollar_to_string (yyvs.item (yyvsp - 1)))
+				process_include (yytype1 (yyvs.item (yyvsp - 1)))
 			end
 		
+
 when 10 then
---|#line 80
+--|#line 83
+			yyval := yyval_default;
 			if_level := if_level + 1
-			if not ignored and not dollar_to_boolean (yyvs.item (yyvsp - 1)) then
+			if not ignored and not yytype2 (yyvs.item (yyvsp - 1)) then
 				ignored_level := if_level
 			end
 		
+
 when 11 then
---|#line 87
+--|#line 90
+			yyval := yyval_default;
 			if_level := if_level + 1
-			if not ignored and dollar_to_boolean (yyvs.item (yyvsp - 1)) then
+			if not ignored and yytype2 (yyvs.item (yyvsp - 1)) then
 				ignored_level := if_level
 			end
 		
+
 when 12 then
---|#line 96
-			yyval := is_defined (dollar_to_string (yyvs.item (yyvsp)))
+--|#line 99
+
+			yyval2 := is_defined (yytype1 (yyvs.item (yyvsp)))
 		
+			yyval := yyval2
 when 13 then
---|#line 100
-			yyval := yyvs.item (yyvsp - 1)
+--|#line 103
+
+			yyval2 := yytype2 (yyvs.item (yyvsp - 1))
 		
+			yyval := yyval2
 when 14 then
---|#line 104
-			yyval := dollar_to_boolean (yyvs.item (yyvsp - 2)) and dollar_to_boolean (yyvs.item (yyvsp))
+--|#line 107
+
+			yyval2 := yytype2 (yyvs.item (yyvsp - 2)) and yytype2 (yyvs.item (yyvsp))
 		
+			yyval := yyval2
 when 15 then
---|#line 108
-			yyval := dollar_to_boolean (yyvs.item (yyvsp - 2)) or dollar_to_boolean (yyvs.item (yyvsp))
+--|#line 111
+
+			yyval2 := yytype2 (yyvs.item (yyvsp - 2)) or yytype2 (yyvs.item (yyvsp))
 		
+			yyval := yyval2
 when 16 then
---|#line 112
-			yyval := not dollar_to_boolean (yyvs.item (yyvsp))
+--|#line 115
+
+			yyval2 := not yytype2 (yyvs.item (yyvsp))
 		
+			yyval := yyval2
 when 17 then
---|#line 118
+--|#line 121
+			yyval := yyval_default;
 			if ignored_level = if_level then
 				ignored_level := 0
 			end
 			if_level := if_level - 1
 		
+
 when 18 then
---|#line 127
+--|#line 130
+			yyval := yyval_default;
 			if not ignored then
 				ignored_level := if_level
 			elseif ignored_level = if_level then
 				ignored_level := 0
 			end
 		
+
 			else
-				-- No action
+					-- No action
+				yyval := yyval_default
 			end
 		end
 
-feature {NONE} -- Tables
+feature {NONE} -- Table templates
 
-	yytranslate_: ARRAY [INTEGER] is
+	yytranslate_template: ANY is
+			-- This is supposed to be "like FIXED_INTEGER_ARRAY_TYPE",
+			-- but once functions cannot be declared with anchored types.
 		once
-			Result := INTEGER_ARRAY_.make_from_array (<<
+			Result := yyfixed_array (<<
 			    0,    2,    2,    2,    2,    2,    2,    2,    2,    2,
 			    2,    2,    2,    2,    2,    2,    2,    2,    2,    2,
 			    2,    2,    2,    2,    2,    2,    2,    2,    2,    2,
@@ -160,76 +190,130 @@ feature {NONE} -- Tables
 			    2,    2,    2,    2,    2,    2,    2,    2,    2,    2,
 			    2,    2,    2,    2,    2,    2,    1,    2,    3,    4,
 			    5,    6,    7,    8,    9,   10,   11,   12,   13,   14,
-			   15>>, 0)
+			   15>>)
 		end
 
-	yyr1_: ARRAY [INTEGER] is
+	yyr1_template: ANY is
+			-- This is supposed to be "like FIXED_INTEGER_ARRAY_TYPE",
+			-- but once functions cannot be declared with anchored types.
 		once
-			Result := INTEGER_ARRAY_.make_from_array (<<
-			    0,   19,   20,   20,   20,   21,   21,   21,   21,   21,
-			   22,   22,   25,   25,   25,   25,   25,   23,   24>>, 0)
+			Result := yyfixed_array (<<
+			    0,   20,   21,   21,   21,   22,   22,   22,   22,   22,
+			   23,   23,   19,   19,   19,   19,   19,   24,   25>>)
 		end
 
-	yyr2_: ARRAY [INTEGER] is
+	yyr2_template: ANY is
+			-- This is supposed to be "like FIXED_INTEGER_ARRAY_TYPE",
+			-- but once functions cannot be declared with anchored types.
 		once
-			Result := INTEGER_ARRAY_.make_from_array (<<
+			Result := yyfixed_array (<<
 			    0,    1,    0,    1,    2,    3,    5,    3,    3,    3,
-			    3,    3,    1,    3,    3,    3,    2,    2,    2>>, 0)
+			    3,    3,    1,    3,    3,    3,    2,    2,    2>>)
 		end
 
-	yydefact_: ARRAY [INTEGER] is
+	yydefact_template: ANY is
+			-- This is supposed to be "like FIXED_INTEGER_ARRAY_TYPE",
+			-- but once functions cannot be declared with anchored types.
 		once
-			Result := INTEGER_ARRAY_.make_from_array (<<
+			Result := yyfixed_array (<<
 			    2,    0,    0,    0,    0,    0,    1,    3,    2,    0,
 			    0,    0,    0,    0,   12,    0,    0,    4,    0,    8,
 			    7,    9,    0,   16,    0,    0,   11,   10,    0,    0,
 			    5,    2,   13,   14,   15,   17,   18,    0,    6,    0,
-			    0,    0>>, 0)
+			    0,    0>>)
 		end
 
-	yydefgoto_: ARRAY [INTEGER] is
+	yydefgoto_template: ANY is
+			-- This is supposed to be "like FIXED_INTEGER_ARRAY_TYPE",
+			-- but once functions cannot be declared with anchored types.
 		once
-			Result := INTEGER_ARRAY_.make_from_array (<<
-			   39,    6,    7,    8,   30,   31,   15>>, 0)
+			Result := yyfixed_array (<<
+			   15,   39,    6,    7,    8,   30,   31>>)
 		end
 
-	yypact_: ARRAY [INTEGER] is
+	yypact_template: ANY is
+			-- This is supposed to be "like FIXED_INTEGER_ARRAY_TYPE",
+			-- but once functions cannot be declared with anchored types.
 		once
-			Result := INTEGER_ARRAY_.make_from_array (<<
-			   13,   42,   38,   36,   -2,   -2,   13, -32768,   13,   28,
-			   27,   18,   -2,   -2, -32768,   33,   29, -32768,   22, -32768,
-			 -32768, -32768,  -11, -32768,   -2,   -2, -32768, -32768,   11,    1,
-			 -32768,   13, -32768, -32768,   -4, -32768, -32768,   31, -32768,    8,
-			    5, -32768>>, 0)
+			Result := yyfixed_array (<<
+			   29,   40,   39,   37,   11,   11,   29, -32768,   29,   36,
+			   35,   34,   11,   11, -32768,   28,   15, -32768,   10, -32768,
+			 -32768, -32768,   23, -32768,   11,   11, -32768, -32768,   33,   14,
+			 -32768,   29, -32768, -32768,   25, -32768, -32768,    1, -32768,   18,
+			    3, -32768>>)
 		end
 
-	yypgoto_: ARRAY [INTEGER] is
+	yypgoto_template: ANY is
+			-- This is supposed to be "like FIXED_INTEGER_ARRAY_TYPE",
+			-- but once functions cannot be declared with anchored types.
 		once
-			Result := INTEGER_ARRAY_.make_from_array (<<
-			 -32768,   -7,   -6, -32768,   14, -32768,   -3>>, 0)
+			Result := yyfixed_array (<<
+			   -3, -32768,   -7,   -6, -32768,   12, -32768>>)
 		end
 
-	yytable_: ARRAY [INTEGER] is
+	yytable_template: ANY is
+			-- This is supposed to be "like FIXED_INTEGER_ARRAY_TYPE",
+			-- but once functions cannot be declared with anchored types.
 		once
-			Result := INTEGER_ARRAY_.make_from_array (<<
-			   17,   18,   16,   25,   24,   41,   14,   32,   40,   22,
-			   23,   24,   17,   36,   13,   12,    5,    4,    3,    2,
-			    1,   33,   34,   35,   37,    5,    4,    3,    2,    1,
-			   21,   17,   29,   28,    5,    4,    3,    2,    1,   20,
-			   19,   27,   28,   25,   24,   26,   10,   25,   24,   11,
-			    9,   38>>, 0)
+			Result := yyfixed_array (<<
+			   17,   18,   16,   41,    5,    4,    3,    2,    1,   22,
+			   23,   28,   17,    5,    4,    3,    2,    1,   40,   29,
+			   28,   33,   34,   14,   37,   36,   27,   13,   12,   25,
+			   24,   17,    5,    4,    3,    2,    1,   25,   24,   26,
+			   24,   32,   25,   24,   35,   21,   20,   19,    0,   38,
+			   11,   10,    9>>)
 		end
 
-	yycheck_: ARRAY [INTEGER] is
+	yycheck_template: ANY is
+			-- This is supposed to be "like FIXED_INTEGER_ARRAY_TYPE",
+			-- but once functions cannot be declared with anchored types.
 		once
-			Result := INTEGER_ARRAY_.make_from_array (<<
-			    6,    8,    5,   14,   15,    0,    8,   18,    0,   12,
-			   13,   15,   18,   12,   16,   17,    3,    4,    5,    6,
-			    7,   24,   25,   12,   31,    3,    4,    5,    6,    7,
-			   12,   37,   10,   11,    3,    4,    5,    6,    7,   12,
-			   12,   12,   11,   14,   15,   12,    8,   14,   15,   13,
-			    8,   37>>, 0)
+			Result := yyfixed_array (<<
+			    6,    8,    5,    0,    3,    4,    5,    6,    7,   12,
+			   13,   10,   18,    3,    4,    5,    6,    7,    0,    9,
+			   10,   24,   25,   12,   31,   11,   11,   16,   17,   14,
+			   15,   37,    3,    4,    5,    6,    7,   14,   15,   11,
+			   15,   18,   14,   15,   11,   11,   11,   11,   -1,   37,
+			   13,   12,   12>>)
 		end
+
+feature {NONE} -- Conversion
+
+	yytype1 (v: ANY): STRING is
+		require
+			valid_type: yyis_type1 (v)
+		do
+			Result ?= v
+		ensure
+			definition: Result = v
+		end
+
+	yyis_type1 (v: ANY): BOOLEAN is
+		local
+			u: STRING
+		do
+			u ?= v
+			Result := (u = v)
+		end
+
+	yytype2 (v: ANY): BOOLEAN is
+		require
+			valid_type: yyis_type2 (v)
+		local
+			ref: BOOLEAN_REF
+		do
+			ref ?= v
+			Result := ref.item
+		end
+
+	yyis_type2 (v: ANY): BOOLEAN is
+		local
+			u: BOOLEAN_REF
+		do
+			u ?= v
+			Result := (u = v)
+		end
+
 
 feature {NONE} -- Constants
 
@@ -242,7 +326,7 @@ feature {NONE} -- Constants
 	yyNtbase: INTEGER is 19
 			-- Number of tokens
 
-	yyLast: INTEGER is 51
+	yyLast: INTEGER is 52
 			-- Upper bound of `yytable' and `yycheck'
 
 	yyMax_token: INTEGER is 270
@@ -395,21 +479,6 @@ feature -- Element change
 			defined_values.remove (a_name)
 		ensure
 			a_name_undefined: not is_defined (a_name)
-		end
-
-feature {NONE} -- Conversion
-
-	dollar_to_string (a: ANY): STRING is
-		do
-			Result ?= a
-		end
-
-	dollar_to_boolean (a: ANY): BOOLEAN is
-		local
-			bool_ref: BOOLEAN_REF
-		do
-			bool_ref ?= a
-			Result := bool_ref.item
 		end
 
 feature {NONE} -- Implementation

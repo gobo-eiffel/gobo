@@ -27,18 +27,26 @@ inherit
 		end
 
 
+feature -- Status report
+
+	valid_start_condition (sc: INTEGER): BOOLEAN is
+			-- Is `sc' a valid start condition?
+		do
+			Result := (INITIAL <= sc and sc <= S_PREPROC)
+		end
+
 feature {NONE} -- Implementation
 
 	yy_build_tables is
 			-- Build scanner tables.
 		do
-			yy_nxt := yy_nxt_
-			yy_chk := yy_chk_
-			yy_base := yy_base_
-			yy_def := yy_def_
-			yy_ec := yy_ec_
-			yy_meta := yy_meta_
-			yy_accept := yy_accept_
+			yy_nxt ?= yy_nxt_template
+			yy_chk ?= yy_chk_template
+			yy_base ?= yy_base_template
+			yy_def ?= yy_def_template
+			yy_ec ?= yy_ec_template
+			yy_meta ?= yy_meta_template
+			yy_accept ?= yy_accept_template
 		end
 
 	yy_execute_action (yy_act: INTEGER) is
@@ -165,6 +173,7 @@ if yy_act = 20 then
 last_token := text_item (1).code
 else
 --|#line 0
+last_token := yyError_token
 fatal_error ("scanner jammed")
 end
 end
@@ -182,11 +191,13 @@ end
 			end
 		end
 
-feature {NONE} -- Tables
+feature {NONE} -- Table templates
 
-	yy_nxt_: ARRAY [INTEGER] is
+	yy_nxt_template: ANY is
+			-- This is supposed to be "like FIXED_INTEGER_ARRAY_TYPE",
+			-- but once functions cannot be declared with anchored types.
 		once
-			Result := INTEGER_ARRAY_.make_from_array (<<
+			Result := yy_fixed_array (<<
 			    0,   25,   61,    8,   25,    9,   10,   11,   12,   13,
 			   14,   15,   16,   16,   17,   18,   16,   19,   16,   16,
 			   16,   20,   21,   30,   31,   32,   40,   28,   33,   60,
@@ -196,12 +207,14 @@ feature {NONE} -- Tables
 			   45,   44,   43,   42,   39,   38,   37,   36,   24,   23,
 			   35,   34,   29,   27,   24,   23,   61,    5,   61,   61,
 			   61,   61,   61,   61,   61,   61,   61,   61,   61,   61,
-			   61,   61,   61,   61,   61>>, 0)
+			   61,   61,   61,   61,   61>>)
 		end
 
-	yy_chk_: ARRAY [INTEGER] is
+	yy_chk_template: ANY is
+			-- This is supposed to be "like FIXED_INTEGER_ARRAY_TYPE",
+			-- but once functions cannot be declared with anchored types.
 		once
-			Result := INTEGER_ARRAY_.make_from_array (<<
+			Result := yy_fixed_array (<<
 			    0,   65,    0,    2,   65,    2,    3,    3,    3,    3,
 			    3,    3,    3,    3,    3,    3,    3,    3,    3,    3,
 			    3,    3,    3,   18,   18,   19,   32,   67,   19,   59,
@@ -211,36 +224,42 @@ feature {NONE} -- Tables
 			   38,   37,   34,   33,   31,   30,   29,   25,   24,   22,
 			   21,   20,   17,   15,   11,    7,    5,   61,   61,   61,
 			   61,   61,   61,   61,   61,   61,   61,   61,   61,   61,
-			   61,   61,   61,   61,   61>>, 0)
+			   61,   61,   61,   61,   61>>)
 		end
 
-	yy_base_: ARRAY [INTEGER] is
+	yy_base_template: ANY is
+			-- This is supposed to be "like FIXED_INTEGER_ARRAY_TYPE",
+			-- but once functions cannot be declared with anchored types.
 		once
-			Result := INTEGER_ARRAY_.make_from_array (<<
+			Result := yy_fixed_array (<<
 			    0,    0,    0,    5,    0,   76,   77,   72,   77,   77,
 			   77,   72,   77,    0,    0,   67,    0,   62,   10,   14,
 			   57,   53,   66,   77,   66,   63,    0,   77,    0,   55,
 			   50,   55,   17,   55,   53,   77,   77,   49,   50,   47,
 			   48,   48,   43,   45,   40,    0,   42,   41,   41,   34,
 			   38,   38,    0,    0,   34,   21,    0,    0,    0,   19,
-			    0,   77,   31,   35,   39,    0,   43,   23>>, 0)
+			    0,   77,   31,   35,   39,    0,   43,   23>>)
 		end
 
-	yy_def_: ARRAY [INTEGER] is
+	yy_def_template: ANY is
+			-- This is supposed to be "like FIXED_INTEGER_ARRAY_TYPE",
+			-- but once functions cannot be declared with anchored types.
 		once
-			Result := INTEGER_ARRAY_.make_from_array (<<
+			Result := yy_fixed_array (<<
 			    0,   62,   63,   61,    3,   61,   61,   64,   61,   61,
 			   61,   61,   61,   65,   66,   61,   67,   67,   67,   67,
 			   67,   61,   64,   61,   61,   65,   66,   61,   67,   67,
 			   67,   67,   67,   67,   67,   61,   61,   67,   67,   67,
 			   67,   67,   67,   67,   67,   67,   67,   67,   67,   67,
 			   67,   67,   67,   67,   67,   67,   67,   67,   67,   67,
-			   67,    0,   61,   61,   61,   61,   61,   61>>, 0)
+			   67,    0,   61,   61,   61,   61,   61,   61>>)
 		end
 
-	yy_ec_: ARRAY [INTEGER] is
+	yy_ec_template: ANY is
+			-- This is supposed to be "like FIXED_INTEGER_ARRAY_TYPE",
+			-- but once functions cannot be declared with anchored types.
 		once
-			Result := INTEGER_ARRAY_.make_from_array (<<
+			Result := yy_fixed_array (<<
 			    0,    1,    1,    1,    1,    1,    1,    1,    1,    2,
 			    3,    1,    1,    2,    1,    1,    1,    1,    1,    1,
 			    1,    1,    1,    1,    1,    1,    1,    1,    1,    1,
@@ -268,26 +287,30 @@ feature {NONE} -- Tables
 			    1,    1,    1,    1,    1,    1,    1,    1,    1,    1,
 			    1,    1,    1,    1,    1,    1,    1,    1,    1,    1,
 			    1,    1,    1,    1,    1,    1,    1,    1,    1,    1,
-			    1,    1,    1,    1,    1,    1,    1>>, 0)
+			    1,    1,    1,    1,    1,    1,    1>>)
 		end
 
-	yy_meta_: ARRAY [INTEGER] is
+	yy_meta_template: ANY is
+			-- This is supposed to be "like FIXED_INTEGER_ARRAY_TYPE",
+			-- but once functions cannot be declared with anchored types.
 		once
-			Result := INTEGER_ARRAY_.make_from_array (<<
+			Result := yy_fixed_array (<<
 			    0,    1,    1,    2,    3,    1,    1,    4,    4,    4,
-			    4,    4,    4,    4,    4,    4,    4,    1>>, 0)
+			    4,    4,    4,    4,    4,    4,    4,    1>>)
 		end
 
-	yy_accept_: ARRAY [INTEGER] is
+	yy_accept_template: ANY is
+			-- This is supposed to be "like FIXED_INTEGER_ARRAY_TYPE",
+			-- but once functions cannot be declared with anchored types.
 		once
-			Result := INTEGER_ARRAY_.make_from_array (<<
+			Result := yy_fixed_array (<<
 			    0,    0,    0,    0,    0,   22,   20,    4,    3,    1,
 			   19,    5,   18,   19,    6,   19,   15,   15,   15,   15,
 			   15,   19,    4,    2,    5,    0,    6,   16,   15,   15,
 			   15,   15,   15,   15,   15,   17,   14,   15,   15,   15,
 			   15,   15,   15,   15,   15,    9,   15,   15,   15,   15,
 			   15,   15,   10,    7,   15,   15,   13,   12,    8,   15,
-			   11,    0>>, 0)
+			   11,    0>>)
 		end
 
 feature {NONE} -- Constants
@@ -337,7 +360,7 @@ feature {NONE} -- Initialization
 	make is
 			-- Create a new scanner.
 		do
-			make_compressed_scanner_skeleton
+			make_with_buffer (Empty_buffer)
 			output_file := std.output
 			line_nb := 1
 		end
