@@ -16,6 +16,11 @@ deferred class KL_FILE
 inherit
 
 	KI_FILE
+#ifdef VE
+		undefine
+			copy
+		end
+#endif
 
 	KL_SHARED_FILE_SYSTEM
 		export

@@ -20,6 +20,9 @@ inherit
 #ifdef ISE
 			read_to_string,
 #endif
+#ifdef VE
+			copy,
+#endif
 			read_to_buffer
 		end
 

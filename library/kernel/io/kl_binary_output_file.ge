@@ -16,6 +16,11 @@ class KL_BINARY_OUTPUT_FILE
 inherit
 
 	KI_BINARY_OUTPUT_FILE
+#ifdef VE
+		undefine
+			copy
+		end
+#endif
 
 	KL_OUTPUT_FILE
 #ifdef ISE || HACT

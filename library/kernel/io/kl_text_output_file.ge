@@ -18,6 +18,11 @@ class KL_TEXT_OUTPUT_FILE
 inherit
 
 	KI_TEXT_OUTPUT_FILE
+#ifdef VE
+		undefine
+			copy
+		end
+#endif
 
 	KL_OUTPUT_FILE
 #ifdef ISE || HACT || VE

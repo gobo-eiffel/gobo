@@ -16,6 +16,10 @@ class KL_WINDOWS_OUTPUT_FILE
 inherit
 
 	KI_TEXT_OUTPUT_FILE
+		undefine
+				-- Needed for VE.
+			copy
+		end
 
 	KL_BINARY_OUTPUT_FILE
 		export {NONE} all end

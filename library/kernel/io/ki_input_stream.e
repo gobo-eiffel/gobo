@@ -13,14 +13,6 @@ indexing
 
 deferred class KI_INPUT_STREAM [G]
 
-inherit
-
-	ANY
-		undefine
-				-- Needed for VE.
-			copy
-		end
-
 feature -- Input
 
 	read is

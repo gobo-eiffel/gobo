@@ -18,6 +18,11 @@ class KL_STDERR_FILE
 inherit
 
 	KI_TEXT_OUTPUT_STREAM
+#ifdef VE
+		undefine
+			copy
+		end
+#endif
 
 	KL_OPERATING_SYSTEM
 		export

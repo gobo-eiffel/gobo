@@ -13,14 +13,6 @@ indexing
 
 deferred class KI_OUTPUT_STREAM [G]
 
-inherit
-
-	ANY
-		undefine
-				-- Needed for VE.
-			copy
-		end
-
 feature -- Output
 
 	put (v: G) is

@@ -18,6 +18,7 @@ inherit
 	KI_INPUT_FILE
 #ifdef VE
 		undefine
+			copy,
 				-- Make sure that this deferred class
 				-- has a deferred routine.
 			read_to_string

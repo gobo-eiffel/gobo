@@ -16,10 +16,6 @@ deferred class KI_FILE
 inherit
 
 	KI_FILE_SYSTEM_ENTRY
-		undefine
-				-- Needed for VE.
-			copy
-		end
 
 feature -- Access
 

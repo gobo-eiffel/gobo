@@ -21,12 +21,7 @@ inherit
 		end
 
 	KL_IMPORTED_STRING_ROUTINES
-		export
-			{NONE} all
-		undefine
-				-- Needed for VE.
-			copy
-		end
+		export {NONE} all end
 
 feature -- Output
 

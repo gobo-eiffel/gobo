@@ -21,6 +21,10 @@ inherit
 	KI_TEXT_INPUT_STREAM
 		rename
 			end_of_input as end_of_file
+#ifdef VE
+		undefine
+			copy
+#endif
 		redefine
 #ifdef ISE
 			read_to_string,
