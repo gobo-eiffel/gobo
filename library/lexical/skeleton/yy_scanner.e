@@ -45,7 +45,6 @@ feature {NONE} -- Initialization
 		require
 			a_buffer_not_void: a_buffer /= Void
 		do
-			output_file := std.output
 			input_buffer := a_buffer
 		ensure
 			input_buffer_set: input_buffer = a_buffer
@@ -247,24 +246,20 @@ feature -- Input
 
 feature -- Output
 
-	output_file: like OUTPUT_STREAM_TYPE
-			-- Output file
-
-	set_output_file (a_file: like OUTPUT_STREAM_TYPE) is
-			-- Set `output_file' to `a_file'.
+	output (a_text: like text) is
+			-- Output `a_text'.
+			-- (Note: this routine can be redefined in descendant
+			-- classes. Default: print `a_text' to standard output.)
 		require
-			a_file_not_void: a_file /= Void
-			a_file_open_write: OUTPUT_STREAM_.is_open_write (a_file)
+			a_text_not_void: a_text /= Void
 		do
-			output_file := a_file
-		ensure
-			output_file_set: output_file = a_file
+			std.output.put_string (a_text)
 		end
 
 	echo is
-			-- Copy `text' to `output_file'.
+			-- Output `text' using feature `output'.
 		do
-			output_file.put_string (text)
+			output (text)
 		end
 
 feature -- Error handling
@@ -283,7 +278,5 @@ feature -- Error handling
 invariant
 
 	input_buffer_not_void: input_buffer /= Void
-	output_not_void: output_file /= Void
-	output_open_write: OUTPUT_STREAM_.is_open_write (output_file)
 
 end -- class YY_SCANNER
