@@ -1,5 +1,5 @@
-@rem system:     "Infix Notation Calculator"
-@rem compiler:   "SmallEiffel -0.81"
+@rem system:     "'ascii2ps' pretty-printer"
+@rem compiler:   "SmallEiffel -0.80"
 @rem author:     "Eric Bezault <ericb@gobo.demon.co.uk>"
 @rem copyright:  "Copyright (c) 1998, Eric Bezault"
 @rem date:       "$Date$"
@@ -7,10 +7,10 @@
 
 
 @echo .\>									loadpath.se
-@echo %GOBO%\example\parse\calc\>>			loadpath.se
+@echo %GOBO%\example\lexical\ascii2ps\>>	loadpath.se
 
-@rem	-- Gobo Eiffel Parse Library
-@echo %GOBO%\library\parse\skeleton\>>		loadpath.se
+@rem	-- Gobo Eiffel Lexical Library
+@echo %GOBO%\library\lexical\skeleton\>>	loadpath.se
 
 @rem	-- Gobo Eiffel Kernel Library
 @echo %GOBO%\library\kernel\>>				loadpath.se
@@ -20,6 +20,6 @@
 @echo %SmallEiffel%\lib_std\>>				loadpath.se
 
 
-set options= -boost -no_split -no_warning
-compile_to_c %options% CALC execute
-calc.bat
+set options= -boost -no_split -no_warning -no_gc
+compile_to_c %options% ASCII2PS make
+ascii2ps.bat

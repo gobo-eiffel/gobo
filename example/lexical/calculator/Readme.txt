@@ -7,7 +7,7 @@ To compile this example:
 1. Use the script 'make_parser.bat' to generate class CALC_PARSER and
    'make_scanner.bat' to generate class CALC_SCANNER if necessary.
 2. Use your HACT Eiffel compiler to compile the Eiffel system using
-   the provided Ace file (hact*.ace).
+   the provided Ace file (hact.ace).
 3. Run the calcultor:
        calc
    and enter infix notation expressions to be evaluated, one per line.

@@ -1,5 +1,5 @@
 -- system:     "'ascii2ps' pretty-printer"
--- compiler:   "Visual Eiffel 2.3"
+-- compiler:   "Visual Eiffel 2.5"
 -- author:     "Eric Bezault <ericb@gobo.demon.co.uk>"
 -- copyright:  "Copyright (c) 1998, Eric Bezault"
 -- date:       "$Date$"

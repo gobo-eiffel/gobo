@@ -4,7 +4,7 @@ It uses Gelex to generate class EIFFEL_SCANNER.
 Class EIFFEL_SCANNER has three creation procedures. `make' just creates
 a scanner. `execute' creates a scanner and scans the files given in the 
 command line, one by one. `benchmark' expects the command line to be made
-of a number 'nb' followed by a filename. It creates a scanner and scans
+up of a number 'nb' followed by a filename. It creates a scanner and scans
 'nb' times the file given as second argument.
 
 Note: This Eiffel scanner is just a simple example. It is not intended
@@ -16,11 +16,11 @@ To compile this example:
 1. Use the script 'make_scanner.bat' to generate class EIFFEL_SCANNER
    if necessary.
 2. Choose either `execute' or `benchmark' as the creation prodecure of
-   the root class EIFFEL_SCANNER in you Ace file (ISE Eiffel: ise*.ace,
-   Halstenbach: hact*.ace), your ESD file (Visual Eiffel: ve*.esd) or
-   your command line (SmallEiffel: se*.bat).
+   the root class EIFFEL_SCANNER in your Ace file (ISE Eiffel: ise.ace,
+   Halstenbach: hact.ace), your ESD file (Visual Eiffel: ve.esd) or
+   your command line (SmallEiffel: se.bat).
 3. Use your favorite Eiffel compiler to compile the Eiffel system.
-   With SmallEiffel, you can just execute the script se*.bat (after
+   With SmallEiffel, you can just execute the script se.bat (after
    possible modifications).
 4. Execute the Eiffel scanner using
        eiffel_scanner filename1 ...

@@ -1,5 +1,5 @@
 -- system:     "Infix Notation Calculator"
--- compiler:   "Visual Eiffel 2.2"
+-- compiler:   "Visual Eiffel 2.5"
 -- author:     "Eric Bezault <ericb@gobo.demon.co.uk>"
 -- copyright:  "Copyright (c) 1998, Eric Bezault"
 -- date:       "$Date$"
