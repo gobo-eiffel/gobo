@@ -17,7 +17,14 @@ export geformat="-html2"
 
 GOBO_UNIX=`echo $GOBO | sed "s/\\\\\\/\//g"`
 export GOBO_UNIX
-find ${GOBO_UNIX}/library -path ${GOBO_UNIX}/library/kernel/spec -prune \
+find ${GOBO_UNIX}/library \
+	-path ${GOBO_UNIX}/library/kernel/spec -prune \
+	-path ${GOBO_UNIX}/library/time/spec -prune \
+	-path ${GOBO_UNIX}/library/utility/spec -prune \
 	-o -name *.e -exec short $geformat $geoptions {} \; > precomp.html
 find ${GOBO_UNIX}/library/kernel/spec/se \
+	-name *.e -exec short $geformat $geoptions {} \; >> precomp.html
+find ${GOBO_UNIX}/library/time/spec/se \
+	-name *.e -exec short $geformat $geoptions {} \; >> precomp.html
+find ${GOBO_UNIX}/library/utility/spec/se \
 	-name *.e -exec short $geformat $geoptions {} \; >> precomp.html
