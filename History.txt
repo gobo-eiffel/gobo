@@ -2,6 +2,7 @@ Version ?
 
 	geant:
 
+	* Task 'echo' supports writing message to a file.
 	* Targets support argument handling. Tasks 'geant' and 'precursor' have been
 	  modified so that they are able to pass these arguments.
 	* Targets support 'obsolete' mechanism.
