@@ -124,7 +124,7 @@ href="flatshort/dt_time.html#infix_plus"><font color="#008080"><em><strong><tt>i
 </tt></em><tt>&quot;+&quot;</tt></font></a> and <a
 href="flatshort/dt_time.html#infix_ampersand_t"><font
 color="#008080"><em><strong><tt>infix</tt></strong></em><em><tt> </tt></em><tt>&quot;&amp;t&quot;</tt></font></a>
-which returns a new object at each call and do not alter the
+which return a new object at each call and do not alter the
 current time object. In short, a <a href="duration.html#time">time
 duration</a> is an object which contains among other things the
 number of hours, minutes, seconds and milliseconds between two
@@ -150,6 +150,25 @@ instead of the <font color="#008080"><em><tt>duration</tt></em></font>
 routine above. The subtraction of the two times 20:05:14 and
 13:24:00 now yields the canonical duration 6 hours, 41 minutes
 and 14 seconds.</p>
+
+<p>Constants related to time are available in class <a
+href="flatshort/dt_gregorian_calendar.html"><font color="#008080"><em><tt>DT_GREGORIAN_CALENDAR</tt></em></font></a>.
+<a href="flatshort/dt_gregorian_calendar.html#seconds_in_minute"><font
+color="#008080"><em><tt>Seconds_in_minute</tt></em></font></a>, <a
+href="flatshort/dt_gregorian_calendar.html#seconds_in_hour"><font
+color="#008080"><em><tt>Seconds_in_hour</tt></em></font></a> and <a
+href="flatshort/dt_gregorian_calendar.html#seconds_in_day"><font
+color="#008080"><em><tt>Seconds_in_day</tt></em></font></a>
+return the number of seconds in a minute, hour or day. <a
+href="flatshort/dt_gregorian_calendar.html#milliseconds_in_day"><font
+color="#008080"><em><tt>Milliseconds_in_day</tt></em></font></a>
+returns the number of milliseconds in a day. <a
+href="flatshort/dt_gregorian_calendar.html#minutes_in_hour"><font
+color="#008080"><em><tt>Minutes_in_hour</tt></em></font></a>
+returns the number of minutes in an hour. <a
+href="flatshort/dt_gregorian_calendar.html#hours_in_day"><font
+color="#008080"><em><tt>Hours_in_day</tt></em></font></a> returns
+the number of hours in a day.</p>
 
 <h2><a name="date">Date</a></h2>
 
@@ -178,7 +197,7 @@ and <a href="flatshort/dt_date.html#is_leap_year"><font
 color="#008080"><em><tt>is_leap_year</tt></em></font></a>, are
 also available in class <font color="#008080"><em><tt>DT_DATE</tt></em></font>
 in order to inspect the month and year of a given date object.
-The four fields of class <font color="#008080"><em><tt>DT_DATE</tt></em></font>
+The three fields of class <font color="#008080"><em><tt>DT_DATE</tt></em></font>
 can be set individually or together with the following routines: <a
 href="flatshort/dt_date.html#set_year"><font color="#008080"><em><tt>set_year</tt></em></font></a>,
 <a href="flatshort/dt_date.html#set_month"><font color="#008080"><em><tt>set_month</tt></em></font></a>,
@@ -248,7 +267,7 @@ href="flatshort/dt_date.html#infix_plus"><font color="#008080"><em><strong><tt>i
 </tt></em><tt>&quot;+&quot;</tt></font></a> and <a
 href="flatshort/dt_date.html#infix_ampersand_d"><font
 color="#008080"><em><strong><tt>infix</tt></strong></em><em><tt> </tt></em><tt>&quot;&amp;d&quot;</tt></font></a>
-which returns a new object at each call and do not alter the
+which return a new object at each call and do not alter the
 current date object. In short, a <a href="duration.html#date">date
 duration</a> is an object which contains among other things the
 number of years, months and days between two dates. For example
@@ -287,6 +306,67 @@ is smaller than 30 days and adding 1 month to 31 May 2000 yields
 the expected date thanks to the truncation of the day which
 occurs in the addition routines.</p>
 
+<p>Constants related to date are available in class <font
+color="#008080"><em><tt>DT_GREGORIAN_CALENDAR</tt></em></font>. <a
+href="flatshort/dt_gregorian_calendar.html#months_in_year"><font
+color="#008080"><em><tt>Months_in_year</tt></em></font></a>
+returns the number of months in a year. <a
+href="flatshort/dt_gregorian_calendar.html#days_in_year"><font
+color="#008080"><em><tt>Days_in_year</tt></em></font></a> returns
+the number of days in a non-leap year whereas <a
+href="flatshort/dt_gregorian_calendar.html#days_in_leap_year"><font
+color="#008080"><em><tt>Days_in_leap_year</tt></em></font></a>
+returns the number of days in a leap year. The months of the year
+are also given symbolic names: <a
+href="flatshort/dt_gregorian_calendar.html#january"><font
+color="#008080"><em><tt>January</tt></em></font></a>, <a
+href="flatshort/dt_gregorian_calendar.html#february"><font
+color="#008080"><em><tt>February</tt></em></font></a>, <a
+href="flatshort/dt_gregorian_calendar.html#march"><font
+color="#008080"><em><tt>March</tt></em></font></a>, <a
+href="flatshort/dt_gregorian_calendar.html#april"><font
+color="#008080"><em><tt>April</tt></em></font></a>, <a
+href="flatshort/dt_gregorian_calendar.html#may"><font
+color="#008080"><em><tt>May</tt></em></font></a>, <a
+href="flatshort/dt_gregorian_calendar.html#june"><font
+color="#008080"><em><tt>June</tt></em></font></a>, <a
+href="flatshort/dt_gregorian_calendar.html#july"><font
+color="#008080"><em><tt>July</tt></em></font></a>, <a
+href="flatshort/dt_gregorian_calendar.html#august"><font
+color="#008080"><em><tt>August</tt></em></font></a>, <a
+href="flatshort/dt_gregorian_calendar.html#september"><font
+color="#008080"><em><tt>September</tt></em></font></a>, <a
+href="flatshort/dt_gregorian_calendar.html#october"><font
+color="#008080"><em><tt>October</tt></em></font></a>, <a
+href="flatshort/dt_gregorian_calendar.html#november"><font
+color="#008080"><em><tt>November</tt></em></font></a>, <a
+href="flatshort/dt_gregorian_calendar.html#december"><font
+color="#008080"><em><tt>December</tt></em></font></a>. <a
+href="flatshort/dt_gregorian_calendar.html#days_in_week"><font
+color="#008080"><em><tt>Days_in_week</tt></em></font></a> returns
+the number of days in a week and days ot the week are given
+symbolic names: <a
+href="flatshort/dt_gregorian_calendar.html#sunday"><font
+color="#008080"><em><tt>Sunday</tt></em></font></a>, <a
+href="flatshort/dt_gregorian_calendar.html#monday"><font
+color="#008080"><em><tt>Monday</tt></em></font></a>, <a
+href="flatshort/dt_gregorian_calendar.html#tuesday"><font
+color="#008080"><em><tt>Tuesday</tt></em></font></a>, <a
+href="flatshort/dt_gregorian_calendar.html#wednesday"><font
+color="#008080"><em><tt>Wednesday</tt></em></font></a>, <a
+href="flatshort/dt_gregorian_calendar.html#thursday"><font
+color="#008080"><em><tt>Thursday</tt></em></font></a>, <a
+href="flatshort/dt_gregorian_calendar.html#friday"><font
+color="#008080"><em><tt>Friday</tt></em></font></a>, <a
+href="flatshort/dt_gregorian_calendar.html#saturday"><font
+color="#008080"><em><tt>Saturday</tt></em></font></a>. The next
+and previous day of a given day in the week can also be found by
+calling features <a
+href="flatshort/dt_gregorian_calendar.html#next_day"><font
+color="#008080"><em><tt>next_day</tt></em></font></a> and <a
+href="flatshort/dt_gregorian_calendar.html#previous_day"><font
+color="#008080"><em><tt>previous_day</tt></em></font></a>.</p>
+
 <h2><a name="date_time">Date Time</a></h2>
 
 <p>Date/time objects are a combination of a date and a time
@@ -308,11 +388,10 @@ the features inherited from these two classes, one can also get
 or set the date and the time parts of a date/time object with
 routines <a href="flatshort/dt_date_time.html#date"><font
 color="#008080"><em><tt>date</tt></em></font></a>, <a
-href="flatshort/dt_date_time.html#time"><font color="#008080"><em><tt>time</tt></em></font></a><font
-color="#008080"><em><tt>, </tt></em></font><a
-href="flatshort/dt_date_time.html#set_date"><font color="#008080"><em><tt>set_date</tt></em></font></a>
-and <a href="flatshort/dt_date_time.html#set_time"><font
-color="#008080"><em><tt>set_time</tt></em></font></a>.</p>
+href="flatshort/dt_date_time.html#time"><font color="#008080"><em><tt>time</tt></em></font></a>,
+<a href="flatshort/dt_date_time.html#set_date"><font
+color="#008080"><em><tt>set_date</tt></em></font></a> and <a
+href="flatshort/dt_date_time.html#set_time"><font color="#008080"><em><tt>set_time</tt></em></font></a>.</p>
 
 <p>Four creation procedures are provided. <a
 href="flatshort/dt_date_time.html#make"><font color="#008080"><em><tt>make</tt></em></font></a>
@@ -389,11 +468,12 @@ returns its time part.</p>
             <strong>http:</strong></font><a
             href="http://www.gobosoft.com"><font size="2">//www.gobosoft.com</font></a><font
             size="2"><br>
-            <strong>Last Updated:</strong> 22 April 2000</font><br>
+            <strong>Last Updated:</strong> 14 June 2000</font><br>
             <!--webbot bot="PurpleText"
             preview="
 $Date$ 
-$Revision$" --> 
+$Revision$"
+            --> 
         </address>
         </td>
         <td align="right" valign="top"><a
