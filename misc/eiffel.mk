@@ -98,7 +98,7 @@ ise-debug:
 
 compile-ise: ise.ace
 	${ISE_COMPILER} ${ISE_CFLAGS} -ace ise.ace
-	$(MAKE) ise_finish_freezing 'MAKEFLAGS='
+	${MAKE} ise_finish_freezing 'MAKEFLAGS='
 
 # Problem with ${MAKEFLAGS} when compiling under
 # Windows: 'nmake' (called by 'finish_freezing')
@@ -108,7 +108,7 @@ ise_finish_freezing:
 
 compile-ise-debug: ise-debug.ace
 	${ISE_COMPILER} ${ISE_DEBUG_CFLAGS} -ace ise-debug.ace
-	$(MAKE) ise_finish_freezing_debug 'MAKEFLAGS='
+	${MAKE} ise_finish_freezing_debug 'MAKEFLAGS='
 
 # Problem with ${MAKEFLAGS} when compiling under
 # Windows: 'nmake' (called by 'finish_freezing')
@@ -161,7 +161,7 @@ hact-debug:
 
 compile-hact: hact.ace
 	${HACT_COMPILER} ${HACT_CFLAGS} -ace hact.ace -project ${TARGET}.eif
-	$(MAKE) hact_fish 'MAKEFLAGS='
+	${MAKE} hact_fish 'MAKEFLAGS='
 
 # Problem with ${MAKEFLAGS} when compiling under
 # Windows: 'nmake' (called by 'fish') does not
@@ -171,7 +171,7 @@ hact_fish:
 
 compile-hact-debug: hact-debug.ace
 	${HACT_COMPILER} ${HACT_DEBUG_CFLAGS} -ace hact-debug.ace -project ${TARGET}.eif
-	$(MAKE) hact_fish_debug 'MAKEFLAGS='
+	${MAKE} hact_fish_debug 'MAKEFLAGS='
 
 # Problem with ${MAKEFLAGS} when compiling under
 # Windows: 'nmake' (called by 'fish') does not
