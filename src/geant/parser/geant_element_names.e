@@ -208,6 +208,15 @@ feature -- Task names
 			task_name_not_empty: not Result.empty
 		end
 
+	Mkdir_task_name: UC_STRING is
+			-- "Mkdir" task name
+		once
+			!! Result.make_from_string ("mkdir")
+		ensure
+			task_name_not_void: Result /= Void
+			task_name_not_empty: not Result.empty
+		end
+
 feature -- Miscellaneous
 
 	Empty_string: UC_STRING is

@@ -164,6 +164,9 @@ feature -- Processing
 					elseif an_element.name.is_equal (Echo_task_name) then
 							-- echo
 						!GEANT_ECHO_TASK! a_task.make_from_element (an_element)
+					elseif an_element.name.is_equal (Mkdir_task_name) then
+							-- echo
+						!GEANT_MKDIR_TASK! a_task.make_from_element (an_element)
 					else
 							-- Default:
 						a_task := Void
