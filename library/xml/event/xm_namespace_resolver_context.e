@@ -21,6 +21,9 @@ inherit
 
 	XM_UNICODE_STRUCTURE_FACTORY
 		export {NONE} all end
+	
+	KL_IMPORTED_STRING_ROUTINES
+		export {NONE} all end
 
 creation
 
@@ -150,7 +153,7 @@ feature {NONE} -- Constants
 	Default_pseudo_prefix: STRING is
 			-- Default pseudo prefix
 		once
-			create Result.make (0)
+			Result := STRING_.make_empty
 		ensure
 			prefix_not_void: Result /= Void
 		end
@@ -158,7 +161,7 @@ feature {NONE} -- Constants
 	Default_namespace: STRING is
 			-- Default namespace (empty)
 		once
-			create Result.make (0)
+			Result := STRING_.make_empty
 		ensure
 			namespace_not_void: Result /= Void
 		end

@@ -672,7 +672,7 @@ feature {NONE} -- String mode: shared empty string implementation
 	shared_empty_string_string: STRING is
 			-- Empty string of type STRING
 		once
-			create Result.make (0)
+			Result := STRING_.make_empty
 		ensure
 			string_type: Result.same_type ("")
 		end

@@ -14,15 +14,20 @@ class XM_OUTPUT
 
 inherit
 
+	ANY
+	
 	KL_SHARED_STANDARD_FILES
+		export {NONE} all end
+		
 	KL_IMPORTED_STRING_ROUTINES
+		export {NONE} all end
 
 feature -- Output
 
 	set_output_to_string is
 			-- Set output to new string.
 		do
-			create last_output.make (0)
+			last_output := STRING_.make_empty
 		ensure
 			last_output_not_void: last_output /= Void
 			last_output_empty: last_output.count = 0
