@@ -113,10 +113,17 @@ feature -- Access
 		require
 			a_name_not_void: a_name /= Void
 		do
-				-- Search commandline variables:
-			Commandline_variables.search (a_name)
-			if Commandline_variables.found then
-				Result := Commandline_variables.found_item
+				-- Check non overrridable variables:
+			if a_name.is_equal ("cwd") then
+				Result := file_system.cwd
+			end
+
+			if Result = Void then
+					-- Search commandline variables:
+				Commandline_variables.search (a_name)
+				if Commandline_variables.found then
+					Result := Commandline_variables.found_item
+				end
 			end
 			
 			if Result = Void then
@@ -135,13 +142,9 @@ feature -- Access
 			end
 
 			if Result = Void then
-				if a_name.is_equal ("cwd") then
-					Result := file_system.cwd
-				else
-					Result := clone("${")
-					Result.append_string(a_name)
-					Result.append_string("}")
-				end
+				Result := clone("${")
+				Result.append_string(a_name)
+				Result.append_string("}")
 			end
 
 		ensure
