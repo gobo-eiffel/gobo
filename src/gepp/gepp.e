@@ -5,7 +5,7 @@ indexing
 		"C-like preprocessors"
 
 	author:     "Eric Bezault <ericb@gobosoft.com>"
-	copyright:  "Copyright (c) 1999, Eric Bezault and others"
+	copyright:  "Copyright (c) 1999-2001, Eric Bezault and others"
 	license:    "Eiffel Forum Freeware License v1 (see forum.txt)"
 	date:       "$Date$"
 	revision:   "$Revision$"
@@ -17,7 +17,6 @@ inherit
 	GEPP_VERSION
 
 	KL_IMPORTED_INPUT_STREAM_ROUTINES
-	KL_IMPORTED_OUTPUT_STREAM_ROUTINES
 	KL_SHARED_STANDARD_FILES
 	KL_SHARED_EXCEPTIONS
 	KL_SHARED_ARGUMENTS
@@ -47,11 +46,12 @@ feature -- Processing
 			-- results to `out_filename'.
 		local
 			in_file: like INPUT_STREAM_TYPE
-			out_file: like OUTPUT_STREAM_TYPE
+			out_file: KL_TEXT_OUTPUT_FILE
 		do
 			if not out_filename.is_equal ("-") then
-				out_file := OUTPUT_STREAM_.make_file_open_write (out_filename)
-				if OUTPUT_STREAM_.is_open_write (out_file) then
+				!! out_file.make (out_filename)
+				out_file.recursive_open_write
+				if out_file.is_open_write then
 					parser.set_output_file (out_file)
 				else
 					report_cannot_write_error (out_filename)
@@ -77,9 +77,9 @@ feature -- Processing
 			end
 			if
 				out_file /= Void and then
-				not OUTPUT_STREAM_.is_closed (out_file)
+				not out_file.is_closed
 			then
-				OUTPUT_STREAM_.close (out_file)
+				out_file.close
 			end
 		end
 
@@ -124,6 +124,12 @@ feature -- Processing
 						i := i + 1
 					elseif nb = 2 and an_arg.item (2) = 'M' then
 						parser.set_makefile_dependencies (True)
+						i := i + 1
+					elseif nb = 2 and an_arg.item (2) = 'l' then
+						parser.set_empty_lines (True)
+						i := i + 1
+					elseif an_arg.is_equal ("--lines") then
+						parser.set_empty_lines (True)
 						i := i + 1
 					else
 						stop := True
@@ -211,8 +217,8 @@ feature -- Error handling
 			-- Gepp usage message.
 		once
 			!! Result.make
-				("[--version] [--help] [-hV?M]%N%
-					%%T[-Dname ...] [filename | -] [filename | -]")
+				("[--version][--help][-hV?lM]%N%
+					%%T[-Dname ...][--lines][filename | -][filename | -]")
 		ensure
 			usage_message_not_void: Result /= Void
 		end
