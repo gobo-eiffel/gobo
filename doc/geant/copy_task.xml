@@ -65,6 +65,22 @@
 					<para><emphasis>Default: </emphasis>-</para>
 				</listitem>
 			</varlistentry>
+
+			<varlistentry>
+				<term>force</term>
+				<listitem>
+					<para>
+						<emphasis>Description: </emphasis>Copy file even when the
+						possibly existing target file is not out of date.
+					</para>
+				</listitem>
+				<listitem>
+					<para><emphasis>Domain: </emphasis>Boolean (true|false)</para>
+				</listitem>
+				<listitem>
+					<para><emphasis>Default: </emphasis>false</para>
+				</listitem>
+			</varlistentry>
 		</variablelist>
 	</sect1>
 	
