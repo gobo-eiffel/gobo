@@ -52,7 +52,7 @@ already enough material for you to review.
 
 Note that I wrote it in ASCII form since it is better to 
 quote it in e-mail messages and I didn't have time to
-experiement with DocBook yet.
+experiment with DocBook yet.
 
 PS: Unfortunately the mailing list archive still doesn't
 work. I hope it will be fixed early next week when the folks
@@ -128,7 +128,7 @@ letters and it is considered bad style to use letter-case difference
 to concatenate words such as LinkedList for example. The name of
 deferred classes can also be adjective when they describe a property,
 such as DS_SORTABLE. It is suspicious to have verbs as class names
-since classes should describe objects rather that actions.
+since classes should describe objects rather than actions.
 
 Classes containing only constants can have the suffix _CONSTANTS
 and those containing only facility routines can have the suffix
@@ -175,7 +175,7 @@ of expertise of the underlying library. Exceptions to
 this rule are 'spec' for Eiffel compiler dependent clusters
 and 'impl' which stands for "implementation". For the
 cluster 'spec', compiler-dependent classes should have
-the same name and put into the four following clusters:
+the same name and put into the three following clusters:
 
   spec/ise        -- Implementation for ISE Eiffel
   spec/se         -- Implementation for SmartEiffel
@@ -252,12 +252,12 @@ Names of factory functions can have the prefix `new_*', as
 in the following example:
 
 _   new_foo (a_string: STRING): FOO is
-_   _   _   -- Foo made up fo characters of `a_string'
+_   _   _   -- Foo made up of characters of `a_string'
 _   _   _   -- (Create a new objet at each call.)
 _   _   require
 _   _   _   a_string_not_void: a_string /= Void
 _   _   do
-_   _   _   !! Result.make_from_string (a_string)
+_   _   _   create Result.make_from_string (a_string)
 _   _   ensure
 _   _   _   new_foo_not_void: Result /= Void
 _   _   end
@@ -326,7 +326,7 @@ _   _   ensure
 _   _   _   foo_set: foo = a_foo
 _   _   end
 
-Some text editors provide a means similiar to the one described
+Some text editors provide a means similar to the one described
 above in order to make tabs visible. It is recommended that
 you enable such facility if you use one of those editors.
 
@@ -381,7 +381,7 @@ _   _   _   -- Create a new bar from `a_string'.
 _   _   require
 _   _   _   a_string_not_void: a_string /= Void
 _   _   do
-_   _   _   !! foo.make_from_string (a_string)
+_   _   _   create foo.make_from_string (a_string)
 _   _   end
 
 feature -- Access
@@ -405,7 +405,7 @@ invariant
 
 _   foo_not_void: foo /= Void
 
-end -- class BAR
+end
 
 Apart from the indentation, please notice that there is
 one and only one empty line between each top-level
@@ -461,7 +461,7 @@ _   revision:   "$Revision$"
 Put a short description of the class in the 'description' field.
 Replace "Lexical" in the 'library' field by the name of your
 library. Replace "Eric Bezault" by your name in the 'author' and
-'copyright' fields and put your e-mail address in the 'auhtor' field.
+'copyright' fields and put your e-mail address in the 'author' field.
 The fields 'date' and 'revision' are automatically expanded by CVS.
 
 
@@ -561,9 +561,9 @@ Documentation format: DocBook XML DTD?
 
 Graphviz could probably be used to generate class inheritance
 graphs. Graphiz is an open source graph drawing software.
-Have a loo at:
+Have a look at:
 
-  http://www.research.att.com/sw/tools/graphviz/ 
+  http://www.graphviz.org/ 
 
 For example, with the following 'list.dot' file:
 
