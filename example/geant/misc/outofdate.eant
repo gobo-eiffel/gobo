@@ -2,7 +2,7 @@
 
 <project name="geant_outofdate_test">
 	
-	<target name="gepp">
+	<target name="ood1">
 		<set name="gepp_dir" value="${GOBO}/library/kernel/io"/>
 		<set name="gepp_file" value="kl_file_system"/>
 		
@@ -11,11 +11,33 @@
 			source="${gepp_dir}/${gepp_file}.ge,${GOBO}/example/geant/misc/outofdate.eant"
 			target="${gepp_file}.e"
 		/>
-		<gepp input="${gepp_dir}/${gepp_file}.ge" output="${gepp_file}.e" if="${generate}=true">
-			<define name="ISE"/>
-		</gepp>
+		<geant target="gepp"/>
 
 	</target>
+
+	<target name="ood2">
+		<set name="gepp_dir" value="${GOBO}/library/kernel/io"/>
+		<set name="gepp_file" value="kl_file_system"/>
+		
+		<echo message="generate: ${generate}"/>
+		<outofdate
+			variable="generate"
+			target="${gepp_file}.e"
+		>
+			<fileset directory="${GOBO}/library/kernel" include="**/*.ge"/>
+		</outofdate>
+		<echo message="generate: ${generate}"/>
+
+		<geant target="gepp"/>
+
+	</target>
+
+	<target name="gepp">
+		<gepp input="${gepp_dir}/${gepp_file}.ge" output="${GOBO}/example/geant/tmp/${gepp_file}.e" if="${generate}=true">
+			<define name="ISE"/>
+		</gepp>
+	</target>
+
 
 </project>
 
