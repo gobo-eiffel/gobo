@@ -65,6 +65,8 @@ inherit
 		end
 
 	KL_IMPORTED_STRING_ROUTINES
+		export
+			{NONE} all
 		undefine
 			is_equal
 		end
@@ -78,21 +80,14 @@ feature {NONE} -- Initialization
 	make (a_name: like name) is
 			-- Create a new identifier.
 		do
-			cached_hash_code := -1
+			hash_code := STRING_.case_insensitive_hash_code (a_name)
 			precursor (a_name)
 		end
 
 feature -- Access
 
-	hash_code: INTEGER is
+	hash_code: INTEGER
 			-- Hash code value
-		do
-			Result := cached_hash_code
-			if Result = -1 then
-				Result := STRING_.case_insensitive_hash_code (name)
-				cached_hash_code := Result
-			end
-		end
 
 	identifier: ET_IDENTIFIER is
 			-- Identifier
@@ -136,13 +131,21 @@ feature -- Comparison
 			-- (case insensitive)
 		local
 			an_id: ET_IDENTIFIER
+			l_name: STRING
 		do
 			if other = Current then
 				Result := True
-			elseif other.is_identifier then
+			else
 				an_id ?= other
 				if an_id /= Void then
-					Result := same_identifier (an_id)
+					l_name := an_id.name
+					if hash_code = an_id.hash_code then
+						if l_name = name then
+							Result := True
+						else
+							Result := STRING_.same_case_insensitive (name, l_name)
+						end
+					end
 				end
 			end
 		end
@@ -152,13 +155,21 @@ feature -- Comparison
 			-- (case insensitive)
 		local
 			an_id: ET_IDENTIFIER
+			l_name: STRING
 		do
 			if other = Current then
 				Result := True
-			elseif other.is_identifier then
+			else
 				an_id ?= other
 				if an_id /= Void then
-					Result := same_identifier (an_id)
+					l_name := an_id.name
+					if hash_code = an_id.hash_code then
+						if l_name = name then
+							Result := True
+						else
+							Result := STRING_.same_case_insensitive (name, l_name)
+						end
+					end
 				end
 			end
 		end
@@ -173,7 +184,7 @@ feature -- Comparison
 				Result := True
 			elseif other.name = name then
 				Result := True
-			else
+			elseif hash_code = other.hash_code then
 				Result := STRING_.same_case_insensitive (name, other.name)
 			end
 		end
@@ -193,10 +204,5 @@ feature -- Processing
 		do
 			a_processor.process_identifier (Current)
 		end
-
-feature {NONE} -- Implementation
-
-	cached_hash_code: INTEGER
-			-- Cached hash code
 
 end
