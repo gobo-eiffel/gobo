@@ -54,6 +54,20 @@ feature -- Document
 			next.on_start
 		end
 
+feature -- Forwarding policy
+
+	forward_xmlns: BOOLEAN
+			-- Should xmlns[:] attributes be forwarded to next filter?
+			
+	set_forward_xmlns (a_boolean: BOOLEAN) is
+			-- Set forwarding of xmlns[:] attributes policy.
+			-- Default (False): do not forward.
+		do
+			forward_xmlns := a_boolean
+		ensure
+			set: forward_xmlns = a_boolean
+		end
+		
 feature -- Element
 
 	on_start_tag (a_namespace: STRING; a_prefix: STRING; a_local_part: STRING) is
@@ -72,6 +86,13 @@ feature -- Element
 			if not has_prefix (a_prefix) and is_xmlns (a_local_part) then
 					-- Default declaration.
 				context.add_default (a_value)
+					-- Optionally do not eat xmlns attributes
+				if forward_xmlns then
+					next.on_attribute (Xmlns_namespace,
+						a_prefix,
+						a_local_part,
+						a_value)
+				end	
 			elseif is_xmlns (a_prefix) then
 					-- Prefix declaration.
 				if context.shallow_has (a_prefix) then
@@ -79,6 +100,13 @@ feature -- Element
 				else
 					context.add (a_value, a_local_part)
 				end
+					-- Optionally do not eat xmlns: attributes
+				if forward_xmlns then
+					next.on_attribute (Xmlns_namespace,
+						a_prefix,
+						a_local_part,
+						a_value)
+				end	
 			else
 					-- Queue ordinary attribute for when all namespace
 					-- declarations have been seen as they can be used
