@@ -248,7 +248,7 @@ feature -- Status report
 		do
 			-- Result := False
 		ensure
-			definition: type /= Void and (arguments /= Void or else arguments.count = 0)
+			definition: type /= Void and (arguments = Void or else arguments.count = 0)
 		end
 
 	is_immediate: BOOLEAN is True
