@@ -44,11 +44,11 @@ feature -- Creating and destroying parsers
 			-- specified by the external protocol or null if there
 			-- is none specified.
 		external
-#ifdef SE || ISE
+#ifdef SE
 			"C use <expat.h>"
 #endif
-#ifdef HACT
-			"C | <expat.h>"
+#ifdef ISE || HACT
+			"C (XML_Char *): EIF_POINTER | <expat.h>"
 #endif
 #ifdef VE
 			"C"
@@ -129,11 +129,11 @@ feature -- Creating and destroying parsers
 			-- Returns 0 if out of memory.  Otherwise returns a new XM_Parser
 			-- object.
 		external
-#ifdef SE || ISE
+#ifdef SE
 			"C use <expat.h>"
 #endif
-#ifdef HACT
-			"C | <expat.h>"
+#ifdef ISE || HACT
+			"C (XML_Parser, XML_Char *, XML_Char *): EIF_POINTER | <expat.h>"
 #endif
 #ifdef VE
 			"C"
@@ -234,11 +234,11 @@ feature -- Error reporting
 	exml_XML_ErrorString (code: INTEGER): POINTER is
 			-- Return a string describing the error.
 		external
-#ifdef SE || ISE
+#ifdef SE
 			"C use <expat.h>"
 #endif
-#ifdef HACT
-			"C | <expat.h>"
+#ifdef ISE || HACT
+			"C (int): EIF_POINTER | <expat.h>"
 #endif
 #ifdef VE
 			"C"
@@ -464,7 +464,7 @@ feature -- Miscellaneous
 			"C use <expat.h>"
 #endif
 #ifdef ISE || HACT
-			"C | <expat.h>"
+			"C (XML_Parser, enum XML_ParamEntityParsing): unsigned char | <expat.h>"
 #endif
 #ifdef VE
 			"C"
@@ -499,7 +499,7 @@ feature -- Handlers
 			"C use <expat.h>"
 #endif
 #ifdef ISE || HACT
-			"C | <expat.h>"
+			"C (XML_Parser, XML_ElementDeclHandler) | <expat.h>"
 #endif
 #ifdef VE
 			"C"
@@ -516,7 +516,7 @@ feature -- Handlers
 			"C use <expat.h>"
 #endif
 #ifdef ISE || HACT
-			"C | <expat.h>"
+			"C (XML_Parser, XML_AttlistDeclHandler) | <expat.h>"
 #endif
 #ifdef VE
 			"C"
@@ -533,7 +533,7 @@ feature -- Handlers
 			"C use <expat.h>"
 #endif
 #ifdef ISE || HACT
-			"C | <expat.h>"
+			"C (XML_Parser, XML_XmlDeclHandler) | <expat.h>"
 #endif
 #ifdef VE
 			"C"
@@ -550,7 +550,7 @@ feature -- Handlers
 			"C use <expat.h>"
 #endif
 #ifdef ISE || HACT
-			"C | <expat.h>"
+			"C (XML_Parser, XML_EntityDeclHandler) | <expat.h>"
 #endif
 #ifdef VE
 			"C"
@@ -567,7 +567,7 @@ feature -- Handlers
 			"C use <expat.h>"
 #endif
 #ifdef ISE || HACT
-			"C | <expat.h>"
+			"C (XML_Parser, XML_StartElementHandler, XML_EndElementHandler) | <expat.h>"
 #endif
 #ifdef VE
 			"C"
@@ -584,7 +584,7 @@ feature -- Handlers
 			"C use <expat.h>"
 #endif
 #ifdef ISE || HACT
-			"C | <expat.h>"
+			"C (XML_Parser, XML_StartElementHandler) | <expat.h>"
 #endif
 #ifdef VE
 			"C"
@@ -601,7 +601,7 @@ feature -- Handlers
 			"C use <expat.h>"
 #endif
 #ifdef ISE || HACT
-			"C | <expat.h>"
+			"C (XML_Parser, XML_EndElementHandler) | <expat.h>"
 #endif
 #ifdef VE
 			"C"
@@ -618,7 +618,7 @@ feature -- Handlers
 			"C use <expat.h>"
 #endif
 #ifdef ISE || HACT
-			"C | <expat.h>"
+			"C (XML_Parser, XML_CharacterDataHandler) | <expat.h>"
 #endif
 #ifdef VE
 			"C"
@@ -635,7 +635,7 @@ feature -- Handlers
 			"C use <expat.h>"
 #endif
 #ifdef ISE || HACT
-			"C | <expat.h>"
+			"C (XML_Parser, XML_ProcessingInstructionHandler) | <expat.h>"
 #endif
 #ifdef VE
 			"C"
@@ -652,7 +652,7 @@ feature -- Handlers
 			"C use <expat.h>"
 #endif
 #ifdef ISE || HACT
-			"C | <expat.h>"
+			"C (XML_Parser, XML_CommentHandler) | <expat.h>"
 #endif
 #ifdef VE
 			"C"
@@ -669,7 +669,7 @@ feature -- Handlers
 			"C use <expat.h>"
 #endif
 #ifdef ISE || HACT
-			"C | <expat.h>"
+			"C (XML_Parser, XML_StartCdataSectionHandler, XML_EndCdataSectionHandler) | <expat.h>"
 #endif
 #ifdef VE
 			"C"
@@ -686,7 +686,7 @@ feature -- Handlers
 			"C use <expat.h>"
 #endif
 #ifdef ISE || HACT
-			"C | <expat.h>"
+			"C (XML_Parser, XML_StartCdataSectionHandler) | <expat.h>"
 #endif
 #ifdef VE
 			"C"
@@ -703,7 +703,7 @@ feature -- Handlers
 			"C use <expat.h>"
 #endif
 #ifdef ISE || HACT
-			"C | <expat.h>"
+			"C (XML_Parser, XML_EndCdataSectionHandler) | <expat.h>"
 #endif
 #ifdef VE
 			"C"
@@ -723,7 +723,7 @@ feature -- Handlers
 			"C use <expat.h>"
 #endif
 #ifdef ISE || HACT
-			"C | <expat.h>"
+			"C (XML_Parser, XML_DefaultHandler) | <expat.h>"
 #endif
 #ifdef VE
 			"C"
@@ -743,7 +743,7 @@ feature -- Handlers
 			"C use <expat.h>"
 #endif
 #ifdef ISE || HACT
-			"C | <expat.h>"
+			"C (XML_Parser, XML_DefaultHandler) | <expat.h>"
 #endif
 #ifdef VE
 			"C"
@@ -760,7 +760,7 @@ feature -- Handlers
 			"C use <expat.h>"
 #endif
 #ifdef ISE || HACT
-			"C | <expat.h>"
+			"C (XML_Parser, XML_StartDoctypeDeclHandler, XML_EndDoctypeDeclHandler) | <expat.h>"
 #endif
 #ifdef VE
 			"C"
@@ -777,7 +777,7 @@ feature -- Handlers
 			"C use <expat.h>"
 #endif
 #ifdef ISE || HACT
-			"C | <expat.h>"
+			"C (XML_Parser, XML_StartDoctypeDeclHandler) | <expat.h>"
 #endif
 #ifdef VE
 			"C"
@@ -794,7 +794,7 @@ feature -- Handlers
 			"C use <expat.h>"
 #endif
 #ifdef ISE || HACT
-			"C | <expat.h>"
+			"C (XML_Parser, XML_EndDoctypeDeclHandler) | <expat.h>"
 #endif
 #ifdef VE
 			"C"
@@ -811,7 +811,7 @@ feature -- Handlers
 			"C use <expat.h>"
 #endif
 #ifdef ISE || HACT
-			"C | <expat.h>"
+			"C (XML_Parser, XML_NotationDeclHandler) | <expat.h>"
 #endif
 #ifdef VE
 			"C"
@@ -828,7 +828,7 @@ feature -- Handlers
 			"C use <expat.h>"
 #endif
 #ifdef ISE || HACT
-			"C | <expat.h>"
+			"C (XML_Parser, XML_StartNamespaceDeclHandler, XML_EndNamespaceDeclHandler) | <expat.h>"
 #endif
 #ifdef VE
 			"C"
@@ -845,7 +845,7 @@ feature -- Handlers
 			"C use <expat.h>"
 #endif
 #ifdef ISE || HACT
-			"C | <expat.h>"
+			"C (XML_Parser, XML_StartNamespaceDeclHandler) | <expat.h>"
 #endif
 #ifdef VE
 			"C"
@@ -862,7 +862,7 @@ feature -- Handlers
 			"C use <expat.h>"
 #endif
 #ifdef ISE || HACT
-			"C | <expat.h>"
+			"C (XML_Parser, XML_EndNamespaceDeclHandler) | <expat.h>"
 #endif
 #ifdef VE
 			"C"
@@ -879,7 +879,7 @@ feature -- Handlers
 			"C use <expat.h>"
 #endif
 #ifdef ISE || HACT
-			"C | <expat.h>"
+			"C (XML_Parser, XML_NotStandaloneHandler) | <expat.h>"
 #endif
 #ifdef VE
 			"C"
@@ -896,7 +896,7 @@ feature -- Handlers
 			"C use <expat.h>"
 #endif
 #ifdef ISE || HACT
-			"C | <expat.h>"
+			"C (XML_Parser,  XML_ExternalEntityRefHandler) | <expat.h>"
 #endif
 #ifdef VE
 			"C"
@@ -934,7 +934,7 @@ feature -- Handlers
 			"C use <expat.h>"
 #endif
 #ifdef ISE || HACT
-			"C | <expat.h>"
+			"C (XML_Parser, XML_UnknownEncodingHandler, void *) | <expat.h>"
 #endif
 #ifdef VE
 			"C"
