@@ -62,11 +62,6 @@ feature -- Status report
 			Result := True
 		end
 
-	is_expanded: BOOLEAN is
-			-- Is current type expanded?
-		deferred
-		end
-
 feature {ET_TYPE} -- Conformance
 
 	conforms_from_bit_type (other: ET_BIT_TYPE; other_context: ET_TYPE_CONTEXT;

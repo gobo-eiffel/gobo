@@ -96,8 +96,7 @@ feature -- Access
 			-- Base class of current type when it appears in `a_context'
 			-- in `a_universe' (Definition of base class in ETL2 page 198).
 			-- Return "*UNKNOWN*" class if unresolved identifier type,
-			-- anchored type involved in a cycle, or unmatched formal
-			-- generic parameter.
+			-- or unmatched formal generic parameter.
 		local
 			a_class: ET_CLASS
 			seeded_feature: ET_FEATURE
@@ -156,8 +155,8 @@ feature -- Access
 			-- formal parameters when the root type of `a_context' is a
 			-- generic type not fully derived (Definition of base type in
 			-- ETL2 p.198). Replace by "*UNKNOWN*" any unresolved identifier
-			-- type, anchored type involved in a cycle, or unmatched formal
-			-- generic parameter if this parameter is current type.
+			-- type, or unmatched formal generic parameter if this parameter
+			-- is current type.
 		local
 			a_class: ET_CLASS
 			seeded_feature: ET_FEATURE
@@ -310,6 +309,61 @@ feature -- Status report
 			Result := name.is_argument
 		ensure then
 			definition: Result = name.is_argument
+		end
+
+	is_expanded_type (a_context: ET_TYPE_CONTEXT; a_universe: ET_UNIVERSE): BOOLEAN is
+			-- Is current type expanded when viewed from
+			-- `a_context' in `a_universe'?
+		local
+			a_class: ET_CLASS
+			seeded_feature: ET_FEATURE
+			a_query_type: ET_TYPE
+			args: ET_FORMAL_ARGUMENT_LIST
+			an_index: INTEGER
+		do
+			if seed = 0 then
+					-- Anchored type not resolved yet.
+				-- Result := False
+			elseif is_like_argument then
+				a_class := a_context.base_class (a_universe)
+				seeded_feature := a_class.seeded_feature (seed)
+				if seeded_feature /= Void then
+					args := seeded_feature.arguments
+					an_index := index
+					if args = Void or else an_index > args.count then
+							-- Internal error: an inconsistency has been
+							-- introduced in the AST since we relsolved
+							-- current anchored type.
+						-- Result := False
+					else
+						Result := args.item (an_index).type.is_expanded_type (a_context, a_universe)
+					end
+				else
+						-- Internal error: an inconsistency has been
+						-- introduced in the AST since we relsolved
+						-- current anchored type.
+					-- Result := False
+				end
+			else
+				a_class := a_context.base_class (a_universe)
+				seeded_feature := a_class.seeded_feature (seed)
+				if seeded_feature /= Void then
+					a_query_type := seeded_feature.type
+					if a_query_type /= Void then
+						Result := a_query_type.is_expanded_type (a_context, a_universe)
+					else
+							-- Internal error: an inconsistency has been
+							-- introduced in the AST since we relsolved
+							-- current anchored type.
+						-- Result := False
+					end
+				else
+						-- Internal error: an inconsistency has been
+						-- introduced in the AST since we relsolved
+						-- current anchored type.
+					-- Result := False
+				end
+			end
 		end
 
 	is_formal_type (a_context: ET_TYPE_CONTEXT; a_universe: ET_UNIVERSE): BOOLEAN is

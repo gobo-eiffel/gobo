@@ -60,8 +60,7 @@ feature -- Access
 			-- Base class of current type when it appears in `a_context'
 			-- in `a_universe' (Definition of base class in ETL2 page 198).
 			-- Return "*UNKNOWN*" class if unresolved identifier type,
-			-- anchored type involved in a cycle, or unmatched formal
-			-- generic parameter.
+			-- or unmatched formal generic parameter.
 		do
 			Result := a_context.base_class (a_universe)
 		end
@@ -72,8 +71,8 @@ feature -- Access
 			-- formal parameters when the root type of `a_context' is a
 			-- generic type not fully derived (Definition of base type in
 			-- ETL2 p.198). Replace by "*UNKNOWN*" any unresolved identifier
-			-- type, anchored type involved in a cycle, or unmatched formal
-			-- generic parameter if this parameter is current type.
+			-- type, or unmatched formal generic parameter if this parameter
+			-- is current type.
 		do
 			Result := a_context.base_type (a_universe)
 		end
@@ -133,6 +132,13 @@ feature -- Setting
 		end
 
 feature -- Status report
+
+	is_expanded_type (a_context: ET_TYPE_CONTEXT; a_universe: ET_UNIVERSE): BOOLEAN is
+			-- Is current type expanded when viewed from
+			-- `a_context' in `a_universe'?
+		do
+			Result := a_context.base_class (a_universe).is_expanded
+		end
 
 	has_qualified_type (a_context: ET_TYPE_CONTEXT; a_universe: ET_UNIVERSE): BOOLEAN is
 			-- Is current type a qualified anchored type (other than of

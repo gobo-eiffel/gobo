@@ -81,8 +81,7 @@ feature -- Access
 			-- Base class of current type when it appears in `a_context'
 			-- in `a_universe' (Definition of base class in ETL2 page 198).
 			-- Return "*UNKNOWN*" class if unresolved identifier type,
-			-- anchored type involved in a cycle, or unmatched formal
-			-- generic parameter.
+			-- or unmatched formal generic parameter.
 		local
 			an_actuals: ET_ACTUAL_PARAMETER_LIST
 			an_actual: ET_TYPE
@@ -134,8 +133,8 @@ feature -- Access
 			-- formal parameters when the root type of `a_context' is a
 			-- generic type not fully derived (Definition of base type in
 			-- ETL2 p.198). Replace by "*UNKNOWN*" any unresolved identifier
-			-- type, anchored type involved in a cycle, or unmatched formal
-			-- generic parameter if this parameter is current type.
+			-- type, or unmatched formal generic parameter if this parameter
+			-- is current type.
 		local
 			an_actuals: ET_ACTUAL_PARAMETER_LIST
 			an_actual: ET_TYPE
@@ -228,6 +227,13 @@ feature -- Access
 		end
 
 feature -- Status report
+
+	is_expanded_type (a_context: ET_TYPE_CONTEXT; a_universe: ET_UNIVERSE): BOOLEAN is
+			-- Is current type expanded when viewed from
+			-- `a_context' in `a_universe'?
+		do
+			-- Result := False
+		end
 
 	is_formal_type (a_context: ET_TYPE_CONTEXT; a_universe: ET_UNIVERSE): BOOLEAN is
 			-- Is current type a formal parameter when viewed from
