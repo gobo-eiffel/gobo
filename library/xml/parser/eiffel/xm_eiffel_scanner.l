@@ -894,7 +894,7 @@ NOQUOTSYSLITCHAR [\r\n\t\x20-!#-\x7F]
 	last_value := text
 }
 
-<*>. {
+<*>(.|\n) {
 		-- Default rule.
 	set_last_token (INPUT_INVALID)
 	last_value := text
