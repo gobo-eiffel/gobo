@@ -22,7 +22,8 @@ inherit
 			remove_last, remove_at_cursor,
 			remove_left_cursor, prune_last,
 			prune_left_cursor, keep_last,
-			set_first_cell
+			set_first_cell, cursor_back,
+			cursor_search_back, cursor_go_i_th
 		redefine
 			move, first_cell, cursor_anchor
 		end
