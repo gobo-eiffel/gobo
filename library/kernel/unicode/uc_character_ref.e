@@ -103,15 +103,47 @@ feature -- Output
    out: STRING is
       do
 	 !!Result.make(0)
-	 if code < 256 then
-	    Result.append_character(code_to_character(code))
+	 if code <= platform.Maximum_character_code then
+	    Result.append_character(as_character)
 	 else
 	    Result.append_string("\u")
-	    Result.append_string(hex_representation(code))
+	    Result.append_string(as_hexadecimal)
 	    Result.append_character(';')
 	 end
       end
-
+   
+feature -- Conversion   
+   
+   as_character: CHARACTER is
+         -- Corresponding character representation
+      require
+         code_large_enough: code >= platform.Minimum_character_code;
+         code_small_enough: code <= platform.Maximum_character_code;
+      do
+	 Result := specific.to_character(code)
+      end
+   
+   as_hexadecimal: STRING is
+         -- Hexadecimal representation of the character.
+      local
+	 cc: INTEGER
+      do
+	 !!Result.make(0)
+	 from
+	    cc := code
+	 until
+	    cc = 0
+	 loop
+	    Result.insert_character(hex_digit_string.item(cc\\16+1), 1)
+	    cc := cc // 16;
+	 end
+         
+         if Result.is_empty then
+            -- in case of code = 0, we have to insert at least one character
+            Result.append_character('0')
+         end
+      end
+   
    to_upper is
 	 -- convert to upper case
       do
@@ -196,7 +228,14 @@ feature {UCCHAR_REF} -- Implementation
       once
 	 !!Result
       end
-
+   
+feature   
+   
+   platform: PLATFORM is
+      once
+         !!Result
+      end
+   
 feature -- new features
 
    -- categories
