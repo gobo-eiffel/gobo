@@ -1,4 +1,4 @@
-Version 1.6 -
+Version 1.6 - 20 August 2000
 
 	geyacc:
 
@@ -30,6 +30,10 @@ Version 1.6 -
 	  counting (suggested by Alexander Kogtenkov).
 	* Added '%option position' to generate code for character
 	  counting since the beginning of the input source.
+	* Fixed bug when the input buffer contains a null character
+	  (reported by Emmanuel Stapf).
+	* Fixed bug when scanning a token larger than the size of
+	  the input buffer (reported by Emmanuel Stapf).
 
 	Gobo Eiffel Structure Library:
 
