@@ -182,7 +182,7 @@ the same name and put into the three following clusters:
   spec/ve         -- Implementation for Visual Eiffel
 
 Only one of these clusters will be included in the Ace
-file, loadpath file or ESD file of the application depending
+file, loadpath file or ESD/Xace file of the application depending
 on the Eiffel compiler used. These clusters can be
 automatically generated with the tool 'gepp' if the 
 different implementations are put in a single file whose
@@ -605,7 +605,7 @@ TEST SUITE
 Each Eiffel library should come with a test suite runnable
 with 'getest'. The test case classes should be placed in
 $GOBO/test/<library-name> along with the Ace files, loadpath
-files, ESD files and the 'getest' configuration files to run
+files, ESD/Xace files and the 'getest' configuration files to run
 the tests.
 
 The purpose of these tests is to make sure that the library
