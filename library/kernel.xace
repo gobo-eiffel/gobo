@@ -45,9 +45,6 @@
 		<cluster name="random"/>
 		<cluster name="sorting"/>
 		<cluster name="time"/>
-
-		<!-- This last cluster is for compatibility with SmallEiffel prior to -0.74b10 -->
-		<cluster name="lib_std" location="${SmallEiffelDirectory}/lib_std"/>
 	</cluster>
 
 	<cluster name="ve" location="${VE_Lib}" abstract="True" if="${GOBO_EIFFEL}=ve">
