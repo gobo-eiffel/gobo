@@ -707,18 +707,18 @@ feature {NONE} -- Implementation
 
 feature {NONE} -- Constants
 
-	yyNewstate: INTEGER is Unique
-	yyDefault: INTEGER is Unique
-	yyReduce: INTEGER is Unique
-	yyErrlab: INTEGER is Unique
-	yyErrhandle: INTEGER is Unique
-	yyErrpop: INTEGER is Unique
+	yyNewstate: INTEGER is unique
+	yyDefault: INTEGER is unique
+	yyReduce: INTEGER is unique
+	yyErrlab: INTEGER is unique
+	yyErrhandle: INTEGER is unique
+	yyErrpop: INTEGER is unique
 			-- Goto constants
 
-	yyAccepted: INTEGER is Unique
-	yyAborted: INTEGER is Unique
-	yyError_raised: INTEGER is Unique
-	yyContinue: INTEGER is Unique
+	yyAccepted: INTEGER is unique
+	yyAborted: INTEGER is unique
+	yyError_raised: INTEGER is unique
+	yyContinue: INTEGER is unique
 			-- Parsing status
 
 	yyTerror: INTEGER is 1

@@ -399,7 +399,7 @@ feature {NONE} -- Implementation
 	associativity: INTEGER
 			-- Associativity of current rule
 
-	Left_assoc, Right_assoc, Non_assoc: INTEGER is Unique
+	Left_assoc, Right_assoc, Non_assoc: INTEGER is unique
 			-- Valid values for `associativity'
 
 feature {NONE} -- Constants
