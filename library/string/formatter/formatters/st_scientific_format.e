@@ -329,6 +329,11 @@ feature {NONE} -- Formatting implementation
 					create i_double_ref
 					i_double_ref.set_item (i_real_ref.item)
 					fmt_el.fmt.set_value (i_double_ref)
+					if False then
+							-- Bug workaround: forces SE 1.0 to generate C code
+							-- for routine 'set_item' from 'reference REAL'.
+						i_real_ref.set_item (i_real_ref.item)
+					end
 				else
 					if args.current_item.conforms_to (fmt_el.fmt.anchor) then
 						fmt_el.fmt.set_value (args.current_item) -- initialize format object
