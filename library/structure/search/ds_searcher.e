@@ -27,10 +27,12 @@ feature -- Measurement
 
 	occurrences (a_container: DS_SEARCHABLE [G]; v: G): INTEGER is
 			-- Number of times `v' appears in `a_container'
+		require
+			a_container_not_void: a_container /= Void
 		deferred
 		ensure
 			positive: Result >= 0
-			has: a_container.has (v) implies Result >= 1
+			has: has (a_container, v) implies Result >= 1
 		end
 
 end -- class DS_SEARCHER
