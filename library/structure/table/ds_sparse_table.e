@@ -342,6 +342,13 @@ feature -- Status report
 			defintion: Result = True
 		end
 
+	key_equality_tester_settable (a_tester: like key_equality_tester): BOOLEAN is
+			-- Can `set_key_equality_tester' be called with `a_tester'
+			-- as argument in current state of container?
+		do
+			Result := is_empty
+		end
+
 feature -- Search
 
 	search (k: K) is
@@ -408,6 +415,20 @@ feature -- Duplication
 				clone_slots
 				clone_clashes
 			end
+		end
+
+feature -- Setting
+
+	set_key_equality_tester (a_tester: like key_equality_tester) is
+			-- Set `key_equality_tester' to `a_tester'.
+			-- A void key equality tester means that `='
+			-- will be used as comparison criterion.
+		require
+			key_equality_tester_settable: key_equality_tester_settable (a_tester)
+		do
+			key_equality_tester := a_tester
+		ensure
+			key_equality_tester_set: key_equality_tester = a_tester
 		end
 
 feature -- Element change
