@@ -19,11 +19,25 @@ feature -- Conversion
 			-- Convert character to 8 bit data type
 		require
 			Character_bits_is_eight: a_c.code < 256
+#ifdef ISE
+		local
+			i, j: INTEGER
+#endif
 		do
 #ifdef VE
 			Result.from_integer (a_c.code)
 #else
+#ifdef SE
 			Result := a_c.to_bit
+#else
+			j := a_c.code
+			from i := 0 until i = 8 loop
+				if j.bit_test (i) then
+					Result.put (True, i)
+				end
+				i := i + 1
+			end
+#endif
 #endif
 		end
 
