@@ -300,7 +300,7 @@ feature {NONE} -- Error handling
 	Usage_message: UT_USAGE_MESSAGE is
 			-- Getest usage message
 		once
-			!! Result.make ("[-ceghV?][--help][--version][--se|--ise|--hact|--ve|filename]")
+			!! Result.make ("[-ceghV?][--help][--version][--compile=<command>][--se|--ise|--hact|--ve|<filename>]")
 		ensure
 			usage_message_not_void: Result /= Void
 		end
