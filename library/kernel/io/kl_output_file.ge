@@ -30,23 +30,6 @@ inherit
 			is_open as is_open_write
 		end
 
-#ifdef SE
-	TEXT_FILE_WRITE
-		rename
-			make as old_make,
-			is_connected as old_is_open_write,
-			put_character as old_put_character,
-			put_string as old_put_string,
-			put_integer as old_put_integer,
-			put_boolean as old_put_boolean,
-			put_new_line as old_put_new_line,
-			disconnect as old_close,
-			flush as old_flush
-		export
-			{NONE} all
-		end
-
-#endif
 feature -- Status report
 
 	is_open_write: BOOLEAN is
@@ -200,6 +183,32 @@ feature {NONE} -- Implementation
 		require
 			string_name_not_void: string_name /= Void
 			string_name_not_empty: string_name.count > 0
+		deferred
+		end
+
+	old_is_open_write: BOOLEAN is
+			-- Is file open for writing?
+		deferred
+		end
+
+	old_put_character (c: CHARACTER) is
+			-- Write `c' at current position.
+		require
+			is_open_write: old_is_open_write
+		deferred
+		end
+
+	old_put_string (s: STRING) is
+			-- Write `s' at current position.
+		require
+			is_open_write: old_is_open_write
+			non_void: s /= void
+		deferred
+		end
+
+	old_flush is
+			-- Forces a write of unwritten character (write my have been 
+			-- delayed, flush writes buffered characters).
 		deferred
 		end
 

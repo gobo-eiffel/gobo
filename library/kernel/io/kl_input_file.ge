@@ -43,24 +43,6 @@ inherit
 			close
 		end
 
-#ifdef SE
-	TEXT_FILE_READ
-		rename
-			make as old_make,
-			is_connected as old_is_open_read,
-			end_of_input as old_end_of_file,
-			last_character as old_last_character,
-			read_character as old_read_character,
-			unread_character as old_unread_character,
-			read_line as old_read_line,
-			disconnect as old_close
-		export
-			{NONE} all
-		redefine
-			last_string
-		end
-
-#endif
 #ifdef ISE
 	STRING_HANDLER
 
@@ -248,10 +230,7 @@ feature -- Input
 			k, nb2: INTEGER
 #endif
 #ifdef SE
-			storage: NATIVE_ARRAY [CHARACTER]
-			m: like memory
-			memory_saved: BOOLEAN
-			j: INTEGER
+			j, nb2: INTEGER
 #endif
 			i: INTEGER
 		do
@@ -318,25 +297,16 @@ feature -- Input
 					end
 #endif
 #ifdef SE
-					from
-						storage := a_string.storage
-						m := basic_io_getc (input_stream)
-					until
-						m = basic_io_eof
-					loop
-						i := i + 1
-						a_string.put (m.to_character, j)
-						j := j + 1
-						if i < nb then
-							m := basic_io_getc (input_stream)
+					nb2 := nb
+					from until i >= nb2 loop
+						old_read_character
+						if not old_end_of_file then
+							a_string.put (old_last_character, j)
+							j := j + 1
+							i := i + 1
 						else
-							memory := m
-							memory_saved := True
-							m := basic_io_eof -- Jump out of the loop.
+							nb2 := i - 1 -- Jump out of the loop.
 						end
-					end
-					if not memory_saved then
-						memory := m
 					end
 #endif
 				end
@@ -426,8 +396,35 @@ feature {NONE} -- Implementation
 		deferred
 		end
 
-#endif
-#ifdef SE
+	old_end_of_file: BOOLEAN is
+			-- Has end-of-input been reached ?
+			-- True when the last character has been read.
+		require
+			opened: old_is_open_read
+		deferred
+		end
+
+	old_read_character is
+			-- Read a new character.
+			-- Make result available in `old_last_character'.
+		require
+			opened: old_is_open_read
+			not_end_of_file: not old_end_of_file
+		deferred
+		end
+
+	old_is_open_read: BOOLEAN is
+			-- Is file open for reading?
+		deferred
+		end
+
+	old_last_character: CHARACTER is
+			-- Last character read with `old_read_character'.
+		require
+			opened: old_is_open_read
+		deferred
+		end
+
 	tmp_directory: KL_DIRECTORY is
 			-- Temporary directory object
 		once

@@ -243,6 +243,7 @@
 			Pass $GOBO_XML_EXPAT option to 'gexace' if defined.
 			Pass $GOBO_DOTNET option to 'gexace' if defined.
 			Pass $ISE_5_1 option to 'gexace' if defined.
+			Pass $SE_0_74 option to 'gexace' if defined.
 			To be redefined in descendant if additional options are
 			necessary.
 		</description>
@@ -256,6 +257,7 @@
 			<define name="GOBO_XML_EXPAT" value="true" if="${GOBO_XML_EXPAT}"/>
 			<define name="GOBO_DOTNET" value="true" if="${GOBO_DOTNET}"/>
 			<define name="ISE_5_1" value="true" if="${ISE_5_1}"/>
+			<define name="SE_0_74" value="true" if="${SE_0_74}"/>
 		</gexace>
 	</target>
 

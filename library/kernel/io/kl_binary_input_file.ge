@@ -93,6 +93,18 @@ inherit
 		end
 
 #endif
+#ifdef SE
+	BINARY_FILE_READ
+		rename
+			make as old_make,
+			is_connected as old_is_open_read,
+			end_of_input as old_end_of_file,
+			disconnect as old_close
+		export
+			{NONE} all
+		end
+
+#endif
 creation
 
 	make
@@ -119,19 +131,21 @@ feature {NONE} -- Implementation
 			-- Open file in read-only mode.
 		do
 			if string_name /= Empty_name then
-				input_stream := basic_io_binary_file_read_open (string_name.to_external)
-				if input_stream.is_not_null then
-					push_back_flag := False
-					memory := (' ').code
-					path := string_name
-				end
+				connect_to (string_name)
 			end
 		end
 
-	basic_io_binary_file_read_open (path_pointer: POINTER): POINTER is
-			-- Open file in binary read-only mode.
-		external
-			"SmallEiffel"
+	old_read_character is
+			-- Read a new character.
+			-- Make result available in `old_last_character'.
+		do
+			read_byte
+		end
+
+	old_last_character: CHARACTER is
+			-- Last character read with `old_read_character'.
+		do
+			Result := last_byte.to_character
 		end
 
 #endif

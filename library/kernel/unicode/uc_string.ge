@@ -94,7 +94,9 @@ inherit
 			infix "+" as old_infix_plus,
 #endif
 			make as old_make,
+#ifndef (SE && ! SE_0_74)
 			empty as old_empty,
+#endif
 			make_from_string as old_make_from_string,
 				-- Note: The postcondition of `is_equal' in ELKS 2001 STRING
 				-- is too constraining and does not allow a redefinition here.

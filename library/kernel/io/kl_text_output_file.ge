@@ -91,6 +91,23 @@ inherit
 		end
 
 #endif
+#ifdef SE
+	TEXT_FILE_WRITE
+		rename
+			make as old_make,
+			is_connected as old_is_open_write,
+			put_character as old_put_character,
+			put_string as old_put_string,
+			put_integer as old_put_integer,
+			put_boolean as old_put_boolean,
+			put_new_line as old_put_new_line,
+			disconnect as old_close,
+			flush as old_flush
+		export
+			{NONE} all
+		end
+
+#endif
 creation
 
 	make

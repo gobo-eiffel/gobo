@@ -84,6 +84,20 @@ inherit
 		end
 
 #endif
+#ifdef SE
+	BINARY_FILE_WRITE
+		rename
+#ifndef SE_0_74
+			flush as old_flush
+#endif
+			make as old_make,
+			is_connected as old_is_open_write,
+			disconnect as old_close
+		export
+			{NONE} all
+		end
+
+#endif
 creation
 
 	make
@@ -96,36 +110,50 @@ feature {NONE} -- Implementation
 			-- Open file in write mode.
 		do
 			if string_name /= Empty_name then
-				output_stream := basic_io_binary_file_write_open (string_name.to_external)
-				if output_stream.is_not_null then
-					path := string_name
-				end
+				connect_to (string_name)
 			end
-		end
-
-	basic_io_binary_file_write_open (path_pointer: POINTER): POINTER is
-			-- Open file in binary write mode.
-		external
-			"SmallEiffel"
 		end
 
 	old_open_append is
 			-- Open file in append mode.
 		do
 			if string_name /= Empty_name then
-				output_stream := basic_io_binary_file_write_append (string_name.to_external)
-				if output_stream.is_not_null then
-					path := string_name
-				end
+				connect_for_appending_to (string_name)
 			end
 		end
 
-	basic_io_binary_file_write_append (path_pointer: POINTER): POINTER is
-			-- Open file in binary append mode.
+	old_put_character (c: CHARACTER) is
+			-- Write `c' at current position.
+		do
+			put_byte (c.code)
+		end
+
+	old_put_string (s: STRING) is
+			-- Write `s' at current position.
+		local
+			i, nb: INTEGER
+		do
+			nb := s.count
+			from i := 1 until i > nb loop
+				old_put_character (s.item (i))
+				i := i + 1
+			end
+		end
+
+#ifdef SE_0_74
+	old_flush is
+			-- Forces a write of unwritten character (write my have been 
+			-- delayed, flush writes buffered characters).
+		do
+			basic_io_flush (output_stream)
+		end
+
+	basic_io_flush(stream_pointer: POINTER) is
 		external
 			"SmallEiffel"
 		end
 
+#endif
 #endif
 #ifdef ISE
 	string_name: STRING
