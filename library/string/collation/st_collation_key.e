@@ -14,6 +14,8 @@ deferred class ST_COLLATION_KEY
 
 inherit
 
+	ANY -- Needed for SE 2.1b1.
+
 	HASHABLE
 
 		-- If two STRINGs are equal, then their

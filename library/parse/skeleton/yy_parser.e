@@ -12,6 +12,10 @@ indexing
 
 deferred class YY_PARSER
 
+inherit
+
+	ANY -- Needed for SE 2.1b1.
+
 feature {NONE} -- Initialization
 
 	make is

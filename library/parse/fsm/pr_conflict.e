@@ -12,6 +12,10 @@ indexing
 
 class PR_CONFLICT
 
+inherit
+
+	ANY -- Needed for SE 2.1b1.
+
 creation
 
 	make

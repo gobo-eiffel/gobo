@@ -12,6 +12,10 @@ indexing
 
 deferred class KI_INPUT_STREAM [G]
 
+inherit
+
+	ANY -- Needed for SE 2.1b1.
+
 feature -- Input
 
 	read is

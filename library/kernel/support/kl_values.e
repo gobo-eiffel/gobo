@@ -12,6 +12,10 @@ indexing
 
 deferred class KL_VALUES [G, K]
 
+inherit
+
+	ANY -- Needed for SE 2.1b1.
+
 feature -- Access
 
 	value (k: K): G is

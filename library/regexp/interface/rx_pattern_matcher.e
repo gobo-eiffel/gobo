@@ -14,6 +14,8 @@ deferred class RX_PATTERN_MATCHER
 
 inherit
 
+	ANY -- Export features from ANY.
+
 	KL_IMPORTED_STRING_ROUTINES
 
 feature {NONE} -- Initialization

@@ -14,8 +14,13 @@ deferred class DT_TIME_VALUE
 
 inherit
 
-	UT_IMPORTED_FORMATTERS
+	ANY -- Export features of ANY.
 		redefine
+			out
+		end
+
+	UT_IMPORTED_FORMATTERS
+		undefine
 			out
 		end
 

@@ -12,6 +12,10 @@ indexing
 
 class TS_SUMMARY
 
+inherit
+
+	ANY -- Needed for SE 2.1b1.
+
 creation
 
 	make

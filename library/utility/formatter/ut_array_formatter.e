@@ -12,6 +12,10 @@ indexing
 
 class UT_ARRAY_FORMATTER
 
+inherit
+
+	ANY -- Needed for SE 2.1b1.
+
 feature -- File handling
 
 	put_integer_array (a_file: KI_TEXT_OUTPUT_STREAM;

@@ -12,6 +12,10 @@ indexing
 
 class LX_BUFFER
 
+inherit
+
+	ANY -- Needed for SE 2.1b1.
+
 creation
 
 	make

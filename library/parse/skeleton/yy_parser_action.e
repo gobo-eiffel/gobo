@@ -13,4 +13,8 @@ indexing
 
 class YY_PARSER_ACTION
 
+inherit
+
+	ANY -- Needed for SE 2.1b1.
+
 end

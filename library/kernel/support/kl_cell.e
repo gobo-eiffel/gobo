@@ -12,6 +12,10 @@ indexing
 
 class KL_CELL [G]
 
+inherit
+
+	ANY -- Needed for SE 2.1b1.
+
 creation
 
 	make

@@ -12,6 +12,10 @@ indexing
 
 class KL_EIFFEL_COMPILER
 
+inherit
+
+	ANY -- Needed for SE 2.1b1.
+
 feature -- Access
 
 	vendor: STRING is

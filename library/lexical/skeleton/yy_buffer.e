@@ -12,6 +12,10 @@ indexing
 
 class YY_BUFFER
 
+inherit
+
+	ANY -- Needed for SE 2.1b1.
+
 creation
 
 	make, make_from_buffer

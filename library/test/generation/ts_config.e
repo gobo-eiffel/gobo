@@ -12,6 +12,10 @@ indexing
 
 class TS_CONFIG
 
+inherit
+
+	ANY -- Needed for SE 2.1b1.
+
 creation
 
 	make

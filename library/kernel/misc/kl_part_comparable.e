@@ -17,6 +17,10 @@ indexing
 
 deferred class KL_PART_COMPARABLE
 
+inherit
+
+	ANY -- Needed for SE 2.1b1.
+
 feature -- Comparison
 
 	infix "<" (other: like Current): BOOLEAN is

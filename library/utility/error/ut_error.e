@@ -14,6 +14,8 @@ deferred class UT_ERROR
 
 inherit
 
+	ANY -- Export features of ANY.
+
 	KL_SHARED_ARGUMENTS
 	KL_IMPORTED_STRING_ROUTINES
 	KL_IMPORTED_ARRAY_ROUTINES

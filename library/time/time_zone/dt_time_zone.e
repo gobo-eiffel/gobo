@@ -12,6 +12,10 @@ indexing
 
 deferred class DT_TIME_ZONE
 
+inherit
+
+	ANY -- Needed for SE 2.1b1.
+
 feature -- Access
 
 	name: STRING

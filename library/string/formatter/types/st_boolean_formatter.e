@@ -1,6 +1,8 @@
 indexing
 
-	description: "Format booleans, ?b and ?B."
+	description:
+
+		"Format booleans, ?b and ?B."
 
 	library: "Gobo Eiffel Formatter Library"
 	origins: "Based on code from Object Tools."
@@ -9,11 +11,7 @@ indexing
 	date: "$Date$"
 	revision: "$Revision$"
 
-
-class
-
-	ST_BOOLEAN_FORMATTER
-
+class ST_BOOLEAN_FORMATTER
 
 inherit
 
@@ -22,11 +20,9 @@ inherit
 			make as make_abstract_formatter
 		end
 
-
 creation
 
 	make
-
 
 feature {NONE} -- Initialization
 
@@ -44,7 +40,6 @@ feature {NONE} -- Initialization
 			is_lowercase_output_set: is_lowercase_output = an_is_lowercase_output
 		end
 
-
 feature {ST_SCIENTIFIC_FORMAT} -- Type that can be formatted
 
 	anchor: BOOLEAN_REF is
@@ -53,12 +48,10 @@ feature {ST_SCIENTIFIC_FORMAT} -- Type that can be formatted
 			Result.set_item (True)
 		end
 
-
 feature -- Access
 
 	is_lowercase_output: BOOLEAN
 			-- Should `output' return lowercase strings for a Boolean value?
-
 
 feature -- Output
 
@@ -75,7 +68,6 @@ feature -- Output
 		ensure then
 			lowercase: is_lowercase_output implies Result.is_equal (Result.as_lower)
 		end
-
 
 feature {NONE} -- Implementation
 

@@ -12,6 +12,10 @@ indexing
 
 deferred class KS_HASHABLE
 
+inherit
+
+	ANY -- Needed for SE 2.1b1
+
 feature -- Access
 
 	hash_code: INTEGER is

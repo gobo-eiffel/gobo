@@ -12,6 +12,10 @@ indexing
 
 deferred class KI_FILE_SYSTEM_ENTRY
 
+inherit
+
+	ANY -- Needed for SE 2.1b1.
+
 feature {NONE} -- Initialization
 
 	make (a_name: STRING) is

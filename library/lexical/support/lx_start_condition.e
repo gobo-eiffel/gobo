@@ -12,6 +12,10 @@ indexing
 
 class LX_START_CONDITION
 
+inherit
+
+	ANY -- Needed for SE 2.1b1.
+
 creation
 
 	make

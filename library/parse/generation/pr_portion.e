@@ -16,6 +16,11 @@ class PR_PORTION
 
 inherit
 
+	ANY -- Needed for SE 2.1b1.
+		redefine
+			is_equal
+		end
+
 	COMPARABLE
 		redefine
 			is_equal

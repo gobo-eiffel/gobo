@@ -32,9 +32,12 @@ inherit
 			{RAW_FILE} old_open_read, extendible, file_pointer, old_count, old_close, old_is_closed, old_put_string, old_is_open_write;
 #endif
 #ifdef SE
-			{ANY} close;
-#endif
+			-- Bug in SE 2.1b1:
+			-- {ANY} close;
+			-- {NONE} all
+#else
 			{NONE} all
+#endif
 		end
 
 creation

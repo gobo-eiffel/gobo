@@ -12,6 +12,10 @@ indexing
 
 class LX_EQUIVALENCE_CLASSES
 
+inherit
+
+	ANY -- Needed for SE 2.1b1.
+
 creation
 
 	make

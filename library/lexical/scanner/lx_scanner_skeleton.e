@@ -12,6 +12,10 @@ indexing
 
 deferred class LX_SCANNER_SKELETON
 
+inherit
+
+	ANY -- Needed for SE 2.1b1.
+
 feature {NONE} -- Initialization
 
 	make is

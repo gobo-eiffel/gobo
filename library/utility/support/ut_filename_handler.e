@@ -14,6 +14,8 @@ class UT_FILENAME_HANDLER
 
 inherit
 
+	ANY -- Export features of ANY.
+
 	KL_IMPORTED_STRING_ROUTINES
 
 creation

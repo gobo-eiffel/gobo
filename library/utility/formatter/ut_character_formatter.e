@@ -14,6 +14,8 @@ class UT_CHARACTER_FORMATTER
 
 inherit
 
+	ANY -- Export features from ANY.
+
 	UT_IMPORTED_FORMATTERS
 
 feature -- Access

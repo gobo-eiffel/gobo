@@ -1,6 +1,8 @@
 indexing
 
-	description: "Format unsigned integers."
+	description:
+
+		"Format unsigned integers."
 
 	library: "Gobo Eiffel Formatter Library"
 	origins: "Based on code from Object Tools."
@@ -10,9 +12,7 @@ indexing
 	revision: "$Revision$"
 
 
-class
-
-	ST_UNSIGNED_INTEGER_FORMATTER
+class ST_UNSIGNED_INTEGER_FORMATTER
 
 inherit
 
@@ -24,11 +24,9 @@ inherit
 			set_value
 		end
 
-
 creation
 
 	make
-
 
 feature {NONE} -- Initialization
 
@@ -40,7 +38,6 @@ feature {NONE} -- Initialization
 			base := 10
 		end
 
-
 feature {ST_SCIENTIFIC_FORMAT} -- Type that can be formatted
 
 	anchor: INTEGER_REF is
@@ -51,13 +48,11 @@ feature {ST_SCIENTIFIC_FORMAT} -- Type that can be formatted
 			create Result
 		end
 
-
 feature -- Access
 
 	base: INTEGER
 			-- Base to use in `get_plain_number_image';
 			-- Examples are octal, decimal, hex, ...
-
 
 feature -- Set
 
@@ -66,7 +61,6 @@ feature -- Set
 			precursor
 			set_precision (1)
 		end
-
 
 feature {ST_ABSTRACT_FORMATTER} -- Implementation
 
@@ -106,7 +100,6 @@ feature {ST_ABSTRACT_FORMATTER} -- Implementation
 			end
 		end
 
-
 feature -- Value
 
 	is_valid_value (a_value: like value): BOOLEAN is
@@ -125,7 +118,6 @@ feature -- Value
 			set_align_char (' ')
 		end
 
-
 feature -- Output
 
 	output: STRING is
@@ -141,7 +133,6 @@ feature -- Output
 				justify (Result)
 			end
 		end
-
 
 invariant
 

@@ -9,7 +9,7 @@ indexing
 	license: "Eiffel Forum License v2 (see forum.txt)"
 	date: "$Date$"
 	revision: "$Revision$"
-	
+
 class LX_SYMBOL_CLASS
 
 inherit

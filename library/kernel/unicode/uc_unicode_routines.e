@@ -14,6 +14,8 @@ class UC_UNICODE_ROUTINES
 
 inherit
 
+	ANY -- Export features from ANY.
+
 	UC_UNICODE_CONSTANTS
 
 	UC_CTYPE_UPPERCASE

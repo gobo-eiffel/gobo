@@ -14,6 +14,8 @@ deferred class DT_CLOCK
 
 inherit
 
+	ANY -- Export features of ANY.
+
 	DT_DATE_HANDLER
 	DT_TIME_HANDLER
 	DT_DATE_TIME_HANDLER

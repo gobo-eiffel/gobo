@@ -14,6 +14,8 @@ class UT_INTEGER_FORMATTER
 
 inherit
 
+	ANY -- Export features of ANY.
+
 	KL_IMPORTED_INTEGER_ROUTINES
 
 feature -- Access

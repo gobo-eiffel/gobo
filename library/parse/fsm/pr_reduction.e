@@ -14,6 +14,11 @@ class PR_REDUCTION
 
 inherit
 
+	ANY -- Needed for SE 2.1b1.
+		undefine
+			is_equal
+		end
+
 	COMPARABLE
 
 creation

@@ -14,6 +14,8 @@ class PR_FSM
 
 inherit
 
+	ANY -- Export features of ANY.
+
 	KL_IMPORTED_STRING_ROUTINES
 	UT_IMPORTED_FORMATTERS
 

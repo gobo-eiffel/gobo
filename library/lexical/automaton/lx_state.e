@@ -12,6 +12,10 @@ indexing
 
 deferred class LX_STATE
 
+inherit
+
+	ANY -- Needed for SE 2.1b1.
+
 feature -- Status report
 
 	is_accepting: BOOLEAN is

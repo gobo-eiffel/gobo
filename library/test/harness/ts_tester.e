@@ -14,6 +14,8 @@ deferred class TS_TESTER
 
 inherit
 
+	ANY -- Export features of ANY.
+
 	KL_SHARED_ARGUMENTS
 	KL_SHARED_EXCEPTIONS
 	KL_SHARED_STANDARD_FILES

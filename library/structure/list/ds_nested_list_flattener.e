@@ -16,6 +16,10 @@ indexing
 
 class DS_NESTED_LIST_FLATTENER [G]
 
+inherit
+
+	ANY -- Needed for SE 2.1b1.
+
 creation
 
 	make

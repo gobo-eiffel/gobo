@@ -14,6 +14,8 @@ deferred class YY_SCANNER
 
 inherit
 
+	ANY -- Export features of ANY.
+
 	KL_SHARED_STANDARD_FILES
 
 feature {NONE} -- Initialization

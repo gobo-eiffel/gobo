@@ -1,6 +1,8 @@
 indexing
 
-	description: "Format ?s."
+	description:
+
+		"Format ?s."
 
 	library: "Gobo Eiffel Formatter Library"
 	origins: "Based on code from Object Tools."
@@ -10,19 +12,15 @@ indexing
 	revision: "$Revision$"
 
 
-class
-
-	ST_STRING_FORMATTER
+class ST_STRING_FORMATTER
 
 inherit
 
 	ST_ABSTRACT_FORMATTER
 
-
 creation
 
 	make
-
 
 feature {ST_SCIENTIFIC_FORMAT} -- Type that can be formatted
 
@@ -30,7 +28,6 @@ feature {ST_SCIENTIFIC_FORMAT} -- Type that can be formatted
 		once
 			Result := ""
 		end
-
 
 feature -- Output
 

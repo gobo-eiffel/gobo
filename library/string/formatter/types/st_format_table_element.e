@@ -1,6 +1,8 @@
 indexing
 
-	description: "Base class for typechar or picture formatters."
+	description:
+
+		"Base class for typechar or picture formatters."
 
 	library: "Gobo Eiffel Formatter Library"
 	origins: "Based on code from Object Tools."
@@ -9,16 +11,15 @@ indexing
 	date: "$Date$"
 	revision: "$Revision$"
 
+class ST_FORMAT_TABLE_ELEMENT
 
-class
+inherit
 
-	ST_FORMAT_TABLE_ELEMENT
-
+	ANY -- Needed for SE 2.1b1.
 
 creation
 
 	make
-
 
 feature -- Initialization
 
@@ -32,12 +33,10 @@ feature -- Initialization
 			format_set: fmt = a_fmt
 		end
 
-
 feature -- Access
 
 	fmt: ST_ABSTRACT_FORMATTER
 			-- The formatter
-
 
 invariant
 

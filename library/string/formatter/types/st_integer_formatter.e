@@ -17,11 +17,7 @@ indexing
 	date: "$Date$"
 	revision: "$Revision$"
 
-
-class
-
-	ST_INTEGER_FORMATTER
-
+class ST_INTEGER_FORMATTER
 
 inherit
 
@@ -32,11 +28,9 @@ inherit
 			reset_options
 		end
 
-
 creation
 
 	make
-
 
 feature -- State
 
@@ -63,7 +57,6 @@ feature -- State
 			end
 		end
 
-
 feature -- Value
 
 	is_valid_value (a_value: like value): BOOLEAN is
@@ -71,7 +64,6 @@ feature -- Value
 		do
 			Result := a_value /= Void
 		end
-
 
 feature -- Output
 

@@ -12,6 +12,10 @@ indexing
 
 deferred class TS_RESULT
 
+inherit
+
+	ANY -- Needed for SE 2.1b1.
+
 feature -- Access
 
 	test: TS_TEST

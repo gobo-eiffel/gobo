@@ -89,7 +89,8 @@ inherit
 			read_byte as old_read_byte,
 			last_byte as old_last_byte
 		export
-			{NONE} all
+			-- Bug in SE 2.1b1:
+			-- {NONE} all
 		end
 
 #endif

@@ -21,11 +21,7 @@ indexing
 	date: "$Date$"
 	revision: "$Revision$"
 
-
-class
-
-	ST_FIXED_POINT_FORMATTER
-
+class ST_FIXED_POINT_FORMATTER
 
 inherit
 
@@ -35,11 +31,9 @@ inherit
 			reset_options
 		end
 
-
 creation
 
 	make
-
 
 feature {NONE} -- Initialization
 
@@ -49,7 +43,6 @@ feature {NONE} -- Initialization
 			create integer_formatter.make
 		end
 
-
 feature -- Set defaults
 
 	reset_options is
@@ -58,14 +51,12 @@ feature -- Set defaults
 			set_precision (6)
 		end
 
-
 feature {ST_SCIENTIFIC_FORMAT} -- Type that can be formatted
 
 	anchor: DOUBLE_REF is
 		once
 			create Result
 		end
-
 
 feature -- Output
 
@@ -101,7 +92,6 @@ feature -- Output
 				center_pad (Result, ' ', width)
 			end
 		end
-
 
 feature {ST_ABSTRACT_FORMATTER} -- Output implementation
 
@@ -199,11 +189,9 @@ feature {ST_ABSTRACT_FORMATTER} -- Output implementation
 			not_void: Result /= Void
 		end
 
-
 feature {NONE} -- Implementation
 
 	integer_formatter: ST_INTEGER_FORMATTER
-
 
 invariant
 

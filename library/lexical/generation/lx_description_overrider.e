@@ -12,6 +12,10 @@ indexing
 
 deferred class LX_DESCRIPTION_OVERRIDER
 
+inherit
+
+	ANY -- Needed for SE 2.1b1.
+
 feature -- Basic operations
 
 	override_description (a_description: LX_DESCRIPTION) is

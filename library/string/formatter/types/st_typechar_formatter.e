@@ -1,6 +1,8 @@
 indexing
 
-	description: "Holds a formatter that is activated by a certain character."
+	description:
+
+		"Holds a formatter that is activated by a certain character."
 
 	library: "Gobo Eiffel Formatter Library"
 	origins: "Based on code from Object Tools."
@@ -9,9 +11,7 @@ indexing
 	date: "$Date$"
 	revision: "$Revision$"
 
-class
-
-	ST_TYPECHAR_FORMATTER
+class ST_TYPECHAR_FORMATTER
 
 inherit
 

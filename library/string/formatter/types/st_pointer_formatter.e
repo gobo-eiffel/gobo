@@ -1,6 +1,8 @@
 indexing
 
-	description: "Format ?x or ?X to produce hexadecimal output"
+	description:
+
+		"Format ?x or ?X to produce hexadecimal output"
 
 	library: "Gobo Eiffel Formatter Library"
 	origins: "Based on code from Object Tools."
@@ -9,9 +11,7 @@ indexing
 	date: "$Date$"
 	revision: "$Revision$"
 
-class
-
-	ST_POINTER_FORMATTER
+class ST_POINTER_FORMATTER
 
 inherit
 
@@ -34,14 +34,12 @@ feature -- Initialization
 			create hex_formatter.make (False)
 		end
 
-
 feature {ST_SCIENTIFIC_FORMAT} -- Type that can be formatted
 
 	anchor: POINTER_REF is
 		once
 			create Result
 		end
-
 
 feature -- Output
 
@@ -54,12 +52,10 @@ feature -- Output
 			Result := value.out
 		end
 
-
 feature {NONE} -- Implementation
 
 	hex_formatter: ST_HEX_FORMATTER
 
 	zero_x: STRING is "0x"
-
 
 end

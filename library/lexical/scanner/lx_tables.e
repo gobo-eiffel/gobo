@@ -14,6 +14,8 @@ deferred class LX_TABLES
 
 inherit
 
+	ANY -- Export features of ANY.
+
 	KL_IMPORTED_ARRAY_ROUTINES
 
 feature {NONE} -- Initialization

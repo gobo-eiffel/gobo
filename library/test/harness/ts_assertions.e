@@ -14,6 +14,8 @@ class TS_ASSERTIONS
 
 inherit
 
+	ANY -- Export features of ANY.
+
 	TS_ASSERTION_ROUTINES
 
 creation

@@ -21,11 +21,7 @@ indexing
 	date: "$Date$"
 	revision: "$Revision$"
 
-
-class
-
-	ST_E_OR_F_FORMATTER
-
+class ST_E_OR_F_FORMATTER
 
 inherit
 
@@ -38,15 +34,11 @@ inherit
 		end
 
 	KL_DOUBLE_ROUTINES
-		export
-			{NONE} all
-		end
-
+		export {NONE} all end
 
 creation
 
 	make
-
 
 feature {NONE} -- Initialization
 
@@ -56,7 +48,6 @@ feature {NONE} -- Initialization
 			create e_formatter.make (a_use_uppercase_digit)
 			create f_formatter.make
 		end
-
 
 feature -- Set
 
@@ -75,14 +66,12 @@ feature -- Set
 			end
 		end
 
-
 feature {ST_SCIENTIFIC_FORMAT} -- Type that can be formatted
 
 	anchor: DOUBLE_REF is
 		once
 			create Result
 		end
-
 
 feature -- Output
 
@@ -113,7 +102,6 @@ feature -- Output
 			formatter.set_precision (precision)
 			Result := formatter.output
 		end
-
 
 feature {NONE} -- Implementation
 

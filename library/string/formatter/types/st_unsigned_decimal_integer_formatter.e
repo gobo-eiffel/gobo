@@ -1,6 +1,8 @@
 indexing
 
-	description: "Format unsigned decimals."
+	description:
+
+		"Format unsigned decimals."
 
 	library: "Gobo Eiffel Formatter Library"
 	origins: "Based on code from Object Tools."
@@ -10,9 +12,7 @@ indexing
 	revision: "$Revision$"
 
 
-class
-
-	ST_UNSIGNED_DECIMAL_INTEGER_FORMATTER
+class ST_UNSIGNED_DECIMAL_INTEGER_FORMATTER
 
 inherit
 
@@ -21,6 +21,5 @@ inherit
 creation
 
 	make
-
 
 end

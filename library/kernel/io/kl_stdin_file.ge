@@ -72,7 +72,8 @@ inherit
 			unread_character as old_unread_character,
 			last_character as old_last_character
 		export
-			{NONE} all
+			-- Bug in SE 2.1b1:
+			-- {NONE} all
 		redefine
 			last_string
 		end

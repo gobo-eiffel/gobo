@@ -12,6 +12,10 @@ indexing
 
 deferred class KI_SHELL_COMMAND
 
+inherit
+
+	ANY -- Needed for SE 2.1b1.
+
 feature {NONE} -- Initialization
 
 	make (a_command: like command) is

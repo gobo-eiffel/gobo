@@ -14,6 +14,8 @@ class UT_ERROR_HANDLER
 
 inherit
 
+	ANY -- Export features of ANY.
+
 	KL_SHARED_STANDARD_FILES
 	KL_SHARED_STREAMS
 

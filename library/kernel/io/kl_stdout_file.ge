@@ -63,7 +63,8 @@ inherit
 			put_new_line as old_put_new_line,
 			flush as old_flush
 		export
-			{NONE} all
+			-- Bug in SE 2.1b1:
+			-- {NONE} all
 		end
 #endif
 #ifdef VE

@@ -12,6 +12,10 @@ indexing
 
 class KL_GREGORIAN_CALENDAR
 
+inherit
+
+	ANY -- Needed for SE 2.1b1.
+
 feature -- Year
 
 	leap_year (y: INTEGER): BOOLEAN is

@@ -12,6 +12,10 @@ indexing
 
 deferred class DP_COMMAND
 
+inherit
+
+	ANY -- Needed for SE 2.1b1.
+
 feature -- Status report
 
 	is_executable: BOOLEAN is

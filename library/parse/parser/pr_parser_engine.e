@@ -12,6 +12,10 @@ indexing
 
 class PR_PARSER_ENGINE
 
+inherit
+
+	ANY -- Needed for SE 2.1b1.
+
 feature -- Tables
 
 	yytranslate: ARRAY [INTEGER]

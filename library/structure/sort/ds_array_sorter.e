@@ -12,6 +12,10 @@ indexing
 
 deferred class DS_ARRAY_SORTER [G]
 
+inherit
+
+	ANY -- Needed for SE 2.1b1.
+
 feature {NONE} -- Initialization
 
 	make (a_comparator: like comparator) is

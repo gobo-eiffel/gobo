@@ -10,9 +10,7 @@ indexing
 	date: "$Date$"
 	revision: "$Revision$"
 
-class
-
-	ST_SHARED_FORMATTER
+class ST_SHARED_FORMATTER
 
 feature -- Access
 

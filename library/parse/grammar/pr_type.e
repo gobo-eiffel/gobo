@@ -14,6 +14,8 @@ class PR_TYPE
 
 inherit
 
+	ANY -- Needed for SE 2.1b1.
+
 	HASHABLE
 
 	KL_IMPORTED_STRING_ROUTINES

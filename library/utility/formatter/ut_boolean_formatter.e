@@ -12,6 +12,10 @@ indexing
 
 class UT_BOOLEAN_FORMATTER
 
+inherit
+
+	ANY -- Needed for SE 2.1b1.
+
 feature -- Access
 
 	eiffel_boolean_out (b: BOOLEAN): STRING is

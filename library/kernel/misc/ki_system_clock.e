@@ -12,6 +12,10 @@ indexing
 
 deferred class KI_SYSTEM_CLOCK
 
+inherit
+
+	ANY -- Needed for SE 2.1b1.
+
 feature {NONE} -- Initialization
 
 	make is

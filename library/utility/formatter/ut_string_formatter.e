@@ -14,6 +14,8 @@ class UT_STRING_FORMATTER
 
 inherit
 
+	ANY -- Export features of ANY.
+
 	KL_IMPORTED_STRING_ROUTINES
 	UT_IMPORTED_FORMATTERS
 

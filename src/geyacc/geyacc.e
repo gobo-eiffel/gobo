@@ -13,6 +13,8 @@ class GEYACC
 
 inherit
 
+	ANY -- Export features of ANY.
+
 	GEYACC_VERSION
 
 	KL_SHARED_EXCEPTIONS

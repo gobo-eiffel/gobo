@@ -10,18 +10,14 @@ indexing
 	date: "$Date$"
 	revision: "$Revision$"
 
-class
-
-	ST_FORMAT_ROUTINES
+class ST_FORMAT_ROUTINES
 
 inherit
 
 	ANY
 
 	ST_SHARED_FORMATTER
-		export
-			{NONE} all
-		end
+		export {NONE} all end
 
 feature -- Status
 

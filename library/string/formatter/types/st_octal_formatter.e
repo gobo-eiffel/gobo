@@ -1,6 +1,8 @@
 indexing
 
-	description: "Format ?o to produce octal output"
+	description:
+
+		"Format ?o to produce octal output"
 
 	library: "Gobo Eiffel Formatter Library"
 	origins: "Based on code from Object Tools."
@@ -9,9 +11,7 @@ indexing
 	date: "$Date$"
 	revision: "$Revision$"
 
-class
-
-	ST_OCTAL_FORMATTER
+class ST_OCTAL_FORMATTER
 
 inherit
 

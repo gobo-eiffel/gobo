@@ -14,6 +14,8 @@ class PR_GRAMMAR
 
 inherit
 
+	ANY -- Export features from ANY.
+
 	KL_IMPORTED_STRING_ROUTINES
 	UT_IMPORTED_FORMATTERS
 

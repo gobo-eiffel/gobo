@@ -12,20 +12,15 @@ indexing
 	revision: "$Revision$"
 
 
-class
-
-	ST_CHARACTER_FORMATTER
-
+class ST_CHARACTER_FORMATTER
 
 inherit
 
 	ST_ABSTRACT_FORMATTER
 
-
 creation
 
 	make
-
 
 feature {ST_SCIENTIFIC_FORMAT} -- Type that can be formatted
 
@@ -34,7 +29,6 @@ feature {ST_SCIENTIFIC_FORMAT} -- Type that can be formatted
 			create Result
 			Result.set_item ('%U')
 		end
-
 
 feature -- Output
 

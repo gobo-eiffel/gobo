@@ -10,15 +10,15 @@ indexing
 	revision: "$Revision$"
 
 
-class
+class ST_ARGUMENTS_ITERATOR
 
-	ST_ARGUMENTS_ITERATOR
+inherit
 
+	ANY -- Needed for SE 2.1b1.
 
 creation
 
 	make
-
 
 feature -- Initialization
 
@@ -33,7 +33,6 @@ feature -- Initialization
 			end
 		end
 
-
 feature -- Iteration
 
 	go_forth is
@@ -43,7 +42,6 @@ feature -- Iteration
 		do
 			cur := cur + 1
 		end
-
 
 feature -- Access
 
@@ -58,7 +56,6 @@ feature -- Access
 			Result := arg.item (cur)
 		end
 
-
 feature -- Status
 
 	is_after: BOOLEAN is
@@ -67,12 +64,10 @@ feature -- Status
 			Result := (arg = Void) or else (cur > arg.upper)
 		end
 
-
 feature {NONE} -- Implementation
 
 	cur: INTEGER
 			-- Index variable into `arg'
-
 
 invariant
 

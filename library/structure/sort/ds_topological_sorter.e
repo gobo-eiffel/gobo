@@ -18,6 +18,10 @@ indexing
 
 class DS_TOPOLOGICAL_SORTER [G]
 
+inherit
+
+	ANY -- Needed for SE 2.1b1.
+
 creation
 
 	make, make_default

@@ -11,21 +11,14 @@ indexing
 	date: "$Date$"
 	revision: "$Revision$"
 
-
-deferred class
-
-	ST_ABSTRACT_FORMATTER
-
+deferred class ST_ABSTRACT_FORMATTER
 
 inherit
 
 	ANY
 
 	KL_IMPORTED_STRING_ROUTINES
-		export
-			{NONE} all
-		end
-
+		export {NONE} all end
 
 feature {NONE} -- Initialization
 
@@ -37,7 +30,6 @@ feature {NONE} -- Initialization
 			value_set: value = anchor
 		end
 
-
 feature {ST_SCIENTIFIC_FORMAT} -- Type that can be formatted
 
 	anchor: ANY is
@@ -48,7 +40,6 @@ feature {ST_SCIENTIFIC_FORMAT} -- Type that can be formatted
 		ensure
 			anchor_not_void: Result /= Void
 		end
-
 
 feature -- Width and precision
 
@@ -64,7 +55,6 @@ feature -- Width and precision
 	width: INTEGER
 			-- Minimum field with, does never cause truncation
 
-
 feature -- Alignment
 
 	alignment: INTEGER
@@ -78,7 +68,6 @@ feature -- Alignment
 	align_right: INTEGER is 2
 	align_center: INTEGER is 3
 			-- Possible `alignment' values
-
 
 feature -- Set
 
@@ -147,7 +136,6 @@ feature -- Set
 	sign_always: BOOLEAN
 			-- Should a sign, plus or minus, be present in the output?
 			-- By default a sign is used only for negative numbers.
-
 
 feature {NONE} -- String padding routines
 
@@ -246,7 +234,6 @@ feature {NONE} -- String padding routines
 					a_string.substring (1, old a_string.count).is_equal (old clone (a_string))
 		end
 
-
 feature -- Value to be formatted
 
 	is_valid_value (a_value: like value): BOOLEAN is
@@ -271,7 +258,6 @@ feature -- Value to be formatted
 			-- Value that is to be formatted;
 			-- MUST never be changed by the formatter itself!
 
-
 feature -- Output
 
 	output: STRING is
@@ -282,15 +268,10 @@ feature -- Output
 			value_not_changed: value.is_equal (old clone (value))
 		end
 
-
 invariant
 
 	value_is_valid: is_valid_value (value)
-
-	alignment_known:
-		alignment = align_left or else
-		alignment = align_right or else
-		alignment = align_center
+	alignment_known: alignment = align_left or else alignment = align_right or else alignment = align_center
 	precision_not_negative: precision >= 0
 	width_not_negative: width >= 0
 

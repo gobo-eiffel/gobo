@@ -1,6 +1,8 @@
 indexing
 
-	description: "Format ?x or ?X to produce hexadecimal output"
+	description:
+
+		"Format ?x or ?X to produce hexadecimal output"
 
 	library: "Gobo Eiffel Formatter Library"
 	origins: "Based on code from Object Tools."
@@ -9,9 +11,7 @@ indexing
 	date: "$Date$"
 	revision: "$Revision$"
 
-class
-
-	ST_HEX_FORMATTER
+class ST_HEX_FORMATTER
 
 inherit
 

@@ -22,11 +22,7 @@ indexing
 	date: "$Date$"
 	revision: "$Revision$"
 
-
-class
-
-	ST_FLOATING_POINT_FORMATTER
-
+class ST_FLOATING_POINT_FORMATTER
 
 inherit
 
@@ -38,15 +34,11 @@ inherit
 		end
 
 	KL_DOUBLE_ROUTINES
-		export
-			{NONE} all
-		end
-
+		export {NONE} all end
 
 creation
 
 	make
-
 
 feature {NONE} -- Initialization
 
@@ -57,12 +49,10 @@ feature {NONE} -- Initialization
 			use_uppercase_digit := a_use_uppercase_digit
 		end
 
-
 feature -- Access
 
 	use_uppercase_digit: BOOLEAN
 			-- Should output an 'E' instead of an 'e'?
-
 
 feature -- Output
 
@@ -115,7 +105,6 @@ feature -- Output
 			Result.append_string (after_exponent)
 			justify (Result)
 		end
-
 
 feature {NONE} -- Implementation
 

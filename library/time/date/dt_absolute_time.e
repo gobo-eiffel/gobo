@@ -14,6 +14,8 @@ deferred class DT_ABSOLUTE_TIME
 
 inherit
 
+	ANY -- Needed for SE 2.1b1.
+
 	COMPARABLE
 		undefine
 			is_equal

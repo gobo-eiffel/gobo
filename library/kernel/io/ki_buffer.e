@@ -12,6 +12,10 @@ indexing
 
 deferred class KI_BUFFER [G]
 
+inherit
+
+	ANY -- Needed for SE 2.1b1.
+
 feature -- Access
 
 	item (i: INTEGER): G is

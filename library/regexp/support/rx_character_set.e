@@ -14,6 +14,8 @@ class RX_CHARACTER_SET
 
 inherit
 
+	ANY -- Export features of ANY.
+
 	KL_IMPORTED_FIXED_ARRAY_ROUTINES
 
 creation

@@ -12,6 +12,10 @@ indexing
 
 class PR_ACTION_FACTORY
 
+inherit
+
+	ANY -- Needed for SE 2.1b1.
+
 creation
 
 	make

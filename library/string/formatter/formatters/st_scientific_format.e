@@ -15,15 +15,15 @@ indexing
 	revision: "$Revision$"
 
 
-class
+class ST_SCIENTIFIC_FORMAT
 
-	ST_SCIENTIFIC_FORMAT
+inherit
 
+	ANY -- Needed for SE 2.1b1.
 
 creation
 
 	make
-
 
 feature -- Initialization
 
@@ -40,7 +40,6 @@ feature -- Initialization
 		ensure
 			escape_set: default_escape = ch
 		end
-
 
 feature -- Special characters
 
@@ -61,7 +60,6 @@ feature -- Special characters
 	Zero: CHARACTER is '0'
 	Space: CHARACTER is ' '
 	Center: CHARACTER is '^'
-
 
 feature -- Resolve format specifiers and return a string
 
@@ -129,7 +127,6 @@ feature -- Resolve format specifiers and return a string
 			result_not_void: Result /= Void
 		end
 
-
 feature {NONE} -- Formatting implementation
 
 	do_sprintf (a_format: STRING; a_para: ARRAY [ANY]): STRING is
@@ -174,19 +171,13 @@ feature {NONE} -- Formatting implementation
 			looked_at_all_arguments: is_correct implies args.is_after
 		end
 
-	do_format (
-			in: STRING;
-			fmt_el: ST_TYPECHAR_FORMATTER;
-			asterisk_allowed: BOOLEAN): STRING is
+	do_format ( in: STRING; fmt_el: ST_TYPECHAR_FORMATTER; asterisk_allowed: BOOLEAN): STRING is
 			-- Current argument(s) formatted according to format string
 			-- `in' using formatter `fmt_el';
 			-- Format specification syntax: [?][flags][width][.precision]
 		require
 			no_errors: is_correct
-			non_void_paramenters:
-				in /= Void and
-				fmt_el /= Void and
-				args /= Void
+			non_void_paramenters: in /= Void and fmt_el /= Void and args /= Void
 			not_after: not args.is_after
 		local
 			i, j, k, width, precision: INTEGER
@@ -501,7 +492,6 @@ feature {NONE} -- Formatting implementation
 			formatters_not_void: Result /= Void
 		end
 
-
 feature {NONE} -- Argument parsing
 
 	args: ST_ARGUMENTS_ITERATOR
@@ -625,7 +615,6 @@ feature {NONE} -- Argument parsing
 	skipped: STRING
 			-- Characters skipped by `forth' with quoted escape sequences
 			-- resolved
-
 
 feature {NONE} -- Error handling
 
