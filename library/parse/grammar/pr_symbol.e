@@ -13,6 +13,10 @@ indexing
 
 deferred class PR_SYMBOL
 
+inherit
+
+	KL_IMPORTED_OUTPUT_STREAM_ROUTINES
+
 feature {NONE} -- Initialization
 
 	make (an_id: INTEGER; a_name: like name) is
@@ -36,6 +40,9 @@ feature -- Status report
 		deferred
 		end
 
+	is_useful: BOOLEAN
+			-- Is current symbol useful?
+
 feature -- Access
 
 	name: STRING
@@ -44,6 +51,41 @@ feature -- Access
 	id: INTEGER
 			-- Internal symbol id used in generated tables
 			-- (Symbols are indexed from 0.)
+
+feature -- Status setting
+
+	set_useful (b: BOOLEAN) is
+			-- Set `is_useful' to `b'.
+		do
+			is_useful := b
+		ensure
+			useful_set: is_useful = b
+		end
+
+feature -- Setting
+
+	set_id (i: INTEGER) is
+			-- Set `id' to i'.
+		require
+			valid_id: i >= 0
+		do
+			id := i
+		ensure
+			id_set: id = i
+		end
+
+feature -- Output
+
+	print_symbol (a_grammar: PR_GRAMMAR; a_file: like OUTPUT_STREAM_TYPE) is
+			-- Print textual representation of current
+			-- symbol to `a_file' with rules where it
+			-- appears in `a_grammar'.
+		require
+			a_grammar_not_void: a_grammar /= Void
+			a_file_not_void: a_file /= Void
+			a_file_open_write: OUTPUT_STREAM_.is_open_write (a_file)
+		deferred
+		end
 
 invariant
 

@@ -264,24 +264,25 @@ feature -- Setting
 
 feature -- Conflicts
 
-	resolve_conflicts (verbose: BOOLEAN; a_file: like OUTPUT_STREAM_TYPE) is
+	resolve_conflicts: DS_LINKED_LIST [PR_CONFLICT] is
 			-- Try to any resolve shift/reduce conflicts
 			-- using precedence levels. Set `has_conflict'
 			-- to true if a conflict could not be resolved.
-			-- Report any conflicts to `a_file'.
+			-- Return the list of shift/reduced conflicts
+			-- which have been resolved.
 		require
 			lookahead_needed: lookahead_needed
-			a_file_not_void: a_file /= Void
-			a_file_open_write: OUTPUT_STREAM_.is_open_write (a_file)
 		local
 			tokens: DS_ARRAYED_LIST [PR_TOKEN]
 			lookaheads: DS_ARRAYED_LIST [PR_TOKEN]
 			rule_prec, token_prec: INTEGER
 			a_reduction: PR_REDUCTION
+			a_conflict: PR_CONFLICT
 			a_token: PR_TOKEN
 			i, j, nb: INTEGER
 			a_rule: PR_RULE
 		do
+			!! Result.make
 			i := shifts.count
 			!! tokens.make (i)
 			from until i < 1 loop
@@ -311,26 +312,31 @@ feature -- Conflicts
 								if token_prec < rule_prec then
 										-- Keep only the reduction.
 									tokens.remove (j)
-									report_resolution (verbose, a_rule, a_token, "reduce", a_file)
+									!! a_conflict.make (Current, a_rule, a_token, "reduce")
+									Result.force_last (a_conflict)
 								elseif rule_prec < token_prec then
 										-- Keep only the shift.
 									lookaheads.delete (a_token)
-									report_resolution (verbose, a_rule, a_token, "shift", a_file)
+									!! a_conflict.make (Current, a_rule, a_token, "shift")
+									Result.force_last (a_conflict)
 								elseif a_token.is_right_associative then
 										-- Keep only the reduction.
 									tokens.remove (j)
-									report_resolution (verbose, a_rule, a_token, "reduce", a_file)
+									!! a_conflict.make (Current, a_rule, a_token, "reduce")
+									Result.force_last (a_conflict)
 								elseif a_token.is_left_associative then
 										-- Keep only the shift.
 									lookaheads.delete (a_token)
-									report_resolution (verbose, a_rule, a_token, "shift", a_file)
+									!! a_conflict.make (Current, a_rule, a_token, "shift")
+									Result.force_last (a_conflict)
 								elseif a_token.is_non_associative then
 										-- Keep neither.
 									lookaheads.delete (a_token)
 									tokens.remove (j)
 										-- Record an explicit error for this token.
 									errors.force_last (a_token)
-									report_resolution (verbose, a_rule, a_token, "an error", a_file)
+									!! a_conflict.make (Current, a_rule, a_token, "an error")
+									Result.force_last (a_conflict)
 								end
 							end
 						end
@@ -361,6 +367,9 @@ feature -- Conflicts
 				end
 				i := i - 1
 			end
+		ensure
+			conflicts_not_void: Result /= Void
+			no_void_conflict: not Result.has (Void)
 		end
 
 	shift_reduce_count: INTEGER is
@@ -397,6 +406,8 @@ feature -- Conflicts
 				end
 				i := i - 1
 			end
+		ensure
+			positive_count: Result >= 0
 		end
 
 	reduce_reduce_count: INTEGER is
@@ -427,32 +438,8 @@ feature -- Conflicts
 				end
 				Result := conflicts.count
 			end
-		end
-
-	report_resolution (verbose: BOOLEAN; a_rule: PR_RULE;
-		a_token: PR_TOKEN; a_resolution: STRING;
-		a_file: like OUTPUT_STREAM_TYPE) is
-			-- Report to `a_file' in verbose mode that a
-			-- shift/reduce conflict between `a_rule' and
-			-- `a_token' has been resolved as `a_resolution'.
-		require
-			a_rule_not_void: a_rule /= Void
-			a_token_not_void: a_token /= Void
-			a_resolution_not_void: a_resolution /= Void
-			a_file_not_void: a_file /= Void
-			a_file_open_write: OUTPUT_STREAM_.is_open_write (a_file)
-		do
-			if verbose then
-				a_file.put_string ("Conflict in state ")
-				a_file.put_integer (id)
-				a_file.put_string (" between rule ")
-				a_file.put_integer (a_rule.id)
-				a_file.put_string (" and token ")
-				a_file.put_integer (a_token.id)
-				a_file.put_string (" resolved as ")
-				a_file.put_string (a_resolution)
-				a_file.put_string (".%N")
-			end
+		ensure
+			positive_count: Result >= 0
 		end
 
 feature -- Sorting
@@ -469,6 +456,250 @@ feature -- Sorting
 			-- Are `positions' sorted?
 		do
 			Result := positions.sorted (Position_sorter)
+		end
+
+feature -- Output
+
+	print_state (a_file: like OUTPUT_STREAM_TYPE) is
+			-- Print textual representation of
+			-- current state to `a_file'.
+		require
+			a_file_not_void: a_file /= Void
+			a_file_open_write: OUTPUT_STREAM_.is_open_write (a_file)
+		local
+			i, nb: INTEGER
+			a_state: PR_STATE
+			a_symbol: PR_SYMBOL
+			a_rule: PR_RULE
+			found: BOOLEAN
+		do
+			a_file.put_string ("%N%Nstate ")
+			a_file.put_integer (id)
+			a_file.put_string ("%N%N")
+			nb := positions.count
+			from i := 1 until i > nb loop
+				a_file.put_character ('%T')
+				positions.item (i).print_position (a_file)
+				a_file.put_character ('%N')
+				i := i + 1
+			end
+			a_file.put_character ('%N')
+			if shifts.is_empty and reductions.is_empty then
+				if accessing_symbol.id = 0 then
+						-- Termination state.
+					a_file.put_string ("%T$default%Taccept%N")
+				else
+					a_file.put_string ("%TNO ACTIONS%N")
+				end
+			else
+				nb := shifts.count
+				from i := 1 until i > nb loop
+					a_state := shifts.item (i)
+					a_symbol := a_state.accessing_symbol
+					if a_symbol.is_terminal then
+						found := True
+						if a_symbol.id = 0 then
+								-- EOF token.
+							a_file.put_string ("%T$%T")
+						else
+							a_file.put_character ('%T')
+							a_file.put_string (a_symbol.name)
+							a_file.put_string ("%Tshift, and ")
+						end
+						a_file.put_string ("go to state ")
+						a_file.put_integer (a_state.id)
+						a_file.put_character ('%N')
+					end
+					i := i + 1
+				end
+				if found then
+					a_file.put_character ('%N')
+					found := False
+				end
+				nb := errors.count
+				from i := 1 until i > nb loop
+					a_file.put_character ('%T')
+					a_file.put_string (errors.item (i).name)
+					a_file.put_string ("%Terror (nonassociative)%N")
+					i := i + 1
+				end
+				if nb > 0 then
+					a_file.put_character ('%N')
+				end
+				if lookahead_needed and not reductions.is_empty then
+					print_reductions (a_file)
+				elseif not reductions.is_empty then
+					a_rule := reductions.first.rule
+					a_file.put_string ("%T$default%Treduce using rule ")
+					a_file.put_integer (a_rule.id)
+					a_file.put_string (" (")
+					a_file.put_string (a_rule.lhs.name)
+					a_file.put_string (")%N%N")
+				end
+				nb := shifts.count
+				from i := 1 until i > nb loop
+					a_state := shifts.item (i)
+					a_symbol := a_state.accessing_symbol
+					if not a_symbol.is_terminal then
+						found := True
+						a_file.put_character ('%T')
+						a_file.put_string (a_symbol.name)
+						a_file.put_string ("%Tgo to state ")
+						a_file.put_integer (a_state.id)
+						a_file.put_character ('%N')
+					end
+					i := i + 1
+				end
+				if found then
+					a_file.put_character ('%N')
+					found := False
+				end
+			end
+		end
+
+	print_reductions (a_file: like OUTPUT_STREAM_TYPE) is
+			-- Print textual representation of current
+			-- state's reductions to `a_file'.
+		require
+			a_file_not_void: a_file /= Void
+			a_file_open_write: OUTPUT_STREAM_.is_open_write (a_file)
+		local
+			no_default, defaulted: BOOLEAN
+			shift_tokens, tokens: DS_ARRAYED_LIST [PR_TOKEN]
+			lookaheads: DS_ARRAYED_LIST [PR_TOKEN]
+			a_reduction, default_reduction: PR_REDUCTION
+			a_rule: PR_RULE
+			a_token: PR_TOKEN
+			count, max: INTEGER
+			i, j, nb: INTEGER
+		do
+			i := shifts.count
+			!! shift_tokens.make (i)
+			from until i < 1 loop
+				a_token ?= shifts.item (i).accessing_symbol
+				if a_token /= Void then
+					shift_tokens.put_last (a_token)
+					if a_token.id = 1 then
+							-- If current state has a shift to the
+							-- error token, don't use a default rule.
+						no_default := True
+					end
+				end
+				i := i - 1
+			end
+			if reductions.count = 1 and not no_default then
+				a_reduction := reductions.first
+				a_rule := a_reduction.rule
+				lookaheads := a_reduction.lookaheads
+				i := lookaheads.count
+				from until i < 1 loop
+					a_token := lookaheads.item (i)
+					if shift_tokens.has (a_token) or errors.has (a_token) then
+						a_file.put_character ('%T')
+						a_file.put_string (a_token.name)
+						a_file.put_string ("%T[reduce using rule ")
+						a_file.put_integer (a_rule.id)
+						a_file.put_string (" (")
+						a_file.put_string (a_rule.lhs.name)
+						a_file.put_string (")]%N")
+					end
+					i := i - 1
+				end
+				a_file.put_string ("%T$default%Treduce using rule ")
+				a_file.put_integer (a_rule.id)
+				a_file.put_string (" (")
+				a_file.put_string (a_rule.lhs.name)
+				a_file.put_string (")%N%N")
+			elseif reductions.count >= 1 then
+				!! tokens.make (2 * (shift_tokens.count + errors.count))
+				tokens.extend_last (shift_tokens)
+				tokens.extend_last (errors)
+				if not no_default then
+					i := reductions.count
+					from until i < 1 loop
+						a_reduction := reductions.item (i)
+						lookaheads := a_reduction.lookaheads
+						j := lookaheads.count
+						from until j < 1 loop
+							a_token := lookaheads.item (j)
+							if not tokens.has (a_token) then
+								tokens.force_last (a_token)
+								count := count + 1
+							end
+							j := j - 1
+						end
+						i := i - 1
+					end
+					if count > max then
+						max := count
+						default_reduction := a_reduction
+					end
+					count := 0
+				end
+				i := tokens.count
+				from until i < 1 loop
+					a_token := tokens.item (i)
+					defaulted := False
+					if shift_tokens.has (a_token) then
+						count := 1
+					else
+						count := 0
+					end
+					nb := reductions.count
+					from j := 1 until j > nb loop
+						a_reduction := reductions.item (j)
+						if a_reduction.lookaheads.has (a_token) then
+							if count = 0 then
+								if a_reduction /= default_reduction then
+									a_rule := a_reduction.rule
+									a_file.put_character ('%T')
+									a_file.put_string (a_token.name)
+									a_file.put_string ("%Treduce using rule ")
+									a_file.put_integer (a_rule.id)
+									a_file.put_string (" (")
+									a_file.put_string (a_rule.lhs.name)
+									a_file.put_string (")%N")
+								else
+									defaulted := True
+								end
+								count := count + 1
+							else
+								if defaulted then
+									a_rule := default_reduction.rule
+									a_file.put_character ('%T')
+									a_file.put_string (a_token.name)
+									a_file.put_string ("%Treduce using rule ")
+									a_file.put_integer (a_rule.id)
+									a_file.put_string (" (")
+									a_file.put_string (a_rule.lhs.name)
+									a_file.put_string (")%N")
+									defaulted := False
+								end
+								a_rule := a_reduction.rule
+								a_rule := default_reduction.rule
+								a_file.put_character ('%T')
+								a_file.put_string (a_token.name)
+								a_file.put_string ("%T[reduce using rule ")
+								a_file.put_integer (a_rule.id)
+								a_file.put_string (" (")
+								a_file.put_string (a_rule.lhs.name)
+								a_file.put_string (")]%N")
+							end
+						end
+						j := j + 1
+					end
+					i := i - 1
+				end
+				if default_reduction /= Void then
+					a_rule := default_reduction.rule
+					a_file.put_string ("%T$default%Treduce using rule ")
+					a_file.put_integer (a_rule.id)
+					a_file.put_string (" (")
+					a_file.put_string (a_rule.lhs.name)
+					a_file.put_string (")%N")
+				end
+				a_file.put_character ('%N')
+			end
 		end
 
 feature {NONE} -- Constants

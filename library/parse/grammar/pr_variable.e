@@ -16,6 +16,8 @@ class PR_VARIABLE
 inherit
 
 	PR_SYMBOL
+		rename
+			print_symbol as print_variable
 		redefine
 			make
 		end
@@ -156,6 +158,50 @@ feature -- Element change
 			transitions.force_last (a_transition)
 		ensure
 			transition_added: transitions.has (a_transition)
+		end
+
+feature -- Output
+
+	print_variable (a_grammar: PR_GRAMMAR; a_file: like OUTPUT_STREAM_TYPE) is
+			-- Print textual representation of current
+			-- variable to `a_file' with rules where it
+			-- appears in `a_grammar'.
+		local
+			i, nb: INTEGER
+			a_rule: PR_RULE
+			r: DS_ARRAYED_LIST [PR_RULE]
+			on_right: BOOLEAN
+		do
+			a_file.put_string (name)
+			a_file.put_string (" (")
+			a_file.put_integer (id)
+			a_file.put_character (')')
+			if not rules.is_empty then
+				a_file.put_string (" on left:")
+				nb := rules.count
+				from i := 1 until i > nb loop
+					a_file.put_character (' ')
+					a_file.put_integer (rules.item (i).id)
+					i := i + 1
+				end
+			end
+			r := a_grammar.rules
+			nb := r.count
+			from i := 1 until i > nb loop
+				a_rule := r.item (i)
+				if a_rule.rhs.has (Current) then
+					if not on_right then
+						on_right := True
+						if not rules.is_empty then
+							a_file.put_character (',')
+						end
+						a_file.put_string (" on right:")
+					end
+					a_file.put_character (' ')
+					a_file.put_integer (a_rule.id)
+				end
+				i := i + 1
+			end
 		end
 
 feature {NONE} -- Constants

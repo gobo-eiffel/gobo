@@ -12,6 +12,12 @@ indexing
 
 class PR_GRAMMAR
 
+inherit
+
+	KL_IMPORTED_OUTPUT_STREAM_ROUTINES
+	KL_IMPORTED_STRING_ROUTINES
+	UT_IMPORTED_FORMATTERS
+
 creation
 
 	make
@@ -148,6 +154,42 @@ feature -- Element change
 			inserted: rules.last = a_rule
 		end
 
+feature -- Output
+
+	print_grammar (a_file: like OUTPUT_STREAM_TYPE) is
+			-- Print textual representation of
+			-- current grammar to `a_file'.
+		require
+			a_file_not_void: a_file /= Void
+			a_file_open_write: OUTPUT_STREAM_.is_open_write (a_file)
+		local
+			i, nb: INTEGER
+		do
+			a_file.put_string ("%NGrammar%N%N")
+			nb := rules.count
+			from i := 1 until i > nb loop
+				rules.item (i).print_rule (a_file)
+				a_file.put_character ('%N')
+				i := i + 1
+			end
+			a_file.put_string ("%NTerminals, with rules where they appear%N%N")
+				-- EOF token.
+			a_file.put_string ("$ (0)%N")
+			nb := tokens.count
+			from i := 1 until i > nb loop
+				tokens.item (i).print_token (Current, a_file)
+				a_file.put_character ('%N')
+				i := i + 1
+			end
+			a_file.put_string ("%NNonterminals, with rules where they appear%N%N")
+			nb := variables.count
+			from i := 1 until i > nb loop
+				variables.item (i).print_variable (Current, a_file)
+				a_file.put_character ('%N')
+				i := i + 1
+			end
+		end
+
 feature -- Processing
 
 	reduce (error_handler: UT_ERROR_HANDLER) is
@@ -155,8 +197,152 @@ feature -- Processing
 			-- Report results to `error_handler'.
 		require
 			error_handler_not_void: error_handler /= Void
+		local
+			i, j: INTEGER
+			a_rule: PR_RULE
+			a_variable: PR_VARIABLE
+			r: DS_ARRAYED_LIST [PR_RULE]
+			useless_variables: INTEGER
+			useless_rules: INTEGER
+			message: STRING
+			warning: UT_MESSAGE
 		do
-			-- TO DO
+			mark_useful_variables
+			mark_useful_rules
+			from i := 1 until i > rules.count loop
+				a_rule := rules.item (i)
+				if a_rule.is_useful then
+					a_rule.set_id (i)
+					i := i + 1
+				else
+					rules.remove (i)
+					useless_rules := useless_rules + 1
+				end
+			end
+			from i := 1 until i > variables.count loop
+				a_variable := variables.item (i)
+				if a_variable.is_useful then
+						-- Variables are indexed from 0.
+					a_variable.set_id (i - 1)
+					r := a_variable.rules
+					j := r.count
+					from until j < 1 loop
+						if not r.item (j).is_useful then
+							r.remove (j)
+						end
+						j := j - 1
+					end
+					i := i + 1
+				else
+					variables.remove (i)
+					useless_variables := useless_variables + 1
+				end
+			end
+			if useless_variables > 0 or useless_rules > 0 then
+				message := STRING_.make (128)
+				message.append_string ("Parser contains ")
+				if useless_variables = 1 then
+					message.append_string ("1 useless nonterminal")
+				elseif useless_variables > 1 then
+					INTEGER_FORMATTER_.append_decimal_integer (message, useless_variables)
+					message.append_string (" useless nonterminals")
+				end
+				if useless_variables > 0 and useless_rules > 0 then
+					message.append_string (" and ")
+				end
+				if useless_rules = 1 then
+					message.append_string ("1 useless rule")
+				elseif useless_rules > 1 then
+					INTEGER_FORMATTER_.append_decimal_integer (message, useless_rules)
+					message.append_string (" useless rules")
+				end
+				message.append_string (".%N")
+				!! warning.make (message)
+				error_handler.report_warning (warning)
+			end
+		end
+
+	reduce_verbose (error_handler: UT_ERROR_HANDLER; a_file: like OUTPUT_STREAM_TYPE) is
+			-- Remove useless nonterminal symbols and rules.
+			-- Report verbosely results to `error_handler'
+			-- and `a_file'.
+		require
+			error_handler_not_void: error_handler /= Void
+			a_file_not_void: a_file /= Void
+			a_file_open_write: OUTPUT_STREAM_.is_open_write (a_file)
+		local
+			old_variables: like variables
+			old_tokens: like tokens
+			old_rules: like rules
+			useless_variables: INTEGER
+			useless_tokens: INTEGER
+			useless_rules: INTEGER
+			a_variable: PR_VARIABLE
+			a_token: PR_TOKEN
+			a_rule: PR_RULE
+			rhs: DS_ARRAYED_LIST [PR_SYMBOL]
+			i, j, nb, nb_rhs: INTEGER
+		do
+			old_variables := clone (variables)
+			old_tokens := clone (tokens)
+			old_rules := clone (rules)
+			reduce (error_handler)
+			useless_variables := variables.count - old_variables.count
+			useless_tokens := tokens.count - old_tokens.count
+			useless_rules := rules.count - old_rules.count
+			if useless_variables > 0 then
+				a_file.put_string ("Useless nonterminals:%N%N")
+				nb := old_variables.count
+				from i := 1 until i > nb loop
+					a_variable := old_variables.item (i)
+					if not a_variable.is_useful then
+						a_file.put_character ('%T')
+						a_file.put_string (a_variable.name)
+						a_file.put_character ('%N')
+					end
+					i := i + 1
+				end
+			end
+			nb := old_tokens.count
+			from i := 1 until i > nb loop
+				a_token := old_tokens.item (i)
+				if not a_token.is_useful then
+					if useless_tokens = 0 then
+						a_file.put_string ("Terminals which are not used:%N%N")
+					end
+					useless_tokens := useless_tokens + 1
+					a_file.put_character ('%T')
+					a_file.put_string (a_token.name)
+					a_file.put_character ('%N')
+				end
+				i := i + 1
+			end
+			if useless_rules > 0 then
+				a_file.put_string ("Useless rules:%N%N")
+				nb := old_rules.count
+				from i := 1 until i > nb loop
+					a_rule := old_rules.item (i)
+					if not a_rule.is_useful then
+						a_file.put_character ('#')
+						a_file.put_integer (i)
+						a_file.put_character ('%T')
+						a_file.put_string (a_rule.lhs.name)
+						a_file.put_string (": ")
+						rhs := a_rule.rhs
+						nb_rhs := rhs.count
+						from j := 1 until j > nb_rhs loop
+							a_file.put_string (rhs.item (j).name)
+							a_file.put_character (' ')
+							j := j + 1
+						end
+						a_file.put_string (";%N")
+					end
+					i := i + 1
+				end
+			end
+			if useless_variables > 0 or useless_tokens > 0 or useless_rules > 0 then
+				a_file.put_string ("%N%N")
+			end
 		end
 
 	set_nullable is
@@ -243,6 +429,126 @@ feature -- Processing
 					end
 					i := i + 1
 				end
+			end
+		end
+
+feature {NONE} -- Processing
+
+	mark_useful_variables is
+			-- Mark all nonterminals which can expand to
+			-- an empty string or strings consisting only
+			-- of terminals. Mark the corresponding rules
+			-- accordingly (i.e. rules whose right-hand-
+			-- side is only made of terminals or useful
+			-- nonterminals).
+		local
+			rhs: DS_ARRAYED_LIST [PR_SYMBOL]
+			r: DS_ARRAYED_LIST [PR_RULE]
+			a_variable: PR_VARIABLE
+			a_symbol: PR_SYMBOL
+			a_rule: PR_RULE
+			i, j: INTEGER
+			changed: BOOLEAN
+			nb_rules: INTEGER
+		do
+			nb_rules := rules.count
+			from changed := True until not changed loop
+				changed := False
+				from i := 1 until i > nb_rules loop
+					a_rule := rules.item (i)
+					if not a_rule.is_useful then
+						a_rule.set_useful (True)
+						rhs := a_rule.rhs
+						j := rhs.count
+						from until j < 1 loop
+							a_symbol := rhs.item (j)
+							if a_symbol.is_terminal or a_symbol.is_useful then
+								j := j - 1
+							else
+									-- Not useful yet.
+								a_rule.set_useful (False)
+								j := 0 -- Jump out of the loop.
+							end
+						end
+						if a_rule.is_useful then
+							a_variable := a_rule.lhs
+							if not a_variable.is_useful then
+								a_variable.set_useful (True)
+								changed := True
+							end
+						end
+						j := j - 1
+					end
+					i := i + 1
+				end
+			end
+		end
+
+	mark_useful_rules is
+			-- Mark all rules which are reachable from
+			-- `start_symbol' and whose symbols are used.
+		local
+			useful: BOOLEAN
+			i: INTEGER
+			a_rule: PR_RULE
+		do
+			useful := start_symbol /= Void and then start_symbol.is_useful
+			i := variables.count
+			from until i < 1 loop
+				variables.item (i).set_useful (False)
+				i := i - 1
+			end
+			if useful then
+				start_symbol.set_useful (True)
+				traverse_variable (start_symbol)
+			end
+			i := rules.count
+			from until i < 1 loop
+				a_rule := rules.item (i)
+				if not a_rule.lhs.is_useful then
+					a_rule.set_useful (False)
+				end
+				i := i - 1
+			end
+		end
+
+	traverse_variable (a_variable: PR_VARIABLE) is
+			-- Traverse the right-hand-side symbols of
+			-- the useful rules whose left-hand-side is
+			-- `a_variable' recursivelly and mark these
+			-- symbols as useful.
+		require
+			a_variable_not_void: a_variable /= Void
+		local
+			rhs: DS_ARRAYED_LIST [PR_SYMBOL]
+			r: DS_ARRAYED_LIST [PR_RULE]
+			variable2: PR_VARIABLE
+			a_symbol: PR_SYMBOL
+			a_rule: PR_RULE
+			i, j: INTEGER
+		do
+			r := a_variable.rules
+			i := r.count
+			from until i < 1 loop
+				a_rule := r.item (i)
+				if a_rule.is_useful then
+					rhs := a_rule.rhs
+					j := rhs.count
+					from until j < 1 loop
+						a_symbol := rhs.item (j)
+						variable2 ?= a_symbol
+						if variable2 /= Void then
+							if not variable2.is_useful then
+								variable2.set_useful (True)
+								traverse_variable (variable2)
+							end
+						else
+							a_symbol.set_useful (True)
+						end
+						j := j - 1
+					end
+				end
+				i := i - 1
 			end
 		end
 

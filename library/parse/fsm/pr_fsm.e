@@ -15,6 +15,8 @@ class PR_FSM
 inherit
 
 	KL_IMPORTED_OUTPUT_STREAM_ROUTINES
+	KL_IMPORTED_STRING_ROUTINES
+	UT_IMPORTED_FORMATTERS
 
 creation
 
@@ -44,10 +46,64 @@ feature -- Access
 
 feature -- Conflicts
 
-	resolve_conflicts (verbose: BOOLEAN; a_file: like OUTPUT_STREAM_TYPE) is
+	resolve_conflicts (error_handler: UT_ERROR_HANDLER) is
 			-- Try to resolve any shift/reduce conflicts using
-			-- precedence levels. Report conflicts to `a_file'.
+			-- precedence levels. Report conflicts to `error_handler'.
 		require
+			error_handler_not_void: error_handler /= Void
+		local
+			i, nb: INTEGER
+			a_state: PR_STATE
+			sr, sr_total: INTEGER
+			rr, rr_total: INTEGER
+			conflicts: DS_LIST [PR_CONFLICT]
+			message: STRING
+			warning: UT_MESSAGE
+		do
+			nb := states.count
+			from i := 1 until i > nb loop
+				a_state := states.item (i)
+				if a_state.lookahead_needed then
+					conflicts := a_state.resolve_conflicts
+					if a_state.has_conflict then
+						sr := a_state.shift_reduce_count
+						rr := a_state.reduce_reduce_count
+						sr_total := sr_total + sr
+						rr_total := rr_total + rr
+					end
+				end
+				i := i + 1
+			end
+			if (sr_total > 0 and sr_total /= grammar.expected_conflicts) or rr_total > 0 then
+				message := STRING_.make (128)
+				message.append_string ("Parser contains ")
+				if sr_total = 1 then
+					message.append_string ("1 shift/reduce conflict")
+				elseif sr_total > 1 then
+					INTEGER_FORMATTER_.append_decimal_integer (message, sr_total)
+					message.append_string (" shift/reduce conflicts")
+				end
+				if sr_total > 0 and rr_total > 0 then
+					message.append_string (" and ")
+				end
+				if rr_total = 1 then
+					message.append_string ("1 reduce/reduce conflict")
+				elseif rr_total > 1 then
+					INTEGER_FORMATTER_.append_decimal_integer (message, rr_total)
+					message.append_string (" reduce/reduce conflicts")
+				end
+				message.append_string (".%N")
+				!! warning.make (message)
+				error_handler.report_warning (warning)
+			end
+		end
+
+	resolve_conflicts_verbose (error_handler: UT_ERROR_HANDLER; a_file: like OUTPUT_STREAM_TYPE) is
+			-- Try to resolve any shift/reduce conflicts using
+			-- precedence levels. Report conflicts to
+			-- `error_handler' and `a_file'.
+		require
+			error_handler_not_void: error_handler /= Void
 			a_file_not_void: a_file /= Void
 			a_file_open_write: OUTPUT_STREAM_.is_open_write (a_file)
 		local
@@ -55,60 +111,89 @@ feature -- Conflicts
 			a_state: PR_STATE
 			sr, sr_total: INTEGER
 			rr, rr_total: INTEGER
+			conflicts: DS_LIST [PR_CONFLICT]
+			a_cursor: DS_LINEAR_CURSOR [PR_CONFLICT]
+			message: STRING
+			warning: UT_MESSAGE
 		do
 			nb := states.count
 			from i := 1 until i > nb loop
 				a_state := states.item (i)
 				if a_state.lookahead_needed then
-					a_state.resolve_conflicts (verbose, a_file)
+					conflicts := a_state.resolve_conflicts
+					a_cursor := conflicts.new_cursor
+					from a_cursor.start until a_cursor.after loop
+						a_cursor.item.print_conflict (a_file)
+						a_cursor.forth
+					end
 					if a_state.has_conflict then
 						sr := a_state.shift_reduce_count
 						rr := a_state.reduce_reduce_count
 						sr_total := sr_total + sr
 						rr_total := rr_total + rr
-						if verbose then
-							a_file.put_string ("State ")
-							a_file.put_integer (a_state.id)
-							a_file.put_string (" contains ")
-							if sr = 1 then
-								a_file.put_string ("1 shift/reduce conflict")
-							elseif sr > 1 then
-								a_file.put_integer (sr)
-								a_file.put_string (" shift/reduce conflicts")
-							end
-							if sr > 0 and rr > 0 then
-								a_file.put_string (" and ")
-							end
-							if rr = 1 then
-								a_file.put_string ("1 reduce/reduce conflict")
-							elseif rr > 1 then
-								a_file.put_integer (rr)
-								a_file.put_string (" reduce/reduce conflicts")
-							end
-							a_file.put_string (".%N")
+						a_file.put_string ("State ")
+						a_file.put_integer (a_state.id)
+						a_file.put_string (" contains ")
+						if sr = 1 then
+							a_file.put_string ("1 shift/reduce conflict")
+						elseif sr > 1 then
+							a_file.put_integer (sr)
+							a_file.put_string (" shift/reduce conflicts")
 						end
+						if sr > 0 and rr > 0 then
+							a_file.put_string (" and ")
+						end
+						if rr = 1 then
+							a_file.put_string ("1 reduce/reduce conflict")
+						elseif rr > 1 then
+							a_file.put_integer (rr)
+							a_file.put_string (" reduce/reduce conflicts")
+						end
+						a_file.put_string (".%N")
 					end
 				end
 				i := i + 1
 			end
 			if (sr_total > 0 and sr_total /= grammar.expected_conflicts) or rr_total > 0 then
-				a_file.put_string ("Parser contains ")
+				message := STRING_.make (128)
+				message.append_string ("Parser contains ")
 				if sr_total = 1 then
-					a_file.put_string ("1 shift/reduce conflict")
+					message.append_string ("1 shift/reduce conflict")
 				elseif sr_total > 1 then
-					a_file.put_integer (sr_total)
-					a_file.put_string (" shift/reduce conflicts")
+					INTEGER_FORMATTER_.append_decimal_integer (message, sr_total)
+					message.append_string (" shift/reduce conflicts")
 				end
 				if sr_total > 0 and rr_total > 0 then
-					a_file.put_string (" and ")
+					message.append_string (" and ")
 				end
 				if rr_total = 1 then
-					a_file.put_string ("1 reduce/reduce conflict")
+					message.append_string ("1 reduce/reduce conflict")
 				elseif rr_total > 1 then
-					a_file.put_integer (rr_total)
-					a_file.put_string (" reduce/reduce conflicts")
+					INTEGER_FORMATTER_.append_decimal_integer (message, rr_total)
+					message.append_string (" reduce/reduce conflicts")
 				end
-				a_file.put_string (".%N")
+				message.append_string (".%N")
+				!! warning.make (message)
+				error_handler.report_warning (warning)
+			end
+		end
+
+feature -- Output
+
+	print_machine (a_file: like OUTPUT_STREAM_TYPE) is
+			-- Print textual representation of current
+			-- finite state machine to `a_file'.
+		require
+			a_file_not_void: a_file /= Void
+			a_file_open_write: OUTPUT_STREAM_.is_open_write (a_file)
+		local
+			i, nb: INTEGER
+		do
+			grammar.print_grammar (a_file)
+			nb := states.count
+			from i := 1 until i > nb loop
+				states.item (i).print_state (a_file)
+				i := i + 1
 			end
 		end
 
@@ -178,7 +263,7 @@ feature {NONE} -- Processing (nondeterministic)
 				states.put_last (next_to_final_state)
 				start_state.shifts.force_last (next_to_final_state)
 			end
-			!! eof_token.make (0, "<<EOF>>")
+			!! eof_token.make (0, "$")
 			!! final_state.make (states.count, eof_token)
 			states.put_last (final_state)
 			next_to_final_state.shifts.force_last (final_state)

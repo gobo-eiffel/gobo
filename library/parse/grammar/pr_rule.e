@@ -17,6 +17,11 @@ inherit
 
 	COMPARABLE
 
+	KL_IMPORTED_OUTPUT_STREAM_ROUTINES
+		undefine
+			is_equal
+		end
+
 creation
 
 	make
@@ -92,6 +97,16 @@ feature -- Setting
 			line_nb_set: line_nb = nb
 		end
 
+	set_id (i: INTEGER) is
+			-- Set `id' to i'.
+		require
+			valid_id: i >= 1
+		do
+			id := i
+		ensure
+			id_set: id = i
+		end
+
 feature -- Element change
 
 	put_symbol (a_symbol: PR_SYMBOL) is
@@ -145,6 +160,9 @@ feature -- Status report
 			Result := precedence /= 0
 		end
 
+	is_useful: BOOLEAN
+			-- Is current symbol useful?
+
 feature -- Status setting
 
 	set_left_associative is
@@ -171,6 +189,14 @@ feature -- Status setting
 			is_non_associative: is_non_associative
 		end
 
+	set_useful (b: BOOLEAN) is
+			-- Set `is_useful' to `b'.
+		do
+			is_useful := b
+		ensure
+			useful_set: is_useful = b
+		end
+
 feature -- Comparison
 
 	infix "<" (other: like Current): BOOLEAN is
@@ -179,6 +205,34 @@ feature -- Comparison
 			Result := id < other.id
 		ensure then
 			definition: Result = (id < other.id)
+		end
+
+feature -- Output
+
+	print_rule (a_file: like OUTPUT_STREAM_TYPE) is
+			-- Print textual representation of
+			-- current rule to `a_file'.
+		require
+			a_file_not_void: a_file /= Void
+			a_file_open_write: OUTPUT_STREAM_.is_open_write (a_file)
+		local
+			i, nb: INTEGER
+		do
+			a_file.put_string ("rule ")
+			a_file.put_integer (id)
+			a_file.put_character (' ')
+			a_file.put_string (lhs.name)
+			a_file.put_string (" ->")
+			if rhs.is_empty then
+				a_file.put_string (" -- /* empty */")
+			else
+				nb := rhs.count
+				from i := 1 until i > nb loop
+					a_file.put_character (' ')
+					a_file.put_string (rhs.item (i).name)
+					i := i + 1
+				end
+			end
 		end
 
 feature {NONE} -- Implementation

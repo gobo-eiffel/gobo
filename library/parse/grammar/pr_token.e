@@ -16,6 +16,9 @@ class PR_TOKEN
 inherit
 
 	PR_SYMBOL
+		rename
+			print_symbol as print_token
+		end
 
 creation
 
@@ -122,6 +125,33 @@ feature -- Status setting
 			associativity := Non_assoc
 		ensure
 			is_non_associative: is_non_associative
+		end
+
+feature -- Output
+
+	print_token (a_grammar: PR_GRAMMAR; a_file: like OUTPUT_STREAM_TYPE) is
+			-- Print textual representation of current
+			-- token to `a_file' with rules where it
+			-- appears in `a_grammar'.
+		local
+			i, nb: INTEGER
+			rules: DS_ARRAYED_LIST [PR_RULE]
+			a_rule: PR_RULE
+		do
+			a_file.put_string (name)
+			a_file.put_string (" (")
+			a_file.put_integer (token_id)
+			a_file.put_character (')')
+			rules := a_grammar.rules
+			nb := rules.count
+			from i := 1 until i > nb loop
+				a_rule := rules.item (i)
+				if a_rule.rhs.has (Current) then
+					a_file.put_character (' ')
+					a_file.put_integer (a_rule.id)
+				end
+				i := i + 1
+			end
 		end
 
 feature {NONE} -- Implementation
