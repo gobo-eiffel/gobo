@@ -21,15 +21,7 @@ creation
 
 	make
 
-feature -- Access
-
-	eol: STRING is "%N"
-			-- Line separator in current file system
-
-	exe_file_extension: STRING is ""
-			-- Executable file extension in current file system
-
-feature -- File factory
+feature -- File handling
 
 	new_input_file (a_name: STRING): KL_UNIX_INPUT_FILE is
 			-- New input text file in current file system
@@ -42,5 +34,327 @@ feature -- File factory
 		do
 			!! Result.make (a_name)
 		end
+
+	eol: STRING is "%N"
+			-- Line separator in current file system
+
+feature -- Pathname handling
+
+	is_absolute_pathname (a_pathname: STRING): BOOLEAN is
+			-- Is `a_pathname' an absolute pathname?
+		do
+			Result := (a_pathname.count > 0 and then a_pathname.item (1) = directory_separator)
+		end
+
+	is_relative_pathname (a_pathname: STRING): BOOLEAN is
+			-- Is `a_pathname' a relative pathname (relative
+			-- to the current working directory)?
+		do
+			Result := not is_absolute_pathname (a_pathname)
+		ensure then
+			definition: Result = not is_absolute_pathname (a_pathname)
+		end
+
+	is_root_directory (a_dirname: STRING): BOOLEAN is
+			-- Is `a_dirname' a root directory (i.e. it
+			-- has no parent directory)?
+		local
+			i, nb: INTEGER
+		do
+			nb := a_dirname.count
+			if nb > 0 then
+				Result := True
+				from i := 1 until i > nb loop
+					if a_dirname.item (i) /= directory_separator then
+						Result := False
+						i := nb + 1 -- Jump out of the loop.
+					else
+						i := i + 1
+					end
+				end
+			end
+		end
+
+	basename (a_pathname: STRING): STRING is
+			-- Pathname with any leading directory components removed
+		local
+			i, nb: INTEGER
+		do
+			if is_root_directory (a_pathname) then
+				Result := root_directory
+			else
+				from
+					i := a_pathname.count
+				until
+					i < 1 or else
+					a_pathname.item (i) /= directory_separator
+				loop
+					i := i - 1
+				end
+				nb := i
+				from
+				until
+					i < 1 or else
+					a_pathname.item (i) = directory_separator
+				loop
+					i := i - 1
+				end
+				if i < 1 and nb = a_pathname.count then
+					Result := a_pathname
+				else
+					Result := a_pathname.substring (i + 1, nb)
+				end
+			end
+		end
+
+	dirname (a_pathname: STRING): STRING is
+			-- Pathname containing only the leading directory components so
+			-- that 'pathname (dirname (a_pathname), basename (a_pathname))'
+			-- is equivalent to `a_pathname; Return `relative_current_directory'
+			-- when there is no leading directory components in `a_pathname';
+			-- Return a root directory when `a_pathname' is a root directory
+		local
+			i: INTEGER
+		do
+			if is_root_directory (a_pathname) then
+				Result := root_directory
+			else
+				from
+					i := a_pathname.count
+				until
+					i < 1 or else
+					a_pathname.item (i) /= directory_separator
+				loop
+					i := i - 1
+				end
+				from
+				until
+					i < 1 or else
+					a_pathname.item (i) = directory_separator
+				loop
+					i := i - 1
+				end
+				if i < 1 then
+					Result := relative_current_directory
+				else
+					from
+					until
+						i < 1 or else
+						a_pathname.item (i) /= directory_separator
+					loop
+						i := i - 1
+					end
+					if i < 1 then
+						Result := root_directory
+					else
+						Result := a_pathname.substring (1, i)
+					end
+				end
+			end
+		end
+
+	pathname (a_dirname, a_pathname: STRING): STRING is
+			-- Pathname made up of relative pathname
+			-- `a_pathname' in directory `a_dirname'
+		local
+			nb: INTEGER
+		do
+			Result := clone (a_dirname)
+			if a_pathname.count > 0 then
+				nb := Result.count
+				if nb > 0 and then Result.item (nb) /= directory_separator then
+					Result.append_character (directory_separator)
+				end
+				Result.append_string (a_pathname)
+			end
+		end
+
+	relative_current_directory: STRING is "."
+			-- Relative pathname of current directory
+
+	relative_parent_directory: STRING is ".."
+			-- Relative pathname of current parent directory
+
+	root_directory: STRING is
+			-- Pathname of current root directory
+		once
+			Result := "/"
+		end
+
+	absolute_pathname (a_pathname: STRING): STRING is
+			-- Absolute pathname of `a_pathname'
+		do
+			if is_absolute_pathname (a_pathname) then
+				Result := a_pathname
+			else
+				Result := pathname (cwd, a_pathname)
+			end
+		end
+
+	absolute_parent_directory (a_dirname: STRING): STRING is
+			-- Absolute pathname of parent directory of `a_dirname';
+			-- Return `absolute_root_directory' if `a_dirname'
+			-- is a root directory (i.e. has no parent)
+		local
+			a_pathname: STRING
+			a_basename: STRING
+			stop: BOOLEAN
+		do
+			from
+				a_pathname := absolute_pathname (a_dirname)
+			until
+				stop
+			loop
+				a_basename := basename (a_pathname)
+				if a_basename.is_equal (relative_current_directory) then
+					a_pathname := dirname (a_pathname)
+				elseif a_basename.is_equal (relative_parent_directory) then
+					a_pathname := absolute_parent_directory (dirname (a_pathname))
+				else
+					stop := True
+				end
+			end
+			a_pathname := dirname (a_pathname)
+			if is_root_directory (a_pathname) then
+				Result := absolute_root_directory
+			else
+				Result := a_pathname
+			end
+		end
+
+	absolute_root_directory: STRING is
+			-- Absolute pathname of current root directory
+		once
+			Result := "/"
+		end
+
+	string_to_pathname (a_pathname: STRING): KL_PATHNAME is
+			-- Convert string to pathname
+		local
+			i, nb: INTEGER
+			j, k: INTEGER
+			str: STRING
+		do
+			!! Result.make
+			nb := a_pathname.count
+			if nb > 0 then
+				if a_pathname.item (1) /= directory_separator then
+					Result.set_relative (True)
+				end
+			else
+				Result.set_relative (True)
+			end
+			from i := 1 until i > nb loop
+				from
+				until
+					i > nb or else
+					a_pathname.item (i) /= directory_separator
+				loop
+					i := i + 1
+				end
+				if i <= nb then
+					j := i
+					from
+					until
+						i > nb or else
+						a_pathname.item (i) = directory_separator
+					loop
+						i := i + 1
+					end
+					k := i - 1
+					str := a_pathname.substring (j, k)
+					if str.is_equal (relative_current_directory) then
+						Result.append_current
+					elseif str.is_equal (relative_parent_directory) then
+						Result.append_parent
+					else
+						Result.append_name (str)
+					end
+				end
+			end
+		end
+
+	pathname_to_string (a_pathname: KI_PATHNAME): STRING is
+			-- Convert pathname to string
+		local
+			i, nb: INTEGER
+		do
+			Result := STRING_.make (50)
+			if not a_pathname.is_relative then
+				Result.append_string (root_directory)
+			end
+			nb:= a_pathname.count
+			from i := 1 until i >= nb loop
+				if a_pathname.is_current (i) then
+					Result.append_string (relative_current_directory)
+				elseif a_pathname.is_parent (i) then
+					Result.append_string (relative_parent_directory)
+				else
+					Result.append_string (a_pathname.item (i))
+				end
+				Result.append_character (directory_separator)
+				i := i + 1
+			end
+			if i = nb then
+				if a_pathname.is_current (i) then
+					Result.append_string (relative_current_directory)
+				elseif a_pathname.is_parent (i) then
+					Result.append_string (relative_parent_directory)
+				else
+					Result.append_string (a_pathname.item (i))
+				end
+			end
+		end
+
+	has_extension (a_filename, an_extension: STRING): BOOLEAN is
+			-- Is `an_extension' a file extension of `a_filename'?
+		local
+			nb, nb2: INTEGER
+		do
+			nb := an_extension.count
+			if nb = 0 then
+				Result := True
+			else
+				nb2 := a_filename.count
+				if nb2 >= nb then
+					Result := a_filename.substring (nb2 - nb + 1, nb2).is_equal (an_extension)
+				end
+			end
+		end
+
+	extension (a_filename: STRING): STRING is
+			-- File extension of `a_filename'
+			-- (include the leading '.')
+		local
+			i: INTEGER
+			c: CHARACTER
+			found, stop: BOOLEAN
+		do
+			from
+				i := a_filename.count
+			until
+				found or stop
+			loop
+				c := a_filename.item (i)
+				if c = '.' then
+					found := True
+				elseif c = directory_separator then
+					stop := True
+				else
+					i := i - 1
+				end
+			end
+			if found then
+				Result := a_filename.substring (i, a_filename.count)
+			else
+				Result := ""
+			end
+		end
+
+	exe_extension: STRING is ""
+			-- Executable file extension
+
+	directory_separator: CHARACTER is '/'
+			-- Directory separator
 
 end -- class KL_UNIX_FILE_SYSTEM
