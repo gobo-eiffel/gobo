@@ -609,6 +609,21 @@ feature -- Compilation: feature flattening
 			flattened: is_flattened
 		end
 
+	remove_features is
+			-- Wipe out all features of current class.
+			-- (Might be useful in order to free some memory
+			-- space when the class is still needed for
+			-- conformance test purposes but its features
+			-- are not used anymore.)
+		do
+			set_flatten_error
+			!! named_features.make (0)
+		ensure
+			is_flattened: is_flattened
+			has_flatten_error: has_flatten_error
+			wiped_out: named_features.is_empty
+		end
+
 feature {ET_FEATURE_FLATTENER} -- Compilation: feature flattening
 
 	set_flatten_error is
