@@ -78,11 +78,6 @@ name="make_with_buffer"><em>make_with_buffer</em></a><em> </em>(<em>a_buffer</em
             text_not_void</em>:<em> Result </em>/= <em>Void
             correct_count</em>:<em> Result.count </em>=<em> text_count
 
-    </em><a href="actions.html#text_count" name="text_count"><em>text_count</em></a>:<em> INTEGER
-            </em>-- Length of last token read<em>
-        </em><em><strong>ensure</strong></em><em>
-            positive_count</em>:<em> Result </em>&gt;=<em> 0
-
     </em><a href="actions.html#text_item" name="text_item"><em>text_item</em></a><em> </em>(<em>i</em>:<em> INTEGER</em>):<em> CHARACTER
             </em>-- <em>i</em>-th character of last token read<em>
         </em><em><strong>require</strong></em><em>
@@ -110,6 +105,32 @@ name="text_substring"><em>text_substring</em></a><em> </em>(<em>s</em>,<em> e</e
     </em><a href="actions.html#start_condition"
 name="start_condition"><em>start_condition</em></a>:<em> INTEGER
             </em>-- Start condition<em>
+
+</em><em><strong>feature</strong></em><em> </em>-- Measurement<em>
+
+    </em><a href="actions.html#text_count" name="text_count"><em>text_count</em></a>:<em> INTEGER
+            </em>-- Length of last token read<em>
+        </em><em><strong>ensure</strong></em><em>
+            positive_count</em>:<em> Result </em>&gt;=<em> 0
+
+    </em><a href="actions.html#line" name="line"><em>line</em></a>:<em> INTEGER
+            </em>-- Line number of last token read when
+            -- '<em>%option line</em>' has been specified<em>
+        </em><em><strong>ensure</strong></em><em>
+            line_positive</em>:<em> Result </em>&gt;=<em> 1
+
+    </em><a href="actions.html#column" name="column"><em>column</em></a>:<em> INTEGER
+            </em>-- Column number of last token read when
+            -- '<em>%option line</em>' has been specified<em>
+        </em><em><strong>ensure</strong></em><em>
+            column_positive</em>:<em> Result </em>&gt;= <em>1
+
+    </em><a href="actions.html#position" name="position"><em>position</em></a>:<em> INTEGER
+            </em>-- Position of last token read (i.e. number of
+            -- characters from the start of the input source)
+            -- when '<em>%option position</em>' has been specified<em>
+        </em><em><strong>ensure</strong></em><em>
+            position_positive</em>:<em> Result </em>&gt;=<em> 1
 
 </em><em><strong>feature </strong></em>-- Status report<em>
 
@@ -273,31 +294,34 @@ name="new_string_buffer"><em>new_string_buffer</em></a><em> </em>(<em>a_string</
 
 </em><em><strong>feature</strong></em><em> </em>-- Action<em>
 
-    </em><a name="pre_action"><em>pre_action</em></a><em>
+    </em><a href="actions.html#pre_action" name="pre_action"><em>pre_action</em></a><em>
             </em>-- Action executed before every semantic action
-            -- when <em>%option pre-action</em> has been specified.
+            -- when <em>'%option pre-action</em>' has been specified.
             -- (Note: this routine can be redefined in descendant
             -- classes. Default: do nothing.)
 <em>
-    </em><a name="post_action"><em>post_action</em></a><em>
+    </em><a href="actions.html#post_action" name="post_action"><em>post_action</em></a><em>
             </em>-- Action executed after every semantic action
-            -- when <em>%option post-action </em>has been specified.
+            -- when <em>'%option post-action' </em>has been specified.
             -- (Note: this routine can be redefined in descendant
             -- classes. Default: do nothing.)<em>
 
-    </em><a name="pre_eof_action"><em>pre_eof_action</em></a><em>
+    </em><a href="actions.html#pre_eof_action"
+name="pre_eof_action"><em>pre_eof_action</em></a><em>
             </em>-- Action executed before every end-of-file semantic action
-            -- (i.e. <em>&lt;&lt;EOF&gt;&gt;</em>) when <em>%option pre-eof-action</em> has been specified.
+            -- (i.e. <em>&lt;&lt;EOF&gt;&gt;</em>) when '<em>%option pre-eof-action</em>' has been specified.
             -- (Note: this routine can be redefined in descendant classes.
             -- Default: do nothing.)<em>
 
-    </em><a name="post_eof_action"><em>post_eof_action</em></a><em>
+    </em><a href="actions.html#post_eof_action"
+name="post_eof_action"><em>post_eof_action</em></a><em>
             </em>-- Action executed after every end-of-file semantic action
-            -- (i.e. <em>&lt;&lt;EOF&gt;&gt;</em>) when <em>%option post-eof-action</em> has been specified.
+            -- (i.e. <em>&lt;&lt;EOF&gt;&gt;</em>) when '<em>%option post-eof-action'</em> has been specified.
             -- (Note: this routine can be redefined in descendant classes.
             -- Default: do nothing.)<em>
 
-    </em><a name="default_action"><em>default_action</em></a><em>
+    </em><a href="matching_rules.html#default_rule"
+name="default_action"><em>default_action</em></a><em>
            </em> -- Action executed when default rule is matched.<em>
             </em>-- (Note: this routine can be redefined in descendant classes.
             -- Default: print last character read to standard output.)<em>

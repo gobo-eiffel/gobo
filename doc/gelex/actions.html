@@ -85,6 +85,13 @@ can be used in actions:</p>
         For efficiency reason, this feature can bypass the call
         to <font color="#008080"><em><tt>text_substring</tt></em></font>
         and directly copy the characters from the input buffer.</dd>
+    <dt><a href="skeleton.html#column" name="column"><font
+        color="#008080"><em><tt>column</tt></em></font></a><font
+        color="#008080"><tt>:</tt><em><tt> INTEGER</tt></em></font></dt>
+    <dd>Column number of last token read. If it is used in any of
+        the scanner's actions the <font color="#0000FF"><tt>%option</tt></font><tt>
+        </tt><a href="options.html#line"><font color="#800000"><tt>line</tt></font></a><font
+        color="#800000"><tt> </tt></font>will have to be set.</dd>
     <dt><a href="skeleton.html#echo" name="echo"><font
         color="#008080"><em><tt>echo</tt></em></font></a></dt>
     <dd>Copy <font color="#008080"><em><tt>text</tt></em></font>
@@ -161,6 +168,13 @@ can be used in actions:</p>
         Unless the way the scanner subsequently process its input
         has been changed (using <font color="#008080"><em><tt>set_start_condition</tt></em></font>,
         for example), this will result in an endless loop.</dd>
+    <dt><a href="skeleton.html#line" name="line"><font
+        color="#008080"><em><tt>line</tt></em></font></a><font
+        color="#008080"><tt>:</tt><em><tt> INTEGER</tt></em></font></dt>
+    <dd>Line number of last token read. If it is used in any of
+        the scanner's actions the <font color="#0000FF"><tt>%option</tt></font><tt>
+        </tt><a href="options.html#line"><font color="#800000"><tt>line</tt></font></a><font
+        color="#800000"><tt> </tt></font>will have to be set.</dd>
     <dt><a href="skeleton.html#more" name="more"><font
         color="#008080"><em><tt>more</tt></em></font></a></dt>
     <dd>Tell the scanner that the next time it matches a rule,
@@ -205,6 +219,15 @@ can be used in actions:</p>
     <dd>Writes <font color="#008080"><em><tt>a_text </tt></em></font>to
         the standard output by default. This behavior can easily
         be modified through redefinition.</dd>
+    <dt><a href="skeleton.html#position" name="position"><font
+        color="#008080"><em><tt>position</tt></em></font></a><font
+        color="#008080"><tt>:</tt><em><tt> INTEGER</tt></em></font></dt>
+    <dd>Position of last token read (i.e. number of characters
+        from the start of the input source). If it is used in any
+        of the scanner's actions the <font color="#0000FF"><tt>%option</tt></font><tt>
+        </tt><a href="options.html#position"><font
+        color="#800000"><tt>position</tt></font></a><font
+        color="#800000"><tt> </tt></font>will have to be set.</dd>
     <dt><a href="skeleton.html#read_character"
         name="read_character"><font color="#008080"><em><tt>read_character</tt></em></font></a></dt>
     <dd>Read the next character from the input stream. Make the
@@ -442,12 +465,47 @@ returned:</p>
         rule</a> is matched nevertheless.</dd>
 </dl>
 
+<p>Furthermore, the following routines can be called before or
+after any semantic actions if the corresponding <font
+color="#0000FF"><tt>%option </tt></font>have been specified.
+These routines do nothing by default but can be redefined in the
+generated scanner class.</p>
+
+<dl>
+    <dt><a href="skeleton.html#pre_action" name="pre_action"><font
+        color="#008080"><em><tt>pre_action</tt></em></font></a></dt>
+    <dd>Action executed before every semantic action when <font
+        color="#0000FF"><tt>%option</tt></font><tt> </tt><a
+        href="options.html#pre-action"><font color="#800000"><tt>pre-action</tt></font></a><font
+        color="#800000"><tt> </tt></font>has been specified.</dd>
+    <dt><a href="skeleton.html#post_action" name="post_action"><font
+        color="#008080"><em><tt>post_action</tt></em></font></a></dt>
+    <dd>Action executed after every semantic action when <font
+        color="#0000FF"><tt>%option</tt></font><tt> </tt><a
+        href="options.html#post-action"><font color="#800000"><tt>post-action</tt></font></a><font
+        color="#800000"><tt> </tt></font>has been specified.</dd>
+    <dt><a href="skeleton.html#pre_eof_action"
+        name="pre_eof_action"><font color="#008080"><em><tt>pre_eof_action</tt></em></font></a></dt>
+    <dd>Action executed before every end-of-file semantic action
+        (i.e. <tt>&lt;&lt;EOF&gt;&gt;</tt>) when <font
+        color="#0000FF"><tt>%option</tt></font><tt> </tt><a
+        href="options.html#pre-eof-action"><font color="#800000"><tt>pre-eof-action</tt></font></a><font
+        color="#800000"><tt> </tt></font>has been specified.</dd>
+    <dt><a href="skeleton.html#post_eof_action"
+        name="post_eof_action"><font color="#008080"><em><tt>post_eof_action</tt></em></font></a></dt>
+    <dd>Action executed after every end-of-file semantic action
+        (i.e. <tt>&lt;&lt;EOF&gt;&gt;</tt>) when <font
+        color="#0000FF"><tt>%option</tt></font><tt> </tt><a
+        href="options.html#post-eof-action"><font color="#800000"><tt>post-eof-action</tt></font></a><font
+        color="#800000"><tt> </tt></font>has been specified.</dd>
+</dl>
+
 <hr size="1">
 
 <table border="0" width="100%">
     <tr>
         <td><address>
-            <font size="2"><b>Copyright © 1999</b></font><font
+            <font size="2"><b>Copyright © 2000</b></font><font
             size="1"><b>, </b></font><font size="2"><strong>Eric
             Bezault</strong></font><strong> </strong><font
             size="2"><br>
@@ -457,7 +515,7 @@ returned:</p>
             <strong>http:</strong></font><a
             href="http://www.gobosoft.com"><font size="2">//www.gobosoft.com</font></a><font
             size="2"><br>
-            <strong>Last Updated:</strong> 22 March 1999</font><br>
+            <strong>Last Updated:</strong> 24 March 2000</font><br>
             <!--webbot bot="PurpleText"
             preview="
 $Date$ 

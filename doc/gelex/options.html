@@ -75,12 +75,14 @@ color="#800000">ecs meta-ecs case-insensitive nodefault</font>
         color="#800000"><tt>case-sensitive</tt></font><font
         size="3">]</font></dd>
     <dt><a name="nodefault"><font color="#800000"><tt>nodefault</tt></font></a></dt>
-    <dd><font size="3">Cause the default rule (that unmatched
-        scanner input is echoed to the standard output) to be
-        suppressed. If the scanner encounters input that does not
-        match any of its rules, it aborts with an error. This
-        option is useful for finding holes in a scanner's rule
-        set. [default: </font><font color="#800000"><tt>default</tt></font><font
+    <dd><font size="3">Cause the </font><a
+        href="matching_rules.html#default_rule"><font size="3">default
+        rule</font></a><font size="3"> (that unmatched scanner
+        input is echoed to the standard output) to be suppressed.
+        If the scanner encounters input that does not match any
+        of its rules, it aborts with an error. This option is
+        useful for finding holes in a scanner's rule set.
+        [default: </font><font color="#800000"><tt>default</tt></font><font
         size="3">]</font></dd>
     <dt><a name="ecs"><font color="#800000"><tt>ecs</tt></font></a></dt>
     <dd><font size="3">Direct <em>gelex</em> to construct
@@ -103,6 +105,16 @@ color="#800000">ecs meta-ecs case-insensitive nodefault</font>
         different states. The result is large but fast. [default:
         </font><font color="#800000"><tt>nofull</tt></font><font
         size="3">]</font></dd>
+    <dt><a name="line"><font color="#800000" size="3"><tt>line</tt></font></a></dt>
+    <dd><font size="3">Direct <em>gelex</em> to generate code for
+        </font><a href="skeleton.html#line"><font color="#008080"
+        size="3"><em><tt>line</tt></em></font></a><font
+        color="#008080" size="3"><em><tt> </tt></em></font><font
+        size="3">and </font><a href="skeleton.html#column"><font
+        color="#008080" size="3"><em><tt>column</tt></em></font></a><font
+        color="#008080" size="3"><em><tt> </tt></em></font><font
+        size="3">counting. [default: </font><font color="#800000"><tt>noline</tt></font><font
+        size="3">]</font></dd>
     <dt><a name="meta-ecs"><font color="#800000"><tt>meta-ecs</tt></font></a></dt>
     <dd><font size="3">Direct <em>gelex</em> to construct
         meta-equivalence classes, which are sets of equivalence
@@ -121,10 +133,50 @@ color="#800000">ecs meta-ecs case-insensitive nodefault</font>
     <dd><font size="3">Direct <em>gelex</em> to write the scanner
         class to the file </font><font color="#800000"><tt>filename</tt></font><font
         size="3"> instead of the standard output.</font></dd>
-    <dt><a name="reject"><font color="#800000"><tt>reject</tt></font></a></dt>
-    <dd><font size="3">Specify that the feature reject is used in
-        semantic actions. [default: </font><font color="#800000"><tt>noreject</tt></font><font
+    <dt><a name="position"><font color="#800000" size="3"><tt>position</tt></font></a></dt>
+    <dd><font size="3">Direct <em>gelex</em> to generate code for
+        </font><a href="skeleton.html#position"><font
+        color="#008080" size="3"><em><tt>position</tt></em></font></a><font
+        size="3"> counting (i.e. the number of characters read
+        since the beginning of the input source). [default: </font><font
+        color="#800000"><tt>noposition</tt></font><font size="3">]</font></dd>
+    <dt><a name="post-action"><font color="#800000"><tt>post-action</tt></font></a></dt>
+    <dd><font size="3">Specify that the feature </font><a
+        href="skeleton.html#post_action"><font color="#008080"
+        size="3"><em><tt>post_action</tt></em></font></a><font
+        size="3"> should be called after each semantic action.
+        [default: </font><font color="#800000"><tt>nopost-action</tt></font><font
         size="3">]</font></dd>
+    <dt><a name="post-eof-action"><font color="#800000" size="3"><tt>post-eof-action</tt></font></a></dt>
+    <dd><font size="3">Specify that the feature </font><a
+        href="skeleton.html#post_eof_action"><font
+        color="#008080" size="3"><em><tt>post_eof_action</tt></em></font></a><font
+        size="3"> should be called after each end-of-file (i.e. </font><font
+        color="#FF0000" size="3"><tt>&lt;&lt;EOF&gt;&gt;</tt></font><font
+        size="3">) semantic action. [default: </font><font
+        color="#800000"><tt>nopost-eof-action</tt></font><font
+        size="3">]</font></dd>
+    <dt><a name="pre-action"><font color="#800000"><tt>pre-action</tt></font></a></dt>
+    <dd><font size="3">Specify that the feature </font><a
+        href="skeleton.html#pre_action"><font color="#008080"
+        size="3"><em><tt>pre_action</tt></em></font></a><font
+        size="3"> should be called before each semantic action.
+        [default: </font><font color="#800000"><tt>nopre-action</tt></font><font
+        size="3">]</font></dd>
+    <dt><a name="pre-eof-action"><font color="#800000" size="3"><tt>pre-eof-action</tt></font></a></dt>
+    <dd><font size="3">Specify that the feature </font><a
+        href="skeleton.html#pre_eof_action"><font color="#008080"
+        size="3"><em><tt>pre_eof_action</tt></em></font></a><font
+        size="3"> should be called before each end-of-file (i.e. </font><font
+        color="#FF0000" size="3"><tt>&lt;&lt;EOF&gt;&gt;</tt></font><font
+        size="3">) semantic action. [default: </font><font
+        color="#800000"><tt>nopre-eof-action</tt></font><font
+        size="3">]</font></dd>
+    <dt><a name="reject"><font color="#800000"><tt>reject</tt></font></a></dt>
+    <dd><font size="3">Specify that the feature </font><a
+        href="actions.html#reject"><font color="#008080" size="3"><em><tt>reject</tt></em></font></a><font
+        size="3"> is used in semantic actions. [default: </font><font
+        color="#800000"><tt>noreject</tt></font><font size="3">]</font></dd>
     <dt><a name="nowarn"><font color="#800000"><tt>nowarn</tt></font></a></dt>
     <dd><font size="3">Suppress warning messages. [default: </font><font
         color="#800000"><tt>warn</tt></font><font size="3">]</font></dd>
@@ -230,7 +282,7 @@ color="#800000">-o filename</font>]<font color="#800000"> filename</font></pre>
 <table border="0" width="100%">
     <tr>
         <td><address>
-            <font size="2"><b>Copyright © 1999</b></font><font
+            <font size="2"><b>Copyright © 2000</b></font><font
             size="1"><b>, </b></font><font size="2"><strong>Eric
             Bezault</strong></font><strong> </strong><font
             size="2"><br>
@@ -240,7 +292,7 @@ color="#800000">-o filename</font>]<font color="#800000"> filename</font></pre>
             <strong>http:</strong></font><a
             href="http://www.gobosoft.com"><font size="2">//www.gobosoft.com</font></a><font
             size="2"><br>
-            <strong>Last Updated:</strong> 17 February 1999</font><br>
+            <strong>Last Updated:</strong> 20 February 2000</font><br>
             <!--webbot bot="PurpleText"
             preview="
 $Date$ 
