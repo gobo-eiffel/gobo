@@ -37,7 +37,7 @@ feature -- Test
 			!! a_buffer.make_from_string ("my buffer")
 			assert ("a_buffer_not_void", a_buffer /= Void)
 			assert_equal ("count_set", 9, a_buffer.count)
-			assert_equal ("characters_set", "my buffer", a_buffer.to_string)
+			assert_equal ("characters_set", "my buffer", a_buffer.to_text)
 		end
 
 	test_put is
@@ -47,11 +47,11 @@ feature -- Test
 		do
 			!! a_buffer.make_from_string ("gobo")
 			a_buffer.put ('y', 4)
-			assert_equal ("put1", "goby", a_buffer.to_string)
+			assert_equal ("put1", "goby", a_buffer.to_text)
 			a_buffer.put ('f', 1)
-			assert_equal ("put2", "foby", a_buffer.to_string)
+			assert_equal ("put2", "foby", a_buffer.to_text)
 			a_buffer.put ('u', 2)
-			assert_equal ("put3", "fuby", a_buffer.to_string)
+			assert_equal ("put3", "fuby", a_buffer.to_text)
 		end
 
 	test_item is
@@ -79,13 +79,13 @@ feature -- Test
 			assert_equal ("sub5", "", a_buffer.substring (2, 1))
 		end
 
-	test_to_string is
-			-- Test feature `to_string'.
+	test_to_text is
+			-- Test feature `to_text'.
 		local
 			a_buffer: KL_CHARACTER_BUFFER
 		do
 			!! a_buffer.make_from_string ("gobo")
-			assert_equal ("to_string", "gobo", a_buffer.to_string)
+			assert_equal ("to_text", "gobo", a_buffer.to_text)
 		end
 
 	test_append_substring_to_string is
@@ -119,11 +119,11 @@ feature -- Test
 		do
 			!! a_buffer.make (8)
 			a_buffer.fill_from_string ("gobogobo", 1)
-			assert_equal ("filled", "gobogobo", a_buffer.to_string)
+			assert_equal ("filled", "gobogobo", a_buffer.to_text)
 			a_buffer.fill_from_string ("bar", 6)
-			assert_equal ("filled", "gobogbar", a_buffer.to_string)
+			assert_equal ("filled", "gobogbar", a_buffer.to_text)
 			a_buffer.fill_from_string ("foo", 3)
-			assert_equal ("filled", "gofoobar", a_buffer.to_string)
+			assert_equal ("filled", "gofoobar", a_buffer.to_text)
 		end
 
 	test_fill_from_stream is
@@ -143,11 +143,11 @@ feature -- Test
 				nb := a_buffer.fill_from_stream (a_file, 1, 11)
 				assert ("not_eof2", not a_file.end_of_file)
 				assert_equal ("nb_char1", 11, nb)
-				assert_equal ("read1", "This is the", a_buffer.to_string)
+				assert_equal ("read1", "This is the", a_buffer.to_text)
 				nb := a_buffer.fill_from_stream (a_file, 5, 3)
 				assert ("not_eof3", not a_file.end_of_file)
 				assert_equal ("nb_char2", 3, nb)
-				assert_equal ("read2", "This fi the", a_buffer.to_string)
+				assert_equal ("read2", "This fi the", a_buffer.to_text)
 				a_file.close
 				assert ("is_closed", a_file.is_closed)
 			else
@@ -162,7 +162,7 @@ feature -- Test
 		do
 			!! a_buffer.make_from_string ("gobo eiffel")
 			a_buffer.move_left (6, 1, 6)
-			assert_equal ("moved", "eiffeliffel", a_buffer.to_string)
+			assert_equal ("moved", "eiffeliffel", a_buffer.to_text)
 		end
 
 	test_move_right is
@@ -172,7 +172,7 @@ feature -- Test
 		do
 			!! a_buffer.make_from_string ("gobo eiffel")
 			a_buffer.move_right (2, 6, 3)
-			assert_equal ("moved", "gobo obofel", a_buffer.to_string)
+			assert_equal ("moved", "gobo obofel", a_buffer.to_text)
 		end
 
 	test_resize is
@@ -186,7 +186,7 @@ feature -- Test
 			assert_equal ("new_count", 6, a_buffer.count)
 			a_buffer.put ('#', 5)
 			a_buffer.put ('#', 6)
-			assert_equal ("resized", "gobo##", a_buffer.to_string)
+			assert_equal ("resized", "gobo##", a_buffer.to_text)
 		end
 
 end
