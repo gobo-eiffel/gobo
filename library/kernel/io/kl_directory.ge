@@ -218,7 +218,7 @@ feature -- Status report
 			-- Can directory be opened in read mode?
 		do
 			if string_name.count > 0 then
-#ifdef ISE || HACT
+#ifdef HACT || (ISE && ! GOBO_DOTNET)
 				Result := old_exists and then old_is_readable
 #ifdef HACT
 				if Result then
@@ -243,7 +243,7 @@ feature -- Status report
 feature -- Basic operations
 
 	open_read is
-			-- Try to open directory in read mode.  Set `is_open_read'
+			-- Try to open directory in read mode. Set `is_open_read'
 			-- to true and is ready to read first entry in directory
 			-- if operation was successful.
 		local
@@ -253,7 +253,17 @@ feature -- Basic operations
 				if string_name.count > 0 then
 					entry_buffer := Void
 					end_of_input := False
-#ifdef ISE || HACT
+#ifdef ISE
+#ifdef GOBO_DOTNET
+					if old_exists then
+#else
+					if old_exists and then old_is_readable then
+#endif
+						old_open_read
+						lastentry := Dummy_entry
+					end
+#endif
+#ifdef HACT
 					if old_exists and then old_is_readable then
 						old_open_read
 						if directory_pointer = default_pointer then

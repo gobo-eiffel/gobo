@@ -167,7 +167,13 @@ feature -- Input
 			end
 			if character_buffer = Void then
 				if not old_end_of_file then
+#ifdef ISE
+					last_string.set_count (nb)
+					i := old_read_to_string (last_string, 1, nb)
+					last_string.set_count (i)
+#else
 					old_read_stream (nb)
+#endif
 				else
 					last_string.set_count (0)
 				end
@@ -420,6 +426,8 @@ feature {NONE} -- Implementation
 		deferred
 		end
 
+#endif
+#ifdef SE
 	tmp_directory: KL_DIRECTORY is
 			-- Temporary directory object
 		once

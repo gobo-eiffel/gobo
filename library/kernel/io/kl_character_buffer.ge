@@ -15,6 +15,10 @@ class KL_CHARACTER_BUFFER
 inherit
 
 	KI_CHARACTER_BUFFER
+#ifdef ISE
+		undefine
+			copy, is_equal, out
+#endif
 		redefine
 #ifdef ISE || SE
 			append_substring_to_string,
@@ -24,7 +28,17 @@ inherit
 		end
 
 #ifdef ISE
-	STRING_HANDLER
+	STRING
+		rename
+			make as string_make,
+			make_from_string as string_make_from_string,
+			put as string_put,
+			item as string_item,
+			substring as string_substring,
+			count as string_count,
+			resize as string_resize,
+			area as string_area
+		end
 
 #endif
 creation
@@ -38,9 +52,8 @@ feature {NONE} -- Initialization
 			-- to contain `n' characters.
 		do
 #ifdef ISE
-			!! area_string.make (n + 1)
-			area_string.set_count (n + 1)
-			area := area_string.area
+			string_make (n)
+			set_count (n)
 #endif
 #ifdef VE
 			!! area.make_filled ('%U', n)
@@ -62,7 +75,11 @@ feature -- Access
 	item (i: INTEGER): CHARACTER is
 			-- Item at position `i'
 		do
+#ifdef ISE
+			Result := string_item (i)
+#else
 			Result := area.item (i)
+#endif
 		end
 
 	substring (s, e: INTEGER): STRING is
@@ -92,7 +109,7 @@ feature -- Access
 				nb := e - s + 1
 				!! Result.make (nb)
 				Result.set_count (nb)
-				Result.subcopy (area_string, s + 1, e + 1, 1)
+				Result.subcopy (area, s, e, 1)
 #endif
 #ifdef SE
 				nb := e - s + 1
@@ -127,7 +144,7 @@ feature -- Measurement
 			-- Number of characters in buffer
 		do
 #ifdef ISE
-			Result := area_string.count - 1
+			Result := string_count
 #else
 			Result := area.count
 #endif
@@ -139,7 +156,11 @@ feature -- Element change
 	put (v: CHARACTER; i: INTEGER) is
 			-- Replace character at position `i' by `v'.
 		do
+#ifdef ISE
+			string_put (v, i)
+#else
 			area.put (v, i)
+#endif
 		end
 
 #ifdef ISE || SE
@@ -160,10 +181,10 @@ feature -- Element change
 				end
 				a_string.set_count (new_count)
 				if a_string.same_type (dummy_string) then
-					a_string.subcopy (area_string, s + 1, e + 1, old_count + 1)
+					a_string.subcopy (area, s, e, old_count + 1)
 				else
 					from i := s until i > e loop
-						a_string.append_character (area.item (i))
+						a_string.append_character (string_item (i))
 						i := i + 1
 					end
 				end
@@ -202,7 +223,7 @@ feature -- Element change
 			nb := a_string.count
 			if nb > 0 then
 #ifdef ISE
-				area_string.subcopy (a_string, 1, nb, pos + 1)
+				area.subcopy (a_string, 1, nb, pos)
 #else
 				j := pos
 				from i := 1 until i > nb loop
@@ -219,7 +240,7 @@ feature -- Element change
 			-- at most `nb' characters read from `a_stream'.
 			-- Return the number of characters actually read.
 		do
-#ifdef ISE || SE
+#ifdef SE
 			Result := a_stream.read_to_string (area_string, pos + 1, nb)
 #else
 			Result := a_stream.read_to_string (area, pos, nb)
@@ -236,7 +257,7 @@ feature -- Element change
 		do
 			if nb > 0 then
 #ifdef ISE
-				area_string.subcopy (area_string, old_pos + 1, old_pos + nb, new_pos + 1)
+				area.subcopy (area, old_pos, old_pos + nb - 1, new_pos)
 #else
 				j := new_pos
 				nb2 := old_pos + nb - 1
@@ -259,7 +280,7 @@ feature -- Element change
 		do
 			if nb > 0 then
 #ifdef ISE
-				area_string.subcopy (area_string, old_pos + 1, old_pos + nb, new_pos + 1)
+				area.subcopy (area, old_pos, old_pos + nb - 1, new_pos)
 #else
 				j := new_pos + nb - 1
 				from i := old_pos + nb - 1 until i < old_pos loop
@@ -289,9 +310,8 @@ feature -- Resizing
 #endif
 #ifdef ISE
 		do
-			area_string.resize (n + 1)
-			area_string.set_count (n + 1)
-			area := area_string.area
+			area.resize (n)
+			area.set_count (n)
 #endif
 #ifdef HACT
 		local
@@ -312,26 +332,27 @@ feature -- Resizing
 feature {NONE} -- Implementation
 
 #ifdef ISE
-	area: SPECIAL [CHARACTER]
-	area_string: STRING
+	area: STRING is
+			-- Implementation
+		do
+			Result := Current
+		end
 #else
 #ifdef SE
 	area: NATIVE_ARRAY [CHARACTER]
 	area_string: STRING
+			-- Implementation
 #else
 	area: STRING
-#endif
-#endif
 			-- Implementation
+#endif
+#endif
 
 invariant
 
 	area_not_void: area /= Void
-#ifdef ISE || SE
+#ifdef SE
 	area_string_not_void: area_string /= Void
-#endif
-#ifdef ISE
-	area_definition: area = area_string.area
 #endif
 
 end

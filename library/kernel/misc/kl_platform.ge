@@ -60,7 +60,11 @@ feature -- Bits
 	Character_bits: INTEGER is
 			-- Number of bits in a value of type CHARACTER
 		once
+#ifdef GOBO_DOTNET
+			Result := 16
+#else
 			Result := old_character_bits
+#endif
 		end
 
 	Double_bits: INTEGER is
@@ -108,7 +112,11 @@ feature -- Bytes
 #ifdef HACT || VE || SE
 			Result := Character_bits // Byte_bits
 #else
+#ifdef GOBO_DOTNET
+			Result := 2
+#else
 			Result := old_character_bytes
+#endif
 #endif
 		end
 

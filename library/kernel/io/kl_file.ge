@@ -484,7 +484,8 @@ feature -- Basic operations
 							old_change_name (string_new_name)
 							string_name := saved_string_name
 #endif
-							if not exists then
+							tmp_file1.reset (string_name)
+							if not tmp_file1.exists then
 								name := new_name
 								string_name := string_new_name
 							end
