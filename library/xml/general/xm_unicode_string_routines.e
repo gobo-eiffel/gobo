@@ -12,11 +12,13 @@ indexing
 
 class XM_UNICODE_STRING_ROUTINES
 
+obsolete "Use XM_UNICODE_CHARACTERS and descendant classes"
+
 inherit
 
 	ANY
 	
-	XM_UNICODE_CHARACTER_CLASSES
+	XM_SHARED_UNICODE_CHARACTERS
 		export {NONE} all end
 
 
@@ -26,44 +28,20 @@ feature -- Status
 			-- Is `a_string' a string containing no invalid XML characters?
 		require
 			a_string_not_void: a_string /= Void
-		local
-			i, nb: INTEGER
 		do
-			Result := True
-			nb := a_string.count
-			from i := 1 until i > nb loop
-				if not is_char (a_string.item_code (i)) then
-					Result := False
-					i := nb + 1 -- Jump out of the loop.
-				else
-					i := i + 1
-				end
-			end
+			Result := characters_1_0.is_string (a_string)
 		ensure
-			empty: (a_string.count = 0) implies Result
+			definition: Result = characters_1_0.is_string (a_string)
 		end
 
 	is_xml_name (a_name: STRING): BOOLEAN is
 			-- Is `a_name' a valid XML name?
 		require
 			a_name_not_void: a_name /= Void
-		local
-			i, nb: INTEGER
 		do
-			nb := a_name.count
-				-- First.
-			if nb = 0 or else is_name_first (a_name.item_code (1)) then
-				Result := True
-					-- Tail.
-				from i := 2 until i > nb loop
-					if not is_name_char (a_name.item_code (i)) then
-						Result := False
-						i := nb + 1 -- Jump out of the loop.
-					else
-						i := i + 1
-					end
-				end
-			end
+			Result := characters_1_0.is_name (a_name)
+		ensure
+			definition: Result = characters_1_0.is_name (a_name)
 		end
 
 end

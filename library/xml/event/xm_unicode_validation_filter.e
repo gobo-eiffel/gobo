@@ -24,7 +24,7 @@ inherit
 			on_content
 		end
 
-	XM_UNICODE_STRING_ROUTINES
+	XM_SHARED_UNICODE_CHARACTERS
 		export {NONE} all end
 
 creation
@@ -84,7 +84,7 @@ feature {NONE} -- Validation
 		require
 			a_string_not_void: a_string /= Void
 		do
-			if not is_xml_string (a_string) then
+			if not characters_1_0.is_string (a_string) then
 				on_error (Error_unicode_invalid_character)
 			end
 		end
@@ -94,7 +94,7 @@ feature {NONE} -- Validation
 		require
 			a_name_not_void: a_name /= Void
 		do
-			if not is_xml_name (a_name) then
+			if not characters_1_0.is_name (a_name) then
 				on_error (Error_unicode_invalid_character)
 			end
 		end
