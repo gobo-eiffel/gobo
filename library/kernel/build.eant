@@ -115,6 +115,12 @@
 		<geant target="spec_eif"/>
 		<set name="gepp_file" value="kl_windows_input_file"/>
 		<geant target="spec_eif"/>
+		<set name="gepp_file" value="kl_file"/>
+		<geant target="spec_eif"/>
+		<set name="gepp_file" value="kl_input_file"/>
+		<geant target="spec_eif"/>
+		<set name="gepp_file" value="kl_output_file"/>
+		<geant target="spec_eif"/>
 	</target>
 
 	<target name="install_misc">
