@@ -1523,11 +1523,11 @@ feature -- Element change
 			else
 				uc_string ?= a_string
 				if uc_string /= Void then
-					-- Because this is really an UTF8 string, we may move bytes.
+					-- Assuming bytes are still in linear order, we may move bytes.
 					new_byte_count := byte_count + uc_string.byte_count
 					old_count := count
-					set_count (byte_count)
 					old_a_string_count := uc_string.count
+					set_count (byte_count)
 					if uc_string /= Current then
 						uc_string.set_count (uc_string.byte_count)
 					end
