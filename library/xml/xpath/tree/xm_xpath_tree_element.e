@@ -78,7 +78,7 @@ feature {NONE} -- Initialization
 			create attribute_collection.make
 			create namespace_code_list.make (0)
 			sequence_number_high_word := 50000
-			set_last_error_from_string (a_message, 0, Static_error)
+			set_last_error_from_string (a_message, "FOER0000", Static_error)
 		end
 
 feature -- Access

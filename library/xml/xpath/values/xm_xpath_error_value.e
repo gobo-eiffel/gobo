@@ -24,7 +24,7 @@ creation
 
 feature {NONE} -- Initialization
 
-	make (an_item: XM_XPATH_ITEM; an_error_code, an_error_type: INTEGER) is
+	make (an_item: XM_XPATH_ITEM; an_error_code: STRING an_error_type: INTEGER) is
 			-- Create a non-empty error value.
 		require
 			item_not_void: an_item /= Void
@@ -41,7 +41,7 @@ feature {NONE} -- Initialization
 			no_empty_sequence: empty_sequence = Void
 		end
 
-	make_empty (an_error_code, an_error_type: INTEGER) is
+	make_empty (an_error_code: STRING an_error_type: INTEGER) is
 			-- Create an empty-sequence error value
 		require
 			valid_error_code: is_valid_error_code (an_error_code)
@@ -57,7 +57,7 @@ feature {NONE} -- Initialization
 			empty_sequence: empty_sequence /= Void
 		end
 
-	make_from_string (a_string: STRING; an_error_code, an_error_type: INTEGER) is
+	make_from_string (a_string, an_error_code: STRING; an_error_type: INTEGER) is
 			-- Create from `a_string'.
 		require
 			valid_error_code: is_valid_error_code (an_error_code)
@@ -78,8 +78,8 @@ feature -- Access
 	item: XM_XPATH_ITEM
 			-- Error value
 
-	code: INTEGER
-			-- Error code, as defined in XPath 2.0 Appendix F
+	code: STRING
+			-- Error code, as defined in  the specifications
 
 	type: INTEGER
 			-- Type of error
@@ -93,7 +93,8 @@ feature -- Access
 			if empty_sequence /= Void then
 				Result := "()"
 			else
-				Result := item.string_value
+				Result := STRING_.concat (code, ": ")
+				Result := STRING_.appended_string (Result, item.string_value)
 			end
 		ensure
 			error_message_not_void: Result /= Void
@@ -107,7 +108,7 @@ feature -- Comparison
 		require
 			other_not_void: other /= Void
 		do
-			Result := code = other.code and then type=other.type
+			Result := STRING_.same_string (code, other.code) and then type=other.type
 				and then STRING_.same_string (error_message, other.error_message)
 		end
 

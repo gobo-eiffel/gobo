@@ -273,13 +273,13 @@ feature -- Optimization
 					create a_node_sequence.make_node_sequence
 					a_type_checker.static_type_check (a_context, start, a_node_sequence, False, a_role)
 					if a_type_checker.is_static_type_check_error then
-						set_last_error_from_string (a_type_checker.static_type_check_error_message, 4, Type_error)
+						set_last_error_from_string (a_type_checker.static_type_check_error_message, "XP0004", Type_error)
 					else
 						set_start (a_type_checker.checked_expression)
 						create another_role.make (Binary_expression_role, "/", 2)
 						a_type_checker.static_type_check (a_context, step, a_node_sequence, False, another_role)
 						if a_type_checker.is_static_type_check_error then
-							set_last_error_from_string (a_type_checker.static_type_check_error_message, 4, Type_error)
+							set_last_error_from_string (a_type_checker.static_type_check_error_message, "XP0004", Type_error)
 						else
 							set_step (a_type_checker.checked_expression)
 							optimize (a_context)
@@ -522,7 +522,7 @@ feature {NONE} -- Implementation
 			if an_axis = Void then
 				Result := Void
 			elseif an_axis.axis = Child_axis then
-				create {XM_XPATH_AXIS_EXPRESSION} a_new_step.make (Descendant_axis, an_axis.node_test )	-- TODO copy location information
+				create {XM_XPATH_AXIS_EXPRESSION} a_new_step.make (Descendant_axis, an_axis.node_test)	-- TODO copy location information
 				from
 					a_filter ?= step
 				until
@@ -542,7 +542,7 @@ feature {NONE} -- Implementation
 				-- turn the expression a//@b into a/descendant-or-self::*/@b
 				
 				create a_node_kind_test.make (Element_node)
-				create {XM_XPATH_AXIS_EXPRESSION} a_new_step.make (Descendant_or_self_axis, a_node_kind_test )	-- TODO copy location information
+				create {XM_XPATH_AXIS_EXPRESSION} a_new_step.make (Descendant_or_self_axis, a_node_kind_test)	-- TODO copy location information
 				create a_path.make (a_path.start, a_new_step)
 				create a_path.make (a_path, step)	-- TODO copy location information
 				Result := a_path
@@ -705,7 +705,7 @@ feature {NONE} -- Implementation
 						set_replacement (a_path)
 					end
 				else
-					promote_sub_expressions (a_context) -- do_nothing -- TODO See bottom of file for code which needs debugging and reinstating
+					promote_sub_expressions (a_context)
 				end
 			end
 		end

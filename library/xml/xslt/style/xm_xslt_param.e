@@ -171,7 +171,7 @@ feature -- Element change
 					create a_supplied_parameter_reference.make (a_slot_number)
 					a_type_checker.static_type_check (static_context, a_supplied_parameter_reference, as_type, False, a_role)
 					if a_type_checker.is_static_type_check_error then
-						set_last_error_from_string (a_type_checker.static_type_check_error_message, 4, Type_error)
+						set_last_error_from_string (a_type_checker.static_type_check_error_message, "XT0320", Type_error)
 					else
 						a_conversion := a_type_checker.checked_expression
 					end

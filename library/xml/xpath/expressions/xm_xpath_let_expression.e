@@ -136,7 +136,7 @@ feature -- Optimization
 					create a_type_checker
 					a_type_checker.static_type_check (a_context, an_expression, declaration.required_type, False, a_role)
 					if a_type_checker.is_static_type_check_error then
-						set_last_error_from_string (a_type_checker.static_type_check_error_message, 4, Type_error)
+						set_last_error_from_string (a_type_checker.static_type_check_error_message, "XP0004", Type_error)
 					else
 						set_sequence (a_type_checker.checked_expression)
 					end

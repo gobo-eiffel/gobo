@@ -266,8 +266,6 @@ feature
 			-- Dynamic error will be raised owing to static analysis.
 		local
 			an_evaluator: XM_XPATH_EVALUATOR
-			evaluated_items: DS_LINKED_LIST [XM_XPATH_ITEM]
-			a_boolean_value: XM_XPATH_BOOLEAN_VALUE
 		do
 			create an_evaluator.make (18, False)
 			an_evaluator.set_string_mode_ascii
@@ -555,7 +553,7 @@ feature
 			assert ("Build successfull", not an_evaluator.was_build_error)
 			an_evaluator.evaluate ("//[position() = ()]")
 			assert ("Evaluation error", an_evaluator.is_error)
-			assert ("XP0003", an_evaluator.error_value.type = Static_error and an_evaluator.error_value.code = 3)
+			assert ("XP0003", an_evaluator.error_value.type = Static_error and STRING_.same_string (an_evaluator.error_value.code, "XP0003"))
 
 		end
 
@@ -570,13 +568,12 @@ feature
 			assert ("Build successfull", not an_evaluator.was_build_error)
 			an_evaluator.evaluate ("/%"fred%"")
 			assert ("Evaluation error", an_evaluator.is_error)
-			assert ("XP0004", an_evaluator.error_value.type = Type_error and an_evaluator.error_value.code = 4)
+			assert ("XP0004", an_evaluator.error_value.type = Type_error and STRING_.same_string (an_evaluator.error_value.code, "XP0004"))
 		end
 
 	test_for_error_xp0006 is
 		local
 			an_evaluator: XM_XPATH_EVALUATOR
-			evaluated_items: DS_LINKED_LIST [XM_XPATH_ITEM]
 			a_string_value: XM_XPATH_STRING_VALUE
 		do
 			create an_evaluator.make (18, False)
@@ -587,6 +584,7 @@ feature
 			an_evaluator.static_context.declare_variable ("fred", a_string_value)
 			an_evaluator.evaluate ("(1 to $fred)")
 			assert ("Evaluation error", an_evaluator.is_error)
+			assert ("XP0006", an_evaluator.error_value.type = Type_error and STRING_.same_string (an_evaluator.error_value.code, "XP0006"))
 		end
 
 	test_for_error_xp0008 is
@@ -600,7 +598,7 @@ feature
 			assert ("Build successfull", not an_evaluator.was_build_error)
 			an_evaluator.evaluate ("//TITLE[position() = $fred]")
 			assert ("Evaluation error", an_evaluator.is_error)
-			assert ("XP0008", an_evaluator.error_value.type = Static_error and an_evaluator.error_value.code = 8)
+			assert ("XP0008", an_evaluator.error_value.type = Static_error and STRING_.same_string (an_evaluator.error_value.code, "XP0008"))
 		end
 
 	test_for_error_xp0017 is
@@ -614,7 +612,7 @@ feature
 			assert ("Build successfull", not an_evaluator.was_build_error)
 			an_evaluator.evaluate ("//TITLE[position(1,2,3)]")
 			assert ("Evaluation error", an_evaluator.is_error)
-			assert ("XP0017", an_evaluator.error_value.type = Static_error and an_evaluator.error_value.code = 17)
+			assert ("XP0017", an_evaluator.error_value.type = Static_error and STRING_.same_string (an_evaluator.error_value.code, "XP0017"))
 		end
 
 	test_for_error_xp0020 is
@@ -628,7 +626,7 @@ feature
 			assert ("Build successfull", not an_evaluator.was_build_error)
 			an_evaluator.evaluate ("'fred'[child::title]")
 			assert ("Evaluation error", an_evaluator.is_error)
-			assert ("XP0020", an_evaluator.error_value.type = Type_error and an_evaluator.error_value.code = 20)
+			assert ("XP0020", an_evaluator.error_value.type = Type_error and STRING_.same_string (an_evaluator.error_value.code, "XP0020"))
 		end
 
 	test_for_error_xp0021 is
@@ -643,7 +641,7 @@ feature
 			an_evaluator.evaluate ("('fred' eq 'jim') cast as xs:date")
 			evaluated_items := an_evaluator.evaluated_items
 			assert ("Evaluation error", an_evaluator.is_error)
-			assert ("XP0021", an_evaluator.error_value.type = Dynamic_error and an_evaluator.error_value.code = 21)
+			assert ("XP0021", an_evaluator.error_value.type = Dynamic_error and STRING_.same_string (an_evaluator.error_value.code, "XP0021"))
 		end
 
 	test_for_error_xp0051 is
@@ -658,7 +656,7 @@ feature
 			assert ("Build successfull", not an_evaluator.was_build_error)
 			an_evaluator.evaluate ("'fred' eq 'jim' cast as xs:Date")
 			assert ("Evaluation error", an_evaluator.is_error)
-			assert ("XP0051", an_evaluator.error_value.type = Static_error and an_evaluator.error_value.code = 51)
+			assert ("XP0051", an_evaluator.error_value.type = Static_error and STRING_.same_string (an_evaluator.error_value.code, "XP0051"))
 		end
 
 	set_up is

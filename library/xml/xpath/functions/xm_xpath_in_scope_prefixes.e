@@ -72,7 +72,7 @@ feature -- Evaluation
 				an_element.ensure_namespace_nodes
 				Result := an_element.prefixes_in_scope
 			else
-				create {XM_XPATH_INVALID_ITERATOR} Result.make_from_string ("First argument is not an element", 2, Dynamic_error)
+				create {XM_XPATH_INVALID_ITERATOR} Result.make_from_string ("First argument is not an element", "FORG0006", Dynamic_error)
 			end
 		end
 		

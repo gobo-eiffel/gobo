@@ -93,7 +93,7 @@ feature -- Evaluation
 			if a_context.is_context_position_set then
 				create {XM_XPATH_BOOLEAN_VALUE} last_evaluated_item.make (condition = a_context.is_at_last)
 			else
-				create {XM_XPATH_INVALID_ITEM} last_evaluated_item.make_from_string ("Context position is not set", 2, Dynamic_error)
+				create {XM_XPATH_INVALID_ITEM} last_evaluated_item.make_from_string ("Context position is not set", "XP0002", Dynamic_error)
 			end
 		end
 

@@ -150,7 +150,7 @@ feature -- Evaluation
 						create {XM_XPATH_DOCUMENT_ORDER_ITERATOR} Result.make (all_values_iterator, a_local_order_comparer)
 					end
 				else
-					create {XM_XPATH_INVALID_ITERATOR} Result.make_from_string ("Non-recoverable error already reported", 0, Dynamic_error)
+					create {XM_XPATH_INVALID_ITERATOR} Result.make_from_string ("Non-recoverable error already reported", "FOER0000", Dynamic_error)
 				end
 			end
 		end

@@ -48,13 +48,13 @@ feature -- Evaluation
 									another_integer_value ?= another_atomic_value.convert_to_type (type_factory.integer_type)
 									last_evaluated_item := an_integer_value.arithmetic (operator, another_integer_value)
 								else
-									set_last_error_from_string ("Second argument to idiv must be an integer", Type_error, 6)
+									set_last_error_from_string ("Second argument to idiv must be an integer", "XP0006", Type_error)
 								end
 							else
 							last_evaluated_item := Void -- represents empty sequence
 							end
 						else
-							create {XM_XPATH_INVALID_ITEM} last_evaluated_item.make_from_string ("First argument to idiv must be an integer", Type_error, 6)
+							create {XM_XPATH_INVALID_ITEM} last_evaluated_item.make_from_string ("First argument to idiv must be an integer", "XP0006", Type_error)
 						end
 					else
 						last_evaluated_item := Void -- represents empty sequence

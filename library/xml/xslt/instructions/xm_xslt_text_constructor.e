@@ -109,7 +109,7 @@ feature -- Optimization
 				create a_single_string.make_single_string
 				a_type_checker.static_type_check (a_context, separator_expression, a_single_string, False, a_role)
 				if a_type_checker.is_static_type_check_error then
-					set_last_error_from_string (a_type_checker.static_type_check_error_message, 4, Type_error)
+					set_last_error_from_string (a_type_checker.static_type_check_error_message, "XT0320", Type_error)
 				else
 					set_separator_expression (a_type_checker.checked_expression)
 				end				
@@ -125,7 +125,7 @@ feature -- Optimization
 				create a_single_string.make_single_string
 				a_type_checker.static_type_check (a_context, select_expression, a_single_string, False, a_role)
 				if a_type_checker.is_static_type_check_error then
-					set_last_error_from_string (a_type_checker.static_type_check_error_message, 4, Type_error)
+					set_last_error_from_string (a_type_checker.static_type_check_error_message, "XT0320", Type_error)
 				else
 					set_select_expression (a_type_checker.checked_expression)
 				end
@@ -143,7 +143,7 @@ feature -- Optimization
 						an_expression.analyze (a_context)
 						a_cursor.replace (an_expression)
 					else
-						set_last_error_from_string ("BUG: Children of an XM_XSLT_EXPRESSION_INSTRUCTION must themselves be Expressions", 0, Type_error)
+						set_last_error_from_string ("BUG: Children of an XM_XSLT_EXPRESSION_INSTRUCTION must themselves be Expressions", "FOER0000", Type_error)
 					end
 					a_cursor.forth
 				end

@@ -126,7 +126,7 @@ feature -- Evaluation
 	iterator (a_context: XM_XPATH_CONTEXT): XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_ITEM] is
 			-- Iterator over the values of a sequence
 		do
-			create {XM_XPATH_INVALID_ITERATOR} Result.make_from_string ("TODO", Static_error, 1) -- TODO
+			create {XM_XPATH_INVALID_ITERATOR} Result.make_from_string ("TODO", "XP0001", Static_error) -- TODO
 		end
 
 	effective_boolean_value (a_context: XM_XPATH_CONTEXT): XM_XPATH_BOOLEAN_VALUE is

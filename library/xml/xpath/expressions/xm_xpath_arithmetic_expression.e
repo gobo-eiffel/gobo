@@ -71,13 +71,13 @@ feature -- Optimization
 			create a_type_checker
 			a_type_checker.static_type_check (a_context, first_operand, a_sequence_type, is_backwards_compatible_mode, a_role)
 			if a_type_checker.is_static_type_check_error then
-				set_last_error_from_string (a_type_checker.static_type_check_error_message, 4, Type_error)
+				set_last_error_from_string (a_type_checker.static_type_check_error_message, "XP0004", Type_error)
 			else
 				set_first_operand (a_type_checker.checked_expression)
 				create another_role.make (Binary_expression_role, token_name (operator), 2)
 				a_type_checker.static_type_check (a_context, second_operand, a_sequence_type, is_backwards_compatible_mode, another_role)
 				if a_type_checker.is_static_type_check_error then
-					set_last_error_from_string (a_type_checker.static_type_check_error_message, 4, Type_error)
+					set_last_error_from_string (a_type_checker.static_type_check_error_message, "XP0004", Type_error)
 				else
 					set_second_operand (a_type_checker.checked_expression)
 					Precursor (a_context)
@@ -158,14 +158,14 @@ feature -- Evaluation
 								a_string := STRING_.appended_string (a_string, ", ")
 								a_string := STRING_.appended_string (a_string, another_atomic_value.item_type.conventional_name)
 								a_string := STRING_.appended_string (a_string,  ")")
-								set_last_error_from_string (a_string, Type_error, 6)								
+								set_last_error_from_string (a_string, "XP0006", Type_error)								
 							end
 						else
 							a_string := STRING_.appended_string ("Unsuitable operands for arithmetic operation (", an_atomic_value.item_type.conventional_name)
 							a_string := STRING_.appended_string (a_string, ", ")
 							a_string := STRING_.appended_string (a_string, another_atomic_value.item_type.conventional_name)
 							a_string := STRING_.appended_string (a_string,  ")")
-							set_last_error_from_string (a_string, Type_error, 6)	
+							set_last_error_from_string (a_string, "XP0006", Type_error)	
 						end
 					end
 				end
@@ -220,7 +220,7 @@ feature {XM_XPATH_ARITHMETIC_EXPRESSION} -- Local
 					a_string := STRING_.appended_string (a_string, ", ")
 					a_string := STRING_.appended_string (a_string, another_type.conventional_name)
 					a_string := STRING_.appended_string (a_string,  ")")
-					set_last_error_from_string (a_string, Type_error, 6)
+					set_last_error_from_string (a_string, "XP0006", Type_error)
 				else
 					finished := True
 				end

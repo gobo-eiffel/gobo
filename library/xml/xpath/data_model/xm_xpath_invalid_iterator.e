@@ -37,7 +37,7 @@ feature {NONE} -- Initialization
 			error_set: error_value = an_error
 		end
 
-	make_from_string (a_string: STRING; an_error_code, an_error_type: INTEGER) is
+	make_from_string (a_string, an_error_code: STRING; an_error_type: INTEGER) is
 			-- Create from `a_string'.
 		require
 			valid_error_code: is_valid_error_code (an_error_code)

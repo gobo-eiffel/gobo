@@ -134,13 +134,13 @@ feature {NONE} -- Implementation
 			-- Dynamic error value
 		do
 			if a_context = Void then
-				create Result.make_from_string 	("Evaluating 'attribute::node()': dynamic the context is not avaialable", 2, Dynamic_error)
+				create Result.make_from_string 	("Evaluating 'attribute::node()': dynamic the context is not avaialable", "XP0002", Dynamic_error)
 			else
 					check
 						a_context.context_item = Void
 						-- follows from pre-condition
 					end
-				create Result.make_from_string ("Evaluating 'attribute::node()': the context item is not set", 2, Dynamic_error)
+				create Result.make_from_string ("Evaluating 'attribute::node()': the context item is not set", "XP0002", Dynamic_error)
 			end
 		end
 	

@@ -121,7 +121,7 @@ feature -- Optimization
 					an_expression.analyze (a_context)
 					a_cursor.replace (an_expression)
 				else
-					set_last_error_from_string ("BUG: Children of an XM_XSLT_EXPRESSION_INSTRUCTION must themselves be Expressions", 0, Type_error)
+					set_last_error_from_string ("BUG: Children of an XM_XSLT_EXPRESSION_INSTRUCTION must themselves be Expressions", "FOER0000", Type_error)
 				end
 				a_cursor.forth
 			end
@@ -146,7 +146,7 @@ feature -- Optimization
 				an_instruction ?= a_cursor.item
 				if an_instruction = Void then
 					a_cursor.go_after
-					set_last_error_from_string ("BUG: Children of an XM_XSLT_EXPRESSION_INSTRUCTION must themselves be Expressions", 0, Type_error)
+					set_last_error_from_string ("BUG: Children of an XM_XSLT_EXPRESSION_INSTRUCTION must themselves be Expressions", "FOER0000", Type_error)
 				else
 					an_instruction.promote (an_offer)
 					if an_instruction.was_expression_replaced then

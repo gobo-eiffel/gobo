@@ -116,21 +116,21 @@ feature {NONE} -- Implementation
 			a_node: XM_XPATH_NODE
 		do
 			if a_context = Void then
-				create Result.make_from_string ("Evaluating '/': the dynamic context is not available", 2, Dynamic_error)
+				create Result.make_from_string ("Evaluating '/': the dynamic context is not available", "XP0002", Dynamic_error)
 			else
 				an_item := a_context.context_item
 				if an_item = Void then
-					create Result.make_from_string ("Evaluating '/': the context item is not set", 2, Dynamic_error)
+					create Result.make_from_string ("Evaluating '/': the context item is not set", "XP0002", Dynamic_error)
 				else
 					a_node ?= an_item
 					if a_node = Void then
-						create Result.make_from_string ("Evaluating '/': the context item is not a node", 20, Type_error)
+						create Result.make_from_string ("Evaluating '/': the context item is not a node", "XP0020", Type_error)
 					else
 							check
 								a_node.document_root = Void
 								-- follows from pre-condition
 							end
-						create Result.make_from_string ("Evaluating '/': the root of the tree containing the context item is not a document node", 20, Type_error)
+						create Result.make_from_string ("Evaluating '/': the root of the tree containing the context item is not a document node", "XP0020", Type_error)
 					end
 				end
 			end

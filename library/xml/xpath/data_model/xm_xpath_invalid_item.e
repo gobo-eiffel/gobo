@@ -32,10 +32,10 @@ feature {NONE} -- Initialization
 			error_set: error_value = an_error
 		end
 
-	make_from_string (a_string: STRING; an_error_code, an_error_type: INTEGER) is
+	make_from_string (a_string, an_error_code: STRING; an_error_type: INTEGER) is
 			-- Create from `a_string'.
 		require
-			valid_error_code: is_valid_error_code (an_error_code)
+			valid_error_code: an_error_code /= Void and then is_valid_error_code (an_error_code)
 			valid_error_type: an_error_type = Static_error or an_error_type = Type_error or an_error_type = Dynamic_error
 			string_not_void: a_string /= Void and then a_string.count > 0
 		do
@@ -91,7 +91,7 @@ feature -- Status setting
 			error_value := an_error_value
 		end
 
-	set_last_error_from_string (a_message: STRING; a_code, an_error_type: INTEGER) is
+	set_last_error_from_string (a_message, a_code: STRING; an_error_type: INTEGER) is
 			-- Set `error_value'.
 		do
 			is_error := True

@@ -261,7 +261,7 @@ feature {NONE} -- Implementation
 				a_message := STRING_.appended_string (a_message, plural_arguments_text ((a_maximum_count - augmented_argument_count)))
 			end
 			if is_type_error then
-				set_last_error_from_string (a_message, 17, Static_error)
+				set_last_error_from_string (a_message, "XP0017", Static_error)
 			end
 		ensure
 			Correct_number_or_error: True

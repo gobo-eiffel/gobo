@@ -84,7 +84,7 @@ feature -- Evaluation
 						create {XM_XPATH_STRING_VALUE} last_evaluated_item.make (shared_name_pool.uri_from_uri_code (a_uri_code))
 					end
 				else
-					create {XM_XPATH_INVALID_ITEM} last_evaluated_item.make_from_string ("Second argument is not an element", 2, Dynamic_error)
+					create {XM_XPATH_INVALID_ITEM} last_evaluated_item.make_from_string ("Second argument is not an element", "FORG0006", Dynamic_error)
 				end
 			else
 				last_evaluated_item := arguments.item (2).last_evaluated_item

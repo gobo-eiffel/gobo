@@ -79,7 +79,7 @@ feature -- Evaluation
 		do
 			a_collator := collator (3, a_context, False)
 			if a_collator = Void then
-				create {XM_XPATH_INVALID_ITEM} last_evaluated_item.make_from_string ("Unsupported collation", 2, Dynamic_error)
+				create {XM_XPATH_INVALID_ITEM} last_evaluated_item.make_from_string ("Unsupported collation", "FOCH0002", Dynamic_error)
 			else
 				arguments.item (1).evaluate_item (a_context)
 				an_atomic_value ?= arguments.item (1).last_evaluated_item

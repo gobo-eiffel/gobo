@@ -49,14 +49,14 @@ feature -- Comparison
 						an_atomic_value_one := an_atomic_value.convert_to_type (type_factory.double_type)
 					else
 						is_comparison_type_error := True
-						create last_type_error.make_from_string ("Could not convert first general comparison operand to xs:double", 6, Type_error)
+						create last_type_error.make_from_string ("Could not convert first general comparison operand to xs:double", "XP0003", Type_error)
 					end
 				else
 					if an_atomic_value.is_convertible (another_atomic_value.item_type) then
 						an_atomic_value_one := an_atomic_value.convert_to_type (another_atomic_value.item_type)
 					else
 						is_comparison_type_error := True
-						create last_type_error.make_from_string (STRING_.appended_string ("Could not convert first general comparison operand to ", another_atomic_value.item_type.conventional_name), 6, Type_error)
+						create last_type_error.make_from_string (STRING_.appended_string ("Could not convert first general comparison operand to ", another_atomic_value.item_type.conventional_name), "XP0003", Type_error)
 					end
 				end
 			end
@@ -70,14 +70,14 @@ feature -- Comparison
 							an_atomic_value_two := another_atomic_value.convert_to_type (type_factory.double_type)
 						else
 							is_comparison_type_error := True
-							create last_type_error.make_from_string ("Could not convert second general comparison operand to xs:double", 6, Type_error)
+							create last_type_error.make_from_string ("Could not convert second general comparison operand to xs:double", "XP0003", Type_error)
 						end
 					else
 						if another_atomic_value.is_convertible (an_atomic_value.item_type) then
 							an_atomic_value_two := another_atomic_value.convert_to_type (an_atomic_value.item_type)
 						else
 							is_comparison_type_error := True
-							create last_type_error.make_from_string (STRING_.appended_string ("Could not convert second general comparison operand to ", another_atomic_value.item_type.conventional_name), 6, Type_error)
+							create last_type_error.make_from_string (STRING_.appended_string ("Could not convert second general comparison operand to ", another_atomic_value.item_type.conventional_name), "XP0006", Type_error)
 						end
 					end
 				end
@@ -91,7 +91,7 @@ feature -- Comparison
 						an_atomic_value_two := an_atomic_value_two.convert_to_type (type_factory.double_type)
 					else
 						is_comparison_type_error := True
-						create last_type_error.make_from_string ("Could not convert both operands of general comparison in XPath 1.0 compatibility mode operand to xs:double", 6, Type_error)
+						create last_type_error.make_from_string ("Could not convert both operands of general comparison in XPath 1.0 compatibility mode operand to xs:double", "XP0006", Type_error)
 					end
 				end
 			end
@@ -133,7 +133,7 @@ feature -- Comparison
 				a_message := STRING_.appended_string ("Cannot compare ", an_atomic_value.item_type.conventional_name)
 				a_message := STRING_.appended_string (a_message, " with ")
 				a_message := STRING_.appended_string (a_message, another_atomic_value.item_type.conventional_name)
-				create last_type_error.make_from_string (a_message, 6, Type_error)
+				create last_type_error.make_from_string (a_message, "XP0006", Type_error)
 			end
 		end
 

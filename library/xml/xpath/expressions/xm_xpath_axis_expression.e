@@ -163,11 +163,11 @@ feature -- Evaluation
 		do
 			an_item := a_context.context_item
 			if an_item = Void then
-				create {XM_XPATH_INVALID_ITERATOR} Result.make_from_string ("The context item for an axis step is not set.", 2, Dynamic_error)
+				create {XM_XPATH_INVALID_ITERATOR} Result.make_from_string ("The context item for an axis step is not set.", "XP0002", Dynamic_error)
 			else
 				a_node ?= an_item
 				if a_node = Void then
-					create {XM_XPATH_INVALID_ITERATOR} Result.make_from_string ("The context item for an axis is not a node.", 20, Type_error)
+					create {XM_XPATH_INVALID_ITERATOR} Result.make_from_string ("The context item for an axis is not a node.", "XP0020", Type_error)
 				elseif node_test = Void then
 					Result := a_node.new_axis_iterator (axis)
 				else

@@ -89,18 +89,18 @@ feature -- Status setting
 			value_set: error_value = an_error_value
 		end
 
-	set_last_error_from_string (a_message: STRING; a_code, an_error_type: INTEGER) is
+	set_last_error_from_string (a_message, a_code: STRING; an_error_type: INTEGER) is
 			-- Set `error_value'.
 		require
 			item_not_in_error: not is_error
 			valid_error_type: an_error_type = Static_error or an_error_type = Type_error or an_error_type = Dynamic_error
 			message_not_void: a_message /= Void and then a_message.count > 0
-			valid_code: is_valid_error_code (a_code)
+			valid_code: a_code /= Void and then is_valid_error_code (a_code)
 		deferred
 		ensure
 			item_in_error: is_error
-			valid_error: error_value /= Void and then STRING_.same_string (error_value.error_message, a_message)
-				and then error_value.code = a_code
+			valid_error: error_value /= Void
+				and then STRING_.same_string (error_value.code , a_code)
 		end
 
 feature -- Conversion

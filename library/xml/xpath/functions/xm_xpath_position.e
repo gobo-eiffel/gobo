@@ -79,20 +79,19 @@ feature -- Evaluation
 			a_context_position: INTEGER
 		do
 			if a_context = Void then
-				create {XM_XPATH_INVALID_ITEM} last_evaluated_item.make_from_string ("Dynamic context is Void", Dynamic_error, 2)
+				create {XM_XPATH_INVALID_ITEM} last_evaluated_item.make_from_string ("Dynamic context is Void", "FONC0001", Dynamic_error)
 			elseif not a_context.is_context_position_set then
-				create {XM_XPATH_INVALID_ITEM} last_evaluated_item.make_from_string ("Context position is not available", Dynamic_error, 2)
+				create {XM_XPATH_INVALID_ITEM} last_evaluated_item.make_from_string ("Context position is not available",  "FONC0001", Dynamic_error)
 			else
 				a_context_position := a_context.context_position
 				if a_context_position = 0 then
-					create {XM_XPATH_INVALID_ITEM} last_evaluated_item.make_from_string ("Context position cannot be zero", Dynamic_error, 2)
+					create {XM_XPATH_INVALID_ITEM} last_evaluated_item.make_from_string ("Context position cannot be zero", "FONC0001", Dynamic_error)
 				else
 					create {XM_XPATH_INTEGER_VALUE} last_evaluated_item.make_from_integer (a_context_position)
 				end
 			end
 		ensure then
 			possible_dynamic_error: last_evaluated_item.is_error implies
-				last_evaluated_item.error_value.code = 2 and then
 				last_evaluated_item.error_value.type = Dynamic_error
 		end
 

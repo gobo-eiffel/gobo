@@ -242,7 +242,7 @@ feature -- Basic operations
 				when Integer_division_token then
 					if an_integer_value.is_zero then
 						create {XM_XPATH_INTEGER_VALUE} Result.make_from_integer (0)
-						Result.set_last_error_from_string ("Division by zero", 0, Dynamic_error)
+						Result.set_last_error_from_string ("Division by zero", "FOAR0001", Dynamic_error)
 					else
 						an_integer := value.divide_integer (an_integer_value.value, shared_integer_context)
 						an_integer := an_integer.rescale (0, shared_integer_context)

@@ -89,9 +89,6 @@ feature -- Creation
 			else
 				is_parse_error := True
 				an_error_type := Static_error
-				if a_parser.first_parse_error_code = 0 then
-					an_error_type := Dynamic_error
-				end
 				create parsed_error_value.make_from_string (a_parser.first_parse_error, a_parser.first_parse_error_code, an_error_type)
 			end
 		ensure

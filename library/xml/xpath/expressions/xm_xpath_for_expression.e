@@ -116,7 +116,7 @@ feature -- Optimization
 				create a_type_checker
 				a_type_checker.static_type_check (a_context, sequence, a_sequence_type, False, a_role)
 				if a_type_checker.is_static_type_check_error then
-					set_last_error_from_string (a_type_checker.static_type_check_error_message, 4, Type_error)
+					set_last_error_from_string (a_type_checker.static_type_check_error_message, "XP0004", Type_error)
 				else
 					create a_cardinality_set.make (1, 3)
 					a_cardinality_set.put (True, 2) -- Exactly One

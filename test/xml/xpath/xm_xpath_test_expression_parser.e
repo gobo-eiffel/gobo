@@ -194,7 +194,7 @@ feature -- Test
 			create a_context.make (False, False)
 			expression_factory.make_expression (a_string, a_context, 1, Eof_token)
 			assert ("Parse failed", expression_factory.is_parse_error)
-			assert ("Error text length", expression_factory.parsed_error_value.error_message.count = 74)
+			assert ("Error text length", expression_factory.parsed_error_value.error_message.count = 82)
 		end
 
 
