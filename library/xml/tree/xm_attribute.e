@@ -33,6 +33,7 @@ feature {NONE} -- Initialization
 			-- Create a new attribute.
 		require
 			a_name_not_void: a_name /= Void
+			a_ns_not_void: a_ns /= Void
 			a_name_not_empty: a_name.count > 0
 			a_value_not_void: a_value /= Void
 			a_parent_not_void: a_parent /= Void
@@ -53,6 +54,7 @@ feature {NONE} -- Initialization
 			-- and add it to parent..
 		require
 			a_name_not_void: a_name /= Void
+			a_ns_not_void: a_ns /= Void
 			a_name_not_empty: a_name.count > 0
 			a_value_not_void: a_value /= Void
 			a_parent_not_void: a_parent /= Void
@@ -84,7 +86,7 @@ feature -- Status report
 feature -- Access
 
 	namespace_declaration: XM_NAMESPACE is
-			-- Namespace declaration
+			-- Namespace corresponding to the declaration
 			-- (Create a new object at each call)
 		require
 			is_namespace_declaration: is_namespace_declaration
@@ -98,10 +100,7 @@ feature -- Access
 					-- New empty string with the same dynamic type as `name'.
 				a_prefix := STRING_.new_empty_string (name, 0)
 			end
-			if value.count > 0 then
-				a_uri := value
-			end
-			create Result.make (a_prefix, a_uri)
+			create Result.make (a_prefix, value)
 		ensure
 			namespace_not_void: Result /= Void
 		end
