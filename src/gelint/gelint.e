@@ -47,7 +47,9 @@ feature -- Processing
 					!! a_parser.make (an_error_handler)
 					a_parser.parse (a_file)
 					INPUT_STREAM_.close (a_file)
-					process_universe (a_parser.last_universe)
+					if not a_parser.syntax_error then
+						process_universe (a_parser.last_universe)
+					end
 				else
 					std.error.put_string ("gelint: cannot read %'")
 					std.error.put_string (a_filename)
