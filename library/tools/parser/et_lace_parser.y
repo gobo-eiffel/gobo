@@ -6,7 +6,7 @@ indexing
 		"Lace parsers"
 
 	author:     "Eric Bezault <ericb@gobosoft.com>"
-	copyright:  "Copyright (c) 1999, Eric Bezault and others"
+	copyright:  "Copyright (c) 1999-2001, Eric Bezault and others"
 	license:    "Eiffel Forum Freeware License v1 (see forum.txt)"
 	date:       "$Date$"
 	revision:   "$Revision$"
@@ -24,17 +24,18 @@ inherit
 
 creation
 
-	make
+	make, make_with_factory
 
 %}
 
 %token                 L_SYSTEM L_ROOT L_END L_CLUSTER
 %token                 L_DEFAULT L_EXTERNAL L_OPTION
+%token                 L_ABSTRACT
 %token <ET_IDENTIFIER> L_IDENTIFIER L_STRING
 %token                 L_STRERR
 
-%type <ET_CLUSTER>			Cluster
-%type <ET_CLUSTERS>			Cluster_list Clusters_opt
+%type <ET_CLUSTER>			Cluster Nested_cluster
+%type <ET_CLUSTERS>			Cluster_list Clusters_opt Sub_clusters_opt
 %type <ET_IDENTIFIER>		Identifier
 
 %start Ace
@@ -89,8 +90,22 @@ Cluster_list: Cluster Cluster_terminator
 		{ $$ := $3; $$.put_first ($1) }
 	;
 
-Cluster: Identifier ':' Identifier Options_opt
-		{ $$ := new_cluster ($1, $3) }
+Cluster: L_ABSTRACT Nested_cluster
+		{ $$ := $2; $$.set_abstract (True) }
+	| Nested_cluster
+		{ $$ := $1 }
+	;
+
+Nested_cluster: Identifier ':' Identifier Options_opt Sub_clusters_opt
+		{
+			$$ := new_cluster ($1, $3)
+			$$.set_subclusters ($5)
+		}
+	| Identifier Options_opt Sub_clusters_opt
+		{
+			$$ := new_cluster ($1, Void)
+			$$.set_subclusters ($3)
+		}
 	;
 
 Cluster_terminator: -- Empty
@@ -99,6 +114,14 @@ Cluster_terminator: -- Empty
 
 Cluster_separator: -- Empty
 	| ';'
+	;
+
+Sub_clusters_opt: -- Empty
+		-- { $$ := Void }
+	| L_CLUSTER L_END
+		-- { $$ := Void }
+	| L_CLUSTER Cluster_list L_END
+		{ $$ := $2 }
 	;
 
 Options_opt: -- Empty
