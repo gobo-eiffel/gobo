@@ -123,16 +123,12 @@ goto exit
 
 :gcc
 	set CFLAGS=-O2
+	set OBJ=.o
 	%CC% %CFLAGS% -o %BIN_DIR%\gexace%EXE% gexace.c
-	%RM% gexace%OBJ%
 	%CC% %CFLAGS% -o %BIN_DIR%\geant%EXE% geant.c
-	%RM% geant%OBJ%
 	%CC% %CFLAGS% -o %BIN_DIR%\gelex%EXE% gelex.c
-	%RM% gelex%OBJ%
 	%CC% %CFLAGS% -o %BIN_DIR%\geyacc%EXE% geyacc.c
-	%RM% geyacc%OBJ%
 	%CC% %CFLAGS% -o %BIN_DIR%\gepp%EXE% gepp.c
-	%RM% gepp%OBJ%
 	goto install
 
 :install
