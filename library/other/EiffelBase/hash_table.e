@@ -98,7 +98,7 @@ feature -- Access
 		local
 			i, j, nb: INTEGER
 		do
-			-- j := 0
+			j := 1
 			nb := count
 			!! Result.make (1, nb)
 			from i := 1 until i > nb loop
@@ -443,7 +443,7 @@ feature -- Conversion
 		local
 			i, j, nb: INTEGER
 		do
-			-- j := 0
+			j := 1
 			nb := count
 			!! Result.make (nb)
 			from i := 1 until i > nb loop
