@@ -33,7 +33,7 @@ feature {NONE} -- Creation
 			-- Create `uris'.
 			-- (Useful to descendant to establish invariant.)
 		do
-			create {DS_LINKED_STACK [UT_URI]} uris.make	
+			create {DS_LINKED_STACK [UT_URI]} uris.make
 			create schemes.make_map_default
 			schemes.set_key_equality_tester (string_equality_tester)
 		end
