@@ -315,7 +315,17 @@ feature -- Measurement
 				a_cursor.forth
 			end
 		ensure
-			parsed_classes_count_positive: Result >= 0
+			parsed_classes_count_non_negative: Result >= 0
+		end
+
+	cluster_count: INTEGER is
+			-- Number (recursively) of non-abstract clusters
+		do
+			if clusters /= Void then
+				Result := clusters.count
+			end
+		ensure
+			cluster_count_non_negavite: Result >= 0
 		end
 
 feature -- Setting
@@ -414,6 +424,18 @@ feature -- Parser setting
 			use_reference_keyword := b
 		ensure
 			use_reference_keyword_set: use_reference_keyword = b
+		end
+
+feature -- Element change
+
+	add_implicit_subclusters is
+			-- Add (recursively) implicit subclusters when clusters are recursive.
+			-- Note that these subclusters will otherwise be added when running one of
+			-- the `preparse_*' or `parse_all' routines.
+		do
+			if clusters /= Void then
+				clusters.add_implicit_subclusters (Current)
+			end
 		end
 
 feature -- Parsing
@@ -587,7 +609,6 @@ feature -- Compilation
 				dt1 := clock.system_clock.date_time_now
 			end
 			preparse_single
-			-- preparse_shallow
 			debug ("ericb")
 				dt2 := clock.system_clock.date_time_now
 				dtd := dt2 - dt1
