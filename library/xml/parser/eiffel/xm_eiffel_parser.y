@@ -751,7 +751,7 @@ att_tokenized_type: DOCTYPE_ATT_ID
 enumerated_type: notation_type
 		{ $$ := new_dtd_attribute_content; $$.set_notation }
 	| enumeration
-		{ $$ := new_dtd_attribute_content; $$.set_enumeration }
+		{ $$ := new_dtd_attribute_content; $$.set_enumeration_list ($1) }
 	;
 
 notation_type: DOCTYPE_ATT_NOTATION req_space group_start notation_type_trail DOCTYPE_GROUP_END

@@ -60,6 +60,8 @@ feature -- Output
 
 	out: STRING is
 			-- Like in DTD.
+		local
+			a_cursor: DS_LINEAR_CURSOR [STRING]
 		do
 				-- Name.
 			if has_name then
@@ -81,6 +83,21 @@ feature -- Output
 				Result.append_string ("NMTOKEN")
 			elseif is_notation then
 				Result.append_string ("NOTATION")
+			elseif is_enumeration then
+				Result.append_string ("(")
+				from
+					a_cursor := enumeration.new_cursor
+					a_cursor.start
+				until
+					a_cursor.after
+				loop
+					if not a_cursor.is_first then
+						Result.append_string ("|")
+					end
+					Result := STRING_.appended_string (Result, a_cursor.item)
+					a_cursor.forth
+				end
+				Result.append_string (")")
 			end
 			if is_list_type then
 				Result.append_string ("S")
@@ -268,6 +285,7 @@ feature -- Enumerated content type
 			-- Fixed enumeration.
 		do
 			type := 'U'
+			enumeration_list := Default_enumeration_list
 		ensure
 			set: is_enumeration
 		end
@@ -343,6 +361,43 @@ feature -- Tokenized content type
 			set: is_list_type
 		end
 
+feature -- Enumeration
+
+	enumeration: DS_LIST [STRING] is
+			-- List of allowed values for fixed enumeration.
+		require
+			is_enumeration: is_enumeration
+		do
+			Result := enumeration_list
+		ensure
+			result_not_void: Result /= Void
+		end
+	
+	set_enumeration_list (a_list: like enumeration) is
+			-- Set enumeration type and associated list.
+		require
+			not_void: a_list /= Void
+		do
+			set_enumeration
+			enumeration_list := a_list
+		ensure
+			enumeration_type_forced: is_enumeration
+			list_set: enumeration_list = a_list
+		end
+		
+feature {NONE} -- Enumeration list
+
+	enumeration_list: like enumeration
+			-- List of allowed values for fixed enumeration.
+			
+	Default_enumeration_list: DS_LINKED_LIST [STRING] is
+			-- Default for 'enumeration_list'.
+		once
+			create Result.make
+		ensure
+			not_void: Result /= Void
+		end
+	
 invariant
 
 	exclusive: BOOLEAN_.nxor (<<is_token, is_entity, is_id_ref, is_id, is_data, is_notation, is_enumeration>>)
