@@ -102,13 +102,6 @@ feature -- Output
 			end
 		end
 
-	put_new_line is
-			-- Write a new line to output stream.
-		require
-			is_writable: is_writable
-		deferred
-		end
-
 feature -- Basic operations
 
 	flush is
