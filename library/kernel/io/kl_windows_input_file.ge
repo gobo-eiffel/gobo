@@ -1,0 +1,279 @@
+indexing
+
+	description:
+
+		"Windows-like text input files"
+
+	library:    "Gobo Eiffel Kernel Library"
+	author:     "Eric Bezault <ericb@gobosoft.com>"
+	copyright:  "Copyright (c) 2001, Eric Bezault and others"
+	license:    "Eiffel Forum Freeware License v1 (see forum.txt)"
+	date:       "$Date$"
+	revision:   "$Revision$"
+
+class KL_WINDOWS_INPUT_FILE
+
+inherit
+
+	KI_INPUT_FILE
+		undefine
+#ifdef ISE
+			read_to_string,
+#endif
+			read_to_buffer
+		end
+
+	KL_BINARY_INPUT_FILE
+#ifdef VE || SE
+		redefine
+#ifdef VE
+			ve_read_stream,
+			end_of_file,
+#endif
+			read_character
+		end
+#endif
+
+creation
+
+	make
+
+feature -- Input
+
+#ifdef VE || SE
+	read_character is
+			-- Read the next character in input stream.
+			-- Make the result available in `last_character'.
+		do
+			if has_carriage_return then
+				last_character := '%R'
+				has_carriage_return := False
+			else
+				precursor
+			end
+		end
+
+#endif
+	read_line is
+			-- Read characters from input file until a line separator
+			-- or end of file is reached. Make the characters that have
+			-- been read available in `last_string' and discard the line
+			-- separator characters from the input file.
+		local
+			done: BOOLEAN
+			a_target: STRING
+			c: CHARACTER
+			has_carriage: BOOLEAN
+		do
+			if last_string = Void then
+#ifdef VE
+				!! last_string.make (0)
+#else
+				!! last_string.make (256)
+#endif
+			else
+#ifdef ISE
+				last_string.clear_all
+#endif
+#ifdef SE
+				last_string.clear
+#endif
+#ifdef HACT
+				last_string.set_count (0)
+#endif
+#ifdef VE
+				last_string.wipe_out
+#endif
+			end
+			a_target := last_string
+			from until done loop
+				read_character
+				if end_of_file then
+					if has_carriage then
+						a_target.append_character ('%R')
+					end
+					done := True
+				else
+					c := last_character
+					inspect c
+					when '%R' then
+						if has_carriage then
+							a_target.append_character ('%R')
+						else
+							has_carriage := True
+						end
+					when '%N' then
+						if has_carriage then
+							done := True
+						else
+							a_target.append_character (c)
+						end
+					else
+						if has_carriage then
+							a_target.append_character ('%R')
+							has_carriage := False
+						end
+						last_string.append_character (c)
+					end
+				end
+			end
+		end
+
+	read_new_line is
+			-- Read a line separator from input file.
+			-- Make the characters making up the recognized
+			-- line separator available in `last_string',
+			-- or make `last_string' empty and leave the
+			-- input file unchanged if no line separator
+			-- was found.
+		do
+			if last_string = Void then
+#ifdef VE
+				!! last_string.make (0)
+#else
+				!! last_string.make (256)
+#endif
+			else
+#ifdef ISE
+				last_string.clear_all
+#endif
+#ifdef SE
+				last_string.clear
+#endif
+#ifdef HACT
+				last_string.set_count (0)
+#endif
+#ifdef VE
+				last_string.wipe_out
+#endif
+			end
+			read_character
+			if not end_of_file then
+				if last_character = '%R' then
+					read_character
+					if not end_of_file then
+						if last_character = '%N' then
+							last_string.append_string (eol)
+						else
+								-- Put characters back to input file.
+#ifdef ISE || HACT
+							back
+							back
+#endif
+#ifdef SE
+							has_carriage_return := True
+							unread_character
+#endif
+#ifdef VE
+							has_carriage_return := True
+							has_buffered_character := True
+#endif
+						end
+					else
+							-- Put character back to input file.
+#ifdef ISE || HACT
+						back
+#endif
+#ifdef SE
+						unread_character
+#endif
+#ifdef VE
+						has_buffered_character := True
+#endif
+					end
+				else
+						-- Put character back to input file.
+#ifdef ISE || HACT
+					back
+#endif
+#ifdef SE
+					unread_character
+#endif
+#ifdef VE
+					has_buffered_character := True
+#endif
+				end
+			end
+		end
+
+#ifdef VE
+feature -- Status report
+
+	end_of_file: BOOLEAN is
+			-- Has the end of file been reached?
+		do
+			if not has_buffered_character then
+				Result := precursor
+			end
+		end
+
+#endif
+feature -- Access
+
+	eol: STRING is "%R%N"
+			-- Line separator
+
+#ifdef VE || SE
+feature {NONE} -- Implementation
+
+	has_carriage_return: BOOLEAN
+			-- Has character '%R' been buffered
+			-- by last call to `read_new_line'?
+
+#ifdef VE
+	ve_read_stream (nb_char: INTEGER) is
+			-- Read a string of a most 'nb_char' bound characters or until end of file.
+			-- Make result available in 'last_string'.
+		local
+			i, l: INTEGER
+			amount: INTEGER
+			buffer: POINTER
+			gc_off: BOOLEAN
+		do
+			if last_string = Void then
+				!!last_string.make (nb_char)
+			else
+				last_string.remake (nb_char)
+			end 
+			amount := nb_char
+			collection_off
+			gc_off := True
+			buffer := last_string.to_c
+			if has_carriage_return then
+				buffer := buffer + 1
+				amount := amount - 1
+				last_string.put ('%R', 1)
+				has_carriage_return := False
+				i := 2
+			else
+				i := 1
+			end
+			if amount > 0 then
+				if has_buffered_character then
+					buffer := buffer + 1
+					amount := amount - 1
+					last_string.put (buffered_character, i)
+					has_buffered_character := False
+				end
+			end
+			if amount > 0 then
+				l := read_buffer (buffer, amount)
+				if l < amount then
+					if l > 0 then
+						last_string.resize (l + nb_char - amount)
+					else
+						last_string := Void
+					end
+				end
+			end
+			collection_on
+		rescue
+			if gc_off then
+				gc_off := False
+				collection_on
+			end
+		end
+
+#endif
+#endif
+end -- class KL_WINDOWS_INPUT_FILE
