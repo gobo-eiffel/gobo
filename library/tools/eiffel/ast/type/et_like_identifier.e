@@ -6,7 +6,7 @@ indexing
 
 	library:    "Gobo Eiffel Tools Library"
 	author:     "Eric Bezault <ericb@gobosoft.com>"
-	copyright:  "Copyright (c) 2001, Eric Bezault and others"
+	copyright:  "Copyright (c) 2001-2002, Eric Bezault and others"
 	license:    "Eiffel Forum Freeware License v1 (see forum.txt)"
 	date:       "$Date$"
 	revision:   "$Revision$"
@@ -26,27 +26,40 @@ creation
 
 feature {NONE} -- Initialization
 
-	make (a_name: like name; p: like position) is
+	make (a_like: like like_keyword; a_name: like name) is
 			-- Create a new 'like Identifier' type.
 		require
+			a_like_not_void: a_like /= Void
 			a_name_not_void: a_name /= Void
-			p_not_void: p /= Void
 		do
+			like_keyword := a_like
 			name := a_name
-			position := p
 		ensure
+			like_keyword_set: like_keyword = a_like
 			name_set: name = a_name
-			position_set: position = p
 		end
 
 feature -- Access
+
+	like_keyword: ET_TOKEN
+			-- 'like' keyword
 
 	name: ET_IDENTIFIER
 			-- Name of the feature or argument
 			-- associated with current type
 
-	position: ET_POSITION
-			-- Position of current type in source code
+	position: ET_POSITION is
+			-- Position of first character of
+			-- current node in source code
+		do
+			Result := like_keyword.position
+		end
+
+	break: ET_BREAK is
+			-- Break which appears just after current node
+		do
+			Result := name.break
+		end
 
 feature -- Status report
 
@@ -100,11 +113,11 @@ feature -- Type processing
 			features.search (name)
 			if features.found then
 				other_feature := features.found_item
-				!ET_LIKE_FEATURE! Result.make (name, other_feature.first_seed, position)
+				!ET_LIKE_FEATURE! Result.make (like_keyword, name, other_feature.first_seed)
 			elseif args /= Void then
 				an_index := args.index_of (name)
 				if an_index /= 0 then
-					!ET_LIKE_ARGUMENT! Result.make (name, an_index, position)
+					!ET_LIKE_ARGUMENT! Result.make (like_keyword, name, an_index)
 				end
 			end
 			if Result = Void then
@@ -159,6 +172,7 @@ feature {NONE} -- Constants
 
 invariant
 
+	like_keyword_not_void: like_keyword /= Void
 	name_not_void: name /= Void
 
 end -- class ET_LIKE_IDENTIFIER

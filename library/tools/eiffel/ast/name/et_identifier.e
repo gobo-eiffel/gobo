@@ -25,6 +25,16 @@ inherit
 			is_identifier, is_equal
 		end
 
+	ET_LOCAL_NAME
+		undefine
+			is_equal
+		end
+
+	ET_TAG
+		undefine
+			is_equal
+		end
+
 	ET_WRITABLE
 		undefine
 			is_equal
@@ -52,6 +62,12 @@ feature -- Access
 			-- Hash code value
 		do
 			Result := STRING_.case_insensitive_hash_code (name)
+		end
+
+	identifier_item: ET_IDENTIFIER is
+			-- Identifier
+		do
+			Result := Current
 		end
 
 feature -- Status report

@@ -6,7 +6,7 @@ indexing
 
 	library:    "Gobo Eiffel Tools Library"
 	author:     "Eric Bezault <ericb@gobosoft.com>"
-	copyright:  "Copyright (c) 2001, Eric Bezault and others"
+	copyright:  "Copyright (c) 2001-2002, Eric Bezault and others"
 	license:    "Eiffel Forum Freeware License v1 (see forum.txt)"
 	date:       "$Date$"
 	revision:   "$Revision$"
@@ -23,23 +23,26 @@ creation
 
 feature {NONE} -- Initialization
 
-	make (a_name: like name; a_feature_id: INTEGER; p: like position) is
+	make (a_like: like like_keyword; a_name: like name; a_feature_id: INTEGER) is
 			-- Create a new 'like feature' type.
 		require
+			a_like_not_void: a_like /= Void
 			a_name_not_void: a_name /= Void
 			a_feature_id_positive: a_feature_id > 0
-			p_not_void: p /= Void
 		do
+			like_keyword := a_like
 			name := a_name
 			feature_id := a_feature_id
-			position := p
 		ensure
+			like_keyword_set: like_keyword = a_like
 			name_set: name = a_name
 			feature_id_set: feature_id = a_feature_id
-			position_set: position = p
 		end
 
 feature -- Access
+
+	like_keyword: ET_TOKEN
+			-- 'like' keyword
 
 	name: ET_IDENTIFIER
 			-- Name of the feature associated
@@ -49,8 +52,18 @@ feature -- Access
 			-- Feature ID of one of the seeds of the
 			-- feature associated with current type
 
-	position: ET_POSITION
-			-- Position of current type in source code
+	position: ET_POSITION is
+			-- Position of first character of
+			-- current node in source code
+		do
+			Result := like_keyword.position
+		end
+
+	break: ET_BREAK is
+			-- Break which appears just after current node
+		do
+			Result := name.break
+		end
 
 feature -- Status report
 
@@ -128,7 +141,7 @@ feature -- Duplication
 	deep_cloned_type: like Current is
 			-- Recursively cloned type
 		do
-			!! Result.make (name, feature_id, position)
+			!! Result.make (like_keyword, name, feature_id)
 		end
 
 feature -- Output
@@ -148,6 +161,7 @@ feature {NONE} -- Constants
 
 invariant
 
+	like_keyword_not_void: like_keyword /= Void
 	name_not_void: name /= Void
 	feature_id_positive: feature_id > 0
 

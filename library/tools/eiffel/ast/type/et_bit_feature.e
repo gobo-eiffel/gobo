@@ -6,7 +6,7 @@ indexing
 
 	library:    "Gobo Eiffel Tools Library"
 	author:     "Eric Bezault <ericb@gobosoft.com>"
-	copyright:  "Copyright (c) 2001, Eric Bezault and others"
+	copyright:  "Copyright (c) 2001-2002, Eric Bezault and others"
 	license:    "Eiffel Forum Freeware License v1 (see forum.txt)"
 	date:       "$Date$"
 	revision:   "$Revision$"
@@ -22,7 +22,8 @@ inherit
 			check_parent_validity,
 			check_constraint_validity,
 			deep_cloned_type,
-			append_to_string
+			append_to_string,
+			break
 		end
 
 creation
@@ -31,25 +32,25 @@ creation
 
 feature {NONE} -- Initialization
 
-	make (a_constant: like constant; a_name: like name;
-		a_feature_id: INTEGER; p: like position) is
+	make (a_bit: like bit_keyword; a_constant: like constant;
+		a_name: like name; a_feature_id: INTEGER) is
 			-- Create a new 'BIT feature' type.
 		require
+			a_bit_not_void: a_bit /= Void
 			a_constant_not_void: a_constant /= Void
 			a_name_not_void: a_name /= Void
 			a_feature_id_positive: a_feature_id > 0
-			p_not_void: p /= Void
 		do
+			bit_keyword := a_bit
 			constant := a_constant
 			name := a_name
 			feature_id := a_feature_id
-			position := p
 			size := No_size
 		ensure
+			bit_keyword_set: bit_keyword = a_bit
 			constant_set: constant = a_constant
 			name_set: name = a_name
 			feature_id_set: feature_id = a_feature_id
-			position_set: position = p
 		end
 
 feature -- Access
@@ -62,6 +63,12 @@ feature -- Access
 	feature_id: INTEGER
 			-- Feature ID of one of the seeds of the
 			-- feature associated with current type
+
+	break: ET_BREAK is
+			-- Break which appears just after current node
+		do
+			Result := name.break
+		end
 
 feature -- Validity
 

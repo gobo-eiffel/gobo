@@ -56,9 +56,20 @@ feature -- Access
 			-- 'expanded', 'reference' or 'separate' keyword
 
 	position: ET_POSITION is
-			-- Position of current type in source code
+			-- Position of first character of
+			-- current node in source code
 		do
-			Result := class_name.position
+			if type_mark /= Void then
+				Result := type_mark.position
+			else
+				Result := class_name.position
+			end
+		end
+
+	break: ET_BREAK is
+			-- Break which appears just after current node
+		do
+			Result := class_name.break
 		end
 
 feature -- Status report

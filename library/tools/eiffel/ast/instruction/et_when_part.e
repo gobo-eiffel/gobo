@@ -28,7 +28,6 @@ feature {NONE} -- Initialization
 			-- Create a new when part.
 		require
 			a_when_not_void: a_when /= Void
-			no_void_choice: a_choices /= Void implies not a_choices.has (Void)
 			a_then_compound_not_void: a_then_compound /= Void
 		do
 			when_keyword := a_when
@@ -45,7 +44,7 @@ feature -- Access
 	when_keyword: ET_TOKEN
 			-- 'when' keyword
 
-	choices: DS_ARRAYED_LIST [ET_CHOICE_ITEM]
+	choices: ET_CHOICE_LIST
 			-- Choices
 
 	then_compound: ET_COMPOUND
@@ -67,7 +66,6 @@ feature -- Access
 invariant
 
 	when_keyword_not_void: when_keyword /= Void
-	no_void_choice: choices /= Void implies not choices.has (Void)
 	then_compound_not_void: then_compound /= Void
 
 end -- class ET_WHEN_PART

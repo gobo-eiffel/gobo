@@ -15,21 +15,14 @@ deferred class ET_ASSERTION
 
 inherit
 
-	ET_AST_NODE
+	ET_ASSERTION_ITEM
 
 feature -- Access
 
-	semicolon: ET_SYMBOL
-			-- Semicolon separator
-
-feature -- Setting
-
-	set_semicolon (a_semicolon: like semicolon) is
-			-- Set `semicolon' to `a_semicolon'.
+	assertion_item: ET_ASSERTION is
+			-- Assertion in list of assertions
 		do
-			semicolon := a_semicolon
-		ensure
-			semicolon_set: semicolon = a_semicolon
+			Result := Current
 		end
 
 end -- class ET_ASSERTION

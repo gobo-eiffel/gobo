@@ -6,7 +6,7 @@ indexing
 
 	library:    "Gobo Eiffel Tools Library"
 	author:     "Eric Bezault <ericb@gobosoft.com>"
-	copyright:  "Copyright (c) 2001, Eric Bezault and others"
+	copyright:  "Copyright (c) 2001-2002, Eric Bezault and others"
 	license:    "Eiffel Forum Freeware License v1 (see forum.txt)"
 	date:       "$Date$"
 	revision:   "$Revision$"
@@ -26,21 +26,24 @@ creation
 
 feature {NONE} -- Initialization
 
-	make (a_constant: like constant; p: like position) is
+	make (a_bit: like bit_keyword; a_constant: like constant) is
 			-- Create a new 'BIT N' type.
 		require
+			a_bit_not_void: a_bit /= Void
 			a_constant_not_void: a_constant /= Void
-			p_not_void: p /= Void
 		do
+			bit_keyword := a_bit
 			constant := a_constant
-			position := p
 			size := No_size
 		ensure
+			bit_keyword_set: bit_keyword = a_bit
 			constant_set: constant = a_constant
-			position_set: position = p
 		end
 
 feature -- Access
+
+	bit_keyword: ET_TOKEN
+			-- 'BIT' keyword
 
 	constant: ET_INTEGER_CONSTANT
 			-- Integer constant
@@ -48,8 +51,18 @@ feature -- Access
 	size: INTEGER
 			-- Size of current bit type
 
-	position: ET_POSITION
-			-- Position of current type in source code
+	position: ET_POSITION is
+			-- Position of first character of
+			-- current node in source code
+		do
+			Result := bit_keyword.position
+		end
+
+	break: ET_BREAK is
+			-- Break which appears just after current node
+		do
+			Result := constant.break
+		end
 
 feature {ET_BIT_TYPE} -- Setting
 
@@ -266,6 +279,7 @@ feature {NONE} -- Constants
 
 invariant
 
+	bit_keyword_not_void: bit_keyword /= Void
 	constant_not_void: constant /= Void
 
 end -- class ET_BIT_TYPE

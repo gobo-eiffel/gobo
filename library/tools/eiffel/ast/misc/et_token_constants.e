@@ -41,6 +41,22 @@ feature -- Keywords
 			keyword_not_void: Result /= Void
 		end
 
+	debug_keyword: ET_TOKEN is
+			-- 'debug' keyword
+		once
+			!! Result.make (debug_keyword_name)
+		ensure
+			keyword_not_void: Result /= Void
+		end
+
+	end_keyword: ET_TOKEN is
+			-- 'end' keyword
+		once
+			!! Result.make (end_keyword_name)
+		ensure
+			keyword_not_void: Result /= Void
+		end
+
 	export_keyword: ET_TOKEN is
 			-- 'export' keyword
 		once

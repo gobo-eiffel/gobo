@@ -19,7 +19,7 @@ inherit
 
 creation
 
-	make
+	make, make_with_capacity
 
 feature {NONE} -- Initialization
 
@@ -29,16 +29,34 @@ feature {NONE} -- Initialization
 			an_ensure_not_void: an_ensure /= Void
 		do
 			ensure_keyword := an_ensure
-			!! assertions.make (10)
+			make_ast_list
 		ensure
 			ensure_keyword_set: ensure_keyword = an_ensure
+			is_empty: is_empty
+			capacity_set: capacity = 0
+		end
+
+	make_with_capacity (an_ensure: like ensure_keyword; nb: INTEGER) is
+			-- Create a new postcondition clause with capacity `nb'.
+		require
+			an_ensure_not_void: an_ensure /= Void
+			nb_positive: nb >= 0
+		do
+			ensure_keyword := an_ensure
+			make_ast_list_with_capacity (nb)
+		ensure
+			ensure_keyword_set: ensure_keyword = an_ensure
+			is_empty: is_empty
+			capacity_set: capacity = nb
 		end
 
 feature -- Access
 
 	ensure_keyword: ET_TOKEN
+			-- 'ensure' keyword
+
 	then_keyword: ET_TOKEN
-			-- 'ensure' and 'then' keywords
+			-- 'then' keyword
 
 	position: ET_POSITION is
 			-- Position of first character of
@@ -50,8 +68,8 @@ feature -- Access
 	break: ET_BREAK is
 			-- Break which appears just after current node
 		do
-			if not assertions.is_empty then
-				Result := assertions.last.break
+			if not is_empty then
+				Result := item (count).break
 			elseif then_keyword /= Void then
 				Result := then_keyword.break
 			else

@@ -19,7 +19,7 @@ inherit
 
 creation
 
-	make
+	make, make_with_capacity
 
 feature {NONE} -- Initialization
 
@@ -29,9 +29,25 @@ feature {NONE} -- Initialization
 			an_invariant_not_void: an_invariant /= Void
 		do
 			invariant_keyword := an_invariant
-			!! assertions.make (10)
+			make_ast_list
 		ensure
 			invariant_keyword_set: invariant_keyword = an_invariant
+			is_empty: is_empty
+			capacity_set: capacity = 0
+		end
+
+	make_with_capacity (an_invariant: like invariant_keyword; nb: INTEGER) is
+			-- Create a new invariant clause with capacity `nb'.
+		require
+			an_invariant_not_void: an_invariant /= Void
+			nb_positive: nb >= 0
+		do
+			invariant_keyword := an_invariant
+			make_ast_list_with_capacity (nb)
+		ensure
+			invariant_keyword_set: invariant_keyword = an_invariant
+			is_empty: is_empty
+			capacity_set: capacity = nb
 		end
 
 feature -- Access
@@ -49,8 +65,8 @@ feature -- Access
 	break: ET_BREAK is
 			-- Break which appears just after current node
 		do
-			if not assertions.is_empty then
-				Result := assertions.last.break
+			if not is_empty then
+				Result := item (count).break
 			else
 				Result := invariant_keyword.break
 			end

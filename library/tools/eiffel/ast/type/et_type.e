@@ -6,7 +6,7 @@ indexing
 
 	library:    "Gobo Eiffel Tools Library"
 	author:     "Eric Bezault <ericb@gobosoft.com>"
-	copyright:  "Copyright (c) 1999-2001, Eric Bezault and others"
+	copyright:  "Copyright (c) 1999-2002, Eric Bezault and others"
 	license:    "Eiffel Forum Freeware License v1 (see forum.txt)"
 	date:       "$Date$"
 	revision:   "$Revision$"
@@ -15,15 +15,19 @@ deferred class ET_TYPE
 
 inherit
 
+	ET_TYPE_ITEM
+		redefine
+			base_type
+		end
+
 	KL_IMPORTED_STRING_ROUTINES
 
 feature -- Access
 
-	position: ET_POSITION is
-			-- Position of current type in source code
-		deferred
-		ensure
-			position_not_void: position /= Void
+	type_item: ET_TYPE is
+			-- Type in comma-separated list
+		do
+			Result := Current
 		end
 
 feature -- Status report
@@ -101,12 +105,8 @@ feature -- Type processing
 			-- corresponding actual parameter is different from
 			-- the formal parameter. (Warning: this is a side-effect
 			-- function.)
-		require
-			actual_parameters_not_void: actual_parameters /= Void
 		do
 			Result := Current
-		ensure
-			resolved_type_not_void: Result /= Void
 		end
 
 	resolved_identifier_types (a_feature: ET_FEATURE; args: ET_FORMAL_ARGUMENTS; a_class: ET_CLASS): ET_TYPE is
@@ -116,14 +116,8 @@ feature -- Type processing
 			-- Also resolve 'BIT identifier' types. Set
 			-- `a_class.has_flatten_error' to true if an error occurs.
 			-- (Warning: this is a side-effect function.)
-		require
-			a_feature_not_void: a_feature /= Void
-			a_class_not_void: a_class /= Void
-			immediate_or_redeclared: a_feature.implementation_class = a_class
 		do
 			Result := Current
-		ensure
-			resolved_type_not_void: Result /= Void
 		end
 
 	resolved_named_types (a_class: ET_CLASS; ast_factory: ET_AST_FACTORY): ET_TYPE is
@@ -132,13 +126,8 @@ feature -- Type processing
 			-- parameter names. `a_class' is the class where
 			-- current type appears in the source code.
 			-- (Warning: this is a side-effect function.)
-		require
-			a_class_not_void: a_class /= Void
-			ast_factory_not_void: ast_factory /= Void
 		do
 			Result := Current
-		ensure
-			resolved_type_not_void: Result /= Void
 		end
 
 feature -- Conversion
@@ -147,24 +136,8 @@ feature -- Conversion
 			-- Type, in the context of `a_feature' in `a_type',
 			-- only made up of class names and generic formal parameters
 			-- when `a_type' in a generic type not fully derived
-			-- (Definition of base type in ETL2 p. 198)
-		require
-			a_feature_not_void: a_feature /= Void
-			a_type_not_void: a_type /= Void
-			flattened: a_type.base_class.is_flattened
-			no_flatten_error: not a_type.base_class.has_flatten_error
+			-- (Definition of base type in ETL2 p.198)
 		deferred
-		ensure
-			base_type_not_void: Result /= Void
-		end
-
-feature -- Duplication
-
-	deep_cloned_type: like Current is
-			-- Recursively cloned type
-		deferred
-		ensure
-			type_not_void: Result /= Void
 		end
 
 feature -- Output

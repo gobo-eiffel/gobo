@@ -23,26 +23,20 @@ creation
 
 feature {NONE} -- Initialization
 
-	make (a_tag: like tag; a_colon: like colon) is
+	make (a_tag: like tag) is
 			-- Create a new assertion.
 		require
 			a_tag_not_void: a_tag /= Void
-			a_colon_not_void: a_colon /= Void
 		do
 			tag := a_tag
-			colon := a_colon
 		ensure
 			tag_set: tag = a_tag
-			colon_set: colon = a_colon
 		end
 
 feature -- Access
 
-	tag: ET_IDENTIFIER
+	tag: ET_TAG
 			-- Tag
-
-	colon: ET_SYMBOL
-			-- ':' symbol
 
 	expression: ET_EXPRESSION
 			-- Expression
@@ -60,7 +54,7 @@ feature -- Access
 			if expression /= Void then
 				Result := expression.break
 			else
-				Result := colon.break
+				Result := tag.break
 			end
 		end
 
@@ -77,6 +71,5 @@ feature -- Setting
 invariant
 
 	tag_not_void: tag /= Void
-	colon_not_void: colon /= Void
 
 end -- class ET_TAGGED_ASSERTION

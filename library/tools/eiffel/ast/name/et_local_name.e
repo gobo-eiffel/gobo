@@ -2,7 +2,7 @@ indexing
 
 	description:
 
-		"Eiffel manifest strings which appear in a comma-separated list of manifest strings"
+		"Eiffel local names"
 
 	library:    "Gobo Eiffel Tools Library"
 	author:     "Eric Bezault <ericb@gobosoft.com>"
@@ -11,7 +11,7 @@ indexing
 	date:       "$Date$"
 	revision:   "$Revision$"
 
-deferred class ET_MANIFEST_STRING_ITEM
+deferred class ET_LOCAL_NAME
 
 inherit
 
@@ -19,11 +19,11 @@ inherit
 
 feature -- Access
 
-	manifest_string_item: ET_MANIFEST_STRING is
-			-- Manifest string in comma-separated list
+	identifier_item: ET_IDENTIFIER is
+			-- Identifier
 		deferred
 		ensure
-			manifest_string_item_not_void: Result /= Void
+			identifier_item_not_void: Result /= Void
 		end
 
-end -- class ET_MANIFEST_STRING_ITEM
+end -- class ET_LOCAL_NAME

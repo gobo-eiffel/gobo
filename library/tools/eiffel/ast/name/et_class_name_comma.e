@@ -27,10 +27,13 @@ feature {NONE} -- Initialization
 			-- Create a new class_name-comma.
 		require
 			a_name_not_void: a_name /= Void
+			a_comma_not_void: a_comma /= Void
 		do
 			class_name_item := a_name
+			comma := a_comma
 		ensure
 			class_name_item_set: class_name_item = a_name
+			comma_set: comma = a_comma
 		end
 
 feature -- Access

@@ -6,7 +6,7 @@ indexing
 
 	library:    "Gobo Eiffel Tools Library"
 	author:     "Eric Bezault <ericb@gobosoft.com>"
-	copyright:  "Copyright (c) 2001, Eric Bezault and others"
+	copyright:  "Copyright (c) 2001-2002, Eric Bezault and others"
 	license:    "Eiffel Forum Freeware License v1 (see forum.txt)"
 	date:       "$Date$"
 	revision:   "$Revision$"
@@ -26,28 +26,41 @@ creation
 
 feature {NONE} -- Initialization
 
-	make (a_name: like name; p: like position) is
+	make (a_bit: like bit_keyword; a_name: like name) is
 			-- Create a new 'BIT identifier' type.
 		require
+			a_bit_not_void: a_bit /= Void
 			a_name_not_void: a_name /= Void
-			p_not_void: p /= Void
 		do
+			bit_keyword := a_bit
 			name := a_name
-			position := p
 		ensure
+			bit_keyword_set: bit_keyword = a_bit
 			name_set: name = a_name
-			position_set: position = p
 		end
 
 feature -- Access
+
+	bit_keyword: ET_TOKEN
+			-- 'BIT' keyword
 
 	name: ET_IDENTIFIER
 			-- Name of the feature associated with
 			-- current type and which is supposed
 			-- to be an integer constant attribute
 
-	position: ET_POSITION
-			-- Position of current type in source code
+	position: ET_POSITION is
+			-- Position of first character of
+			-- current node in source code
+		do
+			Result := bit_keyword.position
+		end
+
+	break: ET_BREAK is
+			-- Break which appears just after current node
+		do
+			Result := name.break
+		end
 
 feature -- Status report
 
@@ -107,7 +120,7 @@ feature -- Type processing
 					a_constant ?= a_constant_attribute.constant
 				end
 				if a_constant /= Void then
-					!ET_BIT_FEATURE! Result.make (a_constant, name, other_feature.first_seed, position)
+					!ET_BIT_FEATURE! Result.make (bit_keyword, a_constant, name, other_feature.first_seed)
 				else
 -- TODO: not an integer constant.
 					Result := Current
@@ -164,6 +177,7 @@ feature {NONE} -- Constants
 
 invariant
 
+	bit_keyword_not_void: bit_keyword /= Void
 	name_not_void: name /= Void
 
 end -- class ET_BIT_IDENTIFIER

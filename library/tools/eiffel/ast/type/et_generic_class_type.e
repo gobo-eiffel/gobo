@@ -6,7 +6,7 @@ indexing
 
 	library:    "Gobo Eiffel Tools Library"
 	author:     "Eric Bezault <ericb@gobosoft.com>"
-	copyright:  "Copyright (c) 1999-2001, Eric Bezault and others"
+	copyright:  "Copyright (c) 1999-2002, Eric Bezault and others"
 	license:    "Eiffel Forum Freeware License v1 (see forum.txt)"
 	date:       "$Date$"
 	revision:   "$Revision$"
@@ -19,7 +19,7 @@ inherit
 		rename
 			make as make_class_type
 		redefine
-			append_to_string,
+			append_to_string, break,
 			is_generic, add_to_system,
 			same_syntactical_type,
 			syntactically_conforms_to,
@@ -61,6 +61,12 @@ feature -- Access
 
 	generic_parameters: ET_ACTUAL_GENERIC_PARAMETERS
 			-- Generic parameters
+
+	break: ET_BREAK is
+			-- Break which appears just after current node
+		do
+			Result := generic_parameters.break
+		end
 
 feature -- Status report
 
@@ -281,38 +287,38 @@ feature -- Conversion
 			-- when `a_type' in a generic type not fully derived
 			-- (Definition of base type in ETL2 p.198)
 		local
-			parameters: like generic_parameters
+			a_parameters: like generic_parameters
 			a_parameter, an_actual: ET_TYPE_ITEM
-			a_parameter_type, an_actual_type: ET_TYPE
+			a_left_bracket, a_right_bracket: ET_SYMBOL
 			duplication_needed: BOOLEAN
-			i, nb: INTEGER
+			i, j, nb: INTEGER
 		do
 			nb := generic_parameters.count
 			from i := 1 until i > nb loop
 				a_parameter := generic_parameters.item (i)
-				a_parameter_type := a_parameter.type
 					-- `a_base_type' has been flattened and no
 					-- error occurred, so there is no loop in
 					-- anchored types.
-				an_actual_type := a_parameter_type.base_type (a_feature, a_type)
-				if a_parameter_type /= an_actual_type then
-					duplication_needed := True
-					!! an_actual.make (an_actual_type)
-					an_actual.set_comma (a_parameter.comma)
-				else
-					an_actual := a_parameter
+				an_actual := a_parameter.base_type (a_feature, a_type)
+				if a_parameter /= an_actual then
+					if not duplication_needed then
+						a_left_bracket := generic_parameters.left_bracket
+						a_right_bracket := generic_parameters.right_bracket
+						!! a_parameters.make_with_capacity (a_left_bracket, a_right_bracket, nb)
+						from j := i - 1 until j < 1 loop
+							a_parameters.put_first (generic_parameters.item (j))
+							j := j - 1
+						end
+						duplication_needed := True
+					end
 				end
 				if duplication_needed then
-					if i = 1 then
-						!! parameters.make_with_capacity (an_actual, nb)
-					else
-						parameters.put (an_actual)
-					end
+					a_parameters.put_first (an_actual)
 				end
 				i := i + 1
 			end
 			if duplication_needed then
-				!ET_GENERIC_CLASS_TYPE! Result.make (type_mark, class_name, parameters, base_class)
+				!ET_GENERIC_CLASS_TYPE! Result.make (type_mark, class_name, a_parameters, base_class)
 			else
 				Result := Current
 			end
@@ -323,10 +329,14 @@ feature -- Duplication
 	deep_cloned_type: like Current is
 			-- Recursively cloned type
 		local
-			generics: like generic_parameters
+			a_generics: like generic_parameters
 		do
-			generics := generic_parameters.deep_cloned_actuals
-			!! Result.make (type_mark, class_name, generics, base_class)
+			a_generics := generic_parameters.deep_cloned_actuals
+			if a_generics /= generic_parameters then
+				!! Result.make (type_mark, class_name, a_generics, base_class)
+			else
+				Result := Current
+			end
 		end
 
 feature -- Output
@@ -360,7 +370,6 @@ feature -- Output
 
 invariant
 
-	is_generic: is_generic
 	generic_parameters_not_void: generic_parameters /= Void
 
 end -- class ET_GENERIC_CLASS_TYPE

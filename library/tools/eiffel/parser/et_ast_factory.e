@@ -48,13 +48,25 @@ feature -- AST factory
 			actual_arguments_not_void: Result /= Void
 		end
 
-	new_actual_generics (a_type: ET_TYPE_ITEM): ET_ACTUAL_GENERIC_PARAMETERS is
-			-- New actual generic parameter list with initially
-			-- one actual generic parameter `a_type'
+	new_actual_generics (a_left, a_right: ET_SYMBOL): ET_ACTUAL_GENERIC_PARAMETERS is
+			-- New actual generic parameter list
 		require
-			a_type_not_void: a_type /= Void
+			a_left_not_void: a_left /= Void
+			a_right_not_void: a_right /= Void
 		do
-			!! Result.make (a_type)
+			!! Result.make (a_left, a_right)
+		ensure
+			actual_generics_not_void: Result /= Void
+		end
+
+	new_actual_generics_with_capacity (a_left, a_right: ET_SYMBOL; nb: INTEGER): ET_ACTUAL_GENERIC_PARAMETERS is
+			-- New actual generic parameter list with given capacity
+		require
+			a_left_not_void: a_left /= Void
+			a_right_not_void: a_right /= Void
+			nb_positive: nb >= 0
+		do
+			!! Result.make_with_capacity (a_left, a_right, nb)
 		ensure
 			actual_generics_not_void: Result /= Void
 		end
@@ -68,6 +80,17 @@ feature -- AST factory
 			!! Result.make (a_clients, an_all)
 		ensure
 			all_export_not_void: Result /= Void
+		end
+
+	new_assertion_semicolon (an_assertion: ET_ASSERTION; a_semicolon: ET_SYMBOL): ET_ASSERTION_SEMICOLON is
+			-- New assertion followed by a semicolon
+		require
+			an_assertion_not_void: an_assertion /= Void
+			a_semicolon_not_void: a_semicolon /= Void
+		do
+			!! Result.make (an_assertion, a_semicolon)
+		ensure
+			assertion_semicolon_not_void: Result /= Void
 		end
 
 	new_assignment (a_target: ET_WRITABLE; an_assign: ET_SYMBOL; a_source: ET_EXPRESSION): ET_ASSIGNMENT is
@@ -134,24 +157,24 @@ feature -- AST factory
 			bit_constant_not_void: Result /= Void
 		end
 
-	new_bit_identifier (an_id: ET_IDENTIFIER; p: ET_POSITION): ET_BIT_IDENTIFIER is
+	new_bit_identifier (a_bit: ET_TOKEN; an_id: ET_IDENTIFIER): ET_BIT_IDENTIFIER is
 			-- New 'BIT Identifier' type
 		require
+			a_bit_not_void: a_bit /= Void
 			an_id_not_void: an_id /= Void
-			p_not_void: p /= Void
 		do
-			!! Result.make (an_id, p)
+			!! Result.make (a_bit, an_id)
 		ensure
 			type_not_void: Result /= Void
 		end
 
-	new_bit_type (an_int: ET_INTEGER_CONSTANT; p: ET_POSITION): ET_BIT_TYPE is
+	new_bit_type (a_bit: ET_TOKEN; an_int: ET_INTEGER_CONSTANT): ET_BIT_TYPE is
 			-- New 'BIT N' type
 		require
+			a_bit_not_void: a_bit /= Void
 			an_int_not_void: an_int /= Void
-			p_not_void: p /= Void
 		do
-			!! Result.make (an_int, p)
+			!! Result.make (a_bit, an_int)
 		ensure
 			type_not_void: Result /= Void
 		end
@@ -211,35 +234,59 @@ feature -- AST factory
 			call_instruction_not_void: Result /= Void
 		end
 
-	new_check_assertions (a_check: ET_TOKEN): ET_CHECK_ASSERTIONS is
-			-- New check assertions
-		require
-			a_check_not_void: a_check /= Void
-		do
-			!! Result.make (a_check)
-		ensure
-			check_assertions_not_void: Result /= Void
-		end
-
-	new_check_instruction (a_check_assertions: ET_CHECK_ASSERTIONS; an_end: ET_TOKEN): ET_CHECK_INSTRUCTION is
+	new_check_instruction (a_check: ET_TOKEN; an_end: ET_TOKEN): ET_CHECK_INSTRUCTION is
 			-- New check instruction
 		require
-			a_check_assertions_not_void: a_check_assertions /= Void
+			a_check_not_void: a_check /= Void
 			an_end_not_void: an_end /= Void
 		do
-			!! Result.make (a_check_assertions, an_end)
+			!! Result.make (a_check, an_end)
 		ensure
 			check_instruction_not_void: Result /= Void
 		end
 
-	new_choice_item (a_choice: ET_CHOICE): ET_CHOICE_ITEM is
-			-- New choice item
+	new_check_instruction_with_capacity (a_check: ET_TOKEN; an_end: ET_TOKEN; nb: INTEGER): ET_CHECK_INSTRUCTION is
+			-- New check instruction with given capacity
+		require
+			a_check_not_void: a_check /= Void
+			an_end_not_void: an_end /= Void
+			nb_positive: nb >= 0
+		do
+			!! Result.make_with_capacity (a_check, an_end, nb)
+		ensure
+			check_instruction_not_void: Result /= Void
+		end
+
+	new_choice_comma (a_choice: ET_CHOICE; a_comma: ET_SYMBOL): ET_CHOICE_COMMA is
+			-- New choice-comma
+		require
+			a_choice_not_void: a_choice /= Void
+			a_comma_not_void: a_comma /= Void
+		do
+			!! Result.make (a_choice, a_comma)
+		ensure
+			choice_comma_not_void: Result /= Void
+		end
+
+	new_choice_list (a_choice: ET_CHOICE_ITEM): ET_CHOICE_LIST is
+			-- New choice list
 		require
 			a_choice_not_void: a_choice /= Void
 		do
 			!! Result.make (a_choice)
 		ensure
-			choice_item_not_void: Result /= Void
+			choice_list_not_void: Result /= Void
+		end
+
+	new_choice_list_with_capacity (a_choice: ET_CHOICE_ITEM; nb: INTEGER): ET_CHOICE_LIST is
+			-- New choice list with given capacity
+		require
+			a_choice_not_void: a_choice /= Void
+			nb_positive: nb >= 1
+		do
+			!! Result.make_with_capacity (a_choice, nb)
+		ensure
+			choice_list_not_void: Result /= Void
 		end
 
 	new_choice_range (a_lower: ET_CHOICE_CONSTANT; a_dotdot: ET_SYMBOL;
@@ -320,7 +367,7 @@ feature -- AST factory
 		end
 
 	new_clients_with_capacity (a_left, a_right: ET_SYMBOL; nb: INTEGER): ET_CLIENTS is
-			-- New client clause
+			-- New client clause with given capacity
 		require
 			a_left_not_void: a_left /= Void
 			a_right_not_void: a_right /= Void
@@ -427,6 +474,17 @@ feature -- AST factory
 			creators_not_void: Result /= Void
 		end
 
+	new_creators_with_capacity (a_creator: ET_CREATOR; nb: INTEGER): ET_CREATORS is
+			-- New creation clauses with given capacity
+		require
+			a_creator_not_void: a_creator /= Void
+			nb_positive: nb >= 1
+		do
+			!! Result.make_with_capacity (a_creator, nb)
+		ensure
+			creators_not_void: Result /= Void
+		end
+
 	new_current (a_text: STRING; a_line, a_column: INTEGER): ET_CURRENT is
 			-- New current entity
 		require
@@ -451,6 +509,30 @@ feature -- AST factory
 			current_address_not_void: Result /= Void
 		end
 
+	new_debug_instruction (a_debug: ET_TOKEN; a_keys: ET_DEBUG_KEYS; an_end: ET_TOKEN): ET_DEBUG_INSTRUCTION is
+			-- New debug instruction
+		require
+			a_debug_not_void: a_debug /= Void
+			an_end_not_void: an_end /= Void
+		do
+			!! Result.make (a_debug, a_keys, an_end)
+		ensure
+			debug_instruction_not_void: Result /= Void
+		end
+
+	new_debug_instruction_with_capacity (a_debug: ET_TOKEN; a_keys: ET_DEBUG_KEYS;
+		an_end: ET_TOKEN; nb: INTEGER): ET_DEBUG_INSTRUCTION is
+			-- New debug instruction with given capacity
+		require
+			a_debug_not_void: a_debug /= Void
+			an_end_not_void: an_end /= Void
+			nb_positive: nb >= 0
+		do
+			!! Result.make_with_capacity (a_debug, a_keys, an_end, nb)
+		ensure
+			debug_instruction_not_void: Result /= Void
+		end
+
 	new_debug_keys (l: ET_SYMBOL; r: ET_SYMBOL): ET_DEBUG_KEYS is
 			-- New debug keys
 		require
@@ -462,16 +544,16 @@ feature -- AST factory
 			debug_keys_not_void: Result /= Void
 		end
 
-	new_debug_instruction (a_keys: ET_DEBUG_KEYS; a_debug_compound: ET_COMPOUND;
-		an_end: ET_TOKEN): ET_DEBUG_INSTRUCTION is
-			-- New debug instruction
+	new_debug_keys_with_capacity (l: ET_SYMBOL; r: ET_SYMBOL; nb: INTEGER): ET_DEBUG_KEYS is
+			-- New debug keys with given capacity
 		require
-			a_debug_compound_not_void: a_debug_compound /= Void
-			an_end_not_void: an_end /= Void
+			l_not_void: l /= Void
+			r_not_void: r /= Void
+			nb_positive: nb >= 0
 		do
-			!! Result.make (a_keys, a_debug_compound, an_end)
+			!! Result.make_with_capacity (l, r, nb)
 		ensure
-			debug_instruction_not_void: Result /= Void
+			debug_keys_not_void: Result /= Void
 		end
 
 	new_deferred_function (a_name: ET_FEATURE_NAME; args: ET_FORMAL_ARGUMENTS;
@@ -559,6 +641,27 @@ feature -- AST factory
 			elseif_part_not_void: Result /= Void
 		end
 
+	new_elseif_part_list (an_elseif_part: ET_ELSEIF_PART): ET_ELSEIF_PART_LIST is
+			-- New elseif part list
+		require
+			an_elseif_part_not_void: an_elseif_part /= Void
+		do
+			!! Result.make (an_elseif_part)
+		ensure
+			elseif_part_list_not_void: Result /= Void
+		end
+
+	new_elseif_part_list_with_capacity (an_elseif_part: ET_ELSEIF_PART; nb: INTEGER): ET_ELSEIF_PART_LIST is
+			-- New elseif part list with given capacity
+		require
+			an_elseif_part_not_void: an_elseif_part /= Void
+			nb_positive: nb >= 1
+		do
+			!! Result.make_with_capacity (an_elseif_part, nb)
+		ensure
+			elseif_part_list_not_void: Result /= Void
+		end
+
 	new_equality_expression (l: ET_EXPRESSION; an_op: ET_EQUALITY_SYMBOL; r: ET_EXPRESSION): ET_EQUALITY_EXPRESSION is
 			-- New equality expression
 		require
@@ -625,16 +728,6 @@ feature -- AST factory
 			!! Result.make (d, e)
 		ensure
 			expression_address_not_void: Result /= Void
-		end
-
-	new_expression_assertion (an_expression: ET_EXPRESSION): ET_EXPRESSION_ASSERTION is
-			-- New expression assertion
-		require
-			an_expression_not_void: an_expression /= Void
-		do
-			!! Result.make (an_expression)
-		ensure
-			assertion_not_void: Result /= Void
 		end
 
 	new_expression_comma (an_expression: ET_EXPRESSION; a_comma: ET_SYMBOL): ET_EXPRESSION_COMMA is
@@ -849,6 +942,28 @@ feature -- AST factory
 			!! Result.make_with_position (a_text, a_line, a_column)
 		ensure
 			identifier_not_void: Result /= Void
+		end
+
+	new_identifier_colon (a_name: ET_IDENTIFIER; a_colon: ET_SYMBOL): ET_IDENTIFIER_COLON is
+			-- New identifier-colon
+		require
+			a_name_not_void: a_name /= Void
+			a_colon_not_void: a_colon /= Void
+		do
+			!! Result.make (a_name, a_colon)
+		ensure
+			identifier_colon_not_void: Result /= Void
+		end
+
+	new_identifier_comma (a_name: ET_IDENTIFIER; a_comma: ET_SYMBOL): ET_IDENTIFIER_COMMA is
+			-- New identifier-comma
+		require
+			a_name_not_void: a_name /= Void
+			a_comma_not_void: a_comma /= Void
+		do
+			!! Result.make (a_name, a_comma)
+		ensure
+			identifier_comma_not_void: Result /= Void
 		end
 
 	new_if_instruction (an_if: ET_TOKEN; an_expression: ET_EXPRESSION;
@@ -1274,6 +1389,17 @@ feature -- AST factory
 			invariants_not_void: Result /= Void
 		end
 
+	new_invariants_with_capacity (an_invariant: ET_TOKEN; nb: INTEGER): ET_INVARIANTS is
+			-- New invariants with given capacity
+		require
+			an_invariant_not_void: an_invariant /= Void
+			nb_positive: nb >= 0
+		do
+			!! Result.make_with_capacity (an_invariant, nb)
+		ensure
+			invariants_not_void: Result /= Void
+		end
+
 	new_keyword_feature_name_list (a_keyword: ET_TOKEN): ET_KEYWORD_FEATURE_NAME_LIST is
 			-- New feature name list preceded by a keyword
 		require
@@ -1295,23 +1421,24 @@ feature -- AST factory
 			keyword_feature_name_list_not_void: Result /= Void
 		end
 
-	new_like_current (p: ET_POSITION): ET_LIKE_CURRENT is
+	new_like_current (a_like: ET_TOKEN; a_current: ET_TOKEN): ET_LIKE_CURRENT is
 			-- New 'like Current' type
 		require
-			p_not_void: p /= Void
+			a_like_not_void: a_like /= Void
+			a_current_not_void: a_current /= Void
 		do
-			!! Result.make (p)
+			!! Result.make (a_like, a_current)
 		ensure
 			type_not_void: Result /= Void
 		end
 
-	new_like_identifier (an_id: ET_IDENTIFIER; p: ET_POSITION): ET_LIKE_IDENTIFIER is
+	new_like_identifier (a_like: ET_TOKEN; a_name: ET_IDENTIFIER): ET_LIKE_IDENTIFIER is
 			-- New 'like Identifier' type
 		require
-			an_id_not_void: an_id /= Void
-			p_not_void: p /= Void
+			a_like_not_void: a_like /= Void
+			a_name_not_void: a_name /= Void
 		do
-			!! Result.make (an_id, p)
+			!! Result.make (a_like, a_name)
 		ensure
 			type_not_void: Result /= Void
 		end
@@ -1370,14 +1497,15 @@ feature -- AST factory
 			manifest_array_not_void: Result /= Void
 		end
 
-	new_manifest_string_item (a_string: ET_MANIFEST_STRING): ET_MANIFEST_STRING_ITEM is
-			-- New manifest string item
+	new_manifest_string_comma (a_string: ET_MANIFEST_STRING; a_comma: ET_SYMBOL): ET_MANIFEST_STRING_COMMA is
+			-- New manifest_string-comma
 		require
 			a_string_not_void: a_string /= Void
+			a_comma_not_void: a_comma /= Void
 		do
-			!! Result.make (a_string)
+			!! Result.make (a_string, a_comma)
 		ensure
-			manifest_string_item_not_void: Result /= Void
+			manifest_string_comma_not_void: Result /= Void
 		end
 
 	new_manifest_tuple (l: ET_SYMBOL; r: ET_SYMBOL): ET_MANIFEST_TUPLE is
@@ -1548,12 +1676,34 @@ feature -- AST factory
 			postconditions_not_void: Result /= Void
 		end
 
+	new_postconditions_with_capacity (an_ensure: ET_TOKEN; nb: INTEGER): ET_POSTCONDITIONS is
+			-- New postconditions with given capacity
+		require
+			an_ensure_not_void: an_ensure /= Void
+			nb_positive: nb >= 0
+		do
+			!! Result.make_with_capacity (an_ensure, nb)
+		ensure
+			postconditions_not_void: Result /= Void
+		end
+
 	new_preconditions (a_require: ET_TOKEN): ET_PRECONDITIONS is
 			-- New preconditions
 		require
 			a_require_not_void: a_require /= Void
 		do
 			!! Result.make (a_require)
+		ensure
+			preconditions_not_void: Result /= Void
+		end
+
+	new_preconditions_with_capacity (a_require: ET_TOKEN; nb: INTEGER): ET_PRECONDITIONS is
+			-- New preconditions with given capacity
+		require
+			a_require_not_void: a_require /= Void
+			nb_positive: nb >= 0
+		do
+			!! Result.make_with_capacity (a_require, nb)
 		ensure
 			preconditions_not_void: Result /= Void
 		end
@@ -1988,13 +2138,12 @@ feature -- AST factory
 			symbol_not_void: Result /= Void
 		end
 
-	new_tagged_assertion (a_tag: ET_IDENTIFIER; a_colon: ET_SYMBOL): ET_TAGGED_ASSERTION is
+	new_tagged_assertion (a_tag: ET_TAG): ET_TAGGED_ASSERTION is
 			-- New tagged assertion
 		require
 			a_tag_not_void: a_tag /= Void
-			a_colon_not_void: a_colon /= Void
 		do
-			!! Result.make (a_tag, a_colon)
+			!! Result.make (a_tag)
 		ensure
 			tagged_assertion_not_void: Result /= Void
 		end
@@ -2039,14 +2188,15 @@ feature -- AST factory
 			true_constant_not_void: Result /= Void
 		end
 
-	new_type_item (a_type: ET_TYPE): ET_TYPE_ITEM is
-			-- New type item
+	new_type_comma (a_type: ET_TYPE; a_comma: ET_SYMBOL): ET_TYPE_COMMA is
+			-- New type-comma
 		require
 			a_type_not_void: a_type /= Void
+			a_comma_not_void: a_comma /= Void
 		do
-			!! Result.make (a_type)
+			!! Result.make (a_type, a_comma)
 		ensure
-			type_item_not_void: Result /= Void
+			type_comma_not_void: Result /= Void
 		end
 
 	new_typed_bang_instruction (l: ET_SYMBOL; a_type: ET_TYPE;
@@ -2143,17 +2293,37 @@ feature -- AST factory
 			verbatim_string_not_void: Result /= Void
 		end
 
-	new_when_part (a_when: ET_TOKEN; a_choices: DS_ARRAYED_LIST [ET_CHOICE_ITEM];
+	new_when_part (a_when: ET_TOKEN; a_choices: ET_CHOICE_LIST;
 		a_then_compound: ET_COMPOUND): ET_WHEN_PART is
 			-- New when part
 		require
 			a_when_not_void: a_when /= Void
-			no_void_choice: a_choices /= Void implies not a_choices.has (Void)
 			a_then_compound_not_void: a_then_compound /= Void
 		do
 			!! Result.make (a_when, a_choices, a_then_compound)
 		ensure
 			when_part_not_void: Result /= Void
+		end
+
+	new_when_part_list (a_when_part: ET_WHEN_PART): ET_WHEN_PART_LIST is
+			-- New when part list
+		require
+			a_when_part_not_void: a_when_part /= Void
+		do
+			!! Result.make (a_when_part)
+		ensure
+			when_part_list_not_void: Result /= Void
+		end
+
+	new_when_part_list_with_capacity (a_when_part: ET_WHEN_PART; nb: INTEGER): ET_WHEN_PART_LIST is
+			-- New when part list with given capacity
+		require
+			a_when_part_not_void: a_when_part /= Void
+			nb_positive: nb >= 1
+		do
+			!! Result.make_with_capacity (a_when_part, nb)
+		ensure
+			when_part_list_not_void: Result /= Void
 		end
 
 end -- class ET_AST_FACTORY

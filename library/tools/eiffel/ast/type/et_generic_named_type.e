@@ -7,7 +7,7 @@ indexing
 
 	library:    "Gobo Eiffel Tools Library"
 	author:     "Eric Bezault <ericb@gobosoft.com>"
-	copyright:  "Copyright (c) 1999-2001, Eric Bezault and others"
+	copyright:  "Copyright (c) 1999-2002, Eric Bezault and others"
 	license:    "Eiffel Forum Freeware License v1 (see forum.txt)"
 	date:       "$Date$"
 	revision:   "$Revision$"
@@ -22,7 +22,8 @@ inherit
 		redefine
 			resolved_named_types,
 			deep_cloned_type,
-			append_to_string
+			append_to_string,
+			break
 		end
 
 creation
@@ -50,6 +51,12 @@ feature -- Access
 
 	generic_parameters: ET_ACTUAL_GENERIC_PARAMETERS
 			-- Generic parameters
+
+	break: ET_BREAK is
+			-- Break which appears just after current node
+		do
+			Result := generic_parameters.break
+		end
 
 feature -- Type processing
 

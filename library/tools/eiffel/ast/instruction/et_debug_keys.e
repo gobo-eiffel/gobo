@@ -17,9 +17,15 @@ inherit
 
 	ET_AST_NODE
 
+	ET_AST_LIST [ET_MANIFEST_STRING_ITEM]
+		rename
+			make as make_ast_list,
+			make_with_capacity as make_ast_list_with_capacity
+		end
+
 creation
 
-	make
+	make, make_with_capacity
 
 feature {NONE} -- Initialization
 
@@ -31,19 +37,49 @@ feature {NONE} -- Initialization
 		do
 			left_parenthesis := l
 			right_parenthesis := r
+			make_ast_list
 		ensure
 			left_parenthesis_set: left_parenthesis = l
 			right_parenthesis_set: right_parenthesis = r
+			is_empty: is_empty
+			capacity_set: capacity = 0
+		end
+
+	make_with_capacity (l: like left_parenthesis; r: like right_parenthesis; nb: INTEGER) is
+			-- Create a new debug keys with capacity `nb'.
+		require
+			l_not_void: l /= Void
+			r_not_void: r /= Void
+			nb_positive: nb >= 0
+		do
+			left_parenthesis := l
+			right_parenthesis := r
+			make_ast_list_with_capacity (nb)
+		ensure
+			left_parenthesis_set: left_parenthesis = l
+			right_parenthesis_set: right_parenthesis = r
+			is_empty: is_empty
+			capacity_set: capacity = nb
 		end
 
 feature -- Access
 
-	keys: DS_ARRAYED_LIST [ET_MANIFEST_STRING_ITEM]
-			-- Debug keys
+	key (i: INTEGER): ET_MANIFEST_STRING is
+			-- Key at index `i' in list
+		require
+			i_large_enough: i >= 1
+			i_small_enough: i <= count
+		do
+			Result := item (i).manifest_string_item
+		ensure
+			key_not_void: Result /= Void
+		end
 
 	left_parenthesis: ET_SYMBOL
+			-- Left parenthesis
+
 	right_parenthesis: ET_SYMBOL
-			-- Parentheses
+			-- Right parenthesis
 
 	position: ET_POSITION is
 			-- Position of first character of
@@ -60,19 +96,36 @@ feature -- Access
 
 feature -- Setting
 
-	set_keys (a_keys: like keys) is
-			-- Set `keys' to `a_keys'.
+	set_left_parenthesis (l: like left_parenthesis) is
+			-- Set `left_parenthesis' to `l'.
 		require
-			no_void_key: a_keys /= Void implies not a_keys.has (Void)
+			l_not_void: l /= Void
 		do
-			keys := a_keys
+			left_parenthesis := l
 		ensure
-			keys_set: keys = a_keys
+			left_parenthesis_set: left_parenthesis = l
+		end
+
+	set_right_parenthesis (r: like right_parenthesis) is
+			-- Set `right_parenthesis' to `r'.
+		require
+			r_not_void: r /= Void
+		do
+			right_parenthesis := r
+		ensure
+			right_parenthesis_set: right_parenthesis = r
+		end
+
+feature {NONE} -- Implementation
+
+	fixed_array: KL_FIXED_ARRAY_ROUTINES [ET_MANIFEST_STRING_ITEM] is
+			-- Fixed array routines
+		once
+			!! Result
 		end
 
 invariant
 
-	no_void_key: keys /= Void implies not keys.has (Void)
 	left_parenthesis_not_void: left_parenthesis /= Void
 	right_parenthesis: right_parenthesis /= Void
 

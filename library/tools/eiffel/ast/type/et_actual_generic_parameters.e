@@ -13,58 +13,62 @@ indexing
 
 class ET_ACTUAL_GENERIC_PARAMETERS
 
+inherit
+
+	ET_AST_NODE
+
+	ET_AST_LIST [ET_TYPE_ITEM]
+		rename
+			make as make_ast_list,
+			make_with_capacity as make_ast_list_with_capacity
+		end
+
 creation
 
-	make, make_empty, make_with_capacity
+	make, make_with_capacity
 
 feature {NONE} -- Initialization
 
-	make_empty is
+	make (l: like left_bracket; r: like right_bracket) is
 			-- Create an empty actual generic parameter list.
+		require
+			l_not_void: l /= Void
+			r_not_void: r /= Void
 		do
-			!! generic_parameters.make (1, 0)
+			left_bracket := l
+			right_bracket := r
+			make_ast_list
 		ensure
-			empty: count = 0
+			left_bracket_set: left_bracket = l
+			right_bracket_set: right_bracket = r
+			is_empty: is_empty
+			capacity_set: capacity = 0
 		end
 
-	make (a_type: ET_TYPE_ITEM) is
-			-- Create a new actual generic parameter list
-			-- with initially one actual parameter `a_type'.
+	make_with_capacity (l: like left_bracket; r: like right_bracket; nb: INTEGER) is
+			-- Create an empty actual generic parameter list with capacity `nb'.
 		require
-			a_type_not_void: a_type /= Void
+			l_not_void: l /= Void
+			r_not_void: r /= Void
+			nb_positive: nb >= 0
 		do
-			make_with_capacity (a_type, 1)
+			left_bracket := l
+			right_bracket := r
+			make_ast_list_with_capacity (nb)
 		ensure
-			count_set: count = 1
-			inserted: item (1) = a_type
-		end
-
-	make_with_capacity (a_type: ET_TYPE_ITEM; nb: INTEGER) is
-			-- Create a new actual generic parameter list
-			-- with initially one actual parameter `a_type'.
-		require
-			a_type_not_void: a_type /= Void
-			nb_positive: nb >= 1
-		do
-			!! generic_parameters.make (1, nb)
-			put (a_type)
-		ensure
-			count_set: count = 1
-			inserted: item (1) = a_type
+			left_bracket_set: left_bracket = l
+			right_bracket_set: right_bracket = r
+			is_empty: is_empty
+			capacity_set: capacity = nb
 		end
 
 feature -- Access
 
-	item (i: INTEGER): ET_TYPE_ITEM is
-			-- `i'-th actual generic parameter
-		require
-			i_large_enough: i >= 1
-			i_small_enough: i <= count
-		do
-			Result := generic_parameters.item (i)
-		ensure
-			parameter_not_void: Result /= Void
-		end
+	left_bracket: ET_SYMBOL
+			-- Left bracket
+
+	right_bracket: ET_SYMBOL
+			-- Right bracket
 
 	type (i: INTEGER): ET_TYPE is
 			-- Type of `i'-th actual generic parameter
@@ -72,24 +76,23 @@ feature -- Access
 			i_large_enough: i >= 1
 			i_small_enough: i <= count
 		do
-			Result := item (i).type
+			Result := item (i).type_item
 		ensure
-			parameter_not_void: Result /= Void
+			type_not_void: Result /= Void
 		end
 
-	comma (i: INTEGER): ET_SYMBOL is
-			-- Comma after the `i'-th actual generic parameter
-		require
-			i_large_enough: i >= 1
-			i_small_enough: i <= count
+	position: ET_POSITION is
+			-- Position of first character of
+			-- current node in source code
 		do
-			Result := item (i).comma
+			Result := left_bracket.position
 		end
 
-feature -- Measurement
-
-	count: INTEGER
-			-- Number of generic parameters
+	break: ET_BREAK is
+			-- Break which appears just after current node
+		do
+			Result := right_bracket.break
+		end
 
 feature -- Status report
 
@@ -251,24 +254,6 @@ feature -- Validity
 			end
 		end
 
-feature -- Element change
-
-	put (a_type: ET_TYPE_ITEM) is
-			-- Add actual generic parameter `a_type'
-			-- to actual generic parameter list.
-		require
-			a_type_not_void: a_type /= Void
-		do
-			count := count + 1
-			if generic_parameters.upper < count then
-				generic_parameters.resize (1, count)
-			end
-			generic_parameters.put (a_type, count)
-		ensure
-			one_more: count = old count + 1
-			inserted: item (count) = a_type
-		end
-
 feature -- System
 
 	add_to_system is
@@ -338,12 +323,10 @@ feature -- Type processing
 			actual_parameters_not_void: actual_parameters /= Void
 		local
 			i, nb: INTEGER
-			an_item: ET_TYPE_ITEM
 		do
 			nb := count
 			from i := 1 until i > nb loop
-				an_item := item (i)
-				an_item.set_type (an_item.type.resolved_formal_parameters (actual_parameters))
+				put (item (i).resolved_formal_parameters (actual_parameters), i)
 				i := i + 1
 			end
 		end
@@ -360,12 +343,10 @@ feature -- Type processing
 			immediate_or_redeclared: a_feature.implementation_class = a_class
 		local
 			i, nb: INTEGER
-			an_item: ET_TYPE_ITEM
 		do
 			nb := count
 			from i := 1 until i > nb loop
-				an_item := item (i)
-				an_item.set_type (an_item.type.resolved_identifier_types (a_feature, args, a_class))
+				put (item (i).resolved_identifier_types (a_feature, args, a_class), i)
 				i := i + 1
 			end
 		end
@@ -380,39 +361,67 @@ feature -- Type processing
 			ast_factory_not_void: ast_factory /= Void
 		local
 			i, nb: INTEGER
-			an_item: ET_TYPE_ITEM
 		do
 			nb := count
 			from i := 1 until i > nb loop
-				an_item := item (i)
-				an_item.set_type (an_item.type.resolved_named_types (a_class, ast_factory))
+				put (item (i).resolved_named_types (a_class, ast_factory), i)
 				i := i + 1
 			end
+		end
+
+feature -- Setting
+
+	set_left_bracket (l: like left_bracket) is
+			-- Set `left_bracket' to `l'.
+		require
+			l_not_void: l /= Void
+		do
+			left_bracket := l
+		ensure
+			left_bracket_set: left_bracket = l
+		end
+
+	set_right_bracket (r: like right_bracket) is
+			-- Set `right_bracket' to `r'.
+		require
+			r_not_void: r /= Void
+		do
+			right_bracket := r
+		ensure
+			right_bracket_set: right_bracket = r
+		end
+
+feature -- Element change
+
+	put (an_item: like item; i: INTEGER) is
+			-- Put `an_item' at index `i' in list.
+		require
+			an_item_not_void: an_item /= Void
+			i_large_enough: i >= 1
+			i_small_enough: i <= count
+		do
+			storage.put (an_item, count - i)
+		ensure
+			same_count: count = old count
+			inserted: item (i) = an_item
 		end
 
 feature -- Duplication
 
 	deep_cloned_actuals: like Current is
-			-- Duplicate recursively actual generic
-			-- parameter types
+			-- Duplicate recursively actual generic parameter types
 		local
-			i, nb: INTEGER
-			an_item, a_cloned_item: ET_TYPE_ITEM
+			i: INTEGER
 		do
-			nb := count
-			if nb = 0 then
-			else
-				an_item := item (1)
-				!! a_cloned_item.make (an_item.type.deep_cloned_type)
-				a_cloned_item.set_comma (an_item.comma)
-				!! Result.make_with_capacity (a_cloned_item, nb)
-				from i := 2 until i > nb loop
-					an_item := item (i)
-					!! a_cloned_item.make (an_item.type.deep_cloned_type)
-					a_cloned_item.set_comma (an_item.comma)
-					Result.put (a_cloned_item)
-					i := i + 1
+			i := count
+			if i /= 0 then
+				!! Result.make_with_capacity (left_bracket, right_bracket, i)
+				from until i < 1 loop
+					Result.put_first (item (i).deep_cloned_type)
+					i := i - 1
 				end
+			else
+				Result := Current
 			end
 		ensure
 			deep_cloned_not_void: Result /= Void
@@ -420,14 +429,15 @@ feature -- Duplication
 
 feature {NONE} -- Implementation
 
-	generic_parameters: ARRAY [ET_TYPE_ITEM]
-			-- Actual generic parameters
+	fixed_array: KL_FIXED_ARRAY_ROUTINES [ET_TYPE_ITEM] is
+			-- Fixed array routines
+		once
+			!! Result
+		end
 
 invariant
 
-	not_empty: count >= 0
-	generic_parameters_not_void: generic_parameters /= Void
-	generic_parameters_lower: generic_parameters.lower = 1
-	generic_parameters_upper: generic_parameters.upper >= count
+	left_bracket_not_void: left_bracket /= Void
+	right_bracket_not_void: right_bracket /= Void
 
 end -- class ET_ACTUAL_GENERIC_PARAMETERS

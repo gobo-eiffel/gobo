@@ -2,7 +2,7 @@ indexing
 
 	description:
 
-		"Eiffel feature names followed by a comma"
+		"Eiffel identifiers followed by a colon"
 
 	library:    "Gobo Eiffel Tools Library"
 	author:     "Eric Bezault <ericb@gobosoft.com>"
@@ -11,11 +11,12 @@ indexing
 	date:       "$Date$"
 	revision:   "$Revision$"
 
-class ET_FEATURE_NAME_COMMA
+class ET_IDENTIFIER_COLON
 
 inherit
 
-	ET_FEATURE_NAME_ITEM
+	ET_LOCAL_NAME
+	ET_TAG
 
 creation
 
@@ -23,42 +24,42 @@ creation
 
 feature {NONE} -- Initialization
 
-	make (a_name: like feature_name_item; a_comma: like comma) is
-			-- Create a new feature_name-comma.
+	make (a_name: like identifier_item; a_colon: like colon) is
+			-- Create a new identifier-colon.
 		require
 			a_name_not_void: a_name /= Void
-			a_comma_not_void: a_comma /= Void
+			a_colon_not_void: a_colon /= Void
 		do
-			feature_name_item := a_name
-			comma := a_comma
+			identifier_item := a_name
+			colon := a_colon
 		ensure
-			feature_name_item_set: feature_name_item = a_name
-			comma_set: comma = a_comma
+			identifier_item_set: identifier_item = a_name
+			colon_set: colon = a_colon
 		end
 
 feature -- Access
 
-	feature_name_item: ET_FEATURE_NAME
-			-- Feature name in comma-separated list
+	identifier_item: ET_IDENTIFIER
+			-- Identifier
 
-	comma: ET_SYMBOL
-			-- Comma separator
+	colon: ET_SYMBOL
+			-- Colon symbol
 
 	position: ET_POSITION is
 			-- Position of first character of
 			-- current node in source code
 		do
-			Result := feature_name_item.position
+			Result := identifier_item.position
 		end
 
 	break: ET_BREAK is
 			-- Break which appears just after current node
 		do
-			Result := comma.break
+			Result := colon.break
 		end
 
 invariant
 
-	comma_not_void: comma /= Void
+	colon_not_void: colon /= Void
 
-end -- class ET_FEATURE_NAME_COMMA
+end -- class ET_IDENTIFIER_COLON

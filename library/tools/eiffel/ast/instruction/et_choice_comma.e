@@ -2,7 +2,7 @@ indexing
 
 	description:
 
-		"Eiffel check assertions"
+		"Eiffel inspect choices followed by a comma"
 
 	library:    "Gobo Eiffel Tools Library"
 	author:     "Eric Bezault <ericb@gobosoft.com>"
@@ -11,11 +11,11 @@ indexing
 	date:       "$Date$"
 	revision:   "$Revision$"
 
-class ET_CHECK_ASSERTIONS
+class ET_CHOICE_COMMA
 
 inherit
 
-	ET_ASSERTIONS
+	ET_CHOICE_ITEM
 
 creation
 
@@ -23,41 +23,42 @@ creation
 
 feature {NONE} -- Initialization
 
-	make (a_check: like check_keyword) is
-			-- Create a new check clause.
+	make (a_choice: like choice_item; a_comma: like comma) is
+			-- Create a new choice-comma.
 		require
-			a_check_not_void: a_check /= Void
+			a_choice_not_void: a_choice /= Void
+			a_comma_not_void: a_comma /= Void
 		do
-			check_keyword := a_check
-			!! assertions.make (10)
+			choice_item := a_choice
+			comma := a_comma
 		ensure
-			check_keyword_set: check_keyword = a_check
+			choice_item_set: choice_item = a_choice
+			comma_set: comma = a_comma
 		end
 
 feature -- Access
 
-	check_keyword: ET_TOKEN
-			-- 'check' keyword
+	choice_item: ET_CHOICE
+			-- Choice in comma-separated list
+
+	comma: ET_SYMBOL
+			-- Comma separator
 
 	position: ET_POSITION is
 			-- Position of first character of
 			-- current node in source code
 		do
-			Result := check_keyword.position
+			Result := choice_item.position
 		end
 
 	break: ET_BREAK is
 			-- Break which appears just after current node
 		do
-			if not assertions.is_empty then
-				Result := assertions.last.break
-			else
-				Result := check_keyword.break
-			end
+			Result := comma.break
 		end
 
 invariant
 
-	check_keyword_not_void: check_keyword /= Void
+	comma_not_void: comma /= Void
 
-end -- class ET_CHECK_ASSERTIONS
+end -- class ET_CHOICE_COMMA

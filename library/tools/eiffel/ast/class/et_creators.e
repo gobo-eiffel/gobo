@@ -13,22 +13,47 @@ indexing
 
 class ET_CREATORS
 
+inherit
+
+	ET_AST_NODE
+
+	ET_AST_LIST [ET_CREATOR]
+		rename
+			make as make_ast_list,
+			make_with_capacity as make_ast_list_with_capacity
+		end
+
 creation
 
-	make
+	make, make_with_capacity
 
 feature {NONE} -- Initialization
 
-	make (a_creator: ET_CREATOR) is
+	make (a_creator: like item) is
 			-- Create a new creation clause list with initially
 			-- one clause `a_creator'.
 		require
 			a_creator_not_void: a_creator /= Void
 		do
-			!! creators.make
-			creators.put_last (a_creator)
+			make_ast_list_with_capacity (1)
+			put_first (a_creator)
 		ensure
-			creators_set: creators.last = a_creator
+			creator_set: item (1) = a_creator
+			capacity_set: capacity = 1
+		end
+
+	make_with_capacity (a_creator: like item; nb: INTEGER) is
+			-- Create a new creation clause list with capacity
+			-- `nb' and initially one clause `a_creator'.
+		require
+			a_creator_not_void: a_creator /= Void
+			nb_positive: nb >= 1
+		do
+			make_ast_list_with_capacity (nb)
+			put_first (a_creator)
+		ensure
+			creator_set: item (1) = a_creator
+			capacity_set: capacity = nb
 		end
 
 feature -- Status report
@@ -40,41 +65,44 @@ feature -- Status report
 			a_name_not_void: a_name /= Void
 			a_class_not_void: a_class /= Void
 		local
-			a_cursor: DS_LINKED_LIST_CURSOR [ET_CREATOR]
+			i, nb: INTEGER
 		do
-			a_cursor := creators.new_cursor
-			from a_cursor.start until a_cursor.after loop
-				if a_cursor.item.is_exported_to (a_name, a_class) then
+			nb := count
+			from i := 1 until i > nb loop
+				if item (i).is_exported_to (a_name, a_class) then
 					Result := True
-					a_cursor.go_after -- Jump out of the loop.
+					i := nb + 1 -- Jump out of the loop.
 				else
-					a_cursor.forth
+					i := i + 1
 				end
 			end
 		end
 
 feature -- Access
 
-	creators: DS_LINKED_LIST [ET_CREATOR]
-			-- Creation clauses
-
-feature -- Element change
-
-	put_last (a_creator: ET_CREATOR) is
-			-- Add `a_creator' to the list of creators.
-		require
-			a_creator_not_void: a_creator /= Void
+	position: ET_POSITION is
+			-- Position of first character of
+			-- current node in source code
 		do
-			creators.put_last (a_creator)
-		ensure
-			one_more: creators.count = old creators.count + 1
-			creators_set: creators.last = a_creator
+			Result := item (1).position
+		end
+
+	break: ET_BREAK is
+			-- Break which appears just after current node
+		do
+			Result := item (count).break
+		end
+
+feature {NONE} -- Implementation
+
+	fixed_array: KL_FIXED_ARRAY_ROUTINES [ET_CREATOR] is
+			-- Fixed array routines
+		once
+			!! Result
 		end
 
 invariant
 
-	creators_not_void: creators /= Void
-	creators_not_empty: not creators.is_empty
-	no_void_creator: not creators.has (Void)
+	not_empty: not is_empty
 
 end -- class ET_CREATORS

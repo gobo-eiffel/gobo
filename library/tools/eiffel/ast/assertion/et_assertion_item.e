@@ -2,7 +2,7 @@ indexing
 
 	description:
 
-		"Eiffel manifest strings which appear in a comma-separated list of manifest strings"
+		"Eiffel assertions in list of assertions"
 
 	library:    "Gobo Eiffel Tools Library"
 	author:     "Eric Bezault <ericb@gobosoft.com>"
@@ -11,7 +11,7 @@ indexing
 	date:       "$Date$"
 	revision:   "$Revision$"
 
-deferred class ET_MANIFEST_STRING_ITEM
+deferred class ET_ASSERTION_ITEM
 
 inherit
 
@@ -19,11 +19,11 @@ inherit
 
 feature -- Access
 
-	manifest_string_item: ET_MANIFEST_STRING is
-			-- Manifest string in comma-separated list
+	assertion_item: ET_ASSERTION is
+			-- Assertion in list of assertions
 		deferred
 		ensure
-			manifest_string_item_not_void: Result /= Void
+			assertion_item_not_void: Result /= Void
 		end
 
-end -- class ET_MANIFEST_STRING_ITEM
+end -- class ET_ASSERTION_ITEM

@@ -16,6 +16,7 @@ deferred class ET_EXPRESSION
 inherit
 
 	ET_EXPRESSION_ITEM
+	ET_ASSERTION
 
 feature -- Access
 

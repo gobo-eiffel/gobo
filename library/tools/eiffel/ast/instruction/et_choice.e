@@ -2,7 +2,7 @@ indexing
 
 	description:
 
-		"Eiffel choices in when parts of inspect instructions"
+		"Eiffel choices in 'when' parts of inspect instructions"
 
 	library:    "Gobo Eiffel Tools Library"
 	author:     "Eric Bezault <ericb@gobosoft.com>"
@@ -15,6 +15,14 @@ deferred class ET_CHOICE
 
 inherit
 
-	ET_AST_NODE
+	ET_CHOICE_ITEM
+
+feature -- Access
+
+	choice_item: ET_CHOICE is
+			-- Choice in comma-separated list
+		do
+			Result := Current
+		end
 
 end -- class ET_CHOICE

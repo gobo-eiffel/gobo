@@ -47,7 +47,7 @@ feature -- Access
 	expression: ET_EXPRESSION
 			-- Expression
 
-	when_parts: DS_ARRAYED_LIST [ET_WHEN_PART]
+	when_parts: ET_WHEN_PART_LIST
 			-- When parts
 
 	else_compound: ET_COMPOUND
@@ -73,8 +73,6 @@ feature -- Setting
 
 	set_when_parts (a_when_parts: like when_parts) is
 			-- Set `when_parts' to `a_when_parts'.
-		require
-			no_void_when: a_when_parts /= Void implies not a_when_parts.has (Void)
 		do
 			when_parts := a_when_parts
 		ensure
@@ -94,6 +92,5 @@ invariant
 	inspect_keyword_not_void: inspect_keyword /= Void
 	expression_not_void: expression /= Void
 	end_keyword_not_void: end_keyword /= Void
-	no_void_when: when_parts /= Void implies not when_parts.has (Void)
 
 end -- class ET_INSPECT_INSTRUCTION

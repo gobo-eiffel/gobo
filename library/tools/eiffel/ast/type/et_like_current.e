@@ -6,7 +6,7 @@ indexing
 
 	library:    "Gobo Eiffel Tools Library"
 	author:     "Eric Bezault <ericb@gobosoft.com>"
-	copyright:  "Copyright (c) 2001, Eric Bezault and others"
+	copyright:  "Copyright (c) 2001-2002, Eric Bezault and others"
 	license:    "Eiffel Forum Freeware License v1 (see forum.txt)"
 	date:       "$Date$"
 	revision:   "$Revision$"
@@ -23,20 +23,39 @@ creation
 
 feature {NONE} -- Initialization
 
-	make (p: like position) is
+	make (a_like: like like_keyword; a_current: like current_keyword) is
 			-- Create a new 'like Current' type.
 		require
-			p_not_void: p /= Void
+			a_like_not_void: a_like /= Void
+			a_current_not_void: a_current /= Void
 		do
-			position := p
+			like_keyword := a_like
+			current_keyword := a_current
 		ensure
-			position_set: position = p
+			like_keyword_set: like_keyword = a_like
+			current_keyword_set: current_keyword = a_current
 		end
 
 feature -- Access
 
-	position: ET_POSITION
-			-- Position of current type in source code
+	like_keyword: ET_TOKEN
+			-- 'like' keyword
+
+	current_keyword: ET_TOKEN
+			-- 'current' keyword
+
+	position: ET_POSITION is
+			-- Position of first character of
+			-- current node in source code
+		do
+			Result := like_keyword.position
+		end
+
+	break: ET_BREAK is
+			-- Break which appears just after current node
+		do
+			Result := current_keyword.break
+		end
 
 feature -- Status report
 
@@ -110,5 +129,10 @@ feature {NONE} -- Constants
 
 	like_space_current: STRING is "like Current"
 			-- Eiffel keywords
+
+invariant
+
+	like_keyword_not_void: like_keyword /= Void
+	current_keyword_not_void: current_keyword /= Void
 
 end -- class ET_LIKE_CURRENT

@@ -27,10 +27,13 @@ feature {NONE} -- Initialization
 			-- Create a new expression-comma.
 		require
 			an_expression_not_void: an_expression /= Void
+			a_comma_not_void: a_comma /= Void
 		do
 			expression_item := an_expression
+			comma := a_comma
 		ensure
 			expression_item_set: expression_item = an_expression
+			comma_set: comma = a_comma
 		end
 
 feature -- Access

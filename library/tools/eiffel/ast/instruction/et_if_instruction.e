@@ -54,7 +54,7 @@ feature -- Access
 	then_compound: ET_COMPOUND
 			-- Then part
 
-	elseif_parts: DS_ARRAYED_LIST [ET_ELSEIF_PART]
+	elseif_parts: ET_ELSEIF_PART_LIST
 			-- Elseif parts
 
 	else_compound: ET_COMPOUND
@@ -80,8 +80,6 @@ feature -- Setting
 
 	set_elseif_parts (an_elseif_parts: like elseif_parts) is
 			-- Set `elseif_parts' to `an_elseif_parts'.
-		require
-			no_void_elseif: an_elseif_parts /= Void implies not an_elseif_parts.has (Void)
 		do
 			elseif_parts := an_elseif_parts
 		ensure
@@ -102,6 +100,5 @@ invariant
 	expression_not_void: expression /= Void
 	then_compound_not_void: then_compound /= Void
 	end_keyword_not_void: end_keyword /= Void
-	no_void_elseif: elseif_parts /= Void implies not elseif_parts.has (Void)
 
 end -- class ET_IF_INSTRUCTION

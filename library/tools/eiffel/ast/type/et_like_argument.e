@@ -6,7 +6,7 @@ indexing
 
 	library:    "Gobo Eiffel Tools Library"
 	author:     "Eric Bezault <ericb@gobosoft.com>"
-	copyright:  "Copyright (c) 2001, Eric Bezault and others"
+	copyright:  "Copyright (c) 2001-2002, Eric Bezault and others"
 	license:    "Eiffel Forum Freeware License v1 (see forum.txt)"
 	date:       "$Date$"
 	revision:   "$Revision$"
@@ -23,23 +23,26 @@ creation
 
 feature {NONE} -- Initialization
 
-	make (a_name: like name; an_index: INTEGER; p: like position) is
+	make (a_like: like like_keyword; a_name: like name; an_index: INTEGER) is
 			-- Create a new 'like argument' type.
 		require
+			a_like_not_void: a_like /= Void
 			a_name_not_void: a_name /= Void
 			an_index_positive: an_index >= 1
-			p_not_void: p /= Void
 		do
+			like_keyword := a_like
 			name := a_name
 			index := an_index
-			position := p
 		ensure
+			like_keyword_set: like_keyword = a_like
 			name_set: name = a_name
 			index_set: index = an_index
-			position_set: position = p
 		end
 
 feature -- Access
+
+	like_keyword: ET_TOKEN
+			-- 'like' keyword
 
 	name: ET_IDENTIFIER
 			-- Name of the argument associated
@@ -49,8 +52,18 @@ feature -- Access
 			-- Index in the argument list of the
 			-- argument associated with current type
 
-	position: ET_POSITION
-			-- Position of current type in source code
+	position: ET_POSITION is
+			-- Position of first character of
+			-- current node in source code
+		do
+			Result := like_keyword.position
+		end
+
+	break: ET_BREAK is
+			-- Break which appears just after current node
+		do
+			Result := name.break
+		end
 
 feature -- Status report
 
@@ -125,7 +138,7 @@ feature -- Duplication
 	deep_cloned_type: like Current is
 			-- Recursively cloned type
 		do
-			!! Result.make (name, index, position)
+			!! Result.make (like_keyword, name, index)
 		end
 
 feature -- Output
@@ -145,6 +158,7 @@ feature {NONE} -- Constants
 
 invariant
 
+	like_keyword_not_void: like_keyword /= Void
 	name_not_void: name /= Void
 	index_positive: index >= 1
 

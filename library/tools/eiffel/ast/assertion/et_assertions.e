@@ -17,45 +17,31 @@ inherit
 
 	ET_AST_NODE
 
+	ET_AST_LIST [ET_ASSERTION_ITEM]
+		rename
+			make as make_ast_list,
+			make_with_capacity as make_ast_list_with_capacity
+		end
+
 feature -- Access
 
-	assertions: DS_ARRAYED_LIST [ET_ASSERTION]
-			-- Assertions
-
-	last: ET_ASSERTION is
-			-- Last assertion inserted in `assertions'
+	assertion (i: INTEGER): ET_ASSERTION is
+			-- Assertion at index `i' in list
 		require
-			not_empty: not is_empty
+			i_large_enough: i >= 1
+			i_small_enough: i <= count
 		do
-			Result := assertions.last
+			Result := item (i).assertion_item
 		ensure
-			last_not_void: Result /= Void
+			assertion_not_void: Result /= Void
 		end
 
-feature -- Status report
+feature {NONE} -- Implementation
 
-	is_empty: BOOLEAN is
-			-- Is there no assertions in `assertions'?
-		do
-			Result := assertions.is_empty
+	fixed_array: KL_FIXED_ARRAY_ROUTINES [ET_ASSERTION_ITEM] is
+			-- Fixed array routines
+		once
+			!! Result
 		end
-
-feature -- Element change
-
-	put_last (an_assertion: ET_ASSERTION) is
-			-- Add `an_assertion' to assertions.
-		require
-			an_assertion_not_void: an_assertion /= Void
-		do
-			assertions.force_last (an_assertion)
-		ensure
-			one_more: assertions.count = old assertions.count + 1
-			assertion_added: assertions.last = an_assertion
-		end
-
-invariant
-
-	assertions_not_void: assertions /= Void
-	no_void_assertion: not assertions.has (Void)
 
 end -- class ET_ASSERTIONS

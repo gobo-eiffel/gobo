@@ -17,6 +17,8 @@ inherit
 
 	ET_CONSTANT
 
+	ET_MANIFEST_STRING_ITEM
+
 	ET_AST_LEAF
 		rename
 			make as make_leaf,
@@ -31,6 +33,12 @@ feature -- Access
 	literal: STRING is
 			-- Literal value
 		deferred
+		end
+
+	manifest_string_item: ET_MANIFEST_STRING is
+			-- Manifest string in comma-separated list
+		do
+			Result := Current
 		end
 
 feature -- Status report

@@ -108,9 +108,9 @@ creation
 %type <ET_BREAK>               Break_opt
 %type <ET_CALL_EXPRESSION>     Call_expression
 %type <ET_CHARACTER_CONSTANT>  Character_constant
-%type <ET_CHECK_ASSERTIONS>    Check_clause
 %type <ET_CHOICE>              Choice
 %type <ET_CHOICE_CONSTANT>     Choice_constant
+%type <ET_CHOICE_LIST>         Choices Choices_opt
 %type <ET_CLASS>               Class_header
 %type <ET_CLIENTS>             Clients Clients_opt Client_list
 %type <ET_COMPOUND>            Compound Rescue_opt Do_compound Once_compound Then_compound
@@ -119,7 +119,9 @@ creation
 %type <ET_CREATOR>             Creation_clause Creation_procedure_list
 %type <ET_CREATORS>            Creators Creators_opt
 %type <ET_CURRENT>             Current
-%type <ET_DEBUG_KEYS>          Debug_keys
+%type <ET_DEBUG_INSTRUCTION>   Debug_instruction Debug_compound
+%type <ET_DEBUG_KEYS>          Debug_keys Debug_key_list
+%type <ET_ELSEIF_PART_LIST>    Elseif_list Elseif_part_list
 %type <ET_EXPANDED_MARK>       Expanded
 %type <ET_EXPORT>              New_export_item
 %type <ET_EXPORTS>             New_exports New_exports_opt New_export_list
@@ -140,9 +142,9 @@ creation
 %type <ET_IF_INSTRUCTION>      Conditional
 %type <ET_INSPECT_INSTRUCTION> Multi_branch
 %type <ET_INSTRUCTION>         Instruction Creation_instruction Call_instruction
-                               Debug_instruction Create_instruction
+                               Create_instruction
 %type <ET_INTEGER_CONSTANT>    Integer_constant
-%type <ET_INVARIANTS>          Invariant_clause Invariant_clause_opt
+%type <ET_INVARIANTS>          Invariant_clause_opt
 %type <ET_KEYWORD_FEATURE_NAME_LIST> Keyword_feature_name_list Select_clause Select_clause_opt
                                Undefine_clause Undefine_clause_opt Redefine_clause
                                Redefine_clause_opt
@@ -152,8 +154,8 @@ creation
 %type <ET_MANIFEST_TUPLE>      Manifest_tuple Manifest_tuple_expression_list
 %type <ET_PARENTHESIZED_EXPRESSION>  Parenthesized_expression
 %type <ET_PARENTS>             Parent_list_to_end Inheritance_to_end
-%type <ET_POSTCONDITIONS>      Postcondition Postcondition_opt
-%type <ET_PRECONDITIONS>       Precondition Precondition_opt
+%type <ET_POSTCONDITIONS>      Postcondition_opt
+%type <ET_PRECONDITIONS>       Precondition_opt
 %type <ET_QUALIFIED_PRECURSOR_EXPRESSION>  Qualified_precursor_expression
 %type <ET_QUALIFIED_PRECURSOR_INSTRUCTION>  Qualified_precursor_instruction
 %type <ET_REAL_CONSTANT>       Real_constant
@@ -170,18 +172,14 @@ creation
                                Right_parenthesis Reverse Dotdot
 %type <ET_TOKEN>               Check Create Debug Else Elseif End Ensure From If Invariant
                                Loop Precursor Require Then Until Variant When Inspect Select
-                               Rename, Redefine, Export, Undefine, All, Creation, As, Do, Once,
-                               Rescue
+                               Rename Redefine Export Undefine All Creation As Do Once
+                               Rescue Like Bit
 %type <ET_TYPE>                Type Constraint_type
 %type <ET_VARIANT>             Variant_clause_opt
+%type <ET_WHEN_PART_LIST>      When_list When_list_opt
 %type <ET_WRITABLE>            Writable
 
-%type <like new_choice_item_list>        Choices Choices_opt
-%type <like new_elseif_part_list>        Elseif_list
-%type <like new_manifest_string_item_list>  Debug_key_list
-%type <like new_when_part_list>          When_list When_list_opt
-
-%expect 39
+%expect 31
 %start Class_declarations
 
 %%
@@ -319,31 +317,43 @@ Constraint_type: Class_name Constraint_actual_generics_opt
 		{ $$ := new_constraint_named_type ($1, $2, $3) }
 	| Reference Class_name Constraint_actual_generics_opt
 		{ $$ := new_constraint_named_type ($1, $2, $3) }
-	| E_LIKE Current
-		{ $$ := new_like_current ($1.position) }
-	| E_LIKE Identifier
-		{ $$ := new_like_identifier ($2, $1.position) }
-	| E_BITTYPE Integer_constant
-		{ $$ := new_bit_type ($2, $1.position) }
-	| E_BITTYPE Identifier
-		{ $$ := new_bit_identifier ($2, $1.position)  }
+	| Like Current
+		{ $$ := new_like_current ($1, $2) }
+	| Like Identifier
+		{ $$ := new_like_identifier ($1, $2) }
+	| Bit Integer_constant
+		{ $$ := new_bit_type ($1, $2) }
+	| Bit Identifier
+		{ $$ := new_bit_identifier ($1, $2)  }
 	;
 
 Constraint_actual_generics_opt: -- Empty
 		-- { $$ := Void }
-	| '[' ']'
+	| Left_bracket Right_bracket
 		-- Warning:
-		-- { $$ := Void }
-	| '[' Constraint_type_list ']'
-		{ $$ := $2 }
+		{ $$ := new_actual_generics ($1, $2) }
+	| Left_bracket
+		{ add_counter }
+	  Constraint_type_list Right_bracket
+		{
+			$$ := $3
+			$$.set_left_bracket ($1)
+			$$.set_right_bracket ($4)
+			remove_counter
+		}
 	;
 
 Constraint_type_list: Constraint_type
-		{ $$ := new_actual_generics (new_type_item ($1)) }
-	| Constraint_type_list Comma Constraint_type
 		{
-			$$ := $1
-			$$.put (new_type_item ($3))
+			$$ := new_actual_generics_with_capacity (counter_value + 1)
+			$$.put_first ($1)
+		}
+	| Constraint_type Comma
+		{ increment_counter }
+	  Constraint_type_list
+		{
+			$$ := $4
+			$$.put_first (new_type_comma ($1, $2))
 		}
 	;
 
@@ -695,20 +705,25 @@ Keyword_feature_name_list: Feature_name
 		}
 	;
 
---------------------------------------------------------------------------------
+--DONE------------------------------------------------------------------------------
 
 Creators_opt: -- Empty
 		-- { $$ := Void }
-	| Creators
-		{ $$ := $1 }
+	| { add_counter } Creators
+		{
+			$$ := $2
+			remove_counter
+		}
 	;
 
 Creators: Creation_clause
-		{ $$ := new_creators ($1) }
-	| Creators Creation_clause
+		{ $$ := new_creators_with_capacity ($1, counter_value + 1) }
+	| Creation_clause
+		{ increment_counter}
+	  Creators
 		{
-			$$ := $1
-			$$.put_last ($2)
+			$$ := $3
+			$$.put_first ($1)
 		}
 	;
 
@@ -1288,128 +1303,54 @@ Local_variable_list: Identifier ':' Type
 
 --DONE------------------------------------------------------------------------------
 
-Precondition_opt: -- Empty
-		-- { $$ := Void }
-	| Precondition
-		{ $$ := $1 }
+Assertions: Expression
+		{ add_expression_assertion ($1, Void) }
+	| Expression Semicolon
+		{ add_expression_assertion ($1, $2) }
+	| Identifier Colon
+		{ add_tagged_assertion ($1, $2, Void) }
+	| Identifier Colon Semicolon
+		{ add_tagged_assertion ($1, $2, $3) }
+	| Assertions Expression
+		{ add_expression_assertion ($2, Void) }
+	| Assertions Expression Semicolon
+		{ add_expression_assertion ($2, $3) }
+	| Assertions Identifier Colon
+		{ add_tagged_assertion ($2, $3, Void) }
+	| Assertions Identifier Colon Semicolon
+		{ add_tagged_assertion ($2, $3, $4) }
 	;
 
-Precondition: Require
-		{ $$ := new_preconditions ($1) }
+Precondition_opt: -- Empty
+		-- { $$ := Void }
+	| Require
+		{ $$ := new_preconditions ($1, Void) }
 	| Require Else
-		{
-			$$ := new_preconditions ($1)
-			$$.set_else_keyword ($2)
-		}
-	| Precondition Expression
-		{
-			$$ := $1
-			add_expression_assertion ($$, $2, Void)
-		}
-	| Precondition Expression Semicolon
-		{
-			$$ := $1
-			add_expression_assertion ($$, $2, $3)
-		}
-	| Precondition Identifier Colon
-		{
-			$$ := $1
-			add_tagged_assertion ($$, $2, $3, Void)
-		}
-	| Precondition Identifier Colon Semicolon
-		{
-			$$ := $1
-			add_tagged_assertion ($$, $2, $3, $4)
-		}
+		{ $$ := new_preconditions ($1, $2) }
+	| Require Assertions
+		{ $$ := new_preconditions ($1, Void) }
+	| Require Else Assertions
+		{ $$ := new_preconditions ($1, $2) }
 	;
 
 Postcondition_opt: -- Empty
 		-- { $$ := Void }
-	| Postcondition
-		{ $$ := $1 }
-	;
-
-Postcondition: Ensure
-		{ $$ := new_postconditions ($1) }
+	| Ensure
+		{ $$ := new_postconditions ($1, Void) }
 	| Ensure Then
-		{
-			$$ := new_postconditions ($1)
-			$$.set_then_keyword ($2)
-		}
-	| Postcondition Expression
-		{
-			$$ := $1
-			add_expression_assertion ($$, $2, Void)
-		}
-	| Postcondition Expression Semicolon
-		{
-			$$ := $1
-			add_expression_assertion ($$, $2, $3)
-		}
-	| Postcondition Identifier Colon
-		{
-			$$ := $1
-			add_tagged_assertion ($$, $2, $3, Void)
-		}
-	| Postcondition Identifier Colon Semicolon
-		{
-			$$ := $1
-			add_tagged_assertion ($$, $2, $3, $4)
-		}
+		{ $$ := new_postconditions ($1, $2) }
+	| Ensure Assertions
+		{ $$ := new_postconditions ($1, Void) }
+	| Ensure Then Assertions
+		{ $$ := new_postconditions ($1, $2) }
 	;
 
 Invariant_clause_opt: -- Empty
 		-- { $$ := Void }
-	| Invariant_clause
-		{ $$ := $1 }
-	;
-
-Invariant_clause: Invariant
+	| Invariant
 		{ $$ := new_invariants ($1) }
-	| Invariant_clause Expression
-		{
-			$$ := $1
-			add_expression_assertion ($$, $2, Void)
-		}
-	| Invariant_clause Expression Semicolon
-		{
-			$$ := $1
-			add_expression_assertion ($$, $2, $3)
-		}
-	| Invariant_clause Identifier Colon
-		{
-			$$ := $1
-			add_tagged_assertion ($$, $2, $3, Void)
-		}
-	| Invariant_clause Identifier Colon Semicolon
-		{
-			$$ := $1
-			add_tagged_assertion ($$, $2, $3, $4)
-		}
-	;
-
-Check_clause: Check
-		{ $$ := new_check_assertions ($1) }
-	| Check_clause Expression
-		{
-			$$ := $1
-			add_expression_assertion ($$, $2, Void)
-		}
-	| Check_clause Expression Semicolon
-		{
-			$$ := $1
-			add_expression_assertion ($$, $2, $3)
-		}
-	| Check_clause Identifier Colon
-		{
-			$$ := $1
-			add_tagged_assertion ($$, $2, $3, Void)
-		}
-	| Check_clause Identifier Colon Semicolon
-		{
-			$$ := $1
-			add_tagged_assertion ($$, $2, $3, $4)
-		}
+	| Invariant Assertions
+		{ $$ := new_invariants ($1) }
 	;
 
 Variant_clause_opt: -- Empty
@@ -1422,7 +1363,7 @@ Variant_clause_opt: -- Empty
 		{ $$ := new_tagged_expression_variant ($1, $2, $3, $4) }
 	;
 
---------------------------------------------------------------------------------
+--DONE------------------------------------------------------------------------------
 
 Rescue_opt: -- Empty
 		-- { $$ := Void }
@@ -1430,7 +1371,7 @@ Rescue_opt: -- Empty
 		{ $$ := $1 }
 	;
 
---------------------------------------------------------------------------------
+--DONE------------------------------------------------------------------------------
 
 Type: Class_name Actual_generics_opt
 		{ $$ := new_named_type (Void, $1, $2) }
@@ -1440,14 +1381,14 @@ Type: Class_name Actual_generics_opt
 		{ $$ := new_named_type ($1, $2, $3) }
 	| Reference Class_name Actual_generics_opt
 		{ $$ := new_named_type ($1, $2, $3) }
-	| E_LIKE Current
-		{ $$ := new_like_current ($1.position) }
-	| E_LIKE Identifier
-		{ $$ := new_like_identifier ($2, $1.position) }
-	| E_BITTYPE Integer_constant
-		{ $$ := new_bit_type ($2, $1.position) }
-	| E_BITTYPE Identifier
-		{ $$ := new_bit_identifier ($2, $1.position)  }
+	| Like Current
+		{ $$ := new_like_current ($1, $2) }
+	| Like Identifier
+		{ $$ := new_like_identifier ($1, $2) }
+	| Bit Integer_constant
+		{ $$ := new_bit_type ($1, $2) }
+	| Bit Identifier
+		{ $$ := new_bit_identifier ($1, $2)  }
 	;
 
 Class_name: E_IDENTIFIER
@@ -1461,19 +1402,31 @@ Class_name: E_IDENTIFIER
 
 Actual_generics_opt: -- Empty
 		-- { $$ := Void }
-	| '[' ']'
+	| Left_bracket Right_bracket
 		-- Warning:
-		-- { $$ := Void }
-	| '[' Type_list ']'
-		{ $$ := $2 }
+		{ $$ := new_actual_generics ($1, $2) }
+	| Left_bracket
+		{ add_counter }
+	  Type_list Right_bracket
+		{
+			$$ := $3
+			$$.set_left_bracket ($1)
+			$$.set_right_bracket ($4)
+			remove_counter
+		}
 	;
 
 Type_list: Type
-		{ $$ := new_actual_generics (new_type_item ($1)) }
-	| Type_list ',' Type
 		{
-			$$ := $1
-			$$.put (new_type_item ($3))
+			$$ := new_actual_generics_with_capacity (counter_value + 1)
+			$$.put_first ($1)
+		}
+	| Type Comma
+		{ increment_counter }
+	  Type_list
+		{
+			$$ := $4
+			$$.put_first (new_type_comma ($1, $2))
 		}
 	;
 
@@ -1625,8 +1578,10 @@ Instruction: Creation_instruction
 		{ $$ := new_loop_instruction ($1, $2, $3, $4, $5, $6, $7) }
 	| Debug_instruction
 		{ $$ := $1 }
-	| Check_clause End
+	| Check End
 		{ $$ := new_check_instruction ($1, $2) }
+	| Check Assertions End
+		{ $$ := new_check_instruction ($1, $3) }
 	| Retry
 		{ $$ := $1 }
 	;
@@ -1681,15 +1636,23 @@ Conditional: If Expression Then_compound End
 		}
 	;
 
-Elseif_list: Elseif Expression Then_compound
+Elseif_list: {add_counter} Elseif_part_list
 		{
-			$$ := new_elseif_part_list
-			$$.force_last (new_elseif_part ($1, $2, $3))
+			$$ := $2
+			remove_counter
 		}
-	| Elseif_list Elseif Expression Then_compound
+	;
+
+Elseif_part_list: Elseif Expression Then_compound
 		{
-			$$ := $1
-			$$.force_last (new_elseif_part ($2, $3, $4))
+			$$ := new_elseif_part_list_with_capacity (new_elseif_part ($1, $2, $3), counter_value + 1)
+		}
+	| Elseif Expression Then_compound
+		{ increment_counter }
+	  Elseif_part_list
+		{
+			$$ := $5
+			$$.put_first (new_elseif_part ($1, $2, $3))
 		}
 	;
 
@@ -1710,38 +1673,54 @@ Multi_branch: Inspect Expression When_list_opt Else_compound End
 
 When_list_opt: -- Empty
 		-- { $$ := Void }
-	| When_list
-		{ $$ := $1 }
+	|
+		{ add_counter }
+	  When_list
+		{
+			$$ := $2
+			remove_counter
+		}
 	;
 
 When_list: When Choices_opt Then_compound
 		{
-			$$ := new_when_part_list
-			$$.force_last (new_when_part ($1, $2, $3))
+			$$ := new_when_part_list_with_capacity (new_when_part ($1, $2, $3), counter_value + 1)
 		}
-	| When_list When Choices_opt Then_compound
+	| When Choices_opt Then_compound
+		{ increment_counter }
+	  When_list
 		{
-			$$ := $1
-			$$.force_last (new_when_part ($2, $3, $4))
+			$$ := $5
+			$$.put_first (new_when_part ($1, $2, $3))
 		}
 	;
 
 Choices_opt: -- Empty
 		-- { $$ := Void }
-	| Choices
-		{ $$ := $1 }
+	|
+		{ add_counter }
+	  Choices
+		{
+			$$ := $2
+			remove_counter
+		}
 	;
 
 Choices: Choice
 		{
-			$$ := new_choice_item_list
-			$$.force_last (new_choice_item ($1))
+			$$ := new_choice_list_with_capacity ($1, counter_value + 1)
 		}
-	| Choices Comma Choice
+	| Choice Comma
+		-- TODO: syntax error.
 		{
-			$$ := $1
-			$$.last.set_comma ($2)
-			$$.force_last (new_choice_item ($3))
+			$$ := new_choice_list_with_capacity (new_choice_comma ($1, $2), counter_value + 1)
+		}
+	| Choice Comma 
+		{ increment_counter }
+	  Choices
+		{
+			$$ := $4
+			$$.put_first (new_choice_comma ($1, $2))
 		}
 	;
 
@@ -1764,14 +1743,59 @@ Choice_constant: Integer_constant
 --DONE------------------------------------------------------------------------------
 
 Debug_instruction: Debug Debug_keys End
-		{ $$ := new_debug_instruction ($2, new_compound ($1), $3) }
+		{ $$ := new_debug_instruction ($1, $2, $3) }
 	|  Debug Debug_keys
 		{ add_counter }
-	  Compound End
+	  Debug_compound End
 		{
-			$4.set_keyword ($1)
-			$$ := new_debug_instruction  ($2, $4, $5)
+			$$ := $4
+			$$.set_keys ($2)
+			$$.set_debug_keyword ($1)
+			$$.set_end_keyword ($5)
 			remove_counter
+		}
+	;
+
+Debug_compound: Instruction
+		{
+			$$ := new_debug_instruction_with_capacity (counter_value + 1)
+			$$.put_first ($1)
+		}
+	| Semicolon
+		{
+			if keep_all_breaks then
+				$$ := new_debug_instruction_with_capacity (counter_value + 1)
+				$$.put_first ($1)
+			elseif keep_all_comments and $1.has_comment then
+				$$ := new_debug_instruction_with_capacity (counter_value + 1)
+				$$.put_first ($1)
+			else
+				$$ := new_debug_instruction_with_capacity (counter_value)
+			end
+		}
+	| Instruction
+		{ increment_counter }
+	  Debug_compound
+		{
+			$$ := $3
+			$$.put_first ($1)
+		}
+	| Semicolon
+		{
+			if keep_all_breaks then
+				increment_counter
+			elseif keep_all_comments and $1.has_comment then
+				increment_counter
+			end
+		}
+	  Debug_compound
+		{
+			$$ := $3
+			if keep_all_breaks then
+				$$.put_first ($1)
+			elseif keep_all_comments and $1.has_comment then
+				$$.put_first ($1)
+			end
 		}
 	;
 
@@ -1779,23 +1803,28 @@ Debug_keys: -- Empty
 		-- { $$ := Void }
 	| Left_parenthesis Right_parenthesis
 		{ $$ := new_debug_keys ($1, $2) }
-	| Left_parenthesis Debug_key_list Right_parenthesis
+	| Left_parenthesis
+		{ add_counter }
+	  Debug_key_list Right_parenthesis
 		{
-			$$ := new_debug_keys ($1, $3)
-			$$.set_keys ($2)
+			$$ := $3
+			$$.set_left_parenthesis ($1)
+			$$.set_right_parenthesis ($4)
+			remove_counter
 		}
 	;
 
 Debug_key_list: Manifest_string
 		{
-			$$ := new_manifest_string_item_list
-			$$.force_last (new_manifest_string_item ($1))
+			$$ := new_debug_keys_with_capacity (counter_value + 1)
+			$$.put_first ($1)
 		}
-	| Debug_key_list Comma Manifest_string
+	| Manifest_string Comma
+		{ increment_counter }
+	  Debug_key_list
 		{
-			$$ := $1
-			$$.last.set_comma ($2)
-			$$.force_last (new_manifest_string_item ($3))
+			$$ := $4
+			$$.put_first (new_manifest_string_comma ($1, $2))
 		}
 	;
 
@@ -2576,6 +2605,17 @@ As: E_AS
 		}
 	;
 
+Bit: E_BITTYPE
+		{ $$ := $1 }
+	| E_BITTYPE E_BREAK
+		{
+			$$ := $1
+			if keep_all_breaks or keep_all_comments then
+				$$.set_break ($2)
+			end
+		}
+	;
+
 Check: E_CHECK
 		{ $$ := $1 }
 	| E_CHECK E_BREAK
@@ -2742,6 +2782,17 @@ Inspect: E_INSPECT
 Invariant: E_INVARIANT
 		{ $$ := $1 }
 	| E_INVARIANT E_BREAK
+		{
+			$$ := $1
+			if keep_all_breaks or keep_all_comments then
+				$$.set_break ($2)
+			end
+		}
+	;
+
+Like: E_LIKE
+		{ $$ := $1 }
+	| E_LIKE E_BREAK
 		{
 			$$ := $1
 			if keep_all_breaks or keep_all_comments then
