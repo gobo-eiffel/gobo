@@ -36,7 +36,6 @@ cluster
 
 		-- Gobo Eiffel Utility Library
 	[ut_command			"$GOBO\library\utility\command"] end
-	[ut_factory			"$GOBO\library\utility\factory"] end
 	[ut_support			"$GOBO\library\utility\support"] end
 
 		-- Gobo Eiffel Kernel Library

@@ -23,7 +23,6 @@
 
 @rem	-- Gobo Eiffel Utility Library
 @echo %GOBO%\library\utility\command\>>				loadpath.se
-@echo %GOBO%\library\utility\factory\>>				loadpath.se
 @echo %GOBO%\library\utility\support\>>				loadpath.se
 
 @rem	-- Gobo Eiffel Kernel Library
