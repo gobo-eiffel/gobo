@@ -11,7 +11,7 @@ indexing
 	date:       "$Date$"
 	revision:   "$Revision$"
 
-class DS_LIST_TESTER
+class DS_TESTER
 
 inherit
 
@@ -182,4 +182,4 @@ feature -- Test
 			a_file.put_string ("after%N")
 		end
 
-end -- class DS_LIST_TESTER
+end -- class DS_TESTER
