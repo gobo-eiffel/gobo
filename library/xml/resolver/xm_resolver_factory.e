@@ -55,8 +55,21 @@ feature -- Access
 		local
 			a_uri: UT_URI
 			a_string: STRING
+			a_cwd: STRING
+			a_pathname: KI_PATHNAME
+			a_drive: STRING
 		do
-			a_string := STRING_.concat ("file://", file_system.current_working_directory)
+			a_cwd := file_system.current_working_directory
+			if file_system /= unix_file_system then
+				a_pathname := file_system.string_to_pathname (a_cwd)
+				a_cwd := unix_file_system.pathname_to_string (a_pathname)
+				a_drive := a_pathname.drive
+				if a_drive /= Void then
+					a_cwd := STRING_.concat (a_drive, a_cwd)
+					a_cwd := STRING_.concat ("/", a_cwd)
+				end
+			end
+			a_string := STRING_.concat ("file://", a_cwd)
 			create a_uri.make (STRING_.concat (a_string, "/"))
 			Result := new_file_resolver_with_uri (a_uri)
 		ensure
