@@ -187,7 +187,7 @@ feature -- Access
 
 	usage_message: STRING is
 			"usage: ascii2ps [-h] [-n] [-d date] [-t time]%N%
-				%T[-l] [-2] [(filename | -) [(filename | -)]]%N"
+				%T[-l] [-2] [filename | -] [filename | -]%N"
 
 feature -- Generation
 
