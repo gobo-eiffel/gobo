@@ -40,7 +40,7 @@ feature {NONE} -- Xace AST factory
 			an_error_handler: ET_ERROR_HANDLER
 			a_factory: ET_AST_FACTORY
 		do
-			an_error_handler := new_error_handler
+			an_error_handler := new_eiffel_error_handler
 			a_factory := new_eiffel_ast_factory
 			create Result.make_with_factory (Void, a_factory, an_error_handler)
 			fill_system (Result, an_element, a_position_table)
@@ -61,18 +61,26 @@ feature {NONE} -- Eiffel AST factory
 			eiffel_ast_factory_not_void: Result /= Void
 		end
 
-	new_error_handler: ET_ERROR_HANDLER is
-			-- New error handler for Eiffel parser
+	new_eiffel_error_handler: ET_ERROR_HANDLER is
+			-- New Eiffel error handler for Eiffel parser
 		do
-			create Result.make_standard
+			if eiffel_error_handler /= Void then
+				Result := eiffel_error_handler
+			else
+				create Result.make_standard
+			end
 		ensure
-			error_handler_not_void: Result /= Void
+			eiffel_error_handler_not_void: Result /= Void
 		end
 
 feature -- Configuration
 
 	eiffel_ast_factory: ET_AST_FACTORY
 			-- Return this AST factory in `new_eiffel_ast_factory'
+			-- if not void
+
+	eiffel_error_handler: ET_ERROR_HANDLER
+			-- Return this error handler in `new_eiffel_error handler'
 			-- if not void
 
 feature -- Configuration setting
@@ -83,6 +91,14 @@ feature -- Configuration setting
 			eiffel_ast_factory := a_factory
 		ensure
 			eiffel_ast_factory_set: eiffel_ast_factory = a_factory
+		end
+
+	set_eiffel_error_handler (a_handler: like eiffel_error_handler) is
+			-- Set `eiffel_error_handler' to `a_handler'.
+		do
+			eiffel_error_handler := a_handler
+		ensure
+			eiffel_error_handler_set: eiffel_error_handler = a_handler
 		end
 
 end
