@@ -1,5 +1,6 @@
 %{
 indexing
+
 	description: 
 		
 		"Full XML parser"
@@ -16,6 +17,7 @@ indexing
 deferred class XF_FULL_PARSER
 
 inherit
+
 	YY_PARSER_SKELETON [ANY]
 		rename
 			make as make_parser,
@@ -1099,17 +1101,6 @@ feature -- Parser
 		do
 			on_start
 			scanner.set_input_buffer (scanner.new_file_buffer (a_stream))
-			parse
-			on_finish
-		end
-
-	parse_string (a_string: STRING) is
-			-- Parse string.
-		require
-			not_void: a_string /= Void
-		do
-			on_start
-			scanner.set_input_buffer (scanner.new_string_buffer (a_string))
 			parse
 			on_finish
 		end
