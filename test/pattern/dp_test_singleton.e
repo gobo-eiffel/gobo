@@ -29,7 +29,7 @@ feature -- Tests
 		local
 			singleton1: SINGLETON1
 		do
-			create singleton1
+			!! singleton1
 		end
 
 	test_singleton_is_singleton is
@@ -39,7 +39,7 @@ feature -- Tests
 			singleton1: SINGLETON1
 		do
 			if not retried then
-				create singleton1
+				!! singleton1
 				assert ("Creating two singletons isn't a problem.", False)
 			else
 				assert ("Singleton seems to be really a singleton.", True)
@@ -54,7 +54,7 @@ feature -- Tests
 		local
 			singleton2: SINGLETON2
 		do
-			create singleton2
+			!! singleton2
 		end
 
 	test_singleton_accessor is
