@@ -2,7 +2,7 @@ indexing
 
 	description:
 
-		"Gepp tasks"
+		"Gedoc tasks"
 
 	library:    "Gobo Eiffel Ant"
 	author:     "Sven Ehrke <sven.ehrke@sven-ehrke.de>"
@@ -12,7 +12,7 @@ indexing
 	revision:   "$Revision$"
 
 
-class GEANT_GEPP_TASK
+class GEANT_GEDOC_TASK
 
 inherit
 
@@ -23,7 +23,7 @@ inherit
 			make_from_element
 		end
 
-	GEANT_GEPP_COMMAND
+	GEANT_GEDOC_COMMAND
 		select
 			make
 		end
@@ -37,10 +37,12 @@ feature {NONE} -- Initialization
 	make_from_element (a_project: GEANT_PROJECT; an_element: GEANT_ELEMENT) is
 			-- Create a new task with information held in `an_element'.
 		local
+			a_name: STRING
 			a_value: STRING
-			define_elements: DS_ARRAYED_LIST [GEANT_ELEMENT]
-			define_element: GEANT_ELEMENT
+			parameter_elements: DS_ARRAYED_LIST [GEANT_ELEMENT]
+			parameter_element: GEANT_ELEMENT
 			i, nb: INTEGER
+			a_pair: DS_PAIR [STRING, STRING]
 		do
 			precursor (a_project, an_element)
 			if has_uc_attribute (an_element, Input_filename_attribute_name) then
@@ -55,13 +57,23 @@ feature {NONE} -- Initialization
 					set_output_filename (a_value)
 				end
 			end
-			define_elements := an_element.children_by_name (Define_element_name)
-			nb := define_elements.count
+			if has_uc_attribute (an_element, Stylesheet_filename_attribute_name) then
+				a_value := uc_attribute_value (an_element, Stylesheet_filename_attribute_name).out
+				if a_value.count > 0 then
+					set_stylesheet_filename (a_value)
+				end
+			end
+			parameter_elements := an_element.children_by_name (Parameter_element_name)
+			nb := parameter_elements.count
 			from i := 1 until i > nb loop
-				define_element := define_elements.item (i)
-				if has_uc_attribute (define_element, Name_attribute_name) then
-					a_value := uc_attribute_value (define_element, Name_attribute_name).out
-					defines.force_last (a_value)
+				parameter_element := parameter_elements.item (i)
+				if has_uc_attribute (parameter_element, Name_attribute_name) and
+					has_uc_attribute (parameter_element, Value_attribute_name)
+				then
+					a_name:= uc_attribute_value (parameter_element, Name_attribute_name).out
+					a_value := uc_attribute_value (parameter_element, Value_attribute_name).out
+					!! a_pair.make (a_name, a_value)
+					parameters.force_last (a_pair)
 				end
 				i := i + 1
 			end
@@ -87,13 +99,31 @@ feature {NONE} -- Constants
 			atribute_name_not_empty: not Result.empty
 		end
 
-	Define_element_name: UC_STRING is
-			-- Name of xml subelement for defines
+	Stylesheet_filename_attribute_name: UC_STRING is
+			-- Name of xml attribute for stylesheet_filename
 		once
-			!! Result.make_from_string ("define")
+			!! Result.make_from_string ("stylesheet")
 		ensure
 			attribute_name_not_void: Result /= Void
 			atribute_name_not_empty: not Result.empty
 		end
 
-end -- class GEANT_GEPP_TASK
+	Parameter_element_name: UC_STRING is
+			-- Name of xml subelement for parameter
+		once
+			!! Result.make_from_string ("parameter")
+		ensure
+			attribute_name_not_void: Result /= Void
+			atribute_name_not_empty: not Result.empty
+		end
+
+	Value_attribute_name: UC_STRING is
+			-- Name of xml attribute for value
+		once
+			!! Result.make_from_string ("value")
+		ensure
+			attribute_name_not_void: Result /= Void
+			atribute_name_not_empty: not Result.empty
+		end
+
+end -- class GEANT_GEDOC_TASK
