@@ -17,6 +17,7 @@ EIFFEL:
 
 GENERAL:
 
+- XM_FORMATTER produces XML, uses streams
 - DTD model should contain attribute enumeration decls
 - Add some generic DTD filters, eg pretty print
 - Q: cache queries by name in tree?
@@ -25,6 +26,7 @@ GENERAL:
 
 TESTS:
 
+- test tree's by_name routines
 - full OASIS test suite to integrate
 - DTD events testing
 
