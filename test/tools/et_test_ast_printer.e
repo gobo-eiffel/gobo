@@ -28,6 +28,9 @@ inherit
 	KL_SHARED_EIFFEL_COMPILER
 		export {NONE} all end
 
+	UC_SHARED_STRING_EQUALITY_TESTER
+		export {NONE} all end
+
 feature -- Test
 
 	test_printer is
@@ -39,7 +42,7 @@ feature -- Test
 			an_xace_ast_factory: ET_XACE_AST_FACTORY
 			an_eiffel_ast_factory: ET_DECORATED_AST_FACTORY
 			an_xace_error_handler: ET_XACE_DEFAULT_ERROR_HANDLER
-			an_xace_variables: ET_XACE_VARIABLES
+			an_xace_variables: DS_HASH_TABLE [STRING, STRING]
 			a_universe: ET_UNIVERSE
 			a_cursor: DS_HASH_TABLE_CURSOR [ET_CLASS, ET_CLASS_NAME]
 			a_class: ET_CLASS
@@ -51,8 +54,9 @@ feature -- Test
 			an_xace_file.open_read
 			assert ("xace_file_opened", an_xace_file.is_open_read)
 			create an_xace_error_handler.make_standard
-			create an_xace_variables.make
-			an_xace_variables.define_value ("GOBO_EIFFEL", eiffel_compiler.vendor)
+			create an_xace_variables.make_map (100)
+			an_xace_variables.set_key_equality_tester (string_equality_tester)
+			an_xace_variables.force_last (eiffel_compiler.vendor, "GOBO_EIFFEL")
 			create an_xace_ast_factory.make
 			create an_eiffel_ast_factory.make
 			an_eiffel_ast_factory.set_keep_all_breaks (True)

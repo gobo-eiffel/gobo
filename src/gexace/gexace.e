@@ -24,6 +24,9 @@ inherit
 	UT_STRING_ROUTINES
 		export {NONE} all end
 
+	UC_SHARED_STRING_EQUALITY_TESTER
+		export {NONE} all end
+
 	KL_SHARED_EXCEPTIONS
 
 	KL_SHARED_EXECUTION_ENVIRONMENT
@@ -42,7 +45,8 @@ feature
 			a_cursor: DS_LINKED_LIST_CURSOR [GEXACE_COMMAND]
 		do
 			Arguments.set_program_name ("gexace")
-			create variables.make
+			create variables.make_map (100)
+			variables.set_key_equality_tester (string_equality_tester)
 			create commands.make
 			create error_handler.make
 			make_command_line_parser
@@ -62,7 +66,7 @@ feature -- Access
 	commands: DS_LINKED_LIST [GEXACE_COMMAND]
 			-- Commands read on the command-line
 
-	variables: ET_XACE_VARIABLES
+	variables: DS_HASH_TABLE [STRING, STRING]
 			-- Defined variables
 
 	error_handler: ET_XACE_DEFAULT_ERROR_HANDLER
@@ -215,19 +219,19 @@ feature {NONE} -- Command-line processing
 			g: ET_XACE_GENERATOR
 		do
 			if a_compiler.is_equal ("se") then
-				variables.define_value ("GOBO_EIFFEL", "se")
+				variables.force_last ("se", "GOBO_EIFFEL")
 				create {ET_XACE_SE_GENERATOR} g.make (variables, error_handler)
 				a_command.generators.force_last (g)
 			elseif a_compiler.is_equal ("ise") then
-				variables.define_value ("GOBO_EIFFEL", "ise")
+				variables.force_last ("ise", "GOBO_EIFFEL")
 				create {ET_XACE_ISE_GENERATOR} g.make (variables, error_handler)
 				a_command.generators.force_last (g)
 			elseif a_compiler.is_equal ("ve") then
-				variables.define_value ("GOBO_EIFFEL", "ve")
+				variables.force_last ("ve", "GOBO_EIFFEL")
 				create {ET_XACE_VE_GENERATOR} g.make (variables, error_handler)
 				a_command.generators.force_last (g)
 			elseif a_compiler.is_equal ("hact") then
-				variables.define_value ("GOBO_EIFFEL", "hact")
+				variables.force_last ("hact", "GOBO_EIFFEL")
 				create {ET_XACE_HACT_GENERATOR} g.make (variables, error_handler)
 				a_command.generators.force_last (g)
 			elseif a_compiler.is_equal ("xml") then
@@ -281,9 +285,9 @@ feature {NONE} -- Command-line processing
 				if a_cursor.item.count /= 0 then
 					a_definition := split_on_first (a_cursor.item, '=')
 					if a_definition.second = Void then
-						variables.define_value (a_cursor.item, "")
+						variables.force_last ("", a_cursor.item)
 					else
-						variables.define_value (a_definition.first, a_definition.second)
+						variables.force_last (a_definition.second, a_definition.first)
 					end
 				end
 				a_cursor.forth

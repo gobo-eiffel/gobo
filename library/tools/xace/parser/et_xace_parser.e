@@ -42,9 +42,10 @@ feature {NONE} -- Initialization
 		require
 			an_error_handler_not_void: an_error_handler /= Void
 		local
-			a_variables: ET_XACE_VARIABLES
+			a_variables: DS_HASH_TABLE [STRING, STRING]
 		do
-			create a_variables.make
+			create a_variables.make_map (100)
+			a_variables.set_key_equality_tester (string_equality_tester)
 			create ast_factory.make
 			make_with_variables_and_factory (a_variables, ast_factory, an_error_handler)
 		ensure
@@ -57,9 +58,10 @@ feature {NONE} -- Initialization
 			a_factory_not_void: a_factory /= Void
 			an_error_handler_not_void: an_error_handler /= Void
 		local
-			a_variables: ET_XACE_VARIABLES
+			a_variables: DS_HASH_TABLE [STRING, STRING]
 		do
-			create a_variables.make
+			create a_variables.make_map (100)
+			a_variables.set_key_equality_tester (string_equality_tester)
 			make_with_variables_and_factory (a_variables, a_factory, an_error_handler)
 		ensure
 			ast_factory_set: ast_factory = a_factory

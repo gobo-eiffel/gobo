@@ -22,6 +22,9 @@ inherit
 
 	KL_IMPORTED_STRING_ROUTINES
 
+	UC_SHARED_STRING_EQUALITY_TESTER
+		export {NONE} all end
+
 creation
 
 	execute
@@ -37,7 +40,7 @@ feature -- Execution
 			a_lace_error_handler: ET_LACE_ERROR_HANDLER
 			an_xace_parser: ET_XACE_UNIVERSE_PARSER
 			an_xace_error_handler: ET_XACE_DEFAULT_ERROR_HANDLER
-			an_xace_variables: ET_XACE_VARIABLES
+			an_xace_variables: DS_HASH_TABLE [STRING, STRING]
 			gobo_eiffel: STRING
 			a_universe: ET_UNIVERSE
 			i, nb: INTEGER
@@ -94,10 +97,11 @@ feature -- Execution
 					nb := a_filename.count
 					if nb > 5 and then a_filename.substring (nb - 4, nb).is_equal (".xace") then
 						create an_xace_error_handler.make_standard
-						create an_xace_variables.make
+						create an_xace_variables.make_map (100)
+						an_xace_variables.set_key_equality_tester (string_equality_tester)
 						gobo_eiffel := Execution_environment.variable_value ("GOBO_EIFFEL")
 						if gobo_eiffel /= Void then
-							an_xace_variables.define_value ("GOBO_EIFFEL", gobo_eiffel)
+							an_xace_variables.force_last (gobo_eiffel, "GOBO_EIFFEL")
 						end
 						create an_xace_parser.make_with_variables (an_xace_variables, an_xace_error_handler)
 						an_xace_parser.parse_file (a_file)

@@ -17,7 +17,7 @@ feature -- Access
 	xace_filename: STRING
 			-- Name of Xace file
 
-	variables: ET_XACE_VARIABLES
+	variables: KL_VALUES [STRING, STRING]
 			-- Dollar variables defined
 
 	error_handler: ET_XACE_ERROR_HANDLER
