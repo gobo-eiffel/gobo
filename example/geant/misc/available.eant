@@ -8,6 +8,9 @@
 
 		<available resource="${GOBO}/readme2.txt" variable="available"/>
 		<echo message="${GOBO}/readme2.txt available?: ${available}"/>
+
+		<available resource="${GOBO}" variable="available"/>
+		<echo message="${GOBO} available?: ${available}"/>
 	</target>
 
 </project>
