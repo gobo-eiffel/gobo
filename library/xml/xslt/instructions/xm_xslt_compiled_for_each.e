@@ -55,6 +55,8 @@ feature -- Evaluation
 			a_saved_template := a_transformer.current_template
 			a_saved_iterator := a_transformer.current_iterator
 			an_iterator := select_expression.iterator (a_context)
+			a_transformer.set_current_template (Void)
+			a_transformer.set_current_iterator (an_iterator)
 			an_inner_context := a_context.new_context
 			an_inner_context.set_current_iterator (an_iterator)
 			if a_transformer.is_tracing then
