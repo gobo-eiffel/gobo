@@ -55,12 +55,17 @@ feature -- Execution
 feature -- Tests
 
 	test_callback is
+		local
+			a_file: KL_TEXT_INPUT_FILE
 		do
 			-- report version
 			assert ("Expat version", version /= Void)
 
-			parse_from_file_name ("test.xml")
-			assert ("parsing is correct.",  is_correct)
+			!! a_file.make ("test.xml")
+			a_file.open_read
+			assert ("a_file_is_open_read", a_file.is_open_read)
+			parse_from_stream (a_file)
+			assert ("parsing is correct.", is_correct)
 
 			-- report results
 			assert ("on_xml_declaration called.", on_xml_declaration_called)
