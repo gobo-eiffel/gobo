@@ -2,19 +2,19 @@ indexing
 
 	description:
 
-		"Routines that ought to be in class STRING";
+		"Routines that ought to be in class STRING"
 
-	library:    "Gobo Eiffel Kernel Library";
-	author:     "Eric Bezault <ericb@gobo.demon.co.uk>";
-	copyright:  "Copyright (c) 1997, Eric Bezault";
-	date:       "$Date$";
+	library:    "Gobo Eiffel Kernel Library"
+	author:     "Eric Bezault <ericb@gobo.demon.co.uk>"
+	copyright:  "Copyright (c) 1997, Eric Bezault"
+	date:       "$Date$"
 	revision:   "$Revision$"
 
 class KL_STRING_ROUTINES
 
 feature -- Initialization
 
-	string__make (n: INTEGER): STRING is
+	make (n: INTEGER): STRING is
 			-- Create an empty string. Try to allocate space
 			-- for at least `n' characters.
 		require
@@ -30,7 +30,7 @@ feature -- Initialization
 			empty_string: Result.count = 0
 		end
 
-	string__make_buffer (n: INTEGER): STRING is
+	make_buffer (n: INTEGER): STRING is
 			-- Create a new string containing `n' characters.
 		require
 			non_negative_n: n >= 0
@@ -38,11 +38,15 @@ feature -- Initialization
 #ifdef VE
 			!! Result.make (n)
 #else
+#ifdef SE
+			!! Result.blank (n)
+#else
 			!! Result.make (n)
 #ifndef ISE || HACT
 			Result.fill ('#')
 #else
 			Result.fill_blank
+#endif
 #endif
 #endif
 		ensure
@@ -52,15 +56,17 @@ feature -- Initialization
 
 feature -- Status report
 
-	string__is_integer (a_string: STRING): BOOLEAN is
+	is_integer (a_string: STRING): BOOLEAN is
 			-- Is `a_string' only made up of digits?
 		require
 			a_string_not_void: a_string /= Void
-#ifndef ISE || HACT
+#ifdef VE
 		local
 			i: INTEGER
 			c: CHARACTER
+#endif
 		do
+#ifdef VE
 			from
 				i := a_string.count
 				Result := True
@@ -72,14 +78,13 @@ feature -- Status report
 				i := i - 1
 			end
 #else
-		do
 			Result := a_string.is_integer
 #endif
 		end
 
 feature -- Conversion
 
-	string__to_lower (a_string: STRING): STRING is
+	to_lower (a_string: STRING): STRING is
 			-- Lower case version of `a_string'
 			-- (Do not alter `a_string'.)
 		require
@@ -94,7 +99,7 @@ feature -- Conversion
 --				Result.item (i) = a_string.item (i).to_lower
 		end
 
-	string__to_upper (a_string: STRING): STRING is
+	to_upper (a_string: STRING): STRING is
 			-- Upper case version of `a_string'
 			-- (Do not alter `a_string'.)
 		require
@@ -111,7 +116,7 @@ feature -- Conversion
 
 feature -- Resizing
 
-	string__resize_buffer (a_string: STRING; n: INTEGER) is
+	resize_buffer (a_string: STRING; n: INTEGER) is
 			-- Resize `a_string' so that it contains `n' characters.
 			-- Do not lose any previously entered characters.
 		require
@@ -120,7 +125,21 @@ feature -- Resizing
 #ifndef VE
 		local
 			i: INTEGER
+#endif
 		do
+#ifdef VE
+			a_string.resize (n)
+#else
+#ifdef SE
+			from
+				i := n - a_string.count
+			until
+				i = 0
+			loop
+				a_string.extend ('#')
+				i := i - 1
+			end
+#else
 			from
 				i := n - a_string.count
 				a_string.resize (n)
@@ -130,9 +149,7 @@ feature -- Resizing
 				a_string.append_character ('#')
 				i := i - 1
 			end
-#else
-		do
-			a_string.resize (n)
+#endif
 #endif
 		ensure
 			count_set: a_string.count = n

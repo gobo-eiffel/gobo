@@ -2,19 +2,49 @@ indexing
 
 	description:
 
-		"Routines that ought to be in class ARRAY";
+		"Routines that ought to be in class ARRAY"
 
-	library:    "Gobo Eiffel Kernel Library";
-	author:     "Eric Bezault <ericb@gobo.demon.co.uk>";
-	copyright:  "Copyright (c) 1997, Eric Bezault";
-	date:       "$Date$";
+	library:    "Gobo Eiffel Kernel Library"
+	author:     "Eric Bezault <ericb@gobo.demon.co.uk>"
+	copyright:  "Copyright (c) 1997, Eric Bezault"
+	date:       "$Date$"
 	revision:   "$Revision$"
 
-class KL_ARRAY_ROUTINES
+class KL_ARRAY_ROUTINES [G]
+
+feature -- Initialization
+
+	make_from_array (an_array: ARRAY [G]; min_index: INTEGER): ARRAY [G] is
+			-- Create a new array and initialize it
+			-- with items from `an_array'.
+		require
+			an_array_not_void: an_array /= Void
+		local
+			i, j, nb: INTEGER
+		do
+			!! Result.make (min_index, min_index + an_array.count - 1)
+			from
+				nb := an_array.upper
+				i := an_array.lower
+				j := min_index
+			until
+				i > nb
+			loop
+				Result.put (an_array.item (i), j)
+				i := i + 1
+				j := j + 1
+			end
+		ensure
+			array_not_void: Result /= Void
+			lower_set: Result.lower = min_index
+			count_set: Result.count = an_array.count
+--			same_items: forall i in Result.lower .. Result.upper,
+--				Result.item (i) = an_array.item (i + an_array.lower - min_index)
+		end
 
 feature -- Status report
 
-	array__has (an_array: ARRAY [ANY]; v: ANY): BOOLEAN is
+	has (an_array: ARRAY [G]; v: G): BOOLEAN is
 			-- Does `v' appear in `an_array'?
 		require
 			an_array_not_void: an_array /= Void

@@ -2,43 +2,39 @@ indexing
 
 	description:
 
-		"Routines that ought to be in class INTEGER";
+		"Routines that ought to be in class INTEGER"
 
-	library:    "Gobo Eiffel Kernel Library";
-	author:     "Eric Bezault <ericb@gobo.demon.co.uk>";
-	copyright:  "Copyright (c) 1997, Eric Bezault";
-	date:       "$Date$";
+	library:    "Gobo Eiffel Kernel Library"
+	author:     "Eric Bezault <ericb@gobo.demon.co.uk>"
+	copyright:  "Copyright (c) 1997, Eric Bezault"
+	date:       "$Date$"
 	revision:   "$Revision$"
 
 class KL_INTEGER_ROUTINES
 
 inherit
 
-	PLATFORM
+	KL_SHARED_PLATFORM
 
-feature -- Convertion
+feature -- Conversion
 
-	integer__to_character (an_int: INTEGER): CHARACTER is
+	to_character (an_int: INTEGER): CHARACTER is
 			-- Character whose ASCII code is `an_int'
 		require
-			a_int_large_enough: an_int >= Minimum_character_code
-			a_int_small_enough: an_int <= Maximum_character_code
+			a_int_large_enough: an_int >= platform_.Minimum_character_code
+			a_int_small_enough: an_int <= platform_.Maximum_character_code
 		do
 #ifdef VE
 			Result.from_integer (an_int)
 #else
+#ifdef SE
+			Result := an_int.to_character
+#else
 			Result := '%U' + an_int
+#endif
 #endif
 		ensure
 			valid_character_code: Result.code = an_int
 		end
 
-#ifdef ISE || HACT
-feature -- Constants
-
-	Minimum_character_code: INTEGER is 0
-	Maximum_character_code: INTEGER is 255
-			-- Smallest and largest supported codes for CHARACTER values
-
-#endif
 end -- class KL_INTEGER_ROUTINES
