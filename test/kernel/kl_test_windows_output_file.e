@@ -32,6 +32,69 @@ feature -- Test
 			assert ("is_closed", a_file.is_closed)
 		end
 
+	test_is_readable is
+			-- Test feature `is_readable'.
+		local
+			a_file: KL_WINDOWS_OUTPUT_FILE
+			a_name: STRING
+			a_directory: KL_DIRECTORY
+			out_file: KL_TEXT_OUTPUT_FILE
+		do
+				-- The following two files, whose pathnames have a non-empty
+				-- dirname, are readable.
+			a_name := gobo_filename
+			a_name := Execution_environment.interpreted_string (a_name)
+			!! a_file.make (a_name)
+			assert ("readable1", a_file.is_readable)
+			a_name := empty_filename
+			a_name := Execution_environment.interpreted_string (a_name)
+			!! a_file.make (a_name)
+			assert ("readable2", a_file.is_readable)
+				-- The following file, whose pathname has a non-empty
+				-- dirname, is not readable.
+			a_name := file_system.pathname (data_dirname, "gobo.txtoops")
+			a_name := Execution_environment.interpreted_string (a_name)
+			!! a_file.make (a_name)
+			assert ("not_readable1", not a_file.is_readable)
+				-- The following file, whose pathname has a non-empty
+				-- dirname and a basename containing a space, is not readable.
+			a_name := file_system.pathname (data_dirname, "gobo.txt oops")
+			a_name := Execution_environment.interpreted_string (a_name)
+			!! a_file.make (a_name)
+			assert ("not_readable2", not a_file.is_readable)
+				-- A file with an empty name is not readable.
+			!! a_file.make ("")
+			assert ("not_readable3", not a_file.is_readable)
+				-- The following pathname exists, but it is a
+				-- directory and hence is not a readable file.
+			a_name := data_dirname
+			a_name := Execution_environment.interpreted_string (a_name)
+			!! a_directory.make (a_name)
+			assert ("directory_readable", a_directory.is_readable)
+			!! a_file.make (a_name)
+			assert ("not_readable4", not a_file.is_readable)
+				-- Create a file in the current directory and then
+				-- check that this file, whose pathname has an empty
+				-- dirname, is readable. Then delete this newly created
+				-- file and check than it is not readable anymore.
+			a_name := new_filename ("gobo", ".tmp")
+			!! a_file.make (a_name)
+			assert ("not_readable5", not a_file.is_readable)
+			!! out_file.make (a_name)
+			out_file.open_write
+			if out_file.is_open_write then
+				out_file.put_string ("Hello gobo")
+				out_file.close
+				assert ("is_closed", out_file.is_closed)
+				!! a_file.make (a_name)
+				assert ("readable3", a_file.is_readable)
+				a_file.delete
+				assert ("not_readable6", not a_file.is_readable)
+			else
+				assert ("is_opened", False)
+			end
+		end
+
 	test_eol is
 			-- Test feature `eol'.
 		local

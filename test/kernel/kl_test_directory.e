@@ -41,7 +41,7 @@ feature -- Test
 			assert ("is_closed", a_directory.is_closed)
 		end
 
-	test_is_readable is
+	test_is_readable1 is
 			-- Test feature `is_readable'.
 		local
 			a_directory: KL_DIRECTORY
@@ -54,6 +54,59 @@ feature -- Test
 			assert ("readable1", a_directory.is_readable)
 			a_directory.delete
 			assert ("not_readable2", not a_directory.is_readable)
+		end
+
+	test_is_readable2 is
+			-- Test feature `is_readable'.
+		local
+			a_directory: KL_DIRECTORY
+			a_file: KL_TEXT_INPUT_FILE
+			a_name: STRING
+		do
+				-- The following directory, whose pathname has a non-empty
+				-- dirname, is readable.
+			a_name := data_dirname
+			a_name := Execution_environment.interpreted_string (a_name)
+			!! a_directory.make (a_name)
+			assert ("readable1", a_directory.is_readable)
+				-- The current directory is readable.
+			a_name := file_system.relative_current_directory
+			!! a_directory.make (a_name)
+			assert ("readable2", a_directory.is_readable)
+				-- The following directory, whose pathname has a non-empty
+				-- dirname, is not readable.
+			a_name := file_system.nested_pathname ("$GOBO", <<"test", "kernel", "dataoops">>)
+			a_name := Execution_environment.interpreted_string (a_name)
+			!! a_directory.make (a_name)
+			assert ("not_readable1", not a_directory.is_readable)
+				-- The following directory, whose pathname has a non-empty
+				-- dirname and a basename containing a space, is not readable.
+			a_name := file_system.nested_pathname ("$GOBO", <<"test", "kernel", "data oops">>)
+			a_name := Execution_environment.interpreted_string (a_name)
+			!! a_directory.make (a_name)
+			assert ("not_readable2", not a_directory.is_readable)
+				-- A directory with an empty name is not readable.
+			!! a_directory.make ("")
+			assert ("not_readable3", not a_directory.is_readable)
+				-- The following pathname exists, but it is a
+				-- file and hence is not a readable directory.
+			a_name := gobo_filename
+			a_name := Execution_environment.interpreted_string (a_name)
+			!! a_file.make (a_name)
+			assert ("file_readable", a_file.is_readable)
+			!! a_directory.make (a_name)
+			assert ("not_readable4", not a_directory.is_readable)
+				-- Create an empty directory in the current directory and then
+				-- check that this directory, whose pathname has an empty
+				-- dirname, is readable. Then delete this newly created
+				-- directory and check than it is not readable anymore.
+			a_name := new_dirname ("gobo")
+			!! a_directory.make (a_name)
+			assert ("not_readable5", not a_directory.is_readable)
+			a_directory.create_directory
+			assert ("readable3", a_directory.is_readable)
+			a_directory.delete
+			assert ("not_readable6", not a_directory.is_readable)
 		end
 
 	test_open_read is
