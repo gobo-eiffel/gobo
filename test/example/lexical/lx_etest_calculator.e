@@ -31,8 +31,22 @@ feature -- Test
 			-- Test 'calculator' example.
 		do
 			if eiffel_compiler.is_hact then
-				compile_example
+				if file_system.directory_exists (yacc_cluster) then
+					compile_example
+				end
 			end
+		end
+
+feature {NONE} -- Implementation
+
+	yacc_cluster: STRING is
+			-- Name of directory where HACT yacc classes are located
+		once
+			Result := file_system.nested_pathname ("${ISS_BASE}", <<"library", "yacc">>)
+			Result := Execution_environment.interpreted_string (Result)
+		ensure
+			yacc_cluster_not_void: Result /= Void
+			yacc_cluster_not_empty: Result.count > 0
 		end
 
 end -- class LX_ETEST_CALCULATOR
