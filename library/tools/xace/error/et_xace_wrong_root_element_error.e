@@ -22,7 +22,7 @@ creation
 
 feature {NONE} -- Initialization
 
-	make (an_element_name: UC_STRING; a_position: XM_POSITION) is
+	make (an_element_name: STRING; a_position: XM_POSITION) is
 			-- Create a new error reporting that Xace file does not
 			-- contain the expected root element `an_element_name'.
 		require
@@ -31,7 +31,7 @@ feature {NONE} -- Initialization
 			a_position_not_void: a_position /= Void
 		do
 			!! parameters.make (1, 2)
-			parameters.put (an_element_name.to_utf8, 1)
+			parameters.put (an_element_name, 1)
 			parameters.put (a_position.out, 2)
 		end
 

@@ -23,7 +23,7 @@ creation
 
 feature {NONE} -- Initialization
 
-	make (an_element: XM_ELEMENT; an_attribute_name: UC_STRING; an_actual_value: UC_STRING;
+	make (an_element: XM_ELEMENT; an_attribute_name: STRING; an_actual_value: STRING;
 		an_expected_values: DS_LINEAR [STRING]; a_position: XM_POSITION) is
 			-- Create an error reporting that the value `an_actual_value' of
 			-- attribute `an_attribute_name' in element `an_element' should be
@@ -42,9 +42,9 @@ feature {NONE} -- Initialization
 			a_string: STRING
 		do
 			!! parameters.make (1, 5)
-			parameters.put (an_element.name.to_utf8, 1)
-			parameters.put (an_attribute_name.to_utf8, 2)
-			parameters.put (an_actual_value.to_utf8, 3)
+			parameters.put (an_element.name, 1)
+			parameters.put (an_attribute_name, 2)
+			parameters.put (an_actual_value, 3)
 			from
 				a_cursor := an_expected_values.new_cursor
 				a_cursor.start

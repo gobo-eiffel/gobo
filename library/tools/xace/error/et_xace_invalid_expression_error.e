@@ -22,7 +22,7 @@ creation
 
 feature {NONE} -- Initialization
 
-	make (an_invalid_expression: UC_STRING; a_position: XM_POSITION) is
+	make (an_invalid_expression: STRING; a_position: XM_POSITION) is
 			-- Create an error reporting that expression `an_invalid_expression'
 			-- is not valid.
 		require
@@ -30,7 +30,7 @@ feature {NONE} -- Initialization
 			a_position_not_void: a_position /= Void
 		do
 			!! parameters.make (1, 2)
-			parameters.put (an_invalid_expression.to_utf8, 1)
+			parameters.put (an_invalid_expression, 1)
 			parameters.put (a_position.out, 2)
 		end
 

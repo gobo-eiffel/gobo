@@ -22,7 +22,7 @@ creation
 
 feature {NONE} -- Initialization
 
-	make (a_containing_element: XM_ELEMENT; an_element_name: UC_STRING; a_position: XM_POSITION) is
+	make (a_containing_element: XM_ELEMENT; an_element_name: STRING; a_position: XM_POSITION) is
 			-- Create an error reporting that element `an_element_name'
 			-- is missing in element `a_containing_element'.
 		require
@@ -32,8 +32,8 @@ feature {NONE} -- Initialization
 			a_position_not_void: a_position /= Void
 		do
 			!! parameters.make (1, 3)
-			parameters.put (a_containing_element.name.to_utf8, 1)
-			parameters.put (an_element_name.to_utf8, 2)
+			parameters.put (a_containing_element.name, 1)
+			parameters.put (an_element_name, 2)
 			parameters.put (a_position.out, 3)
 		end
 

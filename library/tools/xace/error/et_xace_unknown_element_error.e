@@ -31,8 +31,8 @@ feature {NONE} -- Initialization
 			a_position_not_void: a_position /= Void
 		do
 			!! parameters.make (1, 3)
-			parameters.put (a_containing_element.name.to_utf8, 1)
-			parameters.put (an_element.name.to_utf8, 2)
+			parameters.put (a_containing_element.name, 1)
+			parameters.put (an_element.name, 2)
 			parameters.put (a_position.out, 3)
 		end
 

@@ -118,7 +118,7 @@ feature -- Reporting errors
 			report_error (an_error)
 		end
 
-	report_wrong_root_element_error (an_element_name: UC_STRING; a_position: XM_POSITION) is
+	report_wrong_root_element_error (an_element_name: STRING; a_position: XM_POSITION) is
 			-- Report that Xace file does not contain the
 			-- expected root element `an_element_name'.
 		require
@@ -132,7 +132,7 @@ feature -- Reporting errors
 			report_error (an_error)
 		end
 
-	report_missing_attribute_error (a_containing_element: XM_ELEMENT; an_attribute_name: UC_STRING; a_position: XM_POSITION) is
+	report_missing_attribute_error (a_containing_element: XM_ELEMENT; an_attribute_name: STRING; a_position: XM_POSITION) is
 			-- Report that attribute `an_attribute_name' is
 			-- missing in element `a_containing_element'.
 		require
@@ -147,7 +147,7 @@ feature -- Reporting errors
 			report_error (an_error)
 		end
 
-	report_missing_element_error (a_containing_element: XM_ELEMENT; an_element_name: UC_STRING; a_position: XM_POSITION) is
+	report_missing_element_error (a_containing_element: XM_ELEMENT; an_element_name: STRING; a_position: XM_POSITION) is
 			-- Report that element `an_element_name' is
 			-- missing in element `a_containing_element'.
 		require
@@ -176,7 +176,7 @@ feature -- Reporting errors
 			report_error (an_error)
 		end
 
-	report_invalid_expression_error (an_invalid_expression: UC_STRING; a_position: XM_POSITION) is
+	report_invalid_expression_error (an_invalid_expression: STRING; a_position: XM_POSITION) is
 			-- Report that expression `an_invalid_expression'
 			-- is not valid.
 		require
@@ -189,8 +189,8 @@ feature -- Reporting errors
 			report_error (an_error)
 		end
 
-	report_boolean_expected_error (an_element: XM_ELEMENT; an_attribute_name: UC_STRING;
-		an_actual_value: UC_STRING; a_position: XM_POSITION) is
+	report_boolean_expected_error (an_element: XM_ELEMENT; an_attribute_name: STRING;
+		an_actual_value: STRING; a_position: XM_POSITION) is
 			-- Report that the value of attribute `an_attribute_name'
 			-- in element `an_element' should be a boolean value.
 		require
@@ -206,8 +206,8 @@ feature -- Reporting errors
 			report_error (an_error)
 		end
 
-	report_positive_integer_expected_error (an_element: XM_ELEMENT; an_attribute_name: UC_STRING;
-		an_actual_value: UC_STRING; a_position: XM_POSITION) is
+	report_positive_integer_expected_error (an_element: XM_ELEMENT; an_attribute_name: STRING;
+		an_actual_value: STRING; a_position: XM_POSITION) is
 			-- Report that the value of attribute `an_attribute_name'
 			-- in element `an_element' should be a positive integer.
 		require
@@ -223,8 +223,8 @@ feature -- Reporting errors
 			report_error (an_error)
 		end
 
-	report_wrong_attribute_value_error (an_element: XM_ELEMENT; an_attribute_name: UC_STRING;
-		an_actual_value: UC_STRING; an_expected_values: DS_LINEAR [STRING]; a_position: XM_POSITION) is
+	report_wrong_attribute_value_error (an_element: XM_ELEMENT; an_attribute_name: STRING;
+		an_actual_value: STRING; an_expected_values: DS_LINEAR [STRING]; a_position: XM_POSITION) is
 			-- Report that the value `an_actual_value' of attribute
 			-- `an_attribute_name' in element `an_element' should be
 			-- one of the `an_expected_values'.
