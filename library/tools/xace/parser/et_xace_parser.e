@@ -98,11 +98,12 @@ feature {NONE} -- Initialization
 				-- Use an Expat parser if available,
 				-- an Eiffel parser otherwise.
 			!! an_expat_parser_factory
-			if an_expat_parser_factory.is_expat_available then
+			if an_expat_parser_factory.is_expat_parser_available then
 				xml_parser := an_expat_parser_factory.new_expat_parser
 			else
 				!XM_EIFFEL_PARSER! xml_parser.make
 			end
+			xml_parser.set_string_mode_mixed
 				-- The parser will build a tree.
 			!! tree_pipe.make
 			xml_parser.set_callbacks (tree_pipe.start)
