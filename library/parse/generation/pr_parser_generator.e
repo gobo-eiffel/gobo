@@ -122,8 +122,8 @@ feature {NONE} -- Generation
 				-- Skip the "error" and "$undefined." tokens.
 			from i := 3 until i > nb loop
 				a_token := tokens.item (i)
-				a_name := a_token.name
-				if a_name.item (1) /= '%'' then
+				if a_token.has_identifier then
+					a_name := a_token.name
 					a_file.put_character ('%T')
 					a_file.put_string (a_name)
 					a_file.put_string (": INTEGER is ")

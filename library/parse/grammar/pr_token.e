@@ -30,6 +30,15 @@ feature -- Status report
 	is_terminal: BOOLEAN is True
 			-- Is current symbol terminal?
 
+	has_identifier: BOOLEAN is
+			-- Is current token associated with an identifier?
+		local
+			c: CHARACTER
+		do
+			c := name.item (1)
+			Result := c /= '%'' and c /= '%"'
+		end
+
 	is_left_associative: BOOLEAN is
 			-- Is current token left associative?
 		do
