@@ -55,8 +55,7 @@ feature {NONE} -- Initialization
 			else
 				set_description ("")
 			end
-			if a_xml_element.has_attribute_by_name (Export_attribute_name) and then
-				a_xml_element.attribute_by_name (Export_attribute_name).value.count > 0 then
+			if a_xml_element.has_attribute_by_name (Export_attribute_name) then
 				a_exports := string_tokens (
 					a_xml_element.attribute_by_name (Export_attribute_name).value, ',')
 			else
