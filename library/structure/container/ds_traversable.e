@@ -8,7 +8,7 @@ indexing
 
 	library:    "Gobo Eiffel Structure Library"
 	author:     "Eric Bezault <ericb@gobosoft.com>"
-	copyright:  "Copyright (c) 1999, Eric Bezault and others"
+	copyright:  "Copyright (c) 1999-2001, Eric Bezault and others"
 	license:    "Eiffel Forum Freeware License v1 (see forum.txt)"
 	date:       "$Date$"
 	revision:   "$Revision$"
@@ -26,7 +26,7 @@ feature -- Access
 		require
 			not_off: not off
 		do
-			Result := internal_cursor.item
+			Result := cursor_item (internal_cursor)
 		end
 
 	new_cursor: DS_CURSOR [G] is
@@ -42,7 +42,7 @@ feature -- Status report
 	off: BOOLEAN is
 			-- Is there no item at internal cursor position?
 		do
-			Result := internal_cursor.off
+			Result := cursor_off (internal_cursor)
 		end
 
 	same_position (a_cursor: like new_cursor): BOOLEAN is
@@ -50,7 +50,7 @@ feature -- Status report
 		require
 			a_cursor_not_void: a_cursor /= Void
 		do
-			Result := internal_cursor.same_position (a_cursor)
+			Result := cursor_same_position (internal_cursor, a_cursor)
 		end
 
 	valid_cursor (a_cursor: DS_CURSOR [G]): BOOLEAN is
@@ -69,19 +69,57 @@ feature -- Cursor movement
 			cursor_not_void: a_cursor /= Void
 			valid_cursor: valid_cursor (a_cursor)
 		do
-			internal_cursor.go_to (a_cursor)
+			cursor_go_to (internal_cursor, a_cursor)
 		ensure
 			same_position: same_position (a_cursor)
 		end
 
-feature {NONE} -- Implementation
+feature {NONE} -- Cursor implementation
 
 	internal_cursor: like new_cursor is
 			-- Internal cursor
 		deferred
 		end
 
-feature {DS_CURSOR} -- Implementation
+feature {DS_CURSOR} -- Cursor implementation
+
+	cursor_item (a_cursor: like new_cursor): G is
+			-- Item at `a_cursor' position
+		require
+			a_cursor_not_void: a_cursor /= Void
+			a_cursor_valid: valid_cursor (a_cursor)
+			a_cursor_not_off: not cursor_off (a_cursor)
+		deferred
+		end
+
+	cursor_off (a_cursor: like new_cursor): BOOLEAN is
+			-- Is there no item at `a_cursor' position?
+		require
+			a_cursor_not_void: a_cursor /= Void
+			a_cursor_valid: valid_cursor (a_cursor)
+		deferred
+		end
+
+	cursor_same_position (a_cursor, other: like new_cursor): BOOLEAN is
+			-- Is `a_cursor' at same position as `other'?
+		require
+			a_cursor_not_void: a_cursor /= Void
+			a_cursor_valid: valid_cursor (a_cursor)
+			other_not_void: other /= Void
+		deferred
+		end
+
+	cursor_go_to (a_cursor, other: like new_cursor) is
+			-- Move `a_cursor' to `other''s position.
+		require
+			cursor_not_void: a_cursor /= Void
+			a_cursor_valid: valid_cursor (a_cursor)
+			other_not_void: other /= Void
+			other_valid: valid_cursor (other)
+		deferred
+		ensure
+			same_position: cursor_same_position (a_cursor, other)
+		end
 
 	add_traversing_cursor (a_cursor: like new_cursor) is
 			-- Add `a_cursor' to the list of traversing cursors
@@ -123,10 +161,23 @@ feature {DS_CURSOR} -- Implementation
 			end
 		end
 
+feature {NONE} -- Implementation
+
+	initialized: BOOLEAN is
+			-- Some Eiffel compilers check invariants even when the
+			-- execution of the creation procedure is not completed.
+			-- (In this case, checking the assertions of the being
+			-- created `internal_cursor' triggers the invariants
+			-- on the current container. So these invariants need
+			-- to be protected.)
+		do
+			Result := (internal_cursor /= Void)
+		end
+
 invariant
 
-	empty_constraint: is_empty implies off
-	internal_cursor_not_void: internal_cursor /= Void
-	valid_internal_cursor: valid_cursor (internal_cursor)
+	empty_constraint: initialized implies (is_empty implies off)
+	internal_cursor_not_void: initialized implies (internal_cursor /= Void)
+	valid_internal_cursor: initialized implies valid_cursor (internal_cursor)
 
 end -- class DS_TRAVERSABLE

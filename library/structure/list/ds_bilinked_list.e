@@ -6,7 +6,7 @@ indexing
 
 	library:    "Gobo Eiffel Structure Library"
 	author:     "Eric Bezault <ericb@gobosoft.com>"
-	copyright:  "Copyright (c) 1999, Eric Bezault and others"
+	copyright:  "Copyright (c) 1999-2001, Eric Bezault and others"
 	license:    "Eiffel Forum Freeware License v1 (see forum.txt)"
 	date:       "$Date$"
 	revision:   "$Revision$"
@@ -19,10 +19,10 @@ inherit
 		redefine
 			new_cursor, put_left_cursor, force_left_cursor,
 			extend_left_cursor, append_left_cursor,
-			remove_last, remove_at_cursor,
-			remove_left_cursor, prune_last,
-			prune_left_cursor, keep_last,
-			first_cell, set_first_cell
+			remove_last, remove_at_cursor, remove_left_cursor,
+			prune_last, prune_left_cursor, keep_last,
+			first_cell, set_first_cell,
+			cursor_back, cursor_search_back, cursor_go_i_th
 		end
 
 creation
@@ -264,6 +264,118 @@ feature {NONE} -- Implementation
 		do
 			a_cell.forget_left
 			first_cell := a_cell
+		end
+
+feature {DS_BILINKED_LIST_CURSOR} -- Cursor implementation
+
+	cursor_back (a_cursor: like new_cursor) is
+			-- Move `a_cursor' to previous position.
+			-- (Performance: O(1).)
+		local
+			was_off, new_before: BOOLEAN
+			new_cell: like first_cell
+		do
+			if a_cursor.after then
+				was_off := True
+				new_cell := last_cell
+			else
+				new_cell := a_cursor.current_cell.left
+			end
+			new_before := (new_cell = Void)
+			a_cursor.set (new_cell, new_before, False)
+			if new_before then
+				if not was_off then
+					remove_traversing_cursor (a_cursor)
+				end
+			elseif was_off then
+				add_traversing_cursor (a_cursor)
+			end
+		end
+
+	cursor_search_back (a_cursor: like new_cursor; v: G) is
+			-- Move `a_cursor' to first position at or before its current
+			-- position where `cursor_item (a_cursor)' and `v' are equal.
+			-- (Use `equality_tester''s comparison criterion
+			-- if not void, use `=' criterion otherwise.)
+			-- Move `before' if not found.
+		local
+			a_cell: like first_cell
+			a_tester: like equality_tester
+			was_off, new_before: BOOLEAN
+		do
+			a_cell := a_cursor.current_cell
+			was_off := (a_cell = Void)
+			a_tester := equality_tester
+			if a_tester /= Void then
+				from until
+					a_cell = Void or else a_tester.test (a_cell.item, v)
+				loop
+					a_cell := a_cell.left
+				end
+			else
+					-- Use `=' as comparison criterion.
+				from until
+					a_cell = Void or else a_cell.item = v
+				loop
+					a_cell := a_cell.left
+				end
+			end
+			new_before := (a_cell = Void)
+			a_cursor.set (a_cell, new_before, False)
+			if new_before then
+				if not was_off then
+					remove_traversing_cursor (a_cursor)
+				end
+			elseif was_off then
+				add_traversing_cursor (a_cursor)
+			end
+		end
+
+	cursor_go_i_th (a_cursor: like new_cursor; i: INTEGER) is
+			-- Move `a_cursor' to `i'-th position.
+			-- (Performance: O(min(i,count-i)).)
+		local
+			j, k, nb: INTEGER
+			a_cell: like first_cell
+			was_off: BOOLEAN
+		do
+			was_off := cursor_off (a_cursor)
+			nb := count
+			if i = 0 then
+				a_cursor.set_before
+			elseif i = count + 1 then
+				a_cursor.set_after
+			else
+				if i = 1 then
+					a_cell := first_cell
+				elseif i = nb then
+					a_cell := last_cell
+				else
+					k := count - i + 1
+					if k < i then
+						a_cell := last_cell
+						from j := 1 until j = k loop
+							a_cell := a_cell.left
+							j := j + 1
+						end
+					else
+						a_cell := first_cell
+						from j := 1 until j = i loop
+							a_cell := a_cell.right
+							j := j + 1
+						end
+					end
+				end
+				a_cursor.set (a_cell, False, False)
+			end
+			if a_cell = Void then
+					-- `a_cursor.off'
+				if not was_off then
+					remove_traversing_cursor (a_cursor)
+				end
+			elseif was_off then
+				add_traversing_cursor (a_cursor)
+			end
 		end
 
 invariant

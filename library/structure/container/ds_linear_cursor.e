@@ -6,7 +6,7 @@ indexing
 
 	library:    "Gobo Eiffel Structure Library"
 	author:     "Eric Bezault <ericb@gobosoft.com>"
-	copyright:  "Copyright (c) 1999, Eric Bezault and others"
+	copyright:  "Copyright (c) 1999-2001, Eric Bezault and others"
 	license:    "Eiffel Forum Freeware License v1 (see forum.txt)"
 	date:       "$Date$"
 	revision:   "$Revision$"
@@ -17,7 +17,7 @@ inherit
 
 	DS_CURSOR [G]
 		redefine
-			container
+			container, next_cursor
 		end
 
 feature -- Access
@@ -31,39 +31,36 @@ feature -- Status report
 
 	is_first: BOOLEAN is
 			-- Is cursor on first item?
-		deferred
+		do
+			Result := container.cursor_is_first (Current)
 		ensure
 			not_empty: Result implies not container.is_empty
 			not_off: Result implies not off
-			definition: Result implies (item = container.first)
 		end
 
 	after: BOOLEAN is
 			-- Is there no valid position to right of cursor?
-		deferred
-		end
-
-	off: BOOLEAN is
-			-- Is there no item at cursor position?
 		do
-			Result := after
+			Result := container.cursor_after (Current)
 		end
 
 feature -- Cursor movement
 
 	start is
 			-- Move cursor to first position.
-		deferred
+		do
+			container.cursor_start (Current)
 		ensure
 			empty_behavior: container.is_empty implies after
-			not_empty_behavior: not container.is_empty implies is_first
+			first_or_after: is_first xor after
 		end
 
 	forth is
 			-- Move cursor to next position.
 		require
 			not_after: not after
-		deferred
+		do
+			container.cursor_forth (Current)
 		end
 
 	search_forth (v: G) is
@@ -74,15 +71,25 @@ feature -- Cursor movement
 			-- Move `after' if not found.
 		require
 			not_off: not off or after
-		deferred
+		do
+			container.cursor_search_forth (Current, v)
 		end
 
 	go_after is
 			-- Move cursor to `after' position.
-		deferred
+		do
+			container.cursor_go_after (Current)
 		ensure
 			after: after
 		end
+
+feature {DS_LINEAR} -- Implementation
+
+	next_cursor: DS_LINEAR_CURSOR [G]
+			-- Next cursor
+			-- (Used by `container' to keep track of traversing
+			-- cursors (i.e. cursors associated with `container'
+			-- and which are not currently `off').)
 
 invariant
 

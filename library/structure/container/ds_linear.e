@@ -6,7 +6,7 @@ indexing
 
 	library:    "Gobo Eiffel Structure Library"
 	author:     "Eric Bezault <ericb@gobosoft.com>"
-	copyright:  "Copyright (c) 1999, Eric Bezault and others"
+	copyright:  "Copyright (c) 1999-2001, Eric Bezault and others"
 	license:    "Eiffel Forum Freeware License v1 (see forum.txt)"
 	date:       "$Date$"
 	revision:   "$Revision$"
@@ -43,7 +43,7 @@ feature -- Status report
 	is_first: BOOLEAN is
 			-- Is internal cursor on first item?
 		do
-			Result := internal_cursor.is_first
+			Result := cursor_is_first (internal_cursor)
 		ensure
 			not_empty: Result implies not is_empty
 			not_off: Result implies not off
@@ -53,7 +53,7 @@ feature -- Status report
 	after: BOOLEAN is
 			-- Is there no valid position to right of internal cursor?
 		do
-			Result := internal_cursor.after
+			Result := cursor_after (internal_cursor)
 		end
 
 	has (v: G): BOOLEAN is
@@ -96,7 +96,7 @@ feature -- Cursor movement
 	start is
 			-- Move internal cursor to first position.
 		do
-			internal_cursor.start
+			cursor_start (internal_cursor)
 		ensure
 			empty_behavior: is_empty implies after
 			not_empty_behavior: not is_empty implies is_first
@@ -107,7 +107,7 @@ feature -- Cursor movement
 		require
 			not_after: not after
 		do
-			internal_cursor.forth
+			cursor_forth (internal_cursor)
 		end
 
 	search_forth (v: G) is
@@ -119,13 +119,13 @@ feature -- Cursor movement
 		require
 			not_off: not off or after
 		do
-			internal_cursor.search_forth (v)
+			cursor_search_forth (internal_cursor, v)
 		end
 
 	go_after is
-			-- Move cursor to `after' position.
+			-- Move internal cursor to `after' position.
 		do
-			internal_cursor.go_after
+			cursor_go_after (internal_cursor)
 		ensure
 			after: after
 		end
@@ -151,8 +151,81 @@ feature -- Duplication
 			same_count: Result.count = count
 		end
 
+feature {DS_CURSOR} -- Cursor implementation
+
+	cursor_off (a_cursor: like new_cursor): BOOLEAN is
+			-- Is there no item at `a_cursor' position?
+		do
+			Result := cursor_after (a_cursor)
+		end
+
+feature {DS_LINEAR_CURSOR} -- Cursor implementation
+
+	cursor_is_first (a_cursor: like new_cursor): BOOLEAN is
+			-- Is `a_cursor' on first item?
+		require
+			a_cursor_not_void: a_cursor /= Void
+			a_cursor_valid: valid_cursor (a_cursor)
+		deferred
+		ensure
+			not_empty: Result implies not is_empty
+			a_cursor_not_off: Result implies not cursor_off (a_cursor)
+			definition: Result implies (cursor_item (a_cursor) = first)
+		end
+
+	cursor_after (a_cursor: like new_cursor): BOOLEAN is
+			-- Is there no valid position to right of `a_cursor'?
+		require
+			a_cursor_not_void: a_cursor /= Void
+			a_cursor_valid: valid_cursor (a_cursor)
+		deferred
+		end
+
+	cursor_start (a_cursor: like new_cursor) is
+			-- Move `a_cursor' to first position.
+		require
+			a_cursor_not_void: a_cursor /= Void
+			a_cursor_valid: valid_cursor (a_cursor)
+		deferred
+		ensure
+			empty_behavior: is_empty implies cursor_after (a_cursor)
+			not_empty_behavior: not is_empty implies cursor_is_first (a_cursor)
+		end
+
+	cursor_forth (a_cursor: like new_cursor) is
+			-- Move `a_cursor' to next position.
+		require
+			a_cursor_not_void: a_cursor /= Void
+			a_cursor_valid: valid_cursor (a_cursor)
+			a_cursor_not_after: not cursor_after (a_cursor)
+		deferred
+		end
+
+	cursor_search_forth (a_cursor: like new_cursor; v: G) is
+			-- Move `a_cursor' to first position at or after its current
+			-- position where `cursor_item (a_cursor)' and `v' are equal.
+			-- (Use `equality_tester''s comparison criterion
+			-- if not void, use `=' criterion otherwise.)
+			-- Move `after' if not found.
+		require
+			a_cursor_not_void: a_cursor /= Void
+			a_cursor_valid: valid_cursor (a_cursor)
+			a_cursor_not_off: not cursor_off (a_cursor) or cursor_after (a_cursor)
+		deferred
+		end
+
+	cursor_go_after (a_cursor: like new_cursor) is
+			-- Move `a_cursor' to `after' position.
+		require
+			a_cursor_not_void: a_cursor /= Void
+			a_cursor_valid: valid_cursor (a_cursor)
+		deferred
+		ensure
+			a_cursor_after: cursor_after (a_cursor)
+		end
+
 invariant
 
-	after_constraint: after implies off
+	after_constraint: initialized implies (after implies off)
 
 end -- class DS_LINEAR

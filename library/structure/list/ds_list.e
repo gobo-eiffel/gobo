@@ -6,7 +6,7 @@ indexing
 
 	library:    "Gobo Eiffel Structure Library"
 	author:     "Eric Bezault <ericb@gobosoft.com>"
-	copyright:  "Copyright (c) 1999, Eric Bezault and others"
+	copyright:  "Copyright (c) 1999-2001, Eric Bezault and others"
 	license:    "Eiffel Forum Freeware License v1 (see forum.txt)"
 	date:       "$Date$"
 	revision:   "$Revision$"
@@ -27,7 +27,7 @@ feature -- Access
 	index: INTEGER is
 			-- Index of current internal cursor position
 		do
-			Result := internal_cursor.index
+			Result := cursor_index (internal_cursor)
 		ensure
 			valid_index: valid_index (Result)
 		end
@@ -54,7 +54,7 @@ feature -- Cursor movement
 		require
 			valid_index: valid_index (i)
 		do
-			internal_cursor.go_i_th (i)
+			cursor_go_i_th (internal_cursor, i)
 		ensure
 			moved: index = i
 		end
@@ -451,6 +451,29 @@ feature -- Removal
 		ensure
 			deleted: not has (v)
 			new_count: count = old (count - occurrences (v))
+		end
+
+feature {DS_LIST_CURSOR} -- Cursor implementation
+
+	cursor_index (a_cursor: like new_cursor): INTEGER is
+			-- Index of `a_cursor''s current position
+		require
+			cursor_not_void: a_cursor /= Void
+			a_cursor_valid: valid_cursor (a_cursor)
+		deferred
+		ensure
+			valid_index: valid_index (Result)
+		end
+
+	cursor_go_i_th (a_cursor: like new_cursor; i: INTEGER) is
+			-- Move `a_cursor' to `i'-th position.
+		require
+			cursor_not_void: a_cursor /= Void
+			a_cursor_valid: valid_cursor (a_cursor)
+			valid_index: valid_index (i)
+		deferred
+		ensure
+			moved: cursor_index (a_cursor) = i
 		end
 
 end -- class DS_LIST

@@ -6,7 +6,7 @@ indexing
 
 	library:    "Gobo Eiffel Structure Library"
 	author:     "Eric Bezault <ericb@gobosoft.com>"
-	copyright:  "Copyright (c) 1999, Eric Bezault and others"
+	copyright:  "Copyright (c) 1999-2001, Eric Bezault and others"
 	license:    "Eiffel Forum Freeware License v1 (see forum.txt)"
 	date:       "$Date$"
 	revision:   "$Revision$"
@@ -17,7 +17,7 @@ inherit
 
 	DS_LINEAR_CURSOR [G]
 		redefine
-			container, off
+			container, next_cursor
 		end
 
 feature -- Access
@@ -31,39 +31,36 @@ feature -- Status report
 
 	is_last: BOOLEAN is
 			-- Is cursor on last item?
-		deferred
+		do
+			Result := container.cursor_is_last (Current)
 		ensure
 			not_empty: Result implies not container.is_empty
 			not_off: Result implies not off
-			definition: Result implies (item = container.last)
 		end
 
 	before: BOOLEAN is
 			-- Is there no valid position to left of cursor?
-		deferred
-		end
-
-	off: BOOLEAN is
-			-- Is there no item at cursor position?
 		do
-			Result := after or before
+			Result := container.cursor_before (Current)
 		end
 
 feature -- Cursor movement
 
 	finish is
 			-- Move cursor to last position.
-		deferred
+		do
+			container.cursor_finish (Current)
 		ensure
 			empty_behavior: container.is_empty implies before
-			not_empty_behavior: not container.is_empty implies is_last
+			last_or_before: is_last xor before
 		end
 
 	back is
 			-- Move cursor to previous position.
 		require
 			not_before: not before
-		deferred
+		do
+			container.cursor_back (Current)
 		end
 
 	search_back (v: G) is
@@ -74,15 +71,25 @@ feature -- Cursor movement
 			-- Move `before' if not found.
 		require
 			not_off: not off or before
-		deferred
+		do
+			container.cursor_search_back (Current, v)
 		end
 
 	go_before is
 			-- Move cursor to `before' position.
-		deferred
+		do
+			container.cursor_go_before (Current)
 		ensure
 			before: before
 		end
+
+feature {DS_BILINEAR} -- Implementation
+
+	next_cursor: DS_BILINEAR_CURSOR [G]
+			-- Next cursor
+			-- (Used by `container' to keep track of traversing
+			-- cursors (i.e. cursors associated with `container'
+			-- and which are not currently `off').)
 
 invariant
 

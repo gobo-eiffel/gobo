@@ -6,7 +6,7 @@ indexing
 
 	library:    "Gobo Eiffel Structure Library"
 	author:     "Eric Bezault <ericb@gobosoft.com>"
-	copyright:  "Copyright (c) 1999, Eric Bezault and others"
+	copyright:  "Copyright (c) 1999-2001, Eric Bezault and others"
 	license:    "Eiffel Forum Freeware License v1 (see forum.txt)"
 	date:       "$Date$"
 	revision:   "$Revision$"
@@ -17,7 +17,8 @@ inherit
 
 	DS_LIST [G]
 		redefine
-			has, occurrences, swap
+			has, occurrences, swap,
+			cursor_off
 		end
 
 creation
@@ -1190,6 +1191,341 @@ feature {NONE} -- Cursor movement
 				next_cursor := a_cursor.next_cursor
 				a_cursor.set_next_cursor (Void)
 				a_cursor := next_cursor
+			end
+		end
+
+feature {DS_LINKED_LIST_CURSOR} -- Cursor implementation
+
+	cursor_item (a_cursor: like new_cursor): G is
+			-- Item at `a_cursor' position
+			-- (Performance: O(1).)
+		do
+			Result := a_cursor.current_cell.item
+		end
+
+	cursor_index (a_cursor: like new_cursor): INTEGER is
+			-- Index of `a_cursor''s current position
+			-- (Performance: O(count).)
+		local
+			a_cell, current_cell: like first_cell
+		do
+			if a_cursor.after then
+				Result := count + 1
+			elseif not a_cursor.before then
+				from
+					current_cell := a_cursor.current_cell
+					a_cell := first_cell
+					Result := 1
+				until
+					a_cell = current_cell
+				loop
+					a_cell := a_cell.right
+					Result := Result + 1
+				end
+			end
+		end
+
+	cursor_after (a_cursor: like new_cursor): BOOLEAN is
+			-- Is there no valid position to right of `a_cursor'?
+		do
+			Result := a_cursor.after
+		end
+
+	cursor_before (a_cursor: like new_cursor): BOOLEAN is
+			-- Is there no valid position to left of `a_cursor'?
+		do
+			Result := a_cursor.before
+		end
+
+	cursor_is_first (a_cursor: like new_cursor): BOOLEAN is
+			-- Is `a_cursor' on first item?
+		local
+			current_cell: like first_cell
+		do
+			current_cell := a_cursor.current_cell
+			Result := current_cell /= Void and current_cell = first_cell
+		end
+
+	cursor_is_last (a_cursor: like new_cursor): BOOLEAN is
+			-- Is `a_cursor' on last item?
+		local
+			current_cell: like first_cell
+		do
+			current_cell := a_cursor.current_cell
+			Result := current_cell /= Void and current_cell = last_cell
+		end
+
+	cursor_off (a_cursor: like new_cursor): BOOLEAN is
+			-- Is there no item at `a_cursor' position?
+		do
+			Result := (a_cursor.current_cell = Void)
+		end
+
+	cursor_same_position (a_cursor, other: like new_cursor): BOOLEAN is
+			-- Is `a_cursor' at same position as `other'?
+		do
+			Result := a_cursor.current_cell = other.current_cell and
+				a_cursor.before = other.before and a_cursor.after = other.after
+		end
+
+	cursor_start (a_cursor: like new_cursor) is
+			-- Move `a_cursor' to first position.
+			-- (Performance: O(1).)
+		local
+			was_off: BOOLEAN
+			new_after: BOOLEAN
+		do
+			was_off := cursor_off (a_cursor)
+			new_after := (first_cell = Void)
+			a_cursor.set (first_cell, False, new_after)
+			if not new_after and was_off then
+				add_traversing_cursor (a_cursor)
+			end
+		end
+
+	cursor_finish (a_cursor: like new_cursor) is
+			-- Move `a_cursor' to last position.
+			-- (Performance: O(1).)
+		local
+			was_off: BOOLEAN
+			new_before: BOOLEAN
+		do
+			was_off := cursor_off (a_cursor)
+			new_before := (last_cell = Void)
+			a_cursor.set (last_cell, new_before, False)
+			if not new_before and was_off then
+				add_traversing_cursor (a_cursor)
+			end
+		end
+
+	cursor_forth (a_cursor: like new_cursor) is
+			-- Move `a_cursor' to next position.
+			-- (Performance: O(1).)
+		local
+			was_off: BOOLEAN
+			new_after: BOOLEAN
+			new_cell: like first_cell
+		do
+			if a_cursor.before then
+				was_off := True
+				new_cell := first_cell
+			else
+				new_cell := a_cursor.current_cell.right
+			end
+			new_after := (new_cell = Void)
+			a_cursor.set (new_cell, False, new_after)
+			if new_after then
+				if not was_off then
+					remove_traversing_cursor (a_cursor)
+				end
+			elseif was_off then
+				add_traversing_cursor (a_cursor)
+			end
+		end
+
+	cursor_back (a_cursor: like new_cursor) is
+			-- Move `a_cursor' to previous position.
+			-- (Performance: O(a_cursor.index).)
+		local
+			current_cell, new_cell: like first_cell
+			was_off, new_before: BOOLEAN
+		do
+			if a_cursor.after then
+				was_off := True
+				new_cell := last_cell
+			elseif is_first then
+				new_cell := Void
+			else
+				from
+					current_cell := a_cursor.current_cell
+					new_cell := first_cell
+				until
+					new_cell.right = current_cell
+				loop
+					new_cell := new_cell.right
+				end
+			end
+			new_before := (new_cell = Void)
+			a_cursor.set (new_cell, new_before, False)
+			if new_before then
+				if not was_off then
+					remove_traversing_cursor (a_cursor)
+				end
+			elseif was_off then
+				add_traversing_cursor (a_cursor)
+			end
+		end
+
+	cursor_search_forth (a_cursor: like new_cursor; v: G) is
+			-- Move `a_cursor' to first position at or after its current
+			-- position where `cursor_item (a_cursor)' and `v' are equal.
+			-- (Use `equality_tester''s comparison criterion
+			-- if not void, use `=' criterion otherwise.)
+			-- Move `after' if not found.
+		local
+			a_cell: like first_cell
+			a_tester: like equality_tester
+			was_off, new_after: BOOLEAN
+		do
+			a_cell := a_cursor.current_cell
+			was_off := (a_cell = Void)
+			a_tester := equality_tester
+			if a_tester /= Void then
+				from until
+					a_cell = Void or else a_tester.test (a_cell.item, v)
+				loop
+					a_cell := a_cell.right
+				end
+			else
+					-- Use `=' as comparison criterion.
+				from until
+					a_cell = Void or else a_cell.item = v
+				loop
+					a_cell := a_cell.right
+				end
+			end
+			new_after := (a_cell = Void)
+			a_cursor.set (a_cell, False, new_after)
+			if new_after then
+				if not was_off then
+					remove_traversing_cursor (a_cursor)
+				end
+			elseif was_off then
+				add_traversing_cursor (a_cursor)
+			end
+		end
+
+	cursor_search_back (a_cursor: like new_cursor; v: G) is
+			-- Move `a_cursor' to first position at or before its current
+			-- position where `cursor_item (a_cursor)' and `v' are equal.
+			-- (Use `equality_tester''s comparison criterion
+			-- if not void, use `=' criterion otherwise.)
+			-- Move `before' if not found.
+			-- (Performance: O(a_cursor.index).)
+		local
+			a_cell, cursor_cell, new_cell: like first_cell
+			a_tester: like equality_tester
+			was_off, new_before: BOOLEAN
+		do
+			cursor_cell := a_cursor.current_cell
+			was_off := (cursor_cell = Void)
+			a_tester := equality_tester
+			if a_tester /= Void then
+				if cursor_cell /= Void and a_tester.test (cursor_cell.item, v) then
+					from
+						a_cell := first_cell
+					until
+						a_cell = cursor_cell
+					loop
+						if a_tester.test (a_cell.item, v) then
+							new_cell := a_cell
+						end
+						a_cell := a_cell.right
+					end
+				end
+			else
+					-- Use `=' as comparison criterion.
+				if cursor_cell /= Void and cursor_cell.item = v then
+					from
+						a_cell := first_cell
+					until
+						a_cell = cursor_cell
+					loop
+						if a_cell.item = v then
+							new_cell := a_cell
+						end
+						a_cell := a_cell.right
+					end
+				end
+			end
+			new_before := (new_cell = Void)
+			a_cursor.set (new_cell, new_before, False)
+			if new_before then
+				if not was_off then
+					remove_traversing_cursor (a_cursor)
+				end
+			elseif was_off then
+				add_traversing_cursor (a_cursor)
+			end
+		end
+
+	cursor_go_after (a_cursor: like new_cursor) is
+			-- Move `a_cursor' to `after' position.
+			-- (Performance: O(1).)
+		local
+			was_off: BOOLEAN
+		do
+			was_off := cursor_off (a_cursor)
+			a_cursor.set_after
+			if not was_off then
+				remove_traversing_cursor (a_cursor)
+			end
+		end
+
+	cursor_go_before (a_cursor: like new_cursor) is
+			-- Move `a_cursor' to `before' position.
+			-- (Performance: O(1).)
+		local
+			was_off: BOOLEAN
+		do
+			was_off := cursor_off (a_cursor)
+			a_cursor.set_before
+			if not was_off then
+				remove_traversing_cursor (a_cursor)
+			end
+		end
+
+	cursor_go_to (a_cursor, other: like new_cursor) is
+			-- Move `a_cursor' to `other''s position.
+			-- (Performance: O(1).)
+		local
+			was_off: BOOLEAN
+		do
+			was_off := cursor_off (a_cursor)
+			a_cursor.set (other.current_cell, other.before, other.after)
+			if not a_cursor.off then
+				if was_off then
+					add_traversing_cursor (a_cursor)
+				end
+			elseif not was_off then
+				remove_traversing_cursor (a_cursor)
+			end
+		end
+
+	cursor_go_i_th (a_cursor: like new_cursor; i: INTEGER) is
+			-- Move `a_cursor' to `i'-th position.
+			-- (Performance: O(i).)
+		local
+			j: INTEGER
+			new_cell: like first_cell
+			was_off: BOOLEAN
+		do
+			was_off := cursor_off (a_cursor)
+			if i = 0 then
+				a_cursor.set_before
+			elseif i = count + 1 then
+				a_cursor.set_after
+			else
+				if i = 1 then
+					new_cell := first_cell
+				elseif i = count then
+					new_cell := last_cell
+				else
+					new_cell := first_cell
+					from j := 1 until j = i loop
+						new_cell := new_cell.right
+						j := j + 1
+					end
+				end
+				a_cursor.set (new_cell, False, False)
+			end
+			if new_cell = Void then
+					-- `a_cursor.off'
+				if not was_off then
+					remove_traversing_cursor (a_cursor)
+				end
+			elseif was_off then
+				add_traversing_cursor (a_cursor)
 			end
 		end
 

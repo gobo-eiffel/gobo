@@ -6,7 +6,7 @@ indexing
 
 	library:    "Gobo Eiffel Structure Library"
 	author:     "Eric Bezault <ericb@gobosoft.com>"
-	copyright:  "Copyright (c) 1999, Eric Bezault and others"
+	copyright:  "Copyright (c) 1999-2001, Eric Bezault and others"
 	license:    "Eiffel Forum Freeware License v1 (see forum.txt)"
 	date:       "$Date$"
 	revision:   "$Revision$"
@@ -17,20 +17,26 @@ inherit
 
 	DS_BILINEAR_CURSOR [G]
 		redefine
-			container
+			container, next_cursor
 		end
 
 	DS_DYNAMIC_CURSOR [G]
 		redefine
-			container
+			container, next_cursor
 		end
 
 	DS_INDEXED_CURSOR [G]
 		redefine
-			container
+			container, next_cursor
 		end
 
 feature -- Access
+
+	index: INTEGER is
+			-- Index of current position
+		do
+			Result := container.cursor_index (Current)
+		end
 
 	container: DS_LIST [G] is
 			-- List traversed
@@ -44,7 +50,16 @@ feature -- Status report
 		do
 			Result := (0 <= i and i <= (container.count + 1))
 		ensure then
-			definition: Result = (0 <= i and i <= (container.count + 1))
+			i_large_enough: Result implies (i >= 0)
+			i_small_enough: Result implies (i <= (container.count + 1))
+		end
+
+feature -- Cursor movement
+
+	go_i_th (i: INTEGER) is
+			-- Move cursor to `i'-th position.
+		do
+			container.cursor_go_i_th (Current, i)
 		end
 
 feature -- Element change
@@ -209,5 +224,13 @@ feature -- Removal
 		ensure
 			new_count: container.count = old (container.count) - n
 		end
+
+feature {DS_LIST} -- Implementation
+
+	next_cursor: DS_LIST_CURSOR [G]
+			-- Next cursor
+			-- (Used by `container' to keep track of traversing
+			-- cursors (i.e. cursors associated with `container'
+			-- and which are not currently `off').)
 
 end -- class DS_LIST_CURSOR

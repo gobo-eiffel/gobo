@@ -17,7 +17,7 @@ inherit
 
 	DS_ARRAYED_SPARSE_SET_CURSOR [G]
 		redefine
-			container
+			container, next_cursor
 		end
 
 creation
@@ -28,5 +28,13 @@ feature -- Access
 
 	container: DS_HASH_SET [G]
 			-- Hash set traversed
+
+feature {DS_HASH_SET} -- Implementation
+
+	next_cursor: DS_HASH_SET_CURSOR [G]
+			-- Next cursor
+			-- (Used by `container' to keep track of traversing
+			-- cursors (i.e. cursors associated with `container'
+			-- and which are not currently `off').)
 
 end -- class DS_HASH_SET_CURSOR

@@ -6,7 +6,7 @@ indexing
 
 	library:    "Gobo Eiffel Structure Library"
 	author:     "Eric Bezault <ericb@gobosoft.com>"
-	copyright:  "Copyright (c) 1999, Eric Bezault and others"
+	copyright:  "Copyright (c) 1999-2001, Eric Bezault and others"
 	license:    "Eiffel Forum Freeware License v1 (see forum.txt)"
 	date:       "$Date$"
 	revision:   "$Revision$"
@@ -26,7 +26,8 @@ feature -- Access
 			-- Item at cursor position
 		require
 			not_off: not off
-		deferred
+		do
+			Result := container.cursor_item (Current)
 		end
 
 	container: DS_TRAVERSABLE [G] is
@@ -38,14 +39,27 @@ feature -- Status report
 
 	off: BOOLEAN is
 			-- Is there no item at cursor position?
-		deferred
+		do
+			Result := container.cursor_off (Current)
 		end
 
 	same_position (other: like Current): BOOLEAN is
 			-- Is current cursor at same position as `other'?
 		require
 			other_not_void: other /= Void
-		deferred
+		do
+			Result := container.cursor_same_position (Current, other)
+		end
+
+	valid_cursor (other: like Current): BOOLEAN is
+			-- Is `other' a valid cursor according
+			-- to current traversal strategy?
+		require
+			other_not_void: other /= Void
+		do
+			Result := container.valid_cursor (other)
+		ensure
+			Result implies container.valid_cursor (other)
 		end
 
 	is_valid: BOOLEAN is
@@ -64,8 +78,9 @@ feature -- Cursor movement
 			-- Move cursor to `other''s position.
 		require
 			other_not_void: other /= Void
-			valid_cursor: container.valid_cursor (other)
-		deferred
+			other_valid: valid_cursor (other)
+		do
+			container.cursor_go_to (Current, other)
 		ensure
 			same_position: same_position (other)
 		end
@@ -90,18 +105,20 @@ feature -- Comparison
 	is_equal (other: like Current): BOOLEAN is
 			-- Are `other' and current cursor at the same position?
 		do
-			Result := same_position (other)
+			if same_type (other) then
+				Result := same_position (other)
+			end
 		end
 
 feature {DS_TRAVERSABLE} -- Implementation
 
-	next_cursor: like Current
+	next_cursor: DS_CURSOR [G]
 			-- Next cursor
 			-- (Used by `container' to keep track of traversing
 			-- cursors (i.e. cursors associated with `container'
 			-- and which are not currently `off').)
 
-	set_next_cursor (a_cursor: like Current) is
+	set_next_cursor (a_cursor: like next_cursor) is
 			-- Set `next_cursor' to `a_cursor'.
 		do
 			next_cursor := a_cursor
@@ -112,13 +129,6 @@ feature {DS_TRAVERSABLE} -- Implementation
 invariant
 
 	container_not_void: container /= Void
-
--- The following assertion are commented out because
--- some Eiffel compilers check invariants even when the
--- execution of the creation procedure is not completed.
--- (In this case, this is `container' which is not fully
--- created yet, breaking its invariant.)
-
---	empty_constraint: container.is_empty implies off
+	empty_constraint: container.is_empty implies off
 
 end -- class DS_CURSOR

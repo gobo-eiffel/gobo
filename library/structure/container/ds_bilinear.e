@@ -6,7 +6,7 @@ indexing
 
 	library:    "Gobo Eiffel Structure Library"
 	author:     "Eric Bezault <ericb@gobosoft.com>"
-	copyright:  "Copyright (c) 1999, Eric Bezault and others"
+	copyright:  "Copyright (c) 1999-2001, Eric Bezault and others"
 	license:    "Eiffel Forum Freeware License v1 (see forum.txt)"
 	date:       "$Date$"
 	revision:   "$Revision$"
@@ -17,7 +17,7 @@ inherit
 
 	DS_LINEAR [G]
 		redefine
-			new_cursor
+			new_cursor, cursor_off
 		end
 
 feature -- Access
@@ -41,7 +41,7 @@ feature -- Status report
 	is_last: BOOLEAN is
 			-- Is internal cursor on last item?
 		do
-			Result := internal_cursor.is_last
+			Result := cursor_is_last (internal_cursor)
 		ensure
 			not_empty: Result implies not is_empty
 			not_off: Result implies not off
@@ -51,7 +51,7 @@ feature -- Status report
 	before: BOOLEAN is
 			-- Is there no valid position to left of internal cursor?
 		do
-			Result := internal_cursor.before
+			Result := cursor_before (internal_cursor)
 		end
 
 feature -- Cursor movement
@@ -59,7 +59,7 @@ feature -- Cursor movement
 	finish is
 			-- Move internal cursor to last position.
 		do
-			internal_cursor.finish
+			cursor_finish (internal_cursor)
 		ensure
 			empty_behavior: is_empty implies before
 			not_empty_behavior: not is_empty implies is_last
@@ -70,7 +70,7 @@ feature -- Cursor movement
 		require
 			not_before: not before
 		do
-			internal_cursor.back
+			cursor_back (internal_cursor)
 		end
 
 	search_back (v: G) is
@@ -82,20 +82,93 @@ feature -- Cursor movement
 		require
 			not_off: not off or before
 		do
-			internal_cursor.search_back (v)
+			cursor_search_back (internal_cursor, v)
 		end
 
 	go_before is
-			-- Move cursor to `before' position.
+			-- Move internal cursor to `before' position.
 		do
-			internal_cursor.go_before
+			cursor_go_before (internal_cursor)
 		ensure
 			before: before
 		end
 
+feature {DS_CURSOR} -- Cursor implementation
+
+	cursor_off (a_cursor: like new_cursor): BOOLEAN is
+			-- Is there no item at `a_cursor' position?
+		do
+			Result := cursor_after (a_cursor) or cursor_before (a_cursor)
+		end
+
+feature {DS_BILINEAR_CURSOR} -- Cursor implementation
+
+	cursor_is_last (a_cursor: like new_cursor): BOOLEAN is
+			-- Is `a_cursor' on last item?
+		require
+			a_cursor_not_void: a_cursor /= Void
+			a_cursor_valid: valid_cursor (a_cursor)
+		deferred
+		ensure
+			not_empty: Result implies not is_empty
+			a_cursor_not_off: Result implies not cursor_off (a_cursor)
+			definition: Result implies (cursor_item (a_cursor) = last)
+		end
+
+	cursor_before (a_cursor: like new_cursor): BOOLEAN is
+			-- Is there no valid position to left of `a_cursor'?
+		require
+			a_cursor_not_void: a_cursor /= Void
+			a_cursor_valid: valid_cursor (a_cursor)
+		deferred
+		end
+
+	cursor_finish (a_cursor: like new_cursor) is
+			-- Move `a_cursor' to last position.
+		require
+			a_cursor_not_void: a_cursor /= Void
+			a_cursor_valid: valid_cursor (a_cursor)
+		deferred
+		ensure
+			empty_behavior: is_empty implies cursor_before (a_cursor)
+			not_empty_behavior: not is_empty implies cursor_is_last (a_cursor)
+		end
+
+	cursor_back (a_cursor: like new_cursor) is
+			-- Move `a_cursor' to previous position.
+		require
+			a_cursor_not_void: a_cursor /= Void
+			a_cursor_valid: valid_cursor (a_cursor)
+			a_cursor_not_before: not cursor_before (a_cursor)
+		deferred
+		end
+
+	cursor_search_back (a_cursor: like new_cursor; v: G) is
+			-- Move `a_cursor' to first position at or before its current
+			-- position where `cursor_item (a_cursor)' and `v' are equal.
+			-- (Use `equality_tester''s comparison criterion
+			-- if not void, use `=' criterion otherwise.)
+			-- Move `before' if not found.
+		require
+			a_cursor_not_void: a_cursor /= Void
+			a_cursor_valid: valid_cursor (a_cursor)
+			a_cursor_not_off: not cursor_off (a_cursor) or cursor_before (a_cursor)
+		deferred
+		end
+
+	cursor_go_before (a_cursor: like new_cursor) is
+			-- Move `a_cursor' to `before' position.
+		require
+			a_cursor_not_void: a_cursor /= Void
+			a_cursor_valid: valid_cursor (a_cursor)
+		deferred
+		ensure
+			a_cursor_before: cursor_before (a_cursor)
+		end
+
 invariant
 
-	not_both: not (after and before)
-	before_constraint: before implies off
+	not_both: initialized implies (not (after and before))
+	before_constraint: initialized implies (before implies off)
 
 end -- class DS_BILINEAR
