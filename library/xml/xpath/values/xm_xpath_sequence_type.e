@@ -30,7 +30,8 @@ creation
 
 	make, make_any_sequence, make_single_item, make_optional_item, make_single_atomic, make_optional_atomic, make_optional_integer,
 	make_single_string, make_optional_string, make_single_integer, make_single_double, make_single_node, make_optional_node, make_node_sequence,
-	make_numeric_sequence, make_atomic_sequence, make_string_sequence, make_empty, make_single_number
+	make_numeric_sequence, make_atomic_sequence, make_string_sequence, make_empty, make_single_number, make_optional_number,
+	make_single_qname, make_optional_qname
 
 feature {NONE} -- Initialization
 
@@ -77,12 +78,25 @@ feature {NONE} -- Initialization
 			primary_type := type_factory.any_atomic_type
 			set_cardinality_exactly_one
 		end
-
 	
 	make_optional_atomic is
 			-- Create a sequence that allows zero or one atomic items
 		do
 			primary_type := type_factory.any_atomic_type
+			set_cardinality_optional
+		end
+
+	make_single_qname is
+			-- Create a sequence of a single QName
+		do
+			primary_type := type_factory.qname_type
+			set_cardinality_exactly_one
+		end
+	
+	make_optional_qname is
+			-- Create a sequence that allows zero or one QNames
+		do
+			primary_type := type_factory.qname_type
 			set_cardinality_optional
 		end
 
@@ -143,10 +157,17 @@ feature {NONE} -- Initialization
 		end
 
 	make_single_number is
-			-- Create a sequence that exactly_one numeric values
+			-- Create a sequence that exactly one numeric values
 		do
 			primary_type := type_factory.numeric_type
 			set_cardinality_zero_or_more
+		end
+
+	make_optional_number is
+			-- Create a sequence that allows zero or one numeric values
+		do
+			primary_type := type_factory.numeric_type
+			set_cardinality_optional
 		end
 
 	make_numeric_sequence is
@@ -157,14 +178,14 @@ feature {NONE} -- Initialization
 		end
 
 	make_atomic_sequence is
-			-- Create a sequence that allows zero or more atomicic values
+			-- Create a sequence that allows zero or more atomic values
 		do
 			primary_type := type_factory.any_atomic_type
 			set_cardinality_zero_or_more
 		end
 
 	make_string_sequence is
-			-- Create a sequence that allows zero or more atomicic values
+			-- Create a sequence that allows zero or more atomic values
 		do
 			primary_type := type_factory.string_type
 			set_cardinality_zero_or_more

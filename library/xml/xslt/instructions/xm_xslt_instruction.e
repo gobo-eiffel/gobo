@@ -16,6 +16,10 @@ inherit
 
 	KL_IMPORTED_STRING_ROUTINES
 
+	XM_XPATH_ERROR_TYPES
+	
+	XM_XPATH_STANDARD_NAMESPACES
+
 	XM_XPATH_LOCATOR
 
 	XM_XPATH_DEBUGGING_ROUTINES
@@ -156,28 +160,6 @@ feature -- Status report
 				end
 				a_cursor.forth
 			end
-		end
-
-feature -- Status setting
-
-	report_recoverable_error (an_instruction: XM_XSLT_INSTRUCTION; a_message: STRING; a_transformer: XM_XSLT_TRANSFORMER) is
-			-- Report a recoverable error.
-		require
-			instruction_not_void: an_instruction /= Void
-			message_not_void: a_message /= Void
-			transformer_not_void: a_transformer /= Void
-		do
-			a_transformer.report_recoverable_error (a_message, an_instruction)
-		end
-
-	report_fatal_error (an_instruction: XM_XSLT_INSTRUCTION; a_message: STRING; a_transformer: XM_XSLT_TRANSFORMER) is
-			-- Report a recoverable error.
-		require
-			instruction_not_void: an_instruction /= Void
-			message_not_void: a_message /= Void
-			transformer_not_void: a_transformer /= Void
-		do
-			a_transformer.report_fatal_error (a_message, an_instruction)
 		end
 
 feature -- Evaluation

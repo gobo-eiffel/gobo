@@ -17,7 +17,9 @@ inherit
 	XM_XSLT_SHARED_NO_NODE_TEST
 
 	XM_XPATH_TYPE
-	
+
+	XM_XPATH_ERROR_TYPES
+
 	XM_XPATH_DEBUGGING_ROUTINES
 
 	MA_DECIMAL_MATH
@@ -72,7 +74,7 @@ feature -- Access
 			node_not_void: a_node /= Void
 			transformer_not_in_error: a_transformer /= Void and then not a_transformer.is_error
 		local
-			a_key, a_policy, a_specific_precedence: INTEGER
+			a_key, a_specific_precedence: INTEGER
 			a_rule, a_specific_rule: XM_XSLT_RULE
 			a_specific_priority: MA_DECIMAL
 			finished: BOOLEAN
@@ -88,7 +90,6 @@ feature -- Access
 				std.error.put_new_line
 			end
 			a_key := rule_key (a_node.fingerprint, a_node.node_type)
-			a_policy := a_transformer.recovery_policy
 			a_specific_precedence := -1
 			a_specific_priority := negative_infinity
 
@@ -140,7 +141,7 @@ feature -- Access
 							a_specific_rule := a_rule
 							a_specific_precedence := a_rule.precedence
 							a_specific_priority := a_rule.priority
-							if a_policy = Recover_silently then
+							if a_transformer.recovery_policy = Recover_silently then
 								finished := True -- Find the first; they are in priority order.
 							end
 
@@ -152,13 +153,154 @@ feature -- Access
 				-- Search the general list.
 
 				if not a_transformer.is_error then
-					Result := general_rule (a_node, a_transformer, a_specific_rule, a_specific_precedence, a_specific_priority, a_policy)
+					Result := general_rule (a_node, a_transformer, a_specific_rule, a_specific_precedence, a_specific_priority)
 				end
 			end
 		ensure
 			Maybe_no_rule_matches: True
 		end
 
+	imported_rule (a_node: XM_XPATH_NODE; a_minimum_precedence, a_maximum_precedence: INTEGER; a_transformer: XM_XSLT_TRANSFORMER): XM_XSLT_RULE_VALUE is
+			-- Handler for `a_node' within specified precedence range
+		require
+			node_not_void: a_node /= Void
+			transformer_not_in_error: a_transformer /= Void and then not a_transformer.is_error
+		local
+			a_key: INTEGER
+			a_rule, a_specific_rule, a_general_rule: XM_XSLT_RULE
+			finished: BOOLEAN
+		do
+			a_key := rule_key (a_node.fingerprint, a_node.node_type)
+
+			-- Search the specific list for this node type / node name.
+
+			if a_key /= Any_node + 1 then
+				from
+					a_rule := rule_dictionary.item (a_key)
+				until
+					finished or else a_rule = Void
+				loop
+					if a_rule.precedence >= a_minimum_precedence and then a_rule.precedence <= a_maximum_precedence and then a_rule.pattern.matches (a_node, a_transformer) then
+						a_specific_rule := a_rule
+
+						-- Find the first; they are in priority order.
+
+						finished := True
+					else
+						a_rule := a_rule.next_rule
+					end
+				end
+			end
+
+			-- Search the general list.
+
+			if not a_transformer.is_error then
+				from
+					finished := False
+					a_rule := rule_dictionary.item (Any_node + 1)
+				until
+					finished or else a_rule = Void
+				loop
+					if a_rule.precedence >= a_minimum_precedence and then a_rule.precedence <= a_maximum_precedence and then a_rule.pattern.matches (a_node, a_transformer) then
+						a_general_rule := a_rule
+
+						-- Find the first; they are in priority order.
+
+						finished := True
+					else
+						a_rule := a_rule.next_rule
+					end
+				end
+
+				if a_specific_rule /= Void and then a_general_rule = Void then
+					Result := a_specific_rule.handler
+				elseif a_specific_rule = Void and then a_general_rule /= Void then
+					Result := a_general_rule.handler
+				elseif a_specific_rule /= Void and then a_general_rule /= Void then
+					if a_specific_rule.precedence > a_general_rule.precedence or else
+						(a_specific_rule.precedence = a_general_rule.precedence and then
+						 a_specific_rule.priority > a_general_rule.priority) then
+						Result := a_specific_rule.handler
+					else
+						Result := a_general_rule.handler
+					end
+				end
+			end
+		ensure
+			Maybe_no_rule_matches: True
+		end
+
+	next_matching_rule (a_node: XM_XPATH_NODE; a_current_template: XM_XSLT_COMPILED_TEMPLATE; a_transformer: XM_XSLT_TRANSFORMER): XM_XSLT_RULE_VALUE is
+			-- Handler for `a_node' within specified precedence range
+		require
+			node_not_void: a_node /= Void
+			transformer_not_in_error: a_transformer /= Void and then not a_transformer.is_error
+		local
+			a_key: INTEGER
+			a_rule: XM_XSLT_RULE
+			finished: BOOLEAN
+			a_current_priority: MA_DECIMAL
+			a_current_precedence, a_current_sequence_number: INTEGER
+			a_handler: XM_XSLT_RULE_VALUE
+			a_template: XM_XSLT_COMPILED_TEMPLATE
+		do
+			a_key := rule_key (a_node.fingerprint, a_node.node_type)
+			a_current_sequence_number := -1
+			a_current_precedence := -1
+			a_current_priority := minus_one
+
+			-- First find the rule corresponding to the current handler.
+
+			from
+				a_rule := rule_dictionary.item (a_key)
+			until
+				finished or else a_rule = Void
+			loop
+				a_handler := a_rule.handler
+				if a_handler.is_template then
+					a_template := a_handler.as_template
+				else
+					a_template := Void
+				end
+				if a_template /= Void and then a_template = a_current_template then
+					a_current_precedence := a_rule.precedence
+					a_current_priority := a_rule.priority
+					a_current_sequence_number := a_rule.sequence_number
+					finished := True
+				else
+					a_rule := a_rule.next_rule
+				end
+			end
+			if a_rule = Void and then a_key /= Any_node + 1 then
+				from
+					a_rule := rule_dictionary.item (Any_node + 1)
+				until
+					finished or else a_rule = Void
+				loop
+					a_handler := a_rule.handler
+					if a_handler.is_template then
+						a_template := a_handler.as_template
+					else
+						a_template := Void
+					end
+					if a_template /= Void and then a_template = a_current_template then
+						a_current_precedence := a_rule.precedence
+						a_current_priority := a_rule.priority
+						a_current_sequence_number := a_rule.sequence_number
+						finished := True
+					else
+						a_rule := a_rule.next_rule
+					end
+				end
+			end
+			check
+				current_template_matches_node: a_rule /= Void
+			end
+			Result := proper_next_matching_rule (a_node, a_key, a_transformer, a_current_priority, a_current_precedence, a_current_sequence_number)
+		ensure
+			Maybe_no_rule_matches: True
+		end
+			
 	name: STRING is
 			-- Name
 		do
@@ -303,12 +445,37 @@ feature {NONE} -- Implementation
 			node_not_void: a_node /= Void
 			transformer_not_void: a_transformer /= Void
 			rules_not_void: a_rule /= Void and then another_rule /= Void
+		local
+			a_pattern, another_pattern: XM_XSLT_PATTERN
+			a_message: STRING
+			an_error: XM_XPATH_ERROR_VALUE
 		do
-			todo ("report_ambiguity", False)
+
+			-- Don't report an error if the conflict is between two branches of the same.union pattern
+
+			if a_rule /= another_rule then
+				a_pattern := a_rule.pattern
+				another_pattern := another_rule.pattern
+				a_message := STRING_.concat ("Ambiguous rule match for ", a_node.path)
+				a_message := STRING_.appended_string (a_message, "%NMatches both %"")
+				a_message := STRING_.appended_string (a_message, a_pattern.original_text)
+				a_message := STRING_.appended_string (a_message, " on line ")
+				a_message := STRING_.appended_string (a_message, a_pattern.line_number.out)
+				a_message := STRING_.appended_string (a_message, " of ")
+				a_message := STRING_.appended_string (a_message, a_pattern.system_id)
+				a_message := STRING_.appended_string (a_message, "%Nand %"")
+				a_message := STRING_.appended_string (a_message, another_pattern.original_text)
+				a_message := STRING_.appended_string (a_message, " on line ")
+				a_message := STRING_.appended_string (a_message, another_pattern.line_number.out)
+				a_message := STRING_.appended_string (a_message, " of ")
+				a_message := STRING_.appended_string (a_message, another_pattern.system_id)
+				create an_error.make_from_string (a_message, "", "XT0540", Static_error)
+				a_transformer.report_recoverable_error (an_error, Void)
+			end
 		end
 
 	general_rule (a_node: XM_XPATH_NODE; a_transformer: XM_XSLT_TRANSFORMER; a_specific_rule: XM_XSLT_RULE;
-		a_specific_precedence: INTEGER; a_specific_priority: MA_DECIMAL; a_policy: INTEGER): XM_XSLT_RULE_VALUE is
+		a_specific_precedence: INTEGER; a_specific_priority: MA_DECIMAL): XM_XSLT_RULE_VALUE is
 			-- Rule on general list
 		require
 			node_not_void: a_node /= Void
@@ -347,7 +514,7 @@ feature {NONE} -- Implementation
 							end
 						else
 							a_general_rule := a_rule
-							if a_policy = Recover_silently then finished := True end 
+							if a_transformer.recovery_policy = Recover_silently then finished := True end 
 						end
 						
 					end
@@ -355,6 +522,159 @@ feature {NONE} -- Implementation
 				end
 				a_rule := a_rule.next_rule
 			end
+			if not a_transformer.is_error then
+				Result := general_or_specific_rule (a_node, a_transformer, a_specific_rule, a_general_rule)
+			end
+		end
+
+	proper_next_matching_rule (a_node: XM_XPATH_NODE; a_key: INTEGER; a_transformer: XM_XSLT_TRANSFORMER; a_current_priority: MA_DECIMAL; a_current_precedence, a_current_sequence_number: INTEGER): XM_XSLT_RULE_VALUE is
+			-- Next matching rule.
+		require
+			node_not_void: a_node /= Void
+			transformer_not_in_error: a_transformer /= Void and then not a_transformer.is_error
+			priority_not_void: a_current_priority /= Void
+			positive_sequence_number: a_current_sequence_number >= 0
+		local
+			a_rule, a_specific_rule, a_general_rule: XM_XSLT_RULE
+			a_specific_precedence: INTEGER
+			a_specific_priority: MA_DECIMAL
+			finished: BOOLEAN
+		do
+			a_specific_precedence := -1
+			a_specific_priority := negative_infinity
+
+			-- Search the specific list for this node type / node name.
+
+			if a_key /= Any_node + 1 then
+				from
+					a_rule := rule_dictionary.item (a_key)
+				until
+					finished or else a_rule = Void
+				loop
+
+					-- Skip this rule unless it's "below" the current rule in search order.
+
+					if a_rule.precedence > a_current_precedence or else
+						(a_rule.precedence = a_current_precedence and then
+						 (a_rule.priority > a_current_priority or else
+						  (a_rule.priority = a_current_priority and then a_rule.sequence_number >= a_current_sequence_number))) then
+						do_nothing -- skip rule
+					else
+
+						-- Quit the search on finding the second (recoverable error) match.
+
+						if a_specific_rule /= Void then
+							if a_rule.precedence < a_specific_precedence or else
+								(a_rule.precedence = a_specific_precedence and then a_rule.priority < a_specific_priority) then
+								finished := True
+							end
+						end
+						if not finished and then a_rule.pattern.matches (a_node, a_transformer) then
+
+							-- Is this a second match?
+
+							if a_specific_rule /= Void then
+								if a_rule.precedence = a_specific_precedence and then a_rule.priority = a_specific_priority then
+									finished := True
+									report_ambiguity (a_node, a_specific_rule, a_rule, a_transformer)
+								end
+							end
+
+							if not finished then
+								a_specific_rule := a_rule
+								a_specific_precedence := a_rule.precedence
+								a_specific_priority := a_rule.priority
+							end
+						end
+					end
+					if not finished then
+						a_rule := a_rule.next_rule
+					end
+				end
+			end
+
+			-- Search the general list.
+
+			if not a_transformer.is_error then
+				Result := general_next_matching_rule (a_node, a_transformer, a_specific_rule, a_current_priority, a_current_precedence, a_current_sequence_number)
+			end
+		ensure
+			Maybe_no_rule_matches: True
+		end
+
+	general_next_matching_rule (a_node: XM_XPATH_NODE; a_transformer: XM_XSLT_TRANSFORMER; a_specific_rule: XM_XSLT_RULE;
+										 a_current_priority: MA_DECIMAL; a_current_precedence, a_current_sequence_number: INTEGER): XM_XSLT_RULE_VALUE is
+			-- Next matching rule.
+		require
+			node_not_void: a_node /= Void
+			transformer_not_in_error: a_transformer /= Void and then not a_transformer.is_error
+			priority_not_void: a_current_priority /= Void
+			positive_sequence_number: a_current_sequence_number >= 0
+		local
+			a_rule, a_general_rule: XM_XSLT_RULE
+			finished: BOOLEAN
+			a_specific_precedence: INTEGER
+			a_specific_priority: MA_DECIMAL
+		do
+			if a_specific_rule /= Void then
+				a_specific_precedence := -a_specific_rule.precedence
+				a_specific_priority := a_specific_rule.priority
+			else
+				a_specific_precedence := -1
+				a_specific_priority := negative_infinity
+			end
+			from
+				a_rule := rule_dictionary.item (Any_node + 1)
+			until
+				finished or else a_rule = Void
+			loop
+
+				-- Skip this rule unless it's "after" the current rule in search order
+		
+				if a_rule.precedence > a_current_precedence or else
+					(a_rule.precedence = a_current_precedence and then
+					 (a_rule.priority > a_current_priority or else
+					  (a_rule.priority = a_current_priority and then a_rule.sequence_number >= a_current_sequence_number))) then
+					do_nothing -- skip rule
+				else
+					if a_rule.precedence < a_specific_precedence or else
+						(a_rule.precedence = a_specific_precedence and then a_rule.priority < a_specific_priority) then
+						finished := True -- no point in looking at a lower priority rule than the one we've got
+					end
+					if not finished and then a_rule.pattern.matches (a_node, a_transformer) then
+
+						-- Is this a second match?
+
+						if a_general_rule /= Void then
+							if a_rule.precedence = a_general_rule.precedence and then a_rule.priority = a_general_rule.priority then
+								finished := True
+								report_ambiguity (a_node, a_specific_rule, a_rule, a_transformer)
+							end
+						else
+							a_general_rule := a_rule
+							if a_transformer.recovery_policy = Recover_silently then
+								finished := True -- Find the first; they are in priority order.
+							end
+						end
+					end
+				end
+				if not finished then
+					a_rule := a_rule.next_rule
+				end	
+			end
+			if not a_transformer.is_error then
+				Result := general_or_specific_rule (a_node, a_transformer, a_specific_rule, a_general_rule)
+			end
+		ensure
+			Maybe_no_rule_matches: True
+		end
+
+	general_or_specific_rule (a_node: XM_XPATH_NODE; a_transformer: XM_XSLT_TRANSFORMER; a_specific_rule, a_general_rule: XM_XSLT_RULE): XM_XSLT_RULE_VALUE is
+			-- General or specific rule
+		require
+			node_not_void: a_node /= Void
+			transformer_not_in_error: a_transformer /= Void and then not a_transformer.is_error
+		do
 			if a_specific_rule /= Void and then a_general_rule = Void then
 				debug ("XSLT template rules")
 					std.error.put_string ("found a specific rule%N")
@@ -368,11 +688,11 @@ feature {NONE} -- Implementation
 			elseif a_specific_rule /= Void and then a_general_rule /= Void then
 				if a_specific_rule.precedence = a_general_rule.precedence and then
 					a_specific_rule.priority = a_general_rule.priority then
-
+					
 					-- This situation is exceptional: we have a "specific" pattern and
-               --  a "general" pattern with the same priority. We have to select
-               --  the one that was added last.
-
+					--  a "general" pattern with the same priority. We have to select
+					--  the one that was added last.
+					
 					if a_specific_rule.sequence_number > a_general_rule.sequence_number then
 						debug ("XSLT template rules")
 							std.error.put_string ("Found a specific rule%N")
@@ -384,7 +704,7 @@ feature {NONE} -- Implementation
 						end
 						Result := a_general_rule.handler
 					end
-					if  a_policy /= Recover_silently then
+					if a_transformer.recovery_policy /= Recover_silently then
 						report_ambiguity (a_node, a_specific_rule, a_general_rule, a_transformer)
 					end
 				elseif a_specific_rule.precedence > a_general_rule.precedence or else
@@ -405,6 +725,8 @@ feature {NONE} -- Implementation
 				end
 				Result := Void
 			end
+		ensure
+			Maybe_no_rule_matches: True
 		end
 
 invariant

@@ -66,6 +66,7 @@ feature -- Evaluation
 			a_saved_receiver: XM_XSLT_SEQUENCE_RECEIVER
 			an_iterator: XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_ITEM]
 			a_string_value: XM_XPATH_STRING_VALUE
+			an_error: XM_XPATH_ERROR_VALUE
 		do
 			last_tail_call := Void
 			a_transformer := a_context.transformer
@@ -100,13 +101,16 @@ feature -- Evaluation
 				terminate.evaluate_as_string (a_context)
 				a_string_value := terminate.last_evaluated_string
 				if a_string_value.is_error then
-					a_transformer.report_fatal_error (a_string_value.error_value.error_message, Current)
+					a_transformer.report_fatal_error (a_string_value.error_value, Current)
 				elseif STRING_.same_string (a_string_value.string_value, "no") then
 					-- do_nothing
 				elseif STRING_.same_string (a_string_value.string_value, "yes") then
-					a_transformer.report_fatal_error ("Execution terminated owing to xsl:message terminate='yes'.", Current)
+					create an_error.make_from_string ("Execution terminated owing to xsl:message terminate='yes'.", Gexslt_eiffel_type_uri, "TERMINATE_MESSAGE", Dynamic_error)
+					a_transformer.report_fatal_error (an_error, Current)
 				else
-					a_transformer.report_fatal_error (STRING_.concat ("xsl:message terminate attribute must evaluate to 'yes' or 'no'. Found: ", a_string_value.string_value), Current)
+					create an_error.make_from_string (STRING_.concat ("xsl:message terminate attribute must evaluate to 'yes' or 'no'. Found: ", a_string_value.string_value),
+																 Gexslt_eiffel_type_uri, "INVALID_TERMINATE", Dynamic_error)
+					a_transformer.report_fatal_error (an_error, Current)
 				end
 			end
 		end

@@ -143,7 +143,7 @@ feature {XM_XPATH_FUNCTION_CALL} -- Restricted
 						
 						todo ("check_arguments (fixup)", True)
 					else
-						set_last_error_from_string (STRING_.appended_string (a_qname, " is not a lexical QName"), "XT1280", Static_error)
+						set_last_error_from_string (STRING_.appended_string (a_qname, " is not a lexical QName"), "", "XT1280", Static_error)
 					end
 				else
 					
@@ -194,7 +194,7 @@ feature {NONE} -- Implementation
 		do
 			create sub_pictures.make (1,2)
 			if a_picture.count = 0 then
-				set_last_error_from_string ("format-number() picture is zero-length", "XT1310", Dynamic_error)
+				set_last_error_from_string ("format-number() picture is zero-length", "", "XT1310", Dynamic_error)
 			else
 				a_separator_index := a_picture.index_of (a_format.pattern_separator.item (1), 1)
 				if a_separator_index = 0 then
@@ -203,11 +203,11 @@ feature {NONE} -- Implementation
 					sub_pictures.put (Void, 2)
 				else
 					if a_separator_index = a_picture.count then
-						set_last_error_from_string ("second subpicture is zero-length", "XT1310", Dynamic_error)
+						set_last_error_from_string ("second subpicture is zero-length", "", "XT1310", Dynamic_error)
 					elseif a_picture.index_of (a_format.pattern_separator.item (1), a_separator_index + 1) > 0 then
-						set_last_error_from_string ("more than one pattern separator", "XT1310", Dynamic_error)
+						set_last_error_from_string ("more than one pattern separator", "", "XT1310", Dynamic_error)
 					elseif a_separator_index = 1 then
-						set_last_error_from_string ("first subpicture is zero-length", "XT1310", Dynamic_error)
+						set_last_error_from_string ("first subpicture is zero-length", "", "XT1310", Dynamic_error)
 					else
 						create a_sub_picture.make (a_picture.substring (1, a_separator_index - 1), a_format)
 						sub_pictures.put (a_sub_picture, 1)

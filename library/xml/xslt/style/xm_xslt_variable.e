@@ -79,9 +79,12 @@ feature -- Element change
 			-- Set the attribute list for the element.
 		require else
 			preparation_state: preparation_state < 2
+		local
+			an_error: XM_XPATH_ERROR_VALUE
 		do
 			if preparation_state > 0 then
-				report_compile_error ("Circular reference to variable")
+				create an_error.make_from_string ("Circular reference to variable", "", "XT0640", Static_error)
+				report_compile_error (an_error)
 			else
 				preparation_state := 1
 				Precursor

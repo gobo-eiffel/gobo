@@ -78,6 +78,7 @@ feature -- Element change
 			a_child_iterator: XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_NODE]
 			an_xsl_when: XM_XSLT_WHEN
 			an_otherwise: XM_XSLT_OTHERWISE
+			an_error: XM_XPATH_ERROR_VALUE
 		do
 			check_within_template
 			from
@@ -89,27 +90,32 @@ feature -- Element change
 				an_xsl_when ?= a_child_iterator.item
 				if an_xsl_when /= Void then
 					if otherwise /= Void then
-						report_compile_error ("xsl:otherwise must come last within an xsl:choose")
+						create an_error.make_from_string ("xsl:otherwise must be immediately within xsl:choose", "", "XT0010", Static_error)
+						report_compile_error (an_error)
 					end
 					number_of_whens := number_of_whens + 1
 				else
 					an_otherwise ?= a_child_iterator.item
 					if an_otherwise /= Void then
 						if otherwise /= Void then
-							report_compile_error ("Only one xsl:otherwise is allowed within an xsl:choose")
+							create an_error.make_from_string ("Only one xsl:otherwise is allowed within an xsl:choose", "", "XT0010", Static_error)
+							report_compile_error (an_error)
 						else
 							otherwise := an_otherwise
 						end
 					elseif a_child_iterator.item.node_type = Text_node and then not is_all_whitespace (a_child_iterator.item.string_value) then
-						report_compile_error ("Text node is not allowed inside xsl:choose")
+						create an_error.make_from_string ("Text node is not allowed inside xsl:choose", "", "XT0010", Static_error)
+						report_compile_error (an_error)
 					else
-						report_compile_error ("Only xsl:when and xsl:otherwise are allowed within an xsl:choose")
+						create an_error.make_from_string ("Only xsl:when and xsl:otherwise are allowed within an xsl:choose", "", "XT0010", Static_error)
+						report_compile_error (an_error)
 					end
 				end
 				a_child_iterator.forth
 			end
 			if number_of_whens = 0 then
-				report_compile_error ("xsl:choose must contain at least one xsl:when")
+				create an_error.make_from_string ("xsl:choose must contain at least one xsl:when", "", "XT0010", Static_error)
+				report_compile_error (an_error)
 			end
 			validated := True
 		end

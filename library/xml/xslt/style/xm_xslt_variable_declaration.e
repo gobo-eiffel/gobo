@@ -107,6 +107,7 @@ feature -- Element change
 			-- As well as validation, it can perform first-time initialisation.
 		local
 			a_procedure: XM_XSLT_PROCEDURE
+			an_error: XM_XPATH_ERROR_VALUE
 		do
 			Precursor
 			if not any_compile_errors then
@@ -118,7 +119,8 @@ feature -- Element change
 				else
 					a_procedure := owning_procedure
 					if a_procedure = Void then
-						report_compile_error ("Local variable must be declared within a template or function")
+						create an_error.make_from_string ("Local variable must be declared within a template or function", "", "XT0010", Static_error)
+						report_compile_error (an_error)
 					else
 						a_procedure.allocate_slot_number
 						internal_slot_number := a_procedure.number_of_variables

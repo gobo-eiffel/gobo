@@ -83,12 +83,14 @@ feature -- Element change
 			a_parameter: XM_XSLT_PARAM
 			a_preceding_iterator: XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_NODE]
 			a_node: XM_XPATH_NODE
+			an_error: XM_XPATH_ERROR_VALUE
 		do
 			a_stylesheet ?= parent; a_template ?= parent; a_function ?= parent
 			is_local := a_template /= Void or else a_function /= Void
 			is_global_variable := a_stylesheet /= Void
 			if not is_local and then not is_global_variable then
-				report_compile_error ("xsl:param must be immediately within a template, function or stylesheet")
+				create an_error.make_from_string ("xsl:param must be immediately within a template, function or stylesheet", "", "XT0010", Static_error)
+				report_compile_error (an_error)
 			else
 				if not is_global_variable then
 					from
@@ -101,18 +103,21 @@ feature -- Element change
 						a_parameter ?= a_node
 						if a_parameter /= Void then
 							if variable_fingerprint = a_parameter.variable_fingerprint then
-								report_compile_error ("The name of the parameter is not unique")
+								create an_error.make_from_string ("The name of the parameter is not unique", "", "XT0580", Static_error)
+								report_compile_error (an_error)
 							end
 						else
 							a_style_element ?= a_node
 							if a_style_element /= Void then
-								report_compile_error ("xsl:param must be the first element within a template or function")
+								create an_error.make_from_string ("xsl:param must be the first element within a template or function", "", "XT0010", Static_error)
+								report_compile_error (an_error)
 							else
 
 								-- must be a text node - allow it only if all white-space
 
 								if not is_all_whitespace (a_node.string_value) then
-									report_compile_error ("xsl:param must not be preceded by text")
+									create an_error.make_from_string ("xsl:param must not be preceded by text", "", "XT0010", Static_error)
+								report_compile_error (an_error)
 								end
 							end
 						end
@@ -124,10 +129,12 @@ feature -- Element change
 
 						-- NB, we do this test before setting the default select attribute
 
-						report_compile_error ("The select attribute should be omitted when required='yes'")
+						create an_error.make_from_string ("The select attribute should be omitted when required='yes'", "", "XT0010", Static_error)
+						report_compile_error (an_error)
 					end
 					if has_child_nodes then
-						report_compile_error ("A parameter specifying required='yes' must have empty content")
+						create an_error.make_from_string ("A parameter specifying required='yes' must have empty content", "", "XT0010", Static_error)
+						report_compile_error (an_error)
 					end
 				end
 				
@@ -160,6 +167,9 @@ feature -- Element change
 				-- For Function arguments, the XM_XSLT_USER_FUNCTION_PARAMETER is more efficient than
             --  the general-purpose XM_XSLT_COMPILED_PARAM object
 
+				check
+					strictly_positive_slot_number: slot_number > 0
+				end
 				create a_function_param.make (required_type, slot_number, variable_name)
 				fixup_binding (a_function_param)
 				last_generated_instruction := Void
@@ -174,13 +184,13 @@ feature -- Element change
 					create a_supplied_parameter_reference.make (a_slot_number)
 					a_type_checker.static_type_check (static_context, a_supplied_parameter_reference, as_type, False, a_role)
 					if a_type_checker.is_static_type_check_error then
-						set_last_error_from_string (a_type_checker.static_type_check_error_message, "XT0320", Type_error)
+						set_last_error_from_string (a_type_checker.static_type_check_error_message, "", "XT0320", Type_error)
 					else
 						a_conversion := a_type_checker.checked_expression
 					end
 				end
 				if is_error then
-					report_compile_error (error_value.error_message)
+					report_compile_error (error_value)
 				else
 					create a_param.make (an_executable, variable_name, a_slot_number)
 					initialize_instruction (an_executable, a_param)

@@ -15,7 +15,12 @@ class XM_XPATH_TAIL_EXPRESSION
 inherit
 
 	XM_XPATH_COMPUTED_EXPRESSION
--- TODO redefinitions
+		redefine
+			promote, compute_special_properties, sub_expressions, same_expression, iterator
+		end
+
+	KL_SHARED_PLATFORM
+
 creation
 
 	make
@@ -43,8 +48,7 @@ feature -- Access
 	item_type: XM_XPATH_ITEM_TYPE is
 			-- Determine the data type of the expression, if possible
 		do
-			-- TODO
-			todo ("item-type", False)
+			Result := base_expression.item_type
 			if Result /= Void then
 				-- Bug in SE 1.0 and 1.1: Make sure that
 				-- that `Result' is not optimized away.
@@ -57,6 +61,27 @@ feature -- Access
 	start: INTEGER
 			--  Offset of first item within `base_expression' to be included
 
+	sub_expressions: DS_ARRAYED_LIST [XM_XPATH_EXPRESSION] is
+			-- Immediate sub-expressions of `Current'
+		do
+			create Result.make (1)
+			Result.set_equality_tester (expression_tester)
+			Result.put (base_expression, 1)
+		end
+
+feature -- Comparison
+
+	same_expression (other: XM_XPATH_EXPRESSION): BOOLEAN is
+			-- Are `Current' and `other' the same expression?
+		local
+			a_tail: XM_XPATH_TAIL_EXPRESSION
+		do
+			a_tail ?= other
+			if a_tail /= Void then
+				Result := base_expression.same_expression (a_tail.base_expression)
+			end
+		end
+
 feature -- Status report
 
 	display (a_level: INTEGER) is
@@ -67,12 +92,8 @@ feature -- Status report
 			a_string := STRING_.appended_string (indentation (a_level), "tail ")
 			a_string := STRING_.appended_string (a_string, start.out)
 			std.error.put_string (a_string)
-			if is_error then
-				std.error.put_string (" in error%N")
-			else
-				std.error.put_new_line
-				base_expression.display (a_level + 1)
-			end
+			std.error.put_new_line
+			base_expression.display (a_level + 1)
 		end
 
 feature -- Optimization
@@ -81,17 +102,76 @@ feature -- Optimization
 			-- Perform static analysis of `Current' and its subexpressions
 		do
 			mark_unreplaced
-			-- TODO
-			todo ("analyze", False)
+
+			-- By the time we get here, the analysis has all been done.
+
 		end
 
-feature {NONE} -- Implementation
+	promote (an_offer: XM_XPATH_PROMOTION_OFFER) is
+			-- Promote this subexpression.
+		local
+			a_promotion: XM_XPATH_EXPRESSION
+		do
+			an_offer.accept (Current)
+			a_promotion := an_offer.accepted_expression
+			if a_promotion /= Void then
+				set_replacement (a_promotion)
+			else
+				if not (an_offer.action = Unordered) then
+					base_expression.promote (an_offer)
+					if base_expression.was_expression_replaced then set_base_expression (base_expression.replacement_expression) end
+				end
+			end
+		end
+
+feature -- Evaluation
+
+	iterator (a_context: XM_XPATH_CONTEXT): XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_ITEM] is
+			-- Iterate over the values of a sequence
+		local
+			an_array_iterator: XM_XPATH_ARRAY_ITERATOR [XM_XPATH_ITEM]
+			an_iterator: XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_ITEM]
+		do
+			an_iterator := base_expression.iterator (a_context)
+			an_array_iterator ?= an_iterator
+			if an_array_iterator /= Void then
+
+				-- Hm. This is theoretically insufficient, but it practice memory will get
+				--  exhausted before the problem manifests itself
+
+				Result := an_array_iterator.new_slice_iterator (start, Platform.Maximum_integer)
+			else
+				create {XM_XPATH_TAIL_ITERATOR} Result.make (an_iterator, start)
+			end
+		end
 	
+feature -- Element change
+
+	set_base_expression (a_base_expression: XM_XPATH_EXPRESSION) is
+			-- Set `base_expression.
+		require
+			base_expression_not_void: a_base_expression /= Void
+		do
+			base_expression := a_base_expression
+			if base_expression.was_expression_replaced then base_expression.mark_unreplaced end
+		ensure
+			base_expression_set: base_expression = a_base_expression
+			base_expression_not_marked_for_replacement: not base_expression.was_expression_replaced
+		end
+	
+feature {XM_XPATH_EXPRESSION} -- Restricted
+
 	compute_cardinality is
 			-- Compute cardinality.
 		do
-			todo ("compute-cardinality", False)
-			-- TODO
+			clone_cardinality (base_expression)
+			cardinalities.put (True, 1) -- allow zero
+		end
+
+	compute_special_properties is
+			-- Compute special properties.
+		do
+			clone_special_properties (base_expression)
 		end
 
 invariant

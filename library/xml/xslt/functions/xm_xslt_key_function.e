@@ -109,6 +109,7 @@ feature -- Evaluation
 			a_key_iterator: XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_ITEM]
 			all_values_iterator: XM_XPATH_NODE_MAPPING_ITERATOR
 			a_local_order_comparer: XM_XPATH_LOCAL_ORDER_COMPARER
+			an_error: XM_XPATH_ERROR_VALUE
 		do
 			an_evaluation_context ?= a_context
 			check
@@ -119,7 +120,8 @@ feature -- Evaluation
 			arguments.item (3).evaluate_item (an_evaluation_context)
 			a_context_document ?= arguments.item (3).last_evaluated_item
 			if a_context_document = Void then
-				a_transformer.report_fatal_error ("In the key() function, the context node must be in a tree whose root is a document node", Void)
+				create an_error.make_from_string ("In the key() function, the context node must be in a tree whose root is a document node", "", "XT1270", Dynamic_error)
+				a_transformer.report_fatal_error (an_error, Void)
 			else
 				a_fingerprint := key_fingerprint
 				if a_fingerprint = -1 then
@@ -129,7 +131,8 @@ feature -- Evaluation
 					if a_fingerprint = -1 then
 						a_message := STRING_.concat ("Key '", a_given_key_name)
 						a_message := STRING_.appended_string (a_message, "' has not been defined")
-						a_transformer.report_fatal_error (a_message, Void)
+						create an_error.make_from_string (a_message, "", "XT1260", Dynamic_error)
+						a_transformer.report_fatal_error (an_error, Void)
 					end
 				end
 				if not a_transformer.is_error then
@@ -154,7 +157,7 @@ feature -- Evaluation
 						create {XM_XPATH_DOCUMENT_ORDER_ITERATOR} Result.make (all_values_iterator, a_local_order_comparer)
 					end
 				else
-					create {XM_XPATH_INVALID_ITERATOR} Result.make_from_string ("Non-recoverable error already reported", "FOER0000", Dynamic_error)
+					create {XM_XPATH_INVALID_ITERATOR} Result.make_from_string ("Non-recoverable error already reported",  Xpath_errors_uri, "FOER0000", Dynamic_error)
 				end
 			end
 		end

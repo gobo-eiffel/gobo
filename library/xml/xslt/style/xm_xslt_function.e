@@ -108,6 +108,7 @@ feature -- Access
 
 				-- This is a forwards reference to the function.
 
+				if static_context = Void then create static_context.make (Current) end
 				prepare_attributes
 				if any_compile_errors then
 					internal_function_fingerprint := -1
@@ -163,6 +164,7 @@ feature -- Element change
 			a_cursor: DS_ARRAYED_LIST_CURSOR [INTEGER]
 			a_name_code: INTEGER
 			an_expanded_name, an_as_attribute, an_override_attribute: STRING
+			an_error: XM_XPATH_ERROR_VALUE
 		do
 			from
 				a_cursor := attribute_collection.name_code_cursor
@@ -177,7 +179,8 @@ feature -- Element change
 				if STRING_.same_string (an_expanded_name, Name_attribute) then
 					function_name := attribute_value_by_index (a_cursor.index)
 					if function_name.index_of (':', 2) = 0 then
-						report_compile_error ("Xsl:function name must have a namespace prefix")
+						create an_error.make_from_string ("Xsl:function name must have a namespace prefix", "", "XT0740", Static_error)
+						report_compile_error (an_error)
 					else
 						STRING_.left_adjust (function_name)
 						STRING_.right_adjust (function_name)
@@ -195,7 +198,8 @@ feature -- Element change
 					elseif STRING_.same_string (an_override_attribute, "no") then
 						is_overriding := False
 					else
-						report_compile_error ("Xsl:function override attribute must be 'yes' or 'no'")
+						create an_error.make_from_string ("Xsl:function override attribute must be 'yes' or 'no'", "", "XT0020", Static_error)
+						report_compile_error (an_error)
 					end
 				else
 					check_unknown_attribute (a_name_code)
@@ -224,6 +228,7 @@ feature -- Element change
 			a_root: XM_XSLT_STYLESHEET
 			a_cursor: DS_BILINKED_LIST_CURSOR [XM_XSLT_STYLE_ELEMENT]
 			a_function: XM_XSLT_FUNCTION
+			an_error: XM_XPATH_ERROR_VALUE
 		do
 			check_top_level
 			an_arity := arity
@@ -243,7 +248,8 @@ feature -- Element change
 					and then a_function.arity = an_arity
 					and then a_function.function_fingerprint = function_fingerprint
 					and then a_function.precedence = precedence then
-					report_compile_error (STRING_.concat ("Duplicate function declaration for ", function_name))
+					create an_error.make_from_string (STRING_.concat ("Duplicate function declaration for ", function_name), "", "XT0770", Static_error)
+					report_compile_error (an_error)
 					a_cursor.go_before
 				else
 					a_cursor.back
@@ -349,6 +355,7 @@ feature {NONE} -- Implementation
 			a_user_function: XM_XSLT_COMPILED_USER_FUNCTION
 			a_cursor: DS_ARRAYED_LIST_CURSOR [XM_XSLT_INSTRUCTION]
 			a_param: XM_XSLT_COMPILED_PARAM
+			an_error: XM_XPATH_ERROR_VALUE
 		do
 			create a_body.make (an_executable, Void, result_type)
 			compile_children (an_executable, a_body)
@@ -372,7 +379,8 @@ feature {NONE} -- Implementation
 				create a_type_checker
 				a_type_checker.static_type_check (Void, an_expression, result_type, False, a_role)
 				if a_type_checker.is_static_type_check_error then
-					report_compile_error (a_type_checker.static_type_check_error_message)
+					create an_error.make_from_string(a_type_checker.static_type_check_error_message, Xpath_errors_uri, "XP0004", Type_error)
+					report_compile_error (an_error)
 				else
 					an_expression := a_type_checker.checked_expression
 				end
@@ -485,7 +493,7 @@ feature {NONE} -- Implementation
 			loop
 				a_cursor.item.set_function (Current, a_user_function)
 				if a_cursor.item.is_type_error then
-					report_compile_error (a_cursor.item.error_value.error_message)
+					report_compile_error (a_cursor.item.error_value)
 				end
 				a_cursor.forth
 			end

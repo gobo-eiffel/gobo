@@ -96,13 +96,7 @@
 	  <para>analyze-string</para>
 	</listitem>
 	<listitem>
-	  <para>apply-imports</para>
-	</listitem>
-	<listitem>
 	  <para>matching-substring</para>
-	</listitem>
-	<listitem>
-	  <para>next-match</para>
 	</listitem>
 	<listitem>
 	  <para>non-matching-substring</para>

@@ -78,7 +78,7 @@ feature -- Evaluation
 			a_splitter.set_separators (":")
 			qname_parts := a_splitter.split (a_qname)
 			if qname_parts.count = 0 or else qname_parts.count > 2 then
-				set_last_error_from_string ("Argument to 'system-property' is not a QName", "XT1390", Static_error)
+				set_last_error_from_string ("Argument to 'system-property' is not a QName", "", "XT1390", Static_error)
 			else
 				if qname_parts.count = 1 then
 					a_uri := ""
@@ -111,7 +111,7 @@ feature -- Evaluation
 			a_splitter.set_separators (":")
 			qname_parts := a_splitter.split (a_qname)
 			if qname_parts.count = 0 or else qname_parts.count > 2 then
-				set_last_error_from_string ("Argument to 'system-property' is not a QName", "XT1390", Static_error)
+				set_last_error_from_string ("Argument to 'system-property' is not a QName", "", "XT1390", Static_error)
 			else
 				if qname_parts.count = 1 then
 					a_uri := ""

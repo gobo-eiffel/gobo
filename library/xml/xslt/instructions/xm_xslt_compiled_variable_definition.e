@@ -54,7 +54,7 @@ feature -- Evaluation
 
 					a_bindery.set_executing (slot_number, True)
 					if a_bindery.is_circularity_error then
-						create {XM_XPATH_ERROR_VALUE} an_error_value.make_from_string (STRING_.concat ("Circular definition of variable ", variable_name) , "XT0640", Dynamic_error)
+						create {XM_XPATH_ERROR_VALUE} an_error_value.make_from_string (STRING_.concat ("Circular definition of variable ", variable_name) , "", "XT0640", Dynamic_error)
 						create {XM_XPATH_INVALID_VALUE} a_value.make (an_error_value)
 					else
 						a_saved_context := a_transformer.saved_context

@@ -41,6 +41,7 @@ feature -- Access
 			a_uri_resolver: XM_URI_REFERENCE_RESOLVER
 			a_node_factory: XM_XSLT_NODE_FACTORY
 			a_message: STRING
+			an_error: XM_XPATH_ERROR_VALUE
 		do
 			check_empty
 			check_top_level
@@ -58,30 +59,35 @@ feature -- Access
 				create a_uri.make_resolve (a_base_uri, href)
 				if a_uri.has_fragment then
 					-- TODO add an ID filter to support fragment identifiers
-					report_compile_error ("Fragment identifier not supported")
+					create an_error.make_from_string ("Fragment identifier not supported", Gexslt_eiffel_type_uri, "NO_FRAGMENT_ID", Static_error)
+					report_compile_error (an_error)
 				else
 					a_uri_resolver.resolve_uri (a_uri.full_reference)
 					if a_uri_resolver.has_uri_reference_error then
-						report_compile_error (a_uri_resolver.last_uri_reference_error)
+						create an_error.make_from_string (a_uri_resolver.last_uri_reference_error, "", "XT0165", Static_error)
+						report_compile_error (an_error)
 					else
 						create a_source.make (a_uri_resolver.last_system_id.full_reference)
 						create a_node_factory.make (a_configuration.error_listener, a_configuration.are_external_functions_allowed)
 						a_stylesheet_compiler.load_stylesheet_module (a_source, a_uri_resolver.last_uri_reference_stream, a_uri_resolver.last_system_id)
 						if a_stylesheet_compiler.load_stylesheet_module_failed then
-							report_compile_error (a_stylesheet_compiler.load_stylesheet_module_error)
+							create an_error.make_from_string (a_stylesheet_compiler.load_stylesheet_module_error, "", "XT0165", Static_error)
+							report_compile_error (an_error)
 						else
 							included_document := a_stylesheet_compiler.last_loaded_module
 							-- TODO: allow "Literal Result Element as Stylesheet" syntax, and validation errors
 							Result ?= included_document.document_element
 							if Result = Void then
 								a_message := STRING_.concat ("Included document ", href)
-								report_compile_error (STRING_.appended_string (a_message, " is not a stylesheet"))
+								a_message := STRING_.appended_string (a_message, " is not a stylesheet")
+								create an_error.make_from_string (a_message, "", "XT0165", Static_error)
+								report_compile_error (an_error)
 							else
-								if Result.validation_error_message /= Void then
+								if Result.validation_error /= Void then
 									if reporting_circumstances = Report_always then
-										Result.report_compile_error (Result.validation_error_message)
+										Result.report_compile_error (Result.validation_error)
 									elseif reporting_circumstances = Report_unless_forwards_comptible and then not Result.is_forwards_compatible_processing_enabled then
-										Result.report_compile_error (Result.validation_error_message)
+										Result.report_compile_error (Result.validation_error)
 									end
 								end
 								Result.set_import_precedence (a_precedence)
@@ -119,6 +125,7 @@ feature -- Element change
 			a_cursor: DS_ARRAYED_LIST_CURSOR [INTEGER]
 			a_name_code: INTEGER
 			an_expanded_name: STRING
+			an_error: XM_XPATH_ERROR_VALUE
 		do
 			from
 				a_cursor := attribute_collection.name_code_cursor
@@ -141,8 +148,9 @@ feature -- Element change
 			end
 			if href = Void then
 				report_absence ("href")
-			elseif	uri_encoding.has_excluded_characters (href) then
-				report_compile_error ("XT0165: 'href' attribute contains invalid characters")
+			elseif uri_encoding.has_excluded_characters (href) then
+				create an_error.make_from_string ("'href' attribute contains invalid characters", "", "XT0165", Static_error)
+				report_compile_error (an_error)
 			end
 			attributes_prepared := True
 		end

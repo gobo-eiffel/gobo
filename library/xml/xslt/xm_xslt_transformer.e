@@ -22,6 +22,8 @@ inherit
 
 	XM_XPATH_TYPE
 
+	XM_XPATH_ERROR_TYPES
+
 	XM_XPATH_AXIS
 
 	XM_XSLT_CONFIGURATION_CONSTANTS
@@ -218,23 +220,23 @@ feature -- Status setting
 			error_listener.warning (a_message, a_locator)
 		end
 
-	report_recoverable_error (a_message: STRING; a_locator: XM_XPATH_LOCATOR) is
+	report_recoverable_error (an_error: XM_XPATH_ERROR_VALUE; a_locator: XM_XPATH_LOCATOR) is
 			-- Report a recoverable error.
 		require
-			message_not_void: a_message /= Void
+			error_not_void: an_error /= Void
 		do
-			error_listener.error (a_message, a_locator)
+			error_listener.error (an_error, a_locator)
 			if not error_listener.recovered then
 				is_error := True
 			end
 		end
 
-	report_fatal_error (a_message: STRING; a_locator: XM_XPATH_LOCATOR) is
+	report_fatal_error (an_error: XM_XPATH_ERROR_VALUE; a_locator: XM_XPATH_LOCATOR) is
 			-- Report a recoverable error.
 		require
-			message_not_void: a_message /= Void
+			error_not_void: an_error /= Void
 		do
-			error_listener.fatal_error (a_message, a_locator)
+			error_listener.fatal_error (an_error, a_locator)
 			is_error := True
 		end
 
@@ -373,6 +375,7 @@ feature -- Element change
 		local
 			a_fingerprint: INTEGER
 			a_compiled_templates_index: DS_HASH_TABLE [XM_XSLT_COMPILED_TEMPLATE, INTEGER]
+			an_error: XM_XPATH_ERROR_VALUE
 		do
 			if not shared_name_pool.is_expanded_name_allocated (a_template_name) then
 				shared_name_pool.allocate_expanded_name (a_template_name)
@@ -383,7 +386,8 @@ feature -- Element change
 				initial_template := a_compiled_templates_index.item (a_fingerprint)
 			else
 				initial_template := Void
-				report_fatal_error ("Unable to locate a template named " + a_template_name, Void)
+				create an_error.make_from_string (STRING_.concat ("Unable to locate a template named ", a_template_name), "", "XT0040", Dynamic_error)
+				report_fatal_error (an_error, Void)
 			end
 		end
 
@@ -485,7 +489,7 @@ feature -- Element change
 			create an_expression_factory
 			an_expression_factory.make_expression (a_parameter_value, executable.static_context, 1, 0)
 			if an_expression_factory.is_parse_error then
-				report_recoverable_error (an_expression_factory.parsed_error_value.error_message, Void)
+				report_recoverable_error (an_expression_factory.parsed_error_value, Void)
 			else
 				xpath_parameters.force (an_expression_factory.parsed_expression, a_fingerprint)
 			end
@@ -563,9 +567,11 @@ feature -- Element change
 			some_properties: XM_XSLT_OUTPUT_PROPERTIES
 			a_receiver: XM_XPATH_RECEIVER
 			a_namespace_reducer: XM_XSLT_NAMESPACE_REDUCER
+			an_error: XM_XPATH_ERROR_VALUE
 		do
 			if is_final and then temporary_destination_depth > 0 then
-				report_fatal_error ("Cannot switch to a final result destination while writing a temporary tree", Void)
+				create an_error.make_from_string ("Cannot switch to a final result destination while writing a temporary tree", "", "XT1480", Dynamic_error)
+				report_fatal_error (an_error, Void)
 			else
 				if not is_final then temporary_destination_depth := temporary_destination_depth + 1 end
 				if properties = Void then
@@ -617,6 +623,7 @@ feature -- Transformation
 			a_builder: XM_XPATH_BUILDER
 			a_parser: XM_PARSER
 			a_document: XM_XPATH_DOCUMENT
+			an_error: XM_XPATH_ERROR_VALUE
 		do
 			utc_system_clock.set_date_time_to_now (current_date_time)
 			if a_source /= Void then
@@ -627,7 +634,8 @@ feature -- Transformation
 					a_builder := new_builder (a_parser)
 					a_source.send (a_parser, new_stripper (a_builder), False)
 					if a_builder.has_error then
-						report_fatal_error (a_builder.last_error, Void)
+						create an_error.make_from_string (a_builder.last_error, Gexslt_eiffel_type_uri, "BUILD_ERROR", Static_error)
+						report_fatal_error (an_error, Void)
 					else
 						a_document := a_builder.document
 						register_document (a_document, a_source.system_id)
@@ -722,6 +730,77 @@ feature -- Transformation
 			last_tail_call := a_last_tail_call
 		end
 
+	apply_imports (a_minimum_precedence, a_maximum_precedence: INTEGER; some_parameters, some_tunnel_parameters: XM_XSLT_PARAMETER_SET) is
+			-- Apply a template imported from the stylesheet containing the current template.
+		require
+			no_error: not is_error
+		local
+			a_mode: XM_XSLT_MODE
+			a_context_node: XM_XPATH_NODE
+			a_node_handler: XM_XSLT_COMPILED_TEMPLATE
+			an_error: XM_XPATH_ERROR_VALUE
+		do
+			a_mode := current_mode
+			if current_iterator = Void or else current_iterator.off then
+				create an_error.make_from_string ("Context item is not set whilst applying imports.", "", "XT0565", Dynamic_error)
+				report_fatal_error (an_error, Void)
+			else
+				a_context_node ?= current_iterator.item
+				if a_context_node = Void then
+					create an_error.make_from_string ("Context item is not a node whilst applying imports.", "", "XT0565", Dynamic_error)
+					report_fatal_error (an_error, Void)
+				else
+					a_node_handler := rule_manager.imported_template_rule (a_context_node, a_mode, a_minimum_precedence, a_maximum_precedence, Current)
+					if a_node_handler = Void then
+
+						-- Use the default action for the node.
+
+						perform_default_action (a_context_node, some_parameters, some_tunnel_parameters)
+					else
+						bindery.open_stack_frame (some_parameters, some_tunnel_parameters)
+						a_node_handler.process (Current)
+						bindery.close_stack_frame
+					end
+				end
+			end
+		end
+
+	find_next_match (some_parameters, some_tunnel_parameters: XM_XSLT_PARAMETER_SET) is
+			-- Find and apply next matching template.
+		require
+			no_error: not is_error
+			current_template_not_void: current_template /= Void
+		local
+			a_mode: XM_XSLT_MODE
+			a_context_node: XM_XPATH_NODE
+			a_node_handler: XM_XSLT_COMPILED_TEMPLATE
+			an_error: XM_XPATH_ERROR_VALUE
+		do
+			a_mode := current_mode
+			if current_iterator = Void or else current_iterator.off then
+				create an_error.make_from_string ("Context item is not set whilst searching for next match.", "", "XT0565", Dynamic_error)
+				report_fatal_error (an_error, Void)
+			else
+				a_context_node ?= current_iterator.item
+				if a_context_node = Void then
+					create an_error.make_from_string ("Context item is not a node whilst searching for next match.", "", "XT0565", Dynamic_error)
+					report_fatal_error (an_error, Void)
+				else
+					a_node_handler := rule_manager.next_match_handler (a_context_node, a_mode, current_template, Current)
+					if a_node_handler = Void then
+
+						-- Use the default action for the node.
+
+						perform_default_action (a_context_node, some_parameters, some_tunnel_parameters)
+					else
+						bindery.open_stack_frame (some_parameters, some_tunnel_parameters)
+						a_node_handler.process (Current)
+						bindery.close_stack_frame
+					end
+				end
+			end
+		end
+
 feature {XM_XSLT_TRANSFORMER} -- Transformation internals
 
 	transform_document (a_start_node: XM_XPATH_NODE; a_result: XM_XSLT_TRANSFORMATION_RESULT) is
@@ -737,26 +816,28 @@ feature {XM_XSLT_TRANSFORMER} -- Transformation internals
 			principal_result := a_result
 			principal_result_uri := a_result.system_id
 			initialize_transformer (a_start_node)
-			properties := executable.default_output_properties
-
-			-- TODO: overlay properties defined by API
-			-- TODO: stylesheet chaining
-
-			change_output_destination (properties, a_result, True, Validation_preserve, Void)
-
-			-- Process the source document using the handlers that have been set up.
-
-			if initial_template = Void then
-				perform_transformation (a_start_node)
-			else
-				initial_template.process (Current)
+			if not is_error then
+				properties := executable.default_output_properties
+				
+				-- TODO: overlay properties defined by API
+				-- TODO: stylesheet chaining
+				
+				change_output_destination (properties, a_result, True, Validation_preserve, Void)
+				
+				-- Process the source document using the handlers that have been set up.
+				
+				if initial_template = Void then
+					perform_transformation (a_start_node)
+				else
+					initial_template.process (Current)
+				end
+				
+				if is_tracing then
+					trace_listener.stop_tracing
+				end
+				
+				reset_output_destination (Void)
 			end
-
-			if is_tracing then
-				trace_listener.stop_tracing
-			end
-
-			reset_output_destination (Void)
 		end
 		
 	perform_transformation (a_start_node: XM_XPATH_NODE) is
@@ -905,6 +986,8 @@ feature -- Implementation
 			-- Initialize in preparation for a transformation.
 		require
 			executable_not_void: executable /= Void
+		local
+			an_error: XM_XPATH_ERROR_VALUE
 		do
 			trace_listener := configuration.trace_listener
 			if is_tracing then
@@ -929,12 +1012,13 @@ feature -- Implementation
 					apply_xpath_parameters (new_xpath_context)
 				end
 			elseif xpath_parameters /= Void then
-				report_recoverable_error ("XPath parameters cannot be specified without a source document", Void)
+				create an_error.make_from_string ("XPath parameters cannot be specified without a source document", Gexslt_eiffel_type_uri, "PARAMETERS_WITHOUT_SOURCE_DOCUMENT", Dynamic_error)
+				report_fatal_error (an_error, Void)
 			end
 
 			-- If parameters were supplied, set them up
 
-			if parameters /= Void then
+			if parameters /= Void and then not is_error then
 				bindery.define_global_parameters (parameters)
 			end
 		end

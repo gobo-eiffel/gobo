@@ -51,6 +51,7 @@ feature -- Element change
 			a_cursor: DS_ARRAYED_LIST_CURSOR [INTEGER]
 			a_name_code: INTEGER
 			an_expanded_name, a_name_attribute: STRING
+			an_error: XM_XPATH_ERROR_VALUE
 		do
 			from
 				a_cursor := attribute_collection.name_code_cursor
@@ -78,11 +79,12 @@ feature -- Element change
 				if is_qname (a_name_attribute) then
 					generate_name_code (a_name_attribute)
 					if last_generated_name_code = -1 then
-						report_compile_error (STRING_.appended_string (a_name_attribute, " is not a recognised QName"))
+						report_compile_error (name_code_error_value)
 					end
 					called_template_fingerprint := fingerprint_from_name_code (last_generated_name_code)
 				else
-					report_compile_error (STRING_.appended_string ("Name attribute of xsl:call-template must be a QName. Found: ", a_name_attribute))
+					create an_error.make_from_string (STRING_.concat ("Name attribute of xsl:call-template must be a QName. Found: ", a_name_attribute), "", "XT0290", Static_error)
+					report_compile_error (an_error)
 				end
 			end
 			attributes_prepared := True
@@ -108,6 +110,7 @@ feature -- Element change
 			a_with_param: XM_XSLT_WITH_PARAM
 			is_parameter_ok: BOOLEAN
 			a_message: STRING
+			an_error: XM_XPATH_ERROR_VALUE
 		do
 
 			-- check that a parameter is supplied for each required parameter of the called template
@@ -135,8 +138,8 @@ feature -- Element change
 							an_actual_parameter_iterator.forth
 						end
 						if not is_parameter_ok then
-							report_compile_error (STRING_.appended_string ("XT0690: No value supplied for required parameter ",
-														 a_param.variable_name))
+							create an_error.make_from_string (STRING_.concat ("No value supplied for required parameter ", a_param.variable_name), "", "XT0690", Static_error)
+							report_compile_error (an_error)
 						end
 					end
 					a_declared_parameter_iterator.forth
@@ -171,8 +174,11 @@ feature -- Element change
 							a_declared_parameter_iterator.forth
 						end
 						if not is_parameter_ok and then not is_backwards_compatible_processing_enabled then
-							a_message := STRING_.appended_string ("XT0680: Parameter ", a_with_param.variable_name)
-							report_compile_error (STRING_.appended_string (a_message, " is not declared in the called template"))
+							a_message := STRING_.concat ("Parameter ", a_with_param.variable_name)
+							a_message := STRING_.appended_string (a_message, " is not declared in the called template")
+							create an_error.make_from_string (a_message, "", "XT0680", Static_error)
+							report_compile_error (an_error)
+
 						end
 					end
 					an_actual_parameter_iterator.forth
@@ -236,6 +242,7 @@ feature {NONE} -- Implementation
 			an_element_list: DS_BILINKED_LIST [XM_XSLT_STYLE_ELEMENT]
 			a_cursor: DS_BILINKED_LIST_CURSOR [XM_XSLT_STYLE_ELEMENT]
 			a_template: XM_XSLT_TEMPLATE
+			an_error: XM_XPATH_ERROR_VALUE
 		do
 			a_stylesheet := principal_stylesheet
 			an_element_list := a_stylesheet.top_level_elements
@@ -260,7 +267,8 @@ feature {NONE} -- Implementation
 				end
 			end
 			if template = Void then
-				report_compile_error (STRING_.appended_string ("XT0650: No template exists named ", called_template_name))
+				create an_error.make_from_string (STRING_.concat ("No template exists named ", called_template_name), "", "XT0650", Static_error)
+				report_compile_error (an_error)
 			end
 		end
 

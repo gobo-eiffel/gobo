@@ -30,6 +30,8 @@ inherit
 
 	XM_XPATH_TYPE
 
+	XM_XPATH_ERROR_TYPES
+
 	XM_XPATH_AXIS
 
 		-- Separate this class into a pure interface, plus an implementation class.
@@ -71,6 +73,7 @@ feature -- Access
 			a_key_definition: XM_XSLT_KEY_DEFINITION
 			a_list: DS_ARRAYED_LIST [XM_XPATH_NODE]
 			--a_collator: ST_COLLATOR
+			an_error: XM_XPATH_ERROR_VALUE
 		do
 			an_item_type := a_key_value.item_type.primitive_type
 			if an_item_type = Integer_type_code or else
@@ -84,7 +87,8 @@ feature -- Access
 			if does_index_exist (a_document, a_key_fingerprint, an_item_type) then
 				an_index := index (a_document, a_key_fingerprint, an_item_type)
 				if an_index.is_under_construction then
-					a_transformer.report_fatal_error ("Key definition is circular", Void)
+					create an_error.make_from_string ("Key definition is circular", "", "XT0640", Dynamic_error)
+					a_transformer.report_fatal_error (an_error, Void)
 				end
 			else
 				create an_index.make_under_construction
@@ -204,6 +208,7 @@ feature {NONE} -- Implementation
 			a_cursor: DS_ARRAYED_LIST_CURSOR [XM_XSLT_KEY_DEFINITION]
 			a_message: STRING
 			a_map: DS_HASH_TABLE [DS_ARRAYED_LIST [XM_XPATH_NODE], XM_XPATH_ATOMIC_VALUE]
+			an_error: XM_XPATH_ERROR_VALUE
 		do
 			last_built_index := Void
 			some_key_definitions := key_definitions (a_key_fingerprint)
@@ -223,7 +228,8 @@ feature {NONE} -- Implementation
 			else
 				a_message := STRING_.concat ("Key ", shared_name_pool.display_name_from_name_code (a_key_fingerprint))
 				a_message := STRING_.appended_string (a_message, " has not been defined")
-				a_transformer.report_fatal_error (a_message, Void)
+				create an_error.make_from_string (a_message, "", "XT1260", Dynamic_error)
+				a_transformer.report_fatal_error (an_error, Void)
 			end
 		ensure
 			error_or_index_built: not a_transformer.is_error implies last_built_index /= Void

@@ -65,7 +65,7 @@ feature -- Evaluation
 				end
 				a_bindery := a_transformer.bindery
 				a_bindery.open_stack_frame_with_positional_parameters (some_actual_arguments)
-				body.eagerly_evaluate (a_transformer.new_xpath_context) -- TODO: look into lazy evaluation
+				body.eagerly_evaluate (a_transformer.new_xpath_context)
 				last_called_value := body.last_evaluation
 				if evaluate_tail_calls then
 					an_object_value ?= last_called_value

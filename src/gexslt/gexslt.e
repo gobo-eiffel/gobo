@@ -400,7 +400,8 @@ feature -- Error handling
 									  "       --no-line-numbers%N" +
 									  "       --no-output-extensions%N" +
 									  "       --no-gc%N" +
-									  "       --no-catalogs%N" +
+									  "       --no-network-protocols%N" +
+									  "       --no-catalogs%N" +									  
 									  "       --no-catalog-pi%N" +
 									  "       --prefer-system%N" +
 									  "       --no-default-catalog%N" +
@@ -425,7 +426,10 @@ feature {NONE} -- Implementation
 			-- File fro trace output
 
 	suppress_output_extensions: BOOLEAN
-			-- Suppress QName methods for xsl:output
+			-- Suppress QName methods for xsl:output.
+
+	suppress_network_protocols: BOOLEAN
+			-- Suppress URI schemes that access the network.
 
 	process_option (an_option: STRING) is
 			-- Process `an_option'.
@@ -474,6 +478,8 @@ feature {NONE} -- Implementation
 				process_file (an_option.substring (6, an_option.count))
 			elseif an_option.is_equal ("no-output-extensions") then
 				suppress_output_extensions := True
+			elseif an_option.is_equal ("no-network-protocols") then
+					suppress_network_protocols := True
 			elseif an_option.is_equal ("no-catalogs") then
 				shared_catalog_manager.suppress_catalogs
 			elseif an_option.is_equal ("no-catalog-pi") then
@@ -605,6 +611,10 @@ feature {NONE} -- Implementation
 			if not suppress_output_extensions then
 				register_output_extensions
 			end
+			if not suppress_network_protocols then
+				register_network_protocols
+			end
+			register_non_network_protocols
 			create a_stylesheet_uri.make (uris.item (1))
 			create a_stylesheet_compiler.make (configuration)
 			a_stylesheet_compiler.prepare (a_stylesheet_uri)
@@ -795,9 +805,24 @@ feature {NONE} -- Implementation
 			emitter_factory.register_extension_emitter_factory (an_emitter_factory)
 		end
 
+	register_non_network_protocols is
+			-- Register additional URI schemes which do not access the network.
+		do
+			-- Descendants are encouraged to redefine this routine.
+		end
+			
+	register_network_protocols is
+			-- Register additional URI schemes which may access the network.
+		require
+			network_protocols_not_suppressed: not suppress_network_protocols
+		do
+			-- Descendants are encouraged to redefine this routine.
+		end
+
 invariant
 
 	error_handler_not_void: error_handler /= Void
 	error_listener_not_void: error_listener /= Void
+	configuration_not_void: configuration /= Void
 
 end

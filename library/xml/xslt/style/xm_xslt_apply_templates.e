@@ -91,9 +91,7 @@ feature -- Element change
 				else
 					generate_name_code (a_mode_attribute)
 					if last_generated_name_code = -1 then
-						a_message := STRING_.appended_string ("Mode name ", a_mode_attribute)
-						a_message := STRING_.appended_string (a_message, " is not a recognised QName")
-						report_compile_error (a_message)
+						report_compile_error (name_code_error_value)
 					end
 					mode_name_code := last_generated_name_code
 				end
@@ -112,6 +110,7 @@ feature -- Element change
 			a_type_checker: XM_XPATH_TYPE_CHECKER
 			a_node_sequence: XM_XPATH_SEQUENCE_TYPE
 			a_rule_manager: XM_XSLT_RULE_MANAGER
+			an_error: XM_XPATH_ERROR_VALUE
 		do
 			check_within_template
 
@@ -141,9 +140,11 @@ feature -- Element change
 					else
 						a_text ?= a_child_iterator.item
 						if a_text /= Void and then not is_all_whitespace (a_text.string_value) then
-							report_compile_error ("No character data allowed within xsl:apply-templates")
+							create an_error.make_from_string ("No character data allowed within xsl:apply-templates", "", "XT0010", Static_error)
+							report_compile_error (an_error)
 						elseif a_text = Void then
-							report_compile_error ("Invalid element within xsl:apply-templates")
+							create an_error.make_from_string ("Invalid element within xsl:apply-templates", "", "XT0010", Static_error)
+							report_compile_error (an_error)
 						end
 					end
 				end
@@ -161,7 +162,8 @@ feature -- Element change
 			create a_node_sequence.make_node_sequence
 			a_type_checker.static_type_check (static_context, select_expression, a_node_sequence, False, a_role)
 			if a_type_checker.is_static_type_check_error	then
-				report_compile_error (a_type_checker.static_type_check_error_message)
+				create an_error.make_from_string(a_type_checker.static_type_check_error_message, Xpath_errors_uri, "XP0004", Type_error)
+					report_compile_error (an_error)
 			else
 				select_expression := a_type_checker.checked_expression
 			end

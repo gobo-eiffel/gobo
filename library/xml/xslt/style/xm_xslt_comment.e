@@ -55,7 +55,7 @@ feature -- Element change
 				generate_expression (a_select_attribute)
 				select_expression := last_generated_expression
 				if select_expression.is_error then
-					report_compile_error (select_expression.error_value.error_message)
+					report_compile_error (select_expression.error_value)
 				end
 			end
 			attributes_prepared := True

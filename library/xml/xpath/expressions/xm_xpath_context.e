@@ -211,9 +211,12 @@ feature -- Evaluation
 			a_stack_entry: XM_XSLT_STACK_FRAME_ENTRY
 		do
 			a_stack_entry := local_variable_frame.item (a_slot_number + reserved_slot_count)
-			if a_stack_entry /= Void then
-				Result := a_stack_entry.value
+			check
+				stack_entry_not_void: a_stack_entry /= Void
 			end
+			Result := a_stack_entry.value
+		ensure
+			evaluation_not_void: Result /= Void
 		end
 	
 feature 	-- Element change
@@ -222,6 +225,7 @@ feature 	-- Element change
 			-- Set `current_iterator'.
 		do
 			current_iterator := an_iterator
+			cached_last := -1
 		ensure
 			set: current_iterator = an_iterator
 		end
@@ -236,6 +240,16 @@ feature 	-- Element change
 			end
 			create a_stack_entry.make (a_value)
 			local_variable_frame.put (a_stack_entry, a_slot_number + reserved_slot_count)
+		end
+
+	set_local_variable_frame (a_local_variable_frame: ARRAY [XM_XSLT_STACK_FRAME_ENTRY]) is
+			-- Set stack frame.
+		require
+			local_variable_frame_not_void: a_local_variable_frame /= Void
+		do
+			local_variable_frame := a_local_variable_frame
+		ensure
+			local_variable_frame_set: local_variable_frame = a_local_variable_frame
 		end
 
 	build_document (a_uri_reference: STRING) is

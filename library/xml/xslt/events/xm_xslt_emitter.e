@@ -16,6 +16,10 @@ inherit
 	
 	XM_XPATH_RECEIVER
 
+	XM_XPATH_STANDARD_NAMESPACES
+
+	XM_XPATH_ERROR_TYPES
+
 	UC_UNICODE_ROUTINES
 
 feature -- Access
@@ -50,8 +54,11 @@ feature -- Events
 
 	on_error (a_message: STRING) is
 			-- Event producer detected an error.
+		local
+			an_error: XM_XPATH_ERROR_VALUE
 		do
-			transformer.report_fatal_error (a_message, Void)
+			create an_error.make_from_string (a_message, Gexslt_eiffel_type_uri, "SERIALIZATION_ERROR", Dynamic_error)
+			transformer.report_fatal_error (an_error, Void)
 			is_error := True
 		end
 

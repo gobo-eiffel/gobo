@@ -248,7 +248,7 @@ feature -- Events
 			end
 			previous_atomic := an_atomic_value /= Void
 			if tree = Void then
-				output_list.put_last (an_item)
+				output_list.force_last (an_item)
 			else
 				if an_atomic_value /= Void then
 					tree.notify_characters (an_atomic_value.string_value, 0)

@@ -54,10 +54,14 @@ feature -- Access
 				Result := an_arity = -1 or else an_arity = 1
 			elseif a_fingerprint = Empty_function_type_code then
 				Result := an_arity = -1 or else an_arity = 1
+			elseif a_fingerprint = Error_function_type_code then
+				Result := an_arity < 4
 			elseif a_fingerprint = Exists_function_type_code then
 				Result := an_arity = -1 or else an_arity = 1
 			elseif a_fingerprint = False_function_type_code then
 				Result := an_arity = -1 or else an_arity = 0
+			elseif a_fingerprint = Floor_function_type_code then
+				Result := an_arity = -1 or else an_arity = 1
 			elseif a_fingerprint = Id_function_type_code then
 				Result := an_arity = -1 or else an_arity = 1  or else an_arity = 2
 			elseif a_fingerprint = In_scope_prefixes_function_type_code then
@@ -136,10 +140,14 @@ feature -- Element change
 				create {XM_XPATH_DOC} a_function_call.make
 			elseif a_fingerprint = Empty_function_type_code then
 				create {XM_XPATH_EMPTY} a_function_call.make
+			elseif a_fingerprint = Error_function_type_code then
+				create {XM_XPATH_ERROR} a_function_call.make				
 			elseif a_fingerprint = Exists_function_type_code then
 				create {XM_XPATH_EXISTS} a_function_call.make
 			elseif a_fingerprint = False_function_type_code then
 				create {XM_XPATH_FALSE} a_function_call.make
+			elseif a_fingerprint = Floor_function_type_code then
+				create {XM_XPATH_FLOOR} a_function_call.make
 			elseif a_fingerprint = Id_function_type_code then
 				create {XM_XPATH_ID} a_function_call.make
 			elseif a_fingerprint = In_scope_prefixes_function_type_code then

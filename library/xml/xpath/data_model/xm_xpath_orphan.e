@@ -2,7 +2,7 @@ indexing
 
 	description:
 
-		"XPath orphan attribute/namespace/text/processing-instruction or comment nodes with no parent or children."
+		"XPath orphan element/attribute/namespace/text/processing-instruction or comment nodes with no parent or children."
 
 	library: "Gobo Eiffel XML Library"
 	copyright: "Copyright (c) 2003, Colin Adams and others"
@@ -28,12 +28,12 @@ feature {NONE} -- Initialization
 	make (a_node_type: INTEGER_8; a_string_value: STRING) is
 			-- Establsh invariant.
 		require
-			valid_node_kind: a_node_type = Attribute_node or else
-			a_node_type = Element_node or else
-			a_node_type = Namespace_node or else
-			a_node_type = Text_node or else
-			a_node_type = Comment_node or else
-			a_node_type = Processing_instruction_node
+			valid_node_kind: a_node_type = Element_node or else
+			-- a_node_type = Attribute_node or else
+--			a_node_type = Namespace_node or else
+			a_node_type = Text_node -- or else
+--			a_node_type = Comment_node or else
+--			a_node_type = Processing_instruction_node
 			string_value_not_void: a_string_value /= Void
 		do
 			node_type := a_node_type
@@ -135,7 +135,12 @@ feature -- Access
 			a_string_value: XM_XPATH_STRING_VALUE
 			an_untyped_atomic_value: XM_XPATH_UNTYPED_ATOMIC_VALUE
 		do
-			todo ("typed_value", True)
+			if type_annotation = type_factory.untyped_type.fingerprint or else type_annotation = type_factory.untyped_atomic_type.fingerprint then
+				create an_untyped_atomic_value.make (string_value)
+				create {XM_XPATH_SINGLETON_ITERATOR [XM_XPATH_ATOMIC_VALUE]} Result.make (an_untyped_atomic_value)
+			else
+				todo ("typed_value", True)
+			end
 		end
 
 	new_axis_iterator (an_axis_type: INTEGER): XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_NODE] is
@@ -176,7 +181,30 @@ feature -- Duplication
 	copy_node (a_receiver: XM_XPATH_RECEIVER; which_namespaces: INTEGER; copy_annotations: BOOLEAN) is
 			-- Copy `Current' to `a_receiver'.
 		do
-			todo ("copy_node", False)
+			inspect
+				node_type
+			when Element_node then
+
+				-- Note that Element_node is only used as
+				--  a dummy by the stripper, so:
+
+				check
+					elements_not_copied: False
+				end
+--			when Attribute_node then
+--				if copy_annotations then
+--					a_type_annotation := type_annotation
+--				else
+--					a_type_annotation := -1
+--				end
+--				a_receiver.notify_attribute (name_code, a_type_annotation, string_value, 0)
+--			when Namespace_node then
+--				a_receiver.notify_namespace (, 0)
+--			when Processing_instruction_node then
+			when Text_node then
+				a_receiver.notify_characters (string_value, 0)
+--			when Comment_node then			
+			end
 		end
 
 feature {XM_XPATH_NODE} -- Local
@@ -186,12 +214,12 @@ feature {XM_XPATH_NODE} -- Local
 invariant
 
 	no_document: document = Void
-	valid_node_type: node_type = Attribute_node or else
-	node_type = Element_node or else
-	node_type = Namespace_node or else
-	node_type = Text_node or else
-	node_type = Comment_node or else
-	node_type = Processing_instruction_node
+	valid_node_type: node_type = Text_node or else
+-- node_type = Attribute_node or else
+	node_type = Element_node --or else
+--	node_type = Namespace_node or else
+--	node_type = Comment_node or else
+--	node_type = Processing_instruction_node
 	no_parent: parent = Void
 
 end

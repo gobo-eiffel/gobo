@@ -121,8 +121,12 @@ feature {NONE} -- Initialization
 			uris.put (Xhtml_uri, Xhtml_prefix_index)			
 			prefixes_for_uri.put ("xhtml ", Xhtml_prefix_index)
 
-			prefixes_used := 9
-			uris_used := 9
+			prefixes.put ("err", Xpath_errors_prefix_index)
+			uris.put (Xpath_errors_uri, Xpath_errors_prefix_index)
+			prefixes_for_uri.put ("err ", Xpath_errors_prefix_index)
+
+			prefixes_used := 10
+			uris_used := 10
 
 		end
 	

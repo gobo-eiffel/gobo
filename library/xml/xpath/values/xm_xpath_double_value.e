@@ -46,7 +46,8 @@ feature {NONE} -- Initialization
 	make_nan is
 			-- create NaN.
 		do
-			todo ("make-NaN", False)
+			internal_is_nan := True
+			value := 0.0
 		ensure
 			not_a_number: is_nan
 		end
@@ -146,7 +147,7 @@ feature -- Status report
 	is_nan: BOOLEAN is
 			-- Is value Not-a-number?
 		do
-			if not is_zero and then value = 2.0 * value then
+			if internal_is_nan or else not is_zero and then value = 2.0 * value then
 				Result := True
 			end
 		end
@@ -192,9 +193,7 @@ feature -- Conversion
 	rounded_value: like Current is
 			-- `a_numeric_value' rounded towards the nearest whole number (0.5 rounded up)
 		do
-			if is_nan then
-				Result := Current
-			elseif is_infinite then
+			if is_nan or else is_infinite then
 				Result := Current
 			elseif is_zero then
 				Result := Current
@@ -202,6 +201,18 @@ feature -- Conversion
 				create Result.make (-0.0)
 			else
 				todo ("rounded_value", True)
+			end
+		end
+
+	floor: like Current is
+			-- Value rounded towards minus infinity
+		do
+			if is_infinite or else is_nan then
+				Result := Current
+			elseif is_zero then
+				Result := Current
+			else
+				create Result.make (value.floor)
 			end
 		end
 
@@ -246,5 +257,10 @@ feature -- Basic operations
 				end
 			end
 		end
+
+feature {NONE} -- Implementation
+
+	internal_is_nan: BOOLEAN
+			-- Fabricated NaN
 
 end

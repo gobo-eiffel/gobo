@@ -22,20 +22,20 @@ creation
 
 feature {NONE} -- Initialization
 
-	make (an_executable: XM_XSLT_EXECUTABLE; an_error_message, an_instruction_name: STRING) is
+	make (an_executable: XM_XSLT_EXECUTABLE; an_error: XM_XPATH_ERROR_VALUE; an_instruction_name: STRING) is
 			-- Establish invariant.
 		require
 			executable_not_void: an_executable /= Void
-			error_message_not_void: an_error_message /= Void
+			error_not_void: an_error /= Void
 			instruction_name_not_void: an_instruction_name /= Void
 		do
 			executable := an_executable
-			error_message := an_error_message
+			error := an_error
 			instruction_name := an_instruction_name
 			create children.make (0)
 		ensure
 			executable_set: executable = an_executable
-			error_message_set: error_message = an_error_message
+			error_set: error = an_error
 			name_set: instruction_name = an_instruction_name
 		end
 
@@ -43,23 +43,23 @@ feature -- Access
 
 	instruction_name: STRING
 			-- Name of instruction, for diagnostics
-	
+
 feature -- Evaluation
 
 	process_leaving_tail (a_context: XM_XSLT_EVALUATION_CONTEXT) is
 			-- Execute `Current', writing results to the current `XM_XPATH_RECEIVER'.
 		do
-			a_context.transformer.report_fatal_error (error_message, Current)
+			a_context.transformer.report_fatal_error (error, Current)
 		end
 
 feature {NONE} -- Implementation
 
-	error_message: STRING
+	error: XM_XPATH_ERROR_VALUE
 			-- Error to report
 
 invariant
 
-	error_message_not_void: error_message /= Void
+	error_not_void: error /= Void
 
 end
 	

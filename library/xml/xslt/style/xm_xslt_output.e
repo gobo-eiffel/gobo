@@ -121,11 +121,14 @@ feature -- Element change
 
 	validate is
 			-- Check that the stylesheet element is valid.
+		local
+			an_error: XM_XPATH_ERROR_VALUE
 		do
 			check_top_level
 			check_empty
 			if output_version /= Void and then not is_nmtoken (output_version) then
-				report_compile_error ("xsl:output 'version' attribute must be an 'nmtoken'")
+					create an_error.make_from_string ("xsl:output 'version' attribute must be an 'nmtoken'", "", "XT0110", Static_error)
+					report_compile_error (an_error)
 			end
 			if method /= Void then
 				if is_ncname (method) then
@@ -135,17 +138,20 @@ feature -- Element change
 						STRING_.same_string (method, "text") then
 						-- OK
 					else
-						report_compile_error ("XT1570: xsl:output 'method' attribute must be a QName or one of 'xml', 'xhtml', 'html' or 'text'")
+						create an_error.make_from_string ("xsl:output 'method' attribute must be a QName or one of 'xml', 'xhtml', 'html' or 'text'", "", "XT1570", Static_error)
+						report_compile_error (an_error)
 					end
 				elseif not is_qname (method) then
-					report_compile_error ("XT1570: xsl:output 'method' attribute must be a QName or one of 'xml', 'xhtml', 'html' or 'text'")
+						create an_error.make_from_string ("xsl:output 'method' attribute must be a QName or one of 'xml', 'xhtml', 'html' or 'text'", "", "XT1570", Static_error)
+						report_compile_error (an_error)
 				end
 			end
 			if indent /= Void then
 				if STRING_.same_string (indent, "yes") or else STRING_.same_string (indent, "no") then
 					-- OK
 				else
-					report_compile_error ("indent must be 'yes' or 'no'")
+					create an_error.make_from_string ("indent must be 'yes' or 'no'", "", "XT0020", Static_error)
+					report_compile_error (an_error)
 				end
 			end
 			if indent_spaces /= Void then
@@ -159,48 +165,54 @@ feature -- Element change
 				if STRING_.same_string (omit_xml_declaration, "yes") or else STRING_.same_string (omit_xml_declaration, "no") then
 					-- OK
 				else
-					report_compile_error ("omit_xml_declaration must be 'yes' or 'no'")
+					create an_error.make_from_string ("omit_xml_declaration must be 'yes' or 'no'", "", "XT0020", Static_error)
+					report_compile_error (an_error)
 				end
 			end
 			if standalone /= Void then
 				if STRING_.same_string (standalone, "yes") or else STRING_.same_string (standalone, "no") or else STRING_.same_string (standalone, "omit") then
 					-- OK
 				else
-					report_compile_error ("standalone must be 'yes' or 'no' or 'omit'")
+					create an_error.make_from_string ("standalone must be 'yes' or 'no'", "", "XT0020", Static_error)
+					report_compile_error (an_error)
 				end
 			end
 			if cdata_section_elements /= Void then
 				validate_cdata_sections (cdata_section_elements, static_context.namespace_resolver)
-				if cdata_validation_error_message /= Void then
-					report_compile_error (cdata_validation_error_message)
+				if cdata_validation_error /= Void then
+					report_compile_error (cdata_validation_error)
 				end
 			end
 			if undeclare_namespaces /= Void then
 				if STRING_.same_string (undeclare_namespaces, "yes") or else STRING_.same_string (undeclare_namespaces, "no") then
 					-- OK
 				else
-					report_compile_error ("undeclare-namespaces must be 'yes' or 'no'")
+					create an_error.make_from_string ("undeclare-namespaces must be 'yes' or 'no'", "", "XT0020", Static_error)
+					report_compile_error (an_error)
 				end
 			end
 			if include_content_type /= Void then
 				if STRING_.same_string (include_content_type, "yes") or else STRING_.same_string (include_content_type, "no") then
 					-- OK
 				else
-					report_compile_error ("include-content-type must be 'yes' or 'no'")
+					create an_error.make_from_string ("include-content-type must be 'yes' or 'no'", "", "XT0020", Static_error)
+					report_compile_error (an_error)
 				end
 			end
 			if escape_uri_attributes /= Void then
 				if STRING_.same_string (escape_uri_attributes, "yes") or else STRING_.same_string (escape_uri_attributes, "no") then
 					-- OK
 				else
-					report_compile_error ("undeclare-namespaces must be 'yes' or 'no'")
+					create an_error.make_from_string ("undeclare-namespaces must be 'yes' or 'no'", "", "XT0020", Static_error)
+					report_compile_error (an_error)
 				end
 			end
 			if byte_order_mark /= Void then
 				if STRING_.same_string (byte_order_mark, "yes") or else STRING_.same_string (byte_order_mark, "no") then
 					-- OK
 				else
-					report_compile_error ("byte-order-mark must be 'yes' or 'no'")
+					create an_error.make_from_string ("byte-order-mark must be 'yes' or 'no'", "", "XT0020", Static_error)
+					report_compile_error (an_error)
 				end
 			end			
 			validated := True
@@ -227,6 +239,7 @@ feature -- Element change
 			a_cursor: DS_LIST_CURSOR [STRING]
 			a_qname, a_uri, an_xml_prefix, a_local_name, a_message, an_expanded_name: STRING
 			a_character_map: XM_XSLT_CHARACTER_MAP
+			an_error: XM_XPATH_ERROR_VALUE
 		do
 			an_import_precedence := precedence
 			if method /= Void then
@@ -265,15 +278,15 @@ feature -- Element change
 					if qname_parts.count /= 2 then
 						a_message := STRING_.concat ("XT1570: ", method)
 						a_message := STRING_.appended_string (a_message, " is not a lexical QName.")
-						report_compile_error (a_message)
+						create an_error.make_from_string ("include-content-type must be 'yes' or 'no'", "", "XT1570", Static_error)
+						report_compile_error (an_error)
 					else
 						an_xml_prefix := qname_parts.item (1)
 						a_uri := uri_for_prefix (an_xml_prefix, False)
 						a_local_name := qname_parts.item (2)
 						if a_uri = Void then
-							a_message := STRING_.concat ("XT1570: ", an_xml_prefix)
-							a_message := STRING_.appended_string (a_message, " is not an in-scope namespace prefix.")
-							report_compile_error (a_message)
+							create an_error.make_from_string (STRING_.concat (an_xml_prefix, " is not an in-scope namespace prefix."), "", "XT1570", Static_error)
+							report_compile_error (an_error)
 						else
 							if emitter_factory.is_valid_output_method (a_uri, a_local_name) then
 								if a_property_set.is_higher_precedence (an_import_precedence, Method_attribute) then
@@ -283,9 +296,8 @@ feature -- Element change
 									a_property_set.set_duplication_error (Method_attribute)
 								end
 							else
-								a_message := STRING_.concat ("XT1570: ", method)
-								a_message := STRING_.appended_string (a_message, " is not supported by this XSLT configuration/processor.")
-								report_compile_error (a_message)
+								create an_error.make_from_string (STRING_.concat (method, " is not supported by this XSLT configuration/processor."), "", "XT1570", Static_error)
+								report_compile_error (an_error)
 							end
 						end
 					end
@@ -396,9 +408,8 @@ feature -- Element change
 					a_qname := a_cursor.item
 					qname_parts := a_splitter.split (a_qname)
 					if qname_parts.count = 0 or else qname_parts.count > 2 then
-						a_message := STRING_.concat ("XT1590: ", a_qname)
-						a_message := STRING_.appended_string (a_message, " is not a lexical QName.")
-						report_compile_error (a_message)
+						create an_error.make_from_string (STRING_.concat (a_qname, " is not a lexical QName."), "", "XT1590", Static_error)
+						report_compile_error (an_error)
 						a_cursor.go_after
 					else
 						if qname_parts.count = 1 then
@@ -417,17 +428,17 @@ feature -- Element change
 							a_fingerprint := shared_name_pool.last_name_code
 						end
 						if a_fingerprint = -1 then
-							a_message := STRING_.concat ("XT1590: ", a_qname)
-							a_message := STRING_.appended_string (a_message, " is not a lexical QName.")
-							report_compile_error (a_message)
+							create an_error.make_from_string (STRING_.concat (a_qname, " is not a lexical QName."), "", "XT1590", Static_error)
+							report_compile_error (an_error)
 							a_cursor.go_after
 						else
 							a_fingerprint := shared_name_pool.fingerprint_from_name_code (a_fingerprint)
 							a_character_map := a_stylesheet.character_map (a_fingerprint)
 							if a_character_map = Void then
-								a_message := STRING_.concat ("XT1590: No character-map named ", a_qname)
+								a_message := STRING_.concat ("No character-map named ", a_qname)
 								a_message := STRING_.appended_string (a_message, " has been defined.")
-								report_compile_error (a_message)
+								create an_error.make_from_string (a_message, "", "XT1590", Static_error)
+								report_compile_error (an_error)
 								a_cursor.go_after
 							else
 								an_expanded_name := STRING_.concat ("{", a_uri)

@@ -97,6 +97,52 @@ feature -- Access
 			end
 		end
 
+	imported_template_rule (a_node: XM_XPATH_NODE; a_mode: XM_XSLT_MODE; a_minimum_precedence, a_maximum_precedence: INTEGER; a_transformer: XM_XSLT_TRANSFORMER): XM_XSLT_COMPILED_TEMPLATE is
+			-- Template rule registered for a particular node in a specific mode, within a given precedence range.
+			-- (Used to support xsl:apply-imports.)
+		require
+			node_not_void: a_node /= Void
+			transformer_not_in_error: a_transformer /= Void and then not a_transformer.is_error
+		local
+			mode_to_use: XM_XSLT_MODE
+			a_rule_value: XM_XSLT_RULE_VALUE
+		do
+			if a_mode = Void then
+				mode_to_use := mode_for_default_mode
+			else
+				mode_to_use := a_mode
+			end
+			a_rule_value := mode_to_use.imported_rule (a_node, a_minimum_precedence, a_maximum_precedence, a_transformer)
+			check
+				template_rule: a_rule_value.is_template
+				-- Rule manager is only used with template rules
+			end
+			Result := a_rule_value.as_template
+		end
+
+	next_match_handler (a_node: XM_XPATH_NODE; a_mode: XM_XSLT_MODE; a_current_template: XM_XSLT_COMPILED_TEMPLATE; a_transformer: XM_XSLT_TRANSFORMER): XM_XSLT_COMPILED_TEMPLATE is
+			-- Next template rule registered for a particular node in a specific mode, following `a_current_template'
+		require
+			node_not_void: a_node /= Void
+			transformer_not_in_error: a_transformer /= Void and then not a_transformer.is_error
+			current_template_not_void: a_current_template /= Void
+		local
+			mode_to_use: XM_XSLT_MODE
+			a_rule_value: XM_XSLT_RULE_VALUE
+		do
+			if a_mode = Void then
+				mode_to_use := mode_for_default_mode
+			else
+				mode_to_use := a_mode
+			end
+			a_rule_value := mode_to_use.next_matching_rule (a_node, a_current_template, a_transformer)
+			check
+				template_rule: a_rule_value.is_template
+				-- Rule manager is only used with template rules
+			end
+			Result := a_rule_value.as_template			
+		end
+
 feature -- Status report
 	
 	is_mode_registered (a_mode_name_code: INTEGER): BOOLEAN is

@@ -86,7 +86,9 @@ feature -- Evaluation
 				a_cursor.after
 			loop
 				a_cursor.item.evaluate_item (a_context)
-				a_string := STRING_.appended_string (a_string, a_cursor.item.last_evaluated_item.string_value)
+				if a_cursor.item.last_evaluated_item /= Void then
+					a_string := STRING_.appended_string (a_string, a_cursor.item.last_evaluated_item.string_value)
+				end
 				a_cursor.forth
 			end
 			create last_evaluated_string.make (a_string)

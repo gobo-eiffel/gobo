@@ -112,9 +112,58 @@ feature -- Evaluation
 
 	effective_boolean_value (a_context: XM_XPATH_CONTEXT): XM_XPATH_BOOLEAN_VALUE is
 			-- Effective boolean value
+		local
+			an_iterator: XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_ITEM]
+			an_item: XM_XPATH_ITEM
+			a_node: XM_XPATH_NODE
+			a_boolean_value: XM_XPATH_BOOLEAN_VALUE
+			a_string_value: XM_XPATH_STRING_VALUE
+			a_numeric_value: XM_XPATH_NUMERIC_VALUE
 		do
-			-- TODO
-			todo ("effective-boolean-value" ,False)
+			print ("EBV of a sequence value%N")
+			an_iterator := iterator (a_context)
+			an_iterator.start
+			if an_iterator.after then
+				create Result.make (False)
+			else
+				an_item := an_iterator.item
+				a_node ?= an_item
+				if a_node /= Void then
+					create Result.make (True)
+				else
+					a_boolean_value ?= an_item
+					if a_boolean_value /= Void then
+						if a_boolean_value.value then
+							Result := a_boolean_value
+						else
+							an_iterator.forth
+							create Result.make (not an_iterator.after)
+						end
+					else
+						a_string_value ?= an_item
+						if a_string_value /= Void then
+							if a_string_value.string_value.count > 0 then
+								create Result.make (True)
+							else
+								an_iterator.forth
+								create Result.make (not an_iterator.after)
+							end
+						else
+							a_numeric_value ?= an_item
+							if a_numeric_value /= Void then
+								an_iterator.forth
+								if not an_iterator.after then
+									create Result.make (True)
+								else
+									create Result.make ((not a_numeric_value.is_zero ) and then (not a_numeric_value.is_nan))
+								end
+							else
+								create Result.make (True)
+							end
+						end
+					end
+				end
+			end
 		end
 
 	evaluate_item (a_context: XM_XPATH_CONTEXT) is

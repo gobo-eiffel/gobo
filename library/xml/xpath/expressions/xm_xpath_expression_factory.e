@@ -14,6 +14,8 @@ class XM_XPATH_EXPRESSION_FACTORY
 
 inherit
 
+	XM_XPATH_STANDARD_NAMESPACES
+
 	XM_XPATH_ERROR_TYPES
 
 	KL_SHARED_STANDARD_FILES
@@ -89,7 +91,7 @@ feature -- Creation
 			else
 				is_parse_error := True
 				an_error_type := Static_error
-				create parsed_error_value.make_from_string (a_parser.first_parse_error, a_parser.first_parse_error_code, an_error_type)
+				create parsed_error_value.make_from_string (a_parser.first_parse_error, Xpath_errors_uri, a_parser.first_parse_error_code, an_error_type)
 			end
 		ensure
 			error_or_expression: internal_parsed_expression = Void implies parsed_error_value /= Void
@@ -134,7 +136,6 @@ feature -- Creation
 			context_not_void: a_context /= Void
 		local
 			a_tail_expression: XM_XPATH_TAIL_EXPRESSION
-			another_expression: XM_XPATH_EXPRESSION
 			a_variable_reference: XM_XPATH_VARIABLE_REFERENCE
 			a_sequence_extent: XM_XPATH_SEQUENCE_EXTENT
 		do
@@ -142,13 +143,12 @@ feature -- Creation
 
 			a_tail_expression ?= an_expression
 			if a_tail_expression /= Void then
-				another_expression := a_tail_expression.base_expression
-				a_variable_reference ?= another_expression
+				a_variable_reference ?= a_tail_expression.base_expression
 				if a_variable_reference /= Void then
 					a_variable_reference.lazily_evaluate (a_context)
 					a_sequence_extent ?= a_variable_reference.last_evaluation
 					if a_sequence_extent /= Void then
-						create {XM_XPATH_SEQUENCE_EXTENT} Result.make_as_view (a_sequence_extent, a_tail_expression.start - 1, a_sequence_extent.count -  a_tail_expression.start +1)
+						create {XM_XPATH_SEQUENCE_EXTENT} Result.make_as_view (a_sequence_extent, a_tail_expression.start, a_sequence_extent.count -  a_tail_expression.start + 1)
 					end
 				end
 			end

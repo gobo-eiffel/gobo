@@ -858,8 +858,8 @@ feature {NONE} -- Implementation
 				end
 			elseif STRING_.same_string (a_local_name, Cdata_section_elements_attribute) then
 				validate_cdata_sections (a_value, a_namespace_resolver)
-				if cdata_validation_error_message /= Void then
-					set_general_error (cdata_validation_error_message)
+				if cdata_validation_error /= Void then
+					set_general_error (cdata_validation_error.error_message)
 				else
 					set_cdata_sections (cdata_section_expanded_names)
 				end

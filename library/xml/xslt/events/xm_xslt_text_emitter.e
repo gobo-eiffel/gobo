@@ -51,6 +51,7 @@ feature -- Events
 		local
 			a_bad_character: INTEGER
 			a_message, a_mapped_string: STRING
+			an_error: XM_XPATH_ERROR_VALUE
 		do
 			if not is_error then
 				if not are_no_special_characters (properties) and then character_map_expander = Void then
@@ -60,7 +61,8 @@ feature -- Events
 					else
 						a_message := STRING_.concat ("Output character not available in this encoding (decimal ", a_bad_character.out)
 						a_message := STRING_.appended_string (a_message, ")")
-						transformer.report_fatal_error (a_message, Void)
+						create an_error.make_from_string (a_message, "", "XT1190",Dynamic_error)
+						transformer.report_fatal_error (an_error, Void)
 						is_error := True
 					end
 				elseif character_map_expander /= Void then

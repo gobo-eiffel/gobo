@@ -208,6 +208,7 @@ feature -- Events
 		local
 			a_bad_character: INTEGER
 			a_mapped_string: STRING
+			an_error: XM_XPATH_ERROR_VALUE
 		do
 			if not is_error then
 				if not is_open then
@@ -226,7 +227,8 @@ feature -- Events
                   --  that are not available in the target encoding
 
 						if not warning_issued then
-							transformer.report_recoverable_error ("disable-output-escaping is ignored for characters not available in the chosen encoding", Void)
+							create an_error.make_from_string ("disable-output-escaping is ignored for characters not available in the chosen encoding", "", "XT1640", Dynamic_error)
+							transformer.report_recoverable_error (an_error, Void)
 							warning_issued := True
 							if transformer.is_error then
 								is_error := True

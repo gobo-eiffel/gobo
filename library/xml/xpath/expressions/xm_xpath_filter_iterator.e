@@ -109,6 +109,9 @@ feature {NONE} -- Implementation
 	filter_context: XM_XPATH_CONTEXT
 			-- Evaluation context for the filter
 
+	last_match_test: BOOLEAN
+			-- Result from `test_match'
+
 	advance is
 			-- Move to next matching node.
 		local
@@ -116,28 +119,29 @@ feature {NONE} -- Implementation
 			matched: BOOLEAN
 		do
 			from
+				matched := False
 				if base_iterator.before then base_iterator.start end
 			until
-				is_error or matched or else base_iterator.after
+				is_error or else matched or else base_iterator.after
 			loop
 				next_item := base_iterator.item
-				matched := matches
-				
-				base_iterator.forth
+				test_match
+				matched := last_match_test
+				if not base_iterator.after then base_iterator.forth end
 			end
 
 			if is_error then
 				create {XM_XPATH_BOOLEAN_VALUE} current_item.make (False) -- we need SOMETHING to set an error upon!
 				current_item.set_last_error (error_value)
-			elseif matched then
+			elseif last_match_test then
 				current_item := next_item
 			else
 				current_item := Void
 			end
 		end
 
-	matches: BOOLEAN is
-			-- Does the context item match the filter predicate?
+	test_match is
+			-- Test if the context item match the filter predicate?
 		require
 			filter_not_in_error: not filter.is_error
 		local
@@ -149,12 +153,13 @@ feature {NONE} -- Implementation
 			a_numeric_value: XM_XPATH_NUMERIC_VALUE
 			a_string_value: XM_XPATH_STRING_VALUE
 		do
+			last_match_test := False
 			if non_numeric then
 				a_boolean_value := filter.effective_boolean_value (filter_context)
 				if a_boolean_value.is_error then
 					set_last_error (a_boolean_value.error_value)
 				else
-					Result := a_boolean_value.value
+					last_match_test := a_boolean_value.value
 				end
 			else
 
@@ -168,28 +173,28 @@ feature {NONE} -- Implementation
 						an_item := an_iterator.item
 						a_node ?= an_item
 						if a_node /= Void then
-							Result := True
+							last_match_test := True
 						else
 							a_boolean_value ?= an_item
 							if a_boolean_value /= Void then
-								if a_boolean_value.value then	Result := True	else an_iterator.forth; Result := not an_iterator.after end
+								if a_boolean_value.value then	last_match_test := True	else an_iterator.forth; last_match_test := not an_iterator.after end
 							else
 								an_integer_value ?= an_item
 								if an_integer_value /= Void and then an_integer_value.is_platform_integer then
-									if an_integer_value.as_integer = base_iterator.index then Result := True	else an_iterator.forth; Result := not an_iterator.after end
+									if an_integer_value.as_integer = base_iterator.index then last_match_test := True else an_iterator.forth; last_match_test := not an_iterator.after end
 								else
 									a_numeric_value ?= an_item
 									if a_numeric_value /= Void then
 										create an_integer_value.make_from_integer (base_iterator.index)
-										Result := a_numeric_value.same_expression (an_integer_value)
-										if not Result then an_iterator.forth; Result := not an_iterator.after end
+										last_match_test := a_numeric_value.same_expression (an_integer_value)
+										if not last_match_test then an_iterator.forth; last_match_test := not an_iterator.after end
 									else
 										a_string_value ?= an_item
 										if a_string_value /= Void then
-											Result := STRING_.same_string (a_string_value.string_value, "")
-											if not Result then an_iterator.forth; Result := not an_iterator.after end
+											last_match_test := STRING_.same_string (a_string_value.string_value, "")
+											if not last_match_test then an_iterator.forth; last_match_test := not an_iterator.after end
 										else
-											Result := True
+											last_match_test := True
 										end
 									end
 								end
@@ -200,7 +205,7 @@ feature {NONE} -- Implementation
 
 					-- We are in error
 
-					Result := False
+					last_match_test := False
 					set_last_error (an_iterator.error_value)
 				end
 			end

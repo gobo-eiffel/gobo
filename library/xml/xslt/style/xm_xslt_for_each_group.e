@@ -106,6 +106,7 @@ feature -- Element change
 			a_role: XM_XPATH_ROLE_LOCATOR
 			a_type_checker: XM_XPATH_TYPE_CHECKER
 			an_atomic_sequence: XM_XPATH_SEQUENCE_TYPE
+			an_error: XM_XPATH_ERROR_VALUE
 		do
 			check_within_template
 			type_check_expression ("select", select_expression)
@@ -123,7 +124,8 @@ feature -- Element change
 					create an_atomic_sequence.make_atomic_sequence
 					a_type_checker.static_type_check (static_context, group_by, an_atomic_sequence, False, a_role)
 					if a_type_checker.is_static_type_check_error	then
-						report_compile_error (a_type_checker.static_type_check_error_message)
+						create an_error.make_from_string(a_type_checker.static_type_check_error_message, Xpath_errors_uri, "XP0004", Type_error)
+						report_compile_error (an_error)
 					else
 						group_by := a_type_checker.checked_expression
 					end					
@@ -140,7 +142,8 @@ feature -- Element change
 					create an_atomic_sequence.make_single_atomic
 					a_type_checker.static_type_check (static_context, group_adjacent, an_atomic_sequence, False, a_role)
 					if a_type_checker.is_static_type_check_error	then
-						report_compile_error (a_type_checker.static_type_check_error_message)
+						create an_error.make_from_string(a_type_checker.static_type_check_error_message, Xpath_errors_uri, "XP0004", Type_error)
+						report_compile_error (an_error)
 					else
 						group_adjacent := a_type_checker.checked_expression
 					end					
@@ -211,12 +214,13 @@ feature {NONE} -- Implementation
 			-- Prepare attributes some more.
 		local
 			count_of_grouping_attributes: INTEGER
+			an_error: XM_XPATH_ERROR_VALUE
 		do
 			if a_select_attribute /= Void then
 				generate_expression (a_select_attribute)
 				select_expression := last_generated_expression
 				if select_expression.is_error then
-					report_compile_error (select_expression.error_value.error_message)
+					report_compile_error (select_expression.error_value)
 				end
 			else
 				report_absence ("select")
@@ -225,7 +229,7 @@ feature {NONE} -- Implementation
 				generate_attribute_value_template (a_collation_attribute, static_context)
 				collation_name := last_generated_expression
 				if collation_name.is_error then
-					report_compile_error (collation_name.error_value.error_message)
+					report_compile_error (collation_name.error_value)
 				end
 			end
 
@@ -234,7 +238,7 @@ feature {NONE} -- Implementation
 				generate_expression (a_group_by_attribute)
 				group_by := last_generated_expression
 				if group_by.is_error then
-					report_compile_error (group_by.error_value.error_message)
+					report_compile_error (group_by.error_value)
 				end
 			end
 			if a_group_adjacent_attribute /= Void then
@@ -242,7 +246,7 @@ feature {NONE} -- Implementation
 				generate_expression (a_group_adjacent_attribute)
 				group_adjacent := last_generated_expression
 				if group_adjacent.is_error then
-					report_compile_error (group_adjacent.error_value.error_message)
+					report_compile_error (group_adjacent.error_value)
 				end
 			end
 			if a_group_starting_with_attribute /= Void then
@@ -250,7 +254,7 @@ feature {NONE} -- Implementation
 				generate_pattern (a_group_starting_with_attribute)
 				group_starting_with := last_generated_pattern
 				if group_starting_with.is_error then
-					report_compile_error (group_starting_with.error_value.error_message)
+					report_compile_error (group_starting_with.error_value)
 				end
 			end
 			if a_group_ending_with_attribute /= Void then
@@ -258,15 +262,17 @@ feature {NONE} -- Implementation
 				generate_pattern (a_group_ending_with_attribute)
 				group_ending_with := last_generated_pattern
 				if group_ending_with.is_error then
-					report_compile_error (group_ending_with.error_value.error_message)
+					report_compile_error (group_ending_with.error_value)
 				end				
 			end
 
 			if count_of_grouping_attributes /= 1 then
-				report_compile_error ("Exactly one of the attributes group-by, group-adjacent, group-starting-with, and group-ending-with must be specified")
+				create an_error.make_from_string ("Exactly one of the attributes group-by, group-adjacent, group-starting-with, and group-ending-with must be specified", "", "XT1080", Static_error)
+				report_compile_error (an_error)
 			end
 			if a_collation_attribute /= Void and then a_group_by_attribute = Void and then a_group_adjacent_attribute = Void then
-				report_compile_error ("A collation may be specified only if group-by or group-adjacent is specified")
+				create an_error.make_from_string ("A collation may be specified only if group-by or group-adjacent is specified", "", "XT1090", Static_error)
+				report_compile_error (an_error)
 			end
 		end
 

@@ -56,6 +56,22 @@ feature -- Access
 			end
 		end
 
+	namespace_uri: STRING is
+			-- Namespace of `Current'
+		do
+			Result := shared_name_pool.namespace_uri_from_name_code (name_code)
+		ensure
+			namespace_uri_not_void: Result /= Void
+		end
+
+	local_name: STRING is
+			-- Local name of `Current'
+		do
+			Result := shared_name_pool.local_name_from_name_code (name_code)
+		ensure
+			local_name_not_void: Result /= Void
+		end
+
 feature -- Comparison
 
 	same_expression (other: XM_XPATH_EXPRESSION): BOOLEAN is

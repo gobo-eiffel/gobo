@@ -31,6 +31,7 @@ feature -- Element change
 			a_cursor: DS_ARRAYED_LIST_CURSOR [INTEGER]
 			a_name_code: INTEGER
 			an_expanded_name, a_doe_attribute: STRING
+			an_error: XM_XPATH_ERROR_VALUE
 		do
 			from
 				a_cursor := attribute_collection.name_code_cursor
@@ -50,9 +51,10 @@ feature -- Element change
 
 			if a_doe_attribute /= Void then
 				if STRING_.same_string (a_doe_attribute, "yes") then
-					report_compile_error ("Setting disable-output-escaping attribute to 'yes' is not supported by this implementation.%NUse character maps instead if you really need this feature.")
+					report_compile_warning ("Disable Output Escaping is not supported by this implementation (ignored).%NUse character maps instead if you really need this feature.")
 				elseif not STRING_.same_string (a_doe_attribute, "no") then
-					report_compile_error ("disable-output-escaping attribute must be either 'yes' or 'no'")
+					create an_error.make_from_string ("disable-output-escaping attribute must be either 'yes' or 'no'", "", "XT0020", Static_error)
+					report_compile_error (an_error)
 				end
 			end
 			attributes_prepared := True
@@ -60,13 +62,17 @@ feature -- Element change
 
 	validate is
 			-- Check that the stylesheet element is valid.
+		local
+			an_error: XM_XPATH_ERROR_VALUE
 		do
 			check_within_template
 			if children.count > 1 then
-				report_compile_error ("xsl:text may contain at most one child - a text node")
+				create an_error.make_from_string ("xsl:text may contain at most one child - a text node", "", "XT0010", Static_error)
+				report_compile_error (an_error)
 			elseif children.count = 1 then
 				if first_child.node_type /= Text_node then
-					report_compile_error ("Child of xsl:text must be a text node")
+					create an_error.make_from_string ("Child of xsl:text must be a text node", "", "XT0010", Static_error)
+				report_compile_error (an_error)
 				end
 			end
 			Precursor

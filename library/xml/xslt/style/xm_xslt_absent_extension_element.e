@@ -58,8 +58,8 @@ feature -- Element change
 
 				-- if there are fallback children, compile the code for the fallback elements
 
-				if validation_error_message = Void then
-					validation_error_message := "Unknown extension instruction"
+				if validation_error = Void then
+					create validation_error.make_from_string ("Unknown extension instruction: ", Gexslt_eiffel_type_uri, "UNKNOWN_EXTENSION_INSTRUCTION", Static_error)
 				end
 				create an_instruction_list.make
 				fallback_processing (an_executable, Current, an_instruction_list)

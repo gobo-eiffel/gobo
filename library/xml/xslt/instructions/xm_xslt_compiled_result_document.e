@@ -98,36 +98,40 @@ feature -- Evaluation
 			a_property_set: XM_XSLT_OUTPUT_PROPERTIES
 			a_receiver: XM_XSLT_SEQUENCE_RECEIVER
 			a_uri: UT_URI
-			a_uri_to_use, a_message: STRING
+			a_uri_to_use: STRING
+			an_error: XM_XPATH_ERROR_VALUE
 		do
 			a_transformer := a_context.transformer
 			if a_transformer.temporary_destination_depth > 0 then
-				a_transformer.report_fatal_error ("XT1480: Attempt to evaluate xsl:document while writing a temporary tree", Current)
+				create an_error.make_from_string ("Attempt to evaluate xsl:document while writing a temporary tree", "", "XT1480", Dynamic_error)
+				a_transformer.report_fatal_error (an_error, Current)
 			else
 				a_receiver := a_transformer.current_receiver
 				an_output_resolver := a_transformer.output_resolver
 				if href = Void then
 					a_result := a_transformer.principal_result
 					if a_result.is_document_started then
-						a_transformer.report_fatal_error (STRING_.concat ("XT1490: Attempt to generate two result trees to URI ", a_transformer.principal_result_uri), Current)
+						create an_error.make_from_string (STRING_.concat ("Attempt to generate two result trees to URI ", a_transformer.principal_result_uri), "", "XT1490", Dynamic_error)
+						a_transformer.report_fatal_error (an_error, Current)
 					end
 				else
 					href.evaluate_as_string (a_context)
 					if href.last_evaluated_string.is_error then
-						a_transformer.report_fatal_error (href.last_evaluated_string.error_value.error_message, Current)
+						a_transformer.report_fatal_error (href.last_evaluated_string.error_value, Current)
 					else
 						an_output_resolver := a_transformer.output_resolver
 						create a_uri.make (a_transformer.principal_result_uri)
 						create a_uri.make_resolve (a_uri, href.last_evaluated_string.string_value)
 						a_uri_to_use := a_uri.full_reference
 						if an_output_resolver.output_destinations.has (a_uri_to_use) then
-							a_message := STRING_.concat ("XT1490: Attempt to generate two result trees to URI ", a_uri_to_use)
-							a_transformer.report_fatal_error (a_message, Current)
+							create an_error.make_from_string (STRING_.concat ("Attempt to generate two result trees to URI ", a_uri_to_use), "", "XT1490", Dynamic_error)
+							a_transformer.report_fatal_error (an_error, Current)
 						else
 							an_output_resolver.resolve (a_uri)
 							a_result := an_output_resolver.last_result
 							if a_result = Void then
-								a_transformer.report_fatal_error (an_output_resolver.error_message, Current)
+								create an_error.make_from_string (an_output_resolver.error_message, Gexslt_eiffel_type_uri, "OUTPUT_RESOLVER_ERROR", Dynamic_error)
+								a_transformer.report_fatal_error (an_error, Current)
 							else
 								a_property_set := property_set
 								if formatting_attributes.count > 0 then
@@ -142,7 +146,7 @@ feature -- Evaluation
 										an_expression.evaluate_as_string (a_context)
 										a_value :=  an_expression.last_evaluated_string
 										if a_value.is_error then
-											a_transformer.report_fatal_error (a_value.error_value.error_message, Current)
+											a_transformer.report_fatal_error (a_value.error_value, Current)
 											a_cursor.go_after
 										else
 											a_property_set.set_property (a_fingerprint, a_value.string_value, namespace_resolver)

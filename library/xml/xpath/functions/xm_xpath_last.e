@@ -65,10 +65,7 @@ feature -- Status setting
 	compute_intrinsic_dependencies is
 			-- Determine the intrinsic dependencies of an expression.
 		do
-			create intrinsic_dependencies.make (1, 6)
-			-- Now all are `False'
-			intrinsic_dependencies.put (True, 4) -- Depends_upon_last
-			are_intrinsic_dependencies_computed := True
+			set_intrinsically_depends_upon_last
 		end
 
 feature -- Evaluation
@@ -76,7 +73,11 @@ feature -- Evaluation
 	evaluate_item (a_context: XM_XPATH_CONTEXT) is
 			-- Evaluate as a single item
 		do
-			create {XM_XPATH_INTEGER_VALUE} last_evaluated_item.make_from_integer (a_context.last)
+			if a_context.is_context_position_set then
+				create {XM_XPATH_INTEGER_VALUE} last_evaluated_item.make_from_integer (a_context.last)
+			else
+				create {XM_XPATH_INVALID_ITEM} last_evaluated_item.make_from_string ("The context position is undefined.", Xpath_errors_uri, "XP0002", Dynamic_error)
+			end
 		end
 
 	pre_evaluate (a_context: XM_XPATH_STATIC_CONTEXT) is

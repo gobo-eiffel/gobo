@@ -104,10 +104,7 @@ feature -- Element change
 			-- Check that the stylesheet element is valid.
 		do
 			check_within_template
-			if has_child_nodes then
-				-- TODO - xsl:fallback
-				report_compile_error ("If xsl:sequence  must not have child instructions (except xsl:fallback - TODO")
-			end
+			check_empty
 			if select_expression /= Void then
 				type_check_expression ("select", select_expression)
 				if select_expression.was_expression_replaced then

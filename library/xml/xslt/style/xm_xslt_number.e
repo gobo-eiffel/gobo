@@ -99,7 +99,8 @@ feature -- Element change
 		local
 			a_role: XM_XPATH_ROLE_LOCATOR
 			a_type_checker: XM_XPATH_TYPE_CHECKER
-			a_single_node: XM_XPATH_SEQUENCE_TYPE			
+			a_single_node: XM_XPATH_SEQUENCE_TYPE
+			an_error: XM_XPATH_ERROR_VALUE
 		do
 			check_within_template
 			check_empty
@@ -113,7 +114,8 @@ feature -- Element change
 				create a_single_node.make_single_node
 				a_type_checker.static_type_check (static_context, select_expression, a_single_node, False, a_role)
 				if a_type_checker.is_static_type_check_error	then
-					report_compile_error (a_type_checker.static_type_check_error_message)
+					create an_error.make_from_string(a_type_checker.static_type_check_error_message, Xpath_errors_uri, "XP0004", Type_error)
+					report_compile_error (an_error)
 				else
 					select_expression := a_type_checker.checked_expression
 				end
@@ -237,28 +239,34 @@ feature {NONE} -- Implementation
 										 a_level_attribute, a_letter_value_attribute, a_grouping_size_attribute: STRING;
 										 a_grouping_separator_attribute, a_format_attribute: STRING) is
 			-- Prepare attributes some more.
+		local
+			an_error: XM_XPATH_ERROR_VALUE
 		do
 			if a_select_attribute /= Void then
 				generate_expression (a_select_attribute)
 				select_expression := last_generated_expression
 				if select_expression.is_error then
-					report_compile_error (select_expression.error_value.error_message)
+					report_compile_error (select_expression.error_value)
 				end
 			end
 			if a_value_attribute /= Void then
 				generate_expression (a_value_attribute)
 				value_expression := last_generated_expression
 				if value_expression.is_error then
-					report_compile_error (value_expression.error_value.error_message)
+					report_compile_error (value_expression.error_value)
 				end
 				if a_select_attribute /= Void then
-					report_compile_error ("The select attribute and value attribute must not both be present")
+					create an_error.make_from_string ("The select attribute and value attribute must not both be present", "", "XT0010", Static_error)
+					report_compile_error (an_error)
 				elseif a_count_attribute /= Void then
-					report_compile_error ("The count attribute and value attribute must not both be present")
+					create an_error.make_from_string ("The count attribute and value attribute must not both be present", "", "XT0010", Static_error)
+					report_compile_error (an_error)
 				elseif a_from_attribute /= Void then
-					report_compile_error ("The from attribute and value attribute must not both be present")
+					create an_error.make_from_string ("The from attribute and value attribute must not both be present", "", "XT0010", Static_error)
+					report_compile_error (an_error)
 				elseif a_level_attribute /= Void then
-					report_compile_error ("The level attribute and value attribute must not both be present")
+					create an_error.make_from_string ("The level attribute and value attribute must not both be present", "", "XT0010", Static_error)
+					report_compile_error (an_error)
 				end
 			end
 			if a_count_attribute /= Void then
@@ -284,7 +292,8 @@ feature {NONE} -- Implementation
 			elseif STRING_.same_string (a_level_attribute, "any") then
 				level := Any_level				
 			else
-				report_compile_error ("Invalid value for level attribute")
+				create an_error.make_from_string ("Invalid value for level attribute", "", "XT0020", Static_error)
+				report_compile_error (an_error)
 			end
 			if level = Single_level and then from_pattern = Void and then count_pattern = Void then
 				level := Simple_numbering

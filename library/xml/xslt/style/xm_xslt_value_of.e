@@ -31,6 +31,7 @@ feature -- Element change
 			a_cursor: DS_ARRAYED_LIST_CURSOR [INTEGER]
 			a_name_code: INTEGER
 			an_expanded_name, a_select_attribute, a_disable_attribute, a_separator_attribute: STRING
+			an_error: XM_XPATH_ERROR_VALUE
 		do
 			from
 				a_cursor := attribute_collection.name_code_cursor
@@ -61,24 +62,27 @@ feature -- Element change
 				generate_expression (a_select_attribute)
 				select_expression := last_generated_expression
 				if select_expression.is_error then
-					report_compile_error (select_expression.error_value.error_message)
+					report_compile_error (select_expression.error_value)
 				end
 			end
 			if a_disable_attribute /= Void then
 				if STRING_.same_string (a_disable_attribute, "no") then
 					do_nothing
 				elseif STRING_.same_string (a_disable_attribute, "yes") then
-					-- TODO - allow "yes" - perhaps as an option??
-					report_compile_error ("This processor does not support setting 'disable-output-escaping' to 'yes'")
-				else
-					report_compile_error ("The 'disable-output-escaping' attribute must be either 'yes' or 'no' (and this processor only supports 'no'")
+					if STRING_.same_string (a_disable_attribute, "yes") then
+						report_compile_warning ("Disable Output Escaping is not supported by this implementation (ignored).%NUse character maps instead if you really need this feature.")
+					elseif not STRING_.same_string (a_disable_attribute, "no") then
+						create an_error.make_from_string ("disable-output-escaping attribute must be either 'yes' or 'no'", "", "XT0020", Static_error)
+						report_compile_error (an_error)
+					end
 				end
 			end
+
 			if a_separator_attribute /= Void then
 				generate_attribute_value_template (a_separator_attribute, static_context)
 				separator_expression := last_generated_expression
 				if separator_expression.is_error then
-					report_compile_error (separator_expression.error_value.error_message)
+					report_compile_error (separator_expression.error_value)
 				end
 			end
 			attributes_prepared := True

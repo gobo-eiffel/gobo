@@ -443,6 +443,7 @@ feature -- Element change
 			a_cursor: DS_ARRAYED_LIST_CURSOR [INTEGER]
 			a_name_code: INTEGER
 			an_expanded_name: STRING
+			an_error: XM_XPATH_ERROR_VALUE
 		do
 			from
 				a_cursor := attribute_collection.name_code_cursor
@@ -463,9 +464,11 @@ feature -- Element change
 				elseif STRING_.same_string (an_expanded_name, Default_validation_attribute) then
 					default_validation := validation_code (attribute_value_by_index (a_cursor.index))
 					if default_validation = Validation_invalid then
-						report_compile_error ("Invalid value for default-validation attribute. Permitted values are (strict, lax, preserve, strip)")
+						create an_error.make_from_string ("Invalid value for default-validation attribute. Permitted values are (strict, lax, preserve, strip)", "", "XT0020", Static_error)
+						report_compile_error (an_error)
 					elseif conformance.basic_xslt_processor and then default_validation /= Validation_strip then
-						report_compile_error ("Invalid value for default-validation attribute. Only 'strip' is permitted for a basic XSLT processor)")
+						create an_error.make_from_string ("Invalid value for default-validation attribute. Only 'strip' is permitted for a basic XSLT processor)", "", "XT1660", Static_error)
+						report_compile_error (an_error)
 					end
 				else
 					check_unknown_attribute (a_name_code)
@@ -590,6 +593,7 @@ feature -- Element change
 			a_module: XM_XSLT_MODULE
 			found_non_import: BOOLEAN
 			an_included_stylesheet: XM_XSLT_STYLESHEET
+			an_error: XM_XPATH_ERROR_VALUE
 		do
 			create top_level_elements.make
 			minimum_import_precedence := import_precedence
@@ -607,7 +611,8 @@ feature -- Element change
 					-- In an embedded stylesheet, white space nodes may still be there
 
 					if not is_all_whitespace (a_child.string_value) then
-						 a_previous_style_element.report_compile_error ("No character data is allowed between top-level elements")
+						create an_error.make_from_string ("No character data is allowed between top-level elements", "", "XT0120", Static_error)
+						 a_previous_style_element.report_compile_error (an_error)
 					end
 				else
 					a_data_element ?= a_child
@@ -625,7 +630,8 @@ feature -- Element change
 							a_module.process_attributes
 							if a_module.is_import then
 								if found_non_import then
-									a_module.report_compile_error ("xsl:import elements must come first")
+									create an_error.make_from_string ("xsl:import elements must come first", "", "XT0200", Static_error)
+									a_module.report_compile_error (an_error)
 								end
 							else
 								found_non_import := True
@@ -688,13 +694,15 @@ feature -- Element change
 			-- As well as validation, it can perform first-time initialisation.
 		local
 			a_document: XM_XPATH_TREE_DOCUMENT
+			an_error: XM_XPATH_ERROR_VALUE
 		do
-			if validation_error_message /= Void then
-				report_compile_error (validation_error_message)
+			if validation_error /= Void then
+				report_compile_error (validation_error)
 			else
 				a_document ?= parent
 				if a_document = Void then
-					report_compile_error (STRING_.appended_string (node_name, " must be the outermost element"))
+					create an_error.make_from_string (STRING_.concat (node_name, " must be the outermost element"), "", "XT0010", Static_error)
+					report_compile_error (an_error)
 				end
 			end
 			validated := True
@@ -726,6 +734,7 @@ feature -- Element change
 			a_fingerprint: INTEGER
 			a_function: XM_XSLT_FUNCTION
 			a_function_library: XM_XPATH_FUNCTION_LIBRARY
+			an_error: XM_XPATH_ERROR_VALUE
 		do
 						
 			create last_compiled_executable.make (a_configuration, rule_manager, key_manager, decimal_format_manager,
@@ -742,9 +751,9 @@ feature -- Element change
 				any_compile_errors or else a_cursor.after
 			loop
 				if not a_cursor.item.is_excluded then
-					a_cursor.item.compile (last_compiled_executable)
 					a_system_id := a_cursor.item.system_id
 					if not is_module_registered (a_system_id) then register_module (a_system_id) end
+					a_cursor.item.compile (last_compiled_executable)
 					an_instruction := a_cursor.item.last_generated_instruction						
 					if an_instruction /= Void then
 						an_instruction.set_source_location (module_number (a_system_id), a_cursor.item.line_number)
@@ -758,12 +767,13 @@ feature -- Element change
 				a_property_set := gathered_output_properties (-1)
 				if a_property_set.is_error then
 					if a_property_set.is_duplication_error then
-						a_message := STRING_.concat ("XT1560: Two xsl:output statements specify conflicting values for attribute '", a_property_set.duplicate_attribute_name)
+						a_message := STRING_.concat ("Two xsl:output statements specify conflicting values for attribute '", a_property_set.duplicate_attribute_name)
 						a_message := STRING_.appended_string (a_message, "', in the unnamed output definition.")
-						report_compile_error (a_message)
+						create an_error.make_from_string (a_message, "", "XT1560", Static_error)
 					else
-						report_compile_error (a_property_set.error_message)
+						create an_error.make_from_string (a_property_set.error_message, Gexslt_eiffel_type_uri, "OUTPUT+PROPERTY", Static_error)
 					end
+					report_compile_error (an_error)
 				else
 					last_compiled_executable.set_default_output_properties (a_property_set)
 					create a_compiled_templates_index.make_map (named_templates_index.count)
@@ -950,6 +960,7 @@ feature {NONE} -- Implementation
 			a_fingerprint: INTEGER
 			another_template: XM_XSLT_TEMPLATE
 			a_message: STRING
+			an_error: XM_XPATH_ERROR_VALUE
 		do
 			a_fingerprint := a_template.template_fingerprint
 			if a_fingerprint /= -1 then
@@ -962,11 +973,12 @@ feature {NONE} -- Implementation
 
 					another_template := named_templates_index.item (a_fingerprint)
 					if a_template.precedence = another_template.precedence then
-						a_message := STRING_.appended_string ("Duplicate named template (see line ", "0") -- TODO another_template.line_number)
+						a_message := STRING_.concat ("Duplicate named template (see line ", another_template.line_number.out)
 						a_message := STRING_.appended_string (a_message, " of ")
-						-- TODO						a_message := STRING_.appended_string (a_message, another_template.system_id)
+						a_message := STRING_.appended_string (a_message, another_template.system_id)
 						a_message := STRING_.appended_string (a_message, ")")
-						a_template.report_compile_error (a_message)
+						create an_error.make_from_string (a_message, "", "XT0660", Static_error)
+						a_template.report_compile_error (an_error)
 					elseif a_template.precedence < another_template.precedence then
 						a_template.set_redundant_named_template
 					else
@@ -994,6 +1006,7 @@ feature {NONE} -- Implementation
 			a_fingerprint: INTEGER
 			another_variable: XM_XSLT_VARIABLE_DECLARATION
 			a_message: STRING
+			an_error: XM_XPATH_ERROR_VALUE
 		do
 			a_fingerprint := a_variable_declaration.variable_fingerprint
 			if a_fingerprint /= -1 then
@@ -1006,11 +1019,12 @@ feature {NONE} -- Implementation
 
 					another_variable := variables_index.item (a_fingerprint)
 					if another_variable.precedence = a_variable_declaration.precedence then
-						a_message := STRING_.appended_string ("Duplicate global variable declaration (see line ", "0") -- TODO another_variable.line_number)
+						a_message := STRING_.appended_string ("Duplicate global variable declaration (see line ", another_variable.line_number.out)
 						a_message := STRING_.appended_string (a_message, " of ")
-						-- TODO						a_message := STRING_.appended_string (a_message, another_variable.system_id)
+						a_message := STRING_.appended_string (a_message, another_variable.system_id)
 						a_message := STRING_.appended_string (a_message, ")")
-						a_variable_declaration.report_compile_error (a_message)
+						create an_error.make_from_string (a_message, "", "XT0630", Static_error)
+						a_variable_declaration.report_compile_error (an_error)
 					elseif a_variable_declaration.precedence < another_variable.precedence then
 						a_variable_declaration.set_redundant_variable
 					else
@@ -1040,7 +1054,8 @@ feature {NONE} -- Implementation
 		local
 			a_precedence_boundary, a_current_precedence, a_precedence, a_uri_code, a_namespace_code, an_index: INTEGER
 			an_alias: XM_XSLT_NAMESPACE_ALIAS
-			a_cursor: DS_ARRAYED_LIST_CURSOR [XM_XSLT_NAMESPACE_ALIAS]			
+			a_cursor: DS_ARRAYED_LIST_CURSOR [XM_XSLT_NAMESPACE_ALIAS]
+			an_error: XM_XPATH_ERROR_VALUE
 		do
 			if namespace_alias_list.count > 0 then
 				create namespace_alias_namespace_codes.make (1, namespace_alias_list.count)
@@ -1079,8 +1094,9 @@ feature {NONE} -- Implementation
 						an_index > namespace_alias_list.count
 					loop
 						if a_uri_code = namespace_alias_uri_codes.item (an_index) then
-							if a_namespace_code \\ bits_20 /= namespace_alias_namespace_codes.item (an_index) // bits_20 then
-								an_alias.report_compile_error ("Inconsistent namespace aliases")
+							if fingerprint_from_name_code (a_namespace_code) /= fingerprint_from_name_code (namespace_alias_namespace_codes.item (an_index)) then
+								create an_error.make_from_string ("Inconsistent namespace aliases", "", "XT0810", Static_error)
+								an_alias.report_compile_error (an_error)								
 							end
 						end
 

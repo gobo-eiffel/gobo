@@ -53,24 +53,25 @@ feature -- Status report
 	required_type (argument_number: INTEGER): XM_XPATH_SEQUENCE_TYPE is
 			-- Type of argument number `argument_number'
 		do
-			-- TODO
-			todo ("required-type", False)
+			create Result.make_any_sequence
 		end
 
 feature -- Evaluation
 
 	effective_boolean_value (a_context: XM_XPATH_CONTEXT): XM_XPATH_BOOLEAN_VALUE is
 			-- Effective boolean value
+		local
+			an_iterator: XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_ITEM]
 		do
-			-- TODO
-			todo ("effective-boolean-value", False)
+			an_iterator := arguments.item (1).iterator (a_context)
+			an_iterator.start
+			create Result.make (an_iterator.after)
 		end
 
 	evaluate_item (a_context: XM_XPATH_CONTEXT) is
 			-- Evaluate as a single item
 		do
-			-- TODO
-			todo ("evaluate-item", False)
+			last_evaluated_item := effective_boolean_value (a_context)
 		end
 
 feature {XM_XPATH_EXPRESSION} -- Restricted

@@ -135,6 +135,7 @@ feature -- Status setting
 			a_cursor: DS_ARRAYED_LIST_CURSOR [INTEGER]
 			a_name_code: INTEGER
 			an_expanded_name, a_name_attribute, a_select_attribute, an_as_attribute, a_required_attribute, a_tunnel_attribute: STRING
+			an_error: XM_XPATH_ERROR_VALUE
 		do
 			from
 				a_cursor := attribute_collection.name_code_cursor
@@ -171,16 +172,18 @@ feature -- Status setting
 			if a_name_attribute = Void then
 				report_absence ("name")
 			elseif not is_qname (a_name_attribute) then
-				report_compile_error ("Name attribute must be a valid QName")
+				create an_error.make_from_string ("Name attribute must be a valid QName", "", "XT0020", Static_error)
+				report_compile_error (an_error)
 			end
 			if a_select_attribute /= Void then
 				if not allows_value then
-					report_compile_error ("Function parameters cannot have a default value")
+					create an_error.make_from_string ("Function parameters cannot have a default value", "", "XT0760", Static_error)
+					report_compile_error (an_error)
 				else
 					generate_expression (a_select_attribute)
 					select_expression := last_generated_expression
 					if select_expression.is_error then
-						report_compile_error (select_expression.error_value.error_message)
+						report_compile_error (select_expression.error_value)
 					end
 				end
 			end
@@ -190,7 +193,8 @@ feature -- Status setting
 				elseif STRING_.same_string (a_required_attribute, "no") then
 					is_required_parameter := False
 				else
-					report_compile_error ("The attribute 'required' must be set to 'yes' or 'no'")
+					create an_error.make_from_string ("The attribute 'required' must be set to 'yes' or 'no'", "", "XT0020", Static_error)
+					report_compile_error (an_error)
 				end
 			end
 			if a_tunnel_attribute /= Void then
@@ -199,7 +203,8 @@ feature -- Status setting
 				elseif STRING_.same_string (a_tunnel_attribute, "no") then
 					is_tunnel_parameter := False
 				else
-					report_compile_error ("The attribute 'tunnel' must be set to 'yes' or 'no'")
+					create an_error.make_from_string ("The attribute 'tunnel' must be set to 'yes' or 'no'", "", "XT0020", Static_error)
+					report_compile_error (an_error)
 				end
 			end
 			if an_as_attribute /= Void then
@@ -217,12 +222,15 @@ feature -- Status setting
 			a_child_iterator: XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_NODE]
 			a_first_node: XM_XPATH_NODE
 			a_parameter: XM_XSLT_PARAM
+			an_error: XM_XPATH_ERROR_VALUE
 		do
 			a_stylesheet ?= parent
 			is_global_variable := a_stylesheet /= Void
 			if select_expression /= Void and then has_child_nodes then
-				a_message := STRING_.appended_string ("An ", node_name)
-				report_compile_error (STRING_.appended_string (a_message, " element with a select attribute must be empty"))
+				a_message := STRING_.concat ("An ", node_name)
+				a_message := STRING_.appended_string (a_message, " element with a select attribute must be empty")
+				create an_error.make_from_string (a_message, "", "XT0010", Static_error)
+				report_compile_error (an_error)
 			else
 				if as_type /= Void then check_against_required_type (as_type) end
 				if not any_compile_errors then
@@ -247,7 +255,8 @@ feature -- Status setting
 									if as_type.cardinality_allows_zero then
 											create {XM_XPATH_EMPTY_SEQUENCE} select_expression.make
 									else
-										report_compile_error ("Default value () is not valid for the declared type")
+										create an_error.make_from_string ("Default value () is not valid for the declared type", "", "XT0570", Type_error)
+										report_compile_error (an_error)
 									end
 								end
 							end
@@ -286,21 +295,20 @@ feature -- Status setting
 		local
 			a_role: XM_XPATH_ROLE_LOCATOR
 			a_type_checker: XM_XPATH_TYPE_CHECKER
+			an_error: XM_XPATH_ERROR_VALUE
 		do
 			create a_role.make (Variable_role, variable_name, 1)
 			if select_expression /= Void then
 				create a_type_checker
 				a_type_checker.static_type_check (static_context, select_expression, a_required_type, False, a_role)
 				if a_type_checker.is_static_type_check_error	then
-					report_compile_error (a_type_checker.static_type_check_error_message)
+					create an_error.make_from_string(a_type_checker.static_type_check_error_message, Xpath_errors_uri, "XP0004", Type_error)
+					report_compile_error (an_error)
 				else
 					select_expression := a_type_checker.checked_expression
 				end
-			elseif has_child_nodes then
-				
-				-- TODO: check the type of the instruction sequence statically
-				
-				todo ("check_against_required_type", True)
+			else
+				-- do the check later
 			end
 		end
 

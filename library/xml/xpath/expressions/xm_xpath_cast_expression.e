@@ -131,7 +131,7 @@ feature -- Optimization
 				create a_type_checker
 				a_type_checker.static_type_check (a_context, source, a_sequence_type, False, a_role)
 				if a_type_checker.is_static_type_check_error then
-					set_last_error_from_string (a_type_checker.static_type_check_error_message, "XP0004", Type_error)
+					set_last_error_from_string (a_type_checker.static_type_check_error_message, Xpath_errors_uri, "XP0004", Type_error)
 				else
 					an_expression := a_type_checker.checked_expression
 					if is_sub_type (an_expression.item_type, target_type) then
@@ -189,13 +189,13 @@ feature -- Evaluation
 						last_evaluated_item := Void
 					else
 						create {XM_XPATH_INVALID_ITEM} last_evaluated_item.make_from_string (STRING_.appended_string ("Target typr for cast as does not allow empty sequence",
-																																					 target_type.conventional_name), "XP0006", Type_error)
+																																					 target_type.conventional_name), Xpath_errors_uri, "XP0006", Type_error)
 					end
 				elseif an_atomic_value.is_convertible (target_type) then
 					last_evaluated_item := an_atomic_value.convert_to_type (target_type)
 				else
 					create {XM_XPATH_INVALID_ITEM} last_evaluated_item.make_from_string (STRING_.appended_string ("Could not cast expression to type ",
-																																				 target_type.conventional_name), "XP0021", Dynamic_error)
+																																				 target_type.conventional_name), Xpath_errors_uri, "XP0021", Dynamic_error)
 				end
 			end
 		end

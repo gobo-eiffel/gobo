@@ -23,6 +23,8 @@ inherit
 
 	XM_XPATH_STANDARD_NAMESPACES
 
+	XM_XPATH_ERROR_TYPES
+
 	XM_XSLT_VALIDATION
 
 creation
@@ -60,6 +62,7 @@ feature -- Creation
 			a_style_element: XM_XSLT_STYLE_ELEMENT
 			a_data_element: XM_XSLT_DATA_ELEMENT
 			is_top_level_element: BOOLEAN
+			an_error: XM_XPATH_ERROR_VALUE
 		do
 			a_stylesheet ?= a_parent
 			is_top_level_element := a_stylesheet /= Void
@@ -86,7 +89,8 @@ feature -- Creation
 					a_uri_code := shared_name_pool.uri_code_from_name_code (a_name_code)
 					if a_uri_code = Xslt_uri_code then
 						create {XM_XSLT_ABSENT_EXTENSION_ELEMENT} a_style_element.make_style_element (error_listener, a_document, Void, an_attribute_collection, a_namespace_list, a_name_code, a_sequence_number)
-						a_style_element.set_validation_error (STRING_.concat ("Unknown XSLT element: ", a_local_name), Report_unless_forwards_comptible) -- TODO - only under certain circumstances
+						create an_error.make_from_string (STRING_.concat ("Unknown XSLT element: ", a_local_name), Gexslt_eiffel_type_uri, "UNKNOWN_XSLT_ELEMENT", Static_error)
+						a_style_element.set_validation_error (an_error, Report_unless_forwards_comptible) -- TODO - only under certain circumstances
 						Result := a_style_element
 						if a_parent /= Void then a_parent.add_child (Result) end
 						a_style_element.process_use_when_attribute (Use_when_attribute)
@@ -116,8 +120,9 @@ feature -- Creation
 								-- not a Literal Result Element, but an absent Extension Instruction
 
 								create {XM_XSLT_ABSENT_EXTENSION_ELEMENT} a_style_element.make_style_element (error_listener, a_document, Void, an_attribute_collection, a_namespace_list, a_name_code, a_sequence_number)
-								a_style_element.set_validation_error (STRING_.concat ("XT1450: Unknown extension element: ", shared_name_pool.display_name_from_name_code (a_name_code)),
-																				  Report_if_instantiated)
+								create an_error.make_from_string (STRING_.concat ("Unknown extension element: ", shared_name_pool.display_name_from_name_code (a_name_code)),
+																			 "", "XT1450", Static_error)
+								a_style_element.set_validation_error (an_error, Report_if_instantiated)
 								if a_parent /= Void then
 									a_parent.replace_child (a_style_element, a_child_index)
 								end
@@ -149,6 +154,8 @@ feature {NONE} -- Implementation
 				a_fingerprint
 			when Xslt_apply_templates_type_code then
 				create {XM_XSLT_APPLY_TEMPLATES} Result.make_style_element (error_listener, a_document, Void, an_attribute_collection, a_namespace_list, a_name_code, a_sequence_number)
+			when Xslt_apply_imports_type_code then
+				create {XM_XSLT_APPLY_IMPORTS} Result.make_style_element (error_listener, a_document, Void, an_attribute_collection, a_namespace_list, a_name_code, a_sequence_number)
 			when Xslt_attribute_type_code then
 				create {XM_XSLT_ATTRIBUTE} Result.make_style_element (error_listener, a_document, Void, an_attribute_collection, a_namespace_list, a_name_code, a_sequence_number)				
 			when Xslt_attribute_set_type_code then
@@ -191,6 +198,8 @@ feature {NONE} -- Implementation
 				create {XM_XSLT_MESSAGE} Result.make_style_element (error_listener, a_document, Void, an_attribute_collection, a_namespace_list, a_name_code, a_sequence_number)
 			when Xslt_namespace_alias_type_code then
 				create {XM_XSLT_NAMESPACE_ALIAS} Result.make_style_element (error_listener, a_document, Void, an_attribute_collection, a_namespace_list, a_name_code, a_sequence_number)
+			when Xslt_next_match_type_code then
+				create {XM_XSLT_NEXT_MATCH} Result.make_style_element (error_listener, a_document, Void, an_attribute_collection, a_namespace_list, a_name_code, a_sequence_number)
 			when Xslt_number_type_code then
 				create {XM_XSLT_NUMBER} Result.make_style_element (error_listener, a_document, Void, an_attribute_collection, a_namespace_list, a_name_code, a_sequence_number)
 			when Xslt_otherwise_type_code then

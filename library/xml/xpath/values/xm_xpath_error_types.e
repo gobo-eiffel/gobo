@@ -35,7 +35,7 @@ feature -- Status report
 feature {NONE} -- Implementation
 
 	error_codes: DS_HASH_SET [STRING] is
-			-- All known error codes
+			-- All known standard error codes
 		once
 			create Result.make (209)
 			Result.set_equality_tester (string_equality_tester)

@@ -39,6 +39,7 @@ feature -- Element change
 			a_cursor: DS_ARRAYED_LIST_CURSOR [INTEGER]
 			a_name_code: INTEGER
 			an_expanded_name, a_character_attribute: STRING
+			an_error: XM_XPATH_ERROR_VALUE
 		do
 			code_point := -1
 			from
@@ -54,7 +55,8 @@ feature -- Element change
 				if STRING_.same_string (an_expanded_name, Character_attribute) then
 					a_character_attribute := attribute_value_by_index (a_cursor.index)
 					if a_character_attribute.count /= 1 then
-						report_compile_error ("xsl:output-character's 'character' attribute must be a single XML character")
+						create an_error.make_from_string ("xsl:output-character's 'character' attribute must be a single XML character", Gexslt_eiffel_type_uri, "OUTPUT_CHARACTER", Static_error)
+						report_compile_error (an_error)
 					else
 						code_point := a_character_attribute.item_code (1)
 					end
@@ -77,10 +79,12 @@ feature -- Element change
 			-- Check that the stylesheet element is valid.
 		local
 			a_character_map: XM_XSLT_CHARACTER_MAP
+			an_error: XM_XPATH_ERROR_VALUE
 		do
 			a_character_map ?= parent
 			if a_character_map = Void then
-				report_compile_error ("xsl:output-character may appear only as a direct child of xsl:character-map")
+				create an_error.make_from_string ("xsl:output-character may appear only as a direct child of xsl:character-map", "", "XT0010", Static_error)
+				report_compile_error (an_error)
 			end
 		end
 

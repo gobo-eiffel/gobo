@@ -522,11 +522,11 @@ feature -- Status setting
 			error_value := an_error_value
 		end
 
-	set_last_error_from_string (a_message, a_code: STRING; an_error_type: INTEGER) is
+	set_last_error_from_string (a_message, a_namespace_uri, a_code: STRING; an_error_type: INTEGER) is
 			-- Set `error_value'.
 		do
 			is_error := True
-			create error_value.make_from_string (a_message, a_code, an_error_type)
+			create error_value.make_from_string (a_message, a_namespace_uri, a_code, an_error_type)
 		end
 
 feature -- Conversion

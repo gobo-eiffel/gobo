@@ -273,13 +273,13 @@ feature -- Optimization
 					create a_node_sequence.make_node_sequence
 					a_type_checker.static_type_check (a_context, start, a_node_sequence, False, a_role)
 					if a_type_checker.is_static_type_check_error then
-						set_last_error_from_string (a_type_checker.static_type_check_error_message, "XP0004", Type_error)
+						set_last_error_from_string (a_type_checker.static_type_check_error_message, Xpath_errors_uri, "XP0004", Type_error)
 					else
 						set_start (a_type_checker.checked_expression)
 						create another_role.make (Binary_expression_role, "/", 2)
 						a_type_checker.static_type_check (a_context, step, a_node_sequence, False, another_role)
 						if a_type_checker.is_static_type_check_error then
-							set_last_error_from_string (a_type_checker.static_type_check_error_message, "XP0004", Type_error)
+							set_last_error_from_string (a_type_checker.static_type_check_error_message, Xpath_errors_uri, "XP0004", Type_error)
 						else
 							set_step (a_type_checker.checked_expression)
 							optimize (a_context)

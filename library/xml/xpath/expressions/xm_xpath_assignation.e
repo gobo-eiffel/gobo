@@ -56,6 +56,7 @@ feature -- Optimization
 			-- Perform context-independent static optimizations.
 		do
 			if declaration /= Void then
+				simplified := True
 				sequence.simplify
 				if sequence.is_error then
 					set_last_error (sequence.error_value)
@@ -192,6 +193,9 @@ feature {XM_XPATH_ASSIGNATION} -- Local
 
 	slot_number: INTEGER
 			-- Slot number for range variable
+
+	simplified: BOOLEAN
+			-- Has simplify been run?
 
 invariant
 

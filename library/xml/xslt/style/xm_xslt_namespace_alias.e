@@ -39,6 +39,7 @@ feature -- Element change
 			a_cursor: DS_ARRAYED_LIST_CURSOR [INTEGER]
 			a_name_code: INTEGER
 			an_expanded_name, a_stylesheet_prefix_attribute, a_result_prefix_attribute, a_uri: STRING
+			an_error: XM_XPATH_ERROR_VALUE
 		do
 			from
 				a_cursor := attribute_collection.name_code_cursor
@@ -75,7 +76,8 @@ feature -- Element change
 			end
 			stylesheet_uri_code := uri_code_for_prefix (a_stylesheet_prefix_attribute)
 			if stylesheet_uri_code = -1 then
-				report_compile_error (STRING_.concat (a_stylesheet_prefix_attribute, " is not an in-scope prefix."))
+				create an_error.make_from_string (STRING_.concat (a_stylesheet_prefix_attribute, " is not an in-scope prefix."), "", "XT0820", Static_error)
+				report_compile_error (an_error)
 			end
 			a_uri := uri_for_prefix (a_result_prefix_attribute, True)
 			if shared_name_pool.is_namespace_code_allocated (a_result_prefix_attribute, a_uri) then

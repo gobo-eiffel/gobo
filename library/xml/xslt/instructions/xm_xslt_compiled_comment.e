@@ -90,6 +90,7 @@ feature -- Evaluation
 			a_transformer: XM_XSLT_TRANSFORMER
 			a_comment, a_string: STRING
 			a_comment_marker_index: INTEGER
+			an_error: XM_XPATH_ERROR_VALUE
 		do
 			a_transformer := a_context.transformer
 			a_comment := expanded_string_value (a_context)
@@ -100,14 +101,20 @@ feature -- Evaluation
 			loop
 				a_comment_marker_index := a_comment.substring_index ("--", 1)
 				if a_comment_marker_index /= 0 then
-					report_recoverable_error (Current, "Invalid characters (--) in comment", a_transformer)
-					a_string := STRING_.concat (a_comment.substring (1, a_comment_marker_index), " ")
-					a_comment := STRING_.appended_string (a_string, a_comment.substring (a_comment_marker_index + 1, a_comment.count))
+					create an_error.make_from_string ("Invalid characters (--) in comment", "", "XT0950", Dynamic_error)
+					a_transformer.report_recoverable_error (an_error, Current)
+					if not a_transformer.is_error then -- recovery action
+						a_string := STRING_.concat (a_comment.substring (1, a_comment_marker_index), " ")
+						a_comment := STRING_.appended_string (a_string, a_comment.substring (a_comment_marker_index + 1, a_comment.count))
+					end
 				end
 			end
 			if a_comment.count > 0 and then a_comment.item (a_comment.count).is_equal ('-') then
-				report_recoverable_error (Current, "Invalid character (-) at end of comment", a_transformer)
-				a_comment := STRING_.appended_string (a_comment, " ")
+				create an_error.make_from_string ("Invalid characters (-) at end of comment", "", "XT0950", Dynamic_error)
+				a_transformer.report_recoverable_error (an_error, Current)
+				if not a_transformer.is_error then -- recovery action
+					a_comment := STRING_.appended_string (a_comment, " ")
+				end
 			end
 			if not a_transformer.is_error then
 				a_transformer.current_receiver.notify_comment (a_comment, 0)

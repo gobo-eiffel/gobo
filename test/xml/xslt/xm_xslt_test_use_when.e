@@ -52,7 +52,6 @@ feature -- Test
 			create a_stylesheet_compiler.make (a_configuration)
 			create a_uri_source.make ("./data/use_when.xsl")
 			a_stylesheet_compiler.prepare (a_uri_source)
---						print (a_stylesheet_compiler.load_stylesheet_module_error);print ("###")
 			assert ("Stylesheet compiled without errors", not a_stylesheet_compiler.load_stylesheet_module_failed)
 			assert ("Stylesheet not void", a_stylesheet_compiler.last_loaded_module /= Void)
 			a_transformer := a_stylesheet_compiler.new_transformer

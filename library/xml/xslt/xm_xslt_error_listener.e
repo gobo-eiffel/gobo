@@ -50,17 +50,17 @@ feature -- Events
 		deferred
 		end
 
-	error (a_message: STRING; a_locator: XM_XPATH_LOCATOR) is
+	error (an_error: XM_XPATH_ERROR_VALUE; a_locator: XM_XPATH_LOCATOR) is
 			-- Receive notification of a recoverable error.
 		require
-			message_not_void: a_message /= Void
+			error_not_void: an_error /= Void
 		deferred
 		end
 
-	fatal_error (a_message: STRING; a_locator: XM_XPATH_LOCATOR) is
+	fatal_error (an_error: XM_XPATH_ERROR_VALUE; a_locator: XM_XPATH_LOCATOR) is
 			-- Receive notification of a non-recoverable error.
 		require
-			message_not_void: a_message /= Void
+			error_not_void: an_error /= Void
 		deferred
 		end
 

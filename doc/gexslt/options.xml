@@ -436,3 +436,18 @@
     </variablelist>
     </para>
   </section>
+  <section>
+    <title>Miscellaneous</title>
+    <variablelist>
+      <varlistentry>
+	<term>--no-network-protocols</term>
+	<listitem>
+	  <para>
+	    Disables use of any URI schemes that imply access
+	    to the outside world (e.g. <uri>http</uri>, <uri>ftp</uri>
+	    and <uri>telnet</uri>) that might otherwise be registered.
+	  </para>
+	</listitem>
+      </varlistentry>
+    </variablelist>
+  </section>

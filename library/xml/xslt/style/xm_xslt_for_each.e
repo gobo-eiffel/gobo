@@ -84,7 +84,7 @@ feature -- Element change
 		do
 			check_within_template
 			if select_expression.is_error then
-				report_compile_error (select_expression.error_value.error_message)
+				report_compile_error (select_expression.error_value)
 			else
 				type_check_expression ("select", select_expression)
 				if select_expression.was_expression_replaced then

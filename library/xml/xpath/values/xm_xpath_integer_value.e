@@ -172,7 +172,10 @@ feature -- Status report
 	is_nan: BOOLEAN is
 			-- Is value Not-a-number?
 		do
-			Result := value.is_nan
+			Result := False
+			check
+				integer_cant_be_nan: not value.is_nan
+			end
 		end
 
 	is_zero: BOOLEAN is
@@ -185,7 +188,11 @@ feature -- Status report
 	is_infinite: BOOLEAN is
 			-- Is value infinite?
 		do
-			Result := value.is_infinity
+			Result := False
+			check
+				not_infinity: not value.is_infinity
+				-- because xs:integer cannot become inifinite
+			end
 		end
 	
 feature -- Conversions
@@ -218,6 +225,12 @@ feature -- Conversions
 		do
 			Result := Current
 		end
+	
+	floor: like Current is
+			-- Value rounded towards minus infinity
+		do
+			Result := Current
+		end
 
 feature -- Basic operations
 
@@ -226,14 +239,14 @@ feature -- Basic operations
 		local
 			an_integer_value: XM_XPATH_INTEGER_VALUE
 			a_numeric_value: XM_XPATH_NUMERIC_VALUE
-			an_integer: MA_DECIMAL
+			an_integer, a_decimal: MA_DECIMAL
 			a_decimal_value, another_decimal_value: XM_XPATH_DECIMAL_VALUE
 		do
 			debug ("XPath Integer values")
 				std.error.put_string ("Integer arithmetic%N")
 			end
 			an_integer_value ?= other
-			if other /= void then
+			if an_integer_value /= void then
 				inspect
 					an_operator
 				when Plus_token then
@@ -245,7 +258,7 @@ feature -- Basic operations
 				when Integer_division_token then
 					if an_integer_value.is_zero then
 						create {XM_XPATH_INTEGER_VALUE} Result.make_from_integer (0)
-						Result.set_last_error_from_string ("Division by zero", "FOAR0001", Dynamic_error)
+						Result.set_last_error_from_string ("Division by zero", Xpath_errors_uri, "FOAR0001", Dynamic_error)
 					else
 						an_integer := value.divide_integer (an_integer_value.value, shared_integer_context)
 						an_integer := an_integer.rescale (0, shared_integer_context)
@@ -255,7 +268,12 @@ feature -- Basic operations
 
 					-- The result of dividing two integers is a decimal
 
-					create {XM_XPATH_DECIMAL_VALUE} Result.make (value / an_integer_value.value)
+					if an_integer_value.is_zero then
+						create {XM_XPATH_DECIMAL_VALUE} Result.make_error ("Division by Zero", Xpath_errors_uri, "FOAR0001", Dynamic_error)
+					else
+						a_decimal := value / an_integer_value.value
+						create {XM_XPATH_DECIMAL_VALUE} Result.make (a_decimal)
+					end
 				when Modulus_token then
 					debug ("XPath Integer values")
 						std.error.put_string ("Dividend is ")

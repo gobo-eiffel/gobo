@@ -17,7 +17,7 @@ inherit
 	XM_XPATH_COMPUTED_EXPRESSION
 		redefine
 			simplify, evaluate_item, promote, iterator,
-			sub_expressions, mark_tail_function_calls
+			sub_expressions, mark_tail_function_calls, compute_special_properties
 		end
 
 creation
@@ -86,20 +86,16 @@ feature -- Status report
 		do
 			a_string := STRING_.appended_string (indentation (a_level), "if (")
 			std.error.put_string (a_string)
-				if is_error then
-				std.error.put_string (" in error%N")
-			else
-				std.error.put_new_line
-				condition.display (a_level + 1)
-				a_string := STRING_.appended_string (indentation (a_level), "then")
-				std.error.put_string (a_string)
-				std.error.put_new_line
-				then_expression.display (a_level + 1)
-					a_string := STRING_.appended_string (indentation (a_level), "else")
-					std.error.put_string (a_string)
-					std.error.put_new_line
-					else_expression.display (a_level + 1)				
-				end
+			std.error.put_new_line
+			condition.display (a_level + 1)
+			a_string := STRING_.appended_string (indentation (a_level), "then")
+			std.error.put_string (a_string)
+			std.error.put_new_line
+			then_expression.display (a_level + 1)
+			  a_string := STRING_.appended_string (indentation (a_level), "else")
+			  std.error.put_string (a_string)
+			  std.error.put_new_line
+			  else_expression.display (a_level + 1)				
 			end
 
 feature -- Status setting
@@ -223,8 +219,10 @@ feature -- Evaluation
 				last_evaluated_item := a_boolean_value
 			elseif a_boolean_value.value then
 				then_expression.evaluate_item (a_context)
+				last_evaluated_item := then_expression.last_evaluated_item
 			else
 				else_expression.evaluate_item (a_context)
+				last_evaluated_item := else_expression.last_evaluated_item
 			end
 		end
 
@@ -281,7 +279,15 @@ feature -- Element change
 			else_expression_not_marked_for_replacement: not else_expression.was_expression_replaced
 		end	
 
-feature {XM_XPATH_EXPRESSION} -- Restrictes
+
+feature {XM_XPATH_EXPRESSION} -- Restricted
+
+	compute_special_properties is
+			-- Compute special properties.
+		do
+			clone_special_properties (then_expression)
+			mask_special_properties (else_expression)
+		end
 
 	compute_cardinality is
 			-- Compute cardinality.

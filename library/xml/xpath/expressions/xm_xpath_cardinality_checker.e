@@ -165,7 +165,7 @@ feature -- Evaluation
 						end
 						if items > 1 then
 							create {XM_XPATH_INVALID_ITEM} last_evaluated_item.make_from_string (STRING_.appended_string ("A sequence of more than one item is not allowed as the ",
-																																						 role_locator.message), "XP0006", Type_error)
+																																						 role_locator.message), Xpath_errors_uri, "XP0006", Type_error)
 							finished := True
 						else
 							an_iterator.forth
@@ -176,7 +176,7 @@ feature -- Evaluation
 				if not an_iterator.is_error then
 					if items = 0 and then not is_cardinality_allows_zero (required_cardinality) then
 						create {XM_XPATH_INVALID_ITEM} last_evaluated_item.make_from_string (STRING_.appended_string ("An empty sequence is not allowed as the ",
-																																					 role_locator.message), "XP0006", Type_error)
+																																					 role_locator.message), Xpath_errors_uri, "XP0006", Type_error)
 					end
 				else
 					create {XM_XPATH_INVALID_ITEM} last_evaluated_item.make (an_iterator.error_value)
@@ -233,7 +233,7 @@ feature -- Evaluation
 			if a_stopper /= Void then
 				if a_position = 1 then
 					create an_invalid_item.make_from_string (STRING_.appended_string ("An empty sequence is not allowed as the ",
-																											role_locator.message), "XP0006", Type_error)
+																											role_locator.message), Xpath_errors_uri, "XP0006", Type_error)
 					create Result.make_item (an_invalid_item)
 				end
 
@@ -243,7 +243,7 @@ feature -- Evaluation
 			else -- no stopper
 				if a_position = 2 and then not cardinality_allows_many then
 					create an_invalid_item.make_from_string (STRING_.appended_string ("A sequence of more than one item is not allowed as the ",
-																											role_locator.message), "XP0006", Type_error)
+																											role_locator.message), Xpath_errors_uri, "XP0006", Type_error)
 					create Result.make_item (an_invalid_item)
 				else
 					create Result.make_item (an_item)

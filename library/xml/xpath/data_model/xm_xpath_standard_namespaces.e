@@ -51,6 +51,9 @@ feature -- Access
 	Xhtml_prefix_index: INTEGER is 9
 			-- Numeric code representing the XHTML namespace
 
+	Xpath_errors_prefix_index: INTEGER is 10
+			-- Numeric code representing the XPath errors namespace
+
 	namespace_index_to_uri_code (a_name_space_index: INTEGER): INTEGER is
 			-- Convert `a_name_space_index' to a uri code
 		require
@@ -84,6 +87,9 @@ feature -- Access
 
 	Xpath_standard_functions_uri: STRING is "http://www.w3.org/2004/10/xpath-functions"
 			-- XPath standard functions and operators (fn)
+
+	Xpath_errors_uri: STRING is "http://www.w3.org/2004/10/xqt-errors"
+			-- XPath errors
 
 	Microsoft_uri: STRING is "http://www.w3.org/TR/WD-xsl"
 			-- Recognize the Microsoft namespace so we can give a suitably sarcastic error message

@@ -137,7 +137,7 @@ feature -- Status report
 				else
 					Result := a_string.is_integer
 				end
-			elseif a_required_type = type_factory.double_type then
+			elseif a_required_type = type_factory.double_type or else a_required_type = type_factory.numeric_type then
 				a_string := trim_white_space (value)
 				Result := a_string.is_double
 			elseif a_required_type = type_factory.integer_type then
@@ -194,9 +194,7 @@ feature -- Conversion
 					end
 					create {XM_XPATH_BOOLEAN_VALUE} Result.make (True)
 				end
-			elseif a_required_type = type_factory.numeric_type then
-				todo ("convert-to-type (numeric)" ,True)
-			elseif a_required_type = type_factory.double_type then
+			elseif a_required_type = type_factory.double_type or else a_required_type = type_factory.numeric_type then
 				create {XM_XPATH_DOUBLE_VALUE} Result.make_from_string (a_value)
 			elseif a_required_type = type_factory.integer_type then
 				create {XM_XPATH_INTEGER_VALUE} Result.make_from_string (a_value)
@@ -213,7 +211,7 @@ feature -- Conversion
 				create {XM_XPATH_UNTYPED_ATOMIC_VALUE} Result.make (value)
 			else
 				-- TODO
-				todo ("convert-to-type" ,True)				
+				todo ("convert-to-type (" + a_required_type.conventional_name + ")",True)				
 			end
 		end
 

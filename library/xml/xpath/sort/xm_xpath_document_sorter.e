@@ -31,11 +31,9 @@ feature {NONE} -- Initialization
 		do
 			base_expression := an_expression
 			if base_expression.context_document_nodeset then
-				-- TODO - comparer
-				todo ("make", True)
+				create {XM_XPATH_LOCAL_ORDER_COMPARER} comparer
 			else
-				-- TODO - comparer
-				todo ("make", True)
+				create {XM_XPATH_GLOBAL_ORDER_COMPARER} comparer
 			end
 			compute_static_properties
 		end
@@ -45,6 +43,9 @@ feature -- Access
 	base_expression: XM_XPATH_EXPRESSION
 			-- Base expression
 
+	comparer: XM_XPATH_NODE_ORDER_COMPARER
+			-- Comparer
+	
 	item_type: XM_XPATH_ITEM_TYPE is
 			-- Data type of the expression, where known
 		do
@@ -125,8 +126,23 @@ feature -- Evaluation
 
 	iterator (a_context: XM_XPATH_CONTEXT): XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_ITEM] is
 			-- Iterator over the values of a sequence
+		local
+			an_iterator: XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_ITEM]
+			a_node_iterator: XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_NODE]
+			an_empty_iterator: XM_XPATH_EMPTY_ITERATOR [XM_XPATH_ITEM]
 		do
-			create {XM_XPATH_INVALID_ITERATOR} Result.make_from_string ("TODO", "XP0001", Static_error) -- TODO
+			an_iterator := base_expression.iterator (a_context)
+			a_node_iterator ?= an_iterator
+			if a_node_iterator /= Void then
+				create {XM_XPATH_DOCUMENT_ORDER_ITERATOR} Result.make (a_node_iterator, comparer)
+			else
+				an_empty_iterator ?= an_iterator
+				if an_empty_iterator /= Void then
+					Result := an_empty_iterator
+				else
+					create {XM_XPATH_INVALID_ITERATOR} Result.make_from_string ("Unexpected sequence", Gexslt_eiffel_type_uri, "NNON_NODE_SEQUENCE", Dynamic_error)
+				end
+			end
 		end
 
 	effective_boolean_value (a_context: XM_XPATH_CONTEXT): XM_XPATH_BOOLEAN_VALUE is

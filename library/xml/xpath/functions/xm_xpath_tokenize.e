@@ -111,7 +111,7 @@ feature -- Evaluation
 					a_flags_string := normalized_flags_string (an_atomic_value.string_value)
 				end
 				if a_flags_string = Void then
-					set_last_error_from_string ("Unknown flags in regular expression", "FORX0001", Static_error)
+					set_last_error_from_string ("Unknown flags in regular expression", Xpath_errors_uri, "FORX0001", Static_error)
 				else
 					a_key := composed_key (a_pattern_string, a_flags_string)
 					a_regexp_cache_entry := shared_regexp_cache.item (a_key)
@@ -123,12 +123,12 @@ feature -- Evaluation
 					end
 					if not a_regexp_cache_entry.is_error then
 						if a_regexp_cache_entry.regexp.matches ("") then
-							create {XM_XPATH_INVALID_ITERATOR} Result.make_from_string ("Regular expression matches zero-length string", "FORX0003", Dynamic_error)
+							create {XM_XPATH_INVALID_ITERATOR} Result.make_from_string ("Regular expression matches zero-length string", Xpath_errors_uri, "FORX0003", Dynamic_error)
 						else
 							create {XM_XPATH_TOKEN_ITERATOR} Result.make (an_input_string, a_regexp_cache_entry)
 						end
 					else
-						create {XM_XPATH_INVALID_ITERATOR} Result.make_from_string ("Invalid regular expression", "FORX0002", Dynamic_error)
+						create {XM_XPATH_INVALID_ITERATOR} Result.make_from_string ("Invalid regular expression", Xpath_errors_uri, "FORX0002", Dynamic_error)
 					end
 				end
 			else
@@ -167,7 +167,7 @@ feature {NONE} -- Implementation
 				end
 			end
 			if a_flags_string = Void then
-				set_last_error_from_string ("Unknown flags in regular expression", "FORX0001", Static_error)
+				set_last_error_from_string ("Unknown flags in regular expression", Xpath_errors_uri, "FORX0001", Static_error)
 			else
 				a_string_value ?= arguments.item (2) -- the pattern
 				if a_string_value /= Void then
@@ -183,7 +183,7 @@ feature {NONE} -- Implementation
 					end
 					if regexp_cache_entry /= Void then
 						if regexp_cache_entry.regexp.matches ("") then
-							set_last_error_from_string ("Regular expression matches zero-length string", "FORX0003", Static_error)
+							set_last_error_from_string ("Regular expression matches zero-length string", Xpath_errors_uri, "FORX0003", Static_error)
 						end
 					end
 				end

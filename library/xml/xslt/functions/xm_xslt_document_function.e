@@ -139,7 +139,11 @@ feature -- Evaluation
 			if uri_parts.count > 2 then
 				create {XM_XPATH_EMPTY_ITERATOR [XM_XPATH_NODE]} Result.make
 			else
-				a_uri := uri_parts.item (1)
+				if uri_parts.count = 0 then
+					a_uri := ""
+				else
+					a_uri := uri_parts.item (1)
+				end
 				if uri_parts.count = 2 then
 					a_fragment_id := uri_parts.item (2)
 				end

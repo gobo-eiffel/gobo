@@ -17,6 +17,10 @@ inherit
 
 	XM_XSLT_ERROR_LISTENER
 
+	XM_XPATH_ERROR_TYPES
+
+	XM_XPATH_STANDARD_NAMESPACES
+
 	KL_IMPORTED_STRING_ROUTINES
 
 creation
@@ -67,9 +71,12 @@ feature -- Events
 
 	warning (a_message: STRING; a_locator: XM_XPATH_LOCATOR) is
 			-- Receive notification of a warning.
+		local
+			an_error: XM_XPATH_ERROR_VALUE
 		do
 			if warnings_are_recoverable_errors then
-				error (a_message, a_locator)
+				create an_error.make_from_string (a_message, Gexslt_eiffel_type_uri, "WARNING", Dynamic_error)
+				error (an_error, a_locator)
 			elseif warning_threshold >= 0 and then warnings <= warning_threshold then
 				display_location_information (a_locator, False)
 				error_reporter.report_warning_message (STRING_.concat ("Warning: ", a_message))
@@ -80,7 +87,7 @@ feature -- Events
 			end
 		end
 
-	error (a_message: STRING; a_locator: XM_XPATH_LOCATOR) is
+	error (an_error: XM_XPATH_ERROR_VALUE; a_locator: XM_XPATH_LOCATOR) is
 			-- Receive notification of a recoverable error.
 		local
 			a_msg: STRING
@@ -96,7 +103,7 @@ feature -- Events
 				a_msg := "Error: "
 			end
 			if recovery_policy /= Recover_silently then
-				error_reporter.report_error_message (STRING_.concat (a_msg, a_message))
+				error_reporter.report_error_message (STRING_.concat (a_msg, an_error.error_message))
 			end
 			errors := errors + 1
 			if recovery_policy = Recover_with_warnings and then recoverable_error_threshold >=0 and then errors >= recoverable_error_threshold then
@@ -105,11 +112,11 @@ feature -- Events
 			end
 		end
 
-	fatal_error (a_message: STRING; a_locator: XM_XPATH_LOCATOR) is
+	fatal_error (an_error: XM_XPATH_ERROR_VALUE; a_locator: XM_XPATH_LOCATOR) is
 			-- Receive notification of a non-recoverable error.
 		do
 			display_location_information (a_locator, True)
-			error_reporter.report_error_message (STRING_.concat ("Fatal error: ", a_message))
+			error_reporter.report_error_message (STRING_.concat ("Fatal error: ", an_error.error_message))
 			fatal_errors := fatal_errors + 1
 		end
 

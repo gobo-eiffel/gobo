@@ -554,7 +554,7 @@ feature {NONE} -- Implementation
 						create {XM_XPATH_FIRST_ITEM_EXPRESSION} an_expression.make (base_expression)
 						set_replacement (an_expression)
 					elseif a_max = Platform.Maximum_integer then
-						create {XM_XPATH_TAIL_EXPRESSION} replacement_expression.make (base_expression, a_min)
+						create {XM_XPATH_TAIL_EXPRESSION} an_expression.make (base_expression, a_min)
 						set_replacement (an_expression)
 					end
 				end

@@ -87,7 +87,7 @@ feature -- Element change
 			else
 				generate_name_code (a_name_attribute)
 				if last_generated_name_code = -1 then
-					report_compile_error (error_message)
+					report_compile_error (name_code_error_value)
 				else
 					qname_fingerprint := fingerprint_from_name_code (last_generated_name_code)
 				end
@@ -103,6 +103,7 @@ feature -- Element change
 			an_iterator: XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_NODE]
 			an_attribute: XM_XSLT_ATTRIBUTE
 			a_cursor: DS_ARRAYED_LIST_CURSOR [XM_XSLT_ATTRIBUTE_SET]
+			an_error: XM_XPATH_ERROR_VALUE
 		do
 			check_top_level
 			an_iterator := new_axis_iterator (Child_axis)
@@ -113,7 +114,8 @@ feature -- Element change
 			loop
 				an_attribute ?= an_iterator.item
 				if an_attribute = Void then
-					report_compile_error ("Only xsl:attribute is allowed within xsl:attribute-set")
+					create an_error.make_from_string ("Only xsl:attribute is allowed within xsl:attribute-set", "", "XT0010", Static_error)
+					report_compile_error (an_error)
 				end
 				an_iterator.forth
 			end
@@ -147,9 +149,11 @@ feature -- Element change
 			-- Check for circularity of reference.
 		local
 			a_cursor: DS_ARRAYED_LIST_CURSOR [XM_XSLT_ATTRIBUTE_SET]
+			an_error: XM_XPATH_ERROR_VALUE
 		do
 			if an_origin = Current then
-				report_compile_error ("The definition of the attribute set is circular")
+				create an_error.make_from_string ("The definition of the attribute set is circular", "", "XT0640", Static_error)
+				report_compile_error (an_error)
 			elseif validated then
 
 				-- If this attribute set isn't validated yet, we don't check it.

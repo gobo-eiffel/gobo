@@ -70,6 +70,7 @@ feature -- Evaluation
 			-- Evaluate `Current' as a single item
 		local
 			an_evaluation_context: XM_XSLT_EVALUATION_CONTEXT
+			an_error: XM_XPATH_ERROR_VALUE
 		do
 			an_evaluation_context ?= a_context
 			check
@@ -79,7 +80,8 @@ feature -- Evaluation
 			if an_evaluation_context.is_current_item_available then
 				last_evaluated_item := an_evaluation_context.current_stylesheet_item
 			else
-				an_evaluation_context.transformer.report_fatal_error ("XT1360: Context item is undefined when calling current().", Void)
+				create an_error.make_from_string ("Context item is undefined when calling current().", "",  "XT1360", Dynamic_error)
+				an_evaluation_context.transformer.report_fatal_error (an_error, Void)
 			end
 		end
 

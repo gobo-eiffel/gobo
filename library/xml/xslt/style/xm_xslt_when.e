@@ -81,7 +81,7 @@ feature -- Element change
 				generate_expression (a_test_attribute)
 				condition := last_generated_expression
 				if condition.is_error then
-					report_compile_error (condition.error_value.error_message)
+					report_compile_error (condition.error_value)
 				end
 			else
 				report_absence ("test")
@@ -93,10 +93,12 @@ feature -- Element change
 			-- Check that the stylesheet element is valid.
 		local
 			an_xsl_choose: XM_XSLT_CHOOSE
+			an_error: XM_XPATH_ERROR_VALUE
 		do
 			an_xsl_choose ?= parent
 			if an_xsl_choose = Void then
-				report_compile_error ("xsl:when must be immediately within xsl:choose")
+				create an_error.make_from_string ("xsl:when must be immediately within xsl:choose", "", "XT0010", Static_error)
+				report_compile_error (an_error)
 			else
 				type_check_expression ("test", condition)
 				if condition.was_expression_replaced then

@@ -261,6 +261,18 @@ feature {NONE} -- Implementation
 
 				if STRING_.same_string (tokenizer.last_token_value, "item") then
 					a_primary_type := any_item
+					next_token ("In parse_sequence after item: current token is ")
+					if tokenizer.is_lexical_error then
+							report_parse_error (tokenizer.last_lexical_error, "XP0003")
+					else
+						if tokenizer.last_token /= Right_parenthesis_token then
+							a_message := "expected %"%)%", found "
+							a_message := STRING_.appended_string (a_message, display_current_token)
+							report_parse_error (a_message, "XP0003")
+						else
+							next_token ("In parse_sequence after item after RPAR: current token is ")
+						end
+					end
 				else
 					
 					-- Covers element(N,T), comment(), text(), etc
@@ -1150,7 +1162,7 @@ feature {NONE} -- Implementation
 					create {XM_XPATH_INTEGER_VALUE} an_expression.make_from_integer (0)
 					parse_unary_expression
 					if not is_parse_error then
-						create another_expression.make (an_expression, Unary_minus_token, internal_last_parsed_expression)
+						create another_expression.make (an_expression, Minus_token, internal_last_parsed_expression)
 						an_expression := another_expression
 					end
 				end
@@ -1863,6 +1875,7 @@ feature {NONE} -- Implementation
 						if qname_parts.count = 1 then
 							a_uri := Xpath_standard_functions_uri
 							a_local_name := qname_parts.item (1)
+							an_xml_prefix := ""
 						else
 							an_xml_prefix := qname_parts.item (1)
 							a_local_name := qname_parts.item (2)
@@ -1876,6 +1889,10 @@ feature {NONE} -- Implementation
 						end
 						if not is_parse_error then
 							a_fingerprint := shared_name_pool.fingerprint (a_uri, a_local_name)
+							if a_fingerprint = -1 and then not shared_name_pool.is_name_code_allocated (an_xml_prefix, a_uri, a_local_name) then
+								shared_name_pool.allocate_name (an_xml_prefix, a_uri, a_local_name)
+								a_fingerprint := shared_name_pool.fingerprint (a_uri, a_local_name)
+							end
 							if a_fingerprint = -1 or else not function_library.is_function_available (a_fingerprint, arguments.count, environment.is_restricted) then
 								a_message := STRING_.concat ("Unknown function: ", a_function_name)
 								report_parse_error (a_message, "XP0017")

@@ -46,13 +46,15 @@ feature -- Element change
 			a_call_template: XM_XSLT_CALL_TEMPLATE
 			a_preceding_iterator: XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_NODE]
 			a_with_param: XM_XSLT_WITH_PARAM
+			an_error: XM_XPATH_ERROR_VALUE
 		do
 			Precursor
 			an_apply_templates ?= parent
 			if an_apply_templates = Void then
 				a_call_template  ?= parent
 				if a_call_template = Void then
-					report_compile_error (STRING_.appended_string ("xsl:with-param cannot appear as a child of ", parent.node_name))
+					create an_error.make_from_string (STRING_.concat("xsl:with-param cannot appear as a child of ", parent.node_name), "", "XT0010", Static_error)
+					report_compile_error (an_error)
 				end
 			end
 			
@@ -66,7 +68,8 @@ feature -- Element change
 			loop
 				a_with_param ?= a_preceding_iterator.item
 				if a_with_param /= Void and then a_with_param.variable_fingerprint = variable_fingerprint then
-					report_compile_error ("Duplicate parameter name")
+					create an_error.make_from_string ("Duplicate parameter name", "", "XT0670", Static_error)
+					report_compile_error (an_error)
 				end
 			   a_preceding_iterator.forth
 			end

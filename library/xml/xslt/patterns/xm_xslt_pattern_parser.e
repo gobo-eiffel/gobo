@@ -66,6 +66,7 @@ feature -- Parsers
 				std.error.put_new_line
 			end
 			environment := a_context
+			function_library := environment.available_functions
 			create tokenizer.make
 			tokenizer.tokenize (a_pattern_text, 1, -1)
 			is_parse_error := False

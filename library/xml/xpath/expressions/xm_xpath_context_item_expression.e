@@ -96,7 +96,7 @@ feature -- Evaluation
 			if a_context /= Void and then a_context.is_context_position_set then
 				last_evaluated_item := a_context.context_item
 			else
-				create {XM_XPATH_INVALID_ITEM} last_evaluated_item.make_from_string ("The context item is not set", "XP0002", Dynamic_error)				
+				create {XM_XPATH_INVALID_ITEM} last_evaluated_item.make_from_string ("The context item is not set", Xpath_errors_uri, "XP0002", Dynamic_error)				
 			end
 		end
 
@@ -106,7 +106,7 @@ feature -- Evaluation
 			if a_context /= Void and then a_context.is_context_position_set then
 				create {XM_XPATH_SINGLETON_ITERATOR [XM_XPATH_ITEM]} Result.make (a_context.context_item)
 			else
-				create {XM_XPATH_INVALID_ITEM} last_evaluated_item.make_from_string ("The context item is not set", "XP0002", Dynamic_error)
+				create {XM_XPATH_INVALID_ITEM} last_evaluated_item.make_from_string ("The context item is not set", Xpath_errors_uri, "XP0002", Dynamic_error)
 			end
 		end
 	

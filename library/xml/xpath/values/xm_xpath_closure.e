@@ -68,8 +68,9 @@ feature {NONE} -- Initialization
 			clone_cardinality (base_expression)
 			clone_special_properties (base_expression)
 			saved_xpath_context := a_context.new_context
+			save_local_variables (a_context)
 			state := Unread_state
-			if saved_xpath_context.current_iterator /= Void then
+			if saved_xpath_context.current_iterator /= Void and then not saved_xpath_context.current_iterator.off then -- TODO: Is this the right test?
 				create new_singleton_iterator.make (saved_xpath_context.current_iterator.item)
 				saved_xpath_context.set_current_iterator (new_singleton_iterator)
 			end
@@ -118,12 +119,8 @@ feature -- Status report
 		do
 			std.error.put_string (indentation (a_level))
 			std.error.put_string ("closure of expression ")
-			if is_error then
-				std.error.put_string (" in error%N")
-			else
-				std.error.put_new_line
-				base_expression.display (a_level + 1)
-			end
+			std.error.put_new_line
+			base_expression.display (a_level + 1)
 		end
 
 feature -- Evaluation
@@ -150,13 +147,17 @@ feature -- Evaluation
 			inspect
 				state
 			when Unread_state then
-				state := Maybe_more_state
+				state := Busy_state
 				input_iterator := base_expression.iterator (saved_xpath_context)
+				state := Maybe_more_state
 				create {XM_XPATH_PROGRESSIVE_ITERATOR} Result.make (reservoir, input_iterator) 
 			when Maybe_more_state then
-				create {XM_XPATH_PROGRESSIVE_ITERATOR} Result.make (reservoir, input_iterator) 
+				create {XM_XPATH_PROGRESSIVE_ITERATOR} Result.make (reservoir, input_iterator)
 			when All_read_state then
 				create {XM_XPATH_ARRAY_LIST_ITERATOR [XM_XPATH_ITEM]} Result.make (reservoir)
+			when Busy_state then
+				create {XM_XPATH_INVALID_ITERATOR} Result.make_from_string ("Attempt to access a lazily-evaluated variable while it is being evaluated",
+																								Gexslt_eiffel_type_uri, "BUSY_CLOSURE", Dynamic_error)
 			end
 		end
 
@@ -183,12 +184,75 @@ feature {XM_XPATH_CLOSURE} -- Local
 	Unread_state: INTEGER is 1
 	Maybe_more_state: INTEGER is 2
 	All_read_state: INTEGER is 3
-
+	Busy_state: INTEGER is 4
+	
 	input_iterator: XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_ITEM]
 			-- Underlying iterator 
 	
 	reservoir: DS_ARRAYED_LIST [XM_XPATH_ITEM]
 			-- List of items already read
+
+	depth: INTEGER
+			-- Nesting depth
+
+feature {NONE} -- Implementation
+
+	Maximum_closure_nesting_depth: INTEGER is 10
+			-- Maximum depth for nesting closures
+
+	save_local_variables (a_context: XM_XPATH_CONTEXT) is			
+			-- Make a copy of all local variables.
+		require
+			context_not_void: a_context /= Void
+		local
+			a_local_variable_frame, a_saved_local_variable_frame: ARRAY [XM_XSLT_STACK_FRAME_ENTRY]
+			an_index, a_depth: INTEGER
+			a_value: XM_XPATH_VALUE
+			a_closure: XM_XPATH_CLOSURE
+			a_value_entry: XM_XSLT_STACK_FRAME_ENTRY
+		do
+			
+			--If the value of any local variable is a closure whose depth
+			--  exceeds a certain threshold, we evaluate the closure eagerly to avoid
+			--  creating deeply nested lists of closures, which consume memory unnecessarily.
+
+			a_local_variable_frame := a_context.local_variable_frame
+			if a_local_variable_frame.count > 0 then
+				from
+					create a_saved_local_variable_frame.make (1, a_local_variable_frame.count)
+					an_index := 1
+				variant
+					a_local_variable_frame.count + 1 - an_index
+				until
+					an_index > a_local_variable_frame.count
+				loop
+					if a_local_variable_frame.item (an_index) /= Void and then a_local_variable_frame.item (an_index).is_value then
+						a_value := a_local_variable_frame.item (an_index).value
+						a_closure ?= a_value
+						if a_closure /= Void then
+							a_depth := a_closure.depth
+							if a_depth >= Maximum_closure_nesting_depth then
+								a_closure.eagerly_evaluate (a_context)
+								a_value := a_closure.last_evaluation
+								create a_value_entry.make (a_value)
+								a_saved_local_variable_frame.put (a_value_entry, an_index)
+							else
+								if a_depth + 1 > depth then
+									depth := a_depth + 1
+								end
+								a_saved_local_variable_frame.put (a_local_variable_frame.item (an_index), an_index)
+							end
+						else
+							a_saved_local_variable_frame.put (a_local_variable_frame.item (an_index), an_index)
+						end
+					else
+						a_saved_local_variable_frame.put (a_local_variable_frame.item (an_index), an_index)
+					end
+					an_index := an_index + 1
+				end
+				saved_xpath_context.set_local_variable_frame (a_saved_local_variable_frame)
+			end
+		end
 
 invariant
 

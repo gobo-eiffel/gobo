@@ -91,13 +91,14 @@ feature -- Status setting
 			value_set: error_value = an_error_value
 		end
 
-	set_last_error_from_string (a_message, a_code: STRING; an_error_type: INTEGER) is
+	set_last_error_from_string (a_message, a_namespace_uri, a_code: STRING; an_error_type: INTEGER) is
 			-- Set `error_value'.
 		require
 			item_not_in_error: not is_error
 			valid_error_type: an_error_type = Static_error or an_error_type = Type_error or an_error_type = Dynamic_error
 			message_not_void: a_message /= Void and then a_message.count > 0
-			valid_code: a_code /= Void and then is_valid_error_code (a_code)
+			namespace_uri_not_void: a_namespace_uri /= Void
+			code_not_void: a_code /= Void
 		deferred
 		ensure
 			item_in_error: is_error

@@ -15,6 +15,8 @@ inherit
 	
 	XM_XSLT_OUTPUTTER	
 
+	XM_XPATH_ERROR_TYPES
+
 	XM_XPATH_AXIS
 
 creation
@@ -41,8 +43,11 @@ feature -- Events
 
 	on_error (a_message: STRING) is
 			-- Event producer detected an error.
+		local
+			an_error: XM_XPATH_ERROR_VALUE
 		do
-			transformer.report_fatal_error (a_message, Void)
+			create an_error.make_from_string (a_message, Gexslt_eiffel_type_uri, "SERIALIZATION_ERROR", Dynamic_error)
+			transformer.report_fatal_error (an_error, Void)
 		end
 
 	start_element (a_name_code: INTEGER; a_type_code: INTEGER; properties: INTEGER) is
@@ -176,8 +181,11 @@ feature {NONE} -- Implementation
 
 	report_recoverable_error is
 			-- report a recoverable erro
+		local
+			an_error: XM_XPATH_ERROR_VALUE
 		do
-			transformer.report_recoverable_error ("Non-text output nodes are ignored when writing a text node, attribute, comment, or PI", Void)
+			create an_error.make_from_string ("Non-text output nodes are ignored when writing a text node, attribute, comment, or PI", Gexslt_eiffel_type_uri, "SERIALIZATION_ERROR", Dynamic_error)
+			transformer.report_recoverable_error (an_error, Void)
 		end
 	
 invariant

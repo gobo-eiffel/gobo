@@ -215,7 +215,7 @@ feature {NONE} -- Implementation
 				a_message := STRING_.appended_string (a_message, required_item_type.conventional_name)
 				a_message := STRING_.appended_string (a_message, "; supplied value is ")
 				a_message := STRING_.appended_string (a_message, a_type.conventional_name)
-				an_item.set_last_error_from_string (a_message, "XP0006", Type_error)
+				an_item.set_last_error_from_string (a_message, Xpath_errors_uri, "XP0006", Type_error)
 			end
 		end
 

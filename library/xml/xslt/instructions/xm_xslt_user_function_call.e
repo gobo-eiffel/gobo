@@ -204,7 +204,7 @@ feature -- Element change
 				create a_type_checker
 				a_type_checker.static_type_check (Void, arguments.item (an_index), some_required_types.item (an_index), False, a_role)
 				if a_type_checker.is_static_type_check_error then
-					set_last_error_from_string (a_type_checker.static_type_check_error_message, "XT0320", Type_error)
+					set_last_error_from_string (a_type_checker.static_type_check_error_message, "", "XT0320", Type_error)
 					is_type_error := True
 				else
 					 arguments.replace (a_type_checker.checked_expression, an_index)
@@ -271,11 +271,11 @@ feature {NONE} -- Implementation
 			from
 				a_cursor := arguments.new_cursor; a_cursor.start
 			variant
-				arguments.count +1 - a_cursor.index
+				arguments.count + 1 - a_cursor.index
 			until
 				a_cursor.after
 			loop
-				a_cursor.item.lazily_evaluate (a_context)
+				a_cursor.item.eagerly_evaluate (a_context) -- TODO - lazy evaluation is not working - investigate
 				some_actual_arguments.put (a_cursor.item.last_evaluation, a_cursor.index)
 				a_cursor.forth
 			end

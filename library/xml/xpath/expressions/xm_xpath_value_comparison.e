@@ -48,18 +48,6 @@ feature {NONE} -- Initialization
 		do
 			make_binary_expression (an_operand_one, a_token, an_operand_two)
 			create atomic_comparer.make (a_collator)
-			if shared_name_pool.is_name_code_allocated ("", Xpath_standard_functions_uri, "empty") then
-				empty_function_fingerprint := shared_name_pool.fingerprint (Xpath_standard_functions_uri, "empty")
-			else
-				shared_name_pool.allocate_name ("", Xpath_standard_functions_uri, "empty")
-				empty_function_fingerprint := fingerprint_from_name_code (shared_name_pool.last_name_code)
-			end
-			if shared_name_pool.is_name_code_allocated ("", Xpath_standard_functions_uri, "exists") then
-				exists_function_fingerprint := shared_name_pool.fingerprint (Xpath_standard_functions_uri, "exists")
-			else
-				shared_name_pool.allocate_name ("", Xpath_standard_functions_uri, "empty")
-				exists_function_fingerprint := fingerprint_from_name_code (shared_name_pool.last_name_code)
-			end			
 		ensure
 			static_properties_computed: are_static_properties_computed
 			operator_set: operator = a_token
@@ -86,9 +74,11 @@ feature -- Optimization
 		local
 			an_atomic_type: XM_XPATH_SEQUENCE_TYPE
 			a_role, another_role: XM_XPATH_ROLE_LOCATOR
-			a_type, another_type: XM_XPATH_ITEM_TYPE
+			a_type, another_type: XM_XPATH_ATOMIC_TYPE
 			a_type_checker: XM_XPATH_TYPE_CHECKER
 			a_message: STRING
+			a_primitive_type, another_primitive_type: INTEGER
+			is_first_optional, is_second_optional: BOOLEAN
 		do
 			mark_unreplaced
 			create a_type_checker
@@ -105,25 +95,28 @@ feature -- Optimization
 				create a_role.make (Binary_expression_role, token_name (operator), 1)
 				a_type_checker.static_type_check (a_context, first_operand, an_atomic_type, False, a_role)
 				if a_type_checker.is_static_type_check_error then
-					set_last_error_from_string (a_type_checker.static_type_check_error_message, "XP0004", Type_error)
+					set_last_error_from_string (a_type_checker.static_type_check_error_message, Xpath_errors_uri, "XP0004", Type_error)
 				else
 					set_first_operand (a_type_checker.checked_expression)
 					create another_role.make (Binary_expression_role, token_name (operator), 2)
 					a_type_checker.static_type_check (a_context, second_operand, an_atomic_type, False, a_role)
 					if a_type_checker.is_static_type_check_error then
-						set_last_error_from_string (a_type_checker.static_type_check_error_message, "XP0004", Type_error)
+						set_last_error_from_string (a_type_checker.static_type_check_error_message, Xpath_errors_uri, "XP0004", Type_error)
 					else
 						set_second_operand (a_type_checker.checked_expression)
-						a_type := first_operand.item_type
-						another_type := second_operand.item_type
-						
-						if not (a_type = type_factory.any_atomic_type or else a_type = type_factory.untyped_atomic_type
-								  or else another_type = type_factory.any_atomic_type or else another_type = type_factory.untyped_atomic_type) then
-							if a_type.primitive_type /= another_type.primitive_type then
-								a_message := STRING_.appended_string ("Cannot compare ", a_type.conventional_name)
-								a_message := STRING_.appended_string (a_message, " with ")
+						a_type := first_operand.item_type.atomized_item_type; a_primitive_type := a_type.primitive_type
+						another_type := second_operand.item_type.atomized_item_type; another_primitive_type := another_type.primitive_type
+						if a_primitive_type = Untyped_atomic_type_code then a_primitive_type := String_type_code end
+						if another_primitive_type = Untyped_atomic_type_code then another_primitive_type := String_type_code end
+
+						if not are_types_comparable (a_primitive_type, another_primitive_type) then
+							is_first_optional := first_operand.cardinality_allows_zero
+							is_second_optional := second_operand.cardinality_allows_zero
+							if is_first_optional or else is_second_optional then
+								warn_comparison_failure (a_context, is_first_optional, is_second_optional, a_type, another_type)
+							else
 								a_message := STRING_.appended_string (a_message, another_type.conventional_name)
-								set_last_error_from_string (a_message, "XP0004", Type_error)
+								set_last_error_from_string (a_message, Xpath_errors_uri, "XP0004", Type_error)
 							end
 						end
 						if not is_error then optimize (a_context) end
@@ -165,10 +158,10 @@ feature -- Evaluation
 					another_atomic_value ?= another_item
 					if an_atomic_value = Void then
 						create Result.make (False)
-						Result.set_last_error_from_string ("Atomization failed for second operand of value comparison", "XP0006", Type_error)
+						Result.set_last_error_from_string ("Atomization failed for second operand of value comparison", Xpath_errors_uri, "XP0006", Type_error)
 					elseif another_atomic_value = Void then
 						create Result.make (False)
-						Result.set_last_error_from_string ("Atomization failed for second operand of value comparison", "XP0006", Type_error)
+						Result.set_last_error_from_string ("Atomization failed for second operand of value comparison", Xpath_errors_uri, "XP0006", Type_error)
 					else
 						create a_comparison_checker
 						a_comparison_checker.check_correct_value_relation (an_atomic_value, operator, atomic_comparer, another_atomic_value)
@@ -293,14 +286,14 @@ feature {NONE} -- Implementation
 						
 						-- Rewrite count(x)=0 as empty(x).
 
-						a_function_library.bind_function (empty_function_fingerprint, a_count_function.arguments, False)
+						a_function_library.bind_function (Empty_function_type_code, a_count_function.arguments, False)
 						an_empty_function ?= a_function_library.last_bound_function
 						an_expression := an_empty_function
 					elseif operator = Fortran_not_equal_token or else operator = Fortran_greater_than_token then
 						
 						-- Rewrite count(x)!=0, count(x)>0 as exists(x)
 
-						a_function_library.bind_function (exists_function_fingerprint, a_count_function.arguments, False)
+						a_function_library.bind_function (Exists_function_type_code, a_count_function.arguments, False)
 						an_exists_function ?= a_function_library.last_bound_function
 						an_expression := an_exists_function
 					elseif operator = Fortran_greater_equal_token then
@@ -331,7 +324,7 @@ feature {NONE} -- Implementation
 						create an_integer_value.make (an_integer)
 						create a_filter_expression.make (a_count_function.arguments.item(1), an_integer_value)
 						new_arguments.put (a_filter_expression, 1)
-						a_function_library.bind_function (exists_function_fingerprint, new_arguments, False)
+						a_function_library.bind_function (Exists_function_type_code, new_arguments, False)
 						an_exists_function ?= a_function_library.last_bound_function
 						an_expression := an_exists_function
 						
@@ -486,13 +479,42 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	exists_function_fingerprint, empty_function_fingerprint: INTEGER
-			-- Function fingerprints
-
-invariant
-
-	strictly_positive_exists_function_fingerprint: exists_function_fingerprint > 0
-	strictly_positive_empty_function_fingerprint: empty_function_fingerprint > 0
+	warn_comparison_failure (a_context: XM_XPATH_STATIC_CONTEXT;
+									 is_first_optional, is_second_optional: BOOLEAN;
+									 a_type, another_type: XM_XPATH_ATOMIC_TYPE) is
+			-- Warn of probable comparison failure.
+		require
+			context_not_void: a_context /= Void
+			first_type_not_void: a_type /= Void
+			second_type_not_void: another_type /= Void
+		local
+			a_message: STRING
+		do
+			
+			-- This is a comparison such as (xs:integer? eq xs:date?).
+			-- This is almost certainly an error, but we need to let it through
+			--  because it will work if one of the operands is an empty sequence.
+			
+			a_message := STRING_.concat ("Comparison of ", a_type.conventional_name)
+			if is_first_optional then
+				a_message := STRING_.appended_string (a_message, "?")
+			end
+			a_message := STRING_.appended_string (a_message, " with ")
+			a_message := STRING_.appended_string (a_message, another_type.conventional_name)
+			if is_second_optional then
+				a_message := STRING_.appended_string (a_message, "?")
+			end
+			a_message := STRING_.appended_string (a_message, " will fail unless ")
+			if is_first_optional and then is_second_optional then
+				a_message := STRING_.appended_string (a_message, "one or both operands are")
+			elseif is_first_optional then
+				a_message := STRING_.appended_string (a_message, "the first operand is")
+			else
+				a_message := STRING_.appended_string (a_message, "the second operand is")
+			end
+			a_message := STRING_.appended_string (a_message, " empty.")
+			a_context.issue_warning (a_message)
+		end
 
 end
 	

@@ -90,11 +90,12 @@ feature -- Element change
 			an_apply_templates: XM_XSLT_APPLY_TEMPLATES
 			a_for_each: XM_XSLT_FOR_EACH
 			a_for_each_group: XM_XSLT_FOR_EACH_GROUP
+			an_error: XM_XPATH_ERROR_VALUE
 			-- TODO a_perform_sort: XM_XSLT_PERFORM_SORT
 		do
 			if select_expression /= Void then
 				if has_child_nodes then
-					report_compile_error ("xsl:sort must be empty when a 'select' attribute is supplied")
+					create an_error.make_from_string ("xsl:sort must be empty when a 'select' attribute is supplied", "", "XT0010", Static_error)
 				else
 					an_apply_templates ?= parent
 					a_for_each ?= parent
@@ -103,7 +104,8 @@ feature -- Element change
 					if an_apply_templates = Void and then
 						a_for_each = Void and then
 						a_for_each_group = Void then
-						report_compile_error ("xsl:sort must be child of xsl:apply-templates, xsl:for-each[-group], or xsl:perform-sort")
+						create an_error.make_from_string ("xsl:sort must be child of xsl:apply-templates, xsl:for-each[-group], or xsl:perform-sort", "", "XT0010", Static_error)
+						report_compile_error (an_error)
 					end
 				end
 			else
@@ -153,14 +155,14 @@ feature {NONE} -- Implementation
 				generate_expression (a_select_attribute)
 				select_expression := last_generated_expression
 				if select_expression.is_error then
-					report_compile_error (select_expression.error_value.error_message)
+					report_compile_error (select_expression.error_value)
 				end
 			end
 			if an_order_attribute /= Void then
 				generate_attribute_value_template (an_order_attribute, static_context)
 				order := last_generated_expression
 				if order.is_error then
-					report_compile_error (order.error_value.error_message)
+					report_compile_error (order.error_value)
 				end
 			else
 				create {XM_XPATH_STRING_VALUE} order.make ("ascending")
@@ -169,7 +171,7 @@ feature {NONE} -- Implementation
 				generate_attribute_value_template (a_case_order_attribute, static_context)
 				case_order := last_generated_expression
 				if case_order.is_error then
-					report_compile_error (case_order.error_value.error_message)
+					report_compile_error (case_order.error_value)
 				end				
 			else
 				create {XM_XPATH_STRING_VALUE} case_order.make ("#default") -- TODO - check this out - what about validating?  ditto order
@@ -178,7 +180,7 @@ feature {NONE} -- Implementation
 				generate_attribute_value_template (a_data_type_attribute, static_context)
 				data_type := last_generated_expression
 				if data_type.is_error then
-					report_compile_error (data_type.error_value.error_message)
+					report_compile_error (data_type.error_value)
 				end
 			else
 				create {XM_XPATH_EMPTY_SEQUENCE} data_type.make
@@ -189,14 +191,14 @@ feature {NONE} -- Implementation
 				generate_attribute_value_template (a_lang_attribute, static_context)
 				language := last_generated_expression
 				if language.is_error then
-					report_compile_error (language.error_value.error_message)
+					report_compile_error (language.error_value)
 				end
 			end
 			if a_collation_attribute /= Void then
 				generate_attribute_value_template (a_collation_attribute, static_context)
 				collation_name := last_generated_expression
 				if collation_name.is_error then
-					report_compile_error (collation_name.error_value.error_message)
+					report_compile_error (collation_name.error_value)
 				end
 			end
 		end
@@ -207,6 +209,7 @@ feature {NONE} -- Implementation
 			a_type_checker: XM_XPATH_TYPE_CHECKER
 			a_role: XM_XPATH_ROLE_LOCATOR
 			an_atomic_sequence: XM_XPATH_SEQUENCE_TYPE
+			an_error: XM_XPATH_ERROR_VALUE
 		do
 			if select_expression /= Void then
 				type_check_expression ("select", select_expression)
@@ -243,7 +246,8 @@ feature {NONE} -- Implementation
 			create an_atomic_sequence.make_atomic_sequence
 			a_type_checker.static_type_check (static_context, select_expression, an_atomic_sequence, False, a_role)
 			if a_type_checker.is_static_type_check_error	then
-				report_compile_error (a_type_checker.static_type_check_error_message)
+				create an_error.make_from_string(a_type_checker.static_type_check_error_message, Xpath_errors_uri, "XP0004", Type_error)
+				report_compile_error (an_error)
 			else
 				select_expression := a_type_checker.checked_expression
 				create sort_key_definition.make (select_expression, order, case_order, language, data_type, collation_name)

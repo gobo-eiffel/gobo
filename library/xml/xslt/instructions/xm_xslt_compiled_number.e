@@ -93,6 +93,7 @@ feature -- Evaluation
 			a_group_separator, an_ordinal_value, a_letter, a_string: STRING
 			an_integer_value: XM_XPATH_INTEGER_VALUE
 			a_number_formatter: XM_XSLT_NUMBER_FORMATTER
+			an_error: XM_XPATH_ERROR_VALUE
 		do
 			transformer := a_context.transformer
 			a_receiver := transformer.current_receiver
@@ -104,15 +105,18 @@ feature -- Evaluation
 				else
 					grouping_size.evaluate_as_string (a_context)
 					if grouping_size.last_evaluated_string.is_error then
-						report_fatal_error (Current, "grouping-size must be numeric", transformer)
+						create an_error.make_from_string ("grouping-size must be numeric", Gexslt_eiffel_type_uri, "GROUPING_SIZE", Dynamic_error)
+						transformer.report_fatal_error (an_error, Current)
 					else
 						a_string := grouping_size.last_evaluated_string.string_value
 						if not a_string.is_integer then
-							report_fatal_error (Current, "grouping-size must be an integer", transformer)
+							create an_error.make_from_string ("Context item is not set whilst applying imports.", Gexslt_eiffel_type_uri, "GROUPING_SIZE", Dynamic_error)
+							transformer.report_fatal_error (an_error, Current)
 						else
 							a_group_size := a_string.to_integer
 							if a_group_size < 0 then
-								report_fatal_error (Current, "grouping-size must be positive", transformer)
+								create an_error.make_from_string ("grouping-size must be positive", Gexslt_eiffel_type_uri, "GROUPING_SIZE", Dynamic_error)
+								transformer.report_fatal_error (an_error, Current)
 							end
 						end
 					end
@@ -127,7 +131,8 @@ feature -- Evaluation
 					end
 					a_group_separator := grouping_separator.last_evaluated_string.string_value
 					if a_group_separator.count > 1 then
-						report_fatal_error (Current, "grouping-separator must evaluate to a single character", transformer)
+						create an_error.make_from_string ("grouping-separator must evaluate to a single character", Gexslt_eiffel_type_uri, "GROUPING_SEPARATOR", Dynamic_error)
+						transformer.report_fatal_error (an_error, Current)
 					end
 				end
 				if ordinal /= Void then
@@ -155,7 +160,8 @@ feature -- Evaluation
 						if letter_value.last_evaluated_string.is_error or else
 							not (STRING_.same_string (letter_value.last_evaluated_string.string_value, "alphabetic") or else
 								  STRING_.same_string (letter_value.last_evaluated_string.string_value, "traditional")) then
-							report_fatal_error (Current, "letter-value must be %"traditional%" or %"alphabetic%"", transformer)
+							create an_error.make_from_string ("letter-value must be %"traditional%" or %"alphabetic%"", Gexslt_eiffel_type_uri, "LETTER_VALUE", Dynamic_error)
+							transformer.report_fatal_error (an_error, Current)
 						end
 					end
 				end
@@ -169,7 +175,8 @@ feature -- Evaluation
 				if formatter = Void then
 					format.evaluate_as_string (a_context)
 					if format.last_evaluated_string.is_error then
-						report_fatal_error (Current, "format must evaluate to a string", transformer)
+						create an_error.make_from_string ("format must evaluate to a string", Gexslt_eiffel_type_uri, "NUMBER_FORMAT", Dynamic_error)
+						transformer.report_fatal_error (an_error, Current)
 					else
 						create a_number_formatter.make (format.last_evaluated_string.string_value)
 					end
@@ -248,6 +255,7 @@ feature {NONE} -- Implementation
 			a_numeric_value: XM_XPATH_NUMERIC_VALUE
 			an_integer_value: XM_XPATH_INTEGER_VALUE
 			finished: BOOLEAN
+			an_error: XM_XPATH_ERROR_VALUE
 		do
 			create value.make_copy (minus_one)
 
@@ -268,7 +276,8 @@ feature {NONE} -- Implementation
 							if a_numeric_value = Void then
 								a_numeric_value := item_to_double (an_atomic_value)
 								if a_numeric_value.is_nan then
-									report_fatal_error (Current, "Numbers to be formatted must be positive integers", transformer)
+									create an_error.make_from_string ("Numbers to be formatted must be positive integers", "", "XT0980", Dynamic_error)
+									transformer.report_fatal_error (an_error, Current)
 									finished := True
 								end
 							end
@@ -278,7 +287,8 @@ feature {NONE} -- Implementation
 							end
 						end
 						if not finished and then an_integer_value.value.is_negative then
-							report_fatal_error (Current, "Numbers to be formatted must be positive integers", transformer)								
+							create an_error.make_from_string ("Numbers to be formatted must be positive integers", "", "XT0980", Dynamic_error)
+							transformer.report_fatal_error (an_error, Current)
 						end
 						if not finished then
 							integer_vector.force_last (an_integer_value)
@@ -293,7 +303,11 @@ feature {NONE} -- Implementation
 				else
 					a_source  ?= transformer.current_item
 					if a_source = Void then
-						report_recoverable_error (Current, "context item for xsl:number must be a node", transformer)
+						create an_error.make_from_string ("Context item for xsl:number must be a node", "", "XT0990", Dynamic_error)
+						transformer.report_recoverable_error (an_error, Current)
+						if not transformer.is_error then
+							todo ("calculate_value", True) -- return empty sequence
+						end
 					end
 				end
 				if not transformer.is_error then

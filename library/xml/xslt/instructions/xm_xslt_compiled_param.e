@@ -58,8 +58,9 @@ feature -- Evaluation
 			a_transformer: XM_XSLT_TRANSFORMER
 			was_supplied: BOOLEAN
 			a_value: XM_XPATH_VALUE
-
+			an_error: XM_XPATH_ERROR_VALUE
 			a_singleton_node: XM_XPATH_SINGLETON_NODE
+			an_error_code: STRING
 		do
 			a_transformer := a_context.transformer
 			a_bindery := a_transformer.bindery
@@ -68,7 +69,8 @@ feature -- Evaluation
 				if was_supplied then
 					a_bindery.bind_global_parameter (Current, variable_fingerprint)
 					if a_bindery.last_binding_failure /= Void then
-						a_transformer.report_fatal_error (a_bindery.last_binding_failure, Current)
+						create an_error.make_from_string (a_bindery.last_binding_failure, Gexslt_eiffel_type_uri, "PARAMETER_BINDING_FAILURE", Dynamic_error)
+						a_transformer.report_fatal_error (an_error, Current)
 					end
 				end
 			else
@@ -77,7 +79,8 @@ feature -- Evaluation
 					a_singleton_node ?= a_bindery.supplied_local_parameter_value (variable_fingerprint, is_tunnel_parameter)
 					a_bindery.set_local_variable (slot_number, a_bindery.supplied_local_parameter_value (variable_fingerprint, is_tunnel_parameter))
 					if a_bindery.last_binding_failure /= Void then
-						a_transformer.report_fatal_error (a_bindery.last_binding_failure, Current)
+						create an_error.make_from_string (a_bindery.last_binding_failure, Gexslt_eiffel_type_uri, "PARAMETER_BINDING_FAILURE", Dynamic_error)
+						a_transformer.report_fatal_error (an_error, Current)
 					else
 						if conversion /= Void then
 							conversion.eagerly_evaluate (a_context)
@@ -92,7 +95,13 @@ feature -- Evaluation
 
 			if not a_transformer.is_error and then not was_supplied then
 				if is_required_parameter then
-					a_transformer.report_fatal_error ("No value supplied for required parameter", Current)
+					if is_global_variable then
+						an_error_code := "XT0050"
+					else
+						an_error_code := "XT0700"
+					end
+					create an_error.make_from_string ("No value supplied for required parameter", "", an_error_code, Dynamic_error)
+					a_transformer.report_fatal_error (an_error, Current)
 				else
 					a_value := value (a_context)
 					if is_global_variable then

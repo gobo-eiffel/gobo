@@ -129,6 +129,7 @@ feature {NONE} -- Implementation
 			a_splitter: ST_SPLITTER
 			qname_parts: DS_LIST [STRING]
 			a_name_code: INTEGER
+			an_error: XM_XPATH_ERROR_VALUE
 		do
 			create a_boolean_rule.make_boolean (is_preserving)
 			if STRING_.same_string (a_token, "*") then
@@ -136,7 +137,8 @@ feature {NONE} -- Implementation
 				stripper_rules.add_rule (a_pattern, a_boolean_rule, precedence, minus_one_half)
 			elseif a_token.count > 1 and then a_token.substring_index (":*", a_token.count - 1) = a_token.count - 1 then
 				if a_token.count = 2 then
-					report_compile_error ("No prefix before ':*'")
+					create an_error.make_from_string ("No prefix before ':*'", Gexslt_eiffel_type_uri, "STRIPPER", Static_error)
+					report_compile_error (an_error)
 				else
 					an_xml_prefix := a_token.substring (1, a_token.count - 2)
 					a_uri := uri_for_prefix (an_xml_prefix, False)
@@ -145,7 +147,8 @@ feature {NONE} -- Implementation
 				end
 			elseif a_token.count > 1 and then a_token.substring_index ("*:", 1) = 1 then
 				if a_token.count = 2 then
-					report_compile_error ("No local name after '*:'")
+					create an_error.make_from_string ("No local name after '*:'", Gexslt_eiffel_type_uri, "STRIPPER", Static_error)
+					report_compile_error (an_error)
 				else
 					a_local_name := a_token.substring (3, a_token.count)
 					create {XM_XSLT_LOCAL_NAME_TEST} a_pattern.make (Element_node, a_local_name, a_token)
@@ -167,7 +170,8 @@ feature {NONE} -- Implementation
 					if a_uri = Void then
 						a_message := STRING_.concat ("Element name ", a_token)
 						a_message := STRING_.appended_string (a_message, " is not a valid QName")
-						report_compile_error (a_message)
+						create an_error.make_from_string (a_message, Gexslt_eiffel_type_uri, "STRIPPER", Static_error)
+						report_compile_error (an_error)
 					else
 						if not shared_name_pool.is_name_code_allocated ("", a_uri, a_local_name) then
 							shared_name_pool.allocate_name ("", a_uri, a_local_name)
@@ -179,7 +183,8 @@ feature {NONE} -- Implementation
 				else
 					a_message := STRING_.concat ("Element name ", a_token)
 					a_message := STRING_.appended_string (a_message, " is not a valid QName")
-					report_compile_error (a_message)
+					create an_error.make_from_string (a_message, Gexslt_eiffel_type_uri, "STRIPPER", Static_error)
+					report_compile_error (an_error)
 				end
 			end
 		end

@@ -69,7 +69,7 @@ feature -- Element change
 				key_name := a_name_attribute
 				generate_name_code (a_name_attribute)
 				if last_generated_name_code = -1 then
-					report_compile_error (error_message)
+					report_compile_error (name_code_error_value)
 				else
 					key_fingerprint :=  fingerprint_from_name_code (last_generated_name_code)
 					if a_match_attribute = Void then
@@ -97,6 +97,7 @@ feature -- Element change
 			a_role: XM_XPATH_ROLE_LOCATOR
 			an_atomic_type: XM_XPATH_SEQUENCE_TYPE
 			a_collation_name: STRING
+			an_error: XM_XPATH_ERROR_VALUE
 		do
 			check_top_level
 			if use /= Void then
@@ -111,7 +112,8 @@ feature -- Element change
 				create an_atomic_type.make (type_factory.any_atomic_type, Required_cardinality_zero_or_more)
 				a_type_checker.static_type_check (static_context, use, an_atomic_type, False, a_role)
 				if a_type_checker.is_static_type_check_error	then
-					report_compile_error (a_type_checker.static_type_check_error_message)
+					create an_error.make_from_string(a_type_checker.static_type_check_error_message, Xpath_errors_uri, "XP0004", Type_error)
+					report_compile_error (an_error)
 				else
 					use := a_type_checker.checked_expression
 				end
@@ -133,7 +135,8 @@ feature -- Element change
 			if a_key_manager.has_key (key_fingerprint) then
 				a_collation_name := a_key_manager.collation_uri (key_fingerprint)
 				if not STRING_.same_string (a_collation_name, collation_uri) then
-					report_compile_error (STRING_.appended_string("inconsistent collation names for key ", key_name))
+					create an_error.make_from_string (STRING_.concat("inconsistent collation names for key ", key_name), "", "XT1220", Static_error)
+					report_compile_error (an_error)
 				end
 			end
 			validated := True
@@ -146,11 +149,14 @@ feature -- Element change
 			a_key_definition: XM_XSLT_KEY_DEFINITION
 			a_collator: ST_COLLATOR
 			a_message: STRING
+			an_error: XM_XPATH_ERROR_VALUE
 		do
 			last_generated_instruction := Void
 			if not principal_stylesheet.is_collator_defined (collation_uri) = Void then
-				a_message := STRING_.appended_string ("The collation named '", collation_uri)
-				report_compile_error (STRING_.appended_string (a_message, "' has not been defined"))
+				a_message := STRING_.concat ("The collation named '", collation_uri)
+				a_message := STRING_.appended_string (a_message, "' has not been defined")
+				create an_error.make_from_string (a_message, "", "XT1210", Static_error)
+				report_compile_error (an_error)
 			else
 				a_collator := principal_stylesheet.find_collator (collation_uri)
 			end

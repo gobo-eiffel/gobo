@@ -25,8 +25,7 @@ inherit
 
 creation
 
-	make, make_from_string, make_from_integer
-
+	make, make_from_string, make_from_integer, make_error
 
 feature {NONE} -- Initialization
 
@@ -50,6 +49,17 @@ feature {NONE} -- Initialization
 		do
 			make_atomic_value
 			create value.make_from_string (a_value)
+		end
+
+	make_error (a_string, a_namespace_uri, an_error_code: STRING; an_error_type: INTEGER) is
+			-- Create decimal in error.
+		require
+			valid_error_code: an_error_code /= Void
+			namespace_uri_not_void: a_namespace_uri /= Void
+			valid_error_type: an_error_type = Static_error or an_error_type = Type_error or an_error_type = Dynamic_error
+			string_not_void: a_string /= Void and then a_string.count > 0
+		do
+			set_last_error_from_string (a_string, a_namespace_uri, an_error_code, an_error_type)
 		end
 	
 feature -- Access
@@ -191,7 +201,11 @@ feature -- Status report
 	is_nan: BOOLEAN is
 			-- Is value Not-a-number?
 		do
-			Result := value.is_nan
+			Result := False
+			check
+				not_nan: not value.is_nan
+				-- because xs:decimal cannot become NaN
+			end
 		end
 
 	is_zero: BOOLEAN is
@@ -203,7 +217,11 @@ feature -- Status report
 	is_infinite: BOOLEAN is
 			-- Is value infinite?
 		do
-			Result := value.is_infinity
+			Result := False
+			check
+				not_infinite: not value.is_infinity
+				-- because xs:decimal cannot become infinite
+			end
 		end
 	
 feature -- Evaluation
@@ -249,6 +267,16 @@ feature -- Conversion
 			create Result.make (a_decimal)
 		end
 
+	floor: like Current is
+			-- Value rounded towards minus infinity
+		local
+			a_decimal: MA_DECIMAL
+		do
+			create a_decimal.make_copy (value)
+			a_decimal := a_decimal.round_to_integer (shared_floor_context)
+			create Result.make (a_decimal)
+		end
+
 feature -- Basic operations
 
 	arithmetic (an_operator: INTEGER; other: XM_XPATH_NUMERIC_VALUE): XM_XPATH_NUMERIC_VALUE is
@@ -257,6 +285,7 @@ feature -- Basic operations
 			another_decimal: XM_XPATH_DECIMAL_VALUE
 			an_integer_value: XM_XPATH_INTEGER_VALUE
 			a_numeric_value: XM_XPATH_NUMERIC_VALUE
+			a_decimal: MA_DECIMAL
 		do
 			another_decimal ?= other
 			if another_decimal /= Void then
@@ -269,7 +298,12 @@ feature -- Basic operations
 				when Multiply_token then
 					create {XM_XPATH_DECIMAL_VALUE} Result.make (value * another_decimal.value)
 				when Division_token then
-					create {XM_XPATH_DECIMAL_VALUE} Result.make (value / another_decimal.value)
+					if another_decimal.is_zero then
+						create {XM_XPATH_DECIMAL_VALUE} Result.make_error ("Division by Zero", Xpath_errors_uri, "FOAR0001", Dynamic_error)
+					else
+						a_decimal := value / another_decimal.value
+						create {XM_XPATH_DECIMAL_VALUE} Result.make (a_decimal)
+					end
 				when Modulus_token then
 					create {XM_XPATH_DECIMAL_VALUE} Result.make (value \\ another_decimal.value)
 				else
@@ -299,6 +333,12 @@ feature {NONE} -- Implementation
 			-- Decimal context for use by round
 		once
 			create Result.make (shared_decimal_context.digits, Round_ceiling)
+		end
+
+	shared_floor_context: MA_DECIMAL_CONTEXT is
+			-- Decimal context for use by floor
+		once
+			create Result.make (shared_decimal_context.digits, Round_floor)
 		end
 
 end

@@ -47,6 +47,7 @@ feature -- Element change
 			a_cursor: DS_ARRAYED_LIST_CURSOR [INTEGER]
 			a_name_code: INTEGER
 			an_expanded_name, a_name_attribute: STRING
+			an_error: XM_XPATH_ERROR_VALUE
 		do
 			from
 				a_cursor := attribute_collection.name_code_cursor
@@ -77,7 +78,8 @@ feature -- Element change
 				generate_name_code (a_name_attribute)
 				character_map_fingerprint := last_generated_name_code
 				if character_map_fingerprint = -1 then
-					report_compile_error ("Name attribute of xsl:character-map is not a lexical QName")
+					create an_error.make_from_string ("Name attribute of xsl:character-map is not a lexical QName", "", "XT0280", Static_error)
+					report_compile_error (an_error)
 				else
 					character_map_fingerprint := shared_name_pool.fingerprint_from_name_code (character_map_fingerprint)
 				end
@@ -98,6 +100,7 @@ feature -- Element change
 			a_uri, a_local_name, an_xml_prefix, a_message: STRING
 			a_name_code: INTEGER
 			another_cursor: DS_ARRAYED_LIST_CURSOR [XM_XSLT_CHARACTER_MAP]
+			an_error: XM_XPATH_ERROR_VALUE
 		do
 			if not validated then
 				check_top_level
@@ -109,7 +112,8 @@ feature -- Element change
 				loop
 					an_output_character ?= a_child_iterator.item
 					if an_output_character = Void then
-						report_compile_error ("Only xsl:output-character is allowed within xsl:character-map")
+						create an_error.make_from_string ("Only xsl:output-character is allowed within xsl:character-map", "", "XT0010", Static_error)
+						report_compile_error (an_error)
 					end
 					a_child_iterator.forth
 				end
@@ -120,7 +124,8 @@ feature -- Element change
 				another_character_map := a_stylesheet.character_map (character_map_fingerprint)
 				if another_character_map /= Current then
 					if precedence = another_character_map.precedence then
-						report_compile_error ("XT1580: There are two character-maps with the same name and import precedence")
+						create an_error.make_from_string ("There are two character-maps with the same name and import precedence", "", "XT1580", Static_error)
+						report_compile_error (an_error)
 					else
 						if precedence < another_character_map.precedence then
 							is_redundant := True
@@ -145,7 +150,8 @@ feature -- Element change
 					loop
 						qname_parts := a_splitter.split (a_cursor.item)
 						if qname_parts.count = 0 or else qname_parts.count > 2 then
-							report_compile_error (STRING_.concat ("XT1590: Invalid character-map name: ", a_cursor.item))
+							create an_error.make_from_string (STRING_.concat ("Invalid character-map name: ", a_cursor.item), "", "XT1590", Static_error)
+							report_compile_error (an_error)
 							a_cursor.go_after
 						else
 							if qname_parts.count = 1 then
@@ -164,15 +170,18 @@ feature -- Element change
 								a_name_code := shared_name_pool.last_name_code
 							end
 							if a_name_code = -1 then
-								report_compile_error (STRING_.concat ("XT1590: Invalid character-map name: ", a_cursor.item))
+								create an_error.make_from_string (STRING_.concat ("Invalid character-map name: ", a_cursor.item), "", "XT1590", Static_error)
+								report_compile_error (an_error)
 								a_cursor.go_after
 							else
 								a_name_code := shared_name_pool.fingerprint_from_name_code (a_name_code)
 								another_character_map := a_stylesheet.character_map (a_name_code)
 								if another_character_map = Void then
-									a_message := STRING_.concat ("XT1590: No character map named ", shared_name_pool.display_name_from_name_code (a_name_code))
+									a_message := STRING_.concat ("No character map named ", shared_name_pool.display_name_from_name_code (a_name_code))
 									a_message := STRING_.appended_string (a_message, "has been defined.")
-									report_compile_error (a_message)
+									create an_error.make_from_string (a_message, "", "XT1590", Static_error)
+									report_compile_error (an_error)
+
 									a_cursor.go_after
 								else
 									character_maps_used.put_last (another_character_map)
@@ -255,9 +264,11 @@ feature {XM_XSLT_CHARACTER_MAP} -- Implementation
 		local
 			a_cursor: DS_ARRAYED_LIST_CURSOR [XM_XSLT_CHARACTER_MAP]
 			a_child_iterator: XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_NODE]
+			an_error: XM_XPATH_ERROR_VALUE
 		do
 			if Current = origin then
-				report_compile_error ("XT1600: xsl:character-map definition is circular")
+				create an_error.make_from_string ("xsl:character-map definition is circular", "", "XT1600", Static_error)
+				report_compile_error (an_error)
 			else
 				if validated then
 					from

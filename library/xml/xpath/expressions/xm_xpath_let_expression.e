@@ -118,7 +118,9 @@ feature -- Optimization
 			if	declaration = Void then
 				do_nothing
 			else
-			
+
+				if not simplified then simplify end
+
 				-- The order of events is critical here. First we ensure that the type of the
 				-- sequence expression is established. This is used to establish the type of the variable,
 				-- which in turn is required when type-checking the action part.
@@ -136,7 +138,7 @@ feature -- Optimization
 					create a_type_checker
 					a_type_checker.static_type_check (a_context, an_expression, declaration.required_type, False, a_role)
 					if a_type_checker.is_static_type_check_error then
-						set_last_error_from_string (a_type_checker.static_type_check_error_message, "XP0004", Type_error)
+						set_last_error_from_string (a_type_checker.static_type_check_error_message, Xpath_errors_uri, "XP0004", Type_error)
 					else
 						set_sequence (a_type_checker.checked_expression)
 					end

@@ -16,6 +16,8 @@ inherit
 
 	XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_ITEM]
 
+	XM_XPATH_ERROR_TYPES
+
 feature -- Access
 
 	current_grouping_key: XM_XPATH_ATOMIC_VALUE is

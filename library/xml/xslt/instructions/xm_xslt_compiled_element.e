@@ -69,11 +69,13 @@ feature -- Access
 			a_uri, an_xml_prefix, a_local_name: STRING
 			a_splitter: ST_SPLITTER
 			qname_parts: DS_LIST [STRING]
+			an_error: XM_XPATH_ERROR_VALUE 
 		do
 			element_name.evaluate_item (a_context)
 			a_name_value := element_name.last_evaluated_item
 			if a_name_value = Void or else a_name_value.is_error then -- empty sequence
-				a_context.transformer.report_recoverable_error ("XT0820: xsl:element has no 'name'", Current)
+				create an_error.make_from_string ("xsl:element has no 'name'", "","XT0820", Dynamic_error) 
+				a_context.transformer.report_recoverable_error (an_error, Current)
 				Result := -1
 			else
 				a_string_value ?= a_name_value
@@ -82,7 +84,8 @@ feature -- Access
 					a_splitter.set_separators (":")
 					qname_parts := a_splitter.split (a_string_value.string_value)
 					if qname_parts.count = 0 or else qname_parts.count > 2 then
-						a_context.transformer.report_recoverable_error ("XT0820: 'name' attribute of xsl:element does not evaluate to a lexical QName.", Current)
+						create an_error.make_from_string ("'name' attribute of xsl:element does not evaluate to a lexical QName.", "","XT0820", Dynamic_error) 
+						a_context.transformer.report_recoverable_error (an_error, Current)
 						Result := -1
 					elseif qname_parts.count = 1 then
 						a_local_name := qname_parts.item (1)
@@ -94,10 +97,12 @@ feature -- Access
 				else
 					a_qname_value ?= a_name_value
 					if a_qname_value /= Void then
-						a_context.transformer.report_recoverable_error ("XT0820: xsl:element 'name' has a QName value - I don't think this is supposed to happenin XSLT, so it's a BUG.", Current)
+						create an_error.make_from_string ("xsl:element 'name' has a QName value - I don't think this is supposed to happen XSLT, so it's a BUG.", "","XT0820", Dynamic_error) 
+						a_context.transformer.report_recoverable_error (an_error, Current)
 						Result := -1
 					else
-						a_context.transformer.report_recoverable_error ("XT0820: xsl:element 'name' has an unexpected value. This is a BUG.", Current)
+						create an_error.make_from_string ("'name' has an unexpected value. This is a BUG.", "","XT0820", Dynamic_error) 
+						a_context.transformer.report_recoverable_error (an_error, Current)
 						Result := -1
 					end
 				end
@@ -106,7 +111,8 @@ feature -- Access
 				if namespace = Void then
 					a_uri := namespace_context.uri_for_defaulted_prefix (an_xml_prefix, True)
 					if a_uri = Void then
-						a_context.transformer.report_recoverable_error (STRING_.concat ("XT0830: 'name' attribute of xsl:element has an undeclared prefix: ", an_xml_prefix), Current)
+						create an_error.make_from_string (STRING_.concat ("'name' attribute of xsl:element has an undeclared prefix: ", an_xml_prefix), "","XT0830", Dynamic_error) 
+						a_context.transformer.report_recoverable_error (an_error, Current)
 						Result := -1
 						check False end
 					end

@@ -122,7 +122,7 @@ feature -- Evaluation
 				end
 			else
 				create {XM_XPATH_INVALID_ITERATOR} Result.make_from_string ("In the id() function," +
-													 " the tree being searched must be one whose root is a document node", "FODC0001", Dynamic_error)
+													 " the tree being searched must be one whose root is a document node", Xpath_errors_uri, "FODC0001", Dynamic_error)
 			end
 		end
 

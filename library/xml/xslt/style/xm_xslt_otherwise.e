@@ -75,10 +75,12 @@ feature -- Element change
 			-- Check that the stylesheet element is valid.
 		local
 			an_xsl_choose: XM_XSLT_CHOOSE
+			an_error: XM_XPATH_ERROR_VALUE
 		do
 			an_xsl_choose ?= parent
 			if an_xsl_choose = Void then
-				report_compile_error ("xsl:otherwise must be immediately within xsl:choose")
+				create an_error.make_from_string ("xsl:otherwise must be immediately within xsl:choose", "", "XT0010", Static_error)
+				report_compile_error (an_error)
 			end
 			validated := True
 		end

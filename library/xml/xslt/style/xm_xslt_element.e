@@ -53,6 +53,7 @@ feature -- Element change
 			an_expanded_name, a_name_attribute, a_namespace_attribute,
 			a_type_attribute, a_validation_attribute: STRING
 			a_string_value: XM_XPATH_STRING_VALUE
+			an_error: XM_XPATH_ERROR_VALUE
 		do
 			from
 				a_cursor := attribute_collection.name_code_cursor
@@ -94,12 +95,13 @@ feature -- Element change
 				generate_attribute_value_template (a_name_attribute, static_context)
 				element_name := last_generated_expression
 				if element_name.is_error then
-					report_compile_error (element_name.error_value.error_message)
+					report_compile_error (element_name.error_value)
 				else
 					a_string_value ?= element_name
 					if a_string_value /= Void then
 						if not is_qname (a_string_value.string_value) then
-							report_compile_error ("Element name is not a valid QName")
+							create an_error.make_from_string ("Element name is not a valid QName", "", "XT0020", Static_error)
+							report_compile_error (an_error)
 							
 							-- Prevent a duplicate error message.
 							
@@ -114,7 +116,7 @@ feature -- Element change
 				generate_attribute_value_template (a_namespace_attribute, static_context)
 				namespace := last_generated_expression
 				if namespace.is_error then
-					report_compile_error (namespace.error_value.error_message)
+					report_compile_error (namespace.error_value)
 				end
 			end
 			prepare_attributes_2 (a_validation_attribute, a_type_attribute)
@@ -215,22 +217,28 @@ feature {NONE} -- Implementation
 
 	prepare_attributes_2 (a_validation_attribute, a_type_attribute: STRING) is
 			-- Continue prparing attributes.
+		local
+			an_error: XM_XPATH_ERROR_VALUE
 		do
 			if a_validation_attribute /= Void then
 				validation_action := validation_code (a_validation_attribute)
 				if validation_action /= Validation_strip then
-					report_compile_error ("To perform validation, a schema-aware XSLT processor is needed")
+					create an_error.make_from_string ("To perform validation, a schema-aware XSLT processor is needed", "", "XT1660", Static_error)
+				report_compile_error (an_error)
 				elseif validation_action = Validation_invalid then
-					report_compile_error ("Invalid value of validation attribute")
+					create an_error.make_from_string ("Invalid value of validation attribute", "", "XT0020", Static_error)
+					report_compile_error (an_error)
 				end
 			end
 
 			if a_type_attribute /= Void then
-				report_compile_error ("The type attribute is available only with a schema-aware XSLT processor")
+				create an_error.make_from_string ("The type attribute is available only with a schema-aware XSLT processor", "", "XT1660", Static_error)
+				report_compile_error (an_error)
 			end
 
 			if a_type_attribute /= Void and then a_validation_attribute /= Void then
-				report_compile_error ("The validation and type attributes are mutually exclusive")
+				create an_error.make_from_string ("The validation and type attributes are mutually exclusive", "", "XT1505", Static_error)
+				report_compile_error (an_error)
 			end
 		end
 
@@ -241,12 +249,14 @@ feature {NONE} -- Implementation
 		local
 			a_string_splitter: ST_SPLITTER
 			qname_parts: DS_LIST [STRING]
+			an_error: XM_XPATH_ERROR_VALUE
 		do
 			qname := a_string_value.string_value
 			STRING_.left_adjust (qname)
 			STRING_.right_adjust (qname)
 			if qname.count = 0 then
-				report_compile_error ("Element name must not be zero length")
+				create an_error.make_from_string ("Element name must not be zero length", "", "XT0020", Static_error)
+				report_compile_error (an_error)
 			else
 				create a_string_splitter.make
 				a_string_splitter.set_separators (":")
@@ -258,7 +268,8 @@ feature {NONE} -- Implementation
 					local_name := qname_parts.item (2)
 					xml_prefix := qname_parts.item (1)
 				else
-					report_compile_error (STRING_.concat ("Invalid element name: ", qname))
+					create an_error.make_from_string (STRING_.concat ("Invalid element name: ", qname), "", "XT0020", Static_error)
+					report_compile_error (an_error)
 				end
 				if namespace = Void then
 					namespace_uri := uri_for_prefix (xml_prefix, False)

@@ -54,6 +54,7 @@ feature -- Element change
 			an_expanded_name, a_format_attribute, an_href_attribute: STRING
 			a_validation_attribute, a_type_attribute, a_value, a_message: STRING
 			an_expression: XM_XPATH_EXPRESSION
+			an_error: XM_XPATH_ERROR_VALUE
 		do
 			from
 				a_cursor := attribute_collection.name_code_cursor
@@ -102,7 +103,8 @@ feature -- Element change
 				if output_fingerprint = -1 then
 					a_message := STRING_.concat ("XT1460: xsl:result-document format='", a_format_attribute)
 					a_message := STRING_.appended_string (a_message, "' does not specify a valid QName")
-					report_compile_error (a_message)
+					create an_error.make_from_string (a_message, "", "XT1460", Static_error)
+					report_compile_error (an_error)
 				end
 			else
 				output_fingerprint := -1
@@ -110,18 +112,22 @@ feature -- Element change
 			if a_validation_attribute /= Void then
 				validation_action := validation_code (a_validation_attribute)
 				if validation_action /= Validation_strip then
-					report_compile_error ("To perform validation, a schema-aware XSLT processor is needed")
+					create an_error.make_from_string ("To perform validation, a schema-aware XSLT processor is needed", "", "XT1660", Static_error)
+				report_compile_error (an_error)
 				elseif validation_action = Validation_invalid then
-					report_compile_error ("Invalid value of validation attribute")
+					create an_error.make_from_string ("Invalid value of validation attribute", "", "XT0020", Static_error)
+					report_compile_error (an_error)
 				end
 			end
 
 			if a_type_attribute /= Void then
-				report_compile_error ("The type attribute is available only with a schema-aware XSLT processor")
+				create an_error.make_from_string ("The type attribute is available only with a schema-aware XSLT processor", "", "XT1660", Static_error)
+				report_compile_error (an_error)
 			end
 
 			if a_type_attribute /= Void and then a_validation_attribute /= Void then
-				report_compile_error ("The validation and type attributes are mutually exclusive")
+				create an_error.make_from_string ("The validation and type attributes are mutually exclusive", "", "XT1505", Static_error)
+				report_compile_error (an_error)
 			end
 			attributes_prepared := True
 		end
@@ -172,17 +178,19 @@ feature -- Element change
 			a_string_value: XM_XPATH_STRING_VALUE
 			a_namespace_resolver: XM_XPATH_NAMESPACE_RESOLVER
 			a_local_name, a_message: STRING
+			an_error: XM_XPATH_ERROR_VALUE
 		do
 			last_generated_instruction := Void
 			a_stylesheet := principal_stylesheet
 			if output_fingerprint = -1 or else a_stylesheet.is_named_output_property_defined (output_fingerprint) then
 				a_property_set := a_stylesheet.gathered_output_properties (output_fingerprint)
 				if a_property_set.is_error then
-					a_message := STRING_.concat ("XT1560: Two xsl:output statements specify conflicting values for attribute '", a_property_set.duplicate_attribute_name)
+					a_message := STRING_.concat ("Two xsl:output statements specify conflicting values for attribute '", a_property_set.duplicate_attribute_name)
 					a_message := STRING_.appended_string (a_message, "', in the output definition named '")
 					a_message := STRING_.appended_string (a_message, shared_name_pool.display_name_from_name_code (output_fingerprint))
 					a_message := STRING_.appended_string (a_message, "'.")
-					report_compile_error (a_message)
+					create an_error.make_from_string (a_message, "", "XT1560", Static_error)
+					report_compile_error (an_error)
 				else
 					create a_fingerprint_list.make (formatting_attributes.count)
 					a_namespace_resolver := static_context.namespace_resolver
@@ -198,7 +206,8 @@ feature -- Element change
 							a_property_set.set_property (a_fingerprint, a_string_value.string_value, a_namespace_resolver)
 							if a_property_set.is_error then
 								a_cursor.go_after
-								report_compile_error (a_property_set.error_message)
+								create an_error.make_from_string (a_property_set.error_message, Gexslt_eiffel_type_uri, "OUTPUT_PROPERTY", Static_error)
+								report_compile_error (an_error)
 							else
 								a_fingerprint_list.put_last (a_fingerprint)
 							end
@@ -227,9 +236,10 @@ feature -- Element change
 					compile_children (an_executable, last_generated_instruction)
 				end
 			else
-				a_message := STRING_.concat ("XT1460: Output definition named '", shared_name_pool.display_name_from_name_code (output_fingerprint))
+				a_message := STRING_.concat ("Output definition named '", shared_name_pool.display_name_from_name_code (output_fingerprint))
 				a_message := STRING_.appended_string (a_message, "' by the format attribute of xsl:result-document has not been defined.")
-				report_compile_error (a_message)
+				create an_error.make_from_string (a_message, "", "XT1460", Static_error)
+				report_compile_error (an_error)
 			end
 		end
 

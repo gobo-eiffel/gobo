@@ -21,6 +21,10 @@ inherit
 			reduced_definition
 		end
 
+	XM_XPATH_STANDARD_NAMESPACES
+
+	XM_XPATH_ERROR_TYPES
+
 	KL_IMPORTED_STRING_ROUTINES
 
 	XM_UNICODE_CHARACTERS_1_1
@@ -94,6 +98,7 @@ feature {NONE} -- Implementation
 			a_comparer: KL_COMPARATOR [XM_XPATH_ITEM]
 			a_base_collator: ST_COLLATOR
 			a_role: XM_XPATH_ROLE_LOCATOR
+			an_error: XM_XPATH_ERROR_VALUE
 		do
 			if collator /= Void then
 				create {XM_XSLT_TEXT_COMPARER} comparer.make_from_collator (collator)
@@ -103,7 +108,8 @@ feature {NONE} -- Implementation
 				else
 					a_message := STRING_.concat ("Language '", language)
 					a_message := STRING_.appended_string (a_message, "' is not supported by this implementation.")
-					a_context.transformer.report_fatal_error (a_message, Void)
+					create an_error.make_from_string (a_message, Gexslt_eiffel_type_uri, "UNSUPPORTED_LANGUAGE_FOR_SORT", Static_error)
+					a_context.transformer.report_fatal_error (an_error, Void)
 					is_error := True
 				end
 				if not is_error then
@@ -121,10 +127,12 @@ feature {NONE} -- Implementation
 							elseif is_qname (data_type) then
 								a_message := STRING_.concat ("QName '", data_type)
 								a_message := STRING_.appended_string (a_message, "' is not supported by this implementation.")
-								a_context.transformer.report_fatal_error (a_message, Void)
+								create an_error.make_from_string (a_message, Gexslt_eiffel_type_uri, "UNSUPPORTED_DATA_TYPE_FOR_SORT", Static_error)
+								a_context.transformer.report_fatal_error (an_error, Void)
 								is_error := True
 							else
-								a_context.transformer.report_fatal_error ("data-type on xsl:sort must be 'text' or 'number' or a QName", Void)
+								create an_error.make_from_string ("data-type on xsl:sort must be 'text' or 'number' or a QName", "", "XT0290", Static_error)
+								a_context.transformer.report_fatal_error (an_error, Void)
 								is_error := True
 							end
 						end
@@ -141,7 +149,9 @@ feature {NONE} -- Implementation
 		require
 			base_collator_not_void: a_base_collator /= Void
 			no_previous_error: not is_error
-			context_not_void: a_context /= Void	
+			context_not_void: a_context /= Void
+		local
+			an_error: XM_XPATH_ERROR_VALUE
 		do
 			if STRING_.same_string (case_order, "#default") then
 				create {XM_XSLT_TEXT_COMPARER} Result.make_from_collator (a_base_collator)
@@ -150,7 +160,8 @@ feature {NONE} -- Implementation
 			elseif STRING_.same_string (case_order, "upper-first") then
 				todo ("case_order_comparer (ST_COLLATOR support needed)", True)
 			else
-				a_context.transformer.report_fatal_error ("case-order must be 'lower-first' or 'upper-first'", Void)
+				create an_error.make_from_string ("case-order must be 'lower-first' or 'upper-first'", Gexslt_eiffel_type_uri, "INVALID_CASE_ORDER", Static_error)
+				a_context.transformer.report_fatal_error (an_error, Void)
 				is_error := True
 			end
 		ensure
@@ -162,14 +173,17 @@ feature {NONE} -- Implementation
 		require
 			base_comparer_not_void: a_base_comparer /= Void
 			no_previous_error: not is_error
-			context_not_void: a_context /= Void	
+			context_not_void: a_context /= Void
+		local
+			an_error: XM_XPATH_ERROR_VALUE
 		do
 			if STRING_.same_string (order, "ascending") then
 				Result := a_base_comparer
 			elseif STRING_.same_string (order, "descending") then
 				create {XM_XSLT_DESCENDING_COMPARER} Result.make (a_base_comparer)
 			else
-				a_context.transformer.report_fatal_error ("order must be 'ascending' or 'descending'", Void)
+				create an_error.make_from_string ("order must be 'ascending' or 'descending'", Gexslt_eiffel_type_uri, "INVALID_ORDER", Static_error)
+				a_context.transformer.report_fatal_error (an_error, Void)
 				is_error := True
 			end
 		ensure

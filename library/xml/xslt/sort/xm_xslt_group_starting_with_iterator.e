@@ -72,6 +72,7 @@ feature -- Cursor movement
 		local
 			a_node: XM_XPATH_NODE
 			next_group_reached: BOOLEAN
+			an_error: XM_XPATH_ERROR_VALUE
 		do
 			index := index + 1
 			create current_members.make_default
@@ -81,7 +82,8 @@ feature -- Cursor movement
 					item := population.item
 					a_node ?= item
 					if a_node = Void then
-						transformer.report_fatal_error ("XT1120: Member of group-starting-with population is not a node.", locator)
+						create an_error.make_from_string ("Member of group-starting-with population is not a node.", "", "XT1120", Dynamic_error)
+						transformer.report_fatal_error (an_error, locator)
 					end
 				end
 			else
@@ -99,7 +101,8 @@ feature -- Cursor movement
 					next_candidate := population.item
 					a_node ?= next_candidate
 					if a_node = Void then
-						transformer.report_fatal_error ("XT1120: Member of group-starting-with population is not a node.", locator)
+						create an_error.make_from_string ("Member of group-starting-with population is not a node.", "", "XT1120", Dynamic_error)
+						transformer.report_fatal_error (an_error, locator)
 					else
 						if key_pattern.matches (a_node, transformer) then
 							next_group_reached := True

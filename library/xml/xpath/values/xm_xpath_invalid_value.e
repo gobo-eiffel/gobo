@@ -32,16 +32,17 @@ feature {NONE} -- Initialization
 			error_set: error_value = an_error_value
 		end
 
-	make_from_string (a_string, an_error_code: STRING; an_error_type: INTEGER) is
+	make_from_string (a_string, a_namespace_uri, an_error_code: STRING; an_error_type: INTEGER) is
 			-- Create from `a_string'.
 		require
-			valid_error_code: an_error_code /= Void and then is_valid_error_code (an_error_code)
+			valid_error_code: an_error_code /= Void
+			namespace_uri_not_void: a_namespace_uri /= Void
 			valid_error_type: an_error_type = Static_error or an_error_type = Type_error or an_error_type = Dynamic_error
 			string_not_void: a_string /= Void and then a_string.count > 0
 		do
-			set_last_error_from_string (a_string, an_error_code, an_error_type)
+			set_last_error_from_string (a_string, a_namespace_uri, an_error_code, an_error_type)
 		ensure
-			item_set: error_value.item /= Void and then STRING_.same_string (error_value.item.string_value, a_string)
+			description_set: error_value /= Void and then error_value.description /= Void and then STRING_.same_string (error_value.description, a_string)
 			code_set: error_value.code = an_error_code
 			type_set: error_value.type = an_error_type
 		end

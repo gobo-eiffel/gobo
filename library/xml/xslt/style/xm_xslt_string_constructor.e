@@ -47,11 +47,13 @@ feature -- Element change
 			a_message: STRING
 			a_child_iterator: XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_NODE]
 			a_node: XM_XPATH_NODE
+			an_error: XM_XPATH_ERROR_VALUE
 		do
 			if select_expression /= Void and then has_child_nodes then
 				a_message := STRING_.appended_string ("An ", node_name)
 				a_message := STRING_.appended_string (a_message, " element with a select attribute must be empty")
-				report_compile_error (a_message)
+				create an_error.make_from_string (a_message, "", "XT0010", Static_error)
+				report_compile_error (an_error)
 			else
 				a_child_iterator := new_axis_iterator (Child_axis)
 				a_child_iterator.start

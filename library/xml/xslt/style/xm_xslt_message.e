@@ -53,6 +53,7 @@ feature -- Element change
 			a_name_code: INTEGER
 			an_expanded_name, a_terminate_attribute, a_select_attribute: STRING
 			a_string_value: XM_XPATH_STRING_VALUE
+			an_error: XM_XPATH_ERROR_VALUE
 		do
 			from
 				a_cursor := attribute_collection.name_code_cursor
@@ -81,14 +82,14 @@ feature -- Element change
 				generate_expression (a_select_attribute)
 				select_expression := last_generated_expression
 				if select_expression.is_error then
-					report_compile_error (select_expression.error_value.error_message)
+					report_compile_error (select_expression.error_value)
 				end
 			end
 			if a_terminate_attribute = Void then a_terminate_attribute := "no" end
 			generate_attribute_value_template (a_terminate_attribute, static_context)
 			terminate := last_generated_expression
 			if terminate.is_error then
-				report_compile_error (terminate.error_value.error_message)
+				report_compile_error (terminate.error_value)
 			end
 			a_string_value ?= terminate
 			if a_string_value /= Void then
@@ -98,7 +99,8 @@ feature -- Element change
 				elseif STRING_.same_string (a_terminate_attribute, "yes") then
 					-- OK
 				else
-					report_compile_error ("xsl:message terminate attribute must be 'yes' or 'no'")
+					create an_error.make_from_string ("xsl:message terminate attribute must be 'yes' or 'no'", "", "XT0020", Static_error)
+					report_compile_error (an_error)
 				end
 			end
 			attributes_prepared := True

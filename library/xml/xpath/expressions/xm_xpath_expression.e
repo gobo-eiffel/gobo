@@ -16,6 +16,8 @@ inherit
 
 	XM_XPATH_TYPE
 
+	XM_XPATH_STANDARD_NAMESPACES
+
 	XM_XPATH_STATIC_PROPERTY
 
 	XM_XPATH_PROMOTION_ACTIONS
@@ -123,15 +125,16 @@ feature -- Status setting
 			in_error: is_error
 		end
 	
-	set_last_error_from_string (a_message, a_code: STRING; an_error_type: INTEGER) is
+	set_last_error_from_string (a_message, a_namespace_uri, a_code: STRING; an_error_type: INTEGER) is
 			-- Set `error_value'.
 		require
 			valid_error_type: an_error_type = Static_error or an_error_type = Type_error or an_error_type = Dynamic_error
 			message_not_void: a_message /= Void and then a_message.count > 0
-			valid_code: a_code /= Void and then is_valid_error_code (a_code)
+			namespace_uri_not_void: a_namespace_uri /= Void
+			code_not_void: a_code /= Void
 			not_in_error: not is_error			
 		do
-			create error_value.make_from_string (a_message, a_code, an_error_type)
+			create error_value.make_from_string (a_message, a_namespace_uri, a_code, an_error_type)
 		ensure
 			valid_error: error_value /= Void
 				and then STRING_.same_string (error_value.code, a_code)
@@ -344,29 +347,46 @@ feature -- Evaluation
 			--  which is a wrapper around an iterator over the value of the expression.
 		require
 			expression_not_in_error: not is_error
+		local
+			a_value: XM_XPATH_VALUE
+			a_variable_reference: XM_XPATH_VARIABLE_REFERENCE
 		do
-			if a_context = Void then
-
-				-- We are evaluating a value
-				
-				eagerly_evaluate (Void)
-			elseif not cardinality_allows_many then
-				
-				-- Singletons are always evaluated eagerly
-				
-				eagerly_evaluate (a_context)
-			elseif depends_upon_position or else depends_upon_last
-				or else depends_upon_current_item or else depends_upon_current_group then
-				
-				-- We can't save these values in the closure, so we evaluate
-				-- the expression now if they are needed
-				
-				eagerly_evaluate (Void)
+			a_value ?= Current
+			if a_value /= Void then
+				last_evaluation := a_value
 			else
+				a_variable_reference ?= Current
+				if a_variable_reference /= Void then
+
+					-- We always dereference the variable reference; this will often
+					-- do lazy evaluation of the expression to which the variable is bound
+					
+					a_variable_reference.eagerly_evaluate (a_context)
+				else
+					check
+						context_not_void: a_context /= Void
+						-- as we are not evaluating a variable
+					end
+					if not cardinality_allows_many then
 				
-				-- Create a Closure, a wrapper for the expression and its context
+						-- Singletons are always evaluated eagerly
 				
-				last_evaluation := expression_factory.created_closure (Current, a_context)
+						eagerly_evaluate (a_context)
+					elseif depends_upon_position or else depends_upon_last
+						or else depends_upon_current_item or else depends_upon_current_group then
+						-- TODO when implemented or else depends_upon_regexp_group then
+				
+						-- We can't save these values in the closure, so we evaluate
+						-- the expression now if they are needed
+						
+						eagerly_evaluate (a_context)
+					else
+				
+						-- Create a Closure, a wrapper for the expression and its context
+				
+						last_evaluation := expression_factory.created_closure (Current, a_context)
+					end
+				end
 			end
 		ensure
 			evaluated: last_evaluation /= Void

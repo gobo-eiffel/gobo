@@ -110,6 +110,7 @@ feature -- Element change
 			a_cursor: DS_ARRAYED_LIST_CURSOR [INTEGER]
 			a_name_code: INTEGER
 			an_expanded_name, a_name_attribute, a_mode_attribute, a_priority_attribute, a_match_attribute, an_as_attribute: STRING
+			an_error: XM_XPATH_ERROR_VALUE
 		do
 			from
 				a_cursor := attribute_collection.name_code_cursor
@@ -155,7 +156,8 @@ feature -- Element change
 				end
 			end
 			if not any_compile_errors and then a_match_attribute = Void and then a_name_attribute = Void then
-				report_compile_error ("xsl:template must have a name or match attribute (or both)")
+				create an_error.make_from_string ("xsl:template must have a name or match attribute (or both)", "", "XT0010", Static_error)
+				report_compile_error (an_error)
 			end
 			if an_as_attribute /= Void then
 				generate_sequence_type (an_as_attribute)
@@ -295,18 +297,21 @@ feature {NONE} -- Implementation
 			mode_tokens: DS_LIST [STRING]
 			a_cursor: DS_LIST_CURSOR [STRING]
 			a_mode: STRING
+			an_error: XM_XPATH_ERROR_VALUE
 		do
 			if a_mode_attribute = Void then
 				create mode_name_codes.make (1)
 				mode_name_codes.put_last (Default_mode)
 			else
 				if is_match_attribute_void then
-					report_compile_error ("The mode attribute must be absent if the match attribute is absent")
+					create an_error.make_from_string ("The mode attribute must be absent if the match attribute is absent", "", "XT0010", Static_error)
+					report_compile_error (an_error)
 				else
 					create a_splitter.make
 					mode_tokens := a_splitter.split (a_mode_attribute)
 					if mode_tokens.count = 0 then
-						report_compile_error ("The mode attribute must not be empty")
+						create an_error.make_from_string ("The mode attribute must not be empty", "", "XT0020", Static_error)
+						report_compile_error (an_error)
 					else
 						create mode_name_codes.make (mode_tokens.count)
 						from
@@ -322,20 +327,24 @@ feature {NONE} -- Implementation
 								mode_name_codes.put_last (Default_mode)
 							elseif STRING_.same_string (a_mode, "#all") then
 								if mode_tokens.count /= 1 then
-									report_compile_error ("mode='#all' cannot be combined with other modes")
+									create an_error.make_from_string ("mode='#all' cannot be combined with other modes", "", "XT0550", Static_error)
+									report_compile_error (an_error)
 								else
 									mode_name_codes.put_last (All_modes)
 								end
 							else
 								generate_name_code (a_mode)
 								if last_generated_name_code = -1 then
-									report_compile_error (error_message)
+									report_compile_error (name_code_error_value)
 									a_cursor.go_after
 								else
 									mode_name_codes.put_last (last_generated_name_code)
 								end
 							end
 							a_cursor.forth
+						end
+						if not any_compile_errors then
+							check_all_modes_distinct
 						end
 					end
 				end
@@ -346,17 +355,20 @@ feature {NONE} -- Implementation
 
 	prepare_name_attribute (a_name_attribute: STRING) is
 			-- Prepare name attribute
+		local
+			an_error: XM_XPATH_ERROR_VALUE
 		do
 			if a_name_attribute /= Void then
 				if is_qname (a_name_attribute) then
 					generate_name_code (a_name_attribute)
 					if last_generated_name_code = -1 then
-						report_compile_error (error_message)
+						report_compile_error (name_code_error_value)
 					else
 						internal_fingerprint := fingerprint_from_name_code (last_generated_name_code)
 					end
 				else
-					report_compile_error ("Template 'name' attribute must be a QName")
+					create an_error.make_from_string ("Template 'name' attribute must be a QName", "", "XT0020", Static_error)
+					report_compile_error (an_error)
 				end
 			end
 		end
@@ -366,11 +378,13 @@ feature {NONE} -- Implementation
 		local
 			a_message: STRING
 			a_decimal_parser: MA_DECIMAL_TEXT_PARSER
+			an_error: XM_XPATH_ERROR_VALUE
 		do
 			if a_priority_attribute /= Void then
 				is_priority_specified := True
 				if is_match_attribute_void then
-					report_compile_error ("The priority attribute must be absent if the match attribute is absent")
+					create an_error.make_from_string ("The priority attribute must be absent if the match attribute is absent", "", "XT0010", Static_error)
+					report_compile_error (an_error)
 				else
 					create a_decimal_parser
 					a_decimal_parser.parse (a_priority_attribute)
@@ -379,9 +393,37 @@ feature {NONE} -- Implementation
 					else
 						a_message := STRING_.appended_string ("Invalid numeric value for priority (", a_priority_attribute)
 						a_message := STRING_.appended_string (a_message, ")")
-						report_compile_error (a_message)
+						create an_error.make_from_string (a_message, "", "XT0020", Static_error)
+						report_compile_error (an_error)
 					end
 				end
+			end
+		end
+
+	check_all_modes_distinct is
+			-- Check no duplicate mode names.
+		local
+			a_set: DS_HASH_SET [INTEGER]
+			a_cursor: DS_ARRAYED_LIST_CURSOR [INTEGER]
+			a_name_code: INTEGER
+			an_error: XM_XPATH_ERROR_VALUE
+		do
+			create a_set.make (mode_name_codes.count)
+			from
+				a_cursor := mode_name_codes.new_cursor; a_cursor.start
+			variant
+				mode_name_codes.count + 1 - a_cursor.index
+			until
+				any_compile_errors or else a_cursor.after
+			loop
+				a_name_code := a_cursor.item
+				if a_set.has (a_name_code) then
+					create an_error.make_from_string ("Mode names must all be distinct", "", "XT0550", Static_error)
+					report_compile_error (an_error)
+				else
+					a_set.put (a_name_code)
+				end
+				a_cursor.forth
 			end
 		end
 

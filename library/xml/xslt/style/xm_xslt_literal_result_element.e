@@ -37,6 +37,7 @@ feature -- Element change
 			-- Set the attribute list for the element.
 		local
 			an_index, a_name_code, a_uri_code, a_fingerprint: INTEGER
+			an_error: XM_XPATH_ERROR_VALUE
 		do
 			create attribute_name_codes.make (number_of_attributes)
 			create attribute_values.make (number_of_attributes)
@@ -62,10 +63,10 @@ feature -- Element change
 						elseif a_fingerprint = Xslt_xpath_default_namespace_type_code then -- already dealt with
 						elseif a_fingerprint = Xslt_default_collation_type_code then -- already dealt with
 						elseif a_fingerprint = Xslt_type_type_code then -- deal with this later
-						elseif a_fingerprint = Xslt_validation_type_code then -- deal with this later
-			
+						elseif a_fingerprint = Xslt_validation_type_code then -- deal with this later			
 						else
-							report_compile_error (STRING_.appended_string ("Unknown XSL attribute ", shared_name_pool.display_name_from_name_code (a_name_code)))
+							create an_error.make_from_string (STRING_.concat ("Unknown XSL attribute ", shared_name_pool.display_name_from_name_code (a_name_code)), "", "XT0090", Static_error)
+							report_compile_error (an_error)
 						end
 					else
 						attribute_name_codes.put_last (a_name_code)
@@ -253,13 +254,16 @@ feature {NONE} -- Implementation
 			-- Validate a top-level LRE.
 		require
 			top_level_element: is_top_level
+		local
+			an_error: XM_XPATH_ERROR_VALUE
 		do
 
 			-- A top-level element can never be a "real" literal result element,
 			-- but this class gets used for unknown elements found at the top level
 
 			if an_element_uri_code = 0 then
-				report_compile_error ("Top level elements must have a non-null namespace URI")
+				create an_error.make_from_string ("Top level elements must have a non-null namespace URI", "", "XT0130", Static_error)
+				report_compile_error (an_error)
 			end
 		end
 
@@ -356,6 +360,7 @@ feature {NONE} -- Implementation
 			-- Validate special attributes.
 		local
 			a_use_attribute_sets_attribute, a_type_attribute, a_validation_attribute: STRING
+			an_error: XM_XPATH_ERROR_VALUE
 		do
 			a_use_attribute_sets_attribute := attribute_value (Xslt_use_attribute_sets_type_code)
 			if a_use_attribute_sets_attribute /= Void then
@@ -363,13 +368,15 @@ feature {NONE} -- Implementation
 			end
 			a_type_attribute := attribute_value (Xslt_type_type_code)
 			if a_type_attribute /= Void then
-				report_compile_error ("The xsl:type attribute is available only with a schema-aware XSLT processor")
+				create an_error.make_from_string ("The type attribute is available only with a schema-aware XSLT processor", "", "XT1660", Static_error)
+				report_compile_error (an_error)
 			end
 			a_validation_attribute := attribute_value (Xslt_validation_type_code)
 			if a_validation_attribute /= Void then
 				validation := validation_code (a_validation_attribute)
 				if validation /= Validation_strip then
-					report_compile_error ("To perform validation, a schema-aware XSLT processor is needed")
+					create an_error.make_from_string ("To perform validation, a schema-aware XSLT processor is needed", "", "XT1660", Static_error)
+					report_compile_error (an_error)
 				end
 			else
 				validation := containing_stylesheet.default_validation

@@ -467,7 +467,7 @@ feature -- Cardinality
 				Result := "*"
 			elseif cardinality_allows_zero and then cardinality_allows_one then
 				Result := "?"
-			elseif cardinality_exactly_one then
+			elseif cardinality_exactly_one or else cardinality_allows_zero then
 				Result := ""
 			else
 					check
@@ -723,6 +723,26 @@ feature -- Setting special properties
 		ensure
 			-- TODO - equality check set: special_properties = other.special_properties
 			special_properties_computed: are_special_properties_computed
+		end
+
+	mask_special_properties (other: XM_XPATH_STATIC_PROPERTY) is
+			-- `And' `special_properties' from `other'.
+		require
+			special_properties_computed: are_special_properties_computed
+			other_special_properties: other /= Void and then other.are_special_properties_computed
+		local
+			an_index: INTEGER
+		do
+			from
+				an_index := 1
+			variant
+				special_properties.count + 1 - an_index
+			until
+				an_index > special_properties.count
+			loop
+				special_properties.put (other.special_properties.item (an_index) and special_properties.item (an_index), an_index)
+				an_index := an_index + 1
+			end
 		end
 
 	set_special_properties (properties: ARRAY [BOOLEAN]) is

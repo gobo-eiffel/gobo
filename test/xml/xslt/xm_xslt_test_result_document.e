@@ -53,7 +53,7 @@ feature -- Test
 			create another_uri_source.make ("./data/document.xhtml")
 			create an_output
 			an_output.set_output_to_string
-			create a_result.make (an_output, "string:")
+			create a_result.make (an_output, "string:/")
 			a_transformer.transform (another_uri_source, a_result)
 			assert ("Transform successfull", not a_transformer.is_error)
 			assert ("Toc", a_configuration.output_resolver.output_destinations.item ("string:/toc.html").stream.last_output.count = 599)
@@ -89,7 +89,7 @@ feature -- Test
 			create another_uri_source.make ("./data/document.xhtml")
 			create an_output
 			an_output.set_output_to_string
-			create a_result.make (an_output, "string:")
+			create a_result.make (an_output, "string:/")
 			a_transformer.transform (another_uri_source, a_result)
 			assert ("Transform not successfull", a_transformer.is_error)
 		end
@@ -121,7 +121,7 @@ feature -- Test
 			create another_uri_source.make ("./data/document.xhtml")
 			create an_output
 			an_output.set_output_to_string
-			create a_result.make (an_output, "string:")
+			create a_result.make (an_output, "string:/")
 			a_transformer.transform (another_uri_source, a_result)
 			assert ("Transform not successfull", a_transformer.is_error)
 		end

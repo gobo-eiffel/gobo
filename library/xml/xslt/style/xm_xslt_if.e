@@ -131,7 +131,7 @@ feature -- Element change
 				
 				a_boolean_value := a_value.effective_boolean_value (Void)
 				if a_boolean_value.is_error then
-					report_compile_error (a_boolean_value.error_value.error_message)
+					report_compile_error (a_boolean_value.error_value)
 				else
 					if a_boolean_value.value then
 						create a_block.make_if (an_executable)

@@ -68,13 +68,9 @@ feature -- Status report
 		local
 			a_string: STRING
 		do
-			a_string := STRING_.appended_string (indentation (a_level), "isLast()")
+			a_string := STRING_.appended_string (indentation (a_level), "isLast(" +condition.out + ")")
 			std.error.put_string (a_string)
-			if is_error then
-				std.error.put_string (" in error%N")
-			else
-				std.error.put_new_line
-			end
+			std.error.put_new_line
 		end
 
 feature -- Optimization
@@ -93,7 +89,7 @@ feature -- Evaluation
 			if a_context.is_context_position_set then
 				create {XM_XPATH_BOOLEAN_VALUE} last_evaluated_item.make (condition = a_context.is_at_last)
 			else
-				create {XM_XPATH_INVALID_ITEM} last_evaluated_item.make_from_string ("Context position is not set", "XP0002", Dynamic_error)
+				create {XM_XPATH_INVALID_ITEM} last_evaluated_item.make_from_string ("Context position is not set", Xpath_errors_uri, "XP0002", Dynamic_error)
 			end
 		end
 

@@ -85,7 +85,13 @@ feature {NONE} -- Initialization
 	make_as_view (an_extent: XM_XPATH_SEQUENCE_EXTENT; a_start, a_length: INTEGER) is
 			-- TODO
 		do
-			todo ("make-as-view" ,False)
+			make_from_linear (an_extent)
+			if a_start > 1 then
+				prune_first (a_start - 1)
+			end
+			if a_length < count then
+				keep_first (a_length)
+			end
 		end
 
 	make_from_list (a_list: DS_LIST [XM_XPATH_ITEM]) is

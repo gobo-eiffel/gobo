@@ -161,4 +161,13 @@ feature -- Conversions
 		deferred
 		end
 
+	floor: like Current is
+			-- Value rounded towards minus infinity;
+			-- Implements Xpath floor().
+		deferred
+		ensure
+			same_infinity: old is_infinite implies Result.is_infinite -- and then same sign
+			same_nan: old is_nan implies Result.is_nan
+		end
+
 end

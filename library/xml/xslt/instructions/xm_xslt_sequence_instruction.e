@@ -154,7 +154,7 @@ feature -- Optimization
 					create a_type_checker
 					a_type_checker.static_type_check (a_context, select_expression, required_type, False, a_role)
 					if a_type_checker.is_static_type_check_error then
-						set_last_error_from_string (a_type_checker.static_type_check_error_message, "XT0320", Type_error)
+						set_last_error_from_string (a_type_checker.static_type_check_error_message, "", "XT0320", Type_error)
 					else
 						set_select_expression (a_type_checker.checked_expression)
 					end
@@ -186,7 +186,7 @@ feature -- Optimization
 					an_instruction ?= a_cursor.item
 					if an_instruction = Void then
 						a_cursor.go_after
-						set_last_error_from_string ("BUG: Children of an XM_XSLT_EXPRESSION_INSTRUCTION must themselves be Expressions", "FOER0000", Type_error)
+						set_last_error_from_string ("BUG: Children of an XM_XSLT_EXPRESSION_INSTRUCTION must themselves be Expressions", Xpath_errors_uri, "FOER0000", Type_error)
 					else
 						an_instruction.promote (an_offer)
 						if an_instruction.was_expression_replaced then
@@ -214,7 +214,7 @@ feature -- Optimization
 			-- An iterator over the values of a sequence
 		do
 			if children.count > 0 then
-				set_last_error_from_string ("Cannot process xsl:sequence with children as an expression", "FOER0000", Type_error)
+				set_last_error_from_string ("Cannot process xsl:sequence with children as an expression", Xpath_errors_uri, "FOER0000", Type_error)
 			else
 				Result := select_expression.iterator (a_context)
 			end
@@ -321,7 +321,7 @@ feature {XM_XSLT_EXPRESSION_INSTRUCTION} -- Local
 					an_expression ?= a_cursor.item
 					if an_expression = Void then
 						a_cursor.go_after
-						set_last_error_from_string ("BUG: Children of an XM_XSLT_EXPRESSION_INSTRUCTION must themselves be Expressions", "FOER0000", Type_error)
+						set_last_error_from_string ("BUG: Children of an XM_XSLT_EXPRESSION_INSTRUCTION must themselves be Expressions", Xpath_errors_uri, "FOER0000", Type_error)
 					else
 						Result.put_last (an_expression)
 					end
