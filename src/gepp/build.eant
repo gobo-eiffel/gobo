@@ -15,11 +15,18 @@
 	<target name="help">
 		<echo message="usage:"/>
 		<echo message="   geant install"/>
+		<echo message="   geant scanner"/>
+		<echo message="   geant parser"/>
 		<echo message="   geant compile"/>
 		<echo message="   geant compile_ise"/>
 		<echo message="   geant compile_hact"/>
 		<echo message="   geant compile_se"/>
 		<echo message="   geant compile_ve"/>
+		<echo message="   geant compile_debug"/>
+		<echo message="   geant compile_debug_ise"/>
+		<echo message="   geant compile_debug_hact"/>
+		<echo message="   geant compile_debug_se"/>
+		<echo message="   geant compile_debug_ve"/>
 		<echo message="   geant clean"/>
 		<echo message="   geant clobber"/>
 	</target>
@@ -29,7 +36,27 @@
 			Install ${system} directory.
 		</description>
 
+		<geant target="scanner"/>
+		<geant target="parser"/>
+		<gexace command="build" command_options="ise"/>
+		<gexace command="build" command_options="hact"/>
+		<gexace command="build" command_options="se"/>
+		<gexace command="build" command_options="ve"/>
+	</target>
+
+	<target name="scanner" depend="init" dir="${GOBO}/src/${system}">
+		<description>
+			Generate scanner classes.
+		</description>
+
 		<geant target="gepp_scanner"/>
+	</target>
+
+	<target name="parser" depend="init" dir="${GOBO}/src/${system}">
+		<description>
+			Generate parser classes.
+		</description>
+
 		<geant target="gepp_parser"/>
 	</target>
 
@@ -79,19 +106,69 @@
 		<se ace="se.ace"/>
 	</target>
 
+	<target name="compile_debug" depend="init">
+		<description>
+			Compile '${system}' in debug mode.
+			Use Eiffel compiler set in ${GOBO_EIFFEL}
+			or 'se' if this variable is not defined.
+		</description>
+
+		<geant target="compile_debug_${eiffel}"/>
+	</target>
+
+	<target name="compile_debug_ise" depend="init" dir="${GOBO}/src/${system}">
+		<description>
+			Compile '${system}' with ISE Eiffel in debug mode.
+		</description>
+
+		<gexace command="build" command_options="ise">
+			<define name="DEBUG" value="true"/>
+		</gexace>
+		<ise ace="ise.ace" system="${system}" finalize="false" finish_freezing="true"/>
+	</target>
+
+	<target name="compile_debug_hact" depend="init" dir="${GOBO}/src/${system}">
+		<description>
+			Compile '${system}' with Halstenbach Eiffel in debug mode.
+		</description>
+
+		<gexace command="build" command_options="hact">
+			<define name="DEBUG" value="true"/>
+		</gexace>
+		<hact ace="hact.ace" system="${system}" finalize="false" fish="true"/>
+	</target>
+
+	<target name="compile_debug_ve" depend="init" dir="${GOBO}/src/${system}">
+		<description>
+			Compile '${system}' with Visual Eiffel in debug mode.
+		</description>
+
+		<gexace command="build" command_options="ve">
+			<define name="DEBUG" value="true"/>
+		</gexace>
+		<ve esd="ve.esd"/>
+	</target>
+
+	<target name="compile_debug_se" depend="init" dir="${GOBO}/src/${system}">
+		<description>
+			Compile '${system}' with SmallEiffel in debug mode.
+		</description>
+
+		<gexace command="build" command_options="se">
+			<define name="DEBUG" value="true"/>
+		</gexace>
+		<se ace="se.ace"/>
+	</target>
+
 	<target name="clean" depend="init" dir="${GOBO}/src/${system}">
 		<description>
 			Remove intermediary generated files.
 		</description>
 
 		<ise clean="${system}"/>
-		<delete file="ise.ace"/>
 		<hact clean="${system}"/>
-		<delete file="hact.ace"/>
 		<se clean="${system}"/>
-		<delete file="se.ace"/>
 		<ve clean="${system}"/>
-		<delete file="ve.esd"/>
 	</target>
 
 	<target name="clobber" depend="init" dir="${GOBO}/src/${system}">
@@ -103,7 +180,13 @@
 		<delete file="gepp_scanner.e"/>
 		<delete file="gepp_parser.e"/>
 		<delete file="gepp_tokens.e"/>
+		<delete file="ise.ace"/>
+		<delete file="hact.ace"/>
+		<delete file="se.ace"/>
+		<delete file="ve.esd"/>
 		<delete file="${system}${exe}"/>
+		<delete file="${system}.melted"/>
+		<delete file="${system}.h2o"/>
 	</target>
 
 
