@@ -34,7 +34,7 @@ feature -- Processing
 			a_filename: STRING
 			a_file: like INPUT_STREAM_TYPE
 			a_parser: ET_LACE_PARSER
-			an_error_handler: ET_ERROR_HANDLER
+			an_error_handler: ET_LACE_ERROR_HANDLER
 		do
 			if Arguments.argument_count /= 1 then
 				std.error.put_string ("usage: gelint filename%N")
@@ -56,7 +56,6 @@ feature -- Processing
 					std.error.put_string ("%'%N")
 				end
 			end
-			-- io.readline
 		end
 
 	process_universe (a_universe: ET_UNIVERSE) is
