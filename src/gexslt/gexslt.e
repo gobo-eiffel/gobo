@@ -129,6 +129,12 @@ feature -- Status report
 	initial_mode_name: STRING
 			-- Name of initial mode
 
+	is_tracing: BOOLEAN
+			-- Is tracing requested?
+
+	is_timed_tracing: BOOLEAN
+			-- Are trace timings requested?
+
 feature -- Setting
 
 	set_string_parameter (a_string_parameter_option: STRING) is
@@ -382,7 +388,8 @@ feature -- Error handling
 									  "       --prefer-system%N" +
 									  "       --no-default-catalog%N" +
 									  "       --catalog-debug-level=[0-10]%N" +
-									  "       --output=local-file-name%N" +
+									  "       --trace=local-file-name%N" +
+									  "       --timed-trace=local-file-name%N" +
 									  "       --tiny-tree%N" +
 									  "       --mode=[{namespace-uri}]local-name%N" +
 									  "       --template=[{namespace-uri}]local-name%N" +									  
@@ -396,6 +403,9 @@ feature {NONE} -- Implementation
 
 	configuration: XM_XSLT_CONFIGURATION
 			-- Configuration
+
+	trace_file: KI_TEXT_OUTPUT_FILE
+			-- File fro trace output
 
 	process_option (an_option: STRING) is
 			-- Process `an_option'.
@@ -467,8 +477,24 @@ feature {NONE} -- Implementation
 				else
 					set_errors_and_warnings (an_option.substring (21, an_option.count))
 				end
-			elseif an_option.substring_index ("trace-destination=", 1) = 1 and then an_option.count > 18 then
-				set_trace_file (an_option.substring (19, an_option.count))
+			elseif an_option.substring_index ("trace", 1) = 1 then
+				is_tracing := True
+				is_timed_tracing := False
+				if an_option.count > 6 and then an_option.item (6) = '=' then
+					set_trace_file (an_option.substring (7, an_option.count))
+				elseif an_option.count > 5 then
+					report_usage_message
+					Exceptions.die (1)
+				end
+			elseif an_option.substring_index ("timed-trace", 1) = 1 then
+				is_tracing := True
+				is_timed_tracing := True
+				if an_option.count > 12 and then an_option.item (12) = '=' then
+					set_trace_file (an_option.substring (13, an_option.count))
+				elseif an_option.count > 11 then
+					report_usage_message
+					Exceptions.die (1)
+				end				
 			elseif an_option.substring_index ("catalog-debug-level=", 1) = 1 and then an_option.count > 20 then
 				a_number := an_option.substring (21, an_option.count)
 				if a_number.is_integer then
@@ -547,6 +573,7 @@ feature {NONE} -- Implementation
 			conformance.set_basic_xslt_processor
 			configuration.use_tiny_tree_model (is_tiny_tree_model)
 			configuration.set_line_numbering (is_line_numbering)
+			if is_tracing then set_trace_handler end
 			create a_stylesheet_uri.make (uris.item (1))
 			create a_stylesheet.make (configuration)
 			a_stylesheet.prepare (a_stylesheet_uri)
@@ -578,6 +605,9 @@ feature {NONE} -- Implementation
 				if a_stream /= Void then
 					a_stream.close
 				end
+				if trace_file /= Void then
+					trace_file.close
+				end				
 				if a_transformer.is_error then
 					Exceptions.die (3) -- the error listener has already reported the error.message
 				end
@@ -663,12 +693,10 @@ feature {NONE} -- Implementation
 			-- Set trace output to `a_filename'.
 		require
 			file_name_not_void: a_filename /= Void
-		local
-			a_file: KI_TEXT_OUTPUT_FILE
 		do
-			a_file := file_system.new_output_file (a_filename)
-			a_file.open_write
-			error_handler.set_info_file (a_file)
+			trace_file := file_system.new_output_file (a_filename)
+			trace_file.open_write
+			error_handler.set_info_file (trace_file)
 		end
 
 	set_warning_threshold (a_warning_threshold: STRING) is
@@ -695,6 +723,17 @@ feature {NONE} -- Implementation
 				report_general_message ("Error threshold must be an integer")
 				Exceptions.die (1)				
 			end
+		end
+
+	set_trace_handler is
+			-- Create and set trace listener.
+		require
+			tracing_requested: is_tracing
+		local
+			a_listener: XM_XSLT_DEFAULT_TRACE_LISTENER
+		do
+			create a_listener.make (error_handler, is_timed_tracing)
+			configuration.set_trace_listener (a_listener)
 		end
 
 invariant

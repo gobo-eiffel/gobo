@@ -337,8 +337,8 @@ feature -- Access
 			nearly_positive_arity: an_arity >= -1 -- -1 = any arity will do
 		local
 			a_root: XM_XSLT_STYLESHEET
-			a_top_level_element_list: DS_LINKED_LIST [XM_XSLT_STYLE_ELEMENT]
-			a_cursor: DS_LINKED_LIST_CURSOR [XM_XSLT_STYLE_ELEMENT]
+			a_top_level_element_list: DS_BILINKED_LIST [XM_XSLT_STYLE_ELEMENT]
+			a_cursor: DS_BILINKED_LIST_CURSOR [XM_XSLT_STYLE_ELEMENT]
 			a_function: XM_XSLT_FUNCTION
 		do
 
@@ -801,6 +801,27 @@ feature -- Status setting
 
 feature -- Creation
 
+	new_trace_instruction (an_instruction: XM_XSLT_INSTRUCTION): XM_XSLT_TRACE_INSTRUCTION is
+			-- newly created trace instruction
+		require
+			base_instruction_not_void: an_instruction /= Void
+		local
+			a_trace_instruction: XM_XSLT_TRACE_INSTRUCTION
+		do
+			a_trace_instruction ?= an_instruction
+			if a_trace_instruction /= Void then
+
+				-- this can happen, for example, after optimizing a compile-time xsl:if
+				
+				Result := a_trace_instruction
+			else
+				create Result.make (an_instruction)
+				set_additional_trace_properties (Result)
+			end
+		ensure
+			trace_instruction_not_void: Result /= Void
+		end
+
 	generate_attribute_value_template (an_avt_expression: STRING; a_static_context: XM_XSLT_EXPRESSION_CONTEXT) is
 			-- Generate an attribute-valued-template.
 			-- The static context may be altered as a result of parsing.
@@ -1011,6 +1032,14 @@ feature -- Creation
 		end
 
 feature -- Element change
+
+	set_additional_trace_properties (a_trace_instruction: XM_XSLT_TRACE_INSTRUCTION) is
+			-- Set additional properties on `a_trace_instruction'.
+		require
+			trace_instruction_not_void: a_trace_instruction /= Void
+		do
+			-- default does nothing
+		end
 
 	bind_variable (a_fingerprint: INTEGER) is
 			-- Bind variable to it's declaration.
@@ -1425,6 +1454,9 @@ feature -- Element change
 									module_registered: a_stylesheet.is_module_registered (a_style_element.system_id)
 								end
 								another_instruction.set_source_location (a_stylesheet.module_number (a_style_element.system_id), a_style_element.line_number)
+								if prepared_stylesheet.configuration.is_tracing then
+									another_instruction := a_style_element.new_trace_instruction (another_instruction)
+								end
 								an_instruction_list.put_last (another_instruction)
 							end
 						end
@@ -1490,9 +1522,9 @@ feature -- Element change
 		require
 			used_attribute_sets_not_void: used_sets /= Void
 		local
-			a_list: like a_usage_list
+			a_list: DS_ARRAYED_LIST [XM_XSLT_ATTRIBUTE_SET]
 			a_stylesheet: XM_XSLT_STYLESHEET
-			top_level_elements: DS_LINKED_LIST [XM_XSLT_STYLE_ELEMENT]
+			top_level_elements: DS_BILINKED_LIST [XM_XSLT_STYLE_ELEMENT]
 			a_splitter: ST_SPLITTER
 			an_attribute_set_list: DS_LIST [STRING]
 			a_cursor: DS_LIST_CURSOR [STRING]

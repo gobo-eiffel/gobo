@@ -16,7 +16,7 @@ inherit
 
 	XM_XSLT_STYLE_ELEMENT
 		redefine
-			make_style_element, validate, mark_tail_calls
+			make_style_element, validate, mark_tail_calls, set_additional_trace_properties
 		end
 
 	XM_XPATH_ROLE
@@ -184,6 +184,12 @@ feature -- Element change
 																												with_param_instructions (an_executable, False),
 																												with_param_instructions (an_executable, True),
 																												use_current_mode, use_tail_recursion, mode)
+		end
+
+	set_additional_trace_properties (a_trace_instruction: XM_XSLT_TRACE_INSTRUCTION) is
+			-- Set additional properties on `a_trace_instruction'.
+		do
+			a_trace_instruction.add_property (mode.name, "mode")
 		end
 	
 feature {NONE} -- Implementation

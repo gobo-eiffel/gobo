@@ -129,6 +129,9 @@ feature -- Access
 	current_receiver: XM_XSLT_SEQUENCE_RECEIVER
 			-- Receiver to which output is currently being written.
 
+	trace_listener: XM_XSLT_TRACE_LISTENER
+			-- Trace listener
+
 	error_listener: XM_XSLT_ERROR_LISTENER
 			-- Error listener
 
@@ -178,8 +181,11 @@ feature -- Access
 
 feature -- Status report
 
-	is_tracing: BOOLEAN
+	is_tracing: BOOLEAN is
 			-- Is tracing enabled?
+		do
+			Result := trace_listener /= Void
+		end
 
 	is_error: BOOLEAN
 			-- Has an error occured?
@@ -290,6 +296,7 @@ feature -- Creation
 				create a_node_factory
 				create {XM_XPATH_TREE_BUILDER} Result.make (a_node_factory)
 			end
+			Result.set_line_numbering (configuration.is_line_numbering)
 			create a_locator.make (a_parser)
 			Result.set_document_locator (a_locator)
 		ensure
@@ -643,6 +650,10 @@ feature -- Transformation
 				initial_template.process (Current)
 			end
 
+			if is_tracing then
+				trace_listener.stop_tracing
+			end
+
 			reset_output_destination (Void)
 		end
 		
@@ -722,15 +733,25 @@ feature -- Transformation
 						else
 							if some_tunnel_parameters /= Void and then some_tunnel_parameters.count > 0
 								or else a_node_handler.is_stack_frame_needed then
-								if is_tracing then todo ("apply_templates - tracing", True) end
 								bindery.open_stack_frame (some_parameters, some_tunnel_parameters)
+								if is_tracing then
+									trace_listener.trace_current_item_start (a_node)
+								end
 								a_node_handler.process_leaving_tail (Current)
 								last_tail_call := a_node_handler.last_tail_call
+								if is_tracing then
+									trace_listener.trace_current_item_finish (a_node)
+								end
 								bindery.close_stack_frame
 							else
-								if is_tracing then todo ("apply_templates - tracing", True) end
+								if is_tracing then
+									trace_listener.trace_current_item_start (a_node)
+								end
 								a_node_handler.process_leaving_tail (Current)
 								last_tail_call := a_node_handler.last_tail_call
+								if is_tracing then
+									trace_listener.trace_current_item_finish (a_node)
+								end
 							end
 						end
 					end
@@ -878,7 +899,10 @@ feature -- Implementation
 		require
 			executable_not_void: executable /= Void
 		do
-			-- TODO: open trace listener
+			trace_listener := configuration.trace_listener
+			if is_tracing then
+				trace_listener.start_tracing
+			end
 
 			-- Create a new bindery, to clear out any variables from previous runs
 			

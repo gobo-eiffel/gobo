@@ -16,7 +16,7 @@ inherit
 
 	XM_XSLT_TEXT_CONSTRUCTOR
 		redefine
-			simplify, xpath_expressions, promote_instruction, display
+			simplify, xpath_expressions, promote_instruction, display, item_type
 		end
 
 	XM_XPATH_RECEIVER_OPTIONS

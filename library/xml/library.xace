@@ -67,6 +67,7 @@
 			<cluster name="xslt_functions" location="functions" relative="true"/>
 			<cluster name="instructions"/>
 			<cluster name="style"/>
+			<cluster name="tracing"/>
 			<cluster name="number"/>
 			<cluster name="xslt_sort" location="sort" relative="true"/>
 			<cluster name="xslt_events" location="events" relative="true"/>

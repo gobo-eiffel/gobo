@@ -109,9 +109,6 @@ feature -- Conversion
 			-- Convert to a value
 		require
 			item_not_in_error: not is_error
-		local
-			an_atomic_value: XM_XPATH_ATOMIC_VALUE
-			a_node: XM_XPATH_NODE
 		do
 
 			-- This default version is re-defined by NODE and ATOMIC_VALUE

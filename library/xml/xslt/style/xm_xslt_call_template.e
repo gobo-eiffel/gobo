@@ -16,7 +16,8 @@ inherit
 
 	XM_XSLT_STYLE_ELEMENT
 		redefine
-			make_style_element, validate, post_validate, returned_item_type, mark_tail_calls
+			make_style_element, validate, post_validate, returned_item_type,
+			mark_tail_calls, set_additional_trace_properties
 		end
 
 creation {XM_XSLT_NODE_FACTORY}
@@ -191,7 +192,15 @@ feature -- Element change
 			create a_call.make (an_executable, a_target, with_param_instructions (an_executable, False), with_param_instructions (an_executable, True), use_tail_recursion)
 			last_generated_instruction := a_call
 		end
-	
+
+	set_additional_trace_properties (a_trace_instruction: XM_XSLT_TRACE_INSTRUCTION) is
+			-- Set additional properties on `a_trace_instruction'.
+		do
+			if template /= Void then
+				a_trace_instruction.add_property (called_template_name, "name")
+			end
+		end
+		
 feature {XM_XSLT_STYLE_ELEMENT} -- Restricted
 
 	returned_item_type: XM_XPATH_ITEM_TYPE is
@@ -213,7 +222,7 @@ feature {NONE} -- Implementation
 			-- Use tail recursion
 
 	called_template_name: STRING
-			-- Name of called template (for diagnostices)
+			-- Name of called template (for diagnostics)
 
 	called_template_fingerprint: INTEGER
 			-- Fingerprint of named template to call
@@ -224,8 +233,8 @@ feature {NONE} -- Implementation
 			attributes_prepared: attributes_prepared
 		local
 			a_stylesheet: XM_XSLT_STYLESHEET
-			an_element_list: DS_LINKED_LIST [XM_XSLT_STYLE_ELEMENT]
-			a_cursor: DS_LINKED_LIST_CURSOR [XM_XSLT_STYLE_ELEMENT]
+			an_element_list: DS_BILINKED_LIST [XM_XSLT_STYLE_ELEMENT]
+			a_cursor: DS_BILINKED_LIST_CURSOR [XM_XSLT_STYLE_ELEMENT]
 			a_template: XM_XSLT_TEMPLATE
 		do
 			a_stylesheet := principal_stylesheet

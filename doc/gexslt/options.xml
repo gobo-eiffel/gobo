@@ -168,18 +168,34 @@
       <para>The following options control stylesheet execution tracing:
       <variablelist>
 	<varlistentry>
-	  <term>--trace=[&lt;trace-file&gt;]</term>
+	  <term>--trace[=&lt;trace-file&gt;]</term>
 	  <listitem>
+	    <para>
+	      Turn on stylesheet tracing.
+	    </para>
 	    <para>
 	      Set the destination for trace output to be "trace-file". If "trace-file"
 	      is omitted, then trace output is sent to the standard output stream.
 	    </para>
 	    <para>
-	      If this parameter is not given, then no trace output is produced.
-	      <warning>Tracing is not implemented yet.</warning>
+	      If neither this option nor the <featurename>timed-trace</featurename> 
+	      option is given, then no trace output is produced.
 	    </para>
 	  </listitem>
-      </varlistentry>      </variablelist>
+	</varlistentry>      
+	<varlistentry>
+	  <term>--timed-trace[=&lt;trace-file&gt;]</term>
+	  <listitem>
+	    <para>
+	      Turn on stylesheet tracing with timings.
+	    </para>
+	    <para>
+	      Set the destination for trace output to be "trace-file". If "trace-file"
+	      is omitted, then trace output is sent to the standard output stream.
+	    </para>
+	  </listitem>
+	</varlistentry>      
+      </variablelist>
       </para>
     </sect2>
     <sect2>

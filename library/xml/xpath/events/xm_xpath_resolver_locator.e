@@ -47,7 +47,7 @@ feature -- Access
 		end
 
 	line_number: INTEGER is
-			-- Approximate line number of current event, or -1 if unknown
+			-- Approximate line number of current event, or 0 if unknown
 		do
 			Result :=  parser.position.row
 		end

@@ -15,6 +15,9 @@ class XM_XSLT_COMPILED_TEXT
 inherit
 
 	XM_XSLT_TEXT_CONSTRUCTOR
+		redefine
+			item_type
+		end
 
 	XM_XPATH_RECEIVER_OPTIONS
 

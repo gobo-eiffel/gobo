@@ -64,11 +64,7 @@ feature -- Evaluation
 			a_bindery.open_stack_frame (assembled_parameters (a_context, actual_parameter_list),
 												 assembled_tunnel_parameters (a_context, tunnel_parameter_list)
 												 )
-			if a_transformer.is_tracing then
-				todo ("process", True)
-			else
-				target.expand (a_transformer)
-			end
+			target.expand (a_transformer)
 			from
 				a_tail_call := target.last_tail_call
 			until

@@ -90,6 +90,7 @@ feature -- Evaluation
 			reduced_sort_keys: DS_ARRAYED_LIST [XM_XSLT_FIXED_SORT_KEY_DEFINITION]
 			a_cursor: DS_ARRAYED_LIST_CURSOR [XM_XSLT_SORT_KEY_DEFINITION]
 			a_fixed_sort_key: XM_XSLT_FIXED_SORT_KEY_DEFINITION
+			a_trace_listener: XM_XSLT_TRACE_LISTENER
 		do
 			a_transformer := a_context.transformer
 			a_saved_group_iterator := a_transformer.current_group_iterator
@@ -151,16 +152,21 @@ feature -- Evaluation
 			a_new_context := a_context.new_context
 			a_new_context.set_current_iterator (a_group_iterator)
 			if a_transformer.is_tracing then
-				todo ("process_leaving_tail", True)
-			else
-				from
-					a_group_iterator.start
-				until
-					a_group_iterator.after
-				loop
-					process_children (a_new_context)
-					a_group_iterator.forth
+				a_trace_listener := a_transformer.trace_listener
+			end
+			from
+				a_group_iterator.start
+			until
+				a_group_iterator.after
+			loop
+				if a_transformer.is_tracing then
+					a_trace_listener.trace_current_item_start (a_group_iterator.item)
 				end
+				process_children (a_new_context)
+				if a_transformer.is_tracing then
+					a_trace_listener.trace_current_item_finish (a_group_iterator.item)
+				end
+				a_group_iterator.forth
 			end
 			a_transformer.set_current_iterator (a_saved_iterator)
 			a_transformer.set_current_group_iterator (a_saved_group_iterator)

@@ -166,7 +166,7 @@ feature -- Access
 		end
 
 
-		uri: STRING is
+	uri: STRING is
 			-- URI part of the name of this node;
 			-- This is the URI corresponding to the prefix,
 			--  or the URI of the default namespace if appropriate.
@@ -178,6 +178,102 @@ feature -- Access
 			end
 		ensure
 			uri_not_void: Result /= Void
+		end
+
+	path: STRING is
+			-- XPath expression for location with document
+		local
+			a_preceding_path, a_test: STRING
+		do
+			inspect
+				node_type
+			when Document_node then Result := "/"
+			when Element_node then
+				if parent = Void then
+					Result := node_name
+				else
+					a_preceding_path := parent.path
+					if STRING_.same_string (a_preceding_path, "/") then
+						Result := STRING_.concat (a_preceding_path, node_name)
+					else
+						Result := STRING_.concat (a_preceding_path, "/")
+						Result := STRING_.appended_string (Result, node_name)
+						Result := STRING_.appended_string (Result, "[")
+						Result := STRING_.appended_string (Result, simple_number)
+						Result := STRING_.appended_string (Result, "]")
+					end
+				end
+			when Attribute_node then
+				Result := STRING_.concat ("/@", node_name)
+				if parent /= Void then
+					Result := STRING_.appended_string (parent.path, Result)
+				end
+			when Text_node then
+				Result := STRING_.concat ("/text()[", simple_number)
+				Result := STRING_.appended_string (Result, "]")
+				if parent /= Void then
+					a_preceding_path := parent.path
+					if not STRING_.same_string (a_preceding_path, "/") then
+						Result := STRING_.appended_string (a_preceding_path, Result)
+					end
+				end
+			when Comment_node then
+				Result := STRING_.concat ("/comment()[", simple_number)
+				Result := STRING_.appended_string (Result, "]")
+				if parent /= Void then
+					a_preceding_path := parent.path
+					if not STRING_.same_string (a_preceding_path, "/") then
+						Result := STRING_.appended_string (a_preceding_path, Result)
+					end
+				end
+			when Processing_instruction_node then
+				Result := STRING_.concat ("/processing-instruction()[", simple_number)
+				Result := STRING_.appended_string (Result, "]")
+				if parent /= Void then
+					a_preceding_path := parent.path
+					if not STRING_.same_string (a_preceding_path, "/") then
+						Result := STRING_.appended_string (a_preceding_path, Result)
+					end
+				end
+			when Namespace_node then
+				a_test := local_part
+				if a_test.count = 0 then
+					a_test := "*[not(local-name()]"
+				end
+				Result := STRING_.concat ("/namespace::", a_test)
+				if parent /= Void then
+					Result := STRING_.appended_string (parent.path, Result)
+				end
+			end
+		ensure
+			path_not_void: Result /= Void
+		end
+
+	simple_number: STRING is
+			-- Position of `Current' amongst it's siblings
+		local
+			a_node_test: XM_XPATH_NODE_TEST
+			an_iterator: XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_NODE]
+			a_position: INTEGER
+		do
+			if fingerprint = -1 then
+				create {XM_XPATH_NODE_KIND_TEST} a_node_test.make (node_type)
+			else
+				create {XM_XPATH_NAME_TEST} a_node_test.make_same_type (Current)
+			end
+			an_iterator := new_axis_iterator_with_node_test (Preceding_sibling_axis, a_node_test)
+			from
+				a_position := 1
+				an_iterator.start
+			until
+				an_iterator.after
+			loop
+				a_position := a_position + 1
+				an_iterator.forth
+			end
+			Result := a_position.out
+		ensure
+			strictly_positive_integer: Result /= Void and then Result.is_integer and then Result.to_integer > 0
 		end
 
 	document_root: XM_XPATH_DOCUMENT is

@@ -16,7 +16,7 @@ inherit
 
 	XM_XSLT_CALLABLE_FUNCTION
 
-		-- TODO - tracing info
+	XM_XSLT_SHARED_EMPTY_PROPERTIES
 
 	XM_XPATH_DEBUGGING_ROUTINES
 
@@ -31,16 +31,21 @@ feature {NONE} -- Initialization
 		require
 			body_not_void: a_body /= Void
 			function_name_not_void: a_function_name /= Void
-				base_uri_not_void: a_base_uri /= Void
+			base_uri_not_void: a_base_uri /= Void
 		do
 			body := a_body
 			function_name := a_function_name
-			base_uri := a_base_uri
+			create details.make ("xsl:function", a_base_uri, a_line_number, empty_property_set)
 		ensure
 			body_set: body = a_body
 			function_name_set: function_name = a_function_name
-			base_uri_set: base_uri = a_base_uri
 		end
+
+
+feature -- Access
+
+	details: XM_XSLT_TRACE_DETAILS
+			-- Trace details
 
 feature -- Evaluation
 
@@ -59,11 +64,11 @@ feature -- Evaluation
 			end
 			if last_called_value = Void then
 				if a_transformer.is_tracing then
-					todo ("call (tracing)", True)
+					a_transformer.trace_listener.trace_instruction_entry (details)
 				end
 				a_saved_receiver := a_transformer.current_receiver
 				create a_sequence_outputter.make
-				a_sequence_outputter.set_system_id (base_uri)
+				a_sequence_outputter.set_system_id (details.system_id)
 				a_transformer.change_to_sequence_output_destination (a_sequence_outputter)
 				a_bindery := a_transformer.bindery
 				a_bindery.open_stack_frame_with_positional_parameters (some_actual_arguments)
@@ -89,7 +94,7 @@ feature -- Evaluation
 					end
 				end
 				if a_transformer.is_tracing then
-					todo ("call (tracing)", True)
+					a_transformer.trace_listener.trace_instruction_exit (details)
 				end
 				if is_memo_function then
 					put_cached_value (a_transformer, some_actual_arguments, last_called_value)
@@ -102,14 +107,11 @@ feature {NONE} -- Implementation
 	body: XM_XSLT_SEQUENCE_INSTRUCTION
 			-- Function body
 
-	base_uri: STRING
-			-- Base URI
-
 invariant
 
 	body_not_void: body /= Void
 	function_name_not_void: function_name /= Void
-	base_uri_not_void: base_uri /= Void
+	trace_details_not_void: details /= Void
 
 end
 	

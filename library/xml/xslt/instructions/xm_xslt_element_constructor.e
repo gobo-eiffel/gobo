@@ -18,7 +18,7 @@ inherit
 
 	XM_XSLT_EXPRESSION_INSTRUCTION
 		redefine
-			analyze, evaluate_item
+			analyze, evaluate_item, item_type
 		end
 		
 	XM_XPATH_SHARED_NODE_KIND_TESTS

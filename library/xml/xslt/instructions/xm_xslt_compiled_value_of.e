@@ -16,7 +16,7 @@ inherit
 
 	XM_XSLT_TEXT_CONSTRUCTOR
 		redefine
-			display, promote_instruction, evaluate_item
+			display, promote_instruction, evaluate_item, item_type
 		end
 
 	XM_XPATH_RECEIVER_OPTIONS

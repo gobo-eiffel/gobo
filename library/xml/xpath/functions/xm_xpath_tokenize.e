@@ -83,47 +83,43 @@ feature -- Evaluation
 		local
 			an_atomic_value: XM_XPATH_ATOMIC_VALUE
 			an_input_string, a_pattern_string, a_flags_string: STRING
+
 		do
 			arguments.item (1).evaluate_item (a_context)
-			an_atomic_value ?= arguments.item (1).last_evaluated_item
-			if an_atomic_value = Void then
-				create {XM_XPATH_EMPTY_ITERATOR [XM_XPATH_ITEM]} Result.make
-			else
-				an_input_string := an_atomic_value.string_value
-				if regexp = Void then
-					arguments.item (2).evaluate_item (a_context)
-					an_atomic_value ?= arguments.item (2).last_evaluated_item
+			an_input_string := arguments.item (1).last_evaluated_item.string_value
+			if regexp = Void then
+				arguments.item (2).evaluate_item (a_context)
+				an_atomic_value ?= arguments.item (2).last_evaluated_item
+				check
+					atomic_pattern: an_atomic_value /= Void
+					-- Statically typed as a single string
+				end
+				a_pattern_string := an_atomic_value.string_value
+				if arguments.count = 2 then
+					a_flags_string := ""
+				else
+					arguments.item (3).evaluate_item (a_context)
+					an_atomic_value ?= arguments.item (3).last_evaluated_item
 					check
 						atomic_pattern: an_atomic_value /= Void
 						-- Statically typed as a single string
 					end
-					a_pattern_string := an_atomic_value.string_value
-					if arguments.count = 2 then
-						a_flags_string := ""
+					a_flags_string := an_atomic_value.string_value
+				end
+				create regexp.make
+				set_flags (a_flags_string)
+				regexp.compile (a_pattern_string)
+				if regexp.is_compiled then
+					if regexp.matches ("") then
+						create {XM_XPATH_INVALID_ITERATOR} Result.make_from_string ("Regular expression matches zero-length string", 3, Dynamic_error)
 					else
-						arguments.item (3).evaluate_item (a_context)
-						an_atomic_value ?= arguments.item (3).last_evaluated_item
-						check
-							atomic_pattern: an_atomic_value /= Void
-							-- Statically typed as a single string
-						end
-						a_flags_string := an_atomic_value.string_value
-					end
-					create regexp.make
-					set_flags (a_flags_string)
-					regexp.compile (a_pattern_string)
-					if regexp.is_compiled then
-						if regexp.matches ("") then
-							create {XM_XPATH_INVALID_ITERATOR} Result.make_from_string ("Regular expression matches zero-length string", 3, Dynamic_error)
-						else
-							create {XM_XPATH_TOKEN_ITERATOR} Result.make (an_input_string, regexp)
-						end
-					else
-						create {XM_XPATH_INVALID_ITERATOR} Result.make_from_string ("Invalid regular expression", 2, Dynamic_error)
+						create {XM_XPATH_TOKEN_ITERATOR} Result.make (an_input_string, regexp)
 					end
 				else
-					create {XM_XPATH_TOKEN_ITERATOR} Result.make (an_input_string, regexp)
+					create {XM_XPATH_INVALID_ITERATOR} Result.make_from_string ("Invalid regular expression", 2, Dynamic_error)
 				end
+			else
+				create {XM_XPATH_TOKEN_ITERATOR} Result.make (an_input_string, regexp)
 			end
 		end
 

@@ -17,7 +17,7 @@ inherit
 	
 	XM_XSLT_EXPRESSION_INSTRUCTION
 		redefine
-			simplify, analyze, iterator
+			simplify, analyze, iterator, item_type
 		end
 
 	XM_XPATH_SHARED_ANY_ITEM_TYPE

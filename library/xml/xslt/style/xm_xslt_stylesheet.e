@@ -65,7 +65,7 @@ feature -- Access
 	prepared_stylesheet: XM_XSLT_PREPARED_STYLESHEET
 			-- Prepared stylesheet object used to load `Current'
 
-	top_level_elements: DS_LINKED_LIST [XM_XSLT_STYLE_ELEMENT]
+	top_level_elements: DS_BILINKED_LIST [XM_XSLT_STYLE_ELEMENT]
 			-- Top-level elements in this logical stylesheet (after include/import processing)
 
 	import_precedence: INTEGER
@@ -159,7 +159,7 @@ feature -- Access
 			output_properties_defined_somewhere: a_fingerprint > -1 implies True -- Can't actually test this easily (?)
 		local
 			found: BOOLEAN
-			a_cursor: DS_LINKED_LIST_CURSOR [XM_XSLT_STYLE_ELEMENT]
+			a_cursor: DS_BILINKED_LIST_CURSOR [XM_XSLT_STYLE_ELEMENT]
 			an_output: XM_XSLT_OUTPUT
 		do
 			if a_fingerprint = -1 then found := True end
@@ -244,7 +244,7 @@ feature -- Status report
 	strips_whitespace: BOOLEAN is
 			-- Does this stysheet do any whitespace stripping?
 		local
-			a_cursor: DS_LINKED_LIST_CURSOR [XM_XSLT_STYLE_ELEMENT]
+			a_cursor: DS_BILINKED_LIST_CURSOR [XM_XSLT_STYLE_ELEMENT]
 		do
 			from
 				a_cursor := top_level_elements.new_cursor; a_cursor.start
@@ -429,7 +429,7 @@ feature -- Element change
 		require
 			indices_not_built: not indices_built
 		local
-			a_cursor: DS_LINKED_LIST_CURSOR [XM_XSLT_STYLE_ELEMENT]
+			a_cursor: DS_BILINKED_LIST_CURSOR [XM_XSLT_STYLE_ELEMENT]
 			a_style_element: XM_XSLT_STYLE_ELEMENT
 		do
 
@@ -570,7 +570,7 @@ feature -- Element change
 	process_all_attributes is
 			-- Process the attributes of every node in the stylesheet.
 		local
-			a_cursor: DS_LINKED_LIST_CURSOR [XM_XSLT_STYLE_ELEMENT]
+			a_cursor: DS_BILINKED_LIST_CURSOR [XM_XSLT_STYLE_ELEMENT]
 			a_style_element: XM_XSLT_STYLE_ELEMENT
 		do
 			create static_context.make (Current)
@@ -624,7 +624,7 @@ feature -- Element change
 			configuration_not_void: a_configuration /= Void
 			no_compile_errors_so_far: not any_compile_errors
 		local
-			a_cursor: DS_LINKED_LIST_CURSOR [XM_XSLT_STYLE_ELEMENT]
+			a_cursor: DS_BILINKED_LIST_CURSOR [XM_XSLT_STYLE_ELEMENT]
 			an_instruction: XM_XSLT_INSTRUCTION
 			a_compiled_templates_index: DS_HASH_TABLE [XM_XSLT_COMPILED_TEMPLATE, INTEGER]
 			another_cursor: DS_HASH_TABLE_CURSOR [XM_XSLT_TEMPLATE, INTEGER]
@@ -745,7 +745,7 @@ feature {NONE} -- Implementation
 			a_template: XM_XSLT_TEMPLATE
 			a_variable_declaration: XM_XSLT_VARIABLE_DECLARATION
 			a_namespace_alias: XM_XSLT_NAMESPACE_ALIAS
-			a_cursor: DS_LINKED_LIST_CURSOR [XM_XSLT_STYLE_ELEMENT]
+			a_cursor: DS_BILINKED_LIST_CURSOR [XM_XSLT_STYLE_ELEMENT]
 		do
 			from
 				a_cursor := top_level_elements.new_cursor
@@ -942,7 +942,7 @@ feature {NONE} -- Implementation
 		require
 			included_stylesheet: an_included_stylesheet /= Void
 		local
-			a_top_level_list: DS_LINKED_LIST [XM_XSLT_STYLE_ELEMENT]
+			a_top_level_list: DS_BILINKED_LIST [XM_XSLT_STYLE_ELEMENT]
 			a_cursor: DS_LINKED_LIST_CURSOR [XM_XSLT_STYLE_ELEMENT]
 			a_style_element: XM_XSLT_STYLE_ELEMENT
 			a_count: INTEGER

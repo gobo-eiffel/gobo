@@ -20,6 +20,8 @@ inherit
 
 	XM_XPATH_DEBUGGING_ROUTINES
 
+	XM_XPATH_SHARED_ANY_ITEM_TYPE
+
 feature -- Access
 
 	children: DS_ARRAYED_LIST [XM_XSLT_INSTRUCTION]
@@ -39,6 +41,12 @@ feature -- Access
 			else
 				Result := executable.system_id (module_number)
 			end
+		end
+
+	item_type: XM_XPATH_ITEM_TYPE is
+			-- Type of items yielded
+		do
+			Result := any_item
 		end
 
 	result_type: XM_XPATH_SEQUENCE_TYPE is

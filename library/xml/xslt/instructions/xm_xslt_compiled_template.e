@@ -16,6 +16,8 @@ inherit
 
 	XM_XSLT_TAIL_CALL
 
+	XM_XSLT_SHARED_EMPTY_PROPERTIES
+
 	XM_XPATH_DEBUGGING_ROUTINES
 
 creation
@@ -103,16 +105,7 @@ feature -- Evaluation
 			if body /= Void then
 				saved_template := a_transformer.current_template
 				a_transformer.set_current_template (Current)
-				if a_transformer.is_tracing then
-					todo ("process_leaving_tail", True)
-				else
---					if not first_processed then
---						first_processed := True
---						body.display_children (1, shared_name_pool)
---					end
-					body.process_leaving_tail (a_transformer.new_xpath_context)
-					last_tail_call := body.last_tail_call
-				end
+				expand (a_transformer)
 			end
 			a_transformer.set_current_template (saved_template)
 		end
@@ -126,8 +119,17 @@ feature -- Evaluation
 		do
 			last_tail_call := Void
 			if body /= Void then
+				if a_transformer.is_tracing then
+					if details = Void then
+						create details.make ("template", system_id, line_number, empty_property_set)
+					end
+					a_transformer.trace_listener.trace_instruction_entry (details)
+				end
 				body.process_leaving_tail (a_transformer.new_xpath_context)
 				last_tail_call := body.last_tail_call
+				if a_transformer.is_tracing then
+					a_transformer.trace_listener.trace_instruction_exit (details)
+				end
 			end
 		end
 
@@ -135,6 +137,9 @@ feature {NONE} -- Implementation
 
 	body: XM_XSLT_SEQUENCE_INSTRUCTION
 			-- Optional template body
+
+	details:  XM_XSLT_TRACE_DETAILS
+			-- Trace details
 
 	first_processed: BOOLEAN
 

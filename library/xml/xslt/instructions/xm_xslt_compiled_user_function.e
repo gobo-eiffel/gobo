@@ -15,7 +15,7 @@ inherit
 
 	XM_XSLT_CALLABLE_FUNCTION
 
-		-- TODO - tracing info
+	XM_XSLT_SHARED_EMPTY_PROPERTIES
 
 	XM_XPATH_DEBUGGING_ROUTINES
 
@@ -34,17 +34,16 @@ feature {NONE} -- Initialization
 		do
 			body := a_body
 			function_name := a_function_name
-			system_id := a_system_id
+			create details.make ("xsl:function", a_system_id, a_line_number, empty_property_set)
 		ensure
 			body_set: body = a_body
 			function_name_set: function_name = a_function_name
-			system_id_set: system_id = a_system_id
 		end	
 
 feature -- Access
 
-	system_id: STRING
-			-- SYSTEM Id
+	details: XM_XSLT_TRACE_DETAILS
+			-- Trace details
 
 feature -- Evaluation
 
@@ -61,7 +60,7 @@ feature -- Evaluation
 			end
 			if last_called_value = Void then
 				if a_transformer.is_tracing then
-					todo ("call (tracing)", True)
+					a_transformer.trace_listener.trace_instruction_entry (details)
 				end
 				a_bindery := a_transformer.bindery
 				a_bindery.open_stack_frame_with_positional_parameters (some_actual_arguments)
@@ -86,7 +85,7 @@ feature -- Evaluation
 				end
 				a_bindery.close_stack_frame				
 				if a_transformer.is_tracing then
-					todo ("call (tracing)", True)
+					a_transformer.trace_listener.trace_instruction_exit (details)
 				end
 				if is_memo_function then
 					put_cached_value (a_transformer, some_actual_arguments, last_called_value)
@@ -102,6 +101,7 @@ feature {NONE} -- Implementation
 invariant
 
 	body_not_void: body /= Void
+	trace_details_not_void: details /= Void
 
 end
 	

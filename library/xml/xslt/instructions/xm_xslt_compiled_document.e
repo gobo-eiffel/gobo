@@ -16,7 +16,7 @@ inherit
 
 	XM_XSLT_EXPRESSION_INSTRUCTION
 		redefine
-			analyze, evaluate_item
+			analyze, evaluate_item, item_type
 		end
 
 	XM_XSLT_VALIDATION

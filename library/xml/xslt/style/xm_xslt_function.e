@@ -225,7 +225,7 @@ feature -- Element change
 		local
 			an_arity: INTEGER
 			a_root: XM_XSLT_STYLESHEET
-			a_cursor: DS_LINKED_LIST_CURSOR [XM_XSLT_STYLE_ELEMENT]
+			a_cursor: DS_BILINKED_LIST_CURSOR [XM_XSLT_STYLE_ELEMENT]
 			a_function: XM_XSLT_FUNCTION
 		do
 			check_top_level
@@ -393,7 +393,7 @@ feature {NONE} -- Implementation
 			position_in_range: a_position > 0 and then a_position <= some_children.count + 1
 		local
 			a_starting_instruction: XM_XSLT_INSTRUCTION
-			--			a_trace_instruction: XM_XSLT_TRACE_INSTRUCTION
+			a_trace_instruction: XM_XSLT_TRACE_INSTRUCTION
 			an_expression: XM_XPATH_EXPRESSION
 			a_variable: XM_XSLT_COMPILED_VARIABLE
 			a_sequence: XM_XSLT_SEQUENCE_INSTRUCTION
@@ -404,10 +404,10 @@ feature {NONE} -- Implementation
 				create {XM_XPATH_EMPTY_SEQUENCE} Result.make
 			else
 				a_starting_instruction := some_children.item (a_position)
-				-- TODO a_trace_instruction ?= a_starting_instruction
-				--if a_trace_instruction /= Void then
-				--	a_starting_instruction := a_trace_instruction.children.item (1)
-				--end
+				a_trace_instruction ?= a_starting_instruction
+				if a_trace_instruction /= Void then
+					a_starting_instruction := a_trace_instruction.children.item (1)
+				end
 				an_expression ?= a_starting_instruction
 				if an_expression /= Void then
 					Result := an_expression

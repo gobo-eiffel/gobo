@@ -49,11 +49,11 @@ feature -- Access
 			from
 				a_next_node := node_number + 1
 			until
-				a_next_node >= document.last_node_added or else document.depth_of (a_next_node) <= a_level
+				a_next_node > document.last_node_added or else document.depth_of (a_next_node) <= a_level
 			loop
-				a_length := document.beta_value (a_next_node)
-				a_start_position := document.alpha_value (a_next_node)
 				if document.retrieve_node_kind (a_next_node) = Text_node then
+					a_length := document.beta_value (a_next_node)
+					a_start_position := document.alpha_value (a_next_node)
 					if a_buffer = Void then
 						a_buffer := document.character_buffer.substring (a_start_position + 1, a_start_position + a_length)
 					else

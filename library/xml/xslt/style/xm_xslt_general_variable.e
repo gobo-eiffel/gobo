@@ -17,7 +17,8 @@ inherit
 
 	XM_XSLT_STYLE_ELEMENT
 		redefine
-			validate, returned_item_type, may_contain_sequence_constructor
+			validate, returned_item_type, may_contain_sequence_constructor,
+			set_additional_trace_properties
 		end
 
 	XM_XSLT_PROCEDURE
@@ -303,6 +304,11 @@ feature -- Status setting
 			end
 		end
 
+	set_additional_trace_properties (a_trace_instruction: XM_XSLT_TRACE_INSTRUCTION) is
+			-- Set additional properties on `a_trace_instruction'.
+		do
+			a_trace_instruction.add_property (variable_name, "name")
+		end
 
 feature {XM_XSLT_STYLE_ELEMENT} -- Restricted
 

@@ -49,6 +49,7 @@ feature -- Evaluation
 			a_saved_iterator, an_iterator: XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_ITEM]
 			an_inner_context: XM_XSLT_EVALUATION_CONTEXT
 			a_saved_template: XM_XSLT_COMPILED_TEMPLATE
+			a_trace_listener: XM_XSLT_TRACE_LISTENER
 		do
 			a_transformer := a_context.transformer
 			a_saved_template := a_transformer.current_template
@@ -57,19 +58,24 @@ feature -- Evaluation
 			an_inner_context := a_context.new_context
 			an_inner_context.set_current_iterator (an_iterator)
 			if a_transformer.is_tracing then
-				todo ("process_leaving_tail", True)
-			else
-				from
-					an_iterator.start
-				until
-					an_iterator.after
-				loop
-					process_children (an_inner_context)
-					an_iterator.forth
-				end
-				a_transformer.set_current_iterator (a_saved_iterator)
-				a_transformer.set_current_template (a_saved_template)
+				a_trace_listener := a_transformer.trace_listener
 			end
+			from
+				an_iterator.start
+			until
+				an_iterator.after
+			loop
+				if a_transformer.is_tracing then
+					a_trace_listener.trace_current_item_start (an_iterator.item)
+				end
+				process_children (an_inner_context)
+				if a_transformer.is_tracing then
+					a_trace_listener.trace_current_item_finish (an_iterator.item)
+				end
+				an_iterator.forth
+			end
+			a_transformer.set_current_iterator (a_saved_iterator)
+			a_transformer.set_current_template (a_saved_template)
 		end
 
 feature {NONE} -- Implementation

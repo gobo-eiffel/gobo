@@ -16,7 +16,7 @@ inherit
 
 	XM_XSLT_TEXT_CONSTRUCTOR
 		redefine
-			xpath_expressions, promote_instruction, display
+			xpath_expressions, promote_instruction, display, item_type
 		end
 
 	XM_XPATH_SHARED_NODE_KIND_TESTS

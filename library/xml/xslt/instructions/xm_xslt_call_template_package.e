@@ -56,11 +56,7 @@ feature -- Evaluation
 			a_bindery := a_transformer.bindery
 			a_bindery.open_stack_frame (actual_parameters, tunnel_parameters)
 			last_tail_call := Void
-			if a_transformer.is_tracing then
-				todo ("process_leaving_tail", True)
-			else
-				target.expand (a_transformer)
-			end
+			target.expand (a_transformer)
 			a_bindery.close_stack_frame
 			a_transformer.restore_context (a_saved_context)
 		end

@@ -88,6 +88,9 @@ feature -- Access
 	are_external_functions_allowed: BOOLEAN
 			-- Are extension functions allowed?
 
+	trace_listener: XM_XSLT_TRACE_LISTENER
+			-- Trace listener
+
 	error_listener: XM_XSLT_ERROR_LISTENER
 			-- Error listener
 
@@ -117,6 +120,12 @@ feature -- Access
 	
 	recovery_policy: INTEGER
 			-- Recovery policy when warnings or errors are encountered
+
+	is_tracing: BOOLEAN is
+			-- Is tracing enabled?
+		do
+			Result := trace_listener /= Void
+		end
 
 	element_validator (a_receiver: XM_XPATH_RECEIVER; a_name_code: INTEGER; a_schema_type: XM_XPATH_SCHEMA_TYPE;
 							 a_validation_action: INTEGER; a_validation_context: ANY): XM_XPATH_RECEIVER is
@@ -178,6 +187,16 @@ feature -- Element change
 			is_trace_external_functions := on_or_off
 		ensure
 			set: is_trace_external_functions = on_or_off
+		end
+
+	set_trace_listener (a_trace_listener: XM_XSLT_TRACE_LISTENER) is
+			-- Set `trace_listener'.
+		require
+			trace_listener_may_be_void: True
+		do
+			trace_listener := a_trace_listener
+		ensure
+			trace_listener_set: trace_listener = a_trace_listener
 		end
 
 	set_entity_resolver (an_entity_resolver: like entity_resolver) is

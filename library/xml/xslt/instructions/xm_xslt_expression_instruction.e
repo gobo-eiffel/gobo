@@ -66,8 +66,8 @@ feature -- Access
 			loop
 				an_expression ?= a_cursor.item
 				if an_expression = Void then
-					a_cursor.go_after
-					set_last_error_from_string ("BUG: Children of an XM_XSLT_EXPRESSION_INSTRUCTION must themselves be Expressions", 0, Type_error)
+					--a_cursor.go_after
+					--set_last_error_from_string ("BUG: Children of an XM_XSLT_EXPRESSION_INSTRUCTION must themselves be Expressions", 0, Type_error)
 				else
 					a_list.put_last (an_expression)
 				end
