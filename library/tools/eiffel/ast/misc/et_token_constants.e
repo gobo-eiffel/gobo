@@ -162,6 +162,14 @@ feature -- Class names
 			typed_pointer_class_name_not_void: Result /= Void
 		end
 
+	routine_class_name: ET_CLASS_NAME is
+			-- "ROUTINE" class name
+		once
+			create {ET_IDENTIFIER} Result.make (capitalized_routine_name)
+		ensure
+			routine_class_name_not_void: Result /= Void
+		end
+
 	procedure_class_name: ET_CLASS_NAME is
 			-- "PROCEDURE" class name
 		once
@@ -901,6 +909,7 @@ feature -- Keyword and symbol names
 	capitalized_predicate_name: STRING is "PREDICATE"
 	capitalized_procedure_name: STRING is "PROCEDURE"
 	capitalized_real_name: STRING is "REAL"
+	capitalized_routine_name: STRING is "ROUTINE"
 	capitalized_string_name: STRING is "STRING"
 	capitalized_tuple_name: STRING is "TUPLE"
 	capitalized_typed_pointer_name: STRING is "TYPED_POINTER"

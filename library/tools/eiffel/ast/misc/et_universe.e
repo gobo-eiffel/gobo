@@ -124,6 +124,8 @@ feature {NONE} -- Initialization
 			pointer_class.set_in_system (True)
 			typed_pointer_class := eiffel_class (tokens.typed_pointer_class_name)
 			typed_pointer_class.set_in_system (True)
+			routine_class := eiffel_class (tokens.routine_class_name)
+			routine_class.set_in_system (True)
 			procedure_class := eiffel_class (tokens.procedure_class_name)
 			procedure_class.set_in_system (True)
 			predicate_class := eiffel_class (tokens.predicate_class_name)
@@ -176,6 +178,7 @@ feature {NONE} -- Initialization
 			double_class_not_void: double_class /= Void
 			pointer_class_not_void: pointer_class /= Void
 			typed_pointer_class_not_void: typed_pointer_class /= Void
+			routine_class_not_void: routine_class /= Void
 			procedure_class_not_void: procedure_class /= Void
 			predicate_class_not_void: predicate_class /= Void
 			function_class_not_void: function_class /= Void
@@ -409,6 +412,9 @@ feature -- Basic classes
 
 	typed_pointer_class: ET_CLASS
 			-- Class "TYPED_POINTER"
+
+	routine_class: ET_CLASS
+			-- Class "ROUTINE"
 
 	procedure_class: ET_CLASS
 			-- Class "PROCEDURE"
@@ -2085,6 +2091,7 @@ invariant
 	double_class_not_void: double_class /= Void
 	pointer_class_not_void: pointer_class /= Void
 	typed_pointer_class_not_void: typed_pointer_class /= Void
+	routine_class_not_void: routine_class /= Void
 	procedure_class_not_void: procedure_class /= Void
 	predicate_class_not_void: predicate_class /= Void
 	function_class_not_void: function_class /= Void

@@ -504,6 +504,202 @@ feature -- Conformance
 			end
 		end
 
+	agent_conforms_to_types (other: ET_ACTUAL_PARAMETER_LIST; other_context: ET_TYPE_CONTEXT;
+		a_context: ET_TYPE_CONTEXT; a_universe: ET_UNIVERSE): BOOLEAN is
+			-- Does current actual parameters (of an Agent type) appearing in `a_context'
+			-- conform to `other' actual parameters appearing in `other_context'?
+			-- (Note: 'a_universe.ancestor_builder' is used on classes on
+			-- the classes whose ancestors need to be built in order to check
+			-- for conformance, and 'a_universe.qualified_type_resolver' is
+			-- used on classes whose qualified anchored types need to be
+			-- resolved in order to check conformance.)
+		require
+			other_not_void: other /= Void
+			other_context_not_void: other_context /= Void
+			other_context_valid: other_context.is_valid_context
+			a_context_not_void: a_context /= Void
+			a_context_valid: a_context.is_valid_context
+			a_universe_not_void: a_universe /= Void
+		local
+			i, j, nb: INTEGER
+			other_storage: SPECIAL [ET_ACTUAL_PARAMETER_ITEM]
+			other_parameter: ET_ACTUAL_PARAMETER
+			other_qualified_parameter: ET_QUALIFIED_ACTUAL_PARAMETER
+		do
+			Result := cat_agent_conforms_to_types (other, other_context, a_context, a_universe)
+			if not Result and then a_universe.searching_dog_types then
+				if non_cat_agent_conforms_to_types (other, other_context, a_context, a_universe) then
+					Result := True
+					other_storage := other.storage
+					nb := count - 1
+					j := count - 2
+					from i := 0 until i > nb loop
+						other_parameter := other_storage.item (i).actual_parameter
+						if other_parameter.has_cat_parameter_mark then
+							if not storage.item (i).actual_parameter.is_cat_parameter (a_context, a_universe) then
+								other_qualified_parameter ?= other_parameter
+								if other_qualified_parameter /= Void then
+									if other_qualified_parameter.cat_keyword /= Void then
+										other_qualified_parameter.set_cat_keyword (Void)
+										a_universe.set_dog_type_count (a_universe.dog_type_count + 1)
+									end
+								end
+								if i = j then
+										-- Reverse conformance for the argument parameter.
+									if not other_storage.item (i).type.conforms_to_type (storage.item (i).type, a_context, other_context, a_universe) then
+										Result := False
+										i := nb + 1 -- Jump out of the loop.
+									else
+										i := i + 1
+									end
+								else
+									if not storage.item (i).type.conforms_to_type (other_storage.item (i).type, other_context, a_context, a_universe) then
+										Result := False
+										i := nb + 1 -- Jump out of the loop.
+									else
+										i := i + 1
+									end
+								end
+							elseif not storage.item (i).type.same_named_type (other_storage.item (i).type, other_context, a_context, a_universe) then
+								other_qualified_parameter ?= other_parameter
+								if other_qualified_parameter /= Void then
+									if other_qualified_parameter.cat_keyword /= Void then
+										other_qualified_parameter.set_cat_keyword (Void)
+										a_universe.set_dog_type_count (a_universe.dog_type_count + 1)
+									end
+								end
+								if not storage.item (i).type.conforms_to_type (other_storage.item (i).type, other_context, a_context, a_universe) then
+									Result := False
+									i := nb + 1 -- Jump out of the loop.
+								else
+									i := i + 1
+								end
+							else
+								i := i + 1
+							end
+						elseif not storage.item (i).type.conforms_to_type (other_storage.item (i).type, other_context, a_context, a_universe) then
+							Result := False
+							i := nb + 1 -- Jump out of the loop.
+						else
+							i := i + 1
+						end
+					end
+				end
+			end
+		end
+
+	cat_agent_conforms_to_types (other: ET_ACTUAL_PARAMETER_LIST; other_context: ET_TYPE_CONTEXT;
+		a_context: ET_TYPE_CONTEXT; a_universe: ET_UNIVERSE): BOOLEAN is
+			-- Does current actual parameters (of an Agent type) appearing in `a_context'
+			-- conform to `other' actual parameters appearing in `other_context'?
+			-- (Note: 'a_universe.ancestor_builder' is used on classes on
+			-- the classes whose ancestors need to be built in order to check
+			-- for conformance, and 'a_universe.qualified_type_resolver' is
+			-- used on classes whose qualified anchored types need to be
+			-- resolved in order to check conformance.)
+		require
+			other_not_void: other /= Void
+			other_context_not_void: other_context /= Void
+			other_context_valid: other_context.is_valid_context
+			a_context_not_void: a_context /= Void
+			a_context_valid: a_context.is_valid_context
+			a_universe_not_void: a_universe /= Void
+		local
+			i, j, nb: INTEGER
+			other_storage: SPECIAL [ET_ACTUAL_PARAMETER_ITEM]
+		do
+			if other = Current and then other_context = a_context then
+				Result := True
+			elseif other.count /= count then
+					-- Validity error VTUG-2.
+				Result := False
+			else
+				Result := True
+				other_storage := other.storage
+				nb := count - 1
+				j := count - 2
+				from i := 0 until i > nb loop
+					if other_storage.item (i).actual_parameter.has_cat_parameter_mark then
+						Result := storage.item (i).actual_parameter.is_cat_parameter (a_context, a_universe) and then
+							storage.item (i).type.same_named_type (other_storage.item (i).type, other_context, a_context, a_universe)
+						if Result then
+							i := i + 1
+						else
+							i := nb + 1 -- Jump out of the loop.
+						end
+					else
+						if i = j then
+								-- Reverse conformance for the argument parameter.
+							if not other_storage.item (i).type.conforms_to_type (storage.item (i).type, a_context, other_context, a_universe) then
+								Result := False
+								i := nb + 1 -- Jump out of the loop.
+							else
+								i := i + 1
+							end
+						else
+							if not storage.item (i).type.conforms_to_type (other_storage.item (i).type, other_context, a_context, a_universe) then
+								Result := False
+								i := nb + 1 -- Jump out of the loop.
+							else
+								i := i + 1
+							end
+						end
+					end
+				end
+			end
+		end
+
+	non_cat_agent_conforms_to_types (other: ET_ACTUAL_PARAMETER_LIST; other_context: ET_TYPE_CONTEXT;
+		a_context: ET_TYPE_CONTEXT; a_universe: ET_UNIVERSE): BOOLEAN is
+			-- Does current actual parameters (of an Agent type) appearing in `a_context'
+			-- conform to `other' actual parameters appearing in `other_context'?
+			-- (Note: 'a_universe.ancestor_builder' is used on classes on
+			-- the classes whose ancestors need to be built in order to check
+			-- for conformance, and 'a_universe.qualified_type_resolver' is
+			-- used on classes whose qualified anchored types need to be
+			-- resolved in order to check conformance.)
+		require
+			other_not_void: other /= Void
+			other_context_not_void: other_context /= Void
+			other_context_valid: other_context.is_valid_context
+			a_context_not_void: a_context /= Void
+			a_context_valid: a_context.is_valid_context
+			a_universe_not_void: a_universe /= Void
+		local
+			i, j, nb: INTEGER
+			other_storage: SPECIAL [ET_ACTUAL_PARAMETER_ITEM]
+		do
+			if other = Current and then other_context = a_context then
+				Result := True
+			elseif other.count /= count then
+					-- Validity error VTUG-2.
+				Result := False
+			else
+				Result := True
+				other_storage := other.storage
+				nb := count - 1
+				j := count - 2
+				from i := 0 until i > nb loop
+					if i = j then
+							-- Reverse conformance for the argument parameter.
+						if not other_storage.item (i).type.conforms_to_type (storage.item (i).type, a_context, other_context, a_universe) then
+							Result := False
+							i := nb + 1 -- Jump out of the loop.
+						else
+							i := i + 1
+						end
+					else
+						if not storage.item (i).type.conforms_to_type (other_storage.item (i).type, other_context, a_context, a_universe) then
+							Result := False
+							i := nb + 1 -- Jump out of the loop.
+						else
+							i := i + 1
+						end
+					end
+				end
+			end
+		end
+
 	tuple_conforms_to_types (other: ET_ACTUAL_PARAMETER_LIST; other_context: ET_TYPE_CONTEXT;
 		a_context: ET_TYPE_CONTEXT; a_universe: ET_UNIVERSE): BOOLEAN is
 			-- Does current actual parameters (of a Tuple_type) appearing in `a_context'

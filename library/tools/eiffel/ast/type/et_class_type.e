@@ -725,6 +725,7 @@ feature {ET_TYPE, ET_TYPE_CONTEXT} -- Conformance
 			l_feature: ET_FEATURE
 			l_other_feature: ET_FEATURE
 			i, nb: INTEGER
+			l_parameters_conform: BOOLEAN
 		do
 			other_base_class := other.direct_base_class (a_universe)
 			if other_base_class = a_universe.unknown_class then
@@ -762,7 +763,19 @@ feature {ET_TYPE, ET_TYPE_CONTEXT} -- Conformance
 						is_generic: actual_parameters /= Void
 						other_is_generic: other_parameters /= Void
 					end
-					if other_parameters.conforms_to_types (actual_parameters, a_context, other_context, a_universe) then
+					if
+						eiffel_class = a_universe.routine_class or
+						eiffel_class = a_universe.procedure_class or
+						eiffel_class = a_universe.function_class or
+						eiffel_class = a_universe.predicate_class
+					then
+							-- SmartEiffel's agent type conformance.
+						-- l_parameters_conform := other_parameters.agent_conforms_to_types (actual_parameters, a_context, other_context, a_universe)
+						l_parameters_conform := other_parameters.conforms_to_types (actual_parameters, a_context, other_context, a_universe)
+					else
+						l_parameters_conform := other_parameters.conforms_to_types (actual_parameters, a_context, other_context, a_universe)
+					end
+					if l_parameters_conform then
 						if a_universe.forget_enabled then
 --							if a_universe.all_forget_features then
 --								Result := True

@@ -361,6 +361,7 @@ feature {NONE} -- String handler
 			Result.force_new (-1, tokens.capitalized_predicate_name)
 			Result.force_new (-1, tokens.capitalized_procedure_name)
 			Result.force_new (-1, tokens.capitalized_real_name)
+			Result.force_new (-1, tokens.capitalized_routine_name)
 			Result.force_new (-1, tokens.capitalized_string_name)
 			Result.force_new (-1, tokens.capitalized_tuple_name)
 			Result.force_new (-1, tokens.capitalized_typed_pointer_name)
