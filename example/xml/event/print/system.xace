@@ -2,21 +2,26 @@
 <system name="print">
 	<root class="PRINT" creation="make"/>
 	<cluster>
-		<option>
+		<option unless="${DEBUG}">
+			<require enable="False"/>
+			<ensure enable="False"/>
+			<invariant enable="False"/>
+			<loop enable="False"/>
+			<check enable="False"/>
+			<optimize enable="True"/>
+		</option>
+		<option if="${DEBUG}">
 			<require enable="True"/>
 			<ensure enable="True"/>
+			<invariant enable="True"/>
+			<loop enable="True"/>
+			<check enable="True"/>
+			<optimize enable="False"/>
 		</option>
 
 		<cluster name="print" location="${GOBO}/example/xml/event/print"/>
 
-		<mount location="${GOBO}/library/cluster.xace">
-			<exclude cluster="gobo.xml.impl.expat" unless="${GOBO_XML_EXPAT}" />
-			<exclude cluster="gobo.xml.impl.no_expat" if="${GOBO_XML_EXPAT}" />
-			<exclude cluster="gobo.xml.impl.eiffel" unless="${GOBO_XML_EIFFEL}" />
-			<exclude cluster="gobo.xml.impl.no_eiffel" if="${GOBO_XML_EIFFEL}" />
-			<exclude cluster="gobo.xml.impl.tree_on_event"/>
-		</mount>
-
+		<mount location="${GOBO}/library/cluster.xace"/>
 		<mount location="${GOBO}/library/kernel.xace" />
 	</cluster>
 </system>

@@ -8,17 +8,13 @@
 # *******************
 
 # Which Eiffel vendor?
-#VENDOR=VE
 #GOBO_EIFFEL=ve
-#VENDOR=SE
 #GOBO_EIFFEL=se
-#VENDOR=HACT
 #GOBO_EIFFEL=hact
-VENDOR=ISE
 GOBO_EIFFEL=ise
 
 # Make sure CFLAGS has the proper vendor #define
-CFLAGS=$(CFLAGS) -D$(VENDOR)
+CFLAGS=$(CFLAGS) -D$(GOBO_EIFFEL)
 
 
 # Where is Expat

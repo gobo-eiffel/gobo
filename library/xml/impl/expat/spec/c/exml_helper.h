@@ -1,21 +1,18 @@
 /*
-eXML, Eiffel XML Parser Toolkit
-Copyright (C) 2001  Andreas Leitner, Berend de Boer and others
-See the file forum.txt included in this package for licensing info.
+ GOBO Eiffel
+ Copyright (C) 2001  Eric Bezault, Andreas Leitner, Berend de Boer and others
+ See the file forum.txt included in this package for licensing info.
 
-Comments, Questions, Additions to this library? please contact:
+ Comments, Questions, Additions to this library? please contact:
 
-Andreas Leitner
-Arndtgasse 1/3/5
-8010 Graz
-Austria
-email: andreas.leitner@chello.at
-www: http://exml.dhs.org
+ Andreas Leitner
+ mail: nozon@sbox.tugraz.at
+ www: http://www.gobosoft.com
 
 
-Various helper functions.
-
+ Various helper functions.
 */
+
 
 #ifndef _EXML_HELPER_H_
 #define _EXML_HELPER_H_

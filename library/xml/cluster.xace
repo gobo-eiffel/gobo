@@ -72,8 +72,8 @@
 				<cluster name="compiler" location="${GOBO}/library/xml/impl/expat/spec/${GOBO_EIFFEL}"/>
 			</cluster>
 			<external unless="${GOBO_OS}=windows">
-				<include_dir location="$(GOBO)/library/xml/impl/expat/spec/c"/>
-				<link_library location="$(GOBO)/library/xml/impl/expat/spec/c/libexml-expat-${GOBO_EIFFEL}.a"/>
+				<include_dir location="${GOBO}/library/xml/impl/expat/spec/c"/>
+				<link_library location="${GOBO}/library/xml/impl/expat/spec/c/libexml-expat-${GOBO_EIFFEL}.a"/>
 				<link_library location="-lexpat"/>
 			</external>
 			<external if="${GOBO_OS}=windows">

@@ -4,12 +4,12 @@ indexing
 
 		"Command-line parsers for 'gexace'"
 
-	system:     "Gobo Eiffel Xace"
-	author:     "Andreas Leitner <nozone@sbox.tugraz.at>"
-	copyright:  "Copyright (c) 2001, Andreas Leitner and others"
-	license:    "Eiffel Forum Freeware License v1 (see forum.txt)"
-	date:       "$Date$"
-	revision:   "$Revision$"
+	system:		"Gobo Eiffel Xace"
+	author:		"Andreas Leitner <nozone@sbox.tugraz.at>"
+	copyright:	"Copyright (c) 2001, Andreas Leitner and others"
+	license:	"Eiffel Forum Freeware License v1 (see forum.txt)"
+	date:		"$Date$"
+	revision:	"$Revision$"
 
 class GEXACE_COMMAND_LINE_PARSER
 

@@ -4,11 +4,12 @@ indexing
 
 		"A tree based XML Parser using any XM_EVENT_PARSER implementation as back end."
 
-	status:  "See notice at end of class."
-	author:  "Andreas Leitner"
-	note:    "Although it is not DOM (Level 1) conforming, it has %
-			 %been writen with DOM in mind. I prefer to have this %
-			 %parser follow the Eiffel design guide lines"
+	library:	"Gobo Eiffel XML Library"
+	author:		"Andreas Leitner <nozone@sbox.tugraz.at>"
+	copyright:	"Copyright (c) 2001, Andreas Leitner and others"
+	license:	"Eiffel Forum Freeware License v1 (see forum.txt)"
+	date:		"$Date$"
+	revision:	"$Revision$"
 
 class XT_TREE_PARSER
 
@@ -33,6 +34,8 @@ creation
 feature {NONE} -- Initialisation
 
 	make_from_implementation (a_imp: XI_EVENT_PARSER) is
+			-- Create a new tree based parser from the event based 
+			-- parser `a_imp'.
 		do
 			make_from_implementation_event (a_imp)
 			reset
@@ -223,7 +226,7 @@ invariant
 end -- class XT_TREE_PARSER
 --|-------------------------------------------------------------------------
 --| eXML, Eiffel XML Parser Toolkit
---| Copyright (C) 1999  Andreas Leitner and others
+--| Copyright (C) 1999	Andreas Leitner and others
 --| See the file forum.txt included in this package for licensing info.
 --|
 --| Comments, Questions, Additions to this library? please contact:

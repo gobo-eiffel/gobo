@@ -306,7 +306,7 @@ void exml_XML_SetExternalEntityRefHandlerArg(EIF_POINTER parser, EIF_POINTER arg
 
 void exml_XML_SetUserData(EIF_POINTER parser, EIF_OBJECT callback)
 {
-#ifdef ISE
+#ifdef ise
   EIF_OBJECT protected_callback;
   if (callback == NULL)
     {
@@ -327,17 +327,17 @@ void exml_XML_SetUserData(EIF_POINTER parser, EIF_OBJECT callback)
       XML_SetUserData(parser, protected_callback);
     }
 #endif
-#ifdef SE
+#ifdef se
   XML_SetUserData(parser, callback);
 #endif
 }
 
 EIF_OBJECT exml_XML_GetUserData(EIF_POINTER parser)
 {
-#ifdef ISE
+#ifdef ise
   return ( eif_access (XML_GetUserData(parser)) );
 #endif
-#ifdef SE
+#ifdef se
   return ( XML_GetUserData(parser) );
 #endif
 }
@@ -370,7 +370,7 @@ EIF_POINTER exml_XML_ExpatVersion()
    requested for a certain XML event. This callback will dispatch the
    event further to the Eiffel side using the registered eiffel_object. */
 
-#ifdef SE
+#ifdef se
 /* prototype callback function */
 void eif_exml_on_element_declaration_proc(EIF_OBJ obj, EIF_POINTER name, EIF_POINTER model);
 void eif_exml_on_attribute_declaration_proc(EIF_OBJ obj, EIF_POINTER elname, EIF_POINTER attname, EIF_POINTER att_type, EIF_POINTER dflt, EIF_BOOLEAN isrequired);
@@ -399,7 +399,7 @@ void exml_on_element_declaration (void *eiffel_object,
                                   const XML_Char *name, 
                                   XML_Content *model)
 {
-#ifdef ISE
+#ifdef ise
   EIF_PROCEDURE ep;               
 	EIF_TYPE_ID tid;
 	tid = eif_type_id ("EP_EVENT_PARSER");              
@@ -409,7 +409,7 @@ void exml_on_element_declaration (void *eiffel_object,
   else
     { (ep) (eif_access(eiffel_object), (void*) name, (void*) model); }
 #endif
-#ifdef SE
+#ifdef se
   ((eif_exml_on_element_declaration_proc) (eiffel_object, (void*) name, (void*) model));
 #endif
 }
@@ -421,7 +421,7 @@ void exml_on_attribute_declaration (void *eiffel_object,
                                     const XML_Char *dflt, 
                                     int isrequired)
 {
-#ifdef ISE
+#ifdef ise
   EIF_PROCEDURE ep;               
 	EIF_TYPE_ID tid;
 	tid = eif_type_id ("EP_EVENT_PARSER");              
@@ -431,7 +431,7 @@ void exml_on_attribute_declaration (void *eiffel_object,
   else
     { (ep) (eif_access(eiffel_object), (void*) elname, (void*) attname, (void*) att_type, (void*) dflt, isrequired); }
 #endif
-#ifdef SE
+#ifdef se
   ((eif_exml_on_attribute_declaration_proc) (eiffel_object, (void*) elname, (void*) attname, (void*) att_type, (void*) dflt, isrequired));
 #endif
 }
@@ -441,7 +441,7 @@ void exml_on_xml_declaration (void *eiffel_object,
                               const XML_Char *encoding, 
                               int standalone)
 {
-#ifdef ISE
+#ifdef ise
   EIF_PROCEDURE ep;
 	EIF_TYPE_ID tid;
 	tid = eif_type_id ("EP_EVENT_PARSER");
@@ -450,7 +450,7 @@ void exml_on_xml_declaration (void *eiffel_object,
     { eif_panic ("on_xml_declaration_procedure not found."); }
   (ep) (eif_access(eiffel_object), (void*) version, (void*) encoding, standalone);
 #endif
-#ifdef SE
+#ifdef se
   ((eif_exml_on_xml_declaration_proc) (eiffel_object, (void*) version, (void*) encoding, standalone));
 #endif
 }
@@ -465,7 +465,7 @@ void exml_on_entity_declaration (void *eiffel_object,
                                  const XML_Char *publicId,
                                  const XML_Char *notationName)
 {
-#ifdef ISE
+#ifdef ise
   EIF_PROCEDURE ep;
 	EIF_TYPE_ID tid;
 	tid = eif_type_id ("EP_EVENT_PARSER");              
@@ -475,7 +475,7 @@ void exml_on_entity_declaration (void *eiffel_object,
   else
     { (ep) (eif_access(eiffel_object), (void*) entityName, is_parameter_entity, (void*) value, value_length, (void*) base, (void*) systemId, (void*) publicId, (void*) notationName); }
 #endif
-#ifdef SE
+#ifdef se
   ((eif_exml_on_entity_declaration_proc) (eiffel_object, (void*) entityName, is_parameter_entity, (void*) value, value_length, (void*) base, (void*) systemId, (void*) publicId, (void*) notationName));
 #endif
 }
@@ -484,7 +484,7 @@ void exml_on_start_tag (void *eiffel_object,
                         const char *name, 
                         const char **atts)
 {
-#ifdef ISE
+#ifdef ise
   EIF_PROCEDURE ep;               
 	EIF_TYPE_ID tid;
 	tid = eif_type_id ("EP_EVENT_PARSER");              
@@ -493,7 +493,7 @@ void exml_on_start_tag (void *eiffel_object,
     { eif_panic ("on_start_tag_procedure not found."); }
   (ep) (eif_access(eiffel_object), (void*) name, (void*) atts);
 #endif
-#ifdef SE
+#ifdef se
   ((eif_exml_on_start_tag_proc) (eiffel_object, (void*) name, (void*) atts));
 #endif
 }
@@ -501,7 +501,7 @@ void exml_on_start_tag (void *eiffel_object,
 void exml_on_end_tag (void *eiffel_object, 
                       const char *name)
 {
-#ifdef ISE
+#ifdef ise
   EIF_PROCEDURE ep;               
 	EIF_TYPE_ID tid;
 	tid = eif_type_id ("EP_EVENT_PARSER");              
@@ -510,7 +510,7 @@ void exml_on_end_tag (void *eiffel_object,
     { eif_panic ("on_end_tag_procedure not found."); }
   (ep) (eif_access(eiffel_object), (void*) name);
 #endif
-#ifdef SE
+#ifdef se
   ((eif_exml_on_end_tag_proc) (eiffel_object, (void*) name));
 #endif
 }
@@ -519,7 +519,7 @@ void exml_on_content (void *eiffel_object,
                       const XML_Char *s, 
                       int len)
 {
-#ifdef ISE
+#ifdef ise
   EIF_PROCEDURE ep;               
 	EIF_TYPE_ID tid;
 	tid = eif_type_id ("EP_EVENT_PARSER");              
@@ -528,7 +528,7 @@ void exml_on_content (void *eiffel_object,
     { eif_panic ("on_content_procedure not found."); }
   (ep) (eif_access(eiffel_object), (void*) s, len);
 #endif
-#ifdef SE
+#ifdef se
   ((eif_exml_on_content_proc) (eiffel_object, (void*) s, len));
 #endif
 }
@@ -537,7 +537,7 @@ void exml_on_processing_instruction (void *eiffel_object,
                                      const XML_Char *target, 
                                      const XML_Char *data)
 {
-#ifdef ISE
+#ifdef ise
   EIF_PROCEDURE ep;               
 	EIF_TYPE_ID tid;
 	tid = eif_type_id ("EP_EVENT_PARSER");              
@@ -547,7 +547,7 @@ void exml_on_processing_instruction (void *eiffel_object,
   else
     { (ep) (eif_access(eiffel_object), (void*) target, (void*) data); }
 #endif
-#ifdef SE
+#ifdef se
   ((eif_exml_on_processing_instruction_proc) (eiffel_object, (void*) target, (void*) data));
 #endif
 }
@@ -555,7 +555,7 @@ void exml_on_processing_instruction (void *eiffel_object,
 void exml_on_comment (void *eiffel_object, 
                       const XML_Char *data)
 {
-#ifdef ISE
+#ifdef ise
   EIF_PROCEDURE ep;               
 	EIF_TYPE_ID tid;
 	tid = eif_type_id ("EP_EVENT_PARSER");              
@@ -565,14 +565,14 @@ void exml_on_comment (void *eiffel_object,
   else
     { (ep) (eif_access(eiffel_object), (void*) data); }
 #endif
-#ifdef SE
+#ifdef se
   ((eif_exml_on_comment_proc) (eiffel_object, (void*) data));
 #endif
 }
 
 void exml_on_start_cdata_section (void *eiffel_object)
 {
-#ifdef ISE
+#ifdef ise
   EIF_PROCEDURE ep;               
 	EIF_TYPE_ID tid;
 	tid = eif_type_id ("EP_EVENT_PARSER");              
@@ -582,14 +582,14 @@ void exml_on_start_cdata_section (void *eiffel_object)
   else
     { (ep) (eif_access(eiffel_object)); }
 #endif
-#ifdef SE
+#ifdef se
   ((eif_exml_on_start_cdata_section_proc) (eiffel_object));
 #endif
 }
 
 void exml_on_end_cdata_section (void *eiffel_object)
 {
-#ifdef ISE
+#ifdef ise
   EIF_PROCEDURE ep;               
 	EIF_TYPE_ID tid;
 	tid = eif_type_id ("EP_EVENT_PARSER");              
@@ -599,7 +599,7 @@ void exml_on_end_cdata_section (void *eiffel_object)
   else
     { (ep) (eif_access(eiffel_object)); }
 #endif
-#ifdef SE
+#ifdef se
   ((eif_exml_on_end_cdata_section_proc) (eiffel_object));
 #endif
 }
@@ -608,7 +608,7 @@ void exml_on_default (void *eiffel_object,
                       const XML_Char *data, 
                       int len)
 {
-#ifdef ISE
+#ifdef ise
   EIF_PROCEDURE ep;               
 	EIF_TYPE_ID tid;
 	tid = eif_type_id ("EP_EVENT_PARSER");              
@@ -618,7 +618,7 @@ void exml_on_default (void *eiffel_object,
   else
     { (ep) (eif_access(eiffel_object), (void*) data, len); }
 #endif
-#ifdef SE
+#ifdef se
   ((eif_exml_on_default_proc) (eiffel_object, (void*) data, len));
 #endif
 }
@@ -627,7 +627,7 @@ void exml_on_default_expanded (void *eiffel_object,
                                const XML_Char *data, 
                                int len)
 {
-#ifdef ISE
+#ifdef ise
   EIF_PROCEDURE ep;               
 	EIF_TYPE_ID tid;
 	tid = eif_type_id ("EP_EVENT_PARSER");              
@@ -637,7 +637,7 @@ void exml_on_default_expanded (void *eiffel_object,
   else
     { (ep) (eif_access(eiffel_object), (void*) data, (int) len); }
 #endif
-#ifdef SE
+#ifdef se
   ((eif_exml_on_default_expanded_proc) (eiffel_object, (void*) data, (int) len));
 #endif
 }
@@ -648,7 +648,7 @@ void exml_on_start_doctype (void *eiffel_object,
                             const char *pubid, 
                             int has_internal_subset)
 {
-#ifdef ISE
+#ifdef ise
   EIF_PROCEDURE ep;               
 	EIF_TYPE_ID tid;
 	tid = eif_type_id ("EP_EVENT_PARSER");              
@@ -658,14 +658,14 @@ void exml_on_start_doctype (void *eiffel_object,
   else
     { (ep) (eif_access(eiffel_object), (void*) doctypeName, (void*) sysid, (void*) pubid, has_internal_subset); }
 #endif
-#ifdef SE
+#ifdef se
   ((eif_exml_on_start_doctype_proc) (eiffel_object, (void*) doctypeName, (void*) sysid, (void*) pubid, has_internal_subset));
 #endif
 }
 
 void exml_on_end_doctype (void *eiffel_object)
 {
-#ifdef ISE
+#ifdef ise
   EIF_PROCEDURE ep;               
 	EIF_TYPE_ID tid;
 	tid = eif_type_id ("EP_EVENT_PARSER");              
@@ -675,14 +675,14 @@ void exml_on_end_doctype (void *eiffel_object)
   else
     { (ep) (eif_access(eiffel_object)); }
 #endif
-#ifdef SE
+#ifdef se
   ((eif_exml_on_end_doctype_proc) (eiffel_object));
 #endif
 }
 
 void exml_on_notation_declaration (void *eiffel_object, const XML_Char *notationName, const XML_Char *base, const XML_Char *systemId, const XML_Char *publicId)
 {
-#ifdef ISE
+#ifdef ise
   EIF_PROCEDURE ep;               
 	EIF_TYPE_ID tid;
 	tid = eif_type_id ("EP_EVENT_PARSER");              
@@ -692,7 +692,7 @@ void exml_on_notation_declaration (void *eiffel_object, const XML_Char *notation
   else
     { (ep) (eif_access(eiffel_object), (void*) notationName, (void*) base, (void*) systemId, (void*) publicId); }
 #endif
-#ifdef SE
+#ifdef se
   ((eif_exml_on_notation_declaration_proc) (eiffel_object, (void*) notationName, (void*) base, (void*) systemId, (void*) publicId));
 #endif
 }
@@ -701,7 +701,7 @@ void exml_on_start_namespace_declaration (void *eiffel_object,
                                           const char *prefix, 
                                           const char *uri)
 {
-#ifdef ISE
+#ifdef ise
   EIF_PROCEDURE ep;               
 	EIF_TYPE_ID tid;
 	tid = eif_type_id ("EP_EVENT_PARSER");              
@@ -711,7 +711,7 @@ void exml_on_start_namespace_declaration (void *eiffel_object,
   else
     { (ep) (eif_access(eiffel_object), (void*) prefix, (void*) uri); }
 #endif
-#ifdef SE
+#ifdef se
   ((eif_exml_on_start_namespace_declaration_proc) (eiffel_object, (void*) prefix, (void*) uri));
 #endif
 }
@@ -719,7 +719,7 @@ void exml_on_start_namespace_declaration (void *eiffel_object,
 void exml_on_end_namespace_declaration (void *eiffel_object,
                                         const char *prefix)
 {
-#ifdef ISE
+#ifdef ise
   EIF_PROCEDURE ep;               
 	EIF_TYPE_ID tid;
 	tid = eif_type_id ("EP_EVENT_PARSER");              
@@ -729,14 +729,14 @@ void exml_on_end_namespace_declaration (void *eiffel_object,
   else
     { (ep) (eif_access(eiffel_object), (void*) prefix); }
 #endif
-#ifdef SE
+#ifdef se
   ((eif_exml_on_end_namespace_declaration_proc) (eiffel_object, (void*) prefix));
 #endif
 }
 
 int exml_on_not_standalone_handler (void *eiffel_object)
 {
-#ifdef ISE
+#ifdef ise
   EIF_BOOLEAN_FUNCTION ep;               
 	EIF_TYPE_ID tid;
 	tid = eif_type_id ("EP_EVENT_PARSER");              
@@ -745,7 +745,7 @@ int exml_on_not_standalone_handler (void *eiffel_object)
     { eif_panic ("on_not_standalone_procedure not found."); }
   return ((ep) (eif_access(eiffel_object)));
 #endif
-#ifdef SE
+#ifdef se
   return ((eif_exml_on_not_standalone_proc) (eiffel_object));
 #endif
 }
@@ -756,7 +756,7 @@ int exml_on_external_entity_reference_handler (XML_Parser parser,
                                                const XML_Char *systemId,
                                                const XML_Char *publicId)
 {
-#ifdef ISE
+#ifdef ise
   EIF_BOOLEAN_FUNCTION ep;               
 	EIF_TYPE_ID tid;
   void *eiffel_object;
@@ -767,7 +767,7 @@ int exml_on_external_entity_reference_handler (XML_Parser parser,
     { eif_panic ("on_external_entity_reference_procedure not found."); }
   return ((ep) (eif_access(eiffel_object), (void*) context, (void*) base, (void*) systemId, (void*) publicId));
 #endif
-#ifdef SE
+#ifdef se
   void *eiffel_object;
   eiffel_object = XML_GetUserData(parser);
   return ((eif_exml_on_external_entity_reference_proc) (eiffel_object, (void*) context, (void*) base, (void*) systemId, (void*) publicId));
@@ -778,7 +778,7 @@ int exml_on_unknown_encoding_handler (void *eiffel_object,
                                       const XML_Char *name,
                                       XML_Encoding *info)
 {
-#ifdef ISE
+#ifdef ise
   EIF_BOOLEAN_FUNCTION ep;
 	EIF_TYPE_ID tid;
 	tid = eif_type_id ("EP_ENCODING_CALLBACK");              
@@ -787,7 +787,7 @@ int exml_on_unknown_encoding_handler (void *eiffel_object,
     { eif_panic ("on_unknown_encoding_procedure not found."); }
   return ((ep) (eif_access(eiffel_object), (void*) name, (void*) info));
 #endif
-#ifdef SE
+#ifdef se
   return ((eif_exml_on_unknown_encoding_proc) (eiffel_object, (void*) name, (void*) info));
 #endif
 }
@@ -912,13 +912,13 @@ void exml_register_XML_SetExternalEntityRefHandler(EIF_POINTER parser)
 
 void exml_register_XML_SetUnknownEncodingHandler(EIF_POINTER parser, EIF_OBJECT encoding_callback)
 {
-#ifdef ISE
+#ifdef ise
   /* note that encoding_callback will never be weaned!! */
   EIF_OBJECT protected_callback;  
   protected_callback = eif_adopt (encoding_callback);
   XML_SetUnknownEncodingHandler(parser, exml_on_unknown_encoding_handler, protected_callback);
 #endif
-#ifdef SE
+#ifdef se
   XML_SetUnknownEncodingHandler(parser, exml_on_unknown_encoding_handler, encoding_callback);
 #endif
 }
