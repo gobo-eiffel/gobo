@@ -9,25 +9,25 @@ class
 inherit
 	XT_COMPOSITE
 	XI_ELEMENT
-				undefine
-					has,
-					is_equal,
-					copy,
-					occurrences,
-					cursor_off
-				end
-				
-				XT_NAMED_NODE
-				undefine
-					is_equal,
-					copy,
-					set_parent
-				end
-
+		undefine
+			has,
+			is_equal,
+			copy,
+			occurrences,
+			cursor_off
+		end
+	
+	XT_NAMED_NODE
+		undefine
+			is_equal,
+			copy,
+			set_parent
+		end
+	
 creation
 	make_root,
 	make_child
-
+	
 feature {NONE} -- Implementation
 
 	make_root (a_name, a_ns_prefix: UC_STRING) is
