@@ -88,7 +88,7 @@ feature {NONE} -- Constants
 	Verbose_filename_attribute_name: UC_STRING is
 			-- Name of xml attribute for verbose_filename
 		once
-			!! Result.make_from_string ("verbose_filename")
+			!! Result.make_from_string ("verbose")
 		ensure
 			attribute_name_not_void: Result /= Void
 			atribute_name_not_empty: not Result.empty
@@ -97,7 +97,7 @@ feature {NONE} -- Constants
 	Tokens_classname_attribute_name: UC_STRING is
 			-- Name of xml attribute for tokens_classname
 		once
-			!! Result.make_from_string ("eiffel_tokens_classname")
+			!! Result.make_from_string ("tokens")
 		ensure
 			attribute_name_not_void: Result /= Void
 			atribute_name_not_empty: not Result.empty
@@ -106,7 +106,7 @@ feature {NONE} -- Constants
 	Output_filename_attribute_name: UC_STRING is
 			-- Name of xml attribute for output_filename
 		once
-			!! Result.make_from_string ("eiffel_parser_filename")
+			!! Result.make_from_string ("output")
 		ensure
 			attribute_name_not_void: Result /= Void
 			atribute_name_not_empty: not Result.empty
@@ -115,7 +115,7 @@ feature {NONE} -- Constants
 	Input_filename_attribute_name: UC_STRING is
 			-- Name of xml attribute for input_filename
 		once
-			!! Result.make_from_string ("eiffel_grammar_filename")
+			!! Result.make_from_string ("input")
 		ensure
 			attribute_name_not_void: Result /= Void
 			atribute_name_not_empty: not Result.empty

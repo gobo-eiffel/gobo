@@ -72,7 +72,7 @@ feature {NONE} -- Constants
 	Input_filename_attribute_name: UC_STRING is
 			-- Name of xml attribute for input_filename
 		once
-			!! Result.make_from_string ("inputfile")
+			!! Result.make_from_string ("input")
 		ensure
 			attribute_name_not_void: Result /= Void
 			atribute_name_not_empty: not Result.empty
@@ -81,7 +81,7 @@ feature {NONE} -- Constants
 	Output_filename_attribute_name: UC_STRING is
 			-- Name of xml attribute for output_filename
 		once
-			!! Result.make_from_string ("outputfile")
+			!! Result.make_from_string ("output")
 		ensure
 			attribute_name_not_void: Result /= Void
 			atribute_name_not_empty: not Result.empty
