@@ -188,8 +188,8 @@ feature -- Input operations
 			Result := nb_char
 			j := pos
 			from i := 1 until i > Result loop
-				a_stream.read_character
 				if not a_stream.end_of_input then
+					a_stream.read_character
 					a_buffer.put (a_stream.last_character, j)
 					j := j + 1
 					i := i + 1
