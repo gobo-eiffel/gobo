@@ -1,9 +1,15 @@
 
 indexing
-	description: "Handler for character references/ entities"
-	project: "http://www.nenie.org/eiffel/"
-	license: "http://www.opensource.org/licenses/mit-license.html"
-	revision: "$Id$"
+	
+	description:
+		
+		"Handler for character references/ entities"
+	
+	library: "Gobo Eiffel XML Library"
+	copyright: "Copyright (c) 2002, Eric Bezault and others"
+	license: "Eiffel Forum Freeware License v1 (see forum.txt)"		
+	date: "$Date$"
+	revision: "$Revision$"
 
 class XF_CHARACTER_ENTITY
 
