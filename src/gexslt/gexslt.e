@@ -398,6 +398,7 @@ feature {NONE} -- Implementation
 			a_stylesheet.prepare (a_stylesheet_uri)
 			if a_stylesheet.load_stylesheet_module_failed then
 				report_processing_error ("Could not compile stylesheet", a_stylesheet.load_stylesheet_module_error)
+				Exceptions.die (2)
 			else
 				a_transformer := a_stylesheet.new_transformer
 				process_parameters (a_transformer)
@@ -414,7 +415,7 @@ feature {NONE} -- Implementation
 					a_stream.close
 				end
 				if a_transformer.is_error then
-					-- do nothing for now - the error listener has already reported the error.
+					Exceptions.die (3) -- the error listener has already reported the error.message
 				end
 			end
 		end

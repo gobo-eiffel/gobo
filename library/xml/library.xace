@@ -18,7 +18,13 @@
 		<cluster name="event"/>
 		<cluster name="tree"/>
 		<cluster name="formatter"/>
-		<cluster name="resolver"/>
+		<cluster name="resolver">
+		  <option name="abstract" value="true"/>
+		  <cluster name="interface"/>
+		  <cluster name="catalog"/>
+		  <cluster name="simple"/>
+		  <cluster name="uri"/>
+		</cluster>
 		<cluster name="parser">
 			<option name="abstract" value="true"/>
 			<cluster name="interface"/>
