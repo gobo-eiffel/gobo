@@ -24,9 +24,6 @@ inherit
 			{LX_TABLES} all
 			{ANY} to_tables
 		undefine
-#ifdef ISE || HACT
-			consistent, setup,
-#endif
 			is_equal, copy
 		end
 
@@ -34,9 +31,6 @@ inherit
 		export
 			{NONE} all
 		undefine
-#ifdef ISE || HACT
-			consistent, setup,
-#endif
 			is_equal, copy
 		end
 
@@ -44,9 +38,6 @@ inherit
 		export
 			{NONE} all
 		undefine
-#ifdef ISE || HACT
-			consistent, setup,
-#endif
 			is_equal, copy
 		end
 
@@ -54,9 +45,6 @@ inherit
 		export
 			{NONE} all
 		undefine
-#ifdef ISE || HACT
-			consistent, setup,
-#endif
 			is_equal, copy
 		end
 

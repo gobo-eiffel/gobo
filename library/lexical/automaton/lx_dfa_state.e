@@ -16,9 +16,6 @@ inherit
 
 	LX_STATE
 		undefine
-#ifdef ISE || HACT
-			consistent, setup,
-#endif
 			copy
 		redefine
 			is_equal
@@ -28,17 +25,7 @@ inherit
 
 	HASHABLE
 		undefine
-#ifdef ISE || HACT
-			consistent, setup,
-#endif
-			copy
-		redefine
-			is_equal
-#ifdef VE
---| Bug in VE (970520a)
-		select
-			is_equal
-#endif
+			copy, is_equal
 		end
 
 	DS_ARRAYED_LIST [LX_NFA_STATE]

@@ -16,9 +16,6 @@ inherit
 
 	LX_AUTOMATON
 		undefine
-#ifdef ISE || HACT
-			consistent, setup, 
-#endif
 			is_equal, copy
 		end
 

@@ -41,9 +41,6 @@ inherit
 			{LX_FULL_TABLES, LX_DFA_REGULAR_EXPRESSION} all
 			{ANY} to_tables
 		undefine
-#ifdef ISE || HACT
-			consistent, setup,
-#endif
 			is_equal, copy
 		end
 
@@ -51,9 +48,6 @@ inherit
 		export
 			{NONE} all
 		undefine
-#ifdef ISE || HACT
-			consistent, setup,
-#endif
 			is_equal, copy
 		end
 
