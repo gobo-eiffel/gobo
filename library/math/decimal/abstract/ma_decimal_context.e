@@ -117,8 +117,6 @@ feature -- Access
 
 	digits: INTEGER
 			-- The number of digits (precision) to be used for an operation.
-			-- A value of 0 indicates that unlimited precision (as many digits
-			-- as are required) will be used.
 			-- The DECIMAL operators use this value to determine the precision of results.
 			-- Note that leading zeros (in the integer part of a number) are never significant.
 
@@ -190,7 +188,6 @@ feature -- Status setting
 
 	set_digits (some_digits: INTEGER) is
 			-- Set `digits' to `some_digits'.
-			-- digits = 0 <=> calculations in plain, unlimited precision (risky!)
 		require
 			some_digits_valid: some_digits >= Minimum_digits and some_digits <= Maximum_digits
 		do
@@ -371,7 +368,7 @@ feature {DECIMAL_TESTER, MA_DECIMAL_CONTEXT}
 
 invariant
 
-	non_negative_digits: digits >= 0
+	positive_digits: digits > 0
 	rounding_mode_valid: rounding_mode = Round_ceiling or rounding_mode = Round_down
 		or rounding_mode = Round_floor or rounding_mode = Round_half_down
 		or rounding_mode = Round_half_even or rounding_mode = Round_half_up

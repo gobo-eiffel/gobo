@@ -22,7 +22,7 @@ inherit
 
 	KL_IMPORTED_ARRAY_ROUTINES
 	
-feature -- Constants
+feature -- Constants : rounding modes
 
 	Round_up: INTEGER is 0 
 			-- Rounding mode to round away from zero;
@@ -64,7 +64,9 @@ feature -- Constants
 			-- Rounding mode to assert that no rounding is necessary;
 			-- Rounding (potential loss of information) is not permitted.
 			-- If any of the discarded digits are non-zero then an 'ArithmeticException'should be thrown.
-  
+
+feature -- Constants : signals
+
 	Signal_division_by_zero: INTEGER is 1
 			-- Non Zero dividend is divided by zero
 
@@ -88,8 +90,34 @@ feature -- Constants
 
 	Signal_subnormal: INTEGER is 8
 
-	Minimum_digits: INTEGER is 0
-	Maximum_digits: INTEGER is 999_999_999
+feature -- Constants : limits
+
+	Minimum_digits: INTEGER is 1
+	Maximum_digits: INTEGER is 99_999_999
+
+	Minimum_exponent: INTEGER is -999_999_999 
+			-- Minimum exponent allowed
+
+	Maximum_exponent : INTEGER is 999_999_999
+			-- Maximum exponent allowed
+
+	Minimum_integer_as_decimal: MA_DECIMAL is
+			-- Minimum value convertible to integer
+		once
+			create Result.make_from_integer (Platform.Minimum_integer)
+		ensure
+			minimum_integer_not_void: Result /= Void
+		end
+
+	Maximum_integer_as_decimal: MA_DECIMAL is
+			-- Maximum value convertible to integer
+		once
+			create Result.make_from_integer (Platform.Maximum_integer)
+		ensure
+			maximum_integer_not_void: Result /= Void
+		end
+
+feature -- Constants : defaults
 
 	Default_digits: INTEGER is 9
 
@@ -102,43 +130,28 @@ feature -- Constants
 				Signal_underflow >>
 		ensure
 			default_traps_not_void: Result /= Void
+			has_division_by_zero: Integer_array_.has (Result, Signal_division_by_zero)
+			has_invalid_operation: Integer_array_.has (Result, Signal_invalid_operation)
+			has_overflow: INTEGER_ARRAY_.has (Result, Signal_overflow)
+			has_underflow: INTEGER_ARRAY_.has (Result, Signal_underflow)
 		end
 
 	Default_rounding_mode: INTEGER is
 			-- Default rounding mode
 		once
 			Result := Round_half_up
+		ensure
+			definition: Result = Round_half_up
 		end
+
+feature -- Constants : special flags
 
 	Special_none: INTEGER is 0
 	Special_infinity: INTEGER is 1
 	Special_signaling_nan: INTEGER is 2
 	Special_quiet_nan: INTEGER is 3
-			-- Special flags
 
-	 Minimum_exponent: INTEGER is -999_999_999 
-	 		-- Minimum exponent allowed
-
-	 Maximum_exponent : INTEGER is 999_999_999
-	 		-- Maximum exponent allowed
-
-	 Minimum_integer_as_decimal: MA_DECIMAL is
-	 		-- Minimum value convertible to integer
-	 	once
-	 		create Result.make_from_integer (Platform.Minimum_integer)
-	 	ensure
-	 		minimum_integer_not_void: Result /= Void
-	 	end
-
-	 Maximum_integer_as_decimal: MA_DECIMAL is
-	 		-- Maximum value convertible to integer
-	 	once
-	 		create Result.make_from_integer (Platform.Maximum_integer)
-	 	ensure
-	 		maximum_integer_not_void: Result /= Void
-	 	end
-
-feature -- Constants
+feature -- Constants : support
 
 	Rounds: ARRAY [INTEGER] is
 			-- Rounding modes
