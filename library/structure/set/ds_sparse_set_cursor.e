@@ -53,7 +53,7 @@ feature -- Access
 	item: G is
 			-- Item at cursor position
 		do
-			Result := container.items.item (position)
+			Result := container.items_item (position)
 		end
 
 	container: DS_SPARSE_SET [G]
@@ -83,13 +83,13 @@ feature -- Status report
 			-- Is cursor on the first item?
 		local
 			i: INTEGER
-			clashes: like FIXED_INTEGER_ARRAY_TYPE
+			a_set: like container
 		do
 			if not container.is_empty then
 				from
-					clashes := container.clashes
+					a_set := container
 				until
-					clashes.item (i) > Free_watermark
+					a_set.clashes_item (i) > Free_watermark
 				loop
 					i := i + 1
 				end
@@ -101,14 +101,14 @@ feature -- Status report
 			-- Is cursor on the last item?
 		local
 			i: INTEGER
-			clashes: like FIXED_INTEGER_ARRAY_TYPE
+			a_set: like container
 		do
 			if not container.is_empty then
 				from
-					clashes := container.clashes
-					i := clashes.count - 1
+					a_set := container
+					i := a_set.capacity - 1
 				until
-					clashes.item (i) > Free_watermark
+					a_set.clashes_item (i) > Free_watermark
 				loop
 					i := i - 1
 				end
@@ -129,7 +129,6 @@ feature -- Cursor movement
 		local
 			i, nb: INTEGER
 			a_set: like container
-			clashes: like FIXED_INTEGER_ARRAY_TYPE
 			was_off: BOOLEAN
 		do
 			if container.is_empty then
@@ -138,11 +137,10 @@ feature -- Cursor movement
 				was_off := off
 				from
 					a_set := container
-					clashes := a_set.clashes
 					nb := a_set.capacity - 1
 				until
 					i > nb or else
-					clashes.item (i) > Free_watermark
+					a_set.clashes_item (i) > Free_watermark
 				loop
 					i := i + 1
 				end
@@ -165,7 +163,6 @@ feature -- Cursor movement
 		local
 			i: INTEGER
 			a_set: like container
-			clashes: like FIXED_INTEGER_ARRAY_TYPE
 			was_off: BOOLEAN
 		do
 			if container.is_empty then
@@ -174,11 +171,10 @@ feature -- Cursor movement
 				was_off := off
 				from
 					a_set := container
-					clashes := a_set.clashes
 					i := a_set.capacity - 1
 				until
 					i < 0 or else
-					clashes.item (i) > Free_watermark
+					a_set.clashes_item (i) > Free_watermark
 				loop
 					i := i - 1
 				end
@@ -201,7 +197,6 @@ feature -- Cursor movement
 		local
 			i, nb: INTEGER
 			a_set: like container
-			clashes: like FIXED_INTEGER_ARRAY_TYPE
 			was_off: BOOLEAN
 		do
 			if position = Before_position then
@@ -213,11 +208,10 @@ feature -- Cursor movement
 			end
 			from
 				a_set := container
-				clashes := a_set.clashes
 				nb := a_set.capacity - 1
 			until
 				i > nb or else
-				clashes.item (i) > Free_watermark
+				a_set.clashes_item (i) > Free_watermark
 			loop
 				i := i + 1
 			end
@@ -239,11 +233,9 @@ feature -- Cursor movement
 		local
 			i: INTEGER
 			a_set: like container
-			clashes: like FIXED_INTEGER_ARRAY_TYPE
 			was_off: BOOLEAN
 		do
 			a_set := container
-			clashes := a_set.clashes
 			if position = After_position then
 				was_off := True
 				i := a_set.capacity - 1
@@ -254,7 +246,7 @@ feature -- Cursor movement
 			from
 			until
 				i < 0 or else
-				clashes.item (i) > Free_watermark
+				a_set.clashes_item (i) > Free_watermark
 			loop
 				i := i - 1
 			end
