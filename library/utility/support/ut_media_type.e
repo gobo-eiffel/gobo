@@ -31,7 +31,7 @@ feature {NONE} -- Initialization
 			-- Establish invariant.
 		require
 			type_not_empty: a_type /= Void and then a_type.count > 0 and then ANY_.same_types (a_type, "")
-			subtype_not_empty: subtype /= Void and then subtype.count > 0 and then ANY_.same_types (a_subtype, "")
+			subtype_not_empty: a_subtype /= Void and then a_subtype.count > 0 and then ANY_.same_types (a_subtype, "")
 			-- TODO: should these be printable ASCII, or some subset? RFC2045 does not appear to say.
 		do
 			type :=  a_type.as_lower
