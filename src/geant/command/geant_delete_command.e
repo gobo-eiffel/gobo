@@ -51,14 +51,22 @@ feature -- Status report
 			fileset_not_void: Result implies fileset /= Void
 		end
 
+	is_directoryset_executable: BOOLEAN is
+			-- Can command be executed on a directoryset?
+		do
+			Result := directoryset /= Void
+		ensure
+			directoryset_not_void: Result implies directoryset /= Void
+		end
+
 	is_executable: BOOLEAN is
 			-- Can command be executed?
 		do
 			Result := BOOLEAN_.nxor (<<is_file_executable,
-				is_directory_executable, is_fileset_executable>>)
+				is_directory_executable, (is_fileset_executable or is_directoryset_executable)>>)
 		ensure then
 			exclusive: Result implies BOOLEAN_.nxor (<<is_file_executable,
-				is_directory_executable, is_fileset_executable>>)
+				is_directory_executable, (is_fileset_executable or is_directoryset_executable)>>)
 		end
 
 feature -- Access
@@ -71,6 +79,9 @@ feature -- Access
 
 	fileset: GEANT_FILESET
 		-- Fileset for current command
+
+	directoryset: GEANT_DIRECTORYSET
+		-- Directoryset for current command
 
 feature -- Setting
 
@@ -106,6 +117,16 @@ feature -- Setting
 			fileset_set: fileset = a_fileset
 		end
 
+	set_directoryset (a_directoryset: like directoryset) is
+			-- Set `directoryset' to `a_directoryset'.
+		require
+			a_directoryset_not_void: a_directoryset /= Void
+		do
+			directoryset := a_directoryset
+		ensure
+			directoryset_set: directoryset = a_directoryset
+		end
+
 feature -- Execution
 
 	execute is
@@ -135,35 +156,65 @@ feature -- Execution
 					end
 				end
 			else
-				check is_fileset_executable: is_fileset_executable end
-				if not fileset.is_executable then
-					project.log (<<"  [delete] error: fileset definition wrong">>)
-					exit_code := 1
+				check is_fileset_executable_or_is_directoryset_executable:
+					is_fileset_executable or is_directoryset_executable
 				end
-				if exit_code = 0 then
-						-- This command always works on one file and not on two files like copy or move.
-						-- Therefore the force flag of `fileset` is set to 'True' so that files are included
-						-- although `fileset.item_filename' and `fileset.item_mapped_filename' are not
-						-- out of date.
-						-- A value of 'False' for `fileset.force' does not make sense here since the delete
-						-- command does not compare files.
-					fileset.set_force (True)
-					fileset.execute
-					from
-						fileset.start
-					until
-						fileset.after or else exit_code /= 0
-					loop
-						a_name := file_system.pathname_from_file_system (fileset.item_mapped_filename, unix_file_system)
-						project.trace (<<"  [delete] ", a_name>>)
-						if not project.options.no_exec then
-							file_system.delete_file (a_name)
-							if file_system.file_exists (a_name) then
-								project.log (<<"geant error: cannot delete file '", a_name, "%'">>)
-								exit_code := 1
+				if is_fileset_executable then
+					if not fileset.is_executable then
+						project.log (<<"  [delete] error: fileset definition wrong">>)
+						exit_code := 1
+					end
+					if exit_code = 0 then
+							-- This command always works on one file and not on two files like copy or move.
+							-- Therefore the force flag of `fileset` is set to 'True' so that files are included
+							-- although `fileset.item_filename' and `fileset.item_mapped_filename' are not
+							-- out of date.
+							-- A value of 'False' for `fileset.force' does not make sense here since the delete
+							-- command does not compare files.
+						fileset.set_force (True)
+						fileset.execute
+						from
+							fileset.start
+						until
+							fileset.after or else exit_code /= 0
+						loop
+							a_name := file_system.pathname_from_file_system (fileset.item_mapped_filename, unix_file_system)
+							project.trace (<<"  [delete] ", a_name>>)
+							if not project.options.no_exec then
+								file_system.delete_file (a_name)
+								if file_system.file_exists (a_name) then
+									project.log (<<"geant error: cannot delete file '", a_name, "%'">>)
+									exit_code := 1
+								end
 							end
+							fileset.forth
 						end
-						fileset.forth
+					end
+				end
+				if is_directoryset_executable then
+					if not directoryset.is_executable then
+						project.log (<<"  [delete] error: directoryset definition wrong">>)
+						exit_code := 1
+					end
+					if exit_code = 0 then
+						directoryset.execute
+						from
+							directoryset.start
+						until
+							directoryset.after or else exit_code /= 0
+						loop
+							a_name := file_system.pathname_from_file_system (
+								directoryset.item_directory_name, unix_file_system)
+							project.trace (<<"  [delete] ", a_name>>)
+							if not project.options.no_exec then
+								file_system.recursive_delete_directory (a_name)
+								if file_system.directory_exists (a_name) then
+									project.log (<<"  [delete] error: cannot delete directory '", a_name, "%'">>)
+									exit_code := 1
+								end
+							end
+							directoryset.forth
+						end
 					end
 				end
 			end

@@ -33,6 +33,7 @@ feature {NONE} -- Initialization
 			a_value: STRING
 			a_xml_subelement: XM_ELEMENT
 			a_fs_element: GEANT_FILESET_ELEMENT
+			a_directoryset_element: GEANT_DIRECTORYSET_ELEMENT
 		do
 			!! command.make (a_project)
 			task_make (command, a_xml_element)
@@ -52,6 +53,11 @@ feature {NONE} -- Initialization
 			if a_xml_subelement /= Void then
 				!! a_fs_element.make (project, a_xml_subelement)
 				command.set_fileset (a_fs_element.fileset)
+			end
+			a_xml_subelement := xml_element.element_by_name (Directoryset_element_name)
+			if a_xml_subelement /= Void then
+				!! a_directoryset_element.make (project, a_xml_subelement)
+				command.set_directoryset (a_directoryset_element.directoryset)
 			end
 		end
 
@@ -84,6 +90,15 @@ feature {NONE} -- Constants
 			-- Name of xml subelement for fileset
 		once
 			Result := "fileset"
+		ensure
+			element_name_not_void: Result /= Void
+			element_name_not_empty: Result.count > 0
+		end
+
+	Directoryset_element_name: STRING is
+			-- Name of xml subelement for directoryset
+		once
+			Result := "directoryset"
 		ensure
 			element_name_not_void: Result /= Void
 			element_name_not_empty: Result.count > 0
