@@ -16,7 +16,8 @@ inherit
 
 	ET_LIKE_IDENTIFIER
 		redefine
-			named_type, is_formal_type,
+			named_type, shallow_named_type,
+			is_formal_type,
 			has_qualified_type,
 			same_syntactical_like_feature,
 			same_named_bit_type,
@@ -30,7 +31,9 @@ inherit
 			conforms_from_bit_type,
 			conforms_from_class_type,
 			conforms_from_formal_parameter_type,
-			conforms_from_tuple_type
+			conforms_from_tuple_type,
+			convertible_from_class_type,
+			convertible_from_formal_parameter_type
 		end
 
 creation
@@ -395,6 +398,85 @@ feature -- Access
 							lhs_contexts := a_context
 						end
 						Result := a_query_type.named_type (a_context, a_universe)
+						lhs_contexts := lhs_contexts.previous_stacked_context
+					else
+							-- Internal error: an inconsistency has been
+							-- introduced in the AST since we relsolved
+							-- current anchored type.
+						Result := a_universe.unknown_class
+					end
+				else
+						-- Internal error: an inconsistency has been
+						-- introduced in the AST since we relsolved
+						-- current anchored type.
+					Result := a_universe.unknown_class
+				end
+			end
+		end
+
+	shallow_named_type (a_context: ET_TYPE_CONTEXT; a_universe: ET_UNIVERSE): ET_NAMED_TYPE is
+			-- Named type of current type, when it appears in `a_context'
+			-- in `a_universe', but contrary to `named_type' its generic
+			-- parameters can be made up of types other than class names
+			-- and generic formal parameters.
+		local
+			a_class: ET_CLASS
+			seeded_feature: ET_FEATURE
+			a_query_type: ET_TYPE
+			args: ET_FORMAL_ARGUMENT_LIST
+			an_index: INTEGER
+		do
+			if seed = 0 then
+					-- Anchored type not resolved yet.
+				Result := a_universe.unknown_class
+			elseif lhs_contexts /= Void and then lhs_contexts.has_stacked_context (a_context, a_universe) then
+					-- A cycle in the anchored types has been introduced
+					-- in the AST since we checked for cycles.
+				Result := a_universe.unknown_class
+			elseif is_like_argument then
+				a_class := a_context.type.direct_base_class (a_universe)
+				seeded_feature := a_class.seeded_feature (seed)
+				if seeded_feature /= Void then
+					args := seeded_feature.arguments
+					an_index := index
+					if args = Void or else an_index > args.count then
+							-- Internal error: an inconsistency has been
+							-- introduced in the AST since we relsolved
+							-- current anchored type.
+						Result := a_universe.unknown_class
+					else
+							-- Push `a_context' on stack `lhs_contexts' to avoid
+							-- infinite loop if the AST has been externally changed
+							-- since we checked for cycles in anchored types.
+						if lhs_contexts /= Void then
+							create {ET_STACKED_TYPE_CONTEXT} lhs_contexts.make (a_context, lhs_contexts)
+						else
+							lhs_contexts := a_context
+						end
+						Result := args.item (an_index).type.shallow_named_type (a_context, a_universe)
+						lhs_contexts := lhs_contexts.previous_stacked_context
+					end
+				else
+						-- Internal error: an inconsistency has been
+						-- introduced in the AST since we relsolved
+						-- current anchored type.
+					Result := a_universe.unknown_class
+				end
+			else
+				a_class := a_context.type.direct_base_class (a_universe)
+				seeded_feature := a_class.seeded_feature (seed)
+				if seeded_feature /= Void then
+					a_query_type := seeded_feature.type
+					if a_query_type /= Void then
+							-- Push `a_context' on stack `lhs_contexts' to avoid
+							-- infinite loop if the AST has been externally changed
+							-- since we checked for cycles in anchored types.
+						if lhs_contexts /= Void then
+							create {ET_STACKED_TYPE_CONTEXT} lhs_contexts.make (a_context, lhs_contexts)
+						else
+							lhs_contexts := a_context
+						end
+						Result := a_query_type.shallow_named_type (a_context, a_universe)
 						lhs_contexts := lhs_contexts.previous_stacked_context
 					else
 							-- Internal error: an inconsistency has been
@@ -1885,6 +1967,256 @@ feature {NONE} -- Conformance
 			-- Stacks of type contexts to avoid infinite loop if the AST
 			-- has been externally changed since we checked for cycles in
 			-- anchored types (lhs: left-hand-side, rhs: right-hand-side)
+
+feature -- Convertibility
+
+	convertible_to_type (other: ET_TYPE; other_context: ET_TYPE_CONTEXT;
+		a_context: ET_TYPE_CONTEXT; a_universe: ET_UNIVERSE): BOOLEAN is
+			-- Is current type appearing in `a_context' convertible
+			-- to `other' type appearing in `other_context'?
+			-- (Note: 'a_universe.qualified_signature_resolver' is
+			-- used on classes whose qualified anchored types need
+			-- to be resolved in order to check convertibility.)
+		local
+			a_class: ET_CLASS
+			seeded_feature: ET_FEATURE
+			a_query_type: ET_TYPE
+			args: ET_FORMAL_ARGUMENT_LIST
+			an_index: INTEGER
+		do
+			if other = Current and then other_context = a_context then
+				Result := True
+			elseif seed = 0 then
+					-- Anchored type not resolved yet.
+				Result := False
+			elseif lhs_contexts /= Void and then lhs_contexts.has_stacked_context (a_context, a_universe) then
+					-- A cycle in the anchored types has been introduced
+					-- in the AST since we checked for cycles.
+				Result := False
+			elseif is_like_argument then
+				a_class := a_context.type.direct_base_class (a_universe)
+				seeded_feature := a_class.seeded_feature (seed)
+				if seeded_feature /= Void then
+					args := seeded_feature.arguments
+					an_index := index
+					if args = Void or else an_index > args.count then
+							-- Internal error: an inconsistency has been
+							-- introduced in the AST since we relsolved
+							-- current anchored type.
+						Result := False
+					else
+							-- Push `a_context' on stack `lhs_contexts' to avoid
+							-- infinite loop if the AST has been externally changed
+							-- since we checked for cycles in anchored types.
+						if lhs_contexts /= Void then
+							create {ET_STACKED_TYPE_CONTEXT} lhs_contexts.make (a_context, lhs_contexts)
+						else
+							lhs_contexts := a_context
+						end
+						Result := args.item (an_index).type.convertible_to_type (other, other_context, a_context, a_universe)
+						lhs_contexts := lhs_contexts.previous_stacked_context
+					end
+				else
+						-- Internal error: an inconsistency has been
+						-- introduced in the AST since we relsolved
+						-- current anchored type.
+					Result := False
+				end
+			else
+				a_class := a_context.type.direct_base_class (a_universe)
+				seeded_feature := a_class.seeded_feature (seed)
+				if seeded_feature /= Void then
+					a_query_type := seeded_feature.type
+					if a_query_type /= Void then
+							-- Push `a_context' on stack `lhs_contexts' to avoid
+							-- infinite loop if the AST has been externally changed
+							-- since we checked for cycles in anchored types.
+						if lhs_contexts /= Void then
+							create {ET_STACKED_TYPE_CONTEXT} lhs_contexts.make (a_context, lhs_contexts)
+						else
+							lhs_contexts := a_context
+						end
+						Result := a_query_type.convertible_to_type (other, other_context, a_context, a_universe)
+						lhs_contexts := lhs_contexts.previous_stacked_context
+					else
+							-- Internal error: an inconsistency has been
+							-- introduced in the AST since we relsolved
+							-- current anchored type.
+						Result := False
+					end
+				else
+						-- Internal error: an inconsistency has been
+						-- introduced in the AST since we relsolved
+						-- current anchored type.
+					Result := False
+				end
+			end
+		end
+
+feature {ET_TYPE} -- Convertibility
+
+	convertible_from_class_type (other: ET_CLASS_TYPE; other_context: ET_TYPE_CONTEXT;
+		a_context: ET_TYPE_CONTEXT; a_universe: ET_UNIVERSE): BOOLEAN is
+			-- Is `other' type appearing in `other_context' convertible
+			-- to current type appearing in `a_context'?
+			-- (Note: 'a_universe.qualified_signature_resolver' is
+			-- used on classes whose qualified anchored types need
+			-- to be resolved in order to check convertibility.)
+		local
+			a_class: ET_CLASS
+			seeded_feature: ET_FEATURE
+			a_query_type: ET_TYPE
+			args: ET_FORMAL_ARGUMENT_LIST
+			an_index: INTEGER
+		do
+			if seed = 0 then
+					-- Anchored type not resolved yet.
+				Result := False
+			elseif rhs_contexts /= Void and then rhs_contexts.has_stacked_context (a_context, a_universe) then
+					-- A cycle in the anchored types has been introduced
+					-- in the AST since we checked for cycles.
+				Result := False
+			elseif is_like_argument then
+				a_class := a_context.type.direct_base_class (a_universe)
+				seeded_feature := a_class.seeded_feature (seed)
+				if seeded_feature /= Void then
+					args := seeded_feature.arguments
+					an_index := index
+					if args = Void or else an_index > args.count then
+							-- Internal error: an inconsistency has been
+							-- introduced in the AST since we relsolved
+							-- current anchored type.
+						Result := False
+					else
+							-- Push `a_context' on stack `rhs_contexts' to avoid
+							-- infinite loop if the AST has been externally changed
+							-- since we checked for cycles in anchored types.
+						if rhs_contexts /= Void then
+							create {ET_STACKED_TYPE_CONTEXT} rhs_contexts.make (a_context, rhs_contexts)
+						else
+							rhs_contexts := a_context
+						end
+						Result := args.item (an_index).type.convertible_from_class_type (other, other_context, a_context, a_universe)
+						rhs_contexts := rhs_contexts.previous_stacked_context
+					end
+				else
+						-- Internal error: an inconsistency has been
+						-- introduced in the AST since we relsolved
+						-- current anchored type.
+					Result := False
+				end
+			else
+				a_class := a_context.type.direct_base_class (a_universe)
+				seeded_feature := a_class.seeded_feature (seed)
+				if seeded_feature /= Void then
+					a_query_type := seeded_feature.type
+					if a_query_type /= Void then
+							-- Push `a_context' on stack `rhs_contexts' to avoid
+							-- infinite loop if the AST has been externally changed
+							-- since we checked for cycles in anchored types.
+						if rhs_contexts /= Void then
+							create {ET_STACKED_TYPE_CONTEXT} rhs_contexts.make (a_context, rhs_contexts)
+						else
+							rhs_contexts := a_context
+						end
+						Result := a_query_type.convertible_from_class_type (other, other_context, a_context, a_universe)
+						rhs_contexts := rhs_contexts.previous_stacked_context
+					else
+							-- Internal error: an inconsistency has been
+							-- introduced in the AST since we relsolved
+							-- current anchored type.
+						Result := False
+					end
+				else
+						-- Internal error: an inconsistency has been
+						-- introduced in the AST since we relsolved
+						-- current anchored type.
+					Result := False
+				end
+			end
+		end
+
+	convertible_from_formal_parameter_type (other: ET_FORMAL_PARAMETER_TYPE;
+		other_context: ET_TYPE_CONTEXT; a_context: ET_TYPE_CONTEXT;
+		a_universe: ET_UNIVERSE): BOOLEAN is
+			-- Is `other' type appearing in `other_context' convertible
+			-- to current type appearing in `a_context'?
+			-- (Note: 'a_universe.qualified_signature_resolver' is
+			-- used on classes whose qualified anchored types need
+			-- to be resolved in order to check convertibility.)
+		local
+			a_class: ET_CLASS
+			seeded_feature: ET_FEATURE
+			a_query_type: ET_TYPE
+			args: ET_FORMAL_ARGUMENT_LIST
+			an_index: INTEGER
+		do
+			if seed = 0 then
+					-- Anchored type not resolved yet.
+				Result := False
+			elseif rhs_contexts /= Void and then rhs_contexts.has_stacked_context (a_context, a_universe) then
+					-- A cycle in the anchored types has been introduced
+					-- in the AST since we checked for cycles.
+				Result := False
+			elseif is_like_argument then
+				a_class := a_context.type.direct_base_class (a_universe)
+				seeded_feature := a_class.seeded_feature (seed)
+				if seeded_feature /= Void then
+					args := seeded_feature.arguments
+					an_index := index
+					if args = Void or else an_index > args.count then
+							-- Internal error: an inconsistency has been
+							-- introduced in the AST since we relsolved
+							-- current anchored type.
+						Result := False
+					else
+							-- Push `a_context' on stack `rhs_contexts' to avoid
+							-- infinite loop if the AST has been externally changed
+							-- since we checked for cycles in anchored types.
+						if rhs_contexts /= Void then
+							create {ET_STACKED_TYPE_CONTEXT} rhs_contexts.make (a_context, rhs_contexts)
+						else
+							rhs_contexts := a_context
+						end
+						Result := args.item (an_index).type.convertible_from_formal_parameter_type (other, other_context, a_context, a_universe)
+						rhs_contexts := rhs_contexts.previous_stacked_context
+					end
+				else
+						-- Internal error: an inconsistency has been
+						-- introduced in the AST since we relsolved
+						-- current anchored type.
+					Result := False
+				end
+			else
+				a_class := a_context.type.direct_base_class (a_universe)
+				seeded_feature := a_class.seeded_feature (seed)
+				if seeded_feature /= Void then
+					a_query_type := seeded_feature.type
+					if a_query_type /= Void then
+							-- Push `a_context' on stack `rhs_contexts' to avoid
+							-- infinite loop if the AST has been externally changed
+							-- since we checked for cycles in anchored types.
+						if rhs_contexts /= Void then
+							create {ET_STACKED_TYPE_CONTEXT} rhs_contexts.make (a_context, rhs_contexts)
+						else
+							rhs_contexts := a_context
+						end
+						Result := a_query_type.convertible_from_formal_parameter_type (other, other_context, a_context, a_universe)
+						rhs_contexts := rhs_contexts.previous_stacked_context
+					else
+							-- Internal error: an inconsistency has been
+							-- introduced in the AST since we relsolved
+							-- current anchored type.
+						Result := False
+					end
+				else
+						-- Internal error: an inconsistency has been
+						-- introduced in the AST since we relsolved
+						-- current anchored type.
+					Result := False
+				end
+			end
+		end
 
 feature -- Resolving
 

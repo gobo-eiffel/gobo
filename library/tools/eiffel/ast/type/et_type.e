@@ -106,6 +106,21 @@ feature -- Access
 			named_type_named: Result.is_named_type
 		end
 
+	shallow_named_type (a_context: ET_TYPE_CONTEXT; a_universe: ET_UNIVERSE): ET_NAMED_TYPE is
+			-- Named type of current type, when it appears in `a_context'
+			-- in `a_universe', but contrary to `named_type' its generic
+			-- parameters can be made up of types other than class names
+			-- and generic formal parameters.
+		require
+			a_context_not_void: a_context /= Void
+			a_context_valid: a_context.is_valid_context
+			a_universe_not_void: a_universe /= Void
+		do
+			Result := shallow_base_type (a_context, a_universe)
+		ensure
+			named_type_not_void: Result /= Void
+		end
+
 	type: ET_TYPE is
 			-- Type
 		do
@@ -594,6 +609,106 @@ feature {ET_TYPE} -- Conformance
 			-- for conformance, and 'a_universe.qualified_signature_resolver'
 			-- is used on classes whose qualified anchored types need to be
 			-- resolved in order to check conformance.)
+		require
+			other_not_void: other /= Void
+			other_context_not_void: other_context /= Void
+			other_context_valid: other_context.is_valid_context
+			a_context_not_void: a_context /= Void
+			a_context_valid: a_context.is_valid_context
+			same_root_context: other_context.same_root_context (a_context)
+			a_universe_not_void: a_universe /= Void
+		do
+			-- Result := False
+		end
+
+feature -- Convertibility
+
+	convertible_to_type (other: ET_TYPE; other_context: ET_TYPE_CONTEXT;
+		a_context: ET_TYPE_CONTEXT; a_universe: ET_UNIVERSE): BOOLEAN is
+			-- Is current type appearing in `a_context' convertible
+			-- to `other' type appearing in `other_context'?
+			-- (Note: 'a_universe.qualified_signature_resolver' is
+			-- used on classes whose qualified anchored types need
+			-- to be resolved in order to check convertibility.)
+		require
+			other_not_void: other /= Void
+			other_context_not_void: other_context /= Void
+			other_context_valid: other_context.is_valid_context
+			a_context_not_void: a_context /= Void
+			a_context_valid: a_context.is_valid_context
+			same_root_context: other_context.same_root_context (a_context)
+			a_universe_not_void: a_universe /= Void
+		deferred
+		end
+
+feature {ET_TYPE} -- Convertibility
+
+	convertible_from_bit_type (other: ET_BIT_TYPE; other_context: ET_TYPE_CONTEXT;
+		a_context: ET_TYPE_CONTEXT; a_universe: ET_UNIVERSE): BOOLEAN is
+			-- Is `other' type appearing in `other_context' convertible
+			-- to current type appearing in `a_context'?
+			-- (Note: 'a_universe.qualified_signature_resolver' is
+			-- used on classes whose qualified anchored types need
+			-- to be resolved in order to check convertibility.)
+		require
+			other_not_void: other /= Void
+			other_context_not_void: other_context /= Void
+			other_context_valid: other_context.is_valid_context
+			a_context_not_void: a_context /= Void
+			a_context_valid: a_context.is_valid_context
+			same_root_context: other_context.same_root_context (a_context)
+			a_universe_not_void: a_universe /= Void
+		do
+			-- Result := False
+		end
+
+	convertible_from_class_type (other: ET_CLASS_TYPE; other_context: ET_TYPE_CONTEXT;
+		a_context: ET_TYPE_CONTEXT; a_universe: ET_UNIVERSE): BOOLEAN is
+			-- Is `other' type appearing in `other_context' convertible
+			-- to current type appearing in `a_context'?
+			-- (Note: 'a_universe.qualified_signature_resolver' is
+			-- used on classes whose qualified anchored types need
+			-- to be resolved in order to check convertibility.)
+		require
+			other_not_void: other /= Void
+			other_context_not_void: other_context /= Void
+			other_context_valid: other_context.is_valid_context
+			a_context_not_void: a_context /= Void
+			a_context_valid: a_context.is_valid_context
+			same_root_context: other_context.same_root_context (a_context)
+			a_universe_not_void: a_universe /= Void
+		do
+			-- Result := False
+		end
+
+	convertible_from_formal_parameter_type (other: ET_FORMAL_PARAMETER_TYPE;
+		other_context: ET_TYPE_CONTEXT; a_context: ET_TYPE_CONTEXT;
+		a_universe: ET_UNIVERSE): BOOLEAN is
+			-- Is `other' type appearing in `other_context' convertible
+			-- to current type appearing in `a_context'?
+			-- (Note: 'a_universe.qualified_signature_resolver' is
+			-- used on classes whose qualified anchored types need
+			-- to be resolved in order to check convertibility.)
+		require
+			other_not_void: other /= Void
+			other_context_not_void: other_context /= Void
+			other_context_valid: other_context.is_valid_context
+			other_context_is_root: other_context.is_root_context
+			a_context_not_void: a_context /= Void
+			a_context_valid: a_context.is_valid_context
+			same_root_context: other_context.same_root_context (a_context)
+			a_universe_not_void: a_universe /= Void
+		do
+			-- Result := False
+		end
+
+	convertible_from_tuple_type (other: ET_TUPLE_TYPE; other_context: ET_TYPE_CONTEXT;
+		a_context: ET_TYPE_CONTEXT; a_universe: ET_UNIVERSE): BOOLEAN is
+			-- Is `other' type appearing in `other_context' convertible
+			-- to current type appearing in `a_context'?
+			-- (Note: 'a_universe.qualified_signature_resolver' is
+			-- used on classes whose qualified anchored types need
+			-- to be resolved in order to check convertibility.)
 		require
 			other_not_void: other /= Void
 			other_context_not_void: other_context /= Void

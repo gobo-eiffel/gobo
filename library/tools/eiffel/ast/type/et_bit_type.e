@@ -266,6 +266,19 @@ feature {NONE} -- Conformance
 			end
 		end
 
+feature -- Convertibility
+
+	convertible_to_type (other: ET_TYPE; other_context: ET_TYPE_CONTEXT;
+		a_context: ET_TYPE_CONTEXT; a_universe: ET_UNIVERSE): BOOLEAN is
+			-- Is current type appearing in `a_context' convertible
+			-- to `other' type appearing in `other_context'?
+			-- (Note: 'a_universe.qualified_signature_resolver' is
+			-- used on classes whose qualified anchored types need
+			-- to be resolved in order to check convertibility.)
+		do
+			-- Result := False
+		end
+
 feature {NONE} -- Constants
 
 	bit_space: STRING is "BIT "

@@ -22,6 +22,7 @@ inherit
 			same_syntactical_tuple_type,
 			same_named_tuple_type,
 			same_base_tuple_type,
+			conforms_from_class_type,
 			conforms_from_tuple_type,
 			tuple_keyword, actual_parameters,
 			is_named_type, is_base_type,
@@ -326,6 +327,25 @@ feature -- Conformance
 
 feature {ET_TYPE} -- Conformance
 
+	conforms_from_class_type (other: ET_CLASS_TYPE; other_context: ET_TYPE_CONTEXT;
+		a_context: ET_TYPE_CONTEXT; a_universe: ET_UNIVERSE): BOOLEAN is
+			-- Does `other' type appearing in `other_context' conform
+			-- to current type appearing in `a_context'?
+			-- (Note: 'a_universe.ancestor_builder' is used on classes on
+			-- the classes whose ancestors need to be built in order to check
+			-- for conformance, and 'a_universe.qualified_signature_resolver'
+			-- is used on classes whose qualified anchored types need to be
+			-- resolved in order to check conformance.)
+		local
+			other_base_class: ET_CLASS
+		do
+			other_base_class := other.direct_base_class (a_universe)
+			if other_base_class = a_universe.none_class then
+					-- "NONE" conforms to any tuple type since it is a reference type.
+				Result := True
+			end
+		end
+
 	conforms_from_tuple_type (other: ET_TUPLE_TYPE; other_context: ET_TYPE_CONTEXT;
 		a_context: ET_TYPE_CONTEXT; a_universe: ET_UNIVERSE): BOOLEAN is
 			-- Does `other' type appearing in `other_context' conform
@@ -367,6 +387,19 @@ feature {ET_TYPE} -- Conformance
 					end
 				end
 			end
+		end
+
+feature -- Convertibility
+
+	convertible_to_type (other: ET_TYPE; other_context: ET_TYPE_CONTEXT;
+		a_context: ET_TYPE_CONTEXT; a_universe: ET_UNIVERSE): BOOLEAN is
+			-- Is current type appearing in `a_context' convertible
+			-- to `other' type appearing in `other_context'?
+			-- (Note: 'a_universe.qualified_signature_resolver' is
+			-- used on classes whose qualified anchored types need
+			-- to be resolved in order to check convertibility.)
+		do
+			-- Result := False
 		end
 
 feature -- Type processing

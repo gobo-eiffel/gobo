@@ -16,7 +16,8 @@ inherit
 
 	ET_LIKE_TYPE
 		redefine
-			named_type, has_qualified_type,
+			named_type, shallow_named_type,
+			has_qualified_type,
 			same_syntactical_like_current,
 			same_named_bit_type,
 			same_named_class_type,
@@ -29,7 +30,9 @@ inherit
 			conforms_from_bit_type,
 			conforms_from_class_type,
 			conforms_from_formal_parameter_type,
-			conforms_from_tuple_type
+			conforms_from_tuple_type,
+			convertible_from_class_type,
+			convertible_from_formal_parameter_type
 		end
 
 creation
@@ -105,6 +108,19 @@ feature -- Access
 				Result := a_context.type
 			else
 				Result := a_context.type.named_type (a_context.context, a_universe)
+			end
+		end
+
+	shallow_named_type (a_context: ET_TYPE_CONTEXT; a_universe: ET_UNIVERSE): ET_NAMED_TYPE is
+			-- Named type of current type, when it appears in `a_context'
+			-- in `a_universe', but contrary to `named_type' its generic
+			-- parameters can be made up of types other than class names
+			-- and generic formal parameters.
+		do
+			if a_context.is_root_context then
+				Result := a_context.type
+			else
+				Result := a_context.type.shallow_named_type (a_context.context, a_universe)
 			end
 		end
 
@@ -360,6 +376,44 @@ feature {ET_TYPE} -- Conformance
 			-- resolved in order to check conformance.)
 		do
 			Result := a_context.type.conforms_from_tuple_type (other, other_context, a_context.type, a_universe)
+		end
+
+feature -- Convertibility
+
+	convertible_to_type (other: ET_TYPE; other_context: ET_TYPE_CONTEXT;
+		a_context: ET_TYPE_CONTEXT; a_universe: ET_UNIVERSE): BOOLEAN is
+			-- Is current type appearing in `a_context' convertible
+			-- to `other' type appearing in `other_context'?
+			-- (Note: 'a_universe.qualified_signature_resolver' is
+			-- used on classes whose qualified anchored types need
+			-- to be resolved in order to check convertibility.)
+		do
+			Result := a_context.type.convertible_to_type (other, other_context, a_context.context, a_universe)
+		end
+
+feature {ET_TYPE} -- Convertibility
+
+	convertible_from_class_type (other: ET_CLASS_TYPE; other_context: ET_TYPE_CONTEXT;
+		a_context: ET_TYPE_CONTEXT; a_universe: ET_UNIVERSE): BOOLEAN is
+			-- Is `other' type appearing in `other_context' convertible
+			-- to current type appearing in `a_context'?
+			-- (Note: 'a_universe.qualified_signature_resolver' is
+			-- used on classes whose qualified anchored types need
+			-- to be resolved in order to check convertibility.)
+		do
+			Result := a_context.type.convertible_from_class_type (other, other_context, a_context.context, a_universe)
+		end
+
+	convertible_from_formal_parameter_type (other: ET_FORMAL_PARAMETER_TYPE;
+		other_context: ET_TYPE_CONTEXT; a_context: ET_TYPE_CONTEXT;
+		a_universe: ET_UNIVERSE): BOOLEAN is
+			-- Is `other' type appearing in `other_context' convertible
+			-- to current type appearing in `a_context'?
+			-- (Note: 'a_universe.qualified_signature_resolver' is
+			-- used on classes whose qualified anchored types need
+			-- to be resolved in order to check convertibility.)
+		do
+			Result := a_context.type.convertible_from_formal_parameter_type (other, other_context, a_context.context, a_universe)
 		end
 
 feature -- Output

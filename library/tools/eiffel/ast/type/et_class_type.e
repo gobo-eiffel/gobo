@@ -20,6 +20,7 @@ inherit
 			same_named_class_type,
 			same_base_class_type,
 			conforms_from_class_type,
+			convertible_from_class_type,
 			is_named_type, is_base_type,
 			has_qualified_type,
 			resolved_formal_parameters
@@ -228,8 +229,11 @@ feature -- Comparison
 			-- only if they have the same anchor. An anchor type
 			-- is not considered the same as any other type even
 			-- if they have the same base type.)
+		local
+			other_base_class: ET_CLASS
 		do
-			if other = a_universe.unknown_class then
+			other_base_class := other.direct_base_class (a_universe)
+			if other_base_class = a_universe.unknown_class then
 					-- "*UNKNOWN*" is equal to no type, not even itself.
 				Result := False
 			elseif other = Current and then other_context = a_context then
@@ -243,8 +247,11 @@ feature -- Comparison
 		a_context: ET_TYPE_CONTEXT; a_universe: ET_UNIVERSE): BOOLEAN is
 			-- Do current type appearing in `a_context' and `other' type
 			-- appearing in `other_context' have the same named type?
+		local
+			other_base_class: ET_CLASS
 		do
-			if other = a_universe.unknown_class then
+			other_base_class := other.direct_base_class (a_universe)
+			if other_base_class = a_universe.unknown_class then
 					-- "*UNKNOWN*" is equal to no type, not even itself.
 				Result := False
 			elseif other = Current and then other_context = a_context then
@@ -258,8 +265,11 @@ feature -- Comparison
 		a_context: ET_TYPE_CONTEXT; a_universe: ET_UNIVERSE): BOOLEAN is
 			-- Do current type appearing in `a_context' and `other' type
 			-- appearing in `other_context' have the same base type?
+		local
+			other_base_class: ET_CLASS
 		do
-			if other = a_universe.unknown_class then
+			other_base_class := other.direct_base_class (a_universe)
+			if other_base_class = a_universe.unknown_class then
 					-- "*UNKNOWN*" is equal to no type, not even itself.
 				Result := False
 			elseif other = Current and then other_context = a_context then
@@ -282,14 +292,16 @@ feature {ET_TYPE} -- Comparison
 			-- if they have the same base type.)
 		local
 			other_parameters: ET_ACTUAL_PARAMETER_LIST
+			other_base_class: ET_CLASS
 		do
-			if other = a_universe.unknown_class then
+			other_base_class := other.direct_base_class (a_universe)
+			if other_base_class = a_universe.unknown_class then
 					-- "*UNKNOWN*" is equal to no type, not even itself.
 				Result := False
 			elseif other = Current and then other_context = a_context then
 				Result := True
 			elseif
-				eiffel_class = other.direct_base_class (a_universe) and
+				eiffel_class = other_base_class and
 				is_expanded = other.is_expanded and
 				is_separate = other.is_separate
 			then
@@ -314,14 +326,16 @@ feature {ET_TYPE} -- Comparison
 			-- appearing in `other_context' have the same named type?
 		local
 			other_parameters: ET_ACTUAL_PARAMETER_LIST
+			other_base_class: ET_CLASS
 		do
-			if other = a_universe.unknown_class then
+			other_base_class := other.direct_base_class (a_universe)
+			if other_base_class = a_universe.unknown_class then
 					-- "*UNKNOWN*" is equal to no type, not even itself.
 				Result := False
 			elseif other = Current and then other_context = a_context then
 				Result := True
 			elseif
-				eiffel_class = other.direct_base_class (a_universe) and
+				eiffel_class = other_base_class and
 				is_expanded = other.is_expanded and
 				is_separate = other.is_separate
 			then
@@ -346,14 +360,16 @@ feature {ET_TYPE} -- Comparison
 			-- appearing in `other_context' have the same named type?
 		local
 			other_parameters: ET_ACTUAL_PARAMETER_LIST
+			other_base_class: ET_CLASS
 		do
-			if other = a_universe.unknown_class then
+			other_base_class := other.direct_base_class (a_universe)
+			if other_base_class = a_universe.unknown_class then
 					-- "*UNKNOWN*" is equal to no type, not even itself.
 				Result := False
 			elseif other = Current and then other_context = a_context then
 				Result := True
 			elseif
-				eiffel_class = other.direct_base_class (a_universe) and
+				eiffel_class = other_base_class and
 				is_expanded = other.is_expanded and
 				is_separate = other.is_separate
 			then
@@ -383,8 +399,11 @@ feature -- Conformance
 			-- for conformance, and 'a_universe.qualified_signature_resolver'
 			-- is used on classes whose qualified anchored types need to be
 			-- resolved in order to check conformance.)
+		local
+			other_base_class: ET_CLASS
 		do
-			if other = a_universe.unknown_class then
+			other_base_class := other.direct_base_class (a_universe)
+			if other_base_class = a_universe.unknown_class then
 					-- "*UNKNOWN*" conforms to no type, not even itself.
 				Result := False
 			elseif other = Current and then other_context = a_context then
@@ -410,13 +429,13 @@ feature {ET_TYPE} -- Conformance
 			an_ancestor: ET_BASE_TYPE
 			other_parameters: ET_ACTUAL_PARAMETER_LIST
 		do
-			if other = a_universe.unknown_class then
+			other_base_class := other.direct_base_class (a_universe)
+			if other_base_class = a_universe.unknown_class then
 					-- "*UNKNOWN*" conforms to no type, not even itself.
 				Result := False
 			elseif other = Current and other_context = a_context then
 				Result := True
 			else
-				other_base_class := other.direct_base_class (a_universe)
 				if eiffel_class = other_base_class then
 					if not other.is_generic then
 						Result := not is_generic
@@ -453,6 +472,61 @@ feature {ET_TYPE} -- Conformance
 						end
 					end
 				end
+			end
+		end
+
+feature -- Convertibility
+
+	convertible_to_type (other: ET_TYPE; other_context: ET_TYPE_CONTEXT;
+		a_context: ET_TYPE_CONTEXT; a_universe: ET_UNIVERSE): BOOLEAN is
+			-- Is current type appearing in `a_context' convertible
+			-- to `other' type appearing in `other_context'?
+			-- (Note: 'a_universe.qualified_signature_resolver' is
+			-- used on classes whose qualified anchored types need
+			-- to be resolved in order to check convertibility.)
+		do
+			Result := other.convertible_from_class_type (Current, a_context, other_context, a_universe)
+		end
+
+feature {ET_TYPE} -- Convertibility
+
+	convertible_from_class_type (other: ET_CLASS_TYPE; other_context: ET_TYPE_CONTEXT;
+		a_context: ET_TYPE_CONTEXT; a_universe: ET_UNIVERSE): BOOLEAN is
+			-- Is `other' type appearing in `other_context' convertible
+			-- to current type appearing in `a_context'?
+			-- (Note: 'a_universe.qualified_signature_resolver' is
+			-- used on classes whose qualified anchored types need
+			-- to be resolved in order to check convertibility.)
+		local
+			other_base_class: ET_CLASS
+		do
+			other_base_class := other.direct_base_class (a_universe)
+			if other_base_class = a_universe.integer_8_class then
+				Result := eiffel_class = a_universe.integer_16_class or
+					eiffel_class = a_universe.integer_class or
+					eiffel_class = a_universe.integer_64_class or
+					eiffel_class = a_universe.real_class or
+					eiffel_class = a_universe.double_class
+			elseif other_base_class = a_universe.integer_16_class then
+				Result := eiffel_class = a_universe.integer_class or
+					eiffel_class = a_universe.integer_64_class or
+					eiffel_class = a_universe.real_class or
+					eiffel_class = a_universe.double_class
+			elseif other_base_class = a_universe.integer_class then
+				Result := eiffel_class = a_universe.integer_64_class or
+					eiffel_class = a_universe.real_class or
+					eiffel_class = a_universe.double_class or
+						-- Needed by ISE Eiffel 5.4.
+					eiffel_class = a_universe.integer_8_class or
+					eiffel_class = a_universe.integer_16_class
+			elseif other_base_class = a_universe.integer_64_class then
+				Result := eiffel_class = a_universe.real_class or
+					eiffel_class = a_universe.double_class
+			elseif other_base_class = a_universe.real_class then
+				Result := eiffel_class = a_universe.double_class
+			elseif other_base_class = a_universe.double_class then
+					-- Needed by ISE Eiffel 5.4.
+				Result := eiffel_class = a_universe.real_class
 			end
 		end
 
