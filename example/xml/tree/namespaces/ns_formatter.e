@@ -100,7 +100,7 @@ feature -- Standard processing
 			ns_decls := el.namespace_declarations
 			cs := ns_decls.new_cursor
 			from cs.start until cs.after loop
-				if cs.item.is_default then
+				if not cs.item.has_prefix then
 					append ("%Tprefix: [default]%N")
 				else
 					append ("%Tprefix: ")
