@@ -315,7 +315,7 @@ creation
 	-- but is used in Visual Eiffel.
 <IN_STR>%.			eif_buffer.append_character (text_item (2))
 
-<IN_STR>.					|
+<IN_STR>.|\n				|
 <IN_STR>%[ \t\r]*\n[ \t\r]*	|
 <IN_STR>%\/([0-9]+(\/)?)?	|
 <IN_STR><<EOF>>			{	-- Catch-all rules (no backing up)
