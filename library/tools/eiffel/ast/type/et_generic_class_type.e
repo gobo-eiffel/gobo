@@ -18,27 +18,9 @@ inherit
 	ET_CLASS_TYPE
 		rename
 			make as make_class_type
-		undefine
-			append_to_string
 		redefine
+			append_to_string,
 			is_generic, add_to_system,
-			same_syntactical_type,
-			syntactically_conforms_to,
-			check_parent_validity,
-			check_constraint_validity,
-			has_formal_parameters,
-			resolved_formal_parameters,
-			resolved_identifier_types,
-			resolved_named_types,
-			base_type, deep_cloned_type
-		end
-
-	ET_GENERIC_NAMED_TYPE
-		rename
-			make as make_generic_named_type,
-			name as class_name
-		undefine
-			add_to_system,
 			same_syntactical_type,
 			syntactically_conforms_to,
 			check_parent_validity,
@@ -74,6 +56,11 @@ feature {NONE} -- Initialization
 			generic_parameters_set: generic_parameters = a_parameters
 			base_class_set: base_class = a_class
 		end
+
+feature -- Access
+
+	generic_parameters: ET_ACTUAL_GENERIC_PARAMETERS
+			-- Generic parameters
 
 feature -- Status report
 
@@ -342,8 +329,38 @@ feature -- Duplication
 			!! Result.make (type_mark, class_name, generics, base_class)
 		end
 
+feature -- Output
+
+	append_to_string (a_string: STRING) is
+			-- Append textual representation of
+			-- current type to `a_string'.
+		local
+			i, nb: INTEGER
+			a_type: ET_TYPE
+		do
+			if type_mark /= Void then
+				a_string.append_string (type_mark.text)
+				a_string.append_character (' ')
+			end
+			a_string.append_string (class_name.name)
+			nb := generic_parameters.count
+			if nb > 0 then
+				a_string.append_string (" [")
+				a_type := generic_parameters.type (1)
+				a_type.append_to_string (a_string)
+					from i := 2 until i > nb loop
+					a_string.append_string (", ")
+					a_type := generic_parameters.type (i)
+					a_type.append_to_string (a_string)
+					i := i + 1
+				end
+				a_string.append_character (']')
+			end
+		end
+
 invariant
 
 	is_generic: is_generic
+	generic_parameters_not_void: generic_parameters /= Void
 
 end -- class ET_GENERIC_CLASS_TYPE

@@ -411,7 +411,7 @@ feature -- Validity errors
 				old_ve := is_ve
 				is_ise := False
 				is_ve := False
-				report_vtct_error (where, a_constraint)
+				report_vtct_constraint_error (where, a_constraint)
 				is_ise := old_ise
 				is_ve := old_ve
 			end
@@ -491,7 +491,7 @@ feature -- Validity errors
 				old_ve := is_ve
 				is_se := False
 				is_ve := False
-				report_vtct_error (where, a_constraint)
+				report_vtct_constraint_error (where, a_constraint)
 				is_se := old_se
 				is_ve := old_ve
 			end
@@ -556,7 +556,7 @@ feature -- Validity errors
 				old_ve := is_ve
 				is_ise := False
 				is_ve := False
-				report_vtct_error (where, a_type)
+				report_vtct_constraint_error (where, a_type)
 				is_ise := old_ise
 				is_ve := old_ve
 			end
@@ -601,7 +601,7 @@ feature -- Validity errors
 				old_ve := is_ve
 				is_se := False
 				is_ve := False
-				report_vtct_error (where, a_type)
+				report_vtct_constraint_error (where, a_type)
 				is_se := old_se
 				is_ve := old_ve
 			end
@@ -1725,7 +1725,7 @@ feature -- Validity errors
 			end
 		end
 
-	report_vtct_error (where: ET_CLASS; a_type: ET_NAMED_TYPE) is
+	report_vtct_error (where: ET_CLASS; a_type: ET_CLASS_TYPE) is
 			-- Report VTCT error (ETL2 p.199, ETR p.45): `a_type'
 			-- based on unknown class in class `where'.
 		require
@@ -1734,7 +1734,34 @@ feature -- Validity errors
 			no_syntax_error: not where.has_syntax_error
 			a_type_not_void: a_type /= Void
 		local
-			a_name: ET_IDENTIFIER
+			a_name: ET_CLASS_NAME
+		do
+			if reportable_vtct_error (where) then
+				print_compiler (is_ise, No_tag, is_hact, No_tag,
+					is_se, No_tag, False, No_tag)
+				print ("[VTCT] Class ")
+				print (where.name.name)
+				print (" (")
+				a_name := a_type.class_name
+				print (a_name.position.line)
+				print (",")
+				print (a_name.position.column)
+				print ("): type based on unknown class ")
+				print (a_name.name)
+				print (".%N")
+			end
+		end
+
+	report_vtct_constraint_error (where: ET_CLASS; a_type: ET_NAMED_TYPE) is
+			-- Report VTCT error (ETL2 p.199, ETR p.45): `a_type'
+			-- based on unknown class in class `where'.
+		require
+			where_not_void: where /= Void
+			where_parsed: where.is_parsed
+			no_syntax_error: not where.has_syntax_error
+			a_type_not_void: a_type /= Void
+		local
+			a_name: ET_CLASS_NAME
 		do
 			if reportable_vtct_error (where) then
 				print_compiler (is_ise, No_tag, is_hact, No_tag,
@@ -1780,7 +1807,7 @@ feature -- Validity errors
 			no_syntax_error: not where.has_syntax_error
 			a_type_not_void: a_type /= Void
 		local
-			a_name: ET_IDENTIFIER
+			a_name: ET_CLASS_NAME
 		do
 			if reportable_vtug1_error (where) then
 				print_compiler (is_ise, No_tag, is_hact, No_tag,
@@ -1810,7 +1837,7 @@ feature -- Validity errors
 			no_syntax_error: not where.has_syntax_error
 			a_type_not_void: a_type /= Void
 		local
-			a_name: ET_IDENTIFIER
+			a_name: ET_CLASS_NAME
 		do
 			if reportable_vtug2_error (where) then
 				print_compiler (is_ise, No_tag, is_hact, No_tag,

@@ -83,11 +83,12 @@ creation
 
 %token <ET_TOKEN>              E_OLD
 %token <ET_SYMBOL>             '{' '}'
-%token <ET_SYMBOL>             '(' ')' ';' ':' ',' '[' ']' '$' '.' '!'
+%token <ET_SYMBOL>             '(' ')' ':' ',' '[' ']' '$' '.' '!'
 %token <ET_MINUS_SYMBOL>       '-'
 %token <ET_PLUS_SYMBOL>        '+'
 %token <ET_EQUAL_SYMBOL>       '='
 %token <ET_NOT_EQUAL_SYMBOL>   E_NE
+%token <ET_SEMICOLON_SYMBOL>   ';'
 
 %left E_IMPLIES
 %left E_OR E_XOR
@@ -112,15 +113,16 @@ creation
 %type <ET_CHOICE_CONSTANT>     Choice_constant
 %type <ET_CLASS>               Class_header
 %type <ET_CLIENTS>             Clients Clients_opt Client_list
-%type <ET_COMPOUND>            Compound Non_empty_compound Rescue_opt
+%type <ET_COMPOUND>            Compound Rescue_opt Do_compound Once_compound Then_compound
+                               Else_compound Rescue_compound From_compound Loop_compound
 %type <ET_CONSTANT>            Manifest_constant
-%type <ET_CREATOR>             Creation_clause
+%type <ET_CREATOR>             Creation_clause Creation_procedure_list
 %type <ET_CREATORS>            Creators Creators_opt
 %type <ET_CURRENT>             Current
 %type <ET_DEBUG_KEYS>          Debug_keys
-%type <ET_ELSE_PART>           Else_part
 %type <ET_EXPANDED_MARK>       Expanded
 %type <ET_EXPORT>              New_export_item
+%type <ET_EXPORTS>             New_exports New_exports_opt New_export_list
 %type <ET_EXPRESSION>          Expression Call_chain Precursor_expression
                                Address_mark Create_expression
 %type <ET_FEATURE>             Feature_declaration Single_feature_declaration
@@ -130,7 +132,7 @@ creation
                                Do_function_declaration Once_function_declaration
                                Deferred_function_declaration External_function_declaration
 %type <ET_FEATURE_EXPORT>      New_feature_export Export_feature_name_list
-%type <ET_FEATURE_NAME>        Feature_name Procedure_list_item
+%type <ET_FEATURE_NAME>        Feature_name
 %type <ET_FORMAL_ARGUMENTS>    Formal_arguments_opt Formal_argument_list
 %type <ET_FORMAL_GENERIC_PARAMETER>  Formal_generic
 %type <ET_FORMAL_GENERIC_PARAMETERS> Formal_generics_opt Formal_generic_list
@@ -156,31 +158,30 @@ creation
 %type <ET_QUALIFIED_PRECURSOR_INSTRUCTION>  Qualified_precursor_instruction
 %type <ET_REAL_CONSTANT>       Real_constant
 %type <ET_REFERENCE_MARK>      Reference
-%type <ET_RENAME>              Rename_pair
+%type <ET_RENAMES>             Rename_clause Rename_list
 %type <ET_RESULT>              Result
 %type <ET_RETRY_INSTRUCTION>   Retry
+%type <ET_SEMICOLON_SYMBOL>    Semicolon
 %type <ET_SEPARATE_MARK>       Separate
 %type <ET_SIGN_SYMBOL>         Plus_sign Minus_sign
 %type <ET_STRIP_EXPRESSION>    Strip_expression Strip_feature_name_list
 %type <ET_SYMBOL>              Assign Bang Bangbang Colon Comma Dollar Dot Left_array Right_array
                                Left_brace Right_brace Left_bracket Right_bracket Left_parenthesis
-                               Right_parenthesis Reverse Semicolon Dotdot
+                               Right_parenthesis Reverse Dotdot
 %type <ET_TOKEN>               Check Create Debug Else Elseif End Ensure From If Invariant
                                Loop Precursor Require Then Until Variant When Inspect Select
-                               Rename, Redefine, Export, Undefine
+                               Rename, Redefine, Export, Undefine, All, Creation, As, Do, Once,
+                               Rescue
 %type <ET_TYPE>                Type Constraint_type
 %type <ET_VARIANT>             Variant_clause_opt
 %type <ET_WRITABLE>            Writable
 
 %type <like new_choice_item_list>        Choices Choices_opt
 %type <like new_elseif_part_list>        Elseif_list
-%type <like new_export_list>             New_exports New_exports_opt New_export_list New_export_list_with_no_terminator
-%type <like new_feature_list>            Procedure_list Procedure_list_opt
 %type <like new_manifest_string_item_list>  Debug_key_list
-%type <like new_rename_list>             Rename_clause Rename_list
 %type <like new_when_part_list>          When_list When_list_opt
 
-%expect 37
+%expect 39
 %start Class_declarations
 
 %%
@@ -297,7 +298,17 @@ Formal_generic: Identifier
 	;
 
 Constraint_create_opt: -- Empty
-	| E_CREATE Procedure_list_opt End
+	| Create Procedure_list_opt End
+	;
+
+Procedure_list_opt: -- Empty
+		-- { $$ := Void }
+	| Procedure_list
+		{ $$ := $1 }
+	;
+
+Procedure_list: Identifier
+	| Identifier Comma Procedure_list
 	;
 
 Constraint_type: Class_name Constraint_actual_generics_opt
@@ -421,88 +432,111 @@ Parent_separator: -- Empty
 	| ';'
 	;
 
---------------------------------------------------------------------------------
+--DONE------------------------------------------------------------------------------
 
 Rename_clause: Rename
-		-- { $$ := Void }
-	| Rename Rename_list
-		{ $$ := $2 }
-	;
-
-Rename_list: Rename_pair
-		{
-			$$ := new_rename_list (rename_list_count)
-			rename_list_count := rename_list_count - 1
-			$$.put ($1, rename_list_count)
-		}
-	| Rename_pair ',' Rename_list
+		{ $$ := new_renames ($1) }
+	| Rename
+		{ add_counter}
+	  Rename_list
 		{
 			$$ := $3
-			rename_list_count := rename_list_count - 1
-			$$.put ($1, rename_list_count)
+			$$.set_rename_keyword ($1)
+			remove_counter
 		}
 	;
 
-Rename_pair: Feature_name E_AS Feature_name
+Rename_list: Feature_name As Feature_name
 		{
-			$$ := new_rename ($1, $3)
-			rename_list_count := rename_list_count + 1
+			$$ := new_renames_with_capacity (counter_value + 1)
+			$$.put_first (new_rename ($1, $2, $3))
+		}
+	| Feature_name As Feature_name Comma
+		-- TODO: syntax error
+		{
+			$$ := new_renames_with_capacity (counter_value + 1)
+			$$.put_first (new_rename_comma ($1, $2, $3, $4))
+		}
+	| Feature_name As Feature_name Comma 
+		{ increment_counter }
+	  Rename_list
+		{
+			$$ := $6
+			$$.put_first (new_rename_comma ($1, $2, $3, $4))
 		}
 	;
 
---------------------------------------------------------------------------------
+--DONE------------------------------------------------------------------------------
 
-New_exports: Export New_export_list
-		{ $$ := $2 }
+New_exports: Export
+		{ $$ := new_exports ($1) }
+	| Export
+		{ add_counter }
+	  New_export_list
+		{
+			$$ := $3
+			$$.set_export_keyword ($1)
+			remove_counter
+		}
 	;
 
 New_exports_opt: -- Empty
+		-- { $$ := Void }
 	| New_exports
 		{ $$ := $1 }
 	;
 
-New_export_list: -- Empty
-	| Semicolons_opt New_export_list_with_no_terminator Semicolons_opt
-		{ $$ := $2 }
-	;
-
-New_export_list_with_no_terminator: New_export_item
+New_export_list: New_export_item
 		{
-			$$ := new_export_list (export_list_count)
-			export_list_count := export_list_count - 1
-			$$.put ($1, export_list_count)
+			$$ := new_exports_with_capacity (counter_value + 1)
+			$$.put_first ($1)
 		}
-	| New_export_item New_export_list_with_no_terminator
+	| Semicolon
+		-- TODO: syntax error
 		{
-			$$ := $2
-			export_list_count := export_list_count - 1
-			$$.put ($1, export_list_count)
+			if keep_all_breaks then
+				$$ := new_exports_with_capacity (counter_value + 1)
+				$$.put_first ($1)
+			elseif keep_all_comments and $1.has_comment then
+				$$ := new_exports_with_capacity (counter_value + 1)
+				$$.put_first ($1)
+			else
+				$$ := new_exports_with_capacity (counter_value)
+			end
 		}
-	| New_export_item Semicolons New_export_list_with_no_terminator
+	| New_export_item
+		{ increment_counter }
+	  New_export_list
 		{
 			$$ := $3
-			export_list_count := export_list_count - 1
-			$$.put ($1, export_list_count)
+			$$.put_first ($1)
+		}
+	| Semicolon
+		{
+			if keep_all_breaks then
+				increment_counter
+			elseif keep_all_comments and $1.has_comment then
+				increment_counter
+			end
+		}
+	  New_export_list
+		{
+			$$ := $3
+			if keep_all_breaks then
+				$$.put_first ($1)
+			elseif keep_all_comments and $1.has_comment then
+				$$.put_first ($1)
+			end
 		}
 	;
 
-Semicolons: ';'
-	| Semicolons ';'
-	;
-
-Semicolons_opt: -- Empty
-	| Semicolons
-	;
-
-New_export_item: Clients E_ALL
+New_export_item: Clients All
 		{
-			$$ := new_all_export ($1)
-			export_list_count := export_list_count + 1
+			$$ := new_all_export ($1, $2)
 		}
 	| New_feature_export
 		{
 			$$ := $1
-			export_list_count := export_list_count + 1
 		}
 	;
 	
@@ -511,6 +545,7 @@ New_feature_export: Clients
 	  Export_feature_name_list
 		{
 			$$ := $3
+			$$.set_clients_clause ($1)
 			remove_counter
 		}
 	;
@@ -535,12 +570,19 @@ Export_feature_name_list: Feature_name
 		}
 	;
 
---------------------------------------------------------------------------------
+--DONE------------------------------------------------------------------------------
 
-Clients: '{' Client_list '}'
-		{ $$ := $2 }
-	| '{' '}'
-		{ $$ := new_none_clients ($1) }
+Clients: Left_brace
+		{ add_counter }
+	  Client_list Right_brace
+		{
+			$$ := $3
+			$$.set_left_brace ($1)
+			$$.set_right_brace ($4)
+			remove_counter
+		}
+	| Left_brace Right_brace
+		{ $$ := new_none_clients ($1, $2) }
 	;
 
 Clients_opt: -- Empty
@@ -550,13 +592,31 @@ Clients_opt: -- Empty
 	;
 
 Client_list: Identifier
-		{ $$ := new_clients (new_client ($1)) }
-	| Identifier ','
-		{ $$ := new_clients (new_client ($1)) }
-	| Identifier ',' Client_list
-		{ $$ := $3; $$.put_first (new_client ($1)) }
-	| Identifier     Client_list
-		{ $$ := $2; $$.put_first (new_client ($1)) }
+		{
+			$$ := new_clients_with_capacity (counter_value + 1)
+			$$.put_first ($1)
+		}
+	| Identifier Comma
+		-- Syntax error
+		{
+			$$ := new_clients_with_capacity (counter_value + 1)
+			$$.put_first (new_class_name_comma ($1, $2) )
+		}
+	| Identifier Comma
+		{ increment_counter }
+	  Client_list
+		{
+			$$ := $4
+			$$.put_first (new_class_name_comma ($1, $2))
+		}
+	| Identifier
+		{ increment_counter }
+	  Client_list
+		-- Syntax error
+		{
+			$$ := $3
+			$$.put_first ($1)
+		}
 	;
 
 --DONE------------------------------------------------------------------------------
@@ -652,50 +712,69 @@ Creators: Creation_clause
 		}
 	;
 
-Creation_clause: E_CREATION Clients_opt Procedure_list_opt
+Creation_clause: Creation Clients_opt
 		{
 			if $2 = Void then
-				$$ := new_creator (new_any_clients ($1.position), $3)
+				$$ := new_creator ($1, new_any_clients ($1.position))
 			else
-				$$ := new_creator ($2, $3)
+				$$ := new_creator ($1, $2)
 			end
 		}
-	| E_CREATE Clients_opt Procedure_list_opt
+	| Creation Clients_opt
+		{ add_counter }
+	  Creation_procedure_list
+		{
+			$$ := $4
+			if $2 = Void then
+				$$.set_clients (new_any_clients ($1.position))
+			else
+				$$.set_clients ($2)
+			end
+			$$.set_creation_keyword ($1)
+			remove_counter
+		}
+	| Create Clients_opt
 		{
 			if $2 = Void then
-				$$ := new_creator (new_any_clients ($1.position), $3)
+				$$ := new_creator ($1, new_any_clients ($1.position))
 			else
-				$$ := new_creator ($2, $3)
+				$$ := new_creator ($1, $2)
 			end
+		}
+	| Create Clients_opt
+		{ add_counter }
+	  Creation_procedure_list
+		{
+			$$ := $4
+			if $2 = Void then
+				$$.set_clients (new_any_clients ($1.position))
+			else
+				$$.set_clients ($2)
+			end
+			$$.set_creation_keyword ($1)
+			remove_counter
 		}
 	;
 
 		-- Note: Does not support 'Header_comment'.
 
-Procedure_list_opt: -- Empty
-		-- { $$ := Void }
-	| Procedure_list
-		{ $$ := $1 }
-	;
-
-Procedure_list: Procedure_list_item
+Creation_procedure_list: Identifier
 		{
-			$$ := new_feature_list (feature_list_count)
-			feature_list_count := feature_list_count - 1
-			$$.put ($1, feature_list_count)
+			$$ := new_creator_with_capacity (counter_value + 1)
+			$$.put_first ($1)
 		}
-	| Procedure_list_item ',' Procedure_list
+	| Identifier Comma
+		-- TODO: syntax error.
 		{
-			$$ := $3
-			feature_list_count := feature_list_count - 1
-			$$.put ($1, feature_list_count)
+			$$ := new_creator_with_capacity (counter_value + 1)
+			$$.put_first (new_feature_name_comma ($1, $2))
 		}
-	;
-
-Procedure_list_item: Identifier
+	| Identifier Comma 
+		{ increment_counter }
+	  Creation_procedure_list
 		{
-			$$ := $1
-			feature_list_count := feature_list_count + 1
+			$$ := $4
+			$$.put_first (new_feature_name_comma ($1, $2))
 		}
 	;
 
@@ -784,14 +863,14 @@ Unique_declaration: Feature_name Formal_arguments_opt ':' Type E_IS E_UNIQUE
 
 Do_procedure_declaration: Feature_name Formal_arguments_opt E_IS
 	Obsolete_opt Precondition_opt Local_declarations_opt
-	E_DO Compound Postcondition_opt Rescue_opt End
-		{ $$ := new_do_procedure ($1, $2, $4, $5, $6, $8, $9, $10) }
+	Do_compound Postcondition_opt Rescue_opt End
+		{ $$ := new_do_procedure ($1, $2, $4, $5, $6, $7, $8, $9) }
 	;
 
 Once_procedure_declaration: Feature_name Formal_arguments_opt E_IS
 	Obsolete_opt Precondition_opt Local_declarations_opt
-	E_ONCE Compound Postcondition_opt Rescue_opt End
-		{ $$ := new_once_procedure ($1, $2, $4, $5, $6, $8, $9, $10) }
+	Once_compound Postcondition_opt Rescue_opt End
+		{ $$ := new_once_procedure ($1, $2, $4, $5, $6, $7, $8, $9) }
 	;
 
 Deferred_procedure_declaration: Feature_name Formal_arguments_opt E_IS
@@ -807,14 +886,14 @@ External_procedure_declaration: Feature_name Formal_arguments_opt E_IS
 
 Do_function_declaration: Feature_name Formal_arguments_opt ':' Type E_IS
 	Obsolete_opt Precondition_opt Local_declarations_opt
-	E_DO Compound Postcondition_opt Rescue_opt End
-		{ $$ := new_do_function ($1, $2, $4, $6, $7, $8, $10, $11, $12) }
+	Do_compound Postcondition_opt Rescue_opt End
+		{ $$ := new_do_function ($1, $2, $4, $6, $7, $8, $9, $10, $11) }
 	;
 
 Once_function_declaration: Feature_name Formal_arguments_opt ':' Type E_IS
 	Obsolete_opt Precondition_opt Local_declarations_opt
-	E_ONCE Compound Postcondition_opt Rescue_opt End
-		{ $$ := new_once_function ($1, $2, $4, $6, $7, $8, $10, $11, $12) }
+	Once_compound Postcondition_opt Rescue_opt End
+		{ $$ := new_once_function ($1, $2, $4, $6, $7, $8, $9, $10, $11) }
 	;
 
 Deferred_function_declaration: Feature_name Formal_arguments_opt ':' Type E_IS
@@ -1347,8 +1426,8 @@ Variant_clause_opt: -- Empty
 
 Rescue_opt: -- Empty
 		-- { $$ := Void }
-	| E_RESCUE Compound
-		{ $$ := $2 }
+	| Rescue_compound
+		{ $$ := $1 }
 	;
 
 --------------------------------------------------------------------------------
@@ -1400,16 +1479,131 @@ Type_list: Type
 
 --DONE------------------------------------------------------------------------------
 
-Compound: -- Empty
-		-- { $$ := Void }
-	| Non_empty_compound
-		{ $$ := $1 }
-	;
-	
-Non_empty_compound: Instruction
+Do_compound: Do
 		{ $$ := new_compound ($1) }
-	| Non_empty_compound Instruction
-		{ $$ := $1; $$.put_last ($2) }
+	| Do
+		{ add_counter }
+	  Compound
+		{
+			$$ := $3
+			$$.set_keyword ($1)
+			remove_counter
+		}
+	;
+
+Once_compound: Once
+		{ $$ := new_compound ($1) }
+	| Once
+		{ add_counter }
+	  Compound
+		{
+			$$ := $3
+			$$.set_keyword ($1)
+			remove_counter
+		}
+	;
+
+Then_compound: Then
+		{ $$ := new_compound ($1) }
+	| Then
+		{ add_counter }
+	  Compound
+		{
+			$$ := $3
+			$$.set_keyword ($1)
+			remove_counter
+		}
+	;
+
+Else_compound: Else
+		{ $$ := new_compound ($1) }
+	| Else
+		{ add_counter }
+	  Compound
+		{
+			$$ := $3
+			$$.set_keyword ($1)
+			remove_counter
+		}
+	;
+
+Rescue_compound: Rescue
+		{ $$ := new_compound ($1) }
+	| Rescue
+		{ add_counter }
+	  Compound
+		{
+			$$ := $3
+			$$.set_keyword ($1)
+			remove_counter
+		}
+	;
+
+From_compound: From
+		{ $$ := new_compound ($1) }
+	| From
+		{ add_counter }
+	  Compound
+		{
+			$$ := $3
+			$$.set_keyword ($1)
+			remove_counter
+		}
+	;
+
+Loop_compound: Loop
+		{ $$ := new_compound ($1) }
+	| Loop
+		{ add_counter }
+	  Compound
+		{
+			$$ := $3
+			$$.set_keyword ($1)
+			remove_counter
+		}
+	;
+
+Compound: Instruction
+		{
+			$$ := new_compound_with_capacity (counter_value + 1)
+			$$.put_first ($1)
+		}
+	| Semicolon
+		{
+			if keep_all_breaks then
+				$$ := new_compound_with_capacity (counter_value + 1)
+				$$.put_first ($1)
+			elseif keep_all_comments and $1.has_comment then
+				$$ := new_compound_with_capacity (counter_value + 1)
+				$$.put_first ($1)
+			else
+				$$ := new_compound_with_capacity (counter_value)
+			end
+		}
+	| Instruction
+		{ increment_counter }
+	  Compound
+		{
+			$$ := $3
+			$$.put_first ($1)
+		}
+	| Semicolon
+		{
+			if keep_all_breaks then
+				increment_counter
+			elseif keep_all_comments and $1.has_comment then
+				increment_counter
+			end
+		}
+	  Compound
+		{
+			$$ := $3
+			if keep_all_breaks then
+				$$.put_first ($1)
+			elseif keep_all_comments and $1.has_comment then
+				$$.put_first ($1)
+			end
+		}
 	;
 
 Instruction: Creation_instruction
@@ -1426,17 +1620,15 @@ Instruction: Creation_instruction
 		{ $$ := $1 }
 	| Multi_branch
 		{ $$ := $1 }
-	| From Compound Invariant_clause_opt Variant_clause_opt
-	  Until Expression Loop Compound End
-		{ $$ := new_loop_instruction ($1, $2, $3, $4, $5, $6, $7, $8, $9) }
+	| From_compound Invariant_clause_opt Variant_clause_opt
+	  Until Expression Loop_compound End
+		{ $$ := new_loop_instruction ($1, $2, $3, $4, $5, $6, $7) }
 	| Debug_instruction
 		{ $$ := $1 }
 	| Check_clause End
 		{ $$ := new_check_instruction ($1, $2) }
 	| Retry
 		{ $$ := $1 }
-	| Semicolon
-		{ $$ := new_null_instruction ($1) }
 	;
 
 --DONE------------------------------------------------------------------------------
@@ -1469,49 +1661,45 @@ Create_expression: Create Left_brace Type Right_brace
 
 --DONE------------------------------------------------------------------------------
 
-Conditional: If Expression Then Compound End
-		{ $$ := new_if_instruction ($1, $2, $3, $4, $5) }
-	| If Expression Then Compound Else_part End
+Conditional: If Expression Then_compound End
+		{ $$ := new_if_instruction ($1, $2, $3, $4) }
+	| If Expression Then_compound Else_compound End
 		{
-			$$ := new_if_instruction ($1, $2, $3, $4, $6)
-			$$.set_else_part ($5)
+			$$ := new_if_instruction ($1, $2, $3, $5)
+			$$.set_else_compound ($4)
 		}
-	| If Expression Then Compound Elseif_list End
+	| If Expression Then_compound Elseif_list End
 		{
-			$$ := new_if_instruction ($1, $2, $3, $4, $6)
-			$$.set_elseif_parts ($5)
+			$$ := new_if_instruction ($1, $2, $3, $5)
+			$$.set_elseif_parts ($4)
 		}
-	| If Expression Then Compound Elseif_list Else_part End
+	| If Expression Then_compound Elseif_list Else_compound End
 		{
-			$$ := new_if_instruction ($1, $2, $3, $4, $7)
-			$$.set_elseif_parts ($5)
-			$$.set_else_part ($6)
+			$$ := new_if_instruction ($1, $2, $3, $6)
+			$$.set_elseif_parts ($4)
+			$$.set_else_compound ($5)
 		}
 	;
 
-Elseif_list: Elseif Expression Then Compound
+Elseif_list: Elseif Expression Then_compound
 		{
 			$$ := new_elseif_part_list
-			$$.force_last (new_elseif_part ($1, $2, $3, $4))
+			$$.force_last (new_elseif_part ($1, $2, $3))
 		}
-	| Elseif_list Elseif Expression Then Compound
+	| Elseif_list Elseif Expression Then_compound
 		{
 			$$ := $1
-			$$.force_last (new_elseif_part ($2, $3, $4, $5))
+			$$.force_last (new_elseif_part ($2, $3, $4))
 		}
-	;
-
-Else_part: Else Compound
-		{ $$ := new_else_part ($1, $2) }
 	;
 
 --DONE------------------------------------------------------------------------------
 
-Multi_branch: Inspect Expression When_list_opt Else_part End
+Multi_branch: Inspect Expression When_list_opt Else_compound End
 		{
 			$$ := new_inspect_instruction ($1, $2, $5)
 			$$.set_when_parts ($3)
-			$$.set_else_part ($4)
+			$$.set_else_compound ($4)
 		}
 	| Inspect Expression When_list_opt End
 		{
@@ -1526,15 +1714,15 @@ When_list_opt: -- Empty
 		{ $$ := $1 }
 	;
 
-When_list: When Choices_opt Then Compound
+When_list: When Choices_opt Then_compound
 		{
 			$$ := new_when_part_list
-			$$.force_last (new_when_part ($1, $2, $3, $4))
+			$$.force_last (new_when_part ($1, $2, $3))
 		}
-	| When_list When Choices_opt Then Compound
+	| When_list When Choices_opt Then_compound
 		{
 			$$ := $1
-			$$.force_last (new_when_part ($2, $3, $4, $5))
+			$$.force_last (new_when_part ($2, $3, $4))
 		}
 	;
 
@@ -1575,8 +1763,16 @@ Choice_constant: Integer_constant
 
 --DONE------------------------------------------------------------------------------
 
-Debug_instruction: Debug Debug_keys Compound End
-		{ $$ := new_debug_instruction  ($1, $2, $3, $4) }
+Debug_instruction: Debug Debug_keys End
+		{ $$ := new_debug_instruction ($2, new_compound ($1), $3) }
+	|  Debug Debug_keys
+		{ add_counter }
+	  Compound End
+		{
+			$4.set_keyword ($1)
+			$$ := new_debug_instruction  ($2, $4, $5)
+			remove_counter
+		}
 	;
 
 Debug_keys: -- Empty
@@ -1701,6 +1897,14 @@ Actuals_expression_list: Expression
 		{
 			$$ := $4
 			$$.put_first (new_expression_comma ($1, $2))
+		}
+	| Expression
+		{ increment_counter }
+	  Actuals_expression_list
+		-- TODO: syntax error.
+		{
+			$$ := $3
+			$$.put_first ($1)
 		}
 	;
 
@@ -2350,6 +2554,28 @@ Break_opt: -- Empty
 
 --DONE------------------------------------------------------------------------------
 
+All: E_ALL
+		{ $$ := $1 }
+	| E_ALL E_BREAK
+		{
+			$$ := $1
+			if keep_all_breaks or keep_all_comments then
+				$$.set_break ($2)
+			end
+		}
+	;
+
+As: E_AS
+		{ $$ := $1 }
+	| E_AS E_BREAK
+		{
+			$$ := $1
+			if keep_all_breaks or keep_all_comments then
+				$$.set_break ($2)
+			end
+		}
+	;
+
 Check: E_CHECK
 		{ $$ := $1 }
 	| E_CHECK E_BREAK
@@ -2372,6 +2598,17 @@ Create: E_CREATE
 		}
 	;
 
+Creation: E_CREATION
+		{ $$ := $1 }
+	| E_CREATION E_BREAK
+		{
+			$$ := $1
+			if keep_all_breaks or keep_all_comments then
+				$$.set_break ($2)
+			end
+		}
+	;
+
 Current: E_CURRENT
 		{ $$ := $1 }
 	| E_CURRENT E_BREAK
@@ -2384,6 +2621,17 @@ Current: E_CURRENT
 Debug: E_DEBUG
 		{ $$ := $1 }
 	| E_DEBUG E_BREAK
+		{
+			$$ := $1
+			if keep_all_breaks or keep_all_comments then
+				$$.set_break ($2)
+			end
+		}
+	;
+
+Do: E_DO
+		{ $$ := $1 }
+	| E_DO E_BREAK
 		{
 			$$ := $1
 			if keep_all_breaks or keep_all_comments then
@@ -2513,6 +2761,17 @@ Loop: E_LOOP
 		}
 	;
 
+Once: E_ONCE
+		{ $$ := $1 }
+	| E_ONCE E_BREAK
+		{
+			$$ := $1
+			if keep_all_breaks or keep_all_comments then
+				$$.set_break ($2)
+			end
+		}
+	;
+
 Precursor: E_PRECURSOR
 		{ $$ := $1 }
 	| E_PRECURSOR E_BREAK
@@ -2560,6 +2819,17 @@ Rename: E_RENAME
 Require: E_REQUIRE
 		{ $$ := $1 }
 	| E_REQUIRE E_BREAK
+		{
+			$$ := $1
+			if keep_all_breaks or keep_all_comments then
+				$$.set_break ($2)
+			end
+		}
+	;
+
+Rescue: E_RESCUE
+		{ $$ := $1 }
+	| E_RESCUE E_BREAK
 		{
 			$$ := $1
 			if keep_all_breaks or keep_all_comments then

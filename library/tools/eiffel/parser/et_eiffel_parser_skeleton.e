@@ -5,7 +5,7 @@ indexing
 		"Eiffel parser skeletons"
 
 	author:     "Eric Bezault <ericb@gobosoft.com>"
-	copyright:  "Copyright (c) 1999-2001, Eric Bezault and others"
+	copyright:  "Copyright (c) 1999-2002, Eric Bezault and others"
 	license:    "Eiffel Forum Freeware License v1 (see forum.txt)"
 	date:       "$Date$"
 	revision:   "$Revision$"
@@ -56,6 +56,7 @@ feature {NONE} -- Initialization
 			an_error_handler_not_void: an_error_handler /= Void
 		do
 			universe := a_universe
+			!! counters.make (Initial_counters_capacity)
 			make_eiffel_scanner_with_factory ("unknown file", a_factory, an_error_handler)
 			make_parser_skeleton
 		ensure
@@ -70,9 +71,6 @@ feature -- Initialization
 			-- Reset parser before parsing next input.
 		do
 			precursor
-			feature_list_count := 0
-			rename_list_count := 0
-			export_list_count := 0
 			counters.wipe_out
 			last_clients := Void
 			cluster := Void
@@ -86,7 +84,7 @@ feature -- Access
 	cluster: ET_CLUSTER
 			-- Cluster containing the class being parsed
 
-	last_clients: ET_CLIENTS
+	last_clients: ET_CLASS_NAME_LIST
 			-- Last clients read
 
 feature -- Parsing
@@ -223,25 +221,29 @@ feature {NONE} -- AST factory
 			actual_generics_not_void: Result /= Void
 		end
 
-	new_all_export (a_clients: ET_CLIENTS): ET_ALL_EXPORT is
+	new_all_export (a_clients: ET_CLIENTS; an_all: ET_TOKEN): ET_ALL_EXPORT is
 			-- New 'all' export clause
 		require
 			a_clients_not_void: a_clients /= Void
+			an_all_not_void: an_all /= Void
 		do
-			Result := ast_factory.new_all_export (a_clients)
+			Result := ast_factory.new_all_export (a_clients, an_all)
 		ensure
 			all_export_not_void: Result /= Void
 		end
 
-	new_any_clients (a_position: ET_POSITION): ET_CLIENTS is
-			-- Client list with only one client: ANY
+	new_any_clients (a_position: ET_POSITION): ET_CLASS_NAME_LIST is
+			-- Implicit client list with only one client: ANY
 		require
 			a_position_not_void: a_position /= Void
+		local
+			a_name: ET_IDENTIFIER
 		do
-			Result := ast_factory.new_any_clients (a_position, universe)
+			Result := ast_factory.new_class_name_list_with_capacity (1)
+			!! a_name.make_with_position (universe.any_class.name.name, a_position.line, a_position.column)
 			last_clients := Result
 		ensure
-			clients_not_void: Result /= Void
+			any_clients_not_void: Result /= Void
 		end
 
 	new_assignment (a_target: ET_WRITABLE; an_assign: ET_SYMBOL; a_source: ET_EXPRESSION): ET_ASSIGNMENT is
@@ -405,33 +407,70 @@ feature {NONE} -- AST factory
 			class_not_void: Result /= Void
 		end
 
-	new_client (a_name: ET_IDENTIFIER): ET_CLIENT is
-			-- New client
+	new_class_name_comma (a_name: ET_CLASS_NAME; a_comma: ET_SYMBOL): ET_CLASS_NAME_ITEM is
+			-- New class_name-comma
 		require
 			a_name_not_void: a_name /= Void
+			a_comma_not_void: a_comma /= Void
 		do
-			Result := ast_factory.new_client (a_name)
+			if keep_all_breaks then
+				Result := ast_factory.new_class_name_comma (a_name, a_comma)
+			elseif keep_all_comments and a_comma.has_comment then
+				Result := ast_factory.new_class_name_comma (a_name, a_comma)
+			else
+				Result := a_name
+			end
 		ensure
-			client_not_void: Result /= Void
+			class_name_comma_not_void: Result /= Void
 		end
 
-	new_clients (a_client: ET_CLIENT): ET_CLIENTS is
+	new_clients (a_left, a_right: ET_SYMBOL): ET_CLIENTS is
 			-- New client clause
 		require
-			a_client_not_void: a_client /= Void
+			a_left_not_void: a_left /= Void
+			a_right_not_void: a_right /= Void
 		do
-			Result := ast_factory.new_clients (a_client)
+			Result := ast_factory.new_clients (a_left, a_right)
 			last_clients := Result
 		ensure
 			clients_not_void: Result /= Void
 		end
 
-	new_compound (an_instruction: ET_INSTRUCTION): ET_COMPOUND is
+	new_clients_with_capacity (nb: INTEGER): ET_CLIENTS is
+			-- New client clause
+		require
+			nb_positive: nb >= 0
+		local
+			a_left: ET_SYMBOL
+			a_right: ET_SYMBOL
+		do
+			a_left := tokens.symbol
+			a_right := tokens.symbol
+			Result := ast_factory.new_clients_with_capacity (a_left, a_right, nb)
+			last_clients := Result
+		ensure
+			clients_not_void: Result /= Void
+		end
+
+	new_compound (a_keyword: ET_TOKEN): ET_COMPOUND is
 			-- New instruction compound
 		require
-			an_instruction_not_void: an_instruction /= Void
+			a_keyword_not_void: a_keyword /= Void
 		do
-			Result := ast_factory.new_compound (an_instruction)
+			Result := ast_factory.new_compound (a_keyword)
+		ensure
+			compound_not_void: Result /= Void
+		end
+
+	new_compound_with_capacity (nb: INTEGER): ET_COMPOUND is
+			-- New instruction compound with given capacity
+		require
+			nb_positive: nb >= 0
+		local
+			a_keyword: ET_TOKEN
+		do
+			a_keyword := tokens.keyword
+			Result := ast_factory.new_compound_with_capacity (a_keyword, nb)
 		ensure
 			compound_not_void: Result /= Void
 		end
@@ -492,13 +531,26 @@ feature {NONE} -- AST factory
 			create_instruction_not_void: Result /= Void
 		end
 
-	new_creator (a_clients: ET_CLIENTS; a_procedure_list: ARRAY [ET_FEATURE_NAME]): ET_CREATOR is
+	new_creator (a_creation: ET_TOKEN; a_clients: ET_CLASS_NAME_LIST): ET_CREATOR is
 			-- New creation clause
 		require
+			a_creation_not_void: a_creation /= Void
 			a_clients_not_void: a_clients /= Void
-			no_void_procedure: a_procedure_list /= Void implies not ANY_ARRAY_.has (a_procedure_list, Void)
 		do
-			Result := ast_factory.new_creator (a_clients, a_procedure_list)
+			Result := ast_factory.new_creator (a_creation, a_clients)
+		ensure
+			creator_not_void: Result /= Void
+		end
+
+	new_creator_with_capacity (nb: INTEGER): ET_CREATOR is
+			-- New creation clause with given capacity
+		require
+			nb_positive: nb >= 0
+		local
+			a_creation: ET_TOKEN
+		do
+			a_creation := tokens.creation_keyword
+			Result := ast_factory.new_creator_with_capacity (a_creation, dummy_clients, nb)
 		ensure
 			creator_not_void: Result /= Void
 		end
@@ -535,14 +587,14 @@ feature {NONE} -- AST factory
 			debug_keys_not_void: Result /= Void
 		end
 
-	new_debug_instruction (a_debug: ET_TOKEN; a_keys: ET_DEBUG_KEYS;
-		a_compound: ET_COMPOUND; an_end: ET_TOKEN): ET_DEBUG_INSTRUCTION is
+	new_debug_instruction (a_keys: ET_DEBUG_KEYS; a_debug_compound: ET_COMPOUND;
+		an_end: ET_TOKEN): ET_DEBUG_INSTRUCTION is
 			-- New debug instruction
 		require
-			a_debug_not_void: a_debug /= Void
+			a_debug_compound_not_void: a_debug_compound /= Void
 			an_end_not_void: an_end /= Void
 		do
-			Result := ast_factory.new_debug_instruction (a_debug, a_keys, a_compound, an_end)
+			Result := ast_factory.new_debug_instruction (a_keys, a_debug_compound, an_end)
 		ensure
 			debug_instruction_not_void: Result /= Void
 		end
@@ -629,16 +681,6 @@ feature {NONE} -- AST factory
 			do_procedure_not_void: Result /= Void
 		end
 
-	new_else_part (an_else: ET_TOKEN; a_compound: ET_COMPOUND): ET_ELSE_PART is
-			-- New else part
-		require
-			an_else_not_void: an_else /= Void
-		do
-			Result := ast_factory.new_else_part (an_else, a_compound)
-		ensure
-			else_part_not_void: Result /= Void
-		end
-
 	new_elseif_part_list: DS_ARRAYED_LIST [ET_ELSEIF_PART] is
 			-- New empty elseif part list
 		do
@@ -648,14 +690,14 @@ feature {NONE} -- AST factory
 		end
 
 	new_elseif_part (an_elseif: ET_TOKEN; an_expression: ET_EXPRESSION;
-		a_then: ET_TOKEN; a_compound: ET_COMPOUND): ET_ELSEIF_PART is
+		a_then_compound: ET_COMPOUND): ET_ELSEIF_PART is
 			-- New elseif part
 		require
 			an_elseif_not_void: an_elseif /= Void
 			an_expression_not_void: an_expression /= Void
-			a_then_not_void: a_then /= Void
+			a_then_compound_not_void: a_then_compound /= Void
 		do
-			Result := ast_factory.new_elseif_part (an_elseif, an_expression, a_then, a_compound)
+			Result := ast_factory.new_elseif_part (an_elseif, an_expression, a_then_compound)
 		ensure
 			elseif_part_not_void: Result /= Void
 		end
@@ -685,14 +727,27 @@ feature {NONE} -- AST factory
 			is_expanded: Result.is_expanded
 		end
 
-	new_export_list (nb: INTEGER): ARRAY [ET_EXPORT] is
-			-- New export list
+	new_exports (an_export: ET_TOKEN): ET_EXPORTS is
+			-- New export clause
 		require
-			nb_positive: nb > 0
+			an_export_not_void: an_export /= Void
 		do
-			Result := ast_factory.new_export_list (nb)
+			Result := ast_factory.new_exports (an_export)
 		ensure
-			export_list_not_void: Result /= Void
+			exports_not_void: Result /= Void
+		end
+
+	new_exports_with_capacity (nb: INTEGER): ET_EXPORTS is
+			-- New export clause with given capacity
+		require
+			nb_positive: nb >= 0
+		local
+			an_export: ET_TOKEN
+		do
+			an_export := tokens.export_keyword
+			Result := ast_factory.new_exports_with_capacity (an_export, nb)
+		ensure
+			exports_not_void: Result /= Void
 		end
 
 	new_expression_address (d: ET_SYMBOL; e: ET_PARENTHESIZED_EXPRESSION): ET_EXPRESSION_ADDRESS is
@@ -806,21 +861,10 @@ feature {NONE} -- AST factory
 			-- New feature export clause with given capacity
 		require
 			nb_positive: nb >= 0
-			last_clients_not_void: last_clients /= Void
 		do
-			Result := ast_factory.new_feature_export_with_capacity (last_clients, nb)
+			Result := ast_factory.new_feature_export_with_capacity (dummy_clients, nb)
 		ensure
 			feature_export_not_void: Result /= Void
-		end
-
-	new_feature_list (nb: INTEGER): ARRAY [ET_FEATURE_NAME] is
-			-- New feature list
-		require
-			nb_positive: nb > 0
-		do
-			Result := ast_factory.new_feature_list (nb)
-		ensure
-			feature_list_not_void: Result /= Void
 		end
 
 	new_feature_name_comma (a_name: ET_FEATURE_NAME; a_comma: ET_SYMBOL): ET_FEATURE_NAME_ITEM is
@@ -874,15 +918,15 @@ feature {NONE} -- AST factory
 		end
 
 	new_if_instruction (an_if: ET_TOKEN; an_expression: ET_EXPRESSION;
-		a_then: ET_TOKEN; a_compound: ET_COMPOUND; an_end: ET_TOKEN): ET_IF_INSTRUCTION is
+		a_then_compound: ET_COMPOUND; an_end: ET_TOKEN): ET_IF_INSTRUCTION is
 			-- New if instruction
 		require
 			an_if_not_void: an_if /= Void
 			an_expression_not_void: an_expression /= Void
-			a_then_not_void: a_then /= Void
+			a_then_compound_not_void: a_then_compound /= Void
 			an_end_not_void: an_end /= Void
 		do
-			Result := ast_factory.new_if_instruction (an_if, an_expression, a_then, a_compound, an_end)
+			Result := ast_factory.new_if_instruction (an_if, an_expression, a_then_compound, an_end)
 		ensure
 			if_instruction_not_void: Result /= Void
 		end
@@ -1227,21 +1271,20 @@ feature {NONE} -- AST factory
 			local_variables_not_void: Result /= Void
 		end
 
-	new_loop_instruction (a_from: ET_TOKEN; a_from_compound: ET_COMPOUND;
+	new_loop_instruction (a_from_compound: ET_COMPOUND;
 		an_invariant: ET_INVARIANTS; a_variant: ET_VARIANT;
 		an_until: ET_TOKEN; an_until_expression: ET_EXPRESSION;
-		a_loop: ET_TOKEN; a_loop_compound: ET_COMPOUND;
-		an_end: ET_TOKEN): ET_LOOP_INSTRUCTION is
+		a_loop_compound: ET_COMPOUND; an_end: ET_TOKEN): ET_LOOP_INSTRUCTION is
 			-- New loop instruction
 		require
-			a_from_not_void: a_from /= Void
+			a_from_compound_not_void: a_from_compound /= Void
 			an_until_not_void: an_until /= Void
 			an_until_expression_not_void: an_until_expression /= Void
-			a_loop_not_void: a_loop /= Void
+			a_loop_compound_not_void: a_loop_compound /= Void
 			an_end_not_void: an_end /= Void
 		do
-			Result := ast_factory.new_loop_instruction (a_from, a_from_compound, an_invariant,
-				a_variant, an_until, an_until_expression, a_loop, a_loop_compound, an_end)
+			Result := ast_factory.new_loop_instruction (a_from_compound, an_invariant,
+				a_variant, an_until, an_until_expression, a_loop_compound, an_end)
 		ensure
 			loop_instruction_not_void: Result /= Void
 		end
@@ -1317,7 +1360,7 @@ feature {NONE} -- AST factory
 		end
 
 	new_named_type (a_type_mark: ET_TYPE_MARK; a_name: ET_IDENTIFIER;
-		a_generics: like new_actual_generics): ET_NAMED_TYPE is
+		a_generics: like new_actual_generics): ET_TYPE is
 			-- New Eiffel class type or formal generic paramater
 		require
 			a_name_not_void: a_name /= Void
@@ -1347,23 +1390,16 @@ feature {NONE} -- AST factory
 			named_type_not_void: Result /= Void
 		end
 
-	new_none_clients (a_position: ET_POSITION): ET_CLIENTS is
-			-- New client list with only one client: NONE
+	new_none_clients (a_left, a_right: ET_SYMBOL): ET_NONE_CLIENTS is
+			-- Client list of the form {}
 		require
-			a_position_not_void: a_position /= Void
+			a_left_not_void: a_left /= Void
+			a_right_not_void: a_right /= Void
 		do
-			Result := ast_factory.new_none_clients (a_position, universe)
+			Result := ast_factory.new_none_clients (a_left, a_right)
 			last_clients := Result
 		ensure
-			clients_not_void: Result /= Void
-		end
-
-	new_null_instruction (a_semicolon: ET_SYMBOL): ET_NULL_INSTRUCTION is
-			-- New null instruction
-		do
-			Result := ast_factory.new_null_instruction (a_semicolon)
-		ensure
-			null_instruction_not_void: Result /= Void
+			none_clients_not_void: Result /= Void
 		end
 
 	new_old_expression (an_old: ET_TOKEN; e: ET_EXPRESSION): ET_OLD_EXPRESSION is
@@ -1413,7 +1449,7 @@ feature {NONE} -- AST factory
 		end
 
 	new_parent (a_name: ET_IDENTIFIER; a_generic_parameters: like new_actual_generics;
-		a_renames: like new_rename_list; an_exports: like new_export_list;
+		a_renames: ET_RENAMES; an_exports: ET_EXPORTS;
 		an_undefines, a_redefines, a_selects: ET_KEYWORD_FEATURE_NAME_LIST): ET_PARENT is
 			-- New parent
 		require
@@ -1691,23 +1727,57 @@ feature {NONE} -- AST factory
 			qualified_typed_create_instruction_not_void: Result /= Void
 		end
 
-	new_rename_list (nb: INTEGER): ARRAY [ET_RENAME] is
-			-- New rename list
-		require
-			nb_positive: nb > 0
-		do
-			Result := ast_factory.new_rename_list (nb)
-		ensure
-			rename_list_not_void: Result /= Void
-		end
-
-	new_rename (old_name, new_name: ET_FEATURE_NAME): ET_RENAME is
+	new_rename (old_name: ET_FEATURE_NAME; an_as: ET_TOKEN; new_name: ET_FEATURE_NAME): ET_RENAME is
 			-- New rename pair
 		require
 			old_name_not_void: old_name /= Void
+			an_as_not_void: an_as /= Void
 			new_name_not_void: new_name /= Void
 		do
-			Result := ast_factory.new_rename (old_name, new_name)
+			Result := ast_factory.new_rename (old_name, an_as, new_name)
+		ensure
+			rename_not_void: Result /= Void
+		end
+
+	new_rename_comma (old_name: ET_FEATURE_NAME; an_as: ET_TOKEN;
+		new_name: ET_FEATURE_NAME; a_comma: ET_SYMBOL): ET_RENAME is
+			-- New rename pair followed by a comma
+		require
+			old_name_not_void: old_name /= Void
+			an_as_not_void: an_as /= Void
+			new_name_not_void: new_name /= Void
+			a_comma_not_void: a_comma /= Void
+		do
+			if keep_all_breaks then
+				Result := ast_factory.new_rename_comma (old_name, an_as, new_name, a_comma)
+			elseif keep_all_comments and a_comma.has_comment then
+				Result := ast_factory.new_rename_comma (old_name, an_as, new_name, a_comma)
+			else
+				Result := ast_factory.new_rename (old_name, an_as, new_name)
+			end
+		ensure
+			rename_comma_not_void: Result /= Void
+		end
+
+	new_renames (a_rename: ET_TOKEN): ET_RENAMES is
+			-- New rename clause
+		require
+			a_rename_not_void: a_rename /= Void
+		do
+			Result := ast_factory.new_renames (a_rename)
+		ensure
+			renames_not_void: Result /= Void
+		end
+
+	new_renames_with_capacity (nb: INTEGER): ET_RENAMES is
+			-- New rename clause with given capacity
+		require
+			nb_positive: nb >= 0
+		local
+			a_rename: ET_TOKEN
+		do
+			a_rename := tokens.rename_keyword
+			Result := ast_factory.new_renames_with_capacity (a_rename, nb)
 		ensure
 			renames_not_void: Result /= Void
 		end
@@ -1864,14 +1934,14 @@ feature {NONE} -- AST factory
 		end
 
 	new_when_part (a_when: ET_TOKEN; a_choices: DS_ARRAYED_LIST [ET_CHOICE_ITEM];
-		a_then: ET_TOKEN; a_compound: ET_COMPOUND): ET_WHEN_PART is
+		a_then_compound: ET_COMPOUND): ET_WHEN_PART is
 			-- New when part
 		require
 			a_when_not_void: a_when /= Void
 			no_void_choice: a_choices /= Void implies not a_choices.has (Void)
-			a_then_not_void: a_then /= Void
+			a_then_compound_not_void: a_then_compound /= Void
 		do
-			Result := ast_factory.new_when_part (a_when, a_choices, a_then, a_compound)
+			Result := ast_factory.new_when_part (a_when, a_choices, a_then_compound)
 		ensure
 			when_part_not_void: Result /= Void
 		end
@@ -1897,41 +1967,57 @@ feature -- Error handling
 
 feature {NONE} -- Implementation
 
-	feature_list_count: INTEGER
-	rename_list_count: INTEGER
-	export_list_count: INTEGER
-
-	counters: DS_ARRAYED_STACK [INTEGER] is
-		once
-			!! Result.make (10)
-		end
+	counters: DS_ARRAYED_STACK [INTEGER]
+			-- Counters currently in use by the parser
+			-- to build lists of AST nodes
 
 	counter_value: INTEGER is
-			--
+			-- Value of the last counter registered
+		require
+			counters_not_empty: not counters.is_empty
 		do
 			Result := counters.item
+		ensure
+			value_positive: Result >= 0
 		end
 
 	add_counter is
+			-- Register a new counter.
 		do
 			counters.force (0)
+		ensure
+			one_more: counters.count = old counters.count + 1
+			value_zero: counter_value = 0
 		end
 
 	remove_counter is
+			-- Unregister last registered counter.
+		require
+			counters_not_empty: not counters.is_empty
 		do
 			counters.remove
+		ensure
+			one_less: counters.count = old counters.count - 1
 		end
 
 	increment_counter is
+			-- Increment `counter_value'.
+		require
+			counters_not_empty: not counters.is_empty
 		local
 			a_value: INTEGER
 		do
 			a_value := counters.item
-			counters.remove
-			counters.force (a_value + 1)
+			counters.replace (a_value + 1)
+		ensure
+			same_counters_count: counters.count = old counters.count
+			one_more: counter_value = old counter_value + 1
 		end
 
 feature {NONE} -- Constants
+
+	Initial_counters_capacity: INTEGER is 10
+			-- Initial capacity for `counters'
 
 	Eiffel_buffer: YY_FILE_BUFFER is
 			-- Eiffel file input buffer
@@ -1941,8 +2027,22 @@ feature {NONE} -- Constants
 			eiffel_buffer_not_void: Result /= Void
 		end
 
+	dummy_clients: ET_CLIENTS is
+			-- Dummy client clause
+		local
+			a_left: ET_SYMBOL
+			a_right: ET_SYMBOL
+		once
+			a_left := tokens.symbol
+			a_right := tokens.symbol
+			!ET_NONE_CLIENTS! Result.make (a_left, a_right)
+		ensure
+			dummy_clients_not_void: Result /= Void
+		end
+
 invariant
 
 	universe_not_void: universe /= Void
+	counters_not_void: counters /= Void
 
 end -- class ET_EIFFEL_PARSER_SKELETON

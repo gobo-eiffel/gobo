@@ -2,8 +2,7 @@ indexing
 
 	description:
 
-		"Eiffel null instructions (see ETL2 p.234). %
-		%Used as place-holder in the AST for semicolons."
+		"Shared class name equality testers"
 
 	library:    "Gobo Eiffel Tools Library"
 	author:     "Eric Bezault <ericb@gobosoft.com>"
@@ -12,10 +11,16 @@ indexing
 	date:       "$Date$"
 	revision:   "$Revision$"
 
-deferred class ET_NULL_INSTRUCTION
+class ET_SHARED_CLASS_NAME_TESTER
 
-inherit
+feature -- Access
 
-	ET_INSTRUCTION
+	class_name_tester: ET_CLASS_NAME_TESTER is
+			-- Class name equality tester
+		once
+			!! Result
+		ensure
+			class_name_tester_not_void: Result /= Void
+		end
 
-end -- class ET_NULL_INSTRUCTION
+end -- class ET_SHARED_CLASS_NAME_TESTER

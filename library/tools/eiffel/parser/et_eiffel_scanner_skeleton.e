@@ -466,6 +466,14 @@ feature {NONE} -- AST factory
 			retry_instruction_not_void: Result /= Void
 		end
 
+	new_semicolon_symbol: ET_SEMICOLON_SYMBOL is
+			-- New ';' symbol
+		do
+			Result := ast_factory.new_semicolon_symbol (line, column)
+		ensure
+			semicolon_symbol_not_void: Result /= Void
+		end
+
 	new_separate_mark (a_text: STRING): ET_SEPARATE_MARK is
 			-- New 'separate' keyword
 		require

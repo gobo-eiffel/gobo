@@ -96,7 +96,7 @@ feature -- Access
 		require
 			a_universe_not_void: a_universe /= Void
 		local
-			a_cursor: DS_HASH_TABLE_CURSOR [ET_CLASS, ET_IDENTIFIER]
+			a_cursor: DS_HASH_TABLE_CURSOR [ET_CLASS, ET_CLASS_NAME]
 			a_class: ET_CLASS
 		do
 			!! Result.make (Initial_classes_capacity)
@@ -153,6 +153,18 @@ feature -- Setting
 			end
 		ensure
 			subclusters_set: subclusters = a_subclusters
+		end
+
+feature -- Element change
+
+	add_subcluster (a_cluster: like parent) is
+			-- Add `a_cluster' to the list of subsclusters.
+		require
+			a_cluster_not_void: a_cluster /= Void
+			subclusters_not_void: subclusters /= Void
+		do
+			subclusters.put_last (a_cluster)
+			a_cluster.set_parent (Current)
 		end
 
 feature {ET_CLUSTER, ET_CLUSTERS} -- Setting

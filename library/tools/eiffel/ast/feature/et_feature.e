@@ -25,7 +25,7 @@ feature -- Access
 	current_class: ET_CLASS
 			-- Class to which current feature belongs
 
-	clients: ET_CLIENTS
+	clients: ET_CLASS_NAME_LIST
 			-- Clients to which feature is exported
 
 	type: ET_TYPE is
@@ -147,7 +147,7 @@ feature -- Status report
 		require
 			a_class_not_void: a_class /= Void
 		do
-			Result := clients.is_exported_to (a_class)
+			Result := clients.has_descendant (a_class)
 		end
 
 	is_creation_exported_to (a_class: ET_CLASS): BOOLEAN is

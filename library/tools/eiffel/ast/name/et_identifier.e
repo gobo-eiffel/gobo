@@ -20,6 +20,11 @@ inherit
 			is_identifier, is_equal
 		end
 
+	ET_CLASS_NAME
+		undefine
+			is_identifier, is_equal
+		end
+
 	ET_WRITABLE
 		undefine
 			is_equal
@@ -58,6 +63,22 @@ feature -- Comparison
 
 	same_feature_name (other: ET_FEATURE_NAME): BOOLEAN is
 			-- Are feature name and `other' the same feature name?
+			-- (case insensitive)
+		local
+			id: ET_IDENTIFIER
+		do
+			if other = Current then
+				Result := True
+			elseif other.is_identifier then
+				id ?= other
+				if id /= Void then
+					Result := same_identifier (id)
+				end
+			end
+		end
+
+	same_class_name (other: ET_CLASS_NAME): BOOLEAN is
+			-- Are class name and `other' the same class name?
 			-- (case insensitive)
 		local
 			id: ET_IDENTIFIER

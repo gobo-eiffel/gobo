@@ -15,64 +15,90 @@ class ET_CREATOR
 
 inherit
 
-	KL_IMPORTED_ARRAY_ROUTINES
+	ET_FEATURE_NAME_LIST
+		rename
+			make as make_feature_name_list,
+			make_with_capacity as make_feature_name_list_with_capacity
+		end
 
 creation
 
-	make
+	make, make_with_capacity
 
 feature {NONE} -- Initialization
 
-	make (a_clients: like clients; a_procedure_list: like procedure_list) is
+	make (a_creation: like creation_keyword; a_clients: like clients) is
 			-- Create a new creation clause.
 		require
+			a_creation_not_void: a_creation /= Void
 			a_clients_not_void: a_clients /= Void
-			no_void_procedure: a_procedure_list /= Void implies not ANY_ARRAY_.has (a_procedure_list, Void)
 		do
+			creation_keyword := a_creation
 			clients := a_clients
-			procedure_list := a_procedure_list
+			make_feature_name_list
 		ensure
+			creation_keyword_set: creation_keyword = a_creation
 			clients_set: clients = a_clients
-			procedure_list_set: procedure_list = a_procedure_list
+			is_empty: is_empty
+			capacity_set: capacity = 0
+		end
+
+	make_with_capacity (a_creation: like creation_keyword; a_clients: like clients; nb: INTEGER) is
+			-- Create a new creation clause with capacity `nb'.
+		require
+			a_creation_not_void: a_creation /= Void
+			a_clients_not_void: a_clients /= Void
+			nb_positive: nb >= 0
+		do
+			creation_keyword := a_creation
+			clients := a_clients
+			make_feature_name_list_with_capacity (nb)
+		ensure
+			creation_keyword_set: creation_keyword = a_creation
+			clients_set: clients = a_clients
+			is_empty: is_empty
+			capacity_set: capacity = nb
 		end
 
 feature -- Access
 
-	clients: ET_CLIENTS
+	creation_keyword: ET_TOKEN
+			-- 'creation' keyword
+
+	clients: ET_CLASS_NAME_LIST
 			-- Clients
 
-	procedure_list: ARRAY [ET_FEATURE_NAME]
-			-- List of creation procedure names
-
-feature -- Status report
-
-	is_clause_empty: BOOLEAN is
-			-- Is there no creation procedure name in current
-			-- creation clause?
+	clients_clause: ET_CLIENTS is
+			-- Clients clause
 		do
-			Result := procedure_list = Void or else procedure_list.count = 0
+			Result ?= clients
 		end
 
-	has_procedure (a_name: ET_FEATURE_NAME): BOOLEAN is
-			-- Is `a_name' listed in current creation clause?
-		require
-			a_name_not_void: a_name /= Void
-		local
-			i, nb: INTEGER
+	position: ET_POSITION is
+			-- Position of first character of
+			-- current node in source code
 		do
-			if procedure_list /= Void then
-				i := procedure_list.lower
-				nb := procedure_list.upper
-				from until i > nb loop
-					if a_name.same_feature_name (procedure_list.item (i)) then
-						Result := True
-						i := nb + 1 -- Jump out of the loop.
-					else
-						i := i + 1
-					end
+			Result := creation_keyword.position
+		end
+
+	break: ET_BREAK is
+			-- Break which appears just after current node
+		local
+			a_clients_clause: ET_CLIENTS
+		do
+			if is_empty then
+				a_clients_clause := clients_clause
+				if a_clients_clause /= Void then
+					Result := a_clients_clause.break
+				else
+					Result := creation_keyword.break
 				end
+			else
+				Result := item (count).break
 			end
 		end
+
+feature -- Status report
 
 	is_exported_to (a_name: ET_FEATURE_NAME; a_class: ET_CLASS): BOOLEAN is
 			-- Is feature name listed in current creation clause
@@ -81,16 +107,38 @@ feature -- Status report
 			a_name_not_void: a_name /= Void
 			a_class_not_void: a_class /= Void
 		do
-			if not is_clause_empty then
-				if clients.is_exported_to (a_class) then
-					Result := has_procedure (a_name)
+			if not is_empty then
+				if clients.has_descendant (a_class) then
+					Result := has_feature_name (a_name)
 				end
 			end
 		end
 
+feature -- Setting
+
+	set_creation_keyword (a_creation: like creation_keyword) is
+			-- Set `creation_keyword' to `a_creation'.
+		require
+			a_creation_not_void: a_creation /= Void
+		do
+			creation_keyword := a_creation
+		ensure
+			creation_keyword_set: creation_keyword = a_creation
+		end
+
+	set_clients (a_clients: like clients) is
+			-- Set `clients' to `a_clients'.
+		require
+			a_clients_not_void: a_clients /= Void
+		do
+			clients := a_clients
+		ensure
+			clients_set: clients = a_clients
+		end
+
 invariant
 
+	creation_keyword_not_void: creation_keyword /= Void
 	clients_not_void: clients /= Void
-	no_void_procedure: procedure_list /= Void implies not ANY_ARRAY_.has (procedure_list, Void)
 
 end -- class ET_CREATOR

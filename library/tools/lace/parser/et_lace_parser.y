@@ -6,7 +6,7 @@ indexing
 		"Lace parsers"
 
 	author:     "Eric Bezault <ericb@gobosoft.com>"
-	copyright:  "Copyright (c) 1999-2001, Eric Bezault and others"
+	copyright:  "Copyright (c) 1999-2002, Eric Bezault and others"
 	license:    "Eiffel Forum Freeware License v1 (see forum.txt)"
 	date:       "$Date$"
 	revision:   "$Revision$"
@@ -34,8 +34,8 @@ creation
 %token <ET_IDENTIFIER> L_IDENTIFIER L_STRING
 %token                 L_STRERR
 
-%type <ET_LACE_CLUSTER>		Cluster Nested_cluster Recursive_cluster
-%type <ET_LACE_CLUSTERS>	Cluster_list Clusters_opt Sub_clusters_opt
+%type <ET_LACE_CLUSTER>		Cluster Nested_cluster Recursive_cluster Subcluster
+%type <ET_LACE_CLUSTERS>	Cluster_list Clusters_opt Subclusters_opt Subcluster_list
 %type <ET_LACE_EXCLUDE>		Exclude_opt Exclude_list
 %type <ET_IDENTIFIER>		Identifier
 
@@ -90,8 +90,19 @@ Clusters_opt: -- Empty
 
 Cluster_list: Cluster
 		{ $$ := new_clusters ($1) }
+	| Identifier '(' Identifier ')' ':' Identifier Options_opt
+		{
+			add_subcluster ($1, $3, $6)
+			-- TODO:
+			abort
+		}
 	| Cluster_list Cluster_separator Cluster
 		{ $$ := $1; $$.put_last ($3) }
+	| Cluster_list Cluster_separator Identifier '(' Identifier ')' ':' Identifier Options_opt
+		{
+			$$ := $1
+			add_subcluster ($3, $5, $8)
+		}
 	;
 
 Cluster: L_ABSTRACT Nested_cluster
@@ -102,12 +113,12 @@ Cluster: L_ABSTRACT Nested_cluster
 		{ $$ := $1 }
 	;
 
-Nested_cluster: Identifier ':' Identifier Options_opt Sub_clusters_opt
+Nested_cluster: Identifier ':' Identifier Options_opt Subclusters_opt
 		{
 			$$ := new_cluster ($1, $3)
 			$$.set_subclusters ($5)
 		}
-	| Identifier Options_opt Sub_clusters_opt
+	| Identifier Options_opt Subclusters_opt
 		{
 			$$ := new_cluster ($1, Void)
 			$$.set_subclusters ($3)
@@ -129,12 +140,24 @@ Cluster_separator: -- Empty
 	| ';'
 	;
 
-Sub_clusters_opt: -- Empty
+Subclusters_opt: -- Empty
 		-- { $$ := Void }
 	| L_CLUSTER L_END
 		-- { $$ := Void }
-	| L_CLUSTER Cluster_list L_END
+	| L_CLUSTER Subcluster_list L_END
 		{ $$ := $2 }
+	;
+
+Subcluster_list: Subcluster
+		{ $$ := new_clusters ($1) }
+	| Subcluster_list Cluster_separator Subcluster
+		{ $$ := $1; $$.put_last ($3) }
+	;
+
+Subcluster: L_ABSTRACT Nested_cluster
+		{ $$ := $2; $$.set_abstract (True) }
+	| Nested_cluster
+		{ $$ := $1 }
 	;
 
 Exclude_opt: -- Empty

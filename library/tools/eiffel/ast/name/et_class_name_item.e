@@ -2,7 +2,7 @@ indexing
 
 	description:
 
-		"Eiffel feature names which appear in a comma-separated list of feature names"
+		"Eiffel class names which appear in a comma-separated list of class names"
 
 	library:    "Gobo Eiffel Tools Library"
 	author:     "Eric Bezault <ericb@gobosoft.com>"
@@ -11,7 +11,7 @@ indexing
 	date:       "$Date$"
 	revision:   "$Revision$"
 
-deferred class ET_FEATURE_NAME_ITEM
+deferred class ET_CLASS_NAME_ITEM
 
 inherit
 
@@ -19,11 +19,11 @@ inherit
 
 feature -- Access
 
-	feature_name_item: ET_FEATURE_NAME is
-			-- Feature name in comma-separated list
+	class_name_item: ET_CLASS_NAME is
+			-- Class name in comma-separated list
 		deferred
 		ensure
-			feature_name_item_not_void: Result /= Void
+			class_name_item_not_void: Result /= Void
 		end
 
-end -- class ET_FEATURE_NAME_ITEM
+end -- class ET_CLASS_NAME_ITEM

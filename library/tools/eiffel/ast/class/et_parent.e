@@ -13,10 +13,6 @@ indexing
 
 class ET_PARENT
 
-inherit
-
-	KL_IMPORTED_ARRAY_ROUTINES
-
 creation
 
 	make
@@ -29,8 +25,6 @@ feature {NONE} -- Initialization
 			
 		require
 			a_type_not_void: a_type /= Void
-			no_void_rename: a_renames /= Void implies not ANY_ARRAY_.has (a_renames, Void)
-			no_void_export: an_exports /= Void implies not ANY_ARRAY_.has (an_exports, Void)
 		do
 			type := a_type
 			renames := a_renames
@@ -52,10 +46,10 @@ feature -- Access
 	type: ET_CLASS_TYPE
 			-- Class type
 
-	renames: ARRAY [ET_RENAME]
+	renames: ET_RENAMES
 			-- Rename clause
 
-	exports: ARRAY [ET_EXPORT]
+	exports: ET_EXPORTS
 			-- Export clause
 
 	undefines: ET_KEYWORD_FEATURE_NAME_LIST
@@ -69,36 +63,6 @@ feature -- Access
 
 	next: ET_PARENT
 			-- Next parent in parent list
-
-	new_exports (a_feature_name: ET_FEATURE_NAME): ET_CLIENTS is
-			-- New export status for `a_feature_name';
-			-- Void if this export status has not changed
-		local
-			i, nb: INTEGER
-			need_twin: BOOLEAN
-			an_export: ET_EXPORT
-		do
-			if exports /= Void then
-				i := exports.lower
-				nb := exports.upper
-				from until i > nb loop
-					an_export := exports.item (i)
-					if an_export.has_feature_name (a_feature_name) then
-						if Result = Void then
-							Result := an_export.clients
-							need_twin := True
-						else
-							if need_twin then
-								Result := clone (Result)
-								need_twin := False
-							end
-							Result.append_last (an_export.clients)
-						end
-					end
-					i := i + 1
-				end
-			end
-		end
 
 feature -- Genealogy status
 
@@ -211,6 +175,34 @@ feature -- Flattening status
 			Result := type.base_class.has_flatten_error
 		end
 
+feature -- Exports
+
+	add_clients_to (a_feature_name: ET_FEATURE_NAME; a_clients_list: DS_ARRAYED_LIST [ET_CLASS_NAME_LIST]) is
+			-- Add client clauses relevant to `a_feature_name' to
+			-- `a_clients_list'. Try to avoid adding client clauses
+			-- when overridden by other client clauses in the list.
+		require
+			a_feature_name_not_void: a_feature_name /= Void
+			a_clients_list_not_void: a_clients_list /= Void
+			no_void_clients: not a_clients_list.has (Void)
+		local
+			i, nb: INTEGER
+			an_export: ET_EXPORT
+			a_clients: ET_CLIENTS
+		do
+			if exports /= Void then
+				nb := exports.count
+				from i := 1 until i > nb loop
+					an_export := exports.item (i)
+					if an_export.has_feature_name (a_feature_name) then
+						a_clients := an_export.clients (a_feature_name)
+						a_clients_list.force_last (a_clients)
+					end
+					i := i + 1
+				end
+			end
+		end
+
 feature -- Setting
 
 	set_next (a_parent: like next) is
@@ -224,7 +216,5 @@ feature -- Setting
 invariant
 
 	type_not_void: type /= Void
-	no_void_rename: renames /= Void implies not ANY_ARRAY_.has (renames, Void)
-	no_void_export: exports /= Void implies not ANY_ARRAY_.has (exports, Void)
 
 end -- class ET_PARENT

@@ -33,6 +33,30 @@ feature -- Keywords
 			keyword_not_void: Result /= Void
 		end
 
+	creation_keyword: ET_TOKEN is
+			-- 'creation' keyword
+		once
+			!! Result.make (creation_keyword_name)
+		ensure
+			keyword_not_void: Result /= Void
+		end
+
+	export_keyword: ET_TOKEN is
+			-- 'export' keyword
+		once
+			!! Result.make (export_keyword_name)
+		ensure
+			keyword_not_void: Result /= Void
+		end
+
+	rename_keyword: ET_TOKEN is
+			-- 'rename' keyword
+		once
+			!! Result.make (rename_keyword_name)
+		ensure
+			keyword_not_void: Result /= Void
+		end
+
 	strip_keyword: ET_TOKEN is
 			-- 'strip' keyword
 		once

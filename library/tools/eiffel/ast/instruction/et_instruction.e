@@ -17,4 +17,12 @@ inherit
 
 	ET_AST_NODE
 
+feature -- Status report
+
+	is_semicolon: BOOLEAN is
+			-- Is current node a semicolon?
+		do
+			-- Result := False
+		end
+
 end -- class ET_INSTRUCTION

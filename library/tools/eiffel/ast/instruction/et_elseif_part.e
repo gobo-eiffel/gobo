@@ -24,22 +24,20 @@ creation
 feature {NONE} -- Initialization
 
 	make (an_elseif: like elseif_keyword; an_expression: like expression;
-		a_then: like then_keyword; a_compound: like compound) is
+		a_then_compound: like then_compound) is
 			-- Create a new elseif part.
 		require
 			an_elseif_not_void: an_elseif /= Void
 			an_expression_not_void: an_expression /= Void
-			a_then_not_void: a_then /= Void
+			a_then_compound_not_void: a_then_compound /= Void
 		do
 			elseif_keyword := an_elseif
 			expression := an_expression
-			then_keyword := a_then
-			compound := a_compound
+			then_compound := a_then_compound
 		ensure
 			elseif_keyword_set: elseif_keyword = an_elseif
 			expression_set: expression = an_expression
-			then_keyword_set: then_keyword = a_then
-			compound_set: compound = a_compound
+			then_compound_set: then_compound = a_then_compound
 		end
 
 feature -- Access
@@ -50,10 +48,7 @@ feature -- Access
 	expression: ET_EXPRESSION
 			-- Condition
 
-	then_keyword: ET_TOKEN
-			-- 'then' keyword
-
-	compound: ET_COMPOUND
+	then_compound: ET_COMPOUND
 			-- Then part
 
 	position: ET_POSITION is
@@ -66,17 +61,13 @@ feature -- Access
 	break: ET_BREAK is
 			-- Break which appears just after current node
 		do
-			if compound /= Void then
-				Result := compound.break
-			else
-				Result := then_keyword.break
-			end
+			Result := then_compound.break
 		end
 
 invariant
 
 	elseif_keyword_not_void: elseif_keyword /= Void
 	expression_not_void: expression /= Void
-	then_keyword_not_void: then_keyword /= Void
+	then_compound_not_void: then_compound /= Void
 
 end -- class ET_ELSEIF_PART

@@ -24,22 +24,20 @@ creation
 feature {NONE} -- Initialization
 
 	make (a_when: like when_keyword; a_choices: like choices;
-		a_then: like then_keyword; a_compound: like compound) is
+		a_then_compound: like then_compound) is
 			-- Create a new when part.
 		require
 			a_when_not_void: a_when /= Void
 			no_void_choice: a_choices /= Void implies not a_choices.has (Void)
-			a_then_not_void: a_then /= Void
+			a_then_compound_not_void: a_then_compound /= Void
 		do
 			when_keyword := a_when
 			choices := a_choices
-			then_keyword := a_then
-			compound := a_compound
+			then_compound := a_then_compound
 		ensure
 			when_keyword_set: when_keyword = a_when
 			choices_set: choices = a_choices
-			then_keyword_set: then_keyword = a_then
-			compound_set: compound = a_compound
+			then_compound_set: then_compound = a_then_compound
 		end
 
 feature -- Access
@@ -50,10 +48,7 @@ feature -- Access
 	choices: DS_ARRAYED_LIST [ET_CHOICE_ITEM]
 			-- Choices
 
-	then_keyword: ET_TOKEN
-			-- 'then' keyword
-
-	compound: ET_COMPOUND
+	then_compound: ET_COMPOUND
 			-- Then part
 
 	position: ET_POSITION is
@@ -66,17 +61,13 @@ feature -- Access
 	break: ET_BREAK is
 			-- Break which appears just after current node
 		do
-			if compound /= Void then
-				Result := compound.break
-			else
-				Result := then_keyword.break
-			end
+			Result := then_compound.break
 		end
 
 invariant
 
 	when_keyword_not_void: when_keyword /= Void
 	no_void_choice: choices /= Void implies not choices.has (Void)
-	then_keyword_not_void: then_keyword /= Void
+	then_compound_not_void: then_compound /= Void
 
 end -- class ET_WHEN_PART

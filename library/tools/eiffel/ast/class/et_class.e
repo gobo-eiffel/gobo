@@ -58,7 +58,7 @@ feature -- Access
 	filename: STRING
 			-- Filename
 
-	name: ET_IDENTIFIER
+	name: ET_CLASS_NAME
 			-- Class name
 
 	invariants: ET_INVARIANTS

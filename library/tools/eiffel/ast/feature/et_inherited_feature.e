@@ -106,17 +106,6 @@ feature -- Access
 	new_name: ET_RENAME
 			-- New name when feature is renamed
 
-	clients: ET_CLIENTS is
-			-- Clients to which feature is exported
-		do
-			Result := parent.new_exports (name)
-			if Result = Void then
-				Result := inherited_feature.clients
-			end
-		ensure
-			clients_not_void: Result /= Void
-		end
-
 	undefine_name: ET_FEATURE_NAME
 			-- Name listed in undefine clause
 			-- when feature is undefined
@@ -205,6 +194,27 @@ feature -- Status report
 		ensure
 			definition: Result = (first_seed = a_seed or
 				(seeds /= Void and then seeds.has (a_seed)))
+		end
+
+feature -- Exports
+
+	add_clients_to (a_clients_list: DS_ARRAYED_LIST [ET_CLASS_NAME_LIST]) is
+			-- Add client clauses relevant to current feature to
+			-- `a_clients_list'. Try to avoid adding client clauses
+			-- when overridden by other client clauses in the list.
+		require
+			a_clients_list_not_void: a_clients_list /= Void
+			no_void_clients: not a_clients_list.has (Void)
+		local
+			nb: INTEGER
+		do
+			nb := a_clients_list.count
+			parent.add_clients_to (name, a_clients_list)
+			if a_clients_list.count = nb then
+				a_clients_list.force_last (inherited_feature.clients)
+			end
+		ensure
+			not_empty: not a_clients_list.is_empty
 		end
 
 feature -- Comparison

@@ -39,6 +39,7 @@ feature {NONE} -- Initialization
 			!! select_table.make (10)
 			select_table.set_equality_tester (feature_name_tester)
 			!! replicable_features.make_map (400)
+			!! clients_list.make (20)
 			set_current_class (a_class)
 		ensure
 			current_class_set: current_class = a_class
@@ -357,7 +358,7 @@ feature {NONE} -- Element change
 			renames_not_void: a_parent.renames /= Void
 		local
 			i, nb: INTEGER
-			a_renames: ARRAY [ET_RENAME]
+			a_renames: ET_RENAMES
 			a_rename: ET_RENAME
 			a_name: ET_FEATURE_NAME
 		do
@@ -367,7 +368,7 @@ feature {NONE} -- Element change
 			if rename_table.capacity < nb then
 				rename_table.resize (nb)
 			end
-			from until i = nb loop
+			from i := 1 until i > nb loop
 				a_rename := a_renames.item (i)
 				a_name := a_rename.old_name
 				rename_table.search (a_name)
@@ -486,6 +487,11 @@ feature {NONE} -- Implementation
 	replicable_features: DS_HASH_TABLE [ET_REPLICABLE_FEATURE, INTEGER]
 			-- Table of potentially replicable features, indexed by seed
 
+feature {ET_FLATTENED_FEATURE} -- Implementation
+
+	clients_list: DS_ARRAYED_LIST [ET_CLASS_NAME_LIST]
+			-- List of client clauses
+
 invariant
 
 	current_class_not_void: current_class /= Void
@@ -501,6 +507,8 @@ invariant
 	no_void_redefine: not redefine_table.has (Void)
 	select_table_not_void: select_table /= Void
 	no_void_select: not select_table.has (Void)
+	clients_list_not_void: clients_list /= Void
+	not_void_clients: not clients_list.has (Void)
 	replicable_features_not_void: replicable_features /= Void
 	no_void_replicable_feature: not replicable_features.has_item (Void)
 

@@ -2,22 +2,22 @@ indexing
 
 	description:
 
-		"Eiffel instructions compounds"
+		"Eiffel export clauses"
 
 	library:    "Gobo Eiffel Tools Library"
 	author:     "Eric Bezault <ericb@gobosoft.com>"
-	copyright:  "Copyright (c) 1999-2002, Eric Bezault and others"
+	copyright:  "Copyright (c) 2002, Eric Bezault and others"
 	license:    "Eiffel Forum Freeware License v1 (see forum.txt)"
 	date:       "$Date$"
 	revision:   "$Revision$"
 
-class ET_COMPOUND
+class ET_EXPORTS
 
 inherit
 
 	ET_AST_NODE
 
-	ET_AST_LIST [ET_INSTRUCTION]
+	ET_AST_LIST [ET_EXPORT]
 		rename
 			make as make_ast_list,
 			make_with_capacity as make_ast_list_with_capacity
@@ -29,50 +29,50 @@ creation
 
 feature {NONE} -- Initialization
 
-	make (a_keyword: like keyword) is
-			-- Create a new compound.
+	make (an_export: like export_keyword) is
+			-- Create a new export clause
 		require
-			a_keyword_not_void: a_keyword /= Void
+			an_export_not_void: an_export /= Void
 		do
-			keyword := a_keyword
+			export_keyword := an_export
 			make_ast_list
 		ensure
-			keyword_set: keyword = a_keyword
+			export_keyword_set: export_keyword = an_export
 			is_empty: is_empty
 			capacity_set: capacity = 0
 		end
 
-	make_with_capacity (a_keyword: like keyword; nb: INTEGER) is
-			-- Create a new compound with capacity `nb'.
+	make_with_capacity (an_export: like export_keyword; nb: INTEGER) is
+			-- Create a new export clause with capacity `nb'.
 		require
-			a_keyword_not_void: a_keyword /= Void
+			an_export_not_void: an_export /= Void
 			nb_positive: nb >= 0
 		do
-			keyword := a_keyword
+			export_keyword := an_export
 			make_ast_list_with_capacity (nb)
 		ensure
-			keyword_set: keyword = a_keyword
+			export_keyword_set: export_keyword = an_export
 			is_empty: is_empty
 			capacity_set: capacity = nb
 		end
 
 feature -- Access
 
-	keyword: ET_TOKEN
-			-- Keyword preceding the list of instructions
+	export_keyword: ET_TOKEN
+			-- 'export' keyword
 
 	position: ET_POSITION is
 			-- Position of first character of
 			-- current node in source code
 		do
-			Result := keyword.position
+			Result := export_keyword.position
 		end
 
 	break: ET_BREAK is
 			-- Break which appears just after current node
 		do
 			if is_empty then
-				Result := keyword.break
+				Result := export_keyword.break
 			else
 				Result := item (count).break
 			end
@@ -80,19 +80,19 @@ feature -- Access
 
 feature -- Setting
 
-	set_keyword (a_keyword: like keyword) is
-			-- Set `keyword' to `a_keyword'.
+	set_export_keyword (an_export: like export_keyword) is
+			-- Set `export_keyword' to `an_export'.
 		require
-			a_keyword_not_void: a_keyword /= Void
+			an_export_not_void: an_export /= Void
 		do
-			keyword := a_keyword
+			export_keyword := an_export
 		ensure
-			keyword_set: keyword = a_keyword
+			export_keyword_set: export_keyword = an_export
 		end
 
 feature {NONE} -- Implementation
 
-	fixed_array: KL_FIXED_ARRAY_ROUTINES [ET_INSTRUCTION] is
+	fixed_array: KL_FIXED_ARRAY_ROUTINES [ET_EXPORT] is
 			-- Fixed array routines
 		once
 			!! Result
@@ -100,6 +100,6 @@ feature {NONE} -- Implementation
 
 invariant
 
-	keyword_not_void: keyword /= Void
+	export_keyword_not_void: export_keyword /= Void
 
-end -- class ET_COMPOUND
+end -- class ET_EXPORTS

@@ -23,34 +23,38 @@ creation
 
 feature {NONE} -- Initialization
 
-	make (a_debug: like debug_keyword; a_keys: like keys;
-		a_compound: like compound; an_end: like end_keyword) is
+	make (a_keys: like keys; a_debug_compound: like debug_compound; an_end: like end_keyword) is
 			-- Create a new debug instruction.
 		require
-			a_debug_not_void: a_debug /= Void
+			a_debug_compound_not_void: a_debug_compound /= Void
 			an_end_not_void: an_end /= Void
 		do
-			debug_keyword := a_debug
 			keys := a_keys
-			compound := a_compound
+			debug_compound := a_debug_compound
 			end_keyword := an_end
 		ensure
-			debug_keyword_set: debug_keyword = a_debug
 			keys_set: keys = a_keys
-			compound_set: compound = a_compound
+			debug_compound_set: debug_compound = a_debug_compound
 			end_keyword_set: end_keyword = an_end
 		end
 
 feature -- Access
 
-	debug_keyword: ET_TOKEN
+	debug_keyword: ET_TOKEN is
+			-- 'debug' keyword
+		do
+			Result := debug_compound.keyword
+		ensure
+			debug_keyword_not_void: Result /= Void
+		end
+
 	end_keyword: ET_TOKEN
-			-- 'debug' and 'end' keywords
+			-- 'end' keywords
 
 	keys: ET_DEBUG_KEYS
 			-- Debug keys
 
-	compound: ET_COMPOUND
+	debug_compound: ET_COMPOUND
 			-- Compound
 
 	position: ET_POSITION is
@@ -68,7 +72,7 @@ feature -- Access
 
 invariant
 
-	debug_keyword_not_void: debug_keyword /= Void
+	debug_compound_not_void: debug_compound /= Void
 	end_keyword_not_void: end_keyword /= Void
 
 end -- class ET_DEBUG_INSTRUCTION

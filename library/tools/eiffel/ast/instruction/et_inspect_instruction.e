@@ -50,7 +50,7 @@ feature -- Access
 	when_parts: DS_ARRAYED_LIST [ET_WHEN_PART]
 			-- When parts
 
-	else_part: ET_ELSE_PART
+	else_compound: ET_COMPOUND
 			-- Else part
 
 	end_keyword: ET_TOKEN
@@ -81,12 +81,12 @@ feature -- Setting
 			when_parts_set: when_parts = a_when_parts
 		end
 
-	set_else_part (an_else_part: like else_part) is
-			-- Set `else_part' to `an_else_part'.
+	set_else_compound (a_compound: like else_compound) is
+			-- Set `else_compound' to `a_compound'.
 		do
-			else_part := an_else_part
+			else_compound := a_compound
 		ensure
-			else_part_set: else_part = an_else_part
+			else_compound_set: else_compound = a_compound
 		end
 
 invariant

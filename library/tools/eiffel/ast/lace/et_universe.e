@@ -16,6 +16,7 @@ class ET_UNIVERSE
 inherit
 
 	KL_IMPORTED_STRING_ROUTINES
+	ET_SHARED_CLASS_NAME_TESTER
 
 creation
 
@@ -45,7 +46,8 @@ feature {NONE} -- Initialization
 			a_factory_not_void: a_factory /= Void
 		do
 			clusters := a_clusters
-			!! classes.make (3000)
+			!! classes.make_map (3000)
+			classes.set_key_equality_tester (class_name_tester)
 			!! features.make (100000)
 			error_handler := an_error_handler
 			ast_factory := a_factory
@@ -64,15 +66,15 @@ feature {NONE} -- Initialization
 	make_basic_classes is
 			-- Create basic classes.
 		local
-			id: ET_IDENTIFIER
+			a_name: ET_IDENTIFIER
 			any_parent: ET_PARENT
 		do
-			!! id.make ("ANY")
-			any_class := eiffel_class (id)
-			!! id.make ("GENERAL")
-			general_class := eiffel_class (id)
-			!! id.make ("NONE")
-			none_class := eiffel_class (id)
+			!! a_name.make ("ANY")
+			any_class := eiffel_class (a_name)
+			!! a_name.make ("GENERAL")
+			general_class := eiffel_class (a_name)
+			!! a_name.make ("NONE")
+			none_class := eiffel_class (a_name)
 			!! any_type.make (Void, any_class.name, any_class)
 			!! any_parent.make (any_type, Void, Void, Void, Void, Void)
 			!! any_parents.make (any_parent)
@@ -86,7 +88,7 @@ feature {NONE} -- Initialization
 
 feature -- Status report
 
-	has_class (a_name: ET_IDENTIFIER): BOOLEAN is
+	has_class (a_name: ET_CLASS_NAME): BOOLEAN is
 			-- Is there a class named `a_name'
 			-- in current universe?
 		require
@@ -108,13 +110,13 @@ feature -- Access
 	root_class: ET_CLASS
 			-- Root class
 
-	classes: DS_HASH_TABLE [ET_CLASS, ET_IDENTIFIER]
+	classes: DS_HASH_TABLE [ET_CLASS, ET_CLASS_NAME]
 			-- Classes in universe
 
 	features: DS_ARRAYED_LIST [ET_FEATURE]
 			-- Features in universe, indexed by feature IDs
 
-	eiffel_class (a_name: ET_IDENTIFIER): ET_CLASS is
+	eiffel_class (a_name: ET_CLASS_NAME): ET_CLASS is
 			-- Class named `a_name' in universe
 		require
 			a_name_not_void: a_name /= Void
@@ -134,7 +136,7 @@ feature -- Access
 		require
 			a_class_not_void: a_class /= Void
 		local
-			a_cursor: DS_HASH_TABLE_CURSOR [ET_CLASS, ET_IDENTIFIER]
+			a_cursor: DS_HASH_TABLE_CURSOR [ET_CLASS, ET_CLASS_NAME]
 			other_class: ET_CLASS
 		do
 			if a_class = any_class or a_class = general_class then
@@ -180,7 +182,7 @@ feature -- Basic classes
 feature -- Factory
 
 	new_attribute (a_name: ET_FEATURE_NAME; a_type: ET_TYPE;
-		a_clients: ET_CLIENTS; a_class: ET_CLASS): ET_ATTRIBUTE is
+		a_clients: ET_CLASS_NAME_LIST; a_class: ET_CLASS): ET_ATTRIBUTE is
 			-- New attribute feature for `a_class'
 		require
 			a_name_not_void: a_name /= Void
@@ -198,7 +200,7 @@ feature -- Factory
 		end
 
 	new_constant_attribute (a_name: ET_FEATURE_NAME; a_type: ET_TYPE; a_constant: ET_CONSTANT;
-		a_clients: ET_CLIENTS; a_class: ET_CLASS): ET_CONSTANT_ATTRIBUTE is
+		a_clients: ET_CLASS_NAME_LIST; a_class: ET_CLASS): ET_CONSTANT_ATTRIBUTE is
 			-- New constant attribute feature for `a_class'
 		require
 			a_name_not_void: a_name /= Void
@@ -218,7 +220,7 @@ feature -- Factory
 
 	new_deferred_function (a_name: ET_FEATURE_NAME; args: ET_FORMAL_ARGUMENTS;
 		a_type: ET_TYPE; an_obsolete: ET_MANIFEST_STRING; a_preconditions: ET_PRECONDITIONS;
-		a_postconditions: ET_POSTCONDITIONS; a_clients: ET_CLIENTS;
+		a_postconditions: ET_POSTCONDITIONS; a_clients: ET_CLASS_NAME_LIST;
 		a_class: ET_CLASS): ET_DEFERRED_FUNCTION is
 			-- New deferred function feature for `a_class'
 		require
@@ -239,7 +241,7 @@ feature -- Factory
 
 	new_deferred_procedure (a_name: ET_FEATURE_NAME; args: ET_FORMAL_ARGUMENTS;
 		an_obsolete: ET_MANIFEST_STRING; a_preconditions: ET_PRECONDITIONS;
-		a_postconditions: ET_POSTCONDITIONS; a_clients: ET_CLIENTS;
+		a_postconditions: ET_POSTCONDITIONS; a_clients: ET_CLASS_NAME_LIST;
 		a_class: ET_CLASS): ET_DEFERRED_PROCEDURE is
 			-- New deferred procedure feature for `a_class'
 		require
@@ -261,7 +263,7 @@ feature -- Factory
 		an_obsolete: ET_MANIFEST_STRING; a_preconditions: ET_PRECONDITIONS;
 		a_locals: ET_LOCAL_VARIABLES; a_compound: ET_COMPOUND;
 		a_postconditions: ET_POSTCONDITIONS; a_rescue: ET_COMPOUND;
-		a_clients: ET_CLIENTS; a_class: ET_CLASS): ET_DO_FUNCTION is
+		a_clients: ET_CLASS_NAME_LIST; a_class: ET_CLASS): ET_DO_FUNCTION is
 			-- New do function feature for `a_class'
 		require
 			a_name_not_void: a_name /= Void
@@ -283,7 +285,7 @@ feature -- Factory
 		an_obsolete: ET_MANIFEST_STRING; a_preconditions: ET_PRECONDITIONS;
 		a_locals: ET_LOCAL_VARIABLES; a_compound: ET_COMPOUND;
 		a_postconditions: ET_POSTCONDITIONS; a_rescue: ET_COMPOUND;
-		a_clients: ET_CLIENTS; a_class: ET_CLASS): ET_DO_PROCEDURE is
+		a_clients: ET_CLASS_NAME_LIST; a_class: ET_CLASS): ET_DO_PROCEDURE is
 			-- New do procedure feature for `a_class'
 		require
 			a_name_not_void: a_name /= Void
@@ -303,7 +305,7 @@ feature -- Factory
 	new_external_function (a_name: ET_FEATURE_NAME; args: ET_FORMAL_ARGUMENTS;
 		a_type: ET_TYPE; an_obsolete: ET_MANIFEST_STRING; a_preconditions: ET_PRECONDITIONS;
 		a_language: ET_MANIFEST_STRING; an_alias: ET_MANIFEST_STRING;
-		a_postconditions: ET_POSTCONDITIONS; a_clients: ET_CLIENTS;
+		a_postconditions: ET_POSTCONDITIONS; a_clients: ET_CLASS_NAME_LIST;
 		a_class: ET_CLASS): ET_EXTERNAL_FUNCTION is
 			-- New external function feature for `a_class'
 		require
@@ -327,7 +329,7 @@ feature -- Factory
 	new_external_procedure (a_name: ET_FEATURE_NAME; args: ET_FORMAL_ARGUMENTS;
 		an_obsolete: ET_MANIFEST_STRING; a_preconditions: ET_PRECONDITIONS;
 		a_language: ET_MANIFEST_STRING; an_alias: ET_MANIFEST_STRING;
-		a_postconditions: ET_POSTCONDITIONS; a_clients: ET_CLIENTS;
+		a_postconditions: ET_POSTCONDITIONS; a_clients: ET_CLASS_NAME_LIST;
 		a_class: ET_CLASS): ET_EXTERNAL_PROCEDURE is
 			-- New external procedure feature for `a_class'
 		require
@@ -351,7 +353,7 @@ feature -- Factory
 		an_obsolete: ET_MANIFEST_STRING; a_preconditions: ET_PRECONDITIONS;
 		a_locals: ET_LOCAL_VARIABLES; a_compound: ET_COMPOUND;
 		a_postconditions: ET_POSTCONDITIONS; a_rescue: ET_COMPOUND;
-		a_clients: ET_CLIENTS; a_class: ET_CLASS): ET_ONCE_FUNCTION is
+		a_clients: ET_CLASS_NAME_LIST; a_class: ET_CLASS): ET_ONCE_FUNCTION is
 			-- New once function feature for `a_class'
 		require
 			a_name_not_void: a_name /= Void
@@ -373,7 +375,7 @@ feature -- Factory
 		an_obsolete: ET_MANIFEST_STRING; a_preconditions: ET_PRECONDITIONS;
 		a_locals: ET_LOCAL_VARIABLES; a_compound: ET_COMPOUND;
 		a_postconditions: ET_POSTCONDITIONS; a_rescue: ET_COMPOUND;
-		a_clients: ET_CLIENTS; a_class: ET_CLASS): ET_ONCE_PROCEDURE is
+		a_clients: ET_CLASS_NAME_LIST; a_class: ET_CLASS): ET_ONCE_PROCEDURE is
 			-- New once procedure feature for `a_class'
 		require
 			a_name_not_void: a_name /= Void
@@ -391,7 +393,7 @@ feature -- Factory
 		end
 
 	new_unique_attribute (a_name: ET_FEATURE_NAME; a_type: ET_TYPE;
-		a_clients: ET_CLIENTS; a_class: ET_CLASS): ET_UNIQUE_ATTRIBUTE is
+		a_clients: ET_CLASS_NAME_LIST; a_class: ET_CLASS): ET_UNIQUE_ATTRIBUTE is
 			-- New unique attribute declaration for `a_class'
 		require
 			a_name_not_void: a_name /= Void
@@ -410,7 +412,7 @@ feature -- Factory
 
 feature -- Setting
 
-	set_root_class (a_name: ET_IDENTIFIER) is
+	set_root_class (a_name: ET_CLASS_NAME) is
 			-- Set `root_class'.
 		require
 			a_name_not_void: a_name /= Void
@@ -418,7 +420,7 @@ feature -- Setting
 			root_class := eiffel_class (a_name)
 		ensure
 			root_class_not_void: root_class /= Void
-			root_class_set: root_class.name.same_identifier (a_name)
+			root_class_set: root_class.name.same_class_name (a_name)
 		end
 
 	set_clusters (a_clusters: like clusters) is
@@ -442,7 +444,7 @@ feature -- Parsing
 	parse_system is
 			-- Parse whole system.
 		local
-			a_cursor: DS_HASH_TABLE_CURSOR [ET_CLASS, ET_IDENTIFIER]
+			a_cursor: DS_HASH_TABLE_CURSOR [ET_CLASS, ET_CLASS_NAME]
 			a_class: ET_CLASS
 			a_classname: STRING
 			a_filename: STRING
@@ -486,7 +488,7 @@ feature -- Compilation
 
 	compute_ancestors is
 		local
-			a_cursor: DS_HASH_TABLE_CURSOR [ET_CLASS, ET_IDENTIFIER]
+			a_cursor: DS_HASH_TABLE_CURSOR [ET_CLASS, ET_CLASS_NAME]
 			a_class: ET_CLASS
 			nb: INTEGER
 		do

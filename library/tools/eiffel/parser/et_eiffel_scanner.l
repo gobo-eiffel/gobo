@@ -73,7 +73,10 @@ creation
 				last_value := new_infix_lt_operator
 			}
 "."				process_one_character_symbol (Dot_code)
-";"				process_one_character_symbol (Semicolon_code)
+";"			{
+				last_token := Semicolon_code
+				last_value := new_semicolon_symbol
+			}
 ","				process_one_character_symbol (Comma_code)
 ":"				process_one_character_symbol (Colon_code)
 "!"				process_one_character_symbol (Exclamation_code)

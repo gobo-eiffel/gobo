@@ -2,22 +2,22 @@ indexing
 
 	description:
 
-		"Eiffel instructions compounds"
+		"Eiffel rename clauses"
 
 	library:    "Gobo Eiffel Tools Library"
 	author:     "Eric Bezault <ericb@gobosoft.com>"
-	copyright:  "Copyright (c) 1999-2002, Eric Bezault and others"
+	copyright:  "Copyright (c) 2002, Eric Bezault and others"
 	license:    "Eiffel Forum Freeware License v1 (see forum.txt)"
 	date:       "$Date$"
 	revision:   "$Revision$"
 
-class ET_COMPOUND
+class ET_RENAMES
 
 inherit
 
 	ET_AST_NODE
 
-	ET_AST_LIST [ET_INSTRUCTION]
+	ET_AST_LIST [ET_RENAME]
 		rename
 			make as make_ast_list,
 			make_with_capacity as make_ast_list_with_capacity
@@ -29,50 +29,50 @@ creation
 
 feature {NONE} -- Initialization
 
-	make (a_keyword: like keyword) is
-			-- Create a new compound.
+	make (a_rename: like rename_keyword) is
+			-- Create a new rename clause
 		require
-			a_keyword_not_void: a_keyword /= Void
+			a_rename_not_void: a_rename /= Void
 		do
-			keyword := a_keyword
+			rename_keyword := a_rename
 			make_ast_list
 		ensure
-			keyword_set: keyword = a_keyword
+			rename_keyword_set: rename_keyword = a_rename
 			is_empty: is_empty
 			capacity_set: capacity = 0
 		end
 
-	make_with_capacity (a_keyword: like keyword; nb: INTEGER) is
-			-- Create a new compound with capacity `nb'.
+	make_with_capacity (a_rename: like rename_keyword; nb: INTEGER) is
+			-- Create a new rename clause with capacity `nb'.
 		require
-			a_keyword_not_void: a_keyword /= Void
+			a_rename_not_void: a_rename /= Void
 			nb_positive: nb >= 0
 		do
-			keyword := a_keyword
+			rename_keyword := a_rename
 			make_ast_list_with_capacity (nb)
 		ensure
-			keyword_set: keyword = a_keyword
+			rename_keyword_set: rename_keyword = a_rename
 			is_empty: is_empty
 			capacity_set: capacity = nb
 		end
 
 feature -- Access
 
-	keyword: ET_TOKEN
-			-- Keyword preceding the list of instructions
+	rename_keyword: ET_TOKEN
+			-- 'rename' keyword
 
 	position: ET_POSITION is
 			-- Position of first character of
 			-- current node in source code
 		do
-			Result := keyword.position
+			Result := rename_keyword.position
 		end
 
 	break: ET_BREAK is
 			-- Break which appears just after current node
 		do
 			if is_empty then
-				Result := keyword.break
+				Result := rename_keyword.break
 			else
 				Result := item (count).break
 			end
@@ -80,19 +80,19 @@ feature -- Access
 
 feature -- Setting
 
-	set_keyword (a_keyword: like keyword) is
-			-- Set `keyword' to `a_keyword'.
+	set_rename_keyword (a_rename: like rename_keyword) is
+			-- Set `rename_keyword' to `a_rename'.
 		require
-			a_keyword_not_void: a_keyword /= Void
+			a_rename_not_void: a_rename /= Void
 		do
-			keyword := a_keyword
+			rename_keyword := a_rename
 		ensure
-			keyword_set: keyword = a_keyword
+			rename_keyword_set: rename_keyword = a_rename
 		end
 
 feature {NONE} -- Implementation
 
-	fixed_array: KL_FIXED_ARRAY_ROUTINES [ET_INSTRUCTION] is
+	fixed_array: KL_FIXED_ARRAY_ROUTINES [ET_RENAME] is
 			-- Fixed array routines
 		once
 			!! Result
@@ -100,6 +100,6 @@ feature {NONE} -- Implementation
 
 invariant
 
-	keyword_not_void: keyword /= Void
+	rename_keyword_not_void: rename_keyword /= Void
 
-end -- class ET_COMPOUND
+end -- class ET_RENAMES

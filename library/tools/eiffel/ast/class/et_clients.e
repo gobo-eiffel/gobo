@@ -15,148 +15,97 @@ class ET_CLIENTS
 
 inherit
 
-	ANY
-		redefine
-			copy, is_equal
+	ET_AST_NODE
+
+	ET_CLASS_NAME_LIST
+		rename
+			make as make_class_name_list,
+			make_with_capacity as make_class_name_list_with_capacity
 		end
 
 creation
 
-	make, make_none, make_any
+	make, make_with_capacity
 
 feature {NONE} -- Initialization
 
-	make (a_client: ET_CLIENT) is
-			-- Create a new client list with initially
-			-- one client `a_client'.
+	make (l: like left_brace; r: like right_brace) is
+			-- Create a new empty client list.
 		require
-			a_client_not_void: a_client /= Void
+			l_not_void: l /= Void
+			r_not_void: r /= Void
 		do
-			!! clients.make
-			clients.put_first (a_client)
+			left_brace := l
+			right_brace := r
+			make_class_name_list
 		ensure
-			clients_set: clients.first = a_client
+			left_brace_set: left_brace = l
+			right_brace_set: right_brace = r
+			is_empty: is_empty
+			capacity_set: capacity = 0
 		end
 
-	make_none (a_position: ET_POSITION; a_universe: ET_UNIVERSE) is
-			-- Create a new empty client list
-			-- (i.e. "feature {}").
+	make_with_capacity (l: like left_brace; r: like right_brace; nb: INTEGER) is
+			-- Create a new empty client list with capacity `nb'.
 		require
-			a_position_not_void: a_position /= Void
-			a_universe_not_void: a_universe /= Void
-		local
-			a_client: ET_CLIENT
+			l_not_void: l /= Void
+			r_not_void: r /= Void
+			nb_positive: nb >= 0
 		do
-			!! a_client.make_none (a_position, a_universe)
-			make (a_client)
+			left_brace := l
+			right_brace := r
+			make_class_name_list_with_capacity (nb)
 		ensure
-			is_none: is_none
-		end
-
-	make_any (a_position: ET_POSITION; a_universe: ET_UNIVERSE) is
-			-- Create a new absent client list
-			-- (i.e. "feature").
-		require
-			a_position_not_void: a_position /= Void
-			a_universe_not_void: a_universe /= Void
-		local
-			a_client: ET_CLIENT
-		do
-			!! a_client.make_any (a_position, a_universe)
-			make (a_client)
-		ensure
-			is_any: is_any
-		end
-
-feature -- Status report
-
-	is_none: BOOLEAN is
-			-- Has client list been declared as empty
-			-- (i.e. "feature {}")?
-		do
-			Result := clients.count = 1 and then clients.first.is_none
-		ensure
-			definition: Result = (clients.count = 1 and then clients.first.is_none)
-		end
-
-	is_any: BOOLEAN is
-			-- Has client list not been declared
-			-- (i.e. "feature")?
-		do
-			Result := clients.count = 1 and then clients.first.is_any
-		ensure
-			definition: Result = (clients.count = 1 and then clients.first.is_any)
-		end
-
-	is_exported_to (a_class: ET_CLASS): BOOLEAN is
-			-- Is `a_class' a descendant of any of the current clients?
-		require
-			a_class_not_void: a_class /= Void
-		local
-			a_cursor: DS_LINKED_LIST_CURSOR [ET_CLIENT]
-		do
-			a_cursor := clients.new_cursor
-			from a_cursor.start until a_cursor.after loop
-				if a_cursor.item.is_exported_to (a_class) then
-					Result := True
-					a_cursor.go_after -- Jump out of the loop.
-				else
-					a_cursor.forth
-				end
-			end
+			left_brace_set: left_brace = l
+			right_brace_set: right_brace = r
+			is_empty: is_empty
+			capacity_set: capacity = nb
 		end
 
 feature -- Access
 
-	clients: DS_LINKED_LIST [ET_CLIENT]
-			-- Client names
+	left_brace: ET_SYMBOL
+	right_brace: ET_SYMBOL
+			-- '{' and '}' symbols before and after client list
 
-feature -- Element change
-
-	put_first (a_client: ET_CLIENT) is
-			-- Add `a_client' to the list of clients.
-		require
-			a_client_not_void: a_client /= Void
+	position: ET_POSITION is
+			-- Position of first character of
+			-- current node in source code
 		do
-			clients.put_first (a_client)
+			Result := left_brace.position
+		end
+
+	break: ET_BREAK is
+			-- Break which appears just after current node
+		do
+			Result := right_brace.break
+		end
+
+feature -- Setting
+
+	set_left_brace (l: like left_brace) is
+			-- Set `left_brace' to `l'.
+		require
+			l_not_void: l /= Void
+		do
+			left_brace := l
 		ensure
-			one_more: clients.count = old clients.count + 1
-			clients_set: clients.first = a_client
+			left_brace_set: left_brace = l
 		end
 
-	append_last (other: ET_CLIENTS) is
-			-- Append clients held in `other' to end of `clients'.
+	set_right_brace (r: like right_brace) is
+			-- Set `right_brace' to `r'.
 		require
-			other_not_void: other /= Void
+			r_not_void: r /= Void
 		do
-			clients.append_last (other.clients)
-		end
-
-feature -- Duplication
-
-	copy (other: like Current) is
-			-- Copy `other' to `Current'.
-		do
-			standard_copy (other)
-			clients := clone (clients)
-		end
-
-feature -- Comparison
-
-	is_equal (other: like Current): BOOLEAN is
-			-- Are `Current' and `other' considered equal?
-		do
-			if other = Current then
-				Result := True
-			elseif same_type (other) then
-				Result := clients.is_equal (other.clients)
-			end
+			right_brace := r
+		ensure
+			right_brace_set: right_brace = r
 		end
 
 invariant
 
-	clients_not_void: clients /= Void
-	clients_not_empty: not clients.is_empty
-	no_void_client: not clients.has (Void)
+	left_brace_not_void: left_brace /= Void
+	right_brace_not_void: right_brace /= Void
 
 end -- class ET_CLIENTS

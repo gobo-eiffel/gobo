@@ -484,10 +484,13 @@ feature {NONE} -- Compilation
 			i, nb: INTEGER
 			need_twin: BOOLEAN
 			a_seed, new_seed: INTEGER
-			a_clients: ET_CLIENTS
-			a_clients_need_twin: BOOLEAN
+			a_clients_list: DS_ARRAYED_LIST [ET_CLASS_NAME_LIST]
+			a_clients1, a_clients2: ET_CLASS_NAME_LIST
+			nb_clients: INTEGER
 		do
 				-- Check Feature_adaptation clause.
+			a_clients_list := a_flattener.clients_list
+			a_clients_list.wipe_out
 			a_first_precursor := inherited_features.first.id
 			from inherited_features.start until inherited_features.after loop
 				a_feature := inherited_features.item_for_iteration
@@ -500,16 +503,7 @@ feature {NONE} -- Compilation
 					end
 					a_precursors.put (a_precursor)
 				end
-				if a_clients = Void then
-					a_clients := a_feature.clients
-					a_clients_need_twin := True
-				else
-					if a_clients_need_twin then
-						a_clients := clone (a_clients)
-						a_clients_need_twin := False
-					end
-					a_clients.append_last (a_feature.clients)
-				end
+				a_feature.add_clients_to (a_clients_list)
 				if not a_feature.check_rename_clause (current_class) then
 					a_flattener.set_flatten_error
 				end
@@ -592,7 +586,33 @@ feature {NONE} -- Compilation
 					flattened_feature.set_version (a_feature.inherited_feature.version)
 				end
 			end
-			flattened_feature.set_clients (a_clients)
+			a_clients1 := a_clients_list.first
+			nb := a_clients_list.count
+			from i := 1 until i > nb loop
+				a_clients2 := a_clients_list.item (i)
+				if a_clients2.is_none then
+					a_clients_list.remove (i)
+					nb := nb - 1
+				else
+					nb_clients := nb_clients + a_clients2.count
+					i := i + 1
+				end
+			end
+			if a_clients_list.is_empty then
+				-- Keep `a_clients1'.
+			elseif a_clients_list.count = 1 then
+				a_clients1 := a_clients_list.first
+			else
+				!! a_clients1.make_with_capacity (nb_clients)
+				nb := a_clients_list.count
+				from i := 1 until i > nb loop
+					a_clients2 := a_clients_list.item (i)
+					a_clients1.extend_first (a_clients2)
+					i := i + 1
+				end
+			end
+			a_clients_list.wipe_out
+			flattened_feature.set_clients (a_clients1)
 			if seeds /= Void and then seeds.count > 1 then
 				flattened_feature.set_seeds (seeds)
 			else

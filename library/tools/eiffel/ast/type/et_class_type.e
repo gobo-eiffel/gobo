@@ -15,19 +15,12 @@ class ET_CLASS_TYPE
 
 inherit
 
-	ET_NAMED_TYPE
-		rename
-			make as make_named_type,
-			name as class_name
+	ET_TYPE
 		redefine
 			add_to_system,
-			same_syntactical_type,
 			syntactically_conforms_to,
-			check_parent_validity,
-			check_constraint_validity,
 			resolved_formal_parameters,
-			resolved_named_types,
-			base_type, deep_cloned_type
+			resolved_named_types
 		end
 
 creation
@@ -53,8 +46,20 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
+	class_name: ET_CLASS_NAME
+			-- Name of type
+
 	base_class: ET_CLASS
 			-- Base class
+
+	type_mark: ET_TYPE_MARK
+			-- 'expanded', 'reference' or 'separate' keyword
+
+	position: ET_POSITION is
+			-- Position of current type in source code
+		do
+			Result := class_name.position
+		end
 
 feature -- Status report
 
@@ -222,7 +227,7 @@ feature -- Conversion
 			-- Type, in the context of `a_feature' in `a_type',
 			-- only made up of class names and generic formal parameters
 			-- when `a_type' in a generic type not fully derived
-			-- (Definition of base type in ETL2 p. 198)
+			-- (Definition of base type in ETL2 p.198)
 		do
 			Result := Current
 		end
@@ -235,8 +240,22 @@ feature -- Duplication
 			Result := Current
 		end
 
+feature -- Output
+
+	append_to_string (a_string: STRING) is
+			-- Append textual representation of
+			-- current type to `a_string'.
+		do
+			if type_mark /= Void then
+				a_string.append_string (type_mark.text)
+				a_string.append_character (' ')
+			end
+			a_string.append_string (class_name.name)
+		end
+
 invariant
 
+	class_name_not_void: class_name /= Void
 	base_class_not_void: base_class /= Void
 
 end -- class ET_CLASS_TYPE
