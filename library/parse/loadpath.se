@@ -1,8 +1,0 @@
-${GOBO}/library/parse/error/
-${GOBO}/library/parse/fsm/
-${GOBO}/library/parse/generation/
-${GOBO}/library/parse/grammar/
-${GOBO}/library/parse/parser/
-${GOBO}/library/parse/skeleton/
-${GOBO}/library/parse/support/
-${GOBO}/library/parse/yacc/
