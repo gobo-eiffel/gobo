@@ -505,6 +505,7 @@ feature -- Parsing status
 			declared_feature_count := 0
 			features := tokens.empty_features
 			leading_break := Void
+			providers := Void
 		ensure
 			not_parsed: not is_parsed
 			no_syntax_error: not has_syntax_error
@@ -1087,7 +1088,7 @@ feature -- Interface checking status
 			no_interface_error: not has_interface_error
 		end
 
-feature -- Suppliers
+feature -- Suppliers/Providers
 
 	suppliers: DS_HASH_SET [ET_CLASS]
 			-- Supplier classes of current class
@@ -1100,6 +1101,20 @@ feature -- Suppliers
 			suppliers := a_suppliers
 		ensure
 			suppliers_set: suppliers = a_suppliers
+		end
+
+	providers: DS_HASH_SET [ET_CLASS]
+			-- Provider classes of current class
+			-- (classes whose name appears in the text of current class)
+
+	set_providers (a_providers: like providers) is
+			-- Set `providers' to `a_providers'.
+		require
+			no_void_provider: a_providers /= Void implies not providers.has (Void)
+		do
+			providers := providers
+		ensure
+			providers_set: providers = providers
 		end
 
 feature -- Implementation checking status
@@ -1278,6 +1293,7 @@ invariant
 	named_type: is_named_type
 	valid_context: is_valid_context
 	no_void_supplier: suppliers /= Void implies not suppliers.has (Void)
+	no_void_provider: providers /= Void implies not providers.has (Void)
 	ancestors_error: has_ancestors_error implies ancestors_built
 	flattening_error: has_flattening_error implies features_flattened
 	interface_error: has_interface_error implies interface_checked

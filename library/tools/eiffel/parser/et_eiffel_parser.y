@@ -223,49 +223,49 @@ Class_declaration_opt: -- Empty
 	;
 
 Class_to_end: Class_header Formal_parameters_opt Obsolete_opt Inheritance_opt Creators_opt
-	Convert_clause_opt Features_opt Invariant_clause_opt Indexing_clause_opt E_END Class_declaration_opt
+	Convert_clause_opt Features_opt Invariant_clause_opt Indexing_clause_opt E_END Set_providers Class_declaration_opt
 		{
 			$$ := $1
 			set_class_to_end ($$, $3, $4, $5, $6, $7, $8, $9, $10)
 		}
 	| Class_header Formal_parameters_opt Obsolete_opt Inheritance_end Creators Convert_clause_opt
-	Features_opt Invariant_clause_opt Indexing_clause_opt E_END Class_declaration_opt
+	Features_opt Invariant_clause_opt Indexing_clause_opt E_END Set_providers Class_declaration_opt
 		{
 			$$ := $1
 			set_class_to_end ($$, $3, $4, $5, $6, $7, $8, $9, $10)
 		}
 	| Class_header Formal_parameters_opt Obsolete_opt Inheritance_end Convert_clause
-	Features_opt Invariant_clause_opt Indexing_clause_opt E_END Class_declaration_opt
+	Features_opt Invariant_clause_opt Indexing_clause_opt E_END Set_providers Class_declaration_opt
 		{
 			$$ := $1
 			set_class_to_end ($$, $3, $4, Void, $5, $6, $7, $8, $9)
 		}
 	| Class_header Formal_parameters_opt Obsolete_opt Inheritance_end
-	Features Invariant_clause_opt Indexing_clause_opt E_END Class_declaration_opt
+	Features Invariant_clause_opt Indexing_clause_opt E_END Set_providers Class_declaration_opt
 		{
 			$$ := $1
 			set_class_to_end ($$, $3, $4, Void, Void, $5, $6, $7, $8)
 		}
 	| Class_header Formal_parameters_opt Obsolete_opt Inheritance_end
-	Invariant_clause Indexing_clause_opt E_END Class_declaration_opt
+	Invariant_clause Indexing_clause_opt E_END Set_providers Class_declaration_opt
 		{
 			$$ := $1
 			set_class_to_end ($$, $3, $4, Void, Void, Void, $5, $6, $7)
 		}
-	| Class_header Formal_parameters_opt Obsolete_opt Inheritance_end Indexing_clause_opt Class_to_end
+	| Class_header Formal_parameters_opt Obsolete_opt Inheritance_end Indexing_clause_opt Set_providers Class_to_end
 		{
 			$$ := $1
 			set_class_to_inheritance_end ($$, $3, $4)
-			if $6 /= Void then
-				$6.set_first_indexing ($5)
+			if $7 /= Void then
+				$7.set_first_indexing ($5)
 			end
 		}
-	| Class_header Formal_parameters_opt Obsolete_opt Inheritance_end Indexing_clause_opt E_END Class_declaration_opt
+	| Class_header Formal_parameters_opt Obsolete_opt Inheritance_end Indexing_clause_opt E_END Set_providers Class_declaration_opt
 		{
 			$$ := $1
 			set_class_to_end ($$, $3, $4, Void, Void, Void, Void, $5, $6)
 		}
-	| Class_header Formal_parameters_opt Obsolete_opt Inheritance_end
+	| Class_header Formal_parameters_opt Obsolete_opt Inheritance_end Set_providers
 		{
 			$$ := $1
 			set_class_to_inheritance_end ($$, $3, $4)
@@ -279,6 +279,9 @@ Class_to_end: Class_header Formal_parameters_opt Obsolete_opt Inheritance_opt Cr
 		-- been parsed with 'end' being recognized as the
 		-- end of the feature adaptation of BAR instead of
 		-- as the end of the class FOO.
+
+Set_providers: { set_class_providers }
+	;
 
 --------------------------------------------------------------------------------
 

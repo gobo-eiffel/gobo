@@ -86,6 +86,7 @@ feature {NONE} -- Initialization
 			create assertions.make (Initial_assertions_capacity)
 			create features.make (Initial_features_capacity)
 			create constraints.make (Initial_constraints_capacity)
+			create providers.make (Initial_providers_capacity)
 			make_eiffel_scanner_with_factory ("unknown file", a_factory, an_error_handler)
 			make_class_processor (a_universe)
 			make_parser_skeleton
@@ -105,6 +106,7 @@ feature -- Initialization
 			counters.wipe_out
 			last_keywords.wipe_out
 			last_symbols.wipe_out
+			providers.wipe_out
 			assertions.wipe_out
 			features.wipe_out
 			constraints.wipe_out
@@ -162,6 +164,9 @@ feature -- Status report
 	is_null: BOOLEAN
 			-- Is current processor a null processor?
 
+	providers_enabled: BOOLEAN
+			-- Should it providers be built when parsing a class?
+			
 feature -- Status setting
 
 	set_null (b: BOOLEAN) is
@@ -172,6 +177,14 @@ feature -- Status setting
 			null_set: is_null = b
 		end
 
+	set_providers_enabled (b: BOOLEAN) is
+			-- Set `providers_enabled' to `b'.
+		do
+			providers_enabled := b
+		ensure
+			providers_enabled_set: providers_enabled = b
+		end
+		
 feature -- Parsing
 
 	parse_file (a_file: KI_CHARACTER_INPUT_STREAM; a_filename: STRING; a_time_stamp: INTEGER; a_cluster: ET_CLUSTER) is
@@ -574,6 +587,26 @@ feature {NONE} -- Basic operations
 			features.wipe_out
 		end
 
+	set_class_providers is
+			-- Set providers of `last_class' (when enabled).
+		local
+			l_providers: DS_HASH_SET [ET_CLASS]
+			l_class: ET_CLASS
+		do
+			if providers_enabled then
+				l_class := last_class
+				if l_class /= Void then
+					create l_providers.make (providers.count)
+					l_class.set_providers (l_providers)
+					from providers.start until providers.after loop
+						l_providers.put_last (providers.item_for_iteration)
+						providers.forth
+					end
+				end
+			end
+			providers.wipe_out
+		end
+
 	set_class_to_end (a_class: ET_CLASS; an_obsolete: ET_OBSOLETE; a_parents: ET_PARENT_LIST;
 		a_creators: ET_CREATOR_LIST; a_convert_features: ET_CONVERT_FEATURE_LIST;
 		a_feature_clauses: ET_FEATURE_CLAUSE_LIST; an_invariants: ET_INVARIANTS;
@@ -787,6 +820,10 @@ feature {ET_CONSTRAINT_ACTUAL_PARAMETER_ITEM, ET_CONSTRAINT_ACTUAL_PARAMETER_LIS
 				Result := ast_factory.new_formal_parameter_type (a_name, a_formal.index)
 			else
 				a_base_class := universe.eiffel_class (a_name)
+				if providers_enabled then
+					providers.force_last (a_base_class)
+				end
+				a_base_class.set_in_system (True)
 				if a_base_class = universe.tuple_class then
 					if a_type_mark /= Void then
 							-- A TUPLE type is not a class type. It cannot
@@ -795,7 +832,6 @@ feature {ET_CONSTRAINT_ACTUAL_PARAMETER_ITEM, ET_CONSTRAINT_ACTUAL_PARAMETER_LIS
 					end
 					Result := ast_factory.new_tuple_type (a_name, Void)
 				else
-					a_base_class.set_in_system (True)
 					Result := ast_factory.new_class_type (a_type_mark, a_name, a_base_class)
 				end
 			end
@@ -834,6 +870,10 @@ feature {ET_CONSTRAINT_ACTUAL_PARAMETER_ITEM, ET_CONSTRAINT_ACTUAL_PARAMETER_LIS
 				a_base_class := universe.eiffel_class (a_name)
 				a_parameters := a_constraint.actual_parameters.resolved_syntactical_constraint (a_formals, Current)
 				if a_parameters /= Void then
+					if providers_enabled then
+						providers.force_last (a_base_class)
+					end
+					a_base_class.set_in_system (True)
 					if a_base_class = universe.tuple_class then
 						if a_type_mark /= Void then
 								-- A TUPLE type is not a class type. It cannot
@@ -842,7 +882,6 @@ feature {ET_CONSTRAINT_ACTUAL_PARAMETER_ITEM, ET_CONSTRAINT_ACTUAL_PARAMETER_LIS
 						end
 						Result := ast_factory.new_tuple_type (a_name, a_parameters)
 					else
-						a_base_class.set_in_system (True)
 						Result := ast_factory.new_generic_class_type (a_type_mark, a_name, a_parameters, a_base_class)
 					end
 				end
@@ -1125,6 +1164,9 @@ feature {NONE} -- AST factory
 					Result := ast_factory.new_formal_parameter_type (a_name, a_parameter.index)
 				else
 					a_class := universe.eiffel_class (a_name)
+					if providers_enabled then
+						providers.force_last (a_class)
+					end
 					a_class.set_in_system (True)
 					if a_generics /= Void then
 						Result := ast_factory.new_generic_class_type (a_type_mark, a_name, a_generics, a_class)
@@ -1150,6 +1192,9 @@ feature {NONE} -- AST factory
 					-- Error
 				end
 				a_class := universe.eiffel_class (a_name)
+				if providers_enabled then
+					providers.force_last (a_class)
+				end
 				a_class.set_in_system (True)
 				if a_generic_parameters /= Void then
 					a_type := ast_factory.new_generic_class_type (Void, a_name, a_generic_parameters, a_class)
@@ -1608,6 +1653,12 @@ feature {NONE} -- Constants
 	Initial_constraints_capacity: INTEGER is 10
 			-- Initial capacity for `constraints'
 
+	providers: DS_HASH_SET [ET_CLASS]
+			-- Provider classes already read (when enabled)
+
+	Initial_providers_capacity: INTEGER is 100
+			-- Initial capacity for `providers'
+
 	dummy_type: ET_TYPE is
 			-- Dummy type
 		once
@@ -1649,5 +1700,7 @@ invariant
 	no_void_feature: not features.has (Void)
 	-- features_registered: forall f in features, f.is_registered
 	constraints_not_void: constraints /= Void
+	providers_not_void: providers /= Void
+	no_void_provider: not providers.has (Void)
 
 end
