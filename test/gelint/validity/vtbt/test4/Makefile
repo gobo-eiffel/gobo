@@ -1,7 +1,7 @@
 # system:     "VTBT test #4"
 # author:     "Eric Bezault <ericb@gobosoft.com>"
 # copyright:  "Copyright (c) 2001, Eric Bezault and others"
-# license:    "Eiffel Forum Freeware License v1 (see forum.txt)"
+# license:    "Eiffel Forum License v2 (see forum.txt)"
 # date:       "$Date$"
 # revision:   "$Revision$"
 
