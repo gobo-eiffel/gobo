@@ -15,6 +15,9 @@ class ET_DYNAMIC_TYPE
 inherit
 
 	ET_DYNAMIC_TYPE_SET
+		redefine
+			is_expanded
+		end
 
 	DEBUG_OUTPUT
 
@@ -57,7 +60,7 @@ feature -- Status report
 			-- Is current type expanded?
 		do
 			Result := base_type.is_expanded
-		ensure
+		ensure then
 			definition: Result = base_type.is_expanded
 		end
 

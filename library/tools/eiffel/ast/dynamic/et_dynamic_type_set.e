@@ -31,6 +31,14 @@ feature -- Status report
 			end
 		end
 
+	is_expanded: BOOLEAN is
+			-- Is `static_type' expanded?
+		do
+			Result := static_type.is_expanded
+		ensure
+			definition: Result = static_type.is_expanded
+		end
+
 feature -- Access
 
 	static_type: ET_DYNAMIC_TYPE is
