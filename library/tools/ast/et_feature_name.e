@@ -36,6 +36,7 @@ feature -- Comparison
 			if other = Current then
 				Result := True
 			else
+-- TODO
 				Result := same_type (other)
 			end
 		end
