@@ -462,6 +462,12 @@ feature {NONE} -- Output
 					a_file.put_line ("<option name=%"jumps_optimization%" value=%"false%"/>")
 				end
 			end
+			if an_option.is_layout_declared then
+				print_indentation (indent + 1, a_file)
+				a_file.put_string ("<option name=%"layout%" value=%"")
+				a_file.put_string (an_option.layout)
+				a_file.put_line ("%"/>")
+			end
 			if an_option.is_layout_optimization_declared then
 				print_indentation (indent + 1, a_file)
 				if an_option.layout_optimization then
@@ -787,6 +793,7 @@ feature {NONE} -- Output
 			a_class_cursor := an_option_list.new_cursor
 			from a_class_cursor.start until a_class_cursor.after loop
 				a_class_options := a_class_cursor.item
+				print_indentation (indent, a_file)
 				a_file.put_string ("<class name=%"")
 				a_file.put_string (a_class_options.class_name)
 				a_file.put_line ("%">")
@@ -796,6 +803,7 @@ feature {NONE} -- Output
 					print_feature_options (a_feature_options, indent + 1, a_file)
 				end
 				a_class_cursor.forth
+				print_indentation (indent, a_file)
 				a_file.put_line ("</class>")
 			end
 		end
