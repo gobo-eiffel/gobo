@@ -236,11 +236,6 @@ feature -- Element change
 			attribute_value.force_last (value)
 			attribute_code.force_last (nm_code)
 
-				check
-					untyped: type_cde = 0
-					-- As the parser does not provide type information
-				end
-
 			if alpha.item (the_parent) = -1 then alpha.force (attribute_value.count, the_parent) end
 			-- TODO check ID values
 		end

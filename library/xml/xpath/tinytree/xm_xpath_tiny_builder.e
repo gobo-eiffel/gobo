@@ -130,7 +130,7 @@ feature -- Events
 			-- The receiver must maintain a stack if it needs to know which
 			--  element is ending.
 		do
-			previously_at_depth.put (-1, current_depth)
+			previously_at_depth.force (-1, current_depth)
 			current_depth := current_depth - 1			
 		end
 
@@ -149,7 +149,7 @@ feature -- Events
 				document.set_next_sibling (node_number, previous_sibling)
 			end
 			document.set_next_sibling (previously_at_depth.item (current_depth - 1), node_number) -- owner pointer in last sibling
-			previously_at_depth.put (node_number, current_depth)
+			previously_at_depth.force (node_number, current_depth)
 		end
 
 	
@@ -173,7 +173,7 @@ feature -- Events
 				document.set_next_sibling (node_number, previous_sibling)
 			end
 			document.set_next_sibling (previously_at_depth.item (current_depth - 1), node_number) -- owner pointer in last sibling
-			previously_at_depth.put (node_number, current_depth)		
+			previously_at_depth.force (node_number, current_depth)		
 		end
 
 	comment (content: UC_UTF8_STRING; properties: INTEGER) is
@@ -191,7 +191,7 @@ feature -- Events
 				document.set_next_sibling (node_number, previous_sibling)
 			end
 			document.set_next_sibling (previously_at_depth.item (current_depth - 1), node_number) -- owner pointer in last sibling
-			previously_at_depth.put (node_number, current_depth)
+			previously_at_depth.force (node_number, current_depth)
 		end
 
 	end_document is

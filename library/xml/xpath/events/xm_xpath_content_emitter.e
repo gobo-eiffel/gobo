@@ -309,9 +309,9 @@ feature -- Tag
 							-- because `has' returned `True'
 						end
 					if a_prefix.count = 0 then
-						create attribute_qname.make_from_string (a_local_part)
+						attribute_qname := clone (a_local_part)
 					else
-						create attribute_qname.make_from_string (a_prefix)
+						attribute_qname := clone (a_prefix)
 						attribute_qname.append_character (':')
 						attribute_qname.append_string (a_local_part)
 					end
@@ -393,11 +393,14 @@ feature {NONE} -- Implementation
 			-- Has DTD been seen yet?
 
 	is_namespace_declaration (ns_prefix, a_local_part: STRING): BOOLEAN is
-			-- xmlns= or xmlns:
+			-- xmlns= or xmlns
+		require
+			prefix_not_void: ns_prefix /= Void
+			local_part_not_void: a_local_part /= Void
 		do
-			if ns_prefix.count = 0 and then a_local_part.is_equal ("xmlns") then
+			if ns_prefix.count = 0 and then STRING_.same_string (a_local_part, "xmlns") then
 				Result := True
-			elseif ns_prefix.is_equal ("xmlns") then
+			elseif STRING_.same_string (ns_prefix, "xmlns") then
 				Result := True
 			end
 		end

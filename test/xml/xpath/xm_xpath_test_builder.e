@@ -39,7 +39,8 @@ feature
 			input_stream: KL_TEXT_INPUT_FILE
 		do
 			make_parser
-			create input_stream.make ("./data/books.xml")
+			-- TODO: restore to this line, when resolver architecture sorted: create input_stream.make ("./data/books.xml")
+			create input_stream.make ("./books.xml")
 			input_stream.open_read
 			assert ("Inout file open", input_stream.is_open_read)
 			parser.parse_from_stream (input_stream)
