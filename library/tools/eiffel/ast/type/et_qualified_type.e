@@ -899,13 +899,15 @@ feature {ET_TYPE} -- Comparison
 feature -- Conformance
 
 	conforms_to_type (other: ET_TYPE; other_context: ET_TYPE_CONTEXT;
-		a_context: ET_TYPE_CONTEXT; a_processor: ET_AST_PROCESSOR): BOOLEAN is
+		a_context: ET_TYPE_CONTEXT; a_universe: ET_UNIVERSE): BOOLEAN is
 			-- Does current type appearing in `a_context' conform
 			-- to `other' type appearing in `other_context'?
-			-- (Note: Use `a_processor' on the classes whose ancestors
-			-- need to be built in order to check for conformance.)
+			-- (Note: 'a_universe.ancestor_builder' is used on classes on
+			-- the classes whose ancestors need to be built in order to check
+			-- for conformance, and 'a_universe.qualified_signature_resolver'
+			-- is used on classes whose qualified anchored types need to be
+			-- resolved in order to check conformance.)
 		local
-			a_universe: ET_UNIVERSE
 			a_base_type: ET_BASE_TYPE
 			a_target_context: ET_NESTED_TYPE_CONTEXT
 			a_class: ET_CLASS
@@ -914,36 +916,48 @@ feature -- Conformance
 		do
 			if other = Current and then other_context = a_context then
 				Result := True
-			elseif seed = 0 then
-					-- Anchored type not resolved yet.
-				Result := False
-			elseif lhs_contexts /= Void and then lhs_contexts.has_stacked_context (a_context, a_processor.universe) then
-					-- A cycle in the anchored types has been introduced
-					-- in the AST since we checked for cycles.
-				Result := False
 			else
-				a_universe := a_processor.universe
-				a_base_type := target_type.shallow_base_type (a_context, a_universe)
-				a_class := a_base_type.direct_base_class (a_universe)
-				seeded_feature := a_class.seeded_feature (seed)
-				if seeded_feature /= Void then
-					a_query_type := seeded_feature.type
-					if a_query_type /= Void then
-							-- Push `a_context' on stack `lhs_contexts' to avoid
-							-- infinite loop if the AST has been externally changed
-							-- since we checked for cycles in anchored types.
-						if lhs_contexts /= Void then
-							create {ET_STACKED_TYPE_CONTEXT} lhs_contexts.make (a_context, lhs_contexts)
+				if seed = 0 then
+						-- Qualified anchored type not resolved yet.
+						-- Try to resolve it now.
+					a_class := a_context.type.direct_base_class (a_universe)
+					a_class.process (a_universe.qualified_signature_resolver)
+				end
+				if seed = 0 then
+						-- Qualified anchored type still not resolved.
+					Result := False
+				elseif lhs_contexts /= Void and then lhs_contexts.has_stacked_context (a_context, a_universe) then
+						-- A cycle in the anchored types has been introduced
+						-- in the AST since we checked for cycles.
+					Result := False
+				else
+					a_base_type := target_type.shallow_base_type (a_context, a_universe)
+					a_class := a_base_type.direct_base_class (a_universe)
+					seeded_feature := a_class.seeded_feature (seed)
+					if seeded_feature /= Void then
+						a_query_type := seeded_feature.type
+						if a_query_type /= Void then
+								-- Push `a_context' on stack `lhs_contexts' to avoid
+								-- infinite loop if the AST has been externally changed
+								-- since we checked for cycles in anchored types.
+							if lhs_contexts /= Void then
+								create {ET_STACKED_TYPE_CONTEXT} lhs_contexts.make (a_context, lhs_contexts)
+							else
+								lhs_contexts := a_context
+							end
+							create a_target_context.make (a_base_type, a_context)
+							Result := a_query_type.conforms_to_type (other, other_context, a_target_context, a_universe)
+							lhs_contexts := lhs_contexts.previous_stacked_context
+							if not Result then
+									-- Covers the case where only 'like {G}.a'
+									-- conforms to 'like {G}.a'.
+								Result := other.same_syntactical_qualified_type (Current, a_context, other_context, a_universe)
+							end
 						else
-							lhs_contexts := a_context
-						end
-						create a_target_context.make (a_base_type, a_context)
-						Result := a_query_type.conforms_to_type (other, other_context, a_target_context, a_processor)
-						lhs_contexts := lhs_contexts.previous_stacked_context
-						if not Result then
-								-- Covers the case where only 'like {G}.a'
-								-- conforms to 'like {G}.a'.
-							Result := other.same_syntactical_qualified_type (Current, a_context, other_context, a_universe)
+								-- Internal error: an inconsistency has been
+								-- introduced in the AST since we relsolved
+								-- current anchored type.
+							Result := False
 						end
 					else
 							-- Internal error: an inconsistency has been
@@ -951,11 +965,6 @@ feature -- Conformance
 							-- current anchored type.
 						Result := False
 					end
-				else
-						-- Internal error: an inconsistency has been
-						-- introduced in the AST since we relsolved
-						-- current anchored type.
-					Result := False
 				end
 			end
 		end
@@ -963,13 +972,15 @@ feature -- Conformance
 feature {ET_TYPE} -- Conformance
 
 	conforms_from_bit_type (other: ET_BIT_TYPE; other_context: ET_TYPE_CONTEXT;
-		a_context: ET_TYPE_CONTEXT; a_processor: ET_AST_PROCESSOR): BOOLEAN is
+		a_context: ET_TYPE_CONTEXT; a_universe: ET_UNIVERSE): BOOLEAN is
 			-- Does `other' type appearing in `other_context' conform
 			-- to current type appearing in `a_context'?
-			-- (Note: Use `a_processor' on the classes whose ancestors
-			-- need to be built in order to check for conformance.)
+			-- (Note: 'a_universe.ancestor_builder' is used on classes on
+			-- the classes whose ancestors need to be built in order to check
+			-- for conformance, and 'a_universe.qualified_signature_resolver'
+			-- is used on classes whose qualified anchored types need to be
+			-- resolved in order to check conformance.)
 		local
-			a_universe: ET_UNIVERSE
 			a_base_type: ET_BASE_TYPE
 			a_target_context: ET_NESTED_TYPE_CONTEXT
 			a_class: ET_CLASS
@@ -977,14 +988,19 @@ feature {ET_TYPE} -- Conformance
 			a_query_type: ET_TYPE
 		do
 			if seed = 0 then
-					-- Anchored type not resolved yet.
+					-- Qualified anchored type not resolved yet.
+					-- Try to resolve it now.
+				a_class := a_context.type.direct_base_class (a_universe)
+				a_class.process (a_universe.qualified_signature_resolver)
+			end
+			if seed = 0 then
+					-- Qualified anchored type still not resolved.
 				Result := False
-			elseif rhs_contexts /= Void and then rhs_contexts.has_stacked_context (a_context, a_processor.universe) then
+			elseif rhs_contexts /= Void and then rhs_contexts.has_stacked_context (a_context, a_universe) then
 					-- A cycle in the anchored types has been introduced
 					-- in the AST since we checked for cycles.
 				Result := False
 			else
-				a_universe := a_processor.universe
 				if target_type.is_formal_type (a_context, a_universe) then
 						-- Current type is of the unfolded form 'like {G}.a'
 						-- and only 'like {G}.a' conforms to itself.
@@ -1005,7 +1021,7 @@ feature {ET_TYPE} -- Conformance
 								rhs_contexts := a_context
 							end
 							create a_target_context.make (a_base_type, a_context)
-							Result := a_query_type.conforms_from_bit_type (other, other_context, a_target_context, a_processor)
+							Result := a_query_type.conforms_from_bit_type (other, other_context, a_target_context, a_universe)
 							rhs_contexts := rhs_contexts.previous_stacked_context
 						else
 								-- Internal error: an inconsistency has been
@@ -1024,13 +1040,15 @@ feature {ET_TYPE} -- Conformance
 		end
 
 	conforms_from_class_type (other: ET_CLASS_TYPE; other_context: ET_TYPE_CONTEXT;
-		a_context: ET_TYPE_CONTEXT; a_processor: ET_AST_PROCESSOR): BOOLEAN is
+		a_context: ET_TYPE_CONTEXT; a_universe: ET_UNIVERSE): BOOLEAN is
 			-- Does `other' type appearing in `other_context' conform
 			-- to current type appearing in `a_context'?
-			-- (Note: Use `a_processor' on the classes whose ancestors
-			-- need to be built in order to check for conformance.)
+			-- (Note: 'a_universe.ancestor_builder' is used on classes on
+			-- the classes whose ancestors need to be built in order to check
+			-- for conformance, and 'a_universe.qualified_signature_resolver'
+			-- is used on classes whose qualified anchored types need to be
+			-- resolved in order to check conformance.)
 		local
-			a_universe: ET_UNIVERSE
 			a_base_type: ET_BASE_TYPE
 			a_target_context: ET_NESTED_TYPE_CONTEXT
 			a_class: ET_CLASS
@@ -1038,14 +1056,19 @@ feature {ET_TYPE} -- Conformance
 			a_query_type: ET_TYPE
 		do
 			if seed = 0 then
-					-- Anchored type not resolved yet.
+					-- Qualified anchored type not resolved yet.
+					-- Try to resolve it now.
+				a_class := a_context.type.direct_base_class (a_universe)
+				a_class.process (a_universe.qualified_signature_resolver)
+			end
+			if seed = 0 then
+					-- Qualified anchored type still not resolved.
 				Result := False
-			elseif rhs_contexts /= Void and then rhs_contexts.has_stacked_context (a_context, a_processor.universe) then
+			elseif rhs_contexts /= Void and then rhs_contexts.has_stacked_context (a_context, a_universe) then
 					-- A cycle in the anchored types has been introduced
 					-- in the AST since we checked for cycles.
 				Result := False
 			else
-				a_universe := a_processor.universe
 				if target_type.is_formal_type (a_context, a_universe) then
 						-- Current type is of the unfolded form 'like {G}.a'
 						-- and only 'like {G}.a' conforms to itself.
@@ -1066,7 +1089,7 @@ feature {ET_TYPE} -- Conformance
 								rhs_contexts := a_context
 							end
 							create a_target_context.make (a_base_type, a_context)
-							Result := a_query_type.conforms_from_class_type (other, other_context, a_target_context, a_processor)
+							Result := a_query_type.conforms_from_class_type (other, other_context, a_target_context, a_universe)
 							rhs_contexts := rhs_contexts.previous_stacked_context
 						else
 								-- Internal error: an inconsistency has been
@@ -1086,13 +1109,15 @@ feature {ET_TYPE} -- Conformance
 
 	conforms_from_formal_parameter_type (other: ET_FORMAL_PARAMETER_TYPE;
 		other_context: ET_TYPE_CONTEXT; a_context: ET_TYPE_CONTEXT;
-		a_processor: ET_AST_PROCESSOR): BOOLEAN is
+		a_universe: ET_UNIVERSE): BOOLEAN is
 			-- Does `other' type appearing in `other_context' conform
 			-- to current type appearing in `a_context'?
-			-- (Note: Use `a_processor' on the classes whose ancestors
-			-- need to be built in order to check for conformance.)
+			-- (Note: 'a_universe.ancestor_builder' is used on classes on
+			-- the classes whose ancestors need to be built in order to check
+			-- for conformance, and 'a_universe.qualified_signature_resolver'
+			-- is used on classes whose qualified anchored types need to be
+			-- resolved in order to check conformance.)
 		local
-			a_universe: ET_UNIVERSE
 			a_base_type: ET_BASE_TYPE
 			a_target_context: ET_NESTED_TYPE_CONTEXT
 			a_class: ET_CLASS
@@ -1100,14 +1125,19 @@ feature {ET_TYPE} -- Conformance
 			a_query_type: ET_TYPE
 		do
 			if seed = 0 then
-					-- Anchored type not resolved yet.
+					-- Qualified anchored type not resolved yet.
+					-- Try to resolve it now.
+				a_class := a_context.type.direct_base_class (a_universe)
+				a_class.process (a_universe.qualified_signature_resolver)
+			end
+			if seed = 0 then
+					-- Qualified anchored type still not resolved.
 				Result := False
-			elseif rhs_contexts /= Void and then rhs_contexts.has_stacked_context (a_context, a_processor.universe) then
+			elseif rhs_contexts /= Void and then rhs_contexts.has_stacked_context (a_context, a_universe) then
 					-- A cycle in the anchored types has been introduced
 					-- in the AST since we checked for cycles.
 				Result := False
 			else
-				a_universe := a_processor.universe
 				if target_type.is_formal_type (a_context, a_universe) then
 						-- Current type is of the unfolded form 'like {G}.a'
 						-- and only 'like {G}.a' conforms to itself.
@@ -1128,7 +1158,7 @@ feature {ET_TYPE} -- Conformance
 								rhs_contexts := a_context
 							end
 							create a_target_context.make (a_base_type, a_context)
-							Result := a_query_type.conforms_from_formal_parameter_type (other, other_context, a_target_context, a_processor)
+							Result := a_query_type.conforms_from_formal_parameter_type (other, other_context, a_target_context, a_universe)
 							rhs_contexts := rhs_contexts.previous_stacked_context
 						else
 								-- Internal error: an inconsistency has been
@@ -1147,13 +1177,15 @@ feature {ET_TYPE} -- Conformance
 		end
 
 	conforms_from_tuple_type (other: ET_TUPLE_TYPE; other_context: ET_TYPE_CONTEXT;
-		a_context: ET_TYPE_CONTEXT; a_processor: ET_AST_PROCESSOR): BOOLEAN is
+		a_context: ET_TYPE_CONTEXT; a_universe: ET_UNIVERSE): BOOLEAN is
 			-- Does `other' type appearing in `other_context' conform
 			-- to current type appearing in `a_context'?
-			-- (Note: Use `a_processor' on the classes whose ancestors
-			-- need to be built in order to check for conformance.)
+			-- (Note: 'a_universe.ancestor_builder' is used on classes on
+			-- the classes whose ancestors need to be built in order to check
+			-- for conformance, and 'a_universe.qualified_signature_resolver'
+			-- is used on classes whose qualified anchored types need to be
+			-- resolved in order to check conformance.)
 		local
-			a_universe: ET_UNIVERSE
 			a_base_type: ET_BASE_TYPE
 			a_target_context: ET_NESTED_TYPE_CONTEXT
 			a_class: ET_CLASS
@@ -1161,14 +1193,19 @@ feature {ET_TYPE} -- Conformance
 			a_query_type: ET_TYPE
 		do
 			if seed = 0 then
-					-- Anchored type not resolved yet.
+					-- Qualified anchored type not resolved yet.
+					-- Try to resolve it now.
+				a_class := a_context.type.direct_base_class (a_universe)
+				a_class.process (a_universe.qualified_signature_resolver)
+			end
+			if seed = 0 then
+					-- Qualified anchored type still not resolved.
 				Result := False
-			elseif rhs_contexts /= Void and then rhs_contexts.has_stacked_context (a_context, a_processor.universe) then
+			elseif rhs_contexts /= Void and then rhs_contexts.has_stacked_context (a_context, a_universe) then
 					-- A cycle in the anchored types has been introduced
 					-- in the AST since we checked for cycles.
 				Result := False
 			else
-				a_universe := a_processor.universe
 				if target_type.is_formal_type (a_context, a_universe) then
 						-- Current type is of the unfolded form 'like {G}.a'
 						-- and only 'like {G}.a' conforms to itself.
@@ -1189,7 +1226,7 @@ feature {ET_TYPE} -- Conformance
 								rhs_contexts := a_context
 							end
 							create a_target_context.make (a_base_type, a_context)
-							Result := a_query_type.conforms_from_tuple_type (other, other_context, a_target_context, a_processor)
+							Result := a_query_type.conforms_from_tuple_type (other, other_context, a_target_context, a_universe)
 							rhs_contexts := rhs_contexts.previous_stacked_context
 						else
 								-- Internal error: an inconsistency has been

@@ -375,43 +375,47 @@ feature {ET_TYPE} -- Comparison
 feature -- Conformance
 
 	conforms_to_type (other: ET_TYPE; other_context: ET_TYPE_CONTEXT;
-		a_context: ET_TYPE_CONTEXT; a_processor: ET_AST_PROCESSOR): BOOLEAN is
+		a_context: ET_TYPE_CONTEXT; a_universe: ET_UNIVERSE): BOOLEAN is
 			-- Does current type appearing in `a_context' conform
 			-- to `other' type appearing in `other_context'?
-			-- (Note: Use `a_processor' on the classes whose ancestors
-			-- need to be built in order to check for conformance.)
+			-- (Note: 'a_universe.ancestor_builder' is used on classes on
+			-- the classes whose ancestors need to be built in order to check
+			-- for conformance, and 'a_universe.qualified_signature_resolver'
+			-- is used on classes whose qualified anchored types need to be
+			-- resolved in order to check conformance.)
 		do
-			if other = a_processor.universe.unknown_class then
+			if other = a_universe.unknown_class then
 					-- "*UNKNOWN*" conforms to no type, not even itself.
 				Result := False
 			elseif other = Current and then other_context = a_context then
 				Result := True
 			else
-				Result := other.conforms_from_class_type (Current, a_context, other_context, a_processor)
+				Result := other.conforms_from_class_type (Current, a_context, other_context, a_universe)
 			end
 		end
 
 feature {ET_TYPE} -- Conformance
 
 	conforms_from_class_type (other: ET_CLASS_TYPE; other_context: ET_TYPE_CONTEXT;
-		a_context: ET_TYPE_CONTEXT; a_processor: ET_AST_PROCESSOR): BOOLEAN is
+		a_context: ET_TYPE_CONTEXT; a_universe: ET_UNIVERSE): BOOLEAN is
 			-- Does `other' type appearing in `other_context' conform
 			-- to current type appearing in `a_context'?
-			-- (Note: Use `a_processor' on the classes whose ancestors
-			-- need to be built in order to check for conformance.)
+			-- (Note: 'a_universe.ancestor_builder' is used on classes on
+			-- the classes whose ancestors need to be built in order to check
+			-- for conformance, and 'a_universe.qualified_signature_resolver'
+			-- is used on classes whose qualified anchored types need to be
+			-- resolved in order to check conformance.)
 		local
 			other_base_class: ET_CLASS
 			an_ancestor: ET_BASE_TYPE
 			other_parameters: ET_ACTUAL_PARAMETER_LIST
-			a_universe: ET_UNIVERSE
 		do
-			if other = a_processor.universe.unknown_class then
+			if other = a_universe.unknown_class then
 					-- "*UNKNOWN*" conforms to no type, not even itself.
 				Result := False
 			elseif other = Current and other_context = a_context then
 				Result := True
 			else
-				a_universe := a_processor.universe
 				other_base_class := other.direct_base_class (a_universe)
 				if eiffel_class = other_base_class then
 					if not other.is_generic then
@@ -424,14 +428,14 @@ feature {ET_TYPE} -- Conformance
 							is_generic: actual_parameters /= Void
 							other_is_generic: other_parameters /= Void
 						end
-						Result := other_parameters.conforms_to_types (actual_parameters, a_context, other_context, a_processor)
+						Result := other_parameters.conforms_to_types (actual_parameters, a_context, other_context, a_universe)
 					end
 				elseif not is_expanded then
 					if other_base_class = a_universe.none_class then
 							-- "NONE" conforms to any class type that is not expanded.
 						Result := True
 					else
-						other_base_class.process (a_processor)
+						other_base_class.process (a_universe.ancestor_builder)
 							-- If there was an error building the ancestors of
 							-- `other_base_class', this error has already been
 							-- reported, so we assume here that everything went
@@ -445,7 +449,7 @@ feature {ET_TYPE} -- Conformance
 							if other_parameters /= Void then
 								an_ancestor := an_ancestor.resolved_formal_parameters (other_parameters)
 							end
-							Result := an_ancestor.conforms_to_type (Current, a_context, other_context, a_processor)
+							Result := an_ancestor.conforms_to_type (Current, a_context, other_context, a_universe)
 						end
 					end
 				end

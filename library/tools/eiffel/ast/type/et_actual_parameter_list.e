@@ -221,11 +221,14 @@ feature -- Comparison
 feature -- Conformance
 
 	conforms_to_types (other: ET_ACTUAL_PARAMETER_LIST; other_context: ET_TYPE_CONTEXT;
-		a_context: ET_TYPE_CONTEXT; a_processor: ET_AST_PROCESSOR): BOOLEAN is
+		a_context: ET_TYPE_CONTEXT; a_universe: ET_UNIVERSE): BOOLEAN is
 			-- Does current types appearing in `a_context' conform
 			-- to `other' types appearing in `other_context'?
-			-- (Note: Use `a_processor' on the classes whose ancestors
-			-- need to be built in order to check for conformance.)
+			-- (Note: 'a_universe.ancestor_builder' is used on classes on
+			-- the classes whose ancestors need to be built in order to check
+			-- for conformance, and 'a_universe.qualified_type_resolver' is
+			-- used on classes whose qualified anchored types need to be
+			-- resolved in order to check conformance.)
 		require
 			other_not_void: other /= Void
 			other_context_not_void: other_context /= Void
@@ -233,7 +236,7 @@ feature -- Conformance
 			a_context_not_void: a_context /= Void
 			a_context_valid: a_context.is_valid_context
 			same_root_context: other_context.same_root_context (a_context)
-			a_processor_not_void: a_processor /= Void
+			a_universe_not_void: a_universe /= Void
 		local
 			i, nb: INTEGER
 		do
@@ -246,7 +249,7 @@ feature -- Conformance
 				Result := True
 				nb := count
 				from i := 1 until i > nb loop
-					if not type (i).conforms_to_type (other.type (i), other_context, a_context, a_processor) then
+					if not type (i).conforms_to_type (other.type (i), other_context, a_context, a_universe) then
 						Result := False
 						i := nb + 1 -- Jump out of the loop.
 					else

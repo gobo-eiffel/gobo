@@ -499,11 +499,14 @@ feature {ET_TYPE} -- Comparison
 feature -- Conformance
 
 	conforms_to_type (other: ET_TYPE; other_context: ET_TYPE_CONTEXT;
-		a_context: ET_TYPE_CONTEXT; a_processor: ET_AST_PROCESSOR): BOOLEAN is
+		a_context: ET_TYPE_CONTEXT; a_universe: ET_UNIVERSE): BOOLEAN is
 			-- Does current type appearing in `a_context' conform
 			-- to `other' type appearing in `other_context'?
-			-- (Note: Use `a_processor' on the classes whose ancestors
-			-- need to be built in order to check for conformance.)
+			-- (Note: 'a_universe.ancestor_builder' is used on classes on
+			-- the classes whose ancestors need to be built in order to check
+			-- for conformance, and 'a_universe.qualified_signature_resolver'
+			-- is used on classes whose qualified anchored types need to be
+			-- resolved in order to check conformance.)
 		require
 			other_not_void: other /= Void
 			other_context_not_void: other_context /= Void
@@ -511,18 +514,21 @@ feature -- Conformance
 			a_context_not_void: a_context /= Void
 			a_context_valid: a_context.is_valid_context
 			same_root_context: other_context.same_root_context (a_context)
-			a_processor_not_void: a_processor /= Void
+			a_universe_not_void: a_universe /= Void
 		deferred
 		end
 
 feature {ET_TYPE} -- Conformance
 
 	conforms_from_bit_type (other: ET_BIT_TYPE; other_context: ET_TYPE_CONTEXT;
-		a_context: ET_TYPE_CONTEXT; a_processor: ET_AST_PROCESSOR): BOOLEAN is
+		a_context: ET_TYPE_CONTEXT; a_universe: ET_UNIVERSE): BOOLEAN is
 			-- Does `other' type appearing in `other_context' conform
 			-- to current type appearing in `a_context'?
-			-- (Note: Use `a_processor' on the classes whose ancestors
-			-- need to be built in order to check for conformance.)
+			-- (Note: 'a_universe.ancestor_builder' is used on classes on
+			-- the classes whose ancestors need to be built in order to check
+			-- for conformance, and 'a_universe.qualified_signature_resolver'
+			-- is used on classes whose qualified anchored types need to be
+			-- resolved in order to check conformance.)
 		require
 			other_not_void: other /= Void
 			other_context_not_void: other_context /= Void
@@ -530,17 +536,20 @@ feature {ET_TYPE} -- Conformance
 			a_context_not_void: a_context /= Void
 			a_context_valid: a_context.is_valid_context
 			same_root_context: other_context.same_root_context (a_context)
-			a_processor_not_void: a_processor /= Void
+			a_universe_not_void: a_universe /= Void
 		do
 			-- Result := False
 		end
 
 	conforms_from_class_type (other: ET_CLASS_TYPE; other_context: ET_TYPE_CONTEXT;
-		a_context: ET_TYPE_CONTEXT; a_processor: ET_AST_PROCESSOR): BOOLEAN is
+		a_context: ET_TYPE_CONTEXT; a_universe: ET_UNIVERSE): BOOLEAN is
 			-- Does `other' type appearing in `other_context' conform
 			-- to current type appearing in `a_context'?
-			-- (Note: Use `a_processor' on the classes whose ancestors
-			-- need to be built in order to check for conformance.)
+			-- (Note: 'a_universe.ancestor_builder' is used on classes on
+			-- the classes whose ancestors need to be built in order to check
+			-- for conformance, and 'a_universe.qualified_signature_resolver'
+			-- is used on classes whose qualified anchored types need to be
+			-- resolved in order to check conformance.)
 		require
 			other_not_void: other /= Void
 			other_context_not_void: other_context /= Void
@@ -548,18 +557,21 @@ feature {ET_TYPE} -- Conformance
 			a_context_not_void: a_context /= Void
 			a_context_valid: a_context.is_valid_context
 			same_root_context: other_context.same_root_context (a_context)
-			a_processor_not_void: a_processor /= Void
+			a_universe_not_void: a_universe /= Void
 		do
 			-- Result := False
 		end
 
 	conforms_from_formal_parameter_type (other: ET_FORMAL_PARAMETER_TYPE;
 		other_context: ET_TYPE_CONTEXT; a_context: ET_TYPE_CONTEXT;
-		a_processor: ET_AST_PROCESSOR): BOOLEAN is
+		a_universe: ET_UNIVERSE): BOOLEAN is
 			-- Does `other' type appearing in `other_context' conform
 			-- to current type appearing in `a_context'?
-			-- (Note: Use `a_processor' on the classes whose ancestors
-			-- need to be built in order to check for conformance.)
+			-- (Note: 'a_universe.ancestor_builder' is used on classes on
+			-- the classes whose ancestors need to be built in order to check
+			-- for conformance, and 'a_universe.qualified_sgnature_resolver'
+			-- is used on classes whose qualified anchored types need to be
+			-- resolved in order to check conformance.)
 		require
 			other_not_void: other /= Void
 			other_context_not_void: other_context /= Void
@@ -568,17 +580,20 @@ feature {ET_TYPE} -- Conformance
 			a_context_not_void: a_context /= Void
 			a_context_valid: a_context.is_valid_context
 			same_root_context: other_context.same_root_context (a_context)
-			a_processor_not_void: a_processor /= Void
+			a_universe_not_void: a_universe /= Void
 		do
 			-- Result := False
 		end
 
 	conforms_from_tuple_type (other: ET_TUPLE_TYPE; other_context: ET_TYPE_CONTEXT;
-		a_context: ET_TYPE_CONTEXT; a_processor: ET_AST_PROCESSOR): BOOLEAN is
+		a_context: ET_TYPE_CONTEXT; a_universe: ET_UNIVERSE): BOOLEAN is
 			-- Does `other' type appearing in `other_context' conform
 			-- to current type appearing in `a_context'?
-			-- (Note: Use `a_processor' on the classes whose ancestors
-			-- need to be built in order to check for conformance.)
+			-- (Note: 'a_universe.ancestor_builder' is used on classes on
+			-- the classes whose ancestors need to be built in order to check
+			-- for conformance, and 'a_universe.qualified_signature_resolver'
+			-- is used on classes whose qualified anchored types need to be
+			-- resolved in order to check conformance.)
 		require
 			other_not_void: other /= Void
 			other_context_not_void: other_context /= Void
@@ -586,7 +601,7 @@ feature {ET_TYPE} -- Conformance
 			a_context_not_void: a_context /= Void
 			a_context_valid: a_context.is_valid_context
 			same_root_context: other_context.same_root_context (a_context)
-			a_processor_not_void: a_processor /= Void
+			a_universe_not_void: a_universe /= Void
 		do
 			-- Result := False
 		end

@@ -224,27 +224,33 @@ feature {ET_TYPE} -- Comparison
 feature -- Conformance
 
 	conforms_to_type (other: ET_TYPE; other_context: ET_TYPE_CONTEXT;
-		a_context: ET_TYPE_CONTEXT; a_processor: ET_AST_PROCESSOR): BOOLEAN is
+		a_context: ET_TYPE_CONTEXT; a_universe: ET_UNIVERSE): BOOLEAN is
 			-- Does current type appearing in `a_context' conform
 			-- to `other' type appearing in `other_context'?
-			-- (Note: Use `a_processor' on the classes whose ancestors
-			-- need to be built in order to check for conformance.)
+			-- (Note: 'a_universe.ancestor_builder' is used on classes on
+			-- the classes whose ancestors need to be built in order to check
+			-- for conformance, and 'a_universe.qualified_signature_resolver'
+			-- is used on classes whose qualified anchored types need to be
+			-- resolved in order to check conformance.)
 		do
 			if other = Current then
 				Result := True
 			else
-				Result := other.conforms_from_bit_type (Current, a_context, other_context, a_processor)
+				Result := other.conforms_from_bit_type (Current, a_context, other_context, a_universe)
 			end
 		end
 
 feature {NONE} -- Conformance
 
 	conforms_from_bit_type (other: ET_BIT_TYPE; other_context: ET_TYPE_CONTEXT;
-		a_context: ET_TYPE_CONTEXT; a_processor: ET_AST_PROCESSOR): BOOLEAN is
+		a_context: ET_TYPE_CONTEXT; a_universe: ET_UNIVERSE): BOOLEAN is
 			-- Does `other' type appearing in `other_context' conform
 			-- to current type appearing in `a_context'?
-			-- (Note: Use `a_processor' on the classes whose ancestors
-			-- need to be built in order to check for conformance.)
+			-- (Note: 'a_universe.ancestor_builder' is used on classes on
+			-- the classes whose ancestors need to be built in order to check
+			-- for conformance, and 'a_universe.qualified_signature_resolver'
+			-- is used on classes whose qualified anchored types need to be
+			-- resolved in order to check conformance.)
 		do
 			if other = Current then
 				Result := True

@@ -291,60 +291,75 @@ feature {ET_TYPE} -- Comparison
 feature -- Conformance
 
 	conforms_to_type (other: ET_TYPE; other_context: ET_TYPE_CONTEXT;
-		a_context: ET_TYPE_CONTEXT; a_processor: ET_AST_PROCESSOR): BOOLEAN is
+		a_context: ET_TYPE_CONTEXT; a_universe: ET_UNIVERSE): BOOLEAN is
 			-- Does current type appearing in `a_context' conform
 			-- to `other' type appearing in `other_context'?
-			-- (Note: Use `a_processor' on the classes whose ancestors
-			-- need to be built in order to check for conformance.)
+			-- (Note: 'a_universe.ancestor_builder' is used on classes on
+			-- the classes whose ancestors need to be built in order to check
+			-- for conformance, and 'a_universe.qualified_signature_resolver'
+			-- is used on classes whose qualified anchored types need to be
+			-- resolved in order to check conformance.)
 		do
 			if other = Current and then other_context = a_context then
 				Result := True
 			else
-				Result := a_context.type.conforms_to_type (other, other_context, a_context.context, a_processor)
+				Result := a_context.type.conforms_to_type (other, other_context, a_context.context, a_universe)
 			end
 		end
 
 feature {ET_TYPE} -- Conformance
 
 	conforms_from_bit_type (other: ET_BIT_TYPE; other_context: ET_TYPE_CONTEXT;
-		a_context: ET_TYPE_CONTEXT; a_processor: ET_AST_PROCESSOR): BOOLEAN is
+		a_context: ET_TYPE_CONTEXT; a_universe: ET_UNIVERSE): BOOLEAN is
 			-- Does `other' type appearing in `other_context' conform
 			-- to current type appearing in `a_context'?
-			-- (Note: Use `a_processor' on the classes whose ancestors
-			-- need to be built in order to check for conformance.)
+			-- (Note: 'a_universe.ancestor_builder' is used on classes on
+			-- the classes whose ancestors need to be built in order to check
+			-- for conformance, and 'a_universe.qualified_signature_resolver'
+			-- is used on classes whose qualified anchored types need to be
+			-- resolved in order to check conformance.)
 		do
-			Result := a_context.type.conforms_from_bit_type (other, other_context, a_context.context, a_processor)
+			Result := a_context.type.conforms_from_bit_type (other, other_context, a_context.context, a_universe)
 		end
 
 	conforms_from_class_type (other: ET_CLASS_TYPE; other_context: ET_TYPE_CONTEXT;
-		a_context: ET_TYPE_CONTEXT; a_processor: ET_AST_PROCESSOR): BOOLEAN is
+		a_context: ET_TYPE_CONTEXT; a_universe: ET_UNIVERSE): BOOLEAN is
 			-- Does `other' type appearing in `other_context' conform
 			-- to current type appearing in `a_context'?
-			-- (Note: Use `a_processor' on the classes whose ancestors
-			-- need to be built in order to check for conformance.)
+			-- (Note: 'a_universe.ancestor_builder' is used on classes on
+			-- the classes whose ancestors need to be built in order to check
+			-- for conformance, and 'a_universe.qualified_signature_resolver'
+			-- is used on classes whose qualified anchored types need to be
+			-- resolved in order to check conformance.)
 		do
-			Result := a_context.type.conforms_from_class_type (other, other_context, a_context.context, a_processor)
+			Result := a_context.type.conforms_from_class_type (other, other_context, a_context.context, a_universe)
 		end
 
 	conforms_from_formal_parameter_type (other: ET_FORMAL_PARAMETER_TYPE;
 		other_context: ET_TYPE_CONTEXT; a_context: ET_TYPE_CONTEXT;
-		a_processor: ET_AST_PROCESSOR): BOOLEAN is
+		a_universe: ET_UNIVERSE): BOOLEAN is
 			-- Does `other' type appearing in `other_context' conform
 			-- to current type appearing in `a_context'?
-			-- (Note: Use `a_processor' on the classes whose ancestors
-			-- need to be built in order to check for conformance.)
+			-- (Note: 'a_universe.ancestor_builder' is used on classes on
+			-- the classes whose ancestors need to be built in order to check
+			-- for conformance, and 'a_universe.qualified_signature_resolver'
+			-- is used on classes whose qualified anchored types need to be
+			-- resolved in order to check conformance.)
 		do
-			Result := a_context.type.conforms_from_formal_parameter_type (other, other_context, a_context.context, a_processor)
+			Result := a_context.type.conforms_from_formal_parameter_type (other, other_context, a_context.context, a_universe)
 		end
 
 	conforms_from_tuple_type (other: ET_TUPLE_TYPE; other_context: ET_TYPE_CONTEXT;
-		a_context: ET_TYPE_CONTEXT; a_processor: ET_AST_PROCESSOR): BOOLEAN is
+		a_context: ET_TYPE_CONTEXT; a_universe: ET_UNIVERSE): BOOLEAN is
 			-- Does `other' type appearing in `other_context' conform
 			-- to current type appearing in `a_context'?
-			-- (Note: Use `a_processor' on the classes whose ancestors
-			-- need to be built in order to check for conformance.)
+			-- (Note: 'a_universe.ancestor_builder' is used on classes on
+			-- the classes whose ancestors need to be built in order to check
+			-- for conformance, and 'a_universe.qualified_signature_resolver'
+			-- is used on classes whose qualified anchored types need to be
+			-- resolved in order to check conformance.)
 		do
-			Result := a_context.type.conforms_from_tuple_type (other, other_context, a_context.type, a_processor)
+			Result := a_context.type.conforms_from_tuple_type (other, other_context, a_context.type, a_universe)
 		end
 
 feature -- Output

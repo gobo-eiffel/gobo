@@ -694,11 +694,14 @@ feature {ET_TYPE} -- Comparison
 feature -- Conformance
 
 	conforms_to_type (other: ET_TYPE; other_context: ET_TYPE_CONTEXT;
-		a_context: ET_TYPE_CONTEXT; a_processor: ET_AST_PROCESSOR): BOOLEAN is
+		a_context: ET_TYPE_CONTEXT; a_universe: ET_UNIVERSE): BOOLEAN is
 			-- Does current type appearing in `a_context' conform
 			-- to `other' type appearing in `other_context'?
-			-- (Note: Use `a_processor' on the classes whose ancestors
-			-- need to be built in order to check for conformance.)
+			-- (Note: 'a_universe.ancestor_builder' is used on classes on
+			-- the classes whose ancestors need to be built in order to check
+			-- for conformance, and 'a_universe.qualified_signature_resolver'
+			-- is used on classes whose qualified anchored types need to be
+			-- resolved in order to check conformance.)
 		local
 			an_actual: ET_TYPE
 			an_actuals: ET_ACTUAL_PARAMETER_LIST
@@ -717,9 +720,9 @@ feature -- Conformance
 				if a_formal_type /= Void and a_context.is_root_context then
 						-- The actual parameter associated with current
 						-- type is itself a formal generic parameter.
-					Result := other.conforms_from_formal_parameter_type (a_formal_type, a_context, other_context, a_processor)
+					Result := other.conforms_from_formal_parameter_type (a_formal_type, a_context, other_context, a_universe)
 				else
-					Result := an_actual.conforms_to_type (other, other_context, a_context.context, a_processor)
+					Result := an_actual.conforms_to_type (other, other_context, a_context.context, a_universe)
 				end
 			end
 		end
@@ -727,11 +730,14 @@ feature -- Conformance
 feature {ET_TYPE} -- Conformance
 
 	conforms_from_bit_type (other: ET_BIT_TYPE; other_context: ET_TYPE_CONTEXT;
-		a_context: ET_TYPE_CONTEXT; a_processor: ET_AST_PROCESSOR): BOOLEAN is
+		a_context: ET_TYPE_CONTEXT; a_universe: ET_UNIVERSE): BOOLEAN is
 			-- Does `other' type appearing in `other_context' conform
 			-- to current type appearing in `a_context'?
-			-- (Note: Use `a_processor' on the classes whose ancestors
-			-- need to be built in order to check for conformance.)
+			-- (Note: 'a_universe.ancestor_builder' is used on classes on
+			-- the classes whose ancestors need to be built in order to check
+			-- for conformance, and 'a_universe.qualified_signature_resolver'
+			-- is used on classes whose qualified anchored types need to be
+			-- resolved in order to check conformance.)
 		local
 			an_actual: ET_TYPE
 			an_actuals: ET_ACTUAL_PARAMETER_LIST
@@ -752,17 +758,20 @@ feature {ET_TYPE} -- Conformance
 						-- a formal generic type.
 					Result := False
 				else
-					Result := an_actual.conforms_from_bit_type (other, other_context, a_context.context, a_processor)
+					Result := an_actual.conforms_from_bit_type (other, other_context, a_context.context, a_universe)
 				end
 			end
 		end
 
 	conforms_from_class_type (other: ET_CLASS_TYPE; other_context: ET_TYPE_CONTEXT;
-		a_context: ET_TYPE_CONTEXT; a_processor: ET_AST_PROCESSOR): BOOLEAN is
+		a_context: ET_TYPE_CONTEXT; a_universe: ET_UNIVERSE): BOOLEAN is
 			-- Does `other' type appearing in `other_context' conform
 			-- to current type appearing in `a_context'?
-			-- (Note: Use `a_processor' on the classes whose ancestors
-			-- need to be built in order to check for conformance.)
+			-- (Note: 'a_universe.ancestor_builder' is used on classes on
+			-- the classes whose ancestors need to be built in order to check
+			-- for conformance, and 'a_universe.qualified_signature_resolver'
+			-- is used on classes whose qualified anchored types need to be
+			-- resolved in order to check conformance.)
 		local
 			an_actual: ET_TYPE
 			an_actuals: ET_ACTUAL_PARAMETER_LIST
@@ -783,18 +792,21 @@ feature {ET_TYPE} -- Conformance
 						-- a formal generic type.
 					Result := False
 				else
-					Result := an_actual.conforms_from_class_type (other, other_context, a_context.context, a_processor)
+					Result := an_actual.conforms_from_class_type (other, other_context, a_context.context, a_universe)
 				end
 			end
 		end
 
 	conforms_from_formal_parameter_type (other: ET_FORMAL_PARAMETER_TYPE;
 		other_context: ET_TYPE_CONTEXT; a_context: ET_TYPE_CONTEXT;
-		a_processor: ET_AST_PROCESSOR): BOOLEAN is
+		a_universe: ET_UNIVERSE): BOOLEAN is
 			-- Does `other' type appearing in `other_context' conform
 			-- to current type appearing in `a_context'?
-			-- (Note: Use `a_processor' on the classes whose ancestors
-			-- need to be built in order to check for conformance.)
+			-- (Note: 'a_universe.ancestor_builder' is used on classes on
+			-- the classes whose ancestors need to be built in order to check
+			-- for conformance, and 'a_universe.qualified_signature_resolver'
+			-- is used on classes whose qualified anchored types need to be
+			-- resolved in order to check conformance.)
 		local
 			an_actual: ET_TYPE
 			an_actuals: ET_ACTUAL_PARAMETER_LIST
@@ -832,7 +844,7 @@ feature {ET_TYPE} -- Conformance
 							-- root contexts are the same, it does not matter
 							-- whether we operate in `a_context' or `other_context'
 							-- from now on.)
-						a_class := a_context_type.direct_base_class (a_processor.universe)
+						a_class := a_context_type.direct_base_class (a_universe)
 						a_formals := a_class.formal_parameters
 						if a_formals /= Void and then other_index <= a_formals.count then
 							a_formal := a_formals.formal_parameter (other_index)
@@ -843,7 +855,7 @@ feature {ET_TYPE} -- Conformance
 								if a_base_type /= Void then
 										-- There is no cycle of the form
 										-- "[G -> G]" or "[G -> H, H -> G]".
-									Result := a_constraint.conforms_to_type (Current, a_context, other_context, a_processor)
+									Result := a_constraint.conforms_to_type (Current, a_context, other_context, a_universe)
 								else
 										-- There is a cycle. If `other' is "G" and current
 										-- type is "K", we still want to return True when
@@ -894,17 +906,20 @@ feature {ET_TYPE} -- Conformance
 						end
 					end
 				else
-					Result := an_actual.conforms_from_formal_parameter_type (other, other_context, a_context.context, a_processor)
+					Result := an_actual.conforms_from_formal_parameter_type (other, other_context, a_context.context, a_universe)
 				end
 			end
 		end
 
 	conforms_from_tuple_type (other: ET_TUPLE_TYPE; other_context: ET_TYPE_CONTEXT;
-		a_context: ET_TYPE_CONTEXT; a_processor: ET_AST_PROCESSOR): BOOLEAN is
+		a_context: ET_TYPE_CONTEXT; a_universe: ET_UNIVERSE): BOOLEAN is
 			-- Does `other' type appearing in `other_context' conform
 			-- to current type appearing in `a_context'?
-			-- (Note: Use `a_processor' on the classes whose ancestors
-			-- need to be built in order to check for conformance.)
+			-- (Note: 'a_universe.ancestor_builder' is used on classes on
+			-- the classes whose ancestors need to be built in order to check
+			-- for conformance, and 'a_universe.qualified_signature_resolver'
+			-- is used on classes whose qualified anchored types need to be
+			-- resolved in order to check conformance.)
 		local
 			an_actual: ET_TYPE
 			an_actuals: ET_ACTUAL_PARAMETER_LIST
@@ -925,7 +940,7 @@ feature {ET_TYPE} -- Conformance
 						-- a formal generic type.
 					Result := False
 				else
-					Result := an_actual.conforms_from_tuple_type (other, other_context, a_context.context, a_processor)
+					Result := an_actual.conforms_from_tuple_type (other, other_context, a_context.context, a_universe)
 				end
 			end
 		end

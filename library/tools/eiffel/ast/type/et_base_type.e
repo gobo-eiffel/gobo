@@ -61,28 +61,34 @@ feature -- Status report
 feature {ET_TYPE} -- Conformance
 
 	conforms_from_bit_type (other: ET_BIT_TYPE; other_context: ET_TYPE_CONTEXT;
-		a_context: ET_TYPE_CONTEXT; a_processor: ET_AST_PROCESSOR): BOOLEAN is
+		a_context: ET_TYPE_CONTEXT; a_universe: ET_UNIVERSE): BOOLEAN is
 			-- Does `other' type appearing in `other_context' conform
 			-- to current type appearing in `a_context'?
-			-- (Note: Use `a_processor' on the classes whose ancestors
-			-- need to be built in order to check for conformance.)
+			-- (Note: 'a_universe.ancestor_builder' is used on classes on
+			-- the classes whose ancestors need to be built in order to check
+			-- for conformance, and 'a_universe.qualified_signature_resolver'
+			-- is used on classes whose qualified anchored types need to be
+			-- resolved in order to check conformance.)
 		local
 			any_type: ET_CLASS_TYPE
 		do
 				-- See VNCB-1 (ETL2 p.229).
 				-- "BIT N" conforms to "ANY", so "BIT N" conforms to current
 				-- class type if "ANY" conforms to it.
-			any_type := a_processor.universe.any_type
-			Result := conforms_from_class_type (any_type, other_context, a_context, a_processor)
+			any_type := a_universe.any_type
+			Result := conforms_from_class_type (any_type, other_context, a_context, a_universe)
 		end
 
 	conforms_from_formal_parameter_type (other: ET_FORMAL_PARAMETER_TYPE;
 		other_context: ET_TYPE_CONTEXT; a_context: ET_TYPE_CONTEXT;
-		a_processor: ET_AST_PROCESSOR): BOOLEAN is
+		a_universe: ET_UNIVERSE): BOOLEAN is
 			-- Does `other' type appearing in `other_context' conform
 			-- to current type appearing in `a_context'?
-			-- (Note: Use `a_processor' on the classes whose ancestors
-			-- need to be built in order to check for conformance.)
+			-- (Note: 'a_universe.ancestor_builder' is used on classes on
+			-- the classes whose ancestors need to be built in order to check
+			-- for conformance, and 'a_universe.qualified_signature_resolver'
+			-- is used on classes whose qualified anchored types need to be
+			-- resolved in order to check conformance.)
 		local
 			an_index: INTEGER
 			a_formal: ET_FORMAL_PARAMETER
@@ -92,7 +98,7 @@ feature {ET_TYPE} -- Conformance
 			any_type: ET_CLASS_TYPE
 		do
 			an_index := other.index
-			a_formals := other_context.type.direct_base_class (a_processor.universe).formal_parameters
+			a_formals := other_context.type.direct_base_class (a_universe).formal_parameters
 			if a_formals = Void or else an_index > a_formals.count then
 					-- Internal error: does `other' type really
 					-- appear in `other_context'?
@@ -103,8 +109,8 @@ feature {ET_TYPE} -- Conformance
 				if a_constraint = Void then
 						-- `a_formal' is implicitly constrained by "ANY",
 						-- so it conforms to any type that conforms to "ANY".
-					any_type := a_processor.universe.any_type
-					Result := conforms_from_class_type (any_type, other_context, a_context, a_processor)
+					any_type := a_universe.any_type
+					Result := conforms_from_class_type (any_type, other_context, a_context, a_universe)
 				else
 					a_base_type := a_formal.constraint_base_type
 					if a_base_type /= Void then
@@ -112,7 +118,7 @@ feature {ET_TYPE} -- Conformance
 							-- parameter, or if it is there is no cycle and
 							-- the resolved base type of this constraint has
 							-- been made available in `base_type'.
-						Result := a_base_type.conforms_to_type (Current, a_context, other_context, a_processor)
+						Result := a_base_type.conforms_to_type (Current, a_context, other_context, a_universe)
 					else
 							-- There is a cycle of the form "A [G -> H, H -> G]"
 							-- in the constraint of `a_formal'. Therefore `other'
@@ -124,18 +130,21 @@ feature {ET_TYPE} -- Conformance
 		end
 
 	conforms_from_tuple_type (other: ET_TUPLE_TYPE; other_context: ET_TYPE_CONTEXT;
-		a_context: ET_TYPE_CONTEXT; a_processor: ET_AST_PROCESSOR): BOOLEAN is
+		a_context: ET_TYPE_CONTEXT; a_universe: ET_UNIVERSE): BOOLEAN is
 			-- Does `other' type appearing in `other_context' conform
 			-- to current type appearing in `a_context'?
-			-- (Note: Use `a_processor' on the classes whose ancestors
-			-- need to be built in order to check for conformance.)
+			-- (Note: 'a_universe.ancestor_builder' is used on classes on
+			-- the classes whose ancestors need to be built in order to check
+			-- for conformance, and 'a_universe.qualified_signature_resolver'
+			-- is used on classes whose qualified anchored types need to be
+			-- resolved in order to check conformance.)
 		local
 			any_type: ET_CLASS_TYPE
 		do
 				-- Tuple_type conforms to "ANY", so Tuple_type conforms
 				-- to current class type if "ANY" conforms to it.
-			any_type := a_processor.universe.any_type
-			Result := conforms_from_class_type (any_type, other_context, a_context, a_processor)
+			any_type := a_universe.any_type
+			Result := conforms_from_class_type (any_type, other_context, a_context, a_universe)
 		end
 
 feature -- Type processing

@@ -1459,11 +1459,14 @@ feature {ET_TYPE} -- Comparison
 feature -- Conformance
 
 	conforms_to_type (other: ET_TYPE; other_context: ET_TYPE_CONTEXT;
-		a_context: ET_TYPE_CONTEXT; a_processor: ET_AST_PROCESSOR): BOOLEAN is
+		a_context: ET_TYPE_CONTEXT; a_universe: ET_UNIVERSE): BOOLEAN is
 			-- Does current type appearing in `a_context' conform
 			-- to `other' type appearing in `other_context'?
-			-- (Note: Use `a_processor' on the classes whose ancestors
-			-- need to be built in order to check for conformance.)
+			-- (Note: 'a_universe.ancestor_builder' is used on classes on
+			-- the classes whose ancestors need to be built in order to check
+			-- for conformance, and 'a_universe.qualified_signature_resolver'
+			-- is used on classes whose qualified anchored types need to be
+			-- resolved in order to check conformance.)
 		local
 			a_class: ET_CLASS
 			seeded_feature: ET_FEATURE
@@ -1476,12 +1479,12 @@ feature -- Conformance
 			elseif seed = 0 then
 					-- Anchored type not resolved yet.
 				Result := False
-			elseif lhs_contexts /= Void and then lhs_contexts.has_stacked_context (a_context, a_processor.universe) then
+			elseif lhs_contexts /= Void and then lhs_contexts.has_stacked_context (a_context, a_universe) then
 					-- A cycle in the anchored types has been introduced
 					-- in the AST since we checked for cycles.
 				Result := False
 			elseif is_like_argument then
-				a_class := a_context.type.direct_base_class (a_processor.universe)
+				a_class := a_context.type.direct_base_class (a_universe)
 				seeded_feature := a_class.seeded_feature (seed)
 				if seeded_feature /= Void then
 					args := seeded_feature.arguments
@@ -1500,7 +1503,7 @@ feature -- Conformance
 						else
 							lhs_contexts := a_context
 						end
-						Result := args.item (an_index).type.conforms_to_type (other, other_context, a_context, a_processor)
+						Result := args.item (an_index).type.conforms_to_type (other, other_context, a_context, a_universe)
 						lhs_contexts := lhs_contexts.previous_stacked_context
 					end
 				else
@@ -1510,7 +1513,7 @@ feature -- Conformance
 					Result := False
 				end
 			else
-				a_class := a_context.type.direct_base_class (a_processor.universe)
+				a_class := a_context.type.direct_base_class (a_universe)
 				seeded_feature := a_class.seeded_feature (seed)
 				if seeded_feature /= Void then
 					a_query_type := seeded_feature.type
@@ -1523,7 +1526,7 @@ feature -- Conformance
 						else
 							lhs_contexts := a_context
 						end
-						Result := a_query_type.conforms_to_type (other, other_context, a_context, a_processor)
+						Result := a_query_type.conforms_to_type (other, other_context, a_context, a_universe)
 						lhs_contexts := lhs_contexts.previous_stacked_context
 					else
 							-- Internal error: an inconsistency has been
@@ -1543,11 +1546,14 @@ feature -- Conformance
 feature {ET_TYPE} -- Conformance
 
 	conforms_from_bit_type (other: ET_BIT_TYPE; other_context: ET_TYPE_CONTEXT;
-		a_context: ET_TYPE_CONTEXT; a_processor: ET_AST_PROCESSOR): BOOLEAN is
+		a_context: ET_TYPE_CONTEXT; a_universe: ET_UNIVERSE): BOOLEAN is
 			-- Does `other' type appearing in `other_context' conform
 			-- to current type appearing in `a_context'?
-			-- (Note: Use `a_processor' on the classes whose ancestors
-			-- need to be built in order to check for conformance.)
+			-- (Note: 'a_universe.ancestor_builder' is used on classes on
+			-- the classes whose ancestors need to be built in order to check
+			-- for conformance, and 'a_universe.qualified_signature_resolver'
+			-- is used on classes whose qualified anchored types need to be
+			-- resolved in order to check conformance.)
 		local
 			a_class: ET_CLASS
 			seeded_feature: ET_FEATURE
@@ -1558,12 +1564,12 @@ feature {ET_TYPE} -- Conformance
 			if seed = 0 then
 					-- Anchored type not resolved yet.
 				Result := False
-			elseif rhs_contexts /= Void and then rhs_contexts.has_stacked_context (a_context, a_processor.universe) then
+			elseif rhs_contexts /= Void and then rhs_contexts.has_stacked_context (a_context, a_universe) then
 					-- A cycle in the anchored types has been introduced
 					-- in the AST since we checked for cycles.
 				Result := False
 			elseif is_like_argument then
-				a_class := a_context.type.direct_base_class (a_processor.universe)
+				a_class := a_context.type.direct_base_class (a_universe)
 				seeded_feature := a_class.seeded_feature (seed)
 				if seeded_feature /= Void then
 					args := seeded_feature.arguments
@@ -1582,7 +1588,7 @@ feature {ET_TYPE} -- Conformance
 						else
 							rhs_contexts := a_context
 						end
-						Result := args.item (an_index).type.conforms_from_bit_type (other, other_context, a_context, a_processor)
+						Result := args.item (an_index).type.conforms_from_bit_type (other, other_context, a_context, a_universe)
 						rhs_contexts := rhs_contexts.previous_stacked_context
 					end
 				else
@@ -1592,7 +1598,7 @@ feature {ET_TYPE} -- Conformance
 					Result := False
 				end
 			else
-				a_class := a_context.type.direct_base_class (a_processor.universe)
+				a_class := a_context.type.direct_base_class (a_universe)
 				seeded_feature := a_class.seeded_feature (seed)
 				if seeded_feature /= Void then
 					a_query_type := seeded_feature.type
@@ -1605,7 +1611,7 @@ feature {ET_TYPE} -- Conformance
 						else
 							rhs_contexts := a_context
 						end
-						Result := a_query_type.conforms_from_bit_type (other, other_context, a_context, a_processor)
+						Result := a_query_type.conforms_from_bit_type (other, other_context, a_context, a_universe)
 						rhs_contexts := rhs_contexts.previous_stacked_context
 					else
 							-- Internal error: an inconsistency has been
@@ -1623,11 +1629,14 @@ feature {ET_TYPE} -- Conformance
 		end
 
 	conforms_from_class_type (other: ET_CLASS_TYPE; other_context: ET_TYPE_CONTEXT;
-		a_context: ET_TYPE_CONTEXT; a_processor: ET_AST_PROCESSOR): BOOLEAN is
+		a_context: ET_TYPE_CONTEXT; a_universe: ET_UNIVERSE): BOOLEAN is
 			-- Does `other' type appearing in `other_context' conform
 			-- to current type appearing in `a_context'?
-			-- (Note: Use `a_processor' on the classes whose ancestors
-			-- need to be built in order to check for conformance.)
+			-- (Note: 'a_universe.ancestor_builder' is used on classes on
+			-- the classes whose ancestors need to be built in order to check
+			-- for conformance, and 'a_universe.qualified_signature_resolver'
+			-- is used on classes whose qualified anchored types need to be
+			-- resolved in order to check conformance.)
 		local
 			a_class: ET_CLASS
 			seeded_feature: ET_FEATURE
@@ -1638,12 +1647,12 @@ feature {ET_TYPE} -- Conformance
 			if seed = 0 then
 					-- Anchored type not resolved yet.
 				Result := False
-			elseif rhs_contexts /= Void and then rhs_contexts.has_stacked_context (a_context, a_processor.universe) then
+			elseif rhs_contexts /= Void and then rhs_contexts.has_stacked_context (a_context, a_universe) then
 					-- A cycle in the anchored types has been introduced
 					-- in the AST since we checked for cycles.
 				Result := False
 			elseif is_like_argument then
-				a_class := a_context.type.direct_base_class (a_processor.universe)
+				a_class := a_context.type.direct_base_class (a_universe)
 				seeded_feature := a_class.seeded_feature (seed)
 				if seeded_feature /= Void then
 					args := seeded_feature.arguments
@@ -1662,7 +1671,7 @@ feature {ET_TYPE} -- Conformance
 						else
 							rhs_contexts := a_context
 						end
-						Result := args.item (an_index).type.conforms_from_class_type (other, other_context, a_context, a_processor)
+						Result := args.item (an_index).type.conforms_from_class_type (other, other_context, a_context, a_universe)
 						rhs_contexts := rhs_contexts.previous_stacked_context
 					end
 				else
@@ -1672,7 +1681,7 @@ feature {ET_TYPE} -- Conformance
 					Result := False
 				end
 			else
-				a_class := a_context.type.direct_base_class (a_processor.universe)
+				a_class := a_context.type.direct_base_class (a_universe)
 				seeded_feature := a_class.seeded_feature (seed)
 				if seeded_feature /= Void then
 					a_query_type := seeded_feature.type
@@ -1685,7 +1694,7 @@ feature {ET_TYPE} -- Conformance
 						else
 							rhs_contexts := a_context
 						end
-						Result := a_query_type.conforms_from_class_type (other, other_context, a_context, a_processor)
+						Result := a_query_type.conforms_from_class_type (other, other_context, a_context, a_universe)
 						rhs_contexts := rhs_contexts.previous_stacked_context
 					else
 							-- Internal error: an inconsistency has been
@@ -1704,11 +1713,14 @@ feature {ET_TYPE} -- Conformance
 
 	conforms_from_formal_parameter_type (other: ET_FORMAL_PARAMETER_TYPE;
 		other_context: ET_TYPE_CONTEXT; a_context: ET_TYPE_CONTEXT;
-		a_processor: ET_AST_PROCESSOR): BOOLEAN is
+		a_universe: ET_UNIVERSE): BOOLEAN is
 			-- Does `other' type appearing in `other_context' conform
 			-- to current type appearing in `a_context'?
-			-- (Note: Use `a_processor' on the classes whose ancestors
-			-- need to be built in order to check for conformance.)
+			-- (Note: 'a_universe.ancestor_builder' is used on classes on
+			-- the classes whose ancestors need to be built in order to check
+			-- for conformance, and 'a_universe.qualified_signature_resolver'
+			-- is used on classes whose qualified anchored types need to be
+			-- resolved in order to check conformance.)
 		local
 			a_class: ET_CLASS
 			seeded_feature: ET_FEATURE
@@ -1719,12 +1731,12 @@ feature {ET_TYPE} -- Conformance
 			if seed = 0 then
 					-- Anchored type not resolved yet.
 				Result := False
-			elseif rhs_contexts /= Void and then rhs_contexts.has_stacked_context (a_context, a_processor.universe) then
+			elseif rhs_contexts /= Void and then rhs_contexts.has_stacked_context (a_context, a_universe) then
 					-- A cycle in the anchored types has been introduced
 					-- in the AST since we checked for cycles.
 				Result := False
 			elseif is_like_argument then
-				a_class := a_context.type.direct_base_class (a_processor.universe)
+				a_class := a_context.type.direct_base_class (a_universe)
 				seeded_feature := a_class.seeded_feature (seed)
 				if seeded_feature /= Void then
 					args := seeded_feature.arguments
@@ -1743,7 +1755,7 @@ feature {ET_TYPE} -- Conformance
 						else
 							rhs_contexts := a_context
 						end
-						Result := args.item (an_index).type.conforms_from_formal_parameter_type (other, other_context, a_context, a_processor)
+						Result := args.item (an_index).type.conforms_from_formal_parameter_type (other, other_context, a_context, a_universe)
 						rhs_contexts := rhs_contexts.previous_stacked_context
 					end
 				else
@@ -1753,7 +1765,7 @@ feature {ET_TYPE} -- Conformance
 					Result := False
 				end
 			else
-				a_class := a_context.type.direct_base_class (a_processor.universe)
+				a_class := a_context.type.direct_base_class (a_universe)
 				seeded_feature := a_class.seeded_feature (seed)
 				if seeded_feature /= Void then
 					a_query_type := seeded_feature.type
@@ -1766,7 +1778,7 @@ feature {ET_TYPE} -- Conformance
 						else
 							rhs_contexts := a_context
 						end
-						Result := a_query_type.conforms_from_formal_parameter_type (other, other_context, a_context, a_processor)
+						Result := a_query_type.conforms_from_formal_parameter_type (other, other_context, a_context, a_universe)
 						rhs_contexts := rhs_contexts.previous_stacked_context
 					else
 							-- Internal error: an inconsistency has been
@@ -1784,11 +1796,14 @@ feature {ET_TYPE} -- Conformance
 		end
 
 	conforms_from_tuple_type (other: ET_TUPLE_TYPE; other_context: ET_TYPE_CONTEXT;
-		a_context: ET_TYPE_CONTEXT; a_processor: ET_AST_PROCESSOR): BOOLEAN is
+		a_context: ET_TYPE_CONTEXT; a_universe: ET_UNIVERSE): BOOLEAN is
 			-- Does `other' type appearing in `other_context' conform
 			-- to current type appearing in `a_context'?
-			-- (Note: Use `a_processor' on the classes whose ancestors
-			-- need to be built in order to check for conformance.)
+			-- (Note: 'a_universe.ancestor_builder' is used on classes on
+			-- the classes whose ancestors need to be built in order to check
+			-- for conformance, and 'a_universe.qualified_signature_resolver'
+			-- is used on classes whose qualified anchored types need to be
+			-- resolved in order to check conformance.)
 		local
 			a_class: ET_CLASS
 			seeded_feature: ET_FEATURE
@@ -1799,12 +1814,12 @@ feature {ET_TYPE} -- Conformance
 			if seed = 0 then
 					-- Anchored type not resolved yet.
 				Result := False
-			elseif rhs_contexts /= Void and then rhs_contexts.has_stacked_context (a_context, a_processor.universe) then
+			elseif rhs_contexts /= Void and then rhs_contexts.has_stacked_context (a_context, a_universe) then
 					-- A cycle in the anchored types has been introduced
 					-- in the AST since we checked for cycles.
 				Result := False
 			elseif is_like_argument then
-				a_class := a_context.type.direct_base_class (a_processor.universe)
+				a_class := a_context.type.direct_base_class (a_universe)
 				seeded_feature := a_class.seeded_feature (seed)
 				if seeded_feature /= Void then
 					args := seeded_feature.arguments
@@ -1823,7 +1838,7 @@ feature {ET_TYPE} -- Conformance
 						else
 							rhs_contexts := a_context
 						end
-						Result := args.item (an_index).type.conforms_from_tuple_type (other, other_context, a_context, a_processor)
+						Result := args.item (an_index).type.conforms_from_tuple_type (other, other_context, a_context, a_universe)
 						rhs_contexts := rhs_contexts.previous_stacked_context
 					end
 				else
@@ -1833,7 +1848,7 @@ feature {ET_TYPE} -- Conformance
 					Result := False
 				end
 			else
-				a_class := a_context.type.direct_base_class (a_processor.universe)
+				a_class := a_context.type.direct_base_class (a_universe)
 				seeded_feature := a_class.seeded_feature (seed)
 				if seeded_feature /= Void then
 					a_query_type := seeded_feature.type
@@ -1846,7 +1861,7 @@ feature {ET_TYPE} -- Conformance
 						else
 							rhs_contexts := a_context
 						end
-						Result := a_query_type.conforms_from_tuple_type (other, other_context, a_context, a_processor)
+						Result := a_query_type.conforms_from_tuple_type (other, other_context, a_context, a_universe)
 						rhs_contexts := rhs_contexts.previous_stacked_context
 					else
 							-- Internal error: an inconsistency has been
