@@ -41,8 +41,8 @@ feature -- Test
 			a_geant_filename := geant_filename
 			assert_not_exit_code_execute ("geant -b " + a_geant_filename + " test_" + a_debug + eiffel_compiler.vendor + " " + output_log, 0)
 				-- Check result.
+			file_system.concat_files (output_log_filename, error_log_filename)
 			assert_files_equal ("output", expected_output, output_log_filename)
-			assert_equal ("no_error_log", 0, file_system.file_count (error_log_filename))
 				-- Clean.
 			assert_execute ("geant -b " + a_geant_filename + " clean" + output_log)
 		end
