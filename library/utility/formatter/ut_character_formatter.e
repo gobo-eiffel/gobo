@@ -60,25 +60,35 @@ feature -- String handling
 			when ' ', '!', '#', '$', '&', '('..'~' then
 				a_string.append_character (c)
 			when '%B' then
-				a_string.append_string ("%%B")
+				a_string.append_character ('%%')
+				a_string.append_character ('B')
 			when '%F' then
-				a_string.append_string ("%%F")
+				a_string.append_character ('%%')
+				a_string.append_character ('F')
 			when '%N' then
-				a_string.append_string ("%%N")
+				a_string.append_character ('%%')
+				a_string.append_character ('N')
 			when '%R' then
-				a_string.append_string ("%%R")
+				a_string.append_character ('%%')
+				a_string.append_character ('R')
 			when '%T' then
-				a_string.append_string ("%%T")
+				a_string.append_character ('%%')
+				a_string.append_character ('T')
 			when '%U' then
-				a_string.append_string ("%%U")
+				a_string.append_character ('%%')
+				a_string.append_character ('U')
 			when '%%' then
-				a_string.append_string ("%%%%")
+				a_string.append_character ('%%')
+				a_string.append_character ('%%')
 			when '%'' then
-				a_string.append_string ("%%%'")
+				a_string.append_character ('%%')
+				a_string.append_character ('%'')
 			when '%"' then
-				a_string.append_string ("%%%"")
+				a_string.append_character ('%%')
+				a_string.append_character ('%"')
 			else
-				a_string.append_string ("%%/")
+				a_string.append_character ('%%')
+				a_string.append_character ('/')
 				INTEGER_FORMATTER_.append_decimal_integer (a_string, c.code)
 				a_string.append_character ('/')
 			end
