@@ -139,13 +139,12 @@ color="#008080"><em>something_else</em></font></pre>
 </blockquote>
 
 <p>The <a href="matching_rules.html#default_rule">default rule</a>
-(to <font color="#008080"><em><tt>echo</tt></em></font> any
-unmatched character) remains active in start conditions. It is
-equivalent to:</p>
+(to echo any unmatched character) remains active in start
+conditions. It is equivalent to:</p>
 
 <blockquote>
     <pre><font color="#800000">&lt;*&gt;</font><font
-color="#FF0000">.|\n</font>         <font color="#008080"><em>echo</em></font></pre>
+color="#FF0000">.|\n</font>         <font color="#008080"><em>default_action</em></font></pre>
 </blockquote>
 
 <p>To illustrate the uses of start conditions, here is a scanner
@@ -394,7 +393,7 @@ color="#008080"><em>last_token</em> := '<em>%U</em>'</font></pre>
 <table border="0" width="100%">
     <tr>
         <td><address>
-            <font size="2"><b>Copyright © 1998</b></font><font
+            <font size="2"><b>Copyright © 2000</b></font><font
             size="1"><b>, </b></font><font size="2"><strong>Eric
             Bezault</strong></font><strong> </strong><font
             size="2"><br>
@@ -404,7 +403,7 @@ color="#008080"><em>last_token</em> := '<em>%U</em>'</font></pre>
             <strong>http:</strong></font><a
             href="http://www.gobosoft.com"><font size="2">//www.gobosoft.com</font></a><font
             size="2"><br>
-            <strong>Last Updated:</strong> 4 August 1998</font><br>
+            <strong>Last Updated:</strong> 20 February 2000</font><br>
             <!--webbot bot="PurpleText"
             preview="
 $Date$ 
