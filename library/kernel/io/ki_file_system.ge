@@ -280,12 +280,12 @@ feature -- Pathname handling
 			is_absolute: is_absolute_pathname (Result)
 		end
 
-	absolute_parent_directory (a_dirname: STRING): STRING is
-			-- Absolute pathname of parent directory of `a_dirname';
-			-- Return `absolute_root_directory' if `a_dirname'
+	absolute_parent_directory (a_pathname: STRING): STRING is
+			-- Absolute pathname of parent directory of `a_pathname';
+			-- Return `absolute_root_directory' if `a_pathname'
 			-- is a root directory (i.e. has no parent)
 		require
-			a_dirname_not_void: a_dirname /= Void
+			a_pathname_not_void: a_pathname /= Void
 			is_current_file_system: is_current_file_system
 		deferred
 		ensure

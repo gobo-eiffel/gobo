@@ -191,34 +191,34 @@ feature -- Pathname handling
 			end
 		end
 
-	absolute_parent_directory (a_dirname: STRING): STRING is
-			-- Absolute pathname of parent directory of `a_dirname';
-			-- Return `absolute_root_directory' if `a_dirname'
+	absolute_parent_directory (a_pathname: STRING): STRING is
+			-- Absolute pathname of parent directory of `a_pathname';
+			-- Return `absolute_root_directory' if `a_pathname'
 			-- is a root directory (i.e. has no parent)
 		local
-			a_pathname: STRING
+			an_absolute_pathname: STRING
 			a_basename: STRING
 			stop: BOOLEAN
 		do
 			from
-				a_pathname := absolute_pathname (a_dirname)
+				an_absolute_pathname := absolute_pathname (a_pathname)
 			until
 				stop
 			loop
-				a_basename := basename (a_pathname)
+				a_basename := basename (an_absolute_pathname)
 				if a_basename.is_equal (relative_current_directory) then
-					a_pathname := dirname (a_pathname)
+					an_absolute_pathname := dirname (an_absolute_pathname)
 				elseif a_basename.is_equal (relative_parent_directory) then
-					a_pathname := absolute_parent_directory (dirname (a_pathname))
+					an_absolute_pathname := absolute_parent_directory (dirname (an_absolute_pathname))
 				else
 					stop := True
 				end
 			end
-			a_pathname := dirname (a_pathname)
-			if is_root_directory (a_pathname) then
+			an_absolute_pathname := dirname (an_absolute_pathname)
+			if is_root_directory (an_absolute_pathname) then
 				Result := absolute_root_directory
 			else
-				Result := a_pathname
+				Result := an_absolute_pathname
 			end
 		end
 
