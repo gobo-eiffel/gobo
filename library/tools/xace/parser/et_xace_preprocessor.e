@@ -5,10 +5,10 @@ indexing
 		"Xace XML preprocessor"
 
 	library:    "Gobo Eiffel Tools Library"
-	author:     "Andreas Leitner <nozone@sbox.tugraz.at>"
+	author:	    "Andreas Leitner <nozone@sbox.tugraz.at>"
 	copyright:  "Copyright (c) 2001, Andreas Leitner and others"
 	license:    "Eiffel Forum Freeware License v1 (see forum.txt)"
-	date:       "$Date$"
+	date:	    "$Date$"
 	revision:   "$Revision$"
 
 class ET_XACE_PREPROCESSOR
@@ -60,7 +60,7 @@ feature -- Preprocessing
 			a_composite_not_void: a_composite /= Void
 			a_position_table_not_void: a_position_table /= Void
 		local
-			a_cursor: DS_BILINEAR_CURSOR [XM_NODE]
+			a_cursor: DS_LINKED_LIST_CURSOR [XM_NODE]
 			a_child_element: XM_ELEMENT
 			should_remove: BOOLEAN
 		do
