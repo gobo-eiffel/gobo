@@ -1,0 +1,38 @@
+-- system:     "Reverse Polish Notation Calculator"
+-- compiler:   "Halstenbach ISS-BASE 2.0"
+-- author:     "Eric Bezault <ericb@gobo.demon.co.uk>"
+-- copyright:  "Copyright (c) 1998, Eric Bezault"
+-- date:       "$Date$"
+-- revision:   "$Revision$"
+
+system
+
+	rpcalc
+
+root
+
+	RPCALC: "execute"
+
+default
+
+	--debug (yes);
+	--assertion (all);
+	--precompiled ("$ISS_BASE\spec\$PLATFORM\precomp\base")
+
+cluster
+
+	rpcalc:				"$GOBO\example\parse\rpcalc";
+
+		-- Gobo Eiffel Parse Library
+	pr_skeleton:		"$GOBO\library\parse\skeleton";
+
+		-- Gobo Eiffel Kernel Library
+	kl_kernel:			"$GOBO\library\kernel";
+	kl_kernel_spec:		"$GOBO\library\kernel\spec\hact";
+
+component
+
+		-- ISS-Baselib
+	base: "$ISS_BASE\spec\$PLATFORM\component\base.cl"
+
+end
