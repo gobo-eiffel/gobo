@@ -123,11 +123,12 @@ feature {NONE} -- AST factory
 			Result.mount_libraries
 		end
 
-	new_cluster (an_element: XM_ELEMENT; a_position_table: XM_POSITION_TABLE): ET_XACE_CLUSTER is
+	new_cluster (an_element: XM_ELEMENT; a_parent_prefix: STRING; a_position_table: XM_POSITION_TABLE): ET_XACE_CLUSTER is
 			-- New cluster build from `an_element'
 		require
 			an_element_not_void: an_element /= Void
 			is_cluster: an_element.name.is_equal (uc_cluster)
+			a_parent_prefix_not_void: a_parent_prefix /= Void
 			a_position_table_not_void: a_position_table /= Void
 		local
 			a_name: STRING
@@ -142,6 +143,7 @@ feature {NONE} -- AST factory
 			subclusters: ET_XACE_CLUSTERS
 			a_mount: ET_XACE_MOUNTED_LIBRARY
 			a_mounts: ET_XACE_MOUNTED_LIBRARIES
+			a_prefix: STRING
 		do
 			if an_element.has_attribute_by_name (uc_name) then
 				a_value := an_element.attribute_by_name (uc_name).value
@@ -178,12 +180,20 @@ feature {NONE} -- AST factory
 							end
 						end
 					end
+					a_prefix := a_parent_prefix
+					if an_element.has_attribute_by_name (uc_prefix) then
+						a_value := an_element.attribute_by_name (uc_prefix).value
+						if a_value /= Void then
+							a_prefix := a_value.to_utf8
+						end
+					end
+					Result.set_cluster_prefix (a_prefix)
 					a_cursor := an_element.new_cursor
 					from a_cursor.start until a_cursor.after loop
 						a_child ?= a_cursor.item
 						if a_child /= Void then
 							if a_child.name.is_equal (uc_cluster) then
-								a_cluster := new_cluster (a_child, a_position_table)
+								a_cluster := new_cluster (a_child, a_prefix, a_position_table)
 								if a_cluster /= Void then
 									if subclusters = Void then
 										subclusters := ast_factory.new_clusters (a_cluster)
@@ -243,9 +253,6 @@ feature {NONE} -- AST factory
 						a_value := an_element.attribute_by_name (uc_prefix).value
 						if a_value /= Void then
 							a_prefix := a_value.to_utf8
-							if a_prefix.count = 0 then
-								a_prefix := Void
-							end
 						end
 					end
 					parsed_libraries.search (a_pathname)
@@ -265,7 +272,9 @@ feature {NONE} -- AST factory
 						end
 					end
 					Result := ast_factory.new_mounted_library (a_pathname, a_library, a_position_table.item (an_element))
-					Result.set_library_prefix (a_prefix)
+					if a_prefix /= Void then
+						Result.set_library_prefix (a_prefix)
+					end
 				end
 			end
 		end
@@ -478,7 +487,7 @@ feature {NONE} -- Element change
 				a_child ?= a_cursor.item
 				if a_child /= Void then
 					if a_child.name.is_equal (uc_cluster) then
-						a_cluster := new_cluster (a_child, a_position_table)
+						a_cluster := new_cluster (a_child, empty_prefix, a_position_table)
 						if a_cluster /= Void then
 							if a_clusters = Void then
 								a_clusters := ast_factory.new_clusters (a_cluster)
@@ -541,6 +550,7 @@ feature {NONE} -- Element change
 		local
 			a_name: STRING
 			a_value: UC_STRING
+			a_prefix: STRING
 			a_cursor: DS_BILINEAR_CURSOR [XM_NODE]
 			a_child: XM_ELEMENT
 			a_cluster: ET_XACE_CLUSTER
@@ -566,7 +576,7 @@ feature {NONE} -- Element change
 			if an_element.name.is_equal (uc_cluster) then
 				!! a_warning.make ("Warning: <cluster> is obsolete, use <library> instead%N" + a_position_table.item (an_element).out)
 				error_handler.report_warning (a_warning)
-				a_cluster := new_cluster (an_element, a_position_table)
+				a_cluster := new_cluster (an_element, empty_prefix, a_position_table)
 				a_library.set_name (a_cluster.name)
 				a_pathname := a_cluster.pathname
 				if a_pathname = Void and a_cluster.is_abstract then
@@ -579,12 +589,19 @@ feature {NONE} -- Element change
 					a_clusters := ast_factory.new_clusters (a_cluster)
 				end
 			else
+				if an_element.has_attribute_by_name (uc_prefix) then
+					a_value := an_element.attribute_by_name (uc_prefix).value
+					if a_value /= Void then
+						a_prefix := a_value.to_utf8
+						a_library.set_library_prefix (a_prefix)
+					end
+				end
 				a_cursor := an_element.new_cursor
 				from a_cursor.start until a_cursor.after loop
 					a_child ?= a_cursor.item
 					if a_child /= Void then
 						if a_child.name.is_equal (uc_cluster) then
-							a_cluster := new_cluster (a_child, a_position_table)
+							a_cluster := new_cluster (a_child, empty_prefix, a_position_table)
 							if a_cluster /= Void then
 								if a_clusters = Void then
 									a_clusters := ast_factory.new_clusters (a_cluster)
@@ -1209,6 +1226,9 @@ feature {NONE} -- Constant
 	True_constant: STRING is "true"
 	False_constant: STRING is "false"
 			-- Boolean string representation
+
+	empty_prefix: STRING is ""
+			-- Empty prefix
 
 invariant
 
