@@ -6,7 +6,7 @@ indexing
 
 	library:    "Gobo Eiffel Time Library"
 	author:     "Eric Bezault <ericb@gobosoft.com>"
-	copyright:  "Copyright (c) 2000, Eric Bezault and others"
+	copyright:  "Copyright (c) 2000-2001, Eric Bezault and others"
 	license:    "Eiffel Forum Freeware License v1 (see forum.txt)"
 	date:       "$Date$"
 	revision:   "$Revision$"
@@ -61,14 +61,17 @@ feature {NONE} -- Initialization
 			m_small_enough: m < Minutes_in_hour
 			s_large_enough: s >= 0
 			s_small_enough: s < Seconds_in_minute
+		local
+			new_second: INTEGER
 		do
-			make_precise (h, m, s.truncated_to_integer,
-				((s - second) * 1000).truncated_to_integer)
+			new_second := s.truncated_to_integer
+			make_precise (h, m, new_second,
+				((s - new_second) * 1000).truncated_to_integer)
 		ensure
 			hour_set: hour = h
 			minute_set: minute = m
 			second_set: second = s.truncated_to_integer
-			millisecond_set: milli_second = ((s - second) * 1000).truncated_to_integer
+			millisecond_set: milli_second = ((s - s.truncated_to_integer) * 1000).truncated_to_integer
 		end
 
 	make_by_fine_seconds (s: DOUBLE) is
