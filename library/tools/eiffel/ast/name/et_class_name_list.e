@@ -15,6 +15,7 @@ class ET_CLASS_NAME_LIST
 inherit
 
 	ET_AST_LIST [ET_CLASS_NAME_ITEM]
+	ET_SHARED_CLASS_NAME_TESTER
 
 creation
 
@@ -41,6 +42,26 @@ feature -- Status report
 		do
 			if count = 1 then
 				Result := class_name (1).same_class_name (none_class_name)
+			end
+		end
+
+	has (a_class: ET_CLASS): BOOLEAN is
+			-- Does `a_class' appear in current list?
+		require
+			a_class_not_void: a_class /= Void
+		local
+			i, nb: INTEGER
+			a_name: ET_CLASS_NAME
+		do
+			a_name := a_class.name
+			nb := count
+			from i := 1 until i > nb loop
+				if class_name_tester.test (a_name, class_name (i)) then
+					Result := True
+					i := nb + 1 -- Jump out of the loop.
+				else
+					i := i + 1
+				end
 			end
 		end
 
