@@ -28,10 +28,12 @@ feature -- Status report
 			Result := (is_compilable and not (is_cleanable or is_tunable)) or
 				(is_cleanable and not (is_compilable or is_tunable)) or
 				(is_tunable and not (is_compilable or is_cleanable))
+			Result := Result and then (exit_code_variable_name = Void or else exit_code_variable_name.count > 0)
 		ensure then
 			definition: Result = ((is_compilable and not (is_cleanable or is_tunable)) or
 				(is_cleanable and not (is_compilable or is_tunable)) or
 				(is_tunable and not (is_compilable or is_cleanable)))
+			exit_code_variable_name_void_or_not_empty: Result implies (exit_code_variable_name = Void or else exit_code_variable_name.count > 0)
 		end
 
 	is_compilable: BOOLEAN is
@@ -79,6 +81,9 @@ feature -- Access
 	tuning_level: STRING
 			-- Tuning level
 
+	exit_code_variable_name: STRING
+			-- Name of variable holding exit code of se compilation process
+
 feature -- Setting
 
 	set_esd_filename (a_filename: like esd_filename) is
@@ -121,6 +126,17 @@ feature -- Setting
 			tuning_level_set: tuning_level = a_tuning_level
 		end
 
+	set_exit_code_variable_name (a_exit_code_variable_name: like exit_code_variable_name) is
+			-- Set `exit_code_variable_name' to `a_exit_code_variable_name'.
+		require
+			a_exit_code_variable_name_not_void: a_exit_code_variable_name /= Void
+			a_exit_code_variable_name_not_empty: a_exit_code_variable_name.count > 0
+		do
+			exit_code_variable_name := a_exit_code_variable_name
+		ensure
+			exit_code_variable_name_set: exit_code_variable_name = a_exit_code_variable_name
+		end
+
 feature -- Execution
 
 	execute is
@@ -142,6 +158,13 @@ feature -- Execution
 				if not project.options.no_exec then
 					file_system.delete_file ("Result.out")
 					execute_shell (cmd)
+					if exit_code_variable_name /= Void then
+							-- Store return_code of compilation process:
+						project.variables.set_variable_value (exit_code_variable_name, exit_code.out)
+							-- Reset `exit_code' since return_code of process is available through
+							-- variable 'exit_code_variable_name':
+						exit_code := 0
+					end
 				end
 			elseif is_tunable then
 				execute_tuner
@@ -195,6 +218,13 @@ feature -- Execution
 					else
 						exit_code := 1
 					end
+					if exit_code_variable_name /= Void then
+							-- Store return_code of compilation process:
+						project.variables.set_variable_value (exit_code_variable_name, exit_code.out)
+							-- Reset `exit_code' since return_code of process is available through
+							-- variable 'exit_code_variable_name':
+						exit_code := 0
+					end
 				end
 			end
 		end
@@ -220,6 +250,10 @@ feature -- Execution
 					project.trace (<<"  [ve] ", cmd>>)
 				end
 				execute_shell (cmd)
+				if exit_code_variable_name /= Void then
+						-- Store return_code of compilation process:
+					project.variables.set_variable_value (exit_code_variable_name, exit_code.out)
+				end
 				exit_code := 0
 			end
 			if file_system.file_exists ("Result.out") then
