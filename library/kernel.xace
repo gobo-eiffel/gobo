@@ -4,7 +4,7 @@
 
 	<description>
 		description: "Xace file for the Eiffel compilers' kernel libraries"
-		copyright: "Copyright (c) 2001-2002, Eric Bezault and others"
+		copyright: "Copyright (c) 2001-2004, Eric Bezault and others"
 		license: "Eiffel Forum License v2 (see forum.txt)"
 		date: "$Date$"
 		revision: "$Revision$"
@@ -73,7 +73,7 @@
 			<option name="public_key_token" value="b77a5c561934e089"/>
 			<option name="prefix" value="XML_"/>
 		</cluster>
-		<cluster name="time">
+		<cluster name="time" unless="${GOBO_EIFFELBASE}">
 			<cluster name="format">
 				<cluster name="english"/>
 			</cluster>
