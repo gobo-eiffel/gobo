@@ -15,10 +15,11 @@ class LX_FULL_SCANNER
 inherit
 
 	LX_SCANNER
+		rename
+			yy_ec as yy_ec_template,
+			yy_accept as yy_accept_template
 		undefine
 			reset
-		redefine
-			yy_accept, yy_ec
 		end
 
 	YY_FULL_SCANNER_SKELETON
@@ -27,34 +28,36 @@ inherit
 			make_with_file as make_scanner_with_file_skeleton,
 			make_with_buffer as make_scanner_with_buffer_skeleton
 		redefine
-			yy_accept, yy_ec,
-			yy_nxt
+			yy_build_tables
 		end
 
 	LX_FULL_TABLES
+		rename
+			yy_nxt as yy_nxt_template,
+			yy_ec as yy_ec_template,
+			yy_accept as yy_accept_template
 		export
 			{LX_FULL_TABLES} all;
 			{ANY} to_tables, from_tables
-		redefine
-			yy_accept, yy_ec,
-			yy_nxt
 		end
 
 creation
 
 	make, make_with_file, make_with_buffer
 
-feature {LX_FULL_TABLES} -- Tables
+feature {NONE} -- Implementation
 
-	yy_nxt: ARRAY [INTEGER]
-			-- States to enter upon reading symbol;
-			-- indexed by (current_state_id * yyNb_rows + symbol)
-
-	yy_ec: ARRAY [INTEGER]
-			-- Equivalence classes;
-			-- Void if equivalence classes are not used
-
-	yy_accept: ARRAY [INTEGER]
-			-- Accepting ids indexed by state ids
+	yy_build_tables is
+			-- Build scanner tables.
+		local
+			an_array: ARRAY [INTEGER]
+		do
+			yy_nxt := yy_fixed_array (yy_nxt_template)
+			an_array := yy_ec_template
+			if an_array /= Void then
+				yy_ec := yy_fixed_array (an_array)
+			end
+			yy_accept := yy_fixed_array (yy_accept_template)
+		end
 
 end -- class LX_FULL_SCANNER

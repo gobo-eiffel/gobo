@@ -19,16 +19,12 @@ inherit
 			make as make_scanner_skeleton,
 			make_with_file as make_scanner_with_file_skeleton,
 			make_with_buffer as make_scanner_with_buffer_skeleton
-		redefine
-			yy_accept, yy_ec
 		end
 
 	LX_TABLES
 		export
 			{LX_TABLES} all
 			{ANY} to_tables, from_tables
-		redefine
-			yy_accept, yy_ec
 		end
 
 feature {NONE} -- Initialization
@@ -67,15 +63,6 @@ feature {NONE} -- Initialization
 		ensure
 			input_buffer_set: input_buffer = a_buffer
 		end
-
-feature {NONE} -- Tables
-
-	yy_ec: ARRAY [INTEGER]
-			-- Equivalence classes;
-			-- Void if equivalence classes are not used
-
-	yy_accept: ARRAY [INTEGER]
-			-- Accepting ids indexed by state ids
 
 feature {NONE} -- Implementation
 
@@ -124,12 +111,6 @@ feature {NONE} -- Implementation
 			else
 				terminate
 			end
-		end
-
-	yy_build_tables is
-			-- Build scanner tables.
-		do
-			-- Tables are already built.
 		end
 
 end -- class LX_SCANNER

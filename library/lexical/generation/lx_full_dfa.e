@@ -96,26 +96,26 @@ feature {NONE} -- Generation
 			a_file.put_string ("%Tyy_build_tables is%N%
 				%%T%T%T-- Build scanner tables.%N%T%Tdo%N")
 			a_file.put_string (Indentation)
-			a_file.put_string ("yy_nxt := yy_nxt_%N")
+			a_file.put_string ("yy_nxt ?= yy_nxt_template%N")
 			if yy_ec /= Void then
 				a_file.put_string (Indentation)
-				a_file.put_string ("yy_ec := yy_ec_%N")
+				a_file.put_string ("yy_ec ?= yy_ec_template%N")
 			end
 			a_file.put_string (Indentation)
-			a_file.put_string ("yy_accept := yy_accept_%N")
+			a_file.put_string ("yy_accept ?= yy_accept_template%N")
 			a_file.put_string ("%T%Tend%N")
 		end
 
 	print_eiffel_tables (a_file: like OUTPUT_STREAM_TYPE) is
 			-- Print Eiffel code for full tables to `a_file'.
 		do
-			print_eiffel_array ("yy_nxt_", yy_nxt, a_file)
+			print_eiffel_array ("yy_nxt_template", yy_nxt, a_file)
 			if yy_ec /= Void then
 				a_file.put_character ('%N')
-				print_eiffel_array ("yy_ec_", yy_ec, a_file)
+				print_eiffel_array ("yy_ec_template", yy_ec, a_file)
 			end
 			a_file.put_character ('%N')
-			print_eiffel_array ("yy_accept_", yy_accept, a_file)
+			print_eiffel_array ("yy_accept_template", yy_accept, a_file)
 		end
 
 	print_constants (a_file: like OUTPUT_STREAM_TYPE) is

@@ -146,26 +146,26 @@ feature {NONE} -- Generation
 			a_file.put_string ("%Tyy_build_tables is%N%
 				%%T%T%T-- Build scanner tables.%N%T%Tdo%N")
 			a_file.put_string (Indentation)
-			a_file.put_string ("yy_nxt := yy_nxt_%N")
+			a_file.put_string ("yy_nxt ?= yy_nxt_template%N")
 			a_file.put_string (Indentation)
-			a_file.put_string ("yy_chk := yy_chk_%N")
+			a_file.put_string ("yy_chk ?= yy_chk_template%N")
 			a_file.put_string (Indentation)
-			a_file.put_string ("yy_base := yy_base_%N")
+			a_file.put_string ("yy_base ?= yy_base_template%N")
 			a_file.put_string (Indentation)
-			a_file.put_string ("yy_def := yy_def_%N")
+			a_file.put_string ("yy_def ?= yy_def_template%N")
 			if yy_ec /= Void then
 				a_file.put_string (Indentation)
-				a_file.put_string ("yy_ec := yy_ec_%N")
+				a_file.put_string ("yy_ec ?= yy_ec_template%N")
 			end
 			if yy_meta /= Void then
 				a_file.put_string (Indentation)
-				a_file.put_string ("yy_meta := yy_meta_%N")
+				a_file.put_string ("yy_meta ?= yy_meta_template%N")
 			end
 			a_file.put_string (Indentation)
-			a_file.put_string ("yy_accept := yy_accept_%N")
+			a_file.put_string ("yy_accept ?= yy_accept_template%N")
 			if yy_acclist /= Void then
 				a_file.put_string (Indentation)
-				a_file.put_string ("yy_acclist := yy_acclist_%N")
+				a_file.put_string ("yy_acclist ?= yy_acclist_template%N")
 			end
 			a_file.put_string ("%T%Tend%N")
 		end
@@ -173,26 +173,26 @@ feature {NONE} -- Generation
 	print_eiffel_tables (a_file: like OUTPUT_STREAM_TYPE) is
 			-- Print Eiffel code for compressed tables to `a_file'.
 		do
-			print_eiffel_array ("yy_nxt_", yy_nxt, a_file)
+			print_eiffel_array ("yy_nxt_template", yy_nxt, a_file)
 			a_file.put_character ('%N')
-			print_eiffel_array ("yy_chk_", yy_chk, a_file)
+			print_eiffel_array ("yy_chk_template", yy_chk, a_file)
 			a_file.put_character ('%N')
-			print_eiffel_array ("yy_base_", yy_base, a_file)
+			print_eiffel_array ("yy_base_template", yy_base, a_file)
 			a_file.put_character ('%N')
-			print_eiffel_array ("yy_def_", yy_def, a_file)
+			print_eiffel_array ("yy_def_template", yy_def, a_file)
 			if yy_ec /= Void then
 				a_file.put_character ('%N')
-				print_eiffel_array ("yy_ec_", yy_ec, a_file)
+				print_eiffel_array ("yy_ec_template", yy_ec, a_file)
 			end
 			if yy_meta /= Void then
 				a_file.put_character ('%N')
-				print_eiffel_array ("yy_meta_", yy_meta, a_file)
+				print_eiffel_array ("yy_meta_template", yy_meta, a_file)
 			end
 			a_file.put_character ('%N')
-			print_eiffel_array ("yy_accept_", yy_accept, a_file)
+			print_eiffel_array ("yy_accept_template", yy_accept, a_file)
 			if yy_acclist /= Void then
 				a_file.put_character ('%N')
-				print_eiffel_array ("yy_acclist_", yy_acclist, a_file)
+				print_eiffel_array ("yy_acclist_template", yy_acclist, a_file)
 			end
 		end
 
