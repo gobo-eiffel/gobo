@@ -37,6 +37,8 @@ cluster
 
 #include "${GOBO}/library/utility/hact.ace"
 
+#include "${GOBO}/library/time/hact.ace"
+
 component
 
 		-- ISS-Baselib

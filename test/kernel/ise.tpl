@@ -38,6 +38,8 @@ cluster
 
 #include "${GOBO}/library/utility/ise.ace"
 
+#include "${GOBO}/library/time/ise.ace"
+
 		-- EiffelBase
 	all base:			"$EIFFEL4/library/base"
 		exclude
