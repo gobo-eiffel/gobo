@@ -18,7 +18,9 @@ inherit
 		redefine
 			analyze, evaluate_item
 		end
-	
+
+	XM_XSLT_VALIDATION
+
 	XM_XPATH_SHARED_NODE_KIND_TESTS
 
 creation
@@ -172,6 +174,8 @@ feature -- Evaluation
 			a_root: XM_XPATH_DOCUMENT
 			a_text_value: STRING
 			a_saved_receiver: XM_XSLT_SEQUENCE_RECEIVER
+			a_tiny_builder: XM_XPATH_TINY_BUILDER
+			a_result: XM_XSLT_TRANSFORMATION_RESULT
 		do
 			an_evaluation_context ?= a_context
 			check
@@ -191,7 +195,27 @@ feature -- Evaluation
 				end
 				create {XM_XPATH_TEXT_FRAGMENT_VALUE} a_root.make (a_text_value, base_uri)
 			else
-				todo ("evaluate_item", true)
+				a_saved_receiver := a_transformer.current_receiver
+
+				-- TODO: delayed evaluation of temporary trees, in the same way as
+				--  node-sets. This requires saving the controller, including values of local variables
+				--  and any assignable global variables (ouch).
+
+				-- TODO: use an Outputter that delayes the decision whether to build a
+				--  TextFragment or a TinyTree until the first element is encountered, to
+				--  avoid the overhead of using a TinyTree for text-only trees. This would
+				--  make the static analysis superfluous.
+
+				create a_tiny_builder.make
+				a_tiny_builder.set_defaults (50, 10, 5, 200)
+				a_tiny_builder.set_system_id (base_uri)
+				a_tiny_builder.start_document
+				create a_result.make_receiver (a_tiny_builder)
+				a_transformer.change_output_destination (Void, a_result, False, Validation_strip, Void)
+				process_children (an_evaluation_context)
+				a_transformer.reset_output_destination (a_saved_receiver)
+				a_tiny_builder.end_document
+				a_root := a_tiny_builder.document
 			end
 			last_evaluated_item := a_root
 		end

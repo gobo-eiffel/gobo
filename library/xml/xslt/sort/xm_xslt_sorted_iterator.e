@@ -272,36 +272,38 @@ feature {NONE} -- Implementation
 			
 			-- Initialize the array with data.
 
-			from
-				base_iterator.start
-			until
-				base_iterator.after
-			loop
-				if node_keys.is_full then
-					node_keys.resize (node_keys.count * 2)
-				end
+			if not base_iterator.is_error then
 				from
-					create a_key_list.make (sort_keys.count)
-					a_cursor := sort_keys.new_cursor; a_cursor.start
+					base_iterator.start
 				until
-					a_cursor.after
+					base_iterator.after
 				loop
-					a_cursor.item.sort_key.evaluate_item (context)
-					if a_cursor.item.sort_key.last_evaluated_item /= Void then
-						a_sort_key ?= a_cursor.item.sort_key.last_evaluated_item
-					else
-						a_sort_key := Void  -- = () - an empty sequence
+					if node_keys.is_full then
+						node_keys.resize (node_keys.count * 2)
 					end
-					a_key_list.put_last (a_sort_key)
-					a_cursor.forth
+					from
+						create a_key_list.make (sort_keys.count)
+						a_cursor := sort_keys.new_cursor; a_cursor.start
+					until
+						a_cursor.after
+					loop
+						a_cursor.item.sort_key.evaluate_item (context)
+						if a_cursor.item.sort_key.last_evaluated_item /= Void then
+							a_sort_key ?= a_cursor.item.sort_key.last_evaluated_item
+						else
+							a_sort_key := Void  -- = () - an empty sequence
+						end
+						a_key_list.put_last (a_sort_key)
+						a_cursor.forth
+					end
+
+					-- Make the sort stable by adding the record number.
+					
+					count := count + 1
+					create a_sort_record.make (base_iterator.item, a_key_list, count)
+					node_keys.put_last (a_sort_record)
+					base_iterator.forth
 				end
-
-				-- Make the sort stable by adding the record number.
-
-				count := count + 1
-				create a_sort_record.make (base_iterator.item, a_key_list, count)
-				node_keys.put_last (a_sort_record)
-				base_iterator.forth
 			end
 			context.set_current_iterator (a_saved_iterator)
 			a_transformer.set_current_iterator (another_saved_iterator)

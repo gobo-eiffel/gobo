@@ -273,10 +273,10 @@ feature -- Status setting
 	set_defaults (a_new_estimated_node_count: INTEGER; a_new_estimated_attribute_count: INTEGER; a_new_estimated_namespace_count: INTEGER; a_new_estimated_character_count: INTEGER) is
 			-- Supply values for the tree implementation parameters
 		require
-			positive_node_count: estimated_node_count > 0
-			attribute_count: estimated_attribute_count >= 0
-			namespace_count: estimated_namespace_count >= 0
-			character_count: estimated_character_count >= 0
+			positive_node_count: a_new_estimated_node_count > 0
+			attribute_count: a_new_estimated_attribute_count >= 0
+			namespace_count: a_new_estimated_namespace_count >= 0
+			character_count: a_new_estimated_character_count >= 0
 		do
 			estimated_node_count := a_new_estimated_node_count
 			estimated_attribute_count := a_new_estimated_attribute_count

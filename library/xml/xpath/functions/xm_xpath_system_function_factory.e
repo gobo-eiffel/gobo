@@ -73,6 +73,8 @@ feature -- Creation
 				create {XM_XPATH_SUBSTRING_AFTER} Result.make
 			elseif STRING_.same_string (a_function_name, "sum") then
 				create {XM_XPATH_SUM} Result.make
+			elseif STRING_.same_string (a_function_name, "tokenize") then
+				create {XM_XPATH_TOKENIZE} Result.make
 			elseif STRING_.same_string (a_function_name, "translate") then
 				create {XM_XPATH_TRANSLATE} Result.make				
 			elseif STRING_.same_string (a_function_name, "true") then

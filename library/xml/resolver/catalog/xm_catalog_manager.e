@@ -75,8 +75,8 @@ feature -- Access
 			if debug_level > 2 then
 				a_debug_string := STRING_.concat ("PUBLIC ", a_public_id)
 				a_debug_string := STRING_.appended_string (", SYSTEM ", a_system_id)
+				debug_message (3, "Resolving external entity", a_debug_string)
 			end
-			debug_message (3, "Resolving external entity", a_debug_string)
 
 			-- At this level, there is no re-try from relative URI to absolute URI -
 			--  that is left to higher-level callers, such as XM_CATALOG_RESOLVER

@@ -190,6 +190,54 @@
 	</listitem>
       </varlistentry>
       <varlistentry>
+	<term>--warnings=[&lt;warning-file&gt;]</term>
+	<listitem>
+	  <para>
+	    Set the destination for warnings to be "warning-file". If "warning-file"
+	    is omitted, then all warning messages are ignored.
+	  </para>
+	  <para>
+	    If this parameter is not given, then warnings are sent to the standard error
+	    stream.
+	  </para>
+	</listitem>
+      </varlistentry>
+      <varlistentry>
+	<term>--errors=[&lt;error-file&gt;]</term>
+	<listitem>
+	  <para>
+	    Set the destination for error messages to be "error-file". If "error-file"
+	    is omitted, then all error messages are ignored.
+	  </para>
+	  <para>
+	    If this parameter is not given, then error messages are sent to the standard error
+	    stream.
+	  </para>
+	</listitem>
+      </varlistentry>
+      <varlistentry>
+	<term>--errors-and-warnings=[&lt;error-file&gt;]</term>
+	<listitem>
+	  <para>
+	    Set the destination for both error and warning messages to be "error-file". If "error-file"
+	    is omitted, then all such messages are ignored.
+	  </para>
+	</listitem>
+      </varlistentry>
+      <varlistentry>
+	<term>--trace=[&lt;trace-file&gt;]</term>
+	<listitem>
+	  <para>
+	    Set the destination for trace output to be "trace-file". If "trace-file"
+	    is omitted, then trace output is sent to the standard output stream.
+	  </para>
+	  <para>
+	    If this parameter is not given, then no trace output is produced.
+	    <warning>Tracing is not implemented yet.</warning>
+	  </para>
+	</listitem>
+      </varlistentry>
+      <varlistentry>
 	<term>--tiny-tree</term>
 	<listitem>
 	  <para>

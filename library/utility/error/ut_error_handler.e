@@ -196,7 +196,7 @@ feature -- Setting
 		do
 			info_file := std.output
 		ensure
-			info_file_set: info_file = std.error
+			info_file_set: info_file = std.output
 		end
 
 	set_info_null is

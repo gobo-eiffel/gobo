@@ -52,13 +52,23 @@
 
 	<xsl:variable name="current-element" select="."/>
 
-	<xsl:for-each select = "in-scope-prefixes(.)">
+	<xsl:variable name="namespaces">
+
+	  <xsl:for-each select = "in-scope-prefixes(.)">
+
+	    <xsl:sequence select="namespace-uri-for-prefix(., $current-element)" />
+
+	  </xsl:for-each>
+
+	</xsl:variable>
+
+	<xsl:for-each select = "tokenize($namespaces, '\s+')">
 
 	  <xsl:sort select="."/>
 
 	  <xsl:element name="namespace" >
 
-	    <xsl:value-of select = "namespace-uri-for-prefix(., $current-element)"/>
+	    <xsl:value-of select = "."/>
 
 	  </xsl:element>
 

@@ -75,9 +75,6 @@ feature -- Compilation
 			a_node_factory: XM_XSLT_NODE_FACTORY
 		do
 			error_listener := configuration.error_listener
-			if error_listener = Void then
-				create {XM_XSLT_DEFAULT_ERROR_LISTENER} error_listener.make (configuration.recovery_policy)
-			end
 			create a_node_factory.make (error_listener, configuration.are_external_functions_allowed)
 			load_stylesheet_module (a_source, configuration, a_node_factory)
 			if not load_stylesheet_module_failed then

@@ -48,8 +48,9 @@ feature -- Execution
 			i, nb: INTEGER
 			arg: STRING
 		do
+			create configuration.make_with_defaults
+			error_handler := configuration.error_reporter
 			Arguments.set_program_name ("gexslt")
-			create error_handler.make_standard
 			nb := Arguments.argument_count
 			if nb = 0 then
 				report_usage_message
@@ -296,6 +297,9 @@ feature -- Error handling
 									  " or    gexslt --version%N" +
 									  " or    gexslt --help%N" +
 									  "       --output=local-file-name%N" +
+									  "       --errors=[local-file-name]%N" +
+									  "       --warnings=[local-file-name]%N" +
+									  "       --errors-and-warnings=[local-file-name]%N" +
 									  "       --no-line-numbers%N" +
 									  "       --no-gc%N" +
 									  "       --no-catalogs%N" +
@@ -303,6 +307,7 @@ feature -- Error handling
 									  "       --prefer-system%N" +
 									  "       --no-default-catalog%N" +
 									  "       --catalog-debug-level=[0-10]%N" +
+									  "       --output=local-file-name%N" +
 									  "       --tiny-tree%N" +
 									  "       --param=name=string-value%N" +
 									  "       --xpath-param=name=xpath-expression%N")
@@ -311,6 +316,9 @@ feature -- Error handling
 		end
 
 feature {NONE} -- Implementation
+
+	configuration: XM_XSLT_CONFIGURATION
+			-- Configuration
 
 	process_option (an_option: STRING) is
 			-- Process `an_option'.
@@ -353,6 +361,27 @@ feature {NONE} -- Implementation
 				shared_catalog_manager.suppress_default_system_catalog_file
 			elseif an_option.is_equal ("prefer-system") then
 				shared_catalog_manager.set_prefer_system
+			elseif an_option.substring_index ("warnings=", 1) = 1 then
+				if an_option.count = 9 then
+					error_handler.set_warning_null
+				else
+					set_warning_file (an_option.substring (10, an_option.count))
+				end
+			elseif an_option.substring_index ("errors=", 1) = 1 then
+				if an_option.count = 7 then
+					error_handler.set_error_null
+				else
+					set_error_file (an_option.substring (8, an_option.count))
+				end
+			elseif an_option.substring_index ("errors-and-warnings=", 1) = 1 then
+				if an_option.count = 20 then
+					error_handler.set_error_null
+					error_handler.set_warning_null
+				else
+					set_errors_and_warnings (an_option.substring (21, an_option.count))
+				end
+			elseif an_option.substring_index ("trace-destination=", 1) = 1 and then an_option.count > 18 then
+				set_trace_file (an_option.substring (19, an_option.count))
 			elseif an_option.substring_index ("catalog-debug-level=", 1) = 1 and then an_option.count > 20 then
 				a_number := an_option.substring (21, an_option.count)
 				if a_number.is_integer then
@@ -423,18 +452,16 @@ feature {NONE} -- Implementation
 		local
 			a_stylesheet_uri, a_source_uri: XM_XSLT_URI_SOURCE
 			a_destination: XM_OUTPUT
-			a_configuration: XM_XSLT_CONFIGURATION
 			a_stylesheet: XM_XSLT_PREPARED_STYLESHEET
 			a_transformer: XM_XSLT_TRANSFORMER
 			a_result: XM_XSLT_TRANSFORMATION_RESULT
 			a_stream: KL_TEXT_OUTPUT_FILE
 		do
 			conformance.set_basic_xslt_processor
-			create a_configuration.make_with_defaults
-			a_configuration.use_tiny_tree_model (is_tiny_tree_model)
-			a_configuration.set_line_numbering (is_line_numbering)
+			configuration.use_tiny_tree_model (is_tiny_tree_model)
+			configuration.set_line_numbering (is_line_numbering)
 			create a_stylesheet_uri.make (uris.item (1))
-			create a_stylesheet.make (a_configuration)
+			create a_stylesheet.make (configuration)
 			a_stylesheet.prepare (a_stylesheet_uri)
 			if a_stylesheet.load_stylesheet_module_failed then
 				report_processing_error ("Could not compile stylesheet", a_stylesheet.load_stylesheet_module_error)
@@ -487,7 +514,56 @@ feature {NONE} -- Implementation
 			end
 		end
 
+	set_warning_file (a_filename: STRING) is
+			-- Set warning output to `a_filename'.
+		require
+			file_name_not_void: a_filename /= Void
+		local
+			a_file: KI_TEXT_OUTPUT_STREAM
+		do
+			a_file := file_system.new_output_file
+			a_file.open_write
+			error_handler.set_warning_file (a_file)
+		end
+			
+	set_error_file (a_filename: STRING) is
+			-- Set error output to `a_filename'.
+		require
+			file_name_not_void: a_filename /= Void
+		local
+			a_file: KI_TEXT_OUTPUT_STREAM
+		do
+			a_file := file_system.new_output_file
+			a_file.open_write
+			error_handler.set_error_file (a_file)
+		end
+			
+	set_errors_and_warnings (a_filename: STRING) is
+			-- Set error and warning output to `a_filename'.
+		require
+			file_name_not_void: a_filename /= Void
+		local
+			a_file: KI_TEXT_OUTPUT_STREAM
+		do
+			a_file := file_system.new_output_file
+			a_file.open_write
+			error_handler.set_error_file (a_file)
+			error_handler.set_warning_file (a_file)
+		end
+			
 
+	set_trace_file (a_filename: STRING) is
+			-- Set trace output to `a_filename'.
+		require
+			file_name_not_void: a_filename /= Void
+		local
+			a_file: KI_TEXT_OUTPUT_STREAM
+		do
+			a_file := file_system.new_output_file
+			a_file.open_write
+			error_handler.set_info_file (a_file)
+		end
+			
 invariant
 
 	error_handler_not_void: error_handler /= Void

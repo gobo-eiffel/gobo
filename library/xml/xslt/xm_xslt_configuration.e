@@ -74,7 +74,8 @@ feature {NONE} -- Initialization
 			create a_catalog_resolver
 			create an_encoder_factory
 			create a_system_function_factory
-			create an_error_listener.make (Recover_with_warnings)
+			create error_reporter.make_standard
+			create an_error_listener.make (Recover_with_warnings, error_reporter)
 			make (a_catalog_resolver, an_error_listener, a_system_function_factory, an_encoder_factory)
 		end
 
@@ -85,6 +86,9 @@ feature -- Access
 
 	error_listener: XM_XSLT_ERROR_LISTENER
 			-- Error listener
+
+	error_reporter: UT_ERROR_HANDLER
+			-- Error reporter for standard error and trace listeners
 
 	entity_resolver: XM_EXTERNAL_RESOLVER
 			-- Entity resolver
@@ -201,6 +205,7 @@ invariant
 
 	entity_resolver_not_void: entity_resolver /= Void
 	error_listener_not_void: error_listener /= Void
+	error_reporter_not_void: error_reporter /= Void
 	encoder_factory_not_void: 	encoder_factory /= Void
 	recovery_policy: recovery_policy >= Recover_silently and then recovery_policy <= Do_not_recover
 
