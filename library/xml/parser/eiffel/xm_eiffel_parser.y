@@ -58,15 +58,17 @@ creation
 %token <STRING> NMTOKEN NMTOKEN_UTF8
 %token <STRING> EQ
 %token <STRING> SPACE
+%token <STRING> APOS QUOT
 %token <STRING> CHARDATA CHARDATA_UTF8
 %token <STRING> COMMENT_START COMMENT_END COMMENT_DASHDASH
 %token <STRING> PI_START PI_TARGET PI_TARGET_UTF8 PI_END PI_RESERVED
 %token <STRING> XMLDECLARATION_START
 %token <STRING> XMLDECLARATION_END
 %token <STRING> XMLDECLARATION_VERSION
-%token <STRING> XMLDECLARATION_STANDALONE_YES
-%token <STRING> XMLDECLARATION_STANDALONE_NO
-%token <STRING> XMLDECLARATION_ENCODING
+%token <STRING> XMLDECLARATION_VERSION_10
+%token <STRING> XMLDECLARATION_STANDALONE
+%token <STRING> XMLDECLARATION_STANDALONE_YES XMLDECLARATION_STANDALONE_NO
+%token <STRING> XMLDECLARATION_ENCODING XMLDECLARATION_ENCODING_VALUE
 %token <STRING> CDATA_START
 %token <STRING> CDATA_END
 %token <STRING> DOCTYPE_START
@@ -361,6 +363,11 @@ misc_trail: misc
 xml_decl:XMLDECLARATION_START version_info xml_decl_opt XMLDECLARATION_END
 		{ 
 			$3.set_version ($2)
+			if scanner.is_valid_encoding ($3.encoding) then
+				scanner.set_encoding ($3.encoding)
+			else
+				force_error (Error_unsupported_encoding)
+			end
 			$3.process (Current) -- event
 		}
 	| XMLDECLARATION_START error { force_error (Error_xml_declaration) }
@@ -386,8 +393,10 @@ xml_decl_opt: maybe_space
 		}
 	;
 
-version_info: XMLDECLARATION_VERSION
-		{ $$ := $1 }
+version_info: XMLDECLARATION_VERSION APOS XMLDECLARATION_VERSION_10 APOS
+		{ $$ := $3 }
+	| XMLDECLARATION_VERSION QUOT XMLDECLARATION_VERSION_10 QUOT
+		{ $$ := $3 }
 	;
 
 misc: comment
@@ -465,8 +474,10 @@ markup_decl: element_decl
 
 -- 2.9 Stand-alone document declaration
 
-sd_decl: XMLDECLARATION_STANDALONE_YES { $$ := True }
-	| XMLDECLARATION_STANDALONE_NO { $$ := False }
+sd_decl: XMLDECLARATION_STANDALONE APOS XMLDECLARATION_STANDALONE_YES APOS { $$ := True }
+	| XMLDECLARATION_STANDALONE QUOT XMLDECLARATION_STANDALONE_YES QUOT { $$ := True }
+	| XMLDECLARATION_STANDALONE APOS XMLDECLARATION_STANDALONE_NO APOS { $$ := False }
+	| XMLDECLARATION_STANDALONE QUOT XMLDECLARATION_STANDALONE_NO QUOT { $$ := False }
 	;
 
 -- 3. Element
@@ -863,7 +874,10 @@ text_decl: -- Empty
 	| XMLDECLARATION_START error { force_error (Error_xml_declaration) }
 	;
 
-encoding_decl: XMLDECLARATION_ENCODING
+encoding_decl: XMLDECLARATION_ENCODING APOS XMLDECLARATION_ENCODING_VALUE APOS
+		{ $$ := $3 }
+	| XMLDECLARATION_ENCODING QUOT XMLDECLARATION_ENCODING_VALUE QUOT
+		{ $$ := $3 }
 	;
 
 -- 4.7 Notation declaration

@@ -70,7 +70,7 @@ UTF8CHAR (([\xC2-\xDF][\x80-\xBF])|(\xE0[\xA0-\xBF][\x80-\xBF])|([\xE1-\xEF][\x8
 
 SPACECHAR [\r\n\t ]
 
-VALIDENCODING (("us-ascii"|"US-ASCII")|(("utf-"|"UTF-")("8"|"16")))
+XMLENCODING [a-zA-Z0-9\x2D]+
 
 EQUAL [\r\n\t ]*[=][\r\n\t ]*
 
@@ -199,21 +199,47 @@ NOQUOTSYSLITCHAR [\r\n\t\x20-!#-\x7F]
 		}
 
 			-- Version declaration.
-		"version"{EQUAL}({APOS}"1.0"{APOS}|{QUOT}"1.0"{QUOT}) {
-			set_last_token (XMLDECLARATION_VERSION) 
+		"version"{EQUAL} {
+			set_last_token (XMLDECLARATION_VERSION)
+		}
+
+		"1.0" {
+			set_last_token (XMLDECLARATION_VERSION_10)
+			last_value := text
 		}
 
 			-- Standalone declaration.
-		"standalone"{EQUAL}({APOS}"yes"{APOS}|{QUOT}"yes"{QUOT}) {
-			set_last_token (XMLDECLARATION_STANDALONE_YES) 
+		"standalone"{EQUAL} {
+			set_last_token (XMLDECLARATION_STANDALONE) 
+		}
+		
+		"yes" {
+			set_last_token (XMLDECLARATION_STANDALONE_YES)
+			last_value := text
+		}
+		
+		"no" {
+			set_last_token (XMLDECLARATION_STANDALONE_NO)
+			last_value := text
 		}
 
-		"standalone"{EQUAL}({APOS}"no"{APOS}|{QUOT}"no"{QUOT}) {
-			set_last_token (XMLDECLARATION_STANDALONE_NO) 
-		}
-
-		"encoding"{EQUAL}({APOS}{VALIDENCODING}{APOS}|{QUOT}{VALIDENCODING}{QUOT}) {
+			-- Encoding
+		"encoding"{EQUAL} {
 			set_last_token (XMLDECLARATION_ENCODING)
+		}
+			
+		{XMLENCODING} {
+			-- 'yes' 'no' '1.0' caught by previous rules
+			set_last_token (XMLDECLARATION_ENCODING_VALUE)
+			last_value := text
+		}
+		
+		{APOS} {
+			set_last_token (APOS)
+		}
+		
+		{QUOT} {
+			set_last_token (QUOT)
 		}
 
 		{SPACECHAR}+ { 
@@ -910,13 +936,11 @@ feature -- Input
 		require
 			not_void: a_stream /= Void
 			readable: a_stream.is_open_read
-		local
-			a_utf16: XM_EIFFEL_UTF16_INPUT_STREAM
 		do
 			input_stream := a_stream
 
-			create a_utf16.make_from_stream (a_stream)
-			set_input_buffer (new_file_buffer (a_utf16))			
+			create input_filter.make_from_stream (a_stream)
+			set_input_buffer (new_file_buffer (input_filter))			
 		end
 
 	close_input is
@@ -932,8 +956,45 @@ feature -- Input
 feature {NONE} -- Input
 
 	input_stream: KI_CHARACTER_INPUT_STREAM
-			 -- Saved stream for closing on end of stream.
+			-- Saved stream for closing on end of stream.
 			 
+	input_filter: XM_EIFFEL_UTF16_INPUT_STREAM
+			-- Saved filter for encoding changes. 
+			 
+feature -- Encoding
+
+	is_valid_encoding (an_encoding: STRING): BOOLEAN is
+			-- Is this encoding known?
+		local
+			lower_encoding: STRING
+		do
+			if an_encoding /= Void then
+				lower_encoding := STRING_.as_lower (an_encoding)
+				Result := lower_encoding.is_equal (Encoding_latin_1)
+					or lower_encoding.is_equal (Encoding_us_ascii)
+					or lower_encoding.is_equal (Encoding_utf_8) 
+					or lower_encoding.is_equal (Encoding_utf_16)
+			end
+		end
+		
+	set_encoding (an_encoding: STRING) is
+			-- Set encoding.
+		require
+			valid_encoding: is_valid_encoding (an_encoding)
+		do
+			check filter_set: input_filter /= Void end
+			if STRING_.as_lower (an_encoding).is_equal (Encoding_latin_1) then
+				input_filter.set_latin_1
+			end
+		end
+
+feature {NONE} -- Encodings
+
+	Encoding_us_ascii: STRING is "us-ascii"
+	Encoding_latin_1: STRING is "iso-8859-1" 
+	Encoding_utf_8: STRING is "utf-8"
+	Encoding_utf_16: STRING is "utf-16"
+	
 feature -- Error reporting
 
 	has_error: BOOLEAN is
