@@ -43,7 +43,6 @@
 				<option name="abstract" value="true"/>
 				<cluster name="api"/>
 				<cluster name="general"/>
-				<cluster name="event"/>
 				<cluster name="spec">
 					<option name="abstract" value="true"/>
 					<cluster name="${GOBO_EIFFEL}" prefix="impl_expat_spec_"/>
