@@ -18,6 +18,9 @@ inherit
 
 	KL_SHARED_EIFFEL_COMPILER
 		export {NONE} all end
+	
+	KL_IMPORTED_INTEGER_ROUTINES
+		export {NONE} all end
 
 feature -- Test
 
@@ -195,8 +198,8 @@ feature -- Test
 			a_platform: KL_PLATFORM
 		do
 			create a_platform
-			assert ("large_enoung", a_platform.Maximum_character_code >= a_platform.Maximum_byte_code)
-			assert ("definition", a_platform.Maximum_character_code = (2 ^ a_platform.Character_bits) - 1)
+			assert ("large_enough", a_platform.Maximum_character_code >= a_platform.Maximum_byte_code)
+			assert ("definition", a_platform.Maximum_character_code = (INTEGER_.power (2, a_platform.Character_bits)) - 1)
 		end
 
 	test_minimum_integer is
@@ -205,8 +208,8 @@ feature -- Test
 			a_platform: KL_PLATFORM
 		do
 			create a_platform
-			assert ("meaningfull", a_platform.Minimum_integer <= 0)
-			assert ("definition", a_platform.Minimum_integer = (2 ^ (a_platform.Integer_bits - 2)) * -2)
+			assert ("meaningful", a_platform.Minimum_integer <= 0)
+			assert ("definition", a_platform.Minimum_integer = INTEGER_.power (2, a_platform.Integer_bits - 2) * -2)
 			if a_platform.Integer_bits = 32 then
 				if not eiffel_compiler.is_ve then
 						-- There is a bug in VE 4.0 (build 4001) in STRING.out
@@ -222,7 +225,7 @@ feature -- Test
 			a_platform: KL_PLATFORM
 		do
 			create a_platform
-			assert ("meaningfull", a_platform.Maximum_integer >= 0)
+			assert ("meaningful", a_platform.Maximum_integer >= 0)
 			assert_integers_equal ("definition", - (a_platform.Minimum_integer + 1), a_platform.Maximum_integer)
 			if a_platform.Integer_bits = 32 then
 				assert_equal ("value_32_bits", "2147483647", a_platform.Maximum_integer.out)
