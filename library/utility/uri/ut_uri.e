@@ -177,7 +177,7 @@ feature -- Status report
 			a_cursor: DS_LINEAR_CURSOR [UT_URI_STRING]
 		do
 			Result := True
-			if path_has_base then
+			if has_path_base then
 				Result := not is_dot_dot (path_base_item) and not is_dot (path_base_item)
 			end
 			if path_items.count > 0 then
@@ -199,13 +199,13 @@ feature -- Status report
 	has_path: BOOLEAN is
 			-- Is an explicit path defined?
 		do
-			Result := has_absolute_path or path_has_base or not path_items.is_empty
+			Result := has_absolute_path or has_path_base or not path_items.is_empty
 		ensure
-			definition: Result = (has_absolute_path or path_has_base or not path_items.is_empty)
+			definition: Result = (has_absolute_path or has_path_base or not path_items.is_empty)
 			consistent_with_path: Result = not path.is_empty
 		end
 
-	path_has_base: BOOLEAN is
+	has_path_base: BOOLEAN is
 			-- Does the path contain a base segment, that is:
 			-- False for s://host/a/b/
 			-- True for s://host/a/b
@@ -344,24 +344,24 @@ feature -- Components
 				Result.append_character ('/')
 				i := i + 1
 			end
-			if path_has_base then
+			if has_path_base then
 				Result := STRING_.appended_string (Result, path_base_item.encoded)
 			end
 		ensure
 			path_not_void: Result /= Void
 			not_empty: has_path implies not Result.is_empty
 			separator_numbers: Result.occurrences ('/') >= path_items.count
-			path_base: path_has_base implies (not Result.is_empty and then Result.item (Result.count) /= '/')
+			path_base: has_path_base implies (not Result.is_empty and then Result.item (Result.count) /= '/')
 			not_next_query_separator: not Result.has ('?')
 			not_next_fragment_separator: not Result.has ('#')
 		end
 
 	path_base: STRING is
 			-- Base name of path, that is:
-			-- path_has_base = False for "s://host/a/b/"
+			-- has_path_base = False for "s://host/a/b/"
 			-- path_base = "b" for "s://host/a/b"
 		require
-			path_has_base: path_has_base
+			has_path_base: has_path_base
 		do
 			Result := path_base_item.encoded
 		ensure
@@ -615,7 +615,7 @@ feature -- Setting
 		end
 
 	set_path_base (an_item: UT_URI_STRING) is
-			-- Set path base (last segment, see `path_has_base').
+			-- Set path base (last segment, see `has_path_base').
 		require
 			an_item_not_void: an_item /= Void
 		do
@@ -944,8 +944,9 @@ feature {NONE} -- Resolve a relative-path reference
 			has_absolute_path := True
 				-- Path items.
 			create some_items.make_from_linear (a_base.path_items)
+				
 				-- Handle path base if relative.
-			if path_has_base and then (is_dot (path_base_item) or is_dot_dot (path_base_item)) then
+			if has_path_base and then (is_dot (path_base_item) or is_dot_dot (path_base_item)) then
 				path_items.force_last (path_base_item)
 				path_base_item := Void
 			end
