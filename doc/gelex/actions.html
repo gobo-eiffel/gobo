@@ -65,10 +65,37 @@ color="#008080"><em><tt>YY_SCANNER</tt></em></font></a>, which
 can be used in actions:</p>
 
 <dl>
+    <dt><a href="skeleton.html#append_text_to_string"
+        name="append_text_to_string"><font color="#008080"><em><tt>append_text_to_string</tt></em></font></a><font
+        color="#008080"><em><tt> </tt></em><tt>(</tt><em><tt>a_string</tt></em><tt>:</tt><em><tt>
+        STRING</tt></em><tt>)</tt></font></dt>
+    <dd>Append <font color="#008080"><em><tt>text</tt></em></font>
+        at end of <font color="#008080"><em><tt>a_string</tt></em></font>.
+        For efficiency reason, this feature can bypass the call
+        to <font color="#008080"><em><tt>text</tt></em></font>
+        and directly copy the characters from the input buffer.</dd>
+    <dt><a href="skeleton.html#append_text_substring_to_string"
+        name="append_text_substring_to_string"><font
+        color="#008080"><em><tt>append_text_substring_to_string</tt></em></font></a><font
+        color="#008080"><em><tt> </tt></em><tt>(</tt><em><tt>s</tt></em><tt>,</tt><em><tt>
+        e</tt></em><tt>:</tt><em><tt> INTEGER</tt></em><tt>;</tt><em><tt>
+        a_string</tt></em><tt>:</tt><em><tt> STRING</tt></em><tt>)</tt></font></dt>
+    <dd>Append <font color="#008080"><em><tt>text_substring </tt></em></font>at
+        end of <font color="#008080"><em><tt>a_string</tt></em></font>.
+        For efficiency reason, this feature can bypass the call
+        to <font color="#008080"><em><tt>text_substring</tt></em></font>
+        and directly copy the characters from the input buffer.</dd>
     <dt><a href="skeleton.html#echo" name="echo"><font
         color="#008080"><em><tt>echo</tt></em></font></a></dt>
     <dd>Copy <font color="#008080"><em><tt>text</tt></em></font>
         to the scanner's output file using <font color="#008080"><em><tt>output</tt></em></font>.</dd>
+    <dt><a href="skeleton.html#Empty_buffer" name="Empty_buffer"><font
+        color="#008080"><em><tt>Empty_buffer</tt></em></font></a><font
+        color="#008080"><tt>:</tt><em><tt> YY_BUFFER</tt></em></font></dt>
+    <dd>Empty input buffer (once function). When input sources
+        are not known yet at the creation time of a scanner, this
+        input buffer can be used by default with the creation
+        routine <font color="#008080"><em><tt>make_with_buffer</tt></em></font>.</dd>
     <dt><a href="skeleton.html#flush_input_buffer"
         name="flush_input_buffer"><font color="#008080"><em><tt>flush_input_buffer</tt></em></font></a></dt>
     <dd>Flush the scanner's internal buffer so that the next time
@@ -147,6 +174,20 @@ can be used in actions:</p>
         so the <font color="#008080"><em><tt>echo</tt></em></font>
         for the &quot;<tt>kludge</tt>&quot; rule will actually
         write &quot;<tt>mega-kludge</tt>&quot;.</dd>
+    <dt><a href="skeleton.html#new_file_buffer"
+        name="new_file_buffer"><font color="#008080"><em><tt>new_file_buffer</tt></em></font></a><font
+        color="#008080"><em><tt> </tt></em><tt>(</tt><em><tt>a_file</tt></em><tt>:</tt><em><tt>
+        FILE</tt></em><tt>):</tt><em><tt> YY_FILE_BUFFER</tt></em></font></dt>
+    <dd>Create an input buffer for <font color="#008080"><em><tt>a_file</tt></em></font>.
+        This routine is convenient when used with <font
+        color="#008080"><em><tt>set_input_buffer</tt></em></font>.</dd>
+    <dt><a href="skeleton.html#new_string_buffer"
+        name="new_string_buffer"><font color="#008080"><em><tt>new_string_buffer</tt></em></font></a><font
+        color="#008080"><em><tt> </tt></em><tt>(</tt><em><tt>a_string</tt></em><tt>:</tt><em><tt>
+        STRING</tt></em><tt>):</tt><em><tt> YY_BUFFER</tt></em></font></dt>
+    <dd>Create an input buffer for <font color="#008080"><em><tt>a_string</tt></em></font>.
+        This routine is convenient when used with <font
+        color="#008080"><em><tt>set_input_buffer</tt></em></font>.</dd>
     <dt><a href="skeleton.html#output" name="output"><font
         color="#008080"><em><tt>output</tt></em></font></a><font
         color="#008080"><em><tt> </tt></em><tt>(</tt><em><tt>a_text</tt></em><tt>:</tt><em><tt>
@@ -370,7 +411,7 @@ color="#0000FF">{</font>
 <table border="0" width="100%">
     <tr>
         <td><address>
-            <font size="2"><b>Copyright © 1998</b></font><font
+            <font size="2"><b>Copyright © 1999</b></font><font
             size="1"><b>, </b></font><font size="2"><strong>Eric
             Bezault</strong></font><strong> </strong><font
             size="2"><br>
@@ -380,7 +421,7 @@ color="#0000FF">{</font>
             <strong>http:</strong></font><a
             href="http://www.gobo.demon.co.uk"><font size="2">//www.gobo.demon.co.uk</font></a><font
             size="2"><br>
-            <strong>Last Updated:</strong> 4 August 1998</font><br>
+            <strong>Last Updated:</strong> 20 February 1999</font><br>
             <!--webbot bot="PurpleText"
             preview="
 $Date$ 

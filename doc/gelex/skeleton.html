@@ -91,6 +91,9 @@ name="make_with_buffer"><em>make_with_buffer</em></a><em> </em>(<em>a_buffer</em
 name="text_substring"><em>text_substring</em></a><em> </em>(<em>s</em>,<em> e</em>:<em> INTEGER</em>):<em> STRING
             </em>-- Substring of last token read
             -- (Create a new string at each call.)<em>
+            </em>-- (For efficiency reason, this function can bypass the
+            -- call to <em>text</em> and create the substring directly from
+            -- the input buffer.)<em>
         </em><em><strong>require</strong></em><em>
             meaningful_start</em>:<em> 1 </em>&lt;=<em> s
             meaningful_interval</em>:<em> s </em>&lt;=<em> e </em>+<em> 1
@@ -130,6 +133,27 @@ name="set_start_condition"><em>set_start_condition</em></a><em> </em>(<em>a_star
             -- Make result available in <em>last_token</em>.<em>
 
 </em><em><strong>feature</strong></em><em> </em>-- Element change<em>
+
+    </em><a href="actions.html#append_text_to_string"
+name="append_text_to_string"><em>append_text_to_string</em></a><em> </em>(<em>a_string</em>:<em> STRING</em>)<em>
+            </em>-- Append <em>text</em> at end of <em>a_string</em>.
+            -- (For efficiency reason, this feature can bypass the
+            -- call to <em>text</em> and directly copy the characters from
+            -- the input buffer.)<em>
+        </em><em><strong>require</strong></em><em>
+            a_string_not_void</em>:<em> a_string </em>/= <em>Void
+
+    </em><a href="actions.html#append_text_substring_to_string"
+name="append_text_substring_to_string"><em>append_text_substring_to_string</em></a><em> </em>(<em>s</em>,<em> e</em>:<em> INTEGER</em>;<em> a_string</em>:<em> STRING</em>)<em>
+            </em>-- Append <em>text_substring</em> at end of <em>a_string</em>.
+            -- (For efficiency reason, this feature can bypass
+            -- the call to <em>text_substring</em> and directly copy
+            -- the characters from the input buffer.)<em>
+        </em><em><strong>require</strong></em><em>
+            a_string_not_void</em>:<em> a_string </em>/=<em> Void
+            s_large_enough</em>:<em> 1 </em>&lt;=<em> s
+            valid_interval: s </em>&lt;=<em> e </em>+<em> 1
+            e_small_enough</em>:<em> e </em>&lt;=<em> text_count
 
     </em><a href="actions.html#terminate" name="terminate"><em>terminate</em></a><em>
             </em>-- Terminate scanner and set <em>last_token</em>
@@ -189,7 +213,8 @@ name="flush_input_buffer"><em>flush_input_buffer</em></a><em>
         </em><em><strong>ensure</strong></em><em>
             flushed</em>: <em>input_buffer.count </em>=<em> 0
 
-    </em><a name="new_file_buffer"><em>new_file_buffer</em></a><em> </em>(<em>a_file</em>:<em> FILE</em>):<em> YY_BUFFER
+    </em><a href="actions.html#new_file_buffer"
+name="new_file_buffer"><em>new_file_buffer</em></a><em> </em>(<em>a_file</em>:<em> FILE</em>):<em> YY_FILE_BUFFER
             </em>-- New input buffer for <em>a_file
         </em><em><strong>require</strong></em><em>
             a_file_not_void</em>:<em> a_file </em>/= <em>Void
@@ -197,12 +222,18 @@ name="flush_input_buffer"><em>flush_input_buffer</em></a><em>
         </em><em><strong>ensure</strong></em><em>
             new_buffer_not_void</em>:<em> Result</em> /=<em> Void
 
-    </em><a name="new_string_buffer"><em>new_string_buffer</em></a><em> </em>(<em>a_string</em>:<em> STRING</em>):<em> YY_BUFFER
+    </em><a href="actions.html#new_string_buffer"
+name="new_string_buffer"><em>new_string_buffer</em></a><em> </em>(<em>a_string</em>:<em> STRING</em>):<em> YY_BUFFER
             </em>-- New input buffer for <em>a_string
         </em><em><strong>require</strong></em><em>
             a_string_not_void</em>:<em> a_string </em>/=<em> Void
         </em><em><strong>ensure</strong></em><em>
             new_buffer_not_void</em>:<em> Result </em>/=<em> Void
+
+    </em><a href="actions.html#Empty_buffer" name="Empty_buffer"><em>Empty_buffer</em></a>:<em> YY_BUFFER
+           </em> -- Empty input buffer<em>
+        </em><em><strong>ensure</strong></em><em>
+            empty_buffer_not_void</em>:<em> Result </em>/=<em> Void
 
 </em><em><strong>feature</strong></em><em> </em>-- Output<em>
 
@@ -235,7 +266,7 @@ name="flush_input_buffer"><em>flush_input_buffer</em></a><em>
 <table border="0" width="100%">
     <tr>
         <td><address>
-            <font size="2"><b>Copyright © 1998</b></font><font
+            <font size="2"><b>Copyright © 1999</b></font><font
             size="1"><b>, </b></font><font size="2"><strong>Eric
             Bezault</strong></font><strong> </strong><font
             size="2"><br>
@@ -245,7 +276,7 @@ name="flush_input_buffer"><em>flush_input_buffer</em></a><em>
             <strong>http:</strong></font><a
             href="http://www.gobo.demon.co.uk"><font size="2">//www.gobo.demon.co.uk</font></a><font
             size="2"><br>
-            <strong>Last Updated:</strong> 4 August 1998</font><br>
+            <strong>Last Updated:</strong> 20 February 1999</font><br>
             <!--webbot bot="PurpleText"
             preview="
 $Date$ 
