@@ -18,6 +18,13 @@ inherit
 
 	DS_RESIZABLE [G]
 
+	KL_IMPORTED_ANY_ROUTINES
+		export
+			{NONE} all
+		redefine
+			copy, is_equal
+		end
+
 creation
 
 	make, make_equal, make_default
@@ -177,7 +184,7 @@ feature -- Comparison
 		do
 			if Current = other then
 				Result := True
-			elseif same_type (other) and other.count = count then
+			elseif ANY_.same_types (Current, other) and other.count = count then
 				other_storage := other.storage
 				from
 					i := 1

@@ -18,6 +18,8 @@ inherit
 			has, occurrences, swap
 		end
 
+	KL_IMPORTED_ANY_ROUTINES
+
 creation
 
 	make, make_equal, make_from_linear
@@ -243,7 +245,7 @@ feature -- Comparison
 		do
 			if Current = other then
 				Result := True
-			elseif same_type (other) and other.count = count then
+			elseif ANY_.same_types (Current, other) and other.count = count then
 				from
 					a_cell := first_cell
 					other_cell := other.first_cell

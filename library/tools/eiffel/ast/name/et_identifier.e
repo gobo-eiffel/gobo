@@ -90,6 +90,13 @@ inherit
 			is_equal
 		end
 
+	KL_IMPORTED_ANY_ROUTINES
+		export
+			{NONE} all
+		undefine
+			is_equal
+		end
+
 creation
 
 	make, make_with_hash_code
@@ -251,7 +258,7 @@ feature -- Comparison
 	is_equal (other: like Current): BOOLEAN is
 			-- Are current identifier and `other' considered equal?
 		do
-			if same_type (other) then
+			if ANY_.same_types (Current, other) then
 				Result := same_identifier (other)
 			end
 		end

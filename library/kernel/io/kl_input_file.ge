@@ -45,6 +45,8 @@ inherit
 	STRING_HANDLER
 
 #endif
+	KL_IMPORTED_ANY_ROUTINES
+
 #ifdef SE || ISE
 feature -- Access
 
@@ -275,9 +277,9 @@ feature -- Input
 			if i < nb then
 				if not old_end_of_file then
 #ifdef ISE
-					if a_string.same_type (dummy_string) then
+					if ANY_.same_types (a_string, dummy_string) then
 						i := i + old_read_to_string (a_string, j, nb - i)
-					elseif a_string.same_type (dummy_kl_character_buffer) then
+					elseif ANY_.same_types (a_string, dummy_kl_character_buffer) then
 						i := i + old_read_to_string (a_string, j, nb - i)
 					else
 						nb2 := nb - i

@@ -63,7 +63,7 @@ feature -- Comparison
 	same_week_day (other: DT_WEEK_DAY): BOOLEAN is
 			-- Are `Current' and `other' the same week day?
 		do
-			if same_type (other) then
+			if ANY_.same_types (Current, other) then
 				Result := code = other.code
 			else
 				inspect code

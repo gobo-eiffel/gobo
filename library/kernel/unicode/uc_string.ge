@@ -419,7 +419,7 @@ feature {NONE} -- Initialization
 			-- to the UTF-8 representation of a string.
 		require
 			s_not_void: s /= Void
-			s_is_string: s.same_type ("")
+			s_is_string: ANY_.same_types (s, "")
 			valid_utf8: utf8.valid_utf8 (s)
 		do
 			make (s.count)
@@ -431,7 +431,7 @@ feature {NONE} -- Initialization
 			-- to the UTF-16 representation of a string.
 		require
 			s_not_void: s /= Void
-			s_is_string: s.same_type ("")
+			s_is_string: ANY_.same_types (s, "")
 			valid_utf16: utf16.valid_utf16 (s)
 		do
 			make (s.count // 2)
@@ -974,7 +974,7 @@ feature -- Access
 			create Result.make (suggested_capacity)
 		ensure
 			new_string_not_void: Result /= Void
-			same_type: Result.same_type (Current)
+			same_type: ANY_.same_types (Result, Current)
 			new_string_empty: Result.count = 0
 			byte_count_set: Result.byte_count = 0
 			byte_capacity_set: Result.byte_capacity >= suggested_capacity
@@ -1178,7 +1178,7 @@ feature -- Comparison
 		do
 			if other = Current then
 				Result := True
-			elseif same_type (other) and then other.byte_count = byte_count then
+			elseif ANY_.same_types (Current, other) and then other.byte_count = byte_count then
 				nb := byte_count
 				Result := True
 				from i := 1 until i > nb loop
@@ -1192,7 +1192,7 @@ feature -- Comparison
 			end
 		ensure then
 			unicode_definition:
-				Result = (same_type (other) and then count = other.count and then
+				Result = (ANY_.same_types (Current, other) and then count = other.count and then
 				(count > 0 implies (item_code (1) = other.item_code (1) and
 				substring (2, count).is_equal (other.substring (2, count)))))
 		end
@@ -1255,7 +1255,7 @@ feature -- Comparison
 			b1, b2: CHARACTER
 			found: BOOLEAN
 		do
-			if other /= Current and same_type (other) then
+			if other /= Current and ANY_.same_types (Current, other) then
 				nb1 := byte_count
 				nb2 := other.byte_count
 				if nb1 < nb2 then
@@ -1315,7 +1315,7 @@ feature -- Comparison
 		do
 			if other = Current then
 				Result := 0
-			elseif same_type (other) then
+			elseif ANY_.same_types (Current, other) then
 				uc_string ?= other
 				nb1 := byte_count
 				nb2 := uc_string.byte_count
@@ -1548,7 +1548,7 @@ feature -- Element change
 #endif
 		do
 #ifdef ISE || SE
-			if a_string.same_type (dummy_string) then
+			if ANY_.same_types (a_string, dummy_string) then
 					-- Check if string does not contain non-ascii characters.
 					-- Unfortunately, this is a slow but necessary call.
 				nb := utf8.substring_byte_count (a_string, 1, a_string.count)
@@ -1578,7 +1578,7 @@ feature -- Element change
 				a_uc_string ?= a_string
 				if a_uc_string /= Void then
 					a_utf8_string ?= a_string
-					if a_utf8_string /= Void or a_uc_string.same_type (dummy_uc_string) then
+					if a_utf8_string /= Void or ANY_.same_types (a_uc_string, dummy_uc_string) then
 							-- Because bytes are in linear order, we may move bytes.
 						if a_uc_string = Current then
 							new_byte_count := 2 * byte_count
@@ -1668,7 +1668,7 @@ feature -- Element change
 			-- Append UTF-8 encoded string `s' at end of current string.
 		require
 			s_not_void: s /= Void
-			s_is_string: s.same_type ("")
+			s_is_string: ANY_.same_types (s, "")
 			valid_utf8: utf8.valid_utf8 (s)
 		local
 			i, k, nb: INTEGER
@@ -1709,7 +1709,7 @@ feature -- Element change
 			-- Append UTF-16 encoded string `s' at end of current string.
 		require
 			s_not_void: s /= Void
-			s_is_string: s.same_type ("")
+			s_is_string: ANY_.same_types (s, "")
 			valid_utf16: utf16.valid_utf16 (s)
 		local
 			msb_first: BOOLEAN
@@ -2331,7 +2331,7 @@ feature -- Conversion
 			end
 		ensure
 			to_utf8_not_void: Result /= Void
-			string_type: Result.same_type ("")
+			string_type: ANY_.same_types (Result, "")
 			valid_utf8: utf8.valid_utf8 (Result)
 		end
 
@@ -2344,7 +2344,7 @@ feature -- Conversion
 			Result := to_utf8
 		ensure
 			as_string_not_void: Result /= Void
-			string_type: Result.same_type ("")
+			string_type: ANY_.same_types (Result, "")
 		end
 
 feature -- Traversal
@@ -2927,7 +2927,7 @@ feature {NONE} -- Implementation
 				valid_utf8: b = utf8.substring_byte_count (a_string, start_index, end_index)
 			end
 			if b > 0 then
-				if a_string.same_type (dummy_string) then
+				if ANY_.same_types (a_string, dummy_string) then
 					nb := end_index - start_index + 1
 					if nb = b then
 						k := i
@@ -2946,7 +2946,7 @@ feature {NONE} -- Implementation
 							j := j + 1
 						end
 					end
-				elseif a_string.same_type (Current) then
+				elseif ANY_.same_types (a_string, Current) then
 					a_uc_string ?= a_string
 					check is_uc_string: a_uc_string /= Void end
 					k := i

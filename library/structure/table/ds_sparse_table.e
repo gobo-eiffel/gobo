@@ -29,6 +29,15 @@ inherit
 			search, new_cursor
 		end
 
+	KL_IMPORTED_ANY_ROUTINES
+		export
+			{NONE} all
+		undefine
+			copy
+		redefine
+			is_equal
+		end
+
 feature {NONE} -- Initialization
 
 	make (n: INTEGER) is
@@ -237,7 +246,7 @@ feature -- Comparison
 		do
 			if Current = other then
 				Result := True
-			elseif same_type (other) and count = other.count then
+			elseif ANY_.same_types (Current, other) and count = other.count then
 				from
 					i := last_position
 					Result := True

@@ -18,6 +18,7 @@ inherit
 
 	KL_IMPORTED_STRING_ROUTINES
 	KL_IMPORTED_INTEGER_ROUTINES
+	KL_IMPORTED_ANY_ROUTINES
 	UT_IMPORTED_FORMATTERS
 
 feature -- Access
@@ -154,7 +155,7 @@ feature -- String handling
 		require
 			a_target_not_void: a_target /= Void
 			a_string_not_void: a_string /= Void
-			same_type: a_string.same_type (a_target)
+			same_type: ANY_.same_types (a_string, a_target)
 			a_length_positive: a_length >= 0
 		local
 			i, nb: INTEGER

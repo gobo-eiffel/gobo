@@ -16,6 +16,9 @@ inherit
 
 	TS_TEST_CASE
 
+	KL_IMPORTED_ANY_ROUTINES
+		export {NONE} all end
+
 	UC_UNICODE_FACTORY
 		export {NONE} all end
 
@@ -126,7 +129,7 @@ feature {NONE} -- Implementation
 		local
 			a_test: BOOLEAN
 		do
-			a_test := ("").same_type (a_string)
+			a_test := ANY_.same_types (a_string, "")
 			if is_string then
 				assert ("dynamic string type", a_test)
 			else

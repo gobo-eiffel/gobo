@@ -19,6 +19,11 @@ inherit
 			out, is_equal
 		end
 
+	KL_IMPORTED_ANY_ROUTINES
+		undefine
+			out, is_equal
+		end
+
 creation
 
 	make
@@ -64,7 +69,7 @@ feature -- Comparison
 	is_equal (other: like Current): BOOLEAN is
 			-- Are `Current' and `other' considered equal?
 		do
-			if same_type (other) then
+			if ANY_.same_types (Current, other) then
 				Result := text.is_equal (other.text)
 			end
 		end

@@ -31,6 +31,16 @@ inherit
 			{NONE} all
 		end
 
+	KL_IMPORTED_ANY_ROUTINES
+#ifdef SE
+		rename
+			rename_file as se_rename_file,
+			file_exists as se_file_exists
+#endif
+		export
+			{NONE} all
+		end
+
 	KL_SHARED_FILE_SYSTEM
 #ifdef SE
 		rename
@@ -55,7 +65,7 @@ feature -- Status report
 	is_current_file_system: BOOLEAN is
 			-- Is file system the file system of the underlying platform?
 		do
-			Result := same_type (file_system)
+			Result := ANY_.same_types (Current, file_system)
 		end
 
 feature -- File handling

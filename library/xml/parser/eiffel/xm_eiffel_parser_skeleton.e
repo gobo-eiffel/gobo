@@ -49,7 +49,10 @@ inherit
 
 	KL_IMPORTED_INTEGER_ROUTINES
 		export {NONE} all end
-		
+
+	KL_IMPORTED_ANY_ROUTINES
+		export {NONE} all end
+
 feature {NONE} -- Initialization
 
 	make is
@@ -915,7 +918,7 @@ feature {NONE} -- String mode: shared empty string implementation
 		once
 			create Result.make_empty
 		ensure
-			string_type: Result.same_type ("")
+			string_type: ANY_.same_types (Result, "")
 		end
 		
 	shared_empty_string_uc: STRING is

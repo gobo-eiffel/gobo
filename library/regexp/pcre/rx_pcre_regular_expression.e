@@ -106,7 +106,7 @@ feature -- Access
 			Result := captured_substring (n)
 		ensure
 			captured_substring_not_void: Result /= Void
-			same_type: Result.same_type (subject)
+			same_type: ANY_.same_types (Result, subject)
 		end
 
 	matched_portion_in (a_string: STRING; n: INTEGER) is
@@ -119,7 +119,7 @@ feature -- Access
 			n_large_enough: n >= 0
 			n_small_enough: n < match_count
 			a_string_not_void: a_string /= Void
-			same_type: a_string.same_type (subject)
+			same_type: ANY_.same_types (a_string, subject)
 		do
 			append_captured_substring_to_string (a_string, n)
 		end
@@ -136,8 +136,8 @@ feature -- Replacement
 			is_matching: is_matching
 			a_string_not_void: a_string /= Void
 			a_replacement_not_void: a_replacement /= Void
-			a_replacement_same_type: a_replacement.same_type (subject)
-			a_string_same_type: a_string.same_type (a_replacement)
+			a_replacement_same_type: ANY_.same_types (a_replacement, subject)
+			a_string_same_type: ANY_.same_types (a_string, a_replacement)
 		do
 			append_replacement_to_string (a_string, a_replacement)
 		end
@@ -153,8 +153,8 @@ feature -- Replacement
 			is_matching: is_matching
 			a_string_not_void: a_string /= Void
 			a_replacement_not_void: a_replacement /= Void
-			a_replacement_same_type: a_replacement.same_type (subject)
-			a_string_same_type: a_string.same_type (a_replacement)
+			a_replacement_same_type: ANY_.same_types (a_replacement, subject)
+			a_string_same_type: ANY_.same_types (a_string, a_replacement)
 		do
 			append_replace_to_string (a_string, a_replacement)
 		end
@@ -171,8 +171,8 @@ feature -- Replacement
 			is_matching: is_matching
 			a_string_not_void: a_string /= Void
 			a_replacement_not_void: a_replacement /= Void
-			a_replacement_same_type: a_replacement.same_type (subject)
-			a_string_same_type: a_string.same_type (a_replacement)
+			a_replacement_same_type: ANY_.same_types (a_replacement, subject)
+			a_string_same_type: ANY_.same_types (a_string, a_replacement)
 		do
 			append_replace_all_to_string (a_string, a_replacement)
 		ensure

@@ -17,6 +17,7 @@ inherit
 	ANY -- Export features from ANY.
 
 	KL_IMPORTED_STRING_ROUTINES
+	KL_IMPORTED_ANY_ROUTINES
 
 feature {NONE} -- Initialization
 
@@ -215,7 +216,7 @@ feature -- Access
 			end
 		ensure
 			captured_substring_not_void: Result /= Void
-			same_type: Result.same_type (subject)
+			same_type: ANY_.same_types (Result, subject)
 		end
 
 feature -- Element change
@@ -228,7 +229,7 @@ feature -- Element change
 			n_large_enough: n >= 0
 			n_small_enough: n < match_count
 			a_string_not_void: a_string /= Void
-			same_type: a_string.same_type (subject)
+			same_type: ANY_.same_types (a_string, subject)
 		local
 			i, nb: INTEGER
 		do

@@ -39,6 +39,15 @@ inherit
 #endif
 		end
 
+	KL_IMPORTED_ANY_ROUTINES
+		export
+			{NONE} all
+#ifdef VE
+		undefine
+			copy
+#endif
+		end
+
 #ifdef SE
 	FILE_TOOLS
 		rename
@@ -779,6 +788,6 @@ invariant
 #ifdef SE
 	string_name_not_void: string_name /= Void
 #endif
-	string_name_is_string: string_name.same_type ("")
+	string_name_is_string: ANY_.same_types (string_name, "")
 
 end

@@ -20,6 +20,9 @@ inherit
 	KL_IMPORTED_STRING_ROUTINES
 		export {NONE} all end
 
+	KL_IMPORTED_ANY_ROUTINES
+		export {NONE} all end
+
 	KL_SHARED_EXECUTION_ENVIRONMENT
 		export {NONE} all end
 
@@ -111,7 +114,7 @@ feature -- Access
 								elseif c /= '%U' then
 									str.append_character (c)
 								else
-									check same_type: str.same_type (a_string) end
+									check same_type: ANY_.same_types (str, a_string) end
 									STRING_.append_substring_to_string (str, a_string, i, i)
 								end
 								i := i + 1

@@ -28,13 +28,13 @@ feature -- Replacement
 		require
 			is_matching: is_matching
 			a_replacement_not_void: a_replacement /= Void
-			same_type: a_replacement.same_type (subject)
+			same_type: ANY_.same_types (a_replacement, subject)
 		do
 			Result := STRING_.new_empty_string (a_replacement, a_replacement.count)
 			append_replacement_to_string (Result, a_replacement)
 		ensure
 			replacement_not_void: Result /= Void
-			same_type: Result.same_type (a_replacement)
+			same_type: ANY_.same_types (Result, a_replacement)
 		end
 
 	append_replacement_to_string (a_string, a_replacement: STRING) is
@@ -45,8 +45,8 @@ feature -- Replacement
 			is_matching: is_matching
 			a_string_not_void: a_string /= Void
 			a_replacement_not_void: a_replacement /= Void
-			a_replacement_same_type: a_replacement.same_type (subject)
-			a_string_same_type: a_string.same_type (a_replacement)
+			a_replacement_same_type: ANY_.same_types (a_replacement, subject)
+			a_string_same_type: ANY_.same_types (a_string, a_replacement)
 		local
 			i, j, nb, ref: INTEGER
 			c: CHARACTER
@@ -109,13 +109,13 @@ feature -- Replacement
 		require
 			is_matching: is_matching
 			a_replacement_not_void: a_replacement /= Void
-			same_type: a_replacement.same_type (subject)
+			same_type: ANY_.same_types (a_replacement, subject)
 		do
 			Result := STRING_.new_empty_string (subject, subject_end - subject_start)
 			append_replace_to_string (Result, a_replacement)
 		ensure
 			replace_not_void: Result /= Void
-			same_type: Result.same_type (subject)
+			same_type: ANY_.same_types (Result, subject)
 		end
 
 	append_replace_to_string (a_string, a_replacement: STRING) is
@@ -127,8 +127,8 @@ feature -- Replacement
 			is_matching: is_matching
 			a_string_not_void: a_string /= Void
 			a_replacement_not_void: a_replacement /= Void
-			a_replacement_same_type: a_replacement.same_type (subject)
-			a_string_same_type: a_string.same_type (a_replacement)
+			a_replacement_same_type: ANY_.same_types (a_replacement, subject)
+			a_string_same_type: ANY_.same_types (a_string, a_replacement)
 		do
 			if match_count > 0 then
 				STRING_.append_substring_to_string (a_string, subject, subject_start, captured_start_position (0) - 1)
@@ -148,14 +148,14 @@ feature -- Replacement
 		require
 			is_matching: is_matching
 			a_replacement_not_void: a_replacement /= Void
-			same_type: a_replacement.same_type (subject)
+			same_type: ANY_.same_types (a_replacement, subject)
 		do
 			Result := STRING_.new_empty_string (subject, subject_end - subject_start)
 			append_replace_all_to_string (Result, a_replacement)
 		ensure
 			all_matched: not has_matched
 			replace_not_void: Result /= Void
-			same_type: Result.same_type (subject)
+			same_type: ANY_.same_types (Result, subject)
 		end
 
 	append_replace_all_to_string (a_string, a_replacement: STRING) is
@@ -168,8 +168,8 @@ feature -- Replacement
 			is_matching: is_matching
 			a_string_not_void: a_string /= Void
 			a_replacement_not_void: a_replacement /= Void
-			a_replacement_same_type: a_replacement.same_type (subject)
-			a_string_same_type: a_string.same_type (a_replacement)
+			a_replacement_same_type: ANY_.same_types (a_replacement, subject)
+			a_string_same_type: ANY_.same_types (a_string, a_replacement)
 		local
 			old_subject_start: INTEGER
 		do

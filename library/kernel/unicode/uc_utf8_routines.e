@@ -17,6 +17,7 @@ inherit
 	UC_IMPORTED_UNICODE_ROUTINES
 	KL_IMPORTED_STRING_ROUTINES
 	KL_IMPORTED_INTEGER_ROUTINES
+	KL_IMPORTED_ANY_ROUTINES
 	UC_STRING_HANDLER
 
 feature -- Status report
@@ -25,7 +26,7 @@ feature -- Status report
 			-- Are the bytes in `a_string' a valid UTF-8 encoding?
 		require
 			a_string_not_void: a_string /= Void
-			a_string_is_string: a_string.same_type ("")
+			a_string_is_string: ANY_.same_types (a_string, "")
 		local
 			i, nb, nb2: INTEGER
 			bc, a_code: INTEGER
@@ -222,7 +223,7 @@ feature -- Measurement
 			i: INTEGER
 		do
 			if start_index <= end_index then
-				if a_string.same_type (dummy_string) then
+				if ANY_.same_types (a_string, dummy_string) then
 					from i := start_index until i > end_index loop
 						Result := Result + character_byte_count (a_string.item (i))
 						i := i + 1
@@ -355,7 +356,7 @@ feature -- Conversion
 			end
 		ensure
 			to_utf8_not_void: Result /= Void
-			string_type: Result.same_type ("")
+			string_type: ANY_.same_types (Result, "")
 			valid_utf8: valid_utf8 (Result)
 		end
 
@@ -366,7 +367,7 @@ feature -- Element change
 			-- at the end of `a_utf8'.
 		require
 			a_utf8_not_void: a_utf8 /= Void
-			a_utf8_is_string: a_utf8.same_type ("")
+			a_utf8_is_string: ANY_.same_types (a_utf8, "")
 			a_utf8_valid: valid_utf8 (a_utf8)
 			valid_code: unicode.valid_code (a_code)
 		local

@@ -2,7 +2,10 @@ indexing
 
 	description:
 
-		"Media types"
+		"Media types as defined in RFC2045. %
+		%No facility is provided for parsing the MIME Content-Type %
+		%header at present. Nor is the syntax of names rigidly %
+		%checked at present."
 
 	library: "Gobo Eiffel Utility Library"
 	copyright: "Copyright (c) 2004, Colin Adams and others"
@@ -12,10 +15,11 @@ indexing
 
 class UT_MEDIA_TYPE
 
-	-- This class represents media types as defined in RFC2045
-	-- No facility is provided for parsing the MIME Content-Type
-	--  header at present. Nor is the syntax of names rigidly
-	--  checked at present.
+inherit
+
+	ANY
+
+	KL_IMPORTED_ANY_ROUTINES
 
 creation
 
@@ -26,8 +30,8 @@ feature {NONE} -- Initialization
 	make (a_type, a_subtype: STRING) is
 			-- Establish invariant.
 		require
-			type_not_empty: a_type /= Void and then a_type.count > 0 and then a_type.same_type ("")
-			subtype_is_lower_case: subtype /= Void and then subtype.count > 0 and then a_subtype.same_type ("")
+			type_not_empty: a_type /= Void and then a_type.count > 0 and then ANY_.same_types (a_type, "")
+			subtype_is_lower_case: subtype /= Void and then subtype.count > 0 and then ANY_.same_types (a_subtype, "")
 			-- TODO: should these be printable ASCII, or some subset? RFC2045 does not appear to say.
 		do
 			type :=  a_type.as_lower
@@ -49,7 +53,7 @@ feature -- Access
 	has (a_parameter: STRING): BOOLEAN is
 			-- Does `Current' have a parameter named `a_parameter'?
 		require
-			valid_parameter_name: a_parameter /= Void and then a_parameter.same_type ("")
+			valid_parameter_name: a_parameter /= Void and then ANY_.same_types (a_parameter, "")
 				and then is_valid_parameter_name (a_parameter)
 		do
 			Result := parameters.has (a_parameter.as_lower)
@@ -58,7 +62,7 @@ feature -- Access
 	is_valid_parameter_name (a_parameter: STRING): BOOLEAN is
 			-- Is `a_parameter' a legitimate parameter name?
 		require
-			parameter_name_not_void: a_parameter /= Void and then a_parameter.same_type ("")
+			parameter_name_not_void: a_parameter /= Void and then ANY_.same_types (a_parameter, "")
 		do
 			Result := is_token (a_parameter, False)
 		end
@@ -66,7 +70,7 @@ feature -- Access
 	value (a_parameter: STRING): STRING is
 			-- Value for`a_parameter'?
 		require
-			valid_parameter_name: a_parameter /= Void and then a_parameter.same_type ("")
+			valid_parameter_name: a_parameter /= Void and then ANY_.same_types (a_parameter, "")
 				and then is_valid_parameter_name (a_parameter)
 				and then has (a_parameter)
 		do
@@ -116,9 +120,9 @@ feature -- Element change
 	add_parameter (a_parameter, a_value: STRING) is
 			-- Does `Current' have a parameter named `a_parameter'?
 		require
-			valid_parameter_name: a_parameter /= Void and then a_parameter.same_type ("")
+			valid_parameter_name: a_parameter /= Void and then ANY_.same_types (a_parameter, "")
 				and then is_valid_parameter_name (a_parameter)
-			valid_value: a_value /= Void and then a_value.same_type ("") and then is_token (a_value, True)
+			valid_value: a_value /= Void and then ANY_.same_types (a_value, "") and then is_token (a_value, True)
 			parameter_not_present: not has (a_parameter)
 		do
 			parameters.force (a_value, a_parameter.as_lower)

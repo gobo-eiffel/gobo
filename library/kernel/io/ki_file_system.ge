@@ -12,16 +12,24 @@ indexing
 
 deferred class KI_FILE_SYSTEM
 
-#ifdef SE
 inherit
 
 	ANY
+#ifdef SE
 		rename
 			rename_file as se_rename_file,
 			file_exists as se_file_exists
 		end
-
 #endif
+
+	KL_IMPORTED_ANY_ROUTINES
+#ifdef SE
+		rename
+			rename_file as se_rename_file,
+			file_exists as se_file_exists
+		end
+#endif
+
 feature {NONE} -- Initialization
 
 	make is
@@ -591,7 +599,7 @@ feature -- Pathname handling
 			a_pathname_not_void: a_pathname /= Void
 			a_file_system_not_void: a_file_system /= Void
 		do
-			if same_type (a_file_system) then
+			if ANY_.same_types (Current, a_file_system) then
 				Result := a_pathname
 			else
 				Result := pathname_to_string (a_file_system.string_to_pathname (a_pathname))

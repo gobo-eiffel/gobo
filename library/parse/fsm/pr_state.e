@@ -18,6 +18,8 @@ inherit
 
 	HASHABLE
 
+	KL_IMPORTED_ANY_ROUTINES
+
 creation
 
 	make
@@ -153,7 +155,7 @@ feature -- Comparison
 			if other = Current then
 				Result := True
 			elseif
-				same_type (other) and then
+				ANY_.same_types (Current, other) and then
 				hash_code = other.hash_code and
 				positions.count = other.positions.count
 			then

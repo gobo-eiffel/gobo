@@ -24,6 +24,11 @@ inherit
 			is_equal
 		end
 
+	KL_IMPORTED_ANY_ROUTINES
+		undefine
+			is_equal
+		end
+
 feature -- Status report
 
 	is_relative: BOOLEAN is
@@ -158,7 +163,7 @@ feature -- Comparison
 	is_equal (other: like Current): BOOLEAN is
 			-- Is current pathname considered equal to `other'?
 		do
-			if same_type (other) then
+			if ANY_.same_types (Current, other) then
 				Result := same_pathname (other)
 			end
 		end

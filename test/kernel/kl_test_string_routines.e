@@ -17,6 +17,7 @@ inherit
 	KL_TEST_CASE
 
 	KL_IMPORTED_STRING_ROUTINES
+	KL_IMPORTED_ANY_ROUTINES
 	KL_SHARED_PLATFORM
 
 feature -- Test
@@ -28,11 +29,11 @@ feature -- Test
 		do
 			a_string := STRING_.make (3)
 			assert ("not_void1", a_string /= Void) 
-			assert ("string_type1", a_string.same_type ("")) 
+			assert ("string_type1", ANY_.same_types (a_string, "")) 
 			assert_integers_equal ("is_empty1", 0, a_string.count) 
 			a_string := STRING_.make (0)
 			assert ("not_void2", a_string /= Void) 
-			assert ("string_type2", a_string.same_type ("")) 
+			assert ("string_type2", ANY_.same_types (a_string, "")) 
 			assert_integers_equal ("is_empty2", 0, a_string.count) 
 		end
 
@@ -46,19 +47,19 @@ feature -- Test
 			foo := clone ("foo")
 			a_string := STRING_.make_from_string (foo)
 			assert ("not_void1", a_string /= Void) 
-			assert ("string_type1", a_string.same_type ("")) 
+			assert ("string_type1", ANY_.same_types (a_string, "")) 
 			assert ("new_string1", a_string /= foo) 
 			assert_equal ("same_string1", "foo", a_string) 
 			create uc_string.make_from_string ("bar")
 			a_string := STRING_.make_from_string (uc_string)
 			assert ("not_void2", a_string /= Void) 
-			assert ("string_type2", a_string.same_type ("")) 
+			assert ("string_type2", ANY_.same_types (a_string, "")) 
 			assert ("new_string2", a_string /= uc_string) 
 			assert_equal ("same_string2", "bar", a_string) 
 			uc_string.put_code (too_big_character, 2)
 			a_string := STRING_.make_from_string (uc_string)
 			assert ("not_void3", a_string /= Void) 
-			assert ("string_type3", a_string.same_type ("")) 
+			assert ("string_type3", ANY_.same_types (a_string, "")) 
 			assert ("new_string3", a_string /= uc_string) 
 			bnullr := clone ("b%Ur")
 			assert_equal ("same_string3", bnullr, a_string) 
@@ -71,7 +72,7 @@ feature -- Test
 		do
 			a_string := STRING_.make_empty
 			assert ("not_void", a_string /= Void) 
-			assert ("string_type", a_string.same_type ("")) 
+			assert ("string_type", ANY_.same_types (a_string, "")) 
 			assert_integers_equal ("is_empty", 0, a_string.count) 
 		end
 
@@ -82,11 +83,11 @@ feature -- Test
 		do
 			a_string := STRING_.make_filled ('G', 4)
 			assert ("not_void1", a_string /= Void) 
-			assert ("string_type1", a_string.same_type ("")) 
+			assert ("string_type1", ANY_.same_types (a_string, "")) 
 			assert_equal ("filled1", "GGGG",  a_string) 
 			a_string := STRING_.make_filled ('s', 0)
 			assert ("not_void2", a_string /= Void) 
-			assert ("string_type2", a_string.same_type ("")) 
+			assert ("string_type2", ANY_.same_types (a_string, "")) 
 			assert_equal ("filled2", "",  a_string) 
 		end
 
@@ -97,11 +98,11 @@ feature -- Test
 		do
 			a_string := STRING_.make_buffer (4)
 			assert ("not_void1", a_string /= Void) 
-			assert ("string_type1", a_string.same_type ("")) 
+			assert ("string_type1", ANY_.same_types (a_string, "")) 
 			assert_integers_equal ("count1", 4,  a_string.count) 
 			a_string := STRING_.make_buffer (0)
 			assert ("not_void2", a_string /= Void) 
-			assert ("string_type2", a_string.same_type ("")) 
+			assert ("string_type2", ANY_.same_types (a_string, "")) 
 			assert_integers_equal ("count2", 0,  a_string.count) 
 		end
 
@@ -177,18 +178,18 @@ feature -- Test
 			a_string1 := clone ("foo")
 			a_string2 := STRING_.string (a_string1)
 			assert ("not_void1", a_string2 /= Void)
-			assert ("string_type1", a_string2.same_type ("")) 
+			assert ("string_type1", ANY_.same_types (a_string2, "")) 
 			assert ("new_string1", a_string2 /= a_string1) 
 			assert_equal ("value1", "foo", a_string2) 
 			create uc_string.make_from_string ("bar")
 			a_string2 := STRING_.string (uc_string)
 			assert ("not_void2", a_string2 /= Void)
-			assert ("string_type2", a_string2.same_type ("")) 
+			assert ("string_type2", ANY_.same_types (a_string2, "")) 
 			assert_equal ("value2", "bar", a_string2) 
 			uc_string.put_code (too_big_character, 2)
 			a_string2 := STRING_.string (uc_string)
 			assert ("not_void3", a_string2 /= Void)
-			assert ("string_type3", a_string2.same_type ("")) 
+			assert ("string_type3", ANY_.same_types (a_string2, "")) 
 			a_string1 := clone ("b%Ur")
 			assert_equal ("value3", a_string1, a_string2) 
 		end
@@ -203,19 +204,19 @@ feature -- Test
 			a_string1 := clone ("foobar")
 			a_string2 := STRING_.substring (a_string1, 2, 1)
 			assert ("not_void1", a_string2 /= Void)
-			assert ("same_type1", a_string2.same_type (a_string1)) 
+			assert ("same_type1", ANY_.same_types (a_string2, a_string1)) 
 			assert ("new_string1", a_string2 /= a_string1) 
 			assert_equal ("value1", "", a_string2) 
 			a_string2 := STRING_.substring (a_string1, 4, 6)
 			assert ("not_void2", a_string2 /= Void)
-			assert ("same_type2", a_string2.same_type (a_string1)) 
+			assert ("same_type2", ANY_.same_types (a_string2, a_string1)) 
 			assert ("new_string2", a_string2 /= a_string1) 
 			assert_equal ("value2", "bar", a_string2) 
 			create uc_string1.make_from_string ("bar")
 			uc_string1.put_code (432, 1)
 			uc_string2 := STRING_.substring (uc_string1, 1, 3)
 			assert ("not_void3", uc_string2 /= Void)
-			assert ("same_type3", uc_string2.same_type (uc_string1)) 
+			assert ("same_type3", ANY_.same_types (uc_string2, uc_string1)) 
 			assert ("new_string3", uc_string2 /= uc_string1) 
 			assert_equal ("value3", "%%/432/ar", uc_string2.out) 
 		end
@@ -855,7 +856,7 @@ feature -- Test
 		do
 			a_string := STRING_.make_buffer (4)
 			assert ("not_void1", a_string /= Void) 
-			assert ("string_type1", a_string.same_type ("")) 
+			assert ("string_type1", ANY_.same_types (a_string, "")) 
 			assert_integers_equal ("count1", 4,  a_string.count) 
 			STRING_.resize_buffer (a_string, 6)
 			assert_integers_equal ("count2", 6,  a_string.count) 

@@ -19,6 +19,11 @@ inherit
 			copy, is_equal
 		end
 
+	KL_IMPORTED_ANY_ROUTINES
+		undefine
+			copy, is_equal
+		end
+
 creation
 
 	make, make_with_capacity
@@ -183,7 +188,7 @@ feature -- Comparison
 		do
 			if other = Current then
 				Result := True
-			elseif same_type (other) and then count = other.count then
+			elseif ANY_.same_types (Current, other) and then count = other.count then
 				nb := count
 				Result := True
 				from i := 1 until i > nb loop

@@ -34,6 +34,8 @@ inherit
 		export {NONE} all end
 
 #endif
+	KL_IMPORTED_ANY_ROUTINES
+
 creation
 
 	make, make_from_string
@@ -190,7 +192,7 @@ feature -- Element change
 				if new_count > a_string.capacity then
 					a_string.resize (new_count)
 				end
-				if a_string.same_type (dummy_string) then
+				if ANY_.same_types (a_string, dummy_string) then
 					a_string.set_count (new_count)
 					if as_special /= Void then
 						a_string.subcopy (area, s + 1, e + 1, old_count + 1)

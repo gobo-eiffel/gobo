@@ -16,6 +16,7 @@ inherit
 
 	KL_IMPORTED_INTEGER_ROUTINES
 	KL_IMPORTED_STRING_ROUTINES
+	KL_IMPORTED_ANY_ROUTINES
 	KL_SHARED_PLATFORM
 	UC_IMPORTED_UTF8_ROUTINES
 	UC_IMPORTED_UNICODE_ROUTINES
@@ -141,7 +142,7 @@ feature -- Conversion
 			utf8.append_code_to_utf8 (Result, code)
 		ensure
 			to_utf8_not_void: Result /= Void
-			string_type: Result.same_type ("")
+			string_type: ANY_.same_types (Result, "")
 			valid_utf8: utf8.valid_utf8 (Result)
 		end
 
@@ -170,7 +171,7 @@ feature -- Obsolete
 			Result := to_utf8
 		ensure
 			to_utf8_not_void: Result /= Void
-			string_type: Result.same_type ("")
+			string_type: ANY_.same_types (Result, "")
 			valid_utf8: utf8.valid_utf8 (Result)
 		end
 

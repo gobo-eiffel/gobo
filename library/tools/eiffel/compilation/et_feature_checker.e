@@ -92,6 +92,9 @@ inherit
 	KL_IMPORTED_INTEGER_ROUTINES
 		export {NONE} all end
 
+	KL_IMPORTED_ANY_ROUTINES
+		export {NONE} all end
+
 creation
 
 	make
@@ -125,7 +128,7 @@ feature {NONE} -- Initialization
 		require
 			a_checker_not_void: a_checker /= Void
 		do
-			if same_type (a_checker) then
+			if ANY_.same_types (Current, a_checker) then
 				standard_copy (a_checker)
 				current_class := universe.unknown_class
 				current_type := current_class
@@ -4304,7 +4307,7 @@ feature {NONE} -- Expression validity
 		require
 			a_call_not_void: a_call /= Void
 			qualified_call: a_call.is_qualified_call
-			is_expression: an_expression /= Void implies same_objects (a_call, an_expression)
+			is_expression: an_expression /= Void implies ANY_.same_objects (a_call, an_expression)
 			a_context_not_void: a_context /= Void
 		local
 			a_target: ET_EXPRESSION
@@ -5048,7 +5051,7 @@ feature {NONE} -- Expression validity
 		require
 			a_call_not_void: a_call /= Void
 			unqualified_call: not a_call.is_qualified_call
-			is_expression: an_expression /= Void implies same_objects (a_call, an_expression)
+			is_expression: an_expression /= Void implies ANY_.same_objects (a_call, an_expression)
 			a_context_not_void: a_context /= Void
 		local
 			a_name: ET_FEATURE_NAME
@@ -6453,7 +6456,7 @@ feature {NONE} -- Event handling
 			no_error: not has_fatal_error
 			an_expression_not_void: an_expression /= Void
 			a_call_not_void: a_call /= Void
-			a_call_expression: same_objects (a_call, an_expression)
+			a_call_expression: ANY_.same_objects (a_call, an_expression)
 			qualified_call: a_call.is_qualified_call
 			a_target_type_not_void: a_target_type /= Void
 			a_feature_not_void: a_feature /= Void
@@ -6573,7 +6576,7 @@ feature {NONE} -- Event handling
 			no_error: not has_fatal_error
 			an_expression_not_void: an_expression /= Void
 			a_call_not_void: a_call /= Void
-			a_call_expression: same_objects (a_call, an_expression)
+			a_call_expression: ANY_.same_objects (a_call, an_expression)
 			unqualified_call: not a_call.is_qualified_call
 			a_feature_not_void: a_feature /= Void
 			a_feature_query: not a_feature.is_procedure
@@ -7310,14 +7313,6 @@ feature {NONE} -- Implementation
 			create {ET_DEFERRED_PROCEDURE} Result.make (a_name, Void, Void, Void, Void, tokens.any_clients, current_class)
 		ensure
 			dummy_feature_not_void: Result /= Void
-		end
-
-	same_objects (obj1, obj2: ANY): BOOLEAN is
-			-- Workaround for VWEQ when running Degree 3 in flat mode.
-		do
-			Result := (obj1 = obj2)
-		ensure
-			definition: Result = (obj1 = obj2)
 		end
 
 invariant

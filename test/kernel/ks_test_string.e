@@ -16,6 +16,9 @@ inherit
 
 	KL_TEST_CASE
 
+	KL_IMPORTED_ANY_ROUTINES
+		export {NONE} all end
+
 	KL_SHARED_EIFFEL_COMPILER
 		export {NONE} all end
 
@@ -211,14 +214,14 @@ feature -- Test
 			a_string1 := "foo"
 			a_string2 := a_string1.string
 			assert ("not_void1", a_string2 /= Void)
-			assert ("string_type1", a_string2.same_type ("")) 
+			assert ("string_type1", ANY_.same_types (a_string2, "")) 
 			assert ("new_string1", a_string2 /= a_string1) 
 			assert_equal ("value1", "foo", a_string2) 
 				-- Empty string.
 			a_string1 := ""
 			a_string2 := a_string1.string
 			assert ("not_void2", a_string2 /= Void)
-			assert ("string_type2", a_string2.same_type ("")) 
+			assert ("string_type2", ANY_.same_types (a_string2, "")) 
 			assert ("new_string2", a_string2 /= a_string1) 
 			assert_equal ("value2", "", a_string2) 
 		end

@@ -19,6 +19,7 @@ obsolete
 inherit
 
 	KL_IMPORTED_INPUT_STREAM_ROUTINES
+	KL_IMPORTED_ANY_ROUTINES
 
 feature -- Initialization
 
@@ -29,7 +30,7 @@ feature -- Initialization
 			-- if operation was successful.
 		require
 			a_filename_not_void: a_filename /= Void
-			a_filename_is_string: a_filename.same_type ("")
+			a_filename_is_string: ANY_.same_types (a_filename, "")
 			a_filename_not_empty: a_filename.count > 0
 		local
 			rescued: BOOLEAN
@@ -214,7 +215,7 @@ feature -- Input operations
 			a_stream_not_void: a_stream /= Void
 			a_stream_open_read: is_open_read (a_stream)
 			a_buffer_not_void: a_buffer /= Void
-			a_buffer_is_string: a_buffer.same_type ("")
+			a_buffer_is_string: ANY_.same_types (a_buffer, "")
 			valid_position: a_buffer.valid_index (pos)
 			nb_char_large_enough: nb_char >= 0
 			nb_char_small_enough: nb_char <= a_buffer.count - pos + 1

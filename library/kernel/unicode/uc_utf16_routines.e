@@ -12,6 +12,10 @@ indexing
 
 class UC_UTF16_ROUTINES
 
+inherit
+
+	KL_IMPORTED_ANY_ROUTINES
+
 feature -- Status report
 
 	valid_utf16 (a_string: STRING): BOOLEAN is
@@ -20,7 +24,7 @@ feature -- Status report
 			-- TODO: how to default endian-ness when not FEFF?
 		require
 			a_string_not_void: a_string /= Void
-			a_string_is_string: a_string.same_type ("")
+			a_string_is_string: ANY_.same_types (a_string, "")
 		local
 			a_most: INTEGER
 			i, cnt: INTEGER

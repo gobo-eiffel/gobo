@@ -19,6 +19,11 @@ inherit
 			copy, is_equal
 		end
 
+	KL_IMPORTED_ANY_ROUTINES
+		undefine
+			copy, is_equal
+		end
+
 creation
 
 	make, make_symbol, make_epsilon, make_symbol_class
@@ -181,7 +186,7 @@ feature -- Comparison
 	is_equal (other: like Current): BOOLEAN is
 			-- Is current automaton equal to `other'?
 		do
-			if same_type (other) then
+			if ANY_.same_types (Current, other) then
 					-- This routine has been redefined to follow 
 					-- the redefinition of `copy'. The new implementation
 					-- is not really impressive but a better implementation

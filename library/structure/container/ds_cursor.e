@@ -19,6 +19,11 @@ inherit
 			copy, is_equal
 		end
 
+	KL_IMPORTED_ANY_ROUTINES
+		undefine
+			copy, is_equal
+		end
+
 feature -- Access
 
 	item: G is
@@ -104,7 +109,7 @@ feature -- Comparison
 	is_equal (other: like Current): BOOLEAN is
 			-- Are `other' and current cursor at the same position?
 		do
-			if same_type (other) then
+			if ANY_.same_types (Current, other) then
 				Result := same_position (other)
 			end
 		end

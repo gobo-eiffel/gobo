@@ -17,6 +17,7 @@ inherit
 	UC_IMPORTED_UTF8_ROUTINES
 	UC_IMPORTED_UTF16_ROUTINES
 	UC_IMPORTED_UNICODE_ROUTINES
+	KL_IMPORTED_ANY_ROUTINES
 
 feature -- Access
 
@@ -36,7 +37,7 @@ feature -- Access
 			-- from `a_string' encoded in UTF-8
 		require
 			a_string_not_void: a_string /= Void
-			a_string_is_string: a_string.same_type ("")
+			a_string_is_string: ANY_.same_types (a_string, "")
 			valid_utf8: utf8.valid_utf8 (a_string)
 		do
 			create {UC_UTF8_STRING} Result.make_from_utf8 (a_string)
@@ -49,7 +50,7 @@ feature -- Access
 			-- from `a_string' encoded in UTF-16
 		require
 			a_string_not_void: a_string /= Void
-			a_string_is_string: a_string.same_type ("")
+			a_string_is_string: ANY_.same_types (a_string, "")
 			valid_utf16: utf16.valid_utf16 (a_string)
 		do
 			create {UC_UTF8_STRING} Result.make_from_utf16 (a_string)

@@ -23,8 +23,11 @@ inherit
 
 	KL_SHARED_STANDARD_FILES
 		export {NONE} all end
-		
+
 	KL_IMPORTED_STRING_ROUTINES
+		export {NONE} all end
+
+	KL_IMPORTED_ANY_ROUTINES
 		export {NONE} all end
 
 	UC_IMPORTED_UTF8_ROUTINES
@@ -520,7 +523,7 @@ feature {NONE} -- Constants
 			create Result.make (6)
 		ensure
 			utf8_buffer_not_void: Result /= Void
-			string_type: Result.same_type ("")
+			string_type: ANY_.same_types (Result, "")
 		end
 
 invariant

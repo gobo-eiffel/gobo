@@ -14,8 +14,11 @@ class UT_TEMPLATE_EXPANDER
 
 inherit
 
+	ANY -- Export features of ANY.
+
 	KL_IMPORTED_STRING_ROUTINES
 	KL_IMPORTED_ARRAY_ROUTINES
+	KL_IMPORTED_ANY_ROUTINES
 
 creation
 
@@ -91,7 +94,7 @@ feature -- Access
 								elseif c /= '%U' then
 									str.append_character (c)
 								else
-									check same_type: str.same_type (a_template) end
+									check same_type: ANY_.same_types (str, a_template) end
 									STRING_.append_substring_to_string (str, a_template, i, i)
 								end
 								i := i + 1
@@ -216,7 +219,7 @@ feature -- Access
 								elseif c /= '%U' then
 									str.append_character (c)
 								else
-									check same_type: str.same_type (a_template) end
+									check same_type: ANY_.same_types (str, a_template) end
 									STRING_.append_substring_to_string (str, a_template, i, i)
 								end
 								i := i + 1

@@ -31,6 +31,13 @@ inherit
 			precursor_keyword
 		end
 
+	KL_IMPORTED_ANY_ROUTINES
+		export
+			{NONE} all
+		undefine
+			is_equal
+		end
+
 creation
 
 	make
@@ -55,7 +62,7 @@ feature -- Comparison
 	is_equal (other: like Current): BOOLEAN is
 			-- Are current Precursor keyword and `other' considered equal?
 		do
-			Result := same_type (other)
+			Result := ANY_.same_types (Current, other)
 		end
 
 feature -- Conversion

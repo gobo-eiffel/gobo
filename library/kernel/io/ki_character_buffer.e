@@ -23,6 +23,8 @@ inherit
 
 	KL_IMPORTED_STRING_ROUTINES
 
+	KL_IMPORTED_ANY_ROUTINES
+
 feature {NONE} -- Initialization
 
 	make (n: INTEGER) is
@@ -42,7 +44,7 @@ feature {NONE} -- Initialization
 			-- may not share internal representation.)
 		require
 			a_string_not_void: a_string /= Void
-			a_string_is_string: a_string.same_type ("")
+			a_string_is_string: ANY_.same_types (a_string, "")
 		do
 			make (a_string.count)
 			fill_from_string (a_string, 1)
@@ -63,7 +65,7 @@ feature -- Access
 		deferred
 		ensure
 			substring_not_void: Result /= Void
-			string_type: Result.same_type ("")
+			string_type: ANY_.same_types (Result, "")
 			count_set: Result.count = e - s + 1
 		end
 
@@ -75,7 +77,7 @@ feature -- Conversion
 			Result := substring (1, count)
 		ensure
 			to_text_not_void: Result /= Void
-			string_type: Result.same_type ("")
+			string_type: ANY_.same_types (Result, "")
 			same_count: Result.count = count
 		end
 
@@ -111,7 +113,7 @@ feature -- Element change
 			-- starting at position `pos'.
 		require
 			a_string_not_void: a_string /= Void
-			a_string_is_string: a_string.same_type ("")
+			a_string_is_string: ANY_.same_types (a_string, "")
 			pos_large_enough: pos >= 1
 			enough_space: (pos + a_string.count - 1) <= count
 		local

@@ -21,6 +21,8 @@ inherit
 
 	XM_XPATH_REGEXP_ROUTINES
 
+	KL_IMPORTED_ANY_ROUTINES
+
 creation
 
 	make
@@ -279,10 +281,10 @@ feature {NONE} -- Implementation
 			no_previous_error: last_evaluated_item = Void
 		local
 			replacement_is_ascii, subject_is_ascii: BOOLEAN
-			a_subject_string, a_substitution_string: STRING			
+			a_subject_string, a_substitution_string: STRING
 		do
-			subject_is_ascii := an_input_string.same_type ("")
-			replacement_is_ascii := replacement_string.same_type ("")
+			subject_is_ascii := ANY_.same_types (an_input_string, "")
+			replacement_is_ascii := ANY_.same_types (replacement_string, "")
 			if subject_is_ascii = replacement_is_ascii then
 				a_subject_string := an_input_string
 				a_substitution_string := replacement_string

@@ -469,6 +469,10 @@ firstpage
 	(end) printword
 	newline
 	newline
+	printtab
+	(KL_IMPORTED_ANY_ROUTINES) printword
+	newline
+	newline
 	(creation) printword
 	newline
 	newline
@@ -2550,9 +2554,11 @@ firstpage
 	printtab
 	(elseif) printword
 	( ) show
-	(same_type) printword
+	(ANY_.same_types) printword
 	( ) show
 	(\() printword
+	(Current,) printword
+	( ) show
 	(other) printword
 	(\)) printword
 	( ) show

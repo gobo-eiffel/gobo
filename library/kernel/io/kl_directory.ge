@@ -22,6 +22,9 @@ inherit
 	KL_IMPORTED_STRING_ROUTINES
 		export {NONE} all end
 
+	KL_IMPORTED_ANY_ROUTINES
+		export {NONE} all end
+
 #ifdef ISE
 	DIRECTORY
 		rename
@@ -559,7 +562,7 @@ invariant
 #ifdef SE || VE
 	string_name_not_void: string_name /= Void
 #endif
-	string_name_is_string: string_name.same_type ("")
+	string_name_is_string: ANY_.same_types (string_name, "")
 	no_void_bufferred_entry: entry_buffer /= Void implies entry_buffer.item /= Void
 #ifdef VE
 	directory_not_void: string_name.count > 0 implies directory /= Void

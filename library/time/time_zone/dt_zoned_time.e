@@ -29,6 +29,11 @@ inherit
 			is_equal
 		end
 
+	KL_IMPORTED_ANY_ROUTINES
+		undefine
+			is_equal
+		end
+
 creation
 
 	make
@@ -73,7 +78,7 @@ feature -- Comparison
 	is_equal (other: like Current): BOOLEAN is
 			-- Is `Current' time equal to `other'?
 		do
-			if same_type (other) then
+			if ANY_.same_types (Current, other) then
 				Result := same_time (other)
 			end
 		end

@@ -19,6 +19,11 @@ inherit
 			is_equal
 		end
 
+	KL_IMPORTED_ANY_ROUTINES
+		undefine
+			is_equal
+		end
+
 creation
 
 	make
@@ -190,7 +195,7 @@ feature -- Comparison
 	is_equal (other: like Current): BOOLEAN is
 			-- Are current state and `other' equal?
 		do
-			if same_type (other) and code = other.code then
+			if ANY_.same_types (Current, other) and code = other.code then
 				Result := states.is_equal (other.states)
 			end
 		end

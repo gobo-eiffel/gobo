@@ -19,6 +19,11 @@ inherit
 			copy, is_equal
 		end
 
+	KL_IMPORTED_ANY_ROUTINES
+		undefine
+			copy, is_equal
+		end
+
 creation
 
 	make
@@ -213,7 +218,7 @@ feature -- Comparison
 		local
 			old_storage: like storage
 		do
-			if same_type (other) then
+			if ANY_.same_types (Current, other) then
 				old_storage := storage
 				storage := other.storage
 				if standard_is_equal (other) then

@@ -22,6 +22,8 @@ inherit
 			valid_unread_item as valid_unread_character
 		end
 
+	KL_IMPORTED_ANY_ROUTINES
+
 feature -- Input
 
 	read_string (nb: INTEGER) is
@@ -84,7 +86,7 @@ feature -- Access
 			not_end_of_input: not end_of_input
 		deferred
 		ensure
-			string_type: Result /= Void implies Result.same_type ("")
+			string_type: Result /= Void implies ANY_.same_types (Result, "")
 		end
 
 feature -- Status report

@@ -34,6 +34,11 @@ inherit
 			out, is_equal
 		end
 
+	KL_IMPORTED_ANY_ROUTINES
+		undefine
+			out, is_equal
+		end
+
 creation
 
 	make, make_precise, make_canonical, make_precise_canonical
@@ -382,7 +387,7 @@ feature -- Comparison
 	is_equal (other: like Current): BOOLEAN is
 			-- Is current time duration equal to `other'?
 		do
-			if same_type (other) then
+			if ANY_.same_types (Current, other) then
 				Result := same_time_duration (other)
 			end
 		end

@@ -15,8 +15,6 @@ class ET_ADAPTED_FEATURE
 inherit
 
 	ET_FLATTENED_FEATURE
-		undefine
-			same_objects
 		redefine
 			is_immediate,
 			is_adapted,

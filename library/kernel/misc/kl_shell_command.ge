@@ -47,6 +47,8 @@ inherit
 
 	KL_IMPORTED_STRING_ROUTINES
 
+	KL_IMPORTED_ANY_ROUTINES
+
 creation
 
 	make
@@ -139,7 +141,7 @@ feature {NONE} -- Implementation
 invariant
 
 	string_command_not_void: string_command /= Void
-	string_command_is_string: string_command.same_type ("")
+	string_command_is_string: ANY_.same_types (string_command, "")
 	string_command_not_empty: string_command.count > 0
 
 end

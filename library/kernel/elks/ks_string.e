@@ -42,6 +42,16 @@ inherit
 			is_equal, copy, out
 		end
 
+	KL_IMPORTED_ANY_ROUTINES
+		undefine
+			is_equal, copy, out
+		redefine
+				-- Note: VE 4.0 wants `is_equal', `copy' and `out' to be listed
+				-- here, but this is a bug since this deferred version should be
+				-- merged with the version inherited from KS_COMPARABLE:
+			is_equal, copy, out
+		end
+
 	KL_IMPORTED_CHARACTER_ROUTINES
 		undefine
 			is_equal, copy, out
@@ -183,7 +193,7 @@ feature -- Access
 		deferred
 		ensure
 			string_not_void: Result /= Void
-			string_type: Result.same_type ("")
+			string_type: ANY_.same_types (Result, "")
 			first_item: count > 0 implies Result.item (1) = item (1)
 			recurse: count > 1 implies Result.substring (2, count).is_equal (substring (2, count).string)
 		end
@@ -416,10 +426,10 @@ feature -- Comparison
 		deferred
 		ensure then
 			-- Note: Definition not necessarily acceptable in proper descendant classes:
-			-- definition: Result = (same_type (other) and then count = other.count and then
+			-- definition: Result = (ANY_.same_types (Current, other) and then count = other.count and then
 			--   (count > 0 implies (item (1) = other.item (1) and substring (2, count).is_equal (other.substring (2, count)))))
-			definition: same_type ("") implies
-				(Result = (same_type (other) and then count = other.count and then
+			definition: ANY_.same_types (Current, "") implies
+				(Result = (ANY_.same_types (Current, other) and then count = other.count and then
 				(count > 0 implies (item (1) = other.item (1) and 
 				(count > 1 implies substring (2, count).is_equal (other.substring (2, count)))))))
 		end
@@ -454,7 +464,7 @@ feature -- Comparison
 			-- definition: Result = (count = 0 and other.count > 0 or
 			--   count > 0 and then other.count > 0 and then (item (1) < other.item (1) or
 			--   item (1) = other.item (1) and substring (2, count) < other.substring (2, other.count)))
-			definition: same_type ("") implies Result = (count = 0 and other.count > 0 or
+			definition: ANY_.same_types (Current, "") implies Result = (count = 0 and other.count > 0 or
 				count > 0 and then other.count > 0 and then (item (1) < other.item (1) or
 				item (1) = other.item (1) and substring (2, count) < other.substring (2, other.count)))
 		end
@@ -756,7 +766,7 @@ feature -- Output
 		deferred
 		ensure then
 			out_not_void: Result /= Void
-			same_items: same_type ("") implies Result.same_string (current_string)
+			same_items: ANY_.same_types (Current, "") implies Result.same_string (current_string)
 		end
 
 feature -- Implementation

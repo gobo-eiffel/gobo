@@ -81,6 +81,9 @@ inherit
 	KL_IMPORTED_STRING_ROUTINES
 		export {NONE} all end
 
+	KL_IMPORTED_ANY_ROUTINES
+		export {NONE} all end
+
 creation
 
 	make
@@ -123,7 +126,7 @@ feature {NONE} -- Initialization
 	make_from_checker (a_builder: like Current) is
 			-- Create a new dynamic type set builder from `a_builder'.
 		do
-			if same_type (a_builder) then
+			if ANY_.same_types (Current, a_builder) then
 				standard_copy (a_builder)
 				current_class := universe.unknown_class
 				current_type := current_class
