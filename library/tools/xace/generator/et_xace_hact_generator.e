@@ -471,10 +471,10 @@ feature {NONE} -- Output
 			end
 			if an_option.trace then
 				print_indentation (indent, a_file)
-				a_file.put_line ("trace (yes)")
+				a_file.put_line ("trace (yes);")
 			else
 				print_indentation (indent, a_file)
-				a_file.put_line ("trace (no)")
+				a_file.put_line ("trace (no);")
 			end
 			if an_option.is_visible_filename_declared then
 				print_indentation (indent, a_file)
@@ -701,10 +701,10 @@ feature {NONE} -- Output
 				if an_option.is_trace_declared then
 					if an_option.trace then
 						print_indentation (an_indent, a_file)
-						a_file.put_line ("trace (yes)")
+						a_file.put_line ("trace (yes);")
 					else
 						print_indentation (an_indent, a_file)
-						a_file.put_line ("trace (no)")
+						a_file.put_line ("trace (no);")
 					end
 				end
 			end
