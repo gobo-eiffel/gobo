@@ -58,6 +58,86 @@ feature -- Class names
 			bit_class_name_not_void: Result /= Void
 		end
 
+	boolean_class_name: ET_CLASS_NAME is
+			-- "BOOLEAN" class name
+		once
+			create {ET_IDENTIFIER} Result.make ("BOOLEAN")
+		ensure
+			boolean_class_name_not_void: Result /= Void
+		end
+
+	character_class_name: ET_CLASS_NAME is
+			-- "CHARACTER" class name
+		once
+			create {ET_IDENTIFIER} Result.make ("CHARACTER")
+		ensure
+			character_class_name_not_void: Result /= Void
+		end
+
+	wide_character_class_name: ET_CLASS_NAME is
+			-- "WIDE_CHARACTER" class name
+		once
+			create {ET_IDENTIFIER} Result.make ("WIDE_CHARACTER")
+		ensure
+			wide_character_class_name_not_void: Result /= Void
+		end
+
+	integer_class_name: ET_CLASS_NAME is
+			-- "INTEGER" class name
+		once
+			create {ET_IDENTIFIER} Result.make ("INTEGER")
+		ensure
+			integer_class_name_not_void: Result /= Void
+		end
+
+	integer_8_class_name: ET_CLASS_NAME is
+			-- "INTEGER_8" class name
+		once
+			create {ET_IDENTIFIER} Result.make ("INTEGER_8")
+		ensure
+			integer_8_class_name_not_void: Result /= Void
+		end
+
+	integer_16_class_name: ET_CLASS_NAME is
+			-- "INTEGER_16" class name
+		once
+			create {ET_IDENTIFIER} Result.make ("INTEGER_16")
+		ensure
+			integer_16_class_name_not_void: Result /= Void
+		end
+
+	integer_64_class_name: ET_CLASS_NAME is
+			-- "INTEGER_64" class name
+		once
+			create {ET_IDENTIFIER} Result.make ("INTEGER_64")
+		ensure
+			integer_64_class_name_not_void: Result /= Void
+		end
+
+	real_class_name: ET_CLASS_NAME is
+			-- "REAL" class name
+		once
+			create {ET_IDENTIFIER} Result.make ("REAL")
+		ensure
+			real_class_name_not_void: Result /= Void
+		end
+
+	double_class_name: ET_CLASS_NAME is
+			-- "DOUBLE" class name
+		once
+			create {ET_IDENTIFIER} Result.make ("DOUBLE")
+		ensure
+			double_class_name_not_void: Result /= Void
+		end
+
+	pointer_class_name: ET_CLASS_NAME is
+			-- "POINTER" class name
+		once
+			create {ET_IDENTIFIER} Result.make ("POINTER")
+		ensure
+			pointer_class_name_not_void: Result /= Void
+		end
+
 	unknown_class_name: ET_CLASS_NAME is
 			-- "*UNKNOWN*" class name
 		once

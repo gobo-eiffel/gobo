@@ -78,6 +78,16 @@ feature {NONE} -- Initialization
 			tuple_class.set_in_system (True)
 			bit_class := eiffel_class (tokens.bit_class_name)
 			bit_class.set_in_system (True)
+			boolean_class := eiffel_class (tokens.boolean_class_name)
+			character_class := eiffel_class (tokens.character_class_name)
+			wide_character_class := eiffel_class (tokens.wide_character_class_name)
+			integer_class := eiffel_class (tokens.integer_class_name)
+			integer_8_class := eiffel_class (tokens.integer_8_class_name)
+			integer_16_class := eiffel_class (tokens.integer_16_class_name)
+			integer_64_class := eiffel_class (tokens.integer_64_class_name)
+			real_class := eiffel_class (tokens.real_class_name)
+			double_class := eiffel_class (tokens.double_class_name)
+			pointer_class := eiffel_class (tokens.pointer_class_name)
 			create unknown_class.make_unknown (tokens.unknown_class_name)
 			create any_type.make (Void, any_class.name, any_class)
 			create any_parent.make (any_type, Void, Void, Void, Void, Void)
@@ -156,6 +166,36 @@ feature -- Basic classes
 
 	bit_class: ET_CLASS
 			-- Class BIT
+
+	boolean_class: ET_CLASS
+			-- Class BOOLEAN
+
+	character_class: ET_CLASS
+			-- Class CHARACTER
+
+	wide_character_class: ET_CLASS
+			-- Class WIDE_CHARACTER
+
+	integer_class: ET_CLASS
+			-- Class INTEGER
+
+	integer_8_class: ET_CLASS
+			-- Class INTEGER_8
+
+	integer_16_class: ET_CLASS
+			-- Class INTEGER_16
+
+	integer_64_class: ET_CLASS
+			-- Class INTEGER_64
+
+	real_class: ET_CLASS
+			-- Class REAL
+
+	double_class: ET_CLASS
+			-- Class DOUBLE
+
+	pointer_class: ET_CLASS
+			-- Class POINTER
 
 	unknown_class: ET_CLASS
 			-- Class *UNKNOWN*
@@ -710,6 +750,16 @@ invariant
 	none_class_not_void: none_class /= Void
 	tuple_class_not_void: tuple_class /= Void
 	bit_class_not_void: bit_class /= Void
+	boolean_class_not_void: boolean_class /= Void
+	character_class_not_void: character_class /= Void
+	wide_character_class_not_void: wide_character_class /= Void
+	integer_class_not_void: integer_class /= Void
+	integer_8_class_not_void: integer_8_class /= Void
+	integer_16_class_not_void: integer_16_class /= Void
+	integer_64_class_not_void: integer_64_class /= Void
+	real_class_not_void: real_class /= Void
+	double_class_not_void: double_class /= Void
+	pointer_class_not_void: pointer_class /= Void
 	unknown_class_not_void: unknown_class /= Void
 	any_type_not_void: any_type /= Void
 	any_parents_not_void: any_parents /= Void
