@@ -13,7 +13,7 @@
 gobo_usage() {
 	echo "usage: bootstrap.sh [-v] <c_compiler> <eiffel_compiler>"
 	echo "   c_compiler:  msc | bcc | lcc | gcc | no_c"
-	echo "   elffel_compiler:  ise | hact | se | ve"
+	echo "   eiffel_compiler:  ise | hact | se | ve"
 }
 
 if [ "$1" = "-v" ]; then
