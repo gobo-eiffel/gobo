@@ -58,14 +58,6 @@ feature {ANY} -- Parsing
 		deferred
 		end
 
-	parse_from_string_buffer (a_buffer: KL_CHARACTER_BUFFER) is
-			-- Parse XML Document from GOBO string buffer. This is
-			-- faster that parsing from a ordinary STRING on some systems.
-		require
-			a_buffer_not_void: a_buffer /= Void
-		deferred
-		end
-
 	parse_from_string (data: STRING) is
 			-- Parse `data'.
 		require
@@ -81,16 +73,6 @@ feature {ANY} -- Incremental parsing
 			-- call set_end_of_document to get any pending error messages.
 		require
 			a_stream_not_void: a_stream /= Void
-		deferred
-		end
-
-	parse_incremental_from_string_buffer (a_buffer: KL_CHARACTER_BUFFER) is
-			-- Parse partial XML document from GOBO input stream.
-			-- After the last part of the data has been fed into the parser,
-			-- Parse XML Document from GOBO string buffer. This is
-			-- faster that parsing from a regular STRING on some systems.
-		require
-			a_buffer_not_void: a_buffer /= Void
 		deferred
 		end
 
