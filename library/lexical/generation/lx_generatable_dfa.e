@@ -29,7 +29,8 @@ inherit
 
 	UT_CHARACTER_CODES
 		export
-			{NONE} all
+			-- Bug in SE -0.81: Unable to load class NONE!
+			-- {NONE} all
 		undefine
 			is_equal, copy
 		end
@@ -40,6 +41,11 @@ inherit
 		end
 
 	KL_IMPORTED_OUTPUT_STREAM_ROUTINES
+		undefine
+			is_equal, copy
+		end
+
+	UT_IMPORTED_FORMATTERS
 		undefine
 			is_equal, copy
 		end
@@ -337,10 +343,8 @@ feature {NONE} -- Generation
 			a_file.put_string ("--|#line ")
 			a_file.put_integer (a_rule.line_nb)
 			a_file.put_character ('%N')
-			if a_rule.action /= Void then
-				a_file.put_string (a_rule.action.out)
-				a_file.put_character ('%N')
-			end
+			a_file.put_string (a_rule.action.out)
+			a_file.put_character ('%N')
 		end
 
 	print_eof_actions (a_file: like OUTPUT_STREAM_TYPE) is
@@ -416,10 +420,8 @@ feature {NONE} -- Generation
 				a_file.put_string ("--|#line ")
 				a_file.put_integer (rule.line_nb)
 				a_file.put_character ('%N')
-				if rule.action /= Void then
-					a_file.put_string (rule.action.out)
-					a_file.put_character ('%N')
-				end
+				a_file.put_string (rule.action.out)
+				a_file.put_character ('%N')
 				j := j + 1
 			end
 			a_file.put_string ("%T%T%Telse%N%
@@ -473,54 +475,6 @@ feature {NONE} -- Generation
 			end
 		end
 
-	print_array (a_table: ARRAY [INTEGER]; start_pos, end_pos: INTEGER;
-		a_file: like OUTPUT_STREAM_TYPE) is
-			-- Print code for `a_table''s items within bounds
-			-- `start_pos' and `end_pos' to `a_file'.
-		require
-			a_table_not_void: a_table /= Void
-			valid_start_pos: a_table.valid_index (start_pos)
-			valid_end_pos: a_table.valid_index (end_pos)
-			valid_bounds: start_pos <= end_pos + 1
-			a_file_not_void: a_file /= Void
-			a_file_open_write: OUTPUT_STREAM_.is_open_write (a_file)
-		local
-			i, an_item: INTEGER
-			nb_line, nb_colon: INTEGER
-		do
-			a_file.put_string (Indentation)
-			nb_line := 1
-			from i := start_pos until i > end_pos loop
-				nb_colon := nb_colon + 1
-				if nb_colon > Max_nb_colon then
-					a_file.put_character ('%N')
-					nb_colon := 1
-					nb_line := nb_line + 1
-					if nb_line > Max_nb_line then
-						a_file.put_character ('%N')
-						nb_line := 1
-					end
-					a_file.put_string (Indentation)
-				end
-				an_item := a_table.item (i)
-				inspect an_item.out.count
-				when 1 then
-					a_file.put_string (Four_spaces)
-				when 2 then
-					a_file.put_string (Three_spaces)
-				when 3 then
-					a_file.put_string (Two_spaces)
-				else
-					a_file.put_character (' ')
-				end
-				a_file.put_integer (an_item)
-				if i < end_pos then
-					a_file.put_character (',')
-				end
-				i := i + 1
-			end
-		end
-
 	print_eiffel_array (a_name: STRING; a_table: ARRAY [INTEGER];
 		a_file: like OUTPUT_STREAM_TYPE) is
 			-- Print Eiffel code for `a_table' named `a_name' to `a_file'.
@@ -545,7 +499,7 @@ feature {NONE} -- Generation
 			if nb = 1 then
 				a_file.put_string
 					("%T%T%TResult := INTEGER_ARRAY_.make_from_array (<<%N")
-				print_array (a_table, a_table.lower, a_table.upper, a_file)
+				ARRAY_FORMATTER_.put_integer_array (a_file, a_table, a_table.lower, a_table.upper)
 				a_file.put_string (">>, ")
 				a_file.put_integer (a_table.lower)
 				a_file.put_string (")%N%T%Tend%N")
@@ -576,7 +530,7 @@ feature {NONE} -- Generation
 					a_file.put_string (" (an_array: ARRAY [INTEGER]) is%N%
 						%%T%Tdo%N%T%T%TINTEGER_ARRAY_.subcopy (an_array, <<%N")
 					k := a_table_upper.min (i + array_size - 1)
-					print_array (a_table, i, k, a_file)
+					ARRAY_FORMATTER_.put_integer_array (a_file, a_table, i, k)
 					a_file.put_string (">>,%N%T%T%T")
 					a_file.put_integer (1)
 					a_file.put_string (", ")
@@ -859,16 +813,7 @@ feature {NONE} -- Access
 
 feature {NONE} -- Constants
 
-	Two_spaces: STRING is "  "
-	Three_spaces: STRING is "   "
-	Four_spaces: STRING is "    "
 	Indentation: STRING is "%T%T%T"
-
-	Max_nb_line: INTEGER is 10
-			-- Maximum number of lines before one is skipped
-
-	Max_nb_colon: INTEGER is 10
-			-- Maximum number of entries per line
 
 invariant
 
