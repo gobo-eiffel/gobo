@@ -16,6 +16,8 @@ class
 
 inherit
 
+	ANY
+
 	ST_SHARED_FORMATTER
 		export
 			{NONE} all
