@@ -250,7 +250,9 @@ feature {NONE} -- Output
 
 	print_matches (a_regexp: RX_PCRE_REGULAR_EXPRESSION; an_output_file: KI_TEXT_OUTPUT_STREAM) is
 			-- Print matched (sub-)expression(s) and extra information
-			-- needed to fit a given output format.
+			-- needed to fit a given output format. Note, that the restrictions
+			-- suggested by this messages are not really limitations in the
+			-- eiffel library
 		require
 			a_regexp_not_void: a_regexp /= Void
 			an_output_file_not_void: an_output_file /= Void
