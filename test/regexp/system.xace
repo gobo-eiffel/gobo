@@ -1,10 +1,10 @@
-<?xml version="1.0" encoding="iso-8859-1"?>
-<!DOCTYPE system SYSTEM "../../../doc/gexace/xace.dtd">
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE system SYSTEM "../../doc/gexace/xace.dtd">
 
 <system name="rx_test">
 	<description>
 		system: "Regexp test"
-		copyright: "Copyright (c) 2002, Harald Erdbruegger and others"
+		copyright: "Copyright (c) 2002, Harald Erdbrügger and others"
 		license: "Eiffel Forum License v1 (see forum.txt)"
 		date: "$Date$"
 		revision: "$Revision$"
