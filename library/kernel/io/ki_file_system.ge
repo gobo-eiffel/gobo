@@ -5,7 +5,7 @@ indexing
 		"Interface for file systems"
 
 	library: "Gobo Eiffel Kernel Library"
-	copyright: "Copyright (c) 2001, Eric Bezault and others"
+	copyright: "Copyright (c) 2001-2004, Eric Bezault and others"
 	license: "Eiffel Forum License v2 (see forum.txt)"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -110,6 +110,21 @@ feature -- File handling
 			-- Do files named `a_filename1' and `a_filename2'
 			-- contain the same number of lines and are these
 			-- lines equal? Return False if one or both files
+			-- don't exist or cannot be open in read mode.
+			-- (`a_filename1' and `a_filename2' should follow
+			-- the pathname convention of the underlying
+			-- platform. For pathname conversion use
+			-- KI_FILE_SYSTEM.pathname_from_file_system.)
+		require
+			a_filename1_not_void: a_filename1 /= Void
+			a_filename2_not_void: a_filename2 /= Void
+		deferred
+		end
+
+	same_binary_files (a_filename1, a_filename2: STRING): BOOLEAN is
+			-- Do files named `a_filename1' and `a_filename2'
+			-- contain the same number of characters and are these
+			-- characters equal? Return False if one or both files
 			-- don't exist or cannot be open in read mode.
 			-- (`a_filename1' and `a_filename2' should follow
 			-- the pathname convention of the underlying

@@ -5,7 +5,7 @@ indexing
 		"File systems"
 
 	library: "Gobo Eiffel Kernel Library"
-	copyright: "Copyright (c) 2001, Eric Bezault and others"
+	copyright: "Copyright (c) 2001-2004, Eric Bezault and others"
 	license: "Eiffel Forum License v2 (see forum.txt)"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -172,6 +172,61 @@ feature -- File handling
 							a_file1.close
 							a_file2.close
 							done := True
+						end
+					end
+				else
+					a_file1.close
+					-- Result := False
+				end
+			else
+				-- Result := False
+			end
+		end
+
+	same_binary_files (a_filename1, a_filename2: STRING): BOOLEAN is
+			-- Do files named `a_filename1' and `a_filename2'
+			-- contain the same number of characters and are these
+			-- characters equal? Return False if one or both files
+			-- don't exist or cannot be open in read mode.
+			-- (`a_filename1' and `a_filename2' should follow
+			-- the pathname convention of the underlying
+			-- platform. For pathname conversion use
+			-- KI_FILE_SYSTEM.pathname_from_file_system.)
+		local
+			a_file1, a_file2: KL_BINARY_INPUT_FILE
+			done: BOOLEAN
+		do
+			create a_file1.make (a_filename1)
+			a_file1.open_read
+			if a_file1.is_open_read then
+				create a_file2.make (a_filename2)
+				a_file2.open_read
+				if a_file2.is_open_read then
+					if a_file1.count /= a_file2.count then
+						Result := False
+					else
+						Result := True
+						from until done loop
+							a_file1.read_string (512)
+							a_file2.read_string (512)
+							if a_file1.end_of_file then
+								if not a_file2.end_of_file then
+									Result := False
+								end
+								a_file1.close
+								a_file2.close
+								done := True
+							elseif a_file2.end_of_file then
+								Result := False
+								a_file1.close
+								a_file2.close
+								done := True
+							elseif not a_file1.last_string.is_equal (a_file2.last_string) then
+								Result := False
+								a_file1.close
+								a_file2.close
+								done := True
+							end
 						end
 					end
 				else
