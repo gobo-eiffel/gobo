@@ -5,7 +5,7 @@ indexing
 		"Eiffel type checkers"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2003, Eric Bezault and others"
+	copyright: "Copyright (c) 2003-2004, Eric Bezault and others"
 	license: "Eiffel Forum License v2 (see forum.txt)"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -44,7 +44,7 @@ feature {NONE} -- Initialization
 			-- Create a new type checker.
 		do
 			precursor (a_universe)
-			current_class := a_universe.unknown_class
+			current_type := a_universe.unknown_class
 			current_feature := dummy_feature
 		end
 
@@ -55,42 +55,44 @@ feature -- Status report
 
 feature -- Validity checking
 
-	check_type_validity (a_type: ET_TYPE; a_feature: ET_FEATURE; a_class: ET_CLASS) is
-			-- Check validity of `a_type' when it appears in `a_feature' viewed
-			-- from `a_class'. Resolve identifiers (such as 'like identifier'
+	check_type_validity (a_type: ET_TYPE; a_current_feature: ET_FEATURE; a_current_type: ET_BASE_TYPE) is
+			-- Check validity of `a_type' when it appears in `a_current_feature' viewed
+			-- from `a_current_type'. Resolve identifiers (such as 'like identifier'
 			-- and 'BIT identifier') in type `a_type' if not already done.
 			-- Set `has_fatal_error' if an error occurred.
 		require
 			a_type_not_void: a_type /= Void
-			a_feature_not_void: a_feature /= Void
-			a_class_not_void: a_class /= Void
+			a_current_feature_not_void: a_current_feature /= Void
+			a_current_type_not_void: a_current_type /= Void
+			a_current_type_valid: a_current_type.is_valid_context
 		local
 			old_feature: ET_FEATURE
-			old_class: ET_CLASS
+			old_type: ET_BASE_TYPE
 		do
 			has_fatal_error := False
 			old_feature := current_feature
-			current_feature := a_feature
-			old_class := current_class
-			current_class := a_class
+			current_feature := a_current_feature
+			old_type := current_type
+			current_type := a_current_type
 			internal_call := True
 			a_type.process (Current)
 			internal_call := False
-			current_class := old_class
+			current_type := old_type
 			current_feature := old_feature
 		end
 
-	check_creation_type_validity (a_type: ET_CLASS_TYPE; a_feature: ET_FEATURE; a_class: ET_CLASS; a_position: ET_POSITION) is
+	check_creation_type_validity (a_type: ET_CLASS_TYPE; a_current_feature: ET_FEATURE; a_current_type: ET_BASE_TYPE; a_position: ET_POSITION) is
 			-- Check validity of `a_type' as base type of a creation type
-			-- appearing in `a_feature' and viewed from `a_class'. Note that
-			-- `a_type' should already be a valid type by itself (call
+			-- appearing in `a_current_feature' and viewed from `a_current_type'.
+			-- Note that `a_type' should already be a valid type by itself (call
 			-- `check_type_validity' for that). Set `has_fatal_error' if
 			-- an error occurred.
 		require
 			a_type_not_void: a_type /= Void
 			a_type_named_type: a_type.is_named_type
-			a_feature_not_void: a_feature /= Void
-			a_class_not_void: a_class /= Void
+			a_current_feature_not_void: a_current_feature /= Void
+			a_current_type_not_void: a_current_type /= Void
+			a_current_type_valid: a_current_type.is_valid_context
 			a_position_not_void: a_position /= Void
 		local
 			a_type_class: ET_CLASS
@@ -103,7 +105,7 @@ feature -- Validity checking
 			a_name: ET_FEATURE_NAME
 			a_seed: INTEGER
 			a_creation_feature: ET_FEATURE
-			a_class_type: ET_CLASS_TYPE
+			l_class_type: ET_CLASS_TYPE
 			a_formal_type: ET_FORMAL_PARAMETER_TYPE
 			an_index: INTEGER
 			a_formal_parameters: ET_FORMAL_PARAMETER_LIST
@@ -114,6 +116,7 @@ feature -- Validity checking
 			j, nb2: INTEGER
 			had_error: BOOLEAN
 			a_class_impl: ET_CLASS
+			a_current_class: ET_CLASS
 		do
 			has_fatal_error := False
 			an_actuals := a_type.actual_parameters
@@ -129,19 +132,20 @@ feature -- Validity checking
 					set_fatal_error
 					error_handler.report_giaay_error
 				else
-					a_formal_parameters := a_class.formal_parameters
+					a_current_class := a_current_type.direct_base_class (universe)
+					a_formal_parameters := a_current_class.formal_parameters
 					from i := 1 until i > nb loop
 						an_actual := an_actuals.type (i)
 						a_formal := a_formals.formal_parameter (i)
 						a_creator := a_formal.creation_procedures
 						if a_creator /= Void and then not a_creator.is_empty then
-							a_base_class := an_actual.base_class (a_class, universe)
+							a_base_class := an_actual.base_class (a_current_type, universe)
 							a_formal_type ?= an_actual
 							if a_formal_type /= Void then
 								an_index := a_formal_type.index
 								if a_formal_parameters = Void or else an_index > a_formal_parameters.count then
-										-- Internal error: `a_formal_parameter' is supposed
-										-- to be a formal parameter of `a_class'.
+										-- Internal error: `a_formal_parameter' is supposed to be
+										-- a formal parameter of `a_current_type''s base class.
 									has_formal_type_error := True
 									set_fatal_error
 									error_handler.report_giabi_error
@@ -169,11 +173,11 @@ feature -- Validity checking
 											if not has_formal_type_error then
 												if a_formal_creator = Void or else not a_formal_creator.has_feature (a_creation_feature) then
 													set_fatal_error
-													a_class_impl := a_feature.implementation_class
-													if a_class = a_class_impl then
-														error_handler.report_vtcg4c_error (a_class, a_position, i, a_name, a_formal_parameter, a_type_class)
+													a_class_impl := a_current_feature.implementation_class
+													if a_current_class = a_class_impl then
+														error_handler.report_vtcg4c_error (a_current_class, a_position, i, a_name, a_formal_parameter, a_type_class)
 													else
-														error_handler.report_vtcg4d_error (a_class, a_class_impl, a_position, i, a_name, a_formal_parameter, a_type_class)
+														error_handler.report_vtcg4d_error (a_current_class, a_class_impl, a_position, i, a_name, a_formal_parameter, a_type_class)
 													end
 												end
 											end
@@ -182,11 +186,11 @@ feature -- Validity checking
 											(a_base_class.creators /= Void or else not a_creation_feature.has_seed (universe.default_create_seed))
 										then
 											set_fatal_error
-											a_class_impl := a_feature.implementation_class
-											if a_class = a_class_impl then
-												error_handler.report_vtcg4a_error (a_class, a_position, i, a_name, a_base_class, a_type_class)
+											a_class_impl := a_current_feature.implementation_class
+											if a_current_class = a_class_impl then
+												error_handler.report_vtcg4a_error (a_current_class, a_position, i, a_name, a_base_class, a_type_class)
 											else
-												error_handler.report_vtcg4b_error (a_class, a_class_impl, a_position, i, a_name, a_base_class, a_type_class)
+												error_handler.report_vtcg4b_error (a_current_class, a_class_impl, a_position, i, a_name, a_base_class, a_type_class)
 											end
 										end
 										j := j + 1
@@ -198,13 +202,13 @@ feature -- Validity checking
 								-- is possible to create instances of `an_actual'
 								-- through that means. So we need to check recursively
 								-- its validity as a creation type.
-							a_class_type ?= an_actual
-							if a_class_type /= Void then
+							l_class_type ?= an_actual
+							if l_class_type /= Void then
 								check
-									is_named_type: a_class_type.is_named_type
+									is_named_type: l_class_type.is_named_type
 								end
 								had_error := has_fatal_error
-								check_creation_type_validity (a_class_type, a_feature, a_class, a_position)
+								check_creation_type_validity (l_class_type, a_current_feature, a_current_type, a_position)
 								if had_error then
 									set_fatal_error
 								end
@@ -214,13 +218,13 @@ feature -- Validity checking
 								-- In that case the creation of an instance of that
 								-- type will be implicit, so we need to check recursively
 								-- its validity as a creation type.
-							a_class_type ?= an_actual
-							if a_class_type /= Void and then a_class_type.is_expanded then
+							l_class_type ?= an_actual
+							if l_class_type /= Void and then l_class_type.is_expanded then
 								check
-									is_named_type: a_class_type.is_named_type
+									is_named_type: l_class_type.is_named_type
 								end
 								had_error := has_fatal_error
-								check_creation_type_validity (a_class_type, a_feature, a_class, a_position)
+								check_creation_type_validity (l_class_type, a_current_feature, a_current_type, a_position)
 								if had_error then
 									set_fatal_error
 								end
@@ -232,47 +236,75 @@ feature -- Validity checking
 			end
 		end
 
-	resolved_formal_parameters (a_type: ET_TYPE; a_feature: ET_FEATURE; a_class: ET_CLASS): ET_TYPE is
+	resolved_formal_parameters (a_type: ET_TYPE; a_current_feature: ET_FEATURE; a_current_type: ET_BASE_TYPE): ET_TYPE is
 			-- Replace formal generic parameters in `a_type' by their
 			-- corresponding actual parameters if the class where
-			-- `a_type' appears is generic and is not `a_class'.
+			-- `a_type' appears is generic and is not `a_current_type'.
 			-- Set `has_fatal_error' if an error occurred.
 		require
 			a_type_not_void: a_type /= Void
-			a_feature_not_void: a_feature /= Void
-			a_class_not_void: a_class /= Void
+			a_current_feature_not_void: a_current_feature /= Void
+			a_current_type_not_void: a_current_type /= Void
+			a_current_type_valid: a_current_type.is_valid_context
 		local
+			a_current_class: ET_CLASS
 			a_class_impl: ET_CLASS
 			an_ancestor: ET_BASE_TYPE
 			a_parameters: ET_ACTUAL_PARAMETER_LIST
 		do
 			has_fatal_error := False
-			a_class_impl := a_feature.implementation_class
-			if a_class_impl /= a_class and then a_class_impl.is_generic then
+			a_current_class := a_current_type.direct_base_class (universe)
+			a_class_impl := a_current_feature.implementation_class
+			if a_class_impl = a_current_type then
+				Result := a_type
+			elseif not a_class_impl.is_generic then
+				Result := a_type
+			else
 					-- We need to replace formal generic parameters in
 					-- `a_type' by their corresponding actual parameters.
-				a_class.process (universe.ancestor_builder)
-				if a_class.has_ancestors_error then
-					set_fatal_error
-				else
-					an_ancestor := a_class.ancestor (a_class_impl, universe)
-					if an_ancestor = Void then
-							-- Internal error: `a_class' is a descendant of `a_class_impl'.
+				if a_class_impl /= a_current_class then
+						-- We need first to get the ancestor of `a_current_class'
+						-- corresponding to `a_class_impl' in order to find the
+						-- various generic derivations which occurred on the
+						-- parent clauses between `a_current_class' and
+						-- `a_class_impl' where `a_type' was actually written.
+					a_current_class.process (universe.ancestor_builder)
+					if a_current_class.has_ancestors_error then
 						set_fatal_error
-						error_handler.report_giaba_error
 					else
-						a_parameters := an_ancestor.actual_parameters
-						if a_parameters = Void then
-								-- Internal error: we said that `a_class_impl' was generic.
+						an_ancestor := a_current_class.ancestor (a_class_impl, universe)
+						if an_ancestor = Void then
+								-- Internal error: `a_current_class' is a descendant of `a_class_impl'.
 							set_fatal_error
-							error_handler.report_giabb_error
+							error_handler.report_giaba_error
 						else
-							Result := a_type.resolved_formal_parameters (a_parameters)
+							a_parameters := an_ancestor.actual_parameters
+							if a_parameters = Void then
+									-- Internal error: we said that `a_class_impl' was generic.
+								set_fatal_error
+								error_handler.report_giabb_error
+							else
+								Result := a_type.resolved_formal_parameters (a_parameters)
+							end
 						end
 					end
 				end
-			else
-				Result := a_type
+				if not has_fatal_error then
+					if a_current_type /= a_current_class then
+							-- We need to replace the formal generic parameters of
+							-- `a_current_class' by their corresponding actual
+							-- parameters in `a_current_type'.
+						a_parameters := a_current_type.actual_parameters
+						if a_parameters = Void then
+								-- Internal error: we said that `a_class_impl' was generic.
+								-- Therefore `a_current_type' is generic as well.
+							set_fatal_error
+							error_handler.report_giadz_error
+						else
+							Result := Result.resolved_formal_parameters (a_parameters)
+						end
+					end
+				end
 			end
 		ensure
 			resolved_type_not_void: not has_fatal_error implies Result /= Void
@@ -294,9 +326,15 @@ feature -- Type conversion
 			a_target_base_class: ET_CLASS
 		do
 			a_source_base_class := a_source_type.base_class (universe)
+				-- Make sure that the class has been parsed before
+				-- asking for its conversion features.
+			a_source_base_class.process (universe.eiffel_parser)
 			Result := a_source_base_class.convert_to_feature (a_target_type, a_source_type, universe)
 			if Result = Void then
 				a_target_base_class := a_target_type.base_class (universe)
+						-- Make sure that the class has been parsed before
+					-- asking for its conversion features.
+				a_target_base_class.process (universe.eiffel_parser)
 				Result := a_target_base_class.convert_from_feature (a_source_type, a_target_type, universe)
 			end
 			if Result = Void then
@@ -532,7 +570,7 @@ feature {NONE} -- Validity checking
 							internal_call := False
 							a_formal := a_formals.formal_parameter (i)
 							if a_formal.is_cat then
-								if not an_actual.is_cat_type (current_class, universe) then
+								if not an_actual.is_cat_type (current_type, universe) then
 									if universe.searching_dog_types then
 										a_formal.set_cat_keyword (Void)
 										universe.set_dog_type_count (universe.dog_type_count + 1)
@@ -557,7 +595,7 @@ feature {NONE} -- Validity checking
 							else
 								a_constraint := universe.any_type
 							end
-							if not an_actual.conforms_to_type (a_constraint, current_class, current_class, universe) then
+							if not an_actual.conforms_to_type (a_constraint, current_type, current_type, universe) then
 									-- The actual parameter does not conform to the
 									-- constraint of its corresponding formal parameter.
 								set_fatal_error
@@ -821,8 +859,16 @@ feature {NONE} -- Error handling
 
 feature {NONE} -- Access
 
-	current_class: ET_CLASS
+	current_class: ET_CLASS is
 			-- Class where the type appears
+		do
+			Result := current_type.direct_base_class (universe)
+		ensure
+			definition: Result = current_type.direct_base_class (universe)
+		end
+
+	current_type: ET_BASE_TYPE
+			-- Base type where the type appears
 
 	current_feature: ET_FEATURE
 			-- Feature where the type appears;
@@ -848,7 +894,8 @@ feature {NONE} -- Implementation
 
 invariant
 
-	current_class_not_void: current_class /= Void
+	current_type_not_void: current_type /= Void
+	valid_current_type: current_type.is_valid_context
 	current_feature_not_void: current_feature /= Void
 
 end
