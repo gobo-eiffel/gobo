@@ -23,15 +23,15 @@ content="text/html; charset=iso-8859-1">
 
 <hr size="1">
 
-<p><font size="3">First some simple examples to get the flavor of
+<p>First some simple examples to get the flavor of
 how one uses <em>gelex</em>. The following <em>gelex</em> input
 specifies a scanner which whenever it encounters the string
-&quot;</font><tt>foo</tt><font size="3">&quot; will replace it
-with the string &quot;</font><tt>bar</tt><font size="3">&quot;:</font></p>
+&quot;<tt>foo</tt>&quot; will replace it
+with the string &quot;<tt>bar</tt>&quot;:</p>
 
 <blockquote>
-    <pre><font color="#0000FF" size="3">%{</font><font size="3">
-</font><font color="#008080" size="3"><em><strong>class</strong></em><em> FOOBAR
+    <pre><font color="#0000FF">%{</font>
+<font color="#008080"><em><strong>class</strong></em><em> FOOBAR
 
 </em><em><strong>inherit</strong></em><em>
 
@@ -39,61 +39,53 @@ with the string &quot;</font><tt>bar</tt><font size="3">&quot;:</font></p>
 
 </em><em><strong>creation</strong></em><em>
 
-    make</em></font><font size="3"><em>
-</em></font><font color="#0000FF" size="3">%}</font><font
-size="3">
+    make</em></font><em>
+</em></font><font color="#0000FF">%}</font>
 
-</font><font color="#0000FF" size="3">%%</font><font size="3">
+<font color="#0000FF">%%</font>
 
-</font><font color="#FF0000" size="3">foo</font><font size="3">     </font><font
-color="#008080" size="3"><em>output</em> (&quot;<em>bar</em>&quot;)</font><font
-size="3">
+<font color="#FF0000">foo     </font><font
+color="#008080"><em>output</em> (&quot;<em>bar</em>&quot;)</font>
 
-</font><font color="#0000FF" size="3">%%</font><font size="3">
+<font color="#0000FF">%%</font>
 
-</font><font color="#008080" size="3"><em><strong>end</strong></em> -- class FOOBAR</font></pre>
+<font color="#008080"><em><strong>end</strong></em></font></pre>
 </blockquote>
 
-<p><font size="3">This description file is made up of three
-sections separated by </font><font color="#0000FF"><tt>%%</tt></font><font
-size="3"> marks. The text enclosed within the two signs </font><font
-color="#0000FF"><tt>%{</tt></font><font size="3"> and </font><font
-color="#0000FF"><tt>%}</tt></font><font size="3"> in the first
-section is Eiffel text which is copied verbatim to <em>gelex</em>
-output class file. It specifies that the name of the generated
-class is </font><font color="#008080"><em><tt>FOOBAR</tt></em></font><font
-size="3"> and that its creation procedure is </font><font
-color="#008080"><em><tt>make</tt></em></font><font size="3">, a
-routine inherited from class </font><font color="#008080"><em><tt>YY_COMPRESSED_SCANNER_SKELETON</tt></em></font><font
-size="3">. This class contains the pattern-matching engine </font><font
-size="3" face="Symbol">-</font><font size="3"> a Deterministic
-Finite Automaton (or </font><font size="2">DFA</font><font
-size="3"> for short) </font><font size="3" face="Symbol">-</font><font
-size="3"> which is optimized in terms of memory space, hence the
-name of the class. It also provides numerous facilities such as
-routine </font><font color="#008080"><em><tt>scan</tt></em></font><font
-size="3"> for analyzing a given input text. The second section,
-enclosed within the two</font><font color="#0000FF" size="2"
-face="Courier New"> </font><font color="#0000FF"><tt>%%</tt></font><font
-size="3"> marks, contains the only rule of this description file.
-</font><font color="#FF0000"><tt>foo</tt></font><font size="3">
-is the pattern of this rule and the </font><font color="#008080"><em><tt>output
-</tt></em></font><font size="3">instruction is the action. By
-default, any text not matched by a <em>gelex</em> scanner is
-copied to the standard output, so the net effect of this scanner
-is to copy its input file to the standard output with each
-occurrence of &quot;</font><tt>foo</tt><font size="3">&quot;
-replaced with &quot;</font><tt>bar</tt><font size="3">&quot;. The
-third section of the file, after the second </font><font
-color="#0000FF"><tt>%%</tt></font><font size="3"> mark, is Eiffel
-text which is copied verbatim at the end of the generated class.
-In this example, it just contains the end of the class keyword.</font></p>
+<p>This description file is made up of three sections separated by 
+<font color="#0000FF"><tt>%%</tt></font> marks. The text enclosed 
+within the two signs <font color="#0000FF"><tt>%{</tt></font> and 
+<font color="#0000FF"><tt>%}</tt></font> in the first section is 
+Eiffel text which is copied verbatim to <em>gelex</em> output class 
+file. It specifies that the name of the generated class is 
+<font color="#008080"><em><tt>FOOBAR</tt></em></font> and that its 
+creation procedure is <font color="#008080"><em><tt>make</tt></em></font>, 
+a routine inherited from class 
+<font color="#008080"><em><tt>YY_COMPRESSED_SCANNER_SKELETON</tt></em></font>. 
+This class contains the pattern-matching engine <font face="Symbol">-</font> 
+a Deterministic Finite Automaton (or <font size="2">DFA</font> for short) </font>
+<font face="Symbol">-</font> which is optimized in terms of memory space, 
+hence the name of the class. It also provides numerous facilities 
+such as routine <font color="#008080"><em><tt>scan</tt></em></font> 
+for analyzing a given input text. The second section, enclosed within 
+the two<font color="#0000FF" size="2" face="Courier New"> </font>
+<font color="#0000FF"><tt>%%</tt></font> marks, contains the only 
+rule of this description file. <font color="#FF0000"><tt>foo</tt></font>
+is the pattern of this rule and the <font color="#008080"><em><tt>output
+</tt></em></font>instruction is the action. By default, any text not 
+matched by a <em>gelex</em> scanner is copied to the standard output, 
+so the net effect of this scanner is to copy its input file to the 
+standard output with each occurrence of &quot;<tt>foo</tt>&quot;
+replaced with &quot;<tt>bar</tt>&quot;. The third section of the file, 
+after the second <font color="#0000FF"><tt>%%</tt></font> mark, is 
+Eiffel text which is copied verbatim at the end of the generated class.
+In this example, it just contains the end of the class keyword.</p>
 
-<p><font size="3">Here's another simple example:</font></p>
+<p>Here's another simple example:</p>
 
 <blockquote>
-    <pre><font color="#0000FF" size="3">%{</font><font size="3">
-</font><font color="#008080" size="3"><em><strong>class</strong></em><em> WC
+    <pre><font color="#0000FF">%{</font>
+<font color="#008080"><em><strong>class</strong></em><em> WC
 
 </em><em><strong>inherit</strong></em><em>
 
@@ -101,20 +93,17 @@ In this example, it just contains the end of the class keyword.</font></p>
 
 </em><em><strong>creation</strong></em><em>
 
-    make</em></font><font size="3">
-</font><font color="#0000FF" size="3">%}</font><font size="3">
+    make</em></font>
+<font color="#0000FF">%}</font>
 
-</font><font color="#0000FF" size="3">%%
-</font><font size="3">
-</font><font color="#FF0000" size="3">\n</font><font size="3">      </font><font
-color="#008080" size="3">nb_lines := nb_lines + 1; nb_characters := nb_characters + 1</font><font
-size="3">
-</font><font color="#FF0000" size="3"><strong>.</strong></font><font
-size="3">       </font><font color="#008080" size="3">nb_characters := nb_characters + 1</font><font
-size="3">
-</font><font color="#0000FF" size="3">
-%%</font><font size="3">
-</font><font color="#008080" size="3"><em><strong>
+<font color="#0000FF">%%
+</font>
+<font color="#FF0000">\n</font>      <font
+color="#008080">nb_lines := nb_lines + 1; nb_characters := nb_characters + 1</font>
+<font color="#FF0000"><strong>.</strong></font>       <font color="#008080">nb_characters := nb_characters + 1</font>
+
+<font color="#0000FF">%%</font>
+<font color="#008080"><em><strong>
 feature</strong></em> -- Access
 
 <em>    nb_lines</em>: <em>INTEGER</em>
@@ -137,35 +126,34 @@ feature</strong></em> -- Access
             print </em>(<em>nb_characters</em>)<em>
             print </em>('<em>%N</em>')<em>
         </em><em><strong>end</strong></em>
-</font><font size="3">
-</font><font color="#008080" size="3"><em><strong>end</strong></em> -- class WC</font></pre>
+</font>
+<font color="#008080"><em><strong>end</strong></em></font></pre>
 </blockquote>
 
-<p><font size="3">This scanner counts the number of characters
-and the number of lines in its input (it produces no output other
-than the final report on the counts). The first section of the
-scanner description is similar to the one described in the first
-example. The generated class is named after the Unix command <em>wc</em>
-which counts the number of characters, words and lines in given
-files. There are two rules, one which matches a newline (</font><font
-color="#FF0000"><tt>\n</tt></font><font size="3">) and increments
-both the line count and the character count, and one which
-matches any character other than a newline (indicated by the </font><font
-color="#FF0000"><strong><tt>.</tt></strong></font><font size="3">
-regular expression).</font></p>
+<p>This scanner counts the number of characters and the number of 
+lines in its input (it produces no output other than the final 
+report on the counts). The first section of the scanner description 
+is similar to the one described in the first example. The generated 
+class is named after the Unix command <em>wc</em> which counts the 
+number of characters, words and lines in given files. There are two 
+rules, one which matches a newline (<font color="#FF0000"><tt>\n</tt></font>) 
+and increments both the line count and the character count, and one 
+which matches any character other than a newline (indicated by the 
+<font color="#FF0000"><strong><tt>.</tt></strong></font> regular 
+expression).</p>
 
-<p><font size="3">A somewhat more complicated example:</font></p>
+<p>A somewhat more complicated example:</p>
 
 <blockquote>
-    <pre><font color="#0000FF" size="3">%{
-</font><font color="#008080" size="3"><em><strong>indexing</strong></em>
+    <pre><font color="#0000FF">%{
+</font><font color="#008080"><em><strong>indexing</strong></em>
 
     <em>description</em>: &quot;<em>Scanner for a toy Eiffel-like language</em>&quot;
 
 <em><strong>class</strong></em><em> EIFFEL_SCANNER</em></font><font
-color="#0000FF" size="3"><em>
+color="#0000FF"><em>
 
-</em></font><font color="#008080" size="3"><em><strong>inherit</strong></em><em>
+</em></font><font color="#008080"><em><strong>inherit</strong></em><em>
 
     YY_COMPRESSED_SCANNER_SKELETON
 
@@ -176,70 +164,59 @@ color="#0000FF" size="3"><em>
 
 </em><em><strong>creation</strong></em><em>
 
-    make</em></font><font color="#0000FF" size="3">
+    make</em></font><font color="#0000FF">
 %}
 
-</font><font color="#800080" size="3">DIGIT</font><font
-color="#0000FF" size="3">    </font><font color="#FF0000"
-size="3">[0-9]</font><font color="#0000FF" size="3">
-</font><font color="#800080" size="3">ID</font><font
-color="#0000FF" size="3">       </font><font color="#FF0000"
-size="3">[a-z][a-z0-9_]*</font><font color="#0000FF" size="3">
-
+</font><font color="#800080">DIGIT</font><font
+color="#0000FF">    </font><font color="#FF0000">[0-9]</font>
+<font color="#0000FF"></font><font color="#800080">ID</font><font
+color="#0000FF">       </font><font color="#FF0000">[a-z][a-z0-9_]*</font>
+<font color="#0000FF">
 %%
 
-</font><font color="#FF0000" size="3">{DIGIT}+ </font><font
-color="#0000FF" size="3">   {
-                 </font><font color="#008080" size="3"><em>io.put_string </em>(&quot;<em>An integer: </em>&quot;)<em>
+</font><font color="#FF0000">{DIGIT}+ </font><font
+color="#0000FF">   {
+                 </font><font color="#008080"><em>io.put_string </em>(&quot;<em>An integer: </em>&quot;)<em>
                  io.put_integer </em>(<em>text.to_integer</em>)<em>
-                 io.put_new_line</em></font><font color="#0000FF"
-size="3">
+                 io.put_new_line</em></font><font color="#0000FF">
             }
-</font><font color="#FF0000" size="3">{DIGIT}+&quot;.&quot;{DIGIT}*</font><font
-color="#0000FF" size="3">  {
-                 </font><font color="#008080" size="3"><em>io.put_string </em>(&quot;<em>A real: </em>&quot;)<em>
+</font><font color="#FF0000">{DIGIT}+&quot;.&quot;{DIGIT}*</font><font
+color="#0000FF">  {
+                 </font><font color="#008080"><em>io.put_string </em>(&quot;<em>A real: </em>&quot;)<em>
                  io.put_real </em>(<em>text.to_real</em>)<em>
-                 io.put_new_line</em></font><font color="#0000FF"
-size="3">
+                 io.put_new_line</em></font><font color="#0000FF">
             }
-</font><font color="#FF0000" size="3">class|inherit|feature|is|do|if|then|else|end </font><font
-color="#0000FF" size="3">   {
-                 </font><font color="#008080" size="3"><em>io.put_string </em>(&quot;<em>A keyword: </em>&quot;)<em>
+</font><font color="#FF0000">class|inherit|feature|is|do|if|then|else|end </font><font
+color="#0000FF">   {
+                 </font><font color="#008080"><em>io.put_string </em>(&quot;<em>A keyword: </em>&quot;)<em>
                  io.put_string </em>(<em>text</em>)<em>
-                 io.put_new_line</em></font><font color="#0000FF"
-size="3">
+                 io.put_new_line</em></font><font color="#0000FF">
             }
-</font><font color="#FF0000" size="3">{ID}</font><font
-color="#0000FF" size="3">        {
-                 </font><font color="#008080" size="3"><em>io.put_string </em>(&quot;<em>An identifier: </em>&quot;)<em>
+</font><font color="#FF0000">{ID}</font><font
+color="#0000FF">        {
+                 </font><font color="#008080"><em>io.put_string </em>(&quot;<em>An identifier: </em>&quot;)<em>
                  io.put_string </em>(<em>text</em>)<em>
-                 io.put_new_line</em></font><font color="#0000FF"
-size="3">
+                 io.put_new_line</em></font><font color="#0000FF">
             }
-</font><font color="#FF0000" size="3">&quot;+&quot;|&quot;-&quot;|&quot;*&quot;|&quot;/&quot;|&quot;^&quot; </font><font
-color="#0000FF" size="3">   {
-                 </font><font color="#008080" size="3"><em>io.put_string </em>(&quot;<em>An operator: </em>&quot;)<em>
+</font><font color="#FF0000">&quot;+&quot;|&quot;-&quot;|&quot;*&quot;|&quot;/&quot;|&quot;^&quot; </font><font
+color="#0000FF">   {
+                 </font><font color="#008080"><em>io.put_string </em>(&quot;<em>An operator: </em>&quot;)<em>
                  io.put_character </em>(<em>text_item </em>(<em>1</em>))<em>
-                 io.put_new_line</em></font><font color="#0000FF"
-size="3">
+                 io.put_new_line</em></font><font color="#0000FF">
             }
-</font><font color="#FF0000" size="3">&quot;--&quot;.*</font><font
-color="#0000FF" size="3">           </font><font color="#008080"
-size="3">-- Ignore comments</font><font color="#0000FF" size="3">
-</font><font color="#FF0000" size="3">[ \t\n\r]+</font><font
-color="#0000FF" size="3">       </font><font color="#008080"
-size="3">-- Ignore separators</font><font color="#0000FF"
-size="3">
-</font><font color="#FF0000" size="3"><strong>.</strong></font><font
-color="#0000FF" size="3">           {
-                 </font><font color="#008080" size="3"><em>io.put_string </em>(&quot;<em>Unrecognized character: </em>&quot;)<em>
+</font><font color="#FF0000">&quot;--&quot;.*</font><font
+color="#0000FF">           </font><font color="#008080">-- Ignore comments</font>
+<font color="#0000FF"></font><font color="#FF0000">[ \t\n\r]+</font><font
+color="#0000FF">       </font><font color="#008080">-- Ignore separators</font>
+<font color="#0000FF"></font><font color="#FF0000"><strong>.</strong></font><font
+color="#0000FF">           {
+                 </font><font color="#008080"><em>io.put_string </em>(&quot;<em>Unrecognized character: </em>&quot;)<em>
                  io.put_character </em>(<em>text_item </em>(<em>1</em>))<em>
-                 io.put_new_line</em></font><font color="#0000FF"
-size="3">
+                 io.put_new_line</em></font><font color="#0000FF">
             }
 
-%%</font><font size="3">
-</font><font color="#008080" size="3">
+%%</font>
+<font color="#008080">
 <em><strong>feature</strong></em> -- Scanning
 
     <em>scan_file </em><em><strong>is</strong></em><em>
@@ -249,7 +226,7 @@ size="3">
             a_file</em>:<em> FILE
         </em><em><strong>do</strong></em><em>
             </em><em><strong>if</strong></em><em> argument_count </em>&gt;= <em>1 </em><em><strong>then</strong></em><em>
-                </em>!!<em> a_file.make_open_read </em>(<em>argument </em>(<em>1</em>))<em>
+                </em><em><strong>create</strong> a_file.make_open_read </em>(<em>argument </em>(<em>1</em>))<em>
             </em><em><strong>else</strong></em><em>
                 a_file </em>:=<em> io.input
             </em><em><strong>end</strong></em><em>
@@ -257,21 +234,20 @@ size="3">
             scan
         </em><em><strong>end</strong></em>
 
-<em><strong>end</strong></em> -- class EIFFEL_SCANNER</font></pre>
+<em><strong>end</strong></em></font></pre>
 </blockquote>
 
-<p><font size="3">This is the beginnings of a simple scanner for
+<p>This is the beginnings of a simple scanner for
 a language like Eiffel. It identifies different types of tokens
 and reports on what it has seen. The details of this example will
-be explained in the rest of the </font><a href="index.html"><font
-size="3">documentation</font></a><font size="3">.</font></p>
+be explained in the rest of the <a href="index.html">documentation</a>.</p>
 
 <hr size="1">
 
 <table border="0" width="100%">
     <tr>
         <td><address>
-            <font size="2"><b>Copyright © 1998</b></font><font
+            <font size="2"><b>Copyright © 1998-2005</b></font><font
             size="1"><b>, </b></font><font size="2"><strong>Eric
             Bezault</strong></font><strong> </strong><font
             size="2"><br>
@@ -281,7 +257,7 @@ size="3">documentation</font></a><font size="3">.</font></p>
             <strong>http:</strong></font><a
             href="http://www.gobosoft.com"><font size="2">//www.gobosoft.com</font></a><font
             size="2"><br>
-            <strong>Last Updated:</strong> 18 May 1998</font><br>
+            <strong>Last Updated:</strong> 15 February 2005</font><br>
             <!--webbot bot="PurpleText"
             preview="
 $Date$ 
