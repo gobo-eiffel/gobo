@@ -67,26 +67,17 @@ feature -- Matching
 
 	matches (a_node: XM_XPATH_NODE; a_controller: XM_XSLT_CONTROLLER): BOOLEAN is
 			-- Determine whether this Pattern matches the given Node;
-			-- This is the main external interface for matching patterns:
-			--  it sets current() to the node being tested
-			-- The controller is only relevant if the pattern
-			--  uses variables, or contains calls on functions such as document() or key().
 		local
 			doc: XM_XPATH_DOCUMENT
-			abstract_node: XM_XPATH_ABSTRACT_NODE
 			id_value: XM_XPATH_STRING_VALUE
 			id, ids: STRING
 			splitter: ST_SPLITTER
 			strings:  DS_LIST [STRING]
-			element: XM_XPATH_ABSTRACT_NODE
+			element: XM_XPATH_ELEMENT
 			finished: BOOLEAN
 		do
 			if a_node.item_type = Element_node then
-				abstract_node ?= a_node
-					check
-						abstract_node_not_void: abstract_node /= Void
-					end
-				doc := abstract_node.document_root
+				doc := a_node.document_root
 				if doc = Void then
 					Result := False
 				else
@@ -101,7 +92,7 @@ feature -- Matching
 								more_than_zero_ids: strings.count > 0
 							end
 						if strings.count = 1 then
-							element ?= doc.select_id (ids)
+							element := doc.select_id (ids)
 							if element = Void then
 								Result := False
 							else
@@ -117,7 +108,7 @@ feature -- Matching
 								finished or else strings.after
 							loop
 								id := strings.item_for_iteration
-								element ?= doc.select_id (id)
+								element := doc.select_id (id)
 								if element /= Void and then element.is_same_node (a_node) then
 									Result := True
 									finished := True

@@ -38,7 +38,7 @@ feature {NONE} -- Initialization
 			item_type_set: item_type = a_node_type
 		end
 
-	make_same_type (a_node: XM_XPATH_ABSTRACT_NODE) is
+	make_same_type (a_node: XM_XPATH_NODE) is
 		do
 			item_type := a_node.item_type
 			fingerprint := a_node.fingerprint

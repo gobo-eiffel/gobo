@@ -76,10 +76,6 @@ feature -- Matching
 
 	matches (a_node: XM_XPATH_NODE; a_controller: XM_XSLT_CONTROLLER): BOOLEAN is
 			-- Determine whether this Pattern matches the given Node;
-			-- This is the main external interface for matching patterns:
-			--  it sets current() to the node being tested
-			-- The controller is only relevant if the pattern
-			--  uses variables, or contains calls on functions such as document() or key().
 		do
 			Result := left_hand_side.matches (a_node, a_controller) or else right_hand_side.matches (a_node, a_controller)
 		end

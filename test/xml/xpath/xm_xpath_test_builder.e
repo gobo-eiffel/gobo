@@ -83,7 +83,7 @@ feature
 			document_element, books_element, an_element, item_element, categories_element: XM_XPATH_TINY_ELEMENT
 			an_attribute: XM_XPATH_TINY_ATTRIBUTE
 			a_pi: XM_XPATH_TINY_PROCESSING_INSTRUCTION
-			a_node: XM_XPATH_ABSTRACT_NODE
+			a_node: XM_XPATH_NODE
 			a_name: STRING
 			a_fingerprint, counter: INTEGER
 			element_list_1, element_list_2: DS_ARRAYED_LIST [XM_XPATH_TINY_ELEMENT]

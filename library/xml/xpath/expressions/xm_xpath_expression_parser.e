@@ -493,7 +493,7 @@ feature {NONE} -- Expression parsers
 								parse_single_expression
 								if not is_parse_error then
 									create single_item.make_single_item
-									create rv.make (token_value, make_name_code (token_value, False) // bits_20, single_item)
+									create rv.make (token_value, make_name_code (token_value, False) \\ bits_20, single_item)
 									create clause.make (rv, internal_last_expression, a_line_number)
 									declare_range_variable (clause.range_variable)
 									clause_list.put_last (clause)
@@ -630,11 +630,14 @@ feature {NONE} -- Pattern parsers
 			tokenizer_usable: tokenizer /= Void and then tokenizer.input /= Void and not tokenizer.is_lexical_error
 			no_previous_parse_error: not is_parse_error
 		local
-			previous_pattern, a_pattern: XM_XPATH_PATTERN
+			previous_pattern: XM_XPATH_PATTERN
+			location_pattern, a_pattern: XM_XPATH_LOCATION_PATH_PATTERN
+			key_pattern: XM_XPATH_KEY_PATTERN
+			id_pattern: XM_XPATH_ID_PATTERN
 			id_value: XM_XPATH_EXPRESSION
 			connector, var_name_code: INTEGER
 			root_only, finished: BOOLEAN
-			message: STRING
+			message, key_name: STRING
 		do
 			internal_last_pattern := Void
 			connector := -1
@@ -660,6 +663,8 @@ feature {NONE} -- Pattern parsers
 					create {XM_XPATH_NODE_KIND_TEST} previous_pattern.make (Document_node)
 					root_only := False
 				end
+			else
+				do_nothing
 			end
 
 			if not is_parse_error then
@@ -667,7 +672,7 @@ feature {NONE} -- Pattern parsers
 				until
 					finished
 				loop
-					a_pattern := Void
+					a_pattern := Void; key_pattern := Void; id_pattern := Void
 					inspect
 						tokenizer.last_token
 					when Axis_token then
@@ -679,7 +684,7 @@ feature {NONE} -- Pattern parsers
 							else
 								parse_pattern_step (Element_node)
 								if not is_parse_error then
-									a_pattern := internal_last_pattern
+									a_pattern := internal_last_location_pattern
 								else
 									finished := True
 								end
@@ -692,7 +697,7 @@ feature {NONE} -- Pattern parsers
 							else
 								parse_pattern_step (Attribute_node)
 								if not is_parse_error then
-									a_pattern := internal_last_pattern
+									a_pattern := internal_last_location_pattern
 								else
 									finished := True
 								end
@@ -704,35 +709,35 @@ feature {NONE} -- Pattern parsers
 					when Star_token then
 						parse_pattern_step (Element_node)
 						if not is_parse_error then
-							a_pattern := internal_last_pattern
+							a_pattern := internal_last_location_pattern
 						else
 							finished := True
 						end
 					when Name_token then
 						parse_pattern_step (Element_node)
 						if not is_parse_error then
-							a_pattern := internal_last_pattern
+							a_pattern := internal_last_location_pattern
 						else
 							finished := True
 						end
 					when Prefix_token then
 						parse_pattern_step (Element_node)
 						if not is_parse_error then
-							a_pattern := internal_last_pattern
+							a_pattern := internal_last_location_pattern
 						else
 							finished := True
 						end
 					when Suffix_token then
 						parse_pattern_step (Element_node)
 						if not is_parse_error then
-							a_pattern := internal_last_pattern
+							a_pattern := internal_last_location_pattern
 						else
 							finished := True
 						end
 					when Node_kind_token then
 						parse_pattern_step (Element_node)
 						if not is_parse_error then
-							a_pattern := internal_last_pattern
+							a_pattern := internal_last_location_pattern
 						else
 							finished := True
 						end
@@ -744,7 +749,7 @@ feature {NONE} -- Pattern parsers
 						else						
 							parse_pattern_step (Attribute_node)
 							if not is_parse_error then
-								a_pattern := internal_last_pattern
+								a_pattern := internal_last_location_pattern
 							else
 								finished := True
 							end
@@ -772,7 +777,7 @@ feature {NONE} -- Pattern parsers
 												grumble (message)
 												finished := True
 											else
-												var_name_code := make_name_code (tokenizer.last_token_value, False) // bits_20
+												var_name_code := make_name_code (tokenizer.last_token_value, False) \\ bits_20
 												environment.bind_variable (var_name_code)
 												create {XM_XPATH_VARIABLE_REFERENCE} id_value.make (environment.last_bound_variable)
 											end
@@ -781,7 +786,7 @@ feature {NONE} -- Pattern parsers
 										grumble ("id value must be either a literal or a variable reference")
 										finished := True
 									end
-									create {XM_XPATH_ID_PATTERN} a_pattern.make (id_value)
+									create {XM_XPATH_ID_PATTERN} id_pattern.make (id_value)
 									tokenizer.next
 									if tokenizer.is_lexical_error then
 										grumble (tokenizer.last_lexical_error)
@@ -802,7 +807,82 @@ feature {NONE} -- Pattern parsers
 									end
 								end
 							elseif STRING_.same_string (tokenizer.last_token_value, "key") then
-								-- TODO HERE WE ARE
+								tokenizer.next
+								if tokenizer.is_lexical_error then
+									grumble (tokenizer.last_lexical_error)
+									finished := True
+								else
+									if tokenizer.last_token /= String_literal_token then
+										message := "expected %"<string literal>%", found "
+										message := STRING_.appended_string (message, display_current_token)
+										grumble (message)
+										finished := True
+									else
+										key_name := tokenizer.last_token_value
+										tokenizer.next
+										if tokenizer.is_lexical_error then
+											grumble (tokenizer.last_lexical_error)
+											finished := True
+										else
+											if tokenizer.last_token /= Comma_token then
+												message := "expected %",%", found "
+												message := STRING_.appended_string (message, display_current_token)
+												grumble (message)
+												finished := True
+											else
+												tokenizer.next
+												if tokenizer.is_lexical_error then
+													grumble (tokenizer.last_lexical_error)
+													finished := True
+												else
+													id_value := Void
+													if tokenizer.last_token = String_literal_token then
+														create {XM_XPATH_STRING_VALUE} id_value.make (tokenizer.last_token_value)
+													elseif tokenizer.last_token = Dollar_token then
+														tokenizer.next
+														if tokenizer.is_lexical_error then
+															grumble (tokenizer.last_lexical_error)
+															finished := True
+														else
+															if tokenizer.last_token /= Name_token then
+																message := "expected %"<name>%", found "
+																message := STRING_.appended_string (message, display_current_token)
+																grumble (message)
+																finished := True
+															else
+																var_name_code := make_name_code (tokenizer.last_token_value, False) \\ bits_20
+																environment.bind_variable (var_name_code)
+																create {XM_XPATH_VARIABLE_REFERENCE} id_value.make (environment.last_bound_variable)
+															end
+														end
+													else
+														grumble ("id value must be either a literal or a variable reference")
+														finished := True
+													end
+													create {XM_XPATH_KEY_PATTERN} key_pattern.make (make_name_code (key_name, False), id_value)
+													tokenizer.next
+													if tokenizer.is_lexical_error then
+														grumble (tokenizer.last_lexical_error)
+														finished := True
+													else
+														if tokenizer.last_token /= Right_parenthesis_token then
+															message := "expected %"%)%", found "
+															message := STRING_.appended_string (message, display_current_token)
+															grumble (message)
+															finished := True
+														else
+															tokenizer.next
+															if tokenizer.is_lexical_error then
+																grumble (tokenizer.last_lexical_error)
+																finished := True
+															end
+														end
+													end
+												end
+											end
+										end
+									end
+								end
 							else
 								grumble ("The only functions allowed in a pattern are id() and key()")
 								finished := True
@@ -817,6 +897,48 @@ feature {NONE} -- Pattern parsers
 							internal_last_pattern := previous_pattern -- the patter was plain "/"
 						else
 							grumble (STRING_.appended_string ("Unexpected token in pattern, found ", display_current_token))
+						end
+					end
+					if not finished then
+						if previous_pattern /= Void then
+								check
+									a_pattern_not_void: a_pattern /= Void
+								end
+							location_pattern := a_pattern
+									check
+										location_pattern_not_void: location_pattern /= Void
+									end
+							if connector = Slash_token then
+
+								location_pattern.set_parent_pattern (previous_pattern)
+							else
+									check
+										ancestor_connector: connector = Slash_slash_token
+									end
+								location_pattern.set_ancestor_pattern (previous_pattern)
+							end
+						end
+						connector := tokenizer.last_token
+						root_only := false
+						if connector = Slash_token or else connector = Slash_slash_token then
+							previous_pattern := a_pattern
+							tokenizer.next
+							if tokenizer.is_lexical_error then
+								grumble (tokenizer.last_lexical_error)
+								finished := True
+							end
+						else
+							finished := True
+							if a_pattern /= Void then
+								internal_last_pattern := a_pattern
+							elseif key_pattern /= Void then -- pattern consists solely of key(...)
+								internal_last_pattern := key_pattern
+							else
+									check
+										id_pattern_not_void: id_pattern /= Void -- pattern consists solely of id(...)
+									end
+								internal_last_pattern := id_pattern
+							end
 						end
 					end
 				end
@@ -840,16 +962,19 @@ feature {NONE} -- Implementation
 			-- Current static context
 
 	internal_last_expression: XM_XPATH_EXPRESSION
-			-- Result of calling `parse'
+			-- Result of last call to  `parse' and friends
 
 	internal_last_parse_error: STRING
 			-- Text of last parse error encountered
 	
 	internal_last_pattern: XM_XPATH_PATTERN 
-			-- Result of last call to `parse_pattern'
+			-- Result of last call to `parse_pattern' and friends
+	
+	internal_last_location_pattern: XM_XPATH_LOCATION_PATH_PATTERN 
+			-- Result of last call to `parse_pattern_step'
 	
 	internal_last_sequence_type: XM_XPATH_SEQUENCE_TYPE
-			-- Result of last call to `parse_sequence_type'
+			-- Result of last call to `parse_sequence_type' and friends
 
 	range_variable_stack: DS_ARRAYED_STACK [XM_XPATH_RANGE_VARIABLE_DECLARATION]
 			-- Range variables

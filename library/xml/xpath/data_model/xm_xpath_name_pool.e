@@ -55,7 +55,9 @@ inherit
 	KL_SHARED_STANDARD_FILES
 
 	KL_IMPORTED_STRING_ROUTINES
-	
+
+	UC_SHARED_STRING_EQUALITY_TESTER
+
 creation
 	make
 
@@ -67,9 +69,14 @@ feature -- Initialization
 			create document_number_map.make_map (10)
 			create hash_slots.make (0, 1023)
 			
-			create prefixes.make_equal (100)
-			create uris.make_equal (100)
-			create prefixes_for_uri.make_equal (100)
+			create prefixes.make (100)
+			prefixes.set_equality_tester (string_equality_tester)
+
+			create uris.make (100)
+			uris.set_equality_tester (string_equality_tester)
+
+			create prefixes_for_uri.make (100)
+			prefixes_for_uri.set_equality_tester (string_equality_tester)
 
 			prefixes.put ("", Null_prefix_index)
 			uris.put (Null_uri, Null_prefix_index)

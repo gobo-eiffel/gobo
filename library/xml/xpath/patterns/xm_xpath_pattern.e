@@ -118,8 +118,8 @@ feature -- Matching
 
 	matches (a_node: XM_XPATH_NODE; a_controller: XM_XSLT_CONTROLLER): BOOLEAN is
 			-- Determine whether this Pattern matches the given Node;
-			-- This is the main external interface for matching patterns:
-			--  it sets current() to the node being tested
+			-- This is the main external interface for matching patterns;
+			--  it sets the result of current() to `a_node'.
 			-- The controller is only relevant if the pattern
 			--  uses variables, or contains calls on functions such as document() or key().
 		require
@@ -127,12 +127,12 @@ feature -- Matching
 		deferred
 		end
 
-feature {NONE} -- Implementation
+feature {XM_XPATH_PATTERN} -- Implementation
 
 	internal_matches (a_node: XM_XPATH_NODE; a_controller: XM_XSLT_CONTROLLER): BOOLEAN is
 			-- Determine whether this Pattern matches the given Node;
 			-- This is an internal interface used for matching sub-patterns;
-			--  it does not alter the value of current().
+			--  it does not alter current().
 			-- The default implementation is identical to matches().
 		require
 			valid_node: a_node /= Void

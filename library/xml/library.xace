@@ -50,6 +50,8 @@
 		  <cluster name="functions"/>
 		  <cluster name="sort"/>
 		</cluster>
-		<cluster name="xslt" />
+		<cluster name="xslt">
+		  <cluster name="style"/>
+		</cluster>
 	</cluster>
 </library>

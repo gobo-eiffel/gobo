@@ -39,7 +39,9 @@ inherit
 	KL_SHARED_STANDARD_FILES
 
 	UT_STRING_FORMATTER
-	
+
+	UC_SHARED_STRING_EQUALITY_TESTER
+
 	HASHABLE
 	
 creation
@@ -70,7 +72,8 @@ feature -- Initialization
 			create attribute_parents.make (estimated_attribute_count)
 			create attribute_codes.make (estimated_attribute_count)
 			create attribute_values.make (estimated_attribute_count)
-
+			attribute_values.set_equality_tester (string_equality_tester)
+			
 			create namespace_parents.make (estimated_namespace_count)
 			create namespace_codes.make (estimated_namespace_count)
 

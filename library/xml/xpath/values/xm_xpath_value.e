@@ -35,6 +35,7 @@ feature -- Access
 			-- Immediate sub-expressions of `Current'
 		do
 			create Result.make_default
+			Result.set_equality_tester (expression_tester)
 		end
 
 feature -- Status report

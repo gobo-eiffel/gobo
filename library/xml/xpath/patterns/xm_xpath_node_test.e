@@ -33,12 +33,8 @@ feature -- Status report
 
 feature -- Matching
 
-	frozen matches (a_node: XM_XPATH_ABSTRACT_NODE; a_controller: XM_XSLT_CONTROLLER): BOOLEAN is
+	frozen matches (a_node: XM_XPATH_NODE; a_controller: XM_XSLT_CONTROLLER): BOOLEAN is
 			-- Determine whether this Pattern matches the given Node;
-			-- This is the main external interface for matching patterns:
-			--  it sets current() to the node being tested
-			-- The controller is only relevant if the pattern
-			--  uses variables, or contains calls on functions such as document() or key().
 		do
 			Result := matches_node (a_node.item_type, a_node.fingerprint, a_node.type_annotation) 
 		end

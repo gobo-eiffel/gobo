@@ -47,6 +47,7 @@ feature -- Access
 			-- Suitable for an expression without sub-expressions.
 			
 			create Result.make_default
+			Result.set_equality_tester (expression_tester)
 		end
 
 	iterator (context: XM_XPATH_CONTEXT): XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_ITEM] is
@@ -78,7 +79,7 @@ feature -- Access
 		local
 			an_iterator: XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_ITEM]
 			an_item: XM_XPATH_ITEM
-			a_node: XM_XPATH_ABSTRACT_NODE
+			a_node: XM_XPATH_NODE
 			a_boolean: XM_XPATH_BOOLEAN_VALUE
 			a_string: XM_XPATH_STRING_VALUE
 			a_number: XM_XPATH_NUMERIC_VALUE

@@ -14,7 +14,7 @@ deferred class XM_XPATH_TINY_NODE
 	
 inherit
 
-	XM_XPATH_ABSTRACT_NODE
+	XM_XPATH_NODE
 
 feature -- Access
 
@@ -101,7 +101,7 @@ feature -- Access
 			end
 		end
 
-	new_axis_iterator (axis_type: INTEGER): XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_ABSTRACT_NODE] is
+	new_axis_iterator (axis_type: INTEGER): XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_NODE] is
 			-- An enumeration over the nodes reachable by `axis_type' from this node
 		do
 			-- Fast path for child axis
@@ -116,7 +116,7 @@ feature -- Access
 			end
 		end
 
-	new_axis_iterator_with_node_test (axis_type: INTEGER; test: XM_XPATH_NODE_TEST): XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_ABSTRACT_NODE] is
+	new_axis_iterator_with_node_test (axis_type: INTEGER; test: XM_XPATH_NODE_TEST): XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_NODE] is
 			-- An enumeration over the nodes reachable by `axis_type' from this node;
 			-- Only nodes that match the pattern specified by `test' will be selected.
 		local
@@ -282,7 +282,7 @@ feature {NONE} -- Implementation
 	bits_20: INTEGER is 1048576
 			-- Bit mask for 20-bit number
 		
-	empty_abstract_node_iterator: XM_XPATH_EMPTY_ITERATOR [XM_XPATH_ABSTRACT_NODE] is
+	empty_abstract_node_iterator: XM_XPATH_EMPTY_ITERATOR [XM_XPATH_NODE] is
 			-- shared empty iterator
 		once
 			create Result.make

@@ -29,6 +29,11 @@ feature {NONE} -- Initialization
 			controller_set: controller = a_controller
 		end
 
+feature -- Access
+
+	current_iterator: XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_ITEM]
+			-- Current iterator
+
 feature -- Evaluation
 
 	evaluate_local_variable (slot_number: INTEGER): XM_XPATH_VALUE is
@@ -37,6 +42,16 @@ feature -- Evaluation
 			strictly_positive_slot_number: slot_number > 0
 		do
 			-- TODO
+		end
+	
+feature 	-- Element change
+
+	set_current_iterator (it: XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_ITEM]) is
+			-- Set `current_iterator'.
+		do
+			current_iterator := it
+		ensure
+			set: current_iterator = it
 		end
 
 feature {NONE} -- Implementation
