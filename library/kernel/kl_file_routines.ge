@@ -4,17 +4,50 @@ indexing
 
 		"Routines that ought to be in class FILE";
 
-	library:    "Gobo Eiffel Utility Library";
+	library:    "Gobo Eiffel Kernel Library";
 	author:     "Eric Bezault <ericb@gobo.demon.co.uk>";
 	copyright:  "Copyright (c) 1997, Eric Bezault";
 	date:       "$Date$";
 	revision:   "$Revision$"
 
-class UT_FILE_ROUTINES
+class KL_FILE_ROUTINES
+
+feature -- Initialization
+
+	file__make (a_filename: STRING): like FILE_type is
+			-- Create a new file object with `a_filename' as file name.
+		require
+			a_filename_not_void: a_filename /= Void
+			a_filename_not_empty: not a_filename.empty
+		do
+#ifdef ISE || HACT
+			!PLAIN_TEXT_FILE! Result.make (a_filename)
+#else
+			!! Result.make (a_filename)
+#endif
+		ensure
+			file_not_void: Result /= Void
+			file_closed: Result.is_closed
+		end
+
+feature -- Status report
+
+	file__end_of_file (a_file: like FILE_type): BOOLEAN is
+			-- Has an EOF been detected?
+		require
+			a_file_name_void: a_file /= Void
+			a_file_not_closed: not a_file.is_closed
+		do
+#ifdef ISE || HACT
+			Result := not a_file.readable
+#else
+			Result := a_file.end_of_file
+#endif
+		end
 
 feature -- Element change
 
-	file_open_read (a_file: FILE) is
+	file__open_read (a_file: like FILE_type) is
 			-- Open `a_file' in read-only mode.
 			-- `a_file.is_open_read' is set to True
 			-- if operation was successful.
@@ -23,19 +56,30 @@ feature -- Element change
 			a_file_is_closed: a_file.is_closed
 		local
 			rescued: BOOLEAN
+#ifdef ISE || HACT
+			openable_file: FILE
+#endif
 		do
 			if not rescued then
+#ifdef ISE || HACT
+				openable_file ?= a_file
+				if openable_file /= Void then
+					openable_file.open_read
+				end
+#else
 				a_file.open_read
-			end
-		rescue
-			rescued := True
-			if not a_file.is_closed then
+#endif
+			elseif not a_file.is_closed then
 				a_file.close
 			end
-			retry
+		rescue
+			if not rescued then
+				rescued := True
+				retry
+			end
 		end
 
-	file_open_write (a_file: FILE) is
+	file__open_write (a_file: like FILE_type) is
 			-- Open `a_file' in write-only mode.
 			-- `a_file.is_open_write' is set to True
 			-- if operation was successful.
@@ -44,16 +88,35 @@ feature -- Element change
 			a_file_is_closed: a_file.is_closed
 		local
 			rescued: BOOLEAN
+#ifdef ISE || HACT
+			openable_file: FILE
+#endif
 		do
 			if not rescued then
+#ifdef ISE || HACT
+				openable_file ?= a_file
+				if openable_file /= Void then
+					openable_file.open_write
+				end
+#else
 				a_file.open_write
-			end
-		rescue
-			rescued := True
-			if not a_file.is_closed then
+#endif
+			elseif not a_file.is_closed then
 				a_file.close
 			end
-			retry
+		rescue
+			if not rescued then
+				rescued := True
+				retry
+			end
 		end
 
-end -- class UT_FILE_ROUTINES
+feature -- Anchor types
+
+#ifdef ISE || HACT
+	FILE_type: IO_MEDIUM is do end
+#else
+	FILE_type: FILE is do end
+#endif
+
+end -- class KL_FILE_ROUTINES

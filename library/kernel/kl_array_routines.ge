@@ -4,17 +4,17 @@ indexing
 
 		"Routines that ought to be in class ARRAY";
 
-	library:    "Gobo Eiffel Utility Library";
+	library:    "Gobo Eiffel Kernel Library";
 	author:     "Eric Bezault <ericb@gobo.demon.co.uk>";
 	copyright:  "Copyright (c) 1997, Eric Bezault";
 	date:       "$Date$";
 	revision:   "$Revision$"
 
-class UT_ARRAY_ROUTINES
+class KL_ARRAY_ROUTINES
 
 feature -- Status report
 
-	array_has (an_array: ARRAY [ANY]; v: ANY): BOOLEAN is
+	array__has (an_array: ARRAY [ANY]; v: ANY): BOOLEAN is
 			-- Does `v' appear in `an_array'?
 		require
 			an_array_not_void: an_array /= Void
@@ -37,4 +37,4 @@ feature -- Status report
 #endif
 		end
 
-end -- class UT_ARRAY_ROUTINES
+end -- class KL_ARRAY_ROUTINES

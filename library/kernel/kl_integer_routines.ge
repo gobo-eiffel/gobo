@@ -4,13 +4,13 @@ indexing
 
 		"Routines that ought to be in class INTEGER";
 
-	library:    "Gobo Eiffel Utility Library";
+	library:    "Gobo Eiffel Kernel Library";
 	author:     "Eric Bezault <ericb@gobo.demon.co.uk>";
 	copyright:  "Copyright (c) 1997, Eric Bezault";
 	date:       "$Date$";
 	revision:   "$Revision$"
 
-class UT_INTEGER_ROUTINES
+class KL_INTEGER_ROUTINES
 
 inherit
 
@@ -18,7 +18,7 @@ inherit
 
 feature -- Convertion
 
-	integer_to_character (an_int: INTEGER): CHARACTER is
+	integer__to_character (an_int: INTEGER): CHARACTER is
 			-- Character whose ASCII code is `an_int'
 		require
 			a_int_large_enough: an_int >= Minimum_character_code
@@ -41,4 +41,4 @@ feature -- Constants
 			-- Smallest and largest supported codes for CHARACTER values
 
 #endif
-end -- class UT_INTEGER_ROUTINES
+end -- class KL_INTEGER_ROUTINES

@@ -2,46 +2,139 @@ indexing
 
 	description:
 
-		"String handlers";
+		"Routines that ought to be in class STRING";
 
-	library:    "Gobo Eiffel Utility Library";
+	library:    "Gobo Eiffel Kernel Library";
 	author:     "Eric Bezault <ericb@gobo.demon.co.uk>";
 	copyright:  "Copyright (c) 1997, Eric Bezault";
 	date:       "$Date$";
 	revision:   "$Revision$"
 
-class UT_STRING_HANDLER
+class KL_STRING_ROUTINES
+
+feature -- Initialization
+
+	string__make (n: INTEGER): STRING is
+			-- Create an empty string. Try to allocate space
+			-- for at least `n' characters.
+		require
+			non_negative_n: n >= 0
+		do
+#ifdef VE
+			!! Result.make (0)
+#else
+			!! Result.make (n)
+#endif
+		ensure
+			string_not_void: Result /= Void
+			empty_string: Result.count = 0
+		end
+
+	string__make_buffer (n: INTEGER): STRING is
+			-- Create a new string containing `n' characters.
+		require
+			non_negative_n: n >= 0
+		do
+#ifdef VE
+			!! Result.make (n)
+#else
+			!! Result.make (n)
+#ifndef ISE || HACT
+			Result.fill ('#')
+#else
+			Result.fill_blank
+#endif
+#endif
+		ensure
+			string_not_void: Result /= Void
+			count_set: Result.count = n
+		end
+
+feature -- Status report
+
+	string__is_integer (a_string: STRING): BOOLEAN is
+			-- Is `a_string' only made up of digits?
+		require
+			a_string_not_void: a_string /= Void
+#ifndef ISE || HACT
+		local
+			i: INTEGER
+			c: CHARACTER
+		do
+			from
+				i := a_string.count
+				Result := True
+			until
+				not Result or i = 0
+			loop
+				c := a_string.item (i)
+				Result := c >= '0' and c <= '9'
+				i := i - 1
+			end
+#else
+		do
+			Result := a_string.is_integer
+#endif
+		end
 
 feature -- Conversion
 
-	lower_name (a_name: STRING): STRING is
-			-- Lower case name of `a_name'
-			-- (Do not alter `a_name'.)
+	string__to_lower (a_string: STRING): STRING is
+			-- Lower case version of `a_string'
+			-- (Do not alter `a_string'.)
 		require
-			a_name_not_void: a_name /= Void
+			a_string_not_void: a_string /= Void
 		do
-			Result := clone (a_name)
+			Result := clone (a_string)
 			Result.to_lower
 		ensure
-			lower_name_not_void: Result /= Void
-			same_count: Result.count = a_name.count
---			definition: forall i in 1..a_name.count,
---				Result.item (i) = a_name.item (i).to_lower
+			lower_string_not_void: Result /= Void
+			same_count: Result.count = a_string.count
+--			definition: forall i in 1..a_string.count,
+--				Result.item (i) = a_string.item (i).to_lower
 		end
 
-	upper_name (a_name: STRING): STRING is
-			-- Upper case name of `a_name'
-			-- (Do not alter `a_name'.)
+	string__to_upper (a_string: STRING): STRING is
+			-- Upper case version of `a_string'
+			-- (Do not alter `a_string'.)
 		require
-			a_name_not_void: a_name /= Void
+			a_string_not_void: a_string /= Void
 		do
-			Result := clone (a_name)
+			Result := clone (a_string)
 			Result.to_upper
 		ensure
-			upper_name_not_void: Result /= Void
-			same_count: Result.count = a_name.count
---			definition: forall i in 1..a_name.count,
---				Result.item (i) = a_name.item (i).to_upper
+			lower_string_not_void: Result /= Void
+			same_count: Result.count = a_string.count
+--			definition: forall i in 1..a_string.count,
+--				Result.item (i) = a_string.item (i).to_upper
 		end
 
-end -- class UT_STRING_HANDLER
+feature -- Resizing
+
+	string__resize_buffer (a_string: STRING; n: INTEGER) is
+			-- Resize `a_string' so that it contains `n' characters.
+			-- Do not lose any previously entered characters.
+		require
+			a_string_not_void: a_string /= Void
+			n_large_enough: n >= a_string.count
+#ifndef VE
+		local
+			i: INTEGER
+		do
+			from
+				i := n - a_string.count
+				a_string.resize (n)
+			until
+				i = 0
+			loop
+				a_string.append_character ('#')
+				i := i - 1
+			end
+#else
+			a_string.resize (n)
+#endif
+		ensure
+			count_set: a_string.count = n
+		end
+
+end -- class KL_STRING_ROUTINES
