@@ -563,10 +563,22 @@ feature -- Ancestor building status
 
 	set_ancestors_error is
 			-- Set `has_ancestors_error' to True.
+		require
+			ancestors_built: ancestors_built
 		do
 			has_ancestors_error := True
 		ensure
 			has_ancestors_error: has_ancestors_error
+		end
+
+	reset_ancestors_built is
+			-- Set `ancestors_built' to False.
+		do
+			has_ancestors_error := False
+			ancestors_built := False
+		ensure
+			ancestors_not_built: not ancestors_built
+			no_ancestors_error: not has_ancestors_error
 		end
 
 feature -- Creation
@@ -764,10 +776,22 @@ feature -- Feature flattening status
 
 	set_flattening_error is
 			-- Set `has_flattening_error' to True.
+		require
+			features_flattened: features_flattened
 		do
 			has_flattening_error := True
 		ensure
 			has_flattening_error: has_flattening_error
+		end
+
+	reset_features_flattened is
+			-- Set `features_flattened' to False.
+		do
+			has_flattening_error := False
+			features_flattened := False
+		ensure
+			features_not_flattened: not features_flattened
+			no_flattening_error: not has_flattening_error
 		end
 
 feature -- Qualified signature resolving status
@@ -789,10 +813,22 @@ feature -- Qualified signature resolving status
 
 	set_qualified_signatures_error is
 			-- Set `has_qualified_signatures_error' to True.
+		require
+			qualified_signatures_resolved: qualified_signatures_resolved
 		do
 			has_qualified_signatures_error := True
 		ensure
 			has_qualified_signatures_error: has_qualified_signatures_error
+		end
+
+	reset_qualified_signatures_resolved is
+			-- Set `qualified_signatures_resolved' to False.
+		do
+			has_qualified_signatures_error := False
+			qualified_signatures_resolved := False
+		ensure
+			qualified_signatures_not_resolved: not qualified_signatures_resolved
+			no_qualified_signatures_error: not has_qualified_signatures_error
 		end
 
 feature -- Interface checking status
@@ -813,10 +849,22 @@ feature -- Interface checking status
 
 	set_interface_error is
 			-- Set `has_interface_error' to True.
+		require
+			interface_checked: interface_checked
 		do
 			has_interface_error := True
 		ensure
 			has_interface_error: has_interface_error
+		end
+
+	reset_interface_checked is
+			-- Set `interface_checked' to False.
+		do
+			has_interface_error := False
+			interface_checked := False
+		ensure
+			interface_not_checked: not interface_checked
+			no_interface_error: not has_interface_error
 		end
 
 feature -- Implementation checking status
@@ -837,10 +885,22 @@ feature -- Implementation checking status
 
 	set_implementation_error is
 			-- Set `has_implementation_error' to True.
+		require
+			implementation_checked: implementation_checked
 		do
 			has_implementation_error := True
 		ensure
 			has_implementation_error: has_implementation_error
+		end
+
+	reset_implementation_checked is
+			-- Set `implementation_checked' to False.
+		do
+			has_implementation_error := False
+			implementation_checked := False
+		ensure
+			implementation_not_checked: not implementation_checked
+			no_implementation_error: not has_implementation_error
 		end
 
 feature -- Invariant
@@ -916,22 +976,6 @@ feature -- Processing
 			a_processor.process_class (Current)
 		end
 
-	rewind_to_parsing is
-			-- Rewind processing to just after parsing.
-		do
-			ancestors_built := False
-			has_ancestors_error := False
-			ancestors := tokens.empty_ancestors
-			features_flattened := False
-			has_flattening_error := False
-			qualified_signatures_resolved := False
-			has_qualified_signatures_error := False
-			interface_checked := False
-			has_interface_error := False
-			implementation_checked := False
-			has_implementation_error := False
-		end
-
 feature {NONE} -- Constants
 
 	initial_descendants_capacity: INTEGER is
@@ -954,5 +998,10 @@ invariant
 	end_keyword_not_void: end_keyword /= Void
 	named_type: is_named_type
 	valid_context: is_valid_context
+	ancestors_error: has_ancestors_error implies ancestors_built
+	flattening_error: has_flattening_error implies features_flattened
+	qualified_signatures_error: has_qualified_signatures_error implies qualified_signatures_resolved
+	interface_error: has_interface_error implies interface_checked
+	implementation_error: has_implementation_error implies implementation_checked
 
 end

@@ -920,7 +920,11 @@ feature -- Compilation
 					-- Rewind processing to just after parsing.
 				from a_cursor.start until a_cursor.after loop
 					a_class := a_cursor.item
-					a_class.rewind_to_parsing
+					a_class.reset_implementation_checked
+					a_class.reset_interface_checked
+					a_class.reset_qualified_signatures_resolved
+					a_class.reset_features_flattened
+					a_class.reset_ancestors_built
 					a_cursor.forth
 				end
 				feature_count := old_feature_count
@@ -999,7 +1003,11 @@ feature -- Compilation
 					-- Rewind processing to just after parsing.
 				from a_cursor.start until a_cursor.after loop
 					a_class := a_cursor.item
-					a_class.rewind_to_parsing
+					a_class.reset_implementation_checked
+					a_class.reset_interface_checked
+					a_class.reset_qualified_signatures_resolved
+					a_class.reset_features_flattened
+					a_class.reset_ancestors_built
 					a_cursor.forth
 				end
 				feature_count := old_feature_count
