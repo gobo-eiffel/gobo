@@ -12,29 +12,79 @@ indexing
 
 class KL_DOUBLE_ROUTINES
 
-#ifdef ISE || HACT || VE
+#ifdef ISE
 inherit
 	DOUBLE_MATH
+		rename
+			log as old_log,
+			log10 as old_log10
 		export
-			{NONE} all;
-			{ANY} log, log10
+			{NONE} all
 		end
-#endif
 
+#endif
+#ifdef VE
+inherit
+	MATH
+		rename
+			log as old_log
+		export
+			{NONE} all
+		end
+
+#endif
 feature -- Logarithms
 
-#ifdef SE
 	log (d: DOUBLE): DOUBLE is
-			-- Natural logarithm of `d'.
+			-- Natural logarithm of `d'
+		require
+			d_positive: d > 0.0
 		do
+#ifdef SE
 			Result := d.log
+#endif
+#ifdef ISE
+			Result := old_log (d)
+#endif
+#ifdef HACT
+			Result := double_math.log (d)
+#endif
+#ifdef VE
+			Result := old_log (d.truncated_to_real)
+#endif
 		end
 
 	log10 (d: DOUBLE): DOUBLE is
-			-- Base 10 logarithm of `d'.
+			-- Base 10 logarithm of `d'
+		require
+			d_positive: d > 0.0
 		do
+#ifdef SE
 			Result := d.log10
-		end
 #endif
+#ifdef ISE
+			Result := old_log10 (d)
+#endif
+#ifdef HACT
+			Result := double_math.log10 (d)
+#endif
+#ifdef VE
+			Result := log (d) / log (10.0)
+#endif
+		end
 
+#ifdef HACT
+feature {NONE} -- Implementation
+
+	double_math: DOUBLE_MATH is
+			-- Double math functions
+			-- (Note: HACT 4.0.1 does not handle correctly the renaming
+			-- of external features with no alias clause.)
+		once
+			create Result
+		ensure
+			double_math_not_void: Result /= Void
+		end
+
+#endif
 end
