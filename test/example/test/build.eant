@@ -1,14 +1,21 @@
 <?xml version="1.0"?>
 
-<project name="test" inherit="${GOBO}/misc/test.eant" default="help">
+<project name="test" default="help">
 
 	<description>
 		system: "Gobo Eiffel Test Examples Tester"
-		copyright: "Copyright (c) 2001, Eric Bezault and others"
+		copyright: "Copyright (c) 2001-2002, Eric Bezault and others"
 		license: "Eiffel Forum License v1 (see forum.txt)"
 		date: "$Date$"
 		revision: "$Revision$"
 	</description>
+
+	<inherit>
+		<parent location="${GOBO}/misc/test.eant">
+			<redefine target="other_clean"/>
+			<redefine target="init_system"/>
+		</parent>
+	</inherit>
 
 
 <!-- Implementation -->

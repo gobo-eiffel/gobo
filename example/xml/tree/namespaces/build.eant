@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
 
-<project name="namespaces" inherit="${GOBO}/misc/eiffel.eant" default="help" >
+<project name="namespaces" default="help" >
 
 	<description>
 		system: "Namespaces example"
@@ -9,6 +9,12 @@
 		date: "$Date$"
 		revision: "$Revision$"
 	</description>
+
+	<inherit>
+		<parent location="${GOBO}/misc/eiffel.eant">
+			<redefine target="init_system"/>
+		</parent>
+	</inherit>
 
 
 <!-- Implementation -->

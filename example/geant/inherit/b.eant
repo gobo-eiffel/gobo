@@ -1,7 +1,11 @@
 <?xml version="1.0" ?>
 
-<project name="B" inherit="a.eant">
+<project name="B">
 	
+	<inherit>
+		<parent location="a.eant"/>
+	</inherit>
+
 	<target name="f1-">
 		<echo message="B.f1"/>
 		<set name="var1" value="value1"/>

@@ -4,6 +4,7 @@ indexing
 
 		"Test features of class GEANT_MAP"
 
+	library: "Gobo Eiffel Ant"
 	copyright: "Copyright (c) 2002, Sven Ehrke and others"
 	license: "Eiffel Forum License v1 (see forum.txt)"
 	date: "$Date$"

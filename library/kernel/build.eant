@@ -1,15 +1,19 @@
 <?xml version="1.0"?>
 
-<project name="kernel" inherit="${GOBO}/misc/ge2e.eant" default="help">
+<project name="kernel" default="help">
 
 	<description>
 		description: "Eiffel Ant file for the Gobo Eiffel Kernel Library"
 		library: "Gobo Eiffel Kernel Library"
-		copyright: "Copyright (c) 2001, Eric Bezault and others"
+		copyright: "Copyright (c) 2001-2002, Eric Bezault and others"
 		license: "Eiffel Forum License v1 (see forum.txt)"
 		date: "$Date$"
 		revision: "$Revision$"
 	</description>
+
+	<inherit>
+		<parent location="${GOBO}/misc/ge2e.eant"/>
+	</inherit>
 
 	<target name="help">
 		<echo message="usage:"/>

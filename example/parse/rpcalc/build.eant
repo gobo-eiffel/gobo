@@ -1,14 +1,23 @@
 <?xml version="1.0"?>
 
-<project name="rpcalc" inherit="${GOBO}/misc/eiffel.eant" default="help">
+<project name="rpcalc" default="help">
 
 	<description>
 		system: "Reverse Polish Notation Calculator"
-		copyright: "Copyright (c) 2001, Eric Bezault and others"
+		copyright: "Copyright (c) 2001-2002, Eric Bezault and others"
 		license: "Eiffel Forum License v1 (see forum.txt)"
 		date: "$Date$"
 		revision: "$Revision$"
 	</description>
+
+	<inherit>
+		<parent location="${GOBO}/misc/eiffel.eant">
+			<redefine target="help"/>
+			<redefine target="other_install"/>
+			<redefine target="other_clobber"/>
+			<redefine target="init_system"/>
+		</parent>
+	</inherit>
 
 	<target name="help">
 		<echo message="usage:"/>

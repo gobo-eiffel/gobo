@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
 
-<project name="formatter" inherit="${GOBO}/misc/eiffel.eant" default="help" >
+<project name="formatter" default="help" >
 
 	<description>
 		system: "Formatter example"
@@ -9,6 +9,12 @@
 		date: "$Date$"
 		revision: "$Revision$"
 	</description>
+
+	<inherit>
+		<parent location="${GOBO}/misc/eiffel.eant">
+			<redefine target="init_system"/>
+		</parent>
+	</inherit>
 
 
 <!-- Implementation -->

@@ -1,14 +1,20 @@
 <?xml version="1.0"?>
 
-<project name="clock" inherit="${GOBO}/misc/eiffel.eant" default="help">
+<project name="clock" default="help">
 
 	<description>
 		system: "System clock example"
-		copyright: "Copyright (c) 2001, Eric Bezault and others"
+		copyright: "Copyright (c) 2001-2002, Eric Bezault and others"
 		license: "Eiffel Forum License v1 (see forum.txt)"
 		date: "$Date$"
 		revision: "$Revision$"
 	</description>
+
+	<inherit>
+		<parent location="${GOBO}/misc/eiffel.eant">
+			<redefine target="init_system"/>
+		</parent>
+	</inherit>
 
 
 <!-- Implementation -->

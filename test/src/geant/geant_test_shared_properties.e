@@ -4,8 +4,9 @@ indexing
 
 		"Test features of class GEANT_SHARED_PROPERTIES"
 
+	library: "Gobo Eiffel Ant"
 	copyright: "Copyright (c) 2002, Sven Ehrke and others"
-	license: "Eiffel Forum v1 (see forum.txt)"
+	license: "Eiffel Forum License v1 (see forum.txt)"
 	date: "$Date$"
 	revision: "$Revision$"
 
