@@ -402,7 +402,7 @@ href="flatshort/dt_date_time.html#time"><font color="#008080"><em><tt>time</tt><
 color="#008080"><em><tt>set_date</tt></em></font></a> and <a
 href="flatshort/dt_date_time.html#set_time"><font color="#008080"><em><tt>set_time</tt></em></font></a>.</p>
 
-<p>Four creation procedures are provided. <a
+<p>Five creation procedures are provided. <a
 href="flatshort/dt_date_time.html#make"><font color="#008080"><em><tt>make</tt></em></font></a>
 requires six arguments to set the year, month, day, hour, minute
 and second, whereas <a
@@ -413,7 +413,14 @@ hand <a href="flatshort/dt_date_time.html#make_from_date_time"><font
 color="#008080"><em><tt>make_from_date_time</tt></em></font></a>
 and <a href="flatshort/dt_date_time.html#make_from_date"><font
 color="#008080"><em><tt>make_from_date</tt></em></font></a>
-create a new date/time object based on its date and time parts.</p>
+create a new date/time object based on its date and time parts. <a
+href="flatshort/dt_date_time.html#make_from_epoch"><font
+color="#008080"><em><tt>make_from_epoch</tt></em></font></a>
+creates a new date time from the number of seconds since epoch (1
+Jan 1970 at 00:00:00). This routine is useful to convert the time
+stamp of a file (see feature <font color="#008080"><em><tt>time_stamp</tt></em></font>
+from class <font color="#008080"><em><tt>KI_FILE</tt></em></font>)
+into a human readable format.</p>
 
 <p>Contrary to time, date time objects do not have a cyclic
 representation. When the time part reaches 23:59:59, the date
@@ -477,7 +484,7 @@ returns its time part.</p>
             <strong>http:</strong></font><a
             href="http://www.gobosoft.com"><font size="2">//www.gobosoft.com</font></a><font
             size="2"><br>
-            <strong>Last Updated:</strong> 14 June 2000</font><br>
+            <strong>Last Updated:</strong> 10 October 2001</font><br>
             <!--webbot bot="PurpleText"
             preview="
 $Date$ 
