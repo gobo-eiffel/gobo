@@ -51,50 +51,48 @@ feature {NONE} -- Creation
 			implied: is_value_implied
 		end
 
-feature -- From ANY
+feature -- Output
 
 	out: STRING is
 			-- Like in DTD.
 		do
-			-- name
+				-- Name.
 			if has_name then
-				Result := name
+				Result := clone (name)
 			else
-				Result := "?"
+				Result := clone ("?")
 			end
-
-			-- type
-			Result := STRING_.concat (Result, " ")
+				-- Type.
+			Result.append_character (' ')
 			if is_data then
-				Result := STRING_.concat (Result, "CDATA")
+				Result.append_string ("CDATA")
 			elseif is_id then
-				Result := STRING_.concat (Result, "ID")
+				Result.append_string ("ID")
 			elseif is_id_ref then
-				Result := STRING_.concat (Result, "IDREF")
+				Result.append_string ("IDREF")
 			elseif is_entity then
-				Result := STRING_.concat (Result, "ENTITY")
+				Result.append_string ("ENTITY")
 			elseif is_token then
-				Result := STRING_.concat (Result, "NMTOKEN")
+				Result.append_string ("NMTOKEN")
 			elseif is_notation then
-				Result := STRING_.concat (Result, "NOTATION")
+				Result.append_string ("NOTATION")
 			end
 			if is_list_type then
-				Result := STRING_.concat (Result, "S")
+				Result.append_string ("S")
 			end
-			Result := STRING_.concat (Result, " ")
-
-			-- default
+			Result.append_character (' ')
+				-- Default.
 			if is_value_required then
-				Result := STRING_.concat (Result, "#REQUIRED")
+				Result.append_string ("#REQUIRED")
 			elseif is_value_implied then
-				Result := STRING_.concat (Result, "#IMPLIED")
+				Result.append_string ("#IMPLIED")
 			elseif is_value_fixed then
-				Result := STRING_.concat (Result, "#FIXED ")
+				Result.append_string ("#FIXED ")
 			end
 			if has_default_value then
-				Result := STRING_.concat (Result, " %"")
-				Result := STRING_.concat (Result, default_value)
-				Result := STRING_.concat (Result, "%"")
+				Result.append_string (" %"")
+				Result := STRING_.appended_string (Result, default_value)
+				Result.append_character ('%"')
 			end
 		end
 
