@@ -1,0 +1,107 @@
+<?xml version="1.0"?>
+
+<project name="formatter_documentation" default="help">
+
+	<description>
+		description: "Eiffel Formatter file for Gobo Eiffel Ant Documentation"
+		system: "Gobo Eiffel Formatter Documentation"
+		copyright: "Copyright (c) 2004, Berend de Boer and others"
+		license: "Eiffel Forum License v2 (see forum.txt)"
+		date: "$Date$"
+		revision: "$Revision$"
+	</description>
+
+	<target name="help">
+		<echo message="usage:"/>
+		<echo message="   geant install"/>
+		<echo message="   geant clean"/>
+		<echo message="   geant clobber"/>
+	</target>
+
+	<target name="install">
+		<description>
+			Install the Gobo Eiffel Formatter Documentation.
+		</description>
+
+		<set name="xslt_processor" value="xsltproc" unless="$GOBO_XSLT_PROCESSOR"/>
+		<set name="xslt_processor" value="${GOBO_XSLT_PROCESSOR}" if="$GOBO_XSLT_PROCESSOR"/>
+
+			<!-- Concepts: -->
+		<xslt
+			processor="${xslt_processor}"
+			input="overview.xml"
+			output="overview.html"
+			stylesheet="${GOBO}/doc/misc/gobo2html.xsl"
+		/>
+
+		<set name="input" value="index"/>
+		<set name="next" value="index"/>
+
+		<set name="next_chapter" value="index"/>
+		<geant target="xslt"/>
+
+		<set name="next_chapter" value="overview"/>
+		<geant target="xslt"/>
+
+		<set name="next_chapter" value="quick_start"/>
+		<geant target="xslt"/>
+
+		<set name="next_chapter" value="scientific_format"/>
+		<geant target="xslt"/>
+
+		<set name="next_chapter" value="examples"/>
+		<geant target="xslt"/>
+
+		<set name="next_chapter" value="index"/>
+		<geant target="xslt"/>
+
+	</target>
+
+	<target name="clean">
+		<description>
+			Remove intermediary generated files.
+		</description>
+
+		<!-- do nothing -->
+	</target>
+
+	<target name="clobber">
+		<description>
+			Remove all generated files.
+		</description>
+
+			<!-- Concepts: -->
+		<delete file="index.html"/>
+		<delete file="overview.html"/>
+		<delete file="quick_start.html"/>
+		<delete file="scientific_format.html"/>
+		<delete file="examples.html"/>
+		<delete file="flat_short_form.html"/>
+	</target>
+
+
+<!-- Implementation -->
+
+	<target name="xslt">
+		<description>
+			Execute XSL Transformation for argument ${input}, ${previous} and ${next} using processor ${xslt_processor}.
+		</description>
+
+		<set name="previous" value="${input}"/>
+		<set name="input" value="${next}"/>
+		<set name="next" value="${next_chapter}"/>
+
+		<xslt
+			processor="${xslt_processor}"
+			input="${input}.xml"
+			output="${input}.html"
+			stylesheet="${GOBO}/doc/misc/gobo2html.xsl"
+		>
+			<parameter name="previous" value="&quot;'${previous}.html'&quot;"/>
+			<parameter name="next" value="&quot;'${next}.html'&quot;"/>
+			<parameter name="toc" value="&quot;'index.html'&quot;"/>
+		</xslt>
+	</target>
+
+
+</project>
