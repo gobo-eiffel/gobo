@@ -14,8 +14,9 @@ deferred class ET_POSITION
 
 inherit
 
+	ANY
 	KL_IMPORTED_STRING_ROUTINES
-	UT_IMPORTED_FORMATTERS
+	KL_IMPORTED_INTEGER_ROUTINES
 
 feature -- Access
 
@@ -68,9 +69,9 @@ feature -- Output
 			a_string_not_void: a_string /= Void
 		do
 			a_string.append_string ("line ")
-			INTEGER_FORMATTER_.append_decimal_integer (a_string, line)
+			INTEGER_.append_decimal_integer (line, a_string)
 			a_string.append_string (" column ")
-			INTEGER_FORMATTER_.append_decimal_integer (a_string, column)
+			INTEGER_.append_decimal_integer (column, a_string)
 		end
 
 	append_to_string_with_filename (a_filename: STRING; a_string: STRING) is
@@ -80,9 +81,9 @@ feature -- Output
 			a_string_not_void: a_string /= Void
 		do
 			a_string.append_string ("line ")
-			INTEGER_FORMATTER_.append_decimal_integer (a_string, line)
+			INTEGER_.append_decimal_integer (line, a_string)
 			a_string.append_string (" column ")
-			INTEGER_FORMATTER_.append_decimal_integer (a_string, column)
+			INTEGER_.append_decimal_integer (column, a_string)
 			a_string.append_string (" in ")
 			a_string.append_string (a_filename)
 			a_string.append_character ('%N')

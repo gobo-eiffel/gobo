@@ -42,7 +42,7 @@ feature -- Conversion
 			an_int_positive: an_int >= 0
 		do
 			create Result.make (8) -- Max 8 hexadecimal digits for 32-bits
-			append_hexadecimal_integer (Result, an_int, uppercase)
+			append_hexadecimal_integer (an_int, Result, uppercase)
 		ensure
 			hexadecimal_not_void: Result /= Void
 			is_string: Result.same_type ("")
@@ -50,14 +50,177 @@ feature -- Conversion
 			-- regexp_lowercase: not uppercase implies (0|[1-9a-f][0-9a-f]*).recognizes (Result)
 		end
 
+	to_decimal (an_int: INTEGER): STRING is
+			-- Decimal representation of `an_int';
+			-- Return a new string at each call.
+		do
+			create Result.make (10)
+			append_decimal_integer (an_int, Result)
+		ensure
+			decimal_not_void: Result /= Void
+			is_string: Result.same_type ("")
+			-- regexp: (0|(-?[1-9][0-9]*)).recognizes (Result)
+		end
+
+	to_octal (an_int: INTEGER): STRING is
+			-- Octal representation of `an_int';
+			-- Return a new string at each call.
+		require
+			an_int_positive: an_int >= 0
+		do
+			create Result.make (10)
+			append_octal_integer (an_int, Result)
+		ensure
+			octal_not_void: Result /= Void
+			is_string: Result.same_type ("")
+			-- regexp: (0|[1-7][0-7]*).recognizes (Result)
+		end
+
 feature -- Output
 
-	append_hexadecimal_integer (a_string: STRING; an_int: INTEGER; uppercase: BOOLEAN) is
-			-- Append a hexadecimal representation of `an_int' to `a_string'.
+	append_decimal_integer (an_int: INTEGER; a_string: STRING) is
+			-- Append decimal representation of `an_int' to `a_string'.
 			-- Note: works even when `a_string' is a UC_STRING.
 		require
 			a_string_not_void: a_string /= Void
+		local
+			i, k: INTEGER
+		do
+			if an_int = 0 then
+				a_string.append_character ('0')
+			elseif an_int < 0 then
+				a_string.append_character ('-')
+					-- Avoid overflow.
+				k := -(an_int + 1)
+				i := k // 10
+				inspect k \\ 10
+				when 0 then
+					if i /= 0 then
+						append_decimal_integer (i, a_string)
+					end
+					a_string.append_character ('1')
+				when 1 then
+					if i /= 0 then
+						append_decimal_integer (i, a_string)
+					end
+					a_string.append_character ('2')
+				when 2 then
+					if i /= 0 then
+						append_decimal_integer (i, a_string)
+					end
+					a_string.append_character ('3')
+				when 3 then
+					if i /= 0 then
+						append_decimal_integer (i, a_string)
+					end
+					a_string.append_character ('4')
+				when 4 then
+					if i /= 0 then
+						append_decimal_integer (i, a_string)
+					end
+					a_string.append_character ('5')
+				when 5 then
+					if i /= 0 then
+						append_decimal_integer (i, a_string)
+					end
+					a_string.append_character ('6')
+				when 6 then
+					if i /= 0 then
+						append_decimal_integer (i, a_string)
+					end
+					a_string.append_character ('7')
+				when 7 then
+					if i /= 0 then
+						append_decimal_integer (i, a_string)
+					end
+					a_string.append_character ('8')
+				when 8 then
+					if i /= 0 then
+						append_decimal_integer (i, a_string)
+					end
+					a_string.append_character ('9')
+				when 9 then
+					append_decimal_integer (i + 1, a_string)
+					a_string.append_character ('0')
+				end
+			else
+				k := an_int
+				i := k // 10
+				if i /= 0 then
+					append_decimal_integer (i, a_string)
+				end
+				inspect k \\ 10
+				when 0 then
+					a_string.append_character ('0')
+				when 1 then
+					a_string.append_character ('1')
+				when 2 then
+					a_string.append_character ('2')
+				when 3 then
+					a_string.append_character ('3')
+				when 4 then
+					a_string.append_character ('4')
+				when 5 then
+					a_string.append_character ('5')
+				when 6 then
+					a_string.append_character ('6')
+				when 7 then
+					a_string.append_character ('7')
+				when 8 then
+					a_string.append_character ('8')
+				when 9 then
+					a_string.append_character ('9')
+				end
+			end
+		ensure
+			-- regexp: (0|(-?[1-9][0-9]*)).recognizes (a_string.substring (old a_string.count + 1, a_string.count))
+		end
+
+	append_octal_integer (an_int: INTEGER; a_string: STRING) is
+			-- Append octal representation of `an_int' to `a_string'.
+			-- Note: works even when `a_string' is a UC_STRING.
+		require
 			an_int_positive: an_int >= 0
+			a_string_not_void: a_string /= Void
+		local
+			k: INTEGER
+		do
+			if an_int = 0 then
+				a_string.append_character ('0')
+			else
+				k := an_int // 8
+				if k /= 0 then
+					append_octal_integer (k, a_string)
+				end
+				inspect an_int \\ 8
+				when 0 then
+					a_string.append_character ('0')
+				when 1 then
+					a_string.append_character ('1')
+				when 2 then
+					a_string.append_character ('2')
+				when 3 then
+					a_string.append_character ('3')
+				when 4 then
+					a_string.append_character ('4')
+				when 5 then
+					a_string.append_character ('5')
+				when 6 then
+					a_string.append_character ('6')
+				when 7 then
+					a_string.append_character ('7')
+				end
+			end
+		ensure
+			-- regexp: (0|[1-7][0-7]*).recognizes (a_string.substring (old a_string.count + 1, a_string.count))
+		end
+
+	append_hexadecimal_integer (an_int: INTEGER; a_string: STRING; uppercase: BOOLEAN) is
+			-- Append a hexadecimal representation of `an_int' to `a_string'.
+			-- Note: works even when `a_string' is a UC_STRING.
+		require
+			an_int_positive: an_int >= 0
+			a_string_not_void: a_string /= Void
 		local
 			k: INTEGER
 		do
@@ -66,7 +229,7 @@ feature -- Output
 			else
 				k := an_int // 16
 				if k /= 0 then
-					append_hexadecimal_integer (a_string, k, uppercase)
+					append_hexadecimal_integer (k, a_string, uppercase)
 				end
 				inspect an_int \\ 16
 				when 0 then

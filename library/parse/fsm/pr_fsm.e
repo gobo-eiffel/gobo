@@ -17,7 +17,7 @@ inherit
 	ANY -- Export features of ANY.
 
 	KL_IMPORTED_STRING_ROUTINES
-	UT_IMPORTED_FORMATTERS
+	KL_IMPORTED_INTEGER_ROUTINES
 
 creation
 
@@ -117,7 +117,7 @@ feature -- Conflicts
 				if sr_total = 1 then
 					message.append_string ("1 shift/reduce conflict")
 				elseif sr_total > 1 then
-					INTEGER_FORMATTER_.append_decimal_integer (message, sr_total)
+					INTEGER_.append_decimal_integer (sr_total, message)
 					message.append_string (" shift/reduce conflicts")
 				end
 				if sr_total > 0 and rr_total > 0 then
@@ -126,7 +126,7 @@ feature -- Conflicts
 				if rr_total = 1 then
 					message.append_string ("1 reduce/reduce conflict")
 				elseif rr_total > 1 then
-					INTEGER_FORMATTER_.append_decimal_integer (message, rr_total)
+					INTEGER_.append_decimal_integer (rr_total, message)
 					message.append_string (" reduce/reduce conflicts")
 				end
 				message.append_string (".%N")
@@ -201,7 +201,7 @@ feature -- Conflicts
 				if sr_total = 1 then
 					message.append_string ("1 shift/reduce conflict")
 				elseif sr_total > 1 then
-					INTEGER_FORMATTER_.append_decimal_integer (message, sr_total)
+					INTEGER_.append_decimal_integer (sr_total, message)
 					message.append_string (" shift/reduce conflicts")
 				end
 				if sr_total > 0 and rr_total > 0 then
@@ -210,7 +210,7 @@ feature -- Conflicts
 				if rr_total = 1 then
 					message.append_string ("1 reduce/reduce conflict")
 				elseif rr_total > 1 then
-					INTEGER_FORMATTER_.append_decimal_integer (message, rr_total)
+					INTEGER_.append_decimal_integer (rr_total, message)
 					message.append_string (" reduce/reduce conflicts")
 				end
 				message.append_string (".%N")
@@ -338,7 +338,7 @@ feature -- Setting
 				if nb_conflicts = 1 then
 					message.append_string ("1 error action conflict.%N")
 				else
-					INTEGER_FORMATTER_.append_decimal_integer (message, nb_conflicts)
+					INTEGER_.append_decimal_integer (nb_conflicts, message)
 					message.append_string (" error action conflicts.%N")
 				end
 				create warning.make (message)
@@ -486,7 +486,7 @@ feature -- Setting
 				if nb_conflicts = 1 then
 					message.append_string ("1 error action conflict.%N")
 				else
-					INTEGER_FORMATTER_.append_decimal_integer (message, nb_conflicts)
+					INTEGER_.append_decimal_integer (nb_conflicts, message)
 					message.append_string (" error action conflicts.%N")
 				end
 				create warning.make (message)

@@ -19,12 +19,12 @@ inherit
 			out
 		end
 
-	UT_IMPORTED_FORMATTERS
+	KL_IMPORTED_STRING_ROUTINES
 		undefine
 			out
 		end
 
-	KL_IMPORTED_STRING_ROUTINES
+	KL_IMPORTED_INTEGER_ROUTINES
 		undefine
 			out
 		end
@@ -106,14 +106,14 @@ feature -- Output
 		require
 			a_string_not_void: a_string /= Void
 		do
-			INTEGER_FORMATTER_.append_decimal_integer (a_string, hour)
+			INTEGER_.append_decimal_integer (hour, a_string)
 			a_string.append_character (':')
-			INTEGER_FORMATTER_.append_decimal_integer (a_string, minute)
+			INTEGER_.append_decimal_integer (minute, a_string)
 			a_string.append_character (':')
-			INTEGER_FORMATTER_.append_decimal_integer (a_string, second)
+			INTEGER_.append_decimal_integer (second, a_string)
 			if millisecond /= 0 then
 				a_string.append_character ('.')
-				INTEGER_FORMATTER_.append_decimal_integer (a_string, millisecond)
+				INTEGER_.append_decimal_integer (millisecond, a_string)
 			end
 		end
 

@@ -20,7 +20,7 @@ inherit
 
 	KL_IMPORTED_STRING_ROUTINES
 	KL_IMPORTED_CHARACTER_ROUTINES
-	UT_IMPORTED_FORMATTERS
+	KL_IMPORTED_INTEGER_ROUTINES
 
 creation
 
@@ -161,17 +161,17 @@ feature -- Output
 			end
 			if offset = 0 then
 				a_string.append_string ("yyvs")
-				INTEGER_FORMATTER_.append_decimal_integer (a_string, id)
+				INTEGER_.append_decimal_integer (id, a_string)
 				a_string.append_string (".item (yyvsp")
-				INTEGER_FORMATTER_.append_decimal_integer (a_string, id)
+				INTEGER_.append_decimal_integer (id, a_string)
 				a_string.append_character (')')
 			else
 				a_string.append_string ("yyvs")
-				INTEGER_FORMATTER_.append_decimal_integer (a_string, id)
+				INTEGER_.append_decimal_integer (id, a_string)
 				a_string.append_string (".item (yyvsp")
-				INTEGER_FORMATTER_.append_decimal_integer (a_string, id)
+				INTEGER_.append_decimal_integer (id, a_string)
 				a_string.append_string (" - ")
-				INTEGER_FORMATTER_.append_decimal_integer (a_string, offset)
+				INTEGER_.append_decimal_integer (offset, a_string)
 				a_string.append_character (')')
 			end
 		end
@@ -182,7 +182,7 @@ feature -- Output
 			a_string_not_void: a_string /= Void
 		do
 			a_string.append_string ("yyval")
-			INTEGER_FORMATTER_.append_decimal_integer (a_string, id)
+			INTEGER_.append_decimal_integer (id, a_string)
 		end
 
 	print_yyvs_declaration (indent: INTEGER; a_file: KI_TEXT_OUTPUT_STREAM) is
@@ -467,7 +467,7 @@ feature -- Old typing output
 			if conversion_needed then
 				is_used := True
 				a_string.append_string ("yytype")
-				INTEGER_FORMATTER_.append_decimal_integer (a_string, id)
+				INTEGER_.append_decimal_integer (id, a_string)
 				a_string.append_string (" (")
 			end
 			offset := nb_rhs - n
@@ -475,7 +475,7 @@ feature -- Old typing output
 				a_string.append_string ("yyvs.item (yyvsp)")
 			else
 				a_string.append_string ("yyvs.item (yyvsp - ")
-				INTEGER_FORMATTER_.append_decimal_integer (a_string, offset)
+				INTEGER_.append_decimal_integer (offset, a_string)
 				a_string.append_character (')')
 			end
 			if conversion_needed then
@@ -491,7 +491,7 @@ feature -- Old typing output
 		do
 			a_string.append_string ("yyval")
 			if not name.is_equal ("ANY") then
-				INTEGER_FORMATTER_.append_decimal_integer (a_string, id)
+				INTEGER_.append_decimal_integer (id, a_string)
 			end
 		end
 

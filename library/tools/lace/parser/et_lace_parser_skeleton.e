@@ -27,7 +27,7 @@ inherit
 			make as make_lace_scanner
 		end
 
-	UT_IMPORTED_FORMATTERS
+	KL_IMPORTED_INTEGER_ROUTINES
 		export {NONE} all end
 
 feature {NONE} -- Initialization
@@ -259,7 +259,7 @@ feature -- Error handling
 			else
 				a_lined_message.append_string ("line ")
 			end
-			INTEGER_FORMATTER_.append_decimal_integer (a_lined_message, eif_lineno)
+			INTEGER_.append_decimal_integer (eif_lineno, a_lined_message)
 			a_lined_message.append_string (": ")
 			a_lined_message.append_string (a_message)
 			create an_error.make (a_lined_message)

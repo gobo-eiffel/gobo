@@ -469,19 +469,19 @@ feature -- Output
 			if h < 10 then
 				a_string.append_character ('0')
 			end
-			INTEGER_FORMATTER_.append_decimal_integer (a_string, h)
+			INTEGER_.append_decimal_integer (h, a_string)
 			a_string.append_character (':')
 			m := minute
 			if m < 10 then
 				a_string.append_character ('0')
 			end
-			INTEGER_FORMATTER_.append_decimal_integer (a_string, m)
+			INTEGER_.append_decimal_integer (m, a_string)
 			a_string.append_character (':')
 			s := second
 			if s < 10 then
 				a_string.append_character ('0')
 			end
-			INTEGER_FORMATTER_.append_decimal_integer (a_string, s)
+			INTEGER_.append_decimal_integer (s, a_string)
 			ms := millisecond
 			if ms /= 0 then
 				a_string.append_character ('.')
@@ -491,7 +491,7 @@ feature -- Output
 				elseif ms < 100 then
 					a_string.append_character ('0')
 				end
-				INTEGER_FORMATTER_.append_decimal_integer (a_string, ms)
+				INTEGER_.append_decimal_integer (ms, a_string)
 			end
 		end
 

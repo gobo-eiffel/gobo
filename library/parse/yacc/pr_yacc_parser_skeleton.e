@@ -27,7 +27,7 @@ inherit
 			reset as reset_yacc_scanner
 		end
 
-	UT_IMPORTED_FORMATTERS
+	KL_IMPORTED_INTEGER_ROUTINES
 
 feature {NONE} -- Initialization
 
@@ -481,7 +481,7 @@ feature {NONE} -- Factory
 		do
 			create a_name.make (10)
 			a_name.append_character ('@')
-			INTEGER_FORMATTER_.append_decimal_integer (a_name, nonterminal_symbols.count)
+			INTEGER_.append_decimal_integer (nonterminal_symbols.count, a_name)
 				-- Variables are indexed from 0.
 			an_id := last_grammar.variables.count
 			create Result.make (an_id, a_name, Unknown_type)

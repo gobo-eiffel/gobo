@@ -18,7 +18,7 @@ inherit
 	KL_SHARED_EXCEPTIONS
 	KL_SHARED_EXECUTION_ENVIRONMENT
 	KL_IMPORTED_STRING_ROUTINES
-	UT_IMPORTED_FORMATTERS
+	KL_IMPORTED_INTEGER_ROUTINES
 
 feature -- Basic operations
 
@@ -194,7 +194,7 @@ feature -- Files
 								a_message.append_string ("' and '")
 								a_message.append_string (a_filename2)
 								a_message.append_string ("' at line ")
-								INTEGER_FORMATTER_.append_decimal_integer (a_message, i)
+								INTEGER_.append_decimal_integer (i, a_message)
 								a_message.append_string (")")
 								a_file1.close
 								a_file2.close
@@ -213,7 +213,7 @@ feature -- Files
 							a_message.append_string ("' and '")
 							a_message.append_string (a_filename2)
 							a_message.append_string ("' at line ")
-							INTEGER_FORMATTER_.append_decimal_integer (a_message, i)
+							INTEGER_.append_decimal_integer (i, a_message)
 							a_message.append_string (")")
 							a_file1.close
 							a_file2.close
@@ -227,7 +227,7 @@ feature -- Files
 							a_message.append_string ("' and '")
 							a_message.append_string (a_filename2)
 							a_message.append_string ("' at line ")
-							INTEGER_FORMATTER_.append_decimal_integer (a_message, i)
+							INTEGER_.append_decimal_integer (i, a_message)
 							a_message.append_string (")")
 							a_file1.close
 							a_file2.close
@@ -351,7 +351,7 @@ feature -- Containers
 						create new_tag.make (15)
 						new_tag.append_string (a_tag)
 						new_tag.append_string ("-item #")
-						INTEGER_FORMATTER_.append_decimal_integer (new_tag, i)
+						INTEGER_.append_decimal_integer (i, new_tag)
 						a_message := assert_equal_message (new_tag, expected_item, actual_item)
 						Assertions.set_error_message (a_message)
 						Exceptions.raise (Assertion_failure)
@@ -396,7 +396,7 @@ feature -- Containers
 						create new_tag.make (15)
 						new_tag.append_string (a_tag)
 						new_tag.append_string ("-item #")
-						INTEGER_FORMATTER_.append_decimal_integer (new_tag, i)
+						INTEGER_.append_decimal_integer (i, new_tag)
 						a_message := assert_equal_message (new_tag, expected_item, actual_item)
 						Assertions.set_error_message (a_message)
 						Exceptions.raise (Assertion_failure)
@@ -454,7 +454,7 @@ feature -- Containers
 						create new_tag.make (15)
 						new_tag.append_string (a_tag)
 						new_tag.append_string ("-item #")
-						INTEGER_FORMATTER_.append_decimal_integer (new_tag, i)
+						INTEGER_.append_decimal_integer (i, new_tag)
 						a_message := assert_integers_equal_message (new_tag, expected_item, actual_item)
 						Assertions.set_error_message (a_message)
 						Exceptions.raise (Assertion_failure)

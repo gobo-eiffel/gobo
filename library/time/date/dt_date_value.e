@@ -19,12 +19,12 @@ inherit
 			out
 		end
 
-	UT_IMPORTED_FORMATTERS
+	KL_IMPORTED_STRING_ROUTINES
 		undefine
 			out
 		end
 
-	KL_IMPORTED_STRING_ROUTINES
+	KL_IMPORTED_INTEGER_ROUTINES
 		undefine
 			out
 		end
@@ -79,11 +79,11 @@ feature -- Output
 		require
 			a_string_not_void: a_string /= Void
 		do
-			INTEGER_FORMATTER_.append_decimal_integer (a_string, year)
+			INTEGER_.append_decimal_integer (year, a_string)
 			a_string.append_character ('/')
-			INTEGER_FORMATTER_.append_decimal_integer (a_string, month)
+			INTEGER_.append_decimal_integer (month, a_string)
 			a_string.append_character ('/')
-			INTEGER_FORMATTER_.append_decimal_integer (a_string, day)
+			INTEGER_.append_decimal_integer (day, a_string)
 		end
 
 end

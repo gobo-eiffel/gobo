@@ -17,7 +17,7 @@ inherit
 	ANY -- Export features from ANY.
 
 	KL_IMPORTED_STRING_ROUTINES
-	UT_IMPORTED_FORMATTERS
+	KL_IMPORTED_INTEGER_ROUTINES
 
 creation
 
@@ -264,7 +264,7 @@ feature -- Processing
 				if useless_variables = 1 then
 					message.append_string ("1 useless nonterminal")
 				elseif useless_variables > 1 then
-					INTEGER_FORMATTER_.append_decimal_integer (message, useless_variables)
+					INTEGER_.append_decimal_integer (useless_variables, message)
 					message.append_string (" useless nonterminals")
 				end
 				if useless_variables > 0 and useless_rules > 0 then
@@ -273,7 +273,7 @@ feature -- Processing
 				if useless_rules = 1 then
 					message.append_string ("1 useless rule")
 				elseif useless_rules > 1 then
-					INTEGER_FORMATTER_.append_decimal_integer (message, useless_rules)
+					INTEGER_.append_decimal_integer (useless_rules, message)
 					message.append_string (" useless rules")
 				end
 				message.append_string (".%N")

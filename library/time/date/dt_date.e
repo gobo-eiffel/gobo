@@ -521,17 +521,17 @@ feature -- Output
 			yy := year
 			mm := month
 			dd := day
-			INTEGER_FORMATTER_.append_decimal_integer (a_string, yy)
+			INTEGER_.append_decimal_integer (yy, a_string)
 			a_string.append_character ('/')
 			if mm < 10 then
 				a_string.append_character ('0')
 			end
-			INTEGER_FORMATTER_.append_decimal_integer (a_string, mm)
+			INTEGER_.append_decimal_integer (mm, a_string)
 			a_string.append_character ('/')
 			if dd < 10 then
 				a_string.append_character ('0')
 			end
-			INTEGER_FORMATTER_.append_decimal_integer (a_string, dd)
+			INTEGER_.append_decimal_integer (dd, a_string)
 		end
 
 feature {DT_DATE_HANDLER} -- Implementation

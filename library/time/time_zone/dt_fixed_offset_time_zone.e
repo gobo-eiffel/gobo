@@ -21,7 +21,7 @@ inherit
 
 	DT_GREGORIAN_CALENDAR
 
-	UT_IMPORTED_FORMATTERS
+	KL_IMPORTED_INTEGER_ROUTINES
 		export {NONE} all end
 
 creation
@@ -62,17 +62,17 @@ feature {NONE} -- Initialization
 			if l_hour < 10 then
 				l_name.append_character ('0')
 			end
-			INTEGER_FORMATTER_.append_decimal_integer (l_name, l_hour)
+			INTEGER_.append_decimal_integer (l_hour, l_name)
 			l_name.append_character (':')
 			if l_minute < 10 then
 				l_name.append_character ('0')
 			end
-			INTEGER_FORMATTER_.append_decimal_integer (l_name, l_minute)
+			INTEGER_.append_decimal_integer (l_minute, l_name)
 			if l_second /= 0 then
 				if l_second < 10 then
 					l_name.append_character ('0')
 				end
-				INTEGER_FORMATTER_.append_decimal_integer (l_name, l_second)
+				INTEGER_.append_decimal_integer (l_second, l_name)
 				if l_millisecond /= 0 then
 					l_name.append_character ('.')
 					if l_millisecond < 10 then
@@ -81,7 +81,7 @@ feature {NONE} -- Initialization
 					elseif l_millisecond < 100 then
 						l_name.append_character ('0')
 					end
-					INTEGER_FORMATTER_.append_decimal_integer (l_name, l_millisecond)
+					INTEGER_.append_decimal_integer (l_millisecond, l_name)
 				end
 			elseif l_millisecond /= 0 then
 				l_name.append_character (':')
@@ -94,7 +94,7 @@ feature {NONE} -- Initialization
 				elseif l_millisecond < 100 then
 					l_name.append_character ('0')
 				end
-				INTEGER_FORMATTER_.append_decimal_integer (l_name, l_millisecond)
+				INTEGER_.append_decimal_integer (l_millisecond, l_name)
 			end
 			make_named (l_name, an_offset)
 		ensure

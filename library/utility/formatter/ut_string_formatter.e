@@ -17,6 +17,7 @@ inherit
 	ANY -- Export features of ANY.
 
 	KL_IMPORTED_STRING_ROUTINES
+	KL_IMPORTED_INTEGER_ROUTINES
 	UT_IMPORTED_FORMATTERS
 
 feature -- Access
@@ -125,7 +126,7 @@ feature -- String handling
 				else
 					a_target.append_character ('%%')
 					a_target.append_character ('/')
-					INTEGER_FORMATTER_.append_decimal_integer (a_target, a_string.item_code (i))
+					INTEGER_.append_decimal_integer (a_string.item_code (i), a_target)
 					a_target.append_character ('/')
 				end
 				i := i + 1
