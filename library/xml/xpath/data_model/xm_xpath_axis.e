@@ -12,6 +12,12 @@ indexing
 
 class XM_XPATH_AXIS
 
+inherit
+
+	XM_XPATH_TYPE
+
+	KL_IMPORTED_STRING_ROUTINES
+
 feature -- Access
 
 	Ancestor_axis: INTEGER is 1
@@ -28,14 +34,120 @@ feature -- Access
 	Self_axis: INTEGER is 12
 	Preceding_or_ancestor_axis: INTEGER is 13
 			-- Used internally by xsl:number implementation
-	
+
+	axis_number (an_axis: STRING): INTEGER is
+			-- Numeric axis indication
+		require
+			valid_axis_name: is_axis_name_valid (an_axis)
+		do
+			if STRING_.same_string ("ancestor", an_axis) then
+				Result := Ancestor_axis
+			elseif STRING_.same_string ("ancestor-or-self", an_axis) then
+				Result := Ancestor_or_self_axis
+			elseif STRING_.same_string ("attribute", an_axis) then
+				Result := Attribute_axis
+			elseif STRING_.same_string ("child", an_axis) then
+				Result := Child_axis
+			elseif STRING_.same_string ("descendant", an_axis) then
+				Result := Descendant_axis
+			elseif STRING_.same_string ("descendant-or-self", an_axis) then
+				Result := Descendant_or_self_axis
+			elseif STRING_.same_string ("following", an_axis) then
+				Result := Following_axis
+			elseif STRING_.same_string ("following-sibling", an_axis) then
+				Result := Following_sibling_axis
+			elseif STRING_.same_string ("parent", an_axis) then
+				Result := Parent_axis
+			elseif STRING_.same_string ("preceding", an_axis) then
+				Result := Preceding_axis
+			elseif STRING_.same_string ("preceding-sibling", an_axis) then
+				Result := Preceding_sibling_axis
+			elseif STRING_.same_string ("self", an_axis) then
+				Result := Self_axis
+			end
+		ensure
+			axis_number_in_range: Ancestor_axis >= Result and then Result < Preceding_or_ancestor_axis -- (can't be used in XPath expression)
+		end
+
+	axis_principal_node_type (an_axis: INTEGER): INTEGER is
+	require
+		valid_axis: is_axis_valid (an_axis)
+		do
+			if	an_axis = Attribute_axis then
+				Result := Attribute_node
+			else
+				Result := Element_node
+			end
+		ensure
+			axis_number_in_range: Ancestor_axis >= Result and then Result <= Preceding_or_ancestor_axis			
+		end
+
 feature -- Status report
 
-	is_axis_valid (axis: INTEGER): BOOLEAN is
-			-- Is `axis' a valid axis?
+	is_axis_valid (an_axis: INTEGER): BOOLEAN is
+			-- Is `an_axis' a valid axis?
 		do
-			Result := axis >= Ancestor_axis and then axis <= Preceding_or_ancestor_axis
+			Result := an_axis >= Ancestor_axis and then an_axis <= Preceding_or_ancestor_axis
 		end
-	
+
+	is_axis_name_valid (an_axis: STRING): BOOLEAN is
+		require
+			axis_name_not_void: an_axis /= Void
+		do
+			if STRING_.same_string ("ancestor", an_axis) then
+				Result := True
+			elseif STRING_.same_string ("ancestor-or-self", an_axis) then
+				Result := True
+			elseif STRING_.same_string ("attribute", an_axis) then
+				Result := True
+			elseif STRING_.same_string ("child", an_axis) then
+				Result := True
+			elseif STRING_.same_string ("descendant", an_axis) then
+				Result := True
+			elseif STRING_.same_string ("descendant-or-self", an_axis) then
+				Result := True
+			elseif STRING_.same_string ("following", an_axis) then
+				Result := True
+			elseif STRING_.same_string ("following-sibling", an_axis) then
+				Result := True
+			elseif STRING_.same_string ("parent", an_axis) then
+				Result := True
+			elseif STRING_.same_string ("preceding", an_axis) then
+				Result := True
+			elseif STRING_.same_string ("preceding-sibling", an_axis) then
+				Result := True
+			elseif STRING_.same_string ("self", an_axis) then
+				Result := True
+			else
+				Result := False
+			end				
+		end
+
+	is_reverse_axis (an_axis: INTEGER): BOOLEAN is
+			-- Is `an_axis' traveresed in reverse document order?
+		require
+			valid_axis: is_axis_valid (an_axis)
+		do
+			inspect
+				an_axis
+			when Ancestor_axis then
+				Result := True
+			when Ancestor_or_self_axis then
+				Result := True
+			when Parent_axis then
+				Result := True
+			when Preceding_axis then
+				Result := True
+			when Preceding_sibling_axis then
+				Result := True
+			when Self_axis then
+				Result := True
+			when Preceding_or_ancestor_axis then
+				Result := True
+			else
+				Result := False
+			end
+		end
+
 end
 	

@@ -12,28 +12,93 @@ indexing
 
 deferred class XM_XPATH_STATIC_CONTEXT
 
+inherit
+
+	XM_UNICODE_CHARACTERS_1_1
+
 	-- A StaticContext contains the information needed while an expression or pattern is being parsed;
 	-- The information is also sometimes needed at run-time.
 
 feature -- Access
 
-	name_pool: XM_XPATH_NAME_POOL is
+	name_pool: XM_XPATH_NAME_POOL
 			-- The name pool used for compiling expressions
-		deferred
+
+	last_bound_variable: XM_XPATH_VARIABLE_DECLARATION is
+			-- The last variable bound by `bind_variable'
+		require
+			bind_variable_suceeeded: was_last_variable_bound
+		do
+			Result := internal_last_bound_variable
 		ensure
-			name_pool_not_void: Result /= Void
+			variable_not_void: Result /= Void
 		end
 
-	last_bound_variable: XM_XPATH_VARIABLE_DECLARATION
-			-- The last variablew bound by `bind_variable'
+	last_bound_function: XM_XPATH_EXPRESSION is
+			-- The last function bound by `bind_function'
+		require
+			bind_function_suceeeded: was_last_function_bound
+		do
+			Result := internal_last_bound_function
+		ensure
+			function_not_void: Result /= Void
+		end
 
+	default_element_namespace: INTEGER is
+			-- Default XPath namespace, as a namespace code that can be looked up in `name_pool'
+		deferred
+		ensure
+			positive_namespace_code: Result >= 0
+		end
+
+	uri_for_prefix (xml_prefix: STRING): STRING is
+			-- URI for a namespace prefix;
+			-- The default namespace is NOT used when the prefix is empty.
+		require
+			valid_prefix: xml_prefix /= Void and then is_ncname (xml_prefix)
+		deferred
+		ensure
+			uri_not_void: Result /= Void
+		end
+
+feature -- Status report
+
+	was_last_variable_bound: BOOLEAN
+			-- Did last call to `bind_variable' succeed?
+
+	was_last_function_bound: BOOLEAN
+			-- Did last call to `bind_function' succeed?
+
+feature -- Element change
+	
 	bind_variable (fingerprint: INTEGER) is
-			-- Bind variable in this element to the XM_XSLT_XSL_VARIABLE in which it is declared.
+			-- Bind variable to it's declaration.
 		deferred
 		ensure
-			variable_bound: last_bound_variable /= Void
-			-- TODO - require that fingerprint is valid, I think
+			variable_bound: was_last_variable_bound implies last_bound_variable /= Void
 		end
+
+	bind_function (qname: STRING; arguments: DS_ARRAYED_LIST [XM_XPATH_EXPRESSION]) is
+			-- Identify a function appearing in an expression.
+		require
+			valid_qname: qname /= Void and then is_qname (qname)
+			arguments_not_void: arguments /= Void
+		deferred
+		ensure
+			function_bound: was_last_function_bound implies last_bound_function /= Void
+		end
+			
+feature {NONE} -- Implementation
+
+	internal_last_bound_variable: XM_XPATH_VARIABLE_DECLARATION
+			-- Result of last sucessfull call to  `bind_variable'
+
+	internal_last_bound_function: XM_XPATH_EXPRESSION
+			-- Result of last sucessfull call to  `bind_function'
+
+invariant
+
+	name_pool_not_void: name_pool /= Void
 
 end
 	

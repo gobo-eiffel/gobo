@@ -2,7 +2,7 @@ indexing
 
 	description:
 
-		"XPath Axis Expressions"
+		"XPath Expressions representing the context item (.)"
 
 	library: "Gobo Eiffel XPath Library"
 	copyright: "Copyright (c) 2004, Colin Adams and others"
@@ -10,13 +10,11 @@ indexing
 	date: "$Date$"
 	revision: "$Revision$"
 
-class XM_XPATH_AXIS_EXPRESSION
+class XM_XPATH_CONTEXT_ITEM_EXPRESSION
 
 inherit
 
 	XM_XPATH_COMPUTED_EXPRESSION
-
-	XM_XPATH_AXIS
 
 creation
 
@@ -24,12 +22,9 @@ creation
 
 feature {NONE} -- Initialization
 
-	make (an_axis_type: INTEGER; a_node_test: XM_XPATH_NODE_TEST) is
-			-- TODO
+	make is
 		do
-			axis := an_axis_type
-		ensure
-			axis_set: axis = an_axis_type
+			do_nothing
 		end
 
 feature -- Access
@@ -40,9 +35,6 @@ feature -- Access
 			-- TODO
 		end
 
-	axis: INTEGER
-			-- Type of axis
-		
 feature -- Analysis
 
 	analyze (env: XM_XPATH_STATIC_CONTEXT): XM_XPATH_EXPRESSION is
@@ -57,5 +49,5 @@ feature {NONE} -- Implementation
 		do
 			-- TODO
 		end
-	
+
 end

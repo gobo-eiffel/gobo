@@ -49,11 +49,11 @@ feature -- Parsers
 			parse_union_pattern
 
 			if	tokenizer.is_lexical_error then
-				grumble (tokenizer.last_lexical_error)
+				report_parse_error (tokenizer.last_lexical_error)
 			elseif tokenizer.last_token /= Eof_token then
 				s := STRING_.appended_string ("Unexpected token ", display_current_token)
 				s := STRING_.appended_string (s, " beyond end of pattern")
-				grumble (s)
+				report_parse_error (s)
 			end
 		ensure
 			pattern_not_void_unless_error: not is_parse_error implies internal_last_parsed_pattern /= Void
@@ -83,7 +83,7 @@ feature {NONE} -- Pattern parsers
 				loop
 					tokenizer.next
 					if tokenizer.is_lexical_error then
-						grumble (tokenizer.last_lexical_error)
+						report_parse_error (tokenizer.last_lexical_error)
 						finished := True
 					else
 						parse_path_pattern
@@ -126,7 +126,7 @@ feature {NONE} -- Pattern parsers
 				connector := Slash_token
 				tokenizer.next
 				if tokenizer.is_lexical_error then
-					grumble (tokenizer.last_lexical_error)
+					report_parse_error (tokenizer.last_lexical_error)
 				else
 					create {XM_XSLT_NODE_KIND_TEST} previous_pattern.make (Document_node)
 					root_only := True
@@ -135,7 +135,7 @@ feature {NONE} -- Pattern parsers
 				connector := Slash_slash_token
 				tokenizer.next
 				if tokenizer.is_lexical_error then
-					grumble (tokenizer.last_lexical_error)
+					report_parse_error (tokenizer.last_lexical_error)
 				else
 					create {XM_XSLT_NODE_KIND_TEST} previous_pattern.make (Document_node)
 					root_only := False
@@ -156,7 +156,7 @@ feature {NONE} -- Pattern parsers
 						if STRING_.same_string (tokenizer.last_token_value, "child") then
 							tokenizer.next
 							if tokenizer.is_lexical_error then
-								grumble (tokenizer.last_lexical_error)
+								report_parse_error (tokenizer.last_lexical_error)
 								finished := True
 							else
 								parse_pattern_step (Element_node)
@@ -169,7 +169,7 @@ feature {NONE} -- Pattern parsers
 						elseif STRING_.same_string (tokenizer.last_token_value, "attribute") then
 							tokenizer.next
 							if tokenizer.is_lexical_error then
-								grumble (tokenizer.last_lexical_error)
+								report_parse_error (tokenizer.last_lexical_error)
 								finished := True
 							else
 								parse_pattern_step (Attribute_node)
@@ -180,7 +180,7 @@ feature {NONE} -- Pattern parsers
 								end
 							end
 						else
-							grumble ("Axis in pattern must be child or attribute")
+							report_parse_error ("Axis in pattern must be child or attribute")
 							finished := True
 						end
 					when Star_token then
@@ -221,7 +221,7 @@ feature {NONE} -- Pattern parsers
 					when At_token then
 						tokenizer.next
 						if tokenizer.is_lexical_error then
-							grumble (tokenizer.last_lexical_error)
+							report_parse_error (tokenizer.last_lexical_error)
 							finished := True
 						else						
 							parse_pattern_step (Attribute_node)
@@ -236,7 +236,7 @@ feature {NONE} -- Pattern parsers
 							if STRING_.same_string (tokenizer.last_token_value, "id") then
 								tokenizer.next
 								if tokenizer.is_lexical_error then
-									grumble (tokenizer.last_lexical_error)
+									report_parse_error (tokenizer.last_lexical_error)
 									finished := True
 								else
 									id_value :=	Void
@@ -245,13 +245,13 @@ feature {NONE} -- Pattern parsers
 									elseif tokenizer.last_token = Dollar_token then
 										tokenizer.next
 										if tokenizer.is_lexical_error then
-											grumble (tokenizer.last_lexical_error)
+											report_parse_error (tokenizer.last_lexical_error)
 											finished := True
 										else
 											if tokenizer.last_token /= Name_token then
 												message := "expected %"<name>%", found "
 												message := STRING_.appended_string (message, display_current_token)
-												grumble (message)
+												report_parse_error (message)
 												finished := True
 											else
 												var_name_code := make_name_code (tokenizer.last_token_value, False) \\ bits_20
@@ -260,24 +260,24 @@ feature {NONE} -- Pattern parsers
 											end
 										end
 									else
-										grumble ("id value must be either a literal or a variable reference")
+										report_parse_error ("id value must be either a literal or a variable reference")
 										finished := True
 									end
 									create {XM_XSLT_ID_PATTERN} id_pattern.make (id_value)
 									tokenizer.next
 									if tokenizer.is_lexical_error then
-										grumble (tokenizer.last_lexical_error)
+										report_parse_error (tokenizer.last_lexical_error)
 										finished := True
 									else
 										if tokenizer.last_token /= Right_parenthesis_token then
 											message := "expected %"%)%", found "
 											message := STRING_.appended_string (message, display_current_token)
-											grumble (message)
+											report_parse_error (message)
 											finished := True
 										else
 											tokenizer.next
 											if tokenizer.is_lexical_error then
-												grumble (tokenizer.last_lexical_error)
+												report_parse_error (tokenizer.last_lexical_error)
 												finished := True
 											end
 										end
@@ -286,30 +286,30 @@ feature {NONE} -- Pattern parsers
 							elseif STRING_.same_string (tokenizer.last_token_value, "key") then
 								tokenizer.next
 								if tokenizer.is_lexical_error then
-									grumble (tokenizer.last_lexical_error)
+									report_parse_error (tokenizer.last_lexical_error)
 									finished := True
 								else
 									if tokenizer.last_token /= String_literal_token then
 										message := "expected %"<string literal>%", found "
 										message := STRING_.appended_string (message, display_current_token)
-										grumble (message)
+										report_parse_error (message)
 										finished := True
 									else
 										key_name := tokenizer.last_token_value
 										tokenizer.next
 										if tokenizer.is_lexical_error then
-											grumble (tokenizer.last_lexical_error)
+											report_parse_error (tokenizer.last_lexical_error)
 											finished := True
 										else
 											if tokenizer.last_token /= Comma_token then
 												message := "expected %",%", found "
 												message := STRING_.appended_string (message, display_current_token)
-												grumble (message)
+												report_parse_error (message)
 												finished := True
 											else
 												tokenizer.next
 												if tokenizer.is_lexical_error then
-													grumble (tokenizer.last_lexical_error)
+													report_parse_error (tokenizer.last_lexical_error)
 													finished := True
 												else
 													id_value := Void
@@ -318,13 +318,13 @@ feature {NONE} -- Pattern parsers
 													elseif tokenizer.last_token = Dollar_token then
 														tokenizer.next
 														if tokenizer.is_lexical_error then
-															grumble (tokenizer.last_lexical_error)
+															report_parse_error (tokenizer.last_lexical_error)
 															finished := True
 														else
 															if tokenizer.last_token /= Name_token then
 																message := "expected %"<name>%", found "
 																message := STRING_.appended_string (message, display_current_token)
-																grumble (message)
+																report_parse_error (message)
 																finished := True
 															else
 																var_name_code := make_name_code (tokenizer.last_token_value, False) \\ bits_20
@@ -333,24 +333,24 @@ feature {NONE} -- Pattern parsers
 															end
 														end
 													else
-														grumble ("id value must be either a literal or a variable reference")
+														report_parse_error ("id value must be either a literal or a variable reference")
 														finished := True
 													end
 													create {XM_XSLT_KEY_PATTERN} key_pattern.make (make_name_code (key_name, False), id_value)
 													tokenizer.next
 													if tokenizer.is_lexical_error then
-														grumble (tokenizer.last_lexical_error)
+														report_parse_error (tokenizer.last_lexical_error)
 														finished := True
 													else
 														if tokenizer.last_token /= Right_parenthesis_token then
 															message := "expected %"%)%", found "
 															message := STRING_.appended_string (message, display_current_token)
-															grumble (message)
+															report_parse_error (message)
 															finished := True
 														else
 															tokenizer.next
 															if tokenizer.is_lexical_error then
-																grumble (tokenizer.last_lexical_error)
+																report_parse_error (tokenizer.last_lexical_error)
 																finished := True
 															end
 														end
@@ -361,11 +361,11 @@ feature {NONE} -- Pattern parsers
 									end
 								end
 							else
-								grumble ("The only functions allowed in a pattern are id() and key()")
+								report_parse_error ("The only functions allowed in a pattern are id() and key()")
 								finished := True
 							end
 						else
-							grumble ("Function call may appear only at the start of a pattern")
+							report_parse_error ("Function call may appear only at the start of a pattern")
 							finished := True
 						end
 					else
@@ -373,7 +373,7 @@ feature {NONE} -- Pattern parsers
 						if root_only then
 							internal_last_parsed_pattern := previous_pattern -- the patter was plain "/"
 						else
-							grumble (STRING_.appended_string ("Unexpected token in pattern, found ", display_current_token))
+							report_parse_error (STRING_.appended_string ("Unexpected token in pattern, found ", display_current_token))
 						end
 					end
 					if not finished then
@@ -401,7 +401,7 @@ feature {NONE} -- Pattern parsers
 							previous_pattern := a_pattern
 							tokenizer.next
 							if tokenizer.is_lexical_error then
-								grumble (tokenizer.last_lexical_error)
+								report_parse_error (tokenizer.last_lexical_error)
 								finished := True
 							end
 						else

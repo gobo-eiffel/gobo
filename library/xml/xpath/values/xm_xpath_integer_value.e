@@ -18,7 +18,7 @@ inherit
 
 creation
 
-	make, make_with_type
+	make, make_from_string
 
 feature {NONE} -- Initialization
 
@@ -32,18 +32,17 @@ feature {NONE} -- Initialization
 			type_set: this_type = Integer_type
 		end
 
-	make_with_type (a_value: INTEGER; a_type: INTEGER) is
+	make_from_string (a_value: STRING) is
 		require
-			valid_type: is_sub_type (a_type, Integer_type)
+			is_integer: a_value.is_integer -- TODO
 		do
-			make_value
-			value := a_value
-			this_type := a_type
+			make_atomic_value
+			value := a_value.to_integer -- TODO
+			this_type := Integer_type
 		ensure
-			value_set: value = a_value
-			type_set: this_type = a_type
+			value_set: value = a_value.to_double
+			type_set: this_type = Integer_type
 		end
-
 feature -- Access
 
 	value: INTEGER

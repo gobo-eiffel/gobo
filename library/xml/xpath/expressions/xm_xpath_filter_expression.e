@@ -22,7 +22,7 @@ creation
 
 feature {NONE} -- Initialization
 
-	make (step: XM_XPATH_COMPUTED_EXPRESSION; filter: XM_XPATH_EXPRESSION) is
+	make (a_start: XM_XPATH_EXPRESSION; a_filter: XM_XPATH_EXPRESSION) is
 			-- TODO
 		do
 		end

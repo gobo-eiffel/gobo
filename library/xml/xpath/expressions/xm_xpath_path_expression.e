@@ -22,7 +22,7 @@ creation
 
 feature {NONE} -- Initialization
 
-	make (a_parent: XM_XPATH_PARENT_NODE_EXPRESSION; a_step: XM_XPATH_COMPUTED_EXPRESSION) is
+	make (a_start: XM_XPATH_EXPRESSION; a_step: XM_XPATH_EXPRESSION) is
 			-- TODO
 		do
 		end

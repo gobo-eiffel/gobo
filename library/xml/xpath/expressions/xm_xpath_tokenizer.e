@@ -653,57 +653,7 @@ feature {NONE} -- Status setting
 						next_token := Number_token
 						finished := True
 						
-					when '"' then
-						next_token_value := ""
-						from
-							finished_inner := False
-						until
-							finished_inner
-						loop
-							input_index := input.index_of (c, input_index + 1)
-							if input_index = 0 then
-								input_index := next_token_start_index + 1
-								is_lexical_error := True
-								internal_last_lexical_error :=  "Unmatched quote in expression"
-								finished := True
-								finished_inner := True
-							else
-								next_token_value := STRING_.appended_string (next_token_value, input.substring (next_token_start_index + 1, input_index - 1))
-								input_index := input_index + 1
-
-								-- look for doubled delimiters
-
-								if input_index < input.count and then input.item (input_index) = c then
-									next_token_value := STRING_.appended_string (next_token_value, c.out)
-									next_token_start_index := input_index
-									input_index := input_index + 1
-								else
-									finished_inner := True
-								end
-							end
-						end
-
-						-- maintain line number if there are newlines in the string
-
-						if next_token_value.index_of ('%N', 1) > 0 then
-							from
-								i := 1
-							variant
-								next_token_value.count + 1 - 1
-							until
-								i > next_token_value.count
-							loop
-								if next_token_value.item (i) = '%N' then
-									line_number := line_number + 1
-								end
-								i := i + 1
-							end
-						end
-						next_token_value := clone (next_token_value)
-						next_token  := String_literal_token
-						finished := True
-						
-					when '%'' then
+					when '"', '%'' then
 						next_token_value := ""
 						from
 							finished_inner := False
@@ -757,13 +707,7 @@ feature {NONE} -- Status setting
 						line_number := line_number + 1
 						next_token_start_index := input_index
 
-					when ' ' then
-						next_token_start_index := input_index
-
-					when '%R' then
-						next_token_start_index := input_index
-
-					when '%T' then
+					when ' ', '%R', '%T' then
 						next_token_start_index := input_index
 
 					else
@@ -806,11 +750,7 @@ feature {NONE} -- Status setting
 										finished := True										
 									end
 								end
-							when '-' then
-								do_nothing
-							when '_' then
-								do_nothing
-							when '.' then
+							when '-', '_','.'  then
 								do_nothing
 							else
 								if c.code < 128 then

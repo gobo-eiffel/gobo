@@ -26,6 +26,9 @@ creation
 feature {NONE} -- Initialization
 
 	make (a_node_type: INTEGER; a_name_code: INTEGER) is
+		require
+			valid_node_type: is_node_type (a_node_type)
+			positive_name_code: a_name_code >= 0
 		local
 			top_bits: INTEGER
 		do

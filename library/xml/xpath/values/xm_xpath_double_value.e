@@ -18,7 +18,7 @@ inherit
 
 creation
 
-	make
+	make, make_from_string
 
 feature {NONE} -- Initialization
 
@@ -32,6 +32,18 @@ feature {NONE} -- Initialization
 			type_set: this_type = Double_type
 		end
 
+	make_from_string (a_value: STRING) is
+		require
+			is_double: a_value.is_double
+		do
+			make_atomic_value
+			value := a_value.to_double
+			this_type := Double_type
+		ensure
+			value_set: value = a_value.to_double
+			type_set: this_type = Double_type
+		end
+			
 feature -- Access
 
 	value: DOUBLE -- TODO - insufficient

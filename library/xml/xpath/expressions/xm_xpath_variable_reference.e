@@ -34,6 +34,8 @@ feature {NONE} -- Initialization
 			-- Note that the object does not retain a pointer
 			--  to the variable declaration, which would cause the
 			--  stylesheet to be locked in memory.
+		require
+			declaration_not_void: declaration /= Void
 		do
 			declaration.register_reference (Current)
 			display_name := declaration.name
