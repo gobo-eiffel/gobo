@@ -15,9 +15,11 @@ class YY_ARRAY [G]
 inherit
 
 	ARRAY [G]
+#ifndef SE
 		rename
 			make_from_array as array_make_from_array
 		end
+#endif
 
 creation
 
