@@ -37,4 +37,31 @@ feature -- Basic operations
 		deferred
 		end
 
+	recursive_open_write is
+			-- Open current file in write-only mode if
+			-- it can be opened, let it closed otherwise.
+			-- If the file is successfully opened, it is
+			-- either created if it didn't exist or its
+			-- old content is removed otherwise. Try to
+			-- recursively create its parent directory
+			-- if it does not exist yet.
+		require
+			is_closed: is_closed
+		deferred
+		end
+
+	recursive_open_append is
+			-- Open current file in append mode if it
+			-- can be opened, let it closed otherwise.
+			-- If the file is successfully opened, it is
+			-- either created if it didn't exist or the
+			-- data which will be written to the file will
+			-- appear after its old content otherwise.
+			-- Try to recursively create its parent directory
+			-- if it does not exist yet.
+		require
+			is_closed: is_closed
+		deferred
+		end
+
 end -- class KI_OUTPUT_FILE

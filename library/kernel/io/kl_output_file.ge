@@ -118,6 +118,61 @@ feature -- Basic operations
 			end
 		end
 
+	recursive_open_write is
+			-- Open current file in write-only mode if
+			-- it can be opened, let it closed otherwise.
+			-- If the file is successfully opened, it is
+			-- either created if it didn't exist or its
+			-- old content is removed otherwise. Try to
+			-- recursively create its parent directory
+			-- if it does not exist yet.
+		local
+			a_dirname: STRING
+			a_pathname: STRING
+			a_dir: KL_DIRECTORY
+		do
+			open_write
+			if not is_open_write then
+				a_pathname := file_system.canonical_pathname (name)
+				a_dirname := file_system.dirname (a_pathname)
+				!! a_dir.make (a_dirname)
+				if not a_dir.exists then
+					a_dir.recursive_create_directory
+					if a_dir.exists then
+						open_write
+					end
+				end
+			end
+		end
+
+	recursive_open_append is
+			-- Open current file in append mode if it
+			-- can be opened, let it closed otherwise.
+			-- If the file is successfully opened, it is
+			-- either created if it didn't exist or the
+			-- data which will be written to the file will
+			-- appear after its old content otherwise.
+			-- Try to recursively create its parent directory
+			-- if it does not exist yet.
+		local
+			a_dirname: STRING
+			a_pathname: STRING
+			a_dir: KL_DIRECTORY
+		do
+			open_append
+			if not is_open_write then
+				a_pathname := file_system.canonical_pathname (name)
+				a_dirname := file_system.dirname (a_pathname)
+				!! a_dir.make (a_dirname)
+				if not a_dir.exists then
+					a_dir.recursive_create_directory
+					if a_dir.exists then
+						open_append
+					end
+				end
+			end
+		end
+
 	flush is
 			-- Flush buffered data to disk.
 		do
