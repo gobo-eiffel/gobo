@@ -663,7 +663,7 @@ feature {NONE} -- Output
 				--    ...
 				--    CLASS_K
 				--    ...
-			create callbacks.make_default
+			create callbacks.make_map (10)
 			callbacks.set_key_equality_tester (string_equality_tester)
 			merge_callbacks (callbacks, a_clusters)
 			if callbacks.count > 0 then
