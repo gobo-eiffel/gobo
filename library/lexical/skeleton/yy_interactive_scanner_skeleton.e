@@ -48,6 +48,20 @@ feature -- Scanning
 			yy_c: INTEGER
 			yy_found: BOOLEAN
 		do
+				-- This routine is implemented with a loop whose body
+				-- is a big inspect instruction. This is a mere
+				-- translation of C gotos into Eiffel. Needless to
+				-- say that I'm not very proud of this piece of code.
+				-- However I performed some benchmarks and the results
+				-- were that this implementation runs amazingly faster
+				-- than an alternative implementation with no loop nor
+				-- inspect instructions and where every branch of the
+				-- old inspect instruction was written in a separate
+				-- routine. I think that the performance penalty is due
+				-- to the routine call overhead and the depth of the call
+				-- stack. Anyway, I prefer to provide you with a big and
+				-- ugly but fast scanning routine rather than a nice and
+				-- slow version. I hope you won't blame me for that! :-)
 			from
 				last_token := -1
 				yy_goto := yyNext_token
