@@ -147,10 +147,6 @@ feature -- Access
 			rescued: BOOLEAN
 #ifdef SE
 			basic_time: TIME
-			utc_time: TIME
-			y, m, d: INTEGER
-			h, mi, s: INTEGER
-			b: BOOLEAN
 #endif
 #ifdef VE
 			dos_datetime: INTEGER
@@ -168,19 +164,7 @@ feature -- Access
 						if operating_system.is_windows then
 							Result := epoch_time.elapsed_seconds (basic_time)
 						else
-							basic_time.set_universal_time
-							y := basic_time.year
-							m := basic_time.month
-							d := basic_time.day
-							h := basic_time.hour
-							mi := basic_time.minute
-							s := basic_time.second
-								-- Bug in postcondition of TIME.set
-								-- in SE -0.74b11. Workaround: call
-								-- `set_local_time' before.
-							utc_time.set_local_time
-							b := utc_time.set (y, m, d, h, mi, s)
-							Result := epoch_time.elapsed_seconds (utc_time)
+							Result := epoch_time.elapsed_seconds (basic_time) - epoch_time_offset
 						end
 						if Result < 0 then
 							Result := -1
@@ -651,11 +635,34 @@ feature {NONE} -- Implementation
 		local
 			b: BOOLEAN
 		once
-				-- Bug in postcondition of TIME.set
-				-- in SE -0.74b11. Workaround: call
-				-- `set_local_time' before.
-			Result.set_local_time
 			b := Result.set (1970, 1, 1, 0, 0, 0)
+		end
+
+	epoch_time_offset: INTEGER is
+			-- Number of seconds between UTC and
+			-- local time version of epoch time.
+		local
+			b: BOOLEAN
+			y, m, d: INTEGER
+			h, mi, s: INTEGER
+			local_time: TIME
+			utc_time: TIME
+			old_is_local: BOOLEAN
+		once
+			local_time := epoch_time
+			old_is_local := local_time.is_local_time
+			local_time.set_universal_time
+			y := local_time.year
+			m := local_time.month
+			d := local_time.day
+			h := local_time.hour
+			mi := local_time.minute
+			s := local_time.second
+			b := utc_time.set (y, m, d, h, mi, s)
+			if old_is_local then
+				local_time.set_local_time
+			end
+			Result := utc_time.elapsed_seconds (local_time)
 		end
 
 #endif
