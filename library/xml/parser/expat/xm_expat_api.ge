@@ -189,25 +189,33 @@ feature -- Parsing
 			-- true; `str' may be empty.
 			-- You should not change the contents of `str' while Expat
 			-- might still need it. So be extremely careful with
-			-- last_string type of loops.
+			-- last_string kind of loops.
 		require
 			a_parser_not_null: a_parser /= default_pointer
 			str_not_void: str /= Void
 		local
 			int: INTEGER
+			u: UC_STRING
+			s: STRING
 #ifdef ISE
 			c_str: ANY
 #endif
 		do
+			u ?= str
+			if (u = Void) or else (u.count = u.byte_count) then
+				s := str
+			else
+				s := u.as_string
+			end
 			if is_final then
 				int := 1
 			end
 #ifdef ISE
-			c_str := str.to_c
-			Result := exml_XML_Parse (a_parser, $c_str, str.count, int)
+			c_str := s.to_c
+			Result := exml_XML_Parse (a_parser, $c_str, s.count, int)
 #endif
 #ifdef SE || VE
-			Result := exml_XML_Parse (a_parser, str.to_external, str.count, int)
+			Result := exml_XML_Parse (a_parser, s.to_external, s.count, int)
 #endif
 		end
 
@@ -413,6 +421,7 @@ feature -- Miscellaneous
 		ensure
 			user_data_set:
 				(a_callback = Void) = (exml_XML_GetUserData (a_parser) = default_pointer)
+			collection_status_unchanged: memory.collecting = old memory.collecting
 		rescue
 			if is_collecting and then not memory.collecting then
 				memory.collection_on
