@@ -53,73 +53,6 @@ feature -- Access
 	project: GEANT_PROJECT
 			-- Project to which Current belongs to
 
-feature -- Status report
-
-	is_executable: BOOLEAN is
-			-- Can element be executed?
-		do
-			Result := (directory_name /= Void and then directory_name.count > 0)
-			if not Result then
-				project.log (<<"  [fileset] error: attribute 'directory' is mandatory">>)
-			end
-			if Result then
-				Result := include_wildcard = Void or else include_wildcard.is_compiled
-				if not Result then
-					project.log (<<"  [fileset] error: attribute 'include' is not valid">>)
-				end
-			end
-			if Result then
-				Result := exclude_wildcard = Void or else exclude_wildcard.is_compiled
-				if not Result then
-					project.log (<<"  [fileset] error: attribute 'exclude' is not valid">>)
-				end
-			end
-			if Result then
-				Result := map = Void or else map.is_executable
-				if not Result then
-					project.log (<<"  [fileset] error: element 'map' is not defined correctly">>)
-				end
-			end
-		ensure
-			directory_name_not_void: Result implies directory_name /= Void
-			directory_name_not_empty: Result implies directory_name.count > 0
-			include_wildcard_compiled: Result implies (include_wildcard = Void or else include_wildcard.is_compiled)
-			exclude_wildcard_compiled: Result implies (exclude_wildcard = Void or else exclude_wildcard.is_compiled)
-			map_executable: Result implies (map = Void or else map.is_executable)
-		end
-
-	are_project_variables_up_to_date: BOOLEAN is
-			-- If not `after' is project variable named `filename_variable_name' set to `item_filename' and
-			-- project variable named `mapped_filename_variable_name' set to `item_mapped_filename'?
-			-- And if `after' are project variables named `filename_variable_name' and
-			-- `mapped_filename_variable_name' not existing?
-		do
-			if not after then
-				Result := project.variables.has_variable (filename_variable_name) and then
-					STRING_.same_string (project.variables.variable_value (filename_variable_name), item_filename) and then
-					project.variables.has_variable (mapped_filename_variable_name) and then
-					STRING_.same_string (project.variables.variable_value (mapped_filename_variable_name), item_mapped_filename)
-			else
-				Result := not (project.variables.has_variable (filename_variable_name) or
-					project.variables.has_variable (mapped_filename_variable_name))
-			end
-		ensure
-			filename_variable_name_exists: not after implies
-				(Result implies project.variables.has_variable (filename_variable_name))
-			filename_variable_name_set: not after implies (Result implies
-				STRING_.same_string (project.variables.variable_value (filename_variable_name), item_filename))
-			mapped_filename_variable_name_exists: not after implies
-				(Result implies project.variables.has_variable (mapped_filename_variable_name))
-			mapped_filename_variable_name_set: not after implies (Result implies
-				STRING_.same_string (project.variables.variable_value (mapped_filename_variable_name), item_mapped_filename))
-			filename_variable_name_not_exists: after implies
-				(Result implies not project.variables.has_variable (filename_variable_name))
-			mapped_filename_variable_name_not_exists: after implies
-				(Result implies not project.variables.has_variable (mapped_filename_variable_name))
-		end
-
-feature -- Access
-
 	directory_name: STRING
 			-- Name of directory serving as root for recursive scanning
 
@@ -173,22 +106,10 @@ feature -- Access
 			-- during iterations;
 			-- default: 'fs.mapped_filename'
 
-	is_empty: BOOLEAN is
-			-- Is fileset empty?
-		do
-			Result := filenames.is_empty
-		end
-
-	after: BOOLEAN is
-			-- Is there no valid position to right of cursor?
-		do
-			Result := filenames.after
-		end
-
 	item_filename: STRING is
 			-- Filename at current cursor
 		require
-			not_after: not after
+			not_off: not off
 		do
 			if not convert_to_filesystem then
 				Result := filenames.item_for_iteration.filename
@@ -202,7 +123,7 @@ feature -- Access
 	item_mapped_filename: STRING is
 			-- Mapped filename at current cursor
 		require
-			not_after: not after
+			not_off: not off
 		do
 			if not convert_to_filesystem then
 				Result := filenames.item_for_iteration.mapped_filename
@@ -211,6 +132,89 @@ feature -- Access
 			end
 		ensure
 			item_mapped_filename_not_void: Result /= Void
+		end
+
+feature -- Status report
+
+	is_executable: BOOLEAN is
+			-- Can element be executed?
+		do
+			Result := (directory_name /= Void and then directory_name.count > 0)
+			if not Result then
+				project.log (<<"  [fileset] error: attribute 'directory' is mandatory">>)
+			end
+			if Result then
+				Result := include_wildcard = Void or else include_wildcard.is_compiled
+				if not Result then
+					project.log (<<"  [fileset] error: attribute 'include' is not valid">>)
+				end
+			end
+			if Result then
+				Result := exclude_wildcard = Void or else exclude_wildcard.is_compiled
+				if not Result then
+					project.log (<<"  [fileset] error: attribute 'exclude' is not valid">>)
+				end
+			end
+			if Result then
+				Result := map = Void or else map.is_executable
+				if not Result then
+					project.log (<<"  [fileset] error: element 'map' is not defined correctly">>)
+				end
+			end
+		ensure
+			directory_name_not_void: Result implies directory_name /= Void
+			directory_name_not_empty: Result implies directory_name.count > 0
+			include_wildcard_compiled: Result implies (include_wildcard = Void or else include_wildcard.is_compiled)
+			exclude_wildcard_compiled: Result implies (exclude_wildcard = Void or else exclude_wildcard.is_compiled)
+			map_executable: Result implies (map = Void or else map.is_executable)
+		end
+
+	are_project_variables_up_to_date: BOOLEAN is
+			-- If not `off' is project variable named `filename_variable_name' set to `item_filename' and
+			-- project variable named `mapped_filename_variable_name' set to `item_mapped_filename'?
+			-- And if `off' are project variables named `filename_variable_name' and
+			-- `mapped_filename_variable_name' not existing?
+		do
+			if not off then
+				Result := project.variables.has_variable (filename_variable_name) and then
+					STRING_.same_string (project.variables.variable_value (filename_variable_name), item_filename) and then
+					project.variables.has_variable (mapped_filename_variable_name) and then
+					STRING_.same_string (project.variables.variable_value (mapped_filename_variable_name), item_mapped_filename)
+			else
+				Result := not (project.variables.has_variable (filename_variable_name) or
+					project.variables.has_variable (mapped_filename_variable_name))
+			end
+		ensure
+			filename_variable_name_exists: not off implies
+				(Result implies project.variables.has_variable (filename_variable_name))
+			filename_variable_name_set: not off implies (Result implies
+				STRING_.same_string (project.variables.variable_value (filename_variable_name), item_filename))
+			mapped_filename_variable_name_exists: not off implies
+				(Result implies project.variables.has_variable (mapped_filename_variable_name))
+			mapped_filename_variable_name_set: not off implies (Result implies
+				STRING_.same_string (project.variables.variable_value (mapped_filename_variable_name), item_mapped_filename))
+			filename_variable_name_not_exists: off implies
+				(Result implies not project.variables.has_variable (filename_variable_name))
+			mapped_filename_variable_name_not_exists: off implies
+				(Result implies not project.variables.has_variable (mapped_filename_variable_name))
+		end
+
+	is_empty: BOOLEAN is
+			-- Is fileset empty?
+		do
+			Result := filenames.is_empty
+		end
+
+	after: BOOLEAN is
+			-- Is there no valid position to right of cursor?
+		do
+			Result := filenames.after
+		end
+
+	off: BOOLEAN is
+			-- Is there no item at internal cursor position?
+		do
+			Result := filenames.off
 		end
 
 feature -- Element change
@@ -437,6 +441,7 @@ feature -- Execution
 			al_directory_name: STRING
 			cs: DS_SET_CURSOR [STRING]
 		do
+			remove_project_variables
 			project.trace_debug (<<"  [*fileset] directory_name: ", directory_name>>)
 			if include_wc_string /= Void then
 				project.trace_debug (<<"  [*fileset] include_wc_string: ", include_wc_string>>)
@@ -558,16 +563,30 @@ feature {NONE} -- Implementation/Processing
 	update_project_variables is
 			-- Set project variable with name `filename_variable_name' to `item_filename' and
 			-- project variable with name `mapped_filename_variable_name' to `item_mapped_filename'.
+		require
+			not_off: not off
 		do
-			if not after then
+			if filenames.off then
+				remove_project_variables
+			else
 				project.variables.set_variable_value (filename_variable_name, item_filename)
 				project.variables.set_variable_value (mapped_filename_variable_name, item_mapped_filename)
-			else
-				project.variables.remove_variable (filename_variable_name)
-				project.variables.remove_variable (mapped_filename_variable_name)
 			end
 		ensure
 			project_variables_set: are_project_variables_up_to_date
+		end
+
+	remove_project_variables is
+			-- Remove project variable with name `filename_variable_name' and
+			-- project variable with name `mapped_filename_variable_name'.
+		do
+			project.trace_debug (<<"  [*fileset] removing project variables '",
+				filename_variable_name, "' and '", mapped_filename_variable_name, "'">>)
+			project.variables.remove_variable (filename_variable_name)
+			project.variables.remove_variable (mapped_filename_variable_name)
+		ensure
+			project_variables_removed: not project.variables.has (filename_variable_name) and
+				not project.variables.has (mapped_filename_variable_name)
 		end
 
 invariant
