@@ -219,6 +219,17 @@ feature -- Error reporting
 			result_not_void: Result /= Void
 		end
 
+	new_stop_on_error_filter_next (a_next: XM_CALLBACKS): XM_PARSER_STOP_ON_ERROR_FILTER is
+			-- Like 'new_stop_on_error_filter' with next 
+			-- filter.
+		require
+			a_next_not_void: a_next /= Void
+		do
+			create Result.make_next (Current, a_next)
+		ensure
+			result_not_void: Result /= Void
+		end
+
 feature {XM_PARSER_STOP_ON_ERROR_FILTER} -- Error reporting
 
 	force_unreported_error (an_error: STRING) is

@@ -21,7 +21,8 @@ inherit
 
 creation
 
-	make
+	make,
+	make_next
 	
 feature {NONE}
 
@@ -32,6 +33,16 @@ feature {NONE}
 		do
 			parser := a_parser
 			make_null
+		end
+		
+	make_next (a_parser: like parser; a_next: like next) is
+			-- Set parser and next callbacks.
+		require
+			a_parser_not_void: a_parser /= Void
+			a_next_not_void: a_next /= Void
+		do
+			make (a_parser)
+			set_next (a_next)
 		end
 		
 	parser: XM_PARSER
