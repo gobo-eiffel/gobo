@@ -1,6 +1,6 @@
 indexing
 
-	description: 
+	description:
 
 		"Null resolver that always fails"
 		

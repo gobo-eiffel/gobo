@@ -42,7 +42,7 @@ feature -- Action(s)
 			if not last_stream.is_open_read then
 				last_error := STRING_.concat ("cannot open input file: ", a_system_name)
 				last_stream := Void
-			end 
+			end
 		end
 
 feature -- Result

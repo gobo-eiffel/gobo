@@ -1,6 +1,6 @@
 indexing
 
-	description: 
+	description:
 	
 		"XML unicode character classes"
 
@@ -43,7 +43,7 @@ class XM_UNICODE_CHARACTER_CLASSES
 --			when '|' then io.put_string ("or%N%T%T%T%T")
 --			when '#' then -- ignore
 --			when 'x' then
---				create last_number.make (0) 
+--				create last_number.make (0)
 --				if not in_group then io.put_string ("a = ") end
 --			when '0'..'9','A'..'F' then -- ignore
 --			else io.put_character (c)
@@ -73,7 +73,7 @@ feature -- Valid characters (section 2.2)
 	is_name_char (a: INTEGER): BOOLEAN is
 			-- Character for name?
 		do
-			Result := is_name_first (a) or 
+			Result := is_name_first (a) or
 					a = ('.').code or a = ('-').code or
 					is_digit (a) or
 					is_combining_char (a) or
