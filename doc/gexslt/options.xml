@@ -84,7 +84,10 @@
 	</itemizedlist>
       </para>
       <para>
-	If the resolver is unable to supply the media type, then application/xml is assumed.
+	If the resolver is unable to supply the media type, then application/xml is assumed,
+	except for stylesheet modules, where application/xslt+xml is assumed (since the latter
+	is defined to have identical fragment identifier semantics to the former, there is
+	no significance to this difference).
       </para>
     </section>
   </section>

@@ -43,7 +43,10 @@ creation
 feature {NONE} -- Initalization
 
 	set_next (a_callback: XM_CALLBACKS; a_dtd_callback: XM_DTD_CALLBACKS) is
-			-- Set forward chains
+			-- Set forward chains.
+		require
+			callbacks_not_void: a_callback /= Void
+			dtd_callbacks_not_void: a_dtd_callback /= Void
 		do
 			callbacks := a_callback
 			dtd_callbacks := a_dtd_callback

@@ -164,7 +164,7 @@ feature -- Document events
 			Precursor
 		end
 
-		on_finish is
+	on_finish is
 			-- Called when parsing finished
 		do
 			debug ("XPath content emitter")
@@ -286,8 +286,8 @@ feature -- Tag
 				an_element_qname := a_local_part
 			else
 				an_element_qname := clone (a_prefix)
-				an_element_qname.append_character (':')
-				an_element_qname.append_string (a_local_part)
+				an_element_qname := STRING_.appended_string (an_element_qname, ":")
+				an_element_qname := STRING_.appended_string (an_element_qname, a_local_part)
 			end
 
 			current_element_name := an_element_qname
@@ -467,8 +467,8 @@ feature {NONE} -- Implementation
 					an_attribute_qname := clone (a_local_part)
 				else
 					an_attribute_qname := clone (a_prefix)
-					an_attribute_qname.append_character (':')
-					an_attribute_qname.append_string (a_local_part)
+					an_attribute_qname := STRING_.appended_string (an_attribute_qname, ":")
+					an_attribute_qname := STRING_.appended_string (an_attribute_qname, a_local_part)
 				end
 				
 				if an_attribute_table.has (an_attribute_qname) then
