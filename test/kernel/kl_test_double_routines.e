@@ -16,27 +16,29 @@ inherit
 
 	KL_TEST_CASE
 
-	KL_IMPORTED_DOUBLE_ROUTINES
-	KL_SHARED_PLATFORM
-
 feature -- Test
 
 	test_log is
 			-- Test feature `log'.
 		local
-			d: DOUBLE
+			r: KL_DOUBLE_ROUTINES
 		do
-			d := 1.0
-			d := DOUBLE_.log(d)
+			create r
+				-- Use values truncated to integer to avoid possible
+				-- precision problems when comparing double values.
+			assert_equal ("log (1.0)", 0, r.log (1.0).truncated_to_integer)
 		end
 
 	test_log10 is
 			-- Test feature `log10'.
 		local
-			d: DOUBLE
+			r: KL_DOUBLE_ROUTINES
 		do
-			d := 1.0
-			d := DOUBLE_.log10(d)
+			create r
+				-- Use values truncated to integer to avoid possible
+				-- precision problems when comparing double values.
+			assert_equal ("log10 (1.0)", 0, r.log10 (1.0).truncated_to_integer)
+			assert_equal ("log10 (10.0)", 1, r.log10 (10.0).truncated_to_integer)
 		end
 
 end
