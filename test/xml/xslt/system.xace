@@ -29,9 +29,6 @@
 		<option name="msil_generation" value="true"/>
 		<option name="line_generation" value="true"/>
 	</option>
-	<option if="${GOBO_EIFFEL}=ve">
-		<option name="linker" value="microsoft" if="${GOBO_OS}=windows"/>
-	</option>
 	<option if="${GOBO_EIFFEL}=se">
 		<option name="warning" value="none"/>
 	</option>
