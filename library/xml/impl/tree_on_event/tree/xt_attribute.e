@@ -28,8 +28,6 @@ feature {ANY} -- Basic Routines
 	set_value (v: UC_STRING) is
 		do
 			value := v
-		ensure
-			value_set: value.is_equal (v)
 		end
 	
 end -- class XT_ATTRIBUTE
