@@ -17,6 +17,8 @@ inherit
 
 	XM_XPATH_VARIABLE_DECLARATION
 
+	XM_XPATH_BINDING
+
 	XM_UNICODE_CHARACTERS_1_1
 
 creation {XM_XPATH_STAND_ALONE_CONTEXT}
@@ -43,14 +45,17 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	name: STRING
-			-- Name
-
 	value: XM_XPATH_VALUE
 			-- Value;
 			-- This value may be changed between successive evaluations of
 			-- a compiled XPath expression that references the variable.
 
+	required_type: XM_XPATH_SEQUENCE_TYPE is
+			-- Static type of variable
+		do
+			create Result.make_any_sequence
+		end
+	
 	fingerprint: INTEGER is
 			-- Fingerprint of variable name from name pool;
 			-- Not used.
@@ -60,10 +65,10 @@ feature -- Access
 
 feature -- Evaluation
 
-		evaluate_variable (a_context: XM_XPATH_CONTEXT): XM_XPATH_VALUE is
+		evaluate_variable (a_context: XM_XPATH_CONTEXT) is
 			-- Evaluate `Current' as a single item
 		do
-			Result := value
+			last_evaluated_binding := value
 		end
 
 feature -- Element change
@@ -75,6 +80,7 @@ feature -- Element change
 		do
 			create a_sequence_type.make_any_sequence
 			a_reference.set_static_type (a_sequence_type, Void, Void, Void, Void)
+			a_reference.fix_up (Current)
 		end
 
 	set_value (a_value: XM_XPATH_VALUE) is

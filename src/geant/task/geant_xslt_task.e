@@ -46,16 +46,22 @@ feature {NONE} -- Initialization
 			task_make (command, an_xml_element)
 			if has_attribute (Processor_attribute_name) then
 				a_value := attribute_value (Processor_attribute_name)
-				if a_value.is_equal (Processor_attribute_value_xalan_cpp) then
+				if STRING_.same_string (a_value, Processor_attribute_value_xalan_cpp) then
 					a_is_xalan_cpp_processor := True
 					command.set_processor_xalan_cpp
-				elseif a_value.is_equal (Processor_attribute_value_xalan_java) then
+				elseif STRING_.same_string (a_value, Processor_attribute_value_xalan_java) then
 					a_is_xalan_java_processor := True
 					command.set_processor_xalan_java
-				elseif a_value.is_equal (Processor_attribute_value_xsltproc) then
+				elseif STRING_.same_string (a_value, Processor_attribute_value_xsltproc) then
 					a_is_xsltproc_processor := True
 					command.set_processor_xsltproc
 				end
+			end
+
+			debug ("geant xslt task")
+				std.error.put_string ("XSLT processor is ")
+				std.error.put_string (command.processor.out)
+				std.error.put_new_line
 			end
 
 				-- Handle common attributes:

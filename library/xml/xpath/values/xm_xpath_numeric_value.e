@@ -43,7 +43,7 @@ feature -- Comparison
 				Result := as_double.is_equal (a_numeric_value.as_double)
 				-- TODO is this comparison good enough - i.e. is 1.5 / 2 = 4.5 / 6 ?
 				-- TODO check to see if both are integers or bothe decimals
-				todo ("same-expression", True)
+				--todo ("same-expression", True)
 			end
 		end
 

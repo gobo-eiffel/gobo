@@ -192,7 +192,7 @@ feature -- Setting / Implementation
 	set_processor (a_processor: INTEGER) is
 			-- Set `processor' to `a_processor'.
 		require
-			a_processor_valid : a_processor = Processor_xalan_cpp or a_processor = Processor_xalan_java
+			a_processor_valid : a_processor = Processor_xalan_cpp or a_processor = Processor_xalan_java or a_processor = Processor_xsltproc
 		do
 			processor := a_processor
 		ensure

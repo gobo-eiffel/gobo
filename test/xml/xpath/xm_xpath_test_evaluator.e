@@ -108,7 +108,6 @@ feature
 		local
 			an_evaluator: XM_XPATH_EVALUATOR
 			evaluated_items: DS_LINKED_LIST [XM_XPATH_ITEM]
-			a_node: XM_XPATH_NODE
 			an_integer_value: XM_XPATH_INTEGER_VALUE
 		do
 			create an_evaluator
@@ -120,6 +119,24 @@ feature
 			assert ("Twenty evaluated_items", evaluated_items /= Void and then evaluated_items.count = 20)
 			an_integer_value ?= evaluated_items.item (19)
 			assert ("Ninteenth number is 95", an_integer_value /= Void and then an_integer_value.value = 95)
+		end
+
+	test_fifth_integer_in_sequence is
+			-- Test for fifth integer in a sequence
+		local
+			an_evaluator: XM_XPATH_EVALUATOR
+			evaluated_items: DS_LINKED_LIST [XM_XPATH_ITEM]
+			an_integer_value: XM_XPATH_INTEGER_VALUE
+		do
+			create an_evaluator
+			an_evaluator.build_static_context ("./books.xml", False, False)
+			assert ("Build successfull", not an_evaluator.was_build_error)
+			an_evaluator.evaluate ("(21 to 29)[5]")
+			assert ("No evaluation error", not an_evaluator.is_evaluation_in_error)
+			evaluated_items := an_evaluator.evaluated_items
+			assert ("Twenty evaluated_items", evaluated_items /= Void and then evaluated_items.count = 1)
+			an_integer_value ?= evaluated_items.item (1)
+			assert ("Fifth number is 25", an_integer_value /= Void and then an_integer_value.value = 25)
 		end
 
 	-- Eventually, all errors should be tested here
@@ -153,25 +170,20 @@ feature
 			assert ("XP0004", an_evaluator.error_value.type = Type_error and an_evaluator.error_value.code = 4)
 		end
 
-
-	-- replace this with 1 to 'seven'
---	test_for_error_xp0006 is
---				-- Value doesn't match required type.
---			local
---				an_evaluator: XM_XPATH_EVALUATOR
---				a_string_value: XM_XPATH_STRING_VALUE
---			do
---				create an_evaluator
---				an_evaluator.build_static_context ("./books.xml", False, False)
---				create a_string_value.make ("fred")
---				an_evaluator.static_context.declare_variable ("node", a_string_value)
---				assert ("Build successful", not an_evaluator.was_build_error)
---				an_evaluator.evaluate ("some $part in //TITLE satisfies $part/@discounted")
---				assert ("Evaluation error", an_evaluator.is_evaluation_in_error)
---				print (an_evaluator.error_value.error_message); print ("%N")
---				print (an_evaluator.error_value.code.out)
---				assert ("XP0006", an_evaluator.error_value.type = Static_error and an_evaluator.error_value.code = 6)
---			end
+	test_for_error_xp0006 is
+		local
+			an_evaluator: XM_XPATH_EVALUATOR
+			evaluated_items: DS_LINKED_LIST [XM_XPATH_ITEM]
+			a_string_value: XM_XPATH_STRING_VALUE
+		do
+			create an_evaluator
+			an_evaluator.build_static_context ("./books.xml", False, False)
+			assert ("Build successfull", not an_evaluator.was_build_error)
+			create a_string_value.make ("seven")
+			an_evaluator.static_context.declare_variable ("fred", a_string_value)
+			an_evaluator.evaluate ("(1 to $fred)")
+			assert ("Evaluation error", an_evaluator.is_evaluation_in_error)
+		end
 
 	test_for_error_xp0008 is
 			-- Name not bound in static context
