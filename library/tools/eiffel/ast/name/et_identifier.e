@@ -287,15 +287,15 @@ feature {NONE} -- Implementation
 				c := CHARACTER_.as_upper (a_name.item (i)).code - 48
 				inspect i \\ 5
 				when 0 then
-					Result := Result + c
+					Result := INTEGER_.bit_or (Result, c)
 				when 1 then
-					Result := Result + c * 64 -- 2^6
+					Result := INTEGER_.bit_or (Result, c * 64) -- 2^6
 				when 2 then
-					Result := Result + c * 4096 -- 2^12
+					Result := INTEGER_.bit_or (Result, c * 4096) -- 2^12
 				when 3 then
-					Result := Result + c * 262144 -- 2^18
+					Result := INTEGER_.bit_or (Result, c * 262144) -- 2^18
 				when 4 then
-					Result := Result + c * 16777216 -- 2^24
+					Result := INTEGER_.bit_or (Result, c * 16777216) -- 2^24
 				else
 				end
 				i := i + 1
