@@ -53,6 +53,7 @@ feature -- Test
 			a_full_test: BOOLEAN
 			ve_os: STRING
 			ve_4_1: STRING
+			se_1_0: STRING
 		do
 			create an_xace_file.make (xace_filename)
 			an_xace_file.open_read
@@ -73,6 +74,12 @@ feature -- Test
 				ve_4_1 := Execution_environment.variable_value ("VE_4_1")
 				if ve_4_1 /= Void and then ve_4_1.count > 0 then
 					an_xace_variables.force_last (ve_4_1, "VE_4_1")
+				end
+			end
+			if eiffel_compiler.is_se then
+				se_1_0 := Execution_environment.variable_value ("SE_1_0")
+				if se_1_0 /= Void and then se_1_0.count > 0 then
+					an_xace_variables.force_last (se_1_0, "SE_1_0")
 				end
 			end
 			create an_xace_ast_factory.make
