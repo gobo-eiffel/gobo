@@ -2037,6 +2037,7 @@ feature {ET_AST_NODE} -- Processing
 		do
 			if a_constant.cast_type /= Void then
 				a_constant.cast_type.process (Current)
+			end
 		end
 
 	process_rename (a_rename: ET_RENAME) is
@@ -2230,6 +2231,7 @@ feature {ET_AST_NODE} -- Processing
 		do
 			if a_constant.cast_type /= Void then
 				a_constant.cast_type.process (Current)
+			end
 		end
 
 	process_unique_attribute (a_feature: ET_UNIQUE_ATTRIBUTE) is
