@@ -127,10 +127,9 @@ feature -- Setting
 
 feature -- Status report
 
-	filled: BOOLEAN --is
-			-- Did the last call to `fill' add more characters to buffer?
-		--do
-		--end
+	filled: BOOLEAN
+			-- Did the last call to `fill' add
+			-- more characters to buffer?
 
 feature -- Element change
 
@@ -138,6 +137,7 @@ feature -- Element change
 			-- Fill buffer. Set `filled' to True if characters
 			-- have been added to buffer.
 		do
+			filled := False
 		end
 
 	flush is
@@ -151,6 +151,7 @@ feature -- Element change
 			content.put (End_of_buffer_character, 2)
 			position := 1
 			beginning_of_line := True
+			filled := True
 		ensure
 			flushed: count = 0
 			beginning_of_line: beginning_of_line

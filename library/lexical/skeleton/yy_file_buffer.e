@@ -20,7 +20,7 @@ inherit
 		export
 			{NONE} make_from_string, make_from_buffer
 		redefine
-			fill, filled, flush
+			fill
 		end
 
 	KL_SHARED_INPUT_STREAM_ROUTINES
@@ -89,10 +89,6 @@ feature -- Setting
 
 feature -- Status report
 
-	filled: BOOLEAN
-			-- Did the last call to `fill' add more
-			-- characters to buffer? 
-
 	interactive: BOOLEAN
 			-- Is the input source interactive?
 			-- If so, we will have to read characters one by one.
@@ -153,12 +149,22 @@ feature -- Element change
 					-- Read in more data.
 				if interactive then
 						-- Read characters one by one.
-					file.read_character
-					char := file.last_character
-					if input_stream_.end_of_input (file) then
-						j := j + 1
-						buff.put (char, j)
-						filled := True
+						--| The following piece of code does not
+						--| look nice, specially the test against
+						--| the end-of-file character. However
+						--| SmallEiffel implements 'read_character'
+						--| such a way that I could not easily
+						--| do better!
+					if not input_stream_.end_of_input (file) then
+						file.read_character
+						char := file.last_character
+						if char /= End_of_file_character then
+							j := j + 1
+							buff.put (char, j)
+							filled := True
+						else
+							filled := False
+						end
 					else
 						filled := False
 					end
@@ -182,25 +188,14 @@ feature -- Element change
 			end
 		end
 
-	flush is
-			-- Flush buffer.
-		do
-			count := 0
-				-- We always need two end-of-file characters.
-				-- The first causes a transition to the end-of-buffer
-				-- state. The second causes a jam in that state.
-			content.put (End_of_buffer_character, 1)
-			content.put (End_of_buffer_character, 2)
-			position := 1
-			beginning_of_line := True
-			filled := True
-		end
-
 feature {NONE} -- Constants
 
 	Read_buffer_capacity: INTEGER is 8192
 			-- Maximum number of characters to 
 			-- be read at a time
+
+	End_of_file_character: CHARACTER is '%/255/'
+			-- End-of-file character
 
 invariant
 
