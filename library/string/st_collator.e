@@ -16,6 +16,9 @@ inherit
 
 	KL_COMPARATOR  [STRING]
 
+	KL_IMPORTED_STRING_ROUTINES
+		export {NONE} all end
+
 feature -- Comparison
 
 	three_way_comparison (a_string, another_string: STRING): INTEGER is
@@ -27,7 +30,7 @@ feature -- Comparison
 
 			-- Default implementation is to compare using Unicode code points
 
-			Result := a_string.three_way_comparison (another_string)
+			Result := STRING_.three_way_comparison (a_string, another_string)
 		ensure
 			three_way_comparison: Result >= -1 and Result <= 1
 		end

@@ -1305,12 +1305,20 @@ feature -- Comparison
 			-- If current object equal to `other', 0;
 			-- if smaller, -1; if greater, 1
 			-- (ELKS 2001 STRING, inherited from COMPARABLE)
+			-- Note: there is a bug in the specification of the
+			-- contracts of `three_way_comparison' inherited
+			-- from COMPARABLE. This routine cannot satisfy
+			-- its postconditions if `other' is not of the
+			-- same type as `Current' because the postcondition
+			-- uses `is_equal' and `is_equal' has a postcondition
+			-- inherited from ANY which says if it returns true
+			-- then `other' has the same type as `Current'.
 		local
 			i, nb, nb1, nb2: INTEGER
 			b1, b2: CHARACTER
 			found: BOOLEAN
 		do
-			if other /= Current then
+			if other /= Current and same_type (other) then
 				nb1 := byte_count
 				nb2 := other.byte_count
 				if nb1 < nb2 then
@@ -1341,6 +1349,101 @@ feature -- Comparison
 					end
 				end
 			end
+		end
+
+	three_way_unicode_comparison (other: STRING): INTEGER is
+			-- If current object equal to `other', 0;
+			-- if smaller, -1; if greater, 1
+			-- Note: there is a bug in the specification of the
+			-- contracts of `three_way_comparison' inherited
+			-- from COMPARABLE. This routine cannot satisfy
+			-- its postconditions if `other' is not of the
+			-- same type as `Current' because the postcondition
+			-- uses `is_equal' and `is_equal' has a postcondition
+			-- inherited from ANY which says if it returns true
+			-- then `other' has the same type as `Current'.
+			-- `three_way_unicode_comparison' solves this problem
+			-- and make the comparison polymorphically safe by
+			-- changing the signature from 'like Current' to 
+			-- 'STRING' and by using `same_unicode_string' instead
+			-- of `is_equal' in its postcondition.
+		require
+			other_not_void: other /= Void
+		local
+			uc_string: UC_STRING
+			i, nb, nb1, nb2: INTEGER
+			b1, b2: CHARACTER
+			c1, c2: INTEGER
+			found: BOOLEAN
+		do
+			if other = Current then
+				Result := 0
+			elseif same_type (other) then
+				uc_string ?= other
+				nb1 := byte_count
+				nb2 := uc_string.byte_count
+				if nb1 < nb2 then
+					nb := nb1
+				else
+					nb := nb2
+				end
+				from i := 1 until i > nb loop
+					b1 := byte_item (i)
+					b2 := uc_string.byte_item (i)
+					if b1 = b2 then
+						i := i + 1
+					elseif b1 < b2 then
+						found := True
+						Result := -1
+						i := nb + 1 -- Jump out of the loop.
+					else
+						found := True
+						Result := 1
+						i := nb + 1 -- Jump out of the loop.
+					end
+				end
+				if not found then
+					if nb1 < nb2 then
+						Result := -1
+					elseif nb1 /= nb2 then
+						Result := 1
+					end
+				end
+			else
+				nb1 := count
+				nb2 := other.count
+				if nb1 < nb2 then
+					nb := nb1
+				else
+					nb := nb2
+				end
+				from i := 1 until i > nb loop
+					c1 := item_code (i)
+					c2 := other.item_code (i)
+					if c1 = c2 then
+						i := i + 1
+					elseif c1 < c2 then
+						found := True
+						Result := -1
+						i := nb + 1 -- Jump out of the loop.
+					else
+						found := True
+						Result := 1
+						i := nb + 1 -- Jump out of the loop.
+					end
+				end
+				if not found then
+					if nb1 < nb2 then
+						Result := -1
+					elseif nb1 /= nb2 then
+						Result := 1
+					end
+				end
+			end
+		ensure
+			equal_zero: (Result = 0) = same_unicode_string (other)
+			-- smaller_negative: (Result = -1) = (Current is less than other)
+			-- greater_positive: (Result = 1) = (Current is greater than other)
 		end
 
 feature -- Element change
