@@ -36,6 +36,20 @@ feature -- Status report
 			end
 		end
 
+	is_dotnet: BOOLEAN is
+			-- Has this application been compiled with Eiffel for .NET?
+#ifdef (ISE && ! ISE_5_1)
+		local
+			p: PLATFORM
+		once
+			!! p
+			Result := p.is_dotnet
+#else
+		once
+			Result := False
+#endif
+		end
+
 feature {NONE} -- Implementation
 
 	current_working_directory: STRING is
