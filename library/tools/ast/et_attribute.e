@@ -98,11 +98,4 @@ feature -- Conversion
 			Result.set_version (version)
 		end
 
-	undefined_feature (a_name: like name; an_id: INTEGER): ET_DEFERRED_FUNCTION is
-			-- Undefined version of current feature
-		do
-			!! Result.make_with_seeds (a_name, Void, type, Void,
-				Void, Void, clients, implementation_class, seeds, an_id)
-		end
-
 end -- class ET_ATTRIBUTE

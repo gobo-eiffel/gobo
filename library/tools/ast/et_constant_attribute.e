@@ -17,7 +17,7 @@ inherit
 
 	ET_QUERY
 		redefine
-			is_attribute, is_constant_attribute
+			is_constant_attribute
 		end
 
 creation
@@ -89,9 +89,6 @@ feature -- Access
 
 feature -- Status report
 
-	is_attribute: BOOLEAN is True
-			-- Is feature an attribute?
-
 	is_constant_attribute: BOOLEAN is True
 			-- Is feature a constant attribute?
 
@@ -110,13 +107,6 @@ feature -- Conversion
 		do
 			!! Result.make_with_seeds (a_name, type, constant, clients, implementation_class, seeds, an_id)
 			Result.set_version (version)
-		end
-
-	undefined_feature (a_name: like name; an_id: INTEGER): ET_DEFERRED_FUNCTION is
-			-- Undefined version of current feature
-		do
-			!! Result.make_with_seeds (a_name, Void, type,
-				Void, Void, Void, clients, implementation_class, seeds, an_id)
 		end
 
 invariant
