@@ -28,7 +28,7 @@ feature -- Access
 
 feature -- Output
 
-	generate (a_system: ET_XACE_UNIVERSE) is
+	generate_system (a_system: ET_XACE_UNIVERSE) is
 			-- Generate a new XML file from `a_system'.
 		local
 			a_filename: STRING
@@ -42,7 +42,28 @@ feature -- Output
 			!! a_file.make (a_filename)
 			a_file.open_write
 			if a_file.is_open_write then
-				print_xml_file (a_system, a_file)
+				print_xml_system_file (a_system, a_file)
+				a_file.close
+			else
+				error_handler.report_cannot_write_file_error (a_filename)
+			end
+		end
+
+	generate_cluster (a_cluster: ET_XACE_CLUSTER) is
+			-- Generate a new XML file from `a_cluster'.
+		local
+			a_filename: STRING
+			a_file: KL_TEXT_OUTPUT_FILE
+		do
+			if output_filename /= Void then
+				a_filename := output_filename
+			else
+				a_filename := xml_filename
+			end
+			!! a_file.make (a_filename)
+			a_file.open_write
+			if a_file.is_open_write then
+				print_xml_cluster_file (a_cluster, a_file)
 				a_file.close
 			else
 				error_handler.report_cannot_write_file_error (a_filename)
@@ -51,7 +72,7 @@ feature -- Output
 
 feature {NONE} -- Output
 
-	print_xml_file (a_system: ET_XACE_UNIVERSE; a_file: KI_TEXT_OUTPUT_STREAM) is
+	print_xml_system_file (a_system: ET_XACE_UNIVERSE; a_file: KI_TEXT_OUTPUT_STREAM) is
 			-- Print XML version of `a_system' to `a_file'.
 		require
 			a_system_not_void: a_system /= Void
@@ -93,6 +114,18 @@ feature {NONE} -- Output
 			print_indentation (1, a_file)
 			a_file.put_line ("</cluster>")
 			a_file.put_line ("</system>")
+		end
+
+	print_xml_cluster_file (a_cluster: ET_XACE_CLUSTER; a_file: KI_TEXT_OUTPUT_STREAM) is
+			-- Print XML version of `a_cluster' to `a_file'.
+		require
+			a_cluster_not_void: a_cluster /= Void
+			a_file_not_void: a_file /= Void
+			a_file_open_write: a_file.is_open_write
+		do
+			a_file.put_line ("<?xml version=%"1.0%"?>")
+			a_file.put_new_line
+			print_cluster (a_cluster, 0, a_file)
 		end
 
 	print_options (an_option: ET_XACE_OPTIONS; indent: INTEGER; a_file: KI_TEXT_OUTPUT_STREAM) is

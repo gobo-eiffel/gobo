@@ -29,9 +29,12 @@ feature -- Access
 	esd_filename: STRING is "ve.esd"
 			-- Name of generated Ace file
 
+	eld_filename: STRING is "ve.eld"
+			-- Name of generated library Ace file
+
 feature -- Output
 
-	generate (a_system: ET_XACE_UNIVERSE) is
+	generate_system (a_system: ET_XACE_UNIVERSE) is
 			-- Generate a new ESD file from `a_system'.
 		local
 			a_filename: STRING
@@ -54,6 +57,27 @@ feature -- Output
 				print_esd_file (a_system, a_file)
 				a_file.close
 				a_system.set_externals (an_externals)
+			else
+				error_handler.report_cannot_write_file_error (a_filename)
+			end
+		end
+
+	generate_cluster (a_cluster: ET_XACE_CLUSTER) is
+			-- Generate a new ELD file from `a_cluster'.
+		local
+			a_filename: STRING
+			a_file: KL_TEXT_OUTPUT_FILE
+		do
+			if output_filename /= Void then
+				a_filename := output_filename
+			else
+				a_filename := eld_filename
+			end
+			!! a_file.make (a_filename)
+			a_file.open_write
+			if a_file.is_open_write then
+				print_eld_file (a_cluster, a_file)
+				a_file.close
 			else
 				error_handler.report_cannot_write_file_error (a_filename)
 			end
@@ -105,6 +129,35 @@ feature {NONE} -- Output
 				print_options (an_option, 1, a_file)
 			end
 			a_file.put_new_line
+			a_file.put_line ("end")
+		end
+
+	print_eld_file (a_cluster: ET_XACE_CLUSTER; a_file: KI_TEXT_OUTPUT_STREAM) is
+			-- Print ELD `a_cluster' to `a_file'.
+		require
+			a_cluster_not_void: a_cluster /= Void
+			a_file_not_void: a_file /= Void
+			a_file_open_write: a_file.is_open_write
+		local
+			an_option: ET_XACE_OPTIONS
+		do
+			a_file.put_line ("library")
+			a_file.put_new_line
+			print_indentation (1, a_file)
+			a_file.put_line (a_cluster.name)
+			a_file.put_new_line
+			a_file.put_line ("cluster")
+			a_file.put_new_line
+			print_cluster (a_cluster, a_file)
+			a_file.put_new_line
+			an_option := a_cluster.options
+			if an_option /= Void then
+				a_file.put_line ("option")
+				a_file.put_new_line
+				print_indentation (1, a_file)
+				print_options (an_option, 1, a_file)
+				a_file.put_new_line
+			end
 			a_file.put_line ("end")
 		end
 

@@ -29,9 +29,12 @@ feature -- Access
 	cecil_filename: STRING is "cecil.se"
 			-- Name of generated cecil file
 
+	loadpath_filename: STRING is "loadpath.se"
+			-- Name of generated loadpath file
+
 feature -- Output
 
-	generate (a_system: ET_XACE_UNIVERSE) is
+	generate_system (a_system: ET_XACE_UNIVERSE) is
 			-- Generate a new Ace file from `a_system'.
 		local
 			a_filename: STRING
@@ -57,6 +60,27 @@ feature -- Output
 					generate_cecil_file (a_system.externals)
 				end
 				a_system.set_externals (an_externals)
+			else
+				error_handler.report_cannot_write_file_error (a_filename)
+			end
+		end
+
+	generate_cluster (a_cluster: ET_XACE_CLUSTER) is
+			-- Generate a new loadpath file from `a_cluster'.
+		local
+			a_filename: STRING
+			a_file: KL_TEXT_OUTPUT_FILE
+		do
+			if output_filename /= Void then
+				a_filename := output_filename
+			else
+				a_filename := loadpath_filename
+			end
+			!! a_file.make (a_filename)
+			a_file.open_write
+			if a_file.is_open_write then
+				print_loadpath_cluster (a_cluster, a_file)
+				a_file.close
 			else
 				error_handler.report_cannot_write_file_error (a_filename)
 			end
@@ -240,6 +264,42 @@ feature {NONE} -- Output
 			subclusters := a_cluster.subclusters
 			if subclusters /= Void then
 				print_clusters (subclusters, a_file)
+			end
+		end
+
+	print_loadpath_clusters (a_clusters: ET_XACE_CLUSTERS; a_file: KI_TEXT_OUTPUT_STREAM) is
+			-- Print `a_clusters' to loadpath `a_file'.
+		require
+			a_clusters_not_void: a_clusters /= Void
+			a_file_not_void: a_file /= Void
+			a_file_open_write: a_file.is_open_write
+		local
+			i, nb: INTEGER
+			cluster_list: DS_ARRAYED_LIST [ET_XACE_CLUSTER]
+		do
+			cluster_list := a_clusters.clusters
+			nb := cluster_list.count
+			from i := 1 until i > nb loop
+				print_loadpath_cluster (cluster_list.item (i), a_file)
+				i := i + 1
+			end
+		end
+
+	print_loadpath_cluster (a_cluster: ET_XACE_CLUSTER; a_file: KI_TEXT_OUTPUT_STREAM) is
+			-- Print `a_cluster' to loadpath `a_file'.
+		require
+			a_cluster_not_void: a_cluster /= Void
+			a_file_not_void: a_file /= Void
+			a_file_open_write: a_file.is_open_write
+		local
+			subclusters: ET_XACE_CLUSTERS
+		do
+			if not a_cluster.is_abstract then
+				a_file.put_line (a_cluster.full_pathname)
+			end
+			subclusters := a_cluster.subclusters
+			if subclusters /= Void then
+				print_loadpath_clusters (subclusters, a_file)
 			end
 		end
 

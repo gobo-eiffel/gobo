@@ -45,13 +45,20 @@ feature -- Setting
 
 feature -- Output
 
-	generate (a_system: ET_XACE_UNIVERSE) is
+	generate_system (a_system: ET_XACE_UNIVERSE) is
 			-- Generate a new Ace file from `a_system'.
 		require
 			a_system_not_void: a_system /= Void
 			system_name_not_void: a_system.system_name /= Void
 			root_class_name_not_void: a_system.root_class_name /= Void
 			creation_procedure_name_not_void: a_system.creation_procedure_name /= Void
+		deferred
+		end
+
+	generate_cluster (a_cluster: ET_XACE_CLUSTER) is
+			-- Generate a new Ace file from `a_cluster'.
+		require
+			a_cluster_not_void: a_cluster /= Void
 		deferred
 		end
 

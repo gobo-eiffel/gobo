@@ -28,7 +28,7 @@ feature -- Access
 
 feature -- Output
 
-	generate (a_system: ET_XACE_UNIVERSE) is
+	generate_system (a_system: ET_XACE_UNIVERSE) is
 			-- Generate a new Ace file from `a_system'.
 		local
 			a_filename: STRING
@@ -51,6 +51,27 @@ feature -- Output
 				print_ace_file (a_system, a_file)
 				a_file.close
 				a_system.set_externals (an_externals)
+			else
+				error_handler.report_cannot_write_file_error (a_filename)
+			end
+		end
+
+	generate_cluster (a_cluster: ET_XACE_CLUSTER) is
+			-- Generate a new precompilation Ace file from `a_cluster'.
+		local
+			a_filename: STRING
+			a_file: KL_TEXT_OUTPUT_FILE
+		do
+			if output_filename /= Void then
+				a_filename := output_filename
+			else
+				a_filename := ace_filename
+			end
+			!! a_file.make (a_filename)
+			a_file.open_write
+			if a_file.is_open_write then
+				print_precompile_ace_file (a_cluster, a_file)
+				a_file.close
 			else
 				error_handler.report_cannot_write_file_error (a_filename)
 			end
@@ -105,6 +126,53 @@ feature {NONE} -- Output
 			an_external := a_system.externals
 			if
 				an_external /= Void and then
+				(an_external.has_include_directories or an_external.has_link_libraries)
+			then
+				a_file.put_line ("external")
+				a_file.put_new_line
+				print_include_directories (an_external.include_directories, a_file)
+				print_link_libraries (an_external.link_libraries, a_file)
+			end
+			a_file.put_line ("end")
+		end
+
+	print_precompile_ace_file (a_cluster: ET_XACE_CLUSTER; a_file: KI_TEXT_OUTPUT_STREAM) is
+			-- Print precompilation Ace file to `a_file'.
+		require
+			a_cluster_not_void: a_cluster /= Void
+			a_file_not_void: a_file /= Void
+			a_file_open_write: a_file.is_open_write
+		local
+			an_option: ET_XACE_OPTIONS
+			an_external: ET_XACE_EXTERNALS
+		do
+			a_file.put_line ("system")
+			a_file.put_new_line
+			print_indentation (1, a_file)
+			a_file.put_line (a_cluster.name)
+			a_file.put_new_line
+			a_file.put_line ("root")
+			a_file.put_new_line
+			print_indentation (1, a_file)
+			a_file.put_line ("ANY")
+			a_file.put_new_line
+			a_file.put_line ("default")
+			a_file.put_new_line
+			print_indentation (1, a_file)
+			a_file.put_line ("console_application (yes)")
+			an_option := a_cluster.options
+			if an_option /= Void then
+				print_options (an_option, 1, a_file)
+			end
+			a_file.put_new_line
+			a_file.put_line ("cluster")
+			a_file.put_new_line
+			print_cluster (a_cluster, a_file)
+			a_file.put_new_line
+			!! an_external.make
+			a_cluster.merge_externals (an_external)
+			if
+				not an_external.is_empty and then
 				(an_external.has_include_directories or an_external.has_link_libraries)
 			then
 				a_file.put_line ("external")

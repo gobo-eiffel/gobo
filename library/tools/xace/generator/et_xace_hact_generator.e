@@ -28,7 +28,7 @@ feature -- Access
 
 feature -- Output
 
-	generate (a_system: ET_XACE_UNIVERSE) is
+	generate_system (a_system: ET_XACE_UNIVERSE) is
 			-- Generate a new Ace file from `a_system'.
 		local
 			a_filename: STRING
@@ -56,6 +56,27 @@ feature -- Output
 			end
 		end
 
+	generate_cluster (a_cluster: ET_XACE_CLUSTER) is
+			-- Generate a new precompilation Ace file from `a_cluster'.
+		local
+			a_filename: STRING
+			a_file: KL_TEXT_OUTPUT_FILE
+		do
+			if output_filename /= Void then
+				a_filename := output_filename
+			else
+				a_filename := ace_filename
+			end
+			!! a_file.make (a_filename)
+			a_file.open_write
+			if a_file.is_open_write then
+				print_precompile_ace_file (a_cluster, a_file)
+				a_file.close
+			else
+				error_handler.report_cannot_write_file_error (a_filename)
+			end
+		end
+
 feature {NONE} -- Output
 
 	print_ace_file (a_system: ET_XACE_UNIVERSE; a_file: KI_TEXT_OUTPUT_STREAM) is
@@ -72,15 +93,12 @@ feature {NONE} -- Output
 			a_clusters: ET_XACE_CLUSTERS
 			an_external: ET_XACE_EXTERNALS
 		do
-			a_file.put_string ("system")
-			a_file.put_new_line
+			a_file.put_line ("system")
 			a_file.put_new_line
 			print_indentation (1, a_file)
-			a_file.put_string (a_system.system_name)
+			a_file.put_line (a_system.system_name)
 			a_file.put_new_line
-			a_file.put_new_line
-			a_file.put_string ("root")
-			a_file.put_new_line
+			a_file.put_line ("root")
 			a_file.put_new_line
 			print_indentation (1, a_file)
 			a_file.put_string (a_system.root_class_name)
@@ -91,14 +109,12 @@ feature {NONE} -- Output
 			a_file.put_new_line
 			an_option := a_system.options
 			if an_option /= Void then
-				a_file.put_string ("default")
-				a_file.put_new_line
+				a_file.put_line ("default")
 				a_file.put_new_line
 				print_options (an_option, 1, a_file)
 			end
 			a_file.put_new_line
-			a_file.put_string ("cluster")
-			a_file.put_new_line
+			a_file.put_line ("cluster")
 			a_file.put_new_line
 			a_clusters := a_system.clusters
 			if a_clusters /= Void then
@@ -111,14 +127,58 @@ feature {NONE} -- Output
 				an_external /= Void and then
 				(an_external.has_include_directories or an_external.has_link_libraries)
 			then
-				a_file.put_string ("external")
-				a_file.put_new_line
+				a_file.put_line ("external")
 				a_file.put_new_line
 				print_include_directories (an_external.include_directories, a_file)
 				print_link_libraries (an_external.link_libraries, a_file)
 			end
-			a_file.put_string ("end")
+			a_file.put_line ("end")
+		end
+
+	print_precompile_ace_file (a_cluster: ET_XACE_CLUSTER; a_file: KI_TEXT_OUTPUT_STREAM) is
+			-- Print precompilation Ace file to `a_file'.
+		require
+			a_cluster_not_void: a_cluster /= Void
+			a_file_not_void: a_file /= Void
+			a_file_open_write: a_file.is_open_write
+		local
+			an_option: ET_XACE_OPTIONS
+			an_external: ET_XACE_EXTERNALS
+		do
+			a_file.put_line ("system")
 			a_file.put_new_line
+			print_indentation (1, a_file)
+			a_file.put_line (a_cluster.name)
+			a_file.put_new_line
+			a_file.put_line ("root")
+			a_file.put_new_line
+			print_indentation (1, a_file)
+			a_file.put_line ("ANY")
+			a_file.put_new_line
+			an_option := a_cluster.options
+			if an_option /= Void then
+				a_file.put_line ("default")
+				a_file.put_new_line
+				print_options (an_option, 1, a_file)
+			end
+			a_file.put_new_line
+			a_file.put_line ("cluster")
+			a_file.put_new_line
+			print_cluster (a_cluster, a_file)
+			a_file.put_new_line
+			print_component (a_file)
+			!! an_external.make
+			a_cluster.merge_externals (an_external)
+			if
+				not an_external.is_empty and then
+				(an_external.has_include_directories or an_external.has_link_libraries)
+			then
+				a_file.put_line ("external")
+				a_file.put_new_line
+				print_include_directories (an_external.include_directories, a_file)
+				print_link_libraries (an_external.link_libraries, a_file)
+			end
+			a_file.put_line ("end")
 		end
 
 	print_component (a_file: KI_TEXT_OUTPUT_STREAM) is
