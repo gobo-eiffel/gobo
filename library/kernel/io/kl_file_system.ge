@@ -11,7 +11,7 @@ indexing
 	date:       "$Date$"
 	revision:   "$Revision$"
 
-class KL_FILE_SYSTEM
+deferred class KL_FILE_SYSTEM
 
 inherit
 
@@ -41,10 +41,6 @@ inherit
 		end
 
 #endif
-creation
-
-	make
-
 #ifdef VE
 feature {NONE} -- Initialization
 
