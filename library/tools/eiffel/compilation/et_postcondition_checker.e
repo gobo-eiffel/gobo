@@ -10,7 +10,7 @@ indexing
 	date: "$Date$"
 	revision: "$Revision$"
 
-class ET_POSTCONDITION_EXPRESSION_CHECKER
+class ET_POSTCONDITION_CHECKER
 
 inherit
 
