@@ -112,7 +112,7 @@ feature -- Execution
 				end
 				
 				!! ucs.make_from_string (filename)
-				!! a_project.make_with_filename (ucs, a_variables)
+				!! a_project.make_with_filename (ucs, a_variables, Void)
 				a_project.set_verbose (project.verbose)
 	
 					-- Load build configuration:

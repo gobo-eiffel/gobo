@@ -16,6 +16,7 @@ class GEANT_PROJECT
 
 inherit
 
+	ANY
 	GEANT_ELEMENT_NAMES
 		export
 			{NONE} all
@@ -50,12 +51,13 @@ feature {NONE} -- Initialization
 	make (a_variables: GEANT_VARIABLES) is
 			-- Create a new project using file `build.eant'.
 		do
-			make_with_filename (Default_build_filename, a_variables)
+			make_with_filename (Default_build_filename, a_variables, Void)
 		end
 
-	make_with_filename (a_filename: UC_STRING; a_variables: GEANT_VARIABLES) is
+	make_with_filename (a_filename: UC_STRING; a_variables: GEANT_VARIABLES; a_child_project: like Current) is
 			-- Create a new project using file `a_filename'.
 			-- Set `variables' to `a_variables'. If Void create new variables
+			-- Set `child_project' to `a_child_project'.
 		require
 			a_filename_not_void: a_filename /= Void
 			a_filename_not_empty: not a_filename.empty
@@ -70,10 +72,12 @@ feature {NONE} -- Initialization
 			else
 				set_variables (a_variables)
 			end
+			child_project := a_child_project
 		ensure
 			build_filename_set: build_filename = a_filename
 			variables_set: a_variables /= Void implies variables = a_variables
-			variables_created: a_variables = Void implies variables /= Void and variables.variables.count = 0
+			variables_created: a_variables = Void implies variables /= Void
+			child_project_set: child_project = a_child_project
 		end
 
 feature -- Access
@@ -81,6 +85,9 @@ feature -- Access
 	build_filename: UC_STRING
 			-- Name of the file containing the configuration
 			-- information to build current project
+
+	name: STRING
+			-- Name of project
 
 	start_target_name: UC_STRING
 			-- Name of first target to be built
@@ -100,6 +107,14 @@ feature -- Access
 	verbose: BOOLEAN
 		-- Print additional information during build process?
 
+	parent_project: like Current
+		-- Parent project if set by xml attribute 'inherit';
+		-- Void otherwise
+
+	child_project: like Current
+		-- Child project if Current was created through xml attribute 'inherit';
+		-- Void otherwise
+
 	target_with_name (a_name: UC_STRING): GEANT_TARGET is
 			-- Target with `name' `a_name'
 		require
@@ -109,17 +124,37 @@ feature -- Access
 		local
 			i, nb: INTEGER
 			a_target: GEANT_TARGET
+			a_project: GEANT_PROJECT
 		do
-			nb := targets.count
-			from i := 1 until i > nb or Result /= Void loop
-				a_target := targets.item (i)
-				if a_target.name.is_equal (a_name.out)
-				then
-					Result := a_target
+				-- Search "youngest" project in hirarchy:
+			from
+				a_project := Current
+			until
+				a_project.child_project = Void
+			loop
+				a_project := a_project.child_project
+			end
+
+				-- Search target named `a_name' from "youngest" project
+				-- up to "oldest" project in hirarchy:
+			from
+			until
+				Result /= Void or else a_project = Void
+			loop
+				nb := a_project.targets.count
+				from i := 1 until i > nb or Result /= Void loop
+					a_target := a_project.targets.item (i)
+					if a_target.name.is_equal (a_name.out)
+					then
+						Result := a_target
+					end
+	
+					i := i + 1
 				end
 
-				i := i + 1
+				a_project := a_project.parent_project
 			end
+
 		end
 
 feature -- Setting
@@ -141,6 +176,17 @@ feature -- Setting
 			description := a_description
 		ensure
 			description_set: description = a_description
+		end
+
+	set_name (a_name: STRING) is
+			-- Set `name' to `a_name'.
+		require
+			a_name_not_void: a_name /= Void
+			a_name_not_empty: a_name.count > 0
+		do
+			name := a_name
+		ensure
+			name_set: name = a_name
 		end
 
 	set_variables (a_variables: like variables) is
@@ -168,6 +214,7 @@ feature -- Processing
 			an_element: GEANT_ELEMENT
 			a_target: GEANT_TARGET
 			i: INTEGER
+			a_parent_project_filename: UC_STRING
 
 	    do
 				-- Reset current project's state:
@@ -189,6 +236,23 @@ feature -- Processing
 						set_description (an_element.content.out)
 					end
 				end
+					-- handle project name if present:
+				if root_element.has_attribute (Name_attribute_name) then
+					ucs := root_element.attribute_value_by_name (Name_attribute_name)
+					set_name (ucs.out)
+				end
+
+					-- handle parent project if present:
+				if root_element.has_attribute (Inherit_attribute_name) then
+					a_parent_project_filename := root_element.attribute_value_by_name (Inherit_attribute_name)
+					debug ("geant")
+						print ("inheriting from: " + a_parent_project_filename.out + "%N")
+					end
+					!! parent_project.make_with_filename (a_parent_project_filename, variables, Current)
+					parent_project.set_verbose (verbose)
+					parent_project.load (Void)
+				end
+
 					-- Find all target elements of current project:
 				target_elements := root_element.children_by_name (Target_element_name)
 
@@ -312,12 +376,20 @@ feature -- Processing
 			-- Execute anyway if `a_force' is True.
 		require
 			target_not_void: a_target /= Void
+		local
+			s: STRING
 		do
 			if a_force or else not a_target.is_executed then
 				current_target := a_target
 				if verbose then
-					print ("%N" + a_target.name)
-					print (":%N%N")
+					s := clone ("%N")
+					if name /= Void then
+						s.append_string (a_target.project.name)
+						s.append_string (".")
+					end
+					s.append_string (a_target.name)
+					s.append_string (":%N%N")
+					print (s)
 				end
 				a_target.execute
 				current_target := Void
@@ -351,6 +423,17 @@ feature {NONE} -- Implementation
 			!! Result.make
 		ensure
 			parser_factory_not_void: Result /= Void
+		end
+
+feature {NONE} -- Constants
+
+	Inherit_attribute_name: UC_STRING is
+			-- "inherit" attribute name
+		once
+			!! Result.make_from_string ("inherit")
+		ensure
+			attribute_name_not_void: Result /= Void
+			attribute_name_not_empty: not Result.empty
 		end
 
 invariant
