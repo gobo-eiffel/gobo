@@ -19,6 +19,11 @@ Version ?
 	* new library
 	* ST_SPLITTER: parse a string to and from lists of tokens.
 
+  geant:
+
+  * If you use xsltproc and pass string parameters to it, you have to
+    surround those parameters with single quotes now.
+
 Version 3.3 - 2 November 2003
 
 	geant:
