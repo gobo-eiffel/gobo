@@ -30,15 +30,32 @@ feature -- Access
 		local
 			i, nb: INTEGER
 			a_feature: ET_FEATURE
+			an_id: ET_IDENTIFIER
 		do
-			nb := count
-			from i := 1 until i > nb loop
-				a_feature := item (i)
-				if a_feature.name.same_feature_name (a_name) then
-					Result := a_feature
-					i := nb + 1 -- Jump out of the loop
-				else
-					i := i + 1
+				-- This assignment attempt is to avoid too many polymorphic
+				-- calls to `same_feature_name'.
+			an_id ?= a_name
+			if an_id /= Void then
+				nb := count
+				from i := 1 until i > nb loop
+					a_feature := item (i)
+					if an_id.same_feature_name (a_feature.name) then
+						Result := a_feature
+						i := nb + 1 -- Jump out of the loop
+					else
+						i := i + 1
+					end
+				end
+			else
+				nb := count
+				from i := 1 until i > nb loop
+					a_feature := item (i)
+					if a_feature.name.same_feature_name (a_name) then
+						Result := a_feature
+						i := nb + 1 -- Jump out of the loop
+					else
+						i := i + 1
+					end
 				end
 			end
 		end
