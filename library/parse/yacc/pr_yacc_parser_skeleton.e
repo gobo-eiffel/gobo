@@ -555,7 +555,7 @@ feature {NONE} -- Factory
 					-- (0 is reserved for no-type)
 				an_id := last_grammar.types.count + 1
 				!! Result.make_generic (an_id, a_name, generics)
-				upper_name := STRING_.to_upper (result.name)
+				upper_name := STRING_.to_upper (Result.name)
 				if types.has (upper_name) then
 					Result := types.item (upper_name)
 				else
