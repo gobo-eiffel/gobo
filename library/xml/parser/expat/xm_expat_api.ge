@@ -372,29 +372,41 @@ feature -- Miscellaneous
 #ifdef ISE || HACT
 		local
 			ptr: POINTER
+			is_collecting: BOOLEAN
 #endif
 		do
 #ifdef ISE || HACT
+			-- For ISE/HACT we have to enable the garbage collector to be
+			-- able to freeze the object so it will not move. Because, if
+			-- it moves, the call from Expat to our routines will given
+			-- an invalid Current. And that will cause a segment
+			-- violation, panics, and lots of distress for your users.
+			-- If the garbage collector isn't enabled, we have to enable
+			-- it in order to freeze the object. Because it might not be
+			-- abled now, but either you, or a 3rd party libary might
+			-- enabled it at some point in time, causing our callback
+			-- object to move.
+			-- This all is bad, because enabling the garbage collector
+			-- might cause a sweep. So if you're really concerned after
+			-- reading this, try the Eiffel parser.
+			is_collecting := memory.collecting
+			if not is_collecting then
+				memory.collection_on
+			end
 			ptr := exml_XML_GetUserData (a_parser)
 			if ptr /= default_pointer then
-				if memory.collecting then
-					eif_unfreeze (ptr)
-				end
+				eif_unfreeze (ptr)
 			end
 			if a_callback /= Void then
-				if memory.collecting then
-					ptr := eif_freeze (a_callback)
-				else
-					ptr := $a_callback
-				end
-					check
-						ptr_not_nil: ptr /= default_pointer
-					end
+				ptr := eif_freeze (a_callback)
 				exml_XML_SetUserData (a_parser, ptr)
 				exml_XML_SetExternalEntityRefHandlerArg (a_parser, ptr)
 			else
 				exml_XML_SetUserData (a_parser, default_pointer)
 				exml_XML_SetExternalEntityRefHandlerArg (a_parser, default_pointer)
+			end
+			if not is_collecting then
+				memory.collection_off
 			end
 #endif
 #ifdef SE || VE
@@ -406,6 +418,10 @@ feature -- Miscellaneous
 		ensure
 			user_data_set:
 				(a_callback = Void) = (exml_XML_GetUserData (a_parser) = default_pointer)
+		rescue
+			if is_collecting and then not memory.collecting then
+				memory.collection_on
+			end
 #endif
 		end
 
