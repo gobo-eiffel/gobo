@@ -54,6 +54,34 @@ feature -- Deviant tests
 			--assert_valid ("xmltest, valid, stand alone, 012", xmltest_valid_sa_012)
 		end
 
+	test_deviant_attribute_default_value_order is
+			-- Expansion of default attribute values in different 
+			-- order when one in external and other in internal part 
+			-- of DTD. semantics unchanged.
+		do
+			assert_output_external ("xmltest, valid, not stand alone, 009", 
+					xmltest_valid_not_sa_009, 
+					"<doc a2=%"v2%" a1=%"v1%"></doc>", -- a1 a2 swapped 
+					valid_not_sa_externals)
+		end
+	
+	test_deviant_attribute_default_value_external_override is
+			-- Externally declared implied attribute value does
+			-- not hide internal default value declaration.
+		do
+			-- should be output test when correct
+			assert_valid_external ("xmltest, valid, stand alone, 097", xmltest_valid_sa_097, sa_externals)
+		end
+		
+	test_deviant_invalid is
+			-- Detection of invalid fragmenation with PE entities, 
+			-- when not strictly necessary for a non validating parser.
+		do
+			assert_invalid_external ("xmltest, invalid but well formed, 001", xmltest_invalid_001, invalid_externals)
+			assert_invalid_external ("xmltest, invalid but well formed, 003", xmltest_invalid_003, invalid_externals)
+			assert_invalid_external ("xmltest, invalid but well formed, 004", xmltest_invalid_004, invalid_externals)
+		end
+		
 feature -- Deviant tests due to limitation of test framework
 
 	test_deviant_notation is
@@ -68,27 +96,92 @@ feature -- Deviant tests due to limitation of test framework
 			assert_valid ("xmltest, valid, stand alone, 091", xmltest_valid_sa_091)--, xmltest_valid_sa_out_091)
 		end
 
-	test_deviant_external_entity is
-			-- Unused external entity.
-			-- (test limitation: to do when external entities are dealt with)
-		do
-			--assert_output ("xmltest, valid, stand alone, 097", xmltest_valid_sa_097, xmltest_valid_sa_out_097)
-		end
-
-feature -- Deviant tests due to incorrect or controversial tests
-
-	test_deviant_whitespace_in_element_content is
-			-- Extra space to be reduced to one. Only difference is 
-			-- the extra space after the tab. Test output may 
-			-- contradict 2.11?
-		do
-			assert_output ("xmltest, valid, stand alone, 092",
-					xmltest_valid_sa_092,
-					"<doc>&#10;<a></a>&#10;    <a></a>&#9; <a></a>&#10;&#10;&#10;</doc>")
-		end
-
 feature -- Test
 
+
+	test_invalid_but_well_formed is
+			-- Test invalid documents that are well formed.
+		do
+			assert_valid_external ("xmltest, invalid but well formed, 002", xmltest_invalid_002, invalid_externals)
+			assert_valid_external ("xmltest, invalid but well formed, 005", xmltest_invalid_005, invalid_externals)
+			assert_valid_external ("xmltest, invalid but well formed, 006", xmltest_invalid_006, invalid_externals)
+		end
+		
+	test_not_wf_ext_sa is
+			-- Not well formed with external DTD.
+		do
+			assert_invalid_external ("xmltest, not well formed, external stand alone, 001", xmltest_not_wf_ext_sa_001, not_wf_ext_sa_externals)
+			assert_invalid_external ("xmltest, not well formed, external stand alone, 002", xmltest_not_wf_ext_sa_002, not_wf_ext_sa_externals)
+			assert_invalid_external ("xmltest, not well formed, external stand alone, 003", xmltest_not_wf_ext_sa_003, not_wf_ext_sa_externals)
+		end
+
+	test_not_wf_not_sa is
+			-- Not well formed with not stand alone.
+		do
+			assert_invalid_external ("xmltest, not well formed, not stand alone, 001", xmltest_not_wf_not_sa_001, not_wf_not_sa_externals)
+			assert_invalid_external ("xmltest, not well formed, not stand alone, 002", xmltest_not_wf_not_sa_002, not_wf_not_sa_externals)
+			assert_invalid_external ("xmltest, not well formed, not stand alone, 003", xmltest_not_wf_not_sa_003, not_wf_not_sa_externals)
+			assert_invalid_external ("xmltest, not well formed, not stand alone, 004", xmltest_not_wf_not_sa_004, not_wf_not_sa_externals)
+			assert_invalid_external ("xmltest, not well formed, not stand alone, 005", xmltest_not_wf_not_sa_005, not_wf_not_sa_externals)
+			assert_invalid_external ("xmltest, not well formed, not stand alone, 006", xmltest_not_wf_not_sa_006, not_wf_not_sa_externals)
+			assert_invalid_external ("xmltest, not well formed, not stand alone, 007", xmltest_not_wf_not_sa_007, not_wf_not_sa_externals)
+			assert_invalid_external ("xmltest, not well formed, not stand alone, 008", xmltest_not_wf_not_sa_008, not_wf_not_sa_externals)
+		end
+		
+	test_valid_ext_sa is
+			-- Valid with external DTD.
+		do
+			assert_output_external ("xmltest, valid, external stand alone, 001", xmltest_valid_ext_sa_001, xmltest_valid_ext_sa_out_001, valid_ext_sa_externals)
+			assert_output_external ("xmltest, valid, external stand alone, 002", xmltest_valid_ext_sa_002, xmltest_valid_ext_sa_out_002, valid_ext_sa_externals)
+			assert_output_external ("xmltest, valid, external stand alone, 003", xmltest_valid_ext_sa_003, xmltest_valid_ext_sa_out_003, valid_ext_sa_externals)
+			assert_output_external ("xmltest, valid, external stand alone, 004", xmltest_valid_ext_sa_004, xmltest_valid_ext_sa_out_004, valid_ext_sa_externals)
+			assert_output_external ("xmltest, valid, external stand alone, 005", xmltest_valid_ext_sa_005, xmltest_valid_ext_sa_out_005, valid_ext_sa_externals)
+			assert_output_external ("xmltest, valid, external stand alone, 006", xmltest_valid_ext_sa_006, xmltest_valid_ext_sa_out_006, valid_ext_sa_externals)
+			assert_output_external ("xmltest, valid, external stand alone, 007", xmltest_valid_ext_sa_007, xmltest_valid_ext_sa_out_007, valid_ext_sa_externals)
+			assert_output_external ("xmltest, valid, external stand alone, 008", xmltest_valid_ext_sa_008, xmltest_valid_ext_sa_out_008, valid_ext_sa_externals)
+			assert_output_external ("xmltest, valid, external stand alone, 009", xmltest_valid_ext_sa_009, xmltest_valid_ext_sa_out_009, valid_ext_sa_externals)
+			assert_output_external ("xmltest, valid, external stand alone, 010", xmltest_valid_ext_sa_010, xmltest_valid_ext_sa_out_010, valid_ext_sa_externals)
+			assert_output_external ("xmltest, valid, external stand alone, 011", xmltest_valid_ext_sa_011, xmltest_valid_ext_sa_out_011, valid_ext_sa_externals)
+			assert_output_external ("xmltest, valid, external stand alone, 012", xmltest_valid_ext_sa_012, xmltest_valid_ext_sa_out_012, valid_ext_sa_externals)
+			assert_output_external ("xmltest, valid, external stand alone, 013", xmltest_valid_ext_sa_013, xmltest_valid_ext_sa_out_013, valid_ext_sa_externals)
+			assert_output_external ("xmltest, valid, external stand alone, 014", xmltest_valid_ext_sa_014, xmltest_valid_ext_sa_out_014, valid_ext_sa_externals)
+		end
+
+	test_valid_not_sa is
+			-- Tests valid documents with external entities.
+		do
+			assert_output_external ("xmltest, valid, not stand alone, 001", xmltest_valid_not_sa_001, xmltest_valid_not_sa_out_001, valid_not_sa_externals)
+			assert_output_external ("xmltest, valid, not stand alone, 002", xmltest_valid_not_sa_002, xmltest_valid_not_sa_out_002, valid_not_sa_externals)
+			assert_output_external ("xmltest, valid, not stand alone, 003", xmltest_valid_not_sa_003, xmltest_valid_not_sa_out_003, valid_not_sa_externals)
+			assert_output_external ("xmltest, valid, not stand alone, 004", xmltest_valid_not_sa_004, xmltest_valid_not_sa_out_004, valid_not_sa_externals)
+			assert_output_external ("xmltest, valid, not stand alone, 005", xmltest_valid_not_sa_005, xmltest_valid_not_sa_out_005, valid_not_sa_externals)
+			assert_output_external ("xmltest, valid, not stand alone, 006", xmltest_valid_not_sa_006, xmltest_valid_not_sa_out_006, valid_not_sa_externals)
+			assert_output_external ("xmltest, valid, not stand alone, 007", xmltest_valid_not_sa_007, xmltest_valid_not_sa_out_007, valid_not_sa_externals)
+			assert_output_external ("xmltest, valid, not stand alone, 008", xmltest_valid_not_sa_008, xmltest_valid_not_sa_out_008, valid_not_sa_externals)
+			assert_output_external ("xmltest, valid, not stand alone, 010", xmltest_valid_not_sa_010, xmltest_valid_not_sa_out_010, valid_not_sa_externals)
+			assert_output_external ("xmltest, valid, not stand alone, 011", xmltest_valid_not_sa_011, xmltest_valid_not_sa_out_011, valid_not_sa_externals)
+			assert_output_external ("xmltest, valid, not stand alone, 012", xmltest_valid_not_sa_012, xmltest_valid_not_sa_out_012, valid_not_sa_externals)
+			assert_output_external ("xmltest, valid, not stand alone, 013", xmltest_valid_not_sa_013, xmltest_valid_not_sa_out_013, valid_not_sa_externals)
+			assert_output_external ("xmltest, valid, not stand alone, 014", xmltest_valid_not_sa_014, xmltest_valid_not_sa_out_014, valid_not_sa_externals)
+			assert_output_external ("xmltest, valid, not stand alone, 015", xmltest_valid_not_sa_015, xmltest_valid_not_sa_out_015, valid_not_sa_externals)
+			assert_output_external ("xmltest, valid, not stand alone, 016", xmltest_valid_not_sa_016, xmltest_valid_not_sa_out_016, valid_not_sa_externals)
+			assert_output_external ("xmltest, valid, not stand alone, 017", xmltest_valid_not_sa_017, xmltest_valid_not_sa_out_017, valid_not_sa_externals)
+			assert_output_external ("xmltest, valid, not stand alone, 018", xmltest_valid_not_sa_018, xmltest_valid_not_sa_out_018, valid_not_sa_externals)
+			assert_output_external ("xmltest, valid, not stand alone, 019", xmltest_valid_not_sa_019, xmltest_valid_not_sa_out_019, valid_not_sa_externals)
+			assert_output_external ("xmltest, valid, not stand alone, 020", xmltest_valid_not_sa_020, xmltest_valid_not_sa_out_020, valid_not_sa_externals)
+			assert_output_external ("xmltest, valid, not stand alone, 021", xmltest_valid_not_sa_021, xmltest_valid_not_sa_out_021, valid_not_sa_externals)
+			assert_output_external ("xmltest, valid, not stand alone, 022", xmltest_valid_not_sa_022, xmltest_valid_not_sa_out_022, valid_not_sa_externals)
+			assert_output_external ("xmltest, valid, not stand alone, 023", xmltest_valid_not_sa_023, xmltest_valid_not_sa_out_023, valid_not_sa_externals)
+			assert_output_external ("xmltest, valid, not stand alone, 024", xmltest_valid_not_sa_024, xmltest_valid_not_sa_out_024, valid_not_sa_externals)
+			assert_output_external ("xmltest, valid, not stand alone, 025", xmltest_valid_not_sa_025, xmltest_valid_not_sa_out_025, valid_not_sa_externals)
+			assert_output_external ("xmltest, valid, not stand alone, 026", xmltest_valid_not_sa_026, xmltest_valid_not_sa_out_026, valid_not_sa_externals)
+			assert_output_external ("xmltest, valid, not stand alone, 027", xmltest_valid_not_sa_027, xmltest_valid_not_sa_out_027, valid_not_sa_externals)
+			assert_output_external ("xmltest, valid, not stand alone, 028", xmltest_valid_not_sa_028, xmltest_valid_not_sa_out_028, valid_not_sa_externals)
+			assert_output_external ("xmltest, valid, not stand alone, 029", xmltest_valid_not_sa_029, xmltest_valid_not_sa_out_029, valid_not_sa_externals)
+			assert_output_external ("xmltest, valid, not stand alone, 030", xmltest_valid_not_sa_030, xmltest_valid_not_sa_out_030, valid_not_sa_externals)
+			assert_output_external ("xmltest, valid, not stand alone, 031", xmltest_valid_not_sa_031, xmltest_valid_not_sa_out_031, valid_not_sa_externals)
+		end
+		
 	test_not_wf_sa is
 			-- Tests not well formed stand alone documents are correctly 
 			-- detected.
@@ -284,7 +377,7 @@ feature -- Test
 			assert_output_utf16 ("xmltest, valid, stand alone, 050", xmltest_valid_sa_050, xmltest_valid_sa_out_050)
 			assert_output_utf16 ("xmltest, valid, stand alone, 051", xmltest_valid_sa_051, xmltest_valid_sa_out_051)
 		end
-
+		
 	test_valid_sa is
 			-- Test valid output.
 		do
@@ -371,6 +464,7 @@ feature -- Test
 			assert_output ("xmltest, valid, stand alone, 087", xmltest_valid_sa_087, xmltest_valid_sa_out_087)
 			assert_output ("xmltest, valid, stand alone, 088", xmltest_valid_sa_088, xmltest_valid_sa_out_088)
 			assert_output ("xmltest, valid, stand alone, 089", xmltest_valid_sa_089, xmltest_valid_sa_out_089)
+			assert_output ("xmltest, valid, stand alone, 092", xmltest_valid_sa_092, xmltest_valid_sa_out_092)
 			assert_output ("xmltest, valid, stand alone, 093", xmltest_valid_sa_093, xmltest_valid_sa_out_093)
 			assert_output ("xmltest, valid, stand alone, 095", xmltest_valid_sa_095, xmltest_valid_sa_out_095)
 			assert_output ("xmltest, valid, stand alone, 096", xmltest_valid_sa_096, xmltest_valid_sa_out_096)
@@ -398,4 +492,104 @@ feature -- Test
 			assert_output ("xmltest, valid, stand alone, 119", xmltest_valid_sa_119, xmltest_valid_sa_out_119)
 		end
 
+feature {NONE} -- External entities
+
+	valid_not_sa_externals: XM_STRING_EXTERNAL_RESOLVER is
+			-- valid not stand alone entities.
+		once
+			!! Result.make
+			Result.strings.force (xmltest_valid_not_sa_001_ent, "001.ent")
+			Result.strings.force (xmltest_valid_not_sa_002_ent, "002.ent")
+			Result.strings.force (xmltest_valid_not_sa_003_1_ent, "003-1.ent")
+			Result.strings.force (xmltest_valid_not_sa_003_2_ent, "003-2.ent")
+			Result.strings.force (xmltest_valid_not_sa_004_1_ent, "004-1.ent")
+			Result.strings.force (xmltest_valid_not_sa_004_2_ent, "004-2.ent")
+			Result.strings.force (xmltest_valid_not_sa_005_1_ent, "005-1.ent")
+			Result.strings.force (xmltest_valid_not_sa_005_2_ent, "005-2.ent")
+			Result.strings.force (xmltest_valid_not_sa_006_ent, "006.ent")
+			Result.strings.force (xmltest_valid_not_sa_007_ent, "007.ent")
+			Result.strings.force (xmltest_valid_not_sa_008_ent, "008.ent")
+			Result.strings.force (xmltest_valid_not_sa_009_ent, "009.ent")
+			Result.strings.force (xmltest_valid_not_sa_010_ent, "010.ent")
+			Result.strings.force (xmltest_valid_not_sa_011_ent, "011.ent")
+			Result.strings.force (xmltest_valid_not_sa_012_ent, "012.ent")
+			Result.strings.force (xmltest_valid_not_sa_013_ent, "013.ent")
+			Result.strings.force (xmltest_valid_not_sa_014_ent, "014.ent")
+			Result.strings.force (xmltest_valid_not_sa_015_ent, "015.ent")
+			Result.strings.force (xmltest_valid_not_sa_016_ent, "016.ent")
+			Result.strings.force (xmltest_valid_not_sa_017_ent, "017.ent")
+			Result.strings.force (xmltest_valid_not_sa_018_ent, "018.ent")
+			Result.strings.force (xmltest_valid_not_sa_019_ent, "019.ent")
+			Result.strings.force (xmltest_valid_not_sa_020_ent, "020.ent")
+			Result.strings.force (xmltest_valid_not_sa_021_ent, "021.ent")
+			Result.strings.force (xmltest_valid_not_sa_022_ent, "022.ent")
+			Result.strings.force (xmltest_valid_not_sa_023_ent, "023.ent")
+			Result.strings.force (xmltest_valid_not_sa_024_ent, "024.ent")
+			Result.strings.force (xmltest_valid_not_sa_025_ent, "025.ent")
+			Result.strings.force (xmltest_valid_not_sa_026_ent, "026.ent")
+			Result.strings.force (xmltest_valid_not_sa_027_ent, "027.ent")
+			Result.strings.force (xmltest_valid_not_sa_028_ent, "028.ent")
+			Result.strings.force (xmltest_valid_not_sa_029_ent, "029.ent")
+			Result.strings.force (xmltest_valid_not_sa_030_ent, "030.ent")
+			Result.strings.force (xmltest_valid_not_sa_031_1_ent, "031-1.ent")		
+			Result.strings.force (xmltest_valid_not_sa_031_2_ent, "031-2.ent")		
+		end
+		
+	valid_ext_sa_externals: XM_STRING_EXTERNAL_RESOLVER is
+			-- valid ext sa stand alone entities.
+		once
+			!! Result.make
+			Result.strings.force (xmltest_valid_ext_sa_001_ent, "001.ent")
+			Result.strings.force (xmltest_valid_ext_sa_002_ent, "002.ent")
+			Result.strings.force (xmltest_valid_ext_sa_003_ent, "003.ent")
+			Result.strings.force (xmltest_valid_ext_sa_004_ent, "004.ent")
+			Result.strings.force (xmltest_valid_ext_sa_005_ent, "005.ent")
+			Result.strings.force (xmltest_valid_ext_sa_006_ent, "006.ent")
+			Result.strings.force (xmltest_valid_ext_sa_007_ent, "007.ent")
+			Result.strings.force (xmltest_valid_ext_sa_008_ent, "008.ent")
+			Result.strings.force (xmltest_valid_ext_sa_009_ent, "009.ent")
+			Result.strings.force (xmltest_valid_ext_sa_010_ent, "010.ent")
+			Result.strings.force (xmltest_valid_ext_sa_011_ent, "011.ent")
+			Result.strings.force (xmltest_valid_ext_sa_012_ent, "012.ent")
+			Result.strings.force (xmltest_valid_ext_sa_013_ent, "013.ent")
+			Result.strings.force (xmltest_valid_ext_sa_014_ent, "014.ent")
+		end
+
+	not_wf_ext_sa_externals: XM_STRING_EXTERNAL_RESOLVER is
+		once
+			!! Result.make
+			Result.strings.force (xmltest_not_wf_ext_sa_001_ent, "001.ent")
+			Result.strings.force (xmltest_not_wf_ext_sa_002_ent, "002.ent")
+			Result.strings.force (xmltest_not_wf_ext_sa_003_ent, "003.ent")
+		end
+		
+	not_wf_not_sa_externals: XM_STRING_EXTERNAL_RESOLVER is
+		once
+			!! Result.make
+			Result.strings.force (xmltest_not_wf_not_sa_001_ent, "001.ent")
+			Result.strings.force (xmltest_not_wf_not_sa_003_ent, "003.ent")
+			Result.strings.force (xmltest_not_wf_not_sa_004_ent, "004.ent")
+			Result.strings.force (xmltest_not_wf_not_sa_005_ent, "005.ent")
+			Result.strings.force (xmltest_not_wf_not_sa_006_ent, "006.ent")
+			Result.strings.force (xmltest_not_wf_not_sa_007_ent, "007.ent")
+			Result.strings.force (xmltest_not_wf_not_sa_008_ent, "008.ent")
+		end
+		
+	invalid_externals: XM_STRING_EXTERNAL_RESOLVER is
+		once
+			!! Result.make
+			Result.strings.force (xmltest_invalid_001_ent, "001.ent")
+			Result.strings.force (xmltest_invalid_002_ent, "002.ent")
+			Result.strings.force (xmltest_invalid_003_ent, "003.ent")
+			Result.strings.force (xmltest_invalid_004_ent, "004.ent")
+			Result.strings.force (xmltest_invalid_005_ent, "005.ent")
+			Result.strings.force (xmltest_invalid_006_ent, "006.ent")
+		end
+
+	sa_externals: XM_STRING_EXTERNAL_RESOLVER is
+		once
+			!! Result.make
+			Result.strings.force (xmltest_valid_sa_097_ent, "097.ent")
+		end
+		
 end
