@@ -27,7 +27,8 @@ inherit
 	XF_FULL_SCANNER
 		redefine
 			reset,
-			read_token
+			read_token,
+			normalized_newline
 		end
 
 creation
@@ -122,6 +123,22 @@ feature -- Scanner: set input buffer
 				if has_error then
 					fatal_error (Error_entity_unresolved_external)
 				end
+			end
+		end
+		
+feature {NONE} -- Newline normalisation
+
+	normalized_newline: STRING is
+		do
+			-- newline normalisation has already been applied
+			-- to a literal entity and should not be applied 
+			-- again, eg for literal entities which contain 
+			-- character entities of newline characters which 
+			-- should get out as is.
+			if is_literal then
+				Result := text
+			else
+				Result := Precursor
 			end
 		end
 
