@@ -72,7 +72,7 @@ feature -- Result
 			a_cursor: DS_HASH_TABLE_CURSOR [XM_NAMESPACE, STRING]
 		do
 			from
-				!! Result.make (0)
+				create Result.make (0)
 				a_cursor := namespaces.new_cursor
 				a_cursor.start
 			until	
@@ -140,7 +140,7 @@ feature {NONE} -- Implementation
 					-- The namespace may be without prefix (a default 
 					-- declaration) or the prefix is already used.
 					-- Use an alternative prefix.
-					!! a_candidate_namespace.make (unique_prefix, a_namespace.uri)
+					create a_candidate_namespace.make (unique_prefix, a_namespace.uri)
 					register_namespace (a_candidate_namespace)
 				end
 			else

@@ -126,7 +126,7 @@ feature -- Standard processor routines
 	process_document (doc: XM_DOCUMENT) is
 			-- Process document `doc'.
 		do
-			!! namespaces
+			create namespaces
 			doc.process (namespaces)
 			
 			try_process_position (doc)
@@ -183,7 +183,7 @@ feature {NONE} -- Non standard processor routines
 			a_cursor: DS_HASH_TABLE_CURSOR [XM_NAMESPACE, STRING]
 		do
 			-- set root namespace (ignoring original prefix)
-			!! root_namespace.make (Void, an_element.namespace.uri)
+			create root_namespace.make (Void, an_element.namespace.uri)
 			
 			append (Stag_start)
 			process_named_element (an_element)
@@ -286,7 +286,7 @@ feature {NONE} -- Non standard processor routines
 				namespaces_not_void: namespaces /= Void
 			end
 
-			!! a_typer
+			create a_typer
 			a_node.parent.process (a_typer)
 			check a_typer.is_element end
 			
