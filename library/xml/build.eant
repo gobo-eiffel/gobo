@@ -69,7 +69,7 @@
 	<target name="install_api">
 		<set name="gepp_dir" value="impl/expat/api"/>
 		<set name="spec_dir" value="impl/expat/spec"/>
-		<set name="gepp_file" value="xp_api"/>
+		<set name="gepp_file" value="xp_expat_api"/>
 		<geant target="ge2e"/>
 	</target>
 

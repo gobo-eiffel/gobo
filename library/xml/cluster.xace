@@ -41,45 +41,19 @@
 		<cluster name="expat" abstract="True" if="${GOBO_XML_EXPAT}">
 			<cluster name="api"/>
 			<cluster name="general"/>
-			<cluster name="event">
-				<external>
-					<export class="XP_EVENT_PARSER">
-						<feature name="on_element_declaration_procedure" alias="eif_exml_on_element_declaration_proc"/>
-						<feature name="on_attribute_declaration_procedure" alias="eif_exml_on_attribute_declaration_proc"/>
-						<feature name="on_xml_declaration_procedure" alias="eif_exml_on_xml_declaration_proc"/>
-						<feature name="on_entity_declaration_procedure" alias="eif_exml_on_entity_declaration_proc"/>
-						<feature name="on_start_tag_procedure" alias="eif_exml_on_start_tag_proc"/>
-						<feature name="on_end_tag_procedure" alias="eif_exml_on_end_tag_proc"/>
-						<feature name="on_content_procedure" alias="eif_exml_on_content_proc"/>
-						<feature name="on_processing_instruction_procedure" alias="eif_exml_on_processing_instruction_proc"/>
-						<feature name="on_comment_procedure" alias="eif_exml_on_comment_proc"/>
-						<feature name="on_start_cdata_section_procedure" alias="eif_exml_on_start_cdata_section_proc"/>
-						<feature name="on_end_cdata_section_procedure" alias="eif_exml_on_end_cdata_section_proc"/>
-						<feature name="on_default_procedure" alias="eif_exml_on_default_proc"/>
-						<feature name="on_default_expanded_procedure" alias="eif_exml_on_default_expanded_proc"/>
-						<feature name="on_start_doctype_procedure" alias="eif_exml_on_start_doctype_proc"/>
-						<feature name="on_end_doctype_procedure" alias="eif_exml_on_end_doctype_proc"/>
-						<feature name="on_notation_declaration_procedure" alias="eif_exml_on_notation_declaration_proc"/>
-						<feature name="on_start_namespace_declaration_procedure" alias="eif_exml_on_start_namespace_declaration_proc"/>
-						<feature name="on_end_namespace_declaration_procedure" alias="eif_exml_on_end_namespace_declaration_proc"/>
-						<feature name="on_not_standalone_procedure" alias="eif_exml_on_not_standalone_proc"/>
-						<feature name="on_external_entity_reference_procedure" alias="eif_exml_on_external_entity_reference_proc"/>
-						<feature name="on_unknown_encoding_procedure" alias="eif_exml_on_unknown_encoding_proc"/>
-					</export>
-				</external>
-			</cluster>
+			<cluster name="event"/>
 			<cluster name="spec" abstract="True">
 				<cluster name="compiler" location="${GOBO}/library/xml/impl/expat/spec/${GOBO_EIFFEL}"/>
 			</cluster>
 			<external unless="${GOBO_OS}=windows">
-				<include_dir location="${GOBO}/library/xml/impl/expat/spec/c"/>
-				<link_library location="${GOBO}/library/xml/impl/expat/spec/c/libexml-expat-${GOBO_EIFFEL}.a"/>
+				<include_dir location="${EXPAT}/include"/>
 				<link_library location="-lexpat"/>
 			</external>
 			<external if="${GOBO_OS}=windows">
-				<include_dir location="$(GOBO)/library/xml/impl/expat/spec/c"/>
-				<link_library location="$(GOBO)/library/xml/impl/expat/spec/c/libexml-expat-${GOBO_EIFFEL}.lib"/>
-				<link_library location="$(EXPAT)/Libs/expat.lib"/>
+				<include_dir location="$(EXPAT)/Source/lib" unless="${GOBO_EIFFEL}=se"/>
+				<link_library location="$(EXPAT)/Libs/expat.lib" unless="${GOBO_EIFFEL}=se"/>
+				<include_dir location="%EXPAT%/Source/lib" if="${GOBO_EIFFEL}=se"/>
+				<link_library location="%EXPAT%/Libs/expat.lib" if="${GOBO_EIFFEL}=se"/>
 			</external>
 		</cluster>
 		<cluster name="eiffel" abstract="True">

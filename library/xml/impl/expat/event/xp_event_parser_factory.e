@@ -15,7 +15,7 @@ feature
 
 	new_event_parser_imp: XI_EVENT_PARSER is
 		do
-			!XP_EVENT_PARSER! Result
+			!XP_EVENT_PARSER! Result.make
 		end
 
 end -- class XP_EVENT_PARSER_FACTORY

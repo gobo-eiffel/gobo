@@ -13,7 +13,8 @@ inherit
 
 	XI_EVENT_PARSER
 
-	XP_API
+	XP_EXPAT_API
+		export {NONE} all end
 
 	XP_CALLBACK
 
@@ -31,7 +32,17 @@ inherit
 
 	KL_IMPORTED_STRING_ROUTINES
 
-	C_STRING_HELPER
+creation
+
+	make
+
+feature {NONE} -- Initialization
+
+	make is
+			-- Create a new parser.
+		do
+			init_api
+		end
 
 feature {NONE} -- Gc
 
@@ -108,7 +119,6 @@ feature {ANY} -- Parsing
 		local
 			in_file: KL_TEXT_INPUT_FILE
 		do
-			!XM_DEFAULT_URI_SOURCE! source.make (a_file_name)
 			!! in_file.make (a_file_name.to_utf8)
 			in_file.open_read
 			check
@@ -125,12 +135,6 @@ feature {ANY} -- Parsing
 			set_end_of_document
 		end
 
-	parse_from_string_buffer (a_buffer: KL_CHARACTER_BUFFER) is
-		do
-			create_new_parser
-			parse_incremental_from_string_buffer (a_buffer)
-		end
-
 	parse_from_string (a_string: STRING) is
 		do
 			create_new_parser
@@ -145,23 +149,26 @@ feature {ANY} -- Incremental parsing
 			-- After the last part of the data has been fed into the parser,
 			-- call set_end_of_document to get any pending error messages.
 		local
-			a_string: STRING
-			nc: INTEGER
+			uri: UC_STRING
 		do
-			from until a_stream.end_of_input loop
-				a_string := STRING_.make_buffer (read_block_size)
-				nc := a_stream.read_stream (a_string, 1, read_block_size)
-				parse_incremental_from_string (a_string)
+			!! uri.make_from_string (a_stream.name)
+			!XM_DEFAULT_URI_SOURCE! source.make (uri)
+			from
+				a_stream.read_string (read_block_size)
+			until
+				a_stream.end_of_input
+			loop
+				parse_string_and_set_error (a_stream.last_string, False)
+				a_stream.read_string (read_block_size)
 			end
 		end
 
-	parse_incremental_from_string_buffer (a_buffer: KL_CHARACTER_BUFFER) is
-		do
-			parse_string_buffer_and_set_error (a_buffer, False)
-		end
-
 	parse_incremental_from_string (data: STRING) is
+		local
+			uri: UC_STRING
 		do
+			!! uri.make_from_string ("STRING")
+			!XM_DEFAULT_URI_SOURCE! source.make (uri)
 			parse_string_and_set_error (data, False)
 		end
 
@@ -187,21 +194,6 @@ feature {NONE} -- Low level parsing
 			set_error_from_parse_result (int_result)
 		end
 
-	parse_string_buffer_and_set_error (data: KL_CHARACTER_BUFFER; is_final: BOOLEAN) is
-			-- parse `data' (which may be empty).
-			-- set the error flags according to result.
-			-- `is_final' signals end of data input.
-		require
-			created: is_parser_created
-			data_not_void: data /= Void
-		local
-			int_result: INTEGER
-		do
-				-- function call with side effect...
-			int_result := exml_XML_Parse_string_buffer (item, data, is_final)
-			set_error_from_parse_result (int_result)
-		end
-
 	set_error_from_parse_result (i: INTEGER) is
 			-- sets error flags according to `i',
 			-- where `i' must be the result of a call to expats
@@ -215,23 +207,6 @@ feature {NONE} -- Low level parsing
 				last_internal_error := exml_XML_GetErrorCode (item)
 			end
 		end
-
-			-- parse_incremental_from_pointer (buf: POINTER; count: INTEGER; is_final: BOOLEAN) is
-			-- require
-			-- created: is_parser_created
-			-- valid_count: count >= 0
-			-- local
-			-- int_result: INTEGER
-			-- error: BOOLEAN
-			-- do
-			-- -- function call with side effect...
-			-- int_result := exml_XML_Parse (item, buf, count, is_final)
-			-- error := int_result = 0
-			-- if error then
-			-- last_error := Xml_err_unknown
-			-- last_internal_error := exml_XML_GetErrorCode (item)
-			-- end
-			-- end
 
 feature {ANY} -- Status
 
@@ -289,12 +264,14 @@ feature {NONE} -- Parser handle handling
 			-- override to create other default parser
 		do
 				-- item := exml_XML_ParserCreateNS (default_pointer, ':')
-			print ("create parser%N")
+			debug ("EXPAT")
+				print ("create parser%N")
+			end
 			item := exml_XML_ParserCreate (default_pointer)
 			if item = default_pointer then
 				raise ("Failure to create parser with XML_ParserCreate.")
 			end
-			set_callback_object
+			set_callback_object (item, Current)
 				-- we need a smarter way to set callbacks. What callbacks you
 				-- want should be determined by the client
 				-- perhaps override on_xml_declaration to give client chance
@@ -319,29 +296,16 @@ feature {NONE} -- Parser handle handling
 			-- free parser, make callback, if any, available to gc
 		require
 			created: is_parser_created
-		local
-			callback: XP_CALLBACK
 		do
 				-- don't forget to free the callback
-			print ("free parser%N")
-			callback := exml_XML_GetUserData (item)
-			if callback /= Void then
-				exml_XML_SetUserData (item, Void)
+			debug ("EXPAT")
+				print ("free parser%N")
 			end
+			set_callback_object (item, Void)
 			exml_XML_ParserFree (item)
 			item := default_pointer
 		ensure
 			not_created: not is_parser_created
-		end
-
-	set_callback_object is
-			-- This attaches the current object to the user data of Expat.
-			-- The C code has to make sure that this object isn't hit by
-			-- a moving gc!
-		require
-			created: is_parser_created
-		do
-			exml_XML_SetUserData (item, Current)
 		end
 
 feature -- Callback registering, should be in xi_event_parser
@@ -359,12 +323,12 @@ feature -- Callback registering, should be in xi_event_parser
 		do
 				-- required if you want to give people a chance to set their
 				-- own callbacks
-			exml_register_XML_SetXmlDeclHandler (item)
+			exml_XML_SetXmlDeclHandler (item, $on_xml_declaration_procedure)
 				-- people usually only want tags and data
-			exml_register_XML_SetElementHandler (item)
-			exml_register_XML_SetCharacterDataHandler (item)
-			exml_register_XML_SetProcessingInstructionHandler (item)
-			exml_register_XML_SetCommentHandler (item)
+			exml_XML_SetElementHandler (item, $on_start_tag_procedure, $on_end_tag_procedure)
+			exml_XML_SetCharacterDataHandler (item, $on_content_procedure)
+			exml_XML_SetProcessingInstructionHandler (item, $on_processing_instruction_procedure)
+			exml_XML_SetCommentHandler (item, $on_comment_procedure)
 		end
 
 	register_all_callbacks is
@@ -374,40 +338,40 @@ feature -- Callback registering, should be in xi_event_parser
 		do
 			register_element_declaration_handler
 			register_attribute_declaration_handler
-			exml_register_XML_SetXmlDeclHandler (item)
-			exml_register_XML_SetEntityDeclHandler (item)
-			exml_register_XML_SetElementHandler (item)
-			exml_register_XML_SetCharacterDataHandler (item)
-			exml_register_XML_SetProcessingInstructionHandler (item)
-			exml_register_XML_SetCommentHandler (item)
-			exml_register_XML_SetCdataSectionHandler (item)
-			exml_register_XML_SetDefaultHandler (item)
-			exml_register_XML_SetDefaultHandlerExpand (item)
+			exml_XML_SetXmlDeclHandler (item, $on_xml_declaration_procedure)
+			exml_XML_SetEntityDeclHandler (item, $on_entity_declaration_procedure)
+			exml_XML_SetElementHandler (item, $on_start_tag_procedure, $on_end_tag_procedure)
+			exml_XML_SetCharacterDataHandler (item, $on_content_procedure)
+			exml_XML_SetProcessingInstructionHandler (item, $on_processing_instruction_procedure)
+			exml_XML_SetCommentHandler (item, $on_comment_procedure)
+			exml_XML_SetCdataSectionHandler (item, $on_start_cdata_section_procedure, $on_end_cdata_section_procedure)
+			exml_XML_SetDefaultHandler (item, $on_default_procedure)
+			exml_XML_SetDefaultHandlerExpand (item, $on_default_expanded_procedure)
 			register_doctype_handler
-			exml_register_XML_SetNotationDeclHandler (item)
-			exml_register_XML_SetNamespaceDeclHandler (item)
-			exml_register_XML_SetNotStandaloneHandler (item)
+			exml_XML_SetNotationDeclHandler (item, $on_notation_declaration_procedure)
+			exml_XML_SetNamespaceDeclHandler (item, $on_start_namespace_declaration_procedure, $on_end_namespace_declaration_procedure)
+			exml_XML_SetNotStandaloneHandler (item, $on_not_standalone_procedure)
 		end
 
 	register_doctype_handler is
 		require
 			created: is_parser_created
 		do
-			exml_register_XML_SetDoctypeDeclHandler (item)
+			exml_XML_SetDoctypeDeclHandler (item, $on_start_doctype_procedure, $on_end_doctype_procedure)
 		end
 
 	register_element_declaration_handler is
 		require
 			created: is_parser_created
 		do
-			exml_register_XML_SetElementDeclHandler (item)
+			exml_XML_SetElementDeclHandler (item, $on_element_declaration_procedure)
 		end
 
 	register_attribute_declaration_handler is
 		require
 			created: is_parser_created
 		do
-			exml_register_XML_SetAttlistDeclHandler (item)
+			exml_XML_SetAttlistDeclHandler (item, $on_attribute_declaration_procedure)
 		end
 
 feature -- Callback unregistering, should be in xi_event_parser
@@ -420,22 +384,22 @@ feature -- Callback unregistering, should be in xi_event_parser
 		require
 			created: is_parser_created
 		do
-			exml_unregister_XML_SetElementDeclHandler (item)
-			exml_unregister_XML_SetAttlistDeclHandler (item)
-			exml_unregister_XML_SetXmlDeclHandler (item)
-			exml_unregister_XML_SetEntityDeclHandler (item)
-			exml_unregister_XML_SetElementHandler (item)
-			exml_unregister_XML_SetCharacterDataHandler (item)
-			exml_unregister_XML_SetProcessingInstructionHandler (item)
-			exml_unregister_XML_SetCommentHandler (item)
-			exml_unregister_XML_SetCdataSectionHandler (item)
-			exml_unregister_XML_SetDefaultHandler (item)
-			exml_unregister_XML_SetDefaultHandlerExpand (item)
-			exml_unregister_XML_SetDoctypeDeclHandler (item)
-			exml_unregister_XML_SetNotationDeclHandler (item)
-			exml_unregister_XML_SetNamespaceDeclHandler (item)
-			exml_unregister_XML_SetNotStandaloneHandler (item)
-			exml_unregister_XML_SetExternalEntityRefHandler (item)
+			exml_XML_SetElementDeclHandler (item, default_pointer)
+			exml_XML_SetAttlistDeclHandler (item, default_pointer)
+			exml_XML_SetXmlDeclHandler (item, default_pointer)
+			exml_XML_SetEntityDeclHandler (item, default_pointer)
+			exml_XML_SetElementHandler (item, default_pointer, default_pointer)
+			exml_XML_SetCharacterDataHandler (item, default_pointer)
+			exml_XML_SetProcessingInstructionHandler (item, default_pointer)
+			exml_XML_SetCommentHandler (item, default_pointer)
+			exml_XML_SetCdataSectionHandler (item, default_pointer, default_pointer)
+			exml_XML_SetDefaultHandler (item, default_pointer)
+			exml_XML_SetDefaultHandlerExpand (item, default_pointer)
+			exml_XML_SetDoctypeDeclHandler (item, default_pointer, default_pointer)
+			exml_XML_SetNotationDeclHandler (item, default_pointer)
+			exml_XML_SetNamespaceDeclHandler (item, default_pointer, default_pointer)
+			exml_XML_SetNotStandaloneHandler (item, default_pointer)
+			exml_XML_SetExternalEntityRefHandler (item, default_pointer)
 		end
 
 feature -- Parsing parameter entities including the external dtd subset
@@ -447,7 +411,7 @@ feature -- Parsing parameter entities including the external dtd subset
 			r: BOOLEAN
 		do
 			r := exml_XML_SetParamEntityParsing (item, XML_PARAM_ENTITY_PARSING_NEVER)
-			exml_unregister_XML_SetExternalEntityRefHandler (item)
+			exml_XML_SetExternalEntityRefHandler (item, default_pointer)
 		end
 
 	enable_parameter_entity_parsing is
@@ -461,7 +425,7 @@ feature -- Parsing parameter entities including the external dtd subset
 				raise ("Library compiled without support for parameter %
 					%entity parsing (ie XML_DTD not defined).%N")
 			end
-			exml_register_XML_SetExternalEntityRefHandler (item)
+			exml_XML_SetExternalEntityRefHandler (item, $on_external_entity_reference_procedure)
 		end
 
 feature {NONE} -- (low level) frozen callbacks (called from exml clib)
@@ -518,26 +482,38 @@ feature {NONE} -- (low level) frozen callbacks (called from exml clib)
 
 	frozen on_start_tag_procedure (tag_name_ptr, attribute_specifications_ptr: POINTER) is
 		local
-			name: UC_STRING
-			ns_prefix: UC_STRING
+			a_name: UC_STRING
+			a_prefix: UC_STRING
+			colon_index: INTEGER
 			att_list: DS_BILINKED_LIST [DS_PAIR [DS_PAIR [UC_STRING, UC_STRING], UC_STRING]]
 		do
-			name := new_uc_string_from_c_utf8_zero_terminated_string (tag_name_ptr)
-			create ns_prefix.make (0)
-			extract_name_and_prefix_from_name (name, ns_prefix)
+			a_name := new_uc_string_from_c_utf8_zero_terminated_string (tag_name_ptr)
+			colon_index := a_name.substring_index (uc_colon, 1)
+			if colon_index /= 0 then
+				a_prefix := a_name.substring (1, colon_index - 1)
+				a_name := a_name.substring (colon_index + 1, a_name.count)
+			else
+				!! a_prefix.make (0)
+			end
 			att_list := new_attribute_list_from_c (attribute_specifications_ptr)
-			on_start_tag (name, ns_prefix, att_list)
+			on_start_tag (a_name, a_prefix, att_list)
 		end
 
 	frozen on_end_tag_procedure (tag_name_ptr: POINTER) is
 		local
-			name: UC_STRING
-			ns_prefix: UC_STRING
+			a_name: UC_STRING
+			a_prefix: UC_STRING
+			colon_index: INTEGER
 		do
-			name := new_uc_string_from_c_utf8_zero_terminated_string (tag_name_ptr)
-			create ns_prefix.make (0)
-			extract_name_and_prefix_from_name (name, ns_prefix)
-			on_end_tag (name, ns_prefix)
+			a_name := new_uc_string_from_c_utf8_zero_terminated_string (tag_name_ptr)
+			colon_index := a_name.substring_index (uc_colon, 1)
+			if colon_index /= 0 then
+				a_prefix := a_name.substring (1, colon_index - 1)
+				a_name := a_name.substring (colon_index + 1, a_name.count)
+			else
+				!! a_prefix.make (0)
+			end
+			on_end_tag (a_name, a_prefix)
 		end
 
 	frozen on_content_procedure (chr_data_ptr: POINTER; len: INTEGER) is
@@ -704,63 +680,4 @@ feature {NONE} -- Encoding callback
 			Result := False
 		end
 
-feature {NONE} -- Implementation
-
-	new_attribute_list_from_c (attr_spec_ptr: POINTER): DS_BILINKED_LIST [DS_PAIR [DS_PAIR [UC_STRING, UC_STRING], UC_STRING]] is
-		require
-			ptr_not_void: attr_spec_ptr /= Void
-		local
-			a_name: UC_STRING
-			a_prefix: UC_STRING
-			a_value: UC_STRING
-			ptr1, ptr2: POINTER
-			pair1: DS_PAIR [UC_STRING, UC_STRING]
-			pair2: DS_PAIR [DS_PAIR [UC_STRING, UC_STRING], UC_STRING]
-		do
-			!! Result.make
-
-				-- dirty C to Eiffel converstion
-
-			ptr1 := attr_spec_ptr
-			from ptr2 := ptr_contents (ptr1) until ptr2 = default_pointer loop
-				create a_name.make_from_utf8 (new_string_from_c_zero_terminated_string (ptr2))
-				create a_prefix.make (0)
-				extract_name_and_prefix_from_name (a_name, a_prefix)
-				ptr2 := ptr_contents (ptr_move (ptr1, 1))
-
-				create a_value.make_from_utf8 (new_string_from_c_zero_terminated_string (ptr2))
-				create pair1.make (a_name, a_prefix)
-				create pair2.make (pair1, a_value)
-				Result.force_last (pair2)
-
-				ptr1 := ptr_move (ptr1, 2)
-				ptr2 := ptr_contents (ptr1)
-			end
-		end
-
-	extract_name_and_prefix_from_name (a_name, ns_prefix: UC_STRING) is
-			-- extracts name and prefix from `a_name'.
-			-- Both `a_name' and `ns_prefix' will be modified
-		require
-			a_name_not_void: a_name /= Void
-			ns_prefix_not_void: ns_prefix /= Void
-		local
-			colon_index: INTEGER
-			tmp: UC_STRING
-		do
-			colon_index := a_name.substring_index (uc_colon, 1)
-			ns_prefix.wipe_out
-			if colon_index /= 0 then
-				ns_prefix.append_uc_string (a_name.substring (1, colon_index - 1))
-				tmp := clone (a_name)
-				a_name.wipe_out
-				a_name.append_uc_string (tmp.substring (colon_index + 1, tmp.count))
-			end
-		end
-
-	uc_colon: UC_STRING is
-		once
-			!! Result.make_from_string (":")
-		end
-
-end -- XP_EVENT_PARSER
+end -- class XP_EVENT_PARSER
