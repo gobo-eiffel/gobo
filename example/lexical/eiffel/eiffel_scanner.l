@@ -31,13 +31,9 @@ inherit
 		end
 
 	KL_IMPORTED_INTEGER_ROUTINES
-
 	KL_IMPORTED_STRING_ROUTINES
-
 	KL_SHARED_PLATFORM
-
 	KL_SHARED_EXCEPTIONS
-
 	KL_SHARED_ARGUMENTS
 
 creation
@@ -405,7 +401,7 @@ feature {NONE} -- Initialization
 	make is
 			-- Create a new Eiffel scanner.
 		do
-			make_compressed_scanner_skeleton
+			make_with_buffer (Empty_buffer)
 			eif_buffer := STRING_.make (Init_buffer_size)
 			eif_lineno := 1
 		end
