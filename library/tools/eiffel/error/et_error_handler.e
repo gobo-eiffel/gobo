@@ -373,6 +373,133 @@ feature -- Syntax errors
 			report_syntax_error (a_filename, p)
 		end
 
+feature -- System errors
+
+	report_system_error (an_error: ET_SYSTEM_ERROR) is
+			-- Report system error.
+		require
+			an_error_not_void: an_error /= Void
+		do
+			report_error (an_error)
+			if error_file = std.error then
+				error_file.put_line ("----")
+			end
+		end
+
+	report_vsrc1a_error (a_class: ET_CLASS) is
+			-- Report VSRC-1 error: root class `a_class' should not be generic.
+			--
+			-- ETL2: p.36
+		require
+			a_class_not_void: a_class /= Void
+		local
+			an_error: ET_SYSTEM_ERROR
+		do
+			if reportable_vsrc1_error then
+				create an_error.make_vsrc1a (a_class)
+				report_system_error (an_error)
+			end
+		end
+
+	report_gvsrc3a_error is
+			-- Report GVSRC-3 error: missing root class.
+			--
+			-- Not in ETL
+			-- GVSRC-3: See ETL2 VSRC p.36
+		local
+			an_error: ET_SYSTEM_ERROR
+		do
+			if reportable_gvsrc3_error then
+				create an_error.make_gvsrc3a
+				report_system_error (an_error)
+			end
+		end
+
+	report_gvsrc4a_error (a_class: ET_CLASS) is
+			-- Report GVSRC-4 error: unknown root class `a_class'.
+			--
+			-- Not in ETL
+			-- GVSRC-4: See ETL2 VSRC p.36
+		require
+			a_class_not_void: a_class /= Void
+		local
+			an_error: ET_SYSTEM_ERROR
+		do
+			if reportable_gvsrc4_error then
+				create an_error.make_gvsrc4a (a_class)
+				report_system_error (an_error)
+			end
+		end
+
+	report_gvsrc5a_error (a_class: ET_CLASS; a_feature_name: ET_FEATURE_NAME) is
+			-- Report GVSRC-5 error: root creation procedure `a_feature_name'
+			-- is not a feature of root class `a_class'.
+			--
+			-- Not in ETL
+			-- GVSRC-5: See ETL2 VSRC p.36
+		require
+			a_class_not_void: a_class /= Void
+			a_feature_name_not_void: a_feature_name /= Void
+		local
+			an_error: ET_SYSTEM_ERROR
+		do
+			if reportable_gvsrc5_error then
+				create an_error.make_gvsrc5a (a_class, a_feature_name)
+				report_system_error (an_error)
+			end
+		end
+
+	report_gvsrc6a_error (a_class: ET_CLASS; a_feature_name: ET_FEATURE_NAME) is
+			-- Report GVSRC-6 error: root creation feature `a_feature_name'
+			-- is not declared as publicly available creation procedure
+			-- in root class `a_class'.
+			--
+			-- Not in ETL
+			-- GVSRC-6: See ETL2 VSRC p.36
+		require
+			a_class_not_void: a_class /= Void
+			a_feature_name_not_void: a_feature_name /= Void
+		local
+			an_error: ET_SYSTEM_ERROR
+		do
+			if reportable_gvsrc6_error then
+				create an_error.make_gvsrc6a (a_class, a_feature_name)
+				report_system_error (an_error)
+			end
+		end
+
+feature -- System error status
+
+	reportable_vsrc1_error: BOOLEAN is
+			-- Can a VSRC-1 error be reported?
+		do
+			Result := True
+		end
+
+	reportable_gvsrc3_error: BOOLEAN is
+			-- Can a GVSRC-3 error be reported?
+		do
+			Result := True
+		end
+
+	reportable_gvsrc4_error: BOOLEAN is
+			-- Can a GVSRC-4 error be reported?
+		do
+			Result := True
+		end
+
+	reportable_gvsrc5_error: BOOLEAN is
+			-- Can a GVSRC-5 error be reported?
+		do
+			Result := True
+		end
+
+	reportable_gvsrc6_error: BOOLEAN is
+			-- Can a GVSRC-6 error be reported?
+		do
+			Result := True
+		end
+
 feature -- Validity errors
 
 	report_validity_error (an_error: ET_VALIDITY_ERROR) is
@@ -8408,6 +8535,5 @@ feature -- Internal errors
 --					error_handler.report_gibcq_error
 --						error_handler.report_gibch_error
 --						error_handler.report_gibbm_error
---						error_handler.report_gibbn_error
 
 end
