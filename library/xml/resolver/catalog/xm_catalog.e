@@ -87,18 +87,18 @@ feature -- Access
 				if not prefer_public_required or else a_public_entry.prefer_public then
 					Result := a_public_entry.target
 					shared_catalog_manager.debug_message (6, "Public entry found in prefer=system list", a_public_id)
-					shared_catalog_manager.debug_message (7, "Public entry resolves to", Result)
+					shared_catalog_manager.debug_message (5, "Public entry resolves to", Result)
 				elseif prefer_public_required and then prefer_public_entries.has (a_public_id) then
 					Result := prefer_public_entries.item (a_public_id).target
 					shared_catalog_manager.debug_message (6, "Public entry found in prefer=public list", a_public_id)
 				end
 			end
 			if Result = Void then
-				shared_catalog_manager.debug_message (4, "Checking for delegates for", a_public_id)
+				shared_catalog_manager.debug_message (9, "Checking for delegates for", a_public_id)
 				Result := resolved_delegated_fpi (a_public_id, prefer_public_required)
 			end
 			if Result = Void and then not delegated then
-				shared_catalog_manager.debug_message (4, "Checking next catalogs for", a_public_id)
+				shared_catalog_manager.debug_message (9, "Checking next catalogs for", a_public_id)
 				from
 					a_cursor := local_catalog_files.new_cursor; a_cursor.start
 				variant
@@ -140,10 +140,10 @@ feature -- Access
 					system_entry_not_void: a_system_entry /= Void
 				end
 				Result := a_system_entry.target
-				shared_catalog_manager.debug_message (7, "System entry resolves to", Result)
+				shared_catalog_manager.debug_message (5, "System entry resolves to", Result)
 			end
 			if Result = Void then
-				shared_catalog_manager.debug_message (4, "Checking for system rewrite rules for", a_system_id)
+				shared_catalog_manager.debug_message (9, "Checking for system rewrite rules for", a_system_id)
 				from
 					another_cursor := system_rewrite_rules.new_cursor; another_cursor.start
 				variant
@@ -156,7 +156,7 @@ feature -- Access
 					if a_system_id.substring_index (a_rewrite_rule.start_string, 1) = 1 then
 						Result := clone (a_system_id)
 						Result.replace_substring (a_rewrite_rule.target, 1, a_rewrite_rule.count)
-						shared_catalog_manager.debug_message (7, "Rewrite rule resolved to", Result)
+						shared_catalog_manager.debug_message (5, "Rewrite rule resolved to", Result)
 						another_cursor.go_after
 					else
 						another_cursor.forth
@@ -164,11 +164,11 @@ feature -- Access
 				end
 			end
 			if Result = Void then
-				shared_catalog_manager.debug_message (4, "Checking for system delegates for", a_system_id)
+				shared_catalog_manager.debug_message (9, "Checking for system delegates for", a_system_id)
 				Result := resolved_delegated_fsi (a_system_id)
 			end
 			if Result = Void and then not delegated then
-				shared_catalog_manager.debug_message (4, "Checking next catalogs for", a_system_id)
+				shared_catalog_manager.debug_message (9, "Checking next catalogs for", a_system_id)
 				from
 					a_cursor := local_catalog_files.new_cursor; a_cursor.start
 				variant
@@ -211,7 +211,7 @@ feature -- Access
 					uri_entry_not_void: a_uri_entry /= Void
 				end
 				Result := a_uri_entry.target
-				shared_catalog_manager.debug_message (7, "Uri entry resolves to", Result)
+				shared_catalog_manager.debug_message (5, "Uri entry resolves to", Result)
 			end
 			if Result = Void then
 				shared_catalog_manager.debug_message (4, "Checking for uri rewrite rules for", a_uri_reference)
@@ -227,7 +227,7 @@ feature -- Access
 					if a_uri_reference.substring_index (a_rewrite_rule.start_string, 1) = 1 then
 						Result := clone (a_uri_reference)
 						Result.replace_substring (a_rewrite_rule.target, 1, a_rewrite_rule.count)
-						shared_catalog_manager.debug_message (7, "Rewrite rule resolved to", Result)
+						shared_catalog_manager.debug_message (5, "Rewrite rule resolved to", Result)
 						another_cursor.go_after
 					else
 						another_cursor.forth
@@ -235,11 +235,11 @@ feature -- Access
 				end
 			end
 			if Result = Void then
-				shared_catalog_manager.debug_message (4, "Checking for uri delegates for", a_uri_reference)
+				shared_catalog_manager.debug_message (9, "Checking for uri delegates for", a_uri_reference)
 				Result := resolved_delegated_uri (a_uri_reference)
 			end
 			if Result = Void and then not delegated then
-				shared_catalog_manager.debug_message (4, "Checking next catalogs for", a_uri_reference)
+				shared_catalog_manager.debug_message (9, "Checking next catalogs for", a_uri_reference)
 				from
 					a_cursor := local_catalog_files.new_cursor; a_cursor.start
 				variant
@@ -517,6 +517,7 @@ feature {NONE} -- Implementation
 					STRING_.same_string (a_namespace_uri, xml_namespace) then
 					if is_document_element then
 						create base_uri.make (attribute_values.item (a_cursor.index))
+						shared_catalog_manager.debug_message (5, "xml:base set to", base_uri.full_reference)
 					else
 						create group_base.make (attribute_values.item (a_cursor.index))
 					end
@@ -574,6 +575,7 @@ feature {NONE} -- Implementation
 				if STRING_.same_string (a_local_part, "base") and then
 					STRING_.same_string (a_namespace_uri, xml_namespace) then
 					create a_base_uri.make (attribute_values.item (a_cursor.index))
+					shared_catalog_manager.debug_message (5, "xml:base set to", base_uri.full_reference)
 				elseif STRING_.same_string (a_local_part, "id") and then a_namespace_uri.count = 0 then
 					-- OK
 				elseif STRING_.same_string (a_local_part, "systemId") and then a_namespace_uri.count = 0 then
@@ -642,6 +644,7 @@ feature {NONE} -- Implementation
 				if STRING_.same_string (a_local_part, "base") and then
 					STRING_.same_string (a_namespace_uri, xml_namespace) then
 					create a_base_uri.make (attribute_values.item (a_cursor.index))
+					shared_catalog_manager.debug_message (5, "xml:base set to", base_uri.full_reference)
 				elseif STRING_.same_string (a_local_part, "id") and then a_namespace_uri.count = 0 then
 					-- OK
 				elseif STRING_.same_string (a_local_part, "name") and then a_namespace_uri.count = 0 then
@@ -709,6 +712,7 @@ feature {NONE} -- Implementation
 				if STRING_.same_string (a_local_part, "base") and then
 					STRING_.same_string (a_namespace_uri, xml_namespace) then
 					create a_base_uri.make (attribute_values.item (a_cursor.index))
+					shared_catalog_manager.debug_message (5, "xml:base set to", base_uri.full_reference)
 				elseif STRING_.same_string (a_local_part, "id") and then a_namespace_uri.count = 0 then
 					-- OK
 				elseif STRING_.same_string (a_local_part, "publicId") and then a_namespace_uri.count = 0 then
@@ -790,6 +794,7 @@ feature {NONE} -- Implementation
 				if STRING_.same_string (a_local_part, "base") and then
 					STRING_.same_string (a_namespace_uri, xml_namespace) then
 					create a_base_uri.make (attribute_values.item (a_cursor.index))
+					shared_catalog_manager.debug_message (5, "xml:base set to", base_uri.full_reference)
 				elseif STRING_.same_string (a_local_part, "id") and then a_namespace_uri.count = 0 then
 					-- OK
 				elseif STRING_.same_string (a_local_part, "catalog") and then a_namespace_uri.count = 0 then
@@ -839,6 +844,7 @@ feature {NONE} -- Implementation
 				if STRING_.same_string (a_local_part, "base") and then
 					STRING_.same_string (a_namespace_uri, xml_namespace) then
 					create a_base_uri.make (attribute_values.item (a_cursor.index))
+					shared_catalog_manager.debug_message (5, "xml:base set to", base_uri.full_reference)					
 				elseif STRING_.same_string (a_local_part, "id") and then a_namespace_uri.count = 0 then
 					-- OK
 				elseif STRING_.same_string (a_local_part, "rewritePrefix") and then a_namespace_uri.count = 0 then
@@ -895,6 +901,7 @@ feature {NONE} -- Implementation
 				if STRING_.same_string (a_local_part, "base") and then
 					STRING_.same_string (a_namespace_uri, xml_namespace) then
 					create a_base_uri.make (attribute_values.item (a_cursor.index))
+					shared_catalog_manager.debug_message (5, "xml:base set to", base_uri.full_reference)
 				elseif STRING_.same_string (a_local_part, "id") and then a_namespace_uri.count = 0 then
 					-- OK
 				elseif STRING_.same_string (a_local_part, "rewritePrefix") and then a_namespace_uri.count = 0 then
@@ -951,6 +958,7 @@ feature {NONE} -- Implementation
 				if STRING_.same_string (a_local_part, "base") and then
 					STRING_.same_string (a_namespace_uri, xml_namespace) then
 					create a_base_uri.make (attribute_values.item (a_cursor.index))
+					shared_catalog_manager.debug_message (5, "xml:base set to", base_uri.full_reference)
 				elseif STRING_.same_string (a_local_part, "id") and then a_namespace_uri.count = 0 then
 					-- OK
 				elseif STRING_.same_string (a_local_part, "catalog") and then a_namespace_uri.count = 0 then
@@ -1006,6 +1014,7 @@ feature {NONE} -- Implementation
 				if STRING_.same_string (a_local_part, "base") and then
 					STRING_.same_string (a_namespace_uri, xml_namespace) then
 					create a_base_uri.make (attribute_values.item (a_cursor.index))
+					shared_catalog_manager.debug_message (5, "xml:base set to", base_uri.full_reference)
 				elseif STRING_.same_string (a_local_part, "id") and then a_namespace_uri.count = 0 then
 					-- OK
 				elseif STRING_.same_string (a_local_part, "catalog") and then a_namespace_uri.count = 0 then
@@ -1064,6 +1073,7 @@ feature {NONE} -- Implementation
 				if STRING_.same_string (a_local_part, "base") and then
 					STRING_.same_string (a_namespace_uri, xml_namespace) then
 					create a_base_uri.make (attribute_values.item (a_cursor.index))
+					shared_catalog_manager.debug_message (5, "xml:base set to", base_uri.full_reference)
 				elseif STRING_.same_string (a_local_part, "id") and then a_namespace_uri.count = 0 then
 					-- OK
 				elseif STRING_.same_string (a_local_part, "catalog") and then a_namespace_uri.count = 0 then
@@ -1122,7 +1132,7 @@ feature {NONE} -- Implementation
 						create a_system_delegate.make (a_start_string, a_target)
 						a_cursor.force_left (a_system_delegate)
 						shared_catalog_manager.debug_message (4, "System delegation catalog URI added is", a_target.full_reference)
-						shared_catalog_manager.debug_message (4, "System delegation prefix string is", a_start_string)
+						shared_catalog_manager.debug_message (10, "System delegation prefix string is", a_start_string)
 						a_cursor.go_after
 					else
 						a_cursor.forth
@@ -1167,7 +1177,7 @@ feature {NONE} -- Implementation
 						create a_uri_delegate.make (a_start_string, a_target)
 						a_cursor.force_left (a_uri_delegate)
 						shared_catalog_manager.debug_message (4, "Uri delegation catalog URI added is", a_target.full_reference)
-						shared_catalog_manager.debug_message (4, "Uri delegation prefix string is", a_start_string)
+						shared_catalog_manager.debug_message (10, "Uri delegation prefix string is", a_start_string)
 						a_cursor.go_after
 					else
 						a_cursor.forth
@@ -1211,11 +1221,11 @@ feature {NONE} -- Implementation
 							if a_prefer_public then
 								a_cursor.put_right (a_public_delegate)
 								shared_catalog_manager.debug_message (4, "Public delegation catalog URI added is", a_target.full_reference)
-								shared_catalog_manager.debug_message (4, "Public delegation prefix string is", a_start_string)
+								shared_catalog_manager.debug_message (10, "Public delegation prefix string is", a_start_string)
 							else
 								a_cursor.put_left (a_public_delegate)
 								shared_catalog_manager.debug_message (4, "Public delegation catalog URI added is", a_target.full_reference)
-								shared_catalog_manager.debug_message (4, "Public delegation prefix string is", a_start_string)
+								shared_catalog_manager.debug_message (10, "Public delegation prefix string is", a_start_string)
 							end
 						else
 							shared_catalog_manager.debug_message (6, "Public delegation catalog is a duplicate for publicIdStartString", an_existing_delegate.start_string)
@@ -1225,7 +1235,7 @@ feature {NONE} -- Implementation
 						create a_public_delegate.make (a_start_string, a_target, a_prefer_public)
 						a_cursor.force_left (a_public_delegate)
 						shared_catalog_manager.debug_message (4, "Public delegation catalog URI added is", a_target.full_reference)
-						shared_catalog_manager.debug_message (4, "Public delegation prefix string is", a_start_string)
+						shared_catalog_manager.debug_message (10, "Public delegation prefix string is", a_start_string)
 						a_cursor.go_after
 					else
 						a_cursor.forth
@@ -1270,7 +1280,7 @@ feature {NONE} -- Implementation
 						create a_rewrite_rule.make (a_start_string, a_target)
 						a_cursor.force_left (a_rewrite_rule)
 						shared_catalog_manager.debug_message (4, "System rewrite rule added targetted on", a_target.full_reference)
-						shared_catalog_manager.debug_message (4, "System rewrite prefix string is", a_start_string)
+						shared_catalog_manager.debug_message (10, "System rewrite prefix string is", a_start_string)
 						a_cursor.go_after
 					else
 						a_cursor.forth
@@ -1315,7 +1325,7 @@ feature {NONE} -- Implementation
 						create a_rewrite_rule.make (a_start_string, a_target)
 						a_cursor.force_left (a_rewrite_rule)
 						shared_catalog_manager.debug_message (4, "Uri rewrite rule added targetted on", a_target.full_reference)
-						shared_catalog_manager.debug_message (4, "Uri rewrite prefix string is", a_start_string)
+						shared_catalog_manager.debug_message (10, "Uri rewrite prefix string is", a_start_string)
 						a_cursor.go_after
 					else
 						a_cursor.forth
@@ -1338,7 +1348,7 @@ feature {NONE} -- Implementation
 			a_delegate: XM_DELEGATE_CATALOG_ENTRY
 			a_catalog: XM_CATALOG
 		do
-			shared_catalog_manager.debug_message (10, "Number of system delegate catalogs is", system_delegates.count.out)
+			shared_catalog_manager.debug_message (8, "Number of system delegate catalogs is", system_delegates.count.out)
 			from
 				a_cursor := system_delegates.new_cursor; a_cursor.start
 			variant
@@ -1350,7 +1360,6 @@ feature {NONE} -- Implementation
 				shared_catalog_manager.debug_message (9, "Examining system delegation with systemIdStartString", a_delegate.start_string)
 				if a_system_id.substring_index (a_delegate.start_string, 1) = 1 then
 					shared_catalog_manager.debug_message (10, "Candidate match for systemIdStartString against", a_system_id)
-					shared_catalog_manager.debug_message (8, "Match for systemIdStartString against", a_system_id)
 					shared_catalog_manager.set_search_chain_truncated
 					delegated := True
 					a_catalog := shared_catalog_manager.retrieved_catalog (a_delegate.target)
@@ -1358,7 +1367,7 @@ feature {NONE} -- Implementation
 						Result := a_catalog.resolved_fsi (a_system_id)
 					end
 					if Result = Void then
-						shared_catalog_manager.debug_message (10, "No delegated match found for", a_system_id)
+						shared_catalog_manager.debug_message (9, "No delegated match found for", a_system_id)
 						a_cursor.forth
 					else
 						shared_catalog_manager.debug_message (9, "Delegated match found for", a_system_id)
@@ -1379,7 +1388,7 @@ feature {NONE} -- Implementation
 			a_delegate: XM_DELEGATE_CATALOG_ENTRY
 			a_catalog: XM_CATALOG
 		do
-			shared_catalog_manager.debug_message (10, "Number of uri delegate catalogs is", uri_delegates.count.out)
+			shared_catalog_manager.debug_message (8, "Number of uri delegate catalogs is", uri_delegates.count.out)
 			from
 				a_cursor := uri_delegates.new_cursor; a_cursor.start
 			variant
@@ -1391,7 +1400,6 @@ feature {NONE} -- Implementation
 				shared_catalog_manager.debug_message (9, "Examining uri delegation with uriStartString", a_delegate.start_string)
 				if a_uri_reference.substring_index (a_delegate.start_string, 1) = 1 then
 					shared_catalog_manager.debug_message (10, "Candidate match for uriStartString against", a_uri_reference)
-					shared_catalog_manager.debug_message (8, "Match for uriStartString against", a_uri_reference)
 					shared_catalog_manager.set_search_chain_truncated
 					delegated := True
 					a_catalog := shared_catalog_manager.retrieved_catalog (a_delegate.target)
@@ -1399,7 +1407,7 @@ feature {NONE} -- Implementation
 						Result := a_catalog.resolved_fsi (a_uri_reference)
 					end
 					if Result = Void then
-						shared_catalog_manager.debug_message (10, "No delegated match found for", a_uri_reference)
+						shared_catalog_manager.debug_message (9, "No delegated match found for", a_uri_reference)
 						a_cursor.forth
 					else
 						shared_catalog_manager.debug_message (9, "Delegated match found for", a_uri_reference)
@@ -1420,7 +1428,7 @@ feature {NONE} -- Implementation
 			a_delegate: XM_PUBLIC_DELEGATE_CATALOG_ENTRY
 			a_catalog: XM_CATALOG
 		do
-			shared_catalog_manager.debug_message (10, "Number of public delegate catalogs is", public_delegates.count.out)
+			shared_catalog_manager.debug_message (8, "Number of public delegate catalogs is", public_delegates.count.out)
 			from
 				a_cursor := public_delegates.new_cursor; a_cursor.start
 			variant
@@ -1433,7 +1441,7 @@ feature {NONE} -- Implementation
 				if a_public_id.substring_index (a_delegate.start_string, 1) = 1 then
 					shared_catalog_manager.debug_message (10, "Candidate match for publicIdStartString against", a_public_id)
 					if not prefer_public_required or else a_delegate.prefer_public then
-						shared_catalog_manager.debug_message (8, "Match for publicIdStartString against", a_public_id)
+						shared_catalog_manager.debug_message (10, "Match for publicIdStartString against", a_public_id)
 						shared_catalog_manager.set_search_chain_truncated
 						delegated := True
 						a_catalog := shared_catalog_manager.retrieved_catalog (a_delegate.target)
@@ -1441,7 +1449,7 @@ feature {NONE} -- Implementation
 							Result := a_catalog.resolved_fpi (a_public_id, prefer_public_required)
 						end
 						if Result = Void then
-							shared_catalog_manager.debug_message (10, "No delegated match found for", a_public_id)
+							shared_catalog_manager.debug_message (9, "No delegated match found for", a_public_id)
 							a_cursor.forth
 						else
 							shared_catalog_manager.debug_message (9, "Delegated match found for", a_public_id)

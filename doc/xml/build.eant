@@ -20,10 +20,22 @@
 
 	<target name="install">
 		<description>
-			Install the Gobo Eiffel XML Library Doc.
+			Install the Gobo Eiffel XML Library Documentation.
 		</description>
 
-		<xslt input="using.xml" output="using.html" stylesheet="${GOBO}/doc/misc/gobo2html.xsl"/>
+		<set name="xslt_processor" value="gexslt" />
+
+
+		<set name="next" value="using"/>
+		<set name="next_chapter" value="resolvers"/>
+		<geant target="xslt"/>
+
+		<set name="next_chapter" value="catalogs"/>
+		<geant target="xslt"/>
+
+		<set name="next_chapter" value="using"/>
+		<geant target="xslt"/>
+
 	</target>
 
 	<target name="clean">
@@ -40,6 +52,29 @@
 		</description>
 
 		<delete file="using.html"/>
+	</target>
+
+<!-- Implementation -->
+
+	<target name="xslt">
+		<description>
+			Execute XSL Transformation for argument ${input}, ${previous} and ${next} using processor ${xslt_processor}.
+		</description>
+
+		<set name="previous" value="${input}"/>
+		<set name="input" value="${next}"/>
+		<set name="next" value="${next_chapter}"/>
+
+		<xslt
+			processor="${xslt_processor}"
+			input="${input}.xml"
+			output="${input}.html"
+			stylesheet="${GOBO}/doc/misc/gobo2html2.xsl"
+		>
+			<parameter name="previous" value="&quot;'${previous}.html'&quot;"/>
+			<parameter name="next" value="&quot;'${next}.html'&quot;"/>
+			<parameter name="toc" value="&quot;'using.html'&quot;"/>
+		</xslt>
 	</target>
 
 </project>

@@ -154,27 +154,6 @@ Because Expat introduces external dependencies in the library, a factory class i
 
 </sect1>
 
-<sect1 id="external_resolvers">
-<title>Resolution of external entities</title>
-
-<para>
-By default, the parsers do not resolve external entities and produce an error if an external entity or an external DTD is used. These external references are loosely defined as a URI reference in the XML specification, and thus can be virtually anything, so a customisable resolving facility is provided.
-</para>
-
-<para>
-To use entities, an external resolver must be set, using the parser's <featurename>set_resolver</featurename> routine. It sets a single resolver for use both for external DTDs and entities, there are routines to set each of these separately, <featurename>set_entity_resolver</featurename> and  <featurename>set_dtd_resolver</featurename>.
-</para>
-
-<para>
-A resolver is a class that opens a <classname>KI_CHARACTER_INPUT_STREAM</classname> given a system identifier (a string). An error is produced if no corresponding stream can be found. It is the responsibility of the client to close the stream.
-</para>
-
-<para>
-Default concrete resolvers are provided: <classname>XM_FILE_EXTERNAL_RESOLVER</classname> for using system identifiers as local file names, and <classname>XM_STRING_EXTERNAL_RESOLVER</classname> for resolving in memory using a hash table of strings. There is also a null resolver, which always fails. It is the default resolver of a parser.
-</para>
-
-</sect1>
-
 <sect1 id="xml_event_filters">
 <title>Event filters and streams</title>
 

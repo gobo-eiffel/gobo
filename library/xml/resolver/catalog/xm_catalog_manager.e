@@ -70,8 +70,13 @@ feature -- Access
 			public_id_not_void: a_public_id /= Void
 			system_id_not_void: a_system_id /= Void
 		local
-			an_fpi, another_fpi: STRING
+			an_fpi, another_fpi, a_debug_string: STRING
 		do
+			if debug_level > 2 then
+				a_debug_string := STRING_.concat ("PUBLIC ", a_public_id)
+				a_debug_string := STRING_.appended_string (", SYSTEM ", a_system_id)
+			end
+			debug_message (3, "Resolving external entity", a_debug_string)
 
 			-- At this level, there is no re-try from relative URI to absolute URI -
 			--  that is left to higher-level callers, such as XM_CATALOG_RESOLVER
@@ -119,7 +124,8 @@ feature -- Access
 		local
 			an_fpi: STRING
 		do
-
+			debug_message (3, "Resolving URI reference", a_uri_reference)
+			
 			-- At this level, there is no re-try from relative URI to absolute URI -
 			--  that is left to higher-level callers, such as XM_CATALOG_RESOLVER
 
@@ -193,7 +199,7 @@ feature -- Status setting
 			-- Do not allow oasis-xml-catalog PIs to be used.
 		do
 			are_processing_instructions_allowed := False
-			debug_message (3, "Per-document catalogs", "<disallowed>")
+			debug_message (3, "Per-document catalogs", "<suppressed>")
 		ensure
 			processing_instructions_disallowed: not are_processing_instructions_allowed
 		end
@@ -220,7 +226,7 @@ feature -- Element change
 			-- Clear `pi_catalog_files'.
 		do
 			pi_catalog_files.wipe_out
-			debug_message (8, "Per-document catalogs reset to", "<empty>")
+			debug_message (2, "Per-document catalogs reset to", "<empty>")
 		ensure
 			pi_catalog_list_empty: pi_catalog_files.is_empty
 		end
@@ -246,7 +252,7 @@ feature -- Element change
 			a_system_id: STRING
 		do
 			a_system_id := a_base_uri.full_reference
-			debug_message (4, "Catalog's SYSTEM id is", a_system_id)
+			debug_message (7, "Catalog's SYSTEM id is", a_system_id)
 
 			if not all_known_catalogs.has (a_system_id) then
 
@@ -336,7 +342,6 @@ feature {XM_CATALOG, XM_TEST_BOOTSTRAP_RESOLVER, TS_TEST_CASE} -- Implementation
 			a_cursor_2: DS_ARRAYED_LIST_CURSOR [STRING]
 			a_catalog: XM_CATALOG
 		do
-			debug_message (9, "Resolved_fpi passed ", a_public_id)
 			an_fpi := normalized_fpi (a_public_id)
 			debug_message (8, "Fpi normalized to", an_fpi)
 			
@@ -361,7 +366,7 @@ feature {XM_CATALOG, XM_TEST_BOOTSTRAP_RESOLVER, TS_TEST_CASE} -- Implementation
 					end
 				else
 					debug_message (7, "Retrieved catalog failed parsing", a_cursor.item)
-					a_cursor.go_after
+					a_cursor.forth -- WAS a_cursor.go_after
 				end
 			end
 			
@@ -377,12 +382,16 @@ feature {XM_CATALOG, XM_TEST_BOOTSTRAP_RESOLVER, TS_TEST_CASE} -- Implementation
 				loop
 					a_catalog := retrieved_catalog (a_cursor_2.item)
 					if a_catalog /= Void then
+						debug_message (7, "Retrieved catalog is ", a_cursor_2.item)				
 						Result := a_catalog.resolved_fpi (an_fpi, prefer_public_required)
 						if Result = Void and then not search_chain_truncated then
 							a_cursor_2.forth
 						else
 							a_cursor_2.go_after
 						end
+					else
+						debug_message (7, "Retrieved catalog failed parsing", a_cursor_2.item)
+						a_cursor_2.forth
 					end
 				end
 			end
@@ -401,7 +410,6 @@ feature {XM_CATALOG, XM_TEST_BOOTSTRAP_RESOLVER, TS_TEST_CASE} -- Implementation
 			a_cursor_2: DS_ARRAYED_LIST_CURSOR [STRING]
 			a_catalog: XM_CATALOG
 		do
-			debug_message (9, "Resolved_fsi passed ", a_system_id)
 			an_fsi := escape_custom (a_system_id, unescaped_uri_characters, False)
 			debug_message (8, "Fsi normalized to", an_fsi)
 			
@@ -426,7 +434,7 @@ feature {XM_CATALOG, XM_TEST_BOOTSTRAP_RESOLVER, TS_TEST_CASE} -- Implementation
 					end
 				else
 					debug_message (7, "Retrieved catalog failed parsing", a_cursor.item)
-					a_cursor.go_after
+					a_cursor.forth -- WAS: go_after
 				end
 			end
 
@@ -442,12 +450,16 @@ feature {XM_CATALOG, XM_TEST_BOOTSTRAP_RESOLVER, TS_TEST_CASE} -- Implementation
 				loop
 					a_catalog := retrieved_catalog (a_cursor_2.item)
 					if a_catalog /= Void then
+						debug_message (7, "Retrieved catalog is ", a_cursor_2.item)
 						Result := a_catalog.resolved_fsi (an_fsi)
 						if Result = Void and then not search_chain_truncated then
 							a_cursor_2.forth
 						else
 							a_cursor_2.go_after
 						end
+					else
+						debug_message (7, "Retrieved catalog failed parsing", a_cursor_2.item)
+						a_cursor_2.forth
 					end
 				end
 			end
@@ -466,7 +478,6 @@ feature {XM_CATALOG, XM_TEST_BOOTSTRAP_RESOLVER, TS_TEST_CASE} -- Implementation
 			a_cursor_2: DS_ARRAYED_LIST_CURSOR [STRING]
 			a_catalog: XM_CATALOG
 		do
-			debug_message (9, "Resolved_uri passed ", a_uri_reference)
 			a_uri := escape_custom (a_uri_reference, unescaped_uri_characters, False)
 			debug_message (8, "URI normalized to", a_uri)
 			
@@ -491,7 +502,7 @@ feature {XM_CATALOG, XM_TEST_BOOTSTRAP_RESOLVER, TS_TEST_CASE} -- Implementation
 					end
 				else
 					debug_message (7, "Retrieved catalog failed parsing", a_cursor.item)
-					a_cursor.go_after
+					a_cursor.forth -- WAS: go_after
 				end
 			end
 
@@ -507,12 +518,16 @@ feature {XM_CATALOG, XM_TEST_BOOTSTRAP_RESOLVER, TS_TEST_CASE} -- Implementation
 				loop
 					a_catalog := retrieved_catalog (a_cursor_2.item)
 					if a_catalog /= Void then
+						debug_message (7, "Retrieved catalog is ", a_cursor_2.item)
 						Result := a_catalog.resolved_uri (a_uri)
 						if Result = Void and then not search_chain_truncated then
 							a_cursor_2.forth
 						else
 							a_cursor_2.go_after
 						end
+					else
+						debug_message (7, "Retrieved catalog failed parsing", a_cursor_2.item)
+						a_cursor_2.forth
 					end
 				end
 			end
@@ -576,7 +591,7 @@ feature {NONE} -- Implementation
 			if not is_system_default_catalog_suppressed and then system_catalog_files.count = 0 then
 				system_catalog_files.force_last (System_default_catalog)
 			end
-			debug_message (10, "Number of system catalog files is", system_catalog_files.count.out)
+			debug_message (8, "Number of system catalog files is", system_catalog_files.count.out)
 		end
 
 

@@ -167,7 +167,7 @@
 	    match is found for the <featurename>SYSTEM</featurename> id.
 	  </para>
 	  <para>
-	    If no SYSTEM id is given, then this option has no effect.
+	    If no <featurename>SYSTEM</featurename> id is given, then this option has no effect.
 	  </para>
 	</listitem>
       </varlistentry>
