@@ -291,8 +291,10 @@ feature -- Parsing
 								a_class.set_cluster (Current)
 							end
 						elseif is_recursive and then is_valid_directory_name (s) then
-							a_cluster := new_recursive_cluster (s)
-							a_cluster.preparse_shallow (a_universe)
+							if file_system.directory_exists (file_system.pathname (dir_name, s)) then
+								a_cluster := new_recursive_cluster (s)
+								a_cluster.preparse_shallow (a_universe)
+							end
 						end
 						dir.read_entry
 					end
@@ -340,8 +342,10 @@ feature -- Parsing
 								a_universe.error_handler.report_gcaab_error (Current, a_filename)
 							end
 						elseif is_recursive and then is_valid_directory_name (s) then
-							a_cluster := new_recursive_cluster (s)
-							a_cluster.preparse_single (a_universe)
+							if file_system.directory_exists (file_system.pathname (dir_name, s)) then
+								a_cluster := new_recursive_cluster (s)
+								a_cluster.preparse_single (a_universe)
+							end
 						end
 						dir.read_entry
 					end
@@ -388,8 +392,10 @@ feature -- Parsing
 								a_universe.error_handler.report_gcaab_error (Current, a_filename)
 							end
 						elseif is_recursive and then is_valid_directory_name (s) then
-							a_cluster := new_recursive_cluster (s)
-							a_cluster.preparse_multiple (a_universe)
+							if file_system.directory_exists (file_system.pathname (dir_name, s)) then
+								a_cluster := new_recursive_cluster (s)
+								a_cluster.preparse_multiple (a_universe)
+							end
 						end
 						dir.read_entry
 					end
@@ -438,8 +444,10 @@ feature -- Parsing
 								a_universe.error_handler.report_gcaab_error (Current, a_filename)
 							end
 						elseif is_recursive and then is_valid_directory_name (s) then
-							a_cluster := new_recursive_cluster (s)
-							a_cluster.parse_all (a_universe)
+							if file_system.directory_exists (file_system.pathname (dir_name, s)) then
+								a_cluster := new_recursive_cluster (s)
+								a_cluster.parse_all (a_universe)
+							end
 						end
 						dir.read_entry
 					end
