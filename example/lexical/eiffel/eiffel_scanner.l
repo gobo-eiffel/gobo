@@ -58,14 +58,14 @@ creation
 		--/** Separators **/
 
 \n+					eif_lineno := eif_lineno + text_count
-[ \t\r]+			;
+[ \t\r]+			-- Ignore separators.
 
 
 
 		--/** Eiffel comments **/
 
 "--".*\n[ \t\r]*	eif_lineno := eif_lineno + 1
-"--".*				;
+"--".*				-- Ignore comments.
 
 
 
