@@ -18,7 +18,7 @@
 	<sect1 id="setenv_description">
 		<title>Description</title>
 		<para>
-			Set an environment variable’s value (for the current geant process).
+			Set an environment variable's value (for the current geant process).
 		</para>
 	</sect1>
 

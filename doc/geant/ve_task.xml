@@ -18,7 +18,7 @@
 	<sect1 id="ve_description">
 		<title>Description</title>
 		<para>
-			Invoke Object Tools’s Visual Eiffel Compiler.
+			Invoke Object Tools's Visual Eiffel Compiler.
 		</para>
 	</sect1>
 
@@ -94,9 +94,9 @@
 		</variablelist>
 	
 		<para>
-			Note: In mode ’clean’ the directory ’eCluster’ and the files ’Result.out’, ’vec.xcp’ are
-			deleted as well if they exist. If ’recursive’ is set to ’true’ ’clean’ is applied to each
-			subdirectory recursively. In mode tune the Eiffel System is tuned with Visual Eiffel’s tuner.
+			Note: In mode 'clean' the directory 'eCluster' and the files Result.out', 'vec.xcp' are
+			deleted as well if they exist. If 'recursive' is set to 'true' 'clean' is applied to each
+			subdirectory recursively. In mode tune the Eiffel System is tuned with Visual Eiffel's tuner.
 		</para>
 	
 	</sect1>
