@@ -54,9 +54,12 @@ feature -- Initialization
 feature -- Access
 
 	last_output: KI_CHARACTER_OUTPUT_STREAM
-			-- Output string
+			-- Output stream
 			
 	set_output (an_output: like last_output) is
+			-- Set output stream.
+		require
+			not_void: an_output /= Void
 		do
 			last_output := an_output
 		end
