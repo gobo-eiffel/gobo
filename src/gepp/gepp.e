@@ -46,6 +46,24 @@ feature -- Processing
 			!! a_parser.make
 			args_count:= argument_count
 				-- Read options.
+			if args_count = 1 then
+				an_arg := argument (i)
+				if
+					an_arg.is_equal ("-V") or
+					an_arg.is_equal ("--version")
+				then
+					std.out.put_string ("gepp version 1.2%N")
+					exceptions_.die (0)
+				elseif
+					an_arg.is_equal ("-h") or
+					an_arg.is_equal ("-?") or
+					an_arg.is_equal ("--help")
+				then
+					std.out.put_string (Usage_message)
+					std.out.put_character ('%N')
+					exceptions_.die (0)
+				end
+			end
 			from
 				i := 1
 			until
@@ -78,8 +96,8 @@ feature -- Processing
 				in_filename := argument (i)
 				out_filename := argument (i + 1)
 			else
-				std.error.put_string
-					("usage: gepp [-D...] [filename | -] [filename | -]%N")
+				std.error.put_string (Usage_message)
+				std.error.put_character ('%N')
 				exceptions_.die (1)
 			end
 				-- Preprocess.
@@ -120,5 +138,11 @@ feature -- Processing
 			std.error.put_string ("gepp: internal error%N")
 			exceptions_.die (1)
 		end
-			
+
+feature -- Access
+
+	Usage_message: STRING is
+		"usage: gepp [--version] [--help] [-hV?]%N%
+			%[-Dname ...] [filename | -] [filename | -]"
+
 end -- class GEPP
