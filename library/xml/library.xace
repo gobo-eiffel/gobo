@@ -20,7 +20,7 @@
 		<cluster name="formatter"/>
 		<cluster name="resolver">
 		  <option name="abstract" value="true"/>
-		  <cluster name="interface"/>
+		  <cluster name="resolver_interface" location="interface" relative="true"/>
 		  <cluster name="catalog"/>
 		  <cluster name="simple"/>
 		  <cluster name="uri"/>

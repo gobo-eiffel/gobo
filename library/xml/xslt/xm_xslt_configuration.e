@@ -36,7 +36,7 @@ creation
 
 feature {NONE} -- Initialization
 
-	make (an_entity_resolver: XM_URI_EXTERNAL_RESOLVER;
+	make (an_entity_resolver: XM_EXTERNAL_RESOLVER;
 			an_error_listener: XM_XSLT_ERROR_LISTENER;
 			a_system_function_factory: XM_XSLT_SYSTEM_FUNCTION_FACTORY;
 			an_encoder_factory: XM_XSLT_ENCODER_FACTORY) is
@@ -68,12 +68,14 @@ feature {NONE} -- Initialization
 		local
 			a_system_function_factory: XM_XSLT_SYSTEM_FUNCTION_FACTORY
 			an_error_listener: XM_XSLT_DEFAULT_ERROR_LISTENER
-			an_encoder_factory: XM_XSLT_ENCODER_FACTORY 
+			an_encoder_factory: XM_XSLT_ENCODER_FACTORY
+			a_catalog_resolver: XM_CATALOG_RESOLVER
 		do
+			create a_catalog_resolver
 			create an_encoder_factory
 			create a_system_function_factory
 			create an_error_listener.make (Recover_with_warnings)
-			make (new_file_resolver_current_directory, an_error_listener, a_system_function_factory, an_encoder_factory)
+			make (a_catalog_resolver, an_error_listener, a_system_function_factory, an_encoder_factory)
 		end
 
 feature -- Access
@@ -84,7 +86,7 @@ feature -- Access
 	error_listener: XM_XSLT_ERROR_LISTENER
 			-- Error listener
 
-	entity_resolver: XM_URI_EXTERNAL_RESOLVER
+	entity_resolver: XM_EXTERNAL_RESOLVER
 			-- Entity resolver
 
 	encoder_factory: XM_XSLT_ENCODER_FACTORY
@@ -156,7 +158,7 @@ feature -- Element change
 			set: is_line_numbering = on_or_off
 		end
 
-	set_entity_resolver (an_entity_resolver: XM_URI_EXTERNAL_RESOLVER) is
+	set_entity_resolver (an_entity_resolver: XM_EXTERNAL_RESOLVER) is
 			-- Set `entity_resolver'.
 		require
 			entity_resolver_not_void: an_entity_resolver /= Void

@@ -100,7 +100,7 @@ feature -- Access
 				if a_system_id.count = 0 then
 					Result := resolved_fpi (an_fpi, False)
 				else
-					Result := resolved_fsi (an_fsi)
+					Result := resolved_fsi (a_system_id)
 					if Result = Void then
 						if an_fpi.count > 0 then
 							Result := resolved_fpi (an_fpi, True)
@@ -120,8 +120,12 @@ feature -- Access
 		local
 			an_fpi: STRING
 		do
+
+			-- At this level, there is no re-try from relative URI to absolute URI -
+			--  that is left to higher-level callers, such as XM_CATALOG_RESOLVER
+
 			if a_uri_reference.substring_index ("urn:publicid:", 1) = 1 then
-				a_fpi := urn_to_fpi (a_uri_reference)
+				an_fpi := urn_to_fpi (a_uri_reference)
 				Result := resolved_fpi (an_fpi, False)
 			else
 				Result := resolved_uri (a_uri_reference)

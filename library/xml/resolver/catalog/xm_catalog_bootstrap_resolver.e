@@ -105,6 +105,15 @@ feature -- Access
 			xml_catalog_rng_not_void: Result /= Void
 		end
 
+	well_known_system_ids: DS_HASH_TABLE [STRING, STRING]
+			-- Map of well-known system ids to file names
+
+	well_known_public_ids: DS_HASH_TABLE [STRING, STRING]
+			-- Map of well-known public ids to file names
+
+	well_known_uri_references: DS_HASH_TABLE [STRING, STRING]
+			-- Map of well-known URI references to file names
+
 feature -- Action(s)
 
 	resolve (a_system: STRING) is
@@ -198,18 +207,6 @@ feature -- Result
 		do
 			Result := uri_scheme_resolver.last_error
 		end
-
-feature {NONE} -- Implementation
-
-	well_known_system_ids: DS_HASH_TABLE [STRING, STRING]
-			-- Map of well-known system ids to file names
-
-	well_known_public_ids: DS_HASH_TABLE [STRING, STRING]
-			-- Map of well-known public ids to file names
-
-	well_known_uri_references: DS_HASH_TABLE [STRING, STRING]
-			-- Map of well-known URI references to file names
-
 
 end
 

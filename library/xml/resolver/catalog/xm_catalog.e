@@ -868,10 +868,10 @@ feature {NONE} -- Implementation
 		end
 
 	add_uri_rewrite_rule is
-			-- Add a `rewriteUri' entry.
+			-- Add a `rewriteURI' entry.
 		require
 			within_catalog_or_group: in_catalog and then (group_depth = 0 or else group_depth = 1)
-			current_element_is_rewrite_uri: STRING_.same_string (current_element_name, "rewriteUri")
+			current_element_is_rewrite_uri: STRING_.same_string (current_element_name, "rewriteURI")
 			attributes_available: attribute_namespaces /= Void
 		local
 			a_base_uri, a_target: UT_URI
