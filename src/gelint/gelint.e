@@ -13,6 +13,8 @@ class GELINT
 
 inherit
 
+	GELINT_VERSION
+
 	KL_SHARED_EXCEPTIONS
 	KL_SHARED_ARGUMENTS
 	KL_SHARED_EXECUTION_ENVIRONMENT
@@ -42,10 +44,17 @@ feature -- Execution
 			arg: STRING
 		do
 			Arguments.set_program_name ("gelint")
+			create error_handler.make_standard
 			nb := Arguments.argument_count
 			from i := 1 until i > nb loop
 				arg := Arguments.argument (i)
-				if equal (arg, "--all_breaks") then
+				if arg.is_equal ("-V") or arg.is_equal ("--version") then
+					report_version_number
+					Exceptions.die (0)
+				elseif arg.is_equal ("-h") or arg.is_equal ("-?") or arg.is_equal ("--help") then
+					report_usage_message
+					Exceptions.die (0)
+				elseif equal (arg, "--all_breaks") then
 					all_breaks := True
 				elseif equal (arg, "--verbose") then
 					is_verbose := True
@@ -70,13 +79,13 @@ feature -- Execution
 				elseif i = nb then
 					a_filename := arg
 				else
-					std.error.put_line ("usage: gelint [--verbose][--all_breaks][--void][--cat][--forget][--flat] filename")
+					report_usage_message
 					Exceptions.die (1)
 				end
 				i := i + 1
 			end
 			if a_filename = Void then
-				std.error.put_line ("usage: gelint [--verbose][--all_breaks][--void][--cat][--forget][--flat] filename")
+				report_usage_message
 				Exceptions.die (1)
 			else
 				create a_file.make (a_filename)
@@ -109,9 +118,8 @@ feature -- Execution
 						process_universe (a_universe)
 					end
 				else
-					std.error.put_string ("gelint: cannot read %'")
-					std.error.put_string (a_filename)
-					std.error.put_line ("%'")
+					report_cannot_read_error (a_filename)
+					Exceptions.die (1)
 				end
 			end
 			debug ("stop")
@@ -134,6 +142,11 @@ feature -- Status report
 	no_output: BOOLEAN
 	void_feature: BOOLEAN
 			-- Command-line options
+
+feature -- Access
+
+	error_handler: UT_ERROR_HANDLER
+			-- Error handler
 
 feature {NONE} -- Processing
 
@@ -197,5 +210,46 @@ feature {NONE} -- Processing
 				a_universe.compile (is_flat)
 			end
 		end
+
+feature -- Error handling
+
+	report_cannot_read_error (a_filename: STRING) is
+			-- Report that `a_filename' cannot be
+			-- opened in read mode.
+		require
+			a_filename_not_void: a_filename /= Void
+		local
+			an_error: UT_CANNOT_READ_FILE_ERROR
+		do
+			create an_error.make (a_filename)
+			error_handler.report_error (an_error)
+		end
+
+	report_usage_message is
+			-- Report usage message.
+		do
+			error_handler.report_info (Usage_message)
+		end
+
+	report_version_number is
+			-- Report version number.
+		local
+			a_message: UT_VERSION_NUMBER
+		do
+			create a_message.make (Version_number)
+			error_handler.report_info (a_message)
+		end
+
+	Usage_message: UT_USAGE_MESSAGE is
+			-- Gepp usage message.
+		once
+			create Result.make ("[--verbose][--all_breaks][--void][--cat][--forget][--flat] filename")
+		ensure
+			usage_message_not_void: Result /= Void
+		end
+
+invariant
+
+	error_handler_not_void: error_handler /= Void
 
 end
