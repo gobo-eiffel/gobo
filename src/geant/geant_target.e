@@ -425,7 +425,7 @@ feature -- Processing
 				from i := 1 until i > a_dependent_targets.count loop
 					a_value := a_dependent_targets.item (i)
 					if project.targets.has (a_value) then
-						a_dependent_target := project.targets.item (a_value)
+						a_dependent_target := project.targets.item (a_value).final_target
 						Result.force (a_dependent_target)
 					else
 						exit_application (1, <<"geant error: unknown dependent target '", a_value, "%'">>)
