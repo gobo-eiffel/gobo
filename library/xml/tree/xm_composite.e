@@ -159,6 +159,8 @@ feature {NONE} -- Name comparison with namespace.
 			a_named_not_void: a_named /= Void
 			a_name_not_void: a_name /= Void
 		deferred
+		ensure
+			same_name: Result implies same_string (a_named.name, a_name)
 		end
 		
 feature -- Element change

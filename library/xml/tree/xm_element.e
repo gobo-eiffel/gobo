@@ -121,12 +121,8 @@ feature {NONE} -- Name comparison with namespace.
 	named_same_name (a_named: XM_NAMED_NODE; a_name: STRING): BOOLEAN is
 			-- Has 'a_named' same name as 'a_name' and 
 			-- same namespace as current node?
-		require
-			named_not_void: a_named /= Void
 		do
 			Result := same_string (a_named.name, a_name) and same_namespace (a_named)
-		ensure
-			same_name: Result implies same_string (a_named.name, a_name)
 		end
 		
 feature -- Access
