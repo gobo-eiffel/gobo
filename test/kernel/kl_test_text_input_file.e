@@ -585,11 +585,11 @@ feature -- Test
 				nb := a_file.read_to_buffer (a_buffer, 1, 8)
 				assert ("not_eof2", not a_file.end_of_file)
 				assert_equal ("nb_char1", 8, nb)
-				assert_equal ("read1", "This is ", a_buffer.to_string)
+				assert_equal ("read1", "This is ", a_buffer.to_text)
 				nb := a_file.read_to_buffer (a_buffer, 3, 2)
 				assert ("not_eof3", not a_file.end_of_file)
 				assert_equal ("nb_char2", 2, nb)
-				assert_equal ("read2", "Thth is ", a_buffer.to_string)
+				assert_equal ("read2", "Thth is ", a_buffer.to_text)
 				a_file.close
 				assert ("is_closed", a_file.is_closed)
 			else
