@@ -110,15 +110,19 @@ feature {NONE} -- Processing
 					nb := sorted_ancestors.count
 					from i := 1 until i > nb loop
 						current_class := sorted_ancestors.item (i)
-						current_class.set_ancestors_built
-						error_handler.report_compilation_status (Current, current_class)
-						a_parents := current_class.parents
-						if a_parents = Void or else a_parents.is_empty then
-							a_parents := any_parents
+						if not current_class.is_parsed or else current_class.has_syntax_error then
+							set_fatal_error (current_class)
+						else
+							current_class.set_ancestors_built
+							error_handler.report_compilation_status (Current, current_class)
+							a_parents := current_class.parents
+							if a_parents = Void or else a_parents.is_empty then
+								a_parents := any_parents
+							end
+							set_ancestors (a_parents)
+							check_formal_parameters_validity
+							check_parents_validity
 						end
-						set_ancestors (a_parents)
-						check_formal_parameters_validity
-						check_parents_validity
 						i := i + 1
 					end
 					if class_sorter.has_cycle then
@@ -164,7 +168,9 @@ feature {NONE} -- Topological sort
 		local
 			any_class: ET_CLASS
 		do
-			if not a_class.ancestors_built then
+			if a_class = none_class then
+				-- The validity error will be reported in `set_ancestors'.
+			elseif not a_class.ancestors_built then
 				a_class.process (universe.eiffel_parser)
 				if not a_class.is_preparsed then
 						-- Error: class not in universe (VTCT, ETL2 p.199).
@@ -214,6 +220,7 @@ feature {NONE} -- Topological sort
 			-- `an_heir'.
 		require
 			an_heir_not_void: an_heir /= Void
+			an_heir_in_sorter: class_sorter.has (an_heir)
 			a_parents_not_void: a_parents /= Void
 		local
 			i, nb: INTEGER
@@ -224,7 +231,9 @@ feature {NONE} -- Topological sort
 				a_class := a_parents.parent (i).type.direct_base_class (universe)
 				if not a_class.ancestors_built then
 					add_class_to_sorter (a_class)
-					class_sorter.force_relation (a_class, an_heir)
+					if a_class.is_preparsed then
+						class_sorter.force_relation (a_class, an_heir)
+					end
 				end
 				i := i + 1
 			end
@@ -255,7 +264,10 @@ feature {NONE} -- Ancestors
 				a_parent := a_parents.parent (i)
 				a_type := a_parent.type
 				a_class := a_type.direct_base_class (universe)
-				if a_class.has_ancestors_error then
+				if a_class = none_class then
+					set_fatal_error (current_class)
+					error_handler.report_vhpr1b_error (current_class, a_type)
+				elseif a_class.has_ancestors_error then
 					set_fatal_error (current_class)
 					if not a_class.is_preparsed then
 						if a_parents = universe.any_parents then
@@ -415,6 +427,8 @@ feature {NONE} -- Parents validity
 invariant
 
 	class_sorter_not_void: class_sorter /= Void
+	no_void_class_in_sorter: not class_sorter.has (Void)
+	-- classes_in_sorter_preparsed: forall c in `class_sorter', c.is_preparsed
 	ancestors_not_void: ancestors /= Void
 	no_void_ancestor: not ancestors.has_item (Void)
 	parent_checker_not_void: parent_checker /= Void

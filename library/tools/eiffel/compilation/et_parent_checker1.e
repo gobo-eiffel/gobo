@@ -140,7 +140,12 @@ feature {NONE} -- Parent validity
 			a_class.process (universe.eiffel_parser)
 			if not a_class.is_preparsed then
 				set_fatal_error
-				error_handler.report_vtct0a_error (current_class, a_type)
+				if a_type = a_parent.type then
+					-- Error already reported when building the ancestors
+					-- of `current_class'.
+				else
+					error_handler.report_vtct0a_error (current_class, a_type)
+				end
 			elseif a_class.has_syntax_error then
 					-- Error should already have been
 					-- reported somewhere else.
