@@ -60,6 +60,7 @@ inherit
 			process_static_call_expression,
 			process_static_call_instruction,
 			process_tagged_assertion,
+			process_typed_expression,
 			process_unique_attribute,
 			process_when_part,
 			process_when_part_list
@@ -877,6 +878,14 @@ feature {ET_AST_NODE} -- Processing
 				if an_expression /= Void then
 					an_expression.process (Current)
 				end
+			end
+		end
+
+	process_typed_expression (an_expression: ET_TYPED_EXPRESSION) is
+			-- Process `an_expression'.
+		do
+			if internal_call then
+				an_expression.expression.process (Current)
 			end
 		end
 

@@ -154,7 +154,6 @@ feature {NONE} -- Constraint creation validity
 		local
 			a_creator: ET_CONSTRAINT_CREATOR
 			a_name, other_name: ET_FEATURE_NAME
-			a_flattened_feature: ET_FEATURE
 			a_base_type: ET_BASE_TYPE
 			a_feature: ET_FEATURE
 			a_class: ET_CLASS
@@ -193,15 +192,14 @@ feature {NONE} -- Constraint creation validity
 						end
 						a_feature := a_class.named_feature (a_name)
 						if a_feature /= Void then
-							a_flattened_feature := a_feature.flattened_feature
-							if a_flattened_feature.is_procedure then
+							if a_feature.is_procedure then
 									-- We finally got a valid creation
 									-- procedure. Record its seed.
-								a_name.set_seed (a_flattened_feature.first_seed)
+								a_name.set_seed (a_feature.first_seed)
 							else
 									-- This feature is not a procedure.
 								set_fatal_error (current_class)
-								error_handler.report_vtgc0b_error (current_class, a_name, a_flattened_feature, a_class)
+								error_handler.report_vtgc0b_error (current_class, a_name, a_feature, a_class)
 							end
 						else
 								-- This name is not the final name of

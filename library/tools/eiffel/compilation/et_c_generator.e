@@ -57,6 +57,7 @@ inherit
 			process_loop_instruction,
 			process_manifest_array,
 			process_manifest_tuple,
+			process_manifest_type,
 			process_old_expression,
 			process_once_function,
 			process_once_manifest_string,
@@ -77,6 +78,7 @@ inherit
 			process_static_call_instruction,
 			process_strip_expression,
 			process_true_constant,
+			process_typed_expression,
 			process_underscored_integer_constant,
 			process_underscored_real_constant,
 			process_unique_attribute,
@@ -2181,6 +2183,14 @@ feature {NONE} -- Expression generation
 			current_file.put_character (')')
 		end
 
+	print_manifest_type (an_expression: ET_MANIFEST_TYPE) is
+			-- Print `an_expression'.
+		require
+			an_expression_not_void: an_expression /= Void
+		do
+-- TODO.
+		end
+
 	print_old_expression (an_expression: ET_OLD_EXPRESSION) is
 			-- Print `an_expression'.
 		require
@@ -2655,8 +2665,20 @@ feature {NONE} -- Expression generation
 				print_type_cast (current_system.integer_8_type)
 			elseif a_constant.is_integer_16 then
 				print_type_cast (current_system.integer_16_type)
+			elseif a_constant.is_integer_32 then
+				print_type_cast (current_system.integer_32_type)
 			elseif a_constant.is_integer_64 then
 				print_type_cast (current_system.integer_64_type)
+			elseif a_constant.is_natural then
+				print_type_cast (current_system.natural_type)
+			elseif a_constant.is_natural_8 then
+				print_type_cast (current_system.natural_8_type)
+			elseif a_constant.is_natural_16 then
+				print_type_cast (current_system.natural_16_type)
+			elseif a_constant.is_natural_32 then
+				print_type_cast (current_system.natural_32_type)
+			elseif a_constant.is_natural_64 then
+				print_type_cast (current_system.natural_64_type)
 			else
 				print_type_cast (current_system.integer_type)
 			end
@@ -2973,6 +2995,15 @@ feature {NONE} -- Expression generation
 			current_file.put_string (c_eif_true)
 		end
 
+	print_typed_expression (an_expression: ET_TYPED_EXPRESSION) is
+			-- Print `an_expression'.
+		require
+			an_expression_not_void: an_expression /= Void
+		do
+-- TODO.
+			print_expression (an_expression.expression)
+		end
+
 	print_underscored_integer_constant (a_constant: ET_UNDERSCORED_INTEGER_CONSTANT) is
 			-- Print `a_constant'.
 		require
@@ -2985,8 +3016,20 @@ feature {NONE} -- Expression generation
 				print_type_cast (current_system.integer_8_type)
 			elseif a_constant.is_integer_16 then
 				print_type_cast (current_system.integer_16_type)
+			elseif a_constant.is_integer_32 then
+				print_type_cast (current_system.integer_32_type)
 			elseif a_constant.is_integer_64 then
 				print_type_cast (current_system.integer_64_type)
+			elseif a_constant.is_natural then
+				print_type_cast (current_system.natural_type)
+			elseif a_constant.is_natural_8 then
+				print_type_cast (current_system.natural_8_type)
+			elseif a_constant.is_natural_16 then
+				print_type_cast (current_system.natural_16_type)
+			elseif a_constant.is_natural_32 then
+				print_type_cast (current_system.natural_32_type)
+			elseif a_constant.is_natural_64 then
+				print_type_cast (current_system.natural_64_type)
 			else
 				print_type_cast (current_system.integer_type)
 			end
@@ -3951,6 +3994,12 @@ feature {ET_AST_NODE} -- Processing
 			print_manifest_tuple (an_expression)
 		end
 
+	process_manifest_type (an_expression: ET_MANIFEST_TYPE) is
+			-- Process `an_expression'.
+		do
+			print_manifest_type (an_expression)
+		end
+
 	process_old_expression (an_expression: ET_OLD_EXPRESSION) is
 			-- Process `an_expression'.
 		do
@@ -4069,6 +4118,12 @@ feature {ET_AST_NODE} -- Processing
 			-- Process `a_constant'.
 		do
 			print_true_constant (a_constant)
+		end
+
+	process_typed_expression (an_expression: ET_TYPED_EXPRESSION) is
+			-- Process `an_expression'.
+		do
+			print_typed_expression (an_expression)
 		end
 
 	process_underscored_integer_constant (a_constant: ET_UNDERSCORED_INTEGER_CONSTANT) is

@@ -2,7 +2,7 @@ indexing
 
 	description:
 
-		"Eiffel formal parameter validit checkers, second pass"
+		"Eiffel formal parameter validity checkers, second pass"
 
 	library: "Gobo Eiffel Tools Library"
 	copyright: "Copyright (c) 2003, Eric Bezault and others"

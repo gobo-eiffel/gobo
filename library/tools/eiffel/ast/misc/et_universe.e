@@ -115,8 +115,20 @@ feature {NONE} -- Initialization
 			integer_8_class.set_in_system (True)
 			integer_16_class := eiffel_class (tokens.integer_16_class_name)
 			integer_16_class.set_in_system (True)
+			integer_32_class := eiffel_class (tokens.integer_32_class_name)
+			integer_32_class.set_in_system (True)
 			integer_64_class := eiffel_class (tokens.integer_64_class_name)
 			integer_64_class.set_in_system (True)
+			natural_class := eiffel_class (tokens.natural_class_name)
+			natural_class.set_in_system (True)
+			natural_8_class := eiffel_class (tokens.natural_8_class_name)
+			natural_8_class.set_in_system (True)
+			natural_16_class := eiffel_class (tokens.natural_16_class_name)
+			natural_16_class.set_in_system (True)
+			natural_32_class := eiffel_class (tokens.natural_32_class_name)
+			natural_32_class.set_in_system (True)
+			natural_64_class := eiffel_class (tokens.natural_64_class_name)
+			natural_64_class.set_in_system (True)
 			real_class := eiffel_class (tokens.real_class_name)
 			real_class.set_in_system (True)
 			double_class := eiffel_class (tokens.double_class_name)
@@ -125,6 +137,8 @@ feature {NONE} -- Initialization
 			pointer_class.set_in_system (True)
 			typed_pointer_class := eiffel_class (tokens.typed_pointer_class_name)
 			typed_pointer_class.set_in_system (True)
+			type_class := eiffel_class (tokens.type_class_name)
+			type_class.set_in_system (True)
 			routine_class := eiffel_class (tokens.routine_class_name)
 			routine_class.set_in_system (True)
 			procedure_class := eiffel_class (tokens.procedure_class_name)
@@ -158,6 +172,10 @@ feature {NONE} -- Initialization
 			create integer_16_convert_feature.make (integer_16_class)
 			create integer_convert_feature.make (integer_class)
 			create integer_64_convert_feature.make (integer_64_class)
+			create natural_8_convert_feature.make (natural_8_class)
+			create natural_16_convert_feature.make (natural_16_class)
+			create natural_32_convert_feature.make (natural_32_class)
+			create natural_64_convert_feature.make (natural_64_class)
 			create real_convert_feature.make (real_class)
 			create double_convert_feature.make (double_class)
 		ensure
@@ -175,11 +193,18 @@ feature {NONE} -- Initialization
 			integer_class_not_void: integer_class /= Void
 			integer_8_class_not_void: integer_8_class /= Void
 			integer_16_class_not_void: integer_16_class /= Void
+			integer_32_class_not_void: integer_32_class /= Void
 			integer_64_class_not_void: integer_64_class /= Void
+			natural_class_not_void: natural_class /= Void
+			natural_8_class_not_void: natural_8_class /= Void
+			natural_16_class_not_void: natural_16_class /= Void
+			natural_32_class_not_void: natural_32_class /= Void
+			natural_64_class_not_void: natural_64_class /= Void
 			real_class_not_void: real_class /= Void
 			double_class_not_void: double_class /= Void
 			pointer_class_not_void: pointer_class /= Void
 			typed_pointer_class_not_void: typed_pointer_class /= Void
+			type_class_not_void: type_class /= Void
 			routine_class_not_void: routine_class /= Void
 			procedure_class_not_void: procedure_class /= Void
 			predicate_class_not_void: predicate_class /= Void
@@ -196,6 +221,10 @@ feature {NONE} -- Initialization
 			integer_16_convert_feature_not_void: integer_16_convert_feature /= Void
 			integer_convert_feature_not_void: integer_convert_feature /= Void
 			integer_64_convert_feature_not_void: integer_64_convert_feature /= Void
+			natural_8_convert_feature_not_void: natural_8_convert_feature /= Void
+			natural_16_convert_feature_not_void: natural_16_convert_feature /= Void
+			natural_32_convert_feature_not_void: natural_32_convert_feature /= Void
+			natural_64_convert_feature_not_void: natural_64_convert_feature /= Void
 			real_convert_feature_not_void: real_convert_feature /= Void
 			double_convert_feature_not_void: double_convert_feature /= Void
 		end
@@ -402,8 +431,26 @@ feature -- Basic classes
 	integer_16_class: ET_CLASS
 			-- Class "INTEGER_16"
 
+	integer_32_class: ET_CLASS
+			-- Class "INTEGER_32"
+
 	integer_64_class: ET_CLASS
 			-- Class "INTEGER_64"
+
+	natural_class: ET_CLASS
+			-- Class "NATURAL"
+
+	natural_8_class: ET_CLASS
+			-- Class "NATURAL_8"
+
+	natural_16_class: ET_CLASS
+			-- Class "NATURAL_16"
+
+	natural_32_class: ET_CLASS
+			-- Class "NATURAL_32"
+
+	natural_64_class: ET_CLASS
+			-- Class "NATURAL_64"
 
 	real_class: ET_CLASS
 			-- Class "REAL"
@@ -416,6 +463,9 @@ feature -- Basic classes
 
 	typed_pointer_class: ET_CLASS
 			-- Class "TYPED_POINTER"
+
+	type_class: ET_CLASS
+			-- Class "TYPE"
 
 	routine_class: ET_CLASS
 			-- Class "ROUTINE"
@@ -469,6 +519,18 @@ feature -- Feature access
 
 	integer_64_convert_feature: ET_BUILTIN_CONVERT_FEATURE
 			-- Built-in conversion feature to INTEGER_64
+
+	natural_8_convert_feature: ET_BUILTIN_CONVERT_FEATURE
+			-- Built-in conversion feature to NATURAL_8
+
+	natural_16_convert_feature: ET_BUILTIN_CONVERT_FEATURE
+			-- Built-in conversion feature to NATURAL_16
+
+	natural_32_convert_feature: ET_BUILTIN_CONVERT_FEATURE
+			-- Built-in conversion feature to NATURAL_32
+
+	natural_64_convert_feature: ET_BUILTIN_CONVERT_FEATURE
+			-- Built-in conversion feature to NATURAL_64
 
 	real_convert_feature: ET_BUILTIN_CONVERT_FEATURE
 			-- Built-in conversion feature to REAL
@@ -2141,11 +2203,18 @@ invariant
 	integer_class_not_void: integer_class /= Void
 	integer_8_class_not_void: integer_8_class /= Void
 	integer_16_class_not_void: integer_16_class /= Void
+	integer_32_class_not_void: integer_32_class /= Void
 	integer_64_class_not_void: integer_64_class /= Void
+	natural_class_not_void: natural_class /= Void
+	natural_8_class_not_void: natural_8_class /= Void
+	natural_16_class_not_void: natural_16_class /= Void
+	natural_32_class_not_void: natural_32_class /= Void
+	natural_64_class_not_void: natural_64_class /= Void
 	real_class_not_void: real_class /= Void
 	double_class_not_void: double_class /= Void
 	pointer_class_not_void: pointer_class /= Void
 	typed_pointer_class_not_void: typed_pointer_class /= Void
+	type_class_not_void: type_class /= Void
 	routine_class_not_void: routine_class /= Void
 	procedure_class_not_void: procedure_class /= Void
 	predicate_class_not_void: predicate_class /= Void
@@ -2162,6 +2231,10 @@ invariant
 	integer_16_convert_feature_not_void: integer_16_convert_feature /= Void
 	integer_convert_feature_not_void: integer_convert_feature /= Void
 	integer_64_convert_feature_not_void: integer_64_convert_feature /= Void
+	natural_8_convert_feature_not_void: natural_8_convert_feature /= Void
+	natural_16_convert_feature_not_void: natural_16_convert_feature /= Void
+	natural_32_convert_feature_not_void: natural_32_convert_feature /= Void
+	natural_64_convert_feature_not_void: natural_64_convert_feature /= Void
 	real_convert_feature_not_void: real_convert_feature /= Void
 	double_convert_feature_not_void: double_convert_feature /= Void
 	default_create_seed_non_negative: default_create_seed >= 0

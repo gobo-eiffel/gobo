@@ -130,12 +130,60 @@ feature -- Class names
 			integer_16_class_name_not_void: Result /= Void
 		end
 
+	integer_32_class_name: ET_CLASS_NAME is
+			-- "INTEGER_32" class name
+		once
+			create {ET_IDENTIFIER} Result.make (capitalized_integer_32_name)
+		ensure
+			integer_32_class_name_not_void: Result /= Void
+		end
+
 	integer_64_class_name: ET_CLASS_NAME is
 			-- "INTEGER_64" class name
 		once
 			create {ET_IDENTIFIER} Result.make (capitalized_integer_64_name)
 		ensure
 			integer_64_class_name_not_void: Result /= Void
+		end
+
+	natural_class_name: ET_CLASS_NAME is
+			-- "NATURAL" class name
+		once
+			create {ET_IDENTIFIER} Result.make (capitalized_natural_name)
+		ensure
+			natural_class_name_not_void: Result /= Void
+		end
+
+	natural_8_class_name: ET_CLASS_NAME is
+			-- "NATURAL_8" class name
+		once
+			create {ET_IDENTIFIER} Result.make (capitalized_natural_8_name)
+		ensure
+			natural_8_class_name_not_void: Result /= Void
+		end
+
+	natural_16_class_name: ET_CLASS_NAME is
+			-- "NATURAL_16" class name
+		once
+			create {ET_IDENTIFIER} Result.make (capitalized_natural_16_name)
+		ensure
+			natural_16_class_name_not_void: Result /= Void
+		end
+
+	natural_32_class_name: ET_CLASS_NAME is
+			-- "NATURAL_32" class name
+		once
+			create {ET_IDENTIFIER} Result.make (capitalized_natural_32_name)
+		ensure
+			natural_32_class_name_not_void: Result /= Void
+		end
+
+	natural_64_class_name: ET_CLASS_NAME is
+			-- "NATURAL_64" class name
+		once
+			create {ET_IDENTIFIER} Result.make (capitalized_natural_64_name)
+		ensure
+			natural_64_class_name_not_void: Result /= Void
 		end
 
 	real_class_name: ET_CLASS_NAME is
@@ -168,6 +216,14 @@ feature -- Class names
 			create {ET_IDENTIFIER} Result.make (capitalized_typed_pointer_name)
 		ensure
 			typed_pointer_class_name_not_void: Result /= Void
+		end
+
+	type_class_name: ET_CLASS_NAME is
+			-- "TYPE" class name
+		once
+			create {ET_IDENTIFIER} Result.make (capitalized_type_name)
+		ensure
+			type_class_name_not_void: Result /= Void
 		end
 
 	routine_class_name: ET_CLASS_NAME is
@@ -468,6 +524,14 @@ feature -- Symbols
 			-- '(' symbol
 		once
 			create Result.make_left_parenthesis
+		ensure
+			symbol_not_void: Result /= Void
+		end
+
+	question_mark_symbol: ET_QUESTION_MARK_SYMBOL is
+			-- '?' symbol
+		once
+			create Result.make
 		ensure
 			symbol_not_void: Result /= Void
 		end
@@ -1015,7 +1079,13 @@ feature -- Keyword and symbol names
 	capitalized_integer_name: STRING is "INTEGER"
 	capitalized_integer_8_name: STRING is "INTEGER_8"
 	capitalized_integer_16_name: STRING is "INTEGER_16"
+	capitalized_integer_32_name: STRING is "INTEGER_32"
 	capitalized_integer_64_name: STRING is "INTEGER_64"
+	capitalized_natural_name: STRING is "NATURAL"
+	capitalized_natural_8_name: STRING is "NATURAL_8"
+	capitalized_natural_16_name: STRING is "NATURAL_16"
+	capitalized_natural_32_name: STRING is "NATURAL_32"
+	capitalized_natural_64_name: STRING is "NATURAL_64"
 	capitalized_none_name: STRING is "NONE"
 	capitalized_pointer_name: STRING is "POINTER"
 	capitalized_predicate_name: STRING is "PREDICATE"
@@ -1025,6 +1095,7 @@ feature -- Keyword and symbol names
 	capitalized_special_name: STRING is "SPECIAL"
 	capitalized_string_name: STRING is "STRING"
 	capitalized_tuple_name: STRING is "TUPLE"
+	capitalized_type_name: STRING is "TYPE"
 	capitalized_typed_pointer_name: STRING is "TYPED_POINTER"
 	capitalized_wide_character_name: STRING is "WIDE_CHARACTER"
 	capitalized_unknown_name: STRING is "*UNKNOWN*"

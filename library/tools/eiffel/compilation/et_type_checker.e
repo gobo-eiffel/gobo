@@ -366,6 +366,30 @@ feature -- Type conversion
 					then
 						Result := universe.integer_64_convert_feature
 					end
+				elseif a_target_base_class = universe.natural_8_class then
+						-- Needed by ISE Eiffel 5.6.
+					if a_source_base_class = universe.integer_class then
+						Result := universe.natural_8_convert_feature
+					end
+				elseif a_target_base_class = universe.natural_16_class then
+						-- Needed by ISE Eiffel 5.6.
+					if a_source_base_class = universe.integer_class then
+						Result := universe.natural_16_convert_feature
+					end
+				elseif a_target_base_class = universe.natural_32_class then
+						-- Needed by ISE Eiffel 5.6.
+					if a_source_base_class = universe.integer_class then
+						Result := universe.natural_32_convert_feature
+					end
+				elseif a_target_base_class = universe.natural_64_class then
+						-- Needed by ISE Eiffel 5.6.
+					if
+						a_source_base_class = universe.integer_class or
+						a_source_base_class = universe.integer_8_class or
+						a_source_base_class = universe.integer_64_class
+					then
+						Result := universe.natural_64_convert_feature
+					end
 				elseif a_target_base_class = universe.real_class then
 					if
 						a_source_base_class = universe.integer_8_class or

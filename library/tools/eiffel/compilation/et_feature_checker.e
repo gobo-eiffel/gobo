@@ -5,7 +5,7 @@ indexing
 		"Eiffel feature validity checkers"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2003-2004, Eric Bezault and others"
+	copyright: "Copyright (c) 2003-2005, Eric Bezault and others"
 	license: "Eiffel Forum License v2 (see forum.txt)"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -56,6 +56,7 @@ inherit
 			process_loop_instruction,
 			process_manifest_array,
 			process_manifest_tuple,
+			process_manifest_type,
 			process_old_expression,
 			process_once_function,
 			process_once_manifest_string,
@@ -76,6 +77,7 @@ inherit
 			process_static_call_instruction,
 			process_strip_expression,
 			process_true_constant,
+			process_typed_expression,
 			process_underscored_integer_constant,
 			process_underscored_real_constant,
 			process_unique_attribute,
@@ -935,7 +937,19 @@ feature {NONE} -- Feature validity
 						-- Valid with ISE Eiffel. To be checked with other compilers.
 					elseif a_type.same_named_type (universe.integer_16_class, current_type, current_type, universe) then
 						-- Valid with ISE Eiffel. To be checked with other compilers.
+					elseif a_type.same_named_type (universe.integer_32_class, current_type, current_type, universe) then
+						-- Valid with ISE Eiffel. To be checked with other compilers.
 					elseif a_type.same_named_type (universe.integer_64_class, current_type, current_type, universe) then
+						-- Valid with ISE Eiffel. To be checked with other compilers.
+					elseif a_type.same_named_type (universe.natural_class, current_type, current_type, universe) then
+						-- Valid with ISE Eiffel. To be checked with other compilers.
+					elseif a_type.same_named_type (universe.natural_8_class, current_type, current_type, universe) then
+						-- Valid with ISE Eiffel. To be checked with other compilers.
+					elseif a_type.same_named_type (universe.natural_16_class, current_type, current_type, universe) then
+						-- Valid with ISE Eiffel. To be checked with other compilers.
+					elseif a_type.same_named_type (universe.natural_32_class, current_type, current_type, universe) then
+						-- Valid with ISE Eiffel. To be checked with other compilers.
+					elseif a_type.same_named_type (universe.natural_64_class, current_type, current_type, universe) then
 						-- Valid with ISE Eiffel. To be checked with other compilers.
 					else
 						set_fatal_error
@@ -1266,7 +1280,19 @@ feature {NONE} -- Feature validity
 					-- Valid with ISE Eiffel. To be checked with other compilers.
 				elseif a_type.same_named_type (universe.integer_16_class, current_type, current_type, universe) then
 					-- Valid with ISE Eiffel. To be checked with other compilers.
+				elseif a_type.same_named_type (universe.integer_32_class, current_type, current_type, universe) then
+					-- Valid with ISE Eiffel. To be checked with other compilers.
 				elseif a_type.same_named_type (universe.integer_64_class, current_type, current_type, universe) then
+					-- Valid with ISE Eiffel. To be checked with other compilers.
+				elseif a_type.same_named_type (universe.natural_class, current_type, current_type, universe) then
+					-- Valid with ISE Eiffel. To be checked with other compilers.
+				elseif a_type.same_named_type (universe.natural_8_class, current_type, current_type, universe) then
+					-- Valid with ISE Eiffel. To be checked with other compilers.
+				elseif a_type.same_named_type (universe.natural_16_class, current_type, current_type, universe) then
+					-- Valid with ISE Eiffel. To be checked with other compilers.
+				elseif a_type.same_named_type (universe.natural_32_class, current_type, current_type, universe) then
+					-- Valid with ISE Eiffel. To be checked with other compilers.
+				elseif a_type.same_named_type (universe.natural_64_class, current_type, current_type, universe) then
 					-- Valid with ISE Eiffel. To be checked with other compilers.
 				else
 					set_fatal_error
@@ -2126,7 +2152,19 @@ feature {NONE} -- Instruction validity
 				-- Valid with ISE Eiffel. To be checked with other compilers.
 			elseif a_value_context.same_named_type (universe.integer_16_class, current_type, universe) then
 				-- Valid with ISE Eiffel. To be checked with other compilers.
+			elseif a_value_context.same_named_type (universe.integer_32_class, current_type, universe) then
+				-- Valid with ISE Eiffel. To be checked with other compilers.
 			elseif a_value_context.same_named_type (universe.integer_64_class, current_type, universe) then
+				-- Valid with ISE Eiffel. To be checked with other compilers.
+			elseif a_value_context.same_named_type (universe.natural_class, current_type, universe) then
+				-- Valid with ISE Eiffel. To be checked with other compilers.
+			elseif a_value_context.same_named_type (universe.natural_8_class, current_type, universe) then
+				-- Valid with ISE Eiffel. To be checked with other compilers.
+			elseif a_value_context.same_named_type (universe.natural_16_class, current_type, universe) then
+				-- Valid with ISE Eiffel. To be checked with other compilers.
+			elseif a_value_context.same_named_type (universe.natural_32_class, current_type, universe) then
+				-- Valid with ISE Eiffel. To be checked with other compilers.
+			elseif a_value_context.same_named_type (universe.natural_64_class, current_type, universe) then
 				-- Valid with ISE Eiffel. To be checked with other compilers.
 			else
 				had_error := True
@@ -2171,13 +2209,22 @@ feature {NONE} -- Instruction validity
 								elseif
 									a_value_class = universe.integer_class and then
 									(a_choice_class = universe.integer_8_class or
-									a_choice_class = universe.integer_16_class)
+									a_choice_class = universe.integer_16_class or
+									a_choice_class = universe.integer_32_class)
+								then
+									-- Valid with ISE Eiffel. To be checked with other compilers.
+								elseif
+									a_value_class = universe.integer_32_class and then
+									(a_choice_class = universe.integer_8_class or
+									a_choice_class = universe.integer_16_class or
+									a_choice_class = universe.integer_class)
 								then
 									-- Valid with ISE Eiffel. To be checked with other compilers.
 								elseif
 									a_value_class = universe.integer_64_class and then
 									(a_choice_class = universe.integer_8_class or
 									a_choice_class = universe.integer_16_class or
+									a_choice_class = universe.integer_32_class or
 									a_choice_class = universe.integer_class)
 								then
 									-- Valid with ISE Eiffel. To be checked with other compilers.
@@ -2216,13 +2263,22 @@ feature {NONE} -- Instruction validity
 									elseif
 										a_value_class = universe.integer_class and then
 										(a_choice_class = universe.integer_8_class or
-										a_choice_class = universe.integer_16_class)
+										a_choice_class = universe.integer_16_class or
+										a_choice_class = universe.integer_32_class)
+									then
+										-- Valid with ISE Eiffel. To be checked with other compilers.
+									elseif
+										a_value_class = universe.integer_32_class and then
+										(a_choice_class = universe.integer_8_class or
+										a_choice_class = universe.integer_16_class or
+										a_choice_class = universe.integer_class)
 									then
 										-- Valid with ISE Eiffel. To be checked with other compilers.
 									elseif
 										a_value_class = universe.integer_64_class and then
 										(a_choice_class = universe.integer_8_class or
 										a_choice_class = universe.integer_16_class or
+										a_choice_class = universe.integer_32_class or
 										a_choice_class = universe.integer_class)
 									then
 										-- Valid with ISE Eiffel. To be checked with other compilers.
@@ -3506,7 +3562,8 @@ feature {NONE} -- Expression validity
 			when 10 then
 					-- 0[xX][a-fA-F0-9]{8}
 				a_context.force_last (universe.integer_class)
-				a_constant.set_integer_32
+-- TODO: should probably be INTEGER_32, but stay compatible with ISE
+				a_constant.set_integer
 				report_integer_constant (a_constant)
 			when 18 then
 					-- 0[xX][a-fA-F0-9]{16}
@@ -3515,7 +3572,7 @@ feature {NONE} -- Expression validity
 				report_integer_64_constant (a_constant)
 			else
 				a_context.force_last (universe.integer_class)
-				a_constant.set_integer_32
+				a_constant.set_integer
 				report_integer_constant (a_constant)
 			end
 		end
@@ -4108,6 +4165,26 @@ feature {NONE} -- Expression validity
 			end
 		end
 
+	check_manifest_type_validity (an_expression: ET_MANIFEST_TYPE; a_context: ET_NESTED_TYPE_CONTEXT) is
+			-- Check validity of `an_expression'.
+			-- Set `has_fatal_error' if a fatal error occurred.
+		require
+			an_expression_not_void: an_expression /= Void
+			a_context_not_void: a_context /= Void
+		local
+			a_type_class: ET_CLASS
+			a_type_type: ET_GENERIC_CLASS_TYPE
+			an_actuals: ET_ACTUAL_PARAMETER_LIST
+		do
+			has_fatal_error := False
+			a_type_class := universe.type_class
+			create an_actuals.make_with_capacity (1)
+			an_actuals.put_first (an_expression.type)
+			create a_type_type.make (Void, a_type_class.name, an_actuals, a_type_class)
+			report_manifest_type (an_expression, a_type_type, a_context)
+			a_context.force_last (a_type_type)
+		end
+
 	check_old_expression_validity (an_expression: ET_OLD_EXPRESSION; a_context: ET_NESTED_TYPE_CONTEXT) is
 			-- Check validity of `an_expression'.
 			-- Set `has_fatal_error' if a fatal error occurred.
@@ -4487,16 +4564,40 @@ feature {NONE} -- Expression validity
 					a_type := a_class
 					a_constant.set_integer_16
 					report_integer_16_constant (a_constant)
+				elseif a_class = universe.integer_32_class then
+					a_type := a_class
+					a_constant.set_integer_32
+					report_integer_32_constant (a_constant)
 				elseif a_class = universe.integer_64_class then
 					a_type := a_class
 					a_constant.set_integer_64
 					report_integer_64_constant (a_constant)
+				elseif a_class = universe.natural_class then
+					a_type := a_class
+					a_constant.set_natural
+					report_natural_constant (a_constant)
+				elseif a_class = universe.natural_8_class then
+					a_type := a_class
+					a_constant.set_natural_8
+					report_natural_8_constant (a_constant)
+				elseif a_class = universe.natural_16_class then
+					a_type := a_class
+					a_constant.set_natural_16
+					report_natural_16_constant (a_constant)
+				elseif a_class = universe.natural_32_class then
+					a_type := a_class
+					a_constant.set_natural_32
+					report_natural_32_constant (a_constant)
+				elseif a_class = universe.natural_64_class then
+					a_type := a_class
+					a_constant.set_natural_64
+					report_natural_64_constant (a_constant)
 				else
-					a_constant.set_integer_32
+					a_constant.set_integer
 					report_integer_constant (a_constant)
 				end
 			else
-				a_constant.set_integer_32
+				a_constant.set_integer
 				report_integer_constant (a_constant)
 			end
 			a_context.force_last (a_type)
@@ -4993,6 +5094,113 @@ feature {NONE} -- Expression validity
 			report_boolean_constant (a_constant)
 		end
 
+	check_typed_expression_validity (an_expression: ET_TYPED_EXPRESSION; a_context: ET_NESTED_TYPE_CONTEXT) is
+			-- Check validity of `an_expression'.
+			-- Set `has_fatal_error' if a fatal error occurred.
+		require
+			an_expression_not_void: an_expression /= Void
+			a_context_not_void: a_context /= Void
+		local
+			a_source: ET_EXPRESSION
+			a_target_type: ET_TYPE
+			a_class_impl: ET_CLASS
+			a_source_context: ET_NESTED_TYPE_CONTEXT
+			a_target_context: ET_NESTED_TYPE_CONTEXT
+			a_convert_feature: ET_CONVERT_FEATURE
+			a_conversion_feature: ET_FEATURE
+			a_convert_expression: ET_CONVERT_EXPRESSION
+			a_convert_to_expression: ET_CONVERT_TO_EXPRESSION
+			a_convert_class: ET_CLASS
+			a_convert_name: ET_FEATURE_NAME
+			a_source_named_type: ET_NAMED_TYPE
+			a_target_named_type: ET_NAMED_TYPE
+		do
+			has_fatal_error := False
+			a_target_type := an_expression.type
+			check_type_validity (a_target_type)
+			if not has_fatal_error then
+				a_target_context := formal_context
+				a_target_context.reset (current_type)
+				a_target_context.force_last (a_target_type)
+				a_source_context := a_context
+				a_source := an_expression.expression
+				check_subexpression_validity (a_source, a_source_context, a_target_context)
+				an_expression.set_index (a_source.index)
+				if not has_fatal_error then
+					if not a_source_context.conforms_to_type (a_target_type, current_type, universe) then
+						a_class_impl := feature_impl.implementation_class
+						if current_class = a_class_impl then
+							a_convert_feature := type_checker.convert_feature (a_source_context, a_target_context)
+						else
+								-- Convertibility should be resolved in the implementation class.
+							a_convert_feature := Void
+						end
+						if a_convert_feature /= Void then
+							if a_convert_feature.is_convert_from then
+								a_convert_class := a_target_context.base_class (universe)
+							elseif a_convert_feature.is_convert_to then
+								a_convert_class := a_source_context.base_class (universe)
+							else
+								a_convert_class := Void
+							end
+							if a_convert_class /= Void then
+								a_convert_class.process (universe.feature_flattener)
+								if not a_convert_class.features_flattened or else a_convert_class.has_flattening_error then
+										-- Error already reported by the feature flattener.
+									set_fatal_error
+									a_convert_feature := Void
+								end
+							end
+							if a_convert_feature /= Void then
+									-- Insert the conversion feature call in the AST.
+								if a_convert_feature.is_convert_to then
+									create a_convert_to_expression.make (a_source, a_convert_feature)
+									a_convert_expression := a_convert_to_expression
+									a_convert_name := a_convert_feature.name
+									a_conversion_feature := a_convert_class.seeded_feature (a_convert_name.seed)
+									if a_conversion_feature /= Void then
+										report_qualified_call_expression (a_convert_to_expression, a_convert_to_expression, a_source_context, a_conversion_feature)
+									else
+											-- Internal error: the seed of the convert feature should correspond
+											-- to a feature of `a_convert_class'.
+										set_fatal_error
+										error_handler.report_gibid_error
+									end
+								elseif a_convert_feature.is_convert_from then
+									create a_convert_expression.make (a_source, a_convert_feature)
+									a_convert_name := a_convert_feature.name
+									a_conversion_feature := a_convert_class.seeded_feature (a_convert_name.seed)
+									if a_conversion_feature /= Void then
+										report_creation_expression (a_convert_expression, a_source_context.named_type (universe), a_conversion_feature, an_expression.expression)
+									else
+											-- Internal error: the seed of the convert feature should correspond
+											-- to a feature of `a_convert_class'.
+										set_fatal_error
+										error_handler.report_gibie_error
+									end
+								else
+									create a_convert_expression.make (a_source, a_convert_feature)
+									a_convert_expression.set_index (a_source.index)
+								end
+								an_expression.set_expression (a_convert_expression)
+							end
+						else
+							set_fatal_error
+							a_source_named_type := a_source_context.named_type (universe)
+							a_target_named_type := a_target_context.named_type (universe)
+							if current_class = a_class_impl then
+								error_handler.report_vjar0c_error (current_class, an_expression, a_source_named_type, a_target_named_type)
+							else
+								error_handler.report_vjar0d_error (current_class, a_class_impl, an_expression, a_source_named_type, a_target_named_type)
+							end
+						end
+					end
+				end
+			end
+			a_context.reset (current_type)
+			a_context.force_last (a_target_type)
+		end
+
 	check_underscored_integer_constant_validity (a_constant: ET_UNDERSCORED_INTEGER_CONSTANT; a_context: ET_NESTED_TYPE_CONTEXT) is
 			-- Check validity of `a_constant'.
 			-- Set `has_fatal_error' if a fatal error occurred.
@@ -5017,16 +5225,40 @@ feature {NONE} -- Expression validity
 					a_type := a_class
 					a_constant.set_integer_16
 					report_integer_16_constant (a_constant)
+				elseif a_class = universe.integer_32_class then
+					a_type := a_class
+					a_constant.set_integer_32
+					report_integer_32_constant (a_constant)
 				elseif a_class = universe.integer_64_class then
 					a_type := a_class
 					a_constant.set_integer_64
 					report_integer_64_constant (a_constant)
+				elseif a_class = universe.natural_class then
+					a_type := a_class
+					a_constant.set_natural
+					report_natural_constant (a_constant)
+				elseif a_class = universe.natural_8_class then
+					a_type := a_class
+					a_constant.set_natural_8
+					report_natural_8_constant (a_constant)
+				elseif a_class = universe.natural_16_class then
+					a_type := a_class
+					a_constant.set_natural_16
+					report_natural_16_constant (a_constant)
+				elseif a_class = universe.natural_32_class then
+					a_type := a_class
+					a_constant.set_natural_32
+					report_natural_32_constant (a_constant)
+				elseif a_class = universe.natural_64_class then
+					a_type := a_class
+					a_constant.set_natural_64
+					report_natural_64_constant (a_constant)
 				else
-					a_constant.set_integer_32
+					a_constant.set_integer
 					report_integer_constant (a_constant)
 				end
 			else
-				a_constant.set_integer_32
+				a_constant.set_integer
 				report_integer_constant (a_constant)
 			end
 			a_context.force_last (a_type)
@@ -6342,6 +6574,14 @@ feature {NONE} -- Event handling
 		do
 		end
 
+	report_integer_32_constant (a_constant: ET_INTEGER_CONSTANT) is
+			-- Report that an integer_32 has been processed.
+		require
+			no_error: not has_fatal_error
+			a_constant_not_void: a_constant /= Void
+		do
+		end
+
 	report_integer_64_constant (a_constant: ET_INTEGER_CONSTANT) is
 			-- Report that an integer_64 has been processed.
 		require
@@ -6399,6 +6639,58 @@ feature {NONE} -- Event handling
 			no_error: not has_fatal_error
 			an_expression_not_void: an_expression /= Void
 			a_type_not_void: a_type /= Void
+		do
+		end
+
+	report_manifest_type (an_expression: ET_MANIFEST_TYPE; a_type: ET_TYPE; a_context: ET_TYPE_CONTEXT) is
+			-- Report that a manifest type of type `a_type' 
+			-- in `a_context' has been processed.
+		require
+			no_error: not has_fatal_error
+			an_expression_not_void: an_expression /= Void
+			a_type_not_void: a_type /= Void
+			a_context_not_void: a_context /= Void
+			a_context_valid: a_context.is_valid_context
+		do
+		end
+
+	report_natural_constant (a_constant: ET_INTEGER_CONSTANT) is
+			-- Report that a natural has been processed.
+		require
+			no_error: not has_fatal_error
+			a_constant_not_void: a_constant /= Void
+		do
+		end
+
+	report_natural_8_constant (a_constant: ET_INTEGER_CONSTANT) is
+			-- Report that a natural_8 has been processed.
+		require
+			no_error: not has_fatal_error
+			a_constant_not_void: a_constant /= Void
+		do
+		end
+
+	report_natural_16_constant (a_constant: ET_INTEGER_CONSTANT) is
+			-- Report that a natural_16 has been processed.
+		require
+			no_error: not has_fatal_error
+			a_constant_not_void: a_constant /= Void
+		do
+		end
+
+	report_natural_32_constant (a_constant: ET_INTEGER_CONSTANT) is
+			-- Report that a natural_32 has been processed.
+		require
+			no_error: not has_fatal_error
+			a_constant_not_void: a_constant /= Void
+		do
+		end
+
+	report_natural_64_constant (a_constant: ET_INTEGER_CONSTANT) is
+			-- Report that a natural_64 has been processed.
+		require
+			no_error: not has_fatal_error
+			a_constant_not_void: a_constant /= Void
 		do
 		end
 
@@ -6975,6 +7267,15 @@ feature {ET_AST_NODE} -- Processing
 			end
 		end
 
+	process_manifest_type (an_expression: ET_MANIFEST_TYPE) is
+			-- Process `an_expression'.
+		do
+			if internal_call then
+				internal_call := False
+				check_manifest_type_validity (an_expression, current_context)
+			end
+		end
+
 	process_old_expression (an_expression: ET_OLD_EXPRESSION) is
 			-- Process `an_expression'.
 		do
@@ -7156,6 +7457,15 @@ feature {ET_AST_NODE} -- Processing
 			if internal_call then
 				internal_call := False
 				check_true_constant_validity (a_constant, current_context)
+			end
+		end
+
+	process_typed_expression (an_expression: ET_TYPED_EXPRESSION) is
+			-- Process `an_expression'.
+		do
+			if internal_call then
+				internal_call := False
+				check_typed_expression_validity (an_expression, current_context)
 			end
 		end
 
