@@ -121,7 +121,6 @@ feature -- Processing
 		require
 			string_not_void: a_string /= Void
 		local
-			a_uc_delimiter: UC_CHARACTER
 			s: UC_STRING
 			ucs: UC_STRING
 			p_start: INTEGER
@@ -129,7 +128,6 @@ feature -- Processing
 			nice_string: BOOLEAN
 			i, j, nb: INTEGER
 			stop: BOOLEAN
-			a_uc_char: UC_CHARACTER
 		do
 			from
 				i := 1
@@ -137,8 +135,7 @@ feature -- Processing
 			until
 				i > nb or stop
 			loop
-				a_uc_char := a_string.item (i)
-				inspect a_uc_char.code
+				inspect a_string.item_code (i)
 				-- when ' ', '%T', '%R', '%N' then
 				when 32, 9, 13, 10 then
 					i := i + 1
@@ -155,8 +152,7 @@ feature -- Processing
 				until
 					stop
 				loop
-					a_uc_char := a_string.item (j)
-					inspect a_uc_char.code
+					inspect a_string.item_code (j)
 					-- when ' ', '%T', '%R', '%N' then
 					when 32, 9, 13, 10 then
 						j := j - 1
@@ -167,7 +163,6 @@ feature -- Processing
 				s := a_string.substring (i, j)
 			end
 			!! Result.make (5)
-			a_uc_delimiter := new_unicode_character (a_delimiter)
 
 				-- Cleanup String:
 			from
@@ -176,15 +171,15 @@ feature -- Processing
 			loop
 				nice_string := True
 				if s.count > 0 then
-					if s.item (1).is_equal (a_uc_delimiter) then
-						s.tail (s.count - 1)
+					if s.item (1) = a_delimiter then
+						s.keep_tail (s.count - 1)
 						nice_string := False
 					end
 				end
 	
 				if s.count > 0 then
-					if s.item (s.count).is_equal (a_uc_delimiter) then
-						s.head (s.count - 1)
+					if s.item (s.count) = a_delimiter then
+						s.keep_head (s.count - 1)
 						nice_string := False
 					end
 				end
@@ -194,7 +189,7 @@ feature -- Processing
 				-- Find Tokens:
 			from
 				p_start := 1
-				p_end := s.index_of (a_uc_delimiter, p_start)
+				p_end := s.index_of (a_delimiter, p_start)
 			until
 				p_end = 0 or p_start > s.count
 			loop
@@ -205,8 +200,7 @@ feature -- Processing
 				until
 					i > nb or stop
 				loop
-					a_uc_char := s.item (i)
-					inspect a_uc_char.code
+					inspect s.item_code (i)
 					-- when ' ', '%T', '%R', '%N' then
 					when 32, 9, 13, 10 then
 						i := i + 1
@@ -223,8 +217,7 @@ feature -- Processing
 					until
 						stop
 					loop
-					a_uc_char := s.item (j)
-					inspect a_uc_char.code
+					inspect s.item_code (j)
 						-- when ' ', '%T', '%R', '%N' then
 						when 32, 9, 13, 10 then
 							j := j - 1
@@ -240,7 +233,7 @@ feature -- Processing
 				p_start := p_end + 1
 
 				if p_start <= s.count then
-					p_end := s.index_of (a_uc_delimiter, p_start)
+					p_end := s.index_of (a_delimiter, p_start)
 				end
 			end
 
@@ -253,8 +246,7 @@ feature -- Processing
 				until
 					i > nb or stop
 				loop
-					a_uc_char := s.item (i)
-					inspect a_uc_char.code
+					inspect s.item_code (i)
 					-- when ' ', '%T', '%R', '%N' then
 					when 32, 9, 13, 10 then
 						i := i + 1
@@ -271,8 +263,7 @@ feature -- Processing
 					until
 						stop
 					loop
-						a_uc_char := s.item (j)
-						inspect a_uc_char.code
+						inspect s.item_code (j)
 						-- when ' ', '%T', '%R', '%N' then
 						when 32, 9, 13, 10 then
 							j := j - 1

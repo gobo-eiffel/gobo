@@ -268,9 +268,12 @@ feature {NONE} -- Content implementation
 			-- Prefix from a DTD name.
 		require
 			a_not_void: a /= Void
+		local
+			an_index: INTEGER
 		do
-			if a.index_of (Colon_char, 1) > 0 then
-				Result := a.substring (1, a.index_of (Colon_char,1) - 1)
+			an_index := a.index_of (Colon_char, 1)
+			if an_index > 0 then
+				Result := a.substring (1, an_index - 1)
 			end
 		end
 		
@@ -278,18 +281,21 @@ feature {NONE} -- Content implementation
 			-- Local part from a DTD name.
 		require
 			a_not_void: a /= Void
+		local
+			an_index: INTEGER
 		do
-			if a.index_of (Colon_char, 1) > 0 then
-				Result := a.substring (a.index_of (Colon_char,1) + 1, a.count)
+			an_index := a.index_of (Colon_char, 1)
+			if an_index > 0 then
+				Result := a.substring (an_index + 1, a.count)
 			else
 				Result := a
 			end
 		end
 		
-	Colon_char: UC_CHARACTER is
+	Colon_char: CHARACTER is
 			-- Colon char
 		once
-			Result := new_unicode_string (Prefix_separator).item (1)
+			Result := Prefix_separator.item (1)
 		end
 		
 feature {NONE} -- Tokens implementation
@@ -350,8 +356,8 @@ feature {NONE} -- Tokens implementation
 				until
 					i > a_string.count
 				loop
-					if is_space (a_string.item (i - 1).code) 
-							and is_space (a_string.item (i).code)
+					if is_space (a_string.item_code (i - 1)) 
+							and is_space (a_string.item_code (i))
 					then
 						a_string.remove (i)
 					else
@@ -361,12 +367,12 @@ feature {NONE} -- Tokens implementation
 				
 				-- at end of string
 				if a_string.count > 0 
-						and then is_space (a_string.item (1).code) 
+						and then is_space (a_string.item_code (1)) 
 				then
 					a_string.remove (1)
 				end
 				if a_string.count > 0
-						and then is_space (a_string.item (a_string.count).code)
+						and then is_space (a_string.item_code (a_string.count))
 				then
 					a_string.remove (a_string.count)
 				end
