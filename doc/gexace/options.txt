@@ -2041,6 +2041,27 @@ For further details about each option, please refer to the
 documentation provided with the Eiffel compilers.
 
 -------------------------------------------------------------
+NAME: callback
+
+VALUES: winapi
+DEFAULT: no default
+DESCRIPTION: Specify that this feature should get a wrapper
+  when $ operator is applied; the result can be used as a pointer
+  to the Windows API callback function if value of the option is
+  "winapi".
+ISE:
+  N/A
+HACT:
+  N/A
+VE:
+  winapi ->
+    callback
+      class CLASS_NAME
+        feature_name
+      end
+SE:
+  N/A
+-------------------------------------------------------------
 NAME: export
 
 VALUES: <external_name>
@@ -2075,3 +2096,4 @@ SE:
      In 'cecil.se' file:
         <external_name> CLASS_NAME feature_name
 -------------------------------------------------------------
+
