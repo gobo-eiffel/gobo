@@ -1,0 +1,69 @@
+<?xml version="1.0"?>
+
+<project name="test" default="help">
+
+	<description>
+		description: "Eiffel Ant file for Gobo Eiffel tests"
+		author:      "Eric Bezault [ericb@gobosoft.com]"
+		copyright:   "Copyright (c) 2001, Eric Bezault and others"
+		license:     "Eiffel Forum Freeware License v1 (see forum.txt)"
+		date:        "$Date$"
+		revision:    "$Revision$"
+	</description>
+
+	<target name="help">
+		<echo message="usage:"/>
+		<echo message="   geant install"/>
+		<echo message="   geant test"/>
+		<echo message="   geant clean"/>
+		<echo message="   geant clobber"/>
+	</target>
+
+	<target name="install" depend="init" dir="${GOBO}/test">
+		<description>
+			Install the Gobo Eiffel tests.
+		</description>
+
+		<geant file="kernel/build.eant" target="install"/>
+		<geant file="structure/build.eant" target="install"/>
+		<geant file="time/build.eant" target="install"/>
+	</target>
+
+	<target name="test" depend="init" dir="${GOBO}/test">
+		<description>
+			Run the Gobo Eiffel tests.
+		</description>
+
+		<geant file="kernel/build.eant" target="test"/>
+		<geant file="structure/build.eant" target="test"/>
+		<geant file="time/build.eant" target="test"/>
+	</target>
+
+	<target name="clean" depend="init" dir="${GOBO}/test">
+		<description>
+			Remove intermediary generated files.
+		</description>
+
+		<geant file="kernel/build.eant" target="clean"/>
+		<geant file="structure/build.eant" target="clean"/>
+		<geant file="time/build.eant" target="clean"/>
+	</target>
+
+	<target name="clobber" depend="init" dir="${GOBO}/test">
+		<description>
+			Remove all generated files.
+		</description>
+
+		<geant file="kernel/build.eant" target="clobber"/>
+		<geant file="structure/build.eant" target="clobber"/>
+		<geant file="time/build.eant" target="clobber"/>
+	</target>
+
+
+<!-- Implementation -->
+
+	<target name="init">
+		<!-- do nothing -->
+	</target>
+
+</project>

@@ -1,0 +1,42 @@
+<?xml version="1.0"?>
+
+<system name="xstructure">
+	<description>
+		system:      "Gobo Eiffel Structure Library Tester"
+		author:      "Eric Bezault [ericb@gobosoft.com]"
+		copyright:   "Copyright (c) 2001, Eric Bezault and others"
+		license:     "Eiffel Forum Freeware License v1 (see forum.txt)"
+		date:        "$Date$"
+		revision:    "$Revision$"
+	</description>
+
+	<root class="XSTRUCTURE" creation="make"/>
+	<cluster>
+		<option unless="${DEBUG}">
+			<require enable="False"/>
+			<ensure enable="False"/>
+			<invariant enable="False"/>
+			<loop enable="False"/>
+			<check enable="False"/>
+			<optimize enable="True"/>
+		</option>
+		<option if="${DEBUG}">
+			<require enable="True"/>
+			<ensure enable="True"/>
+			<invariant enable="True"/>
+			<loop enable="True"/>
+			<check enable="True"/>
+			<optimize enable="False"/>
+		</option>
+
+		<cluster name="ds_tester" location="${GOBO}/test/structure">
+			<cluster name="TESTGEN"/>
+		</cluster>
+
+		<mount location="${GOBO}/library/test/cluster.xace"/>
+		<mount location="${GOBO}/library/kernel/cluster.xace"/>
+		<mount location="${GOBO}/library/structure/cluster.xace"/>
+		<mount location="${GOBO}/library/utility/cluster.xace"/>
+		<mount location="${GOBO}/library/kernel.xace"/>
+	</cluster>
+</system>
