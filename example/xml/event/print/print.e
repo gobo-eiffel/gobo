@@ -19,6 +19,9 @@ inherit
 	XM_CALLBACKS_FILTER_FACTORY
 		export {NONE} all end
 
+	XM_RESOLVER_FACTORY
+		export {NONE} all end
+		
 creation
 
 	make
@@ -44,34 +47,26 @@ feature -- Processing
 			filename_not_void: filename /= Void
 			event_parser_not_void: event_parser /= Void
 		local
-			a_file: KL_TEXT_INPUT_FILE
+			a_dtd_printer: XM_DTD_PRETTY_PRINT_FILTER
 			a_parser: XM_PARSER
-			cannot_read: UT_CANNOT_READ_FILE_ERROR
 		do
 			error_handler.report_info_message ("parsing data...")
-			create a_file.make (filename)
-			a_file.open_read
-			if not a_file.is_open_read then
-				create cannot_read.make (filename)
-				error_handler.report_error (cannot_read)
+			a_parser := event_parser
+			
+			a_parser.set_dtd_resolver (new_file_resolver_current_directory)
+			a_parser.set_entity_resolver (new_file_resolver_current_directory)
+				
+			create a_dtd_printer.make_null
+			a_parser.set_dtd_callbacks (a_dtd_printer)
+			a_parser.set_callbacks (standard_callbacks_pipe (<<new_pretty_print>>))
+			a_parser.parse_from_system (filename)
+			if not a_parser.is_correct then
+				error_handler.report_error_message (a_parser.last_error_extended_description)
 				has_error := True
 			else
-				a_parser := event_parser
-				a_parser.set_dtd_resolver (new_file_resolver)
-				a_parser.set_entity_resolver (new_file_resolver)
-				
-				a_parser.set_dtd_callbacks (new_dtd_pretty_print)
-				a_parser.set_callbacks (standard_callbacks_pipe (<<new_pretty_print>>))
-				a_parser.parse_from_stream (a_file)
-				if not a_parser.is_correct then
-					error_handler.report_error_message (a_parser.last_error_extended_description)
-					has_error := True
-				else
-					error_handler.report_info_message ("parsing ok.")
-				end
-				a_file.close
-				error_handler.report_info_message ("exiting...")
+				error_handler.report_info_message ("parsing ok.")
 			end
+			error_handler.report_info_message ("exiting...")
 		end
 
 	process_arguments is
@@ -134,20 +129,6 @@ feature -- Access
 	error_handler: UT_ERROR_HANDLER
 			-- Error handler
 
-feature {NONE} -- DTD
-
-	new_dtd_pretty_print: XM_DTD_PRETTY_PRINT_FILTER is
-			-- DTD pretty printer
-		do
-			create Result.make_null
-		end
-		
-	new_file_resolver: XM_FILE_EXTERNAL_RESOLVER is
-			-- File loader for DTD or entities.
-		do
-			create Result.make
-		end
-		
 feature {NONE} -- Implementation
 
 	Usage_message: UT_USAGE_MESSAGE is
