@@ -27,9 +27,6 @@
 		<xslt input="introduction.xml" output="introduction.html" stylesheet="${GOBO}/doc/misc/gobo2html.xsl"/>
 		<xslt input="hello_world.xml" output="hello_world.html" stylesheet="${GOBO}/doc/misc/gobo2html.xsl"/>
 
-<!-- TODO: finish the following:
--->
-
 		<xslt input="tasks.xml" output="tasks.html" stylesheet="${GOBO}/doc/misc/gobo2html.xsl">
 			<parameter name="previous" value="introduction.html"/>
 			<parameter name="next" value="copy_task.html"/>
