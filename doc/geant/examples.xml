@@ -1,0 +1,610 @@
+<?xml version="1.0"?> 
+
+<!--
+	description:
+	
+		"Geant's examples"
+
+	library: "Gobo Eiffel Ant"
+	copyright: "Copyright (c) 2003, Sven Ehrke and others"
+	license: "Eiffel Forum License v2 (see forum.txt)"
+	date: "$Date$"
+	revision: "$Revision$"
+-->
+
+<chapter id="geant_examples">
+	<title>Geant examples</title>
+
+	<sect1 id="abstract">
+		<para>
+			This document explains the individual geant examples and how to use them.
+			It serves as a first draft version for the geant documentation.
+			All examples should be invoked from the commandline.
+		</para>
+		<para>Here ist the commandline syntax of geant:</para>
+		<programlisting>geant [-V][-v|--verbose][-b|--buildfile &lt;buildfile>] [-D&lt;varname>=&lt;varvalue>]* [target]</programlisting>
+	</sect1>
+
+	<sect1 id="introduction">
+		<title>Getting started</title>
+
+		<para>
+			cd to the examples/hello directory and type 'geant'. You should see the following output:
+		</para>
+		<programlisting>
+		</programlisting>
+		<programlisting>Hello world</programlisting>
+
+		<para>
+			Let's have a look at the project file which produces this output:
+		</para>
+		<programlisting><![CDATA[
+  <project name="hello" default="hi">
+    <target name="hi">
+      <echo message="Hello world"/>
+    </target>
+  </project>
+        	]]></programlisting>
+
+		<para>
+			Since we do not provide a buildfile on the commandline the default
+			name (build.eant) is used. With the option '-b' respectively
+			'--buildfile' it is possible to use a different file.  There is no
+			target specified on the commandline either. In this case geant tries
+			to find a 'default' attribute in the &lt;project> element by which the
+			start target for the build process can be specified. When there is no
+			default attribute geant gives up and terminates with the message
+			'Cannot determine start target.'.
+		</para>
+		<para>
+			With the option '-v' respectively '--verbose' geant's output is more verbose:
+		</para>
+		<programlisting><![CDATA[
+Loading Project's configuration from build.eant
+
+  Building Project
+
+  hello.hi:
+
+    [echo]
+  Hello world
+        	]]></programlisting>
+
+		<para>
+			A target can have an optional 'description' subelement which should
+			describe briefly what the target does. It must be the first subelement.
+			In a future version there will be a '--projecthelp' commandline option
+			which will just list all the targetnames with its description without
+			starting the build process.
+		</para>
+		<para>
+			A &lt;target> element may contain zero or more task elements as direct
+			children. Each task element is executed in sequential order. The
+			specific action which is performed is dependent on the individual
+			tasks.
+		</para>
+		<para>
+			The only task wich our 'hi' target contains is &lt;echo>. &lt;echo> has a
+			single attribute called 'message' and this message is printed to
+			stdout. This is the reason why you see 'Hello world' on your screen.
+		</para>
+		<para>
+			In the following sections all other examples are explained. We usually
+			do not use 'build.eant' as filename for the examples since we have
+			mostly more than one build file in a directory.
+		</para>
+	</sect1>
+
+	<sect1>
+		<title>Variables</title>
+		<para>The following example shows how to set and query the value variables.
+		cd to examples/variables and open the buildfile 'variable1.eant'
+		</para>
+		<programlisting><![CDATA[
+  <project name="variables1" default="var">
+    <target name="var">
+      <description>set and query a variable</description>
+        <set name="who" value="world"/>
+        <echo message="Hello ${who}"/>
+    </target>
+  </project>
+        	]]></programlisting>
+
+		<para>Invoking 'geant -v -b variables1.eant' produces:</para>
+		<programlisting><![CDATA[
+  Loading Project's configuration from variables1.eant
+  Building Project
+
+  variables1.var:
+
+    [set] who=world
+    [echo]
+  Hello world
+        	]]></programlisting>
+		<para>
+			With the &lt;set> task a variable can be defined. The 'name' attribute specifies
+			the name of the variable and the 'value' attribute it's value.
+			The values of variables can be retrieved using the ${&lt;variablename>} syntax.
+			Thus ${who} in the examples returns 'world'.
+		</para>
+		<para>The value of a variable can be overridden by a -D option on the commandline</para>
+		<para>'geant -v -b variables1.eant -Dwho=Eiffel' produces:</para>
+		<programlisting><![CDATA[
+  Loading Project's configuration from variables1.eant
+  Building Project
+
+  variables1.var:
+
+    [set] who=world
+    [echo]
+  Hello world
+        	]]></programlisting>
+		<para>
+  Loading Project's configuration from variables1.eant
+  Building Project
+
+  variables1.var:
+
+    [set] who=world
+    [echo]
+  Hello Eiffel
+		</para>
+	</sect1>
+
+	<sect1>
+		<title>Cascading Variables</title>
+		<para>cd to examples/variables and open buildfile 'variables2.eant':</para>
+		<programlisting><![CDATA[
+  <project name="variables2" default="var">
+    <target name="var">
+      <description>set and query a variable</description>
+      <set name="firstname" value="Bart"/>
+      <set name="fullname" value="${firstname} Simpson"/>
+      <echo message="Hello ${fullname}"/>
+    </target>
+  </project>
+        	]]></programlisting>
+
+		<para>'geant -v -b variable2.eant' produces:</para>
+		<programlisting><![CDATA[
+Loading Project's configuration from variables2.eant
+Building Project
+
+variables2.var:
+
+  [set] firstname=Bart
+  [set] fullname=Bart Simpson
+  [echo]
+Hello Bart Simpson
+        	]]></programlisting>
+
+		<para>This examples demonstrates how variables can be constructed from other variables.</para>
+	</sect1>
+
+	<sect1>
+		<title>exec</title>
+		<para>cd to examples/exec and open the buildfile 'dir.eant' (for Windows only):
+		<programlisting><![CDATA[
+  <project name="dir" default="dir">
+    <target name="dir">
+      <description>executes a dir command under dos/windows</description>
+      <set name="directory" value="."/>
+      <exec executable="dir ${directory}"/>
+    </target>
+  </project>
+        	]]></programlisting>
+		</para>
+
+		<para>'geant -v -b dir.eant' produces:</para>
+		<programlisting><![CDATA[
+Loading Project's configuration from dir.eant
+Building Project
+
+dir.dir:
+
+  [set] directory=.
+  [exec] dir .
+ Volume in drive D is D
+ Volume Serial Number is 5C52-67D3
+
+ Directory of D:\cvsstuff\gobo-eiffel\gobo\example\geant\exec
+
+09/08/2002  07:32a      <DIR>          .
+09/08/2002  07:32a      <DIR>          ..
+05/04/2002  01:45p               2,429 build.eant
+11/26/2002  08:41p      <DIR>          CVS
+09/01/2001  01:30p                 261 dir.eant
+09/01/2001  01:30p                 519 dir2.eant
+09/08/2002  07:32a                 875 exec1.eant
+09/01/2001  01:30p                 251 ls.eant
+               5 File(s)          4,335 bytes
+               3 Dir(s)   7,162,626,048 bytes free
+        	]]></programlisting>
+		<para>
+			The exec task can be used as a general means to execute a command as
+			one would do on the commandline. This can always be used when there
+			is no appropriate task available.
+			The attribute 'executable' takes the exact string one would specify
+			on the commandline after replacing possibly existing variables.
+		</para>
+		<para>On Unix call: 'geant -b ls.eant' which produces the same output as a 'ls -l'
+		command on the commandline would show.
+		</para>
+	</sect1>
+
+	<sect1>
+		<title>geant</title>
+		<para>cd to examples/geant and open buildfile 'geant1.eant':</para>
+		<programlisting><![CDATA[
+  <project name="geant" default="one">
+    <target name="one">
+      <description>calls other ant files</description>
+      <set name="who" value="Bart"/>
+
+      <set name="buildfile" value="../variables/variables5.eant"/>
+
+      <echo message="------------------------"/>
+      <echo message="before call of ${buildfile}"/>
+      <geant file="${buildfile}" target="var"/>
+      <echo message="after call of ${buildfile}"/>
+      <echo message="-------" />
+      <echo message="before call of ${buildfile}"/>
+      <geant file="${buildfile}" reuse_variables="true" target="var"/> 
+      <echo message="after call of ${buildfile}"/>
+    </target>
+  </project>
+        	]]></programlisting>
+
+		<para>'geant -v -b geant1.eant' produces:</para>
+		<programlisting><![CDATA[
+Loading Project's configuration from geant1.eant
+Building Project
+
+geant.one:
+
+  [set] who=Bart
+  [set] buildfile=../variables/variables5.eant
+  [echo]
+------------------------
+  [echo]
+before call of ../variables/variables5.eant
+Loading Project's configuration from ..\variables\variables5.eant
+Building Project
+
+variables5.var:
+
+  [echo]
+Hello ${who}
+  [echo]
+after call of ../variables/variables5.eant
+  [echo]
+-------
+  [echo]
+before call of ../variables/variables5.eant
+Loading Project's configuration from ..\variables\variables5.eant
+Building Project
+
+variables5.var:
+
+  [echo]
+Hello Bart
+  [echo]
+after call of ../variables/variables5.eant
+        	]]></programlisting>
+		<para>
+			With the geant task other geant files can be invoked. This can be
+			done in the within the same project scope (default behaviour) or in
+			a new project scope when the 'file' attribute is set to 'true'.
+			At the moment the big difference is that for an invocation in the
+			same scope all defined variables are still available in the called build
+			file. The example makes this visible by displaying 'Hello ${who}'
+			instead of 'Hello Bart' for the first &lt;geant> invokation. The
+			second &lt;geant> invocation passes all variables and thats why you see
+			'Hello Bart'.
+		</para>
+		<para>
+			In the future &lt;geant> will be able to take arguments which can be passed
+			to the called build project exactly like you can do it on the commandline already.
+		</para>
+	</sect1>
+	<sect1>
+		<title>depend</title>
+		<para>
+			Demonstrates the attribute 'depend' of targets. cd to examples/depends and
+			open the buildscript 'depends1.eant'
+		</para>
+		<programlisting><![CDATA[
+  <project name="depend_demo" default="C">
+
+    <target name="A">
+      <echo message="A"/>
+    </target>
+
+    <target name="B" depend="A">
+      <echo message="B"/>
+    </target>
+
+    <target name="C" depend="B">
+      <echo message="C"/>
+    </target>
+
+  </project>
+        	]]></programlisting>
+
+		<para>'geant -v -b depends1.eant' produces:</para>
+		<programlisting><![CDATA[
+Loading Project's configuration from depends1.eant
+Building Project
+
+depend_demo.A:
+
+  [echo]
+A
+
+depend_demo.B:
+
+  [echo]
+B
+
+depend_demo.C:
+
+  [echo]
+C
+        	]]></programlisting>
+		<para>
+			With the XML attribute 'depend' targets can be made dependent on
+			another. In the example target 'C' is dependent on target
+			'B'. This means that target 'B' will be executed before target 'C'
+			is executed. It is possible to specify more than one target
+			dependency using comma separated target names in the 'depend'
+			attribute:
+		</para>
+		<programlisting><![CDATA[
+    <target name="C" depend="B,A" >
+      <echo message="C" />
+    </target>
+        	]]></programlisting>
+		<para>
+			This means that target 'B' is executed first, then target 'A' and
+			then target 'C'.
+		</para>
+
+	</sect1>
+	<sect1>
+		<title>gexace</title>
+		<para>
+			Demonstrates how to generate a compiler specific ace/esd file from a
+			compiler independent xace file. It builds on the 'gexace' tool which is
+			able to produce specific ace/esd files from xace files.
+		</para>
+		<para>cd to examples/gexace and open buildfile 'buildfile build.eant'</para>
+		<programlisting><![CDATA[
+  <project name="geant" default="compile">
+    <target name="init">
+      <set name="system" value="hello"/>
+    </target>
+
+    <target name="compile" depend="init">
+      <description>compiles HELLO</description>
+      <gexace system="se" xace="${system}.xace"/>
+      <se ace="se.ace"/>
+    </target>
+
+    <target name="run" depend="init">
+      <description>executes example</description>
+      <exec executable="${system}"/>
+    </target>
+
+    <target name="clean" depend="init">
+      <description>deletes generated files</description>
+      <se clean="${system}"/>
+      <delete file="${system}${exe}"/>
+    </target>
+  </project>
+        	]]></programlisting>
+
+		<para>Now invoke 'geant'. &lt;gexace> calls the gexace tool which generates a SmallEiffel ace file.
+	&lt;se> then will compile our system using SmallEiffel
+		</para>
+		<para>
+			Now we could simply invoke the hello program from the commandline
+			but since this would be too easy simply invoke 'geant -v run' which
+			produces the following output:
+		</para>
+		<programlisting><![CDATA[
+Loading Project's configuration from build.eant
+Building Project
+
+geant.init:
+
+  [set] system=hello
+
+geant.run:
+
+  [exec] hello
+Hello World
+        	]]></programlisting>
+	</sect1>
+	<sect1>
+		<title>condidional/if,unless</title>
+		<para>
+			Demonstrates the optional 'if' and 'unless' XML attributes of targets.
+		</para>
+		<para>cd to examples/conditional and open buildfile 'if1.eant'</para>
+		<programlisting><![CDATA[
+  <project name="if_demo1" default="C">
+
+	<target name="A" if="$runa">
+		<echo message="A"/>
+	</target>
+
+	<target name="B" if="${runb}">
+		<echo message="B"/>
+	</target>
+
+	<target name="C" depend="A,B">
+		<echo message="C"/>
+	</target>
+
+  </project>
+        	]]></programlisting>
+		<para>'geant -v -b if1.eant' produces:</para>
+		<programlisting><![CDATA[
+Loading Project's configuration from if1.eant
+Building Project
+
+if_demo1.C:
+
+  [echo]
+C
+        	]]></programlisting>
+
+		<para>
+			As values of the 'if' and 'unless' XML attributes of target elements
+			you can use variable values and environmentvariables. This
+			means the 'if' attribute returns true if the variable is defined
+			otherwise true. The value of the variable does not matter. The same
+			is true for 'unless' except that it returns true if it is not
+			defined.
+		</para>
+		<para>
+			Since the variables 'runa' and 'runb' are not defined target 'A' and
+			target 'B' do not produce any output.		</para>
+		<para>e_you_like' produces:</para>
+		<programlisting><![CDATA[
+Loading Project's configuration from if1.eant
+Building Project
+
+if_demo1.A:
+
+  [echo]
+A
+
+if_demo1.C:
+
+  [echo]
+C
+        	]]></programlisting>
+
+		<para>geant -v -b if1.eant -Druna=any_value_you_like -Drunb=another_value_you_like</para>
+		<programlisting><![CDATA[
+Loading Project's configuration from if1.eant
+Building Project
+
+if_demo1.A:
+
+  [echo]
+A
+
+if_demo1.B:
+
+  [echo]
+B
+
+if_demo1.C:
+
+  [echo]
+C
+        	]]></programlisting>
+		<para>
+			As you can see the if's return true and targets 'A' respectively 'B'
+			get executed.
+		</para>
+		<para>
+			The file unless1.eant contains the same examples but the if's have
+			been replaced with unless's.
+		</para>
+	</sect1>
+	<sect1>
+		<title>condidional/if2</title>
+		<para>
+			Demonstrates how we can use 'if' and 'unless' to create a os
+			independent buildfile. cd to examples/conditional and open buildfile 'if2.eant':
+		</para>
+		<programlisting><![CDATA[
+  <project name="if_demo2" default="list">
+
+	<target name="list_for_windows" if="$WINDIR">
+		<exec executable="dir"/>
+	</target>
+
+	<target name="list_for_unix" unless="$WINDIR">
+		<exec executable="ls -l"/>
+	</target>
+
+	<target name="list" depend="list_for_windows,list_for_unix">
+	</target>
+
+  </project>
+        	]]></programlisting>
+		<para>'geant -v -b if2.eant' produces (windows only):</para>
+		<programlisting><![CDATA[
+Loading Project's configuration from if2.eant
+Building Project
+
+if_demo2.list_for_windows:
+
+  [exec] dir
+ Volume in drive D is D
+ Volume Serial Number is 5C52-67D3
+
+ Directory of D:\cvsstuff\gobo-eiffel\gobo\example\geant\conditional
+
+09/03/2002  08:15p      <DIR>          .
+09/03/2002  08:15p      <DIR>          ..
+11/26/2002  08:41p      <DIR>          CVS
+11/11/2001  10:58p                 261 if1.eant
+11/11/2001  10:58p                 316 if2.eant
+11/11/2001  10:58p                 593 if3.eant
+11/11/2001  10:58p                 925 if4.eant
+05/12/2002  05:30p                 724 if5.eant
+09/03/2001  05:58p                 271 unless1.eant
+               6 File(s)          3,090 bytes
+               3 Dir(s)   7,162,556,416 bytes free
+
+if_demo2.list:
+        	]]></programlisting>
+
+		<para>
+			Note: for simplicity we assume here that if a environment variable
+			'windir' exists that we are in a windows environment. Otherwise we
+			are on unix. This should be ok for most situations.
+		</para>
+
+		<para>
+			File if3.eant basically has the same behaviour but introduces an
+			additional abstraction layer by introducing some variables defining
+			the operating system:
+		</para>
+		<programlisting><![CDATA[
+  <project name="if_demo3" default="list">
+
+    <target name="windows" if="$WINDIR">
+      <set name="os.windows" value="true"/>
+    </target>
+
+    <target name="unix" unless="$WINDIR">
+      <set name="os.unix" value="true"/>
+    </target>
+
+    <target name="init" depend="windows,unix">
+    </target>
+
+
+    <target name="list_for_windows" depend="init" if="$os.windows">
+      <exec executable="dir"/>
+    </target>
+
+    <target name="list_for_unix" depend="init"  if="$os.unix">
+      <exec executable="ls -l"/>
+    </target>
+
+    <target name="list" depend="list_for_windows,list_for_unix">
+    </target>
+
+  </project>
+        	]]></programlisting>
+		<para>
+		</para>
+	</sect1>
+</chapter>
