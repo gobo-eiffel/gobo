@@ -351,16 +351,6 @@ feature {NONE} -- Status setting
 					inspect
 						c
 						
-					when '/' then
-						if input_index < input.count and then input.item (input_index) = '/' then
-							input_index := input_index + 1
-							next_token := Slash_slash_token
-							finished := True
-						else
-							next_token := Slash_token
-							finished := True
-						end
-						
 					when ':' then
 						if input_index < input.count then
 							if input.item (input_index) = ':' then
@@ -524,96 +514,106 @@ feature {NONE} -- Status setting
 							next_token := Greater_than_token
 						end
 						finished := True
-
-					when '.' then
-						if input_index < input.count and then input.item (input_index) = '.' then
-							input_index := input_index + 1
-							next_token := Dot_dot_token
-						elseif input_index = input.count
-							or else input.item (input_index) < '0'
-							or else input.item (input_index) > '9' then
-							next_token := Dot_token
-						else
-
-							-- We have a decimal number, starting with a decimal point
-
-							look_ahead
-						end
-						finished := True
 												
-					when '0'..'9' then
+					when '.'..'9' then
 						
 						-- The logic here can return some tokens that are not legitimate numbers,
 						-- for example "23e" or "1.0e+". However, this will only happen if the XPath
 						-- expression as a whole is syntactically incorrect.
 						-- These errors will be caught by the numeric creation procedure.
 
-						from
-							allow_e := True
-							allow_sign := False
-							allow_dot := True
-							end_of_number := False
-						until
-							end_of_number
-						loop
-							only_state_change := False
-							inspect
-								c
-							when '0'..'9' then
-								allow_sign := False
-							when '.' then
-								if allow_dot then
-									allow_dot := False
-									allow_sign := False
-								else
-									input_index := input_index - 1
-									only_state_change := True
-								end
-							when 'E' then
-								if allow_e then
-									allow_sign := True
-									allow_e := False
-								else
-									input_index := input_index - 1
-									only_state_change := True
-								end
-							when 'e' then
-								if allow_e then
-									allow_sign := True
-									allow_e := False
-								else
-									input_index := input_index - 1
-									only_state_change := True
-								end
-							when '+' then
-								if allow_sign then
-									allow_sign := False
-								else
-									input_index := input_index - 1
-									only_state_change := True
-								end
-							when '-' then
-								if allow_sign then
-									allow_sign := False
-								else
-									input_index := input_index - 1
-									only_state_change := True
-								end
+												
+						if c =  '/' then
+							if input_index < input.count and then input.item (input_index) = '/' then
+								input_index := input_index + 1
+								next_token := Slash_slash_token
+								finished := True
 							else
-								input_index := input_index - 1
-								only_state_change := True
+								next_token := Slash_token
+								finished := True
 							end
-							if not only_state_change then
-								if input_index > input.count then
-									end_of_number := True
-								else
-									c := input.item (input_index); input_index := input_index + 1
-								end
+						elseif c = '.' then
+							if input_index < input.count and then input.item (input_index) = '.' then
+								input_index := input_index + 1
+								next_token := Dot_dot_token
+								finished := True
+							elseif input_index = input.count
+								or else input.item (input_index) < '0'
+								or else input.item (input_index) > '9' then
+								next_token := Dot_token
+								finished := True
 							end
 						end
-						next_token_value := input.substring (next_token_start_index, input_index - 1)
-
-
+						if not finished then
+							from
+								allow_e := True
+								allow_sign := False
+								allow_dot := True
+								end_of_number := False
+							until
+								end_of_number
+							loop
+								only_state_change := False
+								inspect
+									c
+								when '0'..'9' then
+									allow_sign := False
+								when '.' then
+									if allow_dot then
+										allow_dot := False
+										allow_sign := False
+									else
+										input_index := input_index - 1
+										only_state_change := True
+									end
+								when 'E' then
+									if allow_e then
+										allow_sign := True
+										allow_e := False
+									else
+										input_index := input_index - 1
+										only_state_change := True
+									end
+								when 'e' then
+									if allow_e then
+										allow_sign := True
+										allow_e := False
+									else
+										input_index := input_index - 1
+										only_state_change := True
+									end
+								when '+' then
+									if allow_sign then
+										allow_sign := False
+									else
+										input_index := input_index - 1
+										only_state_change := True
+									end
+								when '-' then
+									if allow_sign then
+										allow_sign := False
+									else
+										input_index := input_index - 1
+										only_state_change := True
+									end
+								else
+									input_index := input_index - 1
+									only_state_change := True
+									end_of_number := True
+								end
+								if not only_state_change then
+									if input_index > input.count then
+										end_of_number := True
+									else
+										c := input.item (input_index); input_index := input_index + 1
+									end
+								end
+							end
+							next_token_value := input.substring (next_token_start_index, input_index - 1)
+						end
+						next_token := Number_token
+						finished := True
+						
 					when '"' then
 						next_token_value := ""
 						from
@@ -621,12 +621,13 @@ feature {NONE} -- Status setting
 						until
 							finished_inner
 						loop
-							input_index := input.index_of (c, input_index)
+							input_index := input.index_of (c, input_index + 1)
 							if input_index = 0 then
 								input_index := next_token_start_index + 1
 								is_lexical_error := True
 								internal_last_lexical_error :=  "Unmatched quote in expression"
 								finished := True
+								finished_inner := True
 							else
 								next_token_value := STRING_.appended_string (next_token_value, input.substring (next_token_start_index + 1, input_index - 1))
 								input_index := input_index + 1
@@ -670,12 +671,13 @@ feature {NONE} -- Status setting
 						until
 							finished_inner
 						loop
-							input_index := input.index_of (c, input_index)
+							input_index := input.index_of (c, input_index + 1)
 							if input_index = 0 then
 								input_index := next_token_start_index + 1
 								is_lexical_error := True
 								internal_last_lexical_error :=  "Unmatched quote in expression"
 								finished := True
+								finished_inner := True
 							else
 								next_token_value := STRING_.appended_string (next_token_value, input.substring (next_token_start_index + 1, input_index - 1))
 								input_index := input_index + 1
