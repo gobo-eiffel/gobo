@@ -295,7 +295,7 @@ feature {NONE} -- Implementation
 			features_not_void: Result /= Void
 			features_empty: Result.is_empty
 		end
-		
+
 invariant
 
 	base_type_not_void: base_type /= Void

@@ -5,7 +5,7 @@ indexing
 		"Eiffel token and symbol constants"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2002, Eric Bezault and others"
+	copyright: "Copyright (c) 2004, Eric Bezault and others"
 	license: "Eiffel Forum License v2 (see forum.txt)"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -228,6 +228,14 @@ feature -- Feature names
 			call_feature_name_not_void: Result /= Void
 		end
 
+	copy_feature_name: ET_FEATURE_NAME is
+			-- 'copy' feature name
+		once
+			create {ET_IDENTIFIER} Result.make (copy_name)
+		ensure
+			copy_feature_name_not_void: Result /= Void
+		end
+
 	count_feature_name: ET_FEATURE_NAME is
 			-- 'count' feature name
 		once
@@ -314,6 +322,14 @@ feature -- Feature names
 			create {ET_IDENTIFIER} Result.make (set_operands_name)
 		ensure
 			set_operands_feature_name_not_void: Result /= Void
+		end
+
+	twin_feature_name: ET_FEATURE_NAME is
+			-- 'twin' feature name
+		once
+			create {ET_IDENTIFIER} Result.make (twin_name)
+		ensure
+			twin_feature_name_not_void: Result /= Void
 		end
 
 	upper_feature_name: ET_FEATURE_NAME is
@@ -1016,6 +1032,7 @@ feature -- Keyword and symbol names
 
 	area_name: STRING is "area"
 	call_name: STRING is "call"
+	copy_name: STRING is "copy"
 	count_name: STRING is "count"
 	default_create_name: STRING is "default_create"
 	item_name: STRING is "item"
@@ -1025,6 +1042,7 @@ feature -- Keyword and symbol names
 	put_reference_name: STRING is "put_reference"
 	reference_item_name: STRING is "reference_item"
 	set_operands_name: STRING is "set_operands"
+	twin_name: STRING is "twin"
 	upper_name: STRING is "upper"
 		-- Eiffel feature names
 
@@ -1168,6 +1186,11 @@ feature -- Infix and prefix feature names
 	prefix_minus_name: STRING is "prefix %"-%""
 	prefix_plus_name: STRING is "prefix %"+%""
 			-- Prefix feature names
+
+feature -- Built-in
+
+	builtin_marker: STRING is "built_in"
+			-- Built-in marker
 
 feature -- Position
 

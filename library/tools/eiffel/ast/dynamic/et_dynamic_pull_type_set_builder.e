@@ -39,7 +39,8 @@ inherit
 			report_string_constant,
 			report_unqualified_call_agent,
 			report_unqualified_call_expression,
-			report_unqualified_call_instruction
+			report_unqualified_call_instruction,
+			report_builtin_any_twin
 		end
 
 creation
@@ -1482,7 +1483,7 @@ feature {NONE} -- Event handling
 							set_fatal_error
 							error_handler.report_gibep_error
 						else
-							if (l_dynamic_feature.is_builtin_call or l_dynamic_feature.is_builtin_item) and then current_dynamic_type.is_agent_type then
+							if (l_dynamic_feature.is_builtin_routine_call or l_dynamic_feature.is_builtin_function_item) and then current_dynamic_type.is_agent_type then
 									-- This is something of the form:  'agent call ([...])' or 'agent item ([...])'
 									-- Try to get the open operand type sets directly from the
 									-- argument if it is a manifest tuple.
@@ -1615,7 +1616,7 @@ feature {NONE} -- Event handling
 							-- that there was the same number of actual and formal arguments.
 						set_fatal_error
 						error_handler.report_gibbp_error
-					elseif l_query.is_builtin_item and then current_dynamic_type.is_agent_type then
+					elseif l_query.is_builtin_function_item and then current_dynamic_type.is_agent_type then
 							-- This is something of the form:  'item ([...])'
 							-- Try to get the open operand type sets directly from the
 							-- argument if it is a manifest tuple.
@@ -1739,7 +1740,7 @@ feature {NONE} -- Event handling
 							-- that there was the same number of actual and formal arguments.
 						set_fatal_error
 						error_handler.report_gibbs_error
-					elseif l_procedure.is_builtin_call and then current_dynamic_type.is_agent_type then
+					elseif l_procedure.is_builtin_routine_call and then current_dynamic_type.is_agent_type then
 							-- This is something of the form:  'call ([...])'
 							-- Try to get the open operand type sets directly from the
 							-- argument if it is a manifest tuple.
@@ -1818,6 +1819,54 @@ feature {NONE} -- Event handling
 								end
 							end
 							i := i + 1
+						end
+					end
+				end
+			end
+		end
+
+feature {NONE} -- Built-in features
+
+	report_builtin_any_twin (a_feature: ET_EXTERNAL_FUNCTION) is
+			-- Report that built-in feature ANY.twin is being analyzed.
+		local
+			l_result_type_set: ET_DYNAMIC_TYPE_SET
+			l_attachment: ET_DYNAMIC_BUILTIN_ATTACHMENT
+			l_copy_feature: ET_FEATURE
+			l_dynamic_feature: ET_DYNAMIC_FEATURE
+			l_dynamic_type_sets: ET_DYNAMIC_TYPE_SET_LIST
+			l_dynamic_type_set: ET_DYNAMIC_TYPE_SET
+		do
+			if current_type = current_dynamic_type.base_type then
+				current_dynamic_feature.set_builtin_code (builtin_any_twin)
+				l_result_type_set := current_dynamic_feature.result_type_set
+				if l_result_type_set = Void then
+					set_fatal_error
+					error_handler.report_gibgo_error
+				else
+					if not l_result_type_set.is_expanded then
+						create l_attachment.make (current_dynamic_type, current_dynamic_feature, current_dynamic_type)
+						l_result_type_set.put_source (l_attachment, current_system)
+					end
+						-- Feature `copy' is called internally.
+					l_copy_feature := current_class.seeded_feature (universe.copy_seed)
+					if l_copy_feature = Void then
+						set_fatal_error
+						if universe.copy_seed = 0 then
+-- TODO: error
+						else
+							error_handler.report_gibgp_error
+						end
+					else
+						l_dynamic_feature := current_dynamic_type.dynamic_feature (l_copy_feature, current_system)
+						l_dynamic_feature.set_regular (True)
+						l_dynamic_type_sets := l_dynamic_feature.dynamic_type_sets
+						if l_dynamic_type_sets.count >= 1 then
+							l_dynamic_type_set := l_dynamic_type_sets.item (1)
+							if not l_dynamic_type_set.is_expanded then
+								create l_attachment.make (current_dynamic_type, current_dynamic_feature, current_dynamic_type)
+								l_dynamic_type_set.put_source (l_attachment, current_system)
+							end
 						end
 					end
 				end

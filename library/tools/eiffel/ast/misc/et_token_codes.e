@@ -130,4 +130,13 @@ feature -- Keyword and symbol codes
 	tilde_symbol_code: CHARACTER is '%/92/'
 			-- Eiffel symbol codes
 
+feature -- Built-in codes
+
+	builtin_not_builtin: INTEGER is 0
+	builtin_unknown: INTEGER is 1
+	builtin_any_twin: INTEGER is 2
+	builtin_function_item: INTEGER is 3
+	builtin_routine_call: INTEGER is 4
+			-- Built-in feature codes
+
 end

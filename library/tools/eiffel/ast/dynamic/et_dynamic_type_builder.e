@@ -28,6 +28,8 @@ inherit
 		redefine
 			has_fatal_error,
 			make_from_checker, set_state,
+			check_external_function_validity,
+			check_external_procedure_validity,
 			check_check_instruction_validity,
 			check_debug_instruction_validity,
 			check_loop_invariant_validity,
@@ -72,6 +74,9 @@ inherit
 			report_unqualified_call_instruction,
 			report_void_constant
 		end
+
+	ET_TOKEN_CODES
+		export {NONE} all end
 
 	KL_IMPORTED_STRING_ROUTINES
 		export {NONE} all end
@@ -584,6 +589,49 @@ feature {NONE} -- CAT-calls
 			create Result.make (200)
 		ensure
 			shared_error_message_not_void: Result /= Void
+		end
+
+feature {NONE} -- Feature validity
+
+	check_external_function_validity (a_feature: ET_EXTERNAL_FUNCTION) is
+			-- Check validity of `a_feature'.
+			-- Set `has_fatal_error' if a fatal error occurred.
+		local
+			l_formals: ET_FORMAL_ARGUMENT_LIST
+		do
+			if not has_fatal_error then
+				if a_feature.is_builtin then
+					inspect a_feature.builtin_code
+					when builtin_any_twin then
+						l_formals := a_feature.arguments
+						if l_formals /= Void and then l_formals.count /= 0 then
+-- TODO: report error
+							set_fatal_error
+						else
+							report_builtin_any_twin (a_feature)
+						end
+					else
+-- TODO: unknown built-in feature.
+					end
+				end
+			end
+		end
+
+	check_external_procedure_validity (a_feature: ET_EXTERNAL_PROCEDURE) is
+			-- Check validity of `a_feature'.
+			-- Set `has_fatal_error' if a fatal error occurred.
+		do
+			if not has_fatal_error then
+				if a_feature.is_builtin then
+					inspect a_feature.builtin_code
+					when builtin_any_twin then
+-- TODO: report error
+						set_fatal_error
+					else
+-- TODO: unknown built-in feature.
+					end
+				end
+			end
 		end
 
 feature {NONE} -- Instruction validity
@@ -1464,6 +1512,35 @@ feature {NONE} -- Event handling
 				set_dynamic_type_set (l_type, an_expression)
 				if none_index.item = 0 then
 					none_index.put (an_expression.index)
+				end
+			end
+		end
+
+feature {NONE} -- Built-in features
+
+	report_builtin_any_twin (a_feature: ET_EXTERNAL_FUNCTION) is
+			-- Report that built-in feature ANY.twin is being analyzed.
+		require
+			no_error: not has_fatal_error
+			a_feature_not_void: a_feature /= Void
+		local
+			l_copy_feature: ET_FEATURE
+			l_dynamic_feature: ET_DYNAMIC_FEATURE
+		do
+			if current_type = current_dynamic_type.base_type then
+				current_dynamic_feature.set_builtin_code (builtin_any_twin)
+					-- Feature `copy' is called internally.
+				l_copy_feature := current_class.seeded_feature (universe.copy_seed)
+				if l_copy_feature = Void then
+					set_fatal_error
+					if universe.copy_seed = 0 then
+-- TODO: error
+					else
+						error_handler.report_gibia_error
+					end
+				else
+					l_dynamic_feature := current_dynamic_type.dynamic_feature (l_copy_feature, current_system)
+					l_dynamic_feature.set_regular (True)
 				end
 			end
 		end

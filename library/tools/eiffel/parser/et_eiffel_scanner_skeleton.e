@@ -346,6 +346,7 @@ feature {NONE} -- String handler
 			create Result.make_map (100000)
 			Result.set_key_equality_tester (string_equality_tester)
 				-- Insert basic strings in `strings'.
+			Result.force_new (-1, tokens.builtin_marker)
 			Result.force_new (-1, tokens.capitalized_any_name)
 			Result.force_new (-1, tokens.capitalized_array_name)
 			Result.force_new (-1, tokens.capitalized_bit_name)
@@ -372,6 +373,7 @@ feature {NONE} -- String handler
 			Result.force_new (-1, tokens.capitalized_unknown_name)
 			Result.force_new (-1, tokens.area_name)
 			Result.force_new (-1, tokens.call_name)
+			Result.force_new (-1, tokens.copy_name)
 			Result.force_new (-1, tokens.count_name)
 			Result.force_new (-1, tokens.default_create_name)
 			Result.force_new (-1, tokens.item_name)
@@ -381,6 +383,7 @@ feature {NONE} -- String handler
 			Result.force_new (-1, tokens.put_reference_name)
 			Result.force_new (-1, tokens.reference_item_name)
 			Result.force_new (-1, tokens.set_operands_name)
+			Result.force_new (-1, tokens.twin_name)
 			Result.force_new (-1, tokens.upper_name)
 			Result.force_new (-1, tokens.capitalized_current_keyword_name)
 			Result.force_new (-1, tokens.capitalized_false_keyword_name)

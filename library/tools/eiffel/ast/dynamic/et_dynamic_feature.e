@@ -16,6 +16,9 @@ inherit
 
 	DEBUG_OUTPUT
 
+	ET_SHARED_TOKEN_CONSTANTS
+		export {NONE} all end
+
 creation
 
 	make
@@ -60,7 +63,7 @@ feature {NONE} -- Initialization
 					end
 				end
 			end
-			builtin_code := not_builtin
+			builtin_code := tokens.builtin_not_builtin
 		ensure
 			static_feature_set: static_feature = a_feature
 		end
@@ -240,21 +243,24 @@ feature -- Status report
 	is_builtin: BOOLEAN is
 			-- Is current feature built-in?
 		do
-			Result := (builtin_code /= not_builtin)
+			Result := (builtin_code /= tokens.builtin_not_builtin)
 		end
 
-	is_builtin_call: BOOLEAN is
-			-- Is current feature the built-in feature 'call'?
+	builtin_code: INTEGER
+			-- Built-in code of current feature 
+
+	is_builtin_routine_call: BOOLEAN is
+			-- Is current feature the built-in feature 'ROUTINE.call'?
 		do
-			Result := (builtin_code = builtin_call)
+			Result := (builtin_code = tokens.builtin_routine_call)
 		ensure
 			builtin: Result implies is_builtin
 		end
 
-	is_builtin_item: BOOLEAN is
-			-- Is current feature the built-in feature 'item'?
+	is_builtin_function_item: BOOLEAN is
+			-- Is current feature the built-in feature 'FUNCTION.item'?
 		do
-			Result := (builtin_code = builtin_item)
+			Result := (builtin_code = tokens.builtin_function_item)
 		ensure
 			builtin: Result implies is_builtin
 		end
@@ -333,20 +339,12 @@ feature -- Status setting
 			static_set: is_static = b
 		end
 
-	set_builtin_call is
-			-- Set `builtin_call' to True?
+	set_builtin_code (a_code: INTEGER) is
+			-- Set `builtin_code' to `a_code'.
 		do
-			builtin_code := builtin_call
+			builtin_code := a_code
 		ensure
-			is_builtin_call: is_builtin_call
-		end
-
-	set_builtin_item is
-			-- Set `builtin_item' to True?
-		do
-			builtin_code := builtin_item
-		ensure
-			is_builtin_item: is_builtin_item
+			builtin_code_set: builtin_code = a_code
 		end
 
 feature -- Output
@@ -356,16 +354,6 @@ feature -- Output
 		do
 			Result := static_feature.debug_output
 		end
-
-feature {NONE} -- Built-in codes
-
-	builtin_code: INTEGER
-			-- Built-in code of current feature
-
-	not_builtin: INTEGER is 0
-	builtin_call: INTEGER is 1
-	builtin_item: INTEGER is 2
-			-- Built-in codes
 
 feature {NONE} -- Constants
 

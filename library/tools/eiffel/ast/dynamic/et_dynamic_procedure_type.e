@@ -62,10 +62,10 @@ feature {NONE} -- Implementation
 		local
 			l_name: ET_FEATURE_NAME
 		do
-			create Result.make (a_feature, Current, a_system)
+			Result := precursor (a_feature, a_system)
 			l_name := a_feature.name
 			if l_name.same_feature_name (tokens.call_feature_name) then
-				Result.set_builtin_call
+				Result.set_builtin_code (tokens.builtin_routine_call)
 				a_system.dynamic_type_set_builder.build_agent_call (Current, Result)
 			end
 		end

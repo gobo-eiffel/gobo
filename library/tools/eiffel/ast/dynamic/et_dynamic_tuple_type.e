@@ -59,7 +59,7 @@ feature {NONE} -- Implementation
 		local
 			l_name: ET_FEATURE_NAME
 		do
-			create Result.make (a_feature, Current, a_system)
+			Result := precursor (a_feature, a_system)
 			l_name := a_feature.name
 			if l_name.same_feature_name (tokens.put_feature_name) or l_name.same_feature_name (tokens.put_reference_feature_name) then
 				a_system.dynamic_type_set_builder.build_tuple_put (Current, Result)

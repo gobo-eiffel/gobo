@@ -61,7 +61,7 @@ feature {NONE} -- Implementation
 			l_dynamic_type_sets: ET_DYNAMIC_TYPE_SET_LIST
 			l_result_type_set: ET_DYNAMIC_TYPE_SET
 		do
-			create Result.make (a_feature, Current, a_system)
+			Result := precursor (a_feature, a_system)
 			l_name := a_feature.name
 			if l_name.same_feature_name (tokens.put_feature_name) then
 				l_dynamic_type_sets := Result.dynamic_type_sets

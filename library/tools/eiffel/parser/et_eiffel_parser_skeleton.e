@@ -596,6 +596,12 @@ feature {NONE} -- Basic operations
 					else
 						universe.set_default_create_seed (0)
 					end
+					a_feature := a_class.named_feature (tokens.copy_feature_name)
+					if a_feature /= Void then
+						universe.set_copy_seed (a_feature.first_seed)
+					else
+						universe.set_copy_seed (0)
+					end
 					a_feature := a_class.named_feature (tokens.void_feature_name)
 					if a_feature /= Void then
 						universe.set_void_seed (a_feature.first_seed)
@@ -610,6 +616,14 @@ feature {NONE} -- Basic operations
 							-- If there is a parent class then the feature can be defined
 							-- in class GENERAL.
 						universe.set_default_create_seed (0)
+					end
+					a_feature := a_class.named_feature (tokens.copy_feature_name)
+					if a_feature /= Void then
+						universe.set_copy_seed (a_feature.first_seed)
+					elseif a_parents = Void or else a_parents.is_empty then
+							-- If there is a parent class then the feature can be defined
+							-- in class GENERAL.
+						universe.set_copy_seed (0)
 					end
 					a_feature := a_class.named_feature (tokens.void_feature_name)
 					if a_feature /= Void then
@@ -959,6 +973,42 @@ feature {NONE} -- AST factory
 			end
 		end
 
+	new_external_function (a_name: ET_FEATURE_NAME_ITEM; args: ET_FORMAL_ARGUMENT_LIST;
+		a_type: ET_DECLARED_TYPE; an_is: ET_KEYWORD; a_first_indexing: ET_INDEXING_LIST;
+		an_obsolete: ET_OBSOLETE; a_preconditions: ET_PRECONDITIONS; a_language: ET_EXTERNAL_LANGUAGE;
+		an_alias: ET_EXTERNAL_ALIAS; a_postconditions: ET_POSTCONDITIONS;
+		an_end: ET_KEYWORD; a_semicolon: ET_SEMICOLON_SYMBOL; a_clients: ET_CLASS_NAME_LIST;
+		a_feature_clause: ET_FEATURE_CLAUSE; a_class: ET_CLASS): ET_EXTERNAL_FUNCTION is
+			-- New external function
+		do
+			Result := ast_factory.new_external_function (a_name, args, a_type, an_is, a_first_indexing,
+				an_obsolete, a_preconditions, a_language, an_alias, a_postconditions,
+				an_end, a_semicolon, a_clients, a_feature_clause, a_class)
+			if Result /= Void then
+				if STRING_.same_case_insensitive (Result.language.manifest_string.value, tokens.builtin_marker) then
+					set_builtin_function (Result)
+				end
+			end
+		end
+
+	new_external_procedure (a_name: ET_FEATURE_NAME_ITEM; args: ET_FORMAL_ARGUMENT_LIST;
+		an_is: ET_KEYWORD; a_first_indexing: ET_INDEXING_LIST; an_obsolete: ET_OBSOLETE;
+		a_preconditions: ET_PRECONDITIONS; a_language: ET_EXTERNAL_LANGUAGE; an_alias: ET_EXTERNAL_ALIAS;
+		a_postconditions: ET_POSTCONDITIONS; an_end: ET_KEYWORD;
+		a_semicolon: ET_SEMICOLON_SYMBOL; a_clients: ET_CLASS_NAME_LIST;
+		a_feature_clause: ET_FEATURE_CLAUSE; a_class: ET_CLASS): ET_EXTERNAL_PROCEDURE is
+			-- New external procedure
+		do
+			Result := ast_factory.new_external_procedure (a_name, args, an_is, a_first_indexing,
+				an_obsolete, a_preconditions, a_language, an_alias, a_postconditions,
+				an_end, a_semicolon, a_clients, a_feature_clause, a_class)
+			if Result /= Void then
+				if STRING_.same_case_insensitive (Result.language.manifest_string.value, tokens.builtin_marker) then
+					set_builtin_procedure (Result)
+				end
+			end
+		end
+
 	new_formal_arguments (a_left, a_right: ET_SYMBOL; nb: INTEGER): ET_FORMAL_ARGUMENT_LIST is
 			-- New formal argument list with given capacity
 		require
@@ -1305,10 +1355,62 @@ feature {NONE} -- AST factory
 		require
 			a_name_not_void: a_name /= Void
 			a_feature_not_void: a_feature /= Void
+		local
+			l_external: ET_EXTERNAL_ROUTINE
 		do
 			Result := a_feature.new_synonym (a_name)
+			l_external ?= Result
+			if l_external /= Void and then l_external.is_builtin then
+				if l_external.is_procedure then
+					set_builtin_procedure (l_external)
+				else
+					set_builtin_function (l_external)
+				end
+			end
 		ensure
 			synonym_not_void: Result /= Void
+		end
+
+feature {NONE} -- Built-in
+
+	set_builtin_function (a_feature: ET_EXTERNAL_ROUTINE) is
+			-- Set built-in code of `a_feature'.
+		require
+			a_feature_not_void: a_feature /= Void
+		local
+			a_class: ET_CLASS
+		do
+				-- List function names first, then procedure names.
+			a_class := a_feature.implementation_class
+			if a_class = universe.any_class then
+				if a_feature.name.same_feature_name (tokens.twin_feature_name) then
+					a_feature.set_builtin_code (tokens.builtin_any_twin)
+				else
+					a_feature.set_builtin_code (tokens.builtin_unknown)
+				end
+			else
+				a_feature.set_builtin_code (tokens.builtin_unknown)
+			end
+		end
+
+	set_builtin_procedure (a_feature: ET_EXTERNAL_ROUTINE) is
+			-- Set built-in code of `a_feature'.
+		require
+			a_feature_not_void: a_feature /= Void
+		local
+			a_class: ET_CLASS
+		do
+				-- List procedure names first, then function names.
+			a_class := a_feature.implementation_class
+			if a_class = universe.any_class then
+				if a_feature.name.same_feature_name (tokens.twin_feature_name) then
+					a_feature.set_builtin_code (tokens.builtin_any_twin)
+				else
+					a_feature.set_builtin_code (tokens.builtin_unknown)
+				end
+			else
+				a_feature.set_builtin_code (tokens.builtin_unknown)
+			end
 		end
 
 feature -- Error handling

@@ -333,7 +333,33 @@ creation
 	make_gibhw,
 	make_gibhx,
 	make_gibhy,
-	make_gibhz
+	make_gibhz,
+	make_gibia,
+	make_gibib,
+	make_gibic,
+	make_gibid,
+	make_gibie,
+	make_gibif,
+	make_gibig,
+	make_gibih,
+	make_gibii,
+	make_gibij,
+	make_gibik,
+	make_gibil,
+	make_gibim,
+	make_gibin,
+	make_gibio,
+	make_gibip,
+	make_gibiq,
+	make_gibir,
+	make_gibis,
+	make_gibit,
+	make_gibiu,
+	make_gibiv,
+	make_gibiw,
+	make_gibix,
+	make_gibiy,
+	make_gibiz
 
 feature {NONE} -- Initialization
 
@@ -4445,6 +4471,344 @@ feature {NONE} -- Initialization
 			-- dollar1: $1 = ETL code
 		end
 
+	make_gibia is
+			-- Create a new GIBIA error.
+		do
+			code := gibia_template_code
+			etl_code := gibia_etl_code
+			default_template := gibia_default_template
+			create parameters.make (1, 1)
+			parameters.put (etl_code, 1)
+		ensure
+			-- dollar0: $0 = program name
+			-- dollar1: $1 = ETL code
+		end
+
+	make_gibib is
+			-- Create a new GIBIB error.
+		do
+			code := gibib_template_code
+			etl_code := gibib_etl_code
+			default_template := gibib_default_template
+			create parameters.make (1, 1)
+			parameters.put (etl_code, 1)
+		ensure
+			-- dollar0: $0 = program name
+			-- dollar1: $1 = ETL code
+		end
+
+	make_gibic is
+			-- Create a new GIBIC error.
+		do
+			code := gibic_template_code
+			etl_code := gibic_etl_code
+			default_template := gibic_default_template
+			create parameters.make (1, 1)
+			parameters.put (etl_code, 1)
+		ensure
+			-- dollar0: $0 = program name
+			-- dollar1: $1 = ETL code
+		end
+
+	make_gibid is
+			-- Create a new GIBID error.
+		do
+			code := gibid_template_code
+			etl_code := gibid_etl_code
+			default_template := gibid_default_template
+			create parameters.make (1, 1)
+			parameters.put (etl_code, 1)
+		ensure
+			-- dollar0: $0 = program name
+			-- dollar1: $1 = ETL code
+		end
+
+	make_gibie is
+			-- Create a new GIBIE error.
+		do
+			code := gibie_template_code
+			etl_code := gibie_etl_code
+			default_template := gibie_default_template
+			create parameters.make (1, 1)
+			parameters.put (etl_code, 1)
+		ensure
+			-- dollar0: $0 = program name
+			-- dollar1: $1 = ETL code
+		end
+
+	make_gibif is
+			-- Create a new GIBIF error.
+		do
+			code := gibif_template_code
+			etl_code := gibif_etl_code
+			default_template := gibif_default_template
+			create parameters.make (1, 1)
+			parameters.put (etl_code, 1)
+		ensure
+			-- dollar0: $0 = program name
+			-- dollar1: $1 = ETL code
+		end
+
+	make_gibig is
+			-- Create a new GIBIG error.
+		do
+			code := gibig_template_code
+			etl_code := gibig_etl_code
+			default_template := gibig_default_template
+			create parameters.make (1, 1)
+			parameters.put (etl_code, 1)
+		ensure
+			-- dollar0: $0 = program name
+			-- dollar1: $1 = ETL code
+		end
+
+	make_gibih is
+			-- Create a new GIBIH error.
+		do
+			code := gibih_template_code
+			etl_code := gibih_etl_code
+			default_template := gibih_default_template
+			create parameters.make (1, 1)
+			parameters.put (etl_code, 1)
+		ensure
+			-- dollar0: $0 = program name
+			-- dollar1: $1 = ETL code
+		end
+
+	make_gibii is
+			-- Create a new GIBII error.
+		do
+			code := gibii_template_code
+			etl_code := gibii_etl_code
+			default_template := gibii_default_template
+			create parameters.make (1, 1)
+			parameters.put (etl_code, 1)
+		ensure
+			-- dollar0: $0 = program name
+			-- dollar1: $1 = ETL code
+		end
+
+	make_gibij is
+			-- Create a new GIBIJ error.
+		do
+			code := gibij_template_code
+			etl_code := gibij_etl_code
+			default_template := gibij_default_template
+			create parameters.make (1, 1)
+			parameters.put (etl_code, 1)
+		ensure
+			-- dollar0: $0 = program name
+			-- dollar1: $1 = ETL code
+		end
+
+	make_gibik is
+			-- Create a new GIBIK error.
+		do
+			code := gibik_template_code
+			etl_code := gibik_etl_code
+			default_template := gibik_default_template
+			create parameters.make (1, 1)
+			parameters.put (etl_code, 1)
+		ensure
+			-- dollar0: $0 = program name
+			-- dollar1: $1 = ETL code
+		end
+
+	make_gibil is
+			-- Create a new GIBIL error.
+		do
+			code := gibil_template_code
+			etl_code := gibil_etl_code
+			default_template := gibil_default_template
+			create parameters.make (1, 1)
+			parameters.put (etl_code, 1)
+		ensure
+			-- dollar0: $0 = program name
+			-- dollar1: $1 = ETL code
+		end
+
+	make_gibim is
+			-- Create a new GIBIM error.
+		do
+			code := gibim_template_code
+			etl_code := gibim_etl_code
+			default_template := gibim_default_template
+			create parameters.make (1, 1)
+			parameters.put (etl_code, 1)
+		ensure
+			-- dollar0: $0 = program name
+			-- dollar1: $1 = ETL code
+		end
+
+	make_gibin is
+			-- Create a new GIBIN error.
+		do
+			code := gibin_template_code
+			etl_code := gibin_etl_code
+			default_template := gibin_default_template
+			create parameters.make (1, 1)
+			parameters.put (etl_code, 1)
+		ensure
+			-- dollar0: $0 = program name
+			-- dollar1: $1 = ETL code
+		end
+
+	make_gibio is
+			-- Create a new GIBIO error.
+		do
+			code := gibio_template_code
+			etl_code := gibio_etl_code
+			default_template := gibio_default_template
+			create parameters.make (1, 1)
+			parameters.put (etl_code, 1)
+		ensure
+			-- dollar0: $0 = program name
+			-- dollar1: $1 = ETL code
+		end
+
+	make_gibip is
+			-- Create a new GIBIP error.
+		do
+			code := gibip_template_code
+			etl_code := gibip_etl_code
+			default_template := gibip_default_template
+			create parameters.make (1, 1)
+			parameters.put (etl_code, 1)
+		ensure
+			-- dollar0: $0 = program name
+			-- dollar1: $1 = ETL code
+		end
+
+	make_gibiq is
+			-- Create a new GIBIQ error.
+		do
+			code := gibiq_template_code
+			etl_code := gibiq_etl_code
+			default_template := gibiq_default_template
+			create parameters.make (1, 1)
+			parameters.put (etl_code, 1)
+		ensure
+			-- dollar0: $0 = program name
+			-- dollar1: $1 = ETL code
+		end
+
+	make_gibir is
+			-- Create a new GIBIR error.
+		do
+			code := gibir_template_code
+			etl_code := gibir_etl_code
+			default_template := gibir_default_template
+			create parameters.make (1, 1)
+			parameters.put (etl_code, 1)
+		ensure
+			-- dollar0: $0 = program name
+			-- dollar1: $1 = ETL code
+		end
+
+	make_gibis is
+			-- Create a new GIBIS error.
+		do
+			code := gibis_template_code
+			etl_code := gibis_etl_code
+			default_template := gibis_default_template
+			create parameters.make (1, 1)
+			parameters.put (etl_code, 1)
+		ensure
+			-- dollar0: $0 = program name
+			-- dollar1: $1 = ETL code
+		end
+
+	make_gibit is
+			-- Create a new GIBIT error.
+		do
+			code := gibit_template_code
+			etl_code := gibit_etl_code
+			default_template := gibit_default_template
+			create parameters.make (1, 1)
+			parameters.put (etl_code, 1)
+		ensure
+			-- dollar0: $0 = program name
+			-- dollar1: $1 = ETL code
+		end
+
+	make_gibiu is
+			-- Create a new GIBIU error.
+		do
+			code := gibiu_template_code
+			etl_code := gibiu_etl_code
+			default_template := gibiu_default_template
+			create parameters.make (1, 1)
+			parameters.put (etl_code, 1)
+		ensure
+			-- dollar0: $0 = program name
+			-- dollar1: $1 = ETL code
+		end
+
+	make_gibiv is
+			-- Create a new GIBIV error.
+		do
+			code := gibiv_template_code
+			etl_code := gibiv_etl_code
+			default_template := gibiv_default_template
+			create parameters.make (1, 1)
+			parameters.put (etl_code, 1)
+		ensure
+			-- dollar0: $0 = program name
+			-- dollar1: $1 = ETL code
+		end
+
+	make_gibiw is
+			-- Create a new GIBIW error.
+		do
+			code := gibiw_template_code
+			etl_code := gibiw_etl_code
+			default_template := gibiw_default_template
+			create parameters.make (1, 1)
+			parameters.put (etl_code, 1)
+		ensure
+			-- dollar0: $0 = program name
+			-- dollar1: $1 = ETL code
+		end
+
+	make_gibix is
+			-- Create a new GIBIX error.
+		do
+			code := gibix_template_code
+			etl_code := gibix_etl_code
+			default_template := gibix_default_template
+			create parameters.make (1, 1)
+			parameters.put (etl_code, 1)
+		ensure
+			-- dollar0: $0 = program name
+			-- dollar1: $1 = ETL code
+		end
+
+	make_gibiy is
+			-- Create a new GIBIY error.
+		do
+			code := gibiy_template_code
+			etl_code := gibiy_etl_code
+			default_template := gibiy_default_template
+			create parameters.make (1, 1)
+			parameters.put (etl_code, 1)
+		ensure
+			-- dollar0: $0 = program name
+			-- dollar1: $1 = ETL code
+		end
+
+	make_gibiz is
+			-- Create a new GIBIZ error.
+		do
+			code := gibiz_template_code
+			etl_code := gibiz_etl_code
+			default_template := gibiz_default_template
+			create parameters.make (1, 1)
+			parameters.put (etl_code, 1)
+		ensure
+			-- dollar0: $0 = program name
+			-- dollar1: $1 = ETL code
+		end
+
 feature {NONE} -- Implementation
 
 	giaaa_default_template: STRING is "[$1] internal error."
@@ -4763,6 +5127,32 @@ feature {NONE} -- Implementation
 	gibhx_default_template: STRING is "[$1] internal error."
 	gibhy_default_template: STRING is "[$1] internal error."
 	gibhz_default_template: STRING is "[$1] internal error."
+	gibia_default_template: STRING is "[$1] internal error."
+	gibib_default_template: STRING is "[$1] internal error."
+	gibic_default_template: STRING is "[$1] internal error."
+	gibid_default_template: STRING is "[$1] internal error."
+	gibie_default_template: STRING is "[$1] internal error."
+	gibif_default_template: STRING is "[$1] internal error."
+	gibig_default_template: STRING is "[$1] internal error."
+	gibih_default_template: STRING is "[$1] internal error."
+	gibii_default_template: STRING is "[$1] internal error."
+	gibij_default_template: STRING is "[$1] internal error."
+	gibik_default_template: STRING is "[$1] internal error."
+	gibil_default_template: STRING is "[$1] internal error."
+	gibim_default_template: STRING is "[$1] internal error."
+	gibin_default_template: STRING is "[$1] internal error."
+	gibio_default_template: STRING is "[$1] internal error."
+	gibip_default_template: STRING is "[$1] internal error."
+	gibiq_default_template: STRING is "[$1] internal error."
+	gibir_default_template: STRING is "[$1] internal error."
+	gibis_default_template: STRING is "[$1] internal error."
+	gibit_default_template: STRING is "[$1] internal error."
+	gibiu_default_template: STRING is "[$1] internal error."
+	gibiv_default_template: STRING is "[$1] internal error."
+	gibiw_default_template: STRING is "[$1] internal error."
+	gibix_default_template: STRING is "[$1] internal error."
+	gibiy_default_template: STRING is "[$1] internal error."
+	gibiz_default_template: STRING is "[$1] internal error."
 			-- Default templates
 
 	giaaa_etl_code: STRING is "GIAAA"
@@ -5081,6 +5471,32 @@ feature {NONE} -- Implementation
 	gibhx_etl_code: STRING is "GIBHX"
 	gibhy_etl_code: STRING is "GIBHY"
 	gibhz_etl_code: STRING is "GIBHZ"
+	gibia_etl_code: STRING is "GIBIA"
+	gibib_etl_code: STRING is "GIBIB"
+	gibic_etl_code: STRING is "GIBIC"
+	gibid_etl_code: STRING is "GIBID"
+	gibie_etl_code: STRING is "GIBIE"
+	gibif_etl_code: STRING is "GIBIF"
+	gibig_etl_code: STRING is "GIBIG"
+	gibih_etl_code: STRING is "GIBIH"
+	gibii_etl_code: STRING is "GIBII"
+	gibij_etl_code: STRING is "GIBIJ"
+	gibik_etl_code: STRING is "GIBIK"
+	gibil_etl_code: STRING is "GIBIL"
+	gibim_etl_code: STRING is "GIBIM"
+	gibin_etl_code: STRING is "GIBIN"
+	gibio_etl_code: STRING is "GIBIO"
+	gibip_etl_code: STRING is "GIBIP"
+	gibiq_etl_code: STRING is "GIBIQ"
+	gibir_etl_code: STRING is "GIBIR"
+	gibis_etl_code: STRING is "GIBIS"
+	gibit_etl_code: STRING is "GIBIT"
+	gibiu_etl_code: STRING is "GIBIU"
+	gibiv_etl_code: STRING is "GIBIV"
+	gibiw_etl_code: STRING is "GIBIW"
+	gibix_etl_code: STRING is "GIBIX"
+	gibiy_etl_code: STRING is "GIBIY"
+	gibiz_etl_code: STRING is "GIBIZ"
 			-- ETL validity codes
 
 	giaaa_template_code: STRING is "giaaa"
@@ -5399,6 +5815,32 @@ feature {NONE} -- Implementation
 	gibhx_template_code: STRING is "gibhx"
 	gibhy_template_code: STRING is "gibhy"
 	gibhz_template_code: STRING is "gibhz"
+	gibia_template_code: STRING is "gibia"
+	gibib_template_code: STRING is "gibib"
+	gibic_template_code: STRING is "gibic"
+	gibid_template_code: STRING is "gibid"
+	gibie_template_code: STRING is "gibie"
+	gibif_template_code: STRING is "gibif"
+	gibig_template_code: STRING is "gibig"
+	gibih_template_code: STRING is "gibih"
+	gibii_template_code: STRING is "gibii"
+	gibij_template_code: STRING is "gibij"
+	gibik_template_code: STRING is "gibik"
+	gibil_template_code: STRING is "gibil"
+	gibim_template_code: STRING is "gibim"
+	gibin_template_code: STRING is "gibin"
+	gibio_template_code: STRING is "gibio"
+	gibip_template_code: STRING is "gibip"
+	gibiq_template_code: STRING is "gibiq"
+	gibir_template_code: STRING is "gibir"
+	gibis_template_code: STRING is "gibis"
+	gibit_template_code: STRING is "gibit"
+	gibiu_template_code: STRING is "gibiu"
+	gibiv_template_code: STRING is "gibiv"
+	gibiw_template_code: STRING is "gibiw"
+	gibix_template_code: STRING is "gibix"
+	gibiy_template_code: STRING is "gibiy"
+	gibiz_template_code: STRING is "gibiz"
 		-- Template error codes
 
 end

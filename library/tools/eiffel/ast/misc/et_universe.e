@@ -479,6 +479,9 @@ feature -- Feature access
 	default_create_seed: INTEGER
 			-- Seed of feature 'default_create' in class ANY
 
+	copy_seed: INTEGER
+			-- Seed of feature 'copy' in class ANY
+
 	void_seed: INTEGER
 			-- Seed of feature 'Void' in class ANY
 
@@ -492,6 +495,16 @@ feature -- Feature setting
 			default_create_seed := a_seed
 		ensure
 			default_create_seed_set: default_create_seed = a_seed
+		end
+
+	set_copy_seed (a_seed: INTEGER) is
+			-- Set `copy_seed' to `a_seed'.
+		require
+			a_seed_non_negative: a_seed >= 0
+		do
+			copy_seed := a_seed
+		ensure
+			copy_seed_set: copy_seed = a_seed
 		end
 
 	set_void_seed (a_seed: INTEGER) is

@@ -5,7 +5,7 @@ indexing
 		"Eiffel external-functions"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 1999-2002, Eric Bezault and others"
+	copyright: "Copyright (c) 1999-2004, Eric Bezault and others"
 	license: "Eiffel Forum License v2 (see forum.txt)"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -54,6 +54,7 @@ feature {NONE} -- Initialization
 			clients := a_clients
 			implementation_class := a_class
 			implementation_feature := Current
+			builtin_code := tokens.builtin_not_builtin
 		ensure
 			name_item_set: name_item = a_name
 			arguments_set: arguments = args
@@ -82,6 +83,9 @@ feature -- Duplication
 			Result.set_feature_clause (feature_clause)
 			Result.set_first_indexing (first_indexing)
 			Result.set_synonym (Current)
+			if is_builtin then
+				Result.set_builtin_code (tokens.builtin_unknown)
+			end
 		end
 
 feature -- Conversion
@@ -104,6 +108,7 @@ feature -- Conversion
 			Result.set_first_indexing (first_indexing)
 			Result.set_first_seed (first_seed)
 			Result.set_other_seeds (other_seeds)
+			Result.set_builtin_code (builtin_code)
 		end
 
 feature -- Processing

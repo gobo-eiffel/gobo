@@ -132,7 +132,7 @@ feature -- Element change
 							l_builder := a_system.dynamic_type_set_builder
 							l_builder.set_fatal_error
 							l_builder.error_handler.report_gibeb_error
-						elseif (l_dynamic_feature.is_builtin_call or l_dynamic_feature.is_builtin_item) and then a_type.is_agent_type then
+						elseif (l_dynamic_feature.is_builtin_routine_call or l_dynamic_feature.is_builtin_function_item) and then a_type.is_agent_type then
 								-- This is something of the form:  'my_agent.call ([...])' or 'my_agent.item ([...])'
 								-- Try to get the open operand type sets directly from the
 								-- argument if it is a manifest tuple.
@@ -317,7 +317,7 @@ feature -- Element change
 								-- feature redeclaration.
 							a_builder.set_fatal_error
 							a_builder.error_handler.report_gibbv_error
-						elseif (l_dynamic_feature.is_builtin_call or l_dynamic_feature.is_builtin_item) and then a_type.is_agent_type then
+						elseif (l_dynamic_feature.is_builtin_routine_call or l_dynamic_feature.is_builtin_function_item) and then a_type.is_agent_type then
 								-- This is something of the form:  'my_agent.call ([...])' or 'my_agent.item ([...])'
 								-- Try to get the open operand type sets directly from the
 								-- argument if it is a manifest tuple.
