@@ -200,6 +200,27 @@ feature -- Conversion
 --				Result.item (i) = a_string.item (i).to_upper
 		end
 
+feature -- Removal
+
+	wipe_out (a_string: STRING) is
+			-- Remove all characters in `a_string'.
+			-- Do not discard allocated memory (i.e. do not
+			-- change capacity) when allowed by the underlying
+			-- Eiffel compiler. (Note: currently only ISE and
+			-- SE will not change capacity, whereas HACT and
+			-- VE will reset capacity to zero.)
+		require
+			a_string_not_void: a_string /= Void
+		do
+#ifdef ISE
+			a_string.clear_all
+#else
+			a_string.wipe_out
+#endif
+		ensure
+			wiped_out: a_string.count = 0
+		end
+
 feature -- Resizing
 
 	resize_buffer (a_string: STRING; n: INTEGER) is
