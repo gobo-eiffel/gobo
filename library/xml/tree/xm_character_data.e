@@ -2,10 +2,14 @@ indexing
 
 	description:
 
-		"common heir for xml-nodes that consist of character data"
+		"Objects that represent character data XML nodes (plain text)"
 
-	status:  "See notice at end of class."
-	author:  "Andreas Leitner"
+	library:	"Gobo Eiffel Kernel Library"
+	author:		"Andreas Leitner <nozone@sbox.tugraz.at>"
+	copyright:	"Copyright (c) 2001, Andreas Leitner and others"
+	license:	"Eiffel Forum Freeware License v1 (see forum.txt)"
+	date:		"$Date$"
+	revision:	"$Revision$"
 
 class XM_CHARACTER_DATA
 

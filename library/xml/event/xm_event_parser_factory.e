@@ -1,18 +1,23 @@
 indexing
 
+
 	description:
 
-		""
+		"Abstract factory for event based XML parsers"
 
-	status:  "See notice at end of class."
-	author:  "Andreas Leitner"
-	note:    ""
+	library:	"Gobo Eiffel Kernel Library"
+	author:		"Andreas Leitner <nozone@sbox.tugraz.at>"
+	copyright:	"Copyright (c) 2001, Andreas Leitner and others"
+	license:	"Eiffel Forum Freeware License v1 (see forum.txt)"
+	date:		"$Date$"
+	revision:	"$Revision$"
 
 deferred class XM_EVENT_PARSER_FACTORY
 
 feature {ANY}
 
 	is_available: BOOLEAN is
+			-- Is this parser compiled in?
 		deferred
 		end
 

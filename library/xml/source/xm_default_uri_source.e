@@ -1,3 +1,16 @@
+indexing
+
+	description:
+
+		"The source of an XML document that has been retrieved via an URI"
+
+	library:	"Gobo Eiffel Kernel Library"
+	author:		"Andreas Leitner <nozone@sbox.tugraz.at>"
+	copyright:	"Copyright (c) 2001, Andreas Leitner and others"
+	license:	"Eiffel Forum Freeware License v1 (see forum.txt)"
+	date:		"$Date$"
+	revision:	"$Revision$"
+
 class XM_DEFAULT_URI_SOURCE
 
 inherit

@@ -1,6 +1,5 @@
 indexing
 
-
 	description:
 
 		"XML event based parser. Inherit and redefine the notifiers to use this parser"
@@ -15,21 +14,21 @@ indexing
 class XM_EVENT_PARSER
 
 inherit
-	
+
 	XM_PARSER
 		undefine
 			make_from_implementation
 		redefine
 			implementation
 		end
-	
+
 	DP_INTERFACE
 		redefine
 			implementation
 		end
-	
+
 creation
-	
+
 	make_from_implementation
 
 feature {DP_CALLBACK_IMPLEMENTATION} -- Redefinable callbacks

@@ -2,10 +2,14 @@ indexing
 
 	description:
 
-		"common anchestor for xml-nodes that do have a name (elements and attributes)a"
+		"Common anchestor for nodes that have a name"
 
-	status:  "See notice at end of class."
-	author:  "Andreas Leitner"
+	library:	"Gobo Eiffel Kernel Library"
+	author:		"Andreas Leitner <nozone@sbox.tugraz.at>"
+	copyright:	"Copyright (c) 2001, Andreas Leitner and others"
+	license:	"Eiffel Forum Freeware License v1 (see forum.txt)"
+	date:		"$Date$"
+	revision:	"$Revision$"
 
 deferred class XM_NAMED_NODE
 
@@ -99,7 +103,7 @@ end -- class XM_NAMED_NODE
 
 --|-------------------------------------------------------------------------
 --| eXML, Eiffel XML Parser Toolkit
---| Copyright (C) 1999  Andreas Leitner and others
+--| Copyright (C) 1999	Andreas Leitner and others
 --| See the file forum.txt included in this package for licensing info.
 --|
 --| Comments, Questions, Additions to this library? please contact:

@@ -1,8 +1,15 @@
--- takes a XM_DOCUMENT and gives you the corresponding XML text
--- issues: instead of returning a string, streaming the output
--- (through a general class) would be more space efficient for large
--- documents.
--- not fully standards compliant yet (patches accepted :)
+indexing
+
+	description:
+
+		"Generates an XML document from a XML tree"
+
+	library:	"Gobo Eiffel Kernel Library"
+	author:		"Andreas Leitner <nozone@sbox.tugraz.at>"
+	copyright:	"Copyright (c) 2001, Andreas Leitner and others"
+	license:	"Eiffel Forum Freeware License v1 (see forum.txt)"
+	date:		"$Date$"
+	revision:	"$Revision$"
 
 class XM_FORMATTER
 
@@ -10,7 +17,13 @@ inherit
 
 	XM_NODE_PROCESSOR
 		redefine
-			process_document, process_element, process_character_data, process_processing_instruction, process_comment, process_attributes, process_attribute
+			process_document, 
+			process_element, 
+			process_character_data,
+			process_processing_instruction,
+			process_comment, 
+			process_attributes, 
+			process_attribute
 		end
 
 creation
@@ -212,12 +225,12 @@ feature {ANY} -- Non standard processor routines
 		require
 			n_not_void: n /= Void
 		do
---   if
---      n.has_prefix
---    then
---      ucappend (n.ns_prefix)
---      append (":")
---   end
+--	if
+--		n.has_prefix
+--	then
+--		ucappend (n.ns_prefix)
+--		append (":")
+--	end
 			if n.has_namespace then
 				ucappend (n.namespace)
 				append ("=")

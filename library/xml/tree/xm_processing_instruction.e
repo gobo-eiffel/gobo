@@ -1,11 +1,16 @@
 indexing
 
+
 	description:
 
-		"class representing a xml processing instruction."
+		"Objects that represent XML processing instruction nodes"
 
-	status:  "See notice at end of class."
-	author:  "Andreas Leitner"
+	library:	"Gobo Eiffel Kernel Library"
+	author:		"Andreas Leitner <nozone@sbox.tugraz.at>"
+	copyright:	"Copyright (c) 2001, Andreas Leitner and others"
+	license:	"Eiffel Forum Freeware License v1 (see forum.txt)"
+	date:		"$Date$"
+	revision:	"$Revision$"
 
 class XM_PROCESSING_INSTRUCTION
 
@@ -57,7 +62,7 @@ end -- class XM_PROCESSING_INSTRUCTION
 
 --|-------------------------------------------------------------------------
 --| eXML, Eiffel XML Parser Toolkit
---| Copyright (C) 1999  Andreas Leitner and others
+--| Copyright (C) 1999	Andreas Leitner and others
 --| See the file forum.txt included in this package for licensing info.
 --|
 --| Comments, Questions, Additions to this library? please contact:

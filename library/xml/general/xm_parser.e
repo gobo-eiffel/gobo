@@ -2,13 +2,14 @@ indexing
 
 	description:
 
-		"A tree based XML Parser"
+		"Abstract definition of a XML parser"
 
-	status:  "See notice at end of class."
-	author:  "Andreas Leitner"
-	note:    "Although it is not DOM (Level 1) conforming, it has %
-			 %been writen with DOM in mind. I prefer to have this %
-			 %parser follow the Eiffel design guide lines"
+	library:	"Gobo Eiffel Kernel Library"
+	author:		"Andreas Leitner <nozone@sbox.tugraz.at>"
+	copyright:	"Copyright (c) 2001, Andreas Leitner and others"
+	license:	"Eiffel Forum Freeware License v1 (see forum.txt)"
+	date:		"$Date$"
+	revision:	"$Revision$"
 
 class XM_PARSER
 
@@ -191,7 +192,7 @@ feature {NONE} -- Implementation
 end -- class XM_PARSER
 --|-------------------------------------------------------------------------
 --| eXML, Eiffel XML Parser Toolkit
---| Copyright (C) 1999  Andreas Leitner and others
+--| Copyright (C) 1999	Andreas Leitner and others
 --| See the file forum.txt included in this package for licensing info.
 --|
 --| Comments, Questions, Additions to this library? please contact:

@@ -1,3 +1,17 @@
+indexing
+
+	description:
+
+		"Class that creates xml parser objects and allows one to find %
+		%out whether a given parser has been compiled in or not"
+
+	library:	"Gobo Eiffel Kernel Library"
+	author:		"Andreas Leitner <nozone@sbox.tugraz.at>"
+	copyright:	"Copyright (c) 2001, Andreas Leitner and others"
+	license:	"Eiffel Forum Freeware License v1 (see forum.txt)"
+	date:		"$Date$"
+	revision:	"$Revision$"
+
 class XM_PARSER_FACTORY
 
 creation

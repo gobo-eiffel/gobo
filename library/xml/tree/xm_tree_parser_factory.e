@@ -2,11 +2,15 @@ indexing
 
 	description:
 
-		""
+		"Abstract definition of a factory that creates tree based XML %
+		%parser objects"
 
-	status:  "See notice at end of class."
-	author:  "Andreas Leitner"
-	note:    ""
+	library:	"Gobo Eiffel Kernel Library"
+	author:		"Andreas Leitner <nozone@sbox.tugraz.at>"
+	copyright:	"Copyright (c) 2001, Andreas Leitner and others"
+	license:	"Eiffel Forum Freeware License v1 (see forum.txt)"
+	date:		"$Date$"
+	revision:	"$Revision$"
 
 deferred class XM_TREE_PARSER_FACTORY
 

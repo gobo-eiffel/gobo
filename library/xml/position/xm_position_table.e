@@ -1,4 +1,15 @@
--- very slow implementation for now, needs improvement
+indexing
+
+	description:
+
+		"A Table which maps XML nodes to their position in the source document"
+
+	library:	"Gobo Eiffel Kernel Library"
+	author:		"Andreas Leitner <nozone@sbox.tugraz.at>"
+	copyright:	"Copyright (c) 2001, Andreas Leitner and others"
+	license:	"Eiffel Forum Freeware License v1 (see forum.txt)"
+	date:		"$Date$"
+	revision:	"$Revision$"
 
 class XM_POSITION_TABLE
 

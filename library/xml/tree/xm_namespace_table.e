@@ -2,10 +2,14 @@ indexing
 
 	description:
 
-		"Table of XML-attributes"
+		"Objects that map namespace prefixes to namespace URIs"
 
-	status:  "See notice at end of class."
-	author:  "Andreas Leitner"
+	library:	"Gobo Eiffel Kernel Library"
+	author:		"Andreas Leitner <nozone@sbox.tugraz.at>"
+	copyright:	"Copyright (c) 2001, Andreas Leitner and others"
+	license:	"Eiffel Forum Freeware License v1 (see forum.txt)"
+	date:		"$Date$"
+	revision:	"$Revision$"
 
 class XM_NAMESPACE_TABLE
 
@@ -33,13 +37,13 @@ feature {ANY} -- Access
 		end
 
 	default_ns: UC_STRING is
-			--  default namespace
+			--	default namespace
 		do
 			search (uc_empty)
 			Result := found_item
 		end
 
-feature {ANY}                     --
+feature {ANY}					--
 
 	override_with_list (l: DS_BILINEAR [XM_NAMESPACE]) is
 			-- take the namespace declarations from l and
@@ -74,7 +78,7 @@ feature {NONE} -- Implementation
 end -- class XM_NAMESPACE_TABLE
 --|-------------------------------------------------------------------------
 --| eXML, Eiffel XML Parser Toolkit
---| Copyright (C) 1999  Andreas Leitner and others
+--| Copyright (C) 1999	Andreas Leitner and others
 --| See the file forum.txt included in this package for licensing info.
 --|
 --| Comments, Questions, Additions to this library? please contact:

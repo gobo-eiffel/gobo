@@ -1,8 +1,15 @@
--- position to a xml token or node that comes from a stream
--- that means the token or node has at least the following attributes:
--- byte_index
--- column
--- row
+indexing
+
+	description:
+
+		"Abstract definition of a position in a XML document which has been parsed from a stream"
+
+	library:	"Gobo Eiffel Kernel Library"
+	author:		"Andreas Leitner <nozone@sbox.tugraz.at>"
+	copyright:	"Copyright (c) 2001, Andreas Leitner and others"
+	license:	"Eiffel Forum Freeware License v1 (see forum.txt)"
+	date:		"$Date$"
+	revision:	"$Revision$"
 
 deferred class XM_STREAM_POSITION
 
