@@ -3,11 +3,11 @@ indexing
 
 	description:
 
-		"Pretty printer using PostScript facilities";
+		"Pretty printer using PostScript facilities"
 
-	author:     "Eric Bezault <ericb@gobo.demon.co.uk>";
-	copyright:  "Copyright (c) 1997, Eric Bezault";
-	date:       "$Date$";
+	author:     "Eric Bezault <ericb@gobo.demon.co.uk>"
+	copyright:  "Copyright (c) 1997, Eric Bezault"
+	date:       "$Date$"
 	revision:   "$Revision$"
 
 class ASCII2PS
@@ -24,15 +24,13 @@ inherit
 			{NONE} all
 		end
 
-	EXCEPTIONS
-		export
-			{NONE} all
-		end
+	KL_SHARED_EXCEPTIONS
 
-	KL_FILE_ROUTINES
-		export
-			{NONE} all
-		end
+	KL_SHARED_INPUT_STREAM_ROUTINES
+
+	KL_SHARED_OUTPUT_STREAM_ROUTINES
+
+	KL_SHARED_STANDARD_FILES
 
 creation
 
@@ -67,7 +65,8 @@ feature {NONE} -- Initialization
 		local
 			i, nb: INTEGER
 			in_filename, out_filename: STRING
-			in_file, out_file: like FILE_type
+			in_file: like INPUT_STREAM_TYPE
+			out_file: like OUTPUT_STREAM_TYPE
 		do
 			make_compressed_scanner_skeleton
 			tab_length := 4
@@ -97,45 +96,45 @@ feature {NONE} -- Initialization
 				out_filename := argument (i + 1)
 				filename := in_filename
 			else
-				io.error.put_string
+				std.error.put_string
 					("usage: ascii2ps [-n] [filename [filename]]%N")
-				die (1)
+				exceptions_.die (1)
 			end
 
 			if not out_filename.is_equal ("-") then
-				out_file := file__make (out_filename)
-				file__open_write (out_file)
-				if out_file.is_open_write then
+				out_file := output_Stream_.make_file_open_write (out_filename)
+				if output_stream_.is_open_write (out_file) then
 					set_output_file (out_file)
 				else
-					io.error.put_string ("ascii2ps: cannot open %'")
-					io.error.put_string (out_filename)
-					io.error.put_string ("%'%N")
-					die (1)
+					std.error.put_string ("ascii2ps: cannot open %'")
+					std.error.put_string (out_filename)
+					std.error.put_string ("%'%N")
+					exceptions_.die (1)
 				end
+			else
+				set_output_file (std.output)
 			end
 			if in_filename.is_equal ("-") then
 				print_postscript
 			else
-				in_file := file__make (in_filename)
-				file__open_read (in_file)
-				if in_file.is_open_read then
+				in_file := input_stream_.make_file_open_read (in_filename)
+				if input_stream_.is_open_read (in_file) then
 					set_input_buffer (new_file_buffer (in_file))
 					print_postscript
-					in_file.close
+					input_stream_.close (in_file)
 				else
-					io.error.put_string ("ascii2ps: cannot open %'")
-					io.error.put_string (in_filename)
-					io.error.put_string ("%'%N")
-					die (1)
+					std.error.put_string ("ascii2ps: cannot open %'")
+					std.error.put_string (in_filename)
+					std.error.put_string ("%'%N")
+					exceptions_.die (1)
 				end
 			end
-			if out_file /= Void and then not out_file.is_closed then
-				out_file.close
+			if out_file /= Void and then not output_stream_.is_closed (out_file) then
+				output_stream_.close (out_file)
 			end
 		rescue
-			io.error.put_string ("ascii2ps: internal error%N")
-			die (1)
+			std.error.put_string ("ascii2ps: internal error%N")
+			exceptions_.die (1)
 		end
 
 feature -- Access
