@@ -52,6 +52,17 @@ feature -- Status report
 			-- should subdirectories be considered as subclusters?
 			-- (i.e. 'all' keyword in ISE's LACE.)
 
+	is_full_pathname_meaningful: BOOLEAN is
+			-- Is `pathname' not Void nor empty in current cluster
+			-- or at least in one of its ancestor clusters?
+		do
+			if pathname /= Void and then pathname.count > 0 then
+				Result := True
+			elseif parent /= Void then
+				Result := parent.is_full_pathname_meaningful
+			end
+		end
+
 feature -- Access
 
 	name: STRING is
