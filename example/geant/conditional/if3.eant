@@ -1,10 +1,10 @@
 <project name="if_demo" default="list">
 
-	<target name="windows" if="WINDIR">
+	<target name="windows" if="$WINDIR">
 		<set name="os.windows" value="true"/>
 	</target>
 
-	<target name="unix" unless="WINDIR">
+	<target name="unix" unless="$WINDIR">
 		<set name="os.unix" value="true"/>
 	</target>
 
@@ -12,11 +12,11 @@
 	</target>
 
 
-	<target name="list_for_windows" depend="init" if="os.windows">
+	<target name="list_for_windows" depend="init" if="$os.windows">
 		<exec executable="dir"/>
 	</target>
 
-	<target name="list_for_unix" depend="init"  if="os.unix">
+	<target name="list_for_unix" depend="init"  if="$os.unix">
 		<exec executable="ls -l"/>
 	</target>
 

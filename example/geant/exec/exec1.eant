@@ -2,7 +2,7 @@
 
 <project name="multiple commands" default="ls" basedir=".">
 
-	<target name="windows" if="WINDIR">
+	<target name="windows" if="$WINDIR">
 		<set name="copy" value="copy"/>
 		<set name="del" value="del"/>
 		<set name="dir" value="dir"/>
@@ -10,7 +10,7 @@
 		<set name="pathsep" value="\"/>
 	</target>
 
-	<target name="unix" unless="WINDIR">
+	<target name="unix" unless="$WINDIR">
 		<set name="cp" value="cp"/>
 		<set name="del" value="rm"/>
 		<set name="dir" value="ls -l"/>
