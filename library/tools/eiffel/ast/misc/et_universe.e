@@ -1996,6 +1996,26 @@ feature -- Processors
 			end
 		end
 
+	set_ancestor_builder (an_ancestor_builder: like ancestor_builder) is
+			-- Set `ancestor_builder' to `an_ancestor_builder'.
+		require
+			an_ancestor_builder_not_void: an_ancestor_builder /= Void
+		do
+			ancestor_builder := an_ancestor_builder
+		ensure
+			ancestor_builder_set: ancestor_builder = an_ancestor_builder
+		end
+
+	set_feature_flattener (a_feature_flattener: like feature_flattener) is
+			-- Set `feature_flattener' to `a_feature_flattener'.
+		require
+			a_feature_flattener_not_void: a_feature_flattener /= Void
+		do
+			feature_flattener := a_feature_flattener
+		ensure
+			feature_flattener_set: feature_flattener = a_feature_flattener
+		end
+
 	set_qualified_signature_resolver (a_resolver: like qualified_signature_resolver) is
 			-- Set `qualified_signature_resolver' to `a_resolver'.
 		require
@@ -2004,6 +2024,16 @@ feature -- Processors
 			qualified_signature_resolver := a_resolver
 		ensure
 			qualified_signature_resolver_not_void: qualified_signature_resolver = a_resolver
+		end
+
+	set_interface_checker (an_interface_checker: like interface_checker) is
+			-- Set `interface_checker' to `an_interface_checker'.
+		require
+			an_interface_checker_not_void: an_interface_checker /= Void
+		do
+			interface_checker := an_interface_checker
+		ensure
+			interface_checker_set: interface_checker = an_interface_checker
 		end
 
 	set_implementation_checker (a_checker: like implementation_checker) is
