@@ -107,7 +107,7 @@ creation
                                  Redefine Redefine_opt
 %type <like new_rename_list>     Rename Rename_list
 
-%expect 36
+%expect 15
 %start Class_declarations
 
 %%
