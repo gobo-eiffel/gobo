@@ -10,6 +10,7 @@
 	</description>
 
 	<root class="GELEX" creation="execute"/>
+	<option name="console_application" value="true"/>
 	<option unless="${DEBUG}">
 		<option name="assertion" value="none"/>
 		<option name="garbage_collector" value="none"/>
@@ -28,6 +29,7 @@
 		<option name="warning" value="none"/>
 	</option>
 
+	<cluster name="gelex_ve" location="." if="${GOBO_EIFFEL}=ve"/>
 	<cluster name="gelex" location="${GOBO}/src/gelex"/>
 
 	<mount location="${GOBO}/library/lexical/library.xace"/>

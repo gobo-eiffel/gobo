@@ -10,6 +10,7 @@
 	</description>
 
 	<root class="PCRETEST" creation="make"/>
+	<option name="console_application" value="true"/>
 	<option unless="${DEBUG}">
 		<option name="assertion" value="none"/>
 		<option name="garbage_collector" value="none"/>
@@ -25,6 +26,7 @@
 		<option name="line_generation" value="true"/>
 	</option>
 
+	<cluster name="pcretest_ve" location="." if="${GOBO_EIFFEL}=ve"/>
 	<cluster name="pcretest" location="${GOBO}/test/regexp/pcretest"/>
 
 	<mount location="${GOBO}/library/regexp/library.xace"/>

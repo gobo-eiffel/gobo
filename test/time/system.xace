@@ -10,6 +10,7 @@
 	</description>
 
 	<root class="XTIME" creation="make"/>
+	<option name="console_application" value="true"/>
 	<option unless="${DEBUG}">
 		<option name="assertion" value="none"/>
 		<option name="garbage_collector" value="none"/>
@@ -28,6 +29,7 @@
 		<option name="warning" value="none"/>
 	</option>
 
+	<cluster name="dt_tester_ve" location="." if="${GOBO_EIFFEL}=ve"/>
 	<cluster name="dt_tester" location="${GOBO}/test/time"/>
 	<cluster name="dt_testgen" location="TESTGEN"/>
 	<mount location="${GOBO}/library/test/library.xace"/>

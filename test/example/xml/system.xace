@@ -10,6 +10,7 @@
 	</description>
 
 	<root class="XXML" creation="make"/>
+	<option name="console_application" value="true"/>
 	<option unless="${DEBUG}">
 		<option name="assertion" value="none"/>
 		<option name="garbage_collector" value="none"/>
@@ -28,6 +29,7 @@
 		<option name="warning" value="none"/>
 	</option>
 
+	<cluster name="example_xml_tester_ve" location="." if="${GOBO_EIFFEL}=ve"/>
 	<cluster name="xml_tester" location="${GOBO}/test/example" prefix="example_">
 		<option name="abstract" value="true"/>
 		<cluster name="xml"/>

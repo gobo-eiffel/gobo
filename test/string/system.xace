@@ -10,6 +10,7 @@
 	</description>
 
 	<root class="XSTRING" creation="make"/>
+	<option name="console_application" value="true"/>
 	<option unless="${DEBUG}">
 		<option name="assertion" value="none"/>
 		<option name="finalize" value="true"/>
@@ -26,6 +27,7 @@
 		<option name="warning" value="none"/>
 	</option>
 
+	<cluster name="st_tester_ve" location="." if="${GOBO_EIFFEL}=ve"/>
 	<cluster name="st_tester" location="${GOBO}/test/string"/>
 	<cluster name="st_testgen" location="TESTGEN"/>
 	<mount location="${GOBO}/library/test/library.xace"/>

@@ -23,7 +23,7 @@
 		<set name="system" value="xmloasis"/>
 		<set name="library" value="xml"/>
 		<set name="system_dir" value="${GOBO}/test/${library}/oasis/"/>
-		<set name="vetuner" value="huge"/>
+		<set name="vetuner" value="huge" if="${VE_4_1}"/>
 	</target>
 
 </project>

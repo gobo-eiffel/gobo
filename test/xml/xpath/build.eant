@@ -22,7 +22,8 @@
 
 	<target name="init_system">
 		<set name="system" value="xpath"/>
-		<set name="system_dir" value="${GOBO}/test/xml/xpath"/>
+		<set name="library" value="xml"/>
+		<set name="system_dir" value="${GOBO}/test/${library}/xpath"/>
 	</target>
 
 	<target name="other_clobber" depend="init">
@@ -31,7 +32,6 @@
 		</description>
 
 		<delete file="${system_dir}/listing"/>
-		<delete directory="${system_dir}/eCluster"/>
-		<delete directory="${system_dir}/eProject"/>
 	</target>
+
 </project>

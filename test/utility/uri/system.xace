@@ -10,6 +10,7 @@
 	</description>
 
 	<root class="XURI" creation="make"/>
+	<option name="console_application" value="true"/>
 	<option unless="${DEBUG}">
 		<option name="assertion" value="none"/>
 		<option name="finalize" value="true"/>
@@ -23,6 +24,7 @@
 		<option name="line_generation" value="true"/>
 	</option>
 
+	<cluster name="uri_tester_ve" location="." if="${GOBO_EIFFEL}=ve"/>
 	<cluster name="uri_tester" location="${GOBO}/test/utility/uri"/>
 	<cluster name="uri_testgen" location="TESTGEN"/>
 	<mount location="${GOBO}/library/test/library.xace"/>

@@ -14,5 +14,4 @@
 	<option name="assertion" value="generate"/>
 
 	<cluster name="gefoo" location="${GOBO}/test/src/gexace/data"/>
-	<mount location="${GOBO}/library/kernel.xace"/>
 </system>

@@ -10,6 +10,7 @@
 	</description>
 
 	<root class="XTOOLS" creation="make"/>
+	<option name="console_application" value="true"/>
 	<option unless="${DEBUG}">
 		<option name="assertion" value="none"/>
 		<option name="garbage_collector" value="none"/>
@@ -32,6 +33,7 @@
 		<option name="warning" value="none"/>
 	</option>
 
+	<cluster name="et_tester_ve" location="." if="${GOBO_EIFFEL}=ve"/>
 	<cluster name="et_tester" location="${GOBO}/test/tools"/>
 	<cluster name="et_testgen" location="TESTGEN"/>
 	<mount location="${GOBO}/library/test/library.xace"/>

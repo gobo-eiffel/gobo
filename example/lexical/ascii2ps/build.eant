@@ -70,7 +70,7 @@
 		<set name="system" value="ascii2ps"/>
 		<set name="library" value="lexical"/>
 		<set name="system_dir" value="${GOBO}/example/${library}/${system}"/>
-		<set name="vetuner" value="huge"/>
+		<set name="vetuner" value="huge" if="${VE_4_1}"/>
 	</target>
 
 </project>

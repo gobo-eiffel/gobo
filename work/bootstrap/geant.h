@@ -7,7 +7,7 @@ Release 1.0 (Friday December 6th 2002)
 Copyright (C), 1994-2002 - LORIA - UHP - INRIA - FRANCE
 Dominique COLNET and Suzanne COLLIN - SmartEiffel@loria.fr
 http://SmartEiffel.loria.fr
-C Compiler options used: -O2 -nologo -D"WIN32" -w
+C Compiler options used: 
 */
 
 /*
@@ -296,971 +296,1022 @@ void* se_calloc(size_t nmemb, size_t size);
 #define SE_EXCEPTIONS 1
 
 /*C Header Pass 1 :*/
-typedef struct S592 T592;
-typedef struct S207 T207;
-typedef struct S584 T584;
-typedef struct S306 T306;
-typedef void*T874;
-typedef struct S399 T399;
-typedef struct S697 T697;
-typedef struct S497 T497;
-typedef struct S531 T531;
-typedef int T667;
-typedef struct S270 T270;
-typedef void*T398;
-typedef struct S941 T941;
-typedef struct S892 T892;
-typedef struct S113 T113;
-typedef struct S277 T277;
-typedef struct S387 T387;
-typedef struct S566 T566;
-typedef struct S268 T268;
-typedef struct S922 T922;
-typedef void*T873;
-typedef struct S231 T231;
-typedef struct S589 T589;
-typedef struct S226 T226;
-typedef struct S842 T842;
-typedef struct S661 T661;
-typedef struct S725 T725;
-typedef struct S741 T741;
-typedef struct S737 T737;
-typedef struct S281 T281;
-typedef struct S508 T508;
-typedef void*T849;
-typedef struct S524 T524;
-typedef struct S397 T397;
-typedef struct S875 T875;
-typedef struct S193 T193;
-typedef void*T818;
-typedef struct S392 T392;
-typedef struct S341 T341;
-typedef struct S982 T982;
-typedef struct S390 T390;
-typedef struct S12 T12;
-typedef struct S962 T962;
-typedef struct S684 T684;
-typedef struct S777 T777;
-typedef struct S276 T276;
-typedef struct S850 T850;
-typedef void*T441;
-typedef struct S537 T537;
-typedef struct S139 T139;
-typedef struct S188 T188;
-typedef struct S784 T784;
-typedef void*T843;
-typedef struct S754 T754;
-typedef void*T39;
-typedef struct S440 T440;
-typedef void*T358;
-typedef struct S541 T541;
 typedef struct S627 T627;
-typedef void*T831;
-typedef struct S254 T254;
-typedef struct S116 T116;
-typedef struct S205 T205;
-typedef struct S425 T425;
-typedef struct S870 T870;
-typedef void*T63;
-typedef void*T37;
-typedef struct S590 T590;
-typedef struct S342 T342;
-typedef void*T773;
-typedef struct S438 T438;
-typedef struct S723 T723;
-typedef struct S345 T345;
-typedef struct S734 T734;
-typedef struct S455 T455;
-typedef void*T177;
-typedef struct S826 T826;
-typedef struct S682 T682;
-typedef void*T305;
-typedef struct S526 T526;
-typedef struct S340 T340;
-typedef struct S174 T174;
-typedef struct S237 T237;
-typedef struct S103 T103;
-typedef struct S208 T208;
-typedef struct S162 T162;
-typedef struct S653 T653;
-typedef struct S466 T466;
-typedef void*T814;
-typedef struct S422 T422;
-typedef struct S427 T427;
-typedef struct S593 T593;
-typedef void*T460;
-typedef struct S553 T553;
-typedef struct S933 T933;
-typedef void*T479;
-typedef void*T386;
-typedef struct S297 T297;
-typedef struct S256 T256;
-typedef struct S609 T609;
-typedef struct S568 T568;
+typedef struct S227 T227;
+typedef struct S619 T619;
 typedef struct S327 T327;
-typedef struct S611 T611;
-typedef struct S641 T641;
-typedef struct S688 T688;
-typedef struct S549 T549;
-typedef void*T123;
-typedef struct S642 T642;
-typedef struct S689 T689;
-typedef struct S718 T718;
-typedef struct S555 T555;
-typedef struct S970 T970;
-typedef struct S535 T535;
-typedef struct S540 T540;
-typedef struct S779 T779;
-typedef struct S269 T269;
-typedef struct S836 T836;
-typedef struct S598 T598;
-typedef struct S465 T465;
-typedef struct S724 T724;
-typedef struct S262 T262;
-typedef struct S507 T507;
-typedef struct S838 T838;
-typedef void*T62;
-typedef struct S551 T551;
-typedef struct S510 T510;
-typedef struct S572 T572;
-typedef void*T809;
-typedef struct S197 T197;
-typedef void*T825;
-typedef struct S204 T204;
-typedef void*T65;
-typedef struct S343 T343;
+typedef void*T949;
+typedef struct S415 T415;
 typedef struct S738 T738;
-typedef struct S608 T608;
-typedef void*T879;
-typedef struct S554 T554;
-typedef struct S972 T972;
-typedef struct S339 T339;
-typedef struct S819 T819;
-typedef struct S616 T616;
-typedef struct S820 T820;
-typedef struct S856 T856;
-typedef struct S964 T964;
-typedef void*T391;
-typedef struct S785 T785;
-typedef struct S560 T560;
-typedef struct S184 T184;
-typedef struct S801 T801;
-typedef void*T314;
-typedef struct S810 T810;
-typedef struct S239 T239;
-typedef struct S393 T393;
-typedef struct S559 T559;
-typedef struct S848 T848;
-typedef struct S428 T428;
-typedef struct S548 T548;
-typedef struct S945 T945;
-typedef struct S699 T699;
-typedef struct S542 T542;
-typedef void*T965;
-typedef struct S544 T544;
-typedef struct S491 T491;
-typedef struct S827 T827;
-typedef struct S311 T311;
-typedef struct S717 T717;
-typedef struct S493 T493;
-typedef struct S691 T691;
-typedef struct S201 T201;
-typedef struct S894 T894;
-typedef void*T702;
-typedef void*T837;
-typedef struct S79 T79;
-typedef struct S871 T871;
-typedef struct S736 T736;
-typedef struct S182 T182;
-typedef struct S808 T808;
-typedef struct S272 T272;
-typedef struct S783 T783;
-typedef struct S926 T926;
-typedef void*T694;
-typedef struct S789 T789;
-typedef struct S161 T161;
-typedef struct S426 T426;
-typedef struct S561 T561;
-typedef struct S974 T974;
-typedef struct S586 T586;
-typedef struct S117 T117;
-typedef int T164;
-typedef struct S258 T258;
-typedef struct S480 T480;
-typedef struct S662 T662;
-typedef struct S938 T938;
-typedef struct S7 T7;
-typedef struct S947 T947;
-typedef struct S795 T795;
-typedef void*T782;
-typedef struct S696 T696;
-typedef struct S546 T546;
-typedef struct S349 T349;
-typedef struct S337 T337;
-typedef struct S255 T255;
-typedef void*T527;
-typedef struct S562 T562;
-typedef struct S709 T709;
-typedef struct S695 T695;
-typedef struct S904 T904;
-typedef struct S920 T920;
-typedef void*T714;
-typedef struct S769 T769;
-typedef struct S23 T23;
-typedef void*T953;
-typedef struct S334 T334;
-typedef struct S219 T219;
-typedef struct S369 T369;
-typedef struct S753 T753;
-typedef void*T712;
-typedef struct S564 T564;
-typedef struct S656 T656;
-typedef struct S133 T133;
-typedef struct S844 T844;
-typedef struct S198 T198;
-typedef struct S195 T195;
-typedef struct S408 T408;
-typedef struct S476 T476;
-typedef struct S639 T639;
-typedef struct S923 T923;
-typedef struct S860 T860;
-typedef struct S282 T282;
-typedef struct S421 T421;
-typedef void*T855;
-typedef void*T708;
-typedef void*T467;
-typedef struct S623 T623;
-typedef struct S570 T570;
-typedef struct S556 T556;
-typedef struct S824 T824;
-typedef struct S547 T547;
-typedef struct S742 T742;
-typedef struct S144 T144;
-typedef struct S946 T946;
-typedef struct S676 T676;
-typedef struct S183 T183;
-typedef struct S424 T424;
-typedef void*T50;
-typedef struct S158 T158;
-typedef struct S563 T563;
-typedef struct S659 T659;
-typedef struct S389 T389;
-typedef void*T752;
-typedef struct S532 T532;
-typedef struct S127 T127;
-typedef void*T515;
-typedef struct S285 T285;
-typedef struct S252 T252;
-typedef struct S530 T530;
-typedef struct S32 T32;
-typedef void*T805;
-typedef void*T338;
-typedef struct S815 T815;
-typedef struct S54 T54;
-typedef struct S105 T105;
-typedef struct S271 T271;
-typedef struct S558 T558;
-typedef void*T594;
-typedef struct S543 T543;
-typedef struct S165 T165;
-typedef void*T163;
-typedef struct S587 T587;
-typedef struct S968 T968;
-typedef struct S533 T533;
-typedef struct S264 T264;
-typedef struct S407 T407;
-typedef struct S596 T596;
-typedef void*T721;
-typedef struct S194 T194;
-typedef struct S423 T423;
-typedef struct S40 T40;
-typedef struct S806 T806;
-typedef struct S862 T862;
-typedef struct S159 T159;
-typedef void*T883;
-typedef struct S200 T200;
-typedef struct S632 T632;
-typedef struct S185 T185;
-typedef void*T178;
-typedef struct S787 T787;
-typedef struct S122 T122;
-typedef struct S704 T704;
-typedef struct S925 T925;
-typedef struct S70 T70;
-typedef struct S600 T600;
-typedef struct S756 T756;
-typedef struct S772 T772;
-typedef void*T355;
-typedef struct S832 T832;
-typedef void*T716;
-typedef struct S352 T352;
-typedef struct S199 T199;
-typedef struct S381 T381;
+typedef struct S571 T571;
+typedef struct S516 T516;
 typedef struct S552 T552;
-typedef struct S140 T140;
-typedef struct S588 T588;
+typedef int T708;
+typedef struct S291 T291;
+typedef void*T420;
+typedef struct S1024 T1024;
+typedef struct S970 T970;
+typedef struct S117 T117;
+typedef struct S298 T298;
+typedef struct S407 T407;
+typedef struct S601 T601;
+typedef struct S289 T289;
+typedef struct S1004 T1004;
+typedef void*T944;
+typedef struct S252 T252;
+typedef struct S624 T624;
+typedef struct S247 T247;
+typedef struct S920 T920;
+typedef struct S702 T702;
+typedef struct S767 T767;
+typedef struct S781 T781;
+typedef struct S302 T302;
+typedef struct S527 T527;
+typedef void*T951;
+typedef struct S545 T545;
+typedef struct S141 T141;
+typedef struct S414 T414;
+typedef struct S842 T842;
+typedef struct S950 T950;
+typedef struct S213 T213;
+typedef void*T1003;
+typedef struct S410 T410;
+typedef struct S362 T362;
+typedef struct S1062 T1062;
+typedef struct S409 T409;
+typedef struct S12 T12;
+typedef struct S1044 T1044;
+typedef struct S725 T725;
+typedef struct S820 T820;
+typedef struct S297 T297;
+typedef struct S927 T927;
+typedef void*T465;
+typedef struct S558 T558;
+typedef struct S153 T153;
+typedef struct S200 T200;
+typedef struct S825 T825;
+typedef void*T1008;
+typedef struct S795 T795;
+typedef void*T57;
+typedef struct S464 T464;
+typedef void*T379;
+typedef struct S562 T562;
+typedef struct S664 T664;
+typedef void*T1002;
+typedef struct S275 T275;
+typedef struct S120 T120;
+typedef struct S224 T224;
+typedef struct S447 T447;
+typedef struct S941 T941;
+typedef void*T846;
+typedef struct S841 T841;
+typedef struct S47 T47;
+typedef void*T55;
+typedef struct S625 T625;
+typedef struct S363 T363;
+typedef void*T816;
 typedef struct S461 T461;
-typedef struct S550 T550;
-typedef struct S591 T591;
-typedef struct S539 T539;
-typedef struct S865 T865;
-typedef void*T396;
-typedef struct S484 T484;
-typedef struct S660 T660;
-typedef struct S569 T569;
+typedef struct S879 T879;
+typedef void*T143;
+typedef struct S765 T765;
+typedef struct S366 T366;
+typedef struct S776 T776;
+typedef struct S26 T26;
+typedef struct S479 T479;
+typedef void*T194;
+typedef struct S907 T907;
+typedef struct S723 T723;
+typedef void*T326;
+typedef struct S547 T547;
+typedef struct S361 T361;
+typedef struct S191 T191;
+typedef struct S258 T258;
+typedef struct S106 T106;
+typedef struct S228 T228;
+typedef struct S170 T170;
+typedef struct S694 T694;
+typedef struct S490 T490;
+typedef void*T849;
+typedef struct S444 T444;
+typedef struct S449 T449;
+typedef struct S628 T628;
+typedef void*T484;
+typedef struct S588 T588;
+typedef struct S1016 T1016;
+typedef void*T504;
+typedef void*T462;
+typedef struct S318 T318;
+typedef struct S277 T277;
+typedef struct S644 T644;
+typedef struct S603 T603;
+typedef struct S348 T348;
+typedef struct S646 T646;
+typedef struct S680 T680;
+typedef struct S729 T729;
+typedef struct S570 T570;
+typedef void*T128;
+typedef struct S681 T681;
+typedef struct S730 T730;
+typedef struct S761 T761;
+typedef struct S590 T590;
+typedef struct S1052 T1052;
+typedef struct S556 T556;
+typedef struct S561 T561;
+typedef struct S290 T290;
 typedef struct S915 T915;
-typedef struct S857 T857;
-typedef void*T315;
+typedef struct S633 T633;
+typedef struct S489 T489;
+typedef struct S766 T766;
+typedef struct S283 T283;
+typedef struct S869 T869;
+typedef struct S526 T526;
+typedef struct S916 T916;
+typedef void*T132;
+typedef struct S586 T586;
+typedef struct S529 T529;
+typedef struct S607 T607;
+typedef struct S935 T935;
+typedef void*T948;
+typedef void*T993;
+typedef struct S223 T223;
+typedef void*T127;
+typedef struct S364 T364;
 typedef struct S778 T778;
-typedef struct S43 T43;
-typedef void*T388;
-typedef struct S557 T557;
-typedef struct S209 T209;
-typedef struct S791 T791;
-typedef struct S31 T31;
-typedef struct S851 T851;
-typedef struct S416 T416;
-typedef struct S203 T203;
-typedef struct S240 T240;
-typedef struct S196 T196;
-typedef void*T296;
-typedef void*T707;
-typedef struct S202 T202;
-typedef struct S403 T403;
-typedef struct S30 T30;
-typedef struct S29 T29;
-typedef struct S405 T405;
-typedef struct S792 T792;
-typedef struct S451 T451;
-typedef struct S206 T206;
-typedef struct S536 T536;
-typedef void*T575;
-typedef struct S379 T379;
-typedef struct S534 T534;
+typedef struct S643 T643;
+typedef void*T956;
+typedef struct S589 T589;
+typedef struct S1054 T1054;
+typedef struct S169 T169;
+typedef struct S360 T360;
+typedef struct S901 T901;
+typedef struct S651 T651;
+typedef struct S900 T900;
+typedef struct S931 T931;
+typedef struct S1046 T1046;
+typedef void*T422;
+typedef struct S826 T826;
+typedef struct S595 T595;
+typedef struct S205 T205;
+typedef struct S864 T864;
+typedef void*T335;
+typedef struct S896 T896;
+typedef struct S260 T260;
+typedef struct S411 T411;
+typedef struct S594 T594;
+typedef struct S925 T925;
+typedef struct S850 T850;
+typedef struct S450 T450;
+typedef struct S569 T569;
+typedef struct S215 T215;
+typedef struct S740 T740;
+typedef struct S563 T563;
+typedef void*T1047;
 typedef struct S565 T565;
+typedef struct S510 T510;
+typedef struct S906 T906;
+typedef struct S332 T332;
+typedef struct S759 T759;
+typedef struct S512 T512;
+typedef struct S732 T732;
+typedef struct S220 T220;
+typedef struct S973 T973;
+typedef void*T743;
+typedef void*T971;
+typedef struct S94 T94;
+typedef struct S942 T942;
+typedef struct S782 T782;
+typedef struct S895 T895;
+typedef struct S293 T293;
+typedef struct S824 T824;
+typedef struct S1009 T1009;
+typedef void*T735;
+typedef struct S830 T830;
+typedef struct S448 T448;
+typedef struct S596 T596;
+typedef struct S945 T945;
+typedef struct S583 T583;
+typedef struct S621 T621;
+typedef struct S121 T121;
+typedef int T180;
+typedef struct S279 T279;
+typedef struct S703 T703;
+typedef struct S1021 T1021;
+typedef void*T843;
+typedef struct S758 T758;
+typedef struct S7 T7;
+typedef struct S1027 T1027;
+typedef struct S858 T858;
+typedef void*T823;
+typedef struct S737 T737;
+typedef struct S567 T567;
+typedef struct S370 T370;
+typedef struct S358 T358;
+typedef struct S276 T276;
+typedef void*T548;
+typedef struct S597 T597;
+typedef struct S750 T750;
+typedef struct S736 T736;
+typedef struct S983 T983;
+typedef struct S1000 T1000;
+typedef struct S876 T876;
+typedef void*T755;
+typedef struct S812 T812;
+typedef struct S43 T43;
+typedef struct S139 T139;
+typedef void*T1033;
+typedef struct S491 T491;
+typedef struct S355 T355;
+typedef struct S150 T150;
+typedef struct S239 T239;
+typedef struct S391 T391;
+typedef struct S794 T794;
+typedef void*T753;
+typedef struct S599 T599;
+typedef struct S697 T697;
+typedef struct S146 T146;
+typedef struct S921 T921;
+typedef struct S216 T216;
+typedef struct S429 T429;
+typedef struct S501 T501;
+typedef struct S678 T678;
+typedef struct S1005 T1005;
+typedef struct S845 T845;
+typedef struct S875 T875;
+typedef struct S303 T303;
+typedef struct S443 T443;
+typedef void*T940;
+typedef void*T749;
+typedef void*T492;
+typedef struct S660 T660;
+typedef struct S892 T892;
+typedef struct S605 T605;
+typedef struct S591 T591;
+typedef struct S905 T905;
+typedef struct S568 T568;
+typedef struct S783 T783;
+typedef struct S161 T161;
+typedef struct S1026 T1026;
+typedef struct S717 T717;
+typedef struct S204 T204;
+typedef struct S446 T446;
+typedef void*T68;
+typedef struct S209 T209;
+typedef struct S598 T598;
+typedef struct S700 T700;
+typedef struct S408 T408;
+typedef void*T793;
+typedef struct S553 T553;
+typedef struct S133 T133;
+typedef void*T534;
+typedef struct S306 T306;
+typedef struct S273 T273;
+typedef struct S551 T551;
+typedef struct S50 T50;
+typedef void*T868;
+typedef void*T359;
+typedef struct S848 T848;
+typedef struct S72 T72;
+typedef struct S109 T109;
+typedef struct S292 T292;
+typedef struct S593 T593;
+typedef void*T630;
+typedef struct S564 T564;
+typedef struct S193 T193;
+typedef struct S179 T179;
+typedef struct S622 T622;
+typedef struct S1050 T1050;
+typedef struct S554 T554;
+typedef struct S581 T581;
+typedef struct S285 T285;
+typedef struct S584 T584;
+typedef struct S428 T428;
+typedef struct S631 T631;
+typedef void*T763;
+typedef struct S214 T214;
+typedef struct S445 T445;
+typedef struct S58 T58;
+typedef struct S872 T872;
+typedef struct S936 T936;
+typedef struct S167 T167;
+typedef void*T957;
+typedef struct S219 T219;
+typedef struct S669 T669;
+typedef struct S206 T206;
+typedef void*T196;
+typedef struct S828 T828;
+typedef struct S126 T126;
+typedef struct S745 T745;
+typedef struct S1007 T1007;
+typedef struct S84 T84;
+typedef struct S635 T635;
+typedef struct S797 T797;
+typedef struct S831 T831;
+typedef struct S815 T815;
+typedef void*T377;
+typedef struct S911 T911;
+typedef void*T757;
+typedef struct S373 T373;
+typedef struct S218 T218;
+typedef struct S403 T403;
+typedef struct S587 T587;
+typedef struct S154 T154;
+typedef struct S623 T623;
+typedef struct S485 T485;
+typedef struct S585 T585;
+typedef struct S626 T626;
+typedef struct S560 T560;
+typedef struct S840 T840;
+typedef struct S939 T939;
+typedef void*T421;
+typedef struct S701 T701;
+typedef struct S604 T604;
+typedef struct S995 T995;
+typedef struct S932 T932;
+typedef void*T336;
+typedef struct S821 T821;
+typedef struct S61 T61;
+typedef void*T423;
+typedef struct S592 T592;
+typedef struct S229 T229;
+typedef struct S854 T854;
+typedef struct S49 T49;
+typedef struct S572 T572;
+typedef struct S177 T177;
+typedef struct S926 T926;
+typedef struct S437 T437;
+typedef struct S222 T222;
+typedef struct S261 T261;
+typedef struct S217 T217;
+typedef void*T317;
+typedef void*T748;
+typedef struct S221 T221;
+typedef struct S424 T424;
+typedef struct S48 T48;
+typedef struct S426 T426;
+typedef struct S855 T855;
+typedef struct S475 T475;
+typedef struct S226 T226;
+typedef struct S557 T557;
+typedef void*T610;
+typedef struct S401 T401;
+typedef struct S555 T555;
+typedef struct S600 T600;
 
 /*C Header Pass 2 :*/
-typedef T0**T279;
-typedef T0**T529;
-typedef T0**T395;
-typedef T0**T854;
-typedef T0**T351;
-typedef T0**T847;
-typedef T0**T830;
-typedef T6*T274;
-typedef T0**T347;
-typedef T0**T967;
-typedef T0**T701;
-typedef T0**T693;
-typedef T0**T740;
-typedef T0**T823;
-typedef T0**T976;
-typedef T0**T841;
-typedef T0**T813;
-typedef T10*T486;
-typedef T0**T658;
-typedef T0**T71;
-typedef T0**T859;
-typedef T0**T313;
-typedef T0**T129;
-typedef T0**T706;
-typedef T0**T260;
-typedef T0**T775;
+typedef T0**T300;
+typedef T0**T550;
+typedef T0**T413;
+typedef T0**T930;
+typedef T0**T852;
+typedef T0**T372;
+typedef T0**T924;
+typedef T0**T145;
+typedef T0**T910;
+typedef T6*T295;
+typedef T0**T368;
+typedef T0**T1049;
+typedef T0**T742;
+typedef T0**T734;
+typedef T0**T780;
+typedef T0**T904;
+typedef T0**T947;
+typedef T0**T919;
+typedef T0**T899;
+typedef T0**T699;
+typedef T0**T85;
+typedef T0**T934;
+typedef T0**T334;
+typedef T0**T135;
+typedef T0**T747;
+typedef T0**T281;
+typedef T0**T818;
 typedef T3*T9;
-typedef T1*T482;
-typedef T0**T835;
-typedef T2*T106;
-typedef T0**T574;
-typedef T0**T266;
-typedef T0**T402;
+typedef T0**T914;
+typedef T2*T110;
+typedef T0**T609;
+typedef T0**T287;
+typedef T0**T418;
 
 /*C Header Pass 3 :*/
-struct S183{T8 _directory_stream;T8 _current_entry;};
-int se_cmpT183(T183 o1,T183 o2);
-struct S787{T5 _time_memory;};
-int se_cmpT787(T787 o1,T787 o2);
+struct S204{T8 _directory_stream;T8 _current_entry;};
+int se_cmpT204(T204 o1,T204 o2);
+struct S828{T5 _time_memory;};
+int se_cmpT828(T828 o1,T828 o2);
 
 /*C Header Pass 4 :*/
-struct S592{Tid id;T0* _xml_element;T0* _project;T0* _command;};
-extern T592 M592;
-struct S207{T2 _count;T0* _first_cell;T0* _last_cell;T0* _internal_cursor;};
-extern T207 M207;
-struct S584{T0* _container;};
-extern T584 M584;
-struct S306{T0* _comparator;};
-extern T306 M306;
-extern T874 M874;
-struct S399{T402 _storage;T2 _capacity;T2 _upper;};
-extern T399 M399;
-struct S697{T0* _xml_element;T0* _project;T0* _rename_clause;};
-extern T697 M697;
-struct S497{Tid id;T0* _equality_tester;T2 _count;T2 _capacity;T2 _last_position;T2 _modulus;T2 _free_slot;T2 _position;T2 _slots_position;T2 _clashes_previous_position;T2 _found_position;T0* _internal_cursor;T0* _items;T0* _clashes;T0* _slots;T0* _fixed_item_array_;};
-extern T497 M497;
-struct S531{Tid id;T2 _exit_code;T0* _project;T0* _executable;T0* _source_filename;};
-extern T531 M531;
-extern T667 M667;
-struct S270{Tid id;T2 _count;T0* _storage;T0* _symbols;};
-extern T270 M270;
-struct S941{T0* _item;T0* _right;};
-extern T941 M941;
-struct S892{T2 _position;T0* _container;};
-extern T892 M892;
-struct S113{Tid id;T0* _equality_tester;T2 _count;T2 _capacity;T0* _storage;T0* _fixed_array_;T0* _internal_cursor;};
-extern T113 M113;
-struct S387{T347 _storage;T2 _capacity;T2 _upper;};
-extern T387 M387;
-struct S566{Tid id;T0* _xml_element;T0* _project;T0* _command;};
-extern T566 M566;
-struct S268{T2 _count;T0* _storage;};
-extern T268 M268;
-struct S922{Tid id;T0* _item;T0* _right;};
-extern T922 M922;
-extern T873 M873;
-struct S231{T6 _yyline_used;T0* _states;T0* _yy_accept;T0* _yy_ec;T6 _yyposition_used;T0* _input_filename;T0* _eiffel_header;T6 _bol_needed;T6 _pre_action_used;T6 _post_action_used;T6 _post_eof_action_used;T0* _yy_nxt;T6 _yybacking_up;T2 _start_states_count;T2 _maximum_symbol;T0* _yy_start_conditions;T2 _backing_up_count;T0* _partitions;T0* _yy_rules;T0* _yy_eof_rules;T2 _yynb_rules;T2 _yynull_equiv_class;T0* _eiffel_code;T6 _pre_eof_action_used;T2 _characters_count;T2 _array_size;T6 _actions_separated;T2 _yynb_rows;T2 _minimum_symbol;T2 _yyend_of_buffer;T6 _inspect_used;};
-extern T231 M231;
-struct S589{Tid id;T2 _exit_code;T0* _project;T2 _code;};
-extern T589 M589;
-struct S226{T0* _subject;T2 _subject_start;T2 _subject_end;T2 _match_count;T2 _matched_start;T2 _matched_end;T0* _yy_nxt;T0* _yy_accept;T2 _yynb_rows;};
-extern T226 M226;
-struct S842{T0* _system_id;};
+struct S627{Tid id;T0* _xml_element;T0* _project;T0* _command;};
+extern T627 M627;
+struct S227{T2 _count;T0* _first_cell;T0* _last_cell;T0* _internal_cursor;};
+extern T227 M227;
+struct S619{T0* _container;};
+extern T619 M619;
+struct S327{T0* _comparator;};
+extern T327 M327;
+extern T949 M949;
+struct S415{T418 _storage;T2 _capacity;T2 _upper;};
+extern T415 M415;
+struct S738{T0* _xml_element;T0* _project;T0* _rename_clause;};
+extern T738 M738;
+struct S571{T0* _separators;T6 _has_escape_character;T3 _escape_character;T0* _separator_codes;};
+extern T571 M571;
+struct S516{Tid id;T0* _equality_tester;T2 _count;T2 _capacity;T2 _last_position;T2 _modulus;T2 _free_slot;T2 _position;T2 _slots_position;T2 _clashes_previous_position;T2 _found_position;T0* _internal_cursor;T0* _items;T0* _clashes;T0* _slots;T0* _fixed_item_array_;};
+extern T516 M516;
+struct S552{Tid id;T2 _exit_code;T0* _project;T0* _executable;T0* _source_filename;};
+extern T552 M552;
+extern T708 M708;
+struct S291{Tid id;T2 _count;T0* _storage;T0* _symbols;};
+extern T291 M291;
+struct S1024{T0* _item;T0* _right;};
+extern T1024 M1024;
+struct S970{T2 _position;T0* _container;};
+extern T970 M970;
+struct S117{Tid id;T0* _equality_tester;T2 _count;T2 _capacity;T0* _storage;T0* _fixed_array_;T0* _internal_cursor;};
+extern T117 M117;
+struct S407{T368 _storage;T2 _capacity;T2 _upper;};
+extern T407 M407;
+struct S601{Tid id;T0* _xml_element;T0* _project;T0* _command;};
+extern T601 M601;
+struct S289{T2 _count;T0* _storage;};
+extern T289 M289;
+struct S1004{Tid id;T0* _item;T0* _right;};
+extern T1004 M1004;
+extern T944 M944;
+struct S252{T0* _yy_accept;T0* _yy_ec;T0* _yy_rules;T0* _yy_eof_rules;T0* _yy_start_conditions;T2 _yynb_rules;T2 _yyend_of_buffer;T2 _yynull_equiv_class;T6 _yyline_used;T6 _yyposition_used;T0* _states;T0* _input_filename;T0* _eiffel_header;T6 _bol_needed;T6 _pre_action_used;T6 _post_action_used;T6 _post_eof_action_used;T0* _yy_nxt;T6 _yybacking_up;T2 _start_states_count;T2 _maximum_symbol;T2 _backing_up_count;T0* _partitions;T0* _eiffel_code;T6 _pre_eof_action_used;T6 _line_pragma;T2 _characters_count;T2 _array_size;T6 _actions_separated;T6 _inspect_used;T2 _yynb_rows;T2 _minimum_symbol;};
+extern T252 M252;
+struct S624{Tid id;T2 _exit_code;T0* _project;T2 _code;};
+extern T624 M624;
+struct S247{T0* _subject;T2 _subject_start;T2 _subject_end;T2 _match_count;T2 _matched_start;T2 _matched_end;T0* _yy_nxt;T0* _yy_accept;T2 _yynb_rows;};
+extern T247 M247;
+struct S920{T0* _system_id;T0* _public_id;};
+extern T920 M920;
+struct S702{Tid id;T0* _name;T0* _string_name;T3 _last_character;T6 _end_of_file;T0* _character_buffer;T0* _path;T3 _old_last_character;T6 _old_end_of_file;T6 _push_back_flag;T8 _input_stream;T9 _buffer;T6 _end_reached;T2 _buffer_position;T2 _buffer_size;T2 _capacity;};
+extern T702 M702;
+struct S298{T2 _item;T0* _right;T0* _left;};
+extern T298 M298;
+struct S767{T0* _first;T0* _second;};
+extern T767 M767;
+struct S781{Tid id;};
+extern T781 M781;
+struct S302{T0* _transition;T0* _epsilon_transition;T0* _accepted_rule;T2 _id;T6 _in_trail_context;};
+extern T302 M302;
+struct S545{T2 _position;T0* _container;T0* _next_cursor;};
+extern T545 M545;
+struct S141{T145 _storage;T2 _capacity;T2 _upper;};
+extern T141 M141;
+struct S414{T110 _storage;T2 _capacity;T2 _upper;};
+extern T414 M414;
+struct S842{T295 _storage;T2 _capacity;T2 _upper;};
 extern T842 M842;
-struct S661{Tid id;T0* _name;T0* _string_name;T3 _last_character;T6 _end_of_file;T0* _character_buffer;T0* _path;T3 _old_last_character;T6 _old_end_of_file;T6 _push_back_flag;T8 _input_stream;T9 _buffer;T6 _end_reached;T2 _buffer_position;T2 _buffer_size;T2 _capacity;};
-extern T661 M661;
-struct S277{T2 _item;T0* _right;T0* _left;};
-extern T277 M277;
-struct S725{T0* _first;T0* _second;};
-extern T725 M725;
-struct S741{Tid id;T0* _next;T0* _prefixes;T0* _local_parts;};
-extern T741 M741;
-struct S737{Tid id;};
-extern T737 M737;
-struct S281{T0* _transition;T0* _epsilon_transition;T0* _accepted_rule;T2 _id;T6 _in_trail_context;};
-extern T281 M281;
-struct S524{T2 _position;T0* _container;T0* _next_cursor;};
-extern T524 M524;
-struct S397{T106 _storage;T2 _capacity;T2 _upper;};
-extern T397 M397;
-struct S875{Tid id;T2 _last_token;T0* _input_buffer;T2 _line;T2 _column;T2 _position;T2 _yy_start_state;T0* _yy_content;T0* _yy_content_area;T2 _yy_end;T2 _yy_start;T2 _yy_column;T2 _yy_line;T2 _yy_position;T6 _yy_more_flag;T2 _yy_more_len;T2 _yy_last_accepting_state;T2 _yy_last_accepting_cpos;T0* _yy_nxt;T0* _yy_chk;T0* _yy_base;T0* _yy_def;T0* _yy_ec;T0* _yy_meta;T0* _yy_accept;T0* _yy_acclist;T6 _yy_rejected;T0* _yy_state_stack;T2 _yy_state_count;T2 _yy_full_match;T2 _yy_lp;T2 _yy_looking_for_trail_begin;T2 _yy_full_lp;T2 _yy_full_state;T0* _input_stream;T0* _input_filter;T0* _last_error;T0* _filename;T0* _source;T0* _last_value;T0* _character_entity;T0* _start_conditions;T6 _decl_start_sent;T6 _decl_end_sent;};
-extern T875 M875;
-struct S193{Tid id;T0* _xml_element;T0* _project;T0* _command;};
-extern T193 M193;
-struct S392{T395 _storage;T2 _capacity;T2 _upper;};
-extern T392 M392;
-struct S341{T2 _count;T2 _capacity;T0* _storage;T0* _fixed_array_;T0* _internal_cursor;};
-extern T341 M341;
-struct S982{T0* _item;T0* _right;T0* _left;};
-extern T982 M982;
+struct S950{Tid id;T2 _last_token;T0* _input_buffer;T2 _line;T2 _column;T2 _position;T2 _yy_start_state;T0* _yy_content;T0* _yy_content_area;T2 _yy_end;T2 _yy_start;T2 _yy_column;T2 _yy_line;T2 _yy_position;T6 _yy_more_flag;T2 _yy_more_len;T2 _yy_last_accepting_state;T2 _yy_last_accepting_cpos;T0* _yy_nxt;T0* _yy_chk;T0* _yy_base;T0* _yy_def;T0* _yy_ec;T0* _yy_meta;T0* _yy_accept;T0* _yy_acclist;T6 _yy_rejected;T0* _yy_state_stack;T2 _yy_state_count;T2 _yy_full_match;T2 _yy_lp;T2 _yy_looking_for_trail_begin;T2 _yy_full_lp;T2 _yy_full_state;T0* _input_stream;T0* _input_resolver;T0* _input_filter;T0* _last_error;T0* _input_name;T0* _last_value;T0* _character_entity;T0* _start_conditions;T6 _decl_start_sent;T6 _decl_end_sent;};
+extern T950 M950;
+struct S213{Tid id;T0* _xml_element;T0* _project;T0* _command;};
+extern T213 M213;
+struct S410{T413 _storage;T2 _capacity;T2 _upper;};
+extern T410 M410;
+struct S362{T2 _count;T2 _capacity;T0* _storage;T0* _fixed_array_;T0* _internal_cursor;};
+extern T362 M362;
+struct S1062{T0* _item;T0* _right;T0* _left;};
+extern T1062 M1062;
 struct S12{T0* _error_handler;T0* _build_filename;T0* _start_target_name;T6 _verbose;T6 _debug_mode;T6 _show_target_info;T6 _no_exec;};
 extern T12 M12;
-struct S962{T2 _position;T0* _container;};
-extern T962 M962;
-struct S684{Tid id;T0* _next;T6 _has_error;T0* _last_error;};
-extern T684 M684;
-struct S777{T2 _count;T0* _first_cell;};
-extern T777 M777;
-struct S276{T279 _storage;T2 _capacity;T2 _upper;T2 _lower;};
-extern T276 M276;
-struct S537{Tid id;T2 _exit_code;T0* _project;T6 _verbose;T0* _system_command;T0* _library_command;T6 _validate_command;T0* _xace_filename;T0* _output_filename;T0* _defines;};
-extern T537 M537;
-struct S139{T0* _container;T6 _after;T6 _before;T0* _current_cell;T0* _next_cursor;};
-extern T139 M139;
-struct S188{Tid id;T0* _container;T2 _position;T0* _next_cursor;};
-extern T188 M188;
-struct S784{Tid id;T0* _parameters;};
-extern T784 M784;
-struct S754{Tid id;T2 _last_token;T0* _input_buffer;T2 _line;T2 _column;T2 _position;T2 _yy_start_state;T0* _yy_content;T0* _yy_content_area;T2 _yy_end;T2 _yy_start;T2 _yy_column;T2 _yy_line;T2 _yy_position;T6 _yy_more_flag;T2 _yy_more_len;T2 _yy_last_accepting_state;T2 _yy_last_accepting_cpos;T0* _yy_nxt;T0* _yy_chk;T0* _yy_base;T0* _yy_def;T0* _yy_ec;T0* _yy_meta;T0* _yy_accept;T0* _yy_acclist;T6 _yy_rejected;T0* _yy_state_stack;T2 _yy_state_count;T2 _yy_full_match;T2 _yy_lp;T2 _yy_looking_for_trail_begin;T2 _yy_full_lp;T2 _yy_full_state;T0* _input_stream;T0* _input_filter;T0* _last_error;T0* _filename;T0* _source;T0* _last_value;T0* _character_entity;T0* _start_conditions;};
-extern T754 M754;
-extern T39 M39;
-struct S440{Tid id;T0* _target;T0* _label;};
-extern T440 M440;
-struct S541{Tid id;T0* _xml_element;T0* _project;T0* _command;};
-extern T541 M541;
-struct S627{T0* _name;};
-extern T627 M627;
-struct S254{Tid id;T106 _storage;T2 _capacity;T2 _upper;T2 _lower;};
-extern T254 M254;
-struct S116{Tid id;};
-extern T116 M116;
-struct S205{T0* _xml_element;T0* _project;};
-extern T205 M205;
-struct S425{Tid id;T0* _parameters;};
-extern T425 M425;
-struct S870{Tid id;T6 _after;T6 _before;T0* _container;T0* _current_cell;T0* _next_cursor;};
-extern T870 M870;
-extern T63 M63;
-extern T37 M37;
-struct S590{Tid id;T0* _xml_element;T0* _project;T0* _command;};
-extern T590 M590;
-struct S438{Tid id;T0* _parameters;};
-extern T438 M438;
-struct S723{T0* _table;};
-extern T723 M723;
-struct S345{T347 _storage;T2 _capacity;T2 _upper;};
-extern T345 M345;
-struct S734{T0* _container;T6 _after;T6 _before;T0* _current_cell;T0* _next_cursor;};
-extern T734 M734;
-struct S455{Tid id;T0* _target;T2 _label;};
-extern T455 M455;
-struct S682{T0* _start;T0* _error;T0* _tree;T0* _last;};
-extern T682 M682;
-struct S526{T529 _storage;T2 _capacity;T2 _upper;};
-extern T526 M526;
-struct S174{Tid id;T2 _position;T0* _container;T0* _next_cursor;};
-extern T174 M174;
-struct S237{T0* _error_file;T0* _warning_file;T0* _info_file;};
-extern T237 M237;
-struct S103{T0* _equality_tester;T0* _key_equality_tester;T2 _count;T2 _capacity;T2 _last_position;T2 _modulus;T2 _free_slot;T2 _position;T2 _slots_position;T2 _clashes_previous_position;T2 _found_position;T0* _internal_cursor;T0* _items;T0* _keys;T0* _clashes;T0* _slots;T0* _fixed_item_array_;T0* _fixed_key_array_;};
-extern T103 M103;
-struct S208{T0* _xml_element;T0* _project;T0* _map;};
-extern T208 M208;
-struct S653{T0* _equality_tester;T0* _key_equality_tester;T2 _count;T2 _capacity;T2 _last_position;T2 _modulus;T2 _free_slot;T2 _position;T2 _slots_position;T2 _clashes_previous_position;T2 _found_position;T0* _internal_cursor;T0* _items;T0* _keys;T0* _clashes;T0* _slots;T0* _fixed_item_array_;T0* _fixed_key_array_;};
-extern T653 M653;
-struct S466{T2 _count;T9 _area;T0* _area_string;};
-extern T466 M466;
-struct S422{Tid id;T0* _parameters;};
-extern T422 M422;
-struct S427{Tid id;T0* _parameters;};
-extern T427 M427;
-struct S593{Tid id;T2 _exit_code;T0* _project;T0* _resource_name;T0* _variable_name;T0* _true_value;T0* _false_value;};
-extern T593 M593;
-struct S553{Tid id;T2 _exit_code;T0* _project;T0* _message;};
-extern T553 M553;
-struct S933{T2 _count;T0* _last_cell;T0* _internal_cursor;T0* _first_cell;};
-extern T933 M933;
-struct S297{T0* _comparator;};
-extern T297 M297;
-struct S256{T0* _equality_tester;T2 _count;T2 _capacity;T0* _storage;T0* _fixed_array_;T0* _internal_cursor;};
-extern T256 M256;
-struct S609{T0* _container;T2 _position;T0* _next_cursor;};
-extern T609 M609;
-struct S568{T0* _first;T0* _second;};
-extern T568 M568;
-struct S327{T0* _container;T2 _position;T0* _next_cursor;};
-extern T327 M327;
-struct S641{T0* _original_name;T0* _new_name;};
-extern T641 M641;
-struct S688{T0* _xml_element;T0* _project;T0* _geant_inherit;};
-extern T688 M688;
-struct S549{Tid id;T2 _exit_code;T0* _project;T0* _filename;T0* _fileset;T6 _reuse_variables;T0* _start_target_name;};
-extern T549 M549;
-extern T123 M123;
-struct S642{T2 _position;T0* _container;T0* _next_cursor;};
-extern T642 M642;
-struct S689{T0* _xml_element;T0* _project;T0* _parent;};
-extern T689 M689;
-struct S718{Tid id;T0* _next;T0* _document;T0* _last_position_table;T0* _current_open_composite;T0* _current_element;T0* _namespace_cache;T0* _source_parser;};
-extern T718 M718;
-struct S555{Tid id;T2 _exit_code;T0* _project;T0* _directory;};
-extern T555 M555;
-struct S970{T0* _item;T0* _right;T0* _left;};
-extern T970 M970;
-struct S535{Tid id;T2 _exit_code;T0* _project;T0* _name;};
-extern T535 M535;
-struct S540{Tid id;T2 _exit_code;T0* _project;T0* _size;T6 _backup;T6 _ecs;T6 _full;T6 _case_insensitive;T6 _meta_ecs;T6 _no_default;T6 _no_warn;T6 _separate_actions;T0* _output_filename;T0* _input_filename;};
-extern T540 M540;
-struct S779{T0* _filename;};
-extern T779 M779;
-struct S269{T266 _storage;T2 _capacity;T2 _upper;T2 _lower;};
-extern T269 M269;
-struct S836{T0* _name;T0* _items;T3 _type;T3 _repetition;T6 _is_character_data_allowed;};
-extern T836 M836;
-struct S465{Tid id;T0* _parameters;};
-extern T465 M465;
-struct S724{T2 _count;T0* _first_cell;T0* _last_cell;T0* _internal_cursor;};
-extern T724 M724;
-struct S262{T2 _count;T2 _capacity;T0* _storage;T0* _fixed_array_;T0* _internal_cursor;};
-extern T262 M262;
-struct S507{Tid id;T2 _position;T0* _container;T0* _next_cursor;};
-extern T507 M507;
-struct S838{T841 _storage;T2 _capacity;T2 _upper;};
-extern T838 M838;
-extern T62 M62;
-struct S611{T0* _name;};
-extern T611 M611;
-struct S551{Tid id;T2 _exit_code;T0* _project;T0* _input_filename;};
-extern T551 M551;
-struct S510{T0* _equality_tester;T2 _count;T2 _capacity;T2 _last_position;T2 _modulus;T2 _free_slot;T2 _position;T2 _slots_position;T2 _clashes_previous_position;T2 _found_position;T0* _internal_cursor;T0* _items;T0* _clashes;T0* _slots;T0* _fixed_item_array_;};
-extern T510 M510;
-struct S390{T0* _equality_tester;T2 _count;T2 _capacity;T0* _storage;T0* _fixed_array_;T0* _internal_cursor;T6 _negated;T6 _sort_needed;};
-extern T390 M390;
-struct S572{T574 _storage;T2 _capacity;T2 _upper;};
-extern T572 M572;
-struct S197{Tid id;T0* _xml_element;T0* _project;T0* _command;};
-extern T197 M197;
-struct S204{T0* _project;T0* _dir_name;T0* _directory_name;T0* _include_wc_string;T0* _exclude_wc_string;T6 _convert_to_filesystem;T0* _map;T6 _force;T6 _concat;T0* _filename_directory_name;T0* _mapped_filename_directory_name;T0* _filename_variable_name;T0* _mapped_filename_variable_name;T0* _include_wildcard;T0* _exclude_wildcard;T0* _filenames;T0* _single_includes;T0* _single_excludes;};
-extern T204 M204;
-extern T65 M65;
-struct S343{Tid id;T2 _count;T2 _capacity;T0* _storage;T0* _fixed_array_;T0* _internal_cursor;};
-extern T343 M343;
-struct S738{T740 _storage;T2 _capacity;T2 _upper;T2 _lower;};
-extern T738 M738;
-struct S608{T2 _count;T2 _capacity;T0* _storage;T0* _fixed_array_;T0* _internal_cursor;};
-extern T608 M608;
-struct S554{Tid id;T0* _xml_element;T0* _project;T0* _command;};
-extern T554 M554;
-struct S972{Tid id;T0* _parent;T0* _data;};
-extern T972 M972;
-struct S340{T0* _states;T6 _in_trail_context;};
-extern T340 M340;
-struct S339{T0* _text;};
-extern T339 M339;
-struct S616{T0* _equality_tester;T0* _key_equality_tester;T2 _count;T2 _capacity;T2 _last_position;T2 _modulus;T2 _free_slot;T2 _position;T2 _slots_position;T2 _clashes_previous_position;T2 _found_position;T0* _internal_cursor;T0* _items;T0* _keys;T0* _clashes;T0* _slots;T0* _fixed_item_array_;T0* _fixed_key_array_;};
-extern T616 M616;
-struct S820{T823 _storage;T2 _capacity;T2 _upper;};
+struct S1044{T2 _position;T0* _container;};
+extern T1044 M1044;
+struct S725{Tid id;T0* _next;T6 _has_error;T0* _last_error;};
+extern T725 M725;
+struct S820{T2 _count;T0* _first_cell;};
 extern T820 M820;
-struct S856{T859 _storage;T2 _capacity;T2 _upper;};
-extern T856 M856;
-struct S964{T967 _storage;T2 _capacity;T2 _upper;};
-extern T964 M964;
-struct S785{Tid id;T0* _parameters;};
-extern T785 M785;
-struct S560{Tid id;T0* _xml_element;T0* _project;T0* _command;};
-extern T560 M560;
-struct S184{Tid id;T183 _basic_directory;};
-extern T184 M184;
-struct S801{T0* _path;T2 _old_last_byte;T6 _old_end_of_file;T9 _buffer;T6 _end_reached;T2 _buffer_position;T2 _buffer_size;T2 _capacity;T8 _input_stream;T0* _name;T0* _string_name;T3 _last_character;T0* _last_string;T6 _end_of_file;T0* _character_buffer;};
-extern T801 M801;
-struct S810{T813 _storage;T2 _capacity;T2 _upper;};
-extern T810 M810;
-struct S239{T2 _array_size;T6 _case_insensitive;T2 _characters_count;T6 _equiv_classes_used;T6 _meta_equiv_classes_used;T6 _full_table;T6 _actions_separated;T6 _inspect_used;T6 _reject_used;T6 _line_used;T6 _position_used;T6 _pre_action_used;T6 _post_action_used;T6 _pre_eof_action_used;T6 _post_eof_action_used;T0* _input_filename;T0* _start_conditions;T0* _rules;T0* _eof_rules;T0* _equiv_classes;T6 _bol_needed;T6 _variable_trail_context;T0* _eiffel_code;T0* _eiffel_header;};
-extern T239 M239;
-struct S393{T395 _storage;T2 _capacity;T2 _upper;};
-extern T393 M393;
-struct S559{T0* _project;T0* _directory_name;T0* _include_wc_string;T0* _exclude_wc_string;T6 _convert_to_filesystem;T6 _concat;T0* _directory_name_variable_name;T0* _include_wildcard;T0* _exclude_wildcard;T0* _directory_names;T0* _single_includes;T0* _single_excludes;};
-extern T559 M559;
-struct S848{T0* _first;T2 _count;T0* _second;T0* _tail;};
-extern T848 M848;
-struct S428{T2 _position;T0* _container;T0* _next_cursor;};
-extern T428 M428;
-struct S548{Tid id;T0* _xml_element;T0* _project;T0* _command;};
-extern T548 M548;
-struct S945{T2 _count;T0* _first_cell;};
-extern T945 M945;
-struct S699{T701 _storage;T2 _capacity;T2 _upper;};
-extern T699 M699;
-struct S542{Tid id;T2 _exit_code;T0* _project;T0* _verbose_filename;T6 _separate_actions;T0* _tokens_classname;T0* _tokens_filename;T0* _output_filename;T0* _input_filename;T6 _old_typing;T6 _new_typing;};
-extern T542 M542;
-struct S544{Tid id;T2 _exit_code;T0* _project;T0* _input_filename;T0* _output_filename;T6 _empty_lines;T0* _defines;T0* _to_directory;T0* _fileset;T6 _force;};
-extern T544 M544;
-struct S491{Tid id;T0* _container;};
-extern T491 M491;
-struct S827{T830 _storage;T2 _capacity;T2 _upper;};
-extern T827 M827;
-struct S311{T313 _storage;T2 _capacity;T2 _upper;};
-extern T311 M311;
-struct S717{Tid id;T0* _parent;T0* _content;};
-extern T717 M717;
-struct S493{Tid id;T0* _name;};
-extern T493 M493;
-struct S691{T693 _storage;T2 _capacity;T2 _upper;};
-extern T691 M691;
-struct S201{Tid id;T0* _xml_element;T0* _project;T0* _command;};
-extern T201 M201;
-struct S894{T2 _count;T0* _last_cell;T0* _internal_cursor;T0* _first_cell;};
-extern T894 M894;
-struct S79{T2 _position;T0* _container;T0* _next_cursor;};
-extern T79 M79;
-struct S871{T3 _item;T0* _right;};
-extern T871 M871;
-struct S736{Tid id;T0* _next;T0* _context;T0* _element_prefix;T0* _element_local_part;T0* _attributes_prefix;T0* _attributes_local_part;T0* _attributes_value;};
-extern T736 M736;
-struct S182{T11 _item;};
-extern T182 M182;
-struct S272{T274 _storage;T2 _capacity;T2 _upper;T2 _lower;};
-extern T272 M272;
-struct S783{T2 _code;};
-extern T783 M783;
-struct S926{T0* _context;};
-extern T926 M926;
-struct S789{T2 _item;};
-extern T789 M789;
-struct S161{Tid id;};
-extern T161 M161;
-struct S426{Tid id;T0* _parameters;};
-extern T426 M426;
-struct S561{Tid id;T2 _exit_code;T0* _project;T0* _file;T0* _to_file;T0* _to_directory;T0* _fileset;T6 _force;};
-extern T561 M561;
-struct S974{T976 _storage;T2 _capacity;T2 _upper;T2 _lower;};
-extern T974 M974;
-struct S586{Tid id;T0* _xml_element;T0* _project;T0* _command;};
-extern T586 M586;
-struct S117{T71 _storage;T2 _capacity;T2 _upper;};
-extern T117 M117;
-extern T164 M164;
-struct S258{T260 _storage;T2 _capacity;T2 _upper;};
-extern T258 M258;
-struct S342{T2 _id;T0* _name;T0* _patterns;T0* _bol_patterns;T6 _is_exclusive;};
-extern T342 M342;
-struct S480{Tid id;T482 _storage;T2 _capacity;T2 _upper;T2 _lower;};
-extern T480 M480;
-struct S662{T0* _path;T6 _end_of_input;T6 _push_back_flag;T8 _input_stream;T9 _buffer;T6 _end_reached;T2 _buffer_position;T2 _buffer_size;T2 _capacity;};
-extern T662 M662;
-struct S938{T6 _after;T6 _before;T0* _container;T0* _current_cell;T0* _next_cursor;};
-extern T938 M938;
-struct S947{T0* _equality_tester;T2 _count;T2 _capacity;T2 _last_position;T2 _modulus;T2 _free_slot;T2 _position;T2 _slots_position;T2 _clashes_previous_position;T2 _found_position;T0* _internal_cursor;T0* _items;T0* _clashes;T0* _slots;T0* _fixed_item_array_;};
-extern T947 M947;
-struct S795{T0* _name;T0* _string_name;T0* _path;T9 _buffer;T2 _buffer_position;T2 _capacity;T8 _output_stream;};
+struct S297{T300 _storage;T2 _capacity;T2 _upper;T2 _lower;};
+extern T297 M297;
+struct S558{Tid id;T2 _exit_code;T0* _project;T6 _verbose;T0* _system_command;T0* _library_command;T6 _validate_command;T0* _xace_filename;T0* _output_filename;T0* _defines;};
+extern T558 M558;
+struct S153{T0* _container;T6 _after;T6 _before;T0* _current_cell;T0* _next_cursor;};
+extern T153 M153;
+struct S200{Tid id;T0* _container;T2 _position;T0* _next_cursor;};
+extern T200 M200;
+struct S825{Tid id;T0* _parameters;};
+extern T825 M825;
+struct S795{Tid id;T2 _last_token;T0* _input_buffer;T2 _line;T2 _column;T2 _position;T2 _yy_start_state;T0* _yy_content;T0* _yy_content_area;T2 _yy_end;T2 _yy_start;T2 _yy_column;T2 _yy_line;T2 _yy_position;T6 _yy_more_flag;T2 _yy_more_len;T2 _yy_last_accepting_state;T2 _yy_last_accepting_cpos;T0* _yy_nxt;T0* _yy_chk;T0* _yy_base;T0* _yy_def;T0* _yy_ec;T0* _yy_meta;T0* _yy_accept;T0* _yy_acclist;T6 _yy_rejected;T0* _yy_state_stack;T2 _yy_state_count;T2 _yy_full_match;T2 _yy_lp;T2 _yy_looking_for_trail_begin;T2 _yy_full_lp;T2 _yy_full_state;T0* _input_stream;T0* _input_resolver;T0* _input_filter;T0* _last_error;T0* _input_name;T0* _last_value;T0* _character_entity;T0* _start_conditions;};
 extern T795 M795;
-struct S696{T0* _xml_element;T0* _project;T0* _redefine_clause;};
-extern T696 M696;
-struct S546{Tid id;T0* _xml_element;T0* _project;T0* _command;};
-extern T546 M546;
-struct S349{T351 _storage;T2 _capacity;T2 _upper;};
-extern T349 M349;
-struct S337{T2 _item;T0* _right;};
-extern T337 M337;
-struct S255{T2 _id;T0* _action;T0* _pattern;T2 _line_nb;T2 _trail_count;T2 _head_count;T2 _line_count;T2 _column_count;T6 _is_useful;T6 _has_trail_context;};
-extern T255 M255;
+extern T57 M57;
+struct S464{Tid id;T0* _target;T0* _label;};
+extern T464 M464;
 struct S562{Tid id;T0* _xml_element;T0* _project;T0* _command;};
 extern T562 M562;
-struct S709{T0* _name;T0* _last_entry;T6 _end_of_input;T0* _string_name;T0* _entry_buffer;T183 _basic_directory;};
-extern T709 M709;
-struct S695{T0* _xml_element;T0* _project;T0* _select_clause;};
-extern T695 M695;
-struct S904{T6 _before;T0* _container;};
-extern T904 M904;
-struct S920{T6 _after;T6 _before;T0* _container;T0* _current_cell;T0* _next_cursor;};
-extern T920 M920;
-struct S769{T2 _position;T0* _container;T0* _next_cursor;};
-extern T769 M769;
-struct S334{T0* _container;T2 _position;T0* _next_cursor;};
-extern T334 M334;
-struct S219{T0* _item;T0* _right;};
-extern T219 M219;
-struct S369{Tid id;T2 _position;T0* _container;};
-extern T369 M369;
+struct S664{T0* _name;};
+extern T664 M664;
+struct S275{T110 _storage;T2 _capacity;T2 _upper;T2 _lower;};
+extern T275 M275;
+struct S120{Tid id;};
+extern T120 M120;
+struct S224{T0* _xml_element;T0* _project;};
+extern T224 M224;
+struct S447{Tid id;T0* _parameters;};
+extern T447 M447;
+struct S941{Tid id;T6 _after;T6 _before;T0* _container;T0* _current_cell;T0* _next_cursor;};
+extern T941 M941;
+extern T846 M846;
+struct S47{Tid id;T0* _equality_tester;T2 _count;T2 _capacity;T2 _last_position;T2 _modulus;T2 _free_slot;T2 _position;T2 _slots_position;T2 _clashes_previous_position;T2 _found_position;T0* _internal_cursor;T0* _key_equality_tester;T0* _items;T0* _keys;T0* _clashes;T0* _slots;T0* _fixed_item_array_;T0* _fixed_key_array_;};
+extern T47 M47;
+extern T55 M55;
+struct S625{Tid id;T0* _xml_element;T0* _project;T0* _command;};
+extern T625 M625;
+struct S461{Tid id;T0* _parameters;};
+extern T461 M461;
+struct S879{T0* _item;T0* _right;T0* _left;};
+extern T879 M879;
+struct S765{T0* _table;};
+extern T765 M765;
+struct S366{T368 _storage;T2 _capacity;T2 _upper;};
+extern T366 M366;
+struct S776{T0* _container;T6 _after;T6 _before;T0* _current_cell;T0* _next_cursor;};
+extern T776 M776;
+struct S479{Tid id;T0* _target;T2 _label;};
+extern T479 M479;
+struct S723{T0* _start;T0* _error;T0* _tree;T0* _last;};
+extern T723 M723;
+struct S547{T550 _storage;T2 _capacity;T2 _upper;};
+extern T547 M547;
+struct S191{Tid id;T2 _position;T0* _container;T0* _next_cursor;};
+extern T191 M191;
+struct S258{T0* _error_file;T0* _warning_file;T0* _info_file;};
+extern T258 M258;
+struct S106{T0* _equality_tester;T2 _count;T2 _capacity;T2 _last_position;T2 _modulus;T2 _free_slot;T2 _position;T2 _slots_position;T2 _clashes_previous_position;T2 _found_position;T0* _internal_cursor;T0* _key_equality_tester;T0* _items;T0* _keys;T0* _clashes;T0* _slots;T0* _fixed_item_array_;T0* _fixed_key_array_;};
+extern T106 M106;
+struct S228{T0* _xml_element;T0* _project;T0* _map;};
+extern T228 M228;
+struct S694{T0* _equality_tester;T2 _count;T2 _capacity;T2 _last_position;T2 _modulus;T2 _free_slot;T2 _position;T2 _slots_position;T2 _clashes_previous_position;T2 _found_position;T0* _internal_cursor;T0* _key_equality_tester;T0* _items;T0* _keys;T0* _clashes;T0* _slots;T0* _fixed_item_array_;T0* _fixed_key_array_;};
+extern T694 M694;
+struct S490{T2 _count;T9 _area;T0* _area_string;};
+extern T490 M490;
+struct S444{Tid id;T0* _parameters;};
+extern T444 M444;
+struct S449{Tid id;T0* _parameters;};
+extern T449 M449;
+struct S628{Tid id;T2 _exit_code;T0* _project;T0* _resource_name;T0* _variable_name;T0* _true_value;T0* _false_value;};
+extern T628 M628;
+struct S588{Tid id;T2 _exit_code;T0* _project;T0* _message;T0* _to_file;T6 _append;};
+extern T588 M588;
+struct S1016{T2 _count;T0* _last_cell;T0* _internal_cursor;T0* _first_cell;};
+extern T1016 M1016;
+struct S318{T0* _comparator;};
+extern T318 M318;
+struct S277{T0* _equality_tester;T2 _count;T2 _capacity;T0* _storage;T0* _fixed_array_;T0* _internal_cursor;};
+extern T277 M277;
+struct S644{T0* _container;T2 _position;T0* _next_cursor;};
+extern T644 M644;
+struct S603{T0* _first;T0* _second;};
+extern T603 M603;
+struct S348{T0* _container;T2 _position;T0* _next_cursor;};
+extern T348 M348;
+struct S680{T0* _original_name;T0* _new_name;};
+extern T680 M680;
+struct S729{T0* _xml_element;T0* _project;T0* _geant_inherit;};
+extern T729 M729;
+struct S570{Tid id;T2 _exit_code;T0* _project;T0* _filename;T0* _fileset;T6 _reuse_variables;T0* _start_target_name;T0* _arguments;};
+extern T570 M570;
+extern T128 M128;
+struct S681{T2 _position;T0* _container;T0* _next_cursor;};
+extern T681 M681;
+struct S730{T0* _xml_element;T0* _project;T0* _parent;};
+extern T730 M730;
+struct S761{Tid id;T0* _next;T0* _document;T0* _last_position_table;T0* _current_element;T0* _namespace_cache;T0* _source_parser;};
+extern T761 M761;
+struct S590{Tid id;T2 _exit_code;T0* _project;T0* _directory;};
+extern T590 M590;
+struct S1052{T0* _item;T0* _right;T0* _left;};
+extern T1052 M1052;
+struct S556{Tid id;T2 _exit_code;T0* _project;T0* _name;};
+extern T556 M556;
+struct S561{Tid id;T2 _exit_code;T0* _project;T0* _size;T6 _backup;T6 _ecs;T6 _full;T6 _case_insensitive;T6 _meta_ecs;T6 _no_default;T6 _no_warn;T6 _separate_actions;T0* _output_filename;T0* _input_filename;};
+extern T561 M561;
+struct S290{T287 _storage;T2 _capacity;T2 _upper;T2 _lower;};
+extern T290 M290;
+struct S915{T0* _name;T0* _items;T3 _type;T3 _repetition;T6 _is_character_data_allowed;};
+extern T915 M915;
+struct S489{Tid id;T0* _parameters;};
+extern T489 M489;
+struct S766{T2 _count;T0* _first_cell;T0* _last_cell;T0* _internal_cursor;};
+extern T766 M766;
+struct S283{T2 _count;T2 _capacity;T0* _storage;T0* _fixed_array_;T0* _internal_cursor;};
+extern T283 M283;
+struct S869{T0* _name;T0* _string_name;T0* _path;T9 _buffer;T2 _buffer_position;T2 _capacity;T8 _output_stream;};
+extern T869 M869;
+struct S526{Tid id;T2 _position;T0* _container;T0* _next_cursor;};
+extern T526 M526;
+struct S916{T919 _storage;T2 _capacity;T2 _upper;};
+extern T916 M916;
+extern T132 M132;
+struct S646{T0* _name;};
+extern T646 M646;
+struct S586{Tid id;T2 _exit_code;T0* _project;T0* _input_filename;};
+extern T586 M586;
+struct S529{T0* _equality_tester;T2 _count;T2 _capacity;T2 _last_position;T2 _modulus;T2 _free_slot;T2 _position;T2 _slots_position;T2 _clashes_previous_position;T2 _found_position;T0* _internal_cursor;T0* _items;T0* _clashes;T0* _slots;T0* _fixed_item_array_;};
+extern T529 M529;
+struct S409{Tid id;T0* _equality_tester;T2 _count;T2 _capacity;T0* _storage;T0* _fixed_array_;T0* _internal_cursor;T6 _negated;T6 _sort_needed;};
+extern T409 M409;
+struct S607{T609 _storage;T2 _capacity;T2 _upper;};
+extern T607 M607;
+struct S841{T0* _set;};
+extern T841 M841;
+struct S935{Tid id;T6 _end_of_input;T3 _last_character;T0* _string;T2 _location;};
+extern T935 M935;
+struct S223{T0* _project;T0* _dir_name;T0* _directory_name;T0* _include_wc_string;T0* _exclude_wc_string;T6 _convert_to_filesystem;T0* _map;T6 _force;T6 _concat;T0* _filename_directory_name;T0* _mapped_filename_directory_name;T0* _filename_variable_name;T0* _mapped_filename_variable_name;T0* _include_wildcard;T0* _exclude_wildcard;T0* _filenames;T0* _single_includes;T0* _single_excludes;};
+extern T223 M223;
+extern T127 M127;
+struct S364{Tid id;T2 _count;T2 _capacity;T0* _storage;T0* _fixed_array_;T0* _internal_cursor;};
+extern T364 M364;
+struct S778{T780 _storage;T2 _capacity;T2 _upper;T2 _lower;};
+extern T778 M778;
+struct S643{T2 _count;T2 _capacity;T0* _storage;T0* _fixed_array_;T0* _internal_cursor;};
+extern T643 M643;
+struct S589{Tid id;T0* _xml_element;T0* _project;T0* _command;};
+extern T589 M589;
+struct S1054{Tid id;T0* _parent;T0* _data;};
+extern T1054 M1054;
+struct S169{Tid id;};
+extern T169 M169;
+struct S361{T0* _states;T6 _in_trail_context;};
+extern T361 M361;
+struct S360{T0* _text;};
+extern T360 M360;
+struct S651{T0* _equality_tester;T2 _count;T2 _capacity;T2 _last_position;T2 _modulus;T2 _free_slot;T2 _position;T2 _slots_position;T2 _clashes_previous_position;T2 _found_position;T0* _internal_cursor;T0* _key_equality_tester;T0* _items;T0* _keys;T0* _clashes;T0* _slots;T0* _fixed_item_array_;T0* _fixed_key_array_;};
+extern T651 M651;
+struct S900{T904 _storage;T2 _capacity;T2 _upper;};
+extern T900 M900;
+struct S931{T934 _storage;T2 _capacity;T2 _upper;};
+extern T931 M931;
+struct S1046{T1049 _storage;T2 _capacity;T2 _upper;};
+extern T1046 M1046;
+struct S826{Tid id;T0* _parameters;};
+extern T826 M826;
+struct S595{Tid id;T0* _xml_element;T0* _project;T0* _command;};
+extern T595 M595;
+struct S205{Tid id;T204 _basic_directory;};
+extern T205 M205;
+struct S864{T0* _path;T2 _old_last_byte;T6 _old_end_of_file;T9 _buffer;T6 _end_reached;T2 _buffer_position;T2 _buffer_size;T2 _capacity;T8 _input_stream;T0* _name;T0* _string_name;T3 _last_character;T0* _last_string;T6 _end_of_file;T0* _character_buffer;};
+extern T864 M864;
+struct S896{T899 _storage;T2 _capacity;T2 _upper;};
+extern T896 M896;
+struct S260{T2 _array_size;T6 _case_insensitive;T2 _characters_count;T6 _equiv_classes_used;T6 _meta_equiv_classes_used;T6 _full_table;T6 _actions_separated;T6 _inspect_used;T6 _reject_used;T6 _line_used;T6 _position_used;T6 _pre_action_used;T6 _post_action_used;T6 _pre_eof_action_used;T6 _post_eof_action_used;T6 _line_pragma;T0* _input_filename;T0* _start_conditions;T0* _rules;T0* _eof_rules;T0* _equiv_classes;T6 _bol_needed;T6 _variable_trail_context;T0* _eiffel_code;T0* _eiffel_header;};
+extern T260 M260;
+struct S411{T413 _storage;T2 _capacity;T2 _upper;};
+extern T411 M411;
+struct S594{T0* _project;T0* _directory_name;T0* _include_wc_string;T0* _exclude_wc_string;T6 _convert_to_filesystem;T6 _concat;T0* _directory_name_variable_name;T0* _include_wildcard;T0* _exclude_wildcard;T0* _directory_names;T0* _single_includes;T0* _single_excludes;};
+extern T594 M594;
+struct S925{T6 _use_namespaces;T0* _first;T2 _count;T0* _second;T0* _tail;};
+extern T925 M925;
+struct S850{T852 _storage;T2 _capacity;T2 _upper;T2 _lower;};
+extern T850 M850;
+struct S450{T2 _position;T0* _container;T0* _next_cursor;};
+extern T450 M450;
+struct S569{Tid id;T0* _xml_element;T0* _project;T0* _command;};
+extern T569 M569;
+struct S215{Tid id;T0* _variables;};
+extern T215 M215;
+struct S740{T742 _storage;T2 _capacity;T2 _upper;};
+extern T740 M740;
+struct S563{Tid id;T2 _exit_code;T0* _project;T0* _verbose_filename;T6 _separate_actions;T0* _tokens_classname;T0* _tokens_filename;T0* _output_filename;T0* _input_filename;T6 _old_typing;T6 _new_typing;};
+extern T563 M563;
+struct S565{Tid id;T2 _exit_code;T0* _project;T0* _input_filename;T0* _output_filename;T6 _empty_lines;T0* _defines;T0* _to_directory;T0* _fileset;T6 _force;};
+extern T565 M565;
+struct S510{Tid id;T0* _container;};
+extern T510 M510;
+struct S906{T910 _storage;T2 _capacity;T2 _upper;};
+extern T906 M906;
+struct S332{T334 _storage;T2 _capacity;T2 _upper;};
+extern T332 M332;
+struct S759{Tid id;T0* _parent;T0* _content;};
+extern T759 M759;
+struct S512{Tid id;T0* _name;};
+extern T512 M512;
+struct S732{T734 _storage;T2 _capacity;T2 _upper;};
+extern T732 M732;
+struct S220{Tid id;T0* _xml_element;T0* _project;T0* _command;};
+extern T220 M220;
+struct S973{T2 _count;T0* _last_cell;T0* _internal_cursor;T0* _first_cell;};
+extern T973 M973;
+struct S94{T2 _position;T0* _container;T0* _next_cursor;};
+extern T94 M94;
+struct S942{T3 _item;T0* _right;};
+extern T942 M942;
+struct S782{Tid id;T0* _next;T6 _forward_xmlns;T0* _context;T0* _element_prefix;T0* _element_local_part;T0* _attributes_prefix;T0* _attributes_local_part;T0* _attributes_value;};
+extern T782 M782;
+struct S293{T295 _storage;T2 _capacity;T2 _upper;T2 _lower;};
+extern T293 M293;
+struct S824{T2 _code;};
+extern T824 M824;
+struct S1009{T0* _context;};
+extern T1009 M1009;
+struct S830{T2 _item;};
+extern T830 M830;
+struct S448{Tid id;T0* _parameters;};
+extern T448 M448;
+struct S596{Tid id;T2 _exit_code;T0* _project;T0* _file;T0* _to_file;T0* _to_directory;T0* _fileset;T6 _force;};
+extern T596 M596;
+struct S945{T947 _storage;T2 _capacity;T2 _upper;T2 _lower;};
+extern T945 M945;
+struct S583{Tid id;T2 _count;T0* _first_cell;T0* _last_cell;T0* _internal_cursor;};
+extern T583 M583;
+struct S621{Tid id;T0* _xml_element;T0* _project;T0* _command;};
+extern T621 M621;
+struct S121{T85 _storage;T2 _capacity;T2 _upper;};
+extern T121 M121;
+extern T180 M180;
+struct S279{T281 _storage;T2 _capacity;T2 _upper;};
+extern T279 M279;
+struct S363{T2 _id;T0* _name;T0* _patterns;T0* _bol_patterns;T6 _is_exclusive;};
+extern T363 M363;
+struct S703{T0* _path;T6 _end_of_input;T6 _push_back_flag;T8 _input_stream;T9 _buffer;T6 _end_reached;T2 _buffer_position;T2 _buffer_size;T2 _capacity;};
+extern T703 M703;
+struct S1021{T6 _after;T6 _before;T0* _container;T0* _current_cell;T0* _next_cursor;};
+extern T1021 M1021;
+struct S758{T0* _xml_element;};
+extern T758 M758;
+struct S1027{T0* _equality_tester;T2 _count;T2 _capacity;T2 _last_position;T2 _modulus;T2 _free_slot;T2 _position;T2 _slots_position;T2 _clashes_previous_position;T2 _found_position;T0* _internal_cursor;T0* _items;T0* _clashes;T0* _slots;T0* _fixed_item_array_;};
+extern T1027 M1027;
+struct S858{T0* _name;T0* _string_name;T0* _path;T9 _buffer;T2 _buffer_position;T2 _capacity;T8 _output_stream;};
+extern T858 M858;
+struct S737{T0* _xml_element;T0* _project;T0* _redefine_clause;};
+extern T737 M737;
+struct S567{Tid id;T0* _xml_element;T0* _project;T0* _command;};
+extern T567 M567;
+struct S370{T372 _storage;T2 _capacity;T2 _upper;};
+extern T370 M370;
+struct S358{T2 _item;T0* _right;};
+extern T358 M358;
+struct S276{T2 _id;T0* _action;T0* _pattern;T2 _line_nb;T2 _trail_count;T2 _head_count;T2 _line_count;T2 _column_count;T6 _is_useful;T6 _has_trail_context;};
+extern T276 M276;
+struct S597{Tid id;T0* _xml_element;T0* _project;T0* _command;};
+extern T597 M597;
+struct S750{T0* _name;T0* _last_entry;T6 _end_of_input;T0* _string_name;T0* _entry_buffer;T204 _basic_directory;};
+extern T750 M750;
+struct S736{T0* _xml_element;T0* _project;T0* _select_clause;};
+extern T736 M736;
+struct S983{T6 _before;T0* _container;};
+extern T983 M983;
+struct S1000{T6 _after;T6 _before;T0* _container;T0* _current_cell;T0* _next_cursor;};
+extern T1000 M1000;
+struct S876{T2 _count;T0* _last_cell;T0* _internal_cursor;T0* _first_cell;};
+extern T876 M876;
+struct S812{T2 _position;T0* _container;T0* _next_cursor;};
+extern T812 M812;
+struct S139{T2 _count;T2 _capacity;T0* _storage;T0* _fixed_array_;};
+extern T139 M139;
+struct S491{T2 _capacity;T0* _storage;T0* _fixed_array_;};
+extern T491 M491;
+struct S355{T0* _container;T2 _position;T0* _next_cursor;};
+extern T355 M355;
+struct S150{T0* _variable_resolver;};
+extern T150 M150;
+struct S239{T0* _item;T0* _right;};
+extern T239 M239;
+struct S391{Tid id;T2 _position;T0* _container;};
+extern T391 M391;
 struct S7{Tid id;T9 _storage;T2 _count;T2 _capacity;};
 extern T7 M7;
+struct S599{Tid id;T0* _xml_element;T0* _project;T0* _command;};
+extern T599 M599;
+struct S697{T699 _storage;T2 _capacity;T2 _upper;};
+extern T697 M697;
+struct S146{T2 _count;T2 _capacity;T0* _storage;T0* _fixed_array_;};
+extern T146 M146;
+struct S921{T924 _storage;T2 _capacity;T2 _upper;};
+extern T921 M921;
+struct S907{T0* _equality_tester;T2 _count;T0* _last_cell;T0* _internal_cursor;T0* _first_cell;};
+extern T907 M907;
+struct S216{Tid id;T0* _xml_element;T0* _project;T0* _command;};
+extern T216 M216;
+struct S429{Tid id;T0* _content;T2 _count;T2 _capacity;T2 _position;T2 _column;T2 _line;T2 _index;T6 _beginning_of_line;T6 _filled;};
+extern T429 M429;
+struct S527{T0* _filename;T0* _mapped_filename;};
+extern T527 M527;
+struct S501{T0* _container;T2 _position;T0* _next_cursor;};
+extern T501 M501;
+struct S678{T2 _position;T0* _container;T0* _next_cursor;};
+extern T678 M678;
+struct S1005{Tid id;T0* _item;T0* _right;T0* _left;};
+extern T1005 M1005;
+struct S845{T0* _lower_table;T0* _flip_table;};
+extern T845 M845;
+struct S875{T0* _item;T0* _right;};
+extern T875 M875;
+struct S303{Tid id;T0* _equality_tester;T2 _count;T2 _capacity;T0* _storage;T0* _fixed_array_;T0* _internal_cursor;};
+extern T303 M303;
+struct S443{Tid id;T0* _parameters;};
+extern T443 M443;
+extern T492 M492;
+struct S660{T2 _position;T0* _container;T0* _next_cursor;};
+extern T660 M660;
+struct S892{T6 _before;T0* _container;};
+extern T892 M892;
+struct S605{T2 _count;T2 _capacity;T0* _storage;T0* _fixed_array_;T0* _internal_cursor;};
+extern T605 M605;
+struct S591{Tid id;T0* _xml_element;T0* _project;T0* _command;};
+extern T591 M591;
+struct S905{T0* _name;T3 _type;T3 _value;T0* _default_value;T6 _is_list_type;T0* _enumeration_list;};
+extern T905 M905;
+struct S568{Tid id;T2 _exit_code;T0* _project;T0* _config_filename;T0* _compile;T0* _class_regexp;T0* _feature_regexp;T6 _generation;T6 _compilation;T6 _execution;T6 _abort;T0* _defines;};
+extern T568 M568;
+struct S783{Tid id;T0* _yydefact;T0* _yydefgoto;T0* _yytable;T0* _yycheck;T0* _yytypes1;T0* _yytypes2;T0* _yyss;T2 _yyssp;T6 _yy_lookahead_needed;T2 _yyerrstatus;T2 _string_mode;T0* _dtd_resolver;T0* _entity_resolver;T2 _error_count;T0* _yytranslate;T0* _yyr1;T0* _yypact;T0* _yypgoto;T2 _yy_parsing_status;T0* _callbacks;T0* _dtd_callbacks;T0* _last_any_value;T0* _last_string_value;T6 _use_namespaces;T0* _last_error_description;T0* _error_positions;T0* _entities;T0* _pe_entities;T6 _in_external_dtd;T0* _scanner;T0* _scanners;T2 _last_token;T0* _yyvs1;T2 _yyvsc1;T2 _yyvsp1;T0* _yyspecial_routines1;T0* _yyvs2;T2 _yyvsc2;T2 _yyvsp2;T0* _yyspecial_routines2;T0* _yyvs3;T2 _yyvsc3;T2 _yyvsp3;T0* _yyspecial_routines3;T0* _yyvs4;T2 _yyvsc4;T2 _yyvsp4;T0* _yyspecial_routines4;T0* _yyvs5;T2 _yyvsc5;T2 _yyvsp5;T0* _yyspecial_routines5;T0* _yyvs6;T2 _yyvsc6;T2 _yyvsp6;T0* _yyspecial_routines6;T0* _yyvs7;T2 _yyvsc7;T2 _yyvsp7;T0* _yyspecial_routines7;T0* _yyvs8;T2 _yyvsc8;T2 _yyvsp8;T0* _yyspecial_routines8;T0* _yyvs9;T2 _yyvsc9;T2 _yyvsp9;T0* _yyspecial_routines9;T0* _yyvs10;T2 _yyvsc10;T2 _yyvsp10;T0* _yyspecial_routines10;T0* _yyvs11;T2 _yyvsc11;T2 _yyvsp11;T0* _yyspecial_routines11;};
+extern T783 M783;
+struct S161{T0* _element;T0* _character_data;T0* _processing_instruction;T0* _document;T0* _comment;T0* _xml_attribute;T0* _composite;};
+extern T161 M161;
+struct S1026{T2 _count;T0* _first_cell;T0* _last_cell;};
+extern T1026 M1026;
+struct S717{Tid id;T0* _parent;T2 _count;T0* _first_cell;T0* _last_cell;T0* _internal_cursor;T0* _root_element;};
+extern T717 M717;
+extern T204 M204;
+struct S446{Tid id;T0* _parameters;};
+extern T446 M446;
+extern T68 M68;
+struct S209{T0* _item;T0* _right;};
+extern T209 M209;
+struct S598{Tid id;T2 _exit_code;T0* _project;T0* _file;T0* _to_file;T0* _to_directory;T0* _fileset;};
+extern T598 M598;
+struct S700{T0* _xml_element;T0* _project;};
+extern T700 M700;
+struct S408{T85 _storage;T2 _capacity;T2 _upper;};
+extern T408 M408;
+extern T793 M793;
+struct S553{Tid id;T0* _xml_element;T0* _project;T0* _command;};
+extern T553 M553;
+struct S133{T135 _storage;T2 _capacity;T2 _upper;};
+extern T133 M133;
+struct S306{Tid id;T0* _target;};
+extern T306 M306;
+struct S273{Tid id;T2 _id;T0* _states;T0* _accepted_rules;T0* _accepted_head_rules;T0* _transitions;T2 _code;};
+extern T273 M273;
+struct S551{Tid id;T0* _xml_element;T0* _project;T0* _command;};
+extern T551 M551;
+struct S50{T0* _name;T0* _start_target_name;T0* _description;T0* _variables;T0* _options;T0* _targets;T0* _selected_targets;T6 _build_successful;T0* _inherit_clause;T6 _old_inherit;T0* _default_target_name;T0* _output_file;T0* _current_target;};
+extern T50 M50;
+extern T868 M868;
+struct S848{T295 _storage;T2 _capacity;T2 _upper;};
+extern T848 M848;
+struct S72{Tid id;T9 _storage;T2 _count;T2 _capacity;T2 _byte_count;T2 _last_byte_index_input;T2 _last_byte_index_result;};
+extern T72 M72;
+struct S109{Tid id;T110 _storage;T2 _capacity;T2 _upper;};
+extern T109 M109;
+struct S292{Tid id;T2 _count;T0* _storage;};
+extern T292 M292;
+struct S593{Tid id;T2 _exit_code;T0* _project;T0* _directory;T0* _file;T0* _fileset;T0* _directoryset;};
+extern T593 M593;
 struct S564{Tid id;T0* _xml_element;T0* _project;T0* _command;};
 extern T564 M564;
-struct S656{T658 _storage;T2 _capacity;T2 _upper;};
-extern T656 M656;
-struct S133{T2 _count;T2 _capacity;T0* _storage;T0* _fixed_array_;};
-extern T133 M133;
-struct S844{T847 _storage;T2 _capacity;T2 _upper;};
-extern T844 M844;
-struct S826{T0* _equality_tester;T2 _count;T0* _last_cell;T0* _internal_cursor;T0* _first_cell;};
-extern T826 M826;
-struct S198{Tid id;T2 _exit_code;T0* _project;T0* _ace_filename;T0* _system_name;T6 _finalize_mode;T6 _fish;T0* _clean;};
-extern T198 M198;
-struct S195{Tid id;T0* _xml_element;T0* _project;T0* _command;};
-extern T195 M195;
-struct S408{Tid id;T0* _content;T2 _count;T2 _capacity;T2 _position;T2 _column;T2 _line;T2 _index;T6 _beginning_of_line;T6 _filled;};
-extern T408 M408;
-struct S508{T0* _filename;T0* _mapped_filename;};
-extern T508 M508;
-struct S476{T0* _container;T2 _position;T0* _next_cursor;};
-extern T476 M476;
-struct S639{T2 _position;T0* _container;T0* _next_cursor;};
-extern T639 M639;
-struct S923{Tid id;T0* _item;T0* _right;T0* _left;};
-extern T923 M923;
-struct S860{T0* _item;T0* _right;};
-extern T860 M860;
-struct S282{Tid id;T0* _equality_tester;T2 _count;T2 _capacity;T0* _storage;T0* _fixed_array_;T0* _internal_cursor;};
-extern T282 M282;
-struct S421{Tid id;T0* _parameters;};
-extern T421 M421;
-extern T467 M467;
-struct S623{T2 _position;T0* _container;T0* _next_cursor;};
+struct S193{Tid id;T0* _equality_tester;T2 _count;T2 _capacity;T2 _last_position;T2 _modulus;T2 _free_slot;T2 _position;T2 _slots_position;T2 _clashes_previous_position;T2 _found_position;T0* _internal_cursor;T0* _key_equality_tester;T0* _items;T0* _keys;T0* _clashes;T0* _slots;T0* _fixed_item_array_;T0* _fixed_key_array_;};
+extern T193 M193;
+struct S179{int _environment_impl;};
+extern T179 M179;
+struct S622{Tid id;T2 _exit_code;T0* _project;T0* _source_filename;T0* _target_filename;T6 _is_out_of_date;T0* _variable_name;T0* _true_value;T0* _false_value;T0* _fileset;};
+extern T622 M622;
+struct S1050{Tid id;T0* _parent;T0* _target;T0* _data;};
+extern T1050 M1050;
+struct S554{Tid id;T2 _exit_code;T0* _project;T0* _name;T0* _value;};
+extern T554 M554;
+struct S895{T0* _version;T0* _encoding;T6 _stand_alone;};
+extern T895 M895;
+struct S581{Tid id;T2 _position;T0* _container;};
+extern T581 M581;
+struct S285{T287 _storage;T2 _capacity;T2 _upper;};
+extern T285 M285;
+struct S584{Tid id;T0* _container;T6 _after;T6 _before;T0* _current_cell;T0* _next_cursor;};
+extern T584 M584;
+struct S428{Tid id;T0* _content;T2 _count;T2 _capacity;T2 _position;T2 _column;T2 _line;T2 _index;T6 _beginning_of_line;T6 _filled;T6 _interactive;T0* _file;T6 _end_of_file;};
+extern T428 M428;
+struct S631{Tid id;T2 _buffer_position;T9 _buffer;T2 _capacity;T0* _name;};
+extern T631 M631;
+extern T763 M763;
+struct S214{Tid id;T2 _exit_code;T0* _project;T6 _case_insensitive;T6 _no_style_warning;T0* _executable;T0* _root_class;T0* _creation_procedure;T0* _ace_filename;T0* _clean;T0* _exit_code_variable_name;};
+extern T214 M214;
+struct S794{Tid id;T2 _last_token;T0* _input_buffer;T2 _line;T2 _column;T2 _position;T2 _yy_start_state;T0* _yy_content;T0* _yy_content_area;T2 _yy_end;T2 _yy_start;T2 _yy_column;T2 _yy_line;T2 _yy_position;T6 _yy_more_flag;T2 _yy_more_len;T2 _yy_last_accepting_state;T2 _yy_last_accepting_cpos;T0* _yy_nxt;T0* _yy_chk;T0* _yy_base;T0* _yy_def;T0* _yy_ec;T0* _yy_meta;T0* _yy_accept;T0* _yy_acclist;T6 _yy_rejected;T0* _yy_state_stack;T2 _yy_state_count;T2 _yy_full_match;T2 _yy_lp;T2 _yy_looking_for_trail_begin;T2 _yy_full_lp;T2 _yy_full_state;T0* _input_stream;T0* _input_resolver;T0* _input_filter;T0* _last_error;T0* _input_name;T0* _last_value;T0* _character_entity;T0* _start_conditions;T0* _resolver;T0* _value;T0* _external_id;T6 _in_use;};
+extern T794 M794;
+struct S445{Tid id;T0* _parameters;};
+extern T445 M445;
+struct S58{Tid id;T0* _name;};
+extern T58 M58;
+struct S872{T0* _source_name;T2 _byte_index;T2 _column;T2 _row;};
+extern T872 M872;
+struct S936{Tid id;T0* _last_string;T2 _encoding;T0* _utf_queue;T0* _impl;};
+extern T936 M936;
+struct S167{Tid id;T0* _parent;T0* _name;T0* _namespace;T0* _value;};
+extern T167 M167;
+struct S219{Tid id;T2 _exit_code;T0* _project;T0* _esd_filename;T0* _xace_filename;T0* _clean;T6 _recursive_clean;T0* _tuned_system;T0* _tuning_level;T0* _exit_code_variable_name;};
+extern T219 M219;
+struct S669{T0* _equality_tester;T2 _count;T2 _capacity;T2 _last_position;T2 _modulus;T2 _free_slot;T2 _position;T2 _slots_position;T2 _clashes_previous_position;T2 _found_position;T0* _internal_cursor;T0* _key_equality_tester;T0* _items;T0* _keys;T0* _clashes;T0* _slots;T0* _fixed_item_array_;T0* _fixed_key_array_;};
+extern T669 M669;
+struct S206{Tid id;T204 _basic_directory;};
+extern T206 M206;
+struct S43{T0* _xml_element;T0* _project;T0* _name;T0* _obsolete_message;T0* _description;T0* _exports;T0* _precursor_target;T0* _redefining_target;T0* _formal_arguments;T6 _is_executed;T6 _execute_once;};
+extern T43 M43;
+extern T828 M828;
+struct S126{Tid id;T9 _storage;T2 _count;T2 _capacity;T2 _byte_count;T2 _last_byte_index_input;T2 _last_byte_index_result;};
+extern T126 M126;
+struct S745{T747 _storage;T2 _capacity;T2 _upper;};
+extern T745 M745;
+struct S1007{Tid id;T2 _last_token;T0* _input_buffer;T2 _line;T2 _column;T2 _position;T2 _yy_start_state;T0* _yy_content;T0* _yy_content_area;T2 _yy_end;T2 _yy_start;T2 _yy_column;T2 _yy_line;T2 _yy_position;T6 _yy_more_flag;T2 _yy_more_len;T2 _yy_last_accepting_state;T2 _yy_last_accepting_cpos;T0* _yy_nxt;T0* _yy_chk;T0* _yy_base;T0* _yy_def;T0* _yy_ec;T0* _yy_meta;T0* _yy_accept;T0* _yy_acclist;T6 _yy_rejected;T0* _yy_state_stack;T2 _yy_state_count;T2 _yy_full_match;T2 _yy_lp;T2 _yy_looking_for_trail_begin;T2 _yy_full_lp;T2 _yy_full_state;T0* _input_stream;T0* _input_resolver;T0* _input_filter;T0* _last_error;T0* _input_name;T0* _last_value;T0* _character_entity;T0* _start_conditions;T0* _resolver;T0* _value;T0* _external_id;T6 _in_use;T6 _pre_sent;T6 _post_sent;};
+extern T1007 M1007;
+struct S84{T85 _storage;T2 _capacity;T2 _upper;T2 _lower;};
+extern T84 M84;
+struct S635{T0* _project;T0* _parents;};
+extern T635 M635;
+struct S797{T0* _equality_tester;T2 _count;T2 _capacity;T2 _last_position;T2 _modulus;T2 _free_slot;T2 _position;T2 _slots_position;T2 _clashes_previous_position;T2 _found_position;T0* _internal_cursor;T0* _key_equality_tester;T0* _items;T0* _keys;T0* _clashes;T0* _slots;T0* _fixed_item_array_;T0* _fixed_key_array_;};
+extern T797 M797;
+struct S831{T6 _is_caseless;T6 _is_extended;T6 _is_greedy;T6 _is_multiline;T6 _is_dotall;T6 _is_empty_allowed;T6 _is_dollar_endonly;T6 _is_bol;T6 _is_eol;T6 _is_anchored;T6 _is_strict;T0* _byte_code;T0* _character_case_mapping;T0* _word_set;T0* _error_message;T2 _error_code;T2 _error_position;T6 _is_startline;T6 _is_ichanged;T2 _optchanged;T2 _code_index;T0* _pattern;T2 _pattern_position;T2 _pattern_count;T2 _subexpression_count;T2 _maxbackrefs;T0* _start_bits;T2 _first_character;T2 _required_character;T2 _regexp_countlits;T0* _subject;T2 _subject_start;T2 _subject_end;T2 _match_count;T6 _is_matching_caseless;T6 _is_matching_multiline;T6 _is_matching_dotall;T2 _subject_next_start;T2 _first_matched_index;T2 _eptr;T0* _offset_vector;T2 _offset_vector_count;T2 _offset_top;T0* _brastart_vector;T2 _brastart_lower;T2 _brastart_count;T2 _brastart_capacity;T0* _eptr_vector;T2 _eptr_lower;T2 _eptr_upper;T2 _eptr_capacity;};
+extern T831 M831;
+struct S815{T818 _storage;T2 _capacity;T2 _upper;};
+extern T815 M815;
+struct S911{T914 _storage;T2 _capacity;T2 _upper;};
+extern T911 M911;
+struct S373{Tid id;T0* _equality_tester;T2 _count;T2 _capacity;T2 _last_position;T2 _modulus;T2 _free_slot;T2 _position;T2 _slots_position;T2 _clashes_previous_position;T2 _found_position;T0* _internal_cursor;T0* _key_equality_tester;T0* _items;T0* _keys;T0* _clashes;T0* _slots;T0* _fixed_item_array_;T0* _fixed_key_array_;};
+extern T373 M373;
+struct S218{Tid id;T0* _xml_element;T0* _project;T0* _command;};
+extern T218 M218;
+struct S403{T281 _storage;T2 _capacity;T2 _upper;T2 _lower;};
+extern T403 M403;
+struct S587{Tid id;T0* _xml_element;T0* _project;T0* _command;};
+extern T587 M587;
+struct S154{Tid id;T0* _parent;T0* _name;T0* _namespace;T2 _count;T0* _first_cell;T0* _last_cell;T0* _internal_cursor;};
+extern T154 M154;
+struct S623{Tid id;T0* _xml_element;T0* _project;T0* _command;};
 extern T623 M623;
-struct S570{T2 _count;T2 _capacity;T0* _storage;T0* _fixed_array_;T0* _internal_cursor;};
-extern T570 M570;
-struct S556{Tid id;T0* _xml_element;T0* _project;T0* _command;};
-extern T556 M556;
-struct S824{T0* _name;T3 _type;T3 _value;T0* _default_value;T6 _is_list_type;};
-extern T824 M824;
-struct S547{Tid id;T2 _exit_code;T0* _project;T0* _config_filename;T0* _compile;T0* _class_regexp;T0* _feature_regexp;T0* _defines;};
-extern T547 M547;
-struct S742{Tid id;T0* _yydefact;T0* _yydefgoto;T0* _yytable;T0* _yycheck;T0* _yytypes1;T0* _yytypes2;T0* _yyss;T2 _yyssp;T6 _yy_lookahead_needed;T2 _yyerrstatus;T0* _callbacks;T2 _string_mode;T0* _dtd_resolver;T0* _entity_resolver;T2 _error_count;T0* _yytranslate;T0* _yyr1;T0* _yypact;T0* _yypgoto;T2 _yy_parsing_status;T0* _dtd_callbacks;T0* _last_any_value;T0* _last_string_value;T0* _last_error_description;T0* _entities;T0* _pe_entities;T6 _in_external_dtd;T0* _scanner;T0* _scanners;T2 _last_token;T0* _yyvs1;T2 _yyvsc1;T2 _yyvsp1;T0* _yyspecial_routines1;T0* _yyvs2;T2 _yyvsc2;T2 _yyvsp2;T0* _yyspecial_routines2;T0* _yyvs3;T2 _yyvsc3;T2 _yyvsp3;T0* _yyspecial_routines3;T0* _yyvs4;T2 _yyvsc4;T2 _yyvsp4;T0* _yyspecial_routines4;T0* _yyvs5;T2 _yyvsc5;T2 _yyvsp5;T0* _yyspecial_routines5;T0* _yyvs6;T2 _yyvsc6;T2 _yyvsp6;T0* _yyspecial_routines6;T0* _yyvs7;T2 _yyvsc7;T2 _yyvsp7;T0* _yyspecial_routines7;T0* _yyvs8;T2 _yyvsc8;T2 _yyvsp8;T0* _yyspecial_routines8;T0* _yyvs9;T2 _yyvsc9;T2 _yyvsp9;T0* _yyspecial_routines9;T0* _yyvs10;T2 _yyvsc10;T2 _yyvsp10;T0* _yyspecial_routines10;T0* _yyvs11;T2 _yyvsc11;T2 _yyvsp11;T0* _yyspecial_routines11;};
-extern T742 M742;
-struct S144{T0* _element;T0* _character_data;T0* _processing_instruction;T0* _document;T0* _comment;T0* _attribute;T0* _composite;};
-extern T144 M144;
-struct S946{T2 _count;T0* _first_cell;T0* _last_cell;};
-extern T946 M946;
-struct S676{Tid id;T0* _parent;T2 _count;T0* _first_cell;T0* _last_cell;T0* _internal_cursor;T0* _root_element;};
-extern T676 M676;
-extern T183 M183;
+struct S485{T0* _comparator;};
+extern T485 M485;
+struct S585{Tid id;T0* _xml_element;T0* _project;T0* _command;};
+extern T585 M585;
+struct S626{Tid id;T2 _exit_code;T0* _project;T0* _parent;T0* _arguments;};
+extern T626 M626;
+struct S633{T0* _project;T0* _parent_project;T0* _renames;T0* _redefines;T0* _selects;T0* _unchanged_targets;T0* _renamed_targets;T0* _redefined_targets;};
+extern T633 M633;
+struct S560{Tid id;T0* _xml_element;T0* _project;T0* _command;};
+extern T560 M560;
+struct S840{T2 _count;T2 _capacity;T0* _byte_code;T0* _character_sets;T2 _character_sets_count;T2 _character_sets_capacity;};
+extern T840 M840;
+struct S939{T2 _count;T0* _first_cell;T0* _last_cell;};
+extern T939 M939;
+struct S701{T0* _last_project_element;T0* _build_filename;T0* _xml_parser;T0* _tree_pipe;T0* _variables;T0* _options;};
+extern T701 M701;
+struct S604{Tid id;T2 _exit_code;T0* _project;T0* _input_filename;T0* _output_filename;T0* _stylesheet_filename;T0* _parameters;T2 _processor;T0* _format;T0* _indent;T0* _extdirs;T0* _classpath;};
+extern T604 M604;
+struct S995{T0* _item;T0* _right;T0* _left;};
+extern T995 M995;
+struct S932{T934 _storage;T2 _capacity;T2 _upper;};
+extern T932 M932;
+struct S821{T2 _count;T0* _first_cell;};
+extern T821 M821;
+struct S61{T204 _basic_directory;int _environment_impl;};
+extern T61 M61;
+struct S927{T0* _equality_tester;T2 _count;T2 _capacity;T2 _last_position;T2 _modulus;T2 _free_slot;T2 _position;T2 _slots_position;T2 _clashes_previous_position;T2 _found_position;T0* _internal_cursor;T0* _items;T0* _clashes;T0* _slots;T0* _fixed_item_array_;};
+extern T927 M927;
+struct S592{T0* _xml_element;T0* _project;T0* _directoryset;};
+extern T592 M592;
+struct S229{T0* _project;T0* _type;T0* _source_pattern;T0* _target_pattern;T0* _map;};
+extern T229 M229;
+struct S854{T6 _is_relative;T0* _drive;T0* _hostname;T2 _count;T0* _components;};
+extern T854 M854;
+struct S49{T0* _build_filename;T0* _project_element;};
+extern T49 M49;
+struct S572{Tid id;T0* _equality_tester;T2 _count;T2 _capacity;T2 _last_position;T2 _modulus;T2 _free_slot;T2 _position;T2 _slots_position;T2 _clashes_previous_position;T2 _found_position;T0* _internal_cursor;T0* _items;T0* _clashes;T0* _slots;T0* _fixed_item_array_;};
+extern T572 M572;
+struct S177{Tid id;T0* _variables;};
+extern T177 M177;
+struct S170{T0* _ns_prefix;T0* _uri;};
+extern T170 M170;
+struct S926{T930 _storage;T2 _capacity;T2 _upper;};
+extern T926 M926;
+struct S437{T0* _equality_tester;T2 _count;T2 _capacity;T2 _last_position;T2 _modulus;T2 _free_slot;T2 _position;T2 _slots_position;T2 _clashes_previous_position;T2 _found_position;T0* _internal_cursor;T0* _key_equality_tester;T0* _items;T0* _keys;T0* _clashes;T0* _slots;T0* _fixed_item_array_;T0* _fixed_key_array_;};
+extern T437 M437;
+struct S901{Tid id;T0* _equality_tester;T2 _count;T0* _last_cell;T0* _internal_cursor;T0* _first_cell;};
+extern T901 M901;
+struct S222{Tid id;T2 _exit_code;T0* _project;T0* _command_line;T0* _exit_code_variable_name;T6 _accept_errors;T0* _fileset;};
+extern T222 M222;
+struct S261{T2 _error_count;T0* _yytranslate;T0* _yyr1;T0* _yydefact;T0* _yydefgoto;T0* _yypact;T0* _yypgoto;T0* _yytable;T0* _yycheck;T0* _yytypes1;T0* _yytypes2;T0* _yyss;T2 _yyssp;T6 _yy_lookahead_needed;T2 _yyerrstatus;T2 _yy_parsing_status;T2 _last_token;T0* _input_buffer;T2 _line;T2 _column;T2 _position;T2 _yy_start_state;T0* _yy_content;T0* _yy_content_area;T2 _yy_end;T2 _yy_start;T2 _yy_column;T2 _yy_line;T2 _yy_position;T6 _yy_more_flag;T2 _yy_more_len;T2 _yy_last_accepting_state;T2 _yy_last_accepting_cpos;T0* _yy_nxt;T0* _yy_chk;T0* _yy_def;T0* _yy_ec;T0* _yy_accept;T0* _yy_acclist;T2 _yy_state_count;T2 _yy_looking_for_trail_begin;T0* _error_handler;T2 _line_nb;T0* _pending_rules;T0* _action_factory;T0* _rule;T6 _has_trail_context;T0* _old_singleton_lines;T0* _old_singleton_counts;T0* _old_regexp_columns;T2 _head_column;T2 _trail_count;T0* _last_string_value;T0* _yy_base;T6 _yy_rejected;T2 _yy_full_state;T6 _successful;T0* _description;T0* _last_string;T0* _old_regexp_lines;T0* _last_any_value;T0* _yy_meta;T2 _yy_lp;T2 _yy_full_lp;T0* _character_classes;T0* _start_condition_stack;T6 _in_trail_context;T0* _old_singleton_columns;T0* _old_regexp_counts;T2 _head_line;T2 _head_count;T0* _last_lx_symbol_class_value;T0* _yy_state_stack;T2 _yy_full_match;T2 _rule_line_nb;T0* _name_definitions;T0* _yyvs1;T2 _yyvsc1;T2 _yyvsp1;T0* _yyspecial_routines1;T0* _yyvs2;T2 _yyvsc2;T2 _yyvsp2;T0* _yyspecial_routines2;T0* _yyvs3;T2 _yyvsc3;T2 _yyvsp3;T0* _yyspecial_routines3;T0* _yyvs4;T2 _yyvsc4;T2 _yyvsp4;T0* _yyspecial_routines4;T0* _yyvs5;T2 _yyvsc5;T2 _yyvsp5;T0* _yyspecial_routines5;T2 _last_integer_value;};
+extern T261 M261;
+struct S217{Tid id;T2 _exit_code;T0* _project;T0* _ace_filename;T0* _system_name;T6 _finalize_mode;T6 _finish_freezing;T0* _clean;T0* _exit_code_variable_name;};
+extern T217 M217;
+struct S221{T0* _xml_element;T0* _project;T0* _fileset;};
+extern T221 M221;
 struct S424{Tid id;T0* _parameters;};
 extern T424 M424;
-extern T50 M50;
-struct S158{T0* _item;T0* _right;};
-extern T158 M158;
-struct S563{Tid id;T2 _exit_code;T0* _project;T0* _file;T0* _to_file;T0* _to_directory;T0* _fileset;};
-extern T563 M563;
-struct S659{T0* _xml_element;T0* _project;};
-extern T659 M659;
-struct S389{T71 _storage;T2 _capacity;T2 _upper;};
-extern T389 M389;
-extern T752 M752;
-struct S532{Tid id;T0* _xml_element;T0* _project;T0* _command;};
-extern T532 M532;
-struct S127{T129 _storage;T2 _capacity;T2 _upper;};
-extern T127 M127;
-struct S285{Tid id;T0* _target;};
-extern T285 M285;
-struct S252{Tid id;T2 _id;T0* _states;T0* _accepted_rules;T0* _accepted_head_rules;T0* _transitions;T2 _code;};
-extern T252 M252;
-struct S530{Tid id;T0* _xml_element;T0* _project;T0* _command;};
-extern T530 M530;
-struct S32{T0* _name;T0* _start_target_name;T0* _description;T0* _variables;T0* _options;T0* _targets;T0* _selected_targets;T6 _build_successful;T0* _inherit_clause;T6 _old_inherit;T0* _default_target_name;T0* _output_file;T0* _current_target;};
-extern T32 M32;
-extern T805 M805;
-struct S815{T274 _storage;T2 _capacity;T2 _upper;};
-extern T815 M815;
-struct S54{Tid id;T9 _storage;T2 _count;T2 _capacity;T2 _byte_count;T2 _last_byte_index_input;T2 _last_byte_index_result;};
-extern T54 M54;
-struct S105{Tid id;T106 _storage;T2 _capacity;T2 _upper;};
-extern T105 M105;
-struct S271{Tid id;T2 _count;T0* _storage;};
-extern T271 M271;
-struct S558{Tid id;T2 _exit_code;T0* _project;T0* _directory;T0* _file;T0* _fileset;T0* _directoryset;};
-extern T558 M558;
-struct S543{Tid id;T0* _xml_element;T0* _project;T0* _command;};
-extern T543 M543;
-struct S165{Tid id;T0* _equality_tester;T0* _key_equality_tester;T2 _count;T2 _capacity;T2 _last_position;T2 _modulus;T2 _free_slot;T2 _position;T2 _slots_position;T2 _clashes_previous_position;T2 _found_position;T0* _internal_cursor;T0* _items;T0* _keys;T0* _clashes;T0* _slots;T0* _fixed_item_array_;T0* _fixed_key_array_;};
-extern T165 M165;
-extern T163 M163;
-struct S587{Tid id;T2 _exit_code;T0* _project;T0* _source_filename;T0* _target_filename;T6 _is_out_of_date;T0* _variable_name;T0* _true_value;T0* _false_value;T0* _fileset;};
-extern T587 M587;
-struct S968{Tid id;T0* _target;T0* _data;};
-extern T968 M968;
-struct S533{Tid id;T2 _exit_code;T0* _project;T0* _name;T0* _value;};
-extern T533 M533;
-struct S808{T0* _version;T0* _encoding;T6 _stand_alone;};
-extern T808 M808;
-struct S264{T266 _storage;T2 _capacity;T2 _upper;};
-extern T264 M264;
-struct S407{Tid id;T0* _content;T2 _count;T2 _capacity;T2 _position;T2 _column;T2 _line;T2 _index;T6 _beginning_of_line;T6 _filled;T6 _interactive;T0* _file;T6 _end_of_file;};
-extern T407 M407;
-struct S596{Tid id;T2 _buffer_position;T9 _buffer;T2 _capacity;T0* _name;};
-extern T596 M596;
-extern T721 M721;
-struct S194{Tid id;T2 _exit_code;T0* _project;T6 _case_insensitive;T6 _no_style_warning;T0* _executable;T0* _root_class;T0* _creation_procedure;T0* _ace_filename;T0* _clean;};
-extern T194 M194;
-struct S753{Tid id;T2 _last_token;T0* _input_buffer;T2 _line;T2 _column;T2 _position;T2 _yy_start_state;T0* _yy_content;T0* _yy_content_area;T2 _yy_end;T2 _yy_start;T2 _yy_column;T2 _yy_line;T2 _yy_position;T6 _yy_more_flag;T2 _yy_more_len;T2 _yy_last_accepting_state;T2 _yy_last_accepting_cpos;T0* _yy_nxt;T0* _yy_chk;T0* _yy_base;T0* _yy_def;T0* _yy_ec;T0* _yy_meta;T0* _yy_accept;T0* _yy_acclist;T6 _yy_rejected;T0* _yy_state_stack;T2 _yy_state_count;T2 _yy_full_match;T2 _yy_lp;T2 _yy_looking_for_trail_begin;T2 _yy_full_lp;T2 _yy_full_state;T0* _input_stream;T0* _input_filter;T0* _last_error;T0* _filename;T0* _source;T0* _last_value;T0* _character_entity;T0* _start_conditions;T0* _resolver;T6 _is_external;T0* _value;T6 _in_use;};
-extern T753 M753;
-struct S423{Tid id;T0* _parameters;};
-extern T423 M423;
-struct S40{Tid id;T0* _name;};
-extern T40 M40;
-struct S806{T0* _source;T2 _byte_index;T2 _column;T2 _row;};
-extern T806 M806;
-struct S862{Tid id;T0* _last_string;T2 _encoding;T0* _utf_queue;T0* _impl;};
-extern T862 M862;
-struct S159{Tid id;T0* _parent;T0* _name;T0* _namespace;T0* _value;};
-extern T159 M159;
-struct S200{Tid id;T2 _exit_code;T0* _project;T0* _esd_filename;T0* _clean;T6 _recursive_clean;T0* _tuned_system;T0* _tuning_level;};
-extern T200 M200;
-struct S632{T0* _equality_tester;T0* _key_equality_tester;T2 _count;T2 _capacity;T2 _last_position;T2 _modulus;T2 _free_slot;T2 _position;T2 _slots_position;T2 _clashes_previous_position;T2 _found_position;T0* _internal_cursor;T0* _items;T0* _keys;T0* _clashes;T0* _slots;T0* _fixed_item_array_;T0* _fixed_key_array_;};
-extern T632 M632;
-struct S185{Tid id;T183 _basic_directory;};
-extern T185 M185;
-struct S23{T0* _xml_element;T0* _project;T0* _name;T0* _description;T0* _exports;T0* _precursor_target;T0* _redefining_target;T6 _is_executed;};
-extern T23 M23;
-extern T787 M787;
-struct S122{Tid id;T9 _storage;T2 _count;T2 _capacity;T2 _byte_count;T2 _last_byte_index_input;T2 _last_byte_index_result;};
-extern T122 M122;
-struct S704{T706 _storage;T2 _capacity;T2 _upper;};
-extern T704 M704;
-struct S925{Tid id;T2 _last_token;T0* _input_buffer;T2 _line;T2 _column;T2 _position;T2 _yy_start_state;T0* _yy_content;T0* _yy_content_area;T2 _yy_end;T2 _yy_start;T2 _yy_column;T2 _yy_line;T2 _yy_position;T6 _yy_more_flag;T2 _yy_more_len;T2 _yy_last_accepting_state;T2 _yy_last_accepting_cpos;T0* _yy_nxt;T0* _yy_chk;T0* _yy_base;T0* _yy_def;T0* _yy_ec;T0* _yy_meta;T0* _yy_accept;T0* _yy_acclist;T6 _yy_rejected;T0* _yy_state_stack;T2 _yy_state_count;T2 _yy_full_match;T2 _yy_lp;T2 _yy_looking_for_trail_begin;T2 _yy_full_lp;T2 _yy_full_state;T0* _input_stream;T0* _input_filter;T0* _last_error;T0* _filename;T0* _source;T0* _last_value;T0* _character_entity;T0* _start_conditions;T0* _resolver;T6 _is_external;T0* _value;T6 _in_use;T6 _pre_sent;T6 _post_sent;};
-extern T925 M925;
-struct S70{T71 _storage;T2 _capacity;T2 _upper;T2 _lower;};
-extern T70 M70;
-struct S600{T0* _project;T0* _parents;};
-extern T600 M600;
-struct S756{T0* _equality_tester;T0* _key_equality_tester;T2 _count;T2 _capacity;T2 _last_position;T2 _modulus;T2 _free_slot;T2 _position;T2 _slots_position;T2 _clashes_previous_position;T2 _found_position;T0* _internal_cursor;T0* _items;T0* _keys;T0* _clashes;T0* _slots;T0* _fixed_item_array_;T0* _fixed_key_array_;};
-extern T756 M756;
-struct S772{T775 _storage;T2 _capacity;T2 _upper;};
-extern T772 M772;
-struct S832{T835 _storage;T2 _capacity;T2 _upper;};
-extern T832 M832;
-struct S352{Tid id;T0* _equality_tester;T0* _key_equality_tester;T2 _count;T2 _capacity;T2 _last_position;T2 _modulus;T2 _free_slot;T2 _position;T2 _slots_position;T2 _clashes_previous_position;T2 _found_position;T0* _internal_cursor;T0* _items;T0* _keys;T0* _clashes;T0* _slots;T0* _fixed_item_array_;T0* _fixed_key_array_;};
-extern T352 M352;
-struct S199{Tid id;T0* _xml_element;T0* _project;T0* _command;};
-extern T199 M199;
-struct S381{T260 _storage;T2 _capacity;T2 _upper;T2 _lower;};
-extern T381 M381;
-struct S552{Tid id;T0* _xml_element;T0* _project;T0* _command;};
-extern T552 M552;
-struct S140{Tid id;T0* _parent;T0* _name;T0* _namespace;T2 _count;T0* _first_cell;T0* _last_cell;T0* _internal_cursor;};
-extern T140 M140;
-struct S588{Tid id;T0* _xml_element;T0* _project;T0* _command;};
-extern T588 M588;
-struct S461{T0* _comparator;};
-extern T461 M461;
-struct S550{Tid id;T0* _xml_element;T0* _project;T0* _command;};
-extern T550 M550;
-struct S591{Tid id;T2 _exit_code;T0* _project;T0* _parent;};
-extern T591 M591;
-struct S598{T0* _project;T0* _parent_project;T0* _renames;T0* _redefines;T0* _selects;T0* _unchanged_targets;T0* _renamed_targets;T0* _redefined_targets;};
-extern T598 M598;
-struct S539{Tid id;T0* _xml_element;T0* _project;T0* _command;};
-extern T539 M539;
-struct S865{T2 _count;T0* _first_cell;T0* _last_cell;};
-extern T865 M865;
-struct S484{Tid id;T486 _storage;T2 _capacity;T2 _upper;T2 _lower;};
-extern T484 M484;
-struct S660{T0* _last_project_element;T0* _build_filename;T0* _xml_parser;T0* _tree_pipe;T0* _variables;T0* _options;};
-extern T660 M660;
-struct S569{Tid id;T2 _exit_code;T0* _project;T0* _input_filename;T0* _output_filename;T0* _stylesheet_filename;T0* _parameters;T2 _processor;T0* _format;T0* _indent;T0* _extdirs;T0* _classpath;};
-extern T569 M569;
-struct S915{T0* _item;T0* _right;T0* _left;};
-extern T915 M915;
-struct S857{T859 _storage;T2 _capacity;T2 _upper;};
-extern T857 M857;
-struct S778{T2 _count;T0* _first_cell;};
-extern T778 M778;
-struct S43{T183 _basic_directory;};
-extern T43 M43;
-struct S850{T0* _equality_tester;T2 _count;T2 _capacity;T2 _last_position;T2 _modulus;T2 _free_slot;T2 _position;T2 _slots_position;T2 _clashes_previous_position;T2 _found_position;T0* _internal_cursor;T0* _items;T0* _clashes;T0* _slots;T0* _fixed_item_array_;};
-extern T850 M850;
-struct S557{T0* _xml_element;T0* _project;T0* _directoryset;};
+struct S48{T6 _verbose;T6 _debug_mode;T6 _no_exec;};
+extern T48 M48;
+struct S26{Tid id;T0* _equality_tester;T2 _count;T2 _capacity;T2 _last_position;T2 _modulus;T2 _free_slot;T2 _position;T2 _slots_position;T2 _clashes_previous_position;T2 _found_position;T0* _internal_cursor;T0* _key_equality_tester;T0* _items;T0* _keys;T0* _clashes;T0* _slots;T0* _fixed_item_array_;T0* _fixed_key_array_;};
+extern T26 M26;
+struct S426{T0* _program_name;};
+extern T426 M426;
+struct S855{T0* _command;T2 _exit_code;T6 _is_system_code;T0* _string_command;};
+extern T855 M855;
+struct S475{Tid id;T0* _container;};
+extern T475 M475;
+struct S226{T0* _container;T6 _after;T6 _before;T0* _current_cell;T0* _next_cursor;};
+extern T226 M226;
+struct S557{Tid id;T0* _xml_element;T0* _project;T0* _command;};
 extern T557 M557;
-struct S209{T0* _project;T0* _type;T0* _source_pattern;T0* _target_pattern;T0* _map;};
-extern T209 M209;
-struct S791{T6 _is_relative;T0* _drive;T0* _hostname;T2 _count;T0* _components;};
-extern T791 M791;
-struct S31{T0* _build_filename;T0* _project_element;};
-extern T31 M31;
-struct S162{T0* _ns_prefix;T0* _uri;};
-extern T162 M162;
-struct S851{T854 _storage;T2 _capacity;T2 _upper;};
-extern T851 M851;
-struct S416{T0* _equality_tester;T0* _key_equality_tester;T2 _count;T2 _capacity;T2 _last_position;T2 _modulus;T2 _free_slot;T2 _position;T2 _slots_position;T2 _clashes_previous_position;T2 _found_position;T0* _internal_cursor;T0* _items;T0* _keys;T0* _clashes;T0* _slots;T0* _fixed_item_array_;T0* _fixed_key_array_;};
-extern T416 M416;
-struct S819{Tid id;T0* _equality_tester;T2 _count;T0* _last_cell;T0* _internal_cursor;T0* _first_cell;};
-extern T819 M819;
-struct S203{Tid id;T2 _exit_code;T0* _project;T0* _command_line;T6 _accept_errors;T0* _fileset;};
-extern T203 M203;
-struct S240{T2 _error_count;T0* _yytranslate;T0* _yyr1;T0* _yydefact;T0* _yydefgoto;T0* _yypact;T0* _yypgoto;T0* _yytable;T0* _yycheck;T0* _yytypes1;T0* _yytypes2;T0* _yyss;T2 _yyssp;T6 _yy_lookahead_needed;T2 _yyerrstatus;T2 _yy_parsing_status;T2 _column;T2 _position;T2 _yy_start_state;T0* _yy_content;T0* _yy_content_area;T2 _yy_start;T2 _yy_column;T2 _yy_more_len;T2 _yy_last_accepting_state;T2 _yy_last_accepting_cpos;T0* _yy_nxt;T0* _yy_chk;T0* _yy_def;T0* _yy_ec;T0* _yy_accept;T0* _yy_acclist;T2 _yy_state_count;T2 _yy_looking_for_trail_begin;T0* _error_handler;T2 _line_nb;T0* _pending_rules;T0* _action_factory;T0* _rule;T6 _has_trail_context;T2 _head_column;T2 _trail_count;T0* _last_string_value;T0* _yy_base;T6 _yy_rejected;T2 _yy_full_state;T6 _successful;T0* _description;T0* _last_string;T0* _last_any_value;T2 _last_token;T0* _input_buffer;T2 _line;T2 _yy_end;T2 _yy_line;T2 _yy_position;T6 _yy_more_flag;T0* _yy_meta;T2 _yy_lp;T2 _yy_full_lp;T0* _character_classes;T0* _start_condition_stack;T6 _in_trail_context;T2 _head_line;T2 _head_count;T0* _last_lx_symbol_class_value;T0* _yy_state_stack;T2 _yy_full_match;T2 _rule_line_nb;T0* _name_definitions;T0* _yyvs1;T2 _yyvsc1;T2 _yyvsp1;T0* _yyspecial_routines1;T0* _yyvs2;T2 _yyvsc2;T2 _yyvsp2;T0* _yyspecial_routines2;T0* _yyvs3;T2 _yyvsc3;T2 _yyvsp3;T0* _yyspecial_routines3;T0* _yyvs4;T2 _yyvsc4;T2 _yyvsp4;T0* _yyspecial_routines4;T0* _yyvs5;T2 _yyvsc5;T2 _yyvsp5;T0* _yyspecial_routines5;T2 _last_integer_value;};
-extern T240 M240;
-struct S196{Tid id;T2 _exit_code;T0* _project;T0* _ace_filename;T0* _system_name;T6 _finalize_mode;T6 _finish_freezing;T0* _clean;};
-extern T196 M196;
-struct S202{T0* _xml_element;T0* _project;T0* _fileset;};
-extern T202 M202;
-struct S403{Tid id;T0* _parameters;};
-extern T403 M403;
-struct S30{T6 _verbose;T6 _debug_mode;T6 _no_exec;};
-extern T30 M30;
-struct S29{T0* _variables;};
-extern T29 M29;
-struct S405{T0* _program_name;};
-extern T405 M405;
-struct S792{T0* _command;T2 _exit_code;T6 _is_system_code;T0* _string_command;};
-extern T792 M792;
-struct S451{T0* _container;};
-extern T451 M451;
-struct S206{T0* _container;T6 _after;T6 _before;T0* _current_cell;T0* _next_cursor;};
-extern T206 M206;
-struct S536{Tid id;T0* _xml_element;T0* _project;T0* _command;};
-extern T536 M536;
-struct S379{T0* _container;};
-extern T379 M379;
-struct S534{Tid id;T0* _xml_element;T0* _project;T0* _command;};
-extern T534 M534;
-struct S565{Tid id;T2 _exit_code;T0* _project;T0* _name;T0* _value;};
-extern T565 M565;
+struct S401{T0* _container;};
+extern T401 M401;
+struct S555{Tid id;T0* _xml_element;T0* _project;T0* _command;};
+extern T555 M555;
+struct S600{Tid id;T2 _exit_code;T0* _project;T0* _name;T0* _value;};
+extern T600 M600;
 /*
 -- This file is  free  software, which  comes  along  with  SmartEiffel. This
 -- software  is  distributed  in the hope that it will be useful, but WITHOUT
@@ -1557,7 +1608,7 @@ void r6out_in_tagged_out_memory(T6 C);
 T6 r6_px_not(T6 C);
 /*BOOLEAN*/
 T6 r6_ix_or(T6 C,T6 a1);
-extern T0*oBC22tagged_out_memory;
+extern T0*oBC20tagged_out_memory;
 /*CHARACTER*/
 T6 r3is_digit(T3 C);
 /*CHARACTER*/
@@ -1589,163 +1640,167 @@ void r2append_in(T2 C,T0* a1);
 /*INTEGER_64*/
 T3 r11digit(T11 C);
 /*NATIVE_ARRAY[DS_BILINKABLE[INTEGER]]*/
-void r279set_all_with(T279 C,T0* a1,T2 a2);
+void r300set_all_with(T300 C,T0* a1,T2 a2);
 /*NATIVE_ARRAY[GEANT_FILESET_ENTRY]*/
-T529 r529realloc(T529 C,T2 a1,T2 a2);
+T550 r550realloc(T550 C,T2 a1,T2 a2);
 /*NATIVE_ARRAY[GEANT_FILESET_ENTRY]*/
-void r529clear(T529 C,T2 a1,T2 a2);
+void r550clear(T550 C,T2 a1,T2 a2);
 /*NATIVE_ARRAY[GEANT_FILESET_ENTRY]*/
-void r529copy_from(T529 C,T529 a1,T2 a2);
+void r550copy_from(T550 C,T550 a1,T2 a2);
 /*NATIVE_ARRAY[LX_SYMBOL_CLASS]*/
-T395 r395realloc(T395 C,T2 a1,T2 a2);
+T413 r413realloc(T413 C,T2 a1,T2 a2);
 /*NATIVE_ARRAY[LX_SYMBOL_CLASS]*/
-void r395set_all_with(T395 C,T0* a1,T2 a2);
+void r413set_all_with(T413 C,T0* a1,T2 a2);
 /*NATIVE_ARRAY[LX_SYMBOL_CLASS]*/
-void r395clear(T395 C,T2 a1,T2 a2);
+void r413clear(T413 C,T2 a1,T2 a2);
 /*NATIVE_ARRAY[LX_SYMBOL_CLASS]*/
-void r395copy_from(T395 C,T395 a1,T2 a2);
+void r413copy_from(T413 C,T413 a1,T2 a2);
 /*NATIVE_ARRAY[DS_HASH_SET[XM_EIFFEL_PARSER_NAME]]*/
-T854 r854realloc(T854 C,T2 a1,T2 a2);
+T930 r930realloc(T930 C,T2 a1,T2 a2);
 /*NATIVE_ARRAY[DS_HASH_SET[XM_EIFFEL_PARSER_NAME]]*/
-void r854set_all_with(T854 C,T0* a1,T2 a2);
+void r930set_all_with(T930 C,T0* a1,T2 a2);
 /*NATIVE_ARRAY[DS_HASH_SET[XM_EIFFEL_PARSER_NAME]]*/
-void r854clear(T854 C,T2 a1,T2 a2);
+void r930clear(T930 C,T2 a1,T2 a2);
 /*NATIVE_ARRAY[DS_HASH_SET[XM_EIFFEL_PARSER_NAME]]*/
-void r854copy_from(T854 C,T854 a1,T2 a2);
+void r930copy_from(T930 C,T930 a1,T2 a2);
 /*NATIVE_ARRAY[LX_START_CONDITION]*/
-void r351clear(T351 C,T2 a1,T2 a2);
+void r372clear(T372 C,T2 a1,T2 a2);
 /*NATIVE_ARRAY[XM_DTD_EXTERNAL_ID]*/
-T847 r847realloc(T847 C,T2 a1,T2 a2);
+T924 r924realloc(T924 C,T2 a1,T2 a2);
 /*NATIVE_ARRAY[XM_DTD_EXTERNAL_ID]*/
-void r847set_all_with(T847 C,T0* a1,T2 a2);
+void r924set_all_with(T924 C,T0* a1,T2 a2);
 /*NATIVE_ARRAY[XM_DTD_EXTERNAL_ID]*/
-void r847clear(T847 C,T2 a1,T2 a2);
+void r924clear(T924 C,T2 a1,T2 a2);
 /*NATIVE_ARRAY[XM_DTD_EXTERNAL_ID]*/
-void r847copy_from(T847 C,T847 a1,T2 a2);
+void r924copy_from(T924 C,T924 a1,T2 a2);
+/*NATIVE_ARRAY[GEANT_VARIABLES]*/
+T145 r145realloc(T145 C,T2 a1,T2 a2);
+/*NATIVE_ARRAY[GEANT_VARIABLES]*/
+void r145clear(T145 C,T2 a1,T2 a2);
+/*NATIVE_ARRAY[GEANT_VARIABLES]*/
+void r145copy_from(T145 C,T145 a1,T2 a2);
 /*NATIVE_ARRAY[DS_BILINKED_LIST[XM_DTD_ATTRIBUTE_CONTENT]]*/
-T830 r830realloc(T830 C,T2 a1,T2 a2);
+T910 r910realloc(T910 C,T2 a1,T2 a2);
 /*NATIVE_ARRAY[DS_BILINKED_LIST[XM_DTD_ATTRIBUTE_CONTENT]]*/
-void r830set_all_with(T830 C,T0* a1,T2 a2);
+void r910set_all_with(T910 C,T0* a1,T2 a2);
 /*NATIVE_ARRAY[DS_BILINKED_LIST[XM_DTD_ATTRIBUTE_CONTENT]]*/
-void r830clear(T830 C,T2 a1,T2 a2);
+void r910clear(T910 C,T2 a1,T2 a2);
 /*NATIVE_ARRAY[DS_BILINKED_LIST[XM_DTD_ATTRIBUTE_CONTENT]]*/
-void r830copy_from(T830 C,T830 a1,T2 a2);
+void r910copy_from(T910 C,T910 a1,T2 a2);
 /*NATIVE_ARRAY[BOOLEAN]*/
-T274 r274realloc(T274 C,T2 a1,T2 a2);
+T295 r295realloc(T295 C,T2 a1,T2 a2);
 /*NATIVE_ARRAY[BOOLEAN]*/
-void r274set_all_with(T274 C,T6 a1,T2 a2);
+void r295set_all_with(T295 C,T6 a1,T2 a2);
 /*NATIVE_ARRAY[BOOLEAN]*/
-void r274clear(T274 C,T2 a1,T2 a2);
+void r295clear(T295 C,T2 a1,T2 a2);
 /*NATIVE_ARRAY[BOOLEAN]*/
-void r274copy_from(T274 C,T274 a1,T2 a2);
+void r295copy_from(T295 C,T295 a1,T2 a2);
 /*NATIVE_ARRAY[LX_NFA]*/
-T347 r347realloc(T347 C,T2 a1,T2 a2);
+T368 r368realloc(T368 C,T2 a1,T2 a2);
 /*NATIVE_ARRAY[LX_NFA]*/
-void r347set_all_with(T347 C,T0* a1,T2 a2);
+void r368set_all_with(T368 C,T0* a1,T2 a2);
 /*NATIVE_ARRAY[LX_NFA]*/
-void r347clear(T347 C,T2 a1,T2 a2);
+void r368clear(T368 C,T2 a1,T2 a2);
 /*NATIVE_ARRAY[LX_NFA]*/
-void r347copy_from(T347 C,T347 a1,T2 a2);
+void r368copy_from(T368 C,T368 a1,T2 a2);
 /*NATIVE_ARRAY[XM_NAMESPACE]*/
-T967 r967realloc(T967 C,T2 a1,T2 a2);
+T1049 r1049realloc(T1049 C,T2 a1,T2 a2);
 /*NATIVE_ARRAY[XM_NAMESPACE]*/
-void r967clear(T967 C,T2 a1,T2 a2);
+void r1049clear(T1049 C,T2 a1,T2 a2);
 /*NATIVE_ARRAY[XM_NAMESPACE]*/
-void r967copy_from(T967 C,T967 a1,T2 a2);
+void r1049copy_from(T1049 C,T1049 a1,T2 a2);
 /*NATIVE_ARRAY[GEANT_SELECT]*/
-T701 r701realloc(T701 C,T2 a1,T2 a2);
+T742 r742realloc(T742 C,T2 a1,T2 a2);
 /*NATIVE_ARRAY[GEANT_SELECT]*/
-void r701clear(T701 C,T2 a1,T2 a2);
+void r742clear(T742 C,T2 a1,T2 a2);
 /*NATIVE_ARRAY[GEANT_SELECT]*/
-void r701copy_from(T701 C,T701 a1,T2 a2);
+void r742copy_from(T742 C,T742 a1,T2 a2);
 /*NATIVE_ARRAY[GEANT_PARENT]*/
-T693 r693realloc(T693 C,T2 a1,T2 a2);
+T734 r734realloc(T734 C,T2 a1,T2 a2);
 /*NATIVE_ARRAY[GEANT_PARENT]*/
-void r693clear(T693 C,T2 a1,T2 a2);
+void r734clear(T734 C,T2 a1,T2 a2);
 /*NATIVE_ARRAY[GEANT_PARENT]*/
-void r693copy_from(T693 C,T693 a1,T2 a2);
+void r734copy_from(T734 C,T734 a1,T2 a2);
 /*NATIVE_ARRAY[DS_BILINKED_LIST[STRING]]*/
-T823 r823realloc(T823 C,T2 a1,T2 a2);
+T904 r904realloc(T904 C,T2 a1,T2 a2);
 /*NATIVE_ARRAY[DS_BILINKED_LIST[STRING]]*/
-void r823set_all_with(T823 C,T0* a1,T2 a2);
+void r904set_all_with(T904 C,T0* a1,T2 a2);
 /*NATIVE_ARRAY[DS_BILINKED_LIST[STRING]]*/
-void r823clear(T823 C,T2 a1,T2 a2);
+void r904clear(T904 C,T2 a1,T2 a2);
 /*NATIVE_ARRAY[DS_BILINKED_LIST[STRING]]*/
-void r823copy_from(T823 C,T823 a1,T2 a2);
+void r904copy_from(T904 C,T904 a1,T2 a2);
 /*NATIVE_ARRAY[XM_DTD_ELEMENT_CONTENT]*/
-T841 r841realloc(T841 C,T2 a1,T2 a2);
+T919 r919realloc(T919 C,T2 a1,T2 a2);
 /*NATIVE_ARRAY[XM_DTD_ELEMENT_CONTENT]*/
-void r841set_all_with(T841 C,T0* a1,T2 a2);
+void r919set_all_with(T919 C,T0* a1,T2 a2);
 /*NATIVE_ARRAY[XM_DTD_ELEMENT_CONTENT]*/
-void r841clear(T841 C,T2 a1,T2 a2);
+void r919clear(T919 C,T2 a1,T2 a2);
 /*NATIVE_ARRAY[XM_DTD_ELEMENT_CONTENT]*/
-void r841copy_from(T841 C,T841 a1,T2 a2);
+void r919copy_from(T919 C,T919 a1,T2 a2);
 /*NATIVE_ARRAY[XM_EIFFEL_DECLARATION]*/
-T813 r813realloc(T813 C,T2 a1,T2 a2);
+T899 r899realloc(T899 C,T2 a1,T2 a2);
 /*NATIVE_ARRAY[XM_EIFFEL_DECLARATION]*/
-void r813set_all_with(T813 C,T0* a1,T2 a2);
+void r899set_all_with(T899 C,T0* a1,T2 a2);
 /*NATIVE_ARRAY[XM_EIFFEL_DECLARATION]*/
-void r813clear(T813 C,T2 a1,T2 a2);
+void r899clear(T899 C,T2 a1,T2 a2);
 /*NATIVE_ARRAY[XM_EIFFEL_DECLARATION]*/
-void r813copy_from(T813 C,T813 a1,T2 a2);
-/*NATIVE_ARRAY[INTEGER_16]*/
-void r486set_all_with(T486 C,T10 a1,T2 a2);
+void r899copy_from(T899 C,T899 a1,T2 a2);
 /*NATIVE_ARRAY[GEANT_RENAME]*/
-T658 r658realloc(T658 C,T2 a1,T2 a2);
+T699 r699realloc(T699 C,T2 a1,T2 a2);
 /*NATIVE_ARRAY[GEANT_RENAME]*/
-void r658clear(T658 C,T2 a1,T2 a2);
+void r699clear(T699 C,T2 a1,T2 a2);
 /*NATIVE_ARRAY[GEANT_RENAME]*/
-void r658copy_from(T658 C,T658 a1,T2 a2);
+void r699copy_from(T699 C,T699 a1,T2 a2);
 /*NATIVE_ARRAY[STRING]*/
-T71 r71realloc(T71 C,T2 a1,T2 a2);
+T85 r85realloc(T85 C,T2 a1,T2 a2);
 /*NATIVE_ARRAY[STRING]*/
-void r71move(T71 C,T2 a1,T2 a2,T2 a3);
+void r85move(T85 C,T2 a1,T2 a2,T2 a3);
 /*NATIVE_ARRAY[STRING]*/
-void r71set_all_with(T71 C,T0* a1,T2 a2);
+void r85set_all_with(T85 C,T0* a1,T2 a2);
 /*NATIVE_ARRAY[STRING]*/
-void r71clear(T71 C,T2 a1,T2 a2);
+void r85clear(T85 C,T2 a1,T2 a2);
 /*NATIVE_ARRAY[STRING]*/
-void r71copy_from(T71 C,T71 a1,T2 a2);
+void r85copy_from(T85 C,T85 a1,T2 a2);
 /*NATIVE_ARRAY[XM_EIFFEL_PARSER_NAME]*/
-T859 r859realloc(T859 C,T2 a1,T2 a2);
+T934 r934realloc(T934 C,T2 a1,T2 a2);
 /*NATIVE_ARRAY[XM_EIFFEL_PARSER_NAME]*/
-void r859set_all_with(T859 C,T0* a1,T2 a2);
+void r934set_all_with(T934 C,T0* a1,T2 a2);
 /*NATIVE_ARRAY[XM_EIFFEL_PARSER_NAME]*/
-void r859clear(T859 C,T2 a1,T2 a2);
+void r934clear(T934 C,T2 a1,T2 a2);
 /*NATIVE_ARRAY[XM_EIFFEL_PARSER_NAME]*/
-void r859copy_from(T859 C,T859 a1,T2 a2);
+void r934copy_from(T934 C,T934 a1,T2 a2);
 /*NATIVE_ARRAY[LX_NFA_STATE]*/
-T313 r313realloc(T313 C,T2 a1,T2 a2);
+T334 r334realloc(T334 C,T2 a1,T2 a2);
 /*NATIVE_ARRAY[LX_NFA_STATE]*/
-void r313clear(T313 C,T2 a1,T2 a2);
+void r334clear(T334 C,T2 a1,T2 a2);
 /*NATIVE_ARRAY[LX_NFA_STATE]*/
-void r313copy_from(T313 C,T313 a1,T2 a2);
+void r334copy_from(T334 C,T334 a1,T2 a2);
 /*NATIVE_ARRAY[GEANT_TARGET]*/
-T129 r129realloc(T129 C,T2 a1,T2 a2);
+T135 r135realloc(T135 C,T2 a1,T2 a2);
 /*NATIVE_ARRAY[GEANT_TARGET]*/
-void r129clear(T129 C,T2 a1,T2 a2);
+void r135clear(T135 C,T2 a1,T2 a2);
 /*NATIVE_ARRAY[GEANT_TARGET]*/
-void r129copy_from(T129 C,T129 a1,T2 a2);
+void r135copy_from(T135 C,T135 a1,T2 a2);
 /*NATIVE_ARRAY[GEANT_REDEFINE]*/
-T706 r706realloc(T706 C,T2 a1,T2 a2);
+T747 r747realloc(T747 C,T2 a1,T2 a2);
 /*NATIVE_ARRAY[GEANT_REDEFINE]*/
-void r706clear(T706 C,T2 a1,T2 a2);
+void r747clear(T747 C,T2 a1,T2 a2);
 /*NATIVE_ARRAY[GEANT_REDEFINE]*/
-void r706copy_from(T706 C,T706 a1,T2 a2);
+void r747copy_from(T747 C,T747 a1,T2 a2);
 /*NATIVE_ARRAY[LX_RULE]*/
-T260 r260realloc(T260 C,T2 a1,T2 a2);
+T281 r281realloc(T281 C,T2 a1,T2 a2);
 /*NATIVE_ARRAY[LX_RULE]*/
-void r260set_all_with(T260 C,T0* a1,T2 a2);
+void r281set_all_with(T281 C,T0* a1,T2 a2);
 /*NATIVE_ARRAY[LX_RULE]*/
-void r260clear(T260 C,T2 a1,T2 a2);
+void r281clear(T281 C,T2 a1,T2 a2);
 /*NATIVE_ARRAY[LX_RULE]*/
-void r260copy_from(T260 C,T260 a1,T2 a2);
+void r281copy_from(T281 C,T281 a1,T2 a2);
 /*NATIVE_ARRAY[XM_EIFFEL_ENTITY_DEF]*/
-T775 r775realloc(T775 C,T2 a1,T2 a2);
+T818 r818realloc(T818 C,T2 a1,T2 a2);
 /*NATIVE_ARRAY[XM_EIFFEL_ENTITY_DEF]*/
-void r775clear(T775 C,T2 a1,T2 a2);
+void r818clear(T818 C,T2 a1,T2 a2);
 /*NATIVE_ARRAY[XM_EIFFEL_ENTITY_DEF]*/
-void r775copy_from(T775 C,T775 a1,T2 a2);
+void r818copy_from(T818 C,T818 a1,T2 a2);
 /*NATIVE_ARRAY[CHARACTER]*/
 void r9copy_slice(T9 C,T2 a1,T9 a2,T2 a3,T2 a4);
 /*NATIVE_ARRAY[CHARACTER]*/
@@ -1755,55 +1810,53 @@ void r9set_all_with(T9 C,T3 a1,T2 a2);
 /*NATIVE_ARRAY[CHARACTER]*/
 T6 r9fast_memcmp(T9 C,T9 a1,T2 a2);
 /*NATIVE_ARRAY[CHARACTER]*/
+T6 r9fast_has(T9 C,T3 a1,T2 a2);
+/*NATIVE_ARRAY[CHARACTER]*/
 void r9copy_at(T9 C,T2 a1,T9 a2,T2 a3);
 /*NATIVE_ARRAY[CHARACTER]*/
 void r9clear(T9 C,T2 a1,T2 a2);
 /*NATIVE_ARRAY[CHARACTER]*/
 void r9copy_from(T9 C,T9 a1,T2 a2);
-/*NATIVE_ARRAY[INTEGER_8]*/
-void r482set_all_with(T482 C,T1 a1,T2 a2);
 /*NATIVE_ARRAY[XM_DTD_ATTRIBUTE_CONTENT]*/
-T835 r835realloc(T835 C,T2 a1,T2 a2);
+T914 r914realloc(T914 C,T2 a1,T2 a2);
 /*NATIVE_ARRAY[XM_DTD_ATTRIBUTE_CONTENT]*/
-void r835set_all_with(T835 C,T0* a1,T2 a2);
+void r914set_all_with(T914 C,T0* a1,T2 a2);
 /*NATIVE_ARRAY[XM_DTD_ATTRIBUTE_CONTENT]*/
-void r835clear(T835 C,T2 a1,T2 a2);
+void r914clear(T914 C,T2 a1,T2 a2);
 /*NATIVE_ARRAY[XM_DTD_ATTRIBUTE_CONTENT]*/
-void r835copy_from(T835 C,T835 a1,T2 a2);
+void r914copy_from(T914 C,T914 a1,T2 a2);
 /*NATIVE_ARRAY[INTEGER]*/
-void r106clear_all(T106 C,T2 a1);
+void r110clear_all(T110 C,T2 a1);
 /*NATIVE_ARRAY[INTEGER]*/
-T106 r106realloc(T106 C,T2 a1,T2 a2);
+T110 r110realloc(T110 C,T2 a1,T2 a2);
 /*NATIVE_ARRAY[INTEGER]*/
-T6 r106fast_memcmp(T106 C,T106 a1,T2 a2);
+void r110set_all_with(T110 C,T2 a1,T2 a2);
 /*NATIVE_ARRAY[INTEGER]*/
-void r106set_all_with(T106 C,T2 a1,T2 a2);
+void r110clear(T110 C,T2 a1,T2 a2);
 /*NATIVE_ARRAY[INTEGER]*/
-void r106clear(T106 C,T2 a1,T2 a2);
-/*NATIVE_ARRAY[INTEGER]*/
-void r106copy_from(T106 C,T106 a1,T2 a2);
+void r110copy_from(T110 C,T110 a1,T2 a2);
 /*NATIVE_ARRAY[DS_PAIR[STRING,STRING]]*/
-T574 r574realloc(T574 C,T2 a1,T2 a2);
+T609 r609realloc(T609 C,T2 a1,T2 a2);
 /*NATIVE_ARRAY[DS_PAIR[STRING,STRING]]*/
-void r574clear(T574 C,T2 a1,T2 a2);
+void r609clear(T609 C,T2 a1,T2 a2);
 /*NATIVE_ARRAY[DS_PAIR[STRING,STRING]]*/
-void r574copy_from(T574 C,T574 a1,T2 a2);
+void r609copy_from(T609 C,T609 a1,T2 a2);
 /*NATIVE_ARRAY[LX_DFA_STATE]*/
-T266 r266realloc(T266 C,T2 a1,T2 a2);
+T287 r287realloc(T287 C,T2 a1,T2 a2);
 /*NATIVE_ARRAY[LX_DFA_STATE]*/
-void r266set_all_with(T266 C,T0* a1,T2 a2);
+void r287set_all_with(T287 C,T0* a1,T2 a2);
 /*NATIVE_ARRAY[LX_DFA_STATE]*/
-void r266clear(T266 C,T2 a1,T2 a2);
+void r287clear(T287 C,T2 a1,T2 a2);
 /*NATIVE_ARRAY[LX_DFA_STATE]*/
-void r266copy_from(T266 C,T266 a1,T2 a2);
+void r287copy_from(T287 C,T287 a1,T2 a2);
 /*NATIVE_ARRAY[ANY]*/
-T402 r402realloc(T402 C,T2 a1,T2 a2);
+T418 r418realloc(T418 C,T2 a1,T2 a2);
 /*NATIVE_ARRAY[ANY]*/
-void r402set_all_with(T402 C,T0* a1,T2 a2);
+void r418set_all_with(T418 C,T0* a1,T2 a2);
 /*NATIVE_ARRAY[ANY]*/
-void r402clear(T402 C,T2 a1,T2 a2);
+void r418clear(T418 C,T2 a1,T2 a2);
 /*NATIVE_ARRAY[ANY]*/
-void r402copy_from(T402 C,T402 a1,T2 a2);
+void r418copy_from(T418 C,T418 a1,T2 a2);
 /*STRING*/
 T0* r7out(T7* C);
 /*STRING*/
@@ -1857,6 +1910,8 @@ void r7remove_last(T7* C,T2 a1);
 /*STRING*/
 T6 r7conforms_to(T7* C,T0* a1);
 /*STRING*/
+T6 r7has(T7* C,T3 a1);
+/*STRING*/
 void r7keep_head(T7* C,T2 a1);
 /*STRING*/
 T2 r7to_integer(T7* C);
@@ -1865,5155 +1920,5958 @@ void r7append_character(T7* C,T3 a1);
 /*STRING*/
 void r7resize(T7* C,T2 a1);
 /*STRING*/
-T2 r7substring_index(T7* C,T0* a1,T2 a2);
-/*STRING*/
 void r7from_external_copy(T7* C,T8 a1);
 /*STRING*/
 T8 r7to_external(T7* C);
 /*STRING*/
-void r7to_lower(T7* C);
+T6 r7same_string(T7* C,T0* a1);
 /*STRING*/
 T0* r7twin(T7* C);
 /*STRING*/
 T0* r7_ix_43(T7* C,T0* a1);
 /*STRING*/
+void r7remove_head(T7* C,T2 a1);
+/*STRING*/
 void r7swap(T7* C,T2 a1,T2 a2);
+/*FIXED_ARRAY[GEANT_VARIABLES]*/
+T6 r141valid_index(T141* C,T2 a1);
+/*FIXED_ARRAY[GEANT_VARIABLES]*/
+void r141make(T141* C,T2 a1);
+/*FIXED_ARRAY[GEANT_VARIABLES]*/
+void r141resize(T141* C,T2 a1);
+/*FIXED_ARRAY[BOOLEAN]*/
+T6 r842valid_index(T842* C,T2 a1);
+/*FIXED_ARRAY[BOOLEAN]*/
+void r842make(T842* C,T2 a1);
 /*ARRAY[DS_BILINKABLE[INTEGER]]*/
-T2 r276count(T276* C);
+T2 r297count(T297* C);
 /*ARRAY[DS_BILINKABLE[INTEGER]]*/
-T0* r276item(T276* C,T2 a1);
+T0* r297item(T297* C,T2 a1);
 /*ARRAY[DS_BILINKABLE[INTEGER]]*/
-T6 r276valid_index(T276* C,T2 a1);
+T6 r297valid_index(T297* C,T2 a1);
 /*ARRAY[DS_BILINKABLE[INTEGER]]*/
-void r276make(T276* C,T2 a1,T2 a2);
+void r297make(T297* C,T2 a1,T2 a2);
 /*ARRAY[INTEGER]*/
-void r254clear_all(T254* C);
+T2 r275count(T275* C);
 /*ARRAY[INTEGER]*/
-T2 r254count(T254* C);
+T2 r275item(T275* C,T2 a1);
 /*ARRAY[INTEGER]*/
-T2 r254item(T254* C,T2 a1);
+T6 r275valid_index(T275* C,T2 a1);
 /*ARRAY[INTEGER]*/
-T6 r254valid_index(T254* C,T2 a1);
-/*ARRAY[INTEGER]*/
-void r254make(T254* C,T2 a1,T2 a2);
+void r275make(T275* C,T2 a1,T2 a2);
 /*FIXED_ARRAY[LX_NFA]*/
-T6 r345valid_index(T345* C,T2 a1);
+T6 r366valid_index(T366* C,T2 a1);
 /*FIXED_ARRAY[LX_NFA]*/
-void r345make(T345* C,T2 a1);
+void r366make(T366* C,T2 a1);
 /*FIXED_ARRAY[LX_NFA]*/
-void r345resize(T345* C,T2 a1);
+void r366resize(T366* C,T2 a1);
 /*FIXED_ARRAY[GEANT_FILESET_ENTRY]*/
-T6 r526valid_index(T526* C,T2 a1);
+T6 r547valid_index(T547* C,T2 a1);
 /*FIXED_ARRAY[GEANT_FILESET_ENTRY]*/
-void r526make(T526* C,T2 a1);
+void r547make(T547* C,T2 a1);
 /*FIXED_ARRAY[GEANT_FILESET_ENTRY]*/
-void r526resize(T526* C,T2 a1);
+void r547resize(T547* C,T2 a1);
 /*ARRAY[LX_DFA_STATE]*/
-T0* r269item(T269* C,T2 a1);
+T0* r290item(T290* C,T2 a1);
 /*ARRAY[LX_DFA_STATE]*/
-T6 r269valid_index(T269* C,T2 a1);
+T6 r290valid_index(T290* C,T2 a1);
 /*ARRAY[LX_DFA_STATE]*/
-void r269make(T269* C,T2 a1,T2 a2);
+void r290make(T290* C,T2 a1,T2 a2);
 /*FIXED_ARRAY[DS_PAIR[STRING,STRING]]*/
-T6 r572valid_index(T572* C,T2 a1);
+T6 r607valid_index(T607* C,T2 a1);
 /*FIXED_ARRAY[DS_PAIR[STRING,STRING]]*/
-void r572make(T572* C,T2 a1);
+void r607make(T607* C,T2 a1);
 /*FIXED_ARRAY[DS_PAIR[STRING,STRING]]*/
-void r572resize(T572* C,T2 a1);
+void r607resize(T607* C,T2 a1);
 /*ARRAY[XM_CALLBACKS_FILTER]*/
-T0* r738item(T738* C,T2 a1);
+T0* r778item(T778* C,T2 a1);
 /*FIXED_ARRAY[XM_NAMESPACE]*/
-T6 r964valid_index(T964* C,T2 a1);
+T6 r1046valid_index(T1046* C,T2 a1);
 /*FIXED_ARRAY[XM_NAMESPACE]*/
-void r964make(T964* C,T2 a1);
+void r1046make(T1046* C,T2 a1);
 /*FIXED_ARRAY[XM_NAMESPACE]*/
-void r964resize(T964* C,T2 a1);
+void r1046resize(T1046* C,T2 a1);
 /*FIXED_ARRAY[LX_SYMBOL_CLASS]*/
-T6 r393valid_index(T393* C,T2 a1);
+T6 r411valid_index(T411* C,T2 a1);
 /*FIXED_ARRAY[LX_SYMBOL_CLASS]*/
-void r393make(T393* C,T2 a1);
+void r411make(T411* C,T2 a1);
 /*FIXED_ARRAY[LX_SYMBOL_CLASS]*/
-void r393resize(T393* C,T2 a1);
+void r411resize(T411* C,T2 a1);
+/*ARRAY[RX_CHARACTER_SET]*/
+T0* r850item(T850* C,T2 a1);
 /*FIXED_ARRAY[GEANT_SELECT]*/
-T6 r699valid_index(T699* C,T2 a1);
+T6 r740valid_index(T740* C,T2 a1);
 /*FIXED_ARRAY[GEANT_SELECT]*/
-void r699make(T699* C,T2 a1);
+void r740make(T740* C,T2 a1);
 /*FIXED_ARRAY[GEANT_SELECT]*/
-void r699resize(T699* C,T2 a1);
+void r740resize(T740* C,T2 a1);
 /*FIXED_ARRAY[LX_NFA_STATE]*/
-T6 r311valid_index(T311* C,T2 a1);
+T6 r332valid_index(T332* C,T2 a1);
 /*FIXED_ARRAY[LX_NFA_STATE]*/
-void r311make(T311* C,T2 a1);
+void r332make(T332* C,T2 a1);
 /*FIXED_ARRAY[LX_NFA_STATE]*/
-void r311resize(T311* C,T2 a1);
+void r332resize(T332* C,T2 a1);
 /*FIXED_ARRAY[GEANT_PARENT]*/
-T6 r691valid_index(T691* C,T2 a1);
+T6 r732valid_index(T732* C,T2 a1);
 /*FIXED_ARRAY[GEANT_PARENT]*/
-void r691make(T691* C,T2 a1);
+void r732make(T732* C,T2 a1);
 /*FIXED_ARRAY[GEANT_PARENT]*/
-void r691resize(T691* C,T2 a1);
+void r732resize(T732* C,T2 a1);
 /*ARRAY[BOOLEAN]*/
-T6 r272item(T272* C,T2 a1);
+T6 r293item(T293* C,T2 a1);
 /*ARRAY[BOOLEAN]*/
-T6 r272valid_index(T272* C,T2 a1);
+T6 r293valid_index(T293* C,T2 a1);
 /*ARRAY[BOOLEAN]*/
-void r272make(T272* C,T2 a1,T2 a2);
+void r293make(T293* C,T2 a1,T2 a2);
 /*ARRAY[ARRAY[INTEGER]]*/
-T0* r974item(T974* C,T2 a1);
+T0* r945item(T945* C,T2 a1);
 /*FIXED_ARRAY[STRING]*/
-T6 r117valid_index(T117* C,T2 a1);
+T6 r121valid_index(T121* C,T2 a1);
 /*FIXED_ARRAY[STRING]*/
-void r117make(T117* C,T2 a1);
+void r121make(T121* C,T2 a1);
 /*FIXED_ARRAY[STRING]*/
-void r117resize(T117* C,T2 a1);
+void r121resize(T121* C,T2 a1);
 /*FIXED_ARRAY[LX_RULE]*/
-T6 r258valid_index(T258* C,T2 a1);
+T6 r279valid_index(T279* C,T2 a1);
 /*FIXED_ARRAY[LX_RULE]*/
-void r258make(T258* C,T2 a1);
+void r279make(T279* C,T2 a1);
 /*FIXED_ARRAY[LX_RULE]*/
-void r258resize(T258* C,T2 a1);
-/*ARRAY[INTEGER_8]*/
-T2 r480count(T480* C);
-/*ARRAY[INTEGER_8]*/
-T1 r480item(T480* C,T2 a1);
-/*ARRAY[INTEGER_8]*/
-T6 r480valid_index(T480* C,T2 a1);
-/*ARRAY[INTEGER_8]*/
-void r480make(T480* C,T2 a1,T2 a2);
+void r279resize(T279* C,T2 a1);
 /*FIXED_ARRAY[LX_START_CONDITION]*/
-T6 r349valid_index(T349* C,T2 a1);
+T6 r370valid_index(T370* C,T2 a1);
 /*FIXED_ARRAY[LX_START_CONDITION]*/
-void r349make(T349* C,T2 a1);
+void r370make(T370* C,T2 a1);
 /*FIXED_ARRAY[GEANT_RENAME]*/
-T6 r656valid_index(T656* C,T2 a1);
+T6 r697valid_index(T697* C,T2 a1);
 /*FIXED_ARRAY[GEANT_RENAME]*/
-void r656make(T656* C,T2 a1);
+void r697make(T697* C,T2 a1);
 /*FIXED_ARRAY[GEANT_RENAME]*/
-void r656resize(T656* C,T2 a1);
+void r697resize(T697* C,T2 a1);
 /*FIXED_ARRAY[GEANT_TARGET]*/
-T6 r127valid_index(T127* C,T2 a1);
+T6 r133valid_index(T133* C,T2 a1);
 /*FIXED_ARRAY[GEANT_TARGET]*/
-void r127make(T127* C,T2 a1);
-/*FIXED_ARRAY[GEANT_TARGET]*/
-void r127resize(T127* C,T2 a1);
-/*FIXED_ARRAY[INTEGER]*/
-void r105copy(T105* C,T0* a1);
-/*FIXED_ARRAY[INTEGER]*/
-T6 r105is_equal(T105* C,T0* a1);
-/*FIXED_ARRAY[INTEGER]*/
-T6 r105valid_index(T105* C,T2 a1);
-/*FIXED_ARRAY[INTEGER]*/
-void r105make(T105* C,T2 a1);
-/*FIXED_ARRAY[INTEGER]*/
-void r105resize(T105* C,T2 a1);
-/*FIXED_ARRAY[INTEGER]*/
-T0* r105twin(T105* C);
-/*FIXED_ARRAY[INTEGER]*/
-void r105with_capacity(T105* C,T2 a1);
-/*FIXED_ARRAY[INTEGER]*/
-void r105from_collection(T105* C,T0* a1);
-/*FIXED_ARRAY[LX_DFA_STATE]*/
-T6 r264valid_index(T264* C,T2 a1);
-/*FIXED_ARRAY[LX_DFA_STATE]*/
-void r264make(T264* C,T2 a1);
-/*FIXED_ARRAY[LX_DFA_STATE]*/
-void r264resize(T264* C,T2 a1);
-/*FIXED_ARRAY[GEANT_REDEFINE]*/
-T6 r704valid_index(T704* C,T2 a1);
-/*FIXED_ARRAY[GEANT_REDEFINE]*/
-void r704make(T704* C,T2 a1);
-/*FIXED_ARRAY[GEANT_REDEFINE]*/
-void r704resize(T704* C,T2 a1);
-/*ARRAY[STRING]*/
-void r70force(T70* C,T0* a1,T2 a2);
-/*ARRAY[STRING]*/
-T2 r70count(T70* C);
-/*ARRAY[STRING]*/
-T0* r70item(T70* C,T2 a1);
-/*ARRAY[STRING]*/
-T6 r70valid_index(T70* C,T2 a1);
-/*ARRAY[STRING]*/
-void r70make(T70* C,T2 a1,T2 a2);
-/*ARRAY[STRING]*/
-void r70add_last(T70* C,T0* a1);
-/*ARRAY[STRING]*/
-void r70resize(T70* C,T2 a1,T2 a2);
-/*FIXED_ARRAY[XM_EIFFEL_ENTITY_DEF]*/
-T6 r772valid_index(T772* C,T2 a1);
-/*FIXED_ARRAY[XM_EIFFEL_ENTITY_DEF]*/
-void r772make(T772* C,T2 a1);
-/*FIXED_ARRAY[XM_EIFFEL_ENTITY_DEF]*/
-void r772resize(T772* C,T2 a1);
-/*ARRAY[LX_RULE]*/
-T6 r381valid_index(T381* C,T2 a1);
-/*ARRAY[LX_RULE]*/
-void r381make(T381* C,T2 a1,T2 a2);
-/*ARRAY[INTEGER_16]*/
-T2 r484count(T484* C);
-/*ARRAY[INTEGER_16]*/
-T10 r484item(T484* C,T2 a1);
-/*ARRAY[INTEGER_16]*/
-T6 r484valid_index(T484* C,T2 a1);
-/*ARRAY[INTEGER_16]*/
-void r484make(T484* C,T2 a1,T2 a2);
-/*FIXED_ARRAY[XM_EIFFEL_PARSER_NAME]*/
-T6 r857valid_index(T857* C,T2 a1);
-/*FIXED_ARRAY[XM_EIFFEL_PARSER_NAME]*/
-void r857make(T857* C,T2 a1);
-/*FIXED_ARRAY[XM_EIFFEL_PARSER_NAME]*/
-void r857resize(T857* C,T2 a1);
-/*DS_LINKED_LIST[XM_ELEMENT]*/
-T6 r207valid_cursor(T207* C,T0* a1);
-/*DS_LINKED_LIST[XM_ELEMENT]*/
-void r207remove_traversing_cursor(T207* C,T0* a1);
-/*DS_LINKED_LIST[XM_ELEMENT]*/
-void r207add_traversing_cursor(T207* C,T0* a1);
-/*DS_LINKED_LIST[XM_ELEMENT]*/
-void r207make(T207* C);
-/*DS_LINKED_LIST[XM_ELEMENT]*/
-T6 r207cursor_after(T0* a1);
-/*DS_LINKED_LIST[XM_ELEMENT]*/
-void r207cursor_forth(T207* C,T0* a1);
-/*DS_LINKED_LIST[XM_ELEMENT]*/
-void r207cursor_start(T207* C,T0* a1);
-/*DS_LINKED_LIST[XM_ELEMENT]*/
-void r207force_last(T207* C,T0* a1);
-/*DS_LINKED_LIST[XM_ELEMENT]*/
-T0* r207new_cursor(T207* C);
-/*DS_LINKED_LIST[XM_ELEMENT]*/
-T6 r207cursor_off(T0* a1);
-/*DS_BUBBLE_SORTER[LX_NFA_STATE]*/
-void r306subsort_with_comparator(T0* a1,T0* a2,T2 a3,T2 a4);
-/*DS_BUBBLE_SORTER[LX_NFA_STATE]*/
-void r306sort_with_comparator(T0* a1,T0* a2);
-/*SPECIAL[ANY]*/
-T6 r399valid_index(T399* C,T2 a1);
-/*SPECIAL[ANY]*/
-void r399make(T399* C,T2 a1);
-/*SPECIAL[ANY]*/
-T0* r399resize(T399* C,T2 a1);
-/*SPECIAL[ANY]*/
-void r399array_resize(T399* C,T2 a1);
-/*DS_HASH_SET[STRING]*/
-T2 r497new_capacity(T2 a1);
-/*DS_HASH_SET[STRING]*/
-T6 r497valid_cursor(T497* C,T0* a1);
-/*DS_HASH_SET[STRING]*/
-T6 r497valid_slot(T497* C,T2 a1);
-/*DS_HASH_SET[STRING]*/
-void r497make_clashes(T497* C,T2 a1);
-/*DS_HASH_SET[STRING]*/
-T6 r497valid_position(T497* C,T2 a1);
-/*DS_HASH_SET[STRING]*/
-T0* r497cursor_item(T497* C,T0* a1);
-/*DS_HASH_SET[STRING]*/
-void r497search_position(T497* C,T0* a1);
-/*DS_HASH_SET[STRING]*/
-void r497remove_traversing_cursor(T497* C,T0* a1);
-/*DS_HASH_SET[STRING]*/
-void r497make_items(T497* C,T2 a1);
-/*DS_HASH_SET[STRING]*/
-void r497add_traversing_cursor(T497* C,T0* a1);
-/*DS_HASH_SET[STRING]*/
-void r497make(T497* C,T2 a1);
-/*DS_HASH_SET[STRING]*/
-T6 r497cursor_after(T0* a1);
-/*DS_HASH_SET[STRING]*/
-T2 r497hash_position(T497* C,T0* a1);
-/*DS_HASH_SET[STRING]*/
-void r497cursor_forth(T497* C,T0* a1);
-extern T0*oBC98fixed_integer_array_;
-/*DS_HASH_SET[STRING]*/
-void r497items_resize(T497* C,T2 a1);
-/*DS_HASH_SET[STRING]*/
-void r497resize(T497* C,T2 a1);
-/*DS_HASH_SET[STRING]*/
-T6 r497equality_tester_settable(T497* C,T0* a1);
-/*DS_HASH_SET[STRING]*/
-void r497cursor_start(T497* C,T0* a1);
-/*DS_HASH_SET[STRING]*/
-void r497clashes_resize(T497* C,T2 a1);
-/*DS_HASH_SET[STRING]*/
-void r497slots_resize(T497* C,T2 a1);
-/*DS_HASH_SET[STRING]*/
-void r497force_last(T497* C,T0* a1);
-/*DS_HASH_SET[STRING]*/
-T0* r497new_cursor(T497* C);
-/*DS_HASH_SET[STRING]*/
-void r497make_slots(T497* C,T2 a1);
-/*DS_HASH_SET[STRING]*/
-T2 r497new_modulus(T2 a1);
-/*DS_HASH_SET[STRING]*/
-T6 r497cursor_off(T0* a1);
-/*KL_SPECIAL_ROUTINES[ANY]*/
-T0* r398make(T2 a1);
-/*KL_SPECIAL_ROUTINES[ANY]*/
-T0* r398resize(T0* a1,T2 a2);
-/*DS_HASH_SET_CURSOR[XM_EIFFEL_PARSER_NAME]*/
-void r892make(T892* C,T0* a1);
-/*DS_ARRAYED_LIST[STRING]*/
-T2 r113new_capacity(T2 a1);
-/*DS_ARRAYED_LIST[STRING]*/
-T6 r113valid_cursor(T113* C,T0* a1);
-/*DS_ARRAYED_LIST[STRING]*/
-T6 r113extendible(T113* C,T2 a1);
-/*DS_ARRAYED_LIST[STRING]*/
-void r113make_equal(T113* C,T2 a1);
-/*DS_ARRAYED_LIST[STRING]*/
-T0* r113last(T113* C);
-/*DS_ARRAYED_LIST[STRING]*/
-void r113move_cursors_right(T113* C,T2 a1,T2 a2);
-/*DS_ARRAYED_LIST[STRING]*/
-void r113put(T113* C,T0* a1,T2 a2);
-/*DS_ARRAYED_LIST[STRING]*/
-T0* r113cursor_item(T113* C,T0* a1);
-/*DS_ARRAYED_LIST[STRING]*/
-T6 r113is_equal(T113* C,T0* a1);
-/*DS_ARRAYED_LIST[STRING]*/
-void r113remove_traversing_cursor(T113* C,T0* a1);
-/*DS_ARRAYED_LIST[STRING]*/
-void r113add_traversing_cursor(T113* C,T0* a1);
-/*DS_ARRAYED_LIST[STRING]*/
-T6 r113se_assigned_from(T0* a1);
-/*DS_ARRAYED_LIST[STRING]*/
-T6 r113cursor_before(T0* a1);
-/*DS_ARRAYED_LIST[STRING]*/
-T6 r113same_type(T113* C,T0* a1);
-/*DS_ARRAYED_LIST[STRING]*/
-void r113make(T113* C,T2 a1);
-/*DS_ARRAYED_LIST[STRING]*/
-T6 r113cursor_after(T0* a1);
-/*DS_ARRAYED_LIST[STRING]*/
-T6 r113conforms_to(T113* C,T0* a1);
-/*DS_ARRAYED_LIST[STRING]*/
-T6 r113has(T113* C,T0* a1);
-/*DS_ARRAYED_LIST[STRING]*/
-void r113move_right(T113* C,T2 a1,T2 a2);
-/*DS_ARRAYED_LIST[STRING]*/
-void r113cursor_forth(T113* C,T0* a1);
-/*DS_ARRAYED_LIST[STRING]*/
-void r113resize(T113* C,T2 a1);
-/*DS_ARRAYED_LIST[STRING]*/
-void r113cursor_start(T113* C,T0* a1);
-/*DS_ARRAYED_LIST[STRING]*/
-void r113force_last(T113* C,T0* a1);
-/*DS_ARRAYED_LIST[STRING]*/
-T0* r113new_cursor(T113* C);
-/*DS_ARRAYED_LIST[STRING]*/
-void r113put_last(T113* C,T0* a1);
-/*DS_ARRAYED_LIST[STRING]*/
-T6 r113cursor_off(T0* a1);
-/*SPECIAL[LX_NFA]*/
-T6 r387valid_index(T387* C,T2 a1);
-/*SPECIAL[LX_NFA]*/
-void r387make(T387* C,T2 a1);
-/*SPECIAL[LX_NFA]*/
-T0* r387resize(T387* C,T2 a1);
-/*SPECIAL[LX_NFA]*/
-void r387array_resize(T387* C,T2 a1);
-/*LX_TRANSITION_TABLE[LX_DFA_STATE]*/
-void r268set_target(T268* C,T0* a1,T2 a2);
-/*LX_TRANSITION_TABLE[LX_DFA_STATE]*/
-void r268make(T268* C,T2 a1,T2 a2);
-/*DS_BILINKABLE[INTEGER]*/
-void r277put_left(T277* C,T0* a1);
-/*DS_BILINKABLE[INTEGER]*/
-void r277put_right(T277* C,T0* a1);
-/*DS_PAIR[XM_POSITION,XM_NODE]*/
-void r725make(T725* C,T0* a1,T0* a2);
-/*KL_SPECIAL_ROUTINES[DS_HASH_SET[XM_EIFFEL_PARSER_NAME]]*/
-T0* r849make(T2 a1);
-/*KL_SPECIAL_ROUTINES[DS_HASH_SET[XM_EIFFEL_PARSER_NAME]]*/
-T0* r849resize(T0* a1,T2 a2);
-/*DS_HASH_SET_CURSOR[GEANT_FILESET_ENTRY]*/
-T6 r524valid_position(T524* C,T2 a1);
-/*DS_HASH_SET_CURSOR[GEANT_FILESET_ENTRY]*/
-void r524make(T524* C,T0* a1);
-/*SPECIAL[INTEGER]*/
-T6 r397valid_index(T397* C,T2 a1);
-/*SPECIAL[INTEGER]*/
-void r397make(T397* C,T2 a1);
-/*SPECIAL[INTEGER]*/
-T0* r397resize(T397* C,T2 a1);
-/*SPECIAL[INTEGER]*/
-void r397array_resize(T397* C,T2 a1);
-/*KL_SPECIAL_ROUTINES[DS_BILINKED_LIST[STRING]]*/
-T0* r818make(T2 a1);
-/*KL_SPECIAL_ROUTINES[DS_BILINKED_LIST[STRING]]*/
-T0* r818resize(T0* a1,T2 a2);
-/*SPECIAL[LX_SYMBOL_CLASS]*/
-T6 r392valid_index(T392* C,T2 a1);
-/*SPECIAL[LX_SYMBOL_CLASS]*/
-void r392make(T392* C,T2 a1);
-/*SPECIAL[LX_SYMBOL_CLASS]*/
-T0* r392resize(T392* C,T2 a1);
-/*SPECIAL[LX_SYMBOL_CLASS]*/
-void r392array_resize(T392* C,T2 a1);
-/*DS_BILINKABLE[XM_DTD_ELEMENT_CONTENT]*/
-void r982put_right(T982* C,T0* a1);
-/*DS_HASH_SET_CURSOR[XM_NAMESPACE]*/
-void r962make(T962* C,T0* a1);
-/*DS_LINKED_STACK[XM_EIFFEL_SCANNER]*/
-void r777force(T777* C,T0* a1);
-/*DS_LINKED_STACK[XM_EIFFEL_SCANNER]*/
-void r777remove(T777* C);
-/*KL_FIXED_ARRAY_ROUTINES[LX_SYMBOL_CLASS]*/
-T0* r441make(T2 a1);
-/*KL_FIXED_ARRAY_ROUTINES[LX_SYMBOL_CLASS]*/
-T0* r441resize(T0* a1,T2 a2);
-/*DS_LINKED_LIST_CURSOR[XM_NODE]*/
-void r139set(T139* C,T0* a1,T6 a2,T6 a3);
-/*DS_LINKED_LIST_CURSOR[XM_NODE]*/
-void r139make(T139* C,T0* a1);
-/*DS_LINKED_LIST_CURSOR[XM_NODE]*/
-void r139forth(T139* C);
-/*DS_LINKED_LIST_CURSOR[XM_NODE]*/
-void r139start(T139* C);
-/*DS_LINKED_LIST_CURSOR[XM_NODE]*/
-void r139go_after(T139* C);
-/*DS_LINKED_LIST_CURSOR[XM_NODE]*/
-void r139set_after(T139* C);
-/*DS_ARRAYED_LIST_CURSOR[STRING]*/
-T6 r188valid_position(T188* C,T2 a1);
-/*DS_ARRAYED_LIST_CURSOR[STRING]*/
-T0* r188item(T188* C);
-/*DS_ARRAYED_LIST_CURSOR[STRING]*/
-T6 r188after(T188* C);
-/*DS_ARRAYED_LIST_CURSOR[STRING]*/
-T6 r188off(T188* C);
-/*KL_SPECIAL_ROUTINES[XM_DTD_EXTERNAL_ID]*/
-T0* r843make(T2 a1);
-/*KL_SPECIAL_ROUTINES[XM_DTD_EXTERNAL_ID]*/
-T0* r843resize(T0* a1,T2 a2);
-/*LX_SYMBOL_CLASS_TRANSITION[LX_NFA_STATE]*/
-T6 r440labeled(T440* C,T2 a1);
-/*LX_SYMBOL_CLASS_TRANSITION[LX_NFA_STATE]*/
-T6 r440recordable(T440* C,T0* a1);
-/*LX_SYMBOL_CLASS_TRANSITION[LX_NFA_STATE]*/
-void r440make(T440* C,T0* a1,T0* a2);
-/*LX_SYMBOL_CLASS_TRANSITION[LX_NFA_STATE]*/
-void r440record(T440* C,T0* a1);
-/*KL_FIXED_ARRAY_ROUTINES[LX_NFA]*/
-T0* r358make(T2 a1);
-/*KL_FIXED_ARRAY_ROUTINES[LX_NFA]*/
-T0* r358resize(T0* a1,T2 a2);
-/*KL_SPECIAL_ROUTINES[XM_DTD_ATTRIBUTE_CONTENT]*/
-T0* r831make(T2 a1);
-/*KL_SPECIAL_ROUTINES[XM_DTD_ATTRIBUTE_CONTENT]*/
-T0* r831resize(T0* a1,T2 a2);
-/*KL_EQUALITY_TESTER[STRING]*/
-T6 r116test(T0* a1,T0* a2);
-/*DS_BILINKED_LIST_CURSOR[STRING]*/
-void r870set(T870* C,T0* a1,T6 a2,T6 a3);
-/*DS_BILINKED_LIST_CURSOR[STRING]*/
-void r870make(T870* C,T0* a1);
-/*KL_FIXED_ARRAY_ROUTINES[XM_EIFFEL_ENTITY_DEF]*/
-T0* r773make(T2 a1);
-/*KL_FIXED_ARRAY_ROUTINES[XM_EIFFEL_ENTITY_DEF]*/
-T0* r773resize(T0* a1,T2 a2);
-/*DS_LINKED_LIST_CURSOR[DS_PAIR[XM_POSITION,XM_NODE]]*/
-void r734set(T734* C,T0* a1,T6 a2,T6 a3);
-/*DS_LINKED_LIST_CURSOR[DS_PAIR[XM_POSITION,XM_NODE]]*/
-void r734make(T734* C,T0* a1);
-/*DS_LINKED_LIST_CURSOR[DS_PAIR[XM_POSITION,XM_NODE]]*/
-void r734set_after(T734* C);
-/*LX_SYMBOL_TRANSITION[LX_NFA_STATE]*/
-T6 r455recordable(T455* C,T0* a1);
-/*LX_SYMBOL_TRANSITION[LX_NFA_STATE]*/
-void r455make(T455* C,T2 a1,T0* a2);
-/*LX_SYMBOL_TRANSITION[LX_NFA_STATE]*/
-void r455record(T455* C,T0* a1);
-/*KL_FIXED_ARRAY_ROUTINES[INTEGER]*/
-T0* r177to_fixed_array(T0* a1);
-/*KL_FIXED_ARRAY_ROUTINES[INTEGER]*/
-T0* r177make(T2 a1);
-/*KL_FIXED_ARRAY_ROUTINES[INTEGER]*/
-T0* r177make_from_array(T0* a1);
-/*KL_FIXED_ARRAY_ROUTINES[INTEGER]*/
-T0* r177resize(T0* a1,T2 a2);
-/*KL_COMPARABLE_COMPARATOR[LX_NFA_STATE]*/
-T6 r305less_than(T0* a1,T0* a2);
-/*DS_HASH_TABLE_CURSOR[STRING,STRING]*/
-T0* r174key(T174* C);
-/*DS_HASH_TABLE_CURSOR[STRING,STRING]*/
-T6 r174valid_position(T174* C,T2 a1);
-/*DS_HASH_TABLE_CURSOR[STRING,STRING]*/
-T0* r174item(T174* C);
-/*DS_HASH_TABLE_CURSOR[STRING,STRING]*/
-T6 r174after(T174* C);
-/*DS_HASH_TABLE_CURSOR[STRING,STRING]*/
-void r174make(T174* C,T0* a1);
-/*DS_HASH_TABLE[GEANT_TARGET,STRING]*/
-T2 r103new_capacity(T2 a1);
-/*DS_HASH_TABLE[GEANT_TARGET,STRING]*/
-T6 r103valid_cursor(T103* C,T0* a1);
-/*DS_HASH_TABLE[GEANT_TARGET,STRING]*/
-void r103cursor_back(T103* C,T0* a1);
-/*DS_HASH_TABLE[GEANT_TARGET,STRING]*/
-void r103make_clashes(T103* C,T2 a1);
-/*DS_HASH_TABLE[GEANT_TARGET,STRING]*/
-T6 r103valid_slot(T103* C,T2 a1);
-/*DS_HASH_TABLE[GEANT_TARGET,STRING]*/
-T6 r103valid_position(T103* C,T2 a1);
-/*DS_HASH_TABLE[GEANT_TARGET,STRING]*/
-T0* r103cursor_item(T103* C,T0* a1);
-/*DS_HASH_TABLE[GEANT_TARGET,STRING]*/
-void r103search_position(T103* C,T0* a1);
-/*DS_HASH_TABLE[GEANT_TARGET,STRING]*/
-void r103remove_traversing_cursor(T103* C,T0* a1);
-/*DS_HASH_TABLE[GEANT_TARGET,STRING]*/
-void r103keys_resize(T103* C,T2 a1);
-/*DS_HASH_TABLE[GEANT_TARGET,STRING]*/
-T0* r103item(T103* C,T0* a1);
-/*DS_HASH_TABLE[GEANT_TARGET,STRING]*/
-void r103cursor_go_after(T103* C,T0* a1);
-/*DS_HASH_TABLE[GEANT_TARGET,STRING]*/
-void r103make_items(T103* C,T2 a1);
-/*DS_HASH_TABLE[GEANT_TARGET,STRING]*/
-void r103add_traversing_cursor(T103* C,T0* a1);
-/*DS_HASH_TABLE[GEANT_TARGET,STRING]*/
-T6 r103has_item(T103* C,T0* a1);
-/*DS_HASH_TABLE[GEANT_TARGET,STRING]*/
-void r103remove_position(T103* C,T2 a1);
-/*DS_HASH_TABLE[GEANT_TARGET,STRING]*/
-T6 r103cursor_before(T0* a1);
-/*DS_HASH_TABLE[GEANT_TARGET,STRING]*/
-void r103remove(T103* C,T0* a1);
-/*DS_HASH_TABLE[GEANT_TARGET,STRING]*/
-T0* r103cursor_key(T103* C,T0* a1);
-/*DS_HASH_TABLE[GEANT_TARGET,STRING]*/
-T6 r103cursor_after(T0* a1);
-/*DS_HASH_TABLE[GEANT_TARGET,STRING]*/
-T6 r103has(T103* C,T0* a1);
-/*DS_HASH_TABLE[GEANT_TARGET,STRING]*/
-void r103cursor_finish(T103* C,T0* a1);
-/*DS_HASH_TABLE[GEANT_TARGET,STRING]*/
-void r103make_keys(T103* C,T2 a1);
-/*DS_HASH_TABLE[GEANT_TARGET,STRING]*/
-T2 r103hash_position(T103* C,T0* a1);
-/*DS_HASH_TABLE[GEANT_TARGET,STRING]*/
-void r103cursor_forth(T103* C,T0* a1);
-/*DS_HASH_TABLE[GEANT_TARGET,STRING]*/
-void r103items_resize(T103* C,T2 a1);
-/*DS_HASH_TABLE[GEANT_TARGET,STRING]*/
-void r103make_with_equality_testers(T103* C,T2 a1,T0* a2,T0* a3);
-/*DS_HASH_TABLE[GEANT_TARGET,STRING]*/
-void r103resize(T103* C,T2 a1);
-/*DS_HASH_TABLE[GEANT_TARGET,STRING]*/
-void r103move_cursors_after(T103* C,T2 a1);
-/*DS_HASH_TABLE[GEANT_TARGET,STRING]*/
-void r103move_cursors_forth(T103* C,T2 a1);
-/*DS_HASH_TABLE[GEANT_TARGET,STRING]*/
-void r103cursor_start(T103* C,T0* a1);
-/*DS_HASH_TABLE[GEANT_TARGET,STRING]*/
-void r103clashes_resize(T103* C,T2 a1);
-/*DS_HASH_TABLE[GEANT_TARGET,STRING]*/
-void r103slots_resize(T103* C,T2 a1);
-/*DS_HASH_TABLE[GEANT_TARGET,STRING]*/
-T6 r103key_equality_tester_settable(T103* C,T0* a1);
-/*DS_HASH_TABLE[GEANT_TARGET,STRING]*/
-void r103force_last(T103* C,T0* a1,T0* a2);
-/*DS_HASH_TABLE[GEANT_TARGET,STRING]*/
-T0* r103new_cursor(T103* C);
-/*DS_HASH_TABLE[GEANT_TARGET,STRING]*/
-void r103make_slots(T103* C,T2 a1);
-/*DS_HASH_TABLE[GEANT_TARGET,STRING]*/
-T2 r103new_modulus(T2 a1);
-/*DS_HASH_TABLE[GEANT_TARGET,STRING]*/
-void r103move_all_cursors(T103* C,T2 a1,T2 a2);
-/*DS_HASH_TABLE[GEANT_TARGET,STRING]*/
-T6 r103cursor_off(T0* a1);
-/*DS_HASH_TABLE[GEANT_RENAME,STRING]*/
-T2 r653new_capacity(T2 a1);
-/*DS_HASH_TABLE[GEANT_RENAME,STRING]*/
-T6 r653valid_cursor(T653* C,T0* a1);
-/*DS_HASH_TABLE[GEANT_RENAME,STRING]*/
-void r653cursor_back(T653* C,T0* a1);
-/*DS_HASH_TABLE[GEANT_RENAME,STRING]*/
-void r653make_clashes(T653* C,T2 a1);
-/*DS_HASH_TABLE[GEANT_RENAME,STRING]*/
-T6 r653valid_slot(T653* C,T2 a1);
-/*DS_HASH_TABLE[GEANT_RENAME,STRING]*/
-T6 r653valid_position(T653* C,T2 a1);
-/*DS_HASH_TABLE[GEANT_RENAME,STRING]*/
-T0* r653cursor_item(T653* C,T0* a1);
-/*DS_HASH_TABLE[GEANT_RENAME,STRING]*/
-void r653search_position(T653* C,T0* a1);
-/*DS_HASH_TABLE[GEANT_RENAME,STRING]*/
-void r653remove_traversing_cursor(T653* C,T0* a1);
-/*DS_HASH_TABLE[GEANT_RENAME,STRING]*/
-void r653keys_resize(T653* C,T2 a1);
-/*DS_HASH_TABLE[GEANT_RENAME,STRING]*/
-void r653make_items(T653* C,T2 a1);
-/*DS_HASH_TABLE[GEANT_RENAME,STRING]*/
-void r653add_traversing_cursor(T653* C,T0* a1);
-/*DS_HASH_TABLE[GEANT_RENAME,STRING]*/
-void r653make_map_equal(T653* C,T2 a1);
-/*DS_HASH_TABLE[GEANT_RENAME,STRING]*/
-T6 r653cursor_before(T0* a1);
-/*DS_HASH_TABLE[GEANT_RENAME,STRING]*/
-T6 r653has(T653* C,T0* a1);
-/*DS_HASH_TABLE[GEANT_RENAME,STRING]*/
-void r653cursor_finish(T653* C,T0* a1);
-/*DS_HASH_TABLE[GEANT_RENAME,STRING]*/
-void r653make_keys(T653* C,T2 a1);
-/*DS_HASH_TABLE[GEANT_RENAME,STRING]*/
-T2 r653hash_position(T653* C,T0* a1);
-/*DS_HASH_TABLE[GEANT_RENAME,STRING]*/
-void r653items_resize(T653* C,T2 a1);
-/*DS_HASH_TABLE[GEANT_RENAME,STRING]*/
-void r653make_with_equality_testers(T653* C,T2 a1,T0* a2,T0* a3);
-/*DS_HASH_TABLE[GEANT_RENAME,STRING]*/
-void r653resize(T653* C,T2 a1);
-/*DS_HASH_TABLE[GEANT_RENAME,STRING]*/
-void r653clashes_resize(T653* C,T2 a1);
-/*DS_HASH_TABLE[GEANT_RENAME,STRING]*/
-void r653slots_resize(T653* C,T2 a1);
-/*DS_HASH_TABLE[GEANT_RENAME,STRING]*/
-T6 r653key_equality_tester_settable(T653* C,T0* a1);
-/*DS_HASH_TABLE[GEANT_RENAME,STRING]*/
-void r653force_last(T653* C,T0* a1,T0* a2);
-/*DS_HASH_TABLE[GEANT_RENAME,STRING]*/
-T0* r653new_cursor(T653* C);
-/*DS_HASH_TABLE[GEANT_RENAME,STRING]*/
-void r653make_slots(T653* C,T2 a1);
-/*DS_HASH_TABLE[GEANT_RENAME,STRING]*/
-T2 r653new_modulus(T2 a1);
-/*DS_HASH_TABLE[GEANT_RENAME,STRING]*/
-T6 r653cursor_off(T0* a1);
-/*KL_SPECIAL_ROUTINES[BOOLEAN]*/
-T0* r814make(T2 a1);
-/*KL_SPECIAL_ROUTINES[BOOLEAN]*/
-T0* r814resize(T0* a1,T2 a2);
-/*KL_COMPARABLE_COMPARATOR[INTEGER]*/
-T6 r460less_than(T2 a1,T2 a2);
-/*DS_BILINKED_LIST[DS_HASH_TABLE[STRING,STRING]]*/
-void r933set_last_cell(T933* C,T0* a1);
-/*DS_BILINKED_LIST[DS_HASH_TABLE[STRING,STRING]]*/
-T6 r933valid_cursor(T933* C,T0* a1);
-/*DS_BILINKED_LIST[DS_HASH_TABLE[STRING,STRING]]*/
-void r933wipe_out(T933* C);
-/*DS_BILINKED_LIST[DS_HASH_TABLE[STRING,STRING]]*/
-void r933cursor_back(T933* C,T0* a1);
-/*DS_BILINKED_LIST[DS_HASH_TABLE[STRING,STRING]]*/
-T0* r933cursor_item(T0* a1);
-/*DS_BILINKED_LIST[DS_HASH_TABLE[STRING,STRING]]*/
-void r933remove_traversing_cursor(T933* C,T0* a1);
-/*DS_BILINKED_LIST[DS_HASH_TABLE[STRING,STRING]]*/
-void r933move_all_cursors_after(T933* C);
-/*DS_BILINKED_LIST[DS_HASH_TABLE[STRING,STRING]]*/
-void r933add_traversing_cursor(T933* C,T0* a1);
-/*DS_BILINKED_LIST[DS_HASH_TABLE[STRING,STRING]]*/
-T6 r933cursor_before(T0* a1);
-/*DS_BILINKED_LIST[DS_HASH_TABLE[STRING,STRING]]*/
-void r933make(T933* C);
-/*DS_BILINKED_LIST[DS_HASH_TABLE[STRING,STRING]]*/
-void r933remove_last(T933* C);
-/*DS_BILINKED_LIST[DS_HASH_TABLE[STRING,STRING]]*/
-void r933cursor_finish(T933* C,T0* a1);
-/*DS_BILINKED_LIST[DS_HASH_TABLE[STRING,STRING]]*/
-void r933move_last_cursors_after(T933* C);
-/*DS_BILINKED_LIST[DS_HASH_TABLE[STRING,STRING]]*/
-void r933cursor_go_before(T933* C,T0* a1);
-/*DS_BILINKED_LIST[DS_HASH_TABLE[STRING,STRING]]*/
-void r933force_last(T933* C,T0* a1);
-/*DS_BILINKED_LIST[DS_HASH_TABLE[STRING,STRING]]*/
-T0* r933new_cursor(T933* C);
-/*DS_BILINKED_LIST[DS_HASH_TABLE[STRING,STRING]]*/
-T6 r933cursor_off(T0* a1);
-/*KL_FIXED_ARRAY_ROUTINES[LX_START_CONDITION]*/
-T0* r479make(T2 a1);
-/*KL_SPECIAL_ROUTINES[LX_NFA]*/
-T0* r386make(T2 a1);
-/*KL_SPECIAL_ROUTINES[LX_NFA]*/
-T0* r386resize(T0* a1,T2 a2);
-/*DS_BUBBLE_SORTER[LX_RULE]*/
-void r297subsort_with_comparator(T0* a1,T0* a2,T2 a3,T2 a4);
-/*DS_BUBBLE_SORTER[LX_RULE]*/
-void r297sort_with_comparator(T0* a1,T0* a2);
-/*DS_ARRAYED_LIST[LX_RULE]*/
-T2 r256new_capacity(T2 a1);
-/*DS_ARRAYED_LIST[LX_RULE]*/
-T6 r256extendible(T256* C,T2 a1);
-/*DS_ARRAYED_LIST[LX_RULE]*/
-void r256move_cursors_right(T256* C,T2 a1,T2 a2);
-/*DS_ARRAYED_LIST[LX_RULE]*/
-void r256put(T256* C,T0* a1,T2 a2);
-/*DS_ARRAYED_LIST[LX_RULE]*/
-void r256force_first(T256* C,T0* a1);
-/*DS_ARRAYED_LIST[LX_RULE]*/
-void r256make(T256* C,T2 a1);
-/*DS_ARRAYED_LIST[LX_RULE]*/
-T6 r256has(T256* C,T0* a1);
-/*DS_ARRAYED_LIST[LX_RULE]*/
-void r256move_right(T256* C,T2 a1,T2 a2);
-/*DS_ARRAYED_LIST[LX_RULE]*/
-void r256resize(T256* C,T2 a1);
-/*DS_ARRAYED_LIST[LX_RULE]*/
-void r256force_last(T256* C,T0* a1);
-/*DS_ARRAYED_LIST[LX_RULE]*/
-T0* r256new_cursor(T256* C);
-/*DS_ARRAYED_LIST[LX_RULE]*/
-void r256put_last(T256* C,T0* a1);
-/*DS_ARRAYED_LIST_CURSOR[GEANT_PARENT]*/
-T6 r609valid_position(T609* C,T2 a1);
-/*DS_ARRAYED_LIST_CURSOR[GEANT_PARENT]*/
-T0* r609item(T609* C);
-/*DS_ARRAYED_LIST_CURSOR[GEANT_PARENT]*/
-T6 r609after(T609* C);
-/*DS_ARRAYED_LIST_CURSOR[GEANT_PARENT]*/
-T6 r609off(T609* C);
-/*DS_PAIR[STRING,STRING]*/
-void r568make(T568* C,T0* a1,T0* a2);
-/*DS_ARRAYED_LIST_CURSOR[LX_RULE]*/
-T6 r327valid_position(T327* C,T2 a1);
-/*DS_HASH_TABLE_CURSOR[GEANT_RENAME,STRING]*/
-T6 r642valid_position(T642* C,T2 a1);
-/*DS_HASH_TABLE_CURSOR[GEANT_RENAME,STRING]*/
-T0* r642item(T642* C);
-/*DS_HASH_TABLE_CURSOR[GEANT_RENAME,STRING]*/
-void r642make(T642* C,T0* a1);
-/*DS_HASH_TABLE_CURSOR[GEANT_RENAME,STRING]*/
-T6 r642before(T642* C);
-/*DS_BILINKABLE[DS_HASH_TABLE[STRING,STRING]]*/
-void r970put_right(T970* C,T0* a1);
-/*DS_LINKED_LIST[DS_PAIR[XM_POSITION,XM_NODE]]*/
-T6 r724valid_cursor(T724* C,T0* a1);
-/*DS_LINKED_LIST[DS_PAIR[XM_POSITION,XM_NODE]]*/
-void r724remove_traversing_cursor(T724* C,T0* a1);
-/*DS_LINKED_LIST[DS_PAIR[XM_POSITION,XM_NODE]]*/
-void r724cursor_go_after(T724* C,T0* a1);
-/*DS_LINKED_LIST[DS_PAIR[XM_POSITION,XM_NODE]]*/
-void r724add_traversing_cursor(T724* C,T0* a1);
-/*DS_LINKED_LIST[DS_PAIR[XM_POSITION,XM_NODE]]*/
-void r724make(T724* C);
-/*DS_LINKED_LIST[DS_PAIR[XM_POSITION,XM_NODE]]*/
-T6 r724cursor_after(T0* a1);
-/*DS_LINKED_LIST[DS_PAIR[XM_POSITION,XM_NODE]]*/
-void r724cursor_forth(T724* C,T0* a1);
-/*DS_LINKED_LIST[DS_PAIR[XM_POSITION,XM_NODE]]*/
-void r724cursor_start(T724* C,T0* a1);
-/*DS_LINKED_LIST[DS_PAIR[XM_POSITION,XM_NODE]]*/
-T0* r724new_cursor(T724* C);
-/*DS_LINKED_LIST[DS_PAIR[XM_POSITION,XM_NODE]]*/
-void r724put_last(T724* C,T0* a1);
-/*DS_LINKED_LIST[DS_PAIR[XM_POSITION,XM_NODE]]*/
-T6 r724cursor_off(T0* a1);
-/*DS_ARRAYED_LIST[LX_DFA_STATE]*/
-T6 r262extendible(T262* C,T2 a1);
-/*DS_ARRAYED_LIST[LX_DFA_STATE]*/
-void r262make(T262* C,T2 a1);
-/*DS_ARRAYED_LIST[LX_DFA_STATE]*/
-void r262resize(T262* C,T2 a1);
-/*DS_ARRAYED_LIST[LX_DFA_STATE]*/
-T0* r262new_cursor(T262* C);
-/*DS_ARRAYED_LIST[LX_DFA_STATE]*/
-T6 r262is_full(T262* C);
-/*DS_ARRAYED_LIST[LX_DFA_STATE]*/
-void r262put_last(T262* C,T0* a1);
-/*DS_HASH_SET_CURSOR[STRING]*/
-T6 r507valid_position(T507* C,T2 a1);
-/*DS_HASH_SET_CURSOR[STRING]*/
-T0* r507item(T507* C);
-/*DS_HASH_SET_CURSOR[STRING]*/
-T6 r507after(T507* C);
-/*DS_HASH_SET_CURSOR[STRING]*/
-void r507make(T507* C,T0* a1);
-/*SPECIAL[XM_DTD_ELEMENT_CONTENT]*/
-T6 r838valid_index(T838* C,T2 a1);
-/*SPECIAL[XM_DTD_ELEMENT_CONTENT]*/
-void r838make(T838* C,T2 a1);
-/*SPECIAL[XM_DTD_ELEMENT_CONTENT]*/
-T0* r838resize(T838* C,T2 a1);
-/*SPECIAL[XM_DTD_ELEMENT_CONTENT]*/
-void r838array_resize(T838* C,T2 a1);
-/*DS_HASH_SET[GEANT_FILESET_ENTRY]*/
-T2 r510new_capacity(T2 a1);
-/*DS_HASH_SET[GEANT_FILESET_ENTRY]*/
-T6 r510valid_cursor(T510* C,T0* a1);
-/*DS_HASH_SET[GEANT_FILESET_ENTRY]*/
-void r510make_equal(T510* C,T2 a1);
-/*DS_HASH_SET[GEANT_FILESET_ENTRY]*/
-T6 r510valid_slot(T510* C,T2 a1);
-/*DS_HASH_SET[GEANT_FILESET_ENTRY]*/
-void r510make_clashes(T510* C,T2 a1);
-/*DS_HASH_SET[GEANT_FILESET_ENTRY]*/
-T6 r510valid_position(T510* C,T2 a1);
-/*DS_HASH_SET[GEANT_FILESET_ENTRY]*/
-T0* r510cursor_item(T510* C,T0* a1);
-/*DS_HASH_SET[GEANT_FILESET_ENTRY]*/
-void r510search_position(T510* C,T0* a1);
-/*DS_HASH_SET[GEANT_FILESET_ENTRY]*/
-void r510remove_traversing_cursor(T510* C,T0* a1);
-/*DS_HASH_SET[GEANT_FILESET_ENTRY]*/
-void r510make_items(T510* C,T2 a1);
-/*DS_HASH_SET[GEANT_FILESET_ENTRY]*/
-void r510add_traversing_cursor(T510* C,T0* a1);
-/*DS_HASH_SET[GEANT_FILESET_ENTRY]*/
-void r510remove_position(T510* C,T2 a1);
-/*DS_HASH_SET[GEANT_FILESET_ENTRY]*/
-T6 r510after(T510* C);
-/*DS_HASH_SET[GEANT_FILESET_ENTRY]*/
-void r510make(T510* C,T2 a1);
-/*DS_HASH_SET[GEANT_FILESET_ENTRY]*/
-T0* r510item_for_iteration(T510* C);
-/*DS_HASH_SET[GEANT_FILESET_ENTRY]*/
-void r510remove(T510* C,T0* a1);
-/*DS_HASH_SET[GEANT_FILESET_ENTRY]*/
-T6 r510off(T510* C);
-/*DS_HASH_SET[GEANT_FILESET_ENTRY]*/
-T6 r510cursor_after(T0* a1);
-/*DS_HASH_SET[GEANT_FILESET_ENTRY]*/
-T2 r510hash_position(T510* C,T0* a1);
-/*DS_HASH_SET[GEANT_FILESET_ENTRY]*/
-void r510cursor_forth(T510* C,T0* a1);
-/*DS_HASH_SET[GEANT_FILESET_ENTRY]*/
-void r510items_resize(T510* C,T2 a1);
-/*DS_HASH_SET[GEANT_FILESET_ENTRY]*/
-void r510resize(T510* C,T2 a1);
-/*DS_HASH_SET[GEANT_FILESET_ENTRY]*/
-void r510move_cursors_after(T510* C,T2 a1);
-/*DS_HASH_SET[GEANT_FILESET_ENTRY]*/
-void r510move_cursors_forth(T510* C,T2 a1);
-/*DS_HASH_SET[GEANT_FILESET_ENTRY]*/
-void r510cursor_start(T510* C,T0* a1);
-/*DS_HASH_SET[GEANT_FILESET_ENTRY]*/
-void r510clashes_resize(T510* C,T2 a1);
-/*DS_HASH_SET[GEANT_FILESET_ENTRY]*/
-void r510slots_resize(T510* C,T2 a1);
-/*DS_HASH_SET[GEANT_FILESET_ENTRY]*/
-void r510force_last(T510* C,T0* a1);
-/*DS_HASH_SET[GEANT_FILESET_ENTRY]*/
-T0* r510new_cursor(T510* C);
-/*DS_HASH_SET[GEANT_FILESET_ENTRY]*/
-void r510make_slots(T510* C,T2 a1);
-/*DS_HASH_SET[GEANT_FILESET_ENTRY]*/
-void r510move_all_cursors(T510* C,T2 a1,T2 a2);
-/*DS_HASH_SET[GEANT_FILESET_ENTRY]*/
-T2 r510new_modulus(T2 a1);
-/*DS_HASH_SET[GEANT_FILESET_ENTRY]*/
-T6 r510cursor_off(T0* a1);
-/*KL_SPECIAL_ROUTINES[XM_EIFFEL_DECLARATION]*/
-T0* r809make(T2 a1);
-/*KL_SPECIAL_ROUTINES[XM_EIFFEL_DECLARATION]*/
-T0* r809resize(T0* a1,T2 a2);
-/*KL_SPECIAL_ROUTINES[DS_BILINKED_LIST[XM_DTD_ATTRIBUTE_CONTENT]]*/
-T0* r825make(T2 a1);
-/*KL_SPECIAL_ROUTINES[DS_BILINKED_LIST[XM_DTD_ATTRIBUTE_CONTENT]]*/
-T0* r825resize(T0* a1,T2 a2);
-/*DS_ARRAYED_LIST[LX_NFA]*/
-T2 r343new_capacity(T2 a1);
-/*DS_ARRAYED_LIST[LX_NFA]*/
-T6 r343extendible(T343* C,T2 a1);
-/*DS_ARRAYED_LIST[LX_NFA]*/
-void r343make(T343* C,T2 a1);
-/*DS_ARRAYED_LIST[LX_NFA]*/
-void r343resize(T343* C,T2 a1);
-/*DS_ARRAYED_LIST[LX_NFA]*/
-void r343force_last(T343* C,T0* a1);
-/*DS_ARRAYED_LIST[LX_NFA]*/
-T0* r343new_cursor(T343* C);
-/*DS_ARRAYED_LIST[GEANT_PARENT]*/
-T2 r608new_capacity(T2 a1);
-/*DS_ARRAYED_LIST[GEANT_PARENT]*/
-T6 r608valid_cursor(T608* C,T0* a1);
-/*DS_ARRAYED_LIST[GEANT_PARENT]*/
-T6 r608extendible(T608* C,T2 a1);
-/*DS_ARRAYED_LIST[GEANT_PARENT]*/
-T0* r608cursor_item(T608* C,T0* a1);
-/*DS_ARRAYED_LIST[GEANT_PARENT]*/
-void r608remove_traversing_cursor(T608* C,T0* a1);
-/*DS_ARRAYED_LIST[GEANT_PARENT]*/
-void r608add_traversing_cursor(T608* C,T0* a1);
-/*DS_ARRAYED_LIST[GEANT_PARENT]*/
-T6 r608cursor_before(T0* a1);
-/*DS_ARRAYED_LIST[GEANT_PARENT]*/
-void r608make(T608* C,T2 a1);
-/*DS_ARRAYED_LIST[GEANT_PARENT]*/
-T6 r608cursor_after(T0* a1);
-/*DS_ARRAYED_LIST[GEANT_PARENT]*/
-void r608cursor_forth(T608* C,T0* a1);
-/*DS_ARRAYED_LIST[GEANT_PARENT]*/
-void r608resize(T608* C,T2 a1);
-/*DS_ARRAYED_LIST[GEANT_PARENT]*/
-void r608cursor_start(T608* C,T0* a1);
-/*DS_ARRAYED_LIST[GEANT_PARENT]*/
-void r608force_last(T608* C,T0* a1);
-/*DS_ARRAYED_LIST[GEANT_PARENT]*/
-T0* r608new_cursor(T608* C);
-/*DS_ARRAYED_LIST[GEANT_PARENT]*/
-T6 r608cursor_off(T0* a1);
-/*KL_FIXED_ARRAY_ROUTINES[XM_EIFFEL_PARSER_NAME]*/
-T0* r879make(T2 a1);
-/*KL_FIXED_ARRAY_ROUTINES[XM_EIFFEL_PARSER_NAME]*/
-T0* r879resize(T0* a1,T2 a2);
-/*DS_HASH_TABLE[GEANT_SELECT,STRING]*/
-T2 r616new_capacity(T2 a1);
-/*DS_HASH_TABLE[GEANT_SELECT,STRING]*/
-T6 r616valid_cursor(T616* C,T0* a1);
-/*DS_HASH_TABLE[GEANT_SELECT,STRING]*/
-T6 r616valid_slot(T616* C,T2 a1);
-/*DS_HASH_TABLE[GEANT_SELECT,STRING]*/
-void r616make_clashes(T616* C,T2 a1);
-/*DS_HASH_TABLE[GEANT_SELECT,STRING]*/
-T6 r616valid_position(T616* C,T2 a1);
-/*DS_HASH_TABLE[GEANT_SELECT,STRING]*/
-T0* r616cursor_item(T616* C,T0* a1);
-/*DS_HASH_TABLE[GEANT_SELECT,STRING]*/
-void r616search_position(T616* C,T0* a1);
-/*DS_HASH_TABLE[GEANT_SELECT,STRING]*/
-void r616remove_traversing_cursor(T616* C,T0* a1);
-/*DS_HASH_TABLE[GEANT_SELECT,STRING]*/
-void r616keys_resize(T616* C,T2 a1);
-/*DS_HASH_TABLE[GEANT_SELECT,STRING]*/
-void r616make_items(T616* C,T2 a1);
-/*DS_HASH_TABLE[GEANT_SELECT,STRING]*/
-void r616add_traversing_cursor(T616* C,T0* a1);
-/*DS_HASH_TABLE[GEANT_SELECT,STRING]*/
-void r616make_map_equal(T616* C,T2 a1);
-/*DS_HASH_TABLE[GEANT_SELECT,STRING]*/
-T6 r616cursor_after(T0* a1);
-/*DS_HASH_TABLE[GEANT_SELECT,STRING]*/
-void r616make_keys(T616* C,T2 a1);
-/*DS_HASH_TABLE[GEANT_SELECT,STRING]*/
-T2 r616hash_position(T616* C,T0* a1);
-/*DS_HASH_TABLE[GEANT_SELECT,STRING]*/
-void r616cursor_forth(T616* C,T0* a1);
-/*DS_HASH_TABLE[GEANT_SELECT,STRING]*/
-void r616items_resize(T616* C,T2 a1);
-/*DS_HASH_TABLE[GEANT_SELECT,STRING]*/
-void r616make_with_equality_testers(T616* C,T2 a1,T0* a2,T0* a3);
-/*DS_HASH_TABLE[GEANT_SELECT,STRING]*/
-void r616resize(T616* C,T2 a1);
-/*DS_HASH_TABLE[GEANT_SELECT,STRING]*/
-void r616cursor_start(T616* C,T0* a1);
-/*DS_HASH_TABLE[GEANT_SELECT,STRING]*/
-void r616clashes_resize(T616* C,T2 a1);
-/*DS_HASH_TABLE[GEANT_SELECT,STRING]*/
-void r616slots_resize(T616* C,T2 a1);
-/*DS_HASH_TABLE[GEANT_SELECT,STRING]*/
-T6 r616key_equality_tester_settable(T616* C,T0* a1);
-/*DS_HASH_TABLE[GEANT_SELECT,STRING]*/
-void r616force_last(T616* C,T0* a1,T0* a2);
-/*DS_HASH_TABLE[GEANT_SELECT,STRING]*/
-T0* r616new_cursor(T616* C);
-/*DS_HASH_TABLE[GEANT_SELECT,STRING]*/
-void r616make_slots(T616* C,T2 a1);
-/*DS_HASH_TABLE[GEANT_SELECT,STRING]*/
-T2 r616new_modulus(T2 a1);
-/*DS_HASH_TABLE[GEANT_SELECT,STRING]*/
-T6 r616cursor_off(T0* a1);
-/*SPECIAL[DS_BILINKED_LIST[STRING]]*/
-T6 r820valid_index(T820* C,T2 a1);
-/*SPECIAL[DS_BILINKED_LIST[STRING]]*/
-void r820make(T820* C,T2 a1);
-/*SPECIAL[DS_BILINKED_LIST[STRING]]*/
-T0* r820resize(T820* C,T2 a1);
-/*SPECIAL[DS_BILINKED_LIST[STRING]]*/
-void r820array_resize(T820* C,T2 a1);
-/*SPECIAL[XM_EIFFEL_PARSER_NAME]*/
-T6 r856valid_index(T856* C,T2 a1);
-/*SPECIAL[XM_EIFFEL_PARSER_NAME]*/
-void r856make(T856* C,T2 a1);
-/*SPECIAL[XM_EIFFEL_PARSER_NAME]*/
-T0* r856resize(T856* C,T2 a1);
-/*SPECIAL[XM_EIFFEL_PARSER_NAME]*/
-void r856array_resize(T856* C,T2 a1);
-/*KL_SPECIAL_ROUTINES[LX_SYMBOL_CLASS]*/
-T0* r391make(T2 a1);
-/*KL_SPECIAL_ROUTINES[LX_SYMBOL_CLASS]*/
-T0* r391resize(T0* a1,T2 a2);
-/*KL_FIXED_ARRAY_ROUTINES[LX_NFA_STATE]*/
-T0* r314make(T2 a1);
-/*KL_FIXED_ARRAY_ROUTINES[LX_NFA_STATE]*/
-T0* r314resize(T0* a1,T2 a2);
-/*SPECIAL[XM_EIFFEL_DECLARATION]*/
-T6 r810valid_index(T810* C,T2 a1);
-/*SPECIAL[XM_EIFFEL_DECLARATION]*/
-void r810make(T810* C,T2 a1);
-/*SPECIAL[XM_EIFFEL_DECLARATION]*/
-T0* r810resize(T810* C,T2 a1);
-/*SPECIAL[XM_EIFFEL_DECLARATION]*/
-void r810array_resize(T810* C,T2 a1);
-/*DS_HASH_TABLE_CURSOR[LX_SYMBOL_CLASS,STRING]*/
-T6 r428valid_position(T428* C,T2 a1);
-/*DS_HASH_TABLE_CURSOR[LX_SYMBOL_CLASS,STRING]*/
-T0* r428item(T428* C);
-/*DS_HASH_TABLE_CURSOR[LX_SYMBOL_CLASS,STRING]*/
-T6 r428after(T428* C);
-/*DS_HASH_TABLE_CURSOR[LX_SYMBOL_CLASS,STRING]*/
-void r428make(T428* C,T0* a1);
-/*DS_LINKED_STACK[STRING]*/
-void r945force(T945* C,T0* a1);
-/*DS_LINKED_STACK[STRING]*/
-T0* r945item(T945* C);
-/*DS_LINKED_STACK[STRING]*/
-void r945remove(T945* C);
-/*KL_FIXED_ARRAY_ROUTINES[XM_NAMESPACE]*/
-T0* r965make(T2 a1);
-/*KL_FIXED_ARRAY_ROUTINES[XM_NAMESPACE]*/
-T0* r965resize(T0* a1,T2 a2);
-/*SPECIAL[DS_BILINKED_LIST[XM_DTD_ATTRIBUTE_CONTENT]]*/
-T6 r827valid_index(T827* C,T2 a1);
-/*SPECIAL[DS_BILINKED_LIST[XM_DTD_ATTRIBUTE_CONTENT]]*/
-void r827make(T827* C,T2 a1);
-/*SPECIAL[DS_BILINKED_LIST[XM_DTD_ATTRIBUTE_CONTENT]]*/
-T0* r827resize(T827* C,T2 a1);
-/*SPECIAL[DS_BILINKED_LIST[XM_DTD_ATTRIBUTE_CONTENT]]*/
-void r827array_resize(T827* C,T2 a1);
-/*DS_BILINKED_LIST[XM_DTD_ELEMENT_CONTENT]*/
-void r894force_first(T894* C,T0* a1);
-/*DS_BILINKED_LIST[XM_DTD_ELEMENT_CONTENT]*/
-void r894make(T894* C);
-/*DS_BILINKED_LIST[XM_DTD_ELEMENT_CONTENT]*/
-void r894force_last(T894* C,T0* a1);
-/*DS_BILINKED_LIST[XM_DTD_ELEMENT_CONTENT]*/
-T0* r894new_cursor(T894* C);
-/*KL_FIXED_ARRAY_ROUTINES[GEANT_SELECT]*/
-T0* r702make(T2 a1);
-/*KL_FIXED_ARRAY_ROUTINES[GEANT_SELECT]*/
-T0* r702resize(T0* a1,T2 a2);
-/*KL_SPECIAL_ROUTINES[XM_DTD_ELEMENT_CONTENT]*/
-T0* r837make(T2 a1);
-/*KL_SPECIAL_ROUTINES[XM_DTD_ELEMENT_CONTENT]*/
-T0* r837resize(T0* a1,T2 a2);
-/*DS_HASH_TABLE_CURSOR[GEANT_TARGET,STRING]*/
-T0* r79key(T79* C);
-/*DS_HASH_TABLE_CURSOR[GEANT_TARGET,STRING]*/
-T6 r79valid_position(T79* C,T2 a1);
-/*DS_HASH_TABLE_CURSOR[GEANT_TARGET,STRING]*/
-T0* r79item(T79* C);
-/*DS_HASH_TABLE_CURSOR[GEANT_TARGET,STRING]*/
-T6 r79after(T79* C);
-/*DS_HASH_TABLE_CURSOR[GEANT_TARGET,STRING]*/
-void r79make(T79* C,T0* a1);
-/*DS_HASH_TABLE_CURSOR[GEANT_TARGET,STRING]*/
-T6 r79before(T79* C);
-/*KL_FIXED_ARRAY_ROUTINES[GEANT_PARENT]*/
-T0* r694make(T2 a1);
-/*KL_FIXED_ARRAY_ROUTINES[GEANT_PARENT]*/
-T0* r694resize(T0* a1,T2 a2);
-/*DS_BILINKED_LIST_CURSOR[DS_HASH_TABLE[STRING,STRING]]*/
-void r938set(T938* C,T0* a1,T6 a2,T6 a3);
-/*DS_BILINKED_LIST_CURSOR[DS_HASH_TABLE[STRING,STRING]]*/
-void r938set_before(T938* C);
-/*DS_BILINKED_LIST_CURSOR[DS_HASH_TABLE[STRING,STRING]]*/
-void r938make(T938* C,T0* a1);
-/*DS_BILINKED_LIST_CURSOR[DS_HASH_TABLE[STRING,STRING]]*/
-void r938set_after(T938* C);
-/*DS_HASH_SET[XM_NAMESPACE]*/
-T2 r947new_capacity(T2 a1);
-/*DS_HASH_SET[XM_NAMESPACE]*/
-void r947make_equal(T947* C,T2 a1);
-/*DS_HASH_SET[XM_NAMESPACE]*/
-void r947make_clashes(T947* C,T2 a1);
-/*DS_HASH_SET[XM_NAMESPACE]*/
-void r947search_position(T947* C,T0* a1);
-/*DS_HASH_SET[XM_NAMESPACE]*/
-T0* r947item(T947* C,T0* a1);
-/*DS_HASH_SET[XM_NAMESPACE]*/
-void r947make_items(T947* C,T2 a1);
-/*DS_HASH_SET[XM_NAMESPACE]*/
-void r947make(T947* C,T2 a1);
-/*DS_HASH_SET[XM_NAMESPACE]*/
-T6 r947has(T947* C,T0* a1);
-/*DS_HASH_SET[XM_NAMESPACE]*/
-T2 r947hash_position(T947* C,T0* a1);
-/*DS_HASH_SET[XM_NAMESPACE]*/
-void r947items_resize(T947* C,T2 a1);
-/*DS_HASH_SET[XM_NAMESPACE]*/
-void r947resize(T947* C,T2 a1);
-/*DS_HASH_SET[XM_NAMESPACE]*/
-void r947clashes_resize(T947* C,T2 a1);
-/*DS_HASH_SET[XM_NAMESPACE]*/
-void r947slots_resize(T947* C,T2 a1);
-/*DS_HASH_SET[XM_NAMESPACE]*/
-void r947force_last(T947* C,T0* a1);
-/*DS_HASH_SET[XM_NAMESPACE]*/
-T0* r947new_cursor(T947* C);
-/*DS_HASH_SET[XM_NAMESPACE]*/
-void r947make_slots(T947* C,T2 a1);
-/*DS_HASH_SET[XM_NAMESPACE]*/
-T2 r947new_modulus(T2 a1);
-/*KL_ARRAY_ROUTINES[INTEGER]*/
-void r782subcopy(T0* a1,T0* a2,T2 a3,T2 a4,T2 a5);
-/*KL_FIXED_ARRAY_ROUTINES[GEANT_FILESET_ENTRY]*/
-T0* r527make(T2 a1);
-/*KL_FIXED_ARRAY_ROUTINES[GEANT_FILESET_ENTRY]*/
-T0* r527resize(T0* a1,T2 a2);
-/*DS_BILINKED_LIST_CURSOR[XM_DTD_ELEMENT_CONTENT]*/
-void r904make(T904* C,T0* a1);
-/*DS_BILINKED_LIST_CURSOR[XM_DTD_ATTRIBUTE_CONTENT]*/
-void r920set(T920* C,T0* a1,T6 a2,T6 a3);
-/*DS_BILINKED_LIST_CURSOR[XM_DTD_ATTRIBUTE_CONTENT]*/
-void r920make(T920* C,T0* a1);
-/*DS_BILINKED_LIST_CURSOR[XM_DTD_ATTRIBUTE_CONTENT]*/
-void r920set_after(T920* C);
-/*DS_HASH_TABLE_CURSOR[XM_EIFFEL_ENTITY_DEF,STRING]*/
-T6 r769valid_position(T769* C,T2 a1);
-/*DS_HASH_TABLE_CURSOR[XM_EIFFEL_ENTITY_DEF,STRING]*/
-void r769make(T769* C,T0* a1);
-/*KL_EQUALITY_TESTER[XM_NAMESPACE]*/
-T6 r953test(T0* a1,T0* a2);
-/*DS_ARRAYED_LIST_CURSOR[LX_NFA_STATE]*/
-T6 r334valid_position(T334* C,T2 a1);
-/*DS_ARRAYED_LIST_CURSOR[LX_NFA_STATE]*/
-T0* r334item(T334* C);
-/*DS_ARRAYED_LIST_CURSOR[LX_NFA_STATE]*/
-T6 r334after(T334* C);
-/*DS_ARRAYED_LIST_CURSOR[LX_NFA_STATE]*/
-T6 r334off(T334* C);
-/*DS_HASH_TABLE_CURSOR[LX_NFA,INTEGER]*/
-void r369make(T369* C,T0* a1);
-/*DS_ARRAYED_STACK[GEANT_TARGET]*/
-T2 r133new_capacity(T2 a1);
-/*DS_ARRAYED_STACK[GEANT_TARGET]*/
-T6 r133extendible(T133* C,T2 a1);
-/*DS_ARRAYED_STACK[GEANT_TARGET]*/
-void r133force(T133* C,T0* a1);
-/*DS_ARRAYED_STACK[GEANT_TARGET]*/
-T0* r133item(T133* C);
-/*DS_ARRAYED_STACK[GEANT_TARGET]*/
 void r133make(T133* C,T2 a1);
-/*DS_ARRAYED_STACK[GEANT_TARGET]*/
-void r133remove(T133* C);
-/*DS_ARRAYED_STACK[GEANT_TARGET]*/
+/*FIXED_ARRAY[GEANT_TARGET]*/
 void r133resize(T133* C,T2 a1);
-/*SPECIAL[XM_DTD_EXTERNAL_ID]*/
-T6 r844valid_index(T844* C,T2 a1);
-/*SPECIAL[XM_DTD_EXTERNAL_ID]*/
-void r844make(T844* C,T2 a1);
-/*SPECIAL[XM_DTD_EXTERNAL_ID]*/
-T0* r844resize(T844* C,T2 a1);
-/*SPECIAL[XM_DTD_EXTERNAL_ID]*/
-void r844array_resize(T844* C,T2 a1);
-/*DS_BILINKED_LIST[XM_DTD_ATTRIBUTE_CONTENT]*/
-T6 r826valid_cursor(T826* C,T0* a1);
-/*DS_BILINKED_LIST[XM_DTD_ATTRIBUTE_CONTENT]*/
-T0* r826cursor_item(T0* a1);
-/*DS_BILINKED_LIST[XM_DTD_ATTRIBUTE_CONTENT]*/
-void r826remove_traversing_cursor(T826* C,T0* a1);
-/*DS_BILINKED_LIST[XM_DTD_ATTRIBUTE_CONTENT]*/
-void r826cursor_go_after(T826* C,T0* a1);
-/*DS_BILINKED_LIST[XM_DTD_ATTRIBUTE_CONTENT]*/
-void r826add_traversing_cursor(T826* C,T0* a1);
-/*DS_BILINKED_LIST[XM_DTD_ATTRIBUTE_CONTENT]*/
-void r826make(T826* C);
-/*DS_BILINKED_LIST[XM_DTD_ATTRIBUTE_CONTENT]*/
-T6 r826cursor_after(T0* a1);
-/*DS_BILINKED_LIST[XM_DTD_ATTRIBUTE_CONTENT]*/
-T6 r826has(T826* C,T0* a1);
-/*DS_BILINKED_LIST[XM_DTD_ATTRIBUTE_CONTENT]*/
-void r826cursor_search_forth(T826* C,T0* a1,T0* a2);
-/*DS_BILINKED_LIST[XM_DTD_ATTRIBUTE_CONTENT]*/
-void r826cursor_forth(T826* C,T0* a1);
-/*DS_BILINKED_LIST[XM_DTD_ATTRIBUTE_CONTENT]*/
-void r826cursor_start(T826* C,T0* a1);
-/*DS_BILINKED_LIST[XM_DTD_ATTRIBUTE_CONTENT]*/
-void r826force_last(T826* C,T0* a1);
-/*DS_BILINKED_LIST[XM_DTD_ATTRIBUTE_CONTENT]*/
-T0* r826new_cursor(T826* C);
-/*DS_BILINKED_LIST[XM_DTD_ATTRIBUTE_CONTENT]*/
-T6 r826cursor_off(T0* a1);
-/*DS_ARRAYED_LIST_CURSOR[LX_START_CONDITION]*/
-T6 r476valid_position(T476* C,T2 a1);
-/*DS_HASH_TABLE_CURSOR[GEANT_REDEFINE,STRING]*/
-T6 r639valid_position(T639* C,T2 a1);
-/*DS_HASH_TABLE_CURSOR[GEANT_REDEFINE,STRING]*/
-T0* r639item(T639* C);
-/*DS_HASH_TABLE_CURSOR[GEANT_REDEFINE,STRING]*/
-T6 r639after(T639* C);
-/*DS_HASH_TABLE_CURSOR[GEANT_REDEFINE,STRING]*/
-void r639make(T639* C,T0* a1);
-/*DS_BILINKABLE[STRING]*/
-void r923put_right(T923* C,T0* a1);
-/*DS_ARRAYED_LIST[LX_NFA_STATE]*/
-T2 r282new_capacity(T2 a1);
-/*DS_ARRAYED_LIST[LX_NFA_STATE]*/
-T6 r282valid_cursor(T282* C,T0* a1);
-/*DS_ARRAYED_LIST[LX_NFA_STATE]*/
-T6 r282extendible(T282* C,T2 a1);
-/*DS_ARRAYED_LIST[LX_NFA_STATE]*/
-void r282append_last(T282* C,T0* a1);
-/*DS_ARRAYED_LIST[LX_NFA_STATE]*/
-void r282move_cursors_right(T282* C,T2 a1,T2 a2);
-/*DS_ARRAYED_LIST[LX_NFA_STATE]*/
-T0* r282last(T282* C);
-/*DS_ARRAYED_LIST[LX_NFA_STATE]*/
-void r282put(T282* C,T0* a1,T2 a2);
-/*DS_ARRAYED_LIST[LX_NFA_STATE]*/
-T0* r282cursor_item(T282* C,T0* a1);
-/*DS_ARRAYED_LIST[LX_NFA_STATE]*/
-T6 r282is_equal(T282* C,T0* a1);
-/*DS_ARRAYED_LIST[LX_NFA_STATE]*/
-void r282remove_traversing_cursor(T282* C,T0* a1);
-/*DS_ARRAYED_LIST[LX_NFA_STATE]*/
-void r282add_traversing_cursor(T282* C,T0* a1);
-/*DS_ARRAYED_LIST[LX_NFA_STATE]*/
-T6 r282se_assigned_from(T0* a1);
-/*DS_ARRAYED_LIST[LX_NFA_STATE]*/
-T6 r282cursor_before(T0* a1);
-/*DS_ARRAYED_LIST[LX_NFA_STATE]*/
-T6 r282same_type(T282* C,T0* a1);
-/*DS_ARRAYED_LIST[LX_NFA_STATE]*/
-void r282make(T282* C,T2 a1);
-/*DS_ARRAYED_LIST[LX_NFA_STATE]*/
-T6 r282cursor_after(T0* a1);
-/*DS_ARRAYED_LIST[LX_NFA_STATE]*/
-T6 r282conforms_to(T282* C,T0* a1);
-/*DS_ARRAYED_LIST[LX_NFA_STATE]*/
-T6 r282has(T282* C,T0* a1);
-/*DS_ARRAYED_LIST[LX_NFA_STATE]*/
-void r282move_right(T282* C,T2 a1,T2 a2);
-/*DS_ARRAYED_LIST[LX_NFA_STATE]*/
-void r282cursor_forth(T282* C,T0* a1);
-/*DS_ARRAYED_LIST[LX_NFA_STATE]*/
-void r282resize(T282* C,T2 a1);
-/*DS_ARRAYED_LIST[LX_NFA_STATE]*/
-void r282cursor_start(T282* C,T0* a1);
-/*DS_ARRAYED_LIST[LX_NFA_STATE]*/
-void r282force_last(T282* C,T0* a1);
-/*DS_ARRAYED_LIST[LX_NFA_STATE]*/
-T0* r282new_cursor(T282* C);
-/*DS_ARRAYED_LIST[LX_NFA_STATE]*/
-void r282extend_last(T282* C,T0* a1);
-/*DS_ARRAYED_LIST[LX_NFA_STATE]*/
-void r282put_last(T282* C,T0* a1);
-/*DS_ARRAYED_LIST[LX_NFA_STATE]*/
-T6 r282cursor_off(T0* a1);
-/*KL_SPECIAL_ROUTINES[XM_EIFFEL_PARSER_NAME]*/
-T0* r855make(T2 a1);
-/*KL_SPECIAL_ROUTINES[XM_EIFFEL_PARSER_NAME]*/
-T0* r855resize(T0* a1,T2 a2);
-/*KL_FIXED_ARRAY_ROUTINES[GEANT_RENAME]*/
-T0* r708make(T2 a1);
-/*KL_FIXED_ARRAY_ROUTINES[GEANT_RENAME]*/
-T0* r708resize(T0* a1,T2 a2);
-/*DS_HASH_TABLE_CURSOR[GEANT_SELECT,STRING]*/
-T6 r623valid_position(T623* C,T2 a1);
-/*DS_HASH_TABLE_CURSOR[GEANT_SELECT,STRING]*/
-T0* r623item(T623* C);
-/*DS_HASH_TABLE_CURSOR[GEANT_SELECT,STRING]*/
-T6 r623after(T623* C);
-/*DS_HASH_TABLE_CURSOR[GEANT_SELECT,STRING]*/
-void r623make(T623* C,T0* a1);
-/*DS_ARRAYED_LIST[DS_PAIR[STRING,STRING]]*/
-T2 r570new_capacity(T2 a1);
-/*DS_ARRAYED_LIST[DS_PAIR[STRING,STRING]]*/
-T6 r570extendible(T570* C,T2 a1);
-/*DS_ARRAYED_LIST[DS_PAIR[STRING,STRING]]*/
-void r570make(T570* C,T2 a1);
-/*DS_ARRAYED_LIST[DS_PAIR[STRING,STRING]]*/
-void r570resize(T570* C,T2 a1);
-/*DS_ARRAYED_LIST[DS_PAIR[STRING,STRING]]*/
-void r570force_last(T570* C,T0* a1);
-/*DS_ARRAYED_LIST[DS_PAIR[STRING,STRING]]*/
-T0* r570new_cursor(T570* C);
-/*DS_LINKED_QUEUE[STRING]*/
-void r946force(T946* C,T0* a1);
-/*DS_LINKED_QUEUE[STRING]*/
-void r946wipe_out(T946* C);
-/*DS_LINKED_QUEUE[STRING]*/
-T0* r946item(T946* C);
-/*DS_LINKED_QUEUE[STRING]*/
-void r946remove(T946* C);
-/*SPECIAL[STRING]*/
-T6 r389valid_index(T389* C,T2 a1);
-/*SPECIAL[STRING]*/
-void r389make(T389* C,T2 a1);
-/*SPECIAL[STRING]*/
-T0* r389resize(T389* C,T2 a1);
-/*SPECIAL[STRING]*/
-void r389array_resize(T389* C,T2 a1);
-/*KL_EQUALITY_TESTER[GEANT_FILESET_ENTRY]*/
-T6 r515test(T0* a1,T0* a2);
-/*KL_FIXED_ARRAY_ROUTINES[LX_DFA_STATE]*/
-T0* r338make(T2 a1);
-/*KL_FIXED_ARRAY_ROUTINES[LX_DFA_STATE]*/
-T0* r338resize(T0* a1,T2 a2);
-/*SPECIAL[BOOLEAN]*/
+/*FIXED_ARRAY[INTEGER]*/
+void r109copy(T109* C,T0* a1);
+/*FIXED_ARRAY[INTEGER]*/
+T6 r109valid_index(T109* C,T2 a1);
+/*FIXED_ARRAY[INTEGER]*/
+void r109make(T109* C,T2 a1);
+/*FIXED_ARRAY[INTEGER]*/
+void r109resize(T109* C,T2 a1);
+/*FIXED_ARRAY[INTEGER]*/
+T0* r109twin(T109* C);
+/*FIXED_ARRAY[INTEGER]*/
+void r109with_capacity(T109* C,T2 a1);
+/*FIXED_ARRAY[INTEGER]*/
+void r109from_collection(T109* C,T0* a1);
+/*FIXED_ARRAY[LX_DFA_STATE]*/
+T6 r285valid_index(T285* C,T2 a1);
+/*FIXED_ARRAY[LX_DFA_STATE]*/
+void r285make(T285* C,T2 a1);
+/*FIXED_ARRAY[LX_DFA_STATE]*/
+void r285resize(T285* C,T2 a1);
+/*FIXED_ARRAY[GEANT_REDEFINE]*/
+T6 r745valid_index(T745* C,T2 a1);
+/*FIXED_ARRAY[GEANT_REDEFINE]*/
+void r745make(T745* C,T2 a1);
+/*FIXED_ARRAY[GEANT_REDEFINE]*/
+void r745resize(T745* C,T2 a1);
+/*ARRAY[STRING]*/
+void r84force(T84* C,T0* a1,T2 a2);
+/*ARRAY[STRING]*/
+T2 r84count(T84* C);
+/*ARRAY[STRING]*/
+T0* r84item(T84* C,T2 a1);
+/*ARRAY[STRING]*/
+T6 r84valid_index(T84* C,T2 a1);
+/*ARRAY[STRING]*/
+void r84make(T84* C,T2 a1,T2 a2);
+/*ARRAY[STRING]*/
+void r84add_last(T84* C,T0* a1);
+/*ARRAY[STRING]*/
+void r84resize(T84* C,T2 a1,T2 a2);
+/*FIXED_ARRAY[XM_EIFFEL_ENTITY_DEF]*/
 T6 r815valid_index(T815* C,T2 a1);
-/*SPECIAL[BOOLEAN]*/
+/*FIXED_ARRAY[XM_EIFFEL_ENTITY_DEF]*/
 void r815make(T815* C,T2 a1);
+/*FIXED_ARRAY[XM_EIFFEL_ENTITY_DEF]*/
+void r815resize(T815* C,T2 a1);
+/*ARRAY[LX_RULE]*/
+T6 r403valid_index(T403* C,T2 a1);
+/*ARRAY[LX_RULE]*/
+void r403make(T403* C,T2 a1,T2 a2);
+/*FIXED_ARRAY[XM_EIFFEL_PARSER_NAME]*/
+T6 r932valid_index(T932* C,T2 a1);
+/*FIXED_ARRAY[XM_EIFFEL_PARSER_NAME]*/
+void r932make(T932* C,T2 a1);
+/*FIXED_ARRAY[XM_EIFFEL_PARSER_NAME]*/
+void r932resize(T932* C,T2 a1);
+/*DS_LINKED_LIST[XM_ELEMENT]*/
+T6 r227valid_cursor(T227* C,T0* a1);
+/*DS_LINKED_LIST[XM_ELEMENT]*/
+void r227remove_traversing_cursor(T227* C,T0* a1);
+/*DS_LINKED_LIST[XM_ELEMENT]*/
+void r227add_traversing_cursor(T227* C,T0* a1);
+/*DS_LINKED_LIST[XM_ELEMENT]*/
+void r227make(T227* C);
+/*DS_LINKED_LIST[XM_ELEMENT]*/
+T6 r227cursor_after(T0* a1);
+/*DS_LINKED_LIST[XM_ELEMENT]*/
+void r227cursor_forth(T227* C,T0* a1);
+/*DS_LINKED_LIST[XM_ELEMENT]*/
+void r227cursor_start(T227* C,T0* a1);
+/*DS_LINKED_LIST[XM_ELEMENT]*/
+void r227force_last(T227* C,T0* a1);
+/*DS_LINKED_LIST[XM_ELEMENT]*/
+T0* r227new_cursor(T227* C);
+/*DS_LINKED_LIST[XM_ELEMENT]*/
+T6 r227cursor_off(T0* a1);
+/*DS_BUBBLE_SORTER[LX_NFA_STATE]*/
+void r327subsort_with_comparator(T0* a1,T0* a2,T2 a3,T2 a4);
+/*DS_BUBBLE_SORTER[LX_NFA_STATE]*/
+void r327sort_with_comparator(T0* a1,T0* a2);
+/*SPECIAL[ANY]*/
+T6 r415valid_index(T415* C,T2 a1);
+/*SPECIAL[ANY]*/
+void r415make(T415* C,T2 a1);
+/*SPECIAL[ANY]*/
+T0* r415resize(T415* C,T2 a1);
+/*SPECIAL[ANY]*/
+void r415array_resize(T415* C,T2 a1);
+/*DS_HASH_SET[STRING]*/
+T2 r516new_capacity(T2 a1);
+/*DS_HASH_SET[STRING]*/
+T6 r516valid_cursor(T516* C,T0* a1);
+/*DS_HASH_SET[STRING]*/
+T0* r516keys_item(T516* C,T2 a1);
+/*DS_HASH_SET[STRING]*/
+T6 r516valid_slot(T516* C,T2 a1);
+/*DS_HASH_SET[STRING]*/
+void r516make_clashes(T516* C,T2 a1);
+/*DS_HASH_SET[STRING]*/
+T6 r516valid_position(T516* C,T2 a1);
+/*DS_HASH_SET[STRING]*/
+T0* r516cursor_item(T516* C,T0* a1);
+/*DS_HASH_SET[STRING]*/
+void r516search_position(T516* C,T0* a1);
+/*DS_HASH_SET[STRING]*/
+void r516remove_traversing_cursor(T516* C,T0* a1);
+/*DS_HASH_SET[STRING]*/
+void r516make_items(T516* C,T2 a1);
+/*DS_HASH_SET[STRING]*/
+void r516add_traversing_cursor(T516* C,T0* a1);
+/*DS_HASH_SET[STRING]*/
+void r516make(T516* C,T2 a1);
+/*DS_HASH_SET[STRING]*/
+T6 r516cursor_after(T0* a1);
+/*DS_HASH_SET[STRING]*/
+T2 r516hash_position(T516* C,T0* a1);
+/*DS_HASH_SET[STRING]*/
+void r516cursor_forth(T516* C,T0* a1);
+extern T0*oBC30fixed_integer_array_;
+/*DS_HASH_SET[STRING]*/
+void r516items_resize(T516* C,T2 a1);
+/*DS_HASH_SET[STRING]*/
+void r516resize(T516* C,T2 a1);
+/*DS_HASH_SET[STRING]*/
+T6 r516equality_tester_settable(T516* C,T0* a1);
+/*DS_HASH_SET[STRING]*/
+void r516cursor_start(T516* C,T0* a1);
+/*DS_HASH_SET[STRING]*/
+void r516clashes_resize(T516* C,T2 a1);
+/*DS_HASH_SET[STRING]*/
+void r516slots_resize(T516* C,T2 a1);
+/*DS_HASH_SET[STRING]*/
+void r516force_last(T516* C,T0* a1);
+/*DS_HASH_SET[STRING]*/
+T0* r516new_cursor(T516* C);
+/*DS_HASH_SET[STRING]*/
+void r516make_slots(T516* C,T2 a1);
+/*DS_HASH_SET[STRING]*/
+T2 r516new_modulus(T2 a1);
+/*DS_HASH_SET[STRING]*/
+T6 r516cursor_off(T0* a1);
+/*KL_SPECIAL_ROUTINES[ANY]*/
+T0* r420make(T2 a1);
+/*KL_SPECIAL_ROUTINES[ANY]*/
+T0* r420resize(T0* a1,T2 a2);
+/*DS_HASH_SET_CURSOR[XM_EIFFEL_PARSER_NAME]*/
+void r970make(T970* C,T0* a1);
+/*DS_ARRAYED_LIST[STRING]*/
+T2 r117new_capacity(T2 a1);
+/*DS_ARRAYED_LIST[STRING]*/
+T6 r117valid_cursor(T117* C,T0* a1);
+/*DS_ARRAYED_LIST[STRING]*/
+T6 r117extendible(T117* C,T2 a1);
+/*DS_ARRAYED_LIST[STRING]*/
+void r117make_equal(T117* C,T2 a1);
+/*DS_ARRAYED_LIST[STRING]*/
+T0* r117last(T117* C);
+/*DS_ARRAYED_LIST[STRING]*/
+void r117move_cursors_right(T117* C,T2 a1,T2 a2);
+/*DS_ARRAYED_LIST[STRING]*/
+void r117put(T117* C,T0* a1,T2 a2);
+/*DS_ARRAYED_LIST[STRING]*/
+T0* r117cursor_item(T117* C,T0* a1);
+/*DS_ARRAYED_LIST[STRING]*/
+void r117remove_traversing_cursor(T117* C,T0* a1);
+/*DS_ARRAYED_LIST[STRING]*/
+void r117add_traversing_cursor(T117* C,T0* a1);
+/*DS_ARRAYED_LIST[STRING]*/
+T6 r117cursor_before(T0* a1);
+/*DS_ARRAYED_LIST[STRING]*/
+void r117make(T117* C,T2 a1);
+/*DS_ARRAYED_LIST[STRING]*/
+T6 r117cursor_after(T0* a1);
+/*DS_ARRAYED_LIST[STRING]*/
+T6 r117has(T117* C,T0* a1);
+/*DS_ARRAYED_LIST[STRING]*/
+void r117move_right(T117* C,T2 a1,T2 a2);
+/*DS_ARRAYED_LIST[STRING]*/
+void r117cursor_forth(T117* C,T0* a1);
+/*DS_ARRAYED_LIST[STRING]*/
+void r117resize(T117* C,T2 a1);
+/*DS_ARRAYED_LIST[STRING]*/
+void r117cursor_start(T117* C,T0* a1);
+/*DS_ARRAYED_LIST[STRING]*/
+void r117force_last(T117* C,T0* a1);
+/*DS_ARRAYED_LIST[STRING]*/
+T0* r117new_cursor(T117* C);
+/*DS_ARRAYED_LIST[STRING]*/
+void r117put_last(T117* C,T0* a1);
+/*DS_ARRAYED_LIST[STRING]*/
+T6 r117cursor_off(T0* a1);
+/*SPECIAL[LX_NFA]*/
+T6 r407valid_index(T407* C,T2 a1);
+/*SPECIAL[LX_NFA]*/
+void r407make(T407* C,T2 a1);
+/*SPECIAL[LX_NFA]*/
+T0* r407resize(T407* C,T2 a1);
+/*SPECIAL[LX_NFA]*/
+void r407array_resize(T407* C,T2 a1);
+/*LX_TRANSITION_TABLE[LX_DFA_STATE]*/
+void r289set_target(T289* C,T0* a1,T2 a2);
+/*LX_TRANSITION_TABLE[LX_DFA_STATE]*/
+void r289make(T289* C,T2 a1,T2 a2);
+/*DS_BILINKABLE[INTEGER]*/
+void r298put_left(T298* C,T0* a1);
+/*DS_BILINKABLE[INTEGER]*/
+void r298put_right(T298* C,T0* a1);
+/*DS_PAIR[XM_POSITION,XM_NODE]*/
+void r767make(T767* C,T0* a1,T0* a2);
+/*KL_SPECIAL_ROUTINES[DS_HASH_SET[XM_EIFFEL_PARSER_NAME]]*/
+T0* r951make(T2 a1);
+/*KL_SPECIAL_ROUTINES[DS_HASH_SET[XM_EIFFEL_PARSER_NAME]]*/
+T0* r951resize(T0* a1,T2 a2);
+/*DS_HASH_SET_CURSOR[GEANT_FILESET_ENTRY]*/
+T6 r545valid_position(T545* C,T2 a1);
+/*DS_HASH_SET_CURSOR[GEANT_FILESET_ENTRY]*/
+void r545make(T545* C,T0* a1);
+/*SPECIAL[INTEGER]*/
+T6 r414valid_index(T414* C,T2 a1);
+/*SPECIAL[INTEGER]*/
+void r414make(T414* C,T2 a1);
+/*SPECIAL[INTEGER]*/
+T0* r414resize(T414* C,T2 a1);
+/*SPECIAL[INTEGER]*/
+void r414array_resize(T414* C,T2 a1);
+/*KL_SPECIAL_ROUTINES[DS_BILINKED_LIST[STRING]]*/
+T0* r1003make(T2 a1);
+/*KL_SPECIAL_ROUTINES[DS_BILINKED_LIST[STRING]]*/
+T0* r1003resize(T0* a1,T2 a2);
+/*SPECIAL[LX_SYMBOL_CLASS]*/
+T6 r410valid_index(T410* C,T2 a1);
+/*SPECIAL[LX_SYMBOL_CLASS]*/
+void r410make(T410* C,T2 a1);
+/*SPECIAL[LX_SYMBOL_CLASS]*/
+T0* r410resize(T410* C,T2 a1);
+/*SPECIAL[LX_SYMBOL_CLASS]*/
+void r410array_resize(T410* C,T2 a1);
+/*DS_BILINKABLE[XM_DTD_ELEMENT_CONTENT]*/
+void r1062put_right(T1062* C,T0* a1);
+/*DS_HASH_SET_CURSOR[XM_NAMESPACE]*/
+void r1044make(T1044* C,T0* a1);
+/*DS_LINKED_STACK[XM_EIFFEL_SCANNER]*/
+void r820copy(T820* C,T0* a1);
+/*DS_LINKED_STACK[XM_EIFFEL_SCANNER]*/
+void r820force(T820* C,T0* a1);
+/*DS_LINKED_STACK[XM_EIFFEL_SCANNER]*/
+void r820remove(T820* C);
+/*KL_FIXED_ARRAY_ROUTINES[LX_SYMBOL_CLASS]*/
+T0* r465make(T2 a1);
+/*KL_FIXED_ARRAY_ROUTINES[LX_SYMBOL_CLASS]*/
+T0* r465resize(T0* a1,T2 a2);
+/*DS_LINKED_LIST_CURSOR[XM_NODE]*/
+void r153set(T153* C,T0* a1,T6 a2,T6 a3);
+/*DS_LINKED_LIST_CURSOR[XM_NODE]*/
+T6 r153is_first(T153* C);
+/*DS_LINKED_LIST_CURSOR[XM_NODE]*/
+T6 r153is_last(T153* C);
+/*DS_LINKED_LIST_CURSOR[XM_NODE]*/
+void r153make(T153* C,T0* a1);
+/*DS_LINKED_LIST_CURSOR[XM_NODE]*/
+void r153remove(T153* C);
+/*DS_LINKED_LIST_CURSOR[XM_NODE]*/
+void r153forth(T153* C);
+/*DS_LINKED_LIST_CURSOR[XM_NODE]*/
+void r153start(T153* C);
+/*DS_LINKED_LIST_CURSOR[XM_NODE]*/
+void r153go_after(T153* C);
+/*DS_LINKED_LIST_CURSOR[XM_NODE]*/
+void r153set_after(T153* C);
+/*DS_ARRAYED_LIST_CURSOR[STRING]*/
+T6 r200valid_position(T200* C,T2 a1);
+/*DS_ARRAYED_LIST_CURSOR[STRING]*/
+T0* r200item(T200* C);
+/*DS_ARRAYED_LIST_CURSOR[STRING]*/
+T6 r200after(T200* C);
+/*DS_ARRAYED_LIST_CURSOR[STRING]*/
+T6 r200off(T200* C);
+/*KL_SPECIAL_ROUTINES[XM_DTD_EXTERNAL_ID]*/
+T0* r1008make(T2 a1);
+/*KL_SPECIAL_ROUTINES[XM_DTD_EXTERNAL_ID]*/
+T0* r1008resize(T0* a1,T2 a2);
+/*LX_SYMBOL_CLASS_TRANSITION[LX_NFA_STATE]*/
+T6 r464labeled(T464* C,T2 a1);
+/*LX_SYMBOL_CLASS_TRANSITION[LX_NFA_STATE]*/
+T6 r464recordable(T464* C,T0* a1);
+/*LX_SYMBOL_CLASS_TRANSITION[LX_NFA_STATE]*/
+void r464make(T464* C,T0* a1,T0* a2);
+/*LX_SYMBOL_CLASS_TRANSITION[LX_NFA_STATE]*/
+void r464record(T464* C,T0* a1);
+/*KL_FIXED_ARRAY_ROUTINES[LX_NFA]*/
+T0* r379make(T2 a1);
+/*KL_FIXED_ARRAY_ROUTINES[LX_NFA]*/
+T0* r379resize(T0* a1,T2 a2);
+/*KL_SPECIAL_ROUTINES[XM_DTD_ATTRIBUTE_CONTENT]*/
+T0* r1002make(T2 a1);
+/*KL_SPECIAL_ROUTINES[XM_DTD_ATTRIBUTE_CONTENT]*/
+T0* r1002resize(T0* a1,T2 a2);
+/*KL_EQUALITY_TESTER[STRING]*/
+T6 r120test(T0* a1,T0* a2);
+/*DS_BILINKED_LIST_CURSOR[STRING]*/
+void r941set(T941* C,T0* a1,T6 a2,T6 a3);
+/*DS_BILINKED_LIST_CURSOR[STRING]*/
+void r941make(T941* C,T0* a1);
+/*KL_FIXED_ARRAY_ROUTINES[XM_EIFFEL_ENTITY_DEF]*/
+T0* r816make(T2 a1);
+/*KL_FIXED_ARRAY_ROUTINES[XM_EIFFEL_ENTITY_DEF]*/
+T0* r816resize(T0* a1,T2 a2);
+/*DS_BILINKABLE[XM_POSITION]*/
+void r879put_right(T879* C,T0* a1);
+/*KL_FIXED_ARRAY_ROUTINES[GEANT_VARIABLES]*/
+T0* r143make(T2 a1);
+/*KL_FIXED_ARRAY_ROUTINES[GEANT_VARIABLES]*/
+T0* r143resize(T0* a1,T2 a2);
+/*DS_LINKED_LIST_CURSOR[DS_PAIR[XM_POSITION,XM_NODE]]*/
+void r776set(T776* C,T0* a1,T6 a2,T6 a3);
+/*DS_LINKED_LIST_CURSOR[DS_PAIR[XM_POSITION,XM_NODE]]*/
+void r776make(T776* C,T0* a1);
+/*DS_LINKED_LIST_CURSOR[DS_PAIR[XM_POSITION,XM_NODE]]*/
+void r776set_after(T776* C);
+/*LX_SYMBOL_TRANSITION[LX_NFA_STATE]*/
+T6 r479recordable(T479* C,T0* a1);
+/*LX_SYMBOL_TRANSITION[LX_NFA_STATE]*/
+void r479make(T479* C,T2 a1,T0* a2);
+/*LX_SYMBOL_TRANSITION[LX_NFA_STATE]*/
+void r479record(T479* C,T0* a1);
+/*KL_FIXED_ARRAY_ROUTINES[INTEGER]*/
+T0* r194to_fixed_array(T0* a1);
+/*KL_FIXED_ARRAY_ROUTINES[INTEGER]*/
+T0* r194make(T2 a1);
+/*KL_FIXED_ARRAY_ROUTINES[INTEGER]*/
+T0* r194make_from_array(T0* a1);
+/*KL_FIXED_ARRAY_ROUTINES[INTEGER]*/
+T0* r194resize(T0* a1,T2 a2);
+/*KL_COMPARABLE_COMPARATOR[LX_NFA_STATE]*/
+T6 r326less_than(T0* a1,T0* a2);
+/*DS_HASH_TABLE_CURSOR[STRING,STRING]*/
+T0* r191key(T191* C);
+/*DS_HASH_TABLE_CURSOR[STRING,STRING]*/
+T6 r191valid_position(T191* C,T2 a1);
+/*DS_HASH_TABLE_CURSOR[STRING,STRING]*/
+T0* r191item(T191* C);
+/*DS_HASH_TABLE_CURSOR[STRING,STRING]*/
+T6 r191after(T191* C);
+/*DS_HASH_TABLE_CURSOR[STRING,STRING]*/
+void r191make(T191* C,T0* a1);
+/*DS_HASH_TABLE_CURSOR[STRING,STRING]*/
+void r191forth(T191* C);
+/*DS_HASH_TABLE_CURSOR[STRING,STRING]*/
+void r191start(T191* C);
+/*DS_HASH_TABLE[GEANT_TARGET,STRING]*/
+T2 r106new_capacity(T2 a1);
+/*DS_HASH_TABLE[GEANT_TARGET,STRING]*/
+T6 r106valid_cursor(T106* C,T0* a1);
+/*DS_HASH_TABLE[GEANT_TARGET,STRING]*/
+void r106cursor_back(T106* C,T0* a1);
+/*DS_HASH_TABLE[GEANT_TARGET,STRING]*/
+void r106make_clashes(T106* C,T2 a1);
+/*DS_HASH_TABLE[GEANT_TARGET,STRING]*/
+T6 r106valid_slot(T106* C,T2 a1);
+/*DS_HASH_TABLE[GEANT_TARGET,STRING]*/
+T6 r106valid_position(T106* C,T2 a1);
+/*DS_HASH_TABLE[GEANT_TARGET,STRING]*/
+T0* r106cursor_item(T106* C,T0* a1);
+/*DS_HASH_TABLE[GEANT_TARGET,STRING]*/
+void r106search_position(T106* C,T0* a1);
+/*DS_HASH_TABLE[GEANT_TARGET,STRING]*/
+void r106remove_traversing_cursor(T106* C,T0* a1);
+/*DS_HASH_TABLE[GEANT_TARGET,STRING]*/
+void r106keys_resize(T106* C,T2 a1);
+/*DS_HASH_TABLE[GEANT_TARGET,STRING]*/
+T0* r106item(T106* C,T0* a1);
+/*DS_HASH_TABLE[GEANT_TARGET,STRING]*/
+void r106cursor_go_after(T106* C,T0* a1);
+/*DS_HASH_TABLE[GEANT_TARGET,STRING]*/
+void r106make_items(T106* C,T2 a1);
+/*DS_HASH_TABLE[GEANT_TARGET,STRING]*/
+void r106add_traversing_cursor(T106* C,T0* a1);
+/*DS_HASH_TABLE[GEANT_TARGET,STRING]*/
+T6 r106has_item(T106* C,T0* a1);
+/*DS_HASH_TABLE[GEANT_TARGET,STRING]*/
+void r106remove_position(T106* C,T2 a1);
+/*DS_HASH_TABLE[GEANT_TARGET,STRING]*/
+T6 r106cursor_before(T0* a1);
+/*DS_HASH_TABLE[GEANT_TARGET,STRING]*/
+void r106remove(T106* C,T0* a1);
+/*DS_HASH_TABLE[GEANT_TARGET,STRING]*/
+T0* r106cursor_key(T106* C,T0* a1);
+/*DS_HASH_TABLE[GEANT_TARGET,STRING]*/
+T6 r106cursor_after(T0* a1);
+/*DS_HASH_TABLE[GEANT_TARGET,STRING]*/
+T6 r106has(T106* C,T0* a1);
+/*DS_HASH_TABLE[GEANT_TARGET,STRING]*/
+void r106cursor_finish(T106* C,T0* a1);
+/*DS_HASH_TABLE[GEANT_TARGET,STRING]*/
+void r106make_keys(T106* C,T2 a1);
+/*DS_HASH_TABLE[GEANT_TARGET,STRING]*/
+T2 r106hash_position(T106* C,T0* a1);
+/*DS_HASH_TABLE[GEANT_TARGET,STRING]*/
+void r106cursor_forth(T106* C,T0* a1);
+/*DS_HASH_TABLE[GEANT_TARGET,STRING]*/
+void r106items_resize(T106* C,T2 a1);
+/*DS_HASH_TABLE[GEANT_TARGET,STRING]*/
+void r106make_with_equality_testers(T106* C,T2 a1,T0* a2,T0* a3);
+/*DS_HASH_TABLE[GEANT_TARGET,STRING]*/
+void r106resize(T106* C,T2 a1);
+/*DS_HASH_TABLE[GEANT_TARGET,STRING]*/
+void r106move_cursors_after(T106* C,T2 a1);
+/*DS_HASH_TABLE[GEANT_TARGET,STRING]*/
+void r106make_sparse_container(T106* C,T2 a1);
+/*DS_HASH_TABLE[GEANT_TARGET,STRING]*/
+void r106move_cursors_forth(T106* C,T2 a1);
+/*DS_HASH_TABLE[GEANT_TARGET,STRING]*/
+void r106cursor_start(T106* C,T0* a1);
+/*DS_HASH_TABLE[GEANT_TARGET,STRING]*/
+void r106clashes_resize(T106* C,T2 a1);
+/*DS_HASH_TABLE[GEANT_TARGET,STRING]*/
+void r106slots_resize(T106* C,T2 a1);
+/*DS_HASH_TABLE[GEANT_TARGET,STRING]*/
+T6 r106key_equality_tester_settable(T106* C,T0* a1);
+/*DS_HASH_TABLE[GEANT_TARGET,STRING]*/
+void r106force_last(T106* C,T0* a1,T0* a2);
+/*DS_HASH_TABLE[GEANT_TARGET,STRING]*/
+T0* r106new_cursor(T106* C);
+/*DS_HASH_TABLE[GEANT_TARGET,STRING]*/
+void r106make_slots(T106* C,T2 a1);
+/*DS_HASH_TABLE[GEANT_TARGET,STRING]*/
+T2 r106new_modulus(T2 a1);
+/*DS_HASH_TABLE[GEANT_TARGET,STRING]*/
+void r106move_all_cursors(T106* C,T2 a1,T2 a2);
+/*DS_HASH_TABLE[GEANT_TARGET,STRING]*/
+T6 r106cursor_off(T0* a1);
+/*DS_HASH_TABLE[GEANT_RENAME,STRING]*/
+T2 r694new_capacity(T2 a1);
+/*DS_HASH_TABLE[GEANT_RENAME,STRING]*/
+T6 r694valid_cursor(T694* C,T0* a1);
+/*DS_HASH_TABLE[GEANT_RENAME,STRING]*/
+void r694cursor_back(T694* C,T0* a1);
+/*DS_HASH_TABLE[GEANT_RENAME,STRING]*/
+void r694make_clashes(T694* C,T2 a1);
+/*DS_HASH_TABLE[GEANT_RENAME,STRING]*/
+T6 r694valid_slot(T694* C,T2 a1);
+/*DS_HASH_TABLE[GEANT_RENAME,STRING]*/
+T6 r694valid_position(T694* C,T2 a1);
+/*DS_HASH_TABLE[GEANT_RENAME,STRING]*/
+T0* r694cursor_item(T694* C,T0* a1);
+/*DS_HASH_TABLE[GEANT_RENAME,STRING]*/
+void r694search_position(T694* C,T0* a1);
+/*DS_HASH_TABLE[GEANT_RENAME,STRING]*/
+void r694remove_traversing_cursor(T694* C,T0* a1);
+/*DS_HASH_TABLE[GEANT_RENAME,STRING]*/
+void r694keys_resize(T694* C,T2 a1);
+/*DS_HASH_TABLE[GEANT_RENAME,STRING]*/
+void r694make_items(T694* C,T2 a1);
+/*DS_HASH_TABLE[GEANT_RENAME,STRING]*/
+void r694add_traversing_cursor(T694* C,T0* a1);
+/*DS_HASH_TABLE[GEANT_RENAME,STRING]*/
+void r694make_map_equal(T694* C,T2 a1);
+/*DS_HASH_TABLE[GEANT_RENAME,STRING]*/
+T6 r694cursor_before(T0* a1);
+/*DS_HASH_TABLE[GEANT_RENAME,STRING]*/
+T6 r694has(T694* C,T0* a1);
+/*DS_HASH_TABLE[GEANT_RENAME,STRING]*/
+void r694cursor_finish(T694* C,T0* a1);
+/*DS_HASH_TABLE[GEANT_RENAME,STRING]*/
+void r694make_keys(T694* C,T2 a1);
+/*DS_HASH_TABLE[GEANT_RENAME,STRING]*/
+T2 r694hash_position(T694* C,T0* a1);
+/*DS_HASH_TABLE[GEANT_RENAME,STRING]*/
+void r694items_resize(T694* C,T2 a1);
+/*DS_HASH_TABLE[GEANT_RENAME,STRING]*/
+void r694make_with_equality_testers(T694* C,T2 a1,T0* a2,T0* a3);
+/*DS_HASH_TABLE[GEANT_RENAME,STRING]*/
+void r694resize(T694* C,T2 a1);
+/*DS_HASH_TABLE[GEANT_RENAME,STRING]*/
+void r694make_sparse_container(T694* C,T2 a1);
+/*DS_HASH_TABLE[GEANT_RENAME,STRING]*/
+void r694clashes_resize(T694* C,T2 a1);
+/*DS_HASH_TABLE[GEANT_RENAME,STRING]*/
+void r694slots_resize(T694* C,T2 a1);
+/*DS_HASH_TABLE[GEANT_RENAME,STRING]*/
+T6 r694key_equality_tester_settable(T694* C,T0* a1);
+/*DS_HASH_TABLE[GEANT_RENAME,STRING]*/
+void r694force_last(T694* C,T0* a1,T0* a2);
+/*DS_HASH_TABLE[GEANT_RENAME,STRING]*/
+T0* r694new_cursor(T694* C);
+/*DS_HASH_TABLE[GEANT_RENAME,STRING]*/
+void r694make_slots(T694* C,T2 a1);
+/*DS_HASH_TABLE[GEANT_RENAME,STRING]*/
+T2 r694new_modulus(T2 a1);
+/*DS_HASH_TABLE[GEANT_RENAME,STRING]*/
+T6 r694cursor_off(T0* a1);
+/*KL_SPECIAL_ROUTINES[BOOLEAN]*/
+T0* r849make(T2 a1);
+/*KL_SPECIAL_ROUTINES[BOOLEAN]*/
+T0* r849resize(T0* a1,T2 a2);
+/*KL_COMPARABLE_COMPARATOR[INTEGER]*/
+T6 r484less_than(T2 a1,T2 a2);
+/*DS_BILINKED_LIST[DS_HASH_TABLE[STRING,STRING]]*/
+void r1016set_last_cell(T1016* C,T0* a1);
+/*DS_BILINKED_LIST[DS_HASH_TABLE[STRING,STRING]]*/
+T6 r1016valid_cursor(T1016* C,T0* a1);
+/*DS_BILINKED_LIST[DS_HASH_TABLE[STRING,STRING]]*/
+void r1016wipe_out(T1016* C);
+/*DS_BILINKED_LIST[DS_HASH_TABLE[STRING,STRING]]*/
+void r1016cursor_back(T1016* C,T0* a1);
+/*DS_BILINKED_LIST[DS_HASH_TABLE[STRING,STRING]]*/
+T0* r1016cursor_item(T0* a1);
+/*DS_BILINKED_LIST[DS_HASH_TABLE[STRING,STRING]]*/
+void r1016remove_traversing_cursor(T1016* C,T0* a1);
+/*DS_BILINKED_LIST[DS_HASH_TABLE[STRING,STRING]]*/
+void r1016move_all_cursors_after(T1016* C);
+/*DS_BILINKED_LIST[DS_HASH_TABLE[STRING,STRING]]*/
+void r1016add_traversing_cursor(T1016* C,T0* a1);
+/*DS_BILINKED_LIST[DS_HASH_TABLE[STRING,STRING]]*/
+T6 r1016cursor_before(T0* a1);
+/*DS_BILINKED_LIST[DS_HASH_TABLE[STRING,STRING]]*/
+void r1016make(T1016* C);
+/*DS_BILINKED_LIST[DS_HASH_TABLE[STRING,STRING]]*/
+void r1016remove_last(T1016* C);
+/*DS_BILINKED_LIST[DS_HASH_TABLE[STRING,STRING]]*/
+void r1016cursor_finish(T1016* C,T0* a1);
+/*DS_BILINKED_LIST[DS_HASH_TABLE[STRING,STRING]]*/
+void r1016move_last_cursors_after(T1016* C);
+/*DS_BILINKED_LIST[DS_HASH_TABLE[STRING,STRING]]*/
+void r1016cursor_go_before(T1016* C,T0* a1);
+/*DS_BILINKED_LIST[DS_HASH_TABLE[STRING,STRING]]*/
+void r1016force_last(T1016* C,T0* a1);
+/*DS_BILINKED_LIST[DS_HASH_TABLE[STRING,STRING]]*/
+T0* r1016new_cursor(T1016* C);
+/*DS_BILINKED_LIST[DS_HASH_TABLE[STRING,STRING]]*/
+T6 r1016cursor_off(T0* a1);
+/*KL_FIXED_ARRAY_ROUTINES[LX_START_CONDITION]*/
+T0* r504make(T2 a1);
+/*KL_SPECIAL_ROUTINES[LX_NFA]*/
+T0* r462make(T2 a1);
+/*KL_SPECIAL_ROUTINES[LX_NFA]*/
+T0* r462resize(T0* a1,T2 a2);
+/*DS_BUBBLE_SORTER[LX_RULE]*/
+void r318subsort_with_comparator(T0* a1,T0* a2,T2 a3,T2 a4);
+/*DS_BUBBLE_SORTER[LX_RULE]*/
+void r318sort_with_comparator(T0* a1,T0* a2);
+/*DS_ARRAYED_LIST[LX_RULE]*/
+T2 r277new_capacity(T2 a1);
+/*DS_ARRAYED_LIST[LX_RULE]*/
+T6 r277extendible(T277* C,T2 a1);
+/*DS_ARRAYED_LIST[LX_RULE]*/
+void r277move_cursors_right(T277* C,T2 a1,T2 a2);
+/*DS_ARRAYED_LIST[LX_RULE]*/
+void r277put(T277* C,T0* a1,T2 a2);
+/*DS_ARRAYED_LIST[LX_RULE]*/
+void r277force_first(T277* C,T0* a1);
+/*DS_ARRAYED_LIST[LX_RULE]*/
+void r277make(T277* C,T2 a1);
+/*DS_ARRAYED_LIST[LX_RULE]*/
+T6 r277has(T277* C,T0* a1);
+/*DS_ARRAYED_LIST[LX_RULE]*/
+void r277move_right(T277* C,T2 a1,T2 a2);
+/*DS_ARRAYED_LIST[LX_RULE]*/
+void r277resize(T277* C,T2 a1);
+/*DS_ARRAYED_LIST[LX_RULE]*/
+void r277force_last(T277* C,T0* a1);
+/*DS_ARRAYED_LIST[LX_RULE]*/
+T0* r277new_cursor(T277* C);
+/*DS_ARRAYED_LIST[LX_RULE]*/
+void r277put_last(T277* C,T0* a1);
+/*DS_ARRAYED_LIST_CURSOR[GEANT_PARENT]*/
+T6 r644valid_position(T644* C,T2 a1);
+/*DS_ARRAYED_LIST_CURSOR[GEANT_PARENT]*/
+T0* r644item(T644* C);
+/*DS_ARRAYED_LIST_CURSOR[GEANT_PARENT]*/
+T6 r644after(T644* C);
+/*DS_ARRAYED_LIST_CURSOR[GEANT_PARENT]*/
+T6 r644off(T644* C);
+/*DS_PAIR[STRING,STRING]*/
+void r603make(T603* C,T0* a1,T0* a2);
+/*DS_ARRAYED_LIST_CURSOR[LX_RULE]*/
+T6 r348valid_position(T348* C,T2 a1);
+/*DS_HASH_TABLE_CURSOR[GEANT_RENAME,STRING]*/
+T6 r681valid_position(T681* C,T2 a1);
+/*DS_HASH_TABLE_CURSOR[GEANT_RENAME,STRING]*/
+T0* r681item(T681* C);
+/*DS_HASH_TABLE_CURSOR[GEANT_RENAME,STRING]*/
+void r681make(T681* C,T0* a1);
+/*DS_HASH_TABLE_CURSOR[GEANT_RENAME,STRING]*/
+T6 r681before(T681* C);
+/*DS_BILINKABLE[DS_HASH_TABLE[STRING,STRING]]*/
+void r1052put_right(T1052* C,T0* a1);
+/*DS_LINKED_LIST[DS_PAIR[XM_POSITION,XM_NODE]]*/
+T6 r766valid_cursor(T766* C,T0* a1);
+/*DS_LINKED_LIST[DS_PAIR[XM_POSITION,XM_NODE]]*/
+void r766remove_traversing_cursor(T766* C,T0* a1);
+/*DS_LINKED_LIST[DS_PAIR[XM_POSITION,XM_NODE]]*/
+void r766cursor_go_after(T766* C,T0* a1);
+/*DS_LINKED_LIST[DS_PAIR[XM_POSITION,XM_NODE]]*/
+void r766add_traversing_cursor(T766* C,T0* a1);
+/*DS_LINKED_LIST[DS_PAIR[XM_POSITION,XM_NODE]]*/
+void r766make(T766* C);
+/*DS_LINKED_LIST[DS_PAIR[XM_POSITION,XM_NODE]]*/
+T6 r766cursor_after(T0* a1);
+/*DS_LINKED_LIST[DS_PAIR[XM_POSITION,XM_NODE]]*/
+void r766cursor_forth(T766* C,T0* a1);
+/*DS_LINKED_LIST[DS_PAIR[XM_POSITION,XM_NODE]]*/
+void r766cursor_start(T766* C,T0* a1);
+/*DS_LINKED_LIST[DS_PAIR[XM_POSITION,XM_NODE]]*/
+T0* r766new_cursor(T766* C);
+/*DS_LINKED_LIST[DS_PAIR[XM_POSITION,XM_NODE]]*/
+void r766put_last(T766* C,T0* a1);
+/*DS_LINKED_LIST[DS_PAIR[XM_POSITION,XM_NODE]]*/
+T6 r766cursor_off(T0* a1);
+/*DS_ARRAYED_LIST[LX_DFA_STATE]*/
+T6 r283extendible(T283* C,T2 a1);
+/*DS_ARRAYED_LIST[LX_DFA_STATE]*/
+void r283make(T283* C,T2 a1);
+/*DS_ARRAYED_LIST[LX_DFA_STATE]*/
+void r283resize(T283* C,T2 a1);
+/*DS_ARRAYED_LIST[LX_DFA_STATE]*/
+T0* r283new_cursor(T283* C);
+/*DS_ARRAYED_LIST[LX_DFA_STATE]*/
+T6 r283is_full(T283* C);
+/*DS_ARRAYED_LIST[LX_DFA_STATE]*/
+void r283put_last(T283* C,T0* a1);
+/*DS_HASH_SET_CURSOR[STRING]*/
+T6 r526valid_position(T526* C,T2 a1);
+/*DS_HASH_SET_CURSOR[STRING]*/
+T0* r526item(T526* C);
+/*DS_HASH_SET_CURSOR[STRING]*/
+T6 r526after(T526* C);
+/*DS_HASH_SET_CURSOR[STRING]*/
+void r526make(T526* C,T0* a1);
+/*SPECIAL[XM_DTD_ELEMENT_CONTENT]*/
+T6 r916valid_index(T916* C,T2 a1);
+/*SPECIAL[XM_DTD_ELEMENT_CONTENT]*/
+void r916make(T916* C,T2 a1);
+/*SPECIAL[XM_DTD_ELEMENT_CONTENT]*/
+T0* r916resize(T916* C,T2 a1);
+/*SPECIAL[XM_DTD_ELEMENT_CONTENT]*/
+void r916array_resize(T916* C,T2 a1);
+/*DS_HASH_SET[GEANT_FILESET_ENTRY]*/
+T2 r529new_capacity(T2 a1);
+/*DS_HASH_SET[GEANT_FILESET_ENTRY]*/
+T6 r529valid_cursor(T529* C,T0* a1);
+/*DS_HASH_SET[GEANT_FILESET_ENTRY]*/
+void r529make_equal(T529* C,T2 a1);
+/*DS_HASH_SET[GEANT_FILESET_ENTRY]*/
+T0* r529keys_item(T529* C,T2 a1);
+/*DS_HASH_SET[GEANT_FILESET_ENTRY]*/
+T6 r529valid_slot(T529* C,T2 a1);
+/*DS_HASH_SET[GEANT_FILESET_ENTRY]*/
+void r529make_clashes(T529* C,T2 a1);
+/*DS_HASH_SET[GEANT_FILESET_ENTRY]*/
+T6 r529valid_position(T529* C,T2 a1);
+/*DS_HASH_SET[GEANT_FILESET_ENTRY]*/
+T0* r529cursor_item(T529* C,T0* a1);
+/*DS_HASH_SET[GEANT_FILESET_ENTRY]*/
+void r529search_position(T529* C,T0* a1);
+/*DS_HASH_SET[GEANT_FILESET_ENTRY]*/
+void r529remove_traversing_cursor(T529* C,T0* a1);
+/*DS_HASH_SET[GEANT_FILESET_ENTRY]*/
+void r529make_items(T529* C,T2 a1);
+/*DS_HASH_SET[GEANT_FILESET_ENTRY]*/
+void r529add_traversing_cursor(T529* C,T0* a1);
+/*DS_HASH_SET[GEANT_FILESET_ENTRY]*/
+void r529remove_position(T529* C,T2 a1);
+/*DS_HASH_SET[GEANT_FILESET_ENTRY]*/
+T6 r529after(T529* C);
+/*DS_HASH_SET[GEANT_FILESET_ENTRY]*/
+void r529make(T529* C,T2 a1);
+/*DS_HASH_SET[GEANT_FILESET_ENTRY]*/
+T0* r529item_for_iteration(T529* C);
+/*DS_HASH_SET[GEANT_FILESET_ENTRY]*/
+void r529remove(T529* C,T0* a1);
+/*DS_HASH_SET[GEANT_FILESET_ENTRY]*/
+T6 r529off(T529* C);
+/*DS_HASH_SET[GEANT_FILESET_ENTRY]*/
+T6 r529cursor_after(T0* a1);
+/*DS_HASH_SET[GEANT_FILESET_ENTRY]*/
+T2 r529hash_position(T529* C,T0* a1);
+/*DS_HASH_SET[GEANT_FILESET_ENTRY]*/
+void r529cursor_forth(T529* C,T0* a1);
+/*DS_HASH_SET[GEANT_FILESET_ENTRY]*/
+void r529items_resize(T529* C,T2 a1);
+/*DS_HASH_SET[GEANT_FILESET_ENTRY]*/
+void r529resize(T529* C,T2 a1);
+/*DS_HASH_SET[GEANT_FILESET_ENTRY]*/
+void r529move_cursors_after(T529* C,T2 a1);
+/*DS_HASH_SET[GEANT_FILESET_ENTRY]*/
+void r529move_cursors_forth(T529* C,T2 a1);
+/*DS_HASH_SET[GEANT_FILESET_ENTRY]*/
+void r529cursor_start(T529* C,T0* a1);
+/*DS_HASH_SET[GEANT_FILESET_ENTRY]*/
+void r529clashes_resize(T529* C,T2 a1);
+/*DS_HASH_SET[GEANT_FILESET_ENTRY]*/
+void r529slots_resize(T529* C,T2 a1);
+/*DS_HASH_SET[GEANT_FILESET_ENTRY]*/
+void r529force_last(T529* C,T0* a1);
+/*DS_HASH_SET[GEANT_FILESET_ENTRY]*/
+T0* r529new_cursor(T529* C);
+/*DS_HASH_SET[GEANT_FILESET_ENTRY]*/
+void r529make_slots(T529* C,T2 a1);
+/*DS_HASH_SET[GEANT_FILESET_ENTRY]*/
+void r529move_all_cursors(T529* C,T2 a1,T2 a2);
+/*DS_HASH_SET[GEANT_FILESET_ENTRY]*/
+T2 r529new_modulus(T2 a1);
+/*DS_HASH_SET[GEANT_FILESET_ENTRY]*/
+T6 r529cursor_off(T0* a1);
+/*KL_SPECIAL_ROUTINES[XM_EIFFEL_DECLARATION]*/
+T0* r948make(T2 a1);
+/*KL_SPECIAL_ROUTINES[XM_EIFFEL_DECLARATION]*/
+T0* r948resize(T0* a1,T2 a2);
+/*KL_SPECIAL_ROUTINES[DS_BILINKED_LIST[XM_DTD_ATTRIBUTE_CONTENT]]*/
+T0* r993make(T2 a1);
+/*KL_SPECIAL_ROUTINES[DS_BILINKED_LIST[XM_DTD_ATTRIBUTE_CONTENT]]*/
+T0* r993resize(T0* a1,T2 a2);
+/*DS_ARRAYED_LIST[LX_NFA]*/
+T2 r364new_capacity(T2 a1);
+/*DS_ARRAYED_LIST[LX_NFA]*/
+T6 r364extendible(T364* C,T2 a1);
+/*DS_ARRAYED_LIST[LX_NFA]*/
+void r364make(T364* C,T2 a1);
+/*DS_ARRAYED_LIST[LX_NFA]*/
+void r364resize(T364* C,T2 a1);
+/*DS_ARRAYED_LIST[LX_NFA]*/
+void r364force_last(T364* C,T0* a1);
+/*DS_ARRAYED_LIST[LX_NFA]*/
+T0* r364new_cursor(T364* C);
+/*DS_ARRAYED_LIST[GEANT_PARENT]*/
+T2 r643new_capacity(T2 a1);
+/*DS_ARRAYED_LIST[GEANT_PARENT]*/
+T6 r643valid_cursor(T643* C,T0* a1);
+/*DS_ARRAYED_LIST[GEANT_PARENT]*/
+T6 r643extendible(T643* C,T2 a1);
+/*DS_ARRAYED_LIST[GEANT_PARENT]*/
+T0* r643cursor_item(T643* C,T0* a1);
+/*DS_ARRAYED_LIST[GEANT_PARENT]*/
+void r643remove_traversing_cursor(T643* C,T0* a1);
+/*DS_ARRAYED_LIST[GEANT_PARENT]*/
+void r643add_traversing_cursor(T643* C,T0* a1);
+/*DS_ARRAYED_LIST[GEANT_PARENT]*/
+T6 r643cursor_before(T0* a1);
+/*DS_ARRAYED_LIST[GEANT_PARENT]*/
+void r643make(T643* C,T2 a1);
+/*DS_ARRAYED_LIST[GEANT_PARENT]*/
+T6 r643cursor_after(T0* a1);
+/*DS_ARRAYED_LIST[GEANT_PARENT]*/
+void r643cursor_forth(T643* C,T0* a1);
+/*DS_ARRAYED_LIST[GEANT_PARENT]*/
+void r643resize(T643* C,T2 a1);
+/*DS_ARRAYED_LIST[GEANT_PARENT]*/
+void r643cursor_start(T643* C,T0* a1);
+/*DS_ARRAYED_LIST[GEANT_PARENT]*/
+void r643force_last(T643* C,T0* a1);
+/*DS_ARRAYED_LIST[GEANT_PARENT]*/
+T0* r643new_cursor(T643* C);
+/*DS_ARRAYED_LIST[GEANT_PARENT]*/
+T6 r643cursor_off(T0* a1);
+/*KL_FIXED_ARRAY_ROUTINES[XM_EIFFEL_PARSER_NAME]*/
+T0* r956make(T2 a1);
+/*KL_FIXED_ARRAY_ROUTINES[XM_EIFFEL_PARSER_NAME]*/
+T0* r956resize(T0* a1,T2 a2);
+/*DS_HASH_TABLE[GEANT_SELECT,STRING]*/
+T2 r651new_capacity(T2 a1);
+/*DS_HASH_TABLE[GEANT_SELECT,STRING]*/
+T6 r651valid_cursor(T651* C,T0* a1);
+/*DS_HASH_TABLE[GEANT_SELECT,STRING]*/
+T6 r651valid_slot(T651* C,T2 a1);
+/*DS_HASH_TABLE[GEANT_SELECT,STRING]*/
+void r651make_clashes(T651* C,T2 a1);
+/*DS_HASH_TABLE[GEANT_SELECT,STRING]*/
+T6 r651valid_position(T651* C,T2 a1);
+/*DS_HASH_TABLE[GEANT_SELECT,STRING]*/
+T0* r651cursor_item(T651* C,T0* a1);
+/*DS_HASH_TABLE[GEANT_SELECT,STRING]*/
+void r651search_position(T651* C,T0* a1);
+/*DS_HASH_TABLE[GEANT_SELECT,STRING]*/
+void r651remove_traversing_cursor(T651* C,T0* a1);
+/*DS_HASH_TABLE[GEANT_SELECT,STRING]*/
+void r651keys_resize(T651* C,T2 a1);
+/*DS_HASH_TABLE[GEANT_SELECT,STRING]*/
+void r651make_items(T651* C,T2 a1);
+/*DS_HASH_TABLE[GEANT_SELECT,STRING]*/
+void r651add_traversing_cursor(T651* C,T0* a1);
+/*DS_HASH_TABLE[GEANT_SELECT,STRING]*/
+void r651make_map_equal(T651* C,T2 a1);
+/*DS_HASH_TABLE[GEANT_SELECT,STRING]*/
+T6 r651cursor_after(T0* a1);
+/*DS_HASH_TABLE[GEANT_SELECT,STRING]*/
+void r651make_keys(T651* C,T2 a1);
+/*DS_HASH_TABLE[GEANT_SELECT,STRING]*/
+T2 r651hash_position(T651* C,T0* a1);
+/*DS_HASH_TABLE[GEANT_SELECT,STRING]*/
+void r651cursor_forth(T651* C,T0* a1);
+/*DS_HASH_TABLE[GEANT_SELECT,STRING]*/
+void r651items_resize(T651* C,T2 a1);
+/*DS_HASH_TABLE[GEANT_SELECT,STRING]*/
+void r651make_with_equality_testers(T651* C,T2 a1,T0* a2,T0* a3);
+/*DS_HASH_TABLE[GEANT_SELECT,STRING]*/
+void r651resize(T651* C,T2 a1);
+/*DS_HASH_TABLE[GEANT_SELECT,STRING]*/
+void r651make_sparse_container(T651* C,T2 a1);
+/*DS_HASH_TABLE[GEANT_SELECT,STRING]*/
+void r651cursor_start(T651* C,T0* a1);
+/*DS_HASH_TABLE[GEANT_SELECT,STRING]*/
+void r651clashes_resize(T651* C,T2 a1);
+/*DS_HASH_TABLE[GEANT_SELECT,STRING]*/
+void r651slots_resize(T651* C,T2 a1);
+/*DS_HASH_TABLE[GEANT_SELECT,STRING]*/
+T6 r651key_equality_tester_settable(T651* C,T0* a1);
+/*DS_HASH_TABLE[GEANT_SELECT,STRING]*/
+void r651force_last(T651* C,T0* a1,T0* a2);
+/*DS_HASH_TABLE[GEANT_SELECT,STRING]*/
+T0* r651new_cursor(T651* C);
+/*DS_HASH_TABLE[GEANT_SELECT,STRING]*/
+void r651make_slots(T651* C,T2 a1);
+/*DS_HASH_TABLE[GEANT_SELECT,STRING]*/
+T2 r651new_modulus(T2 a1);
+/*DS_HASH_TABLE[GEANT_SELECT,STRING]*/
+T6 r651cursor_off(T0* a1);
+/*SPECIAL[DS_BILINKED_LIST[STRING]]*/
+T6 r900valid_index(T900* C,T2 a1);
+/*SPECIAL[DS_BILINKED_LIST[STRING]]*/
+void r900make(T900* C,T2 a1);
+/*SPECIAL[DS_BILINKED_LIST[STRING]]*/
+T0* r900resize(T900* C,T2 a1);
+/*SPECIAL[DS_BILINKED_LIST[STRING]]*/
+void r900array_resize(T900* C,T2 a1);
+/*SPECIAL[XM_EIFFEL_PARSER_NAME]*/
+T6 r931valid_index(T931* C,T2 a1);
+/*SPECIAL[XM_EIFFEL_PARSER_NAME]*/
+void r931make(T931* C,T2 a1);
+/*SPECIAL[XM_EIFFEL_PARSER_NAME]*/
+T0* r931resize(T931* C,T2 a1);
+/*SPECIAL[XM_EIFFEL_PARSER_NAME]*/
+void r931array_resize(T931* C,T2 a1);
+/*KL_SPECIAL_ROUTINES[LX_SYMBOL_CLASS]*/
+T0* r422make(T2 a1);
+/*KL_SPECIAL_ROUTINES[LX_SYMBOL_CLASS]*/
+T0* r422resize(T0* a1,T2 a2);
+/*KL_FIXED_ARRAY_ROUTINES[LX_NFA_STATE]*/
+T0* r335make(T2 a1);
+/*KL_FIXED_ARRAY_ROUTINES[LX_NFA_STATE]*/
+T0* r335resize(T0* a1,T2 a2);
+/*SPECIAL[XM_EIFFEL_DECLARATION]*/
+T6 r896valid_index(T896* C,T2 a1);
+/*SPECIAL[XM_EIFFEL_DECLARATION]*/
+void r896make(T896* C,T2 a1);
+/*SPECIAL[XM_EIFFEL_DECLARATION]*/
+T0* r896resize(T896* C,T2 a1);
+/*SPECIAL[XM_EIFFEL_DECLARATION]*/
+void r896array_resize(T896* C,T2 a1);
+/*DS_HASH_TABLE_CURSOR[LX_SYMBOL_CLASS,STRING]*/
+T6 r450valid_position(T450* C,T2 a1);
+/*DS_HASH_TABLE_CURSOR[LX_SYMBOL_CLASS,STRING]*/
+T0* r450item(T450* C);
+/*DS_HASH_TABLE_CURSOR[LX_SYMBOL_CLASS,STRING]*/
+T6 r450after(T450* C);
+/*DS_HASH_TABLE_CURSOR[LX_SYMBOL_CLASS,STRING]*/
+void r450make(T450* C,T0* a1);
+/*KL_FIXED_ARRAY_ROUTINES[XM_NAMESPACE]*/
+T0* r1047make(T2 a1);
+/*KL_FIXED_ARRAY_ROUTINES[XM_NAMESPACE]*/
+T0* r1047resize(T0* a1,T2 a2);
+/*SPECIAL[DS_BILINKED_LIST[XM_DTD_ATTRIBUTE_CONTENT]]*/
+T6 r906valid_index(T906* C,T2 a1);
+/*SPECIAL[DS_BILINKED_LIST[XM_DTD_ATTRIBUTE_CONTENT]]*/
+void r906make(T906* C,T2 a1);
+/*SPECIAL[DS_BILINKED_LIST[XM_DTD_ATTRIBUTE_CONTENT]]*/
+T0* r906resize(T906* C,T2 a1);
+/*SPECIAL[DS_BILINKED_LIST[XM_DTD_ATTRIBUTE_CONTENT]]*/
+void r906array_resize(T906* C,T2 a1);
+/*DS_BILINKED_LIST[XM_DTD_ELEMENT_CONTENT]*/
+void r973force_first(T973* C,T0* a1);
+/*DS_BILINKED_LIST[XM_DTD_ELEMENT_CONTENT]*/
+void r973make(T973* C);
+/*DS_BILINKED_LIST[XM_DTD_ELEMENT_CONTENT]*/
+void r973force_last(T973* C,T0* a1);
+/*DS_BILINKED_LIST[XM_DTD_ELEMENT_CONTENT]*/
+T0* r973new_cursor(T973* C);
+/*KL_FIXED_ARRAY_ROUTINES[GEANT_SELECT]*/
+T0* r743make(T2 a1);
+/*KL_FIXED_ARRAY_ROUTINES[GEANT_SELECT]*/
+T0* r743resize(T0* a1,T2 a2);
+/*KL_SPECIAL_ROUTINES[XM_DTD_ELEMENT_CONTENT]*/
+T0* r971make(T2 a1);
+/*KL_SPECIAL_ROUTINES[XM_DTD_ELEMENT_CONTENT]*/
+T0* r971resize(T0* a1,T2 a2);
+/*DS_HASH_TABLE_CURSOR[GEANT_TARGET,STRING]*/
+T0* r94key(T94* C);
+/*DS_HASH_TABLE_CURSOR[GEANT_TARGET,STRING]*/
+T6 r94valid_position(T94* C,T2 a1);
+/*DS_HASH_TABLE_CURSOR[GEANT_TARGET,STRING]*/
+T0* r94item(T94* C);
+/*DS_HASH_TABLE_CURSOR[GEANT_TARGET,STRING]*/
+T6 r94after(T94* C);
+/*DS_HASH_TABLE_CURSOR[GEANT_TARGET,STRING]*/
+void r94make(T94* C,T0* a1);
+/*DS_HASH_TABLE_CURSOR[GEANT_TARGET,STRING]*/
+T6 r94before(T94* C);
+/*KL_FIXED_ARRAY_ROUTINES[GEANT_PARENT]*/
+T0* r735make(T2 a1);
+/*KL_FIXED_ARRAY_ROUTINES[GEANT_PARENT]*/
+T0* r735resize(T0* a1,T2 a2);
+/*DS_LINKED_LIST[STRING]*/
+T6 r583valid_cursor(T583* C,T0* a1);
+/*DS_LINKED_LIST[STRING]*/
+T0* r583last(T583* C);
+/*DS_LINKED_LIST[STRING]*/
+T0* r583cursor_item(T0* a1);
+/*DS_LINKED_LIST[STRING]*/
+void r583remove_traversing_cursor(T583* C,T0* a1);
+/*DS_LINKED_LIST[STRING]*/
+T0* r583item(T583* C,T2 a1);
+/*DS_LINKED_LIST[STRING]*/
+void r583add_traversing_cursor(T583* C,T0* a1);
+/*DS_LINKED_LIST[STRING]*/
+void r583make(T583* C);
+/*DS_LINKED_LIST[STRING]*/
+T6 r583cursor_after(T0* a1);
+/*DS_LINKED_LIST[STRING]*/
+void r583cursor_forth(T583* C,T0* a1);
+/*DS_LINKED_LIST[STRING]*/
+void r583cursor_start(T583* C,T0* a1);
+/*DS_LINKED_LIST[STRING]*/
+void r583force_last(T583* C,T0* a1);
+/*DS_LINKED_LIST[STRING]*/
+T0* r583new_cursor(T583* C);
+/*DS_LINKED_LIST[STRING]*/
+T6 r583cursor_off(T0* a1);
+/*DS_BILINKED_LIST_CURSOR[DS_HASH_TABLE[STRING,STRING]]*/
+void r1021set(T1021* C,T0* a1,T6 a2,T6 a3);
+/*DS_BILINKED_LIST_CURSOR[DS_HASH_TABLE[STRING,STRING]]*/
+void r1021set_before(T1021* C);
+/*DS_BILINKED_LIST_CURSOR[DS_HASH_TABLE[STRING,STRING]]*/
+void r1021make(T1021* C,T0* a1);
+/*DS_BILINKED_LIST_CURSOR[DS_HASH_TABLE[STRING,STRING]]*/
+void r1021set_after(T1021* C);
+/*KL_FIXED_ARRAY_ROUTINES[BOOLEAN]*/
+T0* r843make(T2 a1);
+/*DS_HASH_SET[XM_NAMESPACE]*/
+T2 r1027new_capacity(T2 a1);
+/*DS_HASH_SET[XM_NAMESPACE]*/
+void r1027make_equal(T1027* C,T2 a1);
+/*DS_HASH_SET[XM_NAMESPACE]*/
+T0* r1027keys_item(T1027* C,T2 a1);
+/*DS_HASH_SET[XM_NAMESPACE]*/
+void r1027make_clashes(T1027* C,T2 a1);
+/*DS_HASH_SET[XM_NAMESPACE]*/
+void r1027search_position(T1027* C,T0* a1);
+/*DS_HASH_SET[XM_NAMESPACE]*/
+T0* r1027item(T1027* C,T0* a1);
+/*DS_HASH_SET[XM_NAMESPACE]*/
+void r1027make_items(T1027* C,T2 a1);
+/*DS_HASH_SET[XM_NAMESPACE]*/
+void r1027make(T1027* C,T2 a1);
+/*DS_HASH_SET[XM_NAMESPACE]*/
+T6 r1027has(T1027* C,T0* a1);
+/*DS_HASH_SET[XM_NAMESPACE]*/
+T2 r1027hash_position(T1027* C,T0* a1);
+/*DS_HASH_SET[XM_NAMESPACE]*/
+void r1027items_resize(T1027* C,T2 a1);
+/*DS_HASH_SET[XM_NAMESPACE]*/
+void r1027resize(T1027* C,T2 a1);
+/*DS_HASH_SET[XM_NAMESPACE]*/
+void r1027clashes_resize(T1027* C,T2 a1);
+/*DS_HASH_SET[XM_NAMESPACE]*/
+void r1027slots_resize(T1027* C,T2 a1);
+/*DS_HASH_SET[XM_NAMESPACE]*/
+void r1027force_last(T1027* C,T0* a1);
+/*DS_HASH_SET[XM_NAMESPACE]*/
+T0* r1027new_cursor(T1027* C);
+/*DS_HASH_SET[XM_NAMESPACE]*/
+void r1027make_slots(T1027* C,T2 a1);
+/*DS_HASH_SET[XM_NAMESPACE]*/
+T2 r1027new_modulus(T2 a1);
+/*KL_ARRAY_ROUTINES[INTEGER]*/
+void r823subcopy(T0* a1,T0* a2,T2 a3,T2 a4,T2 a5);
+/*KL_FIXED_ARRAY_ROUTINES[GEANT_FILESET_ENTRY]*/
+T0* r548make(T2 a1);
+/*KL_FIXED_ARRAY_ROUTINES[GEANT_FILESET_ENTRY]*/
+T0* r548resize(T0* a1,T2 a2);
+/*DS_BILINKED_LIST_CURSOR[XM_DTD_ELEMENT_CONTENT]*/
+void r983make(T983* C,T0* a1);
+/*DS_BILINKED_LIST_CURSOR[XM_DTD_ATTRIBUTE_CONTENT]*/
+void r1000set(T1000* C,T0* a1,T6 a2,T6 a3);
+/*DS_BILINKED_LIST_CURSOR[XM_DTD_ATTRIBUTE_CONTENT]*/
+void r1000make(T1000* C,T0* a1);
+/*DS_BILINKED_LIST_CURSOR[XM_DTD_ATTRIBUTE_CONTENT]*/
+void r1000set_after(T1000* C);
+/*DS_BILINKED_LIST[XM_POSITION]*/
+void r876make(T876* C);
+/*DS_BILINKED_LIST[XM_POSITION]*/
+void r876force_last(T876* C,T0* a1);
+/*DS_BILINKED_LIST[XM_POSITION]*/
+T0* r876new_cursor(T876* C);
+/*DS_HASH_TABLE_CURSOR[XM_EIFFEL_ENTITY_DEF,STRING]*/
+T6 r812valid_position(T812* C,T2 a1);
+/*DS_HASH_TABLE_CURSOR[XM_EIFFEL_ENTITY_DEF,STRING]*/
+void r812make(T812* C,T0* a1);
+/*DS_ARRAYED_STACK[GEANT_VARIABLES]*/
+T2 r139new_capacity(T2 a1);
+/*DS_ARRAYED_STACK[GEANT_VARIABLES]*/
+T6 r139extendible(T139* C,T2 a1);
+/*DS_ARRAYED_STACK[GEANT_VARIABLES]*/
+void r139force(T139* C,T0* a1);
+/*DS_ARRAYED_STACK[GEANT_VARIABLES]*/
+T0* r139item(T139* C);
+/*DS_ARRAYED_STACK[GEANT_VARIABLES]*/
+void r139make(T139* C,T2 a1);
+/*DS_ARRAYED_STACK[GEANT_VARIABLES]*/
+void r139remove(T139* C);
+/*DS_ARRAYED_STACK[GEANT_VARIABLES]*/
+void r139resize(T139* C,T2 a1);
+/*KL_EQUALITY_TESTER[XM_NAMESPACE]*/
+T6 r1033test(T0* a1,T0* a2);
+/*DS_ARRAYED_STACK[INTEGER]*/
+void r491make(T491* C,T2 a1);
+/*DS_ARRAYED_LIST_CURSOR[LX_NFA_STATE]*/
+T6 r355valid_position(T355* C,T2 a1);
+/*DS_ARRAYED_LIST_CURSOR[LX_NFA_STATE]*/
+T0* r355item(T355* C);
+/*DS_ARRAYED_LIST_CURSOR[LX_NFA_STATE]*/
+T6 r355after(T355* C);
+/*DS_ARRAYED_LIST_CURSOR[LX_NFA_STATE]*/
+T6 r355off(T355* C);
+/*DS_HASH_TABLE_CURSOR[LX_NFA,INTEGER]*/
+void r391make(T391* C,T0* a1);
+/*DS_ARRAYED_STACK[GEANT_TARGET]*/
+T2 r146new_capacity(T2 a1);
+/*DS_ARRAYED_STACK[GEANT_TARGET]*/
+T6 r146extendible(T146* C,T2 a1);
+/*DS_ARRAYED_STACK[GEANT_TARGET]*/
+void r146force(T146* C,T0* a1);
+/*DS_ARRAYED_STACK[GEANT_TARGET]*/
+T0* r146item(T146* C);
+/*DS_ARRAYED_STACK[GEANT_TARGET]*/
+void r146make(T146* C,T2 a1);
+/*DS_ARRAYED_STACK[GEANT_TARGET]*/
+void r146remove(T146* C);
+/*DS_ARRAYED_STACK[GEANT_TARGET]*/
+void r146resize(T146* C,T2 a1);
+/*SPECIAL[XM_DTD_EXTERNAL_ID]*/
+T6 r921valid_index(T921* C,T2 a1);
+/*SPECIAL[XM_DTD_EXTERNAL_ID]*/
+void r921make(T921* C,T2 a1);
+/*SPECIAL[XM_DTD_EXTERNAL_ID]*/
+T0* r921resize(T921* C,T2 a1);
+/*SPECIAL[XM_DTD_EXTERNAL_ID]*/
+void r921array_resize(T921* C,T2 a1);
+/*DS_BILINKED_LIST[XM_DTD_ATTRIBUTE_CONTENT]*/
+T6 r907valid_cursor(T907* C,T0* a1);
+/*DS_BILINKED_LIST[XM_DTD_ATTRIBUTE_CONTENT]*/
+T0* r907cursor_item(T0* a1);
+/*DS_BILINKED_LIST[XM_DTD_ATTRIBUTE_CONTENT]*/
+void r907remove_traversing_cursor(T907* C,T0* a1);
+/*DS_BILINKED_LIST[XM_DTD_ATTRIBUTE_CONTENT]*/
+void r907cursor_go_after(T907* C,T0* a1);
+/*DS_BILINKED_LIST[XM_DTD_ATTRIBUTE_CONTENT]*/
+void r907add_traversing_cursor(T907* C,T0* a1);
+/*DS_BILINKED_LIST[XM_DTD_ATTRIBUTE_CONTENT]*/
+void r907make(T907* C);
+/*DS_BILINKED_LIST[XM_DTD_ATTRIBUTE_CONTENT]*/
+T6 r907cursor_after(T0* a1);
+/*DS_BILINKED_LIST[XM_DTD_ATTRIBUTE_CONTENT]*/
+T6 r907has(T907* C,T0* a1);
+/*DS_BILINKED_LIST[XM_DTD_ATTRIBUTE_CONTENT]*/
+void r907cursor_search_forth(T907* C,T0* a1,T0* a2);
+/*DS_BILINKED_LIST[XM_DTD_ATTRIBUTE_CONTENT]*/
+void r907cursor_forth(T907* C,T0* a1);
+/*DS_BILINKED_LIST[XM_DTD_ATTRIBUTE_CONTENT]*/
+void r907cursor_start(T907* C,T0* a1);
+/*DS_BILINKED_LIST[XM_DTD_ATTRIBUTE_CONTENT]*/
+void r907force_last(T907* C,T0* a1);
+/*DS_BILINKED_LIST[XM_DTD_ATTRIBUTE_CONTENT]*/
+T0* r907new_cursor(T907* C);
+/*DS_BILINKED_LIST[XM_DTD_ATTRIBUTE_CONTENT]*/
+T6 r907cursor_off(T0* a1);
+/*DS_ARRAYED_LIST_CURSOR[LX_START_CONDITION]*/
+T6 r501valid_position(T501* C,T2 a1);
+/*DS_HASH_TABLE_CURSOR[GEANT_REDEFINE,STRING]*/
+T6 r678valid_position(T678* C,T2 a1);
+/*DS_HASH_TABLE_CURSOR[GEANT_REDEFINE,STRING]*/
+T0* r678item(T678* C);
+/*DS_HASH_TABLE_CURSOR[GEANT_REDEFINE,STRING]*/
+T6 r678after(T678* C);
+/*DS_HASH_TABLE_CURSOR[GEANT_REDEFINE,STRING]*/
+void r678make(T678* C,T0* a1);
+/*DS_BILINKABLE[STRING]*/
+void r1005put_right(T1005* C,T0* a1);
+/*DS_ARRAYED_LIST[LX_NFA_STATE]*/
+T2 r303new_capacity(T2 a1);
+/*DS_ARRAYED_LIST[LX_NFA_STATE]*/
+T6 r303valid_cursor(T303* C,T0* a1);
+/*DS_ARRAYED_LIST[LX_NFA_STATE]*/
+T6 r303extendible(T303* C,T2 a1);
+/*DS_ARRAYED_LIST[LX_NFA_STATE]*/
+void r303append_last(T303* C,T0* a1);
+/*DS_ARRAYED_LIST[LX_NFA_STATE]*/
+void r303move_cursors_right(T303* C,T2 a1,T2 a2);
+/*DS_ARRAYED_LIST[LX_NFA_STATE]*/
+T0* r303last(T303* C);
+/*DS_ARRAYED_LIST[LX_NFA_STATE]*/
+void r303put(T303* C,T0* a1,T2 a2);
+/*DS_ARRAYED_LIST[LX_NFA_STATE]*/
+T0* r303cursor_item(T303* C,T0* a1);
+/*DS_ARRAYED_LIST[LX_NFA_STATE]*/
+T6 r303is_equal(T303* C,T0* a1);
+/*DS_ARRAYED_LIST[LX_NFA_STATE]*/
+void r303remove_traversing_cursor(T303* C,T0* a1);
+/*DS_ARRAYED_LIST[LX_NFA_STATE]*/
+void r303add_traversing_cursor(T303* C,T0* a1);
+/*DS_ARRAYED_LIST[LX_NFA_STATE]*/
+T6 r303se_assigned_from(T0* a1);
+/*DS_ARRAYED_LIST[LX_NFA_STATE]*/
+T6 r303cursor_before(T0* a1);
+/*DS_ARRAYED_LIST[LX_NFA_STATE]*/
+T6 r303same_type(T303* C,T0* a1);
+/*DS_ARRAYED_LIST[LX_NFA_STATE]*/
+void r303make(T303* C,T2 a1);
+/*DS_ARRAYED_LIST[LX_NFA_STATE]*/
+T6 r303cursor_after(T0* a1);
+/*DS_ARRAYED_LIST[LX_NFA_STATE]*/
+T6 r303conforms_to(T303* C,T0* a1);
+/*DS_ARRAYED_LIST[LX_NFA_STATE]*/
+T6 r303has(T303* C,T0* a1);
+/*DS_ARRAYED_LIST[LX_NFA_STATE]*/
+void r303move_right(T303* C,T2 a1,T2 a2);
+/*DS_ARRAYED_LIST[LX_NFA_STATE]*/
+void r303cursor_forth(T303* C,T0* a1);
+/*DS_ARRAYED_LIST[LX_NFA_STATE]*/
+void r303resize(T303* C,T2 a1);
+/*DS_ARRAYED_LIST[LX_NFA_STATE]*/
+void r303cursor_start(T303* C,T0* a1);
+/*DS_ARRAYED_LIST[LX_NFA_STATE]*/
+void r303force_last(T303* C,T0* a1);
+/*DS_ARRAYED_LIST[LX_NFA_STATE]*/
+T0* r303new_cursor(T303* C);
+/*DS_ARRAYED_LIST[LX_NFA_STATE]*/
+void r303extend_last(T303* C,T0* a1);
+/*DS_ARRAYED_LIST[LX_NFA_STATE]*/
+void r303put_last(T303* C,T0* a1);
+/*DS_ARRAYED_LIST[LX_NFA_STATE]*/
+T6 r303cursor_off(T0* a1);
+/*KL_SPECIAL_ROUTINES[XM_EIFFEL_PARSER_NAME]*/
+T0* r940make(T2 a1);
+/*KL_SPECIAL_ROUTINES[XM_EIFFEL_PARSER_NAME]*/
+T0* r940resize(T0* a1,T2 a2);
+/*KL_FIXED_ARRAY_ROUTINES[GEANT_RENAME]*/
+T0* r749make(T2 a1);
+/*KL_FIXED_ARRAY_ROUTINES[GEANT_RENAME]*/
+T0* r749resize(T0* a1,T2 a2);
+/*DS_HASH_TABLE_CURSOR[GEANT_SELECT,STRING]*/
+T6 r660valid_position(T660* C,T2 a1);
+/*DS_HASH_TABLE_CURSOR[GEANT_SELECT,STRING]*/
+T0* r660item(T660* C);
+/*DS_HASH_TABLE_CURSOR[GEANT_SELECT,STRING]*/
+T6 r660after(T660* C);
+/*DS_HASH_TABLE_CURSOR[GEANT_SELECT,STRING]*/
+void r660make(T660* C,T0* a1);
+/*DS_BILINKED_LIST_CURSOR[XM_POSITION]*/
+void r892make(T892* C,T0* a1);
+/*DS_ARRAYED_LIST[DS_PAIR[STRING,STRING]]*/
+T2 r605new_capacity(T2 a1);
+/*DS_ARRAYED_LIST[DS_PAIR[STRING,STRING]]*/
+T6 r605extendible(T605* C,T2 a1);
+/*DS_ARRAYED_LIST[DS_PAIR[STRING,STRING]]*/
+void r605make(T605* C,T2 a1);
+/*DS_ARRAYED_LIST[DS_PAIR[STRING,STRING]]*/
+void r605resize(T605* C,T2 a1);
+/*DS_ARRAYED_LIST[DS_PAIR[STRING,STRING]]*/
+void r605force_last(T605* C,T0* a1);
+/*DS_ARRAYED_LIST[DS_PAIR[STRING,STRING]]*/
+T0* r605new_cursor(T605* C);
+/*DS_LINKED_QUEUE[STRING]*/
+void r1026force(T1026* C,T0* a1);
+/*DS_LINKED_QUEUE[STRING]*/
+void r1026wipe_out(T1026* C);
+/*DS_LINKED_QUEUE[STRING]*/
+T0* r1026item(T1026* C);
+/*DS_LINKED_QUEUE[STRING]*/
+void r1026remove(T1026* C);
+/*SPECIAL[STRING]*/
+T6 r408valid_index(T408* C,T2 a1);
+/*SPECIAL[STRING]*/
+void r408make(T408* C,T2 a1);
+/*SPECIAL[STRING]*/
+T0* r408resize(T408* C,T2 a1);
+/*SPECIAL[STRING]*/
+void r408array_resize(T408* C,T2 a1);
+/*KL_EQUALITY_TESTER[GEANT_FILESET_ENTRY]*/
+T6 r534test(T0* a1,T0* a2);
+/*KL_FIXED_ARRAY_ROUTINES[LX_DFA_STATE]*/
+T0* r359make(T2 a1);
+/*KL_FIXED_ARRAY_ROUTINES[LX_DFA_STATE]*/
+T0* r359resize(T0* a1,T2 a2);
 /*SPECIAL[BOOLEAN]*/
-T0* r815resize(T815* C,T2 a1);
+T6 r848valid_index(T848* C,T2 a1);
 /*SPECIAL[BOOLEAN]*/
-void r815array_resize(T815* C,T2 a1);
+void r848make(T848* C,T2 a1);
+/*SPECIAL[BOOLEAN]*/
+T0* r848resize(T848* C,T2 a1);
+/*SPECIAL[BOOLEAN]*/
+void r848array_resize(T848* C,T2 a1);
 /*KL_FIXED_ARRAY_ROUTINES[GEANT_TARGET]*/
-T0* r594make(T2 a1);
+T0* r630make(T2 a1);
 /*KL_FIXED_ARRAY_ROUTINES[GEANT_TARGET]*/
-T0* r594resize(T0* a1,T2 a2);
+T0* r630resize(T0* a1,T2 a2);
 /*DS_HASH_TABLE[STRING,STRING]*/
-T2 r165new_capacity(T2 a1);
+T2 r193new_capacity(T2 a1);
 /*DS_HASH_TABLE[STRING,STRING]*/
-T6 r165valid_cursor(T165* C,T0* a1);
+T6 r193valid_cursor(T193* C,T0* a1);
 /*DS_HASH_TABLE[STRING,STRING]*/
-void r165force(T165* C,T0* a1,T0* a2);
+void r193force(T193* C,T0* a1,T0* a2);
 /*DS_HASH_TABLE[STRING,STRING]*/
-T6 r165valid_slot(T165* C,T2 a1);
+T0* r193keys_item(T193* C,T2 a1);
 /*DS_HASH_TABLE[STRING,STRING]*/
-void r165make_clashes(T165* C,T2 a1);
+T2 r193clashes_item(T193* C,T2 a1);
 /*DS_HASH_TABLE[STRING,STRING]*/
-T6 r165valid_position(T165* C,T2 a1);
+T6 r193valid_slot(T193* C,T2 a1);
 /*DS_HASH_TABLE[STRING,STRING]*/
-T0* r165cursor_item(T165* C,T0* a1);
+void r193make_clashes(T193* C,T2 a1);
 /*DS_HASH_TABLE[STRING,STRING]*/
-void r165search_position(T165* C,T0* a1);
+T6 r193valid_position(T193* C,T2 a1);
 /*DS_HASH_TABLE[STRING,STRING]*/
-void r165remove_traversing_cursor(T165* C,T0* a1);
-extern T2 oBC94default_capacity;
+T0* r193cursor_item(T193* C,T0* a1);
 /*DS_HASH_TABLE[STRING,STRING]*/
-void r165keys_resize(T165* C,T2 a1);
+void r193search_position(T193* C,T0* a1);
 /*DS_HASH_TABLE[STRING,STRING]*/
-T0* r165item(T165* C,T0* a1);
+void r193remove_traversing_cursor(T193* C,T0* a1);
+extern T2 oBC35default_capacity;
 /*DS_HASH_TABLE[STRING,STRING]*/
-void r165make_items(T165* C,T2 a1);
+void r193keys_resize(T193* C,T2 a1);
 /*DS_HASH_TABLE[STRING,STRING]*/
-void r165add_traversing_cursor(T165* C,T0* a1);
+T0* r193items_item(T193* C,T2 a1);
 /*DS_HASH_TABLE[STRING,STRING]*/
-void r165remove_position(T165* C,T2 a1);
+T0* r193item(T193* C,T0* a1);
 /*DS_HASH_TABLE[STRING,STRING]*/
-void r165make(T165* C,T2 a1);
+void r193make_items(T193* C,T2 a1);
 /*DS_HASH_TABLE[STRING,STRING]*/
-void r165remove(T165* C,T0* a1);
+void r193add_traversing_cursor(T193* C,T0* a1);
 /*DS_HASH_TABLE[STRING,STRING]*/
-T0* r165cursor_key(T165* C,T0* a1);
+T2 r193slots_item(T193* C,T2 a1);
 /*DS_HASH_TABLE[STRING,STRING]*/
-T6 r165cursor_after(T0* a1);
+void r193make_map_default(T193* C);
 /*DS_HASH_TABLE[STRING,STRING]*/
-T6 r165has(T165* C,T0* a1);
+void r193make(T193* C,T2 a1);
 /*DS_HASH_TABLE[STRING,STRING]*/
-void r165make_keys(T165* C,T2 a1);
+T0* r193cursor_key(T193* C,T0* a1);
 /*DS_HASH_TABLE[STRING,STRING]*/
-void r165force_new(T165* C,T0* a1,T0* a2);
+T6 r193cursor_after(T0* a1);
 /*DS_HASH_TABLE[STRING,STRING]*/
-T2 r165hash_position(T165* C,T0* a1);
+T6 r193has(T193* C,T0* a1);
 /*DS_HASH_TABLE[STRING,STRING]*/
-void r165cursor_forth(T165* C,T0* a1);
+void r193make_keys(T193* C,T2 a1);
 /*DS_HASH_TABLE[STRING,STRING]*/
-void r165items_resize(T165* C,T2 a1);
+void r193force_new(T193* C,T0* a1,T0* a2);
 /*DS_HASH_TABLE[STRING,STRING]*/
-void r165move_cursors_after(T165* C,T2 a1);
+T2 r193hash_position(T193* C,T0* a1);
 /*DS_HASH_TABLE[STRING,STRING]*/
-void r165resize(T165* C,T2 a1);
+void r193cursor_forth(T193* C,T0* a1);
 /*DS_HASH_TABLE[STRING,STRING]*/
-T0* r165found_item(T165* C);
+void r193items_resize(T193* C,T2 a1);
 /*DS_HASH_TABLE[STRING,STRING]*/
-void r165make_with_equality_testers(T165* C,T2 a1,T0* a2,T0* a3);
+void r193resize(T193* C,T2 a1);
 /*DS_HASH_TABLE[STRING,STRING]*/
-T6 r165found(T165* C);
+void r193make_with_equality_testers(T193* C,T2 a1,T0* a2,T0* a3);
 /*DS_HASH_TABLE[STRING,STRING]*/
-void r165move_cursors_forth(T165* C,T2 a1);
+void r193make_map(T193* C,T2 a1);
 /*DS_HASH_TABLE[STRING,STRING]*/
-void r165cursor_start(T165* C,T0* a1);
+void r193make_sparse_container(T193* C,T2 a1);
 /*DS_HASH_TABLE[STRING,STRING]*/
-void r165search(T165* C,T0* a1);
+void r193cursor_start(T193* C,T0* a1);
 /*DS_HASH_TABLE[STRING,STRING]*/
-void r165clashes_resize(T165* C,T2 a1);
+void r193clashes_resize(T193* C,T2 a1);
 /*DS_HASH_TABLE[STRING,STRING]*/
-void r165slots_resize(T165* C,T2 a1);
+void r193slots_resize(T193* C,T2 a1);
 /*DS_HASH_TABLE[STRING,STRING]*/
-T6 r165key_equality_tester_settable(T165* C,T0* a1);
+T6 r193key_equality_tester_settable(T193* C,T0* a1);
 /*DS_HASH_TABLE[STRING,STRING]*/
-void r165force_last(T165* C,T0* a1,T0* a2);
+void r193force_last(T193* C,T0* a1,T0* a2);
 /*DS_HASH_TABLE[STRING,STRING]*/
-T0* r165new_cursor(T165* C);
+T0* r193new_cursor(T193* C);
 /*DS_HASH_TABLE[STRING,STRING]*/
-void r165make_slots(T165* C,T2 a1);
+void r193make_slots(T193* C,T2 a1);
 /*DS_HASH_TABLE[STRING,STRING]*/
-void r165move_all_cursors(T165* C,T2 a1,T2 a2);
+T2 r193new_modulus(T2 a1);
 /*DS_HASH_TABLE[STRING,STRING]*/
-T2 r165new_modulus(T2 a1);
-/*DS_HASH_TABLE[STRING,STRING]*/
-T6 r165cursor_off(T0* a1);
+T6 r193cursor_off(T0* a1);
+/*DS_HASH_SET_CURSOR[INTEGER]*/
+void r581make(T581* C,T0* a1);
+/*DS_LINKED_LIST_CURSOR[STRING]*/
+void r584set(T584* C,T0* a1,T6 a2,T6 a3);
+/*DS_LINKED_LIST_CURSOR[STRING]*/
+T0* r584item(T584* C);
+/*DS_LINKED_LIST_CURSOR[STRING]*/
+void r584make(T584* C,T0* a1);
+/*DS_LINKED_LIST_CURSOR[STRING]*/
+void r584forth(T584* C);
+/*DS_LINKED_LIST_CURSOR[STRING]*/
+void r584start(T584* C);
 /*KL_EQUALITY_TESTER[XM_EIFFEL_PARSER_NAME]*/
-T6 r883test(T0* a1,T0* a2);
+T6 r957test(T0* a1,T0* a2);
 /*DS_HASH_TABLE[GEANT_REDEFINE,STRING]*/
-T2 r632new_capacity(T2 a1);
+T2 r669new_capacity(T2 a1);
 /*DS_HASH_TABLE[GEANT_REDEFINE,STRING]*/
-T6 r632valid_cursor(T632* C,T0* a1);
+T6 r669valid_cursor(T669* C,T0* a1);
 /*DS_HASH_TABLE[GEANT_REDEFINE,STRING]*/
-T6 r632valid_slot(T632* C,T2 a1);
+T6 r669valid_slot(T669* C,T2 a1);
 /*DS_HASH_TABLE[GEANT_REDEFINE,STRING]*/
-void r632make_clashes(T632* C,T2 a1);
+void r669make_clashes(T669* C,T2 a1);
 /*DS_HASH_TABLE[GEANT_REDEFINE,STRING]*/
-T6 r632valid_position(T632* C,T2 a1);
+T6 r669valid_position(T669* C,T2 a1);
 /*DS_HASH_TABLE[GEANT_REDEFINE,STRING]*/
-T0* r632cursor_item(T632* C,T0* a1);
+T0* r669cursor_item(T669* C,T0* a1);
 /*DS_HASH_TABLE[GEANT_REDEFINE,STRING]*/
-void r632search_position(T632* C,T0* a1);
+void r669search_position(T669* C,T0* a1);
 /*DS_HASH_TABLE[GEANT_REDEFINE,STRING]*/
-void r632remove_traversing_cursor(T632* C,T0* a1);
+void r669remove_traversing_cursor(T669* C,T0* a1);
 /*DS_HASH_TABLE[GEANT_REDEFINE,STRING]*/
-void r632keys_resize(T632* C,T2 a1);
+void r669keys_resize(T669* C,T2 a1);
 /*DS_HASH_TABLE[GEANT_REDEFINE,STRING]*/
-void r632make_items(T632* C,T2 a1);
+void r669make_items(T669* C,T2 a1);
 /*DS_HASH_TABLE[GEANT_REDEFINE,STRING]*/
-void r632add_traversing_cursor(T632* C,T0* a1);
+void r669add_traversing_cursor(T669* C,T0* a1);
 /*DS_HASH_TABLE[GEANT_REDEFINE,STRING]*/
-void r632make_map_equal(T632* C,T2 a1);
+void r669make_map_equal(T669* C,T2 a1);
 /*DS_HASH_TABLE[GEANT_REDEFINE,STRING]*/
-T6 r632cursor_after(T0* a1);
+T6 r669cursor_after(T0* a1);
 /*DS_HASH_TABLE[GEANT_REDEFINE,STRING]*/
-void r632make_keys(T632* C,T2 a1);
+void r669make_keys(T669* C,T2 a1);
 /*DS_HASH_TABLE[GEANT_REDEFINE,STRING]*/
-T2 r632hash_position(T632* C,T0* a1);
+T2 r669hash_position(T669* C,T0* a1);
 /*DS_HASH_TABLE[GEANT_REDEFINE,STRING]*/
-void r632cursor_forth(T632* C,T0* a1);
+void r669cursor_forth(T669* C,T0* a1);
 /*DS_HASH_TABLE[GEANT_REDEFINE,STRING]*/
-void r632items_resize(T632* C,T2 a1);
+void r669items_resize(T669* C,T2 a1);
 /*DS_HASH_TABLE[GEANT_REDEFINE,STRING]*/
-void r632make_with_equality_testers(T632* C,T2 a1,T0* a2,T0* a3);
+void r669make_with_equality_testers(T669* C,T2 a1,T0* a2,T0* a3);
 /*DS_HASH_TABLE[GEANT_REDEFINE,STRING]*/
-void r632resize(T632* C,T2 a1);
+void r669resize(T669* C,T2 a1);
 /*DS_HASH_TABLE[GEANT_REDEFINE,STRING]*/
-void r632cursor_start(T632* C,T0* a1);
+void r669make_sparse_container(T669* C,T2 a1);
 /*DS_HASH_TABLE[GEANT_REDEFINE,STRING]*/
-void r632clashes_resize(T632* C,T2 a1);
+void r669cursor_start(T669* C,T0* a1);
 /*DS_HASH_TABLE[GEANT_REDEFINE,STRING]*/
-void r632slots_resize(T632* C,T2 a1);
+void r669clashes_resize(T669* C,T2 a1);
 /*DS_HASH_TABLE[GEANT_REDEFINE,STRING]*/
-T6 r632key_equality_tester_settable(T632* C,T0* a1);
+void r669slots_resize(T669* C,T2 a1);
 /*DS_HASH_TABLE[GEANT_REDEFINE,STRING]*/
-void r632force_last(T632* C,T0* a1,T0* a2);
+T6 r669key_equality_tester_settable(T669* C,T0* a1);
 /*DS_HASH_TABLE[GEANT_REDEFINE,STRING]*/
-T0* r632new_cursor(T632* C);
+void r669force_last(T669* C,T0* a1,T0* a2);
 /*DS_HASH_TABLE[GEANT_REDEFINE,STRING]*/
-void r632make_slots(T632* C,T2 a1);
+T0* r669new_cursor(T669* C);
 /*DS_HASH_TABLE[GEANT_REDEFINE,STRING]*/
-T2 r632new_modulus(T2 a1);
+void r669make_slots(T669* C,T2 a1);
 /*DS_HASH_TABLE[GEANT_REDEFINE,STRING]*/
-T6 r632cursor_off(T0* a1);
+T2 r669new_modulus(T2 a1);
+/*DS_HASH_TABLE[GEANT_REDEFINE,STRING]*/
+T6 r669cursor_off(T0* a1);
 /*KL_FIXED_ARRAY_ROUTINES[STRING]*/
-T0* r178make(T2 a1);
+T0* r196make(T2 a1);
 /*KL_FIXED_ARRAY_ROUTINES[STRING]*/
-T0* r178resize(T0* a1,T2 a2);
+T0* r196resize(T0* a1,T2 a2);
 /*DS_HASH_TABLE[XM_EIFFEL_ENTITY_DEF,STRING]*/
-T2 r756new_capacity(T2 a1);
+T2 r797new_capacity(T2 a1);
 /*DS_HASH_TABLE[XM_EIFFEL_ENTITY_DEF,STRING]*/
-void r756force(T756* C,T0* a1,T0* a2);
+void r797force(T797* C,T0* a1,T0* a2);
 /*DS_HASH_TABLE[XM_EIFFEL_ENTITY_DEF,STRING]*/
-void r756wipe_out(T756* C);
+void r797wipe_out(T797* C);
 /*DS_HASH_TABLE[XM_EIFFEL_ENTITY_DEF,STRING]*/
-T6 r756valid_slot(T756* C,T2 a1);
+T6 r797valid_slot(T797* C,T2 a1);
 /*DS_HASH_TABLE[XM_EIFFEL_ENTITY_DEF,STRING]*/
-void r756make_clashes(T756* C,T2 a1);
+void r797make_clashes(T797* C,T2 a1);
 /*DS_HASH_TABLE[XM_EIFFEL_ENTITY_DEF,STRING]*/
-T6 r756valid_position(T756* C,T2 a1);
+T6 r797valid_position(T797* C,T2 a1);
 /*DS_HASH_TABLE[XM_EIFFEL_ENTITY_DEF,STRING]*/
-void r756search_position(T756* C,T0* a1);
+void r797search_position(T797* C,T0* a1);
 /*DS_HASH_TABLE[XM_EIFFEL_ENTITY_DEF,STRING]*/
-void r756keys_resize(T756* C,T2 a1);
+void r797keys_resize(T797* C,T2 a1);
 /*DS_HASH_TABLE[XM_EIFFEL_ENTITY_DEF,STRING]*/
-T0* r756item(T756* C,T0* a1);
+T0* r797item(T797* C,T0* a1);
 /*DS_HASH_TABLE[XM_EIFFEL_ENTITY_DEF,STRING]*/
-void r756move_all_cursors_after(T756* C);
+void r797move_all_cursors_after(T797* C);
 /*DS_HASH_TABLE[XM_EIFFEL_ENTITY_DEF,STRING]*/
-void r756make_items(T756* C,T2 a1);
+void r797make_items(T797* C,T2 a1);
 /*DS_HASH_TABLE[XM_EIFFEL_ENTITY_DEF,STRING]*/
-void r756slots_wipe_out(T756* C);
+void r797slots_wipe_out(T797* C);
 /*DS_HASH_TABLE[XM_EIFFEL_ENTITY_DEF,STRING]*/
-void r756make(T756* C,T2 a1);
+void r797clashes_wipe_out(T797* C);
 /*DS_HASH_TABLE[XM_EIFFEL_ENTITY_DEF,STRING]*/
-void r756clashes_wipe_out(T756* C);
+T6 r797has(T797* C,T0* a1);
 /*DS_HASH_TABLE[XM_EIFFEL_ENTITY_DEF,STRING]*/
-T6 r756has(T756* C,T0* a1);
+void r797make_keys(T797* C,T2 a1);
 /*DS_HASH_TABLE[XM_EIFFEL_ENTITY_DEF,STRING]*/
-void r756make_keys(T756* C,T2 a1);
+T2 r797hash_position(T797* C,T0* a1);
 /*DS_HASH_TABLE[XM_EIFFEL_ENTITY_DEF,STRING]*/
-T2 r756hash_position(T756* C,T0* a1);
+void r797items_wipe_out(T797* C);
 /*DS_HASH_TABLE[XM_EIFFEL_ENTITY_DEF,STRING]*/
-void r756items_wipe_out(T756* C);
+void r797items_resize(T797* C,T2 a1);
 /*DS_HASH_TABLE[XM_EIFFEL_ENTITY_DEF,STRING]*/
-void r756items_resize(T756* C,T2 a1);
+void r797resize(T797* C,T2 a1);
 /*DS_HASH_TABLE[XM_EIFFEL_ENTITY_DEF,STRING]*/
-void r756resize(T756* C,T2 a1);
+void r797make_with_equality_testers(T797* C,T2 a1,T0* a2,T0* a3);
 /*DS_HASH_TABLE[XM_EIFFEL_ENTITY_DEF,STRING]*/
-void r756make_with_equality_testers(T756* C,T2 a1,T0* a2,T0* a3);
+void r797make_sparse_container(T797* C,T2 a1);
 /*DS_HASH_TABLE[XM_EIFFEL_ENTITY_DEF,STRING]*/
-void r756clashes_resize(T756* C,T2 a1);
+void r797clashes_resize(T797* C,T2 a1);
 /*DS_HASH_TABLE[XM_EIFFEL_ENTITY_DEF,STRING]*/
-void r756slots_resize(T756* C,T2 a1);
+void r797slots_resize(T797* C,T2 a1);
 /*DS_HASH_TABLE[XM_EIFFEL_ENTITY_DEF,STRING]*/
-void r756keys_wipe_out(T756* C);
+void r797keys_wipe_out(T797* C);
 /*DS_HASH_TABLE[XM_EIFFEL_ENTITY_DEF,STRING]*/
-T6 r756key_equality_tester_settable(T756* C,T0* a1);
+T6 r797key_equality_tester_settable(T797* C,T0* a1);
 /*DS_HASH_TABLE[XM_EIFFEL_ENTITY_DEF,STRING]*/
-T0* r756new_cursor(T756* C);
+T0* r797new_cursor(T797* C);
 /*DS_HASH_TABLE[XM_EIFFEL_ENTITY_DEF,STRING]*/
-void r756make_slots(T756* C,T2 a1);
+void r797make_slots(T797* C,T2 a1);
 /*DS_HASH_TABLE[XM_EIFFEL_ENTITY_DEF,STRING]*/
-T2 r756new_modulus(T2 a1);
+T2 r797new_modulus(T2 a1);
 /*KL_EQUALITY_TESTER[INTEGER]*/
-T6 r355test(T2 a1,T2 a2);
+T6 r377test(T2 a1,T2 a2);
 /*SPECIAL[XM_DTD_ATTRIBUTE_CONTENT]*/
-T6 r832valid_index(T832* C,T2 a1);
+T6 r911valid_index(T911* C,T2 a1);
 /*SPECIAL[XM_DTD_ATTRIBUTE_CONTENT]*/
-void r832make(T832* C,T2 a1);
+void r911make(T911* C,T2 a1);
 /*SPECIAL[XM_DTD_ATTRIBUTE_CONTENT]*/
-T0* r832resize(T832* C,T2 a1);
+T0* r911resize(T911* C,T2 a1);
 /*SPECIAL[XM_DTD_ATTRIBUTE_CONTENT]*/
-void r832array_resize(T832* C,T2 a1);
+void r911array_resize(T911* C,T2 a1);
 /*DS_HASH_TABLE[LX_NFA,INTEGER]*/
-T2 r352new_capacity(T2 a1);
+T2 r373new_capacity(T2 a1);
 /*DS_HASH_TABLE[LX_NFA,INTEGER]*/
-void r352force(T352* C,T0* a1,T2 a2);
+void r373force(T373* C,T0* a1,T2 a2);
 /*DS_HASH_TABLE[LX_NFA,INTEGER]*/
-void r352make_clashes(T352* C,T2 a1);
+void r373make_clashes(T373* C,T2 a1);
 /*DS_HASH_TABLE[LX_NFA,INTEGER]*/
-void r352search_position(T352* C,T2 a1);
+void r373search_position(T373* C,T2 a1);
 /*DS_HASH_TABLE[LX_NFA,INTEGER]*/
-void r352keys_resize(T352* C,T2 a1);
+void r373keys_resize(T373* C,T2 a1);
 /*DS_HASH_TABLE[LX_NFA,INTEGER]*/
-T0* r352item(T352* C,T2 a1);
+T0* r373item(T373* C,T2 a1);
 /*DS_HASH_TABLE[LX_NFA,INTEGER]*/
-void r352make_items(T352* C,T2 a1);
+void r373make_items(T373* C,T2 a1);
 /*DS_HASH_TABLE[LX_NFA,INTEGER]*/
-void r352make(T352* C,T2 a1);
+void r373make(T373* C,T2 a1);
 /*DS_HASH_TABLE[LX_NFA,INTEGER]*/
-T6 r352has(T352* C,T2 a1);
+T6 r373has(T373* C,T2 a1);
 /*DS_HASH_TABLE[LX_NFA,INTEGER]*/
-void r352make_keys(T352* C,T2 a1);
+void r373make_keys(T373* C,T2 a1);
 /*DS_HASH_TABLE[LX_NFA,INTEGER]*/
-T2 r352hash_position(T352* C,T2 a1);
+T2 r373hash_position(T373* C,T2 a1);
 /*DS_HASH_TABLE[LX_NFA,INTEGER]*/
-void r352items_resize(T352* C,T2 a1);
+void r373items_resize(T373* C,T2 a1);
 /*DS_HASH_TABLE[LX_NFA,INTEGER]*/
-void r352make_with_equality_testers(T352* C,T2 a1,T0* a2,T0* a3);
+void r373make_with_equality_testers(T373* C,T2 a1,T0* a2,T0* a3);
 /*DS_HASH_TABLE[LX_NFA,INTEGER]*/
-void r352resize(T352* C,T2 a1);
+void r373resize(T373* C,T2 a1);
 /*DS_HASH_TABLE[LX_NFA,INTEGER]*/
-void r352clashes_resize(T352* C,T2 a1);
+void r373make_sparse_container(T373* C,T2 a1);
 /*DS_HASH_TABLE[LX_NFA,INTEGER]*/
-void r352slots_resize(T352* C,T2 a1);
+void r373clashes_resize(T373* C,T2 a1);
 /*DS_HASH_TABLE[LX_NFA,INTEGER]*/
-T0* r352new_cursor(T352* C);
+void r373slots_resize(T373* C,T2 a1);
 /*DS_HASH_TABLE[LX_NFA,INTEGER]*/
-void r352make_slots(T352* C,T2 a1);
+T0* r373new_cursor(T373* C);
 /*DS_HASH_TABLE[LX_NFA,INTEGER]*/
-T2 r352new_modulus(T2 a1);
+void r373make_slots(T373* C,T2 a1);
+/*DS_HASH_TABLE[LX_NFA,INTEGER]*/
+T2 r373new_modulus(T2 a1);
 /*DS_SHELL_SORTER[INTEGER]*/
-void r461subsort_with_comparator(T0* a1,T0* a2,T2 a3,T2 a4);
+void r485subsort_with_comparator(T0* a1,T0* a2,T2 a3,T2 a4);
 /*DS_SHELL_SORTER[INTEGER]*/
-void r461sort_with_comparator(T0* a1,T0* a2);
+void r485sort_with_comparator(T0* a1,T0* a2);
 /*DS_LINKED_QUEUE[CHARACTER]*/
-void r865force(T865* C,T3 a1);
+void r939force(T939* C,T3 a1);
 /*DS_LINKED_QUEUE[CHARACTER]*/
-void r865wipe_out(T865* C);
+void r939wipe_out(T939* C);
 /*DS_LINKED_QUEUE[CHARACTER]*/
-void r865remove(T865* C);
+void r939remove(T939* C);
 /*KL_SPECIAL_ROUTINES[INTEGER]*/
-T0* r396make(T2 a1);
+T0* r421make(T2 a1);
 /*KL_SPECIAL_ROUTINES[INTEGER]*/
-T0* r396resize(T0* a1,T2 a2);
+T0* r421resize(T0* a1,T2 a2);
 /*DS_BILINKABLE[XM_DTD_ATTRIBUTE_CONTENT]*/
-void r915put_right(T915* C,T0* a1);
+void r995put_right(T995* C,T0* a1);
 /*KL_FIXED_ARRAY_ROUTINES[LX_RULE]*/
-T0* r315make(T2 a1);
+T0* r336make(T2 a1);
 /*KL_FIXED_ARRAY_ROUTINES[LX_RULE]*/
-T0* r315resize(T0* a1,T2 a2);
+T0* r336resize(T0* a1,T2 a2);
 /*DS_LINKED_STACK[INTEGER]*/
-void r778force(T778* C,T2 a1);
+void r821force(T821* C,T2 a1);
 /*DS_LINKED_STACK[INTEGER]*/
-void r778remove(T778* C);
+void r821remove(T821* C);
 /*DS_HASH_SET[XM_EIFFEL_PARSER_NAME]*/
-T2 r850new_capacity(T2 a1);
+T2 r927new_capacity(T2 a1);
 /*DS_HASH_SET[XM_EIFFEL_PARSER_NAME]*/
-void r850make_equal(T850* C,T2 a1);
+void r927make_equal(T927* C,T2 a1);
 /*DS_HASH_SET[XM_EIFFEL_PARSER_NAME]*/
-void r850make_clashes(T850* C,T2 a1);
+T0* r927keys_item(T927* C,T2 a1);
 /*DS_HASH_SET[XM_EIFFEL_PARSER_NAME]*/
-void r850search_position(T850* C,T0* a1);
+void r927make_clashes(T927* C,T2 a1);
 /*DS_HASH_SET[XM_EIFFEL_PARSER_NAME]*/
-void r850make_items(T850* C,T2 a1);
+void r927search_position(T927* C,T0* a1);
 /*DS_HASH_SET[XM_EIFFEL_PARSER_NAME]*/
-void r850make(T850* C,T2 a1);
+void r927make_items(T927* C,T2 a1);
 /*DS_HASH_SET[XM_EIFFEL_PARSER_NAME]*/
-T6 r850has(T850* C,T0* a1);
+void r927make(T927* C,T2 a1);
 /*DS_HASH_SET[XM_EIFFEL_PARSER_NAME]*/
-void r850force_new(T850* C,T0* a1);
+T6 r927has(T927* C,T0* a1);
 /*DS_HASH_SET[XM_EIFFEL_PARSER_NAME]*/
-T2 r850hash_position(T850* C,T0* a1);
+void r927force_new(T927* C,T0* a1);
 /*DS_HASH_SET[XM_EIFFEL_PARSER_NAME]*/
-void r850items_resize(T850* C,T2 a1);
+T2 r927hash_position(T927* C,T0* a1);
 /*DS_HASH_SET[XM_EIFFEL_PARSER_NAME]*/
-void r850resize(T850* C,T2 a1);
+void r927items_resize(T927* C,T2 a1);
 /*DS_HASH_SET[XM_EIFFEL_PARSER_NAME]*/
-void r850clashes_resize(T850* C,T2 a1);
+void r927resize(T927* C,T2 a1);
 /*DS_HASH_SET[XM_EIFFEL_PARSER_NAME]*/
-void r850slots_resize(T850* C,T2 a1);
+void r927clashes_resize(T927* C,T2 a1);
 /*DS_HASH_SET[XM_EIFFEL_PARSER_NAME]*/
-T0* r850new_cursor(T850* C);
+void r927slots_resize(T927* C,T2 a1);
 /*DS_HASH_SET[XM_EIFFEL_PARSER_NAME]*/
-void r850make_slots(T850* C,T2 a1);
+T0* r927new_cursor(T927* C);
 /*DS_HASH_SET[XM_EIFFEL_PARSER_NAME]*/
-T2 r850new_modulus(T2 a1);
+void r927make_slots(T927* C,T2 a1);
+/*DS_HASH_SET[XM_EIFFEL_PARSER_NAME]*/
+T2 r927new_modulus(T2 a1);
 /*KL_SPECIAL_ROUTINES[STRING]*/
-T0* r388make(T2 a1);
+T0* r423make(T2 a1);
 /*KL_SPECIAL_ROUTINES[STRING]*/
-T0* r388resize(T0* a1,T2 a2);
+T0* r423resize(T0* a1,T2 a2);
+/*DS_HASH_SET[INTEGER]*/
+T6 r572extendible(T572* C,T2 a1);
+/*DS_HASH_SET[INTEGER]*/
+T2 r572keys_item(T572* C,T2 a1);
+/*DS_HASH_SET[INTEGER]*/
+void r572make_clashes(T572* C,T2 a1);
+/*DS_HASH_SET[INTEGER]*/
+void r572put(T572* C,T2 a1);
+/*DS_HASH_SET[INTEGER]*/
+void r572search_position(T572* C,T2 a1);
+/*DS_HASH_SET[INTEGER]*/
+void r572make_items(T572* C,T2 a1);
+/*DS_HASH_SET[INTEGER]*/
+void r572make(T572* C,T2 a1);
+/*DS_HASH_SET[INTEGER]*/
+T6 r572has(T572* C,T2 a1);
+/*DS_HASH_SET[INTEGER]*/
+T2 r572hash_position(T572* C,T2 a1);
+/*DS_HASH_SET[INTEGER]*/
+T0* r572new_cursor(T572* C);
+/*DS_HASH_SET[INTEGER]*/
+void r572make_slots(T572* C,T2 a1);
+/*DS_HASH_SET[INTEGER]*/
+T2 r572new_modulus(T2 a1);
 /*SPECIAL[DS_HASH_SET[XM_EIFFEL_PARSER_NAME]]*/
-T6 r851valid_index(T851* C,T2 a1);
+T6 r926valid_index(T926* C,T2 a1);
 /*SPECIAL[DS_HASH_SET[XM_EIFFEL_PARSER_NAME]]*/
-void r851make(T851* C,T2 a1);
+void r926make(T926* C,T2 a1);
 /*SPECIAL[DS_HASH_SET[XM_EIFFEL_PARSER_NAME]]*/
-T0* r851resize(T851* C,T2 a1);
+T0* r926resize(T926* C,T2 a1);
 /*SPECIAL[DS_HASH_SET[XM_EIFFEL_PARSER_NAME]]*/
-void r851array_resize(T851* C,T2 a1);
+void r926array_resize(T926* C,T2 a1);
 /*DS_HASH_TABLE[LX_SYMBOL_CLASS,STRING]*/
-T2 r416new_capacity(T2 a1);
+T2 r437new_capacity(T2 a1);
 /*DS_HASH_TABLE[LX_SYMBOL_CLASS,STRING]*/
-T6 r416valid_cursor(T416* C,T0* a1);
+T6 r437valid_cursor(T437* C,T0* a1);
 /*DS_HASH_TABLE[LX_SYMBOL_CLASS,STRING]*/
-void r416force(T416* C,T0* a1,T0* a2);
+void r437force(T437* C,T0* a1,T0* a2);
 /*DS_HASH_TABLE[LX_SYMBOL_CLASS,STRING]*/
-void r416make_clashes(T416* C,T2 a1);
+void r437make_clashes(T437* C,T2 a1);
 /*DS_HASH_TABLE[LX_SYMBOL_CLASS,STRING]*/
-T6 r416valid_slot(T416* C,T2 a1);
+T6 r437valid_slot(T437* C,T2 a1);
 /*DS_HASH_TABLE[LX_SYMBOL_CLASS,STRING]*/
-T6 r416valid_position(T416* C,T2 a1);
+T6 r437valid_position(T437* C,T2 a1);
 /*DS_HASH_TABLE[LX_SYMBOL_CLASS,STRING]*/
-T0* r416cursor_item(T416* C,T0* a1);
+T0* r437cursor_item(T437* C,T0* a1);
 /*DS_HASH_TABLE[LX_SYMBOL_CLASS,STRING]*/
-void r416search_position(T416* C,T0* a1);
+void r437search_position(T437* C,T0* a1);
 /*DS_HASH_TABLE[LX_SYMBOL_CLASS,STRING]*/
-void r416remove_traversing_cursor(T416* C,T0* a1);
+void r437remove_traversing_cursor(T437* C,T0* a1);
 /*DS_HASH_TABLE[LX_SYMBOL_CLASS,STRING]*/
-void r416keys_resize(T416* C,T2 a1);
+void r437keys_resize(T437* C,T2 a1);
 /*DS_HASH_TABLE[LX_SYMBOL_CLASS,STRING]*/
-T0* r416item(T416* C,T0* a1);
+T0* r437item(T437* C,T0* a1);
 /*DS_HASH_TABLE[LX_SYMBOL_CLASS,STRING]*/
-void r416make_items(T416* C,T2 a1);
+void r437make_items(T437* C,T2 a1);
 /*DS_HASH_TABLE[LX_SYMBOL_CLASS,STRING]*/
-void r416add_traversing_cursor(T416* C,T0* a1);
+void r437add_traversing_cursor(T437* C,T0* a1);
 /*DS_HASH_TABLE[LX_SYMBOL_CLASS,STRING]*/
-void r416make(T416* C,T2 a1);
+void r437make(T437* C,T2 a1);
 /*DS_HASH_TABLE[LX_SYMBOL_CLASS,STRING]*/
-T6 r416cursor_after(T0* a1);
+T6 r437cursor_after(T0* a1);
 /*DS_HASH_TABLE[LX_SYMBOL_CLASS,STRING]*/
-T6 r416has(T416* C,T0* a1);
+T6 r437has(T437* C,T0* a1);
 /*DS_HASH_TABLE[LX_SYMBOL_CLASS,STRING]*/
-void r416make_keys(T416* C,T2 a1);
+void r437make_keys(T437* C,T2 a1);
 /*DS_HASH_TABLE[LX_SYMBOL_CLASS,STRING]*/
-T2 r416hash_position(T416* C,T0* a1);
+T2 r437hash_position(T437* C,T0* a1);
 /*DS_HASH_TABLE[LX_SYMBOL_CLASS,STRING]*/
-void r416cursor_forth(T416* C,T0* a1);
+void r437cursor_forth(T437* C,T0* a1);
 /*DS_HASH_TABLE[LX_SYMBOL_CLASS,STRING]*/
-void r416items_resize(T416* C,T2 a1);
+void r437items_resize(T437* C,T2 a1);
 /*DS_HASH_TABLE[LX_SYMBOL_CLASS,STRING]*/
-void r416make_with_equality_testers(T416* C,T2 a1,T0* a2,T0* a3);
+void r437make_with_equality_testers(T437* C,T2 a1,T0* a2,T0* a3);
 /*DS_HASH_TABLE[LX_SYMBOL_CLASS,STRING]*/
-void r416resize(T416* C,T2 a1);
+void r437resize(T437* C,T2 a1);
 /*DS_HASH_TABLE[LX_SYMBOL_CLASS,STRING]*/
-void r416cursor_start(T416* C,T0* a1);
+void r437make_sparse_container(T437* C,T2 a1);
 /*DS_HASH_TABLE[LX_SYMBOL_CLASS,STRING]*/
-void r416clashes_resize(T416* C,T2 a1);
+void r437cursor_start(T437* C,T0* a1);
 /*DS_HASH_TABLE[LX_SYMBOL_CLASS,STRING]*/
-void r416slots_resize(T416* C,T2 a1);
+void r437clashes_resize(T437* C,T2 a1);
 /*DS_HASH_TABLE[LX_SYMBOL_CLASS,STRING]*/
-T0* r416new_cursor(T416* C);
+void r437slots_resize(T437* C,T2 a1);
 /*DS_HASH_TABLE[LX_SYMBOL_CLASS,STRING]*/
-void r416make_slots(T416* C,T2 a1);
+T0* r437new_cursor(T437* C);
 /*DS_HASH_TABLE[LX_SYMBOL_CLASS,STRING]*/
-T2 r416new_modulus(T2 a1);
+void r437make_slots(T437* C,T2 a1);
 /*DS_HASH_TABLE[LX_SYMBOL_CLASS,STRING]*/
-T6 r416cursor_off(T0* a1);
+T2 r437new_modulus(T2 a1);
+/*DS_HASH_TABLE[LX_SYMBOL_CLASS,STRING]*/
+T6 r437cursor_off(T0* a1);
 /*DS_BILINKED_LIST[STRING]*/
-T6 r819valid_cursor(T819* C,T0* a1);
+T6 r901valid_cursor(T901* C,T0* a1);
 /*DS_BILINKED_LIST[STRING]*/
-T0* r819cursor_item(T0* a1);
+T0* r901cursor_item(T0* a1);
 /*DS_BILINKED_LIST[STRING]*/
-T6 r819is_equal(T819* C,T0* a1);
+void r901remove_traversing_cursor(T901* C,T0* a1);
 /*DS_BILINKED_LIST[STRING]*/
-void r819remove_traversing_cursor(T819* C,T0* a1);
+T0* r901item(T901* C,T2 a1);
 /*DS_BILINKED_LIST[STRING]*/
-T0* r819item(T819* C,T2 a1);
+void r901add_traversing_cursor(T901* C,T0* a1);
 /*DS_BILINKED_LIST[STRING]*/
-void r819add_traversing_cursor(T819* C,T0* a1);
+void r901make(T901* C);
 /*DS_BILINKED_LIST[STRING]*/
-T6 r819se_assigned_from(T0* a1);
+T6 r901cursor_after(T0* a1);
 /*DS_BILINKED_LIST[STRING]*/
-T6 r819same_type(T819* C,T0* a1);
+void r901cursor_forth(T901* C,T0* a1);
 /*DS_BILINKED_LIST[STRING]*/
-void r819make(T819* C);
+void r901cursor_start(T901* C,T0* a1);
 /*DS_BILINKED_LIST[STRING]*/
-T6 r819cursor_after(T0* a1);
+void r901force_last(T901* C,T0* a1);
 /*DS_BILINKED_LIST[STRING]*/
-T6 r819conforms_to(T819* C,T0* a1);
+T0* r901new_cursor(T901* C);
 /*DS_BILINKED_LIST[STRING]*/
-void r819cursor_forth(T819* C,T0* a1);
-/*DS_BILINKED_LIST[STRING]*/
-void r819cursor_start(T819* C,T0* a1);
-/*DS_BILINKED_LIST[STRING]*/
-void r819force_last(T819* C,T0* a1);
-/*DS_BILINKED_LIST[STRING]*/
-T0* r819new_cursor(T819* C);
-/*DS_BILINKED_LIST[STRING]*/
-T6 r819cursor_off(T0* a1);
+T6 r901cursor_off(T0* a1);
 /*KL_COMPARABLE_COMPARATOR[LX_RULE]*/
-T6 r296less_than(T0* a1,T0* a2);
+T6 r317less_than(T0* a1,T0* a2);
 /*KL_FIXED_ARRAY_ROUTINES[GEANT_REDEFINE]*/
-T0* r707make(T2 a1);
+T0* r748make(T2 a1);
 /*KL_FIXED_ARRAY_ROUTINES[GEANT_REDEFINE]*/
-T0* r707resize(T0* a1,T2 a2);
+T0* r748resize(T0* a1,T2 a2);
 /*DS_LINKED_LIST_CURSOR[XM_ELEMENT]*/
-void r206set(T206* C,T0* a1,T6 a2,T6 a3);
+void r226set(T226* C,T0* a1,T6 a2,T6 a3);
 /*DS_LINKED_LIST_CURSOR[XM_ELEMENT]*/
-void r206make(T206* C,T0* a1);
+void r226make(T226* C,T0* a1);
 /*KL_FIXED_ARRAY_ROUTINES[DS_PAIR[STRING,STRING]]*/
-T0* r575make(T2 a1);
+T0* r610make(T2 a1);
 /*KL_FIXED_ARRAY_ROUTINES[DS_PAIR[STRING,STRING]]*/
-T0* r575resize(T0* a1,T2 a2);
-extern T0*oBC25unix_file_system;
-extern T0*oBC592resource_attribute_name;
+T0* r610resize(T0* a1,T2 a2);
+extern T0*oBC16unix_file_system;
+extern T0*oBC627resource_attribute_name;
 /*GEANT_AVAILABLE_TASK*/
-T0* r592attribute_value(T592* C,T0* a1);
-extern T0*oBC25file_system;
-extern int fBC25file_system;
+T0* r627attribute_value(T627* C,T0* a1);
+extern T0*oBC16file_system;
+extern int fBC16file_system;
 /*GEANT_AVAILABLE_TASK*/
-T0* r592file_system(void);
-extern T0*oBC27unless_attribute_name;
-extern T0*oBC592true_value_attribute_name;
+T0* r627file_system(void);
+extern T0*oBC45unless_attribute_name;
+extern T0*oBC627true_value_attribute_name;
+extern T0*oBC15project_variables_resolver;
 /*GEANT_AVAILABLE_TASK*/
-void r592make(T592* C,T0* a1,T0* a2);
-extern T0*oBC26operating_system;
+void r627make(T627* C,T0* a1,T0* a2);
+extern T0*oBC17operating_system;
 /*GEANT_AVAILABLE_TASK*/
-void r592task_make(T592* C,T0* a1,T0* a2);
-extern T0*oBC27dir_attribute_name;
+void r627task_make(T627* C,T0* a1,T0* a2);
+extern T0*oBC45dir_attribute_name;
 /*GEANT_AVAILABLE_TASK*/
-void r592execute(T592* C);
+void r627execute(T627* C);
 /*GEANT_AVAILABLE_TASK*/
-T6 r592is_enabled(T592* C);
-extern T0*oBC592false_value_attribute_name;
-extern T0*oBC27if_attribute_name;
-extern T0*oBC25windows_file_system;
+T6 r627is_enabled(T627* C);
+extern T0*oBC627false_value_attribute_name;
+extern T0*oBC45if_attribute_name;
+extern T0*oBC15target_arguments_stack;
+extern int fBC15target_arguments_stack;
 /*GEANT_AVAILABLE_TASK*/
-void r592interpreting_element_make(T592* C,T0* a1,T0* a2);
-extern T0*oBC592variable_attribute_name;
-extern T0*oBC697target_attribute_name;
+T0* r627target_arguments_stack(void);
+extern T0*oBC16windows_file_system;
+/*GEANT_AVAILABLE_TASK*/
+void r627interpreting_element_make(T627* C,T0* a1,T0* a2);
+extern T0*oBC627variable_attribute_name;
+extern T0*oBC738target_attribute_name;
 /*GEANT_RENAME_ELEMENT*/
-T0* r697attribute_value(T697* C,T0* a1);
-extern T0*oBC697as_attribute_name;
+T0* r738attribute_value(T738* C,T0* a1);
+extern T0*oBC738as_attribute_name;
 /*GEANT_RENAME_ELEMENT*/
-void r697make(T697* C,T0* a1,T0* a2);
+void r738make(T738* C,T0* a1,T0* a2);
 /*GEANT_RENAME_ELEMENT*/
-void r697interpreting_element_make(T697* C,T0* a1,T0* a2);
-extern T0*oBC18string_;
+T0* r738target_arguments_stack(void);
+/*GEANT_RENAME_ELEMENT*/
+void r738interpreting_element_make(T738* C,T0* a1,T0* a2);
+/*ST_SPLITTER*/
+void r571set_separators(T571* C,T0* a1);
+extern T0*oBC23string_;
+/*ST_SPLITTER*/
+T0* r571unescape(T571* C,T0* a1);
+/*ST_SPLITTER*/
+T0* r571do_split(T571* C,T0* a1,T6 a2);
+/*ST_SPLITTER*/
+T0* r571split(T571* C,T0* a1);
+/*ST_SPLITTER*/
+T6 r571is_separator(T571* C,T0* a1,T2 a2);
 /*GEANT_LCC_COMMAND*/
-T0* r531file_system(void);
+T0* r552file_system(void);
 /*GEANT_LCC_COMMAND*/
-T0* r531clone(T0* a1);
+T0* r552clone(T0* a1);
 /*GEANT_LCC_COMMAND*/
-void r531execute(T531* C);
+void r552execute(T552* C);
 /*GEANT_LCC_COMMAND*/
-void r531execute_shell(T531* C,T0* a1);
+void r552execute_shell(T552* C,T0* a1);
 /*GEANT_LCC_COMMAND*/
-T6 r531is_executable(T531* C);
+T6 r552is_executable(T552* C);
 /*LX_SYMBOL_PARTITIONS*/
-void r270build(T270* C);
+void r291_292Pput(T291* C,T2 a1);
 /*LX_SYMBOL_PARTITIONS*/
-T2 r270previous_symbol(T270* C,T2 a1);
+void r291build(T291* C);
 /*LX_SYMBOL_PARTITIONS*/
-void r270put(T270* C,T2 a1);
+T2 r291previous_symbol(T291* C,T2 a1);
 /*LX_SYMBOL_PARTITIONS*/
-T6 r270valid_symbol_class(T270* C,T0* a1);
+void r291put(T291* C,T2 a1);
 /*LX_SYMBOL_PARTITIONS*/
-T0* r270to_array(T270* C,T2 a1,T2 a2);
+T6 r291valid_symbol_class(T291* C,T0* a1);
 /*LX_SYMBOL_PARTITIONS*/
-void r270make(T270* C,T2 a1,T2 a2);
+void r291_292Pinitialize(T291* C);
 /*LX_SYMBOL_PARTITIONS*/
-void r270equiv_add(T270* C,T0* a1);
+T0* r291to_array(T291* C,T2 a1,T2 a2);
 /*LX_SYMBOL_PARTITIONS*/
-void r270equiv_initialize(T270* C);
+void r291make(T291* C,T2 a1,T2 a2);
 /*LX_SYMBOL_PARTITIONS*/
-T2 r270equivalence_class(T270* C,T2 a1);
+void r291_292Padd(T291* C,T0* a1);
 /*LX_SYMBOL_PARTITIONS*/
-void r270add(T270* C,T0* a1);
+T2 r291equivalence_class(T291* C,T2 a1);
 /*LX_SYMBOL_PARTITIONS*/
-T6 r270is_representative(T270* C,T2 a1);
+void r291add(T291* C,T0* a1);
 /*LX_SYMBOL_PARTITIONS*/
-void r270initialize(T270* C);
+T6 r291is_representative(T291* C,T2 a1);
 /*LX_SYMBOL_PARTITIONS*/
-void r270equiv_put(T270* C,T2 a1);
-extern T0*oBC566stylesheet_filename_attribute_name;
-extern T0*oBC566format_attribute_name;
+void r291initialize(T291* C);
+/*LX_SYMBOL_PARTITIONS*/
+void r291_292Pmake(T291* C,T2 a1,T2 a2);
+extern T0*oBC601stylesheet_filename_attribute_name;
+extern T0*oBC601format_attribute_name;
 /*GEANT_XSLT_TASK*/
-T0* r566attribute_value(T566* C,T0* a1);
+T0* r601attribute_value(T601* C,T0* a1);
 /*GEANT_XSLT_TASK*/
-T0* r566file_system(void);
-extern T0*oBC566input_filename_attribute_name;
+T0* r601file_system(void);
+extern T0*oBC601input_filename_attribute_name;
 /*GEANT_XSLT_TASK*/
-T0* r566elements_by_name(T566* C,T0* a1);
+T0* r601elements_by_name(T601* C,T0* a1);
 /*GEANT_XSLT_TASK*/
-void r566make(T566* C,T0* a1,T0* a2);
+void r601make(T601* C,T0* a1,T0* a2);
 /*GEANT_XSLT_TASK*/
-void r566task_make(T566* C,T0* a1,T0* a2);
-extern T0*oBC566output_filename_attribute_name;
-extern T0*oBC566processor_attribute_value_xsltproc;
-extern T0*oBC566indent_attribute_name;
+void r601task_make(T601* C,T0* a1,T0* a2);
+extern T0*oBC601output_filename_attribute_name;
+extern T0*oBC601processor_attribute_value_xsltproc;
+extern T0*oBC601indent_attribute_name;
 /*GEANT_XSLT_TASK*/
-void r566execute(T566* C);
-extern T0*oBC566classpath_attribute_name;
+void r601execute(T601* C);
+extern T0*oBC601classpath_attribute_name;
 /*GEANT_XSLT_TASK*/
-T6 r566is_enabled(T566* C);
-extern T0*oBC566processor_attribute_value_xalan_java;
-extern T0*oBC566extdirs_attribute_name;
-extern T0*oBC566processor_attribute_value_xalan_cpp;
-extern T0*oBC566parameter_element_name;
+T6 r601is_enabled(T601* C);
+extern T0*oBC601processor_attribute_value_xalan_java;
+extern T0*oBC601extdirs_attribute_name;
+extern T0*oBC601processor_attribute_value_xalan_cpp;
+extern T0*oBC601parameter_element_name;
+extern T0*oBC601processor_attribute_value_gexslt;
 /*GEANT_XSLT_TASK*/
-void r566interpreting_element_make(T566* C,T0* a1,T0* a2);
-extern T0*oBC566processor_attribute_name;
+T0* r601target_arguments_stack(void);
+/*GEANT_XSLT_TASK*/
+void r601interpreting_element_make(T601* C,T0* a1,T0* a2);
+extern T0*oBC601processor_attribute_name;
 /*LX_FULL_DFA*/
-void r231build(T231* C);
+void r252build(T252* C);
 /*LX_FULL_DFA*/
-void r231build_accept_table(T231* C);
+void r252build_accept_table(T252* C);
 /*LX_FULL_DFA*/
-void r231initialize_dfa(T231* C,T0* a1,T2 a2,T2 a3);
+void r252initialize_dfa(T252* C,T0* a1,T2 a2,T2 a3);
 /*LX_FULL_DFA*/
-void r231put_start_condition(T231* C,T0* a1);
+void r252put_start_condition(T252* C,T0* a1);
 /*LX_FULL_DFA*/
-void r231set_nfa_state_ids(T0* a1);
+void r252set_nfa_state_ids(T0* a1);
 /*LX_FULL_DFA*/
-void r231make(T231* C,T0* a1);
+void r252make(T252* C,T0* a1);
 /*LX_FULL_DFA*/
-void r231build_eof_rules(T231* C,T0* a1,T2 a2,T2 a3);
+void r252build_eof_rules(T252* C,T0* a1,T2 a2,T2 a3);
 /*LX_FULL_DFA*/
-void r231build_transitions(T231* C,T0* a1);
+void r252build_transitions(T252* C,T0* a1);
 /*LX_FULL_DFA*/
-void r231initialize(T231* C,T0* a1);
+void r252initialize(T252* C,T0* a1);
 /*LX_FULL_DFA*/
-void r231put_eob_state(T231* C);
+void r252put_eob_state(T252* C);
 /*LX_FULL_DFA*/
-void r231build_rules(T231* C,T0* a1);
+void r252build_rules(T252* C,T0* a1);
 /*LX_FULL_DFA*/
-void r231build_nxt_table(T231* C);
+void r252build_nxt_table(T252* C);
 /*LX_FULL_DFA*/
-T0* r231new_state(T231* C,T0* a1);
+T0* r252new_state(T252* C,T0* a1);
 /*GEANT_EXIT_COMMAND*/
-void r589execute(T589* C);
+void r624execute(T624* C);
 /*LX_DFA_WILDCARD*/
-void r226wipe_out(T226* C);
+void r247wipe_out(T247* C);
 /*LX_DFA_WILDCARD*/
-void r226match_substring(T226* C,T0* a1,T2 a2,T2 a3);
+void r247match_substring(T247* C,T0* a1,T2 a2,T2 a3);
 /*LX_DFA_WILDCARD*/
-T6 r226recognizes(T226* C,T0* a1);
+T6 r247recognizes(T247* C,T0* a1);
 /*LX_DFA_WILDCARD*/
-void r226compile(T226* C,T0* a1,T6 a2);
+void r247compile(T247* C,T0* a1,T6 a2);
 /*LX_DFA_WILDCARD*/
-T2 r226longest_end_position(T226* C,T0* a1,T2 a2);
+T2 r247longest_end_position(T247* C,T0* a1,T2 a2);
 /*KL_UNIX_FILE_SYSTEM*/
-T0* r185pathname_from_file_system(T185* C,T0* a1,T0* a2);
+T0* r206pathname_from_file_system(T206* C,T0* a1,T0* a2);
 /*KL_UNIX_FILE_SYSTEM*/
-T6 r185is_absolute_pathname(T0* a1);
+T6 r206is_absolute_pathname(T0* a1);
 /*KL_UNIX_FILE_SYSTEM*/
-T0* r185current_working_directory(T185* C);
+T0* r206current_working_directory(T206* C);
 /*KL_UNIX_FILE_SYSTEM*/
-void r185cd(T185* C,T0* a1);
+void r206cd(T206* C,T0* a1);
 /*KL_UNIX_FILE_SYSTEM*/
-T6 r185file_exists(T0* a1);
+T6 r206file_exists(T0* a1);
 /*KL_UNIX_FILE_SYSTEM*/
-T6 r185directory_exists(T0* a1);
+T6 r206directory_exists(T0* a1);
 /*KL_UNIX_FILE_SYSTEM*/
-void r185recursive_delete_directory(T0* a1);
+void r206recursive_delete_directory(T0* a1);
 /*KL_UNIX_FILE_SYSTEM*/
-T0* r185absolute_pathname(T185* C,T0* a1);
+T0* r206absolute_pathname(T206* C,T0* a1);
 /*KL_UNIX_FILE_SYSTEM*/
-T0* r185file_system(void);
+T0* r206file_system(void);
 /*KL_UNIX_FILE_SYSTEM*/
-T6 r185se_assigned_from(T0* a1);
+T6 r206se_assigned_from(T0* a1);
 /*KL_UNIX_FILE_SYSTEM*/
-T6 r185is_directory_readable(T0* a1);
+T6 r206is_directory_readable(T0* a1);
 /*KL_UNIX_FILE_SYSTEM*/
-T0* r185clone(T0* a1);
+T0* r206clone(T0* a1);
 /*KL_UNIX_FILE_SYSTEM*/
-T0* r185dirname(T0* a1);
+T0* r206dirname(T0* a1);
 /*KL_UNIX_FILE_SYSTEM*/
-void r185delete_file(T0* a1);
+void r206delete_file(T0* a1);
 /*KL_UNIX_FILE_SYSTEM*/
-void r185set_current_working_directory(T185* C,T0* a1);
+void r206set_current_working_directory(T206* C,T0* a1);
 /*KL_UNIX_FILE_SYSTEM*/
-T0* r185cwd(T185* C);
+T0* r206cwd(T206* C);
 /*KL_UNIX_FILE_SYSTEM*/
-T6 r185same_type(T185* C,T0* a1);
+T6 r206same_type(T206* C,T0* a1);
 /*KL_UNIX_FILE_SYSTEM*/
-T6 r185is_file_readable(T0* a1);
+T6 r206is_file_readable(T0* a1);
 /*KL_UNIX_FILE_SYSTEM*/
-void r185recursive_create_directory(T0* a1);
-extern T0*oBC180tmp_file;
-extern int fBC180tmp_file;
+void r206recursive_create_directory(T0* a1);
+extern T0*oBC202tmp_file;
+extern int fBC202tmp_file;
 /*KL_UNIX_FILE_SYSTEM*/
-T0* r185tmp_file(void);
+T0* r206tmp_file(void);
 /*KL_UNIX_FILE_SYSTEM*/
-T6 r185is_current_file_system(T185* C);
+T6 r206is_current_file_system(T206* C);
 /*KL_UNIX_FILE_SYSTEM*/
-T6 r185conforms_to(T185* C,T0* a1);
+T6 r206conforms_to(T206* C,T0* a1);
 /*KL_UNIX_FILE_SYSTEM*/
-void r185copy_file(T0* a1,T0* a2);
+void r206copy_file(T0* a1,T0* a2);
 /*KL_UNIX_FILE_SYSTEM*/
-T0* r185string_to_pathname(T0* a1);
+T0* r206string_to_pathname(T0* a1);
 /*KL_UNIX_FILE_SYSTEM*/
-void r185rename_file(T0* a1,T0* a2);
+void r206rename_file(T0* a1,T0* a2);
 /*KL_UNIX_FILE_SYSTEM*/
-T2 r185file_time_stamp(T0* a1);
-extern T0*oBC185root_directory;
+T2 r206file_time_stamp(T0* a1);
+extern T0*oBC206root_directory;
 /*KL_UNIX_FILE_SYSTEM*/
-T6 r185is_root_directory(T0* a1);
+T6 r206is_root_directory(T0* a1);
 /*KL_UNIX_FILE_SYSTEM*/
-T6 r185same_physical_file(T0* a1,T0* a2);
+T6 r206same_physical_file(T0* a1,T0* a2);
 /*KL_UNIX_FILE_SYSTEM*/
-T0* r185pathname_to_string(T0* a1);
+T0* r206pathname_to_string(T0* a1);
 /*KL_UNIX_FILE_SYSTEM*/
-T0* r185basename(T0* a1);
+T0* r206basename(T0* a1);
 /*KL_UNIX_FILE_SYSTEM*/
-T0* r185canonical_pathname(T0* a1);
+T0* r206canonical_pathname(T0* a1);
 /*KL_UNIX_FILE_SYSTEM*/
-T0* r185pathname(T0* a1,T0* a2);
-extern T0*oBC180tmp_directory;
-extern int fBC180tmp_directory;
+T0* r206pathname(T0* a1,T0* a2);
+extern T0*oBC202tmp_directory;
+extern int fBC202tmp_directory;
 /*KL_UNIX_FILE_SYSTEM*/
-T0* r185tmp_directory(void);
-/*XM_END_TAG_CHECKER*/
-void r741on_start_tag_finish(T741* C);
-/*XM_END_TAG_CHECKER*/
-void r741_686Pon_start(T741* C);
-/*XM_END_TAG_CHECKER*/
-void r741on_finish(T741* C);
-/*XM_END_TAG_CHECKER*/
-void r741on_content(T741* C,T0* a1);
-/*XM_END_TAG_CHECKER*/
-void r741make_null(T741* C);
-extern T0*oBC138string_equality_tester;
-/*XM_END_TAG_CHECKER*/
-void r741on_start(T741* C);
-/*XM_END_TAG_CHECKER*/
-T6 r741is_local_part(T0* a1);
-/*XM_END_TAG_CHECKER*/
-void r741on_processing_instruction(T741* C,T0* a1,T0* a2);
-/*XM_END_TAG_CHECKER*/
-void r741on_start_tag(T741* C,T0* a1,T0* a2,T0* a3);
-/*XM_END_TAG_CHECKER*/
-void r741on_comment(T741* C,T0* a1);
-/*XM_END_TAG_CHECKER*/
-T0* r741new_string_stack(void);
-/*XM_END_TAG_CHECKER*/
-void r741on_end_tag(T741* C,T0* a1,T0* a2,T0* a3);
-/*XM_END_TAG_CHECKER*/
-void r741_686Pon_start_tag(T741* C,T0* a1,T0* a2,T0* a3);
-/*XM_END_TAG_CHECKER*/
-void r741on_attribute(T741* C,T0* a1,T0* a2,T0* a3,T0* a4);
-/*XM_END_TAG_CHECKER*/
-void r741_686Pon_end_tag(T741* C,T0* a1,T0* a2,T0* a3);
-/*XM_END_TAG_CHECKER*/
-void r741on_error(T741* C,T0* a1);
-/*XM_END_TAG_CHECKER*/
-T6 r741same_string(T0* a1,T0* a2);
-/*XM_END_TAG_CHECKER*/
-void r741on_xml_declaration(T741* C,T0* a1,T0* a2,T6 a3);
+T0* r206tmp_directory(void);
 /*XM_CALLBACKS_NULL*/
-T6 r737is_local_part(T0* a1);
+T6 r781is_local_part(T0* a1);
 /*LX_NFA_STATE*/
-T6 r281is_equal(T281* C,T0* a1);
+T6 r302is_equal(T302* C,T0* a1);
 /*LX_NFA_STATE*/
-T6 r281has_transition(T281* C);
+T6 r302has_transition(T302* C);
 /*LX_NFA_STATE*/
-T6 r281is_accepting_head(T281* C);
+T6 r302is_accepting_head(T302* C);
 /*LX_NFA_STATE*/
-T6 r281_ix_60(T281* C,T0* a1);
-extern T0*oBC755normalized_newline;
-extern T0*oBC230integer_array_;
+T6 r302_ix_60(T302* C,T0* a1);
 /*XM_EIFFEL_SCANNER_DTD*/
-T2 r875start_condition(T875* C);
+void r950_267Pset_input_buffer(T950* C,T0* a1);
+extern T0*oBC796normalized_newline;
+extern T0*oBC251integer_array_;
 /*XM_EIFFEL_SCANNER_DTD*/
-void r875set_input_buffer(T875* C,T0* a1);
+void r950_796Pmake_scanner(T950* C);
 /*XM_EIFFEL_SCANNER_DTD*/
-T0* r875text_substring(T875* C,T2 a1,T2 a2);
-extern T0*oBC754yy_ec_template;
-extern int fBC754yy_ec_template;
+T2 r950start_condition(T950* C);
 /*XM_EIFFEL_SCANNER_DTD*/
-T0* r875yy_ec_template(void);
+void r950set_input_from_resolver(T950* C,T0* a1);
 /*XM_EIFFEL_SCANNER_DTD*/
-void r875yy_execute_action(T875* C,T2 a1);
-extern T0*oBC754yy_def_template;
-extern int fBC754yy_def_template;
+void r950set_input_buffer(T950* C,T0* a1);
 /*XM_EIFFEL_SCANNER_DTD*/
-T0* r875yy_def_template(void);
+T0* r950text_substring(T950* C,T2 a1,T2 a2);
+extern T0*oBC795yy_ec_template;
+extern int fBC795yy_ec_template;
 /*XM_EIFFEL_SCANNER_DTD*/
-T3 r875text_item(T875* C,T2 a1);
+T0* r950yy_ec_template(void);
 /*XM_EIFFEL_SCANNER_DTD*/
-T6 r875end_of_file(T875* C);
+void r950yy_execute_action(T950* C,T2 a1);
+extern T0*oBC795yy_def_template;
+extern int fBC795yy_def_template;
 /*XM_EIFFEL_SCANNER_DTD*/
-T0* r875system_literal_text(T875* C);
+T0* r950yy_def_template(void);
 /*XM_EIFFEL_SCANNER_DTD*/
-void r875yy_load_input_buffer(T875* C);
+T3 r950text_item(T950* C,T2 a1);
 /*XM_EIFFEL_SCANNER_DTD*/
-void r875make_with_buffer(T875* C,T0* a1);
+T6 r950end_of_file(T950* C);
 /*XM_EIFFEL_SCANNER_DTD*/
-T2 r875yy_null_trans_state(T875* C,T2 a1);
+T0* r950system_literal_text(T950* C);
 /*XM_EIFFEL_SCANNER_DTD*/
-void r875pop_start_condition(T875* C);
+void r950yy_load_input_buffer(T950* C);
 /*XM_EIFFEL_SCANNER_DTD*/
-T6 r875is_valid_encoding(T0* a1);
-extern T0*oBC754yy_accept_template;
-extern int fBC754yy_accept_template;
+void r950make_with_buffer(T950* C,T0* a1);
 /*XM_EIFFEL_SCANNER_DTD*/
-T0* r875yy_accept_template(void);
+T2 r950yy_null_trans_state(T950* C,T2 a1);
 /*XM_EIFFEL_SCANNER_DTD*/
-void r875read_token(T875* C);
+void r950pop_start_condition(T950* C);
+extern T0*oBC795yy_accept_template;
+extern int fBC795yy_accept_template;
 /*XM_EIFFEL_SCANNER_DTD*/
-T2 r875yy_previous_state(T875* C);
+T0* r950yy_accept_template(void);
 /*XM_EIFFEL_SCANNER_DTD*/
-void r875yy_refill_input_buffer(T875* C);
+void r950read_token(T950* C);
 /*XM_EIFFEL_SCANNER_DTD*/
-T0* r875yy_fixed_array(T0* a1);
-extern T0*oBC754yy_meta_template;
-extern int fBC754yy_meta_template;
+T2 r950yy_previous_state(T950* C);
 /*XM_EIFFEL_SCANNER_DTD*/
-T0* r875yy_meta_template(void);
-extern T0*oBC754yy_base_template;
-extern int fBC754yy_base_template;
+void r950yy_refill_input_buffer(T950* C);
 /*XM_EIFFEL_SCANNER_DTD*/
-T0* r875yy_base_template(void);
+T0* r950yy_fixed_array(T0* a1);
+extern T0*oBC795yy_meta_template;
+extern int fBC795yy_meta_template;
 /*XM_EIFFEL_SCANNER_DTD*/
-void r875set_input_stream(T875* C,T0* a1);
+T0* r950yy_meta_template(void);
+extern T0*oBC795yy_base_template;
+extern int fBC795yy_base_template;
 /*XM_EIFFEL_SCANNER_DTD*/
-T2 r875text_count(T875* C);
+T0* r950yy_base_template(void);
 /*XM_EIFFEL_SCANNER_DTD*/
-T0* r875new_file_buffer(T0* a1);
+void r950_266Preset(T950* C);
 /*XM_EIFFEL_SCANNER_DTD*/
-void r875make_scanner(T875* C);
+void r950set_input_stream(T950* C,T0* a1);
 /*XM_EIFFEL_SCANNER_DTD*/
-void r875yy_initialize(T875* C);
+T2 r950text_count(T950* C);
 /*XM_EIFFEL_SCANNER_DTD*/
-void r875reset(T875* C);
+T0* r950new_file_buffer(T0* a1);
 /*XM_EIFFEL_SCANNER_DTD*/
-void r875push_start_condition(T875* C,T2 a1);
+void r950make_scanner(T950* C);
 /*XM_EIFFEL_SCANNER_DTD*/
-T0* r875text(T875* C);
+void r950yy_initialize(T950* C);
 /*XM_EIFFEL_SCANNER_DTD*/
-void r875close_input(T875* C);
-extern T0*oBC754yy_nxt_template;
-extern int fBC754yy_nxt_template;
+void r950reset(T950* C);
 /*XM_EIFFEL_SCANNER_DTD*/
-T0* r875yy_nxt_template(void);
+void r950push_start_condition(T950* C,T2 a1);
 /*XM_EIFFEL_SCANNER_DTD*/
-void r875set_encoding(T875* C,T0* a1);
+T0* r950text(T950* C);
 /*XM_EIFFEL_SCANNER_DTD*/
-void r875yy_set_line_column(T875* C);
+void r950_795Pread_token(T950* C);
 /*XM_EIFFEL_SCANNER_DTD*/
-void r875_245Preset(T875* C);
+void r950close_input(T950* C);
+extern T0*oBC795yy_nxt_template;
+extern int fBC795yy_nxt_template;
 /*XM_EIFFEL_SCANNER_DTD*/
-T6 r875valid_start_condition(T2 a1);
-extern T0*oBC247empty_buffer;
-extern int fBC247empty_buffer;
+T0* r950yy_nxt_template(void);
 /*XM_EIFFEL_SCANNER_DTD*/
-T0* r875empty_buffer(void);
+void r950yy_set_line_column(T950* C);
 /*XM_EIFFEL_SCANNER_DTD*/
-void r875_754Pread_token(T875* C);
-extern T0*oBC754yy_chk_template;
-extern int fBC754yy_chk_template;
+T6 r950valid_start_condition(T2 a1);
+extern T0*oBC268empty_buffer;
+extern int fBC268empty_buffer;
 /*XM_EIFFEL_SCANNER_DTD*/
-T0* r875yy_chk_template(void);
+T0* r950empty_buffer(void);
+extern T0*oBC795yy_chk_template;
+extern int fBC795yy_chk_template;
 /*XM_EIFFEL_SCANNER_DTD*/
-void r875yy_set_content(T875* C,T0* a1);
+T0* r950yy_chk_template(void);
 /*XM_EIFFEL_SCANNER_DTD*/
-void r875_246Pset_input_buffer(T875* C,T0* a1);
+void r950yy_set_content(T950* C,T0* a1);
 /*XM_EIFFEL_SCANNER_DTD*/
-void r875set_start_condition(T875* C,T2 a1);
+void r950set_start_condition(T950* C,T2 a1);
 /*XM_EIFFEL_SCANNER_DTD*/
-void r875_755Pmake_scanner(T875* C);
+T0* r950error_position(T950* C);
 /*XM_EIFFEL_SCANNER_DTD*/
-void r875yy_build_tables(T875* C);
-extern T0*oBC193case_insensitive_attribute_name;
-extern T0*oBC193no_style_warning_attribute_name;
+void r950yy_build_tables(T950* C);
+extern T0*oBC213case_insensitive_attribute_name;
+extern T0*oBC213no_style_warning_attribute_name;
 /*GEANT_SE_TASK*/
-T0* r193attribute_value(T193* C,T0* a1);
+T0* r213attribute_value(T213* C,T0* a1);
 /*GEANT_SE_TASK*/
-T0* r193file_system(void);
-extern T0*oBC193creation_procedure_attribute_name;
-extern T0*oBC16std;
+T0* r213file_system(void);
+extern T0*oBC213creation_procedure_attribute_name;
+extern T0*oBC22std;
 /*GEANT_SE_TASK*/
-void r193make(T193* C,T0* a1,T0* a2);
-extern T0*oBC28true_attribute_value;
+void r213make(T213* C,T0* a1,T0* a2);
+extern T0*oBC46true_attribute_value;
 /*GEANT_SE_TASK*/
-T6 r193boolean_value(T193* C,T0* a1);
+T6 r213boolean_value(T213* C,T0* a1);
 /*GEANT_SE_TASK*/
-void r193task_make(T193* C,T0* a1,T0* a2);
-extern T0*oBC193executable_attribute_name;
+void r213task_make(T213* C,T0* a1,T0* a2);
+extern T0*oBC213executable_attribute_name;
 /*GEANT_SE_TASK*/
-void r193execute(T193* C);
-extern T0*oBC193ace_attribute_name;
+void r213execute(T213* C);
+extern T0*oBC213ace_attribute_name;
 /*GEANT_SE_TASK*/
-T6 r193is_enabled(T193* C);
-extern T0*oBC193root_class_attribute_name;
+T6 r213is_enabled(T213* C);
+extern T0*oBC213root_class_attribute_name;
 /*GEANT_SE_TASK*/
-T0* r193attribute_value_or_default(T193* C,T0* a1,T0* a2);
-extern T0*oBC28false_attribute_value;
+T0* r213attribute_value_or_default(T213* C,T0* a1,T0* a2);
+extern T0*oBC213exit_code_variable_attribute_name;
 /*GEANT_SE_TASK*/
-void r193interpreting_element_make(T193* C,T0* a1,T0* a2);
-extern T0*oBC193clean_attribute_name;
+T0* r213target_arguments_stack(void);
+extern T0*oBC46false_attribute_value;
+/*GEANT_SE_TASK*/
+void r213interpreting_element_make(T213* C,T0* a1,T0* a2);
+extern T0*oBC213clean_attribute_name;
 /*LX_START_CONDITIONS*/
-T6 r341extendible(T341* C,T2 a1);
+T6 r362extendible(T362* C,T2 a1);
 /*LX_START_CONDITIONS*/
-void r341move_cursors_right(T341* C,T2 a1,T2 a2);
+void r362move_cursors_right(T362* C,T2 a1,T2 a2);
 /*LX_START_CONDITIONS*/
-void r341put(T341* C,T0* a1,T2 a2);
+void r362put(T362* C,T0* a1,T2 a2);
 /*LX_START_CONDITIONS*/
-void r341make_with_initial(T341* C,T2 a1);
+void r362make_with_initial(T362* C,T2 a1);
 /*LX_START_CONDITIONS*/
-T0* r341names(T341* C);
+T0* r362names(T362* C);
 /*LX_START_CONDITIONS*/
-void r341add_nfa_to_non_exclusive(T341* C,T0* a1);
+void r362add_nfa_to_non_exclusive(T362* C,T0* a1);
 /*LX_START_CONDITIONS*/
-void r341make(T341* C,T2 a1);
+void r362make(T362* C,T2 a1);
 /*LX_START_CONDITIONS*/
-void r341move_right(T341* C,T2 a1,T2 a2);
+void r362move_right(T362* C,T2 a1,T2 a2);
 /*LX_START_CONDITIONS*/
-void r341add_nfa_to_all(T341* C,T0* a1);
+void r362add_nfa_to_all(T362* C,T0* a1);
 /*LX_START_CONDITIONS*/
-T0* r341new_cursor(T341* C);
+T0* r362new_cursor(T362* C);
 /*LX_START_CONDITIONS*/
-void r341put_last(T341* C,T0* a1);
+void r362put_last(T362* C,T0* a1);
 /*XM_STOP_ON_ERROR_FILTER*/
-void r684on_start_tag_finish(T684* C);
+void r725on_start_tag_finish(T725* C);
 /*XM_STOP_ON_ERROR_FILTER*/
-void r684_686Pon_finish(T684* C);
+void r725_727Pon_start_tag_finish(T725* C);
 /*XM_STOP_ON_ERROR_FILTER*/
-void r684_686Pon_start(T684* C);
+void r725on_finish(T725* C);
 /*XM_STOP_ON_ERROR_FILTER*/
-void r684on_finish(T684* C);
+void r725on_content(T725* C,T0* a1);
 /*XM_STOP_ON_ERROR_FILTER*/
-void r684on_content(T684* C,T0* a1);
+void r725make_null(T725* C);
 /*XM_STOP_ON_ERROR_FILTER*/
-void r684make_null(T684* C);
+void r725on_start(T725* C);
 /*XM_STOP_ON_ERROR_FILTER*/
-void r684on_start(T684* C);
+T6 r725is_local_part(T0* a1);
 /*XM_STOP_ON_ERROR_FILTER*/
-T6 r684is_local_part(T0* a1);
+void r725on_processing_instruction(T725* C,T0* a1,T0* a2);
 /*XM_STOP_ON_ERROR_FILTER*/
-void r684on_processing_instruction(T684* C,T0* a1,T0* a2);
+void r725_727Pon_error(T725* C,T0* a1);
 /*XM_STOP_ON_ERROR_FILTER*/
-void r684_686Pon_content(T684* C,T0* a1);
+void r725_727Pon_processing_instruction(T725* C,T0* a1,T0* a2);
 /*XM_STOP_ON_ERROR_FILTER*/
-void r684on_start_tag(T684* C,T0* a1,T0* a2,T0* a3);
+void r725on_start_tag(T725* C,T0* a1,T0* a2,T0* a3);
 /*XM_STOP_ON_ERROR_FILTER*/
-void r684on_comment(T684* C,T0* a1);
+void r725_727Pon_finish(T725* C);
 /*XM_STOP_ON_ERROR_FILTER*/
-void r684on_end_tag(T684* C,T0* a1,T0* a2,T0* a3);
+void r725on_comment(T725* C,T0* a1);
 /*XM_STOP_ON_ERROR_FILTER*/
-void r684_686Pon_start_tag(T684* C,T0* a1,T0* a2,T0* a3);
+void r725_727Pon_content(T725* C,T0* a1);
 /*XM_STOP_ON_ERROR_FILTER*/
-void r684_686Pon_processing_instruction(T684* C,T0* a1,T0* a2);
+void r725on_end_tag(T725* C,T0* a1,T0* a2,T0* a3);
 /*XM_STOP_ON_ERROR_FILTER*/
-void r684_686Pon_comment(T684* C,T0* a1);
+void r725_727Pon_start_tag(T725* C,T0* a1,T0* a2,T0* a3);
 /*XM_STOP_ON_ERROR_FILTER*/
-void r684_686Pon_error(T684* C,T0* a1);
+void r725on_attribute(T725* C,T0* a1,T0* a2,T0* a3,T0* a4);
 /*XM_STOP_ON_ERROR_FILTER*/
-void r684on_attribute(T684* C,T0* a1,T0* a2,T0* a3,T0* a4);
+void r725_727Pon_comment(T725* C,T0* a1);
 /*XM_STOP_ON_ERROR_FILTER*/
-void r684_686Pon_end_tag(T684* C,T0* a1,T0* a2,T0* a3);
+void r725on_error(T725* C,T0* a1);
 /*XM_STOP_ON_ERROR_FILTER*/
-void r684_686Pon_start_tag_finish(T684* C);
+void r725_727Pon_end_tag(T725* C,T0* a1,T0* a2,T0* a3);
 /*XM_STOP_ON_ERROR_FILTER*/
-void r684_686Pon_attribute(T684* C,T0* a1,T0* a2,T0* a3,T0* a4);
+void r725_727Pon_attribute(T725* C,T0* a1,T0* a2,T0* a3,T0* a4);
 /*XM_STOP_ON_ERROR_FILTER*/
-void r684on_error(T684* C,T0* a1);
+void r725_727Pon_start(T725* C);
 /*XM_STOP_ON_ERROR_FILTER*/
-void r684on_xml_declaration(T684* C,T0* a1,T0* a2,T6 a3);
+void r725on_xml_declaration(T725* C,T0* a1,T0* a2,T6 a3);
 /*GEANT_GEXACE_COMMAND*/
-T0* r537file_system(void);
+void r558_211Pmake(T558* C,T0* a1);
 /*GEANT_GEXACE_COMMAND*/
-T0* r537clone(T0* a1);
-extern T0*oBC538boolean_;
+T0* r558file_system(void);
 /*GEANT_GEXACE_COMMAND*/
-void r537make(T537* C,T0* a1);
+T0* r558clone(T0* a1);
+extern T0*oBC559boolean_;
 /*GEANT_GEXACE_COMMAND*/
-T6 r537is_validate_executable(T537* C);
+void r558make(T558* C,T0* a1);
 /*GEANT_GEXACE_COMMAND*/
-T6 r537is_system_executable(T537* C);
+T6 r558is_validate_executable(T558* C);
 /*GEANT_GEXACE_COMMAND*/
-void r537execute(T537* C);
+T6 r558is_system_executable(T558* C);
 /*GEANT_GEXACE_COMMAND*/
-void r537execute_shell(T537* C,T0* a1);
+void r558execute(T558* C);
 /*GEANT_GEXACE_COMMAND*/
-T6 r537is_executable(T537* C);
+void r558execute_shell(T558* C,T0* a1);
 /*GEANT_GEXACE_COMMAND*/
-void r537_191Pmake(T537* C,T0* a1);
+T6 r558is_executable(T558* C);
 /*GEANT_GEXACE_COMMAND*/
-T6 r537is_library_executable(T537* C);
+T6 r558is_library_executable(T558* C);
 extern T0*oBC14arguments;
 extern int fBC14arguments;
 /*UT_VERSION_NUMBER*/
-T0* r784arguments(void);
+T0* r825arguments(void);
 /*UT_VERSION_NUMBER*/
-void r784make(T784* C,T0* a1);
+void r825make(T825* C,T0* a1);
 /*UT_VERSION_NUMBER*/
-T0* r784message(T784* C,T0* a1);
+T0* r825message(T825* C,T0* a1);
 /*UT_VERSION_NUMBER*/
-T0* r784default_message(T784* C);
+T0* r825default_message(T825* C);
 /*XM_EIFFEL_SCANNER*/
-T2 r754start_condition(T754* C);
+void r795_267Pset_input_buffer(T795* C,T0* a1);
 /*XM_EIFFEL_SCANNER*/
-void r754yy_chk_template_1(T0* a1);
+T2 r795start_condition(T795* C);
 /*XM_EIFFEL_SCANNER*/
-void r754yy_chk_template_2(T0* a1);
+void r795set_input_from_resolver(T795* C,T0* a1);
 /*XM_EIFFEL_SCANNER*/
-void r754set_input_buffer(T754* C,T0* a1);
+void r795yy_chk_template_1(T0* a1);
 /*XM_EIFFEL_SCANNER*/
-T0* r754text_substring(T754* C,T2 a1,T2 a2);
+void r795yy_chk_template_2(T0* a1);
 /*XM_EIFFEL_SCANNER*/
-T0* r754yy_ec_template(void);
+void r795set_input_buffer(T795* C,T0* a1);
 /*XM_EIFFEL_SCANNER*/
-void r754yy_execute_action(T754* C,T2 a1);
+T0* r795text_substring(T795* C,T2 a1,T2 a2);
 /*XM_EIFFEL_SCANNER*/
-T0* r754yy_def_template(void);
+T0* r795yy_ec_template(void);
 /*XM_EIFFEL_SCANNER*/
-T3 r754text_item(T754* C,T2 a1);
+void r795yy_execute_action(T795* C,T2 a1);
 /*XM_EIFFEL_SCANNER*/
-T6 r754end_of_file(T754* C);
+T0* r795yy_def_template(void);
 /*XM_EIFFEL_SCANNER*/
-T0* r754system_literal_text(T754* C);
+T3 r795text_item(T795* C,T2 a1);
 /*XM_EIFFEL_SCANNER*/
-void r754yy_load_input_buffer(T754* C);
+T6 r795end_of_file(T795* C);
 /*XM_EIFFEL_SCANNER*/
-void r754make_with_buffer(T754* C,T0* a1);
+T0* r795system_literal_text(T795* C);
 /*XM_EIFFEL_SCANNER*/
-T2 r754yy_null_trans_state(T754* C,T2 a1);
+void r795yy_load_input_buffer(T795* C);
 /*XM_EIFFEL_SCANNER*/
-void r754pop_start_condition(T754* C);
+void r795make_with_buffer(T795* C,T0* a1);
 /*XM_EIFFEL_SCANNER*/
-T6 r754is_valid_encoding(T0* a1);
+T2 r795yy_null_trans_state(T795* C,T2 a1);
 /*XM_EIFFEL_SCANNER*/
-T0* r754yy_accept_template(void);
+void r795pop_start_condition(T795* C);
 /*XM_EIFFEL_SCANNER*/
-void r754read_token(T754* C);
+T6 r795is_valid_encoding(T795* C,T0* a1);
 /*XM_EIFFEL_SCANNER*/
-T2 r754yy_previous_state(T754* C);
+T0* r795yy_accept_template(void);
 /*XM_EIFFEL_SCANNER*/
-void r754yy_refill_input_buffer(T754* C);
+void r795read_token(T795* C);
 /*XM_EIFFEL_SCANNER*/
-void r754push_start_condition_dtd_ignore(T754* C);
+T2 r795yy_previous_state(T795* C);
 /*XM_EIFFEL_SCANNER*/
-T0* r754yy_fixed_array(T0* a1);
+void r795yy_refill_input_buffer(T795* C);
 /*XM_EIFFEL_SCANNER*/
-T0* r754yy_meta_template(void);
+void r795push_start_condition_dtd_ignore(T795* C);
 /*XM_EIFFEL_SCANNER*/
-T0* r754yy_base_template(void);
+T0* r795yy_fixed_array(T0* a1);
 /*XM_EIFFEL_SCANNER*/
-void r754set_input_stream(T754* C,T0* a1);
+T0* r795yy_meta_template(void);
 /*XM_EIFFEL_SCANNER*/
-T2 r754text_count(T754* C);
+T0* r795yy_base_template(void);
 /*XM_EIFFEL_SCANNER*/
-T0* r754new_file_buffer(T0* a1);
+void r795_266Preset(T795* C);
 /*XM_EIFFEL_SCANNER*/
-void r754make_scanner(T754* C);
+void r795set_input_stream(T795* C,T0* a1);
 /*XM_EIFFEL_SCANNER*/
-void r754yy_initialize(T754* C);
+T2 r795text_count(T795* C);
 /*XM_EIFFEL_SCANNER*/
-void r754reset(T754* C);
+T0* r795new_file_buffer(T0* a1);
 /*XM_EIFFEL_SCANNER*/
-void r754push_start_condition(T754* C,T2 a1);
+void r795make_scanner(T795* C);
 /*XM_EIFFEL_SCANNER*/
-T0* r754text(T754* C);
+void r795yy_initialize(T795* C);
 /*XM_EIFFEL_SCANNER*/
-void r754close_input(T754* C);
+void r795reset(T795* C);
 /*XM_EIFFEL_SCANNER*/
-T0* r754yy_nxt_template(void);
+void r795push_start_condition(T795* C,T2 a1);
 /*XM_EIFFEL_SCANNER*/
-void r754set_encoding(T754* C,T0* a1);
+T0* r795text(T795* C);
 /*XM_EIFFEL_SCANNER*/
-void r754yy_set_line_column(T754* C);
+void r795close_input(T795* C);
 /*XM_EIFFEL_SCANNER*/
-void r754_245Preset(T754* C);
+T0* r795yy_nxt_template(void);
 /*XM_EIFFEL_SCANNER*/
-T6 r754valid_start_condition(T2 a1);
+void r795yy_set_line_column(T795* C);
 /*XM_EIFFEL_SCANNER*/
-T0* r754empty_buffer(void);
+T6 r795valid_start_condition(T2 a1);
 /*XM_EIFFEL_SCANNER*/
-void r754yy_nxt_template_1(T0* a1);
+T0* r795empty_buffer(void);
 /*XM_EIFFEL_SCANNER*/
-void r754yy_nxt_template_2(T0* a1);
+void r795yy_nxt_template_1(T0* a1);
 /*XM_EIFFEL_SCANNER*/
-T0* r754yy_chk_template(void);
+void r795yy_nxt_template_2(T0* a1);
 /*XM_EIFFEL_SCANNER*/
-void r754_246Pset_input_buffer(T754* C,T0* a1);
+T0* r795yy_chk_template(void);
 /*XM_EIFFEL_SCANNER*/
-void r754yy_set_content(T754* C,T0* a1);
+void r795yy_set_content(T795* C,T0* a1);
 /*XM_EIFFEL_SCANNER*/
-void r754set_start_condition(T754* C,T2 a1);
+void r795set_start_condition(T795* C,T2 a1);
 /*XM_EIFFEL_SCANNER*/
-void r754yy_execute_eof_action(T754* C,T2 a1);
+void r795yy_execute_eof_action(T795* C,T2 a1);
 /*XM_EIFFEL_SCANNER*/
-void r754yy_build_tables(T754* C);
-extern T0*oBC541tokens_classname_attribute_name;
+void r795yy_build_tables(T795* C);
+/*XM_EIFFEL_SCANNER*/
+T0* r795error_position(T795* C);
+extern T0*oBC562tokens_classname_attribute_name;
 /*GEANT_GEYACC_TASK*/
-T0* r541attribute_value(T541* C,T0* a1);
-/*GEANT_GEYACC_TASK*/
-T0* r541file_system(void);
-extern T0*oBC541input_filename_attribute_name;
-extern T0*oBC541separate_actions_attribute_name;
-extern T0*oBC541tokens_filename_attribute_name;
-/*GEANT_GEYACC_TASK*/
-void r541make(T541* C,T0* a1,T0* a2);
-/*GEANT_GEYACC_TASK*/
-T6 r541boolean_value(T541* C,T0* a1);
-extern T0*oBC541new_typing_attribute_name;
-/*GEANT_GEYACC_TASK*/
-void r541task_make(T541* C,T0* a1,T0* a2);
-extern T0*oBC541output_filename_attribute_name;
-/*GEANT_GEYACC_TASK*/
-void r541execute(T541* C);
-/*GEANT_GEYACC_TASK*/
-T6 r541is_enabled(T541* C);
-extern T0*oBC541old_typing_attribute_name;
-extern T0*oBC541verbose_filename_attribute_name;
-/*GEANT_GEYACC_TASK*/
-void r541interpreting_element_make(T541* C,T0* a1,T0* a2);
-/*GEANT_REDEFINE*/
-T6 r627is_executable(T627* C);
-/*GEANT_DEFINE_ELEMENT*/
-T6 r205has_value(T205* C);
-/*GEANT_DEFINE_ELEMENT*/
-T0* r205name(T205* C);
-/*GEANT_DEFINE_ELEMENT*/
-T0* r205attribute_value(T205* C,T0* a1);
-extern T0*oBC205name_attribute_name;
-/*GEANT_DEFINE_ELEMENT*/
-T6 r205has_name(T205* C);
-extern T0*oBC205value_attribute_name;
-/*GEANT_DEFINE_ELEMENT*/
-void r205make(T205* C,T0* a1,T0* a2);
-/*GEANT_DEFINE_ELEMENT*/
-T0* r205value(T205* C);
-/*GEANT_DEFINE_ELEMENT*/
-T6 r205is_enabled(T205* C);
-/*LX_FULL_AND_REJECT_ERROR*/
-T0* r425arguments(void);
-/*LX_FULL_AND_REJECT_ERROR*/
-void r425make(T425* C);
-/*LX_FULL_AND_REJECT_ERROR*/
-T0* r425message(T425* C,T0* a1);
-/*LX_FULL_AND_REJECT_ERROR*/
-T0* r425default_message(T425* C);
-/*GEANT_PRECURSOR_TASK*/
-T0* r590attribute_value(T590* C,T0* a1);
-/*GEANT_PRECURSOR_TASK*/
-T0* r590file_system(void);
-/*GEANT_PRECURSOR_TASK*/
-void r590make(T590* C,T0* a1,T0* a2);
-/*GEANT_PRECURSOR_TASK*/
-void r590task_make(T590* C,T0* a1,T0* a2);
-/*GEANT_PRECURSOR_TASK*/
-void r590execute(T590* C);
-/*GEANT_PRECURSOR_TASK*/
-T6 r590is_enabled(T590* C);
-/*GEANT_PRECURSOR_TASK*/
-void r590interpreting_element_make(T590* C,T0* a1,T0* a2);
-extern T0*oBC590parent_attribute_name;
-/*LX_UNRECOGNIZED_RULE_ERROR*/
-T0* r438arguments(void);
-/*LX_UNRECOGNIZED_RULE_ERROR*/
-void r438make(T438* C,T0* a1,T2 a2);
-/*LX_UNRECOGNIZED_RULE_ERROR*/
-T0* r438message(T438* C,T0* a1);
-/*LX_UNRECOGNIZED_RULE_ERROR*/
-T0* r438default_message(T438* C);
-/*XM_POSITION_TABLE*/
-void r723put(T723* C,T0* a1,T0* a2);
-/*XM_POSITION_TABLE*/
-void r723make(T723* C);
-/*XM_POSITION_TABLE*/
-T6 r723has(T723* C,T0* a1);
-/*XM_TREE_CALLBACKS_PIPE*/
-T0* r682callbacks_pipe(T0* a1);
-/*XM_TREE_CALLBACKS_PIPE*/
-T0* r682new_tree_builder(void);
-/*XM_TREE_CALLBACKS_PIPE*/
-void r682make(T682* C);
-/*XM_TREE_CALLBACKS_PIPE*/
-T0* r682new_namespace_resolver(void);
-/*XM_TREE_CALLBACKS_PIPE*/
-T0* r682new_end_tag_checker(void);
-/*XM_TREE_CALLBACKS_PIPE*/
-T0* r682new_stop_on_error(void);
-/*UT_ERROR_HANDLER*/
-void r237make_null(T237* C);
-extern T0*oBC238null_output_stream;
-extern int fBC238null_output_stream;
-/*UT_ERROR_HANDLER*/
-T0* r237null_output_stream(void);
-/*UT_ERROR_HANDLER*/
-T0* r237message(T0* a1);
-/*UT_ERROR_HANDLER*/
-void r237report_info_message(T237* C,T0* a1);
-/*UT_ERROR_HANDLER*/
-void r237make_standard(T237* C);
-/*UT_ERROR_HANDLER*/
-void r237report_error_message(T237* C,T0* a1);
-extern T0*oBC202mapped_filename_directory_attribute_name;
-extern T0*oBC202exclude_attribute_name;
-extern T0*oBC202directory_attribute_name;
-/*GEANT_FILESET_ELEMENT*/
-T0* r202attribute_value(T202* C,T0* a1);
-/*GEANT_FILESET_ELEMENT*/
-void r202_27Pmake(T202* C,T0* a1,T0* a2);
-/*GEANT_FILESET_ELEMENT*/
-T0* r202elements_by_name(T202* C,T0* a1);
-extern T0*oBC202include_attribute_name;
-/*GEANT_FILESET_ELEMENT*/
-void r202make(T202* C,T0* a1,T0* a2);
-/*GEANT_FILESET_ELEMENT*/
-T6 r202boolean_value(T202* C,T0* a1);
-extern T0*oBC202force_attribute_name;
-extern T0*oBC202exclude_element_name;
-extern T0*oBC13exceptions;
-/*GEANT_FILESET_ELEMENT*/
-void r202exit_application(T2 a1,T0* a2);
-extern T0*oBC202map_element_name;
-extern T0*oBC202include_element_name;
-extern T0*oBC202mapped_filename_variable_name_attribute_name;
-extern T0*oBC202filename_directory_attribute_name;
-extern T0*oBC202filename_variable_name_attribute_name;
-extern T0*oBC202concat_attribute_name;
-/*YY_FILE_BUFFER*/
-void r407fill(T407* C);
-/*YY_FILE_BUFFER*/
-void r407compact_left(T407* C);
-/*YY_FILE_BUFFER*/
-void r407set_position(T407* C,T2 a1,T2 a2,T2 a3);
-/*YY_FILE_BUFFER*/
-T0* r407name(T407* C);
-/*YY_FILE_BUFFER*/
-void r407make_from_string(T407* C,T0* a1);
-/*YY_FILE_BUFFER*/
-void r407make_from_buffer(T407* C,T0* a1);
-/*YY_FILE_BUFFER*/
-void r407resize(T407* C);
-/*YY_FILE_BUFFER*/
-T0* r407new_default_buffer(T2 a1);
-/*YY_FILE_BUFFER*/
-void r407make_with_size(T407* C,T0* a1,T2 a2);
-/*YY_FILE_BUFFER*/
-void r407set_file(T407* C,T0* a1);
-/*YY_FILE_BUFFER*/
-void r407flush(T407* C);
-/*LX_MISSING_QUOTE_ERROR*/
-T0* r422arguments(void);
-/*LX_MISSING_QUOTE_ERROR*/
-void r422make(T422* C,T0* a1,T2 a2);
-/*LX_MISSING_QUOTE_ERROR*/
-T0* r422message(T422* C,T0* a1);
-/*LX_MISSING_QUOTE_ERROR*/
-T0* r422default_message(T422* C);
-/*LX_FULL_AND_META_ERROR*/
-T0* r427arguments(void);
-/*LX_FULL_AND_META_ERROR*/
-void r427make(T427* C);
-/*LX_FULL_AND_META_ERROR*/
-T0* r427message(T427* C,T0* a1);
-/*LX_FULL_AND_META_ERROR*/
-T0* r427default_message(T427* C);
-/*GEANT_AVAILABLE_COMMAND*/
-T0* r593file_system(void);
-/*GEANT_AVAILABLE_COMMAND*/
-T6 r593is_file_executable(T593* C);
-/*GEANT_AVAILABLE_COMMAND*/
-void r593execute(T593* C);
-/*GEANT_ECHO_COMMAND*/
-void r553execute(T553* C);
-/*GEANT_RENAME*/
-T6 r641is_executable(T641* C);
-/*GEANT_INHERIT_ELEMENT*/
-void r688make_old(T688* C,T0* a1,T0* a2);
-/*GEANT_INHERIT_ELEMENT*/
-T0* r688elements_by_name(T688* C,T0* a1);
-/*GEANT_INHERIT_ELEMENT*/
-void r688make(T688* C,T0* a1,T0* a2);
-extern T0*oBC688parent_element_name;
-/*GEANT_INHERIT_ELEMENT*/
-void r688exit_application(T2 a1,T0* a2);
-/*GEANT_INHERIT_ELEMENT*/
-void r688interpreting_element_make(T688* C,T0* a1,T0* a2);
-/*GEANT_GEANT_COMMAND*/
-T0* r549file_system(void);
-/*GEANT_GEANT_COMMAND*/
-T6 r549is_filename_executable(T549* C);
-/*GEANT_GEANT_COMMAND*/
-T6 r549is_target_executable(T549* C);
-/*GEANT_GEANT_COMMAND*/
-void r549execute(T549* C);
-/*GEANT_GEANT_COMMAND*/
-void r549exit_application(T2 a1,T0* a2);
-/*GEANT_GEANT_COMMAND*/
-T6 r549is_executable(T549* C);
-/*GEANT_PARENT_ELEMENT*/
-T0* r689attribute_value(T689* C,T0* a1);
-/*GEANT_PARENT_ELEMENT*/
-void r689make_old(T689* C,T0* a1,T0* a2);
-extern T0*oBC689inherit_attribute_name;
-/*GEANT_PARENT_ELEMENT*/
-T0* r689elements_by_name(T689* C,T0* a1);
-extern T0*oBC689redefine_element_name;
-/*GEANT_PARENT_ELEMENT*/
-void r689make(T689* C,T0* a1,T0* a2);
-extern T0*oBC689rename_element_name;
-extern T0*oBC689location_attribute_name;
-extern T0*oBC689select_element_name;
-/*GEANT_PARENT_ELEMENT*/
-void r689exit_application(T2 a1,T0* a2);
-/*GEANT_PARENT_ELEMENT*/
-void r689interpreting_element_make(T689* C,T0* a1,T0* a2);
-/*XM_CALLBACKS_TO_TREE_FILTER*/
-void r718on_start_tag_finish(T718* C);
-/*XM_CALLBACKS_TO_TREE_FILTER*/
-T0* r718next_open_composite(T0* a1);
-/*XM_CALLBACKS_TO_TREE_FILTER*/
-void r718enable_position_table(T718* C,T0* a1);
-/*XM_CALLBACKS_TO_TREE_FILTER*/
-void r718on_finish(T718* C);
-/*XM_CALLBACKS_TO_TREE_FILTER*/
-void r718on_content(T718* C,T0* a1);
-/*XM_CALLBACKS_TO_TREE_FILTER*/
-void r718make_null(T718* C);
-/*XM_CALLBACKS_TO_TREE_FILTER*/
-void r718on_start(T718* C);
-/*XM_CALLBACKS_TO_TREE_FILTER*/
-T6 r718is_local_part(T0* a1);
-/*XM_CALLBACKS_TO_TREE_FILTER*/
-void r718on_processing_instruction(T718* C,T0* a1,T0* a2);
-/*XM_CALLBACKS_TO_TREE_FILTER*/
-void r718on_start_tag(T718* C,T0* a1,T0* a2,T0* a3);
-/*XM_CALLBACKS_TO_TREE_FILTER*/
-void r718handle_position(T718* C,T0* a1);
-/*XM_CALLBACKS_TO_TREE_FILTER*/
-void r718on_comment(T718* C,T0* a1);
-/*XM_CALLBACKS_TO_TREE_FILTER*/
-void r718on_end_tag(T718* C,T0* a1,T0* a2,T0* a3);
-/*XM_CALLBACKS_TO_TREE_FILTER*/
-void r718on_attribute(T718* C,T0* a1,T0* a2,T0* a3,T0* a4);
-/*XM_CALLBACKS_TO_TREE_FILTER*/
-T0* r718new_namespace(T718* C,T0* a1,T0* a2);
-/*XM_CALLBACKS_TO_TREE_FILTER*/
-void r718on_error(T718* C,T0* a1);
-/*XM_CALLBACKS_TO_TREE_FILTER*/
-void r718on_xml_declaration(T718* C,T0* a1,T0* a2,T6 a3);
-/*GEANT_MKDIR_COMMAND*/
-T0* r555file_system(void);
-/*GEANT_MKDIR_COMMAND*/
-void r555execute(T555* C);
-/*GEANT_MKDIR_COMMAND*/
-T6 r555is_executable(T555* C);
-/*GEANT_UNSET_COMMAND*/
-void r535execute(T535* C);
-/*GEANT_UNSET_COMMAND*/
-T6 r535is_executable(T535* C);
-/*GEANT_GELEX_COMMAND*/
-T0* r540file_system(void);
-/*GEANT_GELEX_COMMAND*/
-T0* r540clone(T0* a1);
-/*GEANT_GELEX_COMMAND*/
-void r540make(T540* C,T0* a1);
-/*GEANT_GELEX_COMMAND*/
-void r540execute(T540* C);
-/*GEANT_GELEX_COMMAND*/
-void r540execute_shell(T540* C,T0* a1);
-/*GEANT_GELEX_COMMAND*/
-T6 r540is_executable(T540* C);
-/*GEANT_GELEX_COMMAND*/
-void r540_191Pmake(T540* C,T0* a1);
-/*XM_DTD_ELEMENT_CONTENT*/
-void r836make_choice(T836* C);
-/*XM_DTD_ELEMENT_CONTENT*/
-void r836make_mixed(T836* C);
-/*XM_DTD_ELEMENT_CONTENT*/
-void r836set_content_mixed(T836* C);
-/*XM_DTD_ELEMENT_CONTENT*/
-void r836make_empty(T836* C);
-/*XM_DTD_ELEMENT_CONTENT*/
-void r836set_default(T836* C);
-/*XM_DTD_ELEMENT_CONTENT*/
-void r836make_any(T836* C);
-/*XM_DTD_ELEMENT_CONTENT*/
-void r836make_sequence(T836* C);
-/*XM_DTD_ELEMENT_CONTENT*/
-void r836make_list(T836* C);
-/*XM_DTD_ELEMENT_CONTENT*/
-void r836make_name(T836* C,T0* a1);
-/*XM_DTD_ELEMENT_CONTENT*/
-void r836set_content_any(T836* C);
-/*LX_NEGATIVE_RANGE_IN_CHARACTER_CLASS_ERROR*/
-T0* r465arguments(void);
-/*LX_NEGATIVE_RANGE_IN_CHARACTER_CLASS_ERROR*/
-void r465make(T465* C,T0* a1,T2 a2);
-/*LX_NEGATIVE_RANGE_IN_CHARACTER_CLASS_ERROR*/
-T0* r465message(T465* C,T0* a1);
-/*LX_NEGATIVE_RANGE_IN_CHARACTER_CLASS_ERROR*/
-T0* r465default_message(T465* C);
-/*GEANT_SELECT*/
-T6 r611is_executable(T611* C);
-/*GEANT_GEXMLSPLIT_COMMAND*/
-T0* r551file_system(void);
-/*GEANT_GEXMLSPLIT_COMMAND*/
-T0* r551clone(T0* a1);
-/*GEANT_GEXMLSPLIT_COMMAND*/
-void r551make(T551* C,T0* a1);
-/*GEANT_GEXMLSPLIT_COMMAND*/
-void r551execute(T551* C);
-/*GEANT_GEXMLSPLIT_COMMAND*/
-void r551execute_shell(T551* C,T0* a1);
-/*GEANT_GEXMLSPLIT_COMMAND*/
-T6 r551is_executable(T551* C);
-/*GEANT_GEXMLSPLIT_COMMAND*/
-void r551_191Pmake(T551* C,T0* a1);
-/*LX_SYMBOL_CLASS*/
-T2 r390new_capacity(T2 a1);
-/*LX_SYMBOL_CLASS*/
-T6 r390extendible(T390* C,T2 a1);
-/*LX_SYMBOL_CLASS*/
-T2 r390last(T390* C);
-/*LX_SYMBOL_CLASS*/
-void r390put(T390* C,T2 a1);
-/*LX_SYMBOL_CLASS*/
-void r390sort(T390* C);
-/*LX_SYMBOL_CLASS*/
-T6 r390arrayed_has(T390* C,T2 a1);
-/*LX_SYMBOL_CLASS*/
-void r390make(T390* C,T2 a1);
-/*LX_SYMBOL_CLASS*/
-void r390convert_to_equivalence(T390* C,T0* a1);
-extern T0*oBC390sorter;
-extern int fBC390sorter;
-/*LX_SYMBOL_CLASS*/
-T0* r390sorter(void);
-/*LX_SYMBOL_CLASS*/
-T6 r390has(T390* C,T2 a1);
-/*LX_SYMBOL_CLASS*/
-void r390resize(T390* C,T2 a1);
-/*LX_SYMBOL_CLASS*/
-void r390force_last(T390* C,T2 a1);
-/*LX_SYMBOL_CLASS*/
-T0* r390new_cursor(T390* C);
-/*GEANT_HACT_TASK*/
-T0* r197attribute_value(T197* C,T0* a1);
-/*GEANT_HACT_TASK*/
-T0* r197file_system(void);
-extern T0*oBC197fish_attribute_name;
-/*GEANT_HACT_TASK*/
-void r197make(T197* C,T0* a1,T0* a2);
-extern T0*oBC197finalize_attribute_name;
-/*GEANT_HACT_TASK*/
-T6 r197boolean_value(T197* C,T0* a1);
-/*GEANT_HACT_TASK*/
-void r197task_make(T197* C,T0* a1,T0* a2);
-/*GEANT_HACT_TASK*/
-void r197execute(T197* C);
-extern T0*oBC197ace_attribute_name;
-/*GEANT_HACT_TASK*/
-T6 r197is_enabled(T197* C);
-/*GEANT_HACT_TASK*/
-T0* r197attribute_value_or_default(T197* C,T0* a1,T0* a2);
-extern T0*oBC197system_attribute_name;
-/*GEANT_HACT_TASK*/
-void r197interpreting_element_make(T197* C,T0* a1,T0* a2);
-extern T0*oBC197clean_attribute_name;
-/*GEANT_FILESET*/
-void r204remove_fileset_entry(T204* C,T0* a1);
-/*GEANT_FILESET*/
-T6 r204is_in_gobo_32_format(T204* C);
-/*GEANT_FILESET*/
-T0* r204item_mapped_filename(T204* C);
-/*GEANT_FILESET*/
-void r204set_include_wc_string(T204* C,T0* a1);
-/*GEANT_FILESET*/
-T0* r204file_system(void);
-/*GEANT_FILESET*/
-void r204scan_internal(T204* C,T0* a1);
-/*GEANT_FILESET*/
-void r204make(T204* C,T0* a1);
-/*GEANT_FILESET*/
-void r204update_project_variables(T204* C);
-/*GEANT_FILESET*/
-void r204forth(T204* C);
-/*GEANT_FILESET*/
-void r204set_exclude_wc_string(T204* C,T0* a1);
-/*GEANT_FILESET*/
-void r204start(T204* C);
-/*GEANT_FILESET*/
-void r204execute(T204* C);
-/*GEANT_FILESET*/
-T6 r204is_file_outofdate(T0* a1,T0* a2);
-/*GEANT_FILESET*/
-void r204remove_project_variables(T204* C);
-/*GEANT_FILESET*/
-void r204add_fileset_entry_if_necessary(T204* C,T0* a1);
-/*GEANT_FILESET*/
-T0* r204item_filename(T204* C);
-/*GEANT_FILESET*/
-T6 r204is_executable(T204* C);
-/*GEANT_FILESET*/
-T6 r204is_in_gobo_31_format(T204* C);
-extern int fBC204set_convert_to_filesystem;
-/*GEANT_FILESET*/
-void r204set_convert_to_filesystem(T204* C,T6 a1);
-extern T0*oBC554directory_attribute_name;
-/*GEANT_MKDIR_TASK*/
-T0* r554attribute_value(T554* C,T0* a1);
-/*GEANT_MKDIR_TASK*/
-T0* r554file_system(void);
-/*GEANT_MKDIR_TASK*/
-void r554make(T554* C,T0* a1,T0* a2);
-/*GEANT_MKDIR_TASK*/
-void r554task_make(T554* C,T0* a1,T0* a2);
-/*GEANT_MKDIR_TASK*/
-void r554execute(T554* C);
-/*GEANT_MKDIR_TASK*/
-T6 r554is_enabled(T554* C);
-/*GEANT_MKDIR_TASK*/
-void r554interpreting_element_make(T554* C,T0* a1,T0* a2);
-/*XM_COMMENT*/
-void r972make(T972* C,T0* a1,T0* a2);
-/*LX_NFA*/
-void r340build_closure(T340* C);
-/*LX_NFA*/
-void r340make_symbol(T340* C,T2 a1,T6 a2);
-/*LX_NFA*/
-void r340build_optional(T340* C);
-/*LX_NFA*/
-void r340build_positive_closure(T340* C);
-/*LX_NFA*/
-void r340build_concatenation(T340* C,T0* a1);
-/*LX_NFA*/
-void r340make_epsilon(T340* C,T6 a1);
-/*LX_NFA*/
-void r340make_symbol_class(T340* C,T0* a1,T6 a2);
-/*LX_NFA*/
-void r340build_union(T340* C,T0* a1);
-/*UT_USAGE_MESSAGE*/
-T0* r785arguments(void);
-/*UT_USAGE_MESSAGE*/
-void r785make(T785* C,T0* a1);
-/*UT_USAGE_MESSAGE*/
-T0* r785message(T785* C,T0* a1);
-/*UT_USAGE_MESSAGE*/
-T0* r785default_message(T785* C);
-/*GEANT_COPY_TASK*/
-T0* r560attribute_value(T560* C,T0* a1);
-extern T0*oBC560file_attribute_name;
-extern T0*oBC560fileset_element_name;
-/*GEANT_COPY_TASK*/
-T0* r560file_system(void);
-extern T0*oBC560to_directory_attribute_name;
-extern T0*oBC560to_file_attribute_name;
-/*GEANT_COPY_TASK*/
-void r560make(T560* C,T0* a1,T0* a2);
-/*GEANT_COPY_TASK*/
-T6 r560boolean_value(T560* C,T0* a1);
-extern T0*oBC560force_attribute_name;
-/*GEANT_COPY_TASK*/
-void r560task_make(T560* C,T0* a1,T0* a2);
-/*GEANT_COPY_TASK*/
-void r560execute(T560* C);
-/*GEANT_COPY_TASK*/
-T6 r560is_enabled(T560* C);
-/*GEANT_COPY_TASK*/
-void r560interpreting_element_make(T560* C,T0* a1,T0* a2);
-/*KL_WINDOWS_FILE_SYSTEM*/
-T0* r184pathname_from_file_system(T184* C,T0* a1,T0* a2);
-/*KL_WINDOWS_FILE_SYSTEM*/
-T6 r184is_absolute_pathname(T0* a1);
-/*KL_WINDOWS_FILE_SYSTEM*/
-T0* r184current_working_directory(T184* C);
-/*KL_WINDOWS_FILE_SYSTEM*/
-void r184cd(T184* C,T0* a1);
-/*KL_WINDOWS_FILE_SYSTEM*/
-T6 r184file_exists(T0* a1);
-/*KL_WINDOWS_FILE_SYSTEM*/
-T6 r184directory_exists(T0* a1);
-/*KL_WINDOWS_FILE_SYSTEM*/
-void r184recursive_delete_directory(T0* a1);
-/*KL_WINDOWS_FILE_SYSTEM*/
-T0* r184absolute_pathname(T184* C,T0* a1);
-/*KL_WINDOWS_FILE_SYSTEM*/
-T0* r184current_drive(T184* C);
-/*KL_WINDOWS_FILE_SYSTEM*/
-T0* r184file_system(void);
-/*KL_WINDOWS_FILE_SYSTEM*/
-T6 r184se_assigned_from(T0* a1);
-/*KL_WINDOWS_FILE_SYSTEM*/
-T6 r184is_directory_readable(T0* a1);
-/*KL_WINDOWS_FILE_SYSTEM*/
-T0* r184clone(T0* a1);
-/*KL_WINDOWS_FILE_SYSTEM*/
-T0* r184dirname(T0* a1);
-/*KL_WINDOWS_FILE_SYSTEM*/
-void r184delete_file(T0* a1);
-/*KL_WINDOWS_FILE_SYSTEM*/
-void r184set_current_working_directory(T184* C,T0* a1);
-/*KL_WINDOWS_FILE_SYSTEM*/
-T0* r184cwd(T184* C);
-/*KL_WINDOWS_FILE_SYSTEM*/
-T6 r184same_type(T184* C,T0* a1);
-/*KL_WINDOWS_FILE_SYSTEM*/
-T6 r184is_file_readable(T0* a1);
-/*KL_WINDOWS_FILE_SYSTEM*/
-void r184recursive_create_directory(T0* a1);
-/*KL_WINDOWS_FILE_SYSTEM*/
-T0* r184tmp_file(void);
-/*KL_WINDOWS_FILE_SYSTEM*/
-T6 r184is_current_file_system(T184* C);
-/*KL_WINDOWS_FILE_SYSTEM*/
-T6 r184conforms_to(T184* C,T0* a1);
-/*KL_WINDOWS_FILE_SYSTEM*/
-void r184copy_file(T0* a1,T0* a2);
-/*KL_WINDOWS_FILE_SYSTEM*/
-T0* r184string_to_pathname(T0* a1);
-/*KL_WINDOWS_FILE_SYSTEM*/
-void r184rename_file(T0* a1,T0* a2);
-/*KL_WINDOWS_FILE_SYSTEM*/
-T2 r184file_time_stamp(T0* a1);
-extern T0*oBC184root_directory;
-/*KL_WINDOWS_FILE_SYSTEM*/
-T6 r184is_relative_pathname(T0* a1);
-/*KL_WINDOWS_FILE_SYSTEM*/
-T6 r184is_root_directory(T0* a1);
-/*KL_WINDOWS_FILE_SYSTEM*/
-T6 r184same_physical_file(T0* a1,T0* a2);
-/*KL_WINDOWS_FILE_SYSTEM*/
-T0* r184pathname_to_string(T0* a1);
-/*KL_WINDOWS_FILE_SYSTEM*/
-T0* r184canonical_pathname(T0* a1);
-/*KL_WINDOWS_FILE_SYSTEM*/
-T0* r184pathname(T0* a1,T0* a2);
-/*KL_WINDOWS_FILE_SYSTEM*/
-T0* r184tmp_directory(void);
-/*KL_BINARY_INPUT_FILE*/
-T6 r801is_closed(T801* C);
-/*KL_BINARY_INPUT_FILE*/
-void r801old_close(T801* C);
-/*KL_BINARY_INPUT_FILE*/
-void r801open_read(T801* C);
-/*KL_BINARY_INPUT_FILE*/
-void r801read_character(T801* C);
-/*KL_BINARY_INPUT_FILE*/
-void r801fill_buffer(T801* C);
-/*KL_BINARY_INPUT_FILE*/
-void r801close(T801* C);
-/*KL_BINARY_INPUT_FILE*/
-void r801make(T801* C,T0* a1);
-/*KL_BINARY_INPUT_FILE*/
-void r801connect_to(T801* C,T0* a1);
-/*KL_BINARY_INPUT_FILE*/
-void r801read_string(T801* C,T2 a1);
-/*KL_BINARY_INPUT_FILE*/
-void r801old_read_byte(T801* C);
-/*KL_BINARY_INPUT_FILE*/
-void r801old_open_read(T801* C);
-/*LX_DESCRIPTION*/
-void r239make(T239* C);
-/*LX_DESCRIPTION*/
-void r239create_equiv_classes(T239* C);
-/*GEANT_DIRECTORYSET*/
-void r559remove_fileset_entry(T559* C,T0* a1);
-/*GEANT_DIRECTORYSET*/
-void r559set_include_wc_string(T559* C,T0* a1);
-/*GEANT_DIRECTORYSET*/
-T0* r559file_system(void);
-/*GEANT_DIRECTORYSET*/
-void r559scan_internal(T559* C,T0* a1);
-/*GEANT_DIRECTORYSET*/
-void r559make(T559* C,T0* a1);
-/*GEANT_DIRECTORYSET*/
-void r559update_project_variables(T559* C);
-/*GEANT_DIRECTORYSET*/
-void r559forth(T559* C);
-/*GEANT_DIRECTORYSET*/
-T0* r559item_directory_name(T559* C);
-/*GEANT_DIRECTORYSET*/
-void r559set_exclude_wc_string(T559* C,T0* a1);
-/*GEANT_DIRECTORYSET*/
-void r559start(T559* C);
-/*GEANT_DIRECTORYSET*/
-void r559execute(T559* C);
-/*GEANT_DIRECTORYSET*/
-void r559add_fileset_entry_if_necessary(T559* C,T0* a1);
-/*GEANT_DIRECTORYSET*/
-T6 r559is_executable(T559* C);
-/*XM_EIFFEL_PARSER_NAME*/
-T0* r848last(T848* C);
-/*XM_EIFFEL_PARSER_NAME*/
-T6 r848is_equal(T848* C,T0* a1);
-/*XM_EIFFEL_PARSER_NAME*/
-T0* r848item(T848* C,T2 a1);
-/*XM_EIFFEL_PARSER_NAME*/
-T0* r848clone(T0* a1);
-/*XM_EIFFEL_PARSER_NAME*/
-void r848make(T848* C);
-/*XM_EIFFEL_PARSER_NAME*/
-T2 r848hash_code(T848* C);
-/*XM_EIFFEL_PARSER_NAME*/
-T6 r848same_string(T0* a1,T0* a2);
-/*XM_EIFFEL_PARSER_NAME*/
-void r848force_last(T848* C,T0* a1);
-/*XM_EIFFEL_PARSER_NAME*/
-T0* r848ns_prefix(T848* C);
-/*XM_EIFFEL_PARSER_NAME*/
-T0* r848local_part(T848* C);
-/*XM_EIFFEL_PARSER_NAME*/
-T6 r848is_namespace_name(T848* C);
-/*XM_EIFFEL_PARSER_NAME*/
-T0* r848new_string_bilinked_list(void);
-/*GEANT_GEANT_TASK*/
-T0* r548attribute_value(T548* C,T0* a1);
-extern T0*oBC548start_target_attribute_name;
-extern T0*oBC548fileset_element_name;
-/*GEANT_GEANT_TASK*/
-T0* r548file_system(void);
-extern T0*oBC548filename_attribute_name;
-/*GEANT_GEANT_TASK*/
-void r548make(T548* C,T0* a1,T0* a2);
-/*GEANT_GEANT_TASK*/
-T6 r548boolean_value(T548* C,T0* a1);
-/*GEANT_GEANT_TASK*/
-void r548task_make(T548* C,T0* a1,T0* a2);
-/*GEANT_GEANT_TASK*/
-void r548execute(T548* C);
-/*GEANT_GEANT_TASK*/
-T6 r548is_enabled(T548* C);
-extern T0*oBC548reuse_variables_attribute_name;
-/*GEANT_GEANT_TASK*/
-void r548interpreting_element_make(T548* C,T0* a1,T0* a2);
-/*GEANT_GEYACC_COMMAND*/
-T0* r542file_system(void);
-/*GEANT_GEYACC_COMMAND*/
-T0* r542clone(T0* a1);
-/*GEANT_GEYACC_COMMAND*/
-void r542make(T542* C,T0* a1);
-/*GEANT_GEYACC_COMMAND*/
-void r542execute(T542* C);
-/*GEANT_GEYACC_COMMAND*/
-void r542execute_shell(T542* C,T0* a1);
-/*GEANT_GEYACC_COMMAND*/
-T6 r542is_executable(T542* C);
-/*GEANT_GEYACC_COMMAND*/
-void r542_191Pmake(T542* C,T0* a1);
-/*GEANT_GEPP_COMMAND*/
-T0* r544file_system(void);
-/*GEANT_GEPP_COMMAND*/
-T0* r544clone(T0* a1);
-/*GEANT_GEPP_COMMAND*/
-void r544create_directory(T544* C,T0* a1);
-/*GEANT_GEPP_COMMAND*/
-T6 r544is_file_executable(T544* C);
-/*GEANT_GEPP_COMMAND*/
-void r544make(T544* C,T0* a1);
-/*GEANT_GEPP_COMMAND*/
-void r544execute(T544* C);
-/*GEANT_GEPP_COMMAND*/
-T6 r544is_file_outofdate(T0* a1,T0* a2);
-/*GEANT_GEPP_COMMAND*/
-void r544execute_shell(T544* C,T0* a1);
-/*GEANT_GEPP_COMMAND*/
-T6 r544is_executable(T544* C);
-/*GEANT_GEPP_COMMAND*/
-void r544_191Pmake(T544* C,T0* a1);
-/*GEANT_GEPP_COMMAND*/
-T6 r544is_fileset_executable(T544* C);
-/*XM_CHARACTER_DATA*/
-void r717make(T717* C,T0* a1,T0* a2);
-/*KL_NULL_TEXT_OUTPUT_STREAM*/
-void r493put_line(T0* a1);
-/*GEANT_EXEC_TASK*/
-T0* r201attribute_value(T201* C,T0* a1);
-extern T0*oBC201fileset_element_name;
-/*GEANT_EXEC_TASK*/
-T0* r201file_system(void);
-/*GEANT_EXEC_TASK*/
-void r201make(T201* C,T0* a1,T0* a2);
-/*GEANT_EXEC_TASK*/
-T6 r201boolean_value(T201* C,T0* a1);
-/*GEANT_EXEC_TASK*/
-void r201task_make(T201* C,T0* a1,T0* a2);
-extern T0*oBC201executable_attribute_name;
-/*GEANT_EXEC_TASK*/
-void r201execute(T201* C);
-/*GEANT_EXEC_TASK*/
-T6 r201is_enabled(T201* C);
-extern T0*oBC201accept_errors_attribute_name;
-/*GEANT_EXEC_TASK*/
-void r201interpreting_element_make(T201* C,T0* a1,T0* a2);
-/*XM_NAMESPACE_RESOLVER*/
-void r736on_start_tag_finish(T736* C);
-/*XM_NAMESPACE_RESOLVER*/
-void r736on_delayed_attributes(T736* C);
-/*XM_NAMESPACE_RESOLVER*/
-void r736on_finish(T736* C);
-/*XM_NAMESPACE_RESOLVER*/
-void r736on_content(T736* C,T0* a1);
-/*XM_NAMESPACE_RESOLVER*/
-void r736make_null(T736* C);
-/*XM_NAMESPACE_RESOLVER*/
-void r736on_start(T736* C);
-/*XM_NAMESPACE_RESOLVER*/
-T6 r736is_local_part(T0* a1);
-/*XM_NAMESPACE_RESOLVER*/
-T6 r736is_xmlns(T0* a1);
-/*XM_NAMESPACE_RESOLVER*/
-void r736on_processing_instruction(T736* C,T0* a1,T0* a2);
-/*XM_NAMESPACE_RESOLVER*/
-T0* r736new_string_queue(void);
-/*XM_NAMESPACE_RESOLVER*/
-void r736on_start_tag(T736* C,T0* a1,T0* a2,T0* a3);
-/*XM_NAMESPACE_RESOLVER*/
-T6 r736has_prefix(T0* a1);
-/*XM_NAMESPACE_RESOLVER*/
-void r736on_comment(T736* C,T0* a1);
-/*XM_NAMESPACE_RESOLVER*/
-void r736on_end_tag(T736* C,T0* a1,T0* a2,T0* a3);
-extern T0*oBC160xmlns;
-/*XM_NAMESPACE_RESOLVER*/
-void r736attributes_make(T736* C);
-/*XM_NAMESPACE_RESOLVER*/
-void r736on_attribute(T736* C,T0* a1,T0* a2,T0* a3,T0* a4);
-/*XM_NAMESPACE_RESOLVER*/
-void r736_686Pon_end_tag(T736* C,T0* a1,T0* a2,T0* a3);
-/*XM_NAMESPACE_RESOLVER*/
-void r736_686Pon_start_tag_finish(T736* C);
-/*XM_NAMESPACE_RESOLVER*/
-void r736on_error(T736* C,T0* a1);
-/*XM_NAMESPACE_RESOLVER*/
-T6 r736same_string(T0* a1,T0* a2);
-/*XM_NAMESPACE_RESOLVER*/
-void r736attributes_remove(T736* C);
-/*XM_NAMESPACE_RESOLVER*/
-void r736attributes_force(T736* C,T0* a1,T0* a2,T0* a3);
-/*XM_NAMESPACE_RESOLVER*/
-void r736on_xml_declaration(T736* C,T0* a1,T0* a2,T6 a3);
-/*XM_EIFFEL_CHARACTER_ENTITY*/
-void r783from_hexadecimal(T783* C,T0* a1);
-extern T0*oBC57utf8;
-/*XM_EIFFEL_CHARACTER_ENTITY*/
-T0* r783to_utf8(T783* C);
-/*XM_EIFFEL_CHARACTER_ENTITY*/
-T6 r783is_valid(T783* C);
-/*XM_EIFFEL_CHARACTER_ENTITY*/
-void r783from_decimal(T783* C,T0* a1);
-extern T0*oBC51unicode;
-/*XM_NAMESPACE_RESOLVER_CONTEXT*/
-T0* r926new_string_string_table(void);
-/*XM_NAMESPACE_RESOLVER_CONTEXT*/
-T6 r926shallow_has(T926* C,T0* a1);
-/*XM_NAMESPACE_RESOLVER_CONTEXT*/
-void r926make(T926* C);
-/*XM_NAMESPACE_RESOLVER_CONTEXT*/
-T0* r926resolve(T926* C,T0* a1);
-extern T0*oBC926default_pseudo_prefix;
-extern int fBC926default_pseudo_prefix;
-/*XM_NAMESPACE_RESOLVER_CONTEXT*/
-T0* r926default_pseudo_prefix(void);
-/*XM_NAMESPACE_RESOLVER_CONTEXT*/
-T6 r926has(T926* C,T0* a1);
-/*XM_NAMESPACE_RESOLVER_CONTEXT*/
-T0* r926resolve_default(T926* C);
-extern T0*oBC926default_namespace;
-extern int fBC926default_namespace;
-/*XM_NAMESPACE_RESOLVER_CONTEXT*/
-T0* r926default_namespace(void);
-/*XM_NAMESPACE_RESOLVER_CONTEXT*/
-void r926pop(T926* C);
-/*LX_FULL_AND_VARIABLE_TRAILING_CONTEXT_ERROR*/
-T0* r426arguments(void);
-/*LX_FULL_AND_VARIABLE_TRAILING_CONTEXT_ERROR*/
-void r426make(T426* C);
-/*LX_FULL_AND_VARIABLE_TRAILING_CONTEXT_ERROR*/
-T0* r426message(T426* C,T0* a1);
-/*LX_FULL_AND_VARIABLE_TRAILING_CONTEXT_ERROR*/
-T0* r426default_message(T426* C);
-/*GEANT_COPY_COMMAND*/
-T6 r561is_fileset_to_directory_executable(T561* C);
-/*GEANT_COPY_COMMAND*/
-T0* r561file_system(void);
-/*GEANT_COPY_COMMAND*/
-void r561create_directory(T561* C,T0* a1);
-/*GEANT_COPY_COMMAND*/
-void r561create_directory_for_pathname(T561* C,T0* a1);
-/*GEANT_COPY_COMMAND*/
-void r561copy_file(T561* C,T0* a1,T0* a2);
-/*GEANT_COPY_COMMAND*/
-void r561execute(T561* C);
-/*GEANT_COPY_COMMAND*/
-T6 r561is_file_outofdate(T0* a1,T0* a2);
-/*GEANT_COPY_COMMAND*/
-T6 r561is_file_to_directory_executable(T561* C);
-/*GEANT_COPY_COMMAND*/
-T6 r561is_file_to_file_executable(T561* C);
-/*GEANT_COPY_COMMAND*/
-T6 r561is_executable(T561* C);
-extern T0*oBC586source_attribute_name;
-extern T0*oBC586target_attribute_name;
-/*GEANT_OUTOFDATE_TASK*/
-T0* r586attribute_value(T586* C,T0* a1);
-extern T0*oBC586fileset_element_name;
-/*GEANT_OUTOFDATE_TASK*/
-T0* r586file_system(void);
-extern T0*oBC586true_value_attribute_name;
-/*GEANT_OUTOFDATE_TASK*/
-void r586make(T586* C,T0* a1,T0* a2);
-/*GEANT_OUTOFDATE_TASK*/
-void r586task_make(T586* C,T0* a1,T0* a2);
-/*GEANT_OUTOFDATE_TASK*/
-void r586execute(T586* C);
-/*GEANT_OUTOFDATE_TASK*/
-T6 r586is_enabled(T586* C);
-extern T0*oBC586false_value_attribute_name;
-/*GEANT_OUTOFDATE_TASK*/
-void r586interpreting_element_make(T586* C,T0* a1,T0* a2);
-extern T0*oBC586variable_attribute_name;
-/*LX_START_CONDITION*/
-void r342make(T342* C,T0* a1,T2 a2,T6 a3);
-/*TEXT_FILE_READ*/
-void r662disconnect(T662* C);
-/*TEXT_FILE_READ*/
-void r662connect_to(T662* C,T0* a1);
-/*KL_BINARY_OUTPUT_FILE*/
-T6 r795is_closed(T795* C);
-/*KL_BINARY_OUTPUT_FILE*/
-void r795old_close(T795* C);
-/*KL_BINARY_OUTPUT_FILE*/
-void r795old_open_write(T795* C);
-/*KL_BINARY_OUTPUT_FILE*/
-void r795close(T795* C);
-/*KL_BINARY_OUTPUT_FILE*/
-void r795make(T795* C,T0* a1);
-/*KL_BINARY_OUTPUT_FILE*/
-void r795put_byte(T795* C,T2 a1);
-/*KL_BINARY_OUTPUT_FILE*/
-void r795old_put_string(T795* C,T0* a1);
-/*KL_BINARY_OUTPUT_FILE*/
-void r795connect_to(T795* C,T0* a1);
-/*KL_BINARY_OUTPUT_FILE*/
-void r795old_make(T795* C);
-/*KL_BINARY_OUTPUT_FILE*/
-void r795open_write(T795* C);
-/*KL_BINARY_OUTPUT_FILE*/
-void r795write_buffer(T795* C);
-extern T0*oBC696target_attribute_name;
-/*GEANT_REDEFINE_ELEMENT*/
-T0* r696attribute_value(T696* C,T0* a1);
-/*GEANT_REDEFINE_ELEMENT*/
-void r696make(T696* C,T0* a1,T0* a2);
-/*GEANT_REDEFINE_ELEMENT*/
-void r696interpreting_element_make(T696* C,T0* a1,T0* a2);
-extern T0*oBC546feature_attribute_name;
-extern T0*oBC546define_element_name;
-/*GEANT_GETEST_TASK*/
-T0* r546attribute_value(T546* C,T0* a1);
-/*GEANT_GETEST_TASK*/
-T0* r546file_system(void);
-extern T0*oBC546config_filename_attribute_name;
-/*GEANT_GETEST_TASK*/
-T0* r546elements_by_name(T546* C,T0* a1);
-/*GEANT_GETEST_TASK*/
-void r546make(T546* C,T0* a1,T0* a2);
-/*GEANT_GETEST_TASK*/
-void r546task_make(T546* C,T0* a1,T0* a2);
-extern T0*oBC546compile_attribute_name;
-/*GEANT_GETEST_TASK*/
-void r546execute(T546* C);
-/*GEANT_GETEST_TASK*/
-T6 r546is_enabled(T546* C);
-extern T0*oBC546class_attribute_name;
-/*GEANT_GETEST_TASK*/
-void r546interpreting_element_make(T546* C,T0* a1,T0* a2);
-/*LX_RULE*/
-void r255make_default(T255* C,T2 a1);
-/*LX_RULE*/
-T6 r255is_equal(T255* C,T0* a1);
-extern T0*oBC255dummy_pattern;
-extern int fBC255dummy_pattern;
-/*LX_RULE*/
-T0* r255dummy_pattern(void);
-extern T0*oBC255dummy_action;
-extern int fBC255dummy_action;
-/*LX_RULE*/
-T0* r255dummy_action(void);
-/*LX_RULE*/
-T6 r255_ix_60(T255* C,T0* a1);
-/*GEANT_MOVE_TASK*/
 T0* r562attribute_value(T562* C,T0* a1);
-extern T0*oBC562file_attribute_name;
-extern T0*oBC562fileset_element_name;
-/*GEANT_MOVE_TASK*/
+/*GEANT_GEYACC_TASK*/
 T0* r562file_system(void);
-extern T0*oBC562to_directory_attribute_name;
-extern T0*oBC562to_file_attribute_name;
-/*GEANT_MOVE_TASK*/
+extern T0*oBC562input_filename_attribute_name;
+extern T0*oBC562separate_actions_attribute_name;
+extern T0*oBC562tokens_filename_attribute_name;
+/*GEANT_GEYACC_TASK*/
 void r562make(T562* C,T0* a1,T0* a2);
-/*GEANT_MOVE_TASK*/
+/*GEANT_GEYACC_TASK*/
+T6 r562boolean_value(T562* C,T0* a1);
+extern T0*oBC562new_typing_attribute_name;
+/*GEANT_GEYACC_TASK*/
 void r562task_make(T562* C,T0* a1,T0* a2);
-/*GEANT_MOVE_TASK*/
+extern T0*oBC562output_filename_attribute_name;
+/*GEANT_GEYACC_TASK*/
 void r562execute(T562* C);
-/*GEANT_MOVE_TASK*/
+/*GEANT_GEYACC_TASK*/
 T6 r562is_enabled(T562* C);
-/*GEANT_MOVE_TASK*/
+extern T0*oBC562old_typing_attribute_name;
+/*GEANT_GEYACC_TASK*/
+T0* r562target_arguments_stack(void);
+extern T0*oBC562verbose_filename_attribute_name;
+/*GEANT_GEYACC_TASK*/
 void r562interpreting_element_make(T562* C,T0* a1,T0* a2);
-/*KL_DIRECTORY*/
-T6 r709is_closed(T709* C);
-/*KL_DIRECTORY*/
-T6 r709old_end_of_input(T709* C);
-/*KL_DIRECTORY*/
-void r709open_read(T709* C);
-/*KL_DIRECTORY*/
-T0* r709file_system(void);
-/*KL_DIRECTORY*/
-T0* r709clone(T0* a1);
-/*KL_DIRECTORY*/
-void r709create_directory(T709* C);
-/*KL_DIRECTORY*/
-T6 r709is_open_read(T709* C);
-/*KL_DIRECTORY*/
-void r709close(T709* C);
-/*KL_DIRECTORY*/
-void r709make(T709* C,T0* a1);
-/*KL_DIRECTORY*/
-T6 r709exists(T709* C);
-/*KL_DIRECTORY*/
-void r709recursive_create_directory(T709* C);
-/*KL_DIRECTORY*/
-void r709read_entry(T709* C);
-/*KL_DIRECTORY*/
-void r709delete(T709* C);
-/*KL_DIRECTORY*/
-void r709recursive_delete(T709* C);
-/*KL_DIRECTORY*/
-T6 r709is_readable(T709* C);
-extern T0*oBC695target_attribute_name;
-/*GEANT_SELECT_ELEMENT*/
-T0* r695attribute_value(T695* C,T0* a1);
-/*GEANT_SELECT_ELEMENT*/
-void r695make(T695* C,T0* a1,T0* a2);
-/*GEANT_SELECT_ELEMENT*/
-void r695interpreting_element_make(T695* C,T0* a1,T0* a2);
-/*GEANT_SETENV_TASK*/
-T0* r564attribute_value(T564* C,T0* a1);
-/*GEANT_SETENV_TASK*/
-T0* r564file_system(void);
-extern T0*oBC564name_attribute_name;
-extern T0*oBC564value_attribute_name;
-/*GEANT_SETENV_TASK*/
-void r564make(T564* C,T0* a1,T0* a2);
-/*GEANT_SETENV_TASK*/
-void r564task_make(T564* C,T0* a1,T0* a2);
-/*GEANT_SETENV_TASK*/
-void r564execute(T564* C);
-/*GEANT_SETENV_TASK*/
-T6 r564is_enabled(T564* C);
-/*GEANT_SETENV_TASK*/
-void r564interpreting_element_make(T564* C,T0* a1,T0* a2);
-/*GEANT_HACT_COMMAND*/
-T6 r198is_cleanable(T198* C);
-/*GEANT_HACT_COMMAND*/
-T0* r198file_system(void);
-/*GEANT_HACT_COMMAND*/
-T0* r198clone(T0* a1);
-/*GEANT_HACT_COMMAND*/
-void r198execute_clean(T198* C);
-/*GEANT_HACT_COMMAND*/
-void r198execute_compile(T198* C);
-/*GEANT_HACT_COMMAND*/
-T6 r198is_compilable(T198* C);
-/*GEANT_HACT_COMMAND*/
-void r198execute(T198* C);
-/*GEANT_HACT_COMMAND*/
-void r198execute_shell(T198* C,T0* a1);
-/*GEANT_HACT_COMMAND*/
-T6 r198is_executable(T198* C);
-/*GEANT_ISE_TASK*/
-T0* r195attribute_value(T195* C,T0* a1);
-/*GEANT_ISE_TASK*/
-T0* r195file_system(void);
-/*GEANT_ISE_TASK*/
-void r195make(T195* C,T0* a1,T0* a2);
-extern T0*oBC195finalize_attribute_name;
-/*GEANT_ISE_TASK*/
-T6 r195boolean_value(T195* C,T0* a1);
-/*GEANT_ISE_TASK*/
-void r195task_make(T195* C,T0* a1,T0* a2);
-/*GEANT_ISE_TASK*/
-void r195execute(T195* C);
-extern T0*oBC195ace_attribute_name;
-/*GEANT_ISE_TASK*/
-T6 r195is_enabled(T195* C);
-/*GEANT_ISE_TASK*/
-T0* r195attribute_value_or_default(T195* C,T0* a1,T0* a2);
-extern T0*oBC195finish_freezing_attribute_name;
-extern T0*oBC195system_attribute_name;
-/*GEANT_ISE_TASK*/
-void r195interpreting_element_make(T195* C,T0* a1,T0* a2);
-extern T0*oBC195clean_attribute_name;
-/*YY_BUFFER*/
-void r408set_position(T408* C,T2 a1,T2 a2,T2 a3);
-/*YY_BUFFER*/
-T0* r408name(void);
-/*YY_BUFFER*/
-void r408make(T408* C,T0* a1);
-/*YY_BUFFER*/
-void r408make_from_buffer(T408* C,T0* a1);
-/*YY_BUFFER*/
-T0* r408new_default_buffer(T2 a1);
-/*GEANT_FILESET_ENTRY*/
-T6 r508is_equal(T508* C,T0* a1);
-/*GEANT_FILESET_ENTRY*/
-T0* r508file_system(void);
-/*GEANT_FILESET_ENTRY*/
-void r508make(T508* C,T0* a1,T0* a2);
-/*GEANT_FILESET_ENTRY*/
-T2 r508hash_code(T508* C);
-/*GEANT_FILESET_ENTRY*/
-T0* r508mapped_filename_converted(T508* C);
-/*GEANT_FILESET_ENTRY*/
-T0* r508filename_converted(T508* C);
-/*LX_CHARACTER_OUT_OF_RANGE_ERROR*/
-T0* r421arguments(void);
-/*LX_CHARACTER_OUT_OF_RANGE_ERROR*/
-void r421make(T421* C,T0* a1,T2 a2,T0* a3);
-/*LX_CHARACTER_OUT_OF_RANGE_ERROR*/
-T0* r421message(T421* C,T0* a1);
-/*LX_CHARACTER_OUT_OF_RANGE_ERROR*/
-T0* r421default_message(T421* C);
-extern T0*oBC556directory_attribute_name;
-/*GEANT_DELETE_TASK*/
-T0* r556attribute_value(T556* C,T0* a1);
-extern T0*oBC556file_attribute_name;
-extern T0*oBC556fileset_element_name;
-/*GEANT_DELETE_TASK*/
-T0* r556file_system(void);
-extern T0*oBC556directoryset_element_name;
-/*GEANT_DELETE_TASK*/
-void r556make(T556* C,T0* a1,T0* a2);
-/*GEANT_DELETE_TASK*/
-void r556task_make(T556* C,T0* a1,T0* a2);
-/*GEANT_DELETE_TASK*/
-void r556execute(T556* C);
-/*GEANT_DELETE_TASK*/
-T6 r556is_enabled(T556* C);
-/*GEANT_DELETE_TASK*/
-void r556interpreting_element_make(T556* C,T0* a1,T0* a2);
-/*XM_DTD_ATTRIBUTE_CONTENT*/
-T6 r824is_value_required(T824* C);
-/*XM_DTD_ATTRIBUTE_CONTENT*/
-void r824set_default_value(T824* C,T0* a1);
-/*XM_DTD_ATTRIBUTE_CONTENT*/
-void r824make(T824* C);
-/*XM_DTD_ATTRIBUTE_CONTENT*/
-void r824copy_default(T824* C,T0* a1);
-/*XM_DTD_ATTRIBUTE_CONTENT*/
-void r824set_value_fixed(T824* C,T0* a1);
-/*GEANT_GETEST_COMMAND*/
-T0* r547file_system(void);
-/*GEANT_GETEST_COMMAND*/
-T0* r547clone(T0* a1);
-/*GEANT_GETEST_COMMAND*/
-void r547make(T547* C,T0* a1);
-/*GEANT_GETEST_COMMAND*/
-void r547execute(T547* C);
-/*GEANT_GETEST_COMMAND*/
-void r547execute_shell(T547* C,T0* a1);
-/*GEANT_GETEST_COMMAND*/
-T6 r547is_executable(T547* C);
-/*GEANT_GETEST_COMMAND*/
-void r547_191Pmake(T547* C,T0* a1);
-/*XM_EIFFEL_PARSER*/
-T6 r742is_correct(T742* C);
-/*XM_EIFFEL_PARSER*/
-void r742yy_do_action(T742* C,T2 a1);
-extern T0*oBC742yytable_template;
-extern int fBC742yytable_template;
-/*XM_EIFFEL_PARSER*/
-T0* r742yytable_template(void);
-/*XM_EIFFEL_PARSER*/
-void r742on_end_tag(T742* C,T0* a1,T0* a2,T0* a3);
-/*XM_EIFFEL_PARSER*/
-void r742check_void(T742* C);
-/*XM_EIFFEL_PARSER*/
-T0* r742defined_entity_referenced(T742* C,T0* a1);
-/*XM_EIFFEL_PARSER*/
-T0* r742new_entities_table(void);
-/*XM_EIFFEL_PARSER*/
-void r742on_attribute(T742* C,T0* a1,T0* a2,T0* a3,T0* a4);
-/*XM_EIFFEL_PARSER*/
-T2 r742line(T742* C);
-/*XM_EIFFEL_PARSER*/
-void r742on_start_tag_finish(T742* C);
-/*XM_EIFFEL_PARSER*/
-T6 r742is_local_part(T0* a1);
-/*XM_EIFFEL_PARSER*/
-void r742when_external_dtd(T742* C,T0* a1);
-/*XM_EIFFEL_PARSER*/
-void r742yy_do_error_action(T742* C,T2 a1);
-/*XM_EIFFEL_PARSER*/
-void r742parse(T742* C);
-/*XM_EIFFEL_PARSER*/
-T0* r742new_dtd_external_id(void);
-/*XM_EIFFEL_PARSER*/
-void r742when_entity_declared(T742* C,T0* a1,T0* a2);
-/*XM_EIFFEL_PARSER*/
-T2 r742byte_position(T742* C);
-/*XM_EIFFEL_PARSER*/
-void r742on_error(T742* C,T0* a1);
-/*XM_EIFFEL_PARSER*/
-T0* r742new_literal_entity(T0* a1);
-extern T0*oBC742yytranslate_template;
-extern int fBC742yytranslate_template;
-/*XM_EIFFEL_PARSER*/
-T0* r742yytranslate_template(void);
-/*XM_EIFFEL_PARSER*/
-void r742process_pe_entity(T742* C,T0* a1);
-/*XM_EIFFEL_PARSER*/
-T0* r742new_unicode_string_from_utf8(T0* a1);
-/*XM_EIFFEL_PARSER*/
-void r742yy_push_last_value(T742* C,T2 a1);
-/*XM_EIFFEL_PARSER*/
-T0* r742new_name_set(void);
-/*XM_EIFFEL_PARSER*/
-void r742yy_push_error_value(T742* C);
-/*XM_EIFFEL_PARSER*/
-T6 r742syntax_error(T742* C);
-/*XM_EIFFEL_PARSER*/
-void r742on_start(T742* C);
-extern T0*oBC742yyr1_template;
-extern int fBC742yyr1_template;
-/*XM_EIFFEL_PARSER*/
-T0* r742yyr1_template(void);
-/*XM_EIFFEL_PARSER*/
-T0* r742new_external_entity(T742* C,T0* a1);
-extern T0*oBC742yytypes1_template;
-extern int fBC742yytypes1_template;
-/*XM_EIFFEL_PARSER*/
-T0* r742yytypes1_template(void);
-/*XM_EIFFEL_PARSER*/
-T0* r742onstring_ascii(T742* C,T0* a1);
-/*XM_EIFFEL_PARSER*/
-T0* r742position(T742* C);
-/*XM_EIFFEL_PARSER*/
-void r742on_entity_declaration(T742* C,T0* a1,T6 a2,T0* a3,T0* a4,T0* a5);
-/*XM_EIFFEL_PARSER*/
-void r742on_finish(T742* C);
-/*XM_EIFFEL_PARSER*/
-T0* r742new_dtd_attribute_content(void);
-/*XM_EIFFEL_PARSER*/
-void r742on_notation_declaration(T742* C,T0* a1,T0* a2);
-/*XM_EIFFEL_PARSER*/
-void r742read_token(T742* C);
-/*XM_EIFFEL_PARSER*/
-T6 r742is_string_mode_unicode(T742* C);
-/*XM_EIFFEL_PARSER*/
-void r742on_attribute_declarations(T742* C,T0* a1,T0* a2);
-/*XM_EIFFEL_PARSER*/
-void r742yy_init_value_stacks(T742* C);
-extern T0*oBC742yypgoto_template;
-extern int fBC742yypgoto_template;
-/*XM_EIFFEL_PARSER*/
-T0* r742yypgoto_template(void);
-/*XM_EIFFEL_PARSER*/
-void r742process_entity_scanner(T742* C,T0* a1);
-extern T0*oBC742yytypes2_template;
-extern int fBC742yytypes2_template;
-/*XM_EIFFEL_PARSER*/
-T0* r742yytypes2_template(void);
-/*XM_EIFFEL_PARSER*/
-void r742when_pe_entity_declared(T742* C,T0* a1,T0* a2);
-extern T0*oBC55integer_;
-/*XM_EIFFEL_PARSER*/
-T0* r742shared_empty_string(T742* C);
-/*XM_EIFFEL_PARSER*/
-void r742set_element_repetition(T0* a1,T0* a2);
-/*XM_EIFFEL_PARSER*/
-void r742on_doctype(T742* C,T0* a1,T0* a2,T6 a3);
-/*XM_EIFFEL_PARSER*/
-T2 r742column(T742* C);
-/*XM_EIFFEL_PARSER*/
-void r742_686Pon_error(T742* C,T0* a1);
-/*XM_EIFFEL_PARSER*/
-T0* r742clone(T0* a1);
-/*XM_EIFFEL_PARSER*/
-void r742make_scanner(T742* C);
-/*XM_EIFFEL_PARSER*/
-T0* r742new_namespace_name(void);
-/*XM_EIFFEL_PARSER*/
-void r742reset(T742* C);
-/*XM_EIFFEL_PARSER*/
-T0* r742new_string_bilinked_list(void);
-/*XM_EIFFEL_PARSER*/
-void r742on_element_declaration(T742* C,T0* a1,T0* a2);
-/*XM_EIFFEL_PARSER*/
-T0* r742source(T742* C);
-/*XM_EIFFEL_PARSER*/
-void r742yy_clear_value_stacks(T742* C);
-/*XM_EIFFEL_PARSER*/
-void r742parse_from_stream(T742* C,T0* a1);
-/*XM_EIFFEL_PARSER*/
-void r742yy_build_parser_tables(T742* C);
-/*XM_EIFFEL_PARSER*/
-void r742force_error(T742* C,T0* a1);
-/*XM_EIFFEL_PARSER*/
-void r742on_start_tag(T742* C,T0* a1,T0* a2,T0* a3);
-/*XM_EIFFEL_PARSER*/
-T0* r742element_name(T0* a1);
-/*XM_EIFFEL_PARSER*/
-void r742on_processing_instruction(T742* C,T0* a1,T0* a2);
-/*XM_EIFFEL_PARSER*/
-void r742on_attribute_declaration(T742* C,T0* a1,T0* a2,T0* a3);
-/*XM_EIFFEL_PARSER*/
-T0* r742external_entity_to_string(T742* C,T0* a1);
-/*XM_EIFFEL_PARSER*/
-T0* r742last_error_extended_description(T742* C);
-/*XM_EIFFEL_PARSER*/
-T0* r742entity_referenced_in_entity_value(T742* C,T0* a1);
-/*XM_EIFFEL_PARSER*/
-void r742on_content(T742* C,T0* a1);
-/*XM_EIFFEL_PARSER*/
-void r742make_parser(T742* C);
-extern T0*oBC742yydefact_template;
-extern int fBC742yydefact_template;
-/*XM_EIFFEL_PARSER*/
-T0* r742yydefact_template(void);
-extern T0*oBC743shared_empty_string_uc;
-extern int fBC743shared_empty_string_uc;
-/*XM_EIFFEL_PARSER*/
-T0* r742shared_empty_string_uc(void);
-/*XM_EIFFEL_PARSER*/
-T6 r742is_string_mode_ascii(T742* C);
-extern T0*oBC742yycheck_template;
-extern int fBC742yycheck_template;
-/*XM_EIFFEL_PARSER*/
-T0* r742yycheck_template(void);
-/*XM_EIFFEL_PARSER*/
-T0* r742new_dtd_attribute_content_list(void);
-/*XM_EIFFEL_PARSER*/
-void r742make(T742* C);
-/*XM_EIFFEL_PARSER*/
-void r742on_xml_declaration(T742* C,T0* a1,T0* a2,T6 a3);
-/*XM_EIFFEL_PARSER*/
-T0* r742yyfixed_array(T0* a1);
-extern T0*oBC742yydefgoto_template;
-extern int fBC742yydefgoto_template;
-/*XM_EIFFEL_PARSER*/
-T0* r742yydefgoto_template(void);
-/*XM_EIFFEL_PARSER*/
-void r742yy_pop_last_value(T742* C,T2 a1);
-/*XM_EIFFEL_PARSER*/
-void r742process_entity(T742* C,T0* a1);
-extern T0*oBC742yypact_template;
-extern int fBC742yypact_template;
-/*XM_EIFFEL_PARSER*/
-T0* r742yypact_template(void);
-/*XM_EIFFEL_PARSER*/
-void r742on_comment(T742* C,T0* a1);
-/*XM_EIFFEL_PARSER*/
-void r742process_attribute_entity(T742* C,T0* a1);
-extern T0*oBC743shared_empty_string_string;
-extern int fBC743shared_empty_string_string;
-/*XM_EIFFEL_PARSER*/
-T0* r742shared_empty_string_string(void);
-/*XM_EIFFEL_PARSER*/
-T0* r742onstring_utf8(T742* C,T0* a1);
-/*XM_DOCUMENT*/
-T6 r676valid_cursor(T676* C,T0* a1);
-/*XM_DOCUMENT*/
-void r676remove_traversing_cursor(T676* C,T0* a1);
-/*XM_DOCUMENT*/
-void r676cursor_go_after(T676* C,T0* a1);
-/*XM_DOCUMENT*/
-void r676add_traversing_cursor(T676* C,T0* a1);
-/*XM_DOCUMENT*/
-T6 r676cursor_after(T0* a1);
-/*XM_DOCUMENT*/
-void r676make_list(T676* C);
-/*XM_DOCUMENT*/
-void r676cursor_forth(T676* C,T0* a1);
-/*XM_DOCUMENT*/
-void r676cursor_start(T676* C,T0* a1);
-/*XM_DOCUMENT*/
-void r676force_last(T676* C,T0* a1);
-/*XM_DOCUMENT*/
-T0* r676new_cursor(T676* C);
-/*XM_DOCUMENT*/
-T6 r676cursor_off(T0* a1);
-/*XM_DOCUMENT*/
-void r676set_root_element(T676* C,T0* a1);
-/*LX_BAD_CHARACTER_ERROR*/
-T0* r424arguments(void);
-/*LX_BAD_CHARACTER_ERROR*/
-void r424make(T424* C,T0* a1,T2 a2,T0* a3);
-/*LX_BAD_CHARACTER_ERROR*/
-T0* r424message(T424* C,T0* a1);
-/*LX_BAD_CHARACTER_ERROR*/
-T0* r424default_message(T424* C);
-/*GEANT_MOVE_COMMAND*/
-void r563move_file(T563* C,T0* a1,T0* a2);
-/*GEANT_MOVE_COMMAND*/
-T6 r563is_fileset_to_directory_executable(T563* C);
-/*GEANT_MOVE_COMMAND*/
-T0* r563file_system(void);
-/*GEANT_MOVE_COMMAND*/
-void r563create_directory(T563* C,T0* a1);
-/*GEANT_MOVE_COMMAND*/
-void r563create_directory_for_pathname(T563* C,T0* a1);
-/*GEANT_MOVE_COMMAND*/
-void r563execute(T563* C);
-/*GEANT_MOVE_COMMAND*/
-T6 r563is_file_to_directory_executable(T563* C);
-/*GEANT_MOVE_COMMAND*/
-T6 r563is_file_to_file_executable(T563* C);
-/*GEANT_MOVE_COMMAND*/
-T6 r563is_executable(T563* C);
-/*GEANT_PROJECT_ELEMENT*/
-T0* r659attribute_value(T659* C,T0* a1);
-extern T0*oBC659inherit_element_name;
-extern T0*oBC659name_attribute_name;
-extern T0*oBC659inherit_attribute_name;
-/*GEANT_PROJECT_ELEMENT*/
-T0* r659elements_by_name(T659* C,T0* a1);
-extern T0*oBC28description_element_name;
-/*GEANT_PROJECT_ELEMENT*/
-T6 r659has_inherit_element(T659* C);
-extern T0*oBC659default_attribute_name;
-/*GEANT_PROJECT_ELEMENT*/
-void r659make(T659* C,T0* a1,T0* a2,T0* a3,T0* a4);
-/*GEANT_PROJECT_ELEMENT*/
-void r659load_parent_projects(T659* C);
-extern T0*oBC659target_element_name;
-/*GEANT_PROJECT_ELEMENT*/
-void r659exit_application(T2 a1,T0* a2);
-/*GEANT_SET_TASK*/
-T0* r532attribute_value(T532* C,T0* a1);
-/*GEANT_SET_TASK*/
-T0* r532file_system(void);
-extern T0*oBC532name_attribute_name;
-extern T0*oBC532value_attribute_name;
-/*GEANT_SET_TASK*/
-void r532make(T532* C,T0* a1,T0* a2);
-/*GEANT_SET_TASK*/
-void r532task_make(T532* C,T0* a1,T0* a2);
-/*GEANT_SET_TASK*/
-void r532execute(T532* C);
-/*GEANT_SET_TASK*/
-T6 r532is_enabled(T532* C);
-/*GEANT_SET_TASK*/
-void r532interpreting_element_make(T532* C,T0* a1,T0* a2);
-/*LX_DFA_STATE*/
-T6 r252is_equal(T252* C,T0* a1);
-extern T0*oBC252rule_sorter;
-extern int fBC252rule_sorter;
-/*LX_DFA_STATE*/
-T0* r252rule_sorter(void);
-/*LX_DFA_STATE*/
-T6 r252se_assigned_from(T0* a1);
-extern T0*oBC252bubble_sorter;
-extern int fBC252bubble_sorter;
-/*LX_DFA_STATE*/
-T0* r252bubble_sorter(void);
-/*LX_DFA_STATE*/
-T6 r252same_type(T252* C,T0* a1);
-/*LX_DFA_STATE*/
-void r252make(T252* C,T0* a1,T2 a2,T2 a3);
-/*LX_DFA_STATE*/
-void r252partition(T252* C,T0* a1);
-/*LX_DFA_STATE*/
-T6 r252conforms_to(T252* C,T0* a1);
-/*LX_DFA_STATE*/
-T6 r252is_accepting(T252* C);
-/*LX_DFA_STATE*/
-T0* r252new_state(T252* C,T2 a1);
-/*GEANT_LCC_TASK*/
-T0* r530attribute_value(T530* C,T0* a1);
-/*GEANT_LCC_TASK*/
-T0* r530file_system(void);
-/*GEANT_LCC_TASK*/
-void r530make(T530* C,T0* a1,T0* a2);
-/*GEANT_LCC_TASK*/
-void r530task_make(T530* C,T0* a1,T0* a2);
-extern T0*oBC530executable_attribute_name;
-/*GEANT_LCC_TASK*/
-void r530execute(T530* C);
-/*GEANT_LCC_TASK*/
-T6 r530is_enabled(T530* C);
-extern T0*oBC530source_filename_attribute_name;
-/*GEANT_LCC_TASK*/
-void r530interpreting_element_make(T530* C,T0* a1,T0* a2);
-/*GEANT_PROJECT*/
-void r32calculate_depend_order(T32* C,T0* a1);
-/*GEANT_PROJECT*/
-void r32build(T32* C);
-/*GEANT_PROJECT*/
-void r32trace(T32* C,T0* a1);
-/*GEANT_PROJECT*/
-void r32build_target(T32* C,T0* a1);
-/*GEANT_PROJECT*/
-void r32log(T32* C,T0* a1);
-/*GEANT_PROJECT*/
-void r32make(T32* C,T0* a1,T0* a2);
-/*GEANT_PROJECT*/
-T0* r32default_target(T32* C);
-/*GEANT_PROJECT*/
-T0* r32target_name(T32* C,T0* a1);
-/*GEANT_PROJECT*/
-T0* r32start_target(T32* C);
-/*GEANT_PROJECT*/
-void r32trace_debug(T32* C,T0* a1);
-/*GEANT_PROJECT*/
-void r32show_target_info(T32* C);
-/*GEANT_PROJECT*/
-void r32execute_target(T32* C,T0* a1,T6 a2,T6 a3);
-/*GEANT_PROJECT*/
-void r32merge_in_parent_projects(T32* C);
-/*GEANT_PROJECT*/
-void r32exit_application(T2 a1,T0* a2);
-/*GEANT_PROJECT*/
-T6 r32has_parent_with_name(T32* C,T0* a1);
-/*UC_STRING*/
-T0* r54out(T54* C);
-/*UC_STRING*/
-void r54copy(T54* C,T0* a1);
-/*UC_STRING*/
-T0* r54substring(T54* C,T2 a1,T2 a2);
-/*UC_STRING*/
-void r54reset_byte_index_cache(T54* C);
-/*UC_STRING*/
-void r54wipe_out(T54* C);
-/*UC_STRING*/
-void r54keep_tail(T54* C,T2 a1);
-/*UC_STRING*/
-void r54remove_first(T54* C,T2 a1);
-/*UC_STRING*/
-T6 r54same_unicode_string(T54* C,T0* a1);
-/*UC_STRING*/
-T2 r54item_code(T54* C,T2 a1);
-/*UC_STRING*/
-T3 r54character_item_at_byte_index(T54* C,T2 a1);
-/*UC_STRING*/
-void r54put(T54* C,T3 a1,T2 a2);
-/*UC_STRING*/
-void r54remove_between(T54* C,T2 a1,T2 a2);
-/*UC_STRING*/
-T6 r54is_equal(T54* C,T0* a1);
-/*UC_STRING*/
-T2 r54index_of_code(T54* C,T2 a1,T2 a2);
-/*UC_STRING*/
-T3 r54item(T54* C,T2 a1);
-/*UC_STRING*/
-void r54resize_byte_storage(T54* C,T2 a1);
-/*UC_STRING*/
-T6 r54valid_index(T54* C,T2 a1);
-/*UC_STRING*/
-void r54append(T54* C,T0* a1);
-/*UC_STRING*/
-T6 r54se_assigned_from(T0* a1);
-/*UC_STRING*/
-T2 r54byte_index(T54* C,T2 a1);
-/*UC_STRING*/
-T0* r54clone(T0* a1);
-/*UC_STRING*/
-T2 r54index_of(T54* C,T3 a1,T2 a2);
-/*UC_STRING*/
-void r54out_in_tagged_out_memory(T54* C);
-/*UC_STRING*/
-void r54move_bytes_right(T54* C,T2 a1,T2 a2);
-/*UC_STRING*/
-void r54set_count(T54* C,T2 a1);
-/*UC_STRING*/
-T2 r54next_byte_index(T54* C,T2 a1);
-/*UC_STRING*/
-T6 r54same_type(T54* C,T0* a1);
-/*UC_STRING*/
-void r54remove_tail(T54* C,T2 a1);
-/*UC_STRING*/
-void r54make(T54* C,T2 a1);
-/*UC_STRING*/
-void r54old_make_filled(T54* C,T3 a1,T2 a2);
-/*UC_STRING*/
-void r54append_string(T54* C,T0* a1);
-/*UC_STRING*/
-void r54remove(T54* C,T2 a1);
-/*UC_STRING*/
-void r54append_substring(T54* C,T0* a1,T2 a2,T2 a3);
-/*UC_STRING*/
-T2 r54item_code_at_byte_index(T54* C,T2 a1);
-extern T0*oBC53platform;
-/*UC_STRING*/
-T0* r54string(T54* C);
-/*UC_STRING*/
-void r54extend(T54* C,T3 a1);
-/*UC_STRING*/
-T2 r54hash_code(T54* C);
-/*UC_STRING*/
-void r54remove_last(T54* C,T2 a1);
-/*UC_STRING*/
-T0* r54prefixed_string(T54* C,T0* a1);
-/*UC_STRING*/
-T6 r54conforms_to(T54* C,T0* a1);
-/*UC_STRING*/
-void r54keep_head(T54* C,T2 a1);
-/*UC_STRING*/
-T2 r54to_integer(T54* C);
-/*UC_STRING*/
-T0* r54new_empty_string(T2 a1);
-/*UC_STRING*/
-void r54append_character(T54* C,T3 a1);
-/*UC_STRING*/
-void r54make_from_substring(T54* C,T0* a1,T2 a2,T2 a3);
-/*UC_STRING*/
-void r54put_code_at_byte_index(T54* C,T2 a1,T2 a2,T2 a3);
-/*UC_STRING*/
-void r54fill_with(T54* C,T3 a1);
-/*UC_STRING*/
-void r54put_character_at_byte_index(T54* C,T3 a1,T2 a2,T2 a3);
-/*UC_STRING*/
-void r54resize(T54* C,T2 a1);
-/*UC_STRING*/
-void r54put_substring_at_byte_index(T54* C,T0* a1,T2 a2,T2 a3,T2 a4,T2 a5);
-/*UC_STRING*/
-T2 r54substring_index(T54* C,T0* a1,T2 a2);
-/*UC_STRING*/
-void r54from_external_copy(T54* C,T8 a1);
-/*UC_STRING*/
-T3 r54byte_item(T54* C,T2 a1);
-/*UC_STRING*/
-void r54move_bytes_left(T54* C,T2 a1,T2 a2);
-/*UC_STRING*/
-void r54old_make(T54* C,T2 a1);
-/*UC_STRING*/
-T8 r54to_external(T54* C);
-/*UC_STRING*/
-void r54old_make_from_string(T54* C,T0* a1);
-/*UC_STRING*/
-void r54to_lower(T54* C);
-/*UC_STRING*/
-T0* r54twin(T54* C);
-/*UC_STRING*/
-T0* r54to_utf8(T54* C);
-/*UC_STRING*/
-T0* r54_ix_43(T54* C,T0* a1);
-/*UC_STRING*/
-T2 r54_7Phash_code(T54* C);
-/*UC_STRING*/
-T2 r54unicode_substring_index(T54* C,T0* a1,T2 a2);
-/*UC_STRING*/
-void r54swap(T54* C,T2 a1,T2 a2);
-/*LX_EQUIVALENCE_CLASSES*/
-void r271build(T271* C);
-/*LX_EQUIVALENCE_CLASSES*/
-void r271put(T271* C,T2 a1);
-/*LX_EQUIVALENCE_CLASSES*/
-T2 r271upper(T271* C);
-/*LX_EQUIVALENCE_CLASSES*/
-T2 r271lower(T271* C);
-/*LX_EQUIVALENCE_CLASSES*/
-T6 r271valid_symbol_class(T271* C,T0* a1);
-/*LX_EQUIVALENCE_CLASSES*/
-T0* r271to_array(T271* C,T2 a1,T2 a2);
-/*LX_EQUIVALENCE_CLASSES*/
-void r271make(T271* C,T2 a1,T2 a2);
-/*LX_EQUIVALENCE_CLASSES*/
-T6 r271valid_symbol(T271* C,T2 a1);
-/*LX_EQUIVALENCE_CLASSES*/
-T2 r271equivalence_class(T271* C,T2 a1);
-/*LX_EQUIVALENCE_CLASSES*/
-void r271add(T271* C,T0* a1);
-/*LX_EQUIVALENCE_CLASSES*/
-T6 r271is_representative(T271* C,T2 a1);
-/*LX_EQUIVALENCE_CLASSES*/
-void r271initialize(T271* C);
-/*GEANT_DELETE_COMMAND*/
-T6 r558is_directory_executable(T558* C);
-/*GEANT_DELETE_COMMAND*/
-T0* r558file_system(void);
-/*GEANT_DELETE_COMMAND*/
-T6 r558is_file_executable(T558* C);
-/*GEANT_DELETE_COMMAND*/
-void r558execute(T558* C);
-/*GEANT_DELETE_COMMAND*/
-T6 r558is_executable(T558* C);
-extern T0*oBC543define_element_name;
-/*GEANT_GEPP_TASK*/
-T0* r543attribute_value(T543* C,T0* a1);
-extern T0*oBC543fileset_element_name;
-/*GEANT_GEPP_TASK*/
-T0* r543file_system(void);
-extern T0*oBC543input_filename_attribute_name;
-extern T0*oBC543to_directory_attribute_name;
-/*GEANT_GEPP_TASK*/
-T0* r543elements_by_name(T543* C,T0* a1);
-/*GEANT_GEPP_TASK*/
-void r543make(T543* C,T0* a1,T0* a2);
-/*GEANT_GEPP_TASK*/
-T6 r543boolean_value(T543* C,T0* a1);
-extern T0*oBC543force_attribute_name;
-/*GEANT_GEPP_TASK*/
-void r543task_make(T543* C,T0* a1,T0* a2);
-extern T0*oBC543output_filename_attribute_name;
-extern T0*oBC543lines_attribute_name;
-/*GEANT_GEPP_TASK*/
-void r543execute(T543* C);
-/*GEANT_GEPP_TASK*/
-T6 r543is_enabled(T543* C);
-/*GEANT_GEPP_TASK*/
-void r543interpreting_element_make(T543* C,T0* a1,T0* a2);
-/*GEANT_OUTOFDATE_COMMAND*/
-T0* r587file_system(void);
-/*GEANT_OUTOFDATE_COMMAND*/
-T6 r587is_file_executable(T587* C);
-/*GEANT_OUTOFDATE_COMMAND*/
-void r587execute(T587* C);
-/*GEANT_OUTOFDATE_COMMAND*/
-T6 r587is_file_outofdate(T0* a1,T0* a2);
-/*GEANT_OUTOFDATE_COMMAND*/
-T6 r587is_executable(T587* C);
-/*GEANT_OUTOFDATE_COMMAND*/
-T6 r587is_fileset_executable(T587* C);
-/*XM_PROCESSING_INSTRUCTION*/
-void r968make(T968* C,T0* a1,T0* a2);
-/*GEANT_SET_COMMAND*/
-void r533execute(T533* C);
-/*GEANT_SET_COMMAND*/
-T6 r533is_executable(T533* C);
-/*XM_EIFFEL_DECLARATION*/
-void r808process(T808* C,T0* a1);
-/*XM_EIFFEL_DECLARATION*/
-void r808make(T808* C);
-/*KL_STDOUT_FILE*/
-void r596make(T596* C);
-/*KL_STDOUT_FILE*/
-void r596old_put_string(T596* C,T0* a1);
-/*KL_STDOUT_FILE*/
-void r596old_flush(T596* C);
-/*KL_STDOUT_FILE*/
-void r596old_put_character(T596* C,T3 a1);
-/*KL_STDOUT_FILE*/
-void r596put_line(T596* C,T0* a1);
-/*KL_STDOUT_FILE*/
-void r596old_make(T596* C);
-/*KL_STDOUT_FILE*/
-void r596write_buffer(T596* C);
-/*KL_STDOUT_FILE*/
-void r596put_string(T596* C,T0* a1);
-/*GEANT_SE_COMMAND*/
-T6 r194is_cleanable(T194* C);
-/*GEANT_SE_COMMAND*/
-T0* r194file_system(void);
-/*GEANT_SE_COMMAND*/
-T0* r194clone(T0* a1);
-/*GEANT_SE_COMMAND*/
-T0* r194new_ace_cmdline(T194* C);
-/*GEANT_SE_COMMAND*/
-T6 r194is_traditional_configuration(T194* C);
-/*GEANT_SE_COMMAND*/
-void r194execute(T194* C);
-/*GEANT_SE_COMMAND*/
-T0* r194new_clean_cmdline(T194* C);
-/*GEANT_SE_COMMAND*/
-T0* r194new_traditional_cmdline(T194* C);
-/*GEANT_SE_COMMAND*/
-void r194execute_shell(T194* C,T0* a1);
-/*GEANT_SE_COMMAND*/
-T6 r194is_executable(T194* C);
-/*GEANT_SE_COMMAND*/
-T6 r194is_ace_configuration(T194* C);
-/*XM_EIFFEL_ENTITY_DEF*/
-T0* r753normalized_newline(T753* C);
-/*XM_EIFFEL_ENTITY_DEF*/
-T6 r753is_literal(T753* C);
-/*XM_EIFFEL_ENTITY_DEF*/
-T2 r753start_condition(T753* C);
-/*XM_EIFFEL_ENTITY_DEF*/
-void r753yy_chk_template_1(T0* a1);
-/*XM_EIFFEL_ENTITY_DEF*/
-void r753yy_chk_template_2(T0* a1);
-/*XM_EIFFEL_ENTITY_DEF*/
-void r753set_input_buffer(T753* C,T0* a1);
-/*XM_EIFFEL_ENTITY_DEF*/
-T0* r753text_substring(T753* C,T2 a1,T2 a2);
-/*XM_EIFFEL_ENTITY_DEF*/
-T0* r753yy_ec_template(void);
-/*XM_EIFFEL_ENTITY_DEF*/
-void r753yy_execute_action(T753* C,T2 a1);
-/*XM_EIFFEL_ENTITY_DEF*/
-T0* r753yy_def_template(void);
-/*XM_EIFFEL_ENTITY_DEF*/
-T3 r753text_item(T753* C,T2 a1);
-/*XM_EIFFEL_ENTITY_DEF*/
-T6 r753end_of_file(T753* C);
-/*XM_EIFFEL_ENTITY_DEF*/
-T0* r753system_literal_text(T753* C);
-/*XM_EIFFEL_ENTITY_DEF*/
-T0* r753new_string_buffer(T0* a1);
-/*XM_EIFFEL_ENTITY_DEF*/
-void r753yy_load_input_buffer(T753* C);
-/*XM_EIFFEL_ENTITY_DEF*/
-void r753apply_input_buffer(T753* C);
-/*XM_EIFFEL_ENTITY_DEF*/
-void r753make_with_buffer(T753* C,T0* a1);
-/*XM_EIFFEL_ENTITY_DEF*/
-T2 r753yy_null_trans_state(T753* C,T2 a1);
-/*XM_EIFFEL_ENTITY_DEF*/
-void r753pop_start_condition(T753* C);
-/*XM_EIFFEL_ENTITY_DEF*/
-void r753_755Preset(T753* C);
-/*XM_EIFFEL_ENTITY_DEF*/
-T6 r753is_valid_encoding(T0* a1);
-/*XM_EIFFEL_ENTITY_DEF*/
-T0* r753yy_accept_template(void);
-/*XM_EIFFEL_ENTITY_DEF*/
-void r753read_token(T753* C);
-/*XM_EIFFEL_ENTITY_DEF*/
-T2 r753yy_previous_state(T753* C);
-/*XM_EIFFEL_ENTITY_DEF*/
-void r753yy_refill_input_buffer(T753* C);
-/*XM_EIFFEL_ENTITY_DEF*/
-void r753push_start_condition_dtd_ignore(T753* C);
-/*XM_EIFFEL_ENTITY_DEF*/
-T0* r753yy_fixed_array(T0* a1);
-/*XM_EIFFEL_ENTITY_DEF*/
-T0* r753yy_meta_template(void);
-/*XM_EIFFEL_ENTITY_DEF*/
-T0* r753yy_base_template(void);
-/*XM_EIFFEL_ENTITY_DEF*/
-void r753set_input_stream(T753* C,T0* a1);
-/*XM_EIFFEL_ENTITY_DEF*/
-T2 r753text_count(T753* C);
-/*XM_EIFFEL_ENTITY_DEF*/
-T0* r753new_file_buffer(T0* a1);
-/*XM_EIFFEL_ENTITY_DEF*/
-void r753_245P_755Preset(T753* C);
-/*XM_EIFFEL_ENTITY_DEF*/
-void r753make_scanner(T753* C);
-/*XM_EIFFEL_ENTITY_DEF*/
-void r753yy_initialize(T753* C);
-/*XM_EIFFEL_ENTITY_DEF*/
-void r753reset(T753* C);
-/*XM_EIFFEL_ENTITY_DEF*/
-void r753push_start_condition(T753* C,T2 a1);
-/*XM_EIFFEL_ENTITY_DEF*/
-T0* r753text(T753* C);
-/*XM_EIFFEL_ENTITY_DEF*/
-void r753close_input(T753* C);
-/*XM_EIFFEL_ENTITY_DEF*/
-T0* r753yy_nxt_template(void);
-/*XM_EIFFEL_ENTITY_DEF*/
-void r753set_encoding(T753* C,T0* a1);
-/*XM_EIFFEL_ENTITY_DEF*/
-void r753yy_set_line_column(T753* C);
-/*XM_EIFFEL_ENTITY_DEF*/
-T6 r753valid_start_condition(T2 a1);
-/*XM_EIFFEL_ENTITY_DEF*/
-void r753make_literal(T753* C,T0* a1);
-/*XM_EIFFEL_ENTITY_DEF*/
-T0* r753empty_buffer(void);
-/*XM_EIFFEL_ENTITY_DEF*/
-void r753_754Pread_token(T753* C);
-/*XM_EIFFEL_ENTITY_DEF*/
-void r753yy_nxt_template_1(T0* a1);
-/*XM_EIFFEL_ENTITY_DEF*/
-void r753yy_nxt_template_2(T0* a1);
-/*XM_EIFFEL_ENTITY_DEF*/
-T0* r753yy_chk_template(void);
-/*XM_EIFFEL_ENTITY_DEF*/
-void r753yy_set_content(T753* C,T0* a1);
-/*XM_EIFFEL_ENTITY_DEF*/
-void r753_246Pset_input_buffer(T753* C,T0* a1);
-/*XM_EIFFEL_ENTITY_DEF*/
-void r753set_start_condition(T753* C,T2 a1);
-/*XM_EIFFEL_ENTITY_DEF*/
-void r753yy_execute_eof_action(T753* C,T2 a1);
-/*XM_EIFFEL_ENTITY_DEF*/
-void r753yy_build_tables(T753* C);
-/*XM_EIFFEL_ENTITY_DEF*/
-void r753make_external(T753* C,T0* a1,T0* a2);
-/*LX_BAD_CHARACTER_CLASS_ERROR*/
-T0* r423arguments(void);
-/*LX_BAD_CHARACTER_CLASS_ERROR*/
-void r423make(T423* C,T0* a1,T2 a2);
-/*LX_BAD_CHARACTER_CLASS_ERROR*/
-T0* r423message(T423* C,T0* a1);
-/*LX_BAD_CHARACTER_CLASS_ERROR*/
-T0* r423default_message(T423* C);
-/*KL_STDERR_FILE*/
-void r40make(T40* C);
-/*KL_STDERR_FILE*/
-void r40old_put_string(T0* a1);
-/*KL_STDERR_FILE*/
-void r40put_line(T0* a1);
-/*KL_STDERR_FILE*/
-void r40put_string(T0* a1);
-/*XM_DEFAULT_POSITION*/
-T0* r806out(T806* C);
-/*XM_DEFAULT_POSITION*/
-void r806make(T806* C,T0* a1,T2 a2,T2 a3,T2 a4);
-/*XM_EIFFEL_INPUT_STREAM*/
-void r862make_from_stream(T862* C,T0* a1);
-/*XM_EIFFEL_INPUT_STREAM*/
-T0* r862name(T862* C);
-/*XM_EIFFEL_INPUT_STREAM*/
-T2 r862read_to_string(T862* C,T0* a1,T2 a2,T2 a3);
-/*XM_EIFFEL_INPUT_STREAM*/
-T2 r862most_significant(T862* C,T3 a1,T3 a2);
-/*XM_EIFFEL_INPUT_STREAM*/
-void r862noqueue_read_character(T862* C);
-/*XM_EIFFEL_INPUT_STREAM*/
-T0* r862clone(T0* a1);
-/*XM_EIFFEL_INPUT_STREAM*/
-void r862read_character(T862* C);
-/*XM_EIFFEL_INPUT_STREAM*/
-T6 r862is_open_read(T862* C);
-/*XM_EIFFEL_INPUT_STREAM*/
-void r862utf16_detect_read_character(T862* C);
-/*XM_EIFFEL_INPUT_STREAM*/
-T6 r862is_latin_1_compatible(T862* C);
-/*XM_EIFFEL_INPUT_STREAM*/
-T2 r862least_significant(T862* C,T3 a1,T3 a2);
-/*XM_EIFFEL_INPUT_STREAM*/
-T2 r862read_to_buffer(T862* C,T0* a1,T2 a2,T2 a3);
-/*XM_EIFFEL_INPUT_STREAM*/
-T6 r862end_of_input(T862* C);
-/*XM_EIFFEL_INPUT_STREAM*/
-void r862append_character(T862* C,T2 a1);
-/*XM_EIFFEL_INPUT_STREAM*/
-void r862latin1_read_character(T862* C);
-/*XM_EIFFEL_INPUT_STREAM*/
-void r862utf16_read_character(T862* C);
-/*XM_EIFFEL_INPUT_STREAM*/
-T2 r862_409Pread_to_string(T862* C,T0* a1,T2 a2,T2 a3);
-/*XM_EIFFEL_INPUT_STREAM*/
-T3 r862last_character(T862* C);
-/*XM_EIFFEL_INPUT_STREAM*/
-void r862read_string(T862* C,T2 a1);
-extern T0*oBC56utf16;
-extern T0*oBC862utf8_buffer;
-extern int fBC862utf8_buffer;
-/*XM_EIFFEL_INPUT_STREAM*/
-T0* r862utf8_buffer(void);
-/*XM_ATTRIBUTE*/
-void r159make(T159* C,T0* a1,T0* a2,T0* a3,T0* a4);
-/*GEANT_VE_COMMAND*/
-T6 r200is_cleanable(T200* C);
-/*GEANT_VE_COMMAND*/
-T0* r200file_system(void);
-/*GEANT_VE_COMMAND*/
-T0* r200clone(T0* a1);
-/*GEANT_VE_COMMAND*/
-void r200execute_clean(T200* C);
-/*GEANT_VE_COMMAND*/
-void r200execute_tuner(T200* C);
-/*GEANT_VE_COMMAND*/
-T6 r200is_compilable(T200* C);
-/*GEANT_VE_COMMAND*/
-void r200execute(T200* C);
-/*GEANT_VE_COMMAND*/
-T6 r200is_tunable(T200* C);
-/*GEANT_VE_COMMAND*/
-void r200execute_shell(T200* C,T0* a1);
-/*GEANT_VE_COMMAND*/
-T6 r200is_executable(T200* C);
-/*GEANT_TARGET*/
-void r23execute_task(T23* C,T0* a1);
-extern T0*oBC24se_task_name;
-/*GEANT_TARGET*/
-T6 r23is_exported_to_project(T23* C,T0* a1);
-/*GEANT_TARGET*/
-T0* r23full_name(T23* C);
-/*GEANT_TARGET*/
-T6 r23is_exported_to_any(T23* C);
-/*GEANT_TARGET*/
-T0* r23dependencies(T23* C);
-/*GEANT_TARGET*/
-T6 r23valid_xml_element(T0* a1);
-extern T0*oBC24available_task_name;
-extern T0*oBC24exec_task_name;
-extern T0*oBC24hact_task_name;
-extern T0*oBC23depend_attribute_name;
-extern T0*oBC24precursor_task_name;
-extern T0*oBC23export_attribute_name;
-/*GEANT_TARGET*/
-T6 r23conflicts_with(T23* C,T0* a1);
-/*GEANT_TARGET*/
-T0* r23dependent_targets(T23* C);
-extern T0*oBC24mkdir_task_name;
-extern T0*oBC24geyacc_task_name;
-extern T0*oBC24lcc_task_name;
-/*GEANT_TARGET*/
-T0* r23file_system(void);
-extern T0*oBC23name_attribute_name;
-/*GEANT_TARGET*/
-T6 r23has_dependencies(T23* C);
-extern T0*oBC24gexmlsplit_task_name;
-/*GEANT_TARGET*/
-T0* r23clone(T0* a1);
-/*GEANT_TARGET*/
-void r23_27Pmake(T23* C,T0* a1,T0* a2);
-extern T0*oBC24delete_task_name;
-extern T0*oBC24copy_task_name;
-extern T0*oBC24exit_task_name;
-/*GEANT_TARGET*/
-T6 r23has_precursor_target(T23* C,T0* a1);
-/*GEANT_TARGET*/
-void r23make(T23* C,T0* a1,T0* a2);
-extern T0*oBC24outofdate_task_name;
-/*GEANT_TARGET*/
-T6 r23has_redefining_target(T23* C,T0* a1);
-extern T0*oBC24getest_task_name;
-extern T0*oBC23project_name_any;
-extern T0*oBC24set_task_name;
-/*GEANT_TARGET*/
-T0* r23string_tokens(T0* a1,T3 a2);
-extern T0*oBC24ise_task_name;
-extern T0*oBC24ve_task_name;
-/*GEANT_TARGET*/
-void r23show_dependent_targets(T0* a1);
-/*GEANT_TARGET*/
-void r23execute(T23* C);
-/*GEANT_TARGET*/
-T0* r23seed(T23* C);
-/*GEANT_TARGET*/
-T6 r23is_enabled(T23* C);
-extern T0*oBC24gepp_task_name;
-/*GEANT_TARGET*/
-void r23exit_application(T2 a1,T0* a2);
-/*GEANT_TARGET*/
-T0* r23final_target(T23* C);
-extern T0*oBC24xslt_task_name;
-extern T0*oBC24geant_task_name;
-extern T0*oBC24move_task_name;
-extern T0*oBC24setenv_task_name;
-extern T0*oBC24gexace_task_name;
-extern T0*oBC24unset_task_name;
-extern T0*oBC24gelex_task_name;
-/*GEANT_TARGET*/
-void r23show_precursors(T23* C);
-extern T0*oBC24echo_task_name;
-/*UC_UTF8_STRING*/
-T0* r122out(T122* C);
-/*UC_UTF8_STRING*/
-void r122copy(T122* C,T0* a1);
-/*UC_UTF8_STRING*/
-T0* r122substring(T122* C,T2 a1,T2 a2);
-/*UC_UTF8_STRING*/
-void r122reset_byte_index_cache(T122* C);
-/*UC_UTF8_STRING*/
-T2 r122shifted_byte_index(T122* C,T2 a1,T2 a2);
-/*UC_UTF8_STRING*/
-void r122wipe_out(T122* C);
-/*UC_UTF8_STRING*/
-void r122keep_tail(T122* C,T2 a1);
-/*UC_UTF8_STRING*/
-void r122remove_first(T122* C,T2 a1);
-/*UC_UTF8_STRING*/
-T6 r122same_unicode_string(T122* C,T0* a1);
-/*UC_UTF8_STRING*/
-T2 r122item_code(T122* C,T2 a1);
-/*UC_UTF8_STRING*/
-T3 r122character_item_at_byte_index(T122* C,T2 a1);
-/*UC_UTF8_STRING*/
-void r122put(T122* C,T3 a1,T2 a2);
-/*UC_UTF8_STRING*/
-void r122remove_between(T122* C,T2 a1,T2 a2);
-/*UC_UTF8_STRING*/
-T6 r122is_equal(T122* C,T0* a1);
-/*UC_UTF8_STRING*/
-T2 r122index_of_code(T122* C,T2 a1,T2 a2);
-/*UC_UTF8_STRING*/
-T3 r122item(T122* C,T2 a1);
-/*UC_UTF8_STRING*/
-void r122resize_byte_storage(T122* C,T2 a1);
-/*UC_UTF8_STRING*/
-T6 r122valid_index(T122* C,T2 a1);
-/*UC_UTF8_STRING*/
-void r122append(T122* C,T0* a1);
-/*UC_UTF8_STRING*/
-T6 r122se_assigned_from(T0* a1);
-/*UC_UTF8_STRING*/
-T2 r122byte_index(T122* C,T2 a1);
-/*UC_UTF8_STRING*/
-T0* r122clone(T0* a1);
-/*UC_UTF8_STRING*/
-T2 r122index_of(T122* C,T3 a1,T2 a2);
-/*UC_UTF8_STRING*/
-void r122out_in_tagged_out_memory(T122* C);
-/*UC_UTF8_STRING*/
-void r122move_bytes_right(T122* C,T2 a1,T2 a2);
-/*UC_UTF8_STRING*/
-void r122set_count(T122* C,T2 a1);
-/*UC_UTF8_STRING*/
-T2 r122next_byte_index(T122* C,T2 a1);
-/*UC_UTF8_STRING*/
-T6 r122same_type(T122* C,T0* a1);
-/*UC_UTF8_STRING*/
-void r122remove_tail(T122* C,T2 a1);
-/*UC_UTF8_STRING*/
-void r122make(T122* C,T2 a1);
-/*UC_UTF8_STRING*/
-void r122old_make_filled(T122* C,T3 a1,T2 a2);
-/*UC_UTF8_STRING*/
-void r122remove(T122* C,T2 a1);
-/*UC_UTF8_STRING*/
-void r122append_substring(T122* C,T0* a1,T2 a2,T2 a3);
-/*UC_UTF8_STRING*/
-T2 r122item_code_at_byte_index(T122* C,T2 a1);
-/*UC_UTF8_STRING*/
-T0* r122string(T122* C);
-/*UC_UTF8_STRING*/
-void r122extend(T122* C,T3 a1);
-/*UC_UTF8_STRING*/
-T2 r122hash_code(T122* C);
-/*UC_UTF8_STRING*/
-T0* r122prefixed_string(T122* C,T0* a1);
-/*UC_UTF8_STRING*/
-void r122remove_last(T122* C,T2 a1);
-/*UC_UTF8_STRING*/
-T6 r122conforms_to(T122* C,T0* a1);
-/*UC_UTF8_STRING*/
-void r122keep_head(T122* C,T2 a1);
-/*UC_UTF8_STRING*/
-T2 r122to_integer(T122* C);
-/*UC_UTF8_STRING*/
-T0* r122new_empty_string(T2 a1);
-/*UC_UTF8_STRING*/
-void r122append_character(T122* C,T3 a1);
-/*UC_UTF8_STRING*/
-void r122put_code_at_byte_index(T122* C,T2 a1,T2 a2,T2 a3);
-/*UC_UTF8_STRING*/
-void r122make_from_substring(T122* C,T0* a1,T2 a2,T2 a3);
-/*UC_UTF8_STRING*/
-void r122fill_with(T122* C,T3 a1);
-/*UC_UTF8_STRING*/
-void r122put_character_at_byte_index(T122* C,T3 a1,T2 a2,T2 a3);
-/*UC_UTF8_STRING*/
-void r122resize(T122* C,T2 a1);
-/*UC_UTF8_STRING*/
-void r122put_substring_at_byte_index(T122* C,T0* a1,T2 a2,T2 a3,T2 a4,T2 a5);
-/*UC_UTF8_STRING*/
-T2 r122substring_index(T122* C,T0* a1,T2 a2);
-/*UC_UTF8_STRING*/
-void r122append_utf8(T122* C,T0* a1);
-/*UC_UTF8_STRING*/
-void r122from_external_copy(T122* C,T8 a1);
-/*UC_UTF8_STRING*/
-void r122move_bytes_left(T122* C,T2 a1,T2 a2);
-/*UC_UTF8_STRING*/
-void r122old_make(T122* C,T2 a1);
-/*UC_UTF8_STRING*/
-T8 r122to_external(T122* C);
-/*UC_UTF8_STRING*/
-void r122old_make_from_string(T122* C,T0* a1);
-/*UC_UTF8_STRING*/
-void r122to_lower(T122* C);
-/*UC_UTF8_STRING*/
-T0* r122twin(T122* C);
-/*UC_UTF8_STRING*/
-T0* r122to_utf8(T122* C);
-/*UC_UTF8_STRING*/
-T0* r122_ix_43(T122* C,T0* a1);
-/*UC_UTF8_STRING*/
-T2 r122unicode_substring_index(T122* C,T0* a1,T2 a2);
-/*UC_UTF8_STRING*/
-T2 r122_7Phash_code(T122* C);
-/*UC_UTF8_STRING*/
-void r122make_from_utf8(T122* C,T0* a1);
-/*UC_UTF8_STRING*/
-void r122swap(T122* C,T2 a1,T2 a2);
-/*XM_EIFFEL_PE_ENTITY_DEF*/
-void r925_753Preset(T925* C);
-/*XM_EIFFEL_PE_ENTITY_DEF*/
-T0* r925normalized_newline(T925* C);
-/*XM_EIFFEL_PE_ENTITY_DEF*/
-T2 r925start_condition(T925* C);
-/*XM_EIFFEL_PE_ENTITY_DEF*/
-void r925set_input_buffer(T925* C,T0* a1);
-/*XM_EIFFEL_PE_ENTITY_DEF*/
-T0* r925text_substring(T925* C,T2 a1,T2 a2);
-/*XM_EIFFEL_PE_ENTITY_DEF*/
-T0* r925yy_ec_template(void);
-/*XM_EIFFEL_PE_ENTITY_DEF*/
-void r925yy_execute_action(T925* C,T2 a1);
-/*XM_EIFFEL_PE_ENTITY_DEF*/
-T0* r925yy_def_template(void);
-/*XM_EIFFEL_PE_ENTITY_DEF*/
-T3 r925text_item(T925* C,T2 a1);
-/*XM_EIFFEL_PE_ENTITY_DEF*/
-T6 r925end_of_file(T925* C);
-/*XM_EIFFEL_PE_ENTITY_DEF*/
-T0* r925system_literal_text(T925* C);
-/*XM_EIFFEL_PE_ENTITY_DEF*/
-T0* r925new_string_buffer(T0* a1);
-/*XM_EIFFEL_PE_ENTITY_DEF*/
-void r925yy_load_input_buffer(T925* C);
-/*XM_EIFFEL_PE_ENTITY_DEF*/
-void r925apply_input_buffer(T925* C);
-/*XM_EIFFEL_PE_ENTITY_DEF*/
-void r925make_with_buffer(T925* C,T0* a1);
-/*XM_EIFFEL_PE_ENTITY_DEF*/
-T2 r925yy_null_trans_state(T925* C,T2 a1);
-/*XM_EIFFEL_PE_ENTITY_DEF*/
-void r925pop_start_condition(T925* C);
-/*XM_EIFFEL_PE_ENTITY_DEF*/
-T6 r925is_valid_encoding(T0* a1);
-/*XM_EIFFEL_PE_ENTITY_DEF*/
-T0* r925yy_accept_template(void);
-/*XM_EIFFEL_PE_ENTITY_DEF*/
-void r925read_token(T925* C);
-/*XM_EIFFEL_PE_ENTITY_DEF*/
-T2 r925yy_previous_state(T925* C);
-/*XM_EIFFEL_PE_ENTITY_DEF*/
-void r925yy_refill_input_buffer(T925* C);
-/*XM_EIFFEL_PE_ENTITY_DEF*/
-T0* r925yy_fixed_array(T0* a1);
-/*XM_EIFFEL_PE_ENTITY_DEF*/
-T0* r925yy_meta_template(void);
-/*XM_EIFFEL_PE_ENTITY_DEF*/
-T0* r925yy_base_template(void);
-/*XM_EIFFEL_PE_ENTITY_DEF*/
-void r925set_input_stream(T925* C,T0* a1);
-/*XM_EIFFEL_PE_ENTITY_DEF*/
-T2 r925text_count(T925* C);
-/*XM_EIFFEL_PE_ENTITY_DEF*/
-T0* r925new_file_buffer(T0* a1);
-/*XM_EIFFEL_PE_ENTITY_DEF*/
-void r925make_scanner(T925* C);
-/*XM_EIFFEL_PE_ENTITY_DEF*/
-void r925yy_initialize(T925* C);
-/*XM_EIFFEL_PE_ENTITY_DEF*/
-void r925_755P_753Preset(T925* C);
-/*XM_EIFFEL_PE_ENTITY_DEF*/
-void r925reset(T925* C);
-/*XM_EIFFEL_PE_ENTITY_DEF*/
-void r925push_start_condition(T925* C,T2 a1);
-/*XM_EIFFEL_PE_ENTITY_DEF*/
-T0* r925text(T925* C);
-/*XM_EIFFEL_PE_ENTITY_DEF*/
-void r925_245P_755P_753Preset(T925* C);
-/*XM_EIFFEL_PE_ENTITY_DEF*/
-void r925_753Pread_token(T925* C);
-/*XM_EIFFEL_PE_ENTITY_DEF*/
-void r925make_def(T925* C,T0* a1);
-/*XM_EIFFEL_PE_ENTITY_DEF*/
-void r925reset_sent(T925* C);
-/*XM_EIFFEL_PE_ENTITY_DEF*/
-void r925close_input(T925* C);
-/*XM_EIFFEL_PE_ENTITY_DEF*/
-T0* r925yy_nxt_template(void);
-/*XM_EIFFEL_PE_ENTITY_DEF*/
-void r925set_encoding(T925* C,T0* a1);
-/*XM_EIFFEL_PE_ENTITY_DEF*/
-void r925yy_set_line_column(T925* C);
-/*XM_EIFFEL_PE_ENTITY_DEF*/
-T6 r925valid_start_condition(T2 a1);
-/*XM_EIFFEL_PE_ENTITY_DEF*/
-void r925make_literal(T925* C,T0* a1);
-/*XM_EIFFEL_PE_ENTITY_DEF*/
-T0* r925empty_buffer(void);
-/*XM_EIFFEL_PE_ENTITY_DEF*/
-T0* r925yy_chk_template(void);
-/*XM_EIFFEL_PE_ENTITY_DEF*/
-void r925yy_set_content(T925* C,T0* a1);
-/*XM_EIFFEL_PE_ENTITY_DEF*/
-void r925_246Pset_input_buffer(T925* C,T0* a1);
-/*XM_EIFFEL_PE_ENTITY_DEF*/
-void r925_754P_753Pread_token(T925* C);
-/*XM_EIFFEL_PE_ENTITY_DEF*/
-void r925set_start_condition(T925* C,T2 a1);
-/*XM_EIFFEL_PE_ENTITY_DEF*/
-void r925yy_build_tables(T925* C);
-/*XM_EIFFEL_PE_ENTITY_DEF*/
-void r925make_external(T925* C,T0* a1,T0* a2);
-/*GEANT_INHERIT*/
-void r600merge_in_renamed_targets(T600* C,T0* a1);
-/*GEANT_INHERIT*/
-void r600merge_in_unchanged_targets(T600* C,T0* a1);
-/*GEANT_INHERIT*/
-void r600apply_selects(T600* C);
-/*GEANT_INHERIT*/
-void r600make(T600* C,T0* a1);
-/*GEANT_INHERIT*/
-void r600validate_parent_selects(T600* C);
-/*GEANT_INHERIT*/
-void r600merge_in_parent_project(T600* C,T0* a1);
-/*GEANT_INHERIT*/
-void r600check_targets_for_conflicts(T600* C);
-/*GEANT_INHERIT*/
-void r600merge_in_redefined_targets(T600* C,T0* a1);
-/*GEANT_INHERIT*/
-void r600exit_application(T2 a1,T0* a2);
-/*GEANT_INHERIT*/
-void r600sort_out_selected_targets(T600* C);
-/*GEANT_VE_TASK*/
-T0* r199attribute_value(T199* C,T0* a1);
-/*GEANT_VE_TASK*/
-T0* r199file_system(void);
-extern T0*oBC199level_attribute_name;
-extern T0*oBC199tune_attribute_name;
-/*GEANT_VE_TASK*/
-void r199make(T199* C,T0* a1,T0* a2);
-/*GEANT_VE_TASK*/
-T6 r199boolean_value(T199* C,T0* a1);
-/*GEANT_VE_TASK*/
-void r199task_make(T199* C,T0* a1,T0* a2);
-extern T0*oBC199esd_attribute_name;
-/*GEANT_VE_TASK*/
-void r199execute(T199* C);
-/*GEANT_VE_TASK*/
-T6 r199is_enabled(T199* C);
-/*GEANT_VE_TASK*/
-T0* r199attribute_value_or_default(T199* C,T0* a1,T0* a2);
-/*GEANT_VE_TASK*/
-void r199interpreting_element_make(T199* C,T0* a1,T0* a2);
-extern T0*oBC199clean_attribute_name;
-extern T0*oBC199recursive_attribute_name;
-/*GEANT_ECHO_TASK*/
-T0* r552attribute_value(T552* C,T0* a1);
-/*GEANT_ECHO_TASK*/
-T0* r552file_system(void);
-/*GEANT_ECHO_TASK*/
-void r552make(T552* C,T0* a1,T0* a2);
-/*GEANT_ECHO_TASK*/
-void r552task_make(T552* C,T0* a1,T0* a2);
-/*GEANT_ECHO_TASK*/
-void r552execute(T552* C);
-/*GEANT_ECHO_TASK*/
-T6 r552is_enabled(T552* C);
-/*GEANT_ECHO_TASK*/
-void r552interpreting_element_make(T552* C,T0* a1,T0* a2);
-extern T0*oBC552message_attribute_name;
-/*XM_ELEMENT*/
-T6 r140attribute_same_name(T0* a1,T0* a2);
-/*XM_ELEMENT*/
-T6 r140valid_cursor(T140* C,T0* a1);
-/*XM_ELEMENT*/
-T6 r140same_namespace(T140* C,T0* a1);
-/*XM_ELEMENT*/
-void r140remove_traversing_cursor(T140* C,T0* a1);
-/*XM_ELEMENT*/
-void r140cursor_go_after(T140* C,T0* a1);
-/*XM_ELEMENT*/
-T6 r140has_attribute_by_name(T140* C,T0* a1);
-/*XM_ELEMENT*/
-void r140add_traversing_cursor(T140* C,T0* a1);
-/*XM_ELEMENT*/
-T0* r140clone(T0* a1);
-/*XM_ELEMENT*/
-T0* r140attribute_by_name(T140* C,T0* a1);
-/*XM_ELEMENT*/
-void r140make(T140* C,T0* a1,T0* a2,T0* a3);
-/*XM_ELEMENT*/
-T6 r140cursor_after(T0* a1);
-/*XM_ELEMENT*/
-void r140make_list(T140* C);
-/*XM_ELEMENT*/
-void r140cursor_forth(T140* C,T0* a1);
-/*XM_ELEMENT*/
-void r140cursor_start(T140* C,T0* a1);
-/*XM_ELEMENT*/
-T6 r140same_string(T0* a1,T0* a2);
-/*XM_ELEMENT*/
-void r140force_last(T140* C,T0* a1);
-/*XM_ELEMENT*/
-T0* r140new_cursor(T140* C);
-/*XM_ELEMENT*/
-T6 r140has_element_by_name(T140* C,T0* a1);
-/*XM_ELEMENT*/
-T0* r140element_by_name(T140* C,T0* a1);
-/*XM_ELEMENT*/
-T0* r140text(T140* C);
-/*XM_ELEMENT*/
-T6 r140cursor_off(T0* a1);
-/*XM_ELEMENT*/
-T6 r140named_same_name(T140* C,T0* a1,T0* a2);
-/*GEANT_EXIT_TASK*/
-T0* r588attribute_value(T588* C,T0* a1);
-/*GEANT_EXIT_TASK*/
-T0* r588file_system(void);
-/*GEANT_EXIT_TASK*/
-void r588make(T588* C,T0* a1,T0* a2);
-extern T0*oBC588code_attribute_name;
-/*GEANT_EXIT_TASK*/
-void r588task_make(T588* C,T0* a1,T0* a2);
-/*GEANT_EXIT_TASK*/
+/*GEANT_REDEFINE*/
+T6 r664is_executable(T664* C);
+/*GEANT_DEFINE_ELEMENT*/
+T6 r224has_value(T224* C);
+/*GEANT_DEFINE_ELEMENT*/
+T0* r224name(T224* C);
+/*GEANT_DEFINE_ELEMENT*/
+T0* r224attribute_value(T224* C,T0* a1);
+extern T0*oBC225name_attribute_name;
+/*GEANT_DEFINE_ELEMENT*/
+T6 r224has_name(T224* C);
+extern T0*oBC225value_attribute_name;
+/*GEANT_DEFINE_ELEMENT*/
+void r224make(T224* C,T0* a1,T0* a2);
+/*GEANT_DEFINE_ELEMENT*/
+T0* r224value(T224* C);
+/*GEANT_DEFINE_ELEMENT*/
+T6 r224is_enabled(T224* C);
+/*GEANT_DEFINE_ELEMENT*/
+T0* r224target_arguments_stack(void);
+/*LX_FULL_AND_REJECT_ERROR*/
+T0* r447arguments(void);
+/*LX_FULL_AND_REJECT_ERROR*/
+void r447make(T447* C);
+/*LX_FULL_AND_REJECT_ERROR*/
+T0* r447message(T447* C,T0* a1);
+/*LX_FULL_AND_REJECT_ERROR*/
+T0* r447default_message(T447* C);
+/*GEANT_PROJECT_VARIABLES*/
+T2 r47new_capacity(T2 a1);
+/*GEANT_PROJECT_VARIABLES*/
+T6 r47valid_cursor(T47* C,T0* a1);
+/*GEANT_PROJECT_VARIABLES*/
+void r47force(T47* C,T0* a1,T0* a2);
+/*GEANT_PROJECT_VARIABLES*/
+T6 r47valid_slot(T47* C,T2 a1);
+/*GEANT_PROJECT_VARIABLES*/
+void r47make_clashes(T47* C,T2 a1);
+/*GEANT_PROJECT_VARIABLES*/
+T6 r47valid_position(T47* C,T2 a1);
+/*GEANT_PROJECT_VARIABLES*/
+void r47_26Pmake(T47* C);
+/*GEANT_PROJECT_VARIABLES*/
+T0* r47cursor_item(T47* C,T0* a1);
+/*GEANT_PROJECT_VARIABLES*/
+void r47search_position(T47* C,T0* a1);
+/*GEANT_PROJECT_VARIABLES*/
+void r47remove_traversing_cursor(T47* C,T0* a1);
+/*GEANT_PROJECT_VARIABLES*/
+void r47keys_resize(T47* C,T2 a1);
+/*GEANT_PROJECT_VARIABLES*/
+void r47hash_table_make(T47* C,T2 a1);
+/*GEANT_PROJECT_VARIABLES*/
+T0* r47item(T47* C,T0* a1);
+/*GEANT_PROJECT_VARIABLES*/
+void r47make_items(T47* C,T2 a1);
+/*GEANT_PROJECT_VARIABLES*/
+T0* r47file_system(void);
+/*GEANT_PROJECT_VARIABLES*/
+void r47add_traversing_cursor(T47* C,T0* a1);
+/*GEANT_PROJECT_VARIABLES*/
+void r47remove_position(T47* C,T2 a1);
+/*GEANT_PROJECT_VARIABLES*/
+void r47make(T47* C);
+/*GEANT_PROJECT_VARIABLES*/
+void r47remove(T47* C,T0* a1);
+/*GEANT_PROJECT_VARIABLES*/
+T0* r47value(T47* C,T0* a1);
+/*GEANT_PROJECT_VARIABLES*/
+T0* r47cursor_key(T47* C,T0* a1);
+extern T0*oBC15default_builtin_variables;
+extern int fBC15default_builtin_variables;
+/*GEANT_PROJECT_VARIABLES*/
+T0* r47default_builtin_variables(void);
+/*GEANT_PROJECT_VARIABLES*/
+T6 r47cursor_after(T0* a1);
+/*GEANT_PROJECT_VARIABLES*/
+T6 r47has(T47* C,T0* a1);
+/*GEANT_PROJECT_VARIABLES*/
+T6 r47has_same_keys(T47* C,T0* a1);
+/*GEANT_PROJECT_VARIABLES*/
+void r47make_keys(T47* C,T2 a1);
+/*GEANT_PROJECT_VARIABLES*/
+void r47force_new(T47* C,T0* a1,T0* a2);
+/*GEANT_PROJECT_VARIABLES*/
+T2 r47hash_position(T47* C,T0* a1);
+/*GEANT_PROJECT_VARIABLES*/
+void r47cursor_forth(T47* C,T0* a1);
+/*GEANT_PROJECT_VARIABLES*/
+void r47items_resize(T47* C,T2 a1);
+/*GEANT_PROJECT_VARIABLES*/
+T0* r47found_item(T47* C);
+/*GEANT_PROJECT_VARIABLES*/
+void r47move_cursors_after(T47* C,T2 a1);
+/*GEANT_PROJECT_VARIABLES*/
+void r47make_with_equality_testers(T47* C,T2 a1,T0* a2,T0* a3);
+/*GEANT_PROJECT_VARIABLES*/
+void r47resize(T47* C,T2 a1);
+/*GEANT_PROJECT_VARIABLES*/
+T6 r47found(T47* C);
+/*GEANT_PROJECT_VARIABLES*/
+void r47make_sparse_container(T47* C,T2 a1);
+/*GEANT_PROJECT_VARIABLES*/
+void r47move_cursors_forth(T47* C,T2 a1);
+/*GEANT_PROJECT_VARIABLES*/
+void r47search(T47* C,T0* a1);
+/*GEANT_PROJECT_VARIABLES*/
+void r47cursor_start(T47* C,T0* a1);
+/*GEANT_PROJECT_VARIABLES*/
+void r47clashes_resize(T47* C,T2 a1);
+/*GEANT_PROJECT_VARIABLES*/
+void r47slots_resize(T47* C,T2 a1);
+/*GEANT_PROJECT_VARIABLES*/
+T6 r47key_equality_tester_settable(T47* C,T0* a1);
+/*GEANT_PROJECT_VARIABLES*/
+void r47force_last(T47* C,T0* a1,T0* a2);
+/*GEANT_PROJECT_VARIABLES*/
+T0* r47new_cursor(T47* C);
+/*GEANT_PROJECT_VARIABLES*/
+T6 r47has_numbered_keys(T47* C);
+/*GEANT_PROJECT_VARIABLES*/
+void r47make_slots(T47* C,T2 a1);
+/*GEANT_PROJECT_VARIABLES*/
+void r47move_all_cursors(T47* C,T2 a1,T2 a2);
+/*GEANT_PROJECT_VARIABLES*/
+T2 r47new_modulus(T2 a1);
+/*GEANT_PROJECT_VARIABLES*/
+T6 r47cursor_off(T0* a1);
+extern T0*oBC625arguments_attribute_name;
+/*GEANT_PRECURSOR_TASK*/
+T0* r625attribute_value(T625* C,T0* a1);
+/*GEANT_PRECURSOR_TASK*/
+T0* r625file_system(void);
+/*GEANT_PRECURSOR_TASK*/
+T0* r625elements_by_name(T625* C,T0* a1);
+/*GEANT_PRECURSOR_TASK*/
+void r625make(T625* C,T0* a1,T0* a2);
+/*GEANT_PRECURSOR_TASK*/
+void r625task_make(T625* C,T0* a1,T0* a2);
+extern T0*oBC13exceptions;
+/*GEANT_PRECURSOR_TASK*/
+void r625execute(T625* C);
+/*GEANT_PRECURSOR_TASK*/
+T6 r625is_enabled(T625* C);
+/*GEANT_PRECURSOR_TASK*/
+void r625exit_application(T2 a1,T0* a2);
+extern T0*oBC625argument_element_name;
+extern T0*oBC15arguments_string_splitter;
+extern int fBC15arguments_string_splitter;
+/*GEANT_PRECURSOR_TASK*/
+T0* r625arguments_string_splitter(void);
+/*GEANT_PRECURSOR_TASK*/
+T0* r625target_arguments_stack(void);
+/*GEANT_PRECURSOR_TASK*/
+void r625interpreting_element_make(T625* C,T0* a1,T0* a2);
+extern T0*oBC625parent_attribute_name;
+/*LX_UNRECOGNIZED_RULE_ERROR*/
+T0* r461arguments(void);
+/*LX_UNRECOGNIZED_RULE_ERROR*/
+void r461make(T461* C,T0* a1,T2 a2);
+/*LX_UNRECOGNIZED_RULE_ERROR*/
+T0* r461message(T461* C,T0* a1);
+/*LX_UNRECOGNIZED_RULE_ERROR*/
+T0* r461default_message(T461* C);
+/*XM_POSITION_TABLE*/
+void r765put(T765* C,T0* a1,T0* a2);
+/*XM_POSITION_TABLE*/
+void r765make(T765* C);
+/*XM_POSITION_TABLE*/
+T6 r765has(T765* C,T0* a1);
+/*XM_TREE_CALLBACKS_PIPE*/
+T0* r723callbacks_pipe(T0* a1);
+/*XM_TREE_CALLBACKS_PIPE*/
+void r723make(T723* C);
+/*XM_TREE_CALLBACKS_PIPE*/
+T0* r723new_namespace_resolver(void);
+/*XM_TREE_CALLBACKS_PIPE*/
+T0* r723new_stop_on_error(void);
+/*UT_ERROR_HANDLER*/
+void r258make_null(T258* C);
+extern T0*oBC259null_output_stream;
+extern int fBC259null_output_stream;
+/*UT_ERROR_HANDLER*/
+T0* r258null_output_stream(void);
+/*UT_ERROR_HANDLER*/
+T0* r258message(T0* a1);
+/*UT_ERROR_HANDLER*/
+void r258report_info_message(T258* C,T0* a1);
+/*UT_ERROR_HANDLER*/
+void r258make_standard(T258* C);
+/*UT_ERROR_HANDLER*/
+void r258report_error_message(T258* C,T0* a1);
+extern T0*oBC221mapped_filename_directory_attribute_name;
+extern T0*oBC221exclude_attribute_name;
+extern T0*oBC221directory_attribute_name;
+/*GEANT_FILESET_ELEMENT*/
+T0* r221attribute_value(T221* C,T0* a1);
+extern T0*oBC221convert_attribute_name;
+/*GEANT_FILESET_ELEMENT*/
+T0* r221elements_by_name(T221* C,T0* a1);
+extern T0*oBC221include_attribute_name;
+/*GEANT_FILESET_ELEMENT*/
+void r221make(T221* C,T0* a1,T0* a2);
+/*GEANT_FILESET_ELEMENT*/
+T6 r221boolean_value(T221* C,T0* a1);
+extern T0*oBC221force_attribute_name;
+extern T0*oBC221exclude_element_name;
+/*GEANT_FILESET_ELEMENT*/
+void r221exit_application(T2 a1,T0* a2);
+extern T0*oBC221map_element_name;
+extern T0*oBC221include_element_name;
+extern T0*oBC221mapped_filename_variable_name_attribute_name;
+/*GEANT_FILESET_ELEMENT*/
+void r221_45Pmake(T221* C,T0* a1,T0* a2);
+extern T0*oBC221filename_directory_attribute_name;
+extern T0*oBC221filename_variable_name_attribute_name;
+/*GEANT_FILESET_ELEMENT*/
+T0* r221target_arguments_stack(void);
+extern T0*oBC221concat_attribute_name;
+/*YY_FILE_BUFFER*/
+void r428fill(T428* C);
+/*YY_FILE_BUFFER*/
+void r428compact_left(T428* C);
+/*YY_FILE_BUFFER*/
+void r428set_position(T428* C,T2 a1,T2 a2,T2 a3);
+/*YY_FILE_BUFFER*/
+T0* r428name(T428* C);
+extern T2 oBC429default_capacity;
+/*YY_FILE_BUFFER*/
+void r428make_from_string(T428* C,T0* a1);
+/*YY_FILE_BUFFER*/
+void r428make_from_buffer(T428* C,T0* a1);
+/*YY_FILE_BUFFER*/
+void r428resize(T428* C);
+/*YY_FILE_BUFFER*/
+T0* r428new_default_buffer(T2 a1);
+/*YY_FILE_BUFFER*/
+void r428make_with_size(T428* C,T0* a1,T2 a2);
+/*YY_FILE_BUFFER*/
+void r428set_file(T428* C,T0* a1);
+/*YY_FILE_BUFFER*/
+void r428flush(T428* C);
+/*LX_MISSING_QUOTE_ERROR*/
+T0* r444arguments(void);
+/*LX_MISSING_QUOTE_ERROR*/
+void r444make(T444* C,T0* a1,T2 a2);
+/*LX_MISSING_QUOTE_ERROR*/
+T0* r444message(T444* C,T0* a1);
+/*LX_MISSING_QUOTE_ERROR*/
+T0* r444default_message(T444* C);
+/*LX_FULL_AND_META_ERROR*/
+T0* r449arguments(void);
+/*LX_FULL_AND_META_ERROR*/
+void r449make(T449* C);
+/*LX_FULL_AND_META_ERROR*/
+T0* r449message(T449* C,T0* a1);
+/*LX_FULL_AND_META_ERROR*/
+T0* r449default_message(T449* C);
+/*GEANT_AVAILABLE_COMMAND*/
+T0* r628file_system(void);
+/*GEANT_AVAILABLE_COMMAND*/
+T6 r628is_file_executable(T628* C);
+/*GEANT_AVAILABLE_COMMAND*/
+void r628execute(T628* C);
+/*GEANT_ECHO_COMMAND*/
 void r588execute(T588* C);
-/*GEANT_EXIT_TASK*/
-T6 r588is_enabled(T588* C);
-/*GEANT_EXIT_TASK*/
-void r588interpreting_element_make(T588* C,T0* a1,T0* a2);
-/*GEANT_GEXMLSPLIT_TASK*/
-T0* r550attribute_value(T550* C,T0* a1);
-/*GEANT_GEXMLSPLIT_TASK*/
-T0* r550file_system(void);
-extern T0*oBC550input_filename_attribute_name;
-/*GEANT_GEXMLSPLIT_TASK*/
-void r550make(T550* C,T0* a1,T0* a2);
-/*GEANT_GEXMLSPLIT_TASK*/
-void r550task_make(T550* C,T0* a1,T0* a2);
-/*GEANT_GEXMLSPLIT_TASK*/
-void r550execute(T550* C);
-/*GEANT_GEXMLSPLIT_TASK*/
-T6 r550is_enabled(T550* C);
-/*GEANT_GEXMLSPLIT_TASK*/
-void r550interpreting_element_make(T550* C,T0* a1,T0* a2);
-/*GEANT_PRECURSOR_COMMAND*/
-T6 r591is_executable(T591* C);
-/*GEANT_PARENT*/
-void r598apply_renames(T598* C);
-/*GEANT_PARENT*/
-void r598apply_redefines(T598* C);
-/*GEANT_PARENT*/
-void r598apply_selects(T598* C);
-/*GEANT_PARENT*/
-void r598make(T598* C,T0* a1);
-/*GEANT_PARENT*/
-void r598prepare_project(T598* C);
-/*GEANT_PARENT*/
-void r598apply_undeclared_redefines(T598* C);
-/*GEANT_PARENT*/
-void r598exit_application(T2 a1,T0* a2);
-/*GEANT_PARENT*/
-void r598apply_unchangeds(T598* C);
-extern T0*oBC539case_insensitive_attribute_name;
-/*GEANT_GELEX_TASK*/
-T0* r539attribute_value(T539* C,T0* a1);
-/*GEANT_GELEX_TASK*/
-T0* r539file_system(void);
-extern T0*oBC539input_filename_attribute_name;
-extern T0*oBC539no_warn_attribute_name;
-extern T0*oBC539separate_actions_attribute_name;
-extern T0*oBC539full_attribute_name;
-/*GEANT_GELEX_TASK*/
-void r539make(T539* C,T0* a1,T0* a2);
-extern T0*oBC539backup_attribute_name;
-/*GEANT_GELEX_TASK*/
-T6 r539boolean_value(T539* C,T0* a1);
-extern T0*oBC539meta_ecs_attribute_name;
-extern T0*oBC539no_default_attribute_name;
-/*GEANT_GELEX_TASK*/
-void r539task_make(T539* C,T0* a1,T0* a2);
-extern T0*oBC539output_filename_attribute_name;
-extern T0*oBC539size_attribute_name;
-/*GEANT_GELEX_TASK*/
-void r539execute(T539* C);
-/*GEANT_GELEX_TASK*/
-T6 r539is_enabled(T539* C);
-extern T0*oBC539ecs_attribute_name;
-/*GEANT_GELEX_TASK*/
-void r539interpreting_element_make(T539* C,T0* a1,T0* a2);
-/*GEANT_PROJECT_PARSER*/
-void r660make(T660* C,T0* a1,T0* a2,T0* a3);
-/*GEANT_PROJECT_PARSER*/
-void r660parse_file(T660* C,T0* a1);
-/*GEANT_XSLT_COMMAND*/
+/*GEANT_RENAME*/
+T6 r680is_executable(T680* C);
+/*GEANT_INHERIT_ELEMENT*/
+void r729make_old(T729* C,T0* a1,T0* a2);
+/*GEANT_INHERIT_ELEMENT*/
+T0* r729elements_by_name(T729* C,T0* a1);
+/*GEANT_INHERIT_ELEMENT*/
+void r729make(T729* C,T0* a1,T0* a2);
+extern T0*oBC729parent_element_name;
+/*GEANT_INHERIT_ELEMENT*/
+void r729exit_application(T2 a1,T0* a2);
+/*GEANT_INHERIT_ELEMENT*/
+void r729interpreting_element_make(T729* C,T0* a1,T0* a2);
+/*GEANT_GEANT_COMMAND*/
+void r570_211Pmake(T570* C,T0* a1);
+/*GEANT_GEANT_COMMAND*/
+T0* r570file_system(void);
+/*GEANT_GEANT_COMMAND*/
+T6 r570is_filename_executable(T570* C);
+/*GEANT_GEANT_COMMAND*/
+void r570make(T570* C,T0* a1);
+/*GEANT_GEANT_COMMAND*/
+T6 r570is_target_executable(T570* C);
+/*GEANT_GEANT_COMMAND*/
+void r570execute(T570* C);
+/*GEANT_GEANT_COMMAND*/
+void r570exit_application(T2 a1,T0* a2);
+/*GEANT_GEANT_COMMAND*/
+T6 r570is_executable(T570* C);
+/*GEANT_PARENT_ELEMENT*/
+T0* r730attribute_value(T730* C,T0* a1);
+/*GEANT_PARENT_ELEMENT*/
+void r730make_old(T730* C,T0* a1,T0* a2);
+extern T0*oBC730inherit_attribute_name;
+/*GEANT_PARENT_ELEMENT*/
+T0* r730elements_by_name(T730* C,T0* a1);
+extern T0*oBC730redefine_element_name;
+/*GEANT_PARENT_ELEMENT*/
+void r730make(T730* C,T0* a1,T0* a2);
+extern T0*oBC730rename_element_name;
+extern T0*oBC730location_attribute_name;
+extern T0*oBC730select_element_name;
+/*GEANT_PARENT_ELEMENT*/
+void r730exit_application(T2 a1,T0* a2);
+/*GEANT_PARENT_ELEMENT*/
+T0* r730target_arguments_stack(void);
+/*GEANT_PARENT_ELEMENT*/
+void r730interpreting_element_make(T730* C,T0* a1,T0* a2);
+/*XM_CALLBACKS_TO_TREE_FILTER*/
+void r761on_start_tag_finish(T761* C);
+/*XM_CALLBACKS_TO_TREE_FILTER*/
+void r761enable_position_table(T761* C,T0* a1);
+/*XM_CALLBACKS_TO_TREE_FILTER*/
+void r761on_finish(T761* C);
+/*XM_CALLBACKS_TO_TREE_FILTER*/
+void r761on_content(T761* C,T0* a1);
+/*XM_CALLBACKS_TO_TREE_FILTER*/
+void r761make_null(T761* C);
+/*XM_CALLBACKS_TO_TREE_FILTER*/
+void r761on_start(T761* C);
+/*XM_CALLBACKS_TO_TREE_FILTER*/
+T6 r761is_local_part(T0* a1);
+/*XM_CALLBACKS_TO_TREE_FILTER*/
+void r761on_processing_instruction(T761* C,T0* a1,T0* a2);
+/*XM_CALLBACKS_TO_TREE_FILTER*/
+void r761on_start_tag(T761* C,T0* a1,T0* a2,T0* a3);
+/*XM_CALLBACKS_TO_TREE_FILTER*/
+void r761handle_position(T761* C,T0* a1);
+/*XM_CALLBACKS_TO_TREE_FILTER*/
+void r761on_comment(T761* C,T0* a1);
+/*XM_CALLBACKS_TO_TREE_FILTER*/
+void r761on_end_tag(T761* C,T0* a1,T0* a2,T0* a3);
+/*XM_CALLBACKS_TO_TREE_FILTER*/
+void r761on_attribute(T761* C,T0* a1,T0* a2,T0* a3,T0* a4);
+/*XM_CALLBACKS_TO_TREE_FILTER*/
+T0* r761new_namespace(T761* C,T0* a1,T0* a2);
+/*XM_CALLBACKS_TO_TREE_FILTER*/
+void r761on_error(T761* C,T0* a1);
+/*XM_CALLBACKS_TO_TREE_FILTER*/
+void r761on_xml_declaration(T761* C,T0* a1,T0* a2,T6 a3);
+/*GEANT_MKDIR_COMMAND*/
+T0* r590file_system(void);
+/*GEANT_MKDIR_COMMAND*/
+void r590execute(T590* C);
+/*GEANT_MKDIR_COMMAND*/
+T6 r590is_executable(T590* C);
+/*GEANT_UNSET_COMMAND*/
+void r556execute(T556* C);
+/*GEANT_UNSET_COMMAND*/
+T6 r556is_executable(T556* C);
+/*GEANT_GELEX_COMMAND*/
+void r561_211Pmake(T561* C,T0* a1);
+/*GEANT_GELEX_COMMAND*/
+T0* r561file_system(void);
+/*GEANT_GELEX_COMMAND*/
+T0* r561clone(T0* a1);
+/*GEANT_GELEX_COMMAND*/
+void r561make(T561* C,T0* a1);
+/*GEANT_GELEX_COMMAND*/
+void r561execute(T561* C);
+/*GEANT_GELEX_COMMAND*/
+void r561execute_shell(T561* C,T0* a1);
+/*GEANT_GELEX_COMMAND*/
+T6 r561is_executable(T561* C);
+/*XM_DTD_ELEMENT_CONTENT*/
+void r915make_choice(T915* C);
+/*XM_DTD_ELEMENT_CONTENT*/
+void r915make_mixed(T915* C);
+/*XM_DTD_ELEMENT_CONTENT*/
+void r915set_content_mixed(T915* C);
+/*XM_DTD_ELEMENT_CONTENT*/
+void r915make_empty(T915* C);
+/*XM_DTD_ELEMENT_CONTENT*/
+void r915set_default(T915* C);
+/*XM_DTD_ELEMENT_CONTENT*/
+void r915make_any(T915* C);
+/*XM_DTD_ELEMENT_CONTENT*/
+void r915make_sequence(T915* C);
+/*XM_DTD_ELEMENT_CONTENT*/
+void r915make_list(T915* C);
+/*XM_DTD_ELEMENT_CONTENT*/
+void r915make_name(T915* C,T0* a1);
+/*XM_DTD_ELEMENT_CONTENT*/
+void r915set_content_any(T915* C);
+/*LX_NEGATIVE_RANGE_IN_CHARACTER_CLASS_ERROR*/
+T0* r489arguments(void);
+/*LX_NEGATIVE_RANGE_IN_CHARACTER_CLASS_ERROR*/
+void r489make(T489* C,T0* a1,T2 a2);
+/*LX_NEGATIVE_RANGE_IN_CHARACTER_CLASS_ERROR*/
+T0* r489message(T489* C,T0* a1);
+/*LX_NEGATIVE_RANGE_IN_CHARACTER_CLASS_ERROR*/
+T0* r489default_message(T489* C);
+/*KL_TEXT_OUTPUT_FILE*/
+void r869old_open_append(T869* C);
+/*KL_TEXT_OUTPUT_FILE*/
+T6 r869is_closed(T869* C);
+/*KL_TEXT_OUTPUT_FILE*/
+void r869old_close(T869* C);
+/*KL_TEXT_OUTPUT_FILE*/
+void r869connect_for_appending_to(T869* C,T0* a1);
+/*KL_TEXT_OUTPUT_FILE*/
+void r869old_open_write(T869* C);
+/*KL_TEXT_OUTPUT_FILE*/
+void r869close(T869* C);
+/*KL_TEXT_OUTPUT_FILE*/
+void r869make(T869* C,T0* a1);
+/*KL_TEXT_OUTPUT_FILE*/
+void r869old_put_string(T869* C,T0* a1);
+/*KL_TEXT_OUTPUT_FILE*/
+void r869old_put_character(T869* C,T3 a1);
+/*KL_TEXT_OUTPUT_FILE*/
+void r869connect_to(T869* C,T0* a1);
+/*KL_TEXT_OUTPUT_FILE*/
+void r869put_line(T869* C,T0* a1);
+/*KL_TEXT_OUTPUT_FILE*/
+void r869old_make(T869* C);
+/*KL_TEXT_OUTPUT_FILE*/
+void r869open_write(T869* C);
+/*KL_TEXT_OUTPUT_FILE*/
+void r869open_append(T869* C);
+/*KL_TEXT_OUTPUT_FILE*/
+void r869write_buffer(T869* C);
+/*GEANT_SELECT*/
+T6 r646is_executable(T646* C);
+/*GEANT_GEXMLSPLIT_COMMAND*/
+void r586_211Pmake(T586* C,T0* a1);
+/*GEANT_GEXMLSPLIT_COMMAND*/
+T0* r586file_system(void);
+/*GEANT_GEXMLSPLIT_COMMAND*/
+T0* r586clone(T0* a1);
+/*GEANT_GEXMLSPLIT_COMMAND*/
+void r586make(T586* C,T0* a1);
+/*GEANT_GEXMLSPLIT_COMMAND*/
+void r586execute(T586* C);
+/*GEANT_GEXMLSPLIT_COMMAND*/
+void r586execute_shell(T586* C,T0* a1);
+/*GEANT_GEXMLSPLIT_COMMAND*/
+T6 r586is_executable(T586* C);
+/*LX_SYMBOL_CLASS*/
+T2 r409new_capacity(T2 a1);
+/*LX_SYMBOL_CLASS*/
+T6 r409extendible(T409* C,T2 a1);
+/*LX_SYMBOL_CLASS*/
+T2 r409last(T409* C);
+/*LX_SYMBOL_CLASS*/
+void r409put(T409* C,T2 a1);
+/*LX_SYMBOL_CLASS*/
+void r409sort(T409* C);
+/*LX_SYMBOL_CLASS*/
+T6 r409arrayed_has(T409* C,T2 a1);
+/*LX_SYMBOL_CLASS*/
+void r409make(T409* C,T2 a1);
+/*LX_SYMBOL_CLASS*/
+void r409convert_to_equivalence(T409* C,T0* a1);
+extern T0*oBC409sorter;
+extern int fBC409sorter;
+/*LX_SYMBOL_CLASS*/
+T0* r409sorter(void);
+/*LX_SYMBOL_CLASS*/
+T6 r409has(T409* C,T2 a1);
+/*LX_SYMBOL_CLASS*/
+void r409resize(T409* C,T2 a1);
+/*LX_SYMBOL_CLASS*/
+void r409force_last(T409* C,T2 a1);
+/*LX_SYMBOL_CLASS*/
+T0* r409new_cursor(T409* C);
+/*RX_CHARACTER_SET*/
+void r841wipe_out(T841* C);
+extern T0*oBC30fixed_boolean_array_;
+/*RX_CHARACTER_SET*/
+void r841make(T841* C,T0* a1);
+/*RX_CHARACTER_SET*/
+T6 r841is_empty(T841* C);
+/*RX_CHARACTER_SET*/
+T6 r841has(T841* C,T2 a1);
+/*RX_CHARACTER_SET*/
+void r841add_set(T841* C,T0* a1);
+/*RX_CHARACTER_SET*/
+void r841add_string(T841* C,T0* a1);
+/*RX_CHARACTER_SET*/
+void r841add_negated_set(T841* C,T0* a1);
+/*RX_CHARACTER_SET*/
+void r841add_character(T841* C,T2 a1);
+extern T0*oBC935name;
+/*KL_STRING_INPUT_STREAM*/
+T2 r935read_to_string(T935* C,T0* a1,T2 a2,T2 a3);
+/*KL_STRING_INPUT_STREAM*/
+void r935read_character(T935* C);
+/*KL_STRING_INPUT_STREAM*/
+void r935make(T935* C,T0* a1);
+/*KL_STRING_INPUT_STREAM*/
+T2 r935read_to_buffer(T935* C,T0* a1,T2 a2,T2 a3);
+/*GEANT_FILESET*/
+void r223remove_fileset_entry(T223* C,T0* a1);
+/*GEANT_FILESET*/
+T6 r223is_in_gobo_32_format(T223* C);
+/*GEANT_FILESET*/
+T0* r223item_mapped_filename(T223* C);
+/*GEANT_FILESET*/
+void r223set_include_wc_string(T223* C,T0* a1);
+/*GEANT_FILESET*/
+T0* r223file_system(void);
+/*GEANT_FILESET*/
+void r223scan_internal(T223* C,T0* a1);
+/*GEANT_FILESET*/
+void r223make(T223* C,T0* a1);
+/*GEANT_FILESET*/
+void r223update_project_variables(T223* C);
+/*GEANT_FILESET*/
+void r223forth(T223* C);
+/*GEANT_FILESET*/
+void r223set_exclude_wc_string(T223* C,T0* a1);
+/*GEANT_FILESET*/
+void r223start(T223* C);
+/*GEANT_FILESET*/
+void r223execute(T223* C);
+/*GEANT_FILESET*/
+T6 r223is_file_outofdate(T0* a1,T0* a2);
+/*GEANT_FILESET*/
+void r223remove_project_variables(T223* C);
+/*GEANT_FILESET*/
+void r223add_fileset_entry_if_necessary(T223* C,T0* a1);
+/*GEANT_FILESET*/
+T0* r223item_filename(T223* C);
+/*GEANT_FILESET*/
+T6 r223is_executable(T223* C);
+/*GEANT_FILESET*/
+T6 r223is_in_gobo_31_format(T223* C);
+extern T0*oBC589directory_attribute_name;
+/*GEANT_MKDIR_TASK*/
+T0* r589attribute_value(T589* C,T0* a1);
+/*GEANT_MKDIR_TASK*/
+T0* r589file_system(void);
+/*GEANT_MKDIR_TASK*/
+void r589make(T589* C,T0* a1,T0* a2);
+/*GEANT_MKDIR_TASK*/
+void r589task_make(T589* C,T0* a1,T0* a2);
+/*GEANT_MKDIR_TASK*/
+void r589execute(T589* C);
+/*GEANT_MKDIR_TASK*/
+T6 r589is_enabled(T589* C);
+/*GEANT_MKDIR_TASK*/
+T0* r589target_arguments_stack(void);
+/*GEANT_MKDIR_TASK*/
+void r589interpreting_element_make(T589* C,T0* a1,T0* a2);
+/*XM_COMMENT*/
+void r1054make_last_in_document(T1054* C,T0* a1,T0* a2);
+/*XM_COMMENT*/
+void r1054make_last(T1054* C,T0* a1,T0* a2);
+/*LX_NFA*/
+void r361build_closure(T361* C);
+/*LX_NFA*/
+void r361make_symbol(T361* C,T2 a1,T6 a2);
+/*LX_NFA*/
+void r361build_optional(T361* C);
+/*LX_NFA*/
+void r361build_positive_closure(T361* C);
+/*LX_NFA*/
+void r361build_concatenation(T361* C,T0* a1);
+/*LX_NFA*/
+void r361make_epsilon(T361* C,T6 a1);
+/*LX_NFA*/
+void r361make_symbol_class(T361* C,T0* a1,T6 a2);
+/*LX_NFA*/
+void r361build_union(T361* C,T0* a1);
+/*UT_USAGE_MESSAGE*/
+T0* r826arguments(void);
+/*UT_USAGE_MESSAGE*/
+void r826make(T826* C,T0* a1);
+/*UT_USAGE_MESSAGE*/
+T0* r826message(T826* C,T0* a1);
+/*UT_USAGE_MESSAGE*/
+T0* r826default_message(T826* C);
+/*GEANT_COPY_TASK*/
+T0* r595attribute_value(T595* C,T0* a1);
+extern T0*oBC595file_attribute_name;
+extern T0*oBC595fileset_element_name;
+/*GEANT_COPY_TASK*/
+T0* r595file_system(void);
+extern T0*oBC595to_directory_attribute_name;
+extern T0*oBC595to_file_attribute_name;
+/*GEANT_COPY_TASK*/
+void r595make(T595* C,T0* a1,T0* a2);
+/*GEANT_COPY_TASK*/
+T6 r595boolean_value(T595* C,T0* a1);
+extern T0*oBC595force_attribute_name;
+/*GEANT_COPY_TASK*/
+void r595task_make(T595* C,T0* a1,T0* a2);
+/*GEANT_COPY_TASK*/
+void r595execute(T595* C);
+/*GEANT_COPY_TASK*/
+T6 r595is_enabled(T595* C);
+/*GEANT_COPY_TASK*/
+T0* r595target_arguments_stack(void);
+/*GEANT_COPY_TASK*/
+void r595interpreting_element_make(T595* C,T0* a1,T0* a2);
+/*KL_WINDOWS_FILE_SYSTEM*/
+T0* r205pathname_from_file_system(T205* C,T0* a1,T0* a2);
+/*KL_WINDOWS_FILE_SYSTEM*/
+T6 r205is_absolute_pathname(T0* a1);
+/*KL_WINDOWS_FILE_SYSTEM*/
+T0* r205current_working_directory(T205* C);
+/*KL_WINDOWS_FILE_SYSTEM*/
+void r205cd(T205* C,T0* a1);
+/*KL_WINDOWS_FILE_SYSTEM*/
+T6 r205file_exists(T0* a1);
+/*KL_WINDOWS_FILE_SYSTEM*/
+T6 r205directory_exists(T0* a1);
+/*KL_WINDOWS_FILE_SYSTEM*/
+void r205recursive_delete_directory(T0* a1);
+/*KL_WINDOWS_FILE_SYSTEM*/
+T0* r205absolute_pathname(T205* C,T0* a1);
+/*KL_WINDOWS_FILE_SYSTEM*/
+T0* r205current_drive(T205* C);
+/*KL_WINDOWS_FILE_SYSTEM*/
+T0* r205file_system(void);
+/*KL_WINDOWS_FILE_SYSTEM*/
+T6 r205se_assigned_from(T0* a1);
+/*KL_WINDOWS_FILE_SYSTEM*/
+T6 r205is_directory_readable(T0* a1);
+/*KL_WINDOWS_FILE_SYSTEM*/
+T0* r205clone(T0* a1);
+/*KL_WINDOWS_FILE_SYSTEM*/
+T0* r205dirname(T0* a1);
+/*KL_WINDOWS_FILE_SYSTEM*/
+void r205delete_file(T0* a1);
+/*KL_WINDOWS_FILE_SYSTEM*/
+void r205set_current_working_directory(T205* C,T0* a1);
+/*KL_WINDOWS_FILE_SYSTEM*/
+T0* r205cwd(T205* C);
+/*KL_WINDOWS_FILE_SYSTEM*/
+T6 r205same_type(T205* C,T0* a1);
+/*KL_WINDOWS_FILE_SYSTEM*/
+T6 r205is_file_readable(T0* a1);
+/*KL_WINDOWS_FILE_SYSTEM*/
+void r205recursive_create_directory(T0* a1);
+/*KL_WINDOWS_FILE_SYSTEM*/
+T0* r205tmp_file(void);
+/*KL_WINDOWS_FILE_SYSTEM*/
+T6 r205is_current_file_system(T205* C);
+/*KL_WINDOWS_FILE_SYSTEM*/
+T6 r205conforms_to(T205* C,T0* a1);
+/*KL_WINDOWS_FILE_SYSTEM*/
+void r205copy_file(T0* a1,T0* a2);
+/*KL_WINDOWS_FILE_SYSTEM*/
+T0* r205string_to_pathname(T0* a1);
+/*KL_WINDOWS_FILE_SYSTEM*/
+void r205rename_file(T0* a1,T0* a2);
+/*KL_WINDOWS_FILE_SYSTEM*/
+T2 r205file_time_stamp(T0* a1);
+extern T0*oBC205root_directory;
+/*KL_WINDOWS_FILE_SYSTEM*/
+T6 r205is_relative_pathname(T0* a1);
+/*KL_WINDOWS_FILE_SYSTEM*/
+T6 r205is_root_directory(T0* a1);
+/*KL_WINDOWS_FILE_SYSTEM*/
+T6 r205same_physical_file(T0* a1,T0* a2);
+/*KL_WINDOWS_FILE_SYSTEM*/
+T0* r205pathname_to_string(T0* a1);
+/*KL_WINDOWS_FILE_SYSTEM*/
+T0* r205basename(T0* a1);
+/*KL_WINDOWS_FILE_SYSTEM*/
+T0* r205canonical_pathname(T0* a1);
+/*KL_WINDOWS_FILE_SYSTEM*/
+T0* r205pathname(T0* a1,T0* a2);
+/*KL_WINDOWS_FILE_SYSTEM*/
+T0* r205tmp_directory(void);
+/*KL_BINARY_INPUT_FILE*/
+T6 r864is_closed(T864* C);
+/*KL_BINARY_INPUT_FILE*/
+void r864old_close(T864* C);
+/*KL_BINARY_INPUT_FILE*/
+void r864open_read(T864* C);
+/*KL_BINARY_INPUT_FILE*/
+void r864read_character(T864* C);
+/*KL_BINARY_INPUT_FILE*/
+void r864fill_buffer(T864* C);
+/*KL_BINARY_INPUT_FILE*/
+void r864close(T864* C);
+/*KL_BINARY_INPUT_FILE*/
+void r864make(T864* C,T0* a1);
+/*KL_BINARY_INPUT_FILE*/
+void r864connect_to(T864* C,T0* a1);
+/*KL_BINARY_INPUT_FILE*/
+void r864read_string(T864* C,T2 a1);
+/*KL_BINARY_INPUT_FILE*/
+void r864old_read_byte(T864* C);
+/*KL_BINARY_INPUT_FILE*/
+void r864old_open_read(T864* C);
+/*LX_DESCRIPTION*/
+void r260make(T260* C);
+/*LX_DESCRIPTION*/
+void r260create_equiv_classes(T260* C);
+/*GEANT_DIRECTORYSET*/
+void r594remove_fileset_entry(T594* C,T0* a1);
+/*GEANT_DIRECTORYSET*/
+void r594set_include_wc_string(T594* C,T0* a1);
+/*GEANT_DIRECTORYSET*/
+T0* r594file_system(void);
+/*GEANT_DIRECTORYSET*/
+void r594scan_internal(T594* C,T0* a1);
+/*GEANT_DIRECTORYSET*/
+void r594make(T594* C,T0* a1);
+/*GEANT_DIRECTORYSET*/
+void r594update_project_variables(T594* C);
+/*GEANT_DIRECTORYSET*/
+void r594forth(T594* C);
+/*GEANT_DIRECTORYSET*/
+T0* r594item_directory_name(T594* C);
+/*GEANT_DIRECTORYSET*/
+void r594set_exclude_wc_string(T594* C,T0* a1);
+/*GEANT_DIRECTORYSET*/
+void r594start(T594* C);
+/*GEANT_DIRECTORYSET*/
+void r594execute(T594* C);
+/*GEANT_DIRECTORYSET*/
+void r594add_fileset_entry_if_necessary(T594* C,T0* a1);
+/*GEANT_DIRECTORYSET*/
+T6 r594is_executable(T594* C);
+/*XM_EIFFEL_PARSER_NAME*/
+void r925make_no_namespaces(T925* C);
+/*XM_EIFFEL_PARSER_NAME*/
+void r925make_namespaces(T925* C);
+/*XM_EIFFEL_PARSER_NAME*/
+T0* r925last(T925* C);
+/*XM_EIFFEL_PARSER_NAME*/
+T6 r925is_equal(T925* C,T0* a1);
+/*XM_EIFFEL_PARSER_NAME*/
+T0* r925item(T925* C,T2 a1);
+extern T0*oBC27string_equality_tester;
+/*XM_EIFFEL_PARSER_NAME*/
+T0* r925clone(T0* a1);
+/*XM_EIFFEL_PARSER_NAME*/
+T2 r925hash_code(T925* C);
+/*XM_EIFFEL_PARSER_NAME*/
+T6 r925can_force_last(T925* C,T0* a1);
+/*XM_EIFFEL_PARSER_NAME*/
+T6 r925same_string(T0* a1,T0* a2);
+/*XM_EIFFEL_PARSER_NAME*/
+void r925force_last(T925* C,T0* a1);
+/*XM_EIFFEL_PARSER_NAME*/
+T0* r925ns_prefix(T925* C);
+/*XM_EIFFEL_PARSER_NAME*/
+T0* r925local_part(T925* C);
+/*XM_EIFFEL_PARSER_NAME*/
+T6 r925is_namespace_name(T925* C);
+/*XM_EIFFEL_PARSER_NAME*/
+T0* r925new_string_bilinked_list(void);
+extern T0*oBC569arguments_attribute_name;
+/*GEANT_GEANT_TASK*/
+T0* r569attribute_value(T569* C,T0* a1);
+extern T0*oBC569start_target_attribute_name;
+extern T0*oBC569fileset_element_name;
+/*GEANT_GEANT_TASK*/
 T0* r569file_system(void);
-/*GEANT_XSLT_COMMAND*/
-T0* r569clone(T0* a1);
-/*GEANT_XSLT_COMMAND*/
-void r569make(T569* C,T0* a1);
-/*GEANT_XSLT_COMMAND*/
-void r569execute_xalan_java(T569* C);
-/*GEANT_XSLT_COMMAND*/
-void r569execute_xsltproc(T569* C);
-/*GEANT_XSLT_COMMAND*/
+/*GEANT_GEANT_TASK*/
+T0* r569elements_by_name(T569* C,T0* a1);
+extern T0*oBC569filename_attribute_name;
+/*GEANT_GEANT_TASK*/
+void r569make(T569* C,T0* a1,T0* a2);
+/*GEANT_GEANT_TASK*/
+T6 r569boolean_value(T569* C,T0* a1);
+/*GEANT_GEANT_TASK*/
+void r569task_make(T569* C,T0* a1,T0* a2);
+/*GEANT_GEANT_TASK*/
 void r569execute(T569* C);
+/*GEANT_GEANT_TASK*/
+T6 r569is_enabled(T569* C);
+extern T0*oBC569reuse_variables_attribute_name;
+/*GEANT_GEANT_TASK*/
+void r569exit_application(T2 a1,T0* a2);
+extern T0*oBC569argument_element_name;
+/*GEANT_GEANT_TASK*/
+T0* r569arguments_string_splitter(void);
+/*GEANT_GEANT_TASK*/
+T0* r569target_arguments_stack(void);
+/*GEANT_GEANT_TASK*/
+void r569interpreting_element_make(T569* C,T0* a1,T0* a2);
+/*GEANT_VARIABLES_VARIABLE_RESOLVER*/
+T0* r215value(T215* C,T0* a1);
+/*GEANT_VARIABLES_VARIABLE_RESOLVER*/
+T6 r215has(T215* C,T0* a1);
+/*GEANT_GEYACC_COMMAND*/
+void r563_211Pmake(T563* C,T0* a1);
+/*GEANT_GEYACC_COMMAND*/
+T0* r563file_system(void);
+/*GEANT_GEYACC_COMMAND*/
+T0* r563clone(T0* a1);
+/*GEANT_GEYACC_COMMAND*/
+void r563make(T563* C,T0* a1);
+/*GEANT_GEYACC_COMMAND*/
+void r563execute(T563* C);
+/*GEANT_GEYACC_COMMAND*/
+void r563execute_shell(T563* C,T0* a1);
+/*GEANT_GEYACC_COMMAND*/
+T6 r563is_executable(T563* C);
+/*GEANT_GEPP_COMMAND*/
+void r565_211Pmake(T565* C,T0* a1);
+/*GEANT_GEPP_COMMAND*/
+T0* r565file_system(void);
+/*GEANT_GEPP_COMMAND*/
+T0* r565clone(T0* a1);
+/*GEANT_GEPP_COMMAND*/
+void r565create_directory(T565* C,T0* a1);
+/*GEANT_GEPP_COMMAND*/
+T6 r565is_file_executable(T565* C);
+/*GEANT_GEPP_COMMAND*/
+void r565make(T565* C,T0* a1);
+/*GEANT_GEPP_COMMAND*/
+void r565execute(T565* C);
+/*GEANT_GEPP_COMMAND*/
+T6 r565is_file_outofdate(T0* a1,T0* a2);
+/*GEANT_GEPP_COMMAND*/
+void r565execute_shell(T565* C,T0* a1);
+/*GEANT_GEPP_COMMAND*/
+T6 r565is_executable(T565* C);
+/*GEANT_GEPP_COMMAND*/
+T6 r565is_fileset_executable(T565* C);
+/*XM_CHARACTER_DATA*/
+void r759make_last(T759* C,T0* a1,T0* a2);
+/*KL_NULL_TEXT_OUTPUT_STREAM*/
+void r512put_line(T0* a1);
+/*GEANT_EXEC_TASK*/
+T0* r220attribute_value(T220* C,T0* a1);
+extern T0*oBC220fileset_element_name;
+/*GEANT_EXEC_TASK*/
+T0* r220file_system(void);
+/*GEANT_EXEC_TASK*/
+void r220make(T220* C,T0* a1,T0* a2);
+/*GEANT_EXEC_TASK*/
+T6 r220boolean_value(T220* C,T0* a1);
+/*GEANT_EXEC_TASK*/
+void r220task_make(T220* C,T0* a1,T0* a2);
+extern T0*oBC220executable_attribute_name;
+/*GEANT_EXEC_TASK*/
+void r220execute(T220* C);
+/*GEANT_EXEC_TASK*/
+T6 r220is_enabled(T220* C);
+extern T0*oBC220accept_errors_attribute_name;
+extern T0*oBC220exit_code_variable_attribute_name;
+/*GEANT_EXEC_TASK*/
+T0* r220target_arguments_stack(void);
+/*GEANT_EXEC_TASK*/
+void r220interpreting_element_make(T220* C,T0* a1,T0* a2);
+/*XM_NAMESPACE_RESOLVER*/
+void r782on_start_tag_finish(T782* C);
+/*XM_NAMESPACE_RESOLVER*/
+void r782on_delayed_attributes(T782* C);
+/*XM_NAMESPACE_RESOLVER*/
+void r782_727Pon_start_tag_finish(T782* C);
+/*XM_NAMESPACE_RESOLVER*/
+void r782on_finish(T782* C);
+/*XM_NAMESPACE_RESOLVER*/
+void r782on_content(T782* C,T0* a1);
+/*XM_NAMESPACE_RESOLVER*/
+void r782make_null(T782* C);
+/*XM_NAMESPACE_RESOLVER*/
+T0* r782clone(T0* a1);
+/*XM_NAMESPACE_RESOLVER*/
+void r782on_start(T782* C);
+/*XM_NAMESPACE_RESOLVER*/
+T6 r782is_local_part(T0* a1);
+/*XM_NAMESPACE_RESOLVER*/
+T6 r782is_xmlns(T0* a1);
+/*XM_NAMESPACE_RESOLVER*/
+void r782on_processing_instruction(T782* C,T0* a1,T0* a2);
+/*XM_NAMESPACE_RESOLVER*/
+T0* r782new_string_queue(void);
+/*XM_NAMESPACE_RESOLVER*/
+void r782on_start_tag(T782* C,T0* a1,T0* a2,T0* a3);
+/*XM_NAMESPACE_RESOLVER*/
+T6 r782has_prefix(T0* a1);
+/*XM_NAMESPACE_RESOLVER*/
+void r782on_comment(T782* C,T0* a1);
+/*XM_NAMESPACE_RESOLVER*/
+void r782on_end_tag(T782* C,T0* a1,T0* a2,T0* a3);
+extern T0*oBC168xmlns_namespace;
+extern T0*oBC168xml_prefix;
+/*XM_NAMESPACE_RESOLVER*/
+void r782attributes_make(T782* C);
+extern T0*oBC168xmlns;
+/*XM_NAMESPACE_RESOLVER*/
+void r782on_attribute(T782* C,T0* a1,T0* a2,T0* a3,T0* a4);
+extern T0*oBC168default_namespace;
+/*XM_NAMESPACE_RESOLVER*/
+void r782on_error(T782* C,T0* a1);
+/*XM_NAMESPACE_RESOLVER*/
+void r782_727Pon_end_tag(T782* C,T0* a1,T0* a2,T0* a3);
+/*XM_NAMESPACE_RESOLVER*/
+T6 r782same_string(T0* a1,T0* a2);
+/*XM_NAMESPACE_RESOLVER*/
+void r782attributes_remove(T782* C);
+/*XM_NAMESPACE_RESOLVER*/
+void r782attributes_force(T782* C,T0* a1,T0* a2,T0* a3);
+extern T0*oBC168xml_prefix_namespace;
+/*XM_NAMESPACE_RESOLVER*/
+void r782on_xml_declaration(T782* C,T0* a1,T0* a2,T6 a3);
+/*XM_NAMESPACE_RESOLVER*/
+T6 r782is_xml(T0* a1);
+/*XM_EIFFEL_CHARACTER_ENTITY*/
+void r824from_hexadecimal(T824* C,T0* a1);
+extern T0*oBC75utf8;
+/*XM_EIFFEL_CHARACTER_ENTITY*/
+T0* r824to_utf8(T824* C);
+/*XM_EIFFEL_CHARACTER_ENTITY*/
+T6 r824is_valid(T824* C);
+/*XM_EIFFEL_CHARACTER_ENTITY*/
+void r824from_decimal(T824* C,T0* a1);
+extern T0*oBC69unicode;
+/*XM_NAMESPACE_RESOLVER_CONTEXT*/
+T0* r1009new_string_string_table(void);
+/*XM_NAMESPACE_RESOLVER_CONTEXT*/
+T6 r1009shallow_has(T1009* C,T0* a1);
+/*XM_NAMESPACE_RESOLVER_CONTEXT*/
+void r1009make(T1009* C);
+/*XM_NAMESPACE_RESOLVER_CONTEXT*/
+T0* r1009resolve(T1009* C,T0* a1);
+extern T0*oBC1009default_pseudo_prefix;
+extern int fBC1009default_pseudo_prefix;
+/*XM_NAMESPACE_RESOLVER_CONTEXT*/
+T0* r1009default_pseudo_prefix(void);
+/*XM_NAMESPACE_RESOLVER_CONTEXT*/
+T6 r1009has(T1009* C,T0* a1);
+/*XM_NAMESPACE_RESOLVER_CONTEXT*/
+void r1009add(T1009* C,T0* a1,T0* a2);
+/*XM_NAMESPACE_RESOLVER_CONTEXT*/
+T0* r1009resolve_default(T1009* C);
+extern T0*oBC1009default_namespace;
+extern int fBC1009default_namespace;
+/*XM_NAMESPACE_RESOLVER_CONTEXT*/
+T0* r1009default_namespace(void);
+/*XM_NAMESPACE_RESOLVER_CONTEXT*/
+void r1009pop(T1009* C);
+/*LX_FULL_AND_VARIABLE_TRAILING_CONTEXT_ERROR*/
+T0* r448arguments(void);
+/*LX_FULL_AND_VARIABLE_TRAILING_CONTEXT_ERROR*/
+void r448make(T448* C);
+/*LX_FULL_AND_VARIABLE_TRAILING_CONTEXT_ERROR*/
+T0* r448message(T448* C,T0* a1);
+/*LX_FULL_AND_VARIABLE_TRAILING_CONTEXT_ERROR*/
+T0* r448default_message(T448* C);
+/*GEANT_COPY_COMMAND*/
+T6 r596is_fileset_to_directory_executable(T596* C);
+/*GEANT_COPY_COMMAND*/
+T0* r596file_system(void);
+/*GEANT_COPY_COMMAND*/
+void r596create_directory(T596* C,T0* a1);
+/*GEANT_COPY_COMMAND*/
+void r596create_directory_for_pathname(T596* C,T0* a1);
+/*GEANT_COPY_COMMAND*/
+void r596copy_file(T596* C,T0* a1,T0* a2);
+/*GEANT_COPY_COMMAND*/
+void r596execute(T596* C);
+/*GEANT_COPY_COMMAND*/
+T6 r596is_file_outofdate(T0* a1,T0* a2);
+/*GEANT_COPY_COMMAND*/
+T6 r596is_file_to_directory_executable(T596* C);
+/*GEANT_COPY_COMMAND*/
+T6 r596is_file_to_file_executable(T596* C);
+/*GEANT_COPY_COMMAND*/
+T6 r596is_executable(T596* C);
+extern T0*oBC621source_attribute_name;
+extern T0*oBC621target_attribute_name;
+/*GEANT_OUTOFDATE_TASK*/
+T0* r621attribute_value(T621* C,T0* a1);
+extern T0*oBC621fileset_element_name;
+/*GEANT_OUTOFDATE_TASK*/
+T0* r621file_system(void);
+extern T0*oBC621true_value_attribute_name;
+/*GEANT_OUTOFDATE_TASK*/
+void r621make(T621* C,T0* a1,T0* a2);
+/*GEANT_OUTOFDATE_TASK*/
+void r621task_make(T621* C,T0* a1,T0* a2);
+/*GEANT_OUTOFDATE_TASK*/
+void r621execute(T621* C);
+/*GEANT_OUTOFDATE_TASK*/
+T6 r621is_enabled(T621* C);
+extern T0*oBC621false_value_attribute_name;
+/*GEANT_OUTOFDATE_TASK*/
+T0* r621target_arguments_stack(void);
+/*GEANT_OUTOFDATE_TASK*/
+void r621interpreting_element_make(T621* C,T0* a1,T0* a2);
+extern T0*oBC621variable_attribute_name;
+/*LX_START_CONDITION*/
+void r363make(T363* C,T0* a1,T2 a2,T6 a3);
+/*TEXT_FILE_READ*/
+void r703disconnect(T703* C);
+/*TEXT_FILE_READ*/
+void r703connect_to(T703* C,T0* a1);
+/*GEANT_ARGUMENT_ELEMENT*/
+T0* r758name(T758* C);
+/*GEANT_ARGUMENT_ELEMENT*/
+T0* r758attribute_value(T758* C,T0* a1);
+/*GEANT_ARGUMENT_ELEMENT*/
+T6 r758has_name(T758* C);
+/*KL_BINARY_OUTPUT_FILE*/
+T6 r858is_closed(T858* C);
+/*KL_BINARY_OUTPUT_FILE*/
+void r858old_close(T858* C);
+/*KL_BINARY_OUTPUT_FILE*/
+void r858old_open_write(T858* C);
+/*KL_BINARY_OUTPUT_FILE*/
+void r858close(T858* C);
+/*KL_BINARY_OUTPUT_FILE*/
+void r858make(T858* C,T0* a1);
+/*KL_BINARY_OUTPUT_FILE*/
+void r858put_byte(T858* C,T2 a1);
+/*KL_BINARY_OUTPUT_FILE*/
+void r858old_put_string(T858* C,T0* a1);
+/*KL_BINARY_OUTPUT_FILE*/
+void r858connect_to(T858* C,T0* a1);
+/*KL_BINARY_OUTPUT_FILE*/
+void r858old_make(T858* C);
+/*KL_BINARY_OUTPUT_FILE*/
+void r858open_write(T858* C);
+/*KL_BINARY_OUTPUT_FILE*/
+void r858write_buffer(T858* C);
+extern T0*oBC737target_attribute_name;
+/*GEANT_REDEFINE_ELEMENT*/
+T0* r737attribute_value(T737* C,T0* a1);
+/*GEANT_REDEFINE_ELEMENT*/
+void r737make(T737* C,T0* a1,T0* a2);
+/*GEANT_REDEFINE_ELEMENT*/
+T0* r737target_arguments_stack(void);
+/*GEANT_REDEFINE_ELEMENT*/
+void r737interpreting_element_make(T737* C,T0* a1,T0* a2);
+extern T0*oBC567generation_attribute_name;
+extern T0*oBC567feature_attribute_name;
+extern T0*oBC567define_element_name;
+/*GEANT_GETEST_TASK*/
+T0* r567attribute_value(T567* C,T0* a1);
+extern T0*oBC567abort_attribute_name;
+/*GEANT_GETEST_TASK*/
+T0* r567file_system(void);
+extern T0*oBC567config_filename_attribute_name;
+extern T0*oBC567execution_attribute_name;
+/*GEANT_GETEST_TASK*/
+T0* r567elements_by_name(T567* C,T0* a1);
+/*GEANT_GETEST_TASK*/
+void r567make(T567* C,T0* a1,T0* a2);
+/*GEANT_GETEST_TASK*/
+T6 r567boolean_value(T567* C,T0* a1);
+/*GEANT_GETEST_TASK*/
+void r567task_make(T567* C,T0* a1,T0* a2);
+extern T0*oBC567compile_attribute_name;
+/*GEANT_GETEST_TASK*/
+void r567execute(T567* C);
+/*GEANT_GETEST_TASK*/
+T6 r567is_enabled(T567* C);
+extern T0*oBC567class_attribute_name;
+extern T0*oBC567compilation_attribute_name;
+/*GEANT_GETEST_TASK*/
+T0* r567target_arguments_stack(void);
+/*GEANT_GETEST_TASK*/
+void r567interpreting_element_make(T567* C,T0* a1,T0* a2);
+/*LX_RULE*/
+void r276make_default(T276* C,T2 a1);
+/*LX_RULE*/
+T6 r276is_equal(T276* C,T0* a1);
+extern T0*oBC276dummy_pattern;
+extern int fBC276dummy_pattern;
+/*LX_RULE*/
+T0* r276dummy_pattern(void);
+extern T0*oBC276dummy_action;
+extern int fBC276dummy_action;
+/*LX_RULE*/
+T0* r276dummy_action(void);
+/*LX_RULE*/
+T6 r276_ix_60(T276* C,T0* a1);
+/*GEANT_MOVE_TASK*/
+T0* r597attribute_value(T597* C,T0* a1);
+extern T0*oBC597file_attribute_name;
+extern T0*oBC597fileset_element_name;
+/*GEANT_MOVE_TASK*/
+T0* r597file_system(void);
+extern T0*oBC597to_directory_attribute_name;
+extern T0*oBC597to_file_attribute_name;
+/*GEANT_MOVE_TASK*/
+void r597make(T597* C,T0* a1,T0* a2);
+/*GEANT_MOVE_TASK*/
+void r597task_make(T597* C,T0* a1,T0* a2);
+/*GEANT_MOVE_TASK*/
+void r597execute(T597* C);
+/*GEANT_MOVE_TASK*/
+T6 r597is_enabled(T597* C);
+/*GEANT_MOVE_TASK*/
+T0* r597target_arguments_stack(void);
+/*GEANT_MOVE_TASK*/
+void r597interpreting_element_make(T597* C,T0* a1,T0* a2);
+/*KL_DIRECTORY*/
+T6 r750is_closed(T750* C);
+/*KL_DIRECTORY*/
+T6 r750old_end_of_input(T750* C);
+/*KL_DIRECTORY*/
+void r750open_read(T750* C);
+/*KL_DIRECTORY*/
+T0* r750file_system(void);
+/*KL_DIRECTORY*/
+T0* r750clone(T0* a1);
+/*KL_DIRECTORY*/
+void r750create_directory(T750* C);
+/*KL_DIRECTORY*/
+T6 r750is_open_read(T750* C);
+/*KL_DIRECTORY*/
+void r750close(T750* C);
+/*KL_DIRECTORY*/
+void r750make(T750* C,T0* a1);
+/*KL_DIRECTORY*/
+T6 r750exists(T750* C);
+/*KL_DIRECTORY*/
+void r750recursive_create_directory(T750* C);
+/*KL_DIRECTORY*/
+void r750read_entry(T750* C);
+/*KL_DIRECTORY*/
+void r750delete(T750* C);
+/*KL_DIRECTORY*/
+void r750recursive_delete(T750* C);
+/*KL_DIRECTORY*/
+T6 r750is_readable(T750* C);
+extern T0*oBC736target_attribute_name;
+/*GEANT_SELECT_ELEMENT*/
+T0* r736attribute_value(T736* C,T0* a1);
+/*GEANT_SELECT_ELEMENT*/
+void r736make(T736* C,T0* a1,T0* a2);
+/*GEANT_SELECT_ELEMENT*/
+T0* r736target_arguments_stack(void);
+/*GEANT_SELECT_ELEMENT*/
+void r736interpreting_element_make(T736* C,T0* a1,T0* a2);
+/*GEANT_STRING_INTERPRETER*/
+T0* r150expanded_variable_value(T150* C,T0* a1);
+/*GEANT_STRING_INTERPRETER*/
+T0* r150variable_value(T150* C,T0* a1);
+/*GEANT_STRING_INTERPRETER*/
+T0* r150interpreted_string(T150* C,T0* a1);
+/*GEANT_STRING_INTERPRETER*/
+T0* r150default_variable_value(T0* a1);
+/*GEANT_SETENV_TASK*/
+T0* r599attribute_value(T599* C,T0* a1);
+/*GEANT_SETENV_TASK*/
+T0* r599file_system(void);
+extern T0*oBC599name_attribute_name;
+extern T0*oBC599value_attribute_name;
+/*GEANT_SETENV_TASK*/
+void r599make(T599* C,T0* a1,T0* a2);
+/*GEANT_SETENV_TASK*/
+void r599task_make(T599* C,T0* a1,T0* a2);
+/*GEANT_SETENV_TASK*/
+void r599execute(T599* C);
+/*GEANT_SETENV_TASK*/
+T6 r599is_enabled(T599* C);
+/*GEANT_SETENV_TASK*/
+T0* r599target_arguments_stack(void);
+/*GEANT_SETENV_TASK*/
+void r599interpreting_element_make(T599* C,T0* a1,T0* a2);
+/*GEANT_ISE_TASK*/
+T0* r216attribute_value(T216* C,T0* a1);
+/*GEANT_ISE_TASK*/
+T0* r216file_system(void);
+/*GEANT_ISE_TASK*/
+void r216make(T216* C,T0* a1,T0* a2);
+extern T0*oBC216finalize_attribute_name;
+/*GEANT_ISE_TASK*/
+T6 r216boolean_value(T216* C,T0* a1);
+/*GEANT_ISE_TASK*/
+void r216task_make(T216* C,T0* a1,T0* a2);
+/*GEANT_ISE_TASK*/
+void r216execute(T216* C);
+extern T0*oBC216ace_attribute_name;
+/*GEANT_ISE_TASK*/
+T6 r216is_enabled(T216* C);
+/*GEANT_ISE_TASK*/
+T0* r216attribute_value_or_default(T216* C,T0* a1,T0* a2);
+extern T0*oBC216finish_freezing_attribute_name;
+extern T0*oBC216system_attribute_name;
+extern T0*oBC216exit_code_variable_attribute_name;
+/*GEANT_ISE_TASK*/
+T0* r216target_arguments_stack(void);
+/*GEANT_ISE_TASK*/
+void r216interpreting_element_make(T216* C,T0* a1,T0* a2);
+extern T0*oBC216clean_attribute_name;
+/*YY_BUFFER*/
+void r429set_position(T429* C,T2 a1,T2 a2,T2 a3);
+/*YY_BUFFER*/
+T0* r429name(void);
+/*YY_BUFFER*/
+void r429make(T429* C,T0* a1);
+/*YY_BUFFER*/
+void r429make_from_buffer(T429* C,T0* a1);
+/*YY_BUFFER*/
+T0* r429new_default_buffer(T2 a1);
+/*GEANT_FILESET_ENTRY*/
+T6 r527is_equal(T527* C,T0* a1);
+/*GEANT_FILESET_ENTRY*/
+T0* r527file_system(void);
+/*GEANT_FILESET_ENTRY*/
+void r527make(T527* C,T0* a1,T0* a2);
+/*GEANT_FILESET_ENTRY*/
+T2 r527hash_code(T527* C);
+/*GEANT_FILESET_ENTRY*/
+T0* r527mapped_filename_converted(T527* C);
+/*GEANT_FILESET_ENTRY*/
+T0* r527filename_converted(T527* C);
+/*RX_CASE_MAPPING*/
+void r845make_default(T845* C);
+/*RX_CASE_MAPPING*/
+void r845make(T845* C,T0* a1,T0* a2);
+/*RX_CASE_MAPPING*/
+void r845add(T845* C,T0* a1,T0* a2);
+/*RX_CASE_MAPPING*/
+void r845clear(T845* C);
+/*RX_CASE_MAPPING*/
+T2 r845to_lower(T845* C,T2 a1);
+/*RX_CASE_MAPPING*/
+T2 r845flip_case(T845* C,T2 a1);
+/*LX_CHARACTER_OUT_OF_RANGE_ERROR*/
+T0* r443arguments(void);
+/*LX_CHARACTER_OUT_OF_RANGE_ERROR*/
+void r443make(T443* C,T0* a1,T2 a2,T0* a3);
+/*LX_CHARACTER_OUT_OF_RANGE_ERROR*/
+T0* r443message(T443* C,T0* a1);
+/*LX_CHARACTER_OUT_OF_RANGE_ERROR*/
+T0* r443default_message(T443* C);
+extern T0*oBC591directory_attribute_name;
+/*GEANT_DELETE_TASK*/
+T0* r591attribute_value(T591* C,T0* a1);
+extern T0*oBC591file_attribute_name;
+extern T0*oBC591fileset_element_name;
+/*GEANT_DELETE_TASK*/
+T0* r591file_system(void);
+extern T0*oBC591directoryset_element_name;
+/*GEANT_DELETE_TASK*/
+void r591make(T591* C,T0* a1,T0* a2);
+/*GEANT_DELETE_TASK*/
+void r591task_make(T591* C,T0* a1,T0* a2);
+/*GEANT_DELETE_TASK*/
+void r591execute(T591* C);
+/*GEANT_DELETE_TASK*/
+T6 r591is_enabled(T591* C);
+/*GEANT_DELETE_TASK*/
+T0* r591target_arguments_stack(void);
+/*GEANT_DELETE_TASK*/
+void r591interpreting_element_make(T591* C,T0* a1,T0* a2);
+/*XM_DTD_ATTRIBUTE_CONTENT*/
+void r905set_enumeration_list(T905* C,T0* a1);
+/*XM_DTD_ATTRIBUTE_CONTENT*/
+T6 r905is_value_required(T905* C);
+/*XM_DTD_ATTRIBUTE_CONTENT*/
+void r905set_enumeration(T905* C);
+/*XM_DTD_ATTRIBUTE_CONTENT*/
+void r905set_default_value(T905* C,T0* a1);
+extern T0*oBC905default_enumeration_list;
+extern int fBC905default_enumeration_list;
+/*XM_DTD_ATTRIBUTE_CONTENT*/
+T0* r905default_enumeration_list(void);
+/*XM_DTD_ATTRIBUTE_CONTENT*/
+void r905make(T905* C);
+/*XM_DTD_ATTRIBUTE_CONTENT*/
+void r905copy_default(T905* C,T0* a1);
+/*XM_DTD_ATTRIBUTE_CONTENT*/
+void r905set_value_fixed(T905* C,T0* a1);
+/*GEANT_GETEST_COMMAND*/
+void r568_211Pmake(T568* C,T0* a1);
+/*GEANT_GETEST_COMMAND*/
+T0* r568file_system(void);
+/*GEANT_GETEST_COMMAND*/
+T0* r568clone(T0* a1);
+/*GEANT_GETEST_COMMAND*/
+void r568make(T568* C,T0* a1);
+/*GEANT_GETEST_COMMAND*/
+void r568execute(T568* C);
+/*GEANT_GETEST_COMMAND*/
+void r568execute_shell(T568* C,T0* a1);
+/*GEANT_GETEST_COMMAND*/
+T6 r568is_executable(T568* C);
+/*XM_EIFFEL_PARSER*/
+T6 r783is_correct(T783* C);
+/*XM_EIFFEL_PARSER*/
+void r783yy_do_action(T783* C,T2 a1);
+/*XM_EIFFEL_PARSER*/
+T2 r783maximum_item_code(T0* a1);
+/*XM_EIFFEL_PARSER*/
+void r783on_end_tag(T783* C,T0* a1,T0* a2,T0* a3);
+extern T0*oBC783yytable_template;
+extern int fBC783yytable_template;
+/*XM_EIFFEL_PARSER*/
+T0* r783yytable_template(void);
+/*XM_EIFFEL_PARSER*/
+void r783reset_error_state(T783* C);
+/*XM_EIFFEL_PARSER*/
+T0* r783defined_entity_referenced(T783* C,T0* a1);
+/*XM_EIFFEL_PARSER*/
+void r783on_attribute(T783* C,T0* a1,T0* a2,T0* a3,T0* a4);
+/*XM_EIFFEL_PARSER*/
+T0* r783new_entities_table(void);
+/*XM_EIFFEL_PARSER*/
+void r783on_start_tag_finish(T783* C);
+/*XM_EIFFEL_PARSER*/
+T6 r783is_local_part(T0* a1);
+/*XM_EIFFEL_PARSER*/
+void r783when_external_dtd(T783* C,T0* a1);
+/*XM_EIFFEL_PARSER*/
+void r783yy_do_error_action(T783* C,T2 a1);
+/*XM_EIFFEL_PARSER*/
+T6 r783is_string_mode_latin1(T783* C);
+/*XM_EIFFEL_PARSER*/
+void r783parse(T783* C);
+/*XM_EIFFEL_PARSER*/
+T0* r783new_dtd_external_id(void);
+/*XM_EIFFEL_PARSER*/
+void r783parse_with_events(T783* C);
+/*XM_EIFFEL_PARSER*/
+void r783when_entity_declared(T783* C,T0* a1,T0* a2);
+/*XM_EIFFEL_PARSER*/
+void r783on_error(T783* C,T0* a1);
+/*XM_EIFFEL_PARSER*/
+T0* r783new_literal_entity(T0* a1);
+extern T0*oBC783yytranslate_template;
+extern int fBC783yytranslate_template;
+/*XM_EIFFEL_PARSER*/
+T0* r783yytranslate_template(void);
+/*XM_EIFFEL_PARSER*/
+void r783process_pe_entity(T783* C,T0* a1);
+/*XM_EIFFEL_PARSER*/
+T0* r783new_unicode_string_from_utf8(T0* a1);
+/*XM_EIFFEL_PARSER*/
+T0* r783positions(T783* C);
+/*XM_EIFFEL_PARSER*/
+T0* r783new_name_set(void);
+/*XM_EIFFEL_PARSER*/
+void r783yy_push_last_value(T783* C,T2 a1);
+/*XM_EIFFEL_PARSER*/
+T0* r783new_unicode_string_empty(void);
+/*XM_EIFFEL_PARSER*/
+void r783yy_push_error_value(T783* C);
+/*XM_EIFFEL_PARSER*/
+void r783on_start(T783* C);
+/*XM_EIFFEL_PARSER*/
+T6 r783syntax_error(T783* C);
+extern T0*oBC783yyr1_template;
+extern int fBC783yyr1_template;
+/*XM_EIFFEL_PARSER*/
+T0* r783yyr1_template(void);
+/*XM_EIFFEL_PARSER*/
+T0* r783new_external_entity(T783* C,T0* a1);
+extern T0*oBC783yytypes1_template;
+extern int fBC783yytypes1_template;
+/*XM_EIFFEL_PARSER*/
+T0* r783yytypes1_template(void);
+/*XM_EIFFEL_PARSER*/
+T0* r783onstring_ascii(T783* C,T0* a1);
+/*XM_EIFFEL_PARSER*/
+T0* r783position(T783* C);
+/*XM_EIFFEL_PARSER*/
+void r783on_finish(T783* C);
+/*XM_EIFFEL_PARSER*/
+T0* r783new_dtd_attribute_content(void);
+/*XM_EIFFEL_PARSER*/
+void r783read_token(T783* C);
+/*XM_EIFFEL_PARSER*/
+T6 r783is_string_mode_unicode(T783* C);
+/*XM_EIFFEL_PARSER*/
+void r783on_attribute_declarations(T783* C,T0* a1,T0* a2);
+/*XM_EIFFEL_PARSER*/
+void r783yy_init_value_stacks(T783* C);
+extern T0*oBC783yypgoto_template;
+extern int fBC783yypgoto_template;
+/*XM_EIFFEL_PARSER*/
+T0* r783yypgoto_template(void);
+/*XM_EIFFEL_PARSER*/
+void r783process_entity_scanner(T783* C,T0* a1);
+extern T0*oBC783yytypes2_template;
+extern int fBC783yytypes2_template;
+/*XM_EIFFEL_PARSER*/
+T0* r783yytypes2_template(void);
+/*XM_EIFFEL_PARSER*/
+void r783namespace_force_last(T783* C,T0* a1,T0* a2);
+/*XM_EIFFEL_PARSER*/
+void r783when_pe_entity_declared(T783* C,T0* a1,T0* a2);
+extern T0*oBC73integer_;
+/*XM_EIFFEL_PARSER*/
+T0* r783shared_empty_string(T783* C);
+/*XM_EIFFEL_PARSER*/
+void r783set_element_repetition(T0* a1,T0* a2);
+/*XM_EIFFEL_PARSER*/
+void r783on_doctype(T783* C,T0* a1,T0* a2,T6 a3);
+/*XM_EIFFEL_PARSER*/
+T0* r783clone(T0* a1);
+/*XM_EIFFEL_PARSER*/
+void r783make_scanner(T783* C);
+/*XM_EIFFEL_PARSER*/
+T0* r783new_namespace_name(T783* C);
+/*XM_EIFFEL_PARSER*/
+void r783reset(T783* C);
+/*XM_EIFFEL_PARSER*/
+T0* r783new_string_bilinked_list(void);
+extern T0*oBC784null_resolver;
+/*XM_EIFFEL_PARSER*/
+void r783yy_clear_value_stacks(T783* C);
+/*XM_EIFFEL_PARSER*/
+void r783resolve_external_id(T0* a1,T0* a2);
+/*XM_EIFFEL_PARSER*/
+void r783parse_from_stream(T783* C,T0* a1);
+/*XM_EIFFEL_PARSER*/
+void r783yy_build_parser_tables(T783* C);
+/*XM_EIFFEL_PARSER*/
+void r783force_error(T783* C,T0* a1);
+/*XM_EIFFEL_PARSER*/
+void r783on_start_tag(T783* C,T0* a1,T0* a2,T0* a3);
+/*XM_EIFFEL_PARSER*/
+T0* r783element_name(T0* a1);
+/*XM_EIFFEL_PARSER*/
+void r783on_processing_instruction(T783* C,T0* a1,T0* a2);
+/*XM_EIFFEL_PARSER*/
+void r783apply_encoding(T783* C,T0* a1);
+/*XM_EIFFEL_PARSER*/
+T0* r783external_entity_to_string(T783* C,T0* a1);
+/*XM_EIFFEL_PARSER*/
+void r783setup_error_state(T783* C,T0* a1);
+/*XM_EIFFEL_PARSER*/
+T0* r783last_error_extended_description(T783* C);
+/*XM_EIFFEL_PARSER*/
+void r783report_error(T783* C,T0* a1);
+/*XM_EIFFEL_PARSER*/
+T0* r783entity_referenced_in_entity_value(T783* C,T0* a1);
+/*XM_EIFFEL_PARSER*/
+void r783on_content(T783* C,T0* a1);
+/*XM_EIFFEL_PARSER*/
+void r783make_parser(T783* C);
+extern T0*oBC783yydefact_template;
+extern int fBC783yydefact_template;
+/*XM_EIFFEL_PARSER*/
+T0* r783yydefact_template(void);
+extern T0*oBC784shared_empty_string_uc;
+extern int fBC784shared_empty_string_uc;
+/*XM_EIFFEL_PARSER*/
+T0* r783shared_empty_string_uc(void);
+/*XM_EIFFEL_PARSER*/
+T6 r783is_string_mode_ascii(T783* C);
+extern T0*oBC783yycheck_template;
+extern int fBC783yycheck_template;
+/*XM_EIFFEL_PARSER*/
+T0* r783yycheck_template(void);
+/*XM_EIFFEL_PARSER*/
+T0* r783new_dtd_attribute_content_list(void);
+/*XM_EIFFEL_PARSER*/
+void r783make(T783* C);
+/*XM_EIFFEL_PARSER*/
+void r783on_xml_declaration(T783* C,T0* a1,T0* a2,T6 a3);
+/*XM_EIFFEL_PARSER*/
+T0* r783new_positions(T783* C);
+/*XM_EIFFEL_PARSER*/
+T0* r783yyfixed_array(T0* a1);
+extern T0*oBC783yydefgoto_template;
+extern int fBC783yydefgoto_template;
+/*XM_EIFFEL_PARSER*/
+T0* r783yydefgoto_template(void);
+/*XM_EIFFEL_PARSER*/
+void r783yy_pop_last_value(T783* C,T2 a1);
+/*XM_EIFFEL_PARSER*/
+void r783process_entity(T783* C,T0* a1);
+extern T0*oBC783yypact_template;
+extern int fBC783yypact_template;
+/*XM_EIFFEL_PARSER*/
+T0* r783yypact_template(void);
+/*XM_EIFFEL_PARSER*/
+void r783on_comment(T783* C,T0* a1);
+/*XM_EIFFEL_PARSER*/
+void r783process_attribute_entity(T783* C,T0* a1);
+extern T0*oBC784shared_empty_string_string;
+extern int fBC784shared_empty_string_string;
+/*XM_EIFFEL_PARSER*/
+T0* r783shared_empty_string_string(void);
+/*XM_EIFFEL_PARSER*/
+T0* r783onstring_utf8(T783* C,T0* a1);
+/*XM_DOCUMENT*/
+void r717set_last_cell(T717* C,T0* a1);
+/*XM_DOCUMENT*/
+T6 r717valid_cursor(T717* C,T0* a1);
+/*XM_DOCUMENT*/
+void r717wipe_out(T717* C);
+/*XM_DOCUMENT*/
+void r717remove_first(T717* C);
+extern T0*oBC151default_ns;
+extern int fBC151default_ns;
+/*XM_DOCUMENT*/
+T0* r717default_ns(void);
+/*XM_DOCUMENT*/
+T0* r717cursor_item(T0* a1);
+/*XM_DOCUMENT*/
+T6 r717cursor_is_last(T717* C,T0* a1);
+/*XM_DOCUMENT*/
+void r717remove_traversing_cursor(T717* C,T0* a1);
+/*XM_DOCUMENT*/
+void r717_160Pforce_last(T717* C,T0* a1);
+/*XM_DOCUMENT*/
+void r717cursor_go_after(T717* C,T0* a1);
+/*XM_DOCUMENT*/
+void r717move_all_cursors_after(T717* C);
+/*XM_DOCUMENT*/
+void r717add_traversing_cursor(T717* C,T0* a1);
+/*XM_DOCUMENT*/
+void r717remove_previous_root_element(T717* C);
+/*XM_DOCUMENT*/
+void r717before_addition(T717* C,T0* a1);
+/*XM_DOCUMENT*/
+void r717remove_last(T717* C);
+/*XM_DOCUMENT*/
+T6 r717cursor_after(T0* a1);
+/*XM_DOCUMENT*/
+void r717make_with_root_named(T717* C,T0* a1,T0* a2);
+/*XM_DOCUMENT*/
+void r717equality_delete(T717* C,T0* a1);
+/*XM_DOCUMENT*/
+void r717cursor_forth(T717* C,T0* a1);
+/*XM_DOCUMENT*/
+void r717move_last_cursors_after(T717* C);
+/*XM_DOCUMENT*/
+void r717cursor_start(T717* C,T0* a1);
+/*XM_DOCUMENT*/
+void r717force_last(T717* C,T0* a1);
+/*XM_DOCUMENT*/
+T0* r717new_cursor(T717* C);
+/*XM_DOCUMENT*/
+T6 r717cursor_is_first(T717* C,T0* a1);
+/*XM_DOCUMENT*/
+void r717list_make(T717* C);
+/*XM_DOCUMENT*/
+void r717remove_at_cursor(T717* C,T0* a1);
+/*XM_DOCUMENT*/
+void r717move_all_cursors(T717* C,T0* a1,T0* a2);
+/*XM_DOCUMENT*/
+T6 r717cursor_off(T0* a1);
+/*XM_DOCUMENT*/
+void r717set_root_element(T717* C,T0* a1);
+/*LX_BAD_CHARACTER_ERROR*/
+T0* r446arguments(void);
+/*LX_BAD_CHARACTER_ERROR*/
+void r446make(T446* C,T0* a1,T2 a2,T0* a3);
+/*LX_BAD_CHARACTER_ERROR*/
+T0* r446message(T446* C,T0* a1);
+/*LX_BAD_CHARACTER_ERROR*/
+T0* r446default_message(T446* C);
+/*GEANT_MOVE_COMMAND*/
+void r598move_file(T598* C,T0* a1,T0* a2);
+/*GEANT_MOVE_COMMAND*/
+T6 r598is_fileset_to_directory_executable(T598* C);
+/*GEANT_MOVE_COMMAND*/
+T0* r598file_system(void);
+/*GEANT_MOVE_COMMAND*/
+void r598create_directory(T598* C,T0* a1);
+/*GEANT_MOVE_COMMAND*/
+void r598create_directory_for_pathname(T598* C,T0* a1);
+/*GEANT_MOVE_COMMAND*/
+void r598execute(T598* C);
+/*GEANT_MOVE_COMMAND*/
+T6 r598is_file_to_directory_executable(T598* C);
+/*GEANT_MOVE_COMMAND*/
+T6 r598is_file_to_file_executable(T598* C);
+/*GEANT_MOVE_COMMAND*/
+T6 r598is_executable(T598* C);
+/*GEANT_PROJECT_ELEMENT*/
+T0* r700attribute_value(T700* C,T0* a1);
+extern T0*oBC700inherit_element_name;
+/*GEANT_PROJECT_ELEMENT*/
+T0* r700file_system(void);
+extern T0*oBC700name_attribute_name;
+extern T0*oBC700inherit_attribute_name;
+/*GEANT_PROJECT_ELEMENT*/
+T0* r700elements_by_name(T700* C,T0* a1);
+extern T0*oBC46description_element_name;
+/*GEANT_PROJECT_ELEMENT*/
+T6 r700has_inherit_element(T700* C);
+extern T0*oBC700default_attribute_name;
+/*GEANT_PROJECT_ELEMENT*/
+void r700make(T700* C,T0* a1,T0* a2,T0* a3,T0* a4);
+/*GEANT_PROJECT_ELEMENT*/
+void r700load_parent_projects(T700* C);
+extern T0*oBC700target_element_name;
+/*GEANT_PROJECT_ELEMENT*/
+void r700exit_application(T2 a1,T0* a2);
+/*GEANT_SET_TASK*/
+T0* r553attribute_value(T553* C,T0* a1);
+/*GEANT_SET_TASK*/
+T0* r553file_system(void);
+extern T0*oBC553name_attribute_name;
+extern T0*oBC553value_attribute_name;
+/*GEANT_SET_TASK*/
+void r553make(T553* C,T0* a1,T0* a2);
+/*GEANT_SET_TASK*/
+void r553task_make(T553* C,T0* a1,T0* a2);
+/*GEANT_SET_TASK*/
+void r553execute(T553* C);
+/*GEANT_SET_TASK*/
+T6 r553is_enabled(T553* C);
+/*GEANT_SET_TASK*/
+T0* r553target_arguments_stack(void);
+/*GEANT_SET_TASK*/
+void r553interpreting_element_make(T553* C,T0* a1,T0* a2);
+/*LX_DFA_STATE*/
+T6 r273is_equal(T273* C,T0* a1);
+extern T0*oBC273rule_sorter;
+extern int fBC273rule_sorter;
+/*LX_DFA_STATE*/
+T0* r273rule_sorter(void);
+/*LX_DFA_STATE*/
+T6 r273se_assigned_from(T0* a1);
+extern T0*oBC273bubble_sorter;
+extern int fBC273bubble_sorter;
+/*LX_DFA_STATE*/
+T0* r273bubble_sorter(void);
+/*LX_DFA_STATE*/
+T6 r273same_type(T273* C,T0* a1);
+/*LX_DFA_STATE*/
+void r273make(T273* C,T0* a1,T2 a2,T2 a3);
+/*LX_DFA_STATE*/
+void r273partition(T273* C,T0* a1);
+/*LX_DFA_STATE*/
+T6 r273conforms_to(T273* C,T0* a1);
+/*LX_DFA_STATE*/
+T6 r273is_accepting(T273* C);
+/*LX_DFA_STATE*/
+T0* r273new_state(T273* C,T2 a1);
+/*GEANT_LCC_TASK*/
+T0* r551attribute_value(T551* C,T0* a1);
+/*GEANT_LCC_TASK*/
+T0* r551file_system(void);
+/*GEANT_LCC_TASK*/
+void r551make(T551* C,T0* a1,T0* a2);
+/*GEANT_LCC_TASK*/
+void r551task_make(T551* C,T0* a1,T0* a2);
+extern T0*oBC551executable_attribute_name;
+/*GEANT_LCC_TASK*/
+void r551execute(T551* C);
+/*GEANT_LCC_TASK*/
+T6 r551is_enabled(T551* C);
+/*GEANT_LCC_TASK*/
+T0* r551target_arguments_stack(void);
+extern T0*oBC551source_filename_attribute_name;
+/*GEANT_LCC_TASK*/
+void r551interpreting_element_make(T551* C,T0* a1,T0* a2);
+/*GEANT_PROJECT*/
+void r50calculate_depend_order(T50* C,T0* a1);
+/*GEANT_PROJECT*/
+void r50build(T50* C,T0* a1);
+/*GEANT_PROJECT*/
+void r50trace(T50* C,T0* a1);
+/*GEANT_PROJECT*/
+void r50build_target(T50* C,T0* a1,T0* a2);
+/*GEANT_PROJECT*/
+void r50log(T50* C,T0* a1);
+/*GEANT_PROJECT*/
+void r50make(T50* C,T0* a1,T0* a2);
+/*GEANT_PROJECT*/
+T0* r50default_target(T50* C);
+/*GEANT_PROJECT*/
+T0* r50target_name(T50* C,T0* a1);
+/*GEANT_PROJECT*/
+T0* r50start_target(T50* C);
+/*GEANT_PROJECT*/
+void r50trace_debug(T50* C,T0* a1);
+/*GEANT_PROJECT*/
+void r50show_target_info(T50* C);
+/*GEANT_PROJECT*/
+void r50execute_target(T50* C,T0* a1,T0* a2,T6 a3,T6 a4);
+/*GEANT_PROJECT*/
+void r50merge_in_parent_projects(T50* C);
+/*GEANT_PROJECT*/
+void r50exit_application(T2 a1,T0* a2);
+/*GEANT_PROJECT*/
+T0* r50preferred_start_target(T50* C);
+/*GEANT_PROJECT*/
+T6 r50has_parent_with_name(T50* C,T0* a1);
+/*GEANT_PROJECT*/
+T0* r50target_arguments_stack(void);
+/*UC_STRING*/
+T0* r72out(T72* C);
+/*UC_STRING*/
+void r72copy(T72* C,T0* a1);
+/*UC_STRING*/
+T0* r72substring(T72* C,T2 a1,T2 a2);
+/*UC_STRING*/
+void r72reset_byte_index_cache(T72* C);
+/*UC_STRING*/
+void r72wipe_out(T72* C);
+/*UC_STRING*/
+void r72keep_tail(T72* C,T2 a1);
+/*UC_STRING*/
+void r72remove_first(T72* C,T2 a1);
+/*UC_STRING*/
+T6 r72same_unicode_string(T72* C,T0* a1);
+/*UC_STRING*/
+T2 r72item_code(T72* C,T2 a1);
+/*UC_STRING*/
+T3 r72character_item_at_byte_index(T72* C,T2 a1);
+/*UC_STRING*/
+void r72_7Pmake(T72* C,T2 a1);
+/*UC_STRING*/
+void r72put(T72* C,T3 a1,T2 a2);
+/*UC_STRING*/
+void r72remove_between(T72* C,T2 a1,T2 a2);
+/*UC_STRING*/
+T6 r72is_equal(T72* C,T0* a1);
+/*UC_STRING*/
+T2 r72index_of_code(T72* C,T2 a1,T2 a2);
+/*UC_STRING*/
+T3 r72item(T72* C,T2 a1);
+/*UC_STRING*/
+void r72resize_byte_storage(T72* C,T2 a1);
+/*UC_STRING*/
+T6 r72valid_index(T72* C,T2 a1);
+/*UC_STRING*/
+void r72append(T72* C,T0* a1);
+/*UC_STRING*/
+T6 r72se_assigned_from(T0* a1);
+/*UC_STRING*/
+T2 r72byte_index(T72* C,T2 a1);
+/*UC_STRING*/
+T0* r72clone(T0* a1);
+/*UC_STRING*/
+void r72make_from_string(T72* C,T0* a1);
+/*UC_STRING*/
+T2 r72index_of(T72* C,T3 a1,T2 a2);
+/*UC_STRING*/
+void r72out_in_tagged_out_memory(T72* C);
+/*UC_STRING*/
+void r72move_bytes_right(T72* C,T2 a1,T2 a2);
+/*UC_STRING*/
+void r72set_count(T72* C,T2 a1);
+/*UC_STRING*/
+T2 r72next_byte_index(T72* C,T2 a1);
+/*UC_STRING*/
+T6 r72same_type(T72* C,T0* a1);
+/*UC_STRING*/
+void r72remove_tail(T72* C,T2 a1);
+extern T0*oBC72dummy_uc_string;
+extern int fBC72dummy_uc_string;
+/*UC_STRING*/
+T0* r72dummy_uc_string(void);
+/*UC_STRING*/
+void r72make(T72* C,T2 a1);
+/*UC_STRING*/
+void r72append_string(T72* C,T0* a1);
+/*UC_STRING*/
+void r72make_filled(T72* C,T3 a1,T2 a2);
+/*UC_STRING*/
+void r72remove(T72* C,T2 a1);
+/*UC_STRING*/
+void r72append_substring(T72* C,T0* a1,T2 a2,T2 a3);
+/*UC_STRING*/
+T2 r72item_code_at_byte_index(T72* C,T2 a1);
+/*UC_STRING*/
+T0* r72string(T72* C);
+extern T0*oBC71platform;
+/*UC_STRING*/
+void r72extend(T72* C,T3 a1);
+/*UC_STRING*/
+T2 r72hash_code(T72* C);
+/*UC_STRING*/
+void r72remove_last(T72* C,T2 a1);
+/*UC_STRING*/
+T0* r72prefixed_string(T72* C,T0* a1);
+/*UC_STRING*/
+T6 r72conforms_to(T72* C,T0* a1);
+/*UC_STRING*/
+T6 r72has(T72* C,T3 a1);
+/*UC_STRING*/
+void r72keep_head(T72* C,T2 a1);
+/*UC_STRING*/
+T2 r72to_integer(T72* C);
+/*UC_STRING*/
+T0* r72new_empty_string(T2 a1);
+/*UC_STRING*/
+void r72append_character(T72* C,T3 a1);
+/*UC_STRING*/
+void r72make_from_substring(T72* C,T0* a1,T2 a2,T2 a3);
+/*UC_STRING*/
+void r72put_code_at_byte_index(T72* C,T2 a1,T2 a2,T2 a3);
+/*UC_STRING*/
+void r72fill_with(T72* C,T3 a1);
+/*UC_STRING*/
+void r72put_character_at_byte_index(T72* C,T3 a1,T2 a2,T2 a3);
+/*UC_STRING*/
+void r72_7Pappend_string(T72* C,T0* a1);
+/*UC_STRING*/
+void r72resize(T72* C,T2 a1);
+/*UC_STRING*/
+void r72put_substring_at_byte_index(T72* C,T0* a1,T2 a2,T2 a3,T2 a4,T2 a5);
+/*UC_STRING*/
+T2 r72substring_index(T72* C,T0* a1,T2 a2);
+/*UC_STRING*/
+void r72from_external_copy(T72* C,T8 a1);
+/*UC_STRING*/
+T3 r72byte_item(T72* C,T2 a1);
+/*UC_STRING*/
+void r72move_bytes_left(T72* C,T2 a1,T2 a2);
+/*UC_STRING*/
+T8 r72to_external(T72* C);
+/*UC_STRING*/
+T6 r72same_string(T72* C,T0* a1);
+/*UC_STRING*/
+T0* r72twin(T72* C);
+/*UC_STRING*/
+T0* r72to_utf8(T72* C);
+/*UC_STRING*/
+T0* r72_ix_43(T72* C,T0* a1);
+/*UC_STRING*/
+T2 r72_7Phash_code(T72* C);
+/*UC_STRING*/
+T2 r72unicode_substring_index(T72* C,T0* a1,T2 a2);
+/*UC_STRING*/
+void r72remove_head(T72* C,T2 a1);
+/*UC_STRING*/
+void r72swap(T72* C,T2 a1,T2 a2);
+/*LX_EQUIVALENCE_CLASSES*/
+void r292build(T292* C);
+/*LX_EQUIVALENCE_CLASSES*/
+void r292put(T292* C,T2 a1);
+/*LX_EQUIVALENCE_CLASSES*/
+T2 r292upper(T292* C);
+/*LX_EQUIVALENCE_CLASSES*/
+T2 r292lower(T292* C);
+/*LX_EQUIVALENCE_CLASSES*/
+T6 r292valid_symbol_class(T292* C,T0* a1);
+/*LX_EQUIVALENCE_CLASSES*/
+T0* r292to_array(T292* C,T2 a1,T2 a2);
+/*LX_EQUIVALENCE_CLASSES*/
+void r292make(T292* C,T2 a1,T2 a2);
+/*LX_EQUIVALENCE_CLASSES*/
+T6 r292valid_symbol(T292* C,T2 a1);
+/*LX_EQUIVALENCE_CLASSES*/
+T2 r292equivalence_class(T292* C,T2 a1);
+/*LX_EQUIVALENCE_CLASSES*/
+void r292add(T292* C,T0* a1);
+/*LX_EQUIVALENCE_CLASSES*/
+T6 r292is_representative(T292* C,T2 a1);
+/*LX_EQUIVALENCE_CLASSES*/
+void r292initialize(T292* C);
+/*GEANT_DELETE_COMMAND*/
+T6 r593is_directory_executable(T593* C);
+/*GEANT_DELETE_COMMAND*/
+T0* r593file_system(void);
+/*GEANT_DELETE_COMMAND*/
+T6 r593is_file_executable(T593* C);
+/*GEANT_DELETE_COMMAND*/
+void r593execute(T593* C);
+/*GEANT_DELETE_COMMAND*/
+T6 r593is_executable(T593* C);
+extern T0*oBC564define_element_name;
+/*GEANT_GEPP_TASK*/
+T0* r564attribute_value(T564* C,T0* a1);
+extern T0*oBC564fileset_element_name;
+/*GEANT_GEPP_TASK*/
+T0* r564file_system(void);
+extern T0*oBC564input_filename_attribute_name;
+extern T0*oBC564to_directory_attribute_name;
+/*GEANT_GEPP_TASK*/
+T0* r564elements_by_name(T564* C,T0* a1);
+/*GEANT_GEPP_TASK*/
+void r564make(T564* C,T0* a1,T0* a2);
+/*GEANT_GEPP_TASK*/
+T6 r564boolean_value(T564* C,T0* a1);
+extern T0*oBC564force_attribute_name;
+/*GEANT_GEPP_TASK*/
+void r564task_make(T564* C,T0* a1,T0* a2);
+extern T0*oBC564output_filename_attribute_name;
+extern T0*oBC564lines_attribute_name;
+/*GEANT_GEPP_TASK*/
+void r564execute(T564* C);
+/*GEANT_GEPP_TASK*/
+T6 r564is_enabled(T564* C);
+/*GEANT_GEPP_TASK*/
+T0* r564target_arguments_stack(void);
+/*GEANT_GEPP_TASK*/
+void r564interpreting_element_make(T564* C,T0* a1,T0* a2);
+/*GEANT_OUTOFDATE_COMMAND*/
+T0* r622file_system(void);
+/*GEANT_OUTOFDATE_COMMAND*/
+T6 r622is_file_executable(T622* C);
+/*GEANT_OUTOFDATE_COMMAND*/
+void r622execute(T622* C);
+/*GEANT_OUTOFDATE_COMMAND*/
+T6 r622is_file_outofdate(T0* a1,T0* a2);
+/*GEANT_OUTOFDATE_COMMAND*/
+T6 r622is_executable(T622* C);
+/*GEANT_OUTOFDATE_COMMAND*/
+T6 r622is_fileset_executable(T622* C);
+/*XM_PROCESSING_INSTRUCTION*/
+void r1050make_last_in_document(T1050* C,T0* a1,T0* a2,T0* a3);
+/*XM_PROCESSING_INSTRUCTION*/
+void r1050make_last(T1050* C,T0* a1,T0* a2,T0* a3);
+/*GEANT_SET_COMMAND*/
+void r554execute(T554* C);
+/*GEANT_SET_COMMAND*/
+T6 r554is_executable(T554* C);
+/*XM_EIFFEL_DECLARATION*/
+void r895process(T895* C,T0* a1);
+/*XM_EIFFEL_DECLARATION*/
+void r895make(T895* C);
+/*KL_STDOUT_FILE*/
+void r631make(T631* C);
+/*KL_STDOUT_FILE*/
+void r631old_put_string(T631* C,T0* a1);
+/*KL_STDOUT_FILE*/
+void r631old_flush(T631* C);
+/*KL_STDOUT_FILE*/
+void r631old_put_character(T631* C,T3 a1);
+/*KL_STDOUT_FILE*/
+void r631put_line(T631* C,T0* a1);
+/*KL_STDOUT_FILE*/
+void r631old_make(T631* C);
+/*KL_STDOUT_FILE*/
+void r631write_buffer(T631* C);
+/*KL_STDOUT_FILE*/
+void r631put_string(T631* C,T0* a1);
+/*GEANT_SE_COMMAND*/
+T6 r214is_cleanable(T214* C);
+/*GEANT_SE_COMMAND*/
+T0* r214file_system(void);
+/*GEANT_SE_COMMAND*/
+T0* r214clone(T0* a1);
+/*GEANT_SE_COMMAND*/
+T0* r214new_ace_cmdline(T214* C);
+/*GEANT_SE_COMMAND*/
+T6 r214is_traditional_configuration(T214* C);
+/*GEANT_SE_COMMAND*/
+void r214execute(T214* C);
+/*GEANT_SE_COMMAND*/
+T0* r214new_clean_cmdline(T214* C);
+/*GEANT_SE_COMMAND*/
+T0* r214new_traditional_cmdline(T214* C);
+/*GEANT_SE_COMMAND*/
+void r214execute_shell(T214* C,T0* a1);
+/*GEANT_SE_COMMAND*/
+T6 r214is_executable(T214* C);
+/*GEANT_SE_COMMAND*/
+T6 r214is_ace_configuration(T214* C);
+/*XM_EIFFEL_ENTITY_DEF*/
+void r794_267Pset_input_buffer(T794* C,T0* a1);
+/*XM_EIFFEL_ENTITY_DEF*/
+T0* r794normalized_newline(T794* C);
+/*XM_EIFFEL_ENTITY_DEF*/
+T6 r794is_literal(T794* C);
+/*XM_EIFFEL_ENTITY_DEF*/
+T2 r794start_condition(T794* C);
+/*XM_EIFFEL_ENTITY_DEF*/
+void r794set_input_from_resolver(T794* C,T0* a1);
+/*XM_EIFFEL_ENTITY_DEF*/
+void r794yy_chk_template_1(T0* a1);
+/*XM_EIFFEL_ENTITY_DEF*/
+void r794yy_chk_template_2(T0* a1);
+/*XM_EIFFEL_ENTITY_DEF*/
+void r794set_input_buffer(T794* C,T0* a1);
+/*XM_EIFFEL_ENTITY_DEF*/
+T0* r794text_substring(T794* C,T2 a1,T2 a2);
+/*XM_EIFFEL_ENTITY_DEF*/
+T0* r794yy_ec_template(void);
+/*XM_EIFFEL_ENTITY_DEF*/
+void r794yy_execute_action(T794* C,T2 a1);
+/*XM_EIFFEL_ENTITY_DEF*/
+T0* r794yy_def_template(void);
+/*XM_EIFFEL_ENTITY_DEF*/
+T3 r794text_item(T794* C,T2 a1);
+/*XM_EIFFEL_ENTITY_DEF*/
+T6 r794end_of_file(T794* C);
+/*XM_EIFFEL_ENTITY_DEF*/
+T0* r794system_literal_text(T794* C);
+/*XM_EIFFEL_ENTITY_DEF*/
+void r794yy_load_input_buffer(T794* C);
+/*XM_EIFFEL_ENTITY_DEF*/
+void r794apply_input_buffer(T794* C);
+/*XM_EIFFEL_ENTITY_DEF*/
+void r794make_with_buffer(T794* C,T0* a1);
+/*XM_EIFFEL_ENTITY_DEF*/
+T2 r794yy_null_trans_state(T794* C,T2 a1);
+/*XM_EIFFEL_ENTITY_DEF*/
+void r794pop_start_condition(T794* C);
+/*XM_EIFFEL_ENTITY_DEF*/
+T6 r794is_valid_encoding(T794* C,T0* a1);
+/*XM_EIFFEL_ENTITY_DEF*/
+T0* r794yy_accept_template(void);
+/*XM_EIFFEL_ENTITY_DEF*/
+void r794read_token(T794* C);
+/*XM_EIFFEL_ENTITY_DEF*/
+T2 r794yy_previous_state(T794* C);
+/*XM_EIFFEL_ENTITY_DEF*/
+void r794yy_refill_input_buffer(T794* C);
+/*XM_EIFFEL_ENTITY_DEF*/
+void r794push_start_condition_dtd_ignore(T794* C);
+/*XM_EIFFEL_ENTITY_DEF*/
+T0* r794yy_fixed_array(T0* a1);
+/*XM_EIFFEL_ENTITY_DEF*/
+T0* r794yy_meta_template(void);
+/*XM_EIFFEL_ENTITY_DEF*/
+T0* r794yy_base_template(void);
+/*XM_EIFFEL_ENTITY_DEF*/
+void r794set_input_stream(T794* C,T0* a1);
+/*XM_EIFFEL_ENTITY_DEF*/
+T2 r794text_count(T794* C);
+/*XM_EIFFEL_ENTITY_DEF*/
+T0* r794new_file_buffer(T0* a1);
+/*XM_EIFFEL_ENTITY_DEF*/
+void r794make_scanner(T794* C);
+/*XM_EIFFEL_ENTITY_DEF*/
+void r794yy_initialize(T794* C);
+/*XM_EIFFEL_ENTITY_DEF*/
+void r794reset(T794* C);
+/*XM_EIFFEL_ENTITY_DEF*/
+void r794push_start_condition(T794* C,T2 a1);
+/*XM_EIFFEL_ENTITY_DEF*/
+T0* r794text(T794* C);
+/*XM_EIFFEL_ENTITY_DEF*/
+void r794_795Pread_token(T794* C);
+/*XM_EIFFEL_ENTITY_DEF*/
+void r794close_input(T794* C);
+/*XM_EIFFEL_ENTITY_DEF*/
+T0* r794yy_nxt_template(void);
+/*XM_EIFFEL_ENTITY_DEF*/
+void r794yy_set_line_column(T794* C);
+/*XM_EIFFEL_ENTITY_DEF*/
+T6 r794valid_start_condition(T2 a1);
+/*XM_EIFFEL_ENTITY_DEF*/
+void r794make_literal(T794* C,T0* a1);
+/*XM_EIFFEL_ENTITY_DEF*/
+T0* r794empty_buffer(void);
+/*XM_EIFFEL_ENTITY_DEF*/
+void r794yy_nxt_template_1(T0* a1);
+/*XM_EIFFEL_ENTITY_DEF*/
+void r794yy_nxt_template_2(T0* a1);
+/*XM_EIFFEL_ENTITY_DEF*/
+T0* r794yy_chk_template(void);
+/*XM_EIFFEL_ENTITY_DEF*/
+void r794yy_set_content(T794* C,T0* a1);
+/*XM_EIFFEL_ENTITY_DEF*/
+void r794set_start_condition(T794* C,T2 a1);
+/*XM_EIFFEL_ENTITY_DEF*/
+void r794yy_execute_eof_action(T794* C,T2 a1);
+/*XM_EIFFEL_ENTITY_DEF*/
+void r794_796Preset(T794* C);
+/*XM_EIFFEL_ENTITY_DEF*/
+T0* r794error_position(T794* C);
+/*XM_EIFFEL_ENTITY_DEF*/
+void r794yy_build_tables(T794* C);
+/*XM_EIFFEL_ENTITY_DEF*/
+void r794make_external(T794* C,T0* a1,T0* a2);
+/*XM_EIFFEL_ENTITY_DEF*/
+void r794_266P_796Preset(T794* C);
+/*LX_BAD_CHARACTER_CLASS_ERROR*/
+T0* r445arguments(void);
+/*LX_BAD_CHARACTER_CLASS_ERROR*/
+void r445make(T445* C,T0* a1,T2 a2);
+/*LX_BAD_CHARACTER_CLASS_ERROR*/
+T0* r445message(T445* C,T0* a1);
+/*LX_BAD_CHARACTER_CLASS_ERROR*/
+T0* r445default_message(T445* C);
+/*KL_STDERR_FILE*/
+void r58make(T58* C);
+/*KL_STDERR_FILE*/
+void r58old_put_string(T0* a1);
+/*KL_STDERR_FILE*/
+void r58put_line(T0* a1);
+/*KL_STDERR_FILE*/
+void r58put_string(T0* a1);
+/*XM_DEFAULT_POSITION*/
+T0* r872out(T872* C);
+/*XM_DEFAULT_POSITION*/
+void r872make(T872* C,T0* a1,T2 a2,T2 a3,T2 a4);
+/*XM_EIFFEL_INPUT_STREAM*/
+void r936make_from_stream(T936* C,T0* a1);
+/*XM_EIFFEL_INPUT_STREAM*/
+T0* r936name(T936* C);
+/*XM_EIFFEL_INPUT_STREAM*/
+T2 r936read_to_string(T936* C,T0* a1,T2 a2,T2 a3);
+/*XM_EIFFEL_INPUT_STREAM*/
+T2 r936most_significant(T936* C,T3 a1,T3 a2);
+/*XM_EIFFEL_INPUT_STREAM*/
+T6 r936is_valid_encoding(T0* a1);
+/*XM_EIFFEL_INPUT_STREAM*/
+void r936noqueue_read_character(T936* C);
+/*XM_EIFFEL_INPUT_STREAM*/
+T0* r936clone(T0* a1);
+/*XM_EIFFEL_INPUT_STREAM*/
+void r936read_character(T936* C);
+/*XM_EIFFEL_INPUT_STREAM*/
+T6 r936is_open_read(T936* C);
+/*XM_EIFFEL_INPUT_STREAM*/
+void r936utf16_detect_read_character(T936* C);
+/*XM_EIFFEL_INPUT_STREAM*/
+T6 r936is_applicable_encoding(T936* C,T0* a1);
+/*XM_EIFFEL_INPUT_STREAM*/
+T2 r936least_significant(T936* C,T3 a1,T3 a2);
+/*XM_EIFFEL_INPUT_STREAM*/
+T2 r936read_to_buffer(T936* C,T0* a1,T2 a2,T2 a3);
+/*XM_EIFFEL_INPUT_STREAM*/
+T2 r936_430Pread_to_string(T936* C,T0* a1,T2 a2,T2 a3);
+/*XM_EIFFEL_INPUT_STREAM*/
+T6 r936end_of_input(T936* C);
+/*XM_EIFFEL_INPUT_STREAM*/
+void r936append_character(T936* C,T2 a1);
+/*XM_EIFFEL_INPUT_STREAM*/
+void r936latin1_read_character(T936* C);
+/*XM_EIFFEL_INPUT_STREAM*/
+void r936utf16_read_character(T936* C);
+/*XM_EIFFEL_INPUT_STREAM*/
+T3 r936last_character(T936* C);
+/*XM_EIFFEL_INPUT_STREAM*/
+void r936read_string(T936* C,T2 a1);
+extern T0*oBC74utf16;
+extern T0*oBC936utf8_buffer;
+/*XM_EIFFEL_INPUT_STREAM*/
+void r936set_encoding(T936* C,T0* a1);
+/*XM_ATTRIBUTE*/
+void r167make_last(T167* C,T0* a1,T0* a2,T0* a3,T0* a4);
+/*GEANT_VE_COMMAND*/
+T6 r219is_cleanable(T219* C);
+/*GEANT_VE_COMMAND*/
+T0* r219file_system(void);
+/*GEANT_VE_COMMAND*/
+T0* r219clone(T0* a1);
+/*GEANT_VE_COMMAND*/
+void r219execute_clean(T219* C);
+/*GEANT_VE_COMMAND*/
+void r219execute_tuner(T219* C);
+/*GEANT_VE_COMMAND*/
+T6 r219is_compilable(T219* C);
+/*GEANT_VE_COMMAND*/
+void r219execute(T219* C);
+/*GEANT_VE_COMMAND*/
+T6 r219is_tunable(T219* C);
+/*GEANT_VE_COMMAND*/
+void r219execute_shell(T219* C,T0* a1);
+/*GEANT_VE_COMMAND*/
+T6 r219is_executable(T219* C);
+/*GEANT_TARGET*/
+void r43execute_task(T43* C,T0* a1);
+extern T0*oBC44se_task_name;
+/*GEANT_TARGET*/
+T6 r43is_exported_to_project(T43* C,T0* a1);
+/*GEANT_TARGET*/
+T0* r43full_name(T43* C);
+/*GEANT_TARGET*/
+T6 r43is_exported_to_any(T43* C);
+/*GEANT_TARGET*/
+T0* r43dependencies(T43* C);
+/*GEANT_TARGET*/
+T6 r43formal_arguments_match(T43* C,T0* a1);
+/*GEANT_TARGET*/
+T6 r43valid_xml_element(T0* a1);
+extern T0*oBC44available_task_name;
+extern T0*oBC44exec_task_name;
+extern T0*oBC43depend_attribute_name;
+extern T0*oBC44precursor_task_name;
+extern T0*oBC43obsolete_element_name;
+extern T0*oBC43export_attribute_name;
+/*GEANT_TARGET*/
+T0* r43attribute_value(T43* C,T0* a1);
+/*GEANT_TARGET*/
+T6 r43conflicts_with(T43* C,T0* a1);
+/*GEANT_TARGET*/
+T0* r43dependent_targets(T43* C);
+extern T0*oBC44mkdir_task_name;
+extern T0*oBC44geyacc_task_name;
+extern T0*oBC43once_attribute_name;
+extern T0*oBC44lcc_task_name;
+/*GEANT_TARGET*/
+T0* r43file_system(void);
+extern T0*oBC15empty_variables;
+extern int fBC15empty_variables;
+/*GEANT_TARGET*/
+T0* r43empty_variables(void);
+extern T0*oBC43name_attribute_name;
+/*GEANT_TARGET*/
+T6 r43has_dependencies(T43* C);
+extern T0*oBC44gexmlsplit_task_name;
+/*GEANT_TARGET*/
+T0* r43clone(T0* a1);
+extern T0*oBC44delete_task_name;
+/*GEANT_TARGET*/
+T0* r43elements_by_name(T43* C,T0* a1);
+extern T0*oBC44copy_task_name;
+extern T0*oBC44exit_task_name;
+/*GEANT_TARGET*/
+T6 r43has_precursor_target(T43* C,T0* a1);
+/*GEANT_TARGET*/
+T0* r43named_from_numbered_arguments(T43* C,T0* a1);
+/*GEANT_TARGET*/
+void r43make(T43* C,T0* a1,T0* a2);
+/*GEANT_TARGET*/
+T6 r43boolean_value(T43* C,T0* a1);
+extern T0*oBC44outofdate_task_name;
+/*GEANT_TARGET*/
+T6 r43has_redefining_target(T43* C,T0* a1);
+extern T0*oBC44getest_task_name;
+extern T0*oBC43project_name_any;
+extern T0*oBC44set_task_name;
+/*GEANT_TARGET*/
+T0* r43string_tokens(T0* a1,T3 a2);
+extern T0*oBC44ise_task_name;
+extern T0*oBC44ve_task_name;
+/*GEANT_TARGET*/
+void r43show_dependent_targets(T0* a1);
+/*GEANT_TARGET*/
+void r43execute(T43* C);
+/*GEANT_TARGET*/
+T0* r43seed(T43* C);
+/*GEANT_TARGET*/
+T6 r43is_enabled(T43* C);
+extern T0*oBC44gepp_task_name;
+/*GEANT_TARGET*/
+void r43exit_application(T2 a1,T0* a2);
+/*GEANT_TARGET*/
+T0* r43final_target(T43* C);
+extern T0*oBC44xslt_task_name;
+extern T0*oBC43argument_element_name;
+extern T0*oBC44geant_task_name;
+extern T0*oBC44move_task_name;
+/*GEANT_TARGET*/
+void r43_45Pmake(T43* C,T0* a1,T0* a2);
+extern T0*oBC44setenv_task_name;
+extern T0*oBC44gexace_task_name;
+extern T0*oBC44unset_task_name;
+/*GEANT_TARGET*/
+T0* r43target_arguments_stack(void);
+extern T0*oBC44gelex_task_name;
+/*GEANT_TARGET*/
+T0* r43prepared_arguments_from_formal_arguments(T43* C,T0* a1);
+/*GEANT_TARGET*/
+void r43show_precursors(T43* C);
+extern T0*oBC44echo_task_name;
+/*UC_UTF8_STRING*/
+T0* r126out(T126* C);
+/*UC_UTF8_STRING*/
+void r126copy(T126* C,T0* a1);
+/*UC_UTF8_STRING*/
+T0* r126substring(T126* C,T2 a1,T2 a2);
+/*UC_UTF8_STRING*/
+void r126reset_byte_index_cache(T126* C);
+/*UC_UTF8_STRING*/
+T2 r126shifted_byte_index(T126* C,T2 a1,T2 a2);
+/*UC_UTF8_STRING*/
+void r126wipe_out(T126* C);
+/*UC_UTF8_STRING*/
+void r126keep_tail(T126* C,T2 a1);
+/*UC_UTF8_STRING*/
+void r126remove_first(T126* C,T2 a1);
+/*UC_UTF8_STRING*/
+T6 r126same_unicode_string(T126* C,T0* a1);
+/*UC_UTF8_STRING*/
+T2 r126item_code(T126* C,T2 a1);
+/*UC_UTF8_STRING*/
+T3 r126character_item_at_byte_index(T126* C,T2 a1);
+/*UC_UTF8_STRING*/
+void r126_7Pmake(T126* C,T2 a1);
+/*UC_UTF8_STRING*/
+void r126put(T126* C,T3 a1,T2 a2);
+/*UC_UTF8_STRING*/
+void r126remove_between(T126* C,T2 a1,T2 a2);
+/*UC_UTF8_STRING*/
+T6 r126is_equal(T126* C,T0* a1);
+/*UC_UTF8_STRING*/
+T2 r126index_of_code(T126* C,T2 a1,T2 a2);
+/*UC_UTF8_STRING*/
+T3 r126item(T126* C,T2 a1);
+/*UC_UTF8_STRING*/
+void r126resize_byte_storage(T126* C,T2 a1);
+/*UC_UTF8_STRING*/
+T6 r126valid_index(T126* C,T2 a1);
+/*UC_UTF8_STRING*/
+void r126append(T126* C,T0* a1);
+/*UC_UTF8_STRING*/
+T6 r126se_assigned_from(T0* a1);
+/*UC_UTF8_STRING*/
+T2 r126byte_index(T126* C,T2 a1);
+/*UC_UTF8_STRING*/
+T0* r126clone(T0* a1);
+/*UC_UTF8_STRING*/
+void r126make_from_string(T126* C,T0* a1);
+/*UC_UTF8_STRING*/
+T2 r126index_of(T126* C,T3 a1,T2 a2);
+/*UC_UTF8_STRING*/
+void r126out_in_tagged_out_memory(T126* C);
+/*UC_UTF8_STRING*/
+void r126move_bytes_right(T126* C,T2 a1,T2 a2);
+/*UC_UTF8_STRING*/
+void r126set_count(T126* C,T2 a1);
+/*UC_UTF8_STRING*/
+T2 r126next_byte_index(T126* C,T2 a1);
+/*UC_UTF8_STRING*/
+T6 r126same_type(T126* C,T0* a1);
+/*UC_UTF8_STRING*/
+T0* r126dummy_uc_string(void);
+/*UC_UTF8_STRING*/
+void r126remove_tail(T126* C,T2 a1);
+/*UC_UTF8_STRING*/
+void r126make(T126* C,T2 a1);
+/*UC_UTF8_STRING*/
+void r126append_string(T126* C,T0* a1);
+/*UC_UTF8_STRING*/
+void r126make_filled(T126* C,T3 a1,T2 a2);
+/*UC_UTF8_STRING*/
+void r126remove(T126* C,T2 a1);
+/*UC_UTF8_STRING*/
+void r126append_substring(T126* C,T0* a1,T2 a2,T2 a3);
+/*UC_UTF8_STRING*/
+T2 r126item_code_at_byte_index(T126* C,T2 a1);
+/*UC_UTF8_STRING*/
+T0* r126string(T126* C);
+/*UC_UTF8_STRING*/
+void r126extend(T126* C,T3 a1);
+/*UC_UTF8_STRING*/
+T2 r126hash_code(T126* C);
+/*UC_UTF8_STRING*/
+T0* r126prefixed_string(T126* C,T0* a1);
+/*UC_UTF8_STRING*/
+void r126remove_last(T126* C,T2 a1);
+/*UC_UTF8_STRING*/
+T6 r126conforms_to(T126* C,T0* a1);
+/*UC_UTF8_STRING*/
+T6 r126has(T126* C,T3 a1);
+/*UC_UTF8_STRING*/
+void r126keep_head(T126* C,T2 a1);
+/*UC_UTF8_STRING*/
+T2 r126to_integer(T126* C);
+/*UC_UTF8_STRING*/
+T0* r126new_empty_string(T2 a1);
+/*UC_UTF8_STRING*/
+void r126append_character(T126* C,T3 a1);
+/*UC_UTF8_STRING*/
+void r126put_code_at_byte_index(T126* C,T2 a1,T2 a2,T2 a3);
+/*UC_UTF8_STRING*/
+void r126make_from_substring(T126* C,T0* a1,T2 a2,T2 a3);
+/*UC_UTF8_STRING*/
+void r126fill_with(T126* C,T3 a1);
+/*UC_UTF8_STRING*/
+void r126put_character_at_byte_index(T126* C,T3 a1,T2 a2,T2 a3);
+/*UC_UTF8_STRING*/
+void r126_7Pappend_string(T126* C,T0* a1);
+/*UC_UTF8_STRING*/
+void r126resize(T126* C,T2 a1);
+/*UC_UTF8_STRING*/
+void r126put_substring_at_byte_index(T126* C,T0* a1,T2 a2,T2 a3,T2 a4,T2 a5);
+/*UC_UTF8_STRING*/
+T2 r126substring_index(T126* C,T0* a1,T2 a2);
+/*UC_UTF8_STRING*/
+void r126append_utf8(T126* C,T0* a1);
+/*UC_UTF8_STRING*/
+void r126from_external_copy(T126* C,T8 a1);
+/*UC_UTF8_STRING*/
+void r126move_bytes_left(T126* C,T2 a1,T2 a2);
+/*UC_UTF8_STRING*/
+T8 r126to_external(T126* C);
+/*UC_UTF8_STRING*/
+T6 r126same_string(T126* C,T0* a1);
+/*UC_UTF8_STRING*/
+T0* r126twin(T126* C);
+/*UC_UTF8_STRING*/
+T0* r126to_utf8(T126* C);
+/*UC_UTF8_STRING*/
+T0* r126_ix_43(T126* C,T0* a1);
+/*UC_UTF8_STRING*/
+T2 r126unicode_substring_index(T126* C,T0* a1,T2 a2);
+/*UC_UTF8_STRING*/
+T2 r126_7Phash_code(T126* C);
+/*UC_UTF8_STRING*/
+void r126make_from_utf8(T126* C,T0* a1);
+/*UC_UTF8_STRING*/
+void r126remove_head(T126* C,T2 a1);
+/*UC_UTF8_STRING*/
+void r126swap(T126* C,T2 a1,T2 a2);
+/*XM_EIFFEL_PE_ENTITY_DEF*/
+void r1007_267Pset_input_buffer(T1007* C,T0* a1);
+/*XM_EIFFEL_PE_ENTITY_DEF*/
+T0* r1007normalized_newline(T1007* C);
+/*XM_EIFFEL_PE_ENTITY_DEF*/
+T6 r1007is_literal(T1007* C);
+/*XM_EIFFEL_PE_ENTITY_DEF*/
+T2 r1007start_condition(T1007* C);
+/*XM_EIFFEL_PE_ENTITY_DEF*/
+void r1007set_input_from_resolver(T1007* C,T0* a1);
+/*XM_EIFFEL_PE_ENTITY_DEF*/
+void r1007_795P_794Pread_token(T1007* C);
+/*XM_EIFFEL_PE_ENTITY_DEF*/
+void r1007set_input_buffer(T1007* C,T0* a1);
+/*XM_EIFFEL_PE_ENTITY_DEF*/
+T0* r1007text_substring(T1007* C,T2 a1,T2 a2);
+/*XM_EIFFEL_PE_ENTITY_DEF*/
+T0* r1007yy_ec_template(void);
+/*XM_EIFFEL_PE_ENTITY_DEF*/
+void r1007yy_execute_action(T1007* C,T2 a1);
+/*XM_EIFFEL_PE_ENTITY_DEF*/
+T0* r1007yy_def_template(void);
+/*XM_EIFFEL_PE_ENTITY_DEF*/
+T3 r1007text_item(T1007* C,T2 a1);
+/*XM_EIFFEL_PE_ENTITY_DEF*/
+void r1007_796P_794Preset(T1007* C);
+/*XM_EIFFEL_PE_ENTITY_DEF*/
+T6 r1007end_of_file(T1007* C);
+/*XM_EIFFEL_PE_ENTITY_DEF*/
+T0* r1007system_literal_text(T1007* C);
+/*XM_EIFFEL_PE_ENTITY_DEF*/
+void r1007yy_load_input_buffer(T1007* C);
+/*XM_EIFFEL_PE_ENTITY_DEF*/
+void r1007apply_input_buffer(T1007* C);
+/*XM_EIFFEL_PE_ENTITY_DEF*/
+void r1007make_with_buffer(T1007* C,T0* a1);
+/*XM_EIFFEL_PE_ENTITY_DEF*/
+T2 r1007yy_null_trans_state(T1007* C,T2 a1);
+/*XM_EIFFEL_PE_ENTITY_DEF*/
+void r1007pop_start_condition(T1007* C);
+/*XM_EIFFEL_PE_ENTITY_DEF*/
+T0* r1007yy_accept_template(void);
+/*XM_EIFFEL_PE_ENTITY_DEF*/
+void r1007read_token(T1007* C);
+/*XM_EIFFEL_PE_ENTITY_DEF*/
+T2 r1007yy_previous_state(T1007* C);
+/*XM_EIFFEL_PE_ENTITY_DEF*/
+void r1007yy_refill_input_buffer(T1007* C);
+/*XM_EIFFEL_PE_ENTITY_DEF*/
+T0* r1007yy_fixed_array(T0* a1);
+/*XM_EIFFEL_PE_ENTITY_DEF*/
+T0* r1007yy_meta_template(void);
+/*XM_EIFFEL_PE_ENTITY_DEF*/
+T0* r1007yy_base_template(void);
+/*XM_EIFFEL_PE_ENTITY_DEF*/
+void r1007set_input_stream(T1007* C,T0* a1);
+/*XM_EIFFEL_PE_ENTITY_DEF*/
+T2 r1007text_count(T1007* C);
+/*XM_EIFFEL_PE_ENTITY_DEF*/
+T0* r1007new_file_buffer(T0* a1);
+/*XM_EIFFEL_PE_ENTITY_DEF*/
+void r1007make_scanner(T1007* C);
+/*XM_EIFFEL_PE_ENTITY_DEF*/
+void r1007_794Preset(T1007* C);
+/*XM_EIFFEL_PE_ENTITY_DEF*/
+void r1007yy_initialize(T1007* C);
+/*XM_EIFFEL_PE_ENTITY_DEF*/
+void r1007reset(T1007* C);
+/*XM_EIFFEL_PE_ENTITY_DEF*/
+void r1007push_start_condition(T1007* C,T2 a1);
+/*XM_EIFFEL_PE_ENTITY_DEF*/
+T0* r1007text(T1007* C);
+/*XM_EIFFEL_PE_ENTITY_DEF*/
+void r1007make_def(T1007* C,T0* a1);
+/*XM_EIFFEL_PE_ENTITY_DEF*/
+void r1007reset_sent(T1007* C);
+/*XM_EIFFEL_PE_ENTITY_DEF*/
+void r1007close_input(T1007* C);
+/*XM_EIFFEL_PE_ENTITY_DEF*/
+T0* r1007yy_nxt_template(void);
+/*XM_EIFFEL_PE_ENTITY_DEF*/
+void r1007yy_set_line_column(T1007* C);
+/*XM_EIFFEL_PE_ENTITY_DEF*/
+T6 r1007valid_start_condition(T2 a1);
+/*XM_EIFFEL_PE_ENTITY_DEF*/
+void r1007make_literal(T1007* C,T0* a1);
+/*XM_EIFFEL_PE_ENTITY_DEF*/
+T0* r1007empty_buffer(void);
+/*XM_EIFFEL_PE_ENTITY_DEF*/
+void r1007_794Pread_token(T1007* C);
+/*XM_EIFFEL_PE_ENTITY_DEF*/
+T0* r1007yy_chk_template(void);
+/*XM_EIFFEL_PE_ENTITY_DEF*/
+void r1007yy_set_content(T1007* C,T0* a1);
+/*XM_EIFFEL_PE_ENTITY_DEF*/
+void r1007_266P_796P_794Preset(T1007* C);
+/*XM_EIFFEL_PE_ENTITY_DEF*/
+void r1007set_start_condition(T1007* C,T2 a1);
+/*XM_EIFFEL_PE_ENTITY_DEF*/
+T0* r1007error_position(T1007* C);
+/*XM_EIFFEL_PE_ENTITY_DEF*/
+void r1007yy_build_tables(T1007* C);
+/*XM_EIFFEL_PE_ENTITY_DEF*/
+void r1007make_external(T1007* C,T0* a1,T0* a2);
+/*GEANT_INHERIT*/
+void r635merge_in_renamed_targets(T635* C,T0* a1);
+/*GEANT_INHERIT*/
+void r635merge_in_unchanged_targets(T635* C,T0* a1);
+/*GEANT_INHERIT*/
+void r635apply_selects(T635* C);
+/*GEANT_INHERIT*/
+void r635make(T635* C,T0* a1);
+/*GEANT_INHERIT*/
+void r635validate_parent_selects(T635* C);
+/*GEANT_INHERIT*/
+void r635merge_in_parent_project(T635* C,T0* a1);
+/*GEANT_INHERIT*/
+void r635check_targets_for_conflicts(T635* C);
+/*GEANT_INHERIT*/
+void r635merge_in_redefined_targets(T635* C,T0* a1);
+/*GEANT_INHERIT*/
+void r635exit_application(T2 a1,T0* a2);
+/*GEANT_INHERIT*/
+void r635sort_out_selected_targets(T635* C);
+extern T0*oBC834default_word_set;
+extern int fBC834default_word_set;
+/*RX_PCRE_REGULAR_EXPRESSION*/
+T0* r831default_word_set(void);
+/*RX_PCRE_REGULAR_EXPRESSION*/
+void r831compile_repeats(T831* C,T2 a1,T2 a2,T2 a3,T2 a4,T2 a5);
+extern T0*oBC834digit_set;
+extern int fBC834digit_set;
+/*RX_PCRE_REGULAR_EXPRESSION*/
+T0* r831digit_set(void);
+extern T0*oBC834graph_set;
+extern int fBC834graph_set;
+/*RX_PCRE_REGULAR_EXPRESSION*/
+T0* r831graph_set(void);
+/*RX_PCRE_REGULAR_EXPRESSION*/
+T2 r831match_additional_bracket(T831* C,T2 a1,T2 a2);
+/*RX_PCRE_REGULAR_EXPRESSION*/
+T2 r831unset_option_dotall(T2 a1);
+/*RX_PCRE_REGULAR_EXPRESSION*/
+T6 r831has_startline(T831* C);
+extern T0*oBC834upper_set;
+extern int fBC834upper_set;
+/*RX_PCRE_REGULAR_EXPRESSION*/
+T0* r831upper_set(void);
+/*RX_PCRE_REGULAR_EXPRESSION*/
+T2 r831first_significant_code(T831* C,T2 a1,T2 a2,T6 a3);
+extern T2 oBC833infinity;
+extern int fBC833infinity;
+/*RX_PCRE_REGULAR_EXPRESSION*/
+T2 r831infinity(void);
+/*RX_PCRE_REGULAR_EXPRESSION*/
+void r831append_replace_all_to_string(T831* C,T0* a1,T0* a2);
+/*RX_PCRE_REGULAR_EXPRESSION*/
+T2 r831match_recursive(T831* C,T2 a1,T6 a2,T6 a3);
+/*RX_PCRE_REGULAR_EXPRESSION*/
+T2 r831escape_character(T2 a1);
+/*RX_PCRE_REGULAR_EXPRESSION*/
+void r831compile_regexp(T831* C,T2 a1,T6 a2,T6 a3,T2 a4);
+/*RX_PCRE_REGULAR_EXPRESSION*/
+T6 r831is_option_dotall(T2 a1);
+/*RX_PCRE_REGULAR_EXPRESSION*/
+T2 r831match_internal(T831* C,T2 a1,T6 a2,T6 a3);
+/*RX_PCRE_REGULAR_EXPRESSION*/
+T2 r831match_repeated_classes(T831* C,T2 a1);
+extern T0*oBC834meta_set;
+extern int fBC834meta_set;
+/*RX_PCRE_REGULAR_EXPRESSION*/
+T0* r831meta_set(void);
+/*RX_PCRE_REGULAR_EXPRESSION*/
+T2 r831find_firstchar(T831* C,T2 a1);
+/*RX_PCRE_REGULAR_EXPRESSION*/
+T6 r831is_option_caseless(T2 a1);
+extern T0*oBC834punct_set;
+extern int fBC834punct_set;
+/*RX_PCRE_REGULAR_EXPRESSION*/
+T0* r831punct_set(void);
+/*RX_PCRE_REGULAR_EXPRESSION*/
+T2 r831to_option_ims(T2 a1);
+extern T0*oBC834print_set;
+extern int fBC834print_set;
+/*RX_PCRE_REGULAR_EXPRESSION*/
+T0* r831print_set(void);
+/*RX_PCRE_REGULAR_EXPRESSION*/
+void r831match_substring(T831* C,T0* a1,T2 a2,T2 a3);
+/*RX_PCRE_REGULAR_EXPRESSION*/
+T6 r831match_start(T831* C,T2 a1);
+extern T0*oBC834space_set;
+extern int fBC834space_set;
+/*RX_PCRE_REGULAR_EXPRESSION*/
+T0* r831space_set(void);
+/*RX_PCRE_REGULAR_EXPRESSION*/
+void r831append_captured_substring_to_string(T831* C,T0* a1,T2 a2);
+/*RX_PCRE_REGULAR_EXPRESSION*/
+T2 r831match_repeated_characters(T831* C,T2 a1,T2 a2,T2 a3,T6 a4);
+/*RX_PCRE_REGULAR_EXPRESSION*/
+void r831_833Pmake(T831* C);
+/*RX_PCRE_REGULAR_EXPRESSION*/
+void r831set_error(T831* C,T0* a1,T2 a2,T2 a3);
+/*RX_PCRE_REGULAR_EXPRESSION*/
+T2 r831ims_options(T831* C);
+extern T0*oBC833actual_set;
+extern int fBC833actual_set;
+/*RX_PCRE_REGULAR_EXPRESSION*/
+T0* r831actual_set(void);
+/*RX_PCRE_REGULAR_EXPRESSION*/
+void r831_246Pwipe_out(T831* C);
+/*RX_PCRE_REGULAR_EXPRESSION*/
+T2 r831unset_option_multiline(T2 a1);
+extern T0*oBC834alnum_set;
+extern int fBC834alnum_set;
+/*RX_PCRE_REGULAR_EXPRESSION*/
+T0* r831alnum_set(void);
+/*RX_PCRE_REGULAR_EXPRESSION*/
+T2 r831check_posix_syntax(T831* C,T2 a1);
+/*RX_PCRE_REGULAR_EXPRESSION*/
+T2 r831match_not_repeated_characters(T831* C,T2 a1,T2 a2,T2 a3,T6 a4);
+/*RX_PCRE_REGULAR_EXPRESSION*/
+void r831match_it(T831* C,T0* a1,T2 a2,T2 a3);
+/*RX_PCRE_REGULAR_EXPRESSION*/
+T0* r831replace_all(T831* C,T0* a1);
+/*RX_PCRE_REGULAR_EXPRESSION*/
+T2 r831scan_octal_number(T831* C,T2 a1);
+extern T0*oBC834default_character_case_mapping;
+extern int fBC834default_character_case_mapping;
+/*RX_PCRE_REGULAR_EXPRESSION*/
+T0* r831default_character_case_mapping(void);
+/*RX_PCRE_REGULAR_EXPRESSION*/
+T2 r831match_repeated_refs(T831* C,T2 a1);
+/*RX_PCRE_REGULAR_EXPRESSION*/
+T2 r831unset_option_caseless(T2 a1);
+/*RX_PCRE_REGULAR_EXPRESSION*/
+void r831wipe_out(T831* C);
+/*RX_PCRE_REGULAR_EXPRESSION*/
+T2 r831match_repeated_type(T831* C,T2 a1,T2 a2,T2 a3,T6 a4);
+/*RX_PCRE_REGULAR_EXPRESSION*/
+void r831compile_single_repeat(T831* C,T2 a1,T2 a2,T2 a3,T2 a4,T2 a5,T2 a6);
+extern T0*oBC834xdigit_set;
+extern int fBC834xdigit_set;
+/*RX_PCRE_REGULAR_EXPRESSION*/
+T0* r831xdigit_set(void);
+/*RX_PCRE_REGULAR_EXPRESSION*/
+T6 r831is_matching(T831* C);
+/*RX_PCRE_REGULAR_EXPRESSION*/
+void r831_833Pcompile(T831* C,T0* a1);
+/*RX_PCRE_REGULAR_EXPRESSION*/
+T6 r831is_compiled(T831* C);
+extern T0*oBC834ascii_set;
+extern int fBC834ascii_set;
+/*RX_PCRE_REGULAR_EXPRESSION*/
+T0* r831ascii_set(void);
+/*RX_PCRE_REGULAR_EXPRESSION*/
+T2 r831captured_start_position(T831* C,T2 a1);
+extern T0*oBC271special_integer_;
+/*RX_PCRE_REGULAR_EXPRESSION*/
+T0* r831clone(T0* a1);
+/*RX_PCRE_REGULAR_EXPRESSION*/
+T2 r831match_ref(T831* C,T2 a1,T2 a2,T2 a3);
+/*RX_PCRE_REGULAR_EXPRESSION*/
+T2 r831captured_end_position(T831* C,T2 a1);
+/*RX_PCRE_REGULAR_EXPRESSION*/
+void r831_833Preset(T831* C);
+/*RX_PCRE_REGULAR_EXPRESSION*/
+void r831reset(T831* C);
+/*RX_PCRE_REGULAR_EXPRESSION*/
+T2 r831scan_escape(T831* C,T2 a1,T6 a2);
+/*RX_PCRE_REGULAR_EXPRESSION*/
+T2 r831find_fixed_code_length(T831* C,T2 a1);
+extern T2 oBC833maxlit;
+extern int fBC833maxlit;
+/*RX_PCRE_REGULAR_EXPRESSION*/
+T2 r831maxlit(void);
+/*RX_PCRE_REGULAR_EXPRESSION*/
+T2 r831set_option_multiline(T2 a1);
+/*RX_PCRE_REGULAR_EXPRESSION*/
+void r831set_ims_options(T831* C,T2 a1);
+/*RX_PCRE_REGULAR_EXPRESSION*/
+T2 r831next_matching_alternate(T831* C,T2 a1);
+/*RX_PCRE_REGULAR_EXPRESSION*/
+void r831set_default_options(T831* C);
+extern T0*oBC834cntrl_set;
+extern int fBC834cntrl_set;
+/*RX_PCRE_REGULAR_EXPRESSION*/
+T0* r831cntrl_set(void);
+/*RX_PCRE_REGULAR_EXPRESSION*/
+T6 r831compile_counted_repeats(T831* C,T2 a1,T2 a2,T2 a3);
+/*RX_PCRE_REGULAR_EXPRESSION*/
+void r831append_replacement_to_string(T831* C,T0* a1,T0* a2);
+/*RX_PCRE_REGULAR_EXPRESSION*/
+void r831scan_comment(T831* C);
+/*RX_PCRE_REGULAR_EXPRESSION*/
+void r831compile_character_class(T831* C);
+extern T0*oBC833empty_pattern;
+extern int fBC833empty_pattern;
+/*RX_PCRE_REGULAR_EXPRESSION*/
+T0* r831empty_pattern(void);
+/*RX_PCRE_REGULAR_EXPRESSION*/
+void r831set_default_internal_options(T831* C);
+/*RX_PCRE_REGULAR_EXPRESSION*/
+T6 r831is_option_multiline(T2 a1);
+/*RX_PCRE_REGULAR_EXPRESSION*/
+void r831compile(T831* C,T0* a1);
+/*RX_PCRE_REGULAR_EXPRESSION*/
+T6 r831is_option_undef(T2 a1);
+extern T0*oBC834lower_set;
+extern int fBC834lower_set;
+/*RX_PCRE_REGULAR_EXPRESSION*/
+T0* r831lower_set(void);
+/*RX_PCRE_REGULAR_EXPRESSION*/
+T2 r831scan_hex_number(T831* C,T2 a1);
+/*RX_PCRE_REGULAR_EXPRESSION*/
+void r831compile_branch(T831* C,T6 a1);
+/*RX_PCRE_REGULAR_EXPRESSION*/
+void r831make(T831* C);
+/*RX_PCRE_REGULAR_EXPRESSION*/
+T2 r831scan_decimal_number(T831* C,T2 a1);
+/*RX_PCRE_REGULAR_EXPRESSION*/
+T2 r831set_option_caseless(T2 a1);
+extern T0*oBC834class_sets;
+extern int fBC834class_sets;
+/*RX_PCRE_REGULAR_EXPRESSION*/
+T0* r831class_sets(void);
+/*RX_PCRE_REGULAR_EXPRESSION*/
+T2 r831set_option_dotall(T2 a1);
+/*RX_PCRE_REGULAR_EXPRESSION*/
+T6 r831can_anchored(T831* C,T2 a1);
+/*RX_PCRE_REGULAR_EXPRESSION*/
+T2 r831check_posix_name(T831* C,T2 a1,T2 a2);
+extern T0*oBC834class_names;
+extern T0*oBC834alpha_set;
+extern int fBC834alpha_set;
+/*RX_PCRE_REGULAR_EXPRESSION*/
+T0* r831alpha_set(void);
+/*GEANT_VE_TASK*/
+T0* r218attribute_value(T218* C,T0* a1);
+/*GEANT_VE_TASK*/
+T0* r218file_system(void);
+extern T0*oBC218level_attribute_name;
+extern T0*oBC218xace_attribute_name;
+extern T0*oBC218tune_attribute_name;
+/*GEANT_VE_TASK*/
+void r218make(T218* C,T0* a1,T0* a2);
+/*GEANT_VE_TASK*/
+T6 r218boolean_value(T218* C,T0* a1);
+/*GEANT_VE_TASK*/
+void r218task_make(T218* C,T0* a1,T0* a2);
+extern T0*oBC218esd_attribute_name;
+/*GEANT_VE_TASK*/
+void r218execute(T218* C);
+/*GEANT_VE_TASK*/
+T6 r218is_enabled(T218* C);
+/*GEANT_VE_TASK*/
+T0* r218attribute_value_or_default(T218* C,T0* a1,T0* a2);
+extern T0*oBC218exit_code_variable_attribute_name;
+/*GEANT_VE_TASK*/
+T0* r218target_arguments_stack(void);
+/*GEANT_VE_TASK*/
+void r218interpreting_element_make(T218* C,T0* a1,T0* a2);
+extern T0*oBC218clean_attribute_name;
+extern T0*oBC218recursive_attribute_name;
+/*GEANT_ECHO_TASK*/
+T0* r587attribute_value(T587* C,T0* a1);
+/*GEANT_ECHO_TASK*/
+T0* r587file_system(void);
+extern T0*oBC587append_attribute_name;
+extern T0*oBC587to_file_attribute_name;
+/*GEANT_ECHO_TASK*/
+void r587make(T587* C,T0* a1,T0* a2);
+/*GEANT_ECHO_TASK*/
+T6 r587boolean_value(T587* C,T0* a1);
+/*GEANT_ECHO_TASK*/
+void r587task_make(T587* C,T0* a1,T0* a2);
+/*GEANT_ECHO_TASK*/
+void r587execute(T587* C);
+/*GEANT_ECHO_TASK*/
+T6 r587is_enabled(T587* C);
+/*GEANT_ECHO_TASK*/
+T0* r587target_arguments_stack(void);
+/*GEANT_ECHO_TASK*/
+void r587interpreting_element_make(T587* C,T0* a1,T0* a2);
+extern T0*oBC587message_attribute_name;
+/*XM_ELEMENT*/
+void r154set_last_cell(T154* C,T0* a1);
+/*XM_ELEMENT*/
+T6 r154attribute_same_name(T0* a1,T0* a2);
+/*XM_ELEMENT*/
+T6 r154valid_cursor(T154* C,T0* a1);
+/*XM_ELEMENT*/
+void r154wipe_out(T154* C);
+/*XM_ELEMENT*/
+void r154remove_first(T154* C);
+/*XM_ELEMENT*/
+T0* r154cursor_item(T0* a1);
+/*XM_ELEMENT*/
+T6 r154cursor_is_last(T154* C,T0* a1);
+/*XM_ELEMENT*/
+T6 r154same_namespace(T154* C,T0* a1);
+/*XM_ELEMENT*/
+void r154remove_traversing_cursor(T154* C,T0* a1);
+/*XM_ELEMENT*/
+void r154make_root(T154* C,T0* a1,T0* a2,T0* a3);
+/*XM_ELEMENT*/
+void r154cursor_go_after(T154* C,T0* a1);
+/*XM_ELEMENT*/
+void r154move_all_cursors_after(T154* C);
+/*XM_ELEMENT*/
+T6 r154has_attribute_by_name(T154* C,T0* a1);
+/*XM_ELEMENT*/
+void r154add_traversing_cursor(T154* C,T0* a1);
+/*XM_ELEMENT*/
+T0* r154clone(T0* a1);
+/*XM_ELEMENT*/
+void r154_159Pforce_last(T154* C,T0* a1);
+/*XM_ELEMENT*/
+T0* r154attribute_by_name(T154* C,T0* a1);
+/*XM_ELEMENT*/
+void r154_160P_159Pforce_last(T154* C,T0* a1);
+/*XM_ELEMENT*/
+void r154make(T154* C,T0* a1,T0* a2,T0* a3);
+/*XM_ELEMENT*/
+T0* r154parent_element(T154* C);
+/*XM_ELEMENT*/
+void r154before_addition(T154* C,T0* a1);
+/*XM_ELEMENT*/
+void r154remove_last(T154* C);
+/*XM_ELEMENT*/
+T6 r154cursor_after(T0* a1);
+/*XM_ELEMENT*/
+void r154make_last(T154* C,T0* a1,T0* a2,T0* a3);
+/*XM_ELEMENT*/
+void r154equality_delete(T154* C,T0* a1);
+/*XM_ELEMENT*/
+void r154cursor_forth(T154* C,T0* a1);
+/*XM_ELEMENT*/
+void r154move_last_cursors_after(T154* C);
+/*XM_ELEMENT*/
+void r154cursor_start(T154* C,T0* a1);
+/*XM_ELEMENT*/
+T6 r154same_string(T0* a1,T0* a2);
+/*XM_ELEMENT*/
+void r154force_last(T154* C,T0* a1);
+/*XM_ELEMENT*/
+T0* r154new_cursor(T154* C);
+/*XM_ELEMENT*/
+T6 r154has_element_by_name(T154* C,T0* a1);
+/*XM_ELEMENT*/
+T6 r154cursor_is_first(T154* C,T0* a1);
+/*XM_ELEMENT*/
+void r154list_make(T154* C);
+/*XM_ELEMENT*/
+void r154remove_at_cursor(T154* C,T0* a1);
+/*XM_ELEMENT*/
+T0* r154element_by_name(T154* C,T0* a1);
+/*XM_ELEMENT*/
+T0* r154text(T154* C);
+/*XM_ELEMENT*/
+void r154move_all_cursors(T154* C,T0* a1,T0* a2);
+/*XM_ELEMENT*/
+T6 r154cursor_off(T0* a1);
+/*XM_ELEMENT*/
+T6 r154named_same_name(T154* C,T0* a1,T0* a2);
+/*GEANT_EXIT_TASK*/
+T0* r623attribute_value(T623* C,T0* a1);
+/*GEANT_EXIT_TASK*/
+T0* r623file_system(void);
+/*GEANT_EXIT_TASK*/
+void r623make(T623* C,T0* a1,T0* a2);
+extern T0*oBC623code_attribute_name;
+/*GEANT_EXIT_TASK*/
+void r623task_make(T623* C,T0* a1,T0* a2);
+/*GEANT_EXIT_TASK*/
+void r623execute(T623* C);
+/*GEANT_EXIT_TASK*/
+T6 r623is_enabled(T623* C);
+/*GEANT_EXIT_TASK*/
+T0* r623target_arguments_stack(void);
+/*GEANT_EXIT_TASK*/
+void r623interpreting_element_make(T623* C,T0* a1,T0* a2);
+/*GEANT_GEXMLSPLIT_TASK*/
+T0* r585attribute_value(T585* C,T0* a1);
+/*GEANT_GEXMLSPLIT_TASK*/
+T0* r585file_system(void);
+extern T0*oBC585input_filename_attribute_name;
+/*GEANT_GEXMLSPLIT_TASK*/
+void r585make(T585* C,T0* a1,T0* a2);
+/*GEANT_GEXMLSPLIT_TASK*/
+void r585task_make(T585* C,T0* a1,T0* a2);
+/*GEANT_GEXMLSPLIT_TASK*/
+void r585execute(T585* C);
+/*GEANT_GEXMLSPLIT_TASK*/
+T6 r585is_enabled(T585* C);
+/*GEANT_GEXMLSPLIT_TASK*/
+T0* r585target_arguments_stack(void);
+/*GEANT_GEXMLSPLIT_TASK*/
+void r585interpreting_element_make(T585* C,T0* a1,T0* a2);
+/*GEANT_PRECURSOR_COMMAND*/
+void r626_211Pmake(T626* C,T0* a1);
+/*GEANT_PRECURSOR_COMMAND*/
+void r626make(T626* C,T0* a1);
+/*GEANT_PRECURSOR_COMMAND*/
+void r626execute(T626* C);
+/*GEANT_PRECURSOR_COMMAND*/
+T6 r626is_executable(T626* C);
+/*GEANT_PARENT*/
+void r633apply_renames(T633* C);
+/*GEANT_PARENT*/
+void r633apply_redefines(T633* C);
+/*GEANT_PARENT*/
+void r633apply_selects(T633* C);
+/*GEANT_PARENT*/
+void r633make(T633* C,T0* a1);
+/*GEANT_PARENT*/
+void r633prepare_project(T633* C);
+/*GEANT_PARENT*/
+void r633apply_undeclared_redefines(T633* C);
+/*GEANT_PARENT*/
+void r633exit_application(T2 a1,T0* a2);
+/*GEANT_PARENT*/
+void r633apply_unchangeds(T633* C);
+extern T0*oBC560case_insensitive_attribute_name;
+/*GEANT_GELEX_TASK*/
+T0* r560attribute_value(T560* C,T0* a1);
+/*GEANT_GELEX_TASK*/
+T0* r560file_system(void);
+extern T0*oBC560input_filename_attribute_name;
+extern T0*oBC560no_warn_attribute_name;
+extern T0*oBC560separate_actions_attribute_name;
+extern T0*oBC560full_attribute_name;
+/*GEANT_GELEX_TASK*/
+void r560make(T560* C,T0* a1,T0* a2);
+extern T0*oBC560backup_attribute_name;
+/*GEANT_GELEX_TASK*/
+T6 r560boolean_value(T560* C,T0* a1);
+extern T0*oBC560meta_ecs_attribute_name;
+extern T0*oBC560no_default_attribute_name;
+/*GEANT_GELEX_TASK*/
+void r560task_make(T560* C,T0* a1,T0* a2);
+extern T0*oBC560output_filename_attribute_name;
+extern T0*oBC560size_attribute_name;
+/*GEANT_GELEX_TASK*/
+void r560execute(T560* C);
+/*GEANT_GELEX_TASK*/
+T6 r560is_enabled(T560* C);
+extern T0*oBC560ecs_attribute_name;
+/*GEANT_GELEX_TASK*/
+T0* r560target_arguments_stack(void);
+/*GEANT_GELEX_TASK*/
+void r560interpreting_element_make(T560* C,T0* a1,T0* a2);
+/*RX_BYTE_CODE*/
+void r840wipe_out(T840* C);
+/*RX_BYTE_CODE*/
+void r840append_integer(T840* C,T2 a1);
+/*RX_BYTE_CODE*/
+void r840resize_character_sets(T840* C,T2 a1);
+/*RX_BYTE_CODE*/
+void r840make(T840* C,T2 a1);
+/*RX_BYTE_CODE*/
+void r840append_opcode(T840* C,T2 a1);
+/*RX_BYTE_CODE*/
+void r840move_right(T840* C,T2 a1,T2 a2);
+/*RX_BYTE_CODE*/
+void r840append_character(T840* C,T2 a1);
+extern T0*oBC271special_boolean_;
+/*RX_BYTE_CODE*/
+void r840resize_byte_code(T840* C,T2 a1);
+/*RX_BYTE_CODE*/
+void r840append_subcopy(T840* C,T2 a1,T2 a2);
+/*RX_BYTE_CODE*/
+T6 r840character_set_has(T840* C,T2 a1,T2 a2);
+/*RX_BYTE_CODE*/
+void r840append_character_set(T840* C,T0* a1,T6 a2);
+/*RX_BYTE_CODE*/
+void r840put_character(T840* C,T2 a1,T2 a2);
+/*GEANT_PROJECT_PARSER*/
+void r701make(T701* C,T0* a1,T0* a2,T0* a3);
+/*GEANT_PROJECT_PARSER*/
+void r701parse_file(T701* C,T0* a1);
 /*GEANT_XSLT_COMMAND*/
-void r569execute_xalan_cpp(T569* C);
+void r604_211Pmake(T604* C,T0* a1);
 /*GEANT_XSLT_COMMAND*/
-void r569execute_shell(T569* C,T0* a1);
+T0* r604file_system(void);
 /*GEANT_XSLT_COMMAND*/
-T6 r569is_executable(T569* C);
+T0* r604clone(T0* a1);
 /*GEANT_XSLT_COMMAND*/
-void r569_191Pmake(T569* C,T0* a1);
-extern T0*oBC557exclude_attribute_name;
-extern T0*oBC557directory_attribute_name;
+void r604make(T604* C,T0* a1);
+/*GEANT_XSLT_COMMAND*/
+void r604execute_xalan_java(T604* C);
+/*GEANT_XSLT_COMMAND*/
+void r604execute_gexslt(T604* C);
+/*GEANT_XSLT_COMMAND*/
+void r604execute_xsltproc(T604* C);
+/*GEANT_XSLT_COMMAND*/
+void r604execute(T604* C);
+/*GEANT_XSLT_COMMAND*/
+void r604execute_xalan_cpp(T604* C);
+/*GEANT_XSLT_COMMAND*/
+void r604execute_shell(T604* C,T0* a1);
+/*GEANT_XSLT_COMMAND*/
+T6 r604is_executable(T604* C);
+extern T0*oBC592exclude_attribute_name;
+extern T0*oBC592directory_attribute_name;
 /*GEANT_DIRECTORYSET_ELEMENT*/
-T0* r557attribute_value(T557* C,T0* a1);
+T0* r592attribute_value(T592* C,T0* a1);
 /*GEANT_DIRECTORYSET_ELEMENT*/
-void r557_27Pmake(T557* C,T0* a1,T0* a2);
+T0* r592elements_by_name(T592* C,T0* a1);
+extern T0*oBC592include_attribute_name;
 /*GEANT_DIRECTORYSET_ELEMENT*/
-T0* r557elements_by_name(T557* C,T0* a1);
-extern T0*oBC557include_attribute_name;
+void r592make(T592* C,T0* a1,T0* a2);
 /*GEANT_DIRECTORYSET_ELEMENT*/
-void r557make(T557* C,T0* a1,T0* a2);
+T6 r592boolean_value(T592* C,T0* a1);
+extern T0*oBC592exclude_element_name;
+extern T0*oBC592include_element_name;
 /*GEANT_DIRECTORYSET_ELEMENT*/
-T6 r557boolean_value(T557* C,T0* a1);
-extern T0*oBC557exclude_element_name;
-extern T0*oBC557include_element_name;
-extern T0*oBC557concat_attribute_name;
-extern T0*oBC209type_attribute_value_flat;
+void r592_45Pmake(T592* C,T0* a1,T0* a2);
+/*GEANT_DIRECTORYSET_ELEMENT*/
+T0* r592target_arguments_stack(void);
+extern T0*oBC592concat_attribute_name;
+extern T0*oBC229type_attribute_value_flat;
 /*GEANT_MAP*/
-T0* r209clone(T0* a1);
+T0* r229clone(T0* a1);
 /*GEANT_MAP*/
-T0* r209glob_prefix(T0* a1);
+T0* r229glob_prefix(T0* a1);
 /*GEANT_MAP*/
-void r209make(T209* C,T0* a1);
-extern T0*oBC209type_attribute_value_merge;
+void r229make(T229* C,T0* a1);
+extern T0*oBC229type_attribute_value_merge;
+extern T0*oBC229type_attribute_value_regexp;
 /*GEANT_MAP*/
-T0* r209mapped_filename(T209* C,T0* a1);
-extern T0*oBC209type_attribute_value_identity;
+T0* r229mapped_filename(T229* C,T0* a1);
+extern T0*oBC229type_attribute_value_identity;
 /*GEANT_MAP*/
-T0* r209glob_postfix(T0* a1);
-extern T0*oBC209type_attribute_value_glob;
+T0* r229glob_postfix(T0* a1);
+extern T0*oBC229type_attribute_value_glob;
 /*GEANT_MAP*/
-T6 r209is_executable(T209* C);
+T6 r229is_executable(T229* C);
 /*KL_PATHNAME*/
-void r791append_name(T791* C,T0* a1);
+void r854append_name(T854* C,T0* a1);
 /*KL_PATHNAME*/
-T6 r791is_parent(T791* C,T2 a1);
+T6 r854is_parent(T854* C,T2 a1);
 /*KL_PATHNAME*/
-void r791make(T791* C);
+void r854make(T854* C);
 /*KL_PATHNAME*/
-void r791set_canonical(T791* C);
+void r854set_canonical(T854* C);
 /*KL_PATHNAME*/
-T6 r791is_current(T791* C,T2 a1);
+T6 r854is_current(T854* C,T2 a1);
 /*GEANT_PROJECT_LOADER*/
-T0* r31file_system(void);
+T0* r49file_system(void);
 /*GEANT_PROJECT_LOADER*/
-void r31load(T31* C,T0* a1,T0* a2);
+void r49load(T49* C,T0* a1,T0* a2);
 /*GEANT_PROJECT_LOADER*/
-void r31make(T31* C,T0* a1);
+void r49make(T49* C,T0* a1);
 /*GEANT_PROJECT_LOADER*/
-void r31exit_application(T2 a1,T0* a2);
-/*XM_NAMESPACE*/
-T6 r162is_equal(T162* C,T0* a1);
-/*XM_NAMESPACE*/
-void r162make(T162* C,T0* a1,T0* a2);
-/*XM_NAMESPACE*/
-T6 r162is_default_namespace(T162* C);
-/*XM_NAMESPACE*/
-T2 r162hash_code(T162* C);
-/*XM_NAMESPACE*/
-T6 r162same_prefix(T162* C,T0* a1);
-/*GEANT_EXEC_COMMAND*/
-T6 r203is_commandline_executable(T203* C);
-/*GEANT_EXEC_COMMAND*/
-void r203set_fileset(T203* C,T0* a1);
-/*GEANT_EXEC_COMMAND*/
-void r203execute(T203* C);
-/*GEANT_EXEC_COMMAND*/
-void r203execute_shell(T203* C,T0* a1);
-/*GEANT_EXEC_COMMAND*/
-T6 r203is_executable(T203* C);
-/*GEANT_EXEC_COMMAND*/
-T6 r203is_fileset_executable(T203* C);
-/*LX_WILDCARD_PARSER*/
-void r240yy_do_action(T240* C,T2 a1);
-/*LX_WILDCARD_PARSER*/
-void r240process_escaped_character(T240* C);
-/*LX_WILDCARD_PARSER*/
-void r240report_bad_character_error(T240* C,T0* a1);
-extern T0*oBC240yytable_template;
-extern int fBC240yytable_template;
-/*LX_WILDCARD_PARSER*/
-T0* r240yytable_template(void);
-/*LX_WILDCARD_PARSER*/
-void r240make_parser_skeleton(T240* C);
-/*LX_WILDCARD_PARSER*/
-T0* r240append_character_set_to_character_class(T240* C,T2 a1,T2 a2,T0* a3);
-/*LX_WILDCARD_PARSER*/
-void r240report_unrecognized_rule_error(T240* C);
-/*LX_WILDCARD_PARSER*/
-void r240fatal_error(T0* a1);
-/*LX_WILDCARD_PARSER*/
-T2 r240start_condition(T240* C);
-/*LX_WILDCARD_PARSER*/
-void r240yy_do_error_action(T240* C,T2 a1);
-/*LX_WILDCARD_PARSER*/
-T0* r240new_nfa_from_character(T240* C,T2 a1);
-/*LX_WILDCARD_PARSER*/
-void r240parse(T240* C);
-/*LX_WILDCARD_PARSER*/
-void r240check_options(T240* C);
-/*LX_WILDCARD_PARSER*/
-void r240report_missing_quote_error(T240* C);
-/*LX_WILDCARD_PARSER*/
-void r240set_input_buffer(T240* C,T0* a1);
-extern T0*oBC241yy_ec_template;
-extern int fBC241yy_ec_template;
-/*LX_WILDCARD_PARSER*/
-T0* r240yy_ec_template(void);
-/*LX_WILDCARD_PARSER*/
-void r240yy_execute_action(T240* C,T2 a1);
-extern T0*oBC240yytranslate_template;
-extern int fBC240yytranslate_template;
-/*LX_WILDCARD_PARSER*/
-T0* r240yytranslate_template(void);
-extern T0*oBC241yy_def_template;
-extern int fBC241yy_def_template;
-/*LX_WILDCARD_PARSER*/
-T0* r240yy_def_template(void);
-/*LX_WILDCARD_PARSER*/
-void r240report_full_and_meta_equiv_classes_error(T240* C);
-/*LX_WILDCARD_PARSER*/
-T3 r240text_item(T240* C,T2 a1);
-/*LX_WILDCARD_PARSER*/
-void r240yy_push_last_value(T240* C,T2 a1);
-/*LX_WILDCARD_PARSER*/
-T0* r240new_string_buffer(T0* a1);
-/*LX_WILDCARD_PARSER*/
-void r240yy_load_input_buffer(T240* C);
-/*LX_WILDCARD_PARSER*/
-void r240yy_push_error_value(T240* C);
-extern T0*oBC240yyr1_template;
-extern int fBC240yyr1_template;
-/*LX_WILDCARD_PARSER*/
-T0* r240yyr1_template(void);
-/*LX_WILDCARD_PARSER*/
-void r240make_with_buffer(T240* C,T0* a1);
-/*LX_WILDCARD_PARSER*/
-void r240process_rule(T240* C,T0* a1);
-extern T0*oBC240yytypes1_template;
-extern int fBC240yytypes1_template;
-/*LX_WILDCARD_PARSER*/
-T0* r240yytypes1_template(void);
-/*LX_WILDCARD_PARSER*/
-void r240process_character(T240* C,T2 a1);
-/*LX_WILDCARD_PARSER*/
-T2 r240yy_null_trans_state(T240* C,T2 a1);
-/*LX_WILDCARD_PARSER*/
-void r240report_negative_range_in_character_class_error(T240* C);
-/*LX_WILDCARD_PARSER*/
-void r240report_full_and_variable_trailing_context_error(T240* C);
-extern T0*oBC241yy_accept_template;
-extern int fBC241yy_accept_template;
-/*LX_WILDCARD_PARSER*/
-T0* r240yy_accept_template(void);
-/*LX_WILDCARD_PARSER*/
-void r240read_token(T240* C);
-/*LX_WILDCARD_PARSER*/
-T0* r240question_character_class(T240* C);
-/*LX_WILDCARD_PARSER*/
-void r240yy_init_value_stacks(T240* C);
-/*LX_WILDCARD_PARSER*/
-T2 r240yy_previous_state(T240* C);
-extern T0*oBC240yypgoto_template;
-extern int fBC240yypgoto_template;
-/*LX_WILDCARD_PARSER*/
-T0* r240yypgoto_template(void);
-/*LX_WILDCARD_PARSER*/
-void r240yy_refill_input_buffer(T240* C);
-extern T0*oBC240yytypes2_template;
-extern int fBC240yytypes2_template;
-/*LX_WILDCARD_PARSER*/
-T0* r240yytypes2_template(void);
-/*LX_WILDCARD_PARSER*/
-T0* r240yy_fixed_array(T0* a1);
-extern T0*oBC241yy_meta_template;
-extern int fBC241yy_meta_template;
-/*LX_WILDCARD_PARSER*/
-T0* r240yy_meta_template(void);
-/*LX_WILDCARD_PARSER*/
-void r240report_character_out_of_range_error(T240* C,T0* a1);
-/*LX_WILDCARD_PARSER*/
-T0* r240new_epsilon_nfa(T240* C);
-extern T0*oBC241yy_base_template;
-extern int fBC241yy_base_template;
-/*LX_WILDCARD_PARSER*/
-T0* r240yy_base_template(void);
-/*LX_WILDCARD_PARSER*/
-void r240report_full_and_reject_error(T240* C);
-/*LX_WILDCARD_PARSER*/
-T0* r240append_character_to_character_class(T240* C,T2 a1,T0* a2);
-/*LX_WILDCARD_PARSER*/
-T2 r240text_count(T240* C);
-/*LX_WILDCARD_PARSER*/
-void r240parse_string(T240* C,T0* a1);
-/*LX_WILDCARD_PARSER*/
-void r240yy_initialize(T240* C);
-/*LX_WILDCARD_PARSER*/
-T0* r240text(T240* C);
-/*LX_WILDCARD_PARSER*/
-T0* r240new_symbol_nfa(T240* C,T2 a1);
-/*LX_WILDCARD_PARSER*/
-void r240yy_clear_value_stacks(T240* C);
-extern T0*oBC241yy_nxt_template;
-extern int fBC241yy_nxt_template;
-/*LX_WILDCARD_PARSER*/
-T0* r240yy_nxt_template(void);
-/*LX_WILDCARD_PARSER*/
-void r240yy_set_line_column(T240* C);
-/*LX_WILDCARD_PARSER*/
-void r240yy_build_parser_tables(T240* C);
-/*LX_WILDCARD_PARSER*/
-void r240build_equiv_classes(T240* C);
-/*LX_WILDCARD_PARSER*/
-T0* r240new_symbol_class_nfa(T240* C,T0* a1);
-/*LX_WILDCARD_PARSER*/
-T6 r240valid_start_condition(T2 a1);
-/*LX_WILDCARD_PARSER*/
-T0* r240empty_buffer(void);
-/*LX_WILDCARD_PARSER*/
-void r240report_error(T240* C,T0* a1);
-/*LX_WILDCARD_PARSER*/
-T0* r240append_character_to_string(T240* C,T2 a1,T0* a2);
-extern T0*oBC240yydefact_template;
-extern int fBC240yydefact_template;
-/*LX_WILDCARD_PARSER*/
-T0* r240yydefact_template(void);
-extern T0*oBC241yy_chk_template;
-extern int fBC241yy_chk_template;
-/*LX_WILDCARD_PARSER*/
-T0* r240yy_chk_template(void);
-/*LX_WILDCARD_PARSER*/
-T0* r240new_nfa_from_character_class(T240* C,T0* a1);
-extern T0*oBC240yycheck_template;
-extern int fBC240yycheck_template;
-/*LX_WILDCARD_PARSER*/
-T0* r240yycheck_template(void);
-/*LX_WILDCARD_PARSER*/
-T0* r240new_character_class(T240* C);
-/*LX_WILDCARD_PARSER*/
-T0* r240filename(T240* C);
-/*LX_WILDCARD_PARSER*/
-T0* r240yyfixed_array(T0* a1);
-extern T0*oBC240yydefgoto_template;
-extern int fBC240yydefgoto_template;
-/*LX_WILDCARD_PARSER*/
-T0* r240yydefgoto_template(void);
-/*LX_WILDCARD_PARSER*/
-void r240yy_pop_last_value(T240* C,T2 a1);
-/*LX_WILDCARD_PARSER*/
-void r240yy_set_content(T240* C,T0* a1);
-extern T0*oBC240yypact_template;
-extern int fBC240yypact_template;
-/*LX_WILDCARD_PARSER*/
-T0* r240yypact_template(void);
-/*LX_WILDCARD_PARSER*/
-void r240set_start_condition(T240* C,T2 a1);
-/*LX_WILDCARD_PARSER*/
-void r240yy_build_tables(T240* C);
-/*LX_WILDCARD_PARSER*/
-void r240make_lex_scanner_from_description(T240* C,T0* a1,T0* a2);
-/*LX_WILDCARD_PARSER*/
-void r240less(T240* C,T2 a1);
-/*LX_WILDCARD_PARSER*/
-void r240report_bad_character_class_error(T240* C);
-/*LX_WILDCARD_PARSER*/
-void r240make_from_description(T240* C,T0* a1,T0* a2);
-/*GEANT_ISE_COMMAND*/
-T6 r196is_cleanable(T196* C);
-/*GEANT_ISE_COMMAND*/
-T0* r196file_system(void);
-/*GEANT_ISE_COMMAND*/
-T0* r196clone(T0* a1);
-/*GEANT_ISE_COMMAND*/
-void r196execute_clean(T196* C);
-/*GEANT_ISE_COMMAND*/
-void r196execute_compile(T196* C);
-/*GEANT_ISE_COMMAND*/
-T6 r196is_compilable(T196* C);
-/*GEANT_ISE_COMMAND*/
-void r196execute(T196* C);
-/*GEANT_ISE_COMMAND*/
-void r196execute_shell(T196* C,T0* a1);
-/*GEANT_ISE_COMMAND*/
-T6 r196is_executable(T196* C);
-/*UT_SYNTAX_ERROR*/
-T0* r403arguments(void);
-/*UT_SYNTAX_ERROR*/
-void r403make(T403* C,T0* a1,T2 a2);
-/*UT_SYNTAX_ERROR*/
-T0* r403message(T403* C,T0* a1);
-/*UT_SYNTAX_ERROR*/
-T0* r403default_message(T403* C);
-/*GEANT_VARIABLES*/
-T0* r29expanded_variable_value(T29* C,T0* a1);
-/*GEANT_VARIABLES*/
-T0* r29variable_value(T29* C,T0* a1);
-/*GEANT_VARIABLES*/
-T0* r29file_system(void);
+void r49exit_application(T2 a1,T0* a2);
+/*GEANT_PROJECT_VARIABLE_RESOLVER*/
+T0* r177file_system(void);
 extern T0*oBC15commandline_variables;
 extern int fBC15commandline_variables;
+/*GEANT_PROJECT_VARIABLE_RESOLVER*/
+T0* r177commandline_variables(void);
+/*GEANT_PROJECT_VARIABLE_RESOLVER*/
+T0* r177clone(T0* a1);
+extern T0*oBC21execution_environment;
+/*GEANT_PROJECT_VARIABLE_RESOLVER*/
+T0* r177value(T177* C,T0* a1);
+/*GEANT_PROJECT_VARIABLE_RESOLVER*/
+T6 r177boolean_condition_value(T177* C,T0* a1);
+/*GEANT_PROJECT_VARIABLE_RESOLVER*/
+T6 r177has(T177* C,T0* a1);
+/*GEANT_PROJECT_VARIABLE_RESOLVER*/
+T0* r177string_tokens(T0* a1,T3 a2);
+/*GEANT_PROJECT_VARIABLE_RESOLVER*/
+void r177exit_application(T2 a1,T0* a2);
+/*XM_NAMESPACE*/
+T6 r170is_equal(T170* C,T0* a1);
+/*XM_NAMESPACE*/
+void r170make(T170* C,T0* a1,T0* a2);
+/*XM_NAMESPACE*/
+T2 r170hash_code(T170* C);
+/*XM_NAMESPACE*/
+T6 r170same_prefix(T170* C,T0* a1);
+/*GEANT_EXEC_COMMAND*/
+T6 r222is_commandline_executable(T222* C);
+/*GEANT_EXEC_COMMAND*/
+void r222set_fileset(T222* C,T0* a1);
+/*GEANT_EXEC_COMMAND*/
+void r222execute(T222* C);
+/*GEANT_EXEC_COMMAND*/
+void r222execute_shell(T222* C,T0* a1);
+/*GEANT_EXEC_COMMAND*/
+T6 r222is_executable(T222* C);
+/*GEANT_EXEC_COMMAND*/
+T6 r222is_fileset_executable(T222* C);
+/*LX_WILDCARD_PARSER*/
+void r261yy_do_action(T261* C,T2 a1);
+/*LX_WILDCARD_PARSER*/
+void r261process_escaped_character(T261* C);
+/*LX_WILDCARD_PARSER*/
+void r261report_bad_character_error(T261* C,T0* a1);
+extern T0*oBC261yytable_template;
+extern int fBC261yytable_template;
+/*LX_WILDCARD_PARSER*/
+T0* r261yytable_template(void);
+/*LX_WILDCARD_PARSER*/
+void r261make_parser_skeleton(T261* C);
+/*LX_WILDCARD_PARSER*/
+T0* r261append_character_set_to_character_class(T261* C,T2 a1,T2 a2,T0* a3);
+/*LX_WILDCARD_PARSER*/
+void r261report_unrecognized_rule_error(T261* C);
+/*LX_WILDCARD_PARSER*/
+void r261fatal_error(T0* a1);
+/*LX_WILDCARD_PARSER*/
+T2 r261start_condition(T261* C);
+/*LX_WILDCARD_PARSER*/
+void r261yy_do_error_action(T261* C,T2 a1);
+/*LX_WILDCARD_PARSER*/
+T0* r261new_nfa_from_character(T261* C,T2 a1);
+/*LX_WILDCARD_PARSER*/
+void r261parse(T261* C);
+/*LX_WILDCARD_PARSER*/
+void r261check_options(T261* C);
+/*LX_WILDCARD_PARSER*/
+void r261report_missing_quote_error(T261* C);
+/*LX_WILDCARD_PARSER*/
+void r261set_input_buffer(T261* C,T0* a1);
+extern T0*oBC262yy_ec_template;
+extern int fBC262yy_ec_template;
+/*LX_WILDCARD_PARSER*/
+T0* r261yy_ec_template(void);
+/*LX_WILDCARD_PARSER*/
+void r261yy_execute_action(T261* C,T2 a1);
+extern T0*oBC261yytranslate_template;
+extern int fBC261yytranslate_template;
+/*LX_WILDCARD_PARSER*/
+T0* r261yytranslate_template(void);
+extern T0*oBC262yy_def_template;
+extern int fBC262yy_def_template;
+/*LX_WILDCARD_PARSER*/
+T0* r261yy_def_template(void);
+/*LX_WILDCARD_PARSER*/
+void r261report_full_and_meta_equiv_classes_error(T261* C);
+/*LX_WILDCARD_PARSER*/
+T3 r261text_item(T261* C,T2 a1);
+/*LX_WILDCARD_PARSER*/
+void r261yy_push_last_value(T261* C,T2 a1);
+/*LX_WILDCARD_PARSER*/
+T0* r261new_string_buffer(T0* a1);
+/*LX_WILDCARD_PARSER*/
+void r261yy_load_input_buffer(T261* C);
+/*LX_WILDCARD_PARSER*/
+void r261yy_push_error_value(T261* C);
+extern T0*oBC261yyr1_template;
+extern int fBC261yyr1_template;
+/*LX_WILDCARD_PARSER*/
+T0* r261yyr1_template(void);
+/*LX_WILDCARD_PARSER*/
+void r261make_with_buffer(T261* C,T0* a1);
+/*LX_WILDCARD_PARSER*/
+void r261process_rule(T261* C,T0* a1);
+extern T0*oBC261yytypes1_template;
+extern int fBC261yytypes1_template;
+/*LX_WILDCARD_PARSER*/
+T0* r261yytypes1_template(void);
+/*LX_WILDCARD_PARSER*/
+void r261process_character(T261* C,T2 a1);
+/*LX_WILDCARD_PARSER*/
+T2 r261yy_null_trans_state(T261* C,T2 a1);
+/*LX_WILDCARD_PARSER*/
+void r261report_negative_range_in_character_class_error(T261* C);
+/*LX_WILDCARD_PARSER*/
+void r261report_full_and_variable_trailing_context_error(T261* C);
+extern T0*oBC262yy_accept_template;
+extern int fBC262yy_accept_template;
+/*LX_WILDCARD_PARSER*/
+T0* r261yy_accept_template(void);
+/*LX_WILDCARD_PARSER*/
+void r261read_token(T261* C);
+/*LX_WILDCARD_PARSER*/
+T0* r261question_character_class(T261* C);
+/*LX_WILDCARD_PARSER*/
+void r261yy_init_value_stacks(T261* C);
+/*LX_WILDCARD_PARSER*/
+T2 r261yy_previous_state(T261* C);
+extern T0*oBC261yypgoto_template;
+extern int fBC261yypgoto_template;
+/*LX_WILDCARD_PARSER*/
+T0* r261yypgoto_template(void);
+/*LX_WILDCARD_PARSER*/
+void r261yy_refill_input_buffer(T261* C);
+extern T0*oBC261yytypes2_template;
+extern int fBC261yytypes2_template;
+/*LX_WILDCARD_PARSER*/
+T0* r261yytypes2_template(void);
+/*LX_WILDCARD_PARSER*/
+T0* r261yy_fixed_array(T0* a1);
+extern T0*oBC262yy_meta_template;
+extern int fBC262yy_meta_template;
+/*LX_WILDCARD_PARSER*/
+T0* r261yy_meta_template(void);
+/*LX_WILDCARD_PARSER*/
+void r261report_character_out_of_range_error(T261* C,T0* a1);
+/*LX_WILDCARD_PARSER*/
+T0* r261new_epsilon_nfa(T261* C);
+extern T0*oBC262yy_base_template;
+extern int fBC262yy_base_template;
+/*LX_WILDCARD_PARSER*/
+T0* r261yy_base_template(void);
+/*LX_WILDCARD_PARSER*/
+void r261report_full_and_reject_error(T261* C);
+/*LX_WILDCARD_PARSER*/
+T0* r261append_character_to_character_class(T261* C,T2 a1,T0* a2);
+/*LX_WILDCARD_PARSER*/
+T2 r261text_count(T261* C);
+/*LX_WILDCARD_PARSER*/
+void r261parse_string(T261* C,T0* a1);
+/*LX_WILDCARD_PARSER*/
+void r261yy_initialize(T261* C);
+/*LX_WILDCARD_PARSER*/
+T0* r261text(T261* C);
+/*LX_WILDCARD_PARSER*/
+T0* r261new_symbol_nfa(T261* C,T2 a1);
+/*LX_WILDCARD_PARSER*/
+void r261yy_clear_value_stacks(T261* C);
+extern T0*oBC262yy_nxt_template;
+extern int fBC262yy_nxt_template;
+/*LX_WILDCARD_PARSER*/
+T0* r261yy_nxt_template(void);
+/*LX_WILDCARD_PARSER*/
+void r261yy_set_line_column(T261* C);
+/*LX_WILDCARD_PARSER*/
+void r261yy_build_parser_tables(T261* C);
+/*LX_WILDCARD_PARSER*/
+void r261build_equiv_classes(T261* C);
+/*LX_WILDCARD_PARSER*/
+T0* r261new_symbol_class_nfa(T261* C,T0* a1);
+/*LX_WILDCARD_PARSER*/
+T6 r261valid_start_condition(T2 a1);
+/*LX_WILDCARD_PARSER*/
+T0* r261empty_buffer(void);
+/*LX_WILDCARD_PARSER*/
+void r261report_error(T261* C,T0* a1);
+/*LX_WILDCARD_PARSER*/
+T0* r261append_character_to_string(T261* C,T2 a1,T0* a2);
+extern T0*oBC261yydefact_template;
+extern int fBC261yydefact_template;
+/*LX_WILDCARD_PARSER*/
+T0* r261yydefact_template(void);
+extern T0*oBC262yy_chk_template;
+extern int fBC262yy_chk_template;
+/*LX_WILDCARD_PARSER*/
+T0* r261yy_chk_template(void);
+/*LX_WILDCARD_PARSER*/
+T0* r261new_nfa_from_character_class(T261* C,T0* a1);
+extern T0*oBC261yycheck_template;
+extern int fBC261yycheck_template;
+/*LX_WILDCARD_PARSER*/
+T0* r261yycheck_template(void);
+/*LX_WILDCARD_PARSER*/
+T0* r261new_character_class(T261* C);
+/*LX_WILDCARD_PARSER*/
+T0* r261filename(T261* C);
+/*LX_WILDCARD_PARSER*/
+T0* r261yyfixed_array(T0* a1);
+extern T0*oBC261yydefgoto_template;
+extern int fBC261yydefgoto_template;
+/*LX_WILDCARD_PARSER*/
+T0* r261yydefgoto_template(void);
+/*LX_WILDCARD_PARSER*/
+void r261yy_pop_last_value(T261* C,T2 a1);
+/*LX_WILDCARD_PARSER*/
+void r261yy_set_content(T261* C,T0* a1);
+extern T0*oBC261yypact_template;
+extern int fBC261yypact_template;
+/*LX_WILDCARD_PARSER*/
+T0* r261yypact_template(void);
+/*LX_WILDCARD_PARSER*/
+void r261set_start_condition(T261* C,T2 a1);
+/*LX_WILDCARD_PARSER*/
+void r261yy_build_tables(T261* C);
+/*LX_WILDCARD_PARSER*/
+void r261make_lex_scanner_from_description(T261* C,T0* a1,T0* a2);
+/*LX_WILDCARD_PARSER*/
+void r261less(T261* C,T2 a1);
+/*LX_WILDCARD_PARSER*/
+void r261report_bad_character_class_error(T261* C);
+/*LX_WILDCARD_PARSER*/
+void r261make_from_description(T261* C,T0* a1,T0* a2);
+/*GEANT_ISE_COMMAND*/
+T6 r217is_cleanable(T217* C);
+/*GEANT_ISE_COMMAND*/
+T0* r217file_system(void);
+/*GEANT_ISE_COMMAND*/
+T0* r217clone(T0* a1);
+/*GEANT_ISE_COMMAND*/
+void r217execute_clean(T217* C);
+/*GEANT_ISE_COMMAND*/
+void r217execute_compile(T217* C);
+/*GEANT_ISE_COMMAND*/
+T6 r217is_compilable(T217* C);
+/*GEANT_ISE_COMMAND*/
+void r217execute(T217* C);
+/*GEANT_ISE_COMMAND*/
+void r217execute_shell(T217* C,T0* a1);
+/*GEANT_ISE_COMMAND*/
+T6 r217is_executable(T217* C);
+/*UT_SYNTAX_ERROR*/
+T0* r424arguments(void);
+/*UT_SYNTAX_ERROR*/
+void r424make(T424* C,T0* a1,T2 a2);
+/*UT_SYNTAX_ERROR*/
+T0* r424message(T424* C,T0* a1);
+/*UT_SYNTAX_ERROR*/
+T0* r424default_message(T424* C);
 /*GEANT_VARIABLES*/
-T0* r29commandline_variables(void);
+T2 r26new_capacity(T2 a1);
 /*GEANT_VARIABLES*/
-T0* r29clone(T0* a1);
-extern T0*oBC17execution_environment;
+T6 r26valid_cursor(T26* C,T0* a1);
 /*GEANT_VARIABLES*/
-void r29make(T29* C);
+void r26force(T26* C,T0* a1,T0* a2);
 /*GEANT_VARIABLES*/
-T6 r29boolean_condition_value(T29* C,T0* a1);
+T0* r26keys_item(T26* C,T2 a1);
 /*GEANT_VARIABLES*/
-T0* r29string_tokens(T0* a1,T3 a2);
+T2 r26clashes_item(T26* C,T2 a1);
 /*GEANT_VARIABLES*/
-T0* r29interpreted_string(T29* C,T0* a1);
+T6 r26valid_slot(T26* C,T2 a1);
 /*GEANT_VARIABLES*/
-void r29exit_application(T2 a1,T0* a2);
+void r26make_clashes(T26* C,T2 a1);
 /*GEANT_VARIABLES*/
-T6 r29has_variable(T29* C,T0* a1);
-extern T0*oBC22command_arguments;
-extern int fBC22command_arguments;
+T6 r26valid_position(T26* C,T2 a1);
+/*GEANT_VARIABLES*/
+T0* r26cursor_item(T26* C,T0* a1);
+/*GEANT_VARIABLES*/
+void r26search_position(T26* C,T0* a1);
+/*GEANT_VARIABLES*/
+void r26remove_traversing_cursor(T26* C,T0* a1);
+/*GEANT_VARIABLES*/
+void r26keys_resize(T26* C,T2 a1);
+/*GEANT_VARIABLES*/
+T0* r26items_item(T26* C,T2 a1);
+/*GEANT_VARIABLES*/
+void r26hash_table_make(T26* C,T2 a1);
+/*GEANT_VARIABLES*/
+T0* r26item(T26* C,T0* a1);
+/*GEANT_VARIABLES*/
+void r26make_items(T26* C,T2 a1);
+/*GEANT_VARIABLES*/
+void r26add_traversing_cursor(T26* C,T0* a1);
+/*GEANT_VARIABLES*/
+T2 r26slots_item(T26* C,T2 a1);
+/*GEANT_VARIABLES*/
+void r26make_map_default(T26* C);
+/*GEANT_VARIABLES*/
+void r26make(T26* C);
+/*GEANT_VARIABLES*/
+T0* r26cursor_key(T26* C,T0* a1);
+/*GEANT_VARIABLES*/
+T0* r26value(T26* C,T0* a1);
+/*GEANT_VARIABLES*/
+T6 r26cursor_after(T0* a1);
+/*GEANT_VARIABLES*/
+T6 r26has(T26* C,T0* a1);
+/*GEANT_VARIABLES*/
+T6 r26has_same_keys(T26* C,T0* a1);
+/*GEANT_VARIABLES*/
+void r26make_keys(T26* C,T2 a1);
+/*GEANT_VARIABLES*/
+void r26force_new(T26* C,T0* a1,T0* a2);
+/*GEANT_VARIABLES*/
+void r26set_variable_value(T26* C,T0* a1,T0* a2);
+/*GEANT_VARIABLES*/
+T2 r26hash_position(T26* C,T0* a1);
+/*GEANT_VARIABLES*/
+void r26cursor_forth(T26* C,T0* a1);
+/*GEANT_VARIABLES*/
+void r26items_resize(T26* C,T2 a1);
+/*GEANT_VARIABLES*/
+T0* r26found_item(T26* C);
+/*GEANT_VARIABLES*/
+void r26resize(T26* C,T2 a1);
+/*GEANT_VARIABLES*/
+void r26make_with_equality_testers(T26* C,T2 a1,T0* a2,T0* a3);
+/*GEANT_VARIABLES*/
+void r26make_map(T26* C,T2 a1);
+/*GEANT_VARIABLES*/
+T6 r26found(T26* C);
+/*GEANT_VARIABLES*/
+void r26make_sparse_container(T26* C,T2 a1);
+/*GEANT_VARIABLES*/
+void r26cursor_start(T26* C,T0* a1);
+/*GEANT_VARIABLES*/
+void r26search(T26* C,T0* a1);
+/*GEANT_VARIABLES*/
+void r26clashes_resize(T26* C,T2 a1);
+/*GEANT_VARIABLES*/
+void r26slots_resize(T26* C,T2 a1);
+/*GEANT_VARIABLES*/
+T6 r26key_equality_tester_settable(T26* C,T0* a1);
+/*GEANT_VARIABLES*/
+void r26force_last(T26* C,T0* a1,T0* a2);
+/*GEANT_VARIABLES*/
+T0* r26new_cursor(T26* C);
+/*GEANT_VARIABLES*/
+T6 r26has_numbered_keys(T26* C);
+/*GEANT_VARIABLES*/
+void r26make_slots(T26* C,T2 a1);
+/*GEANT_VARIABLES*/
+T2 r26new_modulus(T2 a1);
+/*GEANT_VARIABLES*/
+T6 r26cursor_off(T0* a1);
+extern T0*oBC20command_arguments;
+extern int fBC20command_arguments;
 /*KL_ARGUMENTS*/
-T0* r405command_arguments(void);
+T0* r426command_arguments(void);
 /*KL_ARGUMENTS*/
-T0* r405argument(T2 a1);
+T0* r426argument(T2 a1);
 /*DP_SHELL_COMMAND*/
-T2 r792execute_command(T0* a1);
+T2 r855execute_command(T0* a1);
 /*DP_SHELL_COMMAND*/
-void r792make(T792* C,T0* a1);
+void r855make(T855* C,T0* a1);
 /*DP_SHELL_COMMAND*/
-void r792execute(T792* C);
-extern T0*oBC536validate_attribute_name;
-extern T0*oBC536define_element_name;
+void r855execute(T855* C);
+extern T0*oBC557validate_attribute_name;
+extern T0*oBC557define_element_name;
 /*GEANT_GEXACE_TASK*/
-T0* r536attribute_value(T536* C,T0* a1);
+T0* r557attribute_value(T557* C,T0* a1);
 /*GEANT_GEXACE_TASK*/
-T0* r536file_system(void);
-extern T0*oBC536xace_filename_attribute_name;
+T0* r557file_system(void);
+extern T0*oBC557xace_filename_attribute_name;
 /*GEANT_GEXACE_TASK*/
-T0* r536elements_by_name(T536* C,T0* a1);
-extern T0*oBC536library_attribute_name;
+T0* r557elements_by_name(T557* C,T0* a1);
+extern T0*oBC557library_attribute_name;
 /*GEANT_GEXACE_TASK*/
-void r536make(T536* C,T0* a1,T0* a2);
+void r557make(T557* C,T0* a1,T0* a2);
 /*GEANT_GEXACE_TASK*/
-T6 r536boolean_value(T536* C,T0* a1);
+T6 r557boolean_value(T557* C,T0* a1);
 /*GEANT_GEXACE_TASK*/
-void r536task_make(T536* C,T0* a1,T0* a2);
-extern T0*oBC536output_filename_attribute_name;
-extern T0*oBC536verbose_attribute_name;
+void r557task_make(T557* C,T0* a1,T0* a2);
+extern T0*oBC557output_filename_attribute_name;
+extern T0*oBC557verbose_attribute_name;
 /*GEANT_GEXACE_TASK*/
-void r536execute(T536* C);
+void r557execute(T557* C);
 /*GEANT_GEXACE_TASK*/
-T6 r536is_enabled(T536* C);
-extern T0*oBC536system_attribute_name;
+T6 r557is_enabled(T557* C);
+extern T0*oBC557system_attribute_name;
 /*GEANT_GEXACE_TASK*/
-void r536interpreting_element_make(T536* C,T0* a1,T0* a2);
-extern T0*oBC536cluster_attribute_name;
+T0* r557target_arguments_stack(void);
+/*GEANT_GEXACE_TASK*/
+void r557interpreting_element_make(T557* C,T0* a1,T0* a2);
+extern T0*oBC557cluster_attribute_name;
 /*GEANT_UNSET_TASK*/
-T0* r534attribute_value(T534* C,T0* a1);
+T0* r555attribute_value(T555* C,T0* a1);
 /*GEANT_UNSET_TASK*/
-T0* r534file_system(void);
-extern T0*oBC534name_attribute_name;
+T0* r555file_system(void);
+extern T0*oBC555name_attribute_name;
 /*GEANT_UNSET_TASK*/
-void r534make(T534* C,T0* a1,T0* a2);
+void r555make(T555* C,T0* a1,T0* a2);
 /*GEANT_UNSET_TASK*/
-void r534task_make(T534* C,T0* a1,T0* a2);
+void r555task_make(T555* C,T0* a1,T0* a2);
 /*GEANT_UNSET_TASK*/
-void r534execute(T534* C);
+void r555execute(T555* C);
 /*GEANT_UNSET_TASK*/
-T6 r534is_enabled(T534* C);
+T6 r555is_enabled(T555* C);
 /*GEANT_UNSET_TASK*/
-void r534interpreting_element_make(T534* C,T0* a1,T0* a2);
+T0* r555target_arguments_stack(void);
+/*GEANT_UNSET_TASK*/
+void r555interpreting_element_make(T555* C,T0* a1,T0* a2);
 /*GEANT_SETENV_COMMAND*/
-void r565execute(T565* C);
+void r600execute(T600* C);
 /*GEANT_SETENV_COMMAND*/
-T6 r565is_executable(T565* C);
+T6 r600is_executable(T600* C);
 /*KL_TEXT_INPUT_FILE*/
-T6 r661is_closed(T661* C);
+T6 r702is_closed(T702* C);
 /*KL_TEXT_INPUT_FILE*/
-void r661old_close(T661* C);
+void r702old_close(T702* C);
 /*KL_TEXT_INPUT_FILE*/
-void r661old_delete(T0* a1);
+void r702old_delete(T0* a1);
 /*KL_TEXT_INPUT_FILE*/
-T2 r661count(T661* C);
+T2 r702count(T702* C);
 /*KL_TEXT_INPUT_FILE*/
-T2 r661time_stamp(T661* C);
+T2 r702time_stamp(T702* C);
 /*KL_TEXT_INPUT_FILE*/
-T6 r661file_exists(T0* a1);
+T6 r702file_exists(T0* a1);
 /*KL_TEXT_INPUT_FILE*/
-T2 r661epoch_days(T2 a1,T2 a2,T2 a3);
+T2 r702epoch_days(T2 a1,T2 a2,T2 a3);
 /*KL_TEXT_INPUT_FILE*/
-T2 r661read_to_string(T661* C,T0* a1,T2 a2,T2 a3);
+T2 r702read_to_string(T702* C,T0* a1,T2 a2,T2 a3);
 /*KL_TEXT_INPUT_FILE*/
-T787 r661last_change_of(T0* a1);
+T828 r702last_change_of(T0* a1);
 /*KL_TEXT_INPUT_FILE*/
-void r661rename_to(T0* a1,T0* a2);
+void r702rename_to(T0* a1,T0* a2);
 /*KL_TEXT_INPUT_FILE*/
-void r661open_read(T661* C);
+void r702open_read(T702* C);
 /*KL_TEXT_INPUT_FILE*/
-T0* r661file_system(void);
+T0* r702file_system(void);
 /*KL_TEXT_INPUT_FILE*/
-void r661old_read_character(T661* C);
+void r702old_read_character(T702* C);
 /*KL_TEXT_INPUT_FILE*/
-void r661read_character(T661* C);
+void r702read_character(T702* C);
 /*KL_TEXT_INPUT_FILE*/
-void r661fill_buffer(T661* C);
+void r702fill_buffer(T702* C);
 /*KL_TEXT_INPUT_FILE*/
-T2 r661_410Pread_to_buffer(T661* C,T0* a1,T2 a2,T2 a3);
+T2 r702days_at_month(T2 a1,T2 a2);
 /*KL_TEXT_INPUT_FILE*/
-T2 r661days_at_month(T2 a1,T2 a2);
+void r702close(T702* C);
 /*KL_TEXT_INPUT_FILE*/
-void r661close(T661* C);
+void r702make(T702* C,T0* a1);
 /*KL_TEXT_INPUT_FILE*/
-void r661make(T661* C,T0* a1);
+T6 r702exists(T702* C);
 /*KL_TEXT_INPUT_FILE*/
-T6 r661exists(T661* C);
+T2 r702read_to_buffer(T702* C,T0* a1,T2 a2,T2 a3);
 /*KL_TEXT_INPUT_FILE*/
-T2 r661read_to_buffer(T661* C,T0* a1,T2 a2,T2 a3);
+T2 r702size_of(T0* a1);
 /*KL_TEXT_INPUT_FILE*/
-T2 r661size_of(T0* a1);
+void r702copy_file(T702* C,T0* a1);
 /*KL_TEXT_INPUT_FILE*/
-void r661copy_file(T661* C,T0* a1);
+void r702connect_to(T702* C,T0* a1);
+extern T708 oBC20file_tools;
+extern T2 oBC707epoch_days_at_month;
+extern int fBC707epoch_days_at_month;
 /*KL_TEXT_INPUT_FILE*/
-void r661connect_to(T661* C,T0* a1);
-extern T667 oBC22file_tools;
-extern T2 oBC666epoch_days_at_month;
-extern int fBC666epoch_days_at_month;
+T2 r702epoch_days_at_month(void);
 /*KL_TEXT_INPUT_FILE*/
-T2 r661epoch_days_at_month(void);
+T2 r702_431Pread_to_buffer(T702* C,T0* a1,T2 a2,T2 a3);
 /*KL_TEXT_INPUT_FILE*/
-T6 r661same_physical_file(T661* C,T0* a1);
+T6 r702same_physical_file(T702* C,T0* a1);
 /*KL_TEXT_INPUT_FILE*/
-T6 r661leap_year(T2 a1);
+T6 r702leap_year(T2 a1);
 /*KL_TEXT_INPUT_FILE*/
-void r661delete(T661* C);
-extern T2 oBC666epoch_leap_years;
-extern int fBC666epoch_leap_years;
+void r702delete(T702* C);
+extern T2 oBC707epoch_leap_years;
+extern int fBC707epoch_leap_years;
 /*KL_TEXT_INPUT_FILE*/
-T2 r661epoch_leap_years(void);
+T2 r702epoch_leap_years(void);
 /*KL_TEXT_INPUT_FILE*/
-void r661change_name(T661* C,T0* a1);
-extern T0*oBC665tmp_file1;
-extern int fBC665tmp_file1;
+void r702change_name(T702* C,T0* a1);
+extern T0*oBC706tmp_file1;
+extern int fBC706tmp_file1;
 /*KL_TEXT_INPUT_FILE*/
-T0* r661tmp_file1(void);
+T0* r702tmp_file1(void);
 /*KL_TEXT_INPUT_FILE*/
-void r661old_open_read(T661* C);
+void r702old_open_read(T702* C);
 /*KL_TEXT_INPUT_FILE*/
-T6 r661is_readable(T661* C);
-extern T0*oBC664tmp_directory;
-extern int fBC664tmp_directory;
+T6 r702is_readable(T702* C);
+extern T0*oBC705tmp_directory;
+extern int fBC705tmp_directory;
 /*KL_TEXT_INPUT_FILE*/
-T0* r661tmp_directory(void);
-extern T0*oBC208from_attribute_name;
-extern T0*oBC208type_attribute_name;
+T0* r702tmp_directory(void);
+extern T0*oBC228from_attribute_name;
+extern T0*oBC228type_attribute_name;
 /*GEANT_MAP_ELEMENT*/
-T0* r208attribute_value(T208* C,T0* a1);
+T0* r228attribute_value(T228* C,T0* a1);
 /*GEANT_MAP_ELEMENT*/
-void r208_27Pmake(T208* C,T0* a1,T0* a2);
+void r228make(T228* C,T0* a1,T0* a2);
+extern T0*oBC228to_attribute_name;
+extern T0*oBC228map_element_name;
 /*GEANT_MAP_ELEMENT*/
-void r208make(T208* C,T0* a1,T0* a2);
-extern T0*oBC208to_attribute_name;
-extern T0*oBC208map_element_name;
+void r228_45Pmake(T228* C,T0* a1,T0* a2);
+/*GEANT_MAP_ELEMENT*/
+T0* r228target_arguments_stack(void);
 /*KL_CHARACTER_BUFFER*/
-T0* r466substring(T466* C,T2 a1,T2 a2);
+T0* r490substring(T490* C,T2 a1,T2 a2);
 /*KL_CHARACTER_BUFFER*/
-void r466fill_from_string(T466* C,T0* a1,T2 a2);
+void r490fill_from_string(T490* C,T0* a1,T2 a2);
 /*KL_CHARACTER_BUFFER*/
-T2 r466fill_from_stream(T466* C,T0* a1,T2 a2,T2 a3);
+T2 r490fill_from_stream(T490* C,T0* a1,T2 a2,T2 a3);
 /*KL_CHARACTER_BUFFER*/
-void r466move_left(T466* C,T2 a1,T2 a2,T2 a3);
+void r490move_left(T490* C,T2 a1,T2 a2,T2 a3);
 /*KL_CHARACTER_BUFFER*/
-void r466make(T466* C,T2 a1);
+void r490make(T490* C,T2 a1);
 /*KL_CHARACTER_BUFFER*/
-void r466resize(T466* C,T2 a1);
-extern T0*oBC667tfr1;
+void r490resize(T490* C,T2 a1);
+extern T0*oBC708tfr1;
 /*FILE_TOOLS*/
-T6 r667is_readable(T0* a1);
+T6 r708is_readable(T0* a1);
 /*UC_UTF16_ROUTINES*/
-T6 r873is_endian_detection_character_least_first(T2 a1,T2 a2);
+T6 r944is_endian_detection_character_least_first(T2 a1,T2 a2);
 /*UC_UTF16_ROUTINES*/
-T6 r873is_high_surrogate(T2 a1);
+T6 r944is_high_surrogate(T2 a1);
 /*UC_UTF16_ROUTINES*/
-T6 r873is_low_surrogate(T2 a1);
+T6 r944is_low_surrogate(T2 a1);
 /*UC_UTF16_ROUTINES*/
-T6 r873is_endian_detection_character_most_first(T2 a1,T2 a2);
+T6 r944is_endian_detection_character_most_first(T2 a1,T2 a2);
 /*UC_UTF16_ROUTINES*/
-T6 r873is_surrogate(T2 a1);
+T6 r944is_surrogate(T2 a1);
 /*UC_UTF16_ROUTINES*/
-T2 r873least_10_bits(T2 a1,T2 a2);
+T2 r944least_10_bits(T2 a1,T2 a2);
 /*UC_UTF16_ROUTINES*/
-T2 r873surrogate(T2 a1,T2 a2);
+T2 r944surrogate(T2 a1,T2 a2);
 /*GEANT*/
 void r12read_command_line(T12* C);
 /*GEANT*/
@@ -7036,296 +7894,315 @@ void r12report_version_number(T12* C);
 /*GEANT*/
 void r12exit_application(T2 a1,T0* a2);
 /*GEANT*/
+T0* r12target_arguments_stack(void);
+/*GEANT*/
 void r12report_usage_error(T12* C);
-extern T0*oBC39error;
-extern int fBC39error;
+extern T0*oBC57error;
+extern int fBC57error;
 /*KL_STANDARD_FILES*/
-T0* r39error(void);
-extern T0*oBC39output;
-extern int fBC39output;
+T0* r57error(void);
+extern T0*oBC57output;
+extern int fBC57output;
 /*KL_STANDARD_FILES*/
-T0* r39output(void);
-extern T2 oBC63maximum_character_code;
-extern int fBC63maximum_character_code;
+T0* r57output(void);
+extern T2 oBC846maximum_character_code;
+extern int fBC846maximum_character_code;
 /*KL_PLATFORM*/
-T2 r63maximum_character_code(T63* C);
-extern T2 oBC63maximum_integer;
-extern T0*oBC124lowercase_24;
-extern int fBC124lowercase_24;
+T2 r846maximum_character_code(T846* C);
+extern T2 oBC846maximum_integer;
+extern T0*oBC129lowercase_24;
+extern int fBC129lowercase_24;
 /*UC_UNICODE_ROUTINES*/
-T0* r123lowercase_24(void);
-extern T0*oBC124lowercase_21;
-extern int fBC124lowercase_21;
+T0* r128lowercase_24(void);
+extern T0*oBC129lowercase_21;
+extern int fBC129lowercase_21;
 /*UC_UNICODE_ROUTINES*/
-T0* r123lowercase_21(void);
-extern T0*oBC124lowercase_06;
-extern int fBC124lowercase_06;
+T0* r128lowercase_21(void);
+extern T0*oBC129lowercase_06;
+extern int fBC129lowercase_06;
 /*UC_UNICODE_ROUTINES*/
-T0* r123lowercase_06(void);
-extern T0*oBC124lowercase_05;
-extern int fBC124lowercase_05;
+T0* r128lowercase_06(void);
+extern T0*oBC129lowercase_05;
+extern int fBC129lowercase_05;
 /*UC_UNICODE_ROUTINES*/
-T0* r123lowercase_05(void);
-extern T0*oBC124lowercase_04;
-extern int fBC124lowercase_04;
+T0* r128lowercase_05(void);
+extern T0*oBC129lowercase_04;
+extern int fBC129lowercase_04;
 /*UC_UNICODE_ROUTINES*/
-T0* r123lowercase_04(void);
-extern T0*oBC124lowercase_03;
-extern int fBC124lowercase_03;
+T0* r128lowercase_04(void);
+extern T0*oBC129lowercase_03;
+extern int fBC129lowercase_03;
 /*UC_UNICODE_ROUTINES*/
-T0* r123lowercase_03(void);
-extern T0*oBC124lowercase_02;
-extern int fBC124lowercase_02;
+T0* r128lowercase_03(void);
+extern T0*oBC129lowercase_02;
+extern int fBC129lowercase_02;
 /*UC_UNICODE_ROUTINES*/
-T0* r123lowercase_02(void);
-extern T0*oBC124lowercase_01;
-extern int fBC124lowercase_01;
+T0* r128lowercase_02(void);
+extern T0*oBC129lowercase_01;
+extern int fBC129lowercase_01;
 /*UC_UNICODE_ROUTINES*/
-T0* r123lowercase_01(void);
-extern T0*oBC124lowercase_00;
-extern int fBC124lowercase_00;
+T0* r128lowercase_01(void);
+extern T0*oBC129lowercase_00;
+extern int fBC129lowercase_00;
 /*UC_UNICODE_ROUTINES*/
-T0* r123lowercase_00(void);
-extern T0*oBC124lowercase_ff;
-extern int fBC124lowercase_ff;
+T0* r128lowercase_00(void);
+extern T0*oBC129lowercase_ff;
+extern int fBC129lowercase_ff;
 /*UC_UNICODE_ROUTINES*/
-T0* r123lowercase_ff(void);
+T0* r128lowercase_ff(void);
 /*UC_UNICODE_ROUTINES*/
-T2 r123lower_code(T2 a1);
+T2 r128lower_code(T2 a1);
 /*UC_UNICODE_ROUTINES*/
-T6 r123valid_code(T2 a1);
-extern T0*oBC124lowercase_1f;
-extern int fBC124lowercase_1f;
+T6 r128valid_code(T2 a1);
+extern T0*oBC129lowercase_1f;
+extern int fBC129lowercase_1f;
 /*UC_UNICODE_ROUTINES*/
-T0* r123lowercase_1f(void);
-extern T0*oBC124lowercase_1e;
-extern int fBC124lowercase_1e;
+T0* r128lowercase_1f(void);
+extern T0*oBC129lowercase_1e;
+extern int fBC129lowercase_1e;
 /*UC_UNICODE_ROUTINES*/
-T0* r123lowercase_1e(void);
-extern T0*oBC124lowercase;
-extern int fBC124lowercase;
+T0* r128lowercase_1e(void);
+extern T0*oBC129lowercase;
+extern int fBC129lowercase;
 /*UC_UNICODE_ROUTINES*/
-T0* r123lowercase(void);
+T0* r128lowercase(void);
 /*UC_UTF8_ROUTINES*/
-T2 r62encoded_next_value(T3 a1);
+T2 r132encoded_next_value(T3 a1);
 /*UC_UTF8_ROUTINES*/
-T2 r62character_byte_count(T3 a1);
+T2 r132character_byte_count(T3 a1);
 /*UC_UTF8_ROUTINES*/
-T2 r62encoded_first_value(T3 a1);
+T6 r132is_endian_detection_character(T3 a1,T3 a2,T3 a3);
 /*UC_UTF8_ROUTINES*/
-T2 r62code_byte_count(T2 a1);
+T2 r132encoded_first_value(T3 a1);
 /*UC_UTF8_ROUTINES*/
-T2 r62encoded_byte_count(T3 a1);
+T2 r132code_byte_count(T2 a1);
 /*UC_UTF8_ROUTINES*/
-T6 r62is_encoded_first_byte(T3 a1);
+T2 r132encoded_byte_count(T3 a1);
 /*UC_UTF8_ROUTINES*/
-T6 r62is_encoded_next_byte(T3 a1);
+T6 r132is_encoded_first_byte(T3 a1);
 /*UC_UTF8_ROUTINES*/
-void r62append_code_to_utf8(T0* a1,T2 a2);
+T6 r132is_encoded_next_byte(T3 a1);
 /*UC_UTF8_ROUTINES*/
-T0* r62to_utf8(T0* a1);
+T6 r132is_endian_detection_character_start(T3 a1,T3 a2);
 /*UC_UTF8_ROUTINES*/
-T6 r62valid_utf8(T0* a1);
+void r132append_code_to_utf8(T0* a1,T2 a2);
 /*UC_UTF8_ROUTINES*/
-T2 r62substring_byte_count(T0* a1,T2 a2,T2 a3);
+T0* r132to_utf8(T0* a1);
+/*UC_UTF8_ROUTINES*/
+T6 r132valid_utf8(T0* a1);
+/*UC_UTF8_ROUTINES*/
+T2 r132substring_byte_count(T0* a1,T2 a2,T2 a3);
 /*KL_INTEGER_ROUTINES*/
-T3 r65to_character(T2 a1);
-/*UC_EQUALITY_TESTER*/
-T6 r161test(T0* a1,T0* a2);
+T3 r127to_character(T2 a1);
+/*UC_STRING_EQUALITY_TESTER*/
+T6 r169test(T0* a1,T0* a2);
 /*SYSTEM*/
-T0* r164get_environment_variable(T0* a1);
+T0* r180get_environment_variable(T0* a1);
 /*XM_NODE_TYPER*/
-void r144process_comment(T144* C,T0* a1);
+void r161process_comment(T161* C,T0* a1);
 /*XM_NODE_TYPER*/
-void r144process_processing_instruction(T144* C,T0* a1);
+void r161process_processing_instruction(T161* C,T0* a1);
 /*XM_NODE_TYPER*/
-void r144process_element(T144* C,T0* a1);
+void r161process_document(T161* C,T0* a1);
 /*XM_NODE_TYPER*/
-void r144process_attribute(T144* C,T0* a1);
+void r161process_element(T161* C,T0* a1);
 /*XM_NODE_TYPER*/
-void r144process_character_data(T144* C,T0* a1);
+void r161process_attribute(T161* C,T0* a1);
 /*XM_NODE_TYPER*/
-void r144reset(T144* C);
+void r161process_character_data(T161* C,T0* a1);
+/*XM_NODE_TYPER*/
+void r161reset(T161* C);
 /*BASIC_DIRECTORY*/
-void r183connect_to_current_working_directory(T183* C);
+void r204connect_to_current_working_directory(T204* C);
 /*BASIC_DIRECTORY*/
-void r183disconnect(T183* C);
+void r204disconnect(T204* C);
 /*BASIC_DIRECTORY*/
-T6 r183remove_directory(T0* a1);
-extern T0*oBC183last_entry;
+T6 r204remove_directory(T0* a1);
+extern T0*oBC204last_entry;
 /*BASIC_DIRECTORY*/
-void r183change_current_working_directory(T183* C,T0* a1);
+void r204change_current_working_directory(T204* C,T0* a1);
 /*BASIC_DIRECTORY*/
-void r183read_entry(T183* C);
+void r204read_entry(T204* C);
 /*BASIC_DIRECTORY*/
-void r183connect_to(T183* C,T0* a1);
+void r204connect_to(T204* C,T0* a1);
 /*BASIC_DIRECTORY*/
-T6 r183create_new_directory(T0* a1);
+T6 r204create_new_directory(T0* a1);
 /*KL_STRING_ROUTINES*/
-void r50wipe_out(T0* a1);
+void r68wipe_out(T0* a1);
 /*KL_STRING_ROUTINES*/
-void r50keep_tail(T0* a1,T2 a2);
+T0* r68as_string(T0* a1);
 /*KL_STRING_ROUTINES*/
-T0* r50as_string(T0* a1);
+T0* r68clone(T0* a1);
 /*KL_STRING_ROUTINES*/
-T0* r50clone(T0* a1);
+T0* r68appended_string(T0* a1,T0* a2);
 /*KL_STRING_ROUTINES*/
-T0* r50appended_string(T0* a1,T0* a2);
+T6 r68is_integer(T0* a1);
 /*KL_STRING_ROUTINES*/
-void r50remove_tail(T0* a1,T2 a2);
+T6 r68same_case_insensitive(T0* a1,T0* a2);
 /*KL_STRING_ROUTINES*/
-T6 r50is_integer(T0* a1);
+T2 r68hexadecimal_to_integer(T0* a1);
 /*KL_STRING_ROUTINES*/
-T0* r50make(T2 a1);
+T0* r68appended_substring(T0* a1,T0* a2,T2 a3,T2 a4);
 /*KL_STRING_ROUTINES*/
-T0* r50string(T0* a1);
+T0* r68new_empty_string(T0* a1,T2 a2);
 /*KL_STRING_ROUTINES*/
-T2 r50hexadecimal_to_integer(T0* a1);
+T0* r68concat(T0* a1,T0* a2);
 /*KL_STRING_ROUTINES*/
-void r50keep_head(T0* a1,T2 a2);
+T6 r68is_hexadecimal(T0* a1);
 /*KL_STRING_ROUTINES*/
-T0* r50as_lower(T0* a1);
+T6 r68same_string(T0* a1,T0* a2);
 /*KL_STRING_ROUTINES*/
-T0* r50appended_substring(T0* a1,T0* a2,T2 a3,T2 a4);
+T6 r68elks_same_string(T0* a1,T0* a2);
 /*KL_STRING_ROUTINES*/
-T0* r50new_empty_string(T0* a1,T2 a2);
-/*KL_STRING_ROUTINES*/
-T0* r50concat(T0* a1,T0* a2);
-/*KL_STRING_ROUTINES*/
-T2 r50substring_index(T0* a1,T0* a2,T2 a3);
-/*KL_STRING_ROUTINES*/
-T6 r50is_hexadecimal(T0* a1);
-/*KL_STRING_ROUTINES*/
-T6 r50same_string(T0* a1,T0* a2);
-/*KL_STRING_ROUTINES*/
-T6 r50elks_same_string(T0* a1,T0* a2);
-/*KL_STRING_ROUTINES*/
-void r50remove_head(T0* a1,T2 a2);
-/*KL_STRING_ROUTINES*/
-void r50append_substring_to_string(T0* a1,T0* a2,T2 a3,T2 a4);
+void r68append_substring_to_string(T0* a1,T0* a2,T2 a3,T2 a4);
 /*XM_NULL_EXTERNAL_RESOLVER*/
-T0* r752last_error(void);
+T0* r793last_error(void);
 /*KL_BOOLEAN_ROUTINES*/
-T6 r805nxor(T0* a1);
+T6 r868nxor(T0* a1);
 /*KL_EXECUTION_ENVIRONMENT*/
-T0* r163variable_value(T0* a1);
-extern T164 oBC163environment_impl;
+T0* r179variable_value(T179* C,T0* a1);
 /*TIME*/
-T2 r787day(T787* C);
+T2 r828day(T828* C);
 /*TIME*/
-T2 r787hour(T787* C);
+T2 r828hour(T828* C);
 /*TIME*/
-T2 r787year(T787* C);
+T2 r828year(T828* C);
 /*TIME*/
-T2 r787month(T787* C);
-extern T0*oBC787time_mode_memo;
+T2 r828month(T828* C);
+extern T0*oBC828time_mode_memo;
 /*TIME*/
-T2 r787minute(T787* C);
+T2 r828minute(T828* C);
 /*TIME*/
-T6 r787is_local_time(void);
+T6 r828is_local_time(void);
 /*TIME*/
-T2 r787second(T787* C);
+T2 r828second(T828* C);
 /*KL_OPERATING_SYSTEM*/
-T0* r43current_working_directory(T43* C);
+T0* r61current_working_directory(T61* C);
 /*KL_OPERATING_SYSTEM*/
-T0* r43variable_value(T0* a1);
+T0* r61variable_value(T61* C,T0* a1);
 /*KL_OPERATING_SYSTEM*/
-T0* r43clone(T0* a1);
-extern T6 oBC43is_windows;
-extern int fBC43is_windows;
+T0* r61clone(T0* a1);
+extern T6 oBC61is_windows;
+extern int fBC61is_windows;
 /*KL_OPERATING_SYSTEM*/
-T6 r43is_windows(T43* C);
-extern T164 oBC43environment_impl;
+T6 r61is_windows(T61* C);
+extern T6 oBC61is_unix;
+extern int fBC61is_unix;
 /*KL_OPERATING_SYSTEM*/
-T6 r43equal(T0* a1,T0* a2);
-extern T6 oBC43is_unix;
-extern int fBC43is_unix;
-/*KL_OPERATING_SYSTEM*/
-T6 r43is_unix(T43* C);
+T6 r61is_unix(T61* C);
 extern T12*eiffel_root_object;
 extern int se_argc;
 extern char**se_argv;
-#define SE_MAXID 984
+#define SE_MAXID 1064
 void initialize_eiffel_runtime(int argc,char*argv[]);
-extern T7*ms40_10;
+extern T7*ms936_259593324;
+extern T7*ms837_1317500565;
 extern T7*ms6_59251;
-extern T7*ms184_8976;
-extern T7*ms426_1520688928;
-extern T7*ms746_225532234;
-extern T7*ms438_280487577;
-extern T7*ms746_880035048;
-extern T7*ms808_90456;
-extern T7*ms422_1203377682;
-extern T7*ms19_1554;
-extern T7*ms746_1787513656;
-extern T7*ms746_729820516;
-extern T7*ms755_11156230;
-extern T7*ms184_276;
-extern T7*ms746_1383485945;
-extern T7*ms403_1449702436;
-extern T7*ms746_1040340337;
-extern T7*ms493_10;
-extern T7*ms736_0;
-extern T7*ms743_42;
-extern T7*ms743_43;
-extern T7*ms743_63;
-extern T7*ms185_276;
-extern T7*ms746_1718816811;
-extern T7*ms746_513387338;
-extern T7*ms746_438332871;
-extern T7*ms755_32;
-extern T7*ms50_0;
-extern T7*ms54_0;
-extern T7*ms62_0;
-extern T7*ms746_1232318322;
-extern T7*ms808_1503;
-extern T7*ms755_90456;
+extern T7*ms444_1203377682;
+extern T7*ms837_1200988023;
+extern T7*ms787_2065551545;
+extern T7*ms787_1864547461;
+extern T7*ms837_139329733;
+extern T7*ms869_10;
+extern T7*ms936_452299;
+extern T7*ms837_1675130891;
+extern T7*ms837_1141105903;
+extern T7*ms837_42590039;
+extern T7*ms717_17696;
+extern T7*ms787_438332871;
+extern T7*ms796_192;
+extern T7*ms787_513387338;
+extern T7*ms448_1520688928;
+extern T7*ms429_6934577;
+extern T7*ms837_53019651;
+extern T7*ms787_1806352573;
+extern T7*ms787_2083254325;
+extern T7*ms837_727439395;
+extern T7*ms787_1806545392;
+extern T7*ms837_619510042;
+extern T7*ms253_1338085634;
+extern T7*ms58_10;
+extern T7*ms837_763469248;
+extern T7*ms787_1680506019;
+extern T7*ms787_1389019675;
+extern T7*ms706_250860571;
+extern T7*ms461_280487577;
+extern T7*ms837_1584292294;
+extern T7*ms205_46;
+extern T7*ms837_1432094708;
+extern T7*ms787_1639807481;
+extern T7*ms206_46;
+extern T7*ms787_729820516;
+extern T7*ms787_1105337616;
+extern T7*ms837_1005188058;
+extern T7*ms837_1012776380;
+extern T7*ms837_532624755;
+extern T7*ms449_1531431095;
+extern T7*ms787_880035048;
+extern T7*ms837_1884818624;
+extern T7*ms706_80516;
+extern T7*ms854_276;
+extern T7*ms837_577467693;
+extern T7*ms447_1686894687;
+extern T7*ms837_1194160835;
+extern T7*ms782_2055053662;
+extern T7*ms787_225532234;
+extern T7*ms837_1835565352;
+extern T7*ms72_0;
+extern T7*ms68_0;
+extern T7*ms787_1983024392;
 extern T7*ms6_14036;
-extern T7*ms746_1785408556;
-extern T7*ms755_259593324;
-extern T7*ms746_993001251;
-extern T7*ms746_930325994;
-extern T7*ms665_80516;
-extern T7*ms791_276;
-extern T7*ms184_46;
-extern T7*ms741_1806352573;
-extern T7*ms736_415578366;
-extern T7*ms185_46;
-extern T7*ms736_473224273;
-extern T7*ms746_1105337616;
-extern T7*ms746_429369815;
-extern T7*ms746_1639807481;
-extern T7*ms225_0;
-extern T7*ms791_46;
-extern T7*ms785_1515383187;
-extern T7*ms185_0;
-extern T7*ms465_823229232;
-extern T7*ms408_6934577;
-extern T7*ms741_969380041;
-extern T7*ms180_80516;
-extern T7*ms746_1389019675;
-extern T7*ms746_1680506019;
-extern T7*ms425_1686894687;
-extern T7*ms596_10;
-extern T7*ms746_1806545392;
-extern T7*ms427_1531431095;
-extern T7*ms424_215272365;
-extern T7*ms755_452299;
-extern T7*ms746_2083254325;
-extern T7*ms746_1806352573;
-extern T7*ms746_758578972;
-extern T7*ms665_250860571;
-extern T7*ms784_1158552108;
-extern T7*ms746_224621212;
-extern T7*ms232_1338085634;
-extern T7*ms746_313350252;
-extern T7*ms421_645257649;
-extern T7*ms746_414094759;
-extern T7*ms423_1086870388;
-extern T7*ms746_1864547461;
-extern T7*ms755_192;
-extern T7*ms746_620986269;
-extern T7*ms746_2065551545;
+extern T7*ms787_1785408556;
+extern T7*ms787_620986269;
+extern T7*ms787_414094759;
+extern T7*ms837_2048967656;
+extern T7*ms837_1189338692;
+extern T7*ms787_1232318322;
+extern T7*ms787_313350252;
+extern T7*ms631_10;
+extern T7*ms446_215272365;
+extern T7*ms132_0;
+extern T7*ms787_224621212;
+extern T7*ms837_535188632;
+extern T7*ms837_261495747;
+extern T7*ms25_1556;
+extern T7*ms936_90456;
+extern T7*ms787_758578972;
+extern T7*ms571_4300;
+extern T7*ms837_247606932;
+extern T7*ms206_0;
+extern T7*ms784_42;
+extern T7*ms784_43;
+extern T7*ms784_63;
+extern T7*ms826_1515383187;
+extern T7*ms787_1718816811;
+extern T7*ms443_645257649;
+extern T7*ms202_80516;
+extern T7*ms246_0;
+extern T7*ms205_276;
+extern T7*ms489_823229232;
+extern T7*ms895_90456;
+extern T7*ms895_1503;
+extern T7*ms796_32;
+extern T7*ms787_766510371;
+extern T7*ms787_1040340337;
+extern T7*ms787_429369815;
+extern T7*ms825_1158552108;
+extern T7*ms782_473224273;
+extern T7*ms787_1383485945;
+extern T7*ms206_276;
+extern T7*ms936_11156230;
+extern T7*ms837_106524939;
+extern T7*ms445_1086870388;
+extern T7*ms424_1449702436;
+extern T7*ms837_529870453;
+extern T7*ms854_46;
+extern T7*ms205_8976;
+extern T7*ms512_10;
+extern T7*ms787_1787513656;
+extern T7*ms787_930325994;
+extern T7*ms787_993001251;
+extern T7*ms787_498324258;
 T7*se_ms(int c,char*e);
 T7*se_string(char*e);
 /*
@@ -7349,33 +8226,43 @@ T7*se_string(char*e);
 EIF_STRING se_ms_trace(int count, char* c_string, int li, int co, char* path);
 void se_msi1(void);
 void se_msi2(void);
-void*se_ma974(int argc,...);
-void*se_ma254(int argc,...);
-void*se_ma70(int argc,...);
-void*se_ma272(int argc,...);
-void*se_ma480(int argc,...);
-void*se_ma484(int argc,...);
-void*se_ma738(int argc,...);
-void X271put(T0*C,T2 a1);
-T0* X271to_array(T0*C,T2 a1,T2 a2);
-void X271add(T0*C,T0* a1);
-void X254put(T0*C,T2 a1,T2 a2);
-T2 X254item(T0*C,T2 a1);
-T6 X116test(T0*C,T0* a1,T0* a2);
-T6 X54same_unicode_string(T0*C,T0* a1);
-T0* X54as_string(T0*C);
-T2 X54byte_index(T0*C,T2 a1);
-T2 X54next_byte_index(T0*C,T2 a1);
-void X54append_string(T0*C,T0* a1);
-void X54append_substring(T0*C,T0* a1,T2 a2,T2 a3);
-T2 X54item_code_at_byte_index(T0*C,T2 a1);
-T0* X54string(T0*C);
-T0* X54prefixed_string(T0*C,T0* a1);
-T0* X54new_empty_string(T0*C,T2 a1);
-T2 X54substring_index(T0*C,T0* a1,T2 a2);
-T3 X54byte_item(T0*C,T2 a1);
-T0* X54to_utf8(T0*C);
-T0* X54_ix_43(T0*C,T0* a1);
+void se_msi3(void);
+void*se_ma778(int argc,...);
+void*se_ma850(int argc,...);
+void*se_ma275(int argc,...);
+void*se_ma84(int argc,...);
+void*se_ma293(int argc,...);
+void*se_ma945(int argc,...);
+void X292put(T0*C,T2 a1);
+T0* X292to_array(T0*C,T2 a1,T2 a2);
+void X292add(T0*C,T0* a1);
+T0* X166cursor_item(T0*C,T0* a1);
+void X166cursor_go_after(T0*C,T0* a1);
+T6 X166cursor_after(T0*C,T0* a1);
+void X166cursor_forth(T0*C,T0* a1);
+void X166cursor_start(T0*C,T0* a1);
+T6 X120test(T0*C,T0* a1,T0* a2);
+T6 X72same_unicode_string(T0*C,T0* a1);
+T0* X72as_string(T0*C);
+T2 X72byte_index(T0*C,T2 a1);
+T2 X72next_byte_index(T0*C,T2 a1);
+T6 X72same_type(T0*C,T0* a1);
+void X72append_string(T0*C,T0* a1);
+void X72append_substring(T0*C,T0* a1,T2 a2,T2 a3);
+T2 X72item_code_at_byte_index(T0*C,T2 a1);
+T0* X72prefixed_string(T0*C,T0* a1);
+T0* X72new_empty_string(T0*C,T2 a1);
+T3 X72byte_item(T0*C,T2 a1);
+T0* X72to_utf8(T0*C);
+T0* X72_ix_43(T0*C,T0* a1);
+T0* X186item(T0*C);
+T6 X186after(T0*C);
+void X186forth(T0*C);
+void X186start(T0*C);
+T0* X118cursor_item(T0*C,T0* a1);
+T6 X118cursor_after(T0*C,T0* a1);
+void X118cursor_forth(T0*C,T0* a1);
+void X118cursor_start(T0*C,T0* a1);
 T0* X7out(T0*C);
 T0* X7substring(T0*C,T2 a1,T2 a2);
 void X7wipe_out(T0*C);
@@ -7391,6 +8278,7 @@ T6 X7same_type(T0*C,T0* a1);
 void X7remove_tail(T0*C,T2 a1);
 void X7append_string(T0*C,T0* a1);
 void X7remove(T0*C,T2 a1);
+T6 X7is_empty(T0*C);
 T0* X7string(T0*C);
 void X7extend(T0*C,T3 a1);
 T2 X7hash_code(T0*C);
@@ -7398,90 +8286,112 @@ void X7keep_head(T0*C,T2 a1);
 T2 X7to_integer(T0*C);
 void X7append_character(T0*C,T3 a1);
 void X7resize(T0*C,T2 a1);
-T2 X7substring_index(T0*C,T0* a1,T2 a2);
 void X7from_external_copy(T0*C,T8 a1);
 T8 X7to_external(T0*C);
-void X7to_lower(T0*C);
+T6 X7same_string(T0*C,T0* a1);
 T0* X7twin(T0*C);
 T0* X7_ix_43(T0*C,T0* a1);
+void X7remove_head(T0*C,T2 a1);
 void X7swap(T0*C,T2 a1,T2 a2);
-void X922put_right(T0*C,T0* a1);
-T2 X190exit_code(T0*C);
-void X190execute(T0*C);
-T6 X190is_executable(T0*C);
-T0* X119last(T0*C);
-T0* X119cursor_item(T0*C,T0* a1);
-T6 X119is_equal(T0*C,T0* a1);
-T0* X119item(T0*C,T2 a1);
-T6 X119cursor_after(T0*C,T0* a1);
-void X119cursor_forth(T0*C,T0* a1);
-void X119cursor_start(T0*C,T0* a1);
-void X119force_last(T0*C,T0* a1);
-T0* X119new_cursor(T0*C);
-T6 X20is_equal(T0*C,T0* a1);
-T0* X20twin(T0*C);
-void X137process(T0*C,T0* a1);
-void X753apply_input_buffer(T0*C);
-T6 X22se_assigned_from(T0*C,T0* a1);
-T6 X22conforms_to(T0*C,T0* a1);
-void X44put_new_line(T0*C);
-void X44put_line(T0*C,T0* a1);
-void X44flush(T0*C);
-void X44put_string(T0*C,T0* a1);
-T6 X409is_closable(T0*C);
-T0* X409name(T0*C);
-T2 X409read_to_string(T0*C,T0* a1,T2 a2,T2 a3);
-void X409read_character(T0*C);
-T6 X409is_open_read(T0*C);
-void X409close(T0*C);
-T2 X409read_to_buffer(T0*C,T0* a1,T2 a2,T2 a3);
-T6 X409end_of_input(T0*C);
-T3 X409last_character(T0*C);
-void X142force_last(T0*C,T0* a1);
-void X408fill(T0*C);
-T0* X408name(T0*C);
-void X687on_start_tag_finish(T0*C);
-void X687on_finish(T0*C);
-void X687on_content(T0*C,T0* a1);
-void X687on_start(T0*C);
-void X687on_processing_instruction(T0*C,T0* a1,T0* a2);
-void X687on_start_tag(T0*C,T0* a1,T0* a2,T0* a3);
-void X687on_comment(T0*C,T0* a1);
-void X687on_end_tag(T0*C,T0* a1,T0* a2,T0* a3);
-void X687on_attribute(T0*C,T0* a1,T0* a2,T0* a3,T0* a4);
-void X687on_error(T0*C,T0* a1);
-void X687on_xml_declaration(T0*C,T0* a1,T0* a2,T6 a3);
-T2 X483count(T0*C);
-T2 X483item(T0*C,T2 a1);
-T6 X283labeled(T0*C,T2 a1);
-void X283record(T0*C,T0* a1);
-T0* X186item(T0*C);
-T6 X186after(T0*C);
-void X186forth(T0*C);
-void X186start(T0*C);
-void X154cursor_go_after(T0*C,T0* a1);
-void X154cursor_forth(T0*C,T0* a1);
-void X154cursor_start(T0*C,T0* a1);
-T2 X191exit_code(T0*C);
-void X191execute(T0*C);
-T6 X191is_executable(T0*C);
-T0* X404default_message(T0*C);
-void X754read_token(T0*C);
-void X754close_input(T0*C);
-T6 X754is_valid_encoding(T0*C,T0* a1);
-void X754reset(T0*C);
-void X754set_input_stream(T0*C,T0* a1);
-void X754set_encoding(T0*C,T0* a1);
-T0* X169container(T0*C);
-T0* X180pathname_from_file_system(T0*C,T0* a1,T0* a2);
-T0* X180relative_current_directory(T0*C);
-T0* X180absolute_pathname(T0*C,T0* a1);
-T0* X180dirname(T0*C,T0* a1);
-T0* X180exe_extension(T0*C);
-T0* X180relative_parent_directory(T0*C);
-T0* X180pathname(T0*C,T0* a1,T0* a2);
-T0* X180canonical_pathname(T0*C,T0* a1);
-T0* T11toT182(T11 source);
+void X1004put_right(T0*C,T0* a1);
+T2 X210exit_code(T0*C);
+void X210execute(T0*C);
+T6 X210is_executable(T0*C);
+T0* X178value(T0*C,T0* a1);
+T6 X178has(T0*C,T0* a1);
+T0* X123last(T0*C);
+T0* X123cursor_item(T0*C,T0* a1);
+T0* X123item(T0*C,T2 a1);
+T6 X123cursor_after(T0*C,T0* a1);
+void X123cursor_forth(T0*C,T0* a1);
+void X123cursor_start(T0*C,T0* a1);
+void X123force_last(T0*C,T0* a1);
+T0* X123new_cursor(T0*C);
+T0* X18twin(T0*C);
+void X151process(T0*C,T0* a1);
+void X794apply_input_buffer(T0*C);
+T6 X20se_assigned_from(T0*C,T0* a1);
+T6 X20conforms_to(T0*C,T0* a1);
+void X26force(T0*C,T0* a1,T0* a2);
+T0* X26item(T0*C,T0* a1);
+T0* X26value(T0*C,T0* a1);
+T6 X26has(T0*C,T0* a1);
+T6 X26has_same_keys(T0*C,T0* a1);
+void X26set_variable_value(T0*C,T0* a1,T0* a2);
+void X26search(T0*C,T0* a1);
+void X26force_last(T0*C,T0* a1,T0* a2);
+T0* X26new_cursor(T0*C);
+T6 X26has_numbered_keys(T0*C);
+void X62put_new_line(T0*C);
+void X62put_line(T0*C,T0* a1);
+void X62flush(T0*C);
+void X62put_string(T0*C,T0* a1);
+T6 X430is_closable(T0*C);
+T0* X430name(T0*C);
+T2 X430read_to_string(T0*C,T0* a1,T2 a2,T2 a3);
+void X430read_character(T0*C);
+T6 X430is_open_read(T0*C);
+void X430close(T0*C);
+T2 X430read_to_buffer(T0*C,T0* a1,T2 a2,T2 a3);
+T6 X430end_of_input(T0*C);
+T3 X430last_character(T0*C);
+void X158process(T0*C,T0* a1);
+void X158equality_delete(T0*C,T0* a1);
+void X429fill(T0*C);
+T0* X429name(T0*C);
+void X584set(T0*C,T0* a1,T6 a2,T6 a3);
+void X584set_next_cursor(T0*C,T0* a1);
+T6 X584after(T0*C);
+T6 X584before(T0*C);
+void X728on_start_tag_finish(T0*C);
+void X728on_finish(T0*C);
+void X728on_content(T0*C,T0* a1);
+void X728on_start(T0*C);
+void X728on_processing_instruction(T0*C,T0* a1,T0* a2);
+void X728on_start_tag(T0*C,T0* a1,T0* a2,T0* a3);
+void X728on_comment(T0*C,T0* a1);
+void X728on_end_tag(T0*C,T0* a1,T0* a2,T0* a3);
+void X728on_attribute(T0*C,T0* a1,T0* a2,T0* a3,T0* a4);
+void X728on_error(T0*C,T0* a1);
+void X728on_xml_declaration(T0*C,T0* a1,T0* a2,T6 a3);
+T6 X304labeled(T0*C,T2 a1);
+void X304record(T0*C,T0* a1);
+void X193force(T0*C,T0* a1,T0* a2);
+T0* X193item(T0*C,T0* a1);
+T6 X193has(T0*C,T0* a1);
+void X193force_new(T0*C,T0* a1,T0* a2);
+void X193force_last(T0*C,T0* a1,T0* a2);
+T0* X193new_cursor(T0*C);
+T0* X198item(T0*C);
+T6 X198after(T0*C);
+void X198forth(T0*C);
+void X198start(T0*C);
+T6 X172cursor_is_last(T0*C,T0* a1);
+void X172cursor_go_after(T0*C,T0* a1);
+void X172cursor_forth(T0*C,T0* a1);
+void X172cursor_start(T0*C,T0* a1);
+T6 X172cursor_is_first(T0*C,T0* a1);
+void X172remove_at_cursor(T0*C,T0* a1);
+T2 X211exit_code(T0*C);
+void X211execute(T0*C);
+T6 X211is_executable(T0*C);
+void X583cursor_forth(T0*C,T0* a1);
+void X583cursor_start(T0*C,T0* a1);
+T0* X425default_message(T0*C);
+void X795read_token(T0*C);
+void X795close_input(T0*C);
+void X795set_input_from_resolver(T0*C,T0* a1);
+void X795set_input_stream(T0*C,T0* a1);
+T0* X185container(T0*C);
+T0* X202pathname_from_file_system(T0*C,T0* a1,T0* a2);
+T0* X202relative_current_directory(T0*C);
+T0* X202absolute_pathname(T0*C,T0* a1);
+T0* X202dirname(T0*C,T0* a1);
+T0* X202exe_extension(T0*C);
+T0* X202relative_parent_directory(T0*C);
+T0* X202basename(T0*C,T0* a1);
+T0* X202pathname(T0*C,T0* a1,T0* a2);
+T0* X202canonical_pathname(T0*C,T0* a1);
 
 #ifdef __cplusplus
 }

@@ -3,13 +3,14 @@
 <system name="xkernel">
 	<description>
 		system: "Gobo Eiffel Kernel Library Tester"
-		copyright: "Copyright (c) 2001-2002, Eric Bezault and others"
+		copyright: "Copyright (c) 2001-2004, Eric Bezault and others"
 		license: "Eiffel Forum License v2 (see forum.txt)"
 		date: "$Date$"
 		revision: "$Revision$"
 	</description>
 
 	<root class="XKERNEL" creation="make"/>
+	<option name="console_application" value="true"/>
 	<option unless="${DEBUG}">
 		<option name="assertion" value="none"/>
 		<option name="garbage_collector" value="none"/>
@@ -28,6 +29,7 @@
 		<option name="warning" value="none"/>
 	</option>
 
+	<cluster name="kl_tester_ve" location="." if="${GOBO_EIFFEL}=ve"/>
 	<cluster name="kl_tester" location="${GOBO}/test/kernel"/>
 	<cluster name="kl_testgen" location="TESTGEN"/>
 	<mount location="${GOBO}/library/test/library.xace"/>
