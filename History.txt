@@ -1,3 +1,10 @@
+Version 3.3 - ?
+
+	geant:
+
+	* Fixed bug in task <gepp> occuring when a nested <fileset>
+	  element defined in the new format was specified.
+
 Version 3.2 - 29 June 2003
 
 	geant:
