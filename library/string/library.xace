@@ -11,5 +11,8 @@
 	</description>
 
 	<cluster name="string" location="${GOBO}/library/string">
+		<option name="abstract" value="true"/>
+		<cluster name="collation"/>
+		<cluster name="support"/>
 	</cluster>
 </library>
