@@ -18,7 +18,14 @@ inherit
 
 	XM_XPATH_ITEM
 	
-	XM_XPATH_STATIC_PROPERTY
+feature {NONE} -- Initialization
+
+	make_atomic_value is
+			-- Establish static properties
+		do
+			make_value
+			cardinalities.put (True, 2)
+			end
 
 feature -- Access
 
@@ -26,17 +33,6 @@ feature -- Access
 			-- Typed value
 		do
 			Result := Current
-		end
-
-	cardinality: INTEGER is
-			-- Determine the static cardinality of the expression;
-			--This establishes how many items there will be in
-			-- the result of the expression, at compile time
-			-- (i.e., without actually evaluating the result).
-			-- This method should always return a result,
-			-- though it may be the best approximation that is available at the time.
-		do
-			Result := Cardinality_exactly_one
 		end
 
 	iterator (context: XM_XPATH_CONTEXT): XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_ITEM] is

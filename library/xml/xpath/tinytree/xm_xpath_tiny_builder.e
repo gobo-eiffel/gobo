@@ -24,11 +24,14 @@ creation
 
 feature -- Initialization
 
-	make (a_name_pool: XM_XPATH_NAME_POOL) is
+	make (a_name_pool: XM_XPATH_NAME_POOL; basic_conformance: BOOLEAN) is
 			-- Set the name pool in which all name codes can be found
 		require
 			name_pool_not_void: a_name_pool /= Void
 		do
+			if basic_conformance then
+				conformance.set_basic_xslt_processor
+			end
 			initialize_type_tables
 			name_pool := a_name_pool
 		ensure
@@ -79,11 +82,18 @@ feature -- Events
 			-- Notify the start of an element
 		local
 			owner_node, previous_sibling: INTEGER
+			new_type_code: like a_type_code
 		do
 			document.add_node (Element_node, current_depth, -1, -1, a_name_code)
 			node_number := document.last_node_added
-
-			if a_type_code /= 0 then
+			if conformance.basic_xslt_processor then
+				new_type_code := Untyped_type
+				document.set_element_annotation (node_number, new_type_code)
+			else
+					check
+						Only_basic_xslt_processors_are_supported: False
+					end
+				new_type_code := a_type_code
 				-- TODO
 			end
 
@@ -154,8 +164,18 @@ feature -- Events
 			-- Notify an attribute;
 			-- Attributes are notified after the `start_element' event, and before any
 			--  children. Namespaces and attributes may be intermingled
+		local
+			new_type_code: like a_type_code
 		do
-				document.add_attribute (node_number, a_name_code, a_type_code, value)
+			new_type_code := a_type_code
+			if conformance.basic_xslt_processor then
+				new_type_code := Untyped_atomic_type
+			else
+					check
+						Only_basic_xslt_processors_are_supported: False
+					end
+			end
+				document.add_attribute (node_number, a_name_code, new_type_code, value)
 		end
 
 	start_content is
@@ -297,7 +317,7 @@ feature -- Events
 			previously_at_depth := Void
 			-- TODO add timing information
 		end
-	
+
 feature -- Implementation control
 
 	estimated_node_count: INTEGER

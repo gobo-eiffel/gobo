@@ -32,7 +32,7 @@ feature {NONE} -- Initialization
 			namespace_resolver: XM_NAMESPACE_RESOLVER
 		do
 			default_pool := shared_pool.default_pool
-			create tree.make (default_pool)
+			create tree.make (default_pool, True)
 			create emitter.make (tree, default_pool)
 			create error.set_next (emitter)
 			create namespace_resolver.set_next (error)

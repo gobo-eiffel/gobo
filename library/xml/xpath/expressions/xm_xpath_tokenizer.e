@@ -19,8 +19,6 @@ inherit
 	
 	KL_IMPORTED_STRING_ROUTINES
 
-	KL_SHARED_EXCEPTIONS
-	
 creation
 
 	make
@@ -37,6 +35,7 @@ feature {NONE} -- Initialization
 			input_index := 1
 			line_number := 1
 			next_line_number := 1
+			input := Void
 		end
 	
 feature -- Tokenizer states
@@ -54,11 +53,8 @@ feature -- Tokenizer states
 			-- State in which the next thing to be read is an operator
 			-- TODO: review -  these last two are the same - I think that is because
 			-- Saxon supports XQuery as well as XSLT.
-	
-feature -- Status report
 
-	state: INTEGER
-			-- State
+feature -- Access
 
 	last_token: INTEGER is
 			-- The number identifying the most recently read token
@@ -77,22 +73,10 @@ feature -- Status report
 		ensure
 			last_token_value_not_void: Result /= Void
 		end
-	
+
 	input: STRING
 			-- The string being parsed
 
-	is_input_stream_exhausted: BOOLEAN is
-			-- Are there more characters to read?
-		do
-			Result := input_index > input.count + 2 -- + 2 for the mythical EOF character
-		end
-	
-	line_number: INTEGER
-			-- The line number (within the expression) of the current token
-
-	is_lexical_error: BOOLEAN
-			-- Did `look_ahead' find an error?
-	
 	last_lexical_error: STRING is
 			-- Error text
 		require
@@ -112,6 +96,50 @@ feature -- Status report
 		ensure
 			may_be_void: True -- as valid_token pre-condition is only sufficient to index the array
 		end
+
+	recent_text: STRING is
+			-- Most recently read text;
+			-- (for use in an error message)
+		local
+			normalizer: XM_XPATH_NORMALIZE_SPACE
+			an_index: INTEGER
+			s: STRING
+		do
+			if input_index < input.count then
+				an_index := input.count
+			else
+				an_index := input_index - 1
+			end
+
+			if an_index < 34 then
+				Result := input.substring (1, an_index)
+			else
+				create normalizer
+				s := "..."
+				s := STRING_.appended_string (s, input.substring (an_index - 30, an_index))
+				Result := normalizer.normalize (s)
+			end
+			
+		ensure
+			recent_text_not_void: Result /= Void
+		end
+
+feature -- Status report
+
+	state: INTEGER
+			-- State
+
+	is_input_stream_exhausted: BOOLEAN is
+			-- Are there more characters to read?
+		do
+			Result := input_index > input.count + 2 -- + 2 for the mythical EOF character
+		end
+	
+	line_number: INTEGER
+			-- The line number (within the expression) of the current token
+
+	is_lexical_error: BOOLEAN
+			-- Did `look_ahead' find an error?
 	
 feature -- Status setting
 
@@ -143,6 +171,9 @@ feature -- Status setting
 			next_token_start_index := 1
 			input_index := 1
 			input := an_input
+				check
+					no_error_yet: not is_lexical_error
+				end
 			look_ahead
 			next
 		end
@@ -208,7 +239,7 @@ feature --Element change
 				-- No lookahead after encountering "<" at the start of an XML-like tag.
 				-- After an `Right_curly_token', the parser must do an explicit `look_ahead' to continue
 				-- tokenizing; otherwise it can continue with direct character reading
-			else
+			elseif not is_lexical_error then
 				look_ahead
 					
 				if current_token = Name_token then
@@ -224,23 +255,27 @@ feature --Element change
 								current_token := operator_type
 							else
 								current_token := function_type (current_token_value)
-								look_ahead -- swallow the (
+								if not is_lexical_error then look_ahead  end -- swallow the (
 							end
 								
 						when Left_curly_token then
 							if state /= Sequence_type_state then
 								current_token := Keyword_curly_token
-								look_ahead -- swallow the {
+								if not is_lexical_error then look_ahead  end -- swallow the (
 							end
 							
 						when Colon_colon_token then
-							look_ahead
-							current_token := Axis_token
-
+							if not is_lexical_error then 
+								look_ahead
+								current_token := Axis_token
+							end
+							
 						when Colon_star_token then
-							look_ahead
-							current_token := prefix_token
-
+							if not is_lexical_error then
+								look_ahead
+								current_token := prefix_token
+							end
+							
 						when Dollar_token then
 							if current_token_value = "for" then
 								current_token := For_token
@@ -271,23 +306,28 @@ feature --Element change
 								qname := next_token_value
 								saved_token_value := current_token_value
 								saved_position := input_index
+									check
+										no_error_yet: not is_lexical_error
+									end
 								look_ahead
 
-								if next_token = Left_curly_token then
-									current_token := candidate
-									current_token_value := qname
-									look_ahead
-									finished := True
-								else
-									
-									-- backtrack (we don't have 2-token lookahead; this is the
-									-- only case where it's needed. So we backtrack instead.)
-
-									current_token := Name_token
-									current_token_value := saved_token_value
-									input_index := saved_position
-									next_token := Name_token
-									next_token_value := qname
+								if not is_lexical_error then
+									if next_token = Left_curly_token then
+										current_token := candidate
+										current_token_value := qname
+										look_ahead
+										finished := True
+									else
+										
+										-- backtrack (we don't have 2-token lookahead; this is the
+										-- only case where it's needed. So we backtrack instead.)
+										
+										current_token := Name_token
+										current_token_value := saved_token_value
+										input_index := saved_position
+										next_token := Name_token
+										next_token_value := qname
+									end
 								end
 
 								if not finished then

@@ -267,11 +267,11 @@ feature -- Access
 			node_number_is_valid: is_node_number_valid (a_node_number)
 		do
 			if element_type_map = Void then
-				Result := Untyped_any_type
+				Result := Untyped_type
 			elseif element_type_map.has (a_node_number)  then
 				Result := element_type_map.item (a_node_number)
 			else
-				Result := Untyped_any_type
+				Result := Untyped_type
 			end
 		end
 
@@ -589,7 +589,15 @@ feature -- Element change
 			correct_name_codes: name_codes.item (number_of_nodes) = new_name_codes
 			no_next_sibling: next_sibling_indices.item (number_of_nodes) = -1
 		end
-	
+
+	set_element_annotation (which_node: INTEGER; new_type: INTEGER) is
+			-- Set the element type
+		require
+			valid_current_node: which_node > 0
+		do
+			do_nothing -- Not needed for a basic XSLT processor
+		end
+
 	set_next_sibling (next: INTEGER; which_node: INTEGER) is
 			-- Set the next sibling of a node
 		require

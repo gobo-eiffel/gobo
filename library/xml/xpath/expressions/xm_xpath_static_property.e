@@ -12,117 +12,230 @@ indexing
 
 class XM_XPATH_STATIC_PROPERTY
 
-feature -- Access
+feature -- Status report
 
-	frozen Depends_upon_current_item: INTEGER is 1
-		-- Expression depends upon current item (bit setting)
+	are_intrinsic_dependencies_computed: BOOLEAN
+			-- Have `intrinsic dependencies' been computed yet?
 
-	frozen Depends_upon_context_item: INTEGER is 2
-		-- Expression depends upon context item (bit setting)
+	are_dependencies_computed: BOOLEAN
+			-- Have `dependencies' been computed yet?
+		
+	are_cardinalities_computed: BOOLEAN
+			-- Have `cardinalities' been computed yet?
+
+	are_special_properties_computed: BOOLEAN
+			-- Have `special_properties' been computed yet?
+		
+
+feature -- Dependencies
+
+	dependencies: ARRAY [BOOLEAN]
+			-- Dependencies of expression
+
+	intrinsic_dependencies: ARRAY [BOOLEAN]
+			-- Intrinsic dependencies of expression (ignoring sub-expressions)
 	
-	frozen Depends_upon_position: INTEGER is 4
-		-- Expression depends upon position (bit setting)
-
-	frozen Depends_upon_last: INTEGER is 8
-		-- Expression depends upon last() (bit setting)
-
-	frozen Depends_upon_context_document: INTEGER is 16
-		-- Expression depends upon document containing context item (bit setting)
-
-	frozen Depends_upon_current_group: INTEGER is 32
-		-- Expression depends upon current-group() and/or current-grouping-key() and/or regex-group()  (bit setting)
-
-	frozen Depends_upon_xslt_context: INTEGER is
-			-- Expression depends upon the XSLT context (bit combination)
+	Depends_upon_current_item: BOOLEAN is
+		-- Expression depends upon current item
+		require
+			dependencies_computed: are_dependencies_computed
 		do
-			Result := Depends_upon_current_item + Depends_upon_current_group
+			Result := dependencies.item (1)
+		end
+	Depends_upon_context_item: BOOLEAN is
+		-- Expression depends upon context item
+		require
+			dependencies_computed: are_dependencies_computed
+		do
+			Result := dependencies.item (2)
+		end
+	Depends_upon_position: BOOLEAN is
+		-- Expression depends upon position
+		require
+			dependencies_computed: are_dependencies_computed
+		do
+			Result := dependencies.item (3)
 		end
 
-	frozen Depends_upon_focus: INTEGER is
-			-- Expression depends upon focus (bit combination)
+	Depends_upon_last: BOOLEAN is
+		-- Expression depends upon last()
+		require
+			dependencies_computed: are_dependencies_computed
 		do
-			Result := Depends_upon_context_item + Depends_upon_position +
-				Depends_upon_last + Depends_upon_context_document
+			Result := dependencies.item (4)
 		end
 
-	frozen Depends_upon_non_document_focus: INTEGER is
-			-- Expression depends upon focus, but not the current document (bit combination)
+	Depends_upon_context_document: BOOLEAN is
+		-- Expression depends upon document containing context item
+		require
+			dependencies_computed: are_dependencies_computed
 		do
-			Result := Depends_upon_context_item + Depends_upon_position +
-				Depends_upon_last
+			Result := dependencies.item (5)
 		end
 
-	frozen Dependency_mask: INTEGER is
-			-- Mask to select all the dependency bits
+	Depends_upon_current_group: BOOLEAN is
+		-- Expression depends upon current-group() and/or current-grouping-key() and/or regex-group() 
+		require
+			dependencies_computed: are_dependencies_computed
 		do
-			Result := Depends_upon_focus + Depends_upon_current_item + Depends_upon_current_group
+			Result := dependencies.item (6)
+		end
+	
+	Depends_upon_xslt_context: BOOLEAN is
+			-- Expression depends upon the XSLT context
+		require
+			dependencies_computed: are_dependencies_computed
+		do
+			Result := Depends_upon_current_item or else Depends_upon_current_group
 		end
 
-	frozen Cardinality_allows_zero, Empty: INTEGER is 256
-			-- Bit set if an empty sequence is allowed
-
-	frozen Cardinality_allows_one, Cardinality_exactly_one: INTEGER is 512
-			-- Bit set if a single value is allowed
-
-	frozen Cardinality_allows_many: INTEGER is 1024
-			-- Bit set if multiple values are allowed
-
-	frozen Cardinality_mask: INTEGER is
-			-- Mask to select all the cardinality bits
+	Depends_upon_focus: BOOLEAN is
+			-- Expression depends upon focus
+		require
+			dependencies_computed: are_dependencies_computed
 		do
-			Result := Cardinality_allows_zero + Cardinality_allows_one + Cardinality_allows_many
+			Result := Depends_upon_context_item
+				or else Depends_upon_position
+				or else Depends_upon_last
+				or else Depends_upon_context_document
 		end
 
-	frozen Cardinality_allows_one_or_more: INTEGER is
+	Depends_upon_non_document_focus: BOOLEAN is
+			-- Expression depends upon focus, but not the current document
+		require
+			dependencies_computed: are_dependencies_computed
+		do
+			Result := Depends_upon_context_item
+				or else Depends_upon_position
+				or else Depends_upon_last
+		end
+
+
+feature -- Cardinality
+
+	cardinalities: ARRAY [BOOLEAN]
+
+			-- The following values represent an index into the `cardinalities' array:
+	
+	Cardinality_allows_zero, Allow_empty: BOOLEAN is
+			-- `True' if an empty sequence is allowed
+		require
+			cardinalities_computed: are_cardinalities_computed
+		do
+			Result := cardinalities.item (1)
+		end
+
+	Cardinality_allows_one: BOOLEAN is
+			-- `True' if a single value is allowed
+		require
+			cardinalities_computed: are_cardinalities_computed
+		do
+			Result := cardinalities.item (2)
+		end
+
+	Cardinality_exactly_one: BOOLEAN is
+			-- `True' if a single value is allowed
+		require
+			cardinalities_computed: are_cardinalities_computed
+		do
+			Result := Cardinality_allows_one
+				and then not Cardinality_allows_zero
+				and then not Cardinality_allows_many
+		end
+
+	Cardinality_allows_many: BOOLEAN is
+			-- `True' if multiple values are allowed
+		require
+			cardinalities_computed: are_cardinalities_computed
+		do
+			Result := cardinalities.item (3)
+		end
+
+	Cardinality_allows_one_or_more: BOOLEAN is
 			-- Occurrence indicator for one or more (+)
+		require
+			cardinalities_computed: are_cardinalities_computed
 		do
-			Result := Cardinality_allows_one + Cardinality_allows_many
+			Result := Cardinality_allows_one and then Cardinality_allows_many
 		end
 
-	frozen Cardinality_allows_zero_or_more: INTEGER is
+	Cardinality_allows_zero_or_more: BOOLEAN is
 			-- Occurrence indicator for zero or more (*)
+		require
+			cardinalities_computed: are_cardinalities_computed
 		do
-			Result := Cardinality_allows_zero + Cardinality_allows_one + Cardinality_allows_many
+			Result := Cardinality_allows_zero
+				and then Cardinality_allows_one
+				and then Cardinality_allows_many
 		end
 
-	frozen Context_document_nodeset: INTEGER is 65536
-			-- Expression property: this bit is set in the case of
+feature -- Special properties
+	
+	special_properties: ARRAY [BOOLEAN]
+
+
+
+	Context_document_nodeset: BOOLEAN is
+			-- Expression property: this is `True' in the case of
 			-- an expression whose item type is node, when the nodes in the result are
 			-- guaranteed all to be in the same document as the context node. For
 			-- expressions that return values other than nodes, the setting is undefined.
-	
-	frozen Ordered_nodeset: INTEGER is 131072
-			-- Expression property: this bit is set in the case of
+		require
+			special_properties_computed: are_special_properties_computed
+		do
+			Result := special_properties.item (1)
+		end
+
+	Ordered_nodeset: BOOLEAN is
+			-- Expression property: this is `True' in the case of
 			-- an expression whose item type is node, when the nodes
 			-- in the result are in document order.
+		require
+			special_properties_computed: are_special_properties_computed
+		do
+			Result := special_properties.item (2)
+		end
 
-	frozen Reverse_document_order: INTEGER is 262144
-			-- Expression property: this bit is set in the case of
+	Reverse_document_order: BOOLEAN is
+			-- Expression property: this is `True' in the case of
 			-- an expression that delivers items in the reverse
 			-- of correct order, when unordered retrieval is requested.
+		require
+			special_properties_computed: are_special_properties_computed
+		do
+			Result := special_properties.item (3)
+		end
 
-	frozen Peer_nodeset: INTEGER is 524288
-			-- Expression property: this bit is set in the case of
+	Peer_nodeset: BOOLEAN is
+			-- Expression property: this is `True' in the case of
 			-- an expression that delivers a set of nodes with the guarantee that no node in the
 			-- set will be an ancestor of any other. This property is useful in deciding whether the
 			-- results of a path expression are pre-sorted. The property is only used in the case where
 			-- the `Naturally_sorted' property is true, so there is no point in setting it in other cases.
+		require
+			special_properties_computed: are_special_properties_computed
+		do
+			Result := special_properties.item (4)
+		end
 
-	frozen Subtree_nodeset: INTEGER is 1048576
-			-- Expression property: this bit is set in the case of
+	Subtree_nodeset: BOOLEAN is
+			-- Expression property: this is `True' in the case of
 			-- an expression that delivers a set of nodes with the guarantee that every node in the
 			-- result will be a descendant or self, or attribute or namespace, of the context node
+		require
+			special_properties_computed: are_special_properties_computed
+		do
+			Result := special_properties.item (5)
+		end
 
-	frozen Attribute_ns_nodeset: INTEGER is 2097152
-			-- Expression property: this bit is set in the case of
+	Attribute_ns_nodeset: BOOLEAN is
+			-- Expression property: this is `True' in the case of
 			-- an expression that delivers a set of nodes with the guarantee that every node in the
 			-- result will be an attribute or namespace of the context node
-
-	frozen Special_propert_mask: INTEGER is
-			-- Mask for "special properties": that is, all properties other than cardinality
-			-- and dependencies
+		require
+			special_properties_computed: are_special_properties_computed
 		do
-			Result := Context_document_nodeset + Ordered_nodeset + Reverse_document_order +
-				Peer_nodeset + Subtree_nodeset + Attribute_ns_nodeset
+			Result := special_properties.item (6)
 		end
+
 end

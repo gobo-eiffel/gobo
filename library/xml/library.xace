@@ -41,12 +41,14 @@
 			<cluster name="no_expat" unless="${GOBO_XML_EXPAT}"/>
 		</cluster>
 		<cluster name="xpath">
-			<cluster name="data_model"/>
-			<cluster name="tinytree"/>
-			<cluster name="values"/>
-			<cluster name="expressions"/>
-			<cluster name="events"/>
-			<cluster name="patterns"/>
+		  <cluster name="data_model"/>
+		  <cluster name="tinytree"/>
+		  <cluster name="values"/>
+		  <cluster name="expressions"/>
+		  <cluster name="events"/>
+		  <cluster name="patterns"/>
+		  <cluster name="functions"/>
 		</cluster>
+		<cluster name="xslt" />
 	</cluster>
 </library>

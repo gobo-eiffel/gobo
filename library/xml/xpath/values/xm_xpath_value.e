@@ -19,32 +19,30 @@ inherit
 
 	XM_XPATH_EXPRESSION
 
-feature -- Access
+feature {NONE} -- Initialization
 
-	special_properties: INTEGER is
-			-- Get the static properties of this expression (other than its type);
-			-- The result is bit-signficant. These properties are used for optimizations.
-			-- In general, if a property bit is set, it is true, but if it is unset, the value is unknown.
+	make_value is
+			-- Establish static properties
 		do
-			Result := 0
+			create special_properties.make (1, 6) -- All False
+			create dependencies.make (1, 6) -- All False
+			create cardinalities.make (1, 3) -- All False
 		end
-		
-	frozen dependencies: INTEGER is
-			-- Determine which aspects of the context the expression depends on;
-			-- The result is a bitwise-or'ed value composed from constants
-			-- such as XPath context variables.and XPath context current_node.
-			-- The default implementation combines the intrinsic
-			-- dependencies of this expression with the dependencies of the subexpressions,
-			-- computed recursively. This is overridden for expressions such as Filter Expression
-			-- where a subexpression's dependencies are not necessarily inherited by the parent expression.
-		do
-			Result := 0
-		end
+	
+feature -- Access
 
 	frozen sub_expressions: DS_ARRAYED_LIST [XM_XPATH_EXPRESSION] is
 			-- Immediate sub-expressions of `Current'
 		do
 			create Result.make_default
+		end
+
+feature -- Status report
+	
+	last_static_type_error: STRING is
+			-- Last static type error message
+		do
+			Result := ""
 		end
 
 feature -- Analysis

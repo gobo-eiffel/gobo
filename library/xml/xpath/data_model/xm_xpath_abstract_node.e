@@ -47,7 +47,7 @@ feature -- Access
 			--Type annotation of this node, if any
 		do
 			if item_type = Element_node then
-				Result := Untyped_any_type
+				Result := Untyped_type
 			else
 				Result := Untyped_atomic_type
 			end
@@ -187,7 +187,7 @@ feature -- Access
 			the_type := type_annotation
 			if the_type = Untyped_atomic_type then
 				create {XM_XPATH_UNTYPED_ATOMIC_VALUE} Result.make (string_value)
-			elseif the_type = Untyped_any_type then
+			elseif the_type = Untyped_type then
 				create {XM_XPATH_UNTYPED_ATOMIC_VALUE} Result.make (string_value)
 			else
 				-- TODO complex types should be dealt with properly

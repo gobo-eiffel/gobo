@@ -12,44 +12,20 @@ indexing
 
 deferred class XM_XPATH_EXPRESSION
 
-inherit XM_XPATH_TYPE
-	
+inherit
+
+	XM_XPATH_TYPE
+
+	XM_XPATH_STATIC_PROPERTY
+
 feature -- Access
-
-	special_properties: INTEGER is
-			-- Get the static properties of this expression (other than its type);
-			-- The result is bit-signficant. These properties are used for optimizations.
-			-- In general, if a property bit is set, it is true, but if it is unset, the value is unknown.
-		deferred
-		end
 	
-	cardinality: INTEGER is
-			-- Determine the static cardinality of the expression;
-			--This establishes how many items there will be in
-			-- the result of the expression, at compile time
-			-- (i.e., without actually evaluating the result).
-			-- This method should always return a result,
-			-- though it may be the best approximation that is available at the time.
-		deferred
-		end
-
 	item_type: INTEGER is
 			--Determine the data type of the expression, if possible;
 			-- All expression return sequences, in general;
-			-- This method determines the type of the items within the
+			-- This routine determines the type of the items within the
 			-- sequence, assuming that (a) this is known in advance,
 			-- and (b) it is the same for all items in the sequence.
-		deferred
-		end
-
-	dependencies: INTEGER is
-			-- Determine which aspects of the context the expression depends on;
-			-- The result is a bitwise-or'ed value composed from constants
-			-- such as XPath context variables.and XPath context current_node.
-			-- The default implementation combines the intrinsic
-			-- dependencies of this expression with the dependencies of the subexpressions,
-			-- computed recursively. This is overridden for expressions such as Filter Expression
-			-- where a subexpression's dependencies are not necessarily inherited by the parent expression.
 		deferred
 		end
 
@@ -68,16 +44,36 @@ feature -- Access
 			iterator_not_void: Result /= Void
 		end
 
-	effective_boolean_value: BOOLEAN is
+	effective_boolean_value (context: XM_XPATH_CONTEXT): BOOLEAN is
 			-- Effective boolean value of the expression;
 			-- This returns `False' if the value is the empty sequence,
 			-- a zero-length string, a number equal to zero, or the boolean
 			-- `False'. Otherwise it returns `True'.
+		require
+			context_not_void: context /= Void
 		deferred
 		end
 
 feature -- Status report
 
+	is_static_type_error: BOOLEAN
+			-- Did a static type error occur?
+
+	last_static_type_error: STRING is
+			-- Last static type error message
+		require
+			static_type_error: is_static_type_error
+		deferred
+		ensure
+			message_not_void: Result /= Void
+		end
+
+	may_analyze: BOOLEAN is
+			-- OK to call analyze?
+		do
+			Result := True
+		end
+	
 --	display (level: INTEGER; pool: XM_XPATH_NAME_POOL) is
 --			-- Diagnostic print of expression structure to `std.error'
 --		require
@@ -108,9 +104,10 @@ feature -- Analysis
 			-- variables will only be accurately known if they have been explicitly declared
 		require
 			context_not_void: env /= Void
+			ok_to_analyze: may_analyze
 		deferred
 		ensure
-			expression_not_void: Result /= Void
+			expression_not_void: not is_static_type_error implies Result /= Void
 		end
 
 	promote (offer: XM_XPATH_PROMOTION_OFFER): XM_XPATH_EXPRESSION is
@@ -155,5 +152,22 @@ feature -- Evaluation
 		ensure
 			string_not_void: Result /= Void
 		end
+
+feature {XM_XPATH_EXPRESSION} -- Helper routines
+
+	unsorted (eliminate_duplicates: BOOLEAN): XM_XPATH_EXPRESSION is
+			-- Remove unwanted sorting from an expression, at compile time
+		local
+			offer: XM_XPATH_PROMOTION_OFFER
+		do
+			create offer
+			-- TODO - uncomment next two lines
+--			offer.set_action (Unordered)
+--			offer.set_eliminate_duplicates (eliminate_duplicates)
+			Result := Current.promote (offer)
+		ensure
+			result_not_void: Result /= Void
+		end
+
 end
 	

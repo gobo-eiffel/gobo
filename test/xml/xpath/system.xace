@@ -42,7 +42,6 @@
 
   <cluster name="xpath_tester" location="${GOBO}/test/xml/xpath"/>
   <cluster name="eiffel_testgen" location="TESTGEN"/>
-
   <mount location="${GOBO}/library/test/library.xace"/>
   <mount location="${GOBO}/library/kernel/library.xace"/>
   <mount location="${GOBO}/library/structure/library.xace"/>
@@ -52,4 +51,5 @@
   <mount location="${GOBO}/library/lexical/library.xace"/>
   <mount location="${GOBO}/library/xml/library.xace"/>
   <mount location="${GOBO}/library/kernel.xace" />
+  <mount location="${GOBO}/library/string/library.xace"/>
 </system>

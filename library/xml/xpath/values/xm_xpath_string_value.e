@@ -27,6 +27,7 @@ feature -- Initialization
 		require
 			value_not_void: val /= Void
 		do
+			make_atomic_value
 			value := clone (val)
 		ensure
 			value_set: value.is_equal (val)
@@ -58,7 +59,7 @@ feature -- Access
 			Result := String_type
 		end
 
-	effective_boolean_value: BOOLEAN is
+	effective_boolean_value (context: XM_XPATH_CONTEXT): BOOLEAN is
 			-- Effective boolean value of the expression;
 			-- This returns `False' if the value is the empty sequence,
 			-- a zero-length string, a number equal to zero, or the boolean
