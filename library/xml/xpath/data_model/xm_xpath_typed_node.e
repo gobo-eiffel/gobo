@@ -2,7 +2,7 @@ indexing
 
 	description:
 
-		"XPath nodes that use the Base URI of the parent"
+		"XPath nodes that have the type property"
 
 	library: "Gobo Eiffel XML Library"
 	copyright: "Copyright (c) 2003, Colin Adams and others"
@@ -10,23 +10,23 @@ indexing
 	date: "$Date$"
 	revision: "$Revision$"
 
-deferred class XM_XPATH_BASE_URI_FROM_PARENT
+deferred class XM_XPATH_TYPED_NODE
 
 inherit
 
 	XM_XPATH_NODE
-	
+
 feature -- Access
 
-	base_uri: ANY_URI is
-			-- Base URI
+	type: XM_EXPANDED_QNAME is
+			-- Type
 		do
-			if parent /= Void then
-				Result := parent.base_uri
-			else
-				Result := Void
-			end
+			Result := type_property
 		end
 
-end -- class XM_XPATH_BASE_URI_FROM_PARENT
+feature {NONE} -- Access
 
+	type_property: XM_EXPANDED_QNAME
+			-- Type property from the infoset
+
+end

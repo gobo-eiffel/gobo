@@ -2,10 +2,10 @@ indexing
 
 	description:
 
-		"XPath Element node"
+		"XPath Element nodes"
 
 	library: "Gobo Eiffel XML Library"
-	copyright: "Copyright (c) 2001, Colin Adams and others"
+	copyright: "Copyright (c) 2003, Colin Adams and others"
 	license: "Eiffel Forum License v2 (see forum.txt)"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -14,53 +14,49 @@ deferred class XM_XPATH_ELEMENT
 
 inherit
 
-	XM_XPATH_CHILD_BEARING_NODE
+	XM_XPATH_COMPOSITE_NODE
 
-	XM_XPATH_BASE_URI_OR_FROM_PARENT
+	XM_XPATH_NODE_WITH_BASE_URI_OR_FROM_PARENT
 
 	XM_XPATH_NAMED_NODE
 
-	XM_XPATH_PARENT
+	XM_XPATH_CHILD_NODE
 	
-	XM_XPATH_TYPE
-	
+	XM_XPATH_TYPED_NODE
+
+	KL_IMPORTED_STRING_ROUTINES
+
 feature -- Access
 
 	node_kind: STRING is
-			-- Identifies the kind of node.
+			-- Identifies the kind of node
 		do
-			create Result.make_from_string ("element")
-		ensure
-			node_kind_is_document: Result.is_equal ("element")
+			Result := "element"
+		ensure then
+			node_kind_is_element: STRING_.same_string (Result, "element")
 		end
 
-	string_value: UC_STRING is
-			-- String-value.
+	string_value: STRING is
+			-- String-value
 		do
-			-- Return the concatentation of the string value of all it's 
+			-- Return the concatentation of the string value of all it's
 			-- text-node descendants.
-			-- Actually, more complicated than this.
+			-- Actually, more complicated than the above description.
 			-- TODO
 		end
 
-	typed_value: DS_ARRAYED_LIST [ANY_ATOMIC] is
-			-- Typed value.
-		deferred
+	typed_value: DS_ARRAYED_LIST [XM_XPATH_ANY_ATOMIC_VALUE] is
+			-- Typed value
+		do
 			-- TODO
-		ensure
-			typed_value_not_void: Result /= Void
 		end
 
 feature -- Status report
 
-	is_nilled: DL_ARRAYED_LIST [BOOLEAN]
-			-- True if "nilled".
-			-- Change to a three-valued logic result?
+	is_nilled: BOOLEAN is
+			-- Is current node "nilled"? (i.e. xsi:nill="true")
 		do
-			create Result.make (1)
-			Result.put_first (nilled_property)
-		ensure
-			known_nilled: not Result.is_empty
+			Result := nilled_property
 		end	
 
 feature {NONE} -- Access
@@ -70,10 +66,10 @@ feature {NONE} -- Access
 
 invariant
 
-	namespaces_have_unique_names: -- All namespace nodes must have distinct names.
+	-- namespaces_have_unique_names: All namespace nodes must have distinct names.
 			-- At most one has no name.
-	parent_namespace_relationship: -- namespaces.for_all (agent (parent.is_equal (Current)))
-	attributes_have_distinct_names: -- All attributes must have distinct QNames.
-	parent_attribute_relationship: -- attributes.for_all (agent (parent.is_equal (Current)))
-	
-end
+	-- parent_namespace_relationship: namespaces.for_all (agent (parent.is_equal (Current)))
+	-- attributes_have_distinct_names: All attributes must have distinct QNames.
+	-- parent_attribute_relationship: attributes.for_all (agent (parent.is_equal (Current)))
+
+end -- class XM_XPATH_ELEMENT

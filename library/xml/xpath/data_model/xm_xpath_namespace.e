@@ -2,10 +2,10 @@ indexing
 
 	description:
 
-		"XPath Namespace node"
+		"XPath Namespace nodes"
 
 	library: "Gobo Eiffel XML Library"
-	copyright: "Copyright (c) 2001, Colin Adams and others"
+	copyright: "Copyright (c) 2003, Colin Adams and others"
 	license: "Eiffel Forum License v2 (see forum.txt)"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -14,65 +14,65 @@ deferred class XM_XPATH_NAMESPACE
 
 inherit
 
-	XM_XPATH_NODE
-	
-	XM_XPATH_PARENT
-	
-	XM_XPATH_NO_TYPE
+	XM_XPATH_TYPELESS_NODE
 
-	XM_XPATH_NO_ATTRIBUTES
-	
-	XM_XPATH_NO_CHILDREN
-	
+	XM_XPATH_CHILD_NODE
+
+	XM_XPATH_NODE_WITHOUT_ATTRIBUTES
+
+	XM_XPATH_LEAF_NODE
+
+	KL_IMPORTED_STRING_ROUTINES
+
 feature -- Access
 
-	base_uri: DS_ARRAYED_LIST [ANY_URI] is
-			-- Base URI.
+	base_uri: ANY_URI is
+			-- Base URI
 		do
-create Result.make (0)
-		ensure
-			empty_uri: Result.is_empty
+			Result := Void
+		ensure then
+			base_uri_is_void: Result = Void
 		end
 
 	node_kind: STRING is
-			-- Identifies the kind of node.
+			-- Kind of node
 		do
-			create Result.make_from_string ("namespace")
-		ensure
-			node_kind_is_document: Result.is_equal ("namespace")
+			Result := "namespace"
+		ensure then
+			node_kind_is_namespace: STRING_.same_string (Result, "namespace")
 		end
 
-	node_name: DS_ARRAYED_LIST [XM_EXPANDED_QNAME] is
-			-- Qualified name.
-		local
-			XM_EXPANDED_QNAME: qname
+	node_name: XM_EXPANDED_QNAME is
+			-- Qualified name
 		do
-			create Result.make (1)
-			create qname.make (Void, prefix_property)
-			Result.put_first (qname)
-		ensure
-			node_name_not_empty: Result.count = 1 
+			-- TODO: create Result.make (Void, prefix_property)
+		ensure then
+			node_name_not_void: Result /= Void
 		end
 
-	string_value: UC_STRING is
-			-- String-value.
+	string_value: STRING is
+			-- String-value
 		do
 			create Result.make_from_string (uri_property)
 		end
 
-	typed_value: DS_ARRAYED_LIST [ANY_ATOMIC] is
-			-- Typed value.
+	typed_value: DS_ARRAYED_LIST [XM_XPATH_ANY_ATOMIC_VALUE] is
+			-- Typed value
 		do
 			create Result.make (1)
-			Result.put_first (create {ANY_ATOMIC}.make_untyped (string_value))
+			-- TODO: Result.put_first (create {XM_XPATH_ANY_ATOMIC_VALUE}.make_untyped (string_value))
 		end
 
 feature {NONE} -- Access
-	
+
 	prefix_property: STRING
 			-- Prefix property from the infoset.
 
 	uri_property: STRING
 			-- Namespace name property from the infoset.
+
+invariant
+
+	uri_not_void: 	uri_property /= Void
 	
-end
+end -- class XM_XPATH_NAMESPACE

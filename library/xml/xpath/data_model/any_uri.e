@@ -2,7 +2,7 @@ indexing
 
 	description:
 
-		"Base URI property for XPath nodes that need it"
+		"Place-holder for a possible class to represent a URI"
 
 	library: "Gobo Eiffel XML Library"
 	copyright: "Copyright (c) 2003, Colin Adams and others"
@@ -10,11 +10,7 @@ indexing
 	date: "$Date$"
 	revision: "$Revision$"
 
-class XM_XPATH_BASE_URI
+class ANY_URI
 
-feature {NONE} -- Access
+end -- class ANY_URI
 
-	base_uri_property: ANY_URI
-			-- Base-uri property from the infoset
-
-end -- class XM_XPATH_BASE_URI

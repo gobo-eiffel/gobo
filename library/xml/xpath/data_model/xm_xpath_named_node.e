@@ -5,27 +5,34 @@ indexing
 		"XPath nodes that have a name"
 
 	library: "Gobo Eiffel XML Library"
-	copyright: "Copyright (c) 2001, Colin Adams and others"
+	copyright: "Copyright (c) 2003, Colin Adams and others"
 	license: "Eiffel Forum License v2 (see forum.txt)"
 	date: "$Date$"
 	revision: "$Revision$"
 
-class XM_XPATH_NAMED_NODE
+deferred class XM_XPATH_NAMED_NODE
 
+inherit
+
+	XM_XPATH_NODE
+	
 feature -- Access
 
-	node_name: DS_ARRAYED_LIST [XM_EXPANDED_QNAME] is
-			-- Qualified name.
+	node_name: XM_EXPANDED_QNAME is
+			-- Qualified name
 		do
-create Result.make (1)
-	Result.put_first (node_name_property)
+			Result := node_name_property
 		ensure then
-			node_name: not Result.is_empty
+			node_name: Result /= Void
 		end
 
 feature {NONE} -- Access
-	
+
 	node_name_property: XM_EXPANDED_QNAME
-			-- Node-name property from the infoset.
-			
+			-- Node-name property from the infoset
+
+invariant
+
+	node_name_not_void: node_name_property /= Void
+
 end

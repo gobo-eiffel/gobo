@@ -5,23 +5,25 @@ indexing
 		"XPath nodes that are not elements"
 
 	library: "Gobo Eiffel XML Library"
-	copyright: "Copyright (c) 2001, Colin Adams and others"
+	copyright: "Copyright (c) 2003, Colin Adams and others"
 	license: "Eiffel Forum License v2 (see forum.txt)"
 	date: "$Date$"
 	revision: "$Revision$"
 
-class XM_XPATH_NO_ATTRIBUTES
+deferred class XM_XPATH_NODE_WITHOUT_ATTRIBUTES
 
+inherit
 
+	XM_XPATH_NODE
+	
 feature -- Status report
 
-	is_nilled: DL_ARRAYED_LIST [BOOLEAN]
-			-- True if "nilled".
-			-- Change to a three-valued logic result?
+	is_nilled: BOOLEAN is
+			-- Is current node "nilled"? (i.e. xsi:nill="true")
 		do
-			create Result.make (0)
-		ensure
-			unknown_nilled: Result.is_empty
+			Result := False
+		ensure then
+			not_nilled: Result = False
 		end
 	
 invariant
@@ -29,4 +31,4 @@ invariant
 	attributes_are_empty: attributes.is_empty
 	namespaces_are_empty: namespaces.is_empty
 	
-end
+end -- class XM_XPATH_NODE_WITHOUT_ATTRIBUTES

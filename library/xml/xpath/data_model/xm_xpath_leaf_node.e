@@ -2,18 +2,22 @@ indexing
 
 	description:
 
-		"XPath nodes that do not have children"
+		"XPath nodes that cannot have children"
 
 	library: "Gobo Eiffel XML Library"
-	copyright: "Copyright (c) 2001, Colin Adams and others"
+	copyright: "Copyright (c) 2003, Colin Adams and others"
 	license: "Eiffel Forum License v2 (see forum.txt)"
 	date: "$Date$"
 	revision: "$Revision$"
 
-class XM_XPATH_NO_CHILDREN
+deferred class XM_XPATH_LEAF_NODE
 
+inherit
+
+	XM_XPATH_NODE
+	
 invariant
 
 	children_are_empty: children.is_empty
 	
-end
+end -- class XM_XPATH_LEAF_NODE

@@ -5,7 +5,7 @@ indexing
 		"XPath nodes"
 
 	library: "Gobo Eiffel XML Library"
-	copyright: "Copyright (c) 2001, Colin Adams and others"
+	copyright: "Copyright (c) 2003, Colin Adams and others"
 	license: "Eiffel Forum License v2 (see forum.txt)"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -14,16 +14,15 @@ deferred class XM_XPATH_NODE
 
 feature -- Access
 
-	base_uri: DS_ARRAYED_LIST [ANY_URI] is
-			-- Base URI.
+	base_uri: ANY_URI is
+			-- Base URI
 		deferred
 		ensure
-			base_uri_not_void: Result /= Void
-			not_more_than_one_uri: not Result.is_empty implies Result.count = 1
+			base_uri_may_be_void: True
 		end
 
 	node_kind: STRING is
-			-- Identifies the kind of node.
+			-- Kind of node;
 			-- Must be one of:
 			-- "document", "element", "attribute",
 			-- "namespace", "processing-instruction",
@@ -33,70 +32,63 @@ feature -- Access
 			node_kind_not_void: Result /= Void
 		end
 
-	node_name: DS_ARRAYED_LIST [XM_EXPANDED_QNAME] is
-			-- Qualified name.
+	node_name: XM_EXPANDED_QNAME is
+			-- Qualified name
 		deferred
 		ensure
-			node_name_not_void: Result /= Void
-			not_more_than_one_node_name: not Result.is_empty implies Result.count = 1
+			node_name_may_be_void: True
 		end
 	
-	parent: DS_ARRAYED_LIST [XM_XPATH_NODE] is
-			-- Parent of current node
-			-- Empty if current node is root,
+	parent: XM_XPATH_NODE is
+			-- Parent of current node;
+			-- `Void' if current node is root,
 			-- or for orphan nodes.
 		deferred
 		ensure
-			parent_not_void: Result /= Void
-			not_more_than_one_parent: not Result.is_empty implies Result.count = 1
+			parent_may_be_void: True
 		end
 
-	string_value: UC_STRING is
-			-- String-value.
+	string_value: STRING is
+			-- String-value
 		deferred
 		ensure
 			string_value_not_void: Result /= Void
 		end
 
-	typed_value: DS_ARRAYED_LIST [ANY_ATOMIC] is
-			-- Typed value.
+	typed_value: DS_ARRAYED_LIST [XM_XPATH_ANY_ATOMIC_VALUE] is
+			-- Typed value
 		deferred
 		ensure
 			typed_value_not_void: Result /= Void
 		end
 
-	type: DS_ARRAYED_LIST [XM_EXPANDED_QNAME] is
-			-- Type.
+	type: XM_EXPANDED_QNAME is
+			-- Type
 		deferred
 		ensure
-			type_not_void: Result /= Void
-			not_more_than_one_type: not Result.is_empty implies Result.count = 1
+			type_may_be_void: True
 		end
 
 	children: DS_ARRAYED_LIST [XM_XPATH_NODE]
-			-- Children.
+			-- Children
 
 	attributes: DS_ARRAYED_LIST [XM_XPATH_ATTRIBUTE]
-			-- Attributes.
+			-- Attributes
 
 	namespaces: DS_ARRAYED_LIST [XM_XPATH_NAMESPACE]
-			-- Namespaces.
+			-- Namespaces
 
 feature -- Status report
 
-	is_nilled: DL_ARRAYED_LIST [BOOLEAN]
-			-- True if "nilled".
-			-- Change to a three-valued logic result?
+	is_nilled: BOOLEAN is
+			-- Is current node "nilled"? (i.e. xsi:nill="true")
 		deferred
-		ensure
-			is_nilled_not_void: Result /= Void
-			not_more_than_one_nilled: not Result.is_empty implies Result.count = 1
 		end
 
 feature {XM_XPATH_NODE} -- Access
 
-	identity: INTEGER -- _64 if allowed
-			-- Unique identifier within the document.
+	identity: INTEGER -- TODO: change to INTEGER_64 when all compilers support this
+			-- Unique identifier within the document;
 			-- Increases with document order.
 	
 	is_possible_child: BOOLEAN is
@@ -106,8 +98,11 @@ feature {XM_XPATH_NODE} -- Access
 
 invariant
 
-	child_list_not_void: children /= Void
-	attribute_list~_not_void: attributes /= Void
+	children_not_void: children /= Void
+	no_void_child: not children.has (Void)
+	attributes_not_void: attributes /= Void
+	no_void_attribute: not attributes.has (Void)
 	namespaces_not_void: namespaces /= Void
+	no_void_namespace: not namespaces.has (Void)
 	
-end
+end -- class XM_XPATH_NODE
