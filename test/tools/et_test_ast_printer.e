@@ -49,6 +49,8 @@ feature -- Test
 			a_printer: ET_AST_PRINTER
 			a_file: KL_TEXT_OUTPUT_FILE
 			old_count, new_count: INTEGER
+			a_prefixed_name: STRING
+			a_full_test: BOOLEAN
 		do
 			create an_xace_file.make (xace_filename)
 			an_xace_file.open_read
@@ -77,7 +79,12 @@ feature -- Test
 			else
 				a_universe.set_use_void_keyword (True)
 			end
-			a_universe.preparse_multiple
+			if eiffel_compiler.is_ve then
+				a_universe.preparse_multiple
+			else
+				a_universe.preparse_single
+			end
+			a_full_test :=  variables.has ("full_test")
 			create a_printer.make_null (a_universe)
 			a_cursor := a_universe.classes.new_cursor
 			from a_cursor.start until a_cursor.after loop
@@ -89,7 +96,8 @@ feature -- Test
 						-- Class ANY in ISE 5.4 has 'Void' as a feature and not as a keyword.
 				then
 					if a_class.is_preparsed then
-						if not variables.has ("debug") or else a_class.cluster.prefixed_name.item (1) = 'e' then
+						a_prefixed_name := a_class.cluster.prefixed_name
+						if a_full_test or else (a_prefixed_name.count > 2 and then (a_prefixed_name.item (1) = 'd' and a_prefixed_name.item (2) = 't')) then
 							if not a_class.is_parsed then
 									-- If the class has already been parsed, this means that it
 									-- is contained in a file containing more than one class
