@@ -2,7 +2,7 @@ indexing
 
 	description:
 
-		"Character codes";
+		"Character codes"
 
 	note:
 		"Character codes are declared as integer constants such as %
@@ -10,12 +10,12 @@ indexing
 		%rather than once functions such as %
 		%    Lower_a_code is once Result := ('a').code end %
 		%This is due to the fact that these character codes need to be%
-		%integer constants in order to appear in multi-branch instructions.";
+		%integer constants in order to appear in multi-branch instructions."
 
-	library:    "Gobo Eiffel Utility Library";
-	author:     "Eric Bezault <ericb@gobo.demon.co.uk>";
-	copyright:  "Copyright (c) 1997, Eric Bezault";
-	date:       "$Date$";
+	library:    "Gobo Eiffel Utility Library"
+	author:     "Eric Bezault <ericb@gobo.demon.co.uk>"
+	copyright:  "Copyright (c) 1997, Eric Bezault"
+	date:       "$Date$"
 	revision:   "$Revision$"
 
 class UT_CHARACTER_CODES
