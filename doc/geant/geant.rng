@@ -1,0 +1,614 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<!--
+	description: "Eiffel Ant RelaxNG specification"
+	system: "Gobo Eiffel Ant"
+	copyright: "Copyright (c) 2002, Sven Ehrke and others"
+	license: "Eiffel Forum License v1 (see forum.txt)"
+	date: "$Date$"
+	revision: "$Revision$"
+-->
+
+<grammar xmlns="http://relaxng.org/ns/structure/1.0">
+	<start>
+
+<!-- project -->
+
+		<element name="project">
+			<attribute name="name"/>
+			<optional>
+				<attribute name="default"/>
+			</optional>
+
+			<ref name="description"/>	
+			<choice>
+				<optional>
+					<attribute name="inherit"/>
+				</optional>
+				<optional>
+					<element name="inherit">
+						<oneOrMore>
+							<element name="parent">
+								<attribute name="location"/>
+								<zeroOrMore>
+									<element name="rename">
+										<attribute name="target"/>
+										<attribute name="as"/>
+									</element>
+								</zeroOrMore>
+								<zeroOrMore>
+									<element name="redefine">
+										<attribute name="target"/>
+									</element>
+								</zeroOrMore>
+								<zeroOrMore>
+									<element name="select">
+										<attribute name="target"/>
+									</element>
+								</zeroOrMore>
+							</element>
+						</oneOrMore>
+					</element>
+				</optional>
+			</choice>
+	
+			<oneOrMore>
+				<ref name="target"/>
+			</oneOrMore>
+		</element>
+	</start>
+
+<!-- target -->
+
+	<define name="target">
+		<element name="target">
+			<ref name="description"/>	
+			<attribute name="name"/>
+			<optional>
+				<attribute name="depend"/>
+			</optional>
+			<ref name="dir_if_unless"/>
+			<ref name="tasks"/>
+		</element>
+	</define>
+
+	<define name="tasks">
+		<zeroOrMore>
+			<choice>
+				<ref name="copy"/>
+				<ref name="echo"/>
+				<ref name="delete"/>
+				<ref name="exec"/>
+				<ref name="exit"/>
+				<ref name="geant"/>
+				<ref name="gelex"/>
+				<ref name="geyacc"/>
+				<ref name="gepp"/>
+				<ref name="getest"/>
+				<ref name="gexace"/>
+				<ref name="hact"/>
+				<ref name="ise"/>
+				<ref name="mkdir"/>
+				<ref name="move"/>
+				<ref name="outofdate"/>
+				<ref name="precursor"/>
+				<ref name="se"/>
+				<ref name="set"/>
+				<ref name="setenv"/>
+				<ref name="unset"/>
+				<ref name="ve"/>
+				<ref name="xslt"/>
+			</choice>
+		</zeroOrMore>
+	</define>
+
+<!-- tasks -->
+
+	<define name="copy">
+		<element name="copy">
+			<ref name="dir_if_unless"/>
+			<choice>
+				<group>
+					<attribute name="file"/>
+					<attribute name="to_file"/>
+				</group>
+				<group>
+					<attribute name="file"/>
+					<attribute name="to_directory"/>
+				</group>
+				<group>
+					<attribute name="to_directory"/>
+					<ref name="fileset"/>
+				</group>
+			</choice>
+			<optional>
+				<attribute name="force">
+					<!-- runtime evaluation
+					<choice>
+						<value>true</value>
+						<value>false</value>
+					</choice>
+					-->
+				</attribute>
+			</optional>
+		</element>
+	</define>
+	<define name="delete">
+		<element name="delete">
+			<ref name="dir_if_unless"/>
+			<choice>
+				<attribute name="file"/>
+				<attribute name="directory"/>
+				<ref name="fileset"/>
+			</choice>
+		</element>
+	</define>
+	<define name="echo">
+		<element name="echo">
+			<ref name="dir_if_unless"/>
+			<attribute name="message"/>
+		</element>
+	</define>
+	<define name="exec">
+		<element name="exec">
+			<ref name="dir_if_unless"/>
+			<attribute name="executable"/>
+			<optional>
+				<ref name="fileset"/>
+			</optional>
+		</element>
+	</define>
+	<define name="exit">
+		<element name="exit">
+			<ref name="dir_if_unless"/>
+			<optional>
+				<attribute name="code"/>
+			</optional>
+		</element>
+	</define>
+	<define name="geant">
+		<element name="geant">
+			<ref name="dir_if_unless"/>
+			<choice>
+				<attribute name="target"/>
+				<group>
+					<attribute name="file"/>
+					<optional>
+						<attribute name="reuse_variables">
+							<!-- runtime evaluation
+							<choice>
+								<value>true</value>
+								<value>false</value>
+							</choice>
+							-->
+						</attribute>
+					</optional>
+				</group>
+				<group>
+					<attribute name="file"/>
+					<attribute name="target"/>
+					<optional>
+						<attribute name="reuse_variables">
+							<!-- runtime evaluation
+							<choice>
+								<value>true</value>
+								<value>false</value>
+							</choice>
+							-->
+						</attribute>
+					</optional>
+				</group>
+				<ref name="fileset"/>
+			</choice>
+		</element>
+	</define>
+	<define name="gelex">
+		<element name="gelex">
+			<ref name="dir_if_unless"/>
+			<attribute name="input"/>
+			<optional>
+				<attribute name="output"/>
+			</optional>
+			<optional>
+				<attribute name="backup"/>
+			</optional>
+			<optional>
+				<attribute name="size"/>
+			</optional>
+			<optional>
+				<attribute name="ecs"/>
+			</optional>
+			<choice>
+				<optional>
+					<attribute name="full"/>
+				</optional>
+				<optional>
+					<attribute name="meta_ecs"/>
+				</optional>
+			</choice>
+			<optional>
+				<attribute name="case_insensitive"/>
+			</optional>
+			<optional>
+				<attribute name="no_default"/>
+			</optional>
+			<optional>
+				<attribute name="no_warn"/>
+			</optional>
+			<optional>
+				<attribute name="separate_actions"/>
+			</optional>
+		</element>
+	</define>
+	<define name="geyacc">
+		<element name="geyacc">
+			<ref name="dir_if_unless"/>
+			<attribute name="input"/>
+			<optional>
+				<attribute name="output"/>
+			</optional>
+			<optional>
+				<attribute name="tokens"/>
+			</optional>
+			<optional>
+				<attribute name="separate_actions"/>
+			</optional>
+			<optional>
+				<attribute name="verbose"/>
+			</optional>
+		</element>
+	</define>
+	<define name="gepp">
+		<element name="gepp">
+			<ref name="dir_if_unless"/>
+			<interleave>
+				<choice>
+					<group>
+						<attribute name="input"/>
+						<attribute name="output"/>
+					</group>
+					<ref name="fileset"/>
+				</choice>
+				<zeroOrMore>
+					<element name="define">
+						<ref name="if_unless"/>
+						<attribute name="name"/>
+					</element>
+				</zeroOrMore>
+			</interleave>
+			<optional>
+				<attribute name="to_directory"/>
+			</optional>
+			<optional>
+				<attribute name="lines"/>
+			</optional>
+		</element>
+	</define>
+	<define name="getest">
+		<element name="getest">
+			<ref name="dir_if_unless"/>
+			<attribute name="config"/>
+			<optional>
+				<attribute name="compile"/>
+			</optional>
+			<zeroOrMore>
+				<ref name="define"/>
+			</zeroOrMore>
+		</element>
+	</define>
+	<define name="gexace">
+		<element name="gexace">
+			<ref name="dir_if_unless"/>
+			<choice>
+				<attribute name="validate"/>
+				<attribute name="system">
+					<!-- runtime evaluation
+					<choice>
+						<value>ise</value>
+						<value>hact</value>
+						<value>se</value>
+						<value>ve</value>
+					</choice>
+					-->
+				</attribute>
+				<attribute name="cluster">
+					<!-- runtime evaluation
+					<choice>
+						<value>ise</value>
+						<value>hact</value>
+						<value>se</value>
+						<value>ve</value>
+					</choice>
+					-->
+				</attribute>
+			</choice>
+			<optional>
+				<attribute name="verbose"/>
+			</optional>
+			<optional>
+				<attribute name="xace"/>
+			</optional>
+			<optional>
+				<attribute name="output"/>
+			</optional>
+			<zeroOrMore>
+				<ref name="define"/>
+			</zeroOrMore>
+		</element>
+	</define>
+	<define name="hact">
+		<element name="hact">
+			<ref name="dir_if_unless"/>
+			<choice>
+				<group>
+					<attribute name="system"/>
+					<optional>
+						<attribute name="ace"/>
+					</optional>
+					<optional>
+						<attribute name="finalize"/>
+					</optional>
+					<optional>
+						<attribute name="fish"/>
+					</optional>
+				</group>
+				<attribute name="clean"/>
+			</choice>
+		</element>
+	</define>
+	<define name="ise">
+		<element name="ise">
+			<ref name="dir_if_unless"/>
+			<choice>
+				<group>
+					<attribute name="system"/>
+					<optional>
+						<attribute name="ace"/>
+					</optional>
+					<optional>
+						<attribute name="finalize"/>
+					</optional>
+					<optional>
+						<attribute name="finish_freezing"/>
+					</optional>
+				</group>
+				<attribute name="clean"/>
+			</choice>
+		</element>
+	</define>
+	<define name="mkdir">
+		<element name="mkdir">
+			<ref name="dir_if_unless"/>
+			<attribute name="directory"/>
+		</element>
+	</define>
+	<define name="move">
+		<element name="move">
+			<ref name="dir_if_unless"/>
+			<choice>
+				<group>
+					<attribute name="file"/>
+					<attribute name="to_file"/>
+				</group>
+				<group>
+					<attribute name="file"/>
+					<attribute name="to_directory"/>
+				</group>
+				<group>
+					<attribute name="to_directory"/>
+					<ref name="fileset"/>
+				</group>
+			</choice>
+		</element>
+	</define>
+	<define name="outofdate">
+		<element name="outofdate">
+			<ref name="dir_if_unless"/>
+			<choice>
+				<group>
+					<attribute name="source"/>
+					<attribute name="target"/>
+				</group>
+				<ref name="fileset"/>
+			</choice>
+			<attribute name="variable"/>
+			<optional>
+				<attribute name="true_value"/>
+			</optional>
+			<optional>
+				<attribute name="false_value"/>
+			</optional>
+		</element>
+	</define>
+	<define name="precursor">
+		<element name="precursor">
+			<text/>
+		</element>
+	</define>
+	<define name="se">
+		<element name="se">
+			<ref name="dir_if_unless"/>
+			<choice>
+				<attribute name="clean"/>
+				<attribute name="ace"/>
+				<group>
+					<attribute name="root_class"/>
+					<attribute name="executable"/>
+					<optional>
+						<attribute name="creation_procedure"/>
+					</optional>
+					<optional>
+						<attribute name="case_insensitive"/>
+					</optional>
+					<optional>
+						<attribute name="no_style_warning"/>
+					</optional>
+				</group>
+			</choice>
+		</element>
+	</define>
+	<define name="set">
+		<element name="set">
+			<ref name="dir_if_unless"/>
+			<attribute name="name"/>
+			<attribute name="value"/>
+		</element>
+	</define>
+	<define name="setenv">
+		<element name="setenv">
+			<ref name="dir_if_unless"/>
+			<attribute name="name"/>
+			<attribute name="value"/>
+		</element>
+	</define>
+	<define name="unset">
+		<element name="unset">
+			<ref name="dir_if_unless"/>
+			<attribute name="name"/>
+		</element>
+	</define>
+	<define name="ve">
+		<element name="ve">
+			<ref name="dir_if_unless"/>
+			<choice>
+				<attribute name="esd"/>
+				<group>
+					<attribute name="clean"/>
+					<optional>
+						<attribute name="recursive"/>
+					</optional>
+				</group>
+				<group>
+					<attribute name="tune"/>
+					<optional>
+						<attribute name="level">
+							<!-- runtime evaluation
+							<choice>
+								<value>large</value>
+								<value>huge</value>
+							</choice>
+							-->
+						</attribute>
+					</optional>
+				</group>
+			</choice>
+		</element>
+	</define>
+	<define name="xslt">
+		<element name="xslt">
+			<ref name="dir_if_unless"/>
+			<attribute name="input"/>
+			<attribute name="output"/>
+			<attribute name="stylesheet"/>
+			<optional>
+				<attribute name="processor">
+					<!-- runtime evaluation
+					<choice>
+						<value>xalan_cpp</value>
+						<value>xalan_java</value>
+					</choice>
+					-->
+				</attribute>
+			</optional>
+			<optional>
+				<attribute name="indent"/> <!-- default: '4' -->
+			</optional>
+			<optional>
+				<attribute name="format"/>
+			</optional>
+			<zeroOrMore>
+				<element name="parameter">
+					<attribute name="name"/>
+					<attribute name="value"/>
+				</element>
+			</zeroOrMore>
+			<optional>
+				<attribute name="extdirs"/> <!-- if attribute 'processors' equals 'xalan_java' -->
+			</optional>
+			<optional>
+				<attribute name="classpath"/> <!-- if attribute 'processors' equals 'xalan_java' -->
+			</optional>
+		</element>
+	</define>
+
+<!-- elements -->
+
+	<define name="fileset">
+		<element name="fileset">
+			<attribute name="directory"/>
+			<attribute name="include"/>
+			<optional>
+				<attribute name="exclude"/>
+			</optional>
+			<optional>
+				<attribute name="concat"/>
+			</optional>
+			<optional>
+				<attribute name="force">
+					<!-- runtime evaluation
+					<choice>
+						<value>true</value>
+						<value>false</value>
+					</choice>
+					-->
+				</attribute>
+			</optional>
+			<optional>
+				<ref name="map"/>
+			</optional>
+		</element>
+	</define>
+	<define name="map">
+		<element name="map">
+			<attribute name="type">
+				<!-- runtime evaluation
+				<choice>
+					<value>identity</value>
+					<value>flat</value>
+					<value>merge</value>
+					<value>glob</value>
+				</choice>
+				-->
+			</attribute>
+			<optional>
+				<attribute name="from"/>
+				<attribute name="to"/>
+			</optional>
+			<optional>
+				<ref name="map"/>
+			</optional>
+		</element>
+	</define>
+	<define name="define">
+		<element name="define">
+			<ref name="if_unless"/>
+			<attribute name="name"/>
+			<attribute name="value"/>
+		</element>
+	</define>
+
+<!-- common -->
+
+	<define name="description">
+		<optional>
+			<element name="description">
+				<text/>
+			</element>
+		</optional>
+	</define>
+	<define name="dir_if_unless">
+		<optional>
+			<attribute name="dir"/>
+		</optional>
+		<ref name="if_unless"/>
+	</define>
+	<define name="if_unless">
+		<optional>
+			<attribute name="if"/>
+		</optional>
+		<optional>
+			<attribute name="unless"/>
+		</optional>
+	</define>
+
+</grammar>
