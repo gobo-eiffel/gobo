@@ -17,8 +17,6 @@ inherit
 	XM_COMPOSITE
 		undefine
 			root_node
-		redefine
-			equality_tester
 		end
 
 	XM_NAMED_NODE
@@ -31,13 +29,12 @@ inherit
 			copy, is_equal
 		end
 
-	XM_LINKED_LIST [XM_ELEMENT_NODE]
+	XM_LINKED_LIST [XM_NODE]
 		rename
 			make as make_list,
 			is_first as list_is_first,
 			is_last as list_is_last
 		redefine
-			equality_tester,
 			force_last, put_last
 		end
 				
@@ -111,10 +108,6 @@ feature {NONE} -- Initialization
 			make (a_parent, a_name, a_ns)
 		end
 
-feature -- List
-
-	equality_tester: KL_EQUALITY_TESTER [XM_ELEMENT_NODE]
-
 feature -- Element change
 
 	force_last (v: like last) is
@@ -145,6 +138,7 @@ feature {NONE} -- Parent processing
 			-- Remove node from original parent if not us.
 		do
 			if a_node /= Void then
+				check addable: addable_item (a_node) end
 					-- Remove from previous parent.
 				if a_node.parent /= Void then
 					a_node.parent.equality_delete (a_node)
@@ -153,6 +147,23 @@ feature {NONE} -- Parent processing
 			end
 		ensure then
 			parent_accepted: a_node /= Void implies a_node.parent = Current
+		end
+	
+	addable_item (a_node: like last): BOOLEAN is
+			-- Is this not of the correct type for addition?
+			-- (element node)
+		local
+			typer: XM_NODE_TYPER
+		do
+			if a_node /= Void then
+				create typer
+				a_node.process (typer)
+				Result := typer.is_comment
+					or typer.is_processing_instruction
+					or typer.is_element
+					or typer.is_character_data
+					or typer.is_attribute
+			end
 		end
 		
 feature {XM_NODE} -- Removal

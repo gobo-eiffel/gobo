@@ -16,17 +16,14 @@ inherit
 
 	XM_COMPOSITE
 		redefine
-			equality_tester,
 			root_node
 		end
 
-	XM_LINKED_LIST [XM_DOCUMENT_NODE]
+	XM_LINKED_LIST [XM_NODE]
 		rename
 			make as make_list,
 			is_first as list_is_first,
 			is_last as list_is_last
-		redefine
-			equality_tester
 		end
 		
 creation
@@ -57,17 +54,14 @@ feature {NONE} -- Initialization
 		end
 
 	Default_name: STRING is "root"
-	
-feature -- List
-
-	equality_tester: KL_EQUALITY_TESTER [XM_DOCUMENT_NODE]
-	
+		
 feature {NONE} -- Parent processing
 
 	before_addition (a_node: like last) is
 			-- Remove node from original parent if not us.
 		do
 			if a_node /= Void then
+				check addable: addable_item (a_node) end
 					-- Remove from previous parent.
 				if a_node.parent /= Void then
 					a_node.parent.equality_delete (a_node)
@@ -76,6 +70,21 @@ feature {NONE} -- Parent processing
 			end
 		ensure then
 			parent_accepted: a_node /= Void implies a_node.parent = Current
+		end
+		
+	addable_item (a_node: like last): BOOLEAN is
+			-- Is this not of the correct type for addition?
+			-- (document node)
+		local
+			typer: XM_NODE_TYPER
+		do
+			if a_node /= Void then
+				create typer
+				a_node.process (typer)
+				Result := typer.is_comment
+					or typer.is_processing_instruction
+					or typer.is_element
+			end
 		end
 		
 feature {XM_NODE} -- Removal
