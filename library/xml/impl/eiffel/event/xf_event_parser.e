@@ -50,17 +50,20 @@ feature {ANY}
 		end
 
 	parse_from_string_buffer (a_buffer: like STRING_BUFFER_TYPE) is
+		local
+			an_input_buffer: YY_BUFFER
 		do
-			check
-				False   -- TODO
-			end
+			reset
+			!! an_input_buffer.make_from_buffer (a_buffer)
+			set_input_buffer (an_input_buffer)
+			parse
 		end
 
 	parse_from_string (data: STRING) is
 		do
-			check
-				False   -- TODO
-			end
+			reset
+			set_input_buffer (new_string_buffer (data))
+			parse
 		end
 
 feature {ANY} -- Incremental parsing
