@@ -98,9 +98,8 @@ feature -- Test
 			assert_equal ("mapped_filename7", "aaa\ttt\foobar.e", map.mapped_filename ("aaa\ttt\foobar.ge")) 
 
 			map.set_source_pattern ("bla/*.ge")
-			map.set_target_pattern ("*.e")
---!!			assert_equal ("mapped_filename8", "bla/foobar.e", map.mapped_filename ("bla/foobar.ge")) 
-
+			map.set_target_pattern ("bla/*.e")
+			assert_equal ("mapped_filename9", "bla/foobar.e", map.mapped_filename ("bla/foobar.ge")) 
 		end
 
 feature -- Execution
