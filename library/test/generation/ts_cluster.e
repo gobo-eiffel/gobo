@@ -100,7 +100,7 @@ feature -- Processing
 			a_name: STRING
 		do
 			!! feature_names.make
-			a_cursor := a_class.features.new_cursor
+			a_cursor := a_class.named_features.new_cursor
 			from a_cursor.start until a_cursor.after loop
 				an_identifier ?= a_cursor.key
 				if an_identifier /= Void then
