@@ -38,12 +38,6 @@ feature -- Comparison
 			Result := compare (u, v) = -1
 		end
 
-	greater_than (u, v: STRING): BOOLEAN is
-			-- Is `u' considered greater than `v'?
-		do
-			Result := compare (u, v) = 1
-		end
-
 end
 
 	
