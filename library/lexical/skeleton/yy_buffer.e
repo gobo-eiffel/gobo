@@ -34,7 +34,7 @@ feature {NONE} -- Initialization
 			nb := str.count + 2
 			buff := STRING_BUFFER_.make (nb)
 			STRING_BUFFER_.copy_from_string (buff, 0, str)
-			nb := nb + (Lower - 1)
+			nb := nb + (lower - 1)
 			buff.put (End_of_buffer_character, nb - 1)
 			buff.put (End_of_buffer_character, nb)
 			make_from_buffer (buff)
@@ -51,12 +51,12 @@ feature {NONE} -- Initialization
 		require
 			buff_not_void: buff /= Void
 			valid_buff: buff.count >= 2 and then
-				buff.item (buff.count + (Lower - 1) - 1) = '%U' and
-				buff.item (buff.count + (Lower - 1)) = '%U'
+				buff.item (buff.count + (lower - 1) - 1) = '%U' and
+				buff.item (buff.count + (lower - 1)) = '%U'
 		local
 			l: INTEGER
 		do
-			l := Lower
+			l := lower
 			capacity := buff.count - 2
 			upper := capacity + (l - 1)
 			content := buff
@@ -78,9 +78,9 @@ feature -- Access
 			-- Number of characters in buffer,
 			-- not including EOB characters
 		do
-			Result := upper - Lower + 1
+			Result := upper - lower + 1
 		ensure
-			definition: Result = upper - Lower + 1
+			definition: Result = upper - lower + 1
 		end
 
 	capacity: INTEGER
@@ -90,7 +90,7 @@ feature -- Access
 	position: INTEGER
 			-- Current position in buffer
 
-	Lower: INTEGER is
+	lower: INTEGER is
 			-- Lower value for `position'
 		once
 			Result := STRING_BUFFER_.lower
@@ -105,33 +105,11 @@ feature -- Access
 
 feature -- Setting
 
---	set_capacity (nb: INTEGER) is
---			-- Set `capacity' to `nb'.
---		require
---			nb_small_enough: nb + 2 <= content.count
---			nb_large_enough: nb >= count
---		do
---			capacity := nb
---		ensure
---			capacity_set: capacity = nb
---		end
-
---	set_count (nb: INTEGER) is
---			-- Set `count' to `nb'.
---		require
---			nb_small_enough: nb <= capacity
---			nb_large_enough: nb >= 0
---		do
---			upper := Lower + nb - 1
---		ensure
---			count_set: count = nb
---		end
-
 	set_position (pos: INTEGER) is
 			-- Set `position' to `pos'.
 		require
 			pos_small_enough: pos <= upper + 2
-			pos_large_enough: pos >= Lower
+			pos_large_enough: pos >= lower
 		do
 			position := pos
 		ensure
@@ -180,7 +158,7 @@ feature -- Element change
 		local
 			l: INTEGER
 		do
-			l := Lower
+			l := lower
 				-- We always need two end-of-file characters.
 				-- The first causes a transition to the end-of-buffer
 				-- state. The second causes a jam in that state.
@@ -208,7 +186,7 @@ feature -- Element change
 					-- Buffer is full. Resize it.
 				resize
 			end
-			new_position := Lower
+			new_position := lower
 			if position /= new_position then
 					-- Move the 2 EOB characters as well.
 				STRING_BUFFER_.move_left (content, position, new_position, nb + 2)
@@ -216,7 +194,7 @@ feature -- Element change
 				upper := new_position + nb - 1
 			end
 		ensure
-			compacted_left: position = Lower
+			compacted_left: position = lower
 			not_full: capacity > count
 		end
 
@@ -242,7 +220,7 @@ feature -- Element change
 			end
 		ensure
 			compacted_right: count = capacity
-			not_full: position > Lower
+			not_full: position > lower
 		end
 
 feature {NONE} -- Implementation
