@@ -27,6 +27,7 @@ inherit
 			report_boolean_constant,
 			report_character_constant,
 			report_creation_expression,
+			report_creation_instruction,
 			report_current,
 			report_double_constant,
 			report_equality_expression,
@@ -98,7 +99,6 @@ feature {NONE} -- Initialization
 				create instruction_context.make_with_capacity (current_type, 10)
 				create expression_context.make_with_capacity (current_type, 10)
 				create assertion_context.make_with_capacity (current_type, 10)
-				create convert_actuals.make_with_capacity (1)
 				current_target_type := universe.any_class
 				current_context := actual_context
 			else
@@ -151,43 +151,53 @@ feature {NONE} -- Event handling
 			end
 		end
 
-	report_assignment is
+	report_assignment (an_instruction: ET_ASSIGNMENT) is
 			-- Report that an assignment instruction has been processed.
 		local
 			l_source_type_set: ET_DYNAMIC_TYPE_SET
 			l_target_type_set: ET_DYNAMIC_TYPE_SET
+			l_attachment: ET_DYNAMIC_ASSIGNMENT
 		do
 			if current_type = current_dynamic_type.base_type then
 				if dynamic_type_set_stack.count < 2 then
--- TODO: internal error
+						-- Internal error: the stack of dynamic type sets should 
+						-- at least contain the items for the source and the target
+						-- of the assignment.
+					set_fatal_error
+					error_handler.report_gibaa_error
 				else
 					l_source_type_set := dynamic_type_set_stack.item
 					dynamic_type_set_stack.remove
 					l_target_type_set := dynamic_type_set_stack.item
 					dynamic_type_set_stack.remove
-					l_source_type_set.put_target (l_target_type_set, current_system)
+					create l_attachment.make (l_source_type_set, an_instruction, current_feature, current_type)
+					l_target_type_set.put_source (l_attachment, current_system)
 				end
 			end
 		end
 
-	report_assignment_attempt is
+	report_assignment_attempt (an_instruction: ET_ASSIGNMENT_ATTEMPT) is
 			-- Report that an assignment attempt instruction has been processed.
 		local
 			l_source_type_set: ET_DYNAMIC_TYPE_SET
 			l_target_type_set: ET_DYNAMIC_TYPE_SET
-			l_dynamic_assignment_attempt: ET_DYNAMIC_ASSIGNMENT_ATTEMPT
+			l_assignment_attempt: ET_DYNAMIC_ASSIGNMENT_ATTEMPT
 		do
 			if current_type = current_dynamic_type.base_type then
 				if dynamic_type_set_stack.count < 2 then
--- TODO: internal error
+						-- Internal error: the stack of dynamic type sets should 
+						-- at least contain the items for the source and the target
+						-- of the assignment attempt.
+					set_fatal_error
+					error_handler.report_gibab_error
 				else
 					l_source_type_set := dynamic_type_set_stack.item
 					dynamic_type_set_stack.remove
 					l_target_type_set := dynamic_type_set_stack.item
 					dynamic_type_set_stack.remove
-					create l_dynamic_assignment_attempt.make (l_target_type_set)
-					l_source_type_set.put_target (l_dynamic_assignment_attempt, current_system)
-					current_dynamic_feature.put_assignment_attempt (l_dynamic_assignment_attempt)
+					create l_assignment_attempt.make (l_source_type_set, an_instruction, current_feature, current_type)
+					l_target_type_set.put_source (l_assignment_attempt, current_system)
+					current_dynamic_feature.put_assignment_attempt (l_assignment_attempt)
 				end
 			end
 		end
@@ -201,7 +211,9 @@ feature {NONE} -- Event handling
 			if current_type = current_dynamic_type.base_type then
 				l_dynamic_type_set := current_dynamic_type.dynamic_feature (an_attribute, current_system).result_type
 				if l_dynamic_type_set = Void then
--- TODO: internal error
+						-- Internal error: the result type set of an attribute cannot be void.
+					set_fatal_error
+					error_handler.report_gibac_error
 				else
 					dynamic_type_set_stack.force (l_dynamic_type_set)
 				end
@@ -210,8 +222,14 @@ feature {NONE} -- Event handling
 
 	report_bit_constant is
 			-- Report that a bit constant has been processed.
+		local
+			l_type: ET_DYNAMIC_TYPE
 		do
 -- TODO: not supported.
+			if current_type = current_dynamic_type.base_type then
+				l_type := current_system.none_type
+				dynamic_type_set_stack.force (l_type)
+			end
 		end
 
 	report_boolean_constant is
@@ -238,7 +256,7 @@ feature {NONE} -- Event handling
 			end
 		end
 
-	report_creation_expression (a_creation_type: ET_NAMED_TYPE; a_procedure: ET_FEATURE) is
+	report_creation_expression (a_creation_type: ET_NAMED_TYPE; a_procedure: ET_FEATURE; an_actuals: ET_ACTUAL_ARGUMENTS) is
 			-- Report that a creation expression has been processed.
 		local
 			i, nb: INTEGER
@@ -246,6 +264,7 @@ feature {NONE} -- Event handling
 			l_procedure: ET_DYNAMIC_FEATURE
 			l_dynamic_type_set: ET_DYNAMIC_TYPE_SET
 			l_dynamic_creation_type: ET_DYNAMIC_TYPE
+			l_attachment: ET_DYNAMIC_ACTUAL_ARGUMENT
 		do
 			if current_type = current_dynamic_type.base_type then
 				l_dynamic_creation_type := current_system.dynamic_type (a_creation_type, current_type)
@@ -256,17 +275,85 @@ feature {NONE} -- Event handling
 				if l_argument_types /= Void then
 					nb := l_argument_types.count
 					if dynamic_type_set_stack.count < nb then
--- TODO: internal error
+							-- Internal error: the stack of dynamic type sets should 
+							-- at least contain the items for the arguments of the
+							-- creation call.
+						set_fatal_error
+						error_handler.report_gibad_error
+					elseif an_actuals = Void or else an_actuals.count /= nb then
+							-- Internal error: it has already been checked somewhere else
+							-- that there was the same number of actual and formal arguments.
+						set_fatal_error
+						error_handler.report_gibae_error
 					else
 						from i := nb until i < 1 loop
 							l_dynamic_type_set := dynamic_type_set_stack.item
 							dynamic_type_set_stack.remove
-							l_dynamic_type_set.put_target (l_argument_types.item (i), current_system)
+							create l_attachment.make (l_dynamic_type_set, an_actuals.actual_argument (i), current_feature, current_type)
+							l_argument_types.item (i).put_source (l_attachment, current_system)
 							i := i - 1
 						end
 					end
 				end
 				dynamic_type_set_stack.force (l_dynamic_creation_type)
+			end
+		end
+
+	report_creation_instruction (an_instruction: ET_CREATION_INSTRUCTION; a_creation_type: ET_NAMED_TYPE; a_procedure: ET_FEATURE) is
+			-- Report that a creation instruction has been processed.
+		local
+			i, nb: INTEGER
+			l_actuals: ET_ACTUAL_ARGUMENT_LIST
+			l_argument_types: ET_DYNAMIC_TYPE_SET_LIST
+			l_procedure: ET_DYNAMIC_FEATURE
+			l_dynamic_type_set: ET_DYNAMIC_TYPE_SET
+			l_dynamic_creation_type: ET_DYNAMIC_TYPE
+			l_attachment: ET_DYNAMIC_ACTUAL_ARGUMENT
+			l_creation: ET_DYNAMIC_CREATION_INSTRUCTION
+			l_target_type_set: ET_DYNAMIC_TYPE_SET
+		do
+			if current_type = current_dynamic_type.base_type then
+				l_dynamic_creation_type := current_system.dynamic_type (a_creation_type, current_type)
+				l_procedure := l_dynamic_creation_type.dynamic_feature (a_procedure, current_system)
+				l_procedure.set_creation (True)
+				l_dynamic_creation_type.set_alive (True)
+				l_argument_types := l_procedure.argument_types
+				if l_argument_types /= Void then
+					l_actuals := an_instruction.arguments
+					nb := l_argument_types.count
+					if dynamic_type_set_stack.count < nb then
+							-- Internal error: the stack of dynamic type sets should 
+							-- at least contain the items for the arguments of the
+							-- creation call.
+						set_fatal_error
+						error_handler.report_gibaf_error
+					elseif l_actuals = Void or else l_actuals.count /= nb then
+							-- Internal error: it has already been checked somewhere else
+							-- that there was the same number of actual and formal arguments.
+						set_fatal_error
+						error_handler.report_gibag_error
+					else
+						from i := nb until i < 1 loop
+							l_dynamic_type_set := dynamic_type_set_stack.item
+							dynamic_type_set_stack.remove
+							create l_attachment.make (l_dynamic_type_set, l_actuals.actual_argument (i), current_feature, current_type)
+							l_argument_types.item (i).put_source (l_attachment, current_system)
+							i := i - 1
+						end
+					end
+				end
+				if dynamic_type_set_stack.is_empty then
+						-- Internal error: the stack of dynamic type sets should 
+						-- at least contain the item for the target of the
+						-- creation instruction.
+					set_fatal_error
+					error_handler.report_gibah_error
+				else
+					l_target_type_set := dynamic_type_set_stack.item
+					dynamic_type_set_stack.remove
+					create l_creation.make (l_dynamic_creation_type, an_instruction, current_feature, current_type)
+					l_target_type_set.put_source (l_creation, current_system)
+				end
 			end
 		end
 
@@ -297,7 +384,11 @@ feature {NONE} -- Event handling
 		do
 			if current_type = current_dynamic_type.base_type then
 				if dynamic_type_set_stack.count < 2 then
--- TODO: internal error
+						-- Internal error: the stack of dynamic type sets should 
+						-- at least contain the items for the left and right
+						-- hand side of the equality expression.
+					set_fatal_error
+					error_handler.report_gibai_error
 				else
 					dynamic_type_set_stack.remove
 					dynamic_type_set_stack.remove
@@ -309,11 +400,15 @@ feature {NONE} -- Event handling
 		end
 
 	report_expression is
-			-- Report that an expression has been processed.
+			-- Report that an expression has been consumed.
 		do
 			if current_type = current_dynamic_type.base_type then
 				if dynamic_type_set_stack.is_empty then
--- TODO: internal error
+						-- Internal error: the stack of dynamic type sets should 
+						-- at least contain the item for the expression being
+						-- consumed.
+					set_fatal_error
+					error_handler.report_gibaj_error
 				else
 					dynamic_type_set_stack.remove
 				end
@@ -328,9 +423,15 @@ feature {NONE} -- Event handling
 			if current_type = current_dynamic_type.base_type then
 				l_argument_types := current_dynamic_feature.argument_types
 				if l_argument_types = Void then
--- TODO: internal error.
+						-- Internal error: if there is a formal argument,
+						-- this means that the argument list cannot be void.
+					set_fatal_error
+					error_handler.report_gibak_error
 				elseif i < 1 or i > l_argument_types.count then
--- TODO: internal error.
+						-- Internal error: if there is a formal argument, then
+						-- it has to be within the bounds of the argument list.
+					set_fatal_error
+					error_handler.report_gibal_error
 				else
 					dynamic_type_set_stack.force (l_argument_types.item (i))
 				end
@@ -394,9 +495,15 @@ feature {NONE} -- Event handling
 			if current_type = current_dynamic_type.base_type then
 				l_local_types := current_dynamic_feature.local_types
 				if l_local_types = Void then
--- TODO: internal error.
+						-- Internal error: if there is a local variable, this
+						-- means that the local variable list cannot be void.
+					set_fatal_error
+					error_handler.report_gibam_error
 				elseif i < 1 or i > l_local_types.count then
--- TODO: internal error.
+						-- Internal error: if there is a local variable, then it
+						-- has to be within the bounds of the local variable list.
+					set_fatal_error
+					error_handler.report_giban_error
 				else
 					dynamic_type_set_stack.force (l_local_types.item (i))
 				end
@@ -411,9 +518,15 @@ feature {NONE} -- Event handling
 			if current_type = current_dynamic_type.base_type then
 				l_local_types := current_dynamic_feature.local_types
 				if l_local_types = Void then
--- TODO: internal error.
+						-- Internal error: if there is a local variable, this
+						-- means that the local variable list cannot be void.
+					set_fatal_error
+					error_handler.report_gibao_error
 				elseif i < 1 or i > l_local_types.count then
--- TODO: internal error.
+						-- Internal error: if there is a local variable, then it
+						-- has to be within the bounds of the local variable list.
+					set_fatal_error
+					error_handler.report_gibap_error
 				else
 					dynamic_type_set_stack.force (l_local_types.item (i))
 				end
@@ -437,9 +550,15 @@ feature {NONE} -- Event handling
 				if not has_fatal_error then
 					l_local_types := current_dynamic_feature.local_types
 					if l_local_types = Void then
--- TODO: internal error
+							-- Internal error: if there is a local variable, this
+							-- means that the local variable list cannot be void.
+						set_fatal_error
+						error_handler.report_gibaq_error
 					elseif i < 1 or i > l_local_types.count then
--- TODO: internal error
+							-- Internal error: if there is a local variable, then it
+							-- has to be within the bounds of the local variable list.
+						set_fatal_error
+						error_handler.report_gibar_error
 					else
 						l_dynamic_type := current_system.dynamic_type (l_resolved_type, current_type)
 						create l_dynamic_type_set.make (l_dynamic_type)
@@ -487,14 +606,16 @@ feature {NONE} -- Event handling
 			end
 		end
 
-	report_precursor_expression (a_parent_type: ET_BASE_TYPE; a_feature: ET_FEATURE) is
+	report_precursor_expression (an_expression: ET_PRECURSOR; a_parent_type: ET_BASE_TYPE; a_feature: ET_FEATURE) is
 			-- Report that a precursor expression has been processed.
 		local
 			i, nb: INTEGER
+			l_actuals: ET_ACTUAL_ARGUMENT_LIST
 			l_parent_type: ET_DYNAMIC_TYPE
 			l_argument_types: ET_DYNAMIC_TYPE_SET_LIST
 			l_query: ET_DYNAMIC_FEATURE
 			l_dynamic_type_set: ET_DYNAMIC_TYPE_SET
+			l_attachment: ET_DYNAMIC_ACTUAL_ARGUMENT
 		do
 			if current_type = current_dynamic_type.base_type then
 				l_parent_type := current_system.dynamic_type (a_parent_type, current_type)
@@ -502,35 +623,50 @@ feature {NONE} -- Event handling
 				l_query.set_regular (True)
 				l_argument_types := l_query.argument_types
 				if l_argument_types /= Void then
+					l_actuals := an_expression.arguments
 					nb := l_argument_types.count
 					if dynamic_type_set_stack.count < nb then
--- TODO: internal error
+							-- Internal error: the stack of dynamic type sets should 
+							-- at least contain the items for the arguments of the
+							-- precursor call.
+						set_fatal_error
+						error_handler.report_gibas_error
+					elseif l_actuals = Void or else l_actuals.count /= nb then
+							-- Internal error: it has already been checked somewhere else
+							-- that there was the same number of actual and formal arguments.
+						set_fatal_error
+						error_handler.report_gibat_error
 					else
 						from i := nb until i < 1 loop
 							l_dynamic_type_set := dynamic_type_set_stack.item
 							dynamic_type_set_stack.remove
-							l_dynamic_type_set.put_target (l_argument_types.item (i), current_system)
+							create l_attachment.make (l_dynamic_type_set, l_actuals.actual_argument (i), current_feature, current_type)
+							l_argument_types.item (i).put_source (l_attachment, current_system)
 							i := i - 1
 						end
 					end
 				end
 				l_dynamic_type_set := l_query.result_type
 				if l_dynamic_type_set = Void then
--- TODO: internal error
+						-- Internal error: the result type set of a query cannot be void.
+					set_fatal_error
+					error_handler.report_gibau_error
 				else
 					dynamic_type_set_stack.force (l_dynamic_type_set)
 				end
 			end
 		end
 
-	report_precursor_instruction (a_parent_type: ET_BASE_TYPE; a_feature: ET_FEATURE) is
+	report_precursor_instruction (an_instruction: ET_PRECURSOR; a_parent_type: ET_BASE_TYPE; a_feature: ET_FEATURE) is
 			-- Report that a precursor instruction has been processed.
 		local
 			i, nb: INTEGER
+			l_actuals: ET_ACTUAL_ARGUMENT_LIST
 			l_parent_type: ET_DYNAMIC_TYPE
 			l_argument_types: ET_DYNAMIC_TYPE_SET_LIST
 			l_procedure: ET_DYNAMIC_FEATURE
 			l_dynamic_type_set: ET_DYNAMIC_TYPE_SET
+			l_attachment: ET_DYNAMIC_ACTUAL_ARGUMENT
 		do
 			if current_type = current_dynamic_type.base_type then
 				l_parent_type := current_system.dynamic_type (a_parent_type, current_type)
@@ -538,14 +674,25 @@ feature {NONE} -- Event handling
 				l_procedure.set_regular (True)
 				l_argument_types := l_procedure.argument_types
 				if l_argument_types /= Void then
+					l_actuals := an_instruction.arguments
 					nb := l_argument_types.count
 					if dynamic_type_set_stack.count < nb then
--- TODO: internal error
+							-- Internal error: the stack of dynamic type sets should 
+							-- at least contain the items for the arguments of the
+							-- precursor call.
+						set_fatal_error
+						error_handler.report_gibav_error
+					elseif l_actuals = Void or else l_actuals.count /= nb then
+							-- Internal error: it has already been checked somewhere else
+							-- that there was the same number of actual and formal arguments.
+						set_fatal_error
+						error_handler.report_gibaw_error
 					else
 						from i := nb until i < 1 loop
 							l_dynamic_type_set := dynamic_type_set_stack.item
 							dynamic_type_set_stack.remove
-							l_dynamic_type_set.put_target (l_argument_types.item (i), current_system)
+							create l_attachment.make (l_dynamic_type_set, l_actuals.actual_argument (i), current_feature, current_type)
+							l_argument_types.item (i).put_source (l_attachment, current_system)
 							i := i - 1
 						end
 					end
@@ -553,29 +700,38 @@ feature {NONE} -- Event handling
 			end
 		end
 
-	report_qualified_call is
+	report_qualified_call (a_name: ET_FEATURE_NAME) is
 			-- Report that a qualified call will be processed.
 		local
 			l_call: ET_DYNAMIC_CALL
 		do
-			create l_call.make (current_dynamic_type, dummy_feature, current_system)
-			current_dynamic_feature.put_feature_call (l_call)
-			dynamic_call_stack.force (l_call)
+			if current_type = current_dynamic_type.base_type then
+				create l_call.make_default (a_name, current_feature, current_type, current_system)
+				current_dynamic_feature.put_feature_call (l_call)
+				dynamic_call_stack.force (l_call)
+			end
 		end
 
-	report_qualified_call_agent (a_feature: ET_FEATURE; a_type: ET_TYPE; a_context: ET_TYPE_CONTEXT) is
+	report_qualified_call_agent (an_expression: ET_CALL_AGENT; a_feature: ET_FEATURE; a_type: ET_TYPE; a_context: ET_TYPE_CONTEXT) is
 			-- Report that a qualified call (to `a_feature') agent
 			-- of type `a_type' in `a_context' has been processed.
 		local
 			i, nb: INTEGER
 			l_dynamic_type: ET_DYNAMIC_TYPE
-			l_argument_types: ET_DYNAMIC_TYPE_SET_LIST
 			l_dynamic_type_set: ET_DYNAMIC_TYPE_SET
 			l_call: ET_DYNAMIC_CALL
+			l_actuals: ET_AGENT_ACTUAL_ARGUMENT_LIST
+			l_attachment: ET_DYNAMIC_AGENT_ACTUAL_ARGUMENT
+			l_implicit: ET_DYNAMIC_AGENT_IMPLICIT_ACTUAL_ARGUMENT
+			l_source, l_next: ET_DYNAMIC_ATTACHMENT
 		do
 			if current_type = current_dynamic_type.base_type then
 				if dynamic_call_stack.is_empty then
--- TODO: internal error
+						-- Internal error: the stack of dynamic type sets should 
+						-- at least contain the item for the target of the
+						-- qualified call.
+					set_fatal_error
+					error_handler.report_gibax_error
 				else
 					l_call := dynamic_call_stack.item
 					dynamic_call_stack.remove
@@ -583,26 +739,58 @@ feature {NONE} -- Event handling
 						nb := a_feature.arguments.count
 					end
 					if dynamic_type_set_stack.count < nb + 1 then
--- TODO: internal error
+							-- Internal error: the stack of dynamic type sets should 
+							-- at least contain the items for the arguments of the
+							-- qualified call.
+						set_fatal_error
+						error_handler.report_gibay_error
 					else
 						l_dynamic_type_set := dynamic_type_set_stack.i_th (dynamic_type_set_stack.count - nb)
-						l_call.reset (l_dynamic_type_set.static_type, a_feature, current_system)
-						l_dynamic_type_set.put_target (l_call, current_system)
-						l_argument_types := l_call.argument_types
-						if l_argument_types /= Void then
-							if l_argument_types.count /= nb then
--- TODO: internal error
+						l_call.reset (an_expression.target, l_dynamic_type_set, an_expression.name, a_feature, current_feature, current_type, current_system)
+						if nb > 0 then
+							l_actuals := an_expression.arguments
+							if l_actuals = Void then
+									-- Agent's operands are store in the stack in reverse order.
+								from i := 1 until i > nb loop
+									l_dynamic_type_set := dynamic_type_set_stack.item
+									dynamic_type_set_stack.remove
+									create l_implicit.make (l_dynamic_type_set, an_expression.name, current_feature, current_type)
+									l_implicit.set_next_attachment (l_source)
+									l_source := l_implicit
+									i := i + 1
+								end
+								from until
+									l_source = Void
+								loop
+									l_next := l_source.next_attachment
+									l_source.set_next_attachment (Void)
+									l_call.put_argument_source (l_source)
+									l_source := l_next
+								end
+							elseif l_actuals.count /= nb then
+									-- Internal error: it has already been checked somewhere else
+									-- that there was the same number of actual and formal arguments.
+								set_fatal_error
+								error_handler.report_gibaz_error
 							else
 									-- Agent's operands are store in the stack in reverse order.
 								from i := 1 until i > nb loop
 									l_dynamic_type_set := dynamic_type_set_stack.item
 									dynamic_type_set_stack.remove
-									l_dynamic_type_set.put_target (l_argument_types.item (i), current_system)
+									create l_attachment.make (l_dynamic_type_set, l_actuals.actual_argument (i), current_feature, current_type)
+									l_attachment.set_next_attachment (l_source)
+									l_source := l_attachment
 									i := i + 1
 								end
+								from until
+									l_source = Void
+								loop
+									l_next := l_source.next_attachment
+									l_source.set_next_attachment (Void)
+									l_call.put_argument_source (l_source)
+									l_source := l_next
+								end
 							end
-						elseif nb > 0 then
--- TODO: internal error
 						end
 							-- Remove target type.
 						dynamic_type_set_stack.remove
@@ -613,49 +801,53 @@ feature {NONE} -- Event handling
 			end
 		end
 
-	report_qualified_call_expression (a_feature: ET_FEATURE) is
+	report_qualified_call_expression (a_target: ET_EXPRESSION; a_name: ET_FEATURE_NAME;
+		a_feature: ET_FEATURE; an_actuals: ET_ACTUAL_ARGUMENTS) is
 			-- Report that a qualified call expression has been processed.
 		local
 			i, nb: INTEGER
-			l_argument_types: ET_DYNAMIC_TYPE_SET_LIST
 			l_dynamic_type_set: ET_DYNAMIC_TYPE_SET
 			l_call: ET_DYNAMIC_CALL
+			l_attachment: ET_DYNAMIC_ACTUAL_ARGUMENT
 		do
 			if current_type = current_dynamic_type.base_type then
 				if dynamic_call_stack.is_empty then
--- TODO: internal error
+						-- Internal error: the stack of dynamic type sets should 
+						-- at least contain the item for the target of the
+						-- qualified call.
+					set_fatal_error
+					error_handler.report_gibba_error
 				else
 					l_call := dynamic_call_stack.item
 					dynamic_call_stack.remove
-					if a_feature.arguments /= Void then
-						nb := a_feature.arguments.count
+					if an_actuals /= Void then
+						nb := an_actuals.count
 					end
 					if dynamic_type_set_stack.count < nb + 1 then
--- TODO: internal error
+							-- Internal error: the stack of dynamic type sets should 
+							-- at least contain the items for the arguments of the
+							-- qualified call.
+						set_fatal_error
+						error_handler.report_gibbb_error
 					else
 						l_dynamic_type_set := dynamic_type_set_stack.i_th (dynamic_type_set_stack.count - nb)
-						l_call.reset (l_dynamic_type_set.static_type, a_feature, current_system)
-						l_dynamic_type_set.put_target (l_call, current_system)
-						l_argument_types := l_call.argument_types
-						if l_argument_types /= Void then
-							if l_argument_types.count /= nb then
--- TODO: internal error
-							else
-								from i := nb until i < 1 loop
-									l_dynamic_type_set := dynamic_type_set_stack.item
-									dynamic_type_set_stack.remove
-									l_dynamic_type_set.put_target (l_argument_types.item (i), current_system)
-									i := i - 1
-								end
+						l_call.reset (a_target, l_dynamic_type_set, a_name, a_feature, current_feature, current_type, current_system)
+						if nb > 0 then
+							from i := nb until i < 1 loop
+								l_dynamic_type_set := dynamic_type_set_stack.item
+								dynamic_type_set_stack.remove
+								create l_attachment.make (l_dynamic_type_set, an_actuals.actual_argument (i), current_feature, current_type)
+								l_call.put_argument_source (l_attachment)
+								i := i - 1
 							end
-						elseif nb > 0 then
--- TODO: internal error
 						end
 							-- Remove target type.
 						dynamic_type_set_stack.remove
 						l_dynamic_type_set := l_call.result_type
 						if l_dynamic_type_set = Void then
--- TODO: internal error
+								-- Internal error: the result type set of a query cannot be void.
+							set_fatal_error
+							error_handler.report_gibbc_error
 						else
 							dynamic_type_set_stack.force (l_dynamic_type_set)
 						end
@@ -664,43 +856,45 @@ feature {NONE} -- Event handling
 			end
 		end
 
-	report_qualified_call_instruction (a_feature: ET_FEATURE) is
+	report_qualified_call_instruction (a_target: ET_EXPRESSION; a_name: ET_FEATURE_NAME;
+		a_feature: ET_FEATURE; an_actuals: ET_ACTUAL_ARGUMENTS) is
 			-- Report that a qualified call instruction has been processed.
 		local
 			i, nb: INTEGER
-			l_argument_types: ET_DYNAMIC_TYPE_SET_LIST
 			l_dynamic_type_set: ET_DYNAMIC_TYPE_SET
 			l_call: ET_DYNAMIC_CALL
+			l_attachment: ET_DYNAMIC_ACTUAL_ARGUMENT
 		do
 			if current_type = current_dynamic_type.base_type then
 				if dynamic_call_stack.is_empty then
--- TODO: internal error
+						-- Internal error: the stack of dynamic type sets should 
+						-- at least contain the item for the target of the
+						-- qualified call.
+					set_fatal_error
+					error_handler.report_gibbd_error
 				else
 					l_call := dynamic_call_stack.item
 					dynamic_call_stack.remove
-					if a_feature.arguments /= Void then
-						nb := a_feature.arguments.count
+					if an_actuals /= Void then
+						nb := an_actuals.count
 					end
 					if dynamic_type_set_stack.count < nb + 1 then
--- TODO: internal error
+							-- Internal error: the stack of dynamic type sets should 
+							-- at least contain the items for the arguments of the
+							-- qualified call.
+						set_fatal_error
+						error_handler.report_gibbe_error
 					else
 						l_dynamic_type_set := dynamic_type_set_stack.i_th (dynamic_type_set_stack.count - nb)
-						l_call.reset (l_dynamic_type_set.static_type, a_feature, current_system)
-						l_dynamic_type_set.put_target (l_call, current_system)
-						l_argument_types := l_call.argument_types
-						if l_argument_types /= Void then
-							if l_argument_types.count /= nb then
--- TODO: internal error
-							else
-								from i := nb until i < 1 loop
-									l_dynamic_type_set := dynamic_type_set_stack.item
-									dynamic_type_set_stack.remove
-									l_dynamic_type_set.put_target (l_argument_types.item (i), current_system)
-									i := i - 1
-								end
+						l_call.reset (a_target, l_dynamic_type_set, a_name, a_feature, current_feature, current_type, current_system)
+						if nb > 0 then
+							from i := nb until i < 1 loop
+								l_dynamic_type_set := dynamic_type_set_stack.item
+								dynamic_type_set_stack.remove
+								create l_attachment.make (l_dynamic_type_set, an_actuals.actual_argument (i), current_feature, current_type)
+								l_call.put_argument_source (l_attachment)
+								i := i - 1
 							end
-						elseif nb > 0 then
--- TODO: internal error
 						end
 							-- Remove target type.
 						dynamic_type_set_stack.remove
@@ -717,7 +911,9 @@ feature {NONE} -- Event handling
 			if current_type = current_dynamic_type.base_type then
 				l_dynamic_type_set := current_dynamic_feature.result_type
 				if l_dynamic_type_set = Void then
--- TODO: internal error
+						-- Internal error: the result type set of a function cannot be void.
+					set_fatal_error
+					error_handler.report_gibbf_error
 				else
 					dynamic_type_set_stack.force (l_dynamic_type_set)
 				end
@@ -733,21 +929,25 @@ feature {NONE} -- Event handling
 			if current_type = current_dynamic_type.base_type then
 				l_dynamic_type_set := current_dynamic_feature.result_type
 				if l_dynamic_type_set = Void then
--- TODO: internal error
+						-- Internal error: the result type set of a function cannot be void.
+					set_fatal_error
+					error_handler.report_gibbg_error
 				else
 					dynamic_type_set_stack.force (l_dynamic_type_set)
 				end
 			end
 		end
 
-	report_static_call_expression (a_type: ET_TYPE; a_feature: ET_FEATURE) is
+	report_static_call_expression (an_expression: ET_STATIC_FEATURE_CALL; a_type: ET_TYPE; a_feature: ET_FEATURE) is
 			-- Report that a static call expression has been processed.
 		local
 			i, nb: INTEGER
+			l_actuals: ET_ACTUAL_ARGUMENT_LIST
 			l_dynamic_type: ET_DYNAMIC_TYPE
 			l_argument_types: ET_DYNAMIC_TYPE_SET_LIST
 			l_query: ET_DYNAMIC_FEATURE
 			l_dynamic_type_set: ET_DYNAMIC_TYPE_SET
+			l_attachment: ET_DYNAMIC_ACTUAL_ARGUMENT
 		do
 			if current_type = current_dynamic_type.base_type then
 				l_dynamic_type := current_system.dynamic_type (a_type, current_type)
@@ -755,35 +955,50 @@ feature {NONE} -- Event handling
 				l_query.set_regular (True)
 				l_argument_types := l_query.argument_types
 				if l_argument_types /= Void then
+					l_actuals := an_expression.arguments
 					nb := l_argument_types.count
 					if dynamic_type_set_stack.count < nb then
--- TODO: internal error
+							-- Internal error: the stack of dynamic type sets should 
+							-- at least contain the items for the arguments of the
+							-- static call.
+						set_fatal_error
+						error_handler.report_gibbh_error
+					elseif l_actuals = Void or else l_actuals.count /= nb then
+							-- Internal error: it has already been checked somewhere else
+							-- that there was the same number of actual and formal arguments.
+						set_fatal_error
+						error_handler.report_gibbi_error
 					else
 						from i := nb until i < 1 loop
 							l_dynamic_type_set := dynamic_type_set_stack.item
 							dynamic_type_set_stack.remove
-							l_dynamic_type_set.put_target (l_argument_types.item (i), current_system)
+							create l_attachment.make (l_dynamic_type_set, l_actuals.actual_argument (i), current_feature, current_type)
+							l_argument_types.item (i).put_source (l_attachment, current_system)
 							i := i - 1
 						end
 					end
 				end
 				l_dynamic_type_set := l_query.result_type
 				if l_dynamic_type_set = Void then
--- TODO: internal error
+						-- Internal error: the result type set of a query cannot be void.
+					set_fatal_error
+					error_handler.report_gibbj_error
 				else
 					dynamic_type_set_stack.force (l_dynamic_type_set)
 				end
 			end
 		end
 
-	report_static_call_instruction (a_type: ET_TYPE; a_feature: ET_FEATURE) is
+	report_static_call_instruction (an_instruction: ET_STATIC_FEATURE_CALL; a_type: ET_TYPE; a_feature: ET_FEATURE) is
 			-- Report that a static call instruction has been processed.
 		local
 			i, nb: INTEGER
+			l_actuals: ET_ACTUAL_ARGUMENT_LIST
 			l_dynamic_type: ET_DYNAMIC_TYPE
 			l_argument_types: ET_DYNAMIC_TYPE_SET_LIST
 			l_procedure: ET_DYNAMIC_FEATURE
 			l_dynamic_type_set: ET_DYNAMIC_TYPE_SET
+			l_attachment: ET_DYNAMIC_ACTUAL_ARGUMENT
 		do
 			if current_type = current_dynamic_type.base_type then
 				l_dynamic_type := current_system.dynamic_type (a_type, current_type)
@@ -791,14 +1006,25 @@ feature {NONE} -- Event handling
 				l_procedure.set_regular (True)
 				l_argument_types := l_procedure.argument_types
 				if l_argument_types /= Void then
+					l_actuals := an_instruction.arguments
 					nb := l_argument_types.count
 					if dynamic_type_set_stack.count < nb then
--- TODO: internal error
+							-- Internal error: the stack of dynamic type sets should 
+							-- at least contain the items for the arguments of the
+							-- static call.
+						set_fatal_error
+						error_handler.report_gibbk_error
+					elseif l_actuals = Void or else l_actuals.count /= nb then
+							-- Internal error: it has already been checked somewhere else
+							-- that there was the same number of actual and formal arguments.
+						set_fatal_error
+						error_handler.report_gibbl_error
 					else
 						from i := nb until i < 1 loop
 							l_dynamic_type_set := dynamic_type_set_stack.item
 							dynamic_type_set_stack.remove
-							l_dynamic_type_set.put_target (l_argument_types.item (i), current_system)
+							create l_attachment.make (l_dynamic_type_set, l_actuals.actual_argument (i), current_feature, current_type)
+							l_argument_types.item (i).put_source (l_attachment, current_system)
 							i := i - 1
 						end
 					end
@@ -831,7 +1057,7 @@ feature {NONE} -- Event handling
 			end
 		end
 
-	report_unqualified_call_agent (a_feature: ET_FEATURE; a_type: ET_TYPE; a_context: ET_TYPE_CONTEXT) is
+	report_unqualified_call_agent (an_expression: ET_CALL_AGENT; a_feature: ET_FEATURE; a_type: ET_TYPE; a_context: ET_TYPE_CONTEXT) is
 			-- Report that an unqualified call (to `a_feature') agent
 			-- of type `a_type' in `a_context' has been processed.
 		local
@@ -840,21 +1066,44 @@ feature {NONE} -- Event handling
 			l_argument_types: ET_DYNAMIC_TYPE_SET_LIST
 			l_dynamic_feature: ET_DYNAMIC_FEATURE
 			l_dynamic_type_set: ET_DYNAMIC_TYPE_SET
+			l_actuals: ET_AGENT_ACTUAL_ARGUMENT_LIST
+			l_attachment: ET_DYNAMIC_AGENT_ACTUAL_ARGUMENT
+			l_implicit: ET_DYNAMIC_AGENT_IMPLICIT_ACTUAL_ARGUMENT
 		do
 			if current_type = current_dynamic_type.base_type then
 				l_dynamic_feature := current_dynamic_type.dynamic_feature (a_feature, current_system)
 				l_dynamic_feature.set_regular (True)
 				l_argument_types := l_dynamic_feature.argument_types
 				if l_argument_types /= Void then
+					l_actuals := an_expression.arguments
 					nb := l_argument_types.count
 					if dynamic_type_set_stack.count < nb then
--- TODO: internal error
+							-- Internal error: the stack of dynamic type sets should 
+							-- at least contain the items for the arguments of the
+							-- unqualified call.
+						set_fatal_error
+						error_handler.report_gibbm_error
+					elseif l_actuals = Void then
+							-- Agent's operands are store in the stack in reverse order.
+						from i := 1 until i > nb loop
+							l_dynamic_type_set := dynamic_type_set_stack.item
+							dynamic_type_set_stack.remove
+							create l_implicit.make (l_dynamic_type_set, an_expression.name, current_feature, current_type)
+							l_argument_types.item (i).put_source (l_implicit, current_system)
+							i := i + 1
+						end
+					elseif l_actuals.count /= nb then
+							-- Internal error: it has already been checked somewhere else
+							-- that there was the same number of actual and formal arguments.
+						set_fatal_error
+						error_handler.report_gibbn_error
 					else
 							-- Agent's operands are store in the stack in reverse order.
 						from i := 1 until i > nb loop
 							l_dynamic_type_set := dynamic_type_set_stack.item
 							dynamic_type_set_stack.remove
-							l_dynamic_type_set.put_target (l_argument_types.item (i), current_system)
+							create l_attachment.make (l_dynamic_type_set, l_actuals.actual_argument (i), current_feature, current_type)
+							l_argument_types.item (i).put_source (l_attachment, current_system)
 							i := i + 1
 						end
 					end
@@ -865,13 +1114,14 @@ feature {NONE} -- Event handling
 			end
 		end
 
-	report_unqualified_call_expression (a_feature: ET_FEATURE) is
+	report_unqualified_call_expression (a_name: ET_FEATURE_NAME; a_feature: ET_FEATURE; an_actuals: ET_ACTUAL_ARGUMENT_LIST) is
 			-- Report that an unqualified call expression has been processed.
 		local
 			i, nb: INTEGER
 			l_argument_types: ET_DYNAMIC_TYPE_SET_LIST
 			l_query: ET_DYNAMIC_FEATURE
 			l_dynamic_type_set: ET_DYNAMIC_TYPE_SET
+			l_attachment: ET_DYNAMIC_ACTUAL_ARGUMENT
 		do
 			if current_type = current_dynamic_type.base_type then
 				l_query := current_dynamic_type.dynamic_feature (a_feature, current_system)
@@ -880,32 +1130,45 @@ feature {NONE} -- Event handling
 				if l_argument_types /= Void then
 					nb := l_argument_types.count
 					if dynamic_type_set_stack.count < nb then
--- TODO: internal error
+							-- Internal error: the stack of dynamic type sets should 
+							-- at least contain the items for the arguments of the
+							-- unqualified call.
+						set_fatal_error
+						error_handler.report_gibbo_error
+					elseif an_actuals = Void or else an_actuals.count /= nb then
+							-- Internal error: it has already been checked somewhere else
+							-- that there was the same number of actual and formal arguments.
+						set_fatal_error
+						error_handler.report_gibbp_error
 					else
 						from i := nb until i < 1 loop
 							l_dynamic_type_set := dynamic_type_set_stack.item
 							dynamic_type_set_stack.remove
-							l_dynamic_type_set.put_target (l_argument_types.item (i), current_system)
+							create l_attachment.make (l_dynamic_type_set, an_actuals.actual_argument (i), current_feature, current_type)
+							l_argument_types.item (i).put_source (l_attachment, current_system)
 							i := i - 1
 						end
 					end
 				end
 				l_dynamic_type_set := l_query.result_type
 				if l_dynamic_type_set = Void then
--- TODO: internal error
+						-- Internal error: the result type set of a query cannot be void.
+					set_fatal_error
+					error_handler.report_gibbq_error
 				else
 					dynamic_type_set_stack.force (l_dynamic_type_set)
 				end
 			end
 		end
 
-	report_unqualified_call_instruction (a_feature: ET_FEATURE) is
+	report_unqualified_call_instruction (a_name: ET_FEATURE_NAME; a_feature: ET_FEATURE; an_actuals: ET_ACTUAL_ARGUMENT_LIST) is
 			-- Report that an unqualified call instruction has been processed.
 		local
 			i, nb: INTEGER
 			l_argument_types: ET_DYNAMIC_TYPE_SET_LIST
 			l_procedure: ET_DYNAMIC_FEATURE
 			l_dynamic_type_set: ET_DYNAMIC_TYPE_SET
+			l_attachment: ET_DYNAMIC_ACTUAL_ARGUMENT
 		do
 			if current_type = current_dynamic_type.base_type then
 				l_procedure := current_dynamic_type.dynamic_feature (a_feature, current_system)
@@ -914,12 +1177,22 @@ feature {NONE} -- Event handling
 				if l_argument_types /= Void then
 					nb := l_argument_types.count
 					if dynamic_type_set_stack.count < nb then
--- TODO: internal error
+							-- Internal error: the stack of dynamic type sets should 
+							-- at least contain the items for the arguments of the
+							-- unqualified call.
+						set_fatal_error
+						error_handler.report_gibbr_error
+					elseif an_actuals = Void or else an_actuals.count /= nb then
+							-- Internal error: it has already been checked somewhere else
+							-- that there was the same number of actual and formal arguments.
+						set_fatal_error
+						error_handler.report_gibbs_error
 					else
 						from i := nb until i < 1 loop
 							l_dynamic_type_set := dynamic_type_set_stack.item
 							dynamic_type_set_stack.remove
-							l_dynamic_type_set.put_target (l_argument_types.item (i), current_system)
+							create l_attachment.make (l_dynamic_type_set, an_actuals.actual_argument (i), current_feature, current_type)
+							l_argument_types.item (i).put_source (l_attachment, current_system)
 							i := i - 1
 						end
 					end
@@ -934,7 +1207,6 @@ feature {NONE} -- Event handling
 		do
 			if current_type = current_dynamic_type.base_type then
 				l_type := current_system.none_type
-				l_type.set_alive (True)
 				dynamic_type_set_stack.force (l_type)
 			end
 		end

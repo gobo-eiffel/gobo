@@ -114,7 +114,6 @@ feature {NONE} -- Initialization
 			create instruction_context.make_with_capacity (current_type, 10)
 			create expression_context.make_with_capacity (current_type, 10)
 			create assertion_context.make_with_capacity (current_type, 10)
-			create convert_actuals.make_with_capacity (1)
 			current_target_type := a_universe.any_class
 			current_context := actual_context
 		end
@@ -134,7 +133,6 @@ feature {NONE} -- Initialization
 				create instruction_context.make_with_capacity (current_type, 10)
 				create expression_context.make_with_capacity (current_type, 10)
 				create assertion_context.make_with_capacity (current_type, 10)
-				create convert_actuals.make_with_capacity (1)
 				current_target_type := universe.any_class
 				current_context := actual_context
 			else
@@ -360,7 +358,7 @@ feature -- Validity checking
 			current_target_type := old_target_type
 		end
 
-	check_actual_arguments_validity (an_actuals: ET_ACTUAL_ARGUMENT_LIST;
+	check_actual_arguments_validity (an_actuals: ET_ACTUAL_ARGUMENTS;
 		a_context: ET_NESTED_TYPE_CONTEXT; a_name: ET_FEATURE_NAME; a_feature: ET_FEATURE;
 		a_class: ET_CLASS; a_current_feature: ET_FEATURE; a_current_type: ET_BASE_TYPE) is
 			-- Check actual arguments validity when calling `a_feature' named `a_name'
@@ -383,6 +381,7 @@ feature -- Validity checking
 			old_type: ET_BASE_TYPE
 			a_class_impl: ET_CLASS
 			an_actual: ET_EXPRESSION
+			an_actual_list: ET_ACTUAL_ARGUMENT_LIST
 			a_formals: ET_FORMAL_ARGUMENT_LIST
 			a_formal: ET_FORMAL_ARGUMENT
 			i, nb: INTEGER
@@ -451,7 +450,7 @@ feature -- Validity checking
 				l_formal_type := tokens.like_current
 				nb := an_actuals.count
 				from i := 1 until i > nb loop
-					an_actual := an_actuals.expression (i)
+					an_actual := an_actuals.actual_argument (i)
 					a_formal := a_formals.formal_argument (i)
 					l_formal_context.force_first (a_formal.type)
 					check_expression_validity (an_actual, actual_context, l_formal_context, current_feature, current_type)
@@ -459,21 +458,26 @@ feature -- Validity checking
 						had_error := True
 					elseif not actual_context.conforms_to_type (l_formal_type, l_formal_context, universe) then
 						a_class_impl := current_feature.implementation_class
-						if current_class = a_class_impl then
-							a_convert_feature := type_checker.convert_feature (actual_context, l_formal_context)
-						else
+						if current_class /= a_class_impl then
 								-- Convertibility should be resolved in the implementation class.
 							a_convert_feature := Void
+						elseif an_actual_list /= Void then
+							a_convert_feature := type_checker.convert_feature (actual_context, l_formal_context)
+						else
+							an_actual_list ?= an_actuals
+							if an_actual_list /= Void then
+								a_convert_feature := type_checker.convert_feature (actual_context, l_formal_context)
+							end
 						end
 						if a_convert_feature /= Void then
 								-- Insert the conversion feature call in the AST.
 							a_convert_expression := universe.ast_factory.new_convert_expression (an_actual, a_convert_feature)
 							if a_convert_expression /= Void then
-								an_expression_comma ?= an_actuals.item (i)
+								an_expression_comma ?= an_actual_list.item (i)
 								if an_expression_comma /= Void then
 									an_expression_comma.set_expression (a_convert_expression)
 								else
-									an_actuals.put (a_convert_expression, i)
+									an_actual_list.put (a_convert_expression, i)
 								end
 							end
 						else
@@ -1464,7 +1468,7 @@ feature {NONE} -- Instruction validity
 							an_instruction.set_source (a_convert_expression)
 -- TODO:
 --							report_convert_expression
-							report_assignment
+							report_assignment (an_instruction)
 						else
 							set_fatal_error
 -- TODO: error
@@ -1481,7 +1485,7 @@ feature {NONE} -- Instruction validity
 						end
 					end
 				else
-					report_assignment
+					report_assignment (an_instruction)
 				end
 			end
 		end
@@ -1527,7 +1531,7 @@ feature {NONE} -- Instruction validity
 				set_fatal_error
 			end
 			if not has_fatal_error then
-				report_assignment_attempt
+				report_assignment_attempt (an_instruction)
 			end
 		end
 
@@ -1632,6 +1636,7 @@ feature {NONE} -- Instruction validity
 			a_call: ET_QUALIFIED_CALL
 			a_name: ET_FEATURE_NAME
 			a_position: ET_POSITION
+			had_error: BOOLEAN
 		do
 			has_fatal_error := False
 			actual_context.reset (current_type)
@@ -1750,7 +1755,11 @@ feature {NONE} -- Instruction validity
 				a_creation_named_type := a_context.named_type (universe)
 				a_class_type ?= a_creation_named_type
 				if a_class_type /= Void then
+					had_error := has_fatal_error
 					check_creation_type_validity (a_class_type, a_position)
+					if had_error then
+						set_fatal_error
+					end
 				end
 				if a_feature = Void then
 					check
@@ -1817,14 +1826,17 @@ feature {NONE} -- Instruction validity
 							end
 						end
 					end
+					had_error := has_fatal_error
 					if a_call /= Void then
 						check_sub_actual_arguments_validity (a_call.arguments, a_context, a_name, a_feature, a_class)
 					else
 						check_sub_actual_arguments_validity (Void, a_context, a_name, a_feature, a_class)
 					end
+					if had_error then
+						set_fatal_error
+					end
 					if not has_fatal_error then
-						report_creation_expression (a_creation_named_type, a_feature)
-						report_assignment
+						report_creation_instruction (an_instruction, a_creation_named_type, a_feature)
 					end
 				end
 			end
@@ -2513,16 +2525,19 @@ feature {NONE} -- Expression validity
 			has_fatal_error := False
 			a_literal := a_constant.literal
 			if not a_literal.is_integer then
-				set_fatal_error
+				report_character_constant
 -- TODO
+--				set_fatal_error
 			else
 				a_code := a_literal.to_integer
 				if a_code < Platform.Minimum_character_code then
-					set_fatal_error
+					report_character_constant
 -- TODO
+--					set_fatal_error
 				elseif a_code > Platform.Maximum_character_code then
-					set_fatal_error
+					report_character_constant
 -- TODO
+--					set_fatal_error
 				else
 					a_value := INTEGER_.to_character (a_code)
 					report_character_constant
@@ -2553,15 +2568,13 @@ feature {NONE} -- Expression validity
 			a_context_not_void: a_context /= Void
 		local
 			a_convert_feature: ET_CONVERT_FEATURE
-			an_actuals: ET_ACTUAL_ARGUMENT_LIST
+			an_actuals: ET_ACTUAL_ARGUMENTS
 		do
 			a_convert_feature := an_expression.convert_feature
 			if a_convert_feature.is_convert_to then
 				check_qualified_call_validity (an_expression.expression, a_convert_feature.name, Void, a_context, False)
 			elseif a_convert_feature.is_convert_from then
-				an_actuals := convert_actuals
-				an_actuals.wipe_out
-				an_actuals.put_first (an_expression.expression)
+				an_actuals := an_expression.expression
 				check_creation_expression_validity (current_target_type.named_type (universe),
 					a_convert_feature.name, an_actuals, an_expression.position, a_context)
 			else
@@ -2589,7 +2602,7 @@ feature {NONE} -- Expression validity
 			end
 		end
 
-	check_creation_expression_validity (a_type: ET_TYPE; a_name: ET_FEATURE_NAME; an_actuals: ET_ACTUAL_ARGUMENT_LIST;
+	check_creation_expression_validity (a_type: ET_TYPE; a_name: ET_FEATURE_NAME; an_actuals: ET_ACTUAL_ARGUMENTS;
 		a_type_position: ET_POSITION; a_context: ET_NESTED_TYPE_CONTEXT) is
 			-- Check validity of creation expression.
 			-- Set `has_fatal_error' if a fatal error occurred.
@@ -2612,6 +2625,7 @@ feature {NONE} -- Expression validity
 			l_type: ET_TYPE
 			a_seed: INTEGER
 			l_name: ET_FEATURE_NAME
+			had_error: BOOLEAN
 		do
 			has_fatal_error := False
 			l_type := a_type
@@ -2752,9 +2766,13 @@ feature {NONE} -- Expression validity
 							end
 						end
 					end
+					had_error := has_fatal_error
 					check_sub_actual_arguments_validity (an_actuals, a_context, l_name, a_feature, a_class)
+					if had_error then
+						set_fatal_error
+					end
 					if not has_fatal_error then
-						report_creation_expression (a_creation_type, a_feature)
+						report_creation_expression (a_creation_type, a_feature, an_actuals)
 					end
 				end
 			end
@@ -2942,6 +2960,7 @@ feature {NONE} -- Expression validity
 			an_identifier: ET_IDENTIFIER
 			an_arguments: ET_FORMAL_ARGUMENT_LIST
 			a_locals: ET_LOCAL_VARIABLE_LIST
+			a_resolved_local_type: ET_TYPE
 			a_typed_pointer_class: ET_CLASS
 			a_typed_pointer_type: ET_GENERIC_CLASS_TYPE
 			an_actuals: ET_ACTUAL_PARAMETER_LIST
@@ -3025,9 +3044,26 @@ feature {NONE} -- Expression validity
 							if a_feature /= Void then
 								a_seed := a_feature.first_seed
 								a_name.set_seed (a_seed)
-									-- $feature_name is of type POINTER, even
-									-- in ISE and its TYPED_POINTER support.
-								a_context.force_first (universe.pointer_class)
+								if a_feature.is_attribute then
+									a_typed_pointer_class := universe.typed_pointer_class
+									if a_typed_pointer_class.is_preparsed then
+											-- Class TYPED_POINTER has been found in the universe.
+											-- Use ISE's implementation.
+										create an_actuals.make_with_capacity (1)
+										an_actuals.put_first (a_feature.type)
+										create a_typed_pointer_type.make (Void, a_typed_pointer_class.name, an_actuals, a_typed_pointer_class)
+										report_typed_pointer_expression (a_typed_pointer_type, a_context)
+										a_context.force_first (a_typed_pointer_type)
+									else
+										a_context.force_first (universe.pointer_class)
+										report_pointer_expression
+									end
+								else
+										-- $feature_name is of type POINTER, even
+										-- in ISE and its TYPED_POINTER support.
+									a_context.force_first (universe.pointer_class)
+									report_pointer_expression
+								end
 									-- No need to check validity in the
 									-- context of `current_class' again.
 								already_checked := True
@@ -3082,11 +3118,18 @@ feature {NONE} -- Expression validity
 						if a_typed_pointer_class.is_preparsed then
 								-- Class TYPED_POINTER has been found in the universe.
 								-- Use ISE's implementation.
-							create an_actuals.make_with_capacity (1)
-							an_actuals.put_first (a_locals.local_variable (a_seed).type)
-							create a_typed_pointer_type.make (Void, a_typed_pointer_class.name, an_actuals, a_typed_pointer_class)
-							report_typed_pointer_expression (a_typed_pointer_type, a_context)
-							a_context.force_first (a_typed_pointer_type)
+								-- Contrary to the types appearing in the signatures, types of
+								-- local variables in the AST are those found in the implementation
+								-- class of `current_feature', and hence need to be resolved in
+								-- `current_type'.
+							a_resolved_local_type := resolved_formal_parameters (a_locals.local_variable (a_seed).type)
+							if not has_fatal_error then
+								create an_actuals.make_with_capacity (1)
+								an_actuals.put_first (a_resolved_local_type)
+								create a_typed_pointer_type.make (Void, a_typed_pointer_class.name, an_actuals, a_typed_pointer_class)
+								report_typed_pointer_expression (a_typed_pointer_type, a_context)
+								a_context.force_first (a_typed_pointer_type)
+							end
 						else
 							a_context.force_first (universe.pointer_class)
 							report_pointer_expression
@@ -3099,10 +3142,26 @@ feature {NONE} -- Expression validity
 					else
 						a_feature := current_class.seeded_feature (a_seed)
 						if a_feature /= Void then
-								-- $feature_name is of type POINTER, even
-								-- in ISE and its TYPED_POINTER support.
-							a_context.force_first (universe.pointer_class)
-							report_pointer_expression
+							if a_feature.is_attribute then
+								a_typed_pointer_class := universe.typed_pointer_class
+								if a_typed_pointer_class.is_preparsed then
+										-- Class TYPED_POINTER has been found in the universe.
+										-- Use ISE's implementation.
+									create an_actuals.make_with_capacity (1)
+									an_actuals.put_first (a_feature.type)
+									create a_typed_pointer_type.make (Void, a_typed_pointer_class.name, an_actuals, a_typed_pointer_class)
+									report_typed_pointer_expression (a_typed_pointer_type, a_context)
+									a_context.force_first (a_typed_pointer_type)
+								else
+									a_context.force_first (universe.pointer_class)
+									report_pointer_expression
+								end
+							else
+									-- $feature_name is of type POINTER, even
+									-- in ISE and its TYPED_POINTER support.
+								a_context.force_first (universe.pointer_class)
+								report_pointer_expression
+							end
 						else
 								-- Report internal error: if we got a seed, the
 								-- `a_feature' should not be void.
@@ -3261,9 +3320,9 @@ feature {NONE} -- Expression validity
 			a_cast_expression: ET_INFIX_CAST_EXPRESSION
 		do
 			has_fatal_error := False
-			report_qualified_call
-			any_type := universe.any_type
 			a_name := an_expression.name
+			report_qualified_call (a_name)
+			any_type := universe.any_type
 			a_target := an_expression.left
 			a_seed := a_name.seed
 			if a_seed = 0 then
@@ -3394,6 +3453,7 @@ feature {NONE} -- Expression validity
 									a_convert_expression := universe.ast_factory.new_convert_expression (an_actual, a_convert_feature)
 									if a_convert_expression /= Void then
 										an_expression.set_right (a_convert_expression)
+										an_actual := a_convert_expression
 									end
 								else
 									had_error := True
@@ -3438,6 +3498,7 @@ feature {NONE} -- Expression validity
 														a_class := other_class
 															-- Insert the cast expression in the AST.
 														an_expression.set_left (a_cast_expression)
+														a_target := a_cast_expression
 													end
 												end
 											end
@@ -3490,12 +3551,13 @@ feature {NONE} -- Expression validity
 							formal_context.copy_type_context (a_context)
 							formal_context.force_first (a_feature.arguments.formal_argument (1).type)
 							a_context.wipe_out
+							report_expression
 							check_subexpression_validity (an_expression.right, a_context, formal_context)
 						else
 							a_context.force_first (a_type)
 						end
 						if not has_fatal_error then
-							report_qualified_call_expression (a_feature)
+							report_qualified_call_expression (a_target, a_name, a_feature, an_actual)
 						end
 					end
 				end
@@ -3546,6 +3608,10 @@ feature {NONE} -- Expression validity
 					set_fatal_error
 					error_handler.report_giaao_error
 				else
+						-- Contrary to the types appearing in the signatures, types of
+						-- local variables in the AST are those found in the implementation
+						-- class of `current_feature', and hence need to be resolved in
+						-- `current_type'.
 					a_type := resolved_formal_parameters (a_locals.local_variable (a_seed).type)
 					if not has_fatal_error then
 						a_context.force_first (a_type)
@@ -3600,6 +3666,7 @@ feature {NONE} -- Expression validity
 -- TODO: insert convert feature in AST.
 							end
 						end
+						report_expression
 					end
 					expression_context.wipe_out
 					i := i + 1
@@ -3623,6 +3690,7 @@ feature {NONE} -- Expression validity
 						elseif not hybrid_type then
 							hybrid_type := not expression_context.same_named_type (a_type, current_type, universe)
 						end
+						report_expression
 					end
 					expression_context.wipe_out
 					i := i + 1
@@ -3681,6 +3749,7 @@ feature {NONE} -- Expression validity
 					had_error := True
 				else
 					an_actuals.put_first (expression_context.named_type (universe))
+					report_expression
 				end
 				expression_context.wipe_out
 				i := i - 1
@@ -3693,6 +3762,7 @@ feature {NONE} -- Expression validity
 					had_error := True
 				else
 					an_actuals.put_first (expression_context.named_type (universe))
+					report_expression
 				end
 				expression_context.wipe_out
 				formal_context.wipe_out
@@ -3864,11 +3934,11 @@ feature {NONE} -- Expression validity
 								check_sub_actual_arguments_validity (an_actuals, formal_context, a_precursor_keyword, a_feature, a_class)
 								if not has_fatal_error then
 									if a_instruction then 
-										report_precursor_instruction (a_parent_type, a_feature)
+										report_precursor_instruction (a_precursor, a_parent_type, a_feature)
 									else
 -- TODO: like argument and get the type as it was in the parent.
 										a_context.force_first (current_feature.type)
-										report_precursor_expression (a_parent_type, a_feature)
+										report_precursor_expression (a_precursor, a_parent_type, a_feature)
 									end
 								end
 							end
@@ -3908,7 +3978,7 @@ feature {NONE} -- Expression validity
 			had_error: BOOLEAN
 		do
 			has_fatal_error := False
-			report_qualified_call
+			report_qualified_call (a_name)
 			any_type := universe.any_type
 			a_seed := a_name.seed
 			if a_seed = 0 then
@@ -4025,7 +4095,7 @@ feature {NONE} -- Expression validity
 								error_handler.report_giach_error
 							end
 						elseif not has_fatal_error then
-							report_qualified_call_instruction (a_feature)
+							report_qualified_call_instruction (a_target, a_name, a_feature, an_actuals)
 						end
 					else
 						if a_type = Void then
@@ -4050,7 +4120,8 @@ feature {NONE} -- Expression validity
 									formal_context.copy_type_context (a_context)
 									formal_context.force_first (a_feature.arguments.formal_argument (1).type)
 									a_context.wipe_out
-									check_subexpression_validity (an_actuals.expression (1), a_context, formal_context)
+									report_expression
+									check_subexpression_validity (an_actuals.actual_argument (1), a_context, formal_context)
 								else
 									a_context.force_first (a_type)
 								end
@@ -4058,7 +4129,7 @@ feature {NONE} -- Expression validity
 								a_context.force_first (a_type)
 							end
 							if not has_fatal_error then
-								report_qualified_call_expression (a_feature)
+								report_qualified_call_expression (a_target, a_name, a_feature, an_actuals)
 							end
 						end
 					end
@@ -4455,7 +4526,7 @@ feature {NONE} -- Expression validity
 									error_handler.report_giacn_error
 								end
 							elseif not has_fatal_error then
-								report_static_call_instruction (a_type, a_feature)
+								report_static_call_instruction (a_call, a_type, a_feature)
 							end
 						else
 -- TODO: check that `a_feature' is a constant attribute or an external function.
@@ -4475,7 +4546,7 @@ feature {NONE} -- Expression validity
 							elseif not has_fatal_error then
 -- TODO: like argument.
 								a_context.force_first (a_result_type)
-								report_static_call_expression (a_type, a_feature)
+								report_static_call_expression (a_call, a_type, a_feature)
 							end
 						end
 					end
@@ -4812,7 +4883,7 @@ feature {NONE} -- Expression validity
 								error_handler.report_giack_error
 							end
 						elseif not has_fatal_error then
-							report_unqualified_call_instruction (a_feature)
+							report_unqualified_call_instruction (a_name, a_feature, an_actuals)
 						end
 					else
 						if a_type = Void then
@@ -4837,14 +4908,15 @@ feature {NONE} -- Expression validity
 									formal_context.reset (current_type)
 									formal_context.force_first (a_feature.arguments.formal_argument (1).type)
 									a_context.wipe_out
-									check_subexpression_validity (an_actuals.expression (1), a_context, formal_context)
+									report_expression
+									check_subexpression_validity (an_actuals.actual_argument (1), a_context, formal_context)
 								else
 									a_context.force_first (a_type)
 								end
 							else
 								a_context.force_first (a_type)
 							end
-							report_unqualified_call_expression (a_feature)
+							report_unqualified_call_expression (a_name, a_feature, an_actuals)
 						end
 					end
 				end
@@ -5059,7 +5131,7 @@ feature {NONE} -- Expression validity
 			end
 		end
 
-	check_sub_actual_arguments_validity (an_actuals: ET_ACTUAL_ARGUMENT_LIST; a_context: ET_NESTED_TYPE_CONTEXT;
+	check_sub_actual_arguments_validity (an_actuals: ET_ACTUAL_ARGUMENTS; a_context: ET_NESTED_TYPE_CONTEXT;
 		a_name: ET_FEATURE_NAME; a_feature: ET_FEATURE; a_class: ET_CLASS) is
 			-- Check actual arguments validity when calling `a_feature' named `a_name'
 			-- in context of its target `a_context'. `a_class' is the base class of the
@@ -5102,30 +5174,21 @@ feature {NONE} -- Agent validity
 			an_expression_not_void: an_expression /= Void
 			a_context_not_void: a_context /= Void
 		local
-			a_name: ET_FEATURE_NAME
-			an_arguments: ET_AGENT_ACTUAL_ARGUMENT_LIST
 			a_target: ET_AGENT_TARGET
 			an_expression_target: ET_EXPRESSION
 			a_type_target: ET_TARGET_TYPE
-			an_any: ANY
 		do
-			a_name := an_expression.name
-			an_arguments := an_expression.arguments
 			a_target := an_expression.target
 			if a_target = Void then
-				check_unqualified_call_agent_validity (a_name, an_arguments, a_context)
+				check_unqualified_call_agent_validity (an_expression, a_context)
 			else
-					-- SmartEiffel 1.1 does not allow the assignment attempt
-					-- because ET_EXPRESSION does not conform to ET_AGENT_TARGET.
-				-- an_expression_target ?= a_target
-				an_any := a_target
-				an_expression_target ?= an_any
+				an_expression_target ?= a_target
 				if an_expression_target /= Void then
-					check_qualified_call_agent_validity (an_expression_target, a_name, an_arguments, a_context)
+					check_qualified_call_agent_validity (an_expression, an_expression_target, a_context)
 				else
 					a_type_target ?= a_target
 					if a_type_target /= Void then
-						check_typed_call_agent_validity (a_type_target.type, a_name, an_arguments, a_context)
+						check_typed_call_agent_validity (an_expression, a_type_target, a_context)
 					else
 							-- Internal error: no other kind of targets.
 						set_fatal_error
@@ -5135,14 +5198,16 @@ feature {NONE} -- Agent validity
 			end
 		end
 
-	check_unqualified_call_agent_validity (a_name: ET_FEATURE_NAME;
-		an_actuals: ET_AGENT_ACTUAL_ARGUMENT_LIST; a_context: ET_NESTED_TYPE_CONTEXT) is
+	check_unqualified_call_agent_validity (an_expression: ET_CALL_AGENT; a_context: ET_NESTED_TYPE_CONTEXT) is
 			-- Check validity of unqualified call agent.
 			-- Set `has_fatal_error' if a fatal error occurred.
 		require
-			a_name_not_void: a_name /= Void
+			an_expression_not_void: an_expression /= Void
+			unqualified_call_agent: an_expression.target = Void
 			a_context_not_void: a_context /= Void
 		local
+			a_name: ET_FEATURE_NAME
+			an_actuals: ET_AGENT_ACTUAL_ARGUMENT_LIST
 			a_class_impl: ET_CLASS
 			a_feature: ET_FEATURE
 			a_type: ET_TYPE
@@ -5156,6 +5221,7 @@ feature {NONE} -- Agent validity
 			had_error: BOOLEAN
 		do
 			has_fatal_error := False
+			a_name := an_expression.name
 			a_seed := a_name.seed
 			if a_seed = 0 then
 					-- We need to resolve `a_name' in the implementation
@@ -5210,6 +5276,7 @@ feature {NONE} -- Agent validity
 					if a_formal_arguments /= Void then
 						create an_open_operands.make_with_capacity (a_formal_arguments.count)
 					end
+					an_actuals := an_expression.arguments
 					check_agent_arguments_validity (an_actuals, a_context, a_name, a_feature, Void, an_open_operands)
 					if had_error then
 						set_fatal_error
@@ -5246,22 +5313,24 @@ feature {NONE} -- Agent validity
 								create an_agent_type.make (Void, an_agent_class.name, a_parameters, an_agent_class)
 --							end
 						end
-						report_unqualified_call_agent (a_feature, an_agent_type, a_context)
+						report_unqualified_call_agent (an_expression, a_feature, an_agent_type, a_context)
 						a_context.force_first (an_agent_type)
 					end
 				end
 			end
 		end
 
-	check_qualified_call_agent_validity (a_target: ET_EXPRESSION; a_name: ET_FEATURE_NAME;
-		an_actuals: ET_AGENT_ACTUAL_ARGUMENT_LIST; a_context: ET_NESTED_TYPE_CONTEXT) is
+	check_qualified_call_agent_validity (an_expression: ET_CALL_AGENT; a_target: ET_EXPRESSION; a_context: ET_NESTED_TYPE_CONTEXT) is
 			-- Check validity of qualified call agent.
 			-- Set `has_fatal_error' if a fatal error occurred.
 		require
+			an_expression_not_void: an_expression /= Void
 			a_target_not_void: a_target /= Void
-			a_name_not_void: a_name /= Void
+			valid_target: a_target = an_expression.target
 			a_context_not_void: a_context /= Void
 		local
+			a_name: ET_FEATURE_NAME
+			an_actuals: ET_AGENT_ACTUAL_ARGUMENT_LIST
 			a_class_impl: ET_CLASS
 			a_class: ET_CLASS
 			a_feature: ET_FEATURE
@@ -5278,7 +5347,8 @@ feature {NONE} -- Agent validity
 			had_error: BOOLEAN
 		do
 			has_fatal_error := False
-			report_qualified_call
+			a_name := an_expression.name
+			report_qualified_call (a_name)
 			any_type := universe.any_type
 			a_seed := a_name.seed
 			if a_seed = 0 then
@@ -5370,6 +5440,7 @@ feature {NONE} -- Agent validity
 					if a_formal_arguments /= Void then
 						create an_open_operands.make_with_capacity (a_formal_arguments.count)
 					end
+					an_actuals := an_expression.arguments
 					check_agent_arguments_validity (an_actuals, a_context, a_name, a_feature, a_class, an_open_operands)
 					if has_fatal_error then
 						had_error := True
@@ -5417,22 +5488,24 @@ feature {NONE} -- Agent validity
 								create an_agent_type.make (Void, an_agent_class.name, a_parameters, an_agent_class)
 --							end
 						end
-						report_qualified_call_agent (a_feature, an_agent_type, a_context)
+						report_qualified_call_agent (an_expression, a_feature, an_agent_type, a_context)
 						a_context.force_first (an_agent_type)
 					end
 				end
 			end
 		end
 
-	check_typed_call_agent_validity (a_type: ET_TYPE; a_name: ET_FEATURE_NAME;
-		an_actuals: ET_AGENT_ACTUAL_ARGUMENT_LIST; a_context: ET_NESTED_TYPE_CONTEXT) is
+	check_typed_call_agent_validity (an_expression: ET_CALL_AGENT; a_target: ET_TARGET_TYPE; a_context: ET_NESTED_TYPE_CONTEXT) is
 			-- Check validity of typed call agent.
 			-- Set `has_fatal_error' if a fatal error occurred.
 		require
-			a_type_not_void: a_type /= Void
-			a_name_not_void: a_name /= Void
+			an_expression_not_void: an_expression /= Void
+			a_target_not_void: a_target /= Void
+			valid_target: a_target = an_expression.target
 			a_context_not_void: a_context /= Void
 		local
+			a_name: ET_FEATURE_NAME
+			an_actuals: ET_AGENT_ACTUAL_ARGUMENT_LIST
 			a_class_impl: ET_CLASS
 			a_class: ET_CLASS
 			a_feature: ET_FEATURE
@@ -5448,8 +5521,10 @@ feature {NONE} -- Agent validity
 			had_error: BOOLEAN
 		do
 			has_fatal_error := False
-			report_qualified_call
-			check_type_validity (a_type)
+			a_name := an_expression.name
+			report_qualified_call (a_name)
+			a_target_type := a_target.type
+			check_type_validity (a_target_type)
 			if not has_fatal_error then
 				a_seed := a_name.seed
 				if a_seed = 0 then
@@ -5464,8 +5539,8 @@ feature {NONE} -- Agent validity
 							error_handler.report_giacv_error
 						end
 					else
-						report_agent_open_operand (a_type, a_context)
-						a_context.force_first (a_type)
+						report_agent_open_operand (a_target_type, a_context)
+						a_context.force_first (a_target_type)
 						a_class := a_context.base_class (universe)
 						a_class.process (universe.interface_checker)
 						if a_class.has_interface_error then
@@ -5486,7 +5561,7 @@ feature {NONE} -- Agent validity
 				end
 				if not has_fatal_error then
 					if a_feature = Void then
-						a_target_type := resolved_formal_parameters (a_type)
+						a_target_type := resolved_formal_parameters (a_target_type)
 						if not has_fatal_error then
 							report_agent_open_operand (a_target_type, a_context)
 							a_context.force_first (a_target_type)
@@ -5530,6 +5605,7 @@ feature {NONE} -- Agent validity
 						else
 							create an_open_operands.make_with_capacity (1)
 						end
+						an_actuals := an_expression.arguments
 						check_agent_arguments_validity (an_actuals, a_context, a_name, a_feature, a_class, an_open_operands)
 						if has_fatal_error then
 							had_error := True
@@ -5578,7 +5654,7 @@ feature {NONE} -- Agent validity
 									create an_agent_type.make (Void, an_agent_class.name, a_parameters, an_agent_class)
 --								end
 							end
-							report_qualified_call_agent (a_feature, an_agent_type, a_context)
+							report_qualified_call_agent (an_expression, a_feature, an_agent_type, a_context)
 							a_context.force_first (an_agent_type)
 						end
 					end
@@ -5804,17 +5880,19 @@ feature {NONE} -- Event handling
 		do
 		end
 
-	report_assignment is
+	report_assignment (an_instruction: ET_ASSIGNMENT) is
 			-- Report that an assignment instruction has been processed.
 		require
 			no_error: not has_fatal_error
+			an_instruction_set: an_instruction /= Void
 		do
 		end
 
-	report_assignment_attempt is
+	report_assignment_attempt (an_instruction: ET_ASSIGNMENT_ATTEMPT) is
 			-- Report that an assignment attempt instruction has been processed.
 		require
 			no_error: not has_fatal_error
+			an_instruction_set: an_instruction /= Void
 		do
 		end
 
@@ -5849,10 +5927,21 @@ feature {NONE} -- Event handling
 		do
 		end
 
-	report_creation_expression (a_creation_type: ET_NAMED_TYPE; a_procedure: ET_FEATURE) is
-			-- Report that a creation has been processed.
+	report_creation_expression (a_creation_type: ET_NAMED_TYPE; a_procedure: ET_FEATURE; an_actuals: ET_ACTUAL_ARGUMENTS) is
+			-- Report that a creation expression has been processed.
 		require
 			no_error: not has_fatal_error
+			a_creation_type_not_void: a_creation_type /= Void
+			a_procedure_not_void: a_procedure /= Void
+			a_creation_procedure: a_procedure.is_procedure
+		do
+		end
+
+	report_creation_instruction (an_instruction: ET_CREATION_INSTRUCTION; a_creation_type: ET_NAMED_TYPE; a_procedure: ET_FEATURE) is
+			-- Report that a creation instruction has been processed.
+		require
+			no_error: not has_fatal_error
+			an_instruction_not_void: an_instruction /= Void
 			a_creation_type_not_void: a_creation_type /= Void
 			a_procedure_not_void: a_procedure /= Void
 			a_creation_procedure: a_procedure.is_procedure
@@ -5881,7 +5970,7 @@ feature {NONE} -- Event handling
 		end
 
 	report_expression is
-			-- Report that an expression has been processed.
+			-- Report that an expression has been consumed.
 		require
 			no_error: not has_fatal_error
 		do
@@ -5987,38 +6076,43 @@ feature {NONE} -- Event handling
 		do
 		end
 
-	report_precursor_expression (a_parent_type: ET_BASE_TYPE; a_feature: ET_FEATURE) is
+	report_precursor_expression (an_expression: ET_PRECURSOR; a_parent_type: ET_BASE_TYPE; a_feature: ET_FEATURE) is
 			-- Report that a precursor expression has been processed.
 		require
 			no_error: not has_fatal_error
+			an_expression_not_void: an_expression /= Void
 			a_parent_type_not_void: a_parent_type /= Void
 			a_feature_not_void: a_feature /= Void
 			a_feature_query: not a_feature.is_procedure
 		do
 		end
 
-	report_precursor_instruction (a_parent_type: ET_BASE_TYPE; a_feature: ET_FEATURE) is
+	report_precursor_instruction (an_instruction: ET_PRECURSOR; a_parent_type: ET_BASE_TYPE; a_feature: ET_FEATURE) is
 			-- Report that a precursor instruction has been processed.
 		require
 			no_error: not has_fatal_error
+			an_instruction_not_void: an_instruction /= Void
 			a_parent_type_not_void: a_parent_type /= Void
 			a_feature_not_void: a_feature /= Void
 			a_feature_procedure: a_feature.is_procedure
 		do
 		end
 
-	report_qualified_call is
+	report_qualified_call (a_name: ET_FEATURE_NAME) is
 			-- Report that a qualified call will be processed.
 		require
 			no_error: not has_fatal_error
+			a_name_not_void: a_name /= Void
 		do
 		end
 
-	report_qualified_call_agent (a_feature: ET_FEATURE; a_type: ET_TYPE; a_context: ET_TYPE_CONTEXT) is
+	report_qualified_call_agent (an_expression: ET_CALL_AGENT; a_feature: ET_FEATURE; a_type: ET_TYPE; a_context: ET_TYPE_CONTEXT) is
 			-- Report that a qualified call (to `a_feature') agent
 			-- of type `a_type' in `a_context' has been processed.
 		require
 			no_error: not has_fatal_error
+			an_expression_not_void: an_expression /= Void
+			qualified_call_agent: an_expression.target /= Void
 			a_feature_not_void: a_feature /= Void
 			a_type_not_void: a_type /= Void
 			a_context_not_void: a_context /= Void
@@ -6026,19 +6120,25 @@ feature {NONE} -- Event handling
 		do
 		end
 
-	report_qualified_call_expression (a_feature: ET_FEATURE) is
+	report_qualified_call_expression (a_target: ET_EXPRESSION; a_name: ET_FEATURE_NAME;
+		a_feature: ET_FEATURE; an_actuals: ET_ACTUAL_ARGUMENTS) is
 			-- Report that a qualified call expression has been processed.
 		require
 			no_error: not has_fatal_error
+			a_target_not_void: a_target /= Void
+			a_name_not_void: a_name /= Void
 			a_feature_not_void: a_feature /= Void
 			a_feature_query: not a_feature.is_procedure
 		do
 		end
 
-	report_qualified_call_instruction (a_feature: ET_FEATURE) is
+	report_qualified_call_instruction (a_target: ET_EXPRESSION; a_name: ET_FEATURE_NAME;
+		a_feature: ET_FEATURE; an_actuals: ET_ACTUAL_ARGUMENTS) is
 			-- Report that a qualified call instruction has been processed.
 		require
 			no_error: not has_fatal_error
+			a_target_not_void: a_target /= Void
+			a_name_not_void: a_name /= Void
 			a_feature_not_void: a_feature /= Void
 			a_feature_procedure: a_feature.is_procedure
 		do
@@ -6068,20 +6168,22 @@ feature {NONE} -- Event handling
 		do
 		end
 
-	report_static_call_expression (a_type: ET_TYPE; a_feature: ET_FEATURE) is
+	report_static_call_expression (an_expression: ET_STATIC_FEATURE_CALL; a_type: ET_TYPE; a_feature: ET_FEATURE) is
 			-- Report that a static call expression has been processed.
 		require
 			no_error: not has_fatal_error
+			an_expression_not_void: an_expression /= Void
 			a_type_not_void: a_type /= Void
 			a_feature_not_void: a_feature /= Void
 			a_feature_query: not a_feature.is_procedure
 		do
 		end
 
-	report_static_call_instruction (a_type: ET_TYPE; a_feature: ET_FEATURE) is
+	report_static_call_instruction (an_instruction: ET_STATIC_FEATURE_CALL; a_type: ET_TYPE; a_feature: ET_FEATURE) is
 			-- Report that a static call instruction has been processed.
 		require
 			no_error: not has_fatal_error
+			an_instruction_not_void: an_instruction /= Void
 			a_type_not_void: a_type /= Void
 			a_feature_not_void: a_feature /= Void
 			a_feature_procedure: a_feature.is_procedure
@@ -6106,11 +6208,13 @@ feature {NONE} -- Event handling
 		do
 		end
 
-	report_unqualified_call_agent (a_feature: ET_FEATURE; a_type: ET_TYPE; a_context: ET_TYPE_CONTEXT) is
+	report_unqualified_call_agent (an_expression: ET_CALL_AGENT; a_feature: ET_FEATURE; a_type: ET_TYPE; a_context: ET_TYPE_CONTEXT) is
 			-- Report that an unqualified call (to `a_feature') agent
 			-- of type `a_type' in `a_context' has been processed.
 		require
 			no_error: not has_fatal_error
+			an_expression_not_void: an_expression /= Void
+			unqualified_call_agent: an_expression.target = Void
 			a_feature_not_void: a_feature /= Void
 			a_type_not_void: a_type /= Void
 			a_context_not_void: a_context /= Void
@@ -6118,19 +6222,21 @@ feature {NONE} -- Event handling
 		do
 		end
 
-	report_unqualified_call_expression (a_feature: ET_FEATURE) is
+	report_unqualified_call_expression (a_name: ET_FEATURE_NAME; a_feature: ET_FEATURE; an_actuals: ET_ACTUAL_ARGUMENT_LIST) is
 			-- Report that an unqualified call expression has been processed.
 		require
 			no_error: not has_fatal_error
+			a_name_not_void: a_name /= Void
 			a_feature_not_void: a_feature /= Void
 			a_feature_query: not a_feature.is_procedure
 		do
 		end
 
-	report_unqualified_call_instruction (a_feature: ET_FEATURE) is
+	report_unqualified_call_instruction (a_name: ET_FEATURE_NAME; a_feature: ET_FEATURE; an_actuals: ET_ACTUAL_ARGUMENT_LIST) is
 			-- Report that an unqualified call instruction has been processed.
 		require
 			no_error: not has_fatal_error
+			a_name_not_void: a_name /= Void
 			a_feature_not_void: a_feature /= Void
 			a_feature_procedure: a_feature.is_procedure
 		do
@@ -6820,9 +6926,6 @@ feature {NONE} -- Implementation
 	assertion_context: ET_NESTED_TYPE_CONTEXT
 			-- Assertion context
 
-	convert_actuals: ET_ACTUAL_ARGUMENT_LIST
-			-- Actual argument list used to call convert features
-
 	internal_call: BOOLEAN
 			-- Have the process routines been called from here?
 
@@ -6851,7 +6954,5 @@ invariant
 	instruction_context_not_void: instruction_context /= Void
 	expression_context_not_void: expression_context /= Void
 	assertion_context_not_void: assertion_context /= Void
-	convert_actuals_not_void: convert_actuals /= Void
-	convert_actuals_capacity: convert_actuals.capacity >= 1
 
 end
