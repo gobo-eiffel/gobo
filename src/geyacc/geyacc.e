@@ -4,14 +4,17 @@ indexing
 
 		"Gobo Eiffel Yacc: syntactical analyzer generator"
 
-	author:     "Eric Bezault <ericb@gobo.demon.co.uk>"
-	copyright:  "Copyright (c) 1998, Eric Bezault"
+	author:     "Eric Bezault <ericb@gobosoft.com>"
+	copyright:  "Copyright (c) 1999, Eric Bezault and others"
+	license:    "Eiffel Forum Freeware License v1 (see forum.txt)"
 	date:       "$Date$"
 	revision:   "$Revision$"
 
 class GEYACC
 
 inherit
+
+	GEYACC_VERSION
 
 	KL_SHARED_EXCEPTIONS
 	KL_SHARED_ARGUMENTS
@@ -200,7 +203,6 @@ feature -- Access
 
 feature -- Constants
 
-	Version_number: STRING is "1.4"
 	Eiffel_extension: STRING is ".e"
 
 feature {NONE} -- Error handling
@@ -247,10 +249,28 @@ feature {NONE} -- Implementation
 			et1: DS_EQUALITY_TESTER [PR_RULE]
 			et2: DS_EQUALITY_TESTER [PR_TOKEN]
 			et3: DS_EQUALITY_TESTER [PR_VARIABLE]
+			et4: DS_EQUALITY_TESTER [PR_TYPE]
+			et5: DS_EQUALITY_TESTER [INTEGER]
+			et6: DS_EQUALITY_TESTER [STRING]
+			et7: DS_EQUALITY_TESTER [PR_TRANSITION]
+			et8: DS_EQUALITY_TESTER [PR_REDUCTION]
+			et9: DS_EQUALITY_TESTER [PR_STATE]
+			et10: DS_EQUALITY_TESTER [PR_PORTION]
+			et11: DS_EQUALITY_TESTER [PR_CONFLICT]
+			et12: DS_EQUALITY_TESTER [DS_ARRAYED_LIST [PR_VARIABLE]]
 		do
 			!! et1
 			!! et2
 			!! et3
+			!! et4
+			!! et5
+			!! et6
+			!! et7
+			!! et8
+			!! et9
+			!! et10
+			!! et11
+			!! et12
 		end
 
 invariant

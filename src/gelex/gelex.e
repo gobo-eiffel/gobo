@@ -4,8 +4,9 @@ indexing
 
 		"Gobo Eiffel Lex: lexical analyzer generator"
 
-	author:     "Eric Bezault <ericb@gobo.demon.co.uk>"
-	copyright:  "Copyright (c) 1998, Eric Bezault"
+	author:     "Eric Bezault <ericb@gobosoft.com>"
+	copyright:  "Copyright (c) 1999, Eric Bezault and others"
+	license:    "Eiffel Forum Freeware License v1 (see forum.txt)"
 	date:       "$Date$"
 	revision:   "$Revision$"
 
@@ -206,12 +207,26 @@ feature {NONE} -- Implementation
 			et3: DS_EQUALITY_TESTER [LX_START_CONDITION]
 			et4: DS_EQUALITY_TESTER [LX_RULE]
 			et5: DS_EQUALITY_TESTER [INTEGER]
+			et6: DS_EQUALITY_TESTER [STRING]
+			et7: DS_EQUALITY_TESTER [LX_NFA]
+			et8: DS_EQUALITY_TESTER [LX_PROTO]
+			et9: DS_EQUALITY_TESTER [DS_PAIR [UT_COMMAND, DS_LINKED_LIST [LX_RULE]]]
+			et10: DS_EQUALITY_TESTER [LX_TRANSITION_TABLE [LX_DFA_STATE]]
+			et11: DS_EQUALITY_TESTER [LX_SINGLETON]
+			et12: DS_EQUALITY_TESTER [LX_SYMBOL_CLASS]
 		do
 			!! et1
 			!! et2
 			!! et3
 			!! et4
 			!! et5
+			!! et6
+			!! et7
+			!! et8
+			!! et9
+			!! et10
+			!! et11
+			!! et12
 		end
 
 invariant
