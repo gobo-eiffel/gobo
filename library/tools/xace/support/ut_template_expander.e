@@ -212,19 +212,15 @@ feature
 			end
 		     end
 		  end
-		  if
-		     a_variables.has (str)
-		   then
-		     str := a_variables.item (str)
-		  elseif
-		     str.count = 0
-		   then
-		     str := "$"
+		  if a_variables.has (str) then
+		     Result.append_string (a_variables.item (str))
+		  elseif str.count = 0 then
+		     Result.append_character ('$')
 		  else
-		     str.prepend ("${")
-		     str.append_string ("}")
+		     Result.append_string ("${")
+		     Result.append_string (str)
+		     Result.append_character ('}')
 		  end
-		  Result.append_string (str)
 	       end
 	    end
 	 end
