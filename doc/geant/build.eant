@@ -206,9 +206,9 @@
 			output="${input}.html"
 			stylesheet="${GOBO}/doc/misc/gobo2html.xsl"
 		>
-			<parameter name="previous" value="${previous}.html"/>
-			<parameter name="next" value="${next}.html"/>
-			<parameter name="toc" value="overview.html"/>
+			<parameter name="previous" value="&quot;'${previous}.html'&quot;"/>
+			<parameter name="next" value="&quot;'${next}.html'&quot;"/>
+			<parameter name="toc" value="&quot;'overview.html'&quot;"/>
 		</xslt>
 	</target>
 

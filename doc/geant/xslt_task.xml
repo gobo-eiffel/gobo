@@ -1,8 +1,8 @@
-<?xml version="1.0"?> 
+<?xml version="1.0"?>
 
 <!--
 	description:
-	
+
 		"Xslt Tasks"
 
 	library: "Gobo Eiffel Ant"
@@ -21,10 +21,10 @@
 			Invoke XSLT Processor.
 		</para>
 	</sect1>
-	
+
 	<sect1 id="xslt_parameters">
 		<title>Parameters</title>
-	
+
 		<variablelist>
 			<varlistentry>
 				<term>processor</term>
@@ -38,7 +38,7 @@
 					<para><emphasis>Default: </emphasis>xalan_cpp</para>
 				</listitem>
 			</varlistentry>
-		
+
 			<varlistentry>
 				<term>input</term>
 				<listitem>
@@ -51,7 +51,7 @@
 					<para><emphasis>Default: </emphasis>-</para>
 				</listitem>
 			</varlistentry>
-		
+
 			<varlistentry>
 				<term>xsl</term>
 				<listitem>
@@ -64,7 +64,7 @@
 					<para><emphasis>Default: </emphasis>-</para>
 				</listitem>
 			</varlistentry>
-		
+
 			<varlistentry>
 				<term>output</term>
 				<listitem>
@@ -77,7 +77,7 @@
 					<para><emphasis>Default: </emphasis>-</para>
 				</listitem>
 			</varlistentry>
-		
+
 			<varlistentry>
 				<term>indent</term>
 				<listitem>
@@ -90,13 +90,13 @@
 					<para><emphasis>Default: </emphasis>4</para>
 				</listitem>
 			</varlistentry>
-		
+
 		</variablelist>
 	</sect1>
-	
+
 	<sect1 id="xslt_specification">
 		<title>RNG Specification</title>
-		
+
 		<programlisting><![CDATA[
   <define name="xslt">
     <element name="xslt">
@@ -137,11 +137,17 @@
   </define>
 ]]>
 	</programlisting>
-	
+
 	</sect1>
-	
+
 	<sect1 id="xslt_examples">
 		<title>Examples</title>
+
+    <para>
+      Note that string parameters must be surrounded by a single quote
+      ('), else they will be interpreted as a number.
+    </para>
+
 	<programlisting><![CDATA[
   <xslt
     input="${GOBO}/doc/structure/index.xml"
@@ -154,9 +160,9 @@
     stylesheet="${GOBO}/doc/misc/gobo2html.xsl"
     output="${GOBO}/doc/structure/index2.html"
   >
-    <parameter name="previous" value="../license.html"/>
-    <parameter name="next" value="../time/index.html"/>
-    <parameter name="toc" value="../index.html"/>
+    <parameter name="previous" value="&quot;'../license.html'&quot;"/>
+    <parameter name="next" value="&quot;'../time/index.html'&quot;"/>
+    <parameter name="toc" value="&quot;'../index.html'&quot;"/>
   </xslt>
 ]]>
 	</programlisting>
