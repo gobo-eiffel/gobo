@@ -51,16 +51,9 @@ than matching other characters.</p>
 
 <p>The input buffer may be automatically resized when a token is
 so big that it can hardly fit in the buffer's allocated space.
-This dynamic resizing of the input buffer is slow, as it entails
-rescanning all the text matched so far by the current (generally
-huge) token.</p>
-
-<p>When <a href="actions.html#unread_character"><font
-color="#008080"><em><tt>unread_character</tt></em></font></a><font
-color="#008080"><em><tt> </tt></em></font>results in too much
-text being pushed back to the input buffer, the buffer is not
-resized accordingly and a fatal error (&quot;scanner push-back
-overflow&quot;) is raised instead.</p>
+This dynamic resizing of the input buffer might be a bit slow,
+but all the text matched so far by the current (generally huge)
+token won't have to be scanned again though.</p>
 
 <h2>Reject and full tables</h2>
 
@@ -73,7 +66,7 @@ cannot be used with the <font color="#800000"><tt>-f</tt></font>
 <table border="0" width="100%">
     <tr>
         <td><address>
-            <font size="2"><b>Copyright © 1998</b></font><font
+            <font size="2"><b>Copyright © 1999</b></font><font
             size="1"><b>, </b></font><font size="2"><strong>Eric
             Bezault</strong></font><strong> </strong><font
             size="2"><br>
@@ -83,7 +76,7 @@ cannot be used with the <font color="#800000"><tt>-f</tt></font>
             <strong>http:</strong></font><a
             href="http://www.gobo.demon.co.uk"><font size="2">//www.gobo.demon.co.uk</font></a><font
             size="2"><br>
-            <strong>Last Updated:</strong> 4 August 1998</font><br>
+            <strong>Last Updated:</strong> 22 March 1999</font><br>
             <!--webbot bot="PurpleText"
             preview="
 $Date$ 
