@@ -259,7 +259,7 @@ feature {NONE} -- Error handling
 	Usage_message: UT_USAGE_MESSAGE is
 			-- Geyacc usage message
 		once
-			create Result.make ("[-hxV?][-t classname][-k filename][-v filename][-o filename] filename")
+			create Result.make ("[-hxV?][--(new|old)_typing][-t classname][-k filename][-v filename][-o filename] filename")
 		ensure
 			usage_message_not_void: Result /= Void
 		end
