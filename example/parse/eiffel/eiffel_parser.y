@@ -69,7 +69,7 @@ creation
 %%
 --------------------------------------------------------------------------------
 
-Class_declarations: Class_declaration
+Class_declarations: -- Empty
 	| Class_declarations Class_declaration
 	;
 
