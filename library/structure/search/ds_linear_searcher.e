@@ -18,10 +18,22 @@ inherit
 
 feature -- Status report
 
+#ifdef VE
+--| [VE 2.0g - 24 May 1997]
+--| VE compiler crashes because of 'like anchor'.
+	has (a_container: DS_LINEAR [G]; v: G): BOOLEAN is
+#else
 	has (a_container: like container; v: G): BOOLEAN is
+#endif
 			-- Does `a_container' include `v'?
 		local
+#ifdef VE
+--| [VE 2.0g - 24 May 1997]
+--| VE compiler crashes because of 'like anchor'.
+			a_cursor: DS_LINEAR_CURSOR [G]
+#else
 			a_cursor: like cursor
+#endif
 		do
 			a_cursor := a_container.new_cursor
 			a_cursor.start
@@ -31,10 +43,22 @@ feature -- Status report
 
 feature -- Measurement
 
+#ifdef VE
+--| [VE 2.0g - 24 May 1997]
+--| VE compiler crashes because of 'like anchor'.
+	occurrences (a_container: DS_LINEAR [G]; v: G): INTEGER is
+#else
 	occurrences (a_container: like container; v: G): INTEGER is
+#endif
 			-- Number of times `v' appears in `a_container'
 		local
+#ifdef VE
+--| [VE 2.0g - 24 May 1997]
+--| VE compiler crashes because of 'like anchor'.
+			a_cursor: DS_LINEAR_CURSOR [G]
+#else
 			a_cursor: like cursor
+#endif
 		do
 			from
 				a_cursor := a_container.new_cursor
@@ -50,7 +74,13 @@ feature -- Measurement
 
 feature -- Search
 
+#ifdef VE
+--| [VE 2.0g - 24 May 1997]
+--| VE compiler crashes because of 'like anchor'.
+	search_forth (a_cursor: DS_LINEAR_CURSOR [G]; v: G) is
+#else
 	search_forth (a_cursor: like cursor; v: G) is
+#endif
 			-- Move to first position at or after `a_cursor'
 			-- position where `item' and `v' are equal.
 			-- Move `after' if not found.
