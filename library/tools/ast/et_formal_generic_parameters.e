@@ -186,7 +186,7 @@ feature -- Validity
 									-- Set `has_ancestors_error' to True to avoid
 									-- recursive calls to `check_validity' with the
 									-- same class `a_class'.
-								a_class.set_ancestors_error (True)
+								a_class.set_ancestors_error
 								Result := False
 							end
 						end

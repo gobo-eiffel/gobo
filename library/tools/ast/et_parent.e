@@ -162,7 +162,7 @@ feature -- Genealogy
 				end
 			end
 			if has_error then
-				an_heir.set_ancestors_error (True)
+				an_heir.set_ancestors_error
 			end
 		end
 
