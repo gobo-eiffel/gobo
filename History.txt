@@ -2,6 +2,9 @@ Version ?
 
 	geant:
 
+	* Targets support argument handling. Tasks 'geant' and 'precursor' have been
+	  modified so that they are able to pass these arguments.
+	* Targets support 'obsolete' mechanism.
 	* Tasks 'exit', 'ise', 'se', 've' support capturing the return code of the called process.
 	* Task 'available' supports checking for availablity of directories.
 	* If you use xsltproc and pass string parameters to it, you have to
