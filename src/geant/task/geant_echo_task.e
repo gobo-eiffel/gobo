@@ -38,6 +38,14 @@ feature {NONE} -- Initialization
 				a_value := attribute_value (Message_attribute_name)
 				command.set_message (a_value)
 			end
+
+			if has_attribute (To_file_attribute_name) then
+				a_value := attribute_value (To_file_attribute_name)
+				command.set_to_file (a_value)
+				if has_attribute (Append_attribute_name) then
+					command.set_append (boolean_value (Append_attribute_name))
+				end
+			end
 		end
 
 feature -- Access
@@ -56,4 +64,21 @@ feature {NONE} -- Constants
 			atribute_name_not_empty: Result.count > 0
 		end
 
+	To_file_attribute_name: STRING is
+			-- Name of xml attribute to_file.
+		once
+			Result := "to_file"
+		ensure
+			attribute_name_not_void: Result /= Void
+			atribute_name_not_empty: Result.count > 0
+		end
+
+	Append_attribute_name: STRING is
+			-- Name of xml attribute append.
+		once
+			Result := "append"
+		ensure
+			attribute_name_not_void: Result /= Void
+			atribute_name_not_empty: Result.count > 0
+		end
 end
