@@ -10,7 +10,7 @@ indexing
 	date: "$Date$"
 	revision: "$Revision$"
 
-deferred class ET_ADAPTED_FEATURE
+class ET_ADAPTED_FEATURE
 
 inherit
 
@@ -22,6 +22,12 @@ inherit
 		end
 
 	ET_REPLICABLE_FEATURE
+
+create
+
+	-- This is a deferred class but it has no deferred
+	-- features (allowed in ETL3 but not supported yet
+	-- by VE 1.0).
 
 feature -- Status report
 
