@@ -26,7 +26,7 @@ feature -- Access
 		local
 			encoding: STRING
 		do
-			encoding := STRING_.to_upper (an_encoding)
+			encoding := an_encoding.as_upper
 			if encoding.count > 3 and then encoding.substring (1,3).is_equal ("UTF") then
 				create {XM_XSLT_UTF8_ENCODER} Result.make (encoding, a_raw_outputter)
 			elseif encoding.is_equal ("LATIN-1") or else encoding.is_equal ("ISO-8859-1") then

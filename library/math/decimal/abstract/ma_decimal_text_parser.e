@@ -495,7 +495,7 @@ feature {MA_DECIMAL} -- Basic operations
 			end
 			Result := (i > i_end and then j > t.count)
 		ensure
-			definition: Result = (STRING_.as_lower (s.substring (i_begin, i_end)).is_equal (STRING_.as_lower (t)))
+			definition: Result = (s.substring (i_begin, i_end).as_lower.is_equal (t.as_lower))
 		end
 
 feature -- Constants
