@@ -543,6 +543,7 @@ feature {NONE} -- CAT-calls
 		local
 			l_message: STRING
 			l_class_impl: ET_CLASS
+			l_position: ET_POSITION
 		do
 			if False then
 -- TODO: better error message reporting.
@@ -556,9 +557,10 @@ feature {NONE} -- CAT-calls
 				l_message.append_string (l_class_impl.name.name)
 				l_message.append_character (',')
 			end
-			l_message.append_string (a_call.position.line.out)
+			l_position := a_call.position
+			l_message.append_string (l_position.line.out)
 			l_message.append_character (',')
-			l_message.append_string (a_call.position.column.out)
+			l_message.append_string (l_position.column.out)
 			l_message.append_string ("): type '")
 			l_message.append_string (an_actual_type.base_type.to_text)
 			l_message.append_string ("' of actual argument #")

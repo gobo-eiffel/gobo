@@ -78,7 +78,7 @@ feature -- Access
 
 feature {NONE} -- Constants
 
-	agent_tuple_item_description: STRING is "agent_tuple item #"
+	agent_tuple_item_description: STRING is "tuple item #"
 			-- Description constants
 
 invariant

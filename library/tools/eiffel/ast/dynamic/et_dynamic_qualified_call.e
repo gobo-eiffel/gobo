@@ -27,6 +27,7 @@ feature {NONE} -- Initialization
 			-- Create a new dynamic call.
 		require
 			a_call_not_void: a_call /= Void
+			a_call_is_qualified: a_call.is_qualified_call
 			a_target_type_set_not_void: a_target_type_set /= Void
 			a_current_feature_not_void: a_current_feature /= Void
 			a_current_type_not_void: a_current_type /= Void
@@ -419,6 +420,7 @@ feature -- Element change
 invariant
 
 	static_call_not_void: static_call /= Void
+	static_call_is_qualified: static_call.is_qualified_call
 	target_type_set_not_void: target_type_set /= Void
 	current_feature_not_void: current_feature /= Void
 	current_type_not_void: current_type /= Void

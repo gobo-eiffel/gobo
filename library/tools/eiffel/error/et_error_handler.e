@@ -8987,11 +8987,6 @@ feature -- Internal errors
 
 --Error codes not used:
 
---						l_builder.error_handler.report_gibgi_error
---					l_builder.error_handler.report_gibgj_error
---						a_builder.error_handler.report_gibgk_error
---					a_builder.error_handler.report_gibgm_error
---							a_builder.error_handler.report_gibgn_error
 --							a_builder.error_handler.report_gibgo_error
 --						a_builder.error_handler.report_gibgp_error
 --										a_builder.error_handler.report_gibgq_error
