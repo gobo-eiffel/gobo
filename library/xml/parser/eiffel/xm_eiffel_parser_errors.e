@@ -20,6 +20,7 @@ feature -- Scanner errors
 	Error_lt_not_allowed_attribute_value: STRING is "< not allowed in attribute value"
 	Error_invalid_entity_characters: STRING is "invalid characters in entity reference"
 	Error_unexpected_character: STRING is "unexpected character"
+	Error_unsupported_encoding: STRING is "unsupported character encoding"
 
 feature -- Parser errors
 
