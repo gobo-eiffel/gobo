@@ -521,7 +521,7 @@ feature -- Basic operations
 			index: INTEGER
 			digit: INTEGER
 			to_add: INTEGER
-			l_digits, l_other_digits: like digits
+			l_digits: like digits
 			l_count: INTEGER
 			shifting_delta: INTEGER
 		do
