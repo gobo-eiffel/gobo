@@ -43,6 +43,8 @@
 		<xslt input="delete_task.xml" output="delete_task.html" stylesheet="${GOBO}/doc/misc/gobo2html.xsl"/>
 		<xslt input="echo_task.xml" output="echo_task.html" stylesheet="${GOBO}/doc/misc/gobo2html.xsl"/>
 		<xslt input="exec_task.xml" output="exec_task.html" stylesheet="${GOBO}/doc/misc/gobo2html.xsl"/>
+		<xslt input="exit_task.xml" output="exit_task.html" stylesheet="${GOBO}/doc/misc/gobo2html.xsl"/>
+		<xslt input="geant_task.xml" output="geant_task.html" stylesheet="${GOBO}/doc/misc/gobo2html.xsl"/>
 	</target>
 
 	<target name="clean">
@@ -71,6 +73,8 @@
 		<delete file="delete_task.html"/>
 		<delete file="echo_task.html"/>
 		<delete file="exec_task.html"/>
+		<delete file="exit_task.html"/>
+		<delete file="geant_task.html"/>
 
 		<delete file="hello_world.html"/>
 	</target>
