@@ -93,7 +93,7 @@ feature -- Status report
 			from a_cursor.start until a_cursor.after loop
 				a_cursor.item.process (typer)
 				if typer.is_attribute and then 
-					named_same_name (typer.attribute, a_name)
+					attribute_same_name (typer.attribute, a_name)
 				then
 					Result := True
 					a_cursor.go_after -- Jump out of the loop.
@@ -105,11 +105,31 @@ feature -- Status report
 
 feature {NONE} -- Name comparison with namespace.
 
+	attribute_same_name (a_named: XM_ATTRIBUTE; a_name: STRING): BOOLEAN is
+			-- Has 'a_named' attribute the same name as `a_name',
+			-- either because of same namespace or within the 
+			-- default namespace.
+		require
+			named_not_void: a_named /= Void
+		do
+			Result := same_string (a_named.name, a_name) 
+				and 
+					(a_named.namespace.is_default_namespace or same_namespace (a_named))
+			-- TODO: should we remove same_namespace?
+		ensure
+			same_name: Result implies same_string (a_name.name, a_name)
+			default_ns: a_named.namespace.is_default_namespace implies (Result = same_string (a_named.name, a_name))
+		end
+		
 	named_same_name (a_named: XM_NAMED_NODE; a_name: STRING): BOOLEAN is
 			-- Has 'a_named' same name as 'a_name' and 
 			-- same namespace as current node?
+		require
+			named_not_void: a_named /= Void
 		do
 			Result := same_string (a_named.name, a_name) and same_namespace (a_named)
+		ensure
+			same_name: Result implies same_string (a_name.name, a_name)
 		end
 		
 feature -- Access
@@ -128,7 +148,7 @@ feature -- Access
 			from a_cursor.start until a_cursor.after loop
 				a_cursor.item.process (typer)
 				if typer.is_attribute and then 
-					named_same_name (typer.attribute, a_name)
+					attribute_same_name (typer.attribute, a_name)
 				then
 					Result := typer.attribute
 					a_cursor.go_after -- Jump out of the loop.
@@ -223,7 +243,7 @@ feature -- Removal
 			from a_cursor.start until a_cursor.after loop
 				a_cursor.item.process (typer)
 				if typer.is_attribute and then 
-					named_same_name (typer.attribute, a_name)
+					attribute_same_name (typer.attribute, a_name)
 				then
 					remove_at_cursor (a_cursor)
 				else

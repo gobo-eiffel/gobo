@@ -86,45 +86,22 @@ feature -- Element
 
 	on_start_tag_finish is
 			-- Process end of start tag.
-		local
-			an_element_namespace: STRING
-			a_namespace: STRING
 		do
-				-- Resolve element.
 			if has_prefix (element_prefix) then
 				if context.has (element_prefix) then
-					an_element_namespace := context.resolve (element_prefix)
+					next.on_start_tag (context.resolve (element_prefix), 
+							element_prefix, element_local_part)
+					on_delayed_attributes
 				else
 					on_error (Undeclared_namespace_error)
 				end
 			else
-				an_element_namespace := context.resolve_default
-			end
-			next.on_start_tag (an_element_namespace, element_prefix, element_local_part)
-				-- Resolve attributes.
-			from
-			until
-				attributes_is_empty
-			loop
-				if has_prefix (attributes_prefix.item) then
-					-- Resolve the attribute's prefix if it has any.
-					if context.has (attributes_prefix.item) then
-						a_namespace := context.resolve (attributes_prefix.item)
-					else
-						on_error (Undeclared_namespace_error)
-					end
-				else
-					-- Attributes don't have a default name space.
-					a_namespace := ""
-				end
-				next.on_attribute (a_namespace,
-					attributes_prefix.item, attributes_local_part.item,
-					attributes_value.item)
-					-- Forth:
-				attributes_remove
+				next.on_start_tag (context.resolve_default, 
+						element_prefix, element_local_part)
+				on_delayed_attributes
 			end
 			Precursor
-		end
+		end	
 
 	on_end_tag (a_namespace: STRING; a_prefix: STRING; a_local_part: STRING) is
 			-- Process end tag.
@@ -135,6 +112,34 @@ feature -- Element
 				Precursor (context.resolve_default, a_prefix, a_local_part)
 			end
 			context.pop
+		end
+
+feature {NONE} -- Attribute events
+
+	on_delayed_attributes is
+			-- Resolve attributes.
+		do
+			from
+			until
+				attributes_is_empty
+			loop
+				if has_prefix (attributes_prefix.item) then
+					-- Resolve the attribute's prefix if it has any.
+					if context.has (attributes_prefix.item) then
+						next.on_attribute (context.resolve (attributes_prefix.item),
+							attributes_prefix.item, attributes_local_part.item,
+							attributes_value.item)
+					else
+						on_error (Undeclared_namespace_error)
+					end
+				else
+					next.on_attribute (Unprefixed_attribute_namespace,
+						attributes_prefix.item, attributes_local_part.item,
+						attributes_value.item)
+				end
+					-- Forth:
+				attributes_remove
+			end
 		end
 
 feature {NONE} -- Context
@@ -150,6 +155,8 @@ feature {NONE} -- Context
 			Result := a /= Void and then same_string (Xmlns, a)
 		end
 
+	Unprefixed_attribute_namespace: STRING is ""
+	
 feature {NONE} -- Element
 
 	element_prefix: STRING
