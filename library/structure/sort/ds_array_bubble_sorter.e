@@ -43,6 +43,7 @@ feature -- Sort
 				end
 				if flipped then
 					i := i - 1
+					flipped := False
 				else
 					i := lower
 				end
