@@ -1,0 +1,53 @@
+-- system:     "List tester"
+-- library:    "Gobo Eiffel Structure Library"
+-- compiler:   "Visual Eiffel 3.1"
+-- author:     "Eric Bezault <ericb@gobosoft.com>"
+-- copyright:  "Copyright (c) 1999, Eric Bezault and others"
+-- license:    "Eiffel Forum Freeware License v1 (see forum.txt)"
+-- date:       "$Date$"
+-- revision:   "$Revision$"
+
+system
+
+	ds_tester
+
+root
+
+	DS_TESTER
+
+creation
+
+	make_and_test
+
+cluster
+
+	[ds_test1_project	"."] end
+	[ds_test1			"$GOBO\test\structure\test1"] end
+
+		-- Gobo Eiffel Utility Library
+	[ut_command			"$GOBO\library\utility\command"] end
+	[ut_error			"$GOBO\library\utility\error"] end
+	[ut_formatter		"$GOBO\library\utility\formatter"] end
+	[ut_support			"$GOBO\library\utility\support"] end
+
+		-- Gobo Eiffel Kernel Library
+	[kl_kernel			"$GOBO\library\kernel"] end
+	[kl_kernel_spec		"$GOBO\library\kernel\spec\ve"] end
+
+		-- Gobo Eiffel Structure Library
+	[ds_container		"$GOBO\library\structure\container"] end
+	[ds_cursor			"$GOBO\library\structure\cursor"] end
+	[ds_dispenser		"$GOBO\library\structure\dispenser"] end
+	[ds_list			"$GOBO\library\structure\list"] end
+	[ds_sort			"$GOBO\library\structure\sort"] end
+	[ds_support			"$GOBO\library\structure\support"] end
+	[ds_table			"$GOBO\library\structure\table"] end
+
+		-- Visual Eiffel Kernel
+	[Kernel				"$VE_LIB\kernel"] end
+
+option
+
+	target exe console
+
+end
