@@ -5,7 +5,7 @@ indexing
 		"Test features of class KL_STRING_ROUTINES"
 
 	library: "Gobo Eiffel Kernel Library"
-	copyright: "Copyright (c) 2002, Eric Bezault and others"
+	copyright: "Copyright (c) 2002-2005, Eric Bezault and others"
 	license: "Eiffel Forum License v2 (see forum.txt)"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -559,6 +559,757 @@ feature -- Test
 			create a_string4.make_from_string ("toto")
 			a_string := STRING_.replaced_substring (a_string1, a_string4, 4, 3)
 			assert_equal ("replaced16", "foototobar", a_string.out) 
+		end
+
+	test_replaced_first_substring1 is
+			-- Test feature `replaced_first_substring'.
+		local
+			a_text: STRING
+			a_expt: STRING
+			a_got: STRING
+			s_old: STRING
+			s_new: STRING
+		do
+			s_old := "-"
+			s_new:= "#"
+
+			a_text := "x"
+			a_expt := "x"
+			a_got := STRING_.replaced_first_substring (a_text, s_old, s_new)
+			assert_equal ("replaced1_01", a_expt, a_got)
+			assert_same ("replaced1_02", a_text, a_got)
+
+			a_text := "--"
+			a_expt := "#-"
+			a_got := STRING_.replaced_first_substring (a_text, s_old, s_new)
+			assert_equal ("replaced1_11", a_expt, a_got)
+
+			a_text := "'- -'"
+			a_expt := "'# -'"
+			a_got := STRING_.replaced_first_substring (a_text, s_old, s_new)
+			assert_equal ("replaced1_12", a_expt, a_got)
+
+			a_text := "---"
+			a_expt := "#--"
+			a_got := STRING_.replaced_first_substring (a_text, s_old, s_new)
+			assert_equal ("replaced1_13", a_expt, a_got)
+
+			a_text := "foo-bar-foo-bar-foo-bar-foo-bar-foo-bar"
+			a_expt := "foo#bar-foo-bar-foo-bar-foo-bar-foo-bar"
+			a_got := STRING_.replaced_first_substring (a_text, s_old, s_new)
+			assert_equal ("replaced1_21", a_expt, a_got) 
+
+			a_text := "-foo-bar-foo-bar-foo-bar-foo-bar-foo-bar"
+			a_expt := "#foo-bar-foo-bar-foo-bar-foo-bar-foo-bar"
+			a_got := STRING_.replaced_first_substring (a_text, s_old, s_new)
+			assert_equal ("replaced1_22", a_expt, a_got) 
+
+			a_text := "foo-bar-foo-bar-foo-bar-foo-bar-foo-bar-"
+			a_expt := "foo#bar-foo-bar-foo-bar-foo-bar-foo-bar-"
+			a_got := STRING_.replaced_first_substring (a_text, s_old, s_new)
+			assert_equal ("replaced1_23", a_expt, a_got) 
+
+			a_text := "-foo-bar-foo-bar-foo-bar-foo-bar-foo-bar-"
+			a_expt := "#foo-bar-foo-bar-foo-bar-foo-bar-foo-bar-"
+			a_got := STRING_.replaced_first_substring (a_text, s_old, s_new)
+			assert_equal ("replaced1_24", a_expt, a_got) 
+
+			s_old := "-"
+			s_new:= "#-"
+
+			a_text := "foo-bar"
+			a_expt := "foo#-bar"
+			a_got := STRING_.replaced_first_substring (a_text, s_old, s_new)
+			assert_equal ("replaced1_30", a_expt, a_got)
+
+			a_text := "foobar-"
+			a_expt := "foobar#-"
+			a_got := STRING_.replaced_first_substring (a_text, s_old, s_new)
+			assert_equal ("replaced1_31", a_expt, a_got)
+
+			a_text := "foo-bar-"
+			a_expt := "foo#-bar-"
+			a_got := STRING_.replaced_first_substring (a_text, s_old, s_new)
+			assert_equal ("replaced1_32", a_expt, a_got)
+
+			a_text := "-foo-bar-"
+			a_expt := "#-foo-bar-"
+			a_got := STRING_.replaced_first_substring (a_text, s_old, s_new)
+			assert_equal ("replaced1_33", a_expt, a_got)
+
+			a_text := "--foo---bar--"
+			a_expt := "#--foo---bar--"
+			a_got := STRING_.replaced_first_substring (a_text, s_old, s_new)
+			assert_equal ("replaced1_34", a_expt, a_got)
+
+			s_new := ""
+			a_text := "--foo---bar--"
+			a_expt := "-foo---bar--"
+			a_got := STRING_.replaced_first_substring (a_text, s_old, s_new)
+			assert_equal ("replaced1_35", a_expt, a_got)
+
+			s_new:= "-"
+			a_text := "--foo---bar--"
+			a_expt := "--foo---bar--"
+			a_got := STRING_.replaced_first_substring (a_text, s_old, s_new)
+			assert_equal ("replaced1_36", a_expt, a_got)
+
+			s_new := s_old
+			a_text := "--foo---bar--"
+			a_expt := "--foo---bar--"
+			a_got := STRING_.replaced_first_substring (a_text, s_old, s_new)
+			assert_equal ("replaced1_37", a_expt, a_got)
+
+			s_new := s_old
+			a_text := "--foo---bar--"
+			a_expt := "--foo---bar--"
+			a_got := STRING_.replaced_first_substring (a_text, s_old, s_new)
+			assert_equal ("replaced1_38", a_expt, a_got)
+
+			s_old := "#"
+			s_new := "-"
+			a_text := "--foo---bar--"
+			a_got := STRING_.replaced_first_substring (a_text, s_old, s_new)
+			assert_same ("replaced1_39", a_text, a_got)
+
+			s_old := "foo"
+			s_new := "toto"
+			a_text := "foobar"
+			a_expt := "totobar"
+			a_got := STRING_.replaced_first_substring (a_text, s_old, s_new)
+			assert_equal ("replaced1_40", a_expt, a_got)
+
+			s_old := "foo"
+			s_new := "toto"
+			a_text := "12foobar"
+			a_expt := "12totobar"
+			a_got := STRING_.replaced_first_substring (a_text, s_old, s_new)
+			assert_equal ("replaced1_41", a_expt, a_got)
+
+			s_old := "bar"
+			s_new := "toto"
+			a_text := "foobar"
+			a_expt := "foototo"
+			a_got := STRING_.replaced_first_substring (a_text, s_old, s_new)
+			assert_equal ("replaced1_42", a_expt, a_got)
+
+			s_old := "foo"
+			s_new := "1"
+			a_text := "foobar"
+			a_expt := "1bar"
+			a_got := STRING_.replaced_first_substring (a_text, s_old, s_new)
+			assert_equal ("replaced1_43", a_expt, a_got)
+
+			s_old := "bar"
+			s_new := "1"
+			a_text := "foobar"
+			a_expt := "foo1"
+			a_got := STRING_.replaced_first_substring (a_text, s_old, s_new)
+			assert_equal ("replaced1_43", a_expt, a_got)
+
+			s_old := "bar"
+			s_new := ""
+			a_text := "foobar"
+			a_expt := "foo"
+			a_got := STRING_.replaced_first_substring (a_text, s_old, s_new)
+			assert_equal ("replaced1_44", a_expt, a_got)
+
+			s_old := "foo"
+			s_new := ""
+			a_text := "foobar"
+			a_expt := "bar"
+			a_got := STRING_.replaced_first_substring (a_text, s_old, s_new)
+			assert_equal ("replaced1_45", a_expt, a_got)
+
+			s_old := "foobar"
+			s_new := ""
+			a_text := "foobar"
+			a_expt := ""
+			a_got := STRING_.replaced_first_substring (a_text, s_old, s_new)
+			assert_equal ("replaced1_46", a_expt, a_got)
+
+			s_old := "foo"
+			s_new := "toto"
+			a_text := "foobarfoobar"
+			a_expt := "totobarfoobar"
+			a_got := STRING_.replaced_first_substring (a_text, s_old, s_new)
+			assert_equal ("replaced1_50", a_expt, a_got)
+		end
+
+	test_replaced_first_substring2 is
+			-- Test feature `replaced_first_substring'.
+		local
+			a_text: STRING
+			a_expt: STRING
+			a_got: STRING
+			s_old: STRING
+			s_new: STRING
+			a_uc_string: UC_STRING
+		do
+			s_old := "-"
+			s_new:= "#"
+
+			a_text := "x"
+			a_expt := "x"
+			create a_uc_string.make_from_string (a_text)
+			a_got := STRING_.replaced_first_substring (a_uc_string, s_old, s_new)
+			assert_equal ("replaced1_01", a_expt, a_got)
+			assert_same ("replaced1_02", a_uc_string, a_got)
+
+			a_text := "--"
+			a_expt := "#-"
+			create a_uc_string.make_from_string (a_text)
+			a_got := STRING_.replaced_first_substring (a_uc_string, s_old, s_new)
+			assert_equal ("replaced1_11", a_expt, a_got)
+
+			a_text := "'- -'"
+			a_expt := "'# -'"
+			create a_uc_string.make_from_string (a_text)
+			a_got := STRING_.replaced_first_substring (a_uc_string, s_old, s_new)
+			assert_equal ("replaced1_12", a_expt, a_got)
+
+			a_text := "---"
+			a_expt := "#--"
+			create a_uc_string.make_from_string (a_text)
+			a_got := STRING_.replaced_first_substring (a_uc_string, s_old, s_new)
+			assert_equal ("replaced1_13", a_expt, a_got)
+
+			a_text := "foo-bar-foo-bar-foo-bar-foo-bar-foo-bar"
+			a_expt := "foo#bar-foo-bar-foo-bar-foo-bar-foo-bar"
+			create a_uc_string.make_from_string (a_text)
+			a_got := STRING_.replaced_first_substring (a_uc_string, s_old, s_new)
+			assert_equal ("replaced1_21", a_expt, a_got) 
+
+			a_text := "-foo-bar-foo-bar-foo-bar-foo-bar-foo-bar"
+			a_expt := "#foo-bar-foo-bar-foo-bar-foo-bar-foo-bar"
+			create a_uc_string.make_from_string (a_text)
+			a_got := STRING_.replaced_first_substring (a_uc_string, s_old, s_new)
+			assert_equal ("replaced1_22", a_expt, a_got) 
+
+			a_text := "foo-bar-foo-bar-foo-bar-foo-bar-foo-bar-"
+			a_expt := "foo#bar-foo-bar-foo-bar-foo-bar-foo-bar-"
+			create a_uc_string.make_from_string (a_text)
+			a_got := STRING_.replaced_first_substring (a_uc_string, s_old, s_new)
+			assert_equal ("replaced1_23", a_expt, a_got) 
+
+			a_text := "-foo-bar-foo-bar-foo-bar-foo-bar-foo-bar-"
+			a_expt := "#foo-bar-foo-bar-foo-bar-foo-bar-foo-bar-"
+			create a_uc_string.make_from_string (a_text)
+			a_got := STRING_.replaced_first_substring (a_uc_string, s_old, s_new)
+			assert_equal ("replaced1_24", a_expt, a_got) 
+
+			s_old := "-"
+			s_new:= "#-"
+
+			a_text := "foo-bar"
+			a_expt := "foo#-bar"
+			create a_uc_string.make_from_string (a_text)
+			a_got := STRING_.replaced_first_substring (a_uc_string, s_old, s_new)
+			assert_equal ("replaced1_30", a_expt, a_got)
+
+			a_text := "foobar-"
+			a_expt := "foobar#-"
+			create a_uc_string.make_from_string (a_text)
+			a_got := STRING_.replaced_first_substring (a_uc_string, s_old, s_new)
+			assert_equal ("replaced1_31", a_expt, a_got)
+
+			a_text := "foo-bar-"
+			a_expt := "foo#-bar-"
+			create a_uc_string.make_from_string (a_text)
+			a_got := STRING_.replaced_first_substring (a_uc_string, s_old, s_new)
+			assert_equal ("replaced1_32", a_expt, a_got)
+
+			a_text := "-foo-bar-"
+			a_expt := "#-foo-bar-"
+			create a_uc_string.make_from_string (a_text)
+			a_got := STRING_.replaced_first_substring (a_uc_string, s_old, s_new)
+			assert_equal ("replaced1_33", a_expt, a_got)
+
+			a_text := "--foo---bar--"
+			a_expt := "#--foo---bar--"
+			create a_uc_string.make_from_string (a_text)
+			a_got := STRING_.replaced_first_substring (a_uc_string, s_old, s_new)
+			assert_equal ("replaced1_34", a_expt, a_got)
+
+			s_new := ""
+			a_text := "--foo---bar--"
+			a_expt := "-foo---bar--"
+			create a_uc_string.make_from_string (a_text)
+			a_got := STRING_.replaced_first_substring (a_uc_string, s_old, s_new)
+			assert_equal ("replaced1_35", a_expt, a_got)
+
+			s_new:= "-"
+			a_text := "--foo---bar--"
+			a_expt := "--foo---bar--"
+			create a_uc_string.make_from_string (a_text)
+			a_got := STRING_.replaced_first_substring (a_uc_string, s_old, s_new)
+			assert_equal ("replaced1_36", a_expt, a_got)
+
+			s_new := s_old
+			a_text := "--foo---bar--"
+			a_expt := "--foo---bar--"
+			create a_uc_string.make_from_string (a_text)
+			a_got := STRING_.replaced_first_substring (a_uc_string, s_old, s_new)
+			assert_equal ("replaced1_37", a_expt, a_got)
+
+			s_new := s_old
+			a_text := "--foo---bar--"
+			a_expt := "--foo---bar--"
+			create a_uc_string.make_from_string (a_text)
+			a_got := STRING_.replaced_first_substring (a_uc_string, s_old, s_new)
+			assert_equal ("replaced1_38", a_expt, a_got)
+
+			s_old := "#"
+			s_new := "-"
+			a_text := "--foo---bar--"
+			create a_uc_string.make_from_string (a_text)
+			a_got := STRING_.replaced_first_substring (a_uc_string, s_old, s_new)
+			assert_same ("replaced1_39", a_uc_string, a_got)
+
+			s_old := "foo"
+			s_new := "toto"
+			a_text := "foobar"
+			a_expt := "totobar"
+			create a_uc_string.make_from_string (a_text)
+			a_got := STRING_.replaced_first_substring (a_uc_string, s_old, s_new)
+			assert_equal ("replaced1_40", a_expt, a_got)
+
+			s_old := "foo"
+			s_new := "toto"
+			a_text := "12foobar"
+			a_expt := "12totobar"
+			create a_uc_string.make_from_string (a_text)
+			a_got := STRING_.replaced_first_substring (a_uc_string, s_old, s_new)
+			assert_equal ("replaced1_41", a_expt, a_got)
+
+			s_old := "bar"
+			s_new := "toto"
+			a_text := "foobar"
+			a_expt := "foototo"
+			create a_uc_string.make_from_string (a_text)
+			a_got := STRING_.replaced_first_substring (a_uc_string, s_old, s_new)
+			assert_equal ("replaced1_42", a_expt, a_got)
+
+			s_old := "foo"
+			s_new := "1"
+			a_text := "foobar"
+			a_expt := "1bar"
+			create a_uc_string.make_from_string (a_text)
+			a_got := STRING_.replaced_first_substring (a_uc_string, s_old, s_new)
+			assert_equal ("replaced1_43", a_expt, a_got)
+
+			s_old := "bar"
+			s_new := "1"
+			a_text := "foobar"
+			a_expt := "foo1"
+			create a_uc_string.make_from_string (a_text)
+			a_got := STRING_.replaced_first_substring (a_uc_string, s_old, s_new)
+			assert_equal ("replaced1_43", a_expt, a_got)
+
+			s_old := "bar"
+			s_new := ""
+			a_text := "foobar"
+			a_expt := "foo"
+			create a_uc_string.make_from_string (a_text)
+			a_got := STRING_.replaced_first_substring (a_uc_string, s_old, s_new)
+			assert_equal ("replaced1_44", a_expt, a_got)
+
+			s_old := "foo"
+			s_new := ""
+			a_text := "foobar"
+			a_expt := "bar"
+			create a_uc_string.make_from_string (a_text)
+			a_got := STRING_.replaced_first_substring (a_uc_string, s_old, s_new)
+			assert_equal ("replaced1_45", a_expt, a_got)
+
+			s_old := "foobar"
+			s_new := ""
+			a_text := "foobar"
+			a_expt := ""
+			create a_uc_string.make_from_string (a_text)
+			a_got := STRING_.replaced_first_substring (a_uc_string, s_old, s_new)
+			assert_equal ("replaced1_46", a_expt, a_got)
+
+			s_old := "foo"
+			s_new := "toto"
+			a_text := "foobarfoobar"
+			a_expt := "totobarfoobar"
+			create a_uc_string.make_from_string (a_text)
+			a_got := STRING_.replaced_first_substring (a_uc_string, s_old, s_new)
+			assert_equal ("replaced1_50", a_expt, a_got)
+		end
+
+	test_replaced_all_substrings1 is
+			-- Test feature `replaced_all_substrings'.
+		local
+			a_text: STRING
+			a_expt: STRING
+			a_got: STRING
+			s_old: STRING
+			s_new: STRING
+		do
+			s_old := "-"
+			s_new:= "#"
+
+			a_text := "x"
+			a_expt := "x"
+			a_got := STRING_.replaced_all_substrings (a_text, s_old, s_new)
+			assert_equal ("replaced1_01", a_expt, a_got)
+			assert_same ("replaced1_02", a_text, a_got)
+
+			a_text := "--"
+			a_expt := "##"
+			a_got := STRING_.replaced_all_substrings (a_text, s_old, s_new)
+			assert_equal ("replaced1_11", a_expt, a_got)
+
+			a_text := "'- -'"
+			a_expt := "'# #'"
+			a_got := STRING_.replaced_all_substrings (a_text, s_old, s_new)
+			assert_equal ("replaced1_12", a_expt, a_got)
+
+			a_text := "---"
+			a_expt := "###"
+			a_got := STRING_.replaced_all_substrings (a_text, s_old, s_new)
+			assert_equal ("replaced1_13", a_expt, a_got)
+
+			a_text := "foo-bar-foo-bar-foo-bar-foo-bar-foo-bar"
+			a_expt := "foo#bar#foo#bar#foo#bar#foo#bar#foo#bar"
+			a_got := STRING_.replaced_all_substrings (a_text, s_old, s_new)
+			assert_equal ("replaced1_21", a_expt, a_got) 
+
+			a_text := "-foo-bar-foo-bar-foo-bar-foo-bar-foo-bar"
+			a_expt := "#foo#bar#foo#bar#foo#bar#foo#bar#foo#bar"
+			a_got := STRING_.replaced_all_substrings (a_text, s_old, s_new)
+			assert_equal ("replaced1_22", a_expt, a_got) 
+
+			a_text := "foo-bar-foo-bar-foo-bar-foo-bar-foo-bar-"
+			a_expt := "foo#bar#foo#bar#foo#bar#foo#bar#foo#bar#"
+			a_got := STRING_.replaced_all_substrings (a_text, s_old, s_new)
+			assert_equal ("replaced1_23", a_expt, a_got) 
+
+			a_text := "-foo-bar-foo-bar-foo-bar-foo-bar-foo-bar-"
+			a_expt := "#foo#bar#foo#bar#foo#bar#foo#bar#foo#bar#"
+			a_got := STRING_.replaced_all_substrings (a_text, s_old, s_new)
+			assert_equal ("replaced1_24", a_expt, a_got) 
+
+			s_old := "-"
+			s_new:= "##"
+
+			a_text := "foo-bar"
+			a_expt := "foo##bar"
+			a_got := STRING_.replaced_all_substrings (a_text, s_old, s_new)
+			assert_equal ("replaced1_30", a_expt, a_got)
+
+			a_text := "foobar-"
+			a_expt := "foobar##"
+			a_got := STRING_.replaced_all_substrings (a_text, s_old, s_new)
+			assert_equal ("replaced1_31", a_expt, a_got)
+
+			a_text := "foo-bar-"
+			a_expt := "foo##bar##"
+			a_got := STRING_.replaced_all_substrings (a_text, s_old, s_new)
+			assert_equal ("replaced1_32", a_expt, a_got)
+
+			a_text := "-foo-bar-"
+			a_expt := "##foo##bar##"
+			a_got := STRING_.replaced_all_substrings (a_text, s_old, s_new)
+			assert_equal ("replaced1_33", a_expt, a_got)
+
+			a_text := "--foo---bar--"
+			a_expt := "####foo######bar####"
+			a_got := STRING_.replaced_all_substrings (a_text, s_old, s_new)
+			assert_equal ("replaced1_34", a_expt, a_got)
+
+			s_new := ""
+			a_text := "--foo---bar--"
+			a_expt := "foobar"
+			a_got := STRING_.replaced_all_substrings (a_text, s_old, s_new)
+			assert_equal ("replaced1_35", a_expt, a_got)
+
+			s_new:= "-"
+			a_text := "--foo---bar--"
+			a_expt := "--foo---bar--"
+			a_got := STRING_.replaced_all_substrings (a_text, s_old, s_new)
+			assert_equal ("replaced1_36", a_expt, a_got)
+
+			s_new := s_old
+			a_text := "--foo---bar--"
+			a_expt := "--foo---bar--"
+			a_got := STRING_.replaced_all_substrings (a_text, s_old, s_new)
+			assert_equal ("replaced1_37", a_expt, a_got)
+
+			s_new := s_old
+			a_text := "--foo---bar--"
+			a_expt := "--foo---bar--"
+			a_got := STRING_.replaced_all_substrings (a_text, s_old, s_new)
+			assert_equal ("replaced1_38", a_expt, a_got)
+
+			s_old := "#"
+			s_new := "-"
+			a_text := "--foo---bar--"
+			a_got := STRING_.replaced_all_substrings (a_text, s_old, s_new)
+			assert_same ("replaced1_39", a_text, a_got)
+
+			s_old := "foo"
+			s_new := "toto"
+			a_text := "foobar"
+			a_expt := "totobar"
+			a_got := STRING_.replaced_all_substrings (a_text, s_old, s_new)
+			assert_equal ("replaced1_40", a_expt, a_got)
+
+			s_old := "foo"
+			s_new := "toto"
+			a_text := "12foobar"
+			a_expt := "12totobar"
+			a_got := STRING_.replaced_all_substrings (a_text, s_old, s_new)
+			assert_equal ("replaced1_41", a_expt, a_got)
+
+			s_old := "bar"
+			s_new := "toto"
+			a_text := "foobar"
+			a_expt := "foototo"
+			a_got := STRING_.replaced_all_substrings (a_text, s_old, s_new)
+			assert_equal ("replaced1_42", a_expt, a_got)
+
+			s_old := "foo"
+			s_new := "1"
+			a_text := "foobar"
+			a_expt := "1bar"
+			a_got := STRING_.replaced_all_substrings (a_text, s_old, s_new)
+			assert_equal ("replaced1_43", a_expt, a_got)
+
+			s_old := "bar"
+			s_new := "1"
+			a_text := "foobar"
+			a_expt := "foo1"
+			a_got := STRING_.replaced_all_substrings (a_text, s_old, s_new)
+			assert_equal ("replaced1_43", a_expt, a_got)
+
+			s_old := "bar"
+			s_new := ""
+			a_text := "foobar"
+			a_expt := "foo"
+			a_got := STRING_.replaced_all_substrings (a_text, s_old, s_new)
+			assert_equal ("replaced1_44", a_expt, a_got)
+
+			s_old := "foo"
+			s_new := ""
+			a_text := "foobar"
+			a_expt := "bar"
+			a_got := STRING_.replaced_all_substrings (a_text, s_old, s_new)
+			assert_equal ("replaced1_45", a_expt, a_got)
+
+			s_old := "foobar"
+			s_new := ""
+			a_text := "foobar"
+			a_expt := ""
+			a_got := STRING_.replaced_all_substrings (a_text, s_old, s_new)
+			assert_equal ("replaced1_46", a_expt, a_got)
+
+			s_old := "foo"
+			s_new := "toto"
+			a_text := "foobarfoobar"
+			a_expt := "totobartotobar"
+			a_got := STRING_.replaced_all_substrings (a_text, s_old, s_new)
+			assert_equal ("replaced1_50", a_expt, a_got)
+
+		end
+
+	test_replaced_all_substrings2 is
+			-- Test feature `replaced_all_substrings'.
+		local
+			a_text: STRING
+			a_expt: STRING
+			a_got: STRING
+			s_old: STRING
+			s_new: STRING
+			a_uc_string: UC_STRING
+
+			a_utf8_string: UC_UTF8_STRING
+		do
+			s_old := "-"
+			s_new:= "#"
+
+			a_text := "x"
+			a_expt := "x"
+			create a_uc_string.make_from_string (a_text)
+			a_got := STRING_.replaced_all_substrings (a_uc_string, s_old, s_new)
+			assert_equal ("replaced2_01", a_expt, a_got)
+			assert_same ("replaced2_02", a_got, a_uc_string)
+
+			a_text := "--"
+			a_expt := "##"
+			create a_uc_string.make_from_string (a_text)
+			a_got := STRING_.replaced_all_substrings (a_uc_string, s_old, s_new)
+			assert_equal ("replaced2_11", a_expt, a_got)
+
+			a_text := "'- -'"
+			a_expt := "'# #'"
+			create a_uc_string.make_from_string (a_text)
+			a_got := STRING_.replaced_all_substrings (a_uc_string, s_old, s_new)
+			assert_equal ("replaced2_12", a_expt, a_got)
+
+			a_text := "---"
+			a_expt := "###"
+			create a_uc_string.make_from_string (a_text)
+			a_got := STRING_.replaced_all_substrings (a_uc_string, s_old, s_new)
+			assert_equal ("replaced2_13", a_expt, a_got)
+
+			a_text := "foo-bar-foo-bar-foo-bar-foo-bar-foo-bar"
+			a_expt := "foo#bar#foo#bar#foo#bar#foo#bar#foo#bar"
+			create a_uc_string.make_from_string (a_text)
+			a_got := STRING_.replaced_all_substrings (a_uc_string, s_old, s_new)
+			assert_equal ("replaced2_21", a_expt, a_got) 
+
+			a_text := "-foo-bar-foo-bar-foo-bar-foo-bar-foo-bar"
+			a_expt := "#foo#bar#foo#bar#foo#bar#foo#bar#foo#bar"
+			create a_uc_string.make_from_string (a_text)
+			a_got := STRING_.replaced_all_substrings (a_uc_string, s_old, s_new)
+			assert_equal ("replaced2_22", a_expt, a_got) 
+
+			a_text := "foo-bar-foo-bar-foo-bar-foo-bar-foo-bar-"
+			a_expt := "foo#bar#foo#bar#foo#bar#foo#bar#foo#bar#"
+			create a_uc_string.make_from_string (a_text)
+			a_got := STRING_.replaced_all_substrings (a_uc_string, s_old, s_new)
+			assert_equal ("replaced2_23", a_expt, a_got) 
+
+			a_text := "-foo-bar-foo-bar-foo-bar-foo-bar-foo-bar-"
+			a_expt := "#foo#bar#foo#bar#foo#bar#foo#bar#foo#bar#"
+			create a_uc_string.make_from_string (a_text)
+			a_got := STRING_.replaced_all_substrings (a_uc_string, s_old, s_new)
+			assert_equal ("replaced2_24", a_expt, a_got) 
+
+			s_old := "-"
+			s_new:= "##"
+
+			a_text := "foo-bar"
+			a_expt := "foo##bar"
+			create a_uc_string.make_from_string (a_text)
+			a_got := STRING_.replaced_all_substrings (a_uc_string, s_old, s_new)
+			assert_equal ("replaced2_30", a_expt, a_got)
+
+			a_text := "foobar-"
+			a_expt := "foobar##"
+			create a_uc_string.make_from_string (a_text)
+			a_got := STRING_.replaced_all_substrings (a_uc_string, s_old, s_new)
+			assert_equal ("replaced2_31", a_expt, a_got)
+
+			a_text := "foo-bar-"
+			a_expt := "foo##bar##"
+			create a_uc_string.make_from_string (a_text)
+			a_got := STRING_.replaced_all_substrings (a_uc_string, s_old, s_new)
+			assert_equal ("replaced2_32", a_expt, a_got)
+
+			a_text := "-foo-bar-"
+			a_expt := "##foo##bar##"
+			create a_uc_string.make_from_string (a_text)
+			a_got := STRING_.replaced_all_substrings (a_uc_string, s_old, s_new)
+			assert_equal ("replaced2_33", a_expt, a_got)
+
+			a_text := "--foo---bar--"
+			a_expt := "####foo######bar####"
+			create a_uc_string.make_from_string (a_text)
+			a_got := STRING_.replaced_all_substrings (a_uc_string, s_old, s_new)
+			assert_equal ("replaced2_34", a_expt, a_got)
+
+			s_new := ""
+			a_text := "--foo---bar--"
+			a_expt := "foobar"
+			create a_uc_string.make_from_string (a_text)
+			a_got := STRING_.replaced_all_substrings (a_uc_string, s_old, s_new)
+			assert_equal ("replaced2_35", a_expt, a_got)
+
+			s_new:= "-"
+			a_text := "--foo---bar--"
+			a_expt := "--foo---bar--"
+			create a_uc_string.make_from_string (a_text)
+			a_got := STRING_.replaced_all_substrings (a_uc_string, s_old, s_new)
+			assert_equal ("replaced2_36", a_expt, a_got)
+
+			s_new := s_old
+			a_text := "--foo---bar--"
+			a_expt := "--foo---bar--"
+			create a_uc_string.make_from_string (a_text)
+			a_got := STRING_.replaced_all_substrings (a_uc_string, s_old, s_new)
+			assert_equal ("replaced2_37", a_expt, a_got)
+
+			s_new := s_old
+			a_text := "--foo---bar--"
+			a_expt := "--foo---bar--"
+			a_got := STRING_.replaced_all_substrings (a_uc_string, s_old, s_new)
+			assert_equal ("replaced2_38", a_expt, a_got)
+
+			s_old := "#"
+			s_new := "-"
+			a_text := "--foo---bar--"
+			create a_uc_string.make_from_string (a_text)
+			a_got := STRING_.replaced_all_substrings (a_uc_string, s_old, s_new)
+			assert_same ("replaced2_39", a_uc_string, a_got)
+
+			s_old := "foo"
+			s_new := "toto"
+			a_text := "12foobar"
+			a_expt := "12totobar"
+			create a_uc_string.make_from_string (a_text)
+			a_got := STRING_.replaced_all_substrings (a_uc_string, s_old, s_new)
+			assert_equal ("replaced2_41", a_expt, a_got)
+
+			s_old := "bar"
+			s_new := "toto"
+			a_text := "foobar"
+			a_expt := "foototo"
+			create a_uc_string.make_from_string (a_text)
+			a_got := STRING_.replaced_all_substrings (a_uc_string, s_old, s_new)
+			assert_equal ("replaced2_42", a_expt, a_got)
+
+			s_old := "foo"
+			s_new := "1"
+			a_text := "foobar"
+			a_expt := "1bar"
+			create a_uc_string.make_from_string (a_text)
+			a_got := STRING_.replaced_all_substrings (a_uc_string, s_old, s_new)
+			assert_equal ("replaced2_43", a_expt, a_got)
+
+			s_old := "bar"
+			s_new := "1"
+			a_text := "foobar"
+			a_expt := "foo1"
+			create a_uc_string.make_from_string (a_text)
+			a_got := STRING_.replaced_all_substrings (a_uc_string, s_old, s_new)
+			assert_equal ("replaced2_43", a_expt, a_got)
+
+			s_old := "bar"
+			s_new := ""
+			a_text := "foobar"
+			a_expt := "foo"
+			create a_uc_string.make_from_string (a_text)
+			a_got := STRING_.replaced_all_substrings (a_uc_string, s_old, s_new)
+			assert_equal ("replaced2_44", a_expt, a_got)
+
+			s_old := "foo"
+			s_new := ""
+			a_text := "foobar"
+			a_expt := "bar"
+			create a_uc_string.make_from_string (a_text)
+			a_got := STRING_.replaced_all_substrings (a_uc_string, s_old, s_new)
+			assert_equal ("replaced2_45", a_expt, a_got)
+
+			s_old := "foobar"
+			s_new := ""
+			a_text := "foobar"
+			a_expt := ""
+			create a_uc_string.make_from_string (a_text)
+			a_got := STRING_.replaced_all_substrings (a_uc_string, s_old, s_new)
+			assert_equal ("replaced2_46", a_expt, a_got)
+
+			s_old := "foo"
+			s_new := "toto"
+			a_text := "foobarfoobar"
+			a_expt := "totobartotobar"
+			create a_uc_string.make_from_string (a_text)
+			a_got := STRING_.replaced_all_substrings (a_uc_string, s_old, s_new)
+			assert_equal ("replaced2_50", a_expt, a_got)
+
 		end
 
 	test_elks_same_string is
