@@ -35,6 +35,8 @@ feature -- Status report
 
 	has_feature_name (a_name: ET_FEATURE_NAME): BOOLEAN is
 			-- Is `a_name' listed in current list?
+		require
+			a_name_not_void: a_name /= Void
 		local
 			i, nb: INTEGER
 		do
