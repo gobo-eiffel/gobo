@@ -34,6 +34,7 @@ creation
 %token EIF_CODE PIPED EMPTY
 
 %start Scanner_description
+%expect 14
 
 %%
 
@@ -51,7 +52,6 @@ Section1: ENDSECT
 		{
 			if equiv_classes_used then
 				!! equiv_classes.make (1, characters_count)
-				!! transitions.make (Initial_max_transitions)
 			end
 		}
 	;
