@@ -11,12 +11,13 @@
 			<parameter name="next" value="../time/index.html"/>
 			<parameter name="toc" value="../index.html"/>
 		</xslt>
+<!--
 		<xslt
 			input="${GOBO}/doc/structure/index.xml"
 			output="${GOBO}/doc/structure/index2.xml"
 			stylesheet="${GOBO}/doc/misc/gobo2db.xsl">
 		</xslt>
-		
+-->		
 	</target>
 
 </project>

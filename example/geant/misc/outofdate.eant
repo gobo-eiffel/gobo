@@ -1,0 +1,20 @@
+<?xml version="1.0" ?>
+
+<project name="geant_outofdate_test">
+	
+	<target name="gepp">
+		<set name="gepp_dir" value="${GOBO}/library/kernel/io"/>
+		<set name="gepp_file" value="kl_file_system"/>
+		
+		<outofdate
+			variable="generate"
+			source="${gepp_dir}/${gepp_file}.ge,${GOBO}/example/geant/misc/outofdate.eant"
+			target="${gepp_file}.e"/>
+		<gepp input="${gepp_dir}/${gepp_file}.ge" output="${gepp_file}.e" if="${generate}=true">
+			<define name="ISE"/>
+		</gepp>
+
+	</target>
+
+</project>
+
