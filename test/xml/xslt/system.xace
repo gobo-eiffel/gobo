@@ -24,6 +24,7 @@
 		<option name="garbage_collector" value="internal"/> 
 		<option name="gc_info" value="false"/> 
 		<option name="finalize" value="false"/>
+		<option name="split" value="true" if="${GOBO_EIFFEL}=se"/>
 	</option>
 	<option if="${GOBO_DOTNET}">
 		<option name="msil_generation" value="true"/>
