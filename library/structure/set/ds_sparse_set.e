@@ -676,7 +676,7 @@ feature {NONE} -- Implementation
 			-- Hash position of `v' in `slots'
 		deferred
 		ensure
-			valid_position: Result >= 0 and result <= modulus
+			valid_position: Result >= 0 and Result <= modulus
 		end
 
 	remove_position (i: INTEGER) is
