@@ -1,3 +1,5 @@
+SYSTEM OPTIONS
+
 Following is the list of system-level options supported by
 'gexace' (of the form <option name="..." value="..."/>),
 and how they are translated to the vendor dependent Ace or
@@ -67,7 +69,7 @@ VALUES: true | false
 DEFAULT: false
 DESCRIPTION: Enable array optimization in loops when the array
   has been declared as local variable or formal argument.
-NOTE: The option `finalize' (finalization mode) should
+NOTE: The option 'finalize' (finalization mode) should
   be set in order for this option to have any effect.
 
 ISE:
@@ -83,7 +85,7 @@ SE:
 -------------------------------------------------------------
 NAME: assertion
 
-VALUES: boost | none | require | ensure | invariant |
+VALUES: none | require | ensure | invariant |
         loop_invariant | loop_variant | check | all
 DEFAULT: require
 DESCRIPTION: Set default assertion level of the Eiffel system.
@@ -193,8 +195,8 @@ SE:
   If several occurrences of Ace options would need to be generated,
   only one occurrence would actually be generated with the value
   which appears below all the others in the list above. However if
-  'boost' is specified in the option `finalize', then values specified
-  in option `assertion' are ignored.
+  'boost' is specified in the option 'finalize', then values specified
+  in option 'assertion' are ignored.
 -------------------------------------------------------------
 NAME: case_insensitive
 
@@ -311,7 +313,7 @@ DESCRIPTION: Do not include dead code in the generated application.
   included, and 'class' means the classes which are in the system
   but which are never instanciated in the living code are not
   included.
-NOTE: The option `finalize' (finalization mode) should be set
+NOTE: The option 'finalize' (finalization mode) should be set
   in order for 'feature', 'class' and 'all' (except its low_level
   part in VE) to have any effect.
 NOTE: There can be several of these options.
@@ -484,7 +486,7 @@ VALUES: true | false
 DEFAULT: false
 DESCRIPTION: Enable to see a complete exception trace
   when a finalized application is crashing.
-NOTE: The option `finalize' (finalization mode) should
+NOTE: The option 'finalize' (finalization mode) should
   be set in order for this option to have any effect.
 
 ISE:
@@ -519,9 +521,9 @@ SE:
   true -> assertion (boost)
   false -> assertion (no)
   --
-  If 'boost' is specified, then values specified in option `assertion'
+  If 'boost' is specified, then values specified in option 'assertion'
   are ignored. Otherwise 'no' might be overriden by values specified
-  in option `assertion'.
+  in option 'assertion'.
 -------------------------------------------------------------
 NAME: flat_fst_optimization
 
@@ -529,7 +531,7 @@ VALUES: true | false
 DEFAULT: false
 DESCRIPTION: Specify whether dynamic tables may be kept not
   compacted for faster dynamic access to features.
-NOTE: The option `finalize' (finalization mode) should
+NOTE: The option 'finalize' (finalization mode) should
   be set in order for this option to have any effect.
 
 ISE:
@@ -636,6 +638,24 @@ VE:
 SE:
   N/A
 -------------------------------------------------------------
+NAME: high_memory_compiler
+
+VALUES: true | false
+DEFAULT: false
+DESCRIPTION: Allow the compiler to use more memory at compile
+  time (caching, bigger buffers, etc.). Compilation is likely
+  to be quicker, if you have enough memory (RAM, not disk!)... 
+
+ISE:
+  N/A
+HACT:
+  N/A
+VE:
+  N/A
+SE:
+  true -> high_memory_compiler (yes)
+  false -> high_memory_compiler (no)
+-------------------------------------------------------------
 NAME: inlining
 
 VALUES: none | array | constant | once | all
@@ -739,7 +759,7 @@ DEFAULT: false
 DESCRIPTION: Specify whether special rearrangements may be used
   to represent the objects in the memory in more access-efficient
   way by changing the order of the attributes.
-NOTE: The option `finalize' (finalization mode) should
+NOTE: The option 'finalize' (finalization mode) should
   be set in order for this option to have any effect.
 
 ISE:
@@ -758,7 +778,7 @@ VALUES: true | false
 DEFAULT: false
 DESCRIPTION: Specify whether all calls to features of the leaf
   classes will be direct ones.
-NOTE: The option `finalize' (finalization mode) should
+NOTE: The option 'finalize' (finalization mode) should
   be set in order for this option to have any effect.
 
 ISE:
@@ -1089,13 +1109,14 @@ NAME: trace
 
 VALUES: true | false
 DEFAULT: false
-DESCRIPTION: Enable trace mode
+DESCRIPTION: Enable trace mode.
 
 ISE:
   true -> trace (yes)
   false -> trace (no)
 HACT:
-  N/A
+  true -> trace (yes)
+  false -> trace (no)
 VE:
   N/A
 SE:
@@ -1198,3 +1219,254 @@ yet by 'gexace' (wait for explanation from ISE):
 . disabled_debug (...)
 . il_verifiable (yes)
 . msil_generation_type ("exe")
+
+=============================================================
+
+CLUSTER OPTIONS
+
+Following is the list of cluster-level options supported by
+'gexace' (of the form <option name="..." value="..."/>),
+and how they are translated to the vendor dependent Ace or
+ESD files. "N/A" does not necessarily mean that the corresponding
+Eiffel compiler does not support this facility, it could just
+be that the facility is not parameterizable or is activated
+from the command-line or from a separate tool (such as VETuner
+for Visual Eiffel) rather than from the Ace or ESD file. When
+an entry is marked "N/A" the option will be silently ignored
+and nothing will be generated in the Ace or ESD file for this
+option. Likewise when the name of an option specified in
+an Xace file is not known by 'gexace'.
+
+The DEFAULT section shows 'gexace' default value when this
+option is not explicitely specified in the Xace file. It
+can be different from the default value used by the various
+Eiffel vendors in their Ace or ESD files.
+
+For further details about each option, please refer to the
+documentation provided with the Eiffel compilers.
+
+-------------------------------------------------------------
+NAME: abstract
+
+VALUES: true | false
+DEFAULT: false
+DESCRIPTION: Specify that this cluster should not be searched
+  for Eiffel classes (but its subclusters can if they don't
+  have this option set).
+
+ISE:
+  true ->
+      if there is at least one non-abstract subcluster ->
+          cluster_name: "pathname"
+      if there is no non-abstract subcluster ->
+          no output
+  false ->
+      cluster_name: "pathname"
+HACT:
+  true ->
+      if there is at least one non-abstract subcluster ->
+          abstract cluster_name: "pathname"
+      if there is no non-abstract subcluster ->
+          no output
+  false ->
+      cluster_name: "pathname"
+VE:
+  true ->
+      no output
+  false ->
+      cluster_name: "pathname"
+SE:
+  true ->
+      no output
+  false ->
+      cluster_name: "pathname"
+-------------------------------------------------------------
+NAME: assertion
+
+VALUES: none | require | ensure | invariant |
+        loop_invariant | loop_variant | check | all
+DEFAULT: no default
+DESCRIPTION: Set default assertion level for the classes of
+  this cluster. Override the assertion level specified at
+  the system level.
+NOTE: There can be several of these options.
+
+ISE:
+  none -> assertion (no)
+  require -> assertion (require)
+  ensure -> assertion (ensure)
+  invariant -> assertion (invariant)
+  loop_invariant -> assertion (loop)
+  loop_variant -> assertion (loop)
+  check -> assertion (check)
+  all -> assertion (all)
+HACT:
+  none -> assertion (no)
+  require -> assertion (require)
+  ensure -> assertion (ensure)
+  invariant -> assertion (invariant)
+  loop_invariant -> assertion (loop)
+  loop_variant -> assertion (loop)
+  check -> assertion (check)
+  all -> assertion (all)
+  --
+  If several occurrences of Ace options would need to be generated,
+  only one occurrence would actually be generated with the value
+  which appears below all the others in the list above.
+VE:
+  N/A
+SE:
+  none -> assertion (no)
+  require -> assertion (require)
+  ensure -> assertion (ensure)
+  invariant -> assertion (invariant)
+  loop_invariant -> assertion (loop)
+  loop_variant -> assertion (loop)
+  check -> assertion (check)
+  all -> assertion (all)
+  --
+  If several occurrences of Ace options would need to be generated,
+  only one occurrence would actually be generated with the value
+  which appears below all the others in the list above.
+-------------------------------------------------------------
+NAME: debug
+
+VALUES: true | false
+DEFAULT: no default
+DESCRIPTION: Enable debug instructions for the classes of this cluster.
+  Override the 'debug' option specified at the system level.
+
+ISE:
+  true -> debug (yes)
+  false -> debug (no)
+HACT:
+  true -> debug (yes)
+  false -> debug (no)
+VE:
+  N/A
+SE:
+  true -> debug (yes)
+  false -> debug (no)
+-------------------------------------------------------------
+NAME: debug_tag
+
+VALUES: <tag>
+DEFAULT: no default
+DESCRIPTION: Enable debug instructions with tag '<tag>' for the
+  classes of this cluster. Override the 'debug_tag' option
+  specified at the system level.
+NOTE: There can be several of these options.
+
+ISE:
+  <tag> -> debug ("<tag>")
+HACT:
+  <tag> -> debug ("<tag>")
+VE:
+  N/A
+SE:
+  <tag> -> debug ("<tag>")
+-------------------------------------------------------------
+NAME: document
+
+VALUES: <pathname>
+DEFAULT: no default
+DESCRIPTION: Specify in which directory the documentation for
+  the classes fo this cluster generated by ISE EiffelStudio
+  should be put (when using the Project/Generate documentation...
+  menu). If no directory is specified, the documentation will
+  be generated at the same level as the EIFGEN directory in a
+  directory called 'Documentation'. Override the 'document'
+  option specified at the system level.
+
+ISE:
+  <pathname> -> document ("<pathname>")
+HACT:
+  N/A
+VE:
+  N/A
+SE:
+  N/A
+-------------------------------------------------------------
+NAME: exclude
+
+VALUES: <pathname>
+DEFAULT: no default
+DESCRIPTION: Specify a filename, or a directory name when the
+  'recursive' option is set, that should not be taken into
+  account when searching the cluster for Eiffel classes.
+NOTE: There can be several of these options.
+
+ISE:
+  <pathname> ->
+      cluster_name: "pathname"
+         exclude
+            "<pathname>"
+         end
+HACT:
+  <pathname> ->
+      cluster_name: "pathname"
+         exclude
+            "<pathname>"
+         end
+VE:
+  N/A
+SE:
+  N/A
+-------------------------------------------------------------
+NAME: profile
+
+VALUES: true | false
+DEFAULT: no default
+DESCRIPTION: Enable Eiffel profiling for the classes of this
+  cluster. Override the 'profile' option specified at the
+  system level.
+
+ISE:
+  true -> profile (yes)
+  false -> profile (no)
+HACT:
+  N/A
+VE:
+  N/A
+SE:
+  N/A
+-------------------------------------------------------------
+NAME: recursive
+
+VALUES: true | false
+DEFAULT: false
+DESCRIPTION: Specify that the cluster directory and its
+  subdirectories should be recursively traversed to find
+  Eiffel classes.
+
+ISE:
+  true ->
+      all cluster_name: "pathname"
+  false ->
+      cluster_name: "pathname"
+HACT:
+  N/A
+VE:
+  N/A
+SE:
+  N/A
+-------------------------------------------------------------
+NAME: trace
+
+VALUES: true | false
+DEFAULT: no default
+DESCRIPTION: Enable trace mode for the classes of this cluster.
+  Override the 'trace' option specified at the system level.
+
+ISE:
+  true -> trace (yes)
+  false -> trace (no)
+HACT:
+  true -> trace (yes)
+  false -> trace (no)
+VE:
+  N/A
+SE:
+  true -> trace (yes)
+  false -> trace (no)
+-------------------------------------------------------------
