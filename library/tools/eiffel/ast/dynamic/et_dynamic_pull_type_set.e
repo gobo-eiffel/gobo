@@ -10,7 +10,7 @@ indexing
 	date: "$Date$"
 	revision: "$Revision$"
 
-class ET_PULL_DYNAMIC_TYPE_SET
+class ET_DYNAMIC_PULL_TYPE_SET
 
 inherit
 
