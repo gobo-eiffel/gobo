@@ -4,12 +4,12 @@ indexing
 
 		"Xace parsers"
 
-	library:    "Gobo Eiffel Tools Library"
-	author:     "Andreas Leitner <nozone@sbox.tugraz.at>"
-	copyright:  "Copyright (c) 2001, Andreas Leitner and others"
-	license:    "Eiffel Forum Freeware License v1 (see forum.txt)"
-	date:       "$Date$"
-	revision:   "$Revision$"
+	library:	"Gobo Eiffel Tools Library"
+	author:		"Andreas Leitner <nozone@sbox.tugraz.at>"
+	copyright:	"Copyright (c) 2001, Andreas Leitner and others"
+	license:	"Eiffel Forum Freeware License v1 (see forum.txt)"
+	date:		"$Date$"
+	revision:	"$Revision$"
 
 class ET_XACE_PARSER
 
@@ -57,7 +57,7 @@ feature {NONE} -- Initialization
 				!! a_cluster_parser.make_with_variables (a_variables, error_handler)
 			end
 			!! ast_factory.make (a_cluster_parser, error_handler)
- 			!! xml_preprocessor.make (a_variables, error_handler)
+			!! xml_preprocessor.make (a_variables, error_handler)
 			!! xml_validator.make (an_error_handler)
 			!! a_parser_factory.make
 			if a_parser_factory.is_toe_eiffel_tree_available then
@@ -83,15 +83,6 @@ feature -- Parsing
 			a_cluster: ET_XACE_CLUSTER
 			a_parser_factory: XM_PARSER_FACTORY
 		do
-			-- temporary workaround until eiffel-xml parser
-			-- can parse multiple times with one instance
-			!! a_parser_factory.make
-			if a_parser_factory.is_toe_eiffel_tree_available then
-				xml_parser := a_parser_factory.new_toe_eiffel_tree_parser
-				xml_parser.enable_position_table
-			else
-				error_handler.report_no_parser_available_error
-			end
 			if xml_parser /= Void then
 				xml_parser.parse_from_stream (a_file)
 				if xml_parser.is_correct then

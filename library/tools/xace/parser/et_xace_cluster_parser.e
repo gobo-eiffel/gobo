@@ -4,12 +4,12 @@ indexing
 
 		"Xace cluster parsers"
 
-	library:    "Gobo Eiffel Tools Library"
-	author:     "Andreas Leitner <nozone@sbox.tugraz.at>"
-	copyright:  "Copyright (c) 2001, Andreas Leitner and others"
-	license:    "Eiffel Forum Freeware License v1 (see forum.txt)"
-	date:       "$Date$"
-	revision:   "$Revision$"
+	library:	"Gobo Eiffel Tools Library"
+	author:		"Andreas Leitner <nozone@sbox.tugraz.at>"
+	copyright:	"Copyright (c) 2001, Andreas Leitner and others"
+	license:	"Eiffel Forum Freeware License v1 (see forum.txt)"
+	date:		"$Date$"
+	revision:	"$Revision$"
 
 class ET_XACE_CLUSTER_PARSER
 
@@ -31,15 +31,6 @@ feature -- Parsing
 		local
 			a_parser_factory: XM_PARSER_FACTORY
 		do
-			-- temporary workaround until eiffel-xml parser
-			-- can parse multiple times with one instance
-			!! a_parser_factory.make
-			if a_parser_factory.is_toe_eiffel_tree_available then
-				xml_parser := a_parser_factory.new_toe_eiffel_tree_parser
-				xml_parser.enable_position_table
-			else
-				error_handler.report_no_parser_available_error
-			end
 			last_cluster := Void
 			if xml_parser /= Void then
 				xml_parser.parse_from_stream (a_file)
