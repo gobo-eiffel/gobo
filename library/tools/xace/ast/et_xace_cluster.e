@@ -314,6 +314,7 @@ feature {NONE} -- Implementation
 		do
 			create Result.make (a_name, Void)
 			Result.set_parent (Current)
+			Result.set_options (options)
 			Result.set_recursive (True)
 		end
 
