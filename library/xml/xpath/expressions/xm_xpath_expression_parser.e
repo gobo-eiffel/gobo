@@ -26,36 +26,6 @@ inherit
 
 feature -- Access
 
-	last_expression: XM_XPATH_EXPRESSION is
-			-- Result of last call to `parse'
-		require
-			no_parse_error: not is_parse_error
-		do
-			Result := internal_last_expression
-		ensure
-			last_expression_not_void: Result /= Void
-		end
-
-	last_pattern: XM_XSLT_PATTERN is
-			-- Result of last call to `parse_pattern'
-		require
-			no_parse_error: not is_parse_error
-		do
-			Result := internal_last_pattern
-		ensure
-			last_pattern_not_void: Result /= Void
-		end
-
-	last_sequence_type: XM_XPATH_SEQUENCE_TYPE is
-			-- Result of last call to `parse_sequence_type'
-		require
-			no_parse_error: not is_parse_error
-		do
-			Result := internal_last_sequence_type
-		ensure
-			last_sequence_type_not_void: Result /= Void
-		end
-
 	last_parse_error: STRING is
 			-- Text of last parse error
 		require
@@ -73,8 +43,8 @@ feature -- Status report
 	
 feature -- Parsers
 
-	parse (expression_text: STRING; env: XM_XPATH_STATIC_CONTEXT) is
-			--  Parse `expression_text', which represents an expression.
+	parse (expression_text: STRING; env: XM_XPATH_STATIC_CONTEXT): XM_XPATH_EXPRESSION is
+			--  Parse `expression_text', which represents an expression
 		require
 			expression_text_not_void: expression_text /= Void
 			static_context_not_void: env /= Void
@@ -85,7 +55,7 @@ feature -- Parsers
 			create tokenizer.make
 			tokenizer.tokenize (expression_text)
 			is_parse_error := False
-			parse_expression
+			Result := parse_expression
 			
 			if	tokenizer.is_lexical_error then
 				grumble (tokenizer.last_lexical_error)
@@ -95,12 +65,12 @@ feature -- Parsers
 				grumble (s)
 			end
 		ensure
-			expression_not_void_unless_error: not is_parse_error implies last_expression /= Void
+			expression_not_void_unless_error: not is_parse_error implies Result /= Void
 			static_context_not_void: environment /= Void
 		end
 
-	parse_pattern (pattern_text: STRING; env: XM_XPATH_STATIC_CONTEXT) is
-			-- Parse `pattern_text', which represents an XSLT pattern.
+	parse_pattern (pattern_text: STRING; env: XM_XPATH_STATIC_CONTEXT): XM_XSLT_PATTERN is
+			-- Parse `pattern_text', which represents an XSLT pattern
 		require
 			pattern_text_not_void: pattern_text /= Void
 			static_context_not_void: env /= Void
@@ -111,7 +81,7 @@ feature -- Parsers
 			create tokenizer.make
 			tokenizer.tokenize (pattern_text)
 			is_parse_error := False
-			parse_union_pattern
+			Result := parse_union_pattern
 
 			if	tokenizer.is_lexical_error then
 				grumble (tokenizer.last_lexical_error)
@@ -121,12 +91,12 @@ feature -- Parsers
 				grumble (s)
 			end
 		ensure
-			pattern_not_void_unless_error: not is_parse_error implies last_pattern /= Void
+			pattern_not_void_unless_error: not is_parse_error implies Result /= Void
 			static_context_not_void: environment /= Void
 		end
 
-	parse_sequence_type (input_string: STRING; env: XM_XPATH_STATIC_CONTEXT) is
-			-- Parse `input_string', which represents a sequence type.
+	parse_sequence_type (input_string: STRING; env: XM_XPATH_STATIC_CONTEXT): XM_XPATH_SEQUENCE_TYPE is
+			-- Parse `input_string', which represents a sequence type;
 			-- SequenceType ::= (ItemType OccurrenceIndicator?) | ("empty" "(" ")")
 		require
 			sequence_text_not_void: input_string /= Void
@@ -138,7 +108,7 @@ feature -- Parsers
 			create tokenizer.make
 			tokenizer.tokenize (input_string)
 			is_parse_error := False
-			parse_sequence
+			Result := parse_sequence
 
 			if	tokenizer.is_lexical_error then
 				grumble (tokenizer.last_lexical_error)
@@ -148,7 +118,7 @@ feature -- Parsers
 				grumble (s)
 			end
 		ensure
-			sequence_not_void_unless_error: not is_parse_error implies last_sequence_type /= Void
+			sequence_not_void_unless_error: not is_parse_error implies Result /= Void
 			static_context_not_void: environment /= Void
 		end
 
@@ -164,8 +134,8 @@ feature -- Helper routines
 
 feature {NONE} -- Expression parsers
 
-	parse_sequence is
-			-- Parse the sequence type production.
+	parse_sequence: XM_XPATH_SEQUENCE_TYPE is
+			-- Parse the sequence type production
 		require
 			static_context_not_void: environment /= Void
 			tokenizer_usable: tokenizer /= Void and then tokenizer.input /= Void and not tokenizer.is_lexical_error
@@ -174,7 +144,6 @@ feature {NONE} -- Expression parsers
 			primary_type: INTEGER
 			message: STRING
 		do
-			internal_last_sequence_type := Void
 			primary_type := Any_item
 			if tokenizer.last_token = Name_token then
 				-- TODO
@@ -185,25 +154,23 @@ feature {NONE} -- Expression parsers
 				grumble (message)
 			end
 		ensure
-			expression_not_void_unless_error: not is_parse_error implies internal_last_sequence_type /= Void
+			expression_not_void_unless_error: not is_parse_error implies Result /= Void
 		end
 
-	parse_expression is
-			-- Parse a top-level expression.
+	parse_expression: XM_XPATH_EXPRESSION is
+			-- Parse a top-level expression;
 			-- ExprSingle ( ',' ExprSingle )*
 		require
 			static_context_not_void: environment /= Void
 			tokenizer_usable: tokenizer /= Void and then tokenizer.input /= Void and not tokenizer.is_lexical_error
 			no_previous_parse_error: not is_parse_error
 		local
-			expr1: XM_XPATH_EXPRESSION
+			expr1, expr3: XM_XPATH_EXPRESSION
 			expr2: XM_XPATH_APPEND_EXPRESSION
 		do
-			internal_last_expression := Void
-			parse_single_expression
+			expr1 := parse_single_expression
 			if not is_parse_error then
 				from
-					expr1 := internal_last_expression
 				until
 					is_parse_error or else tokenizer.last_token /= Comma_token
 				loop
@@ -211,19 +178,19 @@ feature {NONE} -- Expression parsers
 					if tokenizer.is_lexical_error then
 						grumble (tokenizer.last_lexical_error)
 					else
-						parse_expression
-						create expr2.make (expr1, Comma_token, internal_last_expression)
+						expr3 := parse_expression
+						create expr2.make (expr1, Comma_token, expr3)
 						expr1 := expr2
 					end
 				end
-				if not is_parse_error then internal_last_expression := expr1 end
+				if not is_parse_error then Result := expr1 end
 			end
 		ensure
-			expression_not_void_unless_error: not is_parse_error implies internal_last_expression /= Void
+			expression_not_void_unless_error: not is_parse_error implies Result /= Void
 		end
 
-	parse_single_expression is
-			-- Parse an ExprSingle.
+	parse_single_expression: XM_XPATH_EXPRESSION is
+			-- Parse an ExprSingle;
 			-- ForExpr
 			-- | QuantifiedExpr
 			-- | IfExpr
@@ -233,29 +200,29 @@ feature {NONE} -- Expression parsers
 			tokenizer_usable: tokenizer /= Void and then tokenizer.input /= Void and not tokenizer.is_lexical_error
 			no_previous_parse_error: not is_parse_error
 		do
-			internal_last_expression := Void
 			inspect
 				tokenizer.last_token
 			when For_token then
-				parse_for_expression
+				Result := parse_for_expression
 			when Let_token then -- XQuery only
-				parse_for_expression
+				Result := parse_for_expression
 			when Some_token then
-				parse_quantified_expression
+				Result := parse_quantified_expression
 			when Every_token then
-				parse_quantified_expression
+				Result := parse_quantified_expression
 			when If_token then
-				parse_if_expression
+				Result := parse_if_expression
 			when Typeswitch_token then -- XQuery only
-				parse_typeswitch_expression
+				Result := parse_typeswitch_expression
 			else
+				Result := parse_or_expression
 			end
 		ensure
-			expression_not_void_unless_error: not is_parse_error implies internal_last_expression /= Void
+			expression_not_void_unless_error: not is_parse_error implies Result /= Void
 		end
 
-	parse_if_expression is
-			-- Parse an IfExpr.
+	parse_if_expression: XM_XPATH_IF_EXPRESSION is
+			-- Parse an IfExpr;
 			-- "if" "(" Expr ")" "then" ExprSingle "else" ExprSingle
 		require
 			static_context_not_void: environment /= Void
@@ -266,7 +233,6 @@ feature {NONE} -- Expression parsers
 			if_expression: XM_XPATH_IF_EXPRESSION
 			message: STRING
 		do
-			internal_last_expression := Void
 
 			-- The Left_parenthesis_token has already been read.
 			
@@ -274,9 +240,8 @@ feature {NONE} -- Expression parsers
 			if tokenizer.is_lexical_error then
 				grumble (tokenizer.last_lexical_error)
 			else
-				parse_expression
+				condition := parse_expression
 				if not is_parse_error then
-					condition := internal_last_expression
 					if tokenizer.last_token /= Right_parenthesis_token then
 						message := "expected %")%", found "
 						message := STRING_.appended_string (message, display_current_token)
@@ -290,9 +255,8 @@ feature {NONE} -- Expression parsers
 							message := STRING_.appended_string (message, display_current_token)
 							grumble (message)
 						else
-							parse_expression
+							then_expression := parse_expression
 							if  not is_parse_error then
-								then_expression := internal_last_expression
 								if tokenizer.last_token /= Right_parenthesis_token then
 									message := "expected %"else%", found "
 									message := STRING_.appended_string (message, display_current_token)
@@ -302,11 +266,10 @@ feature {NONE} -- Expression parsers
 									if tokenizer.is_lexical_error then
 										grumble (tokenizer.last_lexical_error)
 									else
-										parse_single_expression
+										else_expression := parse_single_expression
 										if not is_parse_error then
-											else_expression := internal_last_expression
 											create if_expression.make (condition, then_expression, else_expression)
-											internal_last_expression := if_expression
+											Result := if_expression
 										end
 									end
 								end
@@ -316,10 +279,10 @@ feature {NONE} -- Expression parsers
 				end
 			end
 		ensure
-			expression_not_void_unless_error: not is_parse_error implies internal_last_expression /= Void
+			expression_not_void_unless_error: not is_parse_error implies Result /= Void
 		end
 
-	parse_typeswitch_expression is
+	parse_typeswitch_expression: XM_XPATH_EXPRESSION is
 			-- XQuery only - override in sub-class
 		require
 			static_context_not_void: environment /= Void
@@ -329,22 +292,20 @@ feature {NONE} -- Expression parsers
 			grumble("typeswitch is not allowed in XPath");
 		end
 
-	parse_or_expression is
-			-- Parse an OrExpression.
+	parse_or_expression: XM_XPATH_EXPRESSION is
+			-- Parse an OrExpression;
 			-- AndExpr ( 'or' AndExpr )
 		require
 			static_context_not_void: environment /= Void
 			tokenizer_usable: tokenizer /= Void and then tokenizer.input /= Void and not tokenizer.is_lexical_error
 			no_previous_parse_error: not is_parse_error
 		local
-			expr1: XM_XPATH_EXPRESSION
+			expr1, expr3: XM_XPATH_EXPRESSION
 			expr2: XM_XPATH_BOOLEAN_EXPRESSION
 		do
-			internal_last_expression := Void
-			parse_and_expression
+			expr1 := parse_and_expression
 			if not is_parse_error then
 				from
-					expr1 := internal_last_expression
 				until
 					is_parse_error or else tokenizer.last_token /= Or_token
 				loop
@@ -352,19 +313,19 @@ feature {NONE} -- Expression parsers
 					if tokenizer.is_lexical_error then
 						grumble (tokenizer.last_lexical_error)
 					else
-						parse_and_expression
-						create expr2.make (expr1, Or_token, internal_last_expression)
+						expr3 := parse_and_expression
+						create expr2.make (expr1, Or_token, expr3)
 						expr1 := expr2
 					end
 				end
-				if not is_parse_error then internal_last_expression := expr1 end
+				if not is_parse_error then Result := expr1 end
 				
 			end
 		ensure
-			expression_not_void_unless_error: not is_parse_error implies internal_last_expression /= Void
+			expression_not_void_unless_error: not is_parse_error implies Result /= Void
 		end
 
-	parse_and_expression is
+	parse_and_expression: XM_XPATH_EXPRESSION is
 			-- Parse an AndExpression.
 			-- InstanceofExpr ( 'and' InstanceofExpr )*
 		require
@@ -372,14 +333,12 @@ feature {NONE} -- Expression parsers
 			tokenizer_usable: tokenizer /= Void and then tokenizer.input /= Void and not tokenizer.is_lexical_error
 			no_previous_parse_error: not is_parse_error
 		local
-			expr1: XM_XPATH_EXPRESSION
+			expr1, expr3: XM_XPATH_EXPRESSION
 			expr2: XM_XPATH_BOOLEAN_EXPRESSION
 		do
-			internal_last_expression := Void
-			-- TODO parse_instance_of_expression
+			-- TODO expr1 := parse_instance_of_expression
 			if not is_parse_error then
 				from
-					expr1 := internal_last_expression
 				until
 					is_parse_error or else tokenizer.last_token /= And_token
 				loop
@@ -387,60 +346,57 @@ feature {NONE} -- Expression parsers
 					if tokenizer.is_lexical_error then
 						grumble (tokenizer.last_lexical_error)
 					else
-						-- TODO parse_instance_of_expression
-						create expr2.make (expr1, And_token, internal_last_expression)
+						-- TODO expr3 := parse_instance_of_expression
+						create expr2.make (expr1, And_token, expr3)
 						expr1 := expr2
 					end
 				end
-				if not is_parse_error then internal_last_expression := expr1 end
+				if not is_parse_error then Result := expr1 end
 				
 			end
 		ensure
-			expression_not_void_unless_error: not is_parse_error implies internal_last_expression /= Void
+			expression_not_void_unless_error: not is_parse_error implies Result /= Void
 		end
 
-	parse_for_expression is
-			-- Parse a ForExpression.
+	parse_for_expression: XM_XPATH_EXPRESSION is
+			-- Parse a ForExpression;
 			-- "for" "$" VarName "in" ExprSingle ("," "$" VarName "in" ExprSingle)* "return" ExprSingle;
-		
 		require
 			static_context_not_void: environment /= Void
 			tokenizer_usable: tokenizer /= Void and then tokenizer.input /= Void and not tokenizer.is_lexical_error
 			no_previous_parse_error: not is_parse_error
 		do
-			internal_last_expression := Void
 			if tokenizer.last_token = Let_token then
 				grumble ("'let' is not supported in XPath")
 			else
-				parse_mapping_expression
+				Result := parse_mapping_expression
 			end
 		ensure
-			expression_not_void_unless_error: not is_parse_error implies internal_last_expression /= Void
+			expression_not_void_unless_error: not is_parse_error implies Result /= Void
 		end
 
-	parse_quantified_expression is
-			-- Parse a QuantifiedExpression.
+	parse_quantified_expression: XM_XPATH_EXPRESSION is
+			-- Parse a QuantifiedExpression;
 			-- (("some" "$") | ("every" "$")) VarName "in" ExprSingle ("," "$" VarName "in" ExprSingle)* "satisfies" ExprSingle
 		require
 			static_context_not_void: environment /= Void
 			tokenizer_usable: tokenizer /= Void and then tokenizer.input /= Void and not tokenizer.is_lexical_error
 			no_previous_parse_error: not is_parse_error
 		do
-			internal_last_expression := Void
-			parse_mapping_expression
+			Result := parse_mapping_expression
 		ensure
-			expression_not_void_unless_error: not is_parse_error implies internal_last_expression /= Void
+			expression_not_void_unless_error: not is_parse_error implies Result /= Void
 		end
 
-	parse_mapping_expression is
-			-- Parse a mapping expression.
+	parse_mapping_expression: XM_XPATH_EXPRESSION is
+			-- Parse a mapping expression
 		require
 			static_context_not_void: environment /= Void
 			tokenizer_usable: tokenizer /= Void and then tokenizer.input /= Void and not tokenizer.is_lexical_error
 			no_previous_parse_error: not is_parse_error
 		local
 			clause: XM_XPATH_FOR_CLAUSE
-			action: XM_XPATH_EXPRESSION
+			action, expr1: XM_XPATH_EXPRESSION
 			clause_list: DS_ARRAYED_LIST [XM_XPATH_FOR_CLAUSE]
 			operator, name_code, an_index, a_line_number: INTEGER
 			finished: BOOLEAN
@@ -449,7 +405,6 @@ feature {NONE} -- Expression parsers
 			assignment: XM_XPATH_ASSIGNATION
 			single_item, a_sequence: XM_XPATH_SEQUENCE_TYPE
 		do
-			internal_last_expression := Void
 			create clause_list.make (5)
 			operator := tokenizer.last_token			
 			from
@@ -490,11 +445,11 @@ feature {NONE} -- Expression parsers
 							if tokenizer.is_lexical_error then
 								grumble (tokenizer.last_lexical_error)
 							else
-								parse_single_expression
+								expr1 := parse_single_expression
 								if not is_parse_error then
 									create single_item.make_single_item
 									create rv.make (token_value, make_name_code (token_value, False) \\ bits_20, single_item)
-									create clause.make (rv, internal_last_expression, a_line_number)
+									create clause.make (rv, expr1, a_line_number)
 									declare_range_variable (clause.range_variable)
 									clause_list.put_last (clause)
 								end
@@ -525,9 +480,9 @@ feature {NONE} -- Expression parsers
 			if tokenizer.is_lexical_error then
 				grumble (tokenizer.last_lexical_error)
 			else
-				parse_single_expression
+				expr1 := parse_single_expression
 				if not is_parse_error then
-					action := internal_last_expression
+					action := expr1
 
 					-- work backwards through the list of range variables,
 					-- fixing up all references to the variables in the inner expression
@@ -572,16 +527,16 @@ feature {NONE} -- Expression parsers
 						an_index := an_index - 1
 					end
 
-					internal_last_expression := action
+					Result := action
 				end
 			end
 		ensure
-			expression_not_void_unless_error: not is_parse_error implies internal_last_expression /= Void
+			expression_not_void_unless_error: not is_parse_error implies Result /= Void
 		end
 
 feature {NONE} -- Pattern parsers
 
-	parse_union_pattern is
+	parse_union_pattern: XM_XSLT_UNION_PATTERN is
 			-- Parse a Union Pattern;
 			--  pathPattern ( | pathPattern )*
 		require
@@ -592,11 +547,9 @@ feature {NONE} -- Pattern parsers
 			pat1, pat2: XM_XSLT_PATTERN
 			finished: BOOLEAN
 		do
-			internal_last_pattern := Void
-			parse_path_pattern
+			pat1 := parse_path_pattern
 			if not is_parse_error then
 				from
-					pat1 := internal_last_pattern
 					finished := tokenizer.last_token /= Union_token
 				until
 					finished or tokenizer.last_token /= Union_token
@@ -606,20 +559,18 @@ feature {NONE} -- Pattern parsers
 						grumble (tokenizer.last_lexical_error)
 						finished := True
 					else
-						internal_last_pattern := Void
-						parse_path_pattern
+						pat2 := parse_path_pattern
 						if not is_parse_error then
-							pat2 := internal_last_pattern
-							create {XM_XSLT_UNION_PATTERN} internal_last_pattern.make (pat1, pat2)
+							create Result.make (pat1, pat2)
 						end
 					end
 				end
 			end
 		ensure
-			pattern_not_void_unless_error: not is_parse_error implies internal_last_pattern /= Void
+			pattern_not_void_unless_error: not is_parse_error implies Result /= Void
 		end
 
-	parse_path_pattern is
+	parse_path_pattern: XM_XSLT_PATTERN is
 			-- Parse a Location Path Pattern:
 			-- PathPattern ::= RelativePathPattern
 			-- | '/' RelativePathPattern?
@@ -639,7 +590,6 @@ feature {NONE} -- Pattern parsers
 			root_only, finished: BOOLEAN
 			message, key_name: STRING
 		do
-			internal_last_pattern := Void
 			connector := -1
 			-- special handling for stuff before first component
 
@@ -682,10 +632,8 @@ feature {NONE} -- Pattern parsers
 								grumble (tokenizer.last_lexical_error)
 								finished := True
 							else
-								parse_pattern_step (Element_node)
-								if not is_parse_error then
-									a_pattern := internal_last_location_pattern
-								else
+								a_pattern := parse_pattern_step (Element_node)
+								if is_parse_error then
 									finished := True
 								end
 							end
@@ -695,10 +643,8 @@ feature {NONE} -- Pattern parsers
 								grumble (tokenizer.last_lexical_error)
 								finished := True
 							else
-								parse_pattern_step (Attribute_node)
-								if not is_parse_error then
-									a_pattern := internal_last_location_pattern
-								else
+								a_pattern := parse_pattern_step (Attribute_node)
+								if is_parse_error then
 									finished := True
 								end
 							end
@@ -707,38 +653,28 @@ feature {NONE} -- Pattern parsers
 							finished := True
 						end
 					when Star_token then
-						parse_pattern_step (Element_node)
-						if not is_parse_error then
-							a_pattern := internal_last_location_pattern
-						else
+						a_pattern := parse_pattern_step (Element_node)
+						if is_parse_error then
 							finished := True
 						end
 					when Name_token then
-						parse_pattern_step (Element_node)
-						if not is_parse_error then
-							a_pattern := internal_last_location_pattern
-						else
+						a_pattern := parse_pattern_step (Element_node)
+						if is_parse_error then
 							finished := True
 						end
 					when Prefix_token then
-						parse_pattern_step (Element_node)
-						if not is_parse_error then
-							a_pattern := internal_last_location_pattern
-						else
+						a_pattern := parse_pattern_step (Element_node)
+						if is_parse_error then
 							finished := True
 						end
 					when Suffix_token then
-						parse_pattern_step (Element_node)
-						if not is_parse_error then
-							a_pattern := internal_last_location_pattern
-						else
+						a_pattern := parse_pattern_step (Element_node)
+						if is_parse_error then
 							finished := True
 						end
 					when Node_kind_token then
-						parse_pattern_step (Element_node)
-						if not is_parse_error then
-							a_pattern := internal_last_location_pattern
-						else
+						a_pattern := parse_pattern_step (Element_node)
+						if is_parse_error then
 							finished := True
 						end
 					when At_token then
@@ -747,10 +683,8 @@ feature {NONE} -- Pattern parsers
 							grumble (tokenizer.last_lexical_error)
 							finished := True
 						else						
-							parse_pattern_step (Attribute_node)
-							if not is_parse_error then
-								a_pattern := internal_last_location_pattern
-							else
+							a_pattern := parse_pattern_step (Attribute_node)
+							if is_parse_error then
 								finished := True
 							end
 						end
@@ -894,7 +828,7 @@ feature {NONE} -- Pattern parsers
 					else
 						finished := True
 						if root_only then
-							internal_last_pattern := previous_pattern -- the patter was plain "/"
+							Result := previous_pattern -- the patter was plain "/"
 						else
 							grumble (STRING_.appended_string ("Unexpected token in pattern, found ", display_current_token))
 						end
@@ -930,27 +864,35 @@ feature {NONE} -- Pattern parsers
 						else
 							finished := True
 							if a_pattern /= Void then
-								internal_last_pattern := a_pattern
+								Result := a_pattern
 							elseif key_pattern /= Void then -- pattern consists solely of key(...)
-								internal_last_pattern := key_pattern
+								Result := key_pattern
 							else
 									check
 										id_pattern_not_void: id_pattern /= Void -- pattern consists solely of id(...)
 									end
-								internal_last_pattern := id_pattern
+								Result := id_pattern
 							end
 						end
 					end
 				end
 			end
 		ensure
-			pattern_not_void_unless_error: not is_parse_error implies internal_last_pattern /= Void
+			pattern_not_void_unless_error: not is_parse_error implies Result /= Void
 		end
 
 
-	parse_pattern_step (principal_node_type: INTEGER) is
-			-- TODO
+	parse_pattern_step (principal_node_type: INTEGER): XM_XSLT_LOCATION_PATH_PATTERN is
+			-- Parse a pattern step (after any axis name or @)
+		local
+			step: XM_XSLT_LOCATION_PATH_PATTERN
+			node_test: XM_XSLT_NODE_TEST
 		do
+			create step
+			-- node_test := parse_node_test (principal_node_type)
+			-- TODO
+		ensure
+			pattern_not_void_unless_error: not is_parse_error implies Result /= Void
 		end
 
 feature {NONE} -- Implementation
@@ -961,21 +903,9 @@ feature {NONE} -- Implementation
 	environment: XM_XPATH_STATIC_CONTEXT
 			-- Current static context
 
-	internal_last_expression: XM_XPATH_EXPRESSION
-			-- Result of last call to  `parse' and friends
-
 	internal_last_parse_error: STRING
 			-- Text of last parse error encountered
 	
-	internal_last_pattern: XM_XSLT_PATTERN 
-			-- Result of last call to `parse_pattern' and friends
-	
-	internal_last_location_pattern: XM_XSLT_LOCATION_PATH_PATTERN 
-			-- Result of last call to `parse_pattern_step'
-	
-	internal_last_sequence_type: XM_XPATH_SEQUENCE_TYPE
-			-- Result of last call to `parse_sequence_type' and friends
-
 	range_variable_stack: DS_ARRAYED_STACK [XM_XPATH_RANGE_VARIABLE_DECLARATION]
 			-- Range variables
 
