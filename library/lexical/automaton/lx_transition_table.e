@@ -2,36 +2,54 @@ indexing
 
 	description:
 
-		"Transition tables, indexed by transition labels";
+		"Transition tables, indexed by transition labels"
 
-	library:    "Gobo Eiffel Lexical Library";
-	author:     "Eric Bezault <ericb@gobo.demon.co.uk>";
-	copyright:  "Copyright (c) 1997, Eric Bezault";
-	date:       "$Date$";
+	library:    "Gobo Eiffel Lexical Library"
+	author:     "Eric Bezault <ericb@gobo.demon.co.uk>"
+	copyright:  "Copyright (c) 1997, Eric Bezault"
+	date:       "$Date$"
 	revision:   "$Revision$"
 
 class LX_TRANSITION_TABLE [G -> LX_STATE]
 
 inherit
 
-	DS_ARRAYED [G]
-		rename
-			item as target,
-			count as capacity,
-			valid_index as valid_label,
-			clear_all as array_clear_all
-		export
-			{ANY}
-				target, valid_label, lower, upper,
-				copy, is_equal, capacity;
-			{NONE} all
+	ANY
+		redefine
+			copy, is_equal
 		end
 
 creation
 
 	make
 
+feature {NONE} -- Initialization
+
+	make (min, max: INTEGER) is
+			-- Create a new transition table for labels
+			-- between `min' and `max'.
+		do
+			!! storage.make (min, max)
+		end
+
+feature -- Status report
+
+	valid_label (a_label: INTEGER): BOOLEAN is
+			-- Is `a_label' a valid label?
+		do
+			Result := storage.valid_index (a_label)
+		end
+
 feature -- Access
+
+	target (a_label: INTEGER): G is
+			-- Target reached through transition `a_label';
+			-- Void if no such transition exists
+		require
+			valid_label: valid_label (a_label)
+		do
+			Result := storage.item (a_label)
+		end
 
 	difference (other: like Current; null: like target): like Current is
 			-- Difference between current transitions and `other';
@@ -109,10 +127,28 @@ feature -- Access
 			--	target (i) = Void or else target (i) = target (i).default
 		end
 
+	lower: INTEGER is
+			-- Smallest label allowed
+		do
+			Result := storage.lower
+		end
+
+	upper: INTEGER is
+			-- Largest label allowed
+		do
+			Result := storage.upper
+		end
+
 feature -- Measurement
 
 	count: INTEGER
 			-- Number of transitions in table
+
+	capacity: INTEGER is
+			-- Maximum number of transitions
+		do
+			Result := storage.count
+		end
 
 feature -- Element change
 
@@ -127,7 +163,7 @@ feature -- Element change
 			if target (label) = void_state then
 				count := count + 1
 			end
-			put (state, label)
+			storage.put (state, label)
 		ensure
 			one_more: count >= old count
 			target_set: target (label) = state
@@ -143,7 +179,7 @@ feature -- Removal
 			void_state: like target
 		do
 			if target (label) /= void_state then
-				put (void_state, label)
+				storage.put (void_state, label)
 				count := count - 1
 			end
 		ensure
@@ -156,13 +192,45 @@ feature -- Removal
 			-- Remove all transitions.
 		do
 			count := 0
-			array_clear_all
+			storage.clear_all
 		ensure
 			empty: count = 0
 		end
 
+feature -- Duplication
+
+	copy (other: like Current) is
+			-- Copy `other' to current transition table.
+		do
+			standard_copy (other)
+			storage := clone (storage)
+		end
+
+feature -- Comparison
+
+	is_equal (other: like Current): BOOLEAN is
+			-- Is current transition table equal to `other'?
+		local
+			old_storage: like storage
+		do
+			if same_type (other) then
+				old_storage := storage
+				storage := other.storage
+				if standard_is_equal (other) then
+					Result := old_storage.is_equal (storage)
+				end
+				storage := old_storage
+			end
+		end
+
+feature {LX_TRANSITION_TABLE} -- Implementation
+
+	storage: ARRAY [G]
+			-- Transitions indexed by labels
+
 invariant
 
+	storage_not_void: storage /= Void
 	positive_count: count >= 0
 
 end -- class LX_TRANSITION_TABLE
