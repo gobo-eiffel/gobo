@@ -435,6 +435,8 @@ feature {NONE} -- Output
 					lib_contains_path := a_cursor.item.has ('/') or a_cursor.item.has ('\')
 					if not lib_contains_path then
 						a_file.put_string ("%"-l")
+					else
+						a_file.put_character ('%"')
 					end
 					a_file.put_string (a_cursor.item)
 					if a_cursor.is_last and may_close_statement then
