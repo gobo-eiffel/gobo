@@ -25,7 +25,7 @@ content="text/html; charset=iso-8859-1">
 
 <p>First some simple examples to get the flavor of how one uses <em>getest</em>:
 let's consider a class with a function that concatenates two
-strings and return the result. This example is simple, but <em>getest
+strings and returns the result. This example is simple, but <em>getest
 </em>works the same way for testing more realistic classes. </p>
 
 <blockquote>
@@ -64,7 +64,7 @@ color="#008080"><em>Void</em></font><em>
 </em><font color="#000080"><em><strong>        end</strong></em></font><em>
 
 </em><font color="#000080"><em><strong>end</strong></em></font><em> </em><font
-color="#008000">-- class CONCAT1</font></pre>
+color="#008000"></font></pre>
 </blockquote>
 
 <p>In order to test this class, one just has to write a simple
@@ -96,7 +96,7 @@ color="#008000">.</font><em>
         </em><font color="#000080"><em><strong>local</strong></em></font><em>
             c</em>:<em> CONCAT1
         </em><font color="#000080"><em><strong>do</strong></em></font><em>
-            </em>!!<em> c</em>.<em>make
+            </em><font color="#000080"><em><strong>create</strong></font> c</em>.<em>make
             assert_equal </em>(<font color="#800000"><em>&quot;to+to&quot;</em></font>,<em> </em><font
 color="#800000"><em>&quot;toto&quot;</em></font>,<em> c</em>.<em>concat </em>(<font
 color="#800000"><em>&quot;to&quot;</em></font>,<em> </em><font
@@ -108,7 +108,7 @@ color="#800000"><em>&quot;bar&quot;</em></font>))<em>
         </em><font color="#000080"><em><strong>end</strong></em></font><em>
 
 </em><font color="#000080"><em><strong>end</strong></em></font><em> </em><font
-color="#008000">-- class TEST_CONCAT1</font></pre>
+color="#008000"></font></pre>
 </blockquote>
 
 <p>The source code for this example can be found in <font
@@ -191,7 +191,7 @@ Test Summary for xconcat2
 <table border="0" width="100%">
     <tr>
         <td><address>
-            <font size="2"><b>Copyright © 2001</b></font><font
+            <font size="2"><b>Copyright © 2001-2005</b></font><font
             size="1"><b>, </b></font><font size="2"><strong>Eric
             Bezault</strong></font><strong> </strong><font
             size="2"><br>
@@ -201,7 +201,7 @@ Test Summary for xconcat2
             <strong>http:</strong></font><a
             href="http://www.gobosoft.com"><font size="2">//www.gobosoft.com</font></a><font
             size="2"><br>
-            <strong>Last Updated:</strong> 20 January 2003</font><br>
+            <strong>Last Updated:</strong> 16 February 2005</font><br>
             <!--webbot bot="PurpleText"
             preview="
 $Date$ 
