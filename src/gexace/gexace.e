@@ -278,11 +278,13 @@ feature {NONE} -- Command-line processing
 		do
 			a_cursor := split_string (s, ' ').new_cursor
 			from a_cursor.start until a_cursor.after loop
-				a_definition := split_on_first (a_cursor.item, '=')
-				if a_definition.second = Void then
-					variables.define_value (a_cursor.item, "")
-				else
-					variables.define_value (a_definition.first, a_definition.second)
+				if a_cursor.item.count /= 0 then
+					a_definition := split_on_first (a_cursor.item, '=')
+					if a_definition.second = Void then
+						variables.define_value (a_cursor.item, "")
+					else
+						variables.define_value (a_definition.first, a_definition.second)
+					end
 				end
 				a_cursor.forth
 			end
