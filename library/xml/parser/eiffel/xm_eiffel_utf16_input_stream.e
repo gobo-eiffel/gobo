@@ -65,10 +65,17 @@ feature -- Set latin1
 	set_latin_1 is
 			-- Set latin1 character encoding input mode.
 		require
-			detection_done: encoding /= Undetected
-			utf_8: encoding = Utf_8
+			compatible_encoding: is_latin_1_compatible
 		do
 			encoding := Latin_1
+		end
+		
+	is_latin_1_compatible: BOOLEAN is
+			-- Can the current encoding be switched to latin-1?
+		do
+			Result := encoding = Utf_8
+		ensure
+			undetected: (encoding = Undetected) implies (not Result)
 		end
 		
 feature -- Input
