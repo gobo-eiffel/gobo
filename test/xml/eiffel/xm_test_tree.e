@@ -234,6 +234,8 @@ feature {NONE} -- Walk assertions
 		
 	assert_attribute_element (an_attribute: XM_ATTRIBUTE) is
 			-- Checks on attributes parent element.
+		require
+			an_atttribute_not_void: an_attribute /= Void
 		do
 			an_attribute.parent.process (typer)
 			assert ("parent element", typer.is_element)
