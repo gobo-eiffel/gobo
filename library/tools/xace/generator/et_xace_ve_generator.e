@@ -115,8 +115,6 @@ feature {NONE} -- Output
 		do
 			if an_option.has_optimize.is_true then
 				print_indentation (indent, a_file)
-				a_file.put_line ("assertions off")
-				print_indentation (indent, a_file)
 				a_file.put_line ("finalize on")
 				print_indentation (indent, a_file)
 				a_file.put_line ("optimize leaves on")
@@ -124,8 +122,6 @@ feature {NONE} -- Output
 				a_file.put_line ("optimize calls on")
 				assertions_off := True
 			elseif an_option.has_optimize.is_false then
-				print_indentation (indent, a_file)
-				a_file.put_line ("assertions on")
 				assertions_on := True
 			end
 			if not assertions_off then
@@ -178,13 +174,13 @@ feature {NONE} -- Output
 					a_file.put_line ("require off")
 					assertions_off := True
 				end
-				if assertions_on then
-					print_indentation (indent, a_file)
-					a_file.put_line ("assertions on")
-				elseif assertions_off then
-					print_indentation (indent, a_file)
-					a_file.put_line ("assertions off")
-				end
+			end
+			if assertions_on then
+				print_indentation (indent, a_file)
+				a_file.put_line ("assertions on")
+			elseif assertions_off then
+				print_indentation (indent, a_file)
+				a_file.put_line ("assertions off")
 			end
 		end
 
