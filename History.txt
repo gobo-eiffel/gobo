@@ -23,6 +23,13 @@ Version 2.1 - ?
 	  only, -c for testcase compilation only, and -e for
 	  testcase execution only (suggested by Glenn Maughan).
 
+	Gobo Eiffel Kernel Library:
+
+	* No need for 'include_path' in the Ace file anymore in
+	  order to use KL_STRING_BUFFER_ROUTINES with ISE Eiffel.
+	  Use new routines introduced in class POINTER in ISE
+	  Eiffel 4.5 instead.
+
 	Gobo Eiffel Structure Library:
 
 	* Fixed bug in feature `force_last' of DS_SPARSE_SET and
@@ -32,6 +39,16 @@ Version 2.1 - ?
 	  implement partial traversals or different traversal
 	  strategies (reported by Berend de Boer and Einar
 	  Karttunen).
+	* Fixed bug in HASH_TABLE related to the new implementation
+	  in ancestor class DS_SPARSE_TABLE (reported by Emmanuel
+	  Bouyer).
+
+	Gobo Eiffel Time Library:
+
+	* Fixed bug related to the implementation of features `date'
+	  and `time' in DATE_TIME and DATE_TIME_DURATION (reported
+	  by Emmanuel Bouyer).
+	* Added feature `set_storage' to DT_DATE and DT_TIME.
 
 Version 2.0 - 29 April 2001
 
