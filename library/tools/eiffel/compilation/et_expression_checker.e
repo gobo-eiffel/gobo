@@ -231,7 +231,6 @@ feature {NONE} -- Expression validity
 			a_name_not_void: a_name /= Void
 		local
 			a_context: ET_NESTED_TYPE_CONTEXT
-			a_base_type: ET_BASE_TYPE
 			a_class_impl: ET_CLASS
 			a_class: ET_CLASS
 			a_feature: ET_FEATURE
@@ -254,9 +253,8 @@ feature {NONE} -- Expression validity
 					-- class of `current_feature' first.
 				check_expression_validity (a_target, current_feature, a_class_impl)
 				if not has_fatal_error then
-					a_base_type := type.base_type (context, universe)
-					create a_context.make (a_base_type, a_class_impl)
-					a_class := a_base_type.direct_base_class (universe)
+					create a_context.make (type, context)
+					a_class := a_context.base_class (universe)
 					a_class.process (universe.interface_checker)
 					if a_class.has_interface_error then
 						set_fatal_error
@@ -283,9 +281,8 @@ feature {NONE} -- Expression validity
 				if a_feature = Void then
 					check_expression_validity (a_target, current_feature, current_class)
 					if not has_fatal_error then
-						a_base_type := type.base_type (context, universe)
-						create a_context.make (a_base_type, current_class)
-						a_class := a_base_type.direct_base_class (universe)
+						create a_context.make (type, context)
+						a_class := a_context.base_class (universe)
 						a_class.process (universe.interface_checker)
 						if a_class.has_interface_error then
 							set_fatal_error
@@ -309,9 +306,9 @@ feature {NONE} -- Expression validity
 							-- The feature is not exported to `current_class'.
 						set_fatal_error
 						if current_class = a_class_impl then
-							error_handler.report_vuex2b_error (a_class_impl, a_name, a_feature, a_class)
+							error_handler.report_vuex2b_error (current_class, a_name, a_feature, a_class)
 						else
-							error_handler.report_vuex2c_error (a_class_impl, current_class, a_name, a_feature, a_class)
+							error_handler.report_vuex2c_error (current_class, a_class_impl, a_name, a_feature, a_class)
 						end
 					end
 						-- Check arguments validity.
@@ -320,17 +317,17 @@ feature {NONE} -- Expression validity
 						if a_formals /= Void and then not a_formals.is_empty then
 							set_fatal_error
 							if current_class = a_class_impl then
-								error_handler.report_vuar1a_error (a_class_impl, a_name, a_feature, a_class)
+								error_handler.report_vuar1a_error (current_class, a_name, a_feature, a_class)
 							else
-								error_handler.report_vuar1b_error (a_class_impl, current_class, a_name, a_feature, a_class)
+								error_handler.report_vuar1b_error (current_class, a_class_impl, a_name, a_feature, a_class)
 							end
 						end
 					elseif a_formals = Void or else a_formals.count /= an_actuals.count then
 						set_fatal_error
 						if current_class = a_class_impl then
-							error_handler.report_vuar1a_error (a_class_impl, a_name, a_feature, a_class)
+							error_handler.report_vuar1a_error (current_class, a_name, a_feature, a_class)
 						else
-							error_handler.report_vuar1b_error (a_class_impl, current_class, a_name, a_feature, a_class)
+							error_handler.report_vuar1b_error (current_class, a_class_impl, a_name, a_feature, a_class)
 						end
 					else
 						had_error := has_fatal_error
@@ -353,9 +350,8 @@ feature {NONE} -- Expression validity
 -- TODO
 											else
 -- TODO
-												a_base_type := type.base_type (context, universe)
-												create a_convert_context.make (a_base_type, current_class)
-												a_convert_class := a_base_type.direct_base_class (universe)
+												create a_convert_context.make (type, context)
+												a_convert_class := a_convert_context.base_class (universe)
 												a_convert_class.process (universe.interface_checker)
 												if a_convert_class.has_interface_error then
 													had_error := True
@@ -375,9 +371,9 @@ feature {NONE} -- Expression validity
 														had_error := True
 														set_fatal_error
 														if current_class = a_class_impl then
-															error_handler.report_vuar2a_error (a_class_impl, a_name, a_feature, a_class, i, an_actual_type, a_formal_type)
+															error_handler.report_vuar2a_error (current_class, a_name, a_feature, a_class, i, an_actual_type, a_formal_type)
 														else
-															error_handler.report_vuar2b_error (a_class_impl, current_class, a_name, a_feature, a_class, i, an_actual_type, a_formal_type)
+															error_handler.report_vuar2b_error (current_class, a_class_impl, a_name, a_feature, a_class, i, an_actual_type, a_formal_type)
 														end
 													end
 												end
@@ -388,9 +384,9 @@ feature {NONE} -- Expression validity
 											had_error := True
 											set_fatal_error
 											if current_class = a_class_impl then
-												error_handler.report_vuar2a_error (a_class_impl, a_name, a_feature, a_class, i, an_actual_type, a_formal_type)
+												error_handler.report_vuar2a_error (current_class, a_name, a_feature, a_class, i, an_actual_type, a_formal_type)
 											else
-												error_handler.report_vuar2b_error (a_class_impl, current_class, a_name, a_feature, a_class, i, an_actual_type, a_formal_type)
+												error_handler.report_vuar2b_error (current_class, a_class_impl, a_name, a_feature, a_class, i, an_actual_type, a_formal_type)
 											end
 										end
 									end
@@ -409,9 +405,9 @@ feature {NONE} -- Expression validity
 							-- In a call expression, `a_feature' has to be a query.
 						set_fatal_error
 						if current_class = a_class_impl then
-							error_handler.report_vkcn2a_error (a_class_impl, a_name, a_feature, a_class)
+							error_handler.report_vkcn2a_error (current_class, a_name, a_feature, a_class)
 						else
-							error_handler.report_vkcn2b_error (a_class_impl, current_class, a_name, a_feature, a_class)
+							error_handler.report_vkcn2b_error (current_class, a_class_impl, a_name, a_feature, a_class)
 						end
 					elseif not has_fatal_error then
 						type := a_type
@@ -578,17 +574,17 @@ feature {NONE} -- Expression validity
 							if a_formals /= Void and then not a_formals.is_empty then
 								set_fatal_error
 								if current_class = a_class_impl then
-									error_handler.report_vuar1c_error (a_class_impl, a_name, a_feature)
+									error_handler.report_vuar1c_error (current_class, a_name, a_feature)
 								else
-									error_handler.report_vuar1d_error (a_class_impl, current_class, a_name, a_feature)
+									error_handler.report_vuar1d_error (current_class, a_class_impl, a_name, a_feature)
 								end
 							end
 						elseif a_formals = Void or else a_formals.count /= an_actuals.count then
 							set_fatal_error
 							if current_class = a_class_impl then
-								error_handler.report_vuar1c_error (a_class_impl, a_name, a_feature)
+								error_handler.report_vuar1c_error (current_class, a_name, a_feature)
 							else
-								error_handler.report_vuar1d_error (a_class_impl, current_class, a_name, a_feature)
+								error_handler.report_vuar1d_error (current_class, a_class_impl, a_name, a_feature)
 							end
 						else
 							had_error := has_fatal_error
@@ -607,9 +603,9 @@ feature {NONE} -- Expression validity
 											had_error := True
 											set_fatal_error
 											if current_class = a_class_impl then
-												error_handler.report_vuar2c_error (a_class_impl, a_name, a_feature, i, an_actual_type, a_formal_type)
+												error_handler.report_vuar2c_error (current_class, a_name, a_feature, i, an_actual_type, a_formal_type)
 											else
-												error_handler.report_vuar2d_error (a_class_impl, current_class, a_name, a_feature, i, an_actual_type, a_formal_type)
+												error_handler.report_vuar2d_error (current_class, a_class_impl, a_name, a_feature, i, an_actual_type, a_formal_type)
 											end
 										end
 									end
@@ -627,9 +623,9 @@ feature {NONE} -- Expression validity
 								-- In a call expression, `a_feature' has to be a query.
 							set_fatal_error
 							if current_class = a_class_impl then
-								error_handler.report_vkcn2c_error (a_class_impl, a_name, a_feature)
+								error_handler.report_vkcn2c_error (current_class, a_name, a_feature)
 							else
-								error_handler.report_vkcn2d_error (a_class_impl, current_class, a_name, a_feature)
+								error_handler.report_vkcn2d_error (current_class, a_class_impl, a_name, a_feature)
 							end
 						elseif not has_fatal_error then
 -- TODO: like argument
@@ -657,7 +653,6 @@ feature {NONE} -- Expression validity
 			an_expression_not_void: an_expression /= Void
 		local
 			a_context: ET_NESTED_TYPE_CONTEXT
-			a_base_type: ET_BASE_TYPE
 			a_class_impl: ET_CLASS
 			a_class: ET_CLASS
 			a_feature: ET_FEATURE
@@ -685,9 +680,8 @@ feature {NONE} -- Expression validity
 					if a_seed = 0 then
 							-- We need to resolve `a_name' in the implementation
 							-- class of `current_feature' first.
-						a_base_type := a_type.base_type (a_class_impl, universe)
-						create a_context.make (a_base_type, a_class_impl)
-						a_class := a_base_type.direct_base_class (universe)
+						create a_context.make (a_type, a_class_impl)
+						a_class := a_context.base_class (universe)
 						a_class.process (universe.interface_checker)
 						if a_class.has_interface_error then
 							set_fatal_error
@@ -713,9 +707,8 @@ feature {NONE} -- Expression validity
 						if a_feature = Void then
 							a_type := resolved_formal_parameters (a_type)
 							if not has_fatal_error then
-								a_base_type := a_type.base_type (current_class, universe)
-								create a_context.make (a_base_type, current_class)
-								a_class := a_base_type.direct_base_class (universe)
+								create a_context.make (a_type, current_class)
+								a_class := a_context.base_class (universe)
 								a_class.process (universe.interface_checker)
 								if a_class.has_interface_error then
 									set_fatal_error
@@ -738,9 +731,9 @@ feature {NONE} -- Expression validity
 										-- This is not a procedure.
 									set_fatal_error
 									if current_class = a_class_impl then
-										error_handler.report_vgcc6b_error (a_class_impl, a_name, a_feature, a_class)
+										error_handler.report_vgcc6b_error (current_class, a_name, a_feature, a_class)
 									else
-										error_handler.report_vgcc6c_error (a_class_impl, current_class, a_name, a_feature, a_class)
+										error_handler.report_vgcc6c_error (current_class, a_class_impl, a_name, a_feature, a_class)
 									end
 								end
 								if current_class.is_generic then
@@ -753,9 +746,9 @@ feature {NONE} -- Expression validity
 										-- The procedure is not a creation procedure exported to `current_class'.
 									set_fatal_error
 									if current_class = a_class_impl then
-										error_handler.report_vgcc6d_error (a_class_impl, a_name, a_feature, a_class)
+										error_handler.report_vgcc6d_error (current_class, a_name, a_feature, a_class)
 									else
-										error_handler.report_vgcc6e_error (a_class_impl, current_class, a_name, a_feature, a_class)
+										error_handler.report_vgcc6e_error (current_class, a_class_impl, a_name, a_feature, a_class)
 									end
 								end
 									-- Check arguments validity.
@@ -765,17 +758,17 @@ feature {NONE} -- Expression validity
 									if a_formals /= Void and then not a_formals.is_empty then
 										set_fatal_error
 										if current_class = a_class_impl then
-											error_handler.report_vuar1a_error (a_class_impl, a_name, a_feature, a_class)
+											error_handler.report_vuar1a_error (current_class, a_name, a_feature, a_class)
 										else
-											error_handler.report_vuar1b_error (a_class_impl, current_class, a_name, a_feature, a_class)
+											error_handler.report_vuar1b_error (current_class, a_class_impl, a_name, a_feature, a_class)
 										end
 									end
 								elseif a_formals = Void or else a_formals.count /= an_actuals.count then
 									set_fatal_error
 									if current_class = a_class_impl then
-										error_handler.report_vuar1a_error (a_class_impl, a_name, a_feature, a_class)
+										error_handler.report_vuar1a_error (current_class, a_name, a_feature, a_class)
 									else
-										error_handler.report_vuar1b_error (a_class_impl, current_class, a_name, a_feature, a_class)
+										error_handler.report_vuar1b_error (current_class, a_class_impl, a_name, a_feature, a_class)
 									end
 								else
 									had_error := has_fatal_error
@@ -794,9 +787,9 @@ feature {NONE} -- Expression validity
 													had_error := True
 													set_fatal_error
 													if current_class = a_class_impl then
-														error_handler.report_vuar2a_error (a_class_impl, a_name, a_feature, a_class, i, an_actual_type, a_formal_type)
+														error_handler.report_vuar2a_error (current_class, a_name, a_feature, a_class, i, an_actual_type, a_formal_type)
 													else
-														error_handler.report_vuar2b_error (a_class_impl, current_class, a_name, a_feature, a_class, i, an_actual_type, a_formal_type)
+														error_handler.report_vuar2b_error (current_class, a_class_impl, a_name, a_feature, a_class, i, an_actual_type, a_formal_type)
 													end
 												end
 											end
@@ -852,6 +845,8 @@ feature {NONE} -- Expression validity
 			right_type: ET_TYPE
 			right_context: ET_TYPE_CONTEXT
 			a_class_impl: ET_CLASS
+			left_named_type: ET_NAMED_TYPE
+			right_named_type: ET_NAMED_TYPE
 		do
 			check_expression_validity (an_expression.left, current_feature, current_class)
 			if not has_fatal_error then
@@ -874,12 +869,14 @@ feature {NONE} -- Expression validity
 					elseif right_type.convertible_to_type (left_type, left_context, right_context, universe) then
 						-- OK.
 					else
-						set_fatal_error
+						left_named_type := left_type.named_type (left_context, universe)
+						right_named_type := right_type.named_type (right_context, universe)
 						a_class_impl := current_feature.implementation_class
+						set_fatal_error
 						if a_class_impl = current_class then
-							error_handler.report_vweq0a_error (a_class_impl, an_expression)
+							error_handler.report_vweq0a_error (current_class, an_expression, left_named_type, right_named_type)
 						else
-							error_handler.report_vweq0b_error (a_class_impl, current_class, an_expression)
+							error_handler.report_vweq0b_error (current_class, a_class_impl, an_expression, left_named_type, right_named_type)
 						end
 					end
 					if not has_fatal_error then
@@ -1284,7 +1281,6 @@ feature {NONE} -- Expression validity
 			an_expression_not_void: an_expression /= Void
 		local
 			a_context: ET_NESTED_TYPE_CONTEXT
-			a_base_type: ET_BASE_TYPE
 			a_class_impl: ET_CLASS
 			a_class: ET_CLASS
 			a_feature: ET_FEATURE
@@ -1308,9 +1304,8 @@ feature {NONE} -- Expression validity
 				if a_seed = 0 then
 						-- We need to resolve `a_name' in the implementation
 						-- class of `current_feature' first.
-					a_base_type := a_type.base_type (a_class_impl, universe)
-					create a_context.make (a_base_type, a_class_impl)
-					a_class := a_base_type.direct_base_class (universe)
+					create a_context.make (a_type, a_class_impl)
+					a_class := a_context.base_class (universe)
 					a_class.process (universe.interface_checker)
 					if a_class.has_interface_error then
 						set_fatal_error
@@ -1336,9 +1331,8 @@ feature {NONE} -- Expression validity
 					if a_feature = Void then
 						a_type := resolved_formal_parameters (a_type)
 						if not has_fatal_error then
-							a_base_type := a_type.base_type (current_class, universe)
-							create a_context.make (a_base_type, current_class)
-							a_class := a_base_type.direct_base_class (universe)
+							create a_context.make (a_type, current_class)
+							a_class := a_context.base_class (universe)
 							a_class.process (universe.interface_checker)
 							if a_class.has_interface_error then
 								set_fatal_error
@@ -1348,7 +1342,7 @@ feature {NONE} -- Expression validity
 										-- Report internal error: if we got a seed, the
 										-- `a_feature' should not be void.
 									set_fatal_error
-									error_handler.report_giaak_error
+									error_handler.report_giabg_error
 								end
 							end
 						end
@@ -1362,9 +1356,9 @@ feature {NONE} -- Expression validity
 								-- The feature is not exported to `current_class'.
 							set_fatal_error
 							if current_class = a_class_impl then
-								error_handler.report_vuex2b_error (a_class_impl, a_name, a_feature, a_class)
+								error_handler.report_vuex2b_error (current_class, a_name, a_feature, a_class)
 							else
-								error_handler.report_vuex2c_error (a_class_impl, current_class, a_name, a_feature, a_class)
+								error_handler.report_vuex2c_error (current_class, a_class_impl, a_name, a_feature, a_class)
 							end
 						end
 							-- Check arguments validity.
@@ -1374,17 +1368,17 @@ feature {NONE} -- Expression validity
 							if a_formals /= Void and then not a_formals.is_empty then
 								set_fatal_error
 								if current_class = a_class_impl then
-									error_handler.report_vuar1a_error (a_class_impl, a_name, a_feature, a_class)
+									error_handler.report_vuar1a_error (current_class, a_name, a_feature, a_class)
 								else
-									error_handler.report_vuar1b_error (a_class_impl, current_class, a_name, a_feature, a_class)
+									error_handler.report_vuar1b_error (current_class, a_class_impl, a_name, a_feature, a_class)
 								end
 							end
 						elseif a_formals = Void or else a_formals.count /= an_actuals.count then
 							set_fatal_error
 							if current_class = a_class_impl then
-								error_handler.report_vuar1a_error (a_class_impl, a_name, a_feature, a_class)
+								error_handler.report_vuar1a_error (current_class, a_name, a_feature, a_class)
 							else
-								error_handler.report_vuar1b_error (a_class_impl, current_class, a_name, a_feature, a_class)
+								error_handler.report_vuar1b_error (current_class, a_class_impl, a_name, a_feature, a_class)
 							end
 						else
 							had_error := has_fatal_error
@@ -1403,9 +1397,9 @@ feature {NONE} -- Expression validity
 											had_error := True
 											set_fatal_error
 											if current_class = a_class_impl then
-												error_handler.report_vuar2a_error (a_class_impl, a_name, a_feature, a_class, i, an_actual_type, a_formal_type)
+												error_handler.report_vuar2a_error (current_class, a_name, a_feature, a_class, i, an_actual_type, a_formal_type)
 											else
-												error_handler.report_vuar2b_error (a_class_impl, current_class, a_name, a_feature, a_class, i, an_actual_type, a_formal_type)
+												error_handler.report_vuar2b_error (current_class, a_class_impl, a_name, a_feature, a_class, i, an_actual_type, a_formal_type)
 											end
 										end
 									end
@@ -1424,9 +1418,9 @@ feature {NONE} -- Expression validity
 								-- In a call expression, `a_feature' has to be a query.
 							set_fatal_error
 							if current_class = a_class_impl then
-								error_handler.report_vkcn2a_error (a_class_impl, a_name, a_feature, a_class)
+								error_handler.report_vkcn2a_error (current_class, a_name, a_feature, a_class)
 							else
-								error_handler.report_vkcn2b_error (a_class_impl, current_class, a_name, a_feature, a_class)
+								error_handler.report_vkcn2b_error (current_class, a_class_impl, a_name, a_feature, a_class)
 							end
 						elseif not has_fatal_error then
 							type := a_type
