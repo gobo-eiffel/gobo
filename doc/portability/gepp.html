@@ -27,9 +27,9 @@ content="text/html; charset=iso-8859-1">
 two major kinds of problems may be experienced. The first
 interoperability problem has already been addressed in the <a
 href="inheritance.html">adaptation by inheritance</a> and the <a
-href="client.html">client adaptation</a> techniques. It is the
-result of incompatibilities between kernel classes and features
-provided by different Eiffel compilers. <font size="2">NICE</font>
+href="client.html">client/supplier adaptation</a> techniques. It
+is the result of incompatibilities between kernel classes and
+features provided by different Eiffel compilers. <font size="2">NICE</font>
 (Nonprofit International Consortium for Eiffel) has made the
 first step towards a better interoperability in this area by
 adopting <font size="2">ELKS '95</font> as the kernel library
@@ -213,6 +213,28 @@ file will be ignored by <em>gepp</em>. Otherwise <em>gepp</em>
 ignores lines between <font color="#0000FF"><tt>#ifdef</tt></font>
 and <font color="#0000FF"><tt>#else</tt></font>.</p>
 
+<p>The <font color="#0000FF"><tt>#else</tt></font> part is
+optional. The following conditional instruction with its <font
+color="#0000FF"><tt>#else</tt></font> part missing:</p>
+
+<blockquote>
+    <pre><font color="#0000FF">#ifdef</font> <font
+color="#800080"><em>Condition</em></font>
+...
+<font color="#0000FF">#endif</font></pre>
+</blockquote>
+
+<p>is equivalent to the same conditional instruction with an
+empty <font color="#0000FF"><tt>#else</tt></font> part:</p>
+
+<blockquote>
+    <pre><font color="#0000FF">#ifdef</font> <font
+color="#800080"><em>Condition</em></font>
+...
+<font color="#0000FF">#else</font>
+<font color="#0000FF">#endif</font></pre>
+</blockquote>
+
 <h4>Negative conditional</h4>
 
 <blockquote>
@@ -254,8 +276,8 @@ dealing with cyclic definitions.</p>
 <p><em>Gepp</em> can be used in three different kinds of cases
 when writing portable Eiffel classes. The first case is when the <a
 href="inheritance.html">adaptation by inheritance</a> and the <a
-href="client.html">client adaptation</a> techniques are not
-applicable. This can happen due to a language, rather than a
+href="client.html">client/supplier adaptation</a> techniques are
+not applicable. This can happen due to a language, rather than a
 kernel class, incompatibility between Eiffel compilers. For
 example, in a early release of Visual Eiffel, there was a bug in
 the <em>select</em> clause. In class <font color="#008080"><em><tt>FOO</tt></em></font>
@@ -358,8 +380,8 @@ alphabetical order:</p>
 </blockquote>
 
 <p><em>Gepp</em> can also be used even when the adaptation
-techniques using inheritance or client relationship would
-otherwise work. However the main use of <em>gepp</em> was
+techniques using inheritance or client/supplier relationship
+would otherwise work. However the main use of <em>gepp</em> was
 actually to support these techniques by automatically generating
 the extra &quot;adapted&quot; kernel clusters associated with
 each Eiffel compiler from a set of &quot;template&quot; classes
@@ -464,13 +486,13 @@ where no other solutions were satisfactory.</p>
             size="1"><b>, </b></font><font size="2"><strong>Eric
             Bezault</strong></font><strong> </strong><font
             size="2"><br>
-            </font><a href="mailto:ericb@gobo.demon.co.uk"><font
-            size="2">ericb@gobo.demon.co.uk</font></a><font
+            <strong>mailto:</strong></font><a
+            href="mailto:ericb@gobo.demon.co.uk"><font size="2">ericb@gobo.demon.co.uk</font></a><font
             size="2"> <br>
-            </font><a href="http://www.gobo.demon.co.uk"><font
-            size="2">http://www.gobo.demon.co.uk</font></a><font
+            <strong>http:</strong></font><a
+            href="http://www.gobo.demon.co.uk"><font size="2">//www.gobo.demon.co.uk</font></a><font
             size="2"><br>
-            <strong>Last Updated:</strong> 23 May 1998</font><br>
+            <strong>Last Updated:</strong> 10 August 1998</font><br>
             <!--webbot bot="PurpleText"
             preview="
 $Date$ 
