@@ -204,7 +204,10 @@ feature -- Events
 	on_attribute (a_namespace: STRING; a_prefix: STRING; a_local_part: STRING; a_value: STRING) is
 			-- Process xml:space attribute
 		do
-			if STRING_.same_string (Xml_prefix, a_prefix) and STRING_.same_string (Xml_space, a_local_part) then
+			if has_prefix (a_prefix)
+				and then STRING_.same_string (Xml_prefix, a_prefix)
+				and STRING_.same_string (Xml_space, a_local_part)
+			then
 					--Replace value for current element.
 				is_space_preserved.remove
 				is_space_preserved.force (STRING_.same_string (Xml_space_preserve, a_value))
