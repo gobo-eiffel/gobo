@@ -4,9 +4,9 @@ This library provides lexical functionalities such as regular expressions,
 nondeterministic finite automata (NFA) and deterministic finite automata
 (DFA), lexical analyzers (also known as scanners or tokenizers). This
 library is mainly used by Gobo Eiffel Lex (gelex). To get information
-about Gelex, have a look at "$GOBO\src\gelex\Readme.txt" and
-"$GOBO\doc\gelex". Examples for both Gelex and this library can be
-found in "$GOBO\example\lexical".
+about Gelex, have a look at "$GOBO/src/gelex/Readme.txt" and
+"$GOBO/doc/gelex". Examples for both Gelex and this library can be
+found in "$GOBO/example/lexical".
 
 Clusters:
 
@@ -23,7 +23,7 @@ lex
 regexp
     Regular expression classes using DFA which are dynamically built
     (i.e. no class text generation using Gelex). See the Gegrep example
-    in "$GOBO\example\lexical\gegrep" for details.
+    in "$GOBO/example/lexical/gegrep" for details.
 scanner
     Scanner classes using different kinds of DFA implementations
     (compressed tables, full tables).

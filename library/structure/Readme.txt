@@ -3,7 +3,7 @@ Gobo Eiffel Structure Library
 When this library has been developed, there was no data structure library
 standard, and no portable library was publicly available. Each Eiffel
 compiler provides its own data structure library, but none of them is
-portable (see portability issues in "$GOBO\doc\portability"). This
+portable (see portability issues in "$GOBO/doc/portability"). This
 library has hence been developed as a foundation for other portable
 libraries provided in this package. The Gobo Eiffel Structure Library
 contains the classic containers needed in everyday programming, such
@@ -43,7 +43,7 @@ table
     implementation of tables is hash tables.
 
 A more detailed documentation for this library, in HTML format, is
-provided in "$GOBO\doc\structure".
+provided in "$GOBO/doc/structure".
 
 --
 Copyright (c) 1997-2000, Eric Bezault
