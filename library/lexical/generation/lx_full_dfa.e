@@ -31,7 +31,8 @@ inherit
 			print_constants as generatable_dfa_print_constants,
 			print_backing_up_report as generatable_dfa_print_backing_up_report
 		export
-			{NONE} all
+			-- Bug in SE -0.81: Unable to load class NONE!
+			-- {NONE} all
 		redefine
 			build
 		end
