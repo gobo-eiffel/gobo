@@ -1,4 +1,4 @@
-#ifdef ise
+#ifdef ISE
 #ifndef eif_h
 #define eif_h
 #include <eif_portable.h>
@@ -7,12 +7,12 @@
 #endif
 #endif
 
-#ifdef se
+#ifdef SE
 #include "sys/runtime/base.h"
 #define TRUE 1
 #endif
 
-#ifdef vec
+#ifdef VE
 #include "cecil.h"
 #define TRUE 1
 #endif
