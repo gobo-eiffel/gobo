@@ -288,15 +288,17 @@ feature -- Validity checking
 							end
 						end
 					end
+				else
+					Result := a_type
 				end
 				if not has_fatal_error then
-					if a_current_type /= a_current_class then
+					if a_current_class.is_generic and a_current_type /= a_current_class then
 							-- We need to replace the formal generic parameters of
 							-- `a_current_class' by their corresponding actual
 							-- parameters in `a_current_type'.
 						a_parameters := a_current_type.actual_parameters
 						if a_parameters = Void then
-								-- Internal error: we said that `a_class_impl' was generic.
+								-- Internal error: we said that `a_current_class' was generic.
 								-- Therefore `a_current_type' is generic as well.
 							set_fatal_error
 							error_handler.report_giadz_error
