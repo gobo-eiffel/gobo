@@ -5,7 +5,7 @@ To compile Geyacc:
 
 1. Use your favorite Eiffel compiler to compile the Eiffel system using
    the provided Ace file (ISE Eiffel: ise.ace, SmartEiffel: se.ace) or
-   ESD file (Visual Eiffel: ve.esd). Alternatively you can use 'geant'
+   Xace file (Visual Eiffel: ve.xace). Alternatively you can use 'geant'
    to launch the compilation:
    
        geant compile_<compiler>
@@ -14,8 +14,9 @@ To compile Geyacc:
 
 2. Run Geyacc using:
 
-       geyacc [--version][--help][-hxV?][-t classname]
-           [-v filename][-o filename] filename
+       geyacc [--version][--help][-hxV?][--(new|old)_typing]
+           [--pragma=[no]line][--doc=(html|xml)][-t classname]
+           [-k filename][-v filename][-o filename] filename
 
 A "User's Manual" documentation for Geyacc, in HTML format, is provided
 in "$GOBO/doc/geyacc".
