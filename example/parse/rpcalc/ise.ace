@@ -1,7 +1,8 @@
 -- system:     "Reverse Polish Notation Calculator"
--- compiler:   "ISE Eiffel 4.3"
--- author:     "Eric Bezault <ericb@gobo.demon.co.uk>"
--- copyright:  "Copyright (c) 1998, Eric Bezault"
+-- compiler:   "ISE Eiffel 4.4"
+-- author:     "Eric Bezault <ericb@gobosoft.com>"
+-- copyright:  "Copyright (c) 1999, Eric Bezault and others"
+-- license:    "Eiffel Forum Freeware License v1 (see forum.txt)"
 -- date:       "$Date$"
 -- revision:   "$Revision$"
 
@@ -11,10 +12,11 @@ system
 
 root
 
-	RPCALC: "execute"
+	RPCALC: execute
 
 default
 
+	console_application (yes);
 	--debug (yes);
 	--assertion (all);
 	--precompiled ("$EIFFEL4\precomp\spec\$PLATFORM\base")
