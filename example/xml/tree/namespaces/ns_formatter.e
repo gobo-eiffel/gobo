@@ -81,7 +81,7 @@ feature {ANY} -- Standard processor routines
 			cs: DS_LINKED_LIST_CURSOR [XM_NAMESPACE]
 		do
 			append ("Element: ")
-			append (el.name.to_utf8)
+			append (el.name)
 			append ("%N")
 			ns_decls := el.namespace_declarations
 			from
