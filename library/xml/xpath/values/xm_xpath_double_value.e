@@ -97,7 +97,7 @@ feature -- Access
 				else
 					Result := "INF"
 				end
-			elseif value.abs >= 1.e-6 or else value.abs < 1.e6 then
+			elseif value.abs >= 1.0e-6 or else value.abs < 1.0e6 then
 				create a_decimal.make_from_string (value.out)
 				Result := a_decimal.to_scientific_string
 			else
