@@ -1,4 +1,4 @@
-<?xml version="1.0"?> 
+<?xml version="1.0" encoding="UTF-8"?> 
 
 <!--
 	description:
@@ -12,7 +12,6 @@
 	revision: "$Revision$"
 -->
 
-<chapter  xmlns="http://www.gobosoft.com/eiffel/gobo/documentation" id="gexslt_options">
   <chapterinfo>
     <copyright>
       <year>2004</year>
@@ -25,17 +24,17 @@
     <email>colin@colina.demon.co.uk</email>
     <date>Sunday, September 5th, 2004</date>
   </chapterinfo>
-  <title>Gobo Eiffel XSLT Command-line usage and options</title>
+  <title>&title;</title>
   <section>
-    <title>How to invoke gexslt</title>
+    <title>How to invoke &program_name;</title>
     <para>
-      Gexslt is invoked from the command line. The general form is:
+      &program_name_cased; is invoked from the command line. The general form is:
     <itemizedlist>
-      <listitem><para>gexslt --help</para></listitem>
-      <listitem><para>gexslt --version</para></listitem>
-      <listitem><para>gexslt [--file=|--uri=]stylesheet [--file=|--uri=]source-document (--options)* (string-parameter)*</para></listitem>
-      <listitem><para>gexslt stylesheet --template=template-name (--options)* (string-parameter)*</para></listitem>
-      <listitem><para>gexslt --use-pi [--file=|--uri=]source-document (--options)* (string-parameter)*</para></listitem>
+      <listitem><para>&program_name; --help</para></listitem>
+      <listitem><para>&program_name; --version</para></listitem>
+      <listitem><para>&program_name; [--file=|--uri=]stylesheet [--file=|--uri=]source-document (--options)* (string-parameter)*</para></listitem>
+      <listitem><para>&program_name; stylesheet --template=template-name (--options)* (string-parameter)*</para></listitem>
+      <listitem><para>&program_name; --use-pi [--file=|--uri=]source-document (--options)* (string-parameter)*</para></listitem>
     </itemizedlist>
     <warning>The last form is not yet supported.</warning>
     </para>
@@ -44,15 +43,15 @@
     <title>Stylesheet and source documents</title>
     <para>
       The stylesheet and source documents can be written either as URIs or as names in the local file system.
-      Gexslt will attempt to convert a local file name into a URI, if it detects such a name is not already a URI. 
+      &program_name_cased; will attempt to convert a local file name into a URI, if it detects such a name is not already a URI. 
     </para>
     <para>
       If you want to use a file name that starts with --, or includes = as a character in the name, or might look 
       to the system like a URI (e.g. if http://foo/bar is a valid file name on your system), then you can
-      force gexslt to interpret it as a file name by writing it as --file=my/file.name.
+      force &program_name; to interpret it as a file name by writing it as --file=my/file.name.
     </para>
     <para>
-      If you want to ensure that gexslt treats a name as a URI (necessary if it starts with -- or includes =), then you can write
+      If you want to ensure that &program_name; treats a name as a URI (necessary if it starts with -- or includes =), then you can write
       it as --uri=my:strange=uri.
     </para>
   </section>
@@ -60,7 +59,7 @@
     <title>Parameters</title>
     <para>
       To set a global parameter on a stylesheet (as defined by a top-level xsl:param declaration),
-      you may set it via an option. However, gexslt provides a more convenient syntax for the most common usage pattern, 
+      you may set it via an option. However, &program_name; provides a more convenient syntax for the most common usage pattern, 
       string-valued parameters:
       <itemizedlist>
 	<listitem><para>name=value</para></listitem>
@@ -95,7 +94,7 @@
 	      <warning>Use of the xml-stylesheet processing instruction is not yet implemented</warning>
 	    </para>
 	    <para>
-	      Gexslt has to parse the source document twice. Once to find the processing instructiuon, and again, 
+	      &program_name_cased; has to parse the source document twice. Once to find the processing instructiuon, and again, 
 	      after the stylesheet has been compiled (as it may contain xsl:preserve-space or xsl:strip-space commands).
 	      Although the first parse is quick (as the processing instruction must occur in the prolog of the XML document), 
 	      this does mean that a stream that can only be read once may not be used with this option.
@@ -437,4 +436,3 @@
     </variablelist>
     </para>
   </section>
-</chapter>

@@ -27,9 +27,12 @@
 
 
 		<set name="next" value="index"/>
+		<set name="input_wrapper" value="index"/>
 		<set name="next_chapter" value="options"/>
 		<geant target="xslt"/>
 
+		<set name="input_wrapper" value="options_wrapper" unless="${GESTALT}"/>
+		<set name="input_wrapper" value="options_wrapper_2" if="${GESTALT}"/>
 		<set name="next_chapter" value="index"/>
 		<geant target="xslt"/>
 
@@ -68,7 +71,7 @@
 
 		<xslt
 			processor="${xslt_processor}"
-			input="${input}.xml"
+			input="${input_wrapper}.xml"
 			output="${input}.html"
 			stylesheet="${GOBO}/doc/misc/gobo2html2.xsl"
 		>

@@ -1,0 +1,24 @@
+<?xml version="1.0"?> 
+
+<!--
+	description:
+	
+		"Gobo Eiffel XSLT options wrapper"
+
+	library: "Gobo Eiffel XSLT"
+	copyright: "Copyright (c) 2004, Colin Adams and others"
+	license: "Eiffel Forum License v2 (see forum.txt)"
+	date: "$Date$"
+	revision: "$Revision$"
+-->
+
+<!DOCTYPE chapter [
+ <!ENTITY title "Gobo Eiffel XSLT Command-line usage and options">
+ <!ENTITY program_name "gexslt">
+ <!ENTITY program_name_cased "Gexslt">
+ <!ENTITY inclusion SYSTEM "options.xml" >
+]>
+<chapter  xmlns="http://www.gobosoft.com/eiffel/gobo/documentation" id="gexslt_options">
+&inclusion;
+</chapter>
+
