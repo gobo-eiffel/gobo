@@ -43,7 +43,7 @@ color="#800000"><em>is_equal</em></font></a><font color="#800000"><em>'&quot;
 </em></font><em>author:     </em><font color="#800000"><em>&quot;Eric Bezault &lt;</em></font><a
 href="mailto:ericb@gobosoft.com"><font color="#800000"><em>ericb@gobosoft.com</em></font></a><font
 color="#800000"><em>&gt;&quot;
-</em></font><em>copyright:  </em><font color="#800000"><em>&quot;Copyright (c) 1999, Eric Bezault and others&quot;
+</em></font><em>copyright:  </em><font color="#800000"><em>&quot;Copyright (c) 2000, Eric Bezault and others&quot;
 </em></font><em>license:   </em><font color="#800000"><em> &quot;Eiffel Forum Freeware License v1 (see forum.txt)&quot;</em></font></pre>
 </blockquote>
 
@@ -637,6 +637,22 @@ color="#000080"><em><strong>
         same_count</em>:<em> </em><a href="#count"><em>count</em></a><em> </em>= <font
 color="#000080"><em><strong>old</strong></em></font><em> </em><a
 href="#count"><em>count</em></a></pre>
+    <pre><a name="replace_found_item"><em>replace_found_item</em></a><em> </em>(<em>v</em>:<em> G</em>)<em>
+        </em><font color="#008000">-- Replace item associated with
+        -- the key of </font><a href="#found_item"><em>found_item</em></a><font
+color="#008000"> by </font><em>v</em><font color="#008000">.
+        -- Do not move cursors.</font><em>
+</em><font color="#008000">        -- (From </font><a
+href="ds_sparse_table.html#replace_found_item"><font
+color="#008000"><em>DS_SPARSE_TABLE</em></font></a><font
+color="#008000">.)</font><em>
+    </em><font color="#000080"><em><strong>require</strong></em></font><em>
+        item_found</em>:<em> </em><a href="#found"><em>found</em></a><em>
+    </em><font color="#000080"><em><strong>ensure</strong></em></font><em>
+        replaced</em>:<em> </em><a href="#found_item"><em>found_item</em></a><em> </em>=<em> v
+        same_count</em>:<em> </em><a href="#count"><em>count</em></a><em> </em>= <font
+color="#000080"><em><strong>old</strong></em></font><em> </em><a
+href="#count"><em>count</em></a></pre>
     <pre><a name="put"><em>put</em></a><em> </em>(<em>v</em>:<em> G</em>;<em> k</em>:<em> K</em>)<em>
         </em><font color="#008000">-- Associate </font><em>v</em><font
 color="#008000"> with key </font><em>k</em><font color="#008000">.</font><em>
@@ -665,6 +681,28 @@ href="#count"><em>count</em></a><em> </em>=<em> </em><font
 color="#000080"><em><strong>old</strong></em></font><em> </em><a
 href="#count"><em>count</em></a><em> </em>+<em> </em><font
 color="#808000"><em>1</em></font>)</pre>
+    <pre><a name="put_new"><em>put_new</em></a> (<em>v</em>: <em>G</em>; <em>k</em>: <em>K</em>)
+        <font color="#008000">-- Associate </font><em>v</em><font
+color="#008000"> with key </font><em>k</em><font color="#008000">.
+        -- Do not move cursors.
+        -- (From </font><a href="ds_sparse_table.html#put_new"><font
+color="#008000"><em>DS_SPARSE_TABLE</em></font></a><font
+color="#008000">.)
+</font><em>    </em><font color="#000080"><em><strong>require</strong></em></font><em>
+        not_full</em>:<em> </em><font color="#000080"><em><strong>not</strong></em></font><em> </em><a
+href="#is_full"><em>is_full</em></a><em>
+        valid_key</em>:<em> </em><a href="#valid_key"><em>valid_key</em></a><em> </em>(<em>k</em>)<em>
+        new_item</em>: <font color="#000080"><em><strong>not</strong></em></font> <a
+href="#has"><em>has</em></a><em> </em>(<em>k</em>)<font
+color="#000080"><em><strong>
+    ensure</strong></em></font><em>
+        one_more</em>: <a href="#count"><em>count</em></a><em> </em>=<em> </em><font
+color="#000080"><em><strong>old</strong></em></font><em> </em><a
+href="#count"><em>count</em></a><em> </em>+<em> </em><font
+color="#808000"><em>1</em></font>
+<em>        inserted</em>:<em> </em><a href="#has"><em>has</em></a><em> </em>(<em>k</em>)<em> </em><font
+color="#000080"><em><strong>and then</strong></em></font><em> </em><a
+href="#item"><em>item</em></a><em> </em>(<em>k</em>) =<em> v</em></pre>
     <pre><a name="force"><em>force</em></a><em> </em>(<em>v</em>:<em> G</em>;<em> k</em>:<em> K</em>)<em>
         </em><font color="#008000">-- Associate </font><em>v</em><font
 color="#008000"> with key </font><em>k</em><font color="#008000">.</font><em>
@@ -695,6 +733,29 @@ href="#count"><em>count</em></a><em> </em>=<em> </em><font
 color="#000080"><em><strong>old</strong></em></font><em> </em><a
 href="#count"><em>count</em></a><em> </em>+<em> </em><font
 color="#808000"><em>1</em></font>)</pre>
+    <pre><a name="force_new"><em>force_new</em></a> (<em>v</em>: <em>G</em>; <em>k</em>: <em>K</em>)
+        <font color="#008000">-- Associate </font><em>v</em><font
+color="#008000"> with key </font><em>k</em><font color="#008000">.
+</font><em>        </em><font color="#008000">-- Resize table if necessary.
+        -- Move cursors </font><a href="#off"><em>off</em></a><font
+color="#008000"> when resizing.</font><em>
+</em><font color="#008000">        -- (From </font><a
+href="ds_table.html#put_new"><font color="#008000"><em>put_new</em></font></a><font
+color="#008000"> in </font><a href="ds_table.html#put_new"><font
+color="#008000"><em>DS_TABLE</em></font></a><font color="#008000">.)
+</font><em>    </em><font color="#000080"><em><strong>require</strong></em></font><em>
+        valid_key</em>:<em> </em><a href="#valid_key"><em>valid_key</em></a><em> </em>(<em>k</em>)<em>
+        new_item</em>: <font color="#000080"><em><strong>not</strong></em></font> <a
+href="#has"><em>has</em></a><em> </em>(<em>k</em>)<font
+color="#000080"><em><strong>
+    ensure</strong></em></font><em>
+        one_more</em>: <a href="#count"><em>count</em></a><em> </em>=<em> </em><font
+color="#000080"><em><strong>old</strong></em></font><em> </em><a
+href="#count"><em>count</em></a><em> </em>+<em> </em><font
+color="#808000"><em>1</em></font>
+<em>        inserted</em>:<em> </em><a href="#has"><em>has</em></a><em> </em>(<em>k</em>)<em> </em><font
+color="#000080"><em><strong>and then</strong></em></font><em> </em><a
+href="#item"><em>item</em></a><em> </em>(<em>k</em>) =<em> v</em></pre>
     <pre><a name="swap"><em>swap</em></a><em> </em>(<em>k</em>,<em> l</em>:<em> K</em>)<em>
         </em><font color="#008000">-- Exchange items associated with </font><em>k</em><font
 color="#008000"> and </font><em>l</em><font color="#008000">.</font><em>
@@ -827,7 +888,7 @@ color="#008000"> -- class DS_HASH_TABLE</font></pre>
 <table border="0" width="100%">
     <tr>
         <td><address>
-            <font size="2"><b>Copyright © 1999</b></font><font
+            <font size="2"><b>Copyright © 2000</b></font><font
             size="1"><b>, </b></font><font size="2"><strong>Eric
             Bezault</strong></font><strong> </strong><font
             size="2"><br>
@@ -837,7 +898,7 @@ color="#008000"> -- class DS_HASH_TABLE</font></pre>
             <strong>http:</strong></font><a
             href="http://www.gobosoft.com"><font size="2">//www.gobosoft.com</font></a><font
             size="2"><br>
-            <strong>Last Updated:</strong> 1 August 1999</font><br>
+            <strong>Last Updated:</strong> 16 April 2000</font><br>
             <!--webbot bot="PurpleText"
             preview="
 $Date$ 
