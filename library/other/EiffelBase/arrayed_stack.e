@@ -81,7 +81,7 @@ feature -- Conversion
 			-- Representation as a linear structure
 			-- (order is reverse of original order of insertion)
 		local
-			i, nb: INTEGER
+			i: INTEGER
 		do
 			!! Result.make (count)
 			from i := count until i < 1 loop
