@@ -57,12 +57,4 @@ feature -- Access
 			Result := tokens.null_position
 		end
 
-feature -- Duplication
-
-	cloned_attachment: like Current is
-			-- Cloned version of current attachment
-		do
-			create Result.make (source_type_set, current_feature, current_type)
-		end
-
 end

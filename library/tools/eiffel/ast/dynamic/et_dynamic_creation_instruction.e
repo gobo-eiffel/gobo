@@ -53,14 +53,6 @@ feature -- Access
 			Result := creation_instruction.target.position
 		end
 
-feature -- Duplication
-
-	cloned_attachment: like Current is
-			-- Cloned version of current attachment
-		do
-			create Result.make (source_type_set, creation_instruction, current_feature, current_type)
-		end
-
 invariant
 
 	creation_instruction_not_void: creation_instruction /= Void

@@ -51,12 +51,12 @@ feature {NONE} -- Initialization
 				nb := args.count
 				if nb > 0 then
 					create dynamic_type_sets.make_with_capacity (nb)
-					from i := nb until i < 1 loop
+					from i := 1 until i > nb loop
 						l_type := args.formal_argument (i).type
 						l_dynamic_type := a_system.dynamic_type (l_type, a_target_type.base_type)
 						l_dynamic_type_set := l_dynamic_type_set_builder.new_dynamic_type_set (l_dynamic_type)
-						dynamic_type_sets.put_first (l_dynamic_type_set)
-						i := i - 1
+						dynamic_type_sets.put_last (l_dynamic_type_set)
+						i := i + 1
 					end
 				end
 			end
@@ -118,7 +118,7 @@ feature -- Access
 					create Result.make (a_feature, a_parent_type, Current, a_system)
 					Result.set_regular (is_regular or is_creation)
 					Result.set_static (is_static)
-					other_precursors.put_first (Result)
+					other_precursors.put_last (Result)
 				else
 					nb := other_precursors.count
 					from i := 1 until i > nb loop
@@ -134,7 +134,7 @@ feature -- Access
 						create Result.make (a_feature, a_parent_type, Current, a_system)
 						Result.set_regular (is_regular or is_creation)
 						Result.set_static (is_static)
-						other_precursors.force_first (Result)
+						other_precursors.force_last (Result)
 					end
 				end
 			end

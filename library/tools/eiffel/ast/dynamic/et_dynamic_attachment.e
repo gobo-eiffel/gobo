@@ -33,10 +33,10 @@ feature -- Access
 	source_type_set: ET_DYNAMIC_TYPE_SET
 			-- Dynamic type set of source of attachment
 
-	current_feature: ET_FEATURE
+	current_feature: ET_DYNAMIC_FEATURE
 			-- Feature where the attachment appears
 
-	current_type: ET_BASE_TYPE
+	current_type: ET_DYNAMIC_TYPE
 			-- Type to which `current_feature' belongs
 
 	position: ET_POSITION is
@@ -54,7 +54,7 @@ feature -- Measurement
 
 feature -- Element change
 
-	propagate_types (a_target: ET_DYNAMIC_TYPE_SET; a_system: ET_SYSTEM) is
+	propagate_types (a_target: ET_DYNAMIC_TARGET; a_system: ET_SYSTEM) is
 			-- Propagate types to `a_target'.
 		require
 			a_target_not_void: a_target /= Void
@@ -73,14 +73,14 @@ feature -- Element change
 				l_other_types := source_type_set.other_types
 				if l_other_types /= Void then
 					nb2 := l_other_types.count
-					from j := 1 until j > nb2 loop
+					from j := nb2 until j < 1 loop
 						a_target.put_type (l_other_types.item (j), a_system)
 						i := i + 1
 						if i < nb then
-							j := j + 1
+							j := j - 1
 						else
 								-- Jump out of the loop.
-							j := nb2 + 1
+							j := 0
 						end
 					end
 				end
@@ -91,15 +91,6 @@ feature -- Element change
 					end
 				end
 			end
-		end
-
-feature -- Duplication
-
-	cloned_attachment: like Current is
-			-- Cloned version of current attachment
-		deferred
-		ensure
-			cloned_attachment_not_void: Result /= Void
 		end
 
 feature -- Link

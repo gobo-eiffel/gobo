@@ -53,14 +53,6 @@ feature -- Access
 			Result := assignment.source.position
 		end
 
-feature -- Duplication
-
-	cloned_attachment: like Current is
-			-- Cloned version of current attachment
-		do
-			create Result.make (source_type_set, assignment, current_feature, current_type)
-		end
-
 invariant
 
 	assignment_not_void: assignment /= Void

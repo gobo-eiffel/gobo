@@ -53,14 +53,6 @@ feature -- Access
 			Result := expression.position
 		end
 
-feature -- Duplication
-
-	cloned_attachment: like Current is
-			-- Cloned version of current attachment
-		do
-			create Result.make (source_type_set, expression, current_feature, current_type)
-		end
-
 invariant
 
 	expression_not_void: expression /= Void

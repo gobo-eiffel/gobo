@@ -2,7 +2,7 @@ indexing
 
 	description:
 
-		"Lists of Eiffel attachments at run-time"
+		"Lists Eiffel targets when propagating dynamic types"
 
 	library: "Gobo Eiffel Tools Library"
 	copyright: "Copyright (c) 2004, Eric Bezault and others"
@@ -10,11 +10,11 @@ indexing
 	date: "$Date$"
 	revision: "$Revision$"
 
-class ET_DYNAMIC_ATTACHMENT_LIST
+class ET_DYNAMIC_TARGET_LIST
 
 inherit
 
-	ET_TAIL_LIST [ET_DYNAMIC_ATTACHMENT]
+	ET_TAIL_LIST [ET_DYNAMIC_TARGET]
 
 creation
 
@@ -22,7 +22,7 @@ creation
 
 feature {NONE} -- Implementation
 
-	fixed_array: KL_SPECIAL_ROUTINES [ET_DYNAMIC_ATTACHMENT] is
+	fixed_array: KL_SPECIAL_ROUTINES [ET_DYNAMIC_TARGET] is
 			-- Fixed array routines
 		once
 			create Result
