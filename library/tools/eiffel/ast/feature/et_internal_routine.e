@@ -24,6 +24,7 @@ feature -- Initialization
 	reset is
 			-- Reset feature as it was when it was first parsed.
 		do
+			precursor
 			if locals /= Void then
 				locals.reset
 			end

@@ -73,11 +73,19 @@ feature -- Initialization
 
 	reset is
 			-- Reset type as it was when it was first parsed.
+		local
+			an_identifier: ET_IDENTIFIER
 		do
+			if is_like_argument then
+				an_identifier ?= name
+				if an_identifier /= Void then
+					an_identifier.set_argument (False)
+				end
+			end
 			name.reset
 			seed := 0
 		end
-		
+
 feature -- Access
 
 	like_keyword: ET_KEYWORD
