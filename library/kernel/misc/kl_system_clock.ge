@@ -91,18 +91,18 @@ feature -- Setting
 #endif
 		do
 #ifdef SE
-			old_is_local := basic_time.is_local_time
-			basic_time.set_local_time
+			old_is_local := basic_time.time.is_local_time
+			basic_time.time.set_local_time
 			basic_time.update
-			year := basic_time.year
-			month := basic_time.month
-			day := basic_time.day
-			hour := basic_time.hour
-			minute := basic_time.minute
-			second := basic_time.second
+			year := basic_time.time.year
+			month := basic_time.time.month
+			day := basic_time.time.day
+			hour := basic_time.time.hour
+			minute := basic_time.time.minute
+			second := basic_time.time.second
 			millisecond := basic_time.microsecond // 1000
 			if not old_is_local then
-				basic_time.set_universal_time
+				basic_time.time.set_universal_time
 			end
 #endif
 #ifdef VE
@@ -128,18 +128,18 @@ feature -- Setting
 #endif
 		do
 #ifdef SE
-			old_is_local := basic_time.is_local_time
-			basic_time.set_universal_time
+			old_is_local := basic_time.time.is_local_time
+			basic_time.time.set_universal_time
 			basic_time.update
-			year := basic_time.year
-			month := basic_time.month
-			day := basic_time.day
-			hour := basic_time.hour
-			minute := basic_time.minute
-			second := basic_time.second
+			year := basic_time.time.year
+			month := basic_time.time.month
+			day := basic_time.time.day
+			hour := basic_time.time.hour
+			minute := basic_time.time.minute
+			second := basic_time.time.second
 			millisecond := basic_time.microsecond // 1000
 			if old_is_local then
-				basic_time.set_local_time
+				basic_time.time.set_local_time
 			end
 #endif
 #ifdef VE
