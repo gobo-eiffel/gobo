@@ -25,10 +25,10 @@ feature -- Tests
 			-- No namespaces.
 		do
 			assert_output ("simple",
-				"<doc> <a> <aa/>   </a><b/>   </doc>",
+				"<doc> <a> <aa b='c'/>   </a><b/>   </doc>",
 				"<doc>" + Lf_s +
 				" <a>" + Lf_s +
-				"  <aa>" + Lf_s +
+				"  <aa b=%"c%">" + Lf_s +
 				"  </aa>" + Lf_s +
 				" </a>" + Lf_s +
 				" <b>" + Lf_s +
