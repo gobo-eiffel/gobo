@@ -5,7 +5,7 @@ indexing
 		"Xace defined variables"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2001, Andreas Leitner and others"
+	copyright: "Copyright (c) 2001-2004, Andreas Leitner and others"
 	license: "Eiffel Forum License v2 (see forum.txt)"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -16,6 +16,8 @@ inherit
 
 	ANY -- Export ANY's features
 
+	UC_SHARED_STRING_EQUALITY_TESTER
+	
 	UT_SHARED_TEMPLATE_EXPANDER
 		export {NONE} all end
 
@@ -27,12 +29,9 @@ feature {NONE} -- Initialization
 
 	make is
 			-- Create a new defined variables.
-		local
-			a_tester: UC_EQUALITY_TESTER
 		do
 			create defined_values.make_map (Initial_defined_values_capacity)
-			create a_tester
-			defined_values.set_key_equality_tester (a_tester)
+			defined_values.set_key_equality_tester (string_equality_tester)
 		end
 
 feature -- Status report
