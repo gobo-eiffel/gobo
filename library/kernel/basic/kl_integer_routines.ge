@@ -309,6 +309,39 @@ feature -- Output
 
 feature -- Operation(s)
 
+	div (x, n: INTEGER): INTEGER is
+			-- Integer division of `x' by `n'
+			-- (Use ISO C99 specification)
+		require
+			divisible: n /= 0
+			overflow: x = Platform.Minimum_integer implies n /= -1
+		do
+#ifdef (SE && SE_2_0)
+			Result := x #// n
+#else
+			Result := x // n
+#endif
+		ensure
+			definition: Result * n + mod (x, n) = x
+		end
+
+	mod (x, n: INTEGER): INTEGER is
+			-- Reminder of the integer division of `x' by `n'
+			-- (Use ISO C99 specification)
+		require
+			divisible: n /= 0
+		do
+#ifdef (SE && SE_2_0)
+			Result := x #\\ n
+#else
+			Result := x \\ n
+#endif
+		ensure
+			definition1: n /= Platform.Minimum_integer implies Result.abs < n.abs
+			definition2: n = Platform.Minimum_integer implies Result.abs <= Platform.Maximum_integer
+			iso_c99: Result /= 0 implies Result.sign = x.sign
+		end
+
 	power (x, n: INTEGER): INTEGER is
 			-- Integer `x' to the power of `n' (`x' ^ `n')
 		require
