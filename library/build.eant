@@ -63,6 +63,7 @@
 		<geant file="build.eant" target="${target}" dir="parse"/>
 		<geant file="build.eant" target="${target}" dir="pattern"/>
 		<geant file="build.eant" target="${target}" dir="regexp"/>
+		<geant file="build.eant" target="${target}" dir="string"/>
 		<geant file="build.eant" target="${target}" dir="structure"/>
 		<geant file="build.eant" target="${target}" dir="test"/>
 		<geant file="build.eant" target="${target}" dir="time"/>

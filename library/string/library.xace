@@ -1,0 +1,15 @@
+<?xml version="1.0"?>
+
+<library name="string" prefix="st_">
+	<description>
+		description: "Xace file for the Gobo Eiffel String Library"
+		library: "Gobo Eiffel String Library"
+		copyright: "Copyright (c) 2004, Eric Bezault and others"
+		license: "Eiffel Forum License v2 (see forum.txt)"
+		date: "$Date$"
+		revision: "$Revision$"
+	</description>
+
+	<cluster name="string" location="${GOBO}/library/string">
+	</cluster>
+</library>
