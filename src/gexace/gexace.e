@@ -126,6 +126,7 @@ feature {NONE} -- Command-line processing
 			!! a_command.make (variables, error_handler)
 			commands.force_last (a_command)
 			process_compilers (a_command)
+			process_output (a_command)
 			process_system_file (a_command)
 		end
 
@@ -184,6 +185,32 @@ feature {NONE} -- Command-line processing
 			end
 		end
 
+	process_output (a_command: GEXACE_BUILD_COMMAND) is
+			-- Process output filename option
+			-- ('--output=<filename>).
+		require
+			a_command_not_void: a_command /= Void
+		local
+			a_filename: STRING
+			a_cursor: DS_LINEAR_CURSOR [ET_XACE_GENERATOR]
+		do
+			if match_long_option ("output") then
+				if is_next_option_long_option and then has_next_option_value then
+					a_filename := next_option_value
+					consume_option
+					a_cursor := a_command.generators.new_cursor
+					from a_cursor.start until a_cursor.after loop
+						a_cursor.item.set_output_filename (a_filename)
+						a_cursor.forth
+					end
+				else
+						-- No variable specified.
+					report_usage_error
+					Exceptions.die (1)
+				end
+			end
+		end
+
 	process_define_string (s: STRING) is
 			-- Process `s' and set variables accordingly.
 			-- `s' is the content of a --define option.
@@ -227,10 +254,10 @@ feature {NONE} -- Usage message
 	Usage_message: UT_USAGE_MESSAGE is
 			-- Gexace usage message
 		once
-			!! Result.make ("[variable-definitions] [options] command [xace-file]%N%
+			!! Result.make ("[variable-definitions][options] command [xace-file]%N%
 				%%Tvariable-definitions:  --define=%"VAR_NAME[=VALUE]( VAR_NAME[=VALUE])*%"%N%
 				%%Toptions:  --verbose%N%
-				%%Tcommand:  --build (--se|--ise|--ve|--hact|--xml)%N%
+				%%Tcommand:  --build [--se|--ise|--ve|--hact|--xml][--output=<filename>]%N%
 				%%Tcommand:  --validate")
 		ensure
 			usage_message_not_void: Result /= Void
