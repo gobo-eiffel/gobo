@@ -27,7 +27,6 @@ feature {NONE} -- Initialization
 			-- `a_buffer' as input buffer.
 		do
 			yy_initialize
-			output_file := std.output
 			input_buffer := a_buffer
 			input_buffer.set_interactive (True)
 			yy_load_input_buffer
