@@ -104,13 +104,14 @@ feature {NONE} -- Implementation
 			max_value: a_value < 256
 			positive_value: a_value >= 0
 		do
-			Result := INTEGER_.to_hexadecimal (a_value, False)
+			Result := INTEGER_.to_hexadecimal (a_value, True)
 			if Result.count = 1 then
 				STRING_.insert_character (Result, '0', 1)
 			end
 		ensure
 			result_not_void: Result /= Void
 			two_digits: Result.count = 2
+			hexadecimal: STRING_.is_hexadecimal (Result)
 		end
 
 feature -- Valid characters
