@@ -104,7 +104,13 @@ feature -- Access/XML attribute values
 			an_attr_name_not_empty: an_attr_name.count > 0
 			a_default_value_not_void: a_default_value /= Void
 		do
-			Result := uc_attribute_value_or_default (an_attr_name, a_default_value)
+			if xml_element.has_attribute_by_name (an_attr_name) then
+				Result := xml_element.attribute_by_name (an_attr_name).value
+			else
+				Result := a_default_value
+			end
+		ensure
+			attribute_value_or_default_not_void: Result /= Void
 		end
 
 	attribute_value (an_attr_name: STRING): STRING is
@@ -124,7 +130,11 @@ feature -- Access/XML attribute values
 			an_attr_name_not_void: an_attr_name /= Void
 			an_attr_name_not_empty: an_attr_name.count > 0
 		do
-			Result := uc_boolean_value_or_default (an_attr_name, a_default_value)
+			if xml_element.has_attribute_by_name (an_attr_name) then
+				Result := boolean_value (an_attr_name)
+			else
+				Result := a_default_value
+			end
 		end
 
 	boolean_value (an_attr_name: STRING): BOOLEAN is
@@ -133,85 +143,21 @@ feature -- Access/XML attribute values
 			an_attr_name_not_void: an_attr_name /= Void
 			an_attr_name_not_empty: an_attr_name.count > 0
 			has_attribute: has_attribute (an_attr_name)
-		do
-			Result := uc_boolean_value (an_attr_name)
-		end
-
-	has_attribute (an_attr_name: STRING): BOOLEAN is
-			-- Is `an_attr_name' an atttribute of Current element?
-		require
-			an_attr_name_not_void: an_attr_name /= Void
-			an_attr_name_not_empty: an_attr_name.count > 0
-		do
-			Result := has_uc_attribute (an_attr_name)
-		end
-
-feature -- Access/XML attribute values (unicode)
-
-	uc_attribute_value_or_default (an_attr_name: STRING; a_default_value: STRING): STRING is
-			-- Value of attribue `an_attr_name',
-			-- or `a_default_value' of no such attribute
-		require
-			an_attr_name_not_void: an_attr_name /= Void
-			an_attr_name_not_empty: an_attr_name.count > 0
-			a_default_value_not_void: a_default_value /= Void
-		do
-			if xml_element.has_attribute_by_name (an_attr_name) then
-				Result := xml_element.attribute_by_name (an_attr_name).value
-			else
-				Result := a_default_value
-			end
-		ensure
-			value_not_void: Result /= Void
-		end
-
-	uc_attribute_value (an_attr_name: STRING): STRING is
-			-- Value of attribue `an_attr_name'
-		require
-			an_attr_name_not_void: an_attr_name /= Void
-			an_attr_name_not_empty: an_attr_name.count > 0
-			has_attribute: has_uc_attribute (an_attr_name)
-		do
-			Result := xml_element.attribute_by_name (an_attr_name).value
-		ensure
-			value_not_void: Result /= Void
-		end
-
-	uc_boolean_value_or_default (an_attr_name: STRING; a_default_value: BOOLEAN): BOOLEAN is
-			-- Value of attribue `an_attr_name',
-			-- or `a_default_value' of no such attribute
-		require
-			an_attr_name_not_void: an_attr_name /= Void
-			an_attr_name_not_empty: an_attr_name.count > 0
-		do
-			if xml_element.has_attribute_by_name (an_attr_name) then
-				Result := uc_boolean_value (an_attr_name)
-			else
-				Result := a_default_value
-			end
-		end
-
-	uc_boolean_value (an_attr_name: STRING): BOOLEAN is
-			-- Value of attribue `an_attr_name'
-		require
-			an_attr_name_not_void: an_attr_name /= Void
-			an_attr_name_not_empty: an_attr_name.count > 0
-			has_attribute: has_uc_attribute (an_attr_name)
 		local
 			a_value: STRING
 		do
-			a_value := uc_attribute_value (an_attr_name)
+			a_value := attribute_value (an_attr_name)
 			if STRING_.same_unicode_string (True_attribute_value, a_value) then
 				Result := True
 			elseif STRING_.same_unicode_string (False_attribute_value, a_value) then
 				Result := False
 			else
-				std.error.put_string ("WARNING: wrong value '" + a_value + "' for attribute '" + an_attr_name.out + "'. Valid values are `true' and `false'. Using `false'.%N")
+				std.error.put_string ("WARNING: wrong value '" + a_value + "' for attribute '" + an_attr_name.out + "'. Valid values are 'true' and 'false'. Using 'false'.%N")
 				Result := False
 			end
 		end
 
-	has_uc_attribute (an_attr_name: STRING): BOOLEAN is
+	has_attribute (an_attr_name: STRING): BOOLEAN is
 			-- Is `an_attr_name' an atttribute of Current element?
 		require
 			an_attr_name_not_void: an_attr_name /= Void
