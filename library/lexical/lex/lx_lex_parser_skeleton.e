@@ -7,7 +7,7 @@ indexing
 
 	library:    "Gobo Eiffel Lexical Library"
 	author:     "Eric Bezault <ericb@gobosoft.com>"
-	copyright:  "Copyright (c) 1999, Eric Bezault and others"
+	copyright:  "Copyright (c) 1999-2001, Eric Bezault and others"
 	license:    "Eiffel Forum Freeware License v1 (see forum.txt)"
 	date:       "$Date$"
 	revision:   "$Revision$"
@@ -32,10 +32,9 @@ inherit
 
 feature {NONE} -- Initialization
 
-	make (a_description: LX_DESCRIPTION; handler: like error_handler) is
+	make (handler: like error_handler) is
 			-- Create a new scanner description parser.
 		require
-			a_description_not_void: a_description /= Void
 			handler_not_void: handler /= Void
 		do
 			make_lex_scanner (handler)
@@ -62,6 +61,7 @@ feature {NONE} -- Initialization
 			!! action_factory.make
 		ensure
 			error_handler_set: error_handler = handler
+			description_set: description = a_description
 		end
 
 feature -- Initialization
@@ -72,7 +72,6 @@ feature -- Initialization
 			reset_lex_scanner
 			pending_rules.wipe_out
 			start_condition_stack.wipe_out
-			equiv_classes := Void
 		end
 
 feature -- Parsing
@@ -108,6 +107,9 @@ feature -- Access
 	action_factory: LX_ACTION_FACTORY
 			-- Semantic action factory
 
+	options_overrider: LX_DESCRIPTION_OVERRIDER
+			-- Overrider of options specified in the input file
+
 feature -- Setting
 
 	set_action_factory (a_factory: like action_factory) is
@@ -118,6 +120,14 @@ feature -- Setting
 			action_factory := a_factory
 		ensure
 			action_factory_set: action_factory = a_factory
+		end
+
+	set_options_overrider (an_overrider: like options_overrider) is
+			-- Set `options_overrider' to `an_overrider'.
+		do
+			options_overrider := an_overrider
+		ensure
+			options_overrider_set: options_overrider = an_overrider
 		end
 
 feature -- Status report
@@ -426,7 +436,9 @@ feature {NONE} -- Factory
 		local
 			a_name: STRING
 			a_character_class: LX_SYMBOL_CLASS
+			equiv_classes: LX_EQUIVALENCE_CLASSES
 		do
+			equiv_classes := description.equiv_classes
 			if equiv_classes /= Void then
 					-- Use a transition with a character class
 					-- containing only `symbol' instead of a
@@ -472,7 +484,7 @@ feature {NONE} -- Factory
 	new_character_class: LX_SYMBOL_CLASS is
 			-- New empty character class
 		do
-			!! Result.make (characters_count)
+			!! Result.make (description.characters_count)
 		ensure
 			character_class_not_void: Result /= Void
 		end
@@ -484,8 +496,10 @@ feature {NONE} -- Factory
 			lower_char: INTEGER
 			a_name: STRING
 			a_character_class: LX_SYMBOL_CLASS
+			equiv_classes: LX_EQUIVALENCE_CLASSES
 		do
-			if case_insensitive then
+			if description.case_insensitive then
+				equiv_classes := description.equiv_classes
 				inspect a_char
 				when Upper_a_code .. Upper_z_code then
 					lower_char := a_char + Case_diff
@@ -519,12 +533,12 @@ feature {NONE} -- Factory
 						Result := new_symbol_class_nfa (a_character_class)
 					end
 				when 0 then
-					Result := new_symbol_nfa (characters_count)
+					Result := new_symbol_nfa (description.characters_count)
 				else
 					Result := new_symbol_nfa (a_char)
 				end
 			elseif a_char = 0 then
-				Result := new_symbol_nfa (characters_count)
+				Result := new_symbol_nfa (description.characters_count)
 			else
 				Result := new_symbol_nfa (a_char)
 			end
@@ -535,13 +549,16 @@ feature {NONE} -- Factory
 	new_nfa_from_character_class (a_character_class: LX_SYMBOL_CLASS): LX_NFA is
 			-- New NFA with a transition labeled with `a_character_class'
 			-- (Sort symbols in `a_character_class' if necessary and
-			-- eventually register to `equiv_classes'.)
+			-- eventually register to `description.equiv_classes'.)
 		require
 			a_character_class_not_void: a_character_class /= Void
+		local
+			equiv_classes: LX_EQUIVALENCE_CLASSES
 		do
 			if a_character_class.sort_needed then
 				a_character_class.sort
 			end
+			equiv_classes := description.equiv_classes
 			if equiv_classes /= Void then
 				equiv_classes.add (a_character_class)
 			end
@@ -614,7 +631,10 @@ feature {NONE} -- Implementation
 		require
 			a_name_not_void: a_name /= Void
 			stack_not_void: stack /= Void
+		local
+			start_conditions: LX_START_CONDITIONS
 		do
+			start_conditions := description.start_conditions
 			if start_conditions.has_start_condition (a_name) then
 				if stack.has_start_condition (a_name) then
 					report_start_condition_specified_twice_warning (a_name)
@@ -634,7 +654,7 @@ feature {NONE} -- Implementation
 		do
 			a_nfa.set_accepted_rule (rule)
 			rule.set_pattern (a_nfa)
-			rules.force_last (rule)
+			description.rules.force_last (rule)
 			pending_rules.force_last (rule)
 			rule.set_line_nb (rule_line_nb)
 			rule.set_trail_context (has_trail_context)
@@ -643,12 +663,12 @@ feature {NONE} -- Implementation
 			rule.set_line_count (head_line)
 			rule.set_column_count (head_column)
 			if has_trail_context and then not (head_count >= 0 or trail_count >= 0) then
-				variable_trail_context := True
+				description.set_variable_trail_context (True)
 			end
 			if start_condition_stack.is_empty then
 					-- Add `a_nfa' to all non-exclusive start condition,
 					-- including the default (INITIAL) start condition.
-				start_conditions.add_nfa_to_non_exclusive (a_nfa)
+				description.start_conditions.add_nfa_to_non_exclusive (a_nfa)
 			else
 				start_condition_stack.add_nfa_to_all (a_nfa)
 			end
@@ -662,7 +682,7 @@ feature {NONE} -- Implementation
 		do
 			a_nfa.set_accepted_rule (rule)
 			rule.set_pattern (a_nfa)
-			rules.force_last (rule)
+			description.rules.force_last (rule)
 			pending_rules.force_last (rule)
 			rule.set_line_nb (rule_line_nb)
 			rule.set_trail_context (has_trail_context)
@@ -671,13 +691,13 @@ feature {NONE} -- Implementation
 			rule.set_line_count (head_line)
 			rule.set_column_count (head_column)
 			if has_trail_context and then not (head_count >= 0 or trail_count >= 0) then
-				variable_trail_context := True
+				description.set_variable_trail_context (True)
 			end
-			bol_needed := True
+			description.set_bol_needed (True)
 			if start_condition_stack.is_empty then
 					-- Add `a_nfa' to all non-exclusive start condition,
 					-- including the default (INITIAL) start condition.
-				start_conditions.add_bol_nfa_to_non_exclusive (a_nfa)
+				description.start_conditions.add_bol_nfa_to_non_exclusive (a_nfa)
 			else
 				start_condition_stack.add_bol_nfa_to_all (a_nfa)
 			end
@@ -689,7 +709,7 @@ feature {NONE} -- Implementation
 			if start_condition_stack.is_empty then
 					-- This EOF applies to all start conditions
 					-- which don't already have EOF actions.
-				start_condition_stack.append_non_eof_start_conditions (start_conditions)
+				start_condition_stack.append_non_eof_start_conditions (description.start_conditions)
 				if start_condition_stack.is_empty then
 					report_all_start_conditions_eof_warning
 				else
@@ -709,13 +729,11 @@ feature {NONE} -- Implementation
 			a_rule: LX_RULE
 			i, nb: INTEGER
 			a_start_condition: LX_START_CONDITION
+			eof_rules: DS_ARRAYED_LIST [LX_RULE]
 		do
-			from
-				i := 1
-				nb := stack.count
-			until
-				i > nb
-			loop
+			eof_rules := description.eof_rules
+			nb := stack.count
+			from i := 1 until i > nb loop
 				a_start_condition := stack.item (i)
 				if a_start_condition.has_eof then
 					report_multiple_EOF_rules_error (a_start_condition.name)
@@ -745,7 +763,7 @@ feature {NONE} -- Implementation
 			a_nfa := new_symbol_class_nfa (a_character_class)
 			a_nfa.set_accepted_rule (rule)
 			rule.set_pattern (a_nfa)
-			rules.force_last (rule)
+			description.rules.force_last (rule)
 			pending_rules.force_last (rule)
 			rule.set_line_nb (0)
 			rule.set_trail_context (False)
@@ -753,8 +771,8 @@ feature {NONE} -- Implementation
 			rule.set_trail_count (0)
 			rule.set_line_count (Zero_or_more)
 			rule.set_column_count (Zero_or_more)
-			start_conditions.add_nfa_to_all (a_nfa)
-			if no_default_rule then
+			description.start_conditions.add_nfa_to_all (a_nfa)
+			if description.no_default_rule then
 				set_action ("last_token := yyError_token%N%
 					%fatal_error (%"scanner jammed%")")
 			else
@@ -770,8 +788,10 @@ feature {NONE} -- Implementation
 			a_name: STRING
 			lower_char: INTEGER
 			a_character_class: LX_SYMBOL_CLASS
+			equiv_classes: LX_EQUIVALENCE_CLASSES
 		do
-			if case_insensitive then
+			if description.case_insensitive then
+				equiv_classes := description.equiv_classes
 				inspect a_char
 				when Upper_a_code .. Upper_z_code then
 					lower_char := a_char + Case_diff
@@ -807,12 +827,12 @@ feature {NONE} -- Implementation
 							(a_character_class)
 					end
 				when 0 then
-					Result := a_string & new_symbol_nfa (characters_count)
+					Result := a_string & new_symbol_nfa (description.characters_count)
 				else
 					Result := a_string & new_symbol_nfa (a_char)
 				end
 			elseif a_char = 0 then
-				Result := a_string & new_symbol_nfa (characters_count)
+				Result := a_string & new_symbol_nfa (description.characters_count)
 			else
 				Result := a_string & new_symbol_nfa (a_char)
 			end
@@ -826,7 +846,7 @@ feature {NONE} -- Implementation
 		require
 			a_character_class_not_void: a_character_class /= Void
 		do
-			if case_insensitive then
+			if description.case_insensitive then
 				inspect a_char
 				when Upper_a_code .. Upper_z_code then
 					a_character_class.put (a_char)
@@ -835,12 +855,12 @@ feature {NONE} -- Implementation
 					a_character_class.put (a_char - Case_diff)
 					a_character_class.put (a_char)
 				when 0 then
-					a_character_class.put (characters_count)
+					a_character_class.put (description.characters_count)
 				else
 					a_character_class.put (a_char)
 				end
 			elseif a_char = 0 then
-				a_character_class.put (characters_count)
+				a_character_class.put (description.characters_count)
 			else
 				a_character_class.put (a_char)
 			end
@@ -859,7 +879,7 @@ feature {NONE} -- Implementation
 		do
 			if char1 > char2 then
 				report_negative_range_in_character_class_error
-			elseif case_insensitive then
+			elseif description.case_insensitive then
 				from a_char := char1 until a_char > char2 loop
 					inspect a_char
 					when Upper_a_code .. Upper_z_code then
@@ -869,7 +889,7 @@ feature {NONE} -- Implementation
 						a_character_class.put (a_char - Case_diff)
 						a_character_class.put (a_char)
 					when 0 then
-						a_character_class.put (characters_count)
+						a_character_class.put (description.characters_count)
 					else
 						a_character_class.put (a_char)
 					end
@@ -878,7 +898,7 @@ feature {NONE} -- Implementation
 			else
 				from a_char := char1 until a_char > char2 loop
 					if a_char = 0 then
-						a_character_class.put (characters_count)
+						a_character_class.put (description.characters_count)
 					else
 						a_character_class.put (a_char)
 					end
@@ -925,6 +945,7 @@ feature {NONE} -- Implementation
 			-- "." character class (i.e. all characters except new_line)
 		local
 			dot_string: STRING
+			equiv_classes: LX_EQUIVALENCE_CLASSES
 		do
 			dot_string := "."
 			if character_classes.has (dot_string) then
@@ -933,6 +954,7 @@ feature {NONE} -- Implementation
 				!! Result.make (1)
 				Result.put (New_line_code)
 				Result.set_negated (True)
+				equiv_classes := description.equiv_classes
 				if equiv_classes /= Void then
 					equiv_classes.add (Result)
 				end
@@ -963,10 +985,12 @@ feature {NONE} -- Implementation
 			-- Build equivalence classes and renumber
 			-- symbol and character class transitions.
 		require
-			equiv_classes_not_void: equiv_classes /= Void
+			equiv_classes_not_void: description.equiv_classes /= Void
 		local
 			cursor: DS_HASH_TABLE_CURSOR [LX_SYMBOL_CLASS, STRING]
+			equiv_classes: LX_EQUIVALENCE_CLASSES
 		do
+			equiv_classes := description.equiv_classes
 			equiv_classes.build
 			cursor := character_classes.new_cursor
 			from cursor.start until cursor.after loop
@@ -974,21 +998,29 @@ feature {NONE} -- Implementation
 				cursor.forth
 			end
 		ensure
-			built: equiv_classes.built
+			built: description.equiv_classes.built
 		end
 
 	check_options is
-			-- Check user-specified ptions.
+			-- Check user-specified options.
 		do
-			if full_table then
-				if meta_equiv_classes_used then
+			if description.full_table then
+				if description.meta_equiv_classes_used then
 					report_full_and_meta_equiv_classes_error
 				end
-				if reject_used then
+				if description.reject_used then
 					report_full_and_reject_error
-				elseif variable_trail_context then
+				elseif description.variable_trail_context then
 					report_full_and_variable_trailing_context_error
 				end
+			end
+		end
+
+	override_options is
+			-- Override options specified in the input file.
+		do
+			if options_overrider /= Void then
+				options_overrider.override_description (description)
 			end
 		end
 
@@ -1012,7 +1044,7 @@ feature {NONE} -- Error handling
 		local
 			an_error: LX_ALL_START_CONDITIONS_EOF_ERROR
 		do
-			if not no_warning then
+			if not description.no_warning then
 				!! an_error.make (filename, line_nb)
 				error_handler.report_warning (an_error)
 			end
@@ -1087,7 +1119,7 @@ feature {NONE} -- Error handling
 		local
 			an_error: LX_START_CONDITION_SPECIFIED_TWICE_ERROR
 		do
-			if not no_warning then
+			if not description.no_warning then
 				!! an_error.make (filename, line_nb, sc)
 				error_handler.report_warning (an_error)
 			end
@@ -1172,6 +1204,9 @@ feature {NONE} -- Constants
 
 	Initial_max_pending_rules: INTEGER is 10
 			-- Maximum number of pending rules
+
+	Initial_max_start_conditions: INTEGER is 40
+			-- Maximum number of start conditions
 
 	Eof_nfa: LX_NFA is
 			-- End-of-file NFA

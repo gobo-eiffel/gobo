@@ -7,7 +7,7 @@ indexing
 
 	library:    "Gobo Eiffel Lexical Library"
 	author:     "Eric Bezault <ericb@gobosoft.com>"
-	copyright:  "Copyright (c) 1999, Eric Bezault and others"
+	copyright:  "Copyright (c) 1999-2001, Eric Bezault and others"
 	license:    "Eiffel Forum Freeware License v1 (see forum.txt)"
 	date:       "$Date$"
 	revision:   "$Revision$"
@@ -87,7 +87,7 @@ CCL_CHAR			[^\\\n\]]|{ESC}
 	^"%}"		{
 					last_string := text_substring (1, text_count - 2)
 					line_nb := line_nb + last_string.occurrences ('%N')
-					eiffel_header.force_last (last_string)
+					description.eiffel_header.force_last (last_string)
 					set_start_condition (INITIAL)
 				}
 }
@@ -107,43 +107,43 @@ CCL_CHAR			[^\\\n\]]|{ESC}
 
 <OPTION>{
 	{WS}|{C}		-- Separator or comment.
-	backup			backing_up_report := True
-	nobackup		backing_up_report := False
+	backup			description.set_backing_up_report (True)
+	nobackup		description.set_backing_up_report (False)
 	case-sensitive|nocase-insensitive	{
-					case_insensitive := False
+					description.set_case_insensitive (False)
 				}
 	case-insensitive|nocase-sensitive	{
-					case_insensitive := True
+					description.set_case_insensitive (True)
 				}
-	debug			debug_mode := True
-	nodebug			debug_mode := False
-	default			no_default_rule := False
-	nodefault		no_default_rule := True
-	ecs				equiv_classes_used := True
-	noecs			equiv_classes_used := False
-	full			full_table := True
-	nofull			full_table := False
-	meta-ecs		meta_equiv_classes_used := True
-	nometa-ecs		meta_equiv_classes_used := False
-	reject			reject_used := True
-	noreject		reject_used := False
-	line			line_used := True
-	noline			line_used := False
-	position		position_used := True
-	noposition		position_used := False
-	pre-action		pre_action_used := True
-	nopre-action	pre_action_used := False
-	post-action		post_action_used := True
-	nopost-action	post_action_used := False
-	pre-eof-action		pre_eof_action_used := True
-	nopre-eof-action	pre_eof_action_used := False
-	post-eof-action		post_eof_action_used := True
-	nopost-eof-action	post_eof_action_used := False
+	debug			description.set_debug_mode (True)
+	nodebug			description.set_debug_mode (False)
+	default			description.set_no_default_rule (False)
+	nodefault		description.set_no_default_rule (True)
+	ecs				description.set_equiv_classes_used (True)
+	noecs			description.set_equiv_classes_used (False)
+	full			description.set_full_table (True)
+	nofull			description.set_full_table (False)
+	meta-ecs		description.set_meta_equiv_classes_used (True)
+	nometa-ecs		description.set_meta_equiv_classes_used (False)
+	reject			description.set_reject_used (True)
+	noreject		description.set_reject_used (False)
+	line			description.set_line_used (True)
+	noline			description.set_line_used (False)
+	position		description.set_position_used (True)
+	noposition		description.set_position_used (False)
+	pre-action		description.set_pre_action_used (True)
+	nopre-action	description.set_pre_action_used (False)
+	post-action		description.set_post_action_used (True)
+	nopost-action	description.set_post_action_used (False)
+	pre-eof-action		description.set_pre_eof_action_used (True)
+	nopre-eof-action	description.set_pre_eof_action_used (False)
+	post-eof-action		description.set_post_eof_action_used (True)
+	nopost-eof-action	description.set_post_eof_action_used (False)
 	warn		{
-					no_warning := False
+					description.set_no_warning (False)
 				}
 	nowarn		{
-					no_warning := True
+					description.set_no_warning (True)
 				}
 
 	outfile=		set_start_condition (OUTFILE)
@@ -168,11 +168,11 @@ CCL_CHAR			[^\\\n\]]|{ESC}
 
 <OUTFILE>{
 	\"[^"\n]*\"		{
-					output_filename := text_substring (2, text_count - 1)
+					description.set_output_filename (text_substring (2, text_count - 1))
 					set_start_condition (OPTION)
 				}
 	.			{
-					output_filename := Void
+					description.set_output_filename (Void)
 					report_missing_quote_error
 					set_start_condition (RECOVER1)
 				}

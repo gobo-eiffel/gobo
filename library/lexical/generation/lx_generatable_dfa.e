@@ -6,7 +6,7 @@ indexing
 
 	library:    "Gobo Eiffel Lexical Library"
 	author:     "Eric Bezault <ericb@gobosoft.com>"
-	copyright:  "Copyright (c) 1999, Eric Bezault and others"
+	copyright:  "Copyright (c) 1999-2001, Eric Bezault and others"
 	license:    "Eiffel Forum Freeware License v1 (see forum.txt)"
 	date:       "$Date$"
 	revision:   "$Revision$"
@@ -24,32 +24,19 @@ inherit
 		export
 			{LX_TABLES} all;
 			{ANY} to_tables
-		undefine
-			is_equal, copy
 		end
 
 	UT_CHARACTER_CODES
 		export
 			-- Bug in SE -0.81: Unable to load class NONE!
 			-- {NONE} all
-		undefine
-			is_equal, copy
 		end
 
 	KL_IMPORTED_INTEGER_ROUTINES
-		undefine
-			is_equal, copy
-		end
 
 	KL_IMPORTED_OUTPUT_STREAM_ROUTINES
-		undefine
-			is_equal, copy
-		end
 
 	UT_IMPORTED_FORMATTERS
-		undefine
-			is_equal, copy
-		end
 
 feature {NONE} -- Initialization
 
@@ -97,8 +84,8 @@ feature {NONE} -- Initialization
 	put_eob_state is
 			-- Create an end-of-buffer state and insert it to current DFA.
 		require
-			not_built: count = start_states_count
-			not_full: not is_full
+			not_built: states.count = start_states_count
+			not_full: not states.is_full
 		local
 			eob_state: LX_DFA_STATE
 			nfa_states: DS_ARRAYED_LIST [LX_NFA_STATE]
@@ -108,8 +95,8 @@ feature {NONE} -- Initialization
 			!! eob_state.make (nfa_states, minimum_symbol, maximum_symbol)
 			!! a_rule.make_default (yyEnd_of_buffer)
 			eob_state.accepted_rules.force_first (a_rule)
-			put_last (eob_state)
-			eob_state.set_id (count)
+			states.put_last (eob_state)
+			eob_state.set_id (states.count)
 		end
 
 feature -- Generation
@@ -155,11 +142,11 @@ feature -- Generation
 		do
 			from
 				i := start_states_count + 1
-				nb := count
+				nb := states.count
 			until
 				i > nb
 			loop
-				a_state := item (i)
+				a_state := states.item (i)
 				if not a_state.is_accepting then
 					a_file.put_string ("State #")
 					a_file.put_integer (a_state.id)
@@ -709,13 +696,15 @@ feature {NONE} -- Generation
 			i, nb: INTEGER
 			j, yy_rules_upper: INTEGER
 			a_nfa_state: LX_NFA_STATE
+			nfa_states: DS_ARRAYED_LIST [LX_NFA_STATE]
 			line_numbers: DS_ARRAYED_LIST [INTEGER]
 			line_nb: INTEGER
 		do
-			nb := a_state.count
+			nfa_states := a_state.states
+			nb := nfa_states.count
 			!! line_numbers.make (nb)
 			from i := 1 until i > nb loop
-				a_nfa_state := a_state.item (i)
+				a_nfa_state := nfa_states.item (i)
 				from
 					j := yy_rules.lower
 					yy_rules_upper := yy_rules.upper

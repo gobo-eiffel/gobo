@@ -6,7 +6,7 @@ indexing
 
 	library:    "Gobo Eiffel Lexical Library"
 	author:     "Eric Bezault <ericb@gobosoft.com>"
-	copyright:  "Copyright (c) 1999, Eric Bezault and others"
+	copyright:  "Copyright (c) 1999-2001, Eric Bezault and others"
 	license:    "Eiffel Forum Freeware License v1 (see forum.txt)"
 	date:       "$Date$"
 	revision:   "$Revision$"
@@ -15,7 +15,7 @@ class LX_DESCRIPTION
 
 creation
 
-	make, make_from_description
+	make
 
 feature {NONE} -- Initialization
 
@@ -30,16 +30,6 @@ feature {NONE} -- Initialization
 			!! eof_rules.make (Initial_max_start_conditions)
 			!! eiffel_header.make (1)
 			!! start_conditions.make_with_initial (Initial_max_start_conditions)
-		end
-
-	make_from_description (other: like to_description) is
-			-- Make a new scanner description with information from `other'.
-		require
-			other_not_void: other /= Void
-		do
-			from_description (other)
-		ensure
-			-- set: forall attribute, attribute = other.attribute
 		end
 
 feature -- Initialization
@@ -433,6 +423,18 @@ feature -- Setting
 			equiv_classes_set: equiv_classes = ec
 		end
 
+	create_equiv_classes is
+			-- Create `equiv_classes'.
+		require
+			equiv_classes_used: equiv_classes_used
+		do
+			!! equiv_classes.make (1, characters_count)
+		ensure
+			equiv_classes_created: equiv_classes /= Void
+			lower_set: equiv_classes.lower = 1
+			upper_set: equiv_classes.upper = characters_count
+		end
+
 	set_bol_needed (b: like bol_needed) is
 			-- Set `bol_needed' to `b'.
 		do
@@ -455,57 +457,6 @@ feature -- Setting
 			eiffel_code := code
 		ensure
 			eiffel_code_set: eiffel_code = code
-		end
-
-feature -- Conversion
-
-	from_description (other: like to_description) is
-			-- Set current scanner description data with
-			-- information from `other'.
-		require
-			other_not_void: other /= Void
-		do
-			array_size := other.array_size
-			backing_up_report := other.backing_up_report
-			backing_up_filename := other.backing_up_filename
-			case_insensitive := other.case_insensitive
-			characters_count := other.characters_count
-			debug_mode := other.debug_mode
-			equiv_classes_used := other.equiv_classes_used
-			meta_equiv_classes_used := other.meta_equiv_classes_used
-			full_table := other.full_table
-			no_default_rule := other.no_default_rule
-			no_warning := other.no_warning
-			actions_separated := other.actions_separated
-			inspect_used := other.inspect_used
-			reject_used := other.reject_used
-			line_used := other.line_used
-			position_used := other.position_used
-			pre_action_used := other.pre_action_used
-			post_action_used := other.post_action_used
-			pre_eof_action_used := other.pre_eof_action_used
-			post_eof_action_used := other.post_eof_action_used
-			input_filename := other.input_filename
-			output_filename := other.output_filename
-			start_conditions := other.start_conditions
-			rules := other.rules
-			eof_rules := other.eof_rules
-			equiv_classes := other.equiv_classes
-			bol_needed := other.bol_needed
-			variable_trail_context := other.variable_trail_context
-			eiffel_code := other.eiffel_code
-			eiffel_header := other.eiffel_header
-		ensure
-			-- set: forall attribute, attribute = other.attribute
-		end
-
-	to_description: LX_DESCRIPTION is
-			-- New scanner description made from current description
-		do
-			!! Result.make_from_description (Current)
-		ensure
-			description_not_void: Result /= Void
-			-- set: forall attribute, Result.attribute = attribute
 		end
 
 feature {NONE} -- Constants
@@ -560,7 +511,7 @@ invariant
 	no_void_rule: not rules.has (Void)
 	eof_rules_not_void: eof_rules /= Void
 	no_void_eof_rule: not eof_rules.has (Void)
-	start_conditions_not_void: start_conditions /= void
+	start_conditions_not_void: start_conditions /= Void
 	positive_characters_count: characters_count > 0
 	eiffel_header_not_void: eiffel_header /= Void
 	no_void_eiffel_header: not eiffel_header.has (Void)

@@ -6,7 +6,7 @@ indexing
 
 	library:    "Gobo Eiffel Lexical Library"
 	author:     "Eric Bezault <ericb@gobosoft.com>"
-	copyright:  "Copyright (c) 1999, Eric Bezault and others"
+	copyright:  "Copyright (c) 1999-2001, Eric Bezault and others"
 	license:    "Eiffel Forum Freeware License v1 (see forum.txt)"
 	date:       "$Date$"
 	revision:   "$Revision$"
@@ -16,22 +16,8 @@ class LX_DFA_STATE
 inherit
 
 	LX_STATE
-		undefine
-			copy
 		redefine
 			is_equal
-		select
-			is_equal
-		end
-
-	DS_ARRAYED_LIST [LX_NFA_STATE]
-		rename
-			make as make_arrayed_list,
-			is_equal as arrayed_list_is_equal
-		export
-			{ANY} item, count;
-			{DS_ARRAYED_LIST} storage;
-			{NONE} all
 		end
 
 creation
@@ -57,7 +43,7 @@ feature {NONE} -- Initialization
 			epsilon_transition: LX_EPSILON_TRANSITION [LX_NFA_STATE]
 		do		
 			nb := nfa_states.count
-			make_arrayed_list (nb)
+			!! states.make (nb)
 			!! transitions.make (min, max)
 			!! accepted_rules.make (nb)
 			!! accepted_head_rules.make (nb)
@@ -66,7 +52,7 @@ feature {NONE} -- Initialization
 				if state.transition /= Void then
 					epsilon_transition ?= state.transition
 					if epsilon_transition = Void then
-						force_last (state)
+						states.force_last (state)
 						code := code + state.id
 					else
 						nfa_state := epsilon_transition.target
@@ -89,8 +75,8 @@ feature {NONE} -- Initialization
 					else
 						accepted_rules.force_last (state.accepted_rule)
 					end
-					if is_empty or else last /= state then
-						force_last (state)
+					if states.is_empty or else states.last /= state then
+						states.force_last (state)
 						code := code + state.id
 					end
 				end
@@ -99,7 +85,7 @@ feature {NONE} -- Initialization
 				-- The NFA states are sorted so that we can compare current
 				-- states to other DFA states quickly. Bubble sort is used
 				-- because there probably aren't very many states.
-			sort (bubble_sorter)
+			states.sort (bubble_sorter)
 				-- The accepted rule sets are sorted in increasing order
 				-- so that the disambiguating rule (i.e. the first listed
 				-- is considered match in the event of ties) will work.
@@ -111,7 +97,7 @@ feature {NONE} -- Initialization
 			end
 			accepted_head_rules.sort (rule_sorter)
 		ensure
-			sorted: sorted (bubble_sorter)
+			sorted: states.sorted (bubble_sorter)
 			minimum_symbol_set: minimum_symbol = min
 			maximum_symbol_set: maximum_symbol = max
 		end
@@ -120,6 +106,9 @@ feature -- Access
 
 	id: INTEGER
 			-- State id
+
+	states: DS_ARRAYED_LIST [LX_NFA_STATE]
+			-- NFA states making up current state
 
 	accepted_rules: DS_ARRAYED_LIST [LX_RULE]
 			-- Accepted rule set
@@ -202,8 +191,8 @@ feature -- Comparison
 	is_equal (other: like Current): BOOLEAN is
 			-- Are current state and `other' equal?
 		do
-			if code = other.code then
-				Result := arrayed_list_is_equal (other)
+			if same_type (other) and code = other.code then
+				Result := states.is_equal (other.states)
 			end
 		end
 
@@ -217,10 +206,10 @@ feature {LX_DFA} -- DFA construction
 			transition: LX_TRANSITION [LX_NFA_STATE]
 			nfa_states: DS_ARRAYED_LIST [LX_NFA_STATE]
 		do
-			nb := count
+			nb := states.count
 			!! nfa_states.make (nb)
 			from i := 1 until i > nb loop
-				transition := item (i).transition
+				transition := states.item (i).transition
 				if transition /= Void and then transition.labeled (symbol) then
 					nfa_states.put_last (transition.target)
 				end
@@ -243,9 +232,9 @@ feature {LX_DFA} -- DFA construction
 			i, nb: INTEGER
 			transition: LX_TRANSITION [LX_NFA_STATE]
 		do
-			nb := count
+			nb := states.count
 			from i := 1 until i > nb loop
-				transition := item (i).transition
+				transition := states.item (i).transition
 				if transition /= Void then
 					transition.record (equiv_classes)
 				end
@@ -285,6 +274,8 @@ feature {LX_DFA_STATE} -- Implementation
 
 invariant
 
+	states_not_void: states /= Void
+	no_void_states: not states.has (Void)
 	transitions_not_void: transitions /= Void
 	accepted_rules_not_void: accepted_rules /= Void
 	no_void_accepted_rule: not accepted_rules.has (Void)

@@ -7,7 +7,7 @@ indexing
 
 	library:    "Gobo Eiffel Lexical Library"
 	author:     "Eric Bezault <ericb@gobosoft.com>"
-	copyright:  "Copyright (c) 1999, Eric Bezault and others"
+	copyright:  "Copyright (c) 1999-2001, Eric Bezault and others"
 	license:    "Eiffel Forum Freeware License v1 (see forum.txt)"
 	date:       "$Date$"
 	revision:   "$Revision$"
@@ -46,7 +46,7 @@ feature
 
 Regexp: Init_pattern Pattern
 		{
-			if equiv_classes /= Void then
+			if description.equiv_classes /= Void then
 				build_equiv_classes
 			end
 			check_options
@@ -55,8 +55,8 @@ Regexp: Init_pattern Pattern
 
 Init_pattern: -- Empty
 		{
-			if equiv_classes_used then
-				!! equiv_classes.make (1, characters_count)
+			if description.equiv_classes_used then
+				description.create_equiv_classes
 			end
 				-- Initialize for a parse of one pattern.
 			in_trail_context := False

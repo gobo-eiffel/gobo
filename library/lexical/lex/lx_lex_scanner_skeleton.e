@@ -7,7 +7,7 @@ indexing
 
 	library:    "Gobo Eiffel Lexical Library"
 	author:     "Eric Bezault <ericb@gobosoft.com>"
-	copyright:  "Copyright (c) 1999, Eric Bezault and others"
+	copyright:  "Copyright (c) 1999-2001, Eric Bezault and others"
 	license:    "Eiffel Forum Freeware License v1 (see forum.txt)"
 	date:       "$Date$"
 	revision:   "$Revision$"
@@ -22,13 +22,6 @@ inherit
 			reset as reset_compressed_scanner_skeleton
 		end
 
-	LX_DESCRIPTION
-		rename
-			make as make_description,
-			make_from_description as make_descrition_from_description,
-			reset as reset_description
-		end
-		
 	UT_CHARACTER_CODES
 		export
 			{NONE} all
@@ -43,7 +36,7 @@ feature {NONE} -- Initialization
 		require
 			handler_not_void: handler /= Void
 		do
-			make_description
+			!! description.make
 			make_with_buffer (Empty_buffer)
 			error_handler := handler
 			!! name_definitions.make (Initial_max_nb_names)
@@ -62,7 +55,7 @@ feature {NONE} -- Initialization
 			a_description_not_void: a_description /= Void
 			handler_not_void: handler /= Void
 		do
-			from_description (a_description)
+			description := a_description
 			make_with_buffer (Empty_buffer)
 			error_handler := handler
 			!! name_definitions.make (Initial_max_nb_names)
@@ -70,6 +63,7 @@ feature {NONE} -- Initialization
 			successful := True
 			line_nb := 1
 		ensure
+			description_set: description = a_description
 			error_handler_set: error_handler = handler
 		end
 
@@ -79,7 +73,7 @@ feature -- Initialization
 			-- Reset scanner before scanning next input.
 		do
 			reset_compressed_scanner_skeleton
-			reset_description
+			description.reset
 			name_definitions.wipe_out
 			character_classes.wipe_out
 			successful := True
@@ -94,6 +88,9 @@ feature -- Status report
 			-- Has no fatal error been detected?
 
 feature -- Access
+
+	description: LX_DESCRIPTION
+			-- Scanner description
 
 	error_handler: UT_ERROR_HANDLER
 			-- Error handler
@@ -170,7 +167,10 @@ feature {NONE} -- Implementation
 			-- insert it at the end of `start_conditions'.
 		require
 			a_name_not_void: a_name /= Void
+		local
+			start_conditions: LX_START_CONDITIONS
 		do
+			start_conditions := description.start_conditions
 			if start_conditions.has_start_condition (a_name) then
 				report_start_condition_declared_twice_error (a_name)
 			else
@@ -183,7 +183,7 @@ feature {NONE} -- Implementation
 			-- whose printable representation is held in `text'.
 			-- Set `last_value' accordingly.
 		do
-			if a_code < characters_count then
+			if a_code < description.characters_count then
 				last_value := a_code
 			else
 				report_character_out_of_range_error (text)
@@ -485,6 +485,7 @@ feature {NONE} -- Constants
 
 invariant
 
+	description_not_void: description /= Void
 	error_handler_not_void: error_handler /= Void
 	name_definitions_not_void: name_definitions /= Void
 	no_void_name_definition: not name_definitions.has_item (Void)

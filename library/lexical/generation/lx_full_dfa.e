@@ -6,7 +6,7 @@ indexing
 
 	library:    "Gobo Eiffel Lexical Library"
 	author:     "Eric Bezault <ericb@gobosoft.com>"
-	copyright:  "Copyright (c) 1999, Eric Bezault and others"
+	copyright:  "Copyright (c) 1999-2001, Eric Bezault and others"
 	license:    "Eiffel Forum Freeware License v1 (see forum.txt)"
 	date:       "$Date$"
 	revision:   "$Revision$"
@@ -21,29 +21,12 @@ inherit
 		redefine
 			build, print_constants,
 			print_backing_up_report
-		select
-			print_constants,
-			print_backing_up_report
-		end
-
-	LX_GENERATABLE_DFA
-		rename
-			make as make_generatable_dfa,
-			print_constants as generatable_dfa_print_constants,
-			print_backing_up_report as generatable_dfa_print_backing_up_report
-		export
-			-- Bug in SE -0.81: Unable to load class NONE!
-			-- {NONE} all
-		redefine
-			build
 		end
 
 	LX_FULL_TABLES
 		export
 			{LX_FULL_TABLES, LX_DFA_REGULAR_EXPRESSION} all;
 			{ANY} to_tables
-		undefine
-			is_equal, copy
 		end
 
 creation
@@ -76,7 +59,7 @@ feature -- Generation
 	print_backing_up_report (a_file: like OUTPUT_STREAM_TYPE) is
 			-- Print a backing-up report to `a_file'.
 		do
-			generatable_dfa_print_backing_up_report (a_file)
+			Precursor (a_file)
 			inspect backing_up_count
 			when 0 then
 				a_file.put_string ("No backing up.%N")
@@ -132,7 +115,7 @@ feature {NONE} -- Generation
 			BOOLEAN_FORMATTER_.put_eiffel_boolean (a_file, yyBacking_up)
 			a_file.put_string ("%N%T%T%T-- Does current scanner back up?%N%
 				%%T%T%T-- (i.e. does it have non-accepting states)%N%N")
-			generatable_dfa_print_constants (a_file)
+			Precursor (a_file)
 		end
 
 feature -- Building
@@ -146,15 +129,15 @@ feature -- Building
 			backing_up_count := 0
 			!! partitions.make (minimum_symbol, maximum_symbol)
 			from i := 1 until i > start_states_count loop
-				a_state := item (i)
+				a_state := states.item (i)
 				build_transitions (a_state)
 				i := i + 1
 			end
 				-- Process end-of-buffer state.
-			a_state := item (i)
+			a_state := states.item (i)
 			build_transitions (a_state)
-			from i := i + 1 until i > count loop
-				a_state := item (i)
+			from i := i + 1 until i > states.count loop
+				a_state := states.item (i)
 				build_transitions (a_state)
 				if not a_state.is_accepting then
 					backing_up_count := backing_up_count + 1
@@ -184,14 +167,14 @@ feature {NONE} -- Building
 				-- will be included in the transition table.
 				-- Build it from 0 to `maximum_symbol'.
 			yyNb_rows := maximum_symbol + 1
-			!! yy_nxt_.make (0, yyNb_rows * (count + 1) - 1)
+			!! yy_nxt_.make (0, yyNb_rows * (states.count + 1) - 1)
 			eob_state_id := start_states_count + 1
 			nb := yyNb_rows - 1
 				-- `0' entries for state #0.
 			j := yyNb_rows
-			from i := 1 until i > count loop
+			from i := 1 until i > states.count loop
 				from
-					a_state := item (i)
+					a_state := states.item (i)
 					transitions := a_state.transitions
 					if a_state.id = eob_state_id then
 						yy_nxt_.put (- eob_state_id, j)
@@ -228,10 +211,10 @@ feature {NONE} -- Building
 			i, nb: INTEGER
 			a_state: LX_DFA_STATE
 		do
-			nb := count
+			nb := states.count
 			!! yy_accept_.make (0, nb)
 			from i := 1 until i > nb loop
-				a_state := item (i)
+				a_state := states.item (i)
 				if a_state.is_accepting then
 					yy_accept_.put (a_state.accepted_rules.first.id, i)
 				else

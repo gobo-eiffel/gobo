@@ -7,7 +7,7 @@ indexing
 
 	library:    "Gobo Eiffel Lexical Library"
 	author:     "Eric Bezault <ericb@gobosoft.com>"
-	copyright:  "Copyright (c) 1999, Eric Bezault and others"
+	copyright:  "Copyright (c) 1999-2001, Eric Bezault and others"
 	license:    "Eiffel Forum Freeware License v1 (see forum.txt)"
 	date:       "$Date$"
 	revision:   "$Revision$"
@@ -50,7 +50,7 @@ creation
 Scanner_description: Section1 Section2 Init_rule Section3
 		{
 			process_default_rule
-			if equiv_classes /= Void then
+			if description.equiv_classes /= Void then
 				build_equiv_classes
 			end
 			check_options
@@ -59,8 +59,9 @@ Scanner_description: Section1 Section2 Init_rule Section3
 
 Section1: ENDSECT
 		{
-			if equiv_classes_used then
-				!! equiv_classes.make (1, characters_count)
+			override_options
+			if description.equiv_classes_used then
+				description.create_equiv_classes
 			end
 		}
 	;
@@ -92,7 +93,7 @@ Init_rule: -- Empty
 		{
 				-- Initialize for a parse of one rule.
 			in_trail_context := False
-			!! rule.make_default (rules.count + 1)
+			!! rule.make_default (description.rules.count + 1)
 		}
 	;
 
@@ -103,7 +104,7 @@ Start_condition: -- Empty
 	| Less_than '*' '>'
 		{
 			$$ := $1
-			start_condition_stack.append_start_conditions (start_conditions)
+			start_condition_stack.append_start_conditions (description.start_conditions)
 		}
 	| Less_than Name_list '>'
 		{ $$ := $1 }
@@ -336,7 +337,7 @@ Section3: -- Empty
 	| ENDSECT
 	| ENDSECT EIF_CODE
 		{
-			eiffel_code := $2
+			description.set_eiffel_code ($2)
 		}
 	;
 

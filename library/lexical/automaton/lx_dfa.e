@@ -6,7 +6,7 @@ indexing
 
 	library:    "Gobo Eiffel Lexical Library"
 	author:     "Eric Bezault <ericb@gobosoft.com>"
-	copyright:  "Copyright (c) 1999, Eric Bezault and others"
+	copyright:  "Copyright (c) 1999-2001, Eric Bezault and others"
 	license:    "Eiffel Forum Freeware License v1 (see forum.txt)"
 	date:       "$Date$"
 	revision:   "$Revision$"
@@ -16,14 +16,6 @@ class LX_DFA
 inherit
 
 	LX_AUTOMATON
-		undefine
-			is_equal, copy
-		end
-
-	DS_ARRAYED_LIST [LX_DFA_STATE]
-		rename
-			make as make_arrayed_list
-		end
 
 creation
 
@@ -64,7 +56,7 @@ feature {NONE} -- Initialization
 			nb := start_conditions.count
 				-- Make room for start states and
 				-- an eventual end-of-buffer state.
-			make_arrayed_list ((2 * nb + 1).max (Initial_max_dfas))
+			!! states.make ((2 * nb + 1).max (Initial_max_dfas))
 			set_nfa_state_ids (start_conditions)
 			from i := 1 until i > nb loop
 				put_start_condition (start_conditions.item (i))
@@ -76,7 +68,7 @@ feature {NONE} -- Initialization
 			maximum_symbol_set: maximum_symbol = max
 			state_states_count_set:
 				start_states_count = 2 * start_conditions.count
-			capacity_large_enough: capacity > start_states_count
+			capacity_large_enough: states.capacity > start_states_count
 		end
 
 feature -- Access
@@ -84,7 +76,7 @@ feature -- Access
 	start_state: LX_DFA_STATE is
 			-- DFA "INITIAL" start state
 		do
-			Result := first
+			Result := states.first
 		end
 
 	start_states: DS_ARRAYED_LIST [LX_DFA_STATE] is
@@ -94,7 +86,7 @@ feature -- Access
 		do
 			!! Result.make (start_states_count)
 			from i := 1 until i > start_states_count loop
-				Result.put_last (item (i))
+				Result.put_last (states.item (i))
 				i := i + 1
 			end
 		ensure
@@ -112,6 +104,9 @@ feature -- Access
 	backing_up_count: INTEGER
 			-- Number of DFA states requiring backing-up
 
+	states: DS_ARRAYED_LIST [LX_DFA_STATE]
+			-- States in DFA
+
 feature -- Element change
 
 	build is
@@ -123,11 +118,11 @@ feature -- Element change
 			!! partitions.make (minimum_symbol, maximum_symbol)
 			backing_up_count := 0
 			from i := 1 until i > start_states_count loop
-				build_transitions (item (i))
+				build_transitions (states.item (i))
 				i := i + 1
 			end
-			from until i > count loop
-				state := item (i)
+			from until i > states.count loop
+				state := states.item (i)
 				build_transitions (state)
 				if not state.is_accepting then
 					backing_up_count := backing_up_count + 1
@@ -153,7 +148,7 @@ feature {NONE} -- Implementation
 			start_condition: LX_START_CONDITION
 			patterns: DS_ARRAYED_LIST [LX_NFA]
 			nfa: LX_NFA
-			states: DS_ARRAYED_LIST [LX_NFA_STATE]
+			nfa_states: DS_ARRAYED_LIST [LX_NFA_STATE]
 			visited: DS_HASH_TABLE [LX_NFA, INTEGER]
 			i, nb, j, nb2, k, nb3: INTEGER
 			key, new_id: INTEGER
@@ -170,10 +165,10 @@ feature {NONE} -- Implementation
 					key := nfa.start_state.id
 					if not visited.has (key) or else visited.item (key) /= nfa then
 						visited.force (nfa, new_id)
-						states := nfa.states
-						nb3 := states.count
+						nfa_states := nfa.states
+						nb3 := nfa_states.count
 						from k := 1 until k > nb3 loop
-							states.item (k).set_id (new_id)
+							nfa_states.item (k).set_id (new_id)
 							new_id := new_id + 1
 							k := k + 1
 						end
@@ -187,10 +182,10 @@ feature {NONE} -- Implementation
 					key := nfa.start_state.id
 					if not visited.has (key) or else visited.item (key) /= nfa then
 						visited.force (nfa, new_id)
-						states := nfa.states
-						nb3 := states.count
+						nfa_states := nfa.states
+						nb3 := nfa_states.count
 						from k := 1 until k > nb3 loop
-							states.item (k).set_id (new_id)
+							nfa_states.item (k).set_id (new_id)
 							new_id := new_id + 1
 							k := k + 1
 						end
@@ -204,7 +199,7 @@ feature {NONE} -- Implementation
 	put_start_condition (start_condition: LX_START_CONDITION) is
 			-- Add start states associated with `start_condition'.
 		require
-			not_full: count + 2 <= capacity
+			not_full: states.count + 2 <= states.capacity
 			start_condition_not_void: start_condition /= Void
 		local
 			patterns, bol_patterns: DS_ARRAYED_LIST [LX_NFA]
@@ -230,11 +225,11 @@ feature {NONE} -- Implementation
 				i := i + 1
 			end
 			!! state.make (nfa_states, minimum_symbol, maximum_symbol)
-			put_last (state)
-			state.set_id (count)
+			states.put_last (state)
+			state.set_id (states.count)
 			!! state.make (nfa_bol_states, minimum_symbol, maximum_symbol)
-			put_last (state)
-			state.set_id (count)
+			states.put_last (state)
+			state.set_id (states.count)
 		end
 
 	build_transitions (state: LX_DFA_STATE) is
@@ -251,8 +246,8 @@ feature {NONE} -- Implementation
 			symbols: ARRAY [BOOLEAN]
 		do
 			nb := partitions.capacity
-			if capacity - count < nb then
-				resize (capacity + nb + Max_dfas_increment)
+			if states.capacity - states.count < nb then
+				resize (states.capacity + nb + Max_dfas_increment)
 			end
 			partitions.initialize
 			state.partition (partitions)
@@ -279,17 +274,17 @@ feature {NONE} -- Implementation
  			-- otherwise insert `state' into DFA
 		require
 			state_not_void: state /= Void
-			not_full: not is_full
+			not_full: not states.is_full
 		local
 			i, nb: INTEGER
 		do
 			from
 				i := start_states_count + 1
-				nb := count
+				nb := states.count
 			until
 				Result /= Void or i > nb
 			loop
-				Result := item (i)
+				Result := states.item (i)
 				if not Result.is_equal (state) then
 					Result := Void
 					i := i + 1
@@ -297,13 +292,24 @@ feature {NONE} -- Implementation
 			end
 			if Result = Void then
 				Result := state
-				put_last (state)
-				state.set_id (count)
+				states.put_last (state)
+				state.set_id (states.count)
 			end
 		ensure
 			new_state_not_void: Result /= Void
 			same_state: Result.is_equal (state)
-			has_new_state: has (Result)
+			has_new_state: states.has (Result)
+		end
+
+feature {NONE} -- Resizing
+
+	resize (n: INTEGER) is
+			-- Resize DFA so that it can contain upto `n' states.
+			-- Do not lose any states.
+		require
+			n_large_enough: n >= states.capacity
+		do
+			states.resize (n)
 		end
 
 feature {NONE} -- Constants
@@ -314,12 +320,13 @@ feature {NONE} -- Constants
 
 invariant
 
-	positive_count: count > 0
-	no_void_state: not has (Void)
+	states_not_void: states /= Void
+	no_void_state: not states.has (Void)
+	at_least_one_state: not states.is_empty
 	positive_start_states_count: start_states_count > 0
-	start_states_count_small_enough: start_states_count <= count
+	start_states_count_small_enough: start_states_count <= states.count
 	positive_backing_up_count: backing_up_count >= 0
---	min_symbol: forall state in Current, state.minimum_symbol = minimum_symbol
---	max_symbol: forall state in Current, state.maximum_symbol = maximum_symbol
+--	min_symbol: forall state in states, state.minimum_symbol = minimum_symbol
+--	max_symbol: forall state in states, state.maximum_symbol = maximum_symbol
 
 end -- class LX_DFA
