@@ -132,7 +132,7 @@ feature {NONE} -- Tables
 		once
 			Result := INTEGER_ARRAY_.make_from_array (<<
 			    1,    0,    0,    3,    0,    6,    0,    2,    0,    0,
-			   11,    5,    4,    0,    0,    0,    0,   12,    0,    0,
+			   11,    5,    4,    0,    0,    0,    0,   12,   10,    9,
 			    0,    0,    0,    0>>, 0)
 		end
 
@@ -241,7 +241,7 @@ feature {NONE} -- Scanner
 			if INPUT_STREAM_.end_of_input (std.input) then
 					-- Return end-of-file
 				last_token := 0
-			elseif c = '.' or (c >= '0' and c <= '9') then
+			elseif (c >= '0' and c <= '9') then
 					-- Process numbers
 				last_token := NUM
 				from
@@ -251,11 +251,25 @@ feature {NONE} -- Scanner
 					c := std.input.last_character
 				until
 					INPUT_STREAM_.end_of_input (std.input) or else
-					(c /= '.' and (c < '0' or c > '9'))
+					(c < '0' or c > '9')
 				loop
 					buffer.append_character (c)
 					std.input.read_character
 					c := std.input.last_character
+				end
+				if not INPUT_STREAM_.end_of_input (std.input) and then c = '.' then
+					from
+						buffer.append_character ('.')
+						std.input.read_character
+						c := std.input.last_character
+					until
+						INPUT_STREAM_.end_of_input (std.input) or else
+						(c < '0' or c > '9')
+					loop
+						buffer.append_character (c)
+						std.input.read_character
+						c := std.input.last_character
+					end
 				end
 				if not INPUT_STREAM_.end_of_input (std.input) then
 					pending_character := c
