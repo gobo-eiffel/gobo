@@ -115,7 +115,7 @@ feature -- String handling
 					a_target.append_string ("%%%"")
 				else
 					a_target.append_string ("%%/")
-					INTEGER_FORMATTER_.append_decimal_integer (a_string, c.code)
+					INTEGER_FORMATTER_.append_decimal_integer (a_target, c.code)
 					a_target.append_character ('/')
 				end
 				i := i + 1
