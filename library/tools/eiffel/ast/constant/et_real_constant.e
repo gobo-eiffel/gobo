@@ -24,28 +24,23 @@ inherit
 
 	ET_CONSTANT
 		redefine
-			is_real_constant
+			reset, is_real_constant
 		end
 
 	ET_INDEXING_TERM
 
-feature -- Status report
+feature -- Initialization
 
-	is_real_constant: BOOLEAN is True
-			-- Is current constant a REAL constant?
+	reset is
+			-- Reset constant as it was when it was first parsed.
+		do
+			precision := '%/0/'
+		end
 
 feature -- Access
 
 	literal: STRING
 			-- Literal real absolute value
-
-	is_negative: BOOLEAN is
-			-- Is real value negative?
-		do
-			if sign /= Void then
-				Result := sign.is_minus
-			end
-		end
 
 	sign: ET_SYMBOL_OPERATOR
 			-- Sign; Void if none
@@ -61,6 +56,31 @@ feature -- Access
 			end
 		end
 
+feature -- Status report
+
+	is_negative: BOOLEAN is
+			-- Is real value negative?
+		do
+			if sign /= Void then
+				Result := sign.is_minus
+			end
+		end
+
+	is_real_32: BOOLEAN is
+			-- Is current constant a 32-bit signed real?
+		do
+			Result := precision = '%/32/'
+		end
+
+	is_double_64: BOOLEAN is
+			-- Is current constant a 64-bit signed double?
+		do
+			Result := precision = '%/64/'
+		end
+
+	is_real_constant: BOOLEAN is True
+			-- Is current constant a real constant?
+
 feature -- Setting
 
 	set_sign (a_sign: like sign) is
@@ -70,6 +90,29 @@ feature -- Setting
 		ensure
 			sign_set: sign = a_sign
 		end
+
+feature -- Status setting
+
+	set_real_32 is
+			-- Set current constant as a 32-bit signed real.
+		do
+			precision := '%/32/'
+		ensure
+			is_real_32: is_real_32
+		end
+
+	set_double_64 is
+			-- Set current constant as a 64-bit signed double.
+		do
+			precision := '%/64/'
+		ensure
+			is_double_64: is_double_64
+		end
+
+feature {NONE} -- Implementation
+
+	precision: CHARACTER
+			-- Precision code
 
 invariant
 

@@ -5,7 +5,7 @@ indexing
 		"Eiffel integer constants"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 1999-2002, Eric Bezault and others"
+	copyright: "Copyright (c) 1999-2004, Eric Bezault and others"
 	license: "Eiffel Forum License v2 (see forum.txt)"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -24,7 +24,7 @@ inherit
 
 	ET_CONSTANT
 		redefine
-			is_integer_constant
+			reset, is_integer_constant
 		end
 
 	ET_CHOICE_CONSTANT
@@ -36,18 +36,18 @@ inherit
 
 	ET_INDEXING_TERM
 
+feature -- Initialization
+
+	reset is
+			-- Reset constant as it was when it was first parsed.
+		do
+			precision := '%/0/'
+		end
+
 feature -- Access
 
 	literal: STRING
 			-- Literal integer absolute value
-
-	is_negative: BOOLEAN is
-			-- Is integer value negative?
-		do
-			if sign /= Void then
-				Result := sign.is_minus
-			end
-		end
 
 	value: INTEGER
 			-- Integer value set by last call
@@ -69,8 +69,40 @@ feature -- Access
 
 feature -- Status report
 
+	is_negative: BOOLEAN is
+			-- Is integer value negative?
+		do
+			if sign /= Void then
+				Result := sign.is_minus
+			end
+		end
+
+	is_integer_8: BOOLEAN is
+			-- Is current constant an 8-bit signed integer?
+		do
+			Result := precision = '%/8/'
+		end
+
+	is_integer_16: BOOLEAN is
+			-- Is current constant a 16-bit signed integer?
+		do
+			Result := precision = '%/16/'
+		end
+
+	is_integer_32: BOOLEAN is
+			-- Is current constant a 32-bit signed integer?
+		do
+			Result := precision = '%/32/'
+		end
+
+	is_integer_64: BOOLEAN is
+			-- Is current constant a 64-bit signed integer?
+		do
+			Result := precision = '%/64/'
+		end
+
 	is_integer_constant: BOOLEAN is True
-			-- Is current constant an INTEGER constant?
+			-- Is current constant an integer constant?
 
 	has_value_error: BOOLEAN
 			-- Has an overflow or underflow occurred during
@@ -86,6 +118,40 @@ feature -- Setting
 			sign_set: sign = a_sign
 		end
 
+feature -- Status setting
+
+	set_integer_8 is
+			-- Set current constant as an 8-bit signed integer.
+		do
+			precision := '%/8/'
+		ensure
+			is_integer_8: is_integer_8
+		end
+
+	set_integer_16 is
+			-- Set current constant as a 16-bit signed integer.
+		do
+			precision := '%/16/'
+		ensure
+			is_integer_16: is_integer_16
+		end
+
+	set_integer_32 is
+			-- Set current constant as a 32-bit signed integer.
+		do
+			precision := '%/32/'
+		ensure
+			is_integer_32: is_integer_32
+		end
+
+	set_integer_64 is
+			-- Set current constant as a 64-bit signed integer.
+		do
+			precision := '%/64/'
+		ensure
+			is_integer_64: is_integer_64
+		end
+
 feature -- Basic operations
 
 	compute_value is
@@ -95,6 +161,11 @@ feature -- Basic operations
 			-- underflow occurred during computation.
 		deferred
 		end
+
+feature {NONE} -- Implementation
+
+	precision: CHARACTER
+			-- Precision code
 
 invariant
 
