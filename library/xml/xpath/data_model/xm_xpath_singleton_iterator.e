@@ -48,7 +48,7 @@ feature -- Access
 			
 		end
 	
-		last_position: INTEGER is
+	last_position: INTEGER is
 			-- Last position (= number of items in sequence)
 		do
 			if value = Void then

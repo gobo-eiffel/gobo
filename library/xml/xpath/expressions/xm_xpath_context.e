@@ -34,6 +34,16 @@ feature -- Access
 	current_iterator: XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_ITEM]
 			-- Current iterator
 
+	context_item: XM_XPATH_ITEM is
+			-- The context item (".")
+		do
+			if current_iterator = Void then
+				Result := Void
+			else
+				Result := current_iterator.item_for_iteration
+			end
+		end
+
 feature -- Evaluation
 
 	evaluate_local_variable (a_slot_number: INTEGER): XM_XPATH_VALUE is

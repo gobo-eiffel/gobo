@@ -15,7 +15,10 @@ class XM_XPATH_AXIS_EXPRESSION
 inherit
 
 	XM_XPATH_COMPUTED_EXPRESSION
-
+		redefine
+-- TODO			iterator, ...
+		end
+	
 	XM_XPATH_AXIS
 
 creation
@@ -28,8 +31,10 @@ feature {NONE} -- Initialization
 			-- TODO
 		do
 			axis := an_axis_type
+			node_test := a_node_test
 		ensure
 			axis_set: axis = an_axis_type
+			node_test_set: node_test = a_node_test
 		end
 
 feature -- Access
@@ -43,7 +48,6 @@ feature -- Access
 	axis: INTEGER
 			-- Type of axis
 
-
 	node_test: XM_XPATH_NODE_TEST
 			-- Node test
 
@@ -56,9 +60,19 @@ feature -- Status report
 		do
 			if node_test = Void then
 				test_string := "node()"
+				debug ("XPath Axis Expression")
+					std.error.put_string ("Axis expression: - no node-test present")
+					std.error.put_new_line
+				end
 			else
 				test_string := node_test.original_text
+				debug ("XPath Axis Expression")
+					std.error.put_string ("Axis expression: - test string is")
+					std.error.put_string (test_string)
+					std.error.put_new_line
+				end
 			end
+
 			a_string := STRING_.appended_string (indent (a_level), axis_name (axis))
 			a_string := STRING_.appended_string (a_string, "::")
 			a_string := STRING_.appended_string (a_string, test_string)

@@ -16,7 +16,7 @@ inherit
 
 	XM_XPATH_SEQUENCE_VALUE
 		redefine
-			item_type, display
+			item_type, display, evaluate_as_string, effective_boolean_value
 		end
 
 creation

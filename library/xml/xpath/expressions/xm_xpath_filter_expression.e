@@ -279,7 +279,7 @@ feature -- Optimization
 			an_empty_sequence: XM_XPATH_EMPTY_SEQUENCE
 			a_value: XM_XPATH_VALUE
 			a_number: XM_XPATH_NUMERIC_VALUE
-			a_last_fuction: XM_XPATH_LAST
+			a_last_function: XM_XPATH_LAST
 			an_is_last_expression: XM_XPATH_IS_LAST_EXPRESSION
 		do
 			a_result_expression := clone (Current)
@@ -309,8 +309,8 @@ feature -- Optimization
 					-- Check whether the filter is [last()].
 					-- (note, position()=last() will have already been simplified)
 
-					a_last_fuction ?= a_result_expression.filter
-					if a_last_fuction /= Void then
+					a_last_function ?= a_result_expression.filter
+					if a_last_function /= Void then
 						create an_is_last_expression.make (True)
 						a_result_expression.set_filter (an_is_last_expression)
 					end

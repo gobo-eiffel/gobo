@@ -51,7 +51,7 @@ feature -- Access
 		end
 
 	iterator (a_context: XM_XPATH_CONTEXT): XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_ITEM] is
-			-- Yields an iterator to iterate over the values of a sequence
+			-- Iterator over the values of a sequence
 		local
 			an_item: XM_XPATH_ITEM
 		do
@@ -73,10 +73,7 @@ feature -- Access
 		end
 
 	effective_boolean_value (a_context: XM_XPATH_CONTEXT): BOOLEAN is
-			-- Effective boolean value of the expression;
-			-- This returns `False' if the value is the empty sequence,
-			-- a zero-length string, a number equal to zero, or the boolean
-			-- `False'. Otherwise it returns `True'.
+			-- Effective boolean value
 		local
 			an_iterator: XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_ITEM]
 			an_item: XM_XPATH_ITEM
@@ -231,19 +228,14 @@ feature -- Status setting
 feature -- Optimization
 
 	simplify: XM_XPATH_EXPRESSION is
-			-- Simplify an expression;
-			-- The default implementation does nothing.
+			-- Simplify `Current';
+			-- This default implementation does nothing.
 		do
 			Result := Current
 		end
 
 	promote (an_offer: XM_XPATH_PROMOTION_OFFER): XM_XPATH_EXPRESSION is
-			-- Offer promotion for this subexpression
-			-- The offer will be accepted if the subexpression is not dependent on
-			-- the factors (e.g. the context item) identified in the PromotionOffer.
-			-- By default the offer is not accepted - this is appropriate in the case of simple expressions
-			-- such as constant values and variable references where promotion would give no performance
-			-- advantage. This method is always called at compile time.
+			-- Offer promotion for `Current'
 		do
 			Result := Current
 		end
@@ -251,12 +243,7 @@ feature -- Optimization
 feature -- Evaluation
 
 	evaluate_item (a_context: XM_XPATH_CONTEXT): XM_XPATH_ITEM is
-			-- Evaluate an expression as a single item;
-			-- This always returns either a single Item or Void
-			-- (denoting the empty sequence). No conversion is done. This routine should not be
-			-- used unless the static type of the expression is a subtype of "item" or "item?": that is,
-			-- it should not be called if the expression may return a sequence. There is no guarantee that
-			-- this condition will be detected.
+			-- Evaluate `Current' as a single item
 		local
 			an_iterator: XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_ITEM]
 		do
@@ -276,12 +263,7 @@ feature -- Evaluation
 		end
 
 	evaluate_as_string (a_context: XM_XPATH_CONTEXT): STRING is
-			-- Evaluate an expression as a String
-			-- This function must only be called in contexts where it is known
-			-- that the expression will return a single string (or where an empty sequence
-			-- is to be treated as a zero-length string). Implementations should not attempt to convert
-			-- the result to a string, other than converting () to "". This routine is used mainly to
-			-- evaluate expressions produced by compiling an attribute value template.
+			-- Evaluate `Current' as a String
 		local
 			an_item: XM_XPATH_ITEM
 			a_string: XM_XPATH_STRING_VALUE

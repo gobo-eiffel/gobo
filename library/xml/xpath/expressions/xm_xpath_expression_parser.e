@@ -1142,8 +1142,8 @@ feature {NONE} -- Implementation
 		local
 			a_path: XM_XPATH_EXPRESSION
 			another_path, a_third_path: XM_XPATH_PATH_EXPRESSION
-			root: XM_XPATH_ROOT_EXPRESSION
-			axis: XM_XPATH_AXIS_EXPRESSION
+			a_root: XM_XPATH_ROOT_EXPRESSION
+			an_axis: XM_XPATH_AXIS_EXPRESSION
 		do
 			debug ("XPath Expression Parser")
 				std.error.put_string ("Entered parse_path_expression%N")
@@ -1156,15 +1156,15 @@ feature {NONE} -- Implementation
 				if tokenizer.is_lexical_error then
 					report_parse_error (tokenizer.last_lexical_error)
 				else
-					create root.make
+					create a_root.make
 					if is_at_start_of_relative_path then
 						parse_relative_path
 						if not is_parse_error then
-							create another_path.make (root, internal_last_parsed_expression)
+							create another_path.make (a_root, internal_last_parsed_expression)
 							a_path := another_path
 						end
 					else
-						a_path := root
+						a_path := a_root
 					end
 					if not is_parse_error then
 						internal_last_parsed_expression := a_path
@@ -1178,10 +1178,10 @@ feature {NONE} -- Implementation
 				else
 					parse_relative_path
 					if not is_parse_error then
-						create root.make
-						create axis.make (Descendant_or_self_axis, Void)
-						create a_third_path.make (axis, internal_last_parsed_expression)
-						create another_path.make (root, a_third_path)
+						create a_root.make
+						create an_axis.make (Descendant_or_self_axis, Void)
+						create a_third_path.make (an_axis, internal_last_parsed_expression)
+						create another_path.make (a_root, a_third_path)
 						internal_last_parsed_expression := another_path
 					end
 				end
@@ -1203,7 +1203,7 @@ feature {NONE} -- Implementation
 		local
 			an_expression: XM_XPATH_EXPRESSION
 			a_path, another_path: XM_XPATH_PATH_EXPRESSION
-			axis: XM_XPATH_AXIS_EXPRESSION
+			an_axis: XM_XPATH_AXIS_EXPRESSION
 			an_operator: INTEGER
 		do
 			debug ("XPath Expression Parser")
@@ -1225,8 +1225,8 @@ feature {NONE} -- Implementation
 							if an_operator = Slash_token then
 								create {XM_XPATH_PATH_EXPRESSION} an_expression.make (an_expression, internal_last_parsed_expression)
 							else
-								create axis.make (Descendant_or_self_axis, Void)
-								create another_path.make (axis, internal_last_parsed_expression)
+								create an_axis.make (Descendant_or_self_axis, Void)
+								create another_path.make (an_axis, internal_last_parsed_expression)
 								create a_path.make (an_expression, another_path)
 								an_expression := a_path
 							end
@@ -1331,6 +1331,7 @@ feature {NONE} -- Implementation
 			debug ("XPath Expression Parser - tokens")
 				std.error.put_string ("Current token is ")
 				std.error.put_string (display_current_token)
+				std.error.put_new_line
 			end			
 			inspect
 				tokenizer.last_token
@@ -1356,7 +1357,7 @@ feature {NONE} -- Implementation
 						else
 							environment.bind_variable (a_token_value_fingerprint)
 							if environment.was_last_variable_bound then
-								create a_reference .make(environment.last_bound_variable)
+								create a_reference.make(environment.last_bound_variable)
 							else
 								a_message := STRING_.appended_string ("Variable $", a_token_value)
 								a_message := STRING_.appended_string (a_message, " has not been declared")
@@ -1640,6 +1641,11 @@ feature {NONE} -- Implementation
 			inspect
 				a_token
 			when Name_token then
+				debug ("XPath Expression Parser")
+					std.error.put_string ("Parse_node_test - name token is ")
+					std.error.put_string (a_token_value)
+					std.error.put_new_line
+				end
 				tokenizer.next
 				if tokenizer.is_lexical_error then
 					report_parse_error (tokenizer.last_lexical_error)

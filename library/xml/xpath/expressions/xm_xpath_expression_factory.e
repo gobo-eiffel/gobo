@@ -35,7 +35,7 @@ feature -- Creation
 			a_parser.parse (an_expression, a_context)
 			if not a_parser.is_parse_error then
 				an_expr := a_parser.last_parsed_expression
-				debug ("XPath expressions")
+				debug ("XPath expression factory")
 					std.error.put_string ("After parsing:%N%N")
 					an_expr.display (1, a_context.name_pool)
 					std.error.put_new_line
@@ -43,11 +43,11 @@ feature -- Creation
 				Result := an_expr.simplify
 				if an_expr.is_static_type_error then
 					-- TODO
-					debug ("XPath expressions")
+					debug ("XPath expression factory")
 						std.error.put_string ("Simplification failed!%N")
 					end					
 				else
-					debug ("XPath expressions")
+					debug ("XPath expression factory")
 						std.error.put_string ("After simplication:%N%N")
 						Result.display (1, a_context.name_pool)
 						std.error.put_new_line

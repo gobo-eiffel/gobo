@@ -39,7 +39,20 @@ feature -- Access
 		do
 			Result := Element_node
 		end
-	
+
+	attribute_value_by_name (a_uri: STRING; a_local_name:STRING): STRING is
+			-- Value of named attribute
+		require
+			uri_not_void: a_uri /= Void
+			local_name_not_void: a_local_name /= Void
+		deferred
+		end
+
+	attribute_value (a_fingerprint: INTEGER): STRING is
+			-- Value ofattribute identified by `a_fingerprint'
+		deferred
+		end
+
 feature -- Status report
 
 	is_nilled: BOOLEAN is

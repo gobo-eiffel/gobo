@@ -29,7 +29,7 @@ inherit
 feature -- Access
 	
 	item_type: INTEGER is
-			--Determine the data type of the expression, if possible;
+			-- Determine the data type of the expression, if possible;
 			-- All expression return sequences, in general;
 			-- This routine determines the type of the items within the
 			-- sequence, assuming that (a) this is known in advance,
@@ -184,11 +184,12 @@ feature -- Evaluation
 			-- this condition will be detected.
 		require
 			context_not_void: a_context /= Void
+			no_type_error: not is_static_type_error
 		deferred
 		end
 
 	evaluate_as_string (a_context: XM_XPATH_CONTEXT): STRING is
-			-- Evaluate an expression as a String
+			-- Evaluate as a String
 			-- This function must only be called in contexts where it is known
 			-- that the expression will return a single string (or where an empty sequence
 			-- is to be treated as a zero-length string). Implementations should not attempt to convert
@@ -197,9 +198,63 @@ feature -- Evaluation
 		require
 			-- TODO - turn the above into pre-conditions.
 			context_not_void: a_context /= Void
+			no_type_error: not is_static_type_error
 		deferred
 		ensure
 			string_not_void: Result /= Void
+		end
+
+	eagerly_evaluate (a_context: XM_XPATH_CONTEXT): XM_XPATH_EXPRESSION is
+			-- Eager evaluation of `Current'		
+		require
+			no_type_error: not is_static_type_error
+		local
+			a_length: INTEGER
+			an_item: XM_XPATH_ITEM
+			a_result_value: XM_XPATH_VALUE
+			a_closure: XM_XPATH_CLOSURE
+			an_extent: XM_XPATH_SEQUENCE_EXTENT
+			an_iterator: XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_ITEM]
+			an_empty_iterator: XM_XPATH_EMPTY_ITERATOR [XM_XPATH_ITEM]
+			a_singleton_iterator: XM_XPATH_SINGLETON_ITERATOR [XM_XPATH_ITEM]
+		do
+			a_result_value ?= Current
+			a_closure ?= Current
+			if a_result_value /= Void and then a_closure = Void then
+				Result := a_result_value
+			else
+				an_iterator := iterator (a_context)
+				an_empty_iterator ?= an_iterator
+				if an_empty_iterator /= Void then
+					create {XM_XPATH_EMPTY_SEQUENCE} Result.make
+				else
+					a_singleton_iterator ?= an_iterator
+					if a_singleton_iterator /= Void then
+						a_singleton_iterator.forth
+						an_item := a_singleton_iterator.item_for_iteration
+						if an_item = Void then
+							create {XM_XPATH_EMPTY_SEQUENCE} Result.make
+						else
+							Result := an_item.as_value -- May still be `Void'
+						end
+					else
+						create an_extent.make (an_iterator)
+						a_length := an_extent.count
+						if a_length = 0 then
+							create {XM_XPATH_EMPTY_SEQUENCE} Result.make
+						elseif a_length = 1 then
+							Result := an_extent.item_at (1).as_value
+						else
+							Result := an_extent
+						end
+					end
+				end
+			end
+			if Result = Void then
+				create {XM_XPATH_EMPTY_SEQUENCE} Result.make
+			end
+		ensure
+			evaluated: Result /= Void
 		end
 
 feature {XM_XPATH_EXPRESSION} -- Local

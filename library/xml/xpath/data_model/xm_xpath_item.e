@@ -39,6 +39,25 @@ feature -- Access
 		ensure
 			typed_value_not_void: Result /= Void
 		end
+
+feature -- Conversion
 	
+	as_value: XM_XPATH_VALUE is
+			-- Convert to a value
+		local
+			an_atomic_value: XM_XPATH_ATOMIC_VALUE
+			a_node: XM_XPATH_NODE
+		do
+			an_atomic_value ?= Current
+			if an_atomic_value /= Void then
+				Result := an_atomic_value
+			else
+				a_node ?= Current
+				if a_node /= Void then
+					create {XM_XPATH_SINGLETON_NODE} Result.make (a_node)
+				end
+			end
+		end
+
 end
 	

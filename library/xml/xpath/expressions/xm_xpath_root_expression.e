@@ -15,6 +15,11 @@ class XM_XPATH_ROOT_EXPRESSION
 inherit
 
 	XM_XPATH_SINGLE_NODE_EXPRESSION
+		redefine
+			same_expression, compute_cardinality
+		end
+
+	XM_XPATH_EXCEPTIONS
 
 creation
 
@@ -23,10 +28,53 @@ creation
 feature {NONE} -- Initialization
 
 	make is
-			-- TODO
+			-- Create intrinsic dependencies.
 		do
+			create intrinsic_dependencies.make (1, 6)
+			intrinsic_dependencies.put (True, 5) -- depends_upon_context_document												
 		end
 
+feature -- Access
+
+		node (a_context: XM_XPATH_CONTEXT): XM_XPATH_NODE is
+			-- The single node
+		local
+			an_item: XM_XPATH_ITEM
+			a_node: XM_XPATH_NODE
+			a_document: XM_XPATH_DOCUMENT
+			an_exception_message: STRING
+		do
+			an_item := a_context.context_item
+			if an_item = Void then
+				an_exception_message := STRING_.appended_string (Xpath_dynamic_error_prefix, "Evaluating '/': the context item is not set")
+				Exceptions.raise (an_exception_message)
+			else
+				a_node ?= an_item
+				if a_node = Void then
+					an_exception_message := STRING_.appended_string (Xpath_dynamic_error_prefix, "Evaluating '/': the context item is not a node")
+					Exceptions.raise (an_exception_message)
+				else
+					a_document := a_node.document_root
+					if a_document = Void then
+						an_exception_message := STRING_.appended_string (Xpath_dynamic_error_prefix, "Evaluating '/': the root of the tree containing the context item is not a document node")
+						Exceptions.raise (an_exception_message)
+					else
+						Result := a_document
+					end
+				end
+			end
+		end
+
+feature -- Comparison
+
+	same_expression (other: XM_XPATH_EXPRESSION): BOOLEAN is
+			-- Are `Current' and `other' the same expression?
+		local
+			another_root: XM_XPATH_ROOT_EXPRESSION
+		do
+			another_root ?= other
+			Result := another_root /= Void
+		end
 
 feature -- Status report
 
@@ -38,6 +86,14 @@ feature -- Status report
 			a_string := STRING_.appended_string (indent (a_level), "/")
 			std.error.put_string (a_string)
 			std.error.put_new_line
+		end
+
+feature {XM_XPATH_EXPRESSION} -- Restricted
+
+	compute_cardinality is
+			-- Compute cardinality.
+		do
+			set_cardinality_exactly_one
 		end
 
 end
