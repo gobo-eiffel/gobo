@@ -166,7 +166,7 @@ feature {NONE} -- Semantic actions
 			inspect yy_act
 
 when 7 then
---#line 60 "gepp_parser.y"
+--#line 61 "gepp_parser.y"
 
 			if not ignored then
 				define_value ("", dollar_to_string (yyvs.item (yyvsp - 1)))
@@ -174,7 +174,7 @@ when 7 then
 		
 
 when 8 then
---#line 66 "gepp_parser.y"
+--#line 67 "gepp_parser.y"
 
 			if not ignored then
 				undefine_value (dollar_to_string (yyvs.item (yyvsp - 1)))
@@ -182,7 +182,7 @@ when 8 then
 		
 
 when 9 then
---#line 72 "gepp_parser.y"
+--#line 73 "gepp_parser.y"
 
 			if not ignored then
 				process_include (dollar_to_string (yyvs.item (yyvsp - 1)))
@@ -190,7 +190,7 @@ when 9 then
 		
 
 when 10 then
---#line 80 "gepp_parser.y"
+--#line 81 "gepp_parser.y"
 
 			if_level := if_level + 1
 			if not ignored and not dollar_to_boolean (yyvs.item (yyvsp - 1)) then
@@ -199,7 +199,7 @@ when 10 then
 		
 
 when 11 then
---#line 87 "gepp_parser.y"
+--#line 88 "gepp_parser.y"
 
 			if_level := if_level + 1
 			if not ignored and dollar_to_boolean (yyvs.item (yyvsp - 1)) then
@@ -208,37 +208,37 @@ when 11 then
 		
 
 when 12 then
---#line 96 "gepp_parser.y"
+--#line 97 "gepp_parser.y"
 
 			yyval := is_defined (dollar_to_string (yyvs.item (yyvsp)))
 		
 
 when 13 then
---#line 100 "gepp_parser.y"
+--#line 101 "gepp_parser.y"
 
 			yyval := yyvs.item (yyvsp - 1)
 		
 
 when 14 then
---#line 104 "gepp_parser.y"
+--#line 105 "gepp_parser.y"
 
 			yyval := dollar_to_boolean (yyvs.item (yyvsp - 2)) and dollar_to_boolean (yyvs.item (yyvsp))
 		
 
 when 15 then
---#line 108 "gepp_parser.y"
+--#line 109 "gepp_parser.y"
 
 			yyval := dollar_to_boolean (yyvs.item (yyvsp - 2)) or dollar_to_boolean (yyvs.item (yyvsp))
 		
 
 when 16 then
---#line 112 "gepp_parser.y"
+--#line 113 "gepp_parser.y"
 
 			yyval := not dollar_to_boolean (yyvs.item (yyvsp))
 		
 
 when 17 then
---#line 118 "gepp_parser.y"
+--#line 119 "gepp_parser.y"
 
 			if ignored_level = if_level then
 				ignored_level := 0
@@ -247,7 +247,7 @@ when 17 then
 		
 
 when 18 then
---#line 127 "gepp_parser.y"
+--#line 128 "gepp_parser.y"
 
 			if not ignored then
 				ignored_level := if_level
@@ -325,7 +325,7 @@ feature -- Processing
 			cannot_read: UT_CANNOT_READ_FILE_ERROR
 			too_many_includes: GEPP_TOO_MANY_INCLUDES_ERROR
 		do
-			if include_stack.count < Max_include_depth then
+			if not include_stack.is_full then
 				a_file := INPUT_STREAM_.make_file_open_read (a_filename)
 				if INPUT_STREAM_.is_open_read (a_file) then
 					include_stack.put (input_buffer)
@@ -333,12 +333,12 @@ feature -- Processing
 				else
 					!! cannot_read.make (a_filename)
 					error_handler.report_error (cannot_read)
-					arbort
+					abort
 				end
 			else
 				!! too_many_includes.make (include_stack.count + 1)
 				error_handler.report_error (too_many_includes)
-				arbort
+				abort
 			end
 		end
 
