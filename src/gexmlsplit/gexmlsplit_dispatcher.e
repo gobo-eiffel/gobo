@@ -59,7 +59,7 @@ feature -- Element change
 				error_handler.report_error (cannot_write)
 			end
 			output_files.put (a_file)
-			a_file.put_string ("<?xml version=%"1.0%" encoding=%"UTF-8%"?>%N")
+			a_file.put_line ("<?xml version=%"1.0%" encoding=%"UTF-8%"?>")
 		ensure
 			one_more: output_files.count = old output_files.count + 1
 		end
