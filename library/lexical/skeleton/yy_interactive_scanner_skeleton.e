@@ -83,8 +83,8 @@ feature -- Scanning
 					yy_current_state := yy_start_state + yy_at_beginning_of_line
 					if yyReject_or_variable_trail_context then
 							-- Set up for storing up states.
+						yy_state_stack.put (yy_current_state, 0)
 						yy_state_count := 1
-						yy_state_stack.put (yy_current_state, 1)
 					end
 					yy_goto := yyMatch
 				when yyMatch then
@@ -128,9 +128,8 @@ feature -- Scanning
 						yy_current_state :=
 							yy_nxt.item (yy_base.item (yy_current_state) + yy_c)
 						if yyReject_or_variable_trail_context then
+							yy_state_stack.put (yy_current_state, yy_state_count)
 							yy_state_count := yy_state_count + 1
-							yy_state_stack.put
-								(yy_current_state, yy_state_count)
 						end
 						yy_cp := yy_cp + 1
 					until
@@ -174,9 +173,8 @@ feature -- Scanning
 						yy_current_state :=
 							yy_nxt.item (yy_base.item (yy_current_state) + yy_c)
 						if yyReject_or_variable_trail_context then
+							yy_state_stack.put (yy_current_state, yy_state_count)
 							yy_state_count := yy_state_count + 1
-							yy_state_stack.put
-								(yy_current_state, yy_state_count)
 						end
 						yy_cp := yy_cp + 1
 					end
@@ -195,8 +193,8 @@ feature -- Scanning
 						end
 						yy_goto := yyDo_action
 					else
-						yy_current_state := yy_state_stack.item (yy_state_count)
 						yy_state_count := yy_state_count - 1
+						yy_current_state := yy_state_stack.item (yy_state_count)
 						yy_lp := yy_accept.item (yy_current_state)
 						yy_goto := yyFind_rule
 					end
@@ -243,9 +241,8 @@ feature -- Scanning
 							end
 						else
 							yy_cp := yy_cp - 1
-							yy_current_state :=
-								yy_state_stack.item (yy_state_count)
 							yy_state_count := yy_state_count - 1
+							yy_current_state := yy_state_stack.item (yy_state_count)
 							yy_lp := yy_accept.item (yy_current_state)
 						end
 					end
@@ -282,8 +279,8 @@ feature -- Scanning
 							-- incremented past the NULL character (since all
 							-- states make transitions on EOB to the 
 							-- end-of-buffer state). Contrast this with the
-							-- test in `yyinput'.
-						if yy_position <= input_buffer.count + 1 then
+							-- test in `read_character'.
+						if yy_position <= input_buffer.upper + 1 then
 								-- This was really a NULL character.
 							yy_position := yy_bp + yy_matched_count
 							yy_current_state := yy_previous_state
@@ -353,8 +350,7 @@ feature -- Scanning
 									-- Restore original state.
 								yy_state_count := yy_full_state
 									-- Restore current state.
-								yy_current_state :=
-									yy_state_stack.item (yy_state_count)
+								yy_current_state := yy_state_stack.item (yy_state_count - 1)
 							end
 							yy_lp := yy_lp + 1
 							yy_goto := yyFind_rule

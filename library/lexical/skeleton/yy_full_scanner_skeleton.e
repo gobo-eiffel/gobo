@@ -6,7 +6,7 @@ indexing
 
 	library:    "Gobo Eiffel Lexical Library"
 	author:     "Eric Bezault <ericb@gobo.demon.co.uk>"
-	copyright:  "Copyright (c) 1997, Eric Bezault"
+	copyright:  "Copyright (c) 1999, Eric Bezault"
 	date:       "$Date$"
 	revision:   "$Revision$"
 
@@ -130,8 +130,8 @@ feature -- Scanning
 							-- incremented past the NULL character (since all
 							-- states make transitions on EOB to the 
 							-- end-of-buffer state). Contrast this with the
-							-- test in `yyinput'.
-						if yy_position <= input_buffer.count + 1 then
+							-- test in `read_character'.
+						if yy_position <= input_buffer.upper + 1 then
 								-- This was really a NULL character.
 							yy_position := yy_bp + yy_matched_count
 							yy_current_state := yy_previous_state
@@ -196,9 +196,16 @@ feature -- Scanning
 
 feature {NONE} -- Tables
 
-	yy_nxt: ARRAY [INTEGER]
+	yy_nxt: like FIXED_INTEGER_ARRAY_TYPE
 			-- States to enter upon reading symbol;
 			-- indexed by (current_state_id * yyNb_rows + symbol)
+
+	yy_ec: like FIXED_INTEGER_ARRAY_TYPE
+			-- Equivalence classes;
+			-- Void if equivalence classes are not used
+
+	yy_accept: like FIXED_INTEGER_ARRAY_TYPE
+			-- Accepting ids indexed by state ids
 
 feature {NONE} -- Implementation
 
@@ -272,5 +279,6 @@ feature {NONE} -- Constants
 invariant
 
 	yy_nxt_not_void: yy_nxt /= Void
+	yy_accept_not_void: yy_accept /= Void
 
 end -- class YY_FULL_SCANNER_SKELETON

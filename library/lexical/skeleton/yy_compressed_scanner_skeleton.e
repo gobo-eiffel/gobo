@@ -6,7 +6,7 @@ indexing
 
 	library:    "Gobo Eiffel Lexical Library"
 	author:     "Eric Bezault <ericb@gobo.demon.co.uk>"
-	copyright:  "Copyright (c) 1997, Eric Bezault"
+	copyright:  "Copyright (c) 1999, Eric Bezault"
 	date:       "$Date$"
 	revision:   "$Revision$"
 
@@ -16,8 +16,8 @@ inherit
 
 	YY_SCANNER_SKELETON
 		redefine
-			yy_initialize, yy_build_tables,
-			reset
+			yy_set_content, yy_initialize,
+			yy_build_tables, reset
 		end
 
 feature {NONE} -- Initialization
@@ -28,7 +28,7 @@ feature {NONE} -- Initialization
 			yy_build_tables
 			yy_start_state := 1
 			if yyReject_or_variable_trail_context then
-				!! yy_state_stack.make (1, yyBuffer_capacity + 1)
+				yy_state_stack := FIXED_INTEGER_ARRAY_.make (input_buffer.content.count)
 			end
 		end
 
@@ -105,8 +105,8 @@ feature -- Scanning
 					yy_current_state := yy_start_state + yy_at_beginning_of_line
 					if yyReject_or_variable_trail_context then
 							-- Set up for storing up states.
+						yy_state_stack.put (yy_current_state, 0)
 						yy_state_count := 1
-						yy_state_stack.put (yy_current_state, 1)
 					end
 					yy_goto := yyMatch
 				when yyMatch then
@@ -129,8 +129,7 @@ feature -- Scanning
 							yy_last_accepting_cpos := yy_cp
 						end
 						from until
-							yy_chk.item (yy_base.item (yy_current_state) + yy_c)
-								= yy_current_state
+							yy_chk.item (yy_base.item (yy_current_state) + yy_c) = yy_current_state
 						loop
 							yy_current_state := yy_def.item (yy_current_state)
 							if
@@ -147,12 +146,10 @@ feature -- Scanning
 								yy_c := yy_meta.item (yy_c)
 							end
 						end
-						yy_current_state :=
-							yy_nxt.item (yy_base.item (yy_current_state) + yy_c)
+						yy_current_state := yy_nxt.item (yy_base.item (yy_current_state) + yy_c)
 						if yyReject_or_variable_trail_context then
+							yy_state_stack.put (yy_current_state, yy_state_count)
 							yy_state_count := yy_state_count + 1
-							yy_state_stack.put
-								(yy_current_state, yy_state_count)
 						end
 						yy_cp := yy_cp + 1
 					until
@@ -175,8 +172,7 @@ feature -- Scanning
 							yy_last_accepting_cpos := yy_cp
 						end
 						from until
-							yy_chk.item (yy_base.item (yy_current_state) + yy_c)
-								= yy_current_state
+							yy_chk.item (yy_base.item (yy_current_state) + yy_c) = yy_current_state
 						loop
 							yy_current_state := yy_def.item (yy_current_state)
 							if
@@ -193,12 +189,10 @@ feature -- Scanning
 								yy_c := yy_meta.item (yy_c)
 							end
 						end
-						yy_current_state :=
-							yy_nxt.item (yy_base.item (yy_current_state) + yy_c)
+						yy_current_state := yy_nxt.item (yy_base.item (yy_current_state) + yy_c)
 						if yyReject_or_variable_trail_context then
+							yy_state_stack.put (yy_current_state, yy_state_count)
 							yy_state_count := yy_state_count + 1
-							yy_state_stack.put
-								(yy_current_state, yy_state_count)
 						end
 						yy_cp := yy_cp + 1
 					end
@@ -215,8 +209,8 @@ feature -- Scanning
 						yy_act := yy_accept.item (yy_current_state)
 						yy_goto := yyDo_action
 					else
-						yy_current_state := yy_state_stack.item (yy_state_count)
 						yy_state_count := yy_state_count - 1
+						yy_current_state := yy_state_stack.item (yy_state_count)
 						yy_lp := yy_accept.item (yy_current_state)
 						yy_goto := yyFind_rule
 					end
@@ -263,9 +257,8 @@ feature -- Scanning
 							end
 						else
 							yy_cp := yy_cp - 1
-							yy_current_state :=
-								yy_state_stack.item (yy_state_count)
 							yy_state_count := yy_state_count - 1
+							yy_current_state := yy_state_stack.item (yy_state_count)
 							yy_lp := yy_accept.item (yy_current_state)
 						end
 					end
@@ -302,8 +295,8 @@ feature -- Scanning
 							-- incremented past the NULL character (since all
 							-- states make transitions on EOB to the 
 							-- end-of-buffer state). Contrast this with the
-							-- test in `yyinput'.
-						if yy_position <= input_buffer.count + 1 then
+							-- test in `read_character'.
+						if yy_position <= input_buffer.upper + 1 then
 								-- This was really a NULL character.
 							yy_position := yy_bp + yy_matched_count
 							yy_current_state := yy_previous_state
@@ -314,8 +307,7 @@ feature -- Scanning
 								-- with the possibility of jamming (and we
 								-- don't want to build jamming into it because
 								-- then it will run more slowly).
-							yy_next_state :=
-								yy_null_trans_state (yy_current_state)
+							yy_next_state := yy_null_trans_state (yy_current_state)
 							yy_bp := yy_bp + yy_more_len
 							if yy_next_state /= 0 then
 									-- Consume the NULL character.
@@ -348,8 +340,7 @@ feature -- Scanning
 								yy_bp := yy_start_position + yy_more_len
 								yy_goto := yyMatch
 							elseif
-								yy_position - yy_start_position
-									- yy_more_len /= 0
+								yy_position - yy_start_position - yy_more_len /= 0
 							then
 									-- Some text has been matched prior to
 									-- the EOB. First process it.
@@ -363,8 +354,7 @@ feature -- Scanning
 								if wrap then
 									yy_bp := yy_start_position
 									yy_cp := yy_position
-									yy_execute_eof_action
-										((yy_start_state - 1) // 2)
+									yy_execute_eof_action ((yy_start_state - 1) // 2)
 								end
 							end
 						end
@@ -380,8 +370,7 @@ feature -- Scanning
 									-- Restore original state.
 								yy_state_count := yy_full_state
 									-- Restore current state.
-								yy_current_state :=
-									yy_state_stack.item (yy_state_count)
+								yy_current_state := yy_state_stack.item (yy_state_count - 1)
 							end
 							yy_lp := yy_lp + 1
 							yy_goto := yyFind_rule
@@ -408,29 +397,50 @@ feature -- Element change
 
 feature {NONE} -- Tables
 
-	yy_nxt: ARRAY [INTEGER]
+	yy_nxt: like FIXED_INTEGER_ARRAY_TYPE
 			-- States to enter upon reading symbol
 
-	yy_chk: ARRAY [INTEGER]
+	yy_chk: like FIXED_INTEGER_ARRAY_TYPE
 			-- Check value to see if `yy_nxt' applies
 
-	yy_base: ARRAY [INTEGER]
+	yy_base: like FIXED_INTEGER_ARRAY_TYPE
 			-- Offsets into `yy_nxt' for given states
 
-	yy_def: ARRAY [INTEGER]
+	yy_def: like FIXED_INTEGER_ARRAY_TYPE
 			-- Where to go if `yy_chk' disallow `yy_nxt' entry
 
-	yy_meta: ARRAY [INTEGER]
+	yy_ec: like FIXED_INTEGER_ARRAY_TYPE
+			-- Equivalence classes;
+			-- Void if equivalence classes are not used
+
+	yy_meta: like FIXED_INTEGER_ARRAY_TYPE
 			-- Meta equivalence classes which are sets of classes
 			-- with identical transitions out of templates;
 			-- Void if meta equivalence classes are not used
 
-	yy_acclist: ARRAY [INTEGER]
+	yy_accept: like FIXED_INTEGER_ARRAY_TYPE
+			-- Accepting ids indexed by state ids
+
+	yy_acclist: like FIXED_INTEGER_ARRAY_TYPE
 			-- Accepting id list, used when `reject' is called
 			-- or when there is a variable length trailing context;
 			-- Void otherwise
 
 feature {NONE} -- Implementation
+
+	yy_set_content (a_content: like yy_content) is
+			-- Set `yy_content' to `a_content'.
+		local
+			nb: INTEGER
+		do
+			yy_content := a_content
+			if yyReject_or_variable_trail_context then
+				nb := a_content.count
+				if yy_state_stack.count < nb then
+					yy_state_stack := FIXED_INTEGER_ARRAY_.resize (yy_state_stack, nb)
+				end
+			end
+		end
 
 	yy_build_tables is
 			-- Build scanner tables.
@@ -440,6 +450,7 @@ feature {NONE} -- Implementation
 			yy_chk_not_void: yy_chk /= Void
 			yy_base_not_void: yy_base /= Void
 			yy_def_not_void: yy_def /= Void
+			yy_accept_not_void: yy_accept /= Void
 		end
 
 	yy_previous_state: INTEGER is
@@ -452,8 +463,8 @@ feature {NONE} -- Implementation
 			Result := yy_start_state + yy_at_beginning_of_line
 			if yyReject_or_variable_trail_context then
 					-- Set up for storing up states.
+				yy_state_stack.put (Result, 0)
 				yy_state_count := 1
-				yy_state_stack.put (Result, 1)
 			end
 			from
 				yy_cp := yy_start_position + yy_more_len
@@ -498,8 +509,8 @@ feature {NONE} -- Implementation
 				end
 				Result := yy_nxt.item (yy_base.item (Result) + yy_c)
 				if yyReject_or_variable_trail_context then
-					yy_state_count := yy_state_count + 1
 					yy_state_stack.put (Result, yy_state_count)
+					yy_state_count := yy_state_count + 1
 				end
 				yy_cp := yy_cp + 1
 			end
@@ -543,8 +554,8 @@ feature {NONE} -- Implementation
 			end
 			Result := yy_nxt.item (yy_base.item (Result) + yy_c)
 			if yyReject_or_variable_trail_context then
-				yy_state_count := yy_state_count + 1
 				yy_state_stack.put (Result, yy_state_count)
+				yy_state_count := yy_state_count + 1
 			end
 			yy_is_jam := (Result = yyJam_state)
 			if yy_is_jam then
@@ -555,7 +566,7 @@ feature {NONE} -- Implementation
 	yy_rejected: BOOLEAN
 			-- Has current matched token been rejected?
 
-	yy_state_stack: ARRAY [INTEGER]
+	yy_state_stack: like FIXED_INTEGER_ARRAY_TYPE
 	yy_state_count: INTEGER
 	yy_full_match: INTEGER
 	yy_lp: INTEGER
@@ -602,12 +613,14 @@ feature {NONE} -- Constants
 	yyFind_action: INTEGER is Unique
 	yyDo_action: INTEGER is Unique
 	yyFind_rule: INTEGER is Unique
-		
+
 invariant
 
 	yy_nxt_not_void: yy_nxt /= Void
 	yy_chk_not_void: yy_chk /= Void
 	yy_base_not_void: yy_base /= Void
 	yy_def_not_void: yy_def /= Void
+	yy_accept_not_void: yy_accept /= Void
+	yy_state_stack_not_void: yyReject_or_variable_trail_context implies yy_state_stack /= Void
 
 end -- class YY_COMPRESSED_SCANNER_SKELETON
