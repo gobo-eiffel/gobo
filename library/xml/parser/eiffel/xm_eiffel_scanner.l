@@ -87,6 +87,9 @@ CDATAASCIICHAR [\t\x20-\x5C\x5E-\x7F]
 COMMENTASCIICHAR [\x20-\x2C\x2E-\x7F]
 -- = ASCIICHAR - [\r\n\t\-]
 
+ATTRIBUTECHAR [\x21\x23-\x25\x28-\x3B\x3D-\x7F]
+-- = NOSPASCIICHAR less " & ' <
+
 NAMECHAR [:A-Za-z0-9._\-]
 NAMECHAR_NOCOLON [A-Za-z0-9._\-]
 
@@ -714,6 +717,14 @@ NOQUOTSYSLITCHAR [\r\n\t\x20-!#-\x7F]
 			set_last_token (CHARDATA)
 			last_value := normalized_space
 		}
+		{ATTRIBUTECHAR}+ {
+			set_last_token (CHARDATA)
+			last_value := text
+		}
+		({ATTRIBUTECHAR}|{UTF8CHAR})+ {
+			set_last_token (CHARDATA_UTF8)
+			last_value := text
+		}
 	}
 
 <initial,attribute_value_single,attribute_value_double,entity_value_single,entity_value_double>
@@ -746,6 +757,7 @@ NOQUOTSYSLITCHAR [\r\n\t\x20-!#-\x7F]
 			end
 		}
 
+
 		"&" {
 			set_last_token (ENTITY_INVALID)
 			last_value := text
@@ -759,7 +771,19 @@ NOQUOTSYSLITCHAR [\r\n\t\x20-!#-\x7F]
 			set_last_token (CHARDATA)
 			last_value := normalized_newline
 		}
-}
+		{SPACECHAR} {
+			set_last_token (CHARDATA)
+			last_value := text			
+		}
+		({ATTRIBUTECHAR}|"<")+ {
+			set_last_token (CHARDATA)
+			last_value := text
+		}
+		({ATTRIBUTECHAR}|"<"|{UTF8CHAR})+ {
+			set_last_token (CHARDATA_UTF8)
+			last_value := text
+		}		
+	}
 
 <attribute_value_single, entity_value_single>
 	{
@@ -767,13 +791,8 @@ NOQUOTSYSLITCHAR [\r\n\t\x20-!#-\x7F]
 			set_last_token (VALUE_END) 
 			pop_start_condition
 		}
-		-- After apos.
-		{ASCIICHAR} {
+		{QUOT} {
 			set_last_token (CHARDATA) 
-			last_value := text
-		}
-		{UTF8CHAR} {
-			set_last_token (CHARDATA_UTF8) 
 			last_value := text
 		}
 	}
@@ -784,13 +803,8 @@ NOQUOTSYSLITCHAR [\r\n\t\x20-!#-\x7F]
 			set_last_token (VALUE_END)
 			pop_start_condition
 		}
-		-- After quot.
-		{ASCIICHAR} {
+		{APOS} {
 			set_last_token (CHARDATA) 
-			last_value := text
-		}
-		{UTF8CHAR} {
-			set_last_token (CHARDATA_UTF8) 
 			last_value := text
 		}
 	}
