@@ -23,11 +23,11 @@ inherit
 
 	ET_REPLICABLE_FEATURE
 
-create
+creation
 
 	-- This is a deferred class but it has no deferred
 	-- features (allowed in ETL3 but not supported yet
-	-- by VE 1.0).
+	-- by VE 1.1).
 
 feature -- Status report
 
