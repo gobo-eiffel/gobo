@@ -16,6 +16,9 @@ inherit
 
 	ANY
 
+	KL_SHARED_FILE_SYSTEM
+		export {NONE} all end
+
 	KL_IMPORTED_STRING_ROUTINES
 		export {NONE} all end
 
@@ -137,7 +140,9 @@ feature -- Access
 				elseif l_parent_cluster /= Void and then l_parent_cluster.is_recursive then
 					from until i > nb loop
 						l_name := a_names.item (i)
-						l_parent_cluster.add_recursive_cluster (l_name)
+						if file_system.directory_exists (file_system.pathname (l_parent_cluster.full_pathname, l_name)) then
+							l_parent_cluster.add_recursive_cluster (l_name)
+						end
 						l_clusters := l_parent_cluster.subclusters
 						if l_clusters /= Void then
 							Result := l_clusters.cluster_by_name (l_name)
