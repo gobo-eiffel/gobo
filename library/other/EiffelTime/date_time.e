@@ -17,14 +17,15 @@ inherit
 
 	ABSOLUTE
 		undefine
-			out
+			out, copy, is_equal
 		end
 
 	DATE_TIME_VALUE
 		undefine
 			append_date_to_string,
 			append_time_to_string,
-			append_precise_time_to_string
+			append_precise_time_to_string,
+			copy, is_equal
 		end
 
 	DATE
@@ -40,7 +41,8 @@ inherit
 			append_to_string,
 			infix "<", out,
 			canonical_duration,
-			relative_date_duration
+			relative_date_duration,
+			copy, is_equal
 		redefine
 			origin
 		end
@@ -66,7 +68,8 @@ inherit
 			append_precise_to_string,
 			precise_out, out, out_fine,
 			canonical_duration,
-			relative_time_duration
+			relative_time_duration,
+			copy, is_equal
 		end
 
 	DT_DATE_TIME
@@ -83,7 +86,8 @@ inherit
 			{ANY} make
 		redefine
 			relative_duration, date, time,
-			relative_date_duration, relative_time_duration
+			relative_date_duration, relative_time_duration,
+			copy, is_equal
 		end
 
 creation
@@ -107,10 +111,13 @@ feature {NONE} -- Initialization
 			m_small_enough: mi < Minutes_in_hour
 			s_large_enough: s >= 0
 			s_small_enough: s < Seconds_in_minute
+		local
+			new_second: INTEGER
 		do
 			make_date (y, mo, d)
-			make_precise_time (h, mi, s.truncated_to_integer,
-				((s - second) * 1000).truncated_to_integer)
+			new_second := s.truncated_to_integer
+			make_precise_time (h, mi, new_second,
+				((s - new_second) * 1000).truncated_to_integer)
 		ensure
 			year_set: year = y
 			month_set: month = mo
@@ -118,7 +125,7 @@ feature {NONE} -- Initialization
 			hour_set: hour = h
 			minute_set: minute = mi
 			second_set: second = s.truncated_to_integer
-			millisecond_set: millisecond = ((s - second) * 1000).truncated_to_integer
+			millisecond_set: millisecond = ((s - s.truncated_to_integer) * 1000).truncated_to_integer
 		end
 
 	make_by_date_time (d: DATE; t: TIME) is
@@ -215,6 +222,25 @@ feature -- Access
 			-- Duration between `other' and current time
 		do
 			!! Result.make_precise (0, 0, 0, millisecond_count - other.millisecond_count)
+		end
+
+feature -- Comparison
+
+	is_equal (other: like Current): BOOLEAN is
+			-- Is current date time equal to `other'?
+		do
+			Result := date_storage = other.date_storage and
+				time_storage = other.time_storage
+		end
+
+feature -- Duplication
+
+	copy (other: like Current) is
+			-- Copy `other' to current date time.
+		do
+			standard_copy (other)
+			date_impl := Void
+			time_impl := Void
 		end
 
 feature {NONE} -- Implementation
