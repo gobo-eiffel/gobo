@@ -127,13 +127,8 @@ feature {NONE} -- Implementation
 	basic_directory: BASIC_DIRECTORY
 			-- Implementation
 
-	environment_impl: SYSTEM is
+	environment_impl: SYSTEM
 			-- Execution environment implementation
-		once
-			create Result
-		ensure
-			environment_impl_not_void: Result /= Void
-		end
 
 #endif
 #ifdef VE

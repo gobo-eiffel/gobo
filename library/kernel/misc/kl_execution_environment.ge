@@ -185,16 +185,17 @@ feature {NONE} -- Implementation
 
 #ifdef ISE
 	environment_impl: EXECUTION_ENVIRONMENT is
-#endif
-#ifdef SE
-	environment_impl: SYSTEM is
-#endif
 			-- Execution environment impl
 		once
 			create Result
 		ensure
 			environment_impl_not_void: Result /= Void
 		end
+#endif
+#ifdef SE
+	environment_impl: SYSTEM
+			-- Execution environment impl
+#endif
 
 #endif
 end
