@@ -218,10 +218,9 @@ feature -- Flattening status
 		local
 			a_parent: ET_PARENT
 		do
-			Result := True
 			from a_parent := parents until a_parent = Void loop
-				if not a_parent.has_flatten_error then
-					Result := False
+				if a_parent.has_flatten_error then
+					Result := True
 					a_parent := Void  -- Jump out of the loop.
 				else
 					a_parent := a_parent.next
