@@ -58,7 +58,7 @@ feature {GEANT_INTERPRETING_ELEMENT} -- Access
 	target_arguments_stack: DS_STACK [GEANT_VARIABLES] is
 			-- Arguments stack
 		local
-			a_tester: UC_EQUALITY_TESTER
+			a_tester: UC_STRING_EQUALITY_TESTER
 			a_target_arguments_stack: DS_ARRAYED_STACK [GEANT_VARIABLES]
 		once
 				-- Create target arguments stack:

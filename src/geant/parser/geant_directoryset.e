@@ -30,7 +30,7 @@ feature {NONE} -- Initialization
 	make (a_project: GEANT_PROJECT) is
 			-- Create a new directoryset.
 		local
-			a_tester: UC_EQUALITY_TESTER
+			a_tester: UC_STRING_EQUALITY_TESTER
 		do
 			project := a_project
 			create {DS_HASH_SET [GEANT_FILESET_ENTRY]} directory_names.make_equal (20)

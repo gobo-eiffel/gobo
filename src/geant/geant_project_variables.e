@@ -41,7 +41,7 @@ feature {NONE} -- Initialization
 	make is
 			-- Create a new variables object.
 		local
-			a_tester: UC_EQUALITY_TESTER
+			a_tester: UC_STRING_EQUALITY_TESTER
 		do
 			create variables.make_map (10)
 			create a_tester

@@ -43,7 +43,7 @@ feature {NONE} -- Initialization
 	make (a_project: GEANT_PROJECT; a_xml_element: XM_ELEMENT) is
 			-- Create a new target.
 		local
-			a_tester: UC_EQUALITY_TESTER
+			a_tester: UC_STRING_EQUALITY_TESTER
 			a_description_element: XM_ELEMENT
 			a_exports: DS_ARRAYED_LIST [STRING]
 			a_argument_elements: DS_LINKED_LIST [XM_ELEMENT]

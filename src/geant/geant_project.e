@@ -38,7 +38,7 @@ feature {NONE} -- Initialization
 			a_variables_not_void: a_variables /= Void
 			a_options_not_void: a_options /= Void
 		local
-			a_tester: UC_EQUALITY_TESTER
+			a_tester: UC_STRING_EQUALITY_TESTER
 		do
 			output_file := std.output
 			if a_variables = Void then

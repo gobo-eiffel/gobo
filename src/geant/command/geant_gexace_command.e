@@ -31,7 +31,7 @@ feature {NONE} -- Initialization
 	make (a_project: GEANT_PROJECT) is
 			-- Create a new 'gexace' command.
 		local
-			a_tester: UC_EQUALITY_TESTER
+			a_tester: UC_STRING_EQUALITY_TESTER
 		do
 			precursor (a_project)
 			create defines.make_map (10)

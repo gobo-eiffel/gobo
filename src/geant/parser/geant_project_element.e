@@ -48,7 +48,7 @@ feature {NONE} -- Initialization
 			cs: DS_LINKED_LIST_CURSOR [XM_ELEMENT]
 			a_targets: DS_HASH_TABLE [GEANT_TARGET, STRING]
 			a_target: GEANT_TARGET
-			a_tester: UC_EQUALITY_TESTER
+			a_tester: UC_STRING_EQUALITY_TESTER
 			s: STRING
 			s1: STRING
 		do

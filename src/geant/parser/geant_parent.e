@@ -30,7 +30,7 @@ feature {NONE} -- Initialization
 		require
 			project_not_void: a_project /= Void
 		local
-			a_tester: UC_EQUALITY_TESTER
+			a_tester: UC_STRING_EQUALITY_TESTER
 		do
 			project := a_project
 			create a_tester
