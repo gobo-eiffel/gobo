@@ -73,45 +73,45 @@ when 2 then
 			!! rule.make_default (1)
 		
 when 3 then
---|#line 66
+--|#line 65
 			process_bol_rule (dollar_nfa (yyvs.item (yyvsp)))
 		
 when 4 then
---|#line 70
+--|#line 69
 			process_rule (dollar_nfa (yyvs.item (yyvsp)))
 		
 when 5 then
---|#line 74
+--|#line 73
 			report_unrecognized_rule_error
 		
 when 6 then
---|#line 80
+--|#line 79
 			yyval := append_trail_context_to_regexp
 				(dollar_nfa (yyvs.item (yyvsp)), dollar_nfa (yyvs.item (yyvsp - 1)))
 		
 when 7 then
---|#line 85
+--|#line 84
 			yyval := append_eol_to_regexp (dollar_nfa (yyvs.item (yyvsp - 1)))
 		
 when 8 then
---|#line 89
+--|#line 88
 			-- $$ := $1
 		
 when 9 then
---|#line 93
+--|#line 92
 			report_trailing_context_used_twice_error
 		
 when 10 then
---|#line 97
+--|#line 96
 			report_trailing_context_used_twice_error
 		
 when 12 then
---|#line 104
+--|#line 103
 			variable_length := True
 			yyval := dollar_nfa (yyvs.item (yyvsp - 2)) | dollar_nfa (yyvs.item (yyvsp))
 		
 when 13 then
---|#line 111
+--|#line 110
 				-- This rule is written separately so the reduction
 				-- will occur before the trailing series is parsed.
 			if variable_length then
@@ -124,43 +124,43 @@ when 13 then
 			in_trail_context := True
 		
 when 15 then
---|#line 127
+--|#line 126
 			yyval := dollar_nfa (yyvs.item (yyvsp - 1)) & dollar_nfa (yyvs.item (yyvsp))
 		
 when 16 then
---|#line 133
+--|#line 132
 			rule_length := rule_length + 1
 			yyval := new_nfa_from_character (dollar_integer (yyvs.item (yyvsp)))
 		
 when 17 then
---|#line 138
+--|#line 137
 			variable_length := True
 			yyval := |*| dollar_nfa (yyvs.item (yyvsp - 1))
 		
 when 18 then
---|#line 143
+--|#line 142
 			variable_length := True
 			yyval := |+| dollar_nfa (yyvs.item (yyvsp - 1))
 		
 when 19 then
---|#line 148
+--|#line 147
 			variable_length := True
 			yyval := |?| dollar_nfa (yyvs.item (yyvsp - 1))
 		
 when 20 then
---|#line 153
+--|#line 152
 			variable_length := True
 			yyval := new_bounded_iteration_nfa
 				(dollar_nfa (yyvs.item (yyvsp - 5)), dollar_integer (yyvs.item (yyvsp - 3)), dollar_integer (yyvs.item (yyvsp - 1)))
 		
 when 21 then
---|#line 159
+--|#line 158
 			variable_length := True
 			yyval := new_unbounded_iteration_nfa
 				(dollar_nfa (yyvs.item (yyvsp - 4)), dollar_integer (yyvs.item (yyvsp - 2)))
 		
 when 22 then
---|#line 165
+--|#line 164
 				-- The singleton could be something like "(foo)",
 				-- in which case we have no idea what its length
 				-- is, so we punt here.
@@ -168,69 +168,69 @@ when 22 then
 			yyval := new_iteration_nfa (dollar_nfa (yyvs.item (yyvsp - 3)), dollar_integer (yyvs.item (yyvsp - 1)))
 		
 when 23 then
---|#line 173
+--|#line 172
 			rule_length := rule_length + 1
 			yyval := new_symbol_class_nfa (dot_character_class)
 		
 when 24 then
---|#line 178
+--|#line 177
 			rule_length := rule_length + 1
 			yyval := new_symbol_class_nfa (dollar_symbol_class (yyvs.item (yyvsp)))
 		
 when 25 then
---|#line 183
+--|#line 182
 			rule_length := rule_length + 1
 			yyval := new_nfa_from_character_class (dollar_symbol_class (yyvs.item (yyvsp)))
 		
 when 26 then
---|#line 188
+--|#line 187
 			yyval := yyvs.item (yyvsp - 1)
 		
 when 27 then
---|#line 192
+--|#line 191
 			yyval := yyvs.item (yyvsp - 1)
 		
 when 28 then
---|#line 198
+--|#line 197
 			character_classes.force
 				(dollar_symbol_class (yyvs.item (yyvsp - 1)), dollar_string (yyvs.item (yyvsp - 2)))
 			yyval := yyvs.item (yyvsp - 1)
 		
 when 29 then
---|#line 204
+--|#line 203
 			dollar_symbol_class (yyvs.item (yyvsp - 1)).set_negated (True)
 			character_classes.force
 				(dollar_symbol_class (yyvs.item (yyvsp - 1)), dollar_string (yyvs.item (yyvsp - 3)))
 			yyval := yyvs.item (yyvsp - 1)
 		
 when 30 then
---|#line 213
+--|#line 212
 			yyval := append_character_to_character_class
 				(dollar_integer (yyvs.item (yyvsp)), new_character_class)
 		
 when 31 then
---|#line 218
+--|#line 217
 			yyval := append_character_to_character_class
 				(dollar_integer (yyvs.item (yyvsp)), dollar_symbol_class (yyvs.item (yyvsp - 1)))
 		
 when 32 then
---|#line 223
+--|#line 222
 			yyval := append_character_set_to_character_class
 				(dollar_integer (yyvs.item (yyvsp - 2)), dollar_integer (yyvs.item (yyvsp)),
 				new_character_class)
 		
 when 33 then
---|#line 229
+--|#line 228
 			yyval := append_character_set_to_character_class
 				(dollar_integer (yyvs.item (yyvsp - 2)), dollar_integer (yyvs.item (yyvsp)),
 				dollar_symbol_class (yyvs.item (yyvsp - 3)))
 		
 when 34 then
---|#line 237
+--|#line 236
 			yyval := new_epsilon_nfa
 		
 when 35 then
---|#line 241
+--|#line 240
 			rule_length := rule_length + 1
 			yyval := append_character_to_string
 				(dollar_integer (yyvs.item (yyvsp)), dollar_nfa (yyvs.item (yyvsp - 1)))
