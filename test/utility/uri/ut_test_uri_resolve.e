@@ -51,8 +51,7 @@ feature -- Tests
 			check_uri (uri, "http", "a", "/b/c/g", "y", Void, "http://a/b/c/g?y")
 
 			create uri.make_resolve (base, "#s")
-				-- Current document is this?
-			check_uri (uri, "http", "a", "/b/c/d;p", Void, "s", "http://a/b/c/d;p#s")
+			check_uri (uri, "http", "a", "/b/c/d;p", "q", "s", "http://a/b/c/d;p?q#s")
 
 			create uri.make_resolve (base, "g#s")
 			check_uri (uri, "http", "a", "/b/c/g", Void, "s", "http://a/b/c/g#s")
@@ -114,7 +113,7 @@ feature -- Tests
 			create base.make ("http://a/b/c/d;p?q")
 				-- Start of current document.
 			create uri.make_resolve (base, "")
-			check_uri (uri, "http", "a", "/b/c/d;p", Void, Void, "http://a/b/c/d;p")
+			check_uri (uri, "http", "a", "/b/c/d;p", "q", Void, "http://a/b/c/d;p?q")
 
 			create uri.make_resolve (base, "../../../g")
 			check_uri (uri, "http", "a", "/g", Void, Void, "http://a/g")
