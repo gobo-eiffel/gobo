@@ -112,10 +112,10 @@ feature -- Sort
 					a_container.replace (a_container.item (l), upper)
 					a_container.replace (pivot, l)
 					if l - 1 > lower then
-						subsort (a_container, lower, l - 1)
+						reverse_subsort (a_container, lower, l - 1)
 					end
 					if l + 1 < upper then
-						subsort (a_container, l + 1, upper)
+						reverse_subsort (a_container, l + 1, upper)
 					end
 				end
 			end
