@@ -92,7 +92,7 @@ feature {NONE} -- Initialization
 
 feature -- Access
 	
-	item_type: INTEGER is
+	item_type: XM_XPATH_ITEM_TYPE is
 			--Determine the data type of the expression, if possible
 		do
 			Result := base_expression.item_type
@@ -438,11 +438,11 @@ feature {NONE} -- Implementation
 		require
 			expression_not_void: an_expression /= Void
 		local
-			type: INTEGER
+			type: XM_XPATH_ITEM_TYPE
 		do
 			type := an_expression.item_type
-			Result := type = Atomic_type or else type = Any_item
-				or else is_sub_type (type, Number_type)
+			Result := type = type_factory.any_atomic_type or else type = any_item
+				or else is_sub_type (type, type_factory.numeric_type)
 				or else is_explicitly_positional_filter (an_expression)
 		end
 

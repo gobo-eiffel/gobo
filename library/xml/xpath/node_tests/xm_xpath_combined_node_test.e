@@ -52,8 +52,6 @@ feature {NONE} -- Initialization
 	
 feature -- Status report
 
-	-- Not sure if this next feature is needed
-
 	allows_text_nodes: BOOLEAN is
 			-- Does this node test allow text nodes?
 		do

@@ -42,10 +42,10 @@ feature {NONE} -- Initialization
 
 feature -- Access
 	
-	item_type: INTEGER is
+	item_type: XM_XPATH_ITEM_TYPE is
 			--Determine the data type of the expression, if possible
 		do
-			Result := Atomic_type
+			Result := type_factory.any_atomic_type
 		end
 
 	base_expression: XM_XPATH_EXPRESSION
@@ -102,7 +102,7 @@ feature -- Optimization
 				if base_expression.was_expression_replaced then
 					set_base_expression (base_expression.replacement_expression)
 				end
-				if is_sub_type (base_expression.item_type, Atomic_type) then
+				if is_sub_type (base_expression.item_type, type_factory.any_atomic_type) then
 					set_replacement (base_expression)
 				end
 			end

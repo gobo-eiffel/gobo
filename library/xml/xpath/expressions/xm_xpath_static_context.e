@@ -28,6 +28,13 @@ feature -- Access
 	name_pool: XM_XPATH_NAME_POOL
 			-- The name pool used for compiling expressions
 
+	host_language: STRING is
+			-- Name of host language
+		deferred
+		ensure
+			host_language_not_void: Result /= Void and then Result.count > 0
+		end
+
 	last_bound_variable: XM_XPATH_VARIABLE_DECLARATION is
 			-- The last variable bound by `bind_variable'
 		do
@@ -111,6 +118,11 @@ feature -- Status report
 
 	is_backwards_compatible_mode: BOOLEAN is
 			-- Is XPath 1.0 Backwards Compatible Mode used?
+		deferred
+		end
+
+	is_data_type_valid (a_fingerprint: INTEGER): BOOLEAN is
+			-- Does `a_fingerprint' represent a data-type in `Current'?
 		deferred
 		end
 

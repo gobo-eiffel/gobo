@@ -51,10 +51,10 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	item_type: INTEGER is
+	item_type: XM_XPATH_ITEM_TYPE is
 			--Determine the data type of the expression, if possible
 		do
-			Result := Boolean_type
+			Result := type_factory.boolean_type
 		end
 	
 feature -- Optimization	
@@ -179,17 +179,17 @@ feature {NONE} -- Implementation
 			Result := STRING_.appended_string ("many-to-many ", Precursor)
 		end
 
-	issue_warnings (a_type, another_type: INTEGER a_context: XM_XPATH_STATIC_CONTEXT) is
+	issue_warnings (a_type, another_type: XM_XPATH_ITEM_TYPE; a_context: XM_XPATH_STATIC_CONTEXT) is
 			-- Issue warnings about backwards compatibility.
 		require
 			context_not_void: a_context /= Void
 		do
-			if is_sub_type (a_type, Any_node) and then is_sub_type (another_type, Boolean_type) then
+			if is_sub_type (a_type, any_node_test) and then is_sub_type (another_type, type_factory.boolean_type) then
 				a_context.issue_warning ("Comparison of a node-set to a boolean has changed since XPath 1.0")
-			elseif is_sub_type (a_type, Boolean_type) and then is_sub_type (another_type, Any_node) then
+			elseif is_sub_type (a_type, type_factory.boolean_type) and then is_sub_type (another_type, any_node_test) then
 				a_context.issue_warning ("Comparison of a boolean to a node-set has changed since XPath 1.0")
-			elseif (is_sub_type (a_type, Any_node) or else is_sub_type (a_type, String_type))
-				and then (is_sub_type (another_type, Any_node) or else is_sub_type (another_type, String_type))
+			elseif (is_sub_type (a_type, any_node_test) or else is_sub_type (a_type, type_factory.string_type))
+				and then (is_sub_type (another_type, any_node_test) or else is_sub_type (another_type, type_factory.string_type))
 				and then (operator = Less_than_token or else operator = Less_equal_token
 							 or else operator = Greater_than_token or else operator = Greater_equal_token)
 			then
@@ -230,27 +230,27 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	analyze_two_singletons_two_point_zero (a_context: XM_XPATH_STATIC_CONTEXT; a_type, another_type: INTEGER) is
+	analyze_two_singletons_two_point_zero (a_context: XM_XPATH_STATIC_CONTEXT; a_type, another_type: XM_XPATH_ITEM_TYPE) is
 			-- Use a value comparison if both arguments are singletons
 		require
 			context_not_void: a_context /= Void
-			valid_first_type: is_valid_type (a_type)
-			valid_second_type: is_valid_type (another_type)
+			first_type_not_void: a_type /= Void
+			second_type_not_void: another_type /= Void
 		local
 			an_expression: XM_XPATH_EXPRESSION
 		do
-			if a_type = Untyped_atomic_type then
-				if another_type = Untyped_atomic_type then
-					create {XM_XPATH_CAST_EXPRESSION} first_operand.make (first_operand, String_type, False)
-					create {XM_XPATH_CAST_EXPRESSION} second_operand.make (second_operand, String_type, False)
-				elseif is_sub_type (another_type, Number_type) then
-					create {XM_XPATH_CAST_EXPRESSION} first_operand.make (first_operand, Double_type, False)
+			if a_type = type_factory.untyped_atomic_type then
+				if another_type = type_factory.untyped_atomic_type then
+					create {XM_XPATH_CAST_EXPRESSION} first_operand.make (first_operand, type_factory.string_type, False)
+					create {XM_XPATH_CAST_EXPRESSION} second_operand.make (second_operand, type_factory.string_type, False)
+				elseif is_sub_type (another_type, type_factory.numeric_type) then
+					create {XM_XPATH_CAST_EXPRESSION} first_operand.make (first_operand, type_factory.double_type, False)
 				else
 					create {XM_XPATH_CAST_EXPRESSION} first_operand.make (second_operand, another_type, False)
 				end
-			elseif another_type = Untyped_atomic_type then
-				if is_sub_type (a_type, Number_type) then
-					create {XM_XPATH_CAST_EXPRESSION} second_operand.make (second_operand, Double_type, False)
+			elseif another_type = type_factory.untyped_atomic_type then
+				if is_sub_type (a_type, type_factory.numeric_type) then
+					create {XM_XPATH_CAST_EXPRESSION} second_operand.make (second_operand, type_factory.double_type, False)
 				else
 					create {XM_XPATH_CAST_EXPRESSION} second_operand.make (second_operand, a_type, False)
 				end	
@@ -276,7 +276,7 @@ feature {NONE} -- Implementation
 			an_expression: XM_XPATH_EXPRESSION
 			an_atomic_type: XM_XPATH_SEQUENCE_TYPE
 			a_role, another_role: XM_XPATH_ROLE_LOCATOR
-			a_type, another_type: INTEGER
+			a_type, another_type: XM_XPATH_ITEM_TYPE
 			a_message: STRING
 			a_range_expression: XM_XPATH_RANGE_EXPRESSION
 			a_type_checker: XM_XPATH_TYPE_CHECKER
@@ -286,15 +286,15 @@ feature {NONE} -- Implementation
 			if is_backwards_compatible_mode then
 				issue_warnings (first_operand.item_type, second_operand.item_type, a_context)
 			end
-			create an_atomic_type.make (Atomic_type, Required_cardinality_zero_or_more)
+			create an_atomic_type.make (type_factory.any_atomic_type, Required_cardinality_zero_or_more)
 			create a_role.make (Binary_expression_role, token_name (operator), 1)
-			a_type_checker.static_type_check (first_operand, an_atomic_type, False, a_role)
+			a_type_checker.static_type_check (a_context, first_operand, an_atomic_type, False, a_role)
 			if a_type_checker.is_static_type_check_error then
 				set_last_error_from_string (a_type_checker.static_type_check_error_message, 4, Type_error)
 			else
 				set_first_operand (a_type_checker.checked_expression)
 				create another_role.make (Binary_expression_role, token_name (operator), 2)
-				a_type_checker.static_type_check (second_operand, an_atomic_type, False, another_role)
+				a_type_checker.static_type_check (a_context, second_operand, an_atomic_type, False, another_role)
 				if a_type_checker.is_static_type_check_error	then
 					set_last_error_from_string (a_type_checker.static_type_check_error_message, 4, Type_error)
 				else
@@ -302,11 +302,12 @@ feature {NONE} -- Implementation
 					a_type := first_operand.item_type
 					another_type := second_operand.item_type
 					if not is_backwards_compatible_mode then
-						if not is_error and then not (a_type = Atomic_type or else a_type = Untyped_atomic_type or else another_type = Atomic_type or else another_type = Untyped_atomic_type) then
-							if primitive_type (a_type) /= primitive_type (another_type) then
-								a_message := STRING_.appended_string ("Cannot compare ", type_name (a_type))
+						if not is_error and then not (a_type = type_factory.any_atomic_type or else a_type = type_factory.untyped_atomic_type
+																or else another_type = type_factory.any_atomic_type or else another_type = type_factory.untyped_atomic_type) then
+							if a_type.primitive_type /= another_type.primitive_type then
+								a_message := STRING_.appended_string ("Cannot compare ", a_type.conventional_name)
 								a_message := STRING_.appended_string (a_message, " with ")
-								a_message := STRING_.appended_string (a_message, type_name (another_type))
+								a_message := STRING_.appended_string (a_message, another_type.conventional_name)
 								set_last_error_from_string (a_message, 4, Type_error)
 							end
 						end
@@ -321,11 +322,12 @@ feature {NONE} -- Implementation
 								analyze_first_operand_single (a_context)
 							else
 								a_range_expression ?= first_operand
-								if a_range_expression /= Void and then is_sub_type (second_operand.item_type, Integer_type) and then not second_operand.cardinality_allows_many then
+								if a_range_expression /= Void and then is_sub_type (second_operand.item_type, type_factory.integer_type) and then not second_operand.cardinality_allows_many then
 									analyze_n_to_m_equals_i (a_context, a_range_expression)
 								else
-									if operator /= Equals_token and then operator /= Not_equal_token	and then (is_sub_type (a_type, Number_type) or else is_sub_type (another_type, Number_type)) then
-										if not is_sub_type (a_type, Number_type) then
+									if operator /= Equals_token and then operator /= Not_equal_token	and then (is_sub_type (a_type, type_factory.numeric_type)
+																																		 or else is_sub_type (another_type, type_factory.numeric_type)) then
+										if not is_sub_type (a_type, type_factory.numeric_type) then
 											analyze_inequalities (a_context, another_type)
 										end
 									end
@@ -394,7 +396,7 @@ feature {NONE} -- Implementation
 			set_replacement (an_expression)
 		end
 
-	analyze_inequalities (a_context: XM_XPATH_STATIC_CONTEXT; another_type: INTEGER) is
+	analyze_inequalities (a_context: XM_XPATH_STATIC_CONTEXT; another_type: XM_XPATH_ITEM_TYPE) is
 			-- If the operator is gt, ge, lt, le then replace X < Y by min(X) < max(Y)
 
 			-- This optimization is done only in the case where at least one of the
@@ -404,6 +406,7 @@ feature {NONE} -- Implementation
 			-- involves both string and numeric comparisons.
 		require
 			context_not_void: a_context /= Void
+			type_not_void: another_type /= Void
 		local
 			a_numeric_type: XM_XPATH_SEQUENCE_TYPE
 			a_role, another_role: XM_XPATH_ROLE_LOCATOR
@@ -413,14 +416,14 @@ feature {NONE} -- Implementation
 			create a_type_checker
 			create a_numeric_type.make_numeric_sequence
 			create a_role.make (Binary_expression_role, token_name (operator), 1)
-			a_type_checker.static_type_check (first_operand, a_numeric_type, is_backwards_compatible_mode, a_role)
+			a_type_checker.static_type_check (a_context, first_operand, a_numeric_type, is_backwards_compatible_mode, a_role)
 			if a_type_checker.is_static_type_check_error then
 				set_last_error_from_string (a_type_checker.static_type_check_error_message, 4, Type_error)
 			else
 				set_first_operand (a_type_checker.checked_expression)
-				if not is_sub_type (another_type, Number_type) then
+				if not is_sub_type (another_type, type_factory.numeric_type) then
 					create another_role.make (Binary_expression_role, token_name (operator), 2)
-					a_type_checker.static_type_check (second_operand, a_numeric_type, is_backwards_compatible_mode, another_role)
+					a_type_checker.static_type_check (a_context, second_operand, a_numeric_type, is_backwards_compatible_mode, another_role)
 					if a_type_checker.is_static_type_check_error then
 						set_last_error_from_string (a_type_checker.static_type_check_error_message, 4, Type_error)
 					else

@@ -31,6 +31,9 @@ feature {NONE} -- Initialization
 			
 feature -- Access
 
+	executable: XM_XSLT_EXECUTABLE
+			-- Executable form of the stylesheet
+
 	configuration: XM_XSLT_CONFIGURATION
 			-- User-selectable configuration parameters
 
@@ -42,6 +45,11 @@ feature -- Access
 
 	name_pool: XM_XPATH_NAME_POOL
 			-- Name pool
+
+feature -- Status report
+
+	is_tracing: BOOLEAN
+			-- Is tracing enabled?
 
 feature -- Creation
 
@@ -60,6 +68,11 @@ feature -- Element change
 		ensure
 			iterator_set: current_iterator = an_iterator
 		end
+
+feature {NONE} -- Implementation
+
+	prepared_stylesheet: XM_XSLT_PREPARED_STYLESHEET
+			-- Compiled stylesheet
 
 invariant
 

@@ -35,10 +35,10 @@ feature -- Access
 	value: ANY
 			-- Value of expression
 
-	item_type: INTEGER is
+	item_type: XM_XPATH_ITEM_TYPE is
 			--Determine the data type of the expression, if possible
 		do
-			Result := Object_type
+			Result := type_factory.object_type
 		end
 
 	string_value: STRING is
@@ -96,15 +96,16 @@ feature -- Status report
 			Result := other_object /= Void
 		end
 
-	is_convertible (a_required_type: INTEGER): BOOLEAN is
+	is_convertible (a_required_type: XM_XPATH_ITEM_TYPE): BOOLEAN is
 			-- Is `Current' convertible to `a_required_type'?
 		local
 			a_string_value: XM_XPATH_STRING_VALUE
 		do
-			inspect
-				a_required_type
-
-			when Any_item, Atomic_type, Object_type, Boolean_type, String_type  then
+			if	a_required_type = any_item
+				or else a_required_type = type_factory.any_atomic_type
+				or else a_required_type = type_factory.object_type
+				or else a_required_type = type_factory.boolean_type
+				or else a_required_type = type_factory.string_type then
 				Result := True
 			else
 				create {XM_XPATH_STRING_VALUE} a_string_value.make (string_value)
@@ -128,15 +129,14 @@ feature -- Status report
 
 feature -- Conversions
 	
-	convert_to_type (a_required_type: INTEGER): XM_XPATH_ATOMIC_VALUE is
+	convert_to_type (a_required_type: XM_XPATH_ITEM_TYPE): XM_XPATH_ATOMIC_VALUE is
 			-- Convert `Current' to `a_required_type'
 		do
-			inspect
-				a_required_type
-
-			when Any_item, Atomic_type, Object_type  then
+			if	a_required_type = any_item
+				or else a_required_type = type_factory.any_atomic_type
+				or else a_required_type = type_factory.object_type then
 				Result := Current
-			when Boolean_type then
+			elseif a_required_type = type_factory.boolean_type then
 				if value = Void then
 					create {XM_XPATH_BOOLEAN_VALUE} Result.make (False)
 				elseif string_value.count > 0 then
@@ -144,7 +144,7 @@ feature -- Conversions
 				else
 					create {XM_XPATH_BOOLEAN_VALUE} Result.make (False)
 				end
-			when String_type then
+			elseif a_required_type = type_factory.string_type then
 				create {XM_XPATH_STRING_VALUE} Result.make (string_value)
 			else
 				create {XM_XPATH_STRING_VALUE} Result.make (string_value)

@@ -43,10 +43,10 @@ feature {NONE} -- Initialization
 
 feature -- Access
 	
-	item_type: INTEGER is
+	item_type: XM_XPATH_ITEM_TYPE is
 			--Determine the data type of the expression, if possible
 		do
-			Result := Boolean_type
+			Result := type_factory.boolean_type
 		end
 
 	sub_expressions: DS_ARRAYED_LIST [XM_XPATH_EXPRESSION] is
@@ -71,7 +71,7 @@ feature -- Status report
 			else
 				std.error.put_new_line
 				source.display (a_level + 1, a_pool)
-				a_string := STRING_.appended_string (indentation (a_level + 1), type_name (target_type.primary_type))
+				a_string := STRING_.appended_string (indentation (a_level + 1), target_type.primary_type.conventional_name)
 				a_string := STRING_.appended_string (a_string, target_type.occurence_indicator)			
 				std.error.put_string (a_string)
 				std.error.put_new_line
@@ -119,8 +119,7 @@ feature -- Optimization
 					-- See if we can get the answer by static analysis.
 
 					if target_type.cardinality_subsumes (source.cardinality) and then
-						is_sub_type (source.item_type, target_type.primary_type) and then
-						target_type.content_type = Any_item then
+						is_sub_type (source.item_type, target_type.primary_type) then
 
 						create {XM_XPATH_BOOLEAN_VALUE} an_expression.make (True)
 					end
@@ -161,11 +160,6 @@ feature -- Evaluation
 					counter := counter + 1
 					if not is_sub_type (an_item.item_type, target_type.primary_type) then
 						create Result.make (False); finished := True
-					elseif target_type.content_type /= Any_item then
-							check
-								basic_xslt_processor: False
-								-- Current versions of the library do not supprt content type annotations
-							end
 					elseif counter = 2 and then not target_type.cardinality_allows_many then
 						create Result.make (False)
 					end

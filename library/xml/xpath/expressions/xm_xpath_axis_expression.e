@@ -49,18 +49,18 @@ feature -- Access
 	node_test: XM_XPATH_NODE_TEST
 			-- Node test
 
-	item_type: INTEGER is
+	item_type: XM_XPATH_ITEM_TYPE is
 			--Determine the data type of the expression, if possible
 		local
 			principal_axis: INTEGER
 		do
 			principal_axis := axis_principal_node_type (axis)
 			if principal_axis = Attribute_node then
-				Result := principal_axis
+				create {XM_XPATH_NODE_KIND_TEST} Result.make_attribute_test
 			elseif node_test = Void then
-				Result := Any_node
+				Result := any_node_test
 			else
-				Result := node_test.item_type
+				create {XM_XPATH_NODE_KIND_TEST} Result.make (node_test.node_kind)
 			end
 		end
 
@@ -130,13 +130,11 @@ feature -- Optimization
 			-- Simplified expression as a result of context-independent static optimizations
 		local
 			a_name_test: XM_XPATH_NAME_TEST
-			any_node_test: XM_XPATH_ANY_NODE_TEST
 		do
 			a_name_test ?= node_test
-			any_node_test ?= node_test
 			if axis = Attribute_axis and then a_name_test /= void then
 				create {XM_XPATH_ATTRIBUTE_REFERENCE_EXPRESSION} Result.make (a_name_test.fingerprint)
-			elseif axis = Parent_axis and then (node_test = Void or else any_node_test /= void) then
+			elseif axis = Parent_axis and then (node_test = Void or else node_test = any_node_test) then
 				create {XM_XPATH_PARENT_NODE_EXPRESSION} Result.make
 			else
 				Result := Current

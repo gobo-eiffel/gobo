@@ -19,6 +19,8 @@ inherit
 	XM_DTD_CALLBACKS
 
 	XM_XPATH_TYPE
+
+	XM_XPATH_STANDARD_NAMESPACES
 	
 	KL_SHARED_STANDARD_FILES
 
@@ -225,7 +227,6 @@ feature -- Tag
 			else
 				a_prefix := an_ns_prefix
 			end
-			
 			if not name_pool.is_name_code_allocated (a_prefix, a_namespace, a_local_part) then
 				if not name_pool.is_name_pool_full (a_namespace, a_local_part) then
 					name_pool.allocate_name (a_prefix, a_namespace, a_local_part)
@@ -237,7 +238,7 @@ feature -- Tag
 					on_error (a_message)
 				end
 			else
-				a_name_code := name_pool.name_code (a_prefix, a_namespace, a_local_part) 
+				a_name_code := name_pool.name_code (a_prefix, a_namespace, a_local_part)
 			end
 
 			-- Element typing is not yet supported
@@ -407,15 +408,15 @@ feature {NONE} -- Implementation
 						end
 
 					if an_attribute_model.is_id then
-						a_type_code := Id_type
+						a_type_code := Id_type_code
 					elseif an_attribute_model.is_id_ref then
-						a_type_code := Idref_type
+						a_type_code := Idref_type_code
 					elseif an_attribute_model.is_token then
-						a_type_code := Nmtoken_type
+						a_type_code := Nmtoken_type_code
 					elseif an_attribute_model.is_entity then
-						a_type_code := Entity_type
+						a_type_code := Entity_type_code
 					elseif an_attribute_model.is_notation then
-						a_type_code := Notation_type
+						a_type_code := Notation_type_code
 					else
 
 						-- Ignore CDATA (it basically means "anySimpleType")

@@ -32,10 +32,10 @@ feature -- Access
 			node_kind_is_comment: STRING_.same_string ( Result, "comment")
 		end
 
-	item_type: INTEGER is
+	item_type: XM_XPATH_ITEM_TYPE is
 			-- Type
 		do
-			Result := Comment_node
+			create {XM_XPATH_NODE_KIND_TEST} Result.make_comment_test
 		end
 	
 	string_value: STRING is

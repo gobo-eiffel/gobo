@@ -51,9 +51,11 @@
 		  <cluster name="sort"/>
 		  <cluster name="stand_alone"/>
 		  <cluster name="node_tests"/>
+		  <cluster name="types"/>
 		</cluster>
 		<cluster name="xslt">
 		  <cluster name="patterns"/>
+		  <cluster name="instructions"/>
 		  <cluster name="style"/>
 		  <cluster name="xslt_events" location="events" relative="true"/>
 		  <cluster name="transformation_support"/>

@@ -28,11 +28,11 @@ creation
 
 feature {NONE} -- Initialization
 
-	make (a_sequence: XM_XPATH_EXPRESSION; a_required_type: INTEGER) is
+	make (a_sequence: XM_XPATH_EXPRESSION; a_required_type: XM_XPATH_ITEM_TYPE) is
 			-- Establish invariant.
 		require
 			sequence_not_void: a_sequence /= Void
-			target_type_valid: is_valid_type (a_required_type)
+			target_type_not_void: a_required_type /= Void
 		do
 			sequence := a_sequence
 			target_type := a_required_type
@@ -47,7 +47,7 @@ feature {NONE} -- Initialization
 
 feature -- Access
 	
-	item_type: INTEGER is
+	item_type: XM_XPATH_ITEM_TYPE is
 			--Determine the data type of the expression, if possible
 		do
 			Result := sequence.item_type
@@ -70,7 +70,7 @@ feature -- Status report
 			a_string: STRING
 		do
 			a_string := STRING_.appended_string (indentation (a_level), "convert untyped atomic items to ")
-			a_string := STRING_.appended_string (a_string, type_name (target_type))
+			a_string := STRING_.appended_string (a_string, target_type.conventional_name)
 			std.error.put_string (a_string)
 			if is_error then
 				std.error.put_string (" in error%N")
@@ -98,7 +98,7 @@ feature -- Optimization
 	analyze (a_context: XM_XPATH_STATIC_CONTEXT) is
 			-- Perform static analysis of an expression and its subexpressions
 		local
-			a_type: INTEGER
+			a_type: XM_XPATH_ITEM_TYPE
 		do
 			mark_unreplaced
 			sequence.analyze (a_context)
@@ -109,8 +109,8 @@ feature -- Optimization
 				set_last_error (sequence.error_value)
 			else
 				a_type := sequence.item_type
-				if not is_sub_type (a_type, Any_node) then
-					if not (a_type = Any_item or else a_type = Atomic_type or else a_type = Untyped_atomic_type) then
+				if not is_sub_type (a_type, any_node_test) then
+					if not (a_type = any_item or else a_type = type_factory.any_atomic_type or else a_type = type_factory.untyped_atomic_type) then
 
 						-- The sequence can't contain any untyped atomic values,
 						--  so there's no need for a converter
@@ -199,12 +199,12 @@ feature {XM_XPATH_EXPRESSION} -- Restricted
 			sequence_set: sequence = a_sequence
 		end
 
-	target_type: INTEGER
+	target_type: XM_XPATH_ITEM_TYPE
 			-- Target type 
 
 invariant
 
 	sequence_not_void: sequence /= Void
-	target_type_valid: is_valid_type (target_type)
+	target_type_not_void: target_type /= Void
 
 end

@@ -45,8 +45,8 @@ feature -- Comparison
 			if an_untyped_value /= Void then
 				a_numeric_value ?= another_atomic_value
 				if a_numeric_value /= Void then
-					if an_atomic_value.is_convertible (Double_type) then
-						an_atomic_value_one := an_atomic_value.convert_to_type (Double_type)
+					if an_atomic_value.is_convertible (type_factory.double_type) then
+						an_atomic_value_one := an_atomic_value.convert_to_type (type_factory.double_type)
 					else
 						is_comparison_type_error := True
 						create last_type_error.make_from_string ("Could not convert first general comparison operand to xs:double", 6, Type_error)
@@ -56,7 +56,7 @@ feature -- Comparison
 						an_atomic_value_one := an_atomic_value.convert_to_type (another_atomic_value.item_type)
 					else
 						is_comparison_type_error := True
-						create last_type_error.make_from_string (STRING_.appended_string ("Could not convert first general comparison operand to ", type_name (another_atomic_value.item_type)), 6, Type_error)
+						create last_type_error.make_from_string (STRING_.appended_string ("Could not convert first general comparison operand to ", another_atomic_value.item_type.conventional_name), 6, Type_error)
 					end
 				end
 			end
@@ -66,8 +66,8 @@ feature -- Comparison
 				if an_untyped_value /= Void then
 					a_numeric_value ?= an_atomic_value
 					if a_numeric_value /= Void then
-						if another_atomic_value.is_convertible (Double_type) then
-							an_atomic_value_two := another_atomic_value.convert_to_type (Double_type)
+						if another_atomic_value.is_convertible (type_factory.double_type) then
+							an_atomic_value_two := another_atomic_value.convert_to_type (type_factory.double_type)
 						else
 							is_comparison_type_error := True
 							create last_type_error.make_from_string ("Could not convert second general comparison operand to xs:double", 6, Type_error)
@@ -77,7 +77,7 @@ feature -- Comparison
 							an_atomic_value_two := another_atomic_value.convert_to_type (an_atomic_value.item_type)
 						else
 							is_comparison_type_error := True
-							create last_type_error.make_from_string (STRING_.appended_string ("Could not convert second general comparison operand to ", type_name (another_atomic_value.item_type)), 6, Type_error)
+							create last_type_error.make_from_string (STRING_.appended_string ("Could not convert second general comparison operand to ", another_atomic_value.item_type.conventional_name), 6, Type_error)
 						end
 					end
 				end
@@ -86,9 +86,9 @@ feature -- Comparison
 				a_numeric_value ?= an_atomic_value_one
 				another_numeric_value ?= an_atomic_value_two
 				if a_numeric_value /= Void or else another_numeric_value /= Void then
-					if a_numeric_value.is_convertible (Double_type) and then another_numeric_value.is_convertible (Double_type) then
-						an_atomic_value_one := an_atomic_value_one.convert_to_type (Double_type)
-						an_atomic_value_two := an_atomic_value_two.convert_to_type (Double_type)
+					if a_numeric_value.is_convertible (type_factory.double_type) and then another_numeric_value.is_convertible (type_factory.double_type) then
+						an_atomic_value_one := an_atomic_value_one.convert_to_type (type_factory.double_type)
+						an_atomic_value_two := an_atomic_value_two.convert_to_type (type_factory.double_type)
 					else
 						is_comparison_type_error := True
 						create last_type_error.make_from_string ("Could not convert both operands of general comparison in XPath 1.0 compatibility mode operand to xs:double", 6, Type_error)
@@ -130,9 +130,9 @@ feature -- Comparison
 				end
 			else
 				is_comparison_type_error := True
-				a_message := STRING_.appended_string ("Cannot compare ", type_name (an_atomic_value.item_type))
+				a_message := STRING_.appended_string ("Cannot compare ", an_atomic_value.item_type.conventional_name)
 				a_message := STRING_.appended_string (a_message, " with ")
-				a_message := STRING_.appended_string (a_message, type_name (another_atomic_value.item_type))
+				a_message := STRING_.appended_string (a_message, another_atomic_value.item_type.conventional_name)
 				create last_type_error.make_from_string (a_message, 6, Type_error)
 			end
 		end

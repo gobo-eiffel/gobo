@@ -33,14 +33,14 @@ feature {NONE} -- Initialization
 			starting_node := a_start_node
 			node_test := a_node_test
 
-			if include_self and then node_test.matches_node (starting_node.item_type, starting_node.fingerprint, starting_node.type_annotation) then
+			if include_self and then node_test.matches_node (starting_node.node_type, starting_node.fingerprint, starting_node.type_annotation) then
 				first_node := starting_node
 			end
 
 			-- Now catch the case where the first node is an attribute or namespace node
 
 			next_node := starting_node.parent 
-			if not node_test.matches_node (next_node.item_type, next_node.fingerprint, next_node.type_annotation) then
+			if not node_test.matches_node (next_node.node_type, next_node.fingerprint, next_node.type_annotation) then
 				advance
 			end
 		ensure
@@ -99,7 +99,7 @@ feature {NONE} -- Implemnentation
 			from
 			next_node := starting_node.parent
 			until
-				next_node = Void or else node_test.matches_node (next_node.item_type, next_node.fingerprint, next_node.type_annotation)
+				next_node = Void or else node_test.matches_node (next_node.node_type, next_node.fingerprint, next_node.type_annotation)
 			loop
 				next_node := next_node.parent
 			end

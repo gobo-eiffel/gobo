@@ -55,7 +55,7 @@ feature -- Access
 			do_nothing -- pre-condition cannot be met
 		end
 
-	item_type: INTEGER is
+	item_type: XM_XPATH_ITEM_TYPE is
 			-- Type
 		do
 			do_nothing -- pre-condition cannot be met

@@ -66,6 +66,7 @@ feature {NONE} -- Initialization
 			root_node := 1
 			node_number := 1
 			document := Current
+			node_type := Document_node
 			
 			create node_kinds.make (1, an_estimated_node_count)
 			create depth.make (1, an_estimated_node_count)
@@ -280,7 +281,7 @@ feature -- Access
 			attribute_number_is_valid: is_attribute_number_valid (an_attribute_number)
 		do
 			if attribute_type_codes = Void then
-				Result := Untyped_atomic_type
+				Result := Untyped_atomic_type_code
 			else
 				Result := attribute_type_codes.item (an_attribute_number)
 			end
@@ -292,11 +293,11 @@ feature -- Access
 			node_number_is_valid: is_node_number_valid (a_node_number)
 		do
 			if element_type_map = Void then
-				Result := Untyped_type
+				Result := type_factory.untyped_type.fingerprint
 			elseif element_type_map.has (a_node_number)  then
 				Result := element_type_map.item (a_node_number)
 			else
-				Result := Untyped_type
+				Result := type_factory.untyped_type.fingerprint
 			end
 		end
 
@@ -438,7 +439,7 @@ feature -- Status report
 				an_index > a_limit
 			loop
 				std.error.put_string (left_padded_string_out (an_index.out, 8, ' '))
-				std.error.put_string (left_padded_string_out (type_name (node_kinds.item (an_index)), 8, ' ').substring (1,8))
+				std.error.put_string (left_padded_string_out (node_type_name (node_kinds.item (an_index)), 8, ' ').substring (1,8))
 				std.error.put_string (left_padded_string_out (depth.item (an_index).out, 8, ' '))
 				std.error.put_string (left_padded_string_out (next_sibling_indices.item (an_index).out, 8, ' '))
 				std.error.put_string (left_padded_string_out (alpha.item (an_index).out, 8, ' '))
@@ -588,7 +589,7 @@ feature -- Element change
 				std.error.put_string ("Add_node: Node  ")
 				std.error.put_string (last_node_added.out)
 				std.error.put_string (" of type  ")
-				std.error.put_string (type_name (a_new_node_type))
+				std.error.put_string (name_pool.display_name_from_name_code (a_new_node_type))
 				std.error.put_new_line
 			end
 		ensure
@@ -690,11 +691,11 @@ feature -- Element change
 			end
 			
 			if a_type_code = 0 then
-				another_type_code := Untyped_atomic_type
+				another_type_code := Untyped_atomic_type_code
 			else
 				another_type_code := a_type_code
 			end
-			if another_type_code /= Untyped_atomic_type then
+			if another_type_code /= Untyped_atomic_type_code then
 				if attribute_type_codes = Void then
 					create attribute_type_codes.make (1, attribute_parents.count)
 					from
@@ -704,7 +705,7 @@ feature -- Element change
 					until
 						an_index = attribute_parents.count
 					loop
-						attribute_type_codes.put (Untyped_atomic_type, an_index)
+						attribute_type_codes.put (Untyped_atomic_type_code, an_index)
 					end
 				end
 			end
@@ -718,7 +719,7 @@ feature -- Element change
 			
 			if alpha.item (a_parent) = -1 then alpha.put (attribute_values.count, a_parent) end
 
-			if another_type_code = Id_type then
+			if another_type_code = Id_type_code then
 				-- The attribute is marked as being an ID. But we don't trust it - it
 				-- might come from a non-validating parser. Before adding it to the index, we
 				-- check that it really is an ID.

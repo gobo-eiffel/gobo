@@ -18,7 +18,7 @@ inherit
 		rename
 			original_text as pattern_text
 		undefine
-			item_type, fingerprint, set_original_text
+			fingerprint, set_original_text, node_kind
 		end
 	
 	XM_XPATH_NODE_TEST
@@ -36,7 +36,7 @@ feature -- Matching
 	frozen matches (a_node: XM_XPATH_NODE;  a_transformer: XM_XSLT_TRANSFORMER): BOOLEAN is
 			-- Determine whether this Pattern matches the given Node;
 		do
-			Result := matches_node (a_node.item_type, a_node.fingerprint, a_node.type_annotation) 
+			Result := matches_node (a_node.node_type, a_node.fingerprint, a_node.type_annotation) 
 		end
 
 end

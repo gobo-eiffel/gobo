@@ -62,7 +62,6 @@ feature -- Events
 			base_receiver.start_content
 		end
 
-
 	end_element is
 			-- Notify the end of an element.
 		do
@@ -80,7 +79,6 @@ feature -- Events
 		do
 			base_receiver.notify_processing_instruction (a_name, a_data_string, properties)
 		end
-
 	
 	notify_comment (a_content_string: STRING; properties: INTEGER) is
 			-- Notify a comment.

@@ -27,21 +27,21 @@ creation
 
 feature -- Access
 
-	item_type: INTEGER is
+	item_type: XM_XPATH_ITEM_TYPE is
 			--Determine the data type of the expression, if possible
 		local
-			a_type, another_type: INTEGER
+			a_type, another_type: XM_XPATH_ITEM_TYPE
 		do
 			a_type := first_operand.item_type
 			another_type := second_operand.item_type
 			Result := common_item_type (a_type, another_type)
-			if Result = Number_type then
+			if Result = type_factory.numeric_type then
 				Result := lowest_commom_promotion_super_type (a_type, another_type)
 
 				-- Exception: integer / integer => decimal
 
-				if operator = Division_token and then Result = Integer_type then
-					Result := Decimal_type
+				if operator = Division_token and then Result = type_factory.integer_type then
+					Result := type_factory.decimal_type
 				end
 			end
 		end
@@ -65,13 +65,13 @@ feature -- Optimization
 			create a_sequence_type.make_optional_atomic
 			create a_role.make (Binary_expression_role, token_name (operator), 1)
 			create a_type_checker
-			a_type_checker.static_type_check (first_operand, a_sequence_type, is_backwards_compatible_mode, a_role)
+			a_type_checker.static_type_check (a_context, first_operand, a_sequence_type, is_backwards_compatible_mode, a_role)
 			if a_type_checker.is_static_type_check_error then
 				set_last_error_from_string (a_type_checker.static_type_check_error_message, 4, Type_error)
 			else
 				set_first_operand (a_type_checker.checked_expression)
 				create another_role.make (Binary_expression_role, token_name (operator), 2)
-				a_type_checker.static_type_check (second_operand, a_sequence_type, is_backwards_compatible_mode, another_role)
+				a_type_checker.static_type_check (a_context, second_operand, a_sequence_type, is_backwards_compatible_mode, another_role)
 				if a_type_checker.is_static_type_check_error then
 					set_last_error_from_string (a_type_checker.static_type_check_error_message, 4, Type_error)
 				else
@@ -143,23 +143,23 @@ feature -- Evaluation
 						-- Types are not known yet. Force to numeric if in 1.0 mode
 
 						if is_backwards_compatible_mode then
-							if an_atomic_value.is_convertible (Number_type) and then another_atomic_value.is_convertible (Number_type) then
-								a_numeric_value ?= an_atomic_value.convert_to_type (Number_type)
-								another_numeric_value ?= another_atomic_value.convert_to_type (Number_type)
+							if an_atomic_value.is_convertible (type_factory.numeric_type) and then another_atomic_value.is_convertible (type_factory.numeric_type) then
+								a_numeric_value ?= an_atomic_value.convert_to_type (type_factory.numeric_type)
+								another_numeric_value ?= another_atomic_value.convert_to_type (type_factory.numeric_type)
 								create {XM_XPATH_NUMERIC_ARITHMETIC} an_expression.make (a_numeric_value, operator, another_numeric_value)
 								an_expression.evaluate_item (a_context)
 								last_evaluated_item := an_expression.last_evaluated_item
 							else
-								a_string := STRING_.appended_string ("Unsuitable operands for arithmetic operation (", type_name (an_atomic_value.item_type))
+								a_string := STRING_.appended_string ("Unsuitable operands for arithmetic operation (", an_atomic_value.item_type.conventional_name)
 								a_string := STRING_.appended_string (a_string, ", ")
-								a_string := STRING_.appended_string (a_string, type_name (another_atomic_value.item_type))
+								a_string := STRING_.appended_string (a_string, another_atomic_value.item_type.conventional_name)
 								a_string := STRING_.appended_string (a_string,  ")")
 								set_last_error_from_string (a_string, Type_error, 6)								
 							end
 						else
-							a_string := STRING_.appended_string ("Unsuitable operands for arithmetic operation (", type_name (an_atomic_value.item_type))
+							a_string := STRING_.appended_string ("Unsuitable operands for arithmetic operation (", an_atomic_value.item_type.conventional_name)
 							a_string := STRING_.appended_string (a_string, ", ")
-							a_string := STRING_.appended_string (a_string, type_name (another_atomic_value.item_type))
+							a_string := STRING_.appended_string (a_string, another_atomic_value.item_type.conventional_name)
 							a_string := STRING_.appended_string (a_string,  ")")
 							set_last_error_from_string (a_string, Type_error, 6)	
 						end
@@ -179,7 +179,8 @@ feature {XM_XPATH_ARITHMETIC_EXPRESSION} -- Local
 		analyze_arithmetic_expression  (a_context: XM_XPATH_STATIC_CONTEXT) is
 			-- Perform static analysis of `Current' and its subexpressions
 		local
-			a_type, another_type, an_action: INTEGER
+			a_type, another_type: XM_XPATH_ITEM_TYPE
+			an_action: INTEGER
 			a_string: STRING
 			finished: BOOLEAN
 			a_value, another_value: XM_XPATH_VALUE
@@ -205,15 +206,15 @@ feature {XM_XPATH_ARITHMETIC_EXPRESSION} -- Local
 				-- Either the types are not known yet, or they are wrong
 
 				if not is_backwards_compatible_mode and then
-					is_sub_type (a_type, Atomic_type) and then
-					a_type /= Untyped_atomic_type and then
-					a_type /= Atomic_type and then
-					is_sub_type (another_type, Atomic_type) and then
-					another_type /= Untyped_atomic_type and then
-					another_type /= Atomic_type then
-					a_string := STRING_.appended_string ("Unsuitable operands for arithmetic operation (", type_name (a_type))
+					is_sub_type (a_type, type_factory.any_atomic_type) and then
+					a_type /= type_factory.untyped_atomic_type and then
+					a_type /= type_factory.any_atomic_type and then
+					is_sub_type (another_type, type_factory.any_atomic_type) and then
+					another_type /= type_factory.untyped_atomic_type and then
+					another_type /= type_factory.any_atomic_type then
+					a_string := STRING_.appended_string ("Unsuitable operands for arithmetic operation (", a_type.conventional_name)
 					a_string := STRING_.appended_string (a_string, ", ")
-					a_string := STRING_.appended_string (a_string, type_name (another_type))
+					a_string := STRING_.appended_string (a_string, another_type.conventional_name)
 					a_string := STRING_.appended_string (a_string,  ")")
 					set_last_error_from_string (a_string, Type_error, 6)
 				else
@@ -234,14 +235,14 @@ feature {XM_XPATH_ARITHMETIC_EXPRESSION} -- Local
 
 feature {NONE} -- Implementation
 
-	action (t1, t2: INTEGER): INTEGER is
+	action (t1, t2: XM_XPATH_ITEM_TYPE): INTEGER is
 			-- Action needed for `t1' and `t2'
 		require
-			first_type_valid: is_valid_type (t1)
-			second_type_valid: is_valid_type (t2)
+			first_type_not_void: t1 /= Void
+			second_type_not_void: t2 /= Void
 		do
-			if (is_sub_type (t1, Number_type) or else is_sub_type (t1, Untyped_atomic_type))
-					and then (is_sub_type (t2, Number_type) or else is_sub_type (t2, Untyped_atomic_type)) then
+			if (is_sub_type (t1, type_factory.numeric_type) or else is_sub_type (t1, type_factory.untyped_atomic_type))
+					and then (is_sub_type (t2, type_factory.numeric_type) or else is_sub_type (t2, type_factory.untyped_atomic_type)) then
 					Result := Numeric_arithmetic_action
 			else
 				inspect
@@ -249,35 +250,35 @@ feature {NONE} -- Implementation
 				when Modulus_token, Integer_division_token then
 					Result := Unknown_action
 				when Division_token then
-					if (t1 = Year_month_duration_type or else t1 = Day_time_duration_type) and then is_sub_type (t2, Number_type) then
+					if (t1 = type_factory.year_month_duration_type or else t1 = type_factory.day_time_duration_type) and then is_sub_type (t2, type_factory.numeric_type) then
 						Result := Duration_multiplication_action
 					else
 						Result := Unknown_action
 					end
 				when Multiply_token then
-					if (t1 = Year_month_duration_type or else t1 = Day_time_duration_type) and then is_sub_type (t2, Number_type) then
+					if (t1 = type_factory.year_month_duration_type or else t1 = type_factory.day_time_duration_type) and then is_sub_type (t2, type_factory.numeric_type) then
 						Result := Duration_multiplication_action
-					elseif (t2 = Year_month_duration_type or else t2 = Day_time_duration_type) and then is_sub_type (t1, Number_type) then
+					elseif (t2 = type_factory.year_month_duration_type or else t2 = type_factory.day_time_duration_type) and then is_sub_type (t1, type_factory.numeric_type) then
 						Result := Duration_multiplication_action
 					else
 						Result := Unknown_action
 					end
 				when Plus_token, Minus_token then
-					if t1= Year_month_duration_type and then t2 = Year_month_duration_type then
+					if t1= type_factory.year_month_duration_type and then t2 = type_factory.year_month_duration_type then
 						Result := Duration_addition_action
-					elseif t1 = Day_time_duration_type and then t2 = Day_time_duration_type then
+					elseif t1 = type_factory.day_time_duration_type and then t2 = type_factory.day_time_duration_type then
 						Result := Duration_addition_action
-					elseif t1 = Date_type and then (t2 = Year_month_duration_type or else t2 = Day_time_duration_type) then
+					elseif t1 = type_factory.date_type and then (t2 = type_factory.year_month_duration_type or else t2 = type_factory.day_time_duration_type) then
 						Result := Date_and_duration_action
-					elseif t2 = Date_type and then (t1 = Year_month_duration_type or else t1 = Day_time_duration_type) then
+					elseif t2 = type_factory.date_type and then (t1 = type_factory.year_month_duration_type or else t1 = type_factory.day_time_duration_type) then
 						Result := Date_and_duration_action
-					elseif t1 = Time_type and then (t2 = Year_month_duration_type or else t2 = Day_time_duration_type) then
+					elseif t1 = type_factory.time_type and then (t2 = type_factory.year_month_duration_type or else t2 = type_factory.day_time_duration_type) then
 						Result := Date_and_duration_action
-					elseif t2 = Time_type and then (t1 = Year_month_duration_type or else t1 = Day_time_duration_type) then
+					elseif t2 = type_factory.time_type and then (t1 = type_factory.year_month_duration_type or else t1 = type_factory.day_time_duration_type) then
 						Result := Date_and_duration_action
-					elseif t1 = Date_time_type and then t2 = Date_time_type then
+					elseif t1 = type_factory.date_time_type and then t2 = type_factory.date_time_type then
 						Result := Date_and_duration_action
-					elseif t1 = Date_time_type and then (t2 = Year_month_duration_type or else t2 = Day_time_duration_type) then
+					elseif t1 = type_factory.date_time_type and then (t2 = type_factory.year_month_duration_type or else t2 = type_factory.day_time_duration_type) then
 						Result := Date_and_duration_action
 					else
 						Result := Unknown_action						
@@ -288,11 +289,11 @@ feature {NONE} -- Implementation
 			valid_result_action: Unknown_action <= Result and then Result <= Duration_multiplication_action
 		end
 			
-	common_item_type (t1, t2: INTEGER): INTEGER is
+	common_item_type (t1, t2: XM_XPATH_ITEM_TYPE): XM_XPATH_ITEM_TYPE is
 			-- Common type to use for arithmetic
 		require
-			first_type_valid: is_valid_type (t1)
-			second_type_valid: is_valid_type (t2)
+			first_type_not_void: t1 /= Void
+			second_type_not_void: t2 /= Void
 			not_integer_division: operator /= Integer_division_token
 		do
 			inspect
@@ -309,139 +310,139 @@ feature {NONE} -- Implementation
 				Result := common_item_type_for_subtraction (t1, t2)
 			end
 		ensure
-			valid_result_type: is_valid_type (Result)
+			common_item_type_not_void: Result /= Void
 		end
 
-	common_item_type_for_modulus (t1, t2: INTEGER): INTEGER is
+	common_item_type_for_modulus (t1, t2: XM_XPATH_ITEM_TYPE): XM_XPATH_ITEM_TYPE is
 			-- Common type to use for modulus arithmetic
 		require
-			first_type_valid: is_valid_type (t1)
-			second_type_valid: is_valid_type (t2)
+			first_type_not_void: t1 /= Void
+			second_type_not_void: t2 /= Void
 		do
-			if (is_sub_type (t1, Number_type) or else is_sub_type (t1, Untyped_atomic_type))
-				and then (is_sub_type (t2, Number_type) or else is_sub_type (t2, Untyped_atomic_type)) then
-				Result := Number_type
+			if (is_sub_type (t1, type_factory.numeric_type) or else is_sub_type (t1, type_factory.untyped_atomic_type))
+				and then (is_sub_type (t2, type_factory.numeric_type) or else is_sub_type (t2, type_factory.untyped_atomic_type)) then
+				Result := type_factory.numeric_type
 			else
-				Result := Atomic_type -- Type is not known statically
+				Result := type_factory.any_atomic_type -- Type is not known statically
 			end
 		end
 
-	common_item_type_for_division (t1, t2: INTEGER): INTEGER is
+	common_item_type_for_division (t1, t2: XM_XPATH_ITEM_TYPE): XM_XPATH_ITEM_TYPE is
 			-- Common type to use for division
 		require
-			first_type_valid: is_valid_type (t1)
-			second_type_valid: is_valid_type (t2)
+			first_type_not_void: t1 /= Void
+			second_type_not_void: t2 /= Void
 		do
-			if (t1 = Year_month_duration_type or else t1 = Day_time_duration_type) and then is_sub_type (t2, Number_type) then
+			if (t1 = type_factory.year_month_duration_type or else t1 = type_factory.day_time_duration_type) and then is_sub_type (t2, type_factory.numeric_type) then
 				Result := t1
-			elseif(is_sub_type (t1, Number_type) or else is_sub_type (t1, Untyped_atomic_type))
-				and then (is_sub_type (t2, Number_type) or else is_sub_type (t2, Untyped_atomic_type)) then
-				Result := Number_type
+			elseif(is_sub_type (t1, type_factory.numeric_type) or else is_sub_type (t1, type_factory.untyped_atomic_type))
+				and then (is_sub_type (t2, type_factory.numeric_type) or else is_sub_type (t2, type_factory.untyped_atomic_type)) then
+				Result := type_factory.numeric_type
 			else
-				Result := Atomic_type -- Type is not known statically
+				Result := type_factory.any_atomic_type -- Type is not known statically
 			end
 		end
 	
-	common_item_type_for_multiplication (t1, t2: INTEGER): INTEGER is
+	common_item_type_for_multiplication (t1, t2: XM_XPATH_ITEM_TYPE): XM_XPATH_ITEM_TYPE is
 			-- Common type to use for multiplication
 		require
-			first_type_valid: is_valid_type (t1)
-			second_type_valid: is_valid_type (t2)
+			first_type_not_void: t1 /= Void
+			second_type_not_void: t2 /= Void
 		do
-			if (t1 = Year_month_duration_type or else t1 = Day_time_duration_type) and then is_sub_type (t2, Number_type) then
+			if (t1 = type_factory.year_month_duration_type or else t1 = type_factory.day_time_duration_type) and then is_sub_type (t2, type_factory.numeric_type) then
 				Result := t1
-			elseif (t2 = Year_month_duration_type or else t2 = Day_time_duration_type) and then is_sub_type (t1, Number_type) then
+			elseif (t2 = type_factory.year_month_duration_type or else t2 = type_factory.day_time_duration_type) and then is_sub_type (t1, type_factory.numeric_type) then
 				Result := t2
-			elseif(is_sub_type (t1, Number_type) or else is_sub_type (t1, Untyped_atomic_type))
-				and then (is_sub_type (t2, Number_type) or else is_sub_type (t2, Untyped_atomic_type)) then
-				Result := Number_type
+			elseif(is_sub_type (t1, type_factory.numeric_type) or else is_sub_type (t1, type_factory.untyped_atomic_type))
+				and then (is_sub_type (t2, type_factory.numeric_type) or else is_sub_type (t2, type_factory.untyped_atomic_type)) then
+				Result := type_factory.numeric_type
 			else
-				Result := Atomic_type -- Type is not known statically
+				Result := type_factory.any_atomic_type -- Type is not known statically
 			end
 		end
 
-	common_item_type_for_addition (t1, t2: INTEGER): INTEGER is
+	common_item_type_for_addition (t1, t2: XM_XPATH_ITEM_TYPE): XM_XPATH_ITEM_TYPE is
 			-- Common type to use for addition
 		require
-			first_type_valid: is_valid_type (t1)
-			second_type_valid: is_valid_type (t2)
+			first_type_not_void: t1 /= Void
+			second_type_not_void: t2 /= Void
 		do
-			if (is_sub_type (t1, Number_type) or else is_sub_type (t1, Untyped_atomic_type))
-				and then (is_sub_type (t2, Number_type) or else is_sub_type (t2, Untyped_atomic_type)) then
-				Result := Number_type
-			elseif t1 = Date_type and then (t2 = Year_month_duration_type or else t2 = Day_time_duration_type) then
-				Result := Date_type
-			elseif t2 = Date_type and then (t1 = Year_month_duration_type or else t1 = Day_time_duration_type) then
-				Result := Date_type
-			elseif t1 = Time_type and then (t2 = Year_month_duration_type or else t2 = Day_time_duration_type) then
-				Result := Time_type
-			elseif t2 = Time_type and then (t1 = Year_month_duration_type or else t1 = Day_time_duration_type) then
-				Result := Time_type
-			elseif t1 = Date_time_type and then t2 = Date_time_type then
-				Result := Date_time_type
-			elseif t1 = Date_time_type and then (t2 = Year_month_duration_type or else t2 = Day_time_duration_type) then
-				Result := Date_time_type					
-			elseif t1= Year_month_duration_type and then t2 = Year_month_duration_type then
+			if (is_sub_type (t1, type_factory.numeric_type) or else is_sub_type (t1, type_factory.untyped_atomic_type))
+				and then (is_sub_type (t2, type_factory.numeric_type) or else is_sub_type (t2, type_factory.untyped_atomic_type)) then
+				Result := type_factory.numeric_type
+			elseif t1 = type_factory.date_type and then (t2 = type_factory.year_month_duration_type or else t2 = type_factory.day_time_duration_type) then
+				Result := type_factory.date_type
+			elseif t2 = type_factory.date_type and then (t1 = type_factory.year_month_duration_type or else t1 = type_factory.day_time_duration_type) then
+				Result := type_factory.date_type
+			elseif t1 = type_factory.time_type and then (t2 = type_factory.year_month_duration_type or else t2 = type_factory.day_time_duration_type) then
+				Result := type_factory.time_type
+			elseif t2 = type_factory.time_type and then (t1 = type_factory.year_month_duration_type or else t1 = type_factory.day_time_duration_type) then
+				Result := type_factory.time_type
+			elseif t1 = type_factory.date_time_type and then t2 = type_factory.date_time_type then
+				Result := type_factory.date_time_type
+			elseif t1 = type_factory.date_time_type and then (t2 = type_factory.year_month_duration_type or else t2 = type_factory.day_time_duration_type) then
+				Result := type_factory.date_time_type					
+			elseif t1= type_factory.year_month_duration_type and then t2 = type_factory.year_month_duration_type then
 				Result := t1 
-			elseif t1 = Day_time_duration_type and then t2 = Day_time_duration_type then
+			elseif t1 = type_factory.day_time_duration_type and then t2 = type_factory.day_time_duration_type then
 				Result := t1
 			else
-				Result := Atomic_type -- Type is not known statically
+				Result := type_factory.any_atomic_type -- Type is not known statically
 			end	
 		end
 
-	common_item_type_for_subtraction (t1, t2: INTEGER): INTEGER is
+	common_item_type_for_subtraction (t1, t2: XM_XPATH_ITEM_TYPE): XM_XPATH_ITEM_TYPE is
 			-- Common type to use for subtraction
 		require
-			first_type_valid: is_valid_type (t1)
-			second_type_valid: is_valid_type (t2)
+			first_type_not_void: t1 /= Void
+			second_type_not_void: t2 /= Void
 		do
-			if (is_sub_type (t1, Number_type) or else is_sub_type (t1, Untyped_atomic_type))
-				and then (is_sub_type (t2, Number_type) or else is_sub_type (t2, Untyped_atomic_type)) then
-				Result := Number_type
-			elseif t1 = Date_type and then t2 = Date_type then
-				Result := Day_time_duration_type
-			elseif t1 = Date_type and then (t2 = Year_month_duration_type or else t2 = Day_time_duration_type) then
-				Result := Date_type
-			elseif t1 = Time_type and then t2 = Time_type then
-				Result := Day_time_duration_type
-			elseif t1 = Time_type and then (t2 = Year_month_duration_type or else t2 = Day_time_duration_type) then
-				Result := Time_type
-			elseif t1 = Date_time_type and then t2 = Date_time_type then
-				Result := Day_time_duration_type
-			elseif t1 = Date_time_type and then (t2 = Year_month_duration_type or else t2 = Day_time_duration_type) then
-				Result := Date_time_type
-			elseif t1= Year_month_duration_type and then t2 = Year_month_duration_type then
+			if (is_sub_type (t1, type_factory.numeric_type) or else is_sub_type (t1, type_factory.untyped_atomic_type))
+				and then (is_sub_type (t2, type_factory.numeric_type) or else is_sub_type (t2, type_factory.untyped_atomic_type)) then
+				Result := type_factory.numeric_type
+			elseif t1 = type_factory.date_type and then t2 = type_factory.date_type then
+				Result := type_factory.day_time_duration_type
+			elseif t1 = type_factory.date_type and then (t2 = type_factory.year_month_duration_type or else t2 = type_factory.day_time_duration_type) then
+				Result := type_factory.date_type
+			elseif t1 = type_factory.time_type and then t2 = type_factory.time_type then
+				Result := type_factory.day_time_duration_type
+			elseif t1 = type_factory.time_type and then (t2 = type_factory.year_month_duration_type or else t2 = type_factory.day_time_duration_type) then
+				Result := type_factory.time_type
+			elseif t1 = type_factory.date_time_type and then t2 = type_factory.date_time_type then
+				Result := type_factory.day_time_duration_type
+			elseif t1 = type_factory.date_time_type and then (t2 = type_factory.year_month_duration_type or else t2 = type_factory.day_time_duration_type) then
+				Result := type_factory.date_time_type
+			elseif t1= type_factory.year_month_duration_type and then t2 = type_factory.year_month_duration_type then
 				Result := t1 
-			elseif t1 = Day_time_duration_type and then t2 = Day_time_duration_type then
+			elseif t1 = type_factory.day_time_duration_type and then t2 = type_factory.day_time_duration_type then
 				Result := t1
 			else
-				Result := Atomic_type -- Type is not known statically
+				Result := type_factory.any_atomic_type -- Type is not known statically
 			end			
 		end
 
-	lowest_commom_promotion_super_type (t1, t2: INTEGER): INTEGER is
+	lowest_commom_promotion_super_type (t1, t2: XM_XPATH_ITEM_TYPE): XM_XPATH_ITEM_TYPE is
 			-- Lowest common supertype of two numeric values for promotion purposes
 	require
-			first_type_valid: is_valid_type (t1)
-			second_type_valid: is_valid_type (t2)
+			first_type_not_void: t1 /= Void
+			second_type_not_void: t2 /= Void
 		local
-			a_type, another_type: INTEGER
+			a_type, another_type: XM_XPATH_ITEM_TYPE
 		do
-			if is_sub_type (t1, Number_type) then a_type := t1 else a_type := Double_type end
-			if is_sub_type (t2, Number_type) then another_type := t1 else another_type := Double_type end
+			if is_sub_type (t1, type_factory.numeric_type) then a_type := t1 else a_type := type_factory.double_type end
+			if is_sub_type (t2, type_factory.numeric_type) then another_type := t1 else another_type := type_factory.double_type end
 			if a_type = another_type then
 				Result := a_type
-			elseif a_type = Double_type or else another_type = Double_type then
-				Result := Double_type
-			elseif a_type = Decimal_type or else another_type = Decimal_type then
-				Result := Decimal_type
+			elseif a_type = type_factory.double_type or else another_type = type_factory.double_type then
+				Result := type_factory.double_type
+			elseif a_type = type_factory.decimal_type or else another_type = type_factory.decimal_type then
+				Result := type_factory.decimal_type
 				-- Add in float for scehma-aware
 			else
-				Result := Integer_type
+				Result := type_factory.integer_type
 			end
 		ensure
-			valid_result_type: is_valid_type (Result)
+			result_type_not_void: Result /= Void
 		end
 			
 end

@@ -33,10 +33,10 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	item_type: INTEGER is
+	item_type: XM_XPATH_ITEM_TYPE is
 			-- Type
 		do
-			Result := Any_item -- Can't meet pre-condition anyway
+			Result := any_item -- Can't meet pre-condition anyway
 		end
 
 	string_value: STRING is
@@ -74,7 +74,7 @@ feature -- Status report
 			Result := False
 		end
 
-	is_convertible (a_required_type: INTEGER): BOOLEAN is
+	is_convertible (a_required_type: XM_XPATH_ITEM_TYPE): BOOLEAN is
 			-- Is `Current' convertible to `a_required_type'?
 		do
 			Result := False
@@ -92,7 +92,7 @@ feature -- Status report
 
 feature -- Conversion
 	
-	convert_to_type (a_required_type: INTEGER): XM_XPATH_ATOMIC_VALUE is
+	convert_to_type (a_required_type: XM_XPATH_ITEM_TYPE): XM_XPATH_ATOMIC_VALUE is
 			-- Convert `Current' to `required_type'
 		do
 			Result := Void

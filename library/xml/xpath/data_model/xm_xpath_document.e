@@ -46,10 +46,10 @@ feature -- Access
 			node_kind_is_document: Result /= Void and then ( Result.count = 0 or else Result.is_equal ("document"))
 		end
 
-	item_type: INTEGER is
+	item_type: XM_XPATH_ITEM_TYPE is
 			-- Type
 		do
-			Result := Document_node
+			create {XM_XPATH_NODE_KIND_TEST} Result.make_document_test
 		end
 	
 	unparsed_entity_system_id (an_entity_name: STRING): STRING is

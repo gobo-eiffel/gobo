@@ -27,6 +27,8 @@ inherit
 
 	XM_XPATH_SHARED_FUNCTION_FACTORY
 
+	KL_SHARED_STANDARD_FILES
+
 feature -- Access
 
 	shared_pool: XM_XPATH_SHARED_NAME_POOL is
@@ -211,7 +213,6 @@ feature -- Setting
 
 	set_up is
 		do
-			initialize_type_tables
 			default_pool := shared_pool.default_pool
 		end
 

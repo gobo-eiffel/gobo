@@ -36,7 +36,7 @@ feature {NONE} -- Initialization
 
 feature -- Access
 	
-	item_type: INTEGER is
+	item_type: XM_XPATH_ITEM_TYPE is
 			--Determine the data type of the expression, if possible
 		do
 			-- TODO
@@ -58,7 +58,7 @@ feature -- Status report
 				std.error.put_new_line
 				source.display (a_level + 1, a_pool)
 				a_string := STRING_.appended_string (indentation (a_level + 1), "as")
-				a_string := STRING_.appended_string (a_string, type_name (target_type))
+				a_string := STRING_.appended_string (a_string, target_type.conventional_name)
 				std.error.put_string (a_string)
 				std.error.put_new_line
 			end
@@ -86,6 +86,6 @@ feature {NONE} -- Implementation
 	source: XM_XPATH_EXPRESSION
 			-- Castable expression 
 	
-	target_type: INTEGER
+	target_type: XM_XPATH_ITEM_TYPE
 			-- Target type 
 end

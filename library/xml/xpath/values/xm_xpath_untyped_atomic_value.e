@@ -2,13 +2,13 @@ indexing
 
 	description:
 
-		"XPath untyped atomic values"
+	"XPath untyped atomic values"
 
-	library: "Gobo Eiffel XPath Library"
-	copyright: "Copyright (c) 2004, Colin Adams and others"
-	license: "Eiffel Forum License v2 (see forum.txt)"
-	date: "$Date$"
-	revision: "$Revision$"
+library: "Gobo Eiffel XPath Library"
+copyright: "Copyright (c) 2004, Colin Adams and others"
+license: "Eiffel Forum License v2 (see forum.txt)"
+date: "$Date$"
+revision: "$Revision$"
 
 class XM_XPATH_UNTYPED_ATOMIC_VALUE
 
@@ -29,10 +29,10 @@ creation
 
 feature -- Access
 
-		item_type: INTEGER is
+	item_type: XM_XPATH_ITEM_TYPE is
 			--Determine the data type, if possible;
 		do
-			Result := Untyped_atomic_type
+			Result := type_factory.untyped_atomic_type
 		end
 
 feature -- Comparison
@@ -48,7 +48,7 @@ feature -- Comparison
 			a_numeric_value ?= other
 			if a_numeric_value /= Void then
 				if double_value = Void then
-					double_value ?= convert_to_type (Double_type)
+					double_value ?= convert_to_type (type_factory.double_type)
 						check
 							double_value_not_void: double_value /= Void
 							-- because is_comparable
@@ -76,7 +76,7 @@ feature -- Status report
 				if double_value /= Void then
 					Result := True
 				else
-					Result := is_convertible (Double_type)
+					Result := is_convertible (type_factory.double_type)
 				end
 			else
 				Result := True -- Is this correct?
@@ -110,21 +110,19 @@ feature -- Evaluation
 	
 feature -- Conversion
 	
-	convert_to_type (a_required_type: INTEGER): XM_XPATH_ATOMIC_VALUE is
+	convert_to_type (a_required_type: XM_XPATH_ITEM_TYPE): XM_XPATH_ATOMIC_VALUE is
 			-- Convert `Current' to `required_type'
 		do
-			inspect
-				a_required_type
-			when String_type then
+			if	a_required_type = type_factory.string_type then
 				create {XM_XPATH_STRING_VALUE} Result.make (value)
-			when Double_type then
+			elseif a_required_type = type_factory.double_type then
 				if double_value /= Void then
 					Result := double_value
 				else
-
+					
 					-- Cache the result
 					
-					double_value ?= Precursor (Double_type)
+					double_value ?= Precursor (type_factory.double_type)
 						check
 							double_value_not_void: double_value /= Void
 							-- As is_convertible (Double_type) will return the same result for both String_type and Untyped_atomic_type

@@ -55,12 +55,8 @@ feature -- Access
 	then_expression: XM_XPATH_EXPRESSION
 			-- Then clause
 	
-	item_type: INTEGER is
-			--Determine the data type of the expression, if possible;
-			-- All expression return sequences, in general;
-			-- This routine determines the type of the items within the
-			-- sequence, assuming that (a) this is known in advance,
-			-- and (b) it is the same for all items in the sequence.
+	item_type: XM_XPATH_ITEM_TYPE is
+			--Determine the data type of the expression, if possible
 		do
 			Result := common_super_type (then_expression.item_type, else_expression.item_type)
 		end

@@ -14,29 +14,65 @@ deferred class XM_XPATH_NODE_TEST
 
 inherit
 
+	XM_XPATH_ITEM_TYPE
+
 	XM_XPATH_TYPE
+
+	KL_IMPORTED_STRING_ROUTINES
+
+	XM_XPATH_SHARED_ANY_NODE_TEST
 
 feature -- Access
 
-	-- Not sure if these next two features are needed
-
-	item_type: INTEGER is
-			-- Type of nodes to which this test applies
-		do
-			Result := Any_node
-		ensure
-			valid_node: is_node_type (Result)
-		end
-	
 	fingerprint: INTEGER is
 			-- Determine the name fingerprint of nodes to which this pattern applies
 		do
 			Result := -1 -- Means can match multiple fingerprints
 		end
 
-feature -- Status report
+	matches_item (an_item: XM_XPATH_ITEM): BOOLEAN is
+			-- Does `an_item' conform to `Current'?
+		local
+			a_node: XM_XPATH_NODE
+		do
+			a_node ?= an_item
+			if a_node /= Void then
+				Result := matches_node (a_node.node_type, a_node.fingerprint, a_node.type_annotation)
+			end
+		end
 
-	-- Not sure if this next feature is needed
+	super_type: XM_XPATH_ITEM_TYPE is
+			-- Type from which this item type is derived by restriction
+		do
+			Result := any_node_test
+		end
+
+	node_kind: INTEGER is
+			-- Type of nodes matched
+		do
+			Result := Any_node
+		end
+
+	primitive_type: INTEGER is
+			-- fingerprint of primitive type corresponding to this item type
+		do
+			Result := node_kind
+		end
+
+feature -- Comparison
+
+	is_same_type (other: XM_XPATH_ITEM_TYPE): BOOLEAN is
+			-- Is `other' the same type as `Current'?
+		local
+			an_item_type: XM_XPATH_NODE_TEST
+		do
+			an_item_type ?= other
+			if an_item_type /= Void then
+				Result := STRING_.same_string (original_text, an_item_type.original_text)
+			end
+		end
+
+feature -- Status report
 
 	allows_text_nodes: BOOLEAN is
 			-- Does this node test allow text nodes?
@@ -56,6 +92,15 @@ feature -- Status setting
 			original_text := clone (text)
 		ensure
 			original_text_set: original_text /= Void and then STRING_.same_string (original_text, text)
+		end
+
+	
+feature -- Conversion
+	
+	conventional_name: STRING is
+			-- Representation of this type name for use in error messages
+		do
+			Result := original_text
 		end
 
 feature -- Matching

@@ -69,19 +69,19 @@ feature {NONE} -- Initialization
 
 feature -- Access
 	
-	item_type: INTEGER is
+	item_type: XM_XPATH_ITEM_TYPE is
 			--Determine the data type of the expression, if possible
 		local
-			a_step_type: INTEGER
+			a_step_type: XM_XPATH_ITEM_TYPE
 		do
 			a_step_type := step.item_type
-			if is_node_type (a_step_type) then
+			if is_node_item_type (a_step_type) then
 				Result := a_step_type
 			else
 
 				-- rely on dynamic typing to ensure that it always returns nodes
 				
-				Result := Any_node
+				Result := any_node_test
 			end
 		end
 
@@ -265,13 +265,13 @@ feature -- Optimization
 
 					create a_role.make (Binary_expression_role, "/", 1)
 					create a_node_sequence.make_node_sequence
-					a_type_checker.static_type_check(start, a_node_sequence, False, a_role)
+					a_type_checker.static_type_check (a_context, start, a_node_sequence, False, a_role)
 					if a_type_checker.is_static_type_check_error then
 						set_last_error_from_string (a_type_checker.static_type_check_error_message, 4, Type_error)
 					else
 						set_start (a_type_checker.checked_expression)
 						create another_role.make (Binary_expression_role, "/", 2)
-						a_type_checker.static_type_check (step, a_node_sequence, False, another_role)
+						a_type_checker.static_type_check (a_context, step, a_node_sequence, False, another_role)
 						if a_type_checker.is_static_type_check_error then
 							set_last_error_from_string (a_type_checker.static_type_check_error_message, 4, Type_error)
 						else
@@ -454,7 +454,6 @@ feature {NONE} -- Implementation
 			a_context_item_expression: XM_XPATH_CONTEXT_ITEM_EXPRESSION
 			a_path: XM_XPATH_PATH_EXPRESSION
 			a_test: XM_XPATH_NODE_TEST
-			any_node_test: XM_XPATH_ANY_NODE_TEST
 			a_filter: XM_XPATH_FILTER_EXPRESSION
 			any_positional_filter: BOOLEAN
 		do
@@ -477,8 +476,8 @@ feature {NONE} -- Implementation
 					elseif an_axis.axis /= Descendant_or_self_axis then
 						Result := Void
 					else
-						a_test := an_axis.node_test; any_node_test ?= a_test
-						if a_test = Void or else any_node_test /= Void then
+						a_test := an_axis.node_test
+						if a_test = Void or else a_test = any_node_test then
 							Result := Void
 						else
 							from

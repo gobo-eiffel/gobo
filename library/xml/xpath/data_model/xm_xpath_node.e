@@ -19,6 +19,8 @@ inherit
 			as_value
 		end
 
+	XM_XPATH_SHARED_TYPE_FACTORY
+
 	XM_XPATH_AXIS
 
 		-- This class represents a node in gexslt's object model.
@@ -46,6 +48,9 @@ feature -- Access
 		ensure
 			base_uri_may_be_void: True
 		end
+
+	node_type: INTEGER
+			-- `node_kind' expressed as an integer
 
 	node_kind: STRING is
 			-- Kind of node
@@ -104,15 +109,11 @@ feature -- Access
 		end
 
 	type_annotation: INTEGER is
-			--Type annotation of this node, if any
+			--Type annotation of this node
 		require
 			not_in_error: not is_error
 		do
-			if item_type = Element_node then
-				Result := Untyped_type
-			else
-				Result := Untyped_atomic_type
-			end
+			Result := type_factory.untyped_atomic_type.fingerprint
 		end
 
 	fingerprint: INTEGER is
@@ -259,9 +260,9 @@ feature -- Access
 			a_string_value: XM_XPATH_STRING_VALUE
 		do
 			a_type := type_annotation
-			if a_type = Untyped_atomic_type then
+			if a_type = type_factory.untyped_atomic_type.fingerprint then
 				create {XM_XPATH_UNTYPED_ATOMIC_VALUE} Result.make (string_value)
-			elseif a_type = Untyped_type then
+			elseif a_type = type_factory.untyped_type.fingerprint then
 				create {XM_XPATH_UNTYPED_ATOMIC_VALUE} Result.make (string_value)
 			else
 				-- TODO complex types should be dealt with properly

@@ -64,13 +64,10 @@ feature -- Access
 	Preserve_parent: INTEGER is 4
 			-- Parent element requests preserve white space
 
-	transformer: XM_XSLT_TRANSFORMER
-			-- Transformer - for pattern-evaluation and rule-conflict-reporting
-
 	space_preserving_mode (a_name_code: INTEGER): INTEGER is
 			-- Space-preserving mode for element identitifed by `a_name_code'
 		require
-			valid_name_code: transformer.name_pool.is_valid_name_code (a_name_code)
+			valid_name_code: a_name_code > 0
 		local
 			a_rule: XM_XSLT_RULE_VALUE
 		do
@@ -212,6 +209,14 @@ feature {XM_XSLT_STRIPPER} -- Local
 			preserve_all_set: preserve_all = a_preserve_all
 		end
 
+	transformer: XM_XSLT_TRANSFORMER
+			-- Transformer - for pattern-evaluation and rule-conflict-reporting
+
+	is_local_invariant_met: BOOLEAN is
+			-- is the invariant met?
+		do
+			Result := transformer /= Void and then strip_stack /= Void
+		end
 
 feature {NONE} -- Implementation
 
@@ -252,9 +257,8 @@ feature {NONE} -- Implementation
 		end
 
 invariant
-
-	transformer_not_void: transformer /= Void
-	strip_stack_not_void: strip_stack /= Void
+	
+	local_invariant: is_local_invariant_met
 	
 end
 	

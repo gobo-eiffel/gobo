@@ -31,6 +31,7 @@ feature {NONE} -- Initialization
 		do
 			document := a_document
 			node_number := a_node_number
+			node_type := Text_node
 		ensure
 			document_set: document = a_document
 			node_number_set: node_number = a_node_number

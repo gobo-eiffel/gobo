@@ -51,7 +51,7 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	item_type: INTEGER is
+	item_type: XM_XPATH_ITEM_TYPE is
 			--Determine the data type of the expression, if possible
 		do
 				Result := action.item_type
@@ -97,7 +97,7 @@ feature -- Optimization
 			an_expression: XM_XPATH_EXPRESSION
 			a_role: XM_XPATH_ROLE_LOCATOR
 			a_type_checker: XM_XPATH_TYPE_CHECKER
-			a_type: INTEGER
+			a_type: XM_XPATH_ITEM_TYPE
 			a_value: XM_XPATH_VALUE
 		do
 			mark_unreplaced
@@ -120,7 +120,7 @@ feature -- Optimization
 					end
 					create a_role.make (Variable_role, declaration.name, 1)
 					create a_type_checker
-					a_type_checker.static_type_check (an_expression, declaration.required_type, False, a_role)
+					a_type_checker.static_type_check (a_context, an_expression, declaration.required_type, False, a_role)
 					if a_type_checker.is_static_type_check_error then
 						set_last_error_from_string (a_type_checker.static_type_check_error_message, 4, Type_error)
 					else

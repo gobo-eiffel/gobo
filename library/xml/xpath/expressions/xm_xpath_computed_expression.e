@@ -198,7 +198,7 @@ feature -- Evaluation
 								if an_iterator.after then
 									create Result.make (False)
 								else
-									a_double ?=	a_number.convert_to_type (Double_type)
+									a_double ?=	a_number.convert_to_type (type_factory.double_type)
 										check
 											double_result_not_void: a_double /= Void
 											-- This conversion always suceeds

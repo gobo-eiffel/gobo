@@ -38,10 +38,10 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	item_type: INTEGER is
+	item_type: XM_XPATH_ITEM_TYPE is
 			-- Determine the data type of the expression, if possible
 		do
-			Result := Boolean_type
+			Result := type_factory.boolean_type
 		end
 
 feature -- Status report
@@ -49,7 +49,7 @@ feature -- Status report
 	required_type (argument_number: INTEGER): XM_XPATH_SEQUENCE_TYPE is
 			-- Type of argument number `argument_number'
 		do
-			create Result.make (Any_item, Required_cardinality_zero_or_more)
+			create Result.make (any_item, Required_cardinality_zero_or_more)
 		end
 
 feature -- Evaluation

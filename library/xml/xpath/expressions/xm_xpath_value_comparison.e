@@ -53,10 +53,10 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	item_type: INTEGER is
+	item_type: XM_XPATH_ITEM_TYPE is
 			--Determine the data type of the expression, if possible
 		do
-			Result := Boolean_type
+			Result := type_factory.boolean_type
 		end
 
 feature -- Optimization
@@ -66,7 +66,7 @@ feature -- Optimization
 		local
 			an_atomic_type: XM_XPATH_SEQUENCE_TYPE
 			a_role, another_role: XM_XPATH_ROLE_LOCATOR
-			a_type, another_type: INTEGER
+			a_type, another_type: XM_XPATH_ITEM_TYPE
 			a_type_checker: XM_XPATH_TYPE_CHECKER
 			a_message: STRING
 		do
@@ -81,15 +81,15 @@ feature -- Optimization
 				if second_operand.is_error then set_last_error (second_operand.error_value)	end
 			end
 			if not is_error then
-				create an_atomic_type.make (Atomic_type, Required_cardinality_exactly_one)
+				create an_atomic_type.make (type_factory.any_atomic_type, Required_cardinality_exactly_one)
 				create a_role.make (Binary_expression_role, token_name (operator), 1)
-				a_type_checker.static_type_check (first_operand, an_atomic_type, False, a_role)
+				a_type_checker.static_type_check (a_context, first_operand, an_atomic_type, False, a_role)
 				if a_type_checker.is_static_type_check_error then
 					set_last_error_from_string (a_type_checker.static_type_check_error_message, 4, Type_error)
 				else
 					set_first_operand (a_type_checker.checked_expression)
 					create another_role.make (Binary_expression_role, token_name (operator), 2)
-					a_type_checker.static_type_check (second_operand, an_atomic_type, False, a_role)
+					a_type_checker.static_type_check (a_context, second_operand, an_atomic_type, False, a_role)
 					if a_type_checker.is_static_type_check_error then
 						set_last_error_from_string (a_type_checker.static_type_check_error_message, 4, Type_error)
 					else
@@ -97,12 +97,12 @@ feature -- Optimization
 						a_type := first_operand.item_type
 						another_type := second_operand.item_type
 						
-						if not (a_type = Atomic_type or else a_type = Untyped_atomic_type
-								  or else another_type = Atomic_type or else another_type = Untyped_atomic_type) then
-							if primitive_type (a_type) /= primitive_type (another_type) then
-								a_message := STRING_.appended_string ("Cannot compare ", type_name (a_type))
+						if not (a_type = type_factory.any_atomic_type or else a_type = type_factory.untyped_atomic_type
+								  or else another_type = type_factory.any_atomic_type or else another_type = type_factory.untyped_atomic_type) then
+							if a_type.primitive_type /= another_type.primitive_type then
+								a_message := STRING_.appended_string ("Cannot compare ", a_type.conventional_name)
 								a_message := STRING_.appended_string (a_message, " with ")
-								a_message := STRING_.appended_string (a_message, type_name (another_type))
+								a_message := STRING_.appended_string (a_message, another_type.conventional_name)
 								set_last_error_from_string (a_message, 4, Type_error)
 							end
 						end
@@ -190,8 +190,8 @@ feature {NONE} -- Implementation
 				if an_integer_value /= Void then
 					Result := an_integer_value.value = 0
 				else
-					if an_atomic_value.is_convertible (Integer_type) then
-						an_integer_value ?= an_atomic_value.convert_to_type (Integer_type)
+					if an_atomic_value.is_convertible (type_factory.integer_type) then
+						an_integer_value ?= an_atomic_value.convert_to_type (type_factory.integer_type)
 							check
 								integer: an_integer_value /= Void
 								-- because of is_convertible

@@ -18,10 +18,10 @@ inherit
 
 feature -- Access
 
-	item_type: INTEGER is
-			--Determine the data type of the expression, if possible
+	item_type: XM_XPATH_ITEM_TYPE is
+			--Determine the data type, if possible;
 		do
-			Result := Any_item
+			Result := any_item
 		end
 
 	item (p: INTEGER): XM_XPATH_ITEM is
@@ -79,7 +79,7 @@ feature -- Status report
 			an_iterator: XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_ITEM]
 		do
 			a_string := STRING_.appended_string (indentation (a_level), "sequence of ")
-			a_string := STRING_.appended_string (a_string, type_name (item_type))
+			a_string := STRING_.appended_string (a_string, item_type.conventional_name)
 			if is_error then
 				std.error.put_string (" in error%N")
 			else

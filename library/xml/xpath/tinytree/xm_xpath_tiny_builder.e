@@ -18,6 +18,10 @@ inherit
 
 	XM_XPATH_TYPE
 
+	XM_XPATH_SHARED_CONFORMANCE
+
+	XM_XPATH_STANDARD_NAMESPACES
+
 creation
 
 	make
@@ -32,7 +36,6 @@ feature {NONE} -- Initialization
 			if basic_conformance then
 				conformance.set_basic_xslt_processor
 			end
-			initialize_type_tables
 			name_pool := a_name_pool
 		ensure
 			name_pool_set: name_pool = a_name_pool
@@ -80,7 +83,7 @@ feature -- Events
 			document.add_node (Element_node, current_depth, -1, -1, a_name_code)
 			node_number := document.last_node_added
 			if conformance.basic_xslt_processor then
-				a_new_type_code := Untyped_type
+				a_new_type_code := Untyped_type_code
 				document.set_element_annotation (node_number, a_new_type_code)
 			else
 					check
@@ -122,7 +125,7 @@ feature -- Events
 		do
 			a_new_type_code := a_type_code
 			if conformance.basic_xslt_processor then
-				a_new_type_code := Untyped_atomic_type
+				a_new_type_code := Untyped_atomic_type_code
 			else
 					check
 						Only_basic_xslt_processors_are_supported: False

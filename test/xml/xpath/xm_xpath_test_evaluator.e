@@ -27,6 +27,8 @@ inherit
 
 	KL_IMPORTED_STRING_ROUTINES
 
+	KL_SHARED_STANDARD_FILES
+
 feature
 
 	test_against_xml_file is

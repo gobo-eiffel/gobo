@@ -59,10 +59,10 @@ feature -- Access
 		end
 feature -- Access
 
-	item_type: INTEGER is
+	item_type: XM_XPATH_ITEM_TYPE is
 			-- Determine the data type of the expression, if possible
 		do
-			Result := String_type
+			Result := type_factory.string_type
 		end
 
 feature -- Status report
@@ -70,7 +70,7 @@ feature -- Status report
 	required_type (argument_number: INTEGER): XM_XPATH_SEQUENCE_TYPE is
 			-- Type of argument number `argument_number'
 		do
-			create Result.make (String_type, Required_cardinality_optional)
+			create Result.make (type_factory.string_type, Required_cardinality_optional)
 		end
 
 feature -- Optimization

@@ -17,6 +17,9 @@ inherit
 	XM_XPATH_ELEMENT
 
 	XM_XPATH_TINY_COMPOSITE_NODE
+		undefine
+			type_annotation
+		end
 
 creation
 
@@ -31,6 +34,7 @@ feature {NONE} -- Initialization
 		do
 			document := a_document
 			node_number := a_node_number
+			node_type := Element_node
 		ensure
 			document_set: document = a_document
 			node_number_set: node_number = a_node_number

@@ -16,6 +16,8 @@ inherit
 
 	XM_XPATH_STATIC_CONTEXT
 
+	XM_XPATH_CONFORMANCE
+
 	XM_XPATH_STANDARD_NAMESPACES
 
 	XM_XPATH_SHARED_FUNCTION_FACTORY
@@ -59,6 +61,19 @@ feature {NONE} -- Initialization
 		end
 
 feature -- Access
+
+	host_language: STRING is
+			-- Name of host language
+		do
+
+			-- This routine MUST be redefined for a custom-host language
+
+			if customized_host_language then
+				Result := Void
+			elseif basic_xslt_processor or else schema_aware_processor then
+				Result := "Stand-alone XPath evaluator"
+			end
+		end
 
 	default_element_namespace: INTEGER is
 			-- Default XPath namespace, as a namespace code that can be looked up in `name_pool'
@@ -120,6 +135,17 @@ feature -- Status report
 			else
 				Result := is_variable_declared (a_fingerprint)
 			end
+		end
+
+	is_data_type_valid (a_fingerprint: INTEGER): BOOLEAN is
+			-- Does `a_fingerprint' represent a data-type in `Current'?
+		do
+			Result := False
+
+			-- Customized host languages must redefine this routine.
+			-- It is not called for host languages supported directly
+			--  by this library.
+			
 		end
 
 feature -- Element change

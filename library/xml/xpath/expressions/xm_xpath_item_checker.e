@@ -28,25 +28,22 @@ creation
 
 feature {NONE} -- Initialization
 
-	make (a_sequence: XM_XPATH_EXPRESSION; an_item_type: INTEGER; a_content_type: INTEGER; a_role_locator: XM_XPATH_ROLE_LOCATOR) is
+	make (a_sequence: XM_XPATH_EXPRESSION; an_item_type: XM_XPATH_ITEM_TYPE; a_role_locator: XM_XPATH_ROLE_LOCATOR) is
 			-- Establish invariant.
 		require
 				underlying_expression_not_void: a_sequence /= Void
-				role_locator_not_void: a_role_locator /= void
-				valid_item_type: is_valid_type (an_item_type)
-				valid_content_type: is_valid_type (a_content_type)
+				role_locator_not_void: a_role_locator /= Void
+				item_type_not_void: an_item_type /= Void
 		do
 			sequence := a_sequence
 			role_locator := a_role_locator
 			required_item_type := an_item_type
-			required_content_type := a_content_type
 			compute_static_properties
 			initialize
 		ensure
 			sequence_set: sequence = a_sequence
 			role_locator_set: role_locator = a_role_locator
 			item_type_set: required_item_type = an_item_type
-			content_type_set: required_content_type = a_content_type
 			static_properties_computed: are_static_properties_computed
 		end
 
@@ -55,16 +52,13 @@ feature -- Access
 	sequence: XM_XPATH_EXPRESSION
 			-- The underlying expression
 
-	required_item_type: INTEGER
-			-- The required typr for items
+	required_item_type: XM_XPATH_ITEM_TYPE
+			-- The required type for items
 	
-	required_content_type : INTEGER
-			-- The required type for the content of items
-		
 	role_locator: XM_XPATH_ROLE_LOCATOR
 			-- Role locator for error messages
 
-	item_type: INTEGER is
+	item_type: XM_XPATH_ITEM_TYPE is
 			-- Determine the data type of the expression, if possible
 		do
 			Result := required_item_type
@@ -87,7 +81,7 @@ feature -- Status report
 			a_string: STRING
 		do
 			a_string := STRING_.appended_string (indentation (a_level), "treat as ")
-			a_string := STRING_.appended_string (a_string, type_name (required_item_type))
+			a_string := STRING_.appended_string (a_string, required_item_type.conventional_name)
 			std.error.put_string (a_string)
 			if is_error then
 				std.error.put_string (" in error%N")
@@ -106,7 +100,7 @@ feature -- Optimization
 		do
 			a_result_expression := clone (Current)
 			a_result_expression.set_sequence (sequence.simplified_expression)
-			if required_item_type = Any_item or else sequence.is_error then
+			if required_item_type = any_item or else sequence.is_error then
 				Result := a_result_expression.sequence
 			else
 				Result := a_result_expression
@@ -124,7 +118,7 @@ feature -- Optimization
 			if sequence.is_error then
 				set_last_error (sequence.error_value)
 			else
-				if required_content_type = Any_item and then is_sub_type (sequence.item_type, required_item_type) then
+				if is_sub_type (sequence.item_type, required_item_type) then
 					set_replacement (sequence)
 				end
 			end
@@ -204,28 +198,22 @@ feature {XM_XPATH_EXPRESSION} -- Restricted
 feature {NONE} -- Implementation
 
 	test_conformance (an_item: XM_XPATH_ITEM) is
-			-- Test conformance to `required_item_type' and `required_content_type'.
+			-- Test conformance to `required_item_type'.
 			-- Marks `an_item' as in error if check fails.
 		require
 			item_not_void: an_item /= Void
 		local
-			a_type, a_content_type: INTEGER
+			a_type: XM_XPATH_ITEM_TYPE
 			a_message: STRING
 		do
 			a_type := an_item.item_type
 			if not is_sub_type (a_type, required_item_type) then
 				a_message := STRING_.appended_string ("Required type of ", role_locator.message)
 				a_message := STRING_.appended_string (a_message, " is ")
-				a_message := STRING_.appended_string (a_message, type_name (required_item_type))
+				a_message := STRING_.appended_string (a_message, required_item_type.conventional_name)
 				a_message := STRING_.appended_string (a_message, "; supplied value is ")
-				a_message := STRING_.appended_string (a_message, type_name (a_type))
+				a_message := STRING_.appended_string (a_message, a_type.conventional_name)
 				an_item.set_last_error_from_string (a_message, 6, Type_error)
-			elseif required_content_type /= Any_item then
-				--a_content_type := a_node.type_annotation
-				-- this is only needed for Schema-aware processors, so for now:
-					check
-						basic_xslt_processor: False
-					end
 			end
 		end
 
@@ -233,8 +221,7 @@ invariant
 
 	underlying_expression_not_void: sequence /= Void
 	role_locator_not_void: role_locator /= void
-	valid_item_type: is_valid_type (required_item_type)
-	valid_content_type: is_valid_type (required_content_type)
+	item_type_not_void: required_item_type /= Void
 
 end
 

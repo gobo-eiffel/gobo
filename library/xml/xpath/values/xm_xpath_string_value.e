@@ -47,16 +47,16 @@ feature -- Access
 			Result := value
 		end
 
-	type: INTEGER is
-			-- Type
-		do
-			Result := String_type
-		end
+--	type: INTEGER is
+--			-- Type
+--		do
+--			Result := String_type
+--		end
 	
-	item_type: INTEGER is
+	item_type: XM_XPATH_ITEM_TYPE is
 			--Determine the data type, if possible;
 		do
-			Result := String_type
+			Result := type_factory.string_type
 		end
 
 feature -- Comparison
@@ -116,20 +116,18 @@ feature -- Status report
 			end
 		end
 
-	is_convertible (a_required_type: INTEGER): BOOLEAN is
+	is_convertible (a_required_type: XM_XPATH_ITEM_TYPE): BOOLEAN is
 			-- Is `Current' convertible to `a_required_type'?
 		local
 			a_string: STRING
 		do
-			inspect
-				a_required_type
-			when Boolean_type then
+			if a_required_type = type_factory.boolean_type then
 				a_string := trim_white_space (value)
 				if STRING_.same_string (a_string, "0") or else STRING_.same_string (a_string, "false") 
 					or else STRING_.same_string (a_string, "1") or else STRING_.same_string (a_string, "true") then
 					Result := True
 				end
-			when Number_type then
+			elseif a_required_type = type_factory.numeric_type then
 				a_string := trim_white_space (value)
 				if a_string.index_of ('e', 1) > 0 or else a_string.index_of ('E', 1) > 0 then
 					Result := a_string.is_double
@@ -139,14 +137,17 @@ feature -- Status report
 				else
 					Result := a_string.is_integer
 				end
-			when Double_type then
+			elseif a_required_type = type_factory.double_type then
 				Result := a_string.is_double
-			when Integer_type then
+			elseif a_required_type = type_factory.integer_type then
 				Result := a_string.is_integer
-			when Decimal_type then
+			elseif a_required_type = type_factory.decimal_type then
 				Result := a_string.is_double	-- TODO
 				todo ("is-convertible", True)
-			when Untyped_atomic_type, String_type, Atomic_type, Any_item then
+			elseif a_required_type = type_factory.untyped_atomic_type
+				or else a_required_type = type_factory.string_type
+				or else a_required_type = type_factory.any_atomic_type
+				or else a_required_type = any_item then
 				Result := True
 			else
 				Result := False -- TODO Any_uri, qname, dtd type, dates and times
@@ -164,7 +165,7 @@ feature -- Evaluation
 
 feature -- Conversion
 
-	convert_to_type (a_required_type: INTEGER): XM_XPATH_ATOMIC_VALUE is
+	convert_to_type (a_required_type: XM_XPATH_ITEM_TYPE): XM_XPATH_ATOMIC_VALUE is
 			-- Convert `Current' to `a_required_type'
 		do
 			-- TODO

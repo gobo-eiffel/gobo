@@ -14,10 +14,10 @@ deferred class XM_XPATH_NODE_WITH_BASE_URI_OR_FROM_PARENT
 
 inherit
 
-	XM_XPATH_NODE
-	
 	XM_XPATH_BASE_URI
-	
+
+	XM_XPATH_NODE
+
 feature -- Access
 
 	base_uri: STRING is

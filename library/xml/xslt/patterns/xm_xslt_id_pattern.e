@@ -16,7 +16,7 @@ inherit
 
 	XM_XSLT_PATTERN
 		redefine
-			type_check, item_type
+			type_check, node_kind
 		end
 
 creation
@@ -40,18 +40,16 @@ feature -- Access
 	id_expression: XM_XPATH_EXPRESSION
 			-- The expression
 
+	node_kind: INTEGER is
+			-- Type of nodes matched
+		do
+			Result := Element_node
+		end
+	
 	node_test: XM_XSLT_NODE_TEST is
 			-- Retrieve an `XM_XSLT_NODE_TEST' that all nodes matching this pattern must satisfy
 		do
 			create {XM_XSLT_NODE_KIND_TEST} Result.make (Element_node)
-		end
-
-	item_type: INTEGER is
-			-- Determine the types of nodes to which this pattern applies;
-			-- Used for optimisation;
-			-- For patterns that match nodes of several types, return Any_node
-		do
-			Result := Element_node
 		end
 
 feature -- Optimization
@@ -82,7 +80,7 @@ feature -- Matching
 			a_cursor: DS_LIST_CURSOR [STRING]
 			an_element: XM_XPATH_ELEMENT
 		do
-			if a_node.item_type = Element_node then
+			if a_node.node_type = Element_node then
 				a_doc := a_node.document_root
 				if a_doc = Void then
 					Result := False

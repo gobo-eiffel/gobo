@@ -103,11 +103,11 @@ feature -- Element change
 			end
 		end
 
-	refine_type_information (a_type: INTEGER; a_cardinality_set: ARRAY [BOOLEAN]; a_constant_value: XM_XPATH_VALUE;
+	refine_type_information (a_type: XM_XPATH_ITEM_TYPE; a_cardinality_set: ARRAY [BOOLEAN]; a_constant_value: XM_XPATH_VALUE;
 									 a_dependencies_set: ARRAY [BOOLEAN];  a_special_properties_set: ARRAY [BOOLEAN]) is
 			-- Set static type in the binding reference more accurately.
 		require
-			valid_type: is_valid_type (a_type)
+			type_not_void: a_type /= Void
 			cardinalities_not_void: a_cardinality_set /= Void and then a_cardinality_set.count = 3
 			possible_constant_value: True
 			special_properties_not_void: a_special_properties_set /= Void
@@ -115,7 +115,7 @@ feature -- Element change
 			a_cursor: DS_ARRAYED_LIST_CURSOR [XM_XPATH_BINDING_REFERENCE]
 			a_variable_reference: XM_XPATH_VARIABLE_REFERENCE
 			a_sequence_type: XM_XPATH_SEQUENCE_TYPE
-			old_item_type, new_item_type: INTEGER
+			old_item_type, new_item_type: like a_type
 			a_cardinality: INTEGER
 		do
 			a_cursor := references.new_cursor

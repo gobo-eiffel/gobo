@@ -1,0 +1,122 @@
+indexing
+
+	description:
+
+		"Objects that strip white space from stylesheet elements."
+
+	library: "Gobo Eiffel XSLT Library"
+	copyright: "Copyright (c) 2004, Colin Adams and others"
+	license: "Eiffel Forum License v2 (see forum.txt)"
+	date: "$Date$"
+	revision: "$Revision$"
+
+class	XM_XSLT_STYLESHEET_STRIPPER
+
+inherit
+	
+	XM_XSLT_STRIPPER
+		redefine
+			another, space_preserving_mode, is_local_invariant_met
+		end
+
+creation
+
+	make_first_time, make_another
+
+feature {NONE} -- Initialization
+
+	make_first_time (a_name_pool: XM_XPATH_NAME_POOL) is
+			-- Build stylesheet rules.
+		require
+			name_pool_not_void: a_name_pool /= Void
+		do
+			xsl_text_fingerprint := a_name_pool.fingerprint (Xslt_uri, "text")
+			create specials.make (1, 10)
+			specials.put (a_name_pool.fingerprint (Xslt_uri, "analyze-string"), 1)
+			specials.put (a_name_pool.fingerprint (Xslt_uri, "apply-imports"), 2)
+			specials.put (a_name_pool.fingerprint (Xslt_uri, "apply-templates"), 3)
+			specials.put (a_name_pool.fingerprint (Xslt_uri, "attribute-set"), 4)
+			specials.put (a_name_pool.fingerprint (Xslt_uri, "call-template"), 5)
+			specials.put (a_name_pool.fingerprint (Xslt_uri, "character-map"), 6)
+			specials.put (a_name_pool.fingerprint (Xslt_uri, "choose"), 7)
+			specials.put (a_name_pool.fingerprint (Xslt_uri, "next-match"), 8)
+			specials.put (a_name_pool.fingerprint (Xslt_uri, "stylesheet"), 9)
+			specials.put (a_name_pool.fingerprint (Xslt_uri, "transform"), 10)
+		end
+
+	make_another (other: XM_XSLT_STYLESHEET_STRIPPER) is
+			-- Create another stylesheet stripper.
+		require
+			stripper_not_void: other /= Void
+		do
+			xsl_text_fingerprint := other.xsl_text_fingerprint
+			specials := other.specials
+		ensure
+			fingerprint_set: xsl_text_fingerprint = other.xsl_text_fingerprint
+			specials_set: specials = other.specials
+		end
+
+feature -- Access
+
+	space_preserving_mode (a_name_code: INTEGER): INTEGER is
+			-- Space-preserving mode for element identitifed by `a_name_code'
+		local
+			a_fingerprint, counter: INTEGER
+			found: BOOLEAN
+		do
+			a_fingerprint := a_name_code - (a_name_code // bits_20) * bits_20
+			if a_fingerprint = xsl_text_fingerprint then
+				Result := Always_preserve
+			else
+				from
+					counter := 1
+				variant
+					11 - counter
+				until
+					found or else counter > 10
+				loop
+					if specials.item (counter) = a_fingerprint then
+						found := True
+						Result := Always_strip
+					end	
+					counter := counter + 1
+				end
+				if not found then
+					Result := Strip_default
+				end
+			end
+		end
+
+feature -- Duplication
+
+	another: XM_XSLT_STRIPPER is
+			-- A clean copy of `Current'
+		do
+			create {XM_XSLT_STYLESHEET_STRIPPER} Result.make_another (Current)
+		end
+
+feature {XM_XSLT_STYLESHEET_STRIPPER} -- Local
+
+	xsl_text_fingerprint: INTEGER
+			-- Fingerprint for xsl:text elements
+
+	specials: ARRAY [INTEGER]
+			-- Fingerprints for xsl elements which must always be white-space-stripped
+
+	is_local_invariant_met: BOOLEAN is
+			-- is the invariant met?
+		do
+			Result := True
+		end
+
+feature {NONE} -- Implementation
+	
+	bits_20: INTEGER is 1048576 -- 2^20
+			-- For removinging prefix index from name code
+
+invariant
+
+	specials_not_void: specials /= Void
+
+end
+	

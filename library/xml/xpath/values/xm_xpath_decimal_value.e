@@ -60,10 +60,10 @@ feature -- Access
 			Result := value
 		end
 
-	item_type: INTEGER is
+	item_type: XM_XPATH_ITEM_TYPE is
 			--Determine the data type of the expression, if possible
 		do
-			Result := Double_type -- ?? TODO
+			Result := type_factory.decimal_type
 		end
 
 
@@ -84,7 +84,7 @@ feature -- Comparison
 		do
 			an_integer_value ?= other
 			if an_integer_value /= Void then
-				a_decimal_value ?= an_integer_value.convert_to_type (Decimal_type)
+				a_decimal_value ?= an_integer_value.convert_to_type (type_factory.decimal_type)
 					check
 						decimal_conversion: a_decimal_value /= Void
 					end
@@ -127,13 +127,18 @@ feature -- Status report
 			end
 		end
 		
-	is_convertible (a_required_type: INTEGER): BOOLEAN is
+	is_convertible (a_required_type: XM_XPATH_ITEM_TYPE): BOOLEAN is
 			-- Is `Current' convertible to `a_required_type'?
 		do
-			inspect
-				a_required_type
-			when Any_item, Atomic_type, Boolean_type, String_type,
-				Number_type, Integer_type, Decimal_type, Float_type, Double_type then
+			if	a_required_type = any_item
+				or else a_required_type = type_factory.any_atomic_type
+				or else a_required_type = type_factory.boolean_type
+				or else a_required_type = type_factory.string_type
+				or else a_required_type = type_factory.numeric_type
+				or else a_required_type = type_factory.integer_type
+				or else a_required_type = type_factory.decimal_type
+				or else a_required_type = type_factory.float_type
+				or else a_required_type = type_factory.double_type then
 				Result := True
 			else
 				Result := False
@@ -174,34 +179,25 @@ feature -- Evaluation
 
 feature -- Conversion
 	
-	convert_to_type (a_required_type: INTEGER): XM_XPATH_ATOMIC_VALUE is
+	convert_to_type (a_required_type: XM_XPATH_ITEM_TYPE): XM_XPATH_ATOMIC_VALUE is
 			-- Convert `Current' to `a_required_type'
 			-- TODO - need to virtualize the pre-condition so that
 			-- only sub-types of Integer_type are valid
 		local
 		do
-			inspect
-				a_required_type
-
-			when Boolean_type  then
+			if a_required_type = type_factory.boolean_type  then
 				create {XM_XPATH_BOOLEAN_VALUE} Result.make (value /= 0.0)
-
-			when Atomic_type  then
+			elseif a_required_type = type_factory.any_atomic_type  then
 				Result := Current
-
-			when Any_item  then
+			elseif a_required_type = any_item  then
 				Result := Current
-
-			when Integer_type then
+			elseif  a_required_type = type_factory.integer_type then
 				create {XM_XPATH_INTEGER_VALUE} Result.make (value.truncated_to_integer)
-
-			when Double_type then
+			elseif  a_required_type = type_factory.double_type then
 				create {XM_XPATH_DOUBLE_VALUE} Result.make (value)
-
-			when Decimal_type then
-				create {XM_XPATH_DECIMAL_VALUE} Result.make (value)
-
-			when String_type then
+			elseif  a_required_type = type_factory.decimal_type then
+				Result := Current
+			elseif  a_required_type = type_factory.string_type then
 				create {XM_XPATH_STRING_VALUE} Result.make (string_value)
 			end
 		end

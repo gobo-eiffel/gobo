@@ -27,7 +27,7 @@ creation
 
 feature {NONE} -- Initialization
 
-	make (a_source: XM_XPATH_EXPRESSION; a_target_type: INTEGER; empty_ok: BOOLEAN) is
+	make (a_source: XM_XPATH_EXPRESSION; a_target_type: XM_XPATH_ITEM_TYPE; empty_ok: BOOLEAN) is
 			-- TODO
 		do
 			todo ("make", False)
@@ -41,7 +41,7 @@ feature {NONE} -- Initialization
 			-- Establish invariant.
 		require
 			source_not_void: a_source /= Void
-			valid_target_type: a_target /= Void and then not a_target.cardinality_allows_many and then not is_sub_type (a_target.primary_type, Any_node)
+			valid_target_type: a_target /= Void and then not a_target.cardinality_allows_many and then not is_sub_type (a_target.primary_type, any_node_test)
 		do
 			source := a_source
 			target_type := a_target.primary_type
@@ -54,7 +54,7 @@ feature {NONE} -- Initialization
 
 feature -- Access
 	
-	item_type: INTEGER is
+	item_type: XM_XPATH_ITEM_TYPE is
 			--Determine the data type of the expression, if possible
 		do
 			Result := target_type
@@ -76,7 +76,7 @@ feature -- Status report
 			a_string: STRING
 		do
 			a_string := STRING_.appended_string (indentation (a_level), "cast as ")
-				a_string := STRING_.appended_string (a_string, type_name (target_type))
+				a_string := STRING_.appended_string (a_string, target_type.conventional_name)
 				std.error.put_string (a_string)
 			if is_error then
 				std.error.put_string (" in error%N")
@@ -128,17 +128,17 @@ feature -- Optimization
 			if source.is_error then
 				set_last_error (source.error_value)
 			else
-				create a_sequence_type.make (Atomic_type, cardinality)
+				create a_sequence_type.make (type_factory.any_atomic_type, cardinality)
 				create a_role.make (Type_operation_role, "cast as", 1)
 				create a_type_checker
-				a_type_checker.static_type_check (source, a_sequence_type, False, a_role)
+				a_type_checker.static_type_check (a_context, source, a_sequence_type, False, a_role)
 				if a_type_checker.is_static_type_check_error then
 					set_last_error_from_string (a_type_checker.static_type_check_error_message, 4, Type_error)
 				else
 					an_expression := a_type_checker.checked_expression
 					if is_sub_type (an_expression.item_type, target_type) then
 						set_replacement (an_expression) -- TODO: wrong, should change the type label?
-					elseif is_sub_type (target_type, Qname_type) then
+					elseif is_sub_type (target_type, type_factory.qname_type) then
 						create a_qname_cast.make (an_expression)
 						a_qname_cast.analyze (a_context)
 						if a_qname_cast.is_error then
@@ -184,7 +184,7 @@ feature -- Evaluation
 				elseif an_atomic_value.is_convertible (target_type) then
 					last_evaluated_item := an_atomic_value.convert_to_type (target_type)
 				else
-					create {XM_XPATH_INVALID_ITEM} last_evaluated_item.make_from_string (STRING_.appended_string ("Could not cast expression to type ", type_name (target_type)), Dynamic_error, 21)
+					create {XM_XPATH_INVALID_ITEM} last_evaluated_item.make_from_string (STRING_.appended_string ("Could not cast expression to type ", target_type.conventional_name), Dynamic_error, 21)
 				end
 			end
 		end
@@ -218,7 +218,7 @@ feature {NONE} -- Implementation
 	source: XM_XPATH_EXPRESSION
 			-- Castable expression 
 	
-	target_type: INTEGER
+	target_type: XM_XPATH_ITEM_TYPE
 			-- Target type 
 
 	allows_empty: BOOLEAN
@@ -227,6 +227,6 @@ feature {NONE} -- Implementation
 invariant
 
 	source_expression_not_void: source /= Void
-	valid_target_type: is_valid_type (target_type)
+	target_type_not_void: target_type /= Void
 
 end

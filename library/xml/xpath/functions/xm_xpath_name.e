@@ -38,10 +38,10 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	item_type: INTEGER is
+	item_type: XM_XPATH_ITEM_TYPE is
 			-- Determine the data type of the expression, if possible
 		do
-			Result := String_type
+			Result := type_factory.string_type
 		end
 
 feature -- Status report

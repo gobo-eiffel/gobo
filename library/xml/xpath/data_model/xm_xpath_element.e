@@ -15,12 +15,16 @@ deferred class XM_XPATH_ELEMENT
 inherit
 
 	XM_XPATH_NODE
+		redefine
+			type_annotation
+		end
 
 	XM_XPATH_COMPOSITE_NODE
 
 	XM_XPATH_NODE_WITH_BASE_URI_OR_FROM_PARENT
-
-	XM_XPATH_TYPED_NODE
+		undefine 
+			type_annotation
+		end
 
 	KL_IMPORTED_STRING_ROUTINES
 
@@ -34,11 +38,12 @@ feature -- Access
 			node_kind_is_element: STRING_.same_string (Result, "element")
 		end
 
-	item_type: INTEGER is
+	item_type: XM_XPATH_ITEM_TYPE is
 			-- Type
 		do
-			Result := Element_node
+			create {XM_XPATH_NODE_KIND_TEST} Result.make_element_test
 		end
+
 
 	attribute_value_by_name (a_uri: STRING; a_local_name:STRING): STRING is
 			-- Value of named attribute
@@ -53,6 +58,12 @@ feature -- Access
 		deferred
 		end
 
+	type_annotation: INTEGER is
+			--Type annotation of this node
+		do
+			Result := type_factory.untyped_type.fingerprint
+		end
+	
 feature -- Status report
 
 	is_nilled: BOOLEAN is

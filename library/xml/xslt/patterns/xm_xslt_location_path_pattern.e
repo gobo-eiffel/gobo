@@ -16,7 +16,7 @@ inherit
 
 	XM_XSLT_PATTERN
 		redefine
-			item_type, fingerprint, simplify, type_check, internal_matches
+			fingerprint, simplify, type_check, internal_matches
 		end
 
 	XM_XPATH_AXIS
@@ -33,12 +33,6 @@ feature -- Access
 	ancestor_pattern: XM_XSLT_PATTERN
 			-- Ancestor pattern
 
-	item_type: INTEGER is
-			-- Determine the types of nodes to which this pattern applies
-		do
-			Result := node_test.item_type
-		end
-	
 	node_test: XM_XSLT_NODE_TEST is
 			-- A node test that this pattern matches
 		once
@@ -186,7 +180,7 @@ feature -- Optimization
 
 			-- See if it's an element pattern with a single positional predicate of [1]
 
-			if node_test.item_type = Element_node and then a_result_pattern.filters.count = 1 then
+			if node_test.node_kind = Element_node and then a_result_pattern.filters.count = 1 then
 				a_filter_expression := a_result_pattern.filters.item (1)
 				an_integer ?= a_filter_expression
 				a_position_range ?= a_filter_expression
@@ -202,7 +196,7 @@ feature -- Optimization
 			-- See if it's an element pattern with a single positional predicate
 			-- of [position()=last()]
 
-			if not a_result_pattern.is_first_element_pattern and then node_test.item_type = Element_node and then a_result_pattern.filters.count = 1 then
+			if not a_result_pattern.is_first_element_pattern and then node_test.node_kind = Element_node and then a_result_pattern.filters.count = 1 then
 				is_last_expression ?= a_result_pattern.filters.item (1)
 				if is_last_expression /= Void and then is_last_expression.condition then
 					a_result_pattern.set_last_element_pattern (True)
@@ -345,7 +339,7 @@ feature {XM_XSLT_LOCATION_PATH_PATTERN} -- Local
 			parent_node: XM_XPATH_PARENT_NODE_EXPRESSION
 			a_cursor: DS_ARRAYED_LIST_CURSOR [XM_XPATH_EXPRESSION]
 		do
-			if node_test.item_type = Attribute_node then
+			if node_test.node_kind = Attribute_node then
 				axis := Attribute_axis
 			else
 				axis := Child_axis
@@ -383,10 +377,10 @@ feature {XM_XSLT_LOCATION_PATH_PATTERN} -- Local
 					a_cursor.after
 				loop
 					a_filter_expression := a_cursor.item
-					type := a_filter_expression.item_type
-					if type = Double_type or else type = Decimal_type
-						or else type = Integer_type or else type = Float_type
-						or else type = Atomic_type then
+					type := a_filter_expression.item_type.primitive_type
+					if type = type_factory.double_type.fingerprint or else type = type_factory.decimal_type.fingerprint
+						or else type = type_factory.integer_type.fingerprint or else type = type_factory.float_type.fingerprint
+						or else type = type_factory.any_atomic_type.fingerprint then
 						Result := True
 					elseif a_filter_expression.depends_upon_position or else a_filter_expression.depends_upon_last then
 						Result := True
@@ -418,95 +412,8 @@ feature {XM_XSLT_PATTERN} -- Implementation
 
 	internal_matches (a_node: XM_XPATH_NODE; a_transformer: XM_XSLT_TRANSFORMER): BOOLEAN is
 			-- Determine whether this Pattern matches the given Node
-		local
-			a_parent, an_ancestor, another_node: XM_XPATH_NODE
-			an_enumerator: XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_NODE]
-			a_singleton_iterator: XM_XPATH_SINGLETON_ITERATOR [XM_XPATH_NODE]
-			a_nsv: XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_ITEM]
-			a_new_context: XM_XPATH_CONTEXT
-			a_boolean_value: XM_XPATH_BOOLEAN_VALUE
-			finished: BOOLEAN
-			a_cursor: DS_ARRAYED_LIST_CURSOR [XM_XPATH_EXPRESSION]
 		do
-			if node_test.matches_node (a_node.item_type, a_node.fingerprint, Any_item) then
-				if parent_pattern /= Void then
-					a_parent := a_node.parent
-					if a_parent /= Void then
-						if parent_pattern.internal_matches (a_parent, a_transformer) then
-							if ancestor_pattern /= Void then
-								an_ancestor := a_node.parent
-								from
-									
-								until
-									Result = True or else an_ancestor = Void
-								loop
-									if ancestor_pattern.internal_matches (an_ancestor, a_transformer) then
-										Result := True
-									end
-									an_ancestor := an_ancestor.parent
-								end
-								if an_ancestor /= Void then
-									if is_special_filter then
-										if is_first_element_pattern then
-											an_enumerator := a_node.new_axis_iterator_with_node_test (Preceding_sibling_axis, node_test)
-											Result := an_enumerator.after
-										elseif is_last_element_pattern then
-											an_enumerator := a_node.new_axis_iterator_with_node_test (Following_sibling_axis, node_test)
-											Result := an_enumerator.after
-										elseif equivalent_expression /= Void then
-
-											-- For a positional pattern, we do it the hard way: test whether
-											-- `a_node' is a member of the nodeset obtained by evaluating the
-											-- equivalent expression
-
-											a_new_context := a_transformer.new_xpath_context
-											create a_singleton_iterator.make (a_node)
-											a_new_context.set_current_iterator (a_singleton_iterator)
-											a_nsv := equivalent_expression.iterator (a_new_context)
-											from
-												finished := False
-												a_nsv.forth
-											until
-												finished or else a_nsv.after
-											loop
-												another_node ?= a_nsv.item
-												if another_node /= Void and then another_node.is_same_node (a_node) then
-													Result := True
-													finished := True
-												end
-												a_nsv.forth
-											end
-										end
-									elseif filters /= Void then
-										a_new_context := a_transformer.new_xpath_context
-										create a_singleton_iterator.make (a_node)
-										a_new_context.set_current_iterator (a_singleton_iterator)
-
-										-- It's a non-positional filter, so we can handle each node separately
-
-										from
-											a_cursor := filters.new_cursor
-											a_cursor.start
-										variant
-											filters.count + 1 - a_cursor.index
-										until
-											a_cursor.after
-										loop
-											a_boolean_value :=  a_cursor.item.effective_boolean_value (a_new_context)
-											if a_boolean_value = Void or else not a_boolean_value.value  then
-												Result := False
-											end
-											a_cursor.forth
-										end
-									else
-										Result := True
-									end
-								end
-							end
-						end
-					end
-				end
-			end
+			-- TODO
 		end
 
 invariant

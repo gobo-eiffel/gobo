@@ -16,7 +16,7 @@ inherit
 
 	XM_XSLT_NODE_TEST
 		undefine
-			item_type
+			node_kind
 		redefine
 			default_priority
 		end
@@ -35,7 +35,7 @@ feature {NONE} -- Initialization
 	make (a_node_type: INTEGER) is
 			-- Establish invariant
 		do
-			kind := a_node_type
+			node_kind := a_node_type
 		end
 
 feature -- Access

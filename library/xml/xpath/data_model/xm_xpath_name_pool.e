@@ -15,6 +15,7 @@ class XM_XPATH_NAME_POOL
 	-- A collection of XML names, each containing a Namespace URI,
 	-- a Namespace prefix, and a local name
 	-- plus a collection of namespaces, each consisting of a prefix/URI pair.
+	-- Also an index of names used as schema types.
 	
 	-- The equivalence betweem names depends only on the URI and the local name.
 	-- The prefix is retained for documentary purposes only; it is useful when
@@ -37,8 +38,12 @@ class XM_XPATH_NAME_POOL
 	-- the local name as a string, plus an `INTEGER' (should be `INTEGER_16' when all compilers support this)
 	--  representing the URI (as an offset into the array uris).
 	--
-	-- The fingerprint of a name consists of the hash slot number concatenated with
-	-- the depth of the entry down the chain of hash synonyms.
+	-- The fingerprint of a name consists of the hash slot number (in the bottom 10 bits) concatenated with
+	-- the depth of the entry down the chain of hash synonyms (in the  next 10 bits).
+	-- Fingerprints with depth 0 (i.e., in the range 0-1023) are reserved
+	--  for predefined names (names of XSLT elements and attributes, and of built-in types).
+	-- These names are not stored in the name pool, but are accessible as if they were.
+	-- 
 	--
 	-- A name_code contains the fingerprint in the bottom 20 bits. It also contains
 	-- an 8-bit prefix index. This distinguishes the prefix used, among all the
@@ -49,6 +54,8 @@ class XM_XPATH_NAME_POOL
 inherit
 
 	XM_XPATH_STANDARD_NAMESPACES
+
+	XM_XPATH_SHARED_TYPE_FACTORY
 
 	XM_UNICODE_CHARACTERS_1_1
 
@@ -90,8 +97,24 @@ feature {NONE} -- Initialization
 			uris.put (Xslt_uri, Xslt_prefix_index)			
 			prefixes_for_uri.put ("xsl ", Xslt_prefix_index)
 			
-			prefixes_used := 3
-			uris_used := 3
+			prefixes.put ("xs", Xml_schema_prefix_index)
+			uris.put (Xml_schema_uri, Xml_schema_prefix_index)			
+			prefixes_for_uri.put ("xs ", Xml_schema_prefix_index)
+						
+			prefixes.put ("xdt", Xpath_defined_datatypes_prefix_index)
+			uris.put (Xpath_defined_datatypes_uri, Xpath_defined_datatypes_prefix_index)			
+			prefixes_for_uri.put ("xdt ", Xpath_defined_datatypes_prefix_index)
+
+			prefixes.put ("gexslt", Gexslt_uri_prefix_index)
+			uris.put (Gexslt_eiffel_type_uri, Gexslt_uri_prefix_index)			
+			prefixes_for_uri.put ("gexslt ", Gexslt_uri_prefix_index)
+
+			prefixes.put ("xsi", Xml_schema_instance_uri_code)
+			uris.put (Xml_schema_instance_uri, Xml_schema_instance_uri_code)			
+			prefixes_for_uri.put ("xsi ", Xml_schema_instance_uri_code)
+			
+			prefixes_used := 7
+			uris_used := 7
 		end
 	
 feature -- Access
@@ -155,7 +178,7 @@ feature -- Access
 				std.error.put_string ("code_for_uri: uri is ")
 				std.error.put_string (a_uri)
 				std.error.put_new_line
-			end	
+			end
 			from
 				a_counter := 1
 			variant
@@ -354,59 +377,54 @@ feature -- Access
 			found, finished: BOOLEAN
 			an_entry, next_entry: XM_XPATH_NAME_ENTRY
 		do
-			from
-				a_uri_code := -1
-				a_counter := 1
-			variant
-				uris_used - a_counter + 1
-			until
-				a_counter > uris_used or found = True
-			loop
-				if STRING_.same_string (uris.item (a_counter), a_uri) then
-					a_uri_code := a_counter - 1
-					found := True
-				end
-				a_counter := a_counter + 1
-			end
-			if a_uri_code = -1 then
-				Result := -1
+			if is_reserved_namespace (a_uri) or else STRING_.same_string (a_uri, Gexslt_eiffel_type_uri) then
+				Result := type_factory.standard_fingerprint (a_uri, a_local_name)
 			else
-				a_hash_code := a_local_name.hash_code \\ 1024
-
-				if hash_slots.item (a_hash_code) = Void then
+				from
+					a_uri_code := -1
+					a_counter := 1
+				variant
+					uris_used - a_counter + 1
+				until
+					a_counter > uris_used or found = True
+				loop
+					if STRING_.same_string (uris.item (a_counter), a_uri) then
+						a_uri_code := a_counter - 1
+						found := True
+					end
+					a_counter := a_counter + 1
+				end
+				if a_uri_code = -1 then
 					Result := -1
 				else
-					an_entry :=	hash_slots.item (a_hash_code)
-					from
-					variant
-						1023 - a_depth
-					until
-						finished = True
-					loop
-						if STRING_.same_string (an_entry.local_name, a_local_name) and an_entry.uri_code = a_uri_code then
-							finished := True
-						else
-							next_entry := an_entry.next
-							if next_entry = Void then
-								Result := -1
+					a_hash_code := a_local_name.hash_code \\ 1024
+					
+					if hash_slots.item (a_hash_code) = Void then
+						Result := -1
+					else
+						an_entry :=	hash_slots.item (a_hash_code)
+						from
+							a_depth := 1
+						variant
+							1023 - a_depth
+						until
+							finished = True
+						loop
+							if STRING_.same_string (an_entry.local_name, a_local_name) and an_entry.uri_code = a_uri_code then
+								finished := True
 							else
-								an_entry := next_entry
+								next_entry := an_entry.next
+								if next_entry = Void then
+									Result := -1
+								else
+									an_entry := next_entry
+								end
 							end
+							a_depth := a_depth + 1
 						end
-						a_depth := a_depth + 1
+						Result := ((a_depth - 1) * bits_10) + a_hash_code
 					end
-					Result := ((a_depth - 1) * bits_10) + a_hash_code
 				end
-			end
-			debug ("XPath name pool allocation")
-				std.error.put_string ("fingerprint: searching for uri ")
-				std.error.put_string (a_uri)
-				std.error.put_string (", local-name: ")
-				std.error.put_string (a_local_name)
-				std.error.put_new_line
-				std.error.put_string (" result is: ")
-				std.error.put_string (Result.out)
-				std.error.put_new_line
 			end
 		ensure
 			valid_name_code: is_valid_name_code (Result)
@@ -467,29 +485,33 @@ feature -- Status report
 				std.error.put_string ("is_code_for_uri_allocated: searching for ")
 				std.error.put_string (a_uri)
 				std.error.put_new_line
-			end	
-			from
-				a_counter := 1
-			variant
-				uris_used - a_counter + 1
-			until
-				a_counter > uris_used or Result = True
-			loop
-				debug ("XPath name pool allocation")
-					std.error.put_string ("looking at ")
-					std.error.put_string (uris.item (a_counter))
-					std.error.put_new_line
-				end	
-				if STRING_.same_string (uris.item (a_counter), a_uri) then
-					Result := True
-				end
-				a_counter := a_counter + 1
 			end
-			debug ("XPath name pool allocation")
-				std.error.put_string ("Found uri? ")
-				std.error.put_string (Result.out)
-				std.error.put_new_line
-			end	
+			if is_reserved_namespace (a_uri) or else STRING_.same_string (a_uri, Gexslt_eiffel_type_uri) then
+				Result := True
+			else
+				from
+					a_counter := 1
+				variant
+					uris_used - a_counter + 1
+				until
+					a_counter > uris_used or Result = True
+				loop
+					debug ("XPath name pool allocation")
+						std.error.put_string ("looking at ")
+						std.error.put_string (uris.item (a_counter))
+						std.error.put_new_line
+					end	
+					if STRING_.same_string (uris.item (a_counter), a_uri) then
+						Result := True
+					end
+					a_counter := a_counter + 1
+				end
+				debug ("XPath name pool allocation")
+					std.error.put_string ("Found uri? ")
+					std.error.put_string (Result.out)
+					std.error.put_new_line
+				end
+			end
 		end
 
 	is_code_for_prefix_allocated (an_xml_prefix: STRING): BOOLEAN is
@@ -560,22 +582,15 @@ feature -- Status report
 			a_name_entry, next_entry: XM_XPATH_NAME_ENTRY
 			finished: BOOLEAN
 		do
-			debug ("XPath name pool allocation")
-				std.error.put_string ("is_name_code_allocated_using_uricode: searching for prefix ")
-				std.error.put_string (an_xml_prefix)
-				std.error.put_string (", local-name ")
-				std.error.put_string (a_local_name)
-				std.error.put_string (" and uri code ")
-				std.error.put_string (a_uri_code.out)
-				std.error.put_new_line
-			end	
 			if uris.count < a_uri_code + 1 then Result := False
 			elseif is_code_for_prefix_allocated (an_xml_prefix) = False then Result := False
 			else
 				a_prefix_index := prefix_index(a_uri_code, an_xml_prefix)
 				if a_prefix_index = -1 then Result := False
+				elseif a_uri_code > Default_uri_code and then a_uri_code <= Xml_schema_instance_uri_code then
+					Result := True -- TODO: This isn't exactly true, but it is probably illegitimate to test for a non-standard local name in a standard namespace
 				else
-					a_depth := 0
+					a_depth := 1
 					a_hash_code := a_local_name.hash_code \\ 1024
 					a_name_entry := hash_slots.item (a_hash_code)
 					if a_name_entry = Void then
@@ -587,11 +602,6 @@ feature -- Status report
 						until
 							finished = True
 						loop
-							debug ("XPath name pool")
-								std.error.put_string ("is_name_code_allocated_using_uri_code: current depth is ")
-								std.error.put_string (a_depth.out)
-								std.error.put_new_line
-							end
 							if STRING_.same_string (a_name_entry.local_name, a_local_name) and a_name_entry.uri_code = a_uri_code then
 								finished := True
 								Result := True
@@ -659,7 +669,7 @@ feature -- Status report
 			else
 				from
 					Result := True
-					a_depth := 0
+					a_depth := 1
 					a_hash_code := a_local_name.hash_code \\ 1024
 				variant
 					1023 - a_depth
@@ -713,9 +723,13 @@ feature -- Status report
 			-- Does `a_name_code' represent a name in `Current'?
 		local
 			an_entry: XM_XPATH_NAME_ENTRY
+			a_prefix_index: INTEGER
 		do
 			if a_name_code < 0 then
 				Result := False
+			elseif type_factory.is_built_in_fingerprint (fingerprint_from_name_code (a_name_code)) then
+				a_prefix_index := name_code_to_prefix_index (a_name_code)
+				Result := a_prefix_index >= 0 and then a_prefix_index <= prefixes_used
 			else
 				an_entry := name_entry (a_name_code)
 				Result :=  an_entry /= Void
@@ -808,7 +822,7 @@ feature -- Status report
 				a_hash_code = 1024
 			loop
 				an_entry := hash_slots.item (a_hash_code)
-				a_depth := 0
+				a_depth := 1
 				from
 				variant
 					1023 - a_depth
@@ -994,28 +1008,29 @@ feature -- Element change
 			name_pool_not_full: not is_name_pool_full (a_uri, a_local_name)
 		local
 			a_uri_code: INTEGER -- should be INTEGER_16
+			a_fingerprint, a_prefix_index: INTEGER
 		do
-			if is_code_for_uri_allocated (a_uri) then
-				a_uri_code := code_for_uri (a_uri)
+			if is_reserved_namespace (a_uri) or else STRING_.same_string (a_uri, Gexslt_eiffel_type_uri) then
+				a_fingerprint := type_factory.standard_fingerprint (a_uri, a_local_name)
+				a_uri_code := type_factory.standard_uri_code (a_fingerprint)
+					check
+						prefix_not_allocated: prefix_index (a_uri_code, an_xml_prefix) < 0
+						-- because of pre-conditions (and we have a standard name)
+					end
+				allocate_prefix (a_uri_code, an_xml_prefix)
+				a_prefix_index := prefix_index (a_uri_code, an_xml_prefix)
+				last_name_code :=  (a_prefix_index * bits_20) + a_fingerprint
+			else
+				if is_code_for_uri_allocated (a_uri) then
+					a_uri_code := code_for_uri (a_uri)
 				else
 					allocate_code_for_uri (a_uri)
 					a_uri_code := last_uri_code
-			end
-				check
-					valid_uri_code:  is_valid_uri_code (a_uri_code)
 				end
-			allocate_name_using_uri_code (an_xml_prefix, a_uri_code, a_local_name)
-			debug ("XPath name pool allocation")
-				std.error.put_string ("allocate name: prefix is: ")
-				std.error.put_string (an_xml_prefix)
-				std.error.put_string (", uri: ")
-				std.error.put_string (a_uri)
-				std.error.put_string (", local-name: ")
-				std.error.put_string (a_local_name)				
-				std.error.put_new_line
-				std.error.put_string (" name code is: ")
-				std.error.put_string (last_name_code.out)				
-				std.error.put_new_line				
+					check
+						valid_uri_code:  is_valid_uri_code (a_uri_code)
+					end
+				allocate_name_using_uri_code (an_xml_prefix, a_uri_code, a_local_name)
 			end
 		ensure
 			name_allocated: is_name_code_allocated (an_xml_prefix, a_uri, a_local_name)			
@@ -1031,11 +1046,10 @@ feature -- Element change
 			name_pool_not_full: not is_name_pool_full_using_uri_code (a_uri_code, a_local_name)
 		local
 			a_hash_code, a_depth, a_prefix_index: INTEGER
-			a_key, a_key2: STRING
 			a_name_entry, next_entry, new_entry: XM_XPATH_NAME_ENTRY
 			finished: BOOLEAN
 		do
-			a_depth := 0
+			a_depth := 1
 			a_hash_code := a_local_name.hash_code \\ 1024
 				check
 					valid_hash_code: a_hash_code >= 0 and a_hash_code < 1024
@@ -1045,14 +1059,7 @@ feature -- Element change
 					valid_prefix_index: a_prefix_index > -2 and a_prefix_index < 255
 				end
 			if a_prefix_index < 0 then
-				allocate_code_for_prefix (an_xml_prefix)
-
-				a_key2 := prefixes_for_uri.item (a_uri_code + 1)
-				a_key := clone (an_xml_prefix)
-				a_key := STRING_.appended_string (a_key, " ")
-				a_key := STRING_.appended_string (a_key, a_key2)
-				prefixes_for_uri.replace (a_key, a_uri_code + 1)
-
+				allocate_prefix (a_uri_code, an_xml_prefix)
 				a_prefix_index := prefix_index (a_uri_code, an_xml_prefix)
 					check
 						valid_prefix_index2: a_prefix_index > 0 and a_prefix_index < 255
@@ -1095,19 +1102,34 @@ feature -- Element change
 
 feature -- Conversion
 
+	fingerprint_from_name_code (a_name_code: INTEGER): INTEGER is
+			-- Fingerprint of a name, given its name code
+		require
+			valid_name_code: is_valid_name_code (a_name_code)
+		local
+		do
+			Result := a_name_code - ((a_name_code // bits_20) * bits_20)
+		end
+	
 	namespace_uri_from_name_code (a_name_code: INTEGER): STRING is
 			-- Namespace-URI of a name, given its name code or fingerprint
 		require
 			valid_name_code: is_valid_name_code (a_name_code)
 		local
 			an_entry: XM_XPATH_NAME_ENTRY
+			a_fingerprint: INTEGER
 		do
-			an_entry := name_entry (a_name_code)
-				check
-					entry_not_void: an_entry /= Void
-					-- because of pre-condition
-				end
-			Result := uris.item (an_entry.uri_code + 1)
+			a_fingerprint := fingerprint_from_name_code (a_name_code)
+			if type_factory.is_built_in_fingerprint (a_fingerprint) then
+				Result := type_factory.standard_uri (a_fingerprint)
+			else
+				an_entry := name_entry (a_name_code)
+					check
+						entry_not_void: an_entry /= Void
+						-- because of pre-condition
+					end
+				Result := uris.item (an_entry.uri_code + 1)
+			end
 		ensure
 			result_not_void: Result /= Void
 		end
@@ -1118,13 +1140,19 @@ feature -- Conversion
 		valid_name_code: is_valid_name_code (a_name_code)
 		local
 			an_entry: XM_XPATH_NAME_ENTRY
+			a_fingerprint: INTEGER
 		do
-			an_entry := name_entry (a_name_code)
-				check
-					entry_not_void: an_entry /= Void
-					-- because of pre-condition
-				end
-			Result := an_entry.uri_code
+			a_fingerprint := fingerprint_from_name_code (a_name_code)
+			if type_factory.is_built_in_fingerprint (a_fingerprint) then
+				Result := type_factory.standard_uri_code (a_fingerprint)
+			else
+				an_entry := name_entry (a_name_code)
+					check
+						entry_not_void: an_entry /= Void
+						-- because of pre-condition
+					end
+				Result := an_entry.uri_code
+			end
 		end
 
 	local_name_from_name_code (a_name_code: INTEGER): STRING is
@@ -1133,33 +1161,45 @@ feature -- Conversion
 			valid_name_code: is_valid_name_code (a_name_code)
 		local
 			an_entry: XM_XPATH_NAME_ENTRY
+			a_fingerprint: INTEGER
 		do
-			an_entry := name_entry (a_name_code)
-				check
-					entry_not_void: an_entry /= Void
-					-- because of pre-condition
-				end
-			Result := an_entry.local_name
+			a_fingerprint := fingerprint_from_name_code (a_name_code)
+			if type_factory.is_built_in_fingerprint (a_fingerprint) then
+				Result := type_factory.standard_local_name (a_fingerprint)
+			else
+				an_entry := name_entry (a_name_code)
+					check
+						entry_not_void: an_entry /= Void
+						-- because of pre-condition
+					end
+				Result := an_entry.local_name
+			end
 		ensure
 			result_not_void: Result /= Void
 		end		
 
 	prefix_from_name_code (a_name_code: INTEGER): STRING is
-			-- Local part of a name, given its name code or fingerprint
+			-- Xml prefix, given its name code
 		require
 			valid_name_code: is_valid_name_code (a_name_code)
 		local
+			a_fingerprint: INTEGER
 			a_uri_code: INTEGER -- should be INTEGER_16
 			a_prefix_index: INTEGER
 		do
-			a_uri_code := uri_code_from_name_code (a_name_code)
-			a_prefix_index := name_code_to_prefix_index (a_name_code)
-			debug ("XPath name pool")
+			a_fingerprint := fingerprint_from_name_code (a_name_code)
+			if type_factory.is_built_in_fingerprint (a_fingerprint) then
+				Result := type_factory.standard_prefix (a_fingerprint)
+			else
+				a_uri_code := uri_code_from_name_code (a_name_code)
+				a_prefix_index := name_code_to_prefix_index (a_name_code)
+				debug ("XPath name pool")
 					std.error.put_string ("prefix_from_name_code: Calculated prefix index is ")
 					std.error.put_string (a_prefix_index.out)
 					std.error.put_new_line
+				end
+				Result := prefix_with_index (a_uri_code, a_prefix_index)
 			end
-			Result := prefix_with_index (a_uri_code, a_prefix_index)
 		ensure
 			result_may_be_void: True
 		end
@@ -1171,19 +1211,25 @@ feature -- Conversion
 		local
 			an_entry: XM_XPATH_NAME_ENTRY
 			a_prefix_index: INTEGER
+			a_fingerprint: INTEGER
 		do
-			an_entry := name_entry (a_name_code)
-				check
-					entry_not_void: an_entry /= Void
-					-- because of pre-condition
-				end
-			a_prefix_index := name_code_to_prefix_index (a_name_code)
-			if a_prefix_index = 0 then
-				Result := an_entry.local_name
+			a_fingerprint := fingerprint_from_name_code (a_name_code)
+			if type_factory.is_built_in_fingerprint (a_fingerprint) then
+				Result := type_factory.display_name (a_fingerprint)
 			else
-				Result := prefix_with_index (an_entry.uri_code, a_prefix_index)
-				Result := STRING_.appended_string (Result, ":")
-				Result := STRING_.appended_string (Result, an_entry.local_name)
+				an_entry := name_entry (a_name_code)
+					check
+						entry_not_void: an_entry /= Void
+						-- because of pre-condition
+					end
+				a_prefix_index := name_code_to_prefix_index (a_name_code)
+				if a_prefix_index = 0 then
+					Result := an_entry.local_name
+				else
+					Result := prefix_with_index (an_entry.uri_code, a_prefix_index)
+					Result := STRING_.appended_string (Result, ":")
+					Result := STRING_.appended_string (Result, an_entry.local_name)
+				end
 			end
 		ensure
 			result_not_void: Result /= Void
@@ -1230,7 +1276,6 @@ feature -- Conversion
 			--      so overflow does not arise
 			Result := prefixes.item ((a_namespace_code // bits_16) + 1)
 		end
-		
 
 feature {NONE} -- Implementation
 
@@ -1247,7 +1292,7 @@ feature {NONE} -- Implementation
 			a_hash_code := name_code_to_hash_code (a_name_code)
 			an_entry := hash_slots.item (a_hash_code)
 			from
-				a_counter := 0
+				a_counter := 1
 			variant
 				a_depth - a_counter + 1
 			until
@@ -1331,7 +1376,7 @@ feature {NONE} -- Implementation
 		do
 				check
 					name_code_is_positive: a_name_code > 0
-					-- because it only occupoes 28 bits
+					-- because it only occupies 28 bits
 				end
 			-- (a_name_code |>> 20) & 0x000000ff
 			Result := (a_name_code // bits_20)
@@ -1364,6 +1409,26 @@ feature {NONE} -- Implementation
 			Result := (a_name_code - a_scaled_prefix_index - (a_depth * bits_10))
 		ensure
 			positive_result: Result >= 0 and Result < 1024
+		end
+
+	allocate_prefix (a_uri_code: INTEGER; an_xml_prefix: STRING) is
+			-- Allocate `an_xml_prefix' to `a_uri_code'.
+		require
+			prefix_not_allocated: prefix_index (a_uri_code, an_xml_prefix) < 0
+		local
+			a_key, a_key2: STRING
+		do
+			if not is_code_for_prefix_allocated (an_xml_prefix) then
+				allocate_code_for_prefix (an_xml_prefix)
+			end
+
+			a_key2 := prefixes_for_uri.item (a_uri_code + 1)
+			a_key := clone (an_xml_prefix)
+			a_key := STRING_.appended_string (a_key, " ")
+			a_key := STRING_.appended_string (a_key, a_key2)
+			prefixes_for_uri.replace (a_key, a_uri_code + 1)
+		ensure
+			prefix_allocated: prefix_index (a_uri_code, an_xml_prefix) > -1
 		end
 
 	document_number_map: DS_HASH_TABLE [INTEGER, XM_XPATH_TINY_DOCUMENT] -- TODO - ought to be DS_WEAK_HASH_TABLE, if/when one exists

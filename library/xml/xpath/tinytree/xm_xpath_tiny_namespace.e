@@ -34,6 +34,7 @@ feature {NONE} -- Initialization
 		do
 			document := a_document
 			node_number := a_node_number
+			node_type := Namespace_node
 			if document.name_pool.is_name_code_allocated ("", "", local_part) then
 				name_code := document.name_pool.name_code  ("", "", local_part)
 			else

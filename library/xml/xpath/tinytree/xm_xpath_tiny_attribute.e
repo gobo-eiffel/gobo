@@ -31,6 +31,7 @@ feature {NONE} -- Initialization
 		do
 			document := a_document
 			node_number := an_attribute_number
+			node_type := Attribute_node
 		ensure
 			document_set: document = a_document
 			node_number_set: node_number = an_attribute_number

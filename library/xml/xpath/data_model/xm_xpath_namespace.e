@@ -38,11 +38,12 @@ feature -- Access
 			node_kind_is_namespace: STRING_.same_string (Result, "namespace")
 		end
 
-	item_type: INTEGER is
+	item_type: XM_XPATH_ITEM_TYPE is
 			-- Type
 		do
-			Result := Namespace_node
+			create {XM_XPATH_NODE_KIND_TEST} Result.make_namespace_test
 		end
+
 
 	string_value: STRING is
 			-- String-value

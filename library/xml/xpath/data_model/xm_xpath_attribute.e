@@ -15,8 +15,6 @@ deferred class XM_XPATH_ATTRIBUTE
 inherit
 
 	XM_XPATH_BASE_URI_FROM_PARENT
-
-	XM_XPATH_TYPED_NODE
 	
 	XM_XPATH_NODE_WITHOUT_ATTRIBUTES
 
@@ -32,9 +30,10 @@ feature -- Access
 			node_kind_is_attribute: STRING_.same_string ( Result, "attribute")
 		end
 	
-	item_type: INTEGER is
+	item_type: XM_XPATH_ITEM_TYPE is
 			-- Type
 		do
-			Result := Attribute_node
+			create {XM_XPATH_NODE_KIND_TEST} Result.make_attribute_test
 		end
+
 end

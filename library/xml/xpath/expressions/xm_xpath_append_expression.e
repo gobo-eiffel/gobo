@@ -27,7 +27,7 @@ creation
 
 feature -- Access
 
-	frozen item_type: INTEGER is
+	frozen item_type: XM_XPATH_ITEM_TYPE is
 			--Determine the data type of the expression, if possible
 		do
 			Result := common_super_type (first_operand.item_type, second_operand.item_type)

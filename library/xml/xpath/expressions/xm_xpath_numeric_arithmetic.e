@@ -39,13 +39,13 @@ feature -- Evaluation
 				else
 					an_atomic_value ?= first_operand.last_evaluated_item
 					if an_atomic_value /= Void then
-						if an_atomic_value.is_convertible (Integer_type) then
-							an_integer_value ?= an_atomic_value.convert_to_type (Integer_type)
+						if an_atomic_value.is_convertible (type_factory.integer_type) then
+							an_integer_value ?= an_atomic_value.convert_to_type (type_factory.integer_type)
 							second_operand.evaluate_item (a_context)
 							another_atomic_value ?= second_operand.last_evaluated_item
 							if another_atomic_value /= Void then
-								if another_atomic_value.is_convertible (Integer_type) then
-									another_integer_value ?= another_atomic_value.convert_to_type (Integer_type)
+								if another_atomic_value.is_convertible (type_factory.integer_type) then
+									another_integer_value ?= another_atomic_value.convert_to_type (type_factory.integer_type)
 									last_evaluated_item := an_integer_value.arithmetic (operator, another_integer_value)
 								else
 									set_last_error_from_string ("Second argument to idiv must be an integer", Type_error, 6)
@@ -82,8 +82,8 @@ feature {NONE} -- Implementation
 			else
 				an_atomic_value ?= first_operand.last_evaluated_item
 				if an_atomic_value /= Void then
-					if an_atomic_value.is_convertible (Double_type) then
-						a_double_value ?= an_atomic_value.convert_to_type (Double_type) 
+					if an_atomic_value.is_convertible (type_factory.double_type) then
+						a_double_value ?= an_atomic_value.convert_to_type (type_factory.double_type) 
 					else
 						create a_double_value.make_nan
 					end
@@ -93,8 +93,8 @@ feature {NONE} -- Implementation
 					else
 						another_atomic_value ?= second_operand.last_evaluated_item
 						if another_atomic_value /= Void then
-							if another_atomic_value.is_convertible (Double_type) then
-								another_double_value ?= another_atomic_value.convert_to_type (Double_type) 
+							if another_atomic_value.is_convertible (type_factory.double_type) then
+								another_double_value ?= another_atomic_value.convert_to_type (type_factory.double_type) 
 							else
 								create another_double_value.make_nan
 							end

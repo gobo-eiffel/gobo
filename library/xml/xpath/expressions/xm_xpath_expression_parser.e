@@ -26,6 +26,10 @@ inherit
 
 	XM_XPATH_SHARED_EXPRESSION_FACTORY
 
+	XM_XPATH_SHARED_ANY_ITEM_TYPE
+
+	XM_XPATH_SHARED_ANY_NODE_TEST
+	
 	XM_XPATH_TYPE
 
 	XM_XPATH_AXIS
@@ -212,12 +216,13 @@ feature {NONE} -- Implementation
 			tokenizer_usable: tokenizer /= Void and then tokenizer.input /= Void and not tokenizer.is_lexical_error
 			no_previous_parse_error: not is_parse_error
 		local
-			a_primary_type: INTEGER
+			a_primary_type: XM_XPATH_ITEM_TYPE
 			a_message, a_local_name, a_uri: STRING
 			a_splitter: ST_SPLITTER
 			qname_parts: DS_LIST [STRING]
+			a_fingerprint: INTEGER
 		do
-			a_primary_type := Any_item
+			a_primary_type := any_item
 			if tokenizer.last_token = Name_token then
 				if is_qname (tokenizer.last_token_value) then
 					create a_splitter.make
@@ -234,8 +239,9 @@ feature {NONE} -- Implementation
 						a_uri := environment.uri_for_prefix (qname_parts.item (1))
 						a_local_name := qname_parts.item (2)
 					end
-					if is_qname_valid_type (a_uri, a_local_name) then
-						a_primary_type := named_type (a_uri, a_local_name)
+					a_fingerprint := type_factory.standard_fingerprint (a_uri, a_local_name)
+					if a_fingerprint /= -1 then
+						a_primary_type := type_factory.schema_type (a_fingerprint)
 						next_token ("In parse_sequence: current token is ")
 						if tokenizer.is_lexical_error then
 							report_parse_error (tokenizer.last_lexical_error, 3)
@@ -248,11 +254,16 @@ feature {NONE} -- Implementation
 				end
 			elseif tokenizer.last_token = Node_kind_token then
 
-				-- Covers element(N,T), comment(), text(), etc
-
-				parse_node_kind
-				if not is_parse_error then
-					a_primary_type := internal_last_parsed_node_kind.item (1)
+				if STRING_.same_string (tokenizer.last_token_value, "item") then
+					a_primary_type := any_item
+				else
+					
+					-- Covers element(N,T), comment(), text(), etc
+					
+					parse_node_kind_test
+					if not is_parse_error then
+						a_primary_type := internal_last_parsed_node_test
+					end
 				end
 			else
 				a_message := STRING_.appended_string ("Expected type name in SequenceType, found ", display_current_token)
@@ -265,7 +276,7 @@ feature {NONE} -- Implementation
 			expression_not_void_unless_error: not is_parse_error implies internal_last_parsed_sequence /= Void
 		end
 
-	set_occurence_flag (a_primary_type: INTEGER) is
+	set_occurence_flag (a_primary_type: XM_XPATH_ITEM_TYPE) is
 			-- Set occurrence flag.
 		local
 			an_occurrence_flag: INTEGER
@@ -1895,45 +1906,46 @@ feature {NONE} -- Implementation
 					create {XM_XPATH_NODE_KIND_TEST} internal_last_parsed_node_test.make (a_node_type)
 				end
 			when Node_kind_token then
-				create_node_kind_test
+				--create_node_kind_test
+				parse_node_kind_test
 			end
 		ensure
 			node_test_not_void_unless_error: not is_parse_error implies internal_last_parsed_node_test /= Void
 		end
 
-	create_node_kind_test is
-			-- Create a node kind test.
-		local
-			types: ARRAY [INTEGER]
-		do
-			types := internal_last_parsed_node_kind
-				check
-					three_integers: types.count = 3
-				end
-			inspect
-				types.item (1)
-			when Any_node then
-				create {XM_XPATH_ANY_NODE_TEST} internal_last_parsed_node_test.make
-			when Attribute_node, Element_node then
-				if types.item (3) = Any_item then
-					create {XM_XPATH_NODE_KIND_TEST} internal_last_parsed_node_test.make (types.item (1))
-				else
-					create {XM_XPATH_CONTENT_TYPE_TEST} internal_last_parsed_node_test.make (types.item (1), types.item (3))
-				end
-			when Document_node, Text_node, Comment_node then
-				create {XM_XPATH_NODE_KIND_TEST} internal_last_parsed_node_test.make (types.item (1))
-			when Processing_instruction_node then
-				if types.item (2) = -1 then
-					create {XM_XPATH_NODE_KIND_TEST} internal_last_parsed_node_test.make (Processing_instruction_node)
-				else
-					create {XM_XPATH_NAME_TEST} internal_last_parsed_node_test.make (Processing_instruction_node, types.item (2))
-				end
-			else
-				report_parse_error ("Unknown node kind in node test", 3)
-			end
-		ensure
-			node_test_not_void_unless_error: not is_parse_error implies internal_last_parsed_node_test /= Void
-		end
+--	create_node_kind_test is
+--			-- Create a node kind test.
+--		local
+--			types: ARRAY [INTEGER]
+--		do
+--			types := internal_last_parsed_node_kind
+--				check
+--					three_integers: types.count = 3
+--				end
+--			inspect
+--				types.item (1)
+--			when Any_node then
+--				create {XM_XPATH_ANY_NODE_TEST} internal_last_parsed_node_test.make
+--			when Attribute_node, Element_node then
+--				if types.item (3) = sny_item then
+--					create {XM_XPATH_NODE_KIND_TEST} internal_last_parsed_node_test.make (types.item (1))
+--				else
+--					create {XM_XPATH_CONTENT_TYPE_TEST} internal_last_parsed_node_test.make (types.item (1), types.item (3))
+--				end
+--			when Document_node, Text_node, Comment_node then
+--				create {XM_XPATH_NODE_KIND_TEST} internal_last_parsed_node_test.make (types.item (1))
+--			when Processing_instruction_node then
+--				if types.item (2) = -1 then
+--					create {XM_XPATH_NODE_KIND_TEST} internal_last_parsed_node_test.make (Processing_instruction_node)
+--				else
+--					create {XM_XPATH_NAME_TEST} internal_last_parsed_node_test.make (Processing_instruction_node, types.item (2))
+--				end
+--			else
+--				report_parse_error ("Unknown node kind in node test", 3)
+--			end
+--		ensure
+--			node_test_not_void_unless_error: not is_parse_error implies internal_last_parsed_node_test /= Void
+--		end
 
 	parse_constructor is
 			-- Parse a node constructor.
@@ -1945,75 +1957,207 @@ feature {NONE} -- Implementation
 			report_parse_error ("Node constructor expressions are allowed only in XQuery, not in XPath", 3)
 		end
 
-	parse_node_kind is
-			-- Parse a NodeKind.
+	parse_node_kind_test is
+			-- Parse a node kind test.
+		require
+			static_context_not_void: environment /= Void
+			tokenizer_usable: tokenizer /= Void and then tokenizer.input /= Void and not tokenizer.is_lexical_error
+			no_previous_parse_error: not is_parse_error
 		local
-			a_primary_type, a_content_type, a_name_code: INTEGER
-			a_type_name, a_message: STRING
+			a_type_name: STRING
+			is_empty: BOOLEAN
 		do
-			debug ("XPath Expression Parser")
-				std.error.put_string ("Entered parse_node_kind%N")
-			end			
 			a_type_name := tokenizer.last_token_value
-			a_primary_type := system_type (a_type_name)
-			a_name_code := -1
-			a_content_type := Any_item
-			next_token ("In parse_node_kind: current token is ")
+			next_token ("In node_kind_test: current token is ")
 			if tokenizer.is_lexical_error then
 				report_parse_error (tokenizer.last_lexical_error, 3)
-			elseif tokenizer.last_token = Right_parenthesis_token then
-				next_token ("In parse_node_kind - RPAR: current token is ")
-				if tokenizer.is_lexical_error then
-					report_parse_error (tokenizer.last_lexical_error, 3)
+			else
+				if tokenizer.last_token = Right_parenthesis_token then
+					is_empty := True
+					next_token ("In node_kind_test after RPAR: current token is ")
 				end
-			end
-			if not is_parse_error then
-				inspect
-					a_primary_type					
-				when Any_item, Any_node, Text_node, Comment_node, Document_node then
-					a_message := STRING_.appended_string ("Parentheses after %'", a_type_name)
-					a_message := STRING_.appended_string (a_message, "%' must be empty")
-					report_parse_error (a_message, 3)
-				when Processing_instruction_node then
-					if tokenizer.last_token = String_literal_token or else tokenizer.last_token = Name_token then
-						if not is_ncname (tokenizer.last_token_value) then
-							report_parse_error ("Processing instruction name must not contain a colon", 3)
-						else
-							a_name_code := make_name_code (tokenizer.last_token_value, False)
-						end
-					end
-					if not is_parse_error then
-						next_token ("In parse_node_kind - no error: current token is ")
-						if tokenizer.is_lexical_error then
-							report_parse_error (tokenizer.last_lexical_error, 3)
-						elseif tokenizer.last_token = Right_parenthesis_token then
-							next_token ("In parse_node_kind - RPAR 2: current token is ")
-							if tokenizer.is_lexical_error then
-								report_parse_error (tokenizer.last_lexical_error, 3)
-							end
-						end
-					end
-				when Element_node, Attribute_node then
-					if tokenizer.last_token = Star_token or else tokenizer.last_token = Multiply_token then
-						do_nothing -- allows both tokenizations to be safe
-					elseif tokenizer.last_token = Name_token then
-						report_parse_error ("Named element and attribute declarations are not yet supported", 3)
-					else
-						a_message := STRING_.appended_string ("Unexpected ", display_current_token)
-						a_message := STRING_.appended_string (a_message, " after '%(' in SequenceType")
-						report_parse_error (a_message, 3)
-					end
-				end
-			end
-			if not is_parse_error then
-				create internal_last_parsed_node_kind.make (1, 3)
-				internal_last_parsed_node_kind.put (a_primary_type ,1)
-				internal_last_parsed_node_kind.put (a_name_code ,2)
-				internal_last_parsed_node_kind.put (a_content_type ,3)
+				create_node_kind_test (a_type_name, is_empty)
 			end
 		ensure
-			node_kind_not_void_unless_error: not is_parse_error implies internal_last_parsed_node_kind /= Void and then internal_last_parsed_node_kind.count = 3
+			node_test: not is_parse_error implies internal_last_parsed_node_test /= Void
 		end
+
+	create_node_kind_test (a_type_name: STRING; is_empty: BOOLEAN) is
+			-- Create a node kind test
+		require
+			type_name_not_void: a_type_name /= Void
+		do
+			if STRING_.same_string (a_type_name, "item") then
+				report_parse_error ("item() is not allowed in a path expression", 3)
+			elseif STRING_.same_string (a_type_name, "node") then
+				create_any_node_kind_test (is_empty)
+			elseif STRING_.same_string (a_type_name, "text") then
+				create_text_node_kind_test (is_empty)
+			elseif STRING_.same_string (a_type_name, "comment") then
+				create_comment_node_kind_test (is_empty)
+			elseif STRING_.same_string (a_type_name, "namespace") then
+				report_parse_error ("No node kind test is defined for namespace", 3)
+			elseif STRING_.same_string (a_type_name, "document-node") then
+				create_document_node_kind_test (is_empty)
+			elseif STRING_.same_string (a_type_name, "processing-instruction") then
+				create_processing_instruction_node_kind_test (is_empty)
+			elseif STRING_.same_string (a_type_name, "element") or else STRING_.same_string (a_type_name, "attribute") then
+				create_named_node_kind_test (is_empty, STRING_.same_string (a_type_name, "attribute"))
+			else
+				report_parse_error ("unknown node kind", 3) -- This is supposed not to happen - empty()??
+			end
+		ensure
+			node_test: not is_parse_error implies internal_last_parsed_node_test /= Void
+		end
+
+	create_any_node_kind_test (is_empty: BOOLEAN) is
+			-- Create a node kind test that matches any node.
+		do
+			if is_empty then
+				internal_last_parsed_node_test := any_node_test
+			else
+				report_parse_error ("No arguments are allowed in node()" ,3)
+			end
+		ensure
+			node_test: not is_parse_error implies internal_last_parsed_node_test /= Void
+		end
+
+	create_text_node_kind_test (is_empty: BOOLEAN) is
+			-- Create a node kind test that matches any text node.
+		do
+			if is_empty then
+				create {XM_XPATH_NODE_KIND_TEST} internal_last_parsed_node_test.make_text_test
+			else
+				report_parse_error ("No arguments are allowed in text()" ,3)
+			end
+		ensure
+			node_test: not is_parse_error implies internal_last_parsed_node_test /= Void
+		end
+
+	create_comment_node_kind_test (is_empty: BOOLEAN) is
+			-- Create a node kind test that matches any text node.
+		do
+			if is_empty then
+				create {XM_XPATH_NODE_KIND_TEST} internal_last_parsed_node_test.make_comment_test
+			else
+				report_parse_error ("No arguments are allowed in comment()" ,3)
+			end
+		ensure
+			node_test: not is_parse_error implies internal_last_parsed_node_test /= Void
+		end
+
+	create_document_node_kind_test (is_empty: BOOLEAN) is
+			-- Create a node kind test that matches the specified document node(s).
+		do
+			if is_empty then
+				create {XM_XPATH_NODE_KIND_TEST} internal_last_parsed_node_test.make_document_test
+			elseif STRING_.same_string (tokenizer.last_token_value, "element") then
+				report_parse_error ("document-node(...) is not yet implemented. Sorry.", 3)
+			else
+				report_parse_error ("Argument to document-node() must be an element type descriptor", 3)
+			end
+		ensure
+			node_test: not is_parse_error implies internal_last_parsed_node_test /= Void
+		end
+
+	create_processing_instruction_node_kind_test (is_empty: BOOLEAN) is
+			-- Create a node kind test that matches the specified processing-instruction node(s).
+		do
+			if is_empty then
+				create {XM_XPATH_NODE_KIND_TEST} internal_last_parsed_node_test.make_processing_instruction_test
+			else
+				report_parse_error ("processing-instruction(...) is not yet implemented. Sorry.", 3)
+			end
+		ensure
+			node_test: not is_parse_error implies internal_last_parsed_node_test /= Void
+		end
+
+	create_named_node_kind_test (is_empty, is_attribute: BOOLEAN) is
+			-- Create a node kind test that matches the specified element or attribute node(s).
+		do
+			if is_empty then
+				if is_attribute then
+					create {XM_XPATH_NODE_KIND_TEST} internal_last_parsed_node_test.make_attribute_test
+				else
+					create {XM_XPATH_NODE_KIND_TEST} internal_last_parsed_node_test.make_element_test
+				end
+			else
+				report_parse_error ("attribute(...) or element(...) is not yet implemented. Sorry.", 3)
+			end
+		ensure
+			node_test: not is_parse_error implies internal_last_parsed_node_test /= Void
+		end
+
+--	parse_node_kind is
+			-- Parse a NodeKind.
+--		local
+--			a_primary_type, a_content_type: INTEGER
+--			a_name_code: INTEGER
+--			a_type_name, a_message: STRING
+--		do
+--			debug ("XPath Expression Parser")
+--				std.error.put_string ("Entered parse_node_kind%N")
+--			end			
+--			a_type_name := tokenizer.last_token_value
+--			a_primary_type := system_type (a_type_name)
+	---		a_name_code := -1
+	--		a_content_type := any_item
+	--		next_token ("In parse_node_kind: current token is ")
+	--		if tokenizer.is_lexical_error then
+	--			report_parse_error (tokenizer.last_lexical_error, 3)
+	--		elseif tokenizer.last_token = Right_parenthesis_token then
+	--			next_token ("In parse_node_kind - RPAR: current token is ")
+	--			if tokenizer.is_lexical_error then
+	--				report_parse_error (tokenizer.last_lexical_error, 3)
+	--			end
+	--		end
+	--		if not is_parse_error then
+--				inspect
+--					a_primary_type					
+--				when Any_item, Any_node, Text_node, Comment_node, Document_node then
+--					a_message := STRING_.appended_string ("Parentheses after %'", a_type_name)
+--					a_message := STRING_.appended_string (a_message, "%' must be empty")
+--					report_parse_error (a_message, 3)
+--				when Processing_instruction_node then
+--					if tokenizer.last_token = String_literal_token or else tokenizer.last_token = Name_token then
+--						if not is_ncname (tokenizer.last_token_value) then
+--							report_parse_error ("Processing instruction name must not contain a colon", 3)
+--						else
+--							a_name_code := make_name_code (tokenizer.last_token_value, False)
+--						end
+--					end
+--					if not is_parse_error then
+--						next_token ("In parse_node_kind - no error: current token is ")
+--						if tokenizer.is_lexical_error then
+--							report_parse_error (tokenizer.last_lexical_error, 3)
+--						elseif tokenizer.last_token = Right_parenthesis_token then
+--							next_token ("In parse_node_kind - RPAR 2: current token is ")
+--							if tokenizer.is_lexical_error then
+--								report_parse_error (tokenizer.last_lexical_error, 3)
+--							end
+--						end
+--					end
+--				when Element_node, Attribute_node then
+--					if tokenizer.last_token = Star_token or else tokenizer.last_token = Multiply_token then
+--						do_nothing -- allows both tokenizations to be safe
+--					elseif tokenizer.last_token = Name_token then
+--							report_parse_error ("Named element and attribute declarations are not yet supported", 3)
+--						else
+--							a_message := STRING_.appended_string ("Unexpected ", display_current_token)
+--							a_message := STRING_.appended_string (a_message, " after '%(' in SequenceType")
+--							report_parse_error (a_message, 3)
+--						end
+--					end
+--				end
+--				if not is_parse_error then
+--					create internal_last_parsed_node_kind.make (1, 3)
+--					internal_last_parsed_node_kind.put (a_primary_type ,1)
+--					internal_last_parsed_node_kind.put (a_name_code ,2)
+--					internal_last_parsed_node_kind.put (a_content_type ,3)
+--				end
+--			ensure
+--				node_kind_not_void_unless_error: not is_parse_error implies internal_last_parsed_node_kind /= Void and then internal_last_parsed_node_kind.count = 3
+--			end
 
 	tokenizer: XM_XPATH_TOKENIZER
 			-- Lexical scanner

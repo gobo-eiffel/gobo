@@ -42,12 +42,11 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	item_type: INTEGER is
+	item_type: XM_XPATH_ITEM_TYPE is
 			--Determine the data type, if possible;
 		do
-			Result := Any_node
+			create {XM_XPATH_ANY_ITEM_TYPE} Result.make
 		end
-
 	
 	node: XM_XPATH_NODE
 			-- Optional node

@@ -16,7 +16,7 @@ inherit
 
 	XM_XPATH_NODE_TEST
 		redefine
-			item_type
+			node_kind
 		end
 
 creation
@@ -25,30 +25,25 @@ creation
 
 feature {NONE} -- Initialization
 
-	make (a_node_type: INTEGER; a_type_code: INTEGER) is
+	make (a_node_kind: INTEGER; a_type: XM_XPATH_SCHEMA_TYPE) is
 		require
-			valid_node_type: a_node_type = Element_node or else a_node_type = Attribute_node
-			valid_code: is_valid_type (a_type_code)
+			valid_node_type: a_node_kind = Element_node or else a_node_kind = Attribute_node
+			valid_type: a_type /= Void
 		do
-			item_type := a_node_type
-			content_type := a_type_code
-			inspect
-				item_type
-			when Element_node then
-				original_text := STRING_.appended_string ("element(*,", type_name (content_type))
-				original_text := STRING_.appended_string (original_text, ")")
-			when Attribute_node then
-				original_text := STRING_.appended_string ("attribute(*,", type_name (content_type))
-				original_text := STRING_.appended_string (original_text, ")")
-			end
+			node_kind := a_node_kind
+			content_type := a_type.fingerprint
+			name_pool := a_type.name_pool
+			original_text := a_type.description
 		ensure
-			item_type_set: item_type = a_node_type
-			content_type_set: content_type = a_type_code
+			node_kind_set: node_kind = a_node_kind
+			node_pool_set: name_pool = a_type.name_pool
+			content_type_set: content_type = a_type.fingerprint
+			original_text_set: original_text = a_type.description
 		end
 
 feature -- Access
 
-	item_type: INTEGER
+		node_kind: INTEGER
 			-- Type of nodes to which this pattern applies
 
 feature -- Status report
@@ -64,10 +59,12 @@ feature -- Matching
 	matches_node (a_node_kind: INTEGER; a_name_code: INTEGER; a_node_type: INTEGER): BOOLEAN is
 			-- Is this node test satisfied by a given node?
 		do
-			if item_type /= a_node_kind then
+			if node_kind /= a_node_kind then
 				Result := False
-				else
-					Result := is_sub_type (a_node_type, content_type)
+			elseif a_node_type = content_type then
+				Result := True
+			else
+				Result := False
 			end
 		end
 
@@ -76,8 +73,10 @@ feature {NONE} -- Implementation
 	content_type: INTEGER
 			-- Required content type
 
+	name_pool: XM_XPATH_NAME_POOL
+
 invariant
 
-	valid_content_type: is_valid_type (content_type)
+	name_pool_not_void: name_pool /= Void
 
 end

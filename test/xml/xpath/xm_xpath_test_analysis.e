@@ -27,6 +27,10 @@ inherit
 
 	XM_XPATH_AXIS
 
+	XM_XPATH_SHARED_CONFORMANCE
+
+	KL_SHARED_STANDARD_FILES
+
 feature -- Access
 
 	shared_pool: XM_XPATH_SHARED_NAME_POOL is
@@ -117,7 +121,7 @@ feature -- Setting
 
 	set_up is
 		do
-			initialize_type_tables
+			conformance.set_basic_xslt_processor
 			default_pool := shared_pool.default_pool
 		end
 

@@ -16,7 +16,7 @@ inherit
 
 	XM_XPATH_NODE_TEST
 		redefine
-			item_type
+			node_kind
 		end
 
 creation
@@ -27,12 +27,11 @@ feature {NONE} -- Initialization
 
 	make (a_name_pool: XM_XPATH_NAME_POOL; a_node_type: INTEGER; a_uri: STRING) is
 		require
-			valid_node_type: is_node_type (a_node_type)
 			name_pool_not_void: a_name_pool /= Void
 			uri_not_void: a_uri /= Void
 		do
 			name_pool := a_name_pool
-			item_type := a_node_type
+			node_kind := a_node_type
 			if name_pool.is_code_for_uri_allocated (a_uri) then
 				uri_code := name_pool.code_for_uri (a_uri)
 			else
@@ -40,13 +39,13 @@ feature {NONE} -- Initialization
 				uri_code := name_pool.code_for_uri (a_uri)
 			end
 		ensure
-			item_type_set: item_type = a_node_type
+			node_kind_set: node_kind = a_node_type
 			name_pool_set: name_pool = a_name_pool
 		end
 
 feature -- Access
 
-	item_type: INTEGER
+		node_kind: INTEGER
 			-- Type of nodes to which this pattern applies
 
 feature -- Status report
@@ -65,7 +64,7 @@ feature -- Matching
 
 			if a_name_code = - 1 then
 				Result := False
-			elseif a_node_kind /= item_type then
+			elseif a_node_kind /= node_kind then
 				Result := False
 			else
 				Result := uri_code = name_pool.uri_code_from_name_code (a_name_code)

@@ -20,21 +20,18 @@ inherit
 	
 feature -- Access
 
+
+	node_kind: INTEGER is
+			-- Type of nodes matched
+		do
+			Result := Any_node
+		end
+
 	node_test: XM_XSLT_NODE_TEST is
 			-- Retrieve an `XM_XSLT_NODE_TEST' that all nodes matching this pattern must satisfy
 		deferred
 		ensure
 			non_void_test: Result /= Void
-		end
-
-	item_type: INTEGER is
-			-- Determine the types of nodes to which this pattern applies;
-			-- Used for optimisation;
-			-- For patterns that match nodes of several types, return Any_node
-		do
-			Result := Any_node
-		ensure
-			valid_node: is_node_type (Result)
 		end
 
 	fingerprint: INTEGER is

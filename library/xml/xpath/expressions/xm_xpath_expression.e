@@ -24,6 +24,14 @@ inherit
 
 	XM_XPATH_SHARED_EXPRESSION_FACTORY
 
+	XM_XPATH_SHARED_TYPE_FACTORY
+
+	XM_XPATH_SHARED_ANY_ITEM_TYPE
+
+	XM_XPATH_SHARED_ANY_NODE_TEST
+	
+	XM_XPATH_SHARED_NO_NODE_TEST
+
 	XM_XPATH_ERROR_TYPES
 
 	KL_SHARED_STANDARD_FILES -- TODO - remove when all uses of todo in this and descendant classes are gone
@@ -32,7 +40,7 @@ inherit
 
 feature -- Access
 	
-	item_type: INTEGER is
+	item_type: XM_XPATH_ITEM_TYPE is
 			-- Data type of the expression, when known;
 			-- All expression return sequences, in general;
 			-- This routine determines the type of the items within the
@@ -41,6 +49,8 @@ feature -- Access
 		require
 			not_in_error: not is_error
 		deferred
+		ensure
+			item_type_not_void: Result /= Void
 		end
 
 	sub_expressions: DS_ARRAYED_LIST [XM_XPATH_EXPRESSION] is

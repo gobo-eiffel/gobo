@@ -14,6 +14,8 @@ class XM_XPATH_SEQUENCE_EXTENT
 
 inherit
 
+	XM_XPATH_SHARED_ANY_ITEM_TYPE
+
 	XM_XPATH_SEQUENCE_VALUE
 		redefine
 			item_type, effective_boolean_value
@@ -71,14 +73,14 @@ feature {NONE} -- Initialization
 
 feature -- Access
 	
-	item_type: INTEGER is
+	item_type: XM_XPATH_ITEM_TYPE is
 			--Determine the data type of the expression, if possible
 		local
 			counter: INTEGER
 		do
-			if cached_item_type = 0 then
+			if cached_item_type = Void then
 				if count = 1 then
-					cached_item_type := Any_item
+					Result := any_item
 				else
 					cached_item_type := value.item (1).item_type
 					from
@@ -88,7 +90,7 @@ feature -- Access
 					until
 						counter > count
 					loop
-						if cached_item_type = Any_item then
+						if cached_item_type = any_item then
 							counter := count + 1 -- make a quick exit
 						else
 							cached_item_type := common_super_type (cached_item_type, value.item (counter).item_type)
@@ -193,7 +195,7 @@ feature -- Comparison
 
 feature -- Evaluation
 
-		effective_boolean_value (a_context: XM_XPATH_CONTEXT): XM_XPATH_BOOLEAN_VALUE is
+	effective_boolean_value (a_context: XM_XPATH_CONTEXT): XM_XPATH_BOOLEAN_VALUE is
 			-- Effective boolean value
 		do
 			-- TODO
@@ -208,7 +210,7 @@ feature {NONE} -- Implementation
 	value: ARRAY [XM_XPATH_ITEM]
 			-- Value
 	
-	cached_item_type: INTEGER
+	cached_item_type: XM_XPATH_ITEM_TYPE
 			-- Cached result for `item_type'
 
 invariant

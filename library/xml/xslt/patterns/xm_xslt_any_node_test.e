@@ -15,6 +15,8 @@ class XM_XSLT_ANY_NODE_TEST
 inherit
 
 	XM_XSLT_NODE_TEST
+		undefine
+			super_type, matches_item
 		redefine
 			default_priority
 		end

@@ -18,6 +18,10 @@ inherit
 
 	XM_XPATH_ERROR_TYPES
 
+	KL_IMPORTED_STRING_ROUTINES
+
+	KL_SHARED_STANDARD_FILES
+
 feature -- Access
 
 	string_value: STRING is
@@ -29,16 +33,6 @@ feature -- Access
 			string_value_not_void: Result /= Void
 		end
 
-	item_type: INTEGER is
-			-- Type;
-			-- This will be a value such as Element_node or Integer_type
-		require
-			item_not_in_error: not is_error
-		deferred
-		ensure
-			Result > 0 implies is_valid_type (Result)
-		end
-	
 	typed_value: XM_XPATH_VALUE is
 			-- Typed value
 		require
@@ -48,6 +42,11 @@ feature -- Access
 			typed_value_not_void: Result /= Void
 		end
 
+	item_type: XM_XPATH_ITEM_TYPE is
+			-- Type
+		deferred
+		end
+		
 feature -- Status report
 
 	is_error: BOOLEAN is

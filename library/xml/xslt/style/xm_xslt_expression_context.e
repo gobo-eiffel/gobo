@@ -24,6 +24,11 @@ feature -- Access
 				todo ("style-element", False)
 		end
 
+	host_language: STRING is
+			-- Name of host language
+		do
+			Result := "XSLT"
+		end
 	
 	default_element_namespace: INTEGER is
 			-- Default XPath namespace, as a namespace code that can be looked up in `name_pool'
@@ -57,10 +62,21 @@ feature -- Status report
 			todo ("is-prefix-declared", False)
 		end
 
-		is_variable_declared (a_fingerprint: INTEGER): BOOLEAN is
+	is_variable_declared (a_fingerprint: INTEGER): BOOLEAN is
 			-- Does `a_fingerprint' represent a variable declared in the static context?
 		do
 			todo ("is-variable-declared", False)
+		end
+	
+	is_data_type_valid (a_fingerprint: INTEGER): BOOLEAN is
+			-- Does `a_fingerprint' represent a data-type in `Current'?
+		do
+			Result := False
+
+			-- Customized host languages must redefine this routine.
+			-- It is not called for host languages supported directly
+			--  by this library.
+			
 		end
 
 feature -- Element change

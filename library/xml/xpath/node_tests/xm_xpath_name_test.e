@@ -16,7 +16,7 @@ inherit
 
 	XM_XPATH_NODE_TEST
 		redefine
-			fingerprint, item_type
+			fingerprint, node_kind
 		end
 
 creation
@@ -32,22 +32,22 @@ feature {NONE} -- Initialization
 		local
 			top_bits: INTEGER
 		do
-			item_type := a_node_type
+			node_kind := a_node_type
 			
 			--	fingerprint := a_name_code & 0x0fffff
 			
 			top_bits := (a_name_code // bits_20) * bits_20
 			fingerprint  := a_name_code - top_bits			
 		ensure
-			item_type_set: item_type = a_node_type
+			node_kind_set: node_kind = a_node_type
 		end
 
 	make_same_type (a_node: XM_XPATH_NODE) is
 		do
-			item_type := a_node.item_type
+			node_kind := a_node.node_type
 			fingerprint := a_node.fingerprint
 		ensure
-			same_type: item_type = a_node.item_type
+			same_type: node_kind = a_node.node_type
 			same_fingerprint: fingerprint = a_node.fingerprint
 		end
 
@@ -57,8 +57,8 @@ feature -- Access
 			-- Determine the name fingerprint of nodes to which this pattern applies;
 			-- Used for optimisation.
 
-	item_type: INTEGER
-			-- Type of nodes to which this pattern applies
+	node_kind: INTEGER
+			-- Type of nodes matched
 
 feature -- Status report
 
@@ -81,7 +81,7 @@ feature -- Matching
 
 			-- The next line is in this order for speed - the first test usually fails
 
-			Result := a_fingerprint = fingerprint or else a_node_type = item_type 
+			Result := a_fingerprint = fingerprint or else a_node_type = node_kind 
 		end
 
 feature {NONE} -- Implementation

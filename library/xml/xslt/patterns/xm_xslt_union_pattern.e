@@ -33,8 +33,8 @@ feature {NONE} -- Initialization
 		do
 			left_hand_side := a_pattern_one
 			right_hand_side := a_pattern_two
-			if a_pattern_one.item_type = a_pattern_two.item_type then
-				node_type := a_pattern_one.item_type
+			if a_pattern_one.node_kind = a_pattern_two.node_kind then
+				node_type := a_pattern_one.node_kind
 			else
 				node_type := Any_node
 			end

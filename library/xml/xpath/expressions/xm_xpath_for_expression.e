@@ -51,12 +51,8 @@ feature {NONE} -- Initialization
 	
 feature -- Access
 	
-	item_type: INTEGER is
-			--Determine the data type of the expression, if possible;
-			-- All expression return sequences, in general;
-			-- This routine determines the type of the items within the
-			-- sequence, assuming that (a) this is known in advance,
-			-- and (b) it is the same for all items in the sequence.
+	item_type: XM_XPATH_ITEM_TYPE is
+			--Determine the data type of the expression, if possible
 		do
 			Result := action.item_type
 		end
@@ -114,7 +110,7 @@ feature -- Optimization
 				create a_sequence_type.make (declaration.required_type.primary_type, Required_cardinality_zero_or_more)
 				create a_role.make (Variable_role, name, 1)
 				create a_type_checker
-				a_type_checker.static_type_check (sequence, a_sequence_type, False, a_role)
+				a_type_checker.static_type_check (a_context, sequence, a_sequence_type, False, a_role)
 				if a_type_checker.is_static_type_check_error then
 					set_last_error_from_string (a_type_checker.static_type_check_error_message, 4, Type_error)
 				else

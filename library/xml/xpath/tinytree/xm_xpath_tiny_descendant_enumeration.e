@@ -59,26 +59,12 @@ feature {NONE} -- Initialization
 			else
 				a_type_code := Any_node
 			end
-			debug ("XPath descendants enumeration")
-				std.error.put_string ("Next node is ")
-				std.error.put_string (next_node_number.out)
-				std.error.put_new_line
-			end
+
 			if next_node_number >= 0 and then next_node_number < document.last_node_added and then
 				not a_node_test.matches_node (document.retrieve_node_kind (next_node_number), document.name_code_for_node (next_node_number), a_type_code) then
 				advance
 			end
 
-			debug ("XPath descendants enumeration")
-				std.error.put_string ("Initial depth is ")
-				std.error.put_string (starting_depth.out)
-				std.error.put_string (", next node is ")
-				std.error.put_string (next_node_number.out)
-				std.error.put_string (", starting node is ")
-				std.error.put_string (starting_node.node_number.out)				
-				std.error.put_new_line
-			end
-			
 		ensure
 			document_set: document = a_document
 			starting_node_set: starting_node = a_starting_node

@@ -16,6 +16,10 @@ inherit
 
 	XM_XPATH_NODE
 
+	XM_XPATH_TYPE
+
+	XM_XPATH_SHARED_ANY_ITEM_TYPE
+
 feature -- Access
 
 	document_number: INTEGER is
@@ -28,7 +32,7 @@ feature -- Access
 			-- Qualified name
 		do
 			inspect
-				item_type
+				node_type
 			when Attribute_node then
 				Result := document.name_pool.display_name_from_name_code (name_code)
 			when Element_node then
@@ -148,7 +152,7 @@ feature -- Access
 			when Preceding_sibling_axis then
 				Result := created_preceding_sibling_axis_iterator (a_node_test)
 			when Self_axis then
-				if a_node_test.matches_node (item_type, fingerprint, Any_item) then
+				if a_node_test.matches_node (node_type, fingerprint, any_item.fingerprint) then
 					create {XM_XPATH_SINGLETON_ITERATOR [XM_XPATH_TINY_NODE]} Result.make (Current)
 				else
 					Result := empty_abstract_node_iterator
@@ -170,7 +174,7 @@ feature -- Comparison
 				Result := False
 			elseif node_number /= other.node_number then
 				Result := False
-			elseif item_type /= other.item_type then
+			elseif node_type /= other.node_type then
 				Result := False
 			else
 				Result := True
@@ -239,7 +243,7 @@ feature {NONE} -- Implementation
 		require
 			node_test_not_void: a_node_test /= Void
 		do
-			if item_type = Document_node then
+			if node_type = Document_node then
 				Result := empty_abstract_node_iterator
 			else
 				create {XM_XPATH_TINY_ANCESTOR_ENUMERATION} Result.make (document, Current, a_node_test, False)
@@ -253,8 +257,8 @@ feature {NONE} -- Implementation
 		require
 			node_test_not_void: a_node_test /= Void		
 		do
-			if item_type = Document_node then
-				if a_node_test.matches_node (item_type, fingerprint, Any_item) then
+			if node_type = Document_node then
+				if a_node_test.matches_node (node_type, fingerprint, any_item.fingerprint) then
 					create {XM_XPATH_SINGLETON_ITERATOR [XM_XPATH_TINY_NODE]} Result.make (Current)
 				else
 					Result := empty_abstract_node_iterator
@@ -271,7 +275,7 @@ feature {NONE} -- Implementation
 		require
 			node_test_not_void: a_node_test /= Void		
 		do
-			if item_type /= Element_node then
+			if node_type /= Element_node then
 				Result := empty_abstract_node_iterator
 			elseif document.alpha_value (node_number) < 1 then -- Element has no attributes
 				Result := empty_abstract_node_iterator
@@ -305,11 +309,11 @@ feature {NONE} -- Implementation
 			a_document: XM_XPATH_TINY_DOCUMENT
 		do
 			a_name_test ?= a_node_test
-			if item_type = Document_node and then a_name_test /= Void and then a_name_test.item_type = Element_node then
+			if node_type = Document_node and then a_name_test /= Void and then a_name_test.node_kind = Element_node then
 				a_document ?= Current
 					check
 						document_not_void: document /= Void
-						-- as `item_type' is `Document_node'
+						-- as `node_type' is `Document_node'
 					end
 				create {XM_XPATH_ARRAY_LIST_ITERATOR [XM_XPATH_TINY_ELEMENT]} Result.make (a_document.all_elements (a_node_test.fingerprint))
 			else
@@ -326,7 +330,7 @@ feature {NONE} -- Implementation
 		do
 			if has_child_nodes then
 				create {XM_XPATH_TINY_DESCENDANT_ENUMERATION} Result.make (document, Current, a_node_test, True)
-			elseif a_node_test.matches_node (item_type, fingerprint, Any_item) then
+			elseif a_node_test.matches_node (node_type, fingerprint, any_item.fingerprint) then
 				create {XM_XPATH_SINGLETON_ITERATOR [XM_XPATH_TINY_NODE]} Result.make (Current)
 			else
 				Result := empty_abstract_node_iterator					
@@ -342,9 +346,9 @@ feature {NONE} -- Implementation
 		local
 			a_parent_node: XM_XPATH_TINY_NODE
 		do
-			if item_type = Document_node then
+			if node_type = Document_node then
 				Result := empty_abstract_node_iterator
-			elseif item_type = Attribute_node or else item_type = Namespace_node then
+			elseif node_type = Attribute_node or else node_type = Namespace_node then
 					a_parent_node := parent
 					create {XM_XPATH_TINY_FOLLOWING_ENUMERATION} Result.make (document, a_parent_node, a_node_test, True)
 			else
@@ -359,7 +363,7 @@ feature {NONE} -- Implementation
 		require
 			node_test_not_void: a_node_test /= Void
 		do
-			if item_type = Document_node or else item_type = Attribute_node or else item_type = Namespace_node then
+			if node_type = Document_node or else node_type = Attribute_node or else node_type = Namespace_node then
 				Result := empty_abstract_node_iterator
 			else
 				create  {XM_XPATH_TINY_SIBLING_ENUMERATION} Result.make (document, Current, a_node_test, False)
@@ -378,7 +382,7 @@ feature {NONE} -- Implementation
 			a_parent_node := parent
 			if a_parent_node = Void then
 				Result := empty_abstract_node_iterator
-			elseif a_node_test.matches_node (a_parent_node.item_type, a_parent_node.fingerprint, Any_item) then
+			elseif a_node_test.matches_node (a_parent_node.node_type, a_parent_node.fingerprint, any_item.fingerprint) then
 				create {XM_XPATH_SINGLETON_ITERATOR [XM_XPATH_TINY_NODE]} Result.make (a_parent_node)
 			else
 				Result := empty_abstract_node_iterator
@@ -394,9 +398,9 @@ feature {NONE} -- Implementation
 		local
 			a_parent_node: XM_XPATH_TINY_NODE
 		do
-			if item_type = Document_node then
+			if node_type = Document_node then
 				Result := empty_abstract_node_iterator
-			elseif item_type = Attribute_node or else item_type = Namespace_node then
+			elseif node_type = Attribute_node or else node_type = Namespace_node then
 				a_parent_node := parent
 				create  {XM_XPATH_TINY_PRECEDING_ENUMERATION} Result.make (document, a_parent_node, a_node_test, False)
 			else
@@ -411,7 +415,7 @@ feature {NONE} -- Implementation
 		require
 			node_test_not_void: a_node_test /= Void
 		do	
-			if item_type = Document_node or else item_type = Attribute_node or else item_type = Namespace_node then
+			if node_type = Document_node or else node_type = Attribute_node or else node_type = Namespace_node then
 				Result := empty_abstract_node_iterator
 			else
 				create  {XM_XPATH_TINY_PRECEDING_SIBLING_ENUMERATION} Result.make (document, Current, a_node_test)
@@ -427,9 +431,9 @@ feature {NONE} -- Implementation
 		local
 			a_parent_node: XM_XPATH_TINY_NODE
 		do
-			if item_type = Document_node then
+			if node_type = Document_node then
 				Result := empty_abstract_node_iterator
-			elseif item_type = Attribute_node or else item_type = Namespace_node then
+			elseif node_type = Attribute_node or else node_type = Namespace_node then
 				a_parent_node := parent
 				create  {XM_XPATH_TINY_PRECEDING_ENUMERATION} Result.make (document, a_parent_node, a_node_test, True)
 			else

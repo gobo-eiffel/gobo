@@ -15,6 +15,11 @@ class XM_XPATH_ANY_NODE_TEST
 inherit
 
 	XM_XPATH_NODE_TEST
+		redefine
+			super_type, matches_item
+		end
+
+	XM_XPATH_SHARED_ANY_ITEM_TYPE
 
 creation
 
@@ -27,9 +32,24 @@ feature {NONE} -- Initialization
 			original_text := "node()"
 		end
 	
-feature -- Status report
+feature -- Access
 
-	-- Not sure if this next feature is needed
+		matches_item (an_item: XM_XPATH_ITEM): BOOLEAN is
+			-- Does `an_item' conform to `Current'?
+		local
+			a_node: XM_XPATH_NODE
+		do
+			a_node ?= an_item
+			Result := a_node /= Void
+		end
+
+	super_type: XM_XPATH_ITEM_TYPE is
+			-- Type from which this item type is derived by restriction
+		do
+			Result := any_item
+		end
+
+feature -- Status report
 
 	allows_text_nodes: BOOLEAN is
 			-- Does this node test allow text nodes?

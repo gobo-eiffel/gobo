@@ -16,7 +16,7 @@ inherit
 
 	XM_XPATH_NODE_TEST
 		redefine
-			item_type
+			node_kind
 		end
 
 	XM_UNICODE_CHARACTERS_1_1
@@ -35,21 +35,19 @@ feature {NONE} -- Initialization
 			valid_node_type: is_node_type (a_node_type)
 			valid_local_name: a_local_name /= Void and then is_ncname (a_local_name)
 		do
-			item_type := a_node_type
+			node_kind := a_node_type
 			local_name := a_local_name
 			name_pool := a_name_pool
 		ensure
-			item_type_set: item_type = a_node_type
+			node_kind_set: node_kind = a_node_type
 			local_name_set: local_name = a_local_name
 			name_pool_set: name_pool = a_name_pool
 		end
 
-
 feature -- Access
 
-	item_type: INTEGER
+		node_kind: INTEGER
 			-- Type of nodes to which this pattern applies
-
 
 feature -- Status report
 
@@ -66,12 +64,11 @@ feature -- Matching
 		do
 			if a_name_code = -1 then
 				Result := False
-			elseif not is_node_type (a_node_kind) then
+			elseif node_kind /= a_node_kind then
 				Result := False
 			else
 				Result := STRING_.same_string (local_name, name_pool.local_name_from_name_code (a_name_code))
 			end
-				
 		end
 
 feature {NONE} -- Implementation
