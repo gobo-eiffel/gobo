@@ -23,6 +23,8 @@ inherit
 			command
 		end
 
+	KL_IMPORTED_STRING_ROUTINES
+
 creation
 
 	make
@@ -59,6 +61,42 @@ feature {NONE} -- Initialization
 					command.set_stylesheet_filename (a_value)
 				end
 			end
+			if has_uc_attribute (Processor_attribute_name) then
+				a_value := uc_attribute_value (Processor_attribute_name).out
+				if a_value.is_equal (Processor_attribute_value_xalan_cpp.out) then
+					command.set_processor_xalan_cpp
+				elseif a_value.is_equal (Processor_attribute_value_xalan_java.out) then
+					command.set_processor_xalan_java
+				end
+			end
+			if has_uc_attribute (Format_attribute_name) then
+				a_value := uc_attribute_value (Format_attribute_name).out
+				if a_value.count > 0 then
+					command.set_format (a_value)
+				end
+			end
+
+			if has_uc_attribute (Indent_attribute_name) then
+				a_value := uc_attribute_value (Indent_attribute_name).out
+				if STRING_.is_integer (a_value) then
+					command.set_indent (a_value)
+				end
+			end
+
+			if has_uc_attribute (Extdirs_attribute_name) then
+				a_value := uc_attribute_value (Extdirs_attribute_name).out
+				if a_value.count > 0 then
+					command.set_extdirs (a_value)
+				end
+			end
+
+			if has_uc_attribute (Classpath_attribute_name) then
+				a_value := uc_attribute_value (Classpath_attribute_name).out
+				if a_value.count > 0 then
+					command.set_classpath (a_value)
+				end
+			end
+
 			parameter_elements := xml_element.children_by_name (Parameter_element_name)
 			nb := parameter_elements.count
 			from i := 1 until i > nb loop
@@ -104,6 +142,69 @@ feature {NONE} -- Constants
 			-- Name of xml attribute for stylesheet_filename
 		once
 			Result := new_unicode_string ("stylesheet")
+		ensure
+			attribute_name_not_void: Result /= Void
+			atribute_name_not_empty: Result.count > 0
+		end
+
+	Processor_attribute_name: UC_STRING is
+			-- Name of xml attribute for processor
+		once
+			Result := new_unicode_string ("processor")
+		ensure
+			attribute_name_not_void: Result /= Void
+			atribute_name_not_empty: Result.count > 0
+		end
+
+	Processor_attribute_value_xalan_cpp: UC_STRING is
+			-- value of xml attribute for processor
+		once
+			Result := new_unicode_string ("xalan_cpp")
+		ensure
+			attribute_value_not_void: Result /= Void
+			atribute_value_not_empty: Result.count > 0
+		end
+
+	Processor_attribute_value_xalan_java: UC_STRING is
+			-- value of xml attribute for processor
+		once
+			Result := new_unicode_string ("xalan_java")
+		ensure
+			attribute_value_not_void: Result /= Void
+			atribute_value_not_empty: Result.count > 0
+		end
+
+	Format_attribute_name: UC_STRING is
+			-- Name of xml attribute for format
+		once
+			Result := new_unicode_string ("format")
+		ensure
+			attribute_name_not_void: Result /= Void
+			atribute_name_not_empty: Result.count > 0
+		end
+
+	Indent_attribute_name: UC_STRING is
+			-- Name of xml attribute for indent
+		once
+			Result := new_unicode_string ("indent")
+		ensure
+			attribute_name_not_void: Result /= Void
+			atribute_name_not_empty: Result.count > 0
+		end
+
+	Extdirs_attribute_name: UC_STRING is
+			-- Name of xml attribute for extdirs
+		once
+			Result := new_unicode_string ("extdirs")
+		ensure
+			attribute_name_not_void: Result /= Void
+			atribute_name_not_empty: Result.count > 0
+		end
+
+	Classpath_attribute_name: UC_STRING is
+			-- Name of xml attribute for classpath
+		once
+			Result := new_unicode_string ("classpath")
 		ensure
 			attribute_name_not_void: Result /= Void
 			atribute_name_not_empty: Result.count > 0
