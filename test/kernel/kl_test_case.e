@@ -32,9 +32,17 @@ feature -- Filenames
 		local
 			nb: INTEGER
 		do
-			nb := counter.item + 1
-			counter.put (nb)
-			Result := a_prefix + nb.out + an_extension
+			from
+				nb := counter.item + 1
+				counter.put (nb)
+				Result := a_prefix + nb.out + an_extension
+			until
+				not file_system.file_exists (Result)
+			loop
+				nb := counter.item + 1
+				counter.put (nb)
+				Result := a_prefix + nb.out + an_extension
+			end
 		ensure
 			filename_not_void: Result /= Void
 		end
@@ -88,9 +96,17 @@ feature -- Directory names
 		local
 			nb: INTEGER
 		do
-			nb := counter.item + 1
-			counter.put (nb)
-			Result := a_prefix + nb.out
+			from
+				nb := counter.item + 1
+				counter.put (nb)
+				Result := a_prefix + nb.out
+			until
+				not file_system.directory_exists (Result)
+			loop
+				nb := counter.item + 1
+				counter.put (nb)
+				Result := a_prefix + nb.out
+			end
 		ensure
 			dirname_not_void: Result /= Void
 		end
