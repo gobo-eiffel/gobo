@@ -16,8 +16,17 @@ inherit
 
 	ET_NAMED_TYPE
 		redefine
-			name, named_type,
+			name, named_type, is_formal_type,
+			has_qualified_type,
 			same_syntactical_formal_parameter_type,
+			same_named_bit_type,
+			same_named_class_type,
+			same_named_formal_parameter_type,
+			same_named_tuple_type,
+			same_base_bit_type,
+			same_base_class_type,
+			same_base_formal_parameter_type,
+			same_base_tuple_type,
 			conforms_from_bit_type,
 			conforms_from_class_type,
 			conforms_from_formal_parameter_type,
@@ -165,6 +174,56 @@ feature -- Access
 			end
 		end
 
+	shallow_base_type (a_context: ET_TYPE_CONTEXT; a_universe: ET_UNIVERSE): ET_BASE_TYPE is
+			-- Base type of current type, when it appears in `a_context'
+			-- in `a_universe', but contrary to `base_type' its generic
+			-- parameters can be made up of types other than class names
+			-- and generic formal parameters. Return "*UNKNOWN*" if current
+			-- type is an unresolved identifier type, an anchored type
+			-- involved in a cycle, or an unmatched formal generic parameter.
+		local
+			an_actuals: ET_ACTUAL_PARAMETER_LIST
+			an_actual: ET_TYPE
+			a_formal_type: ET_FORMAL_PARAMETER_TYPE
+			a_class: ET_CLASS
+			a_formals: ET_FORMAL_PARAMETER_LIST
+			a_formal: ET_FORMAL_PARAMETER
+			a_base_type: ET_BASE_TYPE
+			a_context_type: ET_BASE_TYPE
+		do
+			a_context_type := a_context.type
+			an_actuals := a_context_type.actual_parameters
+			if an_actuals /= Void and then index <= an_actuals.count then
+				an_actual := an_actuals.type (index)
+				a_formal_type ?= an_actual
+				if a_formal_type /= Void and a_context.is_root_context then
+					a_class := a_context_type.direct_base_class (a_universe)
+					a_formals := a_class.formal_parameters
+					if a_formals /= Void and then index <= a_formals.count then
+						a_formal := a_formals.formal_parameter (index)
+						a_base_type := a_formal.constraint_base_type
+						if a_base_type /= Void then
+							Result := a_base_type
+						else
+								-- This formal parameter has either no constraint
+								-- or a cyclic constraint of the form "[G -> H,
+								-- H -> G]". The base type is considered to be
+								-- "ANY" in these two cases.
+							Result := a_universe.any_type
+						end
+					else
+							-- Error: formal parameter not matched.
+						Result := a_universe.unknown_class
+					end
+				else
+					Result := an_actual.shallow_base_type (a_context.context, a_universe)
+				end
+			else
+					-- Error: formal parameter not matched.
+				Result := a_universe.unknown_class
+			end
+		end
+
 	named_type (a_context: ET_TYPE_CONTEXT; a_universe: ET_UNIVERSE): ET_NAMED_TYPE is
 			-- Same as `base_type' except when current type is still
 			-- a formal generic parameter after having been replaced
@@ -206,6 +265,67 @@ feature -- Access
 			Result := name.break
 		end
 
+feature -- Status report
+
+	is_formal_type (a_context: ET_TYPE_CONTEXT; a_universe: ET_UNIVERSE): BOOLEAN is
+			-- Is current type a formal parameter when viewed from
+			-- `a_context', or if it is a qualified type is its
+			-- target type (recursively) a formal parameter?
+		local
+			an_actual: ET_TYPE
+			an_actuals: ET_ACTUAL_PARAMETER_LIST
+			a_formal_type: ET_FORMAL_PARAMETER_TYPE
+			a_context_type: ET_BASE_TYPE
+		do
+			a_context_type := a_context.type
+			an_actuals := a_context_type.actual_parameters
+			if an_actuals = Void or else index > an_actuals.count then
+					-- Internal error: does current type really
+					-- appear in `a_context'?
+				Result := False
+			else
+				an_actual := an_actuals.type (index)
+				a_formal_type ?= an_actual
+				if a_formal_type /= Void and a_context.is_root_context then
+						-- The actual parameter associated with current
+						-- type is itself a formal generic parameter.
+					Result := True
+				else
+					Result := an_actual.is_formal_type (a_context.context, a_universe)
+				end
+			end
+		end
+
+	has_qualified_type (a_context: ET_TYPE_CONTEXT; a_universe: ET_UNIVERSE): BOOLEAN is
+			-- Is current type a qualified anchored type (other than of
+			-- the form 'like Current.b') when viewed from `a_context',
+			-- or do its actual generic parameters (recursively)
+			-- contain qualified types?
+		local
+			an_actual: ET_TYPE
+			an_actuals: ET_ACTUAL_PARAMETER_LIST
+			a_formal_type: ET_FORMAL_PARAMETER_TYPE
+			a_context_type: ET_BASE_TYPE
+		do
+			a_context_type := a_context.type
+			an_actuals := a_context_type.actual_parameters
+			if an_actuals = Void or else index > an_actuals.count then
+					-- Internal error: does current type really
+					-- appear in `a_context'?
+				Result := False
+			else
+				an_actual := an_actuals.type (index)
+				a_formal_type ?= an_actual
+				if a_formal_type /= Void and a_context.is_root_context then
+						-- The actual parameter associated with current
+						-- type is itself a formal generic parameter.
+					Result := False
+				else
+					Result := an_actual.has_qualified_type (a_context.context, a_universe)
+				end
+			end
+		end
+
 feature -- Comparison
 
 	same_syntactical_type (other: ET_TYPE; other_context: ET_TYPE_CONTEXT;
@@ -238,6 +358,64 @@ feature -- Comparison
 					Result := other.same_syntactical_formal_parameter_type (a_formal_type, a_context, other_context, a_universe)
 				else
 					Result := an_actual.same_syntactical_type (other, other_context, a_context.context, a_universe)
+				end
+			end
+		end
+
+	same_named_type (other: ET_TYPE; other_context: ET_TYPE_CONTEXT;
+		a_context: ET_TYPE_CONTEXT; a_universe: ET_UNIVERSE): BOOLEAN is
+			-- Do current type appearing in `a_context' and `other' type
+			-- appearing in `other_context' have the same named type?
+		local
+			an_actual: ET_TYPE
+			an_actuals: ET_ACTUAL_PARAMETER_LIST
+			a_formal_type: ET_FORMAL_PARAMETER_TYPE
+			a_context_type: ET_BASE_TYPE
+		do
+			a_context_type := a_context.type
+			an_actuals := a_context_type.actual_parameters
+			if an_actuals = Void or else index > an_actuals.count then
+					-- Internal error: does current type really
+					-- appear in `a_context'?
+				Result := False
+			else
+				an_actual := an_actuals.type (index)
+				a_formal_type ?= an_actual
+				if a_formal_type /= Void and a_context.is_root_context then
+						-- The actual parameter associated with current
+						-- type is itself a formal generic parameter.
+					Result := other.same_named_formal_parameter_type (a_formal_type, a_context, other_context, a_universe)
+				else
+					Result := an_actual.same_named_type (other, other_context, a_context.context, a_universe)
+				end
+			end
+		end
+
+	same_base_type (other: ET_TYPE; other_context: ET_TYPE_CONTEXT;
+		a_context: ET_TYPE_CONTEXT; a_universe: ET_UNIVERSE): BOOLEAN is
+			-- Do current type appearing in `a_context' and `other' type
+			-- appearing in `other_context' have the same base type?
+		local
+			an_actual: ET_TYPE
+			an_actuals: ET_ACTUAL_PARAMETER_LIST
+			a_formal_type: ET_FORMAL_PARAMETER_TYPE
+			a_context_type: ET_BASE_TYPE
+		do
+			a_context_type := a_context.type
+			an_actuals := a_context_type.actual_parameters
+			if an_actuals = Void or else index > an_actuals.count then
+					-- Internal error: does current type really
+					-- appear in `a_context'?
+				Result := False
+			else
+				an_actual := an_actuals.type (index)
+				a_formal_type ?= an_actual
+				if a_formal_type /= Void and a_context.is_root_context then
+						-- The actual parameter associated with current
+						-- type is itself a formal generic parameter.
+					Result := other.same_base_formal_parameter_type (a_formal_type, a_context, other_context, a_universe)
+				else
+					Result := an_actual.same_base_type (other, other_context, a_context.context, a_universe)
 				end
 			end
 		end
@@ -275,6 +453,240 @@ feature {ET_TYPE} -- Comparison
 					Result := a_formal_type.index = other.index
 				else
 					Result := an_actual.same_syntactical_formal_parameter_type (other, other_context, a_context.context, a_universe)
+				end
+			end
+		end
+
+	same_named_bit_type (other: ET_BIT_TYPE; other_context: ET_TYPE_CONTEXT;
+		a_context: ET_TYPE_CONTEXT; a_universe: ET_UNIVERSE): BOOLEAN is
+			-- Do current type appearing in `a_context' and `other' type
+			-- appearing in `other_context' have the same named type?
+		local
+			an_actual: ET_TYPE
+			an_actuals: ET_ACTUAL_PARAMETER_LIST
+			a_formal_type: ET_FORMAL_PARAMETER_TYPE
+			a_context_type: ET_BASE_TYPE
+		do
+			a_context_type := a_context.type
+			an_actuals := a_context_type.actual_parameters
+			if an_actuals = Void or else index > an_actuals.count then
+					-- Internal error: does current type really
+					-- appear in `a_context'?
+				Result := False
+			else
+				an_actual := an_actuals.type (index)
+				a_formal_type ?= an_actual
+				if a_formal_type /= Void and a_context.is_root_context then
+						-- The actual parameter associated with current
+						-- type is itself a formal generic parameter.
+					Result := False
+				else
+					Result := an_actual.same_named_bit_type (other, other_context, a_context.context, a_universe)
+				end
+			end
+		end
+
+	same_named_class_type (other: ET_CLASS_TYPE; other_context: ET_TYPE_CONTEXT;
+		a_context: ET_TYPE_CONTEXT; a_universe: ET_UNIVERSE): BOOLEAN is
+			-- Do current type appearing in `a_context' and `other' type
+			-- appearing in `other_context' have the same named type?
+		local
+			an_actual: ET_TYPE
+			an_actuals: ET_ACTUAL_PARAMETER_LIST
+			a_formal_type: ET_FORMAL_PARAMETER_TYPE
+			a_context_type: ET_BASE_TYPE
+		do
+			a_context_type := a_context.type
+			an_actuals := a_context_type.actual_parameters
+			if an_actuals = Void or else index > an_actuals.count then
+					-- Internal error: does current type really
+					-- appear in `a_context'?
+				Result := False
+			else
+				an_actual := an_actuals.type (index)
+				a_formal_type ?= an_actual
+				if a_formal_type /= Void and a_context.is_root_context then
+						-- The actual parameter associated with current
+						-- type is itself a formal generic parameter.
+					Result := False
+				else
+					Result := an_actual.same_named_class_type (other, other_context, a_context.context, a_universe)
+				end
+			end
+		end
+
+	same_named_formal_parameter_type (other: ET_FORMAL_PARAMETER_TYPE;
+		other_context: ET_TYPE_CONTEXT; a_context: ET_TYPE_CONTEXT;
+		a_universe: ET_UNIVERSE): BOOLEAN is
+			-- Do current type appearing in `a_context' and `other' type
+			-- appearing in `other_context' have the same named type?
+		local
+			an_actual: ET_TYPE
+			an_actuals: ET_ACTUAL_PARAMETER_LIST
+			a_formal_type: ET_FORMAL_PARAMETER_TYPE
+			a_context_type: ET_BASE_TYPE
+		do
+			a_context_type := a_context.type
+			an_actuals := a_context_type.actual_parameters
+			if an_actuals = Void or else index > an_actuals.count then
+					-- Internal error: does current type really
+					-- appear in `a_context'?
+				Result := False
+			else
+				an_actual := an_actuals.type (index)
+				a_formal_type ?= an_actual
+				if a_formal_type /= Void and a_context.is_root_context then
+						-- The actual parameter associated with current
+						-- type is itself a formal generic parameter.
+					Result := a_formal_type.index = other.index
+				else
+					Result := an_actual.same_named_formal_parameter_type (other, other_context, a_context.context, a_universe)
+				end
+			end
+		end
+
+	same_named_tuple_type (other: ET_TUPLE_TYPE; other_context: ET_TYPE_CONTEXT;
+		a_context: ET_TYPE_CONTEXT; a_universe: ET_UNIVERSE): BOOLEAN is
+			-- Do current type appearing in `a_context' and `other' type
+			-- appearing in `other_context' have the same named type?
+		local
+			an_actual: ET_TYPE
+			an_actuals: ET_ACTUAL_PARAMETER_LIST
+			a_formal_type: ET_FORMAL_PARAMETER_TYPE
+			a_context_type: ET_BASE_TYPE
+		do
+			a_context_type := a_context.type
+			an_actuals := a_context_type.actual_parameters
+			if an_actuals = Void or else index > an_actuals.count then
+					-- Internal error: does current type really
+					-- appear in `a_context'?
+				Result := False
+			else
+				an_actual := an_actuals.type (index)
+				a_formal_type ?= an_actual
+				if a_formal_type /= Void and a_context.is_root_context then
+						-- The actual parameter associated with current
+						-- type is itself a formal generic parameter.
+					Result := False
+				else
+					Result := an_actual.same_named_tuple_type (other, other_context, a_context.context, a_universe)
+				end
+			end
+		end
+
+	same_base_bit_type (other: ET_BIT_TYPE; other_context: ET_TYPE_CONTEXT;
+		a_context: ET_TYPE_CONTEXT; a_universe: ET_UNIVERSE): BOOLEAN is
+			-- Do current type appearing in `a_context' and `other' type
+			-- appearing in `other_context' have the same base type?
+		local
+			an_actual: ET_TYPE
+			an_actuals: ET_ACTUAL_PARAMETER_LIST
+			a_formal_type: ET_FORMAL_PARAMETER_TYPE
+			a_context_type: ET_BASE_TYPE
+		do
+			a_context_type := a_context.type
+			an_actuals := a_context_type.actual_parameters
+			if an_actuals = Void or else index > an_actuals.count then
+					-- Internal error: does current type really
+					-- appear in `a_context'?
+				Result := False
+			else
+				an_actual := an_actuals.type (index)
+				a_formal_type ?= an_actual
+				if a_formal_type /= Void and a_context.is_root_context then
+						-- The actual parameter associated with current
+						-- type is itself a formal generic parameter.
+					Result := False
+				else
+					Result := an_actual.same_base_bit_type (other, other_context, a_context.context, a_universe)
+				end
+			end
+		end
+
+	same_base_class_type (other: ET_CLASS_TYPE; other_context: ET_TYPE_CONTEXT;
+		a_context: ET_TYPE_CONTEXT; a_universe: ET_UNIVERSE): BOOLEAN is
+			-- Do current type appearing in `a_context' and `other' type
+			-- appearing in `other_context' have the same base type?
+		local
+			an_actual: ET_TYPE
+			an_actuals: ET_ACTUAL_PARAMETER_LIST
+			a_formal_type: ET_FORMAL_PARAMETER_TYPE
+			a_context_type: ET_BASE_TYPE
+		do
+			a_context_type := a_context.type
+			an_actuals := a_context_type.actual_parameters
+			if an_actuals = Void or else index > an_actuals.count then
+					-- Internal error: does current type really
+					-- appear in `a_context'?
+				Result := False
+			else
+				an_actual := an_actuals.type (index)
+				a_formal_type ?= an_actual
+				if a_formal_type /= Void and a_context.is_root_context then
+						-- The actual parameter associated with current
+						-- type is itself a formal generic parameter.
+					Result := False
+				else
+					Result := an_actual.same_base_class_type (other, other_context, a_context.context, a_universe)
+				end
+			end
+		end
+
+	same_base_formal_parameter_type (other: ET_FORMAL_PARAMETER_TYPE;
+		other_context: ET_TYPE_CONTEXT; a_context: ET_TYPE_CONTEXT;
+		a_universe: ET_UNIVERSE): BOOLEAN is
+			-- Do current type appearing in `a_context' and `other' type
+			-- appearing in `other_context' have the same base type?
+		local
+			an_actual: ET_TYPE
+			an_actuals: ET_ACTUAL_PARAMETER_LIST
+			a_formal_type: ET_FORMAL_PARAMETER_TYPE
+			a_context_type: ET_BASE_TYPE
+		do
+			a_context_type := a_context.type
+			an_actuals := a_context_type.actual_parameters
+			if an_actuals = Void or else index > an_actuals.count then
+					-- Internal error: does current type really
+					-- appear in `a_context'?
+				Result := False
+			else
+				an_actual := an_actuals.type (index)
+				a_formal_type ?= an_actual
+				if a_formal_type /= Void and a_context.is_root_context then
+						-- The actual parameter associated with current
+						-- type is itself a formal generic parameter.
+					Result := a_formal_type.index = other.index
+				else
+					Result := an_actual.same_base_formal_parameter_type (other, other_context, a_context.context, a_universe)
+				end
+			end
+		end
+
+	same_base_tuple_type (other: ET_TUPLE_TYPE; other_context: ET_TYPE_CONTEXT;
+		a_context: ET_TYPE_CONTEXT; a_universe: ET_UNIVERSE): BOOLEAN is
+			-- Do current type appearing in `a_context' and `other' type
+			-- appearing in `other_context' have the same base type?
+		local
+			an_actual: ET_TYPE
+			an_actuals: ET_ACTUAL_PARAMETER_LIST
+			a_formal_type: ET_FORMAL_PARAMETER_TYPE
+			a_context_type: ET_BASE_TYPE
+		do
+			a_context_type := a_context.type
+			an_actuals := a_context_type.actual_parameters
+			if an_actuals = Void or else index > an_actuals.count then
+					-- Internal error: does current type really
+					-- appear in `a_context'?
+				Result := False
+			else
+				an_actual := an_actuals.type (index)
+				a_formal_type ?= an_actual
+				if a_formal_type /= Void and a_context.is_root_context then
+						-- The actual parameter associated with current
+						-- type is itself a formal generic parameter.
+					Result := False
+				else
+					Result := an_actual.same_base_tuple_type (other, other_context, a_context.context, a_universe)
 				end
 			end
 		end

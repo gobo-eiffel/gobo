@@ -20,6 +20,8 @@ inherit
 		redefine
 			bit_keyword,
 			same_syntactical_bit_type,
+			same_named_bit_type,
+			same_base_bit_type,
 			conforms_from_bit_type
 		end
 
@@ -62,6 +64,22 @@ feature -- Access
 			-- ETL2 p.198). Replace by "*UNKNOWN*" any unresolved identifier
 			-- type, anchored type involved in a cycle, or unmatched formal
 			-- generic parameter if this parameter is current type.
+		do
+			if constant /= Void then
+				Result := Current
+			else
+					-- Resolved "BIT name".
+				Result := a_universe.unknown_class
+			end
+		end
+
+	shallow_base_type (a_context: ET_TYPE_CONTEXT; a_universe: ET_UNIVERSE): ET_BASE_TYPE is
+			-- Base type of current type, when it appears in `a_context'
+			-- in `a_universe', but contrary to `base_type' its generic
+			-- parameters can be made up of types other than class names
+			-- and generic formal parameters. Return "*UNKNOWN*" if current
+			-- type is an unresolved identifier type, an anchored type
+			-- involved in a cycle, or an unmatched formal generic parameter.
 		do
 			if constant /= Void then
 				Result := Current
@@ -138,6 +156,30 @@ feature -- Comparison
 			end
 		end
 
+	same_named_type (other: ET_TYPE; other_context: ET_TYPE_CONTEXT;
+		a_context: ET_TYPE_CONTEXT; a_universe: ET_UNIVERSE): BOOLEAN is
+			-- Do current type appearing in `a_context' and `other' type
+			-- appearing in `other_context' have the same named type?
+		do
+			if other = Current then
+				Result := True
+			else
+				Result := other.same_named_bit_type (Current, a_context, other_context, a_universe)
+			end
+		end
+
+	same_base_type (other: ET_TYPE; other_context: ET_TYPE_CONTEXT;
+		a_context: ET_TYPE_CONTEXT; a_universe: ET_UNIVERSE): BOOLEAN is
+			-- Do current type appearing in `a_context' and `other' type
+			-- appearing in `other_context' have the same base type?
+		do
+			if other = Current then
+				Result := True
+			else
+				Result := other.same_base_bit_type (Current, a_context, other_context, a_universe)
+			end
+		end
+
 feature {ET_TYPE} -- Comparison
 
 	same_syntactical_bit_type (other: ET_BIT_TYPE; other_context: ET_TYPE_CONTEXT;
@@ -161,6 +203,22 @@ feature {ET_TYPE} -- Comparison
 					end
 				end
 			end
+		end
+
+	same_named_bit_type (other: ET_BIT_TYPE; other_context: ET_TYPE_CONTEXT;
+		a_context: ET_TYPE_CONTEXT; a_universe: ET_UNIVERSE): BOOLEAN is
+			-- Do current type appearing in `a_context' and `other' type
+			-- appearing in `other_context' have the same named type?
+		do
+			Result := same_syntactical_bit_type (other, other_context, a_context, a_universe)
+		end
+
+	same_base_bit_type (other: ET_BIT_TYPE; other_context: ET_TYPE_CONTEXT;
+		a_context: ET_TYPE_CONTEXT; a_universe: ET_UNIVERSE): BOOLEAN is
+			-- Do current type appearing in `a_context' and `other' type
+			-- appearing in `other_context' have the same base type?
+		do
+			Result := same_syntactical_bit_type (other, other_context, a_context, a_universe)
 		end
 
 feature -- Conformance

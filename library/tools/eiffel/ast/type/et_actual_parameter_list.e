@@ -118,6 +118,31 @@ feature -- Access
 			Result := right_bracket.break
 		end
 
+feature -- Status report
+
+	has_qualified_types (a_context: ET_TYPE_CONTEXT; a_universe: ET_UNIVERSE): BOOLEAN is
+			-- Is one of current types a qualified type (other than of
+			-- the form 'like Current.b') when viewed from `a_context',
+			-- or do their actual generic parameters (recursively)
+			-- contain qualified types?
+		require
+			a_context_not_void: a_context /= Void
+			a_context_valid: a_context.is_valid_context
+			a_universe_not_void: a_universe /= Void
+		local
+			i, nb: INTEGER
+		do
+			nb := count
+			from i := 1 until i > nb loop
+				if type (i).has_qualified_type (a_context, a_universe) then
+					Result := True
+					i := nb + 1 -- Jump out of the loop.
+				else
+					i := i + 1
+				end
+			end
+		end
+
 feature -- Comparison
 
 	same_syntactical_types (other: ET_ACTUAL_PARAMETER_LIST; other_context: ET_TYPE_CONTEXT;
@@ -150,6 +175,40 @@ feature -- Comparison
 				nb := count
 				from i := 1 until i > nb loop
 					if not type (i).same_syntactical_type (other.type (i), other_context, a_context, a_universe) then
+						Result := False
+						i := nb + 1 -- Jump out of the loop.
+					else
+						i := i + 1
+					end
+				end
+			end
+		end
+
+	same_named_types (other: ET_ACTUAL_PARAMETER_LIST; other_context: ET_TYPE_CONTEXT;
+		a_context: ET_TYPE_CONTEXT; a_universe: ET_UNIVERSE): BOOLEAN is
+			-- Do current types appearing in `a_context' and `other' types
+			-- appearing in `other_context' have the same named types?
+		require
+			other_not_void: other /= Void
+			other_context_not_void: other_context /= Void
+			other_context_valid: other_context.is_valid_context
+			a_context_not_void: a_context /= Void
+			a_context_valid: a_context.is_valid_context
+			same_root_context: other_context.same_root_context (a_context)
+			a_universe_not_void: a_universe /= Void
+		local
+			i, nb: INTEGER
+		do
+			if other = Current and then other_context = a_context then
+				Result := True
+			elseif other.count /= count then
+					-- Validity error VTUG-2.
+				Result := False
+			else
+				Result := True
+				nb := count
+				from i := 1 until i > nb loop
+					if not type (i).same_named_type (other.type (i), other_context, a_context, a_universe) then
 						Result := False
 						i := nb + 1 -- Jump out of the loop.
 					else

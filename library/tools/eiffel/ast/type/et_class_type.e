@@ -17,8 +17,11 @@ inherit
 	ET_BASE_TYPE
 		redefine
 			same_syntactical_class_type,
+			same_named_class_type,
+			same_base_class_type,
 			conforms_from_class_type,
 			is_named_type, is_base_type,
+			has_qualified_type,
 			resolved_formal_parameters
 		end
 
@@ -88,6 +91,17 @@ feature -- Access
 					create {ET_GENERIC_CLASS_TYPE} Result.make (type_mark, name, a_named_parameters, eiffel_class)
 				end
 			end
+		end
+
+	shallow_base_type (a_context: ET_TYPE_CONTEXT; a_universe: ET_UNIVERSE): ET_BASE_TYPE is
+			-- Base type of current type, when it appears in `a_context'
+			-- in `a_universe', but contrary to `base_type' its generic
+			-- parameters can be made up of types other than class names
+			-- and generic formal parameters. Return "*UNKNOWN*" if current
+			-- type is an unresolved identifier type, an anchored type
+			-- involved in a cycle, or an unmatched formal generic parameter.
+		do
+			Result := Current
 		end
 
 	position: ET_POSITION is
@@ -189,6 +203,20 @@ feature -- Status report
 			end
 		end
 
+	has_qualified_type (a_context: ET_TYPE_CONTEXT; a_universe: ET_UNIVERSE): BOOLEAN is
+			-- Is current type a qualified anchored type (other than of
+			-- the form 'like Current.b') when viewed from `a_context',
+			-- or do its actual generic parameters (recursively)
+			-- contain qualified types?
+		local
+			a_parameters: like actual_parameters
+		do
+			a_parameters := actual_parameters
+			if a_parameters /= Void then
+				Result := a_parameters.has_qualified_types (a_context, a_universe)
+			end
+		end
+
 feature -- Comparison
 
 	same_syntactical_type (other: ET_TYPE; other_context: ET_TYPE_CONTEXT;
@@ -208,6 +236,36 @@ feature -- Comparison
 				Result := True
 			else
 				Result := other.same_syntactical_class_type (Current, a_context, other_context, a_universe)
+			end
+		end
+
+	same_named_type (other: ET_TYPE; other_context: ET_TYPE_CONTEXT;
+		a_context: ET_TYPE_CONTEXT; a_universe: ET_UNIVERSE): BOOLEAN is
+			-- Do current type appearing in `a_context' and `other' type
+			-- appearing in `other_context' have the same named type?
+		do
+			if other = a_universe.unknown_class then
+					-- "*UNKNOWN*" is equal to no type, not even itself.
+				Result := False
+			elseif other = Current and then other_context = a_context then
+				Result := True
+			else
+				Result := other.same_named_class_type (Current, a_context, other_context, a_universe)
+			end
+		end
+
+	same_base_type (other: ET_TYPE; other_context: ET_TYPE_CONTEXT;
+		a_context: ET_TYPE_CONTEXT; a_universe: ET_UNIVERSE): BOOLEAN is
+			-- Do current type appearing in `a_context' and `other' type
+			-- appearing in `other_context' have the same base type?
+		do
+			if other = a_universe.unknown_class then
+					-- "*UNKNOWN*" is equal to no type, not even itself.
+				Result := False
+			elseif other = Current and then other_context = a_context then
+				Result := True
+			else
+				Result := other.same_base_class_type (Current, a_context, other_context, a_universe)
 			end
 		end
 
@@ -246,6 +304,70 @@ feature {ET_TYPE} -- Comparison
 						other_is_generic: other_parameters /= Void
 					end
 					Result := actual_parameters.same_syntactical_types (other_parameters, other_context, a_context, a_universe)
+				end
+			end
+		end
+
+	same_named_class_type (other: ET_CLASS_TYPE; other_context: ET_TYPE_CONTEXT;
+		a_context: ET_TYPE_CONTEXT; a_universe: ET_UNIVERSE): BOOLEAN is
+			-- Do current type appearing in `a_context' and `other' type
+			-- appearing in `other_context' have the same named type?
+		local
+			other_parameters: ET_ACTUAL_PARAMETER_LIST
+		do
+			if other = a_universe.unknown_class then
+					-- "*UNKNOWN*" is equal to no type, not even itself.
+				Result := False
+			elseif other = Current and then other_context = a_context then
+				Result := True
+			elseif
+				eiffel_class = other.direct_base_class (a_universe) and
+				is_expanded = other.is_expanded and
+				is_separate = other.is_separate
+			then
+				if not other.is_generic then
+					Result := not is_generic
+				elseif not is_generic then
+					-- Result := False
+				else
+					other_parameters := other.actual_parameters
+					check
+						is_generic: actual_parameters /= Void
+						other_is_generic: other_parameters /= Void
+					end
+					Result := actual_parameters.same_named_types (other_parameters, other_context, a_context, a_universe)
+				end
+			end
+		end
+
+	same_base_class_type (other: ET_CLASS_TYPE; other_context: ET_TYPE_CONTEXT;
+		a_context: ET_TYPE_CONTEXT; a_universe: ET_UNIVERSE): BOOLEAN is
+			-- Do current type appearing in `a_context' and `other' type
+			-- appearing in `other_context' have the same named type?
+		local
+			other_parameters: ET_ACTUAL_PARAMETER_LIST
+		do
+			if other = a_universe.unknown_class then
+					-- "*UNKNOWN*" is equal to no type, not even itself.
+				Result := False
+			elseif other = Current and then other_context = a_context then
+				Result := True
+			elseif
+				eiffel_class = other.direct_base_class (a_universe) and
+				is_expanded = other.is_expanded and
+				is_separate = other.is_separate
+			then
+				if not other.is_generic then
+					Result := not is_generic
+				elseif not is_generic then
+					-- Result := False
+				else
+					other_parameters := other.actual_parameters
+					check
+						is_generic: actual_parameters /= Void
+						other_is_generic: other_parameters /= Void
+					end
+					Result := actual_parameters.same_named_types (other_parameters, other_context, a_context, a_universe)
 				end
 			end
 		end

@@ -15,6 +15,9 @@ class ET_QUALIFIED_LIKE_CURRENT
 inherit
 
 	ET_QUALIFIED_TYPE
+		redefine
+			has_qualified_type
+		end
 
 creation
 
@@ -45,6 +48,17 @@ feature -- Access
 
 	target_type: ET_LIKE_CURRENT
 			-- Target anchored type
+
+feature -- Status report
+
+	has_qualified_type (a_context: ET_TYPE_CONTEXT; a_universe: ET_UNIVERSE): BOOLEAN is
+			-- Is current type a qualified anchored type (other than of
+			-- the form 'like Current.b') when viewed from `a_context',
+			-- or do its actual generic parameters (recursively)
+			-- contain qualified types?
+		do
+			Result := False
+		end
 
 feature -- Output
 

@@ -70,7 +70,23 @@ feature -- Access
 		deferred
 		ensure
 			base_type_not_void: Result /= Void
-			base_type_named: Result.is_named_type
+			deep_base_type: Result.is_named_type
+		end
+
+	shallow_base_type (a_context: ET_TYPE_CONTEXT; a_universe: ET_UNIVERSE): ET_BASE_TYPE is
+			-- Base type of current type, when it appears in `a_context'
+			-- in `a_universe', but contrary to `base_type' its generic
+			-- parameters can be made up of types other than class names
+			-- and generic formal parameters. Return "*UNKNOWN*" if current
+			-- type is an unresolved identifier type, an anchored type
+			-- involved in a cycle, or an unmatched formal generic parameter.
+		require
+			a_context_not_void: a_context /= Void
+			a_context_valid: a_context.is_valid_context
+			a_universe_not_void: a_universe /= Void
+		deferred
+		ensure
+			base_type_not_void: Result /= Void
 		end
 
 	named_type (a_context: ET_TYPE_CONTEXT; a_universe: ET_UNIVERSE): ET_NAMED_TYPE is
@@ -95,7 +111,7 @@ feature -- Access
 		do
 			Result := Current
 		ensure then
-			definition: Result = Result
+			definition: Result = Current
 		end
 
 feature -- Status report
@@ -108,6 +124,31 @@ feature -- Status report
 
 	is_base_type: BOOLEAN is
 			-- Is current type only made up of base types?
+		do
+			-- Result := False
+		end
+
+	is_formal_type (a_context: ET_TYPE_CONTEXT; a_universe: ET_UNIVERSE): BOOLEAN is
+			-- Is current type a formal parameter when viewed from
+			-- `a_context', or if it is a qualified type is its
+			-- target type (recursively) a formal parameter?
+		require
+			a_context_not_void: a_context /= Void
+			a_context_valid: a_context.is_valid_context
+			a_universe_not_void: a_universe /= Void
+		do
+			-- Result := False
+		end
+
+	has_qualified_type (a_context: ET_TYPE_CONTEXT; a_universe: ET_UNIVERSE): BOOLEAN is
+			-- Is current type a qualified anchored type (other than of
+			-- the form 'like Current.b') when viewed from `a_context',
+			-- or do its actual generic parameters (recursively)
+			-- contain qualified types?
+		require
+			a_context_not_void: a_context /= Void
+			a_context_valid: a_context.is_valid_context
+			a_universe_not_void: a_universe /= Void
 		do
 			-- Result := False
 		end
@@ -134,6 +175,42 @@ feature -- Comparison
 		deferred
 		ensure
 			symmetric: Result = other.same_syntactical_type (Current, a_context, other_context, a_universe)
+		end
+
+	same_named_type (other: ET_TYPE; other_context: ET_TYPE_CONTEXT;
+		a_context: ET_TYPE_CONTEXT; a_universe: ET_UNIVERSE): BOOLEAN is
+			-- Do current type appearing in `a_context' and `other' type
+			-- appearing in `other_context' have the same named type?
+		require
+			other_not_void: other /= Void
+			other_context_not_void: other_context /= Void
+			other_context_valid: other_context.is_valid_context
+			a_context_not_void: a_context /= Void
+			a_context_valid: a_context.is_valid_context
+			same_root_context: other_context.same_root_context (a_context)
+			a_universe_not_void: a_universe /= Void
+		deferred
+		ensure
+			definition: Result = named_type (a_context, a_universe).same_syntactical_type (other.named_type (other_context, a_universe), other_context, a_context, a_universe)
+			symmetric: Result = other.same_named_type (Current, a_context, other_context, a_universe)
+		end
+
+	same_base_type (other: ET_TYPE; other_context: ET_TYPE_CONTEXT;
+		a_context: ET_TYPE_CONTEXT; a_universe: ET_UNIVERSE): BOOLEAN is
+			-- Do current type appearing in `a_context' and `other' type
+			-- appearing in `other_context' have the same base type?
+		require
+			other_not_void: other /= Void
+			other_context_not_void: other_context /= Void
+			other_context_valid: other_context.is_valid_context
+			a_context_not_void: a_context /= Void
+			a_context_valid: a_context.is_valid_context
+			same_root_context: other_context.same_root_context (a_context)
+			a_universe_not_void: a_universe /= Void
+		deferred
+		ensure
+			definition: Result = base_type (a_context, a_universe).same_syntactical_type (other.base_type (other_context, a_universe), other_context, a_context, a_universe)
+			symmetric: Result = other.same_base_type (Current, a_context, other_context, a_universe)
 		end
 
 feature {ET_TYPE} -- Comparison
@@ -277,6 +354,136 @@ feature {ET_TYPE} -- Comparison
 			-- only if they have the same anchor. An anchor type
 			-- is not considered the same as any other type even
 			-- if they have the same base type.)
+		require
+			other_not_void: other /= Void
+			other_context_not_void: other_context /= Void
+			other_context_valid: other_context.is_valid_context
+			a_context_not_void: a_context /= Void
+			a_context_valid: a_context.is_valid_context
+			same_root_context: other_context.same_root_context (a_context)
+			a_universe_not_void: a_universe /= Void
+		do
+			-- Result := False
+		end
+
+	same_named_bit_type (other: ET_BIT_TYPE; other_context: ET_TYPE_CONTEXT;
+		a_context: ET_TYPE_CONTEXT; a_universe: ET_UNIVERSE): BOOLEAN is
+			-- Do current type appearing in `a_context' and `other' type
+			-- appearing in `other_context' have the same named type?
+		require
+			other_not_void: other /= Void
+			other_context_not_void: other_context /= Void
+			other_context_valid: other_context.is_valid_context
+			a_context_not_void: a_context /= Void
+			a_context_valid: a_context.is_valid_context
+			same_root_context: other_context.same_root_context (a_context)
+			a_universe_not_void: a_universe /= Void
+		do
+			-- Result := False
+		end
+
+	same_named_class_type (other: ET_CLASS_TYPE; other_context: ET_TYPE_CONTEXT;
+		a_context: ET_TYPE_CONTEXT; a_universe: ET_UNIVERSE): BOOLEAN is
+			-- Do current type appearing in `a_context' and `other' type
+			-- appearing in `other_context' have the same named type?
+		require
+			other_not_void: other /= Void
+			other_context_not_void: other_context /= Void
+			other_context_valid: other_context.is_valid_context
+			a_context_not_void: a_context /= Void
+			a_context_valid: a_context.is_valid_context
+			same_root_context: other_context.same_root_context (a_context)
+			a_universe_not_void: a_universe /= Void
+		do
+			-- Result := False
+		end
+
+	same_named_formal_parameter_type (other: ET_FORMAL_PARAMETER_TYPE;
+		other_context: ET_TYPE_CONTEXT; a_context: ET_TYPE_CONTEXT;
+		a_universe: ET_UNIVERSE): BOOLEAN is
+			-- Do current type appearing in `a_context' and `other' type
+			-- appearing in `other_context' have the same named type?
+		require
+			other_not_void: other /= Void
+			other_context_not_void: other_context /= Void
+			other_context_valid: other_context.is_valid_context
+			a_context_not_void: a_context /= Void
+			a_context_valid: a_context.is_valid_context
+			same_root_context: other_context.same_root_context (a_context)
+			a_universe_not_void: a_universe /= Void
+		do
+			-- Result := False
+		end
+
+	same_named_tuple_type (other: ET_TUPLE_TYPE; other_context: ET_TYPE_CONTEXT;
+		a_context: ET_TYPE_CONTEXT; a_universe: ET_UNIVERSE): BOOLEAN is
+			-- Do current type appearing in `a_context' and `other' type
+			-- appearing in `other_context' have the same named type?
+		require
+			other_not_void: other /= Void
+			other_context_not_void: other_context /= Void
+			other_context_valid: other_context.is_valid_context
+			a_context_not_void: a_context /= Void
+			a_context_valid: a_context.is_valid_context
+			same_root_context: other_context.same_root_context (a_context)
+			a_universe_not_void: a_universe /= Void
+		do
+			-- Result := False
+		end
+
+	same_base_bit_type (other: ET_BIT_TYPE; other_context: ET_TYPE_CONTEXT;
+		a_context: ET_TYPE_CONTEXT; a_universe: ET_UNIVERSE): BOOLEAN is
+			-- Do current type appearing in `a_context' and `other' type
+			-- appearing in `other_context' have the same base type?
+		require
+			other_not_void: other /= Void
+			other_context_not_void: other_context /= Void
+			other_context_valid: other_context.is_valid_context
+			a_context_not_void: a_context /= Void
+			a_context_valid: a_context.is_valid_context
+			same_root_context: other_context.same_root_context (a_context)
+			a_universe_not_void: a_universe /= Void
+		do
+			-- Result := False
+		end
+
+	same_base_class_type (other: ET_CLASS_TYPE; other_context: ET_TYPE_CONTEXT;
+		a_context: ET_TYPE_CONTEXT; a_universe: ET_UNIVERSE): BOOLEAN is
+			-- Do current type appearing in `a_context' and `other' type
+			-- appearing in `other_context' have the same base type?
+		require
+			other_not_void: other /= Void
+			other_context_not_void: other_context /= Void
+			other_context_valid: other_context.is_valid_context
+			a_context_not_void: a_context /= Void
+			a_context_valid: a_context.is_valid_context
+			same_root_context: other_context.same_root_context (a_context)
+			a_universe_not_void: a_universe /= Void
+		do
+			-- Result := False
+		end
+
+	same_base_formal_parameter_type (other: ET_FORMAL_PARAMETER_TYPE;
+		other_context: ET_TYPE_CONTEXT; a_context: ET_TYPE_CONTEXT;
+		a_universe: ET_UNIVERSE): BOOLEAN is
+			-- Do current type appearing in `a_context' and `other' type
+			-- appearing in `other_context' have the same base type?
+		require
+			other_not_void: other /= Void
+			other_context_not_void: other_context /= Void
+			other_context_valid: other_context.is_valid_context
+			a_context_not_void: a_context /= Void
+			a_context_valid: a_context.is_valid_context
+			same_root_context: other_context.same_root_context (a_context)
+			a_universe_not_void: a_universe /= Void
+		do
+			-- Result := False
+		end
+
+	same_base_tuple_type (other: ET_TUPLE_TYPE; other_context: ET_TYPE_CONTEXT;
+		a_context: ET_TYPE_CONTEXT; a_universe: ET_UNIVERSE): BOOLEAN is
+			-- Do current type appearing in `a_context' and `other' type
+			-- appearing in `other_context' have the same base type?
 		require
 			other_not_void: other /= Void
 			other_context_not_void: other_context /= Void
