@@ -22,6 +22,9 @@ inherit
 	GEANT_SHARED_PROPERTIES
 		export {NONE} all end
 
+	KL_SHARED_FILE_SYSTEM
+		export {NONE} all end
+
 creation
 
 	make
@@ -46,6 +49,8 @@ feature {NONE} -- Initialization
 			a_targets: DS_HASH_TABLE [GEANT_TARGET, STRING]
 			a_target: GEANT_TARGET
 			a_tester: UC_EQUALITY_TESTER
+			s: STRING
+			s1: STRING
 		do
 			element_make (a_xml_element)
 			create project.make (a_variables, a_options)
@@ -60,6 +65,20 @@ feature {NONE} -- Initialization
 					"' does not have a name.%N", "  Please specify a name for this project.">>)
 			end
 			project.set_name (attribute_value (Name_attribute_name))
+
+				-- Store absolute pathname of buildfile in project variable:
+			s1 := file_system.pathname_from_file_system (a_build_filename, unix_file_system)
+			s := file_system.dirname (file_system.absolute_pathname (s1))
+			a_variables.set_variable_value (project.name + ".absdir", s)
+
+				-- Store dirname of directory buildfile in project variable:
+			s := file_system.dirname (s1)
+			a_variables.set_variable_value (project.name + ".dir", s)
+
+				-- Store basename of buildfile in project variable:
+			s := file_system.basename (s1)
+			a_variables.set_variable_value (project.name + ".filename", s)
+
 				-- Set default target name if present:
 			if has_attribute (Default_attribute_name) then
 				project.set_default_target_name (attribute_value (Default_attribute_name))
