@@ -3,7 +3,8 @@
 <project name="gepp">
 
 	<target name="prepare">
-		<set name="gendir" value="spec"/>
+		<set name="gendir_deep" value="spec_deep"/>
+		<set name="gendir_flat" value="spec_flat"/>
 	</target>
 
 	<target name="init" depend="prepare">
@@ -34,7 +35,11 @@
 
 	<target name="gepp3" depend="init">
 		<set name="eiffelcomp" value="ise"/>
-		<geant target="gepp_int"/>
+		<set name="gendir" value="${gendir_deep}"/>
+		<geant target="gepp_deep"/>
+
+		<set name="gendir" value="${gendir_flat}"/>
+		<geant target="gepp_flat"/>
 	</target>
 
 	<target name="gepp4" depend="init">
@@ -48,7 +53,7 @@
 		<geant target="gepp_int"/>
 	</target>
 
-	<target name="gepp_int" depend="init">
+	<target name="gepp_deep" depend="init">
 		<gepp lines="true" to_directory="${gendir}/${eiffelcomp}">
 			<define name="$HACT" if="$HACT"/>
 			<fileset directory="${GOBO}" include="@(**/*.ge)">
@@ -57,8 +62,20 @@
 		</gepp>
 	</target>
 
+	<target name="gepp_flat" depend="init">
+		<gepp lines="true" to_directory="${gendir}/${eiffelcomp}">
+			<define name="$HACT" if="$HACT"/>
+			<fileset directory="${GOBO}" include="@(**/*.ge)">
+				<map type="glob" from="*.ge" to="*.e">
+					<map type="flat"/>
+				</map>
+			</fileset>
+		</gepp>
+	</target>
+
 	<target name="clean" depend="prepare">
-		<delete directory="${gendir}"/>
+		<delete directory="${gendir_deep}"/>
+		<delete directory="${gendir_flat}"/>
 		<delete directory="ttt"/>
 	</target>
 
