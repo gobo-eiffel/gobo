@@ -29,6 +29,7 @@ feature -- Eiffel keywords
 			-- New 'agent' keyword
 		require
 			a_scanner_not_void: a_scanner /= Void
+			last_literal_not_empty: a_scanner.last_literal_count > 0
 		do
 			Result := new_keyword (a_scanner)
 		ensure
@@ -39,6 +40,7 @@ feature -- Eiffel keywords
 			-- New 'alias' keyword
 		require
 			a_scanner_not_void: a_scanner /= Void
+			last_literal_not_empty: a_scanner.last_literal_count > 0
 		do
 			Result := new_keyword (a_scanner)
 		ensure
@@ -49,6 +51,7 @@ feature -- Eiffel keywords
 			-- New 'all' keyword
 		require
 			a_scanner_not_void: a_scanner /= Void
+			last_literal_not_empty: a_scanner.last_literal_count > 0
 		do
 			Result := new_keyword (a_scanner)
 		ensure
@@ -59,6 +62,7 @@ feature -- Eiffel keywords
 			-- New 'and' keyword
 		require
 			a_scanner_not_void: a_scanner /= Void
+			last_literal_not_empty: a_scanner.last_literal_count > 0
 		do
 			!! Result.make_with_position (a_scanner.last_literal, a_scanner.line, a_scanner.column)
 		ensure
@@ -69,6 +73,7 @@ feature -- Eiffel keywords
 			-- New 'as' keyword
 		require
 			a_scanner_not_void: a_scanner /= Void
+			last_literal_not_empty: a_scanner.last_literal_count > 0
 		do
 			Result := new_keyword (a_scanner)
 		ensure
@@ -79,6 +84,7 @@ feature -- Eiffel keywords
 			-- New 'check' keyword
 		require
 			a_scanner_not_void: a_scanner /= Void
+			last_literal_not_empty: a_scanner.last_literal_count > 0
 		do
 			Result := new_keyword (a_scanner)
 		ensure
@@ -89,6 +95,7 @@ feature -- Eiffel keywords
 			-- New 'class' keyword
 		require
 			a_scanner_not_void: a_scanner /= Void
+			last_literal_not_empty: a_scanner.last_literal_count > 0
 		do
 			Result := new_keyword (a_scanner)
 		ensure
@@ -99,6 +106,7 @@ feature -- Eiffel keywords
 			-- New 'create' keyword
 		require
 			a_scanner_not_void: a_scanner /= Void
+			last_literal_not_empty: a_scanner.last_literal_count > 0
 		do
 			Result := new_keyword (a_scanner)
 		ensure
@@ -109,6 +117,7 @@ feature -- Eiffel keywords
 			-- New 'creation' keyword
 		require
 			a_scanner_not_void: a_scanner /= Void
+			last_literal_not_empty: a_scanner.last_literal_count > 0
 		do
 			Result := new_keyword (a_scanner)
 		ensure
@@ -119,6 +128,7 @@ feature -- Eiffel keywords
 			-- New 'current' keyword
 		require
 			a_scanner_not_void: a_scanner /= Void
+			last_literal_not_empty: a_scanner.last_literal_count > 0
 		do
 			!! Result.make_with_position (a_scanner.last_literal, a_scanner.line, a_scanner.column)
 		ensure
@@ -129,6 +139,7 @@ feature -- Eiffel keywords
 			-- New 'debug' keyword
 		require
 			a_scanner_not_void: a_scanner /= Void
+			last_literal_not_empty: a_scanner.last_literal_count > 0
 		do
 			Result := new_keyword (a_scanner)
 		ensure
@@ -139,6 +150,7 @@ feature -- Eiffel keywords
 			-- New 'deferred' keyword
 		require
 			a_scanner_not_void: a_scanner /= Void
+			last_literal_not_empty: a_scanner.last_literal_count > 0
 		do
 			!! Result.make_with_position (a_scanner.last_literal, a_scanner.line, a_scanner.column)
 		ensure
@@ -149,6 +161,7 @@ feature -- Eiffel keywords
 			-- New 'do' keyword
 		require
 			a_scanner_not_void: a_scanner /= Void
+			last_literal_not_empty: a_scanner.last_literal_count > 0
 		do
 			Result := new_keyword (a_scanner)
 		ensure
@@ -159,6 +172,7 @@ feature -- Eiffel keywords
 			-- New 'else' keyword
 		require
 			a_scanner_not_void: a_scanner /= Void
+			last_literal_not_empty: a_scanner.last_literal_count > 0
 		do
 			Result := new_keyword (a_scanner)
 		ensure
@@ -169,6 +183,7 @@ feature -- Eiffel keywords
 			-- New 'elseif' keyword
 		require
 			a_scanner_not_void: a_scanner /= Void
+			last_literal_not_empty: a_scanner.last_literal_count > 0
 		do
 			Result := new_keyword (a_scanner)
 		ensure
@@ -179,6 +194,7 @@ feature -- Eiffel keywords
 			-- New 'end' keyword
 		require
 			a_scanner_not_void: a_scanner /= Void
+			last_literal_not_empty: a_scanner.last_literal_count > 0
 		do
 			Result := new_keyword (a_scanner)
 		ensure
@@ -189,6 +205,7 @@ feature -- Eiffel keywords
 			-- New 'ensure' keyword
 		require
 			a_scanner_not_void: a_scanner /= Void
+			last_literal_not_empty: a_scanner.last_literal_count > 0
 		do
 			Result := new_keyword (a_scanner)
 		ensure
@@ -199,6 +216,7 @@ feature -- Eiffel keywords
 			-- New 'expanded' keyword
 		require
 			a_scanner_not_void: a_scanner /= Void
+			last_literal_not_empty: a_scanner.last_literal_count > 0
 		do
 			!! Result.make_with_position (a_scanner.last_literal, a_scanner.line, a_scanner.column)
 		ensure
@@ -209,6 +227,7 @@ feature -- Eiffel keywords
 			-- New 'export' keyword
 		require
 			a_scanner_not_void: a_scanner /= Void
+			last_literal_not_empty: a_scanner.last_literal_count > 0
 		do
 			Result := new_keyword (a_scanner)
 		ensure
@@ -219,6 +238,7 @@ feature -- Eiffel keywords
 			-- New 'external' keyword
 		require
 			a_scanner_not_void: a_scanner /= Void
+			last_literal_not_empty: a_scanner.last_literal_count > 0
 		do
 			Result := new_keyword (a_scanner)
 		ensure
@@ -229,6 +249,7 @@ feature -- Eiffel keywords
 			-- New 'false' keyword
 		require
 			a_scanner_not_void: a_scanner /= Void
+			last_literal_not_empty: a_scanner.last_literal_count > 0
 		do
 			!! Result.make_with_position (a_scanner.last_literal, a_scanner.line, a_scanner.column)
 		ensure
@@ -239,6 +260,7 @@ feature -- Eiffel keywords
 			-- New 'feature' keyword
 		require
 			a_scanner_not_void: a_scanner /= Void
+			last_literal_not_empty: a_scanner.last_literal_count > 0
 		do
 			Result := new_keyword (a_scanner)
 		ensure
@@ -249,6 +271,7 @@ feature -- Eiffel keywords
 			-- New 'from' keyword
 		require
 			a_scanner_not_void: a_scanner /= Void
+			last_literal_not_empty: a_scanner.last_literal_count > 0
 		do
 			Result := new_keyword (a_scanner)
 		ensure
@@ -259,6 +282,7 @@ feature -- Eiffel keywords
 			-- New 'frozen' keyword
 		require
 			a_scanner_not_void: a_scanner /= Void
+			last_literal_not_empty: a_scanner.last_literal_count > 0
 		do
 			Result := new_keyword (a_scanner)
 		ensure
@@ -269,6 +293,7 @@ feature -- Eiffel keywords
 			-- New 'if' keyword
 		require
 			a_scanner_not_void: a_scanner /= Void
+			last_literal_not_empty: a_scanner.last_literal_count > 0
 		do
 			Result := new_keyword (a_scanner)
 		ensure
@@ -279,6 +304,7 @@ feature -- Eiffel keywords
 			-- New 'implies' keyword
 		require
 			a_scanner_not_void: a_scanner /= Void
+			last_literal_not_empty: a_scanner.last_literal_count > 0
 		do
 			!! Result.make_with_position (a_scanner.last_literal, a_scanner.line, a_scanner.column)
 		ensure
@@ -289,6 +315,7 @@ feature -- Eiffel keywords
 			-- New 'indexing' keyword
 		require
 			a_scanner_not_void: a_scanner /= Void
+			last_literal_not_empty: a_scanner.last_literal_count > 0
 		do
 			Result := new_keyword (a_scanner)
 		ensure
@@ -299,6 +326,7 @@ feature -- Eiffel keywords
 			-- New 'infix' keyword
 		require
 			a_scanner_not_void: a_scanner /= Void
+			last_literal_not_empty: a_scanner.last_literal_count > 0
 		do
 			Result := new_keyword (a_scanner)
 		ensure
@@ -309,6 +337,7 @@ feature -- Eiffel keywords
 			-- New 'inherit' keyword
 		require
 			a_scanner_not_void: a_scanner /= Void
+			last_literal_not_empty: a_scanner.last_literal_count > 0
 		do
 			Result := new_keyword (a_scanner)
 		ensure
@@ -319,6 +348,7 @@ feature -- Eiffel keywords
 			-- New 'inspect' keyword
 		require
 			a_scanner_not_void: a_scanner /= Void
+			last_literal_not_empty: a_scanner.last_literal_count > 0
 		do
 			Result := new_keyword (a_scanner)
 		ensure
@@ -329,6 +359,7 @@ feature -- Eiffel keywords
 			-- New 'invariant' keyword
 		require
 			a_scanner_not_void: a_scanner /= Void
+			last_literal_not_empty: a_scanner.last_literal_count > 0
 		do
 			Result := new_keyword (a_scanner)
 		ensure
@@ -339,6 +370,7 @@ feature -- Eiffel keywords
 			-- New 'is' keyword
 		require
 			a_scanner_not_void: a_scanner /= Void
+			last_literal_not_empty: a_scanner.last_literal_count > 0
 		do
 			Result := new_keyword (a_scanner)
 		ensure
@@ -349,6 +381,7 @@ feature -- Eiffel keywords
 			-- New Eiffel keyword
 		require
 			a_scanner_not_void: a_scanner /= Void
+			last_literal_not_empty: a_scanner.last_literal_count > 0
 		do
 			!! Result.make_with_position (a_scanner.last_literal, a_scanner.line, a_scanner.column)
 		ensure
@@ -359,6 +392,7 @@ feature -- Eiffel keywords
 			-- New 'like' keyword
 		require
 			a_scanner_not_void: a_scanner /= Void
+			last_literal_not_empty: a_scanner.last_literal_count > 0
 		do
 			Result := new_keyword (a_scanner)
 		ensure
@@ -369,6 +403,7 @@ feature -- Eiffel keywords
 			-- New 'local' keyword
 		require
 			a_scanner_not_void: a_scanner /= Void
+			last_literal_not_empty: a_scanner.last_literal_count > 0
 		do
 			Result := new_keyword (a_scanner)
 		ensure
@@ -379,6 +414,7 @@ feature -- Eiffel keywords
 			-- New 'loop' keyword
 		require
 			a_scanner_not_void: a_scanner /= Void
+			last_literal_not_empty: a_scanner.last_literal_count > 0
 		do
 			Result := new_keyword (a_scanner)
 		ensure
@@ -389,6 +425,7 @@ feature -- Eiffel keywords
 			-- New 'not' keyword
 		require
 			a_scanner_not_void: a_scanner /= Void
+			last_literal_not_empty: a_scanner.last_literal_count > 0
 		do
 			!! Result.make_with_position (a_scanner.last_literal, a_scanner.line, a_scanner.column)
 		ensure
@@ -399,6 +436,7 @@ feature -- Eiffel keywords
 			-- New 'obsolete' keyword
 		require
 			a_scanner_not_void: a_scanner /= Void
+			last_literal_not_empty: a_scanner.last_literal_count > 0
 		do
 			Result := new_keyword (a_scanner)
 		ensure
@@ -409,6 +447,7 @@ feature -- Eiffel keywords
 			-- New 'old' keyword
 		require
 			a_scanner_not_void: a_scanner /= Void
+			last_literal_not_empty: a_scanner.last_literal_count > 0
 		do
 			Result := new_keyword (a_scanner)
 		ensure
@@ -419,6 +458,7 @@ feature -- Eiffel keywords
 			-- New 'once' keyword
 		require
 			a_scanner_not_void: a_scanner /= Void
+			last_literal_not_empty: a_scanner.last_literal_count > 0
 		do
 			Result := new_keyword (a_scanner)
 		ensure
@@ -429,6 +469,7 @@ feature -- Eiffel keywords
 			-- New 'or' keyword
 		require
 			a_scanner_not_void: a_scanner /= Void
+			last_literal_not_empty: a_scanner.last_literal_count > 0
 		do
 			!! Result.make_with_position (a_scanner.last_literal, a_scanner.line, a_scanner.column)
 		ensure
@@ -439,6 +480,7 @@ feature -- Eiffel keywords
 			-- New 'precursor' keyword
 		require
 			a_scanner_not_void: a_scanner /= Void
+			last_literal_not_empty: a_scanner.last_literal_count > 0
 		do
 			Result := new_keyword (a_scanner)
 		ensure
@@ -449,6 +491,7 @@ feature -- Eiffel keywords
 			-- New 'prefix' keyword
 		require
 			a_scanner_not_void: a_scanner /= Void
+			last_literal_not_empty: a_scanner.last_literal_count > 0
 		do
 			Result := new_keyword (a_scanner)
 		ensure
@@ -459,6 +502,7 @@ feature -- Eiffel keywords
 			-- New 'redefine' keyword
 		require
 			a_scanner_not_void: a_scanner /= Void
+			last_literal_not_empty: a_scanner.last_literal_count > 0
 		do
 			Result := new_keyword (a_scanner)
 		ensure
@@ -469,6 +513,7 @@ feature -- Eiffel keywords
 			-- New 'reference' keyword
 		require
 			a_scanner_not_void: a_scanner /= Void
+			last_literal_not_empty: a_scanner.last_literal_count > 0
 		do
 			!! Result.make_with_position (a_scanner.last_literal, a_scanner.line, a_scanner.column)
 		ensure
@@ -479,6 +524,7 @@ feature -- Eiffel keywords
 			-- New 'rename' keyword
 		require
 			a_scanner_not_void: a_scanner /= Void
+			last_literal_not_empty: a_scanner.last_literal_count > 0
 		do
 			Result := new_keyword (a_scanner)
 		ensure
@@ -489,6 +535,7 @@ feature -- Eiffel keywords
 			-- New 'require' keyword
 		require
 			a_scanner_not_void: a_scanner /= Void
+			last_literal_not_empty: a_scanner.last_literal_count > 0
 		do
 			Result := new_keyword (a_scanner)
 		ensure
@@ -499,6 +546,7 @@ feature -- Eiffel keywords
 			-- New 'rescue' keyword
 		require
 			a_scanner_not_void: a_scanner /= Void
+			last_literal_not_empty: a_scanner.last_literal_count > 0
 		do
 			Result := new_keyword (a_scanner)
 		ensure
@@ -509,6 +557,7 @@ feature -- Eiffel keywords
 			-- New 'result' keyword
 		require
 			a_scanner_not_void: a_scanner /= Void
+			last_literal_not_empty: a_scanner.last_literal_count > 0
 		do
 			!! Result.make_with_position (a_scanner.last_literal, a_scanner.line, a_scanner.column)
 		ensure
@@ -519,6 +568,7 @@ feature -- Eiffel keywords
 			-- New 'retry' keyword
 		require
 			a_scanner_not_void: a_scanner /= Void
+			last_literal_not_empty: a_scanner.last_literal_count > 0
 		do
 			!! Result.make_with_position (a_scanner.last_literal, a_scanner.line, a_scanner.column)
 		ensure
@@ -529,6 +579,7 @@ feature -- Eiffel keywords
 			-- New 'select' keyword
 		require
 			a_scanner_not_void: a_scanner /= Void
+			last_literal_not_empty: a_scanner.last_literal_count > 0
 		do
 			Result := new_keyword (a_scanner)
 		ensure
@@ -539,6 +590,7 @@ feature -- Eiffel keywords
 			-- New 'separate' keyword
 		require
 			a_scanner_not_void: a_scanner /= Void
+			last_literal_not_empty: a_scanner.last_literal_count > 0
 		do
 			!! Result.make_with_position (a_scanner.last_literal, a_scanner.line, a_scanner.column)
 		ensure
@@ -549,6 +601,7 @@ feature -- Eiffel keywords
 			-- New 'strip' keyword
 		require
 			a_scanner_not_void: a_scanner /= Void
+			last_literal_not_empty: a_scanner.last_literal_count > 0
 		do
 			Result := new_keyword (a_scanner)
 		ensure
@@ -559,6 +612,7 @@ feature -- Eiffel keywords
 			-- New 'then' keyword
 		require
 			a_scanner_not_void: a_scanner /= Void
+			last_literal_not_empty: a_scanner.last_literal_count > 0
 		do
 			Result := new_keyword (a_scanner)
 		ensure
@@ -569,6 +623,7 @@ feature -- Eiffel keywords
 			-- New 'true' keyword
 		require
 			a_scanner_not_void: a_scanner /= Void
+			last_literal_not_empty: a_scanner.last_literal_count > 0
 		do
 			!! Result.make_with_position (a_scanner.last_literal, a_scanner.line, a_scanner.column)
 		ensure
@@ -579,6 +634,7 @@ feature -- Eiffel keywords
 			-- New 'undefine' keyword
 		require
 			a_scanner_not_void: a_scanner /= Void
+			last_literal_not_empty: a_scanner.last_literal_count > 0
 		do
 			Result := new_keyword (a_scanner)
 		ensure
@@ -589,6 +645,7 @@ feature -- Eiffel keywords
 			-- New 'unique' keyword
 		require
 			a_scanner_not_void: a_scanner /= Void
+			last_literal_not_empty: a_scanner.last_literal_count > 0
 		do
 			Result := new_keyword (a_scanner)
 		ensure
@@ -599,6 +656,7 @@ feature -- Eiffel keywords
 			-- New 'until' keyword
 		require
 			a_scanner_not_void: a_scanner /= Void
+			last_literal_not_empty: a_scanner.last_literal_count > 0
 		do
 			Result := new_keyword (a_scanner)
 		ensure
@@ -609,6 +667,7 @@ feature -- Eiffel keywords
 			-- New 'variant' keyword
 		require
 			a_scanner_not_void: a_scanner /= Void
+			last_literal_not_empty: a_scanner.last_literal_count > 0
 		do
 			Result := new_keyword (a_scanner)
 		ensure
@@ -619,6 +678,7 @@ feature -- Eiffel keywords
 			-- New 'when' keyword
 		require
 			a_scanner_not_void: a_scanner /= Void
+			last_literal_not_empty: a_scanner.last_literal_count > 0
 		do
 			Result := new_keyword (a_scanner)
 		ensure
@@ -629,6 +689,7 @@ feature -- Eiffel keywords
 			-- New 'xor' keyword
 		require
 			a_scanner_not_void: a_scanner /= Void
+			last_literal_not_empty: a_scanner.last_literal_count > 0
 		do
 			!! Result.make_with_position (a_scanner.last_literal, a_scanner.line, a_scanner.column)
 		ensure
@@ -985,6 +1046,7 @@ feature -- AST leaves
 			-- New bit constant
 		require
 			a_scanner_not_void: a_scanner /= Void
+			-- valid_literal: ([0-1]+[bB]).recognizes (a_scanner.last_literal)
 		do
 			!! Result.make_with_position (a_scanner.last_literal, a_scanner.line, a_scanner.column)
 		ensure
@@ -1015,7 +1077,7 @@ feature -- AST leaves
 			-- New character constant of the form '%/code/`'
 		require
 			a_scanner_not_void: a_scanner /= Void
-			-- valid_literal: regexp: [0-9]+
+			-- valid_literal: ([0-9]+).recognizes (a_scanner.last_literal)
 		do
 			!! Result.make_with_position (a_scanner.last_literal, a_scanner.line, a_scanner.column)
 		ensure
@@ -1037,7 +1099,7 @@ feature -- AST leaves
 			-- New integer constant in hexadecimal format
 		require
 			a_scanner_not_void: a_scanner /= Void
-			-- valid_literal: regexp: 0x[0-9a-fA-F]+
+			-- valid_literal: (0x[0-9a-fA-F]+).recognizes (a_scanner.last_literal)
 		do
 			!! Result.make_with_position (a_scanner.last_literal, a_scanner.line, a_scanner.column)
 		ensure
@@ -1048,6 +1110,7 @@ feature -- AST leaves
 			-- New identifier
 		require
 			a_scanner_not_void: a_scanner /= Void
+			last_literal_not_empty: a_scanner.last_literal_count > 0
 		do
 			!! Result.make_with_position (a_scanner.last_literal, a_scanner.line, a_scanner.column)
 		ensure
@@ -1058,7 +1121,7 @@ feature -- AST leaves
 			-- New integer constant with no underscore
 		require
 			a_scanner_not_void: a_scanner /= Void
-			-- valid_literal: regexp: [0-9]+
+			-- valid_literal: ([0-9]+).recognizes (a_scanner.last_literal)
 		do
 			!! Result.make_with_position (a_scanner.last_literal, a_scanner.line, a_scanner.column)
 		ensure
@@ -1069,7 +1132,7 @@ feature -- AST leaves
 			-- New manifest string with no special character
 		require
 			a_scanner_not_void: a_scanner /= Void
-			-- valid_literal: regexp: [^"%\n]*
+			-- valid_literal: ([^"%\n]*).recognizes (a_scanner.last_literal)
 		do
 			!! Result.make_with_position (a_scanner.last_literal, a_scanner.line, a_scanner.column)
 		ensure
@@ -1080,7 +1143,7 @@ feature -- AST leaves
 			-- New real constant with no underscore
 		require
 			a_scanner_not_void: a_scanner /= Void
-			-- valid_literal: regexp: ([0-9]+\.[0-9]*|[0-9]*\.[0-9]+)([eE][+-]?[0-9]+)?
+			-- valid_literal: (([0-9]+\.[0-9]*|[0-9]*\.[0-9]+)([eE][+-]?[0-9]+)?).recognizes (a_scanner.last_literal)
 		do
 			!! Result.make_with_position (a_scanner.last_literal, a_scanner.line, a_scanner.column)
 		ensure
@@ -1091,7 +1154,7 @@ feature -- AST leaves
 			-- New manifest string with special characters
 		require
 			a_scanner_not_void: a_scanner /= Void
-			-- valid_literal: regexp: ([^"%\n]|%([^\n]|\/[0-9]+\/|[ \t\r]*\n[ \t\r\n]*%))*
+			-- valid_literal: (([^"%\n]|%([^\n]|\/[0-9]+\/|[ \t\r]*\n[ \t\r\n]*%))*).recognizes (a_scanner.last_literal)
 		do
 			!! Result.make_with_position (a_scanner.last_literal, a_scanner.line, a_scanner.column)
 		ensure
@@ -1102,7 +1165,7 @@ feature -- AST leaves
 			-- New integer constant with underscores
 		require
 			a_scanner_not_void: a_scanner /= Void
-			-- valid_literal: regexp: (_*[0-9]+_*)+
+			-- valid_literal: ((_*[0-9]+_*)+).recognizes (a_scanner.last_literal)
 		do
 			!! Result.make_with_position (a_scanner.last_literal, a_scanner.line, a_scanner.column)
 		ensure
@@ -1113,7 +1176,7 @@ feature -- AST leaves
 			-- New real constant with underscores
 		require
 			a_scanner_not_void: a_scanner /= Void
-			-- valid_literal: regexp: ((_*[0-9]+_*)+\.(_*[0-9]_*)*|(_*[0-9]_*)*\.(_*[0-9]_*)+)([eE][+-]?(_*[0-9]_*)+)?
+			-- valid_literal: (((_*[0-9]+_*)+\.(_*[0-9]_*)*|(_*[0-9]_*)*\.(_*[0-9]_*)+)([eE][+-]?(_*[0-9]_*)+)?).recognizes (a_scanner.last_literal)
 		do
 			!! Result.make_with_position (a_scanner.last_literal, a_scanner.line, a_scanner.column)
 		ensure
