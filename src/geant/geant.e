@@ -66,7 +66,6 @@ feature {NONE} -- Initialization
 					exit_application (1, Void)
 				end
 			end
-			print ("%NBUILD SUCCESSFUL%N")
 		end
 
 

@@ -45,8 +45,6 @@ feature -- Processing
 			end
 			if a_code /= 0 then
 				print ("%NBUILD FAILED!%N")
-			else
-				print ("%NBUILD SUCCESSFUL%N")
 			end
 			Exceptions.die (a_code)
 		end
