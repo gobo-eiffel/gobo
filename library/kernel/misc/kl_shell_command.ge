@@ -24,7 +24,11 @@ inherit
 #endif
 #ifdef SE
 	SYSTEM
-		export {NONE} all end
+		export
+			{NONE} all
+		undefine
+			get_environment_variable
+		end
 
 #endif
 #ifdef VE
@@ -38,6 +42,12 @@ inherit
 			{NONE} all
 		end
 
+	KL_VE_SHELL_COMMAND
+		export {NONE} all end
+
+	KL_SHARED_OPERATING_SYSTEM
+		export {NONE} all end
+
 #endif
 creation
 
@@ -49,7 +59,9 @@ feature {NONE} -- Initialization
 			-- Create a new shell command.
 		do
 #ifdef VE
-			make_shell (a_command)
+			if operating_system.is_windows then
+				make_shell (a_command)
+			end
 #endif
 			command := a_command
 		end
@@ -80,8 +92,12 @@ feature -- Execution
 				exit_code := return_code
 #endif
 #ifdef VE
-				old_execute
-				exit_code := old_exit_code
+				if operating_system.is_windows then
+					old_execute
+					exit_code := old_exit_code
+				else
+					exit_code := system (command)
+				end
 #endif
 #ifdef SE
 				exit_code := execute_command (command)

@@ -1,0 +1,36 @@
+indexing
+
+	description:
+
+		"Work around for Visual Eiffel 4.0, %
+		%EXTERNAL_PROCESS.make_shell does not work under Linux."
+
+	library:    "Gobo Eiffel Kernel Library"
+	author:     "Eric Bezault <ericb@gobosoft.com>"
+	copyright:  "Copyright (c) 2001, Eric Bezault and others"
+	license:    "Eiffel Forum Freeware License v1 (see forum.txt)"
+	date:       "$Date$"
+	revision:   "$Revision$"
+
+class KL_VE_SHELL_COMMAND
+
+feature -- Execution
+
+	system (a_command: STRING): INTEGER is
+		require
+			a_command_not_void: a_command /= Void
+			a_command_not_empty: a_command.count > 0
+		do
+			Result := c_system (a_command.to_c)
+		end
+
+feature {NONE} -- Implementation
+
+	c_system (ptr: POINTER): INTEGER is
+		external
+			"C"
+		alias
+			"system"
+		end
+
+end -- class KL_VE_SHELL_COMMAND
