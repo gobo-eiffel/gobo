@@ -57,6 +57,7 @@ feature {NONE} -- Initialization
 			end
 
 			a_project.set_verbose (verbose)
+			a_project.set_debug_mode (debug_mode)
 			a_project.load (start_target_name)
 			if a_project.targets /= Void then
 				a_project.build
@@ -81,6 +82,9 @@ feature -- Access
 	verbose: BOOLEAN
 			-- Print additional information during build process?
 
+	debug_mode: BOOLEAN
+		-- Print additional, internal information during build process?
+
 	read_command_line is
 			-- Read command line arguments.
 		local
@@ -97,6 +101,8 @@ feature -- Access
 					report_version_number
 				elseif arg.is_equal ("--verbose") or arg.is_equal ("-v") then
 					set_verbose (true)
+				elseif arg.is_equal ("--debug") or arg.is_equal ("-d") then
+					set_debug_mode (true)
 				elseif arg.is_equal ("--help") or arg.is_equal ("-h") or arg.is_equal ("-?") then
 					report_usage_message
 				elseif arg.is_equal ("-b") then
@@ -139,6 +145,14 @@ feature -- Setting
 			verbose_set: verbose = a_verbose
 		end
 
+	set_debug_mode (a_debug_mode: BOOLEAN) is
+			-- Set `debug_mode' to `a_debug_mode'
+		do
+			debug_mode := a_debug_mode
+		ensure
+			debug_mode_set: debug_mode = a_debug_mode
+		end
+
 feature {NONE} -- Error handling
 
 	report_usage_error is
@@ -169,7 +183,7 @@ feature {NONE} -- Error handling
 	Usage_message: UT_USAGE_MESSAGE is
 			-- Geant usage message
 		once
-			!! Result.make ("[-hV?][-b buildfilename] [target]")
+			!! Result.make ("[-hvd?][-b buildfilename] [target]")
 		ensure
 			usage_message_not_void: Result /= Void
 		end
