@@ -358,7 +358,7 @@ feature -- Element change
 	add_duration (a_duration: like duration) is
 			-- Add `a_duration' to current date.
 			-- (Add `a_duration.year' and `a_duration.month' first, then
-			-- set `day' to `day.min (day_in_month (new_month, new_year))'
+			-- set `day' to `day.min (days_in_month (new_month, new_year))'
 			-- and finally add `a_duration.day'.)
 		do
 			add_date_duration (a_duration)
@@ -367,7 +367,7 @@ feature -- Element change
 	add_date_duration (a_duration: like date_duration) is
 			-- Add `a_duration' to current date.
 			-- (Add `a_duration.year' and `a_duration.month' first, then
-			-- set `day' to `day.min (day_in_month (new_month, new_year))'
+			-- set `day' to `day.min (days_in_month (new_month, new_year))'
 			-- and finally add `a_duration.day'.)
 		require
 			a_duration_not_void: a_duration /= Void
@@ -376,9 +376,9 @@ feature -- Element change
 		end
 
 	add_years_months_days (y, m, d: INTEGER) is
-			-- Add `y' years, `m' month and `d' days to current date.
+			-- Add `y' years, `m' months and `d' days to current date.
 			-- (Add `y' and `m' first, then set `day' to
-			-- `day.min (day_in_month (new_month, new_year))'
+			-- `day.min (days_in_month (new_month, new_year))'
 			-- and finally add `d'.)
 		local
 			yy, mm, dd: INTEGER

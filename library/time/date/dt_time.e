@@ -125,8 +125,8 @@ feature -- Access
 		do
 			Result := storage // Hour_shift
 		ensure then
-			hour_large_enough: hour >= 0
-			hour_small_enough: hour < Hours_in_day
+			hour_large_enough: Result >= 0
+			hour_small_enough: Result < Hours_in_day
 		end
 
 	minute: INTEGER is
@@ -134,8 +134,8 @@ feature -- Access
 		do
 			Result := (storage // Minute_shift) \\ 60
 		ensure then
-			minute_large_enough: minute >= 0
-			minute_small_enough: minute < Minutes_in_hour
+			minute_large_enough: Result >= 0
+			minute_small_enough: Result < Minutes_in_hour
 		end
 
 	second: INTEGER is
@@ -143,8 +143,8 @@ feature -- Access
 		do
 			Result := (storage // Second_shift) \\ 60
 		ensure then
-			second_large_enough: second >= 0
-			second_small_enough: second < Seconds_in_minute
+			second_large_enough: Result >= 0
+			second_small_enough: Result < Seconds_in_minute
 		end
 
 	millisecond: INTEGER is
@@ -152,8 +152,8 @@ feature -- Access
 		do
 			Result := storage \\ 1000
 		ensure then
-			millisecond_large_enough: millisecond >= 0
-			millisecond_small_enough: millisecond < 1000
+			millisecond_large_enough: Result >= 0
+			millisecond_small_enough: Result < 1000
 		end
 
 	second_count: INTEGER is

@@ -188,10 +188,10 @@ feature -- Time
 			-- Number of seconds in an hour
 
 	Seconds_in_day: INTEGER is 86400
-			-- Number of seconds in a day 
+			-- Number of seconds in a day
  
 	Milliseconds_in_day: INTEGER is 86400000
-			-- Number of milliseconds in a day 
+			-- Number of milliseconds in a day
  
 	Minutes_in_hour: INTEGER is 60
 			-- Number of minutes in an hour
