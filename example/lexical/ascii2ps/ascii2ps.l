@@ -127,7 +127,7 @@ feature {NONE} -- Initialization
 			end
 
 			if not out_filename.is_equal ("-") then
-				!! out_file.make (out_filename)
+				create out_file.make (out_filename)
 				out_file.open_write
 				if out_file.is_open_write then
 					set_output_file (out_file)
@@ -143,7 +143,7 @@ feature {NONE} -- Initialization
 			if in_filename.is_equal ("-") then
 				print_postscript
 			else
-				!! in_file.make (in_filename)
+				create in_file.make (in_filename)
 				in_file.open_read
 				if in_file.is_open_read then
 					set_input_buffer (new_file_buffer (in_file))

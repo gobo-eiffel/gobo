@@ -22,7 +22,7 @@ feature -- Test
 		local
 			c: CONCAT2
 		do
-			!! c.make
+			create c.make
 			assert_equal ("to+to", "toto", c.concat ("to", "to"))
 			assert_equal ("foo+bar", "foobar", c.concat ("foo", "bar"))
 		end

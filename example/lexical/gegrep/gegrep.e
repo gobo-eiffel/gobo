@@ -50,7 +50,7 @@ feature -- Execution
 				else
 					i := 1
 				end
-				!! regexp.compile (Arguments.argument (i), case_insensitive)
+				create regexp.compile (Arguments.argument (i), case_insensitive)
 				if not regexp.is_compiled then
 					std.error.put_string ("gegrep: invalid regular expression%N")
 					Exceptions.die (1)
@@ -61,7 +61,7 @@ feature -- Execution
 						parse_file (std.input, Void)
 					when 1 then
 						a_filename := Arguments.argument (i)
-						!! a_file.make (a_filename)
+						create a_file.make (a_filename)
 						a_file.open_read
 						if a_file.is_open_read then
 							parse_file (a_file, Void)
@@ -75,7 +75,7 @@ feature -- Execution
 					else
 						from until i > nb loop
 							a_filename := Arguments.argument (i)
-							!! a_file.make (a_filename)
+							create a_file.make (a_filename)
 							a_file.open_read
 							if a_file.is_open_read then
 								parse_file (a_file, a_filename)
@@ -149,15 +149,15 @@ feature {NONE} -- Implementation
 			et8: KL_EQUALITY_TESTER [STRING]
 			fb: YY_FILE_BUFFER
 		do
-			!! et1
-			!! et2
-			!! et3
-			!! et4
-			!! et5
-			!! et6
-			!! et7
-			!! et8
-			!! fb.make (std.input)
+			create et1
+			create et2
+			create et3
+			create et4
+			create et5
+			create et6
+			create et7
+			create et8
+			create fb.make (std.input)
 		end
 
 end

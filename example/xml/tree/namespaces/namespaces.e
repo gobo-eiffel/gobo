@@ -27,7 +27,7 @@ feature {NONE} -- Initialization
 			-- Run.
 		do
 			Arguments.set_program_name ("namespaces")
-			!! error_handler.make_standard
+			create error_handler.make_standard
 			process_arguments
 			if not has_error then
 				process_data_file
@@ -44,10 +44,10 @@ feature -- Processing
 			cannot_read: UT_CANNOT_READ_FILE_ERROR
 		do
 			error_handler.report_info_message ("parsing data...")
-			!! in.make (filename)
+			create in.make (filename)
 			in.open_read
 			if not in.is_open_read then
-				!! cannot_read.make (filename)
+				create cannot_read.make (filename)
 				error_handler.report_error (cannot_read)
 				has_error := True
 			else
@@ -58,7 +58,7 @@ feature -- Processing
 					has_error := True
 				else
 					error_handler.report_info_message ("printing document...")
-					!! formatter.make
+					create formatter.make
 					formatter.process_document (tree_pipe.document)
 					std.output.put_string (formatter.last_string)
 					std.output.put_new_line
@@ -85,10 +85,10 @@ feature -- Processing
 						event_parser := fact.new_expat_parser
 					end
 				else
-					!XM_EIFFEL_PARSER! event_parser.make
+					create {XM_EIFFEL_PARSER} event_parser.make
 				end
 					-- Create and bind tree pipe.
-				!! tree_pipe.make
+				create tree_pipe.make
 				event_parser.set_callbacks (tree_pipe.start)
 				filename := Arguments.argument (2)
 			end
@@ -102,7 +102,7 @@ feature -- Parser
 	fact: XM_EXPAT_PARSER_FACTORY is
 			-- Expat XML parser factory
 		once
-			!! Result
+			create Result
 		ensure
 			factory_not_void: Result /= Void
 		end
@@ -136,7 +136,7 @@ feature {NONE} -- Implementation
 				a_message.append_string ("--expat|")
 			end
 			a_message.append_string ("--eiffel) <input-file>")
-			!! Result.make (a_message)
+			create Result.make (a_message)
 		ensure
 			usage_message_not_void: Result /= Void
 		end

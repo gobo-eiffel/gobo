@@ -30,7 +30,7 @@ feature {NONE} -- Initialization
 	make is
 			-- Create a new namespace formatter.
 		do
-			!! last_string.make (0)
+			create last_string.make (0)
 		end
 
 feature -- Access

@@ -431,7 +431,7 @@ feature {NONE} -- Initialization
 			else
 				from j := 1 until j > n loop
 					a_filename := Arguments.argument (j)
-					!! a_file.make (a_filename)
+					create a_file.make (a_filename)
 					a_file.open_read
 					if a_file.is_open_read then
 						set_input_buffer (new_file_buffer (a_file))
@@ -465,7 +465,7 @@ feature {NONE} -- Initialization
 				n := Arguments.argument (1).to_integer
 				a_filename := Arguments.argument (2)
 				from j := 1 until j > n loop
-					!! a_file.make (a_filename)
+					create a_file.make (a_filename)
 					a_file.open_read
 					if a_file.is_open_read then
 						set_input_buffer (new_file_buffer (a_file))

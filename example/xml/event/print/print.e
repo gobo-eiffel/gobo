@@ -29,7 +29,7 @@ feature {NONE} -- Initialization
 			-- Run.
 		do
 			Arguments.set_program_name ("print")
-			!! error_handler.make_standard
+			create error_handler.make_standard
 			process_arguments
 			if not has_error then
 				process_data_file
@@ -49,10 +49,10 @@ feature -- Processing
 			cannot_read: UT_CANNOT_READ_FILE_ERROR
 		do
 			error_handler.report_info_message ("parsing data...")
-			!! a_file.make (filename)
+			create a_file.make (filename)
 			a_file.open_read
 			if not a_file.is_open_read then
-				!! cannot_read.make (filename)
+				create cannot_read.make (filename)
 				error_handler.report_error (cannot_read)
 				has_error := True
 			else
@@ -91,7 +91,7 @@ feature -- Processing
 					end
 				elseif parser_switch.is_equal ("--eiffel") then
 					error_handler.report_info_message ("Using eiffel parser")
-					!XM_EIFFEL_PARSER! event_parser.make
+					create {XM_EIFFEL_PARSER} event_parser.make
 				else
 					error_handler.report_error (Usage_message)
 					has_error := True
@@ -107,7 +107,7 @@ feature -- Parser
 	fact: XM_EXPAT_PARSER_FACTORY is
 			-- Expat XML parser factory
 		once
-			!! Result
+			create Result
 		ensure
 			factory_not_void: Result /= Void
 		end
@@ -138,7 +138,7 @@ feature {NONE} -- Implementation
 				a_message.append_string ("--expat|")
 			end
 			a_message.append_string ("--eiffel) <input-file>")
-			!! Result.make (a_message)
+			create Result.make (a_message)
 		ensure
 			usage_message_not_void: Result /= Void
 		end

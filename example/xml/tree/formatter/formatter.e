@@ -27,7 +27,7 @@ feature {NONE} -- Initialization
 			-- Run.
 		do
 			Arguments.set_program_name ("formatter")
-			!! error_handler.make_standard
+			create error_handler.make_standard
 			process_arguments
 			if not has_error then
 				process_data_file
@@ -57,7 +57,7 @@ feature -- Parser
 	fact: XM_EXPAT_PARSER_FACTORY is
 			-- Expat XML parser factory
 		once
-			!! Result
+			create Result
 		ensure
 			factory_not_void: Result /= Void
 		end
@@ -85,10 +85,10 @@ feature -- Basic operations
 			cannot_write: UT_CANNOT_WRITE_TO_FILE_ERROR
 		do
 			error_handler.report_info_message ("- parsing data...")
-			!! in.make (in_filename)
+			create in.make (in_filename)
 			in.open_read
 			if not in.is_open_read then
-				!! cannot_read.make (in_filename)
+				create cannot_read.make (in_filename)
 				error_handler.report_error (cannot_read)
 				has_error := True
 			else
@@ -99,16 +99,16 @@ feature -- Basic operations
 					has_error := True
 				else
 					error_handler.report_info_message ("- printing document...")
-					!! formatter.make
+					create formatter.make
 					formatter.process_document (tree_pipe.document)
 					if use_stdout then
 						std.output.put_string (formatter.last_string)
 						std.output.put_new_line
 					else
-						!! os.make (out_filename)
+						create os.make (out_filename)
 						os.open_write
 						if not os.is_open_write then
-							!! cannot_write.make (out_filename)
+							create cannot_write.make (out_filename)
 							error_handler.report_error (cannot_write)
 							has_error := True
 						else
@@ -139,14 +139,14 @@ feature -- Basic operations
 						has_error := True
 					end
 				elseif parser_switch.is_equal ("--eiffel") then
-					!XM_EIFFEL_PARSER! event_parser.make
+					create {XM_EIFFEL_PARSER} event_parser.make
 				else
 					error_handler.report_error (Usage_message)
 					has_error := True
 				end
 					-- Create standard pipe holder and bind it to event parser.
 				if not has_error then
-					!! tree_pipe.make
+					create tree_pipe.make
 					event_parser.set_callbacks (tree_pipe.start)
 				end
 				in_filename := Arguments.argument (2)
@@ -177,7 +177,7 @@ feature {NONE} -- Implementation
 				a_message.append_string ("--expat|")
 			end
 			a_message.append_string ("--eiffel) <input-file> [<output-file]")
-			!! Result.make (a_message)
+			create Result.make (a_message)
 		ensure
 			usage_message_not_void: Result /= Void
 		end

@@ -68,7 +68,7 @@ feature {NONE} -- Initialization
 			-- Create a new calculator with memory.
 		do
 			make_parser_skeleton
-			!! memory_values.make (10)
+			create memory_values.make (10)
 		end
 
 	execute is
@@ -175,7 +175,7 @@ feature {NONE} -- Scanner
 						-- Process variables.
 					last_token := VAR
 					from
-						!! buffer.make (10)
+						create buffer.make (10)
 						buffer.append_character (c)
 						std.input.read_character
 						c := std.input.last_character
