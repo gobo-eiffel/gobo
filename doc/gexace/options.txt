@@ -249,18 +249,18 @@ SE:
   true -> clean (yes)
   false -> clean (no)
 -------------------------------------------------------------
-NAME: component
+NAME: cls_compliant
 
-VALUES: <pathname>
-DEFAULT: no default
-DESCRIPTION: Specify a component library.
+VALUES: true | false
+DEFAULT: true
+DESCRIPTION: When compiling to the .NET framework. Is the generated
+  code CLS compliant?
 
 ISE:
-  N/A
+  true -> cls_compliant (yes)
+  false -> cls_compliant (no)
 HACT:
-  <pathname> ->
-      component
-         cluster_name: "<pathname>"
+  N/A
 VE:
   N/A
 SE:
@@ -454,6 +454,24 @@ DESCRIPTION: Specify in which directory the documentation
 
 ISE:
   <pathname> -> document ("<pathname>")
+HACT:
+  N/A
+VE:
+  N/A
+SE:
+  N/A
+-------------------------------------------------------------
+NAME: dotnet_naming_convention
+
+VALUES: true | false
+DEFAULT: false
+DESCRIPTION: When compiling to the .NET framework. Should the
+  Eiffel code use .NET naming convention when calling routines
+  from the assembly (use Eiffel naming convention otherwise)?
+
+ISE:
+  true -> dotnet_naming_convention (yes)
+  false -> dotnet_naming_convention (no)
 HACT:
   N/A
 VE:
@@ -671,6 +689,23 @@ VE:
 SE:
   true -> high_memory_compiler (yes)
   false -> high_memory_compiler (no)
+-------------------------------------------------------------
+NAME: il_verifiable
+
+VALUES: true | false
+DEFAULT: true
+DESCRIPTION: When compiling to the .NET framework. Is the generated
+  code IL verifiable?
+
+ISE:
+  true -> il_verifiable (yes)
+  false -> il_verifiable (no)
+HACT:
+  N/A
+VE:
+  N/A
+SE:
+  N/A
 -------------------------------------------------------------
 NAME: inlining
 
@@ -914,6 +949,22 @@ VE:
 SE:
   N/A
 -------------------------------------------------------------
+NAME: msil_generation
+
+VALUES: true | false
+DEFAULT: false
+DESCRIPTION: Compile to the .NET framework.
+
+ISE:
+  true -> msil_generation (yes)
+  false -> msil_generation (no)
+HACT:
+  N/A
+VE:
+  N/A
+SE:
+  N/A
+-------------------------------------------------------------
 NAME: multithreaded
 
 VALUES: true | false
@@ -1124,7 +1175,10 @@ DEFAULT: exe
 DESCRIPTION: Specify the output target of the application.
 
 ISE:
-  N/A
+  exe -> msil_generation_type ("exe")
+  dll -> msil_generation_type ("dll")
+  com -> msil_generation_type ("exe")
+  no_main -> msil_generation_type ("exe")
 HACT:
   N/A
 VE:
@@ -1247,11 +1301,9 @@ following options are supported by the compiler:
 . debug on/off
 
 Note2: the following ISE Eiffel options are not supported
-yet by 'gexace' (wait for explanation from ISE):
+yet by 'gexace':
 
 . disabled_debug (...)
-. il_verifiable (yes)
-. msil_generation_type ("exe")
 
 =============================================================
 
@@ -1314,6 +1366,23 @@ SE:
   false ->
       cluster_name: "pathname"
 -------------------------------------------------------------
+NAME: assembly
+
+VALUES: <name>
+DEFAULT: no default
+DESCRIPTION: Specify that the cluster is in fact a .NET assembly.
+
+ISE:
+  <name> ->
+      assembly
+         cluster_name: "<name>", "<version>", "<culture>", "<public_key_token>"
+HACT:
+  N/A
+VE:
+  N/A
+SE:
+  N/A
+-------------------------------------------------------------
 NAME: assertion
 
 VALUES: none | require | ensure | invariant |
@@ -1361,6 +1430,42 @@ SE:
   If several occurrences of Ace options would need to be generated,
   only one occurrence would actually be generated with the value
   which appears below all the others in the list above.
+-------------------------------------------------------------
+NAME: component
+
+VALUES: <pathname>
+DEFAULT: no default
+DESCRIPTION: Specify that the cluster is in fact a component library.
+
+ISE:
+  N/A
+HACT:
+  <pathname> ->
+      component
+         cluster_name: "<pathname>"
+VE:
+  N/A
+SE:
+  N/A
+-------------------------------------------------------------
+NAME: culture
+
+VALUES: <culture>
+DEFAULT: neutral
+DESCRIPTION: Specify the culture of the .NET assembly.
+NOTE: The option 'assembly' should be set in order for this
+  option to have any effect.
+
+ISE:
+  <culture> ->
+      assembly
+         cluster_name: "<name>", "<version>", "<culture>", "<public_key_token>"
+HACT:
+  N/A
+VE:
+  N/A
+SE:
+  N/A
 -------------------------------------------------------------
 NAME: debug
 
@@ -1505,6 +1610,28 @@ VE:
 SE:
   <pathname> -> external_lib: "<pathname>"
 -------------------------------------------------------------
+NAME: prefix
+
+VALUES: <prefix>
+DEFAULT: no default
+DESCRIPTION: Specify the class prefix for the .NET assembly.
+NOTE: The option 'assembly' should be set in order for this
+  option to have any effect.
+
+ISE:
+  <prefix> ->
+      assembly
+         cluster_name: "<name>", "<version>", "<culture>", "<public_key_token>"
+            prefix
+               "<prefix>"
+            end
+HACT:
+  N/A
+VE:
+  N/A
+SE:
+  N/A
+-------------------------------------------------------------
 NAME: profile
 
 VALUES: true | false
@@ -1516,6 +1643,25 @@ DESCRIPTION: Enable Eiffel profiling for the classes of this
 ISE:
   true -> profile (yes)
   false -> profile (no)
+HACT:
+  N/A
+VE:
+  N/A
+SE:
+  N/A
+-------------------------------------------------------------
+NAME: public_key_token
+
+VALUES: <public_key_token>
+DEFAULT: b77a5c561934e089
+DESCRIPTION: Specify the public_key_token of the .NET assembly.
+NOTE: The option 'assembly' should be set in order for this
+  option to have any effect.
+
+ISE:
+  <public_key_token> ->
+      assembly
+         cluster_name: "<name>", "<version>", "<culture>", "<public_key_token>"
 HACT:
   N/A
 VE:
@@ -1578,6 +1724,25 @@ VE:
 SE:
   true -> trace (yes)
   false -> trace (no)
+-------------------------------------------------------------
+NAME: version
+
+VALUES: <version>
+DEFAULT: 1.0.3300.0
+DESCRIPTION: Specify the version of the .NET assembly.
+NOTE: The option 'assembly' should be set in order for this
+  option to have any effect.
+
+ISE:
+  <version> ->
+      assembly
+         cluster_name: "<name>", "<version>", "<culture>", "<public_key_token>"
+HACT:
+  N/A
+VE:
+  N/A
+SE:
+  N/A
 -------------------------------------------------------------
 
 =============================================================
