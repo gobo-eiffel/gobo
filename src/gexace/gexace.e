@@ -29,6 +29,8 @@ inherit
 
 	KL_SHARED_EXCEPTIONS
 
+	KL_SHARED_EXECUTION_ENVIRONMENT
+
 creation
 
 	make
@@ -192,18 +194,30 @@ feature {NONE} -- Command-line processing
 				variables.define_value ("GOBO_EIFFEL", "se")
 				!ET_XACE_SE_GENERATOR! g.make (error_handler)
 				a_command.generators.force_last (g)
+				if not variables.is_defined ("GOBO_CC") then
+					variables.define_value ("GOBO_CC", se_c_compiler)
+				end
 			elseif a_compiler.is_equal ("ise") then
 				variables.define_value ("GOBO_EIFFEL", "ise")
 				!ET_XACE_ISE_GENERATOR! g.make (error_handler)
 				a_command.generators.force_last (g)
+				if not variables.is_defined ("GOBO_CC") then
+					variables.define_value ("GOBO_CC", ise_c_compiler)
+				end
 			elseif a_compiler.is_equal ("ve") then
 				variables.define_value ("GOBO_EIFFEL", "ve")
 				!ET_XACE_VE_GENERATOR! g.make (error_handler)
 				a_command.generators.force_last (g)
+				if not variables.is_defined ("GOBO_CC") then
+					variables.define_value ("GOBO_CC", ve_c_compiler)
+				end
 			elseif a_compiler.is_equal ("hact") then
 				variables.define_value ("GOBO_EIFFEL", "hact")
 				!ET_XACE_HACT_GENERATOR! g.make (error_handler)
 				a_command.generators.force_last (g)
+				if not variables.is_defined ("GOBO_CC") then
+					variables.define_value ("GOBO_CC", hact_c_compiler)
+				end
 			elseif a_compiler.is_equal ("xml") then
 				!ET_XACE_XML_GENERATOR! g.make (error_handler)
 				a_command.generators.force_last (g)
@@ -272,6 +286,88 @@ feature {NONE} -- Command-line processing
 				consume_option
 			end
 		end
+
+feature {NONE} -- Determine which C compiler is used (only correct for Windows)
+
+	hact_c_compiler: STRING is "msc"
+
+	ise_c_compiler: STRING is
+		local
+			env_ise_c_compiler,
+			env_eif_borland: STRING
+			ise_c_compiler_defined,
+			eif_borland_defined: BOOLEAN
+		do
+			env_ise_c_compiler := Execution_environment.variable_value ("ISE_C_COMPILER")
+			ise_c_compiler_defined := env_ise_c_compiler /= Void and then not ise_c_compiler.is_empty
+			if ise_c_compiler_defined then
+				Result := ise_c_compiler
+			else
+				env_eif_borland := Execution_environment.variable_value ("EIF_BORLAND")
+				eif_borland_defined := env_eif_borland /= Void and then not env_eif_borland.is_empty
+				if eif_borland_defined then
+					Result := "bcc"
+				else
+					-- ahem, what about unix?
+					Result := "msc"
+				end
+			end
+		end
+
+	se_c_compiler: STRING is
+		require
+			smalleiffel_environment_variable_set: not Execution_environment.interpreted_string ("${SmallEiffel}").is_empty
+		local
+			system_se: STRING
+			compiler_se: KL_TEXT_INPUT_FILE
+			se_sys_dir: STRING
+			i: INTEGER
+		once
+			system_se := Execution_environment.interpreted_string ("${SmallEiffel}")
+			se_sys_dir := clone (system_se)
+			from
+				i := se_sys_dir.count
+			until
+				se_sys_dir.item (i) = '/' or else
+				se_sys_dir.item (i) = '\' or else
+				i < 1
+			loop
+				i := i - 1
+			end
+			se_sys_dir.head (i)
+			create compiler_se.make (se_sys_dir + "compiler.se")
+			compiler_se.open_read
+			compiler_se.read_string (128)
+			-- chop string
+			if compiler_se.last_string.item (compiler_se.last_string.count) = '%N' then
+				compiler_se.last_string.remove (compiler_se.last_string.count)
+			end
+			if compiler_se.last_string.item (compiler_se.last_string.count) = '%R' then
+				compiler_se.last_string.remove (compiler_se.last_string.count)
+			end
+			-- remove trailing spaces
+			from
+				i := compiler_se.last_string.count
+			until
+				(compiler_se.last_string.item (i) /= ' ' and
+				compiler_se.last_string.item (i) /= '%T') or else
+				i < 1
+			loop
+				i := i - 1
+			end
+			compiler_se.last_string.head (i)
+			if compiler_se.last_string.is_equal ("bcc32") then
+				Result := "bcc"
+			elseif compiler_se.last_string.is_equal ("cl") then
+				Result := "msc"
+			elseif compiler_se.last_string.is_equal ("lcc-win32") then
+				Result := "lcc"
+			else
+				Result := compiler_se.last_string
+			end
+		end
+
+	ve_c_compiler: STRING is "msc"
 
 feature {NONE} -- Usage message
 
