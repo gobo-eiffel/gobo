@@ -8,8 +8,8 @@ indexing
 	implements: "XML 1.0 Second Edition - W3C Recommendation 6 October 2000 (referred as 'XML1.0')"
 	noncompliance_unicode: "UTF8 is assumed and all chars >255 are assumed to be LETTERS"
 
-	library: "Gobo XML library"
-	copyright: "Copyright (c) 2002, Eric Bezault and others"
+	library: "Gobo Eiffel XML library"
+	copyright: "Copyright (c) 2002-2003, Eric Bezault and others"
 	license: "Eiffel Forum License v2 (see forum.txt)"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -22,19 +22,10 @@ class XM_EIFFEL_SCANNER
 
 inherit
 
-	YY_COMPRESSED_SCANNER_SKELETON
-		rename
-			make as make_scanner_stdin
+	XM_EIFFEL_SCANNER_SKELETON
 		redefine
-			set_input_buffer,
-			reset, fatal_error
+			read_token
 		end
-
-	XM_EIFFEL_TOKENS
-		export {NONE} all end
-
-	XM_EIFFEL_PARSER_ERRORS
-		export {NONE} all end
 
 creation
 
@@ -890,223 +881,328 @@ NOQUOTSYSLITCHAR [\r\n\t\x20-!#-\x7F]
 
 %%
 
-feature {NONE} -- Initialization
+feature -- Scanning
 
-	make_scanner is
-			-- Create a new scanner.
+	read_token is
+			-- Read a token from `input_buffer'.
+			-- Make result available in `last_token'.
+		local
+			yy_cp, yy_bp: INTEGER
+			yy_current_state: INTEGER
+			yy_next_state: INTEGER
+			yy_matched_count: INTEGER
+			yy_act: INTEGER
+			yy_goto: INTEGER
+			yy_c: INTEGER
+			yy_found: BOOLEAN
+			yy_rejected_line: INTEGER
+			yy_rejected_column: INTEGER
+			yy_rejected_position: INTEGER
+			yy_done: BOOLEAN
 		do
-			create character_entity.make
-			make_with_buffer (Empty_buffer)
-			reset
-		end
-
-feature -- Reset
-
-	reset is
-			-- Reset.
-		do
-			Precursor
-			filename := "-"
-			create {XM_FILE_SOURCE} source.make (filename)
-			last_error := Void
-			create start_conditions.make
-		end
-
-	push_start_condition_dtd_ignore is
-			-- Push start condition 'dtd_ignore' to the stack.
-		do
-			push_start_condition (dtd_ignore)
-		end
-
-feature -- Input
-
-	set_input_buffer (a_buffer: like input_buffer) is
-			-- Set `input_buffer' to `a_buffer'.
-		do
-			Precursor (a_buffer)
-			filename := a_buffer.name
-			create {XM_FILE_SOURCE} source.make (filename)
-		ensure then
-			filename_set: filename = a_buffer.name
-		end
-
-	set_input_stream  (a_stream: KI_CHARACTER_INPUT_STREAM) is
-			-- Set input buffer from a stream.
-			-- This class is then in charge of closing it.
-		require
-			not_void: a_stream /= Void
-			readable: a_stream.is_open_read
-		do
-			input_stream := a_stream
-
-			create input_filter.make_from_stream (a_stream)
-			set_input_buffer (new_file_buffer (input_filter))			
-		end
-
-	close_input is
-			-- Close input buffer if needed.
-		do
-			if input_stream /= Void then
-				if input_stream.is_closable then
-					input_stream.close
+				-- This routine is implemented with a loop whose body
+				-- is a big inspect instruction. This is a mere
+				-- translation of C gotos into Eiffel. Needless to
+				-- say that I'm not very proud of this piece of code.
+				-- However I performed some benchmarks and the results
+				-- were that this implementation runs amazingly faster
+				-- than an alternative implementation with no loop nor
+				-- inspect instructions and where every branch of the
+				-- old inspect instruction was written in a separate
+				-- routine. I think that the performance penalty is due
+				-- to the routine call overhead and the depth of the call
+				-- stack. Anyway, I prefer to provide you with a big and
+				-- ugly but fast scanning routine rather than a nice and
+				-- slow version. I hope you won't blame me for that! :-)
+			from
+				last_token := yyUnknown_token
+				yy_goto := yyNext_token
+			until
+				last_token /= yyUnknown_token
+			loop
+				inspect yy_goto
+				when yyNext_token then
+					if yy_more_flag then
+						yy_more_len := yy_end - yy_start
+						yy_more_flag := False
+					else
+						yy_more_len := 0
+						line := yy_line
+						column := yy_column
+						position := yy_position
+					end
+					yy_cp := yy_end
+						-- `yy_bp' is the position of the first
+						-- character of the current token.
+					yy_bp := yy_cp
+						-- Find the start state.
+					-- START INLINING 'yy_at_beginning_of_line'
+					-- yy_current_state := yy_start_state + yy_at_beginning_of_line
+					if input_buffer.beginning_of_line then
+						yy_current_state := yy_start_state + 1
+					else
+						yy_current_state := yy_start_state
+					end
+					-- END INLINING 'yy_at_beginning_of_line'
+					if yyReject_or_variable_trail_context then
+							-- Set up for storing up states.
+						yy_state_stack.put (yy_current_state, 0)
+						yy_state_count := 1
+					end
+					yy_goto := yyMatch
+				when yyMatch then
+						-- Find the next match.
+					from
+						yy_done := False
+					until
+						yy_done
+					loop
+						if yy_ec /= Void then
+							if yy_content_area /= Void then
+								yy_c := yy_ec.item (yy_content_area.item (yy_cp - 1).code)
+							else
+								yy_c := yy_ec.item (yy_content.item (yy_cp).code)
+							end
+						else
+							if yy_content_area /= Void then
+								yy_c := yy_content_area.item (yy_cp - 1).code
+							else
+								yy_c := yy_content.item (yy_cp).code
+							end
+						end
+						if
+							not yyReject_or_variable_trail_context and then
+							yy_accept.item (yy_current_state) /= 0
+						then
+								-- Save the backing-up info before computing
+								-- the next state because we always compute one
+								-- more state than needed - we always proceed
+								-- until we reach a jam state.
+							yy_last_accepting_state := yy_current_state
+							yy_last_accepting_cpos := yy_cp
+						end
+						from until
+							yy_chk.item (yy_base.item (yy_current_state) + yy_c) = yy_current_state
+						loop
+							yy_current_state := yy_def.item (yy_current_state)
+							if
+								yy_meta /= Void and then
+								yy_current_state >= yyTemplate_mark
+							then
+									-- We've arranged it so that templates are
+									-- never chained to one another. This means
+									-- we can afford to make a very simple test
+									-- to see if we need to convert to `yy_c''s
+									-- meta-equivalence class without worrying
+									-- about erroneously looking up the meta
+									-- equivalence class twice.
+								yy_c := yy_meta.item (yy_c)
+							end
+						end
+						yy_current_state := yy_nxt.item (yy_base.item (yy_current_state) + yy_c)
+						if yyReject_or_variable_trail_context then
+							yy_state_stack.put (yy_current_state, yy_state_count)
+							yy_state_count := yy_state_count + 1
+						end
+						yy_cp := yy_cp + 1
+						yy_done := (yy_current_state = yyJam_state)
+					end
+					if not yyReject_or_variable_trail_context then
+							-- Do the guaranteed-needed backing up
+							-- to find out the match.
+						yy_cp := yy_last_accepting_cpos
+						yy_current_state := yy_last_accepting_state
+					end
+					yy_goto := yyFind_action
+				when yyFind_action then
+						-- Find the action number.
+					if not yyReject_or_variable_trail_context then
+						yy_act := yy_accept.item (yy_current_state)
+						yy_goto := yyDo_action
+					else
+						yy_state_count := yy_state_count - 1
+						yy_current_state := yy_state_stack.item (yy_state_count)
+						yy_lp := yy_accept.item (yy_current_state)
+						yy_goto := yyFind_rule
+					end
+				when yyFind_rule then
+						-- We branch here when backing up.
+					check reject_used: yyReject_or_variable_trail_context end
+					from yy_found := False until yy_found loop
+						if
+							yy_lp /= 0 and
+							yy_lp < yy_accept.item (yy_current_state + 1)
+						then
+							yy_act := yy_acclist.item (yy_lp)
+							if yyVariable_trail_context then
+								if
+									yy_act < - yyNb_rules or
+									yy_looking_for_trail_begin /= 0
+								then
+									if yy_act = yy_looking_for_trail_begin then
+										yy_looking_for_trail_begin := 0
+										yy_act := - yy_act - yyNb_rules
+										yy_found := True
+									else
+										yy_lp := yy_lp + 1
+									end
+								elseif yy_act < 0 then
+									yy_looking_for_trail_begin := yy_act - yyNb_rules
+									if yyReject_used then
+											-- Remember matched text in case
+											-- we back up due to `reject'.
+										yy_full_match := yy_cp
+										yy_full_state := yy_state_count
+										yy_full_lp := yy_lp
+									end
+									yy_lp := yy_lp + 1
+								else
+									yy_full_match := yy_cp
+									yy_full_state := yy_state_count
+									yy_full_lp := yy_lp
+									yy_found := True
+								end
+							else
+								yy_full_match := yy_cp
+								yy_found := True
+							end
+						else
+							yy_cp := yy_cp - 1
+							yy_state_count := yy_state_count - 1
+							yy_current_state := yy_state_stack.item (yy_state_count)
+							yy_lp := yy_accept.item (yy_current_state)
+						end
+					end
+					yy_rejected_line := yy_line
+					yy_rejected_column := yy_column
+					yy_rejected_position := yy_position
+					yy_goto := yyDo_action
+				when yyDo_action then
+						-- Set up `text' before action.
+					yy_bp := yy_bp - yy_more_len
+					yy_start := yy_bp
+					yy_end := yy_cp
+					debug ("GELEX")
+					end
+					yy_goto := yyNext_token
+						-- Semantic actions.
+					if yy_act = 0 then
+							-- Must back up.
+						if not yyReject_or_variable_trail_context then
+								-- Backing-up info for compressed tables is
+								-- taken after `yy_cp' has been incremented
+								-- for the next state.
+							yy_cp := yy_last_accepting_cpos
+							yy_bp := yy_bp + yy_more_len
+							yy_current_state := yy_last_accepting_state
+							yy_goto := yyFind_action
+						else
+							last_token := yyError_token
+							fatal_error ("fatal scanner internal error: no action found")
+						end
+					elseif yy_act = yyEnd_of_buffer then
+							-- Amount of text matched not including
+							-- the EOB character.
+						yy_matched_count := yy_cp - yy_bp - 1
+							-- Note that here we test for `yy_end' "<="
+							-- to the position of the first EOB in the buffer,
+							-- since `yy_end' will already have been 
+							-- incremented past the NULL character (since all
+							-- states make transitions on EOB to the 
+							-- end-of-buffer state). Contrast this with the
+							-- test in `read_character'.
+						if yy_end <= input_buffer.count + 1 then
+								-- This was really a NULL character.
+							yy_end := yy_bp + yy_matched_count
+							yy_current_state := yy_previous_state
+								-- We're now positioned to make the NULL
+								-- transition. We couldn't have
+								-- `yy_previous_state' go ahead and do it
+								-- for us because it doesn't know how to deal
+								-- with the possibility of jamming (and we
+								-- don't want to build jamming into it because
+								-- then it will run more slowly).
+							yy_next_state := yy_null_trans_state (yy_current_state)
+							yy_bp := yy_bp + yy_more_len
+							if yy_next_state /= 0 then
+									-- Consume the NULL character.
+								yy_cp := yy_end + 1
+								yy_end := yy_cp
+								yy_current_state := yy_next_state
+								yy_goto := yyMatch
+							else
+								if yyReject_or_variable_trail_context then
+										-- Still need to initialize `yy_cp',
+										-- though `yy_current_state' was set
+										-- up by `yy_previous_state'.
+									yy_cp := yy_end
+										-- Remove the state which was inserted
+										-- in `yy_state_stack' by the call to
+										-- `yy_null_trans_state'.
+									yy_state_count := yy_state_count - 1
+								else
+										-- Do the guaranteed-needed backing up
+										-- then figure out the match.
+									yy_cp := yy_last_accepting_cpos
+									yy_current_state := yy_last_accepting_state
+								end
+								yy_goto := yyFind_action
+							end
+						else
+								-- Do not take the EOB character
+								-- into account.
+							yy_end := yy_end - 1
+							yy_refill_input_buffer
+							if input_buffer.filled then
+								yy_current_state := yy_previous_state
+								yy_cp := yy_end
+								yy_bp := yy_start + yy_more_len
+								yy_goto := yyMatch
+							elseif
+								yy_end - yy_start - yy_more_len /= 0
+							then
+									-- Some text has been matched prior to
+									-- the EOB. First process it.
+								yy_current_state := yy_previous_state
+								yy_cp := yy_end
+								yy_bp := yy_start + yy_more_len
+								yy_goto := yyFind_action
+							else
+									-- Only the EOB character has been matched, 
+									-- so treat this as a final EOF.
+								if wrap then
+									yy_bp := yy_start
+									yy_cp := yy_end
+									yy_execute_eof_action ((yy_start_state - 1) // 2)
+								end
+							end
+						end
+					else
+						yy_execute_action (yy_act)
+						if yy_rejected then
+							yy_rejected := False
+							yy_line := yy_rejected_line
+							yy_column := yy_rejected_column
+							yy_position := yy_rejected_position
+								-- Restore position backed-over text.
+							yy_cp := yy_full_match
+							if yyVariable_trail_context then
+									-- Restore original accepting position.
+								yy_lp := yy_full_lp
+									-- Restore original state.
+								yy_state_count := yy_full_state
+									-- Restore current state.
+								yy_current_state := yy_state_stack.item (yy_state_count - 1)
+							end
+							yy_lp := yy_lp + 1
+							yy_goto := yyFind_rule
+						end
+					end
 				end
 			end
-		end
-		
-feature {NONE} -- Input
-
-	input_stream: KI_CHARACTER_INPUT_STREAM
-			-- Saved stream for closing on end of stream.
-			 
-	input_filter: XM_EIFFEL_INPUT_STREAM
-			-- Saved filter for encoding changes. 
-			 
-feature -- Encoding
-
-	is_valid_encoding (an_encoding: STRING): BOOLEAN is
-			-- Is this encoding known?
-		local
-			lower_encoding: STRING
-		do
-			if an_encoding /= Void then
-				lower_encoding := STRING_.as_lower (an_encoding)
-				Result := lower_encoding.is_equal (Encoding_latin_1)
-					or lower_encoding.is_equal (Encoding_us_ascii)
-					or lower_encoding.is_equal (Encoding_utf_8) 
-					or lower_encoding.is_equal (Encoding_utf_16)
+			debug ("GELEX")
+				print_last_token
 			end
 		end
-		
-	set_encoding (an_encoding: STRING) is
-			-- Set encoding.
-		require
-			valid_encoding: is_valid_encoding (an_encoding)
-		do
-			check filter_set: input_filter /= Void end
-			if STRING_.as_lower (an_encoding).is_equal (Encoding_latin_1) then
-				input_filter.set_latin_1
-			end
-		end
-
-feature {NONE} -- Encodings
-
-	Encoding_us_ascii: STRING is "us-ascii"
-	Encoding_latin_1: STRING is "iso-8859-1" 
-	Encoding_utf_8: STRING is "utf-8"
-	Encoding_utf_16: STRING is "utf-16"
-	
-feature -- Error reporting
-
-	has_error: BOOLEAN is
-			-- Was there an error?
-		do
-			Result := last_error /= Void
-		end
-
-	last_error: STRING
-			-- Last error
-
-	fatal_error (a_message: STRING) is
-			-- A fatal error occurred.
-		do
-			last_error := a_message
-		end
-
-feature -- Access
-
-	filename: STRING
-			-- Name of file being scanned
-
-	source: XM_SOURCE
-			-- Source of the XML document beeing parsed
-
-	last_value: ANY
-			-- Semantic value of last token read
-
-feature {NONE} -- Character entity
-
-	character_entity: XM_EIFFEL_CHARACTER_ENTITY
-			-- Character entity manager (class once)
-
-feature {NONE} -- Start condition stack
-
-	push_start_condition (a_condition: INTEGER) is
-			-- Set start condition and add previous to stack.
-		do
-			start_conditions.force (start_condition)
-			set_start_condition (a_condition)
-		end
-
-	pop_start_condition is
-			-- Restore previous start condition.
-		do
-			if not start_conditions.is_empty then
-					-- This would be a precondition save for 
-					-- invalid input document.
-				set_start_condition (start_conditions.item)
-				start_conditions.remove
-			else 
-				-- Error, to be reported later in parser hopefully.
-			end
-		end
-
-	start_conditions: DS_LINKED_STACK [INTEGER]
-			-- Start conditions
-
-feature {NONE} -- System literal
-
-	system_literal_text: STRING is
-			-- Find last quoted substring in scanner text.
-			-- (this is microparsing, justified above)
-		require
-			quote_at_end: text_item (text_count) = '%'' or text_item (text_count) = '%"'
-			--quote_in: text_substring (1, text_count-1).has (text_item (text_count))
-		local
-			i: INTEGER
-			a_quote: CHARACTER
-		do
-			from
-				a_quote := text_item (text_count)
-				i := text_count - 1
-			invariant
-				i >= 0
-			variant
-				i
-			until
-				text_item (i) = a_quote
-			loop
-				i := i - 1
-			end
-			Result := text_substring (i + 1, text_count - 1)
-		end
-
-feature {NONE} -- Constants
-
-	normalized_newline: STRING is
-			-- Newline normalized text (2.11)
-		once
-			Result := "%N"
-		ensure
-			normalized_newline_not_void: Result /= Void
-		end
-
-	has_normalized_newline: BOOLEAN is
-			-- Has newline normalization already been applied?
-		do
-			Result := False
-		end
-
-	normalized_space: STRING is " "
-			-- Normalized space
-
-	two_normalized_spaces: STRING is "  "
-			-- Two normalized spaces
-
-invariant
-
-	start_conditions_not_void: start_conditions /= Void
-	character_entity_not_void: character_entity /= Void
-	filename_not_void: filename /= Void
-	source_not_void: source /= Void
 
 end
