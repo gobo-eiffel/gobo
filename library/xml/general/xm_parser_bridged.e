@@ -54,26 +54,18 @@ feature {ANY} -- Parsing
 	parse_from_file_name (a_file_name: UC_STRING) is
 			-- Parse XML Document from file
 			-- `source' will be automatically set.
-		require
-			a_file_name_not_void: a_file_name /= Void
-			-- file must exist and be readable (how to check that on a
-			-- compiler independend way?)
 		do
 			implementation.parse_from_file_name (a_file_name)
 		end
 
 	parse_from_stream (a_stream: KI_CHARACTER_INPUT_STREAM) is
 			-- Parse XML Document from GOBO input stream.
-		require
-			a_stream_not_void: a_stream /= Void
 		do
 			implementation.parse_from_stream (a_stream)
 		end
 
 	parse_from_string (data: STRING) is
 			-- Parse `data'.
-		require
-			data_not_void: data /= Void
 		do
 			implementation.parse_from_string (data)
 		end
@@ -84,9 +76,6 @@ feature {ANY} -- Incremental parsing
 			-- Parse partial XML document from GOBO input stream.
 			-- After the last part of the data has been fed into the parser,
 			-- call set_end_of_document to get any pending error messages.
-		require
-			is_incremental: is_incremental
-			a_stream_not_void: a_stream /= Void
 		do
 			implementation.parse_incremental_from_stream (a_stream)
 		end
@@ -97,9 +86,6 @@ feature {ANY} -- Incremental parsing
 			-- and give the parse the document in parts only.
 			-- You have to call 'set_end_of_file' after the
 			-- last call to 'parse_string' in every case.
-		require
-			data_not_void: data /= Void
-			is_incremental: is_incremental
 		do
 			implementation.parse_incremental_from_string (data)
 		end
@@ -107,8 +93,6 @@ feature {ANY} -- Incremental parsing
 	set_end_of_document is
 			-- Call this routine to tell the parser that the document 
 			-- has been completly parsed and no input is comming anymore.
-		require
-			is_incremental: is_incremental
 		do
 			implementation.set_end_of_document
 		end
@@ -130,9 +114,6 @@ feature -- Status
 				-- for no error. If we use parser dependent error codes we
 				-- may need to do this query in the implementation.
 			Result := last_error = Xml_err_none
-		ensure
-			-- error_flag_set: (Result = True) implies (last_error = Xml_error_none)
-			-- error_flag_set2: (Result = False) implies (last_error /= Xml_error_none)
 		end
 
 	last_error_description: STRING is
