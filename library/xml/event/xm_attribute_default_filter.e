@@ -9,6 +9,7 @@ indexing
 	license: "Eiffel Forum License v1 (see forum.txt)"
 	date: "$Date$"
 	revision: "$Revision$"
+	-- TODO: forward namespaces (currently problem with void in list)
 	-- if namespaces are used this filter should be before the 
 	-- namespace resolver if default attribute namespaces are 
 	-- to be resolved.
@@ -29,9 +30,15 @@ inherit
 	UC_UNICODE_FACTORY
 		export {NONE} all end
 	
+	XM_UNICODE_STRUCTURE_FACTORY
+		export {NONE} all end
+		
 	XM_MARKUP_CONSTANTS
 		export {NONE} all end
-	
+		
+	KL_IMPORTED_STRING_ROUTINES
+		export {NONE} all end
+		
 creation
 
 	make_null,
@@ -39,17 +46,17 @@ creation
 	
 feature -- DTD
 
-	on_doctype (name: UC_STRING; an_id: XM_DTD_EXTERNAL_ID; has_internal_subset: BOOLEAN) is
+	on_doctype (name: STRING; an_id: XM_DTD_EXTERNAL_ID; has_internal_subset: BOOLEAN) is
 			-- Document type declaration.
 		do
 		end
 
-	on_element_declaration (a_name: UC_STRING; a_model: XM_DTD_ELEMENT_CONTENT) is
+	on_element_declaration (a_name: STRING; a_model: XM_DTD_ELEMENT_CONTENT) is
 			-- Element declaration.
 		do
 		end
 
-	on_attribute_declaration (an_element_name, a_name: UC_STRING; a_model: XM_DTD_ATTRIBUTE_CONTENT) is
+	on_attribute_declaration (an_element_name, a_name: STRING; a_model: XM_DTD_ATTRIBUTE_CONTENT) is
 			-- Attribute declaration, one event per attribute.
 		local
 			a_sub: DS_BILINKED_LIST [XM_DTD_ATTRIBUTE_CONTENT]
@@ -57,7 +64,7 @@ feature -- DTD
 			-- default attribute values
 			if a_model.has_default_value then
 				if defaults = Void then
-					!! defaults.make_default
+					defaults := new_dtd_attribute_content_list_table
 				end
 
 				if not defaults.has (an_element_name) then
@@ -75,23 +82,23 @@ feature -- DTD
 			token_on_attribute_declaration (an_element_name, a_name, a_model)
 		end
 
-	on_entity_declaration (entity_name: UC_STRING; is_parameter: BOOLEAN; value: UC_STRING; 
-			an_id: XM_DTD_EXTERNAL_ID; notation_name: UC_STRING) is
+	on_entity_declaration (entity_name: STRING; is_parameter: BOOLEAN; value: STRING; 
+			an_id: XM_DTD_EXTERNAL_ID; notation_name: STRING) is
 			 -- Entity declaration.
 		do
 		end
 
-	on_notation_declaration (notation_name: UC_STRING; an_id: XM_DTD_EXTERNAL_ID) is
+	on_notation_declaration (notation_name: STRING; an_id: XM_DTD_EXTERNAL_ID) is
 			-- Notation declaration.
 		do
 		end
 		
 feature {NONE} -- DTD implementation
 
-	defaults: DS_HASH_TABLE [DS_LIST [XM_DTD_ATTRIBUTE_CONTENT], UC_STRING]
+	defaults: DS_HASH_TABLE [DS_LIST [XM_DTD_ATTRIBUTE_CONTENT], STRING]
 			-- Attributes defaults.
 			
-	has_attribute (a_sub: DS_LIST [XM_DTD_ATTRIBUTE_CONTENT]; a_name: UC_STRING): BOOLEAN is
+	has_attribute (a_sub: DS_LIST [XM_DTD_ATTRIBUTE_CONTENT]; a_name: STRING): BOOLEAN is
 			-- Has element level attribute?
 		require
 			not_void: a_sub /= Void
@@ -105,7 +112,7 @@ feature {NONE} -- DTD implementation
 			until
 				it.after
 			loop
-				if it.item.name.is_equal (a_name) then
+				if same_string (it.item.name, a_name) then
 					Result := true
 					it.go_after
 				else
@@ -116,7 +123,7 @@ feature {NONE} -- DTD implementation
 			
 feature -- Content
 
-	on_start_tag (a_namespace: UC_STRING; a_prefix: UC_STRING; a_local_part: UC_STRING) is
+	on_start_tag (a_namespace: STRING; a_prefix: STRING; a_local_part: STRING) is
 			-- Start of start tag.
 			-- Store name of current element.
 		local
@@ -141,12 +148,12 @@ feature -- Content
 			Precursor (a_namespace, a_prefix, a_local_part)
 		end
 
-	on_attribute (a_namespace: UC_STRING; a_prefix: UC_STRING; a_local_part: UC_STRING;
-				a_value: UC_STRING) is
+	on_attribute (a_namespace: STRING; a_prefix: STRING; a_local_part: STRING;
+				a_value: STRING) is
 			-- Remove from defaults attributes which are explicitely
 			-- declared.
 		do
-			if namespaces = Void then
+			if names = Void then
 				-- no defaulting necessary
 				forward_attribute (a_namespace, a_prefix, a_local_part, a_value)
 			else
@@ -168,8 +175,7 @@ feature {NONE} -- Attribute queue
 			-- Clear attributes queue.
 		do
 			namespaces := Void
-			prefixes := Void
-			locals := Void
+			names := Void
 			values := Void
 		end
 	
@@ -183,7 +189,7 @@ feature {NONE} -- Attribute queue
 				or a = Space_char.code
 		end
 		
-	push_attribute (a_ns, a_prefix, a_local, a_value: UC_STRING) is
+	push_attribute (a_ns, a_prefix, a_local, a_value: STRING) is
 			-- Push attributes, if attribute name already 
 			-- in list overwrite the value.
 		local
@@ -191,21 +197,19 @@ feature {NONE} -- Attribute queue
 			i: INTEGER
 		do
 			-- create structure if not
-			if namespaces = Void then
-				!! namespaces.make_default
-				!! prefixes.make_default
-				!! locals.make_default
-				!! values.make_default
+			if names = Void then
+				namespaces := new_string_arrayed_list
+				names := new_string_arrayed_list
+				values := new_string_arrayed_list
 			end
 			
 			-- replace existing attribute
 			from
 				i := 1 
 			until
-				i > namespaces.count
+				i > names.count
 			loop
-				if equal (a_prefix, prefixes.item (i))
-					and a_local.is_equal (locals.item (i))
+				if same_string (dtd_name (a_prefix, a_local), names.item (i))
 				then
 					values.replace (a_value, i)
 					found := True
@@ -214,9 +218,8 @@ feature {NONE} -- Attribute queue
 			end
 			
 			if not found then
-				namespaces.force_last (a_ns)
-				prefixes.force_last (a_prefix)
-				locals.force_last (a_local)
+				--namespaces.force_last (a_ns)
+				names.force_last (a_local)
 				values.force_last (a_value)
 			end
 		end
@@ -226,36 +229,34 @@ feature {NONE} -- Attribute queue
 		local
 			i: INTEGER
 		do
-			if namespaces /= Void then
+			if names /= Void then
 				from
 					i := 1
 				until
-					i > namespaces.count
+					i > names.count
 				loop
-					forward_attribute (namespaces.item (i),
-							prefixes.item (i),
-							locals.item (i),
+					forward_attribute (Void, --namespaces.item (i),
+							dtd_prefix (names.item (i)),
+							dtd_local (names.item (i)),
 							values.item (i))
 					i := i + 1
 				end
 			end
 		end
 		
-	namespaces, locals, prefixes, values: DS_ARRAYED_LIST [UC_STRING]
+	namespaces, names, values: DS_LIST [STRING]
 			-- Mean version of DS_ARRAYED_LIST [ATTRIBUTE_EVENT]
 		
 feature {NONE} -- Content implementation
 
-	dtd_name (a_prefix, a_local: UC_STRING): UC_STRING is
+	dtd_name (a_prefix, a_local: STRING): STRING is
 			-- Name for DTD (without namespaces).
 		require
 			a_local_not_void: a_local /= Void
 		do
 			if has_prefix (a_prefix) then
-				Result := new_unicode_string ("")
-				Result.append_string (a_prefix)
-				Result.append_character (Colon_char)
-				Result.append_string (a_local)
+				Result := string_.concat (a_prefix, Prefix_separator)
+				Result := string_.concat (Result, a_local)
 			else
 				Result := a_local
 			end
@@ -264,7 +265,7 @@ feature {NONE} -- Content implementation
 			no_prefix_same: not has_prefix (a_prefix) implies (Result = a_local) 
 		end
 	
-	dtd_prefix (a: UC_STRING): UC_STRING is
+	dtd_prefix (a: STRING): STRING is
 			-- Prefix from a DTD name.
 		require
 			a_not_void: a /= Void
@@ -277,7 +278,7 @@ feature {NONE} -- Content implementation
 			end
 		end
 		
-	dtd_local (a: UC_STRING): UC_STRING is
+	dtd_local (a: STRING): STRING is
 			-- Local part from a DTD name.
 		require
 			a_not_void: a /= Void
@@ -300,23 +301,24 @@ feature {NONE} -- Content implementation
 		
 feature {NONE} -- Tokens implementation
 
-	tokens: DS_HASH_TABLE [DS_HASH_TABLE [BOOLEAN, UC_STRING], UC_STRING]
-			-- NMTOKENs for space normalisation.
+	tokens: DS_HASH_TABLE [DS_HASH_TABLE [BOOLEAN, STRING], STRING]
+			-- NMTOKENs for space normalisation, table of 
+			-- is_token for (element, attribute).
 			
-	element_tokens: DS_HASH_TABLE [BOOLEAN, UC_STRING]
+	element_tokens: DS_HASH_TABLE [BOOLEAN, STRING]
 			-- Set of token attributes for current element.
 			
-	token_on_attribute_declaration (an_element_name, a_name: UC_STRING; a_model: XM_DTD_ATTRIBUTE_CONTENT) is
+	token_on_attribute_declaration (an_element_name, a_name: STRING; a_model: XM_DTD_ATTRIBUTE_CONTENT) is
 			-- Attribute declaration, one event per attribute.
 		local
 			a_token_sub: like element_tokens
 		do
 			-- NMTOKEN values
 			if tokens = Void then
-				!! tokens.make_default
+				tokens := new_tokens_table
 			end
 			if not tokens.has (an_element_name) then
-				!! a_token_sub.make_equal (0)
+				a_token_sub := new_boolean_string_table
 				tokens.force_new (a_token_sub, an_element_name)
 			end
 			-- first precedes
@@ -325,7 +327,7 @@ feature {NONE} -- Tokens implementation
 			end
 		end
 		
-	token_on_start_tag (a_prefix, a_local: UC_STRING) is
+	token_on_start_tag (a_prefix, a_local: STRING) is
 			-- Initialise at start tag.
 		do
 			element_tokens := Void
@@ -334,11 +336,11 @@ feature {NONE} -- Tokens implementation
 			end
 		end
 		
-	forward_attribute (a_ns, a_prefix, a_local, a_value: UC_STRING) is
+	forward_attribute (a_ns, a_prefix, a_local, a_value: STRING) is
 			-- Push attributes, if attribute name already 
 			-- in list overwrite the value.
 		local
-			a_string: UC_STRING
+			a_string: STRING
 			i: INTEGER
 		do
 			if element_tokens /= Void and then
@@ -365,7 +367,7 @@ feature {NONE} -- Tokens implementation
 					end
 				end
 				
-				-- at end of string
+				-- at ends of string
 				if a_string.count > 0 
 						and then is_space (a_string.item_code (1)) 
 				then
