@@ -105,8 +105,13 @@ feature -- Setting
 			tm_struct: POINTER
 			time_t: INTEGER
 #endif
+#ifdef SE
+		local
+			old_is_local: BOOLEAN
+#endif
 		do
 #ifdef SE
+			old_is_local := basic_time.is_local_time
 			basic_time.set_local_time
 			basic_time.update
 			year := basic_time.year
@@ -115,6 +120,9 @@ feature -- Setting
 			hour := basic_time.hour
 			minute := basic_time.minute
 			second := basic_time.second
+			if not old_is_local then
+				basic_time.set_universal_time
+			end
 #endif
 #ifdef VE
 			old_set_local_time
@@ -141,8 +149,13 @@ feature -- Setting
 			tm_struct: POINTER
 			time_t: INTEGER
 #endif
+#ifdef SE
+		local
+			old_is_local: BOOLEAN
+#endif
 		do
 #ifdef SE
+			old_is_local := basic_time.is_local_time
 			basic_time.set_universal_time
 			basic_time.update
 			year := basic_time.year
@@ -151,6 +164,9 @@ feature -- Setting
 			hour := basic_time.hour
 			minute := basic_time.minute
 			second := basic_time.second
+			if old_is_local then
+				basic_time.set_local_time
+			end
 #endif
 #ifdef VE
 			set_to_now
