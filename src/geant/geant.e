@@ -36,8 +36,8 @@ feature {NONE} -- Initialization
 	make is
 			-- Execute 'geant'.
 		local
-			a_project: GEANT_PROJECT
-			ucs		: UC_STRING
+			a_project	: GEANT_PROJECT
+			ucs			: UC_STRING
 		do
 			Arguments.set_program_name ("geant")
 			!! error_handler.make_standard
@@ -81,8 +81,11 @@ feature -- Access
 	read_command_line is
 			-- Read command line arguments.
 		local
-			i, nb: INTEGER
-			arg: STRING
+			i, nb			: INTEGER
+			p				: INTEGER
+			arg				: STRING
+			a_variable_name	: STRING
+			a_variable_value	: STRING
 		do
 			nb := Arguments.argument_count
 			from i := 1 until i > nb loop
@@ -100,6 +103,13 @@ feature -- Access
 					end
 				elseif arg.count > 16 and then arg.substring (1, 16).is_equal ("--buildfilename=") then
 					build_filename := arg.substring (16, arg.count)
+				elseif arg.item (1) = '-' and arg.item (2) = 'D' then
+					p := arg.index_of('=', 1)
+					if p > 3 and p < arg.count then
+						a_variable_name := clone(arg.substring (3, p - 1))
+						a_variable_value := clone(arg.substring (p + 1, arg.count))
+						set_variable_value(a_variable_name, a_variable_value)
+					end
 				elseif i = nb then
 					start_target_name := arg
 				else
@@ -145,5 +155,6 @@ feature {NONE} -- Error handling
 		end
 
 feature {NONE} -- Implementation
+
 
 end -- class GEANT

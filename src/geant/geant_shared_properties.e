@@ -33,7 +33,7 @@ feature -- Access
 
 	variable_value (a_name: STRING): STRING is
 			-- Value of global variable `a_name';
-			-- `a_name' if `a_name' has not been set
+			-- `${a_name}' if `a_name' has not been set
 		require
 			a_name_not_void: a_name /= Void
 		do
@@ -50,9 +50,11 @@ feature -- Access
 					-- Search value from the project variables:
 				Variables.search (a_name)
 				if Variables.found then
-					Result := Variables.found_item
+					Result := expanded_variable_value(Variables.found_item)
 				else
-					Result := a_name
+					Result := clone("${")
+					Result.append_string(a_name)
+					Result.append_string("}")
 				end
 			end
 		ensure
@@ -61,26 +63,38 @@ feature -- Access
 
 	set_variable_value (a_name, a_value : STRING) is
 			-- Set value of variable `a_name' to `a_value'.
-			-- Expand all variable references in `a_value' first.
+			-- Ignored when `a_name' is already defined
 		require
 			a_name_not_void: a_name /= Void
 			a_name_not_empty: a_name.count > 0
 			a_value_not_void: a_value /= Void
+		do
+			if not Variables.has(a_name) then
+				Variables.force (a_value, a_name)
+			end
+		end
+
+
+	expanded_variable_value(a_value : STRING) : STRING is
+			-- Expanded variable value of `a_value'
+		require
+			a_value_not_void: a_value /= Void
 		local
 			source: STRING
-			transformed: STRING
 		do
 			from
 				source := a_value
-				transformed := interpreted_string (source)
+				Result := interpreted_string (source)
 			until
-				transformed.is_equal (source)
+				Result.is_equal (source)
 			loop
-				source := transformed
-				transformed := interpreted_string (source)
+				source := Result
+				Result := interpreted_string (source)
 			end
-			Variables.force (transformed, a_name)
+		ensure
+			expanded_variable_value_not_void : Result /= Void
 		end
+
 
 	interpreted_string (a_string: STRING): STRING is
 			-- String where the environment variables have been
