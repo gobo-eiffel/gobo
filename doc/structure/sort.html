@@ -23,11 +23,121 @@ content="text/html; charset=iso-8859-1">
 
 <hr size="1">
 
-<p align="center"><img width="482" height="172"></p>
+<p align="center"><!--webbot bot="ImageMap" startspan
+rectangle=" (318,160) (430, 191)  flatshort/ds_shell_sorter.html"
+rectangle=" (169,159) (287, 190)  flatshort/ds_quick_sorter.html"
+rectangle=" (20,159) (139, 191)  flatshort/ds_bubble_sorter.html"
+rectangle=" (161,84) (295, 115)  flatshort/ds_indexable_sorter.html"
+rectangle=" (179,10) (276, 40)  flatshort/ds_sorter.html"
+rectangle=" (17,10) (114, 42)  flatshort/sortable.html"
+src="image/sort.gif" border="0" width="446" height="206" --><MAP NAME="FrontPageMap0"><AREA SHAPE="RECT" COORDS="318, 160, 430, 191" HREF="flatshort/ds_shell_sorter.html"><AREA SHAPE="RECT" COORDS="169, 159, 287, 190" HREF="flatshort/ds_quick_sorter.html"><AREA SHAPE="RECT" COORDS="20, 159, 139, 191" HREF="flatshort/ds_bubble_sorter.html"><AREA SHAPE="RECT" COORDS="161, 84, 295, 115" HREF="flatshort/ds_indexable_sorter.html"><AREA SHAPE="RECT" COORDS="179, 10, 276, 40" HREF="flatshort/ds_sorter.html"><AREA SHAPE="RECT" COORDS="17, 10, 114, 42" HREF="flatshort/sortable.html"></MAP><img src="image/sort.gif" border="0" width="446" height="206" usemap="#FrontPageMap0"><!--webbot
+bot="ImageMap" i-checksum="12902" endspan --></p>
 
-<p>Algorithms for sorting items in containers.</p>
+<h2>Class <em><tt>DS_SORTABLE</tt></em></h2>
 
-<p><img src="../image/construction.gif" width="40" height="40"></p>
+<p>Some containers such as priority queues or binary search trees
+keep their items sorted. On the other hand some other containers
+do not necessarily keep their items sorted but provide facilities
+to sort them on demand according to various comparison criteria
+and sorting algorithms. These latter containers inherit from the
+class <a href="flatshort/ds_sortable.html"><font color="#008080"><em><tt>DS_SORTABLE</tt></em></font></a>.
+One can sort the container with feature <a
+href="flatshort/ds_sortable.html#sort"><font color="#008080"><em><tt>sort</tt></em></font></a>
+and inspect that the container is sorted with the boolean query <a
+href="flatshort/ds_sortable.html#sorted"><font color="#008080"><em><tt>sorted</tt></em></font></a>.</p>
+
+<h2>Class <em><tt>DS_SORTER</tt></em></h2>
+
+<p>Because there are many ways to sort a container, the algorithm
+for sorting items and the comparison criterion are not part of
+the container implementation. They are instead part of a separate
+object called a sorter which is passed as argument to the
+routines <font color="#008080"><em><tt>sort </tt></em></font>and <font
+color="#008080"><em><tt>sorted </tt></em></font>from<font
+color="#008080"><em><tt> DS_SORTABLE</tt></em></font>. This
+allows the container to be sorted using different criteria. For
+example a list of persons can be sorted by name at some point in
+the execution of the program and later sorted by age. One would
+just have to use two different sorters when calling <font
+color="#008080"><em><tt>sort</tt></em></font>. These sorter
+objects are instances of class <a href="flatshort/ds_sorter.html"><font
+color="#008080"><em><tt>DS_SORTER</tt></em></font></a>. This
+class has two routines, <a href="flatshort/ds_sorter.html#sort"><font
+color="#008080"><em><tt>sort</tt></em></font></a><font
+color="#008080"><em><tt> </tt></em></font>and <a
+href="flatshort/ds_sorter.html#sorted"><font color="#008080"><em><tt>sorted</tt></em></font></a>,
+which are called by delegation from their counterparts in <font
+color="#008080"><em><tt>DS_SORTABLE</tt></em></font>. <font
+color="#008080"><em><tt>DS_SORTER </tt></em></font>is a deferred
+class, various sorting algorithms being implemented in its
+descendant classes.</p>
+
+<h2>Class <em><tt>DS_INDEXABLE_SORTER</tt></em></h2>
+
+<p>Items stored in containers of type <a
+href="flatshort/ds_indexable.html"><font color="#008080"><em><tt>DS_INDEXABLE</tt></em></font></a>
+can be accessed by an integer index between 1 and <a
+href="flatshort/ds_indexable.html#count"><font color="#008080"><em><tt>count</tt></em></font></a>
+(the number of items in the container). This is an interesting
+property which is taken into account for the implementation of
+sorters for such containers. In addition to the <a
+href="flatshort/ds_sorter.html#sort"><font color="#008080"><em><tt>sort</tt></em></font></a><font
+color="#008080"><em><tt> </tt></em></font>and <a
+href="flatshort/ds_sorter.html#sorted"><font color="#008080"><em><tt>sorted</tt></em></font></a><font
+color="#008080"><em><tt> </tt></em></font>routines inherited from
+<a href="flatshort/ds_sorter.html"><font color="#008080"><em><tt>DS_SORTER</tt></em></font></a>,
+class <a href="flatshort/ds_indexable_sorter.html"><font
+color="#008080"><em><tt>DS_INDEXABLE_SORTER</tt></em></font></a>
+also provides two new features for sorting the items stored
+within two given indexes in the container, <a
+href="flatshort/ds_indexable_sorter.html#subsort"><font
+color="#008080"><em><tt>subsort</tt></em></font></a> and <a
+href="flatshort/ds_indexable_sorter.html#subsorted"><font
+color="#008080"><em><tt>subsorted</tt></em></font></a>. A call to<font
+color="#008080"><em><tt> sort </tt></em><tt>(</tt><em><tt>a_contanier</tt></em><tt>)</tt></font>
+is therefore equivalent to<font color="#008080"><em><tt> subsort</tt></em><tt>
+(</tt><em><tt>a_contanier</tt></em><tt>,</tt><em><tt> 1</tt></em><tt>,</tt><em><tt>
+a_container</tt></em><tt>.</tt><em><tt>count</tt></em><tt>)</tt></font>.</p>
+
+<p>Note that the implementation of the sorting algorithms in <font
+color="#008080"><em><tt>DS_INDEXABLE_SORTER</tt></em></font> and
+its descendant classes is of course heavily based on calls to <a
+href="flatshort/ds_indexable.html#item"><font color="#008080"><em><tt>item</tt></em></font></a>
+and <a href="flatshort/ds_indexable.html#put"><font
+color="#008080"><em><tt>put</tt></em></font></a> from <font
+color="#008080"><em><tt>DS_INDEXABLE</tt></em></font>. Therefore
+the use of these sorters will be optimal for containers whose
+implementation is based on arrays such as <a
+href="flatshort/ds_arrayed_list.html"><font color="#008080"><em><tt>DS_ARRAYED_LIST</tt></em></font></a><font
+color="#008080"><em><tt> </tt></em></font>for which <font
+color="#008080"><em><tt>item</tt></em></font> and <font
+color="#008080"><em><tt>put </tt></em></font>are efficient.
+However these two routines can be very time-consumming in
+containers implemented with linkable cells such as <a
+href="flatshort/ds_linked_list.html"><font color="#008080"><em><tt>DS_LINKED_LIST</tt></em></font></a>
+and it is not recommended to use this kind of sorters in this
+case. If you need to sort a list, you are better off using an
+arrayed list rather than a linked list. New sorter classes with
+better algorithms to deal with linked containers will be provided
+in future releases.</p>
+
+<h2>Class <em><tt>DS_BUBBLE_SORTER</tt></em></h2>
+
+<p>The class <a href="flatshort/ds_bubble_sorter.html"><font
+color="#008080"><em><tt>DS_BUBBLE_SORTER</tt></em></font></a>
+implements the bubble sort algorithm.</p>
+
+<h2>Class <em><tt>DS_QUICK_SORTER</tt></em></h2>
+
+<p>The class <a href="flatshort/ds_quick_sorter.html"><font
+color="#008080"><em><tt>DS_QUICK_SORTER</tt></em></font></a>
+implements the quick sort algorithm.</p>
+
+<h2>Class <em><tt>DS_SHELL_SORTER</tt></em></h2>
+
+<p>The class <a href="flatshort/ds_shell_sorter.html"><font
+color="#008080"><em><tt>DS_SHELL_SORTER</tt></em></font></a>
+implements the shell sort algorithm.</p>
 
 <hr size="1">
 
@@ -44,7 +154,7 @@ content="text/html; charset=iso-8859-1">
             <strong>http:</strong></font><a
             href="http://www.gobosoft.com"><font size="2">//www.gobosoft.com</font></a><font
             size="2"><br>
-            <strong>Last Updated:</strong> 28 August 1999</font><br>
+            <strong>Last Updated:</strong> 26 September 1999</font><br>
             <!--webbot bot="PurpleText"
             preview="
 $Date$ 
