@@ -10,7 +10,7 @@ indexing
 	date:       "$Date$"
 	revision:   "$Revision$"
 
-deferred class DS_HASH_TABLE_SEARCHER [G, K]
+deferred class DS_HASH_TABLE_SEARCHER [G, K -> HASHABLE]
 
 inherit
 
@@ -18,8 +18,6 @@ inherit
 		redefine
 			container, cursor
 		end
-
-	KL_SHARED_HASHABLE_ROUTINES
 
 feature -- Search
 
@@ -45,7 +43,7 @@ feature -- Search
 				from
 					i := 1
 					nb := a_container.capacity + 1
-					index := hashable_.hash_value (k) \\ nb
+					index := k.hash_code \\ nb
 					dead_cell := a_container.dead_cell
 				until
 					stop or i > nb
