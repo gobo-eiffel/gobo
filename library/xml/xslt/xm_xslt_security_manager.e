@@ -12,6 +12,10 @@ indexing
 
 deferred class XM_XSLT_SECURITY_MANAGER
 
+inherit
+
+	XM_XPATH_SECURITY_MANAGER
+
 feature -- Access
 	
 	is_highly_secure: BOOLEAN

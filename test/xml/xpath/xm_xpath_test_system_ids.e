@@ -82,7 +82,7 @@ feature
 				assert ("Base-URI equals SYSTEM ID for document", STRING_.same_string (document.base_uri, document.system_id))
 
 			end
-			a_base_uri := STRING_.concat ("file://", file_system.current_working_directory)
+			a_base_uri := STRING_.concat ("file://localhost", file_system.current_working_directory)
 			a_base_uri := STRING_.appended_string (a_base_uri, "/")
 			a_base_uri := STRING_.appended_string (a_base_uri, "data/books2.xml")
 			if is_tiny then
@@ -104,7 +104,7 @@ feature
 			books_element ?= document_element.first_child
 			assert ("Books", books_element /= Void)
 			assert ("Books element line number is 2", books_element.line_number = 2)
-			a_base_uri := STRING_.concat ("file://", file_system.current_working_directory)
+			a_base_uri := STRING_.concat ("file://localhost", file_system.current_working_directory)
 			a_base_uri := STRING_.appended_string (a_base_uri, "/")
 			a_base_uri := STRING_.appended_string (a_base_uri, "data/booklist.xml")
 			assert ("SYSTEM ID for BOOKS", STRING_.same_string (a_base_uri, books_element.base_uri))
