@@ -15,14 +15,7 @@ class XM_EVENT_PARSER
 
 inherit
 
-	XM_PARSER
-		undefine
-			make_from_implementation
-		redefine
-			implementation
-		end
-
-	DP_INTERFACE
+	XM_PARSER_BRIDGED
 		redefine
 			implementation
 		end

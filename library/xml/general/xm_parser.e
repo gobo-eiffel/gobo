@@ -11,14 +11,9 @@ indexing
 	date:		"$Date$"
 	revision:	"$Revision$"
 
-class XM_PARSER
+deferred class XM_PARSER
 
 inherit
-
-	DP_INTERFACE
-		redefine
-			implementation
-		end
 
 	XM_ERROR_CODES
 
@@ -30,23 +25,20 @@ feature {ANY} -- Access
 			-- special parseing routines (the ones that contain
 			-- "incremental" in their name) to do this and call
 			-- `set_end_of_document' after the last part has been fed.
-		do
-			Result := implementation.is_incremental
+		deferred
 		end
 
 	source: XM_SOURCE is
 			-- Source of the XML document beeing parserd.
 			-- If `Void' the source is unkown.
-		do
-			Result := implementation.source
+		deferred
 		end
 
 feature {ANY} -- Element change
 
 	set_source (a_source: XM_SOURCE) is
 			-- Make `a_source' the source of the XML document to parse.
-		do
-			implementation.set_source (a_source)
+		deferred
 		end
 
 feature {ANY} -- Parsing
@@ -58,24 +50,21 @@ feature {ANY} -- Parsing
 			a_file_name_not_void: a_file_name /= Void
 			-- file must exist and be readable (how to check that on a
 			-- compiler independend way?)
-		do
-			implementation.parse_from_file_name (a_file_name)
+		deferred
 		end
 
 	parse_from_stream (a_stream: KI_CHARACTER_INPUT_STREAM) is
 			-- Parse XML Document from GOBO input stream.
 		require
 			a_stream_not_void: a_stream /= Void
-		do
-			implementation.parse_from_stream (a_stream)
+		deferred
 		end
 
 	parse_from_string (data: STRING) is
 			-- Parse `data'.
 		require
 			data_not_void: data /= Void
-		do
-			implementation.parse_from_string (data)
+		deferred
 		end
 
 feature {ANY} -- Incremental parsing
@@ -87,8 +76,7 @@ feature {ANY} -- Incremental parsing
 		require
 			is_incremental: is_incremental
 			a_stream_not_void: a_stream /= Void
-		do
-			implementation.parse_incremental_from_stream (a_stream)
+		deferred
 		end
 
 	parse_incremental_from_string (data: STRING) is
@@ -100,8 +88,7 @@ feature {ANY} -- Incremental parsing
 		require
 			data_not_void: data /= Void
 			is_incremental: is_incremental
-		do
-			implementation.parse_incremental_from_string (data)
+		deferred
 		end
 
 	set_end_of_document is
@@ -109,27 +96,19 @@ feature {ANY} -- Incremental parsing
 			-- has been completly parsed and no input is comming anymore.
 		require
 			is_incremental: is_incremental
-		do
-			implementation.set_end_of_document
+		deferred
 		end
 
 feature -- Status
 
 	last_error: INTEGER is
 			-- See XM_PARSE_ERROR_CODES.
-		do
-			Result := implementation.last_error
+		deferred
 		end
 
 	is_correct: BOOLEAN is
 			-- Returns False if an error was detected during parsing
-		do
-				-- TODO: Either we use the same error codes for all parsers
-				-- than this feature can be implemented in the interface
-				-- simply by comparing to `last_error` with the error code
-				-- for no error. If we use parser dependent error codes we
-				-- may need to do this query in the implementation.
-			Result := last_error = Xml_err_none
+		deferred
 		ensure
 			-- error_flag_set: (Result = True) implies (last_error = Xml_error_none)
 			-- error_flag_set2: (Result = False) implies (last_error /= Xml_error_none)
@@ -138,8 +117,7 @@ feature -- Status
 	last_error_description: STRING is
 			-- Returns a text that explain what the error reported by
 			-- `last_error' was all about.
-		do
-			Result := implementation.last_error_description
+		deferred
 		end
 
 	last_error_extended_description: STRING is
@@ -153,15 +131,11 @@ feature -- Status
 
 	position: XM_POSITION is
 			-- Current position in the source of the XML document.
-		do
-			Result := implementation.position
+		deferred
 		end
 
-feature {NONE} -- Implementation
-
-	implementation: XI_PARSER
-
 end -- class XM_PARSER
+
 --|-------------------------------------------------------------------------
 --| eXML, Eiffel XML Parser Toolkit
 --| Copyright (C) 1999	Andreas Leitner and others
