@@ -133,7 +133,6 @@ feature {NONE} -- AST factory
 		local
 			a_name: STRING
 			a_pathname: STRING
-			a_value: UC_STRING
 			a_bool: STRING
 			a_cursor: DS_BILINEAR_CURSOR [XM_NODE]
 			a_child: XM_ELEMENT
@@ -147,24 +146,19 @@ feature {NONE} -- AST factory
 			a_warning: UT_MESSAGE
 		do
 			if an_element.has_attribute_by_name (uc_name) then
-				a_value := an_element.attribute_by_name (uc_name).value
-				if a_value /= Void then
-					a_name := a_value.to_utf8
+				a_name := an_element.attribute_by_name (uc_name).value
+				if a_name /= Void then
 					if a_name.count > 0 then
 						if an_element.has_attribute_by_name (uc_location) then
-							a_value := an_element.attribute_by_name (uc_location).value
-							if a_value /= Void then
-								a_pathname := a_value.to_utf8
-							end
+							a_pathname := an_element.attribute_by_name (uc_location).value
 						end
 					end
 					Result := ast_factory.new_cluster (a_name, a_pathname)
 					if an_element.has_attribute_by_name (uc_abstract) then
 						!! a_warning.make ("Warning: attribute 'abstract' is obsolete, use <option name=%"abstract%" value=%"true/false%"/> instead%N" + a_position_table.item (an_element).out)
 						error_handler.report_warning (a_warning)
-						a_value := an_element.attribute_by_name (uc_abstract).value
-						if a_value /= Void then
-							a_bool := a_value.to_utf8
+						a_bool := an_element.attribute_by_name (uc_abstract).value
+						if a_bool /= Void then
 							if is_true (a_bool) then
 								if an_option = Void then
 									an_option := ast_factory.new_options
@@ -179,9 +173,8 @@ feature {NONE} -- AST factory
 						end
 					end
 					if an_element.has_attribute_by_name (uc_relative) then
-						a_value := an_element.attribute_by_name (uc_relative).value
-						if a_value /= Void then
-							a_bool := a_value.to_utf8
+						a_bool := an_element.attribute_by_name (uc_relative).value
+						if a_bool /= Void then
 							if is_true (a_bool) then
 								Result.set_relative (True)
 							elseif is_false (a_bool) then
@@ -191,10 +184,7 @@ feature {NONE} -- AST factory
 					end
 					a_prefix := a_parent_prefix
 					if an_element.has_attribute_by_name (uc_prefix) then
-						a_value := an_element.attribute_by_name (uc_prefix).value
-						if a_value /= Void then
-							a_prefix := a_value.to_utf8
-						end
+						a_prefix := an_element.attribute_by_name (uc_prefix).value
 					end
 					Result.set_cluster_prefix (a_prefix)
 					a_cursor := an_element.new_cursor
@@ -260,7 +250,6 @@ feature {NONE} -- AST factory
 			is_class: an_element.name.is_equal (uc_class)
 			a_position_table_not_void: a_position_table /= Void
 		local
-			a_value: UC_STRING
 			a_class_name: STRING
 			an_option: ET_XACE_OPTIONS
 			a_cursor: DS_BILINEAR_CURSOR [XM_NODE]
@@ -268,9 +257,8 @@ feature {NONE} -- AST factory
 			a_feature: ET_XACE_FEATURE_OPTIONS
 		do
 			if an_element.has_attribute_by_name (uc_name) then
-				a_value := an_element.attribute_by_name (uc_name).value
-				if a_value /= Void then
-					a_class_name := a_value.to_utf8
+				a_class_name := an_element.attribute_by_name (uc_name).value
+				if a_class_name /= Void then
 					if a_class_name.count > 0 then
 						an_option := ast_factory.new_options
 						Result := ast_factory.new_class_options (a_class_name, an_option)
@@ -301,16 +289,14 @@ feature {NONE} -- AST factory
 			is_feature: an_element.name.is_equal (uc_feature)
 			a_position_table_not_void: a_position_table /= Void
 		local
-			a_value: UC_STRING
 			a_feature_name: STRING
 			an_option: ET_XACE_OPTIONS
 			a_cursor: DS_BILINEAR_CURSOR [XM_NODE]
 			a_child: XM_ELEMENT
 		do
 			if an_element.has_attribute_by_name (uc_name) then
-				a_value := an_element.attribute_by_name (uc_name).value
-				if a_value /= Void then
-					a_feature_name := a_value.to_utf8
+				a_feature_name := an_element.attribute_by_name (uc_name).value
+				if a_feature_name /= Void then
 					if a_feature_name.count > 0 then
 						an_option := ast_factory.new_options
 						Result := ast_factory.new_feature_options (a_feature_name, an_option)
@@ -336,7 +322,6 @@ feature {NONE} -- AST factory
 			is_mount: an_element.name.is_equal (uc_mount)
 			a_position_table_not_void: a_position_table /= Void
 		local
-			a_value: UC_STRING
 			a_pathname: STRING
 			a_library: ET_XACE_LIBRARY
 			a_prefix: STRING
@@ -344,14 +329,10 @@ feature {NONE} -- AST factory
 			a_file: KL_TEXT_INPUT_FILE
 		do
 			if an_element.has_attribute_by_name (uc_location) then
-				a_value := an_element.attribute_by_name (uc_location).value
-				if a_value /= Void then
-					a_pathname := a_value.to_utf8
+				a_pathname := an_element.attribute_by_name (uc_location).value
+				if a_pathname /= Void then
 					if an_element.has_attribute_by_name (uc_prefix) then
-						a_value := an_element.attribute_by_name (uc_prefix).value
-						if a_value /= Void then
-							a_prefix := a_value.to_utf8
-						end
+						a_prefix := an_element.attribute_by_name (uc_prefix).value
 					end
 					parsed_libraries.search (a_pathname)
 					if parsed_libraries.found then
@@ -401,13 +382,11 @@ feature {NONE} -- AST factory
 			a_cursor: DS_BILINEAR_CURSOR [XM_NODE]
 			a_feature: ET_XACE_FEATURE_OPTIONS
 			a_child: XM_ELEMENT
-			a_value: UC_STRING
 			an_option: ET_XACE_OPTIONS
 		do
 			if an_element.has_attribute_by_name (uc_class) then
-				a_value := an_element.attribute_by_name (uc_class).value
-				if a_value /= Void then
-					a_name := a_value.to_utf8
+				a_name := an_element.attribute_by_name (uc_class).value
+				if a_name /= Void then
 					if a_name.count > 0 then
 						an_option := ast_factory.new_options
 						Result := ast_factory.new_class_options (a_name, an_option)
@@ -439,18 +418,14 @@ feature {NONE} -- AST factory
 		local
 			a_name: STRING
 			an_alias: STRING
-			a_value: UC_STRING
 			an_option: ET_XACE_OPTIONS
 		do
 			if an_element.has_attribute_by_name (uc_name) then
-				a_value := an_element.attribute_by_name (uc_name).value
-				if a_value /= Void then
-					a_name := a_value.to_utf8
+				a_name := an_element.attribute_by_name (uc_name).value
+				if a_name /= Void then
 					if an_element.has_attribute_by_name (uc_alias) then
-						a_value := an_element.attribute_by_name (uc_alias).value
-						if a_value /= Void then
-							an_alias := a_value.to_utf8
-						else
+						an_alias := an_element.attribute_by_name (uc_alias).value
+						if an_alias = Void then
 							an_alias := a_name
 						end
 					else
@@ -486,27 +461,19 @@ feature {NONE} -- Element change
 			a_clusters: ET_XACE_CLUSTERS
 			a_mount: ET_XACE_MOUNTED_LIBRARY
 			a_mounts: ET_XACE_MOUNTED_LIBRARIES
-			a_value: UC_STRING
 			i, nb: INTEGER
 			a_library_list: DS_ARRAYED_LIST [ET_XACE_MOUNTED_LIBRARY]
 		do
 			if an_element.has_attribute_by_name (uc_name) then
-				a_value := an_element.attribute_by_name (uc_name).value
-				if a_value /= Void then
-					a_name := a_value.to_utf8
-				end
+				a_name := an_element.attribute_by_name (uc_name).value
 			end
 			if an_element.has_element_by_name (uc_root) then
 				a_root := an_element.element_by_name (uc_root)
 				if a_root.has_attribute_by_name (uc_class) then
-					a_value := a_root.attribute_by_name (uc_class).value
-					a_class := a_value.to_utf8
+					a_class := a_root.attribute_by_name (uc_class).value
 				end
 				if a_root.has_attribute_by_name (uc_creation) then
-					a_value := a_root.attribute_by_name (uc_creation).value
-					if a_value /= Void then
-						a_creation := a_value.to_utf8
-					end
+					a_creation := a_root.attribute_by_name (uc_creation).value
 				end
 			end
 			a_cursor := an_element.new_cursor
@@ -622,7 +589,6 @@ feature {NONE} -- Element change
 			a_position_table_not_void: a_position_table /= Void
 		local
 			a_name: STRING
-			a_value: UC_STRING
 			a_prefix: STRING
 			a_cursor: DS_BILINEAR_CURSOR [XM_NODE]
 			a_child: XM_ELEMENT
@@ -637,9 +603,8 @@ feature {NONE} -- Element change
 			a_library_list: DS_ARRAYED_LIST [ET_XACE_MOUNTED_LIBRARY]
 		do
 			if an_element.has_attribute_by_name (uc_name) then
-				a_value := an_element.attribute_by_name (uc_name).value
-				if a_value /= Void then
-					a_name := a_value.to_utf8
+				a_name := an_element.attribute_by_name (uc_name).value
+				if a_name /= Void then
 					if a_name.count > 0 then
 						a_library.set_name (a_name)
 					end
@@ -661,9 +626,8 @@ feature {NONE} -- Element change
 				end
 			else
 				if an_element.has_attribute_by_name (uc_prefix) then
-					a_value := an_element.attribute_by_name (uc_prefix).value
-					if a_value /= Void then
-						a_prefix := a_value.to_utf8
+					a_prefix := an_element.attribute_by_name (uc_prefix).value
+					if a_prefix /= Void then
 						a_library.set_library_prefix (a_prefix)
 					end
 				end
@@ -735,9 +699,8 @@ feature {NONE} -- Element change
 			is_enclosing_option: BOOLEAN
 			a_cursor: DS_BILINEAR_CURSOR [XM_NODE]
 			a_child: XM_ELEMENT
-			a_name: UC_STRING
-			a_value: UC_STRING
-			a_string_value: STRING
+			a_name: STRING
+			a_value: STRING
 			an_int: INTEGER
 			a_bool: STRING
 			a_key: STRING
@@ -757,149 +720,148 @@ feature {NONE} -- Element change
 						if a_value = Void then
 							-- Error already reported by the validator.
 						else
-							option_codes.search (a_name.to_utf8)
+							option_codes.search (a_name)
 							if option_codes.found then
-								a_string_value := a_value.to_utf8
 								inspect option_codes.found_item
 								when abstract_code then
-									if is_true (a_string_value) then
+									if is_true (a_value) then
 										an_option.set_abstract (True)
-									elseif is_false (a_string_value) then
+									elseif is_false (a_value) then
 										an_option.set_abstract (False)
 									else
 										error_handler.report_boolean_expected_error (an_element, uc_value, a_value, a_position_table.item (an_element))
 									end
 								when address_expression_code then
-									if is_true (a_string_value) then
+									if is_true (a_value) then
 										an_option.set_address_expression (True)
-									elseif is_false (a_string_value) then
+									elseif is_false (a_value) then
 										an_option.set_address_expression (False)
 									else
 										error_handler.report_boolean_expected_error (an_element, uc_value, a_value, a_position_table.item (an_element))
 									end
 								when arguments_code then
-									an_option.set_arguments (a_string_value)
+									an_option.set_arguments (a_value)
 								when array_optimization_code then
-									if is_true (a_string_value) then
+									if is_true (a_value) then
 										an_option.set_array_optimization (True)
-									elseif is_false (a_string_value) then
+									elseif is_false (a_value) then
 										an_option.set_array_optimization (False)
 									else
 										error_handler.report_boolean_expected_error (an_element, uc_value, a_value, a_position_table.item (an_element))
 									end
 								when assertion_code then
-									if an_option.valid_assertion.has (a_string_value) then
-										an_option.set_assertion (a_string_value)
+									if an_option.valid_assertion.has (a_value) then
+										an_option.set_assertion (a_value)
 									else
 										error_handler.report_wrong_attribute_value_error (an_element, uc_value, a_value, an_option.valid_assertion, a_position_table.item (an_element))
 									end
 								when case_insensitive_code then
-									if is_true (a_string_value) then
+									if is_true (a_value) then
 										an_option.set_case_insensitive (True)
-									elseif is_false (a_string_value) then
+									elseif is_false (a_value) then
 										an_option.set_case_insensitive (False)
 									else
 										error_handler.report_boolean_expected_error (an_element, uc_value, a_value, a_position_table.item (an_element))
 									end
 								when check_vape_code then
-									if is_true (a_string_value) then
+									if is_true (a_value) then
 										an_option.set_check_vape (True)
-									elseif is_false (a_string_value) then
+									elseif is_false (a_value) then
 										an_option.set_check_vape (False)
 									else
 										error_handler.report_boolean_expected_error (an_element, uc_value, a_value, a_position_table.item (an_element))
 									end
 								when clean_code then
-									if is_true (a_string_value) then
+									if is_true (a_value) then
 										an_option.set_clean (True)
-									elseif is_false (a_string_value) then
+									elseif is_false (a_value) then
 										an_option.set_clean (False)
 									else
 										error_handler.report_boolean_expected_error (an_element, uc_value, a_value, a_position_table.item (an_element))
 									end
 								when component_code then
-									an_option.set_component (a_string_value)
+									an_option.set_component (a_value)
 								when console_application_code then
-									if is_true (a_string_value) then
+									if is_true (a_value) then
 										an_option.set_console_application (True)
-									elseif is_false (a_string_value) then
+									elseif is_false (a_value) then
 										an_option.set_console_application (False)
 									else
 										error_handler.report_boolean_expected_error (an_element, uc_value, a_value, a_position_table.item (an_element))
 									end
 								when create_keyword_extension_code then
-									if is_true (a_string_value) then
+									if is_true (a_value) then
 										an_option.set_create_keyword_extension (True)
-									elseif is_false (a_string_value) then
+									elseif is_false (a_value) then
 										an_option.set_create_keyword_extension (False)
 									else
 										error_handler.report_boolean_expected_error (an_element, uc_value, a_value, a_position_table.item (an_element))
 									end
 								when dead_code_removal_code then
-									if an_option.valid_dead_code_removal.has (a_string_value) then
-										an_option.set_dead_code_removal (a_string_value)
+									if an_option.valid_dead_code_removal.has (a_value) then
+										an_option.set_dead_code_removal (a_value)
 									else
 										error_handler.report_wrong_attribute_value_error (an_element, uc_value, a_value, an_option.valid_dead_code_removal, a_position_table.item (an_element))
 									end
 								when debug_option_code then
-									if is_true (a_string_value) then
+									if is_true (a_value) then
 										an_option.set_debug_option (True)
-									elseif is_false (a_string_value) then
+									elseif is_false (a_value) then
 										an_option.set_debug_option (False)
 									else
 										error_handler.report_boolean_expected_error (an_element, uc_value, a_value, a_position_table.item (an_element))
 									end
 								when debug_tag_code then
-									an_option.set_debug_tag (a_string_value)
+									an_option.set_debug_tag (a_value)
 								when debugger_code then
-									if is_true (a_string_value) then
+									if is_true (a_value) then
 										an_option.set_debugger (True)
-									elseif is_false (a_string_value) then
+									elseif is_false (a_value) then
 										an_option.set_debugger (False)
 									else
 										error_handler.report_boolean_expected_error (an_element, uc_value, a_value, a_position_table.item (an_element))
 									end
 								when document_code then
-									an_option.set_document (a_string_value)
+									an_option.set_document (a_value)
 								when dynamic_runtime_code then
-									if is_true (a_string_value) then
+									if is_true (a_value) then
 										an_option.set_dynamic_runtime (True)
-									elseif is_false (a_string_value) then
+									elseif is_false (a_value) then
 										an_option.set_dynamic_runtime (False)
 									else
 										error_handler.report_boolean_expected_error (an_element, uc_value, a_value, a_position_table.item (an_element))
 									end
 								when exception_trace_code then
-									if is_true (a_string_value) then
+									if is_true (a_value) then
 										an_option.set_exception_trace (True)
-									elseif is_false (a_string_value) then
+									elseif is_false (a_value) then
 										an_option.set_exception_trace (False)
 									else
 										error_handler.report_boolean_expected_error (an_element, uc_value, a_value, a_position_table.item (an_element))
 									end
 								when exclude_code then
-									an_option.set_exclude (a_string_value)
+									an_option.set_exclude (a_value)
 								when export_option_code then
-									an_option.set_export_option (a_string_value)
+									an_option.set_export_option (a_value)
 								when finalize_code then
-									if is_true (a_string_value) then
+									if is_true (a_value) then
 										an_option.set_finalize (True)
-									elseif is_false (a_string_value) then
+									elseif is_false (a_value) then
 										an_option.set_finalize (False)
 									else
 										error_handler.report_boolean_expected_error (an_element, uc_value, a_value, a_position_table.item (an_element))
 									end
 								when flat_fst_optimization_code then
-									if is_true (a_string_value) then
+									if is_true (a_value) then
 										an_option.set_flat_fst_optimization (True)
-									elseif is_false (a_string_value) then
+									elseif is_false (a_value) then
 										an_option.set_flat_fst_optimization (False)
 									else
 										error_handler.report_boolean_expected_error (an_element, uc_value, a_value, a_position_table.item (an_element))
 									end
 								when fst_expansion_factor_code then
-									if STRING_.is_integer (a_string_value) then
-										an_int := a_string_value.to_integer
+									if STRING_.is_integer (a_value) then
+										an_int := a_value.to_integer
 										if an_int >= 0 then
 											an_option.set_fst_expansion_factor (an_int)
 										else
@@ -909,30 +871,30 @@ feature {NONE} -- Element change
 										error_handler.report_positive_integer_expected_error (an_element, uc_value, a_value, a_position_table.item (an_element))
 									end
 								when fst_optimization_code then
-									if is_true (a_string_value) then
+									if is_true (a_value) then
 										an_option.set_fst_optimization (True)
-									elseif is_false (a_string_value) then
+									elseif is_false (a_value) then
 										an_option.set_fst_optimization (False)
 									else
 										error_handler.report_boolean_expected_error (an_element, uc_value, a_value, a_position_table.item (an_element))
 									end
 								when garbage_collector_code then
-									if an_option.valid_garbage_collector.has (a_string_value) then
-										an_option.set_garbage_collector (a_string_value)
+									if an_option.valid_garbage_collector.has (a_value) then
+										an_option.set_garbage_collector (a_value)
 									else
 										error_handler.report_wrong_attribute_value_error (an_element, uc_value, a_value, an_option.valid_garbage_collector, a_position_table.item (an_element))
 									end
 								when gc_info_code then
-									if is_true (a_string_value) then
+									if is_true (a_value) then
 										an_option.set_gc_info (True)
-									elseif is_false (a_string_value) then
+									elseif is_false (a_value) then
 										an_option.set_gc_info (False)
 									else
 										error_handler.report_boolean_expected_error (an_element, uc_value, a_value, a_position_table.item (an_element))
 									end
 								when heap_size_code then
-									if STRING_.is_integer (a_string_value) then
-										an_int := a_string_value.to_integer
+									if STRING_.is_integer (a_value) then
+										an_int := a_value.to_integer
 										if an_int >= 0 then
 											an_option.set_heap_size (an_int)
 										else
@@ -942,26 +904,26 @@ feature {NONE} -- Element change
 										error_handler.report_positive_integer_expected_error (an_element, uc_value, a_value, a_position_table.item (an_element))
 									end
 								when header_code then
-									an_option.set_header (a_string_value)
+									an_option.set_header (a_value)
 								when high_memory_compiler_code then
-									if is_true (a_string_value) then
+									if is_true (a_value) then
 										an_option.set_high_memory_compiler (True)
-									elseif is_false (a_string_value) then
+									elseif is_false (a_value) then
 										an_option.set_high_memory_compiler (False)
 									else
 										error_handler.report_boolean_expected_error (an_element, uc_value, a_value, a_position_table.item (an_element))
 									end
 								when include_code then
-									an_option.set_include (a_string_value)
+									an_option.set_include (a_value)
 								when inlining_code then
-									if an_option.valid_inlining.has (a_string_value) then
-										an_option.set_inlining (a_string_value)
+									if an_option.valid_inlining.has (a_value) then
+										an_option.set_inlining (a_value)
 									else
 										error_handler.report_wrong_attribute_value_error (an_element, uc_value, a_value, an_option.valid_inlining, a_position_table.item (an_element))
 									end
 								when inlining_size_code then
-									if STRING_.is_integer (a_string_value) then
-										an_int := a_string_value.to_integer
+									if STRING_.is_integer (a_value) then
+										an_int := a_value.to_integer
 										if an_int >= 0 then
 											an_option.set_inlining_size (an_int)
 										else
@@ -971,134 +933,134 @@ feature {NONE} -- Element change
 										error_handler.report_positive_integer_expected_error (an_element, uc_value, a_value, a_position_table.item (an_element))
 									end
 								when jumps_optimization_code then
-									if is_true (a_string_value) then
+									if is_true (a_value) then
 										an_option.set_jumps_optimization (True)
-									elseif is_false (a_string_value) then
+									elseif is_false (a_value) then
 										an_option.set_jumps_optimization (False)
 									else
 										error_handler.report_boolean_expected_error (an_element, uc_value, a_value, a_position_table.item (an_element))
 									end
 								when layout_optimization_code then
-									if is_true (a_string_value) then
+									if is_true (a_value) then
 										an_option.set_layout_optimization (True)
-									elseif is_false (a_string_value) then
+									elseif is_false (a_value) then
 										an_option.set_layout_optimization (False)
 									else
 										error_handler.report_boolean_expected_error (an_element, uc_value, a_value, a_position_table.item (an_element))
 									end
 								when leaves_optimization_code then
-									if is_true (a_string_value) then
+									if is_true (a_value) then
 										an_option.set_leaves_optimization (True)
-									elseif is_false (a_string_value) then
+									elseif is_false (a_value) then
 										an_option.set_leaves_optimization (False)
 									else
 										error_handler.report_boolean_expected_error (an_element, uc_value, a_value, a_position_table.item (an_element))
 									end
 								when line_generation_code then
-									if is_true (a_string_value) then
+									if is_true (a_value) then
 										an_option.set_line_generation (True)
-									elseif is_false (a_string_value) then
+									elseif is_false (a_value) then
 										an_option.set_line_generation (False)
 									else
 										error_handler.report_boolean_expected_error (an_element, uc_value, a_value, a_position_table.item (an_element))
 									end
 								when link_code then
-									an_option.set_link (a_string_value)
+									an_option.set_link (a_value)
 								when linker_code then
-									if an_option.valid_linker.has (a_string_value) then
-										an_option.set_linker (a_string_value)
+									if an_option.valid_linker.has (a_value) then
+										an_option.set_linker (a_value)
 									else
 										error_handler.report_wrong_attribute_value_error (an_element, uc_value, a_value, an_option.valid_linker, a_position_table.item (an_element))
 									end
 								when linux_fpu_double_precision_code then
-									if is_true (a_string_value) then
+									if is_true (a_value) then
 										an_option.set_linux_fpu_double_precision (True)
-									elseif is_false (a_string_value) then
+									elseif is_false (a_value) then
 										an_option.set_linux_fpu_double_precision (False)
 									else
 										error_handler.report_boolean_expected_error (an_element, uc_value, a_value, a_position_table.item (an_element))
 									end
 								when manifest_string_trace_code then
-									if is_true (a_string_value) then
+									if is_true (a_value) then
 										an_option.set_manifest_string_trace (True)
-									elseif is_false (a_string_value) then
+									elseif is_false (a_value) then
 										an_option.set_manifest_string_trace (False)
 									else
 										error_handler.report_boolean_expected_error (an_element, uc_value, a_value, a_position_table.item (an_element))
 									end
 								when map_code then
-									if is_true (a_string_value) then
+									if is_true (a_value) then
 										an_option.set_map (True)
-									elseif is_false (a_string_value) then
+									elseif is_false (a_value) then
 										an_option.set_map (False)
 									else
 										error_handler.report_boolean_expected_error (an_element, uc_value, a_value, a_position_table.item (an_element))
 									end
 								when multithreaded_code then
-									if is_true (a_string_value) then
+									if is_true (a_value) then
 										an_option.set_multithreaded (True)
-									elseif is_false (a_string_value) then
+									elseif is_false (a_value) then
 										an_option.set_multithreaded (False)
 									else
 										error_handler.report_boolean_expected_error (an_element, uc_value, a_value, a_position_table.item (an_element))
 									end
 								when no_default_lib_code then
-									if is_true (a_string_value) then
+									if is_true (a_value) then
 										an_option.set_no_default_lib (True)
-									elseif is_false (a_string_value) then
+									elseif is_false (a_value) then
 										an_option.set_no_default_lib (False)
 									else
 										error_handler.report_boolean_expected_error (an_element, uc_value, a_value, a_position_table.item (an_element))
 									end
 								when override_cluster_code then
-									an_option.set_override_cluster (a_string_value)
+									an_option.set_override_cluster (a_value)
 								when portable_code_generation_code then
-									if is_true (a_string_value) then
+									if is_true (a_value) then
 										an_option.set_portable_code_generation (True)
-									elseif is_false (a_string_value) then
+									elseif is_false (a_value) then
 										an_option.set_portable_code_generation (False)
 									else
 										error_handler.report_boolean_expected_error (an_element, uc_value, a_value, a_position_table.item (an_element))
 									end
 								when precompiled_code then
-									an_option.set_precompiled (a_string_value)
+									an_option.set_precompiled (a_value)
 								when profile_code then
-									if is_true (a_string_value) then
+									if is_true (a_value) then
 										an_option.set_profile (True)
-									elseif is_false (a_string_value) then
+									elseif is_false (a_value) then
 										an_option.set_profile (False)
 									else
 										error_handler.report_boolean_expected_error (an_element, uc_value, a_value, a_position_table.item (an_element))
 									end
 								when recursive_code then
-									if is_true (a_string_value) then
+									if is_true (a_value) then
 										an_option.set_recursive (True)
-									elseif is_false (a_string_value) then
+									elseif is_false (a_value) then
 										an_option.set_recursive (False)
 									else
 										error_handler.report_boolean_expected_error (an_element, uc_value, a_value, a_position_table.item (an_element))
 									end
 								when reloads_optimization_code then
-									if is_true (a_string_value) then
+									if is_true (a_value) then
 										an_option.set_reloads_optimization (True)
-									elseif is_false (a_string_value) then
+									elseif is_false (a_value) then
 										an_option.set_reloads_optimization (False)
 									else
 										error_handler.report_boolean_expected_error (an_element, uc_value, a_value, a_position_table.item (an_element))
 									end
 								when shared_library_definition_code then
-									an_option.set_shared_library_definition (a_string_value)
+									an_option.set_shared_library_definition (a_value)
 								when split_code then
-									if is_true (a_string_value) then
+									if is_true (a_value) then
 										an_option.set_split (True)
-									elseif is_false (a_string_value) then
+									elseif is_false (a_value) then
 										an_option.set_split (False)
 									else
 										error_handler.report_boolean_expected_error (an_element, uc_value, a_value, a_position_table.item (an_element))
 									end
 								when stack_size_code then
-									if STRING_.is_integer (a_string_value) then
-										an_int := a_string_value.to_integer
+									if STRING_.is_integer (a_value) then
+										an_int := a_value.to_integer
 										if an_int >= 0 then
 											an_option.set_stack_size (an_int)
 										else
@@ -1108,49 +1070,49 @@ feature {NONE} -- Element change
 										error_handler.report_positive_integer_expected_error (an_element, uc_value, a_value, a_position_table.item (an_element))
 									end
 								when storable_filename_code then
-									an_option.set_storable_filename (a_string_value)
+									an_option.set_storable_filename (a_value)
 								when strip_option_code then
-									if is_true (a_string_value) then
+									if is_true (a_value) then
 										an_option.set_strip_option (True)
-									elseif is_false (a_string_value) then
+									elseif is_false (a_value) then
 										an_option.set_strip_option (False)
 									else
 										error_handler.report_boolean_expected_error (an_element, uc_value, a_value, a_position_table.item (an_element))
 									end
 								when target_code then
-									if an_option.valid_target.has (a_string_value) then
-										an_option.set_target (a_string_value)
+									if an_option.valid_target.has (a_value) then
+										an_option.set_target (a_value)
 									else
 										error_handler.report_wrong_attribute_value_error (an_element, uc_value, a_value, an_option.valid_target, a_position_table.item (an_element))
 									end
 								when trace_code then
-									if is_true (a_string_value) then
+									if is_true (a_value) then
 										an_option.set_trace (True)
-									elseif is_false (a_string_value) then
+									elseif is_false (a_value) then
 										an_option.set_trace (False)
 									else
 										error_handler.report_boolean_expected_error (an_element, uc_value, a_value, a_position_table.item (an_element))
 									end
 								when verbose_code then
-									if is_true (a_string_value) then
+									if is_true (a_value) then
 										an_option.set_verbose (True)
-									elseif is_false (a_string_value) then
+									elseif is_false (a_value) then
 										an_option.set_verbose (False)
 									else
 										error_handler.report_boolean_expected_error (an_element, uc_value, a_value, a_position_table.item (an_element))
 									end
 								when visible_filename_code then
-									an_option.set_visible_filename (a_string_value)
+									an_option.set_visible_filename (a_value)
 								when warning_code then
-									if an_option.valid_warning.has (a_string_value) then
-										an_option.set_warning (a_string_value)
+									if an_option.valid_warning.has (a_value) then
+										an_option.set_warning (a_value)
 									else
 										error_handler.report_wrong_attribute_value_error (an_element, uc_value, a_value, an_option.valid_warning, a_position_table.item (an_element))
 									end
 								when wedit_code then
-									if is_true (a_string_value) then
+									if is_true (a_value) then
 										an_option.set_wedit (True)
-									elseif is_false (a_string_value) then
+									elseif is_false (a_value) then
 										an_option.set_wedit (False)
 									else
 										error_handler.report_boolean_expected_error (an_element, uc_value, a_value, a_position_table.item (an_element))
@@ -1177,9 +1139,8 @@ feature {NONE} -- Element change
 						!! a_warning.make ("Warning: <require> is obsolete, use <option name=%"assertion%" value=%"require%"/> instead%N" + a_position_table.item (a_child).out)
 						error_handler.report_warning (a_warning)
 						if a_child.has_attribute_by_name (uc_enable) then
-							a_value := a_child.attribute_by_name (uc_enable).value
-							if a_value /= Void then
-								a_bool := a_value.to_utf8
+							a_bool := a_child.attribute_by_name (uc_enable).value
+							if a_bool /= Void then
 								if is_true (a_bool) then
 									an_option.set_assertion (require_value)
 								end
@@ -1191,9 +1152,8 @@ feature {NONE} -- Element change
 						!! a_warning.make ("Warning: <ensure> is obsolete, use <option name=%"assertion%" value=%"ensure%"/> instead%N" + a_position_table.item (a_child).out)
 						error_handler.report_warning (a_warning)
 						if a_child.has_attribute_by_name (uc_enable) then
-							a_value := a_child.attribute_by_name (uc_enable).value
-							if a_value /= Void then
-								a_bool := a_value.to_utf8
+							a_bool := a_child.attribute_by_name (uc_enable).value
+							if a_bool /= Void then
 								if is_true (a_bool) then
 									an_option.set_assertion (ensure_value)
 								end
@@ -1205,9 +1165,8 @@ feature {NONE} -- Element change
 						!! a_warning.make ("Warning: <invariant> is obsolete, use <option name=%"assertion%" value=%"invariant%"/> instead%N" + a_position_table.item (a_child).out)
 						error_handler.report_warning (a_warning)
 						if a_child.has_attribute_by_name (uc_enable) then
-							a_value := a_child.attribute_by_name (uc_enable).value
-							if a_value /= Void then
-								a_bool := a_value.to_utf8
+							a_bool := a_child.attribute_by_name (uc_enable).value
+							if a_bool /= Void then
 								if is_true (a_bool) then
 									an_option.set_assertion (invariant_value)
 								end
@@ -1219,9 +1178,8 @@ feature {NONE} -- Element change
 						!! a_warning.make ("Warning: <loop> is obsolete, use <option name=%"assertion%" value=%"loop_[in]variant%"/> instead%N" + a_position_table.item (a_child).out)
 						error_handler.report_warning (a_warning)
 						if a_child.has_attribute_by_name (uc_enable) then
-							a_value := a_child.attribute_by_name (uc_enable).value
-							if a_value /= Void then
-								a_bool := a_value.to_utf8
+							a_bool := a_child.attribute_by_name (uc_enable).value
+							if a_bool /= Void then
 								if is_true (a_bool) then
 									an_option.set_assertion (loop_invariant_value)
 									an_option.set_assertion (loop_variant_value)
@@ -1235,9 +1193,8 @@ feature {NONE} -- Element change
 						!! a_warning.make ("Warning: <check> is obsolete, use <option name=%"assertion%" value=%"check%"/> instead%N" + a_position_table.item (a_child).out)
 						error_handler.report_warning (a_warning)
 						if a_child.has_attribute_by_name (uc_enable) then
-							a_value := a_child.attribute_by_name (uc_enable).value
-							if a_value /= Void then
-								a_bool := a_value.to_utf8
+							a_bool := a_child.attribute_by_name (uc_enable).value
+							if a_bool /= Void then
 								if is_true (a_bool) then
 									an_option.set_assertion (check_value)
 								end
@@ -1249,9 +1206,8 @@ feature {NONE} -- Element change
 						!! a_warning.make ("Warning: <optimize> is obsolete, use <option name=%"finalize%" value=%"true%"/> instead%N" + a_position_table.item (a_child).out)
 						error_handler.report_warning (a_warning)
 						if a_child.has_attribute_by_name (uc_enable) then
-							a_value := a_child.attribute_by_name (uc_enable).value
-							if a_value /= Void then
-								a_bool := a_value.to_utf8
+							a_bool := a_child.attribute_by_name (uc_enable).value
+							if a_bool /= Void then
 								if is_true (a_bool) then
 									an_option.set_finalize (True)
 								end
@@ -1261,15 +1217,13 @@ feature {NONE} -- Element change
 						end
 					elseif a_child.name.is_equal (uc_debug) then
 						if a_child.has_attribute_by_name (uc_name) then
-							a_value := a_child.attribute_by_name (uc_name).value
-							if a_value /= Void then
-								a_key := a_value.to_utf8
+							a_key := a_child.attribute_by_name (uc_name).value
+							if a_key /= Void then
 								!! a_warning.make ("Warning: <debug> is obsolete, use <option name=%"debug_tag%" value=%"" + a_key + "%"/> instead%N" + a_position_table.item (a_child).out)
 								error_handler.report_warning (a_warning)
 								if a_child.has_attribute_by_name (uc_enable) then
-									a_value := a_child.attribute_by_name (uc_enable).value
-									if a_value /= Void then
-										a_bool := a_value.to_utf8
+									a_bool := a_child.attribute_by_name (uc_enable).value
+									if a_bool /= Void then
 										if is_true (a_bool) then
 											an_option.set_debug_tag (a_key)
 										end
@@ -1280,9 +1234,8 @@ feature {NONE} -- Element change
 							end
 						else
 							if a_child.has_attribute_by_name (uc_enable) then
-								a_value := a_child.attribute_by_name (uc_enable).value
-								if a_value /= Void then
-									a_bool := a_value.to_utf8
+								a_bool := a_child.attribute_by_name (uc_enable).value
+								if a_bool /= Void then
 									if is_true (a_bool) then
 										!! a_warning.make ("Warning: <debug> is obsolete, use <option name=%"debug%" value=%"true%"/> instead%N" + a_position_table.item (a_child).out)
 										error_handler.report_warning (a_warning)
@@ -1319,7 +1272,7 @@ feature {NONE} -- Element change
 			a_cursor: DS_BILINEAR_CURSOR [XM_NODE]
 			a_child: XM_ELEMENT
 			an_export: ET_XACE_CLASS_OPTIONS
-			a_value: UC_STRING
+			a_value: STRING
 		do
 			a_cursor := an_element.new_cursor
 			from a_cursor.start until a_cursor.after loop
@@ -1329,14 +1282,14 @@ feature {NONE} -- Element change
 						if a_child.has_attribute_by_name (uc_location) then
 							a_value := a_child.attribute_by_name (uc_location).value
 							if a_value /= Void then
-								an_option.set_link (a_value.to_utf8)
+								an_option.set_link (a_value)
 							end
 						end
 					elseif a_child.name.is_equal (uc_include_dir) then
 						if a_child.has_attribute_by_name (uc_location) then
 							a_value := a_child.attribute_by_name (uc_location).value
 							if a_value /= Void then
-								an_option.set_header (a_value.to_utf8)
+								an_option.set_header (a_value)
 							end
 						end
 					elseif a_child.name.is_equal (uc_export) then
