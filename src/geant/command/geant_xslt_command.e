@@ -328,7 +328,7 @@ feature -- Execution
 				-- Add parameters:
 			nb := parameters.count
 			from i := 1 until i > nb loop
-				cmd.append_string (" -stringparam ")
+				cmd.append_string (" -param ")
 				cmd := STRING_.appended_string (cmd, parameters.item (i).first)
 				cmd.append_string (" ")
 				cmd := STRING_.appended_string (cmd, parameters.item (i).second)
