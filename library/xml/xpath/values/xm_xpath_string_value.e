@@ -139,7 +139,9 @@ feature -- Status report
 				end
 			elseif a_required_type = type_factory.double_type or else a_required_type = type_factory.numeric_type then
 				a_string := trimmed_white_space (value)
-				Result := a_string.is_double
+				Result := a_string.is_double or else STRING_.same_string (a_string, "INF")
+					or else STRING_.same_string (a_string, "-INF")
+					or else STRING_.same_string (a_string, "NaN")
 			elseif a_required_type = type_factory.integer_type then
 				a_string := trimmed_white_space (value)
 				Result := a_string.is_integer

@@ -40,6 +40,7 @@ feature {NONE} -- Initialization
 			make_dynamic_context (a_context_item)
 			available_documents := a_document_pool
 			available_functions := a_function_library
+			create {XM_XPATH_DEFAULT_SECURITY_MANAGER} security_manager
 			create uri_resolver.make
 			create a_file_resolver.make
 			uri_resolver.register_scheme (a_file_resolver)
@@ -63,6 +64,9 @@ feature -- Access
 
 	last_parsed_document: XM_XPATH_DOCUMENT
 		-- Result from last call to `build_document'
+
+	security_manager: XM_XPATH_SECURITY_MANAGER
+			-- Security manager
 
 feature -- Status report
 
