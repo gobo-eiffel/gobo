@@ -70,6 +70,8 @@ inherit
 #endif
 #ifdef ISE
 			clear_all as old_clear_all,
+			left_adjust as old_left_adjust,
+			right_adjust as old_right_adjust,
 #endif
 #ifdef ISE || HACT
 #ifdef (ISE && ISE_5_1) || HACT
@@ -156,6 +158,8 @@ inherit
 #ifdef ISE
 			count,
 			old_clear_all,
+			old_left_adjust,
+			old_right_adjust,
 #endif
 #ifdef HACT
 			old_infix_plus,
@@ -182,6 +186,8 @@ inherit
 #endif
 			is_empty as old_is_empty,
 			clear_all as old_clear_all,
+			left_adjust as old_left_adjust,
+			right_adjust as old_right_adjust,
 #ifdef (ISE && ISE_5_1)
 				-- Note: The signature of STRING.out in ISE 5.1 and HACT 4.0.1
 				-- is not compliant with ELKS 2001 STRING and does not allow
@@ -233,6 +239,8 @@ inherit
 			old_wipe_out,
 			old_substring_index,
 			old_clear_all,
+			old_left_adjust,
+			old_right_adjust,
 			infix "+",
 			copy, infix "@"
 		end
@@ -3210,6 +3218,42 @@ feature {NONE} -- Inapplicable
 			-- Remove all characters.
 		do
 			wipe_out
+		end
+
+	old_left_adjust is
+			-- Remove leading whitespace.
+		local
+			i, nb: INTEGER
+		do
+			nb := count
+			from i := 1 until i > nb loop
+				inspect item (i)
+				when ' ', '%T', '%R', '%N' then
+					i := i + 1
+				else
+						-- Jump out of the loop.
+					nb := 0
+				end
+			end
+			remove_head (i - 1)
+		end
+
+	old_right_adjust is
+			-- Remove trailing whitespace.
+		local
+			i, nb: INTEGER
+		do
+			nb := count
+			from i := 1 until i > nb loop
+				inspect item (nb)
+				when ' ', '%T', '%R', '%N' then
+					nb := nb - 1
+				else
+						-- Jump out of the loop.
+					i := nb + 1
+				end
+			end
+			keep_head (nb)
 		end
 
 #endif
