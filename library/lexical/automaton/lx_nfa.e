@@ -60,25 +60,21 @@ feature {NONE} -- Initialization
 			count := states.count
 			start_state := start
 			final_state := final
-			rule := final.rule
 			in_trail_context := final.in_trail_context
 		ensure
 			start_state_set: start_state = start
 			final_state_set: final_state = final
 		end
 
-	make_symbol (symbol: INTEGER; a_rule: like rule; in_context: BOOLEAN) is
+	make_symbol (symbol: INTEGER; in_context: BOOLEAN) is
 			-- Create a new NFA made of two states and
 			-- a symbol transition labeled `symbol'.
-		require
-			a_rule_not_void: a_rule /= Void
 		local
 			transition: LX_SYMBOL_TRANSITION [LX_NFA_STATE]
 		do
-			rule := a_rule
 			in_trail_context := in_context
-			!! start_state.make (a_rule, in_context)
-			!! final_state.make (a_rule, in_context)
+			!! start_state.make (in_context)
+			!! final_state.make (in_context)
 			!! transition.make (symbol, final_state)
 			start_state.set_transition (transition)
 			count := 2
@@ -86,21 +82,17 @@ feature {NONE} -- Initialization
 			start_state: not start_state.connected (start_state)
 			final_state: not final_state.has_transition
 			trail: in_trail_context = in_context
-			rule_set: rule = a_rule
 		end
 
-	make_epsilon (a_rule: like rule; in_context: BOOLEAN) is
+	make_epsilon (in_context: BOOLEAN) is
 			-- Create a new NFA made of two states and
 			-- an epsilon transition.
-		require
-			a_rule_not_void: a_rule /= Void
 		local
 			transition: LX_EPSILON_TRANSITION [LX_NFA_STATE]
 		do
-			rule := a_rule
 			in_trail_context := in_context
-			!! start_state.make (a_rule, in_context)
-			!! final_state.make (a_rule, in_context)
+			!! start_state.make (in_context)
+			!! final_state.make (in_context)
 			!! transition.make (final_state)
 			start_state.set_transition (transition)
 			count := 2
@@ -108,23 +100,19 @@ feature {NONE} -- Initialization
 			start_state: not start_state.connected (start_state)
 			final_state: not final_state.has_transition
 			trail: in_trail_context = in_context
-			rule_set: rule = a_rule
 		end
 
-	make_symbol_class (symbols: LX_SYMBOL_CLASS; a_rule: like rule;
-		in_context: BOOLEAN) is
+	make_symbol_class (symbols: LX_SYMBOL_CLASS; in_context: BOOLEAN) is
 			-- Create a new NFA made of two states and
 			-- a symbol class transition labeled `symbols'.
 		require
 			symbols_not_void: symbols /= Void
-			a_rule_not_void: a_rule /= Void
 		local
 			transition: LX_SYMBOL_CLASS_TRANSITION [LX_NFA_STATE]
 		do
-			rule := a_rule
 			in_trail_context := in_context
-			!! start_state.make (a_rule, in_context)
-			!! final_state.make (a_rule, in_context)
+			!! start_state.make (in_context)
+			!! final_state.make (in_context)
 			!! transition.make (symbols, final_state)
 			start_state.set_transition (transition)
 			count := 2
@@ -132,7 +120,6 @@ feature {NONE} -- Initialization
 			start_state: not start_state.connected (start_state)
 			final_state: not final_state.has_transition
 			trail: in_trail_context = in_context
-			rule_set: rule = a_rule
 		end
 
 feature -- Access
@@ -140,15 +127,60 @@ feature -- Access
 	start_state, final_state: LX_NFA_STATE
 			-- Automaton's start and final states
 
-	rule: LX_RULE
-			-- Rule associated with NFA
-
 feature -- Measurement
 
 	count: INTEGER
 			-- Number of states in automaton
 
 feature -- Status report
+
+	has (a_state: like start_state): BOOLEAN is
+			-- Is `a_state' part of current automaton?
+		require
+			a_state_not_void: a_state /= Void
+		local
+			visited_states: DS_HASH_TABLE [LX_NFA_STATE, INTEGER]
+			old_states: DS_ARRAYED_LIST [LX_NFA_STATE]
+			a_target, old_state: LX_NFA_STATE
+			i, nb: INTEGER
+		do
+			if a_state = start_state or a_state = final_state then
+				Result := True
+			else
+				from
+					!! visited_states.make (count * 3 // 2)
+					!! old_states.make (count)
+					old_state := start_state
+					old_states.put_first (old_state)
+					visited_states.put (old_state, old_state.id)
+					i := 1
+					nb := count
+				until
+					Result or i > nb
+				loop
+					old_state := old_states.item (i)
+					if old_state.transition /= Void then
+						a_target := old_state.transition.target
+						if a_target = a_state then
+							Result := True
+						elseif not visited_states.has (a_target.id) then
+							old_states.put_last (a_target)
+							visited_states.put (a_target, a_target.id)
+						end
+					end
+					if not Result and old_state.epsilon_transition /= Void then
+						a_target := old_state.epsilon_transition.target
+						if a_target = a_state then
+							Result := True
+						elseif not visited_states.has (a_target.id) then
+							old_states.put_last (a_target)
+							visited_states.put (a_target, a_target.id)
+						end
+					end
+					i := i + 1
+				end
+			end
+		end
 
 	in_trail_context: BOOLEAN
 			-- Is automaton part of a trailing context rule?
@@ -173,7 +205,7 @@ feature -- Duplication
 			old_states.put_first (state)
 			new_state := clone (state)
 			new_state.reset_id
-			new_states.force (new_state, state.id)
+			new_states.put (new_state, state.id)
 			nb := count
 			from i := 1 until i > nb loop
 				old_state := old_states.item (i)
@@ -293,7 +325,7 @@ feature -- Operation
 				start_state := other.start_state
 				start_state.set_epsilon_transition (transition)
 			else
-				!! state.make (rule, in_trail_context)
+				!! state.make (in_trail_context)
 				!! transition.make (start_state)
 				state.set_transition (transition)
 				!! transition.make (other.start_state)
@@ -309,7 +341,7 @@ feature -- Operation
 				final_state.set_transition (transition)
 				final_state := other.final_state
 			else
-				!! state.make (rule, in_trail_context)
+				!! state.make (in_trail_context)
 				!! transition.make (state)
 				final_state.set_transition (transition)
 				!! transition.make (state)
@@ -339,7 +371,7 @@ feature -- Operation
 				!! transition.make (final_state)
 				start_state.set_epsilon_transition (transition)
 			else
-				!! state.make (rule, in_trail_context)
+				!! state.make (in_trail_context)
 				!! transition.make (start_state)
 				state.set_transition (transition)
 				!! transition.make (final_state)
@@ -378,11 +410,11 @@ feature -- Operation
 		do
 			!! transition.make (start_state)
 			final_state.set_transition (transition)
-			!! state.make (rule, in_trail_context)
+			!! state.make (in_trail_context)
 			!! transition.make (start_state)
 			state.set_transition (transition)
 			start_state := state
-			!! state.make (rule, in_trail_context)
+			!! state.make (in_trail_context)
 			!! transition.make (state)
 			final_state.set_epsilon_transition (transition)
 			final_state := state
@@ -468,6 +500,5 @@ invariant
 	final_state_not_void: final_state /= Void
 	connected: start_state.connected (final_state)
 	valid_automaton: start_state /= final_state
-	rule_not_void: rule /= Void
 
 end -- class LX_NFA
