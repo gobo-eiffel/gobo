@@ -28,6 +28,20 @@ feature -- Processing
 		deferred
 		end
 
+	process_agent_actual_argument_comma (an_argument: ET_AGENT_ACTUAL_ARGUMENT_COMMA) is
+			-- Process `an_argument'.
+		require
+			an_argument_not_void: an_argument /= Void
+		deferred
+		end
+
+	process_agent_actual_argument_list (a_list: ET_AGENT_ACTUAL_ARGUMENT_LIST) is
+			-- Process `a_list'.
+		require
+			a_list_not_void: a_list /= Void
+		deferred
+		end
+
 	process_all_export (an_export: ET_ALL_EXPORT) is
 			-- Process `an_export'.
 		require
@@ -872,6 +886,13 @@ feature -- Processing
 			-- Process `a_call'.
 		require
 			a_call_not_void: a_call /= Void
+		deferred
+		end
+
+	process_question_mark_symbol (a_symbol: ET_QUESTION_MARK_SYMBOL) is
+			-- Process `a_symbol'.
+		require
+			a_symbol_not_void: a_symbol /= Void
 		deferred
 		end
 

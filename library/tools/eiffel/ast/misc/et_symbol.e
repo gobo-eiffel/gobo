@@ -40,7 +40,6 @@ creation
 	make_left_bracket,
 	make_left_parenthesis,
 	make_not_equal,
-	make_question_mark,
 	make_right_array,
 	make_right_brace,
 	make_right_bracket,

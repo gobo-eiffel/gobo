@@ -25,6 +25,8 @@ inherit
 
 	ET_STATIC_TYPE
 
+	ET_AGENT_TYPE
+
 	KL_IMPORTED_STRING_ROUTINES
 
 feature -- Access

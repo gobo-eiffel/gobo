@@ -18,6 +18,8 @@ inherit
 
 	ET_STATIC_TYPE
 
+	ET_AGENT_TYPE
+
 creation
 
 	make

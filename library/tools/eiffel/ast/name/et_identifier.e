@@ -34,6 +34,11 @@ inherit
 			is_equal
 		end
 
+	ET_AGENT_TARGET
+		undefine
+			is_equal
+		end
+
 	ET_TAG
 		undefine
 			is_equal

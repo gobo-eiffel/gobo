@@ -856,12 +856,12 @@ feature -- Eiffel symbols
 			Result.set_position (a_scanner.line, a_scanner.column)
 		end
 
-	new_question_mark_symbol (a_scanner: ET_EIFFEL_SCANNER_SKELETON): ET_SYMBOL is
+	new_question_mark_symbol (a_scanner: ET_EIFFEL_SCANNER_SKELETON): ET_QUESTION_MARK_SYMBOL is
 			-- New '?' symbol
 		require
 			a_scanner_not_void: a_scanner /= Void
 		do
-			!! Result.make_question_mark
+			!! Result.make
 			Result.set_position (a_scanner.line, a_scanner.column)
 		end
 
@@ -1113,6 +1113,28 @@ feature -- AST nodes
 			end
 		end
 
+	new_agent_actual_argument_comma (an_argument: ET_AGENT_ACTUAL_ARGUMENT; a_comma: ET_SYMBOL): ET_AGENT_ACTUAL_ARGUMENT_ITEM is
+			-- New agent_actual_argument-comma
+		do
+			Result := an_argument
+		end
+
+	new_agent_actual_arguments (a_left, a_right: ET_SYMBOL; nb: INTEGER): ET_AGENT_ACTUAL_ARGUMENT_LIST is
+			-- New agent actual argument list with given capacity
+		require
+			nb_positive: nb >= 0
+		do
+			if nb > 0 then
+				!! Result.make_with_capacity (nb)
+			end
+		end
+
+	new_agent_type (l: ET_SYMBOL; a_type: ET_TYPE; r: ET_SYMBOL): ET_AGENT_TYPE is
+			-- New type descriptor in agent surrounded by braces
+		do
+			Result := a_type
+		end
+
 	new_all_export (a_clients: ET_CLIENTS; an_all: ET_KEYWORD): ET_ALL_EXPORT is
 			-- New 'all' export clause
 		do
@@ -1204,6 +1226,18 @@ feature -- AST nodes
 				!! Result.make (an_int)
 				if a_bit /= Void and then not a_bit.position.is_null then
 					Result.set_bit_keyword (a_bit)
+				end
+			end
+		end
+
+	new_call_agent (an_agent: ET_AST_LEAF; a_target: ET_AGENT_TARGET; a_name: ET_QUALIFIED_FEATURE_NAME;
+		args: ET_AGENT_ACTUAL_ARGUMENT_LIST): ET_CALL_AGENT is
+			-- New call agent
+		do
+			if a_name /= Void then
+				!! Result.make (a_target, a_name, args)
+				if an_agent /= Void then
+					Result.set_agent_keyword (an_agent)
 				end
 			end
 		end
@@ -2602,16 +2636,6 @@ feature -- AST nodes
 		end
 
 feature -- AST factory
-
-	new_call_agent (an_agent: ET_KEYWORD): ET_CALL_AGENT is
-			-- New call agent
-		require
-			an_agent_not_void: an_agent /= Void
-		do
-			!! Result.make (an_agent)
-		ensure
-			call_agent_not_void: Result /= Void
-		end
 
 	new_class (a_name: ET_CLASS_NAME; an_id: INTEGER;
 		a_universe: ET_UNIVERSE): ET_CLASS is

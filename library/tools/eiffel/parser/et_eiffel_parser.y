@@ -69,12 +69,13 @@ creation
 
 %token <ET_KEYWORD> E_OLD
 %token <ET_SYMBOL> '{' '}'
-%token <ET_SYMBOL> '(' ')' ':' ',' '[' ']' '$' '.' '!' '?'
+%token <ET_SYMBOL> '(' ')' ':' ',' '[' ']' '$' '.' '!' '~'
 %token <ET_SYMBOL_OPERATOR> '-'
 %token <ET_SYMBOL_OPERATOR> '+'
 %token <ET_SYMBOL> '='
 %token <ET_SYMBOL> E_NE
 %token <ET_SEMICOLON_SYMBOL> ';'
+%token <ET_QUESTION_MARK_SYMBOL> '?'
 
 %left E_IMPLIES
 %left E_OR E_XOR
@@ -89,6 +90,11 @@ creation
 %type <ET_ACTUAL_ARGUMENT_LIST> Actuals_opt Actuals_expression_list
 %type <ET_ACTUAL_PARAMETER_LIST> Actual_parameters_opt Type_list Actual_parameters
 %type <ET_ACTUAL_PARAMETER_LIST> Constraint_actual_parameters_opt Constraint_type_list
+%type <ET_AGENT_ACTUAL_ARGUMENT> Agent_actual
+%type <ET_AGENT_ACTUAL_ARGUMENT_ITEM> Agent_actual_comma
+%type <ET_AGENT_ACTUAL_ARGUMENT_LIST> Agent_actuals_opt Agent_actual_list
+%type <ET_AGENT_TARGET> Agent_target
+%type <ET_AST_LEAF> Agent_keyword
 %type <ET_BOOLEAN_CONSTANT> Boolean_constant
 %type <ET_BREAK> Break_opt
 %type <ET_CALL_AGENT> Call_agent
@@ -171,7 +177,7 @@ creation
 %type <ET_WHEN_PART_LIST> When_list When_list_opt
 %type <ET_WRITABLE> Writable
 
-%expect 44
+%expect 38
 %start Class_declarations
 
 %%
@@ -2592,98 +2598,120 @@ Manifest_constant: Boolean_constant
 		{ $$ := $1 }
 	;
 
---NOTDONE---------------------------------------------------------------------------
+------------------------------------------------------------------------------------
 
-Call_agent: E_AGENT Feature_name Agent_actuals_opt
-		{ $$ := new_call_agent ($1) }
-	| E_AGENT Identifier '.' Feature_name Agent_actuals_opt
-		{ $$ := new_call_agent ($1) }
-	| E_AGENT Parenthesized_expression '.' Feature_name Agent_actuals_opt
-		{ $$ := new_call_agent ($1) }
-	| E_AGENT '{' Type '}' '.' Feature_name Agent_actuals_opt
-		{ $$ := new_call_agent ($1) }
-	| '~' Feature_name Agent_actuals_opt
-		{ $$ := new_call_agent (tokens.agent_keyword) }
-	| '~' Identifier '.' Feature_name Agent_actuals_opt
-		{ $$ := new_call_agent (tokens.agent_keyword) }
-	| '~' Parenthesized_expression '.' Feature_name Agent_actuals_opt
-		{ $$ := new_call_agent (tokens.agent_keyword) }
-	| '~' '{' Type '}' '.' Feature_name Agent_actuals_opt
-		{ $$ := new_call_agent (tokens.agent_keyword) }
+Call_agent: Agent_keyword Feature_name Agent_actuals_opt
+		{ $$ := ast_factory.new_call_agent ($1, Void, $2, $3) }
+	| Agent_keyword Agent_target '.' Feature_name Agent_actuals_opt
+		{ $$ := ast_factory.new_call_agent ($1, $2, ast_factory.new_dot_feature_name ($3, $4), $5) }
+	;
+
+Agent_keyword: E_AGENT
+		{ $$ := $1 }
+	| '~'
+		{ $$ := $1 }
+	;
+
+Agent_target: Identifier
+		{ $$ := $1 }
+	| E_RESULT
+		{ $$ := $1 }
+	| E_CURRENT
+		{ $$ := $1 }
+	| '{' Type '}'
+		{ $$ := ast_factory.new_agent_type ($1, $2, $3) }
 	;
 
 Agent_actuals_opt: -- Empty
 		-- { $$ := Void }
 	| '(' ')'
-		-- { $$ := new_actual_arguments ($1, $2) }
+		{ $$ := ast_factory.new_agent_actual_arguments ($1, $2, 0) }
 	| '('
-		-- { add_counter }
-	  Agent_actual_list ')'
-		-- {
-			-- $$ := $3
-			-- $$.set_left_symbol ($1)
-			-- $$.set_right_symbol ($4)
-			-- remove_counter
-		-- }
+		{
+			add_symbol ($1)
+			add_counter
+		}
+	  Agent_actual_list
+		{
+			$$ := $3
+			remove_symbol
+			remove_counter
+		}
 	;
 
-Agent_actual_list: Agent_actual
-		--{
-			--$$ := new_actual_arguments_with_capacity (counter_value + 1)
-			--$$.put_first ($1)
-		--}
-	| Agent_actual ','
+Agent_actual_list: Agent_actual ')'
+		{
+			if $1 /= Void then
+				$$ := ast_factory.new_agent_actual_arguments (last_symbol, $2, counter_value + 1)
+				if $$ /= Void then
+					$$.put_first ($1)
+				end
+			else
+				$$ := ast_factory.new_agent_actual_arguments (last_symbol, $2, counter_value)
+			end
+		}
+	| Agent_actual_comma ')'
 		-- TODO: syntax error.
-		--{
-			--$$ := new_actual_arguments_with_capacity (counter_value + 1)
-			--$$.put_first (ast_factory.new_expression_comma ($1, $2))
-		--}
-	| Agent_actual ',' 
-		--{ increment_counter }
-	  Agent_actual_list
-		--{
-			--$$ := $4
-			--$$.put_first (ast_factory.new_expression_comma ($1, $2))
-		--}
+		{
+			$$ := ast_factory.new_agent_actual_arguments (last_symbol, $2, counter_value)
+			if $$ /= Void and $1 /= Void then
+				$$.put_first ($1)
+			end
+		}
+	| Agent_actual_comma Agent_actual_list
+		{
+			$$ := $2
+			if $$ /= Void and $1 /= Void then
+				$$.put_first ($1)
+			end
+		}
 	| Agent_actual
-		--{ increment_counter }
+		{
+			if $1 /= Void then
+				increment_counter
+			end
+		}
 	  Agent_actual_list
 		-- TODO: syntax error.
-		--{
-			--$$ := $3
-			--$$.put_first ($1)
-		--}
+		{
+			$$ := $3
+			if $$ /= Void and $1 /= Void then
+				$$.put_first ($1)
+			end
+		}
+	;
+
+Agent_actual_comma: Agent_actual ','
+		{
+			$$ := ast_factory.new_agent_actual_argument_comma ($1, $2)
+			if $$ /= Void then
+				increment_counter
+			end
+		}
 	;
 
 Agent_actual: Expression
+		{ $$ := $1 }
 	| '?'
+		{ $$ := $1 }
 	| '{' Class_name '}'
-		-- TODO:
-		--{ $$ := new_named_type (Void, $1, $2) }
+		{ $$ := ast_factory.new_agent_type ($1, new_named_type (Void, $2, Void), $3) }
 	| '{' Class_name Actual_parameters '}'
-		-- TODO:
-		--{ $$ := new_named_type (Void, $1, $2) }
+		{ $$ := ast_factory.new_agent_type ($1, new_named_type (Void, $2, $3), $4) }
 	| '{' E_EXPANDED Class_name Actual_parameters_opt '}'
-		-- TODO:
-		--{ $$ := new_named_type ($1, $2, $3) }
+		{ $$ := ast_factory.new_agent_type ($1, new_named_type ($2, $3, $4), $5) }
 	| '{' E_SEPARATE Class_name Actual_parameters_opt '}'
-		-- TODO:
-		--{ $$ := new_named_type ($1, $2, $3) }
+		{ $$ := ast_factory.new_agent_type ($1, new_named_type ($2, $3, $4), $5) }
 	| '{' E_REFERENCE Class_name Actual_parameters_opt '}'
-		-- TODO:
-		--{ $$ := new_named_type ($1, $2, $3) }
+		{ $$ := ast_factory.new_agent_type ($1, new_named_type ($2, $3, $4), $5) }
 	| '{' E_LIKE E_CURRENT '}'
-		-- TODO:
-		--{ $$ := ast_factory.new_like_current ($1, $2) }
+		{ $$ := ast_factory.new_agent_type ($1, ast_factory.new_like_current ($2, $3), $4) }
 	| '{' E_LIKE Identifier '}'
-		-- TODO:
-		--{ $$ := ast_factory.new_like_identifier ($1, $2) }
+		{ $$ := ast_factory.new_agent_type ($1, ast_factory.new_like_identifier ($2, $3), $4) }
 	| '{' E_BITTYPE Integer_constant '}'
-		-- TODO:
-		--{ $$ := ast_factory.new_bit_type ($1, $2) }
+		{ $$ := ast_factory.new_agent_type ($1, ast_factory.new_bit_type ($2, $3), $4) }
 	| '{' E_BITTYPE Identifier '}'
-		-- TODO:
-		--{ $$ := ast_factory.new_bit_identifier ($1, $2)  }
+		{ $$ := ast_factory.new_agent_type ($1, ast_factory.new_bit_identifier ($2, $3), $4)  }
 	;
 
 ------------------------------------------------------------------------------------

@@ -127,6 +127,9 @@ inherit
 			new_verbatim_string,
 			new_actual_arguments,
 			new_actual_parameters,
+			new_agent_actual_argument_comma,
+			new_agent_actual_arguments,
+			new_agent_type,
 			new_all_export,
 			new_argument_name_comma,
 			new_assertion_semicolon,
@@ -1026,10 +1029,10 @@ feature -- Eiffel symbols
 			Result.set_break (last_break (False, a_scanner))
 		end
 
-	new_question_mark_symbol (a_scanner: ET_EIFFEL_SCANNER_SKELETON): ET_SYMBOL is
+	new_question_mark_symbol (a_scanner: ET_EIFFEL_SCANNER_SKELETON): ET_QUESTION_MARK_SYMBOL is
 			-- New '?' symbol
 		do
-			!! Result.make_question_mark
+			!! Result.make
 			Result.set_position (a_scanner.line, a_scanner.column)
 			Result.set_break (last_break (False, a_scanner))
 		end
@@ -1239,6 +1242,45 @@ feature -- AST nodes
 			end
 			if a_right /= Void then
 				Result.set_right_bracket (a_right)
+			end
+		end
+
+	new_agent_actual_argument_comma (an_argument: ET_AGENT_ACTUAL_ARGUMENT; a_comma: ET_SYMBOL): ET_AGENT_ACTUAL_ARGUMENT_ITEM is
+			-- New agent_actual_argument-comma
+		do
+			if a_comma = Void then
+				Result := an_argument
+			elseif an_argument /= Void then
+				!ET_AGENT_ACTUAL_ARGUMENT_COMMA! Result.make (an_argument, a_comma)
+			end
+		end
+
+	new_agent_actual_arguments (a_left, a_right: ET_SYMBOL; nb: INTEGER): ET_AGENT_ACTUAL_ARGUMENT_LIST is
+			-- New agent actual argument list with given capacity
+		do
+			!! Result.make_with_capacity (nb)
+			if a_left /= Void then
+				Result.set_left_parenthesis (a_left)
+			end
+			if a_right /= Void then
+				Result.set_right_parenthesis (a_right)
+			end
+		end
+
+	new_agent_type (l: ET_SYMBOL; a_type: ET_TYPE; r: ET_SYMBOL): ET_AGENT_TYPE is
+			-- New type descriptor in agent surrounded by braces
+		local
+			a_braced_type: ET_BRACED_TYPE
+		do
+			if a_type /= Void then
+				!! a_braced_type.make (a_type)
+				if l /= Void then
+					a_braced_type.set_left_brace (l)
+				end
+				if r /= Void then
+					a_braced_type.set_right_brace (r)
+				end
+				Result := a_braced_type
 			end
 		end
 

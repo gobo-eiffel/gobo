@@ -16,6 +16,8 @@ inherit
 
 	ET_EXPRESSION
 
+	ET_AGENT_TARGET
+
 	ET_KEYWORD
 		rename
 			make_current as make

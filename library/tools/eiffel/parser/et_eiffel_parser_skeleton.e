@@ -546,16 +546,6 @@ feature {NONE} -- AST factory
 
 
 
-	new_call_agent (an_agent: ET_KEYWORD): ET_CALL_AGENT is
-			-- New call agent
-		require
-			an_agent_not_void: an_agent /= Void
-		do
-			Result := ast_factory.new_call_agent (an_agent)
-		ensure
-			call_agent_not_void: Result /= Void
-		end
-
 	new_class (a_name: ET_IDENTIFIER): ET_CLASS is
 			-- New Eiffel class
 		require

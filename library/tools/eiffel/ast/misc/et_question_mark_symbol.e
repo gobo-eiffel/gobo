@@ -2,30 +2,26 @@ indexing
 
 	description:
 
-		"Eiffel result entities"
+		"Eiffel '?' symbols"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 1999-2002, Eric Bezault and others"
+	copyright: "Copyright (c) 2002, Eric Bezault and others"
 	license: "Eiffel Forum License v1 (see forum.txt)"
 	date: "$Date$"
 	revision: "$Revision$"
 
-class ET_RESULT
+class ET_QUESTION_MARK_SYMBOL
 
 inherit
 
-	ET_EXPRESSION
-
-	ET_AGENT_TARGET
-
-	ET_WRITABLE
-
-	ET_KEYWORD
+	ET_SYMBOL
 		rename
-			make_result as make
+			make_question_mark as make
 		redefine
 			process
 		end
+
+	ET_AGENT_ACTUAL_ARGUMENT
 
 creation
 
@@ -36,11 +32,11 @@ feature -- Processing
 	process (a_processor: ET_AST_PROCESSOR) is
 			-- Process current node.
 		do
-			a_processor.process_result (Current)
+			a_processor.process_question_mark_symbol (Current)
 		end
 
 invariant
 
-	is_result: is_result
+	is_question_mark: is_question_mark
 
 end

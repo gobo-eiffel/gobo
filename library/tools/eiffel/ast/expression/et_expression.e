@@ -26,6 +26,8 @@ inherit
 
 	ET_ASSERTION
 
+	ET_AGENT_ACTUAL_ARGUMENT
+
 feature -- Access
 
 	expression_item: ET_EXPRESSION is

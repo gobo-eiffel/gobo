@@ -98,6 +98,27 @@ feature -- Processing
 			a_list.right_bracket.process (Current)
 		end
 
+	process_agent_actual_argument_comma (an_argument: ET_AGENT_ACTUAL_ARGUMENT_COMMA) is
+			-- Process `an_argument'.
+		do
+			an_argument.agent_actual_argument.process (Current)
+			an_argument.comma.process (Current)
+		end
+
+	process_agent_actual_argument_list (a_list: ET_AGENT_ACTUAL_ARGUMENT_LIST) is
+			-- Process `a_list'.
+		local
+			i, nb: INTEGER
+		do
+			a_list.left_parenthesis.process (Current)
+			nb := a_list.count
+			from i := 1 until i > nb loop
+				a_list.item (i).process (Current)
+				i := i + 1
+			end
+			a_list.right_parenthesis.process (Current)
+		end
+
 	process_all_export (an_export: ET_ALL_EXPORT) is
 			-- Process `an_export'.
 		do
@@ -1970,6 +1991,12 @@ feature -- Processing
 			if an_arguments /= Void then
 				an_arguments.process (Current)
 			end
+		end
+
+	process_question_mark_symbol (a_symbol: ET_QUESTION_MARK_SYMBOL) is
+			-- Process `a_symbol'.
+		do
+			process_symbol (a_symbol)
 		end
 
 	process_regular_integer_constant (a_constant: ET_REGULAR_INTEGER_CONSTANT) is
