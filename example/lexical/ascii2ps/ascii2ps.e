@@ -31,6 +31,8 @@ inherit
 
 	KL_SHARED_STANDARD_FILES
 
+	KL_SHARED_STRING_ROUTINES
+
 creation
 
 	make
@@ -55,32 +57,32 @@ feature {NONE} -- Implementation
 if yy_act <= 4 then
 if yy_act <= 2 then
 if yy_act = 1 then
---|#line 44
+--|#line 46
 output_file.put_string ("%Tnewline%N")
 else
---|#line 45
+--|#line 47
 output_file.put_string ("%T( ) show%N")
 end
 else
 if yy_act = 3 then
---|#line 46
+--|#line 48
 output_file.put_string ("%Tprinttab%N")
 else
---|#line 47
+--|#line 49
 output_file.put_string ("%Tnewpage%N")
 end
 end
 else
 if yy_act <= 6 then
 if yy_act = 5 then
---|#line 48
+--|#line 50
 
 					output_file.put_string ("%T(")
 					output_file.put_string (text)
 					output_file.put_string (") printword%N")
 				
 else
---|#line 53
+--|#line 55
 
 					output_file.put_string ("%T(\")
 					output_file.put_character (text_item (1))
@@ -88,7 +90,7 @@ else
 				
 end
 else
---|#line 59
+--|#line 61
 fatal_error ("scanner jammed")
 end
 end
@@ -225,6 +227,8 @@ feature {NONE} -- Initialization
 			-- Run 'ascii2ps' pretty-printer.
 		local
 			i, nb: INTEGER
+			no_more_option: BOOLEAN
+			arg: STRING
 			in_filename, out_filename: STRING
 			in_file: like INPUT_STREAM_TYPE
 			out_file: like OUTPUT_STREAM_TYPE
@@ -232,15 +236,43 @@ feature {NONE} -- Initialization
 			make_compressed_scanner_skeleton
 			tab_length := 4
 			user_font := "Courier"
-			header := "true"
-			date := "06/21/97"
-			time := "18:06:34"
-			i := 1
-			nb := argument_count
+			has_header := true
+			date := "00/00/00"
+			time := "00:00:00"
 				-- Read options.
-			if nb >= 1 and then argument (1).is_equal ("-n") then
-				flag_n := True
-				i := i + 1
+			from
+				i := 1
+				nb := argument_count
+			until
+				i > nb or no_more_option
+			loop
+				arg := argument (i)
+				if arg.is_equal ("-h") then
+					std.output.put_string (usage_message)
+					exceptions_.die (0)
+				elseif arg.is_equal ("-n") then
+					flag_n := True
+					i := i + 1
+				elseif arg.is_equal ("-l") then
+					us_letter := True
+					i := i + 1
+				elseif arg.is_equal ("-d") and i < nb then
+					i := i + 1
+					date := argument (i)
+					i := i + 1
+				elseif arg.is_equal ("-t") and i < nb then
+					i := i + 1
+					time := argument (i)
+					i := i + 1
+				elseif arg.is_equal ("-2") then
+					double_sided := True
+					i := i + 1
+				elseif arg.is_equal ("--") then
+					i := i + 1
+					no_more_option := True
+				else
+					no_more_option := True
+				end
 			end
 				-- Read filenames.
 			inspect nb - i + 1
@@ -251,14 +283,13 @@ feature {NONE} -- Initialization
 			when 1 then
 				in_filename := argument (i)
 				out_filename := "-"
-				filename := in_filename
+				filename := basename (in_filename)
 			when 2 then
 				in_filename := argument (i)
 				out_filename := argument (i + 1)
-				filename := in_filename
+				filename := basename (in_filename)
 			else
-				std.error.put_string
-					("usage: ascii2ps [-n] [filename [filename]]%N")
+				std.error.put_string (usage_message)
 				exceptions_.die (1)
 			end
 
@@ -303,9 +334,21 @@ feature -- Access
 	flag_n: BOOLEAN
 	tab_length: INTEGER
 	user_font: STRING
-	header: STRING
+	has_header: BOOLEAN
 	filename: STRING
 	date, time: STRING
+
+	us_letter: BOOLEAN
+			-- Will the PostScript output be printed on
+			-- US-letter paper? (A4 paper otherwise)
+
+	double_sided: BOOLEAN
+			-- Will the PostScript output be printed on
+			-- double side paper (i.e. recto-verso)?
+
+	usage_message: STRING is
+			"usage: ascii2ps [-h] [-n] [-d date] [-t time]%N%
+				%T[-l] [-2] [(filename | -) [(filename | -)]]%N"
 
 feature -- Generation
 
@@ -325,17 +368,19 @@ feature -- Generation
 			output_file.put_string
 				("%T%T%% Translate from `inch' unit to `point' unit.%N%N")
 
-				-- A4
-			output_file.put_string ("/pagewidth 8.27 inch def%N")
-				-- US Letter
-			-- output_file.put_string ("/pagewidth 8.45 inch def%N")
-			output_file.put_string ("%T%T%% Width of the page%N%N")
-
-				-- A4
-			output_file.put_string ("/pageheight 11.69 inch def%N")
-				-- US Letter
-			-- output_file.put_string ("/pageheight 11 inch def%N")
-			output_file.put_string ("%N%N%% Height of the page%N%N")
+			if us_letter then
+					-- US Letter
+				output_file.put_string ("/pagewidth 8.45 inch def%N")
+				output_file.put_string ("%T%T%% Width of the page%N%N")
+				output_file.put_string ("/pageheight 11 inch def%N")
+				output_file.put_string ("%N%N%% Height of the page%N%N")
+			else
+					-- A4
+				output_file.put_string ("/pagewidth 8.27 inch def%N")
+				output_file.put_string ("%T%T%% Width of the page%N%N")
+				output_file.put_string ("/pageheight 11.69 inch def%N")
+				output_file.put_string ("%N%N%% Height of the page%N%N")
+			end
 
 			output_file.put_string ("/textmargin 0.25 inch def%N")
 			output_file.put_string
@@ -601,8 +646,21 @@ feature -- Generation
 				("%T%T%% Give to the page a horizontal orientation,%N")
 			output_file.put_string
 				("%T%T%% divide it into two documents and a title bar.%N")
-			output_file.put_string ("%T90 rotate%N")
-			output_file.put_string ("%T0 pagewidth neg translate%N")
+			if double_sided then
+				output_file.put_string ("%Tpagenb 2 idiv 2 mod 0 eq%N")
+				output_file.put_string ("%T%T{%N%
+					%%T%T%T90 rotate%N%
+					%%T%T%T0 pagewidth neg translate%N%
+					%%T%T}%N")
+				output_file.put_string ("%T%T{%N%
+					%%T%T%T-90 rotate%N%
+					%%T%T%Tpageheight neg 0 translate%N%
+					%%T%T}%N")
+				output_file.put_string ("%Tifelse%N")
+			else
+				output_file.put_string ("%T90 rotate%N")
+				output_file.put_string ("%T0 pagewidth neg translate%N")
+			end
 			output_file.put_string
 				("%T0.07 inch neg 0.035 inch neg translate%N")
 			output_file.put_string ("%Tprintfilename %N")
@@ -670,7 +728,7 @@ feature -- Generation
 			output_file.put_string ("%T%T%% Skip one document.%N")
 			output_file.put_string ("%Tpagenb 2 mod 0 eq%N")
 			output_file.put_string
-				("%T%T{showpage pageinit grestore gsave firstpage newline}%N")
+				("%T%T{showpage pageinit gsave firstpage newline}%N")
 			output_file.put_string ("%T%T{grestore gsave secondpage newline}%N")
 			output_file.put_string ("%Tifelse%N")
 			output_file.put_string ("%T} def%N%N")
@@ -746,7 +804,7 @@ feature -- Generation
 			output_file.put_string ("%%%%EndProlog%N%N")
 	
 			output_file.put_character ('(')
-			output_file.put_string (user_font)
+			output_file.put_string (escaped_string (user_font))
 			output_file.put_string (") setuserfont%N")
 			output_file.put_integer (tab_length)
 			output_file.put_string (" settablength%N")
@@ -754,15 +812,19 @@ feature -- Generation
 				output_file.put_string ("() setfilename%N")
 			else
 				output_file.put_character ('(')
-				output_file.put_string (filename)
+				output_file.put_string (escaped_string (filename))
 				output_file.put_string (") setfilename%N")
 			end
 			output_file.put_character ('(')
-			output_file.put_string (date)
+			output_file.put_string (escaped_string (date))
 			output_file.put_string (") (")
-			output_file.put_string (time)
+			output_file.put_string (escaped_string (time))
 			output_file.put_string (") setdate%N")
-			output_file.put_string (header)
+			if has_header then
+				output_file.put_string ("true")
+			else
+				output_file.put_string ("false")
+			end
 			output_file.put_string (" setshowtitlebar%N")
 			output_file.put_string ("pageinit%N")
 			output_file.put_string ("gsave%N")
@@ -771,5 +833,69 @@ feature -- Generation
 			output_file.put_string ("grestore%N")
 			output_file.put_string ("showpage%N")
 		end
+
+feature {NONE} -- Implementation
+
+	escaped_string (a_string: STRING): STRING is
+			-- Escaped version of `a_string' according
+			-- to PostScript rules
+		require
+			a_string_not_void: a_string /= Void
+		local
+			i, nb: INTEGER
+			c: CHARACTER
+		do
+			from
+				i := 1
+				nb := a_string.count
+				Result := string_.make (nb)
+			until
+				i > nb
+			loop
+				c := a_string.item (i)
+				if c = '(' or c = ')' or c = '\' then
+					Result.append_character ('\')
+				end
+				Result.append_character (c)
+				i := i + 1
+			end
+		ensure
+			escaped_string_not_void: Result /= Void
+		end
+
+	basename (a_filename: STRING): STRING is
+			-- Basename of filename `a_filename'
+			-- (Use '/' and '\' as filename separator)
+		require
+			a_filename_not_void: a_filename /= Void
+		local
+			i, nb: INTEGER
+		do
+			from
+				nb := a_filename.count
+				i := nb
+			until
+				i < 1 or else
+				a_filename.item (i) = '/' or
+				a_filename.item (i) = '\'
+			loop
+				i := i - 1
+			end
+			if i < nb then
+				Result := a_filename.substring (i + 1,  nb)
+			else
+				Result := string_.make (0)
+			end
+		ensure
+			basename_not_void: Result /= Void
+		end
+
+invariant
+
+	date_not_void: date /= Void
+	time_not_void: time /= Void
+	user_font_not_void: user_font /= Void
+	tab_length_positive: tab_length > 0
+	filename_not_void: filename /= Void
 
 end -- class ASCII2PS
