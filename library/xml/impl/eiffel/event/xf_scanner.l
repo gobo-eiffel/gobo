@@ -47,8 +47,10 @@ S_EQUAL         "="
 S_DOUBLE_QUOTES         "\""
 --S_TEXT        [a-zA-Z0-9()\ \t\r_!#$%&'\(+\-]*
 S_TEXT        [a-zA-Z0-9\t\r_\x20-\x2f\x3a\x3b\x3d\x3f\x40\x5a-\x60\x7a-\x7e]*
---S_ATTR_TEXT   [a-zA-Z0-9\t\r_\x20\x21\x23-\x2f\x3a\x3b\x3d\x3f\x40\x5a-\x60\x7a-\x7e]*
-S_ATTR_TEXT   [^\n"]*
+S_ATTR_TEXT   [a-zA-Z0-9\t\r_\x20\x21\x23-\x25\x27-\x2f\x3a\x3b\x3d\x3f\x40\x5a-\x60\x7a-\x7e]*
+S_GT_ENTITY "&gt;"
+S_LT_ENTITY "&lt;"
+S_AMP_ENTITY "&amp;"
 S_XML	      [x|X][m|M][l|L]
 S_START_COMMENT "<!--"
 S_END_COMMENT "-->"
@@ -188,6 +190,18 @@ S_NS_WORD     {S_WORD}:{S_WORD}
         last_token := T_ATTR_TEXT
         handle_found_text
   }
+
+<B_IN_ATTR_TEXT>{S_GT_ENTITY} {
+		last_token := T_GT_ENTITY
+	}
+
+<B_IN_ATTR_TEXT>{S_LT_ENTITY} {
+		last_token := T_LT_ENTITY
+	}
+
+<B_IN_ATTR_TEXT>{S_AMP_ENTITY} {
+		last_token := T_AMP_ENTITY
+	}
 
 <B_IN_ATTR_TEXT>{S_DOUBLE_QUOTES} {
         last_token := T_DOUBLE_QUOTES

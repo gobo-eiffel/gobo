@@ -32,6 +32,7 @@ feature {ANY}
 
 %token T_LT T_GT T_SLASH T_COLON T_EQUAL T_DOUBLE_QUOTES
 %token T_LT_SL T_SL_GT T_LT_QM T_QM_GT T_XML T_START_COMMENT T_END_COMMENT
+%token T_GT_ENTITY T_LT_ENTITY T_AMP_ENTITY
 
 %token <UC_STRING> T_TEXT
 %token <UC_STRING> T_WORD
@@ -71,8 +72,10 @@ xml_decl:
 	;
 
 ----------------
-xml_decl_version:
-	T_WORD T_EQUAL T_DOUBLE_QUOTES xml_attr_text T_DOUBLE_QUOTES { $$ := $4 }
+xml_decl_version: T_WORD T_EQUAL T_DOUBLE_QUOTES xml_attr_text T_DOUBLE_QUOTES
+		{ $$ := $4 }
+	| T_WORD T_EQUAL T_DOUBLE_QUOTES T_DOUBLE_QUOTES
+		{ !! $$.make (0) }
 	;
 
 ----------------
@@ -176,17 +179,40 @@ xml_attr_name:
         ;
 
 ----------------
-xml_attr_value: 
-	T_DOUBLE_QUOTES xml_attr_text T_DOUBLE_QUOTES
-        {
-		$$ := $2
-        }
-        ;
-
-xml_attr_text: -- Empty
+xml_attr_value: T_DOUBLE_QUOTES xml_attr_text T_DOUBLE_QUOTES
+		{ $$ := $2 }
+	| T_DOUBLE_QUOTES T_DOUBLE_QUOTES
 		{ !! $$.make (0) }
-	| T_ATTR_TEXT
+	;
+
+xml_attr_text: T_ATTR_TEXT
 		{ $$ := $1 }
+	| T_GT_ENTITY
+		{ !! $$.make_from_string (">") }
+	| T_LT_ENTITY
+		{ !! $$.make_from_string ("<") }
+	| T_AMP_ENTITY
+		{ !! $$.make_from_string ("&") }
+	| xml_attr_text T_ATTR_TEXT
+		{
+			$$ := $1
+			$$.append_uc_string ($2)
+		}
+	| xml_attr_text T_GT_ENTITY
+		{
+			$$ := $1
+			$$.append_string (">")
+		}
+	| xml_attr_text T_LT_ENTITY
+		{
+			$$ := $1
+			$$.append_string ("<")
+		}
+	| xml_attr_text T_AMP_ENTITY
+		{
+			$$ := $1
+			$$.append_string ("&")
+		}
 	;
 
 ----------------

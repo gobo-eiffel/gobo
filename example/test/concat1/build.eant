@@ -64,7 +64,7 @@
 			Test '${system}' with ISE Eiffel.
 		</description>
 
-		<getest config="getest.cfg" compile="geant compile_ise > xcompile.log 2>&1"/>
+		<getest config="getest.cfg" compile="geant compile_ise &gt; xcompile.log 2&gt;&amp;1"/>
 	</target>
 
 	<target name="test_hact" depend="init" dir="${GOBO}/example/${library}/${example}">
@@ -72,7 +72,7 @@
 			Test '${system}' with Halstenbach Eiffel.
 		</description>
 
-		<getest config="getest.cfg" compile="geant compile_hact > xcompile.log 2>&1"/>
+		<getest config="getest.cfg" compile="geant compile_hact &gt; xcompile.log 2&gt;&amp;1"/>
 	</target>
 
 	<target name="test_ve" depend="init" dir="${GOBO}/example/${library}/${example}">
@@ -80,7 +80,7 @@
 			Test '${system}' with Visual Eiffel.
 		</description>
 
-		<getest config="getest.cfg" compile="geant compile_ve > xcompile.log 2>&1"/>
+		<getest config="getest.cfg" compile="geant compile_ve &gt; xcompile.log 2&gt;&amp;1"/>
 	</target>
 
 	<target name="test_se" depend="init" dir="${GOBO}/example/${library}/${example}">
@@ -88,7 +88,7 @@
 			Test '${system}' with SmallEiffel.
 		</description>
 
-		<getest config="getest.cfg" compile="geant compile_se > xcompile.log 2>&1"/>
+		<getest config="getest.cfg" compile="geant compile_se &gt; xcompile.log 2&gt;&amp;1"/>
 	</target>
 
 	<target name="test_debug" depend="init">
@@ -106,7 +106,7 @@
 			Test '${system}' with ISE Eiffel in debug mode.
 		</description>
 
-		<getest config="getest.cfg" compile="geant compile_debug_ise > xcompile.log 2>&1"/>
+		<getest config="getest.cfg" compile="geant compile_debug_ise &gt; xcompile.log 2&gt;&amp;1"/>
 	</target>
 
 	<target name="test_debug_hact" depend="init" dir="${GOBO}/example/${library}/${example}">
@@ -114,7 +114,7 @@
 			Test '${system}' with Halstenbach Eiffel in debug mode.
 		</description>
 
-		<getest config="getest.cfg" compile="geant compile_debug_hact > xcompile.log 2>&1"/>
+		<getest config="getest.cfg" compile="geant compile_debug_hact &gt; xcompile.log 2&gt;&amp;1"/>
 	</target>
 
 	<target name="test_debug_ve" depend="init" dir="${GOBO}/example/${library}/${example}">
@@ -122,7 +122,7 @@
 			Test '${system}' with Visual Eiffel in debug mode.
 		</description>
 
-		<getest config="getest.cfg" compile="geant compile_debug_ve > xcompile.log 2>&1"/>
+		<getest config="getest.cfg" compile="geant compile_debug_ve &gt; xcompile.log 2&gt;&amp;1"/>
 	</target>
 
 	<target name="test_debug_se" depend="init" dir="${GOBO}/example/${library}/${example}">
@@ -130,7 +130,7 @@
 			Test '${system}' with SmallEiffel in debug mode.
 		</description>
 
-		<getest config="getest.cfg" compile="geant compile_debug_se > xcompile.log 2>&1"/>
+		<getest config="getest.cfg" compile="geant compile_debug_se &gt; xcompile.log 2&gt;&amp;1"/>
 	</target>
 
 	<target name="compile" depend="init">
