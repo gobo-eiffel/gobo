@@ -17,12 +17,12 @@ indexing
 --		%destination, and one will be that symbol on which the %
 --		%state does not go to the common destination. Templates, %
 --		%on the other hand, go to the common state on every %
---		%transition symbol, and therefore cost only one difference";
+--		%transition symbol, and therefore cost only one difference"
 
-	library:    "Gobo Eiffel Lexical Library";
-	author:     "Eric Bezault <ericb@gobo.demon.co.uk>";
-	copyright:  "Copyright (c) 1997, Eric Bezault";
-	date:       "$Date$";
+	library:    "Gobo Eiffel Lexical Library"
+	author:     "Eric Bezault <ericb@gobo.demon.co.uk>"
+	copyright:  "Copyright (c) 1997, Eric Bezault"
+	date:       "$Date$"
 	revision:   "$Revision$"
 
 class LX_TEMPLATE_LIST
