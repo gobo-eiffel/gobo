@@ -157,7 +157,7 @@ feature {ANY} -- Access
 			end
 		end
 
-feature {ANY} -- Element change
+feature {XM_PARSER} -- Element change
 
 	add_attributes (a_attributes: DS_BILINEAR [DS_PAIR [DS_PAIR [UC_STRING, UC_STRING], UC_STRING]]) is
 			-- Add `a_attributes' to this element.
