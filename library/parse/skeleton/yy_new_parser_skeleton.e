@@ -26,9 +26,13 @@ inherit
 	YY_PARSER_TOKENS
 
 	KL_SHARED_STANDARD_FILES
-
+		export {NONE} all end
+		
 	KL_IMPORTED_FIXED_ARRAY_ROUTINES
+		export {NONE} all end
+		
 	KL_IMPORTED_SPECIAL_ROUTINES
+		export {NONE} all end
 
 feature {NONE} -- Initialization
 

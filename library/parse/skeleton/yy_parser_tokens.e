@@ -15,9 +15,14 @@ deferred class YY_PARSER_TOKENS
 inherit
 
 	KL_SHARED_PLATFORM
+		export {NONE} all end
+		
 	KL_IMPORTED_INTEGER_ROUTINES
+		export {NONE} all end
+		
 	KL_IMPORTED_STRING_ROUTINES
-
+		export {NONE} all end
+		
 feature -- Access
 
 	token_name (a_token: INTEGER): STRING is
