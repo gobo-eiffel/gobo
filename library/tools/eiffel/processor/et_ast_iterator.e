@@ -658,6 +658,7 @@ feature {ET_AST_NODE} -- Processing
 			a_frozen_keyword: ET_TOKEN
 			a_synonym: ET_FEATURE
 			an_arguments: ET_FORMAL_ARGUMENT_LIST
+			an_indexing: ET_INDEXING_LIST
 			an_obsolete_message: ET_OBSOLETE
 			a_preconditions: ET_PRECONDITIONS
 			a_postconditions: ET_POSTCONDITIONS
@@ -686,6 +687,10 @@ feature {ET_AST_NODE} -- Processing
 			end
 			a_feature.declared_type.process (Current)
 			a_feature.is_keyword.process (Current)
+			an_indexing := a_feature.first_indexing
+			if an_indexing /= Void then
+				an_indexing.process (Current)
+			end
 			an_obsolete_message := a_feature.obsolete_message
 			if an_obsolete_message /= Void then
 				an_obsolete_message.process (Current)
@@ -712,6 +717,7 @@ feature {ET_AST_NODE} -- Processing
 			a_frozen_keyword: ET_TOKEN
 			a_synonym: ET_FEATURE
 			an_arguments: ET_FORMAL_ARGUMENT_LIST
+			an_indexing: ET_INDEXING_LIST
 			an_obsolete_message: ET_OBSOLETE
 			a_preconditions: ET_PRECONDITIONS
 			a_postconditions: ET_POSTCONDITIONS
@@ -739,6 +745,10 @@ feature {ET_AST_NODE} -- Processing
 				an_arguments.process (Current)
 			end
 			a_feature.is_keyword.process (Current)
+			an_indexing := a_feature.first_indexing
+			if an_indexing /= Void then
+				an_indexing.process (Current)
+			end
 			an_obsolete_message := a_feature.obsolete_message
 			if an_obsolete_message /= Void then
 				an_obsolete_message.process (Current)
@@ -765,6 +775,7 @@ feature {ET_AST_NODE} -- Processing
 			a_frozen_keyword: ET_TOKEN
 			a_synonym: ET_FEATURE
 			an_arguments: ET_FORMAL_ARGUMENT_LIST
+			an_indexing: ET_INDEXING_LIST
 			an_obsolete_message: ET_OBSOLETE
 			a_preconditions: ET_PRECONDITIONS
 			a_locals: ET_LOCAL_VARIABLE_LIST
@@ -795,6 +806,10 @@ feature {ET_AST_NODE} -- Processing
 			end
 			a_feature.declared_type.process (Current)
 			a_feature.is_keyword.process (Current)
+			an_indexing := a_feature.first_indexing
+			if an_indexing /= Void then
+				an_indexing.process (Current)
+			end
 			an_obsolete_message := a_feature.obsolete_message
 			if an_obsolete_message /= Void then
 				an_obsolete_message.process (Current)
@@ -832,6 +847,7 @@ feature {ET_AST_NODE} -- Processing
 			a_frozen_keyword: ET_TOKEN
 			a_synonym: ET_FEATURE
 			an_arguments: ET_FORMAL_ARGUMENT_LIST
+			an_indexing: ET_INDEXING_LIST
 			an_obsolete_message: ET_OBSOLETE
 			a_preconditions: ET_PRECONDITIONS
 			a_locals: ET_LOCAL_VARIABLE_LIST
@@ -861,6 +877,10 @@ feature {ET_AST_NODE} -- Processing
 				an_arguments.process (Current)
 			end
 			a_feature.is_keyword.process (Current)
+			an_indexing := a_feature.first_indexing
+			if an_indexing /= Void then
+				an_indexing.process (Current)
+			end
 			an_obsolete_message := a_feature.obsolete_message
 			if an_obsolete_message /= Void then
 				an_obsolete_message.process (Current)
@@ -964,6 +984,7 @@ feature {ET_AST_NODE} -- Processing
 			a_frozen_keyword: ET_TOKEN
 			a_synonym: ET_FEATURE
 			an_arguments: ET_FORMAL_ARGUMENT_LIST
+			an_indexing: ET_INDEXING_LIST
 			an_obsolete_message: ET_OBSOLETE
 			a_preconditions: ET_PRECONDITIONS
 			an_alias_clause: ET_EXTERNAL_ALIAS
@@ -993,6 +1014,10 @@ feature {ET_AST_NODE} -- Processing
 			end
 			a_feature.declared_type.process (Current)
 			a_feature.is_keyword.process (Current)
+			an_indexing := a_feature.first_indexing
+			if an_indexing /= Void then
+				an_indexing.process (Current)
+			end
 			an_obsolete_message := a_feature.obsolete_message
 			if an_obsolete_message /= Void then
 				an_obsolete_message.process (Current)
@@ -1023,6 +1048,7 @@ feature {ET_AST_NODE} -- Processing
 			a_frozen_keyword: ET_TOKEN
 			a_synonym: ET_FEATURE
 			an_arguments: ET_FORMAL_ARGUMENT_LIST
+			an_indexing: ET_INDEXING_LIST
 			an_obsolete_message: ET_OBSOLETE
 			a_preconditions: ET_PRECONDITIONS
 			an_alias_clause: ET_EXTERNAL_ALIAS
@@ -1051,6 +1077,10 @@ feature {ET_AST_NODE} -- Processing
 				an_arguments.process (Current)
 			end
 			a_feature.is_keyword.process (Current)
+			an_indexing := a_feature.first_indexing
+			if an_indexing /= Void then
+				an_indexing.process (Current)
+			end
 			an_obsolete_message := a_feature.obsolete_message
 			if an_obsolete_message /= Void then
 				an_obsolete_message.process (Current)
@@ -1616,6 +1646,7 @@ feature {ET_AST_NODE} -- Processing
 			a_frozen_keyword: ET_TOKEN
 			a_synonym: ET_FEATURE
 			an_arguments: ET_FORMAL_ARGUMENT_LIST
+			an_indexing: ET_INDEXING_LIST
 			an_obsolete_message: ET_OBSOLETE
 			a_preconditions: ET_PRECONDITIONS
 			a_locals: ET_LOCAL_VARIABLE_LIST
@@ -1646,6 +1677,10 @@ feature {ET_AST_NODE} -- Processing
 			end
 			a_feature.declared_type.process (Current)
 			a_feature.is_keyword.process (Current)
+			an_indexing := a_feature.first_indexing
+			if an_indexing /= Void then
+				an_indexing.process (Current)
+			end
 			an_obsolete_message := a_feature.obsolete_message
 			if an_obsolete_message /= Void then
 				an_obsolete_message.process (Current)
@@ -1690,6 +1725,7 @@ feature {ET_AST_NODE} -- Processing
 			a_frozen_keyword: ET_TOKEN
 			a_synonym: ET_FEATURE
 			an_arguments: ET_FORMAL_ARGUMENT_LIST
+			an_indexing: ET_INDEXING_LIST
 			an_obsolete_message: ET_OBSOLETE
 			a_preconditions: ET_PRECONDITIONS
 			a_locals: ET_LOCAL_VARIABLE_LIST
@@ -1719,6 +1755,10 @@ feature {ET_AST_NODE} -- Processing
 				an_arguments.process (Current)
 			end
 			a_feature.is_keyword.process (Current)
+			an_indexing := a_feature.first_indexing
+			if an_indexing /= Void then
+				an_indexing.process (Current)
+			end
 			an_obsolete_message := a_feature.obsolete_message
 			if an_obsolete_message /= Void then
 				an_obsolete_message.process (Current)
