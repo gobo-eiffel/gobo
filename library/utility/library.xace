@@ -10,7 +10,8 @@
 		revision: "$Revision$"
 	</description>
 
-	<cluster name="utility" location="${GOBO}/library/utility" abstract="true">
+	<cluster name="utility" location="${GOBO}/library/utility">
+		<option name="abstract" value="true"/>
 		<cluster name="error"/>
 		<cluster name="formatter"/>
 		<cluster name="command"/>

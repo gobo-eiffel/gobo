@@ -10,7 +10,8 @@
 		revision: "$Revision$"
 	</description>
 
-	<cluster name="regexp" location="${GOBO}/library/regexp" abstract="true">
+	<cluster name="regexp" location="${GOBO}/library/regexp">
+		<option name="abstract" value="true"/>
 		<cluster name="interface"/>
 		<cluster name="pcre"/>
 		<cluster name="support"/>

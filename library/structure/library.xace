@@ -10,7 +10,8 @@
 		revision: "$Revision$"
 	</description>
 
-	<cluster name="structure" location="${GOBO}/library/structure" abstract="true">
+	<cluster name="structure" location="${GOBO}/library/structure">
+		<option name="abstract" value="true"/>
 		<cluster name="container"/>
 		<cluster name="dispenser"/>
 		<cluster name="list"/>

@@ -22,7 +22,8 @@
 		revision: "$Revision$"
 	</description>
 
-	<cluster name="xml" location="${GOBO}/library/xml" abstract="True">
+	<cluster name="xml" location="${GOBO}/library/xml">
+		<option name="abstract" value="true"/>
 		<cluster name="factory"/>
 		<cluster name="position"/>
 		<cluster name="source"/>
@@ -30,22 +31,27 @@
 		<cluster name="event"/>
 		<cluster name="tree"/>
 		<cluster name="formatter"/>
-		<cluster name="parser" abstract="true">
+		<cluster name="parser">
+			<option name="abstract" value="true"/>
 			<cluster name="eiffel"/>
 			<cluster name="expat" if="${GOBO_XML_EXPAT}"/>
 			<cluster name="no_expat" unless="${GOBO_XML_EXPAT}"/>
 		</cluster>
-		<cluster name="impl" abstract="true">
-			<cluster name="interface" prefix="impl_interface_" abstract="true">
+		<cluster name="impl">
+			<option name="abstract" value="true"/>
+			<cluster name="interface" prefix="impl_interface_">
+				<option name="abstract" value="true"/>
 				<cluster name="general"/>
 				<cluster name="event"/>
 				<cluster name="tree"/>
 			</cluster>
-			<cluster name="expat" prefix="impl_expat_" abstract="true" if="${GOBO_XML_EXPAT}">
+			<cluster name="expat" prefix="impl_expat_" if="${GOBO_XML_EXPAT}">
+				<option name="abstract" value="true"/>
 				<cluster name="api"/>
 				<cluster name="general"/>
 				<cluster name="event"/>
-				<cluster name="spec" abstract="true">
+				<cluster name="spec">
+					<option name="abstract" value="true"/>
 					<cluster name="${GOBO_EIFFEL}" prefix="impl_expat_spec_"/>
 				</cluster>
 				<external unless="${GOBO_OS}=windows">
@@ -58,13 +64,16 @@
 					<link_library location="${EXPAT}/Libs/expat.lib"/>
 				</external>
 			</cluster>
-			<cluster name="eiffel" prefix="impl_eiffel" abstract="true">
+			<cluster name="eiffel" prefix="impl_eiffel">
+				<option name="abstract" value="true"/>
 				<cluster name="event"/>
 			</cluster>
-			<cluster name="tree_on_event" prefix="impl_tree_on_event_" abstract="true">
+			<cluster name="tree_on_event" prefix="impl_tree_on_event_">
+				<option name="abstract" value="true"/>
 				<cluster name="tree"/>
 			</cluster>
-			<cluster name="no_expat" prefix="impl_no_expat_" abstract="true" unless="${GOBO_XML_EXPAT}">
+			<cluster name="no_expat" prefix="impl_no_expat_" unless="${GOBO_XML_EXPAT}">
+				<option name="abstract" value="true"/>
 				<cluster name="event"/>
 			</cluster>
 		</cluster>

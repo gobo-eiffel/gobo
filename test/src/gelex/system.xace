@@ -21,7 +21,8 @@
 		<option name="finalize" value="false"/>
 	</option>
 
-	<cluster name="gelex_tester" location="${GOBO}/test/src" prefix="src_" abstract="true">
+	<cluster name="gelex_tester" location="${GOBO}/test/src" prefix="src_">
+		<option name="abstract" value="true"/>
 		<cluster name="gelex"/>
 		<cluster name="common"/>
 	</cluster>

@@ -10,7 +10,8 @@
 		revision: "$Revision$"
 	</description>
 
-	<cluster name="lexical" location="${GOBO}/library/lexical" abstract="true">
+	<cluster name="lexical" location="${GOBO}/library/lexical">
+		<option name="abstract" value="true"/>
 		<cluster name="automaton"/>
 		<cluster name="error"/>
 		<cluster name="generation"/>

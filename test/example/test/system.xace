@@ -21,7 +21,8 @@
 		<option name="finalize" value="false"/>
 	</option>
 
-	<cluster name="test_tester" location="${GOBO}/test/example" prefix="example_" abstract="true">
+	<cluster name="test_tester" location="${GOBO}/test/example" prefix="example_">
+		<option name="abstract" value="true"/>
 		<cluster name="test"/>
 		<cluster name="common"/>
 	</cluster>

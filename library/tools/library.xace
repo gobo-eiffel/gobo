@@ -10,9 +10,12 @@
 		revision: "$Revision$"
 	</description>
 
-	<cluster name="tools" location="${GOBO}/library/tools" abstract="true">
-		<cluster name="eiffel" prefix="eiffel_" abstract="true">
-			<cluster name="ast" abstract="true">
+	<cluster name="tools" location="${GOBO}/library/tools">
+		<option name="abstract" value="true"/>
+		<cluster name="eiffel" prefix="eiffel_">
+			<option name="abstract" value="true"/>
+			<cluster name="ast">
+				<option name="abstract" value="true"/>
 				<cluster name="assertion"/>
 				<cluster name="class"/>
 				<cluster name="constant"/>
@@ -27,12 +30,14 @@
 			<cluster name="error"/>
 			<cluster name="parser"/>
 		</cluster>
-		<cluster name="lace" prefix="lace_" abstract="true">
+		<cluster name="lace" prefix="lace_">
+			<option name="abstract" value="true"/>
 			<cluster name="ast"/>
 			<cluster name="error"/>
 			<cluster name="parser"/>
 		</cluster>
-		<cluster name="xace" prefix="xace_" abstract="true">
+		<cluster name="xace" prefix="xace_">
+			<option name="abstract" value="true"/>
 			<cluster name="ast"/>
 			<cluster name="error"/>
 			<cluster name="generator"/>

@@ -10,7 +10,8 @@
 		revision: "$Revision$"
 	</description>
 
-	<cluster name="time" location="${GOBO}/library/time" abstract="true">
+	<cluster name="time" location="${GOBO}/library/time">
+		<option name="abstract" value="true"/>
 		<cluster name="clock"/>
 		<cluster name="date"/>
 		<cluster name="time_zone"/>
