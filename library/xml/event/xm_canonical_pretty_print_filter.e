@@ -42,6 +42,7 @@ feature {NONE} -- Escaped
 					or a_char = 9
 					or a_char = 10
 					or a_char = 13
+					or a_char = Quot_char.code -- always escape quote
 		end
 		
 end

@@ -133,6 +133,8 @@ feature {NONE} -- Escaped
 				Result := Gt_entity
 			elseif a_char = Amp_char.code then
 				Result := Amp_entity
+			elseif a_char = Quot_char.code then
+				Result := Quot_entity
 			else
 				Result := "&#"+a_char.out+";"
 			end
