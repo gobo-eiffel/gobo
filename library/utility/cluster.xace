@@ -1,6 +1,17 @@
 <?xml version="1.0"?>
 
 <cluster name="utility" location="${GOBO}/library/utility" abstract="True">
+
+	<description>
+		description: "Xace file for the Gobo Eiffel Utility Library"
+		library:     "Gobo Eiffel Utility Library"
+		author:      "Eric Bezault [ericb@gobosoft.com]"
+		copyright:   "Copyright (c) 2001, Eric Bezault and others"
+		license:     "Eiffel Forum Freeware License v1 (see forum.txt)"
+		date:        "$Date$"
+		revision:    "$Revision$"
+	</description>
+
 	<cluster name="error"/>
 	<cluster name="formatter"/>
 	<cluster name="command"/>
@@ -8,4 +19,5 @@
 	<cluster name="spec" abstract="True">
 		<cluster name="compiler" location="${GOBO}/library/utility/spec/${GOBO_EIFFEL}"/>
 	</cluster>
+
 </cluster>

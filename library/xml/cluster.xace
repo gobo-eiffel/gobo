@@ -3,16 +3,25 @@
 <cluster name="xml" location="${GOBO}/library/xml" abstract="True">
 
 	<description>
-		The Eiffel XML Parser Framework
+		description: "Xace file for the Gobo Eiffel XML Library"
 
-		Please note that you cannot include the root ("xml") cluster
-		and all it's sub-clusters, because there are class name clashes
-		due to the factory in use.
-		You have to select "xml.interface" recursively and then
-		from the "xml.impl" cluster the parsers you wish to compile in.
-		You can choose all, but if you decide to leave out a certain parser 
-		you must select its counterpart from "xml.no_impl" to keep the 
-		factory happy.
+		note:
+
+			Please note that you cannot include the root ("xml") cluster
+			and all it's sub-clusters, because there are class name clashes
+			due to the factory in use.
+			You have to select "xml.impl.interface" recursively and then
+			from the "xml.impl" cluster the parsers you wish to compile in.
+			You can choose all, but if you decide to leave out a certain parser 
+			you must select its counterpart from "xml.impl.no_*" to keep the 
+			factory happy.
+
+		library:     "Gobo Eiffel XML Library"
+		author:      "Eric Bezault [ericb@gobosoft.com]"
+		copyright:   "Copyright (c) 2001, Eric Bezault and others"
+		license:     "Eiffel Forum Freeware License v1 (see forum.txt)"
+		date:        "$Date$"
+		revision:    "$Revision$"
 	</description>
 
 	<cluster name="factory"/>
@@ -35,27 +44,27 @@
 			<cluster name="event">
 				<external>
 					<export class="XP_EVENT_PARSER">
-						<feature name="on_element_declaration_procedure" alias="eif_exml_on_element_declaration_proc" />
-						<feature name="on_attribute_declaration_procedure" alias="eif_exml_on_attribute_declaration_proc" />
-						<feature name="on_xml_declaration_procedure" alias="eif_exml_on_xml_declaration_proc" />
-						<feature name="on_entity_declaration_procedure" alias="eif_exml_on_entity_declaration_proc" />
-						<feature name="on_start_tag_procedure" alias="eif_exml_on_start_tag_proc" />
-						<feature name="on_end_tag_procedure" alias="eif_exml_on_end_tag_proc" />
-						<feature name="on_content_procedure" alias="eif_exml_on_content_proc" />
-						<feature name="on_processing_instruction_procedure" alias="eif_exml_on_processing_instruction_proc" />
-						<feature name="on_comment_procedure" alias="eif_exml_on_comment_proc" />
-						<feature name="on_start_cdata_section_procedure" alias="eif_exml_on_start_cdata_section_proc" />
-						<feature name="on_end_cdata_section_procedure" alias="eif_exml_on_end_cdata_section_proc" />
-						<feature name="on_default_procedure" alias="eif_exml_on_default_proc" />
-						<feature name="on_default_expanded_procedure" alias="eif_exml_on_default_expanded_proc" />
-						<feature name="on_start_doctype_procedure" alias="eif_exml_on_start_doctype_proc" />
-						<feature name="on_end_doctype_procedure" alias="eif_exml_on_end_doctype_proc" />
-						<feature name="on_notation_declaration_procedure" alias="eif_exml_on_notation_declaration_proc" />
-						<feature name="on_start_namespace_declaration_procedure" alias="eif_exml_on_start_namespace_declaration_proc" />
-						<feature name="on_end_namespace_declaration_procedure" alias="eif_exml_on_end_namespace_declaration_proc" />
-						<feature name="on_not_standalone_procedure" alias="eif_exml_on_not_standalone_proc" />
-						<feature name="on_external_entity_reference_procedure" alias="eif_exml_on_external_entity_reference_proc" />
-						<feature name="on_unknown_encoding_procedure" alias="eif_exml_on_unknown_encoding_proc" />
+						<feature name="on_element_declaration_procedure" alias="eif_exml_on_element_declaration_proc"/>
+						<feature name="on_attribute_declaration_procedure" alias="eif_exml_on_attribute_declaration_proc"/>
+						<feature name="on_xml_declaration_procedure" alias="eif_exml_on_xml_declaration_proc"/>
+						<feature name="on_entity_declaration_procedure" alias="eif_exml_on_entity_declaration_proc"/>
+						<feature name="on_start_tag_procedure" alias="eif_exml_on_start_tag_proc"/>
+						<feature name="on_end_tag_procedure" alias="eif_exml_on_end_tag_proc"/>
+						<feature name="on_content_procedure" alias="eif_exml_on_content_proc"/>
+						<feature name="on_processing_instruction_procedure" alias="eif_exml_on_processing_instruction_proc"/>
+						<feature name="on_comment_procedure" alias="eif_exml_on_comment_proc"/>
+						<feature name="on_start_cdata_section_procedure" alias="eif_exml_on_start_cdata_section_proc"/>
+						<feature name="on_end_cdata_section_procedure" alias="eif_exml_on_end_cdata_section_proc"/>
+						<feature name="on_default_procedure" alias="eif_exml_on_default_proc"/>
+						<feature name="on_default_expanded_procedure" alias="eif_exml_on_default_expanded_proc"/>
+						<feature name="on_start_doctype_procedure" alias="eif_exml_on_start_doctype_proc"/>
+						<feature name="on_end_doctype_procedure" alias="eif_exml_on_end_doctype_proc"/>
+						<feature name="on_notation_declaration_procedure" alias="eif_exml_on_notation_declaration_proc"/>
+						<feature name="on_start_namespace_declaration_procedure" alias="eif_exml_on_start_namespace_declaration_proc"/>
+						<feature name="on_end_namespace_declaration_procedure" alias="eif_exml_on_end_namespace_declaration_proc"/>
+						<feature name="on_not_standalone_procedure" alias="eif_exml_on_not_standalone_proc"/>
+						<feature name="on_external_entity_reference_procedure" alias="eif_exml_on_external_entity_reference_proc"/>
+						<feature name="on_unknown_encoding_procedure" alias="eif_exml_on_unknown_encoding_proc"/>
 					</export>
 				</external>
 			</cluster>
@@ -84,4 +93,5 @@
 			<cluster name="tree"/>
 		</cluster>
 	</cluster>
+
 </cluster>

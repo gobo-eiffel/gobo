@@ -1,6 +1,17 @@
 <?xml version="1.0"?>
 
 <cluster name="kernel" location="${GOBO}/library/kernel">
+
+	<description>
+		description: "Xace file for the Gobo Eiffel Kernel Library"
+		library:     "Gobo Eiffel Kernel Library"
+		author:      "Eric Bezault [ericb@gobosoft.com]"
+		copyright:   "Copyright (c) 2001, Eric Bezault and others"
+		license:     "Eiffel Forum Freeware License v1 (see forum.txt)"
+		date:        "$Date$"
+		revision:    "$Revision$"
+	</description>
+
 	<cluster name="io"/>
 	<cluster name="misc"/>
 	<cluster name="unicode"/>
@@ -8,4 +19,5 @@
 		<cluster name="compiler" location="${GOBO}/library/kernel/spec/${GOBO_EIFFEL}"/>
 		<cluster name="os" location="${GOBO}/library/kernel/spec/${GOBO_OS}"/>
 	</cluster>
+
 </cluster>

@@ -1,6 +1,17 @@
 <?xml version="1.0"?>
 
 <cluster name="structure" location="${GOBO}/library/structure" abstract="True">
+
+	<description>
+		description: "Xace fle for the Gobo Eiffel Structure Library"
+		library:     "Gobo Eiffel Structure Library"
+		author:      "Eric Bezault [ericb@gobosoft.com]"
+		copyright:   "Copyright (c) 2001, Eric Bezault and others"
+		license:     "Eiffel Forum Freeware License v1 (see forum.txt)"
+		date:        "$Date$"
+		revision:    "$Revision$"
+	</description>
+
 	<cluster name="container"/>
 	<cluster name="dispenser"/>
 	<cluster name="list"/>
@@ -8,4 +19,5 @@
 	<cluster name="sort"/>
 	<cluster name="support"/>
 	<cluster name="table"/>
+
 </cluster>
