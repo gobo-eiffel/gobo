@@ -278,7 +278,7 @@ groupings.</p>
 
 <blockquote>
     <pre><font color="#800080">sequence</font><font
-color="#0000FF">:</font> <font color="#008080">-- /* empty */</font>
+color="#0000FF">:</font> <font color="#008080">-- Empty</font>
         <font color="#0000FF">{</font> <font color="#008080"><em>print </em>(<em>&quot;empty sequence%N&quot;</em>)</font> <font
 color="#0000FF">}</font>
     <font color="#0000FF">|</font> <font color="#800080">maybeword</font>
@@ -292,7 +292,7 @@ color="#008080">)<em>
    <font color="#0000FF"> ;</font>
 
 <font color="#800080">maybeword</font><font color="#0000FF">:</font> <font
-color="#008080">-- /* empty */</font>
+color="#008080">-- Empty</font>
         <font color="#0000FF">{</font> <font color="#008080"><em>print </em>(<em>&quot;empty maybeword%N&quot;</em>)</font> <font
 color="#0000FF">}
     | </font><font color="#800080">word</font><font
@@ -336,7 +336,7 @@ color="#800080"><tt>sequence</tt></font>:</p>
 
 <blockquote>
     <pre><font color="#800080">sequence</font><font
-color="#0000FF">: </font><font color="#008080">-- /* empty */</font><font
+color="#0000FF">: </font><font color="#008080">-- Empty</font><font
 color="#0000FF">
         { </font><font color="#008080"><em>print </em>(<em>&quot;empty sequence%N&quot;</em>)</font><font
 color="#0000FF"> }
@@ -357,7 +357,7 @@ conflict:</p>
 
 <blockquote>
     <pre><font color="#800080">sequence</font><font
-color="#0000FF">: </font><font color="#008080">-- /* empty */</font><font
+color="#0000FF">: </font><font color="#008080">-- Empty</font><font
 color="#0000FF">
     | </font><font color="#800080">sequence words</font><font
 color="#0000FF">
@@ -366,13 +366,13 @@ color="#0000FF">
     ;
 
 </font><font color="#800080">words</font><font color="#0000FF">: </font><font
-color="#008080">-- /* empty */</font><font color="#0000FF">
+color="#008080">-- Empty</font><font color="#0000FF">
     | </font><font color="#800080">words word</font><font
 color="#0000FF">
     ;
 
 </font><font color="#800080">redirects</font><font
-color="#0000FF">: </font><font color="#008080">-- /* empty */</font><font
+color="#0000FF">: </font><font color="#008080">-- Empty</font><font
 color="#0000FF">
     | </font><font color="#800080">redirects redirect</font><font
 color="#0000FF">
@@ -400,7 +400,7 @@ single level of sequence:</p>
 
 <blockquote>
     <pre><font color="#800080">sequence</font><font
-color="#0000FF">:</font><font color="#008080"> -- /* empty */</font><font
+color="#0000FF">:</font><font color="#008080"> -- Empty</font><font
 color="#0000FF">
     | </font><font color="#800080">sequence word</font><font
 color="#0000FF">
@@ -415,7 +415,7 @@ empty:</p>
 
 <blockquote>
     <pre><font color="#800080">sequence</font><font
-color="#0000FF">: </font><font color="#008080">-- /* empty */</font><font
+color="#0000FF">: </font><font color="#008080">-- Empty</font><font
 color="#0000FF">
     | </font><font color="#800080">sequence words</font><font
 color="#0000FF">
