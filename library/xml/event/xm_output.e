@@ -24,8 +24,7 @@ feature -- Output
 	set_output_to_string is
 			-- Set output to new string.
 		do
-			-- UC_STRING because of concatenation
-			last_output := new_unicode_string ("")
+			!! last_output.make (0)
 		ensure
 			last_output: last_output /= Void
 			last_output_empty: last_output.count = 0
@@ -47,13 +46,13 @@ feature -- Output
 			definition: last_output = a
 		end
 
-	last_output: UC_STRING
+	last_output: STRING
 			-- Last output.
 			-- May be void if standard output used.
 
 feature -- Output, interface to descendants
 
-	output (s: UC_STRING) is
+	output (s: STRING) is
 			-- Output string.
 			-- All output from descendants should go through this for
 			-- convenient redefinition.
@@ -61,9 +60,12 @@ feature -- Output, interface to descendants
 			s_not_void: s /= Void
 		do
 			if last_output /= Void then
+				if not is_unicode_string (last_output) and is_unicode_string (s) then
+					last_output := forced_unicode_string (last_output)
+				end
 				last_output.append_string (s)
 			else
-				std.output.put_string (s.to_utf8)
+				std.output.put_string (s)
 			end
 		end
 

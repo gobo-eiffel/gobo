@@ -36,7 +36,7 @@ creation
 
 feature -- Meta
 
-	on_processing_instruction (a_name: UC_STRING; a_content: UC_STRING) is
+	on_processing_instruction (a_name: STRING; a_content: STRING) is
 			-- Print processing instruction.
 		do
 			output_constant (Pi_start)
@@ -48,7 +48,7 @@ feature -- Meta
 			Precursor (a_name, a_content)
 		end
 
-	on_comment (a_content: UC_STRING) is
+	on_comment (a_content: STRING) is
 			-- Print comment.
 		do
 			output_constant (Comment_start)
@@ -60,7 +60,7 @@ feature -- Meta
 
 feature -- Tag
 
-	on_start_tag (a_namespace: UC_STRING; a_prefix: UC_STRING; a_local_part: UC_STRING) is
+	on_start_tag (a_namespace: STRING; a_prefix: STRING; a_local_part: STRING) is
 			-- Print start of start tag.
 		do
 			output_constant (Stag_start)
@@ -69,7 +69,7 @@ feature -- Tag
 			Precursor (a_namespace, a_prefix, a_local_part)
 		end
 
-	on_attribute (a_namespace: UC_STRING; a_prefix: UC_STRING; a_local_part: UC_STRING; a_value: UC_STRING) is
+	on_attribute (a_namespace: STRING; a_prefix: STRING; a_local_part: STRING; a_value: STRING) is
 			-- Print attribute.
 		do
 			output_constant (Space_s)
@@ -90,7 +90,7 @@ feature -- Tag
 			Precursor
 		end
 
-	on_end_tag (a_namespace: UC_STRING; a_prefix: UC_STRING; a_local_part: UC_STRING) is
+	on_end_tag (a_namespace: STRING; a_prefix: STRING; a_local_part: STRING) is
 			-- Print end tag.
 		do
 			output_constant (Etag_start)
@@ -102,7 +102,7 @@ feature -- Tag
 
 feature -- Content
 
-	on_content (a_content: UC_STRING) is
+	on_content (a_content: STRING) is
 			-- Text content.
 			-- NOT atomic: successive content may be different.
 			-- Default: forward event to 'next'.
@@ -146,14 +146,11 @@ feature {NONE} -- Output
 			-- Output constant string.
 		require
 			s_not_void: s /= Void
-		local
-			a_string: UC_STRING
 		do
-			a_string := new_unicode_string (s)
-			output (a_string)
+			output (s)
 		end
 
-	output_quote_escaped (s: UC_STRING) is
+	output_quote_escaped (s: STRING) is
 			-- Like output escaped with quote also escaped for
 			-- attribute values.
 		local
@@ -188,7 +185,7 @@ feature {NONE} -- Output
 			end
 		end
 
-	output_escaped (s: UC_STRING) is
+	output_escaped (s: STRING) is
 			-- Escape and output content string.
 		require
 			s_not_void: s /= Void
@@ -226,7 +223,7 @@ feature {NONE} -- Output
 			end
 		end
 
-	output_name (a_prefix: UC_STRING; a_local_part: UC_STRING) is
+	output_name (a_prefix: STRING; a_local_part: STRING) is
 			-- Output prefix:name.
 		require
 			s_not_void: a_local_part /= Void

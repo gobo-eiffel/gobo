@@ -26,6 +26,27 @@ inherit
 			out
 		end
 
+	UC_UNICODE_FACTORY
+		export
+			{NONE} all
+		undefine
+			out
+		end
+	
+	XM_UNICODE_STRUCTURE_FACTORY
+		export
+			{NONE} all
+		undefine
+			out
+		end
+	
+	KL_IMPORTED_STRING_ROUTINES
+		export
+			{NONE} all
+		undefine
+			out
+		end
+	
 creation
 
 	make_name, make_list,
@@ -41,7 +62,7 @@ feature {NONE} -- Creation
 			set_default
 		ensure
 			is_name: is_name
-			set: name.is_equal (a)
+			set: same_string (name, a)
 		end
 
 	make_list is
@@ -114,7 +135,7 @@ feature {NONE} -- Creation (derived)
 
 feature -- Data
 
-	name: UC_STRING
+	name: STRING
 			-- Name, IF leaf item.
 		--require is_name
 		--ensure Result /= Void
@@ -142,20 +163,20 @@ feature -- General
 			a_cursor: DS_LINEAR_CURSOR[XM_DTD_ELEMENT_CONTENT]
 		do
 			if is_name then
-				Result := name.to_utf8
+				Result := name
 			elseif is_content_any then
 				Result := "ANY"
 			elseif is_content_empty then
 				Result := "EMPTY"
 			else
-				Result := clone ("(")
+				Result := "("
 				from
 					a_cursor := items.new_cursor
 					a_cursor.start
 				until
 					a_cursor.after
 				loop
-					Result.append_string (a_cursor.item.out)
+					Result := STRING_.concat (Result, a_cursor.item.out)
 					a_cursor.forth
 					if not a_cursor.after then
 						if is_content_mixed then
@@ -165,7 +186,7 @@ feature -- General
 						end
 					end
 				end
-				Result.append_character (')')
+				Result := STRING_.concat (Result, ")")
 				Result.append_character (repetition)
 			end
 		end
