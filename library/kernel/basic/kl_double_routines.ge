@@ -12,10 +12,10 @@ indexing
 
 class KL_DOUBLE_ROUTINES
 
-#ifdef ISE
 inherit
 	ANY
 
+#ifdef ISE
 	DOUBLE_MATH
 		rename
 			log as old_log,
@@ -27,9 +27,6 @@ inherit
 
 #endif
 #ifdef VE
-inherit
-	ANY
-
 	MATH
 		rename
 			log as old_log,
@@ -39,6 +36,9 @@ inherit
 		end
 
 #endif
+	
+	KL_SHARED_PLATFORM
+	
 feature -- Logarithms
 
 	log (d: DOUBLE): DOUBLE is
@@ -132,6 +132,21 @@ feature -- Exponent
 #ifdef SE
 			Result := d.pow (1.0 / n)
 #endif
+		end
+
+	floor_to_integer (d: DOUBLE): INTEGER is
+			-- INTEGER floor
+			-- (floor returns integer in ELKS, but a floating point value with SE2)
+		require
+			d_large_enough: d >= Platform.Minimum_integer
+			d_small_enough: d < (Platform.Maximum_integer + 1.0)
+		do
+			Result := d.truncated_to_integer
+			if d.floor /= Result then
+				Result := Result - 1
+			end
+		ensure
+			definition: Result = d.floor
 		end
 
 end
