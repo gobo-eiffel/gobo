@@ -4,8 +4,9 @@ indexing
 
 		"Parsers for 'gepp' preprocessors"
 
-	author:     "Eric Bezault <ericb@gobo.demon.co.uk>"
-	copyright:  "Copyright (c) 1998, Eric Bezault"
+	author:     "Eric Bezault <ericb@gobosoft.com>"
+	copyright:  "Copyright (c) 1999, Eric Bezault and others"
+	license:    "Eiffel Forum Freeware License v1 (see forum.txt)"
 	date:       "$Date$"
 	revision:   "$Revision$"
 
@@ -58,7 +59,7 @@ feature {NONE} -- Semantic actions
 		do
 			inspect yy_act
 when 7 then
---|#line 63
+--|#line 64
 			yyval := yyval_default;
 			if not ignored then
 				define_value ("", yytype1 (yyvs.item (yyvsp - 1)))
@@ -66,7 +67,7 @@ when 7 then
 		
 
 when 8 then
---|#line 69
+--|#line 70
 			yyval := yyval_default;
 			if not ignored then
 				undefine_value (yytype1 (yyvs.item (yyvsp - 1)))
@@ -74,7 +75,7 @@ when 8 then
 		
 
 when 9 then
---|#line 75
+--|#line 76
 			yyval := yyval_default;
 			if not ignored then
 				process_include (yytype1 (yyvs.item (yyvsp - 1)))
@@ -82,7 +83,7 @@ when 9 then
 		
 
 when 10 then
---|#line 83
+--|#line 84
 			yyval := yyval_default;
 			if_level := if_level + 1
 			if not ignored and not yytype2 (yyvs.item (yyvsp - 1)) then
@@ -91,7 +92,7 @@ when 10 then
 		
 
 when 11 then
---|#line 90
+--|#line 91
 			yyval := yyval_default;
 			if_level := if_level + 1
 			if not ignored and yytype2 (yyvs.item (yyvsp - 1)) then
@@ -100,37 +101,37 @@ when 11 then
 		
 
 when 12 then
---|#line 99
+--|#line 100
 
 			yyval2 := is_defined (yytype1 (yyvs.item (yyvsp)))
 		
 			yyval := yyval2
 when 13 then
---|#line 103
+--|#line 104
 
 			yyval2 := yytype2 (yyvs.item (yyvsp - 1))
 		
 			yyval := yyval2
 when 14 then
---|#line 107
+--|#line 108
 
 			yyval2 := yytype2 (yyvs.item (yyvsp - 2)) and yytype2 (yyvs.item (yyvsp))
 		
 			yyval := yyval2
 when 15 then
---|#line 111
+--|#line 112
 
 			yyval2 := yytype2 (yyvs.item (yyvsp - 2)) or yytype2 (yyvs.item (yyvsp))
 		
 			yyval := yyval2
 when 16 then
---|#line 115
+--|#line 116
 
 			yyval2 := not yytype2 (yyvs.item (yyvsp))
 		
 			yyval := yyval2
 when 17 then
---|#line 121
+--|#line 122
 			yyval := yyval_default;
 			if ignored_level = if_level then
 				ignored_level := 0
@@ -139,7 +140,7 @@ when 17 then
 		
 
 when 18 then
---|#line 130
+--|#line 131
 			yyval := yyval_default;
 			if not ignored then
 				ignored_level := if_level

@@ -4,8 +4,9 @@ indexing
 
 		"Scanners for 'gepp' preprocessors"
 
-	author:     "Eric Bezault <ericb@gobo.demon.co.uk>"
-	copyright:  "Copyright (c) 1998, Eric Bezault"
+	author:     "Eric Bezault <ericb@gobosoft.com>"
+	copyright:  "Copyright (c) 1999, Eric Bezault and others"
+	license:    "Eiffel Forum Freeware License v1 (see forum.txt)"
 	date:       "$Date$"
 	revision:   "$Revision$"
 
@@ -57,17 +58,8 @@ if yy_act <= 6 then
 if yy_act <= 3 then
 if yy_act <= 2 then
 if yy_act = 1 then
---|#line 43
-set_start_condition (S_PREPROC)
-else
 --|#line 44
-
-						if not ignored then
-							echo
-						end
-						line_nb := line_nb + 1
-					
-end
+set_start_condition (S_PREPROC)
 else
 --|#line 45
 
@@ -78,20 +70,29 @@ else
 					
 end
 else
+--|#line 46
+
+						if not ignored then
+							echo
+						end
+						line_nb := line_nb + 1
+					
+end
+else
 if yy_act <= 5 then
 if yy_act = 4 then
---|#line 51
+--|#line 52
 
 						if not ignored then
 							echo
 						end
 					
 else
---|#line 59
+--|#line 60
 -- Separator.
 end
 else
---|#line 60
+--|#line 61
 -- Comment.
 end
 end
@@ -99,22 +100,22 @@ else
 if yy_act <= 9 then
 if yy_act <= 8 then
 if yy_act = 7 then
---|#line 61
+--|#line 62
 last_token := P_IFDEF
 else
---|#line 62
+--|#line 63
 last_token := P_IFNDEF
 end
 else
---|#line 63
+--|#line 64
 last_token := P_ELSE
 end
 else
 if yy_act = 10 then
---|#line 64
+--|#line 65
 last_token := P_ENDIF
 else
---|#line 65
+--|#line 66
 last_token := P_INCLUDE
 end
 end
@@ -124,14 +125,14 @@ if yy_act <= 16 then
 if yy_act <= 14 then
 if yy_act <= 13 then
 if yy_act = 12 then
---|#line 66
+--|#line 67
 last_token := P_DEFINE
 else
---|#line 67
+--|#line 68
 last_token := P_UNDEF
 end
 else
---|#line 68
+--|#line 69
 
 						last_token := P_STRING
 						last_value := text_substring (2, text_count - 1)
@@ -139,13 +140,13 @@ else
 end
 else
 if yy_act = 15 then
---|#line 72
+--|#line 73
 
 						last_token := P_NAME
 						last_value := text
 					
 else
---|#line 76
+--|#line 77
 last_token := P_AND
 end
 end
@@ -153,10 +154,10 @@ else
 if yy_act <= 19 then
 if yy_act <= 18 then
 if yy_act = 17 then
---|#line 77
+--|#line 78
 last_token := P_OR
 else
---|#line 78
+--|#line 79
 
 						last_token := P_EOL
 						line_nb := line_nb + 1
@@ -164,12 +165,12 @@ else
 					
 end
 else
---|#line 83
+--|#line 84
 last_token := text_item (1).code
 end
 else
 if yy_act = 20 then
---|#line 86
+--|#line 87
 last_token := text_item (1).code
 else
 --|#line 0
