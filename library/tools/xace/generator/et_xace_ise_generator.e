@@ -412,9 +412,9 @@ feature {NONE} -- Output
 			-- `a_file'.
 		require
 			link_libraries_not_void: link_libraries /= Void
-			no_void_library: not a_libraries.has (Void)
+			no_void_library: not link_libraries.has (Void)
 			link_libraries_directories_not_void: link_libraries_directories /= Void
-			no_void_library: not link_libraries_directories.has (Void)
+			no_void_directory: not link_libraries_directories.has (Void)
 			a_file_not_void: a_file /= Void
 			a_file_open_write: a_file.is_open_write
 		local
