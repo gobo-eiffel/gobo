@@ -62,7 +62,7 @@ feature -- Access
 			-- -f option, default: false
 
 	case_insensitive: BOOLEAN
-			-- -i option, default: true
+			-- -i option, default: false
 
 	meta_ecs: BOOLEAN
 			-- -m option, default: true
