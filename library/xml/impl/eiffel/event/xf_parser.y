@@ -40,7 +40,7 @@ feature {ANY}
 %token <UC_STRING> T_PI_CONTENT
 %token <UC_STRING> T_COMMENT_CONTENT
 
-%type <UC_STRING>	xml_attr_value
+%type <UC_STRING>	xml_attr_value xml_attr_text
 %type <UC_STRING>	xml_decl_version
 
 %type <DS_PAIR [UC_STRING, UC_STRING]>	xml_attr_name
@@ -72,7 +72,7 @@ xml_decl:
 
 ----------------
 xml_decl_version:
-	T_WORD T_EQUAL T_DOUBLE_QUOTES T_ATTR_TEXT T_DOUBLE_QUOTES { $$ := $4 }
+	T_WORD T_EQUAL T_DOUBLE_QUOTES xml_attr_text T_DOUBLE_QUOTES { $$ := $4 }
 	;
 
 ----------------
@@ -177,11 +177,17 @@ xml_attr_name:
 
 ----------------
 xml_attr_value: 
-	T_DOUBLE_QUOTES T_ATTR_TEXT T_DOUBLE_QUOTES
+	T_DOUBLE_QUOTES xml_attr_text T_DOUBLE_QUOTES
         {
 		$$ := $2
         }
         ;
+
+xml_attr_text: -- Empty
+		{ !! $$.make (0) }
+	| T_ATTR_TEXT
+		{ $$ := $1 }
+	;
 
 ----------------
 xml_pi: 
