@@ -53,6 +53,9 @@ feature -- Access
 			-- Name of the file containing the configuration
 			-- information to build current project
 
+	description: STRING
+		-- project description
+
 	targets: DS_ARRAYED_LIST [GEANT_TARGET]
 			-- Target elements found in current project
 
@@ -94,6 +97,17 @@ feature -- Setting
 			verbose_set: verbose = a_verbose
 		end
 
+	set_description (a_description: STRING) is
+			-- Set `description' to `a_description'.
+		require
+			a_description_not_void: a_description /= Void
+			a_description_not_empty: a_description.count > 0
+		do
+			description := a_description
+		ensure
+			description_set: description = a_description
+		end
+
 feature -- Processing
 
 	load (a_start_target_name: STRING) is
@@ -104,7 +118,9 @@ feature -- Processing
 			xml_parser: GEANT_PROJECT_PARSER
 			ucs: UC_STRING
 			start_target_name: UC_STRING
+			children: DS_ARRAYED_LIST [GEANT_ELEMENT]
 			target_elements: DS_ARRAYED_LIST [GEANT_ELEMENT]
+			an_element: GEANT_ELEMENT
 			a_target: GEANT_TARGET
 			i: INTEGER
 
@@ -120,6 +136,14 @@ feature -- Processing
 				-- Setup project's root element:
 			root_element := xml_parser.root_element
 			if root_element /= Void then
+					-- determine description if available:
+				children := root_element.children
+				if children.count > 0 then
+					an_element := children.item (1)
+					if an_element.name.is_equal (Description_element_name) then
+						set_description (an_element.content.out)
+					end
+				end
 					-- Find all target elements of current project:
 				target_elements := root_element.children_by_name (Target_element_name)
 

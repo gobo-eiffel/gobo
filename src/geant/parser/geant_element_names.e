@@ -45,6 +45,15 @@ feature -- Element names
 			element_name_not_empty: not Result.empty
 		end
 
+	Description_element_name: UC_STRING is
+			-- "description" element name
+		once
+			!!Result.make_from_string ("description")
+		ensure
+			element_name_not_void: Result /= Void
+			element_name_not_empty: not Result.empty
+		end
+
 feature -- Attribute names and values
 
 	Id_attribute_name: UC_STRING is

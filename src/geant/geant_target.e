@@ -35,16 +35,32 @@ feature {NONE} -- Initialization
 			project_not_void: a_project /= Void
 			target_element_not_void: a_target_element /= Void
 			target_element_has_name: a_target_element.has_attribute (Name_attribute_name)
+		local
+			children: DS_ARRAYED_LIST [GEANT_ELEMENT]
+			an_element: GEANT_ELEMENT
 		do
 			project := a_project
 			target_element := a_target_element
 			set_name (target_element.attribute_value_by_name (Name_attribute_name).out)
+
+				-- determine description if available:
+			children := target_element.children
+			if children.count > 0 then
+				an_element := children.item (1)
+				if an_element.name.is_equal (Description_element_name) then
+					set_description (an_element.content.out)
+				end
+			end
+
 		ensure
 			project_set: project = a_project
 			target_element_set: target_element = a_target_element
 		end
 
 feature -- Access
+
+	description: STRING
+		-- description of what target is responsible for
 
 	has_dependencies: BOOLEAN is
 			-- Has current target dependent on other targets?
@@ -75,6 +91,17 @@ feature -- Setting
 			name := a_name
 		ensure
 			name_set: name = a_name
+		end
+
+	set_description (a_description: STRING) is
+			-- Set `description' to `a_description'.
+		require
+			a_description_not_void: a_description /= Void
+			a_description_not_empty: a_description.count > 0
+		do
+			description := a_description
+		ensure
+			description_set: description = a_description
 		end
 
 feature -- Processing
@@ -128,7 +155,15 @@ feature -- Processing
 				end
 
 
-				from i := 1 until i > nb or not if_condition or unless_condition loop
+				from
+					if description /= Void then
+						i := 2
+					else
+						i := 1
+					end
+				until
+					i > nb or not if_condition or unless_condition
+				loop
 					an_element := children.item (i)
 						-- Dispatch tasks:
 					if an_element.name.is_equal (Compile_se_task_name) then
