@@ -199,4 +199,4 @@ feature -- Execution
 			end
 		end
 
-end -- class GEANT_HACT_COMMAND
+end

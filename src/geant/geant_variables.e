@@ -353,4 +353,4 @@ feature -- Setting
 			variables.force (a_value, a_name)
 		end
 
-end -- class GEANT_VARIABLES
+end

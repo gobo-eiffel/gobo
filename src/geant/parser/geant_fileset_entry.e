@@ -104,5 +104,5 @@ invariant
 	mapped_filename_not_void: mapped_filename /= Void
 	mapped_filename_not_empty: mapped_filename.count > 0
 
-end -- class GEANT_FILESET_ENTRY
+end
 

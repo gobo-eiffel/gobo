@@ -82,4 +82,4 @@ feature {NONE} -- Implementation
 			end
 		end
 
-end -- class GEANT_FILESYSTEM_COMMAND
+end

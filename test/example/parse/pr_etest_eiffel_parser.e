@@ -60,4 +60,4 @@ feature {NONE} -- Implementation
 			sample_e_filename_not_empty: Result.count > 0
 		end
 
-end -- class PR_ETEST_EIFFEL_PARSER
+end

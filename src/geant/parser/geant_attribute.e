@@ -91,4 +91,4 @@ invariant
 	name_not_empty: name.count > 0
 	value_not_void: value /= Void
 
-end -- class GEANT_ATTRIBUTE
+end

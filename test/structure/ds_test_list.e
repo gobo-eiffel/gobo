@@ -147,4 +147,4 @@ feature {NONE} -- Implementation
 			assert ("after2", a_list.after)
 		end
 
-end -- class DS_TEST_LIST
+end

@@ -153,7 +153,7 @@ feature
 
 	file_name: UC_STRING
 
-end -- class NAMESPACES
+end
 --|-------------------------------------------------------------------------
 --| eXML, Eiffel XML Parser Toolki
 --| Copyright (C) 1999  Andreas Leitner and others

@@ -240,4 +240,4 @@ invariant
 	in_filename_not_void: in_filename /= Void
 	out_filename_not_void: out_filename /= Void
 
-end -- class GEPP
+end

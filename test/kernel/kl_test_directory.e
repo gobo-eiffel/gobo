@@ -601,4 +601,4 @@ feature -- Test
 			assert ("not_readable6", not file_system.is_directory_readable (a_name))
 		end
 
-end -- class KL_TEST_DIRECTORY
+end

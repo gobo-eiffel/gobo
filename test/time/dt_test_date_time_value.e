@@ -279,4 +279,4 @@ feature -- Test
 			assert_equal ("append_precise_time_to_string4", "G#0:4:3.456", a_string)
 		end
 
-end -- class DT_TEST_DATE_TIME_VALUE
+end

@@ -25,5 +25,5 @@ feature {NONE} -- Initialization
 			print ("Hello World%N")
 		end
 
-end -- class HELLO
+end
 

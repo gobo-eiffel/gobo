@@ -228,4 +228,4 @@ feature {NONE} -- Implementation
 			end
 		end
 
-end -- class GEANT_COPY_COMMAND
+end

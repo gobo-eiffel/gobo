@@ -907,4 +907,4 @@ feature -- Error handling
 			std.error.put_character ('%N')
 		end
 
-end -- class EIFFEL_PARSER
+end

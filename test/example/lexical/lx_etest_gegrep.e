@@ -32,4 +32,4 @@ feature -- Test
 			compile_example
 		end
 
-end -- class LX_ETEST_GEGREP
+end

@@ -189,4 +189,4 @@ feature -- Test
 			assert_equal ("resized", "gobo##", a_buffer.to_string)
 		end
 
-end -- class KL_TEST_CHARACTER_BUFFER
+end

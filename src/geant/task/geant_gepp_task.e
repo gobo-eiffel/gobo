@@ -158,4 +158,4 @@ feature {NONE} -- Constants
 			element_name_not_empty: Result.count > 0
 		end
 
-end -- class GEANT_GEPP_TASK
+end

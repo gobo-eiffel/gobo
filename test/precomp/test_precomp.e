@@ -240,4 +240,4 @@ feature {NONE} -- Implementation
 			output_log_not_empty: Result.count > 0
 		end
 
-end -- class TEST_PRECOMP
+end

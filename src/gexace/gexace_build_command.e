@@ -26,4 +26,4 @@ invariant
 	generators_not_void: generators /= Void
 	no_void_generator: not generators.has (Void)
 
-end -- class GEXACE_BUILD_COMMAND
+end

@@ -153,5 +153,5 @@ feature
 
 	file_name: STRING
 
-end -- class PRINT
+end
 

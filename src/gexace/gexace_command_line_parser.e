@@ -138,4 +138,4 @@ feature {NONE} -- Implementation
 			Result := (i >= 1 and i <= Arguments.argument_count)
 		end
 
-end -- class GEXACE_COMMAND_LINE_PARSER
+end

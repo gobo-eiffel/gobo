@@ -638,4 +638,4 @@ feature -- Test
 			end
 		end
 
-end -- class KL_TEST_MACOS_OUTPUT_FILE
+end

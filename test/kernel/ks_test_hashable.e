@@ -40,4 +40,4 @@ feature -- Test
 			assert ("hash_code2", a_hashable.hash_code = a_hashable2.hash_code) 
 		end
 
-end -- class KS_TEST_HASHABLE
+end

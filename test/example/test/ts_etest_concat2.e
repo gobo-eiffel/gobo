@@ -59,4 +59,4 @@ feature {NONE} -- Implementation
 			expected_output_not_empty: Result.count > 0
 		end
 
-end -- class TS_ETEST_CONCAT2
+end

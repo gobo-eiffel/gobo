@@ -58,4 +58,4 @@ feature -- Test
 			assert_iarrays_same ("items9", <<8>>, a_table.to_array)
 		end
 
-end -- class DS_TEST_MULTIARRAYED_HASH_TABLE
+end

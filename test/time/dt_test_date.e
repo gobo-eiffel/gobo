@@ -343,4 +343,4 @@ feature -- Test
 			assert_equal ("add_date_duration", d2, d1)
 		end
 
-end -- class DT_TEST_DATE
+end

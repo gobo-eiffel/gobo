@@ -332,4 +332,4 @@ feature -- Test
 			assert ("not_canonical2", not a_pathname.is_canonical)
 		end
 
-end -- class KL_TEST_PATHNAME
+end

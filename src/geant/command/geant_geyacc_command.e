@@ -175,4 +175,4 @@ feature -- Execution
 			execute_shell (cmd)
 		end
 
-end -- class GEANT_GEYACC_COMMAND
+end

@@ -265,4 +265,4 @@ feature -- Execution
 			end
 		end
 
-end -- class GEANT_VE_COMMAND
+end

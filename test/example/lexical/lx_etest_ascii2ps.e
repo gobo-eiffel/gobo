@@ -70,4 +70,4 @@ feature {NONE} -- Implementation
 			sample_ps_filename_not_empty: Result.count > 0
 		end
 
-end -- class LX_ETEST_ASCII2PS
+end

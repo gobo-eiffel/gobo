@@ -59,4 +59,4 @@ feature {NONE} -- Constants
 			attribute_name_not_empty: Result.count > 0
 		end
 
-end -- class GEANT_UNSET_TASK
+end

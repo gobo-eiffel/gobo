@@ -103,4 +103,4 @@ print (a_universe.features.count)
 print (" features%N")
 		end
 
-end -- class GELINT
+end

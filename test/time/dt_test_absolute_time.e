@@ -192,4 +192,4 @@ feature -- Test
 			assert ("infix_less2", t2 < t1)
 		end
 
-end -- class DT_TEST_ABSOLUTE_TIME
+end

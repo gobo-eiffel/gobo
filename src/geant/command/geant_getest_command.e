@@ -115,4 +115,4 @@ invariant
 	no_void_define_name: not defines.has (Void)
 	no_void_define_value: not defines.has_item (Void)
 
-end -- class GEANT_GETEST_COMMAND
+end

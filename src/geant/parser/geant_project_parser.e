@@ -89,4 +89,4 @@ feature {NONE} -- Implementation
 			stack_not_void: Result /= Void
 		end
 
-end -- class GEANT_PROJECT_PARSER
+end

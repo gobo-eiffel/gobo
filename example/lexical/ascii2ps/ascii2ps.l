@@ -673,4 +673,5 @@ invariant
 	output_not_void: output_file /= Void
 	output_open_write: output_file.is_open_write
 
-end -- class ASCII2PS
+end
+

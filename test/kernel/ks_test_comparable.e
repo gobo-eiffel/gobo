@@ -357,4 +357,4 @@ feature -- Test
 			assert_equal ("compare7", 0, a_comparable2.three_way_comparison (a_comparable))
 		end
 
-end -- class KS_TEST_COMPARABLE
+end

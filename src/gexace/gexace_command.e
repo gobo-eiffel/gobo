@@ -58,4 +58,4 @@ invariant
 	variables_not_void: variables /= Void
 	error_handler_not_void: error_handler /= Void
 
-end -- class GEXACE_COMMAND
+end

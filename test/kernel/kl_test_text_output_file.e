@@ -603,4 +603,4 @@ feature -- Test
 			end
 		end
 
-end -- class KL_TEST_TEXT_OUTPUT_FILE
+end

@@ -320,4 +320,4 @@ feature -- Processing
 
 		end
 
-end -- class GEANT_SHARED_PROPERTIES
+end

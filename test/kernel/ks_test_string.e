@@ -578,4 +578,4 @@ feature -- Test
 			assert_equal ("compare7", 0, a_string2.three_way_comparison (a_string))
 		end
 
-end -- class KS_TEST_STRING
+end

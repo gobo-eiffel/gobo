@@ -39,4 +39,4 @@ feature -- Execution
 			std.output.put_line (utc_system_clock.date_time_now.out)
 		end
 
-end -- class CLOCK
+end

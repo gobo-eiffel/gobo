@@ -311,4 +311,4 @@ feature -- Constants
 	Processor_xalan_java: INTEGER is unique
 			-- Identifier for Xalan Java processor
 
-end -- class GEANT_XSLT_COMMAND
+end

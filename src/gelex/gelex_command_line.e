@@ -246,4 +246,4 @@ invariant
 
 	error_handler_not_void: error_handler /= Void
 
-end -- class GELEX_COMMAND_LINE
+end

@@ -152,4 +152,4 @@ feature {NONE} -- Implementation
 			counter_not_void: Result /= Void
 		end
 
-end -- class KL_TEST_CASE
+end

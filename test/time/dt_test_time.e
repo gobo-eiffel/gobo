@@ -148,4 +148,4 @@ feature -- Test
 			assert_equal ("set_millisecond_count", t2, t1)
 		end
 
-end -- class DT_TEST_TIME
+end

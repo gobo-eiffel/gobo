@@ -48,4 +48,4 @@ feature {NONE} -- Implementation
 			yacc_cluster_not_empty: Result.count > 0
 		end
 
-end -- class LX_ETEST_CALCULATOR
+end

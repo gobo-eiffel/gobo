@@ -208,4 +208,4 @@ feature -- Execution
 			end
 		end
 
-end -- class GEANT_OUTOFDATE_COMMAND
+end

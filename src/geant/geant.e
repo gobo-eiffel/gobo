@@ -215,4 +215,4 @@ feature {NONE} -- Error handling
 			usage_message_not_void: Result /= Void
 		end
 
-end -- class GEANT
+end

@@ -15,4 +15,4 @@ feature -- Constants
 
 	Version_number: STRING is "2.1"
 
-end -- class GELEX_VERSION
+end

@@ -409,4 +409,4 @@ invariant
 	no_void_command: not commands.has (Void)
 	error_handler_not_void: error_handler /= Void
 
-end -- class GEXACE
+end

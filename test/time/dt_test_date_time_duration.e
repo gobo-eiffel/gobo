@@ -390,4 +390,4 @@ feature -- Test
 			assert ("infix_less4", d2 < d1)
 		end
 
-end -- class DT_TEST_DATE_TIME_DURATION
+end

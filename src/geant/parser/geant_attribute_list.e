@@ -85,4 +85,4 @@ invariant
 
 	no_void_attribute: not has (Void)
 
-end -- class GEANT_ATTRIBUTE_LIST
+end

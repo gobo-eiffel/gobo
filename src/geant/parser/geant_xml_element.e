@@ -146,4 +146,4 @@ invariant
 	name_not_empty: name.count > 0
 	content_not_void: content /= Void
 
-end -- class GEANT_XML_ELEMENT
+end

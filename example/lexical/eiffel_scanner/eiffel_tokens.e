@@ -117,4 +117,4 @@ feature -- Token codes
 	E_NOT: INTEGER is 359
 	E_OLD: INTEGER is 360
 
-end -- class EIFFEL_TOKENS
+end

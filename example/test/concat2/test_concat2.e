@@ -27,4 +27,5 @@ feature -- Test
 			assert_equal ("foo+bar", "foobar", c.concat ("foo", "bar"))
 		end
 
-end -- class TEST_CONCAT2
+end
+

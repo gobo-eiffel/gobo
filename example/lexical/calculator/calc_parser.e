@@ -233,4 +233,4 @@ feature {ANY} -- creation
 			parse
 		end -- make
 
-end -- class CALC_PARSER
+end

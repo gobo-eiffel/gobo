@@ -32,4 +32,4 @@ feature -- Test
 			compile_example
 		end
 
-end -- class PR_ETEST_RPCALC
+end

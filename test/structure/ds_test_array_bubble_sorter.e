@@ -133,4 +133,4 @@ feature -- Test
 			assert_iarrays_same ("items3", <<4, 3, 2, 1>>, an_array)
 		end
 
-end -- class DS_TEST_ARRAY_BUBBLE_SORTER
+end

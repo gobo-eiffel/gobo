@@ -88,4 +88,4 @@ feature {NONE} -- Constants
 			atribute_name_not_empty: Result.count > 0
 		end
 
-end -- class GEANT_GEANT_TASK
+end

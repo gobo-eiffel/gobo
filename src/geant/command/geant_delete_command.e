@@ -171,4 +171,4 @@ feature -- Execution
 			end
 		end
 
-end -- class GEANT_DELETE_COMMAND
+end

@@ -250,4 +250,4 @@ feature -- Execution
 			execute_shell (cmd)
 		end
 
-end -- class GEANT_GELEX_COMMAND
+end

@@ -228,4 +228,4 @@ feature -- Test
 			assert_equal ("add_milliseconds", d2, d1)
 		end
 
-end -- class DT_TEST_TIME_DURATION
+end

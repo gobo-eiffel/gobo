@@ -149,4 +149,4 @@ feature {NONE} -- Implementation
 	pending_character: CHARACTER
 	has_pending_character: BOOLEAN
 
-end -- class CALC
+end

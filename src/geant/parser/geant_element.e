@@ -353,4 +353,4 @@ invariant
 	xml_element_not_void: xml_element /= Void
 	valid_xml_element: valid_xml_element (xml_element)
 
-end -- class GEANT_ELEMENT
+end

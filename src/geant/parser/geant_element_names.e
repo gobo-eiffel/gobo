@@ -248,4 +248,4 @@ feature -- Task names
 			task_name_not_empty: Result.count > 0
 		end
 
-end -- class GEANT_ELEMENT_NAMES
+end

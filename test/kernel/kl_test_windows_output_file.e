@@ -641,4 +641,4 @@ feature -- Test
 			end
 		end
 
-end -- class KL_TEST_WINDOWS_OUTPUT_FILE
+end

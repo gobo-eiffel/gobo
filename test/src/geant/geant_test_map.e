@@ -23,6 +23,7 @@ feature -- Test
 	test_set_type is
 			-- Test feature `set_type'.
 		do
+			!! map.make (project)
 			map.set_type (map.Type_attribute_value_identity)
 			assert_equal ("set_type1", "identity", map.type)
 
@@ -33,6 +34,7 @@ feature -- Test
 	test_set_source_pattern is
 			-- Test feature `set_source_pattern'.
 		do
+			!! map.make (project)
 			map.set_source_pattern ("*.ge")
 			assert_equal ("set_source_pattern1", "*.ge", map.source_pattern)
 
@@ -43,6 +45,7 @@ feature -- Test
 	test_set_target_pattern is
 			-- Test feature `set_target_pattern'.
 		do
+			!! map.make (project)
 			map.set_target_pattern ("*.e")
 			assert_equal ("set_target_pattern1", "*.e", map.target_pattern)
 
@@ -50,19 +53,47 @@ feature -- Test
 			assert_equal ("set_target_pattern2", "alkj*.e", map.target_pattern) 
 		end
 
-	test_is_executable is
-			-- Test feature `is_executable'.
+	test_is_executable_identity is
+			-- Test feature `is_executable' in mode 'identity'.
 		do
-			assert ("is_executable1", map.is_executable)	-- default type is identity
+			!! map.make (project)
+			assert ("is_executable_identity_1", map.is_executable)	-- default type is identity
 
-			map.set_type (map.Type_attribute_value_glob)
-			assert ("is_executable2", not map.is_executable)
-
-			map.set_source_pattern ("*.ge")
-			assert ("is_executable3", not map.is_executable)
+			map.set_source_pattern ("*.e")
+			assert ("is_executable_identity_1a", not map.is_executable)
 
 			map.set_target_pattern ("*.e")
-			assert ("is_executable3", map.is_executable)
+			assert ("is_executable_identity_1b", not map.is_executable)
+
+		end
+
+	test_is_executable_glob is
+			-- Test feature `is_executable' in mode 'glob'.
+		do
+			!! map.make (project)
+			map.set_type (map.Type_attribute_value_glob)
+
+			assert ("is_executable_glob1", not map.is_executable)
+			map.set_source_pattern ("*.ge")
+			assert ("is_executable_glob2", not map.is_executable)
+
+			map.set_target_pattern ("*.e")
+			assert ("is_executable_glob3", map.is_executable)
+
+			!! map.make (project)
+			map.set_type (map.Type_attribute_value_glob)
+			map.set_source_pattern ("")
+			map.set_target_pattern ("*.e")
+			assert ("is_executable_glob4", not map.is_executable)
+
+			map.set_source_pattern ("a")
+			assert ("is_executable_glob5", not map.is_executable)
+
+			map.set_source_pattern ("*.a")
+			assert ("is_executable_glob6", map.is_executable)
+
+			map.set_type ("globber")
+			assert ("is_executable_glob7", not map.is_executable)
 		end
 
 	test_mapped_filename is
@@ -70,6 +101,7 @@ feature -- Test
 		local
 			a_string: STRING
 		do
+			!! map.make (project)
 --			map.project.set_debug_mode (True)
 			map.set_type ("glob")
 			map.set_source_pattern ("*.ge")
@@ -96,12 +128,10 @@ feature -- Execution
 	set_up is
 			-- Setup for a test.
 		local
-			a_project: GEANT_PROJECT
 			a_variables: GEANT_VARIABLES
 		do
 			!! a_variables.make
-			!! a_project.make (a_variables)
-			!! map.make (a_project)
+			!! project.make (a_variables)
 		end
 
 	tear_down is
@@ -112,7 +142,10 @@ feature -- Execution
 
 feature {NONE} -- Implementation
 
+	project: GEANT_PROJECT
+		-- Dummy project for test
+
 	map: GEANT_MAP
 			-- Map under test
 
-end -- class GEANT_TEST_MAP
+end

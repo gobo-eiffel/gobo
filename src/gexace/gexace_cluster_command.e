@@ -76,4 +76,4 @@ feature -- Execution
 			end
 		end
 
-end -- class GEXACE_CLUSTER_COMMAND
+end

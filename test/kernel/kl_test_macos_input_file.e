@@ -886,4 +886,4 @@ feature -- Test
 			end
 		end
 
-end -- class KL_TEST_MACOS_INPUT_FILE
+end

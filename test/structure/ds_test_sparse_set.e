@@ -75,4 +75,4 @@ feature {NONE} -- Implementation
 			assert_iarrays_same ("items9", <<8>>, a_set.to_array)
 		end
 
-end -- class DS_TEST_SPARSE_SET
+end

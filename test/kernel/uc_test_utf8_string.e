@@ -3773,4 +3773,4 @@ feature -- Test
 			assert ("not_is_ascii1", not a_string.is_ascii)
 		end
 
-end -- class UC_TEST_UTF8_STRING
+end

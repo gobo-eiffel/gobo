@@ -122,4 +122,4 @@ feature -- Test
 			assert ("not_matches4", a_wildcard.matched_position ("library/foo/kl_bar.o") = Void)
 		end
 
-end -- class LX_TEST_DFA_WILDCARD
+end

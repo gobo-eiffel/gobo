@@ -56,4 +56,4 @@ feature -- Execution
 			end
 		end
 
-end -- class GEXACE_VALIDATE_COMMAND
+end

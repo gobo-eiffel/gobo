@@ -581,4 +581,4 @@ feature -- Test
 			end
 		end
 
-end -- class KL_TEST_BINARY_OUTPUT_FILE
+end

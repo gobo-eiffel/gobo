@@ -341,4 +341,4 @@ invariant
 	defined_values_not_void: defined_values /= Void
 	no_void_defined_value: not defined_values.has_item (Void)
 
-end -- class GEPP_PARSER
+end

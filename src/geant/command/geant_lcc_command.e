@@ -85,4 +85,4 @@ feature -- Execution
 			execute_shell (cmd)
 		end
 
-end -- class GEANT_LCC_COMMAND
+end

@@ -242,4 +242,4 @@ feature -- Command-line
 			command_line_not_empty: Result.count > 0
 		end
 
-end -- class GEANT_SE_COMMAND
+end

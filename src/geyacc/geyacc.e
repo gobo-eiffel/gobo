@@ -300,4 +300,4 @@ invariant
 	error_handler_not_void: error_handler /= Void
 	token_filename: token_classname /= Void implies token_filename /= Void
 
-end -- class GEYACC
+end

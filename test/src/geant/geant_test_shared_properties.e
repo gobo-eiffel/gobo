@@ -94,4 +94,4 @@ feature {NONE} -- Implementation
 	sp: GEANT_SHARED_PROPERTIES
 			-- Object under test
 
-end -- class GEANT_TEST_SHARED_PROPERTIES
+end

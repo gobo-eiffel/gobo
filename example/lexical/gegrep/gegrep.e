@@ -160,4 +160,4 @@ feature {NONE} -- Implementation
 			!! fb.make (std.input)
 		end
 
-end -- class GEGREP
+end

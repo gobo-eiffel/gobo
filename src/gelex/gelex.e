@@ -245,4 +245,4 @@ invariant
 	description_not_void: description /= Void
 	error_handler_not_void: error_handler /= Void
 
-end -- class GELEX
+end

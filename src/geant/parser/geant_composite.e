@@ -72,4 +72,4 @@ invariant
 	children_not_void: children /= Void
 	no_void_child: not children.has (Void)
 
-end -- class GEANT_COMPOSITE
+end

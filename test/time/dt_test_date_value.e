@@ -214,4 +214,4 @@ feature -- Test
 			assert_equal ("append_date_to_string8", "G#0/3/2", a_string)
 		end
 
-end -- class DT_TEST_DATE_VALUE
+end

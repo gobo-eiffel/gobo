@@ -28,4 +28,4 @@ feature -- Test
 			compile_tool
 		end
 
-end -- class TEST_GEYACC
+end

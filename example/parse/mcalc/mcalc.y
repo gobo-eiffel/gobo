@@ -241,4 +241,4 @@ invariant
 
 	memory_values_not_void: memory_values /= Void
 
-end -- class MCALC
+end

@@ -36,4 +36,5 @@ feature -- Basic operations
 			concat_string_not_void: Result /= Void
 		end
 
-end -- class CONCAT2
+end
+

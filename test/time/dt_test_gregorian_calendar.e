@@ -289,4 +289,4 @@ feature -- Test
 			assert_equal ("hours_in_day", 24, gc.Hours_in_day)
 		end
 
-end -- class DT_TEST_GREGORIAN_CALENDAR
+end

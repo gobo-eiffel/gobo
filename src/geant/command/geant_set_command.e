@@ -73,4 +73,4 @@ feature -- Execution
 			exit_code := 0
 		end
 
-end -- class GEANT_SET_COMMAND
+end

@@ -57,4 +57,4 @@ feature -- Execution
 			exit_code := 0
 		end
 
-end -- class GEANT_ECHO_COMMAND
+end

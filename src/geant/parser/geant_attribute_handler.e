@@ -143,4 +143,4 @@ invariant
 	attributes_not_void: attributes /= Void
 	no_void_attribute: not attributes.has (Void)
 
-end -- class GEANT_ATTRIBUTE_HANDLER
+end

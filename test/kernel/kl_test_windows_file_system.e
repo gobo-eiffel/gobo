@@ -1738,4 +1738,4 @@ feature -- Pathname handling
 			assert_equal ("directory_separator", '\', a_file_system.directory_separator)
 		end
 
-end -- class KL_TEST_WINDOWS_FILE_SYSTEM
+end

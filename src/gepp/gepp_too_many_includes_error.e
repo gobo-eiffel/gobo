@@ -41,4 +41,4 @@ invariant
 	-- dollar0: $0 = program name
 	-- dollar1: $1 = max number of nested include files
 
-end -- class GEPP_TOO_MANY_INCLUDES_ERROR
+end

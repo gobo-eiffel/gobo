@@ -202,7 +202,7 @@ feature
 			Result.append_string (" <input-file> [<output-file>]%N")
 		end
 
-end -- class FORMATTER
+end
 --|-------------------------------------------------------------------------
 --| eXML, Eiffel XML Parser Toolkit
 --| Copyright (C) 1999  Andreas Leitner and others

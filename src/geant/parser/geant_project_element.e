@@ -34,6 +34,12 @@ feature -- Access
 			Result := has_uc_attribute (Default_attribute_name)
 		end
 
+	has_inherit_attribute: BOOLEAN is
+			-- Does `xml_element' has an attribute named `Inherit_attribute_name'
+		do
+			Result := has_uc_attribute (Inherit_attribute_name)
+		end
+
 	has_parent: BOOLEAN is
 			-- Does `xml_element' has an attribute named `Inherit_attribute_name'
 		do
@@ -64,7 +70,7 @@ feature -- Access
 	parent: STRING is
 			-- Value of xml attribute named `Inherit_attribute_name' of `xml_element'
 		require
-			has_name: has_name
+			has_inherit_attribute: has_inherit_attribute
 		do
 			Result := uc_attribute_value (Inherit_attribute_name).out
 		ensure
@@ -127,4 +133,4 @@ feature {NONE} -- Constants
 			element_name_not_empty: Result.count > 0
 		end
 
-end -- class GEANT_PROJECT_ELEMENT
+end

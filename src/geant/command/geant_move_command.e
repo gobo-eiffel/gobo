@@ -214,4 +214,4 @@ feature -- Execution
 			end
 		end
 
-end -- class GEANT_MOVE_COMMAND
+end

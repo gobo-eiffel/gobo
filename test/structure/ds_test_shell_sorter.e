@@ -137,4 +137,4 @@ feature -- Test
 			assert_iarrays_same ("items3", <<4, 3, 2, 1>>, a_list.to_array)
 		end
 
-end -- class DS_TEST_SHELL_SORTER
+end

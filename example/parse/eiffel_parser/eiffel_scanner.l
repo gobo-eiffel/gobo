@@ -466,4 +466,4 @@ invariant
 
 	eif_buffer_not_void: eif_buffer /= Void
 
-end -- class EIFFEL_SCANNER
+end

@@ -97,4 +97,4 @@ invariant
 
 	project_not_void: project /= Void
 
-end -- class GEANT_COMMAND
+end

@@ -140,4 +140,4 @@ feature -- Execution
 			end
 		end
 
-end -- class GEANT_GEANT_COMMAND
+end

@@ -496,4 +496,4 @@ invariant
 	mapped_filename_variable_name_not_void: mapped_filename_variable_name /= Void
 	mapped_filename_variable_name_not_empty: mapped_filename_variable_name.count > 0
 
-end -- class GEANT_FILESET
+end

@@ -62,6 +62,7 @@ feature {NONE} -- Initialization
 			a_filename_not_void: a_filename /= Void
 			a_filename_not_empty: a_filename.count > 0
 		do
+			create {DS_ARRAYED_LIST [like Current]} parent_projects.make (5)
 			build_filename := a_filename
 			if not file_system.is_file_readable (build_filename.out) then
 				exit_application (1, "cannot read build file '" + build_filename.out + "' (Current working directory: " + file_system.current_working_directory + ")")
@@ -113,8 +114,9 @@ feature -- Access
 	no_exec: BOOLEAN
 			-- Do not execute commands (only show what they would do)?
 
-	parent_project: like Current
-		-- Parent project if set by xml attribute 'inherit';
+	parent_projects: DS_LIST [like Current]
+		-- Parent projects if set by xml attribute 'inherit';
+		-- or a nested 'inherit' element
 		-- Void otherwise
 
 	child_project: like Current
@@ -158,7 +160,11 @@ feature -- Access
 						i := i + 1
 					end
 				end
-				a_project := a_project.parent_project
+				if a_project.parent_projects.count > 0 then
+					a_project := a_project.parent_projects.item (1)
+				else
+					a_project := Void
+				end
 			end
 
 		end
@@ -236,7 +242,7 @@ feature -- Processing
 			a_target: GEANT_TARGET
 			i: INTEGER
 			a_parent_project_filename: UC_STRING
-
+			a_parent_project: like Current
 	    do
 				-- Reset current project's state:
 			reset
@@ -267,15 +273,16 @@ feature -- Processing
 				end
 
 					-- handle parent project if present:
-				if project_element.has_parent then
+				if project_element.has_inherit_attribute then
 					a_parent_project_filename := new_unicode_string (variables.interpreted_string (project_element.parent))
 					trace_debug ("inheriting from: " + a_parent_project_filename.out + "%N")
 					if a_parent_project_filename.count > 0 then
-						!! parent_project.make_with_filename (a_parent_project_filename, variables, Current)
-						parent_project.set_verbose (verbose)
-						parent_project.set_debug_mode (debug_mode)
-						parent_project.set_no_exec (no_exec)
-						parent_project.load (Void)
+						!! a_parent_project.make_with_filename (a_parent_project_filename, variables, Current)
+						parent_projects.force_last (a_parent_project)
+						a_parent_project.set_verbose (verbose)
+						a_parent_project.set_debug_mode (debug_mode)
+						a_parent_project.set_no_exec (no_exec)
+						a_parent_project.load (Void)
 					end
 				end
 
@@ -501,4 +508,4 @@ invariant
 	build_filename_not_empty: build_filename.count > 0
 	no_void_target: targets /= Void implies not targets.has (Void)
 
-end -- class GEANT_PROJECT
+end

@@ -55,4 +55,4 @@ feature -- Execution
 			exit_code := code
 		end
 
-end -- class GEANT_EXIT_COMMAND
+end

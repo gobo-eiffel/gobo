@@ -38,4 +38,4 @@ feature -- Test
 			assert_equal ("no_error_log", 0, file_system.file_count (error_log_filename))
 		end
 
-end -- class DT_ETEST_CLOCK
+end
