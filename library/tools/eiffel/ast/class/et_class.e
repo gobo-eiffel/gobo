@@ -393,6 +393,21 @@ feature -- Preparsing status
 			cluster_not_void: Result implies cluster /= Void
 		end
 
+	is_in_cluster (a_cluster: ET_CLUSTER): BOOLEAN is
+			-- Is current class in `a_cluster' or recursively
+			-- in one of its subclusters?
+		require
+			a_cluster_not_void: a_cluster /= Void
+		do
+			if cluster /= Void then
+				if cluster = a_cluster then
+					Result := True
+				else
+					Result := a_cluster.has_subcluster (cluster)
+				end
+			end
+		end
+
 	is_override: BOOLEAN is
 			-- Is current class in an override cluster?
 		do
