@@ -27,11 +27,10 @@ feature -- Access
 			-- Occurrences of "$N" or "${N}" (where N stands
 			-- for [0-9]+) in the template are substituted by
 			-- the entry `N' in `parameters' or left as "$N"
-			-- or "${N}" if `N' is out of bounds, unless it
-			-- is equal to 0 in which case it is substituted
-			-- by the program name. The character '$' is
-			-- escaped using "$$". Return a new string string
-			-- each time.
+			-- or "${N}" if `N' is out of bounds, unless it is
+			-- equal to 0 in which case it is substituted by
+			-- the program name. The character '$' is escaped
+			-- using "$$". Return a new string each time.
 		require
 			a_template_not_void: a_template /= Void
 		local
