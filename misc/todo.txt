@@ -14,3 +14,9 @@ releases.
 
 . Add class DS_TREE to the Gobo Eiffel Structure Library.
 
+11 April 2001
+
+. Add time zones, timers and stopwatches to the Gobo Eiffel
+  Time Library.
+
+. Finish gelint and the Gobo Eiffel Tool Library.
