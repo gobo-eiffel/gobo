@@ -31,7 +31,8 @@ inherit
 		
 creation
 
-	make
+	make,
+	make_with_root_named
 
 feature {NONE} -- Initialization
 	
@@ -41,9 +42,21 @@ feature {NONE} -- Initialization
 			a_ns: XM_NAMESPACE
 		do
 			create a_ns.make_default
-			create root_element.make (Current, Default_name, a_ns)
+			make_with_root_named (Default_name, a_ns)
+		end
+
+	make_with_root_named (a_name: STRING; a_ns: XM_NAMESPACE) is
+			-- Create root node, with a root_element 
+			-- with given name.
+		require
+			not_void: a_name /= Void
+			not_empty: a_name.count > 0
+		do
+			create root_element.make (Current, a_name, a_ns)
 			make_list
 			force_last (root_element)
+		ensure
+			root_element_name_set: root_element.name = a_name
 		end
 
 	Default_name: STRING is "root"
@@ -110,10 +123,23 @@ feature -- Setting
 			-- Set root element.
 		require
 			an_element_not_void: an_element /= Void
+		do
+			remove_previous_root_element
+			root_element := an_element
+			force_last (an_element)
+		ensure
+			root_element_parent: root_element.parent = Current
+			root_element_set: root_element = an_element
+			last_set: last = root_element
+		end
+
+feature {NONE} -- Implementation
+
+	remove_previous_root_element is
+			-- Remove previous root element from composite:
 		local
 			a_cursor: DS_LIST_CURSOR[XM_DOCUMENT_NODE] 
 		do
-				-- Remove previous root element from composite:
 			from
 				a_cursor := new_cursor
 				a_cursor.start
@@ -127,18 +153,8 @@ feature -- Setting
 				   a_cursor.forth
 				end
 			end
-			
-			root_element := an_element
-			
-				-- Add to list, also remove previous root element from 
-				-- composite and sets parent.
-			force_last (an_element)
-		ensure
-			root_element_parent: root_element.parent = Current
-			root_element_set: root_element = an_element
-			last_set: last = root_element
 		end
-
+		
 feature -- Access
 
 	element_by_name (a_name: STRING): XM_ELEMENT is
