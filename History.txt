@@ -38,6 +38,8 @@ Version 2.1 - ?
 	  Eiffel 4.5 instead.
 	* Added cluster $GOBO/library/kernel/io with directory,
 	  file and file-system functionalities.
+	* Added cluster $GOBO/library/kernel/misc with miscellaneous
+	  kernel classes.
 
 	Gobo Eiffel Structure Library:
 
@@ -63,6 +65,18 @@ Version 2.1 - ?
 	* Fixed bug in feature `set_from_epoch_days' of DT_DATE
 	  when the resulting date in 1 January 1600 (reported by
 	  Emmanuel Bouyer).
+	* No need for 'include_path' in the Ace file anymore in
+	  order to use DT_SYSTEM_CLOCK with ISE Eiffel.
+	* Added class DT_UTC_SYSTEM_CLOCK.
+	* Added creation routine DT_DATE_TIME.make_from_epoch.
+
+	Gobo Eiffel Pattern Library:
+
+	* New library with design pattern classes.
+	* Moved $GOBO/library/utility/command cluster to
+	  $GOBO/library/pattern/command and change class
+	  name prefix from UT to DP.
+	* Added feature `exit_code' to class DP_SHELL_COMMAND.
 
 Version 2.0 - 29 April 2001
 
