@@ -16,6 +16,7 @@ inherit
 
 	ET_EXPRESSION_CHECKER
 		redefine
+			check_local_variable_validity,
 			check_old_expression_validity,
 			check_precursor_expression_validity
 		end
@@ -25,6 +26,23 @@ creation
 	make
 
 feature {NONE} -- Expression validity
+
+	check_local_variable_validity (a_name: ET_IDENTIFIER; a_context: ET_NESTED_TYPE_CONTEXT) is
+			-- Check validity of local variable `a_name'.
+		local
+			a_class_impl: ET_CLASS
+			a_feature: ET_FEATURE
+		do
+				-- The local entity appears in a postcondition.
+			set_fatal_error
+			a_class_impl := current_feature.implementation_class
+			if a_class_impl = current_class then 
+				error_handler.report_veen2c_error (current_class, a_name, current_feature)
+			else
+-- TODO: find the corresponding feature in `a_class_impl'
+				error_handler.report_veen2c_error (current_class, a_name, current_feature)
+			end
+		end
 
 	check_old_expression_validity (an_expression: ET_OLD_EXPRESSION; a_context: ET_NESTED_TYPE_CONTEXT) is
 			-- Check validity of `an_expression'.
