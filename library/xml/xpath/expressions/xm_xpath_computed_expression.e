@@ -27,8 +27,6 @@ inherit
 
 	XM_XPATH_EXPRESSION
 
-	XM_XPATH_STATIC_PROPERTY
-
 feature {NONE} -- Initialization
 
 	initialize is
@@ -149,6 +147,14 @@ feature -- Status report
 			Result := are_dependencies_computed and then
 			are_cardinalities_computed and then
 			are_special_properties_computed
+		end
+	
+feature -- Comparison
+
+	same_expression (other: XM_XPATH_EXPRESSION): BOOLEAN is
+			-- Are `Current' and `other' the same expression?
+		do
+			Result := Current = other
 		end
 
 feature -- Status setting

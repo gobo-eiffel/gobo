@@ -35,7 +35,7 @@ feature -- Initialization
 			initialize_type_tables
 			name_pool := a_name_pool
 		ensure
-			name_pool_set: name_pool.is_equal (a_name_pool)
+			name_pool_set: name_pool = a_name_pool
 		end
 	
 feature -- Result

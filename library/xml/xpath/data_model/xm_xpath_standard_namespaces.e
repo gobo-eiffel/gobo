@@ -12,6 +12,10 @@ indexing
 
 class XM_XPATH_STANDARD_NAMESPACES
 
+inherit
+
+		KL_IMPORTED_STRING_ROUTINES
+
 	-- all INTEGERs should be INTEGER_16
 	
 feature -- Access
@@ -65,13 +69,13 @@ feature -- Status report
 		require
 			uri_not_void: uri /= Void
 		do
-			Result := uri.is_equal (Xslt_uri)
-				or else uri.is_equal (Xpath_functions_uri)
-				or else uri.is_equal (Xml_uri)
-				or else uri.is_equal (Xml_schema_uri)
-				or else uri.is_equal (Xml_schema_datatypes_uri)
-				or else uri.is_equal (Xpath_defined_datatypes_uri)
-				or else uri.is_equal (Xml_schema_instance_uri)
+			Result := STRING_.same_string (uri, Xslt_uri)
+				or else STRING_.same_string (uri, Xpath_functions_uri)
+				or else STRING_.same_string (uri, Xml_uri)
+				or else STRING_.same_string (uri, Xml_schema_uri)
+				or else STRING_.same_string (uri, Xml_schema_datatypes_uri)
+				or else STRING_.same_string (uri, Xpath_defined_datatypes_uri)
+				or else STRING_.same_string (uri, Xml_schema_instance_uri)
 		end
 
 end

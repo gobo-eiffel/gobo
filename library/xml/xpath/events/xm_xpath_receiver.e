@@ -36,7 +36,7 @@ feature -- Element change
 		do
 			name_pool := a_name_pool
 		ensure
-			name_pool_set: name_pool.is_equal (a_name_pool)
+			name_pool_set: name_pool = a_name_pool
 		end
 
 	set_system_id (system_id: STRING) is

@@ -20,6 +20,8 @@ inherit
 
 	KL_IMPORTED_STRING_ROUTINES
 
+	XM_XPATH_SHARED_EXPRESSION_TESTER
+
 feature -- Access
 
 	last_expression: XM_XPATH_EXPRESSION is
@@ -353,7 +355,7 @@ feature {NONE} -- Expression parsers
 			single_item, a_sequence: XM_XPATH_SEQUENCE_TYPE
 		do
 			internal_last_expression := Void
-			create clause_list.make_equal (5)
+			create clause_list.make (5)
 			operator := tokenizer.last_token			
 			from
 				finished := False

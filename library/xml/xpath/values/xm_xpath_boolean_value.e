@@ -63,7 +63,21 @@ feature -- Access
 				Result := "false"
 			end
 		end
+
 	
+feature -- Comparison
+
+	same_expression (other: XM_XPATH_EXPRESSION): BOOLEAN is
+			-- Are `Current' and `other' the same expression?
+		local
+			other_boolean: XM_XPATH_BOOLEAN_VALUE
+		do
+			other_boolean ?= other
+			if other_boolean /= Void then
+				Result := value = other_boolean.value
+			end
+		end
+
 feature -- Conversions
 	
 	convert_to_type (required_type: INTEGER): XM_XPATH_ATOMIC_VALUE is

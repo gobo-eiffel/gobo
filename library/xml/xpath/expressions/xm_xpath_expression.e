@@ -20,6 +20,8 @@ inherit
 
 	XM_XPATH_PROMOTION_ACTIONS
 
+	XM_XPATH_SHARED_EXPRESSION_TESTER
+
 feature -- Access
 	
 	item_type: INTEGER is
@@ -75,7 +77,16 @@ feature -- Status report
 		do
 			Result := True
 		end
-	
+
+feature -- Comparison
+
+	same_expression (other: XM_XPATH_EXPRESSION): BOOLEAN is
+			-- Are `Current' and `other' the same expression?
+		require
+			other_not_void: other /= Void
+		deferred
+		end
+
 --	display (level: INTEGER; pool: XM_XPATH_NAME_POOL) is
 --			-- Diagnostic print of expression structure to `std.error'
 --		require

@@ -18,6 +18,8 @@ inherit
 
 	XM_XPATH_SHARED_CONFORMANCE
 
+	KL_IMPORTED_STRING_ROUTINES
+
 	KL_SHARED_EXCEPTIONS
 
 	KL_SHARED_STANDARD_FILES
@@ -271,11 +273,11 @@ feature -- Access
 		local
 			qname: STRING
 		do
-			if uri.is_equal (Xml_schema_uri) or else uri.is_equal (Xml_schema_datatypes_uri) then
+			if STRING_.same_string (uri, Xml_schema_uri) or else STRING_.same_string (uri, Xml_schema_datatypes_uri) then
 				create qname.make_from_string ("xs:")
-			elseif uri.is_equal (Xpath_defined_datatypes_uri) then
+			elseif STRING_.same_string (uri, Xpath_defined_datatypes_uri) then
 				create qname.make_from_string ("xdt:")
-			elseif uri.is_equal (Gexslt_eiffel_type_uri) then
+			elseif STRING_.same_string (uri, Gexslt_eiffel_type_uri) then
 				create qname.make_from_string ("eiffel:")
 			else
 				Exceptions.raise ("URI is not recognized")	
@@ -296,25 +298,25 @@ feature -- Access
 			name_not_void: name /= Void
 			system_type_name: is_system_type (name)
 		do
-			if name.is_equal ("item") then
+			if STRING_.same_string (name, "item") then
 				Result := Any_item
-			elseif name.is_equal ("empty") then
+			elseif STRING_.same_string (name, "empty") then
 				Result := Empty_item
-			elseif name.is_equal ("node") then
+			elseif STRING_.same_string (name, "node") then
 				Result := Any_node
-			elseif name.is_equal ("document") then
+			elseif STRING_.same_string (name, "document") then
 				Result := Document_node
-			elseif name.is_equal ("element") then
+			elseif STRING_.same_string (name, "element") then
 				Result := Element_node
-			elseif name.is_equal ("attribute") then
+			elseif STRING_.same_string (name, "attribute") then
 				Result := Attribute_node
-			elseif name.is_equal ("text") then
+			elseif STRING_.same_string (name, "text") then
 				Result := Text_node
-			elseif name.is_equal ("comment") then
+			elseif STRING_.same_string (name, "comment") then
 				Result := Comment_node
-			elseif name.is_equal ("processing-instruction") then
+			elseif STRING_.same_string (name, "processing-instruction") then
 				Result := Processing_instruction_node
-			elseif name.is_equal ("namespace") then
+			elseif STRING_.same_string (name, "namespace") then
 				Result := Namespace_node
 			else
 				Exceptions.raise ("Not a system type")
@@ -341,12 +343,12 @@ feature -- Status report
 			qname: STRING
 		do
 			Result := True
-			if uri.is_equal (Xml_schema_uri) or else uri.is_equal (Xml_schema_datatypes_uri) then
+			if STRING_.same_string (uri, Xml_schema_uri) or else STRING_.same_string (uri, Xml_schema_datatypes_uri) then
 				create qname.make_from_string ("xs:")
 				qname.append_string (local_name)
-			elseif uri.is_equal (Xpath_defined_datatypes_uri) then
+			elseif STRING_.same_string (uri, Xpath_defined_datatypes_uri) then
 				create qname.make_from_string ("xdt:")
-			elseif uri.is_equal (Gexslt_eiffel_type_uri) then
+			elseif STRING_.same_string (uri, Gexslt_eiffel_type_uri) then
 				create qname.make_from_string ("eiffel:")
 			else
 				Result := False
@@ -361,25 +363,25 @@ feature -- Status report
 		require
 			name_not_void: name /= Void
 		do
-			if name.is_equal ("item") then
+			if STRING_.same_string (name, "item") then
 				Result := True
-			elseif name.is_equal ("empty") then
+			elseif STRING_.same_string (name, "empty") then
 				Result := True
-			elseif name.is_equal ("node") then
+			elseif STRING_.same_string (name, "node") then
 				Result := True
-			elseif name.is_equal ("document") then
+			elseif STRING_.same_string (name, "document") then
 				Result := True
-			elseif name.is_equal ("element") then
+			elseif STRING_.same_string (name, "element") then
 				Result := True
-			elseif name.is_equal ("attribute") then
+			elseif STRING_.same_string (name, "attribute") then
 				Result := True
-			elseif name.is_equal ("text") then
+			elseif STRING_.same_string (name, "text") then
 				Result := True
-			elseif name.is_equal ("comment") then
+			elseif STRING_.same_string (name, "comment") then
 				Result := True
-			elseif name.is_equal ("processing-instruction") then
+			elseif STRING_.same_string (name, "processing-instruction") then
 				Result := True
-			elseif name.is_equal ("namespace") then
+			elseif STRING_.same_string (name, "namespace") then
 				Result := True
 			else
 				Result := False
@@ -657,7 +659,7 @@ feature {NONE} -- Implementation
 	hierarchy: DS_HASH_TABLE [INTEGER, INTEGER] is
 			-- Maps sub-types to their super-types
 		once
-			create Result.make_equal (100)
+			create Result.make (100)
 		end
 
 	type_names: ARRAY [STRING] is
@@ -669,7 +671,7 @@ feature {NONE} -- Implementation
 	type_table: DS_HASH_TABLE [INTEGER, STRING] is
 			-- Maps type-names to types
 		once
-			create Result.make_equal (255)
+			create Result.make (255)
 		end
 
 	define_builtin_type (type: INTEGER; name: STRING) is
@@ -683,7 +685,7 @@ feature {NONE} -- Implementation
 			type_table.put (type, name)
 		ensure
 			type_in_table: type_table.item (name) = type
-			type_listed: type_names.item (type).is_equal (name)
+			type_listed: STRING_.same_string (type_names.item (type), name)
 		end
 
 	define_type  (type: INTEGER; name: STRING) is
@@ -696,7 +698,7 @@ feature {NONE} -- Implementation
 			type_table.put (type, name)
 		ensure
 			type_in_table: type_table.item (name) = type
-			type_listed: type_names.item (type).is_equal (name)
+			type_listed: STRING_.same_string (type_names.item (type), name)
 		end
 
 	define_sub_type  (super: INTEGER; sub_type: INTEGER) is

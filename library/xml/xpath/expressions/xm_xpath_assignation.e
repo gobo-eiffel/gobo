@@ -41,7 +41,8 @@ feature -- Access
 			-- Default implementation returns an empty list;
 			-- Suitable for an expression without sub-expressions.
 			
-			create Result.make_equal (2)
+			create Result.make (2)
+			Result.set_equality_tester (expression_tester)
 			Result.put (sequence, 1)
 			Result.put (action, 2)
 		end

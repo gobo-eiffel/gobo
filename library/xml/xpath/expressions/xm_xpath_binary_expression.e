@@ -16,8 +16,10 @@ inherit
 
 	XM_XPATH_COMPUTED_EXPRESSION
 		redefine
-			promote, simplify, sub_expressions
+			promote, simplify, sub_expressions, same_expression
 		end
+
+	XM_XPATH_TOKENS
 
 feature {NONE} -- Initialization
 
@@ -34,8 +36,8 @@ feature {NONE} -- Initialization
 			operands.put (operand_2, 2)
 		ensure
 			operator_set: operator = token
-			operand_1_set: operands /= Void and then operands.item (1).is_equal (operand_1)
-			operand_2_set: operands.item (2).is_equal (operand_2)
+			operand_1_set: operands /= Void and then operands.item (1).same_expression (operand_1)
+			operand_2_set: operands.item (2).same_expression (operand_2)
 		end
 
 feature -- Access
@@ -43,11 +45,53 @@ feature -- Access
 	sub_expressions: DS_ARRAYED_LIST [XM_XPATH_EXPRESSION] is
 			-- Immediate sub-expressions of `Current'
 		do
-			create Result.make_equal (2)
+			create Result.make (2)
+			Result.set_equality_tester (expression_tester)
 			Result.put (operands.item (1), 1)
 			Result.put (operands.item (2), 2)
 		end
 
+
+feature -- Status report
+
+	is_commutative (oper: INTEGER): BOOLEAN is
+			-- Is `oper' a commutative operator?
+		do
+			Result := oper = And_token
+				or else oper = Or_token
+				or else oper = Union_token
+				or else oper = Intersect_token
+				or else oper = Plus_token
+				or else oper = Multiply_token
+				or else oper = Equals_token
+				or else oper = Fortran_equal_token
+				or else oper = Not_equal_token
+				or else oper = Fortran_not_equal_token
+		end
+		
+feature -- Comparison
+
+	same_expression (other: XM_XPATH_EXPRESSION): BOOLEAN is
+			-- Are `Current' and `other' the same expression?
+		local
+			other_binary: XM_XPATH_BINARY_EXPRESSION
+		do
+			other_binary ?= other
+			if other_binary /= Void then
+				if operator = other_binary.operator then
+					if operands.item (1).same_expression (other_binary.operands.item (1))
+						and then operands.item (2).same_expression ( other_binary.operands.item (2)) then
+						Result := True
+					elseif is_commutative (operator) and then
+						operands.item (1).same_expression ( other_binary.operands.item (2))
+							and then operands.item (2).same_expression ( other_binary.operands.item (1)) then
+							Result := True
+							-- TODO: recognize associative operators (A|(B|C)) == ((A|B)|C)
+							--    and inverse operators (A<B) == (B>A)
+					end
+				end
+			end
+		end
 feature -- Analysis
 
 	simplify: XM_XPATH_EXPRESSION is

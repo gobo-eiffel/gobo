@@ -16,7 +16,7 @@ inherit
 
 	XM_XPATH_COMPUTED_EXPRESSION
 		redefine
-			may_analyze
+			may_analyze, same_expression
 		end
 
 	XM_XPATH_BINDING_REFERENCE
@@ -66,6 +66,21 @@ feature -- Status report
 			-- OK to call analyze?
 		do
 			Result := constant_value /= Void or else static_type /= Void
+		end
+	
+feature -- Comparison
+
+	same_expression (other: XM_XPATH_EXPRESSION): BOOLEAN is
+			-- Are `Current' and `other' the same expression?
+			-- (Note, we only compare expressions that
+			--  have the same static and dynamic context).
+		local
+			other_reference: XM_XPATH_VARIABLE_REFERENCE
+		do
+			other_reference ?= other
+			if other_reference /= Void and then binding.is_equal (other_reference.binding) then
+				Result := binding /= Void
+			end
 		end
 
 feature -- Analysis

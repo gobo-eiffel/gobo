@@ -16,6 +16,8 @@ inherit
 
 	XM_XPATH_ATOMIC_VALUE
 
+	KL_IMPORTED_STRING_ROUTINES
+
 creation
 
 	make
@@ -30,7 +32,7 @@ feature -- Initialization
 			make_atomic_value
 			value := clone (val)
 		ensure
-			value_set: value.is_equal (val)
+			value_set: STRING_.same_string (value, val)
 		end
 
 feature -- Access
@@ -66,6 +68,20 @@ feature -- Access
 			-- `False'. Otherwise it returns `True'.
 		do
 			Result := value.count > 0
+		end
+
+		
+feature -- Comparison
+
+	same_expression (other: XM_XPATH_EXPRESSION): BOOLEAN is
+			-- Are `Current' and `other' the same expression?
+		local
+			other_string: XM_XPATH_STRING_VALUE
+		do
+			other_string ?= other
+			if other_string /= Void then
+				Result := STRING_.same_string (string_value, other_string.string_value)
+			end
 		end
 
 feature -- Conversions
