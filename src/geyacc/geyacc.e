@@ -37,22 +37,21 @@ feature -- Processing
 			token_filename: STRING
 			tokens_needed: BOOLEAN
 			verbose_file: like OUTPUT_STREAM_TYPE
-			verbose: BOOLEAN
 		do
 			Arguments.set_program_name ("geyacc")
 			!! error_handler.make_standard
 			read_command_line
 			parse_input_file
 			if grammar /= Void then
-				grammar.reduce (error_handler)
-				grammar.set_nullable
-				!! fsm.make (grammar)
 				if verbose_filename /= Void then
 						-- Verbose mode.
-					verbose := True
 					verbose_file := OUTPUT_STREAM_.make_file_open_write (verbose_filename)
 					if OUTPUT_STREAM_.is_open_write (verbose_file) then
-						fsm.resolve_conflicts (verbose, verbose_file)
+						grammar.reduce_verbose (error_handler, verbose_file)
+						grammar.set_nullable
+						!! fsm.make (grammar)
+						fsm.resolve_conflicts_verbose (error_handler, verbose_file)
+						fsm.print_machine (verbose_file)
 						OUTPUT_STREAM_.close (verbose_file)
 					else
 						!! cannot_write.make (verbose_filename)
@@ -60,7 +59,10 @@ feature -- Processing
 						Exceptions.die (1)
 					end
 				else
-					fsm.resolve_conflicts (False, std.error)
+					grammar.reduce (error_handler)
+					grammar.set_nullable
+					!! fsm.make (grammar)
+					fsm.resolve_conflicts (error_handler)
 				end
 				!! parser_generator.make (fsm)
 				if token_classname /= Void then
