@@ -30,10 +30,10 @@ feature
 
 	make is
 		do
-			last_string := new_unicode_string ("")
+			!! last_string.make (0)
 		end
 
-	last_string: UC_STRING
+	last_string: STRING
 
 	wipe_out is
 			-- clear `last_string'.
@@ -68,7 +68,9 @@ feature {ANY} -- Standard processor routines
 
 	process_element (el: XM_ELEMENT) is
 		do
-			append ("Element: " + el.name.to_utf8 + "%N")
+			append ("Element: ")
+			append (el.name)
+			append ("%N")
 			process_named (el)
 			process_composite (el)
 		end
@@ -78,7 +80,9 @@ feature {ANY} -- Standard processor routines
 			ns_decls: DS_LINKED_LIST [XM_NAMESPACE]
 			cs: DS_LINKED_LIST_CURSOR [XM_NAMESPACE]
 		do
-			append ("Element: " + el.name.to_utf8 + "%N")
+			append ("Element: ")
+			append (el.name.to_utf8)
+			append ("%N")
 			ns_decls := el.namespace_declarations
 			from
 				cs := ns_decls.new_cursor
@@ -89,9 +93,13 @@ feature {ANY} -- Standard processor routines
 				if cs.item.is_default then
 					append ("%Tprefix: [default]%N")
 				else
-					append ("%Tprefix: " + cs.item.ns_prefix.to_utf8 + "%N")
+					append ("%Tprefix: ")
+					append (cs.item.ns_prefix)
+					append ("%N")
 				end
-				append ("%Turi: " + cs.item.uri.to_utf8 + "%N")
+				append ("%Turi: ")
+				append (cs.item.uri)
+				append ("%N")
 				cs.forth
 			end
 			process_composite (el)
@@ -188,16 +196,16 @@ feature {ANY} -- Non standard processor routines
 			n_not_void: n /= Void
 		do
 			append ("name=")
-			ucappend (n.name)
+			append (n.name)
 			append (" prefix=")
 			if n.has_prefix then
-				ucappend (n.ns_prefix)
+				append (n.ns_prefix)
 			else
 				append ("[no prefix]")
 			end
 			append (" uri=")
 			if n.has_namespace then
-				ucappend (n.namespace)
+				append (n.namespace)
 			else
 				append ("[no uri]")
 			end
@@ -206,19 +214,15 @@ feature {ANY} -- Non standard processor routines
 
 feature {NONE} -- Implementation
 
-	ucappend (str: UC_STRING) is
-		require
-			str_not_void: str /= Void
-			last_string_not_void: last_string /= Void
-		do
-			last_string.append_string (str)
-		end
 
 	append (str: STRING) is
 		require
 			str_not_void: str /= Void
 			last_string_not_void: last_string /= Void
 		do
+			if not is_unicode_string (last_string) and then is_unicode_string (str) then
+				last_string := forced_unicode_string (last_string)
+			end
 			last_string.append_string (str)
 		end
 

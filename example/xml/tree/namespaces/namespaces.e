@@ -57,7 +57,7 @@ feature -- Access
 					io.put_string ("printing document...%N")
 					!! formatter.make
 					formatter.process_document (tree_pipe.document)
-					io.put_string (formatter.last_string.to_utf8)
+					io.put_string (formatter.last_string)
 					io.put_new_line
 				end
 			end
