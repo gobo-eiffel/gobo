@@ -1,10 +1,10 @@
 <?xml version="1.0"?>
 
-<project name="example" default="help">
+<project name="regexp" default="help">
 
 	<description>
-		system: "Regular expression test"
-		copyright: "Copyright (c) 2002, Harald Erdbrügger and others"
+		system: "Gobo Eiffel Regexp Library Tester"
+		copyright: "Copyright (c) 2002, Harald Erdbruegger and others"
 		license: "Eiffel Forum License v1 (see forum.txt)"
 		date: "$Date$"
 		revision: "$Revision$"
@@ -20,8 +20,9 @@
 <!-- Implementation -->
 
 	<target name="init_system">
-		<set name="system" value="regexp"/>
-		<set name="system_dir" value="${GOBO}/test/${system}"/>
+		<set name="system" value="xregexp"/>
+		<set name="library" value="regexp"/>
+		<set name="system_dir" value="${GOBO}/test/${library}"/>
 	</target>
 
 </project>
