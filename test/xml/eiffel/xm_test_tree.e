@@ -319,6 +319,7 @@ feature {NONE} -- Walk assertions
 			assert ("parent element", typer.is_element)
 			if an_attribute.namespace.uri.count = 0 then
 				assert ("unprefixed by name", typer.element.has_attribute_by_name (an_attribute.name))
+				assert ("attribute result", typer.element.attribute_by_name (an_attribute.name) = an_attribute)
 			else
 				assert ("prefixed not by name", not typer.element.has_attribute_by_name (an_attribute.name))
 			end
