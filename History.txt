@@ -10,6 +10,8 @@ Version 1.6 -
 	  by Roger Browne).
 	* Added ISE's language extensions to the Eiffel parser
 	  example (suggested by Patrick Flaherty).
+	* The Eiffel parser example now accepts empty Eiffel
+	  source files (suggested by Alexander Kogtenkov).
 
 	gelex:
 
@@ -21,6 +23,10 @@ Version 1.6 -
 	* Added `pre_eof_action' and `post_eof_action', called when
 	  %option pre-eof-action and %option post-eof-action are
 	  specified.
+	* Added '%option line' to generate code for line and column
+	  counting (suggested by Alexander Kogtenkov).
+	* Added '%option position' to generate code for character
+	  counting since the beginning of the input source.
 
 	Gobo Eiffel Structure Library:
 
@@ -37,6 +43,11 @@ Version 1.6 -
 	* DS_HASH_TABLE: fixed precondition in `hash_code'.
 	* HASH_TABLE: optimization of features `put' and
 	  `force' (avoid unnecessary resizing).
+
+	Gobo Eiffel Kernel Library:
+
+	* Added class KL_DIRECTORY to allow Eiffel compiler
+	  portable directory access.
 
 Version 1.5 - 2 October 1999
 
