@@ -22,19 +22,23 @@ inherit
 			open_read
 		end
 
+	KI_INPUT_STREAM [STRING]
+		rename
+			read as read_entry,
+			unread as unread_entry,
+			last_item as last_entry,
+			valid_unread_item as valid_unread_entry
+		redefine
+			read_entry, last_entry
+		end
+
 feature -- Access
 
 	last_entry: STRING is
 			-- Last entry (file or subdirectory name) read
 			-- (Note: this query returns the new object after
 			-- each call to `read_entry'.)
-		require
-			is_open_read: is_open_read
-			not_end_of_input: not end_of_input
 		deferred
-		ensure
-			last_entry_not_void: Result /= Void
-			last_entry_not_empty: Result.count > 0
 		end
 
 	filenames: ARRAY [STRING] is
@@ -58,16 +62,18 @@ feature -- Access
 
 feature -- Status report
 
-	end_of_input: BOOLEAN is
-			-- Have all entries been read?
-		require
-			is_open_read: is_open_read
-		deferred
-		end
-
 	is_readable: BOOLEAN is
 			-- Can directory be opened in read mode?
 		deferred
+		end
+
+	valid_unread_entry (an_entry: STRING): BOOLEAN is
+			-- Can `an_entry' be put back in input stream?
+		do
+			Result := an_entry /= Void and then an_entry.count > 0
+		ensure then
+			an_entry_not_void: Result implies an_entry /= Void
+			an_entry_not_empty: Result implies an_entry.count > 0
 		end
 
 feature -- Basic operations
@@ -114,15 +120,15 @@ feature -- Basic operations
 		deferred
 		end
 
-feature -- Cursor movement
+feature -- Input
 
 	read_entry is
 			-- Read next entry in directory.
 			-- Make result available in `last_entry'.
-		require
-			is_open_read: is_open_read
-			not_end_of_input: not end_of_input
 		deferred
+		ensure then
+			last_entry_not_void: not end_of_input implies last_entry /= Void
+			last_entry_not_empty: not end_of_input implies last_entry.count > 0
 		end
 
 end -- class KI_DIRECTORY
