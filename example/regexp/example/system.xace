@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+<!DOCTYPE system SYSTEM "../../../doc/gexace/xace.dtd">
+
+<system name="example">
+	<description>
+		system:      "Regexp usage example"
+		author:      "Harald Erdbrügger [he@he-me.de]"
+		copyright:   "Copyright (c) 2002, Harald Erdbrügger and others"
+		license:     "Eiffel Forum Freeware License v1 (see forum.txt)"
+		date:        "$Date$"
+		revision:    "$Revision$"
+	</description>
+
+	<root class="RX_EXAMPLE" creation="make"/>
+	<cluster>
+		<option unless="${DEBUG}">
+			<require enable="True"/>
+			<ensure enable="True"/>
+			<invariant enable="True"/>
+			<loop enable="True"/>
+			<check enable="True"/>
+			<optimize enable="True"/>
+		</option>
+		<option if="${DEBUG}">
+			<require enable="True"/>
+			<ensure enable="True"/>
+			<invariant enable="True"/>
+			<loop enable="True"/>
+			<check enable="True"/>
+			<optimize enable="False"/>
+		</option>
+
+    <cluster name="regexp_example" location="${GOBO}/example/regexp/example"/>
+
+		<mount location="${GOBO}/library/regexp/cluster.xace"/>
+		<mount location="${GOBO}/library/kernel/cluster.xace"/>
+		<mount location="${GOBO}/library/kernel.xace"/>
+	</cluster>
+</system>

@@ -1,0 +1,23 @@
+<?xml version="1.0"?>
+
+<project name="example" inherit="${GOBO}/misc/eiffel.eant" default="help">
+
+	<description>
+		system:      "Regular expression usage example"
+		author:      "Harald Erdbrügger [he@he-me.de]"
+		copyright:   "Copyright (c) 2002, Harald Erdbrügger and others"
+		license:     "Eiffel Forum Freeware License v1 (see forum.txt)"
+		date:        "$Date$"
+		revision:    "$Revision$"
+	</description>
+
+
+<!-- Implementation -->
+
+	<target name="init_system">
+		<set name="system" value="example"/>
+		<set name="library" value="regexp"/>
+		<set name="system_dir" value="${GOBO}/example/${library}/${system}"/>
+	</target>
+
+</project>
