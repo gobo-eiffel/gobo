@@ -17,6 +17,8 @@ inherit
 	ET_AGENT_TARGET
 		undefine
 			reset
+		redefine
+			is_open_operand
 		end
 
 	ET_BRACED_TYPE
@@ -27,6 +29,11 @@ inherit
 creation
 
 	make
+
+feature -- Status report
+
+	is_open_operand: BOOLEAN is True
+			-- Is current operand open?
 
 feature -- Processing
 

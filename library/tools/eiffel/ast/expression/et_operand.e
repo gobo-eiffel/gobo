@@ -23,6 +23,14 @@ feature -- Initialization
 		do
 		end
 
+feature -- Status setting
+
+	is_open_operand: BOOLEAN is
+			-- Is current operand open?
+		do
+			-- Result := False
+		end
+
 feature -- Access
 
 	index: INTEGER

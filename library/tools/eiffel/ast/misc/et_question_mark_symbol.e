@@ -24,11 +24,18 @@ inherit
 	ET_AGENT_ARGUMENT_OPERAND
 		undefine
 			first_position, last_position
+		redefine
+			is_open_operand
 		end
 
 creation
 
 	make
+
+feature -- Status report
+
+	is_open_operand: BOOLEAN is True
+			-- Is current operand open?
 
 feature -- Processing
 
