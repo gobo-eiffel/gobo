@@ -54,7 +54,6 @@ feature -- Element change
 			-- Add `a_type' to current set.
 		local
 			l_other_type: DS_LINKABLE [ET_DYNAMIC_TYPE]
-			l_target: DS_LINKABLE [ET_DYNAMIC_TYPE_SET]
 			found: BOOLEAN
 		do
 			if a_type /= a_system.none_type and then a_type.conforms_to_type (static_type, a_system) then
