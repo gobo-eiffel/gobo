@@ -262,7 +262,7 @@ feature {NONE} -- Walk assertions
 		do
 			an_attribute.parent.process (typer)
 			assert ("parent element", typer.is_element)
-			if an_attribute.namespace.is_default_namespace then
+			if an_attribute.namespace.uri.count = 0 then
 				assert ("unprefixed by name", typer.element.has_attribute_by_name (an_attribute.name))
 			else
 				assert ("prefixed not by name", not typer.element.has_attribute_by_name (an_attribute.name))
