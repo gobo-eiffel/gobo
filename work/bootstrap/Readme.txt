@@ -13,6 +13,7 @@ The procedure is quite simple:
   such as Visual Eiffel provides older versions of the Gobo
   tools in their installation directories. Make sure that
   $GOBO/bin is listed before these directories in your $PATH.
+. Make sure that your Eiffel and C compilers are in your $PATH.
 . Depending on your platform, run either:
 
      bootstrap.bat [-v] <c_compiler> <eiffel_compiler>
@@ -33,7 +34,8 @@ After having run this bootstrap procedure, the Gobo package
 should be fully installed on your computer and ready to be
 used. Later on, if you check out new classes or clusters
 from CVS, there is usually no need to redo a full bootstrap
-again. Just run:
+again (unless incompatible changes have been applied to the
+building tools such as 'geant', 'gexace', ...). Just run:
 
    geant install
    geant clean
