@@ -4,8 +4,9 @@ indexing
 
 		"Reverse polish notation calculator"
 
-	author:     "Eric Bezault <ericb@gobo.demon.co.uk>"
-	copyright:  "Copyright (c) 1997, Eric Bezault"
+	author:     "Eric Bezault <ericb@gobosoft.com>"
+	copyright:  "Copyright (c) 1999, Eric Bezault and others"
+	license:    "Eiffel Forum Freeware License v1 (see forum.txt)"
 	date:       "$Date$"
 	revision:   "$Revision$"
 
@@ -50,37 +51,37 @@ feature {NONE} -- Semantic actions
 		do
 			inspect yy_act
 when 4 then
---|#line 37
+--|#line 38
 			yyval := yyval_default;
 print (yyvs.item (yyvsp - 1)); print ('%N') 
 
 when 5 then
---|#line 40
+--|#line 41
 			yyval := yyval_default;
 yyval := yyvs.item (yyvsp) 
 
 when 6 then
---|#line 41
+--|#line 42
 			yyval := yyval_default;
 yyval := yyvs.item (yyvsp - 2) + yyvs.item (yyvsp - 1) 
 
 when 7 then
---|#line 42
+--|#line 43
 			yyval := yyval_default;
 yyval := yyvs.item (yyvsp - 2) - yyvs.item (yyvsp - 1) 
 
 when 8 then
---|#line 43
+--|#line 44
 			yyval := yyval_default;
 yyval := yyvs.item (yyvsp - 2) * yyvs.item (yyvsp - 1) 
 
 when 9 then
---|#line 44
+--|#line 45
 			yyval := yyval_default;
 yyval := yyvs.item (yyvsp - 2) / yyvs.item (yyvsp - 1) 
 
 when 10 then
---|#line 46
+--|#line 47
 			yyval := yyval_default;
 yyval := -yyvs.item (yyvsp - 1) 
 
@@ -194,7 +195,7 @@ feature {NONE} -- Table templates
 		once
 			Result := yyfixed_array (<<
 			    3,    0,    5,    6,    7,    8,    9,    3,    4,    1,
-			    0,    0,    0,    9,    3,    4>>)
+			   -1,    0,   -1,    9,    3,    4>>)
 		end
 
 feature {NONE} -- Constants
