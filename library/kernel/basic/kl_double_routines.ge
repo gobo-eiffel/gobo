@@ -46,13 +46,13 @@ feature -- Logarithms
 			Result := d.log
 #endif
 #ifdef ISE
-			Result := org_log (d)
+			Result := old_log (d)
 #endif
 #ifdef HACT
 			Result := double_math.log (d)
 #endif
 #ifdef VE
-			Result := org_log (d.truncated_to_real)
+			Result := old_log (d.truncated_to_real)
 #endif
 		end
 
@@ -65,7 +65,7 @@ feature -- Logarithms
 			Result := d.log10
 #endif
 #ifdef ISE
-			Result := org_log10 (d)
+			Result := old_log10 (d)
 #endif
 #ifdef HACT
 			Result := double_math.log10 (d)
