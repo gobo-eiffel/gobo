@@ -36,7 +36,7 @@ feature -- Access
 feature {NONE} -- Implementation
 
 	hash_position (v: G): INTEGER is
-			-- Hash position of `v' in `slots'
+			-- Hash position of `v' in `slots';
 			-- Use `v.hash_code' as hashing function.
 		do
 			if v /= Void then
