@@ -74,6 +74,10 @@ feature -- Status report
 			-- debugging it might be useful to get the full exception
 			-- trace.)
 
+	progress_status: BOOLEAN
+			-- Should progress status be printed while
+			-- executing the test cases?
+
 feature -- Execution
 
 	execute (a_file: KI_TEXT_OUTPUT_STREAM) is
@@ -86,13 +90,23 @@ feature -- Execution
 			a_summary: TS_SUMMARY
 		do
 			a_suite := suite
-			create a_summary.make
+			if progress_status then
+				a_file.put_character ('@')
+				a_file.put_integer (a_suite.count)
+				a_file.put_new_line
+				a_file.flush
+				create {TS_PROGRESS_SUMMARY} a_summary.make (a_file)
+			else
+				create a_summary.make
+			end
 			a_summary.set_fail_on_rescue (fail_on_rescue)
 			a_suite.execute (a_summary)
 			a_summary.print_summary (a_suite, a_file)
 			if not a_summary.is_successful then
-				a_file.put_new_line
-				a_summary.print_errors (a_file)
+				if not progress_status then
+					a_file.put_new_line
+					a_summary.print_errors (a_file)
+				end
 				Exceptions.die (3)
 			end
 		end
@@ -118,6 +132,8 @@ feature {NONE} -- Command line
 					end
 				elseif arg.is_equal ("-a") then
 					fail_on_rescue := True
+				elseif arg.is_equal ("-p") then
+					progress_status := True
 				elseif arg.count >= 9 and then arg.substring (1, 9).is_equal ("--define=") then
 					if arg.count > 9 then
 						set_defined_variable (arg.substring (10, arg.count))
@@ -182,7 +198,7 @@ feature {NONE} -- Error handling
 	Usage_message: UT_USAGE_MESSAGE is
 			-- Tester usage message
 		once
-			create Result.make ("[-a][-D <name>=<value>|--define=<name>=<value>]* [-o filename]")
+			create Result.make ("[-a][-p][-D <name>=<value>|--define=<name>=<value>]* [-o filename]")
 		ensure
 			usage_message_not_void: Result /= Void
 		end
