@@ -435,6 +435,7 @@ feature {NONE} -- Expression validity
 					end
 				end
 				if a_feature /= Void then
+					check_vape_validity (a_name, a_feature, Void)
 					a_formal_arguments := a_feature.arguments
 					if a_formal_arguments /= Void then
 						create an_open_operands.make_with_capacity (a_formal_arguments.count)
@@ -582,6 +583,7 @@ feature {NONE} -- Expression validity
 							error_handler.report_vpca2b_error (current_class, a_class_impl, a_name, a_feature, a_class)
 						end
 					end
+					check_vape_validity (a_name, a_feature, a_class)
 					a_formal_arguments := a_feature.arguments
 					if a_formal_arguments /= Void then
 						create an_open_operands.make_with_capacity (a_formal_arguments.count)
@@ -717,6 +719,7 @@ feature {NONE} -- Expression validity
 								error_handler.report_vpca2b_error (current_class, a_class_impl, a_name, a_feature, a_class)
 							end
 						end
+						check_vape_validity (a_name, a_feature, a_class)
 						a_formal_arguments := a_feature.arguments
 						if a_formal_arguments /= Void then
 							create an_open_operands.make_with_capacity (a_formal_arguments.count + 1)
@@ -1680,6 +1683,7 @@ feature {NONE} -- Expression validity
 							error_handler.report_vuex2c_error (current_class, a_class_impl, a_name, a_feature, a_class)
 						end
 					end
+					check_vape_validity (a_name, a_feature, a_class)
 						-- Check arguments validity.
 					a_formals := a_feature.arguments
 					if a_formals = Void or else a_formals.count /= 1 then

@@ -145,6 +145,16 @@ feature -- Status report
 			definition: Result = (other.root_context = root_context)
 		end
 
+	is_type_expanded (a_universe: ET_UNIVERSE): BOOLEAN is
+			-- Is `base_type' expanded in `a_universe'?
+			-- (Note that the feature name `is_expanded_type' is
+			-- already the name of a feature in SmartEiffel's GENERAL.)
+		require
+			a_universe_not_void: a_universe /= Void
+			-- no_cycle: no cycle in anchored types involved.
+		deferred
+		end
+
 	is_cat_type (a_universe: ET_UNIVERSE): BOOLEAN is
 			-- Is `base_type' a monomorphic type in `a_universe'?
 		require

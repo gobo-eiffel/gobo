@@ -341,6 +341,17 @@ feature {NONE} -- Signature validity
 					else
 						error_handler.report_vdrd2a_error (current_class, a_flattened_feature, other)
 					end
+				elseif a_feature.is_redeclared and other_precursor.is_attribute then
+					if not a_flattened_feature.is_attribute then
+						-- We already checked in `check_redeclaration_validity' whether
+						-- `a_flattened_feature' was an attribute and reported
+						-- an error otherwise.
+					elseif a_type.type.is_type_expanded (current_class, universe) /= other_type.is_type_expanded (current_class, universe) then
+							-- VDRD-6 says that the types of the two attributes should
+							-- be both expanded or both non-expanded.
+						set_fatal_error (current_class)
+						error_handler.report_vdrd6b_error (current_class, other, a_flattened_feature)
+					end
 				end
 			else
 				-- This case has already been handled in the feature flattener.

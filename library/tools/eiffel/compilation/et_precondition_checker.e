@@ -22,6 +22,7 @@ inherit
 			check_precursor_expression_validity,
 			check_result_validity,
 			check_result_address_validity,
+			check_vape_validity,
 			implementation_checked,
 			has_implementation_error
 		end
@@ -234,6 +235,82 @@ feature {NONE} -- Expression validity
 						-- Internal error: the VEEN-2 error should have been
 						-- reported in the implementation feature.
 					error_handler.report_giadn_error
+				end
+			end
+		end
+
+	check_vape_validity (a_name: ET_FEATURE_NAME; a_feature: ET_FEATURE; a_class: ET_CLASS) is
+			-- Check VAPE validity rule when calling `a_feature' named `a_name'
+			-- in a precondition of `current_feature' in `current_class'.
+			-- `a_class' is the base class of the target, or void in case of
+			-- an unqualified call.
+			-- The validity rule VAPE says that all features which are called
+			-- in a precondition of a feature `f' should be exported to every
+			-- class to which `f' is exported.
+		local
+			l_void_seed: INTEGER
+			l_feature_clients: ET_CLASS_NAME_LIST
+			l_clients: ET_CLASS_NAME_LIST
+			l_client_name: ET_CLASS_NAME
+			l_client: ET_CLASS
+			i, nb: INTEGER
+			a_class_impl: ET_CLASS
+		do
+			l_void_seed := universe.void_seed
+			if l_void_seed > 0 and then a_feature.has_seed (l_void_seed) then
+				-- Note: ISE Eiffel does not report VAPE when `a_feature' is the Void feature.
+				-- However ETL says it should be reported (it does not mention a special
+				-- case for `Void').
+			else
+				l_feature_clients := a_feature.clients
+				l_clients := current_feature.clients
+				nb := l_clients.count
+				from i := 1 until i > nb loop
+					l_client_name := l_clients.class_name (i)
+					if l_client_name.same_class_name (universe.none_class.name) then
+						-- NONE is a descendant of all classes.
+					elseif universe.has_class (l_client_name) then
+						l_client := universe.eiffel_class (l_client_name)
+						if not a_feature.is_exported_to (l_client, universe.ancestor_builder) then
+								-- The feature is not exported to `l_client'.
+							set_fatal_error
+							a_class_impl := current_feature.implementation_class
+							if current_class = a_class_impl then
+								if a_class = Void then
+									error_handler.report_vape0a_error (current_class, a_name, a_feature, current_feature, l_client)
+								else
+									error_handler.report_vape0c_error (current_class, a_name, a_feature, a_class, current_feature, l_client)
+								end
+							else
+								if a_class = Void then
+									error_handler.report_vape0b_error (current_class, a_class_impl, a_name, a_feature, current_feature, l_client)
+								else
+									error_handler.report_vape0d_error (current_class, a_class_impl, a_name, a_feature, a_class, current_feature, l_client)
+								end
+							end
+						end
+					elseif not l_feature_clients.has (l_client_name) then
+							-- The feature is not exported to `l_client_name'.
+							-- Note that `l_client_name' is not a class in the universe.
+							-- Therefore we expect this class name to be explicitly
+							-- listed in the client list of `a_feature'.
+						set_fatal_error
+						a_class_impl := current_feature.implementation_class
+						if current_class = a_class_impl then
+							if a_class = Void then
+								error_handler.report_vape0e_error (current_class, a_name, a_feature, current_feature, l_client_name)
+							else
+								error_handler.report_vape0g_error (current_class, a_name, a_feature, a_class, current_feature, l_client_name)
+							end
+						else
+							if a_class = Void then
+								error_handler.report_vape0f_error (current_class, a_class_impl, a_name, a_feature, current_feature, l_client_name)
+							else
+								error_handler.report_vape0h_error (current_class, a_class_impl, a_name, a_feature, a_class, current_feature, l_client_name)
+							end
+						end
+					end
+					i := i + 1
 				end
 			end
 		end

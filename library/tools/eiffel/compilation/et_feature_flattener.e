@@ -505,6 +505,7 @@ feature {NONE} -- Feature flattening
 			a_feature: ET_FEATURE
 			a_deferred_feature: ET_FLATTENED_FEATURE
 			i, nb: INTEGER
+			a_type: ET_TYPE
 		do
 			process_replication
 			if not current_class.has_flattening_error then
@@ -527,6 +528,37 @@ feature {NONE} -- Feature flattening
 						-- have already had their signature resolved
 						-- when processing the parents of `current_class'.
 					resolve_identifier_signature (a_feature)
+					if a_feature.is_deferred and then a_feature.is_frozen then
+							-- A feature cannot be both deferred and frozen.
+						set_fatal_error (current_class)
+						error_handler.report_vffd4a_error (current_class, a_feature)
+					end
+					if a_feature.name.is_prefix and then not a_feature.is_prefixable then
+							-- A feature with a Prefix name should be either
+							-- an attribute or a function with no argument.
+						set_fatal_error (current_class)
+						error_handler.report_vffd5a_error (current_class, a_feature)
+					end
+					if a_feature.name.is_infix and then not a_feature.is_infixable then
+							-- A feature with a Infix name should be 
+							-- a function with exactly one argument.
+						set_fatal_error (current_class)
+						error_handler.report_vffd6a_error (current_class, a_feature)
+					end
+					if a_feature.is_once then
+						a_type := a_feature.type
+						if a_type /= Void then
+								-- The type of a once function should not contain
+								-- a formal generic parameter or an anchored type.
+							if a_type.has_anchored_type (current_class, universe) then
+								set_fatal_error (current_class)
+								error_handler.report_vffd7a_error (current_class, a_feature)
+							elseif a_type.has_formal_types (current_class, universe) then
+								set_fatal_error (current_class)
+								error_handler.report_vffd7b_error (current_class, a_feature)
+							end
+						end
+					end
 					i := i + 1
 				end
 				check_anchored_signatures
@@ -556,6 +588,18 @@ feature {NONE} -- Feature flattening
 							-- not considered as a fatal error here.
 							-- We just consider the class as deferred
 							-- from now on.
+						if a_deferred_feature.is_inherited then
+								-- Try to find a deferred feature which is not inherited.
+							from named_features.start until named_features.after loop
+								a_named_feature := named_features.item_for_iteration
+								if a_named_feature.flattened_feature.is_deferred and not a_named_feature.is_inherited then
+									a_deferred_feature := a_named_feature
+									named_features.go_after
+								else
+									named_features.forth
+								end
+							end
+						end
 						if a_deferred_feature.is_inherited then
 							error_handler.report_vcch1b_error (current_class, a_deferred_feature.inherited_feature)
 						else
@@ -1205,6 +1249,8 @@ feature {NONE} -- Feature adaptation validity
 		require
 			a_parent_feature_not_void: a_parent_feature /= Void
 			a_redeclared_feature_not_void: a_redeclared_feature /= Void
+		local
+			l_precursor_feature: ET_FEATURE
 		do
 			check_rename_clause_validity (a_parent_feature)
 			check_undefine_clause_validity (a_parent_feature)
@@ -1246,6 +1292,14 @@ feature {NONE} -- Feature adaptation validity
 				set_fatal_error (current_class)
 				error_handler.report_vmfn0b_error (current_class, a_parent_feature, a_redeclared_feature)
 				error_handler.report_vdrd4b_error (current_class, a_parent_feature, a_redeclared_feature)
+			end
+			l_precursor_feature := a_parent_feature.precursor_feature
+			if l_precursor_feature.is_attribute then
+				if not a_redeclared_feature.is_attribute then
+						-- An attribute can only be redeclared to another attribute.
+					set_fatal_error (current_class)
+					error_handler.report_vdrd6a_error (current_class, a_parent_feature, a_redeclared_feature)
+				end
 			end
 		end
 
@@ -1625,6 +1679,17 @@ feature {NONE} -- Signature validity
 					else
 						error_handler.report_vdrd2a_error (current_class, a_flattened_feature, other)
 					end
+				end
+			elseif a_feature.is_redeclared and other_precursor.is_attribute then
+				if not a_flattened_feature.is_attribute then
+					-- We already checked in `check_redeclaration_validity' whether
+					-- `a_flattened_feature' was an attribute and reported
+					-- an error otherwise.
+				elseif a_type.type.is_type_expanded (current_class, universe) /= other_type.is_type_expanded (current_class, universe) then
+						-- VDRD-6 says that the types of the two attributes should
+						-- be both expanded or both non-expanded.
+					set_fatal_error (current_class)
+					error_handler.report_vdrd6b_error (current_class, other, a_flattened_feature)
 				end
 			end
 			an_arguments := a_flattened_feature.arguments

@@ -179,6 +179,8 @@ feature {NONE} -- Instruction validity
 			a_target_context: ET_NESTED_TYPE_CONTEXT
 			a_source: ET_EXPRESSION
 			a_source_context: ET_NESTED_TYPE_CONTEXT
+			a_target_named_type: ET_NAMED_TYPE
+			a_class_impl: ET_CLASS
 		do
 			actual_context.reset (current_class)
 			a_source_context := actual_context
@@ -190,6 +192,15 @@ feature {NONE} -- Instruction validity
 				set_fatal_error
 				a_target_context.wipe_out
 				a_target_context.force_first (universe.any_type)
+			elseif a_target_context.is_type_expanded (universe) then
+				set_fatal_error
+				a_target_named_type := a_target_context.named_type (universe)
+				a_class_impl := current_feature.implementation_class
+				if current_class = a_class_impl then
+					error_handler.report_vjrv0a_error (current_class, a_target, a_target_named_type)
+				else
+					error_handler.report_vjrv0b_error (current_class, a_class_impl, a_target, a_target_named_type)
+				end
 			end
 			a_source := an_instruction.source
 			check_subexpression_validity (a_source, a_source_context, a_target_context)

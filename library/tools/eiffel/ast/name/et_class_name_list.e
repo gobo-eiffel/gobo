@@ -39,10 +39,12 @@ feature -- Status report
 
 	is_none: BOOLEAN is
 			-- Does current client list only contain the
-			-- class name "NONE"?
+			-- class name "NONE" or is empty?
 		do
 			if count = 1 then
 				Result := class_name (1).same_class_name (tokens.none_class_name)
+			elseif count = 0 then
+				Result := True
 			end
 		end
 

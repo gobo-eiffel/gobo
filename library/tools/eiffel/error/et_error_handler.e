@@ -404,6 +404,206 @@ feature -- Validity errors
 			end
 		end
 
+	report_vape0a_error (a_class: ET_CLASS; a_name: ET_FEATURE_NAME; a_feature: ET_FEATURE;
+		a_pre_feature: ET_FEATURE; a_client: ET_CLASS) is
+			-- Report VAPE error: `a_feature' named `a_name', appearing in an unqualified
+			-- call in a precondition of `a_pre_feature' in `a_class', is not exported to
+			-- class `a_client' to which `a_pre_feature' is exported.
+			--
+			-- ETL2: p.122
+		require
+			a_class_not_void: a_class /= Void
+			a_class_preparsed: a_class.is_preparsed
+			a_name_not_void: a_name /= Void
+			a_feature_not_void: a_feature /= Void
+			a_pre_feature_not_void: a_pre_feature /= Void
+			a_client_not_void: a_client /= Void
+		local
+			an_error: ET_VALIDITY_ERROR
+		do
+			if reportable_vape_error (a_class) then
+				create an_error.make_vape0a (a_class, a_name, a_feature, a_pre_feature, a_client)
+				report_validity_error (an_error)
+			end
+		end
+
+	report_vape0b_error (a_class, a_class_impl: ET_CLASS; a_name: ET_FEATURE_NAME; a_feature: ET_FEATURE;
+		a_pre_feature: ET_FEATURE; a_client: ET_CLASS) is
+			-- Report VAPE error: `a_feature' named `a_name', appearing in an unqualified
+			-- call in a precondition of `a_pre_feature' in `a_class_impl' and view from
+			-- one of its descendants `a_class', is not exported to class `a_client' to
+			-- which `a_pre_feature' is exported.
+			--
+			-- ETL2: p.122
+		require
+			a_class_not_void: a_class /= Void
+			a_class_impl_not_void: a_class_impl /= Void
+			a_class_impl_preparsed: a_class_impl.is_preparsed
+			a_name_not_void: a_name /= Void
+			a_feature_not_void: a_feature /= Void
+			a_pre_feature_not_void: a_pre_feature /= Void
+			a_client_not_void: a_client /= Void
+		local
+			an_error: ET_VALIDITY_ERROR
+		do
+			if reportable_vape_error (a_class) then
+				create an_error.make_vape0b (a_class, a_class_impl, a_name, a_feature, a_pre_feature, a_client)
+				report_validity_error (an_error)
+			end
+		end
+
+	report_vape0c_error (a_class: ET_CLASS; a_name: ET_FEATURE_NAME; a_feature: ET_FEATURE;
+		a_target_class: ET_CLASS; a_pre_feature: ET_FEATURE; a_client: ET_CLASS) is
+			-- Report VAPE error: `a_feature' named `a_name', appearing in a qualified
+			-- call with target's base class `a_target_class' in a precondition of
+			-- `a_pre_feature' in `a_class', is not exported to class `a_client' to
+			-- which `a_pre_feature' is exported.
+			--
+			-- ETL2: p.122
+		require
+			a_class_not_void: a_class /= Void
+			a_class_preparsed: a_class.is_preparsed
+			a_name_not_void: a_name /= Void
+			a_feature_not_void: a_feature /= Void
+			a_target_class_not_void: a_target_class /= Void
+			a_pre_feature_not_void: a_pre_feature /= Void
+			a_client_not_void: a_client /= Void
+		local
+			an_error: ET_VALIDITY_ERROR
+		do
+			if reportable_vape_error (a_class) then
+				create an_error.make_vape0c (a_class, a_name, a_feature, a_target_class, a_pre_feature, a_client)
+				report_validity_error (an_error)
+			end
+		end
+
+	report_vape0d_error (a_class, a_class_impl: ET_CLASS; a_name: ET_FEATURE_NAME; a_feature: ET_FEATURE;
+		a_target_class: ET_CLASS; a_pre_feature: ET_FEATURE; a_client: ET_CLASS) is
+			-- Report VAPE error: `a_feature' named `a_name', appearing in a qualified
+			-- call with target's base class `a_target_class' in a precondition of
+			-- `a_pre_feature' in `a_class_impl' and view from one of its descendants
+			-- a_class', is not exported to class `a_client' to which `a_pre_feature'
+			-- is exported.
+			--
+			-- ETL2: p.122
+		require
+			a_class_not_void: a_class /= Void
+			a_class_impl_not_void: a_class_impl /= Void
+			a_class_impl_preparsed: a_class_impl.is_preparsed
+			a_name_not_void: a_name /= Void
+			a_feature_not_void: a_feature /= Void
+			a_target_class_not_void: a_target_class /= Void
+			a_pre_feature_not_void: a_pre_feature /= Void
+			a_client_not_void: a_client /= Void
+		local
+			an_error: ET_VALIDITY_ERROR
+		do
+			if reportable_vape_error (a_class) then
+				create an_error.make_vape0d (a_class, a_class_impl, a_name, a_feature, a_target_class, a_pre_feature, a_client)
+				report_validity_error (an_error)
+			end
+		end
+
+	report_vape0e_error (a_class: ET_CLASS; a_name: ET_FEATURE_NAME; a_feature: ET_FEATURE;
+		a_pre_feature: ET_FEATURE; a_client: ET_CLASS_NAME) is
+			-- Report VAPE error: `a_feature' named `a_name', appearing in an unqualified
+			-- call in a precondition of `a_pre_feature' in `a_class', is not exported to
+			-- class `a_client' to which `a_pre_feature' is exported.
+			--
+			-- ETL2: p.122
+		require
+			a_class_not_void: a_class /= Void
+			a_class_preparsed: a_class.is_preparsed
+			a_name_not_void: a_name /= Void
+			a_feature_not_void: a_feature /= Void
+			a_pre_feature_not_void: a_pre_feature /= Void
+			a_client_not_void: a_client /= Void
+		local
+			an_error: ET_VALIDITY_ERROR
+		do
+			if reportable_vape_error (a_class) then
+				create an_error.make_vape0e (a_class, a_name, a_feature, a_pre_feature, a_client)
+				report_validity_error (an_error)
+			end
+		end
+
+	report_vape0f_error (a_class, a_class_impl: ET_CLASS; a_name: ET_FEATURE_NAME; a_feature: ET_FEATURE;
+		a_pre_feature: ET_FEATURE; a_client: ET_CLASS_NAME) is
+			-- Report VAPE error: `a_feature' named `a_name', appearing in an unqualified
+			-- call in a precondition of `a_pre_feature' in `a_class_impl' and view from
+			-- one of its descendants `a_class', is not exported to class `a_client' to
+			-- which `a_pre_feature' is exported.
+			--
+			-- ETL2: p.122
+		require
+			a_class_not_void: a_class /= Void
+			a_class_impl_not_void: a_class_impl /= Void
+			a_class_impl_preparsed: a_class_impl.is_preparsed
+			a_name_not_void: a_name /= Void
+			a_feature_not_void: a_feature /= Void
+			a_pre_feature_not_void: a_pre_feature /= Void
+			a_client_not_void: a_client /= Void
+		local
+			an_error: ET_VALIDITY_ERROR
+		do
+			if reportable_vape_error (a_class) then
+				create an_error.make_vape0f (a_class, a_class_impl, a_name, a_feature, a_pre_feature, a_client)
+				report_validity_error (an_error)
+			end
+		end
+
+	report_vape0g_error (a_class: ET_CLASS; a_name: ET_FEATURE_NAME; a_feature: ET_FEATURE;
+		a_target_class: ET_CLASS; a_pre_feature: ET_FEATURE; a_client: ET_CLASS_NAME) is
+			-- Report VAPE error: `a_feature' named `a_name', appearing in a qualified
+			-- call with target's base class `a_target_class' in a precondition of
+			-- `a_pre_feature' in `a_class', is not exported to class `a_client' to
+			-- which `a_pre_feature' is exported.
+			--
+			-- ETL2: p.122
+		require
+			a_class_not_void: a_class /= Void
+			a_class_preparsed: a_class.is_preparsed
+			a_name_not_void: a_name /= Void
+			a_feature_not_void: a_feature /= Void
+			a_target_class_not_void: a_target_class /= Void
+			a_pre_feature_not_void: a_pre_feature /= Void
+			a_client_not_void: a_client /= Void
+		local
+			an_error: ET_VALIDITY_ERROR
+		do
+			if reportable_vape_error (a_class) then
+				create an_error.make_vape0g (a_class, a_name, a_feature, a_target_class, a_pre_feature, a_client)
+				report_validity_error (an_error)
+			end
+		end
+
+	report_vape0h_error (a_class, a_class_impl: ET_CLASS; a_name: ET_FEATURE_NAME; a_feature: ET_FEATURE;
+		a_target_class: ET_CLASS; a_pre_feature: ET_FEATURE; a_client: ET_CLASS_NAME) is
+			-- Report VAPE error: `a_feature' named `a_name', appearing in a qualified
+			-- call with target's base class `a_target_class' in a precondition of
+			-- `a_pre_feature' in `a_class_impl' and view from one of its descendants
+			-- a_class', is not exported to class `a_client' to which `a_pre_feature'
+			-- is exported.
+			--
+			-- ETL2: p.122
+		require
+			a_class_not_void: a_class /= Void
+			a_class_impl_not_void: a_class_impl /= Void
+			a_class_impl_preparsed: a_class_impl.is_preparsed
+			a_name_not_void: a_name /= Void
+			a_feature_not_void: a_feature /= Void
+			a_target_class_not_void: a_target_class /= Void
+			a_pre_feature_not_void: a_pre_feature /= Void
+			a_client_not_void: a_client /= Void
+		local
+			an_error: ET_VALIDITY_ERROR
+		do
+			if reportable_vape_error (a_class) then
+				create an_error.make_vape0h (a_class, a_class_impl, a_name, a_feature, a_target_class, a_pre_feature, a_client)
+				report_validity_error (an_error)
+			end
+		end
+
 	report_vave0a_error (a_class: ET_CLASS; an_expression: ET_EXPRESSION; a_type: ET_NAMED_TYPE) is
 			-- Report VAVE error: the expression `an_expression' of a
 			-- loop variant in `a_class' is of type `a_type' which is
@@ -1314,6 +1514,48 @@ feature -- Validity errors
 			end
 		end
 
+	report_vdrd6a_error (a_class: ET_CLASS; f1: ET_PARENT_FEATURE; f2: ET_FEATURE) is
+			-- Report VDRD-6 error: the attribute `f1' is not redeclared into
+			-- an attribute in `a_class'.
+			--
+			-- ETL2: p.163
+		require
+			a_class_not_void: a_class /= Void
+			a_class_preparsed: a_class.is_preparsed
+			f1_not_void: f1 /= Void
+			f1_is_attribute: f1.precursor_feature.is_attribute
+			f2_not_void: f2 /= Void
+			f2_not_attribute: not f2.is_attribute
+		local
+			an_error: ET_VALIDITY_ERROR
+		do
+			if reportable_vdrd6_error (a_class) then
+				create an_error.make_vdrd6a (a_class, f1, f2)
+				report_validity_error (an_error)
+			end
+		end
+
+	report_vdrd6b_error (a_class: ET_CLASS; f1: ET_PARENT_FEATURE; f2: ET_FEATURE) is
+			-- Report VDRD-6 error: the type of attribute `f1' has not the
+			-- same type expandedness as its redeclared version `f2' in `a_class'.
+			--
+			-- ETL2: p.163
+		require
+			a_class_not_void: a_class /= Void
+			a_class_preparsed: a_class.is_preparsed
+			f1_not_void: f1 /= Void
+			f1_is_attribute: f1.precursor_feature.is_attribute
+			f2_not_void: f2 /= Void
+			f2_attribute: f2.is_attribute
+		local
+			an_error: ET_VALIDITY_ERROR
+		do
+			if reportable_vdrd6_error (a_class) then
+				create an_error.make_vdrd6b (a_class, f1, f2)
+				report_validity_error (an_error)
+			end
+		end
+
 	report_vdrs1a_error (a_class: ET_CLASS; a_parent: ET_PARENT; f: ET_FEATURE_NAME) is
 			-- Report VDRS-1 error: the Redefine subclause of `a_parent'
 			-- in `a_class' lists `f' which is not the final name in
@@ -1649,6 +1891,105 @@ feature -- Validity errors
 		do
 			if reportable_veen2_error (a_class) then
 				create an_error.make_veen2d (a_class, a_result)
+				report_validity_error (an_error)
+			end
+		end
+
+	report_vffd4a_error (a_class: ET_CLASS; a_feature: ET_FEATURE) is
+			-- Report VFFD-4 error: deferred `a_feature' is marked as frozen.
+			--
+			-- ETL2: p.69
+		require
+			a_class_not_void: a_class /= Void
+			a_class_preparsed: a_class.is_preparsed
+			a_feature_not_void: a_feature /= Void
+			a_feature_deferred: a_feature.is_deferred
+			a_feature_frozen: a_feature.is_frozen
+		local
+			an_error: ET_VALIDITY_ERROR
+		do
+			if reportable_vffd4_error (a_class) then
+				create an_error.make_vffd4a (a_class, a_feature)
+				report_validity_error (an_error)
+			end
+		end
+
+	report_vffd5a_error (a_class: ET_CLASS; a_feature: ET_FEATURE) is
+			-- Report VFFD-5 error: `a_feature' has a prefix name but is
+			-- not an attribute or a function with no argument.
+			--
+			-- ETL2: p.69
+		require
+			a_class_not_void: a_class /= Void
+			a_class_preparsed: a_class.is_preparsed
+			a_feature_not_void: a_feature /= Void
+			a_feature_name_prefix: a_feature.name.is_prefix
+			a_feature_not_prefixable: not a_feature.is_prefixable
+		local
+			an_error: ET_VALIDITY_ERROR
+		do
+			if reportable_vffd5_error (a_class) then
+				create an_error.make_vffd5a (a_class, a_feature)
+				report_validity_error (an_error)
+			end
+		end
+
+	report_vffd6a_error (a_class: ET_CLASS; a_feature: ET_FEATURE) is
+			-- Report VFFD-6 error: `a_feature' has an infix name but is
+			-- not a function with exactly one argument.
+			--
+			-- ETL2: p.69
+		require
+			a_class_not_void: a_class /= Void
+			a_class_preparsed: a_class.is_preparsed
+			a_feature_not_void: a_feature /= Void
+			a_feature_name_infix: a_feature.name.is_infix
+			a_feature_not_infixable: not a_feature.is_infixable
+		local
+			an_error: ET_VALIDITY_ERROR
+		do
+			if reportable_vffd6_error (a_class) then
+				create an_error.make_vffd6a (a_class, a_feature)
+				report_validity_error (an_error)
+			end
+		end
+
+	report_vffd7a_error (a_class: ET_CLASS; a_feature: ET_FEATURE) is
+			-- Report VFFD-7 error: the type of the once function `a_feature'
+			-- contains an anchored type.
+			--
+			-- ETL2: p.69
+		require
+			a_class_not_void: a_class /= Void
+			a_class_preparsed: a_class.is_preparsed
+			a_feature_not_void: a_feature /= Void
+			a_feature_once: a_feature.is_once
+			a_feature_function: a_feature.type /= Void
+		local
+			an_error: ET_VALIDITY_ERROR
+		do
+			if reportable_vffd6_error (a_class) then
+				create an_error.make_vffd7a (a_class, a_feature)
+				report_validity_error (an_error)
+			end
+		end
+
+	report_vffd7b_error (a_class: ET_CLASS; a_feature: ET_FEATURE) is
+			-- Report VFFD-7 error: the type of the once function `a_feature'
+			-- contains an formal generic parameter.
+			--
+			-- ETL2: p.69
+		require
+			a_class_not_void: a_class /= Void
+			a_class_preparsed: a_class.is_preparsed
+			a_feature_not_void: a_feature /= Void
+			a_feature_once: a_feature.is_once
+			a_feature_function: a_feature.type /= Void
+		local
+			an_error: ET_VALIDITY_ERROR
+		do
+			if reportable_vffd6_error (a_class) then
+				create an_error.make_vffd7b (a_class, a_feature)
 				report_validity_error (an_error)
 			end
 		end
@@ -2145,6 +2486,23 @@ feature -- Validity errors
 			end
 		end
 
+	report_vhay0a_error (a_class: ET_CLASS) is
+			-- Report VHAY error: `a_class' implicitly inherits
+			-- from unknown class ANY.
+			--
+			-- ETL2: p.88
+		require
+			a_class_not_void: a_class /= Void
+			a_class_preparsed: a_class.is_preparsed
+		local
+			an_error: ET_VALIDITY_ERROR
+		do
+			if reportable_vhay_error (a_class) then
+				create an_error.make_vhay0a (a_class)
+				report_validity_error (an_error)
+			end
+		end
+
 	report_vhpr1a_error (a_class: ET_CLASS; a_cycle: DS_LIST [ET_CLASS]) is
 			-- Report VHPR-1 error: `a_class' is involved
 			-- in the inheritance cycle `a_cycle'.
@@ -2396,6 +2754,50 @@ feature -- Validity errors
 		do
 			if reportable_vjaw_error (a_class) then
 				create an_error.make_vjaw0c (a_class, a_name, a_feature)
+				report_validity_error (an_error)
+			end
+		end
+
+	report_vjrv0a_error (a_class: ET_CLASS; a_target: ET_WRITABLE; a_target_type: ET_NAMED_TYPE) is
+			-- Report VJRV error: the type `a_target_type' of the target
+			-- `a_target' of an assignment attempt appearing in `a_class'
+			-- is not a reference type.
+			--
+			-- ETL2: p. 332
+		require
+			a_class_not_void: a_class /= Void
+			a_class_preparsed: a_class.is_preparsed
+			a_target_not_void: a_target /= Void
+			a_target_type_not_void: a_target_type /= Void
+			a_target_type_is_named_type: a_target_type.is_named_type
+		local
+			an_error: ET_VALIDITY_ERROR
+		do
+			if reportable_vjrv_error (a_class) then
+				create an_error.make_vjrv0a (a_class, a_target, a_target_type)
+				report_validity_error (an_error)
+			end
+		end
+
+	report_vjrv0b_error (a_class, a_class_impl: ET_CLASS; a_target: ET_WRITABLE; a_target_type: ET_NAMED_TYPE) is
+			-- Report VJRV error: the type `a_target_type' of the target
+			-- `a_target' of an assignment attempt appearing in `a_class_impl'
+			-- and viewed from one of its descedants `a_class' is not a
+			-- reference type.
+			--
+			-- ETL2: p. 332
+		require
+			a_class_not_void: a_class /= Void
+			a_class_impl_not_void: a_class_impl /= Void
+			a_class_impl_preparsed: a_class_impl.is_preparsed
+			a_target_not_void: a_target /= Void
+			a_target_type_not_void: a_target_type /= Void
+			a_target_type_is_named_type: a_target_type.is_named_type
+		local
+			an_error: ET_VALIDITY_ERROR
+		do
+			if reportable_vjrv_error (a_class) then
+				create an_error.make_vjrv0b (a_class, a_class_impl, a_target, a_target_type)
 				report_validity_error (an_error)
 			end
 		end
@@ -3738,24 +4140,6 @@ feature -- Validity errors
 			end
 		end
 
-	report_vtct0c_error (a_class: ET_CLASS) is
-			-- Report VTCT error: `a_class' implicitly inherits
-			-- from unknown class ANY.
-			--
-			-- ETL2: p.199
-			-- ETR: p.45
-		require
-			a_class_not_void: a_class /= Void
-			a_class_preparsed: a_class.is_preparsed
-		local
-			an_error: ET_VALIDITY_ERROR
-		do
-			if reportable_vtct_error (a_class) then
-				create an_error.make_vtct0c (a_class)
-				report_validity_error (an_error)
-			end
-		end
-
 	report_vtgc0a_error (a_class: ET_CLASS; cp: ET_FEATURE_NAME; a_constraint: ET_CLASS) is
 			-- Report VTGC error: creation procedure name `cp'
 			-- is not the final name of a feature in the base class
@@ -4407,6 +4791,16 @@ feature -- Validity error status
 			Result := True
 		end
 
+	reportable_vape_error (a_class: ET_CLASS): BOOLEAN is
+			-- Can a VAPE error be reported when it
+			-- appears in `a_class'?
+		require
+			a_class_not_void: a_class /= Void
+			a_class_preparsed: a_class.is_preparsed
+		do
+			Result := True
+		end
+
 	reportable_vave_error (a_class: ET_CLASS): BOOLEAN is
 			-- Can a VAVE error be reported when it
 			-- appears in `a_class'?
@@ -4557,6 +4951,16 @@ feature -- Validity error status
 			Result := True
 		end
 
+	reportable_vdrd6_error (a_class: ET_CLASS): BOOLEAN is
+			-- Can a VDRD-6 error be reported when it
+			-- appears in `a_class'?
+		require
+			a_class_not_void: a_class /= Void
+			a_class_preparsed: a_class.is_preparsed
+		do
+			Result := True
+		end
+
 	reportable_vdrs1_error (a_class: ET_CLASS): BOOLEAN is
 			-- Can a VDRS-1 error be reported when it
 			-- appears in `a_class'?
@@ -4629,6 +5033,46 @@ feature -- Validity error status
 
 	reportable_vdus4_error (a_class: ET_CLASS): BOOLEAN is
 			-- Can a VDUS-4 error be reported when it
+			-- appears in `a_class'?
+		require
+			a_class_not_void: a_class /= Void
+			a_class_preparsed: a_class.is_preparsed
+		do
+			Result := True
+		end
+
+	reportable_vffd4_error (a_class: ET_CLASS): BOOLEAN is
+			-- Can a VFFD-4 error be reported when it
+			-- appears in `a_class'?
+		require
+			a_class_not_void: a_class /= Void
+			a_class_preparsed: a_class.is_preparsed
+		do
+			Result := True
+		end
+
+	reportable_vffd5_error (a_class: ET_CLASS): BOOLEAN is
+			-- Can a VFFD-5 error be reported when it
+			-- appears in `a_class'?
+		require
+			a_class_not_void: a_class /= Void
+			a_class_preparsed: a_class.is_preparsed
+		do
+			Result := True
+		end
+
+	reportable_vffd6_error (a_class: ET_CLASS): BOOLEAN is
+			-- Can a VFFD-6 error be reported when it
+			-- appears in `a_class'?
+		require
+			a_class_not_void: a_class /= Void
+			a_class_preparsed: a_class.is_preparsed
+		do
+			Result := True
+		end
+
+	reportable_vffd7_error (a_class: ET_CLASS): BOOLEAN is
+			-- Can a VFFD-7 error be reported when it
 			-- appears in `a_class'?
 		require
 			a_class_not_void: a_class /= Void
@@ -4727,6 +5171,16 @@ feature -- Validity error status
 			Result := True
 		end
 
+	reportable_vhay_error (a_class: ET_CLASS): BOOLEAN is
+			-- Can a VHAY error be reported when it
+			-- appears in `a_class'?
+		require
+			a_class_not_void: a_class /= Void
+			a_class_preparsed: a_class.is_preparsed
+		do
+			Result := True
+		end
+
 	reportable_vhpr1_error (a_class: ET_CLASS): BOOLEAN is
 			-- Can a VHPR-1 error be reported when it
 			-- appears in `a_class'?
@@ -4799,6 +5253,16 @@ feature -- Validity error status
 
 	reportable_vjaw_error (a_class: ET_CLASS): BOOLEAN is
 			-- Can a VJAW error be reported when it
+			-- appears in `a_class'?
+		require
+			a_class_not_void: a_class /= Void
+			a_class_preparsed: a_class.is_preparsed
+		do
+			Result := True
+		end
+
+	reportable_vjrv_error (a_class: ET_CLASS): BOOLEAN is
+			-- Can a VJRV error be reported when it
 			-- appears in `a_class'?
 		require
 			a_class_not_void: a_class /= Void

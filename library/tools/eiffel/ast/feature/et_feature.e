@@ -189,18 +189,24 @@ feature -- Status report
 			-- Is feature an attribute?
 		do
 			-- Result := False
+		ensure
+			query: Result implies type /= Void
 		end
 
 	is_constant_attribute: BOOLEAN is
 			-- Is feature a constant attribute?
 		do
 			-- Result := False
+		ensure
+			query: Result implies type /= Void
 		end
 
 	is_unique_attribute: BOOLEAN is
 			-- Is feature a unique attribute?
 		do
 			-- Result := False
+		ensure
+			query: Result implies type /= Void
 		end
 
 	is_procedure: BOOLEAN is
@@ -222,6 +228,8 @@ feature -- Status report
 			-- the form 'infix ...'?
 		do
 			-- Result := False
+		ensure
+			definition: type /= Void and (arguments /= Void and then arguments.count = 1)
 		end
 
 	is_prefixable: BOOLEAN is
@@ -229,6 +237,8 @@ feature -- Status report
 			-- the form 'prefix ...'?
 		do
 			-- Result := False
+		ensure
+			definition: type /= Void and (arguments /= Void or else arguments.count = 0)
 		end
 
 	is_immediate: BOOLEAN is True

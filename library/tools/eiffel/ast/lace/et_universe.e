@@ -310,7 +310,7 @@ feature -- Basic classes
 	any_parents: ET_PARENT_LIST
 			-- Default parents
 
-feature -- Features
+feature -- Feature access
 
 	integer_8_convert_feature: ET_BUILTIN_CONVERT_FEATURE
 			-- Built-in conversion feature to INTEGER_8
@@ -333,15 +333,32 @@ feature -- Features
 	default_create_seed: INTEGER
 			-- Seed of feature 'default_create' in class ANY
 
+	void_seed: INTEGER
+			-- Seed of feature 'Void' in class ANY
+
+feature -- Feature setting
+
 	set_default_create_seed (a_seed: INTEGER) is
 			-- Set `default_create_seed' to `a_seed'.
 		require
-			a_seed_positive: a_seed > 0
+			a_seed_non_negative: a_seed >= 0
 		do
 			default_create_seed := a_seed
 		ensure
 			default_create_seed_set: default_create_seed = a_seed
 		end
+
+	set_void_seed (a_seed: INTEGER) is
+			-- Set `void_seed' to `a_seed'.
+		require
+			a_seed_non_negative: a_seed >= 0
+		do
+			void_seed := a_seed
+		ensure
+			void_seed_set: void_seed = a_seed
+		end
+
+feature -- Feature registration
 
 	register_feature (a_feature: ET_FEATURE) is
 			-- Register `a_feature'.
@@ -981,7 +998,23 @@ feature -- Compilation
 			if a_feature /= Void then
 				set_default_create_seed (a_feature.first_seed)
 			else
+				a_feature := general_class.named_feature (tokens.default_create_feature_name)
+				if a_feature /= Void then
+					set_default_create_seed (a_feature.first_seed)
+				else
 -- TODO
+				end
+			end
+			a_feature := any_class.named_feature (tokens.void_feature_name)
+			if a_feature /= Void then
+				set_void_seed (a_feature.first_seed)
+			else
+				a_feature := general_class.named_feature (tokens.void_feature_name)
+				if a_feature /= Void then
+					set_void_seed (a_feature.first_seed)
+				else
+-- TODO
+				end
 			end
 				-- Build ancestors.
 			a_cursor := classes.new_cursor
@@ -1277,6 +1310,8 @@ invariant
 	integer_64_convert_feature_not_void: integer_64_convert_feature /= Void
 	real_convert_feature_not_void: real_convert_feature /= Void
 	double_convert_feature_not_void: double_convert_feature /= Void
+	default_create_seed_non_negative: default_create_seed >= 0
+	void_seed_non_negative: void_seed >= 0
 	ancestor_builder_not_void: ancestor_builder /= Void
 	feature_flattener_not_void: feature_flattener /= Void
 	qualified_signature_resolver_not_void: qualified_signature_resolver /= Void

@@ -153,6 +153,7 @@ feature {NONE} -- Validity checking
 							error_handler.report_vuex2c_error (current_class, a_class_impl, a_name, a_feature, a_class)
 						end
 					end
+					check_vape_validity (a_name, a_feature, a_class)
 					check_arguments_validity (an_actuals, a_context, a_name, a_feature, a_class)
 						-- Check whether `a_feature' satistfies CAT validity rules.
 					check_cat_validity (a_name, a_feature, a_context)
@@ -350,6 +351,7 @@ feature {NONE} -- Validity checking
 					end
 				end
 				if a_feature /= Void then
+					check_vape_validity (a_name, a_feature, Void)
 					check_arguments_validity (an_actuals, a_context, a_name, a_feature, Void)
 					a_type := a_feature.type
 					if in_expression then
@@ -577,6 +579,7 @@ feature {NONE} -- Validity checking
 								error_handler.report_vuex2c_error (current_class, a_class_impl, a_name, a_feature, a_class)
 							end
 						end
+						check_vape_validity (a_name, a_feature, a_class)
 						check_arguments_validity (a_call.arguments, a_context, a_name, a_feature, a_class)
 						a_type := a_feature.type
 						if in_expression then
@@ -708,6 +711,21 @@ feature {NONE} -- Validity checking
 			a_name_not_void: a_name /= Void
 			a_feature_not_void: a_feature /= Void
 		deferred
+		end
+
+	check_vape_validity (a_name: ET_FEATURE_NAME; a_feature: ET_FEATURE; a_class: ET_CLASS) is
+			-- Check VAPE validity rule when calling `a_feature' named `a_name'
+			-- in a precondition of `current_feature' in `current_class'.
+			-- `a_class' is the base class of the target, or void in case of
+			-- an unqualified call.
+			-- The validity rule VAPE says that all features which are called
+			-- in a precondition of a feature `f' should be exported to every
+			-- class to which `f' is exported.
+		require
+			a_name_not_void: a_name /= Void
+			a_feature_not_void: a_feature /= Void
+		do
+			-- VAPE validity rule only applies to preconditions.
 		end
 
 feature {NONE} -- Type checking

@@ -260,7 +260,7 @@ feature {NONE} -- Ancestors
 					if not a_class.is_preparsed then
 						if a_parents = universe.any_parents then
 								-- Error: class ANY not in universe (VTCT, ETL2 p.199).
-							error_handler.report_vtct0c_error (current_class)
+							error_handler.report_vhay0a_error (current_class)
 						else
 								-- Error: class not in universe (VTCT, ETL2 p.199).
 							error_handler.report_vtct0a_error (current_class, a_type)

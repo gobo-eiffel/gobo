@@ -236,6 +236,26 @@ feature -- Status report
 			-- the actual parameters of these formal parameters are
 			-- themselves
 
+	is_type_expanded (a_universe: ET_UNIVERSE): BOOLEAN is
+			-- Is `base_type' expanded in `a_universe'?
+			-- (Note that the feature name `is_expanded_type' is
+			-- already the name of a feature in SmartEiffel's GENERAL.)
+		local
+			l_type: ET_TYPE
+		do
+			inspect count
+			when 0 then
+				Result := root_context.context_is_type_expanded (a_universe)
+			when 1 then
+				Result := first.is_type_expanded (root_context, a_universe)
+			else
+				l_type := first
+				remove_first
+				Result := l_type.is_type_expanded (Current, a_universe)
+				put_first (l_type)
+			end
+		end
+
 	is_cat_type (a_universe: ET_UNIVERSE): BOOLEAN is
 			-- Is `base_type' a monomorphic type in `a_universe'?
 		local

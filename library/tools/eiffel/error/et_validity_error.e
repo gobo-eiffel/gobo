@@ -23,6 +23,14 @@ creation
 
 	make,
 	make_vaol1a,
+	make_vape0a,
+	make_vape0b,
+	make_vape0c,
+	make_vape0d,
+	make_vape0e,
+	make_vape0f,
+	make_vape0g,
+	make_vape0h,
 	make_vave0a,
 	make_vave0b,
 	make_vcch1a,
@@ -61,6 +69,8 @@ creation
 	make_vdrd4b,
 	make_vdrd4c,
 	make_vdrd5a,
+	make_vdrd6a,
+	make_vdrd6b,
 	make_vdrs1a,
 	make_vdrs2a,
 	make_vdrs2b,
@@ -77,6 +87,11 @@ creation
 	make_veen2b,
 	make_veen2c,
 	make_veen2d,
+	make_vffd4a,
+	make_vffd5a,
+	make_vffd6a,
+	make_vffd7a,
+	make_vffd7b,
 	make_vgcc3a,
 	make_vgcc3b,
 	make_vgcc5a,
@@ -100,6 +115,7 @@ creation
 	make_vgcp3a,
 	make_vgcp3b,
 	make_vgcp3c,
+	make_vhay0a,
 	make_vhpr1a,
 	make_vhpr3a,
 	make_vhpr3b,
@@ -112,6 +128,8 @@ creation
 	make_vjar0b,
 	make_vjaw0a,
 	make_vjaw0c,
+	make_vjrv0a,
+	make_vjrv0b,
 	make_vkcn1a,
 	make_vkcn1c,
 	make_vkcn2a,
@@ -175,7 +193,6 @@ creation
 	make_vtcg4d,
 	make_vtct0a,
 	make_vtct0b,
-	make_vtct0c,
 	make_vtgc0a,
 	make_vtgc0b,
 	make_vtug1a,
@@ -277,6 +294,430 @@ feature {NONE} -- Initialization
 			-- dollar3: $3 = line
 			-- dollar4: $4 = column
 			-- dollar5: $5 = class name
+		end
+
+	make_vape0a (a_class: like current_class; a_name: ET_FEATURE_NAME; a_feature: ET_FEATURE;
+		a_pre_feature: ET_FEATURE; a_client: ET_CLASS) is
+			-- Create a new VAPE error: `a_feature' named `a_name', appearing in an unqualified
+			-- call in a precondition of `a_pre_feature' in `a_class', is not exported to
+			-- class `a_client' to which `a_pre_feature' is exported.
+			--
+			-- ETL2: p.122
+		require
+			a_class_not_void: a_class /= Void
+			a_class_preparsed: a_class.is_preparsed
+			a_name_not_void: a_name /= Void
+			a_feature_not_void: a_feature /= Void
+			a_pre_feature_not_void: a_pre_feature /= Void
+			a_client_not_void: a_client /= Void
+		do
+			code := vape0a_template_code
+			etl_code := vape_etl_code
+			default_template := vape0a_default_template
+			current_class := a_class
+			class_impl := a_class
+			position := a_name.position
+			create parameters.make (1, 9)
+			parameters.put (etl_code, 1)
+			parameters.put (filename, 2)
+			parameters.put (position.line.out, 3)
+			parameters.put (position.column.out, 4)
+			parameters.put (current_class.name.name, 5)
+			parameters.put (a_name.name, 6)
+			parameters.put (a_feature.name.name, 7)
+			parameters.put (a_pre_feature.name.name, 8)
+			parameters.put (a_client.name.name, 9)
+			set_compilers (True)
+		ensure
+			current_class_set: current_class = a_class
+			class_impl_set: class_impl = a_class
+			all_reported: all_reported
+			all_fatal: all_fatal
+			-- dollar0: $0 = program name
+			-- dollar1: $1 = ETL code
+			-- dollar2: $2 = filename
+			-- dollar3: $3 = line
+			-- dollar4: $4 = column
+			-- dollar5: $5 = class name
+			-- dollar6: $6 = feature name of the call
+			-- dollar7: $7 = name of corresponding feature in class $5
+			-- dollar8: $8 = name of feature containing precondition
+			-- dollar9: $9 = name of client of feature `$8'
+		end
+
+	make_vape0b (a_class: like current_class; a_class_impl: ET_CLASS; a_name: ET_FEATURE_NAME; a_feature: ET_FEATURE;
+		a_pre_feature: ET_FEATURE; a_client: ET_CLASS) is
+			-- Create a new VAPE error: `a_feature' named `a_name', appearing in an unqualified
+			-- call in a precondition of `a_pre_feature' in `a_class_impl' and view from
+			-- one of its descendants `a_class', is not exported to class `a_client' to
+			-- which `a_pre_feature' is exported.
+			--
+			-- ETL2: p.122
+		require
+			a_class_not_void: a_class /= Void
+			a_class_impl_not_void: a_class_impl /= Void
+			a_class_impl_preparsed: a_class_impl.is_preparsed
+			a_name_not_void: a_name /= Void
+			a_feature_not_void: a_feature /= Void
+			a_pre_feature_not_void: a_pre_feature /= Void
+			a_client_not_void: a_client /= Void
+		do
+			code := vape0b_template_code
+			etl_code := vape_etl_code
+			default_template := vape0b_default_template
+			current_class := a_class
+			class_impl := a_class_impl
+			position := a_name.position
+			create parameters.make (1, 10)
+			parameters.put (etl_code, 1)
+			parameters.put (filename, 2)
+			parameters.put (position.line.out, 3)
+			parameters.put (position.column.out, 4)
+			parameters.put (current_class.name.name, 5)
+			parameters.put (a_class_impl.name.name, 6)
+			parameters.put (a_name.name, 7)
+			parameters.put (a_feature.name.name, 8)
+			parameters.put (a_pre_feature.name.name, 9)
+			parameters.put (a_client.name.name, 10)
+			set_compilers (True)
+		ensure
+			current_class_set: current_class = a_class
+			class_impl_set: class_impl = a_class_impl
+			all_reported: all_reported
+			all_fatal: all_fatal
+			-- dollar0: $0 = program name
+			-- dollar1: $1 = ETL code
+			-- dollar2: $2 = filename
+			-- dollar3: $3 = line
+			-- dollar4: $4 = column
+			-- dollar5: $5 = class name
+			-- dollar6: $6 = implementation class name
+			-- dollar7: $7 = feature name of the call
+			-- dollar8: $8 = name of corresponding feature in class $6
+			-- dollar9: $9 = name of feature containing precondition
+			-- dollar10: $10 = name of client of feature `$9'
+		end
+
+	make_vape0c (a_class: like current_class; a_name: ET_FEATURE_NAME; a_feature: ET_FEATURE;
+		a_target_class: ET_CLASS; a_pre_feature: ET_FEATURE; a_client: ET_CLASS) is
+			-- Create a new VAPE error: `a_feature' named `a_name', appearing in a qualified
+			-- call with target's base class `a_target_class' in a precondition of
+			-- `a_pre_feature' in `a_class', is not exported to class `a_client' to
+			-- which `a_pre_feature' is exported.
+			--
+			-- ETL2: p.122
+		require
+			a_class_not_void: a_class /= Void
+			a_class_preparsed: a_class.is_preparsed
+			a_name_not_void: a_name /= Void
+			a_feature_not_void: a_feature /= Void
+			a_target_class_not_void: a_target_class /= Void
+			a_pre_feature_not_void: a_pre_feature /= Void
+			a_client_not_void: a_client /= Void
+		do
+			code := vape0c_template_code
+			etl_code := vape_etl_code
+			default_template := vape0c_default_template
+			current_class := a_class
+			class_impl := a_class
+			position := a_name.position
+			create parameters.make (1, 10)
+			parameters.put (etl_code, 1)
+			parameters.put (filename, 2)
+			parameters.put (position.line.out, 3)
+			parameters.put (position.column.out, 4)
+			parameters.put (current_class.name.name, 5)
+			parameters.put (a_name.name, 6)
+			parameters.put (a_feature.name.name, 7)
+			parameters.put (a_target_class.name.name, 8)
+			parameters.put (a_pre_feature.name.name, 9)
+			parameters.put (a_client.name.name, 10)
+			set_compilers (True)
+		ensure
+			current_class_set: current_class = a_class
+			class_impl_set: class_impl = a_class
+			all_reported: all_reported
+			all_fatal: all_fatal
+			-- dollar0: $0 = program name
+			-- dollar1: $1 = ETL code
+			-- dollar2: $2 = filename
+			-- dollar3: $3 = line
+			-- dollar4: $4 = column
+			-- dollar5: $5 = class name
+			-- dollar6: $6 = feature name of the call
+			-- dollar7: $7 = name of corresponding feature in class $8
+			-- dollar8: $8 = base class of target of the call
+			-- dollar9: $9 = name of feature containing precondition
+			-- dollar10: $10 = name of client of feature `$8'
+		end
+
+	make_vape0d (a_class: like current_class; a_class_impl: ET_CLASS; a_name: ET_FEATURE_NAME; a_feature: ET_FEATURE;
+		a_target_class: ET_CLASS; a_pre_feature: ET_FEATURE; a_client: ET_CLASS) is
+			-- Create a new VAPE error: `a_feature' named `a_name', appearing in a qualified
+			-- call with target's base class `a_target_class' in a precondition of
+			-- `a_pre_feature' in `a_class_impl' and view from one of its descendants
+			-- a_class', is not exported to class `a_client' to which `a_pre_feature'
+			-- is exported.
+			--
+			-- ETL2: p.122
+		require
+			a_class_not_void: a_class /= Void
+			a_class_impl_not_void: a_class_impl /= Void
+			a_class_impl_preparsed: a_class_impl.is_preparsed
+			a_name_not_void: a_name /= Void
+			a_feature_not_void: a_feature /= Void
+			a_target_class_not_void: a_target_class /= Void
+			a_pre_feature_not_void: a_pre_feature /= Void
+			a_client_not_void: a_client /= Void
+		do
+			code := vape0d_template_code
+			etl_code := vape_etl_code
+			default_template := vape0d_default_template
+			current_class := a_class
+			class_impl := a_class_impl
+			position := a_name.position
+			create parameters.make (1, 11)
+			parameters.put (etl_code, 1)
+			parameters.put (filename, 2)
+			parameters.put (position.line.out, 3)
+			parameters.put (position.column.out, 4)
+			parameters.put (current_class.name.name, 5)
+			parameters.put (a_class_impl.name.name, 6)
+			parameters.put (a_name.name, 7)
+			parameters.put (a_feature.name.name, 8)
+			parameters.put (a_target_class.name.name, 9)
+			parameters.put (a_pre_feature.name.name, 10)
+			parameters.put (a_client.name.name, 11)
+			set_compilers (True)
+		ensure
+			current_class_set: current_class = a_class
+			class_impl_set: class_impl = a_class_impl
+			all_reported: all_reported
+			all_fatal: all_fatal
+			-- dollar0: $0 = program name
+			-- dollar1: $1 = ETL code
+			-- dollar2: $2 = filename
+			-- dollar3: $3 = line
+			-- dollar4: $4 = column
+			-- dollar5: $5 = class name
+			-- dollar6: $6 = implementation class name
+			-- dollar7: $7 = feature name of the call
+			-- dollar8: $8 = name of corresponding feature in class $9
+			-- dollar9: $9 = base class of target of the call
+			-- dollar10: $10 = name of feature containing precondition
+			-- dollar11: $11 = name of client of feature `$9'
+		end
+
+	make_vape0e (a_class: like current_class; a_name: ET_FEATURE_NAME; a_feature: ET_FEATURE;
+		a_pre_feature: ET_FEATURE; a_client: ET_CLASS_NAME) is
+			-- Create a new VAPE error: `a_feature' named `a_name', appearing in an unqualified
+			-- call in a precondition of `a_pre_feature' in `a_class', is not exported to
+			-- class `a_client' to which `a_pre_feature' is exported.
+			--
+			-- ETL2: p.122
+		require
+			a_class_not_void: a_class /= Void
+			a_class_preparsed: a_class.is_preparsed
+			a_name_not_void: a_name /= Void
+			a_feature_not_void: a_feature /= Void
+			a_pre_feature_not_void: a_pre_feature /= Void
+			a_client_not_void: a_client /= Void
+		do
+			code := vape0e_template_code
+			etl_code := vape_etl_code
+			default_template := vape0e_default_template
+			current_class := a_class
+			class_impl := a_class
+			position := a_name.position
+			create parameters.make (1, 9)
+			parameters.put (etl_code, 1)
+			parameters.put (filename, 2)
+			parameters.put (position.line.out, 3)
+			parameters.put (position.column.out, 4)
+			parameters.put (current_class.name.name, 5)
+			parameters.put (a_name.name, 6)
+			parameters.put (a_feature.name.name, 7)
+			parameters.put (a_pre_feature.name.name, 8)
+			parameters.put (a_client.name, 9)
+			set_compilers (True)
+		ensure
+			current_class_set: current_class = a_class
+			class_impl_set: class_impl = a_class
+			all_reported: all_reported
+			all_fatal: all_fatal
+			-- dollar0: $0 = program name
+			-- dollar1: $1 = ETL code
+			-- dollar2: $2 = filename
+			-- dollar3: $3 = line
+			-- dollar4: $4 = column
+			-- dollar5: $5 = class name
+			-- dollar6: $6 = feature name of the call
+			-- dollar7: $7 = name of corresponding feature in class $5
+			-- dollar8: $8 = name of feature containing precondition
+			-- dollar9: $9 = name of client of feature `$8'
+		end
+
+	make_vape0f (a_class: like current_class; a_class_impl: ET_CLASS; a_name: ET_FEATURE_NAME;
+		a_feature: ET_FEATURE; a_pre_feature: ET_FEATURE; a_client: ET_CLASS_NAME) is
+			-- Create a new VAPE error: `a_feature' named `a_name', appearing in an unqualified
+			-- call in a precondition of `a_pre_feature' in `a_class_impl' and view from
+			-- one of its descendants `a_class', is not exported to class `a_client' to
+			-- which `a_pre_feature' is exported.
+			--
+			-- ETL2: p.122
+		require
+			a_class_not_void: a_class /= Void
+			a_class_impl_not_void: a_class_impl /= Void
+			a_class_impl_preparsed: a_class_impl.is_preparsed
+			a_name_not_void: a_name /= Void
+			a_feature_not_void: a_feature /= Void
+			a_pre_feature_not_void: a_pre_feature /= Void
+			a_client_not_void: a_client /= Void
+		do
+			code := vape0f_template_code
+			etl_code := vape_etl_code
+			default_template := vape0f_default_template
+			current_class := a_class
+			class_impl := a_class_impl
+			position := a_name.position
+			create parameters.make (1, 10)
+			parameters.put (etl_code, 1)
+			parameters.put (filename, 2)
+			parameters.put (position.line.out, 3)
+			parameters.put (position.column.out, 4)
+			parameters.put (current_class.name.name, 5)
+			parameters.put (a_class_impl.name.name, 6)
+			parameters.put (a_name.name, 7)
+			parameters.put (a_feature.name.name, 8)
+			parameters.put (a_pre_feature.name.name, 9)
+			parameters.put (a_client.name, 10)
+			set_compilers (True)
+		ensure
+			current_class_set: current_class = a_class
+			class_impl_set: class_impl = a_class_impl
+			all_reported: all_reported
+			all_fatal: all_fatal
+			-- dollar0: $0 = program name
+			-- dollar1: $1 = ETL code
+			-- dollar2: $2 = filename
+			-- dollar3: $3 = line
+			-- dollar4: $4 = column
+			-- dollar5: $5 = class name
+			-- dollar6: $6 = implementation class name
+			-- dollar7: $7 = feature name of the call
+			-- dollar8: $8 = name of corresponding feature in class $6
+			-- dollar9: $9 = name of feature containing precondition
+			-- dollar10: $10 = name of client of feature `$9'
+		end
+
+	make_vape0g (a_class: like current_class; a_name: ET_FEATURE_NAME; a_feature: ET_FEATURE;
+		a_target_class: ET_CLASS; a_pre_feature: ET_FEATURE; a_client: ET_CLASS_NAME) is
+			-- Create a new VAPE error: `a_feature' named `a_name', appearing in a qualified
+			-- call with target's base class `a_target_class' in a precondition of
+			-- `a_pre_feature' in `a_class', is not exported to class `a_client' to
+			-- which `a_pre_feature' is exported.
+			--
+			-- ETL2: p.122
+		require
+			a_class_not_void: a_class /= Void
+			a_class_preparsed: a_class.is_preparsed
+			a_name_not_void: a_name /= Void
+			a_feature_not_void: a_feature /= Void
+			a_target_class_not_void: a_target_class /= Void
+			a_pre_feature_not_void: a_pre_feature /= Void
+			a_client_not_void: a_client /= Void
+		do
+			code := vape0g_template_code
+			etl_code := vape_etl_code
+			default_template := vape0g_default_template
+			current_class := a_class
+			class_impl := a_class
+			position := a_name.position
+			create parameters.make (1, 10)
+			parameters.put (etl_code, 1)
+			parameters.put (filename, 2)
+			parameters.put (position.line.out, 3)
+			parameters.put (position.column.out, 4)
+			parameters.put (current_class.name.name, 5)
+			parameters.put (a_name.name, 6)
+			parameters.put (a_feature.name.name, 7)
+			parameters.put (a_target_class.name.name, 8)
+			parameters.put (a_pre_feature.name.name, 9)
+			parameters.put (a_client.name, 10)
+			set_compilers (True)
+		ensure
+			current_class_set: current_class = a_class
+			class_impl_set: class_impl = a_class
+			all_reported: all_reported
+			all_fatal: all_fatal
+			-- dollar0: $0 = program name
+			-- dollar1: $1 = ETL code
+			-- dollar2: $2 = filename
+			-- dollar3: $3 = line
+			-- dollar4: $4 = column
+			-- dollar5: $5 = class name
+			-- dollar6: $6 = feature name of the call
+			-- dollar7: $7 = name of corresponding feature in class $8
+			-- dollar8: $8 = base class of target of the call
+			-- dollar9: $9 = name of feature containing precondition
+			-- dollar10: $10 = name of client of feature `$8'
+		end
+
+	make_vape0h (a_class: like current_class; a_class_impl: ET_CLASS; a_name: ET_FEATURE_NAME; a_feature: ET_FEATURE;
+		a_target_class: ET_CLASS; a_pre_feature: ET_FEATURE; a_client: ET_CLASS_NAME) is
+			-- Create a new VAPE error: `a_feature' named `a_name', appearing in a qualified
+			-- call with target's base class `a_target_class' in a precondition of
+			-- `a_pre_feature' in `a_class_impl' and view from one of its descendants
+			-- a_class', is not exported to class `a_client' to which `a_pre_feature'
+			-- is exported.
+			--
+			-- ETL2: p.122
+		require
+			a_class_not_void: a_class /= Void
+			a_class_impl_not_void: a_class_impl /= Void
+			a_class_impl_preparsed: a_class_impl.is_preparsed
+			a_name_not_void: a_name /= Void
+			a_feature_not_void: a_feature /= Void
+			a_target_class_not_void: a_target_class /= Void
+			a_pre_feature_not_void: a_pre_feature /= Void
+			a_client_not_void: a_client /= Void
+		do
+			code := vape0h_template_code
+			etl_code := vape_etl_code
+			default_template := vape0h_default_template
+			current_class := a_class
+			class_impl := a_class_impl
+			position := a_name.position
+			create parameters.make (1, 11)
+			parameters.put (etl_code, 1)
+			parameters.put (filename, 2)
+			parameters.put (position.line.out, 3)
+			parameters.put (position.column.out, 4)
+			parameters.put (current_class.name.name, 5)
+			parameters.put (a_class_impl.name.name, 6)
+			parameters.put (a_name.name, 7)
+			parameters.put (a_feature.name.name, 8)
+			parameters.put (a_target_class.name.name, 9)
+			parameters.put (a_pre_feature.name.name, 10)
+			parameters.put (a_client.name, 11)
+			set_compilers (True)
+		ensure
+			current_class_set: current_class = a_class
+			class_impl_set: class_impl = a_class_impl
+			all_reported: all_reported
+			all_fatal: all_fatal
+			-- dollar0: $0 = program name
+			-- dollar1: $1 = ETL code
+			-- dollar2: $2 = filename
+			-- dollar3: $3 = line
+			-- dollar4: $4 = column
+			-- dollar5: $5 = class name
+			-- dollar6: $6 = implementation class name
+			-- dollar7: $7 = feature name of the call
+			-- dollar8: $8 = name of corresponding feature in class $9
+			-- dollar9: $9 = base class of target of the call
+			-- dollar10: $10 = name of feature containing precondition
+			-- dollar11: $11 = name of client of feature `$9'
 		end
 
 	make_vave0a (a_class: like current_class; an_expression: ET_EXPRESSION; a_type: ET_NAMED_TYPE) is
@@ -1955,6 +2396,96 @@ feature {NONE} -- Initialization
 			-- dollar7: $7 = parent base class
 		end
 
+	make_vdrd6a (a_class: like current_class; f1: ET_PARENT_FEATURE; f2: ET_FEATURE) is
+			-- Create a new VDRD-6 error: the attribute `f1' is not redeclared into
+			-- an attribute in `a_class'.
+			--
+			-- ETL2: p.163
+		require
+			a_class_not_void: a_class /= Void
+			a_class_preparsed: a_class.is_preparsed
+			f1_not_void: f1 /= Void
+			f1_is_attribute: f1.precursor_feature.is_attribute
+			f2_not_void: f2 /= Void
+			f2_not_attribute: not f2.is_attribute
+		do
+			code := vdrd6a_template_code
+			etl_code := vdrd6_etl_code
+			default_template := vdrd6a_default_template
+			current_class := a_class
+			class_impl := a_class
+			position := f2.name.position
+			create parameters.make (1, 8)
+			parameters.put (etl_code, 1)
+			parameters.put (filename, 2)
+			parameters.put (position.line.out, 3)
+			parameters.put (position.column.out, 4)
+			parameters.put (current_class.name.name, 5)
+			parameters.put (f1.name.name, 6)
+			parameters.put (f1.parent.type.name.name, 7)
+			parameters.put (f2.name.name, 8)
+			set_compilers (True)
+		ensure
+			current_class_set: current_class = a_class
+			class_impl_set: class_impl = a_class
+			all_reported: all_reported
+			all_fatal: all_fatal
+			-- dollar0: $0 = program name
+			-- dollar1: $1 = ETL code
+			-- dollar2: $2 = filename
+			-- dollar3: $3 = line
+			-- dollar4: $4 = column
+			-- dollar5: $5 = class name
+			-- dollar6: $6 = inherited attribute name
+			-- dollar7: $7 = parent base class
+			-- dollar8: $8 = redeclared feature name
+		end
+
+	make_vdrd6b (a_class: like current_class; f1: ET_PARENT_FEATURE; f2: ET_FEATURE) is
+			-- Create a new VDRD-6 error: the type of attribute `f1' has not the
+			-- same type expandedness as its redeclared version `f2' in `a_class'.
+			--
+			-- ETL2: p.163
+		require
+			a_class_not_void: a_class /= Void
+			a_class_preparsed: a_class.is_preparsed
+			f1_not_void: f1 /= Void
+			f1_is_attribute: f1.precursor_feature.is_attribute
+			f2_not_void: f2 /= Void
+			f2_attribute: f2.is_attribute
+		do
+			code := vdrd6b_template_code
+			etl_code := vdrd6_etl_code
+			default_template := vdrd6b_default_template
+			current_class := a_class
+			class_impl := a_class
+			position := f2.name.position
+			create parameters.make (1, 8)
+			parameters.put (etl_code, 1)
+			parameters.put (filename, 2)
+			parameters.put (position.line.out, 3)
+			parameters.put (position.column.out, 4)
+			parameters.put (current_class.name.name, 5)
+			parameters.put (f1.name.name, 6)
+			parameters.put (f1.parent.type.name.name, 7)
+			parameters.put (f2.name.name, 8)
+			set_compilers (True)
+		ensure
+			current_class_set: current_class = a_class
+			class_impl_set: class_impl = a_class
+			all_reported: all_reported
+			all_fatal: all_fatal
+			-- dollar0: $0 = program name
+			-- dollar1: $1 = ETL code
+			-- dollar2: $2 = filename
+			-- dollar3: $3 = line
+			-- dollar4: $4 = column
+			-- dollar5: $5 = class name
+			-- dollar6: $6 = inherited attribute name
+			-- dollar7: $7 = parent base class
+			-- dollar8: $8 = redeclared attribute name
+		end
+
 	make_vdrs1a (a_class: like current_class; a_parent: ET_PARENT; f: ET_FEATURE_NAME) is
 			-- Create a new VDRS-1 error: the Redefine subclause of
 			-- `a_parent' in `a_class' lists `f' which is not the final
@@ -2431,6 +2962,205 @@ feature {NONE} -- Initialization
 			-- dollar5: $5 = class name
 			-- dollar6: $6 = feature name
 			-- dollar7: $7 = parent base class
+		end
+
+	make_vffd4a (a_class: like current_class; a_feature: ET_FEATURE) is
+			-- Create a new VFFD-4 error: deferred `a_feature' is marked as frozen.
+			--
+			-- ETL2: p.69
+		require
+			a_class_not_void: a_class /= Void
+			a_class_preparsed: a_class.is_preparsed
+			a_feature_not_void: a_feature /= Void
+			a_feature_deferred: a_feature.is_deferred
+			a_feature_frozen: a_feature.is_frozen
+		do
+			code := vffd4a_template_code
+			etl_code := vffd4_etl_code
+			default_template := vffd4a_default_template
+			current_class := a_class
+			class_impl := a_class
+			position := a_feature.name.position
+			create parameters.make (1, 6)
+			parameters.put (etl_code, 1)
+			parameters.put (filename, 2)
+			parameters.put (position.line.out, 3)
+			parameters.put (position.column.out, 4)
+			parameters.put (current_class.name.name, 5)
+			parameters.put (a_feature.name.name, 6)
+			set_compilers (True)
+		ensure
+			current_class_set: current_class = a_class
+			class_impl_set: class_impl = a_class
+			all_reported: all_reported
+			all_fatal: all_fatal
+			-- dollar0: $0 = program name
+			-- dollar1: $1 = ETL code
+			-- dollar2: $2 = filename
+			-- dollar3: $3 = line
+			-- dollar4: $4 = column
+			-- dollar5: $5 = class name
+			-- dollar6: $6 = feature name
+		end
+
+	make_vffd5a (a_class: like current_class; a_feature: ET_FEATURE) is
+			-- Create a new VFFD-5 error: `a_feature' has a prefix name but is
+			-- not an attribute or a function with no argument.
+			--
+			-- ETL2: p.69
+		require
+			a_class_not_void: a_class /= Void
+			a_class_preparsed: a_class.is_preparsed
+			a_feature_not_void: a_feature /= Void
+			a_feature_name_prefix: a_feature.name.is_prefix
+			a_feature_not_prefixable: not a_feature.is_prefixable
+		do
+			code := vffd5a_template_code
+			etl_code := vffd5_etl_code
+			default_template := vffd5a_default_template
+			current_class := a_class
+			class_impl := a_class
+			position := a_feature.name.position
+			create parameters.make (1, 6)
+			parameters.put (etl_code, 1)
+			parameters.put (filename, 2)
+			parameters.put (position.line.out, 3)
+			parameters.put (position.column.out, 4)
+			parameters.put (current_class.name.name, 5)
+			parameters.put (a_feature.name.name, 6)
+			set_compilers (True)
+		ensure
+			current_class_set: current_class = a_class
+			class_impl_set: class_impl = a_class
+			all_reported: all_reported
+			all_fatal: all_fatal
+			-- dollar0: $0 = program name
+			-- dollar1: $1 = ETL code
+			-- dollar2: $2 = filename
+			-- dollar3: $3 = line
+			-- dollar4: $4 = column
+			-- dollar5: $5 = class name
+			-- dollar6: $6 = feature name
+		end
+
+	make_vffd6a (a_class: like current_class; a_feature: ET_FEATURE) is
+			-- Create a new VFFD-6 error: `a_feature' has an infix name but is
+			-- not a function with exactly one argument.
+			--
+			-- ETL2: p.69
+		require
+			a_class_not_void: a_class /= Void
+			a_class_preparsed: a_class.is_preparsed
+			a_feature_not_void: a_feature /= Void
+			a_feature_name_infix: a_feature.name.is_infix
+			a_feature_not_infixable: not a_feature.is_infixable
+		do
+			code := vffd6a_template_code
+			etl_code := vffd6_etl_code
+			default_template := vffd6a_default_template
+			current_class := a_class
+			class_impl := a_class
+			position := a_feature.name.position
+			create parameters.make (1, 6)
+			parameters.put (etl_code, 1)
+			parameters.put (filename, 2)
+			parameters.put (position.line.out, 3)
+			parameters.put (position.column.out, 4)
+			parameters.put (current_class.name.name, 5)
+			parameters.put (a_feature.name.name, 6)
+			set_compilers (True)
+		ensure
+			current_class_set: current_class = a_class
+			class_impl_set: class_impl = a_class
+			all_reported: all_reported
+			all_fatal: all_fatal
+			-- dollar0: $0 = program name
+			-- dollar1: $1 = ETL code
+			-- dollar2: $2 = filename
+			-- dollar3: $3 = line
+			-- dollar4: $4 = column
+			-- dollar5: $5 = class name
+			-- dollar6: $6 = feature name
+		end
+
+	make_vffd7a (a_class: like current_class; a_feature: ET_FEATURE) is
+			-- Create a new VFFD-7 error: the type of the once function `a_feature'
+			-- contains an anchored type.
+			--
+			-- ETL2: p.69
+		require
+			a_class_not_void: a_class /= Void
+			a_class_preparsed: a_class.is_preparsed
+			a_feature_not_void: a_feature /= Void
+			a_feature_once: a_feature.is_once
+			a_feature_function: a_feature.type /= Void
+		do
+			code := vffd7a_template_code
+			etl_code := vffd7_etl_code
+			default_template := vffd7a_default_template
+			current_class := a_class
+			class_impl := a_class
+			position := a_feature.name.position
+			create parameters.make (1, 6)
+			parameters.put (etl_code, 1)
+			parameters.put (filename, 2)
+			parameters.put (position.line.out, 3)
+			parameters.put (position.column.out, 4)
+			parameters.put (current_class.name.name, 5)
+			parameters.put (a_feature.name.name, 6)
+			set_compilers (True)
+		ensure
+			current_class_set: current_class = a_class
+			class_impl_set: class_impl = a_class
+			all_reported: all_reported
+			all_fatal: all_fatal
+			-- dollar0: $0 = program name
+			-- dollar1: $1 = ETL code
+			-- dollar2: $2 = filename
+			-- dollar3: $3 = line
+			-- dollar4: $4 = column
+			-- dollar5: $5 = class name
+			-- dollar6: $6 = feature name
+		end
+
+	make_vffd7b (a_class: like current_class; a_feature: ET_FEATURE) is
+			-- Create a new VFFD-7 error: the type of the once function `a_feature'
+			-- contains an formal generic parameter.
+			--
+			-- ETL2: p.69
+		require
+			a_class_not_void: a_class /= Void
+			a_class_preparsed: a_class.is_preparsed
+			a_feature_not_void: a_feature /= Void
+			a_feature_once: a_feature.is_once
+			a_feature_function: a_feature.type /= Void
+		do
+			code := vffd7b_template_code
+			etl_code := vffd7_etl_code
+			default_template := vffd7b_default_template
+			current_class := a_class
+			class_impl := a_class
+			position := a_feature.name.position
+			create parameters.make (1, 6)
+			parameters.put (etl_code, 1)
+			parameters.put (filename, 2)
+			parameters.put (position.line.out, 3)
+			parameters.put (position.column.out, 4)
+			parameters.put (current_class.name.name, 5)
+			parameters.put (a_feature.name.name, 6)
+			set_compilers (True)
+		ensure
+			current_class_set: current_class = a_class
+			class_impl_set: class_impl = a_class
+			all_reported: all_reported
+			all_fatal: all_fatal
+			-- dollar0: $0 = program name
+			-- dollar1: $1 = ETL code
+			-- dollar2: $2 = filename
+			-- dollar3: $3 = line
+			-- dollar4: $4 = column
+			-- dollar5: $5 = class name
+			-- dollar6: $6 = feature name
 		end
 
 	make_veen0a (a_class: like current_class; an_identifier: ET_IDENTIFIER; a_feature: ET_FEATURE) is
@@ -3650,6 +4380,41 @@ feature {NONE} -- Initialization
 			-- dollar6: $6 = procedure name
 		end
 
+	make_vhay0a (a_class: like current_class) is
+			-- Create a new VTCT error: `a_class' implicitly inherits
+			-- from unknown class ANY.
+			--
+			-- ETL2: p.88
+		require
+			a_class_not_void: a_class /= Void
+			a_class_preparsed: a_class.is_preparsed
+		do
+			code := vhay0a_template_code
+			etl_code := vhay_etl_code
+			default_template := vhay0a_default_template
+			current_class := a_class
+			class_impl := a_class
+			position := null_position
+			create parameters.make (1, 5)
+			parameters.put (etl_code, 1)
+			parameters.put (filename, 2)
+			parameters.put (position.line.out, 3)
+			parameters.put (position.column.out, 4)
+			parameters.put (current_class.name.name, 5)
+			set_compilers (True)
+		ensure
+			current_class_set: current_class = a_class
+			class_impl_set: class_impl = a_class
+			all_reported: all_reported
+			all_fatal: all_fatal
+			-- dollar0: $0 = program name
+			-- dollar1: $1 = ETL code
+			-- dollar2: $2 = filename
+			-- dollar3: $3 = line
+			-- dollar4: $4 = column
+			-- dollar5: $5 = class name
+		end
+
 	make_vhpr1a (a_class: like current_class; a_cycle: DS_LIST [ET_CLASS]) is
 			-- Create a new VHPR-1 error: `a_class' is 
 			-- involved in the inheritance cycle `a_cycle'.
@@ -4172,6 +4937,92 @@ feature {NONE} -- Initialization
 			-- dollar5: $5 = class name
 			-- dollar6: $6 = formal argument name
 			-- dollar7: $7 = feature name
+		end
+
+	make_vjrv0a (a_class: like current_class; a_target: ET_WRITABLE; a_target_type: ET_NAMED_TYPE) is
+			-- Create a new VJRV error: the type `a_target_type' of the target
+			-- `a_target' of an assignment attempt appearing in `a_class'
+			-- is not a reference type.
+			--
+			-- ETL2: p. 332
+		require
+			a_class_not_void: a_class /= Void
+			a_class_preparsed: a_class.is_preparsed
+			a_target_not_void: a_target /= Void
+			a_target_type_not_void: a_target_type /= Void
+			a_target_type_is_named_type: a_target_type.is_named_type
+		do
+			code := vjrv0a_template_code
+			etl_code := vjrv_etl_code
+			default_template := vjrv0a_default_template
+			current_class := a_class
+			class_impl := a_class
+			position := a_target.position
+			create parameters.make (1, 6)
+			parameters.put (etl_code, 1)
+			parameters.put (filename, 2)
+			parameters.put (position.line.out, 3)
+			parameters.put (position.column.out, 4)
+			parameters.put (current_class.name.name, 5)
+			parameters.put (a_target_type.to_text, 6)
+			set_compilers (True)
+		ensure
+			current_class_set: current_class = a_class
+			class_impl_set: class_impl = a_class
+			all_reported: all_reported
+			all_fatal: all_fatal
+			-- dollar0: $0 = program name
+			-- dollar1: $1 = ETL code
+			-- dollar2: $2 = filename
+			-- dollar3: $3 = line
+			-- dollar4: $4 = column
+			-- dollar5: $5 = class name
+			-- dollar6: $6 = target type
+		end
+
+	make_vjrv0b (a_class: like current_class; a_class_impl: ET_CLASS; a_target: ET_WRITABLE; a_target_type: ET_NAMED_TYPE) is
+			-- Create a new VJRV error: the type `a_target_type' of the target
+			-- `a_target' of an assignment attempt appearing in `a_class_impl'
+			-- and viewed from one of its descedants `a_class' is not a
+			-- reference type.
+			--
+			-- ETL2: p. 332
+		require
+			a_class_not_void: a_class /= Void
+			a_class_impl_not_void: a_class_impl /= Void
+			a_class_impl_preparsed: a_class_impl.is_preparsed
+			a_target_not_void: a_target /= Void
+			a_target_type_not_void: a_target_type /= Void
+			a_target_type_is_named_type: a_target_type.is_named_type
+		do
+			code := vjrv0b_template_code
+			etl_code := vjrv_etl_code
+			default_template := vjrv0b_default_template
+			current_class := a_class
+			class_impl := a_class_impl
+			position := a_target.position
+			create parameters.make (1, 7)
+			parameters.put (etl_code, 1)
+			parameters.put (filename, 2)
+			parameters.put (position.line.out, 3)
+			parameters.put (position.column.out, 4)
+			parameters.put (current_class.name.name, 5)
+			parameters.put (a_class_impl.name.name, 5)
+			parameters.put (a_target_type.to_text, 7)
+			set_compilers (True)
+		ensure
+			current_class_set: current_class = a_class
+			class_impl_set: class_impl = a_class
+			all_reported: all_reported
+			all_fatal: all_fatal
+			-- dollar0: $0 = program name
+			-- dollar1: $1 = ETL code
+			-- dollar2: $2 = filename
+			-- dollar3: $3 = line
+			-- dollar4: $4 = column
+			-- dollar5: $5 = class name
+			-- dollar6: $6 = implementation class name
+			-- dollar7: $7 = target type
 		end
 
 	make_vkcn1a (a_class: like current_class; a_name: ET_FEATURE_NAME; a_feature: ET_FEATURE; a_target: ET_CLASS) is
@@ -7149,42 +8000,6 @@ feature {NONE} -- Initialization
 			-- dollar6: $6 = type base class
 		end
 
-	make_vtct0c (a_class: like current_class) is
-			-- Create a new VTCT error: `a_class' implicitly inherits
-			-- from unknown class ANY.
-			--
-			-- ETL2: p.199
-			-- ETR: p.45
-		require
-			a_class_not_void: a_class /= Void
-			a_class_preparsed: a_class.is_preparsed
-		do
-			code := vtct0c_template_code
-			etl_code := vtct_etl_code
-			default_template := vtct0c_default_template
-			current_class := a_class
-			class_impl := a_class
-			position := null_position
-			create parameters.make (1, 5)
-			parameters.put (etl_code, 1)
-			parameters.put (filename, 2)
-			parameters.put (position.line.out, 3)
-			parameters.put (position.column.out, 4)
-			parameters.put (current_class.name.name, 5)
-			set_compilers (True)
-		ensure
-			current_class_set: current_class = a_class
-			class_impl_set: class_impl = a_class
-			all_reported: all_reported
-			all_fatal: all_fatal
-			-- dollar0: $0 = program name
-			-- dollar1: $1 = ETL code
-			-- dollar2: $2 = filename
-			-- dollar3: $3 = line
-			-- dollar4: $4 = column
-			-- dollar5: $5 = class name
-		end
-
 	make_vtgc0a (a_class: like current_class; cp: ET_FEATURE_NAME; a_constraint: ET_CLASS) is
 			-- Create a new VTGC error: creation procedure name `cp'
 			-- is not the final name of a feature in the base class
@@ -8541,6 +9356,14 @@ feature -- Setting
 feature {NONE} -- Implementation
 
 	vaol1a_default_template: STRING is "[$1] class $5 ($3,$4): old expression does not appear in a postcondition."
+	vape0a_default_template: STRING is "[$1] class $5 ($3,$4): feature `$6' of class $5 appearing in the precondition of `$8' is not exported to class $9 to which feature `$8' is exported."
+	vape0b_default_template: STRING is "[$1] class $5 ($6,$3,$4): feature `$7' of class $5 appearing in the precondition of `$9' is not exported to class $10 to which feature `$9' is exported."
+	vape0c_default_template: STRING is "[$1] class $5 ($3,$4): feature `$6' of class $8 appearing in the precondition of `$9' is not exported to class $10 to which feature `$9' is exported."
+	vape0d_default_template: STRING is "[$1] class $5 ($6,$3,$4): feature `$7' of class $9 appearing in the precondition of `$10' is not exported to class $11 to which feature `$10' is exported."
+	vape0e_default_template: STRING is "[$1] class $5 ($3,$4): feature `$6' of class $5 appearing in the precondition of `$8' is not exported to class $9 to which feature `$8' is exported."
+	vape0f_default_template: STRING is "[$1] class $5 ($6,$3,$4): feature `$7' of class $5 appearing in the precondition of `$9' is not exported to class $10 to which feature `$9' is exported."
+	vape0g_default_template: STRING is "[$1] class $5 ($3,$4): feature `$6' of class $8 appearing in the precondition of `$9' is not exported to class $10 to which feature `$9' is exported."
+	vape0h_default_template: STRING is "[$1] class $5 ($6,$3,$4): feature `$7' of class $9 appearing in the precondition of `$10' is not exported to class $11 to which feature `$10' is exported."
 	vave0a_default_template: STRING is "[$1] class $5 ($3,$4): loop variant expression of non-INTEGER type '$6'."
 	vave0b_default_template: STRING is "[$1] class $5 ($6,$3,$4): loop variant expression of non-INTEGER type '$7'."
 	vcch1a_default_template: STRING is "[$1] class $5 ($3,$4): class is not marked as deferred but has deferred feature `$6'."
@@ -8579,6 +9402,8 @@ feature {NONE} -- Implementation
 	vdrd4b_default_template: STRING is "[$1] class $5 ($3,$4): effective feature `$6' inherited from $7 is redefined but is not listed in the Redefine subclause."
 	vdrd4c_default_template: STRING is "[$1] class $5 ($3,$4): effective feature `$6' inherited from $7 is redefined into a deferred one but is not listed in the Undefine and Redefine subclauses."
 	vdrd5a_default_template: STRING is "[$1] class $5 ($3,$4): effective feature `$6' inherited from $7 is redefined into a deferred one."
+	vdrd6a_default_template: STRING is "[$1] class $5 ($3,$4): attribute `$6' inherited from $7 is not redeclared into an attribute."
+	vdrd6b_default_template: STRING is "[$1] class $5 ($3,$4): attribute `$6' inherited from $7 and its redeclared version don't have the same type expandedness."
 	vdrs1a_default_template: STRING is "[$1] class $5 ($3,$4): `$6' is not the final name of a feature in $7."
 	vdrs2a_default_template: STRING is "[$1] class $5 ($3,$4): cannot redefine the frozen feature `$6'."
 	vdrs2b_default_template: STRING is "[$1] class $5 ($3,$4): cannot redefine the constant attribute `$6'."
@@ -8595,6 +9420,11 @@ feature {NONE} -- Implementation
 	veen2b_default_template: STRING is "[$1] class $5 ($3,$4): entity 'Result' appears in the precondition of feature `$6'."
 	veen2c_default_template: STRING is "[$1] class $5 ($3,$4): local entity `$6' appears in the precondition or postcondition of feature `$7'."
 	veen2d_default_template: STRING is "[$1] class $5 ($3,$4): entity 'Result' appears in the invariant of the class."
+	vffd4a_default_template: STRING is "[$1] class $5 ($3,$4): deferred feature `$6' is marked as frozen."
+	vffd5a_default_template: STRING is "[$1] class $5 ($3,$4): feature `$6' has a Prefix name but is not an attribute or a function with no argument."
+	vffd6a_default_template: STRING is "[$1] class $5 ($3,$4): feature `$6' has an Infix name but is not a function with exactly one argument."
+	vffd7a_default_template: STRING is "[$1] class $5 ($3,$4): feature `$6' is a once funtion but its type contains an anchored type."
+	vffd7b_default_template: STRING is "[$1] class $5 ($3,$4): feature `$6' is a once funtion but its type contains a formal generic parameter."
 	vgcc3a_default_template: STRING is "[$1] class $5 ($3,$4): explicit creation type '$6' does not conform to target entity type '$7'."
 	vgcc3b_default_template: STRING is "[$1] class $5 ($6,$3,$4): explicit creation type '$7' does not conform to target entity type '$8'."
 	vgcc5a_default_template: STRING is "[$1] class $5 ($3,$4): creation expression with no Creation_call part, but $6 has a Creators part."
@@ -8618,6 +9448,7 @@ feature {NONE} -- Implementation
 	vgcp3a_default_template: STRING is "[$1] class $5 ($3,$4): procedure name `$6' appears twice in creation clause."
 	vgcp3b_default_template: STRING is "[$1] class $5 ($3,$4): procedure name `$6' appears in two different creation clauses."
 	vgcp3c_default_template: STRING is "[$1] class $5 ($3,$4): procedure name `$6' appears twice in creation clause of constraint."
+	vhay0a_default_template: STRING is "[$1] class $5: implicitly inherits from unknown class ANY."
 	vhpr1a_default_template: STRING is "[$1] class $5: inheritance cycle $6."
 	vhpr3a_default_template: STRING is "[$1] class $5 ($3,$4): invalid type '$6' in parent clause."
 	vhpr3b_default_template: STRING is "[$1] class $5 ($3,$4): invalid type '$6' in parent clause."
@@ -8630,6 +9461,8 @@ feature {NONE} -- Implementation
 	vjar0b_default_template: STRING is "[$1] class $5 ($6,$3,$4): the source of the assignment (of type '$7') does not conform to its target entity (of type '$8')."
 	vjaw0a_default_template: STRING is "[$1] class $5 ($3,$4): feature `$6' is not an attribute. A Writable is either a local variable (including Result) or an attribute."
 	vjaw0c_default_template: STRING is "[$1] class $5 ($3,$4): `$6' is the name of a formal argument of feature `$7'. A Writable is either a local variable (including Result) or an attribute."
+	vjrv0a_default_template: STRING is "[$1] class $5 ($3,$4): the type '$6' of the target entity of the assignment attempt is not a reference type."
+	vjrv0b_default_template: STRING is "[$1] class $5 ($6,$3,$4): the type '$7' of the target entity of the assignment attempt is not a reference type."
 	vkcn1a_default_template: STRING is "[$1] class $5 ($3,$4): query `$7' of class $8 appears in a call instruction."
 	vkcn1c_default_template: STRING is "[$1] class $5 ($3,$4): query `$7' appears in a call instruction."
 	vkcn2a_default_template: STRING is "[$1] class $5 ($3,$4): procedure `$7' of class $8 appears in a call expression."
@@ -8693,7 +9526,6 @@ feature {NONE} -- Implementation
 	vtcg4d_default_template: STRING is "[$1] class $5 ($6,$3,$4): the $7-th actual generic parameter of $10, which is the $9-th formal generic parameter of class $5, does not list feature `$8' as creation procedure in its generic constraint."
 	vtct0a_default_template: STRING is "[$1] class $5 ($3,$4): type based on unknown class $6."
 	vtct0b_default_template: STRING is "[$1] class $5 ($3,$4): type based on unknown class $6."
-	vtct0c_default_template: STRING is "[$1] class $5: implicitly inherits from unknown class ANY."
 	vtgc0a_default_template: STRING is "[$1] class $5 ($3,$4): `$6' is not the final name of a procedure in constraint's base class $7."
 	vtgc0b_default_template: STRING is "[$1] class $5 ($3,$4): `$6' is not the final name of a procedure in constraint's base class $7."
 	vtug1a_default_template: STRING is "[$1] class $5 ($3,$4): type '$6' has actual generic parameters but class $7 is not generic."
@@ -8728,6 +9560,7 @@ feature {NONE} -- Implementation
 			-- Default templates
 
 	vaol1_etl_code: STRING is "VAOL-1"
+	vape_etl_code: STRING is "VAPE"
 	vave_etl_code: STRING is "VAVE"
 	vcch1_etl_code: STRING is "VCCH-1"
 	vcch2_etl_code: STRING is "VCCH-2"
@@ -8744,6 +9577,7 @@ feature {NONE} -- Implementation
 	vdrd3_etl_code: STRING is "VDRD-3"
 	vdrd4_etl_code: STRING is "VDRD-4"
 	vdrd5_etl_code: STRING is "VDRD-5"
+	vdrd6_etl_code: STRING is "VDRD-6"
 	vdrs1_etl_code: STRING is "VDRS-1"
 	vdrs2_etl_code: STRING is "VDRS-2"
 	vdrs3_etl_code: STRING is "VDRS-3"
@@ -8754,6 +9588,10 @@ feature {NONE} -- Implementation
 	vdus4_etl_code: STRING is "VDUS-4"
 	veen_etl_code: STRING is "VEEN"
 	veen2_etl_code: STRING is "VEEN-2"
+	vffd4_etl_code: STRING is "VFFD-4"
+	vffd5_etl_code: STRING is "VFFD-5"
+	vffd6_etl_code: STRING is "VFFD-6"
+	vffd7_etl_code: STRING is "VFFD-7"
 	vhpr1_etl_code: STRING is "VHPR-1"
 	vgcc3_etl_code: STRING is "VGCC-3"
 	vgcc5_etl_code: STRING is "VGCC-5"
@@ -8762,6 +9600,7 @@ feature {NONE} -- Implementation
 	vgcp1_etl_code: STRING is "VGCP-1"
 	vgcp2_etl_code: STRING is "VGCP-2"
 	vgcp3_etl_code: STRING is "VGCP-3"
+	vhay_etl_code: STRING is "VHAY"
 	vhpr3_etl_code: STRING is "VHPR-3"
 	vhrc1_etl_code: STRING is "VHRC-1"
 	vhrc2_etl_code: STRING is "VHRC-2"
@@ -8769,6 +9608,7 @@ feature {NONE} -- Implementation
 	vhrc5_etl_code: STRING is "VHRC-5"
 	vjar_etl_code: STRING is "VJAR"
 	vjaw_etl_code: STRING is "VJAW"
+	vjrv_etl_code: STRING is "VJRV"
 	vkcn1_etl_code: STRING is "VKCN-1"
 	vkcn2_etl_code: STRING is "VKCN-2"
 	vmfn_etl_code: STRING is "VMFN"
@@ -8823,6 +9663,14 @@ feature {NONE} -- Implementation
 			-- ETL validity codes
 
 	vaol1a_template_code: STRING is "vaol1a"
+	vape0a_template_code: STRING is "vape0a"
+	vape0b_template_code: STRING is "vape0b"
+	vape0c_template_code: STRING is "vape0c"
+	vape0d_template_code: STRING is "vape0d"
+	vape0e_template_code: STRING is "vape0e"
+	vape0f_template_code: STRING is "vape0f"
+	vape0g_template_code: STRING is "vape0g"
+	vape0h_template_code: STRING is "vape0h"
 	vave0a_template_code: STRING is "vave0a"
 	vave0b_template_code: STRING is "vave0b"
 	vcch1a_template_code: STRING is "vcch1a"
@@ -8861,6 +9709,8 @@ feature {NONE} -- Implementation
 	vdrd4b_template_code: STRING is "vdrd4b"
 	vdrd4c_template_code: STRING is "vdrd4c"
 	vdrd5a_template_code: STRING is "vdrd5a"
+	vdrd6a_template_code: STRING is "vdrd6a"
+	vdrd6b_template_code: STRING is "vdrd6b"
 	vdrs1a_template_code: STRING is "vdrs1a"
 	vdrs2a_template_code: STRING is "vdrs2a"
 	vdrs2b_template_code: STRING is "vdrs2b"
@@ -8877,6 +9727,11 @@ feature {NONE} -- Implementation
 	veen2b_template_code: STRING is "veen2b"
 	veen2c_template_code: STRING is "veen2c"
 	veen2d_template_code: STRING is "veen2d"
+	vffd4a_template_code: STRING is "vffd4a"
+	vffd5a_template_code: STRING is "vffd5a"
+	vffd6a_template_code: STRING is "vffd6a"
+	vffd7a_template_code: STRING is "vffd7a"
+	vffd7b_template_code: STRING is "vffd7b"
 	vgcc3a_template_code: STRING is "vgcc3a"
 	vgcc3b_template_code: STRING is "vgcc3b"
 	vgcc5a_template_code: STRING is "vgcc5a"
@@ -8900,6 +9755,7 @@ feature {NONE} -- Implementation
 	vgcp3a_template_code: STRING is "vgcp3a"
 	vgcp3b_template_code: STRING is "vgcp3b"
 	vgcp3c_template_code: STRING is "vgcp3c"
+	vhay0a_template_code: STRING is "vhay0a"
 	vhpr1a_template_code: STRING is "vhpr1a"
 	vhpr3a_template_code: STRING is "vhpr3a"
 	vhpr3b_template_code: STRING is "vhpr3b"
@@ -8912,6 +9768,8 @@ feature {NONE} -- Implementation
 	vjar0b_template_code: STRING is "vjar0b"
 	vjaw0a_template_code: STRING is "vjaw0a"
 	vjaw0c_template_code: STRING is "vjaw0c"
+	vjrv0a_template_code: STRING is "vjrv0a"
+	vjrv0b_template_code: STRING is "vjrv0b"
 	vkcn1a_template_code: STRING is "vkcn1a"
 	vkcn1c_template_code: STRING is "vkcn1c"
 	vkcn2a_template_code: STRING is "vkcn2a"
@@ -8975,7 +9833,6 @@ feature {NONE} -- Implementation
 	vtcg4d_template_code: STRING is "vtcg4d"
 	vtct0a_template_code: STRING is "vtct0a"
 	vtct0b_template_code: STRING is "vtct0b"
-	vtct0c_template_code: STRING is "vtct0c"
 	vtgc0a_template_code: STRING is "vtgc0a"
 	vtgc0b_template_code: STRING is "vtgc0b"
 	vtug1a_template_code: STRING is "vtug1a"
