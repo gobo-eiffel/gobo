@@ -1,5 +1,4 @@
-<?xml version="1.0" encoding="iso-8859-1"?>
-<!DOCTYPE cluster SYSTEM "../../doc/gexace/xace.dtd">
+<?xml version="1.0"?>
 
 <library name="xml" prefix="xm_">
 	<description>

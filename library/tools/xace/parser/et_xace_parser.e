@@ -80,7 +80,7 @@ feature {NONE} -- Initialization
 			a_factory_not_void: a_factory /= Void
 			an_error_handler_not_void: an_error_handler /= Void
 		local
-			a_parser_factory: XM_PARSER_FACTORY
+			an_expat_parser_factory: XM_EXPAT_PARSER_FACTORY
 		do
 			error_handler := an_error_handler
 			ast_factory := a_factory
@@ -95,16 +95,18 @@ feature {NONE} -- Initialization
 			end
 			!! xml_preprocessor.make (a_variables, error_handler)
 			!! xml_validator.make (an_error_handler)
-			!! a_parser_factory.make
-			if a_parser_factory.is_toe_expat_tree_available then
-				xml_parser := a_parser_factory.new_toe_expat_tree_parser
-				xml_parser.enable_position_table
-			elseif a_parser_factory.is_toe_eiffel_tree_available then
-				xml_parser := a_parser_factory.new_toe_eiffel_tree_parser
-				xml_parser.enable_position_table
+				-- Use an Expat parser if available,
+				-- an Eiffel parser otherwise.
+			!! an_expat_parser_factory
+			if an_expat_parser_factory.is_expat_available then
+				xml_parser := an_expat_parser_factory.new_expat_parser
 			else
-				error_handler.report_no_parser_available_error
+				!XM_EIFFEL_PARSER! xml_parser.make
 			end
+				-- The parser will build a tree.
+			!! tree_pipe.make
+			xml_parser.set_callbacks (tree_pipe.start)
+			tree_pipe.tree.enable_position_table (xml_parser)
 		ensure
 			ast_factory_set: ast_factory = a_factory
 			error_handler_set: error_handler = an_error_handler
@@ -121,36 +123,42 @@ feature -- Parsing
 			a_root_name: UC_STRING
 			a_system: ET_XACE_SYSTEM
 			a_library: ET_XACE_LIBRARY
+			a_document: XM_DOCUMENT
+			a_root_element: XM_ELEMENT
+			a_position_table: XM_POSITION_TABLE
 		do
-			if xml_parser /= Void then
-				xml_parser.parse_from_stream (a_file)
-				if xml_parser.is_correct then
-					a_root_name := xml_parser.document.root_element.name
+			xml_parser.parse_from_stream (a_file)
+			if xml_parser.is_correct then
+				if not tree_pipe.error.has_error then
+					a_document := tree_pipe.document
+					a_root_element := a_document.root_element
+					a_root_name := a_root_element.name
+					a_position_table := tree_pipe.tree.last_position_table
 					if a_root_name.is_equal (uc_system) then
-						xml_validator.validate_system_doc (xml_parser.document, xml_parser.last_position_table)
+						xml_validator.validate_system_doc (a_document, a_position_table)
 						if not xml_validator.has_error then
-							xml_preprocessor.preprocess_composite (xml_parser.document, xml_parser.last_position_table)
-							a_system := new_system (xml_parser.document.root_element, xml_parser.last_position_table)
+							xml_preprocessor.preprocess_composite (a_document, a_position_table)
+							a_system := new_system (a_root_element, a_position_table)
 							parsed_libraries.wipe_out
 						end
 					elseif
 						a_root_name.is_equal (uc_library) or
 						a_root_name.is_equal (uc_cluster)
 					then
-						xml_validator.validate_library_doc (xml_parser.document, xml_parser.last_position_table)
+						xml_validator.validate_library_doc (a_document, a_position_table)
 						if not xml_validator.has_error then
-							xml_preprocessor.preprocess_composite (xml_parser.document, xml_parser.last_position_table)
-							a_library := new_library (xml_parser.document.root_element, xml_parser.last_position_table)
+							xml_preprocessor.preprocess_composite (a_document, a_position_table)
+							a_library := new_library (a_root_element, a_position_table)
 							parsed_libraries.wipe_out
 						end
 					else
 						error_handler.report_not_xace_file_error (a_file.name)
 					end
 				else
-					error_handler.report_parser_error (xml_parser.last_error_extended_description)
+					error_handler.report_parser_error (tree_pipe.last_error)
 				end
 			else
-				error_handler.report_no_parser_available_error
+				error_handler.report_parser_error (xml_parser.last_error_extended_description)
 			end
 		end
 
@@ -177,8 +185,11 @@ feature -- Setting
 
 feature {NONE} -- Implementation
 
-	xml_parser: XM_TREE_PARSER
+	xml_parser: XM_PARSER
 			-- XML parser
+
+	tree_pipe: XM_TREE_CALLBACKS_PIPE
+			-- Tree generating callbacks
 
 	xml_validator: ET_XACE_VALIDATOR
 			-- XML validator
@@ -188,7 +199,9 @@ feature {NONE} -- Implementation
 
 invariant
 
-	position_table_enabled: xml_parser /= Void implies xml_parser.is_position_table_enabled
+	xml_parser_not_void: xml_parser /= Void
+	tree_pipe_not_void: tree_pipe /= Void
+	position_table_enabled: tree_pipe.tree.is_position_table_enabled
 	xml_validator_not_void: xml_validator /= Void
 	xml_preprocessor_not_void: xml_preprocessor /= Void
 
