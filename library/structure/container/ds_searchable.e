@@ -28,6 +28,27 @@ feature -- Status report
 			not_empty: Result implies not is_empty
 		end
 
+	same_items (v, u: G): BOOLEAN is
+			-- Are `v' and `u' considered equal?
+			-- (Use `equality_tester''s comparison criterion
+			-- if not void, use `=' criterion otherwise.)
+		do
+			if equality_tester /= Void then
+				Result := equality_tester.test (v, u)
+			else
+				Result := (v = u)
+			end
+		end
+
+	same_equality_tester (other: DS_SEARCHABLE [G]): BOOLEAN is
+			-- Does container use the same comparison
+			-- criterion as `other'?
+		require
+			other_not_void: other /= Void
+		do
+			Result := equal (equality_tester, other.equality_tester)
+		end
+
 feature -- Measurement
 
 	occurrences (v: G): INTEGER is
