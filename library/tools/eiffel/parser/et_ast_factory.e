@@ -35,8 +35,7 @@ feature -- Eiffel keywords
 			a_scanner_not_void: a_scanner /= Void
 			last_literal_not_empty: a_scanner.last_literal_count > 0
 		do
-			create Result.make_agent
-			Result.set_position (a_scanner.line, a_scanner.column)
+			Result := tokens.agent_keyword
 		end
 
 	new_alias_keyword (a_scanner: ET_EIFFEL_SCANNER_SKELETON): ET_KEYWORD is
@@ -45,8 +44,7 @@ feature -- Eiffel keywords
 			a_scanner_not_void: a_scanner /= Void
 			last_literal_not_empty: a_scanner.last_literal_count > 0
 		do
-			create Result.make_alias
-			Result.set_position (a_scanner.line, a_scanner.column)
+			Result := tokens.alias_keyword
 		end
 
 	new_all_keyword (a_scanner: ET_EIFFEL_SCANNER_SKELETON): ET_KEYWORD is
@@ -75,8 +73,7 @@ feature -- Eiffel keywords
 			a_scanner_not_void: a_scanner /= Void
 			last_literal_not_empty: a_scanner.last_literal_count > 0
 		do
-			create Result.make_as
-			Result.set_position (a_scanner.line, a_scanner.column)
+			Result := tokens.as_keyword
 		end
 
 	new_assign_keyword (a_scanner: ET_EIFFEL_SCANNER_SKELETON): ET_KEYWORD is
@@ -85,8 +82,7 @@ feature -- Eiffel keywords
 			a_scanner_not_void: a_scanner /= Void
 			last_literal_not_empty: a_scanner.last_literal_count > 0
 		do
-			create Result.make_assign
-			Result.set_position (a_scanner.line, a_scanner.column)
+			Result := tokens.assign_keyword
 		end
 
 	new_attribute_keyword (a_scanner: ET_EIFFEL_SCANNER_SKELETON): ET_KEYWORD is
@@ -95,8 +91,7 @@ feature -- Eiffel keywords
 			a_scanner_not_void: a_scanner /= Void
 			last_literal_not_empty: a_scanner.last_literal_count > 0
 		do
-			create Result.make_attribute
-			Result.set_position (a_scanner.line, a_scanner.column)
+			Result := tokens.attribute_keyword
 		end
 
 	new_check_keyword (a_scanner: ET_EIFFEL_SCANNER_SKELETON): ET_KEYWORD is
@@ -105,8 +100,7 @@ feature -- Eiffel keywords
 			a_scanner_not_void: a_scanner /= Void
 			last_literal_not_empty: a_scanner.last_literal_count > 0
 		do
-			create Result.make_check
-			Result.set_position (a_scanner.line, a_scanner.column)
+			Result := tokens.check_keyword
 		end
 
 	new_class_keyword (a_scanner: ET_EIFFEL_SCANNER_SKELETON): ET_KEYWORD is
@@ -115,8 +109,7 @@ feature -- Eiffel keywords
 			a_scanner_not_void: a_scanner /= Void
 			last_literal_not_empty: a_scanner.last_literal_count > 0
 		do
-			create Result.make_class
-			Result.set_position (a_scanner.line, a_scanner.column)
+			Result := tokens.class_keyword
 		end
 
 	new_convert_keyword (a_scanner: ET_EIFFEL_SCANNER_SKELETON): ET_KEYWORD is
@@ -125,8 +118,7 @@ feature -- Eiffel keywords
 			a_scanner_not_void: a_scanner /= Void
 			last_literal_not_empty: a_scanner.last_literal_count > 0
 		do
-			create Result.make_convert
-			Result.set_position (a_scanner.line, a_scanner.column)
+			Result := tokens.convert_keyword
 		end
 
 	new_create_keyword (a_scanner: ET_EIFFEL_SCANNER_SKELETON): ET_KEYWORD is
@@ -135,8 +127,7 @@ feature -- Eiffel keywords
 			a_scanner_not_void: a_scanner /= Void
 			last_literal_not_empty: a_scanner.last_literal_count > 0
 		do
-			create Result.make_create
-			Result.set_position (a_scanner.line, a_scanner.column)
+			Result := tokens.create_keyword
 		end
 
 	new_creation_keyword (a_scanner: ET_EIFFEL_SCANNER_SKELETON): ET_KEYWORD is
@@ -145,8 +136,7 @@ feature -- Eiffel keywords
 			a_scanner_not_void: a_scanner /= Void
 			last_literal_not_empty: a_scanner.last_literal_count > 0
 		do
-			create Result.make_creation
-			Result.set_position (a_scanner.line, a_scanner.column)
+			Result := tokens.creation_keyword
 		end
 
 	new_current_keyword (a_scanner: ET_EIFFEL_SCANNER_SKELETON): ET_CURRENT is
@@ -165,8 +155,7 @@ feature -- Eiffel keywords
 			a_scanner_not_void: a_scanner /= Void
 			last_literal_not_empty: a_scanner.last_literal_count > 0
 		do
-			create Result.make_debug
-			Result.set_position (a_scanner.line, a_scanner.column)
+			Result := tokens.debug_keyword
 		end
 
 	new_deferred_keyword (a_scanner: ET_EIFFEL_SCANNER_SKELETON): ET_KEYWORD is
@@ -175,8 +164,7 @@ feature -- Eiffel keywords
 			a_scanner_not_void: a_scanner /= Void
 			last_literal_not_empty: a_scanner.last_literal_count > 0
 		do
-			create Result.make_deferred
-			Result.set_position (a_scanner.line, a_scanner.column)
+			Result := tokens.deferred_keyword
 		end
 
 	new_do_keyword (a_scanner: ET_EIFFEL_SCANNER_SKELETON): ET_KEYWORD is
@@ -185,8 +173,7 @@ feature -- Eiffel keywords
 			a_scanner_not_void: a_scanner /= Void
 			last_literal_not_empty: a_scanner.last_literal_count > 0
 		do
-			create Result.make_do
-			Result.set_position (a_scanner.line, a_scanner.column)
+			Result := tokens.do_keyword
 		end
 
 	new_else_keyword (a_scanner: ET_EIFFEL_SCANNER_SKELETON): ET_KEYWORD is
@@ -195,8 +182,7 @@ feature -- Eiffel keywords
 			a_scanner_not_void: a_scanner /= Void
 			last_literal_not_empty: a_scanner.last_literal_count > 0
 		do
-			create Result.make_else
-			Result.set_position (a_scanner.line, a_scanner.column)
+			Result := tokens.else_keyword
 		end
 
 	new_elseif_keyword (a_scanner: ET_EIFFEL_SCANNER_SKELETON): ET_KEYWORD is
@@ -205,8 +191,7 @@ feature -- Eiffel keywords
 			a_scanner_not_void: a_scanner /= Void
 			last_literal_not_empty: a_scanner.last_literal_count > 0
 		do
-			create Result.make_elseif
-			Result.set_position (a_scanner.line, a_scanner.column)
+			Result := tokens.elseif_keyword
 		end
 
 	new_end_keyword (a_scanner: ET_EIFFEL_SCANNER_SKELETON): ET_KEYWORD is
@@ -244,8 +229,7 @@ feature -- Eiffel keywords
 			a_scanner_not_void: a_scanner /= Void
 			last_literal_not_empty: a_scanner.last_literal_count > 0
 		do
-			create Result.make_export
-			Result.set_position (a_scanner.line, a_scanner.column)
+			Result := tokens.export_keyword
 		end
 
 	new_external_keyword (a_scanner: ET_EIFFEL_SCANNER_SKELETON): ET_KEYWORD is
@@ -254,8 +238,7 @@ feature -- Eiffel keywords
 			a_scanner_not_void: a_scanner /= Void
 			last_literal_not_empty: a_scanner.last_literal_count > 0
 		do
-			create Result.make_external
-			Result.set_position (a_scanner.line, a_scanner.column)
+			Result := tokens.external_keyword
 		end
 
 	new_false_keyword (a_scanner: ET_EIFFEL_SCANNER_SKELETON): ET_FALSE_CONSTANT is
@@ -274,8 +257,7 @@ feature -- Eiffel keywords
 			a_scanner_not_void: a_scanner /= Void
 			last_literal_not_empty: a_scanner.last_literal_count > 0
 		do
-			create Result.make_feature
-			Result.set_position (a_scanner.line, a_scanner.column)
+			Result := tokens.feature_keyword
 		end
 
 	new_from_keyword (a_scanner: ET_EIFFEL_SCANNER_SKELETON): ET_KEYWORD is
@@ -284,8 +266,7 @@ feature -- Eiffel keywords
 			a_scanner_not_void: a_scanner /= Void
 			last_literal_not_empty: a_scanner.last_literal_count > 0
 		do
-			create Result.make_from
-			Result.set_position (a_scanner.line, a_scanner.column)
+			Result := tokens.from_keyword
 		end
 
 	new_frozen_keyword (a_scanner: ET_EIFFEL_SCANNER_SKELETON): ET_KEYWORD is
@@ -304,8 +285,7 @@ feature -- Eiffel keywords
 			a_scanner_not_void: a_scanner /= Void
 			last_literal_not_empty: a_scanner.last_literal_count > 0
 		do
-			create Result.make_if
-			Result.set_position (a_scanner.line, a_scanner.column)
+			Result := tokens.if_keyword
 		end
 
 	new_implies_keyword (a_scanner: ET_EIFFEL_SCANNER_SKELETON): ET_KEYWORD_OPERATOR is
@@ -324,8 +304,7 @@ feature -- Eiffel keywords
 			a_scanner_not_void: a_scanner /= Void
 			last_literal_not_empty: a_scanner.last_literal_count > 0
 		do
-			create Result.make_indexing
-			Result.set_position (a_scanner.line, a_scanner.column)
+			Result := tokens.indexing_keyword
 		end
 
 	new_infix_keyword (a_scanner: ET_EIFFEL_SCANNER_SKELETON): ET_KEYWORD is
@@ -334,8 +313,7 @@ feature -- Eiffel keywords
 			a_scanner_not_void: a_scanner /= Void
 			last_literal_not_empty: a_scanner.last_literal_count > 0
 		do
-			create Result.make_infix
-			Result.set_position (a_scanner.line, a_scanner.column)
+			Result := tokens.infix_keyword
 		end
 
 	new_inherit_keyword (a_scanner: ET_EIFFEL_SCANNER_SKELETON): ET_KEYWORD is
@@ -344,8 +322,7 @@ feature -- Eiffel keywords
 			a_scanner_not_void: a_scanner /= Void
 			last_literal_not_empty: a_scanner.last_literal_count > 0
 		do
-			create Result.make_inherit
-			Result.set_position (a_scanner.line, a_scanner.column)
+			Result := tokens.inherit_keyword
 		end
 
 	new_inspect_keyword (a_scanner: ET_EIFFEL_SCANNER_SKELETON): ET_KEYWORD is
@@ -354,8 +331,7 @@ feature -- Eiffel keywords
 			a_scanner_not_void: a_scanner /= Void
 			last_literal_not_empty: a_scanner.last_literal_count > 0
 		do
-			create Result.make_inspect
-			Result.set_position (a_scanner.line, a_scanner.column)
+			Result := tokens.inspect_keyword
 		end
 
 	new_invariant_keyword (a_scanner: ET_EIFFEL_SCANNER_SKELETON): ET_KEYWORD is
@@ -364,8 +340,7 @@ feature -- Eiffel keywords
 			a_scanner_not_void: a_scanner /= Void
 			last_literal_not_empty: a_scanner.last_literal_count > 0
 		do
-			create Result.make_invariant
-			Result.set_position (a_scanner.line, a_scanner.column)
+			Result := tokens.invariant_keyword
 		end
 
 	new_is_keyword (a_scanner: ET_EIFFEL_SCANNER_SKELETON): ET_KEYWORD is
@@ -393,8 +368,7 @@ feature -- Eiffel keywords
 			a_scanner_not_void: a_scanner /= Void
 			last_literal_not_empty: a_scanner.last_literal_count > 0
 		do
-			create Result.make_local
-			Result.set_position (a_scanner.line, a_scanner.column)
+			Result := tokens.local_keyword
 		end
 
 	new_loop_keyword (a_scanner: ET_EIFFEL_SCANNER_SKELETON): ET_KEYWORD is
@@ -403,8 +377,7 @@ feature -- Eiffel keywords
 			a_scanner_not_void: a_scanner /= Void
 			last_literal_not_empty: a_scanner.last_literal_count > 0
 		do
-			create Result.make_loop
-			Result.set_position (a_scanner.line, a_scanner.column)
+			Result := tokens.loop_keyword
 		end
 
 	new_not_keyword (a_scanner: ET_EIFFEL_SCANNER_SKELETON): ET_KEYWORD_OPERATOR is
@@ -423,8 +396,7 @@ feature -- Eiffel keywords
 			a_scanner_not_void: a_scanner /= Void
 			last_literal_not_empty: a_scanner.last_literal_count > 0
 		do
-			create Result.make_obsolete
-			Result.set_position (a_scanner.line, a_scanner.column)
+			Result := tokens.obsolete_keyword
 		end
 
 	new_old_keyword (a_scanner: ET_EIFFEL_SCANNER_SKELETON): ET_KEYWORD is
@@ -473,8 +445,7 @@ feature -- Eiffel keywords
 			a_scanner_not_void: a_scanner /= Void
 			last_literal_not_empty: a_scanner.last_literal_count > 0
 		do
-			create Result.make_prefix
-			Result.set_position (a_scanner.line, a_scanner.column)
+			Result := tokens.prefix_keyword
 		end
 
 	new_recast_keyword (a_scanner: ET_EIFFEL_SCANNER_SKELETON): ET_KEYWORD is
@@ -483,8 +454,7 @@ feature -- Eiffel keywords
 			a_scanner_not_void: a_scanner /= Void
 			last_literal_not_empty: a_scanner.last_literal_count > 0
 		do
-			create Result.make_recast
-			Result.set_position (a_scanner.line, a_scanner.column)
+			Result := tokens.recast_keyword
 		end
 
 	new_redefine_keyword (a_scanner: ET_EIFFEL_SCANNER_SKELETON): ET_KEYWORD is
@@ -493,8 +463,7 @@ feature -- Eiffel keywords
 			a_scanner_not_void: a_scanner /= Void
 			last_literal_not_empty: a_scanner.last_literal_count > 0
 		do
-			create Result.make_redefine
-			Result.set_position (a_scanner.line, a_scanner.column)
+			Result := tokens.redefine_keyword
 		end
 
 	new_reference_keyword (a_scanner: ET_EIFFEL_SCANNER_SKELETON): ET_KEYWORD is
@@ -513,8 +482,7 @@ feature -- Eiffel keywords
 			a_scanner_not_void: a_scanner /= Void
 			last_literal_not_empty: a_scanner.last_literal_count > 0
 		do
-			create Result.make_rename
-			Result.set_position (a_scanner.line, a_scanner.column)
+			Result := tokens.rename_keyword
 		end
 
 	new_require_keyword (a_scanner: ET_EIFFEL_SCANNER_SKELETON): ET_KEYWORD is
@@ -533,8 +501,7 @@ feature -- Eiffel keywords
 			a_scanner_not_void: a_scanner /= Void
 			last_literal_not_empty: a_scanner.last_literal_count > 0
 		do
-			create Result.make_rescue
-			Result.set_position (a_scanner.line, a_scanner.column)
+			Result := tokens.rescue_keyword
 		end
 
 	new_result_keyword (a_scanner: ET_EIFFEL_SCANNER_SKELETON): ET_RESULT is
@@ -563,8 +530,7 @@ feature -- Eiffel keywords
 			a_scanner_not_void: a_scanner /= Void
 			last_literal_not_empty: a_scanner.last_literal_count > 0
 		do
-			create Result.make_select
-			Result.set_position (a_scanner.line, a_scanner.column)
+			Result := tokens.select_keyword
 		end
 
 	new_separate_keyword (a_scanner: ET_EIFFEL_SCANNER_SKELETON): ET_KEYWORD is
@@ -593,8 +559,7 @@ feature -- Eiffel keywords
 			a_scanner_not_void: a_scanner /= Void
 			last_literal_not_empty: a_scanner.last_literal_count > 0
 		do
-			create Result.make_then
-			Result.set_position (a_scanner.line, a_scanner.column)
+			Result := tokens.then_keyword
 		end
 
 	new_true_keyword (a_scanner: ET_EIFFEL_SCANNER_SKELETON): ET_TRUE_CONSTANT is
@@ -613,8 +578,7 @@ feature -- Eiffel keywords
 			a_scanner_not_void: a_scanner /= Void
 			last_literal_not_empty: a_scanner.last_literal_count > 0
 		do
-			create Result.make_undefine
-			Result.set_position (a_scanner.line, a_scanner.column)
+			Result := tokens.undefine_keyword
 		end
 
 	new_unique_keyword (a_scanner: ET_EIFFEL_SCANNER_SKELETON): ET_KEYWORD is
@@ -633,8 +597,7 @@ feature -- Eiffel keywords
 			a_scanner_not_void: a_scanner /= Void
 			last_literal_not_empty: a_scanner.last_literal_count > 0
 		do
-			create Result.make_until
-			Result.set_position (a_scanner.line, a_scanner.column)
+			Result := tokens.until_keyword
 		end
 
 	new_variant_keyword (a_scanner: ET_EIFFEL_SCANNER_SKELETON): ET_KEYWORD is
@@ -643,8 +606,7 @@ feature -- Eiffel keywords
 			a_scanner_not_void: a_scanner /= Void
 			last_literal_not_empty: a_scanner.last_literal_count > 0
 		do
-			create Result.make_variant
-			Result.set_position (a_scanner.line, a_scanner.column)
+			Result := tokens.variant_keyword
 		end
 
 	new_when_keyword (a_scanner: ET_EIFFEL_SCANNER_SKELETON): ET_KEYWORD is
@@ -653,8 +615,7 @@ feature -- Eiffel keywords
 			a_scanner_not_void: a_scanner /= Void
 			last_literal_not_empty: a_scanner.last_literal_count > 0
 		do
-			create Result.make_when
-			Result.set_position (a_scanner.line, a_scanner.column)
+			Result := tokens.when_keyword
 		end
 
 	new_xor_keyword (a_scanner: ET_EIFFEL_SCANNER_SKELETON): ET_KEYWORD_OPERATOR is
@@ -674,8 +635,7 @@ feature -- Eiffel symbols
 		require
 			a_scanner_not_void: a_scanner /= Void
 		do
-			create Result.make_arrow
-			Result.set_position (a_scanner.line, a_scanner.column)
+			Result := tokens.arrow_symbol
 		end
 
 	new_assign_attempt_symbol (a_scanner: ET_EIFFEL_SCANNER_SKELETON): ET_SYMBOL is
@@ -683,8 +643,7 @@ feature -- Eiffel symbols
 		require
 			a_scanner_not_void: a_scanner /= Void
 		do
-			create Result.make_assign_attempt
-			Result.set_position (a_scanner.line, a_scanner.column)
+			Result := tokens.assign_attempt_symbol
 		end
 
 	new_assign_symbol (a_scanner: ET_EIFFEL_SCANNER_SKELETON): ET_SYMBOL is
@@ -692,8 +651,7 @@ feature -- Eiffel symbols
 		require
 			a_scanner_not_void: a_scanner /= Void
 		do
-			create Result.make_assign
-			Result.set_position (a_scanner.line, a_scanner.column)
+			Result := tokens.assign_symbol
 		end
 
 	new_bang_symbol (a_scanner: ET_EIFFEL_SCANNER_SKELETON): ET_SYMBOL is
@@ -701,8 +659,7 @@ feature -- Eiffel symbols
 		require
 			a_scanner_not_void: a_scanner /= Void
 		do
-			create Result.make_bang
-			Result.set_position (a_scanner.line, a_scanner.column)
+			Result := tokens.bang_symbol
 		end
 
 	new_colon_symbol (a_scanner: ET_EIFFEL_SCANNER_SKELETON): ET_SYMBOL is
@@ -710,8 +667,7 @@ feature -- Eiffel symbols
 		require
 			a_scanner_not_void: a_scanner /= Void
 		do
-			create Result.make_colon
-			Result.set_position (a_scanner.line, a_scanner.column)
+			Result := tokens.colon_symbol
 		end
 
 	new_comma_symbol (a_scanner: ET_EIFFEL_SCANNER_SKELETON): ET_SYMBOL is
@@ -762,8 +718,7 @@ feature -- Eiffel symbols
 		require
 			a_scanner_not_void: a_scanner /= Void
 		do
-			create Result.make_dotdot
-			Result.set_position (a_scanner.line, a_scanner.column)
+			Result := tokens.dotdot_symbol
 		end
 
 	new_equal_symbol (a_scanner: ET_EIFFEL_SCANNER_SKELETON): ET_SYMBOL is
@@ -816,8 +771,7 @@ feature -- Eiffel symbols
 		require
 			a_scanner_not_void: a_scanner /= Void
 		do
-			create Result.make_left_brace
-			Result.set_position (a_scanner.line, a_scanner.column)
+			Result := tokens.left_brace_symbol
 		end
 
 	new_left_bracket_symbol (a_scanner: ET_EIFFEL_SCANNER_SKELETON): ET_SYMBOL is
@@ -834,8 +788,7 @@ feature -- Eiffel symbols
 		require
 			a_scanner_not_void: a_scanner /= Void
 		do
-			create Result.make_left_parenthesis
-			Result.set_position (a_scanner.line, a_scanner.column)
+			Result := tokens.left_parenthesis_symbol
 		end
 
 	new_lt_symbol (a_scanner: ET_EIFFEL_SCANNER_SKELETON): ET_SYMBOL_OPERATOR is
@@ -946,8 +899,7 @@ feature -- Eiffel symbols
 		require
 			a_scanner_not_void: a_scanner /= Void
 		do
-			create Result.make_tilde
-			Result.set_position (a_scanner.line, a_scanner.column)
+			Result := tokens.tilde_symbol
 		end
 
 	new_times_symbol (a_scanner: ET_EIFFEL_SCANNER_SKELETON): ET_SYMBOL_OPERATOR is

@@ -412,6 +412,14 @@ feature -- Keywords
 			keyword_not_void: Result /= Void
 		end
 
+	alias_keyword: ET_KEYWORD is
+			-- 'alias' keyword
+		once
+			create Result.make_alias
+		ensure
+			keyword_not_void: Result /= Void
+		end
+
 	all_keyword: ET_KEYWORD is
 			-- 'all' keyword
 		once
@@ -540,6 +548,14 @@ feature -- Keywords
 			keyword_not_void: Result /= Void
 		end
 
+	elseif_keyword: ET_KEYWORD is
+			-- 'elseif' keyword
+		once
+			create Result.make_elseif
+		ensure
+			keyword_not_void: Result /= Void
+		end
+
 	end_keyword: ET_KEYWORD is
 			-- 'end' keyword
 		once
@@ -564,6 +580,14 @@ feature -- Keywords
 			keyword_not_void: Result /= Void
 		end
 
+	external_keyword: ET_KEYWORD is
+			-- 'external' keyword
+		once
+			create Result.make_external
+		ensure
+			keyword_not_void: Result /= Void
+		end
+
 	feature_keyword: ET_KEYWORD is
 			-- 'feature' keyword
 		once
@@ -576,6 +600,14 @@ feature -- Keywords
 			-- 'from' keyword
 		once
 			create Result.make_from
+		ensure
+			keyword_not_void: Result /= Void
+		end
+
+	if_keyword: ET_KEYWORD is
+			-- 'if' keyword
+		once
+			create Result.make_if
 		ensure
 			keyword_not_void: Result /= Void
 		end
@@ -600,6 +632,14 @@ feature -- Keywords
 			-- 'inherit' keyword
 		once
 			create Result.make_inherit
+		ensure
+			keyword_not_void: Result /= Void
+		end
+
+	inspect_keyword: ET_KEYWORD is
+			-- 'inspect' keyword
+		once
+			create Result.make_inspect
 		ensure
 			keyword_not_void: Result /= Void
 		end
@@ -640,6 +680,14 @@ feature -- Keywords
 			-- 'loop' keyword
 		once
 			create Result.make_loop
+		ensure
+			keyword_not_void: Result /= Void
+		end
+
+	obsolete_keyword: ET_KEYWORD is
+			-- 'obsolete' keyword
+		once
+			create Result.make_obsolete
 		ensure
 			keyword_not_void: Result /= Void
 		end
@@ -732,6 +780,14 @@ feature -- Keywords
 			keyword_not_void: Result /= Void
 		end
 
+	select_keyword: ET_KEYWORD is
+			-- 'select' keyword
+		once
+			create Result.make_select
+		ensure
+			keyword_not_void: Result /= Void
+		end
+
 	strip_keyword: ET_KEYWORD is
 			-- 'strip' keyword
 		once
@@ -756,10 +812,26 @@ feature -- Keywords
 			keyword_not_void: Result /= Void
 		end
 
+	undefine_keyword: ET_KEYWORD is
+			-- 'undefine' keyword
+		once
+			create Result.make_undefine
+		ensure
+			keyword_not_void: Result /= Void
+		end
+
 	unique_keyword: ET_KEYWORD is
 			-- 'unique' keyword
 		once
 			create Result.make_unique
+		ensure
+			keyword_not_void: Result /= Void
+		end
+
+	until_keyword: ET_KEYWORD is
+			-- 'until' keyword
+		once
+			create Result.make_until
 		ensure
 			keyword_not_void: Result /= Void
 		end
