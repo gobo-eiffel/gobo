@@ -19,6 +19,8 @@ inherit
 			start_element, end_element, notify_comment, notify_characters, notify_processing_instruction
 		end
 
+	KL_IMPORTED_STRING_ROUTINES
+
 	-- This class also concatenates text nodes split by comments and processing instructions
 
 creation
@@ -57,7 +59,7 @@ feature -- Events
 	notify_characters (chars: STRING; properties: INTEGER) is
 			-- Notify character data.
 		do
-			character_buffer.append_string (chars)
+			character_buffer := STRING_.appended_string (character_buffer, chars)
 		end
 
 	notify_comment (a_content_string: STRING; properties: INTEGER) is

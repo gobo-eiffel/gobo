@@ -80,6 +80,9 @@ feature -- Element change
 			if a_test_attribute /= Void then
 				generate_expression (a_test_attribute)
 				condition := last_generated_expression
+				if condition.is_error then
+					report_compile_error (condition.error_value.error_message)
+				end
 			else
 				report_absence ("test")
 			end

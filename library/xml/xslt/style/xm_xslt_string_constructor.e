@@ -75,6 +75,7 @@ feature -- Element change
 					end
 				end
 			end
+			validated := True
 		end	
 
 	compile_content (an_executable: XM_XSLT_EXECUTABLE; a_string_constructor: XM_XSLT_TEXT_CONSTRUCTOR) is

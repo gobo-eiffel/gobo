@@ -191,6 +191,7 @@ feature {NONE} -- Implementation
 		local
 			a_cursor: DS_ARRAYED_LIST_CURSOR [INTEGER]
 			a_prefix_code: INTEGER --_16
+			decided: BOOLEAN
 		do
 			if a_namespace_code /= xml_namespace_code then
 				a_prefix_code := prefix_code_from_namespace_code (a_namespace_code)
@@ -226,12 +227,14 @@ feature {NONE} -- Implementation
 						-- it's a duplicate so we don't need it
 
 						Result := False
+						decided := True
 						a_cursor.go_before
 					elseif a_prefix_code = prefix_code_from_namespace_code (a_cursor.item) then
 
 						-- same prefix, different URI, so we do need it
-						
-						Result := False
+
+						Result := True
+						decided := True
 						a_cursor.go_before
 					else
 						a_cursor.back
@@ -240,7 +243,7 @@ feature {NONE} -- Implementation
 
 				-- we need it unless it's a redundant xmlns=""
 
-				Result := a_namespace_code /= null_namespace_code
+				if not decided then Result := a_namespace_code /= null_namespace_code end
 			end
 		end
 

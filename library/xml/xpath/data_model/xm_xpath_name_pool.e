@@ -339,7 +339,7 @@ feature -- Access
 		require
 			prefix_not_void: an_xml_prefix /= Void
 			uri_not_void: a_uri /= Void
-			valid_local_name: a_local_name /= Void and then is_ncname (a_local_name)
+			valid_local_name: a_local_name /= Void and then (a_local_name.count > 0 implies is_ncname (a_local_name))
 			name_is_allocated: is_name_code_allocated (an_xml_prefix, a_uri, a_local_name)
 		local
 			a_prefix_index: INTEGER
@@ -364,7 +364,7 @@ feature -- Access
 			-- (A read-only version of allocate_name)
 		require
 			uri_not_void: a_uri /= Void
-			valid_local_name: a_local_name /= Void and then is_ncname (a_local_name)
+			valid_local_name: a_local_name /= Void and then (a_local_name.count > 0 implies is_ncname (a_local_name))
 		local
 			a_hash_code, a_depth: INTEGER
 			a_uri_code, a_counter: INTEGER -- should be INTEGER_16
@@ -610,7 +610,7 @@ feature -- Status report
 		require
 			prefix_not_void: an_xml_prefix /= Void
 			uri_not_void: a_uri /= Void
-			valid_local_name: a_local_name /= Void and then is_ncname (a_local_name)
+			valid_local_name: a_local_name /= Void and then (a_local_name.count > 0 implies is_ncname (a_local_name))
 		local
 			a_uri_code: INTEGER -- should be INTEGER_16			
 		do
@@ -625,7 +625,7 @@ feature -- Status report
 			-- Has a name code been allocated for `an_xml_prefix' with `a_uri_code' and `a_local_name'?
 		require
 			prefix_not_void: an_xml_prefix /= Void
-			valid_local_name: a_local_name /= Void and then is_ncname (a_local_name)
+			valid_local_name: a_local_name /= Void and then (a_local_name.count > 0 implies is_ncname (a_local_name))
 		local
 			a_hash_code, a_depth, a_prefix_index: INTEGER
 			a_name_entry, next_entry: XM_XPATH_NAME_ENTRY
@@ -687,7 +687,7 @@ feature -- Status report
 			--	Is `Current' full for `a_local_name', taking `a_uri' into consideration?
 		require
 			uri_not_void: a_uri /= Void
-			valid_local_name: a_local_name /= Void and then is_ncname (a_local_name)
+			valid_local_name: a_local_name /= Void and then (a_local_name.count > 0 implies is_ncname (a_local_name))
 		local
 			a_uri_code: INTEGER
 		do
@@ -706,7 +706,7 @@ feature -- Status report
 			--	Is `Current' full for `a_local_name', taking `a_uri_code' into consideration?
 		require
 			valid_uri_code: is_valid_uri_code (a_uri_code) or else a_uri_code = -1
-			valid_local_name: a_local_name /= Void and then is_ncname (a_local_name)
+			valid_local_name: a_local_name /= Void and then (a_local_name.count > 0 implies is_ncname (a_local_name))
 		local
 			a_hash_code, a_depth: INTEGER
 			a_name_entry, next_entry: XM_XPATH_NAME_ENTRY
@@ -1021,7 +1021,7 @@ feature -- Element change
 		require
 			prefix_not_void: an_xml_prefix /= Void
 			uri_not_void: a_uri /= Void
-			valid_local_name: a_local_name /= Void and then is_ncname (a_local_name)
+			valid_local_name: a_local_name /= Void and then (a_local_name.count > 0 implies is_ncname (a_local_name))
 			name_not_allocated: not is_name_code_allocated (an_xml_prefix, a_uri, a_local_name)
 			name_pool_not_full: not is_name_pool_full (a_uri, a_local_name)
 		local
@@ -1059,7 +1059,7 @@ feature -- Element change
 		require
 			prefix_not_void: an_xml_prefix /= Void
 			valid_uri_code:  is_valid_uri_code (a_uri_code)
-			valid_local_name: a_local_name /= Void and then is_ncname (a_local_name)
+			valid_local_name: a_local_name /= Void and then (a_local_name.count > 0 implies is_ncname (a_local_name))
 			name_not_allocated: not is_name_code_allocated_using_uri_code (an_xml_prefix, a_uri_code, a_local_name)
 			name_pool_not_full: not is_name_pool_full_using_uri_code (a_uri_code, a_local_name)
 		local

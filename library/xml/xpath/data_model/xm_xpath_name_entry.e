@@ -22,7 +22,7 @@ feature {NONE} -- Initialization
 			-- Establish invariant
 		require
 			positive_code: uri_code >= 0 and uri_code < 32000
-			local_name_not_void: a_local_name /= Void and then a_local_name.count > 0
+			local_name_not_void: a_local_name /= Void
 		do
 			local_name := a_local_name
 			uri_code := a_code
@@ -55,7 +55,7 @@ feature -- Element change
 invariant
 	
 	positive_uri_code: uri_code >= 0 -- and then uri_code < 32K ?? check this
-	local_name_not_void: local_name /= Void and then local_name.count > 0
+	local_name_not_void: local_name /= Void
 	
 end
 	

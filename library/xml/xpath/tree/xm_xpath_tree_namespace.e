@@ -40,19 +40,23 @@ feature {NONE} -- Initialization
 			element_not_void: an_element /= Void
 			strictly_positive_index: an_index > 0
 			strictly_positive_namespace_code: a_namespace_code > 0
+		local
+			a_local_part: STRING
 		do
 			document := a_document
 			node_type := Namespace_node
 			parent_node := an_element
 			child_index := an_index
 			namespace_code := a_namespace_code
-			if shared_name_pool.is_name_code_allocated ("", "", local_part) then
-				name_code := shared_name_pool.name_code  ("", "", local_part)
+			a_local_part := shared_name_pool.prefix_from_namespace_code (namespace_code)
+			if a_local_part = Void then a_local_part := "" end
+			if shared_name_pool.is_name_code_allocated ("", "", a_local_part) then
+				name_code := shared_name_pool.name_code  ("", "", a_local_part)
 			else
 
 				-- TODO need to check for resource exhaustion in name pool
 				
-				shared_name_pool.allocate_name  ("", "", local_part)
+				shared_name_pool.allocate_name  ("", "", a_local_part)
 				name_code := shared_name_pool.last_name_code
 			end
 		ensure

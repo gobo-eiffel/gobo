@@ -54,6 +54,9 @@ feature -- Element change
 			if a_select_attribute /= Void then
 				generate_expression (a_select_attribute)
 				select_expression := last_generated_expression
+				if select_expression.is_error then
+					report_compile_error (select_expression.error_value.error_message)
+				end
 			end
 			attributes_prepared := True
 		end
@@ -63,7 +66,7 @@ feature -- Element change
 			-- This is called once for each element, after the entire tree has been built.
 			-- As well as validation, it can perform first-time initialisation.
 		do
-			if select_expression /= Void and then not select_expression.is_error then
+			if select_expression /= Void then
 				type_check_expression ("select", select_expression)
 				if select_expression.was_expression_replaced then
 					select_expression := select_expression.replacement_expression

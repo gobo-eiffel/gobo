@@ -16,6 +16,8 @@ inherit
 
 	XM_XPATH_SHARED_NAME_POOL
 
+	XM_XSLT_CONFIGURATION_CONSTANTS
+	
 	XM_XPATH_DEBUGGING_ROUTINES
 
 creation
@@ -74,7 +76,7 @@ feature -- Compilation
 		do
 			error_listener := configuration.error_listener
 			if error_listener = Void then
-				create {XM_XSLT_DEFAULT_ERROR_LISTENER} error_listener.make
+				create {XM_XSLT_DEFAULT_ERROR_LISTENER} error_listener.make (configuration.recovery_policy)
 			end
 			create a_node_factory.make (error_listener, configuration.are_external_functions_allowed)
 			load_stylesheet_module (a_source, configuration, a_node_factory)
@@ -152,9 +154,12 @@ feature -- Compilation
 
 				-- Compile the stylesheet, retaining the resulting  executable
 
-				a_stylesheet.compile_stylesheet (configuration)
-				if a_stylesheet.is_error then
-					todo ("create_style_sheet_executable - compile failed", True)
+				if not a_stylesheet.any_compile_errors then
+					a_stylesheet.compile_stylesheet (configuration)
+				end
+				if a_stylesheet.any_compile_errors then
+					load_stylesheet_module_failed := True
+					load_stylesheet_module_error := "There were error compiling the stylesheet"
 				else
 					executable ?= a_stylesheet.last_compiled_executable
 					check

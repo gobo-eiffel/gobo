@@ -12,6 +12,8 @@ class XM_XSLT_NUMBER_FORMATTER
 
 inherit
 
+	XM_XSLT_STRING_ROUTINES
+
 	UC_SHARED_STRING_EQUALITY_TESTER
 
 	KL_IMPORTED_STRING_ROUTINES
@@ -90,12 +92,12 @@ feature {NONE} -- Initialization
 feature -- Access
 
 	formatted_string (numbers: DS_ARRAYED_LIST [XM_XPATH_INTEGER_VALUE];
-							a_group_size: MA_DECIMAL; a_group_separator, a_letter, an_ordinal: STRING;
+							a_group_size: INTEGER; a_group_separator, a_letter, an_ordinal: STRING;
 							a_numberer: XM_XSLT_NUMBERER): STRING is
 			-- Formatted string
 		require
 			numbers_not_void: numbers /= Void
-			group_size_not_void: a_group_size /= Void
+			positive_group_size: a_group_size >= 0
 			group_separator_not_void: a_group_separator /= Void
 			letter_not_void: a_letter /= Void
 			ordinal_not_void: an_ordinal /= Void
@@ -157,32 +159,6 @@ feature {NONE} -- Implementation
 
 	starts_with_separator: BOOLEAN
 			-- Did format string start with a separator?
-
-	is_alphanumeric (a_character_code: INTEGER): BOOLEAN is
-			-- Does `a_character_code' represent an alphanumeric character?
-		require
-			positive_character_code: a_character_code > 0
-		local
-			a_character: CHARACTER
-		do
-			todo ("is_alphanumeric (does not use Unicode categories)", True)
-
-			-- only ASCII for now
-
-			if a_character_code < 48 then -- zero
-				Result := False
-			elseif a_character_code <= 57 then -- nine
-				Result := True
-			elseif a_character_code < 65 then -- upper case A
-				Result := False
-			elseif a_character_code <= 90 then -- upper case Z
-				Result := True
-			elseif a_character_code < 97 then -- lower case A
-				Result := False
-			elseif a_character_code <= 122 then -- lower case Z
-				Result := True
-			end
-		end
 
 invariant
 

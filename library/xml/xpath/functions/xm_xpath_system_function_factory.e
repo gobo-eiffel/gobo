@@ -25,10 +25,12 @@ feature -- Creation
 		require
 			valid_function_name: a_function_name /= Void and then is_ncname (a_function_name)
 		do
-			if STRING_.same_string (a_function_name, "last") then
-				create {XM_XPATH_LAST} Result.make
-			elseif STRING_.same_string (a_function_name, "position") then
-				create {XM_XPATH_POSITION} Result.make
+			if STRING_.same_string (a_function_name, "boolean") then
+				create {XM_XPATH_BOOLEAN} Result.make
+			elseif STRING_.same_string (a_function_name, "concat") then
+				create {XM_XPATH_CONCAT} Result.make
+			elseif STRING_.same_string (a_function_name, "contains") then
+				create {XM_XPATH_CONTAINS} Result.make
 			elseif STRING_.same_string (a_function_name, "count") then
 				create {XM_XPATH_COUNT} Result.make
 			elseif STRING_.same_string (a_function_name, "current-dateTime") then
@@ -41,20 +43,30 @@ feature -- Creation
 				create {XM_XPATH_FALSE} Result.make
 			elseif STRING_.same_string (a_function_name, "id") then
 				create {XM_XPATH_ID} Result.make				
-			elseif STRING_.same_string (a_function_name, "normalize-space") then
-				create {XM_XPATH_NORMALIZE_SPACE} Result.make
+			elseif STRING_.same_string (a_function_name, "last") then
+				create {XM_XPATH_LAST} Result.make
 			elseif STRING_.same_string (a_function_name, "name") then
 				create {XM_XPATH_NAME} Result.make
+			elseif STRING_.same_string (a_function_name, "normalize-space") then
+				create {XM_XPATH_NORMALIZE_SPACE} Result.make
 			elseif STRING_.same_string (a_function_name, "not") then
 				create {XM_XPATH_NOT} Result.make
-			elseif STRING_.same_string (a_function_name, "boolean") then
-				create {XM_XPATH_BOOLEAN} Result.make
 			elseif STRING_.same_string (a_function_name, "number") then
 				create {XM_XPATH_NORMALIZE_SPACE} Result.make				
+			elseif STRING_.same_string (a_function_name, "position") then
+				create {XM_XPATH_POSITION} Result.make
 			elseif STRING_.same_string (a_function_name, "string-length") then
 				create {XM_XPATH_STRING_LENGTH} Result.make
+			elseif STRING_.same_string (a_function_name, "string-join") then
+				create {XM_XPATH_STRING_JOIN} Result.make
+			elseif STRING_.same_string (a_function_name, "substring-before") then
+				create {XM_XPATH_SUBSTRING_BEFORE} Result.make
+			elseif STRING_.same_string (a_function_name, "substring-after") then
+				create {XM_XPATH_SUBSTRING_AFTER} Result.make
 			elseif STRING_.same_string (a_function_name, "sum") then
 				create {XM_XPATH_SUM} Result.make
+			elseif STRING_.same_string (a_function_name, "translate") then
+				create {XM_XPATH_TRANSLATE} Result.make				
 			elseif STRING_.same_string (a_function_name, "true") then
 				create {XM_XPATH_TRUE} Result.make				
 			end

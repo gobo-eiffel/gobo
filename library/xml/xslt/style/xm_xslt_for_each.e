@@ -83,10 +83,14 @@ feature -- Element change
 			-- Check that the stylesheet element is valid.
 		do
 			check_within_template
-			type_check_expression ("select", select_expression)
-			if select_expression.was_expression_replaced then
-				select_expression := select_expression.replacement_expression
-			end				
+			if select_expression.is_error then
+				report_compile_error (select_expression.error_value.error_message)
+			else
+				type_check_expression ("select", select_expression)
+				if select_expression.was_expression_replaced then
+					select_expression := select_expression.replacement_expression
+				end
+			end
 			validated := True
 		end
 

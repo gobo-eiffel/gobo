@@ -16,7 +16,7 @@ inherit
 
 	XM_XSLT_STYLE_ELEMENT
 		redefine
-			make_style_element, precedence, process_all_attributes, validate, is_global_variable_declared
+			make_style_element, precedence, process_all_attributes, validate, is_global_variable_declared, any_compile_errors
 		end
 
 	XM_XSLT_PROCEDURE
@@ -132,7 +132,7 @@ feature -- Access
 		end
 
 	find_collator (a_collator_uri: STRING): ST_COLLATOR is
-			-- Does `a_collator_uri' represent a defined collator?
+			-- Does `a_collator_uri' represent a defined collator? -- TODO rename to found_collator
 		require
 			collator_uri_not_void: a_collator_uri /= Void
 			collator_is_defined: is_collator_defined (a_collator_uri)
@@ -151,7 +151,43 @@ feature -- Access
 			Result := stylesheet_module_map.item (a_system_id)
 		end
 
+	gathered_output_properties (a_fingerprint: INTEGER): XM_XSLT_OUTPUT_PROPERTIES is
+			-- Accumulated output properties for format named by `a_fingerprint' (-1 = unnamed format)
+		require
+			nearly_positive_fingerprint: a_fingerprint > -2
+			output_properties_defined_somewhere: a_fingerprint > -1 implies True -- Can't actually test this easily (?)
+		local
+			found: BOOLEAN
+			a_cursor: DS_ARRAYED_LIST_CURSOR [XM_XSLT_STYLE_ELEMENT]
+			an_output: XM_XSLT_OUTPUT
+		do
+			if a_fingerprint = -1 then found := True end
+			create Result.make
+			from
+				a_cursor := top_level_elements.new_cursor; a_cursor.start
+			variant
+				top_level_elements.count + 1 - a_cursor.index
+			until
+				a_cursor.after
+			loop
+				an_output ?= a_cursor.item
+				if an_output /= Void and then an_output.output_fingerprint = a_fingerprint then
+					found := True
+					an_output.gather_output_properties (Result)
+				end
+				a_cursor.forth
+			end
+			if not found and then a_fingerprint > -1 then
+				Result := Void -- triggers an exception
+			end
+		ensure
+			output_properties_not_void: Result /= Void
+		end
+			
 feature -- Status report
+
+	any_compile_errors: BOOLEAN
+			-- Have any compile errors been reported?
 
 	was_included: BOOLEAN
 			-- Was `Current' pulled in by xsl:include?
@@ -224,6 +260,16 @@ feature -- Status report
 
 	last_compiled_executable: XM_XSLT_EXECUTABLE
 			-- Result of successfull call to `compile_stylesheet'
+
+feature -- Status setting
+
+	set_compile_errors is
+			-- Mark this stylesheet as having compile errors
+		do
+			any_compile_errors := True
+		ensure
+			compile_errors_reported: any_compile_errors = True
+		end
 
 feature -- Element change
 
@@ -385,7 +431,7 @@ feature -- Element change
 			variant
 				top_level_elements.count + 1 - a_cursor.index
 			until
-				a_cursor.after
+				any_compile_errors or else a_cursor.after
 			loop
 				a_style_element ?= a_cursor.item
 				if a_style_element /= Void then
@@ -510,6 +556,7 @@ feature -- Element change
 			-- Compile `Current' to an excutable instruction.
 		require
 			configuration_not_void: a_configuration /= Void
+			no_compile_errors_so_far: not any_compile_errors
 		local
 			a_cursor: DS_ARRAYED_LIST_CURSOR [XM_XSLT_STYLE_ELEMENT]
 			an_instruction: XM_XSLT_INSTRUCTION
@@ -529,19 +576,15 @@ feature -- Element change
 				any_compile_errors or else a_cursor.after
 			loop
 				a_cursor.item.compile (last_compiled_executable)
-				if a_cursor.item.any_compile_errors then
-					any_compile_errors := True -- this shouldn't happen
-				else
-					an_instruction := a_cursor.item.last_generated_instruction						
-					if an_instruction /= Void then
-						an_instruction.set_source_location (module_number (a_cursor.item.system_id), a_cursor.item.line_number)
-					end
+				an_instruction := a_cursor.item.last_generated_instruction						
+				if an_instruction /= Void then
+					an_instruction.set_source_location (module_number (a_cursor.item.system_id), a_cursor.item.line_number)
 				end
 				a_cursor.forth
 			end
 			decimal_format_manager.fixup_default_default
 			last_compiled_executable.set_slot_space (number_of_variables, largest_stack_frame)
-
+			last_compiled_executable.set_default_output_properties (gathered_output_properties (-1))
 			create a_compiled_templates_index.make_map (named_templates_index.count)
 			from
 				another_cursor := named_templates_index.new_cursor; another_cursor.start
@@ -553,7 +596,7 @@ feature -- Element change
 			end
 			last_compiled_executable.set_named_template_table (a_compiled_templates_index)
 
-			todo ("compile_stylesheet (character maps not yet supported)", True)
+			-- TODO todo ("compile_stylesheet (character maps not yet supported)", True)
 		end
 
 feature {XM_XSLT_STYLE_ELEMENT} -- Local

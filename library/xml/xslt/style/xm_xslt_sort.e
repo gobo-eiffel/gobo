@@ -152,22 +152,34 @@ feature {NONE} -- Implementation
 			if a_select_attribute /= Void then
 				generate_expression (a_select_attribute)
 				select_expression := last_generated_expression
+				if select_expression.is_error then
+					report_compile_error (select_expression.error_value.error_message)
+				end
 			end
 			if an_order_attribute /= Void then
 				generate_attribute_value_template (an_order_attribute, static_context)
 				order := last_generated_expression
+				if order.is_error then
+					report_compile_error (order.error_value.error_message)
+				end
 			else
 				create {XM_XPATH_STRING_VALUE} order.make ("ascending")
 			end
 			if a_case_order_attribute /= Void then
 				generate_attribute_value_template (a_case_order_attribute, static_context)
 				case_order := last_generated_expression
+				if case_order.is_error then
+					report_compile_error (case_order.error_value.error_message)
+				end				
 			else
 				create {XM_XPATH_STRING_VALUE} case_order.make ("#default") -- TODO - check this out - what about validating?  ditto order
 			end			
 			if a_data_type_attribute /= Void then
 				generate_attribute_value_template (a_data_type_attribute, static_context)
 				data_type := last_generated_expression
+				if data_type.is_error then
+					report_compile_error (data_type.error_value.error_message)
+				end
 			else
 				create {XM_XPATH_EMPTY_SEQUENCE} data_type.make
 			end
@@ -176,10 +188,16 @@ feature {NONE} -- Implementation
 			else
 				generate_attribute_value_template (a_lang_attribute, static_context)
 				language := last_generated_expression
+				if language.is_error then
+					report_compile_error (language.error_value.error_message)
+				end
 			end
 			if a_collation_attribute /= Void then
 				generate_attribute_value_template (a_collation_attribute, static_context)
 				collation_name := last_generated_expression
+				if collation_name.is_error then
+					report_compile_error (collation_name.error_value.error_message)
+				end
 			end
 		end
 

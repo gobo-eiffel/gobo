@@ -318,6 +318,59 @@ feature {NONE} -- Implementation
 	warning_issued: BOOLEAN
 			-- Has a warning for disabled character escaping problems been issued?
 
+	empty_tags_set: DS_HASH_SET [STRING] is
+			-- Names of tags that should not be closed
+		once
+			create Result.make (13)
+			Result.set_equality_tester (string_equality_tester)
+			Result.put ("area")
+			Result.put ("base")
+			Result.put ("basefont")
+			Result.put ("br")
+			Result.put ("col")
+			Result.put ("frame")
+			Result.put ("hr")
+			Result.put ("img")
+			Result.put ("input")
+			Result.put ("isindex")
+			Result.put ("link")
+			Result.put ("meta")
+			Result.put ("param")			
+		end
+	
+	is_empty_tag (a_tag: STRING): BOOLEAN is
+			-- Is `a_tag' an empty tag?
+		require
+			tag_not_void: a_tag /= Void
+		do			
+			Result := empty_tags_set.has (STRING_.to_lower (a_tag))
+		end
+	
+	url_attributes_set: DS_HASH_SET [STRING] is
+			-- Names of attributes that are sometimes URL valued
+		once
+			create Result.make (12)
+			Result.set_equality_tester (string_equality_tester)
+		end
+
+	url_combinations_set: DS_HASH_SET [STRING] is
+		-- Names of elements-attribute pairs that are URL valued
+		once
+			create Result.make (27)
+			Result.set_equality_tester (string_equality_tester)
+		end
+
+	is_url_attribute (an_element, an_attribute: STRING): BOOLEAN is
+			-- Is `an_attribute' url-valued when used with `an_element'.?
+		require
+			element_name_not_void: an_element /= Void
+			attribute_name_not_void: an_attribute /= Void
+		do
+			if url_attributes_set.has (an_attribute) then
+				Result := url_combinations_set.has (an_element + "+" + an_attribute)
+			end
+		end
+
 	specials_in_text: ARRAY [BOOLEAN] is
 			-- Lookup table for ASCII characters that need escaping in text
 		once
@@ -573,10 +626,6 @@ feature {NONE} -- Implementation
 			a_character_representation: STRING
 		do
 			encoding := STRING_.to_upper (output_properties.encoding)
-			if not encoding.is_equal ("UTF-8") then
-				on_error ("Only UTF-8 is supported as an encoding for the moment")
-				encoding := "UTF-8"
-			end
 
 			outputter := encoder_factory.outputter (encoding, raw_outputter)
 			if outputter = Void then
@@ -619,19 +668,19 @@ feature {NONE} -- Implementation
 			output ("%N")
 			if a_system_id /= Void then
 				if a_public_id = Void then
-					output (" SYSTEM %"")
+					output ("  SYSTEM %"")
 					output (a_system_id)
 					output ("%">%N")
 				else
-					output (" PUBLIC %"")
+					output ("  PUBLIC %"")
 					output (a_public_id)
-					output (" %"")
+					output ("%" %"")
 					output (a_system_id)
 					output ("%">%N")
 				end
 			elseif a_public_id /= Void then -- for HTML
-				output (" PUBLIC %"")
-				output (a_system_id)
+				output ("  PUBLIC %"")
+				output (a_public_id)
 				output ("%">%N")
 			end
 		end
@@ -684,6 +733,77 @@ feature {NONE} -- Implementation
 			Result := "/>"
 		ensure
 			empty_element_tag_closer_not_void: Result /= Void
+		end
+
+	make_url_attributes is
+			-- Build sets for determining URL-valued attributes
+		once
+			set_url_attribute ("form", "action")
+			set_url_attribute ("body", "background")
+			set_url_attribute ("q", "cite")
+			set_url_attribute ("blockquote", "cite")
+			set_url_attribute ("del", "cite")
+			set_url_attribute ("ins", "cite")
+			set_url_attribute ("object", "classid")
+			set_url_attribute ("object", "codebase")
+			set_url_attribute ("applet", "codebase")
+			set_url_attribute ("object", "data")
+			set_url_attribute ("a", "href")
+			set_url_attribute ("a", "name")       -- see second note in section B.2.1 of HTML 4 specification
+			set_url_attribute ("area", "href")
+			set_url_attribute ("link", "href")
+			set_url_attribute ("base", "href")
+			set_url_attribute ("img", "longdesc")
+			set_url_attribute ("frame", "longdesc")
+			set_url_attribute ("iframe", "longdesc")
+			set_url_attribute ("head", "profile")
+			set_url_attribute ("script", "src")
+			set_url_attribute ("input", "src")
+			set_url_attribute ("frame", "src")
+			set_url_attribute ("iframe", "src")
+			set_url_attribute ("img", "src")
+			set_url_attribute ("img", "usemap")
+			set_url_attribute ("input", "usemap")
+			set_url_attribute ("object", "usemap")
+		end
+
+	set_url_attribute (an_element, an_attribute: STRING) is
+			-- Mark `an_attribute' as url-valued when used with `an_element'.
+		require
+			element_name_not_void: an_element /= Void
+			attribute_name_not_void: an_attribute /= Void
+		do
+			if not url_attributes_set.has (STRING_.to_lower (an_attribute)) then
+				url_attributes_set.put (STRING_.to_lower (an_attribute))
+			end
+			url_combinations_set.put (STRING_.to_lower (an_element + "+" + an_attribute))
+		end
+
+	escaped_url (a_url: STRING): STRING is
+			-- Escaped version of `a_url'.
+		require
+			url_not_void: a_url /= Void
+		local
+			an_index, a_code: INTEGER
+		do
+			create Result.make (a_url.count)
+			from
+				an_index := 1
+			variant
+				a_url.count + 1 - an_index
+			until
+				an_index > a_url.count
+			loop
+				a_code := a_url.item_code (an_index)
+				if a_code < 32 or else a_code > 126 then
+					todo ("escaped_url", True)
+				else
+					Result.append_character (a_url.item (an_index))
+				end
+				an_index := an_index + 1
+			end
+		ensure
+			escaped_url_not_void: Result /= Void
 		end
 
 invariant

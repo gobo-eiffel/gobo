@@ -89,8 +89,8 @@ feature -- Evaluation
 			-- Execute `Current', writing results to the current `XM_XPATH_RECEIVER'.
 		local
 			a_receiver: XM_XSLT_SEQUENCE_RECEIVER
-			a_group_size: MA_DECIMAL
-			a_group_separator, an_ordinal_value, a_letter: STRING
+			a_group_size: INTEGER
+			a_group_separator, an_ordinal_value, a_letter, a_string: STRING
 			an_integer_value: XM_XPATH_INTEGER_VALUE
 			a_number_formatter: XM_XSLT_NUMBER_FORMATTER
 		do
@@ -100,15 +100,20 @@ feature -- Evaluation
 			calculate_value (a_context)
 			if not transformer.is_error then
 				if grouping_size = Void then
-					create a_group_size.make_zero
+					a_group_size := 0
 				else
 					grouping_size.evaluate_as_string (a_context)
 					if grouping_size.last_evaluated_string.is_error then
 						report_fatal_error (Current, "grouping-size must be numeric", transformer)
 					else
-						create a_group_size.make_from_string (grouping_size.last_evaluated_string.string_value)
-						if not a_group_size.is_integer then
+						a_string := grouping_size.last_evaluated_string.string_value
+						if not a_string.is_integer then
 							report_fatal_error (Current, "grouping-size must be an integer", transformer)
+						else
+							a_group_size := a_string.to_integer
+							if a_group_size < 0 then
+								report_fatal_error (Current, "grouping-size must be positive", transformer)
+							end
 						end
 					end
 				end
@@ -134,7 +139,7 @@ feature -- Evaluation
 				else
 					an_ordinal_value := ""
 				end
-				if integer_vector = Void and then format = Void and then a_group_size.is_zero and then language = Void then
+				if integer_vector = Void and then format = Void and then a_group_size = 0 and then language = Void then
 
 				-- fast path for the simple case
 

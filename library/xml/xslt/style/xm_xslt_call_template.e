@@ -169,12 +169,12 @@ feature -- Element change
 							end
 							a_declared_parameter_iterator.forth
 						end
+						if not is_parameter_ok then
+							a_message := STRING_.appended_string ("Parameter ", a_with_param.variable_name)
+							report_compile_error (STRING_.appended_string (a_message, " is not declared in the called template"))
+						end
 					end
 					an_actual_parameter_iterator.forth
-				end
-				if not is_parameter_ok then
-					a_message := STRING_.appended_string ("Parameter ", a_with_param.variable_name)
-					report_compile_error (STRING_.appended_string (a_message, " is not declared in the called template"))
 				end
 			end
 			post_validated := True

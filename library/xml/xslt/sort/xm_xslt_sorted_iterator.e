@@ -256,7 +256,8 @@ feature {NONE} -- Implementation
 			an_index: INTEGER
 			a_cursor: DS_ARRAYED_LIST_CURSOR [XM_XSLT_FIXED_SORT_KEY_DEFINITION]
 			a_sort_record: XM_XSLT_SORT_RECORD
-			a_key_list: DS_ARRAYED_LIST [XM_XPATH_ITEM]
+			a_key_list: DS_ARRAYED_LIST [XM_XPATH_ATOMIC_VALUE]
+			a_sort_key: XM_XPATH_ATOMIC_VALUE
 		do
 			create node_keys.make_default
 
@@ -286,7 +287,12 @@ feature {NONE} -- Implementation
 					a_cursor.after
 				loop
 					a_cursor.item.sort_key.evaluate_item (context)
-					a_key_list.put_last (a_cursor.item.sort_key.last_evaluated_item)
+					if a_cursor.item.sort_key.last_evaluated_item /= Void then
+						a_sort_key ?= a_cursor.item.sort_key.last_evaluated_item
+					else
+						a_sort_key := Void  -- = () - an empty sequence
+					end
+					a_key_list.put_last (a_sort_key)
 					a_cursor.forth
 				end
 

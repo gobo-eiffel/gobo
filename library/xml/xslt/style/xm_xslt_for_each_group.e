@@ -215,33 +215,51 @@ feature {NONE} -- Implementation
 			if a_select_attribute /= Void then
 				generate_expression (a_select_attribute)
 				select_expression := last_generated_expression
+				if select_expression.is_error then
+					report_compile_error (select_expression.error_value.error_message)
+				end
 			else
 				report_absence ("select")
 			end
 			if a_collation_attribute /= Void then
 				generate_attribute_value_template (a_collation_attribute, static_context)
 				collation_name := last_generated_expression
+				if collation_name.is_error then
+					report_compile_error (collation_name.error_value.error_message)
+				end
 			end
 
 			if a_group_by_attribute /= Void then
 				count_of_grouping_attributes := count_of_grouping_attributes + 1
 				generate_expression (a_group_by_attribute)
-				group_by := last_generated_expression 
+				group_by := last_generated_expression
+				if group_by.is_error then
+					report_compile_error (group_by.error_value.error_message)
+				end
 			end
 			if a_group_adjacent_attribute /= Void then
 				count_of_grouping_attributes := count_of_grouping_attributes + 1
 				generate_expression (a_group_adjacent_attribute)
-				group_adjacent := last_generated_expression 
+				group_adjacent := last_generated_expression
+				if group_adjacent.is_error then
+					report_compile_error (group_adjacent.error_value.error_message)
+				end
 			end
 			if a_group_starting_with_attribute /= Void then
 				count_of_grouping_attributes := count_of_grouping_attributes + 1
 				generate_pattern (a_group_starting_with_attribute)
 				group_starting_with := last_generated_pattern
+				if group_starting_with.is_error then
+					report_compile_error (group_starting_with.error_value.error_message)
+				end
 			end
 			if a_group_ending_with_attribute /= Void then
 				count_of_grouping_attributes := count_of_grouping_attributes + 1
 				generate_pattern (a_group_ending_with_attribute)
 				group_ending_with := last_generated_pattern
+				if group_ending_with.is_error then
+					report_compile_error (group_ending_with.error_value.error_message)
+				end				
 			end
 
 			if count_of_grouping_attributes /= 1 then

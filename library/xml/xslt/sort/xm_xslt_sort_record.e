@@ -10,7 +10,7 @@ indexing
 	date: "$Date$"
 	revision: "$Revision$"
 
-class	XM_XSLT_SORT_RECORD
+class	XM_XSLT_SORT_RECORD -- ? [G -> XM_XPATH_ITEM]
 
 creation
 
@@ -18,7 +18,7 @@ creation
 
 feature {NONE} -- Initialization
 
-	make (an_item: XM_XPATH_ITEM; a_key_list: DS_ARRAYED_LIST [XM_XPATH_ITEM]; a_count: INTEGER) is
+	make (an_item: XM_XPATH_ITEM; a_key_list: DS_ARRAYED_LIST [XM_XPATH_ATOMIC_VALUE]; a_count: INTEGER) is
 			-- Establish invariant.
 		require
 			item_not_void: an_item /= Void
@@ -39,7 +39,7 @@ feature -- Access
 	item: XM_XPATH_ITEM
 			-- Item
 
-	key_list: DS_ARRAYED_LIST [XM_XPATH_ITEM]
+	key_list: DS_ARRAYED_LIST [XM_XPATH_ATOMIC_VALUE]
 			-- Evaluated sort keys
 
 	record_number: INTEGER

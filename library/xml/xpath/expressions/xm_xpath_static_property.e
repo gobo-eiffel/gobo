@@ -611,6 +611,14 @@ feature -- Setting cardinality
 			cardinalities_computed: are_cardinalities_computed
 		end
 
+	set_cardinality_disallows_many is
+			-- Forbid multiple items
+		require
+			cardinalities_computed: are_cardinalities_computed
+		do
+			cardinalities.put (False, 3)
+		end
+
 feature -- Special properties
 	
 	special_properties: ARRAY [BOOLEAN]

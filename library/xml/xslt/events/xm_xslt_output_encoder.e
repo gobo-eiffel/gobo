@@ -35,7 +35,7 @@ feature -- Status report
 			an_index: INTEGER
 		do
 			if a_character_string /= Void then
-				Result := true
+				Result := True
 				from
 					an_index := 1
 				variant

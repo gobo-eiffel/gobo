@@ -44,6 +44,7 @@ feature {NONE} -- Initialization
 			type := a_simple_type
 			type_annotation := a_type_annotation
 			options := 0
+			set_cardinality_exactly_one
 		ensure
 			executable_set: executable = an_executable
 			name_code_set: name_code = a_name_code

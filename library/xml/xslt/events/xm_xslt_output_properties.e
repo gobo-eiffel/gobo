@@ -16,7 +16,7 @@ inherit
 
 	UC_SHARED_STRING_EQUALITY_TESTER
 
-		--  RE-WORK as a hash-table, with default values
+	KL_IMPORTED_STRING_ROUTINES
 
 creation
 
@@ -96,7 +96,7 @@ feature -- Access
 	encoding: STRING
 			-- Encoding to use
 
-	cdata_section_elements: DS_ARRAYED_LIST [STRING]
+	cdata_section_elements: DS_HASH_SET [STRING]
 			-- Expanded QNames of elements whose text-node children should be written as CDATA sections
 
 	omit_xml_declaration: BOOLEAN
@@ -200,6 +200,159 @@ feature -- Element change
 			default_media_type := "text/plain"
 		end
 
+	-- TODO - check import precedence rules for clashes
+
+	set_version (a_version: STRING) is
+			--	Set `version'.
+		require
+			version_not_void: a_version /= Void -- and then
+		do
+			if not string_property_map.has ("version") then
+				string_property_map.put (a_version, "version")
+			end
+		end
+
+	set_indent (an_indent_value: BOOLEAN) is
+			-- Set `indent'.
+		do
+			if not boolean_property_map.has ("indent") then
+				boolean_property_map.put (an_indent_value, "indent")
+			end
+		end
+
+	set_omit_xml_declaration (an_omit_xml_declaration_value: BOOLEAN) is
+			-- Set `omit_xml_declaration'.
+		do
+			omit_xml_declaration := an_omit_xml_declaration_value
+		ensure
+			omit_xml_declaration_set: omit_xml_declaration = an_omit_xml_declaration_value
+		end
+
+	set_standalone (a_standalone_value: STRING) is
+			-- Set `standalone'.
+		do
+			standalone := a_standalone_value
+		ensure
+			standalone_set: standalone = a_standalone_value
+		end
+
+	set_indent_spaces (a_number: INTEGER) is
+			-- Set `indent_spaces'
+		require
+			strictly_positive: a_number > 0
+		do
+			indent_spaces := a_number
+		ensure
+			indent_spaces_set: indent_spaces = a_number
+		end
+
+	set_encoding (an_encoding: STRING) is
+			-- Set `encoding'.
+		require
+			encoding_not_void: encoding /= Void --and then encoding.count > 0
+		do
+			encoding := an_encoding
+		ensure
+			encoding_set: encoding = an_encoding
+		end
+
+	set_media_type (a_media_type: STRING) is
+			-- Set `media_type'.
+		require
+			media_type_not_void: a_media_type /= Void --and then a_media_type.count > 0
+		do
+			if not string_property_map.has ("media-type") then
+				string_property_map.put (a_media_type, "media-type")
+			end
+		ensure
+			media_type_set: STRING_.same_string (media_type , a_media_type)
+		end
+
+	set_doctype_system (a_system_id: STRING) is
+			-- Set `doctype_system'.
+		require
+			doctype_system_not_void: a_system_id /= Void
+		do
+			doctype_system := a_system_id
+		ensure
+			doctype_system_set: STRING_.same_string (a_system_id, doctype_system)
+		end
+
+	set_doctype_public (a_public_id: STRING) is
+			-- Set `doctype_public'.
+		require
+			doctype_public_not_void: a_public_id /= Void
+		do
+			doctype_public := a_public_id
+		ensure
+			doctype_public_set: STRING_.same_string (a_public_id, doctype_public)
+		end
+
+	set_cdata_sections (cdata_section_expanded_names:  DS_ARRAYED_LIST [STRING]) is
+			-- Set `cdata_section_elements' by merger form `cdata_section_expanded_names'.
+		require
+			cdata_section_expanded_names_not_void: cdata_section_expanded_names /= Void
+		local
+			a_cursor: DS_ARRAYED_LIST_CURSOR [STRING]
+			an_expanded_name: STRING
+		do
+			from
+				a_cursor := cdata_section_expanded_names.new_cursor
+			variant
+				cdata_section_expanded_names.count + 1 - a_cursor.index
+			until
+				a_cursor.after
+			loop
+				an_expanded_name := a_cursor.item
+				if cdata_section_elements.has (an_expanded_name) then
+					cdata_section_elements.force (an_expanded_name)
+				end
+				a_cursor.forth
+			end
+		end
+
+	set_undeclare_namespaces (an_undeclare_namespaces_value: BOOLEAN) is
+			-- Set `undeclare_namespaces'.
+		do
+			undeclare_namespaces := an_undeclare_namespaces_value
+		ensure
+			undeclare_namespaces_set: undeclare_namespaces = an_undeclare_namespaces_value
+		end
+
+	set_character_representation (a_character_representation: STRING) is
+			-- Set `character_representation'.
+		do
+			if not string_property_map.has ("character-representation") then
+				string_property_map.put (a_character_representation, "character-representation")
+			end
+		ensure
+			media_type_set: STRING_.same_string (character_representation , a_character_representation)			
+		end
+
+	set_include_content_type (an_include_content_type_value: BOOLEAN) is
+			-- Set `include_content_type'.
+		do
+			include_content_type := an_include_content_type_value
+		ensure
+			include_content_type_set: include_content_type = an_include_content_type_value
+		end
+
+	set_escape_uri_attributes (an_escape_uri_attributes_value: BOOLEAN) is
+			-- Set `escape_uri_attributes'.
+		do
+			escape_uri_attributes := an_escape_uri_attributes_value
+		ensure
+			escape_uri_attributes_set: escape_uri_attributes = an_escape_uri_attributes_value
+		end
+										
+	set_byte_order_mark_required (an_byte_order_mark_required_value: BOOLEAN) is
+			-- Set `byte_order_mark_required'.
+		do
+			byte_order_mark_required := an_byte_order_mark_required_value
+		ensure
+			byte_order_mark_required_set: byte_order_mark_required = an_byte_order_mark_required_value
+		end
+								
 feature {NONE} -- Implementation
 
 	string_property_map: DS_HASH_TABLE [STRING, STRING]

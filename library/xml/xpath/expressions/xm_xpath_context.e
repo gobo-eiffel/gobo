@@ -74,19 +74,32 @@ feature -- Access
 	last: INTEGER is
 			-- Context size;
 			-- (the position of the last item in the current node list)
+		require
+			context_position_set: is_context_position_set
+		local
+			an_iterator: XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_ITEM]
 		do
-			if cached_last > 0 then
-				Result := cached_last
-			else
-				todo ("last", True)
-				-- TODO
+			if cached_last = -1 then
+				an_iterator := current_iterator.another
+				cached_last := 0
+				from
+					an_iterator.start
+				until
+					an_iterator.after
+				loop
+					an_iterator.forth
+					cached_last := cached_last + 1
+				end
 			end
+			Result := cached_last
+		ensure
+			positive_size: Result >= 0
 		end
 
 	default_collation: ST_COLLATOR is
 			-- Default collator
 		do
-			Result := unicode_codepoint_collator
+			Result := unicode_codepoint_collator -- TODO - this should be settable
 		end
 
 	collation (a_collation_name: STRING): ST_COLLATOR is
@@ -99,6 +112,16 @@ feature -- Access
 				Result := unicode_codepoint_collator
 			end
 		end
+
+	unicode_codepoint_collation_name: STRING is "http://www.w3.org/2003/11/xpath-functions/collation/codepoint"
+			-- Unicode code-point collator name
+	
+	unicode_codepoint_collator: ST_COLLATOR is
+			-- Unicode code-point collator
+		once
+			create Result
+		end
+
 
 feature -- Status report
 
@@ -113,7 +136,16 @@ feature -- Status report
 		do
 			Result := a_slot_number > 0 and then a_slot_number <= local_variable_frame.count - reserved_slot_count
 		end
-	
+
+	is_at_last: BOOLEAN is
+			-- Is position() = last()?
+		require
+			context_position_set: is_context_position_set
+		do
+			Result := context_position = last
+		end
+
+
 feature -- Creation
 
 	new_context: like Current is
@@ -163,15 +195,6 @@ feature {NONE} -- Implementation
 
 	cached_last: INTEGER
 			-- Used by `last'
-
-	unicode_codepoint_collation_name: STRING is "http://www.w3.org/2003/11/xpath-functions/collation/codepoint"
-			-- Unicode code-point collator name
-	
-	unicode_codepoint_collator: ST_COLLATOR is
-			-- Unicode code-point collator
-		once
-			create Result
-		end
 
 invariant
 

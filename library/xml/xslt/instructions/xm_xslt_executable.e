@@ -150,6 +150,16 @@ feature -- Element change
 			slots_allocated: are_slots_allocated
 		end
 
+	set_default_output_properties (a_property_set: XM_XSLT_OUTPUT_PROPERTIES) is
+			-- Set output properties for the unnamed format.
+		require
+			output_properties_not_void: a_property_set /= Void
+		do
+			default_output_properties := a_property_set
+		ensure
+			default_output_properties_set: default_output_properties = a_property_set
+		end
+
 feature {NONE} -- Implementation
 	
 	collation_map: DS_HASH_TABLE [ST_COLLATOR, STRING]

@@ -31,6 +31,8 @@ inherit
 
 	KL_IMPORTED_STRING_ROUTINES
 
+	XM_XPATH_SHARED_SERIAL_NUMBER_GENERATOR
+
 	XM_XPATH_DEBUGGING_ROUTINES
 
 		-- This class represents a node in gexslt's object model.
@@ -322,6 +324,24 @@ feature -- Access
 		deferred
 		ensure
 			result_not_in_error: Result /= Void and then not Result.is_error
+		end
+
+	generated_id: STRING
+			-- Unique identifier (across all documents)
+
+	generate_id is
+			-- Generate a unique id for `Current'
+		require
+			no_generated_id_yet: generated_id = Void
+		do
+			shared_serial_number_generator.generate_next_serial_number
+			if shared_serial_number_generator.last_generated_serial_number > 0 then
+				generated_id := "N" + shared_serial_number_generator.last_generated_serial_number.out
+			else
+				generated_id := "Nn" + shared_serial_number_generator.last_generated_serial_number.abs.out
+			end
+		ensure
+			unique_id_generated: generated_id /= Void
 		end
 
 feature -- Comparison

@@ -29,7 +29,7 @@ feature {NONE} -- Initialization
 	make (a_node_type: INTEGER) is
 			-- Establish invariant
 		require
-			valid_node_type: is_node_type (a_node_type)
+			valid_node_type: is_node_type (a_node_type) and then a_node_type /= Any_node -- Use XM_XPATH_SHARED_ANY_NODE_TEST for that
 		do
 			node_kind := a_node_type
 			inspect
@@ -132,6 +132,7 @@ feature -- Matching
 		end	
 
 invariant
-	valid_node_type: is_node_type (node_kind)
+
+	valid_node_type: is_node_type (node_kind) and then node_kind /= Any_node -- Use XM_XPATH_SHARED_ANY_NODE_TEST for that
 
 end

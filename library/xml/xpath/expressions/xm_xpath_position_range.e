@@ -15,6 +15,9 @@ class XM_XPATH_POSITION_RANGE
 inherit
 
 	XM_XPATH_COMPUTED_EXPRESSION
+		redefine
+			compute_intrinsic_dependencies, evaluate_item
+		end
 
 creation
 
@@ -43,8 +46,7 @@ feature -- Access
 	item_type: XM_XPATH_ITEM_TYPE is
 			-- Determine the data type of the expression, if possible
 		do
-			-- TODO
-			todo ("item-type", False)
+			Result := type_factory.boolean_type
 			if Result /= Void then
 				-- Bug in SE 1.0 and 1.1: Make sure that
 				-- that `Result' is not optimized away.
@@ -77,7 +79,14 @@ feature -- Status report
 			end
 		end
 
-	
+feature -- Status setting
+
+	compute_intrinsic_dependencies is
+			-- Determine the intrinsic dependencies of an expression.
+		do
+			set_intrinsically_depends_upon_position			
+		end
+
 feature -- Optimization
 
 	analyze (a_context: XM_XPATH_STATIC_CONTEXT) is
@@ -86,13 +95,23 @@ feature -- Optimization
 			mark_unreplaced
 		end
 
+feature -- Evaluation
+
+	evaluate_item (a_context: XM_XPATH_CONTEXT) is
+			-- Evaluate `Current' as a single item
+		local
+			p: INTEGER
+		do
+			p := a_context.context_position
+			create {XM_XPATH_BOOLEAN_VALUE} last_evaluated_item.make (p >= minimum_position and then p <= maximum_position)	
+		end
+
 feature {NONE} -- Implementation
 	
 	compute_cardinality is
 			-- Compute cardinality.
 		do
-			todo ("compute-cardinality", False)
-			-- TODO
+			set_cardinality_exactly_one
 		end
 
 invariant

@@ -146,7 +146,7 @@ feature -- Evaluation
 	process_leaving_tail (a_context: XM_XSLT_EVALUATION_CONTEXT) is
 			-- Execute `Current', writing results to the current `XM_XPATH_RECEIVER'.
 		do
-			todo ("process_leaving_tail", False)
+			process_children_leaving_tail (a_context)
 		end
 
 feature {NONE} -- Implementation

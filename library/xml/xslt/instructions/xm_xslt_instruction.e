@@ -238,7 +238,7 @@ feature -- Evaluation
 			from
 				a_cursor := children.new_cursor; a_cursor.start
 			variant
-				a_cursor.index - children.count + 1
+				children.count + 1 - a_cursor.index
 			until
 				a_transformer.is_error or else a_cursor.after
 			loop

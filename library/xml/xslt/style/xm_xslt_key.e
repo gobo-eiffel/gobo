@@ -178,8 +178,8 @@ feature {NONE} -- Implementation
 
 invariant
 
-	use: not any_compile_errors and then validated implies use /= Void
+	use: parent_node /= Void and then not any_compile_errors and then validated implies use /= Void
 	key_name: attributes_prepared and then not any_compile_errors implies key_name /= Void
-	collation_uri: not any_compile_errors and then validated implies collation_uri /= Void
+	collation_uri: parent_node /= Void and then not any_compile_errors and then validated implies collation_uri /= Void
 
 end

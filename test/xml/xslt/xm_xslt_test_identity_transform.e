@@ -53,17 +53,13 @@ feature
 			a_transformer := a_stylesheet.new_transformer
 			assert ("transformer", a_transformer /= Void)
 			a_configuration.set_entity_resolver (new_file_resolver_current_directory) -- bodge
+			-- Why is that a bodge? I can't remember! think about it!
+			
 			create another_uri_source.make ("../xpath/data/books.xml")
-			a_parser := a_transformer.new_parser
-			a_builder := a_transformer.new_builder (a_parser)
-			another_uri_source.send (a_parser, a_transformer.new_stripper (a_builder), False)
-			a_document := a_builder.document
-			assert ("No error", not a_builder.has_error)
-			assert ("Document", a_document /= Void)
-			a_transformer.register_document (a_document, another_uri_source.system_id)
 			create an_output
 			create a_result.make (an_output)
-			a_transformer.transform_document (a_document, a_result)
+			a_transformer.transform (another_uri_source, a_result)
+			assert ("Transform successfull", not a_transformer.is_error)
 		end
 
 end

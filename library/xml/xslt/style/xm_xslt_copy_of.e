@@ -77,12 +77,11 @@ feature -- Element change
 		do
 			check_within_template
 			check_empty
-			type_check_expression ("select", select_expression)
-			if select_expression.was_expression_replaced then
-				select_expression := select_expression.replacement_expression
-			end
-			if select_expression.is_error then
-				report_compile_error (select_expression.error_value.error_message)
+			if select_expression /= Void then
+				type_check_expression ("select", select_expression)
+				if select_expression.was_expression_replaced then
+					select_expression := select_expression.replacement_expression
+				end
 			end
 			validated := True
 		end
@@ -111,6 +110,9 @@ feature {NONE} -- Implementation
 			if a_select_attribute /= Void then
 				generate_expression (a_select_attribute)
 				select_expression := last_generated_expression
+				if select_expression.is_error then
+					report_compile_error (select_expression.error_value.error_message)
+				end
 			else
 				report_absence ("select")
 			end

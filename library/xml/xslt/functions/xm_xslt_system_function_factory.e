@@ -24,12 +24,14 @@ feature -- Creation
 	make_system_function (a_function_name: STRING): XM_XPATH_SYSTEM_FUNCTION is
 			--  Create an XM_XPATH_FUNCTION_CALL object for `a_function_name'
 		do
-			if STRING_.same_string (a_function_name, "key") then
-				create {XM_XSLT_KEY_FUNCTION} Result.make
-			elseif STRING_.same_string (a_function_name, "current-group") then
+			if STRING_.same_string (a_function_name, "current-group") then
 				create {XM_XSLT_CURRENT_GROUP} Result.make
 			elseif STRING_.same_string (a_function_name, "format-number") then
 				create {XM_XSLT_FORMAT_NUMBER} Result.make
+			elseif STRING_.same_string (a_function_name, "generate-id") then
+				create {XM_XSLT_GENERATE_ID} Result.make
+			elseif STRING_.same_string (a_function_name, "key") then
+				create {XM_XSLT_KEY_FUNCTION} Result.make
 			else
 				Result := Precursor (a_function_name)
 			end

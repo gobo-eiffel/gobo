@@ -75,7 +75,7 @@ feature -- Status report
 			else
 				std.error.put_new_line
 			end
-			end
+		end
 
 feature -- Optimization
 
@@ -90,8 +90,11 @@ feature -- Evaluation
 		evaluate_item (a_context: XM_XPATH_CONTEXT) is
 			-- Evaluate `Current' as a single item
 		do
-			todo ("evaluate-item", False)
-			-- TODO
+			if a_context.is_context_position_set then
+				create {XM_XPATH_BOOLEAN_VALUE} last_evaluated_item.make (condition = a_context.is_at_last)
+			else
+				create {XM_XPATH_INVALID_ITEM} last_evaluated_item.make_from_string ("Context position is not set", 2, Dynamic_error)
+			end
 		end
 
 feature {NONE} -- Implementation

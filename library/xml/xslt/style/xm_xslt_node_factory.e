@@ -119,44 +119,52 @@ feature {NONE} -- Implementation
 			
 			inspect
 				a_fingerprint
-			when Xslt_transform_type_code, Xslt_stylesheet_type_code then
-				create {XM_XSLT_STYLESHEET} Result.make_style_element (error_listener, a_document, Void, an_attribute_collection, a_namespace_list, a_name_code, a_sequence_number)
-			when Xslt_key_type_code then
-				create {XM_XSLT_KEY} Result.make_style_element (error_listener, a_document, Void, an_attribute_collection, a_namespace_list, a_name_code, a_sequence_number)
+			when Xslt_apply_templates_type_code then
+				create {XM_XSLT_APPLY_TEMPLATES} Result.make_style_element (error_listener, a_document, Void, an_attribute_collection, a_namespace_list, a_name_code, a_sequence_number)
+			when Xslt_attribute_type_code then
+				create {XM_XSLT_ATTRIBUTE} Result.make_style_element (error_listener, a_document, Void, an_attribute_collection, a_namespace_list, a_name_code, a_sequence_number)				
+			when Xslt_call_template_type_code then
+				create {XM_XSLT_CALL_TEMPLATE} Result.make_style_element (error_listener, a_document, Void, an_attribute_collection, a_namespace_list, a_name_code, a_sequence_number)
+			when Xslt_choose_type_code then
+				create {XM_XSLT_CHOOSE} Result.make_style_element (error_listener, a_document, Void, an_attribute_collection, a_namespace_list, a_name_code, a_sequence_number)
+			when Xslt_comment_type_code then
+				create {XM_XSLT_COMMENT} Result.make_style_element (error_listener, a_document, Void, an_attribute_collection, a_namespace_list, a_name_code, a_sequence_number)
+			when Xslt_copy_of_type_code then
+				create {XM_XSLT_COPY_OF} Result.make_style_element (error_listener, a_document, Void, an_attribute_collection, a_namespace_list, a_name_code, a_sequence_number)
 			when Xslt_decimal_format_type_code then
 				create {XM_XSLT_DECIMAL_FORMAT} Result.make_style_element (error_listener, a_document, Void, an_attribute_collection, a_namespace_list, a_name_code, a_sequence_number)
-			when Xslt_variable_type_code then
-				create {XM_XSLT_VARIABLE} Result.make_style_element (error_listener, a_document, Void, an_attribute_collection, a_namespace_list, a_name_code, a_sequence_number)
-			when Xslt_param_type_code then
-				create {XM_XSLT_PARAM} Result.make_style_element (error_listener, a_document, Void, an_attribute_collection, a_namespace_list, a_name_code, a_sequence_number)
-			when Xslt_with_param_type_code then
-				create {XM_XSLT_WITH_PARAM} Result.make_style_element (error_listener, a_document, Void, an_attribute_collection, a_namespace_list, a_name_code, a_sequence_number)				
-			when Xslt_template_type_code then
-				create {XM_XSLT_TEMPLATE} Result.make_style_element (error_listener, a_document, Void, an_attribute_collection, a_namespace_list, a_name_code, a_sequence_number)				
-			when Xslt_comment_type_code then
-				create {XM_XSLT_COMMENT} Result.make_style_element (error_listener, a_document, Void, an_attribute_collection, a_namespace_list, a_name_code, a_sequence_number)				
-			when Xslt_value_of_type_code then
-				create {XM_XSLT_VALUE_OF} Result.make_style_element (error_listener, a_document, Void, an_attribute_collection, a_namespace_list, a_name_code, a_sequence_number)
-			when Xslt_copy_of_type_code then
-				create {XM_XSLT_COPY_OF} Result.make_style_element (error_listener, a_document, Void, an_attribute_collection, a_namespace_list, a_name_code, a_sequence_number)								
-			when Xslt_call_template_type_code then
-				create {XM_XSLT_CALL_TEMPLATE} Result.make_style_element (error_listener, a_document, Void, an_attribute_collection, a_namespace_list, a_name_code, a_sequence_number)				
-			when Xslt_apply_templates_type_code then
-				create {XM_XSLT_APPLY_TEMPLATES} Result.make_style_element (error_listener, a_document, Void, an_attribute_collection, a_namespace_list, a_name_code, a_sequence_number)				
-			when Xslt_choose_type_code then
-				create {XM_XSLT_CHOOSE} Result.make_style_element (error_listener, a_document, Void, an_attribute_collection, a_namespace_list, a_name_code, a_sequence_number)				
-			when Xslt_when_type_code then
-				create {XM_XSLT_WHEN} Result.make_style_element (error_listener, a_document, Void, an_attribute_collection, a_namespace_list, a_name_code, a_sequence_number)				
-			when Xslt_otherwise_type_code then
-				create {XM_XSLT_OTHERWISE} Result.make_style_element (error_listener, a_document, Void, an_attribute_collection, a_namespace_list, a_name_code, a_sequence_number)				
 			when Xslt_for_each_type_code then
 				create {XM_XSLT_FOR_EACH} Result.make_style_element (error_listener, a_document, Void, an_attribute_collection, a_namespace_list, a_name_code, a_sequence_number)
 			when Xslt_for_each_group_type_code then
-				create {XM_XSLT_FOR_EACH_GROUP} Result.make_style_element (error_listener, a_document, Void, an_attribute_collection, a_namespace_list, a_name_code, a_sequence_number)								
-			when Xslt_sort_type_code then
-				create {XM_XSLT_SORT} Result.make_style_element (error_listener, a_document, Void, an_attribute_collection, a_namespace_list, a_name_code, a_sequence_number)				
+				create {XM_XSLT_FOR_EACH_GROUP} Result.make_style_element (error_listener, a_document, Void, an_attribute_collection, a_namespace_list, a_name_code, a_sequence_number)
+			when Xslt_if_type_code then
+				create {XM_XSLT_IF} Result.make_style_element (error_listener, a_document, Void, an_attribute_collection, a_namespace_list, a_name_code, a_sequence_number)
+			when Xslt_key_type_code then
+				create {XM_XSLT_KEY} Result.make_style_element (error_listener, a_document, Void, an_attribute_collection, a_namespace_list, a_name_code, a_sequence_number)				
 			when Xslt_number_type_code then
-				create {XM_XSLT_NUMBER} Result.make_style_element (error_listener, a_document, Void, an_attribute_collection, a_namespace_list, a_name_code, a_sequence_number)				
+				create {XM_XSLT_NUMBER} Result.make_style_element (error_listener, a_document, Void, an_attribute_collection, a_namespace_list, a_name_code, a_sequence_number)
+			when Xslt_otherwise_type_code then
+				create {XM_XSLT_OTHERWISE} Result.make_style_element (error_listener, a_document, Void, an_attribute_collection, a_namespace_list, a_name_code, a_sequence_number)				
+			when Xslt_output_type_code then
+				create {XM_XSLT_OUTPUT} Result.make_style_element (error_listener, a_document, Void, an_attribute_collection, a_namespace_list, a_name_code, a_sequence_number)				
+			when Xslt_param_type_code then
+				create {XM_XSLT_PARAM} Result.make_style_element (error_listener, a_document, Void, an_attribute_collection, a_namespace_list, a_name_code, a_sequence_number)
+			when Xslt_sort_type_code then
+				create {XM_XSLT_SORT} Result.make_style_element (error_listener, a_document, Void, an_attribute_collection, a_namespace_list, a_name_code, a_sequence_number)
+			when Xslt_transform_type_code, Xslt_stylesheet_type_code then
+				create {XM_XSLT_STYLESHEET} Result.make_style_element (error_listener, a_document, Void, an_attribute_collection, a_namespace_list, a_name_code, a_sequence_number)
+			when Xslt_template_type_code then
+				create {XM_XSLT_TEMPLATE} Result.make_style_element (error_listener, a_document, Void, an_attribute_collection, a_namespace_list, a_name_code, a_sequence_number)
+			when Xslt_text_type_code then
+				create {XM_XSLT_TEXT} Result.make_style_element (error_listener, a_document, Void, an_attribute_collection, a_namespace_list, a_name_code, a_sequence_number)				
+			when Xslt_value_of_type_code then
+				create {XM_XSLT_VALUE_OF} Result.make_style_element (error_listener, a_document, Void, an_attribute_collection, a_namespace_list, a_name_code, a_sequence_number)								
+			when Xslt_variable_type_code then
+				create {XM_XSLT_VARIABLE} Result.make_style_element (error_listener, a_document, Void, an_attribute_collection, a_namespace_list, a_name_code, a_sequence_number)
+			when Xslt_when_type_code then
+				create {XM_XSLT_WHEN} Result.make_style_element (error_listener, a_document, Void, an_attribute_collection, a_namespace_list, a_name_code, a_sequence_number)				
+			when Xslt_with_param_type_code then
+				create {XM_XSLT_WITH_PARAM} Result.make_style_element (error_listener, a_document, Void, an_attribute_collection, a_namespace_list, a_name_code, a_sequence_number)				
 			else
 			end
 			

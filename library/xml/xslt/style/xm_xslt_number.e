@@ -241,10 +241,16 @@ feature {NONE} -- Implementation
 			if a_select_attribute /= Void then
 				generate_expression (a_select_attribute)
 				select_expression := last_generated_expression
+				if select_expression.is_error then
+					report_compile_error (select_expression.error_value.error_message)
+				end
 			end
 			if a_value_attribute /= Void then
 				generate_expression (a_value_attribute)
 				value_expression := last_generated_expression
+				if value_expression.is_error then
+					report_compile_error (value_expression.error_value.error_message)
+				end
 				if a_select_attribute /= Void then
 					report_compile_error ("The select attribute and value attribute must not both be present")
 				elseif a_count_attribute /= Void then

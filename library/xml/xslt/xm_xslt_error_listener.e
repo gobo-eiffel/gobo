@@ -12,6 +12,15 @@ indexing
 
 deferred class XM_XSLT_ERROR_LISTENER
 
+inherit
+
+	XM_XSLT_CONFIGURATION_CONSTANTS
+	
+feature -- Access
+
+	recovery_policy: INTEGER
+		-- Recovery policy when warnings or errors are encountered
+
 feature -- Status report
 
 	is_impure: BOOLEAN
@@ -45,6 +54,19 @@ feature -- Events
 		deferred
 		end
 
+feature -- Element change
+
+	set_recovery_policy (a_recovery_policy: INTEGER) is
+			-- Set recovery policy.
+		require
+			valid_recovery_policy: a_recovery_policy >= Recover_silently and then a_recovery_policy <= Do_not_recover
+			impure_handler: is_impure
+		deferred
+		ensure
+			recovery_policy_set: recovery_policy = a_recovery_policy
+		end
+
+
 feature -- Duplication
 
 	new_instance: like Current is
@@ -55,6 +77,10 @@ feature -- Duplication
 		ensure
 			instance_not_void: Result /= Void
 		end
+
+invariant
+
+	recovery_policy: recovery_policy >= Recover_silently and then recovery_policy <= Do_not_recover
 
 end
 	

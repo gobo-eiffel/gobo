@@ -12,14 +12,14 @@ deferred class XM_XSLT_NUMBERER
 
 feature -- Access
 
-	formatted_string (a_number: MA_DECIMAL; a_picture: STRING; a_group_size: MA_DECIMAL;
+	formatted_string (a_number: MA_DECIMAL; a_picture: STRING; a_group_size: INTEGER;
 		a_group_separator, a_letter, an_ordinal: STRING): STRING is
 			-- Formated number string
 		require
 			number_not_void: a_number /= Void
 			picture_not_void: a_picture /= Void
-			group_size_not_void: a_group_size /= Void
-			group_separator_not_void: a_group_separator /= Void
+			group_size_positive: a_group_size >= 0
+			group_separator_one_character: a_group_separator /= Void and then a_group_separator.count = 1 or else a_group_separator.count = 0
 			letter_not_void: a_letter /= Void
 			ordinal_not_void: an_ordinal /= Void
 		deferred

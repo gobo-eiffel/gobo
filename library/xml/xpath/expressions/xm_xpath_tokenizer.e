@@ -660,7 +660,7 @@ feature {NONE} -- Status setting
 						until
 							finished or else finished_inner
 						loop
-							input_index := input.index_of (c, input_index + 1)
+							input_index := input.index_of (c, input_index )
 							if input_index = 0 then
 								input_index := next_token_start_index + 1
 								is_lexical_error := True

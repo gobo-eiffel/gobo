@@ -25,7 +25,7 @@ creation
 
 feature {NONE} -- Initialization
 
-	make (an_item: XM_XPATH_ITEM; a_key_list: DS_ARRAYED_LIST [XM_XPATH_ITEM]; a_count: INTEGER;
+	make (an_item: XM_XPATH_ITEM; a_key_list: DS_ARRAYED_LIST [XM_XPATH_ATOMIC_VALUE]; a_count: INTEGER;
 			a_current_grouping_key: XM_XPATH_ATOMIC_VALUE; a_current_group_iterator: XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_ITEM]) is
 			-- Establish invariant.
 		require

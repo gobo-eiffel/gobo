@@ -40,6 +40,23 @@ feature -- Output
 			end
 		end
 
+	debug_print (a_string: STRING) is
+			-- Print `a_string pus it's item codes.
+		local
+			i: INTEGER
+		do
+			print (a_string);print ("%N")
+			from
+				i := 1
+			until
+				i > a_string.count
+			loop
+				print (a_string.item_code (i));print (",")
+				i := i+ 1
+			end
+			print ("%N")
+		end
+
 feature {NONE} -- Implementation
 
 	keys: DS_HASH_SET [STRING] is

@@ -71,8 +71,13 @@ feature -- Optimization
 			-- Perform static analysis of `Current' and its subexpressions
 		do
 			mark_unreplaced
-			-- TODO
-			todo ("analyze", False)
+			base_expression.analyze (a_context)
+			if base_expression.was_expression_replaced then
+				base_expression := base_expression.replacement_expression
+			end
+			if base_expression.is_error then
+				set_last_error (base_expression.error_value)
+			end
 		end
 
 feature {NONE} -- Implementation

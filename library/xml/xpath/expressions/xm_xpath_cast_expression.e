@@ -28,12 +28,17 @@ creation
 feature {NONE} -- Initialization
 
 	make (a_source: XM_XPATH_EXPRESSION; a_target_type: XM_XPATH_ITEM_TYPE; empty_ok: BOOLEAN) is
-			-- TODO
+			-- Establish invariant.
 		do
-			todo ("make", False)
+			source := a_source
+			target_type := a_target_type
+			allows_empty := empty_ok
 			compute_static_properties
 			initialize
 		ensure
+			source_set: source = a_source
+			target_type_set: target_type = a_target_type
+			allows_empty_set: allows_empty = empty_ok
 			static_properties_computed: are_static_properties_computed
 		end
 

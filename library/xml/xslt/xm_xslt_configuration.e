@@ -50,9 +50,12 @@ feature {NONE} -- Initialization
 			function_factory.register_system_function_factory (a_system_function_factory)
 			encoder_factory := an_encoder_factory
 			set_string_mode_mixed
-			entity_resolver := an_entity_resolver
 			recovery_policy := Recover_with_warnings
+			entity_resolver := an_entity_resolver
 			error_listener := an_error_listener
+			if error_listener.is_impure then
+				error_listener.set_recovery_policy (Recover_with_warnings)
+			end
 			shared_decimal_context.set_digits (18)
 		ensure
 			entity_resolver_set: entity_resolver = an_entity_resolver
@@ -69,7 +72,7 @@ feature {NONE} -- Initialization
 		do
 			create an_encoder_factory
 			create a_system_function_factory
-			create an_error_listener.make
+			create an_error_listener.make (Recover_with_warnings)
 			make (new_file_resolver_current_directory, an_error_listener, a_system_function_factory, an_encoder_factory)
 		end
 
@@ -171,6 +174,19 @@ feature -- Element change
 			set: is_strip_all_white_space = strip_all_white_space
 		end
 
+	set_recovery_policy (a_recovery_policy: INTEGER) is
+			-- Set recovery policy.
+		require
+			valid_recovery_policy: a_recovery_policy >= Recover_silently and then a_recovery_policy <= Do_not_recover
+		do
+			recovery_policy := a_recovery_policy
+			if error_listener.is_impure then
+				error_listener.set_recovery_policy (recovery_policy)
+			end
+		ensure
+			recovery_policy_set: recovery_policy = a_recovery_policy
+		end
+
 	use_tiny_tree_model (true_or_false: BOOLEAN) is
 			-- Switch on/off use of tiny tree model for source XML.
 		do
@@ -184,5 +200,6 @@ invariant
 	entity_resolver_not_void: entity_resolver /= Void
 	error_listener_not_void: error_listener /= Void
 	encoder_factory_not_void: 	encoder_factory /= Void
+	recovery_policy: recovery_policy >= Recover_silently and then recovery_policy <= Do_not_recover
 
 end

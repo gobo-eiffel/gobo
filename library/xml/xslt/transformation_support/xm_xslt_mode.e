@@ -239,7 +239,7 @@ feature {NONE} -- Implementation
 				if a_fingerprint = - 1 then
 					Result := Any_node + 1 -- the generic list
 				else
-					Result := Namespace_node + (a_fingerprint // number_of_buckets) + 1
+					Result := Namespace_node + (a_fingerprint \\ number_of_buckets) + 1
 				end
 			else
 				Result := a_node_kind + 1

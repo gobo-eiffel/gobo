@@ -57,7 +57,7 @@ feature -- Access
 			principal_axis := axis_principal_node_type (axis)
 			if principal_axis = Attribute_node then
 				create {XM_XPATH_NODE_KIND_TEST} Result.make_attribute_test
-			elseif node_test = Void then
+			elseif node_test = Void or else node_test.node_kind = Any_node then
 				Result := any_node_test
 			else
 				create {XM_XPATH_NODE_KIND_TEST} Result.make (node_test.node_kind)

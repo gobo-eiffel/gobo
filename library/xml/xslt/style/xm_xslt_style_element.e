@@ -113,6 +113,8 @@ feature -- Access
 			-- Containing stylesheet;
 			-- N.B. This may not be the principal stylersheet, it may be 
 			--  an included or imported module.
+		require
+			well_formed_stylesheet: True -- Can't easily check, but all nodes other than XM_XSLT_STYLESHEETs must have a parent.
 		local
 			a_node: XM_XPATH_TREE_COMPOSITE_NODE
 		do
@@ -201,10 +203,10 @@ feature -- Access
 				Result := ""
 			else
 				a_uri_code := uri_code_for_prefix (an_xml_prefix)
-				Result := shared_name_pool.uri_from_uri_code (a_uri_code)
+				if a_uri_code /= -1 then
+					Result := shared_name_pool.uri_from_uri_code (a_uri_code)
+				end
 			end
-		ensure
-			uri_not_void: Result /= Void
 		end
 
 	last_child_instruction: XM_XSLT_STYLE_ELEMENT is
@@ -321,8 +323,11 @@ feature -- Access
 
 feature -- Status_report
 
-	any_compile_errors: BOOLEAN
+	any_compile_errors: BOOLEAN is
 			-- Have any compile errors been reported?
+		do
+			Result := principal_stylesheet.any_compile_errors
+		end
 
 	attributes_prepared: BOOLEAN
 			-- Have attributes been prepared?
@@ -543,8 +548,8 @@ feature -- Status setting
 		require
 			validation_message_not_void: a_message /= Void
 		do
-			error_listener.error (a_message, Current)
-			any_compile_errors := True
+			error_listener.fatal_error (a_message, Current)
+			principal_stylesheet.set_compile_errors
 		ensure
 			compile_errors: any_compile_errors
 		end
@@ -712,7 +717,7 @@ feature -- Status setting
 		do
 			a_style_element ?= parent
 			if a_style_element = Void or else not a_style_element.may_contain_sequence_constructor then
-				report_compile_error ("Element must only be used within a sequence constructor")
+				report_compile_error (STRING_.concat (node_name, " may only be used within a sequence constructor"))
 			end
 		end
 
@@ -1308,7 +1313,8 @@ feature -- Element change
 	compile (an_executable: XM_XSLT_EXECUTABLE) is
 			-- Compile `Current' to an excutable instruction.
 		require
-			no_previous_error: not is_error and then not any_compile_errors
+			not_in_error: not is_error
+			no_previous_error: not any_compile_errors
 			validation_complete: post_validated
 			executable_not_void: an_executable /= Void
 		deferred
@@ -1565,15 +1571,45 @@ feature {NONE} -- Implementation
 			components_not_void: components /= Void
 			expression_not_void: an_expression /= Void
 		local
+			a_result_expression: XM_XPATH_EXPRESSION
 			an_atomizer: XM_XPATH_ATOMIZER_EXPRESSION
-			-- an_atomic_sequence_converter: XM_XPATH_ATOMIC_SEQUENCE_CONVERTER
+			a_first_item_expression: XM_XPATH_FIRST_ITEM_EXPRESSION
+			an_atomic_sequence_converter: XM_XPATH_ATOMIC_SEQUENCE_CONVERTER
+			a_string_join_function: XM_XPATH_STRING_JOIN
+			arguments: DS_ARRAYED_LIST [XM_XPATH_EXPRESSION]
+			a_blank: XM_XPATH_STRING_VALUE
 		do
-			create an_atomizer.make (an_expression)
-			todo ("append_parsed_expression - need an atomic-sequence-converter and fn:string-join - BUG!", True)
+			if is_backwards_compatible_processing_enabled then
+				if is_sub_type (an_expression.item_type, type_factory.any_atomic_type) then
+					a_result_expression := an_expression
+				else
+					create an_atomizer.make (an_expression)
+					a_result_expression := an_atomizer
+				end
+				if a_result_expression.cardinality_allows_many then
+					create a_first_item_expression.make (a_result_expression)
+					a_result_expression := a_first_item_expression
+				end
+				if not is_sub_type (a_result_expression.item_type, type_factory.string_type) then
+					create an_atomic_sequence_converter.make (a_result_expression, type_factory.string_type)
+					a_result_expression := an_atomic_sequence_converter
+				end
+			else
+				create an_atomizer.make (an_expression)
+				create an_atomic_sequence_converter.make (an_atomizer, type_factory.string_type)
+				create a_string_join_function.make
+				create arguments.make (2)
+				arguments.set_equality_tester (expression_tester)
+				arguments.put (an_atomic_sequence_converter, 1)
+				create a_blank.make (" ")
+				arguments.put (a_blank, 2)
+				a_string_join_function.set_arguments (arguments)
+				a_result_expression := a_string_join_function
+			end
 			if not components.extendible (1) then
 				components.resize (2 * components.count)
 			end
-			components.put_last (an_atomizer)
+			components.put_last (a_result_expression)
 		ensure
 			at_least_one_more: components.count > old components.count
 		end

@@ -429,11 +429,48 @@ feature -- Element change
 
 feature -- Transformation
 
+	transform (a_source: XM_XSLT_SOURCE; a_result: XM_XSLT_TRANSFORMATION_RESULT) is
+			-- Transform `a_source' to `a_result' using `executable'.
+		require
+			executable_not_void: executable /= Void
+			initial_template_or_source_not_void: a_source = Void implies initial_template /= Void
+			result_not_void: a_result /= Void
+		local
+			a_start_node: XM_XPATH_NODE
+			a_builder: XM_XPATH_BUILDER
+			a_parser: XM_EIFFEL_PARSER
+			a_document: XM_XPATH_DOCUMENT
+		do
+
+			-- TODO: reset current date-time
+
+			if a_source /= Void then
+
+				-- Hm. This certainly applies to a uri source, but may need
+				-- additional logic for other sources
+				
+				a_parser := new_parser
+				a_builder := new_builder (a_parser)
+				a_source.send (a_parser, new_stripper (a_builder), False)
+				if a_builder.has_error then
+					report_fatal_error (a_builder.last_error, Void)
+				else
+					a_document := a_builder.document
+					register_document (a_document, a_source.system_id)
+					a_start_node := a_document
+				end
+			end
+
+			if not is_error then
+				transform_document (a_start_node, a_result)
+			end
+		end
+
 	transform_document (a_start_node: XM_XPATH_NODE; a_result: XM_XSLT_TRANSFORMATION_RESULT) is
 			-- Transform document supplied as in-memory tree.
 		require
 			executable_not_void: executable /= Void
-			start_node_not_void: a_start_node /= Void
+			initial_template_or_start_node_not_void: a_start_node = Void implies initial_template /= Void
 			destination_result_not_void: a_result /= Void
 		local
 			properties: XM_XSLT_OUTPUT_PROPERTIES
@@ -452,11 +489,14 @@ feature -- Transformation
 				perform_transformation (a_start_node)
 			else
 				-- TODO
+
+				report_fatal_error ("Provision for an initial template has not yet been added", Void)
 			end
 
 			reset_output_destination (Void)
 
-			-- close output stream?
+			-- close output stream? - it doesn't seem to be necesary, and XM_OUTPUT doesn't support it anyway
+			-- hm. ?? Probably is necessary for a file stream
 		end
 		
 	perform_transformation (a_start_node: XM_XPATH_NODE) is
@@ -588,7 +628,7 @@ feature -- Implementation
 					last_tail_call := last_tail_call.last_tail_call
 				end
 			when Text_node, Attribute_node then
-				todo ("perform_default_action - text, attribute", True)
+				current_receiver.notify_characters (a_node.string_value, 0)
 			when Comment_node, Processing_instruction_node, Namespace_node then
 
 				-- No action
@@ -606,6 +646,9 @@ feature -- Implementation
 			an_emitter: XM_XSLT_EMITTER
 			an_html_emitter: XM_XSLT_HTML_EMITTER
 			an_html_indenter: XM_XSLT_HTML_INDENTER
+			an_xhtml_emitter: XM_XSLT_XHTML_EMITTER
+			an_xml_emitter: XM_XSLT_XML_EMITTER
+			an_xml_indenter: XM_XSLT_XML_INDENTER
 			an_uncommitted_emitter: XM_XSLT_UNCOMMITTED_EMITTER
 			a_method: STRING
 		do
@@ -644,13 +687,22 @@ feature -- Implementation
 					end
 					-- TODO - character map expander stuff
 				elseif STRING_.same_string (a_method, "xml") then
-					create {XM_XSLT_XML_EMITTER} an_emitter.make (Current, a_result.stream, some_properties)
-					a_target := an_emitter
-					
-					-- TODO: indenter, character map expander stuff and CDATA filter
+					create an_xml_emitter.make (Current, a_result.stream, some_properties)
+					a_target := an_xml_emitter
+					if some_properties.indent then
+						create an_xml_indenter.make (Current, an_xml_emitter, some_properties)
+						a_target := an_xml_indenter
+					end
+					-- TODO: character map expander stuff and CDATA filter
 					
 				elseif STRING_.same_string (a_method, "xhtml") then
-					todo ("selected_receiver - xhtml method", True)
+					create an_xhtml_emitter.make (Current, a_result.stream, some_properties)
+					a_target := an_xhtml_emitter
+					if some_properties.indent then
+						create an_xml_indenter.make (Current, an_xhtml_emitter, some_properties)
+						a_target := an_xml_indenter
+					end
+					-- TODO: character map expander stuff
 				elseif STRING_.same_string (a_method, "text") then
 					todo ("selected_receiver - text method", True)
 				else

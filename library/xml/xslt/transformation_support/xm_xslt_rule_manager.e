@@ -115,7 +115,7 @@ feature -- Element change
 				else
 					create a_mode.make
 				end
-				mode_map.put (a_mode, a_node_key)
+				mode_map.force (a_mode, a_node_key)
 			end
 		ensure
 			mode_registered: is_mode_registered (a_mode_name_code)

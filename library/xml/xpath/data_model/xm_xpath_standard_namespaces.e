@@ -245,55 +245,70 @@ feature -- Access
 
 			-- XSLT Attribute names
 
-	Name_attribute: STRING is "name"
-	Use_attribute: STRING is "use"
-	Match_attribute: STRING is "match"
+	As_attribute: STRING is "as"
+	Case_order_attribute: STRING is "case-order"
+	Cdata_section_elements_attribute: STRING is "cdata-section-elements"
 	Collation_attribute: STRING is "collation"
-	Extension_element_prefixes_attribute: STRING is "extension-element-prefixes"
+	Copy_namespaces_attribute: STRING is "copy-namespaces"
+	Count_attribute: STRING is "count"
+	Data_type_attribute: STRING is "data-type"
+	Decimal_separator_attribute: STRING is "decimal-separator"
+	Default_validation_attribute: STRING is "default-validation"
+	Digit_attribute: STRING is "digit"
+	Disable_output_escaping_attribute: STRING is	"disable-output-escaping"
+	Doctype_public_attribute: STRING is "doctype-public"
+	Doctype_system_attribute: STRING is "doctype-system"
+	Encoding_attribute: STRING is "encoding"
+	Escape_uri_attributes_attribute: STRING is "escape-uri-attributes"
 	Exclude_result_prefixes_attribute: STRING is "exclude-result-prefixes"
+	Extension_element_prefixes_attribute: STRING is "extension-element-prefixes"
+	Format_attribute: STRING is "format"
+	From_attribute: STRING is "from"
+	Group_adjacent_attribute: STRING is "group-adjacent"
+	Group_by_attribute: STRING is "group-by"
+	Group_ending_with_attribute: STRING is "group-ending-with"
+	Group_starting_with_attribute: STRING is "group-starting-with"
+	Grouping_separator_attribute: STRING is "grouping-separator"
+	Grouping_size_attribute: STRING is "grouping-size"
+	Id_attribute: STRING is "id"
+	Include_content_type_attribute: STRING is "include-content-type"
+	Indent_attribute: STRING is "indent"
+	Infinity_attribute: STRING is "infinity"
+	Lang_attribute: STRING is "lang"
+	Letter_value_attribute: STRING is "letter-value"
+	Level_attribute: STRING is "level"
+	Match_attribute: STRING is "match"
+	Media_type_attribute: STRING is "media-type"
+	Method_attribute: STRING is "method"
+	Minus_sign_attribute: STRING is "minus-sign"
+	Mode_attribute: STRING is "mode"
+	Name_attribute: STRING is "name"
+	Namespace_attribute: STRING is "namespace"
+	Nan_attribute: STRING is "NaN"
+	Omit_xml_declaration_attribute: STRING is "omit-xml-declaration"
+	Order_attribute: STRING is "order"
+	Ordinal_attribute: STRING is "ordinal"
+	Pattern_separator_attribute: STRING is "pattern-separator"
+	Per_mille_attribute: STRING is "per-mille"
+	Percent_attribute: STRING is "percent"
+	Priority_attribute: STRING is "priority"
+	Required_attribute: STRING is "required"
+	Select_attribute: STRING is "select"
+	Separator_attribute: STRING is "separator"
+	Standalone_attribute: STRING is "standalone"
+	Test_attribute: STRING is "test"
+	Tunnel_attribute: STRING is "tunnel"
+	Type_attribute: STRING is "type"
+	Undeclare_namespaces_attribute: STRING is "undeclare-namespaces"
+	Use_attribute: STRING is "use"
+	Use_character_maps_attribute: STRING is "use-character-maps"
+	Validation_attribute: STRING is "validation"
+	Value_attribute: STRING is "value"
 	Version_attribute: STRING is "version"
 	Xpath_default_namespace_attribute: STRING is "xpath-default-namespace"
-	Id_attribute: STRING is "id"
-	Validation_attribute: STRING is "validation"
-	Copy_namespaces_attribute: STRING is "copy-namespaces"
-	Default_validation_attribute: STRING is "default-validation"
-	Decimal_separator_attribute: STRING is "decimal-separator"
-	Pattern_separator_attribute: STRING is "pattern-separator"
-	Infinity_attribute: STRING is "infinity"
-	Minus_sign_attribute: STRING is "minus-sign"
-	Nan_attribute: STRING is "NaN"
-	Percent_attribute: STRING is "percent"
-	Per_mille_attribute: STRING is "per-mille"
-	Zero_digit_attribute: STRING is "zero-digit"
-	Digit_attribute: STRING is "digit"
-	Select_attribute: STRING is "select"
-	As_attribute: STRING is "as"
-	Required_attribute: STRING is "required"
-	Tunnel_attribute: STRING is "tunnel"
-	Mode_attribute: STRING is "mode"
-	Priority_attribute: STRING is "priority"
-	Disable_output_escaping_attribute: STRING is	"disable-output-escaping"
-	Separator_attribute: STRING is "separator"
-	Test_attribute: STRING is "test"
-	Order_attribute: STRING is "order"
-	Case_order_attribute: STRING is "case-order"
-	Lang_attribute: STRING is "lang"
-	Data_type_attribute: STRING is "data-type"
-	Type_attribute: STRING is "type"
-	Group_by_attribute: STRING is "group-by"
-	Group_adjacent_attribute: STRING is "group-adjacent"
-	Group_starting_with_attribute: STRING is "group-starting-with"
-	Group_ending_with_attribute: STRING is "group-ending-with"
-	Value_attribute: STRING is "value"
-	Count_attribute: STRING is "count"
-	From_attribute: STRING is "from"
-	Level_attribute: STRING is "level"
-	Letter_value_attribute: STRING is "letter-value"
-	Grouping_size_attribute: STRING is "grouping-size"
-	Grouping_separator_attribute: STRING is "grouping-separator"
-	Ordinal_attribute: STRING is "ordinal"
-	Format_attribute: STRING is "format"
-
+	Zero_digit_attribute: STRING is "zero-digit"	
+	
+	
 	Xslt_extension_element_prefixes_attribute: STRING is
 		once
 			Result := "{" + Xslt_uri + "}" + Extension_element_prefixes_attribute
@@ -311,9 +326,24 @@ feature -- Access
 			Result := "{" + Xslt_uri + "}" + Xpath_default_namespace_attribute
 		end
 
+	Gexslt_character_representation_attribute: STRING is
+		once
+				Result := "{" + Gexslt_eiffel_type_uri + "}character-representation"
+		end
+
 	Gexslt_explain_attribute: STRING is
 		once
 			Result := "{" + Gexslt_eiffel_type_uri + "}explain"
+		end
+
+	Gexslt_indent_spaces_attribute: STRING is
+		once
+			Result := "{" + Gexslt_eiffel_type_uri + "}indent-spaces"
+		end
+
+	Gexslt_byte_order_mark_attribute: STRING is
+		once
+			Result := "{" + Gexslt_eiffel_type_uri + "}byte-order-mark"
 		end
 
 feature -- Status report

@@ -196,7 +196,7 @@ feature -- Optimization
 				
 				-- See if it's an element pattern with a single positional predicate of [1]
 
-				if node_test.node_kind = Element_node and then filters.count = 1 then
+				if node_test.node_kind = Element_node and then filters /= Void and then filters.count = 1 then
 					a_filter_expression := filters.item (1)
 					an_integer ?= a_filter_expression
 					a_position_range ?= a_filter_expression
@@ -212,7 +212,7 @@ feature -- Optimization
 				-- See if it's an element pattern with a single positional predicate
 				-- of [position()=last()]
 				
-				if not is_first_element_pattern and then node_test.node_kind = Element_node and then filters.count = 1 then
+				if not is_first_element_pattern and then node_test.node_kind = Element_node and then filters /= Void and then filters.count = 1 then
 					is_last_expression ?= filters.item (1)
 					if is_last_expression /= Void and then is_last_expression.condition then
 						set_last_element_pattern (True)

@@ -222,11 +222,18 @@ feature {NONE} -- Implementation
 			-- Switch to an XML emitter.
 		require
 			not_yet_committed: not committed
+		local
+			an_xml_emitter: XM_XSLT_XML_EMITTER
+			an_xml_indenter: XM_XSLT_XML_INDENTER
 		do
 			output_properties.set_xml_defaults
-			create {XM_XSLT_XML_EMITTER} base_receiver.make (transformer, outputter, output_properties)
-			
-			-- TODO: indenter and CDATA filter
+			create an_xml_emitter.make (transformer, outputter, output_properties)
+			base_receiver := an_xml_emitter
+			if output_properties.indent then
+				create an_xml_indenter.make (transformer, an_xml_emitter, output_properties)
+				base_receiver := an_xml_indenter
+			end
+			-- TODO: CDATA filter
 
 			switch
 		ensure
@@ -257,16 +264,18 @@ feature {NONE} -- Implementation
 			-- Switch to an XHTML emitter.
 		require
 			not_yet_committed: not committed
+		local
+			an_xhtml_emitter: XM_XSLT_XHTML_EMITTER
+			an_xml_indenter: XM_XSLT_XML_INDENTER
 		do
 			output_properties.set_xhtml_defaults
-			check
-				xhtml_not_yet_implemented: False
+			create an_xhtml_emitter.make (transformer, outputter, output_properties)
+			base_receiver := an_xhtml_emitter
+			if output_properties.indent then
+				create an_xml_indenter.make (transformer, an_xhtml_emitter, output_properties)
+				base_receiver := an_xml_indenter
 			end
---			create {XM_XSLT_XHTML_EMITTER} base_receiver.make (transformer, outputter, output_properties)
---			if output_properties.indent then
---				create an_xtml_indenter.make (Current, base_receiver, some_properties)
---				base_receiver := an_xtml_indenter
---			end
+
 			switch
 		ensure
 			committed: committed

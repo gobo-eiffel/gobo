@@ -37,6 +37,7 @@ feature {NONE} -- Initialization
 			base_receiver := a_receiver
 			emitter ?= base_receiver
 			indent_spaces := some_output_properties.indent_spaces
+			is_after_formatted := True
 		end
 
 feature -- Events

@@ -72,6 +72,8 @@ feature -- Evaluation
 			-- Evaluate `Current' as a single item
 		do
 			todo ("evaluate_item", False)
+			--evaluate_as_string (a_context)
+			--last_evaluated_item := last_evaluated_string
 		end
 
 	evaluate_as_string (a_context: XM_XPATH_CONTEXT) is

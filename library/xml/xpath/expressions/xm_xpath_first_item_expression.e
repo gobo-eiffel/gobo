@@ -15,6 +15,10 @@ class XM_XPATH_FIRST_ITEM_EXPRESSION
 inherit
 
 	XM_XPATH_COMPUTED_EXPRESSION
+		redefine
+			simplified_expression, promote, sub_expressions,
+			same_expression, compute_special_properties, evaluate_item
+		end
 
 creation
 
@@ -40,8 +44,7 @@ feature -- Access
 	item_type: XM_XPATH_ITEM_TYPE is
 			--Determine the data type of the expression, if possible
 		do
-			-- TODO
-			todo ("item-type", False)
+			Result := base_expression.item_type
 			if Result /= Void then
 				-- Bug in SE 1.0 and 1.1: Make sure that
 				-- that `Result' is not optimized away.
@@ -50,6 +53,27 @@ feature -- Access
 
 	base_expression: XM_XPATH_EXPRESSION
 			-- Base expression to be filtered
+
+	sub_expressions: DS_ARRAYED_LIST [XM_XPATH_EXPRESSION] is
+			-- Immediate sub-expressions of `Current'
+		do
+			create Result.make (1)
+			Result.set_equality_tester (expression_tester)
+			Result.put (base_expression, 1)
+		end
+
+feature -- Comparison
+
+	same_expression (other: XM_XPATH_EXPRESSION): BOOLEAN is
+			-- Are `Current' and `other' the same expression?
+		local
+			a_first_item_expression: XM_XPATH_FIRST_ITEM_EXPRESSION
+		do
+			a_first_item_expression ?= other
+			if a_first_item_expression /= Void then
+				Result := base_expression.same_expression (a_first_item_expression.base_expression)
+			end
+		end
 
 feature -- Status report
 
@@ -70,12 +94,82 @@ feature -- Status report
 
 feature -- Optimization
 
+	simplified_expression: XM_XPATH_EXPRESSION is
+			-- Simplified expression as a result of context-independent static optimizations
+		local
+			an_expression: XM_XPATH_EXPRESSION
+			a_result_expression: XM_XPATH_FIRST_ITEM_EXPRESSION
+			an_is_last_expression: XM_XPATH_IS_LAST_EXPRESSION
+		do
+			a_result_expression := clone (Current)
+			an_expression := base_expression.simplified_expression
+			if an_expression.cardinality_allows_many then
+				a_result_expression.set_base_expression (an_expression)
+				if an_expression.is_error then
+					a_result_expression.set_last_error (an_expression.error_value)
+				end
+				Result := a_result_expression
+			else
+				Result := an_expression
+			end
+		end
+
 	analyze (a_context: XM_XPATH_STATIC_CONTEXT) is
 			-- Perform static analysis of an expression and its subexpressions
 		do
 			mark_unreplaced
-			todo ("analyze", False)
-			-- TODO
+			base_expression.analyze (a_context)
+			if base_expression.was_expression_replaced then
+				base_expression := base_expression.replacement_expression
+			end
+			if base_expression.is_error then
+				set_last_error (base_expression.error_value)
+			end
+		end
+
+	promote (an_offer: XM_XPATH_PROMOTION_OFFER) is
+			-- Promote this subexpression.
+		local
+			a_promotion: XM_XPATH_EXPRESSION
+		do
+			an_offer.accept (Current)
+			a_promotion := an_offer.accepted_expression
+			if a_promotion /= Void then
+				set_replacement (a_promotion)
+			else
+				if not (an_offer.action = Unordered) then
+					base_expression.promote (an_offer)
+					if base_expression.was_expression_replaced then set_base_expression (base_expression.replacement_expression) end
+				end
+			end
+		end
+
+feature -- Evaluation
+
+	evaluate_item (a_context: XM_XPATH_CONTEXT) is
+			-- Evaluate `Current' as a single item
+		local
+			an_iterator: XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_ITEM]
+		do
+			an_iterator := base_expression.iterator (a_context)
+			an_iterator.start
+			if not an_iterator.after then
+				last_evaluated_item := an_iterator.item
+			else
+				last_evaluated_item := Void
+			end
+		end
+
+feature -- Element change
+
+	set_base_expression (a_base_expression: XM_XPATH_EXPRESSION) is
+			-- Set `base_expression'.
+		require
+			base_expression_not_void: a_base_expression /= Void
+		do
+			base_expression := a_base_expression
+		ensure
+			base_expression_cset: base_expression = a_base_expression
 		end
 
 feature {NONE} -- Implementation
@@ -83,9 +177,17 @@ feature {NONE} -- Implementation
 	compute_cardinality is
 			-- Compute cardinality.
 		do
-			-- TODO
-			todo ("compute-cardinality", False)
+			clone_cardinality (base_expression)
+			set_cardinality_disallows_many
 		end
+
+		
+	compute_special_properties is
+			-- Compute special properties.
+		do
+			set_special_properties (base_expression.special_properties)
+		end
+
 
 invariant
 
