@@ -75,9 +75,12 @@ feature -- Access
 			nb: INTEGER
 			p: POINTER
 #endif
-#ifdef SE
+#ifdef SE || VE
 		local
 			i, nb: INTEGER
+#ifdef VE
+			j: INTEGER
+#endif
 #endif
 		do
 			if e < s then
@@ -95,7 +98,7 @@ feature -- Access
 				p := c_rtid ($a)
 				p.memory_copy (c_rtid ($area) + s, nb)
 				Result.set_count (nb)
-#else
+#endif
 #ifdef SE
 				nb := e - s + 1
 				!! Result.make (nb)
@@ -103,9 +106,18 @@ feature -- Access
 					Result.append_character (area.item (i))
 					i := i + 1
 				end
-#else
-				Result := area.substring (s, e)
 #endif
+#ifdef VE
+				nb := e - s + 1
+				!! Result.make_filled ('%U', nb)
+				from i := s until i > e loop
+					j := j + 1
+					Result.put (area.item (i), j)
+					i := i + 1
+				end
+#endif
+#ifdef HACT
+				Result := area.substring (s, e)
 #endif
 			end
 		end
