@@ -32,6 +32,9 @@ feature -- Access
 			if not is_root_node then
 				Result := parent.root_node
 			end
+			-- is_root_node case dealt by descendant
+		ensure
+			result_not_void: Result /= Void
 		end
 
 	level: INTEGER is
@@ -43,6 +46,8 @@ feature -- Access
 			else
 				Result := parent.level + 1
 			end
+		ensure
+			root_level: is_root_node implies (Result = 1)
 		end
 
 feature -- Status report
@@ -53,6 +58,24 @@ feature -- Status report
 			Result := (parent = Void)
 		ensure
 			definition: Result = (parent = Void)
+		end
+	
+	is_first: BOOLEAN is
+			-- Is this node the first in its parent's child list, 
+			-- or the root node?
+		do
+			Result := is_root_node or else (parent.first = Current)
+		ensure
+			definition: Result = (is_root_node or else (parent.first = Current))
+		end
+		
+	is_last: BOOLEAN is
+			-- Is this node the last in its parent's child list,
+			-- or the root node?
+		do
+			Result := is_root_node or else (parent.last = Current)
+		ensure
+			definition: Result = (is_root_node or else (parent.last = Current))
 		end
 
 feature -- Element change
