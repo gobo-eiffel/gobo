@@ -44,14 +44,35 @@ feature -- Measurement
 			valid_values: Result = -1 or Result >= 0
 		end
 
+feature -- Status report
+
+	same_physical_file (other_name: STRING): BOOLEAN is
+			-- Are current file and file named `other_name'
+			-- the same physical file? Return False if one 
+			-- or both files don't exist. (Return True if
+			-- it was impossible to determine whether the
+			-- files were physically the same files.)
+			-- (`other_name' should follow the pathname convention
+			-- of the underlying platform. For pathname conversion
+			-- use KI_FILE_SYSTEM.pathname_from_file_system.)
+		require
+			other_name_not_void: other_name /= Void
+			is_closed: is_closed
+		deferred
+		end
+
 feature -- Basic operations
 
 	change_name (new_name: STRING) is
 			-- Rename current file as `new_name'.
 			-- Do nothing if the file could not be renamed, if
-			-- it did not exist or if `new_name' already existed.
-			-- If renaming was successful, then `name' is set to
-			-- `new_name'.
+			-- it did not exist or if `new_name' is physically
+			-- the same file as current file. Overwrite `new_name'
+			-- if it already existed. If renaming was successful,
+			-- then `name' is set to `new_name'.
+			-- (`new_name' should follow the pathname convention
+			-- of the underlying platform. For pathname conversion
+			-- use KI_FILE_SYSTEM.pathname_from_file_system.)
 		require
 			new_name_not_void: new_name /= Void
 			is_closed: is_closed
@@ -59,9 +80,13 @@ feature -- Basic operations
 		end
 
 	copy_file (new_name: STRING) is
-			-- Copy current file to `new_name'.
 			-- Do nothing if the file could not be copied, if it
-			-- did not exist or if `new_name' already existed.
+			-- did not exist or if `new_name' is physically
+			-- the same file as current file. Overwrite `new_name'
+			-- if it already existed.
+			-- (`new_name' should follow the pathname convention
+			-- of the underlying platform. For pathname conversion
+			-- use KI_FILE_SYSTEM.pathname_from_file_system.)
 		require
 			new_name_not_void: new_name /= Void
 			is_closed: is_closed

@@ -109,13 +109,30 @@ feature -- File handling
 			Result := tmp_file.time_stamp
 		end
 
+	same_physical_file (a_filename1, a_filename2: STRING): BOOLEAN is
+			-- Are files named `a_filename1' and `a_filename2'
+			-- the same physical file? Return False if one 
+			-- or both files don't exist. (Return True if
+			-- it was impossible to determine whether the
+			-- files were physically the same files.)
+			-- (`a_filename1' and `a_filename2' should follow
+			-- the pathname convention of the underlying
+			-- platform. For pathname conversion use
+			-- KI_FILE_SYSTEM.pathname_from_file_system.)
+		do
+			tmp_file.reset (a_filename1)
+			Result := tmp_file.same_physical_file (a_filename2)
+		end
+
 	rename_file (old_name, new_name: STRING) is
 			-- Rename file named `old_name' as `new_name'.
 			-- Do nothing if the file could not be renamed, if
-			-- it did not exist or if `new_name' already existed.
-			-- (`old_name' and `new_name' should follow the pathname
-			-- convention of the underlying platform. For pathname
-			-- conversion use KI_FILE_SYSTEM.pathname_from_file_system.)
+			-- it did not exist or if `new_name' is physically
+			-- the same file as current file. Overwrite `new_name'
+			-- if it already existed. (`old_name' and `new_name'
+			-- should follow the pathname convention of the
+			-- underlying platform. For pathname conversion use
+			-- KI_FILE_SYSTEM.pathname_from_file_system.)
 		do
 			tmp_file.reset (old_name)
 			tmp_file.change_name (new_name)
@@ -124,10 +141,12 @@ feature -- File handling
 	copy_file (old_name, new_name: STRING) is
 			-- Copy file named `old_name' to `new_name'.
 			-- Do nothing if the file could not be copied, if it
-			-- did not exist or if `new_name' already existed.
-			-- (`old_name' and `new_name' should follow the pathname
-			-- convention of the underlying platform. For pathname
-			-- conversion use KI_FILE_SYSTEM.pathname_from_file_system.)
+			-- did not exist or if `new_name' is physically
+			-- the same file as `old_name'. Overwrite `new_name'
+			-- if it already existed. (`old_name' and `new_name'
+			-- should follow the pathname convention of the
+			-- underlying platform. For pathname conversion use
+			-- KI_FILE_SYSTEM.pathname_from_file_system.)
 		do
 			tmp_file.reset (old_name)
 			tmp_file.copy_file (new_name)

@@ -275,13 +275,13 @@ feature -- Status report
 				Result := old_exists and then (old_is_readable and is_plain)
 #endif
 #ifdef SE
-				tmp_file.reset (name)
-				Result := tmp_file.is_readable
+				tmp_file2.reset (name)
+				Result := tmp_file2.is_readable
 #endif
 #ifdef VE
 				if old_exists then
-					tmp_file.reset (name)
-					Result := tmp_file.is_readable
+					tmp_file2.reset (name)
+					Result := tmp_file2.is_readable
 				end
 #endif
 			end
@@ -296,6 +296,111 @@ feature -- Status report
 			Result := old_is_closed
 #endif
 		end
+
+	same_physical_file (other_name: STRING): BOOLEAN is
+			-- Are current file and file named `other_name'
+			-- the same physical file? Return False if one 
+			-- or both files don't exist. (Return True if
+			-- it was impossible to determine whether the
+			-- files were physically the same files.)
+			-- (`other_name' should follow the pathname convention
+			-- of the underlying platform. For pathname conversion
+			-- use KI_FILE_SYSTEM.pathname_from_file_system.)
+		local
+			absolute_name1, absolute_name2: STRING
+			canonical_name1, canonical_name2: STRING
+			a_name: STRING
+			i: INTEGER
+			rescued: BOOLEAN
+#ifdef ISE || HACT
+			other_inode: INTEGER
+#endif
+		do
+			if not rescued then
+				if name.count > 0 and other_name.count > 0 then
+					if exists then
+						tmp_file1.reset (other_name)
+						if tmp_file1.exists then
+							if name.is_equal (other_name) then
+								Result := True
+#ifdef ISE || HACT
+							else
+								a_name := old_name
+								old_name := other_name
+								other_inode := inode
+								old_name := a_name
+								if inode /= other_inode then
+									-- Result := False
+#endif
+								elseif tmp_file1.count /= count then
+									-- Result := False
+								elseif tmp_file1.time_stamp /= time_stamp then
+									-- Result := False
+								else 
+									absolute_name1 := file_system.absolute_pathname (name)
+									absolute_name2 := file_system.absolute_pathname (other_name)
+									if absolute_name1.is_equal (absolute_name2) then
+										Result := True
+									else
+										canonical_name1 := file_system.canonical_pathname (absolute_name1)
+										canonical_name2 := file_system.canonical_pathname (absolute_name2)
+										if canonical_name1.is_equal (canonical_name2) then
+											Result := True
+										else
+											from
+												i := 1
+												a_name := "gobotmp" + i.out
+												tmp_file1.reset (a_name)
+											until
+												not tmp_file1.exists
+											loop
+												i := i + 1
+												a_name := "gobotmp" + i.out
+												tmp_file1.reset (a_name)
+											end
+#ifdef SE
+											rename_to (name, a_name)
+#else
+											old_change_name (a_name)
+											old_name := name
+#endif
+											if not exists then
+												tmp_file1.reset (other_name)
+												Result := not tmp_file1.exists
+#ifdef SE
+												rename_to (a_name, name)
+#else
+												old_name := a_name
+												old_change_name (name)
+												old_name := name
+#endif
+											else
+													-- We don't know.
+													-- Return True for safety reason.
+												Result := True
+											end
+										end
+									end
+#ifdef ISE || HACT
+								end
+#endif
+							end
+						end
+					end
+				end
+			else
+#ifdef ISE || HACT || VE
+				old_name := name
+#endif
+				Result := True
+			end
+		rescue
+			if not rescued then
+				rescued := True
+				retry
+			end
+		end
+
 
 feature -- Basic operations
 
@@ -318,44 +423,39 @@ feature -- Basic operations
 	change_name (new_name: STRING) is
 			-- Rename current file as `new_name'.
 			-- Do nothing if the file could not be renamed, if
-			-- it did not exist or if `new_name' already existed.
-			-- If renaming was successful, then `name' is set to
-			-- `new_name'.
+			-- it did not exist or if `new_name' is physically
+			-- the same file as current file. Overwrite `new_name'
+			-- if it already existed. If renaming was successful,
+			-- then `name' is set to `new_name'.
+			-- (`new_name' should follow the pathname convention
+			-- of the underlying platform. For pathname conversion
+			-- use KI_FILE_SYSTEM.pathname_from_file_system.)
 		local
 			rescued: BOOLEAN
-#ifdef ISE || HACT || VE
-			a_name: STRING
-#endif
 		do
 			if not rescued then
 				if name.count > 0 and new_name.count > 0 then
+					if exists then
+						if not same_physical_file (new_name) then
 #ifdef SE
-					if not file_exists (new_name) then
-						rename_to (name, new_name)
-						if file_exists (new_name) then
-							name := new_name
-						end
-					end
-#endif
-#ifdef ISE || HACT || VE
-					a_name := name
-					old_name := new_name
-					if old_exists then
-						old_name := a_name
-					else
-						old_name := a_name
-						if old_exists then
+							rename_to (name, new_name)
+#else
 							old_change_name (new_name)
-							old_name := new_name
-							if old_exists then
+							old_name := name
+#endif
+							if not exists then
 								name := new_name
-							else
-								old_name := a_name
+#ifdef ISE || HACT || VE
+								old_name := new_name
+#endif
 							end
 						end
 					end
-#endif
 				end
+			else
+#ifdef ISE || HACT || VE
+				old_name := name
+#endif
 			end
 		rescue
 			if not rescued then
@@ -367,43 +467,37 @@ feature -- Basic operations
 	copy_file (new_name: STRING) is
 			-- Copy current file to `new_name'.
 			-- Do nothing if the file could not be copied, if it
-			-- did not exist or if `new_name' already existed.
+			-- did not exist or if `new_name' is physically
+			-- the same file as current file. Overwrite `new_name'
+			-- if it already existed.
+			-- (`new_name' should follow the pathname convention
+			-- of the underlying platform. For pathname conversion
+			-- use KI_FILE_SYSTEM.pathname_from_file_system.)
 		local
 			old_file: KL_BINARY_INPUT_FILE
 			new_file: KL_BINARY_OUTPUT_FILE
-#ifdef ISE || HACT || VE
-			a_name: STRING
-#endif
 		do
 			if name.count > 0 and new_name.count > 0 then
-#ifdef SE
-				if not file_exists (new_name) then
-#endif
-#ifdef ISE || HACT || VE
-				a_name := name
-				old_name := new_name
-				if old_exists then
-					old_name := a_name
-				else
-					old_name := a_name
-#endif
-					!! old_file.make (name)
-					old_file.open_read
-					if old_file.is_open_read then
-						!! new_file.make (new_name)
-						new_file.open_write
-						if new_file.is_open_write then
-							from
-								old_file.read_string (512)
-							until
-								old_file.end_of_file
-							loop
-								new_file.put_string (old_file.last_string)
-								old_file.read_string (512)
+				if exists then
+					if not same_physical_file (new_name) then
+						!! old_file.make (name)
+						old_file.open_read
+						if old_file.is_open_read then
+							!! new_file.make (new_name)
+							new_file.open_write
+							if new_file.is_open_write then
+								from
+									old_file.read_string (512)
+								until
+									old_file.end_of_file
+								loop
+									new_file.put_string (old_file.last_string)
+									old_file.read_string (512)
+								end
+								new_file.close
 							end
-							new_file.close
+							old_file.close
 						end
-						old_file.close
 					end
 				end
 			end
@@ -437,6 +531,18 @@ feature -- Basic operations
 
 feature {NONE} -- Implementation
 
+	tmp_file1: KL_TEXT_INPUT_FILE is
+			-- Temporary file object
+		once
+			!! Result.make (dummy_name)
+		ensure
+			file_not_void: Result /= Void
+			file_closed: Result.is_closed
+		end
+
+	dummy_name: STRING is "dummy"
+			-- Dummy name
+
 #ifdef SE
 	old_make is
 			-- The new created object is not connected.
@@ -462,7 +568,7 @@ feature {NONE} -- Implementation
 
 #endif
 #ifdef SE || VE
-	tmp_file: KL_TEXT_INPUT_FILE is
+	tmp_file2: KL_TEXT_INPUT_FILE is
 			-- Temporary file object
 		once
 			!! Result.make (dummy_name)
@@ -470,9 +576,6 @@ feature {NONE} -- Implementation
 			file_not_void: Result /= Void
 			file_closed: Result.is_closed
 		end
-
-	dummy_name: STRING is "dummy"
-			-- Dummy name
 
 #endif
 #ifdef VE
