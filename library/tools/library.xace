@@ -20,6 +20,7 @@
 				<cluster name="class"/>
 				<cluster name="cluster"/>
 				<cluster name="constant"/>
+				<cluster name="dynamic"/>
 				<cluster name="expression"/>
 				<cluster name="feature"/>
 				<cluster name="instruction"/>
