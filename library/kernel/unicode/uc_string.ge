@@ -156,8 +156,78 @@ inherit
 			infix "+",
 #endif
 			copy, infix "@"
+#ifdef ISE
+		select
+			put, item
+#endif
 		end
 
+#ifdef ISE
+	STRING
+		rename
+			item as old_item,
+			put as old_put,
+			capacity as byte_capacity,
+			set_count as old_set_count,
+#ifdef (ISE && ! ISE_5_1)
+			make_empty as old_make_empty,
+			make_filled as old_make_filled,
+#endif
+			is_empty as old_is_empty,
+			clear_all as old_clear_all,
+				-- Note: The signature of STRING.out in ISE 5.1 and HACT 4.0.1
+				-- is not compliant with ELKS 2001 STRING and does not allow
+				-- a redefinition here. Redefine version from ANY instead.
+			out as old_out,
+				-- Note: The postconditions of `wipe_out' in HACT 4.0.1
+				-- and ISE 5.1 does not allow an optimized ELKS compliant
+				-- redefinition here. In particular we don't want to
+				-- reset the capacity to zero.
+			wipe_out as old_wipe_out,
+				-- Note: The postconditions of `substring_index' in ISE 5.1
+				-- does not allow an ELKS compliant redefinition here.
+				-- Note2: There is a bug in the postcondition of `substring_index'
+				-- in HACT 4.0.1 because it forgot the fact that HACT does
+				-- not support empty substrings.
+			substring_index as old_substring_index,
+			make as old_make,
+			empty as old_empty,
+			make_from_string as old_make_from_string,
+				-- Note: The postcondition of `is_equal' in ELKS 2001 STRING
+				-- is too constraining and does not allow a redefinition here.
+				-- Redefine version from ANY instead.
+			is_equal as old_is_equal,
+				-- Note: The postcondition of `infix "<"' in ELKS 2001 STRING
+				-- is too constraining and does not allow a redefinition here.
+				-- Redefine version from COMPARABLE instead.
+			infix "<" as old_infix_less
+		export
+			{NONE} all
+		undefine
+			infix ">", infix "<=", infix ">=", max, min
+		redefine
+			append_character,
+			substring, append_string, replace_substring,
+			index_of, has, occurrences, head, tail,
+			hash_code, remove, to_lower, to_upper,
+			three_way_comparison, item_code,
+			byte_capacity,
+#ifdef (ISE && ! ISE_5_1)
+			has_substring, insert_character,
+			string, same_string, insert_string,
+			keep_head, keep_tail,
+			remove_head, remove_tail,
+			remove_substring,
+			as_lower, as_upper,
+#endif
+			old_wipe_out,
+			old_substring_index,
+			old_clear_all,
+			infix "+",
+			copy, infix "@"
+		end
+
+#endif
 	COMPARABLE
 		export
 			{NONE} all
@@ -214,6 +284,18 @@ inherit
 			is_equal, copy, out
 		end
 
+	UC_IMPORTED_UTF16_ROUTINES
+		undefine
+#ifdef SE
+			out_in_tagged_out_memory,
+			fill_tagged_out_memory,
+#endif
+#ifdef HACT
+			setup, consistent,
+#endif
+			is_equal, copy, out
+		end
+
 	KL_IMPORTED_INTEGER_ROUTINES
 		export
 			{NONE} all
@@ -232,7 +314,7 @@ creation
 
 	make, make_empty, make_from_string, make_from_utf8,
 	make_filled, make_filled_code, make_filled_unicode,
-	make_from_substring
+	make_from_substring, make_from_utf16
 
 feature -- Initialization
 
@@ -386,33 +468,23 @@ feature {NONE} -- Initialization
 			-- to the UTF-8 representation of a string.
 		require
 			s_not_void: s /= Void
+			s_is_string: s.same_type ("")
 			valid_utf8: utf8.valid_utf8 (s)
-		local
-			i, nb: INTEGER
-			a_byte: CHARACTER
-			j, nb2: INTEGER
-			a_count: INTEGER
 		do
-			nb := s.count
-			make (nb)
-			byte_count := nb
-			from i := 1 until i > nb loop
-				from
-					a_count := a_count + 1
-					a_byte := s.item (i)
-					put_byte (a_byte, i)
-					i := i + 1
-					nb2 := utf8.encoded_byte_count (a_byte)
-					j := 1
-				until
-					j >= nb2
-				loop
-					put_byte (s.item (i), i)
-					i := i + 1
-					j := j + 1
-				end
-			end
-			set_count (a_count)
+			make (s.count)
+			append_utf8 (s)
+		end
+
+	make_from_utf16 (s: STRING) is
+			-- Initialize from the bytes sequence of `s' corresponding
+			-- to the UTF-16 representation of a string.
+		require
+			s_not_void: s /= Void
+			s_is_string: s.same_type ("")
+			valid_utf16: utf16.valid_utf16 (s)
+		do
+			make (s.count // 2)
+			append_utf16 (s)
 		end
 
 feature -- Access
@@ -1325,7 +1397,7 @@ feature -- Element change
 			unicode_replaced: item_code (i) = c.code
 		end
 
-	append_unicode (c: UC_CHARACTER) is
+	append_unicode_character (c: UC_CHARACTER) is
 			-- Append unicode character `c' at end.
 		require
 			c_not_void: c /= Void
@@ -1422,6 +1494,77 @@ feature -- Element change
 			appended: is_equal (old clone (Current) + old STRING_.substring (a_string, s, e))
 		end
 
+	append_utf8 (s: STRING) is
+			-- Append UTF-8 encoded string `s' at end of current string.
+		require
+			s_not_void: s /= Void
+			s_is_string: s.same_type ("")
+			valid_utf8: utf8.valid_utf8 (s)
+		local
+			i, k, nb: INTEGER
+			a_byte: CHARACTER
+			j, nb2: INTEGER
+			a_count: INTEGER
+			new_byte_count: INTEGER
+		do
+			nb := s.count
+			new_byte_count := byte_count + nb
+			if new_byte_count > byte_capacity then
+				resize_byte_storage (new_byte_count)
+			end
+			k := byte_count + 1
+			byte_count := new_byte_count
+			from i := 1 until i > nb loop
+				from
+					a_count := a_count + 1
+					a_byte := s.item (i)
+					put_byte (a_byte, k)
+					i := i + 1
+					k := k + 1
+					nb2 := utf8.encoded_byte_count (a_byte)
+					j := 1
+				until
+					j >= nb2
+				loop
+					put_byte (s.item (i), k)
+					i := i + 1
+					k := k + 1
+					j := j + 1
+				end
+			end
+			set_count (count + a_count)
+		end
+
+	append_utf16 (s: STRING) is
+			-- Append UTF-16 encoded string `s' at end of current string.
+		require
+			s_not_void: s /= Void
+			s_is_string: s.same_type ("")
+			valid_utf16: utf16.valid_utf16 (s)
+		local
+			msb_first: BOOLEAN
+			i, nb: INTEGER
+		do
+			nb := s.count
+			if nb >= 2 then
+				if s.item_code (1) = 254 and s.item_code (2) = 255 then
+					msb_first := True
+					i := 3
+				elseif s.item_code (1) = 255 and s.item_code (2) = 254 then
+					msb_first := False
+					i := 3
+				end
+			end
+			from until i > nb loop
+				if msb_first then
+					append_code (s.item_code (i) * 256 + s.item_code (i + 1))
+				else
+					append_code (s.item_code (i + 1) * 256 + s.item_code (i))
+				end
+				i := i + 2
+			end
+		end
+
 	fill_with_unicode (c: UC_CHARACTER) is
 			-- Replace every character with unicode character `c'.
 		require
@@ -1488,7 +1631,7 @@ feature -- Element change
 			all_code: code_occurrences (c.code) = count
 		end
 
-	insert_unicode (c: UC_CHARACTER; i: INTEGER) is
+	insert_unicode_character (c: UC_CHARACTER; i: INTEGER) is
 			-- Insert unicode character `c' at index `i', shifting
 			-- characters between ranks `i' and `count' rightwards.
 		require
@@ -1819,7 +1962,7 @@ feature -- Duplication
 #ifdef ISE || SE
 		local
 #ifdef ISE
-			old_area: like area
+			other_count: INTEGER
 #endif
 #ifdef SE
 			c: INTEGER
@@ -1828,14 +1971,11 @@ feature -- Duplication
 		do
 			if other /= Current then
 #ifdef ISE
-				old_area := area
-				standard_copy (other)
-				if old_area = Void or else old_area.count < area.count then
-					area := standard_clone (area)
-				else
-					($old_area).memory_copy ($area, byte_count)
-					area := old_area
-				end
+				other_count := other.count
+				other.set_count (other.byte_count)
+				precursor {STRING} (other)
+				set_count (other_count)
+				other.set_count (other_count)
 #endif
 #ifdef VE
 				c_string_copy (other)
@@ -2025,7 +2165,20 @@ feature -- Conversion
 			end
 		ensure
 			to_utf8_not_void: Result /= Void
+			string_type: Result.same_type ("")
 			valid_utf8: utf8.valid_utf8 (Result)
+		end
+
+	to_string: STRING is
+			-- STRING version of current string;
+			-- Return the UTF8 representation if it is encoded
+			-- with UTF8, the UTF16 representation if it is
+			-- encoded with UTF16, etc.
+		do
+			Result := to_utf8
+		ensure
+			to_string_not_void: Result /= Void
+			string_type: Result.same_type ("")
 		end
 
 feature -- Traversal
@@ -2245,14 +2398,31 @@ feature -- Obsolete
 			append_string (a_string)
 		end
 
-	append_uc_character (c: UC_CHARACTER) is
+	append_unicode, append_uc_character (c: UC_CHARACTER) is
 			-- Append unicode character `c' at end.
 		obsolete
-			"[020428] Use `append_unicode' instead."
+			"[020720] Use `append_unicode_character' instead."
 		require
 			c_not_void: c /= Void
 		do
-			append_unicode (c)
+			append_unicode_character (c)
+		end
+
+	insert_unicode (c: UC_CHARACTER; i: INTEGER) is
+			-- Insert unicode character `c' at index `i', shifting
+			-- characters between ranks `i' and `count' rightwards.
+		obsolete
+			"[020720] Use `insert_unicode_character' instead."
+		require
+			c_not_void: c /= Void
+			valid_insertion_index: 1 <= i and i <= count + 1
+		do
+			insert_unicode_character (c, i)
+		ensure
+			one_more_character: count = old count + 1
+			inserted: item_code (i) = c.code
+			stable_before_i: substring (1, i - 1).is_equal (old substring (1, i - 1))
+			stable_after_i: substring (i + 1, count).is_equal (old substring (i, count))
 		end
 
 feature {UC_STRING_HANDLER} -- Implementation
@@ -2267,11 +2437,21 @@ feature {UC_STRING_HANDLER} -- Implementation
 		require
 			i_large_enough: i >= 1
 			i_small_enough: i <= byte_count
+#ifdef ISE
+		local
+			old_count: INTEGER
+#endif
 		do
+#ifdef ISE
+			old_count := count
+			set_count (byte_count)
+			Result := old_item (i)
+			set_count (old_count)
+#endif
 #ifdef VE
 			Result := storage.item (i)
 #endif
-#ifdef ISE || HACT
+#ifdef HACT
 			Result := area.item (i - 1)
 #endif
 #ifdef SE
@@ -2284,11 +2464,21 @@ feature {UC_STRING_HANDLER} -- Implementation
 		require
 			i_large_enough: i >= 1
 			i_small_enough: i <= byte_count
+#ifdef ISE
+		local
+			old_count: INTEGER
+#endif
 		do
+#ifdef ISE
+			old_count := count
+			set_count (byte_count)
+			old_put (c, i)
+			set_count (old_count)
+#endif
 #ifdef VE
 			storage.put (c, i)
 #endif
-#ifdef ISE || HACT
+#ifdef HACT
 			area.put (c, i - 1)
 #endif
 #ifdef SE
@@ -2307,11 +2497,7 @@ feature {UC_STRING_HANDLER} -- Implementation
 				area := str_resize ($area, n)
 #endif
 #ifdef ISE
-				if area.count = 1 then
-					make_area (n + 1)
-				else
-					area := str_resize ($area, n + 1)
-				end
+				resize (n)
 #endif
 #ifdef SE
 				if byte_capacity = 0 then
@@ -2338,12 +2524,15 @@ feature {UC_STRING_HANDLER} -- Implementation
 			offset_small_enough: offset <= (byte_capacity - byte_count)
 		local
 			j, nb: INTEGER
+#ifdef ISE
+			old_count: INTEGER
+#endif
 		do
 			if last_byte_index_result > i then
 				reset_byte_index_cache
 			end
 			from
-#ifdef VE
+#ifdef VE || ISE
 				j := byte_count
 				nb := i
 #else
@@ -2351,13 +2540,20 @@ feature {UC_STRING_HANDLER} -- Implementation
 				nb := i - 1
 #endif
 				byte_count := byte_count + offset
+#ifdef ISE
+				old_count := count
+				set_count (byte_count)
+#endif
 			until
 				j < nb
 			loop
+#ifdef ISE
+				old_put (old_item (j), j + offset)
+#endif
 #ifdef SE
 				storage.put (storage.item (j), j + offset)
 #endif
-#ifdef ISE || HACT
+#ifdef HACT
 				area.put (area.item (j), j + offset)
 #endif
 #ifdef VE
@@ -2365,6 +2561,9 @@ feature {UC_STRING_HANDLER} -- Implementation
 #endif
 				j := j - 1
 			end
+#ifdef ISE
+			set_count (old_count)
+#endif
 		ensure
 			byte_count_set: byte_count = old byte_count + offset
 		end
@@ -2378,25 +2577,35 @@ feature {UC_STRING_HANDLER} -- Implementation
 			constraint: offset < i
 		local
 			j, nb: INTEGER
+#ifdef ISE
+			old_count: INTEGER
+#endif
 		do
 			if last_byte_index_result > i - offset then
 				reset_byte_index_cache
 			end
 			from
-#ifdef VE
+#ifdef VE || ISE
 				j := i
 				nb := byte_count
 #else
 				j := i - 1
 				nb := byte_count - 1
 #endif
+#ifdef ISE
+				old_count := count
+				set_count (byte_count)
+#endif
 			until
 				j > nb
 			loop
+#ifdef ISE
+				old_put (old_item (j), j - offset)
+#endif
 #ifdef SE
 				storage.put (storage.item (j), j - offset)
 #endif
-#ifdef ISE || HACT
+#ifdef HACT
 				area.put (area.item (j), j - offset)
 #endif
 #ifdef VE
@@ -2404,6 +2613,9 @@ feature {UC_STRING_HANDLER} -- Implementation
 #endif
 				j := j + 1
 			end
+#ifdef ISE
+			set_count (old_count)
+#endif
 			byte_count := byte_count - offset
 		ensure
 			byte_count_set: byte_count = old byte_count - offset
@@ -2442,7 +2654,11 @@ feature {UC_STRING_HANDLER} -- Implementation
 			elseif nb < count then
 				ve_keep_head (nb)
 			end
-#else
+#endif
+#ifdef ISE
+			old_set_count (nb)
+#endif
+#ifdef SE || HACT
 			count := nb
 #endif
 		ensure
