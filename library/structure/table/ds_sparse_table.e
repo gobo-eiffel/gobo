@@ -7,7 +7,7 @@ indexing
 
 	library:    "Gobo Eiffel Structure Library"
 	author:     "Eric Bezault <ericb@gobosoft.com>"
-	copyright:  "Copyright (c) 1999, Eric Bezault and others"
+	copyright:  "Copyright (c) 2000, Eric Bezault and others"
 	license:    "Eiffel Forum Freeware License v1 (see forum.txt)"
 	date:       "$Date$"
 	revision:   "$Revision$"
@@ -361,6 +361,19 @@ feature -- Element change
 			items.put (v, position)
 		end
 
+	replace_found_item (v: G) is
+			-- Replace item associated with
+			-- the key of `found_item' by `v'.
+			-- Do not move cursors.
+		require
+			item_found: found
+		do
+			items.put (v, found_position)
+		ensure
+			replaced: found_item = v
+			same_count: count = old count
+		end
+
 	put (v: G; k: K) is
 			-- Associate `v' with key `k'.
 			-- Do not move cursors.
@@ -387,6 +400,30 @@ feature -- Element change
 		ensure
 			same_count: (old has (k)) implies (count = old count)
 			one_more: (not old has (k)) implies (count = old count + 1)
+			inserted: has (k) and then item (k) = v
+		end
+
+	put_new (v: G; k: K) is
+			-- Associate `v' with key `k'.
+			-- Do not move cursors.
+		require
+			not_full: not is_full
+			valid_key: valid_key (k)
+			new_item: not has (k)
+		local
+			i, h: INTEGER
+		do
+			unset_found_item
+			i := free_slot
+			free_slot := Free_offset - clashes.item (i)
+			h := hash_position (k)
+			clashes.put (slots.item (h), i)
+			slots.put (i, h)
+			items.put (v, i)
+			keys.put (k, i)
+			count := count + 1
+		ensure
+			one_more: count = old count + 1
 			inserted: has (k) and then item (k) = v
 		end
 
@@ -418,30 +455,6 @@ feature -- Element change
 			end
 		end
 
-	put_new (v: G; k: K) is
-			-- Associate `v' with key `k'.
-			-- Do not move cursors.
-		require
-			not_full: not is_full
-			valid_key: valid_key (k)
-			new_item: not has (k)
-		local
-			i, h: INTEGER
-		do
-			unset_found_item
-			i := free_slot
-			free_slot := Free_offset - clashes.item (i)
-			h := hash_position (k)
-			clashes.put (slots.item (h), i)
-			slots.put (i, h)
-			items.put (v, i)
-			keys.put (k, i)
-			count := count + 1
-		ensure
-			one_more: count = old count + 1
-			inserted: has (k) and then item (k) = v
-		end
-
 	force_new (v: G; k: K) is
 			-- Associate `v' with key `k'.
 			-- Resize table if necessary.
@@ -461,18 +474,6 @@ feature -- Element change
 			items.put (v, i)
 			keys.put (k, i)
 			count := count + 1
-		end
-
-	replace_found_item (v: G) is
-			-- Replace item associated with
-			-- the key of `found_item' by `v'.
-		require
-			item_found: found
-		do
-			items.put (v, found_position)
-		ensure
-			replaced: found_item = v
-			same_count: count = old count
 		end
 
 feature -- Removal
