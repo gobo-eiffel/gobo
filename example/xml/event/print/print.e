@@ -133,7 +133,7 @@ feature
 
 	usage_string: STRING is
 		once
-			Result := clone ("usage: event ")
+			Result := clone ("usage: print ")
 			if fact.is_expat_event_available then
 				Result.append_string ("--expat")
 				if fact.is_eiffel_event_available then
