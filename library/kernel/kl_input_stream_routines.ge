@@ -77,11 +77,30 @@ feature -- Access
 			-- Name of `a_stream'
 		require
 			a_stream_void: a_stream /= Void
+#ifdef SE
+		local
+			a_file: STD_FILE_READ
+			a_std_input: STD_INPUT
+#endif
 		do
-#ifdef SE || TOWER
+#ifdef SE
+			a_std_input ?= a_stream
+			if a_std_input /= Void then
+				Result := "standard input"
+			else
+				a_file ?= a_stream
+				if a_file /= Void and then a_file.path /= Void then
+					Result := a_file.path
+				else
+					Result := ""
+				end
+			end
+#else
+#ifdef TOWER
 			Result := ""
 #else
 			Result := a_stream.name
+#endif
 #endif
 		ensure
 			name_not_void: Result /= Void
