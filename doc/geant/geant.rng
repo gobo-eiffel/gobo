@@ -309,6 +309,7 @@
 						<value>hact</value>
 						<value>se</value>
 						<value>ve</value>
+						<value>xml</value>
 					</choice>
 					-->
 				</attribute>
@@ -319,6 +320,7 @@
 						<value>hact</value>
 						<value>se</value>
 						<value>ve</value>
+						<value>xml</value>
 					</choice>
 					-->
 				</attribute>
