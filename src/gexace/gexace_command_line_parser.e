@@ -16,6 +16,9 @@ inherit
 
 	KL_SHARED_ARGUMENTS
 
+	KL_IMPORTED_STRING_ROUTINES
+		export {NONE} all end
+
 creation
 
 	make
@@ -59,7 +62,7 @@ feature -- Status report
 			if has_next_option then
 				arg := next_option
 				Result := arg.count >= 2 and then
-					arg.substring (1, 2).is_equal ("--")
+					 STRING_.same_string (arg.substring (1, 2), "--")
 			end
 		end
 
@@ -121,7 +124,12 @@ feature -- Matching
 			if has_next_option then
 				arg := next_option
 				nb := an_option_name.count + 2
-				if arg.count >= nb and then (arg.item (1) = '-' and arg.item (2) = '-') and then arg.substring (3, nb).is_equal (an_option_name) then
+				if
+					arg.count >= nb and then
+					(arg.item (1) = '-' and
+					arg.item (2) = '-') and then
+					STRING_.same_string (arg.substring (3, nb), an_option_name)
+				then
 					Result := (arg.count = nb or else arg.item (nb + 1) = '=')
 				end
 			end
