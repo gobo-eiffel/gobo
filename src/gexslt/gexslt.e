@@ -36,6 +36,9 @@ inherit
 	KL_SHARED_FILE_SYSTEM
 		export {NONE} all end
 
+	UT_SHARED_FILE_URI_ROUTINES
+		export {NONE} all end
+		
 	KL_IMPORTED_STRING_ROUTINES
 
 	XM_XSLT_CONFIGURATION_CONSTANTS
@@ -549,12 +552,21 @@ feature {NONE} -- Implementation
 		require
 			at_least_one_character: a_file /= Void and then a_file.count > 0
 		local
-			a_uri: STRING
+			a_uri: UT_URI
 		do
-			a_uri := unix_file_system.pathname_from_file_system (a_file, file_system)
-			uris.put_last (a_uri)
+			create a_uri.make_resolve_uri (current_directory_base, File_uri.filename_to_uri (a_file))
+			uris.put_last (a_uri.full_reference)
 		end
-	
+
+	current_directory_base: UT_URI is
+			-- URI of current directory
+		local
+			a_cwd: KI_PATHNAME
+		once
+			a_cwd := file_system.string_to_pathname (file_system.current_working_directory)
+			Result := File_uri.pathname_to_uri (a_cwd)
+		end
+
 	process_uri (a_uri: STRING) is
 			-- Add a URI-valued argument to `uris'.
 		require

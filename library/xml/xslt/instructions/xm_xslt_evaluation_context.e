@@ -86,6 +86,12 @@ feature -- Access
 				Result := transformer.document_pool
 			end
 		end
+	
+	security_manager: XM_XPATH_SECURITY_MANAGER is
+			-- Security manager
+		do
+			Result := transformer.configuration.output_resolver.security_manager
+		end
 
 	current_date_time: DT_DATE_TIME is
 			-- Current date-time
