@@ -85,7 +85,20 @@
 			Bootstrap the Gobo Eiffel package (first pass).
 		</description>
 
+		<geant file="build.eant" target="clobber" dir="library"/>
 		<geant file="build.eant" target="install" dir="library"/>
+		<geant file="build.eant" target="clobber" dir="src/geant"/>
+		<geant file="build.eant" target="install" dir="src/geant"/>
+		<geant file="../src/geant/build.eant" target="compile" dir="bin"/>
+		<geant file="../src/geant/build.eant" target="clean" dir="bin"/>
+	</target>
+
+	<target name="bootstrap2" depend="init">
+		<description>
+			Bootstrap the Gobo Eiffel package (second pass).
+		</description>
+
+		<geant file="build.eant" target="clobber" dir="src"/>
 		<geant file="build.eant" target="install" dir="src"/>
 		<geant file="../src/gexace/build.eant" target="compile" dir="bin"/>
 		<geant file="../src/gexace/build.eant" target="clean" dir="bin"/>
@@ -95,17 +108,7 @@
 		<geant file="../src/gepp/build.eant" target="clean" dir="bin"/>
 		<geant file="../src/geyacc/build.eant" target="compile" dir="bin"/>
 		<geant file="../src/geyacc/build.eant" target="clean" dir="bin"/>
-		<geant file="../src/geant/build.eant" target="compile" dir="bin"/>
-		<geant file="../src/geant/build.eant" target="clean" dir="bin"/>
-		<geant file="build.eant" target="clobber" dir="library"/>
-		<geant file="build.eant" target="clobber" dir="src"/>
-	</target>
-
-	<target name="bootstrap2" depend="init">
-		<description>
-			Bootstrap the Gobo Eiffel package (second pass).
-		</description>
-
+		<geant target="clobber"/>
 		<geant file="build.eant" target="install" dir="library"/>
 		<geant file="build.eant" target="install" dir="src"/>
 		<geant file="../src/gexmlsplit/build.eant" target="compile" dir="bin"/>

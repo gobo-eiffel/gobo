@@ -27,6 +27,7 @@
 		<echo message="   geant compile_debug_hact"/>
 		<echo message="   geant compile_debug_se"/>
 		<echo message="   geant compile_debug_ve"/>
+		<echo message="   geant bootstrap"/>
 		<echo message="   geant clean"/>
 		<echo message="   geant clobber"/>
 	</target>
@@ -185,6 +186,16 @@
 		<geant target="compile"/>
 	</target>
 
+	<target name="bootstrap" depend="init">
+		<description>
+			Compile '${system}' with SmallEiffel in bootstrap mode.
+		</description>
+
+		<set name="eiffel" value="se"/>
+		<set name="bootstrap" value="true"/>
+		<geant target="compile"/>
+	</target>
+
 	<target name="clean" depend="init">
 		<description>
 			Remove intermediary generated files.
@@ -226,6 +237,7 @@
 			Build Ace file or ESD file for Eiffel compiler ${eiffel}.
 			Generate file in ${gexace_output} if specified.
 			Pass $DEBUG option to 'gexace' if ${debug} is defined.
+			Pass $BOOTSTRAP option to 'gexace' if ${bootstrap} is defined.
 			Pass $GOBO_OS value to 'gexace'.
 			Pass $GOBO_CC value to 'gexace' if defined.
 			Pass $GOBO_XML_EXPAT option to 'gexace' if defined.
@@ -238,6 +250,7 @@
 		<set name="gexace_output" value="" unless="${gexace_output}"/>
 		<gexace system="${eiffel}" output="${gexace_output}" xace="${system_dir}/system.xace">
 			<define name="DEBUG" value="${debug}" if="${debug}"/>
+			<define name="BOOTSTRAP" value="${bootstrap}" if="${bootstrap}"/>
 			<define name="GOBO_OS" value="${GOBO_OS}"/>
 			<define name="GOBO_CC" value="${GOBO_CC}" if="${GOBO_CC}"/>
 			<define name="GOBO_XML_EXPAT" value="true" if="${GOBO_XML_EXPAT}"/>

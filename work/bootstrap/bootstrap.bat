@@ -164,7 +164,6 @@ goto exit
 	cd %BIN_DIR%
 	%MV% geant%EXE% geant1%EXE%
 	cd %GOBO%
-	geant1 %VERBOSE% clobber
 	geant1 %VERBOSE% bootstrap1
 	if .%ERRORLEVEL%. == .. goto bootstrap2
 	if %ERRORLEVEL% == 0 goto bootstrap2
