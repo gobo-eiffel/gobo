@@ -106,33 +106,22 @@ feature -- Resizing
 			count_set: Result.count = n
 		end
 
+#ifdef SE
 feature -- Removal
 
 	clear_all is
 			-- Reset all items to default values.
-#ifdef SE
 		local
 			v: G
 		do
 			set_all_with (v)
-#endif
-#ifdef VE
-		local
-			i, nb: INTEGER
-			v: G
-		do
-			nb := upper
-			from until i > nb loop
-				put (v, i)
-				i := i + 1
-			end
-#endif
 		ensure
 			-- all_cleared: forall i in 0..(count - 1),
 			--		item (i) = Void or else
 			--		item (i) = item (i).default
 		end
 
+#endif
 invariant
 
 	zero_based: lower = 0
