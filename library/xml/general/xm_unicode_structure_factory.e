@@ -12,6 +12,10 @@ indexing
 
 class XM_UNICODE_STRUCTURE_FACTORY
 
+inherit
+
+	UC_SHARED_STRING_EQUALITY_TESTER
+
 feature -- Status report
 
 	same_string (a_string, other: STRING): BOOLEAN is
@@ -114,16 +118,6 @@ feature -- Specialized structures
 		ensure
 			table_not_void: Result /= Void
 			equality_tester: Result.key_equality_tester = string_equality_tester
-		end
-
-feature -- Constants
-
-	string_equality_tester: UC_EQUALITY_TESTER is
-			-- Shared equality tester that compares polymorphic strings
-		once
-			create Result
-		ensure
-			tester_not_void: Result /= Void
 		end
 
 end
