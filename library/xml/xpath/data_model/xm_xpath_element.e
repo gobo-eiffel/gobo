@@ -36,18 +36,12 @@ feature -- Access
 			node_kind_is_element: STRING_.same_string (Result, "element")
 		end
 
-	string_value: STRING is
+	string_value: UC_UTF8_STRING is
 			-- String-value
 		do
 			-- Return the concatentation of the string value of all it's
 			-- text-node descendants.
 			-- Actually, more complicated than the above description.
-			-- TODO
-		end
-
-	typed_value: DS_ARRAYED_LIST [XM_XPATH_ANY_ATOMIC_VALUE] is
-			-- Typed value
-		do
 			-- TODO
 		end
 
@@ -65,7 +59,6 @@ feature {NONE} -- Access
 			-- Nilled property from the infoset
 
 invariant
-
 	-- namespaces_have_unique_names: All namespace nodes must have distinct names.
 	-- At most one has no name.
 	-- parent_namespace_relationship: namespaces.for_all (agent (parent.is_equal (Current)))

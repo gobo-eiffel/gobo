@@ -46,6 +46,7 @@
 			<cluster name="values"/>
 			<cluster name="expressions"/>
 			<cluster name="events"/>
+			<cluster name="patterns"/>
 		</cluster>
 	</cluster>
 </library>

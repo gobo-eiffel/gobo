@@ -2,7 +2,7 @@ indexing
 
 	description:
 
-		"XPath nodes that cannot have children"
+		"Objects that iterate over an XPath node axis"
 
 	library: "Gobo Eiffel XML Library"
 	copyright: "Copyright (c) 2003, Colin Adams and others"
@@ -10,14 +10,11 @@ indexing
 	date: "$Date$"
 	revision: "$Revision$"
 
-deferred class XM_XPATH_LEAF_NODE
+deferred class XM_XPATH_AXIS_ITERATOR [G -> XM_XPATH_NODE]
 
 inherit
 
-	XM_XPATH_NODE
-	
-invariant
+	XM_XPATH_SEQUENCE_ITERATOR [G]
 
-	children_are_empty: children.is_empty
-	
 end
+	

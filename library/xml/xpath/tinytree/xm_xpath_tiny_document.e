@@ -22,6 +22,9 @@ class XM_XPATH_TINY_DOCUMENT
 inherit
 
 	XM_XPATH_DOCUMENT
+		redefine
+			node_kind
+		end
 
 	XM_XPATH_TINY_NODE
 
@@ -47,12 +50,10 @@ feature -- Initialization
 		do
 			node_number := 1
 			document := Current
-
-			make_node
 			
 			create node_kinds.make (estimated_node_count)
 			create depth.make (estimated_node_count)
-			create next_sibling.make (estimated_node_count)
+			create next_sibling_indices.make (estimated_node_count)
 			create alpha.make (estimated_node_count)
 			create beta.make (estimated_node_count)
 			create name_code.make (estimated_node_count)
@@ -75,6 +76,16 @@ feature -- Initialization
 
 feature -- Access
 
+	node_kind: STRING is
+			-- Kind of node
+		do
+			if root_node = 1 then
+				Result := "document"
+			else
+				Result := ""
+			end
+		end
+	
 	hash_code: INTEGER is
 		do
 			Result := document_number \\ 7
@@ -149,16 +160,6 @@ feature -- Access
 			end
 		end
 
-	typed_value: DS_ARRAYED_LIST [XM_XPATH_ANY_ATOMIC_VALUE] is
-			-- Typed value
-		local
-			untyped_value: XM_XPATH_XDT_UNTYPED_ATOMIC
-		do
-			create untyped_value.make (string_value)
-			create Result.make (1)
-			Result.put_first (untyped_value)
-		end
-
 	last_node_added: INTEGER
 			-- Last node created with `add_node'
 	
@@ -197,7 +198,7 @@ feature -- Element change
 			correct_alpha: alpha.item (number_of_nodes) = alpha_value
 			correct_beta: beta.item (number_of_nodes) = beta_value
 			correct_name_code: name_code.item (number_of_nodes) = new_name_code
-			no_next_sibling: next_sibling.item (number_of_nodes) = 0
+			no_next_sibling: next_sibling_indices.item (number_of_nodes) = 0
 		end
 	
 	set_next_sibling (next: INTEGER; which_node: INTEGER) is
@@ -206,9 +207,9 @@ feature -- Element change
 			valid_current_node: which_node > 0
 			valid_next_sibling: next >= -1 -- -1 means no next sibling
 		do
-			next_sibling.force (next, which_node)
+			next_sibling_indices.force (next, which_node)
 		ensure
-			next_sibling_set: next_sibling.item (which_node) = next
+			next_sibling_set: next_sibling_indices.item (which_node) = next
 		end
 
 	append_characters (characters: STRING) is
@@ -319,7 +320,7 @@ feature {NONE} -- Implementation
 	depth: DS_ARRAYED_LIST [INTEGER]
 			-- Depth of the node in the hierarchy (document root is level 1, so = the number of ancestors + 1).
 
-	next_sibling: DS_ARRAYED_LIST [INTEGER]
+	next_sibling_indices: DS_ARRAYED_LIST [INTEGER]
 			-- Node number of the next sibling;
 			-- unless it points backwards, in which case it is the node number of the parent
 
@@ -383,7 +384,7 @@ invariant
 
 	node_kind_not_void: node_kind /= Void
 	depth_not_void: depth /= Void
-	next_sibling_not_void: next_sibling /= Void
+	next_sibling_not_void: next_sibling_indices /= Void
 	alpha_not_void: alpha /= Void
 	beta_not_void: beta /= Void
 	name_code_not_void: name_code /= Void

@@ -12,9 +12,38 @@ indexing
 
 deferred class XM_XPATH_NODE
 
+inherit
+
+	XM_XPATH_ITEM
+
+	XM_XPATH_AXIS
+
+feature -- Access
+	-- (These features are not in the data model)
+	
+	new_axis_iterator (axis_type: INTEGER): XM_XPATH_AXIS_ITERATOR [XM_XPATH_ABSTRACT_NODE] is
+			-- An enumeration over the nodes reachable by `axis_type' from this node
+		require
+			valid_axis: is_axis_valid (axis_type)
+		deferred
+		ensure
+			result_not_void: Result /= Void
+		end
+
+	new_axis_iterator_with_node_test (axis_type: INTEGER; test: XM_XPATH_NODE_TEST): XM_XPATH_AXIS_ITERATOR [XM_XPATH_ABSTRACT_NODE] is
+			-- An enumeration over the nodes reachable by `axis_type' from this node;
+			-- Only nodes that match the pattern specified by `test' will be selected.
+		require
+			test_not_void: test /= Void
+			valid_axis: is_axis_valid (axis_type)
+		deferred
+		ensure
+			result_not_void: Result /= Void
+		end
+
 feature -- Access
 
-	base_uri: ANY_URI is
+	base_uri: UC_UTF8_STRING is
 			-- Base URI
 		deferred
 		ensure
@@ -48,34 +77,19 @@ feature -- Access
 			parent_may_be_void: True
 		end
 
-	string_value: STRING is
-			-- String-value
-		deferred
-		ensure
-			string_value_not_void: Result /= Void
-		end
-
-	typed_value: DS_ARRAYED_LIST [XM_XPATH_ANY_ATOMIC_VALUE] is
-			-- Typed value
-		deferred
-		ensure
-			typed_value_not_void: Result /= Void
-		end
-
-	type: XM_EXPANDED_QNAME is
-			-- Type
-		deferred
-		ensure
-			type_may_be_void: True
-		end
-
-	children: DS_ARRAYED_LIST [XM_XPATH_NODE]
+	-- What to do about these?
+	-- Should they be DS_ARRAYED_LISTs?
+	-- Or should they be iterators as indicated
+	-- after all, you can always call the `another' routine.
+	-- Alternatively, they might be routines that return the iterator anew.
+	
+	children: XM_XPATH_AXIS_ITERATOR [XM_XPATH_CHILD_NODE]
 			-- Children
 
-	attributes: DS_ARRAYED_LIST [XM_XPATH_ATTRIBUTE]
+	attributes: XM_XPATH_AXIS_ITERATOR [XM_XPATH_ATTRIBUTE]
 			-- Attributes
 
-	namespaces: DS_ARRAYED_LIST [XM_XPATH_NAMESPACE]
+	namespaces: XM_XPATH_AXIS_ITERATOR [XM_XPATH_NAMESPACE]
 			-- Namespaces
 
 feature -- Status report
@@ -96,13 +110,4 @@ feature {XM_XPATH_NODE} -- Access
 		deferred
 		end
 
-invariant
-
-	children_not_void: children /= Void
-	no_void_child: not children.has (Void)
-	attributes_not_void: attributes /= Void
-	no_void_attribute: not attributes.has (Void)
-	namespaces_not_void: namespaces /= Void
-	no_void_namespace: not namespaces.has (Void)
-	
 end

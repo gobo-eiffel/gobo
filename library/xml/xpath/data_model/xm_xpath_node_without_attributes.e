@@ -25,10 +25,4 @@ feature -- Status report
 		ensure then
 			not_nilled: Result = False
 		end
-	
-invariant
-
-	attributes_are_empty: attributes.is_empty
-	namespaces_are_empty: namespaces.is_empty
-	
 end

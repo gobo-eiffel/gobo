@@ -2,7 +2,7 @@ indexing
 
 	description:
 
-		"Iterates across XPath sequences"
+		"XPath untyped atomic values"
 
 	library: "Gobo Eiffel XPath Library"
 	copyright: "Copyright (c) 2003, Colin Adams and others"
@@ -10,8 +10,14 @@ indexing
 	date: "$Date$"
 	revision: "$Revision$"
 
-deferred class XM_XPATH_SEQUENCE_ITERATOR
+class XM_XPATH_UNTYPED_ATOMIC_VALUE
+
+inherit
+
+	XM_XPATH_STRING_VALUE
+
+creation
+
+	make
 
 end
-
-

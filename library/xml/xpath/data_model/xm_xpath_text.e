@@ -22,8 +22,8 @@ inherit
 
 	XM_XPATH_NODE_WITHOUT_ATTRIBUTES
 
-	XM_XPATH_LEAF_NODE
-
+	XM_XPATH_TYPE
+	
 	KL_IMPORTED_STRING_ROUTINES
 
 feature -- Access
@@ -36,34 +36,25 @@ feature -- Access
 			node_kind_is_text: STRING_.same_string (Result, "text")
 		end
 
-	string_value: STRING is
-			-- String-value
-		do
-			Result := content_property
-		end
-
-	typed_value: DS_ARRAYED_LIST [XM_XPATH_ANY_ATOMIC_VALUE] is
-			-- Typed value
-		do
-			create Result.make (1)
-			-- TODO: Result.put_first (create {XM_XPATH_ANY_ATOMIC_VALUE}.make_untyped (string_value))
-		end
-
-	type: XM_EXPANDED_QNAME is
+	type: INTEGER is
 			-- Type
 		do
-			--	untyped atomic
-		ensure then
-			type: Result /= Void  -- Is this correct? TODO: Review
+			Result := Untyped_atomic_type
+		end
+
+	string_value: UC_UTF8_STRING is
+			-- String-value
+		do
+			Result := clone (content_property)
 		end
 
 feature {NONE} -- Access
 
-	content_property: STRING
+	content_property: UC_UTF8_STRING
 			-- Content property from the infoset
 
 invariant
-
+	type: type = Text_node
 	content_not_void: content_property /= Void
 	
 end

@@ -18,12 +18,12 @@ inherit
 	
 feature -- Access
 
-	type: XM_EXPANDED_QNAME is
+	type: INTEGER is
 			-- Type
 		do
-			Result := Void
+			Result := 0
 		ensure then
-			no_type: Result /= Void
+			no_type: Result = 0
 		end
 	
 end

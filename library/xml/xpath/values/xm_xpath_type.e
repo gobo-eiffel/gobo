@@ -353,6 +353,14 @@ feature -- Status report
 			end
 		end
 
+	is_atomic_type (type: INTEGER): BOOLEAN is
+			-- Is `type' atomic?
+		require
+			positive_type: type > 0
+		do
+			Result := is_sub_type (type, Atomic_type)
+		end
+	
 	is_node_type (type: INTEGER): BOOLEAN is
 			-- `True' if the item type is node() or a subtype of node()
 		require

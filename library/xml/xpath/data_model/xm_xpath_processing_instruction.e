@@ -22,8 +22,6 @@ inherit
 
 	XM_XPATH_NODE_WITHOUT_ATTRIBUTES
 
-	XM_XPATH_LEAF_NODE
-
 	KL_IMPORTED_STRING_ROUTINES
 
 feature -- Access
@@ -44,29 +42,21 @@ feature -- Access
 			node_name_not_void: Result /= Void
 		end
 
-	string_value: STRING is
+	string_value: UC_UTF8_STRING is
 			-- String-value
 		do
-			create Result.make_from_string (content_property)
-		end
-
-	typed_value: DS_ARRAYED_LIST [XM_XPATH_ANY_ATOMIC_VALUE] is
-			-- Typed value.
-		do
-			create Result.make (1)
-			-- TODO: Result.put_first (create {XM_XPATH_ANY_ATOMIC_VALUE}.make_as_string (string_value))
+			Result := clone (content_property)
 		end
 
 feature {NONE} -- Access
 
-	target_property: STRING
+	target_property: UC_UTF8_STRING
 			-- Target property from the infoset
 
-	content_property: STRING
+	content_property: UC_UTF8_STRING
 			-- Content property from the infoset
 
 invariant
-
 	target_not_void: target_property /= Void
 	content_not_void: content_property /= Void
 	

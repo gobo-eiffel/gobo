@@ -20,9 +20,9 @@ inherit
 
 	XM_XPATH_CHILD_NODE
 
+	XM_XPATH_TYPED_NODE
+	
 	XM_XPATH_NODE_WITHOUT_ATTRIBUTES
-
-	XM_XPATH_LEAF_NODE
 
 	KL_IMPORTED_STRING_ROUTINES
 
@@ -36,34 +36,4 @@ feature -- Access
 			node_kind_is_attribute: STRING_.same_string ( Result, "attribute")
 		end
 
-	string_value: STRING is
-			-- String-value
-		do
-			-- TODO
-		end
-
-	typed_value: DS_ARRAYED_LIST [XM_XPATH_ANY_ATOMIC_VALUE] is
-			-- Typed value
-		do
-			-- TODO
-		end
-
-	type: XM_EXPANDED_QNAME is
-			-- Type
-		do
-			-- TODO
-		ensure then
-			type_not_void: Result /= Void
-		end
-
-feature {NONE} -- Access
-
-	attribute_type_property: STRING
-			-- Attribute-type property from the infoset
-
-invariant
-
-	type_not_void: attribute_type_property /= Void
-			-- TODO: Is this necessarily true?
-	
 end

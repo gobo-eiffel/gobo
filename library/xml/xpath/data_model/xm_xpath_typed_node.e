@@ -18,7 +18,7 @@ inherit
 
 feature -- Access
 
-	type: XM_EXPANDED_QNAME is
+	type: INTEGER is
 			-- Type
 		do
 			Result := type_property
@@ -26,7 +26,7 @@ feature -- Access
 
 feature {NONE} -- Access
 
-	type_property: XM_EXPANDED_QNAME
+	type_property: INTEGER
 			-- Type property from the infoset
 
 end

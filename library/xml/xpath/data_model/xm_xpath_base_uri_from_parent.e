@@ -18,7 +18,7 @@ inherit
 	
 feature -- Access
 
-	base_uri: ANY_URI is
+	base_uri: UC_UTF8_STRING is
 			-- Base URI
 		do
 			if parent /= Void then

@@ -12,7 +12,8 @@ indexing
 
 deferred class XM_XPATH_EXPRESSION
 
-
+inherit XM_XPATH_TYPE
+	
 feature -- Access
 
 	special_properties: INTEGER is
@@ -52,16 +53,19 @@ feature -- Access
 		deferred
 		end
 
-	sub_expressions: DS_LIST [XM_XPATH_EXPRESSION] is
+	sub_expressions: DS_ARRAYED_LIST [XM_XPATH_EXPRESSION] is
 			-- Immediate sub-expressions of `Current'
 		deferred
 		end
 
-	iterate (context: XM_XPATH_CONTEXT): XM_XPATH_SEQUENCE_ITERATOR is
+	-- TODO - check the return generic-type-parameter on the next line
+	iterator (context: XM_XPATH_CONTEXT): XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_ITEM] is
 			-- Yields an iterator to iterate over the values of a sequence
 		require
 			context_not_void: context /= Void
 		deferred
+		ensure
+			iterator_not_void: Result /= Void
 		end
 
 	effective_boolean_value: BOOLEAN is
@@ -74,12 +78,12 @@ feature -- Access
 
 feature -- Status report
 
-	display (level: INTEGER; pool: XM_XPATH_NAME_POOL) is
-			-- Diagnostic print of expression structure to `std.error'
-		require
-			name_pool_not_void: pool /= Void
-		deferred
-		end
+--	display (level: INTEGER; pool: XM_XPATH_NAME_POOL) is
+--			-- Diagnostic print of expression structure to `std.error'
+--		require
+--			name_pool_not_void: pool /= Void
+--		deferred
+--		end
 	
 feature -- Analysis
 
@@ -89,6 +93,8 @@ feature -- Analysis
 			--  (by rewriting the expression as a different expression);
 			-- The default implementation does nothing.
 		deferred
+		ensure
+			expression_not_void: Result /= Void
 		end
 
 	analyze (env: XM_XPATH_STATIC_CONTEXT): XM_XPATH_EXPRESSION is
@@ -103,11 +109,12 @@ feature -- Analysis
 		require
 			context_not_void: env /= Void
 		deferred
+		ensure
+			expression_not_void: Result /= Void
 		end
 
 	promote (offer: XM_XPATH_PROMOTION_OFFER): XM_XPATH_EXPRESSION is
 			-- Offer promotion for this subexpression
-
 			-- The offer will be accepted if the subexpression is not dependent on
 			-- the factors (e.g. the context item) identified in the PromotionOffer.
 			-- By default the offer is not accepted - this is appropriate in the case of simple expressions
@@ -116,6 +123,8 @@ feature -- Analysis
 		require
 			offer_not_void: offer /= Void
 		deferred
+		ensure
+			expression_not_void: Result /= Void
 		end
 
 feature -- Evaluation
@@ -132,18 +141,19 @@ feature -- Evaluation
 		deferred
 		end
 
-	evaluate_as_string (context: XM_XPATH_CONTEXT): STRING is
+	evaluate_as_string (context: XM_XPATH_CONTEXT): UC_UTF8_STRING is
 			-- Evaluate an expression as a String
-
 			-- This function must only be called in contexts where it is known
 			-- that the expression will return a single string (or where an empty sequence
 			-- is to be treated as a zero-length string). Implementations should not attempt to convert
 			-- the result to a string, other than converting () to "". This routine is used mainly to
 			-- evaluate expressions produced by compiling an attribute value template.
-			-- TODO - turn the above into pre-conditions.
 		require
+			-- TODO - turn the above into pre-conditions.
 			context_not_void: context /= Void
 		deferred
+		ensure
+			string_not_void: Result /= Void
 		end
 end
 	

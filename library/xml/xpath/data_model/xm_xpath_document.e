@@ -20,8 +20,6 @@ inherit
 
 	XM_XPATH_NAMELESS_NODE
 
-	XM_XPATH_UNTYPED_ATOMIC_STRING_VALUE -- for typed value - add this class
-
 	XM_XPATH_TYPELESS_NODE
 
 	XM_XPATH_NODE_WITHOUT_ATTRIBUTES
@@ -30,7 +28,7 @@ inherit
 
 feature -- Access
 
-	base_uri: ANY_URI is
+	base_uri: UC_UTF8_STRING is
 			-- Base URI
 		do
 			Result := base_uri_property
@@ -43,7 +41,7 @@ feature -- Access
 		do
 			Result := "document"
 		ensure then
-			node_kind_is_document: STRING_.same_string (Result, "document")
+			node_kind_is_document: Result /= Void and then ( Result.count = 0 or else STRING_.same_string (Result, "document"))
 		end
 
 	parent: XM_XPATH_NODE is
@@ -54,7 +52,7 @@ feature -- Access
 			parent_is_void: Result = Void
 		end
 
-	string_value: STRING is
+	string_value: UC_UTF8_STRING is
 			-- String-value
 		do
 			-- Return the concatentation of the string value of all it's
