@@ -30,6 +30,24 @@
 
 		<variablelist>
 			<varlistentry>
+				<term>arguments</term>
+				<listitem>
+					<para><emphasis>Description: </emphasis>Comma separated list of values to be passed
+					as arguments to the target to be called. The number of values must match the number of
+					formal arguments of that target. The sequence is important: the first value
+					will be used for the first actual parameter, the second as the second and so on. This is
+					the so called terse way of argument passing.
+					</para>
+				</listitem>
+				<listitem>
+					<para><emphasis>Domain: </emphasis>Comma separated list of values</para>
+				</listitem>
+				<listitem>
+					<para><emphasis>Default: </emphasis>-</para>
+				</listitem>
+			</varlistentry>
+
+			<varlistentry>
 				<term>file</term>
 				<listitem>
 					<para><emphasis>Description: </emphasis>Name of build file to invoke</para>
@@ -79,13 +97,49 @@
 		</variablelist>
 	</sect1>
 
-	<sect1 id="echo_specification">
+	<sect1 id="geant_nested_parameters">
+		<title>Parameters specified as nested elements</title>
+
+		<variablelist>
+			<varlistentry>
+				<term>argument</term>
+				<listitem>
+					<para><emphasis>Description: </emphasis>Element representing a actual argument
+					for the target to be called. The name of the matching formal argument is specified
+					by the attribute 'name'. The value to be used is specified through the attribute 'value'.
+					The names of the arguments and the number of arguments must match the formal ones of
+					the target to be called.
+					</para>
+				</listitem>
+				<listitem>
+					<para><emphasis>Domain: </emphasis>-</para>
+				</listitem>
+				<listitem>
+					<para><emphasis>Default: </emphasis>-</para>
+				</listitem>
+			</varlistentry>
+		</variablelist>
+	</sect1>
+
+
+	<sect1 id="geant_specification">
 		<title>RNG Specification</title>
 
 		<programlisting><![CDATA[
 <define name="geant">
   <element name="geant">
     <ref name="dir_if_unless"/>
+    <optional>
+      <choice>
+        <attribute name="arguments"/>
+        <zeroOrMore>
+          <element name="argument">
+            <attribute name="name"/>
+            <attribute name="value"/>
+          </element>
+        <zeroOrMore>
+      </choice>
+    </optional>
     <choice>
       <attribute name="target"/>
       <group>

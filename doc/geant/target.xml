@@ -160,6 +160,26 @@
 					<para><emphasis>Default: </emphasis>-</para>
 				</listitem>
 			</varlistentry>
+			<varlistentry>
+				<term>argument</term>
+				<listitem>
+					<para><emphasis>Description: </emphasis>Element representing a formal argument
+					of this target. The name of the argument is specified by it's attribute 'name'.
+					There can be any number of this element to specify an arbitrary number of arguments.
+					It is not allowed to have two or more argument elements with the same name. The
+					sequence of the argument definition is important since it defines the actual to
+					formal argument value assignments when it is called in the so called terse way (see
+					documentation of tasks 'geant' and 'precursor' for more information). If the target is
+					redefined the number of arguments must match the precursor's.
+					</para>
+				</listitem>
+				<listitem>
+					<para><emphasis>Domain: </emphasis>-</para>
+				</listitem>
+				<listitem>
+					<para><emphasis>Default: </emphasis>-</para>
+				</listitem>
+			</varlistentry>
 		</variablelist>
 	</sect1>
 
@@ -174,6 +194,11 @@
         <text/>
       </element>
     </optional>
+    <zeroOrMore>
+      <element name="argument">
+        <attribute name="name"/>
+      </element>
+    </zeroOrMore>
     <ref name="description"/>
     <attribute name="name"/>
     <optional>

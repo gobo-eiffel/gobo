@@ -67,6 +67,11 @@
 					<text/>
 				</element>
 			</optional>
+			<zeroOrMore>
+				<element name="argument">
+					<attribute name="name"/>
+				</element>
+			</zeroOrMore>
 			<ref name="description"/>
 			<attribute name="name"/>
 			<optional>
@@ -205,6 +210,17 @@
 	<define name="geant">
 		<element name="geant">
 			<ref name="dir_if_unless"/>
+			<optional>
+				<choice>
+					<attribute name="arguments"/>
+					<zeroOrMore>
+						<element name="argument">
+							<attribute name="name"/>
+							<attribute name="value"/>
+						</element>
+					<zeroOrMore>
+				</choice>
+			</optional>
 			<choice>
 				<attribute name="target"/>
 				<group>
@@ -484,6 +500,17 @@
 	</define>
 	<define name="precursor">
 		<element name="precursor">
+			<optional>
+				<choice>
+					<attribute name="arguments"/>
+					<zeroOrMore>
+						<element name="argument">
+							<attribute name="name"/>
+							<attribute name="value"/>
+						</element>
+					<zeroOrMore>
+				</choice>
+			</optional>
 			<optional>
 				<attribute name="parent"/>
 			</optional>
