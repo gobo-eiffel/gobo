@@ -371,7 +371,7 @@ feature -- Access
 			until
 				a_cursor.before
 			loop
-				a_function ?= a_cursor.item
+				a_function := as_function (a_cursor.item)
 				if a_function /= Void and then a_function.function_fingerprint = a_fingerprint
 					and then (an_arity = -1 or else a_function.arity = an_arity) then
 					Result := a_function
@@ -384,6 +384,15 @@ feature -- Access
 			function_may_not_be_available: True
 		end
 
+feature {NONE} -- Implementation
+
+	as_function (an_element: XM_XSLT_STYLE_ELEMENT): XM_XSLT_FUNCTION is
+			-- Reverse assignment extracted to prevent
+			-- SmartEiffel bug.
+		do
+			Result ?= an_element
+		end
+		
 feature -- Status_report
 
 	any_compile_errors: BOOLEAN is
