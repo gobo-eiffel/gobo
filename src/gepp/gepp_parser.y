@@ -6,7 +6,7 @@ indexing
 		"Parsers for 'gepp' preprocessors"
 
 	author:     "Eric Bezault <ericb@gobo.demon.co.uk>"
-	copyright:  "Copyright (c) 1997, Eric Bezault"
+	copyright:  "Copyright (c) 1998, Eric Bezault"
 	date:       "$Date$"
 	revision:   "$Revision$"
 
@@ -17,6 +17,8 @@ inherit
 	YY_PARSER_SKELETON [ANY]
 		rename
 			make as make_parser_skeleton
+		redefine
+			report_error
 		end
 
 	GEPP_SCANNER
@@ -24,8 +26,6 @@ inherit
 			make as make_gepp_scanner,
 			reset as reset_gepp_scanner
 		end
-
-	KL_SHARED_EXCEPTIONS
 
 creation
 
@@ -137,13 +137,18 @@ Else: P_ELSE P_EOL
 
 feature {NONE} -- Initialization
 
-	make is
+	make (a_handler: like error_handler) is
 			-- Create a new parser.
+		require
+			a_handler_not_void: a_handler /= Void
 		do
 			make_gepp_scanner
 			make_parser_skeleton
+			error_handler := a_handler
 			!! defined_values.make (10)
 			!! include_stack.make (Max_include_depth)
+		ensure
+			error_handler_set: error_handler = a_handler
 		end
 
 feature -- Initialization
@@ -164,7 +169,7 @@ feature -- Parsing
 			-- Parse scanner description from `a_file'.
 		require
 			a_file_not_void: a_file /= Void
-			a_file_open_read: input_stream_.is_open_read (a_file)
+			a_file_open_read: INPUT_STREAM_.is_open_read (a_file)
 		do
 			set_input_buffer (new_file_buffer (a_file))
 			parse
@@ -189,24 +194,46 @@ feature -- Processing
 			a_filename_not_empty: not a_filename.empty
 		local
 			a_file: like INPUT_STREAM_TYPE
+			cannot_read: UT_CANNOT_READ_FILE_ERROR
+			too_many_includes: GEPP_TOO_MANY_INCLUDES_ERROR
 		do
 			if include_stack.count < Max_include_depth then
-				a_file := input_stream_.make_file_open_read (a_filename)
-				if input_stream_.is_open_read (a_file) then
+				a_file := INPUT_STREAM_.make_file_open_read (a_filename)
+				if INPUT_STREAM_.is_open_read (a_file) then
 					include_stack.put (input_buffer)
 					set_input_buffer (new_file_buffer (a_file))
 				else
-					std.error.put_string ("gepp: cannot open %'")
-					std.error.put_string (a_filename)
-					std.error.put_string ("%'%N")
-					exceptions_.die (1)
+					!! cannot_read.make (a_filename)
+					error_handler.report_error (cannot_read)
+					arbort
 				end
 			else
-				std.error.put_string ("gepp: too many (i.e. ")
-				std.error.put_integer (include_stack.count + 1)
-				std.error.put_string (") nested include files")
-				exceptions_.die (1)
+				!! too_many_includes.make (include_stack.count + 1)
+				error_handler.report_error (too_many_includes)
+				arbort
 			end
+		end
+
+feature -- Error handling
+
+	error_handler: UT_ERROR_HANDLER
+			-- Error handler
+
+	report_error (a_message: STRING) is
+			-- Report a syntax error.
+		local
+			an_error: UT_SYNTAX_ERROR
+			file_buffer: YY_FILE_BUFFER
+			filename: STRING
+		do
+			file_buffer ?= input_buffer
+			if file_buffer /= Void then
+				filename := INPUT_STREAM_.name (file_buffer.file)
+			else
+				filename := "string"
+			end
+			!! an_error.make (filename, line_nb)
+			error_handler.report_error (an_error)
 		end
 
 feature -- Status report
@@ -284,6 +311,7 @@ feature {NONE} -- Implementation
 
 invariant
 
+	error_handler_not_void: error_handler /= Void
 	defined_values_not_void: defined_values /= Void
 	no_void_defined_value: not defined_values.has_item (Void)
 
