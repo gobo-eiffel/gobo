@@ -3008,6 +3008,7 @@ invariant
 
 	non_negative_byte_count: byte_count >= 0
 	byte_count_small_enough: byte_count <= byte_capacity
+	count_small_enough: count <= byte_count
 #ifdef VE
 	storage_not_void: storage /= Void
 #endif
