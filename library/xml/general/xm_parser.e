@@ -15,7 +15,7 @@ deferred class XM_PARSER
 inherit
 
 	XM_STRING_MODE
-	
+
 	XM_ERROR_CODES
 
 	XM_CALLBACKS_SOURCE
@@ -61,7 +61,7 @@ feature {ANY} -- Parsing
 		do
 			!! a_source.make (a_file_name)
 			set_source (a_source)
-			
+
 			!! in_file.make (a_file_name)
 			in_file.open_read
 			check
