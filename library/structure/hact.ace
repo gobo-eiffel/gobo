@@ -3,6 +3,7 @@
 	ds_cursor:			"$GOBO/library/structure/cursor";
 	ds_dispenser:		"$GOBO/library/structure/dispenser";
 	ds_list:			"$GOBO/library/structure/list";
+	ds_set:				"$GOBO/library/structure/set";
 	ds_sort:			"$GOBO/library/structure/sort";
 	ds_support:			"$GOBO/library/structure/support";
 	ds_table:			"$GOBO/library/structure/table";
