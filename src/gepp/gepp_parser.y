@@ -205,7 +205,7 @@ feature -- Processing
 			too_many_includes: GEPP_TOO_MANY_INCLUDES_ERROR
 		do
 			if not include_stack.is_full then
-				a_file := INPUT_STREAM_.make_file_open_read (Execution_environment.interpreted_string (a_filename))
+				a_file := INPUT_STREAM_.make_file_open_read (dos_filename (Execution_environment.interpreted_string (a_filename)))
 				if INPUT_STREAM_.is_open_read (a_file) then
 					include_stack.put (input_buffer)
 					set_input_buffer (new_file_buffer (a_file))
@@ -300,6 +300,34 @@ feature {NONE} -- Implementation
 
 	Max_include_depth: INTEGER is 10
 			-- Maximum number of nested include files
+
+	dos_filename (a_filename: STRING): STRING is
+			-- Replace leading '//D/' by 'D:\' where
+			-- 'D' is a drive letter
+		require
+			a_filename_not_void: a_filename /= Void
+		local
+			nb: INTEGER
+		do
+			nb := a_filename.count
+			if
+				nb >= 4 and then
+				a_filename.item (1) = '/' and then
+				a_filename.item (2) = '/' and then
+				a_filename.item (4) = '/'
+			then
+				Result := STRING_.make (nb - 1)
+				Result.append_character (a_filename.item (3))
+				Result.append_string (":\")
+				if nb > 4 then
+					Result.append_string (a_filename.substring (4, nb))
+				end
+			else
+				Result := a_filename
+			end
+		ensure
+			dos_filename_not_void: Result /= Void
+		end
 
 invariant
 
