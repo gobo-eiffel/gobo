@@ -17,8 +17,13 @@ inherit
 	TS_TEST_CASE
 	
 	XM_CALLBACKS_FILTER_FACTORY
+		export {NONE} all end
 	
+	XM_MARKUP_CONSTANTS
+		export {NONE} all end
+		
 	KL_SHARED_STANDARD_FILES
+		export {NONE} all end
 	
 feature -- Test
 
@@ -81,6 +86,13 @@ feature -- Test
 				<<"", "uri2", "uri1", "uri2", "">>)
 		end
 
+	test_implicit is
+		do
+			assert_namespace ("xml_prefix",
+				"<doc xml:space='default'/>",
+				<<"", Xml_prefix_namespace >>)
+		end
+		
 feature {NONE} -- Implementation
 
 	assert_namespace (a_name: STRING; a_in: STRING; a_ns: ARRAY[STRING]) is
