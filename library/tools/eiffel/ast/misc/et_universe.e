@@ -1954,6 +1954,16 @@ feature -- Processors
 			qualified_signature_resolver_not_void: qualified_signature_resolver = a_resolver
 		end
 
+	set_implementation_checker (a_checker: like implementation_checker) is
+			-- Set `implementation_chcker' to `a_checker'.
+		require
+			a_checker_not_void: a_checker /= Void
+		do
+			implementation_checker := a_checker
+		ensure
+			implementation_checker_set: implementation_checker = a_checker
+		end
+		
 feature -- Timing
 
 	print_time (a_start: DT_DATE_TIME; a_degree: STRING) is
