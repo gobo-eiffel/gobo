@@ -64,6 +64,7 @@ feature
 			assert ("Stylesheet not void", a_stylesheet.last_loaded_module /= void)
 			a_document_element ?= a_stylesheet.last_loaded_module.document_element
 			assert ("xsl:transform", a_document_element /= Void and then STRING_.same_string (a_document_element.node_name, "xsl:transform"))
+			assert ("Stylesheet compiled without errors", not a_document_element.is_stylesheet_in_error)
 			a_key ?= a_document_element.first_child
 			assert ("xsl:key 1", a_key /= Void)
 			a_key ?= a_key.next_sibling

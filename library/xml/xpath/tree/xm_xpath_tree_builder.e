@@ -97,13 +97,12 @@ feature -- Events
 			an_element: XM_XPATH_TREE_ELEMENT
 		do
 			if not has_error then
-				an_element := node_factory.new_element_node (document, Void, Void, Void, a_name_code, next_node_number)
+				an_element := node_factory.new_element_node (document, current_composite_node, Void, Void, a_name_code, next_node_number)
 				if an_element.is_error then
 					has_error := True
 					last_error := an_element.error_value.error_message
 				else
 					next_node_number := next_node_number + 1
-					current_composite_node.add_child (an_element)
 					current_depth := current_depth + 1
 					if current_composite_node = document then
 						document.set_document_element (an_element)

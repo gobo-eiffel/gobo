@@ -26,7 +26,8 @@ feature -- Creation
 			a_base_uri: STRING
 		do
 			a_base_uri := "" -- TODO - need locator
-			create Result.make (a_document, a_parent, an_attribute_collection, a_namespace_list, a_name_code, a_sequence_number, a_line_number, a_base_uri)
+			create Result.make (a_document, Void, an_attribute_collection, a_namespace_list, a_name_code, a_sequence_number, a_line_number, a_base_uri)
+			if a_parent /= Void then a_parent.add_child (Result) end
 		ensure
 			new_element_may_be_in_error: Result /= Void
 		end

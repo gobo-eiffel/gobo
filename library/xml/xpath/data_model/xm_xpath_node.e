@@ -23,6 +23,10 @@ inherit
 
 	XM_XPATH_AXIS
 
+	XM_XPATH_NAME_UTILITIES
+
+	XM_XPATH_STANDARD_NAMESPACES
+
 	KL_IMPORTED_STRING_ROUTINES
 
 		-- This class represents a node in gexslt's object model.
@@ -380,8 +384,5 @@ feature {XM_XPATH_NODE} -- Local
 			not_in_error: not is_error
 		deferred
 		end
-
-	bits_20: INTEGER is 1048576 -- 2^20
-			-- For extracting prefix index from name code
 
 end

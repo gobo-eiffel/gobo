@@ -20,11 +20,13 @@ creation
 
 	make
 
-feature -- Status setting
+
+feature -- Element change
 
 	prepare_attributes is
-			-- TODO
+			-- Set the attribute list for the element.
 		do
+			todo ("prepare_attributes", False)
 		end
 
 end

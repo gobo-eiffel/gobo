@@ -237,6 +237,13 @@ feature -- Access
 	Xsi_schema_location_type_code: INTEGER is 771
 	Xsi_no_namespace_schema_location_type_code: INTEGER is 772
 
+			-- XSLT Attribute names
+
+	Extension_element_prefixes_attribute: STRING is "extension-element-prefixes"
+	Exclude_result_prefixes_attribute: STRING is "exclude-result-prefixes"
+	Version_attribute: STRING is "version"
+	Xpath_default_namespace_attribute: STRING is "xpath-default-namespace"
+	
 feature -- Status report
 
 	is_reserved_namespace (a_uri: STRING): BOOLEAN is

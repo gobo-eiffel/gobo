@@ -116,6 +116,117 @@ feature -- Access
 			Result := attribute_collection.attribute_value_by_name (a_uri, a_local_name)
 		end
 
+	uri_code_for_prefix (an_xml_prefix: STRING): INTEGER is
+			-- URI code for `an_xml_prefix'
+		require
+			prefix_not_void: an_xml_prefix /= Void
+		local
+			a_prefix_code: INTEGER
+		do
+			a_prefix_code := document.name_pool.code_for_prefix (an_xml_prefix)
+			if a_prefix_code = -1 then
+				Result := -1
+			else
+				Result := 	uri_code_for_prefix_code (a_prefix_code)
+			end
+		ensure
+			nearly_positive_result: Result > -2
+		end
+
+	uri_code_for_prefix_code (a_prefix_code: INTEGER): INTEGER is
+			-- URI code for `a_prefix_code'
+		local
+			a_cursor: DS_ARRAYED_LIST_CURSOR [INTEGER]
+			a_namespace_code: INTEGER
+		do
+			Result := -1 -- not found
+			from
+				a_cursor := namespace_code_list.new_cursor
+				a_cursor.start
+			variant
+				namespace_code_list.count + 1 - a_cursor.index
+			until
+				a_cursor.after
+			loop
+				a_namespace_code := a_cursor.item
+				if prefix_code_from_namespace_code (a_namespace_code) = a_prefix_code then
+					Result := uri_code_from_namespace_code (a_namespace_code)
+					a_cursor.go_after
+				else
+					a_cursor.forth
+				end
+			end
+		ensure
+			nearly_positive_result: Result > -2
+		end
+	
+	namespace_codes_in_scope:  DS_ARRAYED_LIST [INTEGER] is
+			-- Namespace codes in scope;
+			-- WARNING - this routine is NOT pure - it is a memo function.
+		local
+			a_parent: XM_XPATH_TREE_ELEMENT
+			a_parent_list: DS_ARRAYED_LIST [INTEGER]
+			a_cursor: DS_ARRAYED_LIST_CURSOR [INTEGER]
+			a_namespace_code, a_prefix_code: INTEGER
+		do
+			if cached_namespace_codes_in_scope /= Void then
+				Result := cached_namespace_codes_in_scope
+			else
+				create cached_namespace_codes_in_scope.make_from_linear (namespace_code_list)
+				a_parent ?= parent
+				if a_parent /= Void then
+					a_parent_list := a_parent.namespace_codes_in_scope
+					create cached_prefix_code_list.make (cached_namespace_codes_in_scope.count + a_parent_list.count)
+					from
+						a_cursor := cached_namespace_codes_in_scope.new_cursor
+						a_cursor.start
+					variant
+						cached_namespace_codes_in_scope.count + 1 - a_cursor.index
+					until
+						a_cursor.after
+					loop
+						a_prefix_code := 	prefix_code_from_namespace_code (a_cursor.item)
+						cached_prefix_code_list.put_last (a_prefix_code)
+						a_cursor.forth
+					end
+					if not cached_namespace_codes_in_scope.extendible (a_parent_list.count) then
+						cached_namespace_codes_in_scope.resize (cached_namespace_codes_in_scope.count + a_parent_list.count)
+					end
+
+					-- Add in all codes from the parent list, unless we already have a match for the prefix
+					
+					from
+						a_cursor := a_parent_list.new_cursor
+						a_cursor.start
+					variant
+						a_parent_list.count + 1 - a_cursor.index
+					until
+						a_cursor.after
+					loop
+						a_namespace_code := a_cursor.item
+						a_prefix_code := 	prefix_code_from_namespace_code (a_namespace_code)
+						if not cached_prefix_code_list.has (a_prefix_code) then
+							cached_prefix_code_list.put_last (a_prefix_code)
+							cached_namespace_codes_in_scope.put_last (a_namespace_code)
+						end
+						a_cursor.forth
+					end
+				else
+					
+					-- Add the XML namespace
+
+					if not cached_namespace_codes_in_scope.extendible (1) then
+						cached_namespace_codes_in_scope.resize (cached_namespace_codes_in_scope.count + 1)
+					end
+						check
+							xml_prefix_code_is_one: document.name_pool.code_for_prefix ("xml") = 1
+							-- Architectural definition
+							end
+					cached_namespace_codes_in_scope.put_last (Xml_uri_code + bits_16) -- bits_16 = 1 << 16
+				end
+			end
+		end
+								
 feature -- Status setting
 
 	set_name_code (a_name_code: INTEGER) is
@@ -202,8 +313,14 @@ feature {NONE} -- Implementation
 			-- Attributes
 
 	namespace_code_list: DS_ARRAYED_LIST [INTEGER]
-			-- Name codes for all namespaces defined on this element;
+			-- Namespace codes for all namespaces defined on this element;
 			-- (NOT all namespaces in scope - must scan up the parent chain for that)
+
+	cached_prefix_code_list: DS_ARRAYED_LIST [INTEGER]
+			-- Prefix codes for all namespacesin scope for `Current'
+
+	cached_namespace_codes_in_scope:  DS_ARRAYED_LIST [INTEGER]
+			-- Namespace codes in scope for `Current'
 
 invariant
 

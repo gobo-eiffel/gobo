@@ -117,7 +117,7 @@ feature -- Status report
 			Result := an_index > 0 and then an_index <= children.count
 		end
 
-feature {XM_XPATH_TREE_BUILDER} -- Restricted
+feature -- Element change
 
 	add_child (a_child: XM_XPATH_TREE_NODE) is
 			-- Add a child node to this node.

@@ -35,7 +35,7 @@ feature -- Status report
 feature -- Element change
 
 	prepare_attributes is
-			-- TODO
+			-- Set the attribute list for the element.
 		do
 		end
 

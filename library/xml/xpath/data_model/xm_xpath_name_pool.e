@@ -55,15 +55,15 @@ inherit
 
 	XM_XPATH_STANDARD_NAMESPACES
 
-	XM_XPATH_SHARED_TYPE_FACTORY
-
-	XM_UNICODE_CHARACTERS_1_1
-
 	KL_SHARED_STANDARD_FILES
 
 	KL_IMPORTED_STRING_ROUTINES
 
 	UC_SHARED_STRING_EQUALITY_TESTER
+
+	XM_XPATH_NAME_UTILITIES
+
+	XM_XPATH_SHARED_TYPE_FACTORY
 
 creation
 	make
@@ -118,18 +118,6 @@ feature {NONE} -- Initialization
 		end
 	
 feature -- Access
-
-	bits_10: INTEGER is 1024 -- 2^10
-			-- For extracting depth and hash code from name code
-
-	bits_16: INTEGER is 65536 -- 2^16
-			-- For extracting uri code and prefix code from namespace code
-
-	bits_20: INTEGER is 1048576 -- 2^20
-			-- For extracting prefix index from name code
-
-	bits_28:INTEGER is 268435455 -- 2^28 -1
-			-- Maximum limit of fingerprint value
 
 	namespace_code (an_xml_prefix: STRING; a_uri: STRING): INTEGER is
 			-- Return existing namespace code for a namespace prefix/URI pair
@@ -438,14 +426,8 @@ feature -- Access
 			a_local_name, a_namespace: STRING
 			a_closing_brace: INTEGER
 		do
-			if an_expanded_name.item (1).is_equal ('{') then
-				a_closing_brace := an_expanded_name.index_of ('}', 1)
-				a_namespace := an_expanded_name.substring (2, a_closing_brace - 1)
-				a_local_name := an_expanded_name.substring (a_closing_brace + 1, an_expanded_name.count)
-			else
-				a_namespace := ""
-				a_local_name := an_expanded_name
-			end
+			a_namespace := namespace_uri_from_expanded_name (an_expanded_name)
+			a_local_name := local_name_from_expanded_name (an_expanded_name)
 			Result := fingerprint (a_namespace, a_local_name)
 		ensure
 			valid_name_code: Result = -1 or else is_valid_name_code (Result)
@@ -473,6 +455,39 @@ feature -- Access
 			-- The last namespace code allocated by `allocate_namespace_code'
 
 feature -- Status report
+
+	is_valid_namespace_code (a_namespace_code: INTEGER): BOOLEAN is
+			-- Does `a_namespace_code' represent a URI in `Current'?
+		local
+			a_uri_code, top_bits: INTEGER -- should be INTEGER_16
+		do
+			top_bits := (a_namespace_code // bits_16) * bits_16
+			a_uri_code := a_namespace_code - top_bits
+			Result :=  is_valid_uri_code (a_uri_code)
+		end
+
+	is_valid_name_code (a_name_code: INTEGER): BOOLEAN is
+			-- Does `a_name_code' represent a name in `Current'?
+		local
+			an_entry: XM_XPATH_NAME_ENTRY
+			a_prefix_index: INTEGER
+		do
+			if a_name_code < 0 then
+				Result := False
+			elseif type_factory.is_built_in_fingerprint (fingerprint_from_name_code (a_name_code)) then
+				a_prefix_index := name_code_to_prefix_index (a_name_code)
+				Result := a_prefix_index >= 0 and then a_prefix_index <= prefixes_used
+			else
+				an_entry := name_entry (a_name_code)
+				Result :=  an_entry /= Void
+			end
+		end
+
+	is_valid_uri_code (a_uri_code: INTEGER): BOOLEAN is
+			-- Does `a_uri_code' represent a URI in `Current'?
+		do
+			Result := a_uri_code >= 0 and then a_uri_code < uris.count
+		end
 
 	is_code_for_uri_allocated (a_uri: STRING): BOOLEAN is
 			-- Has a code been allocated for `a_uri'?
@@ -696,60 +711,16 @@ feature -- Status report
 			end
 		end
 
-	is_valid_expanded_name (an_expanded_name: STRING): BOOLEAN is
-			-- Is `an_expanded_name' a valid expanded name?
+	is_expanded_name_allocated (an_expanded_name: STRING): BOOLEAN is
+			-- Is `an_expanded_name' allocated?
 		require
-			expanded_name_not_void: an_expanded_name /= Void
+			valid_expanded_name: an_expanded_name /= Void and then is_valid_expanded_name (an_expanded_name)
 		local
-			a_closing_brace: INTEGER
-			a_local_part: STRING
+			a_namespace_uri, a_local_name: STRING
 		do
-			if an_expanded_name.item (1).is_equal ('{') then
-				a_closing_brace := an_expanded_name.index_of ('}', 1)
-				if a_closing_brace = 0 then
-					Result := False
-				elseif a_closing_brace = an_expanded_name.count then
-					Result := False
-				else
-					a_local_part := an_expanded_name.substring (a_closing_brace + 1, an_expanded_name.count)
-					Result := is_ncname (a_local_part)
-				end
-			else
-				Result := is_ncname (an_expanded_name)
-			end
-		end
-
-	is_valid_name_code (a_name_code: INTEGER): BOOLEAN is
-			-- Does `a_name_code' represent a name in `Current'?
-		local
-			an_entry: XM_XPATH_NAME_ENTRY
-			a_prefix_index: INTEGER
-		do
-			if a_name_code < 0 then
-				Result := False
-			elseif type_factory.is_built_in_fingerprint (fingerprint_from_name_code (a_name_code)) then
-				a_prefix_index := name_code_to_prefix_index (a_name_code)
-				Result := a_prefix_index >= 0 and then a_prefix_index <= prefixes_used
-			else
-				an_entry := name_entry (a_name_code)
-				Result :=  an_entry /= Void
-			end
-		end
-
-	is_valid_uri_code (a_uri_code: INTEGER): BOOLEAN is
-			-- Does `a_uri_code' represent a URI in `Current'?
-		do
-			Result := a_uri_code >= 0 and then a_uri_code < uris.count
-		end
-
-	is_valid_namespace_code (a_namespace_code: INTEGER): BOOLEAN is
-			-- Does `a_namespace_code' represent a URI in `Current'?
-		local
-			a_uri_code, top_bits: INTEGER -- should be INTEGER_16
-		do
-			top_bits := (a_namespace_code // bits_16) * bits_16
-			a_uri_code := a_namespace_code - top_bits
-			Result :=  is_valid_uri_code (a_uri_code)
+			a_local_name := local_name_from_expanded_name (an_expanded_name)
+			a_namespace_uri := namespace_uri_from_expanded_name (an_expanded_name)
+			Result := is_name_code_allocated ("", a_namespace_uri, a_local_name)
 		end
 
 	is_valid_prefix_for_uri (a_uri_code: INTEGER; an_xml_prefix: STRING): BOOLEAN is
@@ -1100,6 +1071,21 @@ feature -- Element change
 			name_allocated: is_name_code_allocated_using_uri_code (an_xml_prefix, a_uri_code, a_local_name)
 		end
 
+	allocate_expanded_name (an_expanded_name: STRING) is
+			-- Allocate a fingerprint for `an_expanded_name'
+		require
+			valid_expanded_name: an_expanded_name /= Void and then is_valid_expanded_name (an_expanded_name)
+			expanded_name_not_allocated: not is_expanded_name_allocated (an_expanded_name)
+		local
+			a_namespace_uri, a_local_name: STRING
+		do
+			a_local_name := local_name_from_expanded_name (an_expanded_name)
+			a_namespace_uri := namespace_uri_from_expanded_name (an_expanded_name)
+			allocate_name ("", a_namespace_uri, a_local_name)
+		ensure
+			expanded_name_allocated: is_expanded_name_allocated (an_expanded_name)
+		end
+		
 feature -- Conversion
 
 	fingerprint_from_name_code (a_name_code: INTEGER): INTEGER is

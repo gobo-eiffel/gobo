@@ -118,46 +118,61 @@ feature {NONE} -- Implementation
 			inspect
 				a_fingerprint
 			when Xslt_transform_type_code, Xslt_stylesheet_type_code then
-				create {XM_XSLT_STYLESHEET} Result.make (a_document, a_parent, an_attribute_collection, a_namespace_list, a_name_code, a_sequence_number, a_line_number, a_base_uri)
+				create {XM_XSLT_STYLESHEET} Result.make (a_document, Void, an_attribute_collection, a_namespace_list, a_name_code, a_sequence_number, a_line_number, a_base_uri)
 			when Xslt_key_type_code then
-				create {XM_XSLT_KEY} Result.make (a_document, a_parent, an_attribute_collection, a_namespace_list, a_name_code, a_sequence_number, a_line_number, a_base_uri)
+				create {XM_XSLT_KEY} Result.make (a_document, Void, an_attribute_collection, a_namespace_list, a_name_code, a_sequence_number, a_line_number, a_base_uri)
 			when Xslt_decimal_format_type_code then
-				create {XM_XSLT_DECIMAL_FORMAT} Result.make (a_document, a_parent, an_attribute_collection, a_namespace_list, a_name_code, a_sequence_number, a_line_number, a_base_uri)
+				create {XM_XSLT_DECIMAL_FORMAT} Result.make (a_document, Void, an_attribute_collection, a_namespace_list, a_name_code, a_sequence_number, a_line_number, a_base_uri)
 			when Xslt_variable_type_code then
-				create {XM_XSLT_VARIABLE} Result.make (a_document, a_parent, an_attribute_collection, a_namespace_list, a_name_code, a_sequence_number, a_line_number, a_base_uri)
+				create {XM_XSLT_VARIABLE} Result.make (a_document, Void, an_attribute_collection, a_namespace_list, a_name_code, a_sequence_number, a_line_number, a_base_uri)
 			when Xslt_param_type_code then
-				create {XM_XSLT_PARAM} Result.make (a_document, a_parent, an_attribute_collection, a_namespace_list, a_name_code, a_sequence_number, a_line_number, a_base_uri)
+				create {XM_XSLT_PARAM} Result.make (a_document, Void, an_attribute_collection, a_namespace_list, a_name_code, a_sequence_number, a_line_number, a_base_uri)
 			when Xslt_with_param_type_code then
-				create {XM_XSLT_WITH_PARAM} Result.make (a_document, a_parent, an_attribute_collection, a_namespace_list, a_name_code, a_sequence_number, a_line_number, a_base_uri)				
+				create {XM_XSLT_WITH_PARAM} Result.make (a_document, Void, an_attribute_collection, a_namespace_list, a_name_code, a_sequence_number, a_line_number, a_base_uri)				
 			when Xslt_template_type_code then
-				create {XM_XSLT_TEMPLATE} Result.make (a_document, a_parent, an_attribute_collection, a_namespace_list, a_name_code, a_sequence_number, a_line_number, a_base_uri)				
+				create {XM_XSLT_TEMPLATE} Result.make (a_document, Void, an_attribute_collection, a_namespace_list, a_name_code, a_sequence_number, a_line_number, a_base_uri)				
 			when Xslt_comment_type_code then
-				create {XM_XSLT_COMMENT} Result.make (a_document, a_parent, an_attribute_collection, a_namespace_list, a_name_code, a_sequence_number, a_line_number, a_base_uri)				
+				create {XM_XSLT_COMMENT} Result.make (a_document, Void, an_attribute_collection, a_namespace_list, a_name_code, a_sequence_number, a_line_number, a_base_uri)				
 			when Xslt_value_of_type_code then
-				create {XM_XSLT_VALUE_OF} Result.make (a_document, a_parent, an_attribute_collection, a_namespace_list, a_name_code, a_sequence_number, a_line_number, a_base_uri)				
+				create {XM_XSLT_VALUE_OF} Result.make (a_document, Void, an_attribute_collection, a_namespace_list, a_name_code, a_sequence_number, a_line_number, a_base_uri)				
 			when Xslt_call_template_type_code then
-				create {XM_XSLT_CALL_TEMPLATE} Result.make (a_document, a_parent, an_attribute_collection, a_namespace_list, a_name_code, a_sequence_number, a_line_number, a_base_uri)				
+				create {XM_XSLT_CALL_TEMPLATE} Result.make (a_document, Void, an_attribute_collection, a_namespace_list, a_name_code, a_sequence_number, a_line_number, a_base_uri)				
 			when Xslt_apply_templates_type_code then
-				create {XM_XSLT_APPLY_TEMPLATES} Result.make (a_document, a_parent, an_attribute_collection, a_namespace_list, a_name_code, a_sequence_number, a_line_number, a_base_uri)				
+				create {XM_XSLT_APPLY_TEMPLATES} Result.make (a_document, Void, an_attribute_collection, a_namespace_list, a_name_code, a_sequence_number, a_line_number, a_base_uri)				
 			when Xslt_choose_type_code then
-				create {XM_XSLT_CHOOSE} Result.make (a_document, a_parent, an_attribute_collection, a_namespace_list, a_name_code, a_sequence_number, a_line_number, a_base_uri)				
+				create {XM_XSLT_CHOOSE} Result.make (a_document, Void, an_attribute_collection, a_namespace_list, a_name_code, a_sequence_number, a_line_number, a_base_uri)				
 			when Xslt_when_type_code then
-				create {XM_XSLT_WHEN} Result.make (a_document, a_parent, an_attribute_collection, a_namespace_list, a_name_code, a_sequence_number, a_line_number, a_base_uri)				
+				create {XM_XSLT_WHEN} Result.make (a_document, Void, an_attribute_collection, a_namespace_list, a_name_code, a_sequence_number, a_line_number, a_base_uri)				
 			when Xslt_otherwise_type_code then
-				create {XM_XSLT_OTHERWISE} Result.make (a_document, a_parent, an_attribute_collection, a_namespace_list, a_name_code, a_sequence_number, a_line_number, a_base_uri)				
+				create {XM_XSLT_OTHERWISE} Result.make (a_document, Void, an_attribute_collection, a_namespace_list, a_name_code, a_sequence_number, a_line_number, a_base_uri)				
 			when Xslt_for_each_type_code then
-				create {XM_XSLT_FOR_EACH} Result.make (a_document, a_parent, an_attribute_collection, a_namespace_list, a_name_code, a_sequence_number, a_line_number, a_base_uri)
+				create {XM_XSLT_FOR_EACH} Result.make (a_document, Void, an_attribute_collection, a_namespace_list, a_name_code, a_sequence_number, a_line_number, a_base_uri)
 			when Xslt_for_each_group_type_code then
-				create {XM_XSLT_FOR_EACH_GROUP} Result.make (a_document, a_parent, an_attribute_collection, a_namespace_list, a_name_code, a_sequence_number, a_line_number, a_base_uri)								
+				create {XM_XSLT_FOR_EACH_GROUP} Result.make (a_document, Void, an_attribute_collection, a_namespace_list, a_name_code, a_sequence_number, a_line_number, a_base_uri)								
 			when Xslt_sort_type_code then
-				create {XM_XSLT_SORT} Result.make (a_document, a_parent, an_attribute_collection, a_namespace_list, a_name_code, a_sequence_number, a_line_number, a_base_uri)				
+				create {XM_XSLT_SORT} Result.make (a_document, Void, an_attribute_collection, a_namespace_list, a_name_code, a_sequence_number, a_line_number, a_base_uri)				
 			when Xslt_number_type_code then
-				create {XM_XSLT_NUMBER} Result.make (a_document, a_parent, an_attribute_collection, a_namespace_list, a_name_code, a_sequence_number, a_line_number, a_base_uri)				
+				create {XM_XSLT_NUMBER} Result.make (a_document, Void, an_attribute_collection, a_namespace_list, a_name_code, a_sequence_number, a_line_number, a_base_uri)				
 			else
 			end
 			
 			if Result /= Void then
+				if a_parent /= Void then a_parent.add_child (Result) end
+				
 				-- TODO - process XSLT attributes
+
+				if not Result.is_error then
+					Result.process_extension_element_attribute (Extension_element_prefixes_attribute)
+					if not Result.is_error then
+						Result.process_excluded_namespaces_attribute (Exclude_result_prefixes_attribute)
+						if not Result.is_error then
+							Result.process_version_attribute (Version_attribute)
+						end
+						if not Result.is_error then
+							Result.process_default_xpath_namespace_attribute (Xpath_default_namespace_attribute)
+						end
+					end
+				end
 			end
 		end
 
@@ -172,7 +187,8 @@ feature {NONE} -- Implementation
 
 			-- TODO, may be an extension element (or fallback)
 
-			create {XM_XSLT_LITERAL_RESULT_ELEMENT} Result.make (a_document, a_parent, an_attribute_collection, a_namespace_list, a_name_code, a_sequence_number, a_line_number, a_base_uri)
+			create {XM_XSLT_LITERAL_RESULT_ELEMENT} Result.make (a_document, Void, an_attribute_collection, a_namespace_list, a_name_code, a_sequence_number, a_line_number, a_base_uri)
+			if a_parent /= Void then a_parent.add_child (Result) end
 		end
 
 invariant
