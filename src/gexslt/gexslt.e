@@ -584,10 +584,10 @@ feature {NONE} -- Implementation
 		do
 			if a_file_or_uri.index_of ('\', 1) > 0 then
 				is_file := True
-			else
-				if a_file_or_uri.index_of (':', 1) = 2 then
-					is_file := True
-				end
+			--else
+			--	if a_file_or_uri.index_of (':', 1) = 2 then
+			--		is_file := True
+			--	end
 			end
 			if is_file then
 				process_file (a_file_or_uri)
