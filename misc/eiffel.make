@@ -6,12 +6,6 @@
 # revision:   "$Revision$"
 
 
-# Shell Commands
-ECHO=echo
-GEPP=$(GOBO)/bin/gepp
-GELEX=$(GOBO)/bin/gelex
-GEYACC=$(GOBO)/bin/geyacc
-
 # SmallEiffel
 SE_COMPILER=compile
 SE_CFLAGS=-boost -no_split -no_style_warning -no_gc $(SE_PCFLAGS)
