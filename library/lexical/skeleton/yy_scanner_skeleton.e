@@ -24,6 +24,7 @@ inherit
 
 	KL_IMPORTED_STRING_BUFFER_ROUTINES
 	KL_IMPORTED_FIXED_ARRAY_ROUTINES
+	KL_IMPORTED_STRING_ROUTINES
 	KL_IMPORTED_ARRAY_ROUTINES
 
 feature {NONE} -- Initialization
@@ -80,7 +81,7 @@ feature -- Access
 			if yy_start < yy_end then
 				Result := STRING_BUFFER_.substring (yy_content, yy_start, yy_end - 1)
 			else
-				!! Result.make (0)
+				Result := STRING_.make (0)
 			end
 		end
 
@@ -98,7 +99,7 @@ feature -- Access
 			-- from the input buffer.)
 		do
 			if e < s then
-				!! Result.make (0)
+				Result := STRING_.make (0)
 			else
 				Result := STRING_BUFFER_.substring (yy_content,
 					yy_start + s - 1, yy_start + e - 1)

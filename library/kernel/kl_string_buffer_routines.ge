@@ -36,7 +36,7 @@ feature -- Initialization
 #else
 		do
 #ifdef VE
-			!! Result.make (n)
+			!! Result.make_filled ('%U', n)
 #else
 #ifdef SE
 			!! Result.blank (n)
@@ -111,7 +111,11 @@ feature -- Access
 		do
 			if e < s then
 					-- Empty string
+#ifdef VE
+				!! Result.make_empty
+#else
 				!! Result.make (0)
+#endif
 			else
 #ifdef ISE
 				nb := e - s + 1
