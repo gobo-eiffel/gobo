@@ -19,6 +19,9 @@ inherit
 creation
 
 	make,
+	make_vcch1a,
+	make_vcch1b,
+	make_vcch2a,
 	make_vcfg1a,
 	make_vcfg2a,
 	make_vcfg3a,
@@ -65,6 +68,8 @@ creation
 	make_vmss1a,
 	make_vmss2a,
 	make_vmss3a,
+	make_vreg0a,
+	make_vrfa0a,
 	make_vscn0a,
 	make_vtat1a,
 	make_vtat1b,
@@ -109,6 +114,124 @@ feature {NONE} -- Initialization
 		ensure
 			current_class_set: current_class = a_class
 			position_set: position = a_position
+			all_reported: all_reported
+			all_fatal: all_fatal
+			-- dollar0: $0 = program name
+			-- dollar1: $1 = ETL code
+			-- dollar2: $2 = filename
+			-- dollar3: $3 = line
+			-- dollar4: $4 = column
+			-- dollar5: $5 = class name
+		end
+
+	make_vcch1a (a_class: like current_class; f: ET_FLATTENED_FEATURE) is
+			-- Create a new VCCH-1 error: `a_class' has deferred features
+			-- but is not declared as deferred. `f' is one of these deferred
+			-- feature, written in `a_class'.
+			--
+			-- ETL2: p.51
+		require
+			a_class_not_void: a_class /= Void
+			a_class_preparsed: a_class.is_preparsed
+			a_class_not_deferred: not a_class.has_deferred_mark
+			f_not_void: f /= Void
+			f_deferred: f.is_deferred
+		do
+			code := vcch1a_template_code
+			etl_code := vcch1_etl_code
+			default_template := vcch1a_default_template
+			current_class := a_class
+			position := f.name.position
+			create parameters.make (1, 6)
+			parameters.put (etl_code, 1)
+			parameters.put (filename, 2)
+			parameters.put (position.line.out, 3)
+			parameters.put (position.column.out, 4)
+			parameters.put (current_class.name.name, 5)
+			parameters.put (f.name.name, 6)
+			set_compilers (True)
+		ensure
+			current_class_set: current_class = a_class
+			all_reported: all_reported
+			all_fatal: all_fatal
+			-- dollar0: $0 = program name
+			-- dollar1: $1 = ETL code
+			-- dollar2: $2 = filename
+			-- dollar3: $3 = line
+			-- dollar4: $4 = column
+			-- dollar5: $5 = class name
+			-- dollar6: $6 = feature name
+		end
+
+	make_vcch1b (a_class: like current_class; f: ET_INHERITED_FEATURE) is
+			-- Create a new VCCH-1 error: `a_class' has deferred features
+			-- but is not declared as deferred. `f' is one of these deferred
+			-- feature, inherited from a parent of `a_class'.
+			--
+			-- ETL2: p.51
+		require
+			a_class_not_void: a_class /= Void
+			a_class_preparsed: a_class.is_preparsed
+			a_class_not_deferred: not a_class.has_deferred_mark
+			f_not_void: f /= Void
+			f_deferred: f.flattened_feature.is_deferred
+		do
+			code := vcch1a_template_code
+			etl_code := vcch1_etl_code
+			default_template := vcch1a_default_template
+			current_class := a_class
+			if f.has_undefine then
+				position := f.undefine_name.position
+			else
+				position := f.parent.type.name.position
+			end
+			create parameters.make (1, 7)
+			parameters.put (etl_code, 1)
+			parameters.put (filename, 2)
+			parameters.put (position.line.out, 3)
+			parameters.put (position.column.out, 4)
+			parameters.put (current_class.name.name, 5)
+			parameters.put (f.name.name, 6)
+			parameters.put (f.parent.type.name.name, 7)
+			set_compilers (True)
+		ensure
+			current_class_set: current_class = a_class
+			all_reported: all_reported
+			all_fatal: all_fatal
+			-- dollar0: $0 = program name
+			-- dollar1: $1 = ETL code
+			-- dollar2: $2 = filename
+			-- dollar3: $3 = line
+			-- dollar4: $4 = column
+			-- dollar5: $5 = class name
+			-- dollar6: $6 = feature name
+			-- dollar7: $7 = parent base class
+		end
+
+	make_vcch2a (a_class: like current_class) is
+			-- Create a new VCCH-2 error: `a_class' is marked as deferred
+			-- but has no deferred feature.
+			--
+			-- ETL2: p.51
+		require
+			a_class_not_void: a_class /= Void
+			a_class_preparsed: a_class.is_preparsed
+			a_class_deferred: a_class.has_deferred_mark
+		do
+			code := vcch2a_template_code
+			etl_code := vcch2_etl_code
+			default_template := vcch2a_default_template
+			current_class := a_class
+			position := a_class.class_mark.position
+			create parameters.make (1, 5)
+			parameters.put (etl_code, 1)
+			parameters.put (filename, 2)
+			parameters.put (position.line.out, 3)
+			parameters.put (position.column.out, 4)
+			parameters.put (current_class.name.name, 5)
+			set_compilers (True)
+		ensure
+			current_class_set: current_class = a_class
 			all_reported: all_reported
 			all_fatal: all_fatal
 			-- dollar0: $0 = program name
@@ -2106,6 +2229,86 @@ feature {NONE} -- Initialization
 			-- dollar7: $7 = parent base class
 		end
 
+	make_vreg0a (a_class: like current_class; arg1, arg2: ET_FORMAL_ARGUMENT; f: ET_FLATTENED_FEATURE) is
+			-- Create a new VREG error: `arg1' and `arg2' have the same
+			-- name in feature `f' in `a_class'.
+			--
+			-- ETL2: p.110
+		require
+			a_class_not_void: a_class /= Void
+			a_class_preparsed: a_class.is_preparsed
+			arg1_not_void: arg1 /= Void
+			arg2_not_void: arg2 /= Void
+			f_not_void: f /= Void
+		do
+			code := vreg0a_template_code
+			etl_code := vreg_etl_code
+			default_template := vreg0a_default_template
+			current_class := a_class
+			position := arg2.name.position
+			create parameters.make (1, 7)
+			parameters.put (etl_code, 1)
+			parameters.put (filename, 2)
+			parameters.put (position.line.out, 3)
+			parameters.put (position.column.out, 4)
+			parameters.put (current_class.name.name, 5)
+			parameters.put (arg2.name.name, 6)
+			parameters.put (f.name.name, 7)
+			set_compilers (True)
+		ensure
+			current_class_set: current_class = a_class
+			all_reported: all_reported
+			all_fatal: all_fatal
+			-- dollar0: $0 = program name
+			-- dollar1: $1 = ETL code
+			-- dollar2: $2 = filename
+			-- dollar3: $3 = line
+			-- dollar4: $4 = column
+			-- dollar5: $5 = class name
+			-- dollar6: $6 = argument name
+			-- dollar7: $7 = feature name
+		end
+
+	make_vrfa0a (a_class: like current_class; arg: ET_FORMAL_ARGUMENT; f1, f2: ET_FLATTENED_FEATURE) is
+			-- Create a new VRFA error: `arg' in feature `f1' has
+			-- the same name as feature `f2' in `a_class'.
+			--
+			-- ETL2: p.110
+		require
+			a_class_not_void: a_class /= Void
+			a_class_preparsed: a_class.is_preparsed
+			arg_not_void: arg /= Void
+			f1_not_void: f1 /= Void
+			f2_not_void: f2 /= Void
+		do
+			code := vrfa0a_template_code
+			etl_code := vrfa_etl_code
+			default_template := vrfa0a_default_template
+			current_class := a_class
+			position := arg.name.position
+			create parameters.make (1, 7)
+			parameters.put (etl_code, 1)
+			parameters.put (filename, 2)
+			parameters.put (position.line.out, 3)
+			parameters.put (position.column.out, 4)
+			parameters.put (current_class.name.name, 5)
+			parameters.put (arg.name.name, 6)
+			parameters.put (f1.name.name, 7)
+			set_compilers (True)
+		ensure
+			current_class_set: current_class = a_class
+			all_reported: all_reported
+			all_fatal: all_fatal
+			-- dollar0: $0 = program name
+			-- dollar1: $1 = ETL code
+			-- dollar2: $2 = filename
+			-- dollar3: $3 = line
+			-- dollar4: $4 = column
+			-- dollar5: $5 = class name
+			-- dollar6: $6 = argument name
+			-- dollar7: $7 = feature name (where argument appears)
+		end
+
 	make_vscn0a (a_class: like current_class; other_cluster: ET_CLUSTER; other_filename: STRING) is
 			-- Create a new VSCN error: `a_class' also appears in
 			-- `other_cluster'.
@@ -2954,74 +3157,81 @@ feature -- Setting
 
 feature {NONE} -- Implementation
 
-	vcfg1a_default_template: STRING is "[$1] Class $5 ($2,$3): formal generic parameter '$6' has the same name as a class in the surrounding universe."
-	vcfg2a_default_template: STRING is "[$1] Class $5 ($2,$3): '$6' is the name of formal generic parameters #$7 and #$8."
-	vcfg3a_default_template: STRING is "[$1] Class $5 ($2,$3): invalid type '$6' in constraint of formal generic parameter."
-	vcfg3b_default_template: STRING is "[$1] Class $5 ($2,$3): invalid type '$6' in constraint of formal generic parameter."
-	vcfg3c_default_template: STRING is "[$1] Class $5 ($2,$3): invalid type '$6' in constraint of formal generic parameter."
-	vcfg3d_default_template: STRING is "[$1] Class $5 ($2,$3): constraint of formal generic parameter '$6' is '$7' itself."
-	vcfg3e_default_template: STRING is "[$1] Class $5 ($2,$3): constraint of formal generic parameter '$6' is another formal generic parameter '$7'."
-	vcfg3g_default_template: STRING is "[$1] Class $5 ($2,$3): formal generic constraint cycle $6."
-	vcfg3h_default_template: STRING is "[$1] Class $5 ($2,$3): constraint of formal generic parameter '$6' contains '$7' itself."
-	vcfg3j_default_template: STRING is "[$1] Class $5 ($2,$3): formal generic constraint cycle $6."
-	vdjr0a_default_template: STRING is "[$1] Class $5 ($2,$3): joined deferred features `$6' inherited from $7 and $8 don't have the same signature. Different number of arguments."
-	vdjr0b_default_template: STRING is "[$1] Class $5 ($2,$3): joined deferred features `$6' inherited from $7 and $8 don't have the same signature. Type of argument number $9 differs."
-	vdjr0c_default_template: STRING is "[$1] Class $5 ($2,$3): joined deferred features `$6' inherited from $7 and $8 don't have the same signature. Type of result differs."
-	vdrd2a_default_template: STRING is "[$1] Class $5 ($2,$3): signature of feature `$6' does not conform to the signature of redeclared feature `$7' in parent $8."
-	vdrd2b_default_template: STRING is "[$1] Class $5 ($2,$3): signature of feature `$6' inherited from $7 does not conform to the signature of redeclared feature `$8' in parent $9."
-	vdrd4a_default_template: STRING is "[$1] Class $5 ($2,$3): deferred feature `$6' inherited from $7 is redefined but is not listed in the Redefine subclause."
-	vdrd4b_default_template: STRING is "[$1] Class $5 ($2,$3): effective feature `$6' inherited from $7 is redefined but is not listed in the Redefine subclause."
-	vdrd4c_default_template: STRING is "[$1] Class $5 ($2,$3): effective feature `$6' inherited from $7 is redefined into a deferred one but is not listed in the Undefine and Redefine subclauses."
-	vdrd5a_default_template: STRING is "[$1] Class $5 ($2,$3): effective feature `$6' inherited from $7 is redefined into a deferred one."
-	vdrs1a_default_template: STRING is "[$1] Class $5 ($2,$3): `$6' is not the final name of a feature in $7."
-	vdrs2a_default_template: STRING is "[$1] Class $5 ($2,$3): cannot redefine the frozen feature `$6'."
-	vdrs2b_default_template: STRING is "[$1] Class $5 ($2,$3): cannot redefine the constant attribute `$6'."
-	vdrs3a_default_template: STRING is "[$1] Class $5 ($2,$3): feature name `$6' appears twice in the Redefine subclause of parent $7."
-	vdrs4a_default_template: STRING is "[$1] Class $5 ($2,$3): Redefine subclause of $7 lists feature `$6' but it is not redefined."
-	vdrs4b_default_template: STRING is "[$1] Class $5 ($2,$3): redeclaration of feature `$6' from $7 is an effecting and should not appear in the Redefine subclause."
-	vdus1a_default_template: STRING is "[$1] Class $5 ($2,$3): `$6' is not the final name of a feature in $7."
-	vdus2a_default_template: STRING is "[$1] Class $5 ($2,$3): cannot undefine the frozen feature `$6'."
-	vdus2b_default_template: STRING is "[$1] Class $5 ($2,$3): cannot undefine the attribute `$6'."
-	vdus3a_default_template: STRING is "[$1] Class $5 ($2,$3): cannot undefine the deferred feature `$6'."
-	vdus4a_default_template: STRING is "[$1] Class $5 ($2,$3): feature name `$6' appears twice in the Undefine subclause of parent $7."
+	vcch1a_default_template: STRING is "[$1] Class $5 ($3,$4): class is not marked as deferred but has deferred feature `$6'."
+	vcch1b_default_template: STRING is "[$1] Class $5 ($3,$4): class is not marked as deferred but has deferred feature `$6' inherited from $7."
+	vcch2a_default_template: STRING is "[$1] Class $5 ($3,$4): class is marked as deferred but has no deferred feature."
+	vcfg1a_default_template: STRING is "[$1] Class $5 ($3,$4): formal generic parameter '$6' has the same name as a class in the surrounding universe."
+	vcfg2a_default_template: STRING is "[$1] Class $5 ($3,$4): '$6' is the name of formal generic parameters #$7 and #$8."
+	vcfg3a_default_template: STRING is "[$1] Class $5 ($3,$4): invalid type '$6' in constraint of formal generic parameter."
+	vcfg3b_default_template: STRING is "[$1] Class $5 ($3,$4): invalid type '$6' in constraint of formal generic parameter."
+	vcfg3c_default_template: STRING is "[$1] Class $5 ($3,$4): invalid type '$6' in constraint of formal generic parameter."
+	vcfg3d_default_template: STRING is "[$1] Class $5 ($3,$4): constraint of formal generic parameter '$6' is '$7' itself."
+	vcfg3e_default_template: STRING is "[$1] Class $5 ($3,$4): constraint of formal generic parameter '$6' is another formal generic parameter '$7'."
+	vcfg3g_default_template: STRING is "[$1] Class $5 ($3,$4): formal generic constraint cycle $6."
+	vcfg3h_default_template: STRING is "[$1] Class $5 ($3,$4): constraint of formal generic parameter '$6' contains '$7' itself."
+	vcfg3j_default_template: STRING is "[$1] Class $5 ($3,$4): formal generic constraint cycle $6."
+	vdjr0a_default_template: STRING is "[$1] Class $5 ($3,$4): joined deferred features `$6' inherited from $7 and $8 don't have the same signature. Different number of arguments."
+	vdjr0b_default_template: STRING is "[$1] Class $5 ($3,$4): joined deferred features `$6' inherited from $7 and $8 don't have the same signature. Type of argument number $9 differs."
+	vdjr0c_default_template: STRING is "[$1] Class $5 ($3,$4): joined deferred features `$6' inherited from $7 and $8 don't have the same signature. Type of result differs."
+	vdrd2a_default_template: STRING is "[$1] Class $5 ($3,$4): signature of feature `$6' does not conform to the signature of redeclared feature `$7' in parent $8."
+	vdrd2b_default_template: STRING is "[$1] Class $5 ($3,$4): signature of feature `$6' inherited from $7 does not conform to the signature of redeclared feature `$8' in parent $9."
+	vdrd4a_default_template: STRING is "[$1] Class $5 ($3,$4): deferred feature `$6' inherited from $7 is redefined but is not listed in the Redefine subclause."
+	vdrd4b_default_template: STRING is "[$1] Class $5 ($3,$4): effective feature `$6' inherited from $7 is redefined but is not listed in the Redefine subclause."
+	vdrd4c_default_template: STRING is "[$1] Class $5 ($3,$4): effective feature `$6' inherited from $7 is redefined into a deferred one but is not listed in the Undefine and Redefine subclauses."
+	vdrd5a_default_template: STRING is "[$1] Class $5 ($3,$4): effective feature `$6' inherited from $7 is redefined into a deferred one."
+	vdrs1a_default_template: STRING is "[$1] Class $5 ($3,$4): `$6' is not the final name of a feature in $7."
+	vdrs2a_default_template: STRING is "[$1] Class $5 ($3,$4): cannot redefine the frozen feature `$6'."
+	vdrs2b_default_template: STRING is "[$1] Class $5 ($3,$4): cannot redefine the constant attribute `$6'."
+	vdrs3a_default_template: STRING is "[$1] Class $5 ($3,$4): feature name `$6' appears twice in the Redefine subclause of parent $7."
+	vdrs4a_default_template: STRING is "[$1] Class $5 ($3,$4): Redefine subclause of $7 lists feature `$6' but it is not redefined."
+	vdrs4b_default_template: STRING is "[$1] Class $5 ($3,$4): redeclaration of feature `$6' from $7 is an effecting and should not appear in the Redefine subclause."
+	vdus1a_default_template: STRING is "[$1] Class $5 ($3,$4): `$6' is not the final name of a feature in $7."
+	vdus2a_default_template: STRING is "[$1] Class $5 ($3,$4): cannot undefine the frozen feature `$6'."
+	vdus2b_default_template: STRING is "[$1] Class $5 ($3,$4): cannot undefine the attribute `$6'."
+	vdus3a_default_template: STRING is "[$1] Class $5 ($3,$4): cannot undefine the deferred feature `$6'."
+	vdus4a_default_template: STRING is "[$1] Class $5 ($3,$4): feature name `$6' appears twice in the Undefine subclause of parent $7."
 	vhpr1a_default_template: STRING is "[$1] Class $5: inheritance cycle $6."
-	vhpr3a_default_template: STRING is "[$1] Class $5 ($2,$3): invalid type '$6' in parent clause."
-	vhpr3b_default_template: STRING is "[$1] Class $5 ($2,$3): invalid type '$6' in parent clause."
-	vhpr3c_default_template: STRING is "[$1] Class $5 ($2,$3): invalid type '$6' in parent clause."
-	vhrc1a_default_template: STRING is "[$1] Class $5 ($2,$3): `$6' is not the final name of a feature in $7."
-	vhrc2a_default_template: STRING is "[$1] Class $5 ($2,$3): feature name `$6' appears as first element of two Rename_pairs."
-	vhrc4a_default_template: STRING is "[$1] Class $5 ($2,$3): `$6' is of the Prefix form but `$7' in $8 is not an attribute nor a function with no argument."
-	vhrc5a_default_template: STRING is "[$1] Class $5 ($2,$3): `$6' is of the Infix form but `$7' in $8 is not a function with one argument."
-	vmfn0a_default_template: STRING is "[$1] Class $5 ($2,$3): two features with the same name `$6'."
-	vmfn0b_default_template: STRING is "[$1] Class $5 ($2,$3): two features with the same name `$6' in current class and `$7' inherited from $8."
-	vmfn0c_default_template: STRING is "[$1] Class $5 ($2,$3): two features with the same name `$6' inherited from $7 and `$8' inherited from $9."
-	vmrc2a_default_template: STRING is "[$1] Class $5 ($2,$3): replicated features $6 have not been selected."
-	vmrc2b_default_template: STRING is "[$1] Class $5 ($2,$3): replicated features $6 have been selected more than once."
-	vmss1a_default_template: STRING is "[$1] Class $5 ($2,$3): `$6' is not the final name of a feature in $7."
-	vmss2a_default_template: STRING is "[$1] Class $5 ($2,$3): feature name `$6' appears twice in the Select subclause of parent $7."
-	vmss3a_default_template: STRING is "[$1] Class $5 ($2,$3): class name clash: first file '$7', second file '$9'."
+	vhpr3a_default_template: STRING is "[$1] Class $5 ($3,$4): invalid type '$6' in parent clause."
+	vhpr3b_default_template: STRING is "[$1] Class $5 ($3,$4): invalid type '$6' in parent clause."
+	vhpr3c_default_template: STRING is "[$1] Class $5 ($3,$4): invalid type '$6' in parent clause."
+	vhrc1a_default_template: STRING is "[$1] Class $5 ($3,$4): `$6' is not the final name of a feature in $7."
+	vhrc2a_default_template: STRING is "[$1] Class $5 ($3,$4): feature name `$6' appears as first element of two Rename_pairs."
+	vhrc4a_default_template: STRING is "[$1] Class $5 ($3,$4): `$6' is of the Prefix form but `$7' in $8 is not an attribute nor a function with no argument."
+	vhrc5a_default_template: STRING is "[$1] Class $5 ($3,$4): `$6' is of the Infix form but `$7' in $8 is not a function with one argument."
+	vmfn0a_default_template: STRING is "[$1] Class $5 ($3,$4): two features with the same name `$6'."
+	vmfn0b_default_template: STRING is "[$1] Class $5 ($3,$4): two features with the same name `$6' in current class and `$7' inherited from $8."
+	vmfn0c_default_template: STRING is "[$1] Class $5 ($3,$4): two features with the same name `$6' inherited from $7 and `$8' inherited from $9."
+	vmrc2a_default_template: STRING is "[$1] Class $5 ($3,$4): replicated features $6 have not been selected."
+	vmrc2b_default_template: STRING is "[$1] Class $5 ($3,$4): replicated features $6 have been selected more than once."
+	vmss1a_default_template: STRING is "[$1] Class $5 ($3,$4): `$6' is not the final name of a feature in $7."
+	vmss2a_default_template: STRING is "[$1] Class $5 ($3,$4): feature name `$6' appears twice in the Select subclause of parent $7."
+	vmss3a_default_template: STRING is "[$1] Class $5 ($3,$4): class name clash: first file '$7', second file '$9'."
+	vreg0a_default_template: STRING is "[$1] Class $5 ($3,$4): argument name '$6' appear twice in feature `$7'."
+	vrfa0a_default_template: STRING is "[$1] Class $5 ($3,$4): argument name '$6' in feature `$7' is also the final name of feature."
 	vscn0a_default_template: STRING is "[$1] Class $5: invalid type '$6': the anchor `$7' must be the final name of a query."
-	vtat1a_default_template: STRING is "[$1] Class $5 ($2,$3): invalid type '$6': the anchor `$7' must be the final name of a query."
-	vtat1b_default_template: STRING is "[$1] Class $5 ($2,$3): invalid type '$6': the anchor `$7' must be the final name of a query, or an argument of routine `$8'."
-	vtat1c_default_template: STRING is "[$1] Class $5 ($2,$3): invalid type '$6': the anchor `$7' must be the final name of a query."
-	vtat1d_default_template: STRING is "[$1] Class $5 ($2,$3): invalid type '$6': the anchor `$7' must be the final name of a query in class $8."
-	vtat2a_default_template: STRING is "[$1] Class $5 ($2,$3): anchor cycle $6."
-	vtbt0a_default_template: STRING is "[$1] Class $5 ($2,$3): invalid type '$6': `$7' is not the final name of a constant attribute of type INTEGER."
-	vtbt0b_default_template: STRING is "[$1] Class $5 ($2,$3): invalid type '$6': `$7' is not the final name of a feature."
-	vtbt0c_default_template: STRING is "[$1] Class $5 ($2,$3): invalid type '$6': bit size must be a positive integer constant."
-	vtbt0d_default_template: STRING is "[$1] Class $5 ($2,$3): invalid type '$6': bit size must be a positive integer constant."
-	vtcg0a_default_template: STRING is "[$1] Class $5 ($2,$3): actual generic parameter '$6' does not conform to constraint '$7'."
-	vtct0a_default_template: STRING is "[$1] Class $5 ($2,$3): type based on unknown class $6."
-	vtct0b_default_template: STRING is "[$1] Class $5 ($2,$3): type based on unknown class $6."
+	vtat1a_default_template: STRING is "[$1] Class $5 ($3,$4): invalid type '$6': the anchor `$7' must be the final name of a query."
+	vtat1b_default_template: STRING is "[$1] Class $5 ($3,$4): invalid type '$6': the anchor `$7' must be the final name of a query, or an argument of routine `$8'."
+	vtat1c_default_template: STRING is "[$1] Class $5 ($3,$4): invalid type '$6': the anchor `$7' must be the final name of a query."
+	vtat1d_default_template: STRING is "[$1] Class $5 ($3,$4): invalid type '$6': the anchor `$7' must be the final name of a query in class $8."
+	vtat2a_default_template: STRING is "[$1] Class $5 ($3,$4): anchor cycle $6."
+	vtbt0a_default_template: STRING is "[$1] Class $5 ($3,$4): invalid type '$6': `$7' is not the final name of a constant attribute of type INTEGER."
+	vtbt0b_default_template: STRING is "[$1] Class $5 ($3,$4): invalid type '$6': `$7' is not the final name of a feature."
+	vtbt0c_default_template: STRING is "[$1] Class $5 ($3,$4): invalid type '$6': bit size must be a positive integer constant."
+	vtbt0d_default_template: STRING is "[$1] Class $5 ($3,$4): invalid type '$6': bit size must be a positive integer constant."
+	vtcg0a_default_template: STRING is "[$1] Class $5 ($3,$4): actual generic parameter '$6' does not conform to constraint '$7'."
+	vtct0a_default_template: STRING is "[$1] Class $5 ($3,$4): type based on unknown class $6."
+	vtct0b_default_template: STRING is "[$1] Class $5 ($3,$4): type based on unknown class $6."
 	vtct0c_default_template: STRING is "[$1] Class $5: implicitly inherits from unknown class ANY."
-	vtug1a_default_template: STRING is "[$1] Class $5 ($2,$3): type '$6' has actual generic parameters but class $7 is not generic."
-	vtug2a_default_template: STRING is "[$1] Class $5 ($2,$3): type '$6' has wrong number of actual generic parameters."
+	vtug1a_default_template: STRING is "[$1] Class $5 ($3,$4): type '$6' has actual generic parameters but class $7 is not generic."
+	vtug2a_default_template: STRING is "[$1] Class $5 ($3,$4): type '$6' has wrong number of actual generic parameters."
 	gvagp0a_default_template: STRING is "[$1] Class $5: ancestors with generic parameter mismatch: '$6' and '$7'."
 	gvhpr4a_default_template: STRING is "[$1] Class $5: cannot inherit from Bit_type '$6'."
 	gvhpr5a_default_template: STRING is "[$1] Class $5: cannot inherit from Tuple_type '$6'."
-	gvzzz0a_default_template: STRING is "[$1] Class $5 ($2,$3): validity error"
+	gvzzz0a_default_template: STRING is "[$1] Class $5 ($3,$4): validity error"
 			-- Default templates
 
+	vcch1_etl_code: STRING is "VCCH-1"
+	vcch2_etl_code: STRING is "VCCH-2"
 	vcfg1_etl_code: STRING is "VCFG-1"
 	vcfg2_etl_code: STRING is "VCFG-2"
 	vcfg3_etl_code: STRING is "VCFG-3"
@@ -3048,6 +3258,8 @@ feature {NONE} -- Implementation
 	vmss1_etl_code: STRING is "VMSS-1"
 	vmss2_etl_code: STRING is "VMSS-2"
 	vmss3_etl_code: STRING is "VMSS-3"
+	vreg_etl_code: STRING is "VREG"
+	vrfa_etl_code: STRING is "VRFA"
 	vscn_etl_code: STRING is "VSCN"
 	vtat1_etl_code: STRING is "VTAT-1"
 	vtat2_etl_code: STRING is "VTAT-2"
@@ -3062,6 +3274,9 @@ feature {NONE} -- Implementation
 	gvzzz_etl_code: STRING is "GVZZZ"
 			-- ETL validity codes
 
+	vcch1a_template_code: STRING is "vcch1a"
+	vcch1b_template_code: STRING is "vcch1b"
+	vcch2a_template_code: STRING is "vcch2a"
 	vcfg1a_template_code: STRING is "vcfg1a"
 	vcfg2a_template_code: STRING is "vcfg2a"
 	vcfg3a_template_code: STRING is "vcfg3a"
@@ -3108,6 +3323,8 @@ feature {NONE} -- Implementation
 	vmss1a_template_code: STRING is "vmss1a"
 	vmss2a_template_code: STRING is "vmss2a"
 	vmss3a_template_code: STRING is "vmss3a"
+	vreg0a_template_code: STRING is "vreg0a"
+	vrfa0a_template_code: STRING is "vrfa0a"
 	vscn0a_template_code: STRING is "vscn0a"
 	vtat1a_template_code: STRING is "vtat1a"
 	vtat1b_template_code: STRING is "vtat1b"
