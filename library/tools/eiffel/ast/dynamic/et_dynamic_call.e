@@ -71,7 +71,7 @@ feature -- Measurement
 
 	count: INTEGER
 			-- Number of types in `target_type_set' when
-			-- `propagate_types' was last called
+			-- `propagate_call_types' was last called
 
 feature -- Setting
 
