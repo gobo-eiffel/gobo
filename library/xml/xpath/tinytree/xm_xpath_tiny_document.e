@@ -47,6 +47,8 @@ feature -- Initialization
 		do
 			node_number := 1
 			document := Current
+
+			make_node
 			
 			create node_kinds.make (estimated_node_count)
 			create depth.make (estimated_node_count)
@@ -173,11 +175,12 @@ feature -- Element change
 	add_node (new_node_type: INTEGER; depth_value: INTEGER; alpha_value: INTEGER;  beta_value: INTEGER; new_name_code: INTEGER) is
 			-- Add a node to the document
 		require
-			valid_node_type: new_node_type >= Document_node and then new_node_type < Attribute_node
-			positive_depth: depth_value >= 0
-			positive_alpha: alpha_value >= 0
-			positive_beta: beta_value >= 0
-			valid_name_code: new_name_code >= 0
+			valid_node_type: new_node_type = Document_node or new_node_type = Element_node or
+				new_node_type = Text_node or new_node_type = Comment_node or new_node_type = Processing_instruction_node
+			positive_depth: depth_value > 0
+			valid_alpha: alpha_value >= -1
+			valid_beta: beta_value >= -1
+			valid_name_code: new_name_code >= -1
 		do
 			number_of_nodes := number_of_nodes + 1
 			node_kinds.force (new_node_type, number_of_nodes)
@@ -201,7 +204,7 @@ feature -- Element change
 			-- Set the next sibling of a node
 		require
 			valid_current_node: which_node > 0
-			valid_next_sibling: next >= 0 -- 0 means no next sibling
+			valid_next_sibling: next >= -1 -- -1 means no next sibling
 		do
 			next_sibling.force (next, which_node)
 		ensure
@@ -294,7 +297,7 @@ feature {NONE} -- Implementation
 			-- Maps Element types to node numbers
 
 	root_node: INTEGER
-			-- The actual root of the tree. Normally 0.
+			-- The actual root of the tree. Normally 1.
 
 	character_buffer: UC_UTF8_STRING
 			-- The document contents
@@ -314,7 +317,7 @@ feature {NONE} -- Implementation
 			-- Kind of node, e.g. Element, Text, Comment
 
 	depth: DS_ARRAYED_LIST [INTEGER]
-			-- Depth of the node in the hierarchy (i.e. the number of ancestors).
+			-- Depth of the node in the hierarchy (document root is level 1, so = the number of ancestors + 1).
 
 	next_sibling: DS_ARRAYED_LIST [INTEGER]
 			-- Node number of the next sibling;

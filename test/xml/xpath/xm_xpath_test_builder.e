@@ -40,10 +40,11 @@ feature {NONE} -- Implementation
 			create parser.make
 			create tree_pipe.make
 			parser.set_callbacks (tree_pipe.start)
+			parser.set_dtd_callbacks (tree_pipe.emitter)
 			parser.set_string_mode_unicode
 		end
 		
 	parser: XM_EIFFEL_PARSER
-	tree_pipe: XM_TREE_CALLBACKS_PIPE
+	tree_pipe: XM_XPATH_TINYTREE_CALLBACKS_PIPE
 	
 end

@@ -31,40 +31,53 @@ feature {NONE} -- Initialization
 			a_dummy: XM_CALLBACKS
 			namespace_resolver: XM_NAMESPACE_RESOLVER
 		do
-			namespace_resolver := new_namespace_resolver
+			default_pool := shared_pool.default_pool
+			create tree.make (default_pool)
+			create emitter.make (tree, default_pool)
+			create error.set_next (emitter)
+			create namespace_resolver.set_next (error)
 			namespace_resolver.set_forward_xmlns (True)
-			start := namespace_resolver
-			error := new_stop_on_error
-			content := new_content_concatenator
-			tree := new_xpath_tinytree_builder
-			last := tree
-				-- Dummy because we already store 'start' in
-				-- a variable of a descendant type
-			a_dummy := callbacks_pipe (<<
-				start,
-				-- new_shared_strings,
-				-- -- check this is valuable?
-				content,
-				error,
-				tree >>)
+			create attributes.set_next (namespace_resolver)
+			create content.set_next (attributes)
+			create whitespace.set_next (content)
+			create start.set_next (whitespace)
 		end
-		
+
+feature -- Name pool
+
+	shared_pool: XM_XPATH_SHARED_NAME_POOL is
+			-- The shared name pool
+		once
+			create Result.make
+		end
+
+	default_pool: XM_XPATH_NAME_POOL
+			-- The default name pool
+	
 feature -- Filters (part of the pipe)
 
-	start: XM_CALLBACKS_FILTER
+	start: XM_UNICODE_VALIDATION_FILTER
 			-- Starting point for XM_CALLBACKS_SOURCE (e.g. parser)
+
+	whitespace: XM_WHITESPACE_NORMALIZER
+			-- Normalize white space
+
+	content: XM_CONTENT_CONCATENATOR
+			-- Content concatenator
+
+	attributes: XM_ATTRIBUTE_DEFAULT_FILTER
+			-- Set attribute defaults from the DTD
 
 	error: XM_STOP_ON_ERROR_FILTER
 			-- Error collector
 
-	content: XM_CONTENT_CONCATENATOR
-			-- Content concatenator
-	
+feature -- Builder
+
+	emitter: XM_XPATH_CONTENT_EMITTER
+			-- Couples pipeline to the tree-builder
+
 	tree: XM_XPATH_TINY_BUILDER
 			-- Tree construction
-
-	last: XM_CALLBACKS_FILTER
-			-- Last element in the pipe, to which further filters can be added
 
 feature -- Shortcuts
 

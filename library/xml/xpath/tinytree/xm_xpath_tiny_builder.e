@@ -14,173 +14,152 @@ class XM_XPATH_TINY_BUILDER
 
 inherit
 
-	XM_CALLBACKS_FILTER
-		redefine
-			has_resolved_namespaces,
-			on_start,
-			on_finish,
-			on_start_tag,
-			on_attribute,
-			on_content,
-			on_end_tag,
-			on_processing_instruction,
-			on_comment
-		end
-
-	XM_XPATH_STANDARD_NAMESPACES
+	XM_XPATH_RECEIVER
 
 	XM_XPATH_TYPE
-	
-	KL_SHARED_EXCEPTIONS
 
 creation
 
-	make_null,
-	set_next
+	make
 
+feature -- Initialization
+
+	make (a_name_pool: XM_XPATH_NAME_POOL) is
+			-- Set the name pool in which all name codes can be found
+		require
+			name_pool_not_void: a_name_pool /= Void
+		do
+			name_pool := a_name_pool
+		ensure
+			name_pool_set: name_pool.is_equal (a_name_pool)
+		end
+	
 feature -- Result
 
 	document: XM_XPATH_TINY_DOCUMENT
 			-- Resulting document
 
-feature -- Document
+feature -- Element change
 
-	on_start is
-			-- Reset.
+	set_system_id (a_system_id: STRING) is
+			-- Set the system-id of the destination tree
+		do
+			system_id := a_system_id
+		end
+
+feature -- Events
+
+	start_document is
+			-- Notify the start of the document
 		do
 			-- TODO add timing information
-			if name_pool = Void then Exceptions.raise ("Name pool is void") end
 			if defaults_overridden then
 				create document.make (estimated_node_count, estimated_attribute_count, estimated_namespace_count, estimated_character_count)
 			else
 				create document.make_with_defaults
 			end
-			current_depth := 0
+			current_depth := 1
 			document.add_node (Document_node, current_depth, -1, -1, -1)
-			create previously_at_depth.make (0, 99)
-			previously_at_depth.put (1, 0) -- i.e. depth zero is node 1 - the document node
-			previously_at_depth.put (-1, 1) -- i.e. depth has not been reached yet
-			document.set_next_sibling (0, 1) -- i.e. node one has next sibling 0 (i.e. no next sibling)
+			create previously_at_depth.make (100)
+			previously_at_depth.put_first (1) -- i.e. depth one is node 1 - the document node
+			previously_at_depth.put_first (-1) -- i.e. no previous sibling
+			document.set_next_sibling (0, 1) -- i.e. node one has next sibling 0 (no next sibling)
 			current_depth := current_depth + 1
 			document.set_name_pool (name_pool)
 		end
 
-	on_finish is
-			-- Parsing finished.
+	set_unparsed_entity (a_name: STRING; a_system_id: STRING; a_public_id: STRING) is
+			-- Notify an unparsed entity URI
 		do
-			previously_at_depth.put (-1, current_depth) -- i.e. depth has not been reached yet
-			-- TODO add timing information
+			-- TODO document.set_unparsed_entity (a_name, a_system_id, a_public_id)
 		end
-	
-feature -- Element
 
-	on_start_tag (namespace, ns_prefix, a_name: STRING) is
-			-- called whenever the parser findes a start element.
+	start_element (a_name_code: INTEGER; a_type_code: INTEGER; properties: INTEGER) is
+			-- Notify the start of an element
 		local
-			name_code, previous_node_number: INTEGER
+			owner_node, previous_sibling: INTEGER
 		do
-			if namespace = Void then
-				Exceptions.raise ("XM_XPATH_TINY_BUILDER requires namespace to be resolved")
-			end
-			
-			if not name_pool.is_name_code_allocated (ns_prefix, namespace, a_name) then
-				name_pool.allocate_name (ns_prefix, namespace, a_name)
-				name_code := name_pool.last_name_code
-			else
-				name_code := name_pool.name_code (ns_prefix, namespace, a_name) 
-			end
-
-			document.add_node (Element_node, current_depth, -1, -1, name_code)
+			document.add_node (Element_node, current_depth, -1, -1, a_name_code)
 			node_number := document.last_node_added
+			if a_type_code /= 0 then
+				-- TODO
+			end
 
-			-- N.B. We have no type information from the current parser, so we cannot add any.
-
-			previous_node_number := previously_at_depth.item (current_depth)
-			if previous_node_number > 0  then document.set_next_sibling (node_number, previous_node_number) end
-			document.set_next_sibling (previously_at_depth.item (current_depth - 1), node_number) -- owner pointer in last sibling
+			previous_sibling := previously_at_depth.item (current_depth)
+			owner_node := previously_at_depth.item (current_depth - 1)
+			if previous_sibling > 0 then
+				document.set_next_sibling (node_number, previous_sibling)
+			end
+			document.set_next_sibling (owner_node, node_number) -- owner pointer in last sibling
 			previously_at_depth.put (node_number, current_depth)
 			current_depth := current_depth + 1
-
-			if current_depth = previously_at_depth.count then previously_at_depth.automatic_grow end
-			previously_at_depth.put (-1, current_depth) -- i.e. depth has not been reached yet
+			previously_at_depth.force (-1, current_depth) -- no previous sibling
 
 			-- TODO - locator stuff
 		end
 
-	on_attribute (namespace, a_prefix, a_name: STRING; a_value: STRING) is
-			-- Add attribute.
-		local
-			name_code, namespace_code, type_cde: INTEGER
+	namespace (a_namespace_code: INTEGER; properties: INTEGER) is
+			-- Notify a namespace;
+			-- Namespaces are notified after the `start_element' event, and before
+			--  any children for the element. The namespaces that are reported are only required
+			--  to include those that are different from the parent element; however, duplicates may be reported.
+			-- A namespace must not conflict with any namespaces already used for element or attribute names.
 		do
-			if namespace = Void then
-				Exceptions.raise ("XM_XPATH_TINY_BUILDER requires namespace to be resolved")
-			end
-
-			if not name_pool.is_name_code_allocated (a_prefix, namespace, a_name) then
-				name_pool.allocate_name (a_prefix, namespace, a_name)
-				name_code := name_pool.last_name_code
-			else
-				name_code := name_pool.name_code (a_prefix, namespace, a_name) 
-			end
-
-			if is_namespace_declaration (a_prefix, a_name) then
-				-- Create a namespace node
-				if name_pool.is_namespace_code_allocated (a_prefix, namespace) then
-					namespace_code := name_pool.namespace_code (a_prefix, namespace)
-				else
-					name_pool.allocate_namespace_code (a_prefix, namespace)
-					namespace_code := name_pool.last_namespace_code
-				end
-				document.add_namespace (node_number, namespace_code)
-			else
-				-- Normal attribute
-				-- `type_cde' is allowed to default to zero, as the
-				--  current parser does not provide us with any type information
-				document.add_attribute (node_number, name_code, type_cde, a_value)
-			end
-			
-			-- TODO
+				document.add_namespace (node_number, a_namespace_code)			
 		end
 
-	on_content (a_data: STRING) is
-			-- Character data;
-			-- N.B. Since the XPath data model requires that two consecutive
-			--  character nodes cannot occur as adjacent siblings,
-			--  an XM_CONTENT_CONCATENATOR must precede XM_XPATH_TINY_BUILDER
-			--  in the pipeline
-		local
-			buffer_start, previous_node_number: INTEGER
-			new_data: UC_UTF8_STRING
+	attribute (a_name_code: INTEGER; a_type_code: INTEGER; value: STRING; properties: INTEGER) is
+			-- Notify an attribute;
+			-- Attributes are notified after the `start_element' event, and before any
+			--  children. Namespaces and attributes may be intermingled
 		do
-			create new_data.make_from_utf8 (a_data)
+				document.add_attribute (node_number, a_name_code, a_type_code, value)
+		end
+
+	start_content is
+			-- Notify the start of the content, that is, the completion of all attributes and namespaces;
+			-- Note that the initial receiver of output from XSLT instructions will not receive this event,
+			--  it has to detect it itself. Note that this event is reported for every element even if it has
+			--  no attributes, no namespaces, and no content.
+		do
+			node_number := node_number + 1
+		end
+	
+	end_element is
+			-- Notify the end of an element;
+			-- The receiver must maintain a stack if it needs to know which
+			--  element is ending.
+		do
+			previously_at_depth.put (-1, current_depth)
+			current_depth := current_depth - 1			
+		end
+
+	characters (chars: STRING; properties: INTEGER) is
+			-- Notify character data
+		local
+			buffer_start, previous_sibling: INTEGER
+			new_data: UC_UTF8_STRING		
+		do
+			create new_data.make_from_utf8 (chars)
 			buffer_start := document.character_buffer_length
 			document.append_characters (new_data)
 			document.add_node (Text_node, current_depth, buffer_start, new_data.count, -1)
 			node_number := document.last_node_added
-			previous_node_number := previously_at_depth.item (current_depth)
-			if previous_node_number > 0 then
-				document.set_next_sibling (node_number, previous_node_number)
+
+			previous_sibling := previously_at_depth.item (current_depth)
+			if previous_sibling > 0 then
+				document.set_next_sibling (node_number, previous_sibling)
 			end
 			document.set_next_sibling (previously_at_depth.item (current_depth - 1), node_number) -- owner pointer in last sibling
 			previously_at_depth.put (node_number, current_depth)
 		end
 
-	on_end_tag (a_namespace, a_ns_prefix, a_local_part: STRING) is
-			-- End tag
-		do
-			if a_namespace = Void then
-				Exceptions.raise ("XM_XPATH_TINY_BUILDER requires namespace to be resolved")
-			end
-			
-			previously_at_depth.put (-1, current_depth) -- i.e. depth has not been reached yet
-			current_depth := current_depth - 1
-		end
-
-	on_processing_instruction (target, data: STRING) is
-			-- Processing instruction.
+	
+	processing_instruction (target: STRING; data: STRING; properties: INTEGER) is
+			-- Notify a processing instruction
 		local
 			new_data: UC_UTF8_STRING
-			name_code, previous_node_number: INTEGER
+			name_code, previous_sibling: INTEGER
 		do
 			create new_data.make_from_utf8 (data)
 			if not name_pool.is_name_code_allocated ("", "", target) then
@@ -193,35 +172,40 @@ feature -- Element
 			document.add_node (Processing_instruction_node, current_depth, document.comment_buffer_length, new_data.count, name_code)
 			node_number := document.last_node_added
 			
-			previous_node_number := previously_at_depth.item (current_depth)
-			if previous_node_number > 0  then document.set_next_sibling (node_number, previous_node_number) end
+			previous_sibling := previously_at_depth.item (current_depth)
+			if previous_sibling > 0 then
+				document.set_next_sibling (node_number, previous_sibling)
+			end
 			document.set_next_sibling (previously_at_depth.item (current_depth - 1), node_number) -- owner pointer in last sibling
-			previously_at_depth.put (node_number, current_depth)
-			current_depth := current_depth + 1 
+			previously_at_depth.put (node_number, current_depth)		
 		end
 
-	on_comment (com: STRING) is
-			-- Processing comment.
+	comment (content: STRING; properties: INTEGER) is
+			-- Notify a comment;
+			-- Comments are only notified if they are outside the DTD.
 		local
 			new_data: UC_UTF8_STRING
-			previous_node_number: INTEGER
+			previous_sibling: INTEGER
 		do
-			create new_data.make_from_utf8 (com)
+			create new_data.make_from_utf8 (content)
 			document.store_comment (new_data)
 			document.add_node (Comment_node, current_depth, document.comment_buffer_length, new_data.count, -1)
 			node_number := document.last_node_added
 			
-			previous_node_number := previously_at_depth.item (current_depth)
-			if previous_node_number > 0  then document.set_next_sibling (node_number, previous_node_number) end
+			previous_sibling := previously_at_depth.item (current_depth)
+			if previous_sibling > 0 then
+				document.set_next_sibling (node_number, previous_sibling)
+			end
 			document.set_next_sibling (previously_at_depth.item (current_depth - 1), node_number) -- owner pointer in last sibling
 			previously_at_depth.put (node_number, current_depth)
-			current_depth := current_depth + 1 			
 		end
 
-feature -- Access
-
-	name_pool: XM_XPATH_NAME_POOL
-			-- The name pool in use
+	end_document is
+			-- Parsing finished.
+		do
+			previously_at_depth.put (-1, current_depth) -- i.e. depth has not been reached yet
+			-- TODO add timing information
+		end
 	
 feature -- Implementation control
 
@@ -237,16 +221,6 @@ feature -- Implementation control
 	estimated_character_count: INTEGER
 			-- An estimate of how many characters there are in the document contents
 
-	set_name_pool (new_pool: XM_XPATH_NAME_POOL) is
-			-- Set the name pool used by this builder
-		require
-			pool_not_void: new_pool /= Void
-		do
-			name_pool := new_pool
-		ensure
-			pool_set: name_pool = new_pool
-		end
-	
 	reset_defaults is
 			-- Use the default tree implementation parameters
 		require
@@ -278,14 +252,6 @@ feature -- Implementation control
 			default_parameters_overridden: defaults_overridden = True
 		end
 
-feature -- Events mode
-
-	has_resolved_namespaces: BOOLEAN is
-			-- Namespaces required
-		do
-			Result := True
-		end
-		
 feature {NONE} -- Implementation
 
 	defaults_overridden: BOOLEAN
@@ -299,22 +265,16 @@ feature {NONE} -- Implementation
 	node_number: INTEGER
 			-- The local sequence number for a node within this document
 
-	previously_at_depth: ARRAY [INTEGER]
+	previously_at_depth: DS_ARRAYED_LIST [INTEGER]
 			-- Scaffolding used whilst building the tree;
-			-- Indexed by the depth of the tree, values are node numbers
+			-- Values are node numbers
 
-	is_namespace_declaration (a_prefix, a_name: STRING): BOOLEAN is
-			-- xmlns= or xmlns:
-		do
-			if a_prefix.count = 0 and then a_name.is_equal ("xmlns") then
-				Result := True
-			elseif a_prefix.is_equal ("xmlns") then
-				Result := True
-			end
-		end
-	
+	system_id: STRING
+			-- The SYSTEM id of the document being processed
+			-- TODO - set this in the document to the base-URI
+
 invariant
-
 	positive_depth: current_depth >= 0
-	
+	name_pool_not_void: name_pool /= Void
+
 end

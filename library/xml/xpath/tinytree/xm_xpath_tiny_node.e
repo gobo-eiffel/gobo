@@ -16,6 +16,20 @@ inherit
 
 	XM_XPATH_NODE
 
+feature -- Initialization
+
+	make_node is
+			-- Establish invariant
+		require
+			not_created: children = Void and attributes = Void and namespaces = Void
+		do
+			create children.make_equal (7)
+			create attributes.make_equal (7)
+			create namespaces.make_equal (7)
+		ensure
+			created: children /= Void and attributes /= Void and namespaces /= Void
+		end
+			
 feature {NONE} -- Implementation
 
 	node_number: INTEGER
