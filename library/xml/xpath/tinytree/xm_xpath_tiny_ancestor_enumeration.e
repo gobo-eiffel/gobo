@@ -20,18 +20,18 @@ creation
 
 	make
 	
-feature -- Initialization
+feature {NONE} -- Initialization
 
-	make (doc: XM_XPATH_TINY_DOCUMENT; start: XM_XPATH_TINY_NODE; test: XM_XPATH_NODE_TEST; self: BOOLEAN) is
+	make (a_document: XM_XPATH_TINY_DOCUMENT; a_start_node: XM_XPATH_TINY_NODE; a_node_test: XM_XPATH_NODE_TEST; self: BOOLEAN) is
 			-- Establish invariant
 		require
-			document_not_void: doc /= Void
-			starting_node_not_void: start /= Void
-			node_test_not_void: test /= Void
+			document_not_void: a_document /= Void
+			starting_node_not_void: a_start_node /= Void
+			node_test_not_void: a_node_test /= Void
 		do
-			document := doc
-			starting_node := start
-			node_test := test
+			document := a_document
+			starting_node := a_start_node
+			node_test := a_node_test
 
 			if include_self and then node_test.matches_node (starting_node.item_type, starting_node.fingerprint, starting_node.type_annotation) then
 				first_node := starting_node
@@ -44,9 +44,9 @@ feature -- Initialization
 				advance
 			end
 		ensure
-			document_set: document = doc
-			starting_node_set: starting_node = start
-			test_set: node_test = test
+			document_set: document = a_document
+			starting_node_set: starting_node = a_start_node
+			test_set: node_test = a_node_test
 		end
 
 feature -- Status report
@@ -56,15 +56,6 @@ feature -- Status report
 			-- Are there any more items in the sequence?
 		do
 			Result := first_node = Void and then next_node = Void
-		end
-
-feature -- Duplication
-
-	another: like Current is
-			-- Another iterator that iterates over the same items as the original;
-			-- The new iterator will be repositioned at the start of the sequence
-		do
-			create Result.make (document, starting_node, node_test, include_self)
 		end
 
 feature -- Cursor movement
@@ -80,6 +71,15 @@ feature -- Cursor movement
 				current_item := next_node
 				advance
 			end
+		end
+
+feature -- Duplication
+
+	another: like Current is
+			-- Another iterator that iterates over the same items as the original;
+			-- The new iterator will be repositioned at the start of the sequence
+		do
+			create Result.make (document, starting_node, node_test, include_self)
 		end
 	
 feature {NONE} -- Implemnentation

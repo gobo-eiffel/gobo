@@ -23,6 +23,46 @@ inherit
 
 	KL_IMPORTED_STRING_ROUTINES
 
+feature -- Access
+
+	string_value: STRING is
+			-- String-value
+		local
+			a_level, a_next_node, a_start_position, a_length: INTEGER
+			a_buffer: STRING
+		do
+			-- Return the concatentation of the string value of all it's
+			-- text-node descendants.
+			-- Actually, more complicated than the above description.
+
+			a_level := document.depth_of (node_number)
+			
+			-- note, we can't rely on the value being contiguously stored because of whitespace
+			-- nodes: the data for these may still be present
+			-- Also there may be processing-instruction and comment nodes present.
+
+			from
+				a_next_node := node_number + 1
+			until
+				a_next_node >= document.last_node_added or else document.depth_of (a_next_node) <= a_level
+			loop
+				if document.retrieve_node_kind (a_next_node) = Text_node then
+					if a_buffer = Void then
+						create {UC_UTF8_STRING} a_buffer.make_empty
+					end
+					a_length := document.beta_value (a_next_node)
+					a_start_position := document.alpha_value (a_next_node)
+					a_buffer := STRING_.appended_string (a_buffer, document.character_buffer.substring (a_start_position, a_start_position + a_length))
+				end
+				a_next_node := a_next_node + 1
+			end
+			if a_buffer = Void then
+				Result := ""
+			else
+				Result := a_buffer
+			end
+		end
+
 feature -- Status report
 
 	has_child_nodes: BOOLEAN is
@@ -31,45 +71,6 @@ feature -- Status report
 			Result := node_number + 1 < document.last_node_added
 				and then document.depth_of (node_number + 1) > document.depth_of (node_number)
 		end
-
-	string_value: STRING is
-			-- String-value
-		local
-			level, next, start, length: INTEGER
-			buffer: STRING
-		do
-			-- Return the concatentation of the string value of all it's
-			-- text-node descendants.
-			-- Actually, more complicated than the above description.
-
-			level := document.depth_of (node_number)
-			
-			-- note, we can't rely on the value being contiguously stored because of whitespace
-			-- nodes: the data for these may still be present
-			-- Also there may be processing-instruction and comment nodes present.
-
-			from
-				next := node_number + 1
-			until
-				next >= document.last_node_added or else document.depth_of (next) <= level
-			loop
-				if document.retrieve_node_kind (next) = Text_node then
-					if buffer = Void then
-						create {UC_UTF8_STRING} buffer.make_empty
-					end
-					length := document.beta_value (next)
-					start := document.alpha_value (next)
-					buffer := STRING_.appended_string (buffer, document.character_buffer.substring (start, start + length))
-				end
-				next := next + 1
-			end
-			if buffer = Void then
-				Result := ""
-			else
-				Result := buffer
-			end
-		end
-
 
 end
 	

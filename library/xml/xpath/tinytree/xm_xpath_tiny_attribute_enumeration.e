@@ -22,26 +22,26 @@ creation
 
 	make
 	
-feature -- Initialization
+feature {NONE} -- Initialization
 
-	make (doc: XM_XPATH_TINY_DOCUMENT; element: INTEGER; test: XM_XPATH_NODE_TEST) is
+	make (a_document: XM_XPATH_TINY_DOCUMENT; an_element: INTEGER; a_node_test: XM_XPATH_NODE_TEST) is
 			-- Establish invariant
 		require
-			document_not_void: doc /= Void
-			valid_element: doc.is_node_number_valid (element)
-			node_test_not_void: test /= Void
+			document_not_void: a_document /= Void
+			valid_element: a_document.is_node_number_valid (an_element)
+			node_test_not_void: a_node_test /= Void
 		do
-			document := doc
-			parent_element := element
-			node_test := test
+			document := a_document
+			parent_element := an_element
+			node_test := a_node_test
 
-			attribute_index := doc.alpha_value (element) -- first_attribute
+			attribute_index := a_document.alpha_value (an_element) -- first_attribute
 			index := 0
 			advance
 		ensure
-			document_set: document = doc
-			element_set: parent_element = element
-			test_set: node_test = test
+			document_set: document = a_document
+			element_set: parent_element = an_element
+			test_set: node_test = a_node_test
 		end
 
 feature -- Status report
@@ -53,6 +53,26 @@ feature -- Status report
 			Result := attribute_index <= 0
 		end
 
+feature -- Cursor movement
+
+	forth is
+			-- Move to next position
+		local
+			a_node: INTEGER
+			a_name_test: XM_XPATH_NAME_TEST
+		do
+			index := index + 1
+			a_node := attribute_index
+			attribute_index := attribute_index + 1
+			a_name_test ?= node_test
+			if a_name_test /= Void then
+				attribute_index := -1 -- there can only be one match, so abandon further searching
+			else
+				advance
+			end
+			current_item := document.retrieve_attribute_node (a_node) 
+		end
+	
 feature -- Duplication
 
 	another: like Current is
@@ -62,27 +82,7 @@ feature -- Duplication
 			create Result.make (document, parent_element, node_test)
 		end
 
-feature -- Cursor movement
-
-	forth is
-			-- Move to next position
-		local
-			a_node: INTEGER
-			name_test: XM_XPATH_NAME_TEST
-		do
-			index := index + 1
-			a_node := attribute_index
-			attribute_index := attribute_index + 1
-			name_test ?= node_test
-			if name_test /= Void then
-				attribute_index := -1 -- there can only be one match, so abandon further searching
-			else
-				advance
-			end
-			current_item := document.retrieve_attribute_node (a_node) 
-		end
-	
-feature {NONE} -- Implemnentation
+feature {NONE} -- Implementation
 
 	document: XM_XPATH_TINY_DOCUMENT
 			-- The document within which we enumerate

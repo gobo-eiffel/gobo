@@ -20,25 +20,25 @@ creation
 
 	make
 	
-feature -- Initialization
+feature {NONE} -- Initialization
 
-	make (doc: XM_XPATH_TINY_DOCUMENT; start: XM_XPATH_TINY_NODE; test: XM_XPATH_NODE_TEST; descendants: BOOLEAN) is
+	make (a_document: XM_XPATH_TINY_DOCUMENT; a_starting_node: XM_XPATH_TINY_NODE; a_node_test: XM_XPATH_NODE_TEST; descendants: BOOLEAN) is
 			-- Establish invariant
 		require
-			document_not_void: doc /= Void
-			starting_node_not_void: start /= Void
-			node_test_not_void: test /= Void
+			document_not_void: a_document /= Void
+			starting_node_not_void: a_starting_node /= Void
+			node_test_not_void: a_node_test /= Void
 		local
-			depth: INTEGER
+			a_depth: INTEGER
 			finished: BOOLEAN
 		do
-			document := doc
-			starting_node := start
-			node_test := test
-			next_node_number := start.node_number
+			document := a_document
+			starting_node := a_starting_node
+			node_test := a_node_test
+			next_node_number := a_starting_node.node_number
 			include_descendants := descendants
 
-			depth := doc.depth_of (next_node_number)
+			a_depth := a_document.depth_of (next_node_number)
 
 			-- Skip the descendants, if any
 			
@@ -50,22 +50,22 @@ feature -- Initialization
 					finished
 				loop
 					next_node_number := next_node_number + 1
-					if next_node_number > doc.last_node_added then
+					if next_node_number > a_document.last_node_added then
 						next_node_number := -1
 						finished := True
-					elseif not (doc.depth_of (next_node_number) > depth) then
+					elseif not (a_document.depth_of (next_node_number) > a_depth) then
 						finished := True
 					end
 				end
 			end
 
-			if not test.matches_node (doc.retrieve_node_kind (next_node_number), doc.name_code_for_node (next_node_number), doc.element_annotation (next_node_number)) then
+			if not a_node_test.matches_node (a_document.retrieve_node_kind (next_node_number), a_document.name_code_for_node (next_node_number), a_document.element_annotation (next_node_number)) then
 				advance
 			end
 		ensure
-			document_set: document = doc
-			starting_node_set: starting_node = start
-			test_set: node_test = test
+			document_set: document = a_document
+			starting_node_set: starting_node = a_starting_node
+			test_set: node_test = a_node_test
 			include_descendants: include_descendants = descendants
 		end
 
@@ -78,15 +78,6 @@ feature -- Status report
 			Result := next_node_number <= 0
 		end
 
-feature -- Duplication
-
-	another: like Current is
-			-- Another iterator that iterates over the same items as the original;
-			-- The new iterator will be repositioned at the start of the sequence
-		do
-			create Result.make (document, starting_node, node_test, include_descendants)
-		end
-
 feature -- Cursor movement
 
 	forth is
@@ -95,6 +86,15 @@ feature -- Cursor movement
 			index := index + 1
 			current_item := document.retrieve_node (next_node_number)
 			advance
+		end
+
+feature -- Duplication
+
+	another: like Current is
+			-- Another iterator that iterates over the same items as the original;
+			-- The new iterator will be repositioned at the start of the sequence
+		do
+			create Result.make (document, starting_node, node_test, include_descendants)
 		end
 	
 feature {NONE} -- Implemnentation

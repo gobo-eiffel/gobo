@@ -20,26 +20,26 @@ creation
 
 	make
 	
-feature -- Initialization
+feature {NONE} -- Initialization
 
-	make (doc: XM_XPATH_TINY_DOCUMENT; start: XM_XPATH_TINY_NODE; test: XM_XPATH_NODE_TEST) is
+	make (a_document: XM_XPATH_TINY_DOCUMENT; a_starting_node: XM_XPATH_TINY_NODE; a_node_test: XM_XPATH_NODE_TEST) is
 			-- Establish invariant
 		require
-			document_not_void: doc /= Void
-			starting_node_not_void: start /= Void
-			node_test_not_void: test /= Void
+			document_not_void: a_document /= Void
+			starting_node_not_void: a_starting_node /= Void
+			node_test_not_void: a_node_test /= Void
 		do
-			document := doc
+			document := a_document
 			document.ensure_prior_index
-			starting_node := start
-			node_test := test
-			next_node_number := start.node_number
+			starting_node := a_starting_node
+			node_test := a_node_test
+			next_node_number := a_starting_node.node_number
 			parent_node := starting_node.parent
 			advance
 		ensure
-			document_set: document = doc
-			starting_node_set: starting_node = start
-			test_set: node_test = test
+			document_set: document = a_document
+			starting_node_set: starting_node = a_starting_node
+			test_set: node_test = a_node_test
 		end
 
 feature -- Status report
@@ -51,15 +51,6 @@ feature -- Status report
 			Result := next_node_number <= 0
 		end
 
-feature -- Duplication
-
-	another: like Current is
-			-- Another iterator that iterates over the same items as the original;
-			-- The new iterator will be repositioned at the start of the sequence
-		do
-			create Result.make (document, starting_node, node_test)
-		end
-
 feature -- Cursor movement
 
 	forth is
@@ -69,6 +60,15 @@ feature -- Cursor movement
 			current_item := document.retrieve_node (next_node_number)
 			current_item.set_parent_node (parent_node) -- caching the parent node, so a future search need not be done
 			advance
+		end
+
+feature -- Duplication
+
+	another: like Current is
+			-- Another iterator that iterates over the same items as the original;
+			-- The new iterator will be repositioned at the start of the sequence
+		do
+			create Result.make (document, starting_node, node_test)
 		end
 	
 feature {NONE} -- Implementation

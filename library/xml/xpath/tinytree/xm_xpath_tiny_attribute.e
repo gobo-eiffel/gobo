@@ -27,13 +27,13 @@ creation
 
 feature {NONE} -- Initialization
 
-	make (doc: XM_XPATH_TINY_DOCUMENT; attribute_number: INTEGER) is
+	make (a_document: XM_XPATH_TINY_DOCUMENT; an_attribute_number: INTEGER) is
 		do
-			document := doc
-			node_number := attribute_number
+			document := a_document
+			node_number := an_attribute_number
 		ensure
-			document_set: document = doc
-			node_number_set: node_number = attribute_number
+			document_set: document = a_document
+			node_number_set: node_number = an_attribute_number
 		end
 
 feature -- Access

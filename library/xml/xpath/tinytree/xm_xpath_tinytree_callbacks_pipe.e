@@ -43,7 +43,7 @@ feature {NONE} -- Initialization
 			create start.set_next (whitespace)
 		end
 
-feature -- Name pool
+feature -- Access
 
 	shared_pool: XM_XPATH_SHARED_NAME_POOL is
 			-- The shared name pool
@@ -54,8 +54,6 @@ feature -- Name pool
 	default_pool: XM_XPATH_NAME_POOL
 			-- The default name pool
 	
-feature -- Filters (part of the pipe)
-
 	start: XM_UNICODE_VALIDATION_FILTER
 			-- Starting point for XM_CALLBACKS_SOURCE (e.g. parser)
 
@@ -71,15 +69,11 @@ feature -- Filters (part of the pipe)
 	error: XM_STOP_ON_ERROR_FILTER
 			-- Error collector
 
-feature -- Builder
-
 	emitter: XM_XPATH_CONTENT_EMITTER
 			-- Couples pipeline to the tree-builder
 
 	tree: XM_XPATH_TINY_BUILDER
 			-- Tree construction
-
-feature -- Shortcuts
 
 	document: XM_XPATH_TINY_DOCUMENT is
 			-- Document (from tree building filter)

@@ -48,39 +48,39 @@ creation
 
 	make, make_with_defaults
 
-feature -- Initialization
+feature {NONE} -- Initialization
 
-	make (estimated_node_count: INTEGER; estimated_attribute_count: INTEGER; estimated_namespace_count: INTEGER; estimated_character_count: INTEGER) is
+	make (an_estimated_node_count: INTEGER; an_estimated_attribute_count: INTEGER; an_estimated_namespace_count: INTEGER; an_estimated_character_count: INTEGER) is
 			-- Establish invariant
 		require
-			positive_node_count: estimated_node_count > 0
-			attribute_count: estimated_attribute_count >= 0
-			namespace_count: estimated_namespace_count >= 0
-			character_count: estimated_character_count >= 0
+			positive_node_count: an_estimated_node_count > 0
+			attribute_count: an_estimated_attribute_count >= 0
+			namespace_count: an_estimated_namespace_count >= 0
+			character_count: an_estimated_character_count >= 0
 		do
 			root_node := 1
 			node_number := 1
 			document := Current
 			
-			create node_kinds.make (1, estimated_node_count)
-			create depth.make (1, estimated_node_count)
-			create next_sibling_indices.make (1, estimated_node_count)
-			create alpha.make (1, estimated_node_count)
-			create beta.make (1, estimated_node_count)
-			create name_codes.make (1, estimated_node_count)
+			create node_kinds.make (1, an_estimated_node_count)
+			create depth.make (1, an_estimated_node_count)
+			create next_sibling_indices.make (1, an_estimated_node_count)
+			create alpha.make (1, an_estimated_node_count)
+			create beta.make (1, an_estimated_node_count)
+			create name_codes.make (1, an_estimated_node_count)
 
-			create attribute_parents.make (estimated_attribute_count)
-			create attribute_codes.make (estimated_attribute_count)
-			create attribute_values.make (estimated_attribute_count)
+			create attribute_parents.make (an_estimated_attribute_count)
+			create attribute_codes.make (an_estimated_attribute_count)
+			create attribute_values.make (an_estimated_attribute_count)
 			attribute_values.set_equality_tester (string_equality_tester)
 			
-			create namespace_parents.make (estimated_namespace_count)
-			create namespace_codes.make (estimated_namespace_count)
+			create namespace_parents.make (an_estimated_namespace_count)
+			create namespace_codes.make (an_estimated_namespace_count)
 
 			if is_string_mode_ascii then
-				create character_buffer.make (estimated_character_count)
+				create character_buffer.make (an_estimated_character_count)
 			else
-				create {UC_UTF8_STRING} character_buffer.make (estimated_character_count)
+				create {UC_UTF8_STRING} character_buffer.make (an_estimated_character_count)
 			end
 		end
 
@@ -115,13 +115,13 @@ feature -- Access
 		end		
 
 	
-	select_id (id: STRING): XM_XPATH_ELEMENT is
+	select_id (an_id: STRING): XM_XPATH_ELEMENT is
 			-- Element with ID value of `id'
 		do
 			if id_table = Void then
 				Result := Void
-			elseif id_table.has (id) then
-				Result := id_table.item (id)
+			elseif id_table.has (an_id) then
+				Result := id_table.item (an_id)
 			else
 				Result := Void
 			end
@@ -153,41 +153,41 @@ feature -- Access
 			positive_result: Result >= 0
 		end
 			
-	unparsed_entity_system_id (entity_name: STRING): STRING is
+	unparsed_entity_system_id (an_entity_name: STRING): STRING is
 			-- System identifier of an unparsed external entity
 		local
-			entity_table_entry: DS_ARRAYED_LIST [STRING]
+			an_entity_table_entry: DS_ARRAYED_LIST [STRING]
 		do
 			if entity_table = Void then
 				Result := Void
-			elseif not entity_table.has (entity_name) then
+			elseif not entity_table.has (an_entity_name) then
 				Result := Void
 			else
-				entity_table_entry := entity_table.item (entity_name)
+				an_entity_table_entry := entity_table.item (an_entity_name)
 					check
-						entity_present: entity_table_entry /= Void
+						entity_present: an_entity_table_entry /= Void
 						-- Because `has' returned `True'.
 					end
-				Result := entity_table_entry.item (1)
+				Result := an_entity_table_entry.item (1)
 			end
 		end
 
-	unparsed_entity_public_id (entity_name: STRING): STRING is
+	unparsed_entity_public_id (an_entity_name: STRING): STRING is
 			-- Public identifier of an unparsed external entity
 		local
-			entity_table_entry: DS_ARRAYED_LIST [STRING]
+			an_entity_table_entry: DS_ARRAYED_LIST [STRING]
 		do
 			if entity_table = Void then
 				Result := Void
-			elseif not entity_table.has (entity_name) then
+			elseif not entity_table.has (an_entity_name) then
 				Result := Void
 			else
-				entity_table_entry := entity_table.item (entity_name)
+				an_entity_table_entry := entity_table.item (an_entity_name)
 					check
-						entity_present: entity_table_entry /= Void
+						entity_present: an_entity_table_entry /= Void
 						-- Because `has' returned `True'.
 					end
-				Result := entity_table_entry.item (2)
+				Result := an_entity_table_entry.item (2)
 			end
 		end
 
@@ -304,11 +304,11 @@ feature -- Access
 		require
 			node_number_is_valid: is_node_number_valid (a_node_number)
 		local
-			type_of_node: INTEGER
+			a_node_type: INTEGER
 		do
-			type_of_node := node_kinds.item (a_node_number)
+			a_node_type := node_kinds.item (a_node_number)
 			inspect
-				type_of_node
+				a_node_type
 			when Document_node then
 				Result := Current
 					check
@@ -342,7 +342,7 @@ feature -- Access
 			--  element type, it remembers the result for next time.
 		local
 			a_list: DS_ARRAYED_LIST [XM_XPATH_TINY_ELEMENT]
-			an_index, stored_name_code, another_fingerprint, top_bits: INTEGER
+			an_index, a_stored_name_code, another_fingerprint, top_bits: INTEGER
 			an_element: XM_XPATH_TINY_ELEMENT
 		do
 			if element_list = Void then
@@ -366,9 +366,9 @@ feature -- Access
 			until
 				an_index > last_node_added
 			loop
-				stored_name_code := name_codes.item (an_index)
-				top_bits := (stored_name_code // bits_20) * bits_20
-				another_fingerprint := stored_name_code - top_bits
+				a_stored_name_code := name_codes.item (an_index)
+				top_bits := (a_stored_name_code // bits_20) * bits_20
+				another_fingerprint := a_stored_name_code - top_bits
 				if node_kinds.item (an_index) = Element_node
 					and then  another_fingerprint = a_fingerprint then
 					an_element ?= retrieve_node (an_index)
@@ -416,80 +416,80 @@ feature -- Status report
 	diagnostic_dump is
 			-- Produce diagnostic print of main tree arrays
 		local
-			index, limit: INTEGER
+			an_index, a_limit: INTEGER
 			a_prefix, a_uri: STRING
 		do
 			std.error.put_string ("    node    type   depth    next   alpha    beta    name%N")
 			from
-				index := 1
-				limit := last_node_added
+				an_index := 1
+				a_limit := last_node_added
 			variant
-				limit - index + 1
+				a_limit - an_index + 1
 			until
-				index > limit
+				an_index > a_limit
 			loop
-				std.error.put_string (left_padded_string_out (index.out, 8, ' '))
-				std.error.put_string (left_padded_string_out (type_name (node_kinds.item (index)), 8, ' ').substring (1,8))
-				std.error.put_string (left_padded_string_out (depth.item (index).out, 8, ' '))
-				std.error.put_string (left_padded_string_out (next_sibling_indices.item (index).out, 8, ' '))
-				std.error.put_string (left_padded_string_out (alpha.item (index).out, 8, ' '))
-				std.error.put_string (left_padded_string_out (beta.item (index).out, 8, ' '))
-				std.error.put_string (left_padded_string_out (name_codes.item (index).out, 8, ' '))
+				std.error.put_string (left_padded_string_out (an_index.out, 8, ' '))
+				std.error.put_string (left_padded_string_out (type_name (node_kinds.item (an_index)), 8, ' ').substring (1,8))
+				std.error.put_string (left_padded_string_out (depth.item (an_index).out, 8, ' '))
+				std.error.put_string (left_padded_string_out (next_sibling_indices.item (an_index).out, 8, ' '))
+				std.error.put_string (left_padded_string_out (alpha.item (an_index).out, 8, ' '))
+				std.error.put_string (left_padded_string_out (beta.item (an_index).out, 8, ' '))
+				std.error.put_string (left_padded_string_out (name_codes.item (an_index).out, 8, ' '))
 				std.error.put_new_line
-				index := index + 1
+				an_index := an_index + 1
 			end
 
 			std.error.put_string ("    attr  parent    name    value%N")
 			from
-				index := 1
-				limit := attribute_values.count
+				an_index := 1
+				a_limit := attribute_values.count
 			variant
-				limit - index + 1
+				a_limit - an_index + 1
 			until
-				index > limit
+				an_index > a_limit
 			loop
-				std.error.put_string (left_padded_string_out (index.out, 8, ' '))
-				std.error.put_string (left_padded_string_out (attribute_parents.item (index).out, 8, ' '))
-				std.error.put_string (left_padded_string_out (name_pool.display_name_from_name_code (attribute_name_code (index)), 8, ' ').substring (1,8))
+				std.error.put_string (left_padded_string_out (an_index.out, 8, ' '))
+				std.error.put_string (left_padded_string_out (attribute_parents.item (an_index).out, 8, ' '))
+				std.error.put_string (left_padded_string_out (name_pool.display_name_from_name_code (attribute_name_code (an_index)), 8, ' ').substring (1,8))
 				std.error.put_string ("    ")
-				std.error.put_string (attribute_value (index))
+				std.error.put_string (attribute_value (an_index))
 				std.error.put_new_line
-				index := index + 1
+				an_index := an_index + 1
 			end
 			
 			std.error.put_string ("      ns  parent  prefix     uri%N")
 			from
-				index := 1
-				limit := namespace_codes.count
+				an_index := 1
+				a_limit := namespace_codes.count
 			variant
-				limit - index + 1
+				a_limit - an_index + 1
 			until
-				index > limit
+				an_index > a_limit
 			loop
-				std.error.put_string (left_padded_string_out (index.out, 8, ' '))
-				std.error.put_string (left_padded_string_out (namespace_parents.item (index).out, 8, ' '))
-				std.error.put_string (left_padded_string_out (name_pool.prefix_from_namespace_code (namespace_codes.item (index)), 8, ' '))
+				std.error.put_string (left_padded_string_out (an_index.out, 8, ' '))
+				std.error.put_string (left_padded_string_out (namespace_parents.item (an_index).out, 8, ' '))
+				std.error.put_string (left_padded_string_out (name_pool.prefix_from_namespace_code (namespace_codes.item (an_index)), 8, ' '))
 				std.error.put_string ("    ")
-				std.error.put_string (name_pool.uri_from_namespace_code (namespace_codes.item (index)))
+				std.error.put_string (name_pool.uri_from_namespace_code (namespace_codes.item (an_index)))
 				std.error.put_new_line
-				index := index + 1
+				an_index := an_index + 1
 			end				
 		end
 
 		
 feature -- Status setting
 
-	set_name_pool (new_pool: XM_XPATH_NAME_POOL) is
+	set_name_pool (a_new_pool: XM_XPATH_NAME_POOL) is
 			-- Set the name pool used by this builder
 		require
-			pool_not_void: new_pool /= Void
+			pool_not_void: a_new_pool /= Void
 		do
-			name_pool := new_pool
+			name_pool := a_new_pool
 			add_namespace (node_number, name_pool.namespace_code ("xml", Xml_uri))
 			name_pool.allocate_document_number (Current)
 			document_number := name_pool.document_number (Current)
 		ensure
-			pool_set: name_pool = new_pool
+			pool_set: name_pool = a_new_pool
 		end
 
 	ensure_prior_index is
@@ -503,37 +503,228 @@ feature -- Status setting
 	make_prior_index is
 			-- On demand, make an index for quick access to preceding-sibling nodes
 		local
-			prior_index, next_node: INTEGER
+			a_prior_index, a_next_node: INTEGER
 		do
 			create prior.make (1, last_node_added)
 			from
-				prior_index := 1
+				a_prior_index := 1
 			variant
-				last_node_added - prior_index + 1
+				last_node_added - a_prior_index + 1
 			until
-				prior_index > last_node_added
+				a_prior_index > last_node_added
 			loop	
-				prior.put (-1, prior_index)
-				prior_index := prior_index + 1
+				prior.put (-1, a_prior_index)
+				a_prior_index := a_prior_index + 1
 			end
 			from
-				prior_index := 1
+				a_prior_index := 1
 			variant
-				last_node_added - prior_index + 1
+				last_node_added - a_prior_index + 1
 			until
-				prior_index > last_node_added
+				a_prior_index > last_node_added
 			loop
-				next_node := next_sibling_indices.item (prior_index)
-				if next_node > prior_index then
-					prior.put (prior_index, next_node)
+				a_next_node := next_sibling_indices.item (a_prior_index)
+				if a_next_node > a_prior_index then
+					prior.put (a_prior_index, a_next_node)
 				end
-				prior_index := prior_index + 1
+				a_prior_index := a_prior_index + 1
 			end
 		ensure
-			prior_index_built: prior /= Void
+			a_prior_index_built: prior /= Void
 		end
 	
-feature -- Conversions
+feature -- Element change
+
+	add_node (a_new_node_type: INTEGER; a_depth_value: INTEGER; an_alpha_value: INTEGER;  a_beta_value: INTEGER; a_new_name_code: INTEGER) is
+			-- Add a node to the document
+		require
+			valid_node_type: a_new_node_type = Document_node or a_new_node_type = Element_node or
+				a_new_node_type = Text_node or a_new_node_type = Comment_node or a_new_node_type = Processing_instruction_node
+			positive_depth: a_depth_value > 0
+			valid_alpha: an_alpha_value >= -1
+			valid_beta: a_beta_value >= -1
+			valid_name_codes: a_new_name_code >= -1
+		local
+			a_new_size: INTEGER
+		do
+			number_of_nodes := number_of_nodes + 1
+			if number_of_nodes > node_kinds.count then
+				a_new_size := node_kinds.count * 2
+				node_kinds.resize (1, a_new_size)
+				depth.resize (1, a_new_size)
+				alpha.resize (1, a_new_size)
+				beta.resize (1, a_new_size)
+				name_codes.resize (1, a_new_size)
+			end
+			node_kinds.put (a_new_node_type, number_of_nodes)
+			depth.put (a_depth_value, number_of_nodes)
+			alpha.put (an_alpha_value, number_of_nodes)
+			beta.put (a_beta_value, number_of_nodes)
+			name_codes.put (a_new_name_code, number_of_nodes) 
+			set_next_sibling (-1, number_of_nodes) -- safety precaution
+			last_node_added := number_of_nodes
+			debug ("XPath tiny document")
+				std.error.put_string ("Add_node: Node  ")
+				std.error.put_string (last_node_added.out)
+				std.error.put_string (" of type  ")
+				std.error.put_string (type_name (a_new_node_type))
+				std.error.put_new_line
+			end
+		ensure
+			one_more_node: number_of_nodes = old number_of_nodes + 1 and last_node_added = number_of_nodes
+			correct_node_kinds: node_kinds.item (number_of_nodes) = a_new_node_type
+			correct_depth: depth.item (number_of_nodes) = a_depth_value
+			correct_alpha: alpha.item (number_of_nodes) = an_alpha_value
+			correct_beta: beta.item (number_of_nodes) = a_beta_value
+			correct_name_codes: name_codes.item (number_of_nodes) = a_new_name_code
+			no_next_sibling: next_sibling_indices.item (number_of_nodes) = -1
+		end
+
+	set_element_annotation (which_node: INTEGER; a_new_type: INTEGER) is
+			-- Set the element type
+		require
+			valid_current_node: which_node > 0
+		do
+			do_nothing -- Not needed for a basic XSLT processor
+		end
+
+	set_next_sibling (a_next_node: INTEGER; which_node: INTEGER) is
+			-- Set the next sibling of a node
+		require
+			valid_current_node: which_node > 0
+			valid_next_sibling: a_next_node >= -1 -- -1 means no next sibling
+		do
+			debug ("XPath tiny document")
+				std.error.put_string ("Set_next_sibling: Node ")
+				std.error.put_string (which_node.out)
+				std.error.put_string (" set to ")
+				std.error.put_string (a_next_node.out)
+				std.error.put_new_line
+			end
+			if which_node > next_sibling_indices.count then next_sibling_indices.resize (1, 2 * next_sibling_indices.count) end
+			next_sibling_indices.put (a_next_node, which_node)
+		ensure
+			next_sibling_set: next_sibling_indices.item (which_node) = a_next_node
+		end
+
+	append_characters (characters: STRING) is
+			-- Add `characters' to the document's content
+		require
+			characters_not_void: characters /= Void
+		do
+			character_buffer := STRING_.appended_string (character_buffer, characters)
+		end
+
+	add_namespace (a_parent: INTEGER; a_namespace_code: INTEGER) is
+			-- Add a namespace declaration
+		local
+			a_new_size: INTEGER
+		do
+			if namespace_parents.is_full then
+				a_new_size := namespace_parents.count * 2
+				namespace_parents.resize (a_new_size)
+				namespace_codes.resize (a_new_size)
+			end
+			namespace_parents.put_last (a_parent)
+				check
+					namespace_codes_not_full: not	namespace_codes.is_full
+					-- same size as parent
+				end
+			namespace_codes.put_last (a_namespace_code)
+			debug ("XPath tiny document")
+				std.error.put_string ("Namespace added: ")
+				std.error.put_string (name_pool.uri_from_namespace_code (a_namespace_code))
+				std.error.put_string (" for parent:")
+				std.error.put_string (a_parent.out)
+				std.error.put_new_line
+			end			
+		end
+
+	add_attribute (a_parent: INTEGER; a_name_code: INTEGER; a_type_code: INTEGER; a_value: STRING) is
+			-- Add an attribute
+		local
+			a_new_size, an_index, another_type_code: INTEGER
+		do
+			if attribute_parents.capacity < a_parent  then
+				a_new_size := last_node_added.max (attribute_parents.count * 2)
+				attribute_parents.resize (a_new_size)
+				attribute_values.resize (a_new_size)
+				attribute_codes.resize (a_new_size)
+			end
+			attribute_parents.put_last (a_parent)
+			attribute_values.put_last (a_value)
+			attribute_codes.put_last (a_name_code)
+
+			debug ("XPath tiny document")
+				std.error.put_string ("Add_attribute: name code is ")
+				std.error.put_string (a_name_code.out)
+				std.error.put_string (", value is ")
+				std.error.put_string (a_value.out)
+				std.error.put_new_line
+				std.error.put_string ("Attribute_values count is ")
+				std.error.put_string (attribute_values.count.out)
+				std.error.put_string (", attribute_codes count is ")
+				std.error.put_string (attribute_codes.count.out)
+				std.error.put_new_line
+			end
+			
+			if a_type_code = 0 then
+				another_type_code := Untyped_atomic_type
+			else
+				another_type_code := a_type_code
+			end
+			if another_type_code /= Untyped_atomic_type then
+				if attribute_type_codes = Void then
+					create attribute_type_codes.make (1, attribute_parents.count)
+					from
+						an_index := 1
+					variant
+						attribute_parents.count - an_index 
+					until
+						an_index = attribute_parents.count
+					loop
+						attribute_type_codes.put (Untyped_atomic_type, an_index)
+					end
+				end
+			end
+			if attribute_type_codes /= Void then
+				if attribute_type_codes.count < a_parent then
+					a_new_size := last_node_added.max (attribute_type_codes.count * 2)
+					attribute_type_codes.resize (1, a_new_size)
+				end
+				attribute_type_codes.put (another_type_code, attribute_parents.count)
+			end
+			
+			if alpha.item (a_parent) = -1 then alpha.put (attribute_values.count, a_parent) end
+
+			if another_type_code = Id_type then
+				-- The attribute is marked as being an ID. But we don't trust it - it
+				-- might come from a non-validating parser. Before adding it to the index, we
+				-- check that it really is an ID.
+
+				--  TODO
+			end
+		end
+
+	store_comment (a_comment_string: STRING) is
+			-- Store comment or processing instruction test
+		require
+			data_not_void: a_comment_string /= Void
+		do
+			if comment_buffer = Void then
+				if is_string_mode_ascii then
+					create comment_buffer.make (a_comment_string.count)
+				else
+					create {UC_UTF8_STRING} comment_buffer.make (a_comment_string.count)
+				end
+			end
+			comment_buffer := STRING_.appended_string (comment_buffer, a_comment_string)
+		ensure
+			comment_buffer_created: comment_buffer /= Void
+		end
+	
+	
+feature -- Conversion
 
 	namespace_code_for_node (a_node_number: INTEGER): INTEGER is
 			-- Namespace code for `a_node_number'
@@ -558,199 +749,8 @@ feature -- Conversions
 		do
 			Result := attribute_codes.item (a_node_number)
 		end
-	
-feature -- Element change
 
-	add_node (new_node_type: INTEGER; depth_value: INTEGER; alpha_val: INTEGER;  beta_val: INTEGER; new_name_codes: INTEGER) is
-			-- Add a node to the document
-		require
-			valid_node_type: new_node_type = Document_node or new_node_type = Element_node or
-				new_node_type = Text_node or new_node_type = Comment_node or new_node_type = Processing_instruction_node
-			positive_depth: depth_value > 0
-			valid_alpha: alpha_val >= -1
-			valid_beta: beta_val >= -1
-			valid_name_codes: new_name_codes >= -1
-		local
-			new_size: INTEGER
-		do
-			number_of_nodes := number_of_nodes + 1
-			if number_of_nodes > node_kinds.count then
-				new_size := node_kinds.count * 2
-				node_kinds.resize (1, new_size)
-				depth.resize (1, new_size)
-				alpha.resize (1, new_size)
-				beta.resize (1, new_size)
-				name_codes.resize (1, new_size)
-			end
-			node_kinds.put (new_node_type, number_of_nodes)
-			depth.put (depth_value, number_of_nodes)
-			alpha.put (alpha_val, number_of_nodes)
-			beta.put (beta_val, number_of_nodes)
-			name_codes.put (new_name_codes, number_of_nodes) 
-			set_next_sibling (-1, number_of_nodes) -- safety precaution
-			last_node_added := number_of_nodes
-			debug ("XPath tiny document")
-				std.error.put_string ("Add_node: Node  ")
-				std.error.put_string (last_node_added.out)
-				std.error.put_string (" of type  ")
-				std.error.put_string (type_name (new_node_type))
-				std.error.put_new_line
-			end
-		ensure
-			one_more_node: number_of_nodes = old number_of_nodes + 1 and last_node_added = number_of_nodes
-			correct_node_kinds: node_kinds.item (number_of_nodes) = new_node_type
-			correct_depth: depth.item (number_of_nodes) = depth_value
-			correct_alpha: alpha.item (number_of_nodes) = alpha_val
-			correct_beta: beta.item (number_of_nodes) = beta_val
-			correct_name_codes: name_codes.item (number_of_nodes) = new_name_codes
-			no_next_sibling: next_sibling_indices.item (number_of_nodes) = -1
-		end
-
-	set_element_annotation (which_node: INTEGER; new_type: INTEGER) is
-			-- Set the element type
-		require
-			valid_current_node: which_node > 0
-		do
-			do_nothing -- Not needed for a basic XSLT processor
-		end
-
-	set_next_sibling (next: INTEGER; which_node: INTEGER) is
-			-- Set the next sibling of a node
-		require
-			valid_current_node: which_node > 0
-			valid_next_sibling: next >= -1 -- -1 means no next sibling
-		do
-			debug ("XPath tiny document")
-				std.error.put_string ("Set_next_sibling: Node ")
-				std.error.put_string (which_node.out)
-				std.error.put_string (" set to ")
-				std.error.put_string (next.out)
-				std.error.put_new_line
-			end
-			if which_node > next_sibling_indices.count then next_sibling_indices.resize (1, 2 * next_sibling_indices.count) end
-			next_sibling_indices.put (next, which_node)
-		ensure
-			next_sibling_set: next_sibling_indices.item (which_node) = next
-		end
-
-	append_characters (characters: STRING) is
-			-- Add `characters' to the document's content
-		require
-			characters_not_void: characters /= Void
-		do
-			character_buffer := STRING_.appended_string (character_buffer, characters)
-		end
-
-	add_namespace (the_parent: INTEGER; ns_code: INTEGER) is
-			-- Add a namespace declaration
-		local
-			new_size: INTEGER
-		do
-			if namespace_parents.is_full then
-				new_size := namespace_parents.count * 2
-				namespace_parents.resize (new_size)
-				namespace_codes.resize (new_size)
-			end
-			namespace_parents.put_last (the_parent)
-				check
-					namespace_codes_not_full: not	namespace_codes.is_full
-					-- same size as parent
-				end
-			namespace_codes.put_last (ns_code)
-			debug ("XPath tiny document")
-				std.error.put_string ("Namespace added: ")
-				std.error.put_string (name_pool.uri_from_namespace_code (ns_code))
-				std.error.put_string (" for parent:")
-				std.error.put_string (the_parent.out)
-				std.error.put_new_line
-			end			
-		end
-
-	add_attribute (the_parent: INTEGER; a_name_code: INTEGER; a_type_code: INTEGER; value: STRING) is
-			-- Add an attribute
-		local
-			new_size, an_index, a_type_code2: INTEGER
-		do
-			if attribute_parents.capacity < the_parent  then
-				new_size := last_node_added.max (attribute_parents.count * 2)
-				attribute_parents.resize (new_size)
-				attribute_values.resize (new_size)
-				attribute_codes.resize (new_size)
-			end
-			attribute_parents.put_last (the_parent)
-			attribute_values.put_last (value)
-			attribute_codes.put_last (a_name_code)
-
-			debug ("XPath tiny document")
-				std.error.put_string ("Add_attribute: name code is ")
-				std.error.put_string (a_name_code.out)
-				std.error.put_string (", value is ")
-				std.error.put_string (value.out)
-				std.error.put_new_line
-				std.error.put_string ("Attribute_values count is ")
-				std.error.put_string (attribute_values.count.out)
-				std.error.put_string (", attribute_codes count is ")
-				std.error.put_string (attribute_codes.count.out)
-				std.error.put_new_line
-			end
-			
-			if a_type_code = 0 then
-				a_type_code2 := Untyped_atomic_type
-			else
-				a_type_code2 := a_type_code
-			end
-			if a_type_code2 /= Untyped_atomic_type then
-				if attribute_type_codes = Void then
-					create attribute_type_codes.make (1, attribute_parents.count)
-					from
-						an_index := 1
-					variant
-						attribute_parents.count - an_index 
-					until
-						an_index = attribute_parents.count
-					loop
-						attribute_type_codes.put (Untyped_atomic_type, an_index)
-					end
-				end
-			end
-			if attribute_type_codes /= Void then
-				if attribute_type_codes.count < the_parent then
-					new_size := last_node_added.max (attribute_type_codes.count * 2)
-					attribute_type_codes.resize (1, new_size)
-				end
-				attribute_type_codes.put (a_type_code2, attribute_parents.count)
-			end
-			
-			if alpha.item (the_parent) = -1 then alpha.put (attribute_values.count, the_parent) end
-
-			if a_type_code2 = Id_type then
-				-- The attribute is marked as being an ID. But we don't trust it - it
-				-- might come from a non-validating parser. Before adding it to the index, we
-				-- check that it really is an ID.
-
-				--  TODO
-			end
-		end
-
-	store_comment (data: STRING) is
-			-- Store comment or processing instruction test
-		require
-			data_not_void: data /= Void
-		do
-			if comment_buffer = Void then
-				if is_string_mode_ascii then
-					create comment_buffer.make (data.count)
-				else
-					create {UC_UTF8_STRING} comment_buffer.make (data.count)
-				end
-			end
-			comment_buffer := STRING_.appended_string (comment_buffer, data)
-		ensure
-			comment_buffer_created: comment_buffer /= Void
-		end
-	
-
-feature {XM_XPATH_NODE} -- Access
+feature {XM_XPATH_NODE} -- Restricted
 
 	is_possible_child: BOOLEAN is
 			-- Can this node be a child of a document or element node?

@@ -89,147 +89,147 @@ feature -- Access
 	fingerprint: INTEGER is
 			-- Fingerprint of this node - used in matching names
 		local
-			nc, top_bits: INTEGER
+			a_name_code, top_bits: INTEGER
 		do
-			nc := name_code
-			if nc = -1 then
+			a_name_code := name_code
+			if a_name_code = -1 then
 				Result := -1
 			else
-				-- mask nc with 0xfffff
-				top_bits := (nc // bits_20) * bits_20
-				Result := nc - top_bits
+				-- mask a_name_code with 0xfffff
+				top_bits := (a_name_code // bits_20) * bits_20
+				Result := a_name_code - top_bits
 			end
 		end
 
-	new_axis_iterator (axis_type: INTEGER): XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_NODE] is
-			-- An enumeration over the nodes reachable by `axis_type' from this node
+	new_axis_iterator (an_axis_type: INTEGER): XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_NODE] is
+			-- An enumeration over the nodes reachable by `an_axis_type' from this node
 		do
 			-- Fast path for child axis
-			if axis_type = Child_axis then
+			if an_axis_type = Child_axis then
 				if has_child_nodes then
 					create  {XM_XPATH_TINY_SIBLING_ENUMERATION} Result.make (document, Current, Void, True)					
 				else
 					Result := empty_abstract_node_iterator
 				end
 			else
-				Result := new_axis_iterator_with_node_test (axis_type, any_node_test)
+				Result := new_axis_iterator_with_node_test (an_axis_type, any_node_test)
 			end
 		end
 
-	new_axis_iterator_with_node_test (axis_type: INTEGER; test: XM_XPATH_NODE_TEST): XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_NODE] is
-			-- An enumeration over the nodes reachable by `axis_type' from this node;
-			-- Only nodes that match the pattern specified by `test' will be selected.
+	new_axis_iterator_with_node_test (an_axis_type: INTEGER; a_node_test: XM_XPATH_NODE_TEST): XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_NODE] is
+			-- An enumeration over the nodes reachable by `an_axis_type' from this node;
+			-- Only nodes that match the pattern specified by `a_node_test' will be selected.
 		local
-			the_item_type: INTEGER
-			name_test: XM_XPATH_NAME_TEST
-			parent_node: XM_XPATH_TINY_NODE
-			the_document: XM_XPATH_TINY_DOCUMENT
+			an_item_type: INTEGER
+			a_name_test: XM_XPATH_NAME_TEST
+			a_parent_node: XM_XPATH_TINY_NODE
+			a_document: XM_XPATH_TINY_DOCUMENT
 		do
-			the_item_type := item_type
+			an_item_type := item_type
 			inspect
-				axis_type
+				an_axis_type
 			when Ancestor_axis then
-				if the_item_type = Document_node then
+				if an_item_type = Document_node then
 					Result := empty_abstract_node_iterator
 				else
-					create {XM_XPATH_TINY_ANCESTOR_ENUMERATION} Result.make (document, Current, test, False)
+					create {XM_XPATH_TINY_ANCESTOR_ENUMERATION} Result.make (document, Current, a_node_test, False)
 				end
 			when Ancestor_or_self_axis then
-				if the_item_type = Document_node then
-					if test.matches_node (the_item_type, fingerprint, Any_item) then
+				if an_item_type = Document_node then
+					if a_node_test.matches_node (an_item_type, fingerprint, Any_item) then
 						create {XM_XPATH_SINGLETON_ITERATOR [XM_XPATH_TINY_NODE]} Result.make (Current)
 					else
 						Result := empty_abstract_node_iterator
 					end
 				else
-					create {XM_XPATH_TINY_ANCESTOR_ENUMERATION} Result.make (document, Current, test, True)
+					create {XM_XPATH_TINY_ANCESTOR_ENUMERATION} Result.make (document, Current, a_node_test, True)
 				end
 			when Attribute_axis then
-				if the_item_type /= Element_node then
+				if an_item_type /= Element_node then
 					Result := empty_abstract_node_iterator
 				elseif document.alpha_value (node_number) < 1 then -- Element has no attributes
 					Result := empty_abstract_node_iterator
 				else
-					create {XM_XPATH_TINY_ATTRIBUTE_ENUMERATION} Result.make (document, node_number, test)
+					create {XM_XPATH_TINY_ATTRIBUTE_ENUMERATION} Result.make (document, node_number, a_node_test)
 				end
 			when Child_axis then
 				if has_child_nodes then
-					create  {XM_XPATH_TINY_SIBLING_ENUMERATION} Result.make (document, Current, test, True)
+					create  {XM_XPATH_TINY_SIBLING_ENUMERATION} Result.make (document, Current, a_node_test, True)
 				else
 					Result := empty_abstract_node_iterator
 				end
 			when Descendant_axis then
-				name_test ?= test
-				if the_item_type = Document_node and then name_test /= Void and then name_test.item_type = Element_node then
-					the_document ?= Current
+				a_name_test ?= a_node_test
+				if an_item_type = Document_node and then a_name_test /= Void and then a_name_test.item_type = Element_node then
+					a_document ?= Current
 						check
 							document_not_void: document /= Void
 						end
-					create {XM_XPATH_ARRAY_LIST_ITERATOR [XM_XPATH_TINY_ELEMENT]} Result.make (the_document.all_elements (test.fingerprint))
+					create {XM_XPATH_ARRAY_LIST_ITERATOR [XM_XPATH_TINY_ELEMENT]} Result.make (a_document.all_elements (a_node_test.fingerprint))
 				else
 					Result := empty_abstract_node_iterator
 				end
 			when Descendant_or_self_axis then
 				if has_child_nodes then
-					create {XM_XPATH_TINY_DESCENDANT_ENUMERATION} Result.make (document, Current, test, True)
-				elseif test.matches_node (the_item_type, fingerprint, Any_item) then
+					create {XM_XPATH_TINY_DESCENDANT_ENUMERATION} Result.make (document, Current, a_node_test, True)
+				elseif a_node_test.matches_node (an_item_type, fingerprint, Any_item) then
 					create {XM_XPATH_SINGLETON_ITERATOR [XM_XPATH_TINY_NODE]} Result.make (Current)
 				else
 					Result := empty_abstract_node_iterator					
 				end				
 			when Following_axis then
-				if the_item_type = Document_node then
+				if an_item_type = Document_node then
 					Result := empty_abstract_node_iterator
-				elseif the_item_type = Attribute_node or else the_item_type = Namespace_node then
-					parent_node := parent
-					create {XM_XPATH_TINY_FOLLOWING_ENUMERATION} Result.make (document, parent_node, test, True)
+				elseif an_item_type = Attribute_node or else an_item_type = Namespace_node then
+					a_parent_node := parent
+					create {XM_XPATH_TINY_FOLLOWING_ENUMERATION} Result.make (document, a_parent_node, a_node_test, True)
 				else
-					create {XM_XPATH_TINY_FOLLOWING_ENUMERATION} Result.make (document, Current, test, False)
+					create {XM_XPATH_TINY_FOLLOWING_ENUMERATION} Result.make (document, Current, a_node_test, False)
 				end
 			when Following_sibling_axis then
-				if the_item_type = Document_node or else the_item_type = Attribute_node or else the_item_type = Namespace_node then
+				if an_item_type = Document_node or else an_item_type = Attribute_node or else an_item_type = Namespace_node then
 					Result := empty_abstract_node_iterator
 				else
-					create  {XM_XPATH_TINY_SIBLING_ENUMERATION} Result.make (document, Current, test, False)
+					create  {XM_XPATH_TINY_SIBLING_ENUMERATION} Result.make (document, Current, a_node_test, False)
 				end
 			when Parent_axis then
-				parent_node := parent
-				if parent_node = Void then
+				a_parent_node := parent
+				if a_parent_node = Void then
 					Result := empty_abstract_node_iterator
-				elseif test.matches_node (parent_node.item_type, parent_node.fingerprint, Any_item) then
-					create {XM_XPATH_SINGLETON_ITERATOR [XM_XPATH_TINY_NODE]} Result.make (parent_node)
+				elseif a_node_test.matches_node (a_parent_node.item_type, a_parent_node.fingerprint, Any_item) then
+					create {XM_XPATH_SINGLETON_ITERATOR [XM_XPATH_TINY_NODE]} Result.make (a_parent_node)
 				else
 					Result := empty_abstract_node_iterator
 				end
 			when Preceding_axis then
-				if the_item_type = Document_node then
+				if an_item_type = Document_node then
 					Result := empty_abstract_node_iterator
-				elseif the_item_type = Attribute_node or else the_item_type = Namespace_node then
-					parent_node := parent
-					create  {XM_XPATH_TINY_PRECEDING_ENUMERATION} Result.make (document, parent_node, test, False)
+				elseif an_item_type = Attribute_node or else an_item_type = Namespace_node then
+					a_parent_node := parent
+					create  {XM_XPATH_TINY_PRECEDING_ENUMERATION} Result.make (document, a_parent_node, a_node_test, False)
 				else
-					create  {XM_XPATH_TINY_PRECEDING_ENUMERATION} Result.make (document, Current, test, False)
+					create  {XM_XPATH_TINY_PRECEDING_ENUMERATION} Result.make (document, Current, a_node_test, False)
 				end
 			when Preceding_sibling_axis then
-				if the_item_type = Document_node or else the_item_type = Attribute_node or else the_item_type = Namespace_node then
+				if an_item_type = Document_node or else an_item_type = Attribute_node or else an_item_type = Namespace_node then
 					Result := empty_abstract_node_iterator
 				else
-					create  {XM_XPATH_TINY_PRECEDING_SIBLING_ENUMERATION} Result.make (document, Current, test)
+					create  {XM_XPATH_TINY_PRECEDING_SIBLING_ENUMERATION} Result.make (document, Current, a_node_test)
 				end
 			when Self_axis then
-				if test.matches_node (the_item_type, fingerprint, Any_item) then
+				if a_node_test.matches_node (an_item_type, fingerprint, Any_item) then
 					create {XM_XPATH_SINGLETON_ITERATOR [XM_XPATH_TINY_NODE]} Result.make (Current)
 				else
 					Result := empty_abstract_node_iterator
 				end
 			when Preceding_or_ancestor_axis then
-				if the_item_type = Document_node then
+				if an_item_type = Document_node then
 					Result := empty_abstract_node_iterator
-				elseif the_item_type = Attribute_node or else the_item_type = Namespace_node then
-					parent_node := parent
-					create  {XM_XPATH_TINY_PRECEDING_ENUMERATION} Result.make (document, parent_node, test, True)
+				elseif an_item_type = Attribute_node or else an_item_type = Namespace_node then
+					a_parent_node := parent
+					create  {XM_XPATH_TINY_PRECEDING_ENUMERATION} Result.make (document, a_parent_node, a_node_test, True)
 				else
-					create  {XM_XPATH_TINY_PRECEDING_ENUMERATION} Result.make (document, Current, test, True)
+					create  {XM_XPATH_TINY_PRECEDING_ENUMERATION} Result.make (document, Current, a_node_test, True)
 				end	
 			end
 		end
@@ -269,7 +269,7 @@ feature -- Element change
 		end
 	
 
-feature {XM_XPATH_TINY_NODE} -- Implementation
+feature {XM_XPATH_TINY_NODE} -- Local
 	
 	document: XM_XPATH_TINY_DOCUMENT
 			-- Document that owns this node

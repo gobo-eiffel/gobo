@@ -22,7 +22,7 @@ creation
 
 	make
 
-feature -- Initialization
+feature {NONE} -- Initialization
 
 	make (a_name_pool: XM_XPATH_NAME_POOL; basic_conformance: BOOLEAN) is
 			-- Set the name pool in which all name codes can be found
@@ -38,18 +38,10 @@ feature -- Initialization
 			name_pool_set: name_pool = a_name_pool
 		end
 	
-feature -- Result
+feature -- Access
 
 	document: XM_XPATH_TINY_DOCUMENT
 			-- Resulting document
-
-feature -- Element change
-
-	set_system_id (a_system_id: STRING) is
-			-- Set the system-id of the destination tree
-		do
-			system_id := a_system_id
-		end
 
 feature -- Events
 
@@ -81,36 +73,36 @@ feature -- Events
 	start_element (a_name_code: INTEGER; a_type_code: INTEGER; properties: INTEGER) is
 			-- Notify the start of an element
 		local
-			owner_node, previous_sibling: INTEGER
-			new_type_code: like a_type_code
+			an_owner_node, a_previous_sibling: INTEGER
+			a_new_type_code: like a_type_code
 		do
 			document.add_node (Element_node, current_depth, -1, -1, a_name_code)
 			node_number := document.last_node_added
 			if conformance.basic_xslt_processor then
-				new_type_code := Untyped_type
-				document.set_element_annotation (node_number, new_type_code)
+				a_new_type_code := Untyped_type
+				document.set_element_annotation (node_number, a_new_type_code)
 			else
 					check
 						Only_basic_xslt_processors_are_supported: False
 					end
-				new_type_code := a_type_code
+				a_new_type_code := a_type_code
 				-- TODO
 			end
 
-			previous_sibling := previously_at_depth.item (current_depth)
+			a_previous_sibling := previously_at_depth.item (current_depth)
 
-			owner_node := previously_at_depth.item (current_depth - 1)
-			if previous_sibling > 0 then
+			an_owner_node := previously_at_depth.item (current_depth - 1)
+			if a_previous_sibling > 0 then
 				debug ("XPath tiny builder")
 					std.error.put_string ("Setting next sibling for ")
-					std.error.put_string (previous_sibling.out)
+					std.error.put_string (a_previous_sibling.out)
 					std.error.put_string (" to element node ")
 					std.error.put_string (node_number.out)
 					std.error.put_string (" when at depth ")
 					std.error.put_string (current_depth.out)
 					std.error.put_new_line
 				end
-				document.set_next_sibling (node_number, previous_sibling)
+				document.set_next_sibling (node_number, a_previous_sibling)
 			end
 
 			debug ("XPath tiny builder")
@@ -121,9 +113,9 @@ feature -- Events
 				std.error.put_string (", at depth ")
 				std.error.put_string (current_depth.out)
 				std.error.put_string (". Previous sibling is: ")
-				std.error.put_string (previous_sibling.out)
+				std.error.put_string (a_previous_sibling.out)
 				std.error.put_string (", owner is: ")
-				std.error.put_string (owner_node.out)
+				std.error.put_string (an_owner_node.out)
 				std.error.put_new_line
 				std.error.put_string ("Name code is ")
 				std.error.put_string (a_name_code.out)
@@ -133,12 +125,12 @@ feature -- Events
 				std.error.put_string ("Setting owner for element ")
 					std.error.put_string (node_number.out)
 					std.error.put_string (" to ")
-					std.error.put_string (owner_node.out)
+					std.error.put_string (an_owner_node.out)
 					std.error.put_string (" when at depth ")
 					std.error.put_string (current_depth.out)
 					std.error.put_new_line
 			end
-			document.set_next_sibling (owner_node, node_number) -- owner pointer in last sibling
+			document.set_next_sibling (an_owner_node, node_number) -- owner pointer in last sibling
 			
 			previously_at_depth.put (node_number, current_depth)
 			current_depth := current_depth + 1
@@ -160,22 +152,22 @@ feature -- Events
 				document.add_namespace (node_number + 1, a_namespace_code)			
 		end
 
-	attribute (a_name_code: INTEGER; a_type_code: INTEGER; value: STRING; properties: INTEGER) is
+	attribute (a_name_code: INTEGER; a_type_code: INTEGER; a_value: STRING; properties: INTEGER) is
 			-- Notify an attribute;
 			-- Attributes are notified after the `start_element' event, and before any
 			--  children. Namespaces and attributes may be intermingled
 		local
-			new_type_code: like a_type_code
+			a_new_type_code: like a_type_code
 		do
-			new_type_code := a_type_code
+			a_new_type_code := a_type_code
 			if conformance.basic_xslt_processor then
-				new_type_code := Untyped_atomic_type
+				a_new_type_code := Untyped_atomic_type
 			else
 					check
 						Only_basic_xslt_processors_are_supported: False
 					end
 			end
-				document.add_attribute (node_number, a_name_code, new_type_code, value)
+				document.add_attribute (node_number, a_name_code, a_new_type_code, a_value)
 		end
 
 	start_content is
@@ -196,28 +188,28 @@ feature -- Events
 			current_depth := current_depth - 1			
 		end
 
-	characters (chars: STRING; properties: INTEGER) is
+	characters (a_character_string: STRING; properties: INTEGER) is
 			-- Notify character data
 		local
-			buffer_start, previous_sibling: INTEGER
+			a_buffer_start, a_previous_sibling: INTEGER
 		do
-			buffer_start := document.character_buffer_length
-			document.append_characters (chars)
-			document.add_node (Text_node, current_depth, buffer_start, chars.count, -1)
+			a_buffer_start := document.character_buffer_length
+			document.append_characters (a_character_string)
+			document.add_node (Text_node, current_depth, a_buffer_start, a_character_string.count, -1)
 			node_number := document.last_node_added
 
-			previous_sibling := previously_at_depth.item (current_depth)
-			if previous_sibling > 0 then
+			a_previous_sibling := previously_at_depth.item (current_depth)
+			if a_previous_sibling > 0 then
 				debug ("XPath tiny builder")
 					std.error.put_string ("Setting next sibling for ")
-					std.error.put_string (previous_sibling.out)
+					std.error.put_string (a_previous_sibling.out)
 					std.error.put_string (" to text node ")
 					std.error.put_string (node_number.out)
 					std.error.put_string (" when at depth ")
 					std.error.put_string (current_depth.out)
 					std.error.put_new_line
 				end				
-				document.set_next_sibling (node_number, previous_sibling)
+				document.set_next_sibling (node_number, a_previous_sibling)
 			end
 			debug ("XPath tiny builder")
 				std.error.put_string ("Setting owner for text node ")
@@ -231,35 +223,34 @@ feature -- Events
 			document.set_next_sibling (previously_at_depth.item (current_depth - 1), node_number) -- owner pointer in last sibling
 			previously_at_depth.put (node_number, current_depth)
 		end
-
 	
-	processing_instruction (target: STRING; data: STRING; properties: INTEGER) is
+	processing_instruction (a_target: STRING; a_data_string: STRING; properties: INTEGER) is
 			-- Notify a processing instruction
 		local
-			name_code, previous_sibling: INTEGER
+			a_name_code, a_previous_sibling: INTEGER
 		do
-			if not name_pool.is_name_code_allocated ("", "", target) then
-				name_pool.allocate_name ("", "", target)
-				name_code := name_pool.last_name_code
+			if not name_pool.is_name_code_allocated ("", "", a_target) then
+				name_pool.allocate_name ("", "", a_target)
+				a_name_code := name_pool.last_name_code
 			else
-				name_code := name_pool.name_code ("", "", target) 
+				a_name_code := name_pool.name_code ("", "", a_target) 
 			end
-			document.store_comment (data)
-			document.add_node (Processing_instruction_node, current_depth, document.comment_buffer_length, data.count, name_code)
+			document.store_comment (a_data_string)
+			document.add_node (Processing_instruction_node, current_depth, document.comment_buffer_length, a_data_string.count, a_name_code)
 			node_number := document.last_node_added
 			
-			previous_sibling := previously_at_depth.item (current_depth)
-			if previous_sibling > 0 then
+			a_previous_sibling := previously_at_depth.item (current_depth)
+			if a_previous_sibling > 0 then
 				debug ("XPath tiny builder")
 					std.error.put_string ("Setting next sibling for ")
-					std.error.put_string (previous_sibling.out)
+					std.error.put_string (a_previous_sibling.out)
 					std.error.put_string (" to PI node ")
 					std.error.put_string (node_number.out)
 					std.error.put_string (" when at depth ")
 					std.error.put_string (current_depth.out)
 					std.error.put_new_line
 				end
-				document.set_next_sibling (node_number, previous_sibling)
+				document.set_next_sibling (node_number, a_previous_sibling)
 			end
 			debug ("XPath tiny builder")
 				std.error.put_string ("Setting owner for PI node ")
@@ -274,28 +265,28 @@ feature -- Events
 			previously_at_depth.put (node_number, current_depth)		
 		end
 
-	comment (content: STRING; properties: INTEGER) is
+	comment (a_content_string: STRING; properties: INTEGER) is
 			-- Notify a comment;
 			-- Comments are only notified if they are outside the DTD.
 		local
-			previous_sibling: INTEGER
+			a_previous_sibling: INTEGER
 		do
-			document.store_comment (content)
-			document.add_node (Comment_node, current_depth, document.comment_buffer_length, content.count, -1)
+			document.store_comment (a_content_string)
+			document.add_node (Comment_node, current_depth, document.comment_buffer_length, a_content_string.count, -1)
 			node_number := document.last_node_added
 			
-			previous_sibling := previously_at_depth.item (current_depth)
-			if previous_sibling > 0 then
+			a_previous_sibling := previously_at_depth.item (current_depth)
+			if a_previous_sibling > 0 then
 				debug ("XPath tiny builder")
 					std.error.put_string ("Setting next sibling for ")
-					std.error.put_string (previous_sibling.out)
+					std.error.put_string (a_previous_sibling.out)
 					std.error.put_string (" to comment node ")
 					std.error.put_string (node_number.out)
 					std.error.put_string (" when at depth ")
 					std.error.put_string (current_depth.out)
 					std.error.put_new_line
 				end				
-				document.set_next_sibling (node_number, previous_sibling)
+				document.set_next_sibling (node_number, a_previous_sibling)
 			end
 			debug ("XPath tiny builder")
 				std.error.put_string ("Setting owner for comment node ")
@@ -318,7 +309,7 @@ feature -- Events
 			-- TODO add timing information
 		end
 
-feature -- Implementation control
+feature -- Status setting
 
 	estimated_node_count: INTEGER
 			-- An estimate of how many nodes there will be in the fully constructed tree
@@ -342,7 +333,7 @@ feature -- Implementation control
 			default_parameters_in_use: defaults_overridden = False
 		end
 
-	set_defaults (new_estimated_node_count: INTEGER; new_estimated_attribute_count: INTEGER; new_estimated_namespace_count: INTEGER; new_estimated_character_count: INTEGER) is
+	set_defaults (a_new_estimated_node_count: INTEGER; a_new_estimated_attribute_count: INTEGER; a_new_estimated_namespace_count: INTEGER; a_new_estimated_character_count: INTEGER) is
 			-- Supply values for the tree implementation parameters
 		require
 			positive_node_count: estimated_node_count > 0
@@ -350,17 +341,25 @@ feature -- Implementation control
 			namespace_count: estimated_namespace_count >= 0
 			character_count: estimated_character_count >= 0
 		do
-			estimated_node_count := new_estimated_node_count
-			estimated_attribute_count := new_estimated_attribute_count
-			estimated_namespace_count := new_estimated_namespace_count
-			estimated_character_count := new_estimated_character_count
+			estimated_node_count := a_new_estimated_node_count
+			estimated_attribute_count := a_new_estimated_attribute_count
+			estimated_namespace_count := a_new_estimated_namespace_count
+			estimated_character_count := a_new_estimated_character_count
 			defaults_overridden := True
 		ensure
-			correct_node_count: estimated_node_count = new_estimated_node_count
-			correct_attribute_count: estimated_attribute_count = new_estimated_attribute_count
-			correct_namespace_count: estimated_namespace_count = new_estimated_namespace_count
-			correct_character_count: estimated_character_count = new_estimated_character_count
+			correct_node_count: estimated_node_count = a_new_estimated_node_count
+			correct_attribute_count: estimated_attribute_count = a_new_estimated_attribute_count
+			correct_namespace_count: estimated_namespace_count = a_new_estimated_namespace_count
+			correct_character_count: estimated_character_count = a_new_estimated_character_count
 			default_parameters_overridden: defaults_overridden = True
+		end
+
+feature -- Element change
+
+	set_system_id (a_system_id: STRING) is
+			-- Set the system-id of the destination tree
+		do
+			system_id := a_system_id
 		end
 
 feature {NONE} -- Implementation

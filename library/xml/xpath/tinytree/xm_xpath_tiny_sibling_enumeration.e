@@ -16,45 +16,45 @@ inherit
 
 	XM_XPATH_AXIS_ITERATOR [XM_XPATH_TINY_NODE]
 
+	KL_SHARED_STANDARD_FILES
+
 creation
 
 	make
 	
-feature -- Initialization
+feature {NONE} -- Initialization
 
-	make (doc: XM_XPATH_TINY_DOCUMENT; start: XM_XPATH_TINY_NODE; test: XM_XPATH_NODE_TEST; children: BOOLEAN) is
+	make (a_document: XM_XPATH_TINY_DOCUMENT; a_starting_node: XM_XPATH_TINY_NODE; a_node_test: XM_XPATH_NODE_TEST; children: BOOLEAN) is
 			-- Establish invariant
 		require
-			document_not_void: doc /= Void
-			starting_node_not_void: start /= Void
-		local
-			depth: INTEGER
+			document_not_void: a_document /= Void
+			starting_node_not_void: a_starting_node /= Void
 		do
-			document := doc
-			starting_node := start
-			node_test := test
+			document := a_document
+			starting_node := a_starting_node
+			node_test := a_node_test
 			get_children := children
 
 			if get_children then -- child:: axis
 				debug ("XPath tiny sibling enumeration")
-					print ("Child axis%N")
+					std.error.put_string ("Child axis%N")
 				end
 				parent_node := starting_node 
 				-- move to first child
 				next_node_number := starting_node.node_number + 1
 			else -- following-sibling axis
 				debug ("XPath tiny sibling enumeration")
-					print ("Following-sibling axis%N")
+					std.error.put_string ("Following-sibling axis%N")
 				end
 				parent_node := starting_node.parent
 				-- move to next sibling
 				next_node_number := document.retrieve_next_sibling (starting_node.node_number)
 				debug ("XPath tiny sibling enumeration")
-					print ("Starting node number is ")
-					print (starting_node.node_number.out)
-					print (", and it's next sibling is  ")
-					print (next_node_number.out)
-					print ("%N")
+					std.error.put_string ("Starting node number is ")
+					std.error.put_string (starting_node.node_number.out)
+					std.error.put_string (", and it's next sibling is  ")
+					std.error.put_string (next_node_number.out)
+					std.error.put_new_line
 				end
 				if next_node_number < starting_node.node_number then -- owner pointer
 					next_node_number := -1
@@ -65,29 +65,28 @@ feature -- Initialization
 
 			if next_node_number > 0 and then node_test /= Void then
 				debug ("XPath tiny sibling enumeration")
-					print ("Node test present%N")
+					std.error.put_string ("Node test present%N")
 				end
-				if not node_test.matches_node (doc.retrieve_node_kind (next_node_number), doc.name_code_for_node (next_node_number), doc.element_annotation (next_node_number)) then
+				if not node_test.matches_node (a_document.retrieve_node_kind (next_node_number), a_document.name_code_for_node (next_node_number), a_document.element_annotation (next_node_number)) then
 					debug ("XPath tiny sibling enumeration")
-						print ("Need to advance%N")
+						std.error.put_string ("Need to advance%N")
 					end
 					need_to_advance := True
 				end
 			end
 			debug ("XPath tiny sibling enumeration")
-				print ("Next node number is ")
-				print (next_node_number.out)
-				print ("%N")
+				std.error.put_string ("Next node number is ")
+				std.error.put_string (next_node_number.out)
+				std.error.put_new_line
 			end
 		ensure
-			document_set: document = doc
-			starting_node_set: starting_node = start
-			test_set: node_test = test
+			document_set: document = a_document
+			starting_node_set: starting_node = a_starting_node
+			test_set: node_test = a_node_test
 			get_children: get_children = children
 		end
 
 feature -- Status report
-
 	
 	after: BOOLEAN is
 			-- Are there any more items in the sequence?
@@ -107,15 +106,6 @@ feature -- Status report
 			no_need_to_advance: need_to_advance = False
 		end
 
-feature -- Duplication
-
-	another: like Current is
-			-- Another iterator that iterates over the same items as the original;
-			-- The new iterator will be repositioned at the start of the sequence
-		do
-			create Result.make (document, starting_node, node_test, get_children)
-		end
-
 feature -- Cursor movement
 
 	forth is
@@ -126,8 +116,17 @@ feature -- Cursor movement
 			current_item := document.retrieve_node (next_node_number)
 			need_to_advance := True
 		end
+
+feature -- Duplication
+
+	another: like Current is
+			-- Another iterator that iterates over the same items as the original;
+			-- The new iterator will be repositioned at the start of the sequence
+		do
+			create Result.make (document, starting_node, node_test, get_children)
+		end
 	
-feature {NONE} -- Implemnentation
+feature {NONE} -- Implementation
 
 	document: XM_XPATH_TINY_DOCUMENT
 			-- The document within which we enumerate

@@ -16,6 +16,8 @@ inherit
 
 	XM_XPATH_AXIS_ITERATOR [XM_XPATH_TINY_NODE]
 
+	KL_SHARED_STANDARD_FILES
+
 		-- This class also implements an extra Axis, preceding-or-ancestor,
 		-- which is used internally by xsl:number level="any"
 	
@@ -23,38 +25,38 @@ creation
 
 	make
 	
-feature -- Initialization
+feature {NONE} -- Initialization
 
-	make (doc: XM_XPATH_TINY_DOCUMENT; start: XM_XPATH_TINY_NODE; test: XM_XPATH_NODE_TEST; ancestors: BOOLEAN) is
+	make (a_document: XM_XPATH_TINY_DOCUMENT; a_starting_node: XM_XPATH_TINY_NODE; a_node_test: XM_XPATH_NODE_TEST; ancestors: BOOLEAN) is
 			-- Establish invariant
 		require
-			document_not_void: doc /= Void
-			starting_node_not_void: start /= Void
-			node_test_not_void: test /= Void
+			document_not_void: a_document /= Void
+			starting_node_not_void: a_starting_node /= Void
+			node_test_not_void: a_node_test /= Void
 		do
-			document := doc
-			starting_node := start
-			node_test := test
-			next_node_number := start.node_number
+			document := a_document
+			starting_node := a_starting_node
+			node_test := a_node_test
+			next_node_number := a_starting_node.node_number
 			include_ancestors := ancestors
 
-			next_ancestor_depth := doc.depth_of (next_node_number) - 1
+			next_ancestor_depth := a_document.depth_of (next_node_number) - 1
 			debug ("XPath preceding enumeration")
-				print ("Starting node number is ")
-				print (next_node_number)
-				print ("%NNext ancestor's depth is ")
-				print (next_ancestor_depth.out)
+				std.error.put_string ("Starting node number is ")
+				std.error.put_string (next_node_number.out)
+				std.error.put_string ("%NNext ancestor's depth is ")
+				std.error.put_string (next_ancestor_depth.out)
 			end
 			advance
 			debug ("XPath preceding enumeration")
-				print ("%Nprior to calling forth, next node number is ")
-				print (next_node_number)
-				print ("%N")
+				std.error.put_string ("%Nprior to calling forth, next node number is ")
+				std.error.put_string (next_node_number.out)
+				std.error.put_new_line
 			end	
 		ensure
-			document_set: document = doc
-			starting_node_set: starting_node = start
-			test_set: node_test = test
+			document_set: document = a_document
+			starting_node_set: starting_node = a_starting_node
+			test_set: node_test = a_node_test
 			include_ancestors: include_ancestors = ancestors
 		end
 
@@ -67,15 +69,6 @@ feature -- Status report
 			Result := next_node_number <= 0
 		end
 
-feature -- Duplication
-
-	another: like Current is
-			-- Another iterator that iterates over the same items as the original;
-			-- The new iterator will be repositioned at the start of the sequence
-		do
-			create Result.make (document, starting_node, node_test, include_ancestors)
-		end
-
 feature -- Cursor movement
 
 	forth is
@@ -84,6 +77,15 @@ feature -- Cursor movement
 			index := index + 1
 			current_item := document.retrieve_node (next_node_number)
 			advance
+		end
+
+feature -- Duplication
+
+	another: like Current is
+			-- Another iterator that iterates over the same items as the original;
+			-- The new iterator will be repositioned at the start of the sequence
+		do
+			create Result.make (document, starting_node, node_test, include_ancestors)
 		end
 	
 feature {NONE} -- Implementation
@@ -116,9 +118,9 @@ feature {NONE} -- Implementation
 			loop
 				next_node_number := next_node_number - 1
 				debug ("XPath preceding enumeration")
-					print ("Next node number is now ")
-					print (next_node_number)
-					print ("%N")
+					std.error.put_string ("Next node number is now ")
+					std.error.put_string (next_node_number.out)
+					std.error.put_new_line
 				end
 				if not include_ancestors then
 				-- skip over ancestors
@@ -127,12 +129,12 @@ feature {NONE} -- Implementation
 						next_node_number <= 1 or else document.depth_of (next_node_number) /= next_ancestor_depth
 					loop
 						debug ("XPath preceding enumeration")
-							print ("Next node depth is now ")
-							print (document.depth_of (next_node_number))
-							print ("%N")
-							print ("Next ancestor depth is now ")
-							print (next_ancestor_depth)
-							print ("%N")							
+							std.error.put_string ("Next node depth is now ")
+							std.error.put_string (document.depth_of (next_node_number).out)
+							std.error.put_new_line
+							std.error.put_string ("Next ancestor depth is now ")
+							std.error.put_string (next_ancestor_depth.out)
+							std.error.put_new_line
 						end
 						next_ancestor_depth := next_ancestor_depth - 1
 						next_node_number := next_node_number - 1

@@ -18,28 +18,30 @@ inherit
 
 	XM_XPATH_TYPE
 	
+	KL_SHARED_STANDARD_FILES
+
 creation
 
 	make
 	
-feature -- Initialization
+feature {NONE} -- Initialization
 
-	make (doc: XM_XPATH_TINY_DOCUMENT; start: XM_XPATH_TINY_NODE; test: XM_XPATH_NODE_TEST; self: BOOLEAN) is
+	make (a_document: XM_XPATH_TINY_DOCUMENT; a_starting_node: XM_XPATH_TINY_NODE; a_node_test: XM_XPATH_NODE_TEST; self: BOOLEAN) is
 			-- Establish invariant
 		require
-			document_not_void: doc /= Void
-			starting_node_not_void: start /= Void
-			node_test_not_void: test /= Void
+			document_not_void: a_document /= Void
+			starting_node_not_void: a_starting_node /= Void
+			node_test_not_void: a_node_test /= Void
 		local
 			a_type_code: INTEGER
 		do
-			document := doc
-			starting_node := start
-			node_test := test
-			next_node_number := start.node_number
+			document := a_document
+			starting_node := a_starting_node
+			node_test := a_node_test
+			next_node_number := a_starting_node.node_number
 			include_self := self
 
-			starting_depth := doc.depth_of (next_node_number)
+			starting_depth := a_document.depth_of (next_node_number)
 
 			if include_self then
 				do_nothing
@@ -58,30 +60,30 @@ feature -- Initialization
 				a_type_code := Any_node
 			end
 			debug ("XPath descendants enumeration")
-				print ("Next node is ")
-				print (next_node_number.out)
-				print("%N")
+				std.error.put_string ("Next node is ")
+				std.error.put_string (next_node_number.out)
+				std.error.put_new_line
 			end
 			if next_node_number >= 0 and then next_node_number < document.last_node_added and then
-				not test.matches_node (document.retrieve_node_kind (next_node_number), document.name_code_for_node (next_node_number), a_type_code) then
+				not a_node_test.matches_node (document.retrieve_node_kind (next_node_number), document.name_code_for_node (next_node_number), a_type_code) then
 				advance
 			end
 
 			debug ("XPath descendants enumeration")
-				print ("Initial depth is ")
-				print (starting_depth.out)
-				print (", next node is ")
-				print (next_node_number.out)
-				print (", starting node is ")
-				print (starting_node.node_number.out)				
-				print("%N")
+				std.error.put_string ("Initial depth is ")
+				std.error.put_string (starting_depth.out)
+				std.error.put_string (", next node is ")
+				std.error.put_string (next_node_number.out)
+				std.error.put_string (", starting node is ")
+				std.error.put_string (starting_node.node_number.out)				
+				std.error.put_new_line
 			end
 			
 			
 		ensure
-			document_set: document = doc
-			starting_node_set: starting_node = start
-			test_set: node_test = test
+			document_set: document = a_document
+			starting_node_set: starting_node = a_starting_node
+			test_set: node_test = a_node_test
 			include_self: include_self = self
 		end
 
@@ -94,15 +96,6 @@ feature -- Status report
 			Result := next_node_number <= 0
 		end
 
-feature -- Duplication
-
-	another: like Current is
-			-- Another iterator that iterates over the same items as the original;
-			-- The new iterator will be repositioned at the start of the sequence
-		do
-			create Result.make (document, starting_node, node_test, include_self)
-		end
-
 feature -- Cursor movement
 
 	forth is
@@ -111,17 +104,26 @@ feature -- Cursor movement
 			index := index + 1
 			current_item := document.retrieve_node (next_node_number)
 			debug ("XPath descendants enumeration")
-				print ("Forth: index is now ")
-				print (index.out)
-				print (", current item's node number is ")
-				print (next_node_number.out)
-				print ("%N")
+				std.error.put_string ("Forth: index is now ")
+				std.error.put_string (index.out)
+				std.error.put_string (", current item's node number is ")
+				std.error.put_string (next_node_number.out)
+				std.error.put_new_line
 			end
 
 			advance
 		end
+
+feature -- Duplication
+
+	another: like Current is
+			-- Another iterator that iterates over the same items as the original;
+			-- The new iterator will be repositioned at the start of the sequence
+		do
+			create Result.make (document, starting_node, node_test, include_self)
+		end
 	
-feature {NONE} -- Implemnentation
+feature {NONE} -- Implementation
 
 	document: XM_XPATH_TINY_DOCUMENT
 			-- The document within which we enumerate
@@ -152,14 +154,14 @@ feature {NONE} -- Implemnentation
 			loop
 				next_node_number := next_node_number + 1
 				debug ("XPath descendants enumeration")
-					print ("Advance: next node is now ")
-					print (next_node_number.out)
-					print("%N")
-					print ("Node kind is:")
-					print (document.retrieve_node_kind (next_node_number))
-					print (", name code is:")
-					print (document.name_code_for_node (next_node_number))
-					print ("%N")
+					std.error.put_string ("Advance: next node is now ")
+					std.error.put_string (next_node_number.out)
+					std.error.put_new_line
+					std.error.put_string ("Node kind is:")
+					std.error.put_string (document.retrieve_node_kind (next_node_number).out)
+					std.error.put_string (", name code is:")
+					std.error.put_string (document.name_code_for_node (next_node_number).out)
+					std.error.put_new_line
 				end
 					
 				if next_node_number > document.last_node_added or else document.depth_of (next_node_number) <= starting_depth then

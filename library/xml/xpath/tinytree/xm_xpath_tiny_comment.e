@@ -24,15 +24,15 @@ creation
 
 feature {NONE} -- Initialization
 
-	make (doc: XM_XPATH_TINY_DOCUMENT; a_node_number: INTEGER) is
+	make (a_document: XM_XPATH_TINY_DOCUMENT; a_node_number: INTEGER) is
 		require
-			valid_document: doc /= Void
-			valid_node_number: a_node_number > 1 and a_node_number <= doc.last_node_added
+			valid_document: a_document /= Void
+			valid_node_number: a_node_number > 1 and a_node_number <= a_document.last_node_added
 		do
-			document := doc
+			document := a_document
 			node_number := a_node_number
 		ensure
-			document_set: document = doc
+			document_set: document = a_document
 			node_number_set: node_number = a_node_number
 		end
 	
