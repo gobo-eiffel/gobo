@@ -78,7 +78,7 @@
 		<delete directory="doc/structure/visio"/>
 		<delete directory="doc/time/visio"/>
 		<delete>
-			<fileset directory="." include="@(**/.cvsignore)"/>
+			<fileset include="@(**/.cvsignore)"/>
 		</delete>
 		<delete>
 			<directoryset directory="." include="@(**/CVS)"/>
