@@ -94,16 +94,26 @@ feature {NONE} -- Precompilation
 		local
 			eif_compiler: STRING
 			define_base: STRING
+			ise_5_1: STRING
 		do
+			ise_5_1 := Execution_environment.variable_value ("ISE_5_1")
 			old_cwd := file_system.cwd
 			file_system.create_directory (testdir)
 			assert (testdir + "_exists", file_system.directory_exists (testdir))
 			file_system.cd (testdir)
 				-- Generate Ace file.
 			if base then
-				define_base := "--define=%"GOBO_EIFFELBASE%" "
+				if ise_5_1 /= Void and then ise_5_1.count > 0 then
+					define_base := "--define=%"GOBO_EIFFELBASE ISE_5_1%" "
+				else
+					define_base := "--define=%"GOBO_EIFFELBASE%" "
+				end
 			else
-				define_base := ""
+				if ise_5_1 /= Void and then ise_5_1.count > 0 then
+					define_base := "--define=%"ISE_5_1%" "
+				else
+					define_base := ""
+				end
 			end
 			assert_execute ("gexace " + define_base + "--library=ise " + xace_filename + output_log)
 				-- Eiffel precompilation.
