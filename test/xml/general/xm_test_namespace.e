@@ -22,6 +22,9 @@ inherit
 	XM_MARKUP_CONSTANTS
 		export {NONE} all end
 
+	KL_SHARED_STANDARD_FILES
+		export {NONE} all end
+
 feature -- Test printed
 
 	test_printed is
