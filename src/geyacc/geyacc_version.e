@@ -14,6 +14,6 @@ class GEYACC_VERSION
 
 feature -- Constants
 
-	Version_number: STRING is "2.0"
+	Version_number: STRING is "2.1"
 
 end -- class GEYACC_VERSION
