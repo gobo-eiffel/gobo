@@ -46,6 +46,7 @@ feature {NONE} -- Initialization
 			current_class := a_universe.unknown_class
 			current_feature := dummy_feature
 			create instruction_checker.make (a_universe)
+			create type_checker.make (a_universe)
 		end
 
 feature -- Access
@@ -400,8 +401,29 @@ feature {NONE} -- Locals validity
 			-- Check validity of `a_locals'.
 		require
 			a_locals_not_void: a_locals /= Void
+		local
+			i, nb: INTEGER
 		do
+			nb := a_locals.count
+			from i := 1 until i > nb loop
+				check_type_validity (a_locals.local_variable (i).type)
+				i := i + 1
+			end
 		end
+
+	check_type_validity (a_type: ET_TYPE) is
+			-- Check validity of `a_type'.
+		require
+			a_type_not_void: a_type /= Void
+		do
+			type_checker.resolve_type (a_type, current_feature, current_feature.implementation_class)
+			if type_checker.has_fatal_error then
+				--set_fatal_error
+			end
+		end
+
+	type_checker: ET_IDENTIFIER_TYPE_RESOLVER
+			-- Type checker
 
 feature {NONE} -- Instructions validity
 
@@ -540,5 +562,6 @@ invariant
 	current_feature_not_void: current_feature /= Void
 	current_class_not_void: current_class /= Void
 	instruction_checker_not_void: instruction_checker /= Void
+	type_checker_not_void: type_checker /= Void
 
 end
