@@ -32,8 +32,8 @@ regular expressions. These are:</p>
     <dt><font color="#FF0000"><tt>.</tt></font></dt>
     <dd>any character except newline.</dd>
     <dt><font color="#FF0000"><tt>[xyz]</tt></font></dt>
-    <dd>a <em>character class</em>; in this case, the pattern
-        matches either an <font color="#808000"><tt>x</tt></font>,
+    <dd>a <em><strong>character class</strong></em>; in this
+        case, the pattern matches either an <font color="#808000"><tt>x</tt></font>,
         a <font color="#808000"><tt>y</tt></font> or a <font
         color="#808000"><tt>z</tt></font>.</dd>
     <dt><font color="#FF0000"><tt>[abj-oZ]</tt></font></dt>
@@ -44,9 +44,9 @@ regular expressions. These are:</p>
         color="#808000"><tt>o</tt></font>, or a <font
         color="#808000"><tt>Z</tt></font>.</dd>
     <dt><font color="#FF0000"><tt>[^A-Z]</tt></font></dt>
-    <dd>a <em>negated character class</em>, i.e., any character
-        but those in the class. In this case, any character
-        except an uppercase letter.</dd>
+    <dd>a <em><strong>negated character class</strong></em>,
+        i.e., any character but those in the class. In this case,
+        any character except an uppercase letter.</dd>
     <dt><font color="#FF0000"><tt>[^A-Z\n]</tt></font></dt>
     <dd>any character except an uppercase letter or a newline.</dd>
     <dt><font color="#FF0000"><tt>r*</tt></font></dt>
@@ -94,7 +94,7 @@ regular expressions. These are:</p>
     <dt><font color="#FF0000"><tt>rs</tt></font></dt>
     <dd>the regular expression <font color="#FF0000"><tt>r</tt></font>
         followed by the regular expression <font color="#FF0000"><tt>s</tt></font>;
-        called <em>concatenation</em>.</dd>
+        called <em><strong>concatenation</strong></em>.</dd>
 </dl>
 
 <hr size="1" width="75%">
@@ -116,10 +116,12 @@ regular expressions. These are:</p>
         &quot;longest match&quot;, but is then returned to the
         input before the action is executed. So the action only
         sees the text matched by <font color="#FF0000"><tt>r</tt></font>.
-        This type of pattern is called <em>trailing context</em>.
-        (There are some combinations of <font color="#FF0000"><tt>r/s</tt></font>
-        that <em>gelex</em> cannot match correctly, such as in <font
-        color="#FF0000"><tt>zx*/xy</tt></font>.).</dd>
+        This type of pattern is called <em><strong>trailing
+        context</strong></em>. (There are some combinations of <font
+        color="#FF0000"><tt>r/s</tt></font> that <em>gelex</em>
+        cannot match correctly, such as in <font color="#FF0000"><tt>zx*/xy</tt></font>.
+        See <em>gelex</em>'s <a href="limitations.html">limitations</a>
+        for details.).</dd>
     <dt><font color="#FF0000"><tt>^r</tt></font></dt>
     <dd>an <font color="#FF0000"><tt>r</tt></font>, but only at
         the beginning of a line (i.e., which just starting to
@@ -180,9 +182,9 @@ color="#FF0000"><tt>]</tt></font>, and, at the beginning of the
 class, <font color="#FF0000"><tt>^</tt></font>.</p>
 
 <p>The regular expressions listed above are grouped according to <a
-name="precedence">precedence</a>, from highest precedence at the
-top to lowest at the bottom. Those grouped together have equal
-precedence. For example,</p>
+name="precedence"><em><strong>precedence</strong></em></a>, from
+highest precedence at the top to lowest at the bottom. Those
+grouped together have equal precedence. For example,</p>
 
 <blockquote>
     <pre><font color="#FF0000">foo|bar*</font></pre>
