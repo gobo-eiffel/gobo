@@ -3,6 +3,9 @@
 # usage: make_bin <bin_directory>
 
 root_dir=`pwd`
+GOBO_WINDOWS=`echo $GOBO | sed "s/^\/\/\([a-zA-Z]\)\//\1:\//g"`
+GOBO=$GOBO_WINDOWS
+export GOBO
 
 mkdir gelex
 cd gelex
