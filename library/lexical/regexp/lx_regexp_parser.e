@@ -14,11 +14,9 @@ class LX_REGEXP_PARSER
 
 inherit
 
-	YY_PARSER [ANY]
+	YY_PARSER_SKELETON [ANY]
 		rename
 			reset as reset_parser_skeleton
-		redefine
-			last_value, last_token
 		end
 
 	LX_REGEXP_SCANNER
@@ -26,8 +24,6 @@ inherit
 			make as make_regexp_scanner,
 			make_from_description as make_regexp_scanner_from_description,
 			reset as reset_regexp_scanner
-		redefine
-			last_value, last_token
 		end
 
 	KL_SHARED_INPUT_STREAM_ROUTINES
@@ -37,16 +33,506 @@ creation
 	make, make_from_description
 
 feature
---
---	Created	by ibyacc V1.0 from "lx_regexp_parser.y"
---
+-- Created by ibyacc V1.6 from "lx_regexp_parser.y"
 
 	Token_CHAR: INTEGER is 257
-	Token_NUMBER: INTEGER is 258
-	Token_EOF_OP: INTEGER is 259
-	Token_CCL_OP: INTEGER is 260
+		-- id of token CHAR
 
--- line 263
+	Token_NUMBER: INTEGER is 258
+		-- id of token NUMBER
+
+	Token_EOF_OP: INTEGER is 259
+		-- id of token EOF_OP
+
+	Token_CCL_OP: INTEGER is 260
+		-- id of token CCL_OP
+
+feature {NONE}
+
+	yyreds: ARRAY[STRING] is
+		once
+			Result := <<
+				"Regexp : Init_pattern Pattern",
+				"Init_pattern :",
+				"Pattern : ^ Rule",
+				"Pattern : Rule",
+				"Pattern : EOF_OP",
+				"Pattern : error",
+				"Rule : Regular_expression2 Regular_expression",
+				"Rule : Regular_expression2 Regular_expression $",
+				"Rule : Regular_expression $",
+				"Rule : Regular_expression",
+				"Regular_expression : Series",
+				"Regular_expression : Regular_expression | Series",
+				"Regular_expression2 : Regular_expression /",
+				"Series : Singleton",
+				"Series : Series Singleton",
+				"Singleton : CHAR",
+				"Singleton : Singleton *",
+				"Singleton : Singleton +",
+				"Singleton : Singleton ?",
+				"Singleton : Singleton { NUMBER , NUMBER }",
+				"Singleton : Singleton { NUMBER , }",
+				"Singleton : Singleton { NUMBER }",
+				"Singleton : .",
+				"Singleton : CCL_OP",
+				"Singleton : Full_CCl",
+				"Singleton : %" String %"",
+				"Singleton : ( Regular_expression )",
+				"Full_CCl : [ CCl ]",
+				"Full_CCl : [ ^ CCl ]",
+				"CCl : CHAR",
+				"CCl : CCl CHAR",
+				"CCl : CHAR - CHAR",
+				"CCl : CCl CHAR - CHAR",
+				"String :",
+				"String : String CHAR" >>
+		end -- yyreds
+
+	yytoks: ARRAY[STRING] is
+		once
+			Result := <<
+				"$end",
+				"error",
+				"CHAR",
+				"NUMBER",
+				"EOF_OP",
+				"CCL_OP",
+				"^",
+				"$",
+				"|",
+				"/",
+				"*",
+				"+",
+				"?",
+				"{",
+				",",
+				"}",
+				".",
+				"%"",
+				"(",
+				")",
+				"[",
+				"]",
+				"-",
+				"-unknown-" >>
+		end -- yytoks
+
+	yytokv: ARRAY[INTEGER] is
+		once
+			Result := <<
+				0,256,257,258,259,260,94,36,124,47,
+				42,43,63,123,44,125,46,34,40,41,
+				91,93,45,-1 >>
+		end -- yytokv
+
+	yyexca_m: ARRAY[INTEGER] is
+		once
+			Result := <<
+				-1, 1,
+					0, -1,
+					-2, 0,
+				0 >>
+		end -- yyexca_m
+
+	yylast: INTEGER is 229
+
+	yyact_m: ARRAY[INTEGER] is
+		once
+			Result := << 
+				  16,  16,  50,  47,  40,  37,  17,  17,  36,  32,
+				  51,  48,  13,  13,  33,  21,  44,  25,  26,  52,
+				  34,  39,  46,  43,  10,  11,  23,   5,   9,  31,
+				  29,  15,  19,   8,   3,   2,  24,  20,  27,   1,
+				   0,   0,   0,   0,   0,   0,  30,  35,   0,   0,
+				   0,   0,   0,   0,   0,   0,   0,  18,  18,   0,
+				   4,  24,  42,   0,   0,   0,   0,   0,   0,   0,
+				   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,
+				   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,
+				   0,   0,   0,   0,   0,   0,   0,  45,  28,   0,
+				   0,   0,   0,  22,  22,   0,   0,   0,  22,   0,
+				   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,
+				   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,
+				   0,   0,   0,   0,   0,  49,   0,   0,   0,   0,
+				   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,
+				   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,
+				   0,   0,   0,   0,   0,   0,   0,  41,  41,   0,
+				   0,   0,  33,   0,   0,   0,   0,   0,   0,   0,
+				   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,
+				   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,
+				   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,
+				   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,
+				   0,   0,   7,  12,  12,   6,  14,  14,  38 >>
+		end -- yyact_m
+
+	yypact_m: ARRAY[INTEGER] is
+		once
+			Result := << 
+				-1000,-1000, -34,-1000, -33,-1000,-1000,-1000, -33, -21,
+				 -33, -25,-1000,-1000,-1000,-1000,-1000, -33, -85,-1000,
+				 -16,-1000, -33,-1000, -25,-1000,-1000,-1000,-250, -29,
+				 -20, -89,-243, -22,-1000, -33, -28,-1000,-1000,-1000,
+				-1000, -23, -90,-246,-123,-1000,-247,-1000,-1000,-106,
+				-1000,-1000,-1000 >>
+		end -- yypact_m
+
+	yypgo_m: ARRAY[INTEGER] is
+		once
+			Result := << 
+				   0,  39,  35,  34,  27,  33,  28,  24,  25,  31,
+				  30,  29 >>
+		end -- yypgo_m
+
+	yyr1_m: ARRAY[INTEGER] is
+		once
+			Result := << 
+				   0,   1,   2,   3,   3,   3,   3,   4,   4,   4,
+				   4,   6,   6,   5,   7,   7,   8,   8,   8,   8,
+				   8,   8,   8,   8,   8,   8,   8,   8,   9,   9,
+				  11,  11,  11,  11,  10,  10 >>
+		end -- yyr1_m
+
+	yyr2_m: ARRAY[INTEGER] is
+		once
+			Result := << 
+				   0,   5,   1,   5,   3,   3,   3,   5,   7,   5,
+				   3,   2,   7,   5,   2,   5,   3,   5,   5,   5,
+				  13,  11,   9,   3,   3,   3,   7,   7,   7,   9,
+				   3,   5,   7,   9,   1,   5 >>
+		end -- yyr2_m
+
+	yychk_m: ARRAY[INTEGER] is
+		once
+			Result := << 
+				-1000,  -1,  -2,  -3,  94,  -4, 259, 256,  -5,  -6,
+				  -7,  -8, 257,  46, 260,  -9,  34,  40,  91,  -4,
+				  -6,  36, 124,  47,  -8,  42,  43,  63, 123, -10,
+				  -6, -11,  94, 257,  36,  -7, 258,  34, 257,  41,
+				  93, 257, -11,  45,  44, 125,  45,  93, 257, 258,
+				 125, 257, 125 >>
+		end -- yychk_m
+
+	yydef_m: ARRAY[INTEGER] is
+		once
+			Result := << 
+				   2,  -2,   0,   1,   0,   4,   5,   6,   0,  10,
+				  11,  14,  16,  23,  24,  25,  34,   0,   0,   3,
+				   7,   9,   0,  13,  15,  17,  18,  19,   0,   0,
+				   0,   0,   0,  30,   8,  12,   0,  26,  35,  27,
+				  28,  31,   0,   0,   0,  22,   0,  29,  32,   0,
+				  21,  33,  20 >>
+		end -- yydef_m
+
+	yy_do_action (yy_a, yy_n: INTEGER) is
+			-- execute user action 'yy_a'
+		do
+			inspect
+				yy_a
+
+			when 1 then
+				yy_do_default_action(yy_n)
+
+-- line 46
+
+			check_options
+		
+			when 2 then
+				yy_do_default_action(yy_n)
+
+-- line 52
+
+				-- Initialize for a parse of one pattern.
+
+			has_trail_context := False
+			variable_trail_rule := False
+			variable_length := False
+			trail_count := 0
+			head_count := 0
+			rule_length := 0
+			in_trail_context := False
+			init_new_rule
+		
+			when 3 then
+				yy_do_default_action(yy_n)
+
+-- line 66
+
+			process_bol_rule (dollar_nfa (yyvstack.item(-0)))
+		
+			when 4 then
+				yy_do_default_action(yy_n)
+
+-- line 70
+
+			process_rule (dollar_nfa (yyvstack.item(-0)))
+		
+			when 5 then
+				yy_do_default_action(yy_n)
+
+-- line 74
+
+			process_eof_rule
+		
+			when 6 then
+				yy_do_default_action(yy_n)
+
+-- line 78
+
+			error_handler.unrecognized_rule (filename, line_nb)
+		
+			when 7 then
+				yy_do_default_action(yy_n)
+
+-- line 84
+
+			yyval := append_trail_context_to_regexp
+				(dollar_nfa (yyvstack.item(-0)), dollar_nfa (yyvstack.item(-1)))
+		
+			when 8 then
+				yy_do_default_action(yy_n)
+
+-- line 89
+
+			error_handler.trailing_context_used_twice (filename, line_nb)
+		
+			when 9 then
+				yy_do_default_action(yy_n)
+
+-- line 93
+
+			yyval := append_eol_to_regexp (dollar_nfa (yyvstack.item(-1)))
+		
+			when 10 then
+				yy_do_default_action(yy_n)
+
+-- line 97
+
+			if has_trail_context then
+				if variable_length and head_count = 0 then
+						-- Both head and trail are variable-length.
+
+					variable_trail_rule := True
+				else
+					trail_count := rule_length
+				end
+			end
+		
+			when 12 then
+				yy_do_default_action(yy_n)
+
+-- line 111
+
+			variable_length := True
+			yyval := dollar_nfa (yyvstack.item(-2)) | dollar_nfa (yyvstack.item(-0))
+		
+			when 13 then
+				yy_do_default_action(yy_n)
+
+-- line 118
+
+				-- This rule is written separately so the reduction
+
+				-- will occur before the trailing series is parsed.
+
+			if has_trail_context then
+				error_handler.trailing_context_used_twice (filename, line_nb)
+			else
+				has_trail_context := True
+			end
+			if variable_length then
+					-- We hope the trailing context is fixed-length.
+
+				variable_length := False
+			else
+				head_count := rule_length
+			end
+			rule_length := 0
+			in_trail_context := True
+		
+			when 15 then
+				yy_do_default_action(yy_n)
+
+-- line 139
+
+			yyval := dollar_nfa (yyvstack.item(-1)) & dollar_nfa (yyvstack.item(-0))
+		
+			when 16 then
+				yy_do_default_action(yy_n)
+
+-- line 145
+
+			rule_length := rule_length + 1
+			yyval := new_nfa_from_character (dollar_integer (yyvstack.item(-0)))
+		
+			when 17 then
+				yy_do_default_action(yy_n)
+
+-- line 150
+
+			variable_length := True
+			yyval := |*| dollar_nfa (yyvstack.item(-1))
+		
+			when 18 then
+				yy_do_default_action(yy_n)
+
+-- line 155
+
+			variable_length := True
+			yyval := |+| dollar_nfa (yyvstack.item(-1))
+		
+			when 19 then
+				yy_do_default_action(yy_n)
+
+-- line 160
+
+			variable_length := True
+			yyval := |?| dollar_nfa (yyvstack.item(-1))
+		
+			when 20 then
+				yy_do_default_action(yy_n)
+
+-- line 165
+
+			variable_length := True
+			yyval := new_bounded_iteration_nfa
+				(dollar_nfa (yyvstack.item(-5)), dollar_integer (yyvstack.item(-3)), dollar_integer (yyvstack.item(-1)))
+		
+			when 21 then
+				yy_do_default_action(yy_n)
+
+-- line 171
+
+			variable_length := True
+			yyval := new_unbounded_iteration_nfa
+				(dollar_nfa (yyvstack.item(-4)), dollar_integer (yyvstack.item(-2)))
+		
+			when 22 then
+				yy_do_default_action(yy_n)
+
+-- line 177
+
+				-- The singleton could be something like "(foo)",
+
+				-- in which case we have no idea what its length
+
+				-- is, so we punt here.
+
+			variable_length := True
+			yyval := new_iteration_nfa (dollar_nfa (yyvstack.item(-3)), dollar_integer (yyvstack.item(-1)))
+		
+			when 23 then
+				yy_do_default_action(yy_n)
+
+-- line 185
+
+			rule_length := rule_length + 1
+			yyval := new_symbol_class_nfa (dot_character_class)
+		
+			when 24 then
+				yy_do_default_action(yy_n)
+
+-- line 190
+
+			rule_length := rule_length + 1
+			yyval := new_symbol_class_nfa (dollar_symbol_class (yyvstack.item(-0)))
+		
+			when 25 then
+				yy_do_default_action(yy_n)
+
+-- line 195
+
+			rule_length := rule_length + 1
+			yyval := new_nfa_from_character_class (dollar_symbol_class (yyvstack.item(-0)))
+		
+			when 26 then
+				yy_do_default_action(yy_n)
+
+-- line 200
+
+			yyval := yyvstack.item(-1)
+		
+			when 27 then
+				yy_do_default_action(yy_n)
+
+-- line 204
+
+			yyval := yyvstack.item(-1)
+		
+			when 28 then
+				yy_do_default_action(yy_n)
+
+-- line 210
+
+			character_classes.force
+				(dollar_symbol_class (yyvstack.item(-1)), dollar_string (yyvstack.item(-2)))
+			yyval := yyvstack.item(-1)
+		
+			when 29 then
+				yy_do_default_action(yy_n)
+
+-- line 216
+
+			dollar_symbol_class (yyvstack.item(-1)).set_negated (True)
+			character_classes.force
+				(dollar_symbol_class (yyvstack.item(-1)), dollar_string (yyvstack.item(-3)))
+			yyval := yyvstack.item(-1)
+		
+			when 30 then
+				yy_do_default_action(yy_n)
+
+-- line 225
+
+			yyval := append_character_to_character_class
+				(dollar_integer (yyvstack.item(-0)), new_character_class)
+		
+			when 31 then
+				yy_do_default_action(yy_n)
+
+-- line 230
+
+			yyval := append_character_to_character_class
+				(dollar_integer (yyvstack.item(-0)), dollar_symbol_class (yyvstack.item(-1)))
+		
+			when 32 then
+				yy_do_default_action(yy_n)
+
+-- line 235
+
+			yyval := append_character_set_to_character_class
+				(dollar_integer (yyvstack.item(-2)), dollar_integer (yyvstack.item(-0)),
+				new_character_class)
+		
+			when 33 then
+				yy_do_default_action(yy_n)
+
+-- line 241
+
+			yyval := append_character_set_to_character_class
+				(dollar_integer (yyvstack.item(-2)), dollar_integer (yyvstack.item(-0)),
+				dollar_symbol_class (yyvstack.item(-3)))
+		
+			when 34 then
+				yy_do_default_action(yy_n)
+
+-- line 249
+
+			yyval := new_epsilon_nfa
+		
+			when 35 then
+				yy_do_default_action(yy_n)
+
+-- line 253
+
+			rule_length := rule_length + 1
+			yyval := append_character_to_string
+				(dollar_integer (yyvstack.item(-0)), dollar_nfa (yyvstack.item(-1)))
+		
+			else
+			-- empty action
+			end -- inspect action
+		end -- yy_do_action
+
+-- line 260
 
 
 feature {NONE} -- Initialization
@@ -115,12 +601,6 @@ feature -- Parsing
 		end
 
 feature -- Access
-
-	last_token: INTEGER
-			-- Code of last token read
-
-	last_value: ANY
-			-- Last value read by `read_token'
 
 	transitions: DS_ARRAYED_LIST [LX_SYMBOL_TRANSITION [LX_NFA_STATE]]
 			-- Symbol transitions kept for later renumbering
@@ -735,494 +1215,17 @@ feature {NONE} -- Constants
 	Initial_max_transitions: INTEGER is 1000
 			-- Maximum number of symbol transitions
 
--- invariant
---
---	transitions_not_void: equiv_classes /= Void implies transitions /= Void
---
--- end -- class LX_REGEXP_PARSER
+feature {NONE} -- Implementation
 
-feature {NONE}
-
-	yyreds: ARRAY[STRING] is
-		once
-			Result := <<
-				"Regexp : Init_pattern Pattern",
-				"Init_pattern :",
-				"Pattern : ^ Rule",
-				"Pattern : Rule",
-				"Pattern : EOF_OP",
-				"Pattern : error",
-				"Rule : Regular_expression2 Regular_expression",
-				"Rule : Regular_expression2 Regular_expression $",
-				"Rule : Regular_expression $",
-				"Rule : Regular_expression",
-				"Regular_expression : Series",
-				"Regular_expression : Regular_expression | Series",
-				"Regular_expression2 : Regular_expression /",
-				"Series : Singleton",
-				"Series : Series Singleton",
-				"Singleton : CHAR",
-				"Singleton : Singleton *",
-				"Singleton : Singleton +",
-				"Singleton : Singleton ?",
-				"Singleton : Singleton { NUMBER , NUMBER }",
-				"Singleton : Singleton { NUMBER , }",
-				"Singleton : Singleton { NUMBER }",
-				"Singleton : .",
-				"Singleton : CCL_OP",
-				"Singleton : Full_CCl",
-				"Singleton : %" String %"",
-				"Singleton : ( Regular_expression )",
-				"Full_CCl : [ CCl ]",
-				"Full_CCl : [ ^ CCl ]",
-				"CCl : CHAR",
-				"CCl : CCl CHAR",
-				"CCl : CHAR - CHAR",
-				"CCl : CCl CHAR - CHAR",
-				"String :",
-				"String : String CHAR" >>
-		end -- yyreds
-
-	yytoks: ARRAY[STRING] is
-		once
-			Result := <<
-				"$end",
-				"error",
-				"CHAR",
-				"NUMBER",
-				"EOF_OP",
-				"CCL_OP",
-				"^",
-				"$",
-				"|",
-				"/",
-				"*",
-				"+",
-				"?",
-				"{",
-				",",
-				"}",
-				".",
-				"%"",
-				"(",
-				")",
-				"[",
-				"]",
-				"-",
-				"-unknown-" >>
-		end -- yytoks
-
-	yytokv: ARRAY[INTEGER] is
-		once
-			Result := <<
-				0,256,257,258,259,260,94,36,124,47,
-				42,43,63,123,44,125,46,34,40,41,
-				91,93,45,-1 >>
-		end -- yytokv
-
-	yyexca_m: ARRAY[INTEGER] is
-		once
-			Result := <<
-				-1, 1,
-					0, -1,
-					-2, 0,
-				0 >>
-		end -- yyexca_m
-
-	yylast: INTEGER is 229
-
-	yyact_m: ARRAY[INTEGER] is
-		once
-			Result := << 
-				  16,  16,  50,  47,  40,  37,  17,  17,  36,  32,
-				  51,  48,  13,  13,  33,  21,  44,  25,  26,  52,
-				  34,  39,  46,  43,  10,  11,  23,   5,   9,  31,
-				  29,  15,  19,   8,   3,   2,  24,  20,  27,   1,
-				   0,   0,   0,   0,   0,   0,  30,  35,   0,   0,
-				   0,   0,   0,   0,   0,   0,   0,  18,  18,   0,
-				   4,  24,  42,   0,   0,   0,   0,   0,   0,   0,
-				   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,
-				   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,
-				   0,   0,   0,   0,   0,   0,   0,  45,  28,   0,
-				   0,   0,   0,  22,  22,   0,   0,   0,  22,   0,
-				   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,
-				   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,
-				   0,   0,   0,   0,   0,  49,   0,   0,   0,   0,
-				   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,
-				   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,
-				   0,   0,   0,   0,   0,   0,   0,  41,  41,   0,
-				   0,   0,  33,   0,   0,   0,   0,   0,   0,   0,
-				   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,
-				   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,
-				   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,
-				   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,
-				   0,   0,   7,  12,  12,   6,  14,  14,  38 >>
-		end -- yyact_m
-
-	yypact_m: ARRAY[INTEGER] is
-		once
-			Result := << 
-				-1000,-1000, -34,-1000, -33,-1000,-1000,-1000, -33, -21,
-				 -33, -25,-1000,-1000,-1000,-1000,-1000, -33, -85,-1000,
-				 -16,-1000, -33,-1000, -25,-1000,-1000,-1000,-250, -29,
-				 -20, -89,-243, -22,-1000, -33, -28,-1000,-1000,-1000,
-				-1000, -23, -90,-246,-123,-1000,-247,-1000,-1000,-106,
-				-1000,-1000,-1000 >>
-		end -- yypact_m
-
-	yypgo_m: ARRAY[INTEGER] is
-		once
-			Result := << 
-				   0,  39,  35,  34,  27,  33,  28,  24,  25,  31,
-				  30,  29 >>
-		end -- yypgo_m
-
-	yyr1_m: ARRAY[INTEGER] is
-		once
-			Result := << 
-				   0,   1,   2,   3,   3,   3,   3,   4,   4,   4,
-				   4,   6,   6,   5,   7,   7,   8,   8,   8,   8,
-				   8,   8,   8,   8,   8,   8,   8,   8,   9,   9,
-				  11,  11,  11,  11,  10,  10 >>
-		end -- yyr1_m
-
-	yyr2_m: ARRAY[INTEGER] is
-		once
-			Result := << 
-				   0,   5,   1,   5,   3,   3,   3,   5,   7,   5,
-				   3,   2,   7,   5,   2,   5,   3,   5,   5,   5,
-				  13,  11,   9,   3,   3,   3,   7,   7,   7,   9,
-				   3,   5,   7,   9,   1,   5 >>
-		end -- yyr2_m
-
-	yychk_m: ARRAY[INTEGER] is
-		once
-			Result := << 
-				-1000,  -1,  -2,  -3,  94,  -4, 259, 256,  -5,  -6,
-				  -7,  -8, 257,  46, 260,  -9,  34,  40,  91,  -4,
-				  -6,  36, 124,  47,  -8,  42,  43,  63, 123, -10,
-				  -6, -11,  94, 257,  36,  -7, 258,  34, 257,  41,
-				  93, 257, -11,  45,  44, 125,  45,  93, 257, 258,
-				 125, 257, 125 >>
-		end -- yychk_m
-
-	yydef_m: ARRAY[INTEGER] is
-		once
-			Result := << 
-				   2,  -2,   0,   1,   0,   4,   5,   6,   0,  10,
-				  11,  14,  16,  23,  24,  25,  34,   0,   0,   3,
-				   7,   9,   0,  13,  15,  17,  18,  19,   0,   0,
-				   0,   0,   0,  30,   8,  12,   0,  26,  35,  27,
-				  28,  31,   0,   0,   0,  22,   0,  29,  32,   0,
-				  21,  33,  20 >>
-		end -- yydef_m
-
-	yy_do_action (yy_a, yy_n: INTEGER) is
-			-- execute user action 'yy_a'
+	clear_input is
+			-- Set current input to undefined value.
 		do
-			inspect
-				yy_a
+			last_token := Token_undefined
+			last_value := void_value
+		end
 
-			when 1 then
-				yy_do_default_action(yy_n)
+invariant
 
--- line 49
+	transitions_not_void: equiv_classes /= Void implies transitions /= Void
 
-			check_options
-		
-			when 2 then
-				yy_do_default_action(yy_n)
-
--- line 55
-
-				-- Initialize for a parse of one pattern.
-
-			has_trail_context := False
-			variable_trail_rule := False
-			variable_length := False
-			trail_count := 0
-			head_count := 0
-			rule_length := 0
-			in_trail_context := False
-			init_new_rule
-		
-			when 3 then
-				yy_do_default_action(yy_n)
-
--- line 69
-
-			process_bol_rule (dollar_nfa (yyvstack.item(-0)))
-		
-			when 4 then
-				yy_do_default_action(yy_n)
-
--- line 73
-
-			process_rule (dollar_nfa (yyvstack.item(-0)))
-		
-			when 5 then
-				yy_do_default_action(yy_n)
-
--- line 77
-
-			process_eof_rule
-		
-			when 6 then
-				yy_do_default_action(yy_n)
-
--- line 81
-
-			error_handler.unrecognized_rule (filename, line_nb)
-		
-			when 7 then
-				yy_do_default_action(yy_n)
-
--- line 87
-
-			yyval := append_trail_context_to_regexp
-				(dollar_nfa (yyvstack.item(-0)), dollar_nfa (yyvstack.item(-1)))
-		
-			when 8 then
-				yy_do_default_action(yy_n)
-
--- line 92
-
-			error_handler.trailing_context_used_twice (filename, line_nb)
-		
-			when 9 then
-				yy_do_default_action(yy_n)
-
--- line 96
-
-			yyval := append_eol_to_regexp (dollar_nfa (yyvstack.item(-1)))
-		
-			when 10 then
-				yy_do_default_action(yy_n)
-
--- line 100
-
-			if has_trail_context then
-				if variable_length and head_count = 0 then
-						-- Both head and trail are variable-length.
-
-					variable_trail_rule := True
-				else
-					trail_count := rule_length
-				end
-			end
-		
-			when 12 then
-				yy_do_default_action(yy_n)
-
--- line 114
-
-			variable_length := True
-			yyval := dollar_nfa (yyvstack.item(-2)) | dollar_nfa (yyvstack.item(-0))
-		
-			when 13 then
-				yy_do_default_action(yy_n)
-
--- line 121
-
-				-- This rule is written separately so the reduction
-
-				-- will occur before the trailing series is parsed.
-
-			if has_trail_context then
-				error_handler.trailing_context_used_twice (filename, line_nb)
-			else
-				has_trail_context := True
-			end
-			if variable_length then
-					-- We hope the trailing context is fixed-length.
-
-				variable_length := False
-			else
-				head_count := rule_length
-			end
-			rule_length := 0
-			in_trail_context := True
-		
-			when 15 then
-				yy_do_default_action(yy_n)
-
--- line 142
-
-			yyval := dollar_nfa (yyvstack.item(-1)) & dollar_nfa (yyvstack.item(-0))
-		
-			when 16 then
-				yy_do_default_action(yy_n)
-
--- line 148
-
-			rule_length := rule_length + 1
-			yyval := new_nfa_from_character (dollar_integer (yyvstack.item(-0)))
-		
-			when 17 then
-				yy_do_default_action(yy_n)
-
--- line 153
-
-			variable_length := True
-			yyval := |*| dollar_nfa (yyvstack.item(-1))
-		
-			when 18 then
-				yy_do_default_action(yy_n)
-
--- line 158
-
-			variable_length := True
-			yyval := |+| dollar_nfa (yyvstack.item(-1))
-		
-			when 19 then
-				yy_do_default_action(yy_n)
-
--- line 163
-
-			variable_length := True
-			yyval := |?| dollar_nfa (yyvstack.item(-1))
-		
-			when 20 then
-				yy_do_default_action(yy_n)
-
--- line 168
-
-			variable_length := True
-			yyval := new_bounded_iteration_nfa
-				(dollar_nfa (yyvstack.item(-5)), dollar_integer (yyvstack.item(-3)), dollar_integer (yyvstack.item(-1)))
-		
-			when 21 then
-				yy_do_default_action(yy_n)
-
--- line 174
-
-			variable_length := True
-			yyval := new_unbounded_iteration_nfa
-				(dollar_nfa (yyvstack.item(-4)), dollar_integer (yyvstack.item(-2)))
-		
-			when 22 then
-				yy_do_default_action(yy_n)
-
--- line 180
-
-				-- The singleton could be something like "(foo)",
-
-				-- in which case we have no idea what its length
-
-				-- is, so we punt here.
-
-			variable_length := True
-			yyval := new_iteration_nfa (dollar_nfa (yyvstack.item(-3)), dollar_integer (yyvstack.item(-1)))
-		
-			when 23 then
-				yy_do_default_action(yy_n)
-
--- line 188
-
-			rule_length := rule_length + 1
-			yyval := new_symbol_class_nfa (dot_character_class)
-		
-			when 24 then
-				yy_do_default_action(yy_n)
-
--- line 193
-
-			rule_length := rule_length + 1
-			yyval := new_symbol_class_nfa (dollar_symbol_class (yyvstack.item(-0)))
-		
-			when 25 then
-				yy_do_default_action(yy_n)
-
--- line 198
-
-			rule_length := rule_length + 1
-			yyval := new_nfa_from_character_class (dollar_symbol_class (yyvstack.item(-0)))
-		
-			when 26 then
-				yy_do_default_action(yy_n)
-
--- line 203
-
-			yyval := yyvstack.item(-1)
-		
-			when 27 then
-				yy_do_default_action(yy_n)
-
--- line 207
-
-			yyval := yyvstack.item(-1)
-		
-			when 28 then
-				yy_do_default_action(yy_n)
-
--- line 213
-
-			character_classes.force
-				(dollar_symbol_class (yyvstack.item(-1)), dollar_string (yyvstack.item(-2)))
-			yyval := yyvstack.item(-1)
-		
-			when 29 then
-				yy_do_default_action(yy_n)
-
--- line 219
-
-			dollar_symbol_class (yyvstack.item(-1)).set_negated (True)
-			character_classes.force
-				(dollar_symbol_class (yyvstack.item(-1)), dollar_string (yyvstack.item(-3)))
-			yyval := yyvstack.item(-1)
-		
-			when 30 then
-				yy_do_default_action(yy_n)
-
--- line 228
-
-			yyval := append_character_to_character_class
-				(dollar_integer (yyvstack.item(-0)), new_character_class)
-		
-			when 31 then
-				yy_do_default_action(yy_n)
-
--- line 233
-
-			yyval := append_character_to_character_class
-				(dollar_integer (yyvstack.item(-0)), dollar_symbol_class (yyvstack.item(-1)))
-		
-			when 32 then
-				yy_do_default_action(yy_n)
-
--- line 238
-
-			yyval := append_character_set_to_character_class
-				(dollar_integer (yyvstack.item(-2)), dollar_integer (yyvstack.item(-0)),
-				new_character_class)
-		
-			when 33 then
-				yy_do_default_action(yy_n)
-
--- line 244
-
-			yyval := append_character_set_to_character_class
-				(dollar_integer (yyvstack.item(-2)), dollar_integer (yyvstack.item(-0)),
-				dollar_symbol_class (yyvstack.item(-3)))
-		
-			when 34 then
-				yy_do_default_action(yy_n)
-
--- line 252
-
-			yyval := new_epsilon_nfa
-		
-			when 35 then
-				yy_do_default_action(yy_n)
-
--- line 256
-
-			rule_length := rule_length + 1
-			yyval := append_character_to_string
-				(dollar_integer (yyvstack.item(-0)), dollar_nfa (yyvstack.item(-1)))
-		
-			else
-			-- empty action
-			end -- inspect action
-		end -- yy_do_action
-end -- class
+end -- class LX_REGEXP_PARSER

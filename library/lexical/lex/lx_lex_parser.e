@@ -14,11 +14,9 @@ class LX_LEX_PARSER
 
 inherit
 
-	YY_PARSER [ANY]
+	YY_PARSER_SKELETON [ANY]
 		rename
 			reset as reset_parser_skeleton
-		redefine
-			clear_input
 		end
 
 	LX_LEX_SCANNER
@@ -35,30 +33,661 @@ creation
 	make, make_from_description
 
 feature
---
---	Created	by ibyacc V1.0 from "lx_lex_parser.y"
---
+-- Created by ibyacc V1.6 from "lx_lex_parser.y"
 
 	Token_CHAR: INTEGER is 257
+		-- id of token CHAR
+
 	Token_NUMBER: INTEGER is 258
+		-- id of token NUMBER
+
 	Token_ENDSECT: INTEGER is 259
+		-- id of token ENDSECT
+
 	Token_NAME: INTEGER is 260
+		-- id of token NAME
+
 	Token_EOF_OP: INTEGER is 261
+		-- id of token EOF_OP
+
 	Token_CCL_OP: INTEGER is 262
+		-- id of token CCL_OP
+
 	Token_EIF_CODE: INTEGER is 263
+		-- id of token EIF_CODE
+
 	Token_PIPED: INTEGER is 264
+		-- id of token PIPED
+
 	Token_EMPTY: INTEGER is 265
+		-- id of token EMPTY
 
--- line 342
+feature {NONE}
 
-feature
+	yyreds: ARRAY[STRING] is
+		once
+			Result := <<
+				"Scanner_description : Section1 Section2 Init_rule Section3",
+				"Section1 : ENDSECT",
+				"Section2 :",
+				"Section2 : Section2 Start_condition Init_rule Pattern Action",
+				"Section2 : Section2 Start_condition { Section2 }",
+				"Action :",
+				"Action : EIF_CODE",
+				"Action : PIPED",
+				"Action : EMPTY",
+				"Init_rule :",
+				"Start_condition :",
+				"Start_condition : Less_than * >",
+				"Start_condition : Less_than Name_list >",
+				"Less_than : <",
+				"Name_list : NAME",
+				"Name_list : Name_list , NAME",
+				"Name_list : error",
+				"Pattern : ^ Rule",
+				"Pattern : Rule",
+				"Pattern : EOF_OP",
+				"Pattern : error",
+				"Rule : Regular_expression2 Regular_expression",
+				"Rule : Regular_expression2 Regular_expression $",
+				"Rule : Regular_expression $",
+				"Rule : Regular_expression",
+				"Regular_expression : Series",
+				"Regular_expression : Regular_expression | Series",
+				"Regular_expression2 : Regular_expression /",
+				"Series : Singleton",
+				"Series : Series Singleton",
+				"Singleton : CHAR",
+				"Singleton : Singleton *",
+				"Singleton : Singleton +",
+				"Singleton : Singleton ?",
+				"Singleton : Singleton { NUMBER , NUMBER }",
+				"Singleton : Singleton { NUMBER , }",
+				"Singleton : Singleton { NUMBER }",
+				"Singleton : .",
+				"Singleton : CCL_OP",
+				"Singleton : Full_CCl",
+				"Singleton : %" String %"",
+				"Singleton : ( Regular_expression )",
+				"Full_CCl : [ CCl ]",
+				"Full_CCl : [ ^ CCl ]",
+				"CCl : CHAR",
+				"CCl : CCl CHAR",
+				"CCl : CHAR - CHAR",
+				"CCl : CCl CHAR - CHAR",
+				"String :",
+				"String : String CHAR",
+				"Section3 :",
+				"Section3 : ENDSECT",
+				"Section3 : ENDSECT EIF_CODE" >>
+		end -- yyreds
 
-	clear_input is
-         -- set current input to undefined value.
-      do
-         last_token := Token_undefined
-         last_value := void_value
-      end
+	yytoks: ARRAY[STRING] is
+		once
+			Result := <<
+				"$end",
+				"error",
+				"CHAR",
+				"NUMBER",
+				"ENDSECT",
+				"NAME",
+				"EOF_OP",
+				"CCL_OP",
+				"EIF_CODE",
+				"PIPED",
+				"EMPTY",
+				"{",
+				"}",
+				"*",
+				">",
+				"<",
+				",",
+				"^",
+				"$",
+				"|",
+				"/",
+				"+",
+				"?",
+				".",
+				"%"",
+				"(",
+				")",
+				"[",
+				"]",
+				"-",
+				"-unknown-" >>
+		end -- yytoks
+
+	yytokv: ARRAY[INTEGER] is
+		once
+			Result := <<
+				0,256,257,258,259,260,261,262,263,264,
+				265,123,125,42,62,60,44,94,36,124,
+				47,43,63,46,34,40,41,91,93,45,-1 >>
+		end -- yytokv
+
+	yyexca_m: ARRAY[INTEGER] is
+		once
+			Result := <<
+				-1, 1,
+					0, -1,
+					-2, 0,
+				-1, 4,
+					0, 10,
+					259, 10,
+					-2, 11,
+				0 >>
+		end -- yyexca_m
+
+	yylast: INTEGER is 241
+
+	yyact_m: ARRAY[INTEGER] is
+		once
+			Result := << 
+				  31,  31,  39,  40,  41,  17,  32,  32,  58,  75,
+				  10,   3,  28,  28,  72,  65,  13,  62,  61,  55,
+				  76,  73,  56,  69,  48,  49,  44,  77,   8,  64,
+				  59,  12,  35,  37,  54,  26,   8,  46,  25,  24,
+				  71,  68,  20,   4,  52,  50,   5,  30,  23,  14,
+				   7,  36,  38,  11,  18,   6,  34,  33,  33,   9,
+				  19,  47,  42,  43,   2,   1,   0,   0,   0,   0,
+				   0,   0,  53,   0,   0,   0,   0,   0,   0,   0,
+				   0,   0,   0,   0,  60,   0,   0,   0,   0,   0,
+				  67,   0,   0,  57,   0,   0,  47,   0,   0,   0,
+				   0,   0,   0,   0,  70,  51,   0,   0,   0,   0,
+				   0,   0,  45,   0,  45,   0,   0,   0,  45,   0,
+				   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,
+				   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,
+				   0,   0,  74,   0,   0,   0,   0,   0,   0,   0,
+				   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,
+				   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,
+				   0,   0,   0,   0,   0,   0,   0,   0,  66,  66,
+				   0,   0,  56,   0,   0,   0,   0,   0,   0,   0,
+				   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,
+				   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,
+				   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,
+				   0,   0,  22,  27,  27,   0,   0,  21,  29,  29,
+				  16,   0,   0,   0,  15,   0,   0,   0,   0,   0,
+				  63 >>
+		end -- yyact_m
+
+	yypact_m: ARRAY[INTEGER] is
+		once
+			Result := << 
+				-248,-1000,-1000,-1000, -24,-249, -92, -26,-1000,-1000,
+				-258, -34,-1000, -30, -11,-1000,-1000,-1000,-261, -33,
+				-1000,-1000,-1000, -33, -10, -33, -18,-1000,-1000,-1000,
+				-1000,-1000, -33, -75, -32,-1000,-1000,-252,-1000,-1000,
+				-1000,-1000,-1000,  -6,-1000, -33,-1000, -18,-1000,-1000,
+				-1000,-240, -17, -12, -78,-235,  -4,-1000,-1000,-1000,
+				 -33, -21,-1000,-1000,-1000,-1000,  -5, -79,-236,-116,
+				-1000,-237,-1000,-1000, -98,-1000,-1000,-1000 >>
+		end -- yypact_m
+
+	yypgo_m: ARRAY[INTEGER] is
+		once
+			Result := << 
+				   0,  65,  64,  43,  46,  59,  55,  54,  52,  50,
+				  49,  42,  48,  39,  38,  35,  47,  44,  34 >>
+		end -- yypgo_m
+
+	yyr1_m: ARRAY[INTEGER] is
+		once
+			Result := << 
+				   0,   1,   2,   3,   3,   3,   8,   8,   8,   8,
+				   4,   6,   6,   6,   9,  10,  10,  10,   7,   7,
+				   7,   7,  11,  11,  11,  11,  13,  13,  12,  14,
+				  14,  15,  15,  15,  15,  15,  15,  15,  15,  15,
+				  15,  15,  15,  16,  16,  18,  18,  18,  18,  17,
+				  17,   5,   5,   5 >>
+		end -- yyr1_m
+
+	yyr2_m: ARRAY[INTEGER] is
+		once
+			Result := << 
+				   0,   9,   3,   0,  11,  11,   0,   3,   3,   3,
+				   1,   1,   7,   6,   3,   3,   7,   3,   5,   3,
+				   3,   3,   5,   7,   5,   3,   2,   7,   5,   2,
+				   5,   3,   5,   5,   5,  13,  11,   9,   3,   3,
+				   3,   7,   7,   7,   9,   3,   5,   7,   9,   1,
+				   5,   0,   2,   5 >>
+		end -- yyr2_m
+
+	yychk_m: ARRAY[INTEGER] is
+		once
+			Result := << 
+				-1000,  -1,  -2, 259,  -3,  -4,  -6,  -9,  60,  -5,
+				 259,  -4, 123,  42, -10, 260, 256, 263,  -7,  94,
+				 -11, 261, 256, -12, -13, -14, -15, 257,  46, 262,
+				 -16,  34,  40,  91,  -3,  62,  62,  44,  -8, 263,
+				 264, 265, -11, -13,  36, 124,  47, -15,  42,  43,
+				  63, 123, -17, -13, -18,  94, 257, 125, 260,  36,
+				 -14, 258,  34, 257,  41,  93, 257, -18,  45,  44,
+				 125,  45,  93, 257, 258, 125, 257, 125 >>
+		end -- yychk_m
+
+	yydef_m: ARRAY[INTEGER] is
+		once
+			Result := << 
+				   0,  -2,   3,   2,  -2,  51,  10,   0,  14,   1,
+				  52,   0,   3,   0,   0,  15,  17,  53,   6,   0,
+				  19,  20,  21,   0,  25,  26,  29,  31,  38,  39,
+				  40,  49,   0,   0,  11,  12,  13,   0,   4,   7,
+				   8,   9,  18,  22,  24,   0,  28,  30,  32,  33,
+				  34,   0,   0,   0,   0,   0,  45,   5,  16,  23,
+				  27,   0,  41,  50,  42,  43,  46,   0,   0,   0,
+				  37,   0,  44,  47,   0,  36,  48,  35 >>
+		end -- yydef_m
+
+	yy_do_action (yy_a, yy_n: INTEGER) is
+			-- execute user action 'yy_a'
+		do
+			inspect
+				yy_a
+
+			when 1 then
+				yy_do_default_action(yy_n)
+
+-- line 47
+
+			process_default_rule
+			if equiv_classes /= Void then
+				build_equiv_classes
+			end
+			check_options
+		
+			when 2 then
+				yy_do_default_action(yy_n)
+
+-- line 57
+
+			if equiv_classes_used then
+				!! equiv_classes.make (1, characters_count)
+				!! transitions.make (Initial_max_transitions)
+			end
+		
+			when 4 then
+				yy_do_default_action(yy_n)
+
+-- line 67
+
+			start_condition_stack.keep_first (dollar_integer (yyvstack.item(-3)))
+		
+			when 5 then
+				yy_do_default_action(yy_n)
+
+-- line 71
+
+			start_condition_stack.keep_first (dollar_integer (yyvstack.item(-3)))
+		
+			when 7 then
+				yy_do_default_action(yy_n)
+
+-- line 78
+
+			set_action (dollar_string (yyvstack.item(-0)))
+		
+			when 8 then
+				yy_do_default_action(yy_n)
+
+-- line 82
+
+			pending_rules.force_last (rule)
+		
+			when 9 then
+				yy_do_default_action(yy_n)
+
+-- line 86
+
+			set_action ("")
+		
+			when 10 then
+				yy_do_default_action(yy_n)
+
+-- line 92
+
+				-- Initialize for a parse of one rule.
+
+			has_trail_context := False
+			variable_trail_rule := False
+			variable_length := False
+			trail_count := 0
+			head_count := 0
+			rule_length := 0
+			in_trail_context := False
+			init_new_rule
+		
+			when 11 then
+				yy_do_default_action(yy_n)
+
+-- line 106
+
+			yyval := start_condition_stack.count
+		
+			when 12 then
+				yy_do_default_action(yy_n)
+
+-- line 110
+
+			start_condition_stack.append_start_conditions (start_conditions)
+		
+			when 14 then
+				yy_do_default_action(yy_n)
+
+-- line 117
+
+			yyval := start_condition_stack.count
+		
+			when 15 then
+				yy_do_default_action(yy_n)
+
+-- line 123
+
+			push_start_condition (dollar_string (yyvstack.item(-0)), start_condition_stack)
+		
+			when 16 then
+				yy_do_default_action(yy_n)
+
+-- line 127
+
+			push_start_condition (dollar_string (yyvstack.item(-0)), start_condition_stack)
+		
+			when 17 then
+				yy_do_default_action(yy_n)
+
+-- line 131
+
+			error_handler.bad_start_condition_list (filename, line_nb)
+		
+			when 18 then
+				yy_do_default_action(yy_n)
+
+-- line 137
+
+			process_bol_rule (dollar_nfa (yyvstack.item(-0)))
+		
+			when 19 then
+				yy_do_default_action(yy_n)
+
+-- line 141
+
+			process_rule (dollar_nfa (yyvstack.item(-0)))
+		
+			when 20 then
+				yy_do_default_action(yy_n)
+
+-- line 145
+
+			process_eof_rule
+		
+			when 21 then
+				yy_do_default_action(yy_n)
+
+-- line 149
+
+			error_handler.unrecognized_rule (filename, line_nb)
+		
+			when 22 then
+				yy_do_default_action(yy_n)
+
+-- line 155
+
+			yyval := append_trail_context_to_regexp
+				(dollar_nfa (yyvstack.item(-0)), dollar_nfa (yyvstack.item(-1)))
+		
+			when 23 then
+				yy_do_default_action(yy_n)
+
+-- line 160
+
+			error_handler.trailing_context_used_twice (filename, line_nb)
+		
+			when 24 then
+				yy_do_default_action(yy_n)
+
+-- line 164
+
+			yyval := append_eol_to_regexp (dollar_nfa (yyvstack.item(-1)))
+		
+			when 25 then
+				yy_do_default_action(yy_n)
+
+-- line 168
+
+			if has_trail_context then
+				if variable_length and head_count = 0 then
+						-- Both head and trail are variable-length.
+
+					variable_trail_rule := True
+				else
+					trail_count := rule_length
+				end
+			end
+		
+			when 27 then
+				yy_do_default_action(yy_n)
+
+-- line 182
+
+			variable_length := True
+			yyval := dollar_nfa (yyvstack.item(-2)) | dollar_nfa (yyvstack.item(-0))
+		
+			when 28 then
+				yy_do_default_action(yy_n)
+
+-- line 189
+
+				-- This rule is written separately so the reduction
+
+				-- will occur before the trailing series is parsed.
+
+			if has_trail_context then
+				error_handler.trailing_context_used_twice (filename, line_nb)
+			else
+				has_trail_context := True
+			end
+			if variable_length then
+					-- We hope the trailing context is fixed-length.
+
+				variable_length := False
+			else
+				head_count := rule_length
+			end
+			rule_length := 0
+			in_trail_context := True
+		
+			when 30 then
+				yy_do_default_action(yy_n)
+
+-- line 210
+
+			yyval := dollar_nfa (yyvstack.item(-1)) & dollar_nfa (yyvstack.item(-0))
+		
+			when 31 then
+				yy_do_default_action(yy_n)
+
+-- line 216
+
+			rule_length := rule_length + 1
+			yyval := new_nfa_from_character (dollar_integer (yyvstack.item(-0)))
+		
+			when 32 then
+				yy_do_default_action(yy_n)
+
+-- line 221
+
+			variable_length := True
+			yyval := |*| dollar_nfa (yyvstack.item(-1))
+		
+			when 33 then
+				yy_do_default_action(yy_n)
+
+-- line 226
+
+			variable_length := True
+			yyval := |+| dollar_nfa (yyvstack.item(-1))
+		
+			when 34 then
+				yy_do_default_action(yy_n)
+
+-- line 231
+
+			variable_length := True
+			yyval := |?| dollar_nfa (yyvstack.item(-1))
+		
+			when 35 then
+				yy_do_default_action(yy_n)
+
+-- line 236
+
+			variable_length := True
+			yyval := new_bounded_iteration_nfa
+				(dollar_nfa (yyvstack.item(-5)), dollar_integer (yyvstack.item(-3)), dollar_integer (yyvstack.item(-1)))
+		
+			when 36 then
+				yy_do_default_action(yy_n)
+
+-- line 242
+
+			variable_length := True
+			yyval := new_unbounded_iteration_nfa
+				(dollar_nfa (yyvstack.item(-4)), dollar_integer (yyvstack.item(-2)))
+		
+			when 37 then
+				yy_do_default_action(yy_n)
+
+-- line 248
+
+				-- The singleton could be something like "(foo)",
+
+				-- in which case we have no idea what its length
+
+				-- is, so we punt here.
+
+			variable_length := True
+			yyval := new_iteration_nfa (dollar_nfa (yyvstack.item(-3)), dollar_integer (yyvstack.item(-1)))
+		
+			when 38 then
+				yy_do_default_action(yy_n)
+
+-- line 256
+
+			rule_length := rule_length + 1
+			yyval := new_symbol_class_nfa (dot_character_class)
+		
+			when 39 then
+				yy_do_default_action(yy_n)
+
+-- line 261
+
+			rule_length := rule_length + 1
+			yyval := new_symbol_class_nfa (dollar_symbol_class (yyvstack.item(-0)))
+		
+			when 40 then
+				yy_do_default_action(yy_n)
+
+-- line 266
+
+			rule_length := rule_length + 1
+			yyval := new_nfa_from_character_class (dollar_symbol_class (yyvstack.item(-0)))
+		
+			when 41 then
+				yy_do_default_action(yy_n)
+
+-- line 271
+
+			yyval := yyvstack.item(-1)
+		
+			when 42 then
+				yy_do_default_action(yy_n)
+
+-- line 275
+
+			yyval := yyvstack.item(-1)
+		
+			when 43 then
+				yy_do_default_action(yy_n)
+
+-- line 281
+
+			character_classes.force
+				(dollar_symbol_class (yyvstack.item(-1)), dollar_string (yyvstack.item(-2)))
+			yyval := yyvstack.item(-1)
+		
+			when 44 then
+				yy_do_default_action(yy_n)
+
+-- line 287
+
+			dollar_symbol_class (yyvstack.item(-1)).set_negated (True)
+			character_classes.force
+				(dollar_symbol_class (yyvstack.item(-1)), dollar_string (yyvstack.item(-3)))
+			yyval := yyvstack.item(-1)
+		
+			when 45 then
+				yy_do_default_action(yy_n)
+
+-- line 296
+
+			yyval := append_character_to_character_class
+				(dollar_integer (yyvstack.item(-0)), new_character_class)
+		
+			when 46 then
+				yy_do_default_action(yy_n)
+
+-- line 301
+
+			yyval := append_character_to_character_class
+				(dollar_integer (yyvstack.item(-0)), dollar_symbol_class (yyvstack.item(-1)))
+		
+			when 47 then
+				yy_do_default_action(yy_n)
+
+-- line 306
+
+			yyval := append_character_set_to_character_class
+				(dollar_integer (yyvstack.item(-2)), dollar_integer (yyvstack.item(-0)),
+				new_character_class)
+		
+			when 48 then
+				yy_do_default_action(yy_n)
+
+-- line 312
+
+			yyval := append_character_set_to_character_class
+				(dollar_integer (yyvstack.item(-2)), dollar_integer (yyvstack.item(-0)),
+				dollar_symbol_class (yyvstack.item(-3)))
+		
+			when 49 then
+				yy_do_default_action(yy_n)
+
+-- line 320
+
+			yyval := new_epsilon_nfa
+		
+			when 50 then
+				yy_do_default_action(yy_n)
+
+-- line 324
+
+			rule_length := rule_length + 1
+			yyval := append_character_to_string
+				(dollar_integer (yyvstack.item(-0)), dollar_nfa (yyvstack.item(-1)))
+		
+			when 53 then
+				yy_do_default_action(yy_n)
+
+-- line 334
+
+			eiffel_code := dollar_string (yyvstack.item(-0))
+		
+			else
+			-- empty action
+			end -- inspect action
+		end -- yy_do_action
+
+-- line 339
+
 
 feature {NONE} -- Initialization
 
@@ -852,637 +1481,21 @@ feature {NONE} -- Constants
 	Initial_max_transitions: INTEGER is 1000
 			-- Maximum number of symbol transitions
 
--- invariant
---
---	pending_rules_not_void: pending_rules /= Void
---	no_void_pending_rule: not pending_rules.has (Void)
---	start_condition_stack_not_void: start_condition_stack /= Void
---	transitions_not_void: equiv_classes /= Void implies transitions /= Void
---	action_factory_not_void: action_factory /= Void
---
--- end -- class LX_LEX_PARSER
+feature {NONE} -- Implementation
 
-feature {NONE}
-
-	yyreds: ARRAY[STRING] is
-		once
-			Result := <<
-				"Scanner_description : Section1 Section2 Init_rule Section3",
-				"Section1 : ENDSECT",
-				"Section2 :",
-				"Section2 : Section2 Start_condition Init_rule Pattern Action",
-				"Section2 : Section2 Start_condition { Section2 }",
-				"Action :",
-				"Action : EIF_CODE",
-				"Action : PIPED",
-				"Action : EMPTY",
-				"Init_rule :",
-				"Start_condition :",
-				"Start_condition : Less_than * >",
-				"Start_condition : Less_than Name_list >",
-				"Less_than : <",
-				"Name_list : NAME",
-				"Name_list : Name_list , NAME",
-				"Name_list : error",
-				"Pattern : ^ Rule",
-				"Pattern : Rule",
-				"Pattern : EOF_OP",
-				"Pattern : error",
-				"Rule : Regular_expression2 Regular_expression",
-				"Rule : Regular_expression2 Regular_expression $",
-				"Rule : Regular_expression $",
-				"Rule : Regular_expression",
-				"Regular_expression : Series",
-				"Regular_expression : Regular_expression | Series",
-				"Regular_expression2 : Regular_expression /",
-				"Series : Singleton",
-				"Series : Series Singleton",
-				"Singleton : CHAR",
-				"Singleton : Singleton *",
-				"Singleton : Singleton +",
-				"Singleton : Singleton ?",
-				"Singleton : Singleton { NUMBER , NUMBER }",
-				"Singleton : Singleton { NUMBER , }",
-				"Singleton : Singleton { NUMBER }",
-				"Singleton : .",
-				"Singleton : CCL_OP",
-				"Singleton : Full_CCl",
-				"Singleton : %" String %"",
-				"Singleton : ( Regular_expression )",
-				"Full_CCl : [ CCl ]",
-				"Full_CCl : [ ^ CCl ]",
-				"CCl : CHAR",
-				"CCl : CCl CHAR",
-				"CCl : CHAR - CHAR",
-				"CCl : CCl CHAR - CHAR",
-				"String :",
-				"String : String CHAR",
-				"Section3 :",
-				"Section3 : ENDSECT",
-				"Section3 : ENDSECT EIF_CODE" >>
-		end -- yyreds
-
-	yytoks: ARRAY[STRING] is
-		once
-			Result := <<
-				"$end",
-				"error",
-				"CHAR",
-				"NUMBER",
-				"ENDSECT",
-				"NAME",
-				"EOF_OP",
-				"CCL_OP",
-				"EIF_CODE",
-				"PIPED",
-				"EMPTY",
-				"{",
-				"}",
-				"*",
-				">",
-				"<",
-				",",
-				"^",
-				"$",
-				"|",
-				"/",
-				"+",
-				"?",
-				".",
-				"%"",
-				"(",
-				")",
-				"[",
-				"]",
-				"-",
-				"-unknown-" >>
-		end -- yytoks
-
-	yytokv: ARRAY[INTEGER] is
-		once
-			Result := <<
-				0,256,257,258,259,260,261,262,263,264,
-				265,123,125,42,62,60,44,94,36,124,
-				47,43,63,46,34,40,41,91,93,45,-1 >>
-		end -- yytokv
-
-	yyexca_m: ARRAY[INTEGER] is
-		once
-			Result := <<
-				-1, 1,
-					0, -1,
-					-2, 0,
-				-1, 4,
-					0, 10,
-					259, 10,
-					-2, 11,
-				0 >>
-		end -- yyexca_m
-
-	yylast: INTEGER is 241
-
-	yyact_m: ARRAY[INTEGER] is
-		once
-			Result := << 
-				  31,  31,  39,  40,  41,  17,  32,  32,  58,  75,
-				  10,   3,  28,  28,  72,  65,  13,  62,  61,  55,
-				  76,  73,  56,  69,  48,  49,  44,  77,   8,  64,
-				  59,  12,  35,  37,  54,  26,   8,  46,  25,  24,
-				  71,  68,  20,   4,  52,  50,   5,  30,  23,  14,
-				   7,  36,  38,  11,  18,   6,  34,  33,  33,   9,
-				  19,  47,  42,  43,   2,   1,   0,   0,   0,   0,
-				   0,   0,  53,   0,   0,   0,   0,   0,   0,   0,
-				   0,   0,   0,   0,  60,   0,   0,   0,   0,   0,
-				  67,   0,   0,  57,   0,   0,  47,   0,   0,   0,
-				   0,   0,   0,   0,  70,  51,   0,   0,   0,   0,
-				   0,   0,  45,   0,  45,   0,   0,   0,  45,   0,
-				   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,
-				   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,
-				   0,   0,  74,   0,   0,   0,   0,   0,   0,   0,
-				   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,
-				   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,
-				   0,   0,   0,   0,   0,   0,   0,   0,  66,  66,
-				   0,   0,  56,   0,   0,   0,   0,   0,   0,   0,
-				   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,
-				   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,
-				   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,
-				   0,   0,  22,  27,  27,   0,   0,  21,  29,  29,
-				  16,   0,   0,   0,  15,   0,   0,   0,   0,   0,
-				  63 >>
-		end -- yyact_m
-
-	yypact_m: ARRAY[INTEGER] is
-		once
-			Result := << 
-				-248,-1000,-1000,-1000, -24,-249, -92, -26,-1000,-1000,
-				-258, -34,-1000, -30, -11,-1000,-1000,-1000,-261, -33,
-				-1000,-1000,-1000, -33, -10, -33, -18,-1000,-1000,-1000,
-				-1000,-1000, -33, -75, -32,-1000,-1000,-252,-1000,-1000,
-				-1000,-1000,-1000,  -6,-1000, -33,-1000, -18,-1000,-1000,
-				-1000,-240, -17, -12, -78,-235,  -4,-1000,-1000,-1000,
-				 -33, -21,-1000,-1000,-1000,-1000,  -5, -79,-236,-116,
-				-1000,-237,-1000,-1000, -98,-1000,-1000,-1000 >>
-		end -- yypact_m
-
-	yypgo_m: ARRAY[INTEGER] is
-		once
-			Result := << 
-				   0,  65,  64,  43,  46,  59,  55,  54,  52,  50,
-				  49,  42,  48,  39,  38,  35,  47,  44,  34 >>
-		end -- yypgo_m
-
-	yyr1_m: ARRAY[INTEGER] is
-		once
-			Result := << 
-				   0,   1,   2,   3,   3,   3,   8,   8,   8,   8,
-				   4,   6,   6,   6,   9,  10,  10,  10,   7,   7,
-				   7,   7,  11,  11,  11,  11,  13,  13,  12,  14,
-				  14,  15,  15,  15,  15,  15,  15,  15,  15,  15,
-				  15,  15,  15,  16,  16,  18,  18,  18,  18,  17,
-				  17,   5,   5,   5 >>
-		end -- yyr1_m
-
-	yyr2_m: ARRAY[INTEGER] is
-		once
-			Result := << 
-				   0,   9,   3,   0,  11,  11,   0,   3,   3,   3,
-				   1,   1,   7,   6,   3,   3,   7,   3,   5,   3,
-				   3,   3,   5,   7,   5,   3,   2,   7,   5,   2,
-				   5,   3,   5,   5,   5,  13,  11,   9,   3,   3,
-				   3,   7,   7,   7,   9,   3,   5,   7,   9,   1,
-				   5,   0,   2,   5 >>
-		end -- yyr2_m
-
-	yychk_m: ARRAY[INTEGER] is
-		once
-			Result := << 
-				-1000,  -1,  -2, 259,  -3,  -4,  -6,  -9,  60,  -5,
-				 259,  -4, 123,  42, -10, 260, 256, 263,  -7,  94,
-				 -11, 261, 256, -12, -13, -14, -15, 257,  46, 262,
-				 -16,  34,  40,  91,  -3,  62,  62,  44,  -8, 263,
-				 264, 265, -11, -13,  36, 124,  47, -15,  42,  43,
-				  63, 123, -17, -13, -18,  94, 257, 125, 260,  36,
-				 -14, 258,  34, 257,  41,  93, 257, -18,  45,  44,
-				 125,  45,  93, 257, 258, 125, 257, 125 >>
-		end -- yychk_m
-
-	yydef_m: ARRAY[INTEGER] is
-		once
-			Result := << 
-				   0,  -2,   3,   2,  -2,  51,  10,   0,  14,   1,
-				  52,   0,   3,   0,   0,  15,  17,  53,   6,   0,
-				  19,  20,  21,   0,  25,  26,  29,  31,  38,  39,
-				  40,  49,   0,   0,  11,  12,  13,   0,   4,   7,
-				   8,   9,  18,  22,  24,   0,  28,  30,  32,  33,
-				  34,   0,   0,   0,   0,   0,  45,   5,  16,  23,
-				  27,   0,  41,  50,  42,  43,  46,   0,   0,   0,
-				  37,   0,  44,  47,   0,  36,  48,  35 >>
-		end -- yydef_m
-
-	yy_do_action (yy_a, yy_n: INTEGER) is
-			-- execute user action 'yy_a'
+	clear_input is
+			-- Set current input to undefined value.
 		do
-			inspect
-				yy_a
-
-			when 1 then
-				yy_do_default_action(yy_n)
-
--- line 50
-
-			process_default_rule
-			if equiv_classes /= Void then
-				build_equiv_classes
-			end
-			check_options
-		
-			when 2 then
-				yy_do_default_action(yy_n)
-
--- line 60
-
-			if equiv_classes_used then
-				!! equiv_classes.make (1, characters_count)
-				!! transitions.make (Initial_max_transitions)
-			end
-		
-			when 4 then
-				yy_do_default_action(yy_n)
-
--- line 70
-
-			start_condition_stack.keep_first (dollar_integer (yyvstack.item(-3)))
-		
-			when 5 then
-				yy_do_default_action(yy_n)
-
--- line 74
-
-			start_condition_stack.keep_first (dollar_integer (yyvstack.item(-3)))
-		
-			when 7 then
-				yy_do_default_action(yy_n)
-
--- line 81
-
-			set_action (dollar_string (yyvstack.item(-0)))
-		
-			when 8 then
-				yy_do_default_action(yy_n)
-
--- line 85
-
-			pending_rules.force_last (rule)
-		
-			when 9 then
-				yy_do_default_action(yy_n)
-
--- line 89
-
-			set_action ("")
-		
-			when 10 then
-				yy_do_default_action(yy_n)
-
--- line 95
-
-				-- Initialize for a parse of one rule.
-
-			has_trail_context := False
-			variable_trail_rule := False
-			variable_length := False
-			trail_count := 0
-			head_count := 0
-			rule_length := 0
-			in_trail_context := False
-			init_new_rule
-		
-			when 11 then
-				yy_do_default_action(yy_n)
-
--- line 109
-
-			yyval := start_condition_stack.count
-		
-			when 12 then
-				yy_do_default_action(yy_n)
-
--- line 113
-
-			start_condition_stack.append_start_conditions (start_conditions)
-		
-			when 14 then
-				yy_do_default_action(yy_n)
-
--- line 120
-
-			yyval := start_condition_stack.count
-		
-			when 15 then
-				yy_do_default_action(yy_n)
-
--- line 126
-
-			push_start_condition (dollar_string (yyvstack.item(-0)), start_condition_stack)
-		
-			when 16 then
-				yy_do_default_action(yy_n)
-
--- line 130
-
-			push_start_condition (dollar_string (yyvstack.item(-0)), start_condition_stack)
-		
-			when 17 then
-				yy_do_default_action(yy_n)
-
--- line 134
-
-			error_handler.bad_start_condition_list (filename, line_nb)
-		
-			when 18 then
-				yy_do_default_action(yy_n)
-
--- line 140
-
-			process_bol_rule (dollar_nfa (yyvstack.item(-0)))
-		
-			when 19 then
-				yy_do_default_action(yy_n)
-
--- line 144
-
-			process_rule (dollar_nfa (yyvstack.item(-0)))
-		
-			when 20 then
-				yy_do_default_action(yy_n)
-
--- line 148
-
-			process_eof_rule
-		
-			when 21 then
-				yy_do_default_action(yy_n)
-
--- line 152
-
-			error_handler.unrecognized_rule (filename, line_nb)
-		
-			when 22 then
-				yy_do_default_action(yy_n)
-
--- line 158
-
-			yyval := append_trail_context_to_regexp
-				(dollar_nfa (yyvstack.item(-0)), dollar_nfa (yyvstack.item(-1)))
-		
-			when 23 then
-				yy_do_default_action(yy_n)
-
--- line 163
-
-			error_handler.trailing_context_used_twice (filename, line_nb)
-		
-			when 24 then
-				yy_do_default_action(yy_n)
-
--- line 167
-
-			yyval := append_eol_to_regexp (dollar_nfa (yyvstack.item(-1)))
-		
-			when 25 then
-				yy_do_default_action(yy_n)
-
--- line 171
-
-			if has_trail_context then
-				if variable_length and head_count = 0 then
-						-- Both head and trail are variable-length.
-
-					variable_trail_rule := True
-				else
-					trail_count := rule_length
-				end
-			end
-		
-			when 27 then
-				yy_do_default_action(yy_n)
-
--- line 185
-
-			variable_length := True
-			yyval := dollar_nfa (yyvstack.item(-2)) | dollar_nfa (yyvstack.item(-0))
-		
-			when 28 then
-				yy_do_default_action(yy_n)
-
--- line 192
-
-				-- This rule is written separately so the reduction
-
-				-- will occur before the trailing series is parsed.
-
-			if has_trail_context then
-				error_handler.trailing_context_used_twice (filename, line_nb)
-			else
-				has_trail_context := True
-			end
-			if variable_length then
-					-- We hope the trailing context is fixed-length.
-
-				variable_length := False
-			else
-				head_count := rule_length
-			end
-			rule_length := 0
-			in_trail_context := True
-		
-			when 30 then
-				yy_do_default_action(yy_n)
-
--- line 213
-
-			yyval := dollar_nfa (yyvstack.item(-1)) & dollar_nfa (yyvstack.item(-0))
-		
-			when 31 then
-				yy_do_default_action(yy_n)
-
--- line 219
-
-			rule_length := rule_length + 1
-			yyval := new_nfa_from_character (dollar_integer (yyvstack.item(-0)))
-		
-			when 32 then
-				yy_do_default_action(yy_n)
-
--- line 224
-
-			variable_length := True
-			yyval := |*| dollar_nfa (yyvstack.item(-1))
-		
-			when 33 then
-				yy_do_default_action(yy_n)
-
--- line 229
-
-			variable_length := True
-			yyval := |+| dollar_nfa (yyvstack.item(-1))
-		
-			when 34 then
-				yy_do_default_action(yy_n)
-
--- line 234
-
-			variable_length := True
-			yyval := |?| dollar_nfa (yyvstack.item(-1))
-		
-			when 35 then
-				yy_do_default_action(yy_n)
-
--- line 239
-
-			variable_length := True
-			yyval := new_bounded_iteration_nfa
-				(dollar_nfa (yyvstack.item(-5)), dollar_integer (yyvstack.item(-3)), dollar_integer (yyvstack.item(-1)))
-		
-			when 36 then
-				yy_do_default_action(yy_n)
-
--- line 245
-
-			variable_length := True
-			yyval := new_unbounded_iteration_nfa
-				(dollar_nfa (yyvstack.item(-4)), dollar_integer (yyvstack.item(-2)))
-		
-			when 37 then
-				yy_do_default_action(yy_n)
-
--- line 251
-
-				-- The singleton could be something like "(foo)",
-
-				-- in which case we have no idea what its length
-
-				-- is, so we punt here.
-
-			variable_length := True
-			yyval := new_iteration_nfa (dollar_nfa (yyvstack.item(-3)), dollar_integer (yyvstack.item(-1)))
-		
-			when 38 then
-				yy_do_default_action(yy_n)
-
--- line 259
-
-			rule_length := rule_length + 1
-			yyval := new_symbol_class_nfa (dot_character_class)
-		
-			when 39 then
-				yy_do_default_action(yy_n)
-
--- line 264
-
-			rule_length := rule_length + 1
-			yyval := new_symbol_class_nfa (dollar_symbol_class (yyvstack.item(-0)))
-		
-			when 40 then
-				yy_do_default_action(yy_n)
-
--- line 269
-
-			rule_length := rule_length + 1
-			yyval := new_nfa_from_character_class (dollar_symbol_class (yyvstack.item(-0)))
-		
-			when 41 then
-				yy_do_default_action(yy_n)
-
--- line 274
-
-			yyval := yyvstack.item(-1)
-		
-			when 42 then
-				yy_do_default_action(yy_n)
-
--- line 278
-
-			yyval := yyvstack.item(-1)
-		
-			when 43 then
-				yy_do_default_action(yy_n)
-
--- line 284
-
-			character_classes.force
-				(dollar_symbol_class (yyvstack.item(-1)), dollar_string (yyvstack.item(-2)))
-			yyval := yyvstack.item(-1)
-		
-			when 44 then
-				yy_do_default_action(yy_n)
-
--- line 290
-
-			dollar_symbol_class (yyvstack.item(-1)).set_negated (True)
-			character_classes.force
-				(dollar_symbol_class (yyvstack.item(-1)), dollar_string (yyvstack.item(-3)))
-			yyval := yyvstack.item(-1)
-		
-			when 45 then
-				yy_do_default_action(yy_n)
-
--- line 299
-
-			yyval := append_character_to_character_class
-				(dollar_integer (yyvstack.item(-0)), new_character_class)
-		
-			when 46 then
-				yy_do_default_action(yy_n)
-
--- line 304
-
-			yyval := append_character_to_character_class
-				(dollar_integer (yyvstack.item(-0)), dollar_symbol_class (yyvstack.item(-1)))
-		
-			when 47 then
-				yy_do_default_action(yy_n)
-
--- line 309
-
-			yyval := append_character_set_to_character_class
-				(dollar_integer (yyvstack.item(-2)), dollar_integer (yyvstack.item(-0)),
-				new_character_class)
-		
-			when 48 then
-				yy_do_default_action(yy_n)
-
--- line 315
-
-			yyval := append_character_set_to_character_class
-				(dollar_integer (yyvstack.item(-2)), dollar_integer (yyvstack.item(-0)),
-				dollar_symbol_class (yyvstack.item(-3)))
-		
-			when 49 then
-				yy_do_default_action(yy_n)
-
--- line 323
-
-			yyval := new_epsilon_nfa
-		
-			when 50 then
-				yy_do_default_action(yy_n)
-
--- line 327
-
-			rule_length := rule_length + 1
-			yyval := append_character_to_string
-				(dollar_integer (yyvstack.item(-0)), dollar_nfa (yyvstack.item(-1)))
-		
-			when 53 then
-				yy_do_default_action(yy_n)
-
--- line 337
-
-			eiffel_code := dollar_string (yyvstack.item(-0))
-		
-			else
-			-- empty action
-			end -- inspect action
-		end -- yy_do_action
-end -- class
+			last_token := Token_undefined
+			last_value := void_value
+		end
+
+ invariant
+
+	pending_rules_not_void: pending_rules /= Void
+	no_void_pending_rule: not pending_rules.has (Void)
+	start_condition_stack_not_void: start_condition_stack /= Void
+	transitions_not_void: equiv_classes /= Void implies transitions /= Void
+	action_factory_not_void: action_factory /= Void
+
+end -- class LX_LEX_PARSER
