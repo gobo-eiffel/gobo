@@ -2,7 +2,7 @@ indexing
 
 	description: 
 
-		"Variant of KI_CHARACTER_INPUT_STREAM that accepts UTF16 and converts it to UTF8"
+		"Variant of KI_CHARACTER_INPUT_STREAM that accepts UTF16 and Latin1 and converts it to UTF8"
 
 	library: "Gobo Eiffel XML Library"
 	copyright: "Copyright (c) 2002, Eric Bezault and others"
@@ -17,10 +17,18 @@ class XM_EIFFEL_UTF16_INPUT_STREAM
 inherit
 
 	KI_CHARACTER_INPUT_STREAM
+	
 	KL_SHARED_STANDARD_FILES
+		export {NONE} all end
+		
 	KL_IMPORTED_STRING_ROUTINES
+		export {NONE} all end
+
 	UC_IMPORTED_UTF8_ROUTINES
+		export {NONE} all end
+
 	UC_IMPORTED_UTF16_ROUTINES
+		export {NONE} all end
 
 creation
 
@@ -47,10 +55,22 @@ feature {NONE} -- Initialization
 			impl := a_stream
 			create utf_queue.make
 			last_string := clone ("")
+			encoding := Undetected
 		ensure
 			impl_set: impl = a_stream
 		end
 
+feature -- Set latin1
+
+	set_latin_1 is
+			-- Set latin1 character encoding input mode.
+		require
+			detection_done: encoding /= Undetected
+			utf_8: encoding = Utf_8
+		do
+			encoding := Latin_1
+		end
+		
 feature -- Input
 
 	read_character is
@@ -59,9 +79,8 @@ feature -- Input
 		do
 			-- see 'last_character': it chooses from impl or the queue
 			
-			if not is_detected then
+			if encoding = Undetected then
 				utf16_detect_read_character
-				is_detected := True
 				
 				-- If detection has not put back read character in queue, 
 				-- read from upstream, which may be empty if the stream 
@@ -92,13 +111,18 @@ feature {NONE} -- Input
 		require
 			open_read: is_open_read
 			not_end: not end_of_input
-			detected: is_detected
+			detected: encoding /= Undetected
 			queue_empty: utf_queue.count = 0
 		do
-			if is_utf16 then
-				utf16_read_character
-			else
+			if encoding = Utf_8 then
 				impl.read_character
+			elseif encoding = Latin_1 then
+				latin1_read_character
+			else
+				check
+					utf_16: encoding = Utf16_msb_first or encoding = Utf16_msb_last
+				end
+				utf16_read_character
 			end	
 		end
 		
@@ -177,14 +201,15 @@ feature -- Access
 
 feature {NONE} -- State
 
-	is_utf16: BOOLEAN
-			-- Are we reading an UTF16 file?
+	encoding: INTEGER
+			-- Input encoding, one of:
 
-	is_msb_first: BOOLEAN
-			-- Is the most significant byte first?
-
-	is_detected: BOOLEAN
-			-- Have first two bytes been read?
+	Utf_8, Latin_1, Utf16_msb_first, Utf16_msb_last, Undetected: INTEGER is unique
+			-- Utf_8: input already in UTF-8
+			-- Latin_1: input in ISO 8859-1 (Latin-1)
+			-- Utf16_msb_first: UTF-16 with most significant byte first.
+			-- Utf16_msb_last: UTF-16 with least significant byte first.
+			-- Undetected: before reading first two chars
 
 	utf_queue: DS_LINKED_QUEUE [CHARACTER]
 			-- Queue used in UTF16 mode
@@ -192,17 +217,18 @@ feature {NONE} -- State
 	impl: KI_CHARACTER_INPUT_STREAM
 			-- Internal stream
 
-feature {NONE} -- Implementation
+feature {NONE} -- UTF16 implementation
 
 	utf16_detect_read_character is
 			-- Read first two chars of file to establish
 			-- whether we are a UTF16 file.
 		require
-			not_detected: not is_detected
+			not_detected: encoding = Undetected
 			not_end: not impl.end_of_input
 		local
 			first_char, second_char: CHARACTER
 		do
+			encoding := Utf_8
 			impl.read_character
 			if not impl.end_of_input then
 				first_char := impl.last_character
@@ -212,19 +238,15 @@ feature {NONE} -- Implementation
 						-- Check byte ordering character.
 						-- If found, set found and do not forward as input.
 					if utf16.is_endian_detection_character_most_first (first_char.code, second_char.code) then
-						is_utf16 := True
-						is_msb_first := True
+						encoding := Utf16_msb_first
 					elseif utf16.is_endian_detection_character_least_first (first_char.code, second_char.code) then
-						is_utf16 := True
-						is_msb_first := False
+						encoding := Utf16_msb_last
 					elseif (first_char.code = 0 and second_char = Lt_char) then 
 							-- Check wide '<'.
-						is_utf16 := True
-						is_msb_first := False
+						encoding := Utf16_msb_first
 						utf_queue.force (Lt_char)
 					elseif (first_char = Lt_char and second_char.code = 0) then
-						is_utf16 := True
-						is_msb_first := False
+						encoding := Utf16_msb_last
 						utf_queue.force (Lt_char)
 					else
 							-- Not UTF16
@@ -235,13 +257,15 @@ feature {NONE} -- Implementation
 					utf_queue.force (first_char)
 				end
 			end
+		ensure
+			end_or_set: encoding /= Undetected
 		end
 
 	utf16_read_character is
 			-- Read two characters at a time and fill queue with 
 			-- UTF8 encoding of character.
 		require
-			utf16: is_utf16
+			utf16: (encoding = Utf16_msb_first) or (encoding = Utf16_msb_last)
 			not_end: not impl.end_of_input
 		local
 			first_char, second_char: CHARACTER
@@ -296,6 +320,24 @@ feature {NONE} -- Implementation
 			end
 		end
 		
+feature {NONE} -- Latin-1 implementation
+
+	latin1_read_character is
+			-- Read character from source and convert it to UTF8 if latin1 
+			-- character (8th bit set).
+		require
+			latin1: encoding = Latin_1
+		do
+			impl.read_character
+			if not impl.end_of_input then
+				if impl.last_character.code >= 128 then
+					append_character (impl.last_character.code)
+				end
+			end
+		end
+		
+feature {NONE} -- Implementation
+
 	append_character (a_char: INTEGER) is
 			-- Append character from UTF16 code.
 		require
@@ -326,7 +368,7 @@ feature {NONE} -- Implementation
 	most_significant (first, second: CHARACTER): INTEGER is
 			-- Most significant byte from incoming bytes.
 		do
-			if is_msb_first then
+			if encoding = Utf16_msb_first then
 				Result := first.code
 			else
 				Result := second.code
@@ -339,7 +381,7 @@ feature {NONE} -- Implementation
 	least_significant (first, second: CHARACTER): INTEGER is
 			-- Least significant byte from incoming bytes.
 		do
-			if is_msb_first then
+			if encoding = Utf16_msb_first then
 				Result := second.code
 			else
 				Result := first.code
@@ -367,5 +409,5 @@ invariant
 	last_string: last_string /= Void
 	impl_not_void: impl /= Void
 	queue_not_void: utf_queue /= Void
-
+	
 end
