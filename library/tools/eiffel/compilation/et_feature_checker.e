@@ -347,13 +347,13 @@ feature {NONE} -- Locals validity
 		require
 			a_type_not_void: a_type /= Void
 		do
-			type_checker.resolve_type (a_type, current_feature, current_feature.implementation_class)
+			type_checker.check_type_validity (a_type, current_feature, current_feature.implementation_class)
 			if type_checker.has_fatal_error then
 				--set_fatal_error
 			end
 		end
 
-	type_checker: ET_IDENTIFIER_TYPE_RESOLVER
+	type_checker: ET_TYPE_CHECKER
 			-- Type checker
 
 feature {NONE} -- Instructions validity
