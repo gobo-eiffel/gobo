@@ -13,6 +13,8 @@ indexing
 
 deferred class XI_EVENT_PARSER
 
+obsolete "Use XM_EIFFEL_PARSER or XM_EXPAT_PARSER(_FACTORY)"
+
 inherit
 
 	XI_PARSER
