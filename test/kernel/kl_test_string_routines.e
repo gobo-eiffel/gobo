@@ -203,7 +203,8 @@ feature -- Test
 			-- Test feature `substring'.
 		local
 			a_string1, a_string2: STRING
-			uc_string1, uc_string2: UC_UTF8_STRING
+			uc_string1: UC_UTF8_STRING
+			uc_string2: STRING
 		do
 			a_string1 := clone ("foobar")
 			a_string2 := STRING_.substring (a_string1, 2, 1)
@@ -383,7 +384,8 @@ feature -- Test
 			-- Test feature `to_lower'.
 		local
 			a_string, a_string2: STRING
-			uc_string, uc_string2: UC_UTF8_STRING
+			uc_string: UC_UTF8_STRING
+			uc_string2: STRING
 		do
 			a_string := clone ("FoO")
 			a_string2 := STRING_.to_lower (a_string)
@@ -399,7 +401,8 @@ feature -- Test
 			-- Test feature `to_upper'.
 		local
 			a_string, a_string2: STRING
-			uc_string, uc_string2: UC_UTF8_STRING
+			uc_string: UC_UTF8_STRING
+			uc_string2: STRING
 		do
 			a_string := clone ("Foo")
 			a_string2 := STRING_.to_upper (a_string)
@@ -415,7 +418,8 @@ feature -- Test
 			-- Test feature `as_lower'.
 		local
 			a_string, a_string2: STRING
-			uc_string, uc_string2: UC_UTF8_STRING
+			uc_string: UC_UTF8_STRING
+			uc_string2: STRING
 		do
 			a_string := clone ("FoO")
 			a_string2 := STRING_.as_lower (a_string)
@@ -431,7 +435,8 @@ feature -- Test
 			-- Test feature `as_upper'.
 		local
 			a_string, a_string2: STRING
-			uc_string, uc_string2: UC_UTF8_STRING
+			uc_string: UC_UTF8_STRING
+			uc_string2: STRING
 		do
 			a_string := clone ("Foo")
 			a_string2 := STRING_.as_upper (a_string)

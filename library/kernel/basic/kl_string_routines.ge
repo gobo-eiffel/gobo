@@ -334,7 +334,7 @@ feature -- Access
 			recurse: a_string.count > 1 implies substring (Result, 2, a_string.count).is_equal (string (substring (a_string, 2, a_string.count)))
 		end
 
-	substring (a_string: STRING; start_index, end_index: INTEGER): like a_string is
+	substring (a_string: STRING; start_index, end_index: INTEGER): STRING is
 			-- New object containing all characters of `a_string'
 			-- from `start_index' to `end_index' inclusive
 			-- (ELKS 2001 STRING)
@@ -369,6 +369,7 @@ feature -- Access
 #endif
 		ensure
 			substring_not_void: Result /= Void
+			substring_same_type: Result.same_type (a_string)
 			substring_count: Result.count = end_index - start_index + 1
 			first_item: Result.count > 0 implies Result.item (1) = a_string.item (start_index)
 			-- Note: Too time and memory consumming with SE -0.74:
@@ -905,7 +906,7 @@ feature -- Conversion
 			aliasing: a_string.same_type ("") implies Result = a_string
 		end
 
-	to_lower (a_string: STRING): like a_string is
+	to_lower (a_string: STRING): STRING is
 			-- Lower case version of `a_string'
 			-- (Do not alter `a_string'.)
 		require
@@ -915,12 +916,13 @@ feature -- Conversion
 			Result.to_lower
 		ensure
 			lower_string_not_void: Result /= Void
+			lower_string_same_type: Result.same_type (a_string)
 			same_count: Result.count = a_string.count
 			-- definition: forall i in 1..a_string.count,
 			--	Result.item (i) = a_string.item (i).to_lower
 		end
 
-	to_upper (a_string: STRING): like a_string is
+	to_upper (a_string: STRING): STRING is
 			-- Upper case version of `a_string'
 			-- (Do not alter `a_string'.)
 		require
@@ -929,13 +931,14 @@ feature -- Conversion
 			Result := clone (a_string)
 			Result.to_upper
 		ensure
-			lower_string_not_void: Result /= Void
+			upper_string_not_void: Result /= Void
+			upper_string_same_type: Result.same_type (a_string)
 			same_count: Result.count = a_string.count
 			-- definition: forall i in 1..a_string.count,
 			--	Result.item (i) = a_string.item (i).to_upper
 		end
 
-	as_lower (a_string: STRING): like a_string is
+	as_lower (a_string: STRING): STRING is
 			-- New object with all letters in lower case
 			-- (Extended from ELKS 2001 STRING)
 			-- Note: This routine should be made obsolete as soon
@@ -948,12 +951,13 @@ feature -- Conversion
 			Result.to_lower
 		ensure
 			as_lower_not_void: Result /= Void
+			as_lower_same_type: Result.same_type (a_string)
 			length: Result.count = a_string.count
 			anchor: a_string.count > 0 implies Result.item (1) = CHARACTER_.as_lower (a_string.item (1))
 			recurse: a_string.count > 1 implies Result.substring (2, a_string.count).is_equal (as_lower (a_string.substring (2, a_string.count)))
 		end
 
-	as_upper (a_string: STRING): like a_string is
+	as_upper (a_string: STRING): STRING is
 			-- New object with all letters in upper case
 			-- (Extended from ELKS 2001 STRING)
 			-- Note: This routine should be made obsolete as soon
@@ -966,6 +970,7 @@ feature -- Conversion
 			Result.to_upper
 		ensure
 			as_upper_not_void: Result /= Void
+			as_upper_same_type: Result.same_type (a_string)
 			length: Result.count = a_string.count
 			anchor: a_string.count > 0 implies Result.item (1) = CHARACTER_.as_upper (a_string.item (1))
 			recurse: a_string.count > 1 implies Result.substring (2, a_string.count).is_equal (as_upper (a_string.substring (2, a_string.count)))

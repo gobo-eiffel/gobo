@@ -4,12 +4,19 @@ Version 3.3 - ?
 
 	* Fixed bug in task <gepp> occuring when a nested <fileset>
 	  element defined in the new format was specified.
-	
+
 	Gobo Eiffel XML Library:
 
 	* XM_EIFFEL_PARSER.disable_namespaces allows multiple 
 	  colons in names (strict XML compliance).
-	  
+
+	Gobo Eiffel Kernel Library:
+
+	* Removed usage of 'like argument' (will be removed from the
+	  Eiffel language because it was a disguised way of providing
+	  overloading in Eiffel) in features `substring', `to_lower',
+	  `to_upper', `as_lower' and `as_upper' in KL_STRING_ROUTINES.
+
 Version 3.2 - 29 June 2003
 
 	geant:
