@@ -13,7 +13,7 @@
 
 gobo_usage() {
 	echo "usage: bootstrap.sh [-v] <c_compiler> <eiffel_compiler>"
-	echo "   c_compiler:  cl | bcc32 | lcc | gcc | no_c"
+	echo "   c_compiler:  msc | bcc | lcc | gcc | no_c"
 	echo "   elffel_compiler:  ise | hact | se | ve"
 }
 
@@ -62,7 +62,8 @@ elif [ "$CC" = "/?" ]; then
 elif [ "$EIF" = "" ]; then
 	gobo_usage
 	exit 1
-elif [ "$CC" = "cl" ]; then
+elif [ "$CC" = "msc" -o "$CC" = "cl" ]; then
+  CC=cl
 	CFLAGS='-O2 -nologo -D"WIN32" -w'
 	$CC $CFLAGS -o$BIN_DIR/gexace$EXE gexace.c
 	$RM gexace$OBJ
@@ -74,7 +75,8 @@ elif [ "$CC" = "cl" ]; then
 	$RM geyacc$OBJ
 	$CC $CFLAGS -o$BIN_DIR/gepp$EXE gepp.c
 	$RM gepp$OBJ
-elif [ "$CC" = "bcc32" ]; then
+elif [ "$CC" = "bcc" -o "$CC" = "bcc32" ]; then
+  CC=bcc32
 	CFLAGS='-5 -w-aus -w-par -w-rvl -O2 -O-v'
 	$CC $CFLAGS -ogexace$EXE gexace.c
 	$CP gexace$EXE $BIN_DIR

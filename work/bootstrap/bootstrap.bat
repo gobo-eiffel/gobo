@@ -56,7 +56,9 @@ if .%CC%. == ./h. goto usage
 if .%CC%. == ./?. goto usage
 if .%EIF%. == .. goto usage
 
+if .%CC%. == .msc. goto cl
 if .%CC%. == .cl. goto cl
+if .%CC%. == .bcc. goto bcc32
 if .%CC%. == .bcc32. goto bcc32
 if .%CC%. == .lcc. goto lcc
 if .%CC%. == .gcc. goto gcc
@@ -65,6 +67,7 @@ echo Unknown C compiler: %CC%
 goto exit
 
 :cl
+  set CC=cl
 	set CFLAGS=-O2 -nologo -D"WIN32" -w
 	%CC% %CFLAGS% -o%BIN_DIR%\gexace%EXE% gexace.c
 	%RM% gexace%OBJ%
@@ -79,6 +82,7 @@ goto exit
 	goto install
 
 :bcc32
+  set CC=bcc32
 	set CFLAGS=-5 -w-aus -w-par -w-rvl -O2 -O-v
 	%CC% %CFLAGS% -ogexace%EXE% gexace.c
 	%CP% gexace%EXE% %BIN_DIR%
@@ -174,8 +178,8 @@ goto exit
 
 :usage
 	echo "usage: bootstrap.bat [-v] <c_compiler> <eiffel_compiler>"
-	echo "   c_compiler:  cl | bcc32 | lcc | gcc | no_c"
-	echo "   elffel_compiler:  ise | hact | se | ve"
+	echo "   c_compiler:  msc | bcc | lcc | gcc | no_c"
+	echo "   eiffel_compiler:  ise | hact | se | ve"
 	goto exit
-  
+
 :exit
