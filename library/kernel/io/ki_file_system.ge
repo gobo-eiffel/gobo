@@ -230,6 +230,22 @@ feature -- Pathname handling
 			same_absolute: is_absolute_pathname (Result) = is_absolute_pathname (a_dirname)
 		end
 
+	nested_pathname (a_dirname: STRING; a_pathnames: ARRAY [STRING]): STRING is
+			-- Pathname made up of relative pathnames
+			-- `a_pathnames' in directory `a_dirname'
+		require
+			a_dirname_not_void: a_dirname /= Void
+			a_pathnames_not_void: a_pathnames /= Void
+			a_pathnames_not_empty: not a_pathnames.is_empty
+			-- no_void_pathname: not a_pathnames.has (Void)
+			-- a_pathnames_relative: forall p in `a_pathnames', is_relative_pathname (p)
+		deferred
+		ensure
+			pathname_not_void: Result /= Void
+			same_relative: is_relative_pathname (Result) = is_relative_pathname (a_dirname)
+			same_absolute: is_absolute_pathname (Result) = is_absolute_pathname (a_dirname)
+		end
+
 	canonical_pathname (a_pathname: STRING): STRING is
 			-- Canonical form of `a_pathname'
 		require
@@ -322,7 +338,7 @@ feature -- Pathname handling
 			pathname_to_string_not_void: Result /= Void
 		end
 
-	pathname_from (a_pathname: STRING; a_file_system: KI_FILE_SYSTEM): STRING is
+	pathname_from_file_system (a_pathname: STRING; a_file_system: KI_FILE_SYSTEM): STRING is
 			-- Pathname representation in current file system
 			-- of pathname `a_pathname' which is represented
 			-- using `a_file_system''s pathname convention

@@ -27,7 +27,7 @@ feature -- Test
 			a_name: STRING
 		do
 				-- Existing directory name:
-			a_name := file_system.pathname_from ("$GOBO/test/kernel", unix_file_system)
+			a_name := kernel_dirname
 			a_name := Execution_environment.interpreted_string (a_name)
 			!! a_directory.make (a_name)
 			assert ("a_directory_not_void", a_directory /= Void)
@@ -63,7 +63,7 @@ feature -- Test
 			a_name: STRING
 		do
 				-- Existing directory name:
-			a_name := file_system.pathname_from ("$GOBO/test/kernel", unix_file_system)
+			a_name := kernel_dirname
 			a_name := Execution_environment.interpreted_string (a_name)
 			!! a_directory.make (a_name)
 			assert ("is_closed", a_directory.is_closed)
@@ -91,7 +91,7 @@ feature -- Test
 			an_entry: STRING
 			cvs_dir: STRING
 		do
-			a_name := file_system.pathname_from ("$GOBO/test/kernel/data", unix_file_system)
+			a_name := data_dirname
 			a_name := Execution_environment.interpreted_string (a_name)
 			!! a_directory.make (a_name)
 			a_directory.open_read
@@ -409,7 +409,7 @@ feature -- Test
 			expected_entries: ARRAY [STRING]
 			i, nb: INTEGER
 		do
-			a_name := file_system.pathname_from ("$GOBO/test/kernel/data", unix_file_system)
+			a_name := data_dirname
 			a_name := Execution_environment.interpreted_string (a_name)
 			!! a_directory.make (a_name)
 			filenames := a_directory.filenames

@@ -42,27 +42,27 @@ feature -- File handling
 			!! a_file_system.make
 				-- The following two files, whose pathnames have a non-empty
 				-- dirname, are readable.
-			a_name := file_system.pathname_from ("$GOBO/test/kernel/data/gobo.txt", unix_file_system)
+			a_name := gobo_filename
 			a_name := Execution_environment.interpreted_string (a_name)
 			assert ("readable1", a_file_system.is_file_readable (a_name))
-			a_name := file_system.pathname_from ("$GOBO/test/kernel/data/empty.txt", unix_file_system)
+			a_name := empty_filename
 			a_name := Execution_environment.interpreted_string (a_name)
 			assert ("readable2", a_file_system.is_file_readable (a_name))
 				-- The following file, whose pathname has a non-empty
 				-- dirname, is not readable.
-			a_name := file_system.pathname_from ("$GOBO/test/kernel/data/gobo.txtoops", unix_file_system)
+			a_name := file_system.pathname (data_dirname, "gobo.txtoops")
 			a_name := Execution_environment.interpreted_string (a_name)
 			assert ("not_readable1", not a_file_system.is_file_readable (a_name))
 				-- The following file, whose pathname has a non-empty
 				-- dirname and a basename containing a space, is not readable.
-			a_name := file_system.pathname_from ("$GOBO/test/kernel/data/gobo.txt oops", unix_file_system)
+			a_name := file_system.pathname (data_dirname, "gobo.txt oops")
 			a_name := Execution_environment.interpreted_string (a_name)
 			assert ("not_readable2", not a_file_system.is_file_readable (a_name))
 				-- A file with an empty name is not readable.
 			assert ("not_readable3", not a_file_system.is_file_readable (""))
 				-- The following pathname exists, but it is a
 				-- directory and hence is not a readable file.
-			a_name := file_system.pathname_from ("$GOBO/test/kernel/data", unix_file_system)
+			a_name := data_dirname
 			a_name := Execution_environment.interpreted_string (a_name)
 			assert ("directory_readable", a_file_system.is_directory_readable (a_name))
 			assert ("not_readable4", not a_file_system.is_file_readable (a_name))
@@ -852,7 +852,7 @@ feature -- Directory handling
 			!! a_file_system.make
 				-- The following directory, whose pathname has a non-empty
 				-- dirname, is readable.
-			a_name := file_system.pathname_from ("$GOBO/test/kernel/data", unix_file_system)
+			a_name := data_dirname
 			a_name := Execution_environment.interpreted_string (a_name)
 			assert ("readable1", a_file_system.is_directory_readable (a_name))
 				-- The current directory is readable.
@@ -860,19 +860,19 @@ feature -- Directory handling
 			assert ("readable2", a_file_system.is_directory_readable (a_name))
 				-- The following directory, whose pathname has a non-empty
 				-- dirname, is not readable.
-			a_name := file_system.pathname_from ("$GOBO/test/kernel/dataoops", unix_file_system)
+			a_name := file_system.nested_pathname ("$GOBO", <<"test", "kernel", "dataoops">>)
 			a_name := Execution_environment.interpreted_string (a_name)
 			assert ("not_readable1", not a_file_system.is_directory_readable (a_name))
 				-- The following directory, whose pathname has a non-empty
 				-- dirname and a basename containing a space, is not readable.
-			a_name := file_system.pathname_from ("$GOBO/test/kernel/data oops", unix_file_system)
+			a_name := file_system.nested_pathname ("$GOBO", <<"test", "kernel", "data oops">>)
 			a_name := Execution_environment.interpreted_string (a_name)
 			assert ("not_readable2", not a_file_system.is_directory_readable (a_name))
 				-- A directory with an empty name is not readable.
 			assert ("not_readable3", not a_file_system.is_directory_readable (""))
 				-- The following pathname exists, but it is a
 				-- file and hence is not a readable directory.
-			a_name := file_system.pathname_from ("$GOBO/test/kernel/data/gobo.txt", unix_file_system)
+			a_name := gobo_filename
 			a_name := Execution_environment.interpreted_string (a_name)
 			assert ("file_readable", a_file_system.is_file_readable (a_name))
 			assert ("not_readable4", not a_file_system.is_directory_readable (a_name))
@@ -1130,7 +1130,7 @@ feature -- Working directory
 				old_cwd := a_file_system.current_working_directory
 				assert ("readable0", a_file_system.is_directory_readable (old_cwd))
 					-- Change directory to '$GOBO/test/kernel'.
-				a_name := file_system.pathname_from ("$GOBO/test/kernel", unix_file_system)
+				a_name := kernel_dirname
 				a_name := Execution_environment.interpreted_string (a_name)
 				assert ("readable1", a_file_system.is_directory_readable (a_name))
 				a_file_system.set_current_working_directory (a_name)
@@ -1143,7 +1143,7 @@ feature -- Working directory
 					-- There is no directory 'data' in '$GOBO/test/kernel/data'.
 				assert ("not_readable1", not a_file_system.is_directory_readable (a_name))
 				assert ("readable4", a_file_system.is_directory_readable (a_file_system.current_working_directory))
-				a_name := file_system.pathname_from ("$GOBO/test/kernel/data", unix_file_system)
+				a_name := data_dirname
 				a_name := Execution_environment.interpreted_string (a_name)
 				assert ("readable5", a_file_system.is_directory_readable (a_name))
 				assert_filenames_equal ("cwd2", a_name, a_file_system.current_working_directory)
@@ -1167,7 +1167,7 @@ feature -- Working directory
 				old_cwd := a_file_system.cwd
 				assert ("readable0", a_file_system.is_directory_readable (old_cwd))
 					-- Change directory to '$GOBO/test/kernel'.
-				a_name := file_system.pathname_from ("$GOBO/test/kernel", unix_file_system)
+				a_name := kernel_dirname
 				a_name := Execution_environment.interpreted_string (a_name)
 				assert ("readable1", a_file_system.is_directory_readable (a_name))
 				a_file_system.cd (a_name)
@@ -1180,7 +1180,7 @@ feature -- Working directory
 					-- There is no directory 'data' in '$GOBO/test/kernel/data'.
 				assert ("not_readable1", not a_file_system.is_directory_readable (a_name))
 				assert ("readable4", a_file_system.is_directory_readable (a_file_system.cwd))
-				a_name := file_system.pathname_from ("$GOBO/test/kernel/data", unix_file_system)
+				a_name := data_dirname
 				a_name := Execution_environment.interpreted_string (a_name)
 				assert ("readable5", a_file_system.is_directory_readable (a_name))
 				assert_filenames_equal ("cwd2", a_name, a_file_system.cwd)
@@ -1204,7 +1204,7 @@ feature -- Working directory
 				old_cwd := a_file_system.current_working_directory
 				assert ("readable0", a_file_system.is_directory_readable (old_cwd))
 					-- Change directory to '$GOBO/test/kernel'.
-				a_name := file_system.pathname_from ("$GOBO/test/kernel", unix_file_system)
+				a_name := kernel_dirname
 				a_name := Execution_environment.interpreted_string (a_name)
 				assert ("readable1", a_file_system.is_directory_readable (a_name))
 				a_file_system.set_current_working_directory (a_name)
@@ -1218,7 +1218,7 @@ feature -- Working directory
 					-- There is no directory 'data' in '$GOBO/test/kernel/data'.
 				assert ("not_readable1", not a_file_system.is_directory_readable (a_name))
 				assert ("readable5", a_file_system.is_directory_readable (a_file_system.current_working_directory))
-				a_name := file_system.pathname_from ("$GOBO/test/kernel/data", unix_file_system)
+				a_name := data_dirname
 				a_name := Execution_environment.interpreted_string (a_name)
 				assert_filenames_equal ("cwd2", a_name, a_file_system.current_working_directory)
 					-- Change directory to current directory '.' ('$GOBO/test/kernel/data').
@@ -1226,7 +1226,7 @@ feature -- Working directory
 				assert ("readable6", a_file_system.is_directory_readable (a_name))
 				a_file_system.set_current_working_directory (a_name)
 				assert ("readable7", a_file_system.is_directory_readable (a_file_system.current_working_directory))
-				a_name := file_system.pathname_from ("$GOBO/test/kernel/data", unix_file_system)
+				a_name := data_dirname
 				a_name := Execution_environment.interpreted_string (a_name)
 				assert_filenames_equal ("cwd3", a_name, a_file_system.current_working_directory)
 					-- Change directory to parent directory '..' ('$GOBO/test/kernel').
@@ -1234,7 +1234,7 @@ feature -- Working directory
 				assert ("readable8", a_file_system.is_directory_readable (a_name))
 				a_file_system.set_current_working_directory (a_name)
 				assert ("readable9", a_file_system.is_directory_readable (a_file_system.current_working_directory))
-				a_name := file_system.pathname_from ("$GOBO/test/kernel", unix_file_system)
+				a_name := kernel_dirname
 				a_name := Execution_environment.interpreted_string (a_name)
 				assert_filenames_equal ("cwd4", a_name, a_file_system.current_working_directory)
 					-- Change directory to 'data' ('$GOBO/test/kernel/data').
@@ -1243,7 +1243,7 @@ feature -- Working directory
 				a_file_system.set_current_working_directory (a_name)
 				assert ("not_readable2", not a_file_system.is_directory_readable (a_name))
 				assert ("readable11", a_file_system.is_directory_readable (a_file_system.current_working_directory))
-				a_name := file_system.pathname_from ("$GOBO/test/kernel/data", unix_file_system)
+				a_name := data_dirname
 				a_name := Execution_environment.interpreted_string (a_name)
 				assert_filenames_equal ("cwd2", a_name, a_file_system.current_working_directory)
 					-- Go back to old working directory.
@@ -1266,7 +1266,7 @@ feature -- Working directory
 				old_cwd := a_file_system.cwd
 				assert ("readable0", a_file_system.is_directory_readable (old_cwd))
 					-- Change directory to '$GOBO/test/kernel'.
-				a_name := file_system.pathname_from ("$GOBO/test/kernel", unix_file_system)
+				a_name := kernel_dirname
 				a_name := Execution_environment.interpreted_string (a_name)
 				assert ("readable1", a_file_system.is_directory_readable (a_name))
 				a_file_system.cd (a_name)
@@ -1280,7 +1280,7 @@ feature -- Working directory
 					-- There is no directory 'data' in '$GOBO/test/kernel/data'.
 				assert ("not_readable1", not a_file_system.is_directory_readable (a_name))
 				assert ("readable5", a_file_system.is_directory_readable (a_file_system.cwd))
-				a_name := file_system.pathname_from ("$GOBO/test/kernel/data", unix_file_system)
+				a_name := data_dirname
 				a_name := Execution_environment.interpreted_string (a_name)
 				assert_filenames_equal ("cwd2", a_name, a_file_system.cwd)
 					-- Change directory to current directory '.' ('$GOBO/test/kernel/data').
@@ -1288,7 +1288,7 @@ feature -- Working directory
 				assert ("readable6", a_file_system.is_directory_readable (a_name))
 				a_file_system.cd (a_name)
 				assert ("readable7", a_file_system.is_directory_readable (a_file_system.cwd))
-				a_name := file_system.pathname_from ("$GOBO/test/kernel/data", unix_file_system)
+				a_name := data_dirname
 				a_name := Execution_environment.interpreted_string (a_name)
 				assert_filenames_equal ("cwd3", a_name, a_file_system.cwd)
 					-- Change directory to parent directory '..' ('$GOBO/test/kernel').
@@ -1296,7 +1296,7 @@ feature -- Working directory
 				assert ("readable8", a_file_system.is_directory_readable (a_name))
 				a_file_system.cd (a_name)
 				assert ("readable9", a_file_system.is_directory_readable (a_file_system.cwd))
-				a_name := file_system.pathname_from ("$GOBO/test/kernel", unix_file_system)
+				a_name := kernel_dirname
 				a_name := Execution_environment.interpreted_string (a_name)
 				assert_filenames_equal ("cwd4", a_name, a_file_system.cwd)
 					-- Change directory to 'data' ('$GOBO/test/kernel/data').
@@ -1305,7 +1305,7 @@ feature -- Working directory
 				a_file_system.cd (a_name)
 				assert ("not_readable2", not a_file_system.is_directory_readable (a_name))
 				assert ("readable11", a_file_system.is_directory_readable (a_file_system.cwd))
-				a_name := file_system.pathname_from ("$GOBO/test/kernel/data", unix_file_system)
+				a_name := data_dirname
 				a_name := Execution_environment.interpreted_string (a_name)
 				assert_filenames_equal ("cwd2", a_name, a_file_system.cwd)
 					-- Go back to old working directory.
@@ -1687,17 +1687,17 @@ feature -- Pathname handling
 			assert_equal ("absolute3", "\\gobo\foo\bar", a_file_system.pathname_to_string (a_pathname))
 		end
 
-	test_pathname_from is
-			-- Test feature `pathname_from'.
+	test_pathname_from_file_system is
+			-- Test feature `pathname_from_file_system'.
 		local
 			a_file_system: KL_WINDOWS_FILE_SYSTEM
 		do
 			!! a_file_system.make
-			assert_equal ("unix1", "foo\bar", a_file_system.pathname_from ("foo/bar", unix_file_system))
-			assert_equal ("unix2", "\foo\bar", a_file_system.pathname_from ("/foo/bar", unix_file_system))
-			assert_equal ("windows1", "foo\bar", a_file_system.pathname_from ("foo\bar", windows_file_system))
-			assert_equal ("windows2", "c:\foo\bar", a_file_system.pathname_from ("c:\foo\bar", windows_file_system))
-			assert_equal ("windows3", "\\gobo\foo\bar", a_file_system.pathname_from ("\\gobo\foo\bar", windows_file_system))
+			assert_equal ("unix1", "foo\bar", a_file_system.pathname_from_file_system ("foo/bar", unix_file_system))
+			assert_equal ("unix2", "\foo\bar", a_file_system.pathname_from_file_system ("/foo/bar", unix_file_system))
+			assert_equal ("windows1", "foo\bar", a_file_system.pathname_from_file_system ("foo\bar", windows_file_system))
+			assert_equal ("windows2", "c:\foo\bar", a_file_system.pathname_from_file_system ("c:\foo\bar", windows_file_system))
+			assert_equal ("windows3", "\\gobo\foo\bar", a_file_system.pathname_from_file_system ("\\gobo\foo\bar", windows_file_system))
 		end
 
 	test_has_extension is

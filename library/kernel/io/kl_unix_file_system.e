@@ -169,6 +169,29 @@ feature -- Pathname handling
 			end
 		end
 
+	nested_pathname (a_dirname: STRING; a_pathnames: ARRAY [STRING]): STRING is
+			-- Pathname made up of relative pathnames
+			-- `a_pathnames' in directory `a_dirname'
+		local
+			i, nb, k: INTEGER
+			a_pathname: STRING
+		do
+			Result := clone (a_dirname)
+			i := a_pathnames.lower
+			nb := a_pathnames.upper
+			from until i > nb loop
+				a_pathname := a_pathnames.item (i)
+				if a_pathname.count > 0 then
+					k := Result.count
+					if k > 0 and then Result.item (k) /= directory_separator then
+						Result.append_character (directory_separator)
+					end
+					Result.append_string (a_pathname)
+				end
+				i := i + 1
+			end
+		end
+
 	relative_current_directory: STRING is "."
 			-- Relative pathname of current directory
 

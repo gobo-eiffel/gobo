@@ -38,7 +38,7 @@ feature -- Filenames
 	booleans_filename: STRING is
 			-- Full filename of "booleans.txt"
 		once
-			Result := file_system.pathname_from ("$GOBO/test/kernel/data/booleans.txt", unix_file_system)
+			Result := file_system.pathname (data_dirname, "booleans.txt")
 		ensure
 			booleans_filename_not_void: Result /= Void
 		end
@@ -46,7 +46,7 @@ feature -- Filenames
 	empty_filename: STRING is
 			-- Full filename of "empty.txt"
 		once
-			Result := file_system.pathname_from ("$GOBO/test/kernel/data/empty.txt", unix_file_system)
+			Result := file_system.pathname (data_dirname, "empty.txt")
 		ensure
 			empty_filename_not_void: Result /= Void
 		end
@@ -54,7 +54,7 @@ feature -- Filenames
 	gobo_filename: STRING is
 			-- Full filename of "gobo.txt"
 		once
-			Result := file_system.pathname_from ("$GOBO/test/kernel/data/gobo.txt", unix_file_system)
+			Result := file_system.pathname (data_dirname, "gobo.txt")
 		ensure
 			gobo_filename_not_void: Result /= Void
 		end
@@ -62,7 +62,7 @@ feature -- Filenames
 	hello_filename: STRING is
 			-- Full filename of "hello.txt"
 		once
-			Result := file_system.pathname_from ("$GOBO/test/kernel/data/hello.txt", unix_file_system)
+			Result := file_system.pathname (data_dirname, "hello.txt")
 		ensure
 			hello_filename_not_void: Result /= Void
 		end
@@ -70,7 +70,7 @@ feature -- Filenames
 	integers_filename: STRING is
 			-- Full filename of "integers.txt"
 		once
-			Result := file_system.pathname_from ("$GOBO/test/kernel/data/integers.txt", unix_file_system)
+			Result := file_system.pathname (data_dirname, "integers.txt")
 		ensure
 			integers_filename_not_void: Result /= Void
 		end
@@ -89,6 +89,22 @@ feature -- Directory names
 			Result := a_prefix + nb.out
 		ensure
 			dirname_not_void: Result /= Void
+		end
+
+	data_dirname: STRING is
+			-- Full directory name of "$GOBO/test/kernel/data"
+		once
+			Result := file_system.pathname (kernel_dirname, "data")
+		ensure
+			data_dirname_not_void: Result /= Void
+		end
+
+	kernel_dirname: STRING is
+			-- Full directory name of "$GOBO/test/kernel"
+		once
+			Result := file_system.nested_pathname ("$GOBO", <<"test", "kernel">>)
+		ensure
+			kernel_dirname_not_void: Result /= Void
 		end
 
 feature {NONE} -- Implementation
