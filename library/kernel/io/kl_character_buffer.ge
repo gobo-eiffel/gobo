@@ -381,7 +381,10 @@ feature {NONE} -- Implementation
 
 invariant
 
+#ifdef ISE || VE
 	area_not_void: area /= Void
+#endif
+
 #ifdef SE
 	area_string_not_void: area_string /= Void
 #endif
