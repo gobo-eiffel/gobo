@@ -73,7 +73,7 @@ feature -- Tests
 			check_uri (uri, "s", Void, "", "query", Void)
 		
 			create uri.make ("//invalid?q")
-			check_uri (uri, Void, "invalid", Void, "q", Void)
+			check_uri (uri, Void, "invalid", "", "q", Void)
 
 			create uri.make ("?")
 			check_uri (uri, Void, Void, "", "", Void)
@@ -97,7 +97,7 @@ feature -- Tests
 			check_uri (uri, "s", Void, "", Void, "fragment")
 
 			create uri.make ("//www.invalid#fragment")
-			check_uri (uri, Void, "www.invalid", Void, Void, "fragment")
+			check_uri (uri, Void, "www.invalid", "", Void, "fragment")
 
 			create uri.make ("#")
 			check_uri (uri, Void, Void, "", Void, "")
@@ -134,13 +134,11 @@ feature {NONE} -- Implementation
 			-- Check a parsed URI.
 		require
 			uri_not_void: uri /= Void
+			path_not_void: path /= Void
 		do
 			assert_equal ("scheme", scheme, uri.scheme)
 			assert_equal ("authority", authority, uri.authority)
-			assert ("has_path", uri.has_path = (path /= Void))
-			if path /= Void then
-				assert_equal ("path", path, uri.path)
-			end
+			assert_equal ("path", path, uri.path)
 			assert_equal ("query", query, uri.query)
 			assert_equal ("fragment", uri.fragment, fragment)
 		end
