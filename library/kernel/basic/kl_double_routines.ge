@@ -86,7 +86,7 @@ feature -- Exponent
 #endif
 
 	nth_root (d, n: DOUBLE): DOUBLE is
-			-- `n'-th root of `d'.
+			-- `n'-th root of `d'
 		require
 			divisible: (1.0).divisible (n)
 		do
