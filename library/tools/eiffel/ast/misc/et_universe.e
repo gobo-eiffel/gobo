@@ -57,6 +57,7 @@ feature {NONE} -- Initialization
 			set_use_create_keyword (True)
 			set_use_recast_keyword (True)
 			set_use_reference_keyword (True)
+			set_use_void_keyword (True)
 			make_basic_classes
 			create cluster_processor.make (Current)
 			create null_processor.make (Current)
@@ -518,6 +519,10 @@ feature -- Parser status report
 			-- Should 'reference' be considered as
 			-- a keyword (otherwise identifier)?
 
+	use_void_keyword: BOOLEAN
+			-- Should 'void' be considered as
+			-- a keyword (otherwise identifier)?
+
 feature -- Parser setting
 
 	set_use_assign_keyword (b: BOOLEAN) is
@@ -566,6 +571,14 @@ feature -- Parser setting
 			use_reference_keyword := b
 		ensure
 			use_reference_keyword_set: use_reference_keyword = b
+		end
+
+	set_use_void_keyword (b: BOOLEAN) is
+			-- Set `use_void_keyword' to `b'.
+		do
+			use_void_keyword := b
+		ensure
+			use_void_keyword_set: use_void_keyword = b
 		end
 
 feature -- Element change
@@ -1421,6 +1434,7 @@ feature -- Processors
 			Result.set_use_create_keyword (use_create_keyword)
 			Result.set_use_recast_keyword (use_recast_keyword)
 			Result.set_use_reference_keyword (use_reference_keyword)
+			Result.set_use_void_keyword (use_void_keyword)
 		ensure
 			eiffel_preparser_not_void: Result /= Void
 		end
@@ -1442,6 +1456,7 @@ feature -- Processors
 			Result.set_use_create_keyword (use_create_keyword)
 			Result.set_use_recast_keyword (use_recast_keyword)
 			Result.set_use_reference_keyword (use_reference_keyword)
+			Result.set_use_void_keyword (use_void_keyword)
 		ensure
 			eiffel_parser_not_void: Result /= Void
 		end
