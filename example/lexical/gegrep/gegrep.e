@@ -146,6 +146,7 @@ feature {NONE} -- Implementation
 			et5: DS_EQUALITY_TESTER [LX_START_CONDITION]
 			et6: DS_EQUALITY_TESTER [LX_SYMBOL_CLASS]
 			et7: DS_EQUALITY_TESTER [LX_DFA_STATE]
+			et8: DS_EQUALITY_TESTER [STRING]
 			fb: YY_FILE_BUFFER
 		do
 			!! et1
@@ -155,6 +156,7 @@ feature {NONE} -- Implementation
 			!! et5
 			!! et6
 			!! et7
+			!! et8
 			!! fb.make (std.input)
 		end
 
