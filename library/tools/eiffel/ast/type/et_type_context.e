@@ -35,6 +35,7 @@ feature -- Access
 		require
 			valid_context: is_valid_context
 			a_universe_not_void: a_universe /= Void
+			-- no_cycle: no cycle in anchored types involved.
 		do
 			Result := type.base_class (context, a_universe)
 		ensure
@@ -46,11 +47,27 @@ feature -- Access
 		require
 			valid_context: is_valid_context
 			a_universe_not_void: a_universe /= Void
+			-- no_cycle: no cycle in anchored types involved.
 		do
 			Result := type.base_type (context, a_universe)
 		ensure
 			base_type_not_void: Result /= Void
 			deep_base_type: Result.is_named_type
+		end
+
+	base_type_actual (i: INTEGER; a_universe: ET_UNIVERSE): ET_NAMED_TYPE is
+			-- `i'-th actual generic parameter of `base_type'
+		require
+			valid_context: is_valid_context
+			a_universe_not_void: a_universe /= Void
+			-- no_cycle: no cycle in anchored types involved.
+			i_large_enough: i >= 1
+			i_small_enough: i <= base_type_actual_count (a_universe)
+		do
+			Result := type.base_type_actual (i, context, a_universe)
+		ensure
+			definition: Result = base_type (a_universe).actual_parameters.type (i)
+			named_type_named: Result.is_named_type
 		end
 
 	root_context: ET_BASE_TYPE is
@@ -63,6 +80,20 @@ feature -- Access
 			is_root: Result.context = Result
 			same_root_context: Result.root_context = Result
 			valid_context: is_valid_context implies Result.is_valid_context
+		end
+
+feature -- Measurement
+
+	base_type_actual_count (a_universe: ET_UNIVERSE): INTEGER is
+			-- Number of actual generic parameters of `base_type'
+		require
+			valid_context: is_valid_context
+			a_universe_not_void: a_universe /= Void
+			-- no_cycle: no cycle in anchored types involved.
+		do
+			Result := type.base_type_actual_count (context, a_universe)
+		ensure
+			definition: Result = base_type (a_universe).actual_parameter_count
 		end
 
 feature -- Status report
@@ -108,6 +139,31 @@ feature -- Status report
 			Result := other.root_context = root_context
 		ensure
 			definition: Result = (other.root_context = root_context)
+		end
+
+	is_cat_type (a_universe: ET_UNIVERSE): BOOLEAN is
+			-- Is `base_type' a monomorphic type in `a_universe'?
+		require
+			valid_context: is_valid_context
+			a_universe_not_void: a_universe /= Void
+			-- no_cycle: no cycle in anchored types involved.
+		do
+			Result := type.is_cat_type (context, a_universe)
+		end
+
+	is_actual_cat_type (i: INTEGER; a_universe: ET_UNIVERSE): BOOLEAN is
+			-- Is actual generic parameter at index `i' in `base_type'
+			-- a monomorphic type in `a_universe'?
+		require
+			valid_context: is_valid_context
+			a_universe_not_void: a_universe /= Void
+			-- no_cycle: no cycle in anchored types involved.
+			i_large_enough: i >= 1
+			i_small_enough: i <= base_type_actual_count (a_universe)
+		do
+			Result := type.is_actual_cat_type (i, context, a_universe)
+		ensure
+			definition: Result = base_type_actual (i, a_universe).is_cat_type (context, a_universe)
 		end
 
 end

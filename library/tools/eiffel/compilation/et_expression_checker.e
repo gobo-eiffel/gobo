@@ -396,6 +396,7 @@ feature {NONE} -- Expression validity
 			a_convert_feature: ET_FEATURE
 			an_actual_type, a_formal_type: ET_NAMED_TYPE
 			a_like: ET_LIKE_FEATURE
+			j, nb2: INTEGER
 		do
 			a_class_impl := current_feature.implementation_class
 			a_seed := a_name.seed
@@ -584,14 +585,38 @@ feature {NONE} -- Expression validity
 							type := a_type
 							context := a_context
 						end
-						if a_feature.is_cat then
-							if not a_context.type.is_cat_type (a_context.context, universe) then
-								set_fatal_error
+						if universe.cat_enabled and not universe.searching_dog_types then
+							if a_feature.is_cat then
+								if not a_context.is_cat_type (universe) then
+									set_fatal_error
 -- TODO:
-								error_handler.report_error_message ("class " + current_class.name.name + " (" +
-									a_name.position.line.out + "," + a_name.position.column.out +
-									"): cat feature `" + a_name.name + "' applied to target of non-cat type '" +
-									a_context.base_type (universe).to_text + "'")
+									error_handler.report_error_message ("class " + current_class.name.name + " (" +
+										a_name.position.line.out + "," + a_name.position.column.out +
+										"): cat feature `" + a_name.name + "' applied to target of non-cat type '" +
+										a_context.base_type (universe).to_text + "'")
+								end
+							end
+							if a_formals /= Void and then not a_formals.is_empty then
+								nb2 := a_formals.count
+								nb := a_context.base_type_actual_count (universe)
+								from i := 1 until i > nb loop
+									if not a_context.is_actual_cat_type (i, universe) then
+										from j := 1 until j > nb2 loop
+											a_formal := a_formals.formal_argument (j)
+											if a_formal.type.has_formal_type (i, a_context, universe) then
+												set_fatal_error
+-- TODO:
+												error_handler.report_error_message ("class " + current_class.name.name + " (" +
+													a_name.position.line.out + "," + a_name.position.column.out +
+													"): the type of the formal argument #" + j.out + " of feature `" + a_name.name +
+													"' contains formal generic parameter #" + i.out + " but the corresponding actual parameter '" +
+													a_context.base_type_actual (i, universe).to_text + "' is not declared as cat.")
+											end
+											j := j + 1
+										end
+									end
+									i := i + 1
+								end
 							end
 						end
 					end

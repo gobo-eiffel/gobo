@@ -114,6 +114,7 @@ feature -- Status report
 			a_context_not_void: a_context /= Void
 			a_context_valid: a_context.is_valid_context
 			a_universe_not_void: a_universe /= Void
+			-- no_cycle: no cycle in anchored types involved.
 		local
 			i, nb: INTEGER
 		do
@@ -128,19 +129,42 @@ feature -- Status report
 			end
 		end
 
-	has_formal_type (a_context: ET_TYPE_CONTEXT; a_universe: ET_UNIVERSE): BOOLEAN is
-			-- Does one current types contain a formal generic parameter
-			-- when viewed from `a_context' in `a_universe'?
+	has_formal_type (i: INTEGER; a_context: ET_TYPE_CONTEXT; a_universe: ET_UNIVERSE): BOOLEAN is
+			-- Does the named type of one of current types contain the formal generic
+			-- parameter with index `i' when viewed from `a_context' in `a_universe'?
 		require
 			a_context_not_void: a_context /= Void
 			a_context_valid: a_context.is_valid_context
 			a_universe_not_void: a_universe /= Void
+			-- no_cycle: no cycle in anchored types involved.
+		local
+			j, nb: INTEGER
+		do
+			nb := count
+			from j := 1 until j > nb loop
+				if type (j).has_formal_type (i, a_context, a_universe) then
+					Result := True
+					j := nb + 1 -- Jump out of the loop.
+				else
+					j := j + 1
+				end
+			end
+		end
+
+	has_formal_types (a_context: ET_TYPE_CONTEXT; a_universe: ET_UNIVERSE): BOOLEAN is
+			-- Does the named type of one current types contain a formal generic
+			-- parameter when viewed from `a_context' in `a_universe'?
+		require
+			a_context_not_void: a_context /= Void
+			a_context_valid: a_context.is_valid_context
+			a_universe_not_void: a_universe /= Void
+			-- no_cycle: no cycle in anchored types involved.
 		local
 			i, nb: INTEGER
 		do
 			nb := count
 			from i := 1 until i > nb loop
-				if type (i).has_formal_type (a_context, a_universe) then
+				if type (i).has_formal_types (a_context, a_universe) then
 					Result := True
 					i := nb + 1 -- Jump out of the loop.
 				else
@@ -150,14 +174,15 @@ feature -- Status report
 		end
 
 	has_qualified_type (a_context: ET_TYPE_CONTEXT; a_universe: ET_UNIVERSE): BOOLEAN is
-			-- Is one of current types a qualified type (other than of
-			-- the form 'like Current.b') when viewed from `a_context',
-			-- or do their actual generic parameters (recursively)
-			-- contain qualified types?
+			-- Is the named type of one of current types a qualified type (other
+			-- than of the form 'like Current.b') when viewed from `a_context',
+			-- or do their actual generic parameters (recursively) contain
+			-- qualified types?
 		require
 			a_context_not_void: a_context /= Void
 			a_context_valid: a_context.is_valid_context
 			a_universe_not_void: a_universe /= Void
+			-- no_cycle: no cycle in anchored types involved.
 		local
 			i, nb: INTEGER
 		do

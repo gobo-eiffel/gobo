@@ -559,18 +559,22 @@ feature -- Parsing
 
 feature -- Compilation
 
-	compile is
+	compile (flat: BOOLEAN) is
 			-- Compile universe.
+			-- `flat' means that the inherited features are checked
+			-- again in the descendant classes during Degree 3.
 		do
 			if root_class = Void or root_class = none_class then
-				compile_all
+				compile_all (flat)
 			else
-				compile_system
+				compile_system (flat)
 			end
 		end
 
-	compile_system is
+	compile_system (flat: BOOLEAN) is
 			-- Compile all classes in the system.
+			-- `flat' means that the inherited features are checked
+			-- again in the descendant classes during Degree 3.
 		local
 			clock: DT_SHARED_SYSTEM_CLOCK
 			dt1, dt2: DT_DATE_TIME
@@ -590,7 +594,9 @@ feature -- Compilation
 				dtd.set_canonical (dt1)
 				std.error.put_string ("Degree 6: ")
 				std.error.put_line (dtd.out)
-				io.read_line
+				debug ("stop")
+					io.read_line
+				end
 				dt1 := clock.system_clock.date_time_now
 			end
 			parse_system
@@ -609,7 +615,9 @@ feature -- Compilation
 				dtd.set_canonical (dt1)
 				std.error.put_string ("Degree 5: ")
 				std.error.put_line (dtd.out)
-				io.read_line
+				debug ("stop")
+					io.read_line
+				end
 				dt1 := clock.system_clock.date_time_now
 			end
 			if cat_enabled then
@@ -620,7 +628,9 @@ feature -- Compilation
 					dtd.set_canonical (dt1)
 					std.error.put_string ("Degree CAT: ")
 					std.error.put_line (dtd.out)
-					io.read_line
+					debug ("stop")
+						io.read_line
+					end
 					dt1 := clock.system_clock.date_time_now
 				end
 			end
@@ -631,17 +641,25 @@ feature -- Compilation
 				dtd.set_canonical (dt1)
 				std.error.put_string ("Degree 4: ")
 				std.error.put_line (dtd.out)
-				io.read_line
+				debug ("stop")
+					io.read_line
+				end
 				dt1 := clock.system_clock.date_time_now
 			end
-			compile_degree_3
+			if flat then
+				compile_flat_degree_3
+			else
+				compile_degree_3
+			end
 			debug ("ericb")
 				dt2 := clock.system_clock.date_time_now
 				dtd := dt2 - dt1
 				dtd.set_canonical (dt1)
 				std.error.put_string ("Degree 3: ")
 				std.error.put_line (dtd.out)
-				io.read_line
+				debug ("stop")
+					io.read_line
+				end
 				dt1 := clock.system_clock.date_time_now
 			end
 			debug ("ericb")
@@ -650,8 +668,10 @@ feature -- Compilation
 			end
 		end
 
-	compile_all is
+	compile_all (flat: BOOLEAN) is
 			-- Compile all classes in the universe.
+			-- `flat' means that the inherited features are checked
+			-- again in the descendant classes during Degree 3.
 		local
 			clock: DT_SHARED_SYSTEM_CLOCK
 			dt1, dt2: DT_DATE_TIME
@@ -671,7 +691,9 @@ feature -- Compilation
 				dtd.set_canonical (dt1)
 				std.error.put_string ("Degree 6: ")
 				std.error.put_line (dtd.out)
-				io.read_line
+				debug ("stop")
+					io.read_line
+				end
 				dt1 := clock.system_clock.date_time_now
 			end
 			a_cursor := classes.new_cursor
@@ -696,7 +718,9 @@ feature -- Compilation
 				dtd.set_canonical (dt1)
 				std.error.put_string ("Degree 5: ")
 				std.error.put_line (dtd.out)
-				io.read_line
+				debug ("stop")
+					io.read_line
+				end
 				dt1 := clock.system_clock.date_time_now
 			end
 			if cat_enabled then
@@ -707,7 +731,9 @@ feature -- Compilation
 					dtd.set_canonical (dt1)
 					std.error.put_string ("Degree CAT: ")
 					std.error.put_line (dtd.out)
-					io.read_line
+					debug ("stop")
+						io.read_line
+					end
 					dt1 := clock.system_clock.date_time_now
 				end
 			end
@@ -718,17 +744,25 @@ feature -- Compilation
 				dtd.set_canonical (dt1)
 				std.error.put_string ("Degree 4: ")
 				std.error.put_line (dtd.out)
-				io.read_line
+				debug ("stop")
+					io.read_line
+				end
 				dt1 := clock.system_clock.date_time_now
 			end
-			compile_degree_3
+			if flat then
+				compile_flat_degree_3
+			else
+				compile_degree_3
+			end
 			debug ("ericb")
 				dt2 := clock.system_clock.date_time_now
 				dtd := dt2 - dt1
 				dtd.set_canonical (dt1)
 				std.error.put_string ("Degree 3: ")
 				std.error.put_line (dtd.out)
-				io.read_line
+				debug ("stop")
+					io.read_line
+				end
 				dt1 := clock.system_clock.date_time_now
 			end
 		end
@@ -770,7 +804,9 @@ feature -- Compilation
 					std.error.put_string ("DOG type count = ")
 					std.error.put_integer (dog_type_count)
 					std.error.put_new_line
-					io.read_line
+					debug ("stop")
+						io.read_line
+					end
 				end
 			end
 			all_cat_features := False
@@ -847,7 +883,9 @@ feature -- Compilation
 					std.error.put_string ("CAT feature count = ")
 					std.error.put_integer (cat_feature_count)
 					std.error.put_new_line
-					io.read_line
+					debug ("stop")
+						io.read_line
+					end
 				end
 			end
 			searching_cat_features := False
@@ -923,6 +961,24 @@ feature -- Compilation
 				if a_class.interface_checked then
 					a_class.process (implementation_checker)
 					-- a_class.process (flat_checker)
+				end
+				a_cursor.forth
+			end
+		end
+
+	compile_flat_degree_3 is
+			-- Equivalent of ISE Eiffel's Degree 3 but where all inherited
+			-- features are checked again in the descendant classes.
+		local
+			a_cursor: DS_HASH_TABLE_CURSOR [ET_CLASS, ET_CLASS_NAME]
+			a_class: ET_CLASS
+		do
+				-- Check implementation.
+			a_cursor := classes.new_cursor
+			from a_cursor.start until a_cursor.after loop
+				a_class := a_cursor.item
+				if a_class.interface_checked then
+					a_class.process (flat_checker)
 				end
 				a_cursor.forth
 			end

@@ -18,6 +18,8 @@ inherit
 		redefine
 			named_type,
 			is_formal_type,
+			has_formal_type,
+			has_formal_types,
 			has_qualified_type,
 			same_syntactical_like_feature,
 			same_named_bit_type,
@@ -209,6 +211,61 @@ feature -- Access
 			end
 		end
 
+	base_type_actual (i: INTEGER; a_context: ET_TYPE_CONTEXT; a_universe: ET_UNIVERSE): ET_NAMED_TYPE is
+			-- `i'-th actual generic parameter of the base type of current
+			-- type when it appears in `a_context' in `a_universe'
+		local
+			a_class: ET_CLASS
+			seeded_feature: ET_FEATURE
+			a_query_type: ET_TYPE
+			args: ET_FORMAL_ARGUMENT_LIST
+			an_index: INTEGER
+		do
+			if seed = 0 then
+					-- Anchored type not resolved yet.
+				Result := a_universe.unknown_class
+			elseif is_like_argument then
+				a_class := a_context.base_class (a_universe)
+				seeded_feature := a_class.seeded_feature (seed)
+				if seeded_feature /= Void then
+					args := seeded_feature.arguments
+					an_index := index
+					if args = Void or else an_index > args.count then
+							-- Internal error: an inconsistency has been
+							-- introduced in the AST since we relsolved
+							-- current anchored type.
+						Result := a_universe.unknown_class
+					else
+						Result := args.item (an_index).type.base_type_actual (i, a_context, a_universe)
+					end
+				else
+						-- Internal error: an inconsistency has been
+						-- introduced in the AST since we relsolved
+						-- current anchored type.
+					Result := a_universe.unknown_class
+				end
+			else
+				a_class := a_context.base_class (a_universe)
+				seeded_feature := a_class.seeded_feature (seed)
+				if seeded_feature /= Void then
+					a_query_type := seeded_feature.type
+					if a_query_type /= Void then
+						Result := a_query_type.base_type_actual (i, a_context, a_universe)
+					else
+							-- Internal error: an inconsistency has been
+							-- introduced in the AST since we relsolved
+							-- current anchored type.
+						Result := a_universe.unknown_class
+					end
+				else
+						-- Internal error: an inconsistency has been
+						-- introduced in the AST since we relsolved
+						-- current anchored type.
+					Result := a_universe.unknown_class
+				end
+			end
+		end
+
 	named_type (a_context: ET_TYPE_CONTEXT; a_universe: ET_UNIVERSE): ET_NAMED_TYPE is
 			-- Same as `base_type' except when current type is still
 			-- a formal generic parameter after having been replaced
@@ -289,6 +346,62 @@ feature -- Access
 			Result := name.break
 		end
 
+feature -- Measurement
+
+	base_type_actual_count (a_context: ET_TYPE_CONTEXT; a_universe: ET_UNIVERSE): INTEGER is
+			-- Number of actual generic parameters of the base type of current type
+		local
+			a_class: ET_CLASS
+			seeded_feature: ET_FEATURE
+			a_query_type: ET_TYPE
+			args: ET_FORMAL_ARGUMENT_LIST
+			an_index: INTEGER
+		do
+			if seed = 0 then
+					-- Anchored type not resolved yet.
+				Result := 0
+			elseif is_like_argument then
+				a_class := a_context.base_class (a_universe)
+				seeded_feature := a_class.seeded_feature (seed)
+				if seeded_feature /= Void then
+					args := seeded_feature.arguments
+					an_index := index
+					if args = Void or else an_index > args.count then
+							-- Internal error: an inconsistency has been
+							-- introduced in the AST since we relsolved
+							-- current anchored type.
+						Result := 0
+					else
+						Result := args.item (an_index).type.base_type_actual_count (a_context, a_universe)
+					end
+				else
+						-- Internal error: an inconsistency has been
+						-- introduced in the AST since we relsolved
+						-- current anchored type.
+					Result := 0
+				end
+			else
+				a_class := a_context.base_class (a_universe)
+				seeded_feature := a_class.seeded_feature (seed)
+				if seeded_feature /= Void then
+					a_query_type := seeded_feature.type
+					if a_query_type /= Void then
+						Result := a_query_type.base_type_actual_count (a_context, a_universe)
+					else
+							-- Internal error: an inconsistency has been
+							-- introduced in the AST since we relsolved
+							-- current anchored type.
+						Result := 0
+					end
+				else
+						-- Internal error: an inconsistency has been
+						-- introduced in the AST since we relsolved
+						-- current anchored type.
+					Result := 0
+				end
+			end
+		end
+
 feature -- Setting
 
 	set_like_keyword (a_like: like like_keyword) is
@@ -323,7 +436,7 @@ feature -- Status report
 		do
 			if seed = 0 then
 					-- Anchored type not resolved yet.
-				-- Result := False
+				Result := False
 			elseif is_like_argument then
 				a_class := a_context.base_class (a_universe)
 				seeded_feature := a_class.seeded_feature (seed)
@@ -334,7 +447,7 @@ feature -- Status report
 							-- Internal error: an inconsistency has been
 							-- introduced in the AST since we relsolved
 							-- current anchored type.
-						-- Result := False
+						Result := False
 					else
 						Result := args.item (an_index).type.is_type_expanded (a_context, a_universe)
 					end
@@ -342,7 +455,7 @@ feature -- Status report
 						-- Internal error: an inconsistency has been
 						-- introduced in the AST since we relsolved
 						-- current anchored type.
-					-- Result := False
+					Result := False
 				end
 			else
 				a_class := a_context.base_class (a_universe)
@@ -355,13 +468,13 @@ feature -- Status report
 							-- Internal error: an inconsistency has been
 							-- introduced in the AST since we relsolved
 							-- current anchored type.
-						-- Result := False
+						Result := False
 					end
 				else
 						-- Internal error: an inconsistency has been
 						-- introduced in the AST since we relsolved
 						-- current anchored type.
-					-- Result := False
+					Result := False
 				end
 			end
 		end
@@ -378,7 +491,7 @@ feature -- Status report
 		do
 			if seed = 0 then
 					-- Anchored type not resolved yet.
-				-- Result := False
+				Result := False
 			elseif is_like_argument then
 				a_class := a_context.base_class (a_universe)
 				seeded_feature := a_class.seeded_feature (seed)
@@ -389,7 +502,7 @@ feature -- Status report
 							-- Internal error: an inconsistency has been
 							-- introduced in the AST since we relsolved
 							-- current anchored type.
-						-- Result := False
+						Result := False
 					else
 						Result := args.item (an_index).type.is_cat_type (a_context, a_universe)
 					end
@@ -397,7 +510,7 @@ feature -- Status report
 						-- Internal error: an inconsistency has been
 						-- introduced in the AST since we relsolved
 						-- current anchored type.
-					-- Result := False
+					Result := False
 				end
 			else
 				a_class := a_context.base_class (a_universe)
@@ -410,13 +523,178 @@ feature -- Status report
 							-- Internal error: an inconsistency has been
 							-- introduced in the AST since we relsolved
 							-- current anchored type.
-						-- Result := False
+						Result := False
 					end
 				else
 						-- Internal error: an inconsistency has been
 						-- introduced in the AST since we relsolved
 						-- current anchored type.
-					-- Result := False
+					Result := False
+				end
+			end
+		end
+
+	is_actual_cat_type (i: INTEGER; a_context: ET_TYPE_CONTEXT; a_universe: ET_UNIVERSE): BOOLEAN is
+			-- Is actual generic parameter at index `i' in the base type of current
+			-- type a monomorphic type when viewed from `a_context' in `a_universe'?
+		local
+			a_class: ET_CLASS
+			seeded_feature: ET_FEATURE
+			a_query_type: ET_TYPE
+			args: ET_FORMAL_ARGUMENT_LIST
+			an_index: INTEGER
+		do
+			if seed = 0 then
+					-- Anchored type not resolved yet.
+				Result := False
+			elseif is_like_argument then
+				a_class := a_context.base_class (a_universe)
+				seeded_feature := a_class.seeded_feature (seed)
+				if seeded_feature /= Void then
+					args := seeded_feature.arguments
+					an_index := index
+					if args = Void or else an_index > args.count then
+							-- Internal error: an inconsistency has been
+							-- introduced in the AST since we relsolved
+							-- current anchored type.
+						Result := False
+					else
+						Result := args.item (an_index).type.is_actual_cat_type (i, a_context, a_universe)
+					end
+				else
+						-- Internal error: an inconsistency has been
+						-- introduced in the AST since we relsolved
+						-- current anchored type.
+					Result := False
+				end
+			else
+				a_class := a_context.base_class (a_universe)
+				seeded_feature := a_class.seeded_feature (seed)
+				if seeded_feature /= Void then
+					a_query_type := seeded_feature.type
+					if a_query_type /= Void then
+						Result := a_query_type.is_actual_cat_type (i, a_context, a_universe)
+					else
+							-- Internal error: an inconsistency has been
+							-- introduced in the AST since we relsolved
+							-- current anchored type.
+						Result := False
+					end
+				else
+						-- Internal error: an inconsistency has been
+						-- introduced in the AST since we relsolved
+						-- current anchored type.
+					Result := False
+				end
+			end
+		end
+
+	has_formal_type (i: INTEGER; a_context: ET_TYPE_CONTEXT; a_universe: ET_UNIVERSE): BOOLEAN is
+			-- Does the named type of current type contain the formal generic parameter
+			-- with index `i' when viewed from `a_context' in `a_universe'?
+		local
+			a_class: ET_CLASS
+			seeded_feature: ET_FEATURE
+			a_query_type: ET_TYPE
+			args: ET_FORMAL_ARGUMENT_LIST
+			an_index: INTEGER
+		do
+			if seed = 0 then
+					-- Anchored type not resolved yet.
+				Result := False
+			elseif is_like_argument then
+				a_class := a_context.base_class (a_universe)
+				seeded_feature := a_class.seeded_feature (seed)
+				if seeded_feature /= Void then
+					args := seeded_feature.arguments
+					an_index := index
+					if args = Void or else an_index > args.count then
+							-- Internal error: an inconsistency has been
+							-- introduced in the AST since we relsolved
+							-- current anchored type.
+						Result := False
+					else
+						Result := args.item (an_index).type.has_formal_type (i, a_context, a_universe)
+					end
+				else
+						-- Internal error: an inconsistency has been
+						-- introduced in the AST since we relsolved
+						-- current anchored type.
+					Result := False
+				end
+			else
+				a_class := a_context.base_class (a_universe)
+				seeded_feature := a_class.seeded_feature (seed)
+				if seeded_feature /= Void then
+					a_query_type := seeded_feature.type
+					if a_query_type /= Void then
+						Result := a_query_type.has_formal_type (i, a_context, a_universe)
+					else
+							-- Internal error: an inconsistency has been
+							-- introduced in the AST since we relsolved
+							-- current anchored type.
+						Result := False
+					end
+				else
+						-- Internal error: an inconsistency has been
+						-- introduced in the AST since we relsolved
+						-- current anchored type.
+					Result := False
+				end
+			end
+		end
+
+	has_formal_types (a_context: ET_TYPE_CONTEXT; a_universe: ET_UNIVERSE): BOOLEAN is
+			-- Does the named type of current type contain a formal generic parameter
+			-- when viewed from `a_context' in `a_universe'?
+		local
+			a_class: ET_CLASS
+			seeded_feature: ET_FEATURE
+			a_query_type: ET_TYPE
+			args: ET_FORMAL_ARGUMENT_LIST
+			an_index: INTEGER
+		do
+			if seed = 0 then
+					-- Anchored type not resolved yet.
+				Result := False
+			elseif is_like_argument then
+				a_class := a_context.base_class (a_universe)
+				seeded_feature := a_class.seeded_feature (seed)
+				if seeded_feature /= Void then
+					args := seeded_feature.arguments
+					an_index := index
+					if args = Void or else an_index > args.count then
+							-- Internal error: an inconsistency has been
+							-- introduced in the AST since we relsolved
+							-- current anchored type.
+						-- Result := False
+					else
+						Result := args.item (an_index).type.has_formal_types (a_context, a_universe)
+					end
+				else
+						-- Internal error: an inconsistency has been
+						-- introduced in the AST since we relsolved
+						-- current anchored type.
+					Result := False
+				end
+			else
+				a_class := a_context.base_class (a_universe)
+				seeded_feature := a_class.seeded_feature (seed)
+				if seeded_feature /= Void then
+					a_query_type := seeded_feature.type
+					if a_query_type /= Void then
+						Result := a_query_type.has_formal_types (a_context, a_universe)
+					else
+							-- Internal error: an inconsistency has been
+							-- introduced in the AST since we relsolved
+							-- current anchored type.
+						Result := False
+					end
+				else
+						-- Internal error: an inconsistency has been
+						-- introduced in the AST since we relsolved
+						-- current anchored type.
+					Result := False
 				end
 			end
 		end
@@ -478,10 +756,10 @@ feature -- Status report
 		end
 
 	has_qualified_type (a_context: ET_TYPE_CONTEXT; a_universe: ET_UNIVERSE): BOOLEAN is
-			-- Is current type a qualified anchored type (other than of
-			-- the form 'like Current.b') when viewed from `a_context',
-			-- or do its actual generic parameters (recursively)
-			-- contain qualified types?
+			-- Is the named type of current type a qualified anchored type (other
+			-- than of the form 'like Current.b') when viewed from `a_context',
+			-- or do its actual generic parameters (recursively) contain qualified
+			-- types?
 		local
 			a_class: ET_CLASS
 			seeded_feature: ET_FEATURE

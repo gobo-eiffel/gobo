@@ -24,7 +24,7 @@ creation
 
 	execute
 
-feature -- Processing
+feature -- Execution
 
 	execute is
 			-- Start 'gelint' execution.
@@ -41,9 +41,6 @@ feature -- Processing
 			an_xace_variables: ET_XACE_VARIABLES
 			gobo_eiffel: STRING
 			a_universe: ET_UNIVERSE
-			all_breaks: BOOLEAN
-			is_verbose: BOOLEAN
-			is_cat: BOOLEAN
 			i, nb: INTEGER
 			arg: STRING
 		do
@@ -57,16 +54,18 @@ feature -- Processing
 					is_verbose := True
 				elseif equal (arg, "--cat") then
 					is_cat := True
+				elseif equal (arg, "--flat") then
+					is_flat := True
 				elseif i = nb then
 					a_filename := arg
 				else
-					std.error.put_line ("usage: gelint [--verbose][--all_breaks][--cat] filename")
+					std.error.put_line ("usage: gelint [--verbose][--all_breaks][--cat][--flat] filename")
 					Exceptions.die (1)
 				end
 				i := i + 1
 			end
 			if a_filename = Void then
-				std.error.put_line ("usage: gelint [--verbose][--all_breaks][--cat] filename")
+				std.error.put_line ("usage: gelint [--verbose][--all_breaks][--cat][--flat] filename")
 				Exceptions.die (1)
 			else
 				create a_file.make (a_filename)
@@ -112,17 +111,6 @@ feature -- Processing
 						end
 					end
 					if a_universe /= Void then
-						if not is_verbose then
-							a_universe.error_handler.set_info_null
-						else
-							a_universe.error_handler.set_compilers
-						end
-						if is_cat then
-							a_universe.set_cat_enabled (True)
-							a_universe.set_anchored_cat_features (False)
-						else
-							a_universe.set_cat_enabled (False)
-						end
 						process_universe (a_universe)
 					end
 				else
@@ -131,10 +119,20 @@ feature -- Processing
 					std.error.put_line ("%'")
 				end
 			end
-debug ("ericb")
-	io.read_line
-end
+			debug ("stop")
+				io.read_line
+			end
 		end
+
+feature -- Status report
+
+	all_breaks: BOOLEAN
+	is_verbose: BOOLEAN
+	is_cat: BOOLEAN
+	is_flat: BOOLEAN
+			-- Command-line options
+
+feature {NONE} -- Processing
 
 	process_universe (a_universe: ET_UNIVERSE) is
 			-- Process `a_universe'.
@@ -143,12 +141,25 @@ end
 		do
 --			a_universe.error_handler.set_compilers
 			a_universe.error_handler.set_ise
+			if not is_verbose then
+				a_universe.error_handler.set_info_null
+			else
+				a_universe.error_handler.set_compilers
+			end
 			a_universe.set_use_assign_keyword (True)
 			a_universe.set_use_attribute_keyword (False)
 			a_universe.set_use_convert_keyword (True)
 			a_universe.set_use_recast_keyword (True)
 			a_universe.set_use_reference_keyword (False)
-			a_universe.compile
+			if is_cat then
+				a_universe.set_cat_enabled (True)
+				a_universe.set_anchored_cat_features (False)
+			else
+				a_universe.set_cat_enabled (False)
+			end
+			if is_flat then
+			end
+			a_universe.compile (is_flat)
 		end
 
 end

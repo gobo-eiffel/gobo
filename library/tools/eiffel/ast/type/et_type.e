@@ -74,6 +74,22 @@ feature -- Access
 			deep_base_type: Result.is_named_type
 		end
 
+	base_type_actual (i: INTEGER; a_context: ET_TYPE_CONTEXT; a_universe: ET_UNIVERSE): ET_NAMED_TYPE is
+			-- `i'-th actual generic parameter of the base type of current
+			-- type when it appears in `a_context' in `a_universe'
+		require
+			a_context_not_void: a_context /= Void
+			a_context_valid: a_context.is_valid_context
+			a_universe_not_void: a_universe /= Void
+			-- no_cycle: no cycle in anchored types involved.
+			i_large_enough: i >= 1
+			i_small_enough: i <= base_type_actual_count (a_context, a_universe)
+		deferred
+		ensure
+			definition: Result = base_type (a_context, a_universe).actual_parameters.type (i)
+			named_type_named: Result.is_named_type
+		end
+
 	named_type (a_context: ET_TYPE_CONTEXT; a_universe: ET_UNIVERSE): ET_NAMED_TYPE is
 			-- Same as `base_type' except when current type is still
 			-- a formal generic parameter after having been replaced
@@ -98,6 +114,20 @@ feature -- Access
 			Result := Current
 		ensure then
 			definition: Result = Current
+		end
+
+feature -- Measurement
+
+	base_type_actual_count (a_context: ET_TYPE_CONTEXT; a_universe: ET_UNIVERSE): INTEGER is
+			-- Number of actual generic parameters of the base type of current type
+		require
+			a_context_not_void: a_context /= Void
+			a_context_valid: a_context.is_valid_context
+			a_universe_not_void: a_universe /= Void
+			-- no_cycle: no cycle in anchored types involved.
+		deferred
+		ensure
+			definition: Result = base_type (a_context, a_universe).actual_parameter_count
 		end
 
 feature -- Status report
@@ -138,6 +168,21 @@ feature -- Status report
 		deferred
 		end
 
+	is_actual_cat_type (i: INTEGER; a_context: ET_TYPE_CONTEXT; a_universe: ET_UNIVERSE): BOOLEAN is
+			-- Is actual generic parameter at index `i' in the base type of current
+			-- type a monomorphic type when viewed from `a_context' in `a_universe'?
+		require
+			a_context_not_void: a_context /= Void
+			a_context_valid: a_context.is_valid_context
+			a_universe_not_void: a_universe /= Void
+			-- no_cycle: no cycle in anchored types involved.
+			i_large_enough: i >= 1
+			i_small_enough: i <= base_type_actual_count (a_context, a_universe)
+		deferred
+		ensure
+			definition: Result = base_type_actual (i, a_context, a_universe).is_cat_type (a_context, a_universe)
+		end
+
 	has_anchored_type (a_context: ET_TYPE_CONTEXT; a_universe: ET_UNIVERSE): BOOLEAN is
 			-- Does current type contain an anchored type
 			-- when viewed from `a_context' in `a_universe'?
@@ -145,17 +190,32 @@ feature -- Status report
 			a_context_not_void: a_context /= Void
 			a_context_valid: a_context.is_valid_context
 			a_universe_not_void: a_universe /= Void
+			-- no_cycle: no cycle in anchored types involved.
 		do
 			-- Result := False
 		end
 
-	has_formal_type (a_context: ET_TYPE_CONTEXT; a_universe: ET_UNIVERSE): BOOLEAN is
-			-- Does current type contain a formal generic parameter
+	has_formal_type (i: INTEGER; a_context: ET_TYPE_CONTEXT; a_universe: ET_UNIVERSE): BOOLEAN is
+			-- Does the named type of current type contain the formal generic parameter
+			-- with index `i' when viewed from `a_context' in `a_universe'?
+		require
+			a_context_not_void: a_context /= Void
+			a_context_valid: a_context.is_valid_context
+			a_universe_not_void: a_universe /= Void
+			-- no_cycle: no cycle in anchored types involved.
+			i_large_enough: i >= 1
+		do
+			-- Result := False
+		end
+
+	has_formal_types (a_context: ET_TYPE_CONTEXT; a_universe: ET_UNIVERSE): BOOLEAN is
+			-- Does the named type of current type contain a formal generic parameter
 			-- when viewed from `a_context' in `a_universe'?
 		require
 			a_context_not_void: a_context /= Void
 			a_context_valid: a_context.is_valid_context
 			a_universe_not_void: a_universe /= Void
+			-- no_cycle: no cycle in anchored types involved.
 		do
 			-- Result := False
 		end
@@ -174,8 +234,8 @@ feature -- Status report
 		end
 
 	has_qualified_type (a_context: ET_TYPE_CONTEXT; a_universe: ET_UNIVERSE): BOOLEAN is
-			-- Is current type a qualified anchored type (other than of
-			-- the form 'like Current.b') when viewed from `a_context',
+			-- Is the named type of current type a qualified anchored type (other
+			-- than of the form 'like Current.b') when viewed from `a_context',
 			-- or do its actual generic parameters (recursively)
 			-- contain qualified types?
 		require

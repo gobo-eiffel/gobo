@@ -21,10 +21,6 @@ inherit
 			same_base_class_type,
 			conforms_from_class_type,
 			convertible_from_class_type,
-			is_named_type, is_base_type,
-			has_anchored_type,
-			has_formal_type,
-			has_qualified_type,
 			resolved_formal_parameters
 		end
 
@@ -89,15 +85,21 @@ feature -- Access
 			a_named_parameters: ET_ACTUAL_PARAMETER_LIST
 			a_generic_class_type: ET_GENERIC_CLASS_TYPE
 		do
-			Result := Current
-			an_actual_parameters := actual_parameters
-			if an_actual_parameters /= Void then
-				a_named_parameters := an_actual_parameters.named_types (a_context, a_universe)
-				if a_named_parameters /= an_actual_parameters then
-					create a_generic_class_type.make (type_mark, name, a_named_parameters, eiffel_class)
-					a_generic_class_type.set_cat_keyword (cat_keyword)
-					a_generic_class_type.set_unresolved_type (Current)
-					Result := a_generic_class_type
+			if a_context = Current then
+					-- The current type is its own context,
+					-- therefore it is its own a base type.
+				Result := Current
+			else
+				Result := Current
+				an_actual_parameters := actual_parameters
+				if an_actual_parameters /= Void then
+					a_named_parameters := an_actual_parameters.named_types (a_context, a_universe)
+					if a_named_parameters /= an_actual_parameters then
+						create a_generic_class_type.make (type_mark, name, a_named_parameters, eiffel_class)
+						a_generic_class_type.set_cat_keyword (cat_keyword)
+						a_generic_class_type.set_unresolved_type (Current)
+						Result := a_generic_class_type
+					end
 				end
 			end
 		end
@@ -162,48 +164,6 @@ feature -- Status report
 			end
 		end
 
-	is_named_type: BOOLEAN is
-			-- Is current type only made up of named types?
-		local
-			a_parameters: like actual_parameters
-			i, nb: INTEGER
-		do
-			Result := True
-			a_parameters := actual_parameters
-			if a_parameters /= Void then
-				nb := a_parameters.count
-				from i := 1 until i > nb loop
-					if not a_parameters.type (i).is_named_type then
-						Result := False
-						i := nb + 1 -- Jump out of the loop.
-					else
-						i := i + 1
-					end
-				end
-			end
-		end
-
-	is_base_type: BOOLEAN is
-			-- Is current type only made up of base types?
-		local
-			a_parameters: like actual_parameters
-			i, nb: INTEGER
-		do
-			Result := True
-			a_parameters := actual_parameters
-			if a_parameters /= Void then
-				nb := a_parameters.count
-				from i := 1 until i > nb loop
-					if not a_parameters.type (i).is_base_type then
-						Result := False
-						i := nb + 1 -- Jump out of the loop.
-					else
-						i := i + 1
-					end
-				end
-			end
-		end
-
 	is_expanded: BOOLEAN is
 			-- Is current type expanded?
 		do
@@ -232,44 +192,6 @@ feature -- Status report
 			-- `a_context' in `a_universe'?
 		do
 			Result := is_cat
-		end
-
-	has_anchored_type (a_context: ET_TYPE_CONTEXT; a_universe: ET_UNIVERSE): BOOLEAN is
-			-- Does current type contain an anchored type
-			-- when viewed from `a_context' in `a_universe'?
-		local
-			a_parameters: like actual_parameters
-		do
-			a_parameters := actual_parameters
-			if a_parameters /= Void then
-				Result := a_parameters.has_anchored_type (a_context, a_universe)
-			end
-		end
-
-	has_formal_type (a_context: ET_TYPE_CONTEXT; a_universe: ET_UNIVERSE): BOOLEAN is
-			-- Does current type contain a formal generic parameter
-			-- when viewed from `a_context' in `a_universe'?
-		local
-			a_parameters: like actual_parameters
-		do
-			a_parameters := actual_parameters
-			if a_parameters /= Void then
-				Result := a_parameters.has_formal_type (a_context, a_universe)
-			end
-		end
-
-	has_qualified_type (a_context: ET_TYPE_CONTEXT; a_universe: ET_UNIVERSE): BOOLEAN is
-			-- Is current type a qualified anchored type (other than of
-			-- the form 'like Current.b') when viewed from `a_context',
-			-- or do its actual generic parameters (recursively)
-			-- contain qualified types?
-		local
-			a_parameters: like actual_parameters
-		do
-			a_parameters := actual_parameters
-			if a_parameters /= Void then
-				Result := a_parameters.has_qualified_type (a_context, a_universe)
-			end
 		end
 
 feature -- Comparison

@@ -17,6 +17,8 @@ inherit
 	ET_LIKE_TYPE
 		redefine
 			named_type,
+			has_formal_type,
+			has_formal_types,
 			has_qualified_type,
 			same_syntactical_like_current,
 			same_named_bit_type,
@@ -77,6 +79,13 @@ feature -- Access
 			Result := a_context.base_type (a_universe)
 		end
 
+	base_type_actual (i: INTEGER; a_context: ET_TYPE_CONTEXT; a_universe: ET_UNIVERSE): ET_NAMED_TYPE is
+			-- `i'-th actual generic parameter of the base type of current
+			-- type when it appears in `a_context' in `a_universe'
+		do
+			Result := a_context.base_type_actual (i, a_universe)
+		end
+
 	named_type (a_context: ET_TYPE_CONTEXT; a_universe: ET_UNIVERSE): ET_NAMED_TYPE is
 			-- Same as `base_type' except when current type is still
 			-- a formal generic parameter after having been replaced
@@ -107,6 +116,14 @@ feature -- Access
 			-- Break which appears just after current node
 		do
 			Result := current_keyword.break
+		end
+
+feature -- Measurement
+
+	base_type_actual_count (a_context: ET_TYPE_CONTEXT; a_universe: ET_UNIVERSE): INTEGER is
+			-- Number of actual generic parameters of the base type of current type
+		do
+			Result := a_context.base_type_actual_count (a_universe)
 		end
 
 feature -- Setting
@@ -146,14 +163,35 @@ feature -- Status report
 		do
 				-- Unless we can declare the base class as frozen,
 				-- 'like Current' is not monomorphic.
-			Result := True
+			Result := a_context.is_cat_type (a_universe)
+		end
+
+	is_actual_cat_type (i: INTEGER; a_context: ET_TYPE_CONTEXT; a_universe: ET_UNIVERSE): BOOLEAN is
+			-- Is actual generic parameter at index `i' in the base type of current
+			-- type a monomorphic type when viewed from `a_context' in `a_universe'?
+		do
+			Result := a_context.is_actual_cat_type (i, a_universe)
+		end
+
+	has_formal_type (i: INTEGER; a_context: ET_TYPE_CONTEXT; a_universe: ET_UNIVERSE): BOOLEAN is
+			-- Does the named type of current type contain the formal generic parameter
+			-- with index `i' when viewed from `a_context' in `a_universe'?
+		do
+			Result := a_context.type.has_formal_type (i, a_context.context, a_universe)
+		end
+
+	has_formal_types (a_context: ET_TYPE_CONTEXT; a_universe: ET_UNIVERSE): BOOLEAN is
+			-- Does the named type of current type contain a formal generic parameter
+			-- when viewed from `a_context' in `a_universe'?
+		do
+			Result := a_context.type.has_formal_types (a_context.context, a_universe)
 		end
 
 	has_qualified_type (a_context: ET_TYPE_CONTEXT; a_universe: ET_UNIVERSE): BOOLEAN is
-			-- Is current type a qualified anchored type (other than of
-			-- the form 'like Current.b') when viewed from `a_context',
-			-- or do its actual generic parameters (recursively)
-			-- contain qualified types?
+			-- Is the named type of current type a qualified anchored type (other
+			-- than of the form 'like Current.b') when viewed from `a_context',
+			-- or do its actual generic parameters (recursively) contain qualified
+			-- types?
 		do
 			Result := a_context.type.has_qualified_type (a_context.context, a_universe)
 		end

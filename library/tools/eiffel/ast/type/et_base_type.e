@@ -18,7 +18,13 @@ inherit
 		undefine
 			type
 		redefine
-			direct_base_class, is_base_type,
+			is_named_type,
+			is_base_type,
+			has_anchored_type,
+			has_formal_type,
+			has_formal_types,
+			has_qualified_type,
+			direct_base_class,
 			conforms_from_bit_type,
 			conforms_from_formal_parameter_type,
 			conforms_from_tuple_type,
@@ -29,7 +35,11 @@ inherit
 	ET_TYPE_CONTEXT
 		rename
 			base_class as context_base_class,
-			base_type as context_base_type
+			base_type as context_base_type,
+			base_type_actual as context_base_type_actual,
+			base_type_actual_count as context_base_type_actual_count,
+			is_cat_type as context_is_cat_type,
+			is_actual_cat_type as context_is_actual_cat_type
 		redefine
 			has_context, root_context, is_root_context,
 			context_base_class, context_base_type
@@ -54,12 +64,146 @@ feature -- Access
 			-- Result := Void
 		end
 
+	base_type_actual (i: INTEGER; a_context: ET_TYPE_CONTEXT; a_universe: ET_UNIVERSE): ET_NAMED_TYPE is
+			-- `i'-th actual generic parameter of the base type of current
+			-- type when it appears in `a_context' in `a_universe'
+		local
+			an_actual: ET_TYPE
+		do
+			an_actual := actual_parameters.type (i)
+			if a_context = Current then
+					-- The current type is its own context,
+					-- therefore it is its own base type (i.e all
+					-- its actual generic parameters are named).
+				Result ?= an_actual
+			end
+			if Result = Void then
+				Result := an_actual.named_type (a_context, a_universe)
+			end
+		end
+
+feature -- Measurement
+
+	base_type_actual_count (a_context: ET_TYPE_CONTEXT; a_universe: ET_UNIVERSE): INTEGER is
+			-- Number of actual generic parameters of the base type of current type
+		do
+			Result := actual_parameter_count
+		end
+
+	actual_parameter_count: INTEGER is
+			-- Number of generic parameters
+		local
+			l_actual_parameters: ET_ACTUAL_PARAMETER_LIST
+		do
+			l_actual_parameters := actual_parameters
+			if l_actual_parameters /= Void then
+				Result := l_actual_parameters.count
+			end
+		ensure
+			non_negative_count: Result >= 0
+			generic: actual_parameters /= Void implies Result = actual_parameters.count
+			non_generic: actual_parameters = Void implies Result = 0
+		end
+
 feature -- Status report
+
+	is_named_type: BOOLEAN is
+			-- Is current type only made up of named types?
+		local
+			a_parameters: like actual_parameters
+			i, nb: INTEGER
+		do
+			Result := True
+			a_parameters := actual_parameters
+			if a_parameters /= Void then
+				nb := a_parameters.count
+				from i := 1 until i > nb loop
+					if not a_parameters.type (i).is_named_type then
+						Result := False
+						i := nb + 1 -- Jump out of the loop.
+					else
+						i := i + 1
+					end
+				end
+			end
+		end
 
 	is_base_type: BOOLEAN is
 			-- Is current type only made up of base types?
+		local
+			a_parameters: like actual_parameters
+			i, nb: INTEGER
 		do
 			Result := True
+			a_parameters := actual_parameters
+			if a_parameters /= Void then
+				nb := a_parameters.count
+				from i := 1 until i > nb loop
+					if not a_parameters.type (i).is_base_type then
+						Result := False
+						i := nb + 1 -- Jump out of the loop.
+					else
+						i := i + 1
+					end
+				end
+			end
+		end
+
+	is_actual_cat_type (i: INTEGER; a_context: ET_TYPE_CONTEXT; a_universe: ET_UNIVERSE): BOOLEAN is
+			-- Is actual generic parameter at index `i' in the base type of current
+			-- type a monomorphic type when viewed from `a_context' in `a_universe'?
+		do
+			Result := actual_parameters.type (i).is_cat_type (a_context, a_universe)
+		end
+
+	has_anchored_type (a_context: ET_TYPE_CONTEXT; a_universe: ET_UNIVERSE): BOOLEAN is
+			-- Does current type contain an anchored type
+			-- when viewed from `a_context' in `a_universe'?
+		local
+			a_parameters: like actual_parameters
+		do
+			a_parameters := actual_parameters
+			if a_parameters /= Void then
+				Result := a_parameters.has_anchored_type (a_context, a_universe)
+			end
+		end
+
+	has_formal_type (i: INTEGER; a_context: ET_TYPE_CONTEXT; a_universe: ET_UNIVERSE): BOOLEAN is
+			-- Does the named type of current type contain the formal generic parameter
+			-- with index `i' when viewed from `a_context' in `a_universe'?
+		local
+			a_parameters: like actual_parameters
+		do
+			a_parameters := actual_parameters
+			if a_parameters /= Void then
+				Result := a_parameters.has_formal_type (i, a_context, a_universe)
+			end
+		end
+
+	has_formal_types (a_context: ET_TYPE_CONTEXT; a_universe: ET_UNIVERSE): BOOLEAN is
+			-- Does the named type of current type contain a formal generic parameter
+			-- when viewed from `a_context' in `a_universe'?
+		local
+			a_parameters: like actual_parameters
+		do
+			a_parameters := actual_parameters
+			if a_parameters /= Void then
+				Result := a_parameters.has_formal_types (a_context, a_universe)
+			end
+		end
+
+	has_qualified_type (a_context: ET_TYPE_CONTEXT; a_universe: ET_UNIVERSE): BOOLEAN is
+			-- Is the named type of current type a qualified anchored type (other
+			-- than of the form 'like Current.b') when viewed from `a_context',
+			-- or do its actual generic parameters (recursively) contain qualified
+			-- types?
+		local
+			a_parameters: like actual_parameters
+		do
+			a_parameters := actual_parameters
+			if a_parameters /= Void then
+				Result := a_parameters.has_qualified_type (a_context, a_universe)
+			end
 		end
 
 feature {ET_TYPE} -- Conformance

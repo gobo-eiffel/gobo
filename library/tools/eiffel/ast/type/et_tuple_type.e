@@ -18,16 +18,12 @@ inherit
 		rename
 			name as tuple_keyword
 		redefine
-			has_anchored_type,
-			has_formal_type,
-			has_qualified_type,
 			same_syntactical_tuple_type,
 			same_named_tuple_type,
 			same_base_tuple_type,
 			conforms_from_class_type,
 			conforms_from_tuple_type,
 			tuple_keyword, actual_parameters,
-			is_named_type, is_base_type,
 			resolved_formal_parameters
 		end
 
@@ -85,13 +81,19 @@ feature -- Access
 			an_actual_parameters: like actual_parameters
 			a_named_parameters: ET_ACTUAL_PARAMETER_LIST
 		do
-			Result := Current
-			an_actual_parameters := actual_parameters
-			if an_actual_parameters /= Void then
-				a_named_parameters := an_actual_parameters.named_types (a_context, a_universe)
-				if a_named_parameters /= an_actual_parameters then
-					create Result.make (a_named_parameters)
-					Result.set_tuple_keyword (tuple_keyword)
+			if a_context = Current then
+					-- The current type is its own context,
+					-- therefore it is its own a base type.
+				Result := Current
+			else
+				Result := Current
+				an_actual_parameters := actual_parameters
+				if an_actual_parameters /= Void then
+					a_named_parameters := an_actual_parameters.named_types (a_context, a_universe)
+					if a_named_parameters /= an_actual_parameters then
+						create Result.make (a_named_parameters)
+						Result.set_tuple_keyword (tuple_keyword)
+					end
 				end
 			end
 		end
@@ -127,48 +129,6 @@ feature -- Setting
 
 feature -- Status report
 
-	is_named_type: BOOLEAN is
-			-- Is current type only made up of named types?
-		local
-			a_parameters: like actual_parameters
-			i, nb: INTEGER
-		do
-			Result := True
-			a_parameters := actual_parameters
-			if a_parameters /= Void then
-				nb := a_parameters.count
-				from i := 1 until i > nb loop
-					if not a_parameters.type (i).is_named_type then
-						Result := False
-						i := nb + 1 -- Jump out of the loop.
-					else
-						i := i + 1
-					end
-				end
-			end
-		end
-
-	is_base_type: BOOLEAN is
-			-- Is current type only made up of base types?
-		local
-			a_parameters: like actual_parameters
-			i, nb: INTEGER
-		do
-			Result := True
-			a_parameters := actual_parameters
-			if a_parameters /= Void then
-				nb := a_parameters.count
-				from i := 1 until i > nb loop
-					if not a_parameters.type (i).is_base_type then
-						Result := False
-						i := nb + 1 -- Jump out of the loop.
-					else
-						i := i + 1
-					end
-				end
-			end
-		end
-
 	is_type_expanded (a_context: ET_TYPE_CONTEXT; a_universe: ET_UNIVERSE): BOOLEAN is
 			-- Is current type expanded when viewed from
 			-- `a_context' in `a_universe'?
@@ -181,44 +141,6 @@ feature -- Status report
 			-- `a_context' in `a_universe'?
 		do
 			Result := True
-		end
-
-	has_anchored_type (a_context: ET_TYPE_CONTEXT; a_universe: ET_UNIVERSE): BOOLEAN is
-			-- Does current type contain an anchored type
-			-- when viewed from `a_context' in `a_universe'?
-		local
-			a_parameters: like actual_parameters
-		do
-			a_parameters := actual_parameters
-			if a_parameters /= Void then
-				Result := a_parameters.has_anchored_type (a_context, a_universe)
-			end
-		end
-
-	has_formal_type (a_context: ET_TYPE_CONTEXT; a_universe: ET_UNIVERSE): BOOLEAN is
-			-- Does current type contain a formal generic parameter
-			-- when viewed from `a_context' in `a_universe'?
-		local
-			a_parameters: like actual_parameters
-		do
-			a_parameters := actual_parameters
-			if a_parameters /= Void then
-				Result := a_parameters.has_formal_type (a_context, a_universe)
-			end
-		end
-
-	has_qualified_type (a_context: ET_TYPE_CONTEXT; a_universe: ET_UNIVERSE): BOOLEAN is
-			-- Is current type a qualified anchored type (other than of
-			-- the form 'like Current.b') when viewed from `a_context',
-			-- or do its actual generic parameters (recursively)
-			-- contain qualified types?
-		local
-			a_parameters: like actual_parameters
-		do
-			a_parameters := actual_parameters
-			if a_parameters /= Void then
-				Result := a_parameters.has_qualified_type (a_context, a_universe)
-			end
 		end
 
 feature -- Comparison
