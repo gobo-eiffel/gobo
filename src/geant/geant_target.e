@@ -16,12 +16,18 @@ class GEANT_TARGET
 
 inherit
 
-	GEANT_ELEMENT_NAMES
-		export {NONE} all end
 	KL_SHARED_EXCEPTIONS
-	GEANT_SHARED_PROPERTIES
-		export {NONE} all end
 	KL_SHARED_FILE_SYSTEM
+	GEANT_ELEMENT_NAMES
+		export
+			{NONE} all
+		end
+
+	GEANT_SHARED_PROPERTIES
+		export
+			{NONE} all
+		end
+
 
 creation
 
@@ -116,6 +122,45 @@ feature -- Setting
 			is_executed_set: is_executed = a_is_executed
 		end
 
+feature -- Status report
+
+	is_enabled: BOOLEAN is
+			-- Do conditions allow to execute target?
+			-- conditions is boolean of the expression
+			-- "(xml attribute 'if') and not
+			-- (xml attribute 'unless')"
+			-- if xml attribute 'if' is missing it is assumed to be `True'
+			-- if xml attribute 'unless' is missing it is assumed to be `False'
+		local
+			if_condition: BOOLEAN
+			unless_condition: BOOLEAN
+			ucs: UC_STRING
+		do
+				-- Set default execution conditions:
+			if_condition := true
+			unless_condition := false
+
+				-- Look for an 'if' XML attribute
+			if target_element.has_attribute (If_attribute_name) then
+				ucs := target_element.attribute_value_by_name (If_attribute_name)
+				if_condition := project.variables.boolean_condition_value (ucs.out)
+				debug ("geant")
+					print (" if    : '" + ucs.out + "'=" + if_condition.out + "%N")
+				end
+			end
+
+				-- Look for an 'unless' XML attribute
+			if target_element.has_attribute (Unless_attribute_name) then
+				ucs := target_element.attribute_value_by_name (Unless_attribute_name)
+				unless_condition := project.variables.boolean_condition_value (ucs.out)
+				debug ("geant")
+					print (" unless: '" + ucs.out + "'=" + unless_condition.out + "%N")
+				end
+			end
+
+			Result := if_condition and not unless_condition
+		end
+
 feature -- Processing
 
 	execute  is
@@ -125,48 +170,24 @@ feature -- Processing
 			i, nb: INTEGER
 			an_element: GEANT_ELEMENT
 			a_task: GEANT_TASK
-			ucs: UC_STRING
-			if_condition: BOOLEAN
-			unless_condition: BOOLEAN
-			old_cwd: STRING
-			new_cwd: STRING
+			a_old_target_cwd: STRING
+			a_new_target_cwd: STRING
+			a_old_task_cwd: STRING
+			a_new_task_cwd: STRING
 		do
-				-- Set default target execution conditions:
-			if_condition := true
-			unless_condition := false
-
-				-- Look for an 'if' XML attribute
-			if target_element.has_attribute (If_attribute_name) then
-				ucs := target_element.attribute_value_by_name (If_attribute_name)
-				if_condition := boolean_condition_value (ucs.out)
-				if project.verbose then
-					print (" if    : '" + ucs.out + "'=" + if_condition.out + "%N")
-				end
-			end
-
-				-- Look for an 'unless' XML attribute
-			if target_element.has_attribute (Unless_attribute_name) then
-				ucs := target_element.attribute_value_by_name (Unless_attribute_name)
-				unless_condition := boolean_condition_value (ucs.out)
-				if project.verbose then
-					print (" unless: '" + ucs.out + "'=" + unless_condition.out + "%N")
-				end
-			end
-
 			children := target_element.children
 			nb := children.count
-			if if_condition and not unless_condition then
+			if is_enabled then
 					-- change to the specified directory if "dir" attribue is provided:
 				if target_element.has_attribute (Dir_attribute_name) then
-					new_cwd := project.variables.interpreted_string (
+					a_new_target_cwd := project.variables.interpreted_string (
 						target_element.attribute_value_by_name (Dir_attribute_name).out)
-					if project.verbose then
-						print (" changing to directory: '" + new_cwd + "'%N")
+					debug ("geant")
+						print (" changing to directory: '" + a_new_target_cwd + "'%N")
 					end
-					old_cwd := file_system.current_working_directory
-					file_system.set_current_working_directory (new_cwd)
+					a_old_target_cwd := file_system.current_working_directory
+					file_system.set_current_working_directory (a_new_target_cwd)
 				end
-
 
 				from
 					if description /= Void then
@@ -175,7 +196,7 @@ feature -- Processing
 						i := 1
 					end
 				until
-					i > nb or not if_condition or unless_condition
+					i > nb or not is_enabled
 				loop
 					an_element := children.item (i)
 						-- Dispatch tasks:
@@ -242,6 +263,9 @@ feature -- Processing
 					elseif an_element.name.is_equal (Xslt_task_name) then
 							-- xslt
 						!GEANT_XSLT_TASK! a_task.make_from_element (project, an_element)
+					elseif an_element.name.is_equal (Outofdate_task_name) then
+							-- outofdate
+						!GEANT_OUT_OF_DATE_TASK! a_task.make_from_element (project, an_element)
 					else
 							-- Default:
 						a_task := Void
@@ -252,16 +276,39 @@ feature -- Processing
 					elseif not a_task.is_executable then
 						print ("WARNING: cannot execute task : " + an_element.name.out + "%N")
 					else
-						a_task.execute
+						if a_task.is_enabled then
+								-- change to task directory if "dir" attribute is provided:
+							if a_task.element.has_attribute (a_task.Dir_attribute_name) then
+								a_new_task_cwd := project.variables.interpreted_string (
+									a_task.element.attribute_value_by_name (a_task.Dir_attribute_name).out)
+								debug ("geant")
+									print (" changing to directory: '" + a_new_task_cwd + "'%N")
+								end
+								a_old_task_cwd := file_system.current_working_directory
+								file_system.set_current_working_directory (a_new_task_cwd)
+							end
+
+							a_task.execute
+
+								-- change back to previous directory if "dir" attribute is provided:
+							if a_task.element.has_attribute (a_task.Dir_attribute_name) then
+								debug ("geant")
+									print (" changing to directory: '" + a_old_task_cwd + "'%N")
+								end
+								file_system.set_current_working_directory (a_old_task_cwd)
+							end
+						else
+--!!						print ("task is disabled%N")
+						end
 					end
 					i := i + 1
 				end -- from
 
 				if target_element.has_attribute (Dir_attribute_name) then
-					if project.verbose then
-						print (" changing to directory: '" + old_cwd + "'%N")
+					debug ("geant")
+						print (" changing to directory: '" + a_old_target_cwd + "'%N")
 					end
-					file_system.set_current_working_directory (old_cwd)
+					file_system.set_current_working_directory (a_old_target_cwd)
 
 				end
 				
@@ -284,7 +331,7 @@ feature -- Processing
 					-- Check for targets separated by commas:
 				a_dependent_targets := string_tokens (a_value, ',')
 
-				if project.verbose then
+				debug ("geant")
 					show_dependent_targets (a_dependent_targets)
 				end
 
@@ -295,68 +342,13 @@ feature -- Processing
 					if a_dependent_target /= Void then
 						Result.force (a_dependent_target)
 					else
-						print ("geant error: unknown dependent target '" + a_value.out + "'%N")
-						print ("%NBUILD FAILED !%N")
-						Exceptions.die (1)
+						exit_application (1, "geant error: unknown dependent target '" + a_value.out + "'%N")
 					end
 					i := i + 1
 				end
 			end
 		ensure
 			dependent_targets_not_void: Result /= Void
-		end
-
-	boolean_condition_value (a_condition: STRING): BOOLEAN is
-			-- Is `condition' True?;
-			-- used for "if" and "unless" attributes;
-			-- possible forms:
-			-- "$foo": True if variable `foo' is defined
-			-- "${foo}": True if variable `foo' is defined
-			-- "$foo=bar" | "${foo}=bar" | "bar=$foo" | "bar=${foo}":
-			--             True if variable `foo' is defined and its value is "bar"
-			-- if `a_condition' is not in either form Result is `False'
-		require
-			condition_not_void: a_condition /= Void
-		local
-			a_tokens: DS_ARRAYED_LIST [UC_STRING]
-			s: STRING
-			s2: STRING
-			ucs: UC_STRING
-		do
-			!! ucs.make_from_string (a_condition)
-			a_tokens := string_tokens (ucs, '=')
-			if a_tokens.count = 1 then
-					-- a_condition should be in form "$foo";
-					-- check if $foo is defined
-				s := a_tokens.item (1).out
-				if s.count > 3 and then
-					s.item (1) = '$' and then s.item (2) = '{' and then
-					s.item (s.count) = '}' then
-						-- handle "${bar}" form:
-					s := s.substring (3, s.count - 1)
-					Result := project.variables.has_variable (s)
-				elseif s.count > 1 and then s.item (1) = '$' and then s.item (2) /= '{' then
-						-- handle "$bar" form:
-					s.tail (s.count - 1)
-					Result := project.variables.has_variable (s)
-				else
-					print ("geant: incorrect conditional: '" + a_condition + "'%N")
-					print ("%NBUILD FAILED !%N")
-					Exceptions.die (1)
-				end
-			elseif a_tokens.count = 2 then
-					-- a_condition should be in form "$foo=bar";
-					-- check if $foo equals "bar"
-				s := a_tokens.item (1).out
-				s := project.variables.interpreted_string (s)
-				s2 := a_tokens.item (2).out
-				s2 := project.variables.interpreted_string (s2)
-				Result := s.is_equal (s2)
-			else
-				print ("geant: incorrect conditional: '" + a_condition + "'%N")
-				print ("%NBUILD FAILED !%N")
-				Exceptions.die (1)
-			end
 		end
 
 	show_dependent_targets (a_dependent_targets: DS_ARRAYED_LIST [UC_STRING]) is
@@ -369,80 +361,6 @@ feature -- Processing
 				i := i + 1
 			end
 			print ("=================%N")
-		end
-
-	string_tokens (a_string: UC_STRING; a_delimiter: CHARACTER): DS_ARRAYED_LIST [UC_STRING] is
-			-- Strings delimited by `a_delimiter' in `a_string';
-			-- Candidate for STRING_ROUTINES
-		require
-			string_not_void: a_string /= Void
-		local
-			a_uc_delimiter: UC_CHARACTER
-			s: UC_STRING
-			ucs: UC_STRING
-			p_start: INTEGER
-			p_end: INTEGER
-			nice_string: BOOLEAN
-		do
-			s := clone (a_string)
-			!! Result.make (5)
-			a_uc_delimiter.make_from_character (a_delimiter)
-
-				-- Cleanup String:
-			from
-				s.left_adjust
-				s.right_adjust
-			until
-				nice_string
-			loop
-				nice_string := True
-				if s.count > 0 then
-					if s.item (1) = a_uc_delimiter then
-						s.tail (s.count - 1)
-						nice_string := False
-					end
-				end
-	
-				if s.count > 0 then
-					if s.item (s.count) = a_uc_delimiter then
-						s.head (s.count - 1)
-						nice_string := False
-					end
-				end
-
-			end
-
-				-- Find Tokens:
-			from 
-				p_start := 1
-				p_end := s.index_of (a_uc_delimiter, p_start)
-			until
-				p_end = 0 or p_start > s.count
-			loop
-				ucs := s.substring (p_start, p_end - 1)
-				ucs.left_adjust
-				ucs.right_adjust
-				if ucs.count > 0 then
-					Result.force_last (ucs)
-				end
-				p_start := p_end + 1
-
-				if p_start <= s.count then
-					p_end := s.index_of (a_uc_delimiter, p_start)
-				end
-			end
-
-				-- Append last token:
-			if p_start <= s.count then
-				ucs := s.substring (p_start, s.count)
-				ucs.left_adjust
-				ucs.right_adjust
-				if ucs.count > 0 then
-					Result.force_last (ucs)
-				end
-			end
-		ensure
-			string_tokens_not_void: Result /= Void
 		end
 
 
