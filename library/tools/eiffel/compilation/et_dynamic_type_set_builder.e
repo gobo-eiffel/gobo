@@ -173,7 +173,11 @@ feature -- Generation
 				dynamic_type_sets.force_last (l_dynamic_type_sets.item (i))
 				i := i + 1
 			end
-			check_feature_validity (a_feature.static_feature, a_current_dynamic_type.base_type)
+			if a_feature.is_precursor then
+				check_precursor_feature_validity (a_feature.static_feature, a_current_dynamic_type.base_type)
+			else
+				check_feature_validity (a_feature.static_feature, a_current_dynamic_type.base_type)
+			end
 			nb := dynamic_type_sets.count
 			create l_dynamic_type_sets.make_with_capacity (nb)
 			from i := nb until i < 1 loop

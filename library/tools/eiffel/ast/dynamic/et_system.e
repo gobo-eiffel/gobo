@@ -393,7 +393,7 @@ feature -- Compilation
 				universe.print_time (dt1, "Degree 3")
 				dt1 := l_clock.system_clock.date_time_now
 			end
-			create l_builder.make (Current)
+			l_builder := dynamic_type_set_builder
 			l_cursor := universe.classes.new_cursor
 			from l_cursor.start until l_cursor.after loop
 				l_class := l_cursor.item

@@ -171,8 +171,7 @@ feature -- Features
 			l_dynamic_feature: ET_DYNAMIC_FEATURE
 		do
 			if features = Void then
---				create features.make_with_capacity (base_class.features.count)
-				create features.make_with_capacity (10)
+				create features.make_with_capacity (base_class.features.count)
 				Result := new_dynamic_feature (a_feature, a_system)
 				features.put_first (Result)
 			else

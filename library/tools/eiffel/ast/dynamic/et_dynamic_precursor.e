@@ -18,6 +18,7 @@ inherit
 		rename
 			make as make_feature
 		redefine
+			is_precursor,
 			dynamic_precursor
 		end
 
@@ -46,6 +47,11 @@ feature {NONE} -- Initialization
 			parent_type_set: parent_type = a_parent_type
 			current_feature_set: current_feature = a_current_feature
 		end
+
+feature -- Status report
+
+	is_precursor: BOOLEAN is True
+			-- Is current feature a precursor?
 
 feature -- Access
 

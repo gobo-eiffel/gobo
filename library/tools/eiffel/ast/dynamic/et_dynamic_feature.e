@@ -284,6 +284,12 @@ feature -- Status report
 			definition: Result = (result_type = Void)
 		end
 
+	is_precursor: BOOLEAN is
+			-- Is current feature a precursor?
+		do
+			-- Result := False
+		end
+
 feature -- Status setting
 
 	set_built (b: BOOLEAN) is

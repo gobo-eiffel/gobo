@@ -199,8 +199,10 @@ feature -- Validity checking
 			if a_current_class.has_interface_error then
 				set_fatal_error
 			else
+					-- Check that this feature has already been checked in the
+					-- context of its implementation class.
 				a_class_impl := a_feature.implementation_class
-				if a_class_impl /= a_current_class then
+				if a_class_impl /= a_current_type then
 					a_feature_impl := a_feature.implementation_feature
 					if a_feature_impl.implementation_checked then
 						if a_feature_impl.has_implementation_error then
@@ -227,7 +229,7 @@ feature -- Validity checking
 						set_fatal_error
 						error_handler.report_giabr_error
 					end
-					if current_class = a_class_impl then
+					if current_type = a_class_impl then
 						a_feature.set_implementation_checked
 						if has_fatal_error then
 							a_feature.set_implementation_error
@@ -239,6 +241,19 @@ feature -- Validity checking
 					feature_impl := old_feature_impl
 				end
 			end
+		end
+
+	check_precursor_feature_validity (a_feature: ET_FEATURE; a_current_type: ET_BASE_TYPE) is
+			-- Check validity of `a_feature' which is the precursor of a feature from `a_current_type'.
+			-- Set `has_fatal_error' if a fatal error occurred.
+		require
+			a_feature_not_void: a_feature /= Void
+			a_current_type_not_void: a_current_type /= Void
+			a_current_type_valid: a_current_type.is_valid_context
+		do
+			in_precursor := True
+			check_feature_validity (a_feature, a_current_type)
+			in_precursor := False
 		end
 
 	check_instructions_validity (a_compound: ET_COMPOUND; a_feature_impl, a_current_feature: ET_FEATURE; a_current_type: ET_BASE_TYPE) is
@@ -1389,16 +1404,18 @@ feature {NONE} -- Type checking
 			a_class_type: ET_CLASS_TYPE
 		do
 			has_fatal_error := False
-			type_checker.check_type_validity (a_type, feature_impl, current_type)
-			if type_checker.has_fatal_error then
-				set_fatal_error
-			else
-				if a_type.is_type_expanded (current_type, universe) then
-					a_class_type ?= a_type.named_type (current_type, universe)
-					if a_class_type /= Void then
-						type_checker.check_creation_type_validity (a_class_type, feature_impl, current_type, a_type.position)
-						if type_checker.has_fatal_error then
-							set_fatal_error
+			if not in_precursor then
+				type_checker.check_type_validity (a_type, feature_impl, current_type)
+				if type_checker.has_fatal_error then
+					set_fatal_error
+				else
+					if a_type.is_type_expanded (current_type, universe) then
+						a_class_type ?= a_type.named_type (current_type, universe)
+						if a_class_type /= Void then
+							type_checker.check_creation_type_validity (a_class_type, feature_impl, current_type, a_type.position)
+							if type_checker.has_fatal_error then
+								set_fatal_error
+							end
 						end
 					end
 				end
@@ -7371,6 +7388,9 @@ feature {ET_FEATURE_CHECKER} -- Status report
 	in_invariant: BOOLEAN
 			-- Are we processing an invariant?
 
+	in_precursor: BOOLEAN
+			-- Are we processing a precursor feature?
+
 	set_state (other: like Current) is
 			-- Set current state with state of `other'.
 		require
@@ -7382,6 +7402,7 @@ feature {ET_FEATURE_CHECKER} -- Status report
 			in_precondition := other.in_precondition
 			in_postcondition := other.in_postcondition
 			in_invariant := other.in_invariant
+			in_precursor := other.in_precursor
 		ensure
 			in_instruction_set: in_instruction = other.in_instruction
 			in_rescue_set: in_rescue = other.in_rescue
@@ -7389,6 +7410,7 @@ feature {ET_FEATURE_CHECKER} -- Status report
 			in_precondition_set: in_precondition = other.in_precondition
 			in_postcondition_set: in_postcondition = other.in_postcondition
 			in_invariant_set: in_invariant = other.in_invariant
+			in_precursor_set: in_precursor = other.in_precursor
 		end
 
 feature {NONE} -- Implementation
