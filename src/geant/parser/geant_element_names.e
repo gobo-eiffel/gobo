@@ -248,4 +248,13 @@ feature -- Task names
 			task_name_not_empty: Result.count > 0
 		end
 
+	Precursor_task_name: UC_STRING is
+			-- "precursor" task name
+		once
+			Result := new_unicode_string ("precursor")
+		ensure
+			task_name_not_void: Result /= Void
+			task_name_not_empty: Result.count > 0
+		end
+
 end
