@@ -2,9 +2,9 @@
 
 # system:     "List tester"
 # library:    "Gobo Eiffel Structure Library"
-# compiler:   "SmallEiffel -0.78"
+# compiler:   "SmallEiffel -0.76"
 # author:     "Eric Bezault <ericb@gobosoft.com>"
-# copyright:  "Copyright (c) 1999, Eric Bezault and others"
+# copyright:  "Copyright (c) 1999-2000, Eric Bezault and others"
 # license:    "Eiffel Forum Freeware License v1 (see forum.txt)"
 # date:       "$Date$"
 # revision:   "$Revision$"
