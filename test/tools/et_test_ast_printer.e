@@ -64,7 +64,6 @@ feature -- Test
 			a_universe := an_xace_parser.last_universe
 			assert ("universe_not_void", a_universe /= Void)
 			!! a_printer.make_null
-			a_universe.eiffel_parser.set_keep_all_breaks (True)
 			a_universe.preparse_multiple
 			a_cursor := a_universe.classes.new_cursor
 			from a_cursor.start until a_cursor.after loop
