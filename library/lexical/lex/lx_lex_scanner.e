@@ -55,7 +55,7 @@ feature {NONE} -- Implementation
 			yy_accept := yy_accept_
 		end
 
-	yy_do_action (yy_act: INTEGER) is
+	yy_execute_action (yy_act: INTEGER) is
 			-- Execute semantic action.
 		do
 			inspect yy_act
@@ -654,7 +654,7 @@ when 78 then
 --|#line 315
 
 					last_token := NUMBER
-					check is_integer: text.is_integer end
+					--check is_integer: text.is_integer end
 					last_value := text.to_integer
 				
 when 79 then
@@ -912,7 +912,7 @@ fatal_error ("scanner jammed")
 			end
 		end
 
-	yy_do_eof_action (yy_sc: INTEGER) is
+	yy_execute_eof_action (yy_sc: INTEGER) is
 			-- Execute EOF semantic action.
 		do
 			inspect yy_sc

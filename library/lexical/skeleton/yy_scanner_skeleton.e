@@ -272,12 +272,12 @@ feature {NONE} -- Implementation
 			yy_accept_not_void: yy_accept /= Void
 		end
 
-	yy_do_action (yy_act: INTEGER) is
+	yy_execute_action (yy_act: INTEGER) is
 			-- Execute semantic action.
 		deferred
 		end
 
-	yy_do_eof_action (yy_sc: INTEGER) is
+	yy_execute_eof_action (yy_sc: INTEGER) is
 			-- Execute EOF semantic action.
 		deferred
 		end

@@ -40,6 +40,16 @@ inherit
 			is_equal, copy
 		end
 
+	UT_INTEGER_ROUTINES
+		export
+			{NONE} all
+		undefine
+#ifdef ISE || HACT
+			consistent, setup,
+#endif
+			is_equal, copy
+		end
+
 feature {NONE} -- Initialization
 
 	initialize (a_description: LX_DESCRIPTION) is
@@ -115,9 +125,9 @@ feature -- Generation
 			print_eiffel_header (a_file)
 			a_file.put_string ("%Nfeature {NONE} -- Implementation%N%N")
 			print_build_tables (a_file)
-			a_file.new_line
+			a_file.put_character ('%N')
 			print_actions (a_file)
-			a_file.new_line
+			a_file.put_character ('%N')
 			print_eof_actions (a_file)
 			a_file.put_string ("%Nfeature {NONE} -- Tables%N%N")
 			print_eiffel_tables (a_file)
@@ -212,7 +222,7 @@ feature {NONE} -- Generation
 			action: UT_PRINTABLE_COMMAND
 			not_shared: BOOLEAN
 		do
-			a_file.put_string ("%Tyy_do_action (yy_act: INTEGER) is%N%
+			a_file.put_string ("%Tyy_execute_action (yy_act: INTEGER) is%N%
 				%%T%T%T-- Execute semantic action.%N%
 				%%T%Tdo%N%
 				%%T%T%Tinspect yy_act%N")
@@ -319,7 +329,7 @@ feature {NONE} -- Generation
 			rule_list: DS_LINKED_LIST [LX_RULE]
 			rule_cursor: DS_LINKED_LIST_CURSOR [LX_RULE]
 		do
-			a_file.put_string ("%Tyy_do_eof_action (yy_sc: INTEGER) is%N%
+			a_file.put_string ("%Tyy_execute_eof_action (yy_sc: INTEGER) is%N%
 				%%T%T%T-- Execute EOF semantic action.%N%
 				%%T%Tdo%N%
 				%%T%T%Tinspect yy_sc%N")
@@ -766,7 +776,7 @@ feature {NONE} -- Generation
 			elseif i = Space_code then
 				a_file.put_string ("' '")
 			else
-				a_file.put_character ('%U' + i)
+				a_file.put_character (integer_to_character (i))
 			end
 		end
 

@@ -87,7 +87,7 @@ feature {NONE} -- Tables
 
 feature {NONE} -- Implementation
 
-	yy_do_action (yy_act: INTEGER) is
+	yy_execute_action (yy_act: INTEGER) is
 			-- Execute semantic action.
 		local
 			yy_rule: LX_RULE
@@ -123,7 +123,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	yy_do_eof_action (yy_sc: INTEGER) is
+	yy_execute_eof_action (yy_sc: INTEGER) is
 			-- Execute EOF semantic action.
 		local
 			yy_rule: LX_RULE

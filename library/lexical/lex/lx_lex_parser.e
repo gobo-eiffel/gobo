@@ -25,7 +25,6 @@ inherit
 		rename
 			make as make_lex_scanner,
 			make_from_description as make_lex_scanner_from_description,
-			yy_do_action as lex_scanner_do_action,
 			reset as reset_lex_scanner
 		redefine
 			last_value, last_token

@@ -167,12 +167,13 @@ feature -- Scanning
 								if wrap then
 									yy_bp := yy_start_position
 									yy_cp := yy_position
-									yy_do_eof_action ((yy_start_state - 1) // 2)
+									yy_execute_eof_action
+										((yy_start_state - 1) // 2)
 								end
 							end
 						end
 					else
-						yy_do_action (yy_act)
+						yy_execute_action (yy_act)
 					end
 				end
 			end

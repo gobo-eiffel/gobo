@@ -25,7 +25,6 @@ inherit
 		rename
 			make as make_regexp_scanner,
 			make_from_description as make_regexp_scanner_from_description,
-			yy_do_action as regexp_scanner_do_action,
 			reset as reset_regexp_scanner
 		redefine
 			last_value, last_token
