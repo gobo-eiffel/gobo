@@ -63,6 +63,9 @@ feature -- Access
 
 	last_token: INTEGER
 			-- Code of last token read
+			-- (0 means that the end-of-input has been reached,
+			-- non-positive values mean that an error occurred
+			-- (see header-comment of `scanning_error'.))
 
 	text: STRING is
 			-- Text of last token read
@@ -112,6 +115,31 @@ feature -- Access
 		deferred
 		end
 
+feature -- Status report
+
+	end_of_file: BOOLEAN is
+			-- Has the end of input buffer been reached?
+			-- This means that `last_token' has been set
+			-- to 0 indicating "all done".
+		do
+			Result := (last_token = yyEOF_token)
+		end
+
+	scanning_error: BOOLEAN is
+			-- Has an error occurred during scanning?
+			-- This can occur when too many `reject' are called (and hence
+			-- nothing can be matched anymore) or when the option "nodefault"
+			-- (or option -s) has been specified but the default rule is
+			-- matched nevertheless. 
+		do
+			Result := (last_token = yyError_token)
+		end
+
+	valid_start_condition (sc: INTEGER): BOOLEAN is
+			-- Is `sc' a valid start condition?
+		deferred
+		end
+
 feature -- Setting
 
 	set_last_token (a_token: INTEGER) is
@@ -124,6 +152,8 @@ feature -- Setting
 
 	set_start_condition (a_start_condition: INTEGER) is
 			-- Set `start_condition' to `a_start_condition'.
+		require
+			valid_start_condition: valid_start_condition (a_start_condition)
 		deferred
 		ensure
 			start_condition_set: start_condition = a_start_condition
@@ -132,17 +162,18 @@ feature -- Setting
 feature -- Scanning
 
 	scan is
-			-- Scan `input_buffer' until end of file is found.
+			-- Scan `input_buffer' until end of file is found
+			-- or an error occurs.
 		do
 			from
 				read_token
 			until
-				last_token = 0
+				last_token <= 0
 			loop
 				read_token
 			end
 		ensure
-			end_of_file: last_token = 0
+			end_of_file: not scanning_error implies end_of_file
 		end
 
 	read_token is
@@ -186,7 +217,7 @@ feature -- Element change
 			-- Terminate scanner and set `last_token'
 			-- to 0 indicating "all done".
 		do
-			last_token := 0
+			last_token := yyEOF_token
 		end
 
 	wrap: BOOLEAN is
@@ -306,17 +337,24 @@ feature -- Error handling
 
 	fatal_error (a_message: STRING) is
 			-- A fatal error occurred.
-			-- Print `a_message' and raise an exception.
+			-- Print `a_message'.
 		require
 			a_message_not_void: a_message /= Void
 		do
 			std.error.put_string (a_message)
 			std.error.put_character ('%N')
--- TO DO: Exceptions are not standard among compiler vendors.
 		end
+
+feature {NONE} -- Constants
+
+	yyEOF_token: INTEGER is 0
+	yyError_token: INTEGER is -1
+	yyUnknown_token: INTEGER is -2
+			-- Predefined token codes
 
 invariant
 
 	input_buffer_not_void: input_buffer /= Void
+	valid_start_condition: valid_start_condition (start_condition)
 
 end -- class YY_SCANNER
