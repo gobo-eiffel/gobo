@@ -1,0 +1,140 @@
+indexing
+
+	description:
+
+		"Terminal symbols. For details about symbols, %
+		%see $GOBO\doc\geyacc\symbols.html"
+
+	library:    "Gobo Eiffel Parse Library"
+	author:     "Eric Bezault <ericb@gobo.demon.co.uk>"
+	copyright:  "Copyright (c) 1998, Eric Bezault"
+	date:       "$Date$"
+	revision:   "$Revision$"
+
+class PR_TOKEN
+
+inherit
+
+	PR_SYMBOL
+
+creation
+
+	make
+
+feature -- Status report
+
+	is_terminal: BOOLEAN is True
+			-- Is current symbol terminal?
+
+	is_left_associative: BOOLEAN is
+			-- Is current token left associative?
+		do
+			Result := associativity = Left_assoc
+		ensure
+			associativity: Result implies
+				not (is_right_associative or is_non_associative)
+		end
+
+	is_right_associative: BOOLEAN is
+			-- Is current token right associative?
+		do
+			Result := associativity = Right_assoc
+		ensure
+			associativity: Result implies
+				not (is_left_associative or is_non_associative)
+		end
+
+	is_non_associative: BOOLEAN is
+			-- Is current token non-associative?
+		do
+			Result := associativity = Non_assoc
+		ensure
+			associativity: Result implies
+				not (is_left_associative or is_right_associative)
+		end
+
+	has_precedence: BOOLEAN is
+			-- Has a precedence level been
+			-- assigned to current token?
+		do
+			Result := precedence /= 0
+		end
+
+	has_token_id: BOOLEAN is
+			-- Has a `token_id' been assigned
+			-- to current token?
+		do
+			Result := token_id /= 0
+		end
+
+feature -- Access
+
+	token_id: INTEGER
+			-- External id (possibly set by the user)
+			-- known by any associated lexical analyzer
+			-- (0 means that no `token_id' has been assigned.)
+
+	precedence: INTEGER
+			-- Precedence level
+			-- (0 means that no `precedence' has been assigned.)
+
+feature -- Setting
+
+	set_token_id (i: INTEGER) is
+			-- Set `token_id' to `i'.
+		require
+			i_positive: i >= 0
+		do
+			token_id := i
+		ensure
+			token_id_set: token_id = i
+		end
+
+	set_precedence (p: INTEGER) is
+			-- Set `precedence' to `p'.
+		do
+			precedence := p
+		ensure
+			precedence_set: precedence = p
+		end
+
+feature -- Status setting
+
+	set_left_associative is
+			-- Make current token left associative.
+		do
+			associativity := Left_assoc
+		ensure
+			is_left_associative: is_left_associative
+		end
+
+	set_right_associative is
+			-- Make current token right associative.
+		do
+			associativity := Right_assoc
+		ensure
+			is_right_associative: is_right_associative
+		end
+
+	set_non_associative is
+			-- Make current token non-associative.
+		do
+			associativity := Non_assoc
+		ensure
+			is_non_associative: is_non_associative
+		end
+
+feature {NONE} -- Implementation
+
+	associativity: INTEGER
+			-- Associativity of current token
+
+	Left_assoc, Right_assoc, Non_assoc: INTEGER is Unique
+			-- Valid values for `associativity'
+
+invariant
+
+	terminal: is_terminal
+	token_id_positive: token_id >= 0
+
+end -- class PR_TOKEN

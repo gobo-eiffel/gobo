@@ -1,0 +1,178 @@
+%{
+indexing
+
+	description:
+
+		"Scanners for parser generators such as 'geyacc'"
+
+	library:    "Gobo Eiffel Parse Library"
+	author:     "Eric Bezault <ericb@gobo.demon.co.uk>"
+	copyright:  "Copyright (c) 1998, Eric Bezault"
+	date:       "$Date$"
+	revision:   "$Revision$"
+
+class PR_YACC_SCANNER
+
+inherit
+
+	PR_YACC_SCANNER_SKELETON
+
+creation
+
+	make
+%}
+
+%option ecs meta-ecs case-insensitive nodefault
+%option outfile="pr_yacc_scanner.e"
+
+%x SECTION2 SECTION3 EIFFEL_CODE EIFFEL_ACTION
+
+C					"--".*
+WS					[ \t\r]+
+NL					\n
+ESC					\\(.|[0-7]{1,3}|x[0-9a-f]{1,2})
+
+%%
+
+<INITIAL>{
+	"%token"			last_token := T_TOKEN
+	"%left"				last_token := T_LEFT
+	"%right"			last_token := T_RIGHT
+	"%nonassoc"			last_token := T_NONASSOC
+	"%start"			last_token := T_START
+	"%expect"			last_token := T_EXPECT
+	","					last_token := Comma_code
+	"%{"{WS}?{NL}	{
+						line_nb := line_nb + 1
+						set_start_condition (EIFFEL_CODE)
+					}
+	"%{"{WS}?		{
+						set_start_condition (EIFFEL_CODE)
+					}
+	"%%"			{
+						last_token := T_2PERCENTS
+						set_start_condition (SECTION2)
+					}
+	"%"					last_token := T_UNKNOWN
+}
+
+<INITIAL,SECTION2>{
+	{WS}|{C}			 -- Separator or comment.
+	{NL}				line_nb := line_nb + 1
+
+	[a-z][a-z0-9_]*	{
+						last_token := T_IDENTIFIER
+						last_value := text
+					}
+	[0-9]+			{
+						last_token := T_NUMBER
+						last_value := text.to_integer
+						if last_value.is_equal (0) then
+							report_null_integer_error
+						end
+					}
+	\'([^'\\\n]|{ESC})\'	{
+						last_token := T_CHAR
+						last_value := text
+					}
+}
+
+<SECTION2>{
+	"%prec"				last_token := T_PREC
+	":"				{
+						last_token := Colon_code
+						last_value := line_nb
+					}
+	"|"				{
+						last_token := Bar_code
+						last_value := line_nb
+					}
+	";"					last_token := Semicolon_code
+	"{"{WS}?{NL}	{
+						line_nb := line_nb + 1
+						set_start_condition (EIFFEL_ACTION)
+					}
+	"{"{WS}?		{
+						set_start_condition (EIFFEL_ACTION)
+					}
+	"%%"			{
+						last_token := T_2PERCENTS
+						set_start_condition (SECTION3)
+					}
+}
+
+<SECTION3>{
+	(.|\n)+			{
+						last_token := T_USER_CODE
+						last_value := text
+					}
+}
+
+<EIFFEL_CODE>{
+	[^"'%\n-]*										more
+	["%]([^"%\n]|%([^/\n\r]|("/"[0-9]+"/")))*["%]	more
+	\'([^'%\n]|%([^/\n]|("/"[0-9]+"/")))\'			more
+	"--".*											more
+	\"|\'|%|-										more
+	\n			{
+					line_nb := line_nb + 1
+					more
+				}
+	"%}"		{
+					last_token := T_EIFFEL
+					last_value := text_substring (1, text_count - 2)
+					set_start_condition (INITIAL)
+				}
+	<<EOF>>		{
+					report_missing_characters_error ("%%}")
+					last_token := T_EIFFEL
+					last_value := text_substring (1, text_count)
+					set_start_condition (INITIAL)
+				}
+}
+
+<EIFFEL_ACTION>{
+	[^$"'%}\n-]*									|
+	["%]([^"%\n]|%([^/\n\r]|("/"[0-9]+"/")))*["%]	|
+	\'([^'%\n]|%([^/\n]|("/"[0-9]+"/")))\'			|
+	"--".*											|
+	\"|\'|%|-|\$	{
+					action_buffer.append_string (text)
+				}
+	\n+			{
+					line_nb := line_nb + text_count
+					action_buffer.append_string (text)
+				}
+	"$$"		{
+					process_dollar_dollar
+				}
+	\$[0-9]+	{
+					check is_integer: STRING_.is_integer (text_substring (2, text_count)) end
+					process_dollar_n (text_substring (2, text_count).to_integer)
+				}
+	\$\-[0-9]+	{
+					check is_integer: STRING_.is_integer (text_substring (3, text_count)) end
+					process_dollar_n (- text_substring (3, text_count).to_integer)
+				}
+	"}"			{
+					last_token := T_ACTION
+					last_value := cloned_string (action_buffer)
+					action_buffer.wipe_out
+					set_start_condition (SECTION2)
+				}
+	<<EOF>>		{
+					report_missing_characters_error ("}")
+					last_token := T_ACTION
+					last_value := cloned_string (action_buffer)
+					action_buffer.wipe_out
+					set_start_condition (SECTION2)
+				}
+}
+
+<*>.|\n			{
+					last_token := text_item (1).code
+				}
+
+%%
+
+end -- class PR_YACC_SCANNER

@@ -1,0 +1,26 @@
+indexing
+
+	description: "Parser token codes"
+	generator: "geyacc version 1.2"
+
+class PR_YACC_TOKENS
+
+feature -- Token codes
+
+	T_TOKEN: INTEGER is 258
+	T_LEFT: INTEGER is 259
+	T_RIGHT: INTEGER is 260
+	T_NONASSOC: INTEGER is 261
+	T_EXPECT: INTEGER is 262
+	T_PREC: INTEGER is 263
+	T_START: INTEGER is 264
+	T_EIFFEL: INTEGER is 265
+	T_2PERCENTS: INTEGER is 266
+	T_IDENTIFIER: INTEGER is 267
+	T_NUMBER: INTEGER is 268
+	T_ACTION: INTEGER is 269
+	T_USER_CODE: INTEGER is 270
+	T_CHAR: INTEGER is 271
+	T_UNKNOWN: INTEGER is 272
+
+end -- class PR_YACC_TOKENS
