@@ -450,7 +450,7 @@ SYSTEMLITERAL ((['][\r\n\t\x20-&(-\xFF]*['])|(["][\r\n\t\x20-!#-\xFF]*["]))
 		"," { set_last_token (DOCTYPE_GROUP_SEQ) }
 		"(" { set_last_token (DOCTYPE_GROUP_START) }
 		")" { set_last_token (DOCTYPE_GROUP_END) }
-		"?" { set_last_token (DOCTYPE_GROUP_ZEROMORE) }
+		"?" { set_last_token (DOCTYPE_GROUP_ZEROONE) }
 		"*" { set_last_token (DOCTYPE_GROUP_ANY) }
 		"+" { set_last_token (DOCTYPE_GROUP_ONEMORE) }
 		
