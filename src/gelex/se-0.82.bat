@@ -1,7 +1,7 @@
 @rem system:     "Gobo Eiffel Lex: lexical analyzer generator"
-@rem compiler:   "SmallEiffel -0.83"
+@rem compiler:   "SmallEiffel -0.82"
 @rem author:     "Eric Bezault <ericb@gobo.demon.co.uk>"
-@rem copyright:  "Copyright (c) 1997, Eric Bezault"
+@rem copyright:  "Copyright (c) 1998, Eric Bezault"
 @rem date:       "$Date$"
 @rem revision:   "$Revision$"
 
@@ -11,6 +11,7 @@
 
 @rem	-- Gobo Eiffel Lexical Library
 @echo %GOBO%\library\lexical\automaton\>>			loadpath.se
+@echo %GOBO%\library\lexical\error\>>				loadpath.se
 @echo %GOBO%\library\lexical\lex\>>					loadpath.se
 @echo %GOBO%\library\lexical\generation\>>			loadpath.se
 @echo %GOBO%\library\lexical\scanner\>>				loadpath.se
@@ -22,6 +23,7 @@
 
 @rem	-- Gobo Eiffel Utility Library
 @echo %GOBO%\library\utility\command\>>				loadpath.se
+@echo %GOBO%\library\utility\error\>>				loadpath.se
 @echo %GOBO%\library\utility\support\>>				loadpath.se
 
 @rem	-- Gobo Eiffel Kernel Library
