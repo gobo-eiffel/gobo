@@ -35,8 +35,6 @@ feature {NONE} -- Initialization
 			l_dynamic_type: ET_DYNAMIC_TYPE
 			l_dynamic_type_set: ET_NESTED_DYNAMIC_TYPE_SET
 			args: ET_FORMAL_ARGUMENT_LIST
-			l_locals: ET_LOCAL_VARIABLE_LIST
-			l_none_type: ET_DYNAMIC_TYPE
 			i, nb: INTEGER
 		do
 			static_feature := a_feature
@@ -45,32 +43,20 @@ feature {NONE} -- Initialization
 				l_dynamic_type := a_system.dynamic_type (l_type, a_target_type.base_type)
 				create {ET_NESTED_DYNAMIC_TYPE_SET} result_type.make (l_dynamic_type)
 			end
+			dynamic_calls := empty_dynamic_calls
+			dynamic_assignment_attempts := empty_dynamic_assignment_attempts
+			dynamic_type_sets := empty_dynamic_type_sets
 			args := a_feature.arguments
 			if args /= Void then
 				nb := args.count
 				if nb > 0 then
-					create argument_types.make_with_capacity (nb)
+					create dynamic_type_sets.make_with_capacity (nb)
 					from i := nb until i < 1 loop
 						l_type := args.formal_argument (i).type
 						l_dynamic_type := a_system.dynamic_type (l_type, a_target_type.base_type)
 						create l_dynamic_type_set.make (l_dynamic_type)
-						argument_types.put_first (l_dynamic_type_set)
+						dynamic_type_sets.put_first (l_dynamic_type_set)
 						i := i - 1
-					end
-				end
-			end
-			l_locals := a_feature.locals
-			if l_locals /= Void then
-				nb := l_locals.count
-				if nb > 0 then
-						-- Fill local types with "NONE" type. They will be given their real
-						-- types when building the dynamic type sets of current feature in
-						-- ET_DYNAMIC_TYPE_SET_BUILDER.
-					l_none_type := a_system.none_type
-					create local_types.make_with_capacity (nb)
-					from i := 1 until i > nb loop
-						local_types.put_first (l_none_type)
-						i := i + 1
 					end
 				end
 			end
@@ -80,14 +66,60 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	argument_types: ET_DYNAMIC_TYPE_SET_LIST
-			-- Types of arguments, if any
-
-	local_types: ET_DYNAMIC_TYPE_SET_LIST
-			-- Types of locals, if any
-
 	result_type: ET_DYNAMIC_TYPE_SET
 			-- Type of result, if any
+
+	dynamic_type_sets: ET_DYNAMIC_TYPE_SET_LIST
+			-- Dynamic type sets of expressions within current feature;
+			-- Dynamic type sets for arguments are stored first
+
+	dynamic_type_set (an_expression: ET_EXPRESSION): ET_DYNAMIC_TYPE_SET is
+			-- Dynamic type set associated with `an_expression';
+			-- Void if unknown yet
+		require
+			an_expression_not_void: an_expression /= Void
+		local
+			i: INTEGER
+		do
+			i := an_expression.index
+			if i >= 1 and i <= dynamic_type_sets.count then
+				Result := dynamic_type_sets.item (i)
+			end
+		end
+
+	dynamic_calls: ET_DYNAMIC_CALL_LIST
+			-- Dynamic calls within current feature
+
+	dynamic_call (a_call: ET_FEATURE_CALL): ET_DYNAMIC_CALL is
+			-- Dynamic call associated with `a_call';
+			-- Void if unknown yet
+		require
+			a_call_not_void: a_call /= Void
+		local
+			i: INTEGER
+		do
+			i := a_call.call_index
+			if i >= 1 and i <= dynamic_calls.count then
+				Result := dynamic_calls.item (i)
+			end
+		end
+
+	dynamic_assignment_attempts: ET_DYNAMIC_ASSIGNMENT_ATTEMPT_LIST
+			-- Dynamic assignment attempts within current feature
+
+	dynamic_assignment_attempt (an_assignment: ET_ASSIGNMENT_ATTEMPT): ET_DYNAMIC_ASSIGNMENT_ATTEMPT is
+			-- Dynamic assignment attempt associated with `an_assignment';
+			-- Void if unknown yet
+		require
+			an_assignment_not_void: an_assignment /= Void
+		local
+			i: INTEGER
+		do
+			i := an_assignment.index
+			if i >= 1 and i <= dynamic_assignment_attempts.count then
+				Result := dynamic_assignment_attempts.item (i)
+			end
+		end
 
 	first_precursor: ET_DYNAMIC_PRECURSOR
 			-- First precursor called from current feature;
@@ -144,18 +176,6 @@ feature -- Access
 			dynamic_precursor_not_void: Result /= Void
 		end
 
-	first_feature_call: ET_DYNAMIC_CALL
-			-- Dynamic type set of first qualified feature call
-
-	last_feature_call: ET_DYNAMIC_CALL
-			-- Dynamic type set of last qualified feature call
-
-	first_assignment_attempt: ET_DYNAMIC_ASSIGNMENT_ATTEMPT
-			-- Dynamic type set of first assignment attempt in current feature
-
-	last_assignment_attempt: ET_DYNAMIC_ASSIGNMENT_ATTEMPT
-			-- Dynamic type set of last assignment attempt in current feature
-
 	static_feature: ET_FEATURE
 			-- Feature at compilation time
 
@@ -163,6 +183,36 @@ feature -- Access
 			-- ID
 
 feature -- Setting
+
+	set_dynamic_type_sets (a_dynamic_type_sets: like dynamic_type_sets) is
+			-- Set `dynamic_type_sets' to `a_dynamic_type_sets'.
+		require
+			a_dynamic_type_sets_not_void: a_dynamic_type_sets /= Void
+		do
+			dynamic_type_sets := a_dynamic_type_sets
+		ensure
+			dynamic_type_sets_set: dynamic_type_sets = a_dynamic_type_sets
+		end
+
+	set_dynamic_calls (a_dynamic_calls: like dynamic_calls) is
+			-- Set `dynamic_calls' to `a_dynamic_calls'.
+		require
+			a_dynamic_calls_not_void: a_dynamic_calls /= Void
+		do
+			dynamic_calls := a_dynamic_calls
+		ensure
+			dynamic_calls_set: dynamic_calls = a_dynamic_calls
+		end
+
+	set_dynamic_assignment_attempts (a_dynamic_assignment_attempts: like dynamic_assignment_attempts) is
+			-- Set `dynamic_assignment_attempts' to `an_dynamic_assignment_attempts'.
+		require
+			a_dynamic_assignment_attempts_not_void: a_dynamic_assignment_attempts /= Void
+		do
+			dynamic_assignment_attempts := a_dynamic_assignment_attempts
+		ensure
+			dynamic_assignment_attempts_set: dynamic_assignment_attempts = a_dynamic_assignment_attempts
+		end
 
 	set_id (i: INTEGER) is
 			-- Set `id' to `i'.
@@ -300,64 +350,6 @@ feature -- Status setting
 			static_set: is_static = b
 		end
 
-feature -- Element change
-
-	put_assignment_attempt (an_assignment_attempt: ET_DYNAMIC_ASSIGNMENT_ATTEMPT) is
-			-- Put `an_assignment_attempt' to the end of list of assignment attempts.
-		require
-			an_assignment_attempt_not_void: an_assignment_attempt /= Void
-		do
-			if first_assignment_attempt = Void then
-				first_assignment_attempt := an_assignment_attempt
-			else
-				last_assignment_attempt.set_next_assignment_attempt (an_assignment_attempt)
-			end
-			last_assignment_attempt := an_assignment_attempt
-		ensure
-			last_assignment_attempt_set: last_assignment_attempt = an_assignment_attempt
-		end
-
-	put_feature_call (a_call: ET_DYNAMIC_CALL) is
-			-- Put `a_call' to the end of list of feature calls.
-		require
-			a_call_not_void: a_call /= Void
-		do
-			if first_feature_call = Void then
-				first_feature_call := a_call
-			else
-				last_feature_call.set_next_call (a_call)
-			end
-			last_feature_call := a_call
-		ensure
-			last_feature_call_set: last_feature_call = a_call
-		end
-
-	insert_feature_call (a_previous_call, a_call: ET_DYNAMIC_CALL) is
-			-- Insert `a_call' just after `a_previous_call' in the
-			-- list of feature calls, or at the first position if
-			-- it is Void.
-		require
-			a_call_not_void: a_call /= Void
-			-- has_previous_call: a_previous_call /= Void implies has (a_previous_call)
-		do
-			if a_previous_call = Void then
-				if first_feature_call = Void then
-					first_feature_call := a_call
-					last_feature_call := a_call
-				else
-					a_call.set_next_call (first_feature_call)
-					first_feature_call := a_call
-				end
-			else
-				if a_previous_call = last_feature_call then
-					last_feature_call := a_call
-				else
-					a_call.set_next_call (a_previous_call.next_call)
-				end
-				a_previous_call.set_next_call (a_call)
-			end
-		end
-
 feature -- Output
 
 	debug_output: STRING is
@@ -366,10 +358,40 @@ feature -- Output
 			Result := static_feature.debug_output
 		end
 
+feature {NONE} -- Constants
+
+	empty_dynamic_type_sets: ET_DYNAMIC_TYPE_SET_LIST is
+			-- Empty dynamic type set list
+		once
+			create Result.make
+		ensure
+			dynamic_type_sets_not_void: Result /= Void
+			dynamic_type_sets_empty: Result.is_empty
+		end
+
+	empty_dynamic_calls: ET_DYNAMIC_CALL_LIST is
+			-- Empty dynamic call list
+		once
+			create Result.make
+		ensure
+			dynamic_calls_not_void: Result /= Void
+			dynamic_calls_empty: Result.is_empty
+		end
+
+	empty_dynamic_assignment_attempts: ET_DYNAMIC_ASSIGNMENT_ATTEMPT_LIST is
+			-- Empty dynamic assignment attempt list
+		once
+			create Result.make
+		ensure
+			dynamic_assignment_attempts_not_void: Result /= Void
+			dynamic_assignment_attempts_empty: Result.is_empty
+		end
+
 invariant
 
 	static_feature_not_void: static_feature /= Void
-	assignment_attempts: (first_assignment_attempt /= Void) = (last_assignment_attempt /= Void)
-	feature_calls: (first_feature_call /= Void) = (last_feature_call /= Void)
+	dynamic_type_sets_not_void: dynamic_type_sets /= Void
+	dynamic_calls_not_void: dynamic_calls /= Void
+	dynamic_assignment_attempts_not_void: dynamic_assignment_attempts /= Void
 
 end

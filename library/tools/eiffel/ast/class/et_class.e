@@ -112,6 +112,7 @@ feature -- Initialization
 			if convert_features /= Void then
 				convert_features.reset
 			end
+			index := 0
 			in_system := False
 		ensure
 			same_name: name = old name
@@ -160,6 +161,10 @@ feature -- Access
 
 	id: INTEGER
 			-- Class ID
+
+	index: INTEGER
+			-- Index of expression in enclosing universe;
+			-- Used to get dynamic information about this class.
 
 	hash_code: INTEGER is
 			-- Hash code value
@@ -253,6 +258,16 @@ feature -- Setting
 			leading_break := a_break
 		ensure
 			leading_break_set: leading_break = a_break
+		end
+
+	set_index (i: INTEGER) is
+			-- Set `index' to `i'.
+		require
+			i_nonnegative: i >= 0
+		do
+			index := i
+		ensure
+			index_set: index = i
 		end
 
 feature -- Preparsing
@@ -1217,7 +1232,8 @@ feature {NONE} -- Constants
 
 invariant
 
-	id_positive: id >= 0
+	id_nonnegative: id >= 0
+	index_nonnegative: index >= 0
 	master_class_not_void: master_class /= Void
 	ancestors_not_void: ancestors /= Void
 	features_not_void: features /= Void

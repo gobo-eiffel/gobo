@@ -237,6 +237,19 @@ feature -- Output
 			Result := base_type.debug_output
 		end
 
+feature -- Link
+
+	next_type: ET_DYNAMIC_TYPE
+			-- Next dynamic type with the same base class in the surrounding system
+
+	set_next_type (a_type: like next_type) is
+			-- Set `next_type' to `a_type'.
+		do
+			next_type := a_type
+		ensure
+			next_type_set: next_type = a_type
+		end
+
 invariant
 
 	base_type_not_void: base_type /= Void

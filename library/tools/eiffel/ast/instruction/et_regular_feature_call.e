@@ -14,6 +14,8 @@ deferred class ET_REGULAR_FEATURE_CALL
 
 inherit
 
+	ET_FEATURE_CALL
+
 	ET_QUALIFIED_CALL
 		rename
 			make as make_qualified_call

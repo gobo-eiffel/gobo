@@ -166,19 +166,6 @@ feature -- Duplication
 			create Result.make (source_type, assignment_attempt, current_feature, current_type)
 		end
 
-feature -- Link
-
-	next_assignment_attempt: ET_DYNAMIC_ASSIGNMENT_ATTEMPT
-			-- Next linked assignment attempt in list of assignment attempts
-
-	set_next_assignment_attempt (a_next: ET_DYNAMIC_ASSIGNMENT_ATTEMPT) is
-			-- Set `next_assignment_attempt' to `a_next'.
-		do
-			next_assignment_attempt := a_next
-		ensure
-			next_assignment_attempt_set: next_assignment_attempt = a_next
-		end
-
 invariant
 
 	assignment_attempt_not_void: assignment_attempt /= Void

@@ -5,7 +5,7 @@ indexing
 		"Eiffel infix expressions"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 1999-2002, Eric Bezault and others"
+	copyright: "Copyright (c) 1999-2004, Eric Bezault and others"
 	license: "Eiffel Forum License v2 (see forum.txt)"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -13,6 +13,12 @@ indexing
 class ET_INFIX_EXPRESSION
 
 inherit
+
+	ET_FEATURE_CALL
+		rename
+			target as left,
+			arguments as right
+		end
 
 	ET_BINARY_EXPRESSION
 		redefine

@@ -5,7 +5,7 @@ indexing
 		"Eiffel expressions"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 1999-2002, Eric Bezault and others"
+	copyright: "Copyright (c) 1999-2004, Eric Bezault and others"
 	license: "Eiffel Forum License v2 (see forum.txt)"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -48,6 +48,10 @@ inherit
 
 feature -- Access
 
+	index: INTEGER
+			-- Index of expression in enclosing feature;
+			-- Used to get dynamic information about this expression.
+
 	actual_argument (i: INTEGER): ET_EXPRESSION is
 			-- Actual argument at index `i'
 		do
@@ -68,5 +72,21 @@ feature -- Measurement
 
 	actual_argument_count: INTEGER is 1
 			-- Number of actual arguments
+
+feature -- Setting
+
+	set_index (i: INTEGER) is
+			-- Set `index' to `i'.
+		require
+			i_nonnegative: i >= 0
+		do
+			index := i
+		ensure
+			index_set: index = i
+		end
+
+invariant
+
+	index_nonnegative: index >= 0
 
 end

@@ -14,6 +14,11 @@ class ET_PREFIX_EXPRESSION
 
 inherit
 
+	ET_FEATURE_CALL
+		rename
+			target as expression
+		end
+
 	ET_UNARY_EXPRESSION
 		redefine
 			reset
@@ -50,6 +55,13 @@ feature -- Access
 
 	name: ET_OPERATOR
 			-- Feature name
+
+	arguments: ET_ACTUAL_ARGUMENTS is
+			-- Arguments
+		do
+		ensure then
+			no_arguments: Result = Void
+		end
 
 	position: ET_POSITION is
 			-- Position of first character of

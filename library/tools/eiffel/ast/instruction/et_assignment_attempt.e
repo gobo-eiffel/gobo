@@ -59,6 +59,10 @@ feature -- Access
 	assign_attempt_symbol: ET_SYMBOL
 			-- '?=' symbol
 
+	index: INTEGER
+			-- Index of assignment attempt in enclosing feature;
+			-- Used to get information about this assignment attempt.
+
 	position: ET_POSITION is
 			-- Position of first character of
 			-- current node in source code
@@ -84,6 +88,16 @@ feature -- Setting
 			assign_attempt_symbol_set: assign_attempt_symbol = an_assign_attempt
 		end
 
+	set_index (i: INTEGER) is
+			-- Set `index' to `i'.
+		require
+			i_nonnegative: i >= 0
+		do
+			index := i
+		ensure
+			index_set: index = i
+		end
+
 feature -- Processing
 
 	process (a_processor: ET_AST_PROCESSOR) is
@@ -97,5 +111,6 @@ invariant
 	target_not_void: target /= Void
 	source_not_void: source /= Void
 	assign_attempt_symbol_not_void: assign_attempt_symbol /= Void
+	index_nonnegative: index >= 0
 
 end
