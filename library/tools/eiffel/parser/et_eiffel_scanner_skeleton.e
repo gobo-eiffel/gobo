@@ -255,7 +255,8 @@ feature -- AST processing
 					if current_class.is_preparsed then
 						a_filename := current_class.filename
 						a_cluster := current_class.cluster
-						create a_file.make (a_filename)
+						a_file := tmp_file
+						a_file.reset (a_filename)
 						a_file.open_read
 						if a_file.is_open_read then
 							universe.parse_file (a_file, a_filename, a_cluster)
@@ -2756,6 +2757,31 @@ feature {NONE} -- Processing
 				last_et_position_value := current_position
 			end
 		end
+
+feature {NONE} -- Implementation
+
+	tmp_file: KL_TEXT_INPUT_FILE is
+			-- Temporary file object
+		do
+			Result := shared_file
+			if not Result.is_closed then
+				create Result.make (dummy_name)
+			end
+		ensure
+			file_not_void: Result /= Void
+			file_closed: Result.is_closed
+		end
+
+	shared_file: KL_TEXT_INPUT_FILE is
+			-- Shared file object
+		once
+			create Result.make (dummy_name)
+		ensure
+			file_not_void: Result /= Void
+		end
+
+	dummy_name: STRING is "dummy"
+			-- Dummy name
 
 invariant
 

@@ -334,7 +334,8 @@ feature -- Parsing
 			if not is_abstract then
 				a_universe.error_handler.report_preparsing_status (Current)
 				dir_name := Execution_environment.interpreted_string (full_pathname)
-				create dir.make (dir_name)
+				dir := tmp_directory
+				dir.reset (dir_name)
 				dir.open_read
 				if dir.is_open_read then
 					from dir.read_entry until dir.end_of_input loop
@@ -400,14 +401,16 @@ feature -- Parsing
 			if not is_abstract then
 				a_universe.error_handler.report_preparsing_status (Current)
 				dir_name := Execution_environment.interpreted_string (full_pathname)
-				create dir.make (dir_name)
+				dir := tmp_directory
+				dir.reset (dir_name)
 				dir.open_read
 				if dir.is_open_read then
 					from dir.read_entry until dir.end_of_input loop
 						s := dir.last_entry
 						if is_valid_eiffel_filename (s) then
 							a_filename := file_system.pathname (dir_name, s)
-							create a_file.make (a_filename)
+							a_file := tmp_file
+							a_file.reset (a_filename)
 							a_file.open_read
 							if a_file.is_open_read then
 								a_universe.preparse_single_file (a_file, a_filename, Current)
@@ -449,14 +452,16 @@ feature -- Parsing
 			if not is_abstract then
 				a_universe.error_handler.report_preparsing_status (Current)
 				dir_name := Execution_environment.interpreted_string (full_pathname)
-				create dir.make (dir_name)
+				dir := tmp_directory
+				dir.reset (dir_name)
 				dir.open_read
 				if dir.is_open_read then
 					from dir.read_entry until dir.end_of_input loop
 						s := dir.last_entry
 						if is_valid_eiffel_filename (s) then
 							a_filename := file_system.pathname (dir_name, s)
-							create a_file.make (a_filename)
+							a_file := tmp_file
+							a_file.reset (a_filename)
 							a_file.open_read
 							if a_file.is_open_read then
 								a_universe.preparse_multiple_file (a_file, a_filename, Current)
@@ -499,14 +504,16 @@ feature -- Parsing
 			end
 			if not is_abstract then
 				dir_name := Execution_environment.interpreted_string (full_pathname)
-				create dir.make (dir_name)
+				dir := tmp_directory
+				dir.reset (dir_name)
 				dir.open_read
 				if dir.is_open_read then
 					from dir.read_entry until dir.end_of_input loop
 						s := dir.last_entry
 						if is_valid_eiffel_filename (s) then
 							a_filename := file_system.pathname (dir_name, s)
-							create a_file.make (a_filename)
+							a_file := tmp_file
+							a_file.reset (a_filename)
 							a_file.open_read
 							if a_file.is_open_read then
 								a_universe.parse_file (a_file, a_filename, Current)
@@ -626,8 +633,8 @@ feature {NONE} -- Implementation
 			a_dirname_not_void: a_dirname /= Void
 		do
 			Result := a_dirname.count > 0 and
-				not a_dirname.is_equal (dot_directory_name) and
-				not a_dirname.is_equal (dot_dot_directory_name)
+				not STRING_.same_string (a_dirname, dot_directory_name) and
+				not STRING_.same_string (a_dirname, dot_dot_directory_name)
 		end
 
 feature {NONE} -- Constants
@@ -643,5 +650,50 @@ feature {NONE} -- Constants
 		ensure
 			capacity_positive: Result > 0
 		end
+
+feature {NONE} -- Implementation
+
+	tmp_file: KL_TEXT_INPUT_FILE is
+			-- Temporary file object
+		do
+			Result := shared_file
+			if not Result.is_closed then
+				create Result.make (dummy_name)
+			end
+		ensure
+			file_not_void: Result /= Void
+			file_closed: Result.is_closed
+		end
+
+	shared_file: KL_TEXT_INPUT_FILE is
+			-- Shared file object
+		once
+			create Result.make (dummy_name)
+		ensure
+			file_not_void: Result /= Void
+		end
+
+	tmp_directory: KL_DIRECTORY is
+			-- Temporary directory object
+		do
+			Result := shared_directory
+			if not Result.is_closed then
+				create Result.make (dummy_name)
+			end
+		ensure
+			directory_not_void: Result /= Void
+			directory_closed: Result.is_closed
+		end
+
+	shared_directory: KL_DIRECTORY is
+			-- Shared directory object
+		once
+			create Result.make (dummy_name)
+		ensure
+			directory_not_void: Result /= Void
+		end
+
+	dummy_name: STRING is "dummy"
+			-- Dummy name
 
 end
