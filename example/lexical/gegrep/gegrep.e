@@ -51,7 +51,7 @@ feature -- Execution
 					i := 1
 				end
 				!! regexp.compile (Arguments.argument (i), case_insensitive)
-				if not regexp.compiled then
+				if not regexp.is_compiled then
 					std.error.put_string ("gegrep: invalid regular expression%N")
 					Exceptions.die (1)
 				else
@@ -104,7 +104,7 @@ feature -- Parsing
 			a_file_not_void: a_file /= Void
 			a_file_open_read: a_file.is_open_read
 			regexp_not_void: regexp /= Void
-			regexp_compiled: regexp.compiled
+			regexp_compiled: regexp.is_compiled
 		local
 			a_line: STRING
 		do
@@ -139,14 +139,14 @@ feature {NONE} -- Implementation
 			-- Make sure that SmallEiffel does not complain about possible
 			-- "calls on a Void target in the living Eiffel code".
 		local
-			et1: DS_EQUALITY_TESTER [LX_NFA_STATE]
-			et2: DS_EQUALITY_TESTER [INTEGER]
-			et3: DS_EQUALITY_TESTER [LX_NFA]
-			et4: DS_EQUALITY_TESTER [LX_RULE]
-			et5: DS_EQUALITY_TESTER [LX_START_CONDITION]
-			et6: DS_EQUALITY_TESTER [LX_SYMBOL_CLASS]
-			et7: DS_EQUALITY_TESTER [LX_DFA_STATE]
-			et8: DS_EQUALITY_TESTER [STRING]
+			et1: KL_EQUALITY_TESTER [LX_NFA_STATE]
+			et2: KL_EQUALITY_TESTER [INTEGER]
+			et3: KL_EQUALITY_TESTER [LX_NFA]
+			et4: KL_EQUALITY_TESTER [LX_RULE]
+			et5: KL_EQUALITY_TESTER [LX_START_CONDITION]
+			et6: KL_EQUALITY_TESTER [LX_SYMBOL_CLASS]
+			et7: KL_EQUALITY_TESTER [LX_DFA_STATE]
+			et8: KL_EQUALITY_TESTER [STRING]
 			fb: YY_FILE_BUFFER
 		do
 			!! et1
