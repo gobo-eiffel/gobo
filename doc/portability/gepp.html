@@ -1,0 +1,454 @@
+<!DOCTYPE HTML PUBLIC "-//IETF//DTD HTML//EN">
+<html>
+
+<head>
+<meta http-equiv="Content-Type"
+content="text/html; charset=iso-8859-1">
+<meta name="GENERATOR" content="Microsoft FrontPage 2.0">
+<title>Gobo Eiffel Preprocessor</title>
+</head>
+
+<body bgcolor="#FFFFFF">
+
+<h1>Gobo Eiffel Preprocessor</h1>
+
+<hr size="1">
+
+<p>When writing <a href="index.html">portable</a> Eiffel classes,
+two major kinds of problems may be experienced. The first
+interoperability problem has already been addressed in the <a
+href="inheritance.html">adaptation by inheritance</a> and the <a
+href="client.html">client adaptation</a> techniques. It is the
+result of incompatibilities between kernel classes and features
+provided by different Eiffel compilers. <font size="2">NICE</font>
+(Nonprofit International Consortium for Eiffel) has made the
+first step towards a better interoperability in this area by
+adopting <font size="2">ELKS '95</font> as the kernel library
+standard. But this standard is not perfect yet.</p>
+
+<p>The other problem encountered when writing portable code is
+incompatibility between the different language dialects provided
+by the Eiffel compilers. The definition of the Eiffel language is
+controlled by the Language Committee of <font size="2">NICE</font>,
+after the specification given in <a
+href="http://www.prenhall.com/books/ptr_0132479257.html"><em>Eiffel:
+The Language</em></a>, second printing. However no Eiffel
+compiler will realistically implement the <em>standard</em>
+Eiffel language. Some compilers will implement only part of it,
+failing to support expanded types or exception handling. Some
+compilers will add extensions to the language to support
+concurrency or wide characters. And some compilers will have bugs
+in their implementation. Workarounds usually exist for these
+bugs, but these workarounds are very often not supported by the
+other Eiffel compilers. A solution could be to use only the
+subset of the Eiffel language supported by all Eiffel compilers.
+This would mean that a given feature of the Eiffel language could
+not be used in a portable class just because one compiler cannot
+deal with it. Each Eiffel compiler has its strengths and
+weaknesses. It would a pain to be stopped by the weaknesses of
+all Eiffel compilers without even being able to take advantage of
+their strengths. This would probably be acceptable for a
+&quot;Hello World!&quot; program, but certainly not for more
+realistic large-scale library classes. The solution adopted here
+is to get help from a preprocessor.</p>
+
+<h2>Description</h2>
+
+<p><em>Gobo Eiffel Preprocessor</em> is a simple filter program
+which has been developed in Eiffel using <a
+href="../gelex/index.html"><em>gelex</em></a> and <a
+href="../geyacc/index.html"><em>geyacc</em></a>. It takes a text
+file as input, interprets the processing instructions contained
+in that file, and returns the resulting file as output. The
+command-line usage message for <em>gepp</em> is as follows:</p>
+
+<blockquote>
+    <pre><font color="#800000">gepp</font> [<font color="#800000">-D<em>name</em></font> ...] [<font
+color="#800000"><em>filename</em></font> | <font color="#800000">-</font>] [<font
+color="#800000"><em>filename</em></font> | <font color="#800000">-</font>]</pre>
+</blockquote>
+
+<p>where the first <font color="#800000"><em><tt>filename</tt></em></font>
+is the name of the input file or the second <font color="#800000"><em><tt>filename</tt></em></font>
+is the name of the output file. If the input filename is missing,
+or if<font color="#800000" size="2" face="Courier New"> </font><font
+color="#800000"><tt>-</tt></font><font color="#800000" size="2"
+face="Courier New"> </font>is specified instead, the <em>gepp</em>
+reads its input from the standard input. Likewise, if the output
+filename is missing or if<font color="#800000" size="2"
+face="Courier New"> </font><font color="#800000"><tt>-</tt></font><font
+color="#800000" size="2" face="Courier New"> </font>is specified
+instead, then the standard output file is assumed. By convention,
+filenames for Eiffel classes containing preprocessing
+instructions have the suffix <font color="#800000"><tt>.ge</tt></font>
+instead of just <font color="#800000"><tt>.e</tt></font>. Zero or
+more name definitions can also be declared in the command-line
+using the notation <font color="#800000"><tt>-D</tt><em><tt>name</tt></em></font>
+where <font color="#800000"><em><tt>name</tt></em></font> is the
+name being defined.</p>
+
+<p><em>Gepp</em> behaves much like the well-known C-preprocessor,
+but only a small subset of the preprocessing instructions is
+actually supported. Keywords making up <em>gepp</em> instructions
+typically start with the character # at the beginning of the
+line. The preprocessor instructions supported by <em>gepp</em>
+are as follows:</p>
+
+<h4>Name definition</h4>
+
+<blockquote>
+    <pre><font color="#0000FF">#define</font> <font
+color="#800080">name</font></pre>
+</blockquote>
+
+<p>where <font color="#800080"><tt>name</tt></font> is the name
+to be defined. This is slightly different from the macro
+definition provided by C-preprocessors. Here, the name is just
+defined but no value is given. The name definition is only used
+as conditions in the <font color="#0000FF"><tt>#ifdef</tt></font>
+and <font color="#0000FF"><tt>#ifndef</tt></font> instructions.
+In particular, there is no macro substitution in <em>gepp</em>. <font
+color="#800080"><tt>name</tt></font> should be made of one or
+more letters (<tt>a-z</tt>), digits (<tt>0-9</tt>), underscores (<tt>_</tt>),
+dots (<tt>.</tt>) or minus sign (<tt>-</tt>). Also note that <font
+color="#800080"><tt>name</tt></font> is case-sensitive. Defining <font
+color="#800080"><tt>name</tt></font><font color="#800080"
+size="2" face="Courier New"> </font>is not equivalent to defining
+<font color="#800080"><tt>NaMe</tt></font>.</p>
+
+<h4>Name undefinition</h4>
+
+<blockquote>
+    <pre><font color="#0000FF">#undefine</font> <font
+color="#800080">name</font></pre>
+</blockquote>
+
+<p>where <font color="#800080"><tt>name</tt></font> is the name
+to be undefined.</p>
+
+<h4>Positive conditional</h4>
+
+<blockquote>
+    <pre><font color="#0000FF">#ifdef</font> <font
+color="#800080"><em>Condition</em></font>
+...
+<font color="#0000FF">#else</font>
+...
+<font color="#0000FF">#endif</font></pre>
+</blockquote>
+
+<p>where <font color="#800080"><em><tt>Condition</tt></em></font>
+is either:</p>
+
+<blockquote>
+    <dl>
+        <dt><font color="#800080"><tt>name</tt></font></dt>
+        <dd><font color="#800080"><em><tt>Condition</tt></em></font>
+            is true is <font color="#800080"><tt>name</tt></font>
+            is defined, false otherwise.</dd>
+        <dt><font color="#0000FF"><tt>(</tt></font><font
+            color="#800080"><em><tt> Condition1</tt></em><tt> </tt></font><font
+            color="#0000FF"><tt>)</tt></font></dt>
+        <dd><font color="#800080"><em><tt>Condition</tt></em></font>
+            has the same value as <font color="#800080"><em><tt>Condition1</tt></em></font>.</dd>
+        <dt><font color="#800080"><em><tt>Condition1</tt></em></font><tt>
+            </tt><font color="#0000FF"><tt>||</tt></font><tt> </tt><font
+            color="#800080"><em><tt>Condition2</tt></em></font></dt>
+        <dd><font color="#800080"><em><tt>Condition</tt></em></font><font
+            color="#800080" size="2" face="Courier New"><em> </em></font>is
+            true if either <font color="#800080"><em><tt>Condition1</tt></em></font><font
+            color="#800080" size="2" face="Courier New"><em> </em></font>or
+            <font color="#800080"><em><tt>Condition2</tt></em></font><font
+            color="#800080" size="2" face="Courier New"><em> </em></font>is
+            true, false otherwise.</dd>
+        <dt><font color="#800080"><em><tt>Condition1</tt></em></font><tt>
+            </tt><font color="#0000FF"><tt>&amp;&amp;</tt></font><tt>
+            </tt><font color="#800080"><em><tt>Condition2</tt></em></font></dt>
+        <dd><font color="#800080"><em><tt>Condition</tt></em></font><font
+            color="#800080" size="2" face="Courier New"><em> </em></font>is
+            true if both <font color="#800080"><em><tt>Condition1</tt></em></font><font
+            color="#800080" size="2" face="Courier New"><em> </em></font>and
+            <font color="#800080"><em><tt>Condition2</tt></em></font><font
+            color="#800080" size="2" face="Courier New"><em> </em></font>are
+            true, false otherwise.</dd>
+        <dt><font color="#0000FF"><strong><tt>!</tt></strong><tt>
+            </tt></font><font color="#800080"><em><tt>Condition1</tt></em></font></dt>
+        <dd><font color="#800080"><em><tt>Condition</tt></em></font><font
+            color="#800080" size="2" face="Courier New"><em> </em></font>is
+            true if <font color="#800080"><em><tt>Condition1</tt></em></font><font
+            color="#800080" size="2" face="Courier New"><em> </em></font>is
+            true, false otherwise.</dd>
+    </dl>
+</blockquote>
+
+<p>If <font color="#800080"><em><tt>Condition</tt></em></font> is
+evaluated to true, then the lines between <font color="#0000FF"><tt>#else</tt></font>
+and <font color="#0000FF"><tt>#endif</tt></font> in the input
+file will be ignored by <em>gepp</em>. Otherwise <em>gepp</em>
+ignores lines between <font color="#0000FF"><tt>#ifdef</tt></font>
+and <font color="#0000FF"><tt>#else</tt></font>.</p>
+
+<h4>Negative conditional</h4>
+
+<blockquote>
+    <pre><font color="#0000FF">#ifndef</font> <font
+color="#800080"><em>Condition</em></font>
+...
+<font color="#0000FF">#else</font>
+...
+<font color="#0000FF">#endif</font></pre>
+</blockquote>
+
+<p>This is equivalent to:</p>
+
+<blockquote>
+    <pre><font color="#0000FF">#ifdef <strong>!</strong></font> <font
+color="#800080"><em>Condition</em></font>
+...
+<font color="#0000FF">#else</font>
+...
+<font color="#0000FF">#endif</font></pre>
+</blockquote>
+
+<h2>Examples</h2>
+
+<p><em>Gepp</em> can be used in three different kinds of cases
+when writing portable Eiffel classes. The first case is when the <a
+href="inheritance.html">adaptation by inheritance</a> and the <a
+href="client.html">client adaptation</a> techniques are not
+applicable. This can happen due to a language, rather than a
+kernel class, incompatibility between Eiffel compilers. For
+example, in a previous release of Visual Eiffel, there was a bug
+in the <em>select</em> clause. In class <font color="#008080"><em><tt>FOO</tt></em></font>
+sketched below, the compiler was reporting a validity error
+unless two select clauses were specified, one in <font
+color="#008080"><em><tt>NUMERIC</tt></em></font> and one in <font
+color="#008080"><em><tt>HASHABLE</tt></em></font>. However,
+according to <em>Eiffel: The Language</em> and all other
+compilers, the class is valid if and only if one and only one
+select clause is specified for <font color="#008080"><em><tt>is_equal</tt></em></font>,
+either in <font color="#008080"><em><tt>NUMERIC</tt></em></font><font
+color="#008080" size="2" face="Courier New"><em> </em></font>or
+in <font color="#008080"><em><tt>HASHABLE</tt></em></font>, but
+definitely not both. The only solution to solve this
+incompatibility was to use the preprocessor as follows:</p>
+
+<blockquote>
+    <pre><font color="#008080"><em><strong>class</strong></em> <em>FOO</em>
+
+<em><strong>inherit</strong></em>
+
+    <em>NUMERIC</em>
+        <em><strong>redefine</strong></em><em>
+            is_equal
+        </em><em><strong>select</strong></em><em>
+            is_equal
+        </em><em><strong>end</strong></em><em>
+
+    COMPARABLE
+        </em><em><strong>rename</strong></em><em>
+            is_equal</em> <em><strong>as</strong></em><em> comp_is_equal</em>
+        <em><strong>end</strong></em>
+<em>
+    HASHABLE</em>
+        <em><strong>undefine</strong></em><em>
+            is_equal</em>
+</font><font color="#0000FF">#ifdef</font><font color="#008080"> </font><font
+color="#800080">VE</font><font color="#008080">
+        <em><strong>select</strong></em><em>
+            is_equal</em>
+</font><font color="#0000FF">#endif</font><font color="#008080">
+        <em><strong>end</strong></em>
+
+<em><strong>feature</strong></em> -- Comparison
+
+    <em>...</em>
+
+<em><strong>end</strong></em> -- class FOO</font></pre>
+</blockquote>
+
+<p>The names used for each supported Eiffel compiler are, in
+alphabetic order:</p>
+
+<blockquote>
+    <table border="0">
+        <tr>
+            <td width="140">Halstenbach</td>
+            <td><font color="#800080"><tt>HACT</tt></font></td>
+        </tr>
+        <tr>
+            <td width="140">ISE Eiffel</td>
+            <td><font color="#800080"><tt>ISE</tt></font></td>
+        </tr>
+        <tr>
+            <td width="140">SmallEiffel</td>
+            <td><font color="#800080"><tt>SE</tt></font></td>
+        </tr>
+        <tr>
+            <td width="140"><em><strong>Tower</strong></em><em>Eiffel</em></td>
+            <td><font color="#800080"><tt>TOWER</tt></font></td>
+        </tr>
+        <tr>
+            <td width="140">Visual Eiffel</td>
+            <td><font color="#800080"><tt>VE</tt></font></td>
+        </tr>
+    </table>
+</blockquote>
+
+<p>and <em>gepp</em> should then be invoked as follows:</p>
+
+<blockquote>
+    <table border="0">
+        <tr>
+            <td width="140">Halstenbach</td>
+            <td><font color="#800000"><tt>gepp -D</tt><em><tt>HACT</tt></em><tt>
+            </tt><em><tt>foo.ge foo.e</tt></em></font></td>
+        </tr>
+        <tr>
+            <td width="140">ISE Eiffel</td>
+            <td><font color="#800000"><tt>gepp -D</tt><em><tt>ISE</tt></em><tt>
+            </tt><em><tt>foo.ge foo.e</tt></em></font></td>
+        </tr>
+        <tr>
+            <td width="140">SmallEiffel</td>
+            <td><font color="#800000"><tt>gepp -D</tt><em><tt>SE</tt></em><tt>
+            </tt><em><tt>foo.ge foo.e</tt></em></font></td>
+        </tr>
+        <tr>
+            <td width="140"><em><strong>Tower</strong></em><em>Eiffel</em></td>
+            <td><font color="#800000"><tt>gepp -D</tt><em><tt>TOWER</tt></em><tt>
+            </tt><em><tt>foo.ge foo.e</tt></em></font></td>
+        </tr>
+        <tr>
+            <td width="140">Visual Eiffel</td>
+            <td><font color="#800000"><tt>gepp -D</tt><em><tt>VE</tt></em><tt>
+            </tt><em><tt>foo.ge foo.e</tt></em></font></td>
+        </tr>
+    </table>
+</blockquote>
+
+<p><em>Gepp</em> can also be used even when the adaptation
+techniques using inheritance or client relationship would
+otherwise work. However the main use of <em>gepp</em> was
+actually to support these techniques by automatically generating
+the extra &quot;adapted&quot; kernel cluster associated with each
+Eiffel compiler from a set of &quot;template&quot; classes such
+as:</p>
+
+<blockquote>
+    <pre><font color="#008080"><em><strong>class</strong></em> <em>KL_INTEGER_ROUTINES</em>
+
+<em><strong>inherit</strong></em>
+
+    <em>PLATFORM</em>
+
+<em><strong>feature</strong></em> -- Conversion
+
+    <em>to_character</em> (<em>an_int</em>: <em>INTEGER</em>): <em>CHARACTER</em> <em><strong>is</strong></em>
+            -- Character whose ASCII code is <em>an_int</em>
+        <em><strong>require</strong></em>
+            <em>a_int_large_enough</em>: <em>an_int</em> &gt;= <em>Minimum_character_code</em>
+            <em>a_int_small_enough</em>: <em>an_int</em> &lt;= <em>Maximum_character_code</em>
+        <em><strong>do</strong></em>
+</font><font color="#0000FF">#ifdef</font><font color="#008080"> </font><font
+color="#800080">VE</font><font color="#008080">
+            <em>Result</em>.<em>from_integer</em> (<em>an_int</em>)
+</font><font color="#0000FF">#else
+#ifdef</font><font color="#008080"> </font><font color="#800080">ISE</font><font
+color="#008080"> </font><font color="#0000FF">||</font><font
+color="#008080"> </font><font color="#800080">HACT</font><font
+color="#008080">
+            <em>Result</em> := <em>'%U'</em> + <em>an_int</em>
+</font><font color="#0000FF">#else</font><font color="#008080">
+            <em>Result</em> := <em>an_int</em>.<em>to_character</em>
+</font><font color="#0000FF">#endif</font><font color="#008080">
+</font><font color="#0000FF">#endif</font><font color="#008080">
+        <em><strong>ensure</strong></em>
+            <em>valid_character_code</em>: <em>Result</em>.<em>code</em> = <em>an_int</em>
+        <em><strong>end</strong></em>
+
+<em><strong>end</strong></em> -- class KL_INTEGER_ROUTINES</font></pre>
+</blockquote>
+
+<p>The corresponding class <font color="#008080"><em><tt>KL_INTEGER_ROUTINES</tt></em></font>
+for Visual Eiffel, generated with the following command-line:</p>
+
+<blockquote>
+    <pre><font color="#800000">gepp -D<em>VE</em> <em>kl_integer_routines.ge kl_integer_routines.e</em></font></pre>
+</blockquote>
+
+<p>will then be:</p>
+
+<blockquote>
+    <pre><font color="#008080"><em><strong>class</strong></em> <em>KL_INTEGER_ROUTINES</em>
+
+<em><strong>inherit</strong></em>
+
+    <em>PLATFORM</em>
+
+<em><strong>feature</strong></em> -- Conversion
+
+    <em>to_character</em> (<em>an_int</em>: <em>INTEGER</em>): <em>CHARACTER</em> <em><strong>is</strong></em>
+            -- Character whose ASCII code is <em>an_int</em>
+        <em><strong>require</strong></em>
+            <em>a_int_large_enough</em>: <em>an_int</em> &gt;= <em>Minimum_character_code</em>
+            <em>a_int_small_enough</em>: <em>an_int</em> &lt;= <em>Maximum_character_code</em>
+        <em><strong>do</strong></em>
+            <em>Result</em>.<em>from_integer</em> (<em>an_int</em>)
+        <em><strong>ensure</strong></em>
+            <em>valid_character_code</em>: <em>Result</em>.<em>code</em> = <em>an_int</em>
+        <em><strong>end</strong></em>
+
+<em><strong>end</strong></em> -- class KL_INTEGER_ROUTINES</font></pre>
+</blockquote>
+
+<p>Finally, preprocessing can also be used even when no
+portability issue is involved. For example, let's consider that
+besides the portable way to implement a particular feature, one
+of the Eiffel compilers provides a much more optimized mechanism,
+although not portable. It would be a shame to have to discard
+this optimization just because the code being written had to be
+portable. On the other hand, <em>gepp</em> would make it possible
+to take advantage of this optimized feature using <font
+color="#0000FF"><tt>#ifdef</tt></font> instructions as in the
+examples above. </p>
+
+<h2>Caveats</h2>
+
+<p>The only way to write portable code in C is by taking
+advantage of the C-preprocessor. <em>Gepp</em> could be used in
+pretty much the same way in Eiffel. However it is against the
+Eiffel philosophy to use such mechanism and none of the existing
+Eiffel compilers provide support for such preprocessing. Eiffel
+is by nature an elegant and very readable language which should
+not be soiled with ugly preprocessing instructions. As a
+consequence, this technique has only been used in cases where no
+other solutions were satisfactory.</p>
+
+<hr size="1">
+
+<p><font size="2">THIS SOFTWARE IS PROVIDED &quot;AS IS&quot; AND
+WITHOUT ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, WITHOUT
+LIMITATION, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS
+FOR A PARTICULAR PURPOSE.</font></p>
+
+<hr size="1">
+<div align="left">
+
+<address>
+    <font size="2"><b>Copyright © 1997</b></font><font size="1"><b>,
+    </b></font><font size="2"><strong>Eric Bezault</strong></font><strong>
+    </strong><font size="2"><br>
+    </font><a href="mailto:ericb@gobo.demon.co.uk"><font size="2">ericb@gobo.demon.co.uk</font></a><font
+    size="2"> <br>
+    </font><a href="http://www.gobo.demon.co.uk"><font size="2">http://www.gobo.demon.co.uk</font></a><font
+    size="2"><br>
+    <strong>Last Updated:</strong> 4 October 1997</font><br>
+    <!--webbot bot="PurpleText"
+    preview="
+$Date$ 
+$Revision$" --> 
+</address>
+</div>
+</body>
+</html>

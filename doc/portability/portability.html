@@ -1,0 +1,665 @@
+<!DOCTYPE HTML PUBLIC "-//IETF//DTD HTML//EN">
+<html>
+
+<head>
+<meta http-equiv="Content-Type"
+content="text/html; charset=iso-8859-1">
+<meta name="GENERATOR" content="Microsoft FrontPage 2.0">
+<title>Portability Issues</title>
+</head>
+
+<body bgcolor="#FFFFFF">
+
+<h1>Portability Issues</h1>
+
+<hr size="1">
+
+<p>The following non-exhaustive list of portability issues
+encountered during the development of this package, along with
+the corresponding solutions which have been adopted, will help to
+understand some of the design and implementation decisions which
+have been made. Hopefully this list will also be useful to those
+of you who want to develop portable Eiffel class libraries. Feel
+free to contact <a href="mailto:ericb@gobo.demon.co.uk">me</a> if
+you want to discuss some of the items from this list or if you
+experienced other interoperability problems.</p>
+
+<hr size="1">
+
+<p><font color="#FF0000"><strong><u>Problem</u></strong><strong>:</strong></font><strong>
+</strong>Eiffel is a case-insensitive language. However
+SmallEiffel is case-sensitive!</p>
+
+<p><font color="#008000"><strong><u>Solution</u></strong><strong>:</strong></font><strong>
+</strong>A new command-line option <font color="#800000"><tt>-case_insensitive</tt></font>
+has been introduced in SmallEiffel -0.83 to make the compiler
+case-insensitive.</p>
+
+<hr size="1">
+
+<p><font color="#FF0000"><strong><u>Problem</u></strong><strong>:</strong></font>
+In order to avoid classname clashes between different libraries,
+some Eiffel compilers support class renaming in the Ace file or
+equivalent. But some don't.</p>
+
+<p><font color="#008000"><strong><u>Solution</u></strong><strong>:</strong></font><strong>
+</strong>The name of the classes have been systematically
+prefixed with a two-letter library code. For example the classes
+from the <em>Gobo Eiffel Structure Library</em> have been
+prefixed by <font size="2">DS</font>, as in <font color="#008080"><em><tt>DS_LINKED_LIST</tt></em></font>,
+whereas classes from the <em>Gobo Eiffel Lexical Library</em>
+have been prefixed by <font size="2">LX</font>, as in <font
+color="#008080"><em><tt>LX_SCANNER</tt></em></font>.</p>
+
+<hr size="1">
+
+<p><font color="#FF0000"><strong><u>Problem</u></strong><strong>:</strong></font><strong>
+</strong>There is no Data Structure library standard. Although
+each Eiffel compiler provides its own Data Structure library,
+none of them is portable.</p>
+
+<p><font color="#008000"><strong><u>Solution</u></strong><strong>:</strong></font><strong>
+</strong>Although portable Data Structure libraries, such as <a
+href="http://www.altsoft.demon.co.uk/free/pylon.html">Pylon</a>,
+have been made public, none of these libraries were available
+when this project has been started. Therefore a (yet another)
+Data Structure library (the <em>Gobo Eiffel Structure Library</em>)
+has been developed as a foundation for the other libraries of
+this package.</p>
+
+<hr size="1">
+
+<p><font color="#FF0000"><strong><u>Problem</u></strong><strong>:</strong></font><strong>
+</strong>According to <font size="2">ELKS '95</font>, a class has
+to inherit from <font color="#008080"><em><tt>HASHABLE</tt></em></font>
+to supply feature <font color="#008080"><em><tt>hash_code</tt></em></font>
+in its interface. However SmallEiffel does not support class <font
+color="#008080"><em><tt>HASHABLE </tt></em></font>but provides a
+built-in feature <font color="#008080"><em><tt>hash_code </tt></em></font>in
+class <font color="#008080"><em><tt>GENERAL</tt></em></font>
+instead.</p>
+
+<p><font color="#008000"><strong><u>Solution</u></strong><strong>:</strong></font><strong>
+</strong>After several attempts, it was impossible to make
+classes using hash tables portable using either the <a
+href="inheritance.html">inheritance</a> or <a href="client.html">client</a>
+adaptation techniques. Even creating a dummy class <font
+color="#008080"><em><tt>HASHABLE</tt></em></font> in SmallEiffel
+didn't work mainly because of the fact that <font color="#008080"><em><tt>hash_code
+</tt></em></font>was built-in in <font color="#008080"><em><tt>GENERAL</tt></em></font>.The
+only alternative left was to use <a href="gepp.html"><em>gepp</em></a>
+preprocessor as follows:</p>
+
+<blockquote>
+    <pre><font color="#0000FF">#ifdef</font><font color="#008080"> </font><font
+color="#800080">SE</font><font color="#008080">
+<em><strong>class</strong></em><em> DS_HASH_TABLE</em> [<em>G</em>, <em>K</em>]
+</font><font color="#0000FF">#else</font><font color="#008080">
+<em><strong>class</strong></em><em> DS_HASH_TABLE</em> [<em>G</em>, <em>K</em> -&gt; <em>HASHABLE</em>]
+</font><font color="#0000FF">#endif</font><font color="#008080">
+
+<em><strong>inherit</strong></em>
+
+    <em>DS_TABLE</em> [<em>G</em>, <em>K</em>]
+...
+<em><strong>end</strong></em> -- class DS_HASH_TABLE</font></pre>
+</blockquote>
+
+<p>or as in:</p>
+
+<blockquote>
+    <pre><font color="#008080"><em><strong>class</strong></em><em> FOO
+
+</em><em><strong>inherit</strong></em><em>
+
+    BAR</em>
+</font><font color="#0000FF">#ifdef</font><font color="#008080"> </font><font
+color="#800080">SE</font><font color="#008080">
+        <em><strong>redefine</strong></em><em>
+            hash_code
+        </em><em><strong>end</strong></em>
+</font><font color="#0000FF">#endif
+
+#ifndef</font><font color="#008080"> </font><font color="#800080">SE</font><font
+color="#008080">
+    <em>HASHABLE</em>
+</font><font color="#0000FF">#endif</font><font color="#008080">
+...<em><strong>
+feature</strong></em> -- Access
+
+    <em>hash_code</em>: <em>INTEGER</em>
+            -- Hash code value
+...
+<em><strong>end</strong></em> -- class FOO</font></pre>
+</blockquote>
+
+<hr size="1">
+
+<p><font color="#FF0000"><strong><u>Problem</u></strong><strong>:
+</strong></font>Some Eiffel compilers do not handle properly
+inheritance from classes <font color="#008080"><em><tt>ARRAY</tt></em></font>
+or <font color="#008080"><em><tt>STRING</tt></em></font>. This is
+mainly because of some built-in features hard-coded for
+optimization purposes but which cannot even be renamed in
+descendant classes without breaking the run-time system (try to
+rename feature <font color="#008080"><em><tt>count</tt></em></font>
+from class <font color="#008080"><em><tt>ARRAY</tt></em><tt> </tt></font>in
+a descendant class with SmallEiffel to see for yourself). As a
+consequence, classes inheriting from <font color="#008080"><em><tt>ARRAY
+</tt></em></font>for implementation purposes (such as <font
+color="#008080"><em><tt>DS_ARRAYED_LIST</tt></em></font> for
+example) will not work as expected with the faulty compilers.</p>
+
+<p><font color="#008000"><strong><u>Solution</u></strong><strong>:
+</strong></font>Instead of using implementation by inheritance,
+classes such as <font color="#008080"><em><tt>DS_ARRAYED_LIST</tt></em></font>
+have a hidden attribute of type <font color="#008080"><em><tt>ARRAY</tt></em></font>
+and implement their functionalities by delegation.</p>
+
+<hr size="1">
+
+<p><font color="#FF0000"><strong><u>Problem</u></strong><strong>:
+</strong></font>Class <font color="#008080"><em><tt>FILE</tt></em></font>
+is specified in <font size="2">ELKS '95</font> with routines to
+read from (<font color="#008080"><em><tt>read_*</tt></em></font>)
+and to write to (<font color="#008080"><em><tt>put_*</tt></em></font>)
+files. However each Eiffel compiler differs from the other on
+that matter. ISE Eiffel and Halstenbach provide an abstract class
+<font color="#008080"><em><tt>IO_MEDIUM</tt></em></font> as
+ancestor for files, sockets, etc. As opposed to <font size="2">ELKS</font>,
+class <font color="#008080"><em><tt>FILE </tt></em></font>is
+deferred, one possible effective descendant being <font
+color="#008080"><em><tt>PLAIN_TEXT_FILE</tt></em></font>. <em><strong>Tower</strong></em><em>Eiffel</em>
+and Visual Eiffel support class <font color="#008080"><em><tt>FILE</tt></em></font>
+from <font size="2">ELKS</font>, but <em><strong>Tower</strong></em><em>Eiffel</em>
+also provides class <font color="#008080"><em><tt>TEXT_STREAM</tt></em></font>
+as an ancestor of <font color="#008080"><em><tt>FILE</tt></em></font>
+(similar to <font color="#008080"><em><tt>IO_MEDIUM</tt></em></font>
+above). Finally, SmallEiffel does not support <font
+color="#008080"><em><tt>FILE</tt></em></font> at all, but instead
+has the notion of <font color="#008080"><em><tt>INPUT_STREAM</tt></em></font>
+and <font color="#008080"><em><tt>OUTPUT_STREAM</tt></em></font>,
+with two effective descendants <font color="#008080"><em><tt>STD_FILE_READ</tt></em></font>
+and <font color="#008080"><em><tt>STD_FILE_WRITE</tt></em></font>.
+This is a real portability nightmare. The obvious solution which
+is to write a class <font color="#008080"><em><tt>KL_FILE</tt></em></font>,
+implemented as a descendant of the various classes above provided
+by each compiler, is not satisfactory. For example, let's have a
+routine which takes a file as argument. Since the standard input
+and output files provided in class <font color="#008080"><em><tt>STD_FILES</tt></em></font>
+from <font size="2">ELKS</font> are not of type <font
+color="#008080"><em><tt>KL_FILE</tt></em></font>, they cannot be
+passed as argument to this routine, making the routine rather
+useless. The ideal solution would be to take advantage each
+compiler implementation choices, transparently allowing the use
+of <font color="#008080"><em><tt>IO_MEDIUM </tt></em></font>or <font
+color="#008080"><em><tt>TEXT_STREAM</tt></em></font> without
+breaking too much portability constraints.</p>
+
+<p><font color="#008000"><strong><u>Solution</u></strong><strong>:
+</strong></font>From the description above, the <a
+href="inheritance.html">adaptation by inheritance</a> technique
+has naturally been discarded, <a href="client.html">adaptation
+using client</a> relationship being a better choice when dealing
+with standard files as regular text files. To accommodate with
+SmallEiffel viewpoint, the file functionalities had to be split
+into two separate categories: input and output. Finally, using
+anchor types would ease the use of <font color="#008080"><em><tt>IO_MEDIUM</tt></em></font>
+and <font color="#008080"><em><tt>TEXT_STREAM </tt></em></font>while
+keeping portability in mind. Following are two classes taking
+care of input functionalities. The same kind of classes provides
+the output counterpart. The first class provides the anchor types
+to be used when requiring objects with file access facilities,
+and a once function giving access to adapted input features. This
+class should be used through inheritance to take advantage of the
+anchor technique.</p>
+
+<blockquote>
+    <pre><font color="#008080"><em><strong>class</strong></em><em> KL_SHARED_INPUT_STREAM_ROUTINES
+
+</em><em><strong>feature</strong></em> -- Access
+
+    <em>input_stream_</em>: <em>KL_INPUT_STREAM_ROUTINES</em> <em><strong>is</strong></em>
+            -- Routines that ought to be in class INPUT_STREAM
+        <em><strong>once</strong></em>
+            !! <em>Result</em>
+        </font><font color="#008080" size="3"><em><strong>ensure</strong></em></font><font
+color="#008080"><em>
+            input_stream__not_void</em>: <em>Result</em> /= <em>Void</em>
+        <em><strong>end</strong></em>
+
+<em><strong>feature</strong></em> -- Anchor types
+
+</font><font color="#0000FF">#ifdef</font><font color="#008080"> </font><font
+color="#800080">ISE </font><font color="#0000FF">||</font><font
+color="#800080"> HACT</font><font color="#008080">
+    <em>INPUT_STREAM_TYPE</em>: <em>IO_MEDIUM</em> <em><strong>is do end</strong></em>
+</font><font color="#0000FF">#else
+#ifdef</font><font color="#008080"> </font><font color="#800080">SE</font><font
+color="#008080">
+    <em>INPUT_STREAM_TYPE</em>: <em>INPUT_STREAM</em> <em><strong>is do end</strong></em>
+</font><font color="#0000FF">#else
+#ifdef</font><font color="#008080"> </font><font color="#800080">TOWER</font><font
+color="#008080">
+    <em>INPUT_STREAM_TYPE</em>: <em>TEXT_STREAM</em> <em><strong>is do end</strong></em>
+</font><font color="#0000FF">#else</font><font color="#008080">
+    <em>INPUT_STREAM_TYPE</em>: <em>FILE</em> <em><strong>is do end</strong></em>
+</font><font color="#0000FF">#endif
+#endif
+#endif</font><font color="#008080">
+            -- Anchor type
+
+<em><strong>end</strong></em> -- class KL_SHARED_INPUT_STREAM_ROUTINES</font></pre>
+</blockquote>
+
+<p>Note that the name convention used for the once function is
+derived from the name of the class and suffixed by an underscore
+character (<tt>_</tt>) to try to avoid name clashes with
+user-defined feature names. The second class uses the <a
+href="client.html">client adaptation</a> technique to provide
+portable input features. This class should only be used through
+the once function of the class above.</p>
+
+<blockquote>
+    <pre><font color="#008080"><em><strong>class</strong></em><em> KL_INPUT_STREAM_ROUTINES
+
+</em><em><strong>inherit</strong></em><em>
+
+    KL_SHARED_INPUT_STREAM_ROUTINES
+
+</em><em><strong>feature</strong></em> -- Initialization
+
+    <em>make_file_open_read</em> (<em>a_filename</em>: <em>STRING</em>): <em><strong>like</strong></em><em> INPUT_STREAM_TYPE </em><em><strong>is</strong></em>
+            -- Create a new file object with <em>a_filename</em> as
+            -- file name and try to open it in read-only mode.
+            -- <em>is_open_read</em> (<em>Result</em>) is set to True
+            -- if operation was successful.
+        <em><strong>require</strong></em>
+            <em>a_filename_not_void</em>: <em>a_filename</em> /= <em>Void</em>
+            <em>a_filename_not_empty</em>: <em><strong>not</strong></em> <em>a_filename</em>.<em>empty</em>
+        <em><strong>local</strong></em>
+            <em>rescued</em>: <em>BOOLEAN</em>
+</font><font color="#0000FF">#ifdef </font><font color="#800080">ISE</font><font
+color="#0000FF"> || </font><font color="#800080">HACT</font><font
+color="#008080">
+            <em>a_file</em>: <em>PLAIN_TEXT_FILE</em>
+</font><font color="#0000FF">#else
+#ifdef</font><font color="#008080"> </font><font color="#800080">SE</font><font
+color="#008080">
+            <em>a_file</em>: <em>STD_FILE_READ</em>
+</font><font color="#0000FF">#else
+#ifdef</font><font color="#008080"> </font><font color="#800080">TOWER</font><font
+color="#008080">
+            <em>a_file</em>: <em>FILE</em>
+</font><font color="#0000FF">#endif
+#endif
+#endif</font><font color="#008080">
+        <em><strong>do
+            if not</strong></em> <em>rescued</em> <em><strong>then</strong></em>
+</font><font color="#0000FF">#ifdef </font><font color="#800080">ISE</font><font
+color="#0000FF"> || </font><font color="#800080">HACT</font><font
+color="#0000FF"> || </font><font color="#800080">TOWER</font><font
+color="#008080">
+                !! <em>a_file</em>.<em>make</em> (<em>a_filename</em>)
+                <em>Result</em> := <em>a_file</em>
+                <em>a_file</em>.<em>open_read</em>
+            <em><strong>elseif not</strong></em> <em>a_file</em>.<em>is_closed</em> <em><strong>then</strong></em>
+                <em>a_file</em>.<em>close</em>
+</font><font color="#0000FF">#else
+#ifdef</font><font color="#008080"> </font><font color="#800080">SE</font><font
+color="#008080">
+                !! <em>a_file</em>.<em>make</em>
+                <em>Result</em> := <em>a_file</em>
+                <em>a_file</em>.<em>connect_to</em> (<em>a_filename</em>)
+            <em><strong>elseif</strong></em> <em>a_file</em>.<em>is_connected</em> <em><strong>then</strong></em>
+                <em>a_file</em>.<em>disconnect</em>
+</font><font color="#0000FF">#else</font><font color="#008080">
+                !! <em>Result</em>.<em>make</em> (<em>a_filename</em>)
+                <em>Result</em>.<em>open_read</em>
+            <em><strong>elseif</strong></em> <em><strong>not</strong></em> <em>Result</em>.<em>is_closed</em> <em><strong>then</strong></em>
+                <em>Result</em>.<em>close</em>
+</font><font color="#0000FF">#endif
+#endif</font><font color="#008080">
+            <em><strong>end
+        ensure</strong></em>
+            <em>file_not_void</em>: <em>Result</em> /= <em>Void</em>
+        <em><strong>rescue
+            if not</strong></em> <em>rescued</em> <em><strong>then</strong></em>
+                <em>rescued</em> := <em>True</em>
+                <em><strong>retry</strong></em>
+            <em><strong>end
+        end</strong></em>
+
+<em><strong>feature</strong></em> -- Status report
+
+    <em>is_open_read</em> (<em>a_stream</em>: <em><strong>like</strong></em> <em>INPUT_STREAM_TYPE</em>): <em>BOOLEAN</em> <em><strong>is</strong></em>
+            -- Is <em>a_stream</em> open in read mode?
+        <em><strong>require</strong></em>
+            <em>a_stream_void</em>: <em>a_stream</em> /= <em>Void</em>
+        <em><strong>do</strong></em>
+</font><font color="#0000FF">#ifdef</font><font color="#008080"> </font><font
+color="#800080">SE</font><font color="#008080">
+            <em>Result</em> := <em>a_stream</em>.<em>is_connected</em>
+</font><font color="#0000FF">#else</font><font color="#008080">
+            <em>Result</em> := <em>a_stream</em>.<em>is_open_read</em>
+</font><font color="#0000FF">#endif</font><font color="#008080">
+        <em><strong>end
+...
+end</strong></em> -- class KL_INPUT_STREAM_ROUTINES</font></pre>
+</blockquote>
+
+<p>Following is an example using portable file access:</p>
+
+<blockquote>
+    <pre><font color="#008080"><em><strong>class</strong></em><em> FOO
+
+</em><em><strong>inherit</strong></em><em>
+
+    KL_SHARED_INPUT_STREAM_ROUTINES
+
+</em><em><strong>feature</strong></em><em>
+
+    parse_from_file</em> (<em>a_file</em>: <em><strong>like</strong></em> <em>KL_INPUT_STREAM</em>) <em><strong>is</strong></em>
+            -- Parse data from <em>a_file</em>.
+        <em><strong>require</strong></em>
+            <em>a_file_not_void</em>: <em>a_file</em> /= <em>Void</em>
+            <em>a_file_open_read</em>: <em>input_stream_</em>.<em>is_open_read</em> (<em>a_file</em>)
+        <em><strong>do</strong></em>
+            ...
+        <em><strong>end</strong></em>
+
+    <em>execute</em> <em><strong>is</strong></em>
+        <em><strong>local</strong></em>
+            <em>a_file</em>: <em><strong>like</strong></em> <em>KL_INPUT_STREAM</em>
+        <em><strong>do</strong></em>
+            <em>a_file</em> := <em>input_stream_</em>.<em>make_file_open_read</em> (<em>&quot;foo.txt&quot;</em>)
+            <em><strong>if</strong></em> <em>input_stream_</em>.<em>is_open_read</em> (<em>a_file</em>) <em><strong>then</strong></em>
+                <em>parse_from_file</em> (<em>a_file</em>)
+            <em><strong>else</strong></em>
+                    -- Parse from standard input.
+                <em>parse_from_file</em> (<em>io</em>.<em>input</em>)
+            <em><strong>end</strong></em>
+        <em><strong>end</strong></em>
+
+<em><strong>end</strong></em> -- class FOO</font></pre>
+</blockquote>
+
+<hr size="1">
+
+<p><font color="#FF0000"><strong><u>Problem</u></strong><strong>:
+</strong></font>According to <font size="2">ELKS '95</font>,
+standard files are accessible as follows:</p>
+
+<blockquote>
+    <pre><font color="#008080"><em>io.input
+io.output
+io.error</em></font></pre>
+</blockquote>
+
+<p>and are all of type <font color="#008080"><em><tt>FILE</tt></em></font>.
+However in SmallEiffel they appear as <font color="#008080"><em><tt>std_input</tt></em></font>,
+<font color="#008080"><em><tt>std_output</tt></em></font> and <font
+color="#008080"><em><tt>std_error</tt></em></font> in class <font
+color="#008080"><em><tt>GENERAL</tt></em></font>. Moreover, as
+sketched in the portability issue above with respect to <font
+color="#008080"><em><tt>FILE</tt></em></font>, they are declared
+of a different type across different compilers.</p>
+
+<p><font color="#008000"><strong><u>Solution</u></strong><strong>:
+</strong></font>The solution adopted consists of two steps.
+First, to solve the typing problem, the anchor types technique
+described above in the portability issue about files. Then, two
+classes are introduced. The first class is more or less like an
+adaptation of the <font color="#008080"><em><tt>STD_FILES</tt></em></font>
+class from <font size="2">ELKS</font>:</p>
+
+<blockquote>
+    <pre><font color="#008080"><em><strong>class</strong></em><em> KL_STANDARD_FILES
+
+</em><em><strong>inherit</strong></em><em>
+
+    KL_SHARED_INPUT_STREAM_ROUTINES
+
+    KL_SHARED_OUTPUT_STREAM_ROUTINES
+
+</em><em><strong>feature</strong></em> -- Access
+
+</font><font color="#0000FF">#ifdef</font><font color="#008080"> </font><font
+color="#800080">SE</font><font color="#008080">
+    <em>input</em>: <em>STD_INPUT</em> <em><strong>is</strong></em>
+</font><font color="#0000FF">#else
+#ifdef</font><font color="#008080"> </font><font color="#800080">TOWER</font><font
+color="#008080">
+    <em>input</em>: <em>TEXT_STREAM</em> <em><strong>is</strong></em>
+</font><font color="#0000FF">#else</font><font color="#008080">
+    <em>input</em>: <em>FILE</em> <em><strong>is</strong></em>
+</font><font color="#0000FF">#endif
+#endif</font><font color="#008080">
+            -- Standard input file
+        <em><strong>once</strong></em>
+</font><font color="#0000FF">#ifdef</font><font color="#008080"> </font><font
+color="#800080">SE</font><font color="#008080">
+            <em>Result</em> := <em>std_input</em>
+</font><font color="#0000FF">#else</font><font color="#008080">
+            <em>Result</em> := <em>io</em>.<em>input</em>
+</font><font color="#0000FF">#endif</font><font color="#008080">
+        <em><strong>ensure</strong></em>
+            <em>file_not_void</em>: <em>Result</em> /= <em>Void</em>
+            <em>file_open_read</em>: <em>input_stream_</em>.<em>is_open_read</em> (<em>Result</em>)
+        <em><strong>end</strong></em>
+
+</font>... Same thing for <font color="#008080"><em>output</em></font> and <font
+color="#008080"><em>error</em></font> ...<font color="#008080">
+
+<em><strong>end</strong></em> -- class KL_STANDARD_FILES</font></pre>
+</blockquote>
+
+<p>Note that <font color="#008080"><em><tt>input</tt></em></font>
+could not be declared as<font color="#008080"><em><strong><tt>
+like</tt></strong></em><em><tt> KL_INPUT_STREAM </tt></em></font>since
+it is a once function. The second class is used to access these
+standard files through a once function in the same way as <font
+color="#008080"><em><tt>io</tt></em></font> from <font
+color="#008080"><em><tt>GENERAL</tt></em></font>:</p>
+
+<blockquote>
+    <pre><font color="#008080"><em><strong>class</strong></em><em> KL_SHARED_STANDARD_FILES
+
+</em><em><strong>feature</strong></em> -- Access
+
+    <em>std</em>: <em>KL_STANDARD_FILES</em> <em><strong>is</strong></em>
+            -- Standard files
+        <em><strong>once</strong></em>
+            !! Result
+        <em><strong>ensure</strong></em>
+            <em>std_not_void</em>: <em>Result</em> /= <em>Void</em>
+        <em><strong>end</strong></em>
+
+<em><strong>end</strong></em> -- class KL_SHARED_STANDARD_FILES</font></pre>
+</blockquote>
+
+<p>Now, wherever one would have used <font color="#008080"><em><tt>io.input</tt></em></font>,
+<font color="#008080"><em><tt>io.output</tt></em></font> or <font
+color="#008080"><em><tt>io.error</tt></em></font>, one can used <font
+color="#008080"><em><tt>std.input</tt></em></font>, <font
+color="#008080"><em><tt>std.output</tt></em></font> or <font
+color="#008080"><em><tt>std.error</tt></em></font> in a portable
+way as in the following example:</p>
+
+<blockquote>
+    <pre><font color="#008080"><em><strong>class</strong></em><em> FOO
+
+</em><em><strong>inherit</strong></em><em>
+
+    KL_SHARED_STANDARD_FILES
+
+</em><em><strong>feature</strong></em><em>
+
+    parse_from_file</em> (<em>a_file</em>: <em><strong>like</strong></em> <em>KL_INPUT_STREAM</em>) <em><strong>is</strong></em>
+            -- Parse data from <em>a_file</em>.
+        <em><strong>require</strong></em>
+            <em>a_file_not_void</em>: <em>a_file</em> /= <em>Void</em>
+            <em>a_file_open_read</em>: <em>input_stream_</em>.<em>is_open_read</em> (<em>a_file</em>)
+        <em><strong>do</strong></em>
+            ...
+        <em><strong>end</strong></em>
+
+    <em>execute</em> <em><strong>is</strong></em>
+        <em><strong>local</strong></em>
+            <em>a_file</em>: <em><strong>like</strong></em> <em>KL_INPUT_STREAM</em>
+            <em>a_name</em>: <em>STRING</em>
+        <em><strong>do</strong></em>
+            <em>std</em>.<em>output</em>.<em>put_string</em> (&quot;Enter a filename: &quot;)
+            <em>std</em>.<em>input</em>.<em>read_line</em>
+            <em>a_name</em> := <em>std</em>.<em>input</em>.<em>last_string</em>
+            <em>a_file</em> := <em>input_stream_</em>.<em>make_file_open_read</em> (<em>a_name</em>)
+            <em><strong>if</strong></em> <em>input_stream_</em>.<em>is_open_read</em> (<em>a_file</em>) <em><strong>then</strong></em>
+                <em>parse_from_file</em> (<em>a_file</em>)
+            <em><strong>else</strong></em>
+                <em>std</em>.<em>error</em>.<em>put_string</em> (<em>&quot;Cannot open file &quot;</em>)
+                <em>std</em>.<em>error</em>.<em>put_string</em> (<em>a_name</em>)
+                    -- According to ELKS, the following line should
+                    -- be written &quot;std.error.put_new_line&quot;, however
+                    -- this routine is named `new_line' in ISE Eiffel
+                    -- and Halstenbach. At least, the following line
+                    -- is portable.
+                <em>std</em>.<em>error</em>.<em>put_character</em> (<em>'%N'</em>)
+                    -- Parse from standard input instead.
+                <em>parse_from_file</em> (<em>std</em>.<em>input</em>)
+            <em><strong>end</strong></em>
+        <em><strong>end</strong></em>
+
+<em><strong>end</strong></em> -- class FOO</font></pre>
+</blockquote>
+
+<hr size="1">
+
+<p><font color="#FF0000"><strong><u>Problem</u></strong><strong>:
+</strong></font>Some useful features are missing in <font
+size="2">ELKS '95</font>. Most often these features are already
+provided by some compilers, but not by all compilers and probably
+under different names or signatures. For example, features such
+as <font color="#008080"><em><tt>is_integer</tt></em></font> in
+class <font color="#008080"><em><tt>STRING</tt></em></font> would
+be useful (specially as a precondition for <font color="#008080"><em><tt>to_integer</tt></em></font>).</p>
+
+<p><font color="#008000"><strong><u>Solution</u></strong><strong>:
+</strong></font>The solution adopted is the same as when a
+feature specified in <font size="2">ELKS</font> is not supported
+by some compilers, which is to use <a href="client.html">client
+adaptation</a>. For the example above, class <font
+color="#008080"><em><tt>KL_STRING_ROUTINES</tt></em></font> will
+provide the following portable feature:</p>
+
+<blockquote>
+    <pre><font color="#008080">    <em>is_integer</em> (<em>a_string</em>: <em>STRING</em>): <em>BOOLEAN</em> <em><strong>is</strong></em>
+            -- Is <em>a_string</em> only made up of digits?
+        <em><strong>require</strong></em>
+            <em>a_string_not_void</em>: <em>a_string</em> /= <em>Void</em>
+</font><font color="#0000FF">#ifdef </font><font color="#800080">VE</font><font
+color="#0000FF"> || </font><font color="#800080">TOWER</font><font
+color="#008080">
+        <em><strong>local</strong></em>
+            <em>i</em>: <em>INTEGER</em>
+            <em>c</em>: <em>CHARACTER</em>
+</font><font color="#0000FF">#endif</font><font color="#008080">
+        <em><strong>do</strong></em>
+</font><font color="#0000FF">#ifdef </font><font color="#800080">VE</font><font
+color="#0000FF"> || </font><font color="#800080">TOWER</font><font
+color="#008080">
+            <em><strong>from</strong></em>
+                <em>i</em> := <em>a_string</em>.<em>count</em>
+                <em>Result</em> := <em>True</em>
+            <em><strong>until</strong></em>
+                <em><strong>not</strong></em> <em>Result</em> <em><strong>or</strong></em> <em>i</em> = <em>0</em>
+            <em><strong>loop</strong></em>
+                </font><font color="#008080" size="2">c</font><font
+color="#008080"> := <em>a_string</em>.<em>item</em> (<em>i</em>)
+                <em>Result</em> := <em>c</em> &gt;= <em>'0'</em> <em><strong>and</strong></em> <em>c</em> &lt;= <em>'9'</em>
+                <em>i</em> := <em>i</em> - <em>1</em>
+            <em><strong>end</strong></em>
+</font><font color="#0000FF">#else</font><font color="#008080">
+            <em>Result</em> := <em>a_string</em>.<em>is_integer</em>
+</font><font color="#0000FF">#endif</font><font color="#008080">
+        <em><strong>end</strong></em></font></pre>
+</blockquote>
+
+<p>Note that a simple implementation had to be provided when
+missing.</p>
+
+<hr size="1">
+
+<p><font color="#FF0000"><strong><u>Problem</u></strong><strong>:
+</strong></font>Sometimes, creation procedures are not portable
+across compilers. This is for example the case with the creation
+procedure <font color="#008080"><em><tt>make</tt></em></font>
+from class <font color="#008080"><em><tt>STRING</tt></em></font>.
+<font size="2">ELKS</font> says that<font color="#008080"><em><tt>
+make</tt></em><tt> (</tt><em><tt>n</tt></em><tt>)</tt></font>
+allocates space for at least <font color="#008080"><em><tt>n</tt></em></font>
+characters, but keeps <font color="#008080"><em><tt>count</tt></em></font>
+null. However, Visual Eiffel sets <font color="#008080"><em><tt>count</tt></em></font>
+to <font color="#008080"><em><tt>n</tt></em></font> in that case.</p>
+
+<p><font color="#008000"><strong><u>Solution</u></strong><strong>:</strong></font>
+The solution adopted is similar to the <a href="client.html">client
+adaptation</a> of regular features. The only difference is that
+the adapted routine will be a factory function with the same
+arguments as the original creation procedure instead of a routine
+whose extra first argument is the target of the call. The class <font
+color="#008080"><em><tt>KL_STRING_ROUTINES</tt></em></font> will
+hence have the following function:</p>
+
+<blockquote>
+    <pre><font color="#008080">    <em>make</em> (<em>n</em>: <em>INTEGER</em>): <em>STRING</em> <em><strong>is</strong></em>
+            -- Create an empty string. Try to allocate space
+            -- for at least <em>n</em> characters.
+        <em><strong>require</strong></em>
+            <em>non_negative_n</em>: <em>n</em> &gt;= <em>0</em>
+        <em><strong>do</strong></em>
+</font><font color="#0000FF">#ifdef </font><font color="#800080">VE</font><font
+color="#008080">
+            !! <em>Result</em>.<em>make</em> (<em>0</em>)
+</font><font color="#0000FF">#else</font><font color="#008080">
+            !! <em>Result</em>.<em>make</em> (<em>n</em>)
+</font><font color="#0000FF">#endif</font><font color="#008080">
+        <em><strong>ensure</strong></em>
+            <em>string_not_void</em>: <em>Result</em> /= <em>Void</em>
+            <em>empty_string</em>: <em>Result</em>.<em>count</em> = <em>0</em>
+        <em><strong>end</strong></em></font></pre>
+</blockquote>
+
+<p>and the usual string creation using !!:</p>
+
+<blockquote>
+    <pre><font color="#008080"><em>str</em>: <em>STRING</em>
+!! <em>str</em>.<em>make</em> (<em>10</em>)</font></pre>
+</blockquote>
+
+<p>is replaced in portable code by:</p>
+
+<blockquote>
+    <pre><font color="#008080"><em>str</em>: <em>STRING</em>
+<em>str</em> := <em>string_</em>.<em>make</em> (<em>10</em>)</font></pre>
+</blockquote>
+
+<hr size="1">
+<div align="left">
+
+<address>
+    <font size="2"><b>Copyright © 1997</b></font><font size="1"><b>,
+    </b></font><font size="2"><strong>Eric Bezault</strong></font><strong>
+    </strong><font size="2"><br>
+    </font><a href="mailto:ericb@gobo.demon.co.uk"><font size="2">ericb@gobo.demon.co.uk</font></a><font
+    size="2"> <br>
+    </font><a href="http://www.gobo.demon.co.uk"><font size="2">http://www.gobo.demon.co.uk</font></a><font
+    size="2"><br>
+    <strong>Last Updated:</strong> 17 October 1997</font><br>
+    <!--webbot bot="PurpleText"
+    preview="
+$Date$ 
+$Revision$" --> 
+</address>
+</div>
+</body>
+</html>

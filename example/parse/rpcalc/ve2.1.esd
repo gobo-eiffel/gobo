@@ -1,0 +1,40 @@
+-- system:     "Reverse Polish Notation Calculator"
+-- compiler:   "Visual Eiffel 2.1"
+-- author:     "Eric Bezault <ericb@gobo.demon.co.uk>"
+-- copyright:  "Copyright (c) 1997, Eric Bezault"
+-- date:       "$Date$"
+-- revision:   "$Revision$"
+
+system
+
+	rpcalc
+
+root
+
+	RPCALC
+
+creation
+
+	execute
+		
+cluster
+
+	[rpcalc_project			"."] end
+	[rpcalc					"$GOBO\example\parse\rpcalc"] end
+
+		-- Gobo Eiffel Parse Library
+	[pr_skeleton			"$GOBO\library\parse\skeleton"] end
+
+		-- Gobo Eiffel Kernel Library
+	[kl_kernel				"$GOBO\library\kernel"] end
+	[kl_kernel_spec			"$GOBO\library\kernel\spec\ve"] end
+
+		-- Kernel
+	[Kernel					"$VE_LIB\kernel"] end
+
+option
+
+	target exe console
+	code native
+
+end

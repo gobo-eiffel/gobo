@@ -1,0 +1,109 @@
+<!DOCTYPE HTML PUBLIC "-//IETF//DTD HTML//EN">
+<html>
+
+<head>
+<meta http-equiv="Content-Type"
+content="text/html; charset=iso-8859-1">
+<meta name="GENERATOR" content="Microsoft FrontPage 2.0">
+<title>Portability Issues</title>
+</head>
+
+<body bgcolor="#FFFFFF">
+
+<h1>Portability Issues</h1>
+
+<hr size="1">
+
+<p>One of the main concerns that has driven the design and
+implementation of the Eiffel library classes contained in this
+package was to make the code compilable by as much Eiffel
+compilers available on the market as possible. This implies that
+the users of this package shouldn't have to modify any of the
+Eiffel classes in order to compile them with their favorite
+compiler. In particular, no modification should be necessary in
+the library classes provided with the compilers, such as the
+kernel library classes. This latter requirement is quite
+important since a simple modification in a kernel class such as <font
+color="#008080" size="2" face="Courier New"><em>ANY</em></font>
+or <font color="#008080" size="2" face="Courier New"><em>ARRAY</em></font>
+by just adding or renaming a feature may invalidate a lot of
+already existing code based on these classes.</p>
+
+<p>Fortunately, thanks to the kernel library standard <font
+size="2">ELKS '95 </font><font size="3">adopted by </font><font
+size="2">NICE</font><font size="3"> (Nonprofit International
+Consortium for Eiffel), one can now rely on a set of standard
+classes and features to achieve interoperability between Eiffel
+compilers. At least, this is the theory. In practice, none of the
+Eiffel compilers available on the market are 100% compliant to </font><font
+size="2">ELKS '95</font><font size="3">, and the standard itself
+is not bulletproof yet. As a consequence, kernel classes provided
+with the different compilers have to be adapted to get a minimum
+of compatibility between classes from different vendors. Since
+these classes cannot be directly modified (see requirement
+above), the necessary adaptation is achieved with a combination
+of the three following techniques:</font></p>
+
+<blockquote>
+    <ul>
+        <li><a href="inheritance.html">Adaptation by Inheritance
+            Technique</a></li>
+        <li><a href="client.html">Client Adaptation Technique</a></li>
+        <li><a href="gepp.html"><em>Gepp</em>: Gobo Eiffel
+            Preprocessor</a></li>
+    </ul>
+</blockquote>
+
+<p>A non-exhaustive list of <a href="portability.html">portability
+issues</a> encountered during the development of this package,
+along with the corresponding solutions which have been adopted,
+will help to understand some of the design and implementation
+decisions which have been made. Hopefully this list will also be
+useful to those of you who want to develop portable Eiffel class
+libraries. Feel free to contact <a
+href="mailto:ericb@gobo.demon.co.uk">me</a> if you want to
+discuss some of the items from this list or if you experienced
+other interoperability problems.</p>
+
+<p>This package supports the following Eiffel compilers (in
+alphabetical order): <a href="http://www.halstenbach.de">Halstenbach</a>
+1.6, <a href="http://www.eiffel.com">ISE Eiffel</a> 4.1, <a
+href="http://www.loria.fr/SmallEiffel">SmallEiffel</a> -0.83, <a
+href="http://www.object-tools.com">Visual Eiffel</a> 2.1. An
+effort has been made to port this package to <a
+href="http://www.twr.com"><em><strong>Tower</strong></em><em>Eiffel</em></a>
+2.0, however this compiler is not fully supported yet because of
+problems with manifest arrays (which are extensively used in <a
+href="../gelex/index.html"><em>gelex</em></a> and <a
+href="../geyacc/index.html"><em>geyacc</em></a>). For more
+details about the supported Eiffel compilers, please see the
+files <font color="#800000" size="2" face="Courier New">$GOBO/Readme.txt</font>
+and <font color="#800000" size="2" face="Courier New">$GOBO/Release_notes.txt</font>.</p>
+
+<hr size="1">
+
+<p><font size="2">THIS SOFTWARE IS PROVIDED &quot;AS IS&quot; AND
+WITHOUT ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, WITHOUT
+LIMITATION, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS
+FOR A PARTICULAR PURPOSE.</font></p>
+
+<hr size="1">
+<div align="left">
+
+<address>
+    <font size="2"><b>Copyright © 1997</b></font><font size="1"><b>,
+    </b></font><font size="2"><strong>Eric Bezault</strong></font><strong>
+    </strong><font size="2"><br>
+    </font><a href="mailto:ericb@gobo.demon.co.uk"><font size="2">ericb@gobo.demon.co.uk</font></a><font
+    size="2"> <br>
+    </font><a href="http://www.gobo.demon.co.uk"><font size="2">http://www.gobo.demon.co.uk</font></a><font
+    size="2"><br>
+    <strong>Last Updated:</strong> 4 October 1997</font><br>
+    <!--webbot bot="PurpleText"
+    preview="
+$Date$ 
+$Revision$" --> 
+</address>
+</div>
+</body>
+</html>
