@@ -13,13 +13,6 @@ indexing
 
 class ET_ACTUAL_GENERIC_PARAMETERS
 
-inherit
-
-	ANY
-		redefine
-			copy, is_equal
-		end
-
 creation
 
 	make, make_with_capacity
@@ -81,7 +74,9 @@ feature -- Status report
 		local
 			i, nb: INTEGER
 		do
-			if other.count = count then
+			if other = Current then
+				Result := True
+			elseif other.count = count then
 				nb := count
 				Result := True
 				from i := 1 until i > nb loop
@@ -106,25 +101,19 @@ feature -- Status report
 			i, nb: INTEGER
 			a_type, other_type: ET_TYPE
 		do
-			if other.count /= count then
-					-- This error should occur if validity has
-					-- been checked since `Current' and `other'
-					-- are the generic parameters of a class type
-					-- based on the same class and because both
-					-- class types are valid they have the same
-					-- number of actual generic parameters as the
-					-- number of formal generic parameters of this
-					-- base class.
+			if other = Current then
+				Result := True
+			elseif other.count /= count then
+					-- Error VTUG-2 has already been reported
+					-- in ET_CLASS_TYPE.check_*_validity*.
 				Result := False
 			else
-				Result := True
 				nb := count
+				Result := True
 				from i := 1 until i > nb loop
 					a_type := item (i)
 					other_type := other.item (i)
 					if not a_type.syntactically_conforms_to (other_type, a_class) then
-							-- This is a conformance error detected in
-							-- `syntactically_conforms_to'.
 						Result := False
 						i := nb + 1 -- Jump out of the loop.
 					else
@@ -147,8 +136,9 @@ feature -- Validity
 			i, nb: INTEGER
 		do
 			nb := count
+			Result := True
 			from i := 1 until i > nb loop
-				if item (i).check_parent_validity1 (an_heir) then
+				if not item (i).check_parent_validity1 (an_heir) then
 					Result := False
 				end
 				i := i + 1
@@ -279,10 +269,31 @@ feature -- System
 
 feature -- Type processing
 
-	has_formal_parameters (actual_parameters: ARRAY [ET_TYPE]): BOOLEAN is
+	has_derived_parameters: BOOLEAN is
+			-- Are there actual parameters which are different
+			-- from their corresponding formal parameters because
+			-- of the generic derivation?
+		local
+			i, nb: INTEGER
+			a_formal: ET_FORMAL_GENERIC_TYPE
+		do
+			nb := count
+			from i := 1 until i > nb loop
+				a_formal ?= item (i)
+				if a_formal = Void or else a_formal.index /= i then
+					Result := True
+					i := nb + 1 -- Jump out of the loop.
+				else
+					i := i + 1
+				end
+			end
+		end
+
+	has_formal_parameters (actual_parameters: ET_ACTUAL_GENERIC_PARAMETERS): BOOLEAN is
 			-- Does current types contain formal generic parameter
-			-- types of index 'i' such that 'actual_parameters.item (i)'
-			-- is not void?
+			-- types whose corresponding actual parameter in
+			-- `actual_parameters' is different from the formal
+			-- parameter?
 		require
 			actual_parameters_not_void: actual_parameters /= Void
 		local
@@ -301,11 +312,11 @@ feature -- Type processing
 			end
 		end
 
-	resolve_formal_parameters (actual_parameters: ARRAY [ET_TYPE]) is
+	resolve_formal_parameters (actual_parameters: ET_ACTUAL_GENERIC_PARAMETERS) is
 			-- Replace in current types the formal generic parameter
-			-- types of index 'i' by 'actual_parameters.item (i)'
-			-- when these new parameters are not void.
-			-- (Warning: this is a side-effect function.)
+			-- types by those of `actual_parameters' when the 
+			-- corresponding actual parameter is different from
+			-- the formal parameter.
 		require
 			actual_parameters_not_void: actual_parameters /= Void
 		local
@@ -346,42 +357,20 @@ feature -- Type processing
 
 feature -- Duplication
 
-	copy (other: like Current) is
-			-- Duplicate recursively actual generic parameter types.
+	deep_cloned_actuals: like Current is
+			-- Duplicate recursively actual generic
+			-- parameter types
 		local
 			i, nb: INTEGER
-			old_parameters: like generic_parameters
 		do
-			standard_copy (other)
 			nb := count
-			old_parameters := generic_parameters
-			!! generic_parameters.make (1, nb)
-			from i := 1 until i > nb loop
-				generic_parameters.put (clone (old_parameters.item (i)), i)
+			!! Result.make_with_capacity (item (1).deep_cloned_type, nb)
+			from i := 2 until i > nb loop
+				Result.put (item (i).deep_cloned_type)
 				i := i + 1
 			end
-		end
-
-feature -- Comparison
-
-	is_equal (other: like Current): BOOLEAN is
-			-- Are current actual generic paramater types and
-			-- `other' recursively equal?
-		local
-			i, nb: INTEGER
-		do
-			if same_type (other) and count = other.count then
-				nb := count
-				Result := True
-				from i := 1 until i > nb loop
-					if not item (i).is_equal (other.item (i)) then
-						Result := False
-						i := nb + 1 -- Jump out of the loop.
-					else
-						i := i + 1
-					end
-				end
-			end
+		ensure
+			deep_cloned_not_void: Result /= Void
 		end
 
 feature {NONE} -- Implementation
