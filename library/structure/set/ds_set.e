@@ -29,6 +29,9 @@ inherit
 			append as append_last
 		undefine
 			equality_tester_settable
+		redefine
+			put_last, force_last,
+			extend_last, append_last
 		end
 
 feature -- Access
