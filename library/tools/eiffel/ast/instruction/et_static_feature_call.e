@@ -32,7 +32,6 @@ feature {NONE} -- Initialization
 			a_name_not_void: a_name /= Void
 		do
 			static_type := a_type
-			feature_keyword := tokens.feature_keyword
 			make_qualified_call (a_name, args)
 		ensure
 			static_type_set: static_type = a_type
@@ -71,7 +70,7 @@ feature -- Access
 			-- Position of first character of
 			-- current node in source code
 		do
-			if not feature_keyword.position.is_null then
+			if feature_keyword /= Void and then not feature_keyword.position.is_null then
 				Result := feature_keyword.position
 			else
 				Result := static_type.position
@@ -81,15 +80,17 @@ feature -- Access
 	first_leaf: ET_AST_LEAF is
 			-- First leaf node in current node
 		do
-			Result := feature_keyword
+			if feature_keyword /= Void then
+				Result := feature_keyword
+			else
+				Result := static_type.first_leaf
+			end
 		end
 
 feature -- Setting
 
 	set_feature_keyword (a_feature: like feature_keyword) is
 			-- Set `feature_keyword' to `a_feature'.
-		require
-			a_feature_not_void: a_feature /= Void
 		do
 			feature_keyword := a_feature
 		ensure
@@ -98,7 +99,6 @@ feature -- Setting
 
 invariant
 
-	feature_keyword_not_void: feature_keyword /= Void
 	static_type_not_void: static_type /= Void
 
 end
