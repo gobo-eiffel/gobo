@@ -99,6 +99,7 @@ feature -- Element change
 			-- Set `parent' to `a_parent'.
 		require
 			a_parent_not_void: a_parent /= Void
+			not_root_node: not is_root_node
 		do
 			parent := a_parent
 		ensure
