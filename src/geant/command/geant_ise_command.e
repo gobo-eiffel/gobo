@@ -140,6 +140,11 @@ feature -- Execution
 			if finalize_mode then
 				cmd.append_string (" -finalize")
 			end
+			a_filename := system_name + ".epr"
+			if file_system.file_exists (a_filename) then
+				cmd.append_string (" -project ")
+				cmd := STRING_.appended_string (cmd, a_filename)
+			end
 			project.trace (<<"  [ise] ", cmd>>)
 			execute_shell (cmd)
 			if exit_code = 0 and then finish_freezing then
