@@ -1,4 +1,5 @@
-<?xml version="1.0"?>
+<?xml version="1.0" encoding="iso-8859-1"?>
+<!DOCTYPE cluster SYSTEM "../../doc/gexace/xace.dtd">
 
 <cluster name="xml" location="${GOBO}/library/xml" abstract="True">
 
@@ -12,8 +13,8 @@
 			due to the factory in use.
 			You have to select "xml.impl.interface" recursively and then
 			from the "xml.impl" cluster the parsers you wish to compile in.
-			You can choose all, but if you decide to leave out a certain parser 
-			you must select its counterpart from "xml.impl.no_*" to keep the 
+			You can choose all, but if you decide to leave out a certain parser
+			you must select its counterpart from "xml.impl.no_*" to keep the
 			factory happy.
 
 		library:     "Gobo Eiffel XML Library"
@@ -47,13 +48,13 @@
 			</cluster>
 			<external unless="${GOBO_OS}=windows">
 				<include_dir location="${EXPAT}/include"/>
-				<link_library location="-lexpat"/>
+				<link_library location="expat"/>
 			</external>
 			<external if="${GOBO_OS}=windows">
-				<include_dir location="$(EXPAT)/Source/lib" unless="${GOBO_EIFFEL}=se"/>
-				<link_library location="$(EXPAT)/Libs/expat.lib" unless="${GOBO_EIFFEL}=se"/>
-				<include_dir location="%EXPAT%/Source/lib" if="${GOBO_EIFFEL}=se"/>
-				<link_library location="%EXPAT%/Libs/expat.lib" if="${GOBO_EIFFEL}=se"/>
+				<include_dir location="${EXPAT}/Source/lib"/>
+				<link_library_dir location="${EXPAT}/Libs" unless="${GOBO_SE_LCC}"/>
+				<link_library location="expat.lib" unless="${GOBO_SE_LCC}"/>
+				<link_library location="${EXPAT}\Libs\expat.lib" if="${GOBO_SE_LCC}"/>
 			</external>
 		</cluster>
 		<cluster name="eiffel" abstract="True">
