@@ -187,6 +187,14 @@ feature -- Status report
 			-- Result := False
 		end
 
+	is_function: BOOLEAN is
+			-- Is feature a function?
+		do
+			-- Result := False
+		ensure
+			query: Result implies type /= Void
+		end
+
 	is_attribute: BOOLEAN is
 			-- Is feature an attribute?
 		do

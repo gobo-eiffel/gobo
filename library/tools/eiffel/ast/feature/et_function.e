@@ -23,6 +23,7 @@ inherit
 			reset_postconditions,
 			obsolete_message
 		redefine
+			is_function,
 			is_prefixable, is_infixable,
 			undefined_feature,
 			resolve_inherited_signature
@@ -31,9 +32,14 @@ inherit
 	ET_ROUTINE
 		undefine
 			type, is_prefixable, is_infixable
+		redefine
+			is_function
 		end
 
 feature -- Status report
+
+	is_function: BOOLEAN is True
+			-- Is feature a function?
 
 	is_infixable: BOOLEAN is
 			-- Can current feature have a name of
