@@ -24,7 +24,7 @@ creation
 
 	make_null,
 	set_next
-	
+
 feature -- Meta
 
 	on_comment (a_content: UC_STRING) is
@@ -32,7 +32,7 @@ feature -- Meta
 		do
 			next.on_comment (a_content)
 		end
-			
+
 feature {NONE} -- Escaped
 
 	is_escaped (a_char: INTEGER): BOOLEAN is
@@ -44,5 +44,5 @@ feature {NONE} -- Escaped
 					or a_char = 13
 					or a_char = Quot_char.code -- always escape quote
 		end
-		
+
 end

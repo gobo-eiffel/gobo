@@ -4,12 +4,11 @@ indexing
 
 		"Objects that represent XML tree parsers"
 
-	library:	"Gobo Eiffel XML Library"
-	author:		"Andreas Leitner <nozone@sbox.tugraz.at>"
-	copyright:	"Copyright (c) 2001, Andreas Leitner and others"
-	license:	"Eiffel Forum Freeware License v1 (see forum.txt)"
-	date:		"$Date$"
-	revision:	"$Revision$"
+	library: "Gobo Eiffel XML Library"
+	copyright: "Copyright (c) 2001, Andreas Leitner and others"
+	license: "Eiffel Forum License v1 (see forum.txt)"
+	date: "$Date$"
+	revision: "$Revision$"
 
 class XM_TREE_PARSER
 
@@ -67,18 +66,3 @@ feature {NONE} -- Implementation
 	implementation: XI_TREE_PARSER
 
 end -- class XM_TREE_PARSER
---|-------------------------------------------------------------------------
---| eXML, Eiffel XML Parser Toolkit
---| Copyright (C) 1999	Andreas Leitner and others
---| See the file forum.txt included in this package for licensing info.
---|
---| Comments, Questions, Additions to this library? please contact:
---|
---| Andreas Leitner
---| Arndtgasse 1/3/5
---| 8010 Graz
---| Austria
---| email: andreas.leitner@chello.at
---| www: http://exml.dhs.org
---|-------------------------------------------------------------------------
-

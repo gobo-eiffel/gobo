@@ -1,10 +1,9 @@
-
 indexing
-	
+
 	description:
-	
+
 		 "Callbacks filter that resolves namespaces"
-	
+
 	library: "Gobo Eiffel XML Library"
 	copyright: "Copyright (c) 2002, Eric Bezault and others"
 	license: "Eiffel Forum License v1 (see forum.txt)"
@@ -23,6 +22,7 @@ inherit
 			on_start_tag_finish,
 			on_end_tag
 		end
+
 	XM_MARKUP_CONSTANTS
 
 feature -- Document
@@ -33,7 +33,7 @@ feature -- Document
 			!! context.make
 			attributes_make
 		end
-		
+
 feature -- Element
 
 	on_start_tag (a_namespace: UC_STRING; a_prefix: UC_STRING; a_local_part: UC_STRING) is
@@ -46,7 +46,7 @@ feature -- Element
 			element_prefix := a_prefix
 			element_local_part := a_local_part
 		end
-		
+
 	on_attribute (a_namespace: UC_STRING; a_prefix: UC_STRING; a_local_part: UC_STRING; a_value: UC_STRING) is
 			-- Print attribute.
 		do
@@ -67,7 +67,7 @@ feature -- Element
 				attributes_force (a_prefix, a_local_part, a_value)
 			end
 		end
-		
+
 	on_start_tag_finish is
 			-- Print end of start tag.
 		local
@@ -111,7 +111,7 @@ feature -- Element
 			
 			Precursor
 		end
-		
+
 	on_end_tag (a_namespace: UC_STRING; a_prefix: UC_STRING; a_local_part: UC_STRING) is
 			-- Print end tag.
 		do
@@ -120,20 +120,18 @@ feature -- Element
 			else
 				Precursor (context.resolve_default, a_prefix, a_local_part)
 			end
-			
-					
 			context.pop
 		end
-		
+
 feature {NONE} -- Error
 
 	Undeclared_namespace_error: STRING is "Undeclare namespace error"
 	Duplicate_namespace_declaration_error: STRING is "Namespace declared twice"
-	
+
 feature {NONE} -- Context
 
 	context: XM_NAMESPACE_RESOLVER_CONTEXT
-	
+
 feature {NONE} -- Context
 
 	is_xmlns (a: UC_STRING): BOOLEAN is
@@ -141,12 +139,12 @@ feature {NONE} -- Context
 		do
 			Result := a /= Void and then Xmlns.is_equal (a.to_utf8)
 		end
-	
+
 feature {NONE} -- Element
-	
+
 	element_prefix: UC_STRING
 	element_local_part: UC_STRING
-	
+
 feature {NONE} -- Attributes
 
 	-- mean version of:
@@ -159,7 +157,7 @@ feature {NONE} -- Attributes
 			!! attributes_local_part.make
 			!! attributes_value.make
 		end
-		
+
 	attributes_force (a_prefix: UC_STRING; a_local_part: UC_STRING; a_value: UC_STRING) is
 			-- Like attributes.force
 		do
@@ -167,7 +165,7 @@ feature {NONE} -- Attributes
 			attributes_local_part.force (a_local_part)
 			attributes_value.force (a_value)
 		end
-		
+
 	attributes_remove is
 			-- Like attributes.remove
 		require
@@ -177,13 +175,13 @@ feature {NONE} -- Attributes
 			attributes_local_part.remove
 			attributes_value.remove
 		end
-		
+
 	attributes_is_empty: BOOLEAN is
 			-- Like attributes.is_empty
 		do
 			Result := attributes_prefix.is_empty
 		end
-		
+
 	attributes_prefix: DS_LINKED_QUEUE[UC_STRING]
 	attributes_local_part: DS_LINKED_QUEUE[UC_STRING]
 	attributes_value: DS_LINKED_QUEUE[UC_STRING]

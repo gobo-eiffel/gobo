@@ -1,16 +1,15 @@
 indexing
-	
+
 	description:
 	
 		"PE entity definition and scanner"
-	
+
 	library: "Gobo Eiffel XML Library"
 	copyright: "Copyright (c) 2002, Eric Bezault and others"
 	license: "Eiffel Forum License v1 (see forum.txt)"
 	date: "$Date$"
 	revision: "$Revision$"
 
-	
 class XF_PE_ENTITY_DEF
 
 inherit
@@ -22,11 +21,11 @@ inherit
 		end
 
 creation
-	
+
 	make_literal,
 	make_external,
 	make_def
-	
+
 feature -- Scanner
 
 	read_token is
@@ -48,14 +47,14 @@ feature -- Scanner
 				end
 			end
 		end
-		
+
 	reset is
 			-- Reset sent
 		do
 			Precursor
 			reset_sent
 		end
-		
+
 feature {NONE} -- Implementation
 
 	reset_sent is
@@ -64,10 +63,11 @@ feature {NONE} -- Implementation
 			pre_sent := False
 			post_sent := False
 		end
-		
+
 	pre_sent: BOOLEAN
 			-- Has the 'before' token been sent?
+
 	post_sent: BOOLEAN
 			-- Has the 'after' token been sent?
-			
+
 end

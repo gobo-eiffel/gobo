@@ -4,12 +4,11 @@ indexing
 
 		"Objects that represent XML documents"
 
-	library:	"Gobo Eiffel XML Library"
-	author:		"Andreas Leitner <nozone@sbox.tugraz.at>"
-	copyright:	"Copyright (c) 2001, Andreas Leitner and others"
-	license:	"Eiffel Forum Freeware License v1 (see forum.txt)"
-	date:		"$Date$"
-	revision:	"$Revision$"
+	library: "Gobo Eiffel XML Library"
+	copyright: "Copyright (c) 2001, Andreas Leitner and others"
+	license: "Eiffel Forum License v1 (see forum.txt)"
+	date: "$Date$"
+	revision: "$Revision$"
 
 class XM_DOCUMENT
 
@@ -31,7 +30,7 @@ feature {NONE} -- Initialisation
 		do
 			make_composite
 		end
-		
+
 	make_default is
 		do
 			make
@@ -40,6 +39,7 @@ feature {NONE} -- Initialisation
 		end
 
 feature {ANY} -- Access
+
 		-- document_type: XM_DOCUMENT_TYPE
 		-- TODO: Implement!
 
@@ -66,5 +66,5 @@ feature {XM_PARSER,XM_CALLBACKS}
 			last: last = a
 			count: count = 1
 		end
-		
+
 end -- class XM_DOCUMENT

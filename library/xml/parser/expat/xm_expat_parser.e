@@ -1,15 +1,14 @@
-
 indexing
 
 	description:
 
 		"Implementation of XML parser using Expat"
 
-	library:    "Gobo Eiffel XML Library"
-	copyright:  "Copyright (c) 2001, Eric Bezault and others"
-	license:    "Eiffel Forum Freeware License v1 (see forum.txt)"
-	date:       "$Date$"
-	revision:   "$Revision$"
+	library: "Gobo Eiffel XML Library"
+	copyright: "Copyright (c) 2001, Eric Bezault and others"
+	license: "Eiffel Forum License v1 (see forum.txt)"
+	date: "$Date$"
+	revision: "$Revision$"
 
 class XM_EXPAT_PARSER
 

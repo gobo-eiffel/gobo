@@ -1,4 +1,3 @@
-
 indexing
 
 	description:
@@ -16,15 +15,16 @@ class XM_TREE_CALLBACKS_PIPE
 inherit
 
 	ANY
-	
+
 	XM_CALLBACKS_FILTER_FACTORY
 		export
 			{NONE} all
 		end
-		
+
 creation
+
 	make
-	
+
 feature {NONE} -- Make
 
 	make is
@@ -51,20 +51,20 @@ feature {NONE} -- Make
 		end
 		
 feature -- Filters (part of the pipe)
-	
+
 	start: XM_CALLBACKS_FILTER
-		-- Starting point for XM_CALLBACKS_SOURCE (e.g. parser)
-		
+			-- Starting point for XM_CALLBACKS_SOURCE (e.g. parser)
+
 	error: XM_STOP_ON_ERROR_FILTER
-		-- Error collector.
-		
+			-- Error collector.
+
 	tree: XM_CALLBACKS_TO_TREE_FILTER
-		-- Tree construction. 
-		
+			-- Tree construction. 
+
 	last: XM_CALLBACKS_FILTER
-		-- Last element in the pipe, to which further filters 
-		-- can be added.
-		
+			-- Last element in the pipe, to which further filters 
+			-- can be added.
+
 feature -- Shortcuts
 
 	document: XM_DOCUMENT is
@@ -74,7 +74,7 @@ feature -- Shortcuts
 		do
 			Result := tree.document
 		end
-		
+
 	last_error: STRING is
 			-- Error (from error filter).
 		require
@@ -84,9 +84,9 @@ feature -- Shortcuts
 		ensure
 			not_void: Result /= Void
 		end
-		
+
 invariant
 
 	tree_not_void: tree /= Void
-	
+
 end

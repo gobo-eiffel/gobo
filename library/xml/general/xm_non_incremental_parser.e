@@ -1,4 +1,3 @@
-
 indexing
 
 	description:
@@ -16,12 +15,12 @@ deferred class XM_NON_INCREMENTAL_PARSER
 inherit
 
 	XM_PARSER
-	
+
 feature -- Access
 
 	is_incremental: BOOLEAN is false
 			-- Non incremental parser.
-			
+
 feature -- Incremental parsing
 
 	parse_incremental_from_stream (a_stream: KI_CHARACTER_INPUT_STREAM) is
@@ -30,7 +29,7 @@ feature -- Incremental parsing
 		ensure then
 			not_possible: false
 		end
-		
+
 	parse_incremental_from_string (data: STRING) is
 			-- Precondition always false.
 		do

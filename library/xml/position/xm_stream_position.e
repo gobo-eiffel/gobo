@@ -4,12 +4,11 @@ indexing
 
 		"Abstract definition of a position in a XML document which has been parsed from a stream"
 
-	library:	"Gobo Eiffel XML Library"
-	author:		"Andreas Leitner <nozone@sbox.tugraz.at>"
-	copyright:	"Copyright (c) 2001, Andreas Leitner and others"
-	license:	"Eiffel Forum Freeware License v1 (see forum.txt)"
-	date:		"$Date$"
-	revision:	"$Revision$"
+	library: "Gobo Eiffel XML Library"
+	copyright: "Copyright (c) 2001, Andreas Leitner and others"
+	license: "Eiffel Forum License v1 (see forum.txt)"
+	date: "$Date$"
+	revision: "$Revision$"
 
 deferred class XM_STREAM_POSITION
 
@@ -58,4 +57,3 @@ invariant
 	row_positive: row > 0
 
 end -- class XM_STREAM_POSITION
-

@@ -1,9 +1,10 @@
-
 indexing
 
 	description:
-	
+
 		"UTF-8 decoding routines (exported to NONE)"
+
+	todo: "Unify with UC_UTF8_UTILS"
 
 	library: "Gobo Eiffel XML Library"
 	copyright: "Copyright (c) 2002, Eric Bezault and others"
@@ -11,19 +12,17 @@ indexing
 	date: "$Date$"
 	revision: "$Revision$"
 
-	todo: "Unify with UC_UTF8_UTILS"
-
 class XF_UTF8_PRIVATE_ROUTINES
-	
+
 inherit
 
 	ANY
-	
+
 	KL_INTEGER_ROUTINES
 		export
 			{NONE} all
 		end
-			
+
 feature {NONE} -- String validity
 
 	is_utf8_string (a_string: STRING): BOOLEAN is
@@ -33,8 +32,7 @@ feature {NONE} -- String validity
 		do
 			Result := valid_utf8 (a_string, 1, a_string.count)
 		end
-		
-		
+
 	valid_utf8 (a_string: STRING; a_start, a_count: INTEGER): BOOLEAN is
 			-- Valid UTF8 substring?
 		require
@@ -69,9 +67,9 @@ feature {NONE} -- String validity
 			end
 			Result := Result and expected_trail <= 0
 		end
-		
+
 feature {NONE} -- Encoding
-			
+
 	encoding_size (a_char: INTEGER): INTEGER is
 			-- Number of bytes necessary to encode a char in UTF-8?
 		require
@@ -91,7 +89,7 @@ feature {NONE} -- Encoding
 				Result := 6
 			end
 		end
-	
+
 	encoded_byte (a_char: INTEGER; a_position: INTEGER; a_pos_count: INTEGER): INTEGER is
 			-- Encoded byte at given position.
 		require
@@ -145,7 +143,7 @@ feature {NONE} -- Encoding
 				end
 			end
 		end
-		
+
 	encoded_octet (a_char: INTEGER; a_position: INTEGER; a_pos_count: INTEGER):	CHARACTER is
 			-- Encoded byte at given position, result as a CHARACTER.
 		require
@@ -156,7 +154,7 @@ feature {NONE} -- Encoding
 		do
 			Result := to_character (encoded_byte (a_char, a_position, a_pos_count))
 		end
-		
+
 	single_string (a_code: INTEGER): STRING is
 			-- One character in a UTF8 string.
 		local
@@ -177,8 +175,8 @@ feature {NONE} -- Encoding
 			new_string: Result /= Void
 			count: Result.count = encoding_size (a_code)
 		end
-		
-feature {NONE} -- Dedoding
+
+feature {NONE} -- Decoding
 
 	is_integer_byte (a_code: INTEGER): BOOLEAN is
 			-- Is this a byte value.
@@ -201,7 +199,7 @@ feature {NONE} -- Dedoding
 		do
 			Result := not is_following_byte (a_code)
 		end
-		
+
 	nr_of_encoding_bytes (a_first_byte: INTEGER): INTEGER is
 			-- Number of bytes encoding a character from the first one.
 		require
@@ -228,7 +226,7 @@ feature {NONE} -- Dedoding
 			max_encoding: Result <= 7
 			--error: Result = 0 implies error
 		end
-		
+
 	decoded_first (a_first_byte: INTEGER; a_count: INTEGER): INTEGER is
 			-- Decode first byte.
 		require
@@ -256,7 +254,7 @@ feature {NONE} -- Dedoding
 		ensure
 			size: is_integer_byte (Result)
 		end
-		
+
 	decoded_following (a_byte: INTEGER): INTEGER is
 			-- Decode trail byte.
 		require
@@ -267,5 +265,5 @@ feature {NONE} -- Dedoding
 		ensure
 			size: (Result >= 0) and (Result < 64)
 		end
-	
+
 end

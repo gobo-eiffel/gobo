@@ -4,12 +4,11 @@ indexing
 
 		"A Table which maps XML nodes to their position in the source document"
 
-	library:	"Gobo Eiffel XML Library"
-	author:		"Andreas Leitner <nozone@sbox.tugraz.at>"
-	copyright:	"Copyright (c) 2001, Andreas Leitner and others"
-	license:	"Eiffel Forum Freeware License v1 (see forum.txt)"
-	date:		"$Date$"
-	revision:	"$Revision$"
+	library: "Gobo Eiffel XML Library"
+	copyright: "Copyright (c) 2001, Andreas Leitner and others"
+	license: "Eiffel Forum License v1 (see forum.txt)"
+	date: "$Date$"
+	revision: "$Revision$"
 
 class XM_POSITION_TABLE
 
@@ -85,4 +84,3 @@ feature {NONE}
 			-- list of node, position pairs
 
 end -- class XM_POSITION_TABLE
-

@@ -1,7 +1,7 @@
 indexing
 
 	description:
-	
+
 		"Pretty printer as XML document (as in James Clark's canonical XML)"
 
 	library: "Gobo Eiffel XML Library"
@@ -24,16 +24,16 @@ inherit
 			on_end_tag,
 			on_content
 		end
-		
+
 	XM_MARKUP_CONSTANTS
-	
+
 	XM_OUTPUT
-	
+
 creation
 
 	make_null,
 	set_next
-	
+
 feature -- Meta
 
 	on_processing_instruction (a_name: UC_STRING; a_content: UC_STRING) is
@@ -47,7 +47,7 @@ feature -- Meta
 			
 			Precursor (a_name, a_content)
 		end
-	
+
 	on_comment (a_content: UC_STRING) is
 			-- Print comment.
 		do
@@ -57,7 +57,7 @@ feature -- Meta
 			
 			Precursor (a_content)
 		end
-	
+
 feature -- Tag
 
 	on_start_tag (a_namespace: UC_STRING; a_prefix: UC_STRING; a_local_part: UC_STRING) is
@@ -68,7 +68,7 @@ feature -- Tag
 			
 			Precursor (a_namespace, a_prefix, a_local_part)
 		end
-		
+
 	on_attribute (a_namespace: UC_STRING; a_prefix: UC_STRING; a_local_part: UC_STRING; a_value: UC_STRING) is
 			-- Print attribute.
 		do
@@ -81,7 +81,7 @@ feature -- Tag
 			
 			Precursor (a_namespace, a_prefix, a_local_part, a_value)
 		end
-		
+
 	on_start_tag_finish is
 			-- Print end of start tag.
 		do
@@ -89,7 +89,7 @@ feature -- Tag
 			
 			Precursor
 		end
-		
+
 	on_end_tag (a_namespace: UC_STRING; a_prefix: UC_STRING; a_local_part: UC_STRING) is
 			-- Print end tag.
 		do
@@ -99,7 +99,7 @@ feature -- Tag
 		
 			Precursor (a_namespace, a_prefix, a_local_part)
 		end
-		
+
 feature -- Content
 
 	on_content (a_content: UC_STRING) is
@@ -121,7 +121,7 @@ feature {NONE} -- Escaped
 					or a_char = Gt_char.code
 					or a_char = Amp_char.code
 		end
-		
+
 	escaped_char (a_char: INTEGER): STRING is
 			-- Escape char.
 		require
@@ -139,7 +139,7 @@ feature {NONE} -- Escaped
 				Result := "&#"+a_char.out+";"
 			end
 		end
-		
+
 feature {NONE} -- Output
 
 	output_constant (s: STRING) is
@@ -152,7 +152,7 @@ feature {NONE} -- Output
 			!! a_string.make_from_utf8 (s)
 			output (a_string)
 		end
-		
+
 	output_quote_escaped (s: UC_STRING) is
 			-- Like output escaped with quote also escaped for 
 			-- attribute values.
@@ -185,9 +185,9 @@ feature {NONE} -- Output
 				output_escaped (s)
 			elseif last_escaped < i - 1 then
 				output_escaped (s.substring (last_escaped + 1, i - 1))
-			end			
+			end
 		end
-		
+
 	output_escaped (s: UC_STRING) is
 			-- Escape and output content string.
 		require
@@ -217,7 +217,7 @@ feature {NONE} -- Output
 				end
 				i := i + 1
 			end
-			
+
 			-- at exit
 			if last_escaped = 0 then
 				output (s)
@@ -237,5 +237,5 @@ feature {NONE} -- Output
 			end
 			output (a_local_part)
 		end
-				
+
 end

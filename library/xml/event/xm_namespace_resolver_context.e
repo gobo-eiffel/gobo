@@ -1,9 +1,9 @@
-
 indexing
+
 	description: 
-	
+
 		"Context for namespace resolver"
-	
+
 	library: "Gobo Eiffel XML Library"
 	copyright: "Copyright (c) 2002, Eric Bezault and others"
 	license: "Eiffel Forum License v1 (see forum.txt)"
@@ -12,13 +12,10 @@ indexing
 
 class XM_NAMESPACE_RESOLVER_CONTEXT
 
-inherit
-
-	ANY
-
 creation
+
 	make
-	
+
 feature {NONE} -- Creation
 
 	make is
@@ -32,9 +29,9 @@ feature {NONE} -- Implementation
 	context: DS_BILINKED_LIST [DS_HASH_TABLE [UC_STRING, UC_STRING]]
 			-- Really a DS_STACK but we need to see 
 			-- the content.
-	
+
 feature -- Add
-		
+
 	add_default (a_namespace: UC_STRING) is
 			-- Add default namespace to context.
 		require
@@ -42,7 +39,7 @@ feature -- Add
 		do
 			add (a_namespace, Default_pseudo_prefix)
 		end
-		
+
 	add (a_namespace: UC_STRING; a_prefix: UC_STRING) is
 			-- Add namespace to context.
 		require
@@ -63,7 +60,7 @@ feature -- Query
 		do
 			Result := context.count > 0 and then context.last.has (a_prefix)
 		end
-		
+
 	has (a_prefix: UC_STRING): BOOLEAN is
 			-- Is this prefix known
 		require
@@ -85,13 +82,13 @@ feature -- Query
 				end
 			end
 		end
-		
+
 	resolve_default: UC_STRING is
 			-- Resolve default namespace.
 		do
 			Result := resolve (Default_pseudo_prefix)
 		end
-		
+
 	resolve (a_prefix: UC_STRING): UC_STRING is
 			-- Resolve a prefix.
 		require
@@ -127,7 +124,7 @@ feature -- Stack
 			!! a_table.make (0)
 			context.force_last (a_table)
 		end
-	
+
 	pop is
 			-- Pop element context.
 		do
@@ -135,19 +132,19 @@ feature -- Stack
 				context.remove_last
 			end
 		end
-		
+
 feature {NONE} -- Constants
-	
+
 	Default_pseudo_prefix: UC_STRING is
 			-- Default pseduo prefix
 		once
 			!! Result.make (0)
 		end
-		
+
 	Default_namespace: UC_STRING is
 			-- Default namespace (empty)
 		once
 			!! Result.make (0)
 		end
-	
+
 end

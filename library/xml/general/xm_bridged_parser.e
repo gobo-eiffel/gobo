@@ -4,24 +4,23 @@ indexing
 
 		"Abstract definition of a XML parser"
 
-	library:	"Gobo Eiffel XML Library"
-	author:		"Andreas Leitner <nozone@sbox.tugraz.at>"
-	copyright:	"Copyright (c) 2001, Andreas Leitner and others"
-	license:	"Eiffel Forum Freeware License v1 (see forum.txt)"
-	date:		"$Date$"
-	revision:	"$Revision$"
+	library: "Gobo Eiffel XML Library"
+	copyright: "Copyright (c) 2001, Andreas Leitner and others"
+	license: "Eiffel Forum License v1 (see forum.txt)"
+	date: "$Date$"
+	revision: "$Revision$"
 
 class XM_BRIDGED_PARSER
 
 inherit
 
 	XM_PARSER
-	
+
 	DP_INTERFACE
 		redefine
 			implementation
 		end
-	
+
 feature -- Callbacks
 
 	set_callbacks (c: XM_CALLBACKS) is
@@ -29,13 +28,13 @@ feature -- Callbacks
 		do
 			check not_implemented: false end
 		end
-		
+
 	set_dtd_callbacks (c: XM_DTD_CALLBACKS) is
 			-- Callbacks not implemented for bridged parsers.
 		do
 			check not_implemented: false end
 		end
-		
+
 feature {ANY} -- Access
 
 	is_incremental: BOOLEAN is

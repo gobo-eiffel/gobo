@@ -1,15 +1,28 @@
+indexing
+
+	description:
+
+		"Files as source of XML documents"
+
+	library: "Gobo Eiffel XML Library"
+	copyright: "Copyright (c) 2001, Andreas Leitner and others"
+	license: "Eiffel Forum License v1 (see forum.txt)"
+	date: "$Date$"
+	revision: "$Revision$"
 
 class XM_FILE_SOURCE
 
 inherit
+
 	XM_URI_SOURCE
 		redefine
 			out
 		end
 
 creation
+
 	make
-	
+
 feature {NONE} -- Creation
 
 	make (a_file: STRING) is
@@ -26,13 +39,13 @@ feature -- Access
 
 	file_name: STRING
 			-- File name.
-	
+
 	uri: UC_STRING is
 			-- File URI.
 		do
 			!!Result.make_from_utf8("file:"+file_name)
 		end
-		
+
 feature -- Out
 
 	out: STRING is
@@ -42,6 +55,7 @@ feature -- Out
 		end
 
 invariant
+
 	file_name_not_void: file_name /= Void
-	
+
 end

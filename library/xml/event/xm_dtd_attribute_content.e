@@ -1,27 +1,28 @@
-
 indexing
-	
+
 	description:
-	
+
 		"Declaration of attribute content in DTD"
-			
+
 	library: "Gobo Eiffel XML Library"
 	copyright: "Copyright (c) 2002, Eric Bezault and others"
 	license: "Eiffel Forum License v1 (see forum.txt)"
 	date: "$Date$"
 	revision: "$Revision$"
-		
+
 class XM_DTD_ATTRIBUTE_CONTENT
 
 inherit
+
 	ANY
 		redefine
 			out
 		end
-		
+
 creation
+
 	make
-	
+
 feature {NONE} -- Creation
 
 	make is
@@ -37,7 +38,7 @@ feature {NONE} -- Creation
 		end
 
 feature -- From ANY
-				
+
 	out: STRING is
 			-- Like in DTD.
 		do
@@ -83,12 +84,12 @@ feature -- From ANY
 				Result.append_character ('%"')	
 			end
 		end
-		
+
 feature -- Name content type
 
 	name: UC_STRING
 			-- Attribute name.
-			
+
 	set_name (a: like name) is
 			-- Set name.
 		require
@@ -104,12 +105,12 @@ feature -- Name content type
 		do
 			Result := name /= Void
 		end
-		
+
 feature {NONE} -- Implementation
 
 	type: CHARACTER
 			-- Enumeration for type.
-			
+
 	value: CHARACTER
 			-- Enumeration for default value.
 
@@ -118,7 +119,7 @@ feature -- Default value
 	default_value: UC_STRING
 			-- require has_default_value
 			-- ensure Result /= Void
-			
+
 	set_default_value (a: like default_value) is
 			-- Set default value.
 		require
@@ -129,13 +130,13 @@ feature -- Default value
 		ensure
 			set: default_value = a
 		end
-		
+
 	has_default_value: BOOLEAN is
 			-- Is there a default value?
 		do
 			Result := default_value /= Void
 		end
-		
+
 	copy_default (other: XM_DTD_ATTRIBUTE_CONTENT) is
 			-- Copy default value settings from 'other'
 		require
@@ -152,7 +153,7 @@ feature -- Default value
 				set_value_implied
 			end
 		end
-		
+
 feature -- Defaults
 
 	is_value_required: BOOLEAN is
@@ -160,7 +161,7 @@ feature -- Defaults
 		do
 			Result := value = 'R'
 		end
-		
+
 	set_value_required is
 			-- Attribute value required.
 		do
@@ -168,13 +169,13 @@ feature -- Defaults
 		ensure
 			set: is_value_required
 		end
-		
+
 	is_value_implied: BOOLEAN is
 			-- Is attribute value implied?
 		do
 			Result := value = 'I'
 		end
-		
+
 	set_value_implied is
 			-- Attribute value implied.
 		do
@@ -182,13 +183,13 @@ feature -- Defaults
 		ensure
 			set: is_value_implied
 		end
-		
+
 	is_value_fixed: BOOLEAN is
 			-- Is value fixed?
 		do
 			Result := value = 'F'
 		end
-		
+
 	set_value_fixed (a: like default_value) is
 			-- Set fixed value.
 		require
@@ -200,7 +201,7 @@ feature -- Defaults
 			set: is_value_fixed
 			has_default: has_default_value
 		end
-		
+
 feature -- String content type
 
 	is_data: BOOLEAN is
@@ -208,7 +209,7 @@ feature -- String content type
 		do
 			Result := type = 'C'
 		end
-		
+
 	set_data is
 			-- CDATA.
 		do
@@ -224,7 +225,7 @@ feature -- Enumerated content type
 		do
 			Result := type = 'N'
 		end
-		
+
 	set_notation is
 			-- NOTATION.
 		do
@@ -232,13 +233,13 @@ feature -- Enumerated content type
 		ensure
 			set: is_notation
 		end
-		
+
 	is_enumeration: BOOLEAN is
 			-- Fixed enumeration?
 		do
 			Result := type = 'U'
 		end
-		
+
 	set_enumeration is
 			-- Fixed enumeration.
 		do
@@ -246,7 +247,7 @@ feature -- Enumerated content type
 		ensure
 			set: is_enumeration
 		end
-		
+
 feature -- Tokenized content type
 
 	is_id: BOOLEAN is
@@ -254,7 +255,7 @@ feature -- Tokenized content type
 		do
 			Result := type = 'I'
 		end
-		
+
 	set_id is
 			-- ID.
 		do
@@ -262,13 +263,13 @@ feature -- Tokenized content type
 		ensure
 			set: is_id
 		end
-		
+
 	is_id_ref: BOOLEAN is
 			-- IDREF (identifier reference)?
 		do
 			Result := type = 'R'
 		end
-		
+
 	set_id_ref is
 			-- IDREF.
 		do
@@ -276,13 +277,13 @@ feature -- Tokenized content type
 		ensure
 			set: is_id_ref
 		end
-	
+
 	is_entity: BOOLEAN is
 			-- ENTITY?
 		do
 			Result := type = 'E'
 		end
-		
+
 	set_entity is
 			-- ENTITY.
 		do
@@ -290,13 +291,13 @@ feature -- Tokenized content type
 		ensure
 			set: is_entity
 		end
-		
+
 	is_token: BOOLEAN is
 			-- NMTOKEN?
 		do
 			Result := type = 'T'
 		end
-	
+
 	set_token is
 			-- NMTOKEN.
 		do
@@ -307,7 +308,7 @@ feature -- Tokenized content type
 
 	is_list_type: BOOLEAN
 			-- Is the type a list (NMTOKENS, ENTITIES, IDREFS)?
-			
+
 	set_list_type is
 			-- Set type to list.
 		require
@@ -319,6 +320,7 @@ feature -- Tokenized content type
 		end
 
 invariant
+
 	exclusive: is_token xor is_entity xor is_id_ref xor is_id xor is_data xor is_notation xor is_enumeration
 	list_ok: is_list_type implies (is_token or is_entity or is_id_ref)
 	impl_type_enumeration: ("CIRETNU").has (type)

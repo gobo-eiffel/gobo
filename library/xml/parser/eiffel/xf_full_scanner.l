@@ -1,26 +1,27 @@
 %{
-
 indexing
-	
+
 	description: 
-	
-		"Scanner for an XML parser"
-	
-	library: "Gobo XML library"
-	copyright:  "Copyright (c) 2002, Eric Bezault and others"
-	license:    "Eiffel Forum Freeware License v1 (see forum.txt)"		
+
+		"Scanners for an XML parser"
 
 	implements: "XML 1.0 Second Edition - W3C Recommendation 6 October 2000 (referred as 'XML1.0')"
 	noncompliance_unicode: "UTF8 is assumed and all chars >255 are assumed to be LETTERS"
-	revision: "$Id$"
 
-	-- todo:
+	library: "Gobo XML library"
+	copyright: "Copyright (c) 2002, Eric Bezault and others"
+	license: "Eiffel Forum License v1 (see forum.txt)"
+	date: "$Date$"
+	revision: "$Revision$"
+
+	-- TODO:
 	-- system literal accepts non-CHAR
 	-- use CONTENTCHAR+ for attribute value?
 
 class XF_FULL_SCANNER
 
 inherit
+
 	YY_COMPRESSED_SCANNER_SKELETON
 		rename
 			make as make_scanner_stdin
@@ -39,10 +40,11 @@ inherit
 		export
 			{NONE} all
 		end
-				
+
 	XF_UTF8_PRIVATE_ROUTINES
-	
+
 creation
+
 	make_scanner
 
 %}
@@ -731,14 +733,14 @@ feature {NONE} -- Creation
 			make_with_buffer (Empty_buffer)
 			reset
 		end
-		
+
 feature -- Reset
 
 	push_start_condition_dtd_ignore is
 		do
 			push_start_condition (dtd_ignore)
 		end
-		
+
 	reset is
 			-- Reset.
 		do
@@ -747,7 +749,7 @@ feature -- Reset
 			last_error := Void
 			!! start_conditions.make
 		end
-		
+
 feature -- Input
 
 	set_input_file (a_name: STRING) is
@@ -771,7 +773,7 @@ feature -- Input
 		ensure
 			keep_copy: a_name = filename
 		end
-	
+
 	new_file_buffer (a_file: KI_CHARACTER_INPUT_STREAM): YY_FILE_BUFFER is
 			-- New input buffer for `a_file'
 		local
@@ -780,7 +782,7 @@ feature -- Input
 			!! a_utf16.make_from_stream (a_file)
 			Result := Precursor (a_utf16)
 		end
-		
+
 	fatal_error (a_message: STRING) is
 			-- A fatal error occurred.
 		do
@@ -796,20 +798,20 @@ feature -- Error reportring
 		do
 			Result := last_error /= Void
 		end
-		
+
 	last_error: STRING
-		
+
 	filename: STRING
-	
+
 feature -- Last value
 
 	last_value: ANY
 
 feature {NONE} -- Character entity
-	
+
 	character_entity: XF_CHARACTER_ENTITY
 			-- Character entity manager (class once)
-			
+
 feature {NONE} -- Start condition stack
 
 	push_start_condition (a_condition: INTEGER) is
@@ -859,15 +861,15 @@ feature {NONE} -- System literal
 			end
 			Result := text_substring (i + 1, text_count - 1)
 		end
-		
+
 feature {NONE} -- Constants
 
 	Normalized_newline: STRING is once Result := "%N" end
 	Normalized_space: STRING is once Result := " " end
 
 invariant
+
 	start_not_void: start_conditions /= Void
 	character_entity_not_void: character_entity /= Void
 	
 end
-

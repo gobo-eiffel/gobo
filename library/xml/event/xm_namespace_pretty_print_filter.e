@@ -1,16 +1,15 @@
-
 indexing
 
 	description:
-		
+
 		"Pretty printer with resolved namespaces"
-	
+
 	library: "Gobo Eiffel XML Library"
 	copyright: "Copyright (c) 2002, Eric Bezault and others"
 	license: "Eiffel Forum License v1 (see forum.txt)"
 	date: "$Date$"
 	revision: "$Revision$"
-	
+
 class XM_NAMESPACE_PRETTY_PRINT_FILTER
 
 inherit
@@ -31,7 +30,7 @@ feature -- Tag
 			Precursor (a_namespace, a_prefix, a_local_part)
 			namespace := Void
 		end
-		
+
 	on_attribute (a_namespace: UC_STRING; a_prefix: UC_STRING; a_local_part: UC_STRING; a_value: UC_STRING) is
 			-- Print attribute.
 		do
@@ -39,12 +38,12 @@ feature -- Tag
 			Precursor (a_namespace, a_prefix, a_local_part, a_value)
 			namespace := Void
 		end
-		
+
 feature {NONE} -- Name output
 
 	namespace: UC_STRING
 			-- Namespace stored for output.
-	
+
 	output_name (a_prefix: UC_STRING; a_local_part: UC_STRING) is
 			-- Output prefix:name, with namespace annotation.
 		do
@@ -55,5 +54,5 @@ feature {NONE} -- Name output
 			end
 			Precursor (a_prefix, a_local_part)
 		end
-		
+
 end

@@ -1,43 +1,42 @@
-
 indexing
 
 	description: 
-		
+
 		"Implementation of XM_PARSER using the native Eiffel parser"
-		
+
 	library: "Gobo Eiffel XML Library"
 	copyright: "Copyright (c) 2002, Eric Bezault and others"
-	license: "Eiffel Forum Freeware License v1 (see forum.txt)"
+	license: "Eiffel Forum License v1 (see forum.txt)"
 	date: "$Date$"
 	revision: "$Revision$"
-	
+
 class XM_EIFFEL_PARSER
 
 inherit
 
 	XM_NON_INCREMENTAL_PARSER
-	
+
 	XF_FULL_PARSER
 		export
 			{NONE} all
 		end
-		
+
 	XM_FORWARD_CALLBACKS
 		redefine
 			on_error
 		end
-		
+
 	XM_FORWARD_DTD_CALLBACKS
 
 creation
 
 	make
-	
+
 feature -- Source
 
 	source: XM_SOURCE
 			-- Source identification.
-	
+
 	set_source (a: XM_SOURCE) is
 			-- Set source.
 		do
@@ -52,14 +51,14 @@ feature -- Parsing
 			!XM_FILE_SOURCE! source.make (a_stream.name)
 			parse_stream (a_stream)
 		end
-		
+
 	parse_from_file_name (a_file_name: UC_STRING) is
 			-- Parse file.
 		do
 			!XM_FILE_SOURCE! source.make (a_file_name.to_utf8)
 			parse_file (a_file_name.to_utf8)
 		end
-		
+
 	parse_from_string (a: STRING) is
 			-- Parse from UTF8 string.
 		local
@@ -69,7 +68,7 @@ feature -- Parsing
 			!! a_stream.make (a)
 			parse_stream (a_stream)
 		end
-	
+
 feature {NONE} -- Error
 
 	on_error (a: STRING) is
@@ -77,8 +76,8 @@ feature {NONE} -- Error
 		do
 			last_error_description := a
 			Precursor (a)
-		end	
-		
+		end
+
 feature -- Error
 
 	is_correct: BOOLEAN is
@@ -96,10 +95,10 @@ feature -- Error
 				Result := Xml_err_none
 			end
 		end
-		
+
 	last_error_description: STRING
 			-- Last error description.
-	
+
 	position: XM_POSITION is
 			-- Current position.
 		local
@@ -110,4 +109,3 @@ feature -- Error
 		end
 
 end
-	

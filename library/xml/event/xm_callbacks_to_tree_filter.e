@@ -1,16 +1,14 @@
-
 indexing
 
 	description:
 
 		"A callbacks filter producing a tree"
-		
-	library:	"Gobo Eiffel XML Library"
-	author:		"Andreas Leitner <nozone@sbox.tugraz.at>"
-	copyright:	"Copyright (c) 2001, Andreas Leitner and others"
-	license:	"Eiffel Forum Freeware License v1 (see forum.txt)"
-	date:		"$Date$"
-	revision:	"$Revision$"
+
+	library: "Gobo Eiffel XML Library"
+	copyright: "Copyright (c) 2001, Andreas Leitner and others"
+	license: "Eiffel Forum License v1 (see forum.txt)"
+	date: "$Date$"
+	revision: "$Revision$"
 
 class XM_CALLBACKS_TO_TREE_FILTER
 
@@ -44,7 +42,6 @@ feature -- Position table
 		end
 
 	last_position_table: XM_POSITION_TABLE
-
 
 	enable_position_table (a_source: XM_PARSER) is
 			-- Enable position table, store the position 
@@ -117,7 +114,7 @@ feature -- Element
 			
 			current_open_composite.force_last (xml)
 		end
-		
+
 	on_content (a_data: UC_STRING) is
 			-- Character data
 		local
@@ -182,8 +179,10 @@ feature {NONE} -- Implementation
 
 	current_node: XM_NODE
 			-- Current node.
+
 	current_open_composite: XM_COMPOSITE
 			-- Current composite node.
+
 	current_element: XM_ELEMENT
 			-- Current element.
 

@@ -4,12 +4,11 @@ indexing
 
 		"Objects that represent XML element nodes"
 
-	library:	"Gobo Eiffel XML Library"
-	author:		"Andreas Leitner <nozone@sbox.tugraz.at>"
-	copyright:	"Copyright (c) 2001, Andreas Leitner and others"
-	license:	"Eiffel Forum Freeware License v1 (see forum.txt)"
-	date:		"$Date$"
-	revision:	"$Revision$"
+	library: "Gobo Eiffel XML Library"
+	copyright: "Copyright (c) 2001, Andreas Leitner and others"
+	license: "Eiffel Forum License v1 (see forum.txt)"
+	date: "$Date$"
+	revision: "$Revision$"
 
 class XM_ELEMENT
 
@@ -311,4 +310,3 @@ feature {NONE} -- Implementation
 	namespace_declarations_cache: DS_LINKED_LIST [XM_NAMESPACE]
 
 end -- class XM_ELEMENT
-

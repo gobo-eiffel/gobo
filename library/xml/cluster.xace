@@ -17,12 +17,11 @@
 			you must select its counterpart from "xml.impl.no_*" to keep the
 			factory happy.
 
-		library:     "Gobo Eiffel XML Library"
-		author:      "Eric Bezault [ericb@gobosoft.com]"
-		copyright:   "Copyright (c) 2001, Eric Bezault and others"
-		license:     "Eiffel Forum Freeware License v1 (see forum.txt)"
-		date:        "$Date$"
-		revision:    "$Revision$"
+		library: "Gobo Eiffel XML Library"
+		copyright: "Copyright (c) 2001, Eric Bezault and others"
+		license: "Eiffel Forum Freeware License v1 (see forum.txt)"
+		date: "$Date$"
+		revision: "$Revision$"
 	</description>
 
 	<cluster name="factory"/>
@@ -32,23 +31,23 @@
 	<cluster name="event"/>
 	<cluster name="tree"/>
 	<cluster name="formatter"/>
-	<cluster name="parser" abstract="True">
+	<cluster name="parser" abstract="true">
 		<cluster name="eiffel"/>
 		<cluster name="expat" if="${GOBO_XML_EXPAT}"/>
 		<cluster name="no_expat" unless="${GOBO_XML_EXPAT}"/>
 	</cluster>
-	<cluster name="impl" abstract="True">
-		<cluster name="interface" abstract="True">
+	<cluster name="impl" abstract="true">
+		<cluster name="interface" abstract="true">
 			<cluster name="general"/>
 			<cluster name="event"/>
 			<cluster name="tree"/>
 		</cluster>
 
-		<cluster name="expat" abstract="True" if="${GOBO_XML_EXPAT}">
+		<cluster name="expat" abstract="true" if="${GOBO_XML_EXPAT}">
 			<cluster name="api"/>
 			<cluster name="general"/>
 			<cluster name="event"/>
-			<cluster name="spec" abstract="True">
+			<cluster name="spec" abstract="true">
 				<cluster name="compiler" location="${GOBO}/library/xml/impl/expat/spec/${GOBO_EIFFEL}"/>
 			</cluster>
 			<external unless="${GOBO_OS}=windows">
@@ -61,13 +60,13 @@
 				<link_library location="${EXPAT}\Libs\expat.lib"/>
 			</external>
 		</cluster>
-		<cluster name="eiffel" abstract="True">
+		<cluster name="eiffel" abstract="true">
 			<cluster name="event"/>
 		</cluster>
-		<cluster name="tree_on_event" abstract="True">
+		<cluster name="tree_on_event" abstract="true">
 			<cluster name="tree"/>
 		</cluster>
-		<cluster name="no_expat" abstract="True" unless="${GOBO_XML_EXPAT}">
+		<cluster name="no_expat" abstract="true" unless="${GOBO_XML_EXPAT}">
 			<cluster name="event"/>
 		</cluster>
 	</cluster>

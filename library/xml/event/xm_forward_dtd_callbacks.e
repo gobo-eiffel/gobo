@@ -1,8 +1,7 @@
-
 indexing
 
 	description: 
-		
+
 		"Callbacks for DTD declaration"
 
 	library: "Gobo Eiffel XML Library"
@@ -16,12 +15,12 @@ class XM_FORWARD_DTD_CALLBACKS
 inherit
 
 	XM_DTD_CALLBACKS_SOURCE
-	
+
 	XM_DTD_CALLBACKS
 		export
 			{NONE} all
 		end
-	
+
 feature -- Set
 
 	set_dtd_callbacks (a: XM_DTD_CALLBACKS) is
@@ -31,12 +30,11 @@ feature -- Set
 		ensure then
 			set: dtd_callbacks = a
 		end
-	
+
 	dtd_callbacks: XM_DTD_CALLBACKS
 			-- Callbacks event interface to which events are forwarded.
 			-- If void, a null callback is created on startup.
-		
-		
+
 feature {NONE} -- Document type definition callbacks
 
 	on_doctype (name: UC_STRING; an_id: XM_DTD_EXTERNAL_ID; has_internal_subset: BOOLEAN) is
@@ -45,21 +43,21 @@ feature {NONE} -- Document type definition callbacks
 			check_void
 			dtd_callbacks.on_doctype (name, an_id, has_internal_subset)
 		end
-	
+
 	on_element_declaration (a_name: UC_STRING; a_model: XM_DTD_ELEMENT_CONTENT) is
 			-- Element declaration.
 		do
 			check_void
 			dtd_callbacks.on_element_declaration (a_name, a_model)
 		end
-	
+
 	on_attribute_declaration (an_element_name, a_name: UC_STRING; a_model: XM_DTD_ATTRIBUTE_CONTENT) is
 			-- Attribute declaration, one event per attribute.
 		do
 			check_void
 			dtd_callbacks.on_attribute_declaration (an_element_name, a_name, a_model)
 		end
-	
+
 	on_entity_declaration (entity_name: UC_STRING; is_parameter: BOOLEAN; value: UC_STRING; 
 			an_id: XM_DTD_EXTERNAL_ID; notation_name: UC_STRING) is
 			 -- Entity declaration.

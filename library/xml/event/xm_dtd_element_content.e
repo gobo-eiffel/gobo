@@ -1,10 +1,9 @@
-
 indexing
 
 	description:
-	
-			"Content model for element declaration in DTD"
-			
+
+		"Content model for element declaration in DTD"
+
 	library: "Gobo Eiffel XML Library"
 	copyright: "Copyright (c) 2002, Eric Bezault and others"
 	license: "Eiffel Forum License v1 (see forum.txt)"
@@ -19,20 +18,20 @@ inherit
 		redefine
 			out
 		end
-	
+
 	KL_SHARED_PLATFORM
 		export
 			{NONE} all
 		undefine
 			out
 		end
-		
+
 creation
 
 	make_name, make_list,
 	make_choice, make_sequence, make_mixed,
 	make_any, make_empty
-	
+
 feature {NONE} -- Creation
 
 	make_name (a: like name) is
@@ -44,7 +43,7 @@ feature {NONE} -- Creation
 			is_name: is_name
 			set: name.is_equal (a)
 		end
-		
+
 	make_list is
 			-- Make list node.
 		do
@@ -53,14 +52,14 @@ feature {NONE} -- Creation
 		ensure
 			not_name: not is_name
 		end
-		
+
 	set_default is
 			-- Set default for repetition and type.
 		do
 			set_sequence
 			set_one
 		end
-		
+
 feature {NONE} -- Creation (derived)
 
 	make_empty is
@@ -72,7 +71,7 @@ feature {NONE} -- Creation (derived)
 			list: not is_name
 			set: is_content_empty
 		end
-	
+
 	make_any is
 			-- Any content model.
 		do
@@ -82,7 +81,7 @@ feature {NONE} -- Creation (derived)
 			list: not is_name
 			set: is_content_any
 		end
-		
+
 	make_choice is
 			-- Choice list.
 		do
@@ -102,7 +101,7 @@ feature {NONE} -- Creation (derived)
 			list: not is_name
 			set: is_sequence
 		end
-		
+
 	make_mixed is
 			-- Mixed content.
 		do
@@ -112,21 +111,21 @@ feature {NONE} -- Creation (derived)
 			list: not is_name
 			set: is_content_mixed
 		end
-				
+
 feature -- Data
 
 	name: UC_STRING
 			-- Name, IF leaf item.
 		--require is_name
 		--ensure Result /= Void
-			
+
 	items: DS_LIST[XM_DTD_ELEMENT_CONTENT]
 			-- List of subitems.
 		--require not is_name
 		--ensure Result /= Void
-		
+
 feature {NONE} -- Data (implementation)
-	
+
 	type: CHARACTER
 			-- Sequence enumeration, see invariant.
 			-- Internal type not exposed to client, character for convenience
@@ -134,7 +133,7 @@ feature {NONE} -- Data (implementation)
 	repetition: CHARACTER
 			-- Repetition enumeration, see invariant..
 			-- Internal type not exposed to client, character for convenience
-	
+
 feature -- General
 
 	out: STRING is
@@ -170,7 +169,7 @@ feature -- General
 				Result.append_character (repetition)
 			end
 		end
-		
+
 feature -- Sequence/leaf
 
 	is_name: BOOLEAN is
@@ -181,7 +180,7 @@ feature -- Sequence/leaf
 			leaf: Result implies name /= Void
 			node: not Result implies items /= Void
 		end
-		
+
 feature -- Repetition
 
 	is_one: BOOLEAN is
@@ -189,25 +188,25 @@ feature -- Repetition
 		do
 			Result := repetition = ' '
 		end
-		
+
 	is_one_or_more: BOOLEAN is
 			-- One or more occurrences.
 		do
 			Result := repetition = '+'
 		end
-		
+
 	is_zero_or_one: BOOLEAN is
 			-- Zero or one occurrences.
 		do
 			Result := repetition = '?'
 		end
-		
+
 	is_zero_or_more: BOOLEAN is
 			-- Zero or more occurrences.
 		do
 			Result := repetition = '*'
 		end
-		
+
 	set_one is
 			-- One occurrence.
 		do
@@ -215,7 +214,7 @@ feature -- Repetition
 		ensure
 			set: is_one
 		end
-		
+
 	set_one_or_more is
 			-- One or more occurrences.
 		do
@@ -223,7 +222,7 @@ feature -- Repetition
 		ensure
 			set: is_one_or_more
 		end
-		
+
 	set_zero_or_one is
 			-- Zero or one occurrences.
 		do
@@ -231,7 +230,7 @@ feature -- Repetition
 		ensure
 			set: is_zero_or_one
 		end
-		
+
 	set_zero_or_more is
 			-- Zero or more occurrences.
 		do
@@ -239,7 +238,7 @@ feature -- Repetition
 		ensure
 			set: is_zero_or_more
 		end
-		
+
 feature -- Repetition (derived)
 
 	minimum_occurrences: INTEGER is
@@ -256,7 +255,7 @@ feature -- Repetition (derived)
 			one_or_more: is_one_or_more implies (Result = 1)
 			zero_or_more: is_zero_or_more implies (Result = 0)
 		end
-		
+
 	maximum_occurrences: INTEGER is
 			-- Maximum occurrences.
 		do
@@ -273,7 +272,7 @@ feature -- Repetition (derived)
 			one_or_more: is_one_or_more implies (Result > 1)
 			zero_or_more: is_zero_or_more implies (Result > 1)
 		end
-		
+
 feature -- Content (compound)
 
 	is_choice: BOOLEAN is
@@ -281,13 +280,13 @@ feature -- Content (compound)
 		do
 			Result := type = '|'
 		end
-	
+
 	is_sequence: BOOLEAN is
 			-- Sequence.
 		do
 			Result := type = ','
 		end
-	
+
 	set_choice is
 			-- Choice.
 		do
@@ -303,7 +302,7 @@ feature -- Content (compound)
 		ensure
 			set: is_sequence
 		end
-		
+
 feature -- Content (final)
 
 	is_content_any: BOOLEAN is
@@ -314,7 +313,7 @@ feature -- Content (final)
 			empty: Result implies (not is_name and items.count = 0)
 			chardata: Result implies is_character_data_allowed
 		end
-		
+
 	is_content_empty: BOOLEAN is
 			-- EMPTY content.
 		do
@@ -322,7 +321,7 @@ feature -- Content (final)
 		ensure
 			empty: Result implies (not is_name and items.count = 0)
 		end
-		
+
 	set_content_any is
 			-- ANY content.
 		require
@@ -333,7 +332,7 @@ feature -- Content (final)
 		ensure
 			set: is_content_any
 		end
-		
+
 	set_content_empty is
 			-- EMPTY content.
 		require
@@ -343,7 +342,7 @@ feature -- Content (final)
 		ensure
 			set: is_content_empty
 		end
-		
+
 feature -- Content (mixed)
 
 	is_content_mixed: BOOLEAN is
@@ -353,7 +352,7 @@ feature -- Content (mixed)
 		ensure
 			empty: Result implies (not is_name and items.count = 0)
 		end
-		
+
 	set_content_mixed is
 			-- Mixed #PCDATA content.
 		require
@@ -368,12 +367,12 @@ feature -- Content (mixed)
 
 	is_character_data_allowed: BOOLEAN
 			-- Is PCDATA allowed within this content?
-		
+
 invariant
 
 	name: is_name = (name /= Void)
 	chardata: is_character_data_allowed = (is_content_mixed or is_content_any)
 	type_enumeration: ("|,?0").has (type)
 	repetition_enumeration: (" +?*").has (repetition)
-	
+
 end

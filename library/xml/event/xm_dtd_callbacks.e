@@ -1,8 +1,7 @@
-
 indexing
 
 	description: 
-		
+
 		"Callbacks for DTD declaration"
 
 	library: "Gobo Eiffel XML Library"
@@ -10,7 +9,7 @@ indexing
 	license: "Eiffel Forum License v1 (see forum.txt)"
 	date: "$Date$"
 	revision: "$Revision$"
-		
+
 deferred class XM_DTD_CALLBACKS
 
 feature -- Document type definuition callbacks
@@ -21,7 +20,7 @@ feature -- Document type definuition callbacks
 			name_not_void: name /= Void
 		deferred
 		end
-	
+
 	on_element_declaration (a_name: UC_STRING; a_model: XM_DTD_ELEMENT_CONTENT) is
 			-- Element declaration.
 		require
@@ -29,7 +28,7 @@ feature -- Document type definuition callbacks
 			model_not_void: a_model /= Void
 		deferred
 		end
-	
+
 	on_attribute_declaration (an_element_name, a_name: UC_STRING; a_model: XM_DTD_ATTRIBUTE_CONTENT) is
 			-- Attribute declaration, one event per attribute.
 		require
@@ -38,7 +37,7 @@ feature -- Document type definuition callbacks
 			model_not_void: a_model /= Void
 		deferred
 		end
-	
+
 	on_entity_declaration (entity_name: UC_STRING; is_parameter: BOOLEAN; value: UC_STRING; 
 			an_id: XM_DTD_EXTERNAL_ID; notation_name: UC_STRING) is
 			 -- Entity declaration.

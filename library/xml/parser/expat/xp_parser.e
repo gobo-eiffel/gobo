@@ -4,11 +4,14 @@ indexing
 
 		"Class for parsing XML documents using Expat."
 
-	status: "See notice at end of class."
-	author: "Andreas Leitner"
+	library: "Gobo Eiffel XML Library"
+	copyright: "Copyright (c) 2001, Andreas Leitner and others"
+	license: "Eiffel Forum License v1 (see forum.txt)"
+	date: "$Date$"
+	revision: "$Revision$"
 
 deferred class XP_PARSER
-	-- FIXME: this is a duplicate of XP_EVENT_PARSER which
+	-- TODO: FIXME: this is a duplicate of XP_EVENT_PARSER which
 	-- it should replace.
 	
 inherit

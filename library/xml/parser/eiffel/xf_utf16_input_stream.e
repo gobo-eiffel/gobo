@@ -1,8 +1,7 @@
-
 indexing
 
 	description: 
-		
+
 		"Variant of KI_CHARACTER_INPUT_STREAM that accepts UTF16 and converts it to UTF8"
 
 	library: "Gobo Eiffel XML Library"
@@ -10,24 +9,24 @@ indexing
 	license: "Eiffel Forum License v1 (see forum.txt)"
 	date: "$Date$"
 	revision: "$Revision$"
-	
+
 	--xml_specific_lt: "Detection assuming first char is < is XML specific"
 	-- TODO:
 	-- UTF16 surrogate characters
 	-- factorise UTF8 encoding routines
-	
+
 class XF_UTF16_INPUT_STREAM
 
 inherit
 
 	KI_CHARACTER_INPUT_STREAM
-	
+
 	XF_UTF8_PRIVATE_ROUTINES
-		
+
 creation
 
 	make, make_from_stream
-	
+
 feature {NONE} -- Creation
 
 	make (a_name: STRING) is
@@ -39,7 +38,7 @@ feature {NONE} -- Creation
 			a_file.open_read
 			make_from_stream (a_file)
 		end
-			
+
 	make_from_stream (a: like impl) is
 			-- Make from stream.
 		require
@@ -51,11 +50,11 @@ feature {NONE} -- Creation
 		ensure
 			def: impl = a
 		end
-		
+
 feature {NONE} -- Impl
 
 	impl: KI_CHARACTER_INPUT_STREAM
-	
+
 feature -- Input
 
 	read_character is
@@ -125,7 +124,7 @@ feature -- Access
 				Result := impl.last_character
 			end
 		end
-			
+
 feature -- Input
 
 	read_string (nb: INTEGER) is
@@ -145,7 +144,7 @@ feature -- Input
 				last_string.wipe_out
 				i := nb
 				read_character
-			until	
+			until
 				i = 0 or end_of_input
 			loop
 				last_string.append_character (last_character)
@@ -153,14 +152,14 @@ feature -- Input
 				i := i - 1
 			end
 		end
-		
+
 	last_string: STRING
 			-- Last string read
 			-- (Note: unlike the abstract specification, this _often_ but 
 			-- not always returns the same object.)
-	
+
 feature {NONE} -- Implementation
-		
+
 	utf16_detect_read_character is
 			-- Read first two chars of file to establish
 			-- whether we are a UTF16 file.
@@ -201,7 +200,7 @@ feature {NONE} -- Implementation
 				end
 			end
 		end
-			
+
 	utf16_read_character is
 			-- Read two characters at a time and fill queue with 
 			-- UTF8 encoding of character.
@@ -225,9 +224,9 @@ feature {NONE} -- Implementation
 				end
 			end
 		end
-		
+
 feature {NONE} -- Implementation
-		
+
 	append_character (a_char: INTEGER) is
 			-- Append character from UTF16 code.
 		require
@@ -254,9 +253,9 @@ feature {NONE} -- Implementation
 				i := i + 1
 			end
 		end
-						
+
 feature {NONE} -- State
-	
+
 	is_utf16: BOOLEAN
 			-- Are we reading an UTF16 file?
 
@@ -268,11 +267,11 @@ feature {NONE} -- State
 
 	utf_queue: DS_LINKED_QUEUE [CHARACTER]
 			-- Queue used in UTF16 mode.
-		
+
 feature {NONE} -- Constants
 
 	Lt_char: CHARACTER is '<'
-	
+
 invariant
 	
 	last_string: last_string /= Void

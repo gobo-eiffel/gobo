@@ -1,42 +1,41 @@
-
 indexing
-	
+
 	description: 
-		
+
 		"Entity definition and scanner"
-		
+
+	note:
+
+		"This class represents an entity name/type and also a scanner for this %
+		%entity. The two concepts could be distinct, but this helps enforcing %
+		%the property that an entity cannot be recursively included, as the %
+		%scanner can be checked for being in use if the entity is recursively %
+		%included. This is not really a is-a relationship though."
+
 	library: "Gobo Eiffel XML Library"
 	copyright: "Copyright (c) 2002, Eric Bezault and others"
 	license: "Eiffel Forum License v1 (see forum.txt)"
 	date: "$Date$"
 	revision: "$Revision$"
 
--- <discussion>
--- This class represents an entity name/type and also a scanner for this 
--- entity. The two concepts could be distinct, but this helps enforcing 
--- the property that an entity cannot be recursively included, as the 
--- scanner can be checked for being in use if the entity is recursively 
--- included. This is not really a is-a relationship though.
--- </discussion>
-
 class XF_ENTITY_DEF
 
 inherit
 
 	HASHABLE
-	
+
 	XF_FULL_SCANNER
 		redefine
 			reset,
 			read_token
 		end
-	
+
 creation
 
 	make_literal,
 	make_external,
 	make_def
-	
+
 feature {NONE} -- Creation
 
 	make_literal (a: STRING) is
@@ -47,7 +46,7 @@ feature {NONE} -- Creation
 			value := a
 			make_scanner
 		end
-		
+
 	make_external (a: STRING) is
 			-- External.
 		require
@@ -57,7 +56,7 @@ feature {NONE} -- Creation
 			value := a
 			make_scanner
 		end
-		
+
 	make_def (a: XF_ENTITY_DEF) is
 			-- Make from other.
 		require
@@ -69,18 +68,18 @@ feature {NONE} -- Creation
 				make_literal (a.value)
 			end
 		end
-		
+
 feature -- Access
 
 	is_external: BOOLEAN
 			-- Is this an external entity.
-	
+
 	is_literal: BOOLEAN is
 			-- Is this a literal entity.
 		do
 			Result := not is_external
 		end
-	
+
 	value: STRING
 			-- Value.
 
@@ -92,7 +91,7 @@ feature -- Access
 		do
 			Result := value
 		end
-		
+
 feature -- HASHABLE (on the entity name aspect)
 
 	hash_code: INTEGER is
@@ -188,5 +187,5 @@ invariant
 
 	not_void: value /= Void
 	type: is_literal xor is_external
-	
+
 end

@@ -1,16 +1,15 @@
-
 indexing
 
 	description: 
-	
+
 		"Scanner adapter to external DTD"
-	
+
 	library: "Gobo Eiffel XML Library"
 	copyright: "Copyright (c) 2002, Eric Bezault and others"
 	license: "Eiffel Forum License v1 (see forum.txt)"
 	date: "$Date$"
 	revision: "$Revision$"
-		
+
 class XF_SCANNER_DTD
 
 inherit
@@ -20,11 +19,11 @@ inherit
 			make_scanner,
 			read_token
 		end
-		
+
 creation
 
 	make_scanner
-	
+
 feature {NONE} -- Creation
 
 	make_scanner is
@@ -38,7 +37,7 @@ feature {NONE} -- State
 
 	decl_start_sent: BOOLEAN
 	decl_end_sent: BOOLEAN
-	
+
 feature -- Input
 
 	read_token is
@@ -63,5 +62,5 @@ feature -- Input
 				end
 			end
 		end
-		
+
 end

@@ -1,21 +1,21 @@
-
 indexing
 
 	description:
-		
+
 		"Parser name: optimised for  namespaces but still allowing XML 1.0 names"
-	
+
+	todo: "Review how to handle strict XML 1.0 with namespaces"
+
 	library: "Gobo Eiffel XML Library"
 	copyright: "Copyright (c) 2002, Eric Bezault and others"
 	license: "Eiffel Forum License v1 (see forum.txt)"
 	date: "$Date$"
 	revision: "$Revision$"
-	todo: "Review how to handle strict XML 1.0 with namespaces"
 
 class XF_PARSER_NAME
 
 inherit
-	
+
 	HASHABLE
 		redefine
 			is_equal,
@@ -25,7 +25,7 @@ inherit
 creation
 
 	make
-			
+
 feature -- Any
 
 	is_equal (other: like Current): BOOLEAN is
@@ -45,7 +45,7 @@ feature -- Any
 				end
 			end
 		end
-		
+
 	out: STRING is
 			-- Colon separated name.
 		local
@@ -63,7 +63,7 @@ feature -- Any
 				i := i + 1
 			end
 		end
-		
+
 	hash_code: INTEGER is
 			-- Hashable.
 		local
@@ -84,7 +84,7 @@ feature -- Data
 
 	count: INTEGER
 			-- Number of items.
-			
+
 	first: STRING
 			-- First item (name or namespace)
 
@@ -94,32 +94,32 @@ feature -- XML
 		do
 			Result := is_simple_name or is_namespace_name
 		end
-		
+
 	is_simple_name: BOOLEAN is
 			-- Is this simple name?
 		do
 			Result := count = 1 and then first.count > 0
 		end
-		
+
 	is_namespace_name: BOOLEAN is
 			-- Is name with namespace?
 		do
 			Result := count = 2 and then 
 				(first.count > 0 and second.count > 0)
 		end
-		
+
 	is_namespace_declaration: BOOLEAN is
 			-- Is this an XML namespace declaration?
 		do
 			Result := (count = 1 or count = 2) and then first.is_equal (Xmlns)
 		end
-		
+
 	is_named_namespace_declaration: BOOLEAN is
 			-- Is this an XML declaration for a named namespace?
 		do
 			Result := is_namespace_declaration and is_namespace_name
 		end
-					
+
 feature 
 
 	ns_prefix: STRING is
@@ -129,7 +129,7 @@ feature
 				Result := first
 			end
 		end
-	
+
 	local_part: STRING is
 			-- Local part.
 			-- (including tail)
@@ -151,16 +151,16 @@ feature
 				end
 			end
 		end
-		
+
 feature {XF_PARSER_NAME} -- Data
 
 	second: STRING
 			-- Second (name).
-			
+
 	tail: DS_BILINKED_LIST[STRING]
 			-- Inefficient(?) tail, because "a:b:c:d" is valid XML 1.0 but 
 			-- it is supposed to be rare in practice.
-	
+
 feature -- DS_LIST like features
 
 	is_empty: BOOLEAN is
@@ -168,11 +168,11 @@ feature -- DS_LIST like features
 		do
 			Result := count = 0
 		end
-		
+
 	last: STRING is
 			-- Last item.
 		require
-			not_empty: count > 0		
+			not_empty: count > 0
 		do
 			if count = 1 then
 				Result := first
@@ -182,7 +182,7 @@ feature -- DS_LIST like features
 				Result := tail.last
 			end
 		end
-		
+
 	item (i: INTEGER): STRING is
 			-- Item at position i.
 		require
@@ -197,7 +197,7 @@ feature -- DS_LIST like features
 				Result := tail.item (i-2)
 			end
 		end
-		
+
 	make, wipe_out is
 			-- Remove all.
 		do
@@ -206,7 +206,7 @@ feature -- DS_LIST like features
 			second := Void
 			tail := Void
 		end
-		
+
 	force_last (a_string: STRING) is
 			-- Add item at end.
 		require
@@ -227,9 +227,9 @@ feature -- DS_LIST like features
 			count_done: count = ((old count) + 1)
 			at_last: item (count) = a_string
 		end
-		
+
 feature {NONE} -- Constants
 
 	Xmlns: STRING is "xmlns"
-	
+
 end

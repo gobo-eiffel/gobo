@@ -4,12 +4,11 @@ indexing
 
 		"Objects that represent xml nodes that can contain other xml nodes"
 
-	library:	"Gobo Eiffel XML Library"
-	author:		"Andreas Leitner <nozone@sbox.tugraz.at>"
-	copyright:	"Copyright (c) 2001, Andreas Leitner and others"
-	license:	"Eiffel Forum Freeware License v1 (see forum.txt)"
-	date:		"$Date$"
-	revision:	"$Revision$"
+	library: "Gobo Eiffel XML Library"
+	copyright: "Copyright (c) 2001, Andreas Leitner and others"
+	license: "Eiffel Forum License v1 (see forum.txt)"
+	date: "$Date$"
+	revision: "$Revision$"
 
 deferred class XM_COMPOSITE
 
@@ -56,7 +55,7 @@ feature {ANY} -- Access
 			end
 		end
 
-			-- FIXME: This feature does not work right now, fix needed
+			-- TODO: This feature does not work right now, fix needed
 			-- new_element_cursor: DS_BILINEAR_CURSOR [XM_ELEMENT] is
 			-- -- New external cursor. This cursor will ignore all nodes
 			-- -- but elements.
@@ -296,4 +295,3 @@ invariant
 	namespaces_not_void: namespaces /= Void
 
 end -- class XM_COMPOSITE
-

@@ -1,8 +1,7 @@
-
 indexing
 
 	description:
-	
+
 		"Error messages for parser (can be used as enumeration)"
 
 	library: "Gobo Eiffel XML Library"
@@ -23,10 +22,10 @@ feature -- Scanner errors
 	Error_unexpected_character: STRING is "unexpected character"
 
 feature -- Parser errors
-	
+
 	Error_cannot_read_file: STRING is "Cannot read file"
 	Error_cannot_open_external_dtd: STRING is "Cannot read external dtd file"
-	
+
 	Error_incorrect_unsupported_version: STRING is "XML version misformed or not 1.0"
 	Error_stand_alone_attribute: STRING is "Invalid standalone attribute in XML declaration"
 	Error_invalid_numeric_entity_code: STRING is "Numeric entity code is not XML character"
@@ -48,10 +47,10 @@ feature -- Parser errors
 	Error_entity_xml_declaration: STRING is "Error in XML declaration"
 	Error_entity_literal_in_attribute: STRING is "Literal entity expected in attribute"
 	Error_entity_undefined: STRING is "Entity is not defined"
-	
+
 	Error_external_reference_in_quoted_value: STRING is "External reference in quoted value"
 	Error_recursive_entity: STRING is "Entity cannot be recursively included"
-	
+
 	Error_doctype_declaration: STRING is "Misformed DOCTYPE declaration"
 	Error_doctype_entity_defined_twice: STRING is "Entity defined twice"
 	Error_doctype_undefined_pe_entity: STRING is "Undefined PE entity"
@@ -62,15 +61,15 @@ feature -- Parser errors
 	Error_doctype_notation: STRING is "Misformed entity notation"
 	Error_doctype_conditional_section: STRING is "Misformed conditional section"
 	Error_doctype_peref_only_in_dtd: STRING is "PE reference only allowed in DTD"
-	
+
 	Error_pi_xml_reserved: STRING is "xml prefix reserved in processing instruction"
 	Error_unicode_invalid_character: STRING is "Unexpected unicode character"
-	
+
 	Error_namespaces_name_misformed: STRING is "Name misformed"
 	Error_namespaces_undeclared: STRING is "Undeclared namespace"
 
 	Error_markup_declaration_in_prolog: STRING is "Markup declaration in prolog"
 	Error_markup_in_external_dtd: STRING is "Markup in external DTD"
 	Error_cannot_parse_external_dtd: STRING is "Cannot parse external DTD"
-	
+
 end

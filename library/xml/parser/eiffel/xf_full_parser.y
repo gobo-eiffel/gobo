@@ -2,17 +2,16 @@
 indexing
 
 	description: 
-		
+
 		"Full XML parser"
-		
+
 	implements: "XML 1.0 (Second Edition) - W3C Recommendation 6 October 2000"
 
 	library: "Gobo Eiffel XML Library"
 	copyright: "Copyright (c) 2002, Eric Bezault and others"
-	license: "Eiffel Forum Freeware License v1 (see forum.txt)"		
+	license: "Eiffel Forum License v1 (see forum.txt)"
 	date: "$Date$"
 	revision: "$Revision$"
-		
 
 deferred class XF_FULL_PARSER
 
@@ -30,7 +29,7 @@ inherit
 		export
 			{NONE} all
 		end
-	
+
 	XM_DTD_CALLBACKS
 		export
 			{NONE} all
@@ -40,17 +39,17 @@ inherit
 		export
 			{NONE} all
 		end
-	
+
 	XF_PARSER_ERRORS
 		export
 			{NONE} all
 		end
-		
+
 	UC_UNICODE_FACTORY
 		export
 			{NONE} all
 		end
-	
+
 -- TODO:
 -- character classes validation: external
 -- pi: should have space after PI_TARGET?
@@ -866,10 +865,10 @@ feature {NONE} -- State
 			-- Defined entites
 	pe_entities: DS_HASH_TABLE [XF_ENTITY_DEF,STRING]
 			-- Defined PE entities
-	
+
 	in_external_dtd: BOOLEAN
 			-- Is the scanner in an external DTD?
-		
+
 feature {NONE} -- Factory
 
 	new_namespace_name: XF_PARSER_NAME is
@@ -880,7 +879,7 @@ feature {NONE} -- Factory
 			new_object: Result /= Void
 			empty: Result.is_empty
 		end
-		
+
 	new_name_set: DS_HASH_SET [XF_PARSER_NAME] is
 			-- Name set for checking.
 		do
@@ -901,7 +900,7 @@ feature {NONE} -- DTD
 			when '*' then a_node.set_zero_or_more
 			end
 		end
-		
+
 	element_name (a_name: STRING): XM_DTD_ELEMENT_CONTENT is
 			-- Make element content name node.
 		require
@@ -911,7 +910,7 @@ feature {NONE} -- DTD
 		ensure
 			not_void: Result /= Void
 		end
-		
+
 	on_attribute_declarations (ele_name: STRING; some_attributes: DS_LINEAR[XM_DTD_ATTRIBUTE_CONTENT]) is
 			-- Send all element declarations.
 		require
@@ -931,7 +930,7 @@ feature {NONE} -- DTD
 				a_cursor.forth
 			end
 		end
-		
+
 feature {NONE} -- Entities
 
 	new_literal_entity (a_value: STRING): XF_ENTITY_DEF is
@@ -941,7 +940,7 @@ feature {NONE} -- Entities
 		do
 			!! Result.make_literal (a_value)
 		end
-		
+
 	new_external_entity (a_value: XM_DTD_EXTERNAL_ID): XF_ENTITY_DEF is
 			-- New external entity definition.
 		require
@@ -949,7 +948,7 @@ feature {NONE} -- Entities
 		do
 			!! Result.make_external (a_value.system_id.to_utf8)
 		end
-		
+
 feature {NONE} -- Entities
 
 	when_entity_declared (a_name: STRING; a_def: XF_ENTITY_DEF) is
@@ -971,7 +970,7 @@ feature {NONE} -- Entities
 					entities.force (a_def, a_name)
 				end
 				check has: entities.has (a_name) end
-			end			
+			end
 		end
 		
 	when_pe_entity_declared (a_name: STRING; in_def: XF_ENTITY_DEF) is
@@ -1000,7 +999,7 @@ feature {NONE} -- Entities
 			end
 			
 		end
-			
+
 	entity_referenced_in_entity_value (a_name: STRING): STRING is
 			-- Named parameter entity has been referenced in entity value.
 		require
@@ -1030,7 +1029,7 @@ feature {NONE} -- Entities
 				Result := external_entity_to_string (a_def.value)
 			end
 		end
-		
+
 	external_entity_to_string (a_sys: STRING): STRING is
 			-- External entity to string.
 		require
@@ -1056,7 +1055,7 @@ feature {NONE} -- Entities
 				force_error (an_error)
 			end
 		end
-		
+
 feature {NONE} -- DTD
 
 	when_external_dtd (a_system: XM_DTD_EXTERNAL_ID) is
@@ -1092,7 +1091,7 @@ feature -- Parser
 			end
 			on_finish
 		end
-		
+
 	parse_stream (a_stream: KI_CHARACTER_INPUT_STREAM) is
 			-- Parse XML Document from GOBO input stream.
 			--
@@ -1104,7 +1103,7 @@ feature -- Parser
 			parse
 			on_finish
 		end
-		
+
 feature -- Errors
 	
 	force_error (a_message: STRING) is
@@ -1134,7 +1133,7 @@ feature {NONE} -- Scanner implementation
 			-- Last token read by read_token.
 	last_value: ANY
 			-- Last value read by read_token.
-	
+
 	read_token is
 			-- Read token from scanner.
 		do
@@ -1184,7 +1183,7 @@ feature {NONE} -- Scanner entity processing
 				force_error (Error_doctype_undefined_pe_entity)
 			end
 		end
-		
+
 	process_entity (a_name: STRING) is
 			-- Push entity scanner on stack.
 		require
@@ -1197,7 +1196,7 @@ feature {NONE} -- Scanner entity processing
 				force_error (Error_entity_undefined)
 			end
 		end
-	
+
 	process_attribute_entity (a_name: STRING) is
 			-- Push entity scanner on stack.
 		require
@@ -1214,7 +1213,7 @@ feature {NONE} -- Scanner entity processing
 				force_error (Error_entity_undefined)
 			end
 		end
-		
+
 	process_entity_scanner (a_def: XF_ENTITY_DEF) is
 			-- Save previous scannner, create new scanner, and
 			-- reset it with previous scanner state. 
@@ -1240,25 +1239,25 @@ feature -- Error diagnostic
 		do
 			Result := scanner.line
 		end
-		
+
 	column: INTEGER is
 			-- Current column.
 		do
 			Result := scanner.column
 		end
-	
+
 	byte_position: INTEGER is
 			-- Current byte index.
 		do
 			Result := scanner.position
 		end
-		
+
 	filename: STRING is
 			-- Current file.
 		do
 			Result := scanner.filename
 		end
-		
+
 	error_header: STRING is
 			-- Header for error message.
 			-- <filename>:<line>:<column>:
@@ -1289,7 +1288,7 @@ feature {NONE} -- String
 		once
 			Result := clone ("")
 		end
-		
+
 	onstring (a: STRING): UC_STRING is
 			-- Convert string from inside the parser to string as 
 			-- seen by callback interface.
@@ -1300,7 +1299,8 @@ feature {NONE} -- String
 		end
 
 invariant
+
 	scanner_not_void: scanner /= Void
 	scanners_not_void: scanners /= Void
-		
+
 end

@@ -1,13 +1,12 @@
-
 indexing
-	
+
 	description:
-		
+
 		"Handler for character references/ entities"
-	
+
 	library: "Gobo Eiffel XML Library"
 	copyright: "Copyright (c) 2002, Eric Bezault and others"
-	license: "Eiffel Forum Freeware License v1 (see forum.txt)"		
+	license: "Eiffel Forum License v1 (see forum.txt)"
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -16,14 +15,14 @@ class XF_CHARACTER_ENTITY
 inherit
 
 	ANY
-	
+
 	XF_UTF8_PRIVATE_ROUTINES
-	
+
 	KL_INTEGER_ROUTINES
 		export
 			{NONE} all
 		end
-	
+
 	KL_STRING_ROUTINES
 		rename
 			make as string_make
@@ -44,7 +43,7 @@ feature {NONE} -- Creation
 		end
 
 feature -- Setting
-	
+
 	from_decimal (a_string: STRING) is
 			-- Set entity from decimal representation.
 		require

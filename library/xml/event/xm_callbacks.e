@@ -1,9 +1,9 @@
 indexing
-	
+
 	description: 
-		
+
 		"Callback interface for core content XML events"
-	
+
 	library: "Gobo Eiffel XML Library"
 	copyright: "Copyright (c) 2002, Eric Bezault and others"
 	license: "Eiffel Forum License v1 (see forum.txt)"
@@ -18,12 +18,12 @@ feature -- Document
 			-- Called when parsing starts.
 		deferred
 		end
-		
+
 	on_finish is
 			-- Called when parsing finished.
 		deferred
 		end
-	
+
 feature -- Errors
 
 	on_error (a_message: STRING) is
@@ -42,13 +42,13 @@ feature -- Meta
 			content_not_void: a_content /= Void
 		deferred
 		end
-		
+
 	on_comment (a_content: UC_STRING) is
 			-- Comment
 			-- Atomic: single comment produces single event
 		deferred
 		end
-		
+
 feature -- Tag
 
 	on_start_tag (a_namespace: UC_STRING; a_prefix: UC_STRING; a_local_part: UC_STRING) is
@@ -58,7 +58,7 @@ feature -- Tag
 			local_part: is_local_part (a_local_part)  
 		deferred
 		end
-		
+
 	on_attribute (a_namespace: UC_STRING; a_prefix: UC_STRING; a_local_part: UC_STRING; a_value: UC_STRING) is
 			-- Start of attribute.
 		require
@@ -66,12 +66,12 @@ feature -- Tag
 			local_part: is_local_part (a_local_part) 
 		deferred
 		end
-		
+
 	on_start_tag_finish is
 			-- End of start tag.
 		deferred
 		end
-		
+
 	on_end_tag (a_namespace: UC_STRING; a_prefix: UC_STRING; a_local_part: UC_STRING) is
 			-- End tag.
 		require
@@ -79,7 +79,7 @@ feature -- Tag
 			local_part: is_local_part (a_local_part)
 		deferred
 		end
-	
+
 feature -- Content
 
 	on_content (a_content: UC_STRING) is
@@ -90,7 +90,7 @@ feature -- Content
 			not_empty: a_content.count >= 0
 		deferred
 		end
-		
+
 feature -- Support
 
 	has_prefix (a: UC_STRING): BOOLEAN is
@@ -98,13 +98,13 @@ feature -- Support
 		do
 			Result := a /= Void
 		end
-		
+
 	has_namespace (a: UC_STRING): BOOLEAN is
 			-- Is namespace resolved?
 		do
 			Result := a /= Void
 		end
-		
+
 	is_local_part (a: UC_STRING): BOOLEAN is
 			-- Is this a valid local part string?
 		do

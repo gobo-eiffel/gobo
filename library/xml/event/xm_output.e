@@ -1,10 +1,9 @@
-
 indexing
 
 	description:
-	
+
 		"Output facility switchable between in-memory string and standard output"
-	
+
 	library: "Gobo Eiffel XML Library"
 	copyright: "Copyright (c) 2002, Eric Bezault and others"
 	license: "Eiffel Forum License v1 (see forum.txt)"
@@ -24,13 +23,13 @@ feature -- Output
 			last_output: last_output /= Void
 			last_output_empty: last_output.count = 0
 		end
-		
+
 	set_output_standard is
 			-- Set output to standard output (Default).
 		do
 			last_output := Void
 		end
-		
+
 	set_output_string (a: like last_output) is
 			-- Set output to given string.
 		require
@@ -40,11 +39,10 @@ feature -- Output
 		ensure
 			definition: last_output = a
 		end
-		
+
 	last_output: UC_STRING
 			-- Last output.
 			-- may be void if standard output used.
-			
 
 feature -- Output, interface to descendants
 

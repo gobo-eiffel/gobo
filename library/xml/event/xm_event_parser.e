@@ -4,12 +4,11 @@ indexing
 
 		"XML event based parser. Inherit and redefine the notifiers to use this parser"
 
-	library:	"Gobo Eiffel XML Library"
-	author:		"Andreas Leitner <nozone@sbox.tugraz.at>"
-	copyright:	"Copyright (c) 2001, Andreas Leitner and others"
-	license:	"Eiffel Forum Freeware License v1 (see forum.txt)"
-	date:		"$Date$"
-	revision:	"$Revision$"
+	library: "Gobo Eiffel XML Library"
+	copyright: "Copyright (c) 2001, Andreas Leitner and others"
+	license: "Eiffel Forum License v1 (see forum.txt)"
+	date: "$Date$"
+	revision: "$Revision$"
 
 class XM_EVENT_PARSER
 
@@ -193,4 +192,3 @@ feature {DP_IMPLEMENTATION, DP_INTERFACE} -- Implementation
 	implementation: XI_EVENT_PARSER
 
 end -- class XM_EVENT_PARSER
-

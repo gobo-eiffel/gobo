@@ -1,10 +1,9 @@
-
 indexing
-	
+
 	description: 
-	
+
 		"XML markup constants"
-	
+
 	library: "Gobo Eiffel XML Library"
 	copyright: "Copyright (c) 2002, Eric Bezault and others"
 	license: "Eiffel Forum License v1 (see forum.txt)"
@@ -27,21 +26,21 @@ feature {NONE} -- Constants
 	Eq_s: STRING is once Result := "=" end
 	Quot_s: STRING is once Result := "%"" end
 	Prefix_separator: STRING is once Result := ":" end
-	
+
 	Lt_char: CHARACTER is '<'
 	Gt_char: CHARACTER is '>'
 	Amp_char: CHARACTER is '&'
 	Quot_char: CHARACTER is '%"'
-	
+
 	Lt_entity: STRING is once Result := "&lt;" end
 	Gt_entity: STRING is once Result := "&gt;" end
 	Amp_entity: STRING is once Result := "&amp;" end
 	Quot_entity: STRING is once Result := "&quot;" end
-	
+
 	Comment_start: STRING is once Result := "<!--" end
 	Comment_end: STRING is once Result := "-->" end
-	
+
 	Default_namespace: STRING is once Result := "" end
 	Xmlns: STRING is once Result := "xmlns" end
-	
+
 end
