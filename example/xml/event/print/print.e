@@ -17,7 +17,7 @@ inherit
 	KL_SHARED_ARGUMENTS
 
 	XM_CALLBACKS_FILTER_FACTORY
-	
+
 creation
 
 	make
@@ -51,13 +51,13 @@ feature
 
 			!! a_file.make (file_name)
 			a_file.open_read
-			
+
 			a_parser := event_parser
 
 			a_parser.set_callbacks (
 					standard_callbacks_pipe (<<new_pretty_print>>))
 			a_parser.parse_from_stream (a_file)
-			
+
 			if not a_parser.is_correct then
 				io.put_string (a_parser.last_error_extended_description)
 				io.put_new_line
@@ -139,7 +139,7 @@ feature -- Access
 
 	has_error: BOOLEAN
 			-- Has error occurred?
-	
+
 	file_name: STRING
 			-- Name of file to read.
 
@@ -148,11 +148,11 @@ feature {NONE} -- Implementation
 	usage_string: STRING is
 			-- Command line usage.
 		once
-			Result := clone ("usage: print ")
+			Result := clone ("usage: print ( ")
 			if fact.is_expat_available then
 				Result.append_string ("--expat|")
 			end
-			Result.append_string ("--eiffel")
+			Result.append_string ("--eiffel )")
 			Result.append_string (" <input-file>%N")
 		end
 
