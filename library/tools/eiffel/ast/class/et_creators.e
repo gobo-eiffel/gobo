@@ -77,6 +77,30 @@ feature -- Status report
 			end
 		end
 
+	is_directly_exported_to (a_name: ET_FEATURE_NAME; a_class: ET_CLASS): BOOLEAN is
+			-- Is feature name listed in current creation clauses
+			-- and is it directly_exported to `a_class'?
+			-- This is different from `is_exported_to' where `a_class' can
+			-- be a descendant of a class appearing in the list of clients.
+			-- Note: The use of 'direct' in the name of this feature has not
+			-- the same meaning as 'direct and indirect client' in ETL2 p.91.
+		require
+			a_name_not_void: a_name /= Void
+			a_class_not_void: a_class /= Void
+		local
+			i, nb: INTEGER
+		do
+			nb := count
+			from i := 1 until i > nb loop
+				if item (i).is_directly_exported_to (a_name, a_class) then
+					Result := True
+					i := nb + 1 -- Jump out of the loop.
+				else
+					i := i + 1
+				end
+			end
+		end
+
 feature -- Access
 
 	position: ET_POSITION is
