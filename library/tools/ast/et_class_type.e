@@ -17,7 +17,6 @@ inherit
 
 	ET_TYPE
 		redefine
-			copy, is_equal,
 			add_to_system,
 			syntactically_conforms_to,
 			check_parent_validity2,
@@ -74,14 +73,18 @@ feature -- Status report
 			a_class_type: ET_CLASS_TYPE
 			other_parameters: like generic_parameters
 		do
-			a_class_type ?= other
-			if a_class_type /= Void then
-				if base_class = a_class_type.base_class then
-					other_parameters := a_class_type.generic_parameters
-					if generic_parameters = Void then
-						Result := (other_parameters = Void)
-					elseif other_parameters /= Void then
-						Result := generic_parameters.same_syntactical_types (other_parameters)
+			if other = Current then
+				Result := True
+			else
+				a_class_type ?= other
+				if a_class_type /= Void then
+					if base_class = a_class_type.base_class then
+						other_parameters := a_class_type.generic_parameters
+						if generic_parameters = Void then
+							Result := (other_parameters = Void)
+						elseif other_parameters /= Void then
+							Result := generic_parameters.same_syntactical_types (other_parameters)
+						end
 					end
 				end
 			end
@@ -94,15 +97,27 @@ feature -- Status report
 		local
 			a_class_type: ET_CLASS_TYPE
 			other_parameters: like generic_parameters
+			ancestor_parameters: like generic_parameters
 		do
-			a_class_type ?= other
-			if a_class_type /= Void then
-				if base_class.has_ancestor (a_class_type.base_class) then
-					other_parameters := base_class.ancestors.item (a_class_type.base_class).generic_parameters
-					if generic_parameters = Void then
-						Result := (other_parameters = Void)
-					elseif other_parameters /= Void then
-						Result := generic_parameters.syntactically_conforms_to (other_parameters, a_class)
+			if other = Current then
+				Result := True
+			else
+				a_class_type ?= other
+				if a_class_type /= Void then
+					if base_class.has_ancestor (a_class_type.base_class) then
+						ancestor_parameters := base_class.ancestor (a_class_type).generic_parameters
+						other_parameters := a_class_type.generic_parameters
+						if other_parameters = Void then
+							Result := (ancestor_parameters = Void)
+						elseif ancestor_parameters /= Void then
+							if generic_parameters /= Void and then generic_parameters.has_derived_parameters then
+								if ancestor_parameters.has_formal_parameters (generic_parameters) then
+									ancestor_parameters := ancestor_parameters.deep_cloned_actuals
+									ancestor_parameters.resolve_formal_parameters (generic_parameters)
+								end
+							end
+							Result := ancestor_parameters.syntactically_conforms_to (other_parameters, a_class)
+						end
 					end
 				end
 			end
@@ -238,21 +253,22 @@ feature -- System
 
 feature -- Type processing
 
-	has_formal_parameters (actual_parameters: ARRAY [ET_TYPE]): BOOLEAN is
+	has_formal_parameters (actual_parameters: ET_ACTUAL_GENERIC_PARAMETERS): BOOLEAN is
 			-- Does current type contain formal generic parameter
-			-- types of index 'i' such that 'actual_parameters.item (i)'
-			-- is not void?
+			-- types whose corresponding actual parameter in
+			-- `actual_parameters' is different from the formal
 		do
 			if generic_parameters /= Void then
 				Result := generic_parameters.has_formal_parameters (actual_parameters)
 			end
 		end
 
-	resolved_formal_parameters (actual_parameters: ARRAY [ET_TYPE]): ET_CLASS_TYPE is
+	resolved_formal_parameters (actual_parameters: ET_ACTUAL_GENERIC_PARAMETERS): ET_CLASS_TYPE is
 			-- Replace in current type the formal generic parameter
-			-- types of index 'i' by 'actual_parameters.item (i)'
-			-- when these new parameters are not void.
-			-- (Warning: this is a side-effect function.)
+			-- types by those of `actual_parameters' when the 
+			-- corresponding actual parameter is different from
+			-- the formal parameter. (Warning: this is a side-effect
+			-- function.)
 		do
 			if generic_parameters /= Void then
 				generic_parameters.resolve_formal_parameters (actual_parameters)
@@ -316,24 +332,15 @@ feature -- Conversion
 
 feature -- Duplication
 
-	copy (other: like Current) is
-			-- Duplicate recursively current class type.
+	deep_cloned_type: like Current is
+			-- Recursively cloned type
+		local
+			generics: like generic_parameters
 		do
-			standard_copy (other)
-			generic_parameters := clone (generic_parameters)
-		end
-
-feature -- Comparison
-
-	is_equal (other: like Current): BOOLEAN is
-			-- Are current actual generic paramater types and
-			-- `other' recursively equal?
-		do
-			if same_type (other) then
-				Result := base_class = other.base_class and
-					class_name = other.class_name and
-					equal (generic_parameters, other.generic_parameters)
+			if generic_parameters /= Void then
+				generics := generic_parameters.deep_cloned_actuals
 			end
+			!! Result.make (class_name, generics, base_class)
 		end
 
 feature -- Output

@@ -91,21 +91,23 @@ feature -- System
 
 feature -- Type processing
 
-	has_formal_parameters (actual_parameters: ARRAY [ET_TYPE]): BOOLEAN is
+	has_formal_parameters (actual_parameters: ET_ACTUAL_GENERIC_PARAMETERS): BOOLEAN is
 			-- Does current type contain formal generic parameter
-			-- types of index 'i' such that 'actual_parameters.item (i)'
-			-- is not void?
+			-- types whose corresponding actual parameter in
+			-- `actual_parameters' is different from the formal
+			-- parameter?
 		require
 			actual_parameters_not_void: actual_parameters /= Void
 		do
 			Result := False
 		end
 
-	resolved_formal_parameters (actual_parameters: ARRAY [ET_TYPE]): ET_TYPE is
+	resolved_formal_parameters (actual_parameters: ET_ACTUAL_GENERIC_PARAMETERS): ET_TYPE is
 			-- Replace in current type the formal generic parameter
-			-- types of index 'i' by 'actual_parameters.item (i)'
-			-- when these new parameters are not void.
-			-- (Warning: this is a side-effect function.)
+			-- types by those of `actual_parameters' when the 
+			-- corresponding actual parameter is different from
+			-- the formal parameter. (Warning: this is a side-effect
+			-- function.)
 		require
 			actual_parameters_not_void: actual_parameters /= Void
 		do
@@ -151,8 +153,7 @@ feature -- Duplication
 
 	deep_cloned_type: like Current is
 			-- Recursively cloned type
-		do
-			Result := clone (Current)
+		deferred
 		ensure
 			type_not_void: Result /= Void
 		end

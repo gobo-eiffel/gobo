@@ -122,33 +122,37 @@ feature -- Validity
 
 feature -- Type processing
 
-	has_formal_parameters (actual_parameters: ARRAY [ET_TYPE]): BOOLEAN is
+	has_formal_parameters (actual_parameters: ET_ACTUAL_GENERIC_PARAMETERS): BOOLEAN is
 			-- Does current type contain formal generic parameter
-			-- types of index 'i' such that 'actual_parameters.item (i)'
-			-- is not void?
+			-- types whose corresponding actual parameter in
+			-- `actual_parameters' is different from the formal
+			-- parameter?
 		local
-			a_type: ET_TYPE
+			a_formal: ET_FORMAL_GENERIC_TYPE
 		do
-			if actual_parameters.valid_index (index) then
-				a_type := actual_parameters.item (index)
-				if a_type /= Void then
+			if index <= actual_parameters.count then
+				a_formal ?= actual_parameters.item (index)
+				if a_formal = Void or else a_formal.index /= index then
 					Result := True
 				end
 			end
 		end
 
-	resolved_formal_parameters (actual_parameters: ARRAY [ET_TYPE]): ET_TYPE is
+	resolved_formal_parameters (actual_parameters: ET_ACTUAL_GENERIC_PARAMETERS): ET_TYPE is
 			-- Replace in current type the formal generic parameter
-			-- types of index 'i' by 'actual_parameters.item (i)'
-			-- when these new parameters are not void.
-			-- (Warning: this is a side-effect function.)
+			-- types by those of `actual_parameters' when the 
+			-- corresponding actual parameter is different from
+			-- the formal parameter. (Warning: this is a side-effect
+			-- function.)
 		local
 			a_type: ET_TYPE
+			a_formal: ET_FORMAL_GENERIC_TYPE
 		do
 			Result := Current
-			if actual_parameters.valid_index (index) then
+			if index <= actual_parameters.count then
 				a_type := actual_parameters.item (index)
-				if a_type /= Void then
+				a_formal ?= a_type
+				if a_formal = Void or else a_formal.index /= index then
 					Result := a_type
 				end
 			end
@@ -184,6 +188,14 @@ print ("'%N")
 					Result := Result.actual_type (a_feature, a_base_type)
 				end
 			end
+		end
+
+feature -- Duplication
+
+	deep_cloned_type: like Current is
+			-- Recursively cloned type
+		do
+			!! Result.make (name, index)
 		end
 
 feature -- Output
