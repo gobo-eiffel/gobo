@@ -76,6 +76,18 @@ feature -- Conversion
 			-- regexp: (0|[1-7][0-7]*).recognizes (Result)
 		end
 
+	to_integer (an_int: INTEGER): INTEGER is
+			-- Return `an_int'.
+			-- This can be used to force integer manifest constants to 
+			-- be of INTEGER type -- some versions of SmartEiffel use 
+			-- the smallest possible INTEGER_* type. A manifest array 
+			-- can thus be forced to be of type ARRAY [INTEGER].
+		do
+			Result := an_int
+		ensure
+			definition: Result = an_int
+		end
+
 feature -- Output
 
 	append_decimal_integer (an_int: INTEGER; a_string: STRING) is
