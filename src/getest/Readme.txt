@@ -5,7 +5,7 @@ To compile getest:
 
 1. Use your favorite Eiffel compiler to compile the Eiffel system using
    the provided Ace file (ISE Eiffel: ise.ace, SmartEiffel: se.ace) or
-   ESD file (Visual Eiffel: ve.esd). Alternatively you can use 'geant'
+   Xace file (Visual Eiffel: ve.xace). Alternatively you can use 'geant'
    to launch the compilation:
    
        geant compile_<compiler>
@@ -14,13 +14,13 @@ To compile getest:
 
 2. Run getest using:
 
-       getest [-aceghV?][--help][--version]
+       getest [-aceghvV?][--help][--version][--verbose]
             [-D <name>=<value>|--define=<name>=<value>]*
-            [-C <command>|--compile=<command>]
-            [--se|--ise|--ve|<filename>]
+            [--class=<regexp>][--feature=<regexp>]
+            [--compile=<command>][--se|--ise|--ve|<filename>]
 
 A "User's Manual" documentation for getest, in HTML format, is provided
 in "$GOBO/doc/getest".
 
 --
-Copyright (c) 2000-2001, Eric Bezault and others
+Copyright (c) 2000-2005, Eric Bezault and others

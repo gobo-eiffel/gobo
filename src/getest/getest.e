@@ -449,8 +449,7 @@ feature {NONE} -- Error handling
 			create Result.make ("[-aceghvV?][--help][--version][--verbose]%N%
 				%%T[-D <name>=<value>|--define=<name>=<value>]*%N%
 				%%T[--class=<regexp>][--feature=<regexp>]%N%
-				%%T[--compile=<command>]%N%
-				%%T[--se|--ise|--ve|<filename>]")
+				%%T[--compile=<command>][--se|--ise|--ve|<filename>]")
 		ensure
 			usage_message_not_void: Result /= Void
 		end
