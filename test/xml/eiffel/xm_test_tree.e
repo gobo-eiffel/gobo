@@ -46,8 +46,9 @@ feature
 				+"<!-- post -->")
 		
 			go_root
-			assert_first
 			assert_document
+			assert_first
+			assert_last
 			go_down
 			assert_first
 			assert_comment (" pre ")
@@ -89,8 +90,9 @@ feature
 				+"</doc>")
 			
 			go_root
-			go_down
 			assert_single
+			assert_document
+			go_down
 			assert_ns_element ("uri1", "doc")
 			go_down
 			assert_ns_element ("uri1", "a")
@@ -106,7 +108,28 @@ feature
 			assert_ns_attribute ("uri4", "a2", "foo2")
 			assert_last
 		end
+	
+	test_build_simple is
+			-- Build very simple tree.
+		local
+			a_namespace: XM_NAMESPACE
+			a_doc: XM_DOCUMENT
+			an_element: XM_ELEMENT
+		do
+			create a_namespace.make ("", "uri1")
+			create a_doc.make
+			create an_element.make (a_doc, "doc", a_namespace)
+			a_doc.set_root_element (an_element)
 			
+			create typer
+			node := a_doc
+			
+			assert_document
+			go_down
+			assert_first
+			assert_ns_element ("uri1", "doc")
+			assert_last
+		end
 			
 feature {NONE} -- Walk navigation
 
@@ -211,8 +234,8 @@ feature {NONE} -- Walk assertions
 			-- Node is empty composite.
 		do
 			node.process (typer)
-			assert ("composite expected", typer.is_composite)
-			assert ("composite not empty", typer.composite.count = 0)
+			assert ("element expected", typer.is_element)
+			assert ("element not empty", typer.element.count = 0)
 		end
 		
 	assert_attribute (a_name: STRING; a_value: STRING) is
