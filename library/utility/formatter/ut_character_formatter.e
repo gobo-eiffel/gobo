@@ -28,7 +28,7 @@ feature -- Access
 			-- Return a new string at each call.
 			-- Regexp: [ !#$&(-~]|%[BFNRTU%'"]|%/[0-9]+/
 		do
-			Result := string_.make (1)
+			Result := STRING_.make (1)
 			append_eiffel_character (Result, c)
 		ensure
 			eiffel_character_out_not_void: Result /= Void
@@ -42,7 +42,7 @@ feature -- Access
 			-- Return a new string at each call.
 			-- Regexp: \'([ !#$&(-~]|%[BFNRTU%'"]|%/[0-9]+/)\'
 		do
-			Result := string_.make (3)
+			Result := STRING_.make (3)
 			append_quoted_eiffel_character (Result, c)
 		ensure
 			quoted_eiffel_character_out_not_void: Result /= Void
@@ -108,7 +108,7 @@ feature -- File handling
 			-- as described in ETL, section 25.15, page 422.
 		require
 			a_file_not_void: a_file /= Void
-			a_file_is_open_write: output_stream_.is_open_write (a_file)
+			a_file_is_open_write: OUTPUT_STREAM_.is_open_write (a_file)
 		local
 			f: expanded UT_INTEGER_FORMATTER
 		do
@@ -147,7 +147,7 @@ feature -- File handling
 			-- section 25.15, page 422.
 		require
 			a_file_not_void: a_file /= Void
-			a_file_is_open_write: output_stream_.is_open_write (a_file)
+			a_file_is_open_write: OUTPUT_STREAM_.is_open_write (a_file)
 		do
 			a_file.put_character ('%'')
 			put_quoted_eiffel_character (a_file, c)

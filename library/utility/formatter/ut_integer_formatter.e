@@ -25,7 +25,7 @@ feature -- Access
 			-- Return a new string at each call.
 			-- Regexp: -?(0|[1-9][0-9]*)
 		do
-			Result := string_.make (10)
+			Result := STRING_.make (10)
 			append_decimal_integer (Result, an_int)
 		ensure
 			decimal_integer_out_not_void: Result /= Void
@@ -38,7 +38,7 @@ feature -- Access
 		require
 			an_int_positive: an_int >= 0
 		do
-			Result := string_.make (10)
+			Result := STRING_.make (10)
 			append_octal_integer (Result, an_int)
 		ensure
 			octal_integer_out_not_void: Result /= Void
@@ -156,7 +156,7 @@ feature -- File handling
 			-- Write decimal representation of `an_int' to `a_file'.
 		require
 			a_file_not_void: a_file /= Void
-			a_file_is_open_write: output_stream_.is_open_write (a_file)
+			a_file_is_open_write: OUTPUT_STREAM_.is_open_write (a_file)
 		do
 			a_file.put_string (decimal_integer_out (an_int))
 		end
@@ -165,7 +165,7 @@ feature -- File handling
 			-- Write octal representation of `an_int' to `a_file'.
 		require
 			a_file_not_void: a_file /= Void
-			a_file_is_open_write: output_stream_.is_open_write (a_file)
+			a_file_is_open_write: OUTPUT_STREAM_.is_open_write (a_file)
 		do
 			a_file.put_string (octal_integer_out (an_int))
 		end

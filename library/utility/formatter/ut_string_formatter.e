@@ -30,7 +30,7 @@ feature -- Access
 		require
 			a_string_not_void: a_string /= Void
 		do
-			Result := string_.make (a_string.count)
+			Result := STRING_.make (a_string.count)
 			append_eiffel_string (Result, a_string)
 		ensure
 			eiffel_string_out_not_void: Result /= Void
@@ -47,7 +47,7 @@ feature -- Access
 		require
 			a_string_not_void: a_string /= Void
 		do
-			Result := string_.make (a_string.count + 2)
+			Result := STRING_.make (a_string.count + 2)
 			append_quoted_eiffel_string (Result, a_string)
 		ensure
 			quoted_eiffel_string_out_not_void: Result /= Void
@@ -69,7 +69,7 @@ feature -- Access
 			if a_length >= nb then
 				nb := a_length
 			end
-			Result := string_.make (nb)
+			Result := STRING_.make (nb)
 			append_left_padded_string (Result, a_string, a_length, c)
 		ensure
 			left_padded_string_out_not_void: Result /= Void
@@ -165,7 +165,7 @@ feature -- File handling
 			-- ETL, section 25.15, page 422.
 		require
 			a_file_not_void: a_file /= Void
-			a_file_is_open_write: output_stream_.is_open_write (a_file)
+			a_file_is_open_write: OUTPUT_STREAM_.is_open_write (a_file)
 			a_string_not_void: a_string /= Void
 		local
 			i, nb: INTEGER
@@ -212,7 +212,7 @@ feature -- File handling
 			-- described in ETL, section 25.15, page 422.
 		require
 			a_file_not_void: a_file /= Void
-			a_file_is_open_write: output_stream_.is_open_write (a_file)
+			a_file_is_open_write: OUTPUT_STREAM_.is_open_write (a_file)
 			a_string_not_void: a_string /= Void
 		do
 			a_file.put_character ('%"')
@@ -226,7 +226,7 @@ feature -- File handling
 			-- than `a_length' character long.
 		require
 			a_file_not_void: a_file /= Void
-			a_file_is_open_write: output_stream_.is_open_write (a_file)
+			a_file_is_open_write: OUTPUT_STREAM_.is_open_write (a_file)
 			a_string_not_void: a_string /= Void
 			a_length_positive: a_length >= 0
 		local
