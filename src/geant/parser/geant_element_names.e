@@ -83,6 +83,15 @@ feature -- Attribute names and values
 			attribute_name_not_empty: not Result.empty
 		end
 
+	Depends_attribute_name: UC_STRING is
+			-- "depends" attribute name
+		once
+			!! Result.make_from_string ("depends")
+		ensure
+			attribute_name_not_void: Result /= Void
+			attribute_name_not_empty: not Result.empty
+		end
+
 	True_attribute_value: UC_STRING is
 			-- "true" attribute value
 		once

@@ -145,6 +145,30 @@ feature -- Processing
 			end
 	    end
 
+	calculate_build_order is
+			-- Setup `Build_targets' according to target dependencies
+		require
+			loaded: targets /= Void
+			target_not_void: a_target /= Void
+			build_targets_not_void: Build_targets /= Void
+			build_targets_not_empty: Build_targets.count > 0
+		local
+			a_target: GEANT_ELEMENT
+			a_dependend_targets: DS_ARRAYED_STACK [GEANT_ELEMENT]
+		do
+				-- Get dependend targets:
+			a_target := Build_targets.item
+--!!print("**pushing target : " + a_target.attribute_value_by_name (Name_attribute_name).out + "%N")
+			a_dependend_targets := targets_dependend_targets(a_target)
+				-- Add all dependend targets to `Build_targets':
+			from until a_dependend_targets.count = 0 loop
+				Build_targets.force (a_dependend_targets.item)
+				a_dependend_targets.remove
+					-- Recursive call of routine for dependend target:
+				calculate_build_order
+			end
+		end
+
 	build is
 			-- Build project: execute project's tasks.
 		require
@@ -152,13 +176,58 @@ feature -- Processing
 		local
 			a_target: GEANT_ELEMENT
 		do
-			a_target := Build_targets.item
-			execute_tasks_of_target (a_target)
-			Build_targets.remove
+				-- Analyse dependencies of targets:
+			calculate_build_order
+
+--!!print("%N%N%N")
+
+				-- Execute configured targets:
+			from until Build_targets.count = 0 loop
+				a_target := Build_targets.item
+				if not Executed_targets.has (a_target) then
+						-- Execute topmost target of `Build_targets':
+--!!print("**executing target : " + a_target.attribute_value_by_name (Name_attribute_name).out + "%N")
+					execute_tasks_of_target (a_target)
+					Executed_targets.force_last (a_target)
+				end
+				Build_targets.remove
+			end
+
 		end
 
-	execute_tasks_of_target(a_target: GEANT_ELEMENT) is
+	targets_dependend_targets (a_target: GEANT_ELEMENT): DS_ARRAYED_STACK [GEANT_ELEMENT] is
 			-- Execute all tasks of `a_target' in sequential order
+			--!! Candidate feature for GEANT_TARGET
+		require
+			target_not_void: a_target /= Void
+		local
+			an_element: GEANT_ELEMENT
+			a_value: UC_STRING
+		do
+			!! Result.make (10)
+			if a_target.has_attribute (Depends_attribute_name) then
+				a_value := a_target.attribute_value_by_name (Depends_attribute_name)
+
+					--!! Todo: check for more than one target separated by commas
+					--!! Currently only one dependent target possible
+
+				an_element := target_with_name (a_value)
+				if an_element /= Void then
+					Result.force (an_element)
+				else
+					print ("geant error: unknown dependend target '" + a_value.out + "'%N")
+--!!					Exceptions.die (1)
+				end
+			end
+		ensure
+			dependend_targets_not_void: Result /= Void
+		end
+
+	execute_tasks_of_target (a_target: GEANT_ELEMENT) is
+			-- Execute all tasks of `a_target' in sequential order
+			--!! Candidate feature for GEANT_TARGET
+		require
+			target_not_void: a_target /= Void
 		local
 			children: DS_ARRAYED_LIST [GEANT_ELEMENT]
 			i, nb: INTEGER
@@ -247,6 +316,14 @@ feature {NONE} -- Implementation
 			!! Result.make (10)
 		ensure
 			build_targets_not_void: Result /= Void
+		end
+
+	Executed_targets: DS_ARRAYED_LIST [GEANT_ELEMENT] is
+			-- Targets already executed
+		once
+			!! Result.make (10)
+		ensure
+			executed_targets_not_void: Result /= Void
 		end
 
 invariant
