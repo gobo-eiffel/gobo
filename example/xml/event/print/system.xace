@@ -1,22 +1,25 @@
 <?xml version="1.0"?>
+
 <system name="print">
+	<description>
+		system: "Print example"
+		copyright: "Copyright (c) 2002, Eric Bezault and others"
+		license: "Eiffel Forum License v1 (see forum.txt)"
+		date: "$Date$"
+		revision: "$Revision$"
+	</description>
+
 	<root class="PRINT" creation="make"/>
 	<cluster>
 		<option unless="${DEBUG}">
-			<require enable="False"/>
-			<ensure enable="False"/>
-			<invariant enable="False"/>
-			<loop enable="False"/>
-			<check enable="False"/>
-			<optimize enable="True"/>
+			<option name="assertion" value="none"/>
+			<option name="garbage_collector" value="none"/>
+			<option name="finalize" value="true" unless="${GOBO_EIFFEL}=ve"/>
 		</option>
 		<option if="${DEBUG}">
-			<require enable="True"/>
-			<ensure enable="True"/>
-			<invariant enable="True"/>
-			<loop enable="True"/>
-			<check enable="True"/>
-			<optimize enable="False"/>
+			<option name="assertion" value="all"/>
+			<option name="garbage_collector" value="none"/>
+			<option name="finalize" value="false"/>
 		</option>
 
 		<cluster name="print" location="${GOBO}/example/xml/event/print"/>
