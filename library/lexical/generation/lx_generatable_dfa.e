@@ -637,6 +637,8 @@ feature {NONE} -- Generation
 			a_file_open_write: output_stream_.is_open_write (a_file)
 		local
 			i, nb: INTEGER
+			j, yy_rules_upper: INTEGER
+			a_nfa_state: LX_NFA_STATE
 			line_numbers: DS_ARRAYED_LIST [INTEGER]
 			line_nb: INTEGER
 			bubble_sorter: DS_BUBBLE_SORTER [INTEGER]
@@ -645,8 +647,19 @@ feature {NONE} -- Generation
 			nb := a_state.count
 			!! line_numbers.make (nb)
 			from i := 1 until i > nb loop
-				a_rule := a_state.item (i).rule
-				line_nb := a_rule.line_nb
+				a_nfa_state := a_state.item (i)
+				from
+					j := yy_rules.lower
+					yy_rules_upper := yy_rules.upper
+				until
+					j > yy_rules_upper or else
+					yy_rules.item (j).pattern.has (a_nfa_state)
+				loop
+					j := j + 1
+				end
+				if j <= yy_rules_upper then
+					line_nb := yy_rules.item (j).line_nb
+				end
 				if not line_numbers.has (line_nb) then
 					line_numbers.put_last (line_nb)
 				end
