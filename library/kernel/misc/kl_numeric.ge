@@ -16,9 +16,7 @@ inherit
 	NUMERIC
 #ifdef SE
 		rename
-			sign as smarteiffel_sign
-		redefine
-			smarteiffel_sign
+			sign as se_sign
 		end
 #endif
 #ifdef VE
@@ -31,14 +29,11 @@ inherit
 #ifdef SE
 feature -- Measurement
 
-	sign: INTEGER is
-			-- Sign: positive = 1; negative = -1
-		deferred
-		end
-		
-	smarteiffel_sign: INTEGER_8 is
+	se_sign: INTEGER_8 is
+			-- Sign of Current (0 -1 or 1)
+			-- Not implemented.
 		do
-			Result := sign.to_integer_8
+			-- Not implemented.
 		end
 
 #endif
@@ -49,7 +44,7 @@ feature -- Basic operations
 			-- Not implemented
 		do
 		end
-		
+
 	ve_exponentiable (other: DOUBLE): BOOLEAN is
 			-- Not implemented
 		do

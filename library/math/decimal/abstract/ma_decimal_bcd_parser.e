@@ -2,36 +2,39 @@ indexing
 
 	description:
 
-		"Decimal number parsers for BCD representation."
+		"Decimal number parsers for BCD representation"
 
-	library: "GOBO Eiffel Decimal Arithmetic Library"
+	library: "Gobo Eiffel Decimal Arithmetic Library"
 	copyright: "Copyright (c) 2004, Paul G. Crismer and others"
 	license: "Eiffel Forum License v2 (see forum.txt)"
 	date: "$Date$"
 
 class MA_DECIMAL_BCD_PARSER
-	
+
 inherit
 
 	MA_DECIMAL_PARSER
-	
-feature -- Access		
-	
-	last_nibble : INTEGER
-	
+
+feature -- Access
+
+	last_nibble: INTEGER
+			-- Last nibble
+
 feature -- Status report
-		
-	error : BOOLEAN
-	
+
+	error: BOOLEAN
+			-- Has an error occurred during the last call to `parse'?
+
 feature -- Basic operations
 
-	parse (packed_string : STRING) is
+	parse (packed_string: STRING) is
+			-- Parse `packed_string'.
 		local
-			zero_code : INTEGER
-			index, l_count, hi, lo : INTEGER
-			l_coefficient : MA_DECIMAL_COEFFICIENT
-			nibble_index, c_code : INTEGER
-			c : CHARACTER
+			zero_code: INTEGER
+			index, l_count, hi, lo: INTEGER
+			l_coefficient: MA_DECIMAL_COEFFICIENT
+			nibble_index, c_code: INTEGER
+			c: CHARACTER
 		do
 			error := False
 			create last_decimal.make (packed_string.count * 2 - 1)
@@ -48,7 +51,7 @@ feature -- Basic operations
 				c_code := c.code
 				lo := c_code \\ 16
 				hi := c_code // 16
-				--number_string.append_character (integer_routines.to_character (zero_code+ hi))
+				-- number_string.append_character (integer_routines.to_character (zero_code + hi))
 				l_coefficient.put (hi, nibble_index)
 				nibble_index := nibble_index - 1
 				last_nibble := hi
@@ -64,20 +67,14 @@ feature -- Basic operations
 						last_decimal.set_negative
 					when 10,12,14,15 then
 					else
-						--create e
-						--e.raise ("Invalid file format : need 8 bytes packed decimal")
+						-- create e
+						-- e.raise ("Invalid file format : need 8 bytes packed decimal")
 						error := True
 						last_decimal := Void
 					end
-				end					
+				end
 				index := index + 1
 			end
 		end
 
-
-feature {NONE} -- Implementation
-
-
 end
-
-

@@ -2,7 +2,7 @@ indexing
 
 	description:
 
-		"Decimal number parsers, whose BNF syntax follows :  %N%
+		"Decimal number parsers, whose BNF syntax follows:  %N%
 		% sign ::= '+' | '-' %N%
 		% digit ::= '0' | '1' | '2' | '3' | '4' | '5' | '6' | '7' | '8' | '9' %N%
 		% indicator ::= 'e' | 'E' %N%
@@ -15,7 +15,7 @@ indexing
 		% numeric-value ::= decimal-part [exponent-part] | infinity %N%
 		% numeric-string ::= [sign] numeric-value | nan%N"
 	
-	library: "GOBO Eiffel Decimal Arithmetic Library"
+	library: "Gobo Eiffel Decimal Arithmetic Library"
 	copyright: "Copyright (c) 2004, Paul G. Crismer and others"
 	license: "Eiffel Forum License v2 (see forum.txt)"
 	date: "$Date$"
@@ -30,109 +30,114 @@ inherit
 	KL_IMPORTED_STRING_ROUTINES
 
 feature -- Access
-		
-	sign : INTEGER
-		-- sign of last parsed decimal
-		
-	exponent_sign : INTEGER
-		-- sign of exponent of last parsed decimal
-		
-	state : INTEGER
-		-- last state of parsing finite state automaton
-		
-	error_code : INTEGER
-		-- description of last error
-		
-	coefficient_begin : INTEGER
-		-- index of last parsed coefficient begin
 
-	coefficient_end : INTEGER
-		-- index of last parsed coefficient end
+	sign: INTEGER
+			-- Sign of last parsed decimal
 
-	coefficient_count : INTEGER is do Result := coefficient_end - coefficient_begin + 1 end		
+	exponent_sign: INTEGER
+			-- Sign of exponent of last parsed decimal
 
-	fractional_part_count : INTEGER is 
-			-- number of characters in the fractional part
+	state: INTEGER
+			-- Last state of parsing finite state automaton
+
+	error_code: INTEGER
+			-- Description of last error
+
+	coefficient_begin: INTEGER
+			-- Index of last parsed coefficient begin
+
+	coefficient_end: INTEGER
+			-- Index of last parsed coefficient end
+
+	coefficient_count: INTEGER is
+			-- Number of characters in coefficient part
+		do
+			Result := coefficient_end - coefficient_begin + 1
+		end
+
+	fractional_part_count: INTEGER is 
+			-- Number of characters in the fractional part
 		do
 			if decimal_point_index > 0 then
 				Result := coefficient_end - decimal_point_index
-			end	
+			end
 		end
-	
-	exponent_as_double : DOUBLE
-			-- exponent expressed as double
-		
-	exponent_begin : INTEGER
-			-- index of last parsed first exponent character
-		
-	exponent_end : INTEGER
-			-- index of  last parsed last exponent character
-			
-	exponent_significant_digits : INTEGER
-			-- count of significant digits in exponent
-			
-	exponent_count : INTEGER is 
-			-- count of significant digits in exponent; synonym of `exponent_significant_digits'
+
+	exponent_as_double: DOUBLE
+			-- Exponent expressed as DOUBLE
+
+	exponent_begin: INTEGER
+			-- Index of last parsed first exponent character
+
+	exponent_end: INTEGER
+			-- Index of last parsed last exponent character
+
+	exponent_significant_digits: INTEGER
+			-- Count of significant digits in exponent
+
+	exponent_count: INTEGER is 
+			-- Count of significant digits in exponent;
+			-- Synonym of `exponent_significant_digits'
 		do 
 			Result := exponent_significant_digits 
-		end	
-	
-	decimal_point_index : INTEGER
-		-- index of decimal point if any
-		
+		end
+
+	decimal_point_index: INTEGER
+			-- Index of decimal point if any
+
 feature -- Status report
 
-	error : BOOLEAN is 
-			-- has there been an error in last parse operation ?
+	error: BOOLEAN is 
+			-- Has there been an error in last parse operation?
 		do 
 			Result := state = State_error 
 		end
-	
-	is_comma_allowed : BOOLEAN
-			-- is ',' allowed as fractional part separator ?
 
-	is_infinity : BOOLEAN is 
-			-- is last parsed number an 'Infinity' ?
+	is_comma_allowed: BOOLEAN
+			-- Is ',' allowed as fractional part separator?
+
+	is_infinity: BOOLEAN is 
+			-- Is last parsed number an 'Infinity'?
 		do 
 			Result := not error and then state = State_infinity 
 		end
-		
-	is_nan : BOOLEAN is 
-			-- is last parsed number a 'Not a Number'?
+
+	is_nan: BOOLEAN is 
+			-- Is last parsed number a 'Not a Number'?
 		do 
 			Result := not error and then state = State_nan 
 		end
-	
-	is_snan : BOOLEAN is 
-			-- is last parsed number a 'Signaling NaN' ?
+
+	is_snan: BOOLEAN is 
+			-- Is last parsed number a 'Signaling NaN'?
 		do 
 			Result := not error and then state = State_snan 
 		end
-	
-	has_point : BOOLEAN is 
-			-- has last parsed number a fractional part ?
+
+	has_point: BOOLEAN is 
+			-- Has last parsed number a fractional part?
 		do 
 			Result := decimal_point_index /= 0 
 		end
-		
-	has_exponent : BOOLEAN is 
-			-- has last parsed number an exponent ?
+
+	has_exponent: BOOLEAN is 
+			-- Has last parsed number an exponent?
 		do 
 			Result := exponent_begin > 0 
 		end
-		
-	decimal_point_is_comma : BOOLEAN
-			-- has last parsed number a comma as decimal point ?	
-	
+
+	decimal_point_is_comma: BOOLEAN
+			-- Has last parsed number a comma as decimal point?
+
 feature -- Basic operations
 
-	parse (s : STRING) is
+	parse (s: STRING) is
 			-- Parse `s'.
 		require else
 			s_not_void: s /= Void
 			s_not_empty: not s.is_empty
 		local
-			old_allowed : BOOLEAN
+			old_allowed: BOOLEAN
 		do
 			old_allowed := is_comma_allowed
 			is_comma_allowed := False
@@ -140,7 +145,7 @@ feature -- Basic operations
 			is_comma_allowed := old_allowed
 		end
 
-	parse_with_decimal_point_comma (s : STRING) is
+	parse_with_decimal_point_comma (s: STRING) is
 			-- Parse `s' with comma as decimal point.
 		require
 			s_not_void: s /= Void
@@ -155,19 +160,19 @@ feature -- Basic operations
 		ensure
 			no_mode_change: is_comma_allowed = old is_comma_allowed
 		end
-		
+
 feature {MA_DECIMAL} -- Basic operations
 
-	decimal_parse (s : STRING) is
+	decimal_parse (s: STRING) is
 			-- Effective parse of `s'.
 		require
 			s_not_void: s /= Void
 		local
-			c : CHARACTER
-			index : INTEGER
+			c: CHARACTER
+			index: INTEGER
 		do
 			from
-				-- initializations
+					-- Initializations.
 				state := State_start
 				sign := 1
 				exponent_sign := 1
@@ -213,32 +218,32 @@ feature {MA_DECIMAL} -- Basic operations
 				index := index + 1
 			end
 			inspect state
-			when State_start, State_sign, State_comma, 
-				 		State_start_exponent, State_exponent_sign, State_starting_point then
+			when State_start, State_sign, State_comma, State_start_exponent, State_exponent_sign, State_starting_point then
 				state := State_error
 			else
-				do_nothing
+				-- Do nothing.
 			end
 			if decimal_point_is_comma and then not is_comma_allowed then
 				state := State_error
 			end
 		end
 
-	process_start (c : CHARACTER; index : INTEGER; s : STRING) is 
+	process_start (c: CHARACTER; index: INTEGER; s: STRING) is 
+			-- Process `c' at `index' in `s' when in `state_start'.
 		do
 			inspect c
 			when '0'..'9' then
 				coefficient_begin := index
 				coefficient_end := index
 				state := State_integer_part
-			when '+','-' then
-				if c='-' then
+			when '+', '-' then
+				if c = '-' then
 					sign := -1
 				else
 					sign := +1
 				end
 				state := State_sign
-			when 'n','N' then
+			when 'n', 'N' then
 				if case_insensitive_substring_equal (s, index + 1, s.count, "an") then
 					state := State_nan
 				else
@@ -252,7 +257,7 @@ feature {MA_DECIMAL} -- Basic operations
 					state := State_error
 					error_code := Error_invalid_value
 				end
-			when 'i','I' then
+			when 'i', 'I' then
 				handle_i (s, index)
 			when '.' then
 				coefficient_begin := index
@@ -266,30 +271,30 @@ feature {MA_DECIMAL} -- Basic operations
 		ensure
 			next_state: error or else state /= State_start
 		end
-		
-	handle_i (s : STRING; index : INTEGER) is
+
+	handle_i (s: STRING; index: INTEGER) is
 			-- Handle the case of 'i' or 'I' recognized in `s' at `index'.
 		require
-			s_exists: s /= Void
+			s_not_void: s /= Void
 			index_in_s: index > 0 and then index <= s.count
 		do
 			if case_insensitive_substring_equal (s, index + 1, index + 2, "nf") then
-				if (s.count - index + 1)= 3 or else case_insensitive_substring_equal (s, index + 3, s.count, "inity") then
+				if (s.count - index + 1) = 3 or else case_insensitive_substring_equal (s, index + 3, s.count, "inity") then
 					state := State_infinity
 				else
 					state := State_error
 					error_code := Error_invalid_value
 				end
-			end			
+			end
 		ensure
 			definition: not error implies is_infinity and then state = State_infinity
 		end
-		
-	process_sign (c : CHARACTER; index : INTEGER; s : STRING) is 
-			-- process `c' at `index' in `s'
+
+	process_sign (c: CHARACTER; index: INTEGER; s: STRING) is 
+			-- Process `c' at `index' in `s' when in `state_sign'.
 		require
 			state_sign: state = State_sign
-			s_exists: s /= Void
+			s_not_void: s /= Void
 			index_in_s: index > 0 and then index <= s.count
 		do
 			inspect c
@@ -309,9 +314,9 @@ feature {MA_DECIMAL} -- Basic operations
 				error_code := Error_invalid_character
 			end
 		end
-		
-	process_integer_part (c : CHARACTER; index : INTEGER) is
-			-- Process `c' at `index' when in state_integer_part.
+
+	process_integer_part (c: CHARACTER; index: INTEGER) is
+			-- Process `c' at `index' when in `state_integer_part'.
 		do
 			inspect c
 			when '0'..'9' then
@@ -332,9 +337,9 @@ feature {MA_DECIMAL} -- Basic operations
 				error_code := Error_invalid_character_in_integer_part
 			end
 		end
-		
-	process_starting_point(c : CHARACTER; index : INTEGER) is
-			-- Process `c' at `index' when at state_starting_point
+
+	process_starting_point(c: CHARACTER; index: INTEGER) is
+			-- Process `c' at `index' when in `state_starting_point'.
 		require
 			state_starting_point: state = State_starting_point
 		do
@@ -348,9 +353,9 @@ feature {MA_DECIMAL} -- Basic operations
 				error_code := Error_invalid_character
 			end
 		end
-		
-	process_point (c : CHARACTER; index : INTEGER) is
-			-- Process `c' at `index' when in state_point.
+
+	process_point (c: CHARACTER; index: INTEGER) is
+			-- Process `c' at `index' when in `state_point'.
 		require
 			state_point: state = State_point
 		do  
@@ -358,16 +363,16 @@ feature {MA_DECIMAL} -- Basic operations
 			when '0'..'9' then
 				coefficient_end := coefficient_end + 1
 				state := State_fractional_part
-			when 'e','E' then
+			when 'e', 'E' then
 				state := State_start_exponent
 			else
 				state := State_error
 				error_code := Error_invalid_character
 			end
 		end
-		
-	process_comma (c : CHARACTER; index : INTEGER) is 
-			-- process `c' at `index' when in state_comma
+
+	process_comma (c: CHARACTER;index : INTEGER) is 
+			-- Process `c' at `index' when in `state_comma'.
 		require
 			state_comma: state = State_comma
 		do
@@ -380,27 +385,27 @@ feature {MA_DECIMAL} -- Basic operations
 				error_code := Error_invalid_character
 			end
 		end
-		
-	process_fractional_part (c : CHARACTER; index : INTEGER) is 
-			-- process `c' at `inddex' when in state_fractional_part
+
+	process_fractional_part (c: CHARACTER; index: INTEGER) is 
+			-- Process `c' at `inddex' when in `state_fractional_part'.
 		require
-			State_fractional_part: state = State_fractional_part
+			state_fractional_part: state = State_fractional_part
 		do
 			inspect c
 			when '0'..'9' then
 				coefficient_end := coefficient_end + 1
-			when 'e','E' then
+			when 'e', 'E' then
 				state := State_start_exponent
 			else
 				state := State_error
 				error_code := Error_invalid_character_in_decimal_part
 			end
 		end
-		
-	process_start_exponent (c : CHARACTER; index : INTEGER) is 
-			-- process `c' at `index' when in State_start_exponent
+
+	process_start_exponent (c: CHARACTER; index: INTEGER) is 
+			-- Process `c' at `index' when in `state_start_exponent'.
 		require
-			State_start_exponent: state = State_start_exponent
+			state_start_exponent: state = State_start_exponent
 		do
 			inspect c
 			when '0'..'9' then
@@ -411,11 +416,11 @@ feature {MA_DECIMAL} -- Basic operations
 					exponent_significant_digits := 1
 				end
 				state := State_exponent
-			when '+','-' then
+			when '+', '-' then
 				if c = '-' then
 					exponent_sign := -1
 				else
-					exponent_sign := + 1
+					exponent_sign := 1
 				end
 				state := State_exponent_sign
 			else
@@ -423,11 +428,11 @@ feature {MA_DECIMAL} -- Basic operations
 				error_code := Error_invalid_character_in_exponent
 			end
 		end
-		
-	process_exponent_sign (c : CHARACTER; index : INTEGER) is 
-			-- process `c' at `index' when in State_exponent_sign
+
+	process_exponent_sign (c: CHARACTER; index: INTEGER) is 
+			-- Process `c' at `index' when in `state_exponent_sign'.
 		require
-			State_exponent_sign: state = State_exponent_sign
+			state_exponent_sign: state = State_exponent_sign
 		do  
 			inspect c
 			when '0'..'9'  then
@@ -443,11 +448,11 @@ feature {MA_DECIMAL} -- Basic operations
 				error_code := Error_invalid_character_in_exponent
 			end
 		end
-		
-	process_exponent (c : CHARACTER; index : INTEGER) is 
-			-- process `c' at `index' when in State_exponent
+
+	process_exponent (c: CHARACTER; index: INTEGER) is 
+			-- Process `c' at `index' when in `state_exponent'.
 		require
-			State_exponent: state = State_exponent
+			state_exponent: state = State_exponent
 		do  
 			inspect c
 			when '0'..'9'  then
@@ -462,9 +467,9 @@ feature {MA_DECIMAL} -- Basic operations
 				error_code := Error_invalid_character_in_exponent
 			end
 		end
-	
-	case_insensitive_substring_equal (s : STRING; i_begin, i_end : INTEGER; t : STRING) : BOOLEAN is
-			-- Is s[i_begin, i_end] equal to t[1,tcount] - case insensitive ?
+
+	case_insensitive_substring_equal (s: STRING; i_begin, i_end: INTEGER; t: STRING): BOOLEAN is
+			-- Is s[i_begin, i_end] equal to t[1, tcount] - case insensitive?
 		require
 			s_not_void: s /= Void
 			t_not_void: t /= Void
@@ -477,13 +482,14 @@ feature {MA_DECIMAL} -- Basic operations
 			until
 				i > s.count or else j > t.count or else i > i_end or else CHARACTER_.as_lower (s.item (i)) /= CHARACTER_.as_lower (t.item (j))
 			loop
-				i := i + 1; j := j + 1
+				i := i + 1
+				j := j + 1
 			end
 			Result := (i > i_end and then j > t.count)
 		ensure
-			definition: Result = (STRING_.as_lower(s.substring (i_begin, i_end)).is_equal (STRING_.as_lower(t)))
+			definition: Result = (STRING_.as_lower (s.substring (i_begin, i_end)).is_equal (STRING_.as_lower (t)))
 		end
-		
+
 feature -- Constants
 
 	State_start,
@@ -498,19 +504,17 @@ feature -- Constants
 	State_sign,
 	State_comma,
 	State_start_exponent,
-	State_exponent_sign, State_error : INTEGER is unique
+	State_exponent_sign, State_error: INTEGER is unique
 
 feature {NONE} -- Implementation
 
 	Error_invalid_value, Error_invalid_character, Error_invalid_character_in_integer_part,
 	Error_invalid_character_in_decimal_part,
 	Error_invalid_character_in_exponent,
-	Error_invalid_state : INTEGER is unique
-	
+	Error_invalid_state: INTEGER is unique
+
 invariant
 
 	decimal_point_is_comma_implies_has_fractional_part: decimal_point_is_comma implies has_point
-	
+
 end
-
-
