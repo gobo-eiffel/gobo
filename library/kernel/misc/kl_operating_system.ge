@@ -18,9 +18,13 @@ feature -- Status report
 			-- Is underlying operating system Windows-like?
 		local
 			cwd: STRING
+			gobo_os: STRING
 		once
-			if equal (variable_value ("GOBO_OS"), "windows") then
-				Result := True
+			gobo_os := variable_value ("GOBO_OS")
+			if gobo_os /= Void and then gobo_os.count > 0 then
+				if gobo_os.is_equal ("windows") then
+					Result := True
+				end
 			elseif equal (variable_value ("OS"), "Windows_NT") then
 				Result := True
 			else
@@ -39,9 +43,13 @@ feature -- Status report
 			-- Is underlying operating system Unix-like?
 		local
 			cwd: STRING
+			gobo_os: STRING
 		once
-			if equal (variable_value ("GOBO_OS"), "unix") then
-				Result := True
+			gobo_os := variable_value ("GOBO_OS")
+			if gobo_os /= Void and then gobo_os.count > 0 then
+				if gobo_os.is_equal ("unix") then
+					Result := True
+				end
 			else
 				cwd := current_working_directory
 				if cwd.count > 0 then
