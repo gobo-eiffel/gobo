@@ -650,6 +650,13 @@ feature {ET_AST_NODE} -- Processing
 		deferred
 		end
 
+	process_infix_cast_expression (an_expression: ET_INFIX_CAST_EXPRESSION) is
+			-- Process `an_expression'.
+		require
+			an_expression_not_void: an_expression /= Void
+		deferred
+		end
+
 	process_infix_and_then_operator (an_operator: ET_INFIX_AND_THEN_OPERATOR) is
 			-- Process `an_operator'.
 		require

@@ -214,16 +214,6 @@ feature -- Types
 			like_current_not_void: Result /= Void
 		end
 
-feature -- Conversion features
-
-	builtin_convert_feature: ET_CONVERT_FEATURE is
-			-- Built-in conversion feature
-		once
-			create {ET_BUILTIN_CONVERT_FEATURE} Result.make
-		ensure
-			builtin_convert_feature_not_void: Result /= Void
-		end
-
 feature -- Symbols
 
 	symbol: ET_SYMBOL is

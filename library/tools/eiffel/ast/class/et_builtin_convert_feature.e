@@ -5,7 +5,7 @@ indexing
 		"Eiffel built-in conversion features"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2003, Eric Bezault and others"
+	copyright: "Copyright (c) 2003-2004, Eric Bezault and others"
 	license: "Eiffel Forum License v2 (see forum.txt)"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -22,14 +22,22 @@ creation
 
 feature {NONE} -- Initialization
 
-	make is
+	make (a_type: like type) is
 			-- Create a new built-in conversion feature.
+		require
+			a_type_not_void: a_type /= Void
 		do
 			create {ET_IDENTIFIER} name.make ("_builtin_")
 			create {ET_BRACED_TYPE_LIST} types.make
+			type := a_type
+		ensure
+			type_set: type = a_type
 		end
 
 feature -- Access
+
+	type: ET_TYPE
+			-- Target type
 
 	break: ET_BREAK is
 			-- Break which appears just after current node
@@ -44,5 +52,9 @@ feature -- Processing
 		do
 			-- Do nothing.
 		end
+
+invariant
+
+	type_not_void: type /= Void
 
 end

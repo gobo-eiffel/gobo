@@ -121,6 +121,13 @@ feature {NONE} -- Initialization
 			create any_parent.make (any_type, Void, Void, Void, Void, Void)
 			create any_parents.make_with_capacity (1)
 			any_parents.put_first (any_parent)
+				-- Built-in conversion features.
+			create integer_8_convert_feature.make (integer_8_class)
+			create integer_16_convert_feature.make (integer_16_class)
+			create integer_convert_feature.make (integer_class)
+			create integer_64_convert_feature.make (integer_64_class)
+			create real_convert_feature.make (real_class)
+			create double_convert_feature.make (double_class)
 		ensure
 			any_class_not_void: any_class /= Void
 			general_class_not_void: general_class /= Void
@@ -151,6 +158,12 @@ feature {NONE} -- Initialization
 			array_none_type_not_void: array_none_type /= Void
 			any_parent_not_void: any_parent /= Void
 			any_parents_not_void: any_parents /= Void
+			integer_8_convert_feature_not_void: integer_8_convert_feature /= Void
+			integer_16_convert_feature_not_void: integer_16_convert_feature /= Void
+			integer_convert_feature_not_void: integer_convert_feature /= Void
+			integer_64_convert_feature_not_void: integer_64_convert_feature /= Void
+			real_convert_feature_not_void: real_convert_feature /= Void
+			double_convert_feature_not_void: double_convert_feature /= Void
 		end
 
 feature -- Status report
@@ -298,6 +311,24 @@ feature -- Basic classes
 			-- Default parents
 
 feature -- Features
+
+	integer_8_convert_feature: ET_BUILTIN_CONVERT_FEATURE
+			-- Built-in conversion feature to INTEGER_8
+
+	integer_16_convert_feature: ET_BUILTIN_CONVERT_FEATURE
+			-- Built-in conversion feature to INTEGER_16
+
+	integer_convert_feature: ET_BUILTIN_CONVERT_FEATURE
+			-- Built-in conversion feature to INTEGER
+
+	integer_64_convert_feature: ET_BUILTIN_CONVERT_FEATURE
+			-- Built-in conversion feature to INTEGER_64
+
+	real_convert_feature: ET_BUILTIN_CONVERT_FEATURE
+			-- Built-in conversion feature to REAL
+
+	double_convert_feature: ET_BUILTIN_CONVERT_FEATURE
+			-- Built-in conversion feature to DOUBLE
 
 	default_create_seed: INTEGER
 			-- Seed of feature 'default_create' in class ANY
@@ -1240,6 +1271,12 @@ invariant
 	array_none_type_not_void: array_none_type /= Void
 	any_parent_not_void: any_parent /= Void
 	any_parents_not_void: any_parents /= Void
+	integer_8_convert_feature_not_void: integer_8_convert_feature /= Void
+	integer_16_convert_feature_not_void: integer_16_convert_feature /= Void
+	integer_convert_feature_not_void: integer_convert_feature /= Void
+	integer_64_convert_feature_not_void: integer_64_convert_feature /= Void
+	real_convert_feature_not_void: real_convert_feature /= Void
+	double_convert_feature_not_void: double_convert_feature /= Void
 	ancestor_builder_not_void: ancestor_builder /= Void
 	feature_flattener_not_void: feature_flattener /= Void
 	qualified_signature_resolver_not_void: qualified_signature_resolver /= Void

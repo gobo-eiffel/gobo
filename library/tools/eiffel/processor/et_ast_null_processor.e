@@ -457,6 +457,11 @@ feature {ET_AST_NODE} -- Processing
 		do
 		end
 
+	process_infix_cast_expression (an_expression: ET_INFIX_CAST_EXPRESSION) is
+			-- Process `an_expression'.
+		do
+		end
+
 	process_infix_and_then_operator (an_operator: ET_INFIX_AND_THEN_OPERATOR) is
 			-- Process `an_operator'.
 		do

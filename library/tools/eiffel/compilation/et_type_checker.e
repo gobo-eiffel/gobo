@@ -300,51 +300,56 @@ feature -- Type conversion
 				Result := a_target_base_class.convert_from_feature (a_source_type, a_target_type, universe)
 			end
 			if Result = Void then
-				if a_source_base_class = universe.integer_8_class then
+				if a_target_base_class = universe.integer_8_class then
 					if
-						a_target_base_class = universe.integer_16_class or
-						a_target_base_class = universe.integer_class or
-						a_target_base_class = universe.integer_64_class or
-						a_target_base_class = universe.real_class or
-						a_target_base_class = universe.double_class
-					then
-						Result := tokens.builtin_convert_feature
-					end
-				elseif a_source_base_class = universe.integer_16_class then
-					if
-						a_target_base_class = universe.integer_class or
-						a_target_base_class = universe.integer_64_class or
-						a_target_base_class = universe.real_class or
-						a_target_base_class = universe.double_class
-					then
-						Result := tokens.builtin_convert_feature
-					end
-				elseif a_source_base_class = universe.integer_class then
-					if
-						a_target_base_class = universe.integer_64_class or
-						a_target_base_class = universe.real_class or
-						a_target_base_class = universe.double_class or
 							-- Needed by ISE Eiffel 5.4.
-						a_target_base_class = universe.integer_8_class or
-						a_target_base_class = universe.integer_16_class
+						a_source_base_class = universe.integer_class
 					then
-						Result := tokens.builtin_convert_feature
+						Result := universe.integer_8_convert_feature
 					end
-				elseif a_source_base_class = universe.integer_64_class then
+				elseif a_target_base_class = universe.integer_16_class then
 					if
-						a_target_base_class = universe.real_class or
-						a_target_base_class = universe.double_class
+						a_source_base_class = universe.integer_8_class or
+							-- Needed by ISE Eiffel 5.4.
+						a_source_base_class = universe.integer_class
 					then
-						Result := tokens.builtin_convert_feature
+						Result := universe.integer_16_convert_feature
 					end
-				elseif a_source_base_class = universe.real_class then
-					if a_target_base_class = universe.double_class then
-						Result := tokens.builtin_convert_feature
+				elseif a_target_base_class = universe.integer_class then
+					if
+						a_source_base_class = universe.integer_8_class or
+						a_source_base_class = universe.integer_16_class
+					then
+						Result := universe.integer_convert_feature
 					end
-				elseif a_source_base_class = universe.double_class then
-						-- Needed by ISE Eiffel 5.4.
-					if a_target_base_class = universe.real_class then
-						Result := tokens.builtin_convert_feature
+				elseif a_target_base_class = universe.integer_64_class then
+					if
+						a_source_base_class = universe.integer_8_class or
+						a_source_base_class = universe.integer_16_class or
+						a_source_base_class = universe.integer_class
+					then
+						Result := universe.integer_64_convert_feature
+					end
+				elseif a_target_base_class = universe.real_class then
+					if
+						a_source_base_class = universe.integer_8_class or
+						a_source_base_class = universe.integer_16_class or
+						a_source_base_class = universe.integer_class or
+						a_source_base_class = universe.integer_64_class or
+							-- Needed by ISE Eiffel 5.4.
+						a_source_base_class = universe.double_class
+					then
+						Result := universe.real_convert_feature
+					end
+				elseif a_target_base_class = universe.double_class then
+					if
+						a_source_base_class = universe.integer_8_class or
+						a_source_base_class = universe.integer_16_class or
+						a_source_base_class = universe.integer_class or
+						a_source_base_class = universe.integer_64_class or
+						a_source_base_class = universe.real_class
+					then
+						Result := universe.double_convert_feature
 					end
 				end
 			end

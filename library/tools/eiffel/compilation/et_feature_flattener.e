@@ -573,6 +573,7 @@ feature {NONE} -- Feature flattening
 					end
 				end
 				check_creators_validity
+				check_convert_validity
 			end
 			declared_feature_count := 0
 			named_features.wipe_out
@@ -2118,6 +2119,39 @@ feature {NONE} -- Creators validity
 							error_handler.report_vgcp2a_error (current_class, a_name)
 						end
 						k := k + 1
+					end
+					i := i + 1
+				end
+			end
+		end
+
+feature {NONE} -- Convert validity
+
+	check_convert_validity is
+			-- Check validity of convert clause of `current_class'.
+		local
+			a_convert_features: ET_CONVERT_FEATURE_LIST
+			a_convert_feature: ET_CONVERT_FEATURE
+			i, nb: INTEGER
+			a_name: ET_FEATURE_NAME
+			a_feature: ET_FEATURE
+		do
+			a_convert_features := current_class.convert_features
+			if a_convert_features /= Void then
+				nb := a_convert_features.count
+				from i := 1 until i > nb loop
+					a_convert_feature := a_convert_features.convert_feature (i)
+					a_name := a_convert_feature.name
+					named_features.search (a_name)
+					if named_features.found then
+						a_feature := named_features.found_item.flattened_feature
+-- TODO: check whether this feature is valid as a convert feature.
+						a_name.set_seed (a_feature.first_seed)
+					else
+							-- This name is not the final name of
+							-- a feature on `current_class'.
+						set_fatal_error (current_class)
+-- TODO: report error message
 					end
 					i := i + 1
 				end
