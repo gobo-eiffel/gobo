@@ -23,7 +23,7 @@
 
 	<cluster name="calc" location="${GOBO}/example/lexical/calculator"/>
 	<cluster name="yacc" location="${ISS_BASE}/library/yacc"/>
-	<mount location="${GOBO}/library/lexical/library.xace" prefix="lx_"/>
-	<mount location="${GOBO}/library/kernel/library.xace" prefix="kl_"/>
+	<mount location="${GOBO}/library/lexical/library.xace"/>
+	<mount location="${GOBO}/library/kernel/library.xace"/>
 	<mount location="${GOBO}/library/kernel.xace"/>
 </system>

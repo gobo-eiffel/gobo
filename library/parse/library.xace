@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
 
-<library name="parse">
+<library name="parse" prefix="pr_">
 	<description>
 		description: "Xace file for the Gobo Eiffel Parse Library"
 		library: "Gobo Eiffel Parse Library"

@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="iso-8859-1"?>
 <!DOCTYPE cluster SYSTEM "../../doc/gexace/xace.dtd">
 
-<library name="regexp">
+<library name="regexp" prefix="rx_">
 	<description>
 		description: "Xace file for the Gobo Eiffel Regexp Library"
 		library: "Gobo Eiffel Regexp Library"

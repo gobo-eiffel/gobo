@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
 
-<library name="time">
+<library name="time" prefix="dt_">
 	<description>
 		description: "Xace file for the Gobo Eiffel Time Library"
 		library: "Gobo Eiffel Time Library"

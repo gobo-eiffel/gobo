@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
 
-<library name="test">
+<library name="test" prefix="ts_">
 	<description>
 		description: "Xace file for the Gobo Eiffel Test Library"
 		library: "Gobo Eiffel Test Library"

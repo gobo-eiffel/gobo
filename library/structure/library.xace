@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
 
-<library name="structure">
+<library name="structure" prefix="ds_">
 	<description>
 		description: "Xace fle for the Gobo Eiffel Structure Library"
 		library: "Gobo Eiffel Structure Library"

@@ -22,11 +22,11 @@
 	</option>
 
 	<cluster name="gegrep" location="${GOBO}/example/lexical/gegrep"/>
-	<mount location="${GOBO}/library/lexical/library.xace" prefix="lx_"/>
-	<mount location="${GOBO}/library/parse/library.xace" prefix="pr_"/>
-	<mount location="${GOBO}/library/utility/library.xace" prefix="ut_"/>
-	<mount location="${GOBO}/library/pattern/library.xace" prefix="dp_"/>
-	<mount location="${GOBO}/library/structure/library.xace" prefix="ds_"/>
-	<mount location="${GOBO}/library/kernel/library.xace" prefix="kl_"/>
+	<mount location="${GOBO}/library/lexical/library.xace"/>
+	<mount location="${GOBO}/library/parse/library.xace"/>
+	<mount location="${GOBO}/library/utility/library.xace"/>
+	<mount location="${GOBO}/library/pattern/library.xace"/>
+	<mount location="${GOBO}/library/structure/library.xace"/>
+	<mount location="${GOBO}/library/kernel/library.xace"/>
 	<mount location="${GOBO}/library/kernel.xace"/>
 </system>

@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
 
-<library name="pattern">
+<library name="pattern" prefix="dp_">
 	<description>
 		description: "Xace file for the Gobo Eiffel Pattern Library"
 		library: "Gobo Eiffel Pattern Library"

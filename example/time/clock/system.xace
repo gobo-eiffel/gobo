@@ -22,8 +22,8 @@
 	</option>
 
 	<cluster name="clock" location="${GOBO}/example/time/clock"/>
-	<mount location="${GOBO}/library/time/library.xace" prefix="dt_"/>
-	<mount location="${GOBO}/library/utility/library.xace" prefix="ut_"/>
-	<mount location="${GOBO}/library/kernel/library.xace" prefix="kl_"/>
+	<mount location="${GOBO}/library/time/library.xace"/>
+	<mount location="${GOBO}/library/utility/library.xace"/>
+	<mount location="${GOBO}/library/kernel/library.xace"/>
 	<mount location="${GOBO}/library/kernel.xace"/>
 </system>

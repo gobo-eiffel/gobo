@@ -23,6 +23,6 @@
 	</option>
 
 	<cluster name="regexp_example" location="${GOBO}/example/regexp/example"/>
-	<mount location="${GOBO}/library/regexp/library.xace" prefix="rx_"/>
+	<mount location="${GOBO}/library/regexp/library.xace"/>
 	<mount location="${GOBO}/library/kernel.xace"/>
 </system>

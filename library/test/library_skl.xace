@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
 
-<library name="test_skl">
+<library name="test_skl" prefix="ts_">
 	<description>
 		description: "Xace file for the Gobo Eiffel test harness"
 		library: "Gobo Eiffel Test Library"

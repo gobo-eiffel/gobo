@@ -22,7 +22,7 @@
 	</option>
 
 	<cluster name="rpcalc" location="${GOBO}/example/parse/rpcalc"/>
-	<mount location="${GOBO}/library/parse/library.xace" prefix="pr_"/>
-	<mount location="${GOBO}/library/kernel/library.xace" prefix="kl_"/>
+	<mount location="${GOBO}/library/parse/library.xace"/>
+	<mount location="${GOBO}/library/kernel/library.xace"/>
 	<mount location="${GOBO}/library/kernel.xace"/>
 </system>

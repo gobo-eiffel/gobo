@@ -22,9 +22,9 @@
 	</option>
 
 	<cluster name="eiffel_parser" location="${GOBO}/example/parse/eiffel_parser"/>
-	<mount location="${GOBO}/library/parse/library.xace" prefix="pr_"/>
-	<mount location="${GOBO}/library/lexical/library.xace" prefix="lx_"/>
-	<mount location="${GOBO}/library/utility/library.xace" prefix="ut_"/>
-	<mount location="${GOBO}/library/kernel/library.xace" prefix="kl_"/>
+	<mount location="${GOBO}/library/parse/library.xace"/>
+	<mount location="${GOBO}/library/lexical/library.xace"/>
+	<mount location="${GOBO}/library/utility/library.xace"/>
+	<mount location="${GOBO}/library/kernel/library.xace"/>
 	<mount location="${GOBO}/library/kernel.xace"/>
 </system>

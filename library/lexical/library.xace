@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
 
-<library name="lexical">
+<library name="lexical" prefix="lx_">
 	<description>
 		description: "Xace file for the Gobo Eiffel Lexical Library"
 		library: "Gobo Eiffel Lexical Library"
