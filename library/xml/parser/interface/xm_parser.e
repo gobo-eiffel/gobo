@@ -202,15 +202,15 @@ feature -- Error reporting
 		require
 			has_error: not is_correct
 		do
+			Result := safe_error_component (position.source_name)
+			Result.append_character (':')
+			Result.append_string (position.row.out)
+			Result.append_character (':')
+			Result.append_string (position.column.out)
+			Result.append_character (':')
 			if last_error_description /= Void then
-				Result := clone (last_error_description)
-				Result.append_character (' ')
-			else
-				Result := clone ("")
+				Result := STRING_.appended_string (Result, last_error_description)
 			end
-			Result.append_character ('(')
-			Result := STRING_.appended_string (Result, position.out)
-			Result.append_character (')')
 		ensure
 			description_not_void: Result /= Void
 		end
@@ -238,6 +238,57 @@ feature -- Error reporting
 		ensure
 			result_not_void: Result /= Void
 		end
+
+feature {NONE} -- Implementation
+
+	safe_error_component (a_string: STRING): STRING is
+			-- Return a string that can safely be included in an error
+			-- message
+		local
+			i: INTEGER
+		do
+			if a_string = Void then
+				Result := Safe_error_component_undefined
+			elseif a_string.count > Safe_error_component_maximum_size then
+				Result := Safe_error_component_too_big
+			else
+				create Result.make_empty
+				from
+					i := 1
+				until
+					i > a_string.count
+				loop
+					if is_safe_error_character (a_string.item (i)) then
+						Result.append_character (a_string.item (i))
+					else
+						Result.append_character ('?')
+					end
+					i := i + 1
+				end
+			end
+		ensure
+			result_not_void: Result /= Void
+			result_not_large: Result.count <= Safe_error_component_maximum_size
+			--result_no_special_chars: Result.for_all (agent is_safe_error_character)
+		end
+
+	is_safe_error_character (a_char: CHARACTER): BOOLEAN is
+			-- Is character acceptable for error component display?
+		do
+			Result := (a_char >= '/' and a_char < '9') 
+				or (a_char >= '@' and a_char < 'Z')
+				or (a_char >= 'a' and a_char < 'z')
+				-- (This covers a_char.code = 0 for UC_STRING unicode characters.)
+		end
+
+	Safe_error_component_maximum_size: INTEGER is 100
+			-- Safe error component maximum size
+			
+	Safe_error_component_too_big: STRING is "value-too-big"
+			-- Error component too big error
+	
+	Safe_error_component_undefined: STRING is "undefined"
+			-- Error component undefined
 
 feature {XM_PARSER_STOP_ON_ERROR_FILTER} -- Error reporting
 
