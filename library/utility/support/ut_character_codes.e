@@ -229,6 +229,12 @@ feature -- Access
 	Caret_code: INTEGER is 94
 			-- '^'
 
+	Underscore_code: INTEGER is 95
+			-- '_'
+
+	Backquote_code: INTEGER is 96
+			-- '`'
+
 	Less_than_code: INTEGER is 60
 			-- '<'
 
@@ -285,6 +291,9 @@ feature -- Access
 
 	Pound_code: INTEGER is 35
 			-- '#'
+
+	At_code: INTEGER is 64
+			-- '@'
 
 	Bar_code: INTEGER is 124
 			-- '|'
