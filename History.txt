@@ -67,6 +67,8 @@ Version 3.2 - ?
 	* XM_COMPOSITE now a read-only list. Modification routines 
 	  are in XM_ELEMENT and XM_DOCUMENT (typing is used to allow 
 	  only the correct node types to be added).
+	* XM_COMPOSITE descendants' modification routines remove 
+	  a node from its previous parent if any.
 	* XM_NODE.parent_element added, root_node now XM_DOCUMENT.
 	* XM_NAMESPACE stricter contracts and uri invariant.
 	* XM_DOCUMENT.set_root_element now exported to ANY.
