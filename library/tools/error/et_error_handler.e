@@ -23,6 +23,17 @@ creation
 
 feature -- Syntax errors
 
+	report_syntax_error (p: ET_POSITION) is
+			-- Report a syntax error.
+		require
+			p_not_void: p /= Void
+		local
+			an_error: ET_SYNTAX_ERROR
+		do
+			!! an_error.make (p)
+			report_error (an_error)
+		end
+
 	report_SCAC_error (p: ET_POSITION) is
 			-- Missing ASCII code in special character
 			-- specification %/code/ in character constant.
