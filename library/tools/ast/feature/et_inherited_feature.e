@@ -217,53 +217,78 @@ feature -- Comparison
 			definition: Result = inherited_feature.same_version (other.inherited_feature)
 		end
 
-	same_syntactical_signature (other: ET_INHERITED_FEATURE): BOOLEAN is
-			-- Does current feature have syntactically the
-			-- same signature as `other' (e.g. do not try
-			-- to resolve anchored types)?
-		require
-			other_not_void: other /= Void
-		do
-			Result := signature.same_syntactical_signature (other.signature)
-		ensure
-			definition: Result = signature.same_syntactical_signature (other.signature)
-		end
-	
-	signature_conforms_to (other: ET_INHERITED_FEATURE): BOOLEAN is
-			-- Does signature of current feature
-			-- conform to signature of `other'?
-		require
-			other_not_void: other /= Void
-		do
-			Result := inherited_feature.signature_conforms_to (other.inherited_feature)
-		end
-
 feature -- Validity
 
-	check_undefine_clause (a_class: ET_CLASS) is
-			-- Check validity of undefine clause.
+	check_rename_clause (a_class: ET_CLASS): BOOLEAN is
+			-- Check validity of rename clause.
+			-- Report errors if not valid.
 		require
 			a_class_not_void: a_class /= Void
+		local
+			a_name: ET_FEATURE_NAME
 		do
-			if is_undefined then
-				if inherited_feature.is_deferred then
-				end
-				if inherited_feature.is_frozen then
-				end
-				if inherited_feature.is_unique_attribute then
-				elseif inherited_feature.is_constant_attribute then
-				elseif inherited_feature.is_attribute then
+			Result := True
+			if is_renamed then
+				a_name := new_name.new_name
+				if a_name.is_infix then
+					if not inherited_feature.is_infixable then
+						Result := False
+						a_class.error_handler.report_vhrc5_error (a_class, parent, new_name, inherited_feature)
+					end
+				elseif a_name.is_prefix then
+					if not inherited_feature.is_prefixable then
+						Result := False
+						a_class.error_handler.report_vhrc4_error (a_class, parent, new_name, inherited_feature)
+					end
 				end
 			end
 		end
 
-	check_redefine_clause (a_class: ET_CLASS) is
-			-- Check validity of redefine clause.
+	check_undefine_clause (a_class: ET_CLASS): BOOLEAN is
+			-- Check validity of undefine clause.
+			-- Report errors if not valid.
 		require
 			a_class_not_void: a_class /= Void
 		do
+			Result := True
+			if is_undefined then
+				if inherited_feature.is_deferred then
+						-- This is not a fatal error for gelint.
+					a_class.error_handler.report_vdus3_error (a_class, parent, undefine_name)
+				end
+				if inherited_feature.is_frozen then
+					Result := False
+					a_class.error_handler.report_vdus2a_error (a_class, parent, undefine_name)
+				end
+				if
+					inherited_feature.is_attribute or
+					inherited_feature.is_unique_attribute or
+					inherited_feature.is_constant_attribute
+				then
+					Result := False
+					a_class.error_handler.report_vdus2b_error (a_class, parent, undefine_name)
+				end
+			end
+		end
+
+	check_redefine_clause (a_class: ET_CLASS): BOOLEAN is
+			-- Check validity of redefine clause.
+			-- Report errors if not valid.
+		require
+			a_class_not_void: a_class /= Void
+		do
+			Result := True
 			if is_redefined then
 				if inherited_feature.is_frozen then
+					Result := False
+					a_class.error_handler.report_vdrs2a_error (a_class, parent, redefine_name)
+				end
+				if
+					inherited_feature.is_unique_attribute or
+					inherited_feature.is_constant_attribute
+				then
+					Result := False
+					a_class.error_handler.report_vdrs2b_error (a_class, parent, redefine_name)
 				end
 			end
 		end

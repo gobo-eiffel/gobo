@@ -24,8 +24,13 @@ feature {NONE} -- Initialization
 		require
 			a_class_not_void: a_class /= Void
 		do
-			!! features.make (200)
-			!! seeds.make (200)
+			!! named_features.make (200)
+			!! seeded_features.make_map (200)
+			!! rename_table.make (10)
+			!! undefine_table.make_equal (10)
+			!! redefine_table.make_equal (10)
+			!! select_table.make_equal (10)
+			!! replicable_features.make_map (400)
 			set_current_class (a_class)
 		ensure
 			current_class_set: current_class = a_class
@@ -36,11 +41,19 @@ feature -- Access
 	current_class: ET_CLASS
 			-- Class being flattened
 
-	features: DS_HASH_TABLE [ET_FLATTENED_FEATURE, ET_FEATURE_NAME]
+	named_features: DS_HASH_TABLE [ET_FLATTENED_FEATURE, ET_FEATURE_NAME]
 			-- Features indexed by name
 
-	seeds: DS_HASH_TABLE [ET_FLATTENED_FEATURE, INTEGER]
+	seeded_features: DS_HASH_TABLE [ET_FLATTENED_FEATURE, INTEGER]
 			-- Features indexed by seed
+
+	error_handler: ET_ERROR_HANDLER is
+			-- Error handler
+		do
+			Result := current_class.error_handler
+		ensure
+			error_handler_not_void: Result /= Void
+		end
 
 feature -- Setting
 
@@ -54,16 +67,17 @@ feature -- Setting
 			nb: INTEGER
 		do
 			current_class := a_class
-			features.wipe_out
-			seeds.wipe_out
-			nb := current_class.features.count
-			if features.capacity < nb then
-				features.resize (nb)
+			named_features.wipe_out
+			seeded_features.wipe_out
+			has_flatten_error := False
+			nb := current_class.named_features.count
+			if named_features.capacity < nb then
+				named_features.resize (nb)
 			end
-			a_cursor := current_class.features.new_cursor
+			a_cursor := current_class.named_features.new_cursor
 			from a_cursor.start until a_cursor.after loop
 				!! a_feature.make (a_cursor.item, current_class)
-				features.put (a_feature, a_feature.name)
+				named_features.put (a_feature, a_feature.name)
 				a_cursor.forth
 			end
 		ensure
@@ -80,10 +94,10 @@ feature -- Element change
 			no_flatten_error: not a_parent.has_flatten_error
 		local
 			a_class: ET_CLASS
-			a_rename_table: like Shared_rename_table
-			a_redefine_table: like Shared_redefine_table
-			an_undefine_table: like Shared_undefine_table
-			a_select_table: like Shared_select_table
+			has_rename: BOOLEAN
+			has_redefine: BOOLEAN
+			has_undefine: BOOLEAN
+			has_select: BOOLEAN
 			a_cursor: DS_HASH_TABLE_CURSOR [ET_FEATURE, ET_FEATURE_NAME]
 			a_feature: ET_INHERITED_FEATURE
 			a_flattened_feature: ET_FLATTENED_FEATURE
@@ -91,191 +105,233 @@ feature -- Element change
 			a_rename: ET_RENAME
 			nb: INTEGER
 		do
-			a_class := a_parent.type.base_class
 			if a_parent.renames /= Void then
-				a_rename_table := Shared_rename_table
-				fill_rename_table (a_rename_table, a_parent)
+				has_rename := True
+				fill_rename_table (a_parent)
 			end
 			if a_parent.redefines /= Void then
-				a_redefine_table := Shared_redefine_table
-				fill_redefine_table (a_redefine_table, a_parent)
+				has_redefine := True
+				fill_redefine_table (a_parent)
 			end
 			if a_parent.undefines /= Void then
-				an_undefine_table := Shared_undefine_table
-				fill_undefine_table (an_undefine_table, a_parent)
+				has_undefine := True
+				fill_undefine_table (a_parent)
 			end
 			if a_parent.selects /= Void then
-				a_select_table := Shared_select_table
-				fill_select_table (a_select_table, a_parent)
+				has_select := True
+				fill_select_table (a_parent)
 			end
-			nb := a_class.features.count + features.count
-			if features.capacity < nb then
-				features.resize (nb)
+			a_class := a_parent.type.base_class
+			nb := a_class.named_features.count + named_features.count
+			if named_features.capacity < nb then
+				named_features.resize (nb)
 			end
-			a_cursor := a_class.features.new_cursor
+			a_cursor := a_class.named_features.new_cursor
 			from a_cursor.start until a_cursor.after loop
 				!! a_feature.make (a_cursor.item, a_parent)
 				a_name := a_cursor.key
-				if a_rename_table /= Void and then a_rename_table.has (a_name) then
-					a_rename := a_rename_table.item (a_name)
-					a_rename_table.remove (a_name)
-					a_feature.set_new_name (a_rename)
-					a_name := a_rename.new_name
+				if has_rename then
+					rename_table.search (a_name)
+					if rename_table.found then
+						a_rename := rename_table.found_item
+						rename_table.remove_found_item
+						a_feature.set_new_name (a_rename)
+						a_name := a_rename.new_name
+					end
 				end
-				if an_undefine_table /= Void and then an_undefine_table.has (a_name) then
-					a_feature.set_undefine_name (an_undefine_table.key (a_name))
-					an_undefine_table.replace (True, a_name)
+				if has_undefine then
+					undefine_table.search (a_name)
+					if undefine_table.found then
+						a_feature.set_undefine_name (undefine_table.found_item)
+						undefine_table.remove_found_item
+					end
 				end
-				if a_redefine_table /= Void and then a_redefine_table.has (a_name) then
-					a_feature.set_redefine_name (a_redefine_table.key (a_name))
-					a_redefine_table.replace (True, a_name)
+				if has_redefine then
+					redefine_table.search (a_name)
+					if redefine_table.found then
+						a_feature.set_redefine_name (redefine_table.found_item)
+						redefine_table.remove_found_item
+					end
 				end
-				if a_select_table /= Void and then a_select_table.has (a_name) then
-					a_feature.set_select_name (a_select_table.key (a_name))
-					a_select_table.replace (True, a_name)
+				if has_select then
+					select_table.search (a_name)
+					if select_table.found then
+						a_feature.set_select_name (select_table.found_item)
+						select_table.remove_found_item
+					end
 				end
-				if features.has (a_name) then
-					a_flattened_feature := features.item (a_name)
+				named_features.search (a_name)
+				if named_features.found then
+					a_flattened_feature := named_features.found_item
 					a_flattened_feature.put_inherited_feature (a_feature)
 				else
 					!! a_flattened_feature.make_inherited (a_feature, current_class)
-					features.put (a_flattened_feature, a_name)
+					named_features.put (a_flattened_feature, a_name)
 				end
 				a_cursor.forth
 			end
-			if a_rename_table /= Void and then not a_rename_table.is_empty then
-					-- Error
-				a_rename_table.wipe_out
-			end
-			if an_undefine_table /= Void then
-				from an_undefine_table.start until an_undefine_table.after loop
-					if not an_undefine_table.item_for_iteration then
-						-- Error
-					end
-					an_undefine_table.forth
+			if not rename_table.is_empty then
+				from rename_table.start until rename_table.after loop
+					a_rename := rename_table.item_for_iteration
+					error_handler.report_vhrc1_error (current_class, a_parent, a_rename)
+					rename_table.forth
 				end
-				an_undefine_table.wipe_out
+				rename_table.wipe_out
+				set_flatten_error
 			end
-			if a_redefine_table /= Void then
-				from a_redefine_table.start until a_redefine_table.after loop
-					if not a_redefine_table.item_for_iteration then
-						-- Error
-					end
-					a_redefine_table.forth
+			if not undefine_table.is_empty then
+				from undefine_table.start until undefine_table.after loop
+					a_name := undefine_table.item_for_iteration
+					error_handler.report_vdus1_error (current_class, a_parent, a_name)
+					undefine_table.forth
 				end
-				a_redefine_table.wipe_out
+				undefine_table.wipe_out
+				set_flatten_error
 			end
-			if a_select_table /= Void then
-				from a_select_table.start until a_select_table.after loop
-					if not a_select_table.item_for_iteration then
-						-- Error
-					end
-					a_select_table.forth
+			if not redefine_table.is_empty then
+				from redefine_table.start until redefine_table.after loop
+					a_name := redefine_table.item_for_iteration
+					error_handler.report_vdrs1_error (current_class, a_parent, a_name)
+					redefine_table.forth
 				end
-				a_select_table.wipe_out
+				redefine_table.wipe_out
+				set_flatten_error
+			end
+			if not select_table.is_empty then
+				from select_table.start until select_table.after loop
+					a_name := select_table.item_for_iteration
+					error_handler.report_vmss1_error (current_class, a_parent, a_name)
+					select_table.forth
+				end
+				select_table.wipe_out
+				set_flatten_error
 			end
 		end
+
+feature -- Status
+
+	has_flatten_error: BOOLEAN
+			-- Has fatal error occurred during last
+			-- feature flattening?
 
 feature -- Compilation
 
 	flatten is
 			-- Flatten inherited features into `current_class'.
 		local
-			class_features: DS_HASH_TABLE [ET_FEATURE, ET_FEATURE_NAME]
-			class_seeds: DS_HASH_TABLE [ET_FEATURE, INTEGER]
+			class_named_features: DS_HASH_TABLE [ET_FEATURE, ET_FEATURE_NAME]
+			class_seeded_features: DS_HASH_TABLE [ET_FEATURE, INTEGER]
 			a_feature: ET_FEATURE
 			a_seed: INTEGER
 			nb: INTEGER
 		do
 			process_seeded_features
-			from features.start until features.after loop
-				features.item_for_iteration.process_flattened_feature (Current)
-				features.forth
+			from named_features.start until named_features.after loop
+				named_features.item_for_iteration.process_flattened_feature (Current)
+				named_features.forth
 			end
-			class_features := current_class.features
-			class_features.wipe_out
-			nb := features.count
-			if class_features.capacity < nb then
-				class_features.resize (nb)
+			!! class_seeded_features.make_map (seeded_features.count)
+			from seeded_features.start until seeded_features.after loop
+				a_feature := seeded_features.item_for_iteration.flattened_feature
+				a_seed := seeded_features.key_for_iteration
+				class_seeded_features.put (a_feature, a_seed)
+				seeded_features.forth
 			end
-			from features.start until features.after loop
-				a_feature := features.item_for_iteration.flattened_feature
-				class_features.put (a_feature, a_feature.name)
-				features.forth
+			current_class.set_seeded_features (class_seeded_features)
+			seeded_features.wipe_out
+			from named_features.start until named_features.after loop
+				if not named_features.item_for_iteration.check_signature_validity then
+					set_flatten_error
+				end
+				named_features.forth
 			end
-			features.wipe_out
-			!! class_seeds.make (seeds.count)
-			from seeds.start until seeds.after loop
-				a_feature := seeds.item_for_iteration.flattened_feature
-				a_seed := seeds.key_for_iteration
-				class_seeds.put (a_feature, a_seed)
-				seeds.forth
+			if not has_flatten_error then
+				class_named_features := current_class.named_features
+				class_named_features.wipe_out
+				nb := named_features.count
+				if class_named_features.capacity < nb then
+					class_named_features.resize (nb)
+				end
+				from named_features.start until named_features.after loop
+					a_feature := named_features.item_for_iteration.flattened_feature
+					class_named_features.put (a_feature, a_feature.name)
+					named_features.forth
+				end
+			else
+				current_class.set_flatten_error
 			end
-			current_class.set_seeds (class_seeds)
-			seeds.wipe_out
+			named_features.wipe_out
 		ensure
-			seeds_set: current_class.seeds /= Void
+			flattened: current_class.is_flattened
+		end
+
+feature {ET_REPLICABLE_FEATURE, ET_FLATTENED_FEATURE} -- Compilation
+
+	set_flatten_error is
+			-- Set `has_flatten_error' to True.
+		do
+			has_flatten_error := True
+		ensure
+			has_flatten_error: has_flatten_error
 		end
 
 feature {NONE} -- Processing
 
 	process_seeded_features is
-			-- Put features in `seeds', indexed by seeds.
+			-- Put features in `seeded_features', indexed by seeds.
 			-- Take care of selected features and replication.
 		local
 			a_feature: ET_FLATTENED_FEATURE
 			feature_seeds: ET_FEATURE_SEEDS
 			a_replicable_feature: ET_REPLICABLE_FEATURE
-			replicable_features: DS_HASH_TABLE [ET_REPLICABLE_FEATURE, INTEGER]
 			a_seed: INTEGER
 			i, nb: INTEGER
 			nb_seeds: INTEGER
 			inherited: BOOLEAN
 		do
-			nb := features.count
-			!! replicable_features.make (2 * nb)
-			if seeds.capacity < nb then
-				seeds.resize (nb)
+			replicable_features.wipe_out
+			nb := named_features.count
+			if seeded_features.capacity < nb then
+				seeded_features.resize (nb)
 			end
-			from features.start until features.after loop
-				a_feature := features.item_for_iteration
+			from named_features.start until named_features.after loop
+				a_feature := named_features.item_for_iteration
 				inherited := a_feature.is_inherited
 				feature_seeds := a_feature.seeds
 				nb := feature_seeds.count
 				from i := 1 until i > nb loop
 					a_seed := feature_seeds.item (i)
 					if not inherited then
-						seeds.put (a_feature, a_seed)
+						seeded_features.put (a_feature, a_seed)
 						nb_seeds := nb_seeds + 1
 					elseif replicable_features.has (a_seed) then
 						a_replicable_feature := replicable_features.item (a_seed)
 						a_replicable_feature.put_feature (a_feature)
 					else
 						!! a_replicable_feature.make (a_seed, a_feature)
-						replicable_features.force (a_replicable_feature, a_seed)
+						replicable_features.force_new (a_replicable_feature, a_seed)
 						nb_seeds := nb_seeds + 1
 					end
 					i := i + 1
 				end
-				features.forth
+				named_features.forth
 			end
-			if seeds.capacity < nb_seeds then
-				seeds.resize (nb_seeds)
+			if seeded_features.capacity < nb_seeds then
+				seeded_features.resize (nb_seeds)
 			end
 			from replicable_features.start until replicable_features.after loop
-				replicable_features.item_for_iteration.register_seeded_features (seeds)
+				replicable_features.item_for_iteration.register_seeded_features (Current)
 				replicable_features.forth
 			end
+			replicable_features.wipe_out
 		end
 
 feature {NONE} -- Element change
 
-	fill_rename_table (a_table: like Shared_rename_table; a_parent: ET_PARENT) is
-			-- Fill `a_table' with rename pairs of `a_parent'
+	fill_rename_table (a_parent: ET_PARENT) is
+			-- Fill `rename_table' with rename pairs of `a_parent'
 			-- indexed by their old_name.
 		require
-			a_table_not_void: a_table /= Void
-			a_table_empty: a_table.is_empty
 			a_parent_not_void: a_parent /= Void
 			renames_not_void: a_parent.renames /= Void
 		local
@@ -284,60 +340,33 @@ feature {NONE} -- Element change
 			a_rename: ET_RENAME
 			a_name: ET_FEATURE_NAME
 		do
+			rename_table.wipe_out
 			a_renames := a_parent.renames
 			nb := a_renames.count
-			if a_table.capacity < nb then
-				a_table.resize (nb)
+			if rename_table.capacity < nb then
+				rename_table.resize (nb)
 			end
 			from until i = nb loop
 				a_rename := a_renames.item (i)
 				a_name := a_rename.old_name
-				if not a_table.has (a_name) then
-					a_table.put (a_rename, a_name)
+				rename_table.search (a_name)
+				if not rename_table.found then
+					rename_table.put (a_rename, a_name)
 				else
-					-- Error
+					error_handler.report_vhrc2_error (current_class, a_parent, rename_table.found_item, a_rename)
+					if not rename_table.found_item.new_name.same_feature_name (a_rename.new_name) then
+							-- The two Rename_pairs have a different `new_name'.
+							-- The flatten process will have to fail.
+						set_flatten_error
+					end
 				end
 				i := i + 1
 			end
-		ensure
-			no_void_rename_pair: not a_table.has_item (Void)
 		end
 
-	fill_redefine_table (a_table: like Shared_redefine_table; a_parent: ET_PARENT) is
-			-- Fill `a_table' with redefined names of `a_parent'.
+	fill_undefine_table (a_parent: ET_PARENT) is
+			-- Fill `undefine_table' with undefined names of `a_parent'.
 		require
-			a_table_not_void: a_table /= Void
-			a_table_empty: a_table.is_empty
-			a_parent_not_void: a_parent /= Void
-			redefines_not_void: a_parent.redefines /= Void
-		local
-			i, nb: INTEGER
-			a_redefines: ARRAY [ET_FEATURE_NAME]
-			a_name: ET_FEATURE_NAME
-		do
-			a_redefines := a_parent.redefines
-			nb := a_redefines.count
-			if a_table.capacity < nb then
-				a_table.resize (nb)
-			end
-			from until i = nb loop
-				a_name := a_redefines.item (i)
-				if not a_table.has (a_name) then
-					a_table.put (False, a_name)
-				else
-					-- Error
-				end
-				i := i + 1
-			end
-		ensure
-			no_used_redefine_name: not a_table.has_item (True)
-		end
-
-	fill_undefine_table (a_table: like Shared_undefine_table; a_parent: ET_PARENT) is
-			-- Fill `a_table' with undefined names of `a_parent'.
-		require
-			a_table_not_void: a_table /= Void
-			a_table_empty: a_table.is_empty
 			a_parent_not_void: a_parent /= Void
 			undefines_not_void: a_parent.undefines /= Void
 		local
@@ -345,29 +374,55 @@ feature {NONE} -- Element change
 			a_undefines: ARRAY [ET_FEATURE_NAME]
 			a_name: ET_FEATURE_NAME
 		do
+			undefine_table.wipe_out
 			a_undefines := a_parent.undefines
 			nb := a_undefines.count
-			if a_table.capacity < nb then
-				a_table.resize (nb)
+			if undefine_table.capacity < nb then
+				undefine_table.resize (nb)
 			end
 			from until i = nb loop
 				a_name := a_undefines.item (i)
-				if not a_table.has (a_name) then
-					a_table.put (False, a_name)
+				undefine_table.search (a_name)
+				if not undefine_table.found then
+					undefine_table.put_new (a_name)
 				else
-					-- Error
+					error_handler.report_vdus4_error (current_class, a_parent, undefine_table.found_item, a_name)
 				end
 				i := i + 1
 			end
-		ensure
-			no_used_undefine_name: not a_table.has_item (True)
 		end
 
-	fill_select_table (a_table: like Shared_select_table; a_parent: ET_PARENT) is
-			-- Fill `a_table' with selected names of `a_parent'.
+	fill_redefine_table (a_parent: ET_PARENT) is
+			-- Fill `redefine_table' with redefined names of `a_parent'.
 		require
-			a_table_not_void: a_table /= Void
-			a_table_empty: a_table.is_empty
+			a_parent_not_void: a_parent /= Void
+			redefines_not_void: a_parent.redefines /= Void
+		local
+			i, nb: INTEGER
+			a_redefines: ARRAY [ET_FEATURE_NAME]
+			a_name: ET_FEATURE_NAME
+		do
+			redefine_table.wipe_out
+			a_redefines := a_parent.redefines
+			nb := a_redefines.count
+			if redefine_table.capacity < nb then
+				redefine_table.resize (nb)
+			end
+			from until i = nb loop
+				a_name := a_redefines.item (i)
+				redefine_table.search (a_name)
+				if not redefine_table.found then
+					redefine_table.put_new (a_name)
+				else
+					error_handler.report_vdrs3_error (current_class, a_parent, redefine_table.found_item, a_name)
+				end
+				i := i + 1
+			end
+		end
+
+	fill_select_table (a_parent: ET_PARENT) is
+			-- Fill `select_table' with selected names of `a_parent'.
+		require
 			a_parent_not_void: a_parent /= Void
 			selects_not_void: a_parent.selects /= Void
 		local
@@ -375,62 +430,58 @@ feature {NONE} -- Element change
 			a_selects: ARRAY [ET_FEATURE_NAME]
 			a_name: ET_FEATURE_NAME
 		do
+			select_table.wipe_out
 			a_selects := a_parent.selects
 			nb := a_selects.count
-			if a_table.capacity < nb then
-				a_table.resize (nb)
+			if select_table.capacity < nb then
+				select_table.resize (nb)
 			end
 			from until i = nb loop
 				a_name := a_selects.item (i)
-				if not a_table.has (a_name) then
-					a_table.put (False, a_name)
+				select_table.search (a_name)
+				if not select_table.found then
+					select_table.put_new (a_name)
 				else
-					-- Error
+					error_handler.report_vmss2_error (current_class, a_parent, select_table.found_item, a_name)
 				end
 				i := i + 1
 			end
-		ensure
-			no_used_select_name: not a_table.has_item (True)
 		end
 
 feature {NONE} -- Implementation
 
-	Shared_rename_table: DS_HASH_TABLE [ET_RENAME, ET_FEATURE_NAME] is
-			-- Shared rename table
-		once
-			!! Result.make (10)
-		ensure
-			renamed_table_not_void: Result /= Void
-		end
+	rename_table: DS_HASH_TABLE [ET_RENAME, ET_FEATURE_NAME]
+			-- Rename table
 
-	Shared_redefine_table: DS_HASH_TABLE [BOOLEAN, ET_FEATURE_NAME] is
-			-- Shared redefine table
-		once
-			!! Result.make (10)
-		ensure
-			redefine_table_not_void: Result /= Void
-		end
+	undefine_table: DS_HASH_SET [ET_FEATURE_NAME]
+			-- Undefine table
 
-	Shared_undefine_table: DS_HASH_TABLE [BOOLEAN, ET_FEATURE_NAME] is
-			-- Shared undefine table
-		once
-			!! Result.make (10)
-		ensure
-			undefine_table_not_void: Result /= Void
-		end
+	redefine_table: DS_HASH_SET [ET_FEATURE_NAME]
+			-- Redefine table
 
-	Shared_select_table: DS_HASH_TABLE [BOOLEAN, ET_FEATURE_NAME] is
-			-- Shared select table
-		once
-			!! Result.make (10)
-		ensure
-			select_table_not_void: Result /= Void
-		end
+	select_table: DS_HASH_SET [ET_FEATURE_NAME]
+			-- Select table
+
+	replicable_features: DS_HASH_TABLE [ET_REPLICABLE_FEATURE, INTEGER]
+			-- Table of potentially replicable features, indexed by seed
 
 invariant
 
 	current_class_not_void: current_class /= Void
-	features_not_void: features /= Void
-	seeds_not_void: seeds /= Void
+	named_features_not_void: named_features /= Void
+	no_void_named_feature: not named_features.has_item (Void)
+	seeded_features_not_void: seeded_features /= Void
+	no_void_seeded_feature: not seeded_features.has_item (Void)
+	rename_table_not_void: rename_table /= Void
+	no_void_rename: not rename_table.has_item (Void)
+	no_void_rename_old_name: not rename_table.has (Void)
+	undefine_table_not_void: undefine_table /= Void
+	no_void_undefine: not undefine_table.has (Void)
+	redefine_table_not_void: redefine_table /= Void
+	no_void_redefine: not redefine_table.has (Void)
+	select_table_not_void: select_table /= Void
+	no_void_select: not select_table.has (Void)
+	replicable_features_not_void: replicable_features /= Void
+	no_void_replicable_feature: not replicable_features.has_item (Void)
 
 end -- class ET_FEATURE_FLATTENER
