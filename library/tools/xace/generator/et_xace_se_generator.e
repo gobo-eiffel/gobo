@@ -103,7 +103,9 @@ feature {NONE} -- Output
 			a_file.put_new_line
 			a_file.put_new_line
 			print_indentation (1, a_file)
-			print_escaped_name (a_system.system_name, a_file)
+			a_file.put_character ('%"')
+			a_file.put_string (a_system.system_name)
+			a_file.put_character ('%"')
 			a_file.put_new_line
 			a_file.put_new_line
 			a_file.put_string ("root")
