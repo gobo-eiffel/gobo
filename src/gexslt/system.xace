@@ -31,7 +31,7 @@
 	<option name="exception_trace" value="true"/>
 	<option name="trace" value="false"/>
 	<!-- <option name="debug_tag" value="XPath expression factory"/>-->
-	<!--<option name="debug_tag" value="XSLT template rules"/>-->
+	<!-- <option name="debug_tag" value="XSLT template rules"/> -->
 	<!--<option name="debug_tag" value="XSLT pattern parsing"/>-->
 
 	<cluster name="gexslt" location="${GOBO}/src/gexslt"/>

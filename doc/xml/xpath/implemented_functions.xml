@@ -522,7 +522,7 @@
 	 </row>	
 	 <row>
 	   <entry>fn:insert-before</entry>
-	   <entry>No</entry>
+	   <entry>Yes</entry>
 	   <entry>No</entry>
 	   <entry>No</entry>
 	 </row>	
@@ -540,7 +540,7 @@
 	 </row>	
 	 <row>
 	   <entry>fn:subsequence</entry>
-	   <entry>No</entry>
+	   <entry>Yes</entry>
 	   <entry>No</entry>
 	   <entry>No</entry>
 	 </row>	

@@ -149,11 +149,16 @@ feature -- Status report
 			-- `True' if `a_type' is node() or a subtype of node()
 		require
 			type_not_void: a_type /= Void
-		local
-			a_node_test: XM_XPATH_NODE_TEST
 		do
-			a_node_test ?= a_type
-			Result := a_node_test /= void
+			Result := is_sub_type (a_type, any_node_test)
+		end
+
+	is_atomic_item_type (a_type: XM_XPATH_ITEM_TYPE): BOOLEAN is
+			-- `True' if `a_type' is an atomic value
+		require
+			type_not_void: a_type /= Void
+		do
+			Result := is_sub_type (a_type, type_factory.any_atomic_type)
 		end
 	
 	is_sub_type (a_sub_type, a_super_type: XM_XPATH_ITEM_TYPE): BOOLEAN is

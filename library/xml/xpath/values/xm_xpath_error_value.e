@@ -109,16 +109,18 @@ feature -- Access
 
 	error_message: STRING is
 			-- Textual error message
+		local
+			a_message: STRING
 		do
 			if namespace_uri.count > 0 then
-				Result := STRING_.concat ("{",namespace_uri)
-				Result := STRING_.appended_string (Result, "}")
-				Result := STRING_.appended_string (Result, code)
+				a_message := STRING_.concat ("{",namespace_uri)
+				a_message := STRING_.appended_string (a_message, "}")
+				a_message := STRING_.appended_string (a_message, code)
 			else
-				Result := code
+				a_message := code
 			end
-			Result := STRING_.appended_string (Result, ": ")
-			Result := STRING_.appended_string (Result, description)
+			a_message := STRING_.appended_string (a_message, ": ")
+			Result := STRING_.appended_string (a_message, description)
 		ensure
 			error_message_not_void: Result /= Void
 		end

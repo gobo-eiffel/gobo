@@ -148,7 +148,7 @@ feature {NONE} -- Implementation
 						parse_path_pattern
 						if not is_parse_error then
 							a_right_pattern := internal_last_parsed_pattern
-							create {XM_XSLT_UNION_PATTERN} a_left_pattern.make (a_left_pattern, a_right_pattern)
+							create {XM_XSLT_UNION_PATTERN} a_left_pattern.make (environment, a_left_pattern, a_right_pattern)
 						end
 					end
 				end
@@ -189,7 +189,7 @@ feature {NONE} -- Implementation
 				if tokenizer.is_lexical_error then
 					report_parse_error (tokenizer.last_lexical_error, "XT0340")
 				else
-					create {XM_XSLT_NODE_KIND_TEST} previous_pattern.make (Document_node)
+					create {XM_XSLT_NODE_KIND_TEST} previous_pattern.make (environment, Document_node)
 					root_only := True
 				end
 			when Slash_slash_token then -- leading // changes the default priority
@@ -198,7 +198,7 @@ feature {NONE} -- Implementation
 				if tokenizer.is_lexical_error then
 					report_parse_error (tokenizer.last_lexical_error, "XT0340")
 				else
-					create {XM_XSLT_NODE_KIND_TEST} previous_pattern.make (Document_node)
+					create {XM_XSLT_NODE_KIND_TEST} previous_pattern.make (environment, Document_node)
 					root_only := False
 				end
 			else
@@ -328,7 +328,7 @@ feature {NONE} -- Implementation
 										report_parse_error ("id value must be either a literal or a variable reference", "XT0340")
 										finished := True
 									end
-									create {XM_XSLT_ID_PATTERN} id_pattern.make (id_value)
+									create {XM_XSLT_ID_PATTERN} id_pattern.make (environment, id_value)
 									tokenizer.next
 									if tokenizer.is_lexical_error then
 										report_parse_error (tokenizer.last_lexical_error, "XT0340")
@@ -402,7 +402,7 @@ feature {NONE} -- Implementation
 														finished := True
 													end
 													generate_name_code (key_name, False)
-													create {XM_XSLT_KEY_PATTERN} key_pattern.make (last_generated_name_code, id_value)
+													create {XM_XSLT_KEY_PATTERN} key_pattern.make (environment, last_generated_name_code, id_value)
 													tokenizer.next
 													if tokenizer.is_lexical_error then
 														report_parse_error (tokenizer.last_lexical_error, "XT0340")
@@ -498,7 +498,7 @@ feature {NONE} -- Implementation
 			a_node_test: XM_XSLT_NODE_TEST
 			a_node_kind: INTEGER_8
 		do
-			create a_step.make
+			create a_step.make (environment)
 			parse_node_test (a_principal_node_type)
 			if not is_parse_error then
 				a_node_test := xpath_to_xslt_node_test (internal_last_parsed_node_test)
@@ -510,7 +510,7 @@ feature {NONE} -- Implementation
 						
 						-- We are on the Child::axis
 						
-						create {XM_XSLT_ANY_CHILD_NODE_PATTERN} a_node_test.make
+						create {XM_XSLT_ANY_CHILD_NODE_PATTERN} a_node_test.make (environment)
 					else
 						
 						-- We are on the Attribute::axis
@@ -608,15 +608,15 @@ feature {NONE} -- Implementation
 						else
 							a_namespace_test ?= an_xpath_node_test
 							if a_namespace_test /= Void then
-								create  {XM_XSLT_NAMESPACE_TEST} Result.make (a_namespace_test.node_kind, shared_name_pool.uri_from_uri_code(a_namespace_test.uri_code), a_namespace_test.original_text)
+								create  {XM_XSLT_NAMESPACE_TEST} Result.make (environment, a_namespace_test.node_kind, shared_name_pool.uri_from_uri_code(a_namespace_test.uri_code), a_namespace_test.original_text)
 							else
 								a_name_test ?= an_xpath_node_test
 								if a_name_test /= Void then
-									create {XM_XSLT_NAME_TEST} Result.make (a_name_test.node_kind, a_name_test.fingerprint, a_name_test.original_text)
+									create {XM_XSLT_NAME_TEST} Result.make (environment, a_name_test.node_kind, a_name_test.fingerprint, a_name_test.original_text)
 								else
 									a_node_kind_test ?= an_xpath_node_test
 									if a_node_kind_test /= Void then
-										create {XM_XSLT_NODE_KIND_TEST} Result.make (a_node_kind_test.node_kind)
+										create {XM_XSLT_NODE_KIND_TEST} Result.make (environment, a_node_kind_test.node_kind)
 									else
 										todo ("xpath_to_xslt_node_test - unknown test", True)
 									end

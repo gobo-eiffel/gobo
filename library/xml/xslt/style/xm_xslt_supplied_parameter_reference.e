@@ -31,6 +31,7 @@ feature {NONE} -- Initialization
 			-- Set slot number.
 		do
 			slot_number := a_slot_number
+			compute_static_properties
 		ensure
 			set: slot_number = a_slot_number
 		end
@@ -72,7 +73,7 @@ feature -- Evaluation
 		iterator (a_context: XM_XPATH_CONTEXT): XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_ITEM] is
 			-- Iterator over the values of a sequence
 		do
-			todo ("iterator", False)
+			Result := a_context.evaluated_local_variable (slot_number).iterator (a_context)
 		end
 
 feature {XM_XPATH_EXPRESSION} -- Restricted

@@ -43,6 +43,21 @@ feature -- Access
 			absolute_uri: Result /= Void and then Result.is_absolute
 		end
 
+	system_id: STRING is
+			-- SYSTEM-id;
+			-- This may differ from `base_uri', as it reports
+			--  the system-id of the containing entity, which
+			--  tends to be more useful for diagnostics.
+		deferred
+		ensure
+			system_id_not_void: Result /= Void
+		end
+
+	line_number: INTEGER is
+			-- Line number
+		deferred
+		end
+
 	last_bound_variable: XM_XPATH_VARIABLE_DECLARATION is
 			-- The last variable bound by `bind_variable'
 		do

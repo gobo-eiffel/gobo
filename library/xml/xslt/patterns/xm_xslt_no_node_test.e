@@ -20,10 +20,23 @@ inherit
 		end
 	
 	XM_XPATH_NO_NODE_TEST
+		rename
+			make as make_xpath
+		end
 
 creation
 
 	make
+
+feature {NONE} -- Initialization
+
+	make is
+			-- Establish invariant
+		do
+			system_id := ""
+			line_number := -1
+			make_xpath
+		end
 
 feature -- Access
 

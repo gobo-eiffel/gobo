@@ -19,6 +19,8 @@ inherit
 			effective_boolean_value
 		end
 
+	MA_DECIMAL_CONSTANTS
+
 creation
 
 	make, make_from_string, make_nan
@@ -46,6 +48,7 @@ feature {NONE} -- Initialization
 	make_nan is
 			-- create NaN.
 		do
+			make_atomic_value
 			internal_is_nan := True
 			value := 0.0
 		ensure
@@ -87,7 +90,17 @@ feature -- Access
 	string_value: STRING is
 			--Value of the item as a string
 		do
-			Result := value.out
+			if is_nan then
+				Result := "NaN"
+			elseif is_infinite then
+				if value = minus_infinity then
+					Result := "-INF"
+				else
+					Result := "INF"
+				end
+			else
+				Result := value.out
+			end
 		end
 
 feature -- Status report
@@ -158,11 +171,10 @@ feature -- Status report
 			Result := value = 0.0 or else value = -0.0
 		end
 
-
 	is_infinite: BOOLEAN is
 			-- Is value infinite?
 		do
-			todo ("is-infinite", False)
+			Result := value = plus_infinity or else value = minus_infinity
 		end	
 
 feature -- Conversion
@@ -192,6 +204,8 @@ feature -- Conversion
 
 	rounded_value: like Current is
 			-- `a_numeric_value' rounded towards the nearest whole number (0.5 rounded up)
+		local
+			a_decimal: MA_DECIMAL
 		do
 			if is_nan or else is_infinite then
 				Result := Current
@@ -200,19 +214,23 @@ feature -- Conversion
 			elseif value > -0.5 and then value < 0.0 then
 				create Result.make (-0.0)
 			else
-				todo ("rounded_value", True)
+				create a_decimal.make_from_string (value.out)
+				create Result.make (a_decimal.round_to_integer (shared_round_context).to_double)
 			end
 		end
 
 	floor: like Current is
 			-- Value rounded towards minus infinity
+		local
+			a_decimal: MA_DECIMAL		
 		do
 			if is_infinite or else is_nan then
 				Result := Current
 			elseif is_zero then
 				Result := Current
 			else
-				create Result.make (value.floor)
+				create a_decimal.make_from_string (value.out)
+				create Result.make (a_decimal.round_to_integer (shared_floor_context).to_double)
 			end
 		end
 
@@ -262,5 +280,38 @@ feature {NONE} -- Implementation
 
 	internal_is_nan: BOOLEAN
 			-- Fabricated NaN
+
+	Large_number: DOUBLE is 2.0e300
+	Large_negative_number: DOUBLE is -2.0e300
+ 
+	plus_infinity: DOUBLE is 
+			-- Overflow on purpose.
+		once
+			Result := Large_number * Large_number 
+		ensure
+			positive: Result > 0
+			infinity_reached: Result / Large_number = Result
+		end
+
+	minus_infinity: DOUBLE is 
+			-- Overflow on purpose.
+		once
+			Result := Large_number * Large_negative_number 
+		ensure
+			negitive: Result < 0
+			infinity_reached: Result / Large_number = Result
+		end
+
+	shared_round_context: MA_DECIMAL_CONTEXT is
+			-- Decimal context for use by round
+		once
+			create Result.make (0, Round_ceiling)
+		end
+
+	shared_floor_context: MA_DECIMAL_CONTEXT is
+			-- Decimal context for use by floor
+		once
+			create Result.make (0, Round_floor)
+		end
 
 end

@@ -22,11 +22,30 @@ inherit
 		end
 
 	XM_XPATH_NODE_KIND_TEST
+		rename
+			make as make_xpath
+		end
 
 creation
 
 	make
 
+feature {NONE} -- Initialization
+
+	make (a_static_context: XM_XPATH_STATIC_CONTEXT; a_node_type: INTEGER_8) is
+			-- Establish invariant
+		require
+			valid_node_type: is_node_type (a_node_type) and then a_node_type /= Any_node
+			static_context_not_void: a_static_context /= Void
+		do
+			make_xpath (a_node_type)
+			system_id := a_static_context.system_id
+			line_number := a_static_context.line_number
+		ensure
+			system_id_set: STRING_.same_string (system_id, a_static_context.system_id)
+			line_number_set: line_number = a_static_context.line_number			
+		end
+	
 feature -- Access
 
 		frozen default_priority: MA_DECIMAL is

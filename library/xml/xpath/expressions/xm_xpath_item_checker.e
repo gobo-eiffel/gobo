@@ -165,7 +165,7 @@ feature -- Evaluation
 	map (an_item: XM_XPATH_ITEM; a_context: XM_XPATH_CONTEXT; an_information_object: ANY): XM_XPATH_MAPPED_ITEM is
 			-- Map `an_item' to a sequence
 		do
-			test_conformance (an_item)
+			if not an_item.is_error then test_conformance (an_item) end
 			create Result.make_item (an_item)
 		end
 
@@ -203,7 +203,7 @@ feature {NONE} -- Implementation
 			-- Test conformance to `required_item_type'.
 			-- Marks `an_item' as in error if check fails.
 		require
-			item_not_void: an_item /= Void
+			item_not_in_error: an_item /= Void and then not an_item.is_error 
 		local
 			a_type: XM_XPATH_ITEM_TYPE
 			a_message: STRING

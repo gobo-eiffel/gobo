@@ -142,7 +142,10 @@ feature {NONE} -- Implementation
 				else
 					an_xml_prefix := a_token.substring (1, a_token.count - 2)
 					a_uri := uri_for_prefix (an_xml_prefix, False)
-					create {XM_XSLT_NAMESPACE_TEST} a_pattern.make (Element_node, a_uri, a_token)
+					if static_context = Void then
+						create static_context.make (Current)
+					end
+					create {XM_XSLT_NAMESPACE_TEST} a_pattern.make (static_context, Element_node, a_uri, a_token)
 					stripper_rules.add_rule (a_pattern, a_boolean_rule, precedence, minus_one_quarter)
 				end
 			elseif a_token.count > 1 and then a_token.substring_index ("*:", 1) = 1 then
@@ -151,7 +154,10 @@ feature {NONE} -- Implementation
 					report_compile_error (an_error)
 				else
 					a_local_name := a_token.substring (3, a_token.count)
-					create {XM_XSLT_LOCAL_NAME_TEST} a_pattern.make (Element_node, a_local_name, a_token)
+					if static_context = Void then
+						create static_context.make (Current)
+					end
+					create {XM_XSLT_LOCAL_NAME_TEST} a_pattern.make (static_context, Element_node, a_local_name, a_token)
 					stripper_rules.add_rule (a_pattern, a_boolean_rule, precedence, minus_one_quarter)
 				end
 			else
@@ -177,7 +183,10 @@ feature {NONE} -- Implementation
 							shared_name_pool.allocate_name ("", a_uri, a_local_name)
 						end
 						a_name_code := shared_name_pool.name_code ("", a_uri, a_local_name)
-						create {XM_XSLT_NAME_TEST} a_pattern.make (Element_node, a_name_code, a_token)
+						if static_context = Void then
+							create static_context.make (Current)
+						end
+						create {XM_XSLT_NAME_TEST} a_pattern.make (static_context, Element_node, a_name_code, a_token)
 						stripper_rules.add_rule (a_pattern, a_boolean_rule, precedence, zero)
 					end
 				else

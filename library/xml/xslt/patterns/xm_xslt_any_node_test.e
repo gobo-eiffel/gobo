@@ -22,8 +22,8 @@ inherit
 		end
 
 	XM_XPATH_ANY_NODE_TEST
-		undefine
-			make
+		rename 
+			make as make_xpath
 		end
 
 creation
@@ -33,8 +33,11 @@ creation
 feature {NONE} -- Initialization
 
 	make is
+			-- Establish invariant
 		do
-			original_text := "node()"
+			system_id := ""
+			line_number := -1
+			make_xpath
 		end
 	
 feature -- Access

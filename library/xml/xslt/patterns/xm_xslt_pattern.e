@@ -150,6 +150,7 @@ invariant
 
 	error: is_error implies error_value /= Void
 	no_error: not is_error implies error_value = Void
+	system_id_not_void: system_id /= Void
 
 end
 	

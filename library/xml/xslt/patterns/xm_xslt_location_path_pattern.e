@@ -37,12 +37,19 @@ creation
 
 feature {NONE} -- Initialization
 
-	make is
+	make (a_static_context: XM_XPATH_STATIC_CONTEXT) is
 			-- Establish invariant.
+		require
+			static_context_not_void: a_static_context /= Void
 		do
+			system_id := a_static_context.system_id
+			line_number := a_static_context.line_number
 			node_test := any_xslt_node_test
+		ensure
+			system_id_set: STRING_.same_string (system_id, a_static_context.system_id)
+			line_number_set: line_number = a_static_context.line_number
 		end
-
+	
 feature -- Access
 
 	parent_pattern: XM_XSLT_PATTERN
@@ -228,7 +235,11 @@ feature -- Optimization
 					a_position_range ?= a_filter_expression
 					if (an_integer /= Void and then an_integer.value.is_equal (one))
 						or else (a_position_range /= Void and then
-									a_position_range.minimum_position = 1 and a_position_range.maximum_position = 1) then
+									(a_position_range.minimum_position = 1 and
+									 a_position_range.maximum_position = 1)) then
+--					if (an_integer /= Void and then an_integer.value.is_equal (one))
+--						or else (a_position_range /= Void and then
+--									a_position_range.minimum_position = 1 and a_position_range.maximum_position = 1) then
 						set_first_element_pattern (True)
 						set_special_filter (True)
 						set_filters (Void)

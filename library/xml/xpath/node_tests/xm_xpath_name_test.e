@@ -46,6 +46,8 @@ feature {NONE} -- Initialization
 		end
 
 	make_same_type (a_node: XM_XPATH_NODE) is
+		require
+			node_not_void: a_node /= Void
 		do
 			node_kind := a_node.node_type
 			fingerprint := a_node.fingerprint

@@ -133,7 +133,7 @@ feature -- Access
 							-- Is this a second match?
 
 							if a_specific_rule /= Void then
-								if a_rule.precedence = a_specific_precedence and then a_rule.priority = a_specific_priority then
+								if a_rule.precedence = a_specific_precedence and then a_rule.priority.is_equal (a_specific_priority) then
 									report_ambiguity (a_node, a_specific_rule, a_rule, a_transformer)
 									finished := True
 								end
@@ -503,12 +503,28 @@ feature {NONE} -- Implementation
 
 					finished := True
 				else
+					debug ("XSLT template rules")
+						std.error.put_string ("Searching for a possible second general rule ...%N")
+					end
 					if a_rule.pattern.matches (a_node, a_transformer) then
-
+						debug ("XSLT template rules")
+							std.error.put_string ("Searching for a possible second general rule ... found a possible second candidate...%N")
+						end
+						
 						-- Is it a second match?
 
 						if a_general_rule /= Void then
-							if a_rule.precedence = a_general_rule.precedence and then a_rule.priority = a_general_rule.priority then
+							debug ("XSLT template rules")
+								std.error.put_string ("Searching for a possible second general rule ... found a second candidate...%N")
+								std.error.put_string ("First general rule has precedence of " + a_general_rule.precedence.out)
+								std.error.put_string (" and proprity of " + a_general_rule.priority.to_scientific_string)
+								std.error.put_string ("%NSecond general rule has precedence of " + a_rule.precedence.out)
+								std.error.put_string (" and proprity of " + a_rule.priority.to_scientific_string + "%N")
+							end
+							if a_rule.precedence = a_general_rule.precedence and then a_rule.priority.is_equal (a_general_rule.priority) then
+								debug ("XSLT template rules")
+									std.error.put_string ("Searching for a possible second general rule ... found an ambiguity.%N")
+								end
 									report_ambiguity (a_node, a_rule, a_general_rule, a_transformer)
 									finished := True
 							end
@@ -557,7 +573,7 @@ feature {NONE} -- Implementation
 					if a_rule.precedence > a_current_precedence or else
 						(a_rule.precedence = a_current_precedence and then
 						 (a_rule.priority > a_current_priority or else
-						  (a_rule.priority = a_current_priority and then a_rule.sequence_number >= a_current_sequence_number))) then
+						  (a_rule.priority.is_equal (a_current_priority) and then a_rule.sequence_number >= a_current_sequence_number))) then
 						do_nothing -- skip rule
 					else
 
@@ -574,7 +590,7 @@ feature {NONE} -- Implementation
 							-- Is this a second match?
 
 							if a_specific_rule /= Void then
-								if a_rule.precedence = a_specific_precedence and then a_rule.priority = a_specific_priority then
+								if a_rule.precedence = a_specific_precedence and then a_rule.priority.is_equal (a_specific_priority) then
 									finished := True
 									report_ambiguity (a_node, a_specific_rule, a_rule, a_transformer)
 								end
@@ -634,7 +650,7 @@ feature {NONE} -- Implementation
 				if a_rule.precedence > a_current_precedence or else
 					(a_rule.precedence = a_current_precedence and then
 					 (a_rule.priority > a_current_priority or else
-					  (a_rule.priority = a_current_priority and then a_rule.sequence_number >= a_current_sequence_number))) then
+					  (a_rule.priority.is_equal (a_current_priority) and then a_rule.sequence_number >= a_current_sequence_number))) then
 					do_nothing -- skip rule
 				else
 					if a_rule.precedence < a_specific_precedence or else
@@ -646,7 +662,7 @@ feature {NONE} -- Implementation
 						-- Is this a second match?
 
 						if a_general_rule /= Void then
-							if a_rule.precedence = a_general_rule.precedence and then a_rule.priority = a_general_rule.priority then
+							if a_rule.precedence = a_general_rule.precedence and then a_rule.priority.is_equal (a_general_rule.priority) then
 								finished := True
 								report_ambiguity (a_node, a_specific_rule, a_rule, a_transformer)
 							end
@@ -687,7 +703,7 @@ feature {NONE} -- Implementation
 				Result := a_general_rule.handler
 			elseif a_specific_rule /= Void and then a_general_rule /= Void then
 				if a_specific_rule.precedence = a_general_rule.precedence and then
-					a_specific_rule.priority = a_general_rule.priority then
+					a_specific_rule.priority.is_equal (a_general_rule.priority) then
 					
 					-- This situation is exceptional: we have a "specific" pattern and
 					--  a "general" pattern with the same priority. We have to select

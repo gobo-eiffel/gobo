@@ -25,14 +25,21 @@ creation
 	
 feature {NONE} -- Initialization
 
-	make (an_id: XM_XPATH_EXPRESSION) is
+	make (a_static_context: XM_XPATH_STATIC_CONTEXT; an_id: XM_XPATH_EXPRESSION) is
 			-- Establish invariant
 		require
 			id_not_void: an_id /= Void
+			static_context_not_void: a_static_context /= Void
 		do
+			static_context := static_context
+			system_id := a_static_context.system_id
+			line_number := a_static_context.line_number
 			id_expression := an_id
 		ensure
+			static_context_set: static_context = static_context
 			id_set: id_expression = an_id
+			system_id_set: STRING_.same_string (system_id, a_static_context.system_id)
+			line_number_set: line_number = a_static_context.line_number
 		end
 
 feature -- Access
@@ -55,7 +62,7 @@ feature -- Access
 	node_test: XM_XSLT_NODE_TEST is
 			-- Retrieve an `XM_XSLT_NODE_TEST' that all nodes matching this pattern must satisfy
 		do
-			create {XM_XSLT_NODE_KIND_TEST} Result.make (Element_node)
+			create {XM_XSLT_NODE_KIND_TEST} Result.make (static_context, Element_node)
 		end
 
 feature -- Optimization
@@ -131,9 +138,15 @@ feature -- Matching
 			end
 		end
 
+feature {NONE} -- Implementation
+
+	static_context: XM_XPATH_STATIC_CONTEXT
+			-- Stored static context
+
 invariant
 
 	id_expression_not_void: id_expression /= Void
+	static_context_not_void: static_context /= Void
 
 end
 	

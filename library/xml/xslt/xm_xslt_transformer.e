@@ -837,6 +837,7 @@ feature {XM_XSLT_TRANSFORMER} -- Transformation internals
 				end
 				
 				reset_output_destination (Void)
+				std.output.flush
 			end
 		end
 		

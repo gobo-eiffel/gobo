@@ -22,11 +22,49 @@ inherit
 		end
 
 	XM_XPATH_NAME_TEST
+		rename
+			make as make_xpath,
+			make_same_type as make_same_type_xpath
+		end
 
 creation
 
 	make, make_same_type
 
+feature {NONE} -- Initialization
+
+	make (a_static_context: XM_XPATH_STATIC_CONTEXT; a_node_type: INTEGER_8; a_name_code: INTEGER; an_original_text: STRING) is
+		require
+			static_context_not_void: a_static_context /= Void
+			valid_node_type: is_node_type (a_node_type)
+			positive_name_code: a_name_code >= 0
+			original_text_not_void: an_original_text /= Void
+		do
+			make_xpath (a_node_type, a_name_code, an_original_text)
+			system_id := a_static_context.system_id
+			line_number := a_static_context.line_number
+		ensure
+			node_kind_set: node_kind = a_node_type
+			original_text_set: original_text = an_original_text
+			system_id_set: STRING_.same_string (system_id, a_static_context.system_id)
+			line_number_set: line_number = a_static_context.line_number
+		end
+
+	make_same_type (a_static_context: XM_XPATH_STATIC_CONTEXT; a_node: XM_XPATH_NODE) is
+		require
+			static_context_not_void: a_static_context /= Void
+			node_not_void: a_node /= Void
+		do
+			make_same_type_xpath (a_node)
+			system_id := a_static_context.system_id
+			line_number := a_static_context.line_number
+		ensure
+			same_type: node_kind = a_node.node_type
+			same_fingerprint: fingerprint = a_node.fingerprint
+			system_id_set: STRING_.same_string (system_id, a_static_context.system_id)
+			line_number_set: line_number = a_static_context.line_number
+		end
+	
 feature -- Access
 
 		frozen default_priority: MA_DECIMAL is

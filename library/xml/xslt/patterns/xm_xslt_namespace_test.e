@@ -22,10 +22,31 @@ inherit
 		end
 
 	XM_XPATH_NAMESPACE_TEST
+		rename
+			make as make_xpath
+		end
 
 creation
 
 	make
+
+feature {NONE} -- Initialization
+
+	make (a_static_context: XM_XPATH_STATIC_CONTEXT; a_node_type: INTEGER_8; a_uri, an_original_text: STRING) is
+		require
+			static_context_not_void: a_static_context /= Void
+			uri_not_void: a_uri /= Void
+			original_text_not_void: an_original_text /= Void
+		do
+			make_xpath (a_node_type, a_uri, an_original_text)
+			system_id := a_static_context.system_id
+			line_number := a_static_context.line_number
+		ensure
+			node_kind_set: node_kind = a_node_type
+			original_text_set: original_text = an_original_text
+			system_id_set: STRING_.same_string (system_id, a_static_context.system_id)
+			line_number_set: line_number = a_static_context.line_number
+		end
 
 feature -- Access
 

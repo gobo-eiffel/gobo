@@ -127,9 +127,9 @@ feature {NONE} -- Implementation
 			from
 				an_index := 1
 			variant
-				s1.count - s2.count + 1 - an_index
+				s1.count - s2.count + 2 - an_index
 			until
-				found or else an_index > s1.count - s2.count
+				found or else an_index > s1.count - s2.count + 1
 			loop
 				a_substring := s1.substring (an_index, an_index + s2.count - 1)
 				if a_collator.three_way_comparison (a_substring, s2) = 0 then

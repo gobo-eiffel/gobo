@@ -69,6 +69,17 @@ feature -- Access
 	style_element: XM_XSLT_STYLE_ELEMENT
 			-- Style element that provides the context
 
+	system_id: STRING is
+		do
+			Result := style_element.system_id
+		end
+
+	line_number: INTEGER is
+			-- Line number
+		do
+			Result := style_element.line_number
+		end
+
 	style_sheet: XM_XSLT_STYLESHEET is
 			-- Principal style sheet
 		do

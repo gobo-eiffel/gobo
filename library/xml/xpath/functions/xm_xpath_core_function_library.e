@@ -66,6 +66,8 @@ feature -- Access
 				Result := an_arity = -1 or else an_arity = 1  or else an_arity = 2
 			elseif a_fingerprint = In_scope_prefixes_function_type_code then
 				Result := an_arity = -1 or else an_arity = 1
+			elseif a_fingerprint = Insert_before_function_type_code then
+				Result := an_arity = -1 or else an_arity = 3				
 			elseif a_fingerprint = Last_function_type_code then
 				Result := an_arity = -1 or else an_arity = 0
 			elseif a_fingerprint = Local_name_function_type_code then
@@ -94,6 +96,8 @@ feature -- Access
 				Result := an_arity = -1 or else an_arity = 0 or else an_arity = 1
 			elseif a_fingerprint = String_join_function_type_code then
 				Result := an_arity = -1 or else an_arity = 2
+			elseif a_fingerprint = Subsequence_function_type_code then
+				Result := an_arity = -1 or else an_arity = 2  or else an_arity = 3
 			elseif a_fingerprint = Substring_function_type_code then
 				Result := an_arity = -1 or else an_arity = 2  or else an_arity = 3
 			elseif a_fingerprint = Substring_before_function_type_code then
@@ -152,6 +156,8 @@ feature -- Element change
 				create {XM_XPATH_ID} a_function_call.make
 			elseif a_fingerprint = In_scope_prefixes_function_type_code then
 				create {XM_XPATH_IN_SCOPE_PREFIXES} a_function_call.make
+			elseif a_fingerprint = Insert_before_function_type_code then
+				create {XM_XPATH_INSERT_BEFORE} a_function_call.make
 			elseif a_fingerprint = Last_function_type_code then
 				create {XM_XPATH_LAST} a_function_call.make
 			elseif a_fingerprint = Local_name_function_type_code then
@@ -180,8 +186,10 @@ feature -- Element change
 				create {XM_XPATH_STRING} a_function_call.make								
 			elseif a_fingerprint = String_join_function_type_code then
 				create {XM_XPATH_STRING_JOIN} a_function_call.make								
+			elseif a_fingerprint = Subsequence_function_type_code then
+				create {XM_XPATH_SUBSEQUENCE} a_function_call.make
 			elseif a_fingerprint = Substring_function_type_code then
-				create {XM_XPATH_SUBSTRING} a_function_call.make								
+				create {XM_XPATH_SUBSTRING} a_function_call.make												
 			elseif a_fingerprint = Substring_before_function_type_code then
 				create {XM_XPATH_SUBSTRING_BEFORE} a_function_call.make								
 			elseif a_fingerprint = Substring_after_function_type_code then

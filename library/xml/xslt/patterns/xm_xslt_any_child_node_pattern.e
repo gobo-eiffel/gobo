@@ -26,10 +26,17 @@ creation
 
 feature {NONE} -- Initialization
 
-	make is
+	make (a_static_context: XM_XPATH_STATIC_CONTEXT) is
 			-- Set original_text.
+		require
+			static_context_not_void: a_static_context /= Void
 		do
+			system_id := a_static_context.system_id
+			line_number := a_static_context.line_number
 			original_text := "child::node()"
+		ensure
+			system_id_set: STRING_.same_string (system_id, a_static_context.system_id)
+			line_number_set: line_number = a_static_context.line_number
 		end
 
 feature -- Access

@@ -19,21 +19,28 @@ inherit
 			type_check
 		end
 
+	XM_XPATH_NAME_UTILITIES
+
 creation
 
 	make
 	
 feature {NONE} -- Initialization
 
-	make (a_name_code: INTEGER; a_key: XM_XPATH_EXPRESSION) is
+	make (a_static_context: XM_XPATH_STATIC_CONTEXT; a_name_code: INTEGER; a_key: XM_XPATH_EXPRESSION) is
 			-- Establish invariant
 		require
 			key_not_void: a_key /= Void
+			static_context_not_void: a_static_context /= Void
 		do
-			key_fingerprint := a_name_code \\ bits_20
+			key_fingerprint := fingerprint_from_name_code (a_name_code)
 			key_expression := a_key
+			system_id := a_static_context.system_id
+			line_number := a_static_context.line_number
 		ensure
 			key_set: key_expression = a_key
+			system_id_set: STRING_.same_string (system_id, a_static_context.system_id)
+			line_number_set: line_number = a_static_context.line_number
 		end
 
 feature -- Access
@@ -124,11 +131,6 @@ feature -- Matching
 				end
 			end
 		end
-
-feature {NONE} -- Implementation
-
-	bits_20: INTEGER is 1048576 
-			-- 0x0fffff
 
 invariant
 

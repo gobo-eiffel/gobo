@@ -68,7 +68,7 @@ feature -- Cursor movement
 			-- Move to next position
 		do
 			index := index + 1
-			if current_iterator = base_iterator and then current_iterator.after then
+			if current_iterator = base_iterator and then not current_iterator.before and then current_iterator.after then
 				current_iterator := second_expression.iterator (context)
 			end
 			current_iterator.forth

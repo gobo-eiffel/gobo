@@ -56,9 +56,9 @@ feature -- Cursor movement
 			-- Move to next position
 		do
 			index := index + 1
-			if first_iterator.after then
+			if not first_iterator.before and then first_iterator.after then
 				second_iterator.forth; if not second_iterator.after then item := second_iterator.item else item := Void end
-			elseif second_iterator.after then
+			elseif not second_iterator.before and then second_iterator.after then
 				first_iterator.forth; if not first_iterator.after then item := first_iterator.item else item := Void end
 			else
 

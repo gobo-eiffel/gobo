@@ -54,6 +54,8 @@ feature {NONE} -- Initialization
 			warnings_to_std_error := warnings
 			is_backwards_compatible_mode := backwards
 			base_uri := a_base_uri
+			system_id := ""
+			line_number := -1
 			available_functions := a_function_library
 		ensure
 			warnings_set: warnings_to_std_error = warnings
@@ -88,6 +90,12 @@ feature -- Access
 	
 	base_uri: UT_URI
 			-- Base URI
+
+	system_id: STRING
+			-- SYSTEM-id
+
+	line_number: INTEGER
+			-- Line number
 
 	default_element_namespace: INTEGER is
 			-- Default XPath namespace, as a namespace code that can be looked up in `name_pool'

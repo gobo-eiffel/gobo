@@ -537,7 +537,23 @@ feature
 			a_boolean_value ?= evaluated_items.item (1)
 			assert ("Boolean true", a_boolean_value /= Void and then a_boolean_value.value = True)
 		end
-	
+
+	test_atomic_values_in_path_expression is
+			-- Final step of path expression is a value-sequence.
+		local
+			an_evaluator: XM_XPATH_EVALUATOR
+			evaluated_items: DS_LINKED_LIST [XM_XPATH_ITEM]
+		do
+			create an_evaluator.make (18, False)
+			an_evaluator.set_string_mode_ascii
+			an_evaluator.build_static_context ("./data/books.xml", False, False, True, True)
+			assert ("Build successfull", not an_evaluator.was_build_error)
+			an_evaluator.evaluate ("//TITLE/(string(.), 'fred', 2.01, 2.01e3, 7)")
+			assert ("No evaluation error", not an_evaluator.is_error)
+			evaluated_items := an_evaluator.evaluated_items
+			assert ("Five evaluated items", evaluated_items /= Void and then evaluated_items.count = 40)
+		end
+
 	-- Eventually, all errors should be tested here
 
 	-- We can't test for XP0002 with the stand-alone evaluator, because it is proof against it. (NO - not if we can put the current iterator into error, or before )
@@ -555,20 +571,6 @@ feature
 			assert ("Evaluation error", an_evaluator.is_error)
 			assert ("XP0003", an_evaluator.error_value.type = Static_error and STRING_.same_string (an_evaluator.error_value.code, "XP0003"))
 
-		end
-
-	test_for_error_xp0004 is
-			-- Type error during static analysis
-		local
-			an_evaluator: XM_XPATH_EVALUATOR			
-		do
-			create an_evaluator.make (18, False)
-			an_evaluator.set_string_mode_ascii
-			an_evaluator.build_static_context ("./data/books.xml", False, False, True, True)
-			assert ("Build successfull", not an_evaluator.was_build_error)
-			an_evaluator.evaluate ("/%"fred%"")
-			assert ("Evaluation error", an_evaluator.is_error)
-			assert ("XP0004", an_evaluator.error_value.type = Type_error and STRING_.same_string (an_evaluator.error_value.code, "XP0004"))
 		end
 
 	test_for_error_xp0006 is
@@ -613,6 +615,34 @@ feature
 			an_evaluator.evaluate ("//TITLE[position(1,2,3)]")
 			assert ("Evaluation error", an_evaluator.is_error)
 			assert ("XP0017", an_evaluator.error_value.type = Static_error and STRING_.same_string (an_evaluator.error_value.code, "XP0017"))
+		end
+
+	test_for_error_xp0018 is
+			-- Final step is heterogeneous
+		local
+			an_evaluator: XM_XPATH_EVALUATOR			
+		do
+			create an_evaluator.make (18, False)
+			an_evaluator.set_string_mode_ascii
+			an_evaluator.build_static_context ("./data/books.xml", False, False, True, True)
+			assert ("Build successfull", not an_evaluator.was_build_error)
+			an_evaluator.evaluate ("//TITLE/(string(.), .)")
+			assert ("Evaluation error", an_evaluator.is_error)
+			assert ("XP0018", an_evaluator.error_value.type = Type_error and STRING_.same_string (an_evaluator.error_value.code, "XP0018"))
+		end
+
+	test_for_error_xp0019 is
+			-- Non-final step is not a node
+		local
+			an_evaluator: XM_XPATH_EVALUATOR			
+		do
+			create an_evaluator.make (18, False)
+			an_evaluator.set_string_mode_ascii
+			an_evaluator.build_static_context ("./data/books.xml", False, False, True, True)
+			assert ("Build successfull", not an_evaluator.was_build_error)
+			an_evaluator.evaluate ("/%"fred%"/%"fred%"")
+			assert ("Evaluation error", an_evaluator.is_error)
+			assert ("XP0019", an_evaluator.error_value.type = Type_error and STRING_.same_string (an_evaluator.error_value.code, "XP0019"))
 		end
 
 	test_for_error_xp0020 is

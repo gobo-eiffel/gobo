@@ -81,21 +81,21 @@ feature -- Conversion
 			when Equals_token, Fortran_equal_token, Not_equal_token, Fortran_not_equal_token then
 				Result := an_operator -- symmetrical operators
 			when Greater_equal_token then
-				Result := Less_than_token
-			when Greater_than_token then
 				Result := Less_equal_token
+			when Greater_than_token then
+				Result := Less_than_token
 			when Less_than_token then
-				Result := Greater_equal_token
-			when Less_equal_token then
 				Result := Greater_than_token
+			when Less_equal_token then
+				Result := Greater_equal_token
 			when Fortran_greater_equal_token then
-				Result := Fortran_less_than_token
-			when Fortran_greater_than_token then
 				Result := Fortran_less_equal_token
+			when Fortran_greater_than_token then
+				Result := Fortran_less_than_token
 			when Fortran_less_than_token then
-				Result := Fortran_greater_equal_token
-			when Fortran_less_equal_token then
 				Result := Fortran_greater_than_token
+			when Fortran_less_equal_token then
+				Result := Fortran_greater_equal_token
 			end
 		end
 

@@ -77,11 +77,10 @@ feature -- Access
 			a_step_type := step.item_type
 			if is_node_item_type (a_step_type) then
 				Result := a_step_type
+			elseif is_atomic_item_type (a_step_type) then
+				Result := a_step_type
 			else
-
-				-- rely on dynamic typing to ensure that it always returns nodes
-				
-				Result := any_node_test
+				Result := any_item -- can't do better than this yet
 			end
 			if Result /= Void then
 				-- Bug in SE 1.0 and 1.1: Make sure that
@@ -246,7 +245,9 @@ feature -- Optimization
 		local
 			a_role, another_role: XM_XPATH_ROLE_LOCATOR
 			a_node_sequence: XM_XPATH_SEQUENCE_TYPE
+			an_atomic_sequence: XM_XPATH_SEQUENCE_TYPE
 			a_type_checker: XM_XPATH_TYPE_CHECKER
+			a_homogeneous_checker: XM_XPATH_HOMOGENEOUS_ITEM_CHECKER
 		do
 			mark_unreplaced
 			create a_type_checker
@@ -267,23 +268,37 @@ feature -- Optimization
 					start.set_unsorted (False)
 					step.set_unsorted (False)
 
-					-- Both operands must be of type node()*
+					-- Start must be of type node()*
+					-- Step must be homogenous (all nodes or all atomic)
 
 					create a_role.make (Binary_expression_role, "/", 1)
 					create a_node_sequence.make_node_sequence
 					a_type_checker.static_type_check (a_context, start, a_node_sequence, False, a_role)
 					if a_type_checker.is_static_type_check_error then
-						set_last_error_from_string (a_type_checker.static_type_check_error_message, Xpath_errors_uri, "XP0004", Type_error)
+						set_last_error_from_string (a_type_checker.static_type_check_error_message, Xpath_errors_uri, "XP0019", Type_error)
 					else
 						set_start (a_type_checker.checked_expression)
 						create another_role.make (Binary_expression_role, "/", 2)
-						a_type_checker.static_type_check (a_context, step, a_node_sequence, False, another_role)
-						if a_type_checker.is_static_type_check_error then
-							set_last_error_from_string (a_type_checker.static_type_check_error_message, Xpath_errors_uri, "XP0004", Type_error)
+						if is_node_item_type (step.item_type) then
+							a_type_checker.static_type_check (a_context, step, a_node_sequence, False, another_role)
+							if a_type_checker.is_static_type_check_error then
+								set_last_error_from_string (a_type_checker.static_type_check_error_message, Xpath_errors_uri, "XP0019", Type_error)
+							else
+								set_step (a_type_checker.checked_expression)
+							end
+						elseif is_atomic_item_type (step.item_type) then
+							create an_atomic_sequence.make_atomic_sequence
+							a_type_checker.static_type_check (a_context, step, an_atomic_sequence, False, another_role)
+							if a_type_checker.is_static_type_check_error then
+								set_last_error_from_string (a_type_checker.static_type_check_error_message, Xpath_errors_uri, "XP0019", Type_error)
+							else
+								set_step (a_type_checker.checked_expression)
+							end
 						else
-							set_step (a_type_checker.checked_expression)
-							optimize (a_context)
+							create a_homogeneous_checker.make (step, another_role)
+							set_step (a_homogeneous_checker)
 						end
+						if not is_error then optimize (a_context) end
 					end
 				else
 					set_last_error (step.error_value)

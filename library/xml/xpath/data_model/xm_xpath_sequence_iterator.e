@@ -48,6 +48,7 @@ feature -- Status report
 			-- Are there any more items in the sequence?
 		require
 			not_in_error: not is_error
+			not_before: not before
 		deferred
 		end
 

@@ -20,7 +20,7 @@ inherit
 		end
 	
 	XM_XPATH_NODE_TEST
-	
+
 feature -- Access
 
 	node_test: XM_XSLT_NODE_TEST is

@@ -316,6 +316,7 @@ feature -- Evaluation
 			finished: BOOLEAN
 			a_position_range: XM_XPATH_POSITION_RANGE
 			a_base_iterator: XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_ITEM]
+			an_empty_iterator: XM_XPATH_EMPTY_ITERATOR [XM_XPATH_ITEM]
 		do
 
 			-- Fast path where both operands are constants
@@ -337,35 +338,38 @@ feature -- Evaluation
 
 				if  a_base_iterator.is_error then
 					Result := a_base_iterator
-				elseif a_base_iterator.after then
-					create {XM_XPATH_EMPTY_ITERATOR [XM_XPATH_ITEM]} Result.make
 				else
-
-					-- Test whether the filter is a constant value
-
-					a_value ?= filter
-
-					if a_value /= Void then
-						finished := True
-						a_number ?= a_value
-						Result := constant_value_iterator (a_number, a_base_iterator, a_context)
-					end
-					
-					-- Construct the FilterIterator to do the actual filtering
-
-					if not finished then
-
-						-- Test whether the filter is a position range, e.g. [position()>$x]
-						-- TODO: handle all such cases with a TailExpression
-
-						a_position_range ?= filter
-						if a_position_range /= Void then
+					an_empty_iterator ?= a_base_iterator
+					if an_empty_iterator /= Void then
+						Result := an_empty_iterator
+					else
+						
+						-- Test whether the filter is a constant value
+						
+						a_value ?= filter
+						
+						if a_value /= Void then
+							finished := True
+							a_number ?= a_value
+							Result := constant_value_iterator (a_number, a_base_iterator, a_context)
+						end
+						
+						-- Construct the FilterIterator to do the actual filtering
+						
+						if not finished then
 							
-							Result := expression_factory.created_item_position_iterator (a_base_iterator, a_position_range.minimum_position, a_position_range.maximum_position)
-						elseif filter_is_positional then
-							create {XM_XPATH_FILTER_ITERATOR} Result.make (a_base_iterator, filter, a_context)
-						else
-							create {XM_XPATH_FILTER_ITERATOR} Result.make_non_numeric (a_base_iterator, filter, a_context)
+							-- Test whether the filter is a position range, e.g. [position()>$x]
+							-- TODO: handle all such cases with a TailExpression
+							
+							a_position_range ?= filter
+							if a_position_range /= Void then
+								
+								Result := expression_factory.created_item_position_iterator (a_base_iterator, a_position_range.minimum_position, a_position_range.maximum_position)
+							elseif filter_is_positional then
+								create {XM_XPATH_FILTER_ITERATOR} Result.make (a_base_iterator, filter, a_context)
+							else
+								create {XM_XPATH_FILTER_ITERATOR} Result.make_non_numeric (a_base_iterator, filter, a_context)
+							end
 						end
 					end
 				end
