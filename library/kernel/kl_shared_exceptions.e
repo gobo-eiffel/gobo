@@ -23,4 +23,16 @@ feature -- Access
 			exceptions_not_void: Result /= Void
 		end
 
+feature -- Obsolete
+
+	exceptions_: KL_EXCEPTIONS is
+			-- Exception handling
+		obsolete
+			"Use `Exceptions' instead."
+		once
+			Result := Exceptions
+		ensure
+			exceptions__not_void: Result /= Void
+		end
+
 end -- class KL_SHARED_EXCEPTIONS

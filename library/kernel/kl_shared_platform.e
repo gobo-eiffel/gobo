@@ -23,4 +23,16 @@ feature -- Access
 			platform_not_void: Result /= Void
 		end
 
+feature -- Obsolete
+
+	platform_: KL_PLATFORM is
+			-- Platform-dependent properties
+		obsolete
+			"Use `Platform' instead."
+		once
+			Result := Platform
+		ensure
+			platform__not_void: Result /= Void
+		end
+
 end -- class KL_SHARED_PLATFORM
