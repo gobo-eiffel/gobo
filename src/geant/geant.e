@@ -32,6 +32,11 @@ inherit
 			{NONE} all
 		end
 
+	UC_UNICODE_FACTORY
+		export
+			{NONE} all
+		end
+
 creation
 
 	make
@@ -42,28 +47,38 @@ feature {NONE} -- Initialization
 			-- Execute 'geant'.
 		local
 			a_project: GEANT_PROJECT
+			a_project_loader: GEANT_PROJECT_LOADER
+			a_project_options: GEANT_PROJECT_OPTIONS
+			a_variables: GEANT_VARIABLES
 			ucs: UC_STRING
 		do
 			Arguments.set_program_name ("geant")
 			!! error_handler.make_standard
 			read_command_line
 
-			if build_filename /= void and then build_filename.count > 0 then
-				ucs := new_unicode_string (build_filename)
-				!! a_project.make_with_filename(ucs, Void, Void)
-			else
-				!! a_project.make (Void)
+			create a_variables.make
+			create a_project_options.make
+			a_project_options.set_verbose (verbose)
+			a_project_options.set_debug_mode (debug_mode)
+			a_project_options.set_no_exec (no_exec)
+
+			if build_filename = Void then
+				build_filename := Default_build_filename
+			end
+			ucs := new_unicode_string (build_filename)
+			create a_project_loader.make (ucs)
+
+			a_project_loader.load (a_variables, a_project_options)
+			a_project := a_project_loader.project_element.project
+			a_project.merge_in_parent_projects
+			if start_target_name /= Void and then start_target_name.count > 0 then
+				a_project.set_start_target_name (start_target_name)
 			end
 
-			a_project.set_verbose (verbose)
-			a_project.set_debug_mode (debug_mode)
-			a_project.set_no_exec (no_exec)
-			a_project.load (start_target_name)
-			if a_project.targets /= Void then
-				a_project.build
-				if not a_project.build_successful then
-					exit_application (1, Void)
-				end
+			a_project.build
+
+			if not a_project.build_successful then
+				exit_application (1, Void)
 			end
 		end
 
@@ -213,6 +228,17 @@ feature {NONE} -- Error handling
 			!! Result.make (s)
 		ensure
 			usage_message_not_void: Result /= Void
+		end
+
+feature {NONE} -- Constants
+
+	Default_build_filename: STRING is
+			-- Default Name of build file
+		once
+			Result := clone ("build.eant")
+		ensure
+			filename_not_void: Result /= Void
+			filename_not_empty: Result.count > 0
 		end
 
 end
