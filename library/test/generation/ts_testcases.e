@@ -16,6 +16,7 @@ class TS_TESTCASES
 inherit
 
 	KL_SHARED_FILE_SYSTEM
+	KL_SHARED_EXECUTION_ENVIRONMENT
 	KL_IMPORTED_STRING_ROUTINES
 
 creation
@@ -92,6 +93,7 @@ feature -- Generation
 			new_name.append_string (class_name)
 			if testgen /= Void and then testgen.count > 0 then
 				a_dirname := file_system.pathname_from_file_system (testgen, unix_file_system)
+				a_dirname := Execution_environment.interpreted_string (a_dirname)
 				!! a_dir.make (a_dirname)
 				if not a_dir.exists then
 					a_dir.recursive_create_directory
@@ -190,6 +192,7 @@ feature -- Generation
 		do
 			if testgen /= Void and then testgen.count > 0 then
 				a_dirname := file_system.pathname_from_file_system (testgen, unix_file_system)
+				a_dirname := Execution_environment.interpreted_string (a_dirname)
 				!! a_dir.make (a_dirname)
 				if not a_dir.exists then
 					a_dir.recursive_create_directory
@@ -225,7 +228,7 @@ feature -- Generation
 				a_file.put_line ("%T%Tdo")
 				a_file.put_string ("%T%T%T!! Result.make (%"")
 				a_file.put_string (class_name)
-				a_file.put_line ("%")")
+				a_file.put_line ("%", variables)")
 				a_cursor := testcases.new_cursor
 				from a_cursor.start until a_cursor.after loop
 					test_name := a_cursor.key
@@ -237,7 +240,7 @@ feature -- Generation
 						a_file.put_string (test_name)
 						a_file.put_string ("! a_test.make (")
 						a_file.put_integer (i)
-						a_file.put_line (")")
+						a_file.put_line (", variables)")
 						a_file.put_line ("%T%T%TResult.put_test (a_test)")
 						i := i + 1
 					end

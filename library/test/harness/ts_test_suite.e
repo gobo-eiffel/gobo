@@ -6,7 +6,7 @@ indexing
 
 	library:    "Gobo Eiffel Test Library"
 	author:     "Eric Bezault <ericb@gobosoft.com>"
-	copyright:  "Copyright (c) 2000, Eric Bezault and others"
+	copyright:  "Copyright (c) 2000-2001, Eric Bezault and others"
 	license:    "Eiffel Forum Freeware License v1 (see forum.txt)"
 	date:       "$Date$"
 	revision:   "$Revision$"
@@ -23,15 +23,20 @@ creation
 
 feature {NONE} -- Initialization
 
-	make (a_name: STRING) is
+	make (a_name: STRING; a_variables: like variables) is
 			-- Create a new test suite named `a_name'.
 		require
 			a_name_not_void: a_name /= Void
+			a_variables_not_void: a_variables /= Void
+			no_void_variable_name: not a_variables.has (Void)
+			no_void_variable_value: not a_variables.has_item (Void)
 		do
 			name := a_name
+			variables := a_variables
 			!! tests.make
 		ensure
 			name_set: name = a_name
+			variables_set: variables = a_variables
 		end
 
 feature -- Access

@@ -6,7 +6,7 @@ indexing
 
 	library:    "Gobo Eiffel Test Library"
 	author:     "Eric Bezault <ericb@gobosoft.com>"
-	copyright:  "Copyright (c) 2000, Eric Bezault and others"
+	copyright:  "Copyright (c) 2000-2001, Eric Bezault and others"
 	license:    "Eiffel Forum Freeware License v1 (see forum.txt)"
 	date:       "$Date$"
 	revision:   "$Revision$"
@@ -25,6 +25,7 @@ feature {NONE} -- Initialization
 			-- Create a new tester.
 		do
 			!! error_handler.make_standard
+			!! variables.make (10)
 		end
 
 	make is
@@ -59,6 +60,9 @@ feature -- Access
 			suite_not_void: Result /= Void
 		end
 
+	variables: DS_HASH_TABLE [STRING, STRING]
+			-- Defined variables
+
 	output_filename: STRING
 			-- Output filename
 
@@ -78,7 +82,7 @@ feature -- Execution
 			a_suite.execute (a_summary)
 			a_summary.print_summary (a_suite, a_file)
 			if not a_summary.is_successful then
-				a_file.put_character ('%N')
+				a_file.put_new_line
 				a_summary.print_errors (a_file)
 			end
 		end
@@ -131,5 +135,8 @@ feature {NONE} -- Error handling
 invariant
 
 	error_handler_not_void: error_handler /= Void
+	variables_not_void: variables /= Void
+	no_void_variable_name: not variables.has (Void)
+	no_void_variable_value: not variables.has_item (Void)
 
 end -- class TS_TESTER

@@ -6,7 +6,7 @@ indexing
 
 	library:    "Gobo Eiffel Test Library"
 	author:     "Eric Bezault <ericb@gobosoft.com>"
-	copyright:  "Copyright (c) 2000, Eric Bezault and others"
+	copyright:  "Copyright (c) 2000-2001, Eric Bezault and others"
 	license:    "Eiffel Forum Freeware License v1 (see forum.txt)"
 	date:       "$Date$"
 	revision:   "$Revision$"
@@ -20,12 +20,18 @@ inherit
 
 feature {NONE} -- Initialization
 
-	make (an_id: INTEGER) is
+	make (an_id: INTEGER; a_variables: like variables) is
 			-- Create a new test case with id `an_id'.
+		require
+			a_variables_not_void: a_variables /= Void
+			no_void_variable_name: not a_variables.has (Void)
+			no_void_variable_value: not a_variables.has_item (Void)
 		do
 			id := an_id
+			variables := a_variables
 		ensure
 			id_set: id = an_id
+			variables_set: variables = a_variables
 		end
 
 feature -- Access
