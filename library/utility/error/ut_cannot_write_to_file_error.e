@@ -22,14 +22,14 @@ creation
 
 feature {NONE} -- Initialization
 
-	make (filename: STRING) is
+	make (a_filename: STRING) is
 			-- Create a new error reporting that file
-			-- `filename' cannot be opened in write mode.
+			-- `a_filename' cannot be opened in write mode.
 		require
-			filename_not_void: filename /= Void
+			a_filename_not_void: a_filename /= Void
 		do
 			!! parameters.make (1, 1)
-			parameters.put (filename, 1)
+			parameters.put (a_filename, 1)
 		end
 
 feature -- Access
