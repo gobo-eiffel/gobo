@@ -94,23 +94,26 @@ feature {NONE} -- Precompilation
 		local
 			eif_compiler: STRING
 			define_base: STRING
-			ise_5_1: STRING
+			dotnet: STRING
 		do
-			ise_5_1 := Execution_environment.variable_value ("ISE_5_1")
+			dotnet := Execution_environment.variable_value ("GOBO_DOTNET")
 			old_cwd := file_system.cwd
 			file_system.create_directory (testdir)
 			assert (testdir + "_exists", file_system.directory_exists (testdir))
 			file_system.cd (testdir)
+				-- Make sure that there is not left-over from
+				-- previous precompilation.
+			assert ("EIFGEN_not_exists", not file_system.directory_exists ("EIFGEN"))
 				-- Generate Ace file.
 			if base then
-				if ise_5_1 /= Void and then ise_5_1.count > 0 then
-					define_base := "--define=%"GOBO_EIFFELBASE ISE_5_1%" "
+				if dotnet /= Void and then dotnet.count > 0 then
+					define_base := "--define=%"GOBO_EIFFELBASE GOBO_DOTNET%" "
 				else
 					define_base := "--define=%"GOBO_EIFFELBASE%" "
 				end
 			else
-				if ise_5_1 /= Void and then ise_5_1.count > 0 then
-					define_base := "--define=%"ISE_5_1%" "
+				if dotnet /= Void and then dotnet.count > 0 then
+					define_base := "--define=%"GOBO_DOTNET%" "
 				else
 					define_base := ""
 				end
@@ -122,11 +125,15 @@ feature {NONE} -- Precompilation
 			file_system.cd (file_system.pathname ("EIFGEN", "W_code"))
 			assert_execute ("finish_freezing -silent" + output_log)
 				-- Check creation of precompiled files.
-			eif_compiler := Execution_environment.variable_value ("ISE_C_COMPILER")
-			if eif_compiler /= Void and then eif_compiler.count > 0 then
-				assert ("driver_exists", file_system.file_exists (file_system.pathname (eif_compiler, "driver" + file_system.exe_extension)))
+			if dotnet /= Void and then dotnet.count > 0 then
+				assert ("driver_exists", file_system.file_exists ("precomp" + file_system.exe_extension))
 			else
-				assert ("driver_exists", file_system.file_exists ("driver" + file_system.exe_extension))
+				eif_compiler := Execution_environment.variable_value ("ISE_C_COMPILER")
+				if eif_compiler /= Void and then eif_compiler.count > 0 then
+					assert ("driver_exists", file_system.file_exists (file_system.pathname (eif_compiler, "driver" + file_system.exe_extension)))
+				else
+					assert ("driver_exists", file_system.file_exists ("driver" + file_system.exe_extension))
+				end
 			end
 				-- Done.
 			file_system.cd (old_cwd)
