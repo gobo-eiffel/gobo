@@ -5,12 +5,25 @@
 <meta http-equiv="Content-Type"
 content="text/html; charset=iso-8859-1">
 <meta name="GENERATOR" content="Microsoft FrontPage 2.0">
-<title>Traversable structures</title>
+<title>Traversable Containers</title>
 </head>
 
 <body bgcolor="#FFFFFF">
 
-<h2>Description</h2>
+<table border="0" width="100%">
+    <tr>
+        <td><font size="6"><strong>Traversable Containers</strong></font></td>
+        <td align="right"><a href="container.html"><img
+        src="../image/previous.gif" alt="Previous" border="0"
+        width="40" height="40"></a><a href="search.html"><img
+        src="../image/next.gif" alt="Next" border="0" width="40"
+        height="40"></a></td>
+    </tr>
+</table>
+
+<hr size="1">
+
+<p align="center"><img src="cursor.gif" width="514" height="298"></p>
 
 <p>Data structures such as lists may want to provide their
 clients with a way to access and traverse their elements. This
@@ -18,60 +31,85 @@ notion of traversal mechanism seems to be simple to design: one
 just has to add, using inheritance, the traversal operation
 features to the traversable container interfaces. However some
 data structures might have different traversal policies. For
-example, a tree structure might be traversed in preorder,
-postorder or breadth-first depending on its clients' needs.
-Including the operations for such different traversals in the
-data structures' class interface is hardly possible for two
-reasons: the class interface will rapidly be too complex, making
-more important features difficult to spot; and one cannot
-anticipate all possible traversal policies relevant to all
-clients of a data structure. Another important facility to take
-into account is to allow a data structure to traversed more than
-once at the same time. </p>
+example, a tree structure might be traversed in <em>preorder</em>,
+<em>postorder</em> or <em>breadth-first</em> depending on its
+clients' needs. Including the operations for such different
+traversals in the data structures' class interface is hardly
+possible for two reasons: the class interface will rapidly be too
+complex, making more important features difficult to spot; and
+one cannot anticipate all possible traversal policies relevant to
+all clients of a data structure. Another important facility to
+take into account is to allow a data structure to be traversed
+more than once at the same time. </p>
 
-<p>The use of the <b>Iterator pattern</b> as described in <a
-href="bibliography.html#dp">Design Patterns</a> solves the
-concerns expressed above. The key idea of this pattern is to take
-the responsibility for access and traversal out of the data
-structure and put it into a <b>cursor</b> object. This way, it is
-very straightforward to traverse the same data structure at once:
-each cursor just has to keep track of its own traversal state.
+<p>The use of the <em><strong>iterator pattern</strong></em> as
+described in <em>Design Patterns</em> solves the concerns
+expressed above. The key idea of this pattern is to take the
+responsibility for access and traversal out of the data structure
+and put it into a cursor object. This way, it is very
+straightforward to traverse the same data structure at once: each
+cursor just has to keep track of its own traversal state.
 Moreover the traversal algorithm being held in cursors, it is
 very easy to switch from one traversal policy to another for a
 given data structure just by using a different kind of cursor. </p>
 
-<p>Typically, traversable structures are heirs of class <i>TRAVERSABLE</i>.
-This class is only responsible for providing its clients with new
-cursors (instances of class <i>CURSOR</i>). This is achieved
-through feature <i>cursor</i>. Traversable structures are also
-equipped with the boolean-valued query <i>valid_cursor</i>
+<p>Typically, traversable structures are heirs of class <font
+color="#008080"><em><tt>DS_TRAVERSABLE</tt></em></font>. This
+class is only responsible for providing its clients with new
+cursors (instances of class <font color="#008080"><em><tt>DS_CURSOR</tt></em></font>).
+This is achieved through feature <font color="#008080"><em><tt>new_cursor</tt></em></font>.
+Traversable structures are also equipped with the boolean-valued
+query <font color="#008080"><em><tt>valid_cursor</tt></em></font>
 providing a means to check whether a given cursor can be used to
 traverse the current container. Cursors supplied by one data
 structure cannot be used to traverse another structure, even if
 the structures are of the same type. This is enforced by the fact
 that each cursor knows about the structure it is traversing.
-Apart from this <i>container</i> reference, class <i>CURSOR</i>
-has a boolean-valued query <i>off</i> stating whether there is an
-element at the current cursor position, and <i>item</i> returning
-this element. </p>
+Apart from this container reference, class <font color="#008080"><em><tt>DS_CURSOR
+</tt></em></font>has a boolean-valued query <font color="#008080"><em><tt>off
+</tt></em></font>stating whether there is an element at the
+current cursor position, and <font color="#008080"><em><tt>item </tt></em></font>returning
+this element. All features in the cursor classes have a
+precondition <font color="#008080"><em><tt>is_valid </tt></em></font>ensuring
+that the cursor is still synchronized with the structure. For
+example a cursor pointing to an item which has been removed from
+the container won't be valid any more.</p>
 
-<h2>Discussion</h2>
+<p><img src="../image/construction.gif" width="40" height="40"></p>
 
 <hr size="1">
 
-<address>
-    <font size="2"><b>Copyright © 1997</b></font><font size="1"><b>,
-    </b></font><font size="2"><strong>Eric Bezault</strong></font><strong>
-    </strong><font size="2"><br>
-    </font><a href="mailto:ericb@gobo.demon.co.uk"><font size="2">ericb@gobo.demon.co.uk</font></a><font
-    size="2"> <br>
-    </font><a href="http://www.gobo.demon.co.uk"><font size="2">http://www.gobo.demon.co.uk</font></a><font
-    size="2"><br>
-    <strong>Last Updated:</strong> 4 October 1997</font><br>
-    <!--webbot bot="PurpleText"
-    preview="
+<table border="0" width="100%">
+    <tr>
+        <td><address>
+            <font size="2"><b>Copyright © 1997</b></font><font
+            size="1"><b>, </b></font><font size="2"><strong>Eric
+            Bezault</strong></font><strong> </strong><font
+            size="2"><br>
+            </font><a href="mailto:ericb@gobo.demon.co.uk"><font
+            size="2">ericb@gobo.demon.co.uk</font></a><font
+            size="2"> <br>
+            </font><a href="http://www.gobo.demon.co.uk"><font
+            size="2">http://www.gobo.demon.co.uk</font></a><font
+            size="2"><br>
+            <strong>Last Updated:</strong> 17 December 1997</font><br>
+            <!--webbot bot="PurpleText"
+            preview="
 $Date$ 
 $Revision$" --> 
-</address>
+        </address>
+        </td>
+        <td align="right" valign="top"><a
+        href="http://www.gobo.demon.co.uk"><img
+        src="../image/home.gif" alt="Home" border="0" width="40"
+        height="40"></a><a href="index.html"><img
+        src="../image/toc.gif" alt="Toc" border="0" width="40"
+        height="40"></a><a href="container.html"><img
+        src="../image/previous.gif" alt="Previous" border="0"
+        width="40" height="40"></a><a href="search.html"><img
+        src="../image/next.gif" alt="Next" border="0" width="40"
+        height="40"></a></td>
+    </tr>
+</table>
 </body>
 </html>
