@@ -112,10 +112,7 @@ feature {NONE} -- Name comparison with namespace.
 		require
 			named_not_void: a_named /= Void
 		do
-			Result := same_string (a_named.name, a_name) 
-				and 
-					(a_named.namespace.is_default_namespace or same_namespace (a_named))
-			-- TODO: should we remove same_namespace?
+			Result := same_string (a_named.name, a_name) and a_named.namespace.is_default_namespace
 		ensure
 			same_name: Result implies same_string (a_named.name, a_name)
 			default_ns: a_named.namespace.is_default_namespace implies (Result = same_string (a_named.name, a_name))
