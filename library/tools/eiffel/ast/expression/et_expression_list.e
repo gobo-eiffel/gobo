@@ -69,7 +69,7 @@ feature -- Access
 			i_large_enough: i >= 1
 			i_small_enough: i <= count
 		do
-			Result := item (i).expression_item
+			Result := item (i).expression
 		ensure
 			expression_not_void: Result /= Void
 		end

@@ -41,6 +41,8 @@ feature -- Conversion
 		do
 			Result := universe.new_deferred_procedure (a_name, arguments,
 				obsolete_message, preconditions, postconditions, clients, current_class)
+			Result.set_is_keyword (is_keyword)
+			Result.set_end_keyword (end_keyword)
 			Result.set_implementation_class (implementation_class)
 			if seeds /= Void then
 				Result.set_seeds (seeds)

@@ -22,22 +22,22 @@ creation
 
 feature {NONE} -- Initialization
 
-	make (a_term: like indexing_term_item; a_comma: like comma) is
+	make (a_term: like indexing_term; a_comma: like comma) is
 			-- Create a new indexing_term-comma.
 		require
 			a_term_not_void: a_term /= Void
 			a_comma_not_void: a_comma /= Void
 		do
-			indexing_term_item := a_term
+			indexing_term := a_term
 			comma := a_comma
 		ensure
-			indexing_term_item_set: indexing_term_item = a_term
+			indexing_term_set: indexing_term = a_term
 			comma_set: comma = a_comma
 		end
 
 feature -- Access
 
-	indexing_term_item: ET_INDEXING_TERM
+	indexing_term: ET_INDEXING_TERM
 			-- Indexing term in comma-separated list
 
 	comma: ET_SYMBOL
@@ -47,7 +47,7 @@ feature -- Access
 			-- Position of first character of
 			-- current node in source code
 		do
-			Result := indexing_term_item.position
+			Result := indexing_term.position
 		end
 
 	break: ET_BREAK is

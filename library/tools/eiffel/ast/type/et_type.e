@@ -19,12 +19,20 @@ inherit
 			base_type
 		end
 
+	ET_DECLARED_TYPE
+
 	KL_IMPORTED_STRING_ROUTINES
 
 feature -- Access
 
-	type_item: ET_TYPE is
+	type: ET_TYPE is
 			-- Type in comma-separated list
+		do
+			Result := Current
+		end
+
+	declared_type: ET_TYPE is
+			-- Declared type
 		do
 			Result := Current
 		end

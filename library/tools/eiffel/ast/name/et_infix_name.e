@@ -37,7 +37,7 @@ feature -- Access
 			-- Infix keyword
 
 	operator_name: ET_MANIFEST_STRING
-			-- Name of prefix operator
+			-- Name of infix operator
 
 	position: ET_POSITION is
 			-- Position of first character of

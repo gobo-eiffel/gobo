@@ -185,21 +185,21 @@ feature -- Type processing
 		local
 			i: INTEGER
 			arg: ET_FORMAL_ARGUMENT
-			a_type, new_type: ET_TYPE
+			a_type, new_type: ET_DECLARED_TYPE
 		do
 			i := count
 			from until i < 1 loop
 				arg := formal_argument (i)
-				if arg.type = a_type then
+				if arg.declared_type = a_type then
 						-- This argument shares the same
 						-- type as the previous argument.
-					arg.set_type (new_type)
+					arg.set_declared_type (new_type)
 				else
-					a_type := arg.type
-					if a_type.has_formal_parameters (actual_parameters) then
+					a_type := arg.declared_type
+					if a_type.declared_type.has_formal_parameters (actual_parameters) then
 						new_type := a_type.deep_cloned_type
 						new_type := new_type.resolved_formal_parameters (actual_parameters)
-						arg.set_type (new_type)
+						arg.set_declared_type (new_type)
 					else
 						new_type := a_type
 					end

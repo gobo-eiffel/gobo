@@ -61,7 +61,7 @@ feature -- Access
 			Result := index
 		end
 
-	formal_generic_parameter_item: ET_FORMAL_GENERIC_PARAMETER is
+	formal_generic_parameter: ET_FORMAL_GENERIC_PARAMETER is
 			-- Formal generic parameter in comma-separated list
 		do
 			Result := Current

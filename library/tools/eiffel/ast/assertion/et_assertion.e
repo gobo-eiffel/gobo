@@ -18,7 +18,7 @@ inherit
 
 feature -- Access
 
-	assertion_item: ET_ASSERTION is
+	assertion: ET_ASSERTION is
 			-- Assertion in list of assertions
 		do
 			Result := Current

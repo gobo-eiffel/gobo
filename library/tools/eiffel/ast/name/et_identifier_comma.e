@@ -23,22 +23,22 @@ creation
 
 feature {NONE} -- Initialization
 
-	make (a_name: like identifier_item; a_comma: like comma) is
+	make (a_name: like identifier; a_comma: like comma) is
 			-- Create a new identifier-comma.
 		require
 			a_name_not_void: a_name /= Void
 			a_comma_not_void: a_comma /= Void
 		do
-			identifier_item := a_name
+			identifier := a_name
 			comma := a_comma
 		ensure
-			identifier_item_set: identifier_item = a_name
+			identifier_set: identifier = a_name
 			comma_set: comma = a_comma
 		end
 
 feature -- Access
 
-	identifier_item: ET_IDENTIFIER
+	identifier: ET_IDENTIFIER
 			-- Identifier
 
 	comma: ET_SYMBOL
@@ -48,7 +48,7 @@ feature -- Access
 			-- Position of first character of
 			-- current node in source code
 		do
-			Result := identifier_item.position
+			Result := identifier.position
 		end
 
 	break: ET_BREAK is

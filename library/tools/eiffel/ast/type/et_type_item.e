@@ -18,11 +18,11 @@ inherit
 
 feature -- Access
 
-	type_item: ET_TYPE is
+	type: ET_TYPE is
 			-- Type in comma-separated list
 		deferred
 		ensure
-			type_item_not_void: Result /= Void
+			type_not_void: Result /= Void
 		end
 
 feature -- Type processing

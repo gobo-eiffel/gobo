@@ -22,22 +22,22 @@ creation
 
 feature {NONE} -- Initialization
 
-	make (a_type: like type_item; a_comma: like comma) is
+	make (a_type: like type; a_comma: like comma) is
 			-- Create a new type-comma.
 		require
 			a_type_not_void: a_type /= Void
 			a_comma_not_void: a_comma /= Void
 		do
-			type_item := a_type
+			type := a_type
 			comma := a_comma
 		ensure
-			type_item_set: type_item = a_type
+			type_set: type = a_type
 			comma_set: comma = a_comma
 		end
 
 feature -- Access
 
-	type_item: ET_TYPE
+	type: ET_TYPE
 			-- Type in comma-separated list
 
 	comma: ET_SYMBOL
@@ -47,7 +47,7 @@ feature -- Access
 			-- Position of first character of
 			-- current node in source code
 		do
-			Result := type_item.position
+			Result := type.position
 		end
 
 	break: ET_BREAK is
@@ -67,8 +67,8 @@ feature -- Type processing
 		local
 			a_type: ET_TYPE
 		do
-			a_type := type_item.resolved_formal_parameters (actual_parameters)
-			if a_type /= type_item then
+			a_type := type.resolved_formal_parameters (actual_parameters)
+			if a_type /= type then
 				!! Result.make (a_type, comma)
 			else
 				Result := Current
@@ -85,8 +85,8 @@ feature -- Type processing
 		local
 			a_type: ET_TYPE
 		do
-			a_type := type_item.resolved_identifier_types (a_feature, args, a_class)
-			if a_type /= type_item then
+			a_type := type.resolved_identifier_types (a_feature, args, a_class)
+			if a_type /= type then
 				!! Result.make (a_type, comma)
 			else
 				Result := Current
@@ -102,8 +102,8 @@ feature -- Type processing
 		local
 			a_type: ET_TYPE
 		do
-			a_type := type_item.resolved_named_types (a_class, ast_factory)
-			if a_type /= type_item then
+			a_type := type.resolved_named_types (a_class, ast_factory)
+			if a_type /= type then
 				!! Result.make (a_type, comma)
 			else
 				Result := Current
@@ -120,8 +120,8 @@ feature -- Conversion
 		local
 			a_base_type: ET_TYPE
 		do
-			a_base_type := type_item.base_type (a_feature, a_type)
-			if a_base_type /= type_item then
+			a_base_type := type.base_type (a_feature, a_type)
+			if a_base_type /= type then
 				!! Result.make (a_base_type, comma)
 			else
 				Result := Current
@@ -135,8 +135,8 @@ feature -- Duplication
 		local
 			a_type: ET_TYPE
 		do
-			a_type := type_item.deep_cloned_type
-			if a_type /= type_item then
+			a_type := type.deep_cloned_type
+			if a_type /= type then
 				!! Result.make (a_type, comma)
 			else
 				Result := Current

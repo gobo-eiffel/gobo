@@ -22,22 +22,22 @@ creation
 
 feature {NONE} -- Initialization
 
-	make (a_formal: like formal_generic_parameter_item; a_comma: like comma) is
+	make (a_formal: like formal_generic_parameter; a_comma: like comma) is
 			-- Create a new formal_generic_parameter-comma.
 		require
 			a_formal_not_void: a_formal /= Void
 			a_comma_not_void: a_comma /= Void
 		do
-			formal_generic_parameter_item := a_formal
+			formal_generic_parameter := a_formal
 			comma := a_comma
 		ensure
-			formal_generic_parameter_item_set: formal_generic_parameter_item = a_formal
+			formal_generic_parameter_set: formal_generic_parameter = a_formal
 			comma_set: comma = a_comma
 		end
 
 feature -- Access
 
-	formal_generic_parameter_item: ET_FORMAL_GENERIC_PARAMETER
+	formal_generic_parameter: ET_FORMAL_GENERIC_PARAMETER
 			-- Formal generic parameter in comma-separated list
 
 	comma: ET_SYMBOL
@@ -47,7 +47,7 @@ feature -- Access
 			-- Position of first character of
 			-- current node in source code
 		do
-			Result := formal_generic_parameter_item.position
+			Result := formal_generic_parameter.position
 		end
 
 	break: ET_BREAK is

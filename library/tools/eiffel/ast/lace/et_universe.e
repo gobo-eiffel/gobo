@@ -181,7 +181,7 @@ feature -- Basic classes
 
 feature -- Factory
 
-	new_attribute (a_name: ET_FEATURE_NAME; a_type: ET_TYPE;
+	new_attribute (a_name: ET_FEATURE_NAME_ITEM; a_type: ET_DECLARED_TYPE;
 		a_clients: ET_CLASS_NAME_LIST; a_class: ET_CLASS): ET_ATTRIBUTE is
 			-- New attribute feature for `a_class'
 		require
@@ -199,7 +199,7 @@ feature -- Factory
 			attribute_not_void: Result /= Void
 		end
 
-	new_constant_attribute (a_name: ET_FEATURE_NAME; a_type: ET_TYPE; a_constant: ET_CONSTANT;
+	new_constant_attribute (a_name: ET_FEATURE_NAME_ITEM; a_type: ET_DECLARED_TYPE; a_constant: ET_CONSTANT;
 		a_clients: ET_CLASS_NAME_LIST; a_class: ET_CLASS): ET_CONSTANT_ATTRIBUTE is
 			-- New constant attribute feature for `a_class'
 		require
@@ -218,8 +218,8 @@ feature -- Factory
 			constant_attribute_not_void: Result /= Void
 		end
 
-	new_deferred_function (a_name: ET_FEATURE_NAME; args: ET_FORMAL_ARGUMENTS;
-		a_type: ET_TYPE; an_obsolete: ET_OBSOLETE; a_preconditions: ET_PRECONDITIONS;
+	new_deferred_function (a_name: ET_FEATURE_NAME_ITEM; args: ET_FORMAL_ARGUMENTS;
+		a_type: ET_DECLARED_TYPE; an_obsolete: ET_OBSOLETE; a_preconditions: ET_PRECONDITIONS;
 		a_postconditions: ET_POSTCONDITIONS; a_clients: ET_CLASS_NAME_LIST;
 		a_class: ET_CLASS): ET_DEFERRED_FUNCTION is
 			-- New deferred function feature for `a_class'
@@ -239,7 +239,7 @@ feature -- Factory
 			deferred_function_not_void: Result /= Void
 		end
 
-	new_deferred_procedure (a_name: ET_FEATURE_NAME; args: ET_FORMAL_ARGUMENTS;
+	new_deferred_procedure (a_name: ET_FEATURE_NAME_ITEM; args: ET_FORMAL_ARGUMENTS;
 		an_obsolete: ET_OBSOLETE; a_preconditions: ET_PRECONDITIONS;
 		a_postconditions: ET_POSTCONDITIONS; a_clients: ET_CLASS_NAME_LIST;
 		a_class: ET_CLASS): ET_DEFERRED_PROCEDURE is
@@ -259,8 +259,8 @@ feature -- Factory
 			deferred_procedure_not_void: Result /= Void
 		end
 
-	new_do_function (a_name: ET_FEATURE_NAME; args: ET_FORMAL_ARGUMENTS; a_type: ET_TYPE;
-		an_obsolete: ET_OBSOLETE; a_preconditions: ET_PRECONDITIONS;
+	new_do_function (a_name: ET_FEATURE_NAME_ITEM; args: ET_FORMAL_ARGUMENTS;
+		a_type: ET_DECLARED_TYPE; an_obsolete: ET_OBSOLETE; a_preconditions: ET_PRECONDITIONS;
 		a_locals: ET_LOCAL_VARIABLES; a_compound: ET_COMPOUND;
 		a_postconditions: ET_POSTCONDITIONS; a_rescue: ET_COMPOUND;
 		a_clients: ET_CLASS_NAME_LIST; a_class: ET_CLASS): ET_DO_FUNCTION is
@@ -268,6 +268,7 @@ feature -- Factory
 		require
 			a_name_not_void: a_name /= Void
 			a_type_not_void: a_type /= Void
+			a_compound_not_void: a_compound /= Void
 			a_clients_not_void: a_clients /= Void
 			a_class_not_void: a_class /= Void
 		local
@@ -281,7 +282,7 @@ feature -- Factory
 			do_function_not_void: Result /= Void
 		end
 
-	new_do_procedure (a_name: ET_FEATURE_NAME; args: ET_FORMAL_ARGUMENTS;
+	new_do_procedure (a_name: ET_FEATURE_NAME_ITEM; args: ET_FORMAL_ARGUMENTS;
 		an_obsolete: ET_OBSOLETE; a_preconditions: ET_PRECONDITIONS;
 		a_locals: ET_LOCAL_VARIABLES; a_compound: ET_COMPOUND;
 		a_postconditions: ET_POSTCONDITIONS; a_rescue: ET_COMPOUND;
@@ -289,6 +290,7 @@ feature -- Factory
 			-- New do procedure feature for `a_class'
 		require
 			a_name_not_void: a_name /= Void
+			a_compound_not_void: a_compound /= Void
 			a_clients_not_void: a_clients /= Void
 			a_class_not_void: a_class /= Void
 		local
@@ -302,9 +304,9 @@ feature -- Factory
 			do_procedure_not_void: Result /= Void
 		end
 
-	new_external_function (a_name: ET_FEATURE_NAME; args: ET_FORMAL_ARGUMENTS;
-		a_type: ET_TYPE; an_obsolete: ET_OBSOLETE; a_preconditions: ET_PRECONDITIONS;
-		a_language: ET_MANIFEST_STRING; an_alias: ET_MANIFEST_STRING;
+	new_external_function (a_name: ET_FEATURE_NAME_ITEM; args: ET_FORMAL_ARGUMENTS;
+		a_type: ET_DECLARED_TYPE; an_obsolete: ET_OBSOLETE; a_preconditions: ET_PRECONDITIONS;
+		a_language: ET_EXTERNAL_LANGUAGE; an_alias: ET_EXTERNAL_ALIAS;
 		a_postconditions: ET_POSTCONDITIONS; a_clients: ET_CLASS_NAME_LIST;
 		a_class: ET_CLASS): ET_EXTERNAL_FUNCTION is
 			-- New external function feature for `a_class'
@@ -326,9 +328,9 @@ feature -- Factory
 			external_function_not_void: Result /= Void
 		end
 
-	new_external_procedure (a_name: ET_FEATURE_NAME; args: ET_FORMAL_ARGUMENTS;
+	new_external_procedure (a_name: ET_FEATURE_NAME_ITEM; args: ET_FORMAL_ARGUMENTS;
 		an_obsolete: ET_OBSOLETE; a_preconditions: ET_PRECONDITIONS;
-		a_language: ET_MANIFEST_STRING; an_alias: ET_MANIFEST_STRING;
+		a_language: ET_EXTERNAL_LANGUAGE; an_alias: ET_EXTERNAL_ALIAS;
 		a_postconditions: ET_POSTCONDITIONS; a_clients: ET_CLASS_NAME_LIST;
 		a_class: ET_CLASS): ET_EXTERNAL_PROCEDURE is
 			-- New external procedure feature for `a_class'
@@ -349,8 +351,8 @@ feature -- Factory
 			external_procedure_not_void: Result /= Void
 		end
 
-	new_once_function (a_name: ET_FEATURE_NAME; args: ET_FORMAL_ARGUMENTS; a_type: ET_TYPE;
-		an_obsolete: ET_OBSOLETE; a_preconditions: ET_PRECONDITIONS;
+	new_once_function (a_name: ET_FEATURE_NAME_ITEM; args: ET_FORMAL_ARGUMENTS;
+		a_type: ET_DECLARED_TYPE; an_obsolete: ET_OBSOLETE; a_preconditions: ET_PRECONDITIONS;
 		a_locals: ET_LOCAL_VARIABLES; a_compound: ET_COMPOUND;
 		a_postconditions: ET_POSTCONDITIONS; a_rescue: ET_COMPOUND;
 		a_clients: ET_CLASS_NAME_LIST; a_class: ET_CLASS): ET_ONCE_FUNCTION is
@@ -358,6 +360,7 @@ feature -- Factory
 		require
 			a_name_not_void: a_name /= Void
 			a_type_not_void: a_type /= Void
+			a_compound_not_void: a_compound /= Void
 			a_clients_not_void: a_clients /= Void
 			a_class_not_void: a_class /= Void
 		local
@@ -371,7 +374,7 @@ feature -- Factory
 			once_function_not_void: Result /= Void
 		end
 
-	new_once_procedure (a_name: ET_FEATURE_NAME; args: ET_FORMAL_ARGUMENTS;
+	new_once_procedure (a_name: ET_FEATURE_NAME_ITEM; args: ET_FORMAL_ARGUMENTS;
 		an_obsolete: ET_OBSOLETE; a_preconditions: ET_PRECONDITIONS;
 		a_locals: ET_LOCAL_VARIABLES; a_compound: ET_COMPOUND;
 		a_postconditions: ET_POSTCONDITIONS; a_rescue: ET_COMPOUND;
@@ -379,6 +382,7 @@ feature -- Factory
 			-- New once procedure feature for `a_class'
 		require
 			a_name_not_void: a_name /= Void
+			a_compound_not_void: a_compound /= Void
 			a_clients_not_void: a_clients /= Void
 			a_class_not_void: a_class /= Void
 		local
@@ -392,7 +396,7 @@ feature -- Factory
 			once_procedure_not_void: Result /= Void
 		end
 
-	new_unique_attribute (a_name: ET_FEATURE_NAME; a_type: ET_TYPE;
+	new_unique_attribute (a_name: ET_FEATURE_NAME_ITEM; a_type: ET_DECLARED_TYPE;
 		a_clients: ET_CLASS_NAME_LIST; a_class: ET_CLASS): ET_UNIQUE_ATTRIBUTE is
 			-- New unique attribute declaration for `a_class'
 		require

@@ -18,11 +18,11 @@ inherit
 
 feature -- Access
 
-	feature_name_item: ET_FEATURE_NAME is
+	feature_name: ET_FEATURE_NAME is
 			-- Feature name in comma-separated list
 		deferred
 		ensure
-			feature_name_item_not_void: Result /= Void
+			feature_name_not_void: Result /= Void
 		end
 
 end

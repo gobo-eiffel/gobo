@@ -18,11 +18,11 @@ inherit
 
 feature -- Access
 
-	expression_item: ET_EXPRESSION is
+	expression: ET_EXPRESSION is
 			-- Expression in comma-separated list
 		deferred
 		ensure
-			expression_item_not_void: Result /= Void
+			expression_not_void: Result /= Void
 		end
 
 end

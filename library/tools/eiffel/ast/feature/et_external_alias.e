@@ -2,7 +2,7 @@ indexing
 
 	description:
 
-		"Eiffel indexing clauses which appear in a semicolon-separated list of indexing clauses"
+		"Eiffel alias clauses in external routines"
 
 	library: "Gobo Eiffel Tools Library"
 	copyright: "Copyright (c) 2002, Eric Bezault and others"
@@ -10,7 +10,7 @@ indexing
 	date: "$Date$"
 	revision: "$Revision$"
 
-deferred class ET_INDEXING_ITEM
+deferred class ET_EXTERNAL_ALIAS
 
 inherit
 
@@ -18,11 +18,11 @@ inherit
 
 feature -- Access
 
-	indexing_clause: ET_INDEXING is
-			-- Indexing clause in semicolon-separated list
+	manifest_string: ET_MANIFEST_STRING is
+			-- Manifest string
 		deferred
 		ensure
-			indexing_clause_not_void: Result /= Void
+			manifest_string_not_void: Result /= Void
 		end
 
 end

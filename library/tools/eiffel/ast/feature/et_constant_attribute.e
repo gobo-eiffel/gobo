@@ -20,13 +20,15 @@ inherit
 			is_prefixable
 		end
 
+	ET_SHARED_TOKEN_CONSTANTS
+
 creation
 
 	make
 
 feature {NONE} -- Initialization
 
-	make (a_name: like name; a_type: like type; a_constant: like constant;
+	make (a_name: like name_item; a_type: like declared_type; a_constant: like constant;
 		a_clients: like clients; a_class: like current_class; an_id: INTEGER) is
 			-- Create a new constant attribute.
 		require
@@ -37,9 +39,10 @@ feature {NONE} -- Initialization
 			a_class_not_void: a_class /= Void
 			an_id_positive: an_id > 0
 		do
-			name := a_name
+			name_item := a_name
 			id := an_id
-			type := a_type
+			declared_type := a_type
+			is_keyword := tokens.is_keyword
 			constant := a_constant
 			clients := a_clients
 			version := an_id
@@ -47,8 +50,8 @@ feature {NONE} -- Initialization
 			implementation_class := a_class
 			first_seed := an_id
 		ensure
-			name_set: name = a_name
-			type_set: type = a_type
+			name_item_set: name_item = a_name
+			declared_type_set: declared_type = a_type
 			constant_set: constant = a_constant
 			clients_set: clients = a_clients
 			version_set: version = an_id
@@ -60,8 +63,17 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
+	is_keyword: ET_TOKEN
+			-- 'is' keyword
+
 	constant: ET_CONSTANT
 			-- Constant value
+
+	break: ET_BREAK is
+			-- Break which appears just after current node
+		do
+			Result := constant.break
+		end
 
 feature -- Status report
 
@@ -72,13 +84,27 @@ feature -- Status report
 			-- Can current feature have a name of
 			-- the form 'prefix ...'?
 
+feature -- Setting
+
+	set_is_keyword (an_is: like is_keyword) is
+			-- Set `is_keyword' to `an_is'.
+		require
+			an_is_not_void: an_is /= Void
+		do
+			is_keyword := an_is
+		ensure
+			is_keyword_set: is_keyword = an_is
+		end
+
 feature -- Duplication
 
-	synonym (a_name: like name): like Current is
+	new_synonym (a_name: like name_item): like Current is
 			-- Synonym feature
 		do
 			Result := universe.new_constant_attribute (a_name,
-				type, constant, clients, current_class)
+				declared_type, constant, clients, current_class)
+			Result.set_is_keyword (is_keyword)
+			Result.set_synonym (Current)
 		end
 
 feature -- Conversion
@@ -87,9 +113,11 @@ feature -- Conversion
 			-- Renamed version of current feature
 		do
 			Result := universe.new_constant_attribute (a_name,
-				type, constant, clients, current_class)
+				declared_type, constant, clients, current_class)
+			Result.set_is_keyword (is_keyword)
 			Result.set_implementation_class (implementation_class)
 			Result.set_version (version)
+			Result.set_frozen_keyword (frozen_keyword)
 			if seeds /= Void then
 				Result.set_seeds (seeds)
 			else
@@ -104,6 +132,7 @@ feature -- Conversion
 
 invariant
 
+	is_keyword_not_void: is_keyword /= Void
 	constant_not_void: constant /= Void
 
 end

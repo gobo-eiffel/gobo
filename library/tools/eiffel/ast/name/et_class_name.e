@@ -27,7 +27,7 @@ feature -- Access
 			name_not_empty: Result.count > 0
 		end
 
-	class_name_item: ET_CLASS_NAME is
+	class_name: ET_CLASS_NAME is
 			-- Class name in comma-separated list
 		do
 			Result := Current

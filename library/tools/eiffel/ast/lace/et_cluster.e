@@ -15,6 +15,7 @@ deferred class ET_CLUSTER
 inherit
 
 	KL_SHARED_EXECUTION_ENVIRONMENT
+	KL_SHARED_STANDARD_FILES
 	KL_IMPORTED_STRING_ROUTINES
 
 feature -- Status report
@@ -391,6 +392,11 @@ feature -- Parsing
 			s: STRING
 			a_cluster: ET_CLUSTER
 		do
+			debug ("GELINT")
+				std.error.put_string ("Parse cluster '")
+				std.error.put_string (full_pathname)
+				std.error.put_line ("%'")
+			end
 			if not is_abstract then
 				dir_name := Execution_environment.interpreted_string (full_pathname)
 				!! dir.make (dir_name)

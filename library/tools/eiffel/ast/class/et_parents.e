@@ -63,7 +63,7 @@ feature -- Access
 			i_large_enough: i >= 1
 			i_small_enough: i <= count
 		do
-			Result := item (i).parent_item
+			Result := item (i).parent
 		ensure
 			parent_not_void: Result /= Void
 		end

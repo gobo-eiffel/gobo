@@ -18,11 +18,11 @@ inherit
 
 feature -- Access
 
-	assertion_item: ET_ASSERTION is
+	assertion: ET_ASSERTION is
 			-- Assertion in list of assertions
 		deferred
 		ensure
-			assertion_item_not_void: Result /= Void
+			assertion_not_void: Result /= Void
 		end
 
 end

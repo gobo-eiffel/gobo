@@ -27,7 +27,7 @@ creation
 
 feature {NONE} -- Initialization
 
-	make (a_name: like name; args: like arguments; an_obsolete: like obsolete_message;
+	make (a_name: like name_item; args: like arguments; an_obsolete: like obsolete_message;
 		a_preconditions: like preconditions; a_postconditions: like postconditions;
 		a_clients: like clients; a_class: like current_class; an_id: INTEGER) is
 			-- Create a new deferred procedure.
@@ -37,19 +37,22 @@ feature {NONE} -- Initialization
 			a_class_not_void: a_class /= Void
 			an_id_positive: an_id > 0
 		do
-			name := a_name
+			name_item := a_name
 			id := an_id
 			arguments := args
+			is_keyword := tokens.is_keyword
 			obsolete_message := an_obsolete
 			preconditions := a_preconditions
+			deferred_keyword := tokens.deferred_keyword
 			postconditions := a_postconditions
+			end_keyword := tokens.end_keyword
 			clients := a_clients
 			version := an_id
 			current_class := a_class
 			implementation_class := a_class
 			first_seed := an_id
 		ensure
-			name_set: name = a_name
+			name_item_set: name_item = a_name
 			arguments_set: arguments = args
 			obsolete_message_set: obsolete_message = an_obsolete
 			preconditions_set: preconditions = a_preconditions
@@ -64,12 +67,16 @@ feature {NONE} -- Initialization
 
 feature -- Duplication
 
-	synonym (a_name: like name): like Current is
+	new_synonym (a_name: like name_item): like Current is
 			-- Synonym feature
 		do
 			Result := universe.new_deferred_procedure (a_name,
 				arguments, obsolete_message, preconditions, postconditions,
 				clients, current_class)
+			Result.set_is_keyword (is_keyword)
+			Result.set_deferred_keyword (deferred_keyword)
+			Result.set_end_keyword (end_keyword)
+			Result.set_synonym (Current)
 		end
 
 feature -- Conversion
@@ -80,8 +87,12 @@ feature -- Conversion
 			Result := universe.new_deferred_procedure (a_name,
 				arguments, obsolete_message, preconditions, postconditions,
 				clients, current_class)
+			Result.set_is_keyword (is_keyword)
+			Result.set_deferred_keyword (deferred_keyword)
+			Result.set_end_keyword (end_keyword)
 			Result.set_implementation_class (implementation_class)
 			Result.set_version (version)
+			Result.set_frozen_keyword (frozen_keyword)
 			if seeds /= Void then
 				Result.set_seeds (seeds)
 			else

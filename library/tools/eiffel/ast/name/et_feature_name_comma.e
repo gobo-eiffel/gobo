@@ -22,22 +22,22 @@ creation
 
 feature {NONE} -- Initialization
 
-	make (a_name: like feature_name_item; a_comma: like comma) is
+	make (a_name: like feature_name; a_comma: like comma) is
 			-- Create a new feature_name-comma.
 		require
 			a_name_not_void: a_name /= Void
 			a_comma_not_void: a_comma /= Void
 		do
-			feature_name_item := a_name
+			feature_name := a_name
 			comma := a_comma
 		ensure
-			feature_name_item_set: feature_name_item = a_name
+			feature_name_set: feature_name = a_name
 			comma_set: comma = a_comma
 		end
 
 feature -- Access
 
-	feature_name_item: ET_FEATURE_NAME
+	feature_name: ET_FEATURE_NAME
 			-- Feature name in comma-separated list
 
 	comma: ET_SYMBOL
@@ -47,7 +47,7 @@ feature -- Access
 			-- Position of first character of
 			-- current node in source code
 		do
-			Result := feature_name_item.position
+			Result := feature_name.position
 		end
 
 	break: ET_BREAK is

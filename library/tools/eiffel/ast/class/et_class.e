@@ -296,6 +296,19 @@ feature -- Genealogy
 	has_descendants: BOOLEAN
 			-- Does current class have proper descendants?
 
+feature -- Feature clauses
+
+	feature_clauses: ET_FEATURE_CLAUSES
+			-- Feature clauses
+
+	set_feature_clauses (a_feature_clauses: like feature_clauses) is
+			-- Set `feature_clauses' to `a_feature_clauses'.
+		do
+			feature_clauses := a_feature_clauses
+		ensure
+			feature_clauses_set: feature_clauses = a_feature_clauses
+		end
+
 feature -- Features
 
 	named_features: DS_HASH_TABLE [ET_FEATURE, ET_FEATURE_NAME]

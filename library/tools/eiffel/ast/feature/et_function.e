@@ -60,9 +60,11 @@ feature -- Conversion
 	undefined_feature (a_name: like name): ET_DEFERRED_FUNCTION is
 			-- Undefined version of current feature
 		do
-			Result := universe.new_deferred_function (a_name,
-				arguments, type, obsolete_message, preconditions, postconditions,
+			Result := universe.new_deferred_function (a_name, arguments,
+				declared_type, obsolete_message, preconditions, postconditions,
 				clients, current_class)
+			Result.set_is_keyword (is_keyword)
+			Result.set_end_keyword (end_keyword)
 			Result.set_implementation_class (implementation_class)
 			if seeds /= Void then
 				Result.set_seeds (seeds)
@@ -111,8 +113,8 @@ feature -- Type processing
 			-- the formal parameter.
 		do
 			if type.has_formal_parameters (actual_parameters) then
-				type := type.deep_cloned_type
-				type := type.resolved_formal_parameters (actual_parameters)
+				declared_type := declared_type.deep_cloned_type
+				declared_type := declared_type.resolved_formal_parameters (actual_parameters)
 			end
 			if arguments /= Void then
 				if arguments.has_formal_parameters (actual_parameters) then
@@ -133,7 +135,7 @@ feature -- Type processing
 			if arguments /= Void then
 				arguments.resolve_identifier_types (Current, a_class)
 			end
-			type := type.resolved_identifier_types (Current, arguments, a_class)
+			declared_type := declared_type.resolved_identifier_types (Current, arguments, a_class)
 		end
 
 end

@@ -20,6 +20,10 @@ inherit
 
 	ET_INDEXING_TERM
 
+	ET_EXTERNAL_LANGUAGE
+
+	ET_EXTERNAL_ALIAS
+
 	ET_AST_LEAF
 		rename
 			make as make_leaf,
@@ -38,7 +42,7 @@ feature -- Access
 		deferred
 		end
 
-	manifest_string_item: ET_MANIFEST_STRING is
+	manifest_string: ET_MANIFEST_STRING is
 			-- Manifest string in comma-separated list
 		do
 			Result := Current

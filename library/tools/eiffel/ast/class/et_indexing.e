@@ -42,7 +42,7 @@ feature -- Access
 	terms: ET_INDEXING_TERMS
 			-- Indexing terms
 
-	indexing_item: ET_INDEXING is
+	indexing_clause: ET_INDEXING is
 			-- Indexing clause in semicolon-separated list
 		do
 			Result := Current

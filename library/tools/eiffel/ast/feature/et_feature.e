@@ -14,12 +14,19 @@ deferred class ET_FEATURE
 
 inherit
 
+	ET_FEATURE_ITEM
+
 	HASHABLE
 
 feature -- Access
 
-	name: ET_FEATURE_NAME
+	name: ET_FEATURE_NAME is
 			-- Feature name
+		do
+			Result := name_item.feature_name
+		ensure
+			name_not_void: Result /= Void
+		end
 
 	current_class: ET_CLASS
 			-- Class to which current feature belongs
@@ -98,10 +105,40 @@ feature -- Access
 			error_handler_not_void: Result /= Void
 		end
 
+	name_item: ET_FEATURE_NAME_ITEM
+			-- Feature name (possibly followed by comma for synomyms)
+
+	frozen_keyword: ET_TOKEN
+			-- 'frozen' keyword
+
+	synonym: ET_FEATURE
+			-- Next synonym if any
+
+	position: ET_POSITION is
+			-- Position of first character of
+			-- current node in source code
+		do
+			if not is_frozen then
+				Result := name.position
+			else
+				-- TODO:
+				Result := name.position
+			end
+		end
+
+	feature_item: ET_FEATURE is
+			-- Feature in semicolon-separated list
+		do
+			Result := Current
+		end
+
 feature -- Status report
 
-	is_frozen: BOOLEAN
+	is_frozen: BOOLEAN is
 			-- Has feature been declared as frozen?
+		do
+			Result := (frozen_keyword /= Void)
+		end
 
 	is_deferred: BOOLEAN is
 			-- Is feature deferred?
@@ -284,26 +321,32 @@ feature -- Setting
 			precursors_set: precursors = a_precursors
 		end
 
-feature -- Status setting
-
-	set_frozen is
-			-- Set `is_frozen' to true.
+	set_frozen_keyword (a_frozen: like frozen_keyword) is
+			-- Set `frozen_keyword' to `a_frozen'.
 		do
-			is_frozen := True
+			frozen_keyword := a_frozen
 		ensure
-			is_frozen: is_frozen
+			frozen_keyword_set: frozen_keyword = a_frozen
+		end
+
+	set_synonym (a_synonym: like synonym) is
+			-- Set `synonym' to `a_synonym'.
+		do
+			synonym := a_synonym
+		ensure
+			synonym_set: a_synonym = a_synonym
 		end
 
 feature -- Duplication
 
-	synonym (a_name: like name): like Current is
+	new_synonym (a_name: like name_item): like Current is
 			-- Synonym feature
 		require
 			a_name_not_void: a_name /= Void
 		deferred
 		ensure
-			synonym_not_void: Result /= Void
-			name_set: Result.name = a_name
+			new_synonym_not_void: Result /= Void
+			name_item_set: Result.name_item = a_name
 		end
 
 feature -- Conversion
@@ -374,7 +417,7 @@ feature -- Type processing
 
 invariant
 
-	name_not_void: name /= Void
+	name_item_not_void: name_item /= Void
 	id_positive: id > 0
 	current_class_not_void: current_class /= Void
 	clients_not_void: clients /= Void

@@ -73,7 +73,7 @@ feature -- Access
 			Result := STRING_.case_insensitive_hash_code (name)
 		end
 
-	identifier_item: ET_IDENTIFIER is
+	identifier: ET_IDENTIFIER is
 			-- Identifier
 		do
 			Result := Current

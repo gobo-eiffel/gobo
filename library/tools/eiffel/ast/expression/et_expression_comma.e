@@ -22,22 +22,22 @@ creation
 
 feature {NONE} -- Initialization
 
-	make (an_expression: like expression_item; a_comma: like comma) is
+	make (an_expression: like expression; a_comma: like comma) is
 			-- Create a new expression-comma.
 		require
 			an_expression_not_void: an_expression /= Void
 			a_comma_not_void: a_comma /= Void
 		do
-			expression_item := an_expression
+			expression := an_expression
 			comma := a_comma
 		ensure
-			expression_item_set: expression_item = an_expression
+			expression_set: expression = an_expression
 			comma_set: comma = a_comma
 		end
 
 feature -- Access
 
-	expression_item: ET_EXPRESSION
+	expression: ET_EXPRESSION
 			-- Expression in comma-separated list
 
 	comma: ET_SYMBOL
@@ -47,7 +47,7 @@ feature -- Access
 			-- Position of first character of
 			-- current node in source code
 		do
-			Result := expression_item.position
+			Result := expression.position
 		end
 
 	break: ET_BREAK is

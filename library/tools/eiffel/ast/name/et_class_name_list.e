@@ -29,7 +29,7 @@ feature -- Access
 			i_large_enough: i >= 1
 			i_small_enough: i <= count
 		do
-			Result := item (i).class_name_item
+			Result := item (i).class_name
 		ensure
 			class_name_not_void: Result /= Void
 		end

@@ -18,8 +18,16 @@ inherit
 
 feature -- Access
 
-	type: ET_TYPE
+	type: ET_TYPE is
 			-- Return type
+		do
+			Result := declared_type.declared_type
+		ensure
+			type_not_void: Result /= Void
+		end
+
+	declared_type: ET_DECLARED_TYPE
+			-- Declared type (type preceded by a colon)
 
 	signature: ET_SIGNATURE is
 			-- Signature of current feature
@@ -33,8 +41,8 @@ feature -- Conversion
 	undefined_feature (a_name: like name): ET_DEFERRED_FUNCTION is
 			-- Undefined version of current feature
 		do
-			Result := universe.new_deferred_function (a_name,
-				Void, type, Void, Void, Void, clients, current_class)
+			Result := universe.new_deferred_function (a_name, Void,
+				declared_type, Void, Void, Void, clients, current_class)
 			Result.set_implementation_class (implementation_class)
 			if seeds /= Void then
 				Result.set_seeds (seeds)
@@ -75,8 +83,8 @@ feature -- Type processing
 			-- the formal parameter.
 		do
 			if type.has_formal_parameters (actual_parameters) then
-				type := type.deep_cloned_type
-				type := type.resolved_formal_parameters (actual_parameters)
+				declared_type := declared_type.deep_cloned_type
+				declared_type := declared_type.resolved_formal_parameters (actual_parameters)
 			end
 		end
 
@@ -88,11 +96,11 @@ feature -- Type processing
 			-- of arguments' name. Set `a_class.has_flatten_error' to
 			-- true if an error occurs.
 		do
-			type := type.resolved_identifier_types (Current, Void, a_class)
+			declared_type := declared_type.resolved_identifier_types (Current, Void, a_class)
 		end
 
 invariant
 
-	type_not_void: type /= Void
+	declared_type_not_void: declared_type /= Void
 
 end

@@ -74,7 +74,7 @@ feature -- Access
 	end_keyword: ET_TOKEN
 			-- 'end' keyword
 
-	parent_item: ET_PARENT is
+	parent: ET_PARENT is
 			-- Class parent in semicolon-separated list
 		do
 			Result := Current

@@ -27,7 +27,7 @@ feature -- Access
 			name_not_empty: Result.count > 0
 		end
 
-	feature_name_item: ET_FEATURE_NAME is
+	feature_name: ET_FEATURE_NAME is
 			-- Feature name in comma-separated list
 		do
 			Result := Current

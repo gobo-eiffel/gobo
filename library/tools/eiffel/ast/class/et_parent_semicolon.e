@@ -22,22 +22,22 @@ creation
 
 feature {NONE} -- Initialization
 
-	make (a_parent: like parent_item; a_semicolon: like semicolon) is
+	make (a_parent: like parent; a_semicolon: like semicolon) is
 			-- Create a new parent-semicolon.
 		require
 			a_parent_not_void: a_parent /= Void
 			a_semicolon_not_void: a_semicolon /= Void
 		do
-			parent_item := a_parent
+			parent := a_parent
 			semicolon := a_semicolon
 		ensure
-			parent_item_set: parent_item = a_parent
+			parent_set: parent = a_parent
 			semicolon_set: semicolon = a_semicolon
 		end
 
 feature -- Access
 
-	parent_item: ET_PARENT
+	parent: ET_PARENT
 			-- Class parent in semicolon-separated list
 
 	semicolon: ET_SYMBOL
@@ -47,7 +47,7 @@ feature -- Access
 			-- Position of first character of
 			-- current node in source code
 		do
-			Result := parent_item.position
+			Result := parent.position
 		end
 
 	break: ET_BREAK is

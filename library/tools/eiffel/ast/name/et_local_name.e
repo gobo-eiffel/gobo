@@ -18,11 +18,11 @@ inherit
 
 feature -- Access
 
-	identifier_item: ET_IDENTIFIER is
+	identifier: ET_IDENTIFIER is
 			-- Identifier
 		deferred
 		ensure
-			identifier_item_not_void: Result /= Void
+			identifier_not_void: Result /= Void
 		end
 
 end

@@ -18,11 +18,11 @@ inherit
 
 feature -- Access
 
-	formal_generic_parameter_item: ET_FORMAL_GENERIC_PARAMETER is
+	formal_generic_parameter: ET_FORMAL_GENERIC_PARAMETER is
 			-- Formal generic parameter in comma-separated list
 		deferred
 		ensure
-			formal_generic_parameter_item_not_void: Result /= Void
+			formal_generic_parameter_not_void: Result /= Void
 		end
 
 end

@@ -18,17 +18,17 @@ inherit
 
 feature {NONE} -- Initialization
 
-	make (a_name: like name_item; a_type: like type) is
+	make (a_name: like name_item; a_type: like declared_type) is
 			-- Create a new local variable.
 		require
 			a_name_not_void: a_name /= Void
 			a_type_not_void: a_type /= Void
 		do
 			name_item := a_name
-			type := a_type
+			declared_type := a_type
 		ensure
 			name_set: name_item = a_name
-			type_set: type = a_type
+			declared_type_set: declared_type = a_type
 		end
 
 feature -- Access
@@ -36,16 +36,22 @@ feature -- Access
 	name: ET_IDENTIFIER is
 			-- Name
 		do
-			Result := name_item.identifier_item
+			Result := name_item.identifier
 		ensure
 			name_not_void: Result /= Void
 		end
 
-	type: ET_TYPE
+	type: ET_TYPE is
 			-- Type
+		do
+			Result := declared_type.declared_type
+		end
 
 	name_item: ET_LOCAL_NAME
 			-- Name follow by a comma or semicolon
+
+	declared_type: ET_DECLARED_TYPE
+			-- Declared type (type preceded by a colon)
 
 	local_variable_item: ET_LOCAL_VARIABLE is
 			-- Local variable in semicolon-separated list
@@ -63,5 +69,6 @@ feature -- Access
 invariant
 
 	name_item_not_void: name_item /= Void
+	declared_type_not_void: declared_type /= Void
 
 end

@@ -14,8 +14,6 @@ class ET_IDENTIFIER_COLON
 
 inherit
 
-	ET_LOCAL_NAME
-	ET_ARGUMENT_NAME
 	ET_TAG
 
 creation
@@ -24,22 +22,22 @@ creation
 
 feature {NONE} -- Initialization
 
-	make (a_name: like identifier_item; a_colon: like colon) is
+	make (a_name: like identifier; a_colon: like colon) is
 			-- Create a new identifier-colon.
 		require
 			a_name_not_void: a_name /= Void
 			a_colon_not_void: a_colon /= Void
 		do
-			identifier_item := a_name
+			identifier := a_name
 			colon := a_colon
 		ensure
-			identifier_item_set: identifier_item = a_name
+			identifier_set: identifier = a_name
 			colon_set: colon = a_colon
 		end
 
 feature -- Access
 
-	identifier_item: ET_IDENTIFIER
+	identifier: ET_IDENTIFIER
 			-- Identifier
 
 	colon: ET_SYMBOL
@@ -49,7 +47,7 @@ feature -- Access
 			-- Position of first character of
 			-- current node in source code
 		do
-			Result := identifier_item.position
+			Result := identifier.position
 		end
 
 	break: ET_BREAK is

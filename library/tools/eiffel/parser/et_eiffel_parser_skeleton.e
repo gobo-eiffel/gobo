@@ -101,6 +101,11 @@ feature -- Parsing
 			a_filename_not_void: a_filename /= Void
 			a_cluster_not_void: a_cluster /= Void
 		do
+			debug ("GELINT")
+				std.error.put_string ("Parse file '")
+				std.error.put_string (a_filename)
+				std.error.put_line ("%'")
+			end
 			filename := a_filename
 			cluster := a_cluster
 			input_buffer := Eiffel_buffer
@@ -121,18 +126,6 @@ feature {NONE} -- Basic operations
 			has_last_class: has_last_class
 		do
 			last_class.put_feature (a_feature)
-		end
-
-	register_frozen_feature (a_feature: ET_FEATURE) is
-			-- Register `a_feature' in `last_class'.
-		require
-			a_feature_not_void: a_feature /= Void
-			has_last_class: has_last_class
-		do
-			a_feature.set_frozen
-			last_class.put_feature (a_feature)
-		ensure
-			frozen_feature: a_feature.is_frozen
 		end
 
 	set_formal_generic_parameters (a_generics: ET_FORMAL_GENERIC_PARAMETERS) is
@@ -318,7 +311,7 @@ feature {NONE} -- AST factory
 			assignment_attempt_not_void: Result /= Void
 		end
 
-	new_attribute (a_name: ET_FEATURE_NAME; args: ET_FORMAL_ARGUMENTS; a_type: ET_TYPE): ET_ATTRIBUTE is
+	new_attribute (a_name: ET_FEATURE_NAME; args: ET_FORMAL_ARGUMENTS; a_type: ET_DECLARED_TYPE): ET_ATTRIBUTE is
 			-- New attribute declaration
 		require
 			a_name_not_void: a_name /= Void
@@ -481,9 +474,9 @@ feature {NONE} -- AST factory
 			Result.set_parsed
 
 			debug ("GELINT")
-				std.error.put_string ("Parse class `")
+				std.error.put_string ("Parse class '")
 				std.error.put_string (a_name.name)
-				std.error.put_string ("'%N")
+				std.error.put_line ("%'")
 			end
 		ensure
 			class_not_void: Result /= Void
@@ -534,7 +527,7 @@ feature {NONE} -- AST factory
 			clients_not_void: Result /= Void
 		end
 
-	new_colon_formal_argument (a_name: ET_ARGUMENT_NAME; a_type: ET_TYPE): ET_COLON_FORMAL_ARGUMENT is
+	new_colon_formal_argument (a_name: ET_ARGUMENT_NAME; a_type: ET_DECLARED_TYPE): ET_COLON_FORMAL_ARGUMENT is
 			-- New formal argument whose name is followed by a colon
 		require
 			a_name_not_void: a_name /= Void
@@ -545,7 +538,7 @@ feature {NONE} -- AST factory
 			colon_formal_argument_not_void: Result /= Void
 		end
 
-	new_colon_local_variable (a_name: ET_LOCAL_NAME; a_type: ET_TYPE): ET_COLON_LOCAL_VARIABLE is
+	new_colon_local_variable (a_name: ET_LOCAL_NAME; a_type: ET_DECLARED_TYPE): ET_COLON_LOCAL_VARIABLE is
 			-- New local variable whose name is followed by a colon
 		require
 			a_name_not_void: a_name /= Void
@@ -556,7 +549,24 @@ feature {NONE} -- AST factory
 			colon_local_variable_not_void: Result /= Void
 		end
 
-	new_comma_formal_argument (a_name: ET_ARGUMENT_NAME; a_type: ET_TYPE): ET_COMMA_FORMAL_ARGUMENT is
+	new_colon_type (a_colon: ET_SYMBOL; a_type: ET_TYPE): ET_DECLARED_TYPE is
+			-- New colon-type
+		require
+			a_colon_not_void: a_colon /= Void
+			a_type_not_void: a_type /= Void
+		do
+			if keep_all_breaks then
+				Result := ast_factory.new_colon_type (a_colon, a_type)
+			elseif keep_all_comments and a_colon.has_comment then
+				Result := ast_factory.new_colon_type (a_colon, a_type)
+			else
+				Result := a_type
+			end
+		ensure
+			colon_type_not_void: Result /= Void
+		end
+
+	new_comma_formal_argument (a_name: ET_ARGUMENT_NAME; a_type: ET_DECLARED_TYPE): ET_COMMA_FORMAL_ARGUMENT is
 			-- New formal agument whose name is followed by a comma
 		require
 			a_name_not_void: a_name /= Void
@@ -567,7 +577,7 @@ feature {NONE} -- AST factory
 			comma_formal_argument_not_void: Result /= Void
 		end
 
-	new_comma_local_variable (a_name: ET_LOCAL_NAME; a_type: ET_TYPE): ET_COMMA_LOCAL_VARIABLE is
+	new_comma_local_variable (a_name: ET_LOCAL_NAME; a_type: ET_DECLARED_TYPE): ET_COMMA_LOCAL_VARIABLE is
 			-- New local variable whose name is followed by a comma
 		require
 			a_name_not_void: a_name /= Void
@@ -602,16 +612,18 @@ feature {NONE} -- AST factory
 		end
 
 	new_constant_attribute (a_name: ET_FEATURE_NAME; args: ET_FORMAL_ARGUMENTS;
-		a_type: ET_TYPE; a_constant: ET_CONSTANT): ET_CONSTANT_ATTRIBUTE is
+		a_type: ET_DECLARED_TYPE; an_is: ET_TOKEN; a_constant: ET_CONSTANT): ET_CONSTANT_ATTRIBUTE is
 			-- New constant attribute declaration
 		require
 			a_name_not_void: a_name /= Void
 			a_type_not_void: a_type /= Void
+			an_is_not_void: an_is /= Void
 			a_constant_not_void: a_constant /= Void
 			last_clients_not_void: last_clients /= Void
 			has_last_class: has_last_class
 		do
 			Result := universe.new_constant_attribute (a_name, a_type, a_constant, last_clients, last_class)
+			Result.set_is_keyword (an_is)
 		ensure
 			constant_attribute_not_void: Result /= Void
 		end
@@ -805,46 +817,63 @@ feature {NONE} -- AST factory
 		end
 
 	new_deferred_function (a_name: ET_FEATURE_NAME; args: ET_FORMAL_ARGUMENTS;
-		a_type: ET_TYPE; an_obsolete: ET_OBSOLETE; a_preconditions: ET_PRECONDITIONS;
-		a_postconditions: ET_POSTCONDITIONS): ET_DEFERRED_FUNCTION is
+		a_type: ET_DECLARED_TYPE; an_is: ET_TOKEN; an_obsolete: ET_OBSOLETE;
+		a_preconditions: ET_PRECONDITIONS; a_deferred: ET_DEFERRED_KEYWORD;
+		a_postconditions: ET_POSTCONDITIONS; an_end: ET_TOKEN): ET_DEFERRED_FUNCTION is
 			-- New deferred function
 		require
 			a_name_not_void: a_name /= Void
 			a_type_not_void: a_type /= Void
+			an_is_not_void: an_is /= Void
+			a_deferred_not_void: a_deferred /= Void
+			an_end_not_void: an_end /= Void
 			last_clients_not_void: last_clients /= Void
 			has_last_class: has_last_class
 		do
 			Result := universe.new_deferred_function (a_name, args,
 				a_type, an_obsolete, a_preconditions, a_postconditions,
 				last_clients, last_class)
+			Result.set_is_keyword (an_is)
+			Result.set_deferred_keyword (a_deferred)
+			Result.set_end_keyword (an_end)
 		ensure
 			deferred_function_not_void: Result /= Void
 		end
 
 	new_deferred_procedure (a_name: ET_FEATURE_NAME; args: ET_FORMAL_ARGUMENTS;
-		an_obsolete: ET_OBSOLETE; a_preconditions: ET_PRECONDITIONS;
-		a_postconditions: ET_POSTCONDITIONS): ET_DEFERRED_PROCEDURE is
+		an_is: ET_TOKEN; an_obsolete: ET_OBSOLETE; a_preconditions: ET_PRECONDITIONS;
+		a_deferred: ET_DEFERRED_KEYWORD; a_postconditions: ET_POSTCONDITIONS;
+		an_end: ET_TOKEN): ET_DEFERRED_PROCEDURE is
 			-- New deferred procedure
 		require
 			a_name_not_void: a_name /= Void
+			an_is_not_void: an_is /= Void
+			a_deferred_not_void: a_deferred /= Void
+			an_end_not_void: an_end /= Void
 			last_clients_not_void: last_clients /= Void
 			has_last_class: has_last_class
 		do
 			Result := universe.new_deferred_procedure (a_name, args,
 				an_obsolete, a_preconditions, a_postconditions,
 				last_clients, last_class)
+			Result.set_is_keyword (an_is)
+			Result.set_deferred_keyword (a_deferred)
+			Result.set_end_keyword (an_end)
 		ensure
 			deferred_procedure_not_void: Result /= Void
 		end
 
-	new_do_function (a_name: ET_FEATURE_NAME; args: ET_FORMAL_ARGUMENTS; a_type: ET_TYPE;
-		an_obsolete: ET_OBSOLETE; a_preconditions: ET_PRECONDITIONS;
-		a_locals: ET_LOCAL_VARIABLES; a_compound: ET_COMPOUND;
-		a_postconditions: ET_POSTCONDITIONS; a_rescue: ET_COMPOUND): ET_DO_FUNCTION is
+	new_do_function (a_name: ET_FEATURE_NAME; args: ET_FORMAL_ARGUMENTS; a_type: ET_DECLARED_TYPE;
+		an_is: ET_TOKEN; an_obsolete: ET_OBSOLETE; a_preconditions: ET_PRECONDITIONS;
+		a_locals: ET_LOCAL_VARIABLES; a_compound: ET_COMPOUND; a_postconditions: ET_POSTCONDITIONS;
+		a_rescue: ET_COMPOUND; an_end: ET_TOKEN): ET_DO_FUNCTION is
 			-- New do function
 		require
 			a_name_not_void: a_name /= Void
 			a_type_not_void: a_type /= Void
+			an_is_not_void: an_is /= Void
+			a_compound_not_void: a_compound /= Void
+			an_end_not_void: an_end /= Void
 			last_clients_not_void: last_clients /= Void
 			has_last_class: has_last_class
 		do
@@ -852,23 +881,30 @@ feature {NONE} -- AST factory
 				a_type, an_obsolete, a_preconditions, a_locals,
 				a_compound, a_postconditions, a_rescue,
 				last_clients, last_class)
+			Result.set_is_keyword (an_is)
+			Result.set_end_keyword (an_end)
 		ensure
 			do_function_not_void: Result /= Void
 		end
 
-	new_do_procedure (a_name: ET_FEATURE_NAME; args: ET_FORMAL_ARGUMENTS;
-		an_obsolete: ET_OBSOLETE; a_preconditions: ET_PRECONDITIONS;
-		a_locals: ET_LOCAL_VARIABLES; a_compound: ET_COMPOUND;
-		a_postconditions: ET_POSTCONDITIONS; a_rescue: ET_COMPOUND): ET_DO_PROCEDURE is
+	new_do_procedure (a_name: ET_FEATURE_NAME; args: ET_FORMAL_ARGUMENTS; an_is: ET_TOKEN
+		an_obsolete: ET_OBSOLETE; a_preconditions: ET_PRECONDITIONS; a_locals: ET_LOCAL_VARIABLES;
+		a_compound: ET_COMPOUND; a_postconditions: ET_POSTCONDITIONS; a_rescue: ET_COMPOUND;
+		an_end: ET_TOKEN): ET_DO_PROCEDURE is
 			-- New do procedure
 		require
 			a_name_not_void: a_name /= Void
+			an_is_not_void: an_is /= Void
+			a_compound_not_void: a_compound /= Void
+			an_end_not_void: an_end /= Void
 			last_clients_not_void: last_clients /= Void
 			has_last_class: has_last_class
 		do
 			Result := universe.new_do_procedure (a_name, args,
 				an_obsolete, a_preconditions, a_locals, a_compound,
 				a_postconditions, a_rescue, last_clients, last_class)
+			Result.set_is_keyword (an_is)
+			Result.set_end_keyword (an_end)
 		ensure
 			do_procedure_not_void: Result /= Void
 		end
@@ -981,39 +1017,82 @@ feature {NONE} -- AST factory
 			expression_variant_not_void: Result /= Void
 		end
 
+	new_external_alias (a_keyword: ET_TOKEN; a_string: ET_MANIFEST_STRING): ET_EXTERNAL_ALIAS is
+			-- New external alias
+		require
+			a_keyword_not_void: a_keyword /= Void
+			a_string_not_void: a_string /= Void
+		do
+			if keep_all_breaks then
+				Result := ast_factory.new_keyword_manifest_string (a_keyword, a_string)
+			elseif keep_all_comments and a_keyword.has_comment then
+				Result := ast_factory.new_keyword_manifest_string (a_keyword, a_string)
+			else
+				Result := a_string
+			end
+		ensure
+			external_alias_not_void: Result /= Void
+		end
+
 	new_external_function (a_name: ET_FEATURE_NAME; args: ET_FORMAL_ARGUMENTS;
-		a_type: ET_TYPE; an_obsolete: ET_OBSOLETE; a_preconditions: ET_PRECONDITIONS;
-		a_language: ET_MANIFEST_STRING; an_alias: ET_MANIFEST_STRING;
-		a_postconditions: ET_POSTCONDITIONS): ET_EXTERNAL_FUNCTION is
+		a_type: ET_DECLARED_TYPE; an_is: ET_TOKEN; an_obsolete: ET_OBSOLETE;
+		a_preconditions: ET_PRECONDITIONS; a_language: ET_EXTERNAL_LANGUAGE;
+		an_alias: ET_EXTERNAL_ALIAS; a_postconditions: ET_POSTCONDITIONS;
+		an_end: ET_TOKEN): ET_EXTERNAL_FUNCTION is
 			-- New external function
 		require
 			a_name_not_void: a_name /= Void
 			a_type_not_void: a_type /= Void
+			an_is_not_void: an_is /= Void
 			a_language_not_void: a_language /= Void
+			an_end_not_void: an_end /= Void
 			last_clients_not_void: last_clients /= Void
 			has_last_class: has_last_class
 		do
 			Result := universe.new_external_function (a_name, args,
 				a_type, an_obsolete, a_preconditions, a_language, an_alias,
 				a_postconditions, last_clients, last_class)
+			Result.set_is_keyword (an_is)
+			Result.set_end_keyword (an_end)
 		ensure
 			external_function_not_void: Result /= Void
 		end
 
+	new_external_language (a_keyword: ET_TOKEN; a_string: ET_MANIFEST_STRING): ET_EXTERNAL_LANGUAGE is
+			-- New external language
+		require
+			a_keyword_not_void: a_keyword /= Void
+			a_string_not_void: a_string /= Void
+		do
+			if keep_all_breaks then
+				Result := ast_factory.new_keyword_manifest_string (a_keyword, a_string)
+			elseif keep_all_comments and a_keyword.has_comment then
+				Result := ast_factory.new_keyword_manifest_string (a_keyword, a_string)
+			else
+				Result := a_string
+			end
+		ensure
+			external_language_not_void: Result /= Void
+		end
+
 	new_external_procedure (a_name: ET_FEATURE_NAME; args: ET_FORMAL_ARGUMENTS;
-		an_obsolete: ET_OBSOLETE; a_preconditions: ET_PRECONDITIONS;
-		a_language: ET_MANIFEST_STRING; an_alias: ET_MANIFEST_STRING;
-		a_postconditions: ET_POSTCONDITIONS): ET_EXTERNAL_PROCEDURE is
+		an_is: ET_TOKEN; an_obsolete: ET_OBSOLETE; a_preconditions: ET_PRECONDITIONS;
+		a_language: ET_EXTERNAL_LANGUAGE; an_alias: ET_EXTERNAL_ALIAS;
+		a_postconditions: ET_POSTCONDITIONS; an_end: ET_TOKEN): ET_EXTERNAL_PROCEDURE is
 			-- New external procedure
 		require
 			a_name_not_void: a_name /= Void
+			an_is_not_void: an_is /= Void
 			a_language_not_void: a_language /= Void
+			an_end_not_void: an_end /= Void
 			last_clients_not_void: last_clients /= Void
 			has_last_class: has_last_class
 		do
 			Result := universe.new_external_procedure (a_name, args,
 				an_obsolete, a_preconditions, a_language, an_alias,
 				a_postconditions, last_clients, last_class)
+			Result.set_is_keyword (an_is)
+			Result.set_end_keyword (an_end)
 		ensure
 			external_procedure_not_void: Result /= Void
 		end
@@ -1027,6 +1106,51 @@ feature {NONE} -- AST factory
 			Result := ast_factory.new_feature_address (d, a_name)
 		ensure
 			feature_address_not_void: Result /= Void
+		end
+
+	new_feature_clause (a_feature: ET_TOKEN; a_clients: ET_CLASS_NAME_LIST): ET_FEATURE_CLAUSE is
+			-- New feature clause
+		require
+			a_feature_not_void: a_feature /= Void
+			a_clients_not_void: a_clients /= Void
+		do
+			Result := ast_factory.new_feature_clause (a_feature, a_clients)
+		ensure
+			feature_clause_not_void: Result /= Void
+		end
+
+	new_feature_clause_with_capacity (nb: INTEGER): ET_FEATURE_CLAUSE is
+			-- New feature clause with given capacity
+		require
+			nb_positive: nb >= 0
+		local
+			a_feature: ET_TOKEN
+		do
+			a_feature := tokens.feature_keyword
+			Result := ast_factory.new_feature_clause_with_capacity (a_feature, dummy_clients, nb)
+		ensure
+			feature_clause_not_void: Result /= Void
+		end
+
+	new_feature_clauses (a_feature_clause: ET_FEATURE_CLAUSE): ET_FEATURE_CLAUSES is
+			-- New feature clauses
+		require
+			a_feature_clause_not_void: a_feature_clause /= Void
+		do
+			Result := ast_factory.new_feature_clauses (a_feature_clause)
+		ensure
+			feature_clauses_not_void: Result /= Void
+		end
+
+	new_feature_clauses_with_capacity (a_feature_clause: ET_FEATURE_CLAUSE; nb: INTEGER): ET_FEATURE_CLAUSES is
+			-- New feature clauses with given capacity
+		require
+			a_feature_clause_not_void: a_feature_clause /= Void
+			nb_positive: nb >= 1
+		do
+			Result := ast_factory.new_feature_clauses_with_capacity (a_feature_clause, nb)
+		ensure
+			feature_clauses_not_void: Result /= Void
 		end
 
 	new_feature_export (a_clients: ET_CLIENTS): ET_FEATURE_EXPORT is
@@ -1066,23 +1190,6 @@ feature {NONE} -- AST factory
 			feature_name_comma_not_void: Result /= Void
 		end
 
-	new_argument_name_colon (a_name: ET_IDENTIFIER; a_colon: ET_SYMBOL): ET_ARGUMENT_NAME is
-			-- New argument_name-colon
-		require
-			a_name_not_void: a_name /= Void
-			a_colon_not_void: a_colon /= Void
-		do
-			if keep_all_breaks then
-				Result := ast_factory.new_identifier_colon (a_name, a_colon)
-			elseif keep_all_comments and a_colon.has_comment then
-				Result := ast_factory.new_identifier_colon (a_name, a_colon)
-			else
-				Result := a_name
-			end
-		ensure
-			argument_name_colon_not_void: Result /= Void
-		end
-
 	new_argument_name_comma (a_name: ET_IDENTIFIER; a_comma: ET_SYMBOL): ET_ARGUMENT_NAME is
 			-- New argument_name-comma
 		require
@@ -1098,6 +1205,25 @@ feature {NONE} -- AST factory
 			end
 		ensure
 			argument_name_comma_not_void: Result /= Void
+		end
+
+	new_feature_semicolon (a_feature: ET_FEATURE; a_semicolon: ET_SYMBOL): ET_FEATURE_ITEM is
+			-- New feature-semicolon
+		require
+			a_feature_not_void: a_feature /= Void
+			a_semicolon_not_void: a_semicolon /= Void
+		do
+			if keep_all_breaks then
+				Result := ast_factory.new_feature_semicolon (a_feature, a_semicolon)
+			elseif keep_all_comments and a_semicolon.has_comment then
+				Result := ast_factory.new_feature_semicolon (a_feature, a_semicolon)
+			elseif keep_header_comments and a_semicolon.has_comment then
+				Result := ast_factory.new_feature_semicolon (a_feature, a_semicolon)
+			else
+				Result := a_feature
+			end
+		ensure
+			feature_semicolon_not_void: Result /= Void
 		end
 
 	new_formal_argument_semicolon (an_argument: ET_FORMAL_ARGUMENT; a_semicolon: ET_SYMBOL): ET_FORMAL_ARGUMENT_SEMICOLON is
@@ -1631,23 +1757,6 @@ feature {NONE} -- AST factory
 			type_not_void: Result /= Void
 		end
 
-	new_local_name_colon (a_name: ET_IDENTIFIER; a_colon: ET_SYMBOL): ET_LOCAL_NAME is
-			-- New local_name-colon
-		require
-			a_name_not_void: a_name /= Void
-			a_colon_not_void: a_colon /= Void
-		do
-			if keep_all_breaks then
-				Result := ast_factory.new_identifier_colon (a_name, a_colon)
-			elseif keep_all_comments and a_colon.has_comment then
-				Result := ast_factory.new_identifier_colon (a_name, a_colon)
-			else
-				Result := a_name
-			end
-		ensure
-			local_name_colon_not_void: Result /= Void
-		end
-
 	new_local_name_comma (a_name: ET_IDENTIFIER; a_comma: ET_SYMBOL): ET_LOCAL_NAME is
 			-- New local_name-comma
 		require
@@ -1862,20 +1971,25 @@ feature {NONE} -- AST factory
 			old_expression_not_void: Result /= Void
 		end
 
-	new_once_function (a_name: ET_FEATURE_NAME; args: ET_FORMAL_ARGUMENTS; a_type: ET_TYPE;
-		an_obsolete: ET_OBSOLETE; a_preconditions: ET_PRECONDITIONS;
+	new_once_function (a_name: ET_FEATURE_NAME; args: ET_FORMAL_ARGUMENTS; a_type: ET_DECLARED_TYPE;
+		an_is: ET_TOKEN; an_obsolete: ET_OBSOLETE; a_preconditions: ET_PRECONDITIONS;
 		a_locals: ET_LOCAL_VARIABLES; a_compound: ET_COMPOUND;
-		a_postconditions: ET_POSTCONDITIONS; a_rescue: ET_COMPOUND): ET_ONCE_FUNCTION is
+		a_postconditions: ET_POSTCONDITIONS; a_rescue: ET_COMPOUND; an_end: ET_TOKEN): ET_ONCE_FUNCTION is
 			-- New once function
 		require
 			a_name_not_void: a_name /= Void
 			a_type_not_void: a_type /= Void
+			an_is_not_void: an_is /= Void
+			a_compound_not_void: a_compound /= Void
+			an_end_not_void: an_end /= Void
 			last_clients_not_void: last_clients /= Void
 			has_last_class: has_last_class
 		do
 			Result := universe.new_once_function (a_name, args,
 				a_type, an_obsolete, a_preconditions, a_locals, a_compound,
 				a_postconditions, a_rescue, last_clients, last_class)
+			Result.set_is_keyword (an_is)
+			Result.set_end_keyword (an_end)
 		ensure
 			once_function_not_void: Result /= Void
 		end
@@ -1892,18 +2006,23 @@ feature {NONE} -- AST factory
 		end
 
 	new_once_procedure (a_name: ET_FEATURE_NAME; args: ET_FORMAL_ARGUMENTS;
-		an_obsolete: ET_OBSOLETE; a_preconditions: ET_PRECONDITIONS;
+		an_is: ET_TOKEN; an_obsolete: ET_OBSOLETE; a_preconditions: ET_PRECONDITIONS;
 		a_locals: ET_LOCAL_VARIABLES; a_compound: ET_COMPOUND;
-		a_postconditions: ET_POSTCONDITIONS; a_rescue: ET_COMPOUND): ET_ONCE_PROCEDURE is
+		a_postconditions: ET_POSTCONDITIONS; a_rescue: ET_COMPOUND; an_end: ET_TOKEN): ET_ONCE_PROCEDURE is
 			-- New once procedure
 		require
 			a_name_not_void: a_name /= Void
+			an_is_not_void: an_is /= Void
+			a_compound_not_void: a_compound /= Void
+			an_end_not_void: an_end /= Void
 			last_clients_not_void: last_clients /= Void
 			has_last_class: has_last_class
 		do
 			Result := universe.new_once_procedure (a_name, args,
 				an_obsolete, a_preconditions, a_locals, a_compound,
 				a_postconditions, a_rescue, last_clients, last_class)
+			Result.set_is_keyword (an_is)
+			Result.set_end_keyword (an_end)
 		ensure
 			once_procedure_not_void: Result /= Void
 		end
@@ -2386,13 +2505,13 @@ feature {NONE} -- AST factory
 			strip_expression_not_void: Result /= Void
 		end
 
-	new_synonym_feature (a_name: ET_FEATURE_NAME; a_feature: ET_FEATURE): ET_FEATURE is
+	new_synonym_feature (a_name: ET_FEATURE_NAME_ITEM; a_feature: ET_FEATURE): ET_FEATURE is
 			-- New synomym for feature `a_feature'
 		require
 			a_name_not_void: a_name /= Void
 			a_feature_not_void: a_feature /= Void
 		do
-			Result := a_feature.synonym (a_name)
+			Result := a_feature.new_synonym (a_name)
 		ensure
 			synonym_not_void: Result /= Void
 		end
@@ -2424,16 +2543,15 @@ feature {NONE} -- AST factory
 			tagged_assertion_not_void: Result /= Void
 		end
 
-	new_tagged_expression_variant (a_variant: ET_TOKEN; a_tag: ET_IDENTIFIER;
-		a_colon: ET_SYMBOL; an_expression: ET_EXPRESSION): ET_TAGGED_EXPRESSION_VARIANT is
+	new_tagged_expression_variant (a_variant: ET_TOKEN; a_tag: ET_TAG;
+		an_expression: ET_EXPRESSION): ET_TAGGED_EXPRESSION_VARIANT is
 			-- New loop tagged expression variant
 		require
 			a_variant_not_void: a_variant /= Void
 			a_tag_not_void: a_tag /= Void
-			a_colon_not_void: a_colon /= Void
 			an_expression_not_void: an_expression /= Void
 		do
-			Result := ast_factory.new_tagged_expression_variant (a_variant, a_tag, a_colon, an_expression)
+			Result := ast_factory.new_tagged_expression_variant (a_variant, a_tag, an_expression)
 		ensure
 			tagged_expression_variant_not_void: Result /= Void
 		end
@@ -2496,15 +2614,19 @@ feature {NONE} -- AST factory
 		end
 
 	new_unique_attribute (a_name: ET_FEATURE_NAME; args: ET_FORMAL_ARGUMENTS;
-		a_type: ET_TYPE): ET_UNIQUE_ATTRIBUTE is
+		a_type: ET_DECLARED_TYPE; an_is, a_unique: ET_TOKEN): ET_UNIQUE_ATTRIBUTE is
 			-- New unique attribute declaration
 		require
 			a_name_not_void: a_name /= Void
 			a_type_not_void: a_type /= Void
+			an_is_not_void: an_is /= Void
+			a_unique_not_void: a_unique /= Void
 			last_clients_not_void: last_clients /= Void
 			has_last_class: has_last_class
 		do
 			Result := universe.new_unique_attribute (a_name, a_type, last_clients, last_class)
+			Result.set_is_keyword (an_is)
+			Result.set_unique_keyword (a_unique)
 		ensure
 			unique_attribute_not_void: Result /= Void
 		end

@@ -18,11 +18,11 @@ inherit
 
 feature -- Access
 
-	class_name_item: ET_CLASS_NAME is
+	class_name: ET_CLASS_NAME is
 			-- Class name in comma-separated list
 		deferred
 		ensure
-			class_name_item_not_void: Result /= Void
+			class_name_not_void: Result /= Void
 		end
 
 end

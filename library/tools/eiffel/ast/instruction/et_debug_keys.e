@@ -69,7 +69,7 @@ feature -- Access
 			i_large_enough: i >= 1
 			i_small_enough: i <= count
 		do
-			Result := item (i).manifest_string_item
+			Result := item (i).manifest_string
 		ensure
 			key_not_void: Result /= Void
 		end

@@ -23,7 +23,7 @@ inherit
 
 feature {NONE} -- Initialization
 
-	make (a_name: like name; args: like arguments; an_obsolete: like obsolete_message;
+	make (a_name: like name_item; args: like arguments; an_obsolete: like obsolete_message;
 		a_preconditions: like preconditions; a_locals: like locals;
 		a_compound: like compound; a_postconditions: like postconditions;
 		a_rescue: like rescue_clause; a_clients: like clients;
@@ -31,26 +31,29 @@ feature {NONE} -- Initialization
 			-- Create a new internal procedure.
 		require
 			a_name_not_void: a_name /= Void
+			a_compound_not_void: a_compound /= Void
 			a_clients_not_void: a_clients /= Void
 			a_class_not_void: a_class /= Void
 			an_id_positive: an_id > 0
 		do
-			name := a_name
+			name_item := a_name
 			id := an_id
 			arguments := args
+			is_keyword := tokens.is_keyword
 			obsolete_message := an_obsolete
 			preconditions := a_preconditions
 			locals := a_locals
 			compound := a_compound
 			postconditions := a_postconditions
 			rescue_clause := a_rescue
+			end_keyword := tokens.end_keyword
 			clients := a_clients
 			version := an_id
 			current_class := a_class
 			implementation_class := a_class
 			first_seed := an_id
 		ensure
-			name_set: name = a_name
+			name_item_set: name_item = a_name
 			arguments_set: arguments = args
 			obsolete_message_set: obsolete_message = an_obsolete
 			preconditions_set: preconditions = a_preconditions
@@ -78,9 +81,7 @@ feature -- System
 			if locals /= Void then
 				locals.add_to_system
 			end
-			if compound /= Void then
-				compound.add_to_system
-			end
+			compound.add_to_system
 		end
 
 end

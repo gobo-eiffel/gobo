@@ -37,7 +37,7 @@ creation
 %token <ET_TOKEN>              E_EXPORT E_EXTERNAL E_FEATURE E_FROM E_FROZEN
 %token <ET_TOKEN>              E_IF E_INDEXING E_INFIX E_INHERIT E_INSPECT
 %token <ET_TOKEN>              E_INVARIANT E_IS E_LIKE E_LOCAL E_LOOP E_OBSOLETE
-%token <ET_TOKEN>              E_ONCE E_PREFIX E_REDEFINE E_RENAME E_REQUIRE
+%token <ET_TOKEN>              E_ONCE E_ONCE_STRING E_PREFIX E_REDEFINE E_RENAME E_REQUIRE
 %token <ET_TOKEN>              E_RESCUE E_SELECT E_STRIP
 %token <ET_TOKEN>              E_THEN E_UNDEFINE E_UNIQUE E_UNTIL E_VARIANT
 %token <ET_TOKEN>              E_WHEN E_PRECURSOR
@@ -131,12 +131,15 @@ creation
 %type <ET_EXPORTS>             New_exports New_exports_opt New_export_list
 %type <ET_EXPRESSION>          Expression Call_chain Precursor_expression
                                Address_mark Create_expression
+%type <ET_EXTERNAL_ALIAS>      External_name_opt
 %type <ET_FEATURE>             Feature_declaration Single_feature_declaration
                                Attribute_declaration Constant_declaration Unique_declaration
                                Do_procedure_declaration Once_procedure_declaration
                                Deferred_procedure_declaration External_procedure_declaration
                                Do_function_declaration Once_function_declaration
                                Deferred_function_declaration External_function_declaration
+%type <ET_FEATURE_CLAUSE>      Feature_clause Feature_declaration_list
+%type <ET_FEATURE_CLAUSES>     Features Features_opt
 %type <ET_FEATURE_EXPORT>      New_feature_export Export_feature_name_list
 %type <ET_FEATURE_NAME>        Feature_name
 %type <ET_FORMAL_ARGUMENTS>    Formal_arguments_opt Formal_argument_list
@@ -158,7 +161,7 @@ creation
                                Redefine_clause_opt
 %type <ET_LOCAL_VARIABLES>     Local_declarations_opt Local_variable_list
 %type <ET_MANIFEST_ARRAY>      Manifest_array Manifest_array_expression_list
-%type <ET_MANIFEST_STRING>     Manifest_string External_name_opt
+%type <ET_MANIFEST_STRING>     Manifest_string
 %type <ET_MANIFEST_TUPLE>      Manifest_tuple Manifest_tuple_expression_list
 %type <ET_OBSOLETE>            Obsolete_opt
 %type <ET_PARENTHESIZED_EXPRESSION>  Parenthesized_expression
@@ -181,15 +184,15 @@ creation
                                Right_parenthesis Reverse Dotdot Arrow Question_mark
 %type <ET_TOKEN>               Check Create Debug Else Elseif End Ensure From If Invariant
                                Loop Precursor Require Then Until Variant When Inspect Select
-                               Rename Redefine Export Undefine All Creation As Do Once
+                               Rename Redefine Export Undefine All Creation As Do Once Once_string
                                Rescue Like Bit Local Obsolete Inherit Class Agent Feature
-                               Indexing
+                               Indexing Frozen Is Unique External Alias
 %type <ET_TYPE>                Type Constraint_type
 %type <ET_VARIANT>             Variant_clause_opt
 %type <ET_WHEN_PART_LIST>      When_list When_list_opt
 %type <ET_WRITABLE>            Writable
 
-%expect 45
+%expect 41
 %start Class_declarations
 
 %%
@@ -215,6 +218,7 @@ Class_to_end: Class_header Formal_generics_opt Obsolete_opt
 			$$ := $1
 			$$.set_obsolete_message ($3)
 			$$.set_creators ($4)
+			$$.set_feature_clauses ($5)
 			$$.set_invariants ($6)
 			$$.set_second_indexing ($7)
 			$$.set_end_keyword ($8)
@@ -229,6 +233,7 @@ Class_to_end: Class_header Formal_generics_opt Obsolete_opt
 Creators_to_end: Creators_opt Features_opt Invariant_clause_opt Indexing_clause_opt End Class_declaration_opt
 		{
 			last_class.set_creators ($1)
+			last_class.set_feature_clauses ($2)
 			last_class.set_invariants ($3)
 			last_class.set_second_indexing ($4)
 			last_class.set_end_keyword ($5)
@@ -1071,54 +1076,120 @@ Creation_procedure_list: Identifier
 		}
 	;
 
---NOTDONE-----------------------------------------------------------------------
+--------------------------------------------------------------------------------
 
 Features_opt: -- Empty
-	| Features
+		-- { $$ := Void }
+	| { add_counter } Features
+		{
+			$$ := $2
+			remove_counter
+		}
 	;
-	
+
 Features: Feature_clause
-	| Feature_clause Features
+		{ $$ := new_feature_clauses_with_capacity ($1, counter_value + 1) }
+	| Feature_clause
+		{ increment_counter}
+	  Features
+		{
+			$$ := $3
+			$$.put_first ($1)
+		}
 	;
 
 Feature_clause: Feature Clients_opt
-			{
-				if $2 = Void then
-					if new_any_clients ($1.position) = Void then end
-				end
-			}
+		{
+			if $2 = Void then
+				last_clients := new_any_clients ($1.position)
+				$$ := new_feature_clause ($1, last_clients)
+			else
+				last_clients := $2
+				$$ := new_feature_clause ($1, last_clients)
+			end
+		}
 	| Feature Clients_opt
-			{
-				if $2 = Void then
-					if new_any_clients ($1.position) = Void then end
-				end
-			}
+		{
+			if $2 = Void then
+				last_clients := new_any_clients ($1.position)
+			else
+				last_clients := $2
+			end
+			add_counter
+		}
 	  Feature_declaration_list
+		{
+			$$ := $4
+			$$.set_clients (last_clients)
+			$$.set_feature_keyword ($1)
+			remove_counter
+		}
 	;
 
 		-- Note: Does not support 'Header_comment'.
 
 Feature_declaration_list: Feature_declaration
+		{
+			$$ := new_feature_clause_with_capacity (counter_value + 1)
+			$$.put_first ($1)
+		}
 	| Feature_declaration Semicolon
 		-- TODO: Syntax error
-	| Feature_declaration Feature_declaration_list
-	| Feature_declaration Semicolon Feature_declaration_list
+		{
+			$$ := new_feature_clause_with_capacity (counter_value + 1)
+			$$.put_first (new_feature_semicolon ($1, $2))
+		}
+	| Feature_declaration
+		{ increment_counter }
+	  Feature_declaration_list
+		{
+			$$ := $3
+			$$.put_first ($1)
+		}
+	| Feature_declaration Semicolon
+		{ increment_counter }
+	  Feature_declaration_list
+		{
+			$$ := $4
+			$$.put_first (new_feature_semicolon ($1, $2))
+		}
 	;
 
---NOTDONE-----------------------------------------------------------------------
+--------------------------------------------------------------------------------
 
 Feature_declaration: Single_feature_declaration
-		{ $$ := $1; register_feature ($$) }
-	| E_FROZEN Single_feature_declaration
-		{ $$ := $2; register_frozen_feature ($$) }
-	| Feature_name ',' Feature_declaration
-		{ $$ := new_synonym_feature ($1, $3); register_feature ($$) }
+		{
+			$$ := $1
+			register_feature ($$)
+		}
+	| Frozen Single_feature_declaration
+		{
+			$$ := $2
+			$$.set_frozen_keyword ($1)
+			register_feature ($$)
+		}
+	| Feature_name Comma Feature_declaration
+		{
+			$$ := new_synonym_feature (new_feature_name_comma ($1, $2), $3)
+			register_feature ($$)
+		}
 	| Feature_name Feature_declaration
-		{ $$ := new_synonym_feature ($1, $2); register_feature ($$) }
-	| E_FROZEN Feature_name ',' Feature_declaration
-		{ $$ := new_synonym_feature ($2, $4); register_frozen_feature ($$) }
-	| E_FROZEN Feature_name Feature_declaration
-		{ $$ := new_synonym_feature ($2, $3); register_frozen_feature ($$) }
+		{
+			$$ := new_synonym_feature ($1, $2)
+			register_feature ($$)
+		}
+	| Frozen Feature_name Comma Feature_declaration
+		{
+			$$ := new_synonym_feature (new_feature_name_comma ($2, $3), $4)
+			$$.set_frozen_keyword ($1)
+			register_feature ($$)
+		}
+	| Frozen Feature_name Feature_declaration
+		{
+			$$ := new_synonym_feature ($2, $3)
+			$$.set_frozen_keyword ($1)
+			register_feature ($$)
+		}
 	;
 
 Single_feature_declaration: Attribute_declaration
@@ -1145,68 +1216,70 @@ Single_feature_declaration: Attribute_declaration
 		{ $$ := $1 }
 	;
 
-Attribute_declaration: Feature_name Formal_arguments_opt ':' Type
-		{ $$ := new_attribute ($1, $2, $4) }
+Attribute_declaration: Feature_name Formal_arguments_opt Colon Type
+		{ $$ := new_attribute ($1, $2, new_colon_type ($3, $4)) }
 	;
 
-Constant_declaration: Feature_name Formal_arguments_opt ':' Type E_IS Manifest_constant
-		{ $$ := new_constant_attribute ($1, $2, $4, $6) }
+Constant_declaration: Feature_name Formal_arguments_opt Colon Type Is Manifest_constant
+		{
+			$$ := new_constant_attribute ($1, $2, new_colon_type ($3, $4), $5, $6)
+		}
 	;
 
-Unique_declaration: Feature_name Formal_arguments_opt ':' Type E_IS E_UNIQUE
-		{ $$ := new_unique_attribute ($1, $2, $4) }
+Unique_declaration: Feature_name Formal_arguments_opt Colon Type Is Unique
+		{ $$ := new_unique_attribute ($1, $2, new_colon_type ($3, $4), $5, $6) }
 	;
 
-Do_procedure_declaration: Feature_name Formal_arguments_opt E_IS
+Do_procedure_declaration: Feature_name Formal_arguments_opt Is
 	Obsolete_opt Precondition_opt Local_declarations_opt
 	Do_compound Postcondition_opt Rescue_opt End
-		{ $$ := new_do_procedure ($1, $2, $4, $5, $6, $7, $8, $9) }
+		{ $$ := new_do_procedure ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10) }
 	;
 
-Once_procedure_declaration: Feature_name Formal_arguments_opt E_IS
+Once_procedure_declaration: Feature_name Formal_arguments_opt Is
 	Obsolete_opt Precondition_opt Local_declarations_opt
 	Once_compound Postcondition_opt Rescue_opt End
-		{ $$ := new_once_procedure ($1, $2, $4, $5, $6, $7, $8, $9) }
+		{ $$ := new_once_procedure ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10) }
 	;
 
-Deferred_procedure_declaration: Feature_name Formal_arguments_opt E_IS
-	Obsolete_opt Precondition_opt E_DEFERRED Postcondition_opt End
-		{ $$ := new_deferred_procedure ($1, $2, $4, $5, $7) }
+Deferred_procedure_declaration: Feature_name Formal_arguments_opt Is
+	Obsolete_opt Precondition_opt Deferred Postcondition_opt End
+		{ $$ := new_deferred_procedure ($1, $2, $3, $4, $5, $6, $7, $8) }
 	;
 
-External_procedure_declaration: Feature_name Formal_arguments_opt E_IS
-	Obsolete_opt Precondition_opt E_EXTERNAL Manifest_string
+External_procedure_declaration: Feature_name Formal_arguments_opt Is
+	Obsolete_opt Precondition_opt External Manifest_string
 	External_name_opt Postcondition_opt End
-		{ $$ := new_external_procedure ($1, $2, $4, $5, $7, $8, $9) }
+		{ $$ := new_external_procedure ($1, $2, $3, $4, $5, new_external_language ($6, $7), $8, $9, $10) }
 	;
 
-Do_function_declaration: Feature_name Formal_arguments_opt ':' Type E_IS
+Do_function_declaration: Feature_name Formal_arguments_opt Colon Type Is
 	Obsolete_opt Precondition_opt Local_declarations_opt
 	Do_compound Postcondition_opt Rescue_opt End
-		{ $$ := new_do_function ($1, $2, $4, $6, $7, $8, $9, $10, $11) }
+		{ $$ := new_do_function ($1, $2, new_colon_type ($3, $4), $5, $6, $7, $8, $9, $10, $11, $12) }
 	;
 
-Once_function_declaration: Feature_name Formal_arguments_opt ':' Type E_IS
+Once_function_declaration: Feature_name Formal_arguments_opt Colon Type Is
 	Obsolete_opt Precondition_opt Local_declarations_opt
 	Once_compound Postcondition_opt Rescue_opt End
-		{ $$ := new_once_function ($1, $2, $4, $6, $7, $8, $9, $10, $11) }
+		{ $$ := new_once_function ($1, $2, new_colon_type ($3, $4), $5, $6, $7, $8, $9, $10, $11, $12) }
 	;
 
-Deferred_function_declaration: Feature_name Formal_arguments_opt ':' Type E_IS
-	Obsolete_opt Precondition_opt E_DEFERRED Postcondition_opt End
-		{ $$ := new_deferred_function ($1, $2, $4, $6, $7, $9) }
+Deferred_function_declaration: Feature_name Formal_arguments_opt Colon Type Is
+	Obsolete_opt Precondition_opt Deferred Postcondition_opt End
+		{ $$ := new_deferred_function ($1, $2, new_colon_type ($3, $4), $5, $6, $7, $8, $9, $10) }
 	;
 
-External_function_declaration: Feature_name Formal_arguments_opt ':' Type E_IS
-	Obsolete_opt Precondition_opt E_EXTERNAL Manifest_string
+External_function_declaration: Feature_name Formal_arguments_opt Colon Type Is
+	Obsolete_opt Precondition_opt External Manifest_string
 	External_name_opt Postcondition_opt End
-		{ $$ := new_external_function ($1, $2, $4, $6, $7, $9, $10, $11) }
+		{ $$ := new_external_function ($1, $2, new_colon_type ($3, $4), $5, $6, $7, new_external_language ($8, $9), $10, $11, $12) }
 	;
 
 External_name_opt: -- Empty
 		-- { $$ := Void }
-	| E_ALIAS Manifest_string
-		{ $$ := $2 }
+	| Alias Manifest_string
+		{ $$ := new_external_alias ($1, $2) }
 	;
 
 ------------------------------------------------------------------------------------
@@ -1554,12 +1627,12 @@ Formal_arguments_opt: -- Empty
 Formal_argument_list: Identifier Colon Type
 		{
 			$$ := new_formal_arguments_with_capacity (counter_value + 1)
-			$$.put_first (new_colon_formal_argument (new_argument_name_colon ($1, $2), $3))
+			$$.put_first (new_colon_formal_argument ($1, new_colon_type ($2, $3)))
 		}
 	| Identifier Colon Type Semicolon
 		{
 			$$ := new_formal_arguments_with_capacity (counter_value + 1)
-			$$.put_first (new_formal_argument_semicolon (new_colon_formal_argument (new_argument_name_colon ($1, $2), $3), $4))
+			$$.put_first (new_formal_argument_semicolon (new_colon_formal_argument ($1, new_colon_type ($2, $3)), $4))
 		}
 	| Identifier Comma
 		{ increment_counter }
@@ -1580,14 +1653,14 @@ Formal_argument_list: Identifier Colon Type
 	  Formal_argument_list
 		{
 			$$ := $6
-			$$.put_first (new_formal_argument_semicolon (new_colon_formal_argument (new_argument_name_colon ($1, $2), $3), $4))
+			$$.put_first (new_formal_argument_semicolon (new_colon_formal_argument ($1, new_colon_type ($2, $3)), $4))
 		}
 	| Identifier Colon Type
 		{ increment_counter }
 	  Formal_argument_list
 		{
 			$$ := $5
-			$$.put_first (new_colon_formal_argument (new_argument_name_colon ($1, $2), $3))
+			$$.put_first (new_colon_formal_argument ($1, new_colon_type ($2, $3)))
 		}
 	;
 
@@ -1610,12 +1683,12 @@ Local_declarations_opt: -- Empty
 Local_variable_list: Identifier Colon Type
 		{
 			$$ := new_local_variables_with_capacity (counter_value + 1)
-			$$.put_first (new_colon_local_variable (new_local_name_colon ($1, $2), $3))
+			$$.put_first (new_colon_local_variable ($1, new_colon_type ($2, $3)))
 		}
 	| Identifier Colon Type Semicolon
 		{
 			$$ := new_local_variables_with_capacity (counter_value + 1)
-			$$.put_first (new_local_variable_semicolon (new_colon_local_variable (new_local_name_colon ($1, $2), $3), $4))
+			$$.put_first (new_local_variable_semicolon (new_colon_local_variable ($1, new_colon_type ($2, $3)), $4))
 		}
 	| Identifier Comma
 		{ increment_counter }
@@ -1636,14 +1709,14 @@ Local_variable_list: Identifier Colon Type
 	  Local_variable_list
 		{
 			$$ := $6
-			$$.put_first (new_local_variable_semicolon (new_colon_local_variable (new_local_name_colon ($1, $2), $3), $4))
+			$$.put_first (new_local_variable_semicolon (new_colon_local_variable ($1, new_colon_type ($2, $3)), $4))
 		}
 	| Identifier Colon Type
 		{ increment_counter }
 	  Local_variable_list
 		{
 			$$ := $5
-			$$.put_first (new_colon_local_variable (new_local_name_colon ($1, $2), $3))
+			$$.put_first (new_colon_local_variable ($1, new_colon_type ($2, $3)))
 		}
 	;
 
@@ -1706,7 +1779,7 @@ Variant_clause_opt: -- Empty
 	| Variant Expression
 		{ $$ := new_expression_variant ($1, $2) }
 	| Variant Identifier Colon Expression
-		{ $$ := new_tagged_expression_variant ($1, $2, $3, $4) }
+		{ $$ := new_tagged_expression_variant ($1, new_tag ($2, $3), $4) }
 	;
 
 ------------------------------------------------------------------------------------
@@ -2348,7 +2421,20 @@ Expression: Call_expression
 		}
 	| Manifest_string
 		{ $$ := $1 }
-	| Once Manifest_string
+	| Once_string Manifest_string
+-- We need to make the distinction between once keywords followed
+-- by a manifest string and once keywords introducing a once-routine
+-- because otherwise we would need to have two look-ahead tokens
+-- to figure out that the first once keyword in the following example
+-- in part of a once manifest string expression and the second is
+-- part of the compound of the once routine:
+--   f is
+--      require
+--         once "foo" /= Void
+--      once
+--         do_nothing
+--      end
+-- Hence the use of 'Once_string' instead of 'Once'.
 		{ $$ := new_once_manifest_string ($1, $2) }
 	| Bit_constant
 		{ $$ := $1 }
@@ -3036,6 +3122,17 @@ Agent: E_AGENT
 		}
 	;
 
+Alias: E_ALIAS
+		{ $$ := $1 }
+	| E_ALIAS E_BREAK
+		{
+			$$ := $1
+			if keep_all_breaks or keep_all_comments then
+				$$.set_break ($2)
+			end
+		}
+	;
+
 All: E_ALL
 		{ $$ := $1 }
 	| E_ALL E_BREAK
@@ -3221,6 +3318,17 @@ Export: E_EXPORT
 		}
 	;
 
+External: E_EXTERNAL
+		{ $$ := $1 }
+	| E_EXTERNAL E_BREAK
+		{
+			$$ := $1
+			if keep_all_breaks or keep_all_comments then
+				$$.set_break ($2)
+			end
+		}
+	;
+
 Feature: E_FEATURE
 		{ $$ := $1 }
 	| E_FEATURE E_BREAK
@@ -3235,6 +3343,17 @@ Feature: E_FEATURE
 From: E_FROM
 		{ $$ := $1 }
 	| E_FROM E_BREAK
+		{
+			$$ := $1
+			if keep_all_breaks or keep_all_comments then
+				$$.set_break ($2)
+			end
+		}
+	;
+
+Frozen: E_FROZEN
+		{ $$ := $1 }
+	| E_FROZEN E_BREAK
 		{
 			$$ := $1
 			if keep_all_breaks or keep_all_comments then
@@ -3298,6 +3417,15 @@ Invariant: E_INVARIANT
 		}
 	;
 
+Is: E_IS
+		{ $$ := $1 }
+	| E_IS E_BREAK
+		{
+			$$ := $1
+			$$.set_break ($2)
+		}
+	;
+
 Like: E_LIKE
 		{ $$ := $1 }
 	| E_LIKE E_BREAK
@@ -3345,6 +3473,17 @@ Obsolete: E_OBSOLETE
 Once: E_ONCE
 		{ $$ := $1 }
 	| E_ONCE E_BREAK
+		{
+			$$ := $1
+			if keep_all_breaks or keep_all_comments then
+				$$.set_break ($2)
+			end
+		}
+	;
+
+Once_string: E_ONCE_STRING
+		{ $$ := $1 }
+	| E_ONCE_STRING E_BREAK
 		{
 			$$ := $1
 			if keep_all_breaks or keep_all_comments then
@@ -3482,6 +3621,15 @@ Undefine: E_UNDEFINE
 			if keep_all_breaks or keep_all_comments then
 				$$.set_break ($2)
 			end
+		}
+	;
+
+Unique: E_UNIQUE
+		{ $$ := $1 }
+	| E_UNIQUE E_BREAK
+		{
+			$$ := $1
+			$$.set_break ($2)
 		}
 	;
 

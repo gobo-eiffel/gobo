@@ -18,10 +18,10 @@ inherit
 
 feature -- Access
 
-	language: ET_MANIFEST_STRING
+	language: ET_EXTERNAL_LANGUAGE
 			-- External language
 
-	alias_clause: ET_MANIFEST_STRING
+	alias_clause: ET_EXTERNAL_ALIAS
 			-- Alias clause
 
 invariant

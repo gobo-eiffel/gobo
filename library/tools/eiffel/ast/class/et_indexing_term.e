@@ -18,7 +18,7 @@ inherit
 
 feature -- Access
 
-	indexing_term_item: ET_INDEXING_TERM is
+	indexing_term: ET_INDEXING_TERM is
 			-- Indexing term in comma-separated list
 		do
 			Result := Current

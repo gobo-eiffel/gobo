@@ -18,11 +18,11 @@ inherit
 
 feature -- Access
 
-	parent_item: ET_PARENT is
+	parent: ET_PARENT is
 			-- Class parent in semicolon-separated list
 		deferred
 		ensure
-			parent_item_not_void: Result /= Void
+			parent_not_void: Result /= Void
 		end
 
 end

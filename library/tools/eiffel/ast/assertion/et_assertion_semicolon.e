@@ -22,22 +22,22 @@ creation
 
 feature {NONE} -- Initialization
 
-	make (an_assertion: like assertion_item; a_semicolon: like semicolon) is
+	make (an_assertion: like assertion; a_semicolon: like semicolon) is
 			-- Create a new assertion-semicolon.
 		require
 			an_assertion_not_void: an_assertion /= Void
 			a_semicolon_not_void: a_semicolon /= Void
 		do
-			assertion_item := an_assertion
+			assertion := an_assertion
 			semicolon := a_semicolon
 		ensure
-			assertion_item_set: assertion_item = an_assertion
+			assertion_set: assertion = an_assertion
 			semicolon_set: semicolon = a_semicolon
 		end
 
 feature -- Access
 
-	assertion_item: ET_ASSERTION
+	assertion: ET_ASSERTION
 			-- Assertion in list of assertions
 
 	semicolon: ET_SYMBOL
@@ -47,7 +47,7 @@ feature -- Access
 			-- Position of first character of
 			-- current node in source code
 		do
-			Result := assertion_item.position
+			Result := assertion.position
 		end
 
 	break: ET_BREAK is

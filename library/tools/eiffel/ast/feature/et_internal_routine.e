@@ -27,4 +27,8 @@ feature -- Access
 	rescue_clause: ET_COMPOUND
 			-- Rescue clause
 
+invariant
+
+	compound_not_void: compound /= Void
+
 end

@@ -75,7 +75,7 @@ feature -- Access
 			i_large_enough: i >= 1
 			i_small_enough: i <= count
 		do
-			Result := item (i).type_item
+			Result := item (i).type
 		ensure
 			type_not_void: Result /= Void
 		end

@@ -449,6 +449,26 @@ once		{
 				last_token := E_ONCE
 				last_value := new_token (text)
 			}
+-- We need to make the distinction between once keywords followed
+-- by a manifest string and once keywords introducing a once-routine
+-- because otherwise we would need to have two look-ahead tokens
+-- to figure out that the first once keyword in the following example
+-- in part of a once manifest string expression and the second is
+-- part of the compound of the once routine:
+--   f is
+--      require
+--         once "foo" /= Void
+--      once
+--         do_nothing
+--      end
+once/([ \t\r\n]|"--".*\n)+\"	{
+				last_token := E_ONCE_STRING
+				last_value := new_token (once_keyword)
+			}
+[oO][nN][cC][eE]/([ \t\r\n]|"--".*\n)+\"	{
+				last_token := E_ONCE_STRING
+				last_value := new_token (text)
+			}
 or			{
 				last_token := E_OR
 				last_value := new_infix_or_operator (or_keyword)

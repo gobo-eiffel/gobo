@@ -18,11 +18,11 @@ inherit
 
 feature -- Access
 
-	manifest_string_item: ET_MANIFEST_STRING is
+	manifest_string: ET_MANIFEST_STRING is
 			-- Manifest string in comma-separated list
 		deferred
 		ensure
-			manifest_string_item_not_void: Result /= Void
+			manifest_string_not_void: Result /= Void
 		end
 
 end

@@ -78,7 +78,7 @@ feature -- Access
 			i_large_enough: i >= 1
 			i_small_enough: i <= count
 		do
-			Result := formal_generic_parameter_item (i).formal_generic_parameter_item
+			Result := formal_generic_parameter_item (i).formal_generic_parameter
 		ensure
 			item_not_void: Result /= Void
 		end
@@ -319,7 +319,7 @@ feature -- Element change
 			-- Put `an_item' at first position in list.
 		do
 			precursor (an_item)
-			an_item.formal_generic_parameter_item.set_index (capacity - count + 1)
+			an_item.formal_generic_parameter.set_index (capacity - count + 1)
 		end
 
 feature {NONE} -- Implementation

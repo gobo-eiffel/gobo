@@ -22,12 +22,15 @@ creation
 
 feature -- Duplication
 
-	synonym (a_name: like name): like Current is
+	new_synonym (a_name: like name_item): like Current is
 			-- Synonym feature
 		do
 			Result := universe.new_do_function (a_name,
-				arguments, type, obsolete_message, preconditions, locals,
+				arguments, declared_type, obsolete_message, preconditions, locals,
 				compound, postconditions, rescue_clause, clients, current_class)
+			Result.set_is_keyword (is_keyword)
+			Result.set_end_keyword (end_keyword)
+			Result.set_synonym (Current)
 		end
 
 feature -- Conversion
@@ -36,10 +39,13 @@ feature -- Conversion
 			-- Renamed version of current feature
 		do
 			Result := universe.new_do_function (a_name,
-				arguments, type, obsolete_message, preconditions, locals,
+				arguments, declared_type, obsolete_message, preconditions, locals,
 				compound, postconditions, rescue_clause, clients, current_class)
+			Result.set_is_keyword (is_keyword)
+			Result.set_end_keyword (end_keyword)
 			Result.set_implementation_class (implementation_class)
 			Result.set_version (version)
+			Result.set_frozen_keyword (frozen_keyword)
 			if seeds /= Void then
 				Result.set_seeds (seeds)
 			else

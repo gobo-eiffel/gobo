@@ -64,6 +64,14 @@ feature -- Keywords
 			keyword_not_void: Result /= Void
 		end
 
+	deferred_keyword: ET_DEFERRED_KEYWORD is
+			-- 'deferred' keyword
+		once
+			!! Result.make (deferred_keyword_name)
+		ensure
+			keyword_not_void: Result /= Void
+		end
+
 	end_keyword: ET_TOKEN is
 			-- 'end' keyword
 		once
@@ -80,6 +88,14 @@ feature -- Keywords
 			keyword_not_void: Result /= Void
 		end
 
+	feature_keyword: ET_TOKEN is
+			-- 'feature' keyword
+		once
+			!! Result.make (feature_keyword_name)
+		ensure
+			keyword_not_void: Result /= Void
+		end
+
 	indexing_keyword: ET_TOKEN is
 			-- 'indexing' keyword
 		once
@@ -92,6 +108,14 @@ feature -- Keywords
 			-- 'inherit' keyword
 		once
 			!! Result.make (inherit_keyword_name)
+		ensure
+			keyword_not_void: Result /= Void
+		end
+
+	is_keyword: ET_TOKEN is
+			-- 'is' keyword
+		once
+			!! Result.make (is_keyword_name)
 		ensure
 			keyword_not_void: Result /= Void
 		end
@@ -116,6 +140,14 @@ feature -- Keywords
 			-- 'strip' keyword
 		once
 			!! Result.make (strip_keyword_name)
+		ensure
+			keyword_not_void: Result /= Void
+		end
+
+	unique_keyword: ET_TOKEN is
+			-- 'unique' keyword
+		once
+			!! Result.make (unique_keyword_name)
 		ensure
 			keyword_not_void: Result /= Void
 		end
