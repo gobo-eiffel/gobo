@@ -24,8 +24,8 @@ creation
 feature
 
 	make (a_event_parser_factory: XM_EVENT_PARSER_FACTORY) is
-			-- Create factory and use `a_event_parser_factory' to 
-			-- retrieve event based parser for creation of the tree 
+			-- Create factory and use `a_event_parser_factory' to
+			-- retrieve event based parser for creation of the tree
 			-- based parsers.
 		require
 			a_event_parser_factory_not_void: a_event_parser_factory /= Void

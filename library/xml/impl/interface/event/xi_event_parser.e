@@ -42,13 +42,13 @@ feature {ANY} -- Status
 
 feature {NONE} -- Redefinable callbacks
 
-	on_element_declaration (name: UC_STRING) is
+	on_element_declaration (name: UC_STRING; model: POINTER) is
 			-- Called for an XML element declaration (DTD)
 		require
 			valid_name: name /= Void and name.count > 0
-			-- valid_model: model /= default_pointer
+			valid_model: model /= default_pointer
 		do
-			interface.on_element_declaration (name)
+			interface.on_element_declaration (name, model)
 		end
 
 	on_attribute_declaration (element_name, attribute_name, attribute_type, default_value: UC_STRING; is_required: BOOLEAN) is
@@ -123,7 +123,7 @@ feature {NONE} -- Redefinable callbacks
 		end
 
 	on_default (data: UC_STRING) is
-			-- Called if the parser finds something that does not fit 
+			-- Called if the parser finds something that does not fit
 			-- into for any of the other callbacks
 		do
 			interface.on_default (data)
@@ -157,7 +157,7 @@ feature {NONE} -- Redefinable callbacks
 		end
 
 	on_start_namespace_declaration (namespace_prefix, uri: UC_STRING) is
-			-- Called when the parser finds the beginning of a 
+			-- Called when the parser finds the beginning of a
 			-- namespace declaration
 		do
 			interface.on_start_namespace_declaration (namespace_prefix, uri)

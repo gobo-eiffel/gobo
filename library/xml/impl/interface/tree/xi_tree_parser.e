@@ -31,7 +31,7 @@ feature {ANY} -- Access
 		end
 
 	last_position_table: XM_POSITION_TABLE is
-			-- Returns the last generated position table, which maps 
+			-- Returns the last generated position table, which maps
 			-- xml nodes to their exact location in the source document
 		deferred
 		end
@@ -39,13 +39,13 @@ feature {ANY} -- Access
 feature {ANY} -- Basic opertations
 
 	enable_position_table is
-			-- Enable the creation of a position table while parsing 
+			-- Enable the creation of a position table while parsing
 			-- a document.
 		deferred
 		end
 
 	disable_position_table is
-			-- Disable the creation of a position table while parsing 
+			-- Disable the creation of a position table while parsing
 			-- a document.
 		deferred
 		end

@@ -4,8 +4,8 @@ indexing
 
 		"Class for parsing XML documents using Expat."
 
-	status:	 "See notice at end of class."
-	author:	 "Andreas Leitner"
+	status: "See notice at end of class."
+	author: "Leitner"
 
 class XP_EVENT_PARSER
 
@@ -380,7 +380,7 @@ feature -- Callback unregistering, should be in xi_event_parser
 			-- quite useful when an error has been found, and you want to
 			-- stop processing things. There doesn't seem to be a way to
 			-- signal the parser, but unregistering everything has the
-			-- same for the client class.
+			-- same effect for the client class.
 		require
 			created: is_parser_created
 		do
@@ -435,7 +435,7 @@ feature {NONE} -- (low level) frozen callbacks (called from exml clib)
 			name: UC_STRING
 		do
 			name := new_uc_string_from_c_utf8_zero_terminated_string (name_ptr)
-			on_element_declaration (name)
+			on_element_declaration (name, model_ptr)
 		end
 
 	frozen on_attribute_declaration_procedure (elname_ptr, attname_ptr, att_type_ptr, dflt_ptr: POINTER; is_required: BOOLEAN) is
@@ -456,7 +456,7 @@ feature {NONE} -- (low level) frozen callbacks (called from exml clib)
 		do
 			ucversion := new_uc_string_from_c_utf8_zero_terminated_string (version_ptr)
 			ucencoding := new_uc_string_from_c_utf8_zero_terminated_string_safe (encoding_ptr)
-			if standalone /= 0 then
+			if standalone = 1 then
 				bool_standalone := True
 			end
 			on_xml_declaration (ucversion, ucencoding, bool_standalone)
@@ -637,6 +637,9 @@ feature {NONE} -- (low level) frozen callbacks (called from exml clib)
 			system_id: UC_STRING
 			in_file: KL_TEXT_INPUT_FILE
 		do
+			debug ("EXPAT")
+				print ("on_external_entity_reference%N")
+			end
 			parent_item := item
 			encoding := default_pointer
 			item := exml_XML_ExternalEntityParserCreate (parent_item, context_ptr, encoding)

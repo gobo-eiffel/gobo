@@ -92,7 +92,7 @@ feature {ANY} -- Incremental parsing
 		end
 
 	set_end_of_document is
-			-- Call this routine to tell the parser that the document 
+			-- Call this routine to tell the parser that the document
 			-- has been completly parsed and no input is comming anymore.
 		require
 			is_incremental: is_incremental

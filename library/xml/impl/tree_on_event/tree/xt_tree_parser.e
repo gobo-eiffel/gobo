@@ -34,7 +34,7 @@ creation
 feature {NONE} -- Initialisation
 
 	make_from_implementation (a_imp: XI_EVENT_PARSER) is
-			-- Create a new tree based parser from the event based 
+			-- Create a new tree based parser from the event based
 			-- parser `a_imp'.
 		do
 			make_from_implementation_event (a_imp)

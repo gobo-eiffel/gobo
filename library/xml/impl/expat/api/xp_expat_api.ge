@@ -4,12 +4,12 @@ indexing
 
 		"Class that makes the complete Expat 1.95 API available."
 
-	library:    "Gobo Eiffel XML Library"
-	author:     "Eric Bezault <ericb@gobosoft.com>"
-	copyright:  "Copyright (c) 2001, Eric Bezault and others"
-	license:    "Eiffel Forum Freeware License v1 (see forum.txt)"
-	date:       "$Date$"
-	revision:   "$Revision$"
+	library:		"Gobo Eiffel XML Library"
+	author:		"Eric Bezault <ericb@gobosoft.com>"
+	copyright:	"Copyright (c) 2001, Eric Bezault and others"
+	license:		"Eiffel Forum Freeware License v1 (see forum.txt)"
+	date:			"$Date$"
+	revision:	"$Revision$"
 
 class XP_EXPAT_API
 
@@ -36,9 +36,6 @@ feature -- Initialization
 	init_api is
 			-- Initialize Expat API.
 		once
-#ifdef SE
-			c_inline_h ("#include <expat.h>")
-#endif
 		end
 
 feature -- Creating and destroying parsers
@@ -48,11 +45,11 @@ feature -- Creating and destroying parsers
 			-- specified by the external protocol or null if there
 			-- is none specified.
 		external
-#ifdef SE
-			"C_InlineWithoutCurrent"
+#ifdef SE || ISE
+			"C use <expat.h>"
 #endif
-#ifdef ISE || HACT
-			"C | <expat.h>"
+#ifdef HACT
+			"C use <expat.h>"
 #endif
 #ifdef VE
 			"C"
@@ -62,22 +59,22 @@ feature -- Creating and destroying parsers
 		end
 
 	exml_XML_ParserCreateNS (encoding: POINTER; namespace_separator: CHARACTER): POINTER is
-			-- Create a new parser and namespace processor.  Element
+			-- Create a new parser and namespace processor.	Element
 			-- type names and attribute names that belong to a namespace
 			-- will be expanded; unprefixed attribute names are never
 			-- expanded; unprefixed element type names are expanded only
 			-- if there is a default namespace. The expanded name is the
 			-- concatenation of the namespace URI, the namespace
-			-- separator character, and the local part of the name.  If
+			-- separator character, and the local part of the name.	If
 			-- the namespace separator is '\0' then the namespace URI and
 			-- the local part will be concatenated without any separator.
 			-- When a namespace is not declared, the name and prefix will
 			-- be passed through without expansion.
 		external
-#ifdef SE
-			"C_InlineWithoutCurrent"
+#ifdef SE || ISE
+			"C use <expat.h>"
 #endif
-#ifdef ISE || HACT
+#ifdef HACT
 			"C | <expat.h>"
 #endif
 #ifdef VE
@@ -93,14 +90,14 @@ feature -- Creating and destroying parsers
 			-- standard library memory suite. If namespaceSeparator is
 			-- non-NULL it creates a parser with namespace processing as
 			-- described above. The character pointed at will serve as
-			-- the namespace separator.  
+			-- the namespace separator.
 			-- All further memory operations used for the created parser
 			-- will come from the given suite.
 		external
-#ifdef SE
-			"C_InlineWithoutCurrent"
+#ifdef SE || ISE
+			"C use <expat.h>"
 #endif
-#ifdef ISE || HACT
+#ifdef HACT
 			"C | <expat.h>"
 #endif
 #ifdef VE
@@ -111,7 +108,7 @@ feature -- Creating and destroying parsers
 		end
 
 	exml_XML_ExternalEntityParserCreate (parser_handle: POINTER; context: POINTER; encoding: POINTER): POINTER is
-			-- Create an XM_Parser object that can parse an external general 
+			-- Create an XM_Parser object that can parse an external general
 			-- entity;
 			-- context is a '\0'-terminated string specifying the parse context;
 			-- encoding is a '\0'-terminated string giving the name of
@@ -128,15 +125,15 @@ feature -- Creating and destroying parsers
 			-- yet been freed.
 			-- The new parser is completely independent and may safely be
 			-- used in a separate thread.
-			-- The handlers and userData are initialized from the parser 
+			-- The handlers and userData are initialized from the parser
 			-- argument.
-			-- Returns 0 if out of memory.  Otherwise returns a new XM_Parser 
+			-- Returns 0 if out of memory.  Otherwise returns a new XM_Parser
 			-- object.
 		external
-#ifdef SE
-			"C_InlineWithoutCurrent"
+#ifdef SE || ISE
+			"C use <expat.h>"
 #endif
-#ifdef ISE || HACT
+#ifdef HACT
 			"C | <expat.h>"
 #endif
 #ifdef VE
@@ -148,14 +145,14 @@ feature -- Creating and destroying parsers
 
 	exml_XML_ParserFree (parser_handle: POINTER) is
 			-- Free memory used by the parser.
-			-- If an Eiffel callback has been specified, make sure you 
-			-- have called `exml_XM_SetUserData' with a Void argument, 
+			-- If an Eiffel callback has been specified, make sure you
+			-- have called `exml_XM_SetUserData' with a Void argument,
 			-- else your callback is never available for the gc again.
 		external
-#ifdef SE
-			"C_InlineWithoutCurrent"
+#ifdef SE || ISE
+			"C use <expat.h>"
 #endif
-#ifdef ISE || HACT
+#ifdef HACT
 			"C | <expat.h>"
 #endif
 #ifdef VE
@@ -165,11 +162,11 @@ feature -- Creating and destroying parsers
 			"XML_ParserFree"
 		end
 
-feature -- Parsing      
+feature -- Parsing
 
-	exml_XML_Parse_string (a_parser: POINTER; str: STRING; is_final: BOOLEAN): INTEGER  is
-			-- Parse some input. Return 0 if a fatal error is 
-			-- detected. The last call to XML_Parse must have isFinal 
+	exml_XML_Parse_string (a_parser: POINTER; str: STRING; is_final: BOOLEAN): INTEGER	is
+			-- Parse some input. Return 0 if a fatal error is
+			-- detected. The last call to XML_Parse must have isFinal
 			-- true; `str' may be empty
 		require
 			a_parser_not_null: a_parser /= default_pointer
@@ -192,17 +189,17 @@ feature -- Parsing
 #endif
 		end
 
-	exml_XML_Parse (a_parser: POINTER; s: POINTER; len: INTEGER; is_final: INTEGER): INTEGER  is
-			-- Parse some input. Return 0 if a fatal error is 
-			-- detected. The last call to XML_Parse must have isFinal 
+	exml_XML_Parse (a_parser: POINTER; s: POINTER; len: INTEGER; is_final: INTEGER): INTEGER	is
+			-- Parse some input. Return 0 if a fatal error is
+			-- detected. The last call to XML_Parse must have isFinal
 			-- true; len may be zero for this call (or any other).
 		require
 			a_parser_not_null: a_parser /= default_pointer
 		external
-#ifdef SE
-			"C_InlineWithoutCurrent"
+#ifdef SE || ISE
+			"C use <expat.h>"
 #endif
-#ifdef ISE || HACT
+#ifdef HACT
 			"C | <expat.h>"
 #endif
 #ifdef VE
@@ -214,16 +211,16 @@ feature -- Parsing
 
 feature -- Error reporting
 
-	exml_XML_GetErrorCode (a_parser: POINTER): INTEGER  is
-			-- If XML_Parse or XML_ParseBuffer have returned 0, then 
+	exml_XML_GetErrorCode (a_parser: POINTER): INTEGER	is
+			-- If XML_Parse or XML_ParseBuffer have returned 0, then
 			-- XML_GetErrorCode returns information about the error.
 		require
 			a_parser_not_null: a_parser /= default_pointer
 		external
-#ifdef SE
-			"C_InlineWithoutCurrent"
+#ifdef SE || ISE
+			"C use <expat.h>"
 #endif
-#ifdef ISE || HACT
+#ifdef HACT
 			"C | <expat.h>"
 #endif
 #ifdef VE
@@ -236,10 +233,10 @@ feature -- Error reporting
 	exml_XML_ErrorString (code: INTEGER): POINTER is
 			-- Return a string describing the error.
 		external
-#ifdef SE
-			"C_InlineWithoutCurrent"
+#ifdef SE || ISE
+			"C use <expat.h>"
 #endif
-#ifdef ISE || HACT
+#ifdef HACT
 			"C | <expat.h>"
 #endif
 #ifdef VE
@@ -256,18 +253,18 @@ feature -- Parse state
 -- return 0; in this case the location is the location of the
 -- character at which the error was detected.
 
--- They may also be called from any other callback called to 
--- report some parse event; in this the location is the location of the 
+-- They may also be called from any other callback called to
+-- report some parse event; in this the location is the location of the
 -- first of the sequence of characters that generated the event.
 
-	exml_XML_GetCurrentLineNumber (a_parser: POINTER): INTEGER  is
+	exml_XML_GetCurrentLineNumber (a_parser: POINTER): INTEGER	is
 		require
 			a_parser_not_null: a_parser /= default_pointer
 		external
-#ifdef SE
-			"C_InlineWithoutCurrent"
+#ifdef SE || ISE
+			"C use <expat.h>"
 #endif
-#ifdef ISE || HACT
+#ifdef HACT
 			"C | <expat.h>"
 #endif
 #ifdef VE
@@ -281,10 +278,10 @@ feature -- Parse state
 		require
 			a_parser_not_null: a_parser /= default_pointer
 		external
-#ifdef SE
-			"C_InlineWithoutCurrent"
+#ifdef SE || ISE
+			"C use <expat.h>"
 #endif
-#ifdef ISE || HACT
+#ifdef HACT
 			"C | <expat.h>"
 #endif
 #ifdef VE
@@ -298,10 +295,10 @@ feature -- Parse state
 		require
 			a_parser_not_null: a_parser /= default_pointer
 		external
-#ifdef SE
-			"C_InlineWithoutCurrent"
+#ifdef SE || ISE
+			"C use <expat.h>"
 #endif
-#ifdef ISE || HACT
+#ifdef HACT
 			"C | <expat.h>"
 #endif
 #ifdef VE
@@ -332,12 +329,16 @@ feature -- Miscellaneous
 			if a_callback /= Void then
 				ptr := eif_freeze (a_callback)
 				exml_XML_SetUserData (a_parser, ptr)
+				exml_XML_SetExternalEntityRefHandlerArg (a_parser, ptr)
 			else
 				exml_XML_SetUserData (a_parser, default_pointer)
+				exml_XML_SetExternalEntityRefHandlerArg (a_parser, default_pointer)
 			end
 #endif
 #ifdef SE || VE
+				-- BdB: I think we need to freeze for VE too, look it up
 			exml_XML_SetUserData (a_parser, a_callback)
+			exml_XML_SetExternalEntityRefHandlerArg (a_parser, a_callback)
 #endif
 		end
 
@@ -346,13 +347,13 @@ feature -- Miscellaneous
 #else
 	exml_XML_SetUserData (a_parser, a_callback: POINTER) is
 #endif
-			-- This value is passed as the userData argument to 
+			-- This value is passed as the userData argument to
 			-- callbacks.
 		require
 			a_parser_not_null: a_parser /= default_pointer
 		external
 #ifdef SE
-			"C_InlineWithoutCurrent"
+			"C use <expat.h>"
 #endif
 #ifdef ISE || HACT
 			"C | <expat.h>"
@@ -366,7 +367,7 @@ feature -- Miscellaneous
 
 	exml_XML_SetBase_string (a_parser: POINTER; a_base: STRING): BOOLEAN is
 			-- Set the base to be used for resolving relative URIs in
-			-- system identifiers in declarations.  Resolving relative
+			-- system identifiers in declarations.	Resolving relative
 			-- identifiers is left to the application: this value will be
 			-- passed through as the base argument to the
 			-- XML_ExternalEntityRefHandler, XML_NotationDeclHandler and
@@ -392,7 +393,7 @@ feature -- Miscellaneous
 
 	exml_XML_SetBase (a_parser: POINTER; a_base: POINTER): BOOLEAN is
 			-- Set the base to be used for resolving relative URIs in
-			-- system identifiers in declarations.  Resolving relative
+			-- system identifiers in declarations.	Resolving relative
 			-- identifiers is left to the application: this value will be
 			-- passed through as the base argument to the
 			-- XML_ExternalEntityRefHandler, XML_NotationDeclHandler and
@@ -404,7 +405,7 @@ feature -- Miscellaneous
 			a_base_not_null: a_base /= default_pointer
 		external
 #ifdef SE
-			"C_InlineWithoutCurrent"
+			"C use <expat.h>"
 #endif
 #ifdef ISE || HACT
 			"C | <expat.h>"
@@ -421,7 +422,7 @@ feature -- Miscellaneous
 			a_parser_not_null: a_parser /= default_pointer
 		external
 #ifdef SE
-			"C_InlineWithoutCurrent"
+			"C use <expat.h>"
 #endif
 #ifdef ISE || HACT
 			"C | <expat.h>"
@@ -441,7 +442,7 @@ feature -- Miscellaneous
 			-- handler set with `XML_SetExternalEntityRefHandler'.  The
 			-- context passed will be 0. Unlike external general
 			-- entities, external parameter entities can only be parsed
-			-- synchronously.  If the external parameter entity is to be
+			-- synchronously.	If the external parameter entity is to be
 			-- parsed, it must be parsed during the call to the external
 			-- entity ref handler: the complete sequence of
 			-- `XML_ExternalEntityParserCreate', `XML_Parse'/`XML_ParseBuffer'
@@ -450,7 +451,7 @@ feature -- Miscellaneous
 			-- create the parser for the external parameter entity
 			-- (context must be 0 for this call), it is illegal to make
 			-- any calls on the old parser until `XML_ParserFree' has been
-			-- called on the newly created parser.  If the library has
+			-- called on the newly created parser.	If the library has
 			-- been compiled without support for parameter entity parsing
 			-- (ie without XM_DTD being defined), then
 			-- `XML_SetParamEntityParsing' will return 0 if parsing of
@@ -460,7 +461,7 @@ feature -- Miscellaneous
 			a_parser_not_null: a_parser /= default_pointer
 		external
 #ifdef SE
-			"C_InlineWithoutCurrent"
+			"C use <expat.h>"
 #endif
 #ifdef ISE || HACT
 			"C | <expat.h>"
@@ -475,10 +476,10 @@ feature -- Miscellaneous
 	exml_XML_ExpatVersion: POINTER  is
 			-- Return a string containing the version number of this expat
 		external
-#ifdef SE
-			"C_InlineWithoutCurrent"
+#ifdef SE || ISE
+			"C use <expat.h>"
 #endif
-#ifdef ISE || HACT
+#ifdef HACT
 			"C | <expat.h>"
 #endif
 #ifdef VE
@@ -495,7 +496,7 @@ feature -- Handlers
 			a_parser_not_null: a_parser /= default_pointer
 		external
 #ifdef SE
-			"C_InlineWithoutCurrent"
+			"C use <expat.h>"
 #endif
 #ifdef ISE || HACT
 			"C | <expat.h>"
@@ -512,7 +513,7 @@ feature -- Handlers
 			a_parser_not_null: a_parser /= default_pointer
 		external
 #ifdef SE
-			"C_InlineWithoutCurrent"
+			"C use <expat.h>"
 #endif
 #ifdef ISE || HACT
 			"C | <expat.h>"
@@ -529,7 +530,7 @@ feature -- Handlers
 			a_parser_not_null: a_parser /= default_pointer
 		external
 #ifdef SE
-			"C_InlineWithoutCurrent"
+			"C use <expat.h>"
 #endif
 #ifdef ISE || HACT
 			"C | <expat.h>"
@@ -546,7 +547,7 @@ feature -- Handlers
 			a_parser_not_null: a_parser /= default_pointer
 		external
 #ifdef SE
-			"C_InlineWithoutCurrent"
+			"C use <expat.h>"
 #endif
 #ifdef ISE || HACT
 			"C | <expat.h>"
@@ -563,7 +564,7 @@ feature -- Handlers
 			a_parser_not_null: a_parser /= default_pointer
 		external
 #ifdef SE
-			"C_InlineWithoutCurrent"
+			"C use <expat.h>"
 #endif
 #ifdef ISE || HACT
 			"C | <expat.h>"
@@ -580,7 +581,7 @@ feature -- Handlers
 			a_parser_not_null: a_parser /= default_pointer
 		external
 #ifdef SE
-			"C_InlineWithoutCurrent"
+			"C use <expat.h>"
 #endif
 #ifdef ISE || HACT
 			"C | <expat.h>"
@@ -597,7 +598,7 @@ feature -- Handlers
 			a_parser_not_null: a_parser /= default_pointer
 		external
 #ifdef SE
-			"C_InlineWithoutCurrent"
+			"C use <expat.h>"
 #endif
 #ifdef ISE || HACT
 			"C | <expat.h>"
@@ -614,7 +615,7 @@ feature -- Handlers
 			a_parser_not_null: a_parser /= default_pointer
 		external
 #ifdef SE
-			"C_InlineWithoutCurrent"
+			"C use <expat.h>"
 #endif
 #ifdef ISE || HACT
 			"C | <expat.h>"
@@ -631,7 +632,7 @@ feature -- Handlers
 			a_parser_not_null: a_parser /= default_pointer
 		external
 #ifdef SE
-			"C_InlineWithoutCurrent"
+			"C use <expat.h>"
 #endif
 #ifdef ISE || HACT
 			"C | <expat.h>"
@@ -648,7 +649,7 @@ feature -- Handlers
 			a_parser_not_null: a_parser /= default_pointer
 		external
 #ifdef SE
-			"C_InlineWithoutCurrent"
+			"C use <expat.h>"
 #endif
 #ifdef ISE || HACT
 			"C | <expat.h>"
@@ -665,7 +666,7 @@ feature -- Handlers
 			a_parser_not_null: a_parser /= default_pointer
 		external
 #ifdef SE
-			"C_InlineWithoutCurrent"
+			"C use <expat.h>"
 #endif
 #ifdef ISE || HACT
 			"C | <expat.h>"
@@ -682,7 +683,7 @@ feature -- Handlers
 			a_parser_not_null: a_parser /= default_pointer
 		external
 #ifdef SE
-			"C_InlineWithoutCurrent"
+			"C use <expat.h>"
 #endif
 #ifdef ISE || HACT
 			"C | <expat.h>"
@@ -699,7 +700,7 @@ feature -- Handlers
 			a_parser_not_null: a_parser /= default_pointer
 		external
 #ifdef SE
-			"C_InlineWithoutCurrent"
+			"C use <expat.h>"
 #endif
 #ifdef ISE || HACT
 			"C | <expat.h>"
@@ -719,7 +720,7 @@ feature -- Handlers
 			a_parser_not_null: a_parser /= default_pointer
 		external
 #ifdef SE
-			"C_InlineWithoutCurrent"
+			"C use <expat.h>"
 #endif
 #ifdef ISE || HACT
 			"C | <expat.h>"
@@ -739,7 +740,7 @@ feature -- Handlers
 			a_parser_not_null: a_parser /= default_pointer
 		external
 #ifdef SE
-			"C_InlineWithoutCurrent"
+			"C use <expat.h>"
 #endif
 #ifdef ISE || HACT
 			"C | <expat.h>"
@@ -756,7 +757,7 @@ feature -- Handlers
 			a_parser_not_null: a_parser /= default_pointer
 		external
 #ifdef SE
-			"C_InlineWithoutCurrent"
+			"C use <expat.h>"
 #endif
 #ifdef ISE || HACT
 			"C | <expat.h>"
@@ -773,7 +774,7 @@ feature -- Handlers
 			a_parser_not_null: a_parser /= default_pointer
 		external
 #ifdef SE
-			"C_InlineWithoutCurrent"
+			"C use <expat.h>"
 #endif
 #ifdef ISE || HACT
 			"C | <expat.h>"
@@ -790,7 +791,7 @@ feature -- Handlers
 			a_parser_not_null: a_parser /= default_pointer
 		external
 #ifdef SE
-			"C_InlineWithoutCurrent"
+			"C use <expat.h>"
 #endif
 #ifdef ISE || HACT
 			"C | <expat.h>"
@@ -807,7 +808,7 @@ feature -- Handlers
 			a_parser_not_null: a_parser /= default_pointer
 		external
 #ifdef SE
-			"C_InlineWithoutCurrent"
+			"C use <expat.h>"
 #endif
 #ifdef ISE || HACT
 			"C | <expat.h>"
@@ -824,7 +825,7 @@ feature -- Handlers
 			a_parser_not_null: a_parser /= default_pointer
 		external
 #ifdef SE
-			"C_InlineWithoutCurrent"
+			"C use <expat.h>"
 #endif
 #ifdef ISE || HACT
 			"C | <expat.h>"
@@ -841,7 +842,7 @@ feature -- Handlers
 			a_parser_not_null: a_parser /= default_pointer
 		external
 #ifdef SE
-			"C_InlineWithoutCurrent"
+			"C use <expat.h>"
 #endif
 #ifdef ISE || HACT
 			"C | <expat.h>"
@@ -858,7 +859,7 @@ feature -- Handlers
 			a_parser_not_null: a_parser /= default_pointer
 		external
 #ifdef SE
-			"C_InlineWithoutCurrent"
+			"C use <expat.h>"
 #endif
 #ifdef ISE || HACT
 			"C | <expat.h>"
@@ -875,7 +876,7 @@ feature -- Handlers
 			a_parser_not_null: a_parser /= default_pointer
 		external
 #ifdef SE
-			"C_InlineWithoutCurrent"
+			"C use <expat.h>"
 #endif
 #ifdef ISE || HACT
 			"C | <expat.h>"
@@ -892,7 +893,7 @@ feature -- Handlers
 			a_parser_not_null: a_parser /= default_pointer
 		external
 #ifdef SE
-			"C_InlineWithoutCurrent"
+			"C use <expat.h>"
 #endif
 #ifdef ISE || HACT
 			"C | <expat.h>"
@@ -904,12 +905,33 @@ feature -- Handlers
 			"XML_SetExternalEntityRefHandler"
 		end
 
+#ifdef SE || VE
+	exml_XML_SetExternalEntityRefHandlerArg (a_parser: POINTER; a_arg: XP_CALLBACK) is
+#else
+	exml_XML_SetExternalEntityRefHandlerArg (a_parser: POINTER; a_arg: POINTER) is
+#endif
+		require
+			a_parser_not_null: a_parser /= default_pointer
+		external
+#ifdef SE
+			"C use <expat.h>"
+#endif
+#ifdef ISE || HACT
+			"C | <expat.h>"
+#endif
+#ifdef VE
+			"C"
+#endif
+		alias
+			"XML_SetExternalEntityRefHandlerArg"
+		end
+
 	exml_XML_SetUnknownEncodingHandler (a_parser, a_handler, info: POINTER) is
 		require
 			a_parser_not_null: a_parser /= default_pointer
 		external
 #ifdef SE
-			"C_InlineWithoutCurrent"
+			"C use <expat.h>"
 #endif
 #ifdef ISE || HACT
 			"C | <expat.h>"
@@ -921,18 +943,18 @@ feature -- Handlers
 			"XML_SetUnknownEncodingHandler"
 		end
 
-feature -- XML_ParamEntityParsing enum   
+feature -- XML_ParamEntityParsing enum
 
 #ifdef VE
 	XML_PARAM_ENTITY_PARSING_NEVER: INTEGER is 0
 #else
 	XML_PARAM_ENTITY_PARSING_NEVER: INTEGER is
+		external
 #ifdef SE
-		do
-			c_inline_c ("R = XML_PARAM_ENTITY_PARSING_NEVER;%N")
+			"C macro use <expat.h>"
+--			c_inline_c ("R = XML_PARAM_ENTITY_PARSING_NEVER;%N")
 #endif
 #ifdef ISE || HACT
-		external
 			"C [macro <expat.h>]"
 		alias
 			"XML_PARAM_ENTITY_PARSING_NEVER"
@@ -973,6 +995,740 @@ feature -- XML_ParamEntityParsing enum
 #endif
 		end
 #endif
+
+feature -- XML_Content_Type enum
+
+#ifdef VE
+	XML_CTYPE_EMPTY: INTEGER is 1
+#else
+	XML_CTYPE_EMPTY: INTEGER is
+#ifdef SE
+		do
+			c_inline_c ("R = XML_CTYPE_EMPTY;%N")
+#endif
+#ifdef ISE || HACT
+		external
+			"C [macro <expat.h>]"
+		alias
+			"XML_CTYPE_EMPTY"
+#endif
+		end
+#endif
+
+#ifdef VE
+	XML_CTYPE_ANY: INTEGER is 2
+#else
+	XML_CTYPE_ANY: INTEGER is
+#ifdef SE
+		do
+			c_inline_c ("R = XML_CTYPE_ANY;%N")
+#endif
+#ifdef ISE || HACT
+		external
+			"C [macro <expat.h>]"
+		alias
+			"XML_CTYPE_ANY"
+#endif
+		end
+#endif
+
+#ifdef VE
+	XML_CTYPE_MIXED: INTEGER is 3
+#else
+	XML_CTYPE_MIXED: INTEGER is
+#ifdef SE
+		do
+			c_inline_c ("R = XML_CTYPE_MIXED;%N")
+#endif
+#ifdef ISE || HACT
+		external
+			"C [macro <expat.h>]"
+		alias
+			"XML_CTYPE_MIXED"
+#endif
+		end
+#endif
+
+#ifdef VE
+	XML_CTYPE_NAME: INTEGER is 4
+#else
+	XML_CTYPE_NAME: INTEGER is
+#ifdef SE
+		do
+			c_inline_c ("R = XML_CTYPE_NAME;%N")
+#endif
+#ifdef ISE || HACT
+		external
+			"C [macro <expat.h>]"
+		alias
+			"XML_CTYPE_NAME"
+#endif
+		end
+#endif
+
+#ifdef VE
+	XML_CTYPE_CHOICE: INTEGER is 5
+#else
+	XML_CTYPE_CHOICE: INTEGER is
+#ifdef SE
+		do
+			c_inline_c ("R = XML_CTYPE_CHOICE;%N")
+#endif
+#ifdef ISE || HACT
+		external
+			"C [macro <expat.h>]"
+		alias
+			"XML_CTYPE_CHOICE"
+#endif
+		end
+#endif
+
+#ifdef VE
+	XML_CTYPE_SEQ: INTEGER is 6
+#else
+	XML_CTYPE_SEQ: INTEGER is
+#ifdef SE
+		do
+			c_inline_c ("R = XML_CTYPE_SEQ;%N")
+#endif
+#ifdef ISE || HACT
+		external
+			"C [macro <expat.h>]"
+		alias
+			"XML_CTYPE_SEQ"
+#endif
+		end
+#endif
+
+feature -- XML_Content_Quant enum
+
+#ifdef VE
+	XML_CQUANT_NONE: INTEGER is 0
+#else
+	XML_CQUANT_NONE: INTEGER is
+#ifdef SE
+		do
+			c_inline_c ("R = XML_CQUANT_NONE;%N")
+#endif
+#ifdef ISE || HACT
+		external
+			"C macro use <expat.h>"
+		alias
+			"XML_CQUANT_NONE"
+#endif
+		end
+#endif
+
+#ifdef VE
+	XML_CQUANT_OPT: INTEGER is 1
+#else
+	XML_CQUANT_OPT: INTEGER is
+#ifdef SE
+		do
+			c_inline_c ("R = XML_CQUANT_OPT;%N")
+#endif
+#ifdef ISE || HACT
+		external
+			"C [macro <expat.h>]"
+		alias
+			"XML_CQUANT_OPT"
+#endif
+		end
+#endif
+
+#ifdef VE
+	XML_CQUANT_REP: INTEGER is 2
+#else
+	XML_CQUANT_REP: INTEGER is
+#ifdef SE
+		do
+			c_inline_c ("R = XML_CQUANT_REP;%N")
+#endif
+#ifdef ISE || HACT
+		external
+			"C [macro <expat.h>]"
+		alias
+			"XML_CQUANT_REP"
+#endif
+		end
+#endif
+
+#ifdef VE
+	XML_CQUANT_PLUS: INTEGER is 3
+#else
+	XML_CQUANT_PLUS: INTEGER is
+#ifdef SE
+		do
+			c_inline_c ("R = XML_CQUANT_PLUS;%N")
+#endif
+#ifdef ISE || HACT
+		external
+			"C [macro <expat.h>]"
+		alias
+			"XML_CQUANT_PLUS"
+#endif
+		end
+#endif
+
+feature -- XML_Error enum
+
+#ifdef VE
+	XML_ERROR_NONE: INTEGER is 0
+#else
+	XML_ERROR_NONE: INTEGER is
+#ifdef SE
+		do
+			c_inline_c ("R = XML_ERROR_NONE;%N")
+#endif
+#ifdef ISE || HACT
+		external
+			"C [macro <expat.h>]"
+		alias
+			"XML_ERROR_NONE"
+#endif
+		end
+#endif
+
+#ifdef VE
+	XML_ERROR_NO_MEMORY: INTEGER is 1
+#else
+	XML_ERROR_NO_MEMORY: INTEGER is
+#ifdef SE
+		do
+			c_inline_c ("R = XML_ERROR_NO_MEMORY;%N")
+#endif
+#ifdef ISE || HACT
+		external
+			"C [macro <expat.h>]"
+		alias
+			"XML_ERROR_NO_MEMORY"
+#endif
+		end
+#endif
+
+#ifdef VE
+	XML_ERROR_SYNTAX: INTEGER is 2
+#else
+	XML_ERROR_SYNTAX: INTEGER is
+#ifdef SE
+		do
+			c_inline_c ("R = XML_ERROR_SYNTAX;%N")
+#endif
+#ifdef ISE || HACT
+		external
+			"C [macro <expat.h>]"
+		alias
+			"XML_ERROR_SYNTAX"
+#endif
+		end
+#endif
+
+#ifdef VE
+	XML_ERROR_NO_ELEMENTS: INTEGER is 3
+#else
+	XML_ERROR_NO_ELEMENTS: INTEGER is
+#ifdef SE
+		do
+			c_inline_c ("R = XML_ERROR_NO_ELEMENTS;%N")
+#endif
+#ifdef ISE || HACT
+		external
+			"C [macro <expat.h>]"
+		alias
+			"XML_ERROR_NO_ELEMENTS"
+#endif
+		end
+#endif
+
+#ifdef VE
+	XML_ERROR_INVALID_TOKEN: INTEGER is 4
+#else
+	XML_ERROR_INVALID_TOKEN: INTEGER is
+#ifdef SE
+		do
+			c_inline_c ("R = XML_ERROR_INVALID_TOKEN;%N")
+#endif
+#ifdef ISE || HACT
+		external
+			"C [macro <expat.h>]"
+		alias
+			"XML_ERROR_INVALID_TOKEN"
+#endif
+		end
+#endif
+
+#ifdef VE
+	XML_ERROR_UNCLOSED_TOKEN: INTEGER is 5
+#else
+	XML_ERROR_UNCLOSED_TOKEN: INTEGER is
+#ifdef SE
+		do
+			c_inline_c ("R = XML_ERROR_UNCLOSED_TOKEN;%N")
+#endif
+#ifdef ISE || HACT
+		external
+			"C [macro <expat.h>]"
+		alias
+			"XML_ERROR_UNCLOSED_TOKEN"
+#endif
+		end
+#endif
+
+#ifdef VE
+	XML_ERROR_PARTIAL_CHAR: INTEGER is 6
+#else
+	XML_ERROR_PARTIAL_CHAR: INTEGER is
+#ifdef SE
+		do
+			c_inline_c ("R = XML_ERROR_PARTIAL_CHAR;%N")
+#endif
+#ifdef ISE || HACT
+		external
+			"C [macro <expat.h>]"
+		alias
+			"XML_ERROR_PARTIAL_CHAR"
+#endif
+		end
+#endif
+
+#ifdef VE
+	XML_ERROR_TAG_MISMATCH: INTEGER is 7
+#else
+	XML_ERROR_TAG_MISMATCH: INTEGER is
+#ifdef SE
+		do
+			c_inline_c ("R = XML_ERROR_TAG_MISMATCH;%N")
+#endif
+#ifdef ISE || HACT
+		external
+			"C [macro <expat.h>]"
+		alias
+			"XML_ERROR_TAG_MISMATCH"
+#endif
+		end
+#endif
+
+#ifdef VE
+	XML_ERROR_DUPLICATE_ATTRIBUTE: INTEGER is 8
+#else
+	XML_ERROR_DUPLICATE_ATTRIBUTE: INTEGER is
+#ifdef SE
+		do
+			c_inline_c ("R = XML_ERROR_DUPLICATE_ATTRIBUTE;%N")
+#endif
+#ifdef ISE || HACT
+		external
+			"C [macro <expat.h>]"
+		alias
+			"XML_ERROR_DUPLICATE_ATTRIBUTE"
+#endif
+		end
+#endif
+
+#ifdef VE
+	XML_ERROR_JUNK_AFTER_DOC_ELEMENT: INTEGER is 9
+#else
+	XML_ERROR_JUNK_AFTER_DOC_ELEMENT: INTEGER is
+#ifdef SE
+		do
+			c_inline_c ("R = XML_ERROR_JUNK_AFTER_DOC_ELEMENT;%N")
+#endif
+#ifdef ISE || HACT
+		external
+			"C [macro <expat.h>]"
+		alias
+			"XML_ERROR_JUNK_AFTER_DOC_ELEMENT"
+#endif
+		end
+#endif
+
+#ifdef VE
+	XML_ERROR_PARAM_ENTITY_REF: INTEGER is 10
+#else
+	XML_ERROR_PARAM_ENTITY_REF: INTEGER is
+#ifdef SE
+		do
+			c_inline_c ("R = XML_ERROR_PARAM_ENTITY_REF;%N")
+#endif
+#ifdef ISE || HACT
+		external
+			"C [macro <expat.h>]"
+		alias
+			"XML_ERROR_PARAM_ENTITY_REF"
+#endif
+		end
+#endif
+
+#ifdef VE
+	XML_ERROR_UNDEFINED_ENTITY: INTEGER is 11
+#else
+	XML_ERROR_UNDEFINED_ENTITY: INTEGER is
+#ifdef SE
+		do
+			c_inline_c ("R = XML_ERROR_UNDEFINED_ENTITY;%N")
+#endif
+#ifdef ISE || HACT
+		external
+			"C [macro <expat.h>]"
+		alias
+			"XML_ERROR_UNDEFINED_ENTITY"
+#endif
+		end
+#endif
+
+#ifdef VE
+	XML_ERROR_RECURSIVE_ENTITY_REF: INTEGER is 12
+#else
+	XML_ERROR_RECURSIVE_ENTITY_REF: INTEGER is
+#ifdef SE
+		do
+			c_inline_c ("R = XML_ERROR_RECURSIVE_ENTITY_REF;%N")
+#endif
+#ifdef ISE || HACT
+		external
+			"C [macro <expat.h>]"
+		alias
+			"XML_ERROR_RECURSIVE_ENTITY_REF"
+#endif
+		end
+#endif
+
+#ifdef VE
+	XML_ERROR_ASYNC_ENTITY: INTEGER is 13
+#else
+	XML_ERROR_ASYNC_ENTITY: INTEGER is
+#ifdef SE
+		do
+			c_inline_c ("R = XML_ERROR_ASYNC_ENTITY;%N")
+#endif
+#ifdef ISE || HACT
+		external
+			"C [macro <expat.h>]"
+		alias
+			"XML_ERROR_ASYNC_ENTITY"
+#endif
+		end
+#endif
+
+#ifdef VE
+	XML_ERROR_BAD_CHAR_REF: INTEGER is 14
+#else
+	XML_ERROR_BAD_CHAR_REF: INTEGER is
+#ifdef SE
+		do
+			c_inline_c ("R = XML_ERROR_BAD_CHAR_REF;%N")
+#endif
+#ifdef ISE || HACT
+		external
+			"C [macro <expat.h>]"
+		alias
+			"XML_ERROR_BAD_CHAR_REF"
+#endif
+		end
+#endif
+
+#ifdef VE
+	XML_ERROR_BINARY_ENTITY_REF: INTEGER is 15
+#else
+	XML_ERROR_BINARY_ENTITY_REF: INTEGER is
+#ifdef SE
+		do
+			c_inline_c ("R = XML_ERROR_BINARY_ENTITY_REF;%N")
+#endif
+#ifdef ISE || HACT
+		external
+			"C [macro <expat.h>]"
+		alias
+			"XML_ERROR_BINARY_ENTITY_REF"
+#endif
+		end
+#endif
+
+#ifdef VE
+	XML_ERROR_ATTRIBUTE_EXTERNAL_ENTITY_REF: INTEGER is 16
+#else
+	XML_ERROR_ATTRIBUTE_EXTERNAL_ENTITY_REF: INTEGER is
+#ifdef SE
+		do
+			c_inline_c ("R = XML_ERROR_ATTRIBUTE_EXTERNAL_ENTITY_REF;%N")
+#endif
+#ifdef ISE || HACT
+		external
+			"C [macro <expat.h>]"
+		alias
+			"XML_ERROR_ATTRIBUTE_EXTERNAL_ENTITY_REF"
+#endif
+		end
+#endif
+
+#ifdef VE
+	XML_ERROR_MISPLACED_XML_PI: INTEGER is 17
+#else
+	XML_ERROR_MISPLACED_XML_PI: INTEGER is
+#ifdef SE
+		do
+			c_inline_c ("R = XML_ERROR_MISPLACED_XML_PI;%N")
+#endif
+#ifdef ISE || HACT
+		external
+			"C [macro <expat.h>]"
+		alias
+			"XML_ERROR_MISPLACED_XML_PI"
+#endif
+		end
+#endif
+
+#ifdef VE
+	XML_ERROR_UNKNOWN_ENCODING: INTEGER is 18
+#else
+	XML_ERROR_UNKNOWN_ENCODING: INTEGER is
+#ifdef SE
+		do
+			c_inline_c ("R = XML_ERROR_UNKNOWN_ENCODING;%N")
+#endif
+#ifdef ISE || HACT
+		external
+			"C [macro <expat.h>]"
+		alias
+			"XML_ERROR_UNKNOWN_ENCODING"
+#endif
+		end
+#endif
+
+#ifdef VE
+	XML_ERROR_INCORRECT_ENCODING: INTEGER is 19
+#else
+	XML_ERROR_INCORRECT_ENCODING: INTEGER is
+#ifdef SE
+		do
+			c_inline_c ("R = XML_ERROR_INCORRECT_ENCODING;%N")
+#endif
+#ifdef ISE || HACT
+		external
+			"C [macro <expat.h>]"
+		alias
+			"XML_ERROR_INCORRECT_ENCODING"
+#endif
+		end
+#endif
+
+#ifdef VE
+	XML_ERROR_UNCLOSED_CDATA_SECTION: INTEGER is 20
+#else
+	XML_ERROR_UNCLOSED_CDATA_SECTION: INTEGER is
+#ifdef SE
+		do
+			c_inline_c ("R = XML_ERROR_UNCLOSED_CDATA_SECTION;%N")
+#endif
+#ifdef ISE || HACT
+		external
+			"C [macro <expat.h>]"
+		alias
+			"XML_ERROR_UNCLOSED_CDATA_SECTION"
+#endif
+		end
+#endif
+
+#ifdef VE
+	XML_ERROR_EXTERNAL_ENTITY_HANDLING: INTEGER is 21
+#else
+	XML_ERROR_EXTERNAL_ENTITY_HANDLING: INTEGER is
+#ifdef SE
+		do
+			c_inline_c ("R = XML_ERROR_EXTERNAL_ENTITY_HANDLING;%N")
+#endif
+#ifdef ISE || HACT
+		external
+			"C [macro <expat.h>]"
+		alias
+			"XML_ERROR_EXTERNAL_ENTITY_HANDLING"
+#endif
+		end
+#endif
+
+#ifdef VE
+	XML_ERROR_NOT_STANDALONE: INTEGER is 22
+#else
+	XML_ERROR_NOT_STANDALONE: INTEGER is
+#ifdef SE
+		do
+			c_inline_c ("R = XML_ERROR_NOT_STANDALONE;%N")
+#endif
+#ifdef ISE || HACT
+		external
+			"C [macro <expat.h>]"
+		alias
+			"XML_ERROR_NOT_STANDALONE"
+#endif
+		end
+#endif
+
+#ifdef VE
+	XML_ERROR_UNEXPECTED_STATE: INTEGER is 23
+#else
+	XML_ERROR_UNEXPECTED_STATE: INTEGER is
+#ifdef SE
+		do
+			c_inline_c ("R = XML_ERROR_UNEXPECTED_STATE;%N")
+#endif
+#ifdef ISE || HACT
+		external
+			"C [macro <expat.h>]"
+		alias
+			"XML_ERROR_UNEXPECTED_STATE"
+#endif
+		end
+#endif
+
+feature -- XML_cp members
+
+#ifdef VE
+	exml_XML_cp_size: INTEGER is 20
+#else
+	exml_XML_cp_size: INTEGER is
+		external
+#ifdef SE
+			"C inline use <expat.h>"
+		alias
+			"sizeof(XML_Content)"
+#endif
+#ifdef ISE || HACT
+			"C [macro <expat.h>]: EIF_INTEGER"
+		alias
+			"sizeof(XML_Content)"
+#endif
+		end
+#endif
+
+	exml_XML_cp_type (cp: POINTER): INTEGER is
+		require
+			have_struct_pointer: cp /= Void
+#ifdef VE
+		local
+			m_cp: RTS_MEMORY_MAPPED_AREA_ARRAY [INTEGER]
+		do
+			create m_cp.make (cp, exml_XML_cp_size)
+			Result := m_cp.item (1)
+#else
+		external
+#ifdef SE
+			"C struct XML_Content get type use <expat.h>"
+#endif
+#ifdef ISE || HACT
+			"C [struct <expat.h>] (struct XML_cp): EIF_INTEGER"
+		alias
+			"type"
+#endif
+#endif
+		end
+
+	exml_XML_cp_quant (cp: POINTER): INTEGER is
+		require
+			have_struct_pointer: cp /= Void
+#ifdef VE
+		local
+			m_cp: RTS_MEMORY_MAPPED_AREA_ARRAY [INTEGER]
+		do
+			create m_cp.make (cp, exml_XML_cp_size)
+			Result := m_cp.item (2)
+#else
+		external
+#ifdef SE
+			"C struct XML_Content get quant use <expat.h>"
+#endif
+#ifdef ISE || HACT
+			"C [struct <expat.h>] (struct XML_cp): EIF_INTEGER"
+		alias
+			"quant"
+#endif
+#endif
+		end
+
+	exml_XML_cp_name (cp: POINTER): POINTER is
+		require
+			have_struct_pointer: cp /= Void
+#ifdef VE
+		local
+			m_cp: RTS_MEMORY_MAPPED_AREA_ARRAY [POINTER]
+		do
+			create m_cp.make (cp, exml_XML_cp_size)
+			Result := m_cp.item (3)
+#else
+		external
+#ifdef SE
+			"C struct XML_Content get name use <expat.h>"
+#endif
+--  #ifdef ISE
+--			"C struct XML_Content access name type EIF_POINTER use <expat.h>"
+--  #endif
+#ifdef HACT || ISE
+			"C [struct <expat.h>] (struct XML_cp): EIF_POINTER"
+		alias
+			"name"
+#endif
+#endif
+		end
+
+	exml_XML_cp_numchildren (cp: POINTER): INTEGER is
+		require
+			have_struct_pointer: cp /= Void
+#ifdef VE
+		local
+			m_cp: RTS_MEMORY_MAPPED_AREA_ARRAY [INTEGER]
+		do
+			create m_cp.make (cp, exml_XML_cp_size)
+			Result := m_cp.item (4)
+#else
+		external
+#ifdef SE
+			"C struct XML_Content get numchildren use <expat.h>"
+#endif
+#ifdef ISE || HACT
+			"C [struct <expat.h>] (struct XML_cp): EIF_INTEGER"
+		alias
+			"numchildren"
+#endif
+#endif
+		end
+
+#ifdef ISE || HACT
+	exml_XML_cp_children_0 (cp: POINTER): POINTER is
+		external
+			"C [struct <expat.h>] (struct XML_cp): EIF_INTEGER"
+		alias
+			"children"
+		end
+#endif
+
+	exml_XML_cp_children (cp: POINTER; index: INTEGER): POINTER is
+		require
+			have_struct_pointer: cp /= Void
+			valid_index: index >= 0 and index < exml_XML_cp_numchildren (cp)
+#ifdef VE
+		local
+			m_cp,
+			m_cp_array: RTS_MEMORY_MAPPED_AREA_ARRAY [POINTER]
+		do
+			create m_cp.make (cp, exml_XML_cp_size + (exml_XML_cp_numchildren (cp) * exml_XML_cp_size))
+			Result := m_cp.item (5) + (index * exml_XML_cp_size)
+#else
+#ifdef SE
+		external
+			"C inline"
+		alias
+			"(EIF_POINTER) (&(((XML_Content*)$cp)->children[$index]))"
+#endif
+#ifdef ISE || HACT
+		local
+			children: POINTER
+		do
+			children := exml_XML_cp_children_0 (cp)
+			Result := children + (index * exml_XML_cp_size)
+#endif
+#endif
+		ensure
+			valid_struct: Result /= default_pointer
+		end
 
 feature -- Conversion
 
@@ -1133,7 +1889,7 @@ feature {NONE} -- Implementation
 		end
 
 	eif_unfreeze (ptr: POINTER) is
-			-- Object at address `ptr' can be handled 
+			-- Object at address `ptr' can be handled
 			-- and moved by the GC now.
 		require
 			ptr_not_null: ptr /= default_pointer

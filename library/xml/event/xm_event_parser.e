@@ -26,11 +26,11 @@ creation
 
 feature {DP_CALLBACK_IMPLEMENTATION} -- Redefinable callbacks
 
-	on_element_declaration (name: UC_STRING) is
+	on_element_declaration (name: UC_STRING; model: POINTER) is
 			-- Called for an XML element declaration (DTD)
 		require
 			valid_name: name /= Void and name.count > 0
-			-- valid_model: model /= default_pointer
+			valid_model: model /= default_pointer
 		do
 			-- inherit from this class and redefine this feature to
 			-- handle this event.
@@ -127,7 +127,7 @@ feature {DP_CALLBACK_IMPLEMENTATION} -- Redefinable callbacks
 		end
 
 	on_default (data: UC_STRING) is
-			-- Called if the parser finds something that does not fit 
+			-- Called if the parser finds something that does not fit
 			-- into for any of the other callbacks
 		do
 			-- inherit from this class and redefine this feature to
@@ -168,7 +168,7 @@ feature {DP_CALLBACK_IMPLEMENTATION} -- Redefinable callbacks
 		end
 
 	on_start_namespace_declaration (namespace_prefix, uri: UC_STRING) is
-			-- Called when the parser finds the beginning of a 
+			-- Called when the parser finds the beginning of a
 			-- namespace declaration
 		do
 			-- inherit from this class and redefine this feature

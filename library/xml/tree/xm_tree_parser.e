@@ -33,14 +33,14 @@ feature {ANY} -- Access
 		end
 
 	is_position_table_enabled: BOOLEAN is
-			-- Will this parser generate a position table while 
+			-- Will this parser generate a position table while
 			-- parsing an XML document?
 		do
 			Result := implementation.is_position_table_enabled
 		end
 
 	last_position_table: XM_POSITION_TABLE is
-			-- Returns the last generated position table, which maps 
+			-- Returns the last generated position table, which maps
 			-- xml nodes to their exact location in the source document.
 		do
 			Result := implementation.last_position_table
@@ -49,14 +49,14 @@ feature {ANY} -- Access
 feature {ANY} -- Basic opertations
 
 	enable_position_table is
-			-- Enable the creation of a position table while parsing 
+			-- Enable the creation of a position table while parsing
 			-- a document.
 		do
 			implementation.enable_position_table
 		end
 
 	disable_position_table is
-			-- Disable the creation of a position table while parsing 
+			-- Disable the creation of a position table while parsing
 			-- a document.
 		do
 			implementation.disable_position_table
