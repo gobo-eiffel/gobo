@@ -27,7 +27,7 @@ feature -- Access
 
 feature -- Setting
 
-	set_callbacks (a_callbacks: XM_CALLBACKS) is
+	set_callbacks (a_callbacks: like callbacks) is
 			-- Set `callbacks' to `a_callbacks'.
 		do
 			callbacks := a_callbacks
