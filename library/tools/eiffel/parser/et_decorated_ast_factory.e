@@ -234,6 +234,7 @@ inherit
 			new_manifest_string_comma,
 			new_manifest_string_list,
 			new_manifest_tuple,
+			new_manifest_type,
 			new_null_export,
 			new_null_instruction,
 			new_obsolete_message,
@@ -1338,8 +1339,8 @@ feature -- AST nodes
 			end
 		end
 
-	new_agent_typed_open_argument (l: ET_SYMBOL; a_type: ET_TYPE; r: ET_SYMBOL): ET_AGENT_TYPED_OPEN_ARGUMENT is
-			-- New agent open argument of the form '{TYPE}'
+	new_agent_typed_open_argument (l: ET_SYMBOL; a_type: ET_TYPE; r: ET_SYMBOL; a_question_mark: ET_QUESTION_MARK_SYMBOL): ET_AGENT_TYPED_OPEN_ARGUMENT is
+			-- New agent open argument of the form '{TYPE} ?'
 		do
 			if a_type /= Void then
 				create Result.make (a_type)
@@ -1348,6 +1349,9 @@ feature -- AST nodes
 				end
 				if r /= Void then
 					Result.set_right_brace (r)
+				end
+				if a_question_mark /= Void then
+					Result.set_question_mark (a_question_mark)
 				end
 			end
 		end
@@ -2511,6 +2515,20 @@ feature -- AST nodes
 			end
 			if a_right /= Void then
 				Result.set_right_symbol (a_right)
+			end
+		end
+
+	new_manifest_type (a_left: ET_SYMBOL; a_type: ET_TYPE; a_right: ET_SYMBOL): ET_MANIFEST_TYPE is
+			-- New manifest type
+		do
+			if a_type /= Void then
+				create Result.make (a_type)
+				if a_left /= Void then
+					Result.set_left_brace (a_left)
+				end
+				if a_right /= Void then
+					Result.set_right_brace (a_right)
+				end
 			end
 		end
 

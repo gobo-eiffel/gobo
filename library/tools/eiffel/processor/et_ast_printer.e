@@ -145,7 +145,12 @@ feature {ET_AST_NODE} -- Processing
 			-- Process `a_constant'.
 		local
 			a_sign: ET_SYMBOL
+			a_type: ET_TARGET_TYPE
 		do
+			a_type := a_constant.cast_type
+			if a_type /= Void then
+				a_type.process (Current)
+			end
 			a_sign := a_constant.sign
 			if a_sign /= Void then
 				a_sign.process (Current)
@@ -158,7 +163,12 @@ feature {ET_AST_NODE} -- Processing
 			-- Process `a_constant'.
 		local
 			a_sign: ET_SYMBOL
+			a_type: ET_TARGET_TYPE
 		do
+			a_type := a_constant.cast_type
+			if a_type /= Void then
+				a_type.process (Current)
+			end
 			a_sign := a_constant.sign
 			if a_sign /= Void then
 				a_sign.process (Current)
@@ -180,7 +190,12 @@ feature {ET_AST_NODE} -- Processing
 			-- Process `a_constant'.
 		local
 			a_sign: ET_SYMBOL
+			a_type: ET_TARGET_TYPE
 		do
+			a_type := a_constant.cast_type
+			if a_type /= Void then
+				a_type.process (Current)
+			end
 			a_sign := a_constant.sign
 			if a_sign /= Void then
 				a_sign.process (Current)
@@ -216,7 +231,12 @@ feature {ET_AST_NODE} -- Processing
 			-- Process `a_constant'.
 		local
 			a_sign: ET_SYMBOL
+			a_type: ET_TARGET_TYPE
 		do
+			a_type := a_constant.cast_type
+			if a_type /= Void then
+				a_type.process (Current)
+			end
 			a_sign := a_constant.sign
 			if a_sign /= Void then
 				a_sign.process (Current)
@@ -229,7 +249,12 @@ feature {ET_AST_NODE} -- Processing
 			-- Process `a_constant'.
 		local
 			a_sign: ET_SYMBOL
+			a_type: ET_TARGET_TYPE
 		do
+			a_type := a_constant.cast_type
+			if a_type /= Void then
+				a_type.process (Current)
+			end
 			a_sign := a_constant.sign
 			if a_sign /= Void then
 				a_sign.process (Current)

@@ -5,7 +5,7 @@ indexing
 		"Eiffel AST iterators"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2003, Eric Bezault and others"
+	copyright: "Copyright (c) 2003-2005, Eric Bezault and others"
 	license: "Eiffel Forum License v2 (see forum.txt)"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -90,6 +90,7 @@ feature {ET_AST_NODE} -- Processing
 			an_argument.left_brace.process (Current)
 			an_argument.type.process (Current)
 			an_argument.right_brace.process (Current)
+			an_argument.question_mark.process (Current)
 		end
 
 	process_agent_open_target (a_target: ET_AGENT_OPEN_TARGET) is
@@ -1318,6 +1319,9 @@ feature {ET_AST_NODE} -- Processing
 	process_hexadecimal_integer_constant (a_constant: ET_HEXADECIMAL_INTEGER_CONSTANT) is
 			-- Process `a_constant'.
 		do
+			if a_constant.cast_type /= Void then
+				a_constant.cast_type.process (Current)
+			end
 		end
 
 	process_identifier (an_identifier: ET_IDENTIFIER) is
@@ -1651,6 +1655,14 @@ feature {ET_AST_NODE} -- Processing
 				an_expression.item (i).process (Current)
 				i := i + 1
 			end
+			an_expression.right_symbol.process (Current)
+		end
+
+	process_manifest_type (an_expression: ET_MANIFEST_TYPE) is
+			-- Process `an_expression'.
+		do
+			an_expression.left_symbol.process (Current)
+			an_expression.type.process (Current)
 			an_expression.right_symbol.process (Current)
 		end
 
@@ -2010,6 +2022,9 @@ feature {ET_AST_NODE} -- Processing
 	process_regular_integer_constant (a_constant: ET_REGULAR_INTEGER_CONSTANT) is
 			-- Process `a_constant'.
 		do
+			if a_constant.cast_type /= Void then
+				a_constant.cast_type.process (Current)
+			end
 		end
 
 	process_regular_manifest_string (a_string: ET_REGULAR_MANIFEST_STRING) is
@@ -2020,6 +2035,8 @@ feature {ET_AST_NODE} -- Processing
 	process_regular_real_constant (a_constant: ET_REGULAR_REAL_CONSTANT) is
 			-- Process `a_constant'.
 		do
+			if a_constant.cast_type /= Void then
+				a_constant.cast_type.process (Current)
 		end
 
 	process_rename (a_rename: ET_RENAME) is
@@ -2084,8 +2101,12 @@ feature {ET_AST_NODE} -- Processing
 			-- Process `an_expression'.
 		local
 			an_arguments: ET_ACTUAL_ARGUMENT_LIST
+			a_feature_keyword: ET_KEYWORD
 		do
-			an_expression.feature_keyword.process (Current)
+			a_feature_keyword := an_expression.feature_keyword
+			if a_feature_keyword /= Void then
+				a_feature_keyword.process (Current)
+			end
 			an_expression.static_type.process (Current)
 			an_expression.qualified_name.process (Current)
 			an_arguments := an_expression.arguments
@@ -2098,8 +2119,12 @@ feature {ET_AST_NODE} -- Processing
 			-- Process `an_instruction'.
 		local
 			an_arguments: ET_ACTUAL_ARGUMENT_LIST
+			a_feature_keyword: ET_KEYWORD
 		do
-			an_instruction.feature_keyword.process (Current)
+			a_feature_keyword := an_instruction.feature_keyword
+			if a_feature_keyword /= Void then
+				a_feature_keyword.process (Current)
+			end
 			an_instruction.static_type.process (Current)
 			an_instruction.qualified_name.process (Current)
 			an_arguments := an_instruction.arguments
@@ -2185,14 +2210,26 @@ feature {ET_AST_NODE} -- Processing
 			a_type.comma.process (Current)
 		end
 
+	process_typed_expression (an_expression: ET_TYPED_EXPRESSION) is
+			-- Process `an_expression'.
+		do
+			an_expression.cast_type.process (Current)
+			an_expression.expression.process (Current)
+		end
+
 	process_underscored_integer_constant (a_constant: ET_UNDERSCORED_INTEGER_CONSTANT) is
 			-- Process `a_constant'.
 		do
+			if a_constant.cast_type /= Void then
+				a_constant.cast_type.process (Current)
+			end
 		end
 
 	process_underscored_real_constant (a_constant: ET_UNDERSCORED_REAL_CONSTANT) is
 			-- Process `a_constant'.
 		do
+			if a_constant.cast_type /= Void then
+				a_constant.cast_type.process (Current)
 		end
 
 	process_unique_attribute (a_feature: ET_UNIQUE_ATTRIBUTE) is

@@ -56,6 +56,7 @@ inherit
 			process_formal_argument_list,
 			process_formal_parameter_list,
 			process_generic_class_type,
+			process_hexadecimal_integer_constant,
 			process_if_instruction,
 			process_infix_expression,
 			process_inspect_instruction,
@@ -66,6 +67,7 @@ inherit
 			process_loop_invariants,
 			process_manifest_array,
 			process_manifest_tuple,
+			process_manifest_type,
 			process_old_expression,
 			process_once_function,
 			process_once_procedure,
@@ -77,10 +79,15 @@ inherit
 			process_precursor_expression,
 			process_precursor_instruction,
 			process_prefix_expression,
+			process_regular_integer_constant,
+			process_regular_real_constant,
 			process_static_call_expression,
 			process_static_call_instruction,
 			process_tagged_assertion,
 			process_tuple_type,
+			process_typed_expression,
+			process_underscored_integer_constant,
+			process_underscored_real_constant,
 			process_unique_attribute,
 			process_variant,
 			process_when_part,
@@ -701,6 +708,17 @@ feature {ET_AST_NODE} -- Processing
 			a_type.actual_parameters.process (Current)
 		end
 
+	process_hexadecimal_integer_constant (a_constant: ET_HEXADECIMAL_INTEGER_CONSTANT) is
+			-- Process `a_constant'.
+		local
+			a_type: ET_TARGET_TYPE
+		do
+			a_type := a_constant.cast_type
+			if a_type /= Void then
+				a_type.process (Current)
+			end
+		end
+
 	process_if_instruction (an_instruction: ET_IF_INSTRUCTION) is
 			-- Process `an_instruction'.
 		local
@@ -836,6 +854,12 @@ feature {ET_AST_NODE} -- Processing
 				an_expression.expression (i).process (Current)
 				i := i + 1
 			end
+		end
+
+	process_manifest_type (an_expression: ET_MANIFEST_TYPE) is
+			-- Process `an_expression'.
+		do
+			an_expression.type.process (Current)
 		end
 
 	process_old_expression (an_expression: ET_OLD_EXPRESSION) is
@@ -991,6 +1015,28 @@ feature {ET_AST_NODE} -- Processing
 			an_expression.expression.process (Current)
 		end
 
+	process_regular_integer_constant (a_constant: ET_REGULAR_INTEGER_CONSTANT) is
+			-- Process `a_constant'.
+		local
+			a_type: ET_TARGET_TYPE
+		do
+			a_type := a_constant.cast_type
+			if a_type /= Void then
+				a_type.process (Current)
+			end
+		end
+
+	process_regular_real_constant (a_constant: ET_REGULAR_REAL_CONSTANT) is
+			-- Process `a_constant'.
+		local
+			a_type: ET_TARGET_TYPE
+		do
+			a_type := a_constant.cast_type
+			if a_type /= Void then
+				a_type.process (Current)
+			end
+		end
+
 	process_static_call_expression (an_expression: ET_STATIC_CALL_EXPRESSION) is
 			-- Process `an_expression'.
 		local
@@ -1042,6 +1088,35 @@ feature {ET_AST_NODE} -- Processing
 			a_parameters := a_type.actual_parameters
 			if a_parameters /= Void then
 				a_parameters.process (Current)
+			end
+		end
+
+	process_typed_expression (an_expression: ET_TYPED_EXPRESSION) is
+			-- Process `an_expression'.
+		do
+			an_expression.type.process (Current)
+			an_expression.expression.process (Current)
+		end
+
+	process_underscored_integer_constant (a_constant: ET_UNDERSCORED_INTEGER_CONSTANT) is
+			-- Process `a_constant'.
+		local
+			a_type: ET_TARGET_TYPE
+		do
+			a_type := a_constant.cast_type
+			if a_type /= Void then
+				a_type.process (Current)
+			end
+		end
+
+	process_underscored_real_constant (a_constant: ET_UNDERSCORED_REAL_CONSTANT) is
+			-- Process `a_constant'.
+		local
+			a_type: ET_TARGET_TYPE
+		do
+			a_type := a_constant.cast_type
+			if a_type /= Void then
+				a_type.process (Current)
 			end
 		end
 

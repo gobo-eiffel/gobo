@@ -5,7 +5,7 @@ indexing
 		"Eiffel AST null processors"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2002-2003, Eric Bezault and others"
+	copyright: "Copyright (c) 2002-2005, Eric Bezault and others"
 	license: "Eiffel Forum License v2 (see forum.txt)"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -602,6 +602,11 @@ feature {ET_AST_NODE} -- Processing
 		do
 		end
 
+	process_manifest_type (an_expression: ET_MANIFEST_TYPE) is
+			-- Process `an_expression'.
+		do
+		end
+
 	process_none_clients (a_list: ET_NONE_CLIENTS) is
 			-- Process `a_list'.
 		do
@@ -799,6 +804,11 @@ feature {ET_AST_NODE} -- Processing
 
 	process_type_comma (a_type: ET_TYPE_COMMA) is
 			-- Process `a_type'.
+		do
+		end
+
+	process_typed_expression (an_expression: ET_TYPED_EXPRESSION) is
+			-- Process `an_expression'.
 		do
 		end
 

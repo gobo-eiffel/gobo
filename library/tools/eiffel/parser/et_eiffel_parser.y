@@ -6,7 +6,7 @@ indexing
 		"Eiffel parsers"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 1999-2003, Eric Bezault and others"
+	copyright: "Copyright (c) 1999-2005, Eric Bezault and others"
 	license: "Eiffel Forum License v2 (see forum.txt)"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -131,8 +131,11 @@ creation
 %type <ET_ELSEIF_PART_LIST> Elseif_list Elseif_part_list
 %type <ET_EXPORT> New_export_item
 %type <ET_EXPORT_LIST> New_exports New_exports_opt New_export_list
-%type <ET_EXPRESSION> Expression Call_chain Precursor_expression
-%type <ET_EXPRESSION> Address_mark Create_expression Call_expression
+%type <ET_EXPRESSION> Expression Call_chain_without_static Call_chain_with_static
+%type <ET_EXPRESSION> Precursor_expression Manifest_type Address_mark Create_expression
+%type <ET_EXPRESSION> Call_expression_without_static Call_expression_with_static
+%type <ET_EXPRESSION> Typed_expression Typable_expression Binary_expression Non_binary_expression
+%type <ET_EXPRESSION> Non_binary_expression_without_unsigned_numeric
 %type <ET_EXPRESSION_ITEM> Expression_comma
 %type <ET_EXTERNAL_ALIAS> External_name_opt
 %type <ET_FEATURE> Feature_declaration Single_feature_declaration
@@ -156,7 +159,7 @@ creation
 %type <ET_INDEXING_TERM_LIST> Index_terms
 %type <ET_INSPECT_INSTRUCTION> Multi_branch
 %type <ET_INSTRUCTION> Instruction Creation_instruction Call_instruction Create_instruction
-%type <ET_INTEGER_CONSTANT> Integer_constant
+%type <ET_INTEGER_CONSTANT> Integer_constant Typed_integer_constant Untyped_integer_constant Signed_integer_constant
 %type <ET_INVARIANTS> Invariant_clause Invariant_clause_opt
 %type <ET_KEYWORD> Frozen_opt External_opt
 %type <ET_KEYWORD_FEATURE_NAME_LIST> Keyword_feature_name_list Select_clause Select_clause_opt
@@ -177,16 +180,14 @@ creation
 %type <ET_PARENT_ITEM> Parent_semicolon
 %type <ET_PARENT_LIST> Inheritance_opt Inheritance_end Parent_list Parent_list_end
 %type <ET_POSTCONDITIONS> Postcondition_opt
-%type <ET_PRECURSOR_EXPRESSION> Qualified_precursor_expression
-%type <ET_PRECURSOR_INSTRUCTION> Qualified_precursor_instruction
 %type <ET_PRECONDITIONS> Precondition_opt
-%type <ET_REAL_CONSTANT> Real_constant
+%type <ET_REAL_CONSTANT> Real_constant Typed_real_constant Untyped_real_constant Signed_real_constant
 %type <ET_RENAME_ITEM> Rename Rename_comma
 %type <ET_RENAME_LIST> Rename_clause Rename_list
 %type <ET_SEMICOLON_SYMBOL> Semicolon_opt
 %type <ET_STATIC_CALL_EXPRESSION> Static_call_expression
 %type <ET_STRIP_EXPRESSION> Strip_expression Strip_feature_name_list
-%type <ET_TYPE> Type
+%type <ET_TYPE> Type Type_no_class_name
 %type <ET_TYPE_ITEM> Type_comma
 %type <ET_TYPE_LIST> Convert_types Convert_type_list
 %type <ET_VARIANT> Variant_clause_opt
@@ -194,7 +195,7 @@ creation
 %type <ET_WHEN_PART_LIST> When_list When_list_opt
 %type <ET_WRITABLE> Writable
 
-%expect 67
+%expect 55
 %start Class_declarations
 
 %%
@@ -403,9 +404,9 @@ Index_value: Identifier
 		{ $$ := $1 }
 	| Character_constant
 		{ $$ := $1 }
-	| Integer_constant
+	| Untyped_integer_constant
 		{ $$ := $1 }
-	| Real_constant
+	| Untyped_real_constant
 		{ $$ := $1 }
 	| Manifest_string
 		{ $$ := $1 }
@@ -654,7 +655,7 @@ Constraint_type: Class_name Constraint_actual_parameters_opt
 		{ $$ := new_constraint_named_type ($1, $2, $3) }
 	| Anchored_type
 		{ $$ := $1 }
-	| E_BITTYPE Integer_constant
+	| E_BITTYPE Untyped_integer_constant
 		{ $$ := new_bit_n ($1, $2) }
 	| E_BITTYPE Identifier
 		{ $$ := ast_factory.new_bit_feature ($1, $2)  }
@@ -794,7 +795,7 @@ Parent: Class_name Actual_parameters_opt
 		}
 	;
 
-Parent_end:  Class_name Actual_parameters_opt E_END
+Parent_end: Class_name Actual_parameters_opt E_END
 		{
 			$$ := new_parent ($1, $2, Void, Void, Void, Void, Void, $3)
 			if $$ /= Void then
@@ -2018,7 +2019,13 @@ Rescue_opt: -- Empty
 
 ------------------------------------------------------------------------------------
 
-Type: Class_name Actual_parameters_opt
+Type: Class_name
+		{ $$ := new_named_type (Void, $1, Void) }
+	| Type_no_class_name
+		{ $$ := $1 }
+	;
+
+Type_no_class_name: Class_name Actual_parameters
 		{ $$ := new_named_type (Void, $1, $2) }
 	| E_EXPANDED Class_name Actual_parameters_opt
 		{ $$ := new_named_type ($1, $2, $3) }
@@ -2028,7 +2035,7 @@ Type: Class_name Actual_parameters_opt
 		{ $$ := new_named_type ($1, $2, $3) }
 	| Anchored_type
 		{ $$ := $1 }
-	| E_BITTYPE Integer_constant
+	| E_BITTYPE Untyped_integer_constant
 		{ $$ := new_bit_n ($1, $2) }
 	| E_BITTYPE Identifier
 		{ $$ := ast_factory.new_bit_feature ($1, $2)  }
@@ -2478,49 +2485,53 @@ Manifest_string_comma: Manifest_string ','
 
 Call_instruction: Identifier Actuals_opt
 		{ $$ := new_unqualified_call_instruction ($1, $2) }
-	| Call_chain '.' Identifier Actuals_opt
+	| Call_chain_without_static '.' Identifier Actuals_opt
+		{ $$ := ast_factory.new_call_instruction ($1, ast_factory.new_dot_feature_name ($2, $3), $4) }
+	| Call_chain_with_static '.' Identifier Actuals_opt
 		{ $$ := ast_factory.new_call_instruction ($1, ast_factory.new_dot_feature_name ($2, $3), $4) }
 	| E_PRECURSOR Actuals_opt
 		{ $$ := ast_factory.new_precursor_instruction (False, $1, Void, $2) }
-	| Qualified_precursor_instruction
-		{ $$ := $1 }
+	| E_PRECURSOR '{' Class_name '}' Actuals_opt
+		{ $$ := ast_factory.new_precursor_instruction (False, $1, ast_factory.new_precursor_class_name ($2, $3, $4), $5) }
 	| E_FEATURE '{' Type '}' '.' Identifier Actuals_opt
 		{ $$ := ast_factory.new_static_call_instruction ($1, ast_factory.new_target_type ($2, $3, $4), ast_factory.new_dot_feature_name ($5, $6), $7) }
+	| '{' Class_name '}' '.' Identifier Actuals_opt
+		{ $$ := ast_factory.new_static_call_instruction (Void, ast_factory.new_target_type ($1, new_named_type (Void, $2, Void), $3), ast_factory.new_dot_feature_name ($4, $5), $6) }
+	| '{' Type_no_class_name '}' '.' Identifier Actuals_opt
+		{ $$ := ast_factory.new_static_call_instruction (Void, ast_factory.new_target_type ($1, $2, $3), ast_factory.new_dot_feature_name ($4, $5), $6) }
 	;
 
-Qualified_precursor_instruction: E_PRECURSOR '{' Class_name '}' Actuals_opt
-		{ $$ := ast_factory.new_precursor_instruction (False, $1, ast_factory.new_precursor_class_name ($2, $3, $4), $5) }
-	| '{' Class_name '}' E_PRECURSOR Actuals_opt
-		{ $$ := ast_factory.new_precursor_instruction (True, $4, ast_factory.new_precursor_class_name ($1, $2, $3), $5) }
-	;
-
-Call_expression: Identifier Actuals_opt
+Call_expression_without_static: Identifier Actuals_opt
 		{ $$ := new_unqualified_call_expression ($1, $2) }
-	| Qualified_call_expression
-		{ $$ := $1 }
+	| Call_chain_without_static '.' Identifier Actuals_opt
+		{ $$ := ast_factory.new_call_expression ($1, ast_factory.new_dot_feature_name ($2, $3), $4) }
 	;
 
-Qualified_call_expression: Call_chain '.' Identifier Actuals_opt
+Call_expression_with_static: Call_chain_with_static '.' Identifier Actuals_opt
+		{ $$ := ast_factory.new_call_expression ($1, ast_factory.new_dot_feature_name ($2, $3), $4) }
+	;
+
+Qualified_call_expression: Call_chain_without_static '.' Identifier Actuals_opt
+		{ $$ := ast_factory.new_call_expression ($1, ast_factory.new_dot_feature_name ($2, $3), $4) }
+	| Call_chain_with_static '.' Identifier Actuals_opt
 		{ $$ := ast_factory.new_call_expression ($1, ast_factory.new_dot_feature_name ($2, $3), $4) }
 	;
 
 Static_call_expression: E_FEATURE '{' Type '}' '.' Identifier Actuals_opt
 		{ $$ := ast_factory.new_static_call_expression ($1, ast_factory.new_target_type ($2, $3, $4), ast_factory.new_dot_feature_name ($5, $6), $7) }
+	| '{' Class_name '}' '.' Identifier Actuals_opt
+		{ $$ := ast_factory.new_static_call_expression (Void, ast_factory.new_target_type ($1, new_named_type (Void, $2, Void), $3), ast_factory.new_dot_feature_name ($4, $5), $6) }
+	| '{' Type_no_class_name '}' '.' Identifier Actuals_opt
+		{ $$ := ast_factory.new_static_call_expression (Void, ast_factory.new_target_type ($1, $2, $3), ast_factory.new_dot_feature_name ($4, $5), $6) }
 	;
 
 Precursor_expression: E_PRECURSOR Actuals_opt
 		{ $$ := ast_factory.new_precursor_expression (False, $1, Void, $2) }
-	| Qualified_precursor_expression
-		{ $$ := $1 }
-	;
-
-Qualified_precursor_expression: E_PRECURSOR '{' Class_name '}' Actuals_opt
+	| E_PRECURSOR '{' Class_name '}' Actuals_opt
 		{ $$ := ast_factory.new_precursor_expression (False, $1, ast_factory.new_precursor_class_name ($2, $3, $4), $5) }
-	| '{' Class_name '}' E_PRECURSOR Actuals_opt
-		{ $$ := ast_factory.new_precursor_expression (True, $4, ast_factory.new_precursor_class_name ($1, $2, $3), $5) }
 	;
 
-Call_chain: Identifier Actuals_opt
+Call_chain_without_static: Identifier Actuals_opt
 		{ $$ := new_unqualified_call_expression ($1, $2) }
 	| E_RESULT
 		{ $$ := $1 }
@@ -2530,9 +2541,13 @@ Call_chain: Identifier Actuals_opt
 		{ $$ := $1 }
 	| Precursor_expression
 		{ $$ := $1 }
-	| Static_call_expression
+	| Call_chain_without_static '.' Identifier Actuals_opt
+		{ $$ := ast_factory.new_call_expression ($1, ast_factory.new_dot_feature_name ($2, $3), $4) }
+	;
+
+Call_chain_with_static: Static_call_expression
 		{ $$ := $1 }
-	| Call_chain '.' Identifier Actuals_opt
+	| Call_chain_with_static '.' Identifier Actuals_opt
 		{ $$ := ast_factory.new_call_expression ($1, ast_factory.new_dot_feature_name ($2, $3), $4) }
 	;
 
@@ -2581,20 +2596,6 @@ Actuals_expression_list: Expression ')'
 				$$.put_first ($1)
 			end
 		}
-	| Expression
-		{
-			if $1 /= Void then
-				increment_counter
-			end
-		}
-	  Actuals_expression_list
-		-- TODO: syntax error.
-		{
-			$$ := $3
-			if $$ /= Void and $1 /= Void then
-				$$.put_first ($1)
-			end
-		}
 	;
 
 Expression_comma: Expression ','
@@ -2627,69 +2628,13 @@ Writable: Identifier
 
 ------------------------------------------------------------------------------------
 
-Expression: Call_expression
+Expression: Binary_expression
 		{ $$ := $1 }
-	| Static_call_expression
+	| Non_binary_expression
 		{ $$ := $1 }
-	| Call_agent
-		{ $$ := $1 }
-	| Precursor_expression
-		{ $$ := $1 }
-	| Create_expression
-		{ $$ := $1 }
-	| E_RESULT
-		{ $$ := $1 }
-	| E_CURRENT
-		{ $$ := $1 }
-	| E_VOID
-		{ $$ := $1 }
-	| Parenthesized_expression
-		{ $$ := $1 }
-	| Boolean_constant
-		{ $$ := $1 }
-	| Character_constant
-		{ $$ := $1 }
-	| E_INTEGER
-		{ $$ := $1 }
-	| E_REAL
-		{ $$ := $1 }
-	| Manifest_string
-		{ $$ := $1 }
-	| E_ONCE_STRING Manifest_string
--- We need to make the distinction between once keywords followed
--- by a manifest string and once keywords introducing a once-routine
--- because otherwise we would need to have two look-ahead tokens
--- to figure out that the first once keyword in the following example
--- in part of a once manifest string expression and the second is
--- part of the compound of the once routine:
---   f is
---      require
---         once "foo" /= Void
---      once
---         do_nothing
---      end
--- Hence the use of 'E_ONCE_STRING' instead of 'E_ONCE'.
-		{ $$ := ast_factory.new_once_manifest_string ($1, $2) }
-	| E_BIT
-		{ $$ := $1 }
-	| Manifest_array
-		{ $$ := $1 }
-	| Manifest_tuple
-		{ $$ := $1 }
-	| '+' Expression %prec E_NOT
-		{ $$ := ast_factory.new_prefix_expression (ast_factory.new_prefix_plus_operator ($1), $2) }
-	| '-' Expression %prec E_NOT
-		{ $$ := ast_factory.new_prefix_expression (ast_factory.new_prefix_minus_operator ($1), $2) }
-	| E_NOT Expression
-		{ $$ := ast_factory.new_prefix_expression ($1, $2) }
--- Hack for SmartEiffel 1.1 (in INTEGER_GENERAL):
-	| '~' E_RESULT %prec E_NOT
-		{ $$ := ast_factory.new_call_agent ($1, Void, se_hack ($2), Void) }
-	| '~' E_INTEGER %prec E_NOT
-		{ $$ := ast_factory.new_call_agent ($1, Void, se_hack2 ($2), Void) }
-	| E_FREEOP Expression %prec E_NOT
-		{ $$ := ast_factory.new_prefix_expression (ast_factory.new_prefix_free_operator ($1), $2) }
-	| Expression E_FREEOP Expression
+	;
+
+Binary_expression: Expression E_FREEOP Expression
 		{ $$ := ast_factory.new_infix_expression ($1, ast_factory.new_infix_free_operator ($2), $3) }
 	| Expression '+' Expression
 		{ $$ := ast_factory.new_infix_expression ($1, ast_factory.new_infix_plus_operator ($2), $3) }
@@ -2729,16 +2674,109 @@ Expression: Call_expression
 		{ $$ := ast_factory.new_infix_expression ($1, ast_factory.new_infix_or_else_operator ($2, $3), $4) }
 	| Expression E_IMPLIES Expression
 		{ $$ := ast_factory.new_infix_expression ($1, $2, $3) }
-	| E_OLD Expression
-		{ $$ := ast_factory.new_old_expression ($1, $2) }
+	;
+
+Non_binary_expression: Non_binary_expression_without_unsigned_numeric
+		{ $$ := $1 }
+	| E_INTEGER
+		{ $$ := $1 }
+	| E_REAL
+		{ $$ := $1 }
+	;
+
+Non_binary_expression_without_unsigned_numeric: Typable_expression
+		{ $$ := $1 }
+	| Typed_expression
+		{ $$ := $1 }
+	| Typed_integer_constant
+		{ $$ := $1 }
+	| Typed_real_constant
+		{ $$ := $1 }
+	| Signed_integer_constant
+		{ $$ := $1 }
+	| Signed_real_constant
+		{ $$ := $1 }
+	| Manifest_type
+		{ $$ := $1 }
+	| Tilde_call_agent
+		{ $$ := $1 }
+	| Static_call_expression
+		{ $$ := $1 }
+	| Call_expression_with_static
+		{ $$ := $1 }
+	;
+
+Typable_expression: Call_expression_without_static
+		{ $$ := $1 }
+	| Precursor_expression
+		{ $$ := $1 }
+	| Create_expression
+		{ $$ := $1 }
+	| Call_agent
+		{ $$ := $1 }
+	| E_RESULT
+		{ $$ := $1 }
+	| E_CURRENT
+		{ $$ := $1 }
+	| E_VOID
+		{ $$ := $1 }
+	| Parenthesized_expression
+		{ $$ := $1 }
+	| Boolean_constant
+		{ $$ := $1 }
+	| Character_constant
+		{ $$ := $1 }
+	| Manifest_string
+		{ $$ := $1 }
+	| E_ONCE_STRING Manifest_string
+-- We need to make the distinction between once keywords followed
+-- by a manifest string and once keywords introducing a once-routine
+-- because otherwise we would need to have two look-ahead tokens
+-- to figure out that the first once keyword in the following example
+-- in part of a once manifest string expression and the second is
+-- part of the compound of the once routine:
+--   f is
+--      require
+--         once "foo" /= Void
+--      once
+--         do_nothing
+--      end
+-- Hence the use of 'E_ONCE_STRING' instead of 'E_ONCE'.
+		{ $$ := ast_factory.new_once_manifest_string ($1, $2) }
+	| E_BIT
+		{ $$ := $1 }
+	| Manifest_array
+		{ $$ := $1 }
+	| Manifest_tuple
+		{ $$ := $1 }
 	| Strip_expression
 		{ $$ := $1 }
 	| Address_mark
 		{ $$ := $1 }
+	| '+' Non_binary_expression_without_unsigned_numeric
+		{ $$ := ast_factory.new_prefix_expression (ast_factory.new_prefix_plus_operator ($1), $2) }
+	| '-' Non_binary_expression_without_unsigned_numeric
+		{ $$ := ast_factory.new_prefix_expression (ast_factory.new_prefix_minus_operator ($1), $2) }
+	| E_NOT Non_binary_expression
+		{ $$ := ast_factory.new_prefix_expression ($1, $2) }
+	| E_FREEOP Non_binary_expression
+		{ $$ := ast_factory.new_prefix_expression (ast_factory.new_prefix_free_operator ($1), $2) }
+	| E_OLD Non_binary_expression
+		{ $$ := ast_factory.new_old_expression ($1, $2) }
+	;
+
+Typed_expression: '{' Type '}' Typable_expression
+		{ $$ := ast_factory.new_typed_expression (ast_factory.new_target_type ($1, $2, $3), $4) }
 	;
 
 Parenthesized_expression: '(' Expression ')'
 		{ $$ := ast_factory.new_parenthesized_expression ($1, $2, $3) }
+	;
+
+Manifest_type: '{' Class_name '}'
+		{ $$ := ast_factory.new_manifest_type ($1, new_named_type (Void, $2, Void), $3) }
+	| '{' Type_no_class_name '}'
+		{ $$ := ast_factory.new_manifest_type ($1, $2, $3) }
 	;
 
 Manifest_array: E_LARRAY E_RARRAY
@@ -2892,8 +2930,6 @@ Call_agent: E_AGENT Feature_name Agent_actuals_opt
 		{ $$ := ast_factory.new_call_agent ($1, Void, $2, $3) }
 	| E_AGENT Agent_target '.' Feature_name Agent_actuals_opt
 		{ $$ := ast_factory.new_call_agent ($1, $2, ast_factory.new_dot_feature_name ($3, $4), $5) }
-	| Tilde_call_agent
-		{ $$ := $1 }
 	;
 
 Tilde_call_agent: '~' Feature_name Agent_actuals_opt
@@ -2908,22 +2944,8 @@ Tilde_call_agent: '~' Feature_name Agent_actuals_opt
 		{ $$ := ast_factory.new_call_agent ($2, $1, $3, $4) }
 	| '{' Class_name '}' '~' Feature_name Agent_actuals_opt
 		{ $$ := ast_factory.new_call_agent ($4, ast_factory.new_agent_open_target ($1, new_named_type (Void, $2, Void), $3), $5, $6) }
-	| '{' Class_name Actual_parameters '}' '~' Feature_name Agent_actuals_opt
-		{ $$ := ast_factory.new_call_agent ($5, ast_factory.new_agent_open_target ($1, new_named_type (Void, $2, $3), $4), $6, $7) }
-	| '{' E_EXPANDED Class_name Actual_parameters_opt '}' '~' Feature_name Agent_actuals_opt
-		{ $$ := ast_factory.new_call_agent ($6, ast_factory.new_agent_open_target ($1, new_named_type ($2, $3, $4), $5), $7, $8) }
-	| '{' E_SEPARATE Class_name Actual_parameters_opt '}' '~' Feature_name Agent_actuals_opt
-		{ $$ := ast_factory.new_call_agent ($6, ast_factory.new_agent_open_target ($1, new_named_type ($2, $3, $4), $5), $7, $8) }
-	| '{' E_REFERENCE Class_name Actual_parameters_opt '}' '~' Feature_name Agent_actuals_opt
-		{ $$ := ast_factory.new_call_agent ($6, ast_factory.new_agent_open_target ($1, new_named_type ($2, $3, $4), $5), $7, $8) }
-	| '{' Anchored_type '}' '~' Feature_name Agent_actuals_opt
+	| '{' Type_no_class_name '}' '~' Feature_name Agent_actuals_opt
 		{ $$ := ast_factory.new_call_agent ($4, ast_factory.new_agent_open_target ($1, $2, $3), $5, $6) }
-	| '{' E_BITTYPE Integer_constant '}' '~' Feature_name Agent_actuals_opt
-		{ $$ := ast_factory.new_call_agent ($5, ast_factory.new_agent_open_target ($1, new_bit_n ($2, $3), $4), $6, $7) }
-	| '{' E_BITTYPE Identifier '}' '~' Feature_name Agent_actuals_opt
-		{ $$ := ast_factory.new_call_agent ($5, ast_factory.new_agent_open_target ($1, ast_factory.new_bit_feature ($2, $3), $4), $6, $7) }
-	| '{' E_TUPLE Actual_parameters_opt '}' '~' Feature_name Agent_actuals_opt
-		{ $$ := ast_factory.new_call_agent ($5, ast_factory.new_agent_open_target ($1, new_tuple_type ($2, $3), $4), $6, $7) }
 	;
 
 Agent_target: Identifier
@@ -2981,20 +3003,6 @@ Agent_actual_list: Agent_actual ')'
 				$$.put_first ($1)
 			end
 		}
-	| Agent_actual
-		{
-			if $1 /= Void then
-				increment_counter
-			end
-		}
-	  Agent_actual_list
-		-- TODO: syntax error.
-		{
-			$$ := $3
-			if $$ /= Void and $1 /= Void then
-				$$.put_first ($1)
-			end
-		}
 	;
 
 Agent_actual_comma: Agent_actual ','
@@ -3010,24 +3018,8 @@ Agent_actual: Expression
 		{ $$ := $1 }
 	| '?'
 		{ $$ := $1 }
-	| '{' Class_name '}'
-		{ $$ := ast_factory.new_agent_typed_open_argument ($1, new_named_type (Void, $2, Void), $3) }
-	| '{' Class_name Actual_parameters '}'
-		{ $$ := ast_factory.new_agent_typed_open_argument ($1, new_named_type (Void, $2, $3), $4) }
-	| '{' E_EXPANDED Class_name Actual_parameters_opt '}'
-		{ $$ := ast_factory.new_agent_typed_open_argument ($1, new_named_type ($2, $3, $4), $5) }
-	| '{' E_SEPARATE Class_name Actual_parameters_opt '}'
-		{ $$ := ast_factory.new_agent_typed_open_argument ($1, new_named_type ($2, $3, $4), $5) }
-	| '{' E_REFERENCE Class_name Actual_parameters_opt '}'
-		{ $$ := ast_factory.new_agent_typed_open_argument ($1, new_named_type ($2, $3, $4), $5) }
-	| '{' Anchored_type '}'
-		{ $$ := ast_factory.new_agent_typed_open_argument ($1, $2, $3) }
-	| '{' E_BITTYPE Integer_constant '}'
-		{ $$ := ast_factory.new_agent_typed_open_argument ($1, new_bit_n ($2, $3), $4) }
-	| '{' E_BITTYPE Identifier '}'
-		{ $$ := ast_factory.new_agent_typed_open_argument ($1, ast_factory.new_bit_feature ($2, $3), $4)  }
-	| '{' E_TUPLE Actual_parameters_opt '}'
-		{ $$ := ast_factory.new_agent_typed_open_argument ($1, new_tuple_type ($2, $3), $4) }
+	| '{' Type '}' '?'
+		{ $$ := ast_factory.new_agent_typed_open_argument ($1, $2, $3, $4) }
 	;
 
 ------------------------------------------------------------------------------------
@@ -3088,9 +3080,19 @@ Boolean_constant: E_TRUE
 		{ $$ := $1 }
 	;
 
-Integer_constant: E_INTEGER
+Integer_constant: Untyped_integer_constant
 		{ $$ := $1 }
-	| '-' E_INTEGER
+	| Typed_integer_constant
+		{ $$ := $1 }
+	;
+
+Untyped_integer_constant: E_INTEGER
+		{ $$ := $1 }
+	| Signed_integer_constant
+		{ $$ := $1 }
+	;
+
+Signed_integer_constant: '-' E_INTEGER
 		{
 			$$ := $2
 			$$.set_sign ($1)
@@ -3102,9 +3104,26 @@ Integer_constant: E_INTEGER
 		}
 	;
 
-Real_constant: E_REAL
+Typed_integer_constant: '{' Type '}' Untyped_integer_constant
+		{
+			$$ := $4
+			$$.set_cast_type (ast_factory.new_target_type ($1, $2, $3))
+		}
+	;
+
+Real_constant: Untyped_real_constant
 		{ $$ := $1 }
-	| '-' E_REAL
+	| Typed_real_constant
+		{ $$ := $1 }
+	;
+
+Untyped_real_constant: E_REAL
+		{ $$ := $1 }
+	| Signed_real_constant
+		{ $$ := $1 }
+	;
+
+Signed_real_constant: '-' E_REAL
 		{
 			$$ := $2
 			$$.set_sign ($1)
@@ -3113,6 +3132,13 @@ Real_constant: E_REAL
 		{
 			$$ := $2
 			$$.set_sign ($1)
+		}
+	;
+
+Typed_real_constant: '{' Type '}' Untyped_real_constant
+		{
+			$$ := $4
+			$$.set_cast_type (ast_factory.new_target_type ($1, $2, $3))
 		}
 	;
 
@@ -3134,32 +3160,6 @@ Add_counter: { add_counter }
 
 --------------------------------------------------------------------------------
 %%
-
-feature {NONE} -- SmartEiffel hack
-
-	se_hack (r: ET_RESULT): ET_IDENTIFIER is
-			-- I hate SmartEiffel!!!!
-		require
-			r_not_void: r /= Void
-		do
-			create Result.make (r.text)
-			Result.set_position (r.line, r.column)
-			Result.set_break (r.break)
-		ensure
-			identifier_not_void: Result /= Void
-		end
-
-	se_hack2 (r: ET_INTEGER_CONSTANT): ET_IDENTIFIER is
-			-- I hate SmartEiffel!!!!
-		require
-			r_not_void: r /= Void
-		do
-			create Result.make (r.literal)
-			Result.set_position (r.line, r.column)
-			Result.set_break (r.break)
-		ensure
-			identifier_not_void: Result /= Void
-		end
 
 feature -- Parsing
 

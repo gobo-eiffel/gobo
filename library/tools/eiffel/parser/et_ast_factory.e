@@ -1268,8 +1268,8 @@ feature -- AST nodes
 			end
 		end
 
-	new_agent_typed_open_argument (l: ET_SYMBOL; a_type: ET_TYPE; r: ET_SYMBOL): ET_AGENT_TYPED_OPEN_ARGUMENT is
-			-- New agent open argument of the form '{TYPE}'
+	new_agent_typed_open_argument (l: ET_SYMBOL; a_type: ET_TYPE; r: ET_SYMBOL; a_question_mark: ET_QUESTION_MARK_SYMBOL): ET_AGENT_TYPED_OPEN_ARGUMENT is
+			-- New agent open argument of the form '{TYPE} ?'
 		do
 			if a_type /= Void then
 				create Result.make (a_type)
@@ -2466,6 +2466,14 @@ feature -- AST nodes
 			end
 		end
 
+	new_manifest_type (l: ET_SYMBOL; a_type: ET_TYPE; r: ET_SYMBOL): ET_MANIFEST_TYPE is
+			-- New manifest type
+		do
+			if a_type /= Void then
+				create Result.make (a_type)
+			end
+		end
+
 	new_none_clients (a_left, a_right: ET_SYMBOL): ET_NONE_CLIENTS is
 			-- Client list of the form {}
 		do
@@ -2858,6 +2866,14 @@ feature -- AST nodes
 			-- New type-comma
 		do
 			Result := a_type
+		end
+
+	new_typed_expression (a_type: ET_TARGET_TYPE; an_expression: ET_EXPRESSION): ET_TYPED_EXPRESSION is
+			-- New typed expression
+		do
+			if a_type /= Void and an_expression /= Void then
+				create Result.make (a_type, an_expression)
+			end
 		end
 
 	new_unique_attribute (a_name: ET_FEATURE_NAME_ITEM; a_type: ET_DECLARED_TYPE;
