@@ -33,11 +33,14 @@ feature {NONE} -- Initialization
 		require
 			a_build_filename_not_void: a_build_filename /= Void
 			a_build_filename_not_empty: a_build_filename.count > 0
+		local
+			a_absolute_pathname: STRING
 		do
 			build_filename := a_build_filename
 			if not file_system.is_file_readable (build_filename) then
-				exit_application (1, <<"cannot read build file '", build_filename,
-					"' (Current working directory: ", file_system.current_working_directory, ")">>)
+				a_absolute_pathname := file_system.absolute_pathname (
+					file_system.pathname_from_file_system (build_filename, unix_file_system))
+				exit_application (1, <<"cannot read build file '", a_absolute_pathname, "'">>)
 			end
 		ensure
 			build_filename_set: build_filename = a_build_filename
