@@ -11,3 +11,9 @@ releases.
 . Add %option backupfile="filename" and corresponding command-line option.
 . Add a feature in DS_ARRAYED_LIST to get rid of garbage (i.e. old items
   at indexes count+1..capacity.
+
+2 October 1999
+
+. Add classes DS_SET and DS_TREE to the Gobo Eiffel Structure Library.
+. Allow strings in geyacc's rules.
+. Include Friedrich Dominicus (and Object Tools) formatter library.
