@@ -2,7 +2,7 @@ indexing
 
 	description:
 
-		""
+		"String routines"
 
 	library: "Gobo Eiffel Tools Library"
 	copyright: "Copyright (c) 2001, Andreas Leitner and others"
@@ -10,11 +10,9 @@ indexing
 	date: "$Date$"
 	revision: "$Revision$"
 
-class
-	
-	UT_STRING_ROUTINES
+class UT_STRING_ROUTINES
 
-feature
+feature -- Basic operations
 
 	split_string (s: STRING; c: CHARACTER): DS_LINKED_LIST [STRING] is
 			-- split `s' on `c' and return token list
@@ -30,18 +28,13 @@ feature
 			until
 				i > s.count
 			loop
-				if
-					s.item (i) = c and
-					i > mark
-				then
+				if s.item (i) = c and i > mark then
 					Result.put_last (s.substring (mark, i - 1))
 					mark := i + 1
 				end
 				i := i + 1
 			end
-			if
-				i > mark
-			then
+			if i > mark then
 				Result.put_last (s.substring (mark, i - 1))
 			end
 		ensure
@@ -65,9 +58,7 @@ feature
 		do
 			l := split_string (s, c)
 			first := l.first
-			if
-				l.count > 1
-			then
+			if l.count > 1 then
 				from
 					second := clone ("")
 					cs := l.new_cursor
@@ -105,9 +96,7 @@ feature
 			until
 				i > str.count
 			loop
-				if
-					str.item (i) = old_char
-				then
+				if str.item (i) = old_char then
 					Result.append_character (new_char)
 				else
 					Result.append_character (str.item (i))
@@ -132,9 +121,7 @@ feature
 			until
 				i > str.count
 			loop
-				if
-					str.item (i) /= char
-				then
+				if str.item (i) /= char then
 					Result.append_character (str.item (i))
 				end
 				i := i + 1
@@ -148,7 +135,7 @@ feature
 			-- returns a new string everytime.
 		require
 			a_not_void: a /= Void
-				--	no_element_void: not a.has (Void)
+			-- no_element_void: not a.has (Void)
 			a_count_bigger_zero: a.count > 0
 		local
 			i: INTEGER

@@ -10,13 +10,16 @@ indexing
 	date: "$Date$"
 	revision: "$Revision$"
 
-class
-   UT_SHARED_TEMPLATE_EXPANDER
+class UT_SHARED_TEMPLATE_EXPANDER
 
-feature {ANY} -- Access
+feature -- Access
 
-   template_expander: UT_TEMPLATE_EXPANDER is
-      once
-         !! Result.make
-      end
+	template_expander: UT_TEMPLATE_EXPANDER is
+			-- Shared template expander
+		once
+			!! Result.make
+		ensure
+			template_expander_not_void: Result /= Void
+		end
+
 end
