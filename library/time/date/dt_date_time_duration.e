@@ -573,6 +573,8 @@ feature -- Comparison
 
 	same_date_time_duration (other: DT_DATE_TIME_DURATION): BOOLEAN is
 			-- Is current date time duration equal to `other'?
+		require
+			other_not_void: other /= Void
 		local
 			d, ms: INTEGER
 		do
