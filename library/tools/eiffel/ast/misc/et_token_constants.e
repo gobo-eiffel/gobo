@@ -162,6 +162,30 @@ feature -- Class names
 			typed_pointer_class_name_not_void: Result /= Void
 		end
 
+	procedure_class_name: ET_CLASS_NAME is
+			-- "PROCEDURE" class name
+		once
+			create {ET_IDENTIFIER} Result.make ("PROCEDURE")
+		ensure
+			procedure_class_name_not_void: Result /= Void
+		end
+
+	predicate_class_name: ET_CLASS_NAME is
+			-- "PREDICATE" class name
+		once
+			create {ET_IDENTIFIER} Result.make ("PREDICATE")
+		ensure
+			predicate_class_name_not_void: Result /= Void
+		end
+
+	function_class_name: ET_CLASS_NAME is
+			-- "FUNCTION" class name
+		once
+			create {ET_IDENTIFIER} Result.make ("FUNCTION")
+		ensure
+			function_class_name_not_void: Result /= Void
+		end
+
 	unknown_class_name: ET_CLASS_NAME is
 			-- "*UNKNOWN*" class name
 		once
@@ -250,10 +274,26 @@ feature -- Symbols
 			symbol_not_void: Result /= Void
 		end
 
+	comma_symbol: ET_SYMBOL is
+			-- ',' symbol
+		once
+			create Result.make_comma
+		ensure
+			symbol_not_void: Result /= Void
+		end
+
 	dollar_symbol: ET_SYMBOL is
 			-- '$' symbol
 		once
 			create Result.make_dollar
+		ensure
+			symbol_not_void: Result /= Void
+		end
+
+	dot_symbol: ET_SYMBOL is
+			-- '.' symbol
+		once
+			create Result.make_dot
 		ensure
 			symbol_not_void: Result /= Void
 		end
