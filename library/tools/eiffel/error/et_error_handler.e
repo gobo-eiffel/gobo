@@ -5,7 +5,7 @@ indexing
 		"Error handlers"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 1999-2003, Eric Bezault and others"
+	copyright: "Copyright (c) 1999-2004, Eric Bezault and others"
 	license: "Eiffel Forum License v2 (see forum.txt)"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -400,6 +400,48 @@ feature -- Validity errors
 		do
 			if reportable_vaol1_error (a_class) then
 				create an_error.make_vaol1a (a_class, an_expression)
+				report_validity_error (an_error)
+			end
+		end
+
+	report_vave0a_error (a_class: ET_CLASS; an_expression: ET_EXPRESSION; a_type: ET_NAMED_TYPE) is
+			-- Report VAVE error: the expression `an_expression' of a
+			-- loop variant in `a_class' is of type `a_type' which is
+			-- not "INTEGER".
+			--
+			-- ETL2: p.130
+		require
+			a_class_not_void: a_class /= Void
+			a_class_preparsed: a_class.is_preparsed
+			an_expression_not_void: an_expression /= Void
+			a_type_not_void: a_type /= Void
+		local
+			an_error: ET_VALIDITY_ERROR
+		do
+			if reportable_vave_error (a_class) then
+				create an_error.make_vave0a (a_class, an_expression, a_type)
+				report_validity_error (an_error)
+			end
+		end
+
+	report_vave0b_error (a_class, a_class_impl: ET_CLASS; an_expression: ET_EXPRESSION; a_type: ET_NAMED_TYPE) is
+			-- Report VAVE error: the expression `an_expression' of a
+			-- loop variant in `a_class_impl' and viewed from one of
+			-- its descendants `a_class' is of type `a_type' which is
+			-- not "INTEGER".
+			--
+			-- ETL2: p.130
+		require
+			a_class_not_void: a_class /= Void
+			a_class_impl_not_void: a_class_impl /= Void
+			a_class_impl_preparsed: a_class_impl.is_preparsed
+			an_expression_not_void: an_expression /= Void
+			a_type_not_void: a_type /= Void
+		local
+			an_error: ET_VALIDITY_ERROR
+		do
+			if reportable_vave_error (a_class) then
+				create an_error.make_vave0b (a_class, a_class_impl, an_expression, a_type)
 				report_validity_error (an_error)
 			end
 		end
@@ -1556,6 +1598,44 @@ feature -- Validity errors
 		do
 			if reportable_veen2_error (a_class) then
 				create an_error.make_veen2a (a_class, a_result, a_feature)
+				report_validity_error (an_error)
+			end
+		end
+
+	report_veen2b_error (a_class: ET_CLASS; a_result: ET_RESULT; a_feature: ET_FEATURE) is
+			-- Report VEEN-2 error: `a_result' appears in the precondition
+			-- `a_feature' in `a_class'.
+			--
+			-- ETL2: p.276
+		require
+			a_class_not_void: a_class /= Void
+			a_class_preparsed: a_class.is_preparsed
+			a_result_not_void: a_result /= Void
+			a_feature_not_void: a_feature /= Void
+		local
+			an_error: ET_VALIDITY_ERROR
+		do
+			if reportable_veen2_error (a_class) then
+				create an_error.make_veen2b (a_class, a_result, a_feature)
+				report_validity_error (an_error)
+			end
+		end
+
+	report_veen2c_error (a_class: ET_CLASS; a_local: ET_IDENTIFIER; a_feature: ET_FEATURE) is
+			-- Report VEEN-2 error: the local variable `a_local' appears in the precondition
+			-- or postcondition of `a_feature' in `a_class'.
+			--
+			-- ETL2: p.276
+		require
+			a_class_not_void: a_class /= Void
+			a_class_preparsed: a_class.is_preparsed
+			a_local_not_void: a_local /= Void
+			a_feature_not_void: a_feature /= Void
+		local
+			an_error: ET_VALIDITY_ERROR
+		do
+			if reportable_veen2_error (a_class) then
+				create an_error.make_veen2c (a_class, a_local, a_feature)
 				report_validity_error (an_error)
 			end
 		end
@@ -2717,6 +2797,92 @@ feature -- Validity errors
 					an_error.set_se_fatal (False)
 					report_validity_error (an_error)
 				end
+			end
+		end
+
+	report_vomb1a_error (a_class: ET_CLASS; an_expression: ET_EXPRESSION; a_type: ET_NAMED_TYPE) is
+			-- Report VOMB-1 error: the inspect expression `an_expression'
+			-- in `a_class' is of type `a_type' which is not "INTEGER" or
+			-- "CHARACTER".
+			--
+			-- ETL2: p.239
+		require
+			a_class_not_void: a_class /= Void
+			a_class_preparsed: a_class.is_preparsed
+			an_expression_not_void: an_expression /= Void
+			a_type_not_void: a_type /= Void
+		local
+			an_error: ET_VALIDITY_ERROR
+		do
+			if reportable_vomb1_error (a_class) then
+				create an_error.make_vomb1a (a_class, an_expression, a_type)
+				report_validity_error (an_error)
+			end
+		end
+
+	report_vomb1b_error (a_class, a_class_impl: ET_CLASS; an_expression: ET_EXPRESSION; a_type: ET_NAMED_TYPE) is
+			-- Report VOMB-1 error: the inspect expression `an_expression'
+			-- in `a_class_impl' and viewed from one of its descendants `a_class'
+			-- is of type `a_type' which is not "INTEGER" or "CHARACTER".
+			--
+			-- ETL2: p.239
+		require
+			a_class_not_void: a_class /= Void
+			a_class_impl_not_void: a_class_impl /= Void
+			a_class_impl_preparsed: a_class_impl.is_preparsed
+			an_expression_not_void: an_expression /= Void
+			a_type_not_void: a_type /= Void
+		local
+			an_error: ET_VALIDITY_ERROR
+		do
+			if reportable_vomb1_error (a_class) then
+				create an_error.make_vomb1b (a_class, a_class_impl, an_expression, a_type)
+				report_validity_error (an_error)
+			end
+		end
+
+	report_vomb2a_error (a_class: ET_CLASS; a_constant: ET_CHOICE_CONSTANT; a_constant_type, a_value_type: ET_NAMED_TYPE) is
+			-- Report VOMB-2 error: the inspect constant `a_constant' in `a_class'
+			-- is of type `a_consant_type' which is not the same as the type
+			-- `a_value_type' of the inspect expression.
+			--
+			-- ETL2: p.239
+		require
+			a_class_not_void: a_class /= Void
+			a_class_preparsed: a_class.is_preparsed
+			a_constant_not_void: a_constant /= Void
+			a_constant_type_not_void: a_constant_type /= Void
+			a_value_type_not_void: a_value_type /= Void
+		local
+			an_error: ET_VALIDITY_ERROR
+		do
+			if reportable_vomb2_error (a_class) then
+				create an_error.make_vomb2a (a_class, a_constant, a_constant_type, a_value_type)
+				report_validity_error (an_error)
+			end
+		end
+
+	report_vomb2b_error (a_class, a_class_impl: ET_CLASS; a_constant: ET_CHOICE_CONSTANT;
+		a_constant_type, a_value_type: ET_NAMED_TYPE) is
+			-- Report VOMB-2 error: the inspect constant `a_constant' in
+			-- `a_class_impl' and viewed from one of its descendants `a_class'
+			-- is of type `a_constant_type' which is not the same as the
+			-- type `a_value_type' of the inspect expression.
+			--
+			-- ETL2: p.239
+		require
+			a_class_not_void: a_class /= Void
+			a_class_impl_not_void: a_class_impl /= Void
+			a_class_impl_preparsed: a_class_impl.is_preparsed
+			a_constant_not_void: a_constant /= Void
+			a_constant_type_not_void: a_constant_type /= Void
+			a_value_type_not_void: a_value_type /= Void
+		local
+			an_error: ET_VALIDITY_ERROR
+		do
+			if reportable_vomb2_error (a_class) then
+				create an_error.make_vomb2b (a_class, a_class_impl, a_constant, a_constant_type, a_value_type)
+				report_validity_error (an_error)
 			end
 		end
 
@@ -4469,6 +4635,16 @@ feature -- Validity error status
 			Result := True
 		end
 
+	reportable_vave_error (a_class: ET_CLASS): BOOLEAN is
+			-- Can a VAVE error be reported when it
+			-- appears in `a_class'?
+		require
+			a_class_not_void: a_class /= Void
+			a_class_preparsed: a_class.is_preparsed
+		do
+			Result := True
+		end
+
 	reportable_vcch1_error (a_class: ET_CLASS): BOOLEAN is
 			-- Can a VCCH-1 error be reported when it
 			-- appears in `a_class'?
@@ -4921,6 +5097,26 @@ feature -- Validity error status
 
 	reportable_vmss3_error (a_class: ET_CLASS): BOOLEAN is
 			-- Can a VMSS-3 error be reported when it
+			-- appears in `a_class'?
+		require
+			a_class_not_void: a_class /= Void
+			a_class_preparsed: a_class.is_preparsed
+		do
+			Result := True
+		end
+
+	reportable_vomb1_error (a_class: ET_CLASS): BOOLEAN is
+			-- Can a VOMB-1 error be reported when it
+			-- appears in `a_class'?
+		require
+			a_class_not_void: a_class /= Void
+			a_class_preparsed: a_class.is_preparsed
+		do
+			Result := True
+		end
+
+	reportable_vomb2_error (a_class: ET_CLASS): BOOLEAN is
+			-- Can a VOMB-2 error be reported when it
 			-- appears in `a_class'?
 		require
 			a_class_not_void: a_class /= Void

@@ -5,7 +5,7 @@ indexing
 		"Eiffel validity errors"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2003, Eric Bezault and others"
+	copyright: "Copyright (c) 2003-2004, Eric Bezault and others"
 	license: "Eiffel Forum License v2 (see forum.txt)"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -23,6 +23,8 @@ creation
 
 	make,
 	make_vaol1a,
+	make_vave0a,
+	make_vave0b,
 	make_vcch1a,
 	make_vcch1b,
 	make_vcch2a,
@@ -72,6 +74,8 @@ creation
 	make_vdus4a,
 	make_veen0a,
 	make_veen2a,
+	make_veen2b,
+	make_veen2c,
 	make_vgcc3a,
 	make_vgcc3b,
 	make_vgcc5a,
@@ -126,6 +130,10 @@ creation
 	make_vmss1a,
 	make_vmss2a,
 	make_vmss3a,
+	make_vomb1a,
+	make_vomb1b,
+	make_vomb2a,
+	make_vomb2b,
 	make_vpca1a,
 	make_vpca1b,
 	make_vpca2a,
@@ -279,6 +287,90 @@ feature {NONE} -- Initialization
 			-- dollar3: $3 = line
 			-- dollar4: $4 = column
 			-- dollar5: $5 = class name
+		end
+
+	make_vave0a (a_class: like current_class; an_expression: ET_EXPRESSION; a_type: ET_NAMED_TYPE) is
+			-- Create a new VAVE error: the expression `an_expression' of a
+			-- loop variant in `a_class' is of type `a_type' which is
+			-- not "INTEGER".
+			--
+			-- ETL2: p.130
+		require
+			a_class_not_void: a_class /= Void
+			a_class_preparsed: a_class.is_preparsed
+			an_expression_not_void: an_expression /= Void
+			a_type_not_void: a_type /= Void
+		do
+			code := vave0a_template_code
+			etl_code := vave_etl_code
+			default_template := vave0a_default_template
+			current_class := a_class
+			class_impl := a_class
+			position := an_expression.position
+			create parameters.make (1, 6)
+			parameters.put (etl_code, 1)
+			parameters.put (filename, 2)
+			parameters.put (position.line.out, 3)
+			parameters.put (position.column.out, 4)
+			parameters.put (current_class.name.name, 5)
+			parameters.put (a_type.to_text, 6)
+			set_compilers (True)
+		ensure
+			current_class_set: current_class = a_class
+			class_impl_set: class_impl = a_class
+			all_reported: all_reported
+			all_fatal: all_fatal
+			-- dollar0: $0 = program name
+			-- dollar1: $1 = ETL code
+			-- dollar2: $2 = filename
+			-- dollar3: $3 = line
+			-- dollar4: $4 = column
+			-- dollar5: $5 = class name
+			-- dollar6: $6 = base type of expression
+		end
+
+	make_vave0b (a_class: like current_class; a_class_impl: ET_CLASS; an_expression: ET_EXPRESSION; a_type: ET_NAMED_TYPE) is
+			-- Create a new VAVE error: the expression `an_expression' of a
+			-- loop variant in `a_class_impl' and viewed from one of
+			-- its descendants `a_class' is of type `a_type' which is
+			-- not "INTEGER".
+			--
+			-- ETL2: p.130
+		require
+			a_class_not_void: a_class /= Void
+			a_class_impl_not_void: a_class_impl /= Void
+			a_class_impl_preparsed: a_class_impl.is_preparsed
+			an_expression_not_void: an_expression /= Void
+			a_type_not_void: a_type /= Void
+		do
+			code := vave0b_template_code
+			etl_code := vave_etl_code
+			default_template := vave0b_default_template
+			current_class := a_class
+			class_impl := a_class_impl
+			position := an_expression.position
+			create parameters.make (1, 7)
+			parameters.put (etl_code, 1)
+			parameters.put (filename, 2)
+			parameters.put (position.line.out, 3)
+			parameters.put (position.column.out, 4)
+			parameters.put (current_class.name.name, 5)
+			parameters.put (a_class_impl.name.name, 6)
+			parameters.put (a_type.to_text, 7)
+			set_compilers (True)
+		ensure
+			current_class_set: current_class = a_class
+			class_impl_set: class_impl = a_class_impl
+			all_reported: all_reported
+			all_fatal: all_fatal
+			-- dollar0: $0 = program name
+			-- dollar1: $1 = ETL code
+			-- dollar2: $2 = filename
+			-- dollar3: $3 = line
+			-- dollar4: $4 = column
+			-- dollar5: $5 = class name
+			-- dollar6: $6 = implementation class name
+			-- dollar7: $7 = base type of expression
 		end
 
 	make_vcch1a (a_class: like current_class; f: ET_FEATURE) is
@@ -2443,6 +2535,86 @@ feature {NONE} -- Initialization
 			-- dollar4: $4 = column
 			-- dollar5: $5 = class name
 			-- dollar6: $6 = feature name
+		end
+
+	make_veen2b (a_class: like current_class; a_result: ET_RESULT; a_feature: ET_FEATURE) is
+			-- Create a new VEEN-2 error: `a_result' appears in the precondition
+			-- of `a_feature' in `a_class'.
+			--
+			-- ETL2: p.276
+		require
+			a_class_not_void: a_class /= Void
+			a_class_preparsed: a_class.is_preparsed
+			a_result_not_void: a_result /= Void
+			a_feature_not_void: a_feature /= Void
+		do
+			code := veen2b_template_code
+			etl_code := veen2_etl_code
+			default_template := veen2b_default_template
+			current_class := a_class
+			class_impl := a_class
+			position := a_result.position
+			create parameters.make (1, 6)
+			parameters.put (etl_code, 1)
+			parameters.put (filename, 2)
+			parameters.put (position.line.out, 3)
+			parameters.put (position.column.out, 4)
+			parameters.put (current_class.name.name, 5)
+			parameters.put (a_feature.name.name, 6)
+			set_compilers (True)
+		ensure
+			current_class_set: current_class = a_class
+			class_impl_set: class_impl = a_class
+			all_reported: all_reported
+			all_fatal: all_fatal
+			-- dollar0: $0 = program name
+			-- dollar1: $1 = ETL code
+			-- dollar2: $2 = filename
+			-- dollar3: $3 = line
+			-- dollar4: $4 = column
+			-- dollar5: $5 = class name
+			-- dollar6: $6 = feature name
+		end
+
+	make_veen2c (a_class: like current_class; a_local: ET_IDENTIFIER; a_feature: ET_FEATURE) is
+			-- Create a new VEEN-2 error: the local variable `a_local' appears in the precondition
+			-- or postcondition of `a_feature' in `a_class'.
+			--
+			-- ETL2: p.276
+		require
+			a_class_not_void: a_class /= Void
+			a_class_preparsed: a_class.is_preparsed
+			a_local_not_void: a_local /= Void
+			a_feature_not_void: a_feature /= Void
+		do
+			code := veen2c_template_code
+			etl_code := veen2_etl_code
+			default_template := veen2c_default_template
+			current_class := a_class
+			class_impl := a_class
+			position := a_local.position
+			create parameters.make (1, 7)
+			parameters.put (etl_code, 1)
+			parameters.put (filename, 2)
+			parameters.put (position.line.out, 3)
+			parameters.put (position.column.out, 4)
+			parameters.put (current_class.name.name, 5)
+			parameters.put (a_local.name, 6)
+			parameters.put (a_feature.name.name, 7)
+			set_compilers (True)
+		ensure
+			current_class_set: current_class = a_class
+			class_impl_set: class_impl = a_class
+			all_reported: all_reported
+			all_fatal: all_fatal
+			-- dollar0: $0 = program name
+			-- dollar1: $1 = ETL code
+			-- dollar2: $2 = filename
+			-- dollar3: $3 = line
+			-- dollar4: $4 = column
+			-- dollar5: $5 = class name
+			-- dollar6: $6 = local name
+			-- dollar7: $7 = feature name
 		end
 
 	make_vgcc3a (a_class: like current_class; a_creation: ET_CREATION_INSTRUCTION;
@@ -4881,6 +5053,180 @@ feature {NONE} -- Initialization
 			-- dollar5: $5 = class name
 			-- dollar6: $6 = feature name
 			-- dollar7: $7 = parent base class
+		end
+
+	make_vomb1a (a_class: like current_class; an_expression: ET_EXPRESSION; a_type: ET_NAMED_TYPE) is
+			-- Create a new VOMB-1 error: the inspect expression `an_expression'
+			-- in `a_class' is of type `a_type' which is not "INTEGER" or
+			-- "CHARACTER".
+			--
+			-- ETL2: p.239
+		require
+			a_class_not_void: a_class /= Void
+			a_class_preparsed: a_class.is_preparsed
+			an_expression_not_void: an_expression /= Void
+			a_type_not_void: a_type /= Void
+		do
+			code := vomb1a_template_code
+			etl_code := vomb1_etl_code
+			default_template := vomb1a_default_template
+			current_class := a_class
+			class_impl := a_class
+			position := an_expression.position
+			create parameters.make (1, 6)
+			parameters.put (etl_code, 1)
+			parameters.put (filename, 2)
+			parameters.put (position.line.out, 3)
+			parameters.put (position.column.out, 4)
+			parameters.put (current_class.name.name, 5)
+			parameters.put (a_type.to_text, 6)
+			set_compilers (True)
+		ensure
+			current_class_set: current_class = a_class
+			class_impl_set: class_impl = a_class
+			all_reported: all_reported
+			all_fatal: all_fatal
+			-- dollar0: $0 = program name
+			-- dollar1: $1 = ETL code
+			-- dollar2: $2 = filename
+			-- dollar3: $3 = line
+			-- dollar4: $4 = column
+			-- dollar5: $5 = class name
+			-- dollar6: $6 = base type of inspect expression
+		end
+
+	make_vomb1b (a_class: like current_class; a_class_impl: ET_CLASS; an_expression: ET_EXPRESSION; a_type: ET_NAMED_TYPE) is
+			-- Create a new VOMB-1 error: the inspect expression `an_expression'
+			-- in `a_class_impl' and viewed from one of its descendants `a_class'
+			-- is of type `a_type' which is not "INTEGER" or "CHARACTER".
+			--
+			-- ETL2: p.239
+		require
+			a_class_not_void: a_class /= Void
+			a_class_impl_not_void: a_class_impl /= Void
+			a_class_impl_preparsed: a_class_impl.is_preparsed
+			an_expression_not_void: an_expression /= Void
+			a_type_not_void: a_type /= Void
+		do
+			code := vomb1b_template_code
+			etl_code := vomb1_etl_code
+			default_template := vomb1b_default_template
+			current_class := a_class
+			class_impl := a_class_impl
+			position := an_expression.position
+			create parameters.make (1, 7)
+			parameters.put (etl_code, 1)
+			parameters.put (filename, 2)
+			parameters.put (position.line.out, 3)
+			parameters.put (position.column.out, 4)
+			parameters.put (current_class.name.name, 5)
+			parameters.put (a_class_impl.name.name, 6)
+			parameters.put (a_type.to_text, 7)
+			set_compilers (True)
+		ensure
+			current_class_set: current_class = a_class
+			class_impl_set: class_impl = a_class_impl
+			all_reported: all_reported
+			all_fatal: all_fatal
+			-- dollar0: $0 = program name
+			-- dollar1: $1 = ETL code
+			-- dollar2: $2 = filename
+			-- dollar3: $3 = line
+			-- dollar4: $4 = column
+			-- dollar5: $5 = class name
+			-- dollar6: $6 = implementation class name
+			-- dollar7: $7 = base type of inspect expression
+		end
+
+	make_vomb2a (a_class: like current_class; a_constant: ET_CHOICE_CONSTANT; a_constant_type, a_value_type: ET_NAMED_TYPE) is
+			-- Create a new VOMB-2 error: the inspect constant `a_constant' in `a_class'
+			-- is of type `a_consant_type' which is not the same as the type
+			-- `a_value_type' of the inspect expression.
+			--
+			-- ETL2: p.239
+		require
+			a_class_not_void: a_class /= Void
+			a_class_preparsed: a_class.is_preparsed
+			a_constant_not_void: a_constant /= Void
+			a_constant_type_not_void: a_constant_type /= Void
+			a_value_type_not_void: a_value_type /= Void
+		do
+			code := vomb2a_template_code
+			etl_code := vomb2_etl_code
+			default_template := vomb2a_default_template
+			current_class := a_class
+			class_impl := a_class
+			position := a_constant.position
+			create parameters.make (1, 7)
+			parameters.put (etl_code, 1)
+			parameters.put (filename, 2)
+			parameters.put (position.line.out, 3)
+			parameters.put (position.column.out, 4)
+			parameters.put (current_class.name.name, 5)
+			parameters.put (a_constant_type.to_text, 6)
+			parameters.put (a_value_type.to_text, 7)
+			set_compilers (True)
+		ensure
+			current_class_set: current_class = a_class
+			class_impl_set: class_impl = a_class
+			all_reported: all_reported
+			all_fatal: all_fatal
+			-- dollar0: $0 = program name
+			-- dollar1: $1 = ETL code
+			-- dollar2: $2 = filename
+			-- dollar3: $3 = line
+			-- dollar4: $4 = column
+			-- dollar5: $5 = class name
+			-- dollar6: $6 = base type of choice constant
+			-- dollar7: $7 = base type of inspect expression
+		end
+
+	make_vomb2b (a_class: like current_class; a_class_impl: ET_CLASS; a_constant: ET_CHOICE_CONSTANT;
+		a_constant_type, a_value_type: ET_NAMED_TYPE) is
+			-- Create a new VOMB-2 error: the inspect constant `a_constant' in
+			-- `a_class_impl' and viewed from one of its descendants `a_class'
+			-- is of type `a_constant_type' which is not the same as the
+			-- type `a_value_type' of the inspect expression.
+			--
+			-- ETL2: p.239
+		require
+			a_class_not_void: a_class /= Void
+			a_class_impl_not_void: a_class_impl /= Void
+			a_class_impl_preparsed: a_class_impl.is_preparsed
+			a_constant_not_void: a_constant /= Void
+			a_constant_type_not_void: a_constant_type /= Void
+			a_value_type_not_void: a_value_type /= Void
+		do
+			code := vomb2b_template_code
+			etl_code := vomb2_etl_code
+			default_template := vomb2b_default_template
+			current_class := a_class
+			class_impl := a_class_impl
+			position := a_constant.position
+			create parameters.make (1, 8)
+			parameters.put (etl_code, 1)
+			parameters.put (filename, 2)
+			parameters.put (position.line.out, 3)
+			parameters.put (position.column.out, 4)
+			parameters.put (current_class.name.name, 5)
+			parameters.put (a_class_impl.name.name, 6)
+			parameters.put (a_constant_type.to_text, 7)
+			parameters.put (a_value_type.to_text, 8)
+			set_compilers (True)
+		ensure
+			current_class_set: current_class = a_class
+			class_impl_set: class_impl = a_class_impl
+			all_reported: all_reported
+			all_fatal: all_fatal
+			-- dollar0: $0 = program name
+			-- dollar1: $1 = ETL code
+			-- dollar2: $2 = filename
+			-- dollar3: $3 = line
+			-- dollar4: $4 = column
+			-- dollar5: $5 = class name
+			-- dollar6: $6 = implementation class name
+			-- dollar7: $7 = base type of choice constant
+			-- dollar8: $8 = base type of inspect expression
 		end
 
 	make_vpca1a (a_class: like current_class; a_name: ET_FEATURE_NAME) is
@@ -8694,6 +9040,8 @@ feature -- Setting
 feature {NONE} -- Implementation
 
 	vaol1a_default_template: STRING is "[$1] class $5 ($3,$4): old expression does not appear in a postcondition."
+	vave0a_default_template: STRING is "[$1] class $5 ($3,$4): loop variant expression of non-INTEGER type '$6'."
+	vave0b_default_template: STRING is "[$1] class $5 ($6,$3,$4): loop variant expression of non-INTEGER type '$7'."
 	vcch1a_default_template: STRING is "[$1] class $5 ($3,$4): class is not marked as deferred but has deferred feature `$6'."
 	vcch1b_default_template: STRING is "[$1] class $5 ($3,$4): class is not marked as deferred but has deferred feature `$6' inherited from $7."
 	vcch2a_default_template: STRING is "[$1] class $5 ($3,$4): class is marked as deferred but has no deferred feature."
@@ -8743,6 +9091,8 @@ feature {NONE} -- Implementation
 	vdus4a_default_template: STRING is "[$1] class $5 ($3,$4): feature name `$6' appears twice in the Undefine subclause of parent $7."
 	veen0a_default_template: STRING is "[$1] class $5 ($3,$4): `$6' appears in feature `$7', but it is not the final name of a feature in class $5 nor the name of a local variable or formal argument of feature `$7'."
 	veen2a_default_template: STRING is "[$1] class $5 ($3,$4): entity 'Result' appears in the body, postcondition or rescue clause of a procedure `$6'."
+	veen2b_default_template: STRING is "[$1] class $5 ($3,$4): entity 'Result' appears in the precondition of feature `$6'."
+	veen2c_default_template: STRING is "[$1] class $5 ($3,$4): local entity `$6' appears in the precondition or postcondition of feature `$7'."
 	vgcc3a_default_template: STRING is "[$1] class $5 ($3,$4): explicit creation type '$6' does not conform to target entity type '$7'."
 	vgcc3b_default_template: STRING is "[$1] class $5 ($6,$3,$4): explicit creation type '$7' does not conform to target entity type '$8'."
 	vgcc5a_default_template: STRING is "[$1] class $5 ($3,$4): creation expression with no Creation_call part, but $6 has a Creators part."
@@ -8797,6 +9147,10 @@ feature {NONE} -- Implementation
 	vmss1a_default_template: STRING is "[$1] class $5 ($3,$4): `$6' is not the final name of a feature in $7."
 	vmss2a_default_template: STRING is "[$1] class $5 ($3,$4): feature name `$6' appears twice in the Select subclause of parent $7."
 	vmss3a_default_template: STRING is "[$1] class $5 ($3,$4): feature name `$6' appears in the Select subclause of parent $7 but is not replicated."
+	vomb1a_default_template: STRING is "[$1] class $5 ($3,$4): inspect expression of type '$6' different from INTEGER or CHARACTER."
+	vomb1b_default_template: STRING is "[$1] class $5 ($6,$3,$4): inspect expression of type '$7' different from INTEGER or CHARACTER."
+	vomb2a_default_template: STRING is "[$1] class $5 ($3,$4): inspect constant of type '$6' different from type '$7' of inspect expression."
+	vomb2b_default_template: STRING is "[$1] class $5 ($6,$3,$4): inspect constant of type '$7' different from type '$8' of inspect expression."
 	vpca1a_default_template: STRING is "[$1] class $5 ($3,$4): `$6' is not the final name of a feature in class $5."
 	vpca1b_default_template: STRING is "[$1] class $5 ($3,$4): `$6' is not the final name of a feature in class $7."
 	vpca2a_default_template: STRING is "[$1] class $5 ($3,$4): feature `$7' of class $8 is not exported to class $5."
@@ -8883,6 +9237,7 @@ feature {NONE} -- Implementation
 			-- Default templates
 
 	vaol1_etl_code: STRING is "VAOL-1"
+	vave_etl_code: STRING is "VAVE"
 	vcch1_etl_code: STRING is "VCCH-1"
 	vcch2_etl_code: STRING is "VCCH-2"
 	vcfg1_etl_code: STRING is "VCFG-1"
@@ -8930,6 +9285,8 @@ feature {NONE} -- Implementation
 	vmss1_etl_code: STRING is "VMSS-1"
 	vmss2_etl_code: STRING is "VMSS-2"
 	vmss3_etl_code: STRING is "VMSS-3"
+	vomb1_etl_code: STRING is "VOMB-1"
+	vomb2_etl_code: STRING is "VOMB-2"
 	vpca1_etl_code: STRING is "VPCA-1"
 	vpca2_etl_code: STRING is "VPCA-2"
 	vpca3_etl_code: STRING is "VPCA-3"
@@ -8975,6 +9332,8 @@ feature {NONE} -- Implementation
 			-- ETL validity codes
 
 	vaol1a_template_code: STRING is "vaol1a"
+	vave0a_template_code: STRING is "vave0a"
+	vave0b_template_code: STRING is "vave0b"
 	vcch1a_template_code: STRING is "vcch1a"
 	vcch1b_template_code: STRING is "vcch1b"
 	vcch2a_template_code: STRING is "vcch2a"
@@ -9024,6 +9383,8 @@ feature {NONE} -- Implementation
 	vdus4a_template_code: STRING is "vdus4a"
 	veen0a_template_code: STRING is "veen0a"
 	veen2a_template_code: STRING is "veen2a"
+	veen2b_template_code: STRING is "veen2b"
+	veen2c_template_code: STRING is "veen2c"
 	vgcc3a_template_code: STRING is "vgcc3a"
 	vgcc3b_template_code: STRING is "vgcc3b"
 	vgcc5a_template_code: STRING is "vgcc5a"
@@ -9078,6 +9439,10 @@ feature {NONE} -- Implementation
 	vmss1a_template_code: STRING is "vmss1a"
 	vmss2a_template_code: STRING is "vmss2a"
 	vmss3a_template_code: STRING is "vmss3a"
+	vomb1a_template_code: STRING is "vomb1a"
+	vomb1b_template_code: STRING is "vomb1b"
+	vomb2a_template_code: STRING is "vomb2a"
+	vomb2b_template_code: STRING is "vomb2b"
 	vpca1a_template_code: STRING is "vpca1a"
 	vpca1b_template_code: STRING is "vpca1b"
 	vpca2a_template_code: STRING is "vpca2a"
