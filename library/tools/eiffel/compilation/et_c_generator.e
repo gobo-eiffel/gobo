@@ -84,6 +84,9 @@ inherit
 			process_void
 		end
 
+	ET_TOKEN_CODES
+		export {NONE} all end
+
 	ET_SHARED_TOKEN_CONSTANTS
 		export {NONE} all end
 
@@ -592,10 +595,10 @@ feature {NONE} -- Feature generation
 				error_handler.report_giadl_error
 			else
 				if current_feature.is_regular then
-					print_external_routine (a_feature, False)
+					print_external_routine (a_feature, False, False)
 				end
 				if current_feature.is_static then
-					print_external_routine (a_feature, True)
+					print_external_routine (a_feature, True, False)
 				end
 			end
 		end
@@ -611,20 +614,24 @@ feature {NONE} -- Feature generation
 				error_handler.report_giadu_error
 			else
 				if current_feature.is_regular then
-					print_external_routine (a_feature, False)
+					print_external_routine (a_feature, False, False)
+				end
+				if current_feature.is_creation then
+					print_external_routine (a_feature, False, True)
 				end
 				if current_feature.is_static then
-					print_external_routine (a_feature, True)
+					print_external_routine (a_feature, True, False)
 				end
 			end
 		end
 
-	print_external_routine (a_feature: ET_EXTERNAL_ROUTINE; a_static: BOOLEAN) is
+	print_external_routine (a_feature: ET_EXTERNAL_ROUTINE; a_static: BOOLEAN; a_creation: BOOLEAN) is
 			-- Print `a_feature'.
 		require
 			a_feature_not_void: a_feature /= Void
 			valid_feature: current_feature.static_feature = a_feature
 			is_static: a_static implies current_feature.is_static
+			is_creation: a_creation implies current_feature.is_creation
 		local
 			l_result_type_set: ET_DYNAMIC_TYPE_SET
 			l_dynamic_type_sets: ET_DYNAMIC_TYPE_SET_LIST
@@ -643,17 +650,24 @@ feature {NONE} -- Feature generation
 			l_formal_arguments: ET_FORMAL_ARGUMENT_LIST
 			l_name: STRING
 			l_comma: BOOLEAN
+			l_special_type: ET_DYNAMIC_SPECIAL_TYPE
+			l_copy_feature: ET_FEATURE
 		do
 			print_feature_name_comment (a_feature, current_type)
 			l_result_type_set := current_feature.result_type_set
 			if l_result_type_set /= Void then
 				print_type_declaration (l_result_type_set.static_type)
+			elseif a_creation then
+				print_type_declaration (current_type)
 			else
 				current_file.put_string (c_void)
 			end
 			current_file.put_character (' ')
 			if a_static then
 				print_static_routine_name (current_feature, current_type)
+				current_file.put_character ('(')
+			elseif a_creation then
+				print_creation_procedure_name (current_feature, current_type)
 				current_file.put_character ('(')
 			else
 				print_routine_name (current_feature, current_type)
@@ -709,89 +723,195 @@ feature {NONE} -- Feature generation
 				current_file.put_character (';')
 				current_file.put_new_line
 			end
-			l_language := a_feature.language
-			l_language_value := l_language.manifest_string
-			if STRING_.same_case_insensitive (l_language_value.value, e_inline) then
-				l_alias := a_feature.alias_clause
-				if l_alias /= Void then
-					l_alias_value := l_alias.manifest_string
-					l_c_code := l_alias_value.value
-					l_formal_arguments := a_feature.arguments
-					if l_formal_arguments /= Void then
-						nb := l_c_code.count
-						from i := 1 until i > nb loop
-							c := l_c_code.item (i)
-							if c = '$' then
-								i := i + 1
-								if i <= nb then
-									c := l_c_code.item (i)
-									inspect c
-									when '$' then
-										current_file.put_character ('$')
-										i := i + 1
-									when 'a'..'z', 'A'..'Z' then
-										l_max := 0
-										l_max_index := 0
-										nb2 := l_formal_arguments.count
-										from i2 := 1 until i2 > nb2 loop
-											l_name := l_formal_arguments.formal_argument (i2).name.name
-											nb3 := l_name.count
-											if nb3 > l_max then
-												from
-													i3 := 1
-													j := i
-												until
-													j > nb or
-													i3 > nb3
-												loop
-													c := l_c_code.item (j)
-													c3 := l_name.item (i3)
-													if CHARACTER_.as_lower (c3) = CHARACTER_.as_lower (c) then
-														i3 := i3 + 1
-														j := j + 1
-													else
-														j := nb + 1
+			if a_creation then
+				print_malloc_current
+			end
+			if a_feature.is_builtin then
+				inspect a_feature.builtin_code
+				when builtin_any_twin then
+					l_special_type ?= current_type
+					if l_special_type /= Void then
+-- TODO
+					elseif
+						current_type = current_system.character_type or
+						current_type = current_system.boolean_type or
+						current_type = current_system.integer_8_type or
+						current_type = current_system.integer_16_type or
+						current_type = current_system.integer_type or
+						current_type = current_system.integer_64_type or
+						current_type = current_system.real_type or
+						current_type = current_system.double_type or
+						current_type = current_system.pointer_type
+					then
+						print_indentation
+						current_file.put_character ('R')
+						current_file.put_character (' ')
+						current_file.put_character ('=')
+						current_file.put_character (' ')
+						current_file.put_character ('C')
+						current_file.put_character (';')
+						current_file.put_new_line
+					else
+						print_indentation
+						current_file.put_character ('R')
+						current_file.put_character (' ')
+						current_file.put_character ('=')
+						current_file.put_character (' ')
+						current_file.put_character ('(')
+						print_type_declaration (current_type)
+						current_file.put_character (')')
+						current_file.put_string (c_eif_malloc)
+						current_file.put_character ('(')
+						current_file.put_string (c_sizeof)
+						current_file.put_character ('(')
+						print_type_name (current_type)
+						current_file.put_character (')')
+						current_file.put_character (')')
+						current_file.put_character (';')
+						current_file.put_new_line
+						print_indentation
+						if not current_type.is_expanded then
+							current_file.put_character ('*')
+						end
+						print_type_cast (current_type)
+						current_file.put_character ('(')
+						current_file.put_character ('R')
+						current_file.put_character (')')
+						current_file.put_character (' ')
+						current_file.put_character ('=')
+						current_file.put_character (' ')
+						if not current_type.is_expanded then
+							current_file.put_character ('*')
+						end
+						print_type_cast (current_type)
+						current_file.put_character ('(')
+						current_file.put_character ('C')
+						current_file.put_character (')')
+						current_file.put_character (';')
+						current_file.put_new_line
+						l_copy_feature := current_type.base_class.seeded_feature (universe.copy_seed)
+						if l_copy_feature = Void then
+								-- This error should already have been reported when
+								-- building the dynamic type sets.
+							set_fatal_error
+							error_handler.report_gibic_error
+						else
+							print_indentation
+							print_routine_name (current_type.dynamic_feature (l_copy_feature, current_system), current_type)
+							current_file.put_character ('(')
+							current_file.put_character ('R')
+							current_file.put_character (',')
+							current_file.put_character (' ')
+							current_file.put_character ('C')
+							current_file.put_character (')')
+							current_file.put_character (';')
+							current_file.put_new_line
+						end
+					end
+				else
+						-- Unknown built-in feature.
+						-- This error should already have been reported when
+						-- building the dynamic type sets.
+-- TODO:
+--					set_fatal_error
+--					error_handler.report_gibib_error
+				end
+			else
+				l_language := a_feature.language
+				l_language_value := l_language.manifest_string
+				if STRING_.same_case_insensitive (l_language_value.value, e_inline) then
+					l_alias := a_feature.alias_clause
+					if l_alias /= Void then
+						l_alias_value := l_alias.manifest_string
+						l_c_code := l_alias_value.value
+						l_formal_arguments := a_feature.arguments
+						if l_formal_arguments /= Void then
+							nb := l_c_code.count
+							from i := 1 until i > nb loop
+								c := l_c_code.item (i)
+								if c = '$' then
+									i := i + 1
+									if i <= nb then
+										c := l_c_code.item (i)
+										inspect c
+										when '$' then
+											current_file.put_character ('$')
+											i := i + 1
+										when 'a'..'z', 'A'..'Z' then
+											l_max := 0
+											l_max_index := 0
+											nb2 := l_formal_arguments.count
+											from i2 := 1 until i2 > nb2 loop
+												l_name := l_formal_arguments.formal_argument (i2).name.name
+												nb3 := l_name.count
+												if nb3 > l_max then
+													from
+														i3 := 1
+														j := i
+													until
+														j > nb or
+														i3 > nb3
+													loop
+														c := l_c_code.item (j)
+														c3 := l_name.item (i3)
+														if CHARACTER_.as_lower (c3) = CHARACTER_.as_lower (c) then
+															i3 := i3 + 1
+															j := j + 1
+														else
+															j := nb + 1
+														end
+													end
+													if i3 > nb3 then
+														l_max_index := i2
+														l_max := nb3
 													end
 												end
-												if i3 > nb3 then
-													l_max_index := i2
-													l_max := nb3
-												end
+												i2 := i2 + 1
 											end
-											i2 := i2 + 1
-										end
-										if l_max_index /= 0 then
-											current_file.put_character ('a')
-											current_file.put_integer (l_max_index)
-											i := i + l_max
+											if l_max_index /= 0 then
+												current_file.put_character ('a')
+												current_file.put_integer (l_max_index)
+												i := i + l_max
+											else
+												current_file.put_character ('$')
+												current_file.put_character (l_c_code.item (i))
+												i := i + 1
+											end
 										else
 											current_file.put_character ('$')
-											current_file.put_character (l_c_code.item (i))
+											current_file.put_character (c)
 											i := i + 1
 										end
 									else
 										current_file.put_character ('$')
-										current_file.put_character (c)
-										i := i + 1
 									end
 								else
-									current_file.put_character ('$')
+									current_file.put_character (c)
+									i := i + 1
 								end
-							else
-								current_file.put_character (c)
-								i := i + 1
 							end
+							current_file.put_new_line
+						else
+							current_file.put_line (l_c_code)
 						end
-						current_file.put_new_line
-					else
-						current_file.put_line (l_c_code)
 					end
+						-- No need to print "return R;", this should
+						-- already be done in the inlined code.
+					l_result_type_set := Void
 				end
-			elseif l_result_type_set /= Void then
+			end
+			if l_result_type_set /= Void then
 				print_indentation
 				current_file.put_string (c_return)
 				current_file.put_character (' ')
 				current_file.put_character ('R')
+				current_file.put_character (';')
+				current_file.put_new_line
+			elseif a_creation then
+				print_indentation
+				current_file.put_string (c_return)
+				current_file.put_character (' ')
+				current_file.put_character ('C')
 				current_file.put_character (';')
 				current_file.put_new_line
 			end
@@ -850,7 +970,6 @@ feature {NONE} -- Feature generation
 			is_static: a_static implies current_feature.is_static
 			is_creation: a_creation implies current_feature.is_creation
 		local
-			l_special_type: ET_DYNAMIC_SPECIAL_TYPE
 			l_result_type_set: ET_DYNAMIC_TYPE_SET
 			l_dynamic_type_sets: ET_DYNAMIC_TYPE_SET_LIST
 			l_arguments: ET_FORMAL_ARGUMENT_LIST
@@ -957,66 +1076,7 @@ feature {NONE} -- Feature generation
 				end
 			end
 			if a_creation then
-				print_indentation
-				print_type_declaration (current_type)
-				current_file.put_character (' ')
-				current_file.put_character ('C')
-				current_file.put_character (';')
-				current_file.put_new_line
-				print_indentation
-				current_file.put_character ('C')
-				current_file.put_character (' ')
-				current_file.put_character ('=')
-				current_file.put_character (' ')
-				current_file.put_character ('(')
-				print_type_declaration (current_type)
-				current_file.put_character (')')
-				l_special_type ?= current_type
-				if l_special_type /= Void then
-					current_file.put_string (c_eif_malloc)
-					current_file.put_character ('(')
-					current_file.put_string (c_sizeof)
-					current_file.put_character ('(')
-					print_type_name (current_type)
-					current_file.put_character (')')
-					current_file.put_character ('+')
-					current_file.put_character ('a')
-					current_file.put_character ('1')
-					current_file.put_character ('*')
-					current_file.put_string (c_sizeof)
-					current_file.put_character ('(')
-					print_type_declaration (l_special_type.item_type_set.static_type)
-					current_file.put_character (')')
-					current_file.put_character (')')
-					current_file.put_character (';')
-					current_file.put_new_line
-					print_indentation
-					current_file.put_character ('(')
-					print_type_cast (current_type)
-					current_file.put_character ('(')
-					current_file.put_character ('C')
-					current_file.put_character (')')
-					current_file.put_character (')')
-					current_file.put_character ('-')
-					current_file.put_character ('>')
-					current_file.put_character ('a')
-					current_file.put_character ('1')
-					current_file.put_character (' ')
-					current_file.put_character ('=')
-					current_file.put_character (' ')
-					current_file.put_character ('a')
-					current_file.put_character ('1')
-				else
-					current_file.put_string (c_eif_malloc)
-					current_file.put_character ('(')
-					current_file.put_string (c_sizeof)
-					current_file.put_character ('(')
-					print_type_name (current_type)
-					current_file.put_character (')')
-					current_file.put_character (')')
-				end
-				current_file.put_character (';')
-				current_file.put_new_line
+				print_malloc_current
 			end
 -- TODO
 			if current_type = current_system.character_type then
@@ -3198,6 +3258,75 @@ feature {NONE} -- Locals
 			current_file.put_character (';')
 			current_file.put_new_line
 			current_file := old_file
+		end
+
+feature {NONE} -- Malloc
+
+	print_malloc_current is
+			-- Print memory allocation of 'Current'.
+		local
+			l_special_type: ET_DYNAMIC_SPECIAL_TYPE
+		do
+			print_indentation
+			print_type_declaration (current_type)
+			current_file.put_character (' ')
+			current_file.put_character ('C')
+			current_file.put_character (';')
+			current_file.put_new_line
+			print_indentation
+			current_file.put_character ('C')
+			current_file.put_character (' ')
+			current_file.put_character ('=')
+			current_file.put_character (' ')
+			current_file.put_character ('(')
+			print_type_declaration (current_type)
+			current_file.put_character (')')
+			l_special_type ?= current_type
+			if l_special_type /= Void then
+				current_file.put_string (c_eif_malloc)
+				current_file.put_character ('(')
+				current_file.put_string (c_sizeof)
+				current_file.put_character ('(')
+				print_type_name (current_type)
+				current_file.put_character (')')
+				current_file.put_character ('+')
+				current_file.put_character ('a')
+				current_file.put_character ('1')
+				current_file.put_character ('*')
+				current_file.put_string (c_sizeof)
+				current_file.put_character ('(')
+				print_type_declaration (l_special_type.item_type_set.static_type)
+				current_file.put_character (')')
+				current_file.put_character (')')
+				current_file.put_character (';')
+				current_file.put_new_line
+				print_indentation
+				current_file.put_character ('(')
+				print_type_cast (current_type)
+				current_file.put_character ('(')
+				current_file.put_character ('C')
+				current_file.put_character (')')
+				current_file.put_character (')')
+				current_file.put_character ('-')
+				current_file.put_character ('>')
+				current_file.put_character ('a')
+				current_file.put_character ('1')
+				current_file.put_character (' ')
+				current_file.put_character ('=')
+				current_file.put_character (' ')
+				current_file.put_character ('a')
+				current_file.put_character ('1')
+			else
+				current_file.put_string (c_eif_malloc)
+				current_file.put_character ('(')
+				current_file.put_string (c_sizeof)
+				current_file.put_character ('(')
+				print_type_name (current_type)
+				current_file.put_character (')')
+				current_file.put_character (')')
+			end
+			current_file.put_character (';')
+			current_file.put_new_line
 		end
 
 feature {NONE} -- Type generation

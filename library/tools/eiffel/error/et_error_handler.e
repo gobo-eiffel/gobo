@@ -9199,8 +9199,6 @@ feature -- Internal errors
 
 --Error codes not used:
 
-	-- report_gibib_error
-	-- report_gibic_error
 	-- report_gibid_error
 	-- report_gibie_error
 	-- report_gibif_error
