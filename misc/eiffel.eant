@@ -93,6 +93,11 @@
 				<map type="flat"/>
 			</fileset>
 		</copy>
+		<copy to_directory=".">
+			<fileset include="EIFGEN/${codedir}/Assemblies/*.@(dll|exe)">
+				<map type="flat"/>
+			</fileset>
+		</copy>
 	</target>
 
 	<target name="compile_ve" depend="prepare_compile">
@@ -217,6 +222,7 @@
 		<delete>
 			<fileset include="?(${system}_)module_*.dll"/>
 		</delete>
+		<delete directory="EiffelSoftware.Runtime.exe"/>
 		<delete file="${system}.h2o"/>
 		<geant target="other_clobber"/>
 	</target>
