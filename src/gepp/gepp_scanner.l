@@ -18,6 +18,8 @@ inherit
 		rename
 			make as make_compressed_scanner_skeleton,
 			reset as reset_compressed_scanner_skeleton
+		redefine
+			wrap
 		end
 
 	GEPP_TOKENS
@@ -63,6 +65,10 @@ ESC					\\(.|[0-7]{1,3}|x[0-9a-f]{1,2})
 	"include"			last_token := P_INCLUDE
 	"define"			last_token := P_DEFINE
 	"undef"				last_token := P_UNDEF
+	\"[^"\n]+\"		{
+						last_token := P_STRING
+						last_value := text_substring (2, text_count - 1)
+					}
 	[a-z0-9_.-]+	{
 						last_token := P_NAME
 						last_value := text
@@ -107,11 +113,40 @@ feature -- Access
 	last_value: ANY
 			-- Semantic value to be passed to the parser
 
+	include_stack: DS_STACK [YY_BUFFER] is
+			-- Input buffers not completely parsed yet
+		deferred
+		ensure
+			include_stack_not_void: Result /= Void
+			no_void_buffer: not Result.has (Void)
+		end
+
 feature -- Status report
 
 	ignored: BOOLEAN is
 			-- Is current line ignored?
 		deferred
+		end
+
+feature -- Element change
+
+	wrap: BOOLEAN is
+			-- Should current scanner terminate when end of file is reached?
+			-- True unless an include file was being processed.
+		local
+			old_buffer: YY_FILE_BUFFER
+		do
+			if not include_stack.is_empty then
+				old_buffer ?= input_buffer
+				set_input_buffer (include_stack.item)
+				include_stack.remove
+				if old_buffer /= Void then
+					input_stream_.close (old_buffer.file)
+				end
+				set_start_condition (INITIAL)
+			else
+				Result := True
+			end
 		end
 
 end -- class GEPP_SCANNER
