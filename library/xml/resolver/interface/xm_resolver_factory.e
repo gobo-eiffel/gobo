@@ -69,4 +69,58 @@ feature -- Access
 			result_not_void: Result /= Void
 		end
 
+	new_resolver: XM_URI_EXTERNAL_RESOLVER is
+			-- Resolver for all schemes implemented within Gobo
+		local
+			a_file: XM_FILE_URI_RESOLVER
+			a_data: XM_DATA_URI_RESOLVER
+			a_simple_uri_resolver: XM_SIMPLE_URI_EXTERNAL_RESOLVER
+		do
+			create a_simple_uri_resolver.make
+			create a_file.make
+			a_simple_uri_resolver.register_scheme (a_file)
+			create a_data.make
+			a_simple_uri_resolver.register_scheme (a_data)
+			Result := a_simple_uri_resolver
+		ensure
+			result_not_void: Result /= Void
+		end
+		
+	new_resolver_with_uri (a_uri: UT_URI): XM_URI_EXTERNAL_RESOLVER is
+			-- Resolver for all schemes implemented within Gobo, with default URI
+		require
+			a_uri_not_void: a_uri /= Void
+		local
+			a_file: XM_FILE_URI_RESOLVER
+				a_data: XM_DATA_URI_RESOLVER
+			a_simple_uri_resolver: XM_SIMPLE_URI_EXTERNAL_RESOLVER
+		do
+			create a_simple_uri_resolver.make_with_base (a_uri)
+			create a_file.make
+			a_simple_uri_resolver.register_scheme (a_file)
+			create a_data.make
+			a_simple_uri_resolver.register_scheme (a_data)			
+			Result := a_simple_uri_resolver
+		ensure
+			result_not_void: Result /= Void
+		end
+	
+	new_resolver_current_directory: XM_URI_EXTERNAL_RESOLVER is
+			--  Resolver for all schemes implemented within Gobo, with default set
+			-- to the current directory
+		local
+			a_cwd: KI_PATHNAME
+		do
+			a_cwd := file_system.string_to_pathname (file_system.current_working_directory)
+			Result := new_resolver_with_uri (File_uri.pathname_to_uri (a_cwd))
+		ensure
+			result_not_void: Result /= Void
+		end
+
+	new_catalog_resolver: XM_CATALOG_RESOLVER is
+			-- As `new_resolver_current_directory' plues indirection through OASIS XML Catalogs
+		do
+			create Result.make
+		end
+
 end

@@ -238,12 +238,18 @@ feature -- Element change
 	clear_namespaces is
 			-- Clear all the declared namespaces, except for the standard ones.
 		do
-			create namespaces.make_with_equality_testers (10, string_equality_tester, string_equality_tester)
+			clear_all_namespaces
 			declare_namespace ("xml", Xml_uri)
 			declare_namespace ("xsl", Xslt_uri)
 			declare_namespace ("xs", Xml_schema_uri)
 			declare_namespace ("xdt", Xpath_defined_datatypes_uri)
 			declare_namespace ("", Null_uri)
+		end
+
+	clear_all_namespaces is
+			-- Clear all the declared namespaces.
+		do
+			create namespaces.make_with_equality_testers (10, string_equality_tester, string_equality_tester)
 		end
 
 	bind_variable (a_fingerprint: INTEGER) is

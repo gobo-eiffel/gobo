@@ -142,15 +142,6 @@ feature -- Events
 			a_new_type_code: like a_type_code
 		do
 			a_new_type_code := a_type_code
-			if conformance.basic_xslt_processor then
-				if a_type_code /= Id_type_code then
-					a_new_type_code := Untyped_atomic_type_code
-				end
-			else
-				check
-					Only_basic_xslt_processors_are_supported: False
-				end
-			end
 			if is_output_escaping_disabled (properties) then
 				on_error ("Cannot disable output escaping when writing to a tree")
 			else

@@ -16,6 +16,10 @@ inherit
 	
 	XM_XPATH_SHARED_NAME_POOL
 
+	XM_XPATH_STANDARD_NAMESPACES
+
+	XM_UNICODE_CHARACTERS_1_1
+
 creation
 
 	make
@@ -28,6 +32,7 @@ feature {NONE} -- Initialization
 		do
 			create attribute_name_codes.make (5)
 			create attribute_type_codes.make (5)
+			create attribute_ids.make (5)
 			create attribute_values.make (5)
 		end
 
@@ -78,6 +83,13 @@ feature -- Access
 			Result := attribute_type_codes.item (an_attribute_index)
 		end
 
+	is_id (an_attribute_index: INTEGER): BOOLEAN is
+		require
+			valid_attribute_index: is_attribute_index_valid (an_attribute_index)
+		do
+			Result := attribute_ids.item (an_attribute_index)
+		end
+
 	name_code_cursor: DS_ARRAYED_LIST_CURSOR [INTEGER] is
 			-- A cursor over the name codes
 		do
@@ -110,19 +122,34 @@ feature -- Element change
 			value_not_void: a_value /= Void
 		local
 			new_size: INTEGER
+			another_type_code: like a_type_code
 		do
+			another_type_code := Untyped_atomic_type_code
 			if not attribute_name_codes.extendible (1) then
 				new_size := 2* attribute_name_codes.count
 				attribute_name_codes.resize (new_size)
 				attribute_type_codes.resize (new_size)
+				attribute_ids.resize (new_size)
 				attribute_values.resize (new_size)
 			end
 			attribute_name_codes.put_last (a_name_code)
-			attribute_type_codes.put_last (a_type_code)
+			attribute_type_codes.put_last (another_type_code)
 			attribute_values.put_last (a_value)
+			if a_type_code = Id_type_code then
+				-- The attribute is marked as being an ID. But we don't trust it - it
+				-- might come from a non-validating parser. Before adding it to the index, we
+				-- check that it really is an ID.
+				if is_ncname (a_value) then
+					attribute_ids.put_last (True)
+				else
+					attribute_ids.put_last (False)
+				end
+			else
+				attribute_ids.put_last (False)
+			end
+			
 		ensure
 			attribute_name_code_added: attribute_name_codes.has (a_name_code)
-			attribute_type_code_added: attribute_type_codes.has (a_type_code)
 			attribute_value_added: attribute_values.has (a_value)
 		end
 

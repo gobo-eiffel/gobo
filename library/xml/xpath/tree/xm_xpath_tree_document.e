@@ -329,7 +329,7 @@ feature {NONE} -- Implementation
 					until
 						an_index > an_element.number_of_attributes
 					loop
-						if an_element.attribute_type_code (an_index) = Id_type_code then
+						if an_element.is_id (an_index) then
 							a_value := an_element.attribute_value_by_index (an_index)
 							if is_ncname (a_value) then
 								if not Result.has (a_value) then

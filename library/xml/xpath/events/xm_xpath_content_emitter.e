@@ -455,10 +455,10 @@ feature {NONE} -- Implementation
 		do
 			if attribute_types.has (current_element_name) then
 				an_attribute_table := attribute_types.item (current_element_name)
-					check
-						attribute_table_not_void: an_attribute_table /= Void
-						-- because `has' returned `True'
-					end
+				check
+					attribute_table_not_void: an_attribute_table /= Void
+					-- because `has' returned `True'
+				end
 				if a_prefix.count = 0 then
 					an_attribute_qname := clone (a_local_part)
 				else
@@ -466,14 +466,13 @@ feature {NONE} -- Implementation
 					an_attribute_qname.append_character (':')
 					an_attribute_qname.append_string (a_local_part)
 				end
-					
+				
 				if an_attribute_table.has (an_attribute_qname) then
 					an_attribute_model := an_attribute_table.item (an_attribute_qname)
-						check
-							attribute_model_not_void: an_attribute_model /= Void
-							-- because `has' returned `True'
-						end
-
+					check
+						attribute_model_not_void: an_attribute_model /= Void
+						-- because `has' returned `True'
+					end
 					if an_attribute_model.is_id then
 						a_type_code := Id_type_code
 					elseif an_attribute_model.is_id_ref then
@@ -485,17 +484,17 @@ feature {NONE} -- Implementation
 					elseif an_attribute_model.is_notation then
 						a_type_code := Notation_type_code
 					else
-
+						
 						-- Ignore CDATA (it basically means "anySimpleType")
 						-- Ignore NMTOKENS, ENTITIES, IDREFS: we can't handle list types yet
-
+						
 						a_type_code := 0 -- not a valid type code
 					end
 				end
 			end
 			receiver.notify_attribute (a_name_code, a_type_code, a_value, 0)
 		end
-
+	
 invariant
 
 	receiver_not_void: receiver /= Void

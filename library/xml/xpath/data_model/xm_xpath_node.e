@@ -332,7 +332,7 @@ feature -- Access
 			-- The top-level element;
 			-- If the document is not well-formed
 			-- (i.e. it is a document fragment), then
-			-- return the last element child of the document root.
+			-- return the first element child of the document root.
 		require
 			not_in_error: not is_error
 		local

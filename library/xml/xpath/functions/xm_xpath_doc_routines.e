@@ -25,6 +25,9 @@ feature -- Access
 	last_evaluated_document: XM_XPATH_ITEM
 			-- Result from `parse_document'
 
+	last_evaluated_media_type: UT_MEDIA_TYPE
+			-- Possible media-type set by `parse_document'
+
 feature -- Evaluation
 	
 	parse_document (a_uri_reference: STRING; a_base_uri: UT_URI; a_context: XM_XPATH_CONTEXT) is

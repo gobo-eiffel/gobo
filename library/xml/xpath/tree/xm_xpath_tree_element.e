@@ -427,6 +427,13 @@ feature {XM_XPATH_TREE_ATTRIBUTE, XM_XPATH_TREE_ATTRIBUTE_ENUMERATION, XM_XPATH_
 			Result := attribute_collection.attribute_type_code (an_attribute_index)
 		end
 
+	is_id (an_attribute_index: INTEGER): BOOLEAN is
+		require
+			valid_attribute_index: is_attribute_index_valid (an_attribute_index)
+		do
+			Result := attribute_collection.is_id (an_attribute_index)
+		end
+
 feature {NONE} -- Implementation
 
 	attribute_collection: XM_XPATH_ATTRIBUTE_COLLECTION

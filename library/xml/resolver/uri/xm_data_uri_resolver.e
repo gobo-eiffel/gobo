@@ -23,6 +23,17 @@ inherit
 
 	XM_URI_RESOLVER
 
+creation
+
+	make
+
+feature {NONE} -- Initialization
+
+	make is
+		-- Nothing to do
+		do
+		end
+
 feature -- Operation(s)
 
 	scheme: STRING is "data"

@@ -144,40 +144,6 @@ feature -- Access
 			end
 		end
 
-	iterator (a_context: XM_XPATH_CONTEXT): XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_ITEM] is
-			-- An iterator over the values of a sequence
-		local
-			counter: INTEGER
-			an_item: XM_XPATH_ITEM
-		do
-			debug ("Xpath sequence extent")
-				from
-					counter := 1
-				until
-					counter > count
-				loop
-					an_item := item (counter)
-					if an_item = Void then
-						std.error.put_string ("Item number ")
-						std.error.put_string (counter.out)
-						std.error.put_string (" was void.%N")
-					end
-					counter := counter + 1
-				end
-			end
-			if count = 0 then
-				create {XM_XPATH_EMPTY_ITERATOR [XM_XPATH_ITEM]} Result.make
-			else
-				create {XM_XPATH_ARRAY_LIST_ITERATOR [XM_XPATH_ITEM]} Result.make (Current)
-			end
-		end
-
-	reverse_iterator: XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_ITEM] is
-			-- An iterator over the values of a sequence in reverse order
-		do
-			create {XM_XPATH_REVERSE_ARRAY_LIST_ITERATOR [XM_XPATH_ITEM]} Result.make (Current)
-		end
-		
 	item_at (an_index: INTEGER) :XM_XPATH_ITEM is
 			-- Item at `an_index'
 		require
@@ -244,6 +210,25 @@ feature -- Comparison
 			end
 		end
 
+feature -- Status report
+
+	is_node_sequence: BOOLEAN is
+			-- Is `Current' a node-sequence?
+		local
+			an_index: INTEGER
+			a_node: XM_XPATH_NODE
+		do
+			from
+				an_index := 1; Result := True
+			until
+				not Result or else an_index > count
+			loop
+				a_node ?= item_at (an_index)
+				Result := a_node /= Void
+				an_index := an_index + 1
+			end
+		end
+
 feature -- Evaluation
 
 	effective_boolean_value (a_context: XM_XPATH_CONTEXT): XM_XPATH_BOOLEAN_VALUE is
@@ -251,6 +236,68 @@ feature -- Evaluation
 		do
 			-- TODO
 			todo ("effective-boolean-value" ,False)
+		end
+
+	iterator (a_context: XM_XPATH_CONTEXT): XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_ITEM] is
+			-- An iterator over the values of a sequence
+		local
+			counter: INTEGER
+			an_item: XM_XPATH_ITEM
+		do
+			debug ("Xpath sequence extent")
+				from
+					counter := 1
+				until
+					counter > count
+				loop
+					an_item := item (counter)
+					if an_item = Void then
+						std.error.put_string ("Item number ")
+						std.error.put_string (counter.out)
+						std.error.put_string (" was void.%N")
+					end
+					counter := counter + 1
+				end
+			end
+			if count = 0 then
+				create {XM_XPATH_EMPTY_ITERATOR [XM_XPATH_ITEM]} Result.make
+			else
+				create {XM_XPATH_ARRAY_LIST_ITERATOR [XM_XPATH_ITEM]} Result.make (Current)
+			end
+		end
+
+	reverse_iterator: XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_ITEM] is
+			-- An iterator over the values of a sequence in reverse order
+		do
+			create {XM_XPATH_REVERSE_ARRAY_LIST_ITERATOR [XM_XPATH_ITEM]} Result.make (Current)
+		end
+
+	node_iterator : XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_NODE] is
+			-- An iterator over the nodes of a node-sequence
+		require
+			is_node_sequence
+		local
+			a_node_list: DS_ARRAYED_LIST [XM_XPATH_NODE]
+			a_cursor: DS_ARRAYED_LIST_CURSOR [XM_XPATH_ITEM]
+			a_node: XM_XPATH_NODE
+		do
+			create a_node_list.make (count)
+			from
+				a_cursor := new_cursor; a_cursor.start
+			variant
+				count + 1 - a_cursor.index
+			until
+				a_cursor.after
+			loop
+				a_node ?= a_cursor.item
+				check
+					is_node: a_node /= Void
+					-- from pre-condition
+				end
+				a_node_list.put_last (a_node)
+				a_cursor.forth
+			end
+			create {XM_XPATH_ARRAY_LIST_ITERATOR [XM_XPATH_NODE]} Result.make (a_node_list)
 		end
 
 feature {XM_XPATH_SEQUENCE_EXTENT} -- Implementation

@@ -108,6 +108,9 @@ feature -- Access
 
 	Exslt_environment_uri: STRING is "http://exslt.org/environment-variables"
 			-- EXSLT environment variables
+	
+	Xmlns_uri: STRING is "http://www.w3.org/2000/xmlns/"
+			-- Xmlns
 
 	Unicode_codepoint_collation_uri: STRING is "http://www.w3.org/2004/10/xpath-functions/collation/codepoint"
 			-- Unicode codepoint collation

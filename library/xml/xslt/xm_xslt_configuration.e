@@ -60,6 +60,8 @@ feature {NONE} -- Initialization
 			shared_decimal_context.set_digits (18)
 			saved_base_uri := entity_resolver.uri
 			create extension_functions.make_default
+			assume_html_is_xhtml := True
+			use_xpointer := True
 		ensure
 			entity_resolver_set: entity_resolver = an_entity_resolver
 			uri_resolver_set: uri_resolver = a_uri_resolver
@@ -77,7 +79,7 @@ feature {NONE} -- Initialization
 			an_output_resolver: XM_XSLT_DEFAULT_OUTPUT_URI_RESOLVER
 			a_security_manager: XM_XSLT_DEFAULT_SECURITY_MANAGER
 		do
-			create a_catalog_resolver
+			a_catalog_resolver := new_catalog_resolver
 			create an_encoder_factory
 			create error_reporter.make_standard
 			create an_error_listener.make (Recover_with_warnings, error_reporter)
@@ -118,6 +120,12 @@ feature -- Access
 	extension_functions: DS_ARRAYED_LIST [XM_XPATH_FUNCTION_LIBRARY]
 			-- Libraries of extension functions
 
+	assume_html_is_xhtml: BOOLEAN
+			-- Do we treat text/html as application/xhtml+xml (on the assumption that the HTTP server is lying for MSIE)?
+
+	use_xpointer: BOOLEAN
+			-- Should we use XPointer for XML media types?
+
 	is_tracing: BOOLEAN is
 			-- Is tracing enabled?
 		do
@@ -134,6 +142,17 @@ feature -- Access
 			end
 		ensure
 			error_listener_not_void: Result /= Void
+		end
+
+	default_media_type (a_uri: STRING): UT_MEDIA_TYPE is
+			-- Media-type assoicated with `a_uri' (only used when resolver returns no information)
+		require
+			uri_not_empty: a_uri /= Void and then a_uri.count > 0
+		once
+
+			-- This implementation always returns application/xml - sub-class and redefine if this is not satisfactory
+
+			create Result.make ("application", "xml")
 		end
 
 feature -- Element change
@@ -229,6 +248,22 @@ feature -- Element change
 			is_tiny_tree_model := true_or_false
 		ensure
 			set: is_tiny_tree_model = true_or_false
+		end
+
+	do_not_assume_xhtml is
+			-- Do not assume that text/html is really application/xhtml+xml.
+		do
+			assume_html_is_xhtml := False
+		ensure
+			really_html: not assume_html_is_xhtml
+		end
+
+	do_not_use_xpointer is
+			-- Do not use XPointer for XML media types
+		do
+			use_xpointer := False
+		ensure
+			no_xpointer_usage: not use_xpointer
 		end
 
 feature {XM_XSLT_TRANSFORMER, XM_XSLT_INSTRUCTION} -- Transformation
