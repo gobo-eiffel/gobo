@@ -6,7 +6,7 @@ indexing
 
 	library:    "Gobo Eiffel Time Library"
 	author:     "Eric Bezault <ericb@gobosoft.com>"
-	copyright:  "Copyright (c) 2000, Eric Bezault and others"
+	copyright:  "Copyright (c) 2000-2001, Eric Bezault and others"
 	license:    "Eiffel Forum Freeware License v1 (see forum.txt)"
 	date:       "$Date$"
 	revision:   "$Revision$"
@@ -20,7 +20,8 @@ inherit
 			make as make_date,
 			make_from_day_count as make_date_from_day_count,
 			make_from_storage as make_from_date_storage,
-			storage as date_storage
+			storage as date_storage,
+			set_storage as set_date_storage
 		undefine
 			out, append_to_string
 		redefine
@@ -35,7 +36,8 @@ inherit
 			make_from_second_count as make_time_from_second_count,
 			make_from_millisecond_count as make_time_from_millisecond_count,
 			make_from_storage as make_from_time_storage,
-			storage as time_storage
+			storage as time_storage,
+			set_storage as set_time_storage
 		undefine
 			append_to_string, append_precise_to_string,
 			infix "<", hash_code, out, precise_out,
