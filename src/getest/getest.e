@@ -21,8 +21,6 @@ inherit
 	KL_SHARED_STANDARD_FILES
 	KL_SHARED_EXECUTION_ENVIRONMENT
 
-	KL_IMPORTED_INPUT_STREAM_ROUTINES
-
 creation
 
 	execute
@@ -34,15 +32,16 @@ feature -- Processing
 		local
 			a_config: TS_CONFIG
 			config_parser: TS_CONFIG_PARSER
-			a_file: like INPUT_STREAM_TYPE
+			a_file: KL_TEXT_INPUT_FILE
 			cannot_read: UT_CANNOT_READ_FILE_ERROR
 		do
 			Arguments.set_program_name ("getest")
 			!! variables.make
 			!! error_handler.make_standard
 			read_command_line
-			a_file := INPUT_STREAM_.make_file_open_read (config_filename)
-			if INPUT_STREAM_.is_open_read (a_file) then
+			!! a_file.make (config_filename)
+			a_file.open_read
+			if a_file.is_open_read then
 				if must_generate then
 					std.output.put_line ("Preparing Test Cases")
 				elseif must_compile then
@@ -52,12 +51,13 @@ feature -- Processing
 					std.output.put_new_line
 				end
 				!! config_parser.make (variables, error_handler)
+				config_parser.set_fail_on_rescue (fail_on_rescue)
 				config_parser.set_compiler_ise (compiler_ise)
 				config_parser.set_compiler_hact (compiler_hact)
 				config_parser.set_compiler_se (compiler_se)
 				config_parser.set_compiler_ve (compiler_ve)
 				config_parser.parse (a_file)
-				INPUT_STREAM_.close (a_file)
+				a_file.close
 				a_config := config_parser.last_config
 				if compile_command /= Void then
 					a_config.set_compile (compile_command)
@@ -198,6 +198,13 @@ feature -- Status report
 			definition: Result = (compiler_ise or compiler_hact or compiler_se or compiler_ve)
 		end
 
+	fail_on_rescue: BOOLEAN
+			-- Should the test application crash when an error occur?
+			-- (By default test case errors are caught by a rescue
+			-- clause and reported to the result summary, but during
+			-- debugging it might be useful to get the full exception
+			-- trace.)
+
 feature {NONE} -- Command line
 
 	read_command_line is
@@ -264,6 +271,8 @@ feature {NONE} -- Command line
 					must_compile := True
 				elseif arg.is_equal ("-e") then
 					must_execute := True
+				elseif arg.is_equal ("-a") then
+					fail_on_rescue := True
 				elseif i = nb then
 					if config_filename /= Void then
 						report_usage_error
@@ -399,7 +408,7 @@ feature {NONE} -- Error handling
 	Usage_message: UT_USAGE_MESSAGE is
 			-- Getest usage message
 		once
-			!! Result.make ("[-ceghV?][--help][--version]%N%
+			!! Result.make ("[-aceghV?][--help][--version]%N%
 				%%T[-D <name>=<value>|--define=<name>=<value>]*%N%
 				%%T[-C <command>|--compile=<command>]%N%
 				%%T[--se|--ise|--hact|--ve|<filename>]")
