@@ -57,6 +57,7 @@ feature -- Initialization
 			reset_compressed_scanner_skeleton
 			successful := True
 			action_buffer.wipe_out
+			nb_open_brackets := 0
 			line_nb := 1
 		end
 
@@ -107,6 +108,10 @@ feature {NONE} -- Implementation
 
 	action_buffer: STRING
 			-- Buffer for semanic action text
+
+	nb_open_brackets: INTEGER
+			-- Number of characters { not-yet-balanced
+			-- in semantic actions
 
 	nb_rhs: INTEGER
 			-- Number of right-hand-side items

@@ -132,7 +132,7 @@ ESC					\\(.|[0-7]{1,3}|x[0-9a-f]{1,2})
 }
 
 <EIFFEL_ACTION>{
-	[^$"'%}\n-]*									|
+	[^$"'%{}\n-]*									|
 	["%]([^"%\n]|%([^/\n\r]|("/"[0-9]+"/")))*["%]	|
 	\'([^'%\n]|%([^/\n]|("/"[0-9]+"/")))\'			|
 	"--".*											|
@@ -154,11 +154,20 @@ ESC					\\(.|[0-7]{1,3}|x[0-9a-f]{1,2})
 					check is_integer: STRING_.is_integer (text_substring (3, text_count)) end
 					process_dollar_n (- text_substring (3, text_count).to_integer)
 				}
+	"{"			{
+					action_buffer.append_character ('{')
+					nb_open_brackets := nb_open_brackets + 1
+				}
 	"}"			{
-					last_token := T_ACTION
-					last_value := cloned_string (action_buffer)
-					action_buffer.wipe_out
-					set_start_condition (SECTION2)
+					if nb_open_brackets = 0 then
+						last_token := T_ACTION
+						last_value := cloned_string (action_buffer)
+						action_buffer.wipe_out
+						set_start_condition (SECTION2)
+					else
+						action_buffer.append_character ('}')
+						nb_open_brackets := nb_open_brackets - 1
+					end
 				}
 	<<EOF>>		{
 					report_missing_characters_error ("}")
