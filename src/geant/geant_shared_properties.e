@@ -25,7 +25,7 @@ feature -- Access
 			-- Variables specified on the commandline using -D
 			-- example: -Dname=value
 		local
-			a_tester: UC_EQUALITY_TESTER
+			a_tester: UC_STRING_EQUALITY_TESTER
 		once
 			create Result.make_map (10)
 			create a_tester
@@ -34,10 +34,42 @@ feature -- Access
 			Commandline_variables_not_void: Result /= Void
 		end
 
+	Empty_variables: GEANT_VARIABLES is
+			-- Variables with no entries
+		once
+			create Result.make
+		ensure
+			Empty_variables_not_void: Result /= Void
+		end
+
+	Arguments_string_splitter: ST_SPLITTER is
+			-- String splitter for terse arguments
+		once
+			create Result.make
+			Result.set_separators (",%T")
+		ensure
+			Arguments_string_splitter_not_void: Result /= Void
+		end
+
 	system_parents: DS_ARRAYED_LIST [GEANT_PARENT] is
 			-- Projects of system
 		once
 			create Result.make (5)
+		end
+
+feature {GEANT_INTERPRETING_ELEMENT} -- Access
+
+	target_arguments_stack: DS_STACK [GEANT_VARIABLES] is
+			-- Arguments stack
+		local
+			a_tester: UC_EQUALITY_TESTER
+			a_target_arguments_stack: DS_ARRAYED_STACK [GEANT_VARIABLES]
+		once
+				-- Create target arguments stack:
+			create a_target_arguments_stack.make (10)
+			Result := a_target_arguments_stack
+		ensure
+			target_arguments_stack_not_void: target_arguments_stack /= Void
 		end
 
 feature -- Status report

@@ -293,6 +293,14 @@ feature -- Status report
 						"' as declared.">>)
 				end
 				a_target := project.targets.item (a_redefine_target_name)
+
+					-- Check that both targets have the same formal arguments:
+				if not a_target.formal_arguments_match (a_redefine_target) then
+					exit_application (1, <<"%NLOAD ERROR:%N", "Target '", a_target.full_name,
+						"'s arguments do not match it's parent's (`", a_redefine_target.full_name,
+						"'s) arguments.">>)
+				end
+
 					-- Connect `a_target' and `a_redefine_target':
 				project.trace_debug (<<"Project '", project.name, "': connecting target `",
 					a_target.full_name, "' and target `", a_redefine_target.full_name, "%'">>)

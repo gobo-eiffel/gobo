@@ -25,7 +25,7 @@ creation
 
 feature {NONE} -- Initialization
 
-	make (a_variables: GEANT_VARIABLES; a_options: GEANT_PROJECT_OPTIONS; a_build_filename: STRING) is
+	make (a_variables: GEANT_PROJECT_VARIABLES; a_options: GEANT_PROJECT_OPTIONS; a_build_filename: STRING) is
 			-- Initialize project parser.
 		require
 			a_variables_not_void: a_variables /= Void
@@ -94,7 +94,7 @@ feature {NONE} -- Implementation
 	tree_pipe: XM_TREE_CALLBACKS_PIPE
 			-- Tree generating callbacks
 
-	variables: GEANT_VARIABLES
+	variables: GEANT_PROJECT_VARIABLES
 			-- Project variables
 
 	options: GEANT_PROJECT_OPTIONS

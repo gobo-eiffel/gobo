@@ -46,6 +46,9 @@ feature {NONE} -- Initialization
 			a_tester: UC_EQUALITY_TESTER
 			a_description_element: XM_ELEMENT
 			a_exports: DS_ARRAYED_LIST [STRING]
+			a_argument_elements: DS_LINKED_LIST [XM_ELEMENT]
+			a_argument_element: GEANT_ARGUMENT_ELEMENT
+			cs: DS_LINKED_LIST_CURSOR [XM_ELEMENT]
 		do
 			precursor (a_project, a_xml_element)
 
@@ -74,6 +77,23 @@ feature {NONE} -- Initialization
 			if has_attribute (Once_attribute_name) then
 				set_execute_once (boolean_value (Once_attribute_name))
 			end
+
+				-- formal arguments:
+			formal_arguments := Empty_variables
+			a_argument_elements := elements_by_name (Argument_element_name)
+			if a_argument_elements.count /= 0 then
+				create formal_arguments.make
+				cs := a_argument_elements.new_cursor
+				from cs.start until cs.after loop
+					create a_argument_element.make (cs.item)
+					if a_argument_element.has_name and then a_argument_element.name.count > 0 then
+						formal_arguments.force_last ("dummy_value", a_argument_element.name)
+						project.trace_debug (<<"found formal argument '", a_argument_element.name, "'%N">>)
+					end
+					cs.forth
+				end
+			end
+
 		end
 
 feature -- Access
@@ -158,6 +178,58 @@ feature -- Access
 			final_target_has_no_redefining_target: Result.redefining_target = Void
 		end
 
+	formal_arguments: GEANT_VARIABLES
+			-- Formal arguments of this target
+
+	prepared_arguments_from_formal_arguments (a_arguments: GEANT_VARIABLES): GEANT_VARIABLES is
+			-- Prepared actual arguments arguments for `formal_arguments';
+			-- Numbered arguments are replaced by their associated named arguments according
+			-- to `formal_arguments';
+			-- Application is terminated in case there is a mismatch between `a_arguments' and
+			-- `formal_arguments'
+		require
+			a_arguments_not_void: a_arguments /= Void
+			a_arguments_and_formals_have_same_count: a_arguments.count = formal_arguments.count
+		do
+				-- Default Result is `a_arguments' if nothing needs to be changed:
+			Result := a_arguments
+				-- Check that actual and formal arguments match:
+			if a_arguments.count /= formal_arguments.count then
+				exit_application (1, <<"  error: number of actual and formal arguments do not match for target '", name, "' (", a_arguments.count.out, " against ", formal_arguments.count.out, ")">>)
+			end
+			if a_arguments.has_numbered_keys then
+				Result := named_from_numbered_arguments (a_arguments)
+			end
+
+			if not Result.has_same_keys (formal_arguments) then
+				exit_application (1, <<"  error: actual and formal arguments do not match for target '", name, "'">>)
+			end
+		end
+
+	named_from_numbered_arguments (a_arguments: GEANT_VARIABLES): GEANT_VARIABLES is
+			-- Clone of `a_arguments' where number keys have been replaced by their
+			-- corresponding names from `formal_arguments'
+		require
+			a_arguments_not_void: a_arguments /= Void
+			a_arguments_and_formals_have_same_count: a_arguments.count = formal_arguments.count
+			a_arguments_has_numbered_arguments: a_arguments.has_numbered_keys
+		local
+			csa: DS_HASH_TABLE_CURSOR [STRING, STRING]
+			csf: DS_HASH_TABLE_CURSOR [STRING, STRING]
+		do
+			create Result.make
+
+			csa := a_arguments.new_cursor
+			csf :=formal_arguments.new_cursor
+			csa.start
+			csf.start
+			from until csa.after loop
+				Result.force_last (csa.item, csf.key)
+				csa.forth
+				csf.forth
+			end
+		end
+
 feature -- Status report
 
 	is_executed: BOOLEAN
@@ -229,6 +301,14 @@ feature -- Status report
 			a_target_not_void: a_target /= Void
 		do
 			Result := STRING_.same_string (seed.full_name, a_target.seed.full_name)
+		end
+
+	formal_arguments_match (a_target: like Current): BOOLEAN is
+			-- Does `formal_arguments' match `a_target.formal_arguments'?
+		require
+			a_target_not_void: a_target /= Void
+		do
+			Result := formal_arguments.has_same_keys (a_target.formal_arguments)
 		end
 
 	has_precursor_target (a_target: like Current): BOOLEAN is
@@ -397,7 +477,8 @@ feature -- Processing
 					loop
 						a_xml_element ?= cs.item
 						if a_xml_element /= Void then
-							if not STRING_.same_string (a_xml_element.name, Description_element_name) then
+							if not STRING_.same_string (a_xml_element.name, Description_element_name) and then
+								not STRING_.same_string (a_xml_element.name, Argument_element_name) then
 								execute_task (a_xml_element)
 							end
 						end
@@ -566,6 +647,15 @@ feature -- Processing
 		end
 
 feature {NONE} -- Constants
+
+	Argument_element_name: STRING is
+			-- Name of xml subelement for arguments
+		once
+			Result := "argument"
+		ensure
+			attribute_name_not_void: Result /= Void
+			atribute_name_not_empty: Result.count > 0
+		end
 
 	Name_attribute_name: STRING is
 			-- "name" attribute name

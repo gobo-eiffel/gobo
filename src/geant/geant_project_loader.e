@@ -57,7 +57,7 @@ feature -- Access
 
 feature -- Processing
 
-	load (a_variables: GEANT_VARIABLES; a_options: GEANT_PROJECT_OPTIONS) is
+	load (a_variables: GEANT_PROJECT_VARIABLES; a_options: GEANT_PROJECT_OPTIONS) is
 			-- Read current project's configuration from `build_filename'
 			-- and convert it into a 'GEANT_DOM'.
 		require

@@ -15,10 +15,25 @@ class GEANT_GEANT_COMMAND
 inherit
 
 	GEANT_COMMAND
+		redefine
+			make
+		end
 
 creation
 
 	make
+
+feature {NONE} -- Initialization
+
+	make (a_project: GEANT_PROJECT) is
+			-- Initialize command by setting `project' to `a_project'.
+		do
+			precursor (a_project)
+				-- Create actual arguments:
+			create arguments.make
+		ensure then
+			arguments_not_void: arguments /= Void
+		end
 
 feature -- Access
 
@@ -33,6 +48,9 @@ feature -- Access
 
 	start_target_name: STRING
 			-- Name of target the build process starts with
+
+	arguments: GEANT_VARIABLES
+			-- Actual arguments
 
 feature -- Status report
 
@@ -120,7 +138,7 @@ feature -- Execution
 			-- Execute command.
 		local
 			a_project: GEANT_PROJECT
-			a_variables: GEANT_VARIABLES
+			a_variables: GEANT_PROJECT_VARIABLES
 			a_target: GEANT_TARGET
 			a_filename: STRING
 			a_project_loader: GEANT_PROJECT_LOADER
@@ -166,7 +184,9 @@ feature -- Execution
 						if exit_code = 0 then
 							fileset.execute
 							from fileset.start until fileset.after or else exit_code /= 0 loop
-								a_project.build
+								a_target := a_project.start_target
+								arguments := a_target.prepared_arguments_from_formal_arguments (arguments)
+								a_project.build (arguments)
 								if not a_project.build_successful then
 									exit_code := 1
 								end
@@ -175,7 +195,9 @@ feature -- Execution
 							end
 						end
 					else
-						a_project.build
+						a_target := a_project.start_target
+						arguments := a_target.prepared_arguments_from_formal_arguments (arguments)
+						a_project.build (arguments)
 						if not a_project.build_successful then
 							exit_code := 1
 						end
@@ -184,7 +206,7 @@ feature -- Execution
 			else
 				check target_executable: is_target_executable end
 
-					-- call target of current project:
+					-- Call target of current project:
 				if project.targets.has (start_target_name) then
 					if is_fileset_executable then
 						if not fileset.is_executable then
@@ -195,8 +217,9 @@ feature -- Execution
 							fileset.execute
 							a_target := project.targets.item (start_target_name)
 							a_target := a_target.final_target
+							arguments := a_target.prepared_arguments_from_formal_arguments (arguments)
 							from fileset.start until fileset.after or else exit_code /= 0 loop
-								a_target.project.build_target (a_target)
+								a_target.project.build_target (a_target, arguments)
 
 								fileset.forth
 							end
@@ -204,7 +227,8 @@ feature -- Execution
 					else
 						a_target := project.targets.item (start_target_name)
 						a_target := a_target.final_target
-						a_target.project.build_target (a_target)
+						arguments := a_target.prepared_arguments_from_formal_arguments (arguments)
+						a_target.project.build_target (a_target, arguments)
 					end
 				else
 					project.log (<<"  [geant] error: unknown target: `", start_target_name, "%'">>)

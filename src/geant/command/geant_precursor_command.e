@@ -15,10 +15,25 @@ class GEANT_PRECURSOR_COMMAND
 inherit
 
 	GEANT_COMMAND
+		redefine
+			make
+		end
 
 creation
 
 	make
+
+feature {NONE} -- Initialization
+
+	make (a_project: GEANT_PROJECT) is
+			-- Initialize command by setting `project' to `a_project'.
+		do
+			precursor (a_project)
+				-- Create actual arguments:
+			create arguments.make
+		ensure then
+			arguments_not_void: arguments /= Void
+		end
 
 feature -- Status report
 
@@ -39,6 +54,9 @@ feature -- Access
 	parent: STRING
 			-- Parent on which precursor command should be applied
 
+	arguments: GEANT_VARIABLES
+			-- Actual arguments
+
 feature -- Setting
 
 	set_parent (a_parent: like parent) is
@@ -55,8 +73,12 @@ feature -- Execution
 
 	execute is
 			-- Execute command.
+		local
+			a_precursor_target: GEANT_TARGET
 		do
-			project.execute_target (project.current_target.precursor_target, True, False)
+			a_precursor_target := project.current_target.precursor_target
+			arguments := a_precursor_target.prepared_arguments_from_formal_arguments (arguments)
+			a_precursor_target.project.execute_target (a_precursor_target, arguments, True, False)
 		end
 
 end

@@ -38,14 +38,22 @@ feature {NONE} -- Initialization
 			a_project: GEANT_PROJECT
 			a_project_loader: GEANT_PROJECT_LOADER
 			a_project_options: GEANT_PROJECT_OPTIONS
-			a_variables: GEANT_VARIABLES
+			a_variables: GEANT_PROJECT_VARIABLES
 			a_target: GEANT_TARGET
+			a_arguments: GEANT_VARIABLES
 		do
 			Arguments.set_program_name ("geant")
 			create error_handler.make_standard
 			read_command_line
 
+				-- Create project variables:
 			create a_variables.make
+
+				-- Create dummy arguments for first call:
+			create a_arguments.make
+			target_arguments_stack.put (a_arguments)
+
+				-- Create project options:
 			create a_project_options.make
 			a_project_options.set_verbose (verbose)
 			a_project_options.set_debug_mode (debug_mode)
@@ -75,7 +83,9 @@ feature {NONE} -- Initialization
 			if show_target_info then
 				a_project.show_target_info
 			else
-				a_project.build
+				a_project.build (a_arguments)
+					-- Remove dummy arguments of first call:
+				target_arguments_stack.remove
 			end
 
 			if not a_project.build_successful then

@@ -16,62 +16,18 @@ inherit
 
 	GEANT_INTERPRETING_ELEMENT
 
+	GEANT_NAME_VALUE_ELEMENT
+		rename
+			make as name_value_make
+		undefine
+			attribute_value,
+			attribute_value_or_default
+		select
+			name_value_make
+		end
+
 creation
 
 	make
-
-feature -- Access
-
-	has_name: BOOLEAN is
-			-- Does `xml_element' has an attribute named `Name_attribute_name'
-		do
-			Result := has_attribute (Name_attribute_name)
-		end
-
-	has_value: BOOLEAN is
-			-- Does `xml_element' has an attribute named `Value_attribute_name'
-		do
-			Result := has_attribute (Value_attribute_name)
-		end
-
-	name: STRING is
-			-- Value of xml attribute named `Name_attribute_name' of `xml_element'
-		require
-			has_name: has_name
-		do
-			Result := attribute_value (Name_attribute_name)
-		ensure
-			name_not_void: name /= Void
-		end
-
-	value: STRING is
-			-- Value of xml attribute named `Value_attribute_name' of `xml_element'
-		require
-			has_value: has_value
-		do
-			Result := attribute_value (Value_attribute_name)
-		ensure
-			value_not_void: Result /= Void
-		end
-
-feature {NONE} -- Constants
-
-	Name_attribute_name: STRING is
-			-- "name" attribute name
-		once
-			Result := "name"
-		ensure
-			attribute_name_not_void: Result /= Void
-			attribute_name_not_empty: Result.count > 0
-		end
-
-	Value_attribute_name: STRING is
-			-- Name of xml attribute "value" of subelement <define>
-		once
-			Result := "value"
-		ensure
-			attribute_name_not_void: Result /= Void
-			atribute_name_not_empty: Result.count > 0
-		end
 
 end

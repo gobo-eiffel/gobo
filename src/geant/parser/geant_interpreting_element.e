@@ -22,6 +22,9 @@ inherit
 			attribute_value_or_default
 		end
 
+	GEANT_SHARED_PROPERTIES
+		export {NONE} all end
+
 creation
 
 	make
@@ -96,8 +99,18 @@ feature -- Access/XML attribute values
 
 	attribute_value (an_attr_name: STRING): STRING is
 			-- Value of attribue `an_attr_name'
+		local
+			a_string_interpreter: GEANT_STRING_INTERPRETER
 		do
 			Result := xml_element.attribute_by_name (an_attr_name).value
+
+				-- Search variable in arguments:
+			create a_string_interpreter.make
+			a_string_interpreter.set_source_string (Result)
+			a_string_interpreter.set_variables (target_arguments_stack.item)
+			Result := a_string_interpreter.interpreted_source_string
+
+				-- Search variable in project variables:
 			Result := project.variables.interpreted_string (Result)
 		end
 

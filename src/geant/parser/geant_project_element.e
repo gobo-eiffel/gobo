@@ -32,7 +32,7 @@ creation
 feature {NONE} -- Initialization
 
 	make (a_xml_element: XM_ELEMENT;
-		a_variables: GEANT_VARIABLES;
+		a_variables: GEANT_PROJECT_VARIABLES;
 		a_options: GEANT_PROJECT_OPTIONS;
 		a_build_filename: STRING) is
 			-- Create element with information held in `a_xml_element'.

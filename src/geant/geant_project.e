@@ -32,7 +32,7 @@ creation
 
 feature {NONE} -- Initialization
 
-	make (a_variables: GEANT_VARIABLES; a_options: GEANT_PROJECT_OPTIONS) is
+	make (a_variables: GEANT_PROJECT_VARIABLES; a_options: GEANT_PROJECT_OPTIONS) is
 			-- Create a new project.
 		require
 			a_variables_not_void: a_variables /= Void
@@ -50,6 +50,7 @@ feature {NONE} -- Initialization
 			create selected_targets.make_map (5)
 			create a_tester
 			selected_targets.set_key_equality_tester (a_tester)
+
 			build_successful := True
 		ensure
 			variables_set: a_variables /= Void implies variables = a_variables
@@ -69,7 +70,7 @@ feature -- Access
 	description: STRING
 			-- Project description
 
-	variables: GEANT_VARIABLES
+	variables: GEANT_PROJECT_VARIABLES
 			-- Project variables
 
 	options: GEANT_PROJECT_OPTIONS
@@ -81,8 +82,8 @@ feature -- Access
 	selected_targets: DS_HASH_TABLE [GEANT_TARGET, STRING]
 			-- Targets selected in heir
 
-	start_target: GEANT_TARGET is
-			-- Target with which build will start
+	preferred_start_target: GEANT_TARGET is
+			-- Preferred target to start build process
 		do
 			if start_target_name /= Void and then start_target_name.count > 0 then
 				if targets.has (start_target_name) then
@@ -92,13 +93,31 @@ feature -- Access
 		end
 
 	default_target: GEANT_TARGET is
-			-- Target with which build starts in case `start_target' is Void
+			-- Target to start build process in case `preferred_start_target' is Void
 		do
 			if default_target_name /= Void and then default_target_name.count > 0 then
 				if targets.has (default_target_name) then
 					Result := targets.item (default_target_name)
 				end
 			end
+		end
+
+	start_target: GEANT_TARGET is
+			-- `preferred_start_target' if not Void; `default_target' otherwise
+		do
+			Result := default_target
+			if start_target_name /= Void and then start_target_name.count > 0 then
+				if preferred_start_target = Void then
+					exit_application (1, <<"Cannot determine start target `", start_target_name + "%'">>)
+				else
+					Result := preferred_start_target
+				end
+			end
+			if Result = Void then
+				exit_application (1, <<"Cannot determine start target.">>)
+			end
+		ensure
+			start_target_not_void: Result /= Void
 		end
 
 	build_successful: BOOLEAN
@@ -327,32 +346,19 @@ feature -- Processing
 			end
 		end
 
-	build is
+	build (a_arguments: GEANT_VARIABLES) is
 			-- Build project: execute project's tasks.
 		require
 			targets_not_void: targets /= Void
+			a_arguments_not_void: a_arguments /= Void
 		local
 			a_target: GEANT_TARGET
 		do
 			trace (<<"Building Project">>)
 
-				-- Determine start target:
-			if start_target_name /= Void and then start_target_name.count > 0 then
-				if start_target = Void then
-					exit_application (1, <<"Cannot determine start target `", start_target_name + "%'">>)
-				else
-					a_target := start_target
-				end
-			end
-			if a_target = Void then
-					-- Use default target as start target if exists:
-				a_target := default_target
-			end
-			if a_target = Void then
-				exit_application (1, <<"Cannot determine start target.">>)
-			end
+			a_target := start_target
 
-			build_target (a_target)
+			build_target (a_target, a_arguments)
 		end
 
 	show_target_info is
@@ -374,10 +380,11 @@ feature -- Processing
 			end
 		end
 
-	build_target (a_target: GEANT_TARGET) is
+	build_target (a_target: GEANT_TARGET; a_arguments: GEANT_VARIABLES) is
 			-- Analyze dependencies and execute `a_target'.
 		require
 			a_target_not_void: a_target /= Void
+			a_arguments_not_void: a_arguments /= Void
 		local
 			depend_targets: DS_ARRAYED_STACK [GEANT_TARGET]
 		do
@@ -387,19 +394,20 @@ feature -- Processing
 			calculate_depend_order (depend_targets)
 				-- Execute depend targets:
 			from until depend_targets.count = 1 loop
-				execute_target (depend_targets.item, False, True)
+				execute_target (depend_targets.item, a_arguments, False, True)
 				depend_targets.remove
 			end
 				-- Execute `a_target':
 			check last_target: depend_targets.item = a_target end
-			execute_target (a_target, True, True)
+			execute_target (a_target, a_arguments, True, True)
 		end
 
-	execute_target (a_target: GEANT_TARGET; a_force: BOOLEAN; a_polymorph: BOOLEAN) is
+	execute_target (a_target: GEANT_TARGET; a_arguments: GEANT_VARIABLES; a_force: BOOLEAN; a_polymorph: BOOLEAN) is
 			-- Execute `a_target' if not executed before;
 			-- Execute anyway if `a_force' is True.
 		require
 			target_not_void: a_target /= Void
+			a_arguments_not_void: a_arguments /= Void
 		local
 			old_current_target: like current_target
 			a_execute_target: like current_target
@@ -416,9 +424,11 @@ feature -- Processing
 				end
 				current_target := a_execute_target
 				if a_execute_target.project /= Current then
-					a_execute_target.project.execute_target (a_execute_target, a_force, a_polymorph)
+					a_execute_target.project.execute_target (a_execute_target, a_arguments, a_force, a_polymorph)
 				else
+					target_arguments_stack.put (a_arguments)
 					a_execute_target.execute
+					target_arguments_stack.remove
 				end
 			end
 
