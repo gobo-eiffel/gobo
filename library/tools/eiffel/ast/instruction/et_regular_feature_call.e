@@ -2,15 +2,15 @@ indexing
 
 	description:
 
-		"Eiffel feature calls"
+		"Eiffel regular feature calls"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 1999-2002, Eric Bezault and others"
+	copyright: "Copyright (c) 1999-2004, Eric Bezault and others"
 	license: "Eiffel Forum License v2 (see forum.txt)"
 	date: "$Date$"
 	revision: "$Revision$"
 
-deferred class ET_FEATURE_CALL
+deferred class ET_REGULAR_FEATURE_CALL
 
 inherit
 
