@@ -5,7 +5,7 @@ indexing
 		"Expands special tokens in a template with given parameters"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2001, Andreas Leitner and others"
+	copyright: "Copyright (c) 2001-2004, Andreas Leitner and others"
 	license: "Eiffel Forum License v2 (see forum.txt)"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -149,7 +149,7 @@ feature -- Access
 			result_not_void: Result /= Void
 		end
 
-	expand_from_hash_table (a_template: STRING; a_variables: DS_HASH_TABLE [STRING, STRING]): STRING is
+	expand_from_values (a_template: STRING; a_variables: KL_VALUES [STRING, STRING]): STRING is
 			-- String where the variables have been
 			-- replaced by their values. The variables
 			-- are considered to be either ${[^}]*} or $[a-zA-Z0-9_]+
@@ -164,13 +164,13 @@ feature -- Access
 		require
 			a_template_not_void: a_template /= Void
 			a_variables_not_void: a_variables /= Void
-			a_variable_values_not_void: not a_variables.has_item (Void)
 		local
 			str: STRING
 			i, nb: INTEGER
 			c: CHARACTER
 			stop: BOOLEAN
 			has_brackets: BOOLEAN
+			value: STRING
 		do
 			from
 				i := 1
@@ -240,8 +240,9 @@ feature -- Access
 								end
 							end
 						end
-						if a_variables.has (str) then
-							Result := STRING_.appended_string (Result, a_variables.item (str))
+						value := a_variables.value (str)
+						if value /= Void then
+							Result := STRING_.appended_string (Result, value)
 						elseif str.count = 0 then
 							Result.append_character ('$')
 						else

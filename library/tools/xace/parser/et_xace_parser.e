@@ -5,7 +5,7 @@ indexing
 		"Xace parsers"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2001-2002, Andreas Leitner and others"
+	copyright: "Copyright (c) 2001-2004, Andreas Leitner and others"
 	license: "Eiffel Forum License v2 (see forum.txt)"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -66,7 +66,7 @@ feature {NONE} -- Initialization
 			error_handler_set: error_handler = an_error_handler
 		end
 
-	make_with_variables (a_variables: ET_XACE_VARIABLES an_error_handler: like error_handler) is
+	make_with_variables (a_variables: KL_VALUES [STRING, STRING]; an_error_handler: like error_handler) is
 			-- Create a new Xace parser with variables defined in `a_variables'.
 		require
 			a_variables_not_void: a_variables /= Void
@@ -78,7 +78,7 @@ feature {NONE} -- Initialization
 			error_handler_set: error_handler = an_error_handler
 		end
 
-	make_with_variables_and_factory (a_variables: ET_XACE_VARIABLES;
+	make_with_variables_and_factory (a_variables: KL_VALUES [STRING, STRING];
 		a_factory: like ast_factory; an_error_handler: like error_handler) is
 			-- Create a new Xace parser with variables defined in `a_variables'
 			-- and using `a_factory' as AST factory.

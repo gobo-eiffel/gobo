@@ -5,7 +5,7 @@ indexing
 		"Xace XML preprocessor"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2001, Andreas Leitner and others"
+	copyright: "Copyright (c) 2001-2004, Andreas Leitner and others"
 	license: "Eiffel Forum License v2 (see forum.txt)"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -21,7 +21,9 @@ inherit
 
 	KL_IMPORTED_STRING_ROUTINES
 		export {NONE} all end
-	
+
+	UT_SHARED_TEMPLATE_EXPANDER
+
 creation
 
 	make
@@ -46,7 +48,7 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	variables: ET_XACE_VARIABLES
+	variables: KL_VALUES [STRING, STRING]
 			-- Dollar variables defined
 
 	error_handler: ET_XACE_ERROR_HANDLER
@@ -167,10 +169,10 @@ feature {NONE} -- Implementation
 				if equal_index = 1 then
 					a_left_side := STRING_.new_empty_string (a_string, 0)
 				else
-					a_left_side := variables.expanded_variables (a_string.substring (1, equal_index - 1))
+					a_left_side := template_expander.expand_from_values (a_string.substring (1, equal_index - 1), variables)
 				end
 				if a_string.count > equal_index then
-					a_right_side := variables.expanded_variables (a_string.substring (equal_index + 1, a_string.count))
+					a_right_side := template_expander.expand_from_values (a_string.substring (equal_index + 1, a_string.count), variables)
 				else
 					a_right_side := STRING_.new_empty_string (a_string, 0)
 				end
@@ -191,7 +193,7 @@ feature {NONE} -- Implementation
 				check
 					a_variable_name_not_void: a_variable_name /= Void
 				end
-				Result := variables.is_defined (a_variable_name)
+				Result := variables.value (a_variable_name) /= Void
 			end
 		end
 
@@ -211,7 +213,7 @@ feature {NONE} -- Implementation
 			from a_cursor.start until a_cursor.after loop
 				an_attribute ?= a_cursor.item
 				if an_attribute /= Void then
-					a_string := variables.expanded_variables (an_attribute.value)
+					a_string := template_expander.expand_from_values (an_attribute.value, variables)
 					an_attribute.set_value (a_string)
 				end
 				a_cursor.forth

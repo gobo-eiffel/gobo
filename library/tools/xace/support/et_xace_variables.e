@@ -18,9 +18,6 @@ inherit
 
 	UC_SHARED_STRING_EQUALITY_TESTER
 	
-	UT_SHARED_TEMPLATE_EXPANDER
-		export {NONE} all end
-
 creation
 
 	make
@@ -88,23 +85,6 @@ feature -- Element change
 			defined_values.remove (a_name)
 		ensure
 			a_name_undefined: not is_defined (a_name)
-		end
-
-feature -- Basic operations
-
-	expanded_variables (s: STRING): STRING is
-			-- Expand variables in `s'
-			-- (Do not alter `s'.)
-		require
-			s_not_void: s /= Void
-		do
-			if not defined_values.is_empty then
-				Result := template_expander.expand_from_hash_table (s, defined_values)
-			else
-				Result := s
-			end
-		ensure
-			expanded_variables_not_void: Result /= Void
 		end
 
 feature {NONE} -- Implementation
