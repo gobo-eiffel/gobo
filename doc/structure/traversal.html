@@ -213,17 +213,19 @@ is empty. This is because the feature <font color="#008080"><em><tt>start
 </tt></em></font>when there is no items, hence exiting from the
 loop before the first iteration.</p>
 
-<p>We saw in the previous section that it was the responsibility
-of the container to keep uptodate the cursors currently
-traversing its items. This implies that the container internally
-keeps track of such cursors. Therefore, after a traversal and/or
-when the cursor is not needed anymore, it is important to give a
-clue to the container that it doesn't need to take care of this
-cursor anymore by calling <font color="#008080"><em><tt>go_after</tt></em></font>.
-This will allow the container to release its reference to this
-cursor and hence allow the garbage collector to reclaim its
-memory if necessary. Otherwise memory leaks as well as
-performance degradation may appear.</p>
+<p><font color="#FF0000">We saw in the previous section that it
+was the responsibility of the container to keep uptodate the
+cursors currently traversing its items. This implies that the
+container internally keeps track of such cursors. Therefore,
+after a traversal and/or when the cursor is not needed anymore,
+it is important to give a clue to the container that it doesn't
+need to take care of this cursor anymore by calling </font><font
+color="#008080"><em><tt>go_after</tt></em></font><font
+color="#FF0000">. This will allow the container to release its
+reference to this cursor and hence allow the garbage collector to
+reclaim its memory if necessary. Otherwise <em><strong>memory
+leaks</strong></em> as well as performance degradation may
+appear.</font></p>
 
 <h2><a name="DS_BILINEAR">Classes <em><tt>DS_BILINEAR</tt></em></a>
 and <em><tt>DS_BILINEAR_CURSOR</tt></em></h2>
