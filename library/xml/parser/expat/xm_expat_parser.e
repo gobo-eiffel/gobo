@@ -92,6 +92,13 @@ feature -- Access
 		do
 			create {XM_DEFAULT_POSITION} Result.make ("source unknown", last_byte_index, last_column_number, last_line_number)
 		end
+		
+	positions: DS_LINKED_LIST [XM_POSITION] is
+			-- To be implemented...
+		do
+			create Result.make
+			Result.force_last (position)
+		end
 
 	relative_uri_base: STRING is
 			-- Relative URI base
