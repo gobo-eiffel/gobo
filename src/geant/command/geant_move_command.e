@@ -48,7 +48,6 @@ feature -- Status report
 
 	is_fileset_to_directory_executable: BOOLEAN is
 			-- Can command be executed on source fileset `fileset' to targetdirectory `to_directory'?
-			-- Can command be executed on a to_directory?
 		do
 			Result := fileset /= Void and then
 				to_directory /= Void and then to_directory.count > 0
@@ -138,7 +137,6 @@ feature -- Execution
 		local
 			a_from_file: STRING
 			a_to_file: STRING
-			a_filename: STRING
 			a_basename: STRING
 		do
 			exit_code := 0
@@ -155,35 +153,28 @@ feature -- Execution
 				a_to_file := to_file
 				move_file (file, a_to_file)
 			else
+
 				check is_fileset_to_directory_executable: is_fileset_to_directory_executable end
-				fileset.execute
-				from
-					fileset.filenames.start
-				until
-					fileset.filenames.after or else exit_code /= 0
-				loop
-					a_filename := fileset.filenames.item_for_iteration
-					a_from_file := unix_file_system.pathname(fileset.directory_name, a_filename)
-					if fileset.map /= Void then
-						if fileset.map.is_executable then
-							a_filename := fileset.map.mapped_filename (a_filename)
-						else
-							project.log ("  [move] error: map definition wrong'%N")
-							exit_code := 1
-						end
-					else
-						project.trace_debug ("  map is Void%N")
-					end
-					if exit_code = 0 then
-						a_to_file := unix_file_system.pathname(to_directory, a_filename)
+				if not fileset.is_executable then
+					project.log ("  [copy] error: fileset definition wrong%N")
+					exit_code := 1
+				end
+
+				if exit_code = 0 then
+					fileset.execute
+					from
+						fileset.start
+					until
+						fileset.after or else exit_code /= 0
+					loop
+						a_from_file := unix_file_system.pathname(fileset.directory_name, fileset.item_filename)
+						a_to_file := unix_file_system.pathname(to_directory, fileset.item_mapped_filename)
 							-- Create target directory if necessary:
 						create_directory_for_pathname (a_to_file)
 						move_file (a_from_file, a_to_file)
-					else
-						project.log ("  [move] error: cannot move%N")
+	
+						fileset.forth
 					end
-
-					fileset.filenames.forth
 				end
 			end
 		end
@@ -203,21 +194,23 @@ feature -- Execution
 			old_name := file_system.pathname_from_file_system (a_source_file, unix_file_system)
 			new_name := file_system.pathname_from_file_system (a_target_file, unix_file_system)
 			project.trace ("  [move] " + old_name + " to " + new_name + "%N")
-				-- Check that source file exists:
-			if not file_system.file_exists (old_name) then
-				project.log ("  [move] error: cannot find file '" + old_name + "'%N")
-				exit_code := 1
-			else
-				file_system.rename_file (old_name, new_name)
-				if not file_system.file_exists (new_name) then
-						-- The new file has not been created.
-					project.log ("  [move] error: cannot move file '" + old_name + "' to file '" + new_name + "'%N")
+			if not project.no_exec then
+					-- Check that source file exists:
+				if not file_system.file_exists (old_name) then
+					project.log ("  [move] error: cannot find file '" + old_name + "'%N")
 					exit_code := 1
-				elseif file_system.file_exists (old_name) then
-					if not file_system.same_physical_file (old_name, new_name) then
-							-- The old file has not been removed.
-						project.log ("  [move] error: cannot remove file '" + old_name + "'%N")
+				else
+					file_system.rename_file (old_name, new_name)
+					if not file_system.file_exists (new_name) then
+							-- The new file has not been created.
+						project.log ("  [move] error: cannot move file '" + old_name + "' to file '" + new_name + "'%N")
 						exit_code := 1
+					elseif file_system.file_exists (old_name) then
+						if not file_system.same_physical_file (old_name, new_name) then
+								-- The old file has not been removed.
+							project.log ("  [move] error: cannot remove file '" + old_name + "'%N")
+							exit_code := 1
+						end
 					end
 				end
 			end
