@@ -759,7 +759,7 @@ feature {NONE} -- AST factory
 		end
 
 	new_deferred_function (a_name: ET_FEATURE_NAME; args: ET_FORMAL_ARGUMENTS;
-		a_type: ET_TYPE; an_obsolete: ET_MANIFEST_STRING; a_preconditions: ET_PRECONDITIONS;
+		a_type: ET_TYPE; an_obsolete: ET_OBSOLETE; a_preconditions: ET_PRECONDITIONS;
 		a_postconditions: ET_POSTCONDITIONS): ET_DEFERRED_FUNCTION is
 			-- New deferred function
 		require
@@ -776,7 +776,7 @@ feature {NONE} -- AST factory
 		end
 
 	new_deferred_procedure (a_name: ET_FEATURE_NAME; args: ET_FORMAL_ARGUMENTS;
-		an_obsolete: ET_MANIFEST_STRING; a_preconditions: ET_PRECONDITIONS;
+		an_obsolete: ET_OBSOLETE; a_preconditions: ET_PRECONDITIONS;
 		a_postconditions: ET_POSTCONDITIONS): ET_DEFERRED_PROCEDURE is
 			-- New deferred procedure
 		require
@@ -792,7 +792,7 @@ feature {NONE} -- AST factory
 		end
 
 	new_do_function (a_name: ET_FEATURE_NAME; args: ET_FORMAL_ARGUMENTS; a_type: ET_TYPE;
-		an_obsolete: ET_MANIFEST_STRING; a_preconditions: ET_PRECONDITIONS;
+		an_obsolete: ET_OBSOLETE; a_preconditions: ET_PRECONDITIONS;
 		a_locals: ET_LOCAL_VARIABLES; a_compound: ET_COMPOUND;
 		a_postconditions: ET_POSTCONDITIONS; a_rescue: ET_COMPOUND): ET_DO_FUNCTION is
 			-- New do function
@@ -811,7 +811,7 @@ feature {NONE} -- AST factory
 		end
 
 	new_do_procedure (a_name: ET_FEATURE_NAME; args: ET_FORMAL_ARGUMENTS;
-		an_obsolete: ET_MANIFEST_STRING; a_preconditions: ET_PRECONDITIONS;
+		an_obsolete: ET_OBSOLETE; a_preconditions: ET_PRECONDITIONS;
 		a_locals: ET_LOCAL_VARIABLES; a_compound: ET_COMPOUND;
 		a_postconditions: ET_POSTCONDITIONS; a_rescue: ET_COMPOUND): ET_DO_PROCEDURE is
 			-- New do procedure
@@ -949,7 +949,7 @@ feature {NONE} -- AST factory
 		end
 
 	new_external_function (a_name: ET_FEATURE_NAME; args: ET_FORMAL_ARGUMENTS;
-		a_type: ET_TYPE; an_obsolete: ET_MANIFEST_STRING; a_preconditions: ET_PRECONDITIONS;
+		a_type: ET_TYPE; an_obsolete: ET_OBSOLETE; a_preconditions: ET_PRECONDITIONS;
 		a_language: ET_MANIFEST_STRING; an_alias: ET_MANIFEST_STRING;
 		a_postconditions: ET_POSTCONDITIONS): ET_EXTERNAL_FUNCTION is
 			-- New external function
@@ -968,7 +968,7 @@ feature {NONE} -- AST factory
 		end
 
 	new_external_procedure (a_name: ET_FEATURE_NAME; args: ET_FORMAL_ARGUMENTS;
-		an_obsolete: ET_MANIFEST_STRING; a_preconditions: ET_PRECONDITIONS;
+		an_obsolete: ET_OBSOLETE; a_preconditions: ET_PRECONDITIONS;
 		a_language: ET_MANIFEST_STRING; an_alias: ET_MANIFEST_STRING;
 		a_postconditions: ET_POSTCONDITIONS): ET_EXTERNAL_PROCEDURE is
 			-- New external procedure
@@ -1683,6 +1683,17 @@ feature {NONE} -- AST factory
 			none_clients_not_void: Result /= Void
 		end
 
+	new_obsolete (an_obsolete: ET_TOKEN; a_message: ET_MANIFEST_STRING): ET_OBSOLETE is
+			-- New obsolete clause.
+		require
+			an_obsolete_not_void: an_obsolete /= Void
+			a_message_not_void: a_message /= Void
+		do
+			Result := ast_factory.new_obsolete (an_obsolete, a_message)
+		ensure
+			obsolete_not_void: Result /= Void
+		end
+
 	new_old_expression (an_old: ET_TOKEN; e: ET_EXPRESSION): ET_OLD_EXPRESSION is
 			-- New old expression
 		require
@@ -1695,7 +1706,7 @@ feature {NONE} -- AST factory
 		end
 
 	new_once_function (a_name: ET_FEATURE_NAME; args: ET_FORMAL_ARGUMENTS; a_type: ET_TYPE;
-		an_obsolete: ET_MANIFEST_STRING; a_preconditions: ET_PRECONDITIONS;
+		an_obsolete: ET_OBSOLETE; a_preconditions: ET_PRECONDITIONS;
 		a_locals: ET_LOCAL_VARIABLES; a_compound: ET_COMPOUND;
 		a_postconditions: ET_POSTCONDITIONS; a_rescue: ET_COMPOUND): ET_ONCE_FUNCTION is
 			-- New once function
@@ -1713,7 +1724,7 @@ feature {NONE} -- AST factory
 		end
 
 	new_once_procedure (a_name: ET_FEATURE_NAME; args: ET_FORMAL_ARGUMENTS;
-		an_obsolete: ET_MANIFEST_STRING; a_preconditions: ET_PRECONDITIONS;
+		an_obsolete: ET_OBSOLETE; a_preconditions: ET_PRECONDITIONS;
 		a_locals: ET_LOCAL_VARIABLES; a_compound: ET_COMPOUND;
 		a_postconditions: ET_POSTCONDITIONS; a_rescue: ET_COMPOUND): ET_ONCE_PROCEDURE is
 			-- New once procedure

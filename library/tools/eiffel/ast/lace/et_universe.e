@@ -219,7 +219,7 @@ feature -- Factory
 		end
 
 	new_deferred_function (a_name: ET_FEATURE_NAME; args: ET_FORMAL_ARGUMENTS;
-		a_type: ET_TYPE; an_obsolete: ET_MANIFEST_STRING; a_preconditions: ET_PRECONDITIONS;
+		a_type: ET_TYPE; an_obsolete: ET_OBSOLETE; a_preconditions: ET_PRECONDITIONS;
 		a_postconditions: ET_POSTCONDITIONS; a_clients: ET_CLASS_NAME_LIST;
 		a_class: ET_CLASS): ET_DEFERRED_FUNCTION is
 			-- New deferred function feature for `a_class'
@@ -240,7 +240,7 @@ feature -- Factory
 		end
 
 	new_deferred_procedure (a_name: ET_FEATURE_NAME; args: ET_FORMAL_ARGUMENTS;
-		an_obsolete: ET_MANIFEST_STRING; a_preconditions: ET_PRECONDITIONS;
+		an_obsolete: ET_OBSOLETE; a_preconditions: ET_PRECONDITIONS;
 		a_postconditions: ET_POSTCONDITIONS; a_clients: ET_CLASS_NAME_LIST;
 		a_class: ET_CLASS): ET_DEFERRED_PROCEDURE is
 			-- New deferred procedure feature for `a_class'
@@ -260,7 +260,7 @@ feature -- Factory
 		end
 
 	new_do_function (a_name: ET_FEATURE_NAME; args: ET_FORMAL_ARGUMENTS; a_type: ET_TYPE;
-		an_obsolete: ET_MANIFEST_STRING; a_preconditions: ET_PRECONDITIONS;
+		an_obsolete: ET_OBSOLETE; a_preconditions: ET_PRECONDITIONS;
 		a_locals: ET_LOCAL_VARIABLES; a_compound: ET_COMPOUND;
 		a_postconditions: ET_POSTCONDITIONS; a_rescue: ET_COMPOUND;
 		a_clients: ET_CLASS_NAME_LIST; a_class: ET_CLASS): ET_DO_FUNCTION is
@@ -282,7 +282,7 @@ feature -- Factory
 		end
 
 	new_do_procedure (a_name: ET_FEATURE_NAME; args: ET_FORMAL_ARGUMENTS;
-		an_obsolete: ET_MANIFEST_STRING; a_preconditions: ET_PRECONDITIONS;
+		an_obsolete: ET_OBSOLETE; a_preconditions: ET_PRECONDITIONS;
 		a_locals: ET_LOCAL_VARIABLES; a_compound: ET_COMPOUND;
 		a_postconditions: ET_POSTCONDITIONS; a_rescue: ET_COMPOUND;
 		a_clients: ET_CLASS_NAME_LIST; a_class: ET_CLASS): ET_DO_PROCEDURE is
@@ -303,7 +303,7 @@ feature -- Factory
 		end
 
 	new_external_function (a_name: ET_FEATURE_NAME; args: ET_FORMAL_ARGUMENTS;
-		a_type: ET_TYPE; an_obsolete: ET_MANIFEST_STRING; a_preconditions: ET_PRECONDITIONS;
+		a_type: ET_TYPE; an_obsolete: ET_OBSOLETE; a_preconditions: ET_PRECONDITIONS;
 		a_language: ET_MANIFEST_STRING; an_alias: ET_MANIFEST_STRING;
 		a_postconditions: ET_POSTCONDITIONS; a_clients: ET_CLASS_NAME_LIST;
 		a_class: ET_CLASS): ET_EXTERNAL_FUNCTION is
@@ -327,7 +327,7 @@ feature -- Factory
 		end
 
 	new_external_procedure (a_name: ET_FEATURE_NAME; args: ET_FORMAL_ARGUMENTS;
-		an_obsolete: ET_MANIFEST_STRING; a_preconditions: ET_PRECONDITIONS;
+		an_obsolete: ET_OBSOLETE; a_preconditions: ET_PRECONDITIONS;
 		a_language: ET_MANIFEST_STRING; an_alias: ET_MANIFEST_STRING;
 		a_postconditions: ET_POSTCONDITIONS; a_clients: ET_CLASS_NAME_LIST;
 		a_class: ET_CLASS): ET_EXTERNAL_PROCEDURE is
@@ -350,7 +350,7 @@ feature -- Factory
 		end
 
 	new_once_function (a_name: ET_FEATURE_NAME; args: ET_FORMAL_ARGUMENTS; a_type: ET_TYPE;
-		an_obsolete: ET_MANIFEST_STRING; a_preconditions: ET_PRECONDITIONS;
+		an_obsolete: ET_OBSOLETE; a_preconditions: ET_PRECONDITIONS;
 		a_locals: ET_LOCAL_VARIABLES; a_compound: ET_COMPOUND;
 		a_postconditions: ET_POSTCONDITIONS; a_rescue: ET_COMPOUND;
 		a_clients: ET_CLASS_NAME_LIST; a_class: ET_CLASS): ET_ONCE_FUNCTION is
@@ -372,7 +372,7 @@ feature -- Factory
 		end
 
 	new_once_procedure (a_name: ET_FEATURE_NAME; args: ET_FORMAL_ARGUMENTS;
-		an_obsolete: ET_MANIFEST_STRING; a_preconditions: ET_PRECONDITIONS;
+		an_obsolete: ET_OBSOLETE; a_preconditions: ET_PRECONDITIONS;
 		a_locals: ET_LOCAL_VARIABLES; a_compound: ET_COMPOUND;
 		a_postconditions: ET_POSTCONDITIONS; a_rescue: ET_COMPOUND;
 		a_clients: ET_CLASS_NAME_LIST; a_class: ET_CLASS): ET_ONCE_PROCEDURE is

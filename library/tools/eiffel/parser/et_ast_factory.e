@@ -601,7 +601,7 @@ feature -- AST factory
 		end
 
 	new_deferred_function (a_name: ET_FEATURE_NAME; args: ET_FORMAL_ARGUMENTS;
-		a_type: ET_TYPE; an_obsolete: ET_MANIFEST_STRING; a_preconditions: ET_PRECONDITIONS;
+		a_type: ET_TYPE; an_obsolete: ET_OBSOLETE; a_preconditions: ET_PRECONDITIONS;
 		a_postconditions: ET_POSTCONDITIONS; a_clients: ET_CLASS_NAME_LIST;
 		a_class: ET_CLASS; an_id: INTEGER): ET_DEFERRED_FUNCTION is
 			-- New deferred function
@@ -619,7 +619,7 @@ feature -- AST factory
 		end
 
 	new_deferred_procedure (a_name: ET_FEATURE_NAME; args: ET_FORMAL_ARGUMENTS;
-		an_obsolete: ET_MANIFEST_STRING; a_preconditions: ET_PRECONDITIONS;
+		an_obsolete: ET_OBSOLETE; a_preconditions: ET_PRECONDITIONS;
 		a_postconditions: ET_POSTCONDITIONS; a_clients: ET_CLASS_NAME_LIST;
 		a_class: ET_CLASS; an_id: INTEGER): ET_DEFERRED_PROCEDURE is
 			-- New deferred procedure
@@ -636,7 +636,7 @@ feature -- AST factory
 		end
 
 	new_do_function (a_name: ET_FEATURE_NAME; args: ET_FORMAL_ARGUMENTS; a_type: ET_TYPE;
-		an_obsolete: ET_MANIFEST_STRING; a_preconditions: ET_PRECONDITIONS;
+		an_obsolete: ET_OBSOLETE; a_preconditions: ET_PRECONDITIONS;
 		a_locals: ET_LOCAL_VARIABLES; a_compound: ET_COMPOUND;
 		a_postconditions: ET_POSTCONDITIONS; a_rescue: ET_COMPOUND;
 		a_clients: ET_CLASS_NAME_LIST; a_class: ET_CLASS; an_id: INTEGER): ET_DO_FUNCTION is
@@ -655,7 +655,7 @@ feature -- AST factory
 		end
 
 	new_do_procedure (a_name: ET_FEATURE_NAME; args: ET_FORMAL_ARGUMENTS;
-		an_obsolete: ET_MANIFEST_STRING; a_preconditions: ET_PRECONDITIONS;
+		an_obsolete: ET_OBSOLETE; a_preconditions: ET_PRECONDITIONS;
 		a_locals: ET_LOCAL_VARIABLES; a_compound: ET_COMPOUND;
 		a_postconditions: ET_POSTCONDITIONS; a_rescue: ET_COMPOUND;
 		a_clients: ET_CLASS_NAME_LIST; a_class: ET_CLASS; an_id: INTEGER): ET_DO_PROCEDURE is
@@ -797,7 +797,7 @@ feature -- AST factory
 		end
 
 	new_external_function (a_name: ET_FEATURE_NAME; args: ET_FORMAL_ARGUMENTS;
-		a_type: ET_TYPE; an_obsolete: ET_MANIFEST_STRING; a_preconditions: ET_PRECONDITIONS;
+		a_type: ET_TYPE; an_obsolete: ET_OBSOLETE; a_preconditions: ET_PRECONDITIONS;
 		a_language: ET_MANIFEST_STRING; an_alias: ET_MANIFEST_STRING;
 		a_postconditions: ET_POSTCONDITIONS; a_clients: ET_CLASS_NAME_LIST;
 		a_class: ET_CLASS; an_id: INTEGER): ET_EXTERNAL_FUNCTION is
@@ -818,7 +818,7 @@ feature -- AST factory
 		end
 
 	new_external_procedure (a_name: ET_FEATURE_NAME; args: ET_FORMAL_ARGUMENTS;
-		an_obsolete: ET_MANIFEST_STRING; a_preconditions: ET_PRECONDITIONS;
+		an_obsolete: ET_OBSOLETE; a_preconditions: ET_PRECONDITIONS;
 		a_language: ET_MANIFEST_STRING; an_alias: ET_MANIFEST_STRING;
 		a_postconditions: ET_POSTCONDITIONS; a_clients: ET_CLASS_NAME_LIST;
 		a_class: ET_CLASS; an_id: INTEGER): ET_EXTERNAL_PROCEDURE is
@@ -1661,6 +1661,17 @@ feature -- AST factory
 			not_equal_symbol_not_void: Result /= Void
 		end
 
+	new_obsolete (an_obsolete: ET_TOKEN; a_message: ET_MANIFEST_STRING): ET_OBSOLETE is
+			-- New obsolete clause.
+		require
+			an_obsolete_not_void: an_obsolete /= Void
+			a_message_not_void: a_message /= Void
+		do
+			!! Result.make (an_obsolete, a_message)
+		ensure
+			obsolete_not_void: Result /= Void
+		end
+
 	new_old_expression (an_old: ET_TOKEN; e: ET_EXPRESSION): ET_OLD_EXPRESSION is
 			-- New old expression
 		require
@@ -1673,7 +1684,7 @@ feature -- AST factory
 		end
 
 	new_once_function (a_name: ET_FEATURE_NAME; args: ET_FORMAL_ARGUMENTS; a_type: ET_TYPE;
-		an_obsolete: ET_MANIFEST_STRING; a_preconditions: ET_PRECONDITIONS;
+		an_obsolete: ET_OBSOLETE; a_preconditions: ET_PRECONDITIONS;
 		a_locals: ET_LOCAL_VARIABLES; a_compound: ET_COMPOUND;
 		a_postconditions: ET_POSTCONDITIONS; a_rescue: ET_COMPOUND;
 		a_clients: ET_CLASS_NAME_LIST; a_class: ET_CLASS; an_id: INTEGER): ET_ONCE_FUNCTION is
@@ -1692,7 +1703,7 @@ feature -- AST factory
 		end
 
 	new_once_procedure (a_name: ET_FEATURE_NAME; args: ET_FORMAL_ARGUMENTS;
-		an_obsolete: ET_MANIFEST_STRING; a_preconditions: ET_PRECONDITIONS;
+		an_obsolete: ET_OBSOLETE; a_preconditions: ET_PRECONDITIONS;
 		a_locals: ET_LOCAL_VARIABLES; a_compound: ET_COMPOUND;
 		a_postconditions: ET_POSTCONDITIONS; a_rescue: ET_COMPOUND;
 		a_clients: ET_CLASS_NAME_LIST; a_class: ET_CLASS; an_id: INTEGER): ET_ONCE_PROCEDURE is

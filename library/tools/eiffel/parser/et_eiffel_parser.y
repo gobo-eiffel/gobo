@@ -150,8 +150,9 @@ creation
                                Redefine_clause_opt
 %type <ET_LOCAL_VARIABLES>     Local_declarations_opt Local_variable_list
 %type <ET_MANIFEST_ARRAY>      Manifest_array Manifest_array_expression_list
-%type <ET_MANIFEST_STRING>     Obsolete_opt Manifest_string External_name_opt
+%type <ET_MANIFEST_STRING>     Manifest_string External_name_opt
 %type <ET_MANIFEST_TUPLE>      Manifest_tuple Manifest_tuple_expression_list
+%type <ET_OBSOLETE>            Obsolete_opt
 %type <ET_PARENTHESIZED_EXPRESSION>  Parenthesized_expression
 %type <ET_PARENTS>             Parent_list_to_end Inheritance_to_end
 %type <ET_POSTCONDITIONS>      Postcondition_opt
@@ -173,7 +174,7 @@ creation
 %type <ET_TOKEN>               Check Create Debug Else Elseif End Ensure From If Invariant
                                Loop Precursor Require Then Until Variant When Inspect Select
                                Rename Redefine Export Undefine All Creation As Do Once
-                               Rescue Like Bit Local
+                               Rescue Like Bit Local Obsolete
 %type <ET_TYPE>                Type Constraint_type
 %type <ET_VARIANT>             Variant_clause_opt
 %type <ET_WHEN_PART_LIST>      When_list When_list_opt
@@ -357,12 +358,12 @@ Constraint_type_list: Constraint_type
 		}
 	;
 
---------------------------------------------------------------------------------
+--DONE------------------------------------------------------------------------------
 
 Obsolete_opt: -- Empty
 		-- { $$ := Void }
-	| E_OBSOLETE Manifest_string
-		{ $$ := $2 }
+	| Obsolete Manifest_string
+		{ $$ := new_obsolete ($1, $2) }
 	;
 
 --------------------------------------------------------------------------------
@@ -2880,6 +2881,17 @@ Local: E_LOCAL
 Loop: E_LOOP
 		{ $$ := $1 }
 	| E_LOOP E_BREAK
+		{
+			$$ := $1
+			if keep_all_breaks or keep_all_comments then
+				$$.set_break ($2)
+			end
+		}
+	;
+
+Obsolete: E_OBSOLETE
+		{ $$ := $1 }
+	| E_OBSOLETE E_BREAK
 		{
 			$$ := $1
 			if keep_all_breaks or keep_all_comments then

@@ -22,7 +22,7 @@ feature -- Access
 	arguments: ET_FORMAL_ARGUMENTS
 			-- Formal arguments
 
-	obsolete_message: ET_MANIFEST_STRING
+	obsolete_message: ET_OBSOLETE
 			-- Obsolete message
 
 	preconditions: ET_PRECONDITIONS
