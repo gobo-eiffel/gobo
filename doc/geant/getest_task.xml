@@ -115,7 +115,7 @@
 	<programlisting><![CDATA[
   <getest
     config="${system_dir}/getest.cfg"
-    compile="geant -b ${system_dir}/build.eant compile${debug_suffix}_${eiffel} &lt;compilation_log.txt"
+    compile="geant -b ${system_dir}/build.eant compile${debug_suffix}_${eiffel} &gt; compilation_log.txt 2&gt;&amp;1"
   >
     <define name="debug" value="true" if="${debug}"/>
   </getest>
