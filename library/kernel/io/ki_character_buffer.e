@@ -16,7 +16,7 @@ inherit
 
 	KI_BUFFER [CHARACTER]
 		undefine
-			put
+			put, item
 		redefine
 			fill_from_stream
 		end
