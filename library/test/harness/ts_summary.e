@@ -125,38 +125,42 @@ feature -- Output
 			a_file_open_write: a_file.is_open_write
 		do
 			a_file.put_string ("Test Summary for ")
-			a_file.put_string (a_test.name)
+			a_file.put_line (a_test.name)
+			a_file.put_new_line
 			if failure_count = 0 and abort_count = 0 then
-				a_file.put_string ("%N%N# PASSED:     ")
+				a_file.put_string ("# PASSED:     ")
 			else
-				a_file.put_string ("%N%N# Passed:     ")
+				a_file.put_string ("# Passed:     ")
 			end
 			a_file.put_integer (success_count)
 			a_file.put_string (" test")
 			if success_count > 1 then
 				a_file.put_character ('s')
 			end
+			a_file.put_new_line
 			if failure_count > 0 then
-				a_file.put_string ("%N# FAILED:     ")
+				a_file.put_string ("# FAILED:     ")
 			else
-				a_file.put_string ("%N# Failed:     ")
+				a_file.put_string ("# Failed:     ")
 			end
 			a_file.put_integer (failure_count)
 			a_file.put_string (" test")
 			if failure_count > 1 then
 				a_file.put_character ('s')
 			end
+			a_file.put_new_line
 			if abort_count > 0 then
-				a_file.put_string ("%N# ABORTED:    ")
+				a_file.put_string ("# ABORTED:    ")
 			else
-				a_file.put_string ("%N# Aborted:    ")
+				a_file.put_string ("# Aborted:    ")
 			end
 			a_file.put_integer (abort_count)
 			a_file.put_string (" test")
 			if abort_count > 1 then
 				a_file.put_character ('s')
 			end
-			a_file.put_string ("%N# Total:      ")
+			a_file.put_new_line
+			a_file.put_string ("# Total:      ")
 			a_file.put_integer (test_count)
 			a_file.put_string (" test")
 			if test_count > 1 then
@@ -168,7 +172,8 @@ feature -- Output
 			if assertion_count > 1 then
 				a_file.put_character ('s')
 			end
-			a_file.put_string (")%N")
+			a_file.put_character (')')
+			a_file.put_new_line
 		end
 
 	print_errors (a_file: KI_TEXT_OUTPUT_STREAM) is
@@ -181,13 +186,13 @@ feature -- Output
 			a_cursor: DS_LIST_CURSOR [TS_RESULT]
 			a_result: TS_RESULT
 		do
-			a_file.put_string ("Test Results:%N")
+			a_file.put_line ("Test Results:")
 			a_cursor := results.new_cursor
 			from a_cursor.start until a_cursor.after loop
 				a_result := a_cursor.item
 				if not a_result.passed then
 					a_result.print_result (a_file)
-					a_file.put_character ('%N')
+					a_file.put_new_line
 				end
 				a_cursor.forth
 			end
@@ -202,11 +207,11 @@ feature -- Output
 			a_cursor: DS_LIST_CURSOR [TS_RESULT]
 		do
 			if not results.is_empty then
-				a_file.put_string ("Test Results:%N")
+				a_file.put_line ("Test Results:")
 				a_cursor := results.new_cursor
 				from a_cursor.start until a_cursor.after loop
 					a_cursor.item.print_result (a_file)
-					a_file.put_character ('%N')
+					a_file.put_new_line
 					a_cursor.forth
 				end
 			end
