@@ -5,7 +5,7 @@
 	<description>
 		description: "Eiffel Ant file for the Gobo Eiffel Kernel Library"
 		library: "Gobo Eiffel Kernel Library"
-		copyright: "Copyright (c) 2001-2002, Eric Bezault and others"
+		copyright: "Copyright (c) 2001-2004, Eric Bezault and others"
 		license: "Eiffel Forum License v2 (see forum.txt)"
 		date: "$Date$"
 		revision: "$Revision$"
@@ -149,6 +149,8 @@
 		<set name="gepp_file" value="kl_execution_environment"/>
 		<geant target="ge2e"/>
 		<set name="gepp_file" value="kl_hashable_routines"/>
+		<geant target="ge2e"/>
+		<set name="gepp_file" value="kl_numeric"/>
 		<geant target="ge2e"/>
 		<set name="gepp_file" value="kl_operating_system"/>
 		<geant target="ge2e"/>

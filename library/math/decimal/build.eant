@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
 
-<project name="kernel" default="help">
+<project name="decimal" default="help">
 
 	<description>
 		description: "Eiffel Ant file for the Gobo Eiffel Decimal Library"
@@ -45,6 +45,7 @@
 		</description>
 
 		<geant target="clean"/>
+		<delete directory="spec"/>
 	</target>
 
 <!-- Implementation -->
@@ -52,9 +53,8 @@
 	<target name="install_implementation">
 		<set name="gepp_dir" value="implementation"/>
 		<set name="spec_dir" value="spec"/>
-		<set name="gepp_file" value="kl_numeric"/>
-		<geant target="ge2e"/>
 		<set name="gepp_file" value="ma_decimal_coefficient_imp"/>
 		<geant target="ge2e"/>
 	</target>
+
 </project>
