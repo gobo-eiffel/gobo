@@ -28,6 +28,8 @@ inherit
 			reset as reset_gepp_scanner
 		end
 
+	KL_SHARED_EXECUTION_ENVIRONMENT
+
 creation
 
 	make
@@ -203,7 +205,7 @@ feature -- Processing
 			too_many_includes: GEPP_TOO_MANY_INCLUDES_ERROR
 		do
 			if not include_stack.is_full then
-				a_file := INPUT_STREAM_.make_file_open_read (a_filename)
+				a_file := INPUT_STREAM_.make_file_open_read (Execution_environment.interpreted_string (a_filename))
 				if INPUT_STREAM_.is_open_read (a_file) then
 					include_stack.put (input_buffer)
 					set_input_buffer (new_file_buffer (a_file))
