@@ -587,7 +587,7 @@
 
 	<define name="fileset">
 		<element name="fileset">
-			<attribute name="directory"/>
+			<ref name="dir_if_unless"/>
 			<attribute name="include"/>
 			<optional>
 				<attribute name="exclude"/>
@@ -606,10 +606,7 @@
 				<attribute name="filename_directory"/>
 			</optional>
 			<optional>
-				<choice>
-					<attribute name="mapped_filename_directory"/>
-					<attribute name="concat"/> <!-- obsolete -->
-				</choice>
+				<attribute name="mapped_filename_directory"/>
 			</optional>
 			<zeroOrMore>
 				<element name="include">
