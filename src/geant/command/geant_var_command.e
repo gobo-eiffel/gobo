@@ -28,13 +28,17 @@ feature
 		end
 
 	execute is
-		require
-			name_not_void : name /= Void
-			name_not_empty: not name.is_empty
-
 		do
 			log("  [var] " + name + "=" + value + "%N")
 			vars.force(name, value)	-- put the variable in the pool of global variables
+		end
+
+	is_executable : BOOLEAN is
+		do
+			Result := name /= Void and then not name.is_empty
+		ensure then
+			name_not_void : Result implies name /= Void
+			name_not_empty: Result implies not name.is_empty
 		end
 
 	set_name(a_name : STRING) is

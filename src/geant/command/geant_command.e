@@ -19,6 +19,13 @@ deferred class GEANT_COMMAND
 	
 feature
 	execute is
+		require
+			is_executable : is_executable
+		deferred
+		end
+
+	is_executable : BOOLEAN is
+		-- is object prepared to execute
 		deferred
 		end
 

@@ -30,12 +30,6 @@ feature
 		end
 
 	execute is
-		require
-			command_not_void : command /= Void
-			command_not_empty: not command.is_empty
-
-			command_options_not_void : command_options /= Void
-			command_options_not_empty: not command_options.is_empty
 		local
 			cmd	: STRING
 		do
@@ -52,6 +46,18 @@ feature
 				log("  [xace] " + cmd + "%N")
 				system(cmd)
 			end
+		end
+
+	is_executable : BOOLEAN is
+		do
+			Result := command /= Void and then not command.is_empty and then
+					command_options /= Void and then not command_options.is_empty
+		ensure then
+			command_not_void : Result implies command /= Void
+			command_not_empty: Result implies not command.is_empty
+
+			command_options_not_void : Result implies command_options /= Void
+			command_options_not_empty: Result implies not command_options.is_empty
 		end
 
 	set_var(a_name, a_value : STRING) is

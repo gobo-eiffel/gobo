@@ -28,15 +28,20 @@ feature
 		end
 
 	execute is
-		require
-			cmd_not_void : cmd /= Void
-			cmd_not_empty : not cmd.is_empty
 		local
 			sc : UT_SHELL_COMMAND
 		do
 			log("  [exec] " + cmd + "%N")
 			!!sc.make(cmd)
 			sc.execute
+		end
+
+	is_executable : BOOLEAN is
+		do
+			Result := cmd /= Void and then not cmd.is_empty
+		ensure then
+			cmd_not_void : Result implies cmd /= Void
+			cmd_not_empty : Result implies not cmd.is_empty
 		end
 
 	set_cmd(a_cmd : STRING) is

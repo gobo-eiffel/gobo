@@ -35,11 +35,6 @@ feature
 		end
 
 	execute is
-		require
-			gelex_input_filename_not_void : gelex_input_filename /= Void
-			gelex_input_filename_not_empty : not gelex_input_filename.is_empty
-			meta_ecs implies not full
-			full implies not meta_ecs
 		local
 			cmd	: STRING
 		do
@@ -103,6 +98,17 @@ feature
 
 			log("  [gelex] " + cmd + "%N")
 			system(cmd)
+		end
+
+	is_executable : BOOLEAN is
+		do
+			Result := gelex_input_filename /= Void and then not gelex_input_filename.is_empty
+						and ((meta_ecs and not full) or (full and not meta_ecs))
+		ensure then
+			gelex_input_filename_not_void : Result implies gelex_input_filename /= Void
+			gelex_input_filename_not_empty : Result implies not gelex_input_filename.is_empty
+			meta_ecs implies not full
+			full implies not meta_ecs
 		end
 
 	feature -- gelex commandline options setters

@@ -35,9 +35,6 @@ feature
 		end
 
 	execute is
-		require
-			grammar_filename_not_void : grammar_filename /= Void
-			grammar_filename_not_empty: not grammar_filename.is_empty
 		local
 			cmd	: STRING
 		do
@@ -73,6 +70,14 @@ feature
 
 			log("  [geyacc] " + cmd + "%N")
 			system(cmd)
+		end
+
+	is_executable : BOOLEAN is
+		do
+			Result := grammar_filename /= Void and then not grammar_filename.is_empty
+		ensure then
+			grammar_filename_not_void : Result implies grammar_filename /= Void
+			grammar_filename_not_empty: Result implies not grammar_filename.is_empty
 		end
 
 	feature -- geyacc commandline options setters

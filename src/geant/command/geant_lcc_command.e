@@ -28,12 +28,6 @@ feature
 		end
 
 	execute is
-		require
-			executable_not_void : executable /= Void
-			executable_not_empty: not executable.is_empty
-
-			sourcefilename_not_void : sourcefilename /= Void
-			sourcefilename_not_empty: not sourcefilename.is_empty
 		local
 			cmd	: STRING
 		do
@@ -42,6 +36,18 @@ feature
 			cmd.append(" "); cmd.append(sourcefilename)
 			log("  [lcc] " + cmd + "%N")
 			system(cmd)
+		end
+
+	is_executable : BOOLEAN is
+		do
+			Result := executable /= Void and then not executable.is_empty
+						and then sourcefilename /= Void and then not sourcefilename.is_empty
+		ensure then
+			executable_not_void : Result implies executable /= Void
+			executable_not_empty: Result implies not executable.is_empty
+
+			sourcefilename_not_void : Result implies sourcefilename /= Void
+			sourcefilename_not_empty: Result implies not sourcefilename.is_empty
 		end
 
 	set_executable(a_executable : STRING) is

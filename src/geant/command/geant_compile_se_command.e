@@ -27,9 +27,6 @@ feature
 		end
 
 	execute is
-		require
-			valid_configuration : valid_configuration
-
 		local
 			cmd	: STRING
 		do
@@ -43,19 +40,28 @@ feature
 			system(cmd)
 		end
 
-	valid_configuration : BOOLEAN is
+	is_executable : BOOLEAN is
 		do
 			Result := valid_ace_configuration or else valid_traditional_configuration
+		ensure then
+			valid_configuration : Result implies valid_ace_configuration
+									or else valid_traditional_configuration
 		end
 
 	valid_ace_configuration : BOOLEAN is
 		do
 			Result := (ace_file /= void and then ace_file.count > 0) and not valid_traditional_configuration
+		ensure
+			Result implies (ace_file /= void and then ace_file.count > 0) and not valid_traditional_configuration
 		end
 
 	valid_traditional_configuration : BOOLEAN is
 		do
 			Result :=
+				(root_class /= void and then root_class.count > 0) and
+				(executable /= void and then executable.count > 0) and not valid_ace_configuration
+		ensure
+			Result implies
 				(root_class /= void and then root_class.count > 0) and
 				(executable /= void and then executable.count > 0) and not valid_ace_configuration
 		end
