@@ -71,5 +71,5 @@ ${GOBO_TEST_EXAMPLES}:
 	${ECHO} 'Testing Example ${EXAMPLE_DIR}/$@...'
 	${ECHO} 'Preparing Test Cases'
 	${MKDIR} $@-${EXAMPLE_DIR}
-	${CP} -f ${GOBO}/example/${EXAMPLE_DIR}/$@/* $@-${EXAMPLE_DIR}
+	${CP} -rf ${GOBO}/example/${EXAMPLE_DIR}/$@/* $@-${EXAMPLE_DIR}
 	cd $@-${EXAMPLE_DIR} ; ${GOBO}/test/all/common/test_harness.sh --getest ${ECOMPILER} $@
