@@ -5,7 +5,7 @@ indexing
 		"Time zones"
 
 	library: "Gobo Eiffel Time Library"
-	copyright: "Copyright (c) 2001, Eric Bezault and others"
+	copyright: "Copyright (c) 2001-2004, Eric Bezault and others"
 	license: "Eiffel Forum License v2 (see forum.txt)"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -18,14 +18,25 @@ inherit
 
 feature -- Access
 
-	name: STRING
+	name: STRING is
 			-- Time zone name
+		deferred
+		ensure
+			name_not_void: Result /= Void
+			name_not_empty: Result.count > 0
+		end
 
-	abbreviation: STRING
-			-- Time zone abbreviation
-
-	offset: DT_TIME_DURATION
-			-- GMT offset
+	offset (a_date_time: DT_DATE_TIME): DT_TIME_DURATION is
+			-- UTC offset for `a_date_time' in current time zone
+		require
+			a_date_time_not_void: a_date_time /= Void
+		do
+			Result := a_date_time.canonical_duration (date_time_to_utc (a_date_time)).time_duration
+		ensure
+			offset_not_void: Result /= Void
+			offset_is_canonical: Result.is_canonical
+			definition: Result.same_time_duration (a_date_time.canonical_duration (date_time_to_utc (a_date_time)).time_duration)
+		end
 
 feature -- Conversion
 
@@ -89,11 +100,5 @@ feature -- Conversion
 			a_date_time_not_void: a_date_time /= Void
 		deferred
 		end
-
-invariant
-
-	name_not_void: name /= Void
-	abbreviation_not_void: abbreviation /= Void
-	offset_not_void: offset /= Void
 
 end
