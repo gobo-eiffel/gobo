@@ -33,15 +33,15 @@ feature {NONE} -- Implementation
 	yy_build_parser_tables is
 			-- Build parser tables.
 		do
-			yytranslate := yytranslate_
-			yyr1 := yyr1_
-			yyr2 := yyr2_
-			yydefact := yydefact_
-			yydefgoto := yydefgoto_
-			yypact := yypact_
-			yypgoto := yypgoto_
-			yytable := yytable_
-			yycheck := yycheck_
+			yytranslate ?= yytranslate_template
+			yyr1 ?= yyr1_template
+			yyr2 ?= yyr2_template
+			yydefact ?= yydefact_template
+			yydefgoto ?= yydefgoto_template
+			yypact ?= yypact_template
+			yypgoto ?= yypgoto_template
+			yytable ?= yytable_template
+			yycheck ?= yycheck_template
 		end
 
 feature {NONE} -- Semantic actions
@@ -291,11 +291,13 @@ when 54 then
 			end
 		end
 
-feature {NONE} -- Tables
+feature {NONE} -- Table templates
 
-	yytranslate_: ARRAY [INTEGER] is
+	yytranslate_template: ANY is
+			-- This is supposed to be "like FIXED_INTEGER_ARRAY_TYPE",
+			-- but once functions cannot be declared with anchored types.
 		once
-			Result := INTEGER_ARRAY_.make_from_array (<<
+			Result := yyfixed_array (<<
 			    0,    2,    2,    2,    2,    2,    2,    2,    2,    2,
 			    2,    2,    2,    2,    2,    2,    2,    2,    2,    2,
 			    2,    2,    2,    2,    2,    2,    2,    2,    2,    2,
@@ -324,34 +326,40 @@ feature {NONE} -- Tables
 			    2,    2,    2,    2,    2,    2,    2,    2,    2,    2,
 			    2,    2,    2,    2,    2,    2,    2,    2,    2,    2,
 			    2,    2,    2,    2,    2,    2,    1,    2,    3,    4,
-			    5,    6,    7,    8,    9,   10,   11>>, 0)
+			    5,    6,    7,    8,    9,   10,   11>>)
 		end
 
-	yyr1_: ARRAY [INTEGER] is
+	yyr1_template: ANY is
+			-- This is supposed to be "like FIXED_INTEGER_ARRAY_TYPE",
+			-- but once functions cannot be declared with anchored types.
 		once
-			Result := INTEGER_ARRAY_.make_from_array (<<
+			Result := yyfixed_array (<<
 			    0,   31,   32,   33,   33,   33,   38,   38,   38,   38,
 			   34,   36,   36,   36,   39,   40,   40,   40,   37,   37,
 			   37,   37,   41,   41,   41,   41,   41,   43,   43,   42,
 			   44,   44,   45,   45,   45,   45,   45,   45,   45,   45,
 			   45,   45,   45,   45,   46,   46,   48,   48,   48,   48,
-			   47,   47,   35,   35,   35>>, 0)
+			   47,   47,   35,   35,   35>>)
 		end
 
-	yyr2_: ARRAY [INTEGER] is
+	yyr2_template: ANY is
+			-- This is supposed to be "like FIXED_INTEGER_ARRAY_TYPE",
+			-- but once functions cannot be declared with anchored types.
 		once
-			Result := INTEGER_ARRAY_.make_from_array (<<
+			Result := yyfixed_array (<<
 			    0,    4,    1,    0,    5,    5,    0,    1,    1,    1,
 			    0,    0,    3,    3,    1,    1,    3,    1,    2,    1,
 			    1,    1,    2,    2,    1,    2,    3,    1,    3,    2,
 			    1,    2,    1,    2,    2,    2,    6,    5,    4,    1,
 			    1,    1,    3,    3,    3,    4,    1,    2,    3,    4,
-			    0,    2,    0,    1,    2>>, 0)
+			    0,    2,    0,    1,    2>>)
 		end
 
-	yydefact_: ARRAY [INTEGER] is
+	yydefact_template: ANY is
+			-- This is supposed to be "like FIXED_INTEGER_ARRAY_TYPE",
+			-- but once functions cannot be declared with anchored types.
 		once
-			Result := INTEGER_ARRAY_.make_from_array (<<
+			Result := yyfixed_array (<<
 			    0,    2,    3,   11,   14,   52,   10,    0,   53,    1,
 			    3,    0,    0,   15,   17,    0,   54,   11,    0,    0,
 			   50,   39,    0,   40,   20,   32,   21,    6,   19,    0,
@@ -360,19 +368,23 @@ feature {NONE} -- Tables
 			   29,    0,   23,   31,   35,   34,   33,    0,   16,    0,
 			    0,   44,   47,   43,   42,   51,   26,   28,    0,   45,
 			   48,    0,    0,   38,   49,   37,    0,   36,    0,    0,
-			    0>>, 0)
+			    0>>)
 		end
 
-	yydefgoto_: ARRAY [INTEGER] is
+	yydefgoto_template: ANY is
+			-- This is supposed to be "like FIXED_INTEGER_ARRAY_TYPE",
+			-- but once functions cannot be declared with anchored types.
 		once
-			Result := INTEGER_ARRAY_.make_from_array (<<
+			Result := yyfixed_array (<<
 			   78,    2,    3,    5,    9,    6,   27,   47,    7,   15,
-			   28,   29,   30,   31,   32,   33,   42,   40>>, 0)
+			   28,   29,   30,   31,   32,   33,   42,   40>>)
 		end
 
-	yypact_: ARRAY [INTEGER] is
+	yypact_template: ANY is
+			-- This is supposed to be "like FIXED_INTEGER_ARRAY_TYPE",
+			-- but once functions cannot be declared with anchored types.
 		once
-			Result := INTEGER_ARRAY_.make_from_array (<<
+			Result := yyfixed_array (<<
 			   65, -32768, -32768,    6, -32768,   64,   56,   37,   57, -32768,
 			 -32768,    0,   52, -32768, -32768,   31, -32768,   29,   11,    9,
 			 -32768, -32768,    9, -32768, -32768, -32768, -32768,   51, -32768,    9,
@@ -381,19 +393,23 @@ feature {NONE} -- Tables
 			 -32768,    9, -32768,   27, -32768, -32768, -32768,   36, -32768,    1,
 			   49, -32768,   17, -32768, -32768, -32768, -32768,    9,   10, -32768,
 			 -32768,   18,   40, -32768, -32768, -32768,  -11, -32768,   16,   15,
-			 -32768>>, 0)
+			 -32768>>)
 		end
 
-	yypgoto_: ARRAY [INTEGER] is
+	yypgoto_template: ANY is
+			-- This is supposed to be "like FIXED_INTEGER_ARRAY_TYPE",
+			-- but once functions cannot be declared with anchored types.
 		once
-			Result := INTEGER_ARRAY_.make_from_array (<<
+			Result := yyfixed_array (<<
 			 -32768, -32768,   66,   68, -32768, -32768, -32768, -32768, -32768, -32768,
-			   53,   44,  -10,   20,  -31, -32768, -32768,   34>>, 0)
+			   53,   44,  -10,   20,  -31, -32768, -32768,   34>>)
 		end
 
-	yytable_: ARRAY [INTEGER] is
+	yytable_template: ANY is
+			-- This is supposed to be "like FIXED_INTEGER_ARRAY_TYPE",
+			-- but once functions cannot be declared with anchored types.
 		once
-			Result := INTEGER_ARRAY_.make_from_array (<<
+			Result := yyfixed_array (<<
 			   53,   26,   77,   25,   62,   62,  -10,   24,   23,   41,
 			   65,  -10,   25,   51,   39,   80,   79,   23,   22,   49,
 			   63,   74,    4,   73,   21,   20,   19,   72,   18,   38,
@@ -401,12 +417,14 @@ feature {NONE} -- Tables
 			   68,   56,   37,   13,   76,    4,   36,   71,   35,   55,
 			   54,   12,   70,   75,   66,   51,   50,   52,   51,   50,
 			   46,   45,   44,   60,   39,   58,   16,   34,   10,    8,
-			    1,   67,   59,   48,   11,   43,   17>>, 0)
+			    1,   67,   59,   48,   11,   43,   17>>)
 		end
 
-	yycheck_: ARRAY [INTEGER] is
+	yycheck_template: ANY is
+			-- This is supposed to be "like FIXED_INTEGER_ARRAY_TYPE",
+			-- but once functions cannot be declared with anchored types.
 		once
-			Result := INTEGER_ARRAY_.make_from_array (<<
+			Result := yyfixed_array (<<
 			   31,    1,   13,    3,    3,    3,    0,    7,    8,   19,
 			    3,    5,    3,   20,    3,    0,    0,    8,   18,   29,
 			   27,    3,   16,   13,   24,   25,   26,   17,   28,   18,
@@ -414,7 +432,7 @@ feature {NONE} -- Tables
 			    4,   14,   13,    6,    4,   16,   15,   30,   17,   22,
 			   23,   14,    3,   13,   19,   20,   21,   19,   20,   21,
 			    9,   10,   11,   30,    3,    6,    9,   15,   12,    5,
-			    5,   51,   38,   29,    6,   22,   10>>, 0)
+			    5,   51,   38,   29,    6,   22,   10>>)
 		end
 
 feature {NONE} -- Constants
