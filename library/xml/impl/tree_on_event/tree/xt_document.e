@@ -1,27 +1,29 @@
 indexing
-   description:	"A tree based XML Parser using any XM_EVENT_PARSER implementation as back end."
-   status:	"See notice at end of class."
-   author:	"Andreas Leitner"
-   note:	"Although it is not DOM (Level 1) conforming, it has %
-   %been writen with DOM in mind. I prefer to have this %
-   %parser follow the Eiffel design guide lines";
-class
-   XT_DOCUMENT
+
+    description:
+
+        "A tree based XML Parser using any XM_EVENT_PARSER implementation as back end."
+
+    status:  "See notice at end of class."
+    author:  "Andreas Leitner"
+    note:    "Although it is not DOM (Level 1) conforming, it has %
+             %been writen with DOM in mind. I prefer to have this %
+             %parser follow the Eiffel design guide lines"
+
+class XT_DOCUMENT
 
 inherit
-   XI_DOCUMENT
-      undefine
-	 has,
-	 is_equal,
-	 copy,
-	 occurrences,
-		cursor_off
-      end
 
-   XT_COMPOSITE
+    XI_DOCUMENT
+        undefine
+            has, is_equal, copy, occurrences, cursor_off
+        end
+
+    XT_COMPOSITE
 
 creation
-   make
+
+    make
 
 end -- class XT_DOCUMENT
 --|-------------------------------------------------------------------------
@@ -38,3 +40,4 @@ end -- class XT_DOCUMENT
 --| email: andreas.leitner@chello.at
 --| www: http://exml.dhs.org
 --|-------------------------------------------------------------------------
+

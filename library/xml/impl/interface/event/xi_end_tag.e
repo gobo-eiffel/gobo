@@ -1,12 +1,17 @@
 indexing
-   description:"Objects representing a XML-end-tag"
-   status:		"See notice at end of class."
-   author:		"Andreas Leitner"
-deferred class
-   XI_END_TAG
+
+    description:
+
+        "Objects representing a XML-end-tag"
+
+    status:  "See notice at end of class."
+    author:  "Andreas Leitner"
+
+deferred class XI_END_TAG
 
 inherit
-   XI_TAG
+
+    XI_TAG
 
 feature
 
@@ -25,10 +30,4 @@ end -- class XI_END_TAG
 --| email: andreas.leitner@chello.at
 --| www: http://exml.dhs.org
 --|-------------------------------------------------------------------------
-
-
-
-
-
-
 

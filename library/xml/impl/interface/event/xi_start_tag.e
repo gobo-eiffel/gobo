@@ -1,23 +1,29 @@
 indexing
-   description:"Objects representig a XML-start tag"
-   status:		"See notice at end of class."
-   author:		"Andreas Leitner"
 
-deferred class
-   XI_START_TAG
+    description:
+
+        "Objects representig a XML-start tag"
+
+    status:  "See notice at end of class."
+    author:  "Andreas Leitner"
+
+deferred class XI_START_TAG
 
 inherit
-   XI_TAG
+
+    XI_TAG
 
 feature
 
-   attributes: XM_ATTRIBUTE_TABLE is
-	 -- table of all attributes
-      deferred
-      end
+    attributes: XM_ATTRIBUTE_TABLE is
+            -- table of all attributes
+        deferred
+        end
 
 invariant
-   attributes_not_void: attributes /= Void
+
+    attributes_not_void: attributes /= Void
+
 end -- class XI_START_TAG
 
 --|-------------------------------------------------------------------------
@@ -34,3 +40,4 @@ end -- class XI_START_TAG
 --| email: andreas.leitner@chello.at
 --| www: http://exml.dhs.org
 --|-------------------------------------------------------------------------
+

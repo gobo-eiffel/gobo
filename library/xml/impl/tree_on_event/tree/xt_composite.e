@@ -1,41 +1,40 @@
 indexing
-   description: "xml nodes that may hold other child nodes";
-   status:	"see notice at end of class.";
-   author:	"Andreas Leitner";
 
-class
-   XT_COMPOSITE
+    description:
+
+        "xml nodes that may hold other child nodes"
+
+    status:  "see notice at end of class."
+    author:  "Andreas Leitner"
+
+class XT_COMPOSITE
 
 inherit
-   XI_COMPOSITE
-      undefine
-	 occurrences,
-	 has,
-	 is_equal,
-	 copy,
-		cursor_off
-      end
 
-   DS_LINKED_LIST [XM_NODE]
+    XI_COMPOSITE
+        undefine
+            occurrences, has, is_equal, copy, cursor_off
+        end
 
-   XT_NODE
-      undefine
-	 copy,
-	 is_equal
-      end
+    DS_LINKED_LIST [XM_NODE]
+
+    XT_NODE
+        undefine
+            copy, is_equal
+        end
 
 feature {ANY} -- Access
 
 --   parent: XM_COMPOSITE
-	 -- parent of this node. Only void
-	 -- if this node is the root node
+        -- parent of this node. Only void
+        -- if this node is the root node
 
 feature {ANY} -- Element change
 
 --   set_parent (a_parent: XM_COMPOSITE) is
-	 -- make `a_parent' the new parent of this node.
+        -- make `a_parent' the new parent of this node.
 --      do
---	 parent := a_parent
+--   parent := a_parent
 --      end
 
 end -- class XT_COMPOSITE
@@ -54,3 +53,4 @@ end -- class XT_COMPOSITE
 --| email: andreas.leitner@chello.at
 --| www: http://exml.dhs.org
 --|-------------------------------------------------------------------------
+

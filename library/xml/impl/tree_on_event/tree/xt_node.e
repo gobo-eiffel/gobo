@@ -1,26 +1,31 @@
 indexing
-   description: "common anchestor for xml-nodes";
-   status:			"See notice at end of class.";
-   author:			"Andreas Leitner";
 
-class
-   XT_NODE
+    description:
+
+        "common anchestor for xml-nodes"
+
+    status:  "See notice at end of class."
+    author:  "Andreas Leitner"
+
+class XT_NODE
+
 inherit
-   XI_NODE
+
+    XI_NODE
 
 feature {ANY} -- Access
 
-   parent: XM_COMPOSITE
-	 -- parent of this node. Only void
-	 -- if this node is the root node
+    parent: XM_COMPOSITE
+            -- parent of this node. Only void
+            -- if this node is the root node
 
 feature {ANY} -- Element change
 
-   set_parent (a_parent: XM_COMPOSITE) is
-	 -- make `a_parent' the new parent of this node.
-      do
-	 parent := a_parent
-      end
+    set_parent (a_parent: XM_COMPOSITE) is
+            -- make `a_parent' the new parent of this node.
+        do
+            parent := a_parent
+        end
 
 end -- XT_NODE
 

@@ -1,23 +1,29 @@
 indexing
-   description: "class representing xml comment"
-   status:	"See notice at end of class.";
-   author:	"Andreas Leitner";
 
-deferred class
-   XI_COMMENT
+    description:
+
+        "class representing xml comment"
+
+    status:  "See notice at end of class."
+    author:  "Andreas Leitner"
+
+deferred class XI_COMMENT
+
 inherit
-   XI_NODE
+
+    XI_NODE
 
 feature {ANY} -- Access
 
-   data: UC_STRING is
-	 -- the actual character data of this comment.
-      deferred
-      end
-
+    data: UC_STRING is
+            -- the actual character data of this comment.
+        deferred
+        end
 
 invariant
-   data_not_void: data /= Void
+
+    data_not_void: data /= Void
+
 end -- XI_COMMENT
 
 --|-------------------------------------------------------------------------

@@ -1,50 +1,53 @@
 indexing
-   description: "common anchestor for xml-nodes";
-   status:			"See notice at end of class.";
-   author:			"Andreas Leitner";
 
-class
-   XM_NODE_PROCESSOR
+    description:
+
+        "common anchestor for xml-nodes"
+
+    status:  "See notice at end of class."
+    author:  "Andreas Leitner"
+
+class XM_NODE_PROCESSOR
 
 feature {ANY} -- Access
 
-   process_element (e: XM_ELEMENT) is
-      do
-      end
+    process_element (e: XM_ELEMENT) is
+        do
+        end
 
-   process_character_data (c: XM_CHARACTER_DATA) is
-      require
-	 c_not_void: c /= Void
-      do
-      end
+    process_character_data (c: XM_CHARACTER_DATA) is
+        require
+            c_not_void: c /= Void
+        do
+        end
 
-   process_processing_instruction (pi: XM_PROCESSING_INSTRUCTION) is
-      require
-	 pi_not_void: pi /= Void
-      do
-      end
+    process_processing_instruction (pi: XM_PROCESSING_INSTRUCTION) is
+        require
+            pi_not_void: pi /= Void
+        do
+        end
 
-   process_document (doc: XM_DOCUMENT) is
-      do
-      end
+    process_document (doc: XM_DOCUMENT) is
+        do
+        end
 
-   process_comment (com: XM_COMMENT) is
-      require
-	 com_not_void: com /= Void
-      do
-      end
+    process_comment (com: XM_COMMENT) is
+        require
+            com_not_void: com /= Void
+        do
+        end
 
-   process_attributes (e: XM_ELEMENT) is
-      require
-	 e_not_void: e /= Void
-      do
-      end
+    process_attributes (e: XM_ELEMENT) is
+        require
+            e_not_void: e /= Void
+        do
+        end
 
-   process_attribute (att: XM_ATTRIBUTE) is
-      require
-	 att_not_void: att /= Void
-      do
-      end
+    process_attribute (att: XM_ATTRIBUTE) is
+        require
+            att_not_void: att /= Void
+        do
+        end
 
 end -- class XM_NODE_PROCESSOR
 
@@ -62,3 +65,4 @@ end -- class XM_NODE_PROCESSOR
 --| email: andreas.leitner@chello.at
 --| www: http://exml.dhs.org
 --|-------------------------------------------------------------------------
+

@@ -1,34 +1,44 @@
 indexing
-   description:"Objects representing a XML-attribute"
-   status:		"See notice at end of class."
-   author:		"Andreas Leitner"
 
-class
-   XT_ATTRIBUTE
+    description:
+
+        "Objects representing a XML-attribute"
+
+    status:  "See notice at end of class."
+    author:  "Andreas Leitner"
+
+class XT_ATTRIBUTE
 
 inherit
-   XI_ATTRIBUTE
-   XT_NAMED_NODE
+
+    XI_ATTRIBUTE
+
+    XT_NAMED_NODE
+
 creation
-   make
+
+    make
+
 feature {NONE} -- Initialisation
-   make (a_name, a_prefix, a_value: UC_STRING; a_parent: XM_ELEMENT) is
-      do
-	 name := a_name
-	 ns_prefix := a_prefix
-	 value := a_value
-	 parent := a_parent
-      end
+
+    make (a_name, a_prefix, a_value: UC_STRING; a_parent: XM_ELEMENT) is
+        do
+            name := a_name
+            ns_prefix := a_prefix
+            value := a_value
+            parent := a_parent
+        end
+
 feature {ANY} -- Access
 
-   value: UC_STRING
+    value: UC_STRING
 
-feature {ANY} -- Basic Routines
+feature {ANY} -- Basic routines
 
-	set_value (v: UC_STRING) is
-		do
-			value := v
-		end
+    set_value (v: UC_STRING) is
+        do
+            value := v
+        end
 
 end -- class XT_ATTRIBUTE
 
@@ -46,3 +56,4 @@ end -- class XT_ATTRIBUTE
 --| email: andreas.leitner@chello.at
 --| www: http://exml.dhs.org
 --|-------------------------------------------------------------------------
+
