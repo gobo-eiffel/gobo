@@ -1340,13 +1340,6 @@ feature -- Compilation
 				print_time (dt1, "Degree 5")
 				dt1 := l_clock.system_clock.date_time_now
 			end
-			if cat_enabled then
-				compile_cat_calls
-				debug ("ericb")
-					print_time (dt1, "Degree CAT")
-					dt1 := l_clock.system_clock.date_time_now
-				end
-			end
 			compile_degree_4
 			debug ("ericb")
 				print_time (dt1, "Degree 4")
@@ -1381,13 +1374,6 @@ feature -- Compilation
 			debug ("ericb")
 				print_time (dt1, "Degree 5")
 				dt1 := l_clock.system_clock.date_time_now
-			end
-			if cat_enabled then
-				compile_cat_calls
-				debug ("ericb")
-					print_time (dt1, "Degree CAT")
-					dt1 := l_clock.system_clock.date_time_now
-				end
 			end
 			compile_degree_4
 			debug ("ericb")
@@ -1615,196 +1601,6 @@ feature -- Client/Supplier relationship
 			supplier_handler_set: supplier_handler = a_handler
 		end
 
-feature -- CAT-calls
-
-	cat_enabled: BOOLEAN
-			-- Is CAT-call processing enabled?
-
-	set_cat_enabled (b: BOOLEAN) is
-			-- Set `cat_enabled' to `b'.
-		do
-			cat_enabled := b
-		ensure
-			cat_enabled_set: cat_enabled = b
-		end
-
-	all_cat_features: BOOLEAN
-			-- Are all features considered as 'cat'?
-
-	anchored_cat_features: BOOLEAN
-			-- Are features with argument types containing anchored types
-			-- considered as 'cat'?
-
-	set_anchored_cat_features (b: BOOLEAN) is
-			-- Set `anchored_cat_features' to `b'.
-		do
-			anchored_cat_features := b
-		ensure
-			anchored_cat_features_set: anchored_cat_features = b
-		end
-
-	searching_cat_features: BOOLEAN
-			-- Are we currently searching for 'cat' features?
-
-	cat_feature_count: INTEGER
-			-- Number of 'cat' features found
-
-	set_cat_feature_count (i: INTEGER) is
-			-- Set `cat_feature_count' to `i'.
-		do
-			cat_feature_count := i
-		ensure
-			cat_feature_count_set: cat_feature_count = i
-		end
-
-	searching_dog_types: BOOLEAN
-			-- Are we currently searching for 'dog' types?
-
-	dog_type_count: INTEGER
-			-- Number of 'dog' types found
-
-	set_dog_type_count (i: INTEGER) is
-			-- Set `dog_type_count' to `i'.
-		do
-			dog_type_count := i
-		ensure
-			dog_type_count_set: dog_type_count = i
-		end
-
-	compile_cat_calls is
-			-- Process CAT-calls.
-		require
-			cat_enabled: cat_enabled
-		local
-			a_cursor: DS_HASH_TABLE_CURSOR [ET_CLASS, ET_CLASS_NAME]
-			a_class: ET_CLASS
-			old_feature_count: INTEGER
-			nb_cat: INTEGER
-			i, nb: INTEGER
-			j, nb2: INTEGER
-			k, nb3: INTEGER
-			an_ancestors: ET_BASE_TYPE_LIST
-			an_ancestor: ET_CLASS
-			a_features: ET_FEATURE_LIST
-			a_feature: ET_FEATURE
-			a_cat_feature: ET_FEATURE
-			a_seeds: ET_FEATURE_IDS
-		do
-			old_feature_count := feature_count
-				-- Find 'dog' types.
-			a_cursor := classes.new_cursor
-			all_cat_features := True
-			searching_dog_types := True
-			from dog_type_count := 1 until dog_type_count = 0 loop
-				dog_type_count := 0
-				compile_degree_4
-				compile_degree_3 (False)
-					-- Rewind processing to just after parsing.
-				from a_cursor.start until a_cursor.after loop
-					a_class := a_cursor.item
-					a_class.reset_implementation_checked
-					a_class.reset_interface_checked
-					a_class.reset_qualified_signatures_resolved
-					a_class.reset_features_flattened
-					a_class.reset_ancestors_built
-					a_cursor.forth
-				end
-				feature_count := old_feature_count
-				debug ("ericb")
-					std.error.put_string ("DOG type count = ")
-					std.error.put_integer (dog_type_count)
-					std.error.put_new_line
-					debug ("stop")
-						io.read_line
-					end
-				end
-			end
-			all_cat_features := False
-			searching_dog_types := False
-			searching_cat_features := True
-			from cat_feature_count := 1 until cat_feature_count = 0 loop
-				cat_feature_count := 0
-					-- Build ancestors.
-				from a_cursor.start until a_cursor.after loop
-					a_class := a_cursor.item
-					if a_class.is_parsed then
-						a_class.process (ancestor_builder)
-					end
-					a_cursor.forth
-				end
-					-- Find 'cat' features.
-				from a_cursor.start until a_cursor.after loop
-					a_class := a_cursor.item
-					if a_class.ancestors_built then
-						a_class.process (feature_flattener)
-					end
-					a_cursor.forth
-				end
-				from nb_cat := 1 until nb_cat = 0 loop
-					nb_cat := 0
-					from a_cursor.start until a_cursor.after loop
-						a_class := a_cursor.item
-						if a_class.ancestors_built then
-							an_ancestors := a_class.ancestors
-							a_features := a_class.features
-							nb := a_features.count
-							nb2 := an_ancestors.count
-							from i := 1 until i > nb loop
-								a_feature := a_features.item (i)
-								if a_feature.is_cat then
-									from j := 1 until j > nb2 loop
-										an_ancestor := an_ancestors.item (j).direct_base_class (Current)
-										a_cat_feature := an_ancestor.seeded_feature (a_feature.first_seed)
-										if a_cat_feature /= Void and then not a_cat_feature.is_cat then
-											a_cat_feature.set_cat_keyword (tokens.cat_keyword)
-											cat_feature_count := cat_feature_count + 1
-											nb_cat := nb_cat + 1
-										end
-										a_seeds := a_feature.other_seeds
-										if a_seeds /= Void then
-											nb3 := a_seeds.count
-											from k := 1 until k > nb3 loop
-												a_cat_feature := an_ancestor.seeded_feature (a_seeds.item (k))
-												if a_cat_feature /= Void and then not a_cat_feature.is_cat then
-													a_cat_feature.set_cat_keyword (tokens.cat_keyword)
-													cat_feature_count := cat_feature_count + 1
-													nb_cat := nb_cat + 1
-												end
-												k := k + 1
-											end
-										end
-										j := j + 1
-									end
-								end
-								i := i + 1
-							end
-						end
-						a_cursor.forth
-					end
-				end
-					-- Rewind processing to just after parsing.
-				from a_cursor.start until a_cursor.after loop
-					a_class := a_cursor.item
-					a_class.reset_implementation_checked
-					a_class.reset_interface_checked
-					a_class.reset_qualified_signatures_resolved
-					a_class.reset_features_flattened
-					a_class.reset_ancestors_built
-					a_cursor.forth
-				end
-				feature_count := old_feature_count
-				debug ("ericb")
-					std.error.put_string ("CAT feature count = ")
-					std.error.put_integer (cat_feature_count)
-					std.error.put_new_line
-					debug ("stop")
-						io.read_line
-					end
-				end
-			end
-			searching_cat_features := False
-		end
-
 feature -- Processors
 
 	eiffel_preparser: ET_EIFFEL_PREPARSER is
@@ -1872,21 +1668,6 @@ feature -- Processors
 			l_feature_flattener: ET_FEATURE_FLATTENER
 			l_interface_checker: ET_INTERFACE_CHECKER
 		do
-			if cat_enabled then
-				all_cat_features := False
-				any_type.set_cat_keyword (Void)
-				none_type.set_cat_keyword (tokens.cat_keyword)
-				string_type.set_cat_keyword (tokens.cat_keyword)
-				array_any_type.set_cat_keyword (tokens.cat_keyword)
-				array_none_type.set_cat_keyword (tokens.cat_keyword)
-			else
-				all_cat_features := True
-				any_type.set_cat_keyword (Void)
-				none_type.set_cat_keyword (Void)
-				string_type.set_cat_keyword (Void)
-				array_any_type.set_cat_keyword (Void)
-				array_none_type.set_cat_keyword (Void)
-			end
 			if ancestor_builder = null_processor then
 				create {ET_ANCESTOR_BUILDER} ancestor_builder.make (Current)
 			end

@@ -37,20 +37,6 @@ feature -- Status report
 			Result := True
 		end
 
-	is_cat_type (a_context: ET_TYPE_CONTEXT; a_universe: ET_UNIVERSE): BOOLEAN is
-			-- Is current type monomorphic when viewed from
-			-- `a_context' in `a_universe'?
-		do
-			Result := True
-		end
-
-	is_cat_parameter (a_context: ET_TYPE_CONTEXT; a_universe: ET_UNIVERSE): BOOLEAN is
-			-- Is current actual parameter a non-conforming parameter
-			-- when viewed from `a_context' in `a_universe'?
-		do
-			Result := False
-		end
-
 	base_type_has_class (a_class: ET_CLASS; a_context: ET_TYPE_CONTEXT; a_universe: ET_UNIVERSE): BOOLEAN is
 			-- Does the base type of current type contain `a_class'
 			-- when it appears in `a_context' in `a_universe'?

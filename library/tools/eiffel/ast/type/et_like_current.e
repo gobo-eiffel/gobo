@@ -175,38 +175,6 @@ feature -- Status report
 			Result := a_context.base_class (a_universe).is_expanded
 		end
 
-	is_cat_type (a_context: ET_TYPE_CONTEXT; a_universe: ET_UNIVERSE): BOOLEAN is
-			-- Is current type monomorphic when viewed from
-			-- `a_context' in `a_universe'?
-		do
-				-- Unless we can declare the base class as frozen,
-				-- 'like Current' is not monomorphic.
-			Result := a_context.is_cat_type (a_universe)
-		end
-
-	is_actual_cat_type (i: INTEGER; a_context: ET_TYPE_CONTEXT; a_universe: ET_UNIVERSE): BOOLEAN is
-			-- Is actual generic parameter at index `i' in the base type of current
-			-- type a monomorphic type when viewed from `a_context' in `a_universe'?
-		do
-			Result := a_context.is_actual_cat_type (i, a_universe)
-		end
-
-	is_cat_parameter (a_context: ET_TYPE_CONTEXT; a_universe: ET_UNIVERSE): BOOLEAN is
-			-- Is current actual parameter a non-conforming parameter
-			-- when viewed from `a_context' in `a_universe'?
-		do
-				-- Unless we can declare the base class as frozen,
-				-- 'like Current' is not monomorphic.
-			Result := a_context.is_cat_parameter (a_universe)
-		end
-
-	is_actual_cat_parameter (i: INTEGER; a_context: ET_TYPE_CONTEXT; a_universe: ET_UNIVERSE): BOOLEAN is
-			-- Is actual generic parameter at index `i' in the base type of current
-			-- type a non-conforming parameter when viewed from `a_context' in `a_universe'?
-		do
-			Result := a_context.is_actual_cat_parameter (i, a_universe)
-		end
-
 	has_formal_type (i: INTEGER; a_context: ET_TYPE_CONTEXT; a_universe: ET_UNIVERSE): BOOLEAN is
 			-- Does the named type of current type contain the formal generic parameter
 			-- with index `i' when viewed from `a_context' in `a_universe'?

@@ -578,14 +578,6 @@ feature -- Keywords
 			keyword_not_void: Result /= Void
 		end
 
-	cat_keyword: ET_KEYWORD is
-			-- 'cat' keyword
-		once
-			create Result.make_cat
-		ensure
-			keyword_not_void: Result /= Void
-		end
-
 	check_keyword: ET_KEYWORD is
 			-- 'check' keyword
 		once
@@ -1052,7 +1044,6 @@ feature -- Keyword and symbol names
 	as_keyword_name: STRING is "as"
 	assign_keyword_name: STRING is "assign"
 	attribute_keyword_name: STRING is "attribute"
-	cat_keyword_name: STRING is "cat"
 	check_keyword_name: STRING is "check"
 	class_keyword_name: STRING is "class"
 	convert_keyword_name: STRING is "convert"

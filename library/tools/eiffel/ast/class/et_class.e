@@ -465,7 +465,6 @@ feature -- Parsing status
 			end_keyword := tokens.end_keyword
 			external_keyword := Void
 			frozen_keyword := Void
-			cat_keyword := Void
 			class_mark := Void
 			creators := Void
 			convert_features := Void

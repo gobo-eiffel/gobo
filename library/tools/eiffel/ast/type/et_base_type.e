@@ -41,10 +41,6 @@ inherit
 			named_type as context_named_type,
 			is_type_expanded as context_is_type_expanded,
 			is_type_reference as context_is_type_reference,
-			is_cat_type as context_is_cat_type,
-			is_actual_cat_type as context_is_actual_cat_type,
-			is_cat_parameter as context_is_cat_parameter,
-			is_actual_cat_parameter as context_is_actual_cat_parameter,
 			same_named_type as context_same_named_type,
 			same_base_type as context_same_base_type,
 			same_named_bit_type as context_same_named_bit_type,
@@ -217,20 +213,6 @@ feature -- Status report
 	is_expanded: BOOLEAN is
 			-- Is current type expanded?
 		deferred
-		end
-
-	is_actual_cat_type (i: INTEGER; a_context: ET_TYPE_CONTEXT; a_universe: ET_UNIVERSE): BOOLEAN is
-			-- Is actual generic parameter at index `i' in the base type of current
-			-- type a monomorphic type when viewed from `a_context' in `a_universe'?
-		do
-			Result := actual_parameters.type (i).is_cat_type (a_context, a_universe)
-		end
-
-	is_actual_cat_parameter (i: INTEGER; a_context: ET_TYPE_CONTEXT; a_universe: ET_UNIVERSE): BOOLEAN is
-			-- Is actual generic parameter at index `i' in the base type of current
-			-- type a non-conforming parameter when viewed from `a_context' in `a_universe'?
-		do
-			Result := actual_parameters.actual_parameter (i).is_cat_parameter (a_context, a_universe)
 		end
 
 	has_anchored_type (a_context: ET_TYPE_CONTEXT; a_universe: ET_UNIVERSE): BOOLEAN is
@@ -510,33 +492,6 @@ feature -- Type context
 			-- Is `base_type' reference in `a_universe'?
 		do
 			Result := is_type_reference (Current, a_universe)
-		end
-
-	context_is_cat_type (a_universe: ET_UNIVERSE): BOOLEAN is
-			-- Is `base_type' a monomorphic type in `a_universe'?
-		do
-			Result := is_cat_type (Current, a_universe)
-		end
-
-	context_is_actual_cat_type (i: INTEGER; a_universe: ET_UNIVERSE): BOOLEAN is
-			-- Is actual generic parameter at index `i' in `base_type'
-			-- a monomorphic type in `a_universe'?
-		do
-			Result := is_actual_cat_type (i, Current, a_universe)
-		end
-
-	context_is_cat_parameter (a_universe: ET_UNIVERSE): BOOLEAN is
-			-- Is `base_type' a non-conforming actual
-			-- generic parameter in `a_universe'?
-		do
-			Result := is_cat_parameter (Current, a_universe)
-		end
-
-	context_is_actual_cat_parameter (i: INTEGER; a_universe: ET_UNIVERSE): BOOLEAN is
-			-- Is actual generic parameter at index `i' in `base_type'
-			-- a non-conforming parameter in `a_universe'?
-		do
-			Result := is_actual_cat_parameter (i, Current, a_universe)
 		end
 
 	context_has_formal_type (i: INTEGER; a_universe: ET_UNIVERSE): BOOLEAN is

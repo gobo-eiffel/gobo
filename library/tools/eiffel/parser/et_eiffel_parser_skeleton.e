@@ -704,16 +704,8 @@ feature {ET_CONSTRAINT_ACTUAL_PARAMETER_ITEM, ET_CONSTRAINT_ACTUAL_PARAMETER_LIS
 		require
 			a_constraint_not_void: a_constraint /= Void
 			a_formals_not_void: a_formals /= Void
-		local
-			a_type: ET_TYPE
-			a_qualified_parameter: ET_QUALIFIED_ACTUAL_PARAMETER
 		do
-			a_type := a_constraint.type.resolved_syntactical_constraint (a_formals, Current)
-			if a_type /= Void then
-				create a_qualified_parameter.make (a_type)
-				a_qualified_parameter.set_cat_keyword (a_constraint.cat_keyword)
-				Result := a_qualified_parameter
-			end
+			Result := a_constraint.type.resolved_syntactical_constraint (a_formals, Current)
 		end
 
 	resolved_constraint_named_type (a_constraint: ET_CONSTRAINT_NAMED_TYPE;
@@ -731,7 +723,6 @@ feature {ET_CONSTRAINT_ACTUAL_PARAMETER_ITEM, ET_CONSTRAINT_ACTUAL_PARAMETER_LIS
 			a_formal: ET_FORMAL_PARAMETER
 			a_type_mark: ET_KEYWORD
 			a_base_class: ET_CLASS
-			a_class_type: ET_CLASS_TYPE
 		do
 			a_name := a_constraint.name
 			a_type_mark := a_constraint.type_mark
@@ -754,11 +745,7 @@ feature {ET_CONSTRAINT_ACTUAL_PARAMETER_ITEM, ET_CONSTRAINT_ACTUAL_PARAMETER_LIS
 					Result := ast_factory.new_tuple_type (a_name, Void)
 				else
 					a_base_class.set_in_system (True)
-					a_class_type := ast_factory.new_class_type (a_type_mark, a_name, a_base_class)
-					if universe.cat_enabled and a_class_type /= Void and then not a_class_type.is_expanded then
-						a_class_type.set_cat_keyword (tokens.cat_keyword)
-					end
-					Result := a_class_type
+					Result := ast_factory.new_class_type (a_type_mark, a_name, a_base_class)
 				end
 			end
 		end
@@ -779,7 +766,6 @@ feature {ET_CONSTRAINT_ACTUAL_PARAMETER_ITEM, ET_CONSTRAINT_ACTUAL_PARAMETER_LIS
 			a_formal: ET_FORMAL_PARAMETER
 			a_base_class: ET_CLASS
 			a_parameters: ET_ACTUAL_PARAMETER_LIST
-			a_class_type: ET_CLASS_TYPE
 		do
 			a_name := a_constraint.name
 			a_type_mark := a_constraint.type_mark
@@ -806,11 +792,7 @@ feature {ET_CONSTRAINT_ACTUAL_PARAMETER_ITEM, ET_CONSTRAINT_ACTUAL_PARAMETER_LIS
 						Result := ast_factory.new_tuple_type (a_name, a_parameters)
 					else
 						a_base_class.set_in_system (True)
-						a_class_type := ast_factory.new_generic_class_type (a_type_mark, a_name, a_parameters, a_base_class)
-						if universe.cat_enabled and a_class_type /= Void and then not a_class_type.is_expanded then
-							a_class_type.set_cat_keyword (tokens.cat_keyword)
-						end
-						Result := a_class_type
+						Result := ast_factory.new_generic_class_type (a_type_mark, a_name, a_parameters, a_base_class)
 					end
 				end
 			end
@@ -847,18 +829,8 @@ feature {NONE} -- AST factory
 
 	new_actual_parameter (a_type: ET_TYPE): ET_ACTUAL_PARAMETER is
 			-- New actual parameter
-		local
-			a_qualified_parameter: ET_QUALIFIED_ACTUAL_PARAMETER
 		do
-			if universe.cat_enabled then
-				if a_type /= Void then
-					create a_qualified_parameter.make (a_type)
-					a_qualified_parameter.set_cat_keyword (tokens.cat_keyword)
-					Result := a_qualified_parameter
-				end
-			else
-				Result := ast_factory.new_actual_parameter (a_type)
-			end
+			Result := ast_factory.new_actual_parameter (a_type)
 		end
 
 	new_agent_identifier_target (an_identifier: ET_IDENTIFIER): ET_IDENTIFIER is
@@ -931,18 +903,8 @@ feature {NONE} -- AST factory
 
 	new_constraint_actual_parameter (a_type: ET_CONSTRAINT_TYPE): ET_CONSTRAINT_ACTUAL_PARAMETER is
 			-- New actual parameter appearing in a generic constraint
-		local
-			a_qualified_parameter: ET_CONSTRAINT_QUALIFIED_ACTUAL_PARAMETER
 		do
-			if universe.cat_enabled then
-				if a_type /= Void then
-					create a_qualified_parameter.make (a_type)
-					a_qualified_parameter.set_cat_keyword (tokens.cat_keyword)
-					Result := a_qualified_parameter
-				end
-			else
-				Result := ast_factory.new_constraint_actual_parameter (a_type)
-			end
+			Result := ast_factory.new_constraint_actual_parameter (a_type)
 		end
 
 	new_constrained_formal_parameter (a_type_mark: ET_KEYWORD; a_name: ET_IDENTIFIER; an_arrow: ET_SYMBOL;
@@ -950,11 +912,6 @@ feature {NONE} -- AST factory
 			-- New constrained formal generic parameter
 		do
 			Result := ast_factory.new_constrained_formal_parameter (a_type_mark, a_name, an_arrow, a_constraint, a_creation)
-			if Result /= Void then
-				if universe.cat_enabled then
-					Result.set_cat_keyword (tokens.cat_keyword)
-				end
-			end
 		end
 
 	new_constraint_named_type (a_type_mark: ET_KEYWORD; a_name: ET_IDENTIFIER;
@@ -982,11 +939,6 @@ feature {NONE} -- AST factory
 			-- New formal generic parameter
 		do
 			Result := ast_factory.new_formal_parameter (a_type_mark, a_name)
-			if Result /= Void then
-				if universe.cat_enabled then
-					Result.set_cat_keyword (tokens.cat_keyword)
-				end
-			end
 		end
 
 	new_invalid_infix_name (an_infix: ET_KEYWORD; an_operator: ET_MANIFEST_STRING): ET_INFIX_FREE_NAME is
@@ -1075,31 +1027,26 @@ feature {NONE} -- AST factory
 			a_parameter: ET_FORMAL_PARAMETER
 			a_last_class: ET_CLASS
 			a_class: ET_CLASS
-			a_class_type: ET_CLASS_TYPE
 		do
 			a_last_class := last_class
 			if a_last_class /= Void and a_name /= Void then
 				a_parameter := a_last_class.formal_parameter (a_name)
 				if a_parameter /= Void then
 					if a_generics /= Void then
-						-- Error
+						-- TODO: Error
 					end
 					if a_type_mark /= Void then
-						-- ERROR
+						-- TODO: ERROR
 					end
 					Result := ast_factory.new_formal_parameter_type (a_name, a_parameter.index)
 				else
 					a_class := universe.eiffel_class (a_name)
 					a_class.set_in_system (True)
 					if a_generics /= Void then
-						a_class_type := ast_factory.new_generic_class_type (a_type_mark, a_name, a_generics, a_class)
+						Result := ast_factory.new_generic_class_type (a_type_mark, a_name, a_generics, a_class)
 					else
-						a_class_type := ast_factory.new_class_type (a_type_mark, a_name, a_class)
+						Result := ast_factory.new_class_type (a_type_mark, a_name, a_class)
 					end
-					if universe.cat_enabled and a_class_type /= Void and then not a_class_type.is_expanded then
-						a_class_type.set_cat_keyword (tokens.cat_keyword)
-					end
-					Result := a_class_type
 				end
 			end
 		end
@@ -1124,9 +1071,6 @@ feature {NONE} -- AST factory
 					a_type := ast_factory.new_generic_class_type (Void, a_name, a_generic_parameters, a_class)
 				else
 					a_type := ast_factory.new_class_type (Void, a_name, a_class)
-				end
-				if a_type /= Void then
-					a_type.set_cat_keyword (Void)
 				end
 				Result := ast_factory.new_parent (a_type, a_renames, an_exports,
 					an_undefines, a_redefines, a_selects, an_end)

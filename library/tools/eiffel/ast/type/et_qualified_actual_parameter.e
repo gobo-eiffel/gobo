@@ -16,8 +16,7 @@ inherit
 
 	ET_ACTUAL_PARAMETER
 		redefine
-			resolved_formal_parameters,
-			has_cat_parameter_mark
+			resolved_formal_parameters
 		end
 
 creation
@@ -38,24 +37,6 @@ feature {NONE} -- Initialization
 
 feature -- Status report
 
-	is_cat_parameter (a_context: ET_TYPE_CONTEXT; a_universe: ET_UNIVERSE): BOOLEAN is
-			-- Is current actual parameter a non-conforming parameter
-			-- when viewed from `a_context' in `a_universe'?
-		do
-			Result := cat_keyword /= Void
-			if not Result then
-				Result := type.is_cat_parameter (a_context, a_universe)
-			end
-		end
-
-	has_cat_parameter_mark: BOOLEAN is
-			-- Has the keyword 'cat' been specified for current actual parameter?
-		do
-			Result := (cat_keyword /= Void)
-		ensure then
-			definition: Result = (cat_keyword /= Void)
-		end
-
 	named_parameter_has_class (a_class: ET_CLASS; a_context: ET_TYPE_CONTEXT; a_universe: ET_UNIVERSE): BOOLEAN is
 			-- Does the named parameter of current type contain `a_class'
 			-- when it appears in `a_context' in `a_universe'?
@@ -67,9 +48,6 @@ feature -- Access
 
 	type: ET_TYPE
 			-- Type of actual parameter
-
-	cat_keyword: ET_KEYWORD
-			-- 'cat' keyword
 
 	named_parameter (a_context: ET_TYPE_CONTEXT; a_universe: ET_UNIVERSE): ET_ACTUAL_PARAMETER is
 			-- Same as current actual parameter but its type
@@ -83,7 +61,6 @@ feature -- Access
 				Result := Current
 			else
 				create a_qualified_parameter.make (a_named_type)
-				a_qualified_parameter.set_cat_keyword (cat_keyword)
 				a_qualified_parameter.set_unresolved_parameter (Current)
 				Result := a_qualified_parameter
 			end
@@ -93,21 +70,13 @@ feature -- Access
 			-- Position of first character of
 			-- current node in source code
 		do
-			if cat_keyword /= Void then
-				Result := cat_keyword.position
-			else
-				Result := type.position
-			end
+			Result := type.position
 		end
 
 	first_leaf: ET_AST_LEAF is
 			-- First leaf node in current node
 		do
-			if cat_keyword /= Void then
-				Result := cat_keyword
-			else
-				Result := type.first_leaf
-			end
+			Result := type.first_leaf
 		end
 
 	last_leaf: ET_AST_LEAF is
@@ -126,17 +95,6 @@ feature -- Access
 			-- Actual parameter from which current parameter is a resolved version
 
 feature -- Setting
-
-	set_cat_keyword (a_cat: like cat_keyword) is
-			-- Set `cat_keyword' to `a_cat'.
-		do
-			cat_keyword := a_cat
-			if unresolved_parameter /= Void then
-				unresolved_parameter.set_cat_keyword (a_cat)
-			end
-		ensure
-			cat_keyword_set: cat_keyword = a_cat
-		end
 
 	set_unresolved_parameter (a_parameter: like unresolved_parameter) is
 			-- Set `unresolved_parameter' to `a_parameter'.
@@ -161,7 +119,6 @@ feature -- Type processing
 				Result := Current
 			else
 				create a_qualified_parameter.make (a_resolved_type)
-				a_qualified_parameter.set_cat_keyword (cat_keyword)
 				a_qualified_parameter.set_unresolved_parameter (Current)
 				Result := a_qualified_parameter
 			end

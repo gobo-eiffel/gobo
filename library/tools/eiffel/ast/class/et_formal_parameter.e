@@ -49,9 +49,6 @@ feature -- Access
 	type_mark: ET_KEYWORD
 			-- 'expanded', 'reference' keyword
 
-	cat_keyword: ET_KEYWORD
-			-- 'cat' keyword
-
 	constraint: ET_TYPE is
 			-- Generic constraint
 		do
@@ -124,13 +121,6 @@ feature -- Status report
 			Result := type_mark /= Void and then type_mark.is_reference
 		end
 
-	is_cat: BOOLEAN is
-			-- Will actual parameters associatied with current formal
-			-- generic parameter be all monomorphic types?
-		do
-			Result := cat_keyword /= Void
-		end
-
 feature -- Setting
 
 	set_index (an_index: INTEGER) is
@@ -149,14 +139,6 @@ feature -- Setting
 			type_mark := a_keyword
 		ensure
 			type_mark_set: type_mark = a_keyword
-		end
-
-	set_cat_keyword (a_cat: like cat_keyword) is
-			-- Set `cat_keyword' to `a_cat'.
-		do
-			cat_keyword := a_cat
-		ensure
-			cat_keyword_set: cat_keyword = a_cat
 		end
 
 	set_constraint_base_type (a_type: like constraint_base_type) is

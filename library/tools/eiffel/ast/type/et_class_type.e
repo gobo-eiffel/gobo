@@ -51,9 +51,6 @@ feature -- Access
 	type_mark: ET_KEYWORD
 			-- 'expanded', 'reference' or 'separate' keyword
 
-	cat_keyword: ET_KEYWORD
-			-- 'cat' keyword
-
 	direct_base_class (a_universe: ET_UNIVERSE): ET_CLASS is
 			-- Class on which current type is directly based
 			-- (e.g. a Class_type, a Tuple_type or a Bit_type);
@@ -97,7 +94,6 @@ feature -- Access
 					a_named_parameters := an_actual_parameters.named_types (a_context, a_universe)
 					if a_named_parameters /= an_actual_parameters then
 						create a_generic_class_type.make (type_mark, name, a_named_parameters, eiffel_class)
-						a_generic_class_type.set_cat_keyword (cat_keyword)
 						a_generic_class_type.set_unresolved_type (Current)
 						Result := a_generic_class_type
 					end
@@ -152,19 +148,6 @@ feature -- Access
 			end
 		end
 
-feature -- Setting
-
-	set_cat_keyword (a_cat: like cat_keyword) is
-			-- Set `cat_keyword' to `a_cat'.
-		do
-			cat_keyword := a_cat
-			if unresolved_type /= Void then
-				unresolved_type.set_cat_keyword (a_cat)
-			end
-		ensure
-			cat_keyword_set: cat_keyword = a_cat
-		end
-
 feature -- Status report
 
 	is_separate: BOOLEAN is
@@ -192,26 +175,6 @@ feature -- Status report
 			-- `a_context' in `a_universe'?
 		do
 			Result := is_expanded
-		end
-
-	is_cat: BOOLEAN is
-			-- Is current type monomorphic?
-		do
-			Result := cat_keyword /= Void or is_expanded
-		end
-
-	is_cat_type (a_context: ET_TYPE_CONTEXT; a_universe: ET_UNIVERSE): BOOLEAN is
-			-- Is current type monomorphic when viewed from
-			-- `a_context' in `a_universe'?
-		do
-			Result := is_cat
-		end
-
-	is_cat_parameter (a_context: ET_TYPE_CONTEXT; a_universe: ET_UNIVERSE): BOOLEAN is
-			-- Is current actual parameter a non-conforming parameter
-			-- when viewed from `a_context' in `a_universe'?
-		do
-			Result := is_cat
 		end
 
 	base_type_has_class (a_class: ET_CLASS; a_context: ET_TYPE_CONTEXT; a_universe: ET_UNIVERSE): BOOLEAN is
@@ -303,44 +266,6 @@ feature {ET_TYPE, ET_TYPE_CONTEXT} -- Comparison
 			-- is not considered the same as any other type even
 			-- if they have the same base type.)
 		local
-			old_cat_keyword: like cat_keyword
-		do
-			Result := standard_same_syntactical_class_type (other, other_context, a_context, a_universe)
-			if not Result then
-				if a_universe.searching_dog_types then
-					if cat_keyword /= Void then
-						old_cat_keyword := cat_keyword
-						set_cat_keyword (Void)
-						a_universe.set_dog_type_count (a_universe.dog_type_count + 1)
-						Result := standard_same_syntactical_class_type (other, other_context, a_context, a_universe)
-						if not Result then
-							set_cat_keyword (old_cat_keyword)
-							a_universe.set_dog_type_count (a_universe.dog_type_count - 1)
-						end
-					elseif other.cat_keyword /= Void then
-						old_cat_keyword := other.cat_keyword
-						other.set_cat_keyword (Void)
-						a_universe.set_dog_type_count (a_universe.dog_type_count + 1)
-						Result := standard_same_syntactical_class_type (other, other_context, a_context, a_universe)
-						if not Result then
-							other.set_cat_keyword (old_cat_keyword)
-							a_universe.set_dog_type_count (a_universe.dog_type_count - 1)
-						end
-					end
-				end
-			end
-		end
-
-	standard_same_syntactical_class_type (other: ET_CLASS_TYPE; other_context: ET_TYPE_CONTEXT;
-		a_context: ET_TYPE_CONTEXT; a_universe: ET_UNIVERSE): BOOLEAN is
-			-- Are current type appearing in `a_context' and `other'
-			-- type appearing in `other_context' the same type?
-			-- (Note: We are NOT comparing the basic types here!
-			-- Therefore anchored types are considered the same
-			-- only if they have the same anchor. An anchor type
-			-- is not considered the same as any other type even
-			-- if they have the same base type.)
-		local
 			other_parameters: ET_ACTUAL_PARAMETER_LIST
 			other_base_class: ET_CLASS
 		do
@@ -353,7 +278,6 @@ feature {ET_TYPE, ET_TYPE_CONTEXT} -- Comparison
 			elseif
 				eiffel_class = other_base_class and
 				is_expanded = other.is_expanded and
-				is_cat = other.is_cat and
 				is_separate = other.is_separate
 			then
 				if not other.is_generic then
@@ -388,7 +312,6 @@ feature {ET_TYPE, ET_TYPE_CONTEXT} -- Comparison
 			elseif
 				eiffel_class = other_base_class and
 				is_expanded = other.is_expanded and
-				is_cat = other.is_cat and
 				is_separate = other.is_separate
 			then
 				if not other.is_generic then
@@ -423,7 +346,6 @@ feature {ET_TYPE, ET_TYPE_CONTEXT} -- Comparison
 			elseif
 				eiffel_class = other_base_class and
 				is_expanded = other.is_expanded and
-				is_cat = other.is_cat and
 				is_separate = other.is_separate
 			then
 				if not other.is_generic then
@@ -478,35 +400,6 @@ feature {ET_TYPE, ET_TYPE_CONTEXT} -- Conformance
 			-- whose qualified anchored types need to be resolved in order to
 			-- check conformance.)
 		local
-			old_cat_keyword: like cat_keyword
-		do
-			Result := standard_conforms_from_class_type (other, other_context, a_context, a_universe)
-			if not Result then
-				if a_universe.searching_dog_types then
-					if cat_keyword /= Void then
-						old_cat_keyword := cat_keyword
-						set_cat_keyword (Void)
-						a_universe.set_dog_type_count (a_universe.dog_type_count + 1)
-						Result := standard_conforms_from_class_type (other, other_context, a_context, a_universe)
-						if not Result then
-							set_cat_keyword (old_cat_keyword)
-							a_universe.set_dog_type_count (a_universe.dog_type_count - 1)
-						end
-					end
-				end
-			end
-		end
-
-	standard_conforms_from_class_type (other: ET_CLASS_TYPE; other_context: ET_TYPE_CONTEXT;
-		a_context: ET_TYPE_CONTEXT; a_universe: ET_UNIVERSE): BOOLEAN is
-			-- Does `other' type appearing in `other_context' conform
-			-- to current type appearing in `a_context'?
-			-- (Note: 'a_universe.ancestor_builder' is used on the classes
-			-- whose ancestors need to be built in order to check for conformance,
-			-- and 'a_universe.qualified_signature_resolver' is used on classes
-			-- whose qualified anchored types need to be resolved in order to
-			-- check conformance.)
-		local
 			other_base_class: ET_CLASS
 			an_ancestor: ET_BASE_TYPE
 			other_parameters: ET_ACTUAL_PARAMETER_LIST
@@ -518,9 +411,7 @@ feature {ET_TYPE, ET_TYPE_CONTEXT} -- Conformance
 			elseif other = Current and other_context = a_context then
 				Result := True
 			elseif eiffel_class = other_base_class then
-				if (is_cat and not is_expanded) and not other.is_cat then
-					Result := False
-				elseif not other.is_generic then
+				if not other.is_generic then
 					Result := not is_generic
 				elseif not is_generic then
 					Result := False
@@ -547,7 +438,7 @@ feature {ET_TYPE, ET_TYPE_CONTEXT} -- Conformance
 				if other_base_class = a_universe.none_class then
 						-- "NONE" conforms to any class type that is not expanded.
 					Result := True
-				elseif not is_cat then
+				else
 					other_base_class.process (a_universe.ancestor_builder)
 						-- If there was an error building the ancestors of
 						-- `other_base_class', this error has already been
@@ -585,7 +476,6 @@ feature -- Type processing
 				a_resolved_parameters := an_actual_parameters.resolved_formal_parameters (a_parameters)
 				if a_resolved_parameters /= an_actual_parameters then
 					create a_generic_class_type.make (type_mark, name, a_resolved_parameters, eiffel_class)
-					a_generic_class_type.set_cat_keyword (cat_keyword)
 					a_generic_class_type.set_unresolved_type (Current)
 					Result := a_generic_class_type
 				end
@@ -606,10 +496,6 @@ feature -- Output
 		local
 			a_parameters: like actual_parameters
 		do
-			if cat_keyword /= Void then
-				a_string.append_string (cat_keyword.text)
-				a_string.append_character (' ')
-			end
 			if type_mark /= Void then
 				a_string.append_string (type_mark.text)
 				a_string.append_character (' ')

@@ -582,20 +582,6 @@ feature {NONE} -- Validity checking
 							internal_call := True
 							an_actual.process (Current)
 							internal_call := False
-							if a_formal.is_cat then
-								if not an_actual.is_cat_type (current_type, universe) then
-									if universe.searching_dog_types then
-										a_formal.set_cat_keyword (Void)
-										universe.set_dog_type_count (universe.dog_type_count + 1)
-									else
-										set_fatal_error
--- TODO
-										error_handler.report_error_message ("class " + current_class.name.name + " (" +
-											an_actual.position.line.out + "," + an_actual.position.column.out +
-											"): actual generic parameter '" + an_actual.to_text + "' must be a cat type")
-									end
-								end
-							end
 							a_constraint := a_formal.constraint
 							if a_constraint /= Void then
 									-- If we have:

@@ -396,7 +396,6 @@ feature {NONE} -- String handler
 			Result.force_new (-1, tokens.as_keyword_name)
 			Result.force_new (-1, tokens.assign_keyword_name)
 			Result.force_new (-1, tokens.attribute_keyword_name)
-			Result.force_new (-1, tokens.cat_keyword_name)
 			Result.force_new (-1, tokens.check_keyword_name)
 			Result.force_new (-1, tokens.class_keyword_name)
 			Result.force_new (-1, tokens.convert_keyword_name)

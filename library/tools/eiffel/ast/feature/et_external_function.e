@@ -104,7 +104,6 @@ feature -- Conversion
 			Result.set_first_indexing (first_indexing)
 			Result.set_first_seed (first_seed)
 			Result.set_other_seeds (other_seeds)
-			Result.set_cat_keyword (cat_keyword)
 		end
 
 feature -- Processing

@@ -3024,38 +3024,36 @@ feature {NONE} -- Expression validity
 			if not has_fatal_error then
 				check_subexpression_validity (an_expression.right, right_context, any_type)
 				if not has_fatal_error then
-					if not universe.cat_enabled then
-							-- This rule is too constraining when checking CAT-calls.
-						left_type := tokens.like_current
-						right_type := tokens.like_current
-						if left_context.conforms_to_type (right_type, right_context, universe) then
-								-- OK.
-							report_equality_expression (an_expression)
-						elseif right_context.conforms_to_type (left_type, left_context, universe) then
-								-- OK.
-							report_equality_expression (an_expression)
-						elseif left_context.same_named_type (universe.none_type, current_type, universe) then
-								-- OK.
-							report_equality_expression (an_expression)
-						elseif right_context.same_named_type (universe.none_type, current_type, universe) then
-								-- OK.
-							report_equality_expression (an_expression)
-						elseif type_checker.convert_feature (left_context, right_context) /= Void then
-								-- OK.
-							report_equality_expression (an_expression)
-						elseif type_checker.convert_feature (right_context, left_context) /= Void then
-								-- OK.
-							report_equality_expression (an_expression)
+						-- This rule is too constraining when checking CAT-calls.
+					left_type := tokens.like_current
+					right_type := tokens.like_current
+					if left_context.conforms_to_type (right_type, right_context, universe) then
+							-- OK.
+						report_equality_expression (an_expression)
+					elseif right_context.conforms_to_type (left_type, left_context, universe) then
+							-- OK.
+						report_equality_expression (an_expression)
+					elseif left_context.same_named_type (universe.none_type, current_type, universe) then
+							-- OK.
+						report_equality_expression (an_expression)
+					elseif right_context.same_named_type (universe.none_type, current_type, universe) then
+							-- OK.
+						report_equality_expression (an_expression)
+					elseif type_checker.convert_feature (left_context, right_context) /= Void then
+							-- OK.
+						report_equality_expression (an_expression)
+					elseif type_checker.convert_feature (right_context, left_context) /= Void then
+							-- OK.
+						report_equality_expression (an_expression)
+					else
+						set_fatal_error
+						left_named_type := left_context.named_type (universe)
+						right_named_type := right_context.named_type (universe)
+						a_class_impl := feature_impl.implementation_class
+						if a_class_impl = current_class then
+							error_handler.report_vweq0a_error (current_class, an_expression, left_named_type, right_named_type)
 						else
-							set_fatal_error
-							left_named_type := left_context.named_type (universe)
-							right_named_type := right_context.named_type (universe)
-							a_class_impl := feature_impl.implementation_class
-							if a_class_impl = current_class then
-								error_handler.report_vweq0a_error (current_class, an_expression, left_named_type, right_named_type)
-							else
-								error_handler.report_vweq0b_error (current_class, a_class_impl, an_expression, left_named_type, right_named_type)
-							end
+							error_handler.report_vweq0b_error (current_class, a_class_impl, an_expression, left_named_type, right_named_type)
 						end
 					end
 					if not has_fatal_error then
@@ -3615,11 +3613,6 @@ feature {NONE} -- Expression validity
 				else
 					check_expression_validity (a_target, a_context, any_type, feature_impl, current_feature, current_type)
 					if not has_fatal_error then
-						if not a_context.is_empty and then a_context.last = universe.string_type then
-								-- When a manifest string is the target of a call,
-								-- we consider it as non-cat type.
-							a_context.put (universe.string_class, 1)
-						end
 						a_class := a_context.base_class (universe)
 						a_class.process (universe.interface_checker)
 						if a_class.has_interface_error then
@@ -3643,11 +3636,6 @@ feature {NONE} -- Expression validity
 				if a_feature = Void then
 					check_expression_validity (a_target, a_context, any_type, feature_impl, current_feature, current_type)
 					if not has_fatal_error then
-						if not a_context.is_empty and then a_context.last = universe.string_type then
-								-- When a manifest string is the target of a call,
-								-- we consider it as non-cat type.
-							a_context.put (universe.string_class, 1)
-						end
 						a_class := a_context.base_class (universe)
 						a_class.process (universe.interface_checker)
 						if a_class.has_interface_error then
@@ -3892,12 +3880,6 @@ feature {NONE} -- Expression validity
 							end
 						end
 					end
-						-- Check whether `a_feature' satisfies CAT validity rules.
-					had_error := has_fatal_error
-					check_cat_validity (a_name, a_feature, a_context)
-					if had_error then
-						set_fatal_error
-					end
 					a_type := a_feature.type
 					if a_type = Void then
 							-- In a call expression, `a_feature' has to be a query.
@@ -4079,7 +4061,6 @@ feature {NONE} -- Expression validity
 					create an_actuals.make_with_capacity (1)
 					an_actuals.put_first (an_item_type)
 					create a_generic_class_type.make (Void, array_class.name, an_actuals, array_class)
-					a_generic_class_type.set_cat_keyword (universe.array_any_type.cat_keyword)
 					a_generic_class_type.set_unresolved_type (universe.array_any_type)
 					report_manifest_array (an_expression, a_generic_class_type)
 					a_context.force_last (a_generic_class_type)
@@ -4379,11 +4360,6 @@ feature {NONE} -- Expression validity
 				else
 					check_expression_validity (a_target, a_context, any_type, feature_impl, current_feature, current_type)
 					if not has_fatal_error then
-						if not a_context.is_empty and then a_context.last = universe.string_type then
-								-- When a manifest string is the target of a call,
-								-- we consider it as non-cat type.
-							a_context.put (universe.string_class, 1)
-						end
 						a_class := a_context.base_class (universe)
 						a_class.process (universe.interface_checker)
 						if a_class.has_interface_error then
@@ -4407,11 +4383,6 @@ feature {NONE} -- Expression validity
 				if a_feature = Void then
 					check_expression_validity (a_target, a_context, any_type, feature_impl, current_feature, current_type)
 					if not has_fatal_error then
-						if not a_context.is_empty and then a_context.last = universe.string_type then
-								-- When a manifest string is the target of a call,
-								-- we consider it as non-cat type.
-							a_context.put (universe.string_class, 1)
-						end
 						a_class := a_context.base_class (universe)
 						a_class.process (universe.interface_checker)
 						if a_class.has_interface_error then
@@ -4447,11 +4418,6 @@ feature {NONE} -- Expression validity
 						had_error := True
 					end
 					check_sub_actual_arguments_validity (an_actuals, a_context, a_name, a_feature, a_class)
-					if has_fatal_error then
-						had_error := True
-					end
-						-- Check whether `a_feature' satisfies CAT validity rules.
-					check_cat_validity (a_name, a_feature, a_context)
 					if had_error then
 						set_fatal_error
 					end
@@ -5420,58 +5386,6 @@ feature {NONE} -- Expression validity
 			end
 		end
 
-	check_cat_validity (a_name: ET_FEATURE_NAME; a_feature: ET_FEATURE; a_context: ET_TYPE_CONTEXT) is
-			-- Check CAT validity rules on qualified call to `a_feature' named `a_name'
-			-- in context of its target `a_context'.
-			-- Set `has_fatal_error' if a fatal error occurred.
-		require
-			a_name_not_void: a_name /= Void
-			a_feature_not_void: a_feature /= Void
-			a_context_not_void: a_context /= Void
-		local
-			a_formals: ET_FORMAL_ARGUMENT_LIST
-			a_formal: ET_FORMAL_ARGUMENT
-			i, nb: INTEGER
-			j, nb2: INTEGER
-		do
-			has_fatal_error := False
-			if universe.cat_enabled and not universe.searching_dog_types then
-				if a_feature.is_cat then
-					if not a_context.is_cat_type (universe) then
-						set_fatal_error
--- TODO: better error message reporting.
-						error_handler.report_error_message ("class " + current_class.name.name + " (" +
-							a_name.position.line.out + "," + a_name.position.column.out +
-							"): cat feature `" + a_name.name + "' applied to target of non-cat type '" +
-							a_context.base_type (universe).to_text + "'")
-					end
-				end
-				a_formals := a_feature.arguments
-				if a_formals /= Void and then not a_formals.is_empty then
-					nb2 := a_formals.count
-					nb := a_context.base_type_actual_count (universe)
-					from i := 1 until i > nb loop
-						if not a_context.is_actual_cat_parameter (i, universe) then
-							from j := 1 until j > nb2 loop
-								a_formal := a_formals.formal_argument (j)
-								if a_formal.type.has_formal_type (i, a_context, universe) then
-									set_fatal_error
--- TODO: better error message reporting.
-									error_handler.report_error_message ("class " + current_class.name.name + " (" +
-										a_name.position.line.out + "," + a_name.position.column.out +
-										"): the type of the formal argument #" + j.out + " of feature `" + a_name.name +
-										"' contains formal generic parameter #" + i.out + " but the corresponding actual parameter '" +
-										a_context.base_type_actual (i, universe).to_text + "' is not declared as cat.")
-								end
-								j := j + 1
-							end
-						end
-						i := i + 1
-					end
-				end
-			end
-		end
-
 	check_subexpression_validity (an_expression: ET_EXPRESSION; a_context: ET_NESTED_TYPE_CONTEXT;
 		a_target_type: ET_TYPE_CONTEXT) is
 			-- Check validity of `an_expression' (whose target is of type
@@ -5752,11 +5666,6 @@ feature {NONE} -- Agent validity
 -- a local variable, a formal argument or the name of an attribute.
 					check_expression_validity (a_target, a_context, any_type, feature_impl, current_feature, current_type)
 					if not has_fatal_error then
-						if not a_context.is_empty and then a_context.last = universe.string_type then
-								-- When a manifest string is the target of a call,
-								-- we consider it as non-cat type.
-							a_context.put (universe.string_class, 1)
-						end
 						a_class := a_context.base_class (universe)
 						a_class.process (universe.interface_checker)
 						if a_class.has_interface_error then
@@ -5796,11 +5705,6 @@ feature {NONE} -- Agent validity
 -- a local variable, a formal argument or the name of an attribute.
 					check_expression_validity (a_target, a_context, any_type, feature_impl, current_feature, current_type)
 					if not has_fatal_error then
-						if not a_context.is_empty and then a_context.last = universe.string_type then
-								-- When a manifest string is the target of a call,
-								-- we consider it as non-cat type.
-							a_context.put (universe.string_class, 1)
-						end
 						a_class := a_context.base_class (universe)
 						a_class.process (universe.interface_checker)
 						if a_class.has_interface_error then
@@ -5841,14 +5745,6 @@ feature {NONE} -- Agent validity
 					end
 					an_actuals := an_expression.arguments
 					check_agent_arguments_validity (an_actuals, a_context, a_name, a_feature, a_class, an_open_operands)
-					if has_fatal_error then
-						had_error := True
-					end
-						-- Check whether `a_feature' satisfies CAT validity rules.
-					check_cat_validity (a_name, a_feature, a_context)
-					if has_fatal_error then
-						had_error := True
-					end
 					if had_error then
 						set_fatal_error
 					end
@@ -6018,14 +5914,6 @@ feature {NONE} -- Agent validity
 						end
 						an_actuals := an_expression.arguments
 						check_agent_arguments_validity (an_actuals, a_context, a_name, a_feature, a_class, an_open_operands)
-						if has_fatal_error then
-							had_error := True
-						end
-							-- Check whether `a_feature' satisfies CAT validity rules.
-						check_cat_validity (a_name, a_feature, a_context)
-						if has_fatal_error then
-							had_error := True
-						end
 						if had_error then
 							set_fatal_error
 						end

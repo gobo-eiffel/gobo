@@ -47,23 +47,6 @@ feature -- Access
 
 feature -- Status report
 
-	is_cat_parameter (a_context: ET_TYPE_CONTEXT; a_universe: ET_UNIVERSE): BOOLEAN is
-			-- Is current actual parameter a non-conforming parameter
-			-- when viewed from `a_context' in `a_universe'?
-		require
-			a_context_not_void: a_context /= Void
-			a_context_valid: a_context.is_valid_context
-			a_universe_not_void: a_universe /= Void
-			-- no_cycle: no cycle in anchored types involved.
-		deferred
-		end
-
-	has_cat_parameter_mark: BOOLEAN is
-			-- Has the keyword 'cat' been specified for current actual parameter?
-		do
-			-- Result := False
-		end
-
 	named_parameter_has_class (a_class: ET_CLASS; a_context: ET_TYPE_CONTEXT; a_universe: ET_UNIVERSE): BOOLEAN is
 			-- Does the named parameter of current type contain `a_class'
 			-- when it appears in `a_context' in `a_universe'?

@@ -50,7 +50,6 @@ feature -- Keyword and symbol codes
 	as_keyword_code: CHARACTER is '%/104/'
 	assign_keyword_code: CHARACTER is '%/59/'
 	attribute_keyword_code: CHARACTER is '%/105/'
-	cat_keyword_code: CHARACTER is '%/60/'
 	check_keyword_code: CHARACTER is '%/106/'
 	class_keyword_code: CHARACTER is '%/107/'
 	convert_keyword_code: CHARACTER is '%/108/'

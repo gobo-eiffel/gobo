@@ -67,8 +67,6 @@ feature -- Execution
 					all_breaks := True
 				elseif arg.is_equal ("--verbose") then
 					is_verbose := True
-				elseif arg.is_equal ("--cat") then
-					is_cat := True
 				elseif arg.is_equal ("--flat") then
 					is_flat := True
 				elseif arg.is_equal ("--compile") then
@@ -159,7 +157,6 @@ feature -- Status report
 	defined_variables: STRING
 	all_breaks: BOOLEAN
 	is_verbose: BOOLEAN
-	is_cat: BOOLEAN
 	is_flat: BOOLEAN
 	do_compile: BOOLEAN
 	do_c_compile: BOOLEAN
@@ -209,12 +206,6 @@ feature {NONE} -- Processing
 				a_universe.set_use_void_keyword (False)
 			else
 				a_universe.set_use_void_keyword (True)
-			end
-			if is_cat then
-				a_universe.set_cat_enabled (True)
-				a_universe.set_anchored_cat_features (False)
-			else
-				a_universe.set_cat_enabled (False)
 			end
 			if do_compile then
 				create a_system.make (a_universe)

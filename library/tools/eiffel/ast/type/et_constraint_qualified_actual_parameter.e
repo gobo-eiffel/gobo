@@ -40,28 +40,11 @@ feature -- Access
 	type: ET_CONSTRAINT_TYPE
 			-- Type of actual parameter
 
-	cat_keyword: ET_KEYWORD
-			-- 'cat' keyword
-
 	position: ET_POSITION is
 			-- Position of first character of
 			-- current node in source code
 		do
-			if cat_keyword /= Void then
-				Result := cat_keyword.position
-			else
-				Result := type.position
-			end
-		end
-
-feature -- Setting
-
-	set_cat_keyword (a_cat: like cat_keyword) is
-			-- Set `cat_keyword' to `a_cat'.
-		do
-			cat_keyword := a_cat
-		ensure
-			cat_keyword_set: cat_keyword = a_cat
+			Result := type.position
 		end
 
 feature -- Conversion

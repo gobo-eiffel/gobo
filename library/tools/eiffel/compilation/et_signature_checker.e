@@ -140,39 +140,10 @@ feature -- Signature validity
 feature {NONE} -- Signature validity
 
 	check_immediate_signature_validity (a_feature: ET_FEATURE) is
-			-- Check whether `a_feature' has correctly been declared
-			-- as having arguments which can possibly be redefined
-			-- covariantly in descendant classes?
+			-- Check whether `a_feature' has correctly been declared.
 		require
 			a_feature_not_void: a_feature /= Void
-		local
-			an_arguments: ET_FORMAL_ARGUMENT_LIST
-			i, nb: INTEGER
-			a_type: ET_TYPE
 		do
-			if universe.anchored_cat_features then
-				if not universe.all_cat_features and not a_feature.is_cat then
-					an_arguments := a_feature.arguments
-					if an_arguments /= Void then
-						nb := an_arguments.count
-						from i := 1 until i > nb loop
-							a_type := an_arguments.formal_argument (i).type
-							if a_type.has_anchored_type (current_class, universe) then
-								if universe.searching_cat_features then
-									a_feature.set_cat_keyword (tokens.cat_keyword)
-									universe.set_cat_feature_count (universe.cat_feature_count + 1)
-									i := nb + 1 -- Jump out of the loop.
-								else
-									set_fatal_error
--- TODO:
-									error_handler.report_error_message ("Feature " + current_class.name.name + "." + a_feature.name.name + " should be marked as covariant")
-								end
-							end
-							i := i + 1
-						end
-					end
-				end
-			end
 		end
 
 	check_redeclared_signature_validity (a_feature: ET_ADAPTED_FEATURE; other: ET_PARENT_FEATURE) is
@@ -194,17 +165,7 @@ feature {NONE} -- Signature validity
 			an_arguments: ET_FORMAL_ARGUMENT_LIST
 			other_arguments: ET_FORMAL_ARGUMENT_LIST
 			a_resolver: ET_AST_PROCESSOR
-			b: BOOLEAN
 			i, nb: INTEGER
-			l_cat: BOOLEAN
-			l_other_cat: BOOLEAN
-			l_mark_cat: BOOLEAN
-			l_mark_other_cat: BOOLEAN
-			an_ancestors: ET_BASE_TYPE_LIST
-			an_ancestor: ET_CLASS
-			a_cat_feature: ET_FEATURE
-			a_seeds: ET_FEATURE_IDS
-			j, nb2: INTEGER
 		do
 				-- We don't want the qualified anchored types in signatures to be resolved yet.
 			a_resolver := universe.qualified_signature_resolver
@@ -277,141 +238,29 @@ feature {NONE} -- Signature validity
 				set_fatal_error
 				error_handler.report_vdrd2a_error (current_class, a_flattened_feature, other)
 			else
-				l_cat := universe.all_cat_features or a_flattened_feature.is_cat
-				l_other_cat := universe.all_cat_features or other_precursor.is_cat
 				nb := an_arguments.count
 				from i := 1 until i > nb loop
 					a_type := an_arguments.formal_argument (i).type
-					if universe.anchored_cat_features then
-						if not l_cat and a_feature.is_redeclared then
-							if a_type.has_anchored_type (current_class, universe) then
-								if universe.searching_cat_features then
-									l_mark_cat := True
-									l_cat := True
-								else
-									set_fatal_error
--- TODO:
-									error_handler.report_error_message ("Feature " + current_class.name.name + "." + a_flattened_feature.name.name + " should be marked as covariant")
-								end
-							end
-						end
-					end
 					other_type := other_arguments.formal_argument (i).type
-					if not l_other_cat then
-						if universe.searching_cat_features then
-							if l_cat then
-								l_mark_other_cat := True
-								l_other_cat := True
-							elseif not a_type.same_named_type (other_type, parent_context, current_class, universe) then
-								l_mark_other_cat := True
-								l_other_cat := True
-							end
+					if not a_type.conforms_to_type (other_type, parent_context, current_class, universe) then
+						if
+							a_type.has_qualified_type (current_class, universe) or
+							other_type.has_qualified_type (parent_context, universe)
+						then
+								-- We have to delay until qualified
+								-- anchored types have been resolved.
+							has_qualified_type := True
 						else
-							if l_cat then
-								set_fatal_error
--- TODO:
-								error_handler.report_error_message ("Feature " + current_class.name.name + "." + a_flattened_feature.name.name + " is marked as covariant but is the redeclaration of an no-variant feature")
-							end
-							if not a_type.same_named_type (other_type, parent_context, current_class, universe) then
-								if
-									a_type.has_qualified_type (current_class, universe) or
-									other_type.has_qualified_type (parent_context, universe)
-								then
-										-- We have to delay until qualified
-										-- anchored types have been resolved.
-									has_qualified_type := True
-								else
-									set_fatal_error
-									if a_feature.is_inherited then
-										a_parent_feature := a_feature.inherited_feature.flattened_parent
-										error_handler.report_vdrd2b_error (current_class, a_parent_feature, other)
-									else
-										error_handler.report_vdrd2a_error (current_class, a_flattened_feature, other)
-									end
-								end
-							end
-						end
-					end
-					if l_other_cat then
-						if not a_type.conforms_to_type (other_type, parent_context, current_class, universe) then
-							if
-								a_type.has_qualified_type (current_class, universe) or
-								other_type.has_qualified_type (parent_context, universe)
-							then
-									-- We have to delay until qualified
-									-- anchored types have been resolved.
-								has_qualified_type := True
+							set_fatal_error
+							if a_feature.is_inherited then
+								a_parent_feature := a_feature.inherited_feature.flattened_parent
+								error_handler.report_vdrd2b_error (current_class, a_parent_feature, other)
 							else
-								set_fatal_error
-								if a_feature.is_inherited then
-									a_parent_feature := a_feature.inherited_feature.flattened_parent
-									error_handler.report_vdrd2b_error (current_class, a_parent_feature, other)
-								else
-									error_handler.report_vdrd2a_error (current_class, a_flattened_feature, other)
-								end
+								error_handler.report_vdrd2a_error (current_class, a_flattened_feature, other)
 							end
-						elseif universe.searching_dog_types then
-								-- Force the redeclared type to be non-cat when the two
-								-- types are the same except for their cat-ness. This
-								-- trick may prevent this feature from having to be
-								-- marked as cat.
-							b := a_type.same_syntactical_type (other_type, parent_context, current_class, universe)
 						end
 					end
 					i := i + 1
-				end
-				if l_mark_cat then
-					a_flattened_feature.set_cat_keyword (tokens.cat_keyword)
-					universe.set_cat_feature_count (universe.cat_feature_count + 1)
-					an_ancestors := current_class.ancestors
-					nb := an_ancestors.count
-					from i := 1 until i > nb loop
-						an_ancestor := an_ancestors.item (i).direct_base_class (universe)
-						a_cat_feature := an_ancestor.seeded_feature (a_flattened_feature.first_seed)
-						if a_cat_feature /= Void and then not a_cat_feature.is_cat then
-							a_cat_feature.set_cat_keyword (tokens.cat_keyword)
-							universe.set_cat_feature_count (universe.cat_feature_count + 1)
-						end
-						a_seeds := a_flattened_feature.other_seeds
-						if a_seeds /= Void then
-							nb2 := a_seeds.count
-							from j := 1 until j > nb2 loop
-								a_cat_feature := an_ancestor.seeded_feature (a_seeds.item (j))
-								if a_cat_feature /= Void and then not a_cat_feature.is_cat then
-									a_cat_feature.set_cat_keyword (tokens.cat_keyword)
-									universe.set_cat_feature_count (universe.cat_feature_count + 1)
-								end
-								j := j + 1
-							end
-						end
-						i := i + 1
-					end
-				elseif l_mark_other_cat then
-					other_precursor.set_cat_keyword (tokens.cat_keyword)
-					universe.set_cat_feature_count (universe.cat_feature_count + 1)
-					an_ancestors := other.parent.type.direct_base_class (universe).ancestors
-					nb := an_ancestors.count
-					from i := 1 until i > nb loop
-						an_ancestor := an_ancestors.item (i).direct_base_class (universe)
-						a_cat_feature := an_ancestor.seeded_feature (other_precursor.first_seed)
-						if a_cat_feature /= Void and then not a_cat_feature.is_cat then
-							a_cat_feature.set_cat_keyword (tokens.cat_keyword)
-							universe.set_cat_feature_count (universe.cat_feature_count + 1)
-						end
-						a_seeds := other_precursor.other_seeds
-						if a_seeds /= Void then
-							nb2 := a_seeds.count
-							from j := 1 until j > nb2 loop
-								a_cat_feature := an_ancestor.seeded_feature (a_seeds.item (j))
-								if a_cat_feature /= Void and then not a_cat_feature.is_cat then
-									a_cat_feature.set_cat_keyword (tokens.cat_keyword)
-									universe.set_cat_feature_count (universe.cat_feature_count + 1)
-								end
-								j := j + 1
-							end
-						end
-						i := i + 1
-					end
 				end
 			end
 			universe.set_qualified_signature_resolver (a_resolver)
@@ -435,17 +284,7 @@ feature {NONE} -- Signature validity
 			an_arguments: ET_FORMAL_ARGUMENT_LIST
 			other_arguments: ET_FORMAL_ARGUMENT_LIST
 			a_resolver: ET_AST_PROCESSOR
-			b: BOOLEAN
 			i, nb: INTEGER
-			l_cat: BOOLEAN
-			l_other_cat: BOOLEAN
-			l_mark_cat: BOOLEAN
-			l_mark_other_cat: BOOLEAN
-			an_ancestors: ET_BASE_TYPE_LIST
-			an_ancestor: ET_CLASS
-			a_cat_feature: ET_FEATURE
-			a_seeds: ET_FEATURE_IDS
-			j, nb2: INTEGER
 		do
 				-- We don't want the qualified anchored types in signatures to be resolved yet.
 			a_resolver := universe.qualified_signature_resolver
@@ -512,127 +351,29 @@ feature {NONE} -- Signature validity
 					error_handler.report_vdrd2c_error (current_class, a_flattened_feature, other)
 				end
 			else
-				l_cat := universe.all_cat_features or a_flattened_feature.is_cat
-				l_other_cat := universe.all_cat_features or other_precursor.is_cat
 				nb := an_arguments.count
 				from i := 1 until i > nb loop
 					a_type := an_arguments.formal_argument (i).type
 					other_type := other_arguments.formal_argument (i).type
-					if not l_other_cat then
-						if universe.searching_cat_features then
-							if l_cat then
-								l_mark_other_cat := True
-								l_other_cat := True
-							elseif not a_type.same_named_type (other_type, parent_context, current_class, universe) then
-								l_mark_other_cat := True
-								l_other_cat := True
-							end
+					if not a_type.conforms_to_type (other_type, parent_context, current_class, universe) then
+						if
+							a_type.has_qualified_type (current_class, universe) or
+							other_type.has_qualified_type (parent_context, universe)
+						then
+								-- We have to delay until qualified
+								-- anchored types have been resolved.
+							has_qualified_type := True
 						else
-							if l_cat then
-								set_fatal_error
--- TODO:
-								error_handler.report_error_message ("Feature " + current_class.name.name + "." + a_flattened_feature.name.name + " is marked as covariant but is the redeclaration of an no-variant feature")
-							end
-							if not a_type.same_named_type (other_type, parent_context, current_class, universe) then
-								if
-									a_type.has_qualified_type (current_class, universe) or
-									other_type.has_qualified_type (parent_context, universe)
-								then
-										-- We have to delay until qualified
-										-- anchored types have been resolved.
-									has_qualified_type := True
-								else
-									set_fatal_error
-									if a_feature.is_inherited then
-										a_parent_feature := a_feature.inherited_feature.flattened_parent
-										error_handler.report_vdrd2d_error (current_class, a_parent_feature, other)
-									else
-										error_handler.report_vdrd2c_error (current_class, a_flattened_feature, other)
-									end
-								end
-							end
-						end
-					end
-					if l_other_cat then
-						if not a_type.conforms_to_type (other_type, parent_context, current_class, universe) then
-							if
-								a_type.has_qualified_type (current_class, universe) or
-								other_type.has_qualified_type (parent_context, universe)
-							then
-									-- We have to delay until qualified
-									-- anchored types have been resolved.
-								has_qualified_type := True
+							set_fatal_error
+							if a_feature.is_inherited then
+								a_parent_feature := a_feature.inherited_feature.flattened_parent
+								error_handler.report_vdrd2d_error (current_class, a_parent_feature, other)
 							else
-								set_fatal_error
-								if a_feature.is_inherited then
-									a_parent_feature := a_feature.inherited_feature.flattened_parent
-									error_handler.report_vdrd2d_error (current_class, a_parent_feature, other)
-								else
-									error_handler.report_vdrd2c_error (current_class, a_flattened_feature, other)
-								end
+								error_handler.report_vdrd2c_error (current_class, a_flattened_feature, other)
 							end
-						elseif universe.searching_dog_types then
-								-- Force the redeclared type to be non-cat when the two
-								-- types are the same except for their cat-ness. This
-								-- trick may prevent this feature from having to be
-								-- marked as cat.
-							b := a_type.same_syntactical_type (other_type, parent_context, current_class, universe)
 						end
 					end
 					i := i + 1
-				end
-				if l_mark_cat then
-					a_flattened_feature.set_cat_keyword (tokens.cat_keyword)
-					universe.set_cat_feature_count (universe.cat_feature_count + 1)
-					an_ancestors := current_class.ancestors
-					nb := an_ancestors.count
-					from i := 1 until i > nb loop
-						an_ancestor := an_ancestors.item (i).direct_base_class (universe)
-						a_cat_feature := an_ancestor.seeded_feature (a_flattened_feature.first_seed)
-						if a_cat_feature /= Void and then not a_cat_feature.is_cat then
-							a_cat_feature.set_cat_keyword (tokens.cat_keyword)
-							universe.set_cat_feature_count (universe.cat_feature_count + 1)
-						end
-						a_seeds := a_flattened_feature.other_seeds
-						if a_seeds /= Void then
-							nb2 := a_seeds.count
-							from j := 1 until j > nb2 loop
-								a_cat_feature := an_ancestor.seeded_feature (a_seeds.item (j))
-								if a_cat_feature /= Void and then not a_cat_feature.is_cat then
-									a_cat_feature.set_cat_keyword (tokens.cat_keyword)
-									universe.set_cat_feature_count (universe.cat_feature_count + 1)
-								end
-								j := j + 1
-							end
-						end
-						i := i + 1
-					end
-				elseif l_mark_other_cat then
-					other_precursor.set_cat_keyword (tokens.cat_keyword)
-					universe.set_cat_feature_count (universe.cat_feature_count + 1)
-					an_ancestors := other.parent.type.direct_base_class (universe).ancestors
-					nb := an_ancestors.count
-					from i := 1 until i > nb loop
-						an_ancestor := an_ancestors.item (i).direct_base_class (universe)
-						a_cat_feature := an_ancestor.seeded_feature (other_precursor.first_seed)
-						if a_cat_feature /= Void and then not a_cat_feature.is_cat then
-							a_cat_feature.set_cat_keyword (tokens.cat_keyword)
-							universe.set_cat_feature_count (universe.cat_feature_count + 1)
-						end
-						a_seeds := other_precursor.other_seeds
-						if a_seeds /= Void then
-							nb2 := a_seeds.count
-							from j := 1 until j > nb2 loop
-								a_cat_feature := an_ancestor.seeded_feature (a_seeds.item (j))
-								if a_cat_feature /= Void and then not a_cat_feature.is_cat then
-									a_cat_feature.set_cat_keyword (tokens.cat_keyword)
-									universe.set_cat_feature_count (universe.cat_feature_count + 1)
-								end
-								j := j + 1
-							end
-						end
-						i := i + 1
-					end
 				end
 			end
 			universe.set_qualified_signature_resolver (a_resolver)
@@ -692,8 +433,6 @@ feature {NONE} -- Signature validity
 				set_fatal_error
 				error_handler.report_vdjr0a_error (current_class, a_feature.flattened_parent, other)
 			else
--- TODO: if one of the joined features is not argument covariant, then the
--- feature resulting of the join should be no argument covariant as well.
 				nb := an_arguments.count
 				from i := 1 until i > nb loop
 					if not an_arguments.formal_argument (i).type.same_syntactical_type (other_arguments.formal_argument (i).type, parent_context, current_class, universe) then

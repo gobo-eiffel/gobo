@@ -210,47 +210,6 @@ feature -- Status report
 			Result := not is_type_expanded (a_context, a_universe)
 		end
 
-	is_cat_type (a_context: ET_TYPE_CONTEXT; a_universe: ET_UNIVERSE): BOOLEAN is
-			-- Is current type monomorphic when viewed from
-			-- `a_context' in `a_universe'?
-		require
-			a_context_not_void: a_context /= Void
-			a_context_valid: a_context.is_valid_context
-			a_universe_not_void: a_universe /= Void
-			-- no_cycle: no cycle in anchored types involved.
-		deferred
-		end
-
-	is_actual_cat_type (i: INTEGER; a_context: ET_TYPE_CONTEXT; a_universe: ET_UNIVERSE): BOOLEAN is
-			-- Is actual generic parameter at index `i' in the base type of current
-			-- type a monomorphic type when viewed from `a_context' in `a_universe'?
-		require
-			a_context_not_void: a_context /= Void
-			a_context_valid: a_context.is_valid_context
-			a_universe_not_void: a_universe /= Void
-			-- no_cycle: no cycle in anchored types involved.
-			i_large_enough: i >= 1
-			i_small_enough: i <= base_type_actual_count (a_context, a_universe)
-		deferred
-		ensure
-			definition: Result = base_type_actual (i, a_context, a_universe).is_cat_type (a_context, a_universe)
-		end
-
-	is_actual_cat_parameter (i: INTEGER; a_context: ET_TYPE_CONTEXT; a_universe: ET_UNIVERSE): BOOLEAN is
-			-- Is actual generic parameter at index `i' in the base type of current
-			-- type a non-conforming parameter when viewed from `a_context' in `a_universe'?
-		require
-			a_context_not_void: a_context /= Void
-			a_context_valid: a_context.is_valid_context
-			a_universe_not_void: a_universe /= Void
-			-- no_cycle: no cycle in anchored types involved.
-			i_large_enough: i >= 1
-			i_small_enough: i <= base_type_actual_count (a_context, a_universe)
-		deferred
-		ensure
-			definition: Result = base_type_actual (i, a_context, a_universe).is_cat_parameter (a_context, a_universe)
-		end
-
 	has_anchored_type (a_context: ET_TYPE_CONTEXT; a_universe: ET_UNIVERSE): BOOLEAN is
 			-- Does current type contain an anchored type
 			-- when viewed from `a_context' in `a_universe'?
