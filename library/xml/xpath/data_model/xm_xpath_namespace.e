@@ -73,6 +73,6 @@ feature {NONE} -- Access
 
 invariant
 
-	uri_not_void: 	uri_property /= Void
+	uri_not_void: uri_property /= Void
 	
-end -- class XM_XPATH_NAMESPACE
+end

@@ -81,4 +81,4 @@ feature -- Access
 		deferred
 		end
 
-end -- class XM_XPATH_DOCUMENT
+end

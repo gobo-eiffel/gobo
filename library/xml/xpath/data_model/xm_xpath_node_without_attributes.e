@@ -19,7 +19,7 @@ inherit
 feature -- Status report
 
 	is_nilled: BOOLEAN is
-			-- Is current node "nilled"? (i.e. xsi:nill="true")
+			-- Is current node "nilled"? (i.e. xsi: nill="true")
 		do
 			Result := False
 		ensure then
@@ -31,4 +31,4 @@ invariant
 	attributes_are_empty: attributes.is_empty
 	namespaces_are_empty: namespaces.is_empty
 	
-end -- class XM_XPATH_NODE_WITHOUT_ATTRIBUTES
+end

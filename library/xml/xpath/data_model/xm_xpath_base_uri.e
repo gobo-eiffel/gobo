@@ -17,4 +17,4 @@ feature {NONE} -- Access
 	base_uri_property: ANY_URI
 			-- Base-uri property from the infoset
 
-end -- class XM_XPATH_BASE_URI
+end

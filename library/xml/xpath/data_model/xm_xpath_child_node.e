@@ -29,4 +29,4 @@ feature {NONE} -- Access
 	parent_property: XM_XPATH_NODE
 			-- Parent property from the infoset
 
-end -- class XM_XPATH_CHILD_NODE
+end

@@ -26,4 +26,4 @@ feature -- Access
 			no_node_name: Result = Void
 		end
 
-end -- class XM_XPATH_NAMELESS_NODE
+end

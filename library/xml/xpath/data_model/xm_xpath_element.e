@@ -54,7 +54,7 @@ feature -- Access
 feature -- Status report
 
 	is_nilled: BOOLEAN is
-			-- Is current node "nilled"? (i.e. xsi:nill="true")
+			-- Is current node "nilled"? (i.e. xsi: nill="true")
 		do
 			Result := nilled_property
 		end	
@@ -67,9 +67,9 @@ feature {NONE} -- Access
 invariant
 
 	-- namespaces_have_unique_names: All namespace nodes must have distinct names.
-			-- At most one has no name.
+	-- At most one has no name.
 	-- parent_namespace_relationship: namespaces.for_all (agent (parent.is_equal (Current)))
 	-- attributes_have_distinct_names: All attributes must have distinct QNames.
 	-- parent_attribute_relationship: attributes.for_all (agent (parent.is_equal (Current)))
 
-end -- class XM_XPATH_ELEMENT
+end

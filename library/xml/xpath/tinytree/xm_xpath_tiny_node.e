@@ -29,4 +29,4 @@ invariant
 	non_negative_node_number: node_number >= 0
 	owned_node: document /= Void
 	
-end -- class XM_XPATH_TINY_NODE
+end

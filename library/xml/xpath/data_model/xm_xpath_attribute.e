@@ -66,4 +66,4 @@ invariant
 	type_not_void: attribute_type_property /= Void
 			-- TODO: Is this necessarily true?
 	
-end -- class XM_XPATH_ATTRIBUTE
+end

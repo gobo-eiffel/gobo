@@ -23,10 +23,10 @@ invariant
 	-- Uncomment these when agents are available to Gobo classes.
 	-- proper_children: children.for_all (agent is_possible_child)
 	-- sorted_children: children are sorted in order of ascending `identity'. (document order).
-			-- children.sorted
+	-- children.sorted
 	-- normalized_text_nodes: no two consecutive child nodes may both be text nodes
 	-- parent_relationship: children.for_all (agent (parent.is_equal (Current)))
 	-- no_duplicates: children.for_all (--all nodes are distinct)
 
-end -- class XM_XPATH_COMPOSITE_NODE
+end
 

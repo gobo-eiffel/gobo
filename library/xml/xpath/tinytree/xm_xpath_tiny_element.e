@@ -12,4 +12,4 @@ indexing
 
 class XM_XPATH_TINY_ELEMENT
 
-end -- class XM_XPATH_TINY_ELEMENT
+end

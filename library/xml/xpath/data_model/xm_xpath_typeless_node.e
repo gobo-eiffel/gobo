@@ -26,5 +26,5 @@ feature -- Access
 			no_type: Result /= Void
 		end
 	
-end -- class XM_XPATH_TYPELESS_NODE
+end
 

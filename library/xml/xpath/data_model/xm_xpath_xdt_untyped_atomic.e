@@ -2,13 +2,13 @@ indexing
 
 	description:
 
-		"xdt:untypedAtomic values"
+		"xdt: untypedAtomic values"
 
-	library: "Gobo Eiffel XML Library"
-	copyright: "Copyright (c) 2003, Colin Adams and others"
-	license: "Eiffel Forum License v2 (see forum.txt)"
-	date: "$Date$"
-	revision: "$Revision$"
+		library: "Gobo Eiffel XML Library"
+		copyright: "Copyright (c) 2003, Colin Adams and others"
+		license: "Eiffel Forum License v2 (see forum.txt)"
+		date: "$Date$"
+		revision: "$Revision$"
 
 class XM_XPATH_XDT_UNTYPED_ATOMIC
 
@@ -35,5 +35,5 @@ feature -- Access
 	string_value: STRING
 			-- Value as string
 	
-end -- class XM_XPATH_XDT_UNTYPED_ATOMIC
+end
 

@@ -22,7 +22,7 @@ feature -- Access
 		end
 
 	node_kind: STRING is
-			-- Kind of node;
+			-- Kind of node
 			-- Must be one of:
 			-- "document", "element", "attribute",
 			-- "namespace", "processing-instruction",
@@ -40,7 +40,7 @@ feature -- Access
 		end
 	
 	parent: XM_XPATH_NODE is
-			-- Parent of current node;
+			-- Parent of current node
 			-- `Void' if current node is root,
 			-- or for orphan nodes.
 		deferred
@@ -81,14 +81,14 @@ feature -- Access
 feature -- Status report
 
 	is_nilled: BOOLEAN is
-			-- Is current node "nilled"? (i.e. xsi:nill="true")
+			-- Is current node "nilled"? (i.e. xsi: nill="true")
 		deferred
 		end
 
 feature {XM_XPATH_NODE} -- Access
 
 	identity: INTEGER -- TODO: change to INTEGER_64 when all compilers support this
-			-- Unique identifier within the document;
+			-- Unique identifier within the document
 			-- Increases with document order.
 	
 	is_possible_child: BOOLEAN is
@@ -105,4 +105,4 @@ invariant
 	namespaces_not_void: namespaces /= Void
 	no_void_namespace: not namespaces.has (Void)
 	
-end -- class XM_XPATH_NODE
+end

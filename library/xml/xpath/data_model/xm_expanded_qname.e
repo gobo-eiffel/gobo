@@ -12,5 +12,5 @@ indexing
 
 class XM_EXPANDED_QNAME
 
-end -- class XM_EXPANDED_QNAME
+end
 

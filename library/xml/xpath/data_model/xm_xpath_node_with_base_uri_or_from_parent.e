@@ -21,7 +21,7 @@ inherit
 feature -- Access
 
 	base_uri: ANY_URI is
-			-- Base URI;
+			-- Base URI
 			-- Algorithm:
 			-- Use the base_uri_property if it is not Void.
 			-- Otherwise, if the node has a parent,
@@ -37,5 +37,5 @@ feature -- Access
 			end
 		end
 
-end -- class  XM_XPATH_NODE_WITH_BASE_URI_OR_FROM_PARENT
+end
 

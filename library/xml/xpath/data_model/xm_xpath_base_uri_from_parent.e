@@ -28,5 +28,5 @@ feature -- Access
 			end
 		end
 
-end -- class XM_XPATH_BASE_URI_FROM_PARENT
+end
 

@@ -66,4 +66,4 @@ invariant
 
 	content_not_void: content_property /= Void
 	
-end -- class XM_XPATH_TEXT
+end

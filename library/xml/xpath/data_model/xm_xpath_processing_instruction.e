@@ -70,4 +70,4 @@ invariant
 	target_not_void: target_property /= Void
 	content_not_void: content_property /= Void
 	
-end -- class XM_XPATH_PROCESSING_INSTRUCTION
+end

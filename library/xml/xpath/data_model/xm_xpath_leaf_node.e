@@ -20,4 +20,4 @@ invariant
 
 	children_are_empty: children.is_empty
 	
-end -- class XM_XPATH_LEAF_NODE
+end

@@ -12,5 +12,5 @@ indexing
 
 class ANY_URI
 
-end -- class ANY_URI
+end
 
