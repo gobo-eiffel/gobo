@@ -30,7 +30,7 @@ feature -- Initialization
 		local
 			buff: STRING
 		do
-			buff := string_.make (str.count + 2)
+			buff := STRING_.make (str.count + 2)
 			buff.append_string (str)
 			buff.append_character (End_of_buffer_character)
 			buff.append_character (End_of_buffer_character)

@@ -48,7 +48,7 @@ feature {NONE} -- Initialization
 			-- Build the scanner with information contained in `tables'.
 		require
 			a_file_not_void: a_file /= Void
-			a_file_open_read: input_stream_.is_open_read (a_file)
+			a_file_open_read: INPUT_STREAM_.is_open_read (a_file)
 			tables_not_void: tables /= Void
 		do
 			make_from_tables (tables)

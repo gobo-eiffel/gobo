@@ -80,9 +80,9 @@ invariant
 
 	yy_accept_not_void: yy_accept /= Void
 	yy_rules_not_void: yy_rules /= Void
-	no_void_rules: not any_array_.has (yy_rules, Void)
+	no_void_rules: not ANY_ARRAY_.has (yy_rules, Void)
 	yy_eof_rules_not_void: yy_eof_rules /= Void
 	yy_start_conditions_not_void: yy_start_conditions /= Void
-	no_void_start_condition: not any_array_.has (yy_start_conditions, Void)
+	no_void_start_condition: not ANY_ARRAY_.has (yy_start_conditions, Void)
 
 end -- class LX_TABLES

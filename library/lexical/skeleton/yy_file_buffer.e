@@ -37,7 +37,7 @@ feature -- Initialization
 			-- Create a new buffer for `a_file'.
 		require
 			a_file_not_void: a_file /= Void
-			a_file_open_read: input_stream_.is_open_read (a_file)
+			a_file_open_read: INPUT_STREAM_.is_open_read (a_file)
 		do
 			make_with_size (a_file, Default_capacity)
 		ensure
@@ -50,14 +50,14 @@ feature -- Initialization
 			-- Create a new buffer of capacity `size' for `a_file'.
 		require
 			a_file_not_void: a_file /= Void
-			a_file_open_read: input_stream_.is_open_read (a_file)
+			a_file_open_read: INPUT_STREAM_.is_open_read (a_file)
 			size_positive: size >= 0
 		do
 			capacity := size
 				-- `content' has to be 2 characters longer
 				-- than the size given because we need to
 				-- put in 2 end-of-buffer characters.
-			content := string_.make_buffer (size + 2)
+			content := STRING_.make_buffer (size + 2)
 			set_file (a_file)
 		ensure
 			capacity_set: capacity = size
@@ -77,7 +77,7 @@ feature -- Setting
 			-- Set `file' to `a_file'.
 		require
 			a_file_not_void: a_file /= Void
-			a_file_open_read: input_stream_.is_open_read (a_file)
+			a_file_open_read: INPUT_STREAM_.is_open_read (a_file)
 		do
 			flush
 			file := a_file
@@ -102,7 +102,7 @@ feature -- Element change
 				-- more characters, this means that the end of
 				-- file has already been reached. Do not attempt
 				-- to fill again the buffer in that case.
-			if filled and not input_stream_.end_of_input (file) then
+			if filled and not INPUT_STREAM_.end_of_input (file) then
 				buff := content
 					-- First move last characters to start of buffer.
 					--| This should be done with a block copy.
@@ -125,14 +125,14 @@ feature -- Element change
 						-- Include room for 2 EOB characters.
 					if capacity + 2 - buff.count > 0 then
 							-- Set `content.count' to `capacity' + 2.
-						string_.resize_buffer (buff, capacity + 2)
+						STRING_.resize_buffer (buff, capacity + 2)
 					end
 					nb := capacity - count
 				end
 					-- Read in more data.
 				if interactive then
 					file.read_character
-					if not input_stream_.end_of_input (file) then
+					if not INPUT_STREAM_.end_of_input (file) then
 						j := j + 1
 						buff.put (file.last_character, j)
 						filled := True
@@ -143,7 +143,7 @@ feature -- Element change
 					if nb > Read_buffer_capacity then
 						nb := Read_buffer_capacity
 					end
-					nb := input_stream_.read_stream (file, buff, j + 1, nb)
+					nb := INPUT_STREAM_.read_stream (file, buff, j + 1, nb)
 					if nb > 0 then
 						filled := True
 					else
@@ -168,6 +168,6 @@ feature {NONE} -- Constants
 invariant
 
 	file_not_void: file /= Void
-	file_open_read: input_stream_.is_open_read (file)
+	file_open_read: INPUT_STREAM_.is_open_read (file)
 
 end -- class YY_FILE_BUFFER

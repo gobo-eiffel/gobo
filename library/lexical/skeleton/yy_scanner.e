@@ -34,7 +34,7 @@ feature {NONE} -- Initialization
 			-- `a_file' as input file.
 		require
 			a_file_not_void: a_file /= Void
-			a_file_open_read: input_stream_.is_open_read (a_file)
+			a_file_open_read: INPUT_STREAM_.is_open_read (a_file)
 		do
 			make_with_buffer (new_file_buffer (a_file))
 		end
@@ -228,7 +228,7 @@ feature -- Input
 			-- New input buffer for `a_file'
 		require
 			a_file_not_void: a_file /= Void
-			a_file_open_read: input_stream_.is_open_read (a_file)
+			a_file_open_read: INPUT_STREAM_.is_open_read (a_file)
 		do
 			!YY_FILE_BUFFER! Result.make (a_file)
 		ensure
@@ -254,7 +254,7 @@ feature -- Output
 			-- Set `output_file' to `a_file'.
 		require
 			a_file_not_void: a_file /= Void
-			a_file_open_write: output_stream_.is_open_write (a_file)
+			a_file_open_write: OUTPUT_STREAM_.is_open_write (a_file)
 		do
 			output_file := a_file
 		ensure
@@ -284,6 +284,6 @@ invariant
 
 	input_buffer_not_void: input_buffer /= Void
 	output_not_void: output_file /= Void
-	output_open_write: output_stream_.is_open_write (output_file)
+	output_open_write: OUTPUT_STREAM_.is_open_write (output_file)
 
 end -- class YY_SCANNER
