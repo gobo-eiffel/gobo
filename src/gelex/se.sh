@@ -1,4 +1,4 @@
-#!/local/bin/bash
+#!/bin/sh
 
 # system:     "Gobo Eiffel Lex: lexical analyzer generator"
 # compiler:   "SmallEiffel -0.78"

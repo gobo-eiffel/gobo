@@ -1,4 +1,4 @@
-#!/local/bin/bash
+#!/bin/sh
 
 echo "Testing Gobo Eiffel Structure Library..."
 $GOBO/test/all/hact/test_structure.sh $1

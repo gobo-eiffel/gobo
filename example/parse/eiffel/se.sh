@@ -1,4 +1,4 @@
-#!/local/bin/bash
+#!/bin/sh
 
 # system:     "Eiffel parser"
 # compiler:   "SmallEiffel -0.78"

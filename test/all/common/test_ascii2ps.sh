@@ -1,4 +1,4 @@
-#!/local/bin/bash
+#!/bin/sh
 
 ./ascii2ps $GOBO/test/all/common/sample.e toto.ps > tmp1.txt 2>&1
 if [ -s tmp1.txt ]; then

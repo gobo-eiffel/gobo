@@ -1,4 +1,4 @@
-#!/local/bin/bash
+#!/bin/sh
 
 # system:     "'ascii2ps' pretty-printer"
 # compiler:   "SmallEiffel -0.78"

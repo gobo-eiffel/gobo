@@ -1,4 +1,4 @@
-#!/local/bin/bash
+#!/bin/sh
 
 # system:     "Calculator with memory"
 # compiler:   "SmallEiffel -0.78"

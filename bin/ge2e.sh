@@ -1,4 +1,4 @@
-#!/local/bin/bash
+#!/bin/sh
 
 # usage: ge2e.sh dirname
 

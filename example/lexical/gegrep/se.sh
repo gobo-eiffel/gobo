@@ -1,4 +1,4 @@
-#!/local/bin/bash
+#!/bin/sh
 
 # system:     "Gobo Eiffel Grep"
 # compiler:   "SmallEiffel -0.78"

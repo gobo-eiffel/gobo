@@ -1,4 +1,4 @@
-#!/local/bin/bash
+#!/bin/sh
 
 cp $GOBO/library/lexical/lex/lx_lex_scanner.l .
 ./gelex lx_lex_scanner.l

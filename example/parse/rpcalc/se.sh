@@ -1,4 +1,4 @@
-#!/local/bin/bash
+#!/bin/sh
 
 # system:     "Reverse Polish Notation Calculator"
 # compiler:   "SmallEiffel -0.78"

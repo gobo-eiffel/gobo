@@ -1,4 +1,4 @@
-#!/local/bin/bash
+#!/bin/sh
 
 ./eiffel_parser 2 $GOBO/test/all/common/sample.e > tmp1.txt 2>&1
 if [ -s tmp1.txt ]; then

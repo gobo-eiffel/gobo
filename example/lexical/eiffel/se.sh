@@ -1,4 +1,4 @@
-#!/local/bin/bash
+#!/bin/sh
 
 # system:     "Eiffel scanner"
 # compiler:   "SmallEiffel -0.78"

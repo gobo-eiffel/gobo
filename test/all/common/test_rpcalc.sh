@@ -1,2 +1,2 @@
-#!/local/bin/bash
+#!/bin/sh
 

@@ -1,4 +1,4 @@
-#!/local/bin/bash
+#!/bin/sh
 
 # system:     "'gepp' preprocessor"
 # compiler:   "SmallEiffel -0.78"
