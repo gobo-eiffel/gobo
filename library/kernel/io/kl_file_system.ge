@@ -195,6 +195,8 @@ feature -- File handling
 		local
 			a_file1, a_file2: KL_BINARY_INPUT_FILE
 			a_count1, a_count2: INTEGER
+			s1, s2: STRING
+			i, nb: INTEGER
 			done: BOOLEAN
 		do
 			create a_file1.make (a_filename1)
@@ -224,11 +226,32 @@ feature -- File handling
 								a_file1.close
 								a_file2.close
 								done := True
-							elseif not a_file1.last_string.is_equal (a_file2.last_string) then
-								Result := False
-								a_file1.close
-								a_file2.close
-								done := True
+							else
+									-- Note: there is a bug in ISE Eiffel 5.5.0409 in STRING.is_equal
+									-- when null characters are enclosed in the string. Therefore we
+									-- do the comparison ourselves by hand character by character.
+								s1 := a_file1.last_string
+								s2 := a_file2.last_string
+								nb := s1.count
+								if s2.count /= nb then
+									Result := False
+									a_file1.close
+									a_file2.close
+									done := True
+								else
+									from i := 1 until i > nb loop
+										if s1.item (i) /= s2.item (i) then
+											Result := False
+											a_file1.close
+											a_file2.close
+											done := True
+												-- Jump out of the loop.
+											i := nb + 1
+										else
+											i := i + 1
+										end
+									end
+								end
 							end
 						end
 					end
