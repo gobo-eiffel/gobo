@@ -1,0 +1,15 @@
+<project name="depends_demo" default="C" >
+
+	<target name="A" >
+		<echo message="A" />
+	</target>
+
+	<target name="B" depends="A" >
+		<echo message="B" />
+	</target>
+
+	<target name="C" depends="B" >
+		<echo message="C" />
+	</target>
+
+</project>

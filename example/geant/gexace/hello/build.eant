@@ -1,0 +1,28 @@
+<project name="geant" default="compile">
+
+	<target name="init">
+		<var name="system" value="hello" />
+	</target>
+
+	<target name="compile" description="compiles HELLO" depends="init">
+
+		<gexace
+			command="build"
+			command_options="se"
+			xace_filename="${system}.xace"
+			compile="true"
+		/>
+
+	</target>
+
+	<target name="run" description="executes example" depends="init">
+		<exec executable="${system}" />
+	</target>
+
+
+	<target name="clean" description="deletes generated files" depends="init">
+		<exec executable="clean ${system}" />
+		<exec executable="del ${system}.exe se.ace cecil.se *.bak" />
+	</target>
+
+</project>

@@ -65,11 +65,13 @@ cd to examples/variables
 
 	call:
 
-		geant -b variable1.eant
+		geant -b variables1.eant
 
 	output:
 
-		[echo] Hello world
+		var:
+		
+		  [echo] Hello world
 
 	With the <var> task a variable can be defined. The 'name' attribute specifies
 	the name of the variable and the 'value' attribute it's value.
@@ -84,7 +86,9 @@ cd to examples/variables
 
 	output:
 
-		[echo] Hello Eiffel
+		var:
+		
+		  [echo] Hello Eiffel
 
 	call:
 
@@ -92,8 +96,9 @@ cd to examples/variables
 
 	output:
 
-		[echo] Hello Eiffel World
-
+		var:
+		
+		  [echo] Hello Eiffel World
 
 	Once a variable has been set it cannot be set again.
 	This bahaviour might change in a future version.
@@ -104,7 +109,7 @@ Cascading Variables:
 
 cd to examples/variables
 
-	buildfile variable2.eant:
+	buildfile variables2.eant:
 
 		<project name="variables2"  >
 			<target name="var" description="set and query a variable">
@@ -120,7 +125,9 @@ cd to examples/variables
 
 	output:
 
-		[echo] Hello Bart Simpson
+		var:
+		
+		  [echo] Hello Bart Simpson
 
 	This examples demonstrates how variables can be constructed from other variables.
 
@@ -197,19 +204,29 @@ cd to examples/geant
 
 	call:
 
-		geant>geant -b geant1.eant
+		geant -b geant1.eant
 
 	output:
 
-		[echo] ------------------------
-		[echo] before call of ../variables/variables1.eant
-		[echo] Hello Bart
-		[echo] after call of ../variables/variables1.eant
-		[echo] -------
-		[echo] before call of ../variables/variables1.eant
-		[geant] geant -b ../variables/variables1.eant
-		[echo] Hello world
-		[echo] after call of ../variables/variables1.eant
+		one:
+		
+		  [echo] ------------------------
+		  [echo] before call of ../variables/variables1.eant
+		
+		var:
+		
+		  [echo] Hello Bart
+		  [echo] after call of ../variables/variables1.eant
+		  [echo] -------
+		  [echo] before call of ../variables/variables1.eant
+		  [geant] geant -b ../variables/variables1.eant
+		
+		var:
+		
+		  [echo] Hello world
+		  [echo] after call of ../variables/variables1.eant
+
+
 
 	With the geant task other geant files can be invoked. This can be done in the same
 	process (default behaviour) or in a new process when the 'force' attribute is set to
@@ -224,4 +241,128 @@ cd to examples/geant
 	be able to take arguments which can be passed to the called build project exactly like you
 	can do it on the commandline already.
 
+
+depends/01:
+Demonstrates the depends attribute of targets.
+
+cd to examples/depends
+
+	buildfile 01.eant:
+
+		<project name="depends_demo" default="C" >
+			<target name="A" >
+				<echo message="A" />
+			</target>
+			<target name="B" depends="A" >
+				<echo message="B" />
+			</target>
+			<target name="C" depends="B" >
+				<echo message="C" />
+			</target>
+		</project>
+
+	call:
+
+		geant -b depends1.eant
+
+	output:
+
+		A:
+		
+		  [echo] A
+		
+		B:
+		
+		  [echo] B
+		
+		C:
+		
+		  [echo] C
+
+
+	With the 'depends' XML attribute targets can be made dependent on each other. In the
+	example target 'C' is dependent on target 'B'. This means that target 'B' will be executed
+	before target 'C' is executed. It is possible to specify more than one target dependencies
+	using comma separated target names in the 'depends' attribute:
+
+			<target name="C" depends="B,A" >
+				<echo message="C" />
+			</target>
+
+	This means that target 'B' is executed first, then target 'A' and then target 'C'.
+
+gexace:
+Demonstrates how to compile an Eiffel program. It builds on the 'gexace' tool which will
+be the 'gobo way' to compile an Eiffel program.
+
+cd to examples/gexace.
+
+	buildfile build.eant:
+
+		<project name="geant" default="compile">
+			<target name="init">
+				<var name="system" value="hello" />
+			</target>
+			<target name="compile" description="compiles HELLO" depends="init">
+				<gexace
+					command="build"
+					command_options="se"
+					xace_filename="${system}.xace"
+					compile="true"
+				/>
+			</target>
+			<target name="run" description="executes example" depends="init">
+				<exec executable="${system}" />
+			</target>
+			<target name="clean" description="deletes generated files" depends="init">
+				<exec executable="clean ${system}" />
+			</target>
+		</project>
+
+	call:
+
+		geant
+
+		Note: Since the default target of the project is 'compile' this starts the build
+				process with the 'compile' target.
+				Currently only SmallEiffel is used !
+
+	output:
+
+		init:
+		
+		
+		compile:
+		
+		gexace
+		  [gexace] gexace  --build --se hello.xace
+		  [gexace] compile se.ace
+
+	This calls the gexace tool which generates a SmallEiffel ace file and which will be
+	compiled immediately since we provided the 'compile="true"' attribute.
+	Note: 'gexace' will not be described here since it's documentation can be found in (TBD!!).
+
+	Now we could simply invoke the hello program from the commandline but since this would be
+	too easy simply invoke 'geant run' which produces the following output:
+
+		init:
+		
+		
+		run:
+		
+		  [exec] hello
+		Hello World
+
+	The clean target ('geant clean') is more useful:
+
+		init:
+		
+		
+		clean:
+		
+		  [exec] clean hello
+		  [exec] del hello.exe se.ace cecil.se *.bak
+
+	Note: the 'del' command is windows specific. In future os independent special tasks
+		will be provided like <del>.
 

@@ -1,0 +1,12 @@
+<?xml version="1.0"?>
+<system name="hello">
+	<root class="HELLO" creation="make"/>
+	<cluster>
+		<cluster name="geant_examples_hello" location="${GOBO}/example/geant/gexace/hello" />
+
+		<mount location="${EXML}/library/gobo.xace" />
+		<mount location="${EXML}/library/kernel.xace" />
+
+	</cluster>
+
+</system>
