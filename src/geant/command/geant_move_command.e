@@ -192,7 +192,7 @@ feature -- Execution
 			old_name := file_system.pathname_from_file_system (a_source_file, unix_file_system)
 			new_name := file_system.pathname_from_file_system (a_target_file, unix_file_system)
 			project.trace ("  [move] " + old_name + " to " + new_name + "%N")
-			if not project.no_exec then
+			if not project.options.no_exec then
 					-- Check that source file exists:
 				if not file_system.file_exists (old_name) then
 					project.log ("  [move] error: cannot find file '" + old_name + "'%N")

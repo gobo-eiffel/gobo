@@ -27,7 +27,7 @@ feature {NONE} -- Implementation
 		local
 			al_dirname: STRING
 		do
-			if not project.no_exec then
+			if not project.options.no_exec then
 				al_dirname := file_system.pathname_from_file_system (a_directory, unix_file_system)
 				if not file_system.directory_exists (al_dirname) then
 					project.trace_debug ("  creating directory '" + al_dirname + "'%N")
@@ -48,7 +48,7 @@ feature {NONE} -- Implementation
 		local
 			al_pathname: STRING
 		do
-			if not project.no_exec then
+			if not project.options.no_exec then
 				al_pathname := unix_file_system.dirname (a_pathname)
 				al_pathname := file_system.pathname_from_file_system (al_pathname, unix_file_system)
 				if not file_system.directory_exists (al_pathname) then

@@ -159,7 +159,7 @@ feature -- Execution
 				cmd := clone ("fish")
 				project.trace ("  [hact] " + cmd + "%N")
 				execute_shell (cmd)
-				if not project.no_exec then
+				if not project.options.no_exec then
 					if exit_code = 0 then
 						a_filename := system_name + file_system.exe_extension
 						if not file_system.file_exists (a_filename) then
@@ -186,14 +186,14 @@ feature -- Execution
 			a_name := clean + "_gen"
 			if file_system.directory_exists (a_name) then
 				project.trace ("  [hact] delete " + a_name + "%N")
-				if not project.no_exec then
+				if not project.options.no_exec then
 					file_system.recursive_delete_directory (a_name)
 				end
 			end
 			a_name := clean + ".eif"
 			if file_system.file_exists (a_name) then
 				project.trace ("  [hact] delete " + a_name + "%N")
-				if not project.no_exec then
+				if not project.options.no_exec then
 					file_system.delete_file (a_name)
 				end
 			end

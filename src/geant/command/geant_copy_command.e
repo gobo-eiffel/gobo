@@ -217,7 +217,7 @@ feature {NONE} -- Implementation
 					-- Copy file if target is out of date:
 				if force or else is_file_outofdate (old_name, new_name) then
 					project.trace ("  [copy] " + old_name + " to " + new_name + "%N")
-					if not project.no_exec then
+					if not project.options.no_exec then
 						file_system.copy_file (old_name, new_name)
 						if not file_system.file_exists (new_name) then
 							project.log ("  [copy] error: cannot copy file '" + old_name + "' to file '" + new_name + "'%N")

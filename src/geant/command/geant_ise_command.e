@@ -155,7 +155,7 @@ feature -- Execution
 				cmd := clone ("finish_freezing -silent")
 				project.trace ("  [ise] " + cmd + "%N")
 				execute_shell (cmd)
-				if not project.no_exec then
+				if not project.options.no_exec then
 					if exit_code = 0 then
 						a_filename := system_name + file_system.exe_extension
 						if not file_system.file_exists (a_filename) then
@@ -182,34 +182,34 @@ feature -- Execution
 			a_name := clean + ".epr"
 			if file_system.file_exists (a_name) then
 				project.trace ("  [ise] delete " + a_name + "%N")
-				if not project.no_exec then
+				if not project.options.no_exec then
 					file_system.delete_file (a_name)
 				end
 			end
 			a_name := clean + ".rc"
 			if file_system.file_exists (a_name) then
 				project.trace ("  [ise] delete " + a_name + "%N")
-				if not project.no_exec then
+				if not project.options.no_exec then
 					file_system.delete_file (a_name)
 				end
 			end
 			a_name := "exception_trace.log"
 			if file_system.file_exists (a_name) then
 				project.trace ("  [ise] delete " + a_name + "%N")
-				if not project.no_exec then
+				if not project.options.no_exec then
 					file_system.delete_file (a_name)
 				end
 			end
 			a_name := "preferences.wb"
 			if file_system.file_exists (a_name) then
 				project.trace ("  [ise] delete " + a_name + "%N")
-				if not project.no_exec then
+				if not project.options.no_exec then
 					file_system.delete_file (a_name)
 				end
 			end
 			if file_system.directory_exists ("EIFGEN") then
 				project.trace ("  [ise] delete EIFGEN%N")
-				if not project.no_exec then
+				if not project.options.no_exec then
 					file_system.recursive_delete_directory ("EIFGEN")
 				end
 			end

@@ -132,14 +132,14 @@ feature -- Execution
 			exit_code := 0
 			if is_compilable then
 				cmd := clone ("vec")
-				if not project.verbose then
+				if not project.options.verbose then
 					cmd.append_string (" -no")
 				end
 				cmd.append_string (" -a:")
 				a_filename := file_system.pathname_from_file_system (esd_filename, unix_file_system)
 				cmd.append_string (a_filename)
 				project.trace ("  [ve] " + cmd + "%N")
-				if not project.no_exec then
+				if not project.options.no_exec then
 					file_system.delete_file ("Result.out")
 					execute_shell (cmd)
 				end
@@ -228,7 +228,7 @@ feature -- Execution
 				else
 					project.trace ("  [ve] delete Result.out%N")
 				end
-				if not project.no_exec then
+				if not project.options.no_exec then
 					file_system.delete_file ("Result.out")
 				end
 			end
@@ -238,7 +238,7 @@ feature -- Execution
 				else
 					project.trace ("  [ve] delete vec.xcp%N")
 				end
-				if not project.no_exec then
+				if not project.options.no_exec then
 					file_system.delete_file ("vec.xcp")
 				end
 			end

@@ -186,7 +186,7 @@ feature -- Command-line
 			a_filename: STRING
 		do
 			Result := clone ("compile ")
-			if project.verbose then
+			if project.options.verbose then
 				Result.append_string (" -verbose ")
 			end
 			a_filename := file_system.pathname_from_file_system (ace_filename, unix_file_system)
