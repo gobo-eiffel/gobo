@@ -1,3 +1,17 @@
+2001-07-05    <majkel.kretschmar@epost.de>
+
+
+
+	* elks2001/uc_string.e: Started experimental implementation of
+
+	UC_STRING based upon ELKS2001 STRING proposal. implemented
+
+	features in sections Initialization, Basic sepicifiers, and
+
+	Measurement.
+
+
+
 2001-07-02    <majkel.kretschmar@epost.de>
 
 
