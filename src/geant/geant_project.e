@@ -40,6 +40,7 @@ feature {NONE} -- Initialization
 		local
 			a_tester: UC_EQUALITY_TESTER
 		do
+			output_file := std.output
 			if a_variables = Void then
 				create variables.make
 			else
@@ -374,11 +375,11 @@ feature -- Output
 				i := a_message.lower
 				nb := a_message.upper
 				from until i > nb loop
-					std.output.put_string (a_message.item (i))
+					output_file.put_string (a_message.item (i))
 					i := i + 1
 				end
-				std.output.put_new_line
-				std.output.flush
+				output_file.put_new_line
+				output_file.flush
 			end
 		end
 
@@ -394,11 +395,11 @@ feature -- Output
 			i := a_message.lower
 			nb := a_message.upper
 			from until i > nb loop
-				std.output.put_string (a_message.item (i))
+				output_file.put_string (a_message.item (i))
 				i := i + 1
 			end
-			std.output.put_new_line
-			std.output.flush
+			output_file.put_new_line
+			output_file.flush
 		end
 
 	trace_debug (a_message: ARRAY [STRING]) is
@@ -414,12 +415,26 @@ feature -- Output
 				i := a_message.lower
 				nb := a_message.upper
 				from until i > nb loop
-					std.output.put_string (a_message.item (i))
+					output_file.put_string (a_message.item (i))
 					i := i + 1
 				end
-				std.output.put_new_line
-				std.output.flush
+				output_file.put_new_line
+				output_file.flush
 			end
+		end
+
+	output_file: KI_TEXT_OUTPUT_STREAM
+			-- Output file
+
+	set_output_file (a_file: like output_file) is
+			-- Set `output_file' to `a_file'.
+		require
+			a_file_not_void: a_file /= Void
+			a_file_open_write: a_file.is_open_write
+		do
+			output_file := a_file
+		ensure
+			output_file_set: output_file = a_file
 		end
 
 feature {GEANT_COMMAND} -- Access GEANT_COMMAND
@@ -431,5 +446,7 @@ feature {GEANT_COMMAND} -- Access GEANT_COMMAND
 invariant
 
 	no_void_target: targets /= Void implies not targets.has (Void)
+	output_file_not_void: output_file /= Void
+	output_file_open_write: output_file.is_open_write
 
 end
