@@ -278,7 +278,7 @@ feature -- Error handling
 			message_not_void: message /= Void
 		do
 			io.error.put_string (message)
-			io.error.new_line
+			io.error.put_character ('%N')
 -- TO DO: Exceptions are not standard among compiler vendors.
 		end
 
