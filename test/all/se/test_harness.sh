@@ -76,6 +76,7 @@ else
 		sed "s/-boost/-all_check/g" $dirname/se.sh > se.sh
 	fi
 	echo "Compiling Test Cases"
+	chmod a+x ./se.sh
 	./se.sh > tmp_compile.txt 2>&1
 	$GOBO/test/all/common/test_exe.sh $version se $exename
 fi
