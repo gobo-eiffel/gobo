@@ -722,90 +722,90 @@ feature {NONE} -- Expression validity
 									end
 								end
 							end
-							if a_feature /= Void then
-								check
-									a_class_not_void: a_class /= Void
-									a_context_not_void: a_context /= Void
+						end
+						if a_feature /= Void then
+							check
+								a_class_not_void: a_class /= Void
+								a_context_not_void: a_context /= Void
+							end
+							if a_feature.type /= Void then
+									-- This is not a procedure.
+								set_fatal_error
+								if current_class = a_class_impl then
+									error_handler.report_vgcc6b_error (current_class, a_name, a_feature, a_class)
+								else
+									error_handler.report_vgcc6c_error (current_class, a_class_impl, a_name, a_feature, a_class)
 								end
-								if a_feature.type /= Void then
-										-- This is not a procedure.
-									set_fatal_error
-									if current_class = a_class_impl then
-										error_handler.report_vgcc6b_error (current_class, a_name, a_feature, a_class)
-									else
-										error_handler.report_vgcc6c_error (current_class, a_class_impl, a_name, a_feature, a_class)
-									end
-								end
-								if current_class.is_generic then
+							end
+							if current_class.is_generic then
 -- TODO.
-									has_formal_creation_type := True
-								end
-								if has_formal_creation_type then
+								has_formal_creation_type := True
+							end
+							if has_formal_creation_type then
 -- TODO.
-								elseif not a_feature.is_creation_exported_to (current_class, a_class, universe.ancestor_builder) then
-										-- The procedure is not a creation procedure exported to `current_class'.
-									set_fatal_error
-									if current_class = a_class_impl then
-										error_handler.report_vgcc6d_error (current_class, a_name, a_feature, a_class)
-									else
-										error_handler.report_vgcc6e_error (current_class, a_class_impl, a_name, a_feature, a_class)
-									end
+							elseif not a_feature.is_creation_exported_to (current_class, a_class, universe.ancestor_builder) then
+									-- The procedure is not a creation procedure exported to `current_class'.
+								set_fatal_error
+								if current_class = a_class_impl then
+									error_handler.report_vgcc6d_error (current_class, a_name, a_feature, a_class)
+								else
+									error_handler.report_vgcc6e_error (current_class, a_class_impl, a_name, a_feature, a_class)
 								end
-									-- Check arguments validity.
-								an_actuals := a_call.arguments
-								a_formals := a_feature.arguments
-								if an_actuals = Void or else an_actuals.is_empty then
-									if a_formals /= Void and then not a_formals.is_empty then
-										set_fatal_error
-										if current_class = a_class_impl then
-											error_handler.report_vuar1a_error (current_class, a_name, a_feature, a_class)
-										else
-											error_handler.report_vuar1b_error (current_class, a_class_impl, a_name, a_feature, a_class)
-										end
-									end
-								elseif a_formals = Void or else a_formals.count /= an_actuals.count then
+							end
+								-- Check arguments validity.
+							an_actuals := a_call.arguments
+							a_formals := a_feature.arguments
+							if an_actuals = Void or else an_actuals.is_empty then
+								if a_formals /= Void and then not a_formals.is_empty then
 									set_fatal_error
 									if current_class = a_class_impl then
 										error_handler.report_vuar1a_error (current_class, a_name, a_feature, a_class)
 									else
 										error_handler.report_vuar1b_error (current_class, a_class_impl, a_name, a_feature, a_class)
 									end
+								end
+							elseif a_formals = Void or else a_formals.count /= an_actuals.count then
+								set_fatal_error
+								if current_class = a_class_impl then
+									error_handler.report_vuar1a_error (current_class, a_name, a_feature, a_class)
 								else
-									had_error := has_fatal_error
-									nb := an_actuals.count
-									from i := 1 until i > nb loop
-										an_actual := an_actuals.expression (i)
-										check_expression_validity (an_actual, current_feature, current_class)
-										if has_fatal_error then
-											had_error := True
-										else
-											a_formal := a_formals.formal_argument (i)
-											if not type.conforms_to_type (a_formal.type, a_context, context, universe) then
-												if not type.convertible_to_type (a_formal.type, a_context, context, universe) then
-													an_actual_type := type.named_type (context, universe)
-													a_formal_type := a_formal.type.named_type (a_context, universe)
-													had_error := True
-													set_fatal_error
-													if current_class = a_class_impl then
-														error_handler.report_vuar2a_error (current_class, a_name, a_feature, a_class, i, an_actual_type, a_formal_type)
-													else
-														error_handler.report_vuar2b_error (current_class, a_class_impl, a_name, a_feature, a_class, i, an_actual_type, a_formal_type)
-													end
+									error_handler.report_vuar1b_error (current_class, a_class_impl, a_name, a_feature, a_class)
+								end
+							else
+								had_error := has_fatal_error
+								nb := an_actuals.count
+								from i := 1 until i > nb loop
+									an_actual := an_actuals.expression (i)
+									check_expression_validity (an_actual, current_feature, current_class)
+									if has_fatal_error then
+										had_error := True
+									else
+										a_formal := a_formals.formal_argument (i)
+										if not type.conforms_to_type (a_formal.type, a_context, context, universe) then
+											if not type.convertible_to_type (a_formal.type, a_context, context, universe) then
+												an_actual_type := type.named_type (context, universe)
+												a_formal_type := a_formal.type.named_type (a_context, universe)
+												had_error := True
+												set_fatal_error
+												if current_class = a_class_impl then
+													error_handler.report_vuar2a_error (current_class, a_name, a_feature, a_class, i, an_actual_type, a_formal_type)
+												else
+													error_handler.report_vuar2b_error (current_class, a_class_impl, a_name, a_feature, a_class, i, an_actual_type, a_formal_type)
 												end
 											end
 										end
-										i := i + 1
 									end
-									if had_error then
-											-- The error status may have been reset
-											-- while checking the arguments.
-										set_fatal_error
-									end
+									i := i + 1
 								end
-								if not has_fatal_error then
-									type := a_type
-									context := current_class
+								if had_error then
+										-- The error status may have been reset
+										-- while checking the arguments.
+									set_fatal_error
 								end
+							end
+							if not has_fatal_error then
+								type := a_type
+								context := current_class
 							end
 						end
 					end
