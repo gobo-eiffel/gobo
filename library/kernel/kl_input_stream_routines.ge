@@ -223,9 +223,13 @@ feature -- Input operations
 			nb_char_large_enough: nb_char >= 0
 			nb_char_small_enough: nb_char <= a_buffer.count - pos + 1
 		local
-			i, j: INTEGER
 #ifndef SE
 			a_string: STRING
+#endif
+#ifdef VE
+			a_memory: expanded MEMORY
+#else
+			i, j: INTEGER
 #endif
 		do
 #ifdef SE
@@ -247,12 +251,16 @@ feature -- Input operations
 			a_stream.read_stream (nb_char)
 			a_string := a_stream.last_string
 			Result := a_string.count
+#ifdef VE
+			a_memory.mem_copy (a_buffer.to_c + (pos - 1), a_string.to_c, Result)
+#else
 			j := pos
 			from i := 1 until i > Result loop
 				a_buffer.put (a_string.item (i), j)
 				j := j + 1
 				i := i + 1
 			end
+#endif
 #endif
 		ensure
 			nb_char_read_large_enough: Result >= 0
