@@ -57,6 +57,11 @@ feature {NONE} -- Initialization
 
 	make is
 			-- Create a new parser.
+			-- The string mode (see XM_STRING_MODE parent) is set by 
+			-- default to a safe mode, and the parser will be in error 
+			-- if the XML input contains characters above the maximum:
+			-- another string mode must be set explicitely to accept 
+			-- the full range of unicode characters.
 		do
 			make_scanner
 			make_parser
@@ -71,6 +76,8 @@ feature {NONE} -- Initialization
 			dtd_resolver := null_resolver
 			entity_resolver := null_resolver
 			use_namespaces := True
+		ensure
+			string_mode_set_to_safe_ascii_only: is_string_mode_ascii
 		end
 
 	null_resolver: XM_NULL_EXTERNAL_RESOLVER is
