@@ -1254,7 +1254,7 @@ feature -- Comparison
 		ensure then
 			unicode_definition:
 				Result = (same_type (other) and then count = other.count and then
-				(count > 0 implies (item_code (1) = other.item_code (1) and 
+				(count > 0 implies (item_code (1) = other.item_code (1) and
 				substring (2, count).is_equal (other.substring (2, count)))))
 		end
 
@@ -1296,7 +1296,7 @@ feature -- Comparison
 			end
 		ensure
 			definition: Result = (count = other.count and then
-				(count > 0 implies (item_code (1) = other.item_code (1) and 
+				(count > 0 implies (item_code (1) = other.item_code (1) and
 				(count >= 2 implies substring (2, count).same_unicode_string (other.substring (2, count))))))
 			same_string: Result implies same_string (other)
 		end
@@ -1493,8 +1493,49 @@ feature -- Element change
 	append_string (a_string: STRING) is
 			-- Append a copy of `a_string' at end.
 			-- (ELKS 2001 STRING)
+#ifdef HACT || ISE || SE
+		local
+			old_count: INTEGER
+			nb: INTEGER
+			new_byte_count: INTEGER
+			a_utf8_string: UC_UTF8_STRING
+#endif
 		do
+#ifdef HACT || ISE || SE
+			if a_string.same_type (dummy_string) then
+				-- Check if string does not contain high-ascii characters.
+				-- Unfortunately, this is a slow but necessary call.
+				nb := utf8.substring_byte_count (a_string, 1, a_string.count)
+				if nb = a_string.count then
+					-- If not, we may use the native
+					-- `append_string'. Hopefully this one has a fast move.
+					new_byte_count := byte_count + nb
+					old_count := count
+					set_count (byte_count)
+					precursor (a_string)
+					set_count (old_count + nb)
+					byte_count := new_byte_count
+				else
+					-- If so, use proper UTF8 encoding.
+					append_substring (a_string, 1, a_string.count)
+				end
+			else
+				a_utf8_string ?= a_string
+				if a_utf8_string /= Void then
+					-- Because this is really an UTF8 string, we may move bytes.
+					new_byte_count := byte_count + a_utf8_string.byte_count
+					old_count := count
+					set_count (byte_count)
+					precursor (a_string)
+					set_count (old_count + a_utf8_string.byte_count)
+					byte_count := new_byte_count
+				else
+					append_substring (a_string, 1, a_string.count)
+				end
+			end
+#else
 			append_substring (a_string, 1, a_string.count)
+#endif
 		end
 
 	append_substring (a_string: STRING; s, e: INTEGER) is
@@ -1605,10 +1646,10 @@ feature -- Element change
 				end
 				if utf16.is_surrogate (a_most) then
 					check valid_pre_implies_high: utf16.is_high_surrogate (a_most) end
-					
+
 					check valid_pre_implies_size: i + 2 < nb end
 					i := i + 2
-					
+
 					if msb_first then
 						a_low_most := s.item_code (i)
 						a_low_least := s.item_code (i + 1)
@@ -1616,7 +1657,7 @@ feature -- Element change
 						a_low_least := s.item_code (i)
 						a_low_most := s.item_code (i + 1)
 					end
-					
+
 					check valid_pre_implies_low: utf16.is_low_surrogate (a_low_most) end
 					append_code (utf16.surrogate_from_bytes (a_most, a_least, a_low_most, a_low_least))
 				else
@@ -1791,7 +1832,7 @@ feature -- Element change
 				if i = count + 1 then
 					append_string (a_string)
 				else
-					if a_string = Current then 
+					if a_string = Current then
 						str := clone (a_string)
 					else
 						str := a_string
@@ -1843,7 +1884,7 @@ feature -- Element change
 				if start_index = count + 1 then
 					append_string (a_string)
 				else
-					if a_string = Current then 
+					if a_string = Current then
 						str := clone (a_string)
 					else
 						str := a_string
@@ -2360,7 +2401,7 @@ feature -- Traversal
 			if byte_count = count then
 				Result := i
 			else
-				from 
+				from
 					if i < last_byte_index_input then
 						j := 1
 						Result := 1
@@ -2369,7 +2410,7 @@ feature -- Traversal
 						Result := last_byte_index_result
 					end
 				invariant
-					j <= i 
+					j <= i
 				until
 					j = i
 				loop
