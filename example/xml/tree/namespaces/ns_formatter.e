@@ -1,3 +1,15 @@
+indexing
+
+	description:
+
+		"Namespace formatters"
+
+	library: "Gobo Eiffel XML Library"
+	copyright: "Copyright (c) 2001, Andreas Leitner and others"
+	license: "Eiffel Forum License v1 (see forum.txt)"
+	date: "$Date$"
+	revision: "$Revision$"
+
 class NS_FORMATTER
 
 inherit
@@ -7,6 +19,9 @@ inherit
 			process_document, process_element, process_attributes, process_attribute
 		end
 
+	UC_UNICODE_FACTORY
+		export {NONE} all end
+
 creation
 
 	make
@@ -15,15 +30,15 @@ feature
 
 	make is
 		do
-			!! last_string.make (0)
+			last_string := new_unicode_string ("")
 		end
 
 	last_string: UC_STRING
 
 	wipe_out is
-			-- clear `last_string'
+			-- clear `last_string'.
 		do
-			last_string.wipe_ou
+			last_string.wipe_out
 		end
 
 feature {ANY} -- Debugging options

@@ -27,6 +27,7 @@
 		<geant target="install_root"/>
 		<geant target="install_io"/>
 		<geant target="install_misc"/>
+		<geant target="install_unicode"/>
 	</target>
 
 	<target name="clean">
@@ -142,6 +143,13 @@
 		<set name="gepp_file" value="kl_shell_command"/>
 		<geant target="ge2e"/>
 		<set name="gepp_file" value="kl_eiffel_compiler"/>
+		<geant target="ge2e"/>
+	</target>
+
+	<target name="install_unicode">
+		<set name="gepp_dir" value="unicode"/>
+		<set name="spec_dir" value="spec"/>
+		<set name="gepp_file" value="uc_string"/>
 		<geant target="ge2e"/>
 	</target>
 
