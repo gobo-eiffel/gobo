@@ -764,12 +764,14 @@ feature -- Validity errors
 			where_parsed: where.is_parsed
 			no_syntax_error: not where.has_syntax_error
 			a_feature_not_void: a_feature /= Void
+			a_feature_flattened: a_feature.is_flattened
 			an_inherited_feature_not_void: an_inherited_feature /= Void
 		local
 			a_name: ET_FEATURE_NAME
 			args: ET_FORMAL_ARGUMENT_LIST
 			i, nb: INTEGER
 			a_type: ET_TYPE
+a_context: ET_NESTED_TYPE_CONTEXT
 		do
 			if reportable_vdrd2_error (where) then
 				print ("[VDRD-2] Class ")
@@ -809,12 +811,13 @@ if a_universe /= Void then
 				print ("]%N")
 
 				print ("%T[")
-				args := an_inherited_feature.arguments
+				create a_context.make (an_inherited_feature.parent.type, where)
+				args := an_inherited_feature.precursor_feature.arguments
 				if args /= Void then
 					nb := args.count
 					from i := 1 until i > nb loop
 						a_type := args.formal_argument (i).type
-						print (a_type.base_type (an_inherited_feature.parent.type, a_universe).to_text)
+						print (a_type.base_type (a_context, a_universe).to_text)
 						if i /= nb then
 							print (", ")
 						end
@@ -822,9 +825,9 @@ if a_universe /= Void then
 					end
 				end
 				print ("], [")
-				a_type := an_inherited_feature.type
+				a_type := an_inherited_feature.precursor_feature.type
 				if a_type /= Void then
-					print (a_type.base_type (an_inherited_feature.parent.type, a_universe).to_text)
+					print (a_type.base_type (a_context, a_universe).to_text)
 				end
 				print ("]%N")
 end
@@ -848,6 +851,7 @@ end
 			args: ET_FORMAL_ARGUMENT_LIST
 			i, nb: INTEGER
 			a_type: ET_TYPE
+a_context: ET_NESTED_TYPE_CONTEXT
 		do
 			if reportable_vdrd2_error (where) then
 				print ("[VDRD-2] Class ")
@@ -889,12 +893,13 @@ if a_universe /= Void then
 				print ("]%N")
 
 				print ("%T[")
-				args := an_inherited_feature.arguments
+				create a_context.make (an_inherited_feature.parent.type, where)
+				args := an_inherited_feature.precursor_feature.arguments
 				if args /= Void then
 					nb := args.count
 					from i := 1 until i > nb loop
 						a_type := args.formal_argument (i).type
-						print (a_type.base_type (an_inherited_feature.parent.type, a_universe).to_text)
+						print (a_type.base_type (a_context, a_universe).to_text)
 						if i /= nb then
 							print (", ")
 						end
@@ -902,9 +907,9 @@ if a_universe /= Void then
 					end
 				end
 				print ("], [")
-				a_type := an_inherited_feature.type
+				a_type := an_inherited_feature.precursor_feature.type
 				if a_type /= Void then
-					print (a_type.base_type (an_inherited_feature.parent.type, a_universe).to_text)
+					print (a_type.base_type (a_context, a_universe).to_text)
 				end
 				print ("]%N")
 			end
@@ -1955,6 +1960,33 @@ end
 				print ("' must be the final name of a query, or an argument of routine `")
 				print (a_feature.name.name)
 				print ("'.%N")
+			end
+		end
+
+	report_vtat0c_error (where: ET_CLASS; a_type: ET_QUALIFIED_LIKE_CURRENT) is
+			-- Report VTAT error (ETL2 p.214): the anchor in the
+			-- Anchored_type must be the final name of a query
+			-- in class `where'.
+		require
+			where_not_void: where /= Void
+			where_parsed: where.is_parsed
+			no_syntax_error: not where.has_syntax_error
+			a_type_not_void: a_type /= Void
+		do
+			if reportable_vtat_error (where) then
+--				print_compiler (is_ise, Question_tag, is_hact, Question_tag,
+--					is_se, No_tag, False, No_tag)
+				print ("[VTAT] Class ")
+				print (where.name.name)
+				print (" (")
+				print (a_type.position.line)
+				print (",")
+				print (a_type.position.column)
+				print ("): invalid type '")
+				print (a_type.to_text)
+				print ("': the anchor `")
+				print (a_type.name.name)
+				print ("' must be the final name of a query.%N")
 			end
 		end
 
