@@ -3,21 +3,21 @@ Version ?
 	Gobo Eiffel XML Library:
 
 	* XM_DOCUMENT.process_to_events makes the tree an event source.
-	* New XM_XMLNS_GENERATOR filter injects xmlns declarations 
+	* New XM_XMLNS_GENERATOR filter injects xmlns declarations
 	  in event stream. It can be combined with a print filter.
-	* XM_FORMATTER is now a wrapper for the above and so 
+	* XM_FORMATTER is now a wrapper for the above and so
 	  produces XML compliant output.
-	* XM_INDENT_PRETTY_PRINT_FILTER and XM_WHITESPACE_NORMALIZER 
+	* XM_INDENT_PRETTY_PRINT_FILTER and XM_WHITESPACE_NORMALIZER
 	  added to allow pretty indented output.
-	* XM_NAMESPACE_RESOLVER has new option to forward 
+	* XM_NAMESPACE_RESOLVER has new option to forward
 	  xmlns attribute events (forward_xmlns).
-	* XM_DTD_CALLBACKS: on_doctype called first; on_dtd_end, 
+	* XM_DTD_CALLBACKS: on_doctype called first; on_dtd_end,
 	  on_dtd_comment, on_dtd_processing_instruction added.
 
 	Gobo Eiffel String Library
 
 	* new library
-	* DS_SPLITTER: parse a string to and from lists of tokens. 
+	* ST_SPLITTER: parse a string to and from lists of tokens.
 
 Version 3.3 - 2 November 2003
 
@@ -28,7 +28,7 @@ Version 3.3 - 2 November 2003
 
 	Gobo Eiffel XML Library:
 
-	* XM_EIFFEL_PARSER.disable_namespaces allows multiple 
+	* XM_EIFFEL_PARSER.disable_namespaces allows multiple
 	  colons in names (strict XML compliance).
 
 	Gobo Eiffel Kernel Library:
@@ -109,27 +109,27 @@ Version 3.2 - 29 June 2003
 	  where missing and creation procedures updated accordingly. Also
 	  for the root element, so that `root_node' returns the real
 	  root (XM_DOCUMENT). XM_NODE.level consequently offset by 1.
-	* XM_COMPOSITE now a read-only list. Modification routines 
-	  are in XM_ELEMENT and XM_DOCUMENT (typing is used to allow 
+	* XM_COMPOSITE now a read-only list. Modification routines
+	  are in XM_ELEMENT and XM_DOCUMENT (typing is used to allow
 	  only the correct node types to be added).
-	* XM_COMPOSITE descendants' modification routines remove 
-	  a node from its previous parent if any. They also have 
-	  `make_last' creation routines that add the node to the 
+	* XM_COMPOSITE descendants' modification routines remove
+	  a node from its previous parent if any. They also have
+	  `make_last' creation routines that add the node to the
 	  composite. `make_last' is faster than `make', `force_last'.
 	* XM_NODE.parent_element added, root_node now XM_DOCUMENT.
-	* XM_NAMESPACE stricter contracts and uri invariant, 
-	  `is_default' replaced by `not has_prefix', removed rather 
+	* XM_NAMESPACE stricter contracts and uri invariant,
+	  `is_default' replaced by `not has_prefix', removed rather
 	  than obsoleted due to SmartEiffel's ANY using the name.
 	* XM_DOCUMENT.set_root_element now exported to ANY.
-	* XM_NAMESPACE_RESOLVER now issues empty strings (the default 
-	  namespace) rather than the parent element's namespace for 
+	* XM_NAMESPACE_RESOLVER now issues empty strings (the default
+	  namespace) rather than the parent element's namespace for
 	  on_attribute events in the case of unprefixed attributes.
 	  (XML Names says unprefixed attributes have no namespace.)
-	* XM_ELEMENT.*attribute_by_name only look for unprefixed 
+	* XM_ELEMENT.*attribute_by_name only look for unprefixed
 	  attributes, for the same reason as above.
 	* Added _by_qualified_name routines to tree nodes.
 	* XM_FORMATTER.last_string replaced by .last_output stream.
-	* XM_NODE_TYPER.attribute obsoleted and renamed to `xml_attribute' 
+	* XM_NODE_TYPER.attribute obsoleted and renamed to `xml_attribute'
 	  to avoid future keyword collision.
 
 	Miscellaneous:
@@ -186,10 +186,10 @@ Version 3.1 - 18 December 2002
 
 	Gobo Eiffel XML Library:
 
-	* Tree: `namespace' in named nodes is now an object, which 
+	* Tree: `namespace' in named nodes is now an object, which
 	  contains URI and prefix. It may be shared.
 	* Tree: `*_by_name' routines check the namespace is the same.
-	* Tree: `is_first' and `is_last' in XM_COMPOSITE for 
+	* Tree: `is_first' and `is_last' in XM_COMPOSITE for
 	  checking position within parent.
 	* Tree: added `elements' to XM_COMPOSITE.
 
@@ -342,7 +342,7 @@ Version 2.0 - 29 April 2001
 	gelex:
 
 	* Added debugging instructions at the end of routine
-	  `read_token' in classes YY_COMPRESSED_SCANNER_SKELETON, 
+	  `read_token' in classes YY_COMPRESSED_SCANNER_SKELETON,
 	  YY_INTERACTIVE_SCANNER_SKELETON and YY_FULL_SCANNER_SKELETON.
 	  One need to compile the system with 'debug ("GELEX")'
 	  enabled. The routine `print_last_token' can be redefined
@@ -480,7 +480,7 @@ Version 1.5 - 2 October 1999
 	* Fixed bug whereby the end-of-file was not recognized
 	  properly (reported by Patrick Doyle).
 	* Updated documentation to state that the Eiffel type
-	  for the semantic of a mid-rule action is the same 
+	  for the semantic of a mid-rule action is the same
 	  type as declared for the full grouping (reported by
 	  Andreas Auras).
 
@@ -557,13 +557,13 @@ Version 1.3 - 15 August 1998
 	* Added warnings in gelex when a rule cannot be
 	  matched and when the default rule can be matched
 	  despite the %option nodefault or -s option.
-	* Renamed classes KL_SHARED_*_ROUTINES as 
+	* Renamed classes KL_SHARED_*_ROUTINES as
 	  KL_IMPORTED_*_ROUTINES. (The old class names are
 	  still temporarily valid using the classes in cluster
 	  "$GOBO\library\kernel\obsolete".)
 	* Gepp now supports #include "filename" instructions.
 	* The second generic parameter of DS_HASH_TABLE is now
-	  constrained to HASHABLE (HASHABLE was not part of 
+	  constrained to HASHABLE (HASHABLE was not part of
 	  SmallEiffel in previous releases).
 	* Cluster `error' has been added to the Gobo Eiffel
 	  Utility Library to support a flexible error
