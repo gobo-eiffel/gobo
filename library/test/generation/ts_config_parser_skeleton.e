@@ -27,6 +27,9 @@ inherit
 			make as make_config_scanner
 		end
 
+	TS_CONFIG_CONSTANTS
+		export {NONE} all end
+
 	KL_SHARED_FILE_SYSTEM
 		export {NONE} all end
 
@@ -227,27 +230,6 @@ feature -- Defaults
 			execute_not_void: execute /= Void
 		end
 
-	Default_class_regexp: LX_REGULAR_EXPRESSION is
-			-- Default class regexp
-		once
-			create {LX_DFA_REGULAR_EXPRESSION} Result.compile_case_insensitive ("TEST_.*")
-		ensure
-			regexp_not_void: Result /= Void
-			regexp_compiled: Result.is_compiled
-		end
-
-	Default_feature_regexp: LX_REGULAR_EXPRESSION is
-			-- Default feature regexp
-		once
-			create {LX_DFA_REGULAR_EXPRESSION} Result.compile_case_insensitive ("test_.*")
-		ensure
-			regexp_not_void: Result /= Void
-			regexp_compiled: Result.is_compiled
-		end
-
-	Default_class_prefix: STRING is "X"
-			-- Default prefix of generated testcase class names
-
 	default_compile (root_class: STRING): STRING is
 			-- Default compilation command-line
 		require
@@ -300,12 +282,8 @@ feature -- Defaults
 			class_regexp_not_void: class_regexp /= Void
 			feature_regexp_not_void: feature_regexp /= Void
 			class_prefix_not_void: class_prefix /= Void
-		local
-			a_name, a_pathname: ET_IDENTIFIER
 		do
-			create a_name.make ("root")
-			create a_pathname.make (".")
-			create Result.make (a_name, a_pathname, class_regexp, feature_regexp, class_prefix)
+			create Result.make (Default_cluster_name, Default_cluster_pathname, class_regexp, feature_regexp, class_prefix)
 		ensure
 			cluster_not_void: Result /= Void
 		end

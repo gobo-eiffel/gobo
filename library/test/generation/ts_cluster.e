@@ -12,9 +12,16 @@ indexing
 
 class TS_CLUSTER
 
+inherit
+
+	ANY
+
+	TS_CONFIG_CONSTANTS
+		export {NONE} all end
+
 creation
 
-	make
+	make, make_default
 
 feature {NONE} -- Initialization
 
@@ -42,6 +49,16 @@ feature {NONE} -- Initialization
 			class_regexp_set: class_regexp = cregexp
 			feature_regexp_set: feature_regexp = fregexp
 			class_prefix_set: class_prefix = a_prefix
+		end
+
+	make_default is
+			-- Create a new default cluster.
+		do
+			name := Default_cluster_name
+			pathname := Default_cluster_pathname
+			class_regexp := Default_class_regexp
+			feature_regexp := Default_feature_regexp
+			class_prefix := Default_class_prefix
 		end
 
 feature -- Access

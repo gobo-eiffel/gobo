@@ -271,7 +271,7 @@ feature -- Access
 			-- Directory where test classes are generated;
 			-- Void means current directory
 
-	error_handler: TS_ERROR_HANDLER
+	error_handler: UT_ERROR_HANDLER
 			-- Error handler
 
 feature {NONE} -- Implementation
