@@ -11,7 +11,7 @@ To compile this example:
 2. Use your favorite Eiffel compiler to compile the Eiffel system using
    the provided Ace file (ISE Eiffel: ise.ace, Halstenbach: hact.ace) or
    ESD file (Visual Eiffel: ve.esd). With SmallEiffel, you can just execute
-   the script se.bat (after possible modifications).
+   the script se.bat or se.sh (after possible modifications).
 3. Run the filter using:
 
        ascii2ps [-h][-n][-d date][-t time][-l][-2][filename|-][filename|-]
@@ -40,7 +40,7 @@ To compile this example:
            Output filename. Use standard output if not specified or 
            when '-' is given instead.
 
-Note: The options '-d' and '-t' are typically used to provided
+Note: The options '-d' and '-t' are typically used to provide
 the current date and time. It would have been more user-friendly
 for user of 'ascii2ps' if the date and time were internally computed
 by the program. However there is no portable Date and Time Eiffel
