@@ -170,6 +170,16 @@
 			<ref name="dir_if_unless"/>
 			<attribute name="executable"/>
 			<optional>
+				<attribute name="accept_errors">
+					<!-- runtime evaluation
+					<choice>
+						<value>true</value>
+						<value>false</value>
+					</choice>
+					-->
+				</attribute>
+			</optional>
+			<optional>
 				<ref name="fileset"/>
 			</optional>
 		</element>
