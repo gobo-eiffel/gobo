@@ -39,7 +39,7 @@ feature {NONE} -- Initialization
 feature -- Status report
 
 	is_executable: BOOLEAN is
-			-- Can commandbe executed?
+			-- Can command be executed?
 		do
 			Result := (input_filename /= Void and then input_filename.count > 0) and
 				(output_filename /= Void and then output_filename.count > 0)

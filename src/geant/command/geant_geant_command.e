@@ -105,26 +105,14 @@ feature -- Execution
 			a_variables: GEANT_VARIABLES
 			a_target: GEANT_TARGET
 		do
-			if is_target_executable then
-					-- call target of current project:
-				!! ucs.make_from_string (start_target_name)
-				a_target := project.target_with_name (ucs)
-				project.execute_target (a_target, True)
-			else
-				check filename_executable: is_filename_executable end
+			if is_filename_executable then
 					-- Create a new project and run it's build process:
 				if reuse_variables then
 					a_variables := project.variables
-				else
-					a_variables := Void
 				end
 				
-				if filename /= Void and then filename.count > 0 then
-					!! ucs.make_from_string (filename)
-					!! a_project.make_with_filename (ucs, a_variables)
-				else
-					!! a_project.make (a_variables)
-				end
+				!! ucs.make_from_string (filename)
+				!! a_project.make_with_filename (ucs, a_variables)
 	
 					-- Load build configuration:
 				a_project.load (start_target_name)
@@ -138,6 +126,12 @@ feature -- Execution
 						Exceptions.die (1)
 					end
 				end
+			else
+				check target_executable: is_target_executable end
+					-- call target of current project:
+				!! ucs.make_from_string (start_target_name)
+				a_target := project.target_with_name (ucs)
+				project.build_target (a_target)
 			end
 		end
 

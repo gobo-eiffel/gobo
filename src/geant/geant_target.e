@@ -80,6 +80,9 @@ feature -- Access
 	project: GEANT_PROJECT
 			-- Project to which this target belongs
 
+	is_executed: BOOLEAN
+			-- Was this target executed already?
+			
 feature -- Setting
 
 	set_name (a_name: STRING) is
@@ -102,6 +105,15 @@ feature -- Setting
 			description := a_description
 		ensure
 			description_set: description = a_description
+		end
+
+
+	set_executed (a_is_executed: BOOLEAN) is
+			-- Set `is_executed' to `a_is_executed'.
+		do
+			is_executed := a_is_executed
+		ensure
+			is_executed_set: is_executed = a_is_executed
 		end
 
 feature -- Processing
@@ -228,6 +240,8 @@ feature -- Processing
 					file_system.set_current_working_directory (old_cwd)
 
 				end
+				
+				set_executed (True)
 			end	-- if
 		end
 

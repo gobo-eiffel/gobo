@@ -53,8 +53,6 @@ feature {NONE} -- Initialization
 			else
 				set_variables (a_variables)
 			end
-			!! build_targets.make (10)
-			!! executed_targets.make (10)
 		ensure
 			build_filename_set: build_filename = a_filename
 			variables_set: a_variables /= Void implies variables = a_variables
@@ -67,11 +65,14 @@ feature -- Access
 			-- Name of the file containing the configuration
 			-- information to build current project
 
+	start_target_name: UC_STRING
+			-- Name of first target to be built
+
 	description: STRING
-		-- project description
+			-- project description
 
 	variables: GEANT_VARIABLES
-		-- project variables
+			-- project variables
 
 	targets: DS_ARRAYED_LIST [GEANT_TARGET]
 			-- Target elements found in current project
@@ -144,7 +145,7 @@ feature -- Processing
 		local
 			xml_parser: GEANT_PROJECT_PARSER
 			ucs: UC_STRING
-			start_target_name: UC_STRING
+			tmp_start_target_name: UC_STRING
 			children: DS_ARRAYED_LIST [GEANT_ELEMENT]
 			target_elements: DS_ARRAYED_LIST [GEANT_ELEMENT]
 			an_element: GEANT_ELEMENT
@@ -186,7 +187,7 @@ feature -- Processing
 				if a_start_target_name /= Void and then a_start_target_name.count > 0 then
 					!! ucs.make_from_string (a_start_target_name)
 					if target_with_name (ucs) /= Void then
-						start_target_name := ucs
+						tmp_start_target_name := ucs
 					else
 						print ("geant error: unknown target: " + a_start_target_name.out + "%N")
 						Exceptions.die (1)
@@ -194,28 +195,28 @@ feature -- Processing
 				end
 
 					-- Find start target:
-				if start_target_name = Void or else start_target_name.count = 0 then
+				if tmp_start_target_name = Void or else tmp_start_target_name.count = 0 then
 					if root_element.has_attribute (Default_attribute_name) then
 						ucs := root_element.attribute_value_by_name (Default_attribute_name)
 						if target_with_name (ucs) /= Void then
-							start_target_name := ucs
+							tmp_start_target_name := ucs
 						end
 					else
 							-- Use first target in project file for start_target_name:
 						if targets /= void and then targets.count > 0 then
-							!! start_target_name.make_from_string (targets.item (1).name)
+							!! tmp_start_target_name.make_from_string (targets.item (1).name)
 						end
 					end
 				end
-				if start_target_name = Void then
+				if tmp_start_target_name = Void then
 					reset
 					print ("geant error: unknown target%N")
-				elseif start_target_name.empty then
+				elseif tmp_start_target_name.empty then
 					reset
 					print ("geant error: unknown target%N")
 				else
-							-- put start target on the stack:
-					build_targets.force (target_with_name (start_target_name))
+						-- put start target on the stack:
+					start_target_name := tmp_start_target_name
 				end
 			else
 				reset
@@ -223,29 +224,28 @@ feature -- Processing
 			end
 	    end
 
-	calculate_build_order is
+	calculate_depend_order (a_depend_targets: DS_ARRAYED_STACK [GEANT_TARGET]) is
 			-- Setup `build_targets' according to target dependencies
 		require
 			loaded: targets /= Void
-			build_targets_not_void: build_targets /= Void
-			build_targets_not_empty: build_targets.count > 0
+			depend_targets_not_void: a_depend_targets /= Void
 		local
 			a_target: GEANT_TARGET
-			a_dependent_targets: DS_ARRAYED_STACK [GEANT_TARGET]
+			a_tmp_dependent_targets: DS_ARRAYED_STACK [GEANT_TARGET]
 		do
 				-- Get dependent targets:
-			a_target := build_targets.item
+			a_target := a_depend_targets.item
 			if verbose then
 				print("**pushing target : " + a_target.name + "%N")
 			end
-			a_dependent_targets := a_target.dependent_targets
+			a_tmp_dependent_targets := a_target.dependent_targets
 
 				-- Add all dependent targets to `build_targets':
-			from until a_dependent_targets.count = 0 loop
-				build_targets.force (a_dependent_targets.item)
-				a_dependent_targets.remove
+			from until a_tmp_dependent_targets.count = 0 loop
+				a_depend_targets.force (a_tmp_dependent_targets.item)
+				a_tmp_dependent_targets.remove
 					-- Recursive call of routine for dependent target:
-				calculate_build_order
+				calculate_depend_order (a_depend_targets)
 			end
 		end
 
@@ -253,46 +253,52 @@ feature -- Processing
 			-- Build project: execute project's tasks.
 		require
 			loaded: targets /= Void
-		local
-			a_target: GEANT_TARGET
+			start_target_name_not_void: start_target_name /= Void
+			start_target_name_not_empty: start_target_name.count > 1
 		do
 			if verbose then
 				print("Building Project%N")
 			end
-				-- Analyse dependencies of targets:
-			calculate_build_order
+			build_target (target_with_name (start_target_name))
+		end
 
-				-- Execute configured targets:
-			from until build_targets.count = 0 loop
-				a_target := build_targets.item
-				execute_target (a_target, false)
-				build_targets.remove
+	build_target (a_target: GEANT_TARGET) is
+			-- Analyze dependencies and execute `a_target'.
+		require
+			a_target_not_void: a_target /= Void
+		local
+			depend_targets: DS_ARRAYED_STACK [GEANT_TARGET]
+		do
+			-- Analyze dependencies of targets.
+			!! depend_targets.make (10)
+			depend_targets.force (a_target)
+			calculate_depend_order (depend_targets)
+				-- Execute depend targets:
+			from until depend_targets.count = 1 loop
+				execute_target (depend_targets.item, False)
+				depend_targets.remove
 			end
+				-- Execute `a_target'.
+			check last_target: depend_targets.item = a_target end
+			execute_target (a_target, True)
 		end
 
 	execute_target (a_target: GEANT_TARGET; a_force: BOOLEAN) is
 			-- Execute `a_target' if not executed before;
 			-- Execute anyway if `a_force' is True.
-			-- Add `a_target' to `executed_targets'.
 		require
 			target_not_void: a_target = Void
 		do
-			if a_force or else not executed_targets.has (a_target) then
+			if a_force or else not a_target.is_executed then
 				current_target := a_target
 				print("%N" + a_target.name)
-				if verbose then
-					print(" (stack item nr=" + build_targets.count.out + ")")
-				end
 				print(":%N%N")
 				a_target.execute
-				executed_targets.force_last (a_target)
 				current_target := Void
 			end
 		ensure
-			target_added_toexecuted_targets: executed_targets.has (a_target)
 			current_target_void: current_target = Void
 		end
-
 
 	reset is
 			-- Reset current state of project.
@@ -301,9 +307,6 @@ feature -- Processing
 			targets := Void
 			build_successful := True
 		end
-
-	build_targets: DS_ARRAYED_STACK [GEANT_TARGET]
-			-- Targets to be executed
 
 feature {GEANT_COMMAND} -- Access GEANT_COMMAND
 
@@ -323,9 +326,6 @@ feature {NONE} -- Implementation
 		ensure
 			parser_factory_not_void: Result /= Void
 		end
-
-	executed_targets: DS_ARRAYED_LIST [GEANT_TARGET]
-			-- Targets already executed
 
 invariant
 
