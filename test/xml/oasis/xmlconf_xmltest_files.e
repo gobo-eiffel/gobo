@@ -373,7 +373,11 @@ xmltest_valid_sa_013: STRING is "<!DOCTYPE doc [%R%N<!ELEMENT doc (#PCDATA)>%R%N
 xmltest_valid_sa_014: STRING is "<!DOCTYPE doc [%R%N<!ELEMENT doc (#PCDATA)>%R%N<!ATTLIST doc abcdefghijklmnopqrstuvwxyz CDATA #IMPLIED>%R%N]>%R%N<doc abcdefghijklmnopqrstuvwxyz=%"v1%"></doc>%R%N"
 xmltest_valid_sa_015: STRING is "<!DOCTYPE doc [%R%N<!ELEMENT doc (#PCDATA)>%R%N<!ATTLIST doc ABCDEFGHIJKLMNOPQRSTUVWXYZ CDATA #IMPLIED>%R%N]>%R%N<doc ABCDEFGHIJKLMNOPQRSTUVWXYZ=%"v1%"></doc>%R%N"
 xmltest_valid_sa_016: STRING is "<!DOCTYPE doc [%R%N<!ELEMENT doc (#PCDATA)>%R%N]>%R%N<doc><?pi?></doc>%R%N"
-xmltest_valid_sa_017: STRING is "<!DOCTYPE doc [%R%N<!ELEMENT doc (#PCDATA)>%R%N]>%R%N<doc><?pi some data ? > <??></doc>%R%N"
+xmltest_valid_sa_017: STRING is
+	once
+			-- There is bug in SE -0.74 with ANSI C trigraphs (e.g. "??>" = "}").
+		Result := "<!DOCTYPE doc [%R%N<!ELEMENT doc (#PCDATA)>%R%N]>%R%N<doc><?pi some data ? > <?"+"?></doc>%R%N"
+	end
 xmltest_valid_sa_018: STRING is "<!DOCTYPE doc [%R%N<!ELEMENT doc (#PCDATA)>%R%N]>%R%N<doc><![CDATA[<foo>]]></doc>%R%N"
 xmltest_valid_sa_019: STRING is "<!DOCTYPE doc [%R%N<!ELEMENT doc (#PCDATA)>%R%N]>%R%N<doc><![CDATA[<&]]></doc>%R%N"
 xmltest_valid_sa_020: STRING is "<!DOCTYPE doc [%R%N<!ELEMENT doc (#PCDATA)>%R%N]>%R%N<doc><![CDATA[<&]>]]]></doc>%R%N"
@@ -493,7 +497,11 @@ xmltest_valid_sa_out_013: STRING is "<doc _.-0123456789=%"v1%"></doc>"
 xmltest_valid_sa_out_014: STRING is "<doc abcdefghijklmnopqrstuvwxyz=%"v1%"></doc>"
 xmltest_valid_sa_out_015: STRING is "<doc ABCDEFGHIJKLMNOPQRSTUVWXYZ=%"v1%"></doc>"
 xmltest_valid_sa_out_016: STRING is "<doc><?pi ?></doc>"
-xmltest_valid_sa_out_017: STRING is "<doc><?pi some data ? > <??></doc>"
+xmltest_valid_sa_out_017: STRING is
+	once
+			-- There is bug in SE -0.74 with ANSI C trigraphs (e.g. "??>" = "}").
+		Result := "<doc><?pi some data ? > <?"+"?></doc>"
+	end
 xmltest_valid_sa_out_018: STRING is "<doc>&lt;foo&gt;</doc>"
 xmltest_valid_sa_out_019: STRING is "<doc>&lt;&amp;</doc>"
 xmltest_valid_sa_out_020: STRING is "<doc>&lt;&amp;]&gt;]</doc>"
