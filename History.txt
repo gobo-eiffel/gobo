@@ -60,9 +60,15 @@ Version 3.2 - ?
 	Gobo Eiffel XML Library:
 
 	* Tree formatter now produces valid XML.
-	* The parent of the root element is now correctly set. So 
-	  XM_NODE.root_node returns the real root (XM_DOCUMENT) rather 
-	  than the root element. XM_NODE.level consequently offset by 1.
+	* Tree node parent not void (when not the root node) implemented
+	  where missing and creation procedures updated accordingly. Also
+	  for the root element, so that 'root_node' returns the real
+	  root (XM_DOCUMENT). XM_NODE.level consequently offset by 1.
+	* XM_COMPOSITE now a read-only list. Modification routines 
+	  are in XM_ELEMENT and XM_DOCUMENT (restricted to XM_DOCUMENT_NODE
+	  in the latter case).
+	* XM_NODE.parent_element added, root_node now XM_DOCUMENT.
+	* XM_DOCUMENT.set_root_element now exported to ANY.
 	* XM_NAMESPACE_RESOLVER now issues empty strings (the default 
 	  namespace) rather than the parent element's namespace for 
 	  on_attribute events in the case of unprefixed attributes.
