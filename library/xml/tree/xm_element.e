@@ -83,6 +83,31 @@ feature -- List
 	
 feature -- Status report
 
+	has_attribute_by_qualified_name (a_uri: STRING; a_name: STRING): BOOLEAN is
+			-- Does current element contain an attribute with 
+			-- this qualified name?
+		require
+			a_uri_not_void: a_uri /= Void
+			a_name_not_void: a_name /= Void
+		local
+			a_cursor: like new_cursor
+			typer: XM_NODE_TYPER
+		do
+			create typer
+			a_cursor := new_cursor
+			from a_cursor.start until a_cursor.after loop
+				a_cursor.item.process (typer)
+				if typer.is_attribute and then 
+					typer.attribute.has_qualified_name (a_uri, a_name)
+				then
+					Result := True
+					a_cursor.go_after -- Jump out of the loop.
+				else
+					a_cursor.forth
+				end
+			end
+		end
+		
 	has_attribute_by_name (a_name: STRING): BOOLEAN is
 			-- Does current element contain an attribute named `a_name'?
 			-- element?
@@ -158,6 +183,28 @@ feature -- Access (from XM_COMPOSITE)
 			end
 		end
 
+	has_element_by_qualified_name (a_uri: STRING; a_name: STRING): BOOLEAN is
+			-- Has current node at least one direct child
+			-- element with this qualified name ?
+		local
+			a_cursor: like new_cursor
+			typer: XM_NODE_TYPER
+		do
+			create typer
+			a_cursor := new_cursor
+			from a_cursor.start until a_cursor.after loop
+				a_cursor.item.process (typer)
+				if typer.is_element and then 
+					typer.element.has_qualified_name (a_uri, a_name)
+				then
+					Result := True
+					a_cursor.go_after -- Jump out of the loop.
+				else
+					a_cursor.forth
+				end
+			end
+		end
+		
 	element_by_name (a_name: STRING): XM_ELEMENT is
 			-- Direct child element with name `a_name';
 			-- If there are more than one element with that name, anyone may be returned.
@@ -172,6 +219,29 @@ feature -- Access (from XM_COMPOSITE)
 				a_cursor.item.process (typer)
 				if typer.is_element and then 
 					named_same_name (typer.element, a_name)
+				then
+					Result := typer.element
+					a_cursor.go_after -- Jump out of the loop.
+				else
+					a_cursor.forth
+				end
+			end
+		end
+		
+	element_by_qualified_name (a_uri: STRING; a_name: STRING): XM_ELEMENT is
+			-- Direct child element with given qualified name;
+			-- If there are more than one element with that name, anyone may be returned.
+			-- Return Void if no element with that name is a child of current node.
+		local
+			a_cursor: like new_cursor
+			typer: XM_NODE_TYPER
+		do
+			create typer
+			a_cursor := new_cursor
+			from a_cursor.start until a_cursor.after loop
+				a_cursor.item.process (typer)
+				if typer.is_element and then 
+					typer.element.has_qualified_name (a_uri, a_name)
 				then
 					Result := typer.element
 					a_cursor.go_after -- Jump out of the loop.
@@ -208,6 +278,34 @@ feature -- Access
 		ensure
 			attribute_not_void: has_attribute_by_name (a_name) = (Result /= Void)
 			namespace: Result /= Void implies same_namespace (Result)
+		end
+
+	attribute_by_qualified_name (a_uri: STRING; a_name: STRING): XM_ATTRIBUTE is
+			-- Attribute named `a_name' in current element;
+			-- Return Void if no such attribute was found.
+		require
+			a_uri_not_void: a_uri /= Void
+			a_name_not_void: a_name /= Void
+		local
+			a_cursor: like new_cursor
+			typer: XM_NODE_TYPER
+		do
+			create typer
+			a_cursor := new_cursor
+			from a_cursor.start until a_cursor.after loop
+				a_cursor.item.process (typer)
+				if typer.is_attribute and then 
+					typer.attribute.has_qualified_name (a_uri, a_name)
+				then
+					Result := typer.attribute
+					a_cursor.go_after -- Jump out of the loop.
+				else
+					a_cursor.forth
+				end
+			end
+		ensure
+			attribute_not_void: has_attribute_by_qualified_name (a_uri, a_name) = (Result /= Void)
+			namespace: Result /= Void implies Result.has_qualified_name (a_uri, a_name)
 		end
 
 	namespace_declarations: DS_LINKED_LIST [XM_NAMESPACE] is
@@ -263,7 +361,7 @@ feature {XM_PARSER} -- Element change
 
 	add_attribute (a_name: STRING; a_ns: XM_NAMESPACE; a_value: STRING) is
 			-- Add an attribute to current element.
-		obsolete "Use force_last on an attribute node"
+		obsolete "Use force_last with an attribute node parameter"
 		require
 			a_name_not_void: a_name /= Void
 			a_name_not_empty: a_name.count > 0

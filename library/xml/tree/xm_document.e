@@ -112,6 +112,16 @@ feature -- Access
 			root_element: has_element_by_name (a_name) implies Result = root_element
 		end
 		
+	element_by_qualified_name (a_uri: STRING; a_name: STRING): XM_ELEMENT is
+			-- Root element, if name matches, Void otherwise.
+		do
+			if has_element_by_qualified_name (a_uri, a_name) then
+				Result := root_element
+			end
+		ensure then
+			root_element: has_element_by_qualified_name (a_uri, a_name) implies Result = root_element
+		end
+		
 	has_element_by_name (a_name: STRING): BOOLEAN is
 			-- Has current node at least one direct child
 			-- element with the name `a_name'?
@@ -121,6 +131,14 @@ feature -- Access
 			Result := same_string (root_element.name, a_name)
 		ensure then
 			definition: Result = same_string (root_element.name, a_name)
+		end
+		
+	has_element_by_qualified_name (a_uri: STRING; a_name: STRING): BOOLEAN is
+			-- Is this the qualified name of the root element?
+		do
+			Result := root_element.has_qualified_name (a_uri, a_name)
+		ensure then
+			definition: Result = root_element.has_qualified_name (a_uri, a_name)
 		end
 
 feature -- Text
