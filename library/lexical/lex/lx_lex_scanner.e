@@ -572,6 +572,11 @@ else
 --|#line 231
 
 					last_token := Caret_code
+						-- The line number is set when creating the rule,
+						-- but it often gets the wrong number because
+						-- it is done after the corresponding action has
+						-- be scanned.
+					rule_line_nb := line_nb
 					set_start_condition (REGEXP)
 				
 end
@@ -580,13 +585,13 @@ if yy_act = 56 then
 	if yy_position > yy_start_position then
 		input_buffer.set_beginning_of_line (yy_content.item (yy_position - 1) = '%N')
 	end
---|#line 235
+--|#line 240
 last_token := Left_brace_code
 else
 	if yy_position > yy_start_position then
 		input_buffer.set_beginning_of_line (yy_content.item (yy_position - 1) = '%N')
 	end
---|#line 236
+--|#line 241
 last_token := Right_brace_code
 end
 end
@@ -596,7 +601,7 @@ if yy_act = 58 then
 	if yy_position > yy_start_position then
 		input_buffer.set_beginning_of_line (yy_content.item (yy_position - 1) = '%N')
 	end
---|#line 237
+--|#line 242
 
 					last_token := Less_than_code
 					set_start_condition (SCOND)
@@ -605,9 +610,14 @@ else
 	if yy_position > yy_start_position then
 		input_buffer.set_beginning_of_line (yy_content.item (yy_position - 1) = '%N')
 	end
---|#line 241
+--|#line 246
 
 					less (0)
+						-- The line number is set when creating the rule,
+						-- but it often gets the wrong number because
+						-- it is done after the corresponding action has
+						-- be scanned.
+					rule_line_nb := line_nb
 					set_start_condition (REGEXP)
 				
 end
@@ -615,7 +625,7 @@ else
 	if yy_position > yy_start_position then
 		input_buffer.set_beginning_of_line (yy_content.item (yy_position - 1) = '%N')
 	end
---|#line 248
+--|#line 258
 
 					last_token := Double_quote_code
 					set_start_condition (QUOTE)
@@ -630,13 +640,13 @@ if yy_act = 61 then
 	if yy_position > yy_start_position then
 		input_buffer.set_beginning_of_line (yy_content.item (yy_position - 1) = '%N')
 	end
---|#line 252
+--|#line 262
 last_token := Dollar_code
 else
 	if yy_position > yy_start_position then
 		input_buffer.set_beginning_of_line (yy_content.item (yy_position - 1) = '%N')
 	end
---|#line 253
+--|#line 263
 
 					last_string := string_.to_lower (text)
 					if name_definitions.has (last_string) then
@@ -652,7 +662,7 @@ if yy_act = 63 then
 	if yy_position > yy_start_position then
 		input_buffer.set_beginning_of_line (yy_content.item (yy_position - 1) = '%N')
 	end
---|#line 262
+--|#line 272
 
 					last_token := Left_brace_code
 					set_start_condition (NUM)
@@ -661,7 +671,7 @@ else
 	if yy_position > yy_start_position then
 		input_buffer.set_beginning_of_line (yy_content.item (yy_position - 1) = '%N')
 	end
---|#line 266
+--|#line 276
 
 					last_string := text
 					if character_classes.has (last_string) then
@@ -682,25 +692,21 @@ if yy_act = 65 then
 	if yy_position > yy_start_position then
 		input_buffer.set_beginning_of_line (yy_content.item (yy_position - 1) = '%N')
 	end
---|#line 278
+--|#line 288
 last_token := EOF_OP
 else
 	if yy_position > yy_start_position then
 		input_buffer.set_beginning_of_line (yy_content.item (yy_position - 1) = '%N')
 	end
---|#line 279
+--|#line 289
 last_token := text_item (1).code
 end
 else
 	if yy_position > yy_start_position then
 		input_buffer.set_beginning_of_line (yy_content.item (yy_position - 1) = '%N')
 	end
---|#line 280
+--|#line 290
 
-						-- The line number has already been set when creating
-						-- `rule', but it often gets the wrong number because
-						-- it is done before parsing the current rule.
-					rule.set_line_nb (line_nb)
 					set_start_condition (ACTION_TEXT)
 				
 end
@@ -714,12 +720,8 @@ if yy_act = 68 then
 	if yy_position > yy_start_position then
 		input_buffer.set_beginning_of_line (yy_content.item (yy_position - 1) = '%N')
 	end
---|#line 287
+--|#line 293
 
-						-- The line number has already been set when creating
-						-- `rule', but it often gets the wrong number because
-						-- it is done before parsing the current rule.
-					rule.set_line_nb (line_nb)
 					line_nb := line_nb + 1
 					last_token := EMPTY
 					set_start_condition (SECT2)
@@ -728,7 +730,7 @@ else
 	if yy_position > yy_start_position then
 		input_buffer.set_beginning_of_line (yy_content.item (yy_position - 1) = '%N')
 	end
---|#line 296
+--|#line 298
 
 					last_token := CHAR
 					process_character (text_item (1).code)
@@ -739,13 +741,13 @@ if yy_act = 70 then
 	if yy_position > yy_start_position then
 		input_buffer.set_beginning_of_line (yy_content.item (yy_position - 1) = '%N')
 	end
---|#line 303
+--|#line 305
 -- Separator or comment.
 else
 	if yy_position > yy_start_position then
 		input_buffer.set_beginning_of_line (yy_content.item (yy_position - 1) = '%N')
 	end
---|#line 304
+--|#line 306
 line_nb := line_nb + 1
 end
 end
@@ -755,20 +757,20 @@ if yy_act = 72 then
 	if yy_position > yy_start_position then
 		input_buffer.set_beginning_of_line (yy_content.item (yy_position - 1) = '%N')
 	end
---|#line 305
+--|#line 307
 last_token := Comma_code
 else
 	if yy_position > yy_start_position then
 		input_buffer.set_beginning_of_line (yy_content.item (yy_position - 1) = '%N')
 	end
---|#line 306
+--|#line 308
 last_token := Star_code
 end
 else
 	if yy_position > yy_start_position then
 		input_buffer.set_beginning_of_line (yy_content.item (yy_position - 1) = '%N')
 	end
---|#line 307
+--|#line 309
 
 					last_token := Greater_than_code
 					set_start_condition (SECT2)
@@ -782,7 +784,7 @@ if yy_act = 75 then
 	if yy_position > yy_start_position then
 		input_buffer.set_beginning_of_line (yy_content.item (yy_position - 1) = '%N')
 	end
---|#line 311
+--|#line 313
 
 					last_token := NAME
 					last_value := text
@@ -791,14 +793,14 @@ else
 	if yy_position > yy_start_position then
 		input_buffer.set_beginning_of_line (yy_content.item (yy_position - 1) = '%N')
 	end
---|#line 315
+--|#line 317
 error_handler.bad_start_condition (text, filename, line_nb)
 end
 else
 	if yy_position > yy_start_position then
 		input_buffer.set_beginning_of_line (yy_content.item (yy_position - 1) = '%N')
 	end
---|#line 319
+--|#line 321
 -- Separator.
 end
 else
@@ -807,7 +809,7 @@ if yy_act = 78 then
 	if yy_position > yy_start_position then
 		input_buffer.set_beginning_of_line (yy_content.item (yy_position - 1) = '%N')
 	end
---|#line 320
+--|#line 322
 
 					last_token := NUMBER
 					check is_integer: string_.is_integer (text) end
@@ -817,14 +819,14 @@ else
 	if yy_position > yy_start_position then
 		input_buffer.set_beginning_of_line (yy_content.item (yy_position - 1) = '%N')
 	end
---|#line 325
+--|#line 327
 last_token := Comma_code
 end
 else
 	if yy_position > yy_start_position then
 		input_buffer.set_beginning_of_line (yy_content.item (yy_position - 1) = '%N')
 	end
---|#line 326
+--|#line 328
 
 					last_token := Right_brace_code
 					set_start_condition (REGEXP)
@@ -842,7 +844,7 @@ if yy_act = 81 then
 	if yy_position > yy_start_position then
 		input_buffer.set_beginning_of_line (yy_content.item (yy_position - 1) = '%N')
 	end
---|#line 330
+--|#line 332
 
 					error_handler.bad_character_in_brackets (filename, line_nb)
 					last_token := Right_brace_code
@@ -852,7 +854,7 @@ else
 	if yy_position > yy_start_position then
 		input_buffer.set_beginning_of_line (yy_content.item (yy_position - 1) = '%N')
 	end
---|#line 335
+--|#line 337
 
 					error_handler.missing_bracket (filename, line_nb)
 					line_nb := line_nb + 1
@@ -865,7 +867,7 @@ if yy_act = 83 then
 	if yy_position > yy_start_position then
 		input_buffer.set_beginning_of_line (yy_content.item (yy_position - 1) = '%N')
 	end
---|#line 344
+--|#line 346
 
 					process_character (text_item (1).code)
 					last_token := CHAR
@@ -874,7 +876,7 @@ else
 	if yy_position > yy_start_position then
 		input_buffer.set_beginning_of_line (yy_content.item (yy_position - 1) = '%N')
 	end
---|#line 348
+--|#line 350
 
 					last_token := Double_quote_code
 					set_start_condition (REGEXP)
@@ -887,7 +889,7 @@ if yy_act = 85 then
 	if yy_position > yy_start_position then
 		input_buffer.set_beginning_of_line (yy_content.item (yy_position - 1) = '%N')
 	end
---|#line 352
+--|#line 354
 
 					error_handler.missing_quote (filename, line_nb)
 					line_nb := line_nb + 1
@@ -898,7 +900,7 @@ else
 	if yy_position > yy_start_position then
 		input_buffer.set_beginning_of_line (yy_content.item (yy_position - 1) = '%N')
 	end
---|#line 360
+--|#line 362
 
 					last_token := CHAR
 					process_escaped_character
@@ -912,7 +914,7 @@ else
 	if yy_position > yy_start_position then
 		input_buffer.set_beginning_of_line (yy_content.item (yy_position - 1) = '%N')
 	end
---|#line 369
+--|#line 371
 
 					set_start_condition (CCL)
 					last_token := Caret_code
@@ -927,13 +929,13 @@ if yy_act = 88 then
 	if yy_position > yy_start_position then
 		input_buffer.set_beginning_of_line (yy_content.item (yy_position - 1) = '%N')
 	end
---|#line 373
+--|#line 375
 last_token := Caret_code
 else
 	if yy_position > yy_start_position then
 		input_buffer.set_beginning_of_line (yy_content.item (yy_position - 1) = '%N')
 	end
---|#line 374
+--|#line 376
 
 					last_token := CHAR
 					process_character (text_item (1).code)
@@ -944,7 +946,7 @@ else
 	if yy_position > yy_start_position then
 		input_buffer.set_beginning_of_line (yy_content.item (yy_position - 1) = '%N')
 	end
---|#line 379
+--|#line 381
 
 					error_handler.bad_character_class (filename, line_nb)
 					line_nb := line_nb + 1
@@ -959,13 +961,13 @@ if yy_act = 91 then
 	if yy_position > yy_start_position then
 		input_buffer.set_beginning_of_line (yy_content.item (yy_position - 1) = '%N')
 	end
---|#line 388
+--|#line 390
 last_token := Minus_code
 else
 	if yy_position > yy_start_position then
 		input_buffer.set_beginning_of_line (yy_content.item (yy_position - 1) = '%N')
 	end
---|#line 389
+--|#line 391
 
 					last_token := CHAR
 					process_character (text_item (1).code)
@@ -975,7 +977,7 @@ else
 	if yy_position > yy_start_position then
 		input_buffer.set_beginning_of_line (yy_content.item (yy_position - 1) = '%N')
 	end
---|#line 393
+--|#line 395
 
 					last_token := Right_bracket_code
 					set_start_condition (REGEXP)
@@ -991,7 +993,7 @@ if yy_act = 94 then
 	if yy_position > yy_start_position then
 		input_buffer.set_beginning_of_line (yy_content.item (yy_position - 1) = '%N')
 	end
---|#line 397
+--|#line 399
 
 					error_handler.bad_character_class (filename, line_nb)
 					line_nb := line_nb + 1
@@ -1002,7 +1004,7 @@ else
 	if yy_position > yy_start_position then
 		input_buffer.set_beginning_of_line (yy_content.item (yy_position - 1) = '%N')
 	end
---|#line 406
+--|#line 408
 
 					last_token := PIPED
 					set_start_condition (SECT2)
@@ -1013,7 +1015,7 @@ if yy_act = 96 then
 	if yy_position > yy_start_position then
 		input_buffer.set_beginning_of_line (yy_content.item (yy_position - 1) = '%N')
 	end
---|#line 410
+--|#line 412
 
 					last_token := EMPTY
 					line_nb := line_nb + 1
@@ -1023,7 +1025,7 @@ else
 	if yy_position > yy_start_position then
 		input_buffer.set_beginning_of_line (yy_content.item (yy_position - 1) = '%N')
 	end
---|#line 415
+--|#line 417
 set_start_condition (EIFFEL_BLOCK2)
 end
 end
@@ -1033,7 +1035,7 @@ if yy_act = 98 then
 	if yy_position > yy_start_position then
 		input_buffer.set_beginning_of_line (yy_content.item (yy_position - 1) = '%N')
 	end
---|#line 416
+--|#line 418
 
 					last_token := EIF_CODE
 					last_value := text
@@ -1043,14 +1045,14 @@ else
 	if yy_position > yy_start_position then
 		input_buffer.set_beginning_of_line (yy_content.item (yy_position - 1) = '%N')
 	end
---|#line 424
+--|#line 426
 more
 end
 else
 	if yy_position > yy_start_position then
 		input_buffer.set_beginning_of_line (yy_content.item (yy_position - 1) = '%N')
 	end
---|#line 425
+--|#line 427
 more
 end
 end
@@ -1061,20 +1063,20 @@ if yy_act = 101 then
 	if yy_position > yy_start_position then
 		input_buffer.set_beginning_of_line (yy_content.item (yy_position - 1) = '%N')
 	end
---|#line 426
+--|#line 428
 more
 else
 	if yy_position > yy_start_position then
 		input_buffer.set_beginning_of_line (yy_content.item (yy_position - 1) = '%N')
 	end
---|#line 428
+--|#line 430
 more
 end
 else
 	if yy_position > yy_start_position then
 		input_buffer.set_beginning_of_line (yy_content.item (yy_position - 1) = '%N')
 	end
---|#line 429
+--|#line 431
 
 					last_token := EIF_CODE
 					last_string := text_substring (1, text_count - 1)
@@ -1089,7 +1091,7 @@ if yy_act = 104 then
 	if yy_position > yy_start_position then
 		input_buffer.set_beginning_of_line (yy_content.item (yy_position - 1) = '%N')
 	end
---|#line 442
+--|#line 444
 
 					last_token := EIF_CODE
 					last_value := text
@@ -1098,7 +1100,7 @@ else
 	if yy_position > yy_start_position then
 		input_buffer.set_beginning_of_line (yy_content.item (yy_position - 1) = '%N')
 	end
---|#line 447
+--|#line 449
 
 					if text_item (1) = '%N' then
 						error_handler.bad_character ("%%N", filename, line_nb)
@@ -1112,7 +1114,7 @@ else
 	if yy_position > yy_start_position then
 		input_buffer.set_beginning_of_line (yy_content.item (yy_position - 1) = '%N')
 	end
---|#line 456
+--|#line 458
 fatal_error ("scanner jammed")
 end
 end
@@ -1807,6 +1809,9 @@ feature -- Access
 	line_nb: INTEGER
 			-- Current line number
 
+	rule_line_nb: INTEGER
+			-- Line number of rule being parsed
+
 	filename: STRING is
 			-- Name of file being parsed
 		local
@@ -1824,9 +1829,6 @@ feature -- Access
 
 	last_value: ANY
 			-- Semantic value to be passed to the parser
-
-	rule: LX_RULE
-			-- Rule being analyzed
 
 	character_classes: DS_HASH_TABLE [LX_SYMBOL_CLASS, STRING]
 			-- Character classes declared so far

@@ -561,9 +561,6 @@ feature -- Access
 	last_value: ANY
 			-- Semantic value to be passed to the parser
 
-	rule: LX_RULE
-			-- Rule being analyzed
-
 	character_classes: DS_HASH_TABLE [LX_SYMBOL_CLASS, STRING]
 			-- Character classes declared so far
 
