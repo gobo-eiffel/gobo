@@ -11,18 +11,38 @@ indexing
 	date:       "$Date$"
 	revision:   "$Revision$"
 
-deferred class DS_SPARSE_TABLE_CURSOR [G, K]
+class DS_SPARSE_TABLE_CURSOR [G, K]
 
 inherit
 
 	DS_BILINEAR_CURSOR [G]
 		redefine
-			off, container
+			off
 		end
 
 	DS_DYNAMIC_CURSOR [G]
-		redefine
-			container
+
+	KL_IMPORTED_FIXED_ARRAY_ROUTINES
+		undefine
+			is_equal, copy
+		end
+
+creation
+
+	make
+
+feature {NONE} -- Initialization
+
+	make (a_table: like container) is
+			-- Create a new cursor for `a_table'.
+		require
+			a_table_not_void: a_table /= Void
+		do
+			container := a_table
+			position := Before_position
+		ensure
+			container_set: container = a_table
+			before: before
 		end
 
 feature -- Access
@@ -30,7 +50,7 @@ feature -- Access
 	item: G is
 			-- Item at cursor position
 		do
-			Result := container.storage.item (position).first
+			Result := container.items.item (position)
 		end
 
 	key: K is
@@ -38,13 +58,11 @@ feature -- Access
 		require
 			not_off: not off
 		do
-			Result := container.storage.item (position).second
+			Result := container.keys.item (position)
 		end
 
-	container: DS_SPARSE_TABLE [G, K] is
+	container: DS_SPARSE_TABLE [G, K]
 			-- Table traversed
-		deferred 
-		end
 
 feature -- Status report
 
@@ -70,13 +88,13 @@ feature -- Status report
 			-- Is cursor on the first item?
 		local
 			i: INTEGER
-			a_table: like container
+			clashes: like FIXED_INTEGER_ARRAY_TYPE
 		do
 			if not container.is_empty then
 				from
-					a_table := container
+					clashes := container.clashes
 				until
-					a_table.valid_slot (i)
+					clashes.item (i) > Free_watermark
 				loop
 					i := i + 1
 				end
@@ -88,14 +106,14 @@ feature -- Status report
 			-- Is cursor on the last item?
 		local
 			i: INTEGER
-			a_table: like container
+			clashes: like FIXED_INTEGER_ARRAY_TYPE
 		do
 			if not container.is_empty then
 				from
-					a_table := container
-					i := a_table.slots
+					clashes := container.clashes
+					i := clashes.count - 1
 				until
-					a_table.valid_slot (i)
+					clashes.item (i) > Free_watermark
 				loop
 					i := i - 1
 				end
@@ -114,8 +132,9 @@ feature -- Cursor movement
 	start is
 			-- Move cursor to first position.
 		local
-			i: INTEGER
+			i, nb: INTEGER
 			a_table: like container
+			clashes: like FIXED_INTEGER_ARRAY_TYPE
 			was_off: BOOLEAN
 		do
 			if container.is_empty then
@@ -124,12 +143,15 @@ feature -- Cursor movement
 				was_off := off
 				from
 					a_table := container
+					clashes := a_table.clashes
+					nb := a_table.capacity - 1
 				until
-					a_table.valid_slot (i)
+					i > nb or else
+					clashes.item (i) > Free_watermark
 				loop
 					i := i + 1
 				end
-				if i > a_table.slots then
+				if i > nb then
 					position := After_position
 					if not was_off then
 						a_table.remove_traversing_cursor (Current)
@@ -148,6 +170,7 @@ feature -- Cursor movement
 		local
 			i: INTEGER
 			a_table: like container
+			clashes: like FIXED_INTEGER_ARRAY_TYPE
 			was_off: BOOLEAN
 		do
 			if container.is_empty then
@@ -156,9 +179,11 @@ feature -- Cursor movement
 				was_off := off
 				from
 					a_table := container
-					i := a_table.slots
+					clashes := a_table.clashes
+					i := a_table.capacity - 1
 				until
-					a_table.valid_slot (i)
+					i < 0 or else
+					clashes.item (i) > Free_watermark
 				loop
 					i := i - 1
 				end
@@ -181,6 +206,7 @@ feature -- Cursor movement
 		local
 			i, nb: INTEGER
 			a_table: like container
+			clashes: like FIXED_INTEGER_ARRAY_TYPE
 			was_off: BOOLEAN
 		do
 			if position = Before_position then
@@ -192,9 +218,11 @@ feature -- Cursor movement
 			end
 			from
 				a_table := container
-				nb := a_table.slots
+				clashes := a_table.clashes
+				nb := a_table.capacity - 1
 			until
-				i > nb or else a_table.valid_slot (i)
+				i > nb or else
+				clashes.item (i) > Free_watermark
 			loop
 				i := i + 1
 			end
@@ -216,19 +244,22 @@ feature -- Cursor movement
 		local
 			i: INTEGER
 			a_table: like container
+			clashes: like FIXED_INTEGER_ARRAY_TYPE
 			was_off: BOOLEAN
 		do
 			a_table := container
+			clashes := a_table.clashes
 			if position = After_position then
 				was_off := True
-				i := a_table.slots
+				i := a_table.capacity - 1
 			else
 				-- was_off := False
 				i := position - 1
 			end
 			from
 			until
-				i < 0 or else a_table.valid_slot (i)
+				i < 0 or else
+				clashes.item (i) > Free_watermark
 			loop
 				i := i - 1
 			end
@@ -342,7 +373,7 @@ feature -- Element change
 	replace (v: G) is
 			-- Replace item at cursor position by `v'.
 		do
-			container.storage.item (position).put_first (v)
+			container.items.put (v, position)
 		end
 
 feature {DS_SPARSE_TABLE, DS_SPARSE_TABLE_CURSOR} -- Implementation
@@ -387,6 +418,10 @@ feature {NONE} -- Implementation
 	Before_position: INTEGER is -1
 	After_position: INTEGER is -2
 			-- Special values for before and after positions
+
+	Free_watermark: INTEGER is -2
+			-- Limit between free and occupied slots in
+			-- `container.clashes'
 
 invariant
 
