@@ -17,8 +17,6 @@ deferred class DS_SPARSE_SET [G]
 inherit
 
 	DS_SET [G]
-		rename
-			put as force
 		undefine
 			has, cursor_off
 		end
@@ -167,6 +165,14 @@ feature -- Status report
 			definition: Result = (found_position /= No_position)
 		end
 
+	extendible (n: INTEGER): BOOLEAN is
+			-- May set be extended with `n' items?
+		do
+			Result := (capacity >= count + n)
+		ensure then
+			enough_space: Result implies (capacity >= count + n)
+		end
+
 	is_subset (other: DS_SET [G]): BOOLEAN is
 			-- Are all items of current set included in `other'?
 			-- (Use `equality_tester''s comparison criterion
@@ -296,8 +302,6 @@ feature -- Element change
 			-- (Use `equality_tester''s comparison criterion
 			-- if not void, use `=' criterion otherwise.)
 			-- Do not move cursors.
-		require
-			not_full: not is_full
 		local
 			i, h: INTEGER
 		do
@@ -319,10 +323,6 @@ feature -- Element change
 				items_put (v, i)
 				count := count + 1
 			end
-		ensure
-			same_count: (old has (v)) implies (count = old count)
-			one_more: (not old has (v)) implies (count = old count + 1)
-			inserted: has (v) and then item (v) = v
 		end
 
 	put_new (v: G) is
@@ -330,9 +330,6 @@ feature -- Element change
 			-- (Use `equality_tester''s comparison criterion
 			-- if not void, use `=' criterion otherwise.)
 			-- Do not move cursors.
-		require
-			not_full: not is_full
-			new_item: not has (v)
 		local
 			i, h: INTEGER
 		do
@@ -349,9 +346,36 @@ feature -- Element change
 			slots_put (i, h)
 			items_put (v, i)
 			count := count + 1
-		ensure
-			one_more: count = old count + 1
-			inserted: has (v) and then item (v) = v
+		end
+
+	put_last (v: G) is
+			-- Add `v' at the end of set if not already included,
+			-- or replace it otherwise.
+			-- (Use `equality_tester''s comparison criterion
+			-- if not void, use `=' criterion otherwise.)
+			-- Do not move cursors.
+		local
+			i, h: INTEGER
+		do
+			unset_found_item
+			search_position (v)
+			if position /= No_position then
+				items_put (v, position)
+			else
+				i := last_position + 1
+				if i > capacity then
+					compress
+					i := last_position + 1
+				end
+				h := slots_position
+				clashes_put (slots_item (h), i)
+				slots_put (i, h)
+				items_put (v, i)
+				last_position := i
+				count := count + 1
+			end
+		ensure then
+			last: (not old has (v)) implies last = v
 		end
 
 	force (v: G) is
@@ -394,8 +418,6 @@ feature -- Element change
 			-- if not void, use `=' criterion otherwise.)
 			-- Resize set if necessary.
 			-- Do not move cursors.
-		require
-			new_item: not has (v)
 		local
 			i, h: INTEGER
 		do
@@ -415,9 +437,6 @@ feature -- Element change
 			slots_put (i, h)
 			items_put (v, i)
 			count := count + 1
-		ensure
-			one_more: count = old count + 1
-			inserted: has (v) and then item (v) = v
 		end
 
 	force_last (v: G) is
@@ -448,11 +467,74 @@ feature -- Element change
 				last_position := i
 				count := count + 1
 			end
-		ensure
-			same_count: (old has (v)) implies (count = old count)
-			one_more: (not old has (v)) implies (count = old count + 1)
-			inserted: has (v) and then item (v) = v
+		ensure then
 			last: (not old has (v)) implies last = v
+		end
+
+	extend (other: DS_LINEAR [G]) is
+			-- Add items of `other' to set, replacing any existing item.
+			-- Add `other.first' first, etc.
+			-- Do not move cursors.
+		local
+			a_cursor: DS_LINEAR_CURSOR [G]
+		do
+			if other /= Current then
+				a_cursor := other.new_cursor
+				from a_cursor.start until a_cursor.after loop
+					put (a_cursor.item)
+					a_cursor.forth
+				end
+			end
+		end
+
+	extend_last (other: DS_LINEAR [G]) is
+			-- Add items of `other' to set, replacing any existing item.
+			-- Add `other.first' first, etc.
+			-- If items of `other' were not included yet, insert
+			-- them at last position if implementation permits.
+			-- Do not move cursors.
+		local
+			a_cursor: DS_LINEAR_CURSOR [G]
+		do
+			if other /= Current then
+				a_cursor := other.new_cursor
+				from a_cursor.start until a_cursor.after loop
+					put_last (a_cursor.item)
+					a_cursor.forth
+				end
+			end
+		end
+
+	append (other: DS_LINEAR [G]) is
+			-- Add items of `other' to set, replacing any existing item.
+			-- Add `other.first' first, etc.
+			-- Resize set if necessary.
+			-- Do not move cursors.
+		local
+			nb: INTEGER
+		do
+			nb := other.count
+			if not extendible (nb) then
+				resize (new_capacity (count + nb))
+			end
+			extend (other)
+		end
+
+	append_last (other: DS_LINEAR [G]) is
+			-- Add items of `other' to set, replacing any existing item.
+			-- Add `other.first' first, etc.
+			-- If items of `other' were not included yet, insert
+			-- them at last position if implementation permits.
+			-- Resize set if necessary.
+			-- Do not move cursors.
+		local
+			nb: INTEGER
+		do
+			nb := other.count
+			if not extendible (nb) then
+				resize (new_capacity (count + nb))
+			end
+			extend_last (other)
 		end
 
 feature -- Removal
@@ -501,7 +583,7 @@ feature -- Removal
 
 feature -- Basic operations
 
-	append (other: DS_SET [G]) is
+	merge (other: DS_SET [G]) is
 			-- Add all items of `other' to current set.
 			-- (Use `equality_tester''s comparison criterion
 			-- if not void, use `=' criterion otherwise.)
@@ -512,17 +594,19 @@ feature -- Basic operations
 			a_cursor: DS_SET_CURSOR [G]
 		do
 			unset_found_item
-			nb := count + other.count
-			if nb > capacity then
-				resize (new_capacity (nb))
-			end
-			a_cursor := other.new_cursor
-			from a_cursor.start until a_cursor.after loop
-				an_item := a_cursor.item
-				if not has (an_item) then
-					put_new (an_item)
+			if other /= Current then
+				nb := count + other.count
+				if nb > capacity then
+					resize (new_capacity (nb))
 				end
-				a_cursor.forth
+				a_cursor := other.new_cursor
+				from a_cursor.start until a_cursor.after loop
+					an_item := a_cursor.item
+					if not has (an_item) then
+						put_new (an_item)
+					end
+					a_cursor.forth
+				end
 			end
 		end
 
@@ -535,17 +619,24 @@ feature -- Basic operations
 			i: INTEGER
 			an_item: G
 		do
-			move_all_cursors_after
-			unset_found_item
-			i := last_position
-			from until i < 1 loop
-				if clashes_item (i) > Free_watermark then
-					an_item := items_item (i)
-					if not other.has (an_item) then
-						remove_position (i)
+			if other = Current then
+				move_all_cursors_after
+				unset_found_item
+			elseif other.is_empty then
+				wipe_out
+			else
+				move_all_cursors_after
+				unset_found_item
+				i := last_position
+				from until i < 1 loop
+					if clashes_item (i) > Free_watermark then
+						an_item := items_item (i)
+						if not other.has (an_item) then
+							remove_position (i)
+						end
 					end
+					i := i - 1
 				end
-				i := i - 1
 			end
 		end
 
@@ -558,17 +649,24 @@ feature -- Basic operations
 			i: INTEGER
 			an_item: G
 		do
-			move_all_cursors_after
-			unset_found_item
-			i := last_position
-			from until i < 1 loop
-				if clashes_item (i) > Free_watermark then
-					an_item := items_item (i)
-					if other.has (an_item) then
-						remove_position (i)
+			if other.is_empty then
+				move_all_cursors_after
+				unset_found_item
+			elseif other = Current then
+				wipe_out
+			else
+				move_all_cursors_after
+				unset_found_item
+				i := last_position
+				from until i < 1 loop
+					if clashes_item (i) > Free_watermark then
+						an_item := items_item (i)
+						if other.has (an_item) then
+							remove_position (i)
+						end
 					end
+					i := i - 1
 				end
-				i := i - 1
 			end
 		end
 
@@ -583,22 +681,31 @@ feature -- Basic operations
 			an_item: G
 			a_cursor: DS_SET_CURSOR [G]
 		do
-			move_all_cursors_after
-			unset_found_item
-			nb := count + other.count
-			if nb > capacity then
-				resize (new_capacity (nb))
-			end
-			a_cursor := other.new_cursor
-			from a_cursor.start until a_cursor.after loop
-				an_item := a_cursor.item
-				search (an_item)
-				if found then
-					remove_found_item
-				else
-					put_new (an_item)
+			if other.is_empty then
+				move_all_cursors_after
+				unset_found_item
+			elseif other = Current then
+				wipe_out
+			elseif is_empty then
+				merge (other)
+			else
+				move_all_cursors_after
+				unset_found_item
+				nb := count + other.count
+				if nb > capacity then
+					resize (new_capacity (nb))
 				end
-				a_cursor.forth
+				a_cursor := other.new_cursor
+				from a_cursor.start until a_cursor.after loop
+					an_item := a_cursor.item
+					search (an_item)
+					if found then
+						remove_found_item
+					else
+						put_new (an_item)
+					end
+					a_cursor.forth
+				end
 			end
 		end
 
@@ -632,6 +739,51 @@ feature -- Resizing
 			clashes_resize (n + 1)
 			capacity := n
 			position := No_position
+		end
+
+feature -- Optimization
+
+	compress is
+			-- Remove holes between stored items. May avoid
+			-- resizing when calling `force_last' for example.
+			-- Do not lose any item. Do not move cursors.
+		local
+			i, j, nb, h: INTEGER
+			dead_item: G
+		do
+			if last_position /= count then
+				unset_found_item
+				nb := last_position
+				from i := 1 until i > nb loop
+					if clashes_item (i) > Free_watermark then
+						j := j + 1
+						if j /= i then
+							items_put (items_item (i), j)
+							move_all_cursors (i, j)
+						end
+					end
+					i := i + 1
+				end
+				from j := j + 1 until j > nb loop
+					items_put (dead_item, j)
+					j := j + 1
+				end
+				nb := count
+				from i := 1 until i > nb loop
+					h := hash_position (items_item (i))
+					clashes_put (slots_item (h), i)
+					slots_put (i, h)
+					i := i + 1
+				end
+				clashes_wipe_out
+				slots_wipe_out
+				last_position := nb
+				position := No_position
+			end
+		ensure
+			same_count: count = old count
+			compressed: last_position = count
+			not_reszied: capacity = old capacity
 		end
 
 feature {DS_SPARSE_SET_CURSOR} -- Implementation
