@@ -7,13 +7,18 @@ these two utilities.
 
 To compile this program:
 
-1. Use the script 'make parser' to generate class GEPP_PARSER and
-   'make scanner' to generate class GEPP_SCANNER if necessary.
+1. Use the script 'geant parser' to generate class GEPP_PARSER and
+   'geant scanner' to generate class GEPP_SCANNER if necessary.
+
 2. Use your favorite Eiffel compiler to compile the Eiffel system using
-   the provided Ace file (ISE Eiffel: ise.ace, Halstenbach: hact.ace),
-   ESD file (Visual Eiffel: ve.esd) or loadpath file (SmallEiffel:
-   loadpath.se). If you have GNU make, you can alternatively type:
-   'make ise', 'make hact', 'make ve' or 'make se'.
+   the provided Ace file (ISE Eiffel: ise.ace, Halstenbach: hact.ace,
+   SmallEiffel: se.ace) or ESD file (Visual Eiffel: ve.esd). Alternatively
+   you can use 'geant' to launch the compilation:
+   
+       geant compile_<compiler>
+       
+   where <compiler> is either 'ise', 'hact', 've' or 'se'.
+
 3. Run Gepp using:
 
        gepp [-M] [-Dname ...] [filename | -] [filename | -]

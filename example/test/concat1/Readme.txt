@@ -14,15 +14,40 @@ you can use the following shorthand:
 
 which is equivalent to the command-line above.
 
-Note that the files 'getest.<compiler>' use Makefiles to compile
-the generated test suite. If you are under Windows and don't have
-GNU make nor bash installed on your PC, you can try to use the
-following command-line instead:
+The expected output is as follows:
 
-    getest getest-win.<compiler>
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+Preparing Test Cases
+Compiling Test Cases
+Running Test Cases
 
-It has been tested under Windows NT and I hope that it will work
-with other flavors of Windows as well.
+Test Summary for xconcat1
+
+# Passed:     0 test
+# FAILED:     1 test
+# Aborted:    0 test
+# Total:      1 test (2 assertions)
+
+Test Results:
+FAIL:  [TEST_CONCAT1.test_concat] foo+bar (expected: foobar but got: foofoo)
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+'getest' can also be invoked from 'geant' using the
+following command-line:
+
+     geant test_<compiler>
+
+or:
+
+     geant test_debug_<compiler>
+
+if you want to run the test with all assertions on.
+
+Note: If your underlying shell does not support the following
+file redirections: > and 2>&1, you will have to remove them
+from the files 'getest.<compiler>'. As far as I know these
+should work at least under Windows NT 4.0 and Unix/Linux
+Bourne shell and bash.
 
 --
 Copyright (c) 2001, Eric Bezault

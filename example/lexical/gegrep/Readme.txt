@@ -22,10 +22,14 @@ uses this DFA to directly analyze input streams.
 To compile this example:
 
 1. Use your favorite Eiffel compiler to compile the Eiffel system using
-   the provided Ace file (ISE Eiffel: ise.ace, Halstenbach: hact.ace),
-   ESD file (Visual Eiffel: ve.esd) or loadpath file (SmallEiffel:
-   loadpath.se). If you have GNU make, you can alternatively type:
-   'make ise', 'make hact', 'make ve' or 'make se'.
+   the provided Ace file (ISE Eiffel: ise.ace, Halstenbach: hact.ace,
+   SmallEiffel: se.ace) or ESD file (Visual Eiffel: ve.esd). Alternatively
+   you can use 'geant' to launch the compilation:
+   
+       geant compile_<compiler>
+       
+   where <compiler> is either 'ise', 'hact', 've' or 'se'.
+
 2. Run the program using:
 
        gegrep [-i] regexp [filename...]
@@ -47,6 +51,6 @@ When several filenames are given as argument, the matched lines are
 prefixed by their enclosing filename, just as 'grep' does.
 
 --
-Copyright (c) 1997-2000, Eric Bezault
+Copyright (c) 1997-2001, Eric Bezault
 mailto:ericb@gobosoft.com
 http://www.gobosoft.com

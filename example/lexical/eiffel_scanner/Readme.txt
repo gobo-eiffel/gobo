@@ -13,25 +13,35 @@ not generate any output.
 
 To compile this example:
 
-1. Use the script 'make scanner' to generate class EIFFEL_SCANNER
+1. Use the script 'geant scanner' to generate class EIFFEL_SCANNER
    if necessary.
+
 2. Choose either `execute' or `benchmark' as the creation procedure of
    the root class EIFFEL_SCANNER in your Ace file (ISE Eiffel: ise.ace,
-   Halstenbach: hact.ace), your ESD file (Visual Eiffel: ve.esd) or
-   your command line (SmallEiffel).
+   Halstenbach: hact.ace, SmallEiffel: se.ace) or your ESD file
+   (Visual Eiffel: ve.esd).
+
 3. Use your favorite Eiffel compiler to compile the Eiffel system using
-   the provided Ace file (ISE Eiffel: ise.ace, Halstenbach: hact.ace),
-   ESD file (Visual Eiffel: ve.esd) or loadpath file (SmallEiffel:
-   loadpath.se). If you have GNU make, you can alternatively type:
-   'make ise', 'make hact', 'make ve' or 'make se'.
+   the provided Ace file (ISE Eiffel: ise.ace, Halstenbach: hact.ace,
+   SmallEiffel: se.ace) or ESD file (Visual Eiffel: ve.esd). Alternatively
+   you can use 'geant' to launch the compilation:
+   
+       geant compile_<compiler>
+       
+   where <compiler> is either 'ise', 'hact', 've' or 'se'.
+
 4. Execute the Eiffel scanner using
+
        eiffel_scanner filename1 ...
+
    if you selected `execute' as creation procedure, or
+
        eiffel_scanner nb filename
+
    if you selected `benchmark', where `filename', `filename1', etc. are
    filenames containing Eiffel classes and `nb' is an integer.
 
 --
-Copyright (c) 1997-2000, Eric Bezault
+Copyright (c) 1997-2001, Eric Bezault
 mailto:ericb@gobosoft.com
 http://www.gobosoft.com

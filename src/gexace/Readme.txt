@@ -1,8 +1,6 @@
-This directory contains the source code of Gobo Eiffel Ant (geant).
-Geant is a build tool for Eiffel, modeled after the Jakarta Ant build
-tool for Java.
+This directory contains the source code of Gobo Eiffel Xace (gexace).
 
-To compile Geant:
+To compile Gexace:
 
 1. Use your favorite Eiffel compiler to compile the Eiffel system using
    the provided Ace file (ISE Eiffel: ise.ace, Halstenbach: hact.ace,
@@ -13,11 +11,18 @@ To compile Geant:
        
    where <compiler> is either 'ise', 'hact', 've' or 'se'.
 
-2. Run Geant using:
+2. Run Gexace using:
 
-       geant [-hV?][-b buildfilename] [target]
+       gexace [variable-definitions] [options] command [xace-file]
 
-A more detailed documentation for 'geant' will be provided in
+   where:
+
+       variable-definitions:  --define="VAR_NAME[=VALUE]( VAR_NAME[=VALUE])*"
+       options:  --verbose
+       command:  --build (--se|--ise|--ve|--hact|--xml)
+       command:  --validate
+
+A more detailed documentation for 'gexace' will be provided in
 future releases.
 
 --
