@@ -27,8 +27,6 @@ feature {NONE} -- Expression validity
 
 	check_old_expression_validity (an_expression: ET_OLD_EXPRESSION) is
 			-- Check validity of `an_expression'.
-		require
-			an_expression_not_void: an_expression /= Void
 		do
 				-- Check VAOL-2 (ETL2 p.124).
 			check_expression_validity (an_expression.expression, current_feature, current_class)
