@@ -5,7 +5,7 @@ indexing
 		"Eiffel constants"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2002, Eric Bezault and others"
+	copyright: "Copyright (c) 2002-2005, Eric Bezault and others"
 	license: "Eiffel Forum License v2 (see forum.txt)"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -50,6 +50,12 @@ feature -- Status report
 
 	is_bit_constant: BOOLEAN is
 			-- Is current constant a BIT constant?
+		do
+			-- Result := False
+		end
+
+	is_type_constant: BOOLEAN is
+			-- Is current constant a TYPE constant?
 		do
 			-- Result := False
 		end

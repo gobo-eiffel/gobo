@@ -50,11 +50,26 @@ feature -- Access
 	sign: ET_SYMBOL_OPERATOR
 			-- Sign; Void if none
 
+	cast_type: ET_TARGET_TYPE
+			-- Cast type
+
+	type: ET_TYPE is
+			-- Type of real when casted
+		do
+			if cast_type /= Void then
+				Result := cast_type.type
+			end
+		ensure
+			definition: cast_type /= Void implies Result = cast_type.type
+		end
+
 	position: ET_POSITION is
 			-- Position of first character of
 			-- current node in source code
 		do
-			if sign /= Void then
+			if cast_type /= Void then
+				Result := cast_type.position
+			elseif sign /= Void then
 				Result := sign.position
 			else
 				Result := Current
@@ -64,7 +79,9 @@ feature -- Access
 	first_position: ET_POSITION is
 			-- Position of first character of current node in source code
 		do
-			if sign /= Void then
+			if cast_type /= Void then
+				Result := cast_type.first_position
+			elseif sign /= Void then
 				Result := sign.first_position
 			else
 				Result := Current
@@ -80,7 +97,9 @@ feature -- Access
 	first_leaf: ET_AST_LEAF is
 			-- First leaf node in current node
 		do
-			if sign /= Void then
+			if cast_type /= Void then
+				Result := cast_type.first_leaf
+			elseif sign /= Void then
 				Result := sign
 			else
 				Result := Current
@@ -120,6 +139,14 @@ feature -- Setting
 			sign := a_sign
 		ensure
 			sign_set: sign = a_sign
+		end
+
+	set_cast_type (a_type: like cast_type) is
+			-- Set `cast_type' to `a_type'.
+		do
+			cast_type := a_type
+		ensure
+			cast_type_set: cast_type = a_type
 		end
 
 feature -- Status setting
