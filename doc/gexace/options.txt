@@ -1,13 +1,14 @@
 Following is the list of system-level options supported by
 'gexace' (of the form <option name="..." value="..."/>),
 and how they are translated to the vendor dependent Ace or
-ESD files. N/A does not necessarily mean that the corresponding
+ESD files. "N/A" does not necessarily mean that the corresponding
 Eiffel compiler does not support this facility, it could just
 be that the facility is not parameterizable or is activated
-from the command-line rather than the Ace or ESD file. When
-an entry is marked N/A the option will be silently ignored
+from the command-line or from a separate tool (such as VETuner
+for Visual Eiffel) rather than from the Ace or ESD file. When
+an entry is marked "N/A" the option will be silently ignored
 and nothing will be generated in the Ace or ESD file for this
-option. Likewise when the name of an options specified in
+option. Likewise when the name of an option specified in
 an Xace file is not known by 'gexace'.
 
 The DEFAULT section shows 'gexace' default value when this
@@ -21,8 +22,8 @@ documentation provided with the Eiffel compilers.
 -------------------------------------------------------------
 NAME: address_expression
 
-VALUES: yes | no
-DEFAULT: no
+VALUES: true | false
+DEFAULT: false
 DESCRIPTION: Enable expressions of the form '$(s.to_c)' instead
   of having to declare 'a' of type ANY, and then having to 
   assign 's.to_c' to 'a' and passing '$a'. Turn this option on
@@ -33,35 +34,13 @@ NOTE: This form of syntax is not supported in Visual Eiffel and
   SmallEiffel.
 
 ISE:
-  yes -> address_expression (yes)
-  no -> address_expression (no)
+  true -> address_expression (yes)
+  false -> address_expression (no)
 HACT:
-  yes -> address_expression (yes)
-  no -> address_expression (no)
+  true -> address_expression (yes)
+  false -> address_expression (no)
 VE:
   N/A
-SE:
-  N/A
--------------------------------------------------------------
-NAME: application
-
-VALUES: console | windows | dm
-DEFAULT: console
-DESCRIPTION: Under Windows, generate either a console, a
-  windows or a display machine (VE only) application.
-
-ISE:
-  console -> console_application (yes)
-  windows -> console_application (no)
-  dm -> console_application (yes)
-HACT:
-  console -> console_application (yes)
-  windows -> console_application (no)
-  dm -> console_application (yes)
-VE:
-  console -> target <target> console
-  windows -> target <target> windows
-  dm -> target <target> dm
 SE:
   N/A
 -------------------------------------------------------------
@@ -84,19 +63,19 @@ SE:
 -------------------------------------------------------------
 NAME: array_optimization
 
-VALUES: yes | no
-DEFAULT: no
+VALUES: true | false
+DEFAULT: false
 DESCRIPTION: Enable array optimization in loops when the array
   has been declared as local variable or formal argument.
 NOTE: The option `finalize' (finalization mode) should
   be set in order for this option to have any effect.
 
 ISE:
-  yes -> array_optimization (yes)
-  no -> array_optimization (no)
+  true -> array_optimization (yes)
+  false -> array_optimization (no)
 HACT:
-  yes -> array_optimization (yes)
-  no -> array_optimization (no)
+  true -> array_optimization (yes)
+  false -> array_optimization (no)
 VE:
   N/A
 SE:
@@ -104,15 +83,14 @@ SE:
 -------------------------------------------------------------
 NAME: assertion
 
-VALUES: boost | no | require | ensure | invariant |
+VALUES: boost | none | require | ensure | invariant |
         loop_invariant | loop_variant | check | all
 DEFAULT: require
 DESCRIPTION: Set default assertion level of the Eiffel system.
 NOTE: There can be several of these options.
 
 ISE:
-  boost ->  assertion (no)
-  no -> assertion (no)
+  none -> assertion (no)
   require -> assertion (require)
   ensure -> assertion (ensure)
   invariant -> assertion (invariant)
@@ -121,8 +99,7 @@ ISE:
   check -> assertion (check)
   all -> assertion (all)
 HACT:
-  boost ->  assertion (no)
-  no -> assertion (no)
+  none -> assertion (no)
   require -> assertion (require)
   ensure -> assertion (ensure)
   invariant -> assertion (invariant)
@@ -135,16 +112,8 @@ HACT:
   only one occurrence would actually be generated with the value
   which appears below all the others in the list above.
 VE:
-  boost ->
+  none ->
        assertions off
-       require off
-       ensure off
-       class invariant off
-       loop invariant off
-       loop variant off
-       check off
-  no ->
-       assertions on
        require off
        ensure off
        class invariant off
@@ -212,8 +181,7 @@ VE:
   only one occurrence would actually be generated with value 'on'
   if there is at least one 'on' and 'off' otherwise.
 SE:
-  boost ->  assertion (boost)
-  no -> assertion (no)
+  none -> assertion (no)
   require -> assertion (require)
   ensure -> assertion (ensure)
   invariant -> assertion (invariant)
@@ -224,12 +192,14 @@ SE:
   --
   If several occurrences of Ace options would need to be generated,
   only one occurrence would actually be generated with the value
-  which appears below all the others in the list above.
+  which appears below all the others in the list above. However if
+  'boost' is specified in the option `finalize', then values specified
+  in option `assertion' are ignored.
 -------------------------------------------------------------
 NAME: case_insensitive
 
-VALUES: yes | no
-DEFAULT: yes
+VALUES: true | false
+DEFAULT: true
 DESCRIPTION: Enable Eiffel code to be case insensitive.
 
 ISE:
@@ -239,21 +209,21 @@ HACT:
 VE:
   N/A
 SE:
-  yes -> case_insensitive (yes)
-  no -> case_insensitive (no)
+  true -> case_insensitive (yes)
+  false -> case_insensitive (no)
 -------------------------------------------------------------
 NAME: check_vape
 
-VALUES: yes | no
-DEFAULT: yes
+VALUES: true | false
+DEFAULT: true
 DESCRIPTION: Report VAPE validity errors (ETL 2nd edition page 122).
 
 ISE:
-  yes -> check_vape (yes)
-  no -> check_vape (no)
+  true -> check_vape (yes)
+  false -> check_vape (no)
 HACT:
-  yes -> check_vape (yes)
-  no -> check_vape (no)
+  true -> check_vape (yes)
+  false -> check_vape (no)
 VE:
   N/A
 SE:
@@ -261,8 +231,8 @@ SE:
 -------------------------------------------------------------
 NAME: clean
 
-VALUES: yes | no
-DEFAULT: no
+VALUES: true | false
+DEFAULT: false
 DESCRIPTION: Remove all generated C files, all generated object
   filesa and all other temporary files generated during the
   compilation process.
@@ -274,13 +244,49 @@ HACT:
 VE:
   N/A
 SE:
-  yes -> clean (yes)
-  no -> clean (no)
+  true -> clean (yes)
+  false -> clean (no)
+-------------------------------------------------------------
+NAME: component
+
+VALUES: <pathname>
+DEFAULT: no default
+DESCRIPTION: Specify a component library.
+
+ISE:
+  N/A
+HACT:
+  <pathname> ->
+      component
+         cluster_name: "<pathname>"
+VE:
+  N/A
+SE:
+  N/A
+-------------------------------------------------------------
+NAME: console_application
+
+VALUES: true | false
+DEFAULT: true
+DESCRIPTION: Under Windows, generate either a console, a windows
+  application.
+
+ISE:
+  true -> console_application (yes)
+  false -> console_application (no)
+HACT:
+  true -> console_application (yes)
+  false -> console_application (no)
+VE:
+  true -> target <target> console
+  false -> target <target> windows
+SE:
+  N/A
 -------------------------------------------------------------
 NAME: create_keyword_extension
 
-VALUES: yes | no
-DEFAULT: yes
+VALUES: true | false
+DEFAULT: true
 DESCRIPTION: Specify that 'create' should be considered as
   a keyword (replacing the old form !!) and not as an
   identifier.
@@ -288,8 +294,8 @@ DESCRIPTION: Specify that 'create' should be considered as
 ISE:
   N/A
 HACT:
-  yes -> create_keyword_extension (yes)
-  no -> create_keyword_extension (no)
+  true -> create_keyword_extension (yes)
+  false -> create_keyword_extension (no)
 VE:
   N/A
 SE:
@@ -297,22 +303,22 @@ SE:
 -------------------------------------------------------------
 NAME: dead_code_removal
 
-VALUES: no | lowlevel | feature | class | all
+VALUES: none | low_level | feature | class | all
 DEFAULT: feature
 DESCRIPTION: Do not include dead code in the generated application.
-  'lowlevel' means that unreachable chuncks of code are not included,
+  'low_level' means that unreachable chuncks of code are not included,
   'feature' means that features which are never called are not
   included, and 'class' means the classes which are in the system
   but which are never instanciated in the living code are not
   included.
 NOTE: The option `finalize' (finalization mode) should be set
-  in order for 'feature', 'class' and 'all' (except its lowlevel
+  in order for 'feature', 'class' and 'all' (except its low_level
   part in VE) to have any effect.
 NOTE: There can be several of these options.
 
 ISE:
-  no -> dead_code_removal (no)
-  lowlevel -> dead_code_removal (no)
+  none -> dead_code_removal (no)
+  low_level -> dead_code_removal (no)
   feature -> dead_code_removal (yes)
   class -> dead_code_removal (no)
   all -> dead_code_removal (yes)
@@ -321,10 +327,10 @@ ISE:
   only one occurrence would actually be generated with value 'yes'
   if there is at least one 'yes' and 'no' otherwise.
 HACT:
-  no ->
+  none ->
       dead_code_removal (no)
       optimize (no)
-  lowlevel ->
+  low_level ->
       dead_code_removal (no)
       optimize (no)
   feature ->
@@ -341,11 +347,11 @@ HACT:
   only one occurrence would actually be generated with value 'yes'
   if there is at least one 'yes' and 'no' otherwise.
 VE:
-  no ->
+  none ->
      optimize dead_code off
      optimize calls off
      optimize dyn_type off
-  lowlevel ->
+  low_level ->
      optimize dead_code on
      optimize calls off
      optimize dyn_type off
@@ -370,25 +376,28 @@ SE:
 -------------------------------------------------------------
 NAME: debug
 
-VALUES: yes | no
-DEFAULT: no
+VALUES: true | false
+DEFAULT: false
 DESCRIPTION: Enable debug instructions.
 
 ISE:
-  yes -> debug (yes)
-  no -> debug (no)
+  true -> debug (yes)
+  false -> debug (no)
 HACT:
-  yes -> debug (yes)
-  no -> debug (no)
+  true -> debug (yes)
+  false -> debug (no)
 VE:
-  yes -> debug instructions on
-  no -> debug instructions off
+  true -> debug instructions on
+  false -> debug instructions off
   --
+  If option 'debug_tag' is also specified, then set to
+  'on' if at least one of the two 'debug instructions'
+  are 'on', 'off' otherwise.
   The debug instructions are actually only executed if
   so specified in the command-line of the application.
 SE:
-  yes -> debug (yes)
-  no -> debug (no)
+  true -> debug (yes)
+  false -> debug (no)
 -------------------------------------------------------------
 NAME: debug_tag
 
@@ -404,6 +413,9 @@ HACT:
 VE:
   <tag> -> debug instructions on
   --
+  If option 'debug' is also specified, then set to 'on'
+  if at least one of the two 'debug instructions' are
+  'on', 'off' otherwise.
   The debug instructions are actually only executed if
   so specified in the command-line of the application.
 SE:
@@ -411,8 +423,8 @@ SE:
 -------------------------------------------------------------
 NAME: debugger
 
-VALUES: yes | no
-DEFAULT: no
+VALUES: true | false
+DEFAULT: false
 DESCRIPTION: Specify whether debug information should be
   generated. Debug information is required to use the
   debugger with Visual Eiffel.
@@ -422,8 +434,8 @@ ISE:
 HACT:
   N/A
 VE:
-  yes -> debug on
-  no -> debug off
+  true -> debug on
+  false -> debug off
 SE:
   N/A
 -------------------------------------------------------------
@@ -449,38 +461,38 @@ SE:
 -------------------------------------------------------------
 NAME: dynamic_runtime
 
-VALUES: yes | no
-DEFAULT: no
+VALUES: true | false
+DEFAULT: false
 DESCRIPTION: Enable the use of the Eiffel runtime as a
   DLL or shared library.
 
 ISE:
-  yes -> dynamic_runtime (yes)
-  no -> dynamic_runtime (no)
+  true -> dynamic_runtime (yes)
+  false -> dynamic_runtime (no)
 HACT:
-  yes -> dynamic_runtime_library (yes)
-  no -> dynamic_runtime_library (no)
+  true -> dynamic_runtime_library (yes)
+  false -> dynamic_runtime_library (no)
 VE:
-  yes -> run_time_in_dll on
-  no -> run_time_in_dll off
+  true -> run_time_in_dll on
+  false -> run_time_in_dll off
 SE:
   N/A
 -------------------------------------------------------------
 NAME: exception_trace
 
-VALUES: yes | no
-DEFAULT: no
+VALUES: true | false
+DEFAULT: false
 DESCRIPTION: Enable to see a complete exception trace
   when a finalized application is crashing.
 NOTE: The option `finalize' (finalization mode) should
   be set in order for this option to have any effect.
 
 ISE:
-  yes -> exception_trace (yes)
-  no -> exception_trace (no)
+  true -> exception_trace (yes)
+  false -> exception_trace (no)
 HACT:
-  yes -> exception_trace (yes)
-  no -> exception_trace (no)
+  true -> exception_trace (yes)
+  false -> exception_trace (no)
 VE:
   N/A
 SE:
@@ -488,8 +500,8 @@ SE:
 -------------------------------------------------------------
 NAME: finalize
 
-VALUES: yes | no
-DEFAULT: no
+VALUES: true | false
+DEFAULT: false
 DESCRIPTION: Enable global optimizations (finalization mode).
 NOTE: This option has no direct effect. Each individual
   optimization option should be set separately.
@@ -499,17 +511,22 @@ ISE:
 HACT:
   N/A
 VE:
-  yes -> finalize on
-  no -> finalize off
+  true -> finalize on
+  false -> finalize off
   --  
   Setting 'finalize on' automatically turns 'assertions off'.
 SE:
-  N/A
+  true -> assertion (boost)
+  false -> assertion (no)
+  --
+  If 'boost' is specified, then values specified in option `assertion'
+  are ignored. Otherwise 'no' might be overriden by values specified
+  in option `assertion'.
 -------------------------------------------------------------
 NAME: flat_fst_optimization
 
-VALUES: yes | no
-DEFAULT: no
+VALUES: true | false
+DEFAULT: false
 DESCRIPTION: Specify whether dynamic tables may be kept not
   compacted for faster dynamic access to features.
 NOTE: The option `finalize' (finalization mode) should
@@ -520,8 +537,8 @@ ISE:
 HACT:
   N/A
 VE:
-  yes -> optimize flat_fsf on
-  no -> optimize flat_fsf off
+  true -> optimize flat_fsf on
+  false -> optimize flat_fsf off
 SE:
   N/A
 -------------------------------------------------------------
@@ -531,8 +548,8 @@ VALUES: <value>
 DEFAULT: 2
 DESCRIPTION: Visual Eiffel supports dynamic binding via
   mechanism of FST (stands for Feature Selection Tables).
-  Every entry in such table is a pair “class id (magic
-  number) - feature address/attribute offset”. In the general
+  Every entry in such table is a pair "class id (magic
+  number) - feature address/attribute offset". In the general
   case binary searching is used to find the proper entry. To
   make this search faster and more efficient binary searching
   in the table can be replaced with direct linear access to
@@ -552,8 +569,8 @@ SE:
 -------------------------------------------------------------
 NAME: fst_optimization
 
-VALUES: yes | no
-DEFAULT: no
+VALUES: true | false
+DEFAULT: false
 DESCRIPTION: Replace dynamic feature calls by static ones
   when possible (FST stands for Feature Selection Tables).
 
@@ -562,34 +579,34 @@ ISE:
 HACT:
   N/A
 VE:
-  yes -> optimize FST on
-  no -> optimize FST off
+  true -> optimize FST on
+  false -> optimize FST off
 SE:
   N/A
 -------------------------------------------------------------
 NAME: garbage_collector
 
-VALUES: no | internal | boehm
+VALUES: none | internal | boehm
 DEFAULT: internal
 DESCRIPTION: Select garbage collector.
 
 ISE:
   N/A
 HACT:
-  no -> garbage_collector ("internal")
+  none -> garbage_collector ("internal")
   internal -> garbage_collector ("internal")
   boehm -> garbage_collector ("boehm")
 VE:
   N/A
 SE:
-  no -> collect (no)
+  none -> collect (no)
   internal -> collect (yes)
   boehm -> collect (no)
 -------------------------------------------------------------
 NAME: gc_info
 
-VALUES: yes | no
-DEFAULT: no
+VALUES: true | false
+DEFAULT: false
 DESCRIPTION: Enable garbage collector status information.
 
 ISE:
@@ -599,10 +616,10 @@ HACT:
 VE:
   N/A
 SE:
-  yes -> gc_info (yes)
-  no -> gc_info (no)
+  true -> gc_info (yes)
+  false -> gc_info (no)
 -------------------------------------------------------------
-NAME: head_size
+NAME: heap_size
 
 VALUES: <value>
 DEFAULT: no default
@@ -621,8 +638,8 @@ SE:
 -------------------------------------------------------------
 NAME: inlining
 
-VALUES: no | array | constant | once | all
-DEFAULT: no
+VALUES: none | array | constant | once | all
+DEFAULT: none
 DESCRIPTION: Enable inlining. 'array' means ARRAY and STRING
   inlining, 'constants' means constant inlining, 'once' means
   once-feature inlining, and 'all' means anything that can
@@ -630,7 +647,7 @@ DESCRIPTION: Enable inlining. 'array' means ARRAY and STRING
 NOTE: There can be several of these options.
 
 ISE:
-  no -> inlining (no)
+  none -> inlining (no)
   array -> inlining (yes)
   constant -> inlining (yes)
   once -> inlining (yes)
@@ -641,7 +658,7 @@ ISE:
   if there is at least one 'yes' and 'no' otherwise.
   The option has effect only in finalized mode.
 HACT:
-  no -> inlining (no)
+  none -> inlining (no)
   array -> inlining (yes)
   constant -> inlining (yes)
   once -> inlining (yes)
@@ -652,7 +669,7 @@ HACT:
   if there is at least one 'yes' and 'no' otherwise.
   The option has effect only in finalized mode.
 VE:
-  no ->
+  none ->
        optimize inline off
        optimize constants off
        optimize once off
@@ -697,8 +714,8 @@ SE:
 -------------------------------------------------------------
 NAME: jumps_optimization
 
-VALUES: yes | no
-DEFAULT: no
+VALUES: true | false
+DEFAULT: false
 DESCRIPTION: Specify whether jumps optimization will be enabled.
   This option activates lowlevel code optimization: chains of
   jump instructions (when one jump instruction transfers control
@@ -710,15 +727,15 @@ ISE:
 HACT:
   N/A
 VE:
-  yes -> optimize jumps on
-  no -> optimize jumps off
+  true -> optimize jumps on
+  false -> optimize jumps off
 SE:
   N/A
 -------------------------------------------------------------
 NAME: layout_optimization
 
-VALUES: yes | no
-DEFAULT: no
+VALUES: true | false
+DEFAULT: false
 DESCRIPTION: Specify whether special rearrangements may be used
   to represent the objects in the memory in more access-efficient
   way by changing the order of the attributes.
@@ -730,15 +747,15 @@ ISE:
 HACT:
   N/A
 VE:
-  yes -> optimize layout on
-  no -> optimize layout off
+  true -> optimize layout on
+  false -> optimize layout off
 SE:
   N/A
 -------------------------------------------------------------
 NAME: leaves_optimization
 
-VALUES: yes | no
-DEFAULT: no
+VALUES: true | false
+DEFAULT: false
 DESCRIPTION: Specify whether all calls to features of the leaf
   classes will be direct ones.
 NOTE: The option `finalize' (finalization mode) should
@@ -749,20 +766,20 @@ ISE:
 HACT:
   N/A
 VE:
-  yes -> optimize leaves on
-  no -> optimize leaves off
+  true -> optimize leaves on
+  false -> optimize leaves off
 SE:
   N/A
 -------------------------------------------------------------
 NAME: line_generation
 
-VALUES: yes | no
-DEFAULT: no
+VALUES: true | false
+DEFAULT: false
 DESCRIPTION: Generate C pragmas '#line x' in generated C code.
 
 ISE:
-  yes -> line_generation (yes)
-  no -> line_generation (no)
+  true -> line_generation (yes)
+  false -> line_generation (no)
 HACT:
   N/A
 VE:
@@ -791,8 +808,8 @@ SE:
 -------------------------------------------------------------
 NAME: linux_fpu_double_precision
 
-VALUES: yes | no
-DEFAULT: no
+VALUES: true | false
+DEFAULT: false
 DESCRIPTION: The default FPU precision used by gcc for Linux
   may not be appropriate for some users and does not match the
   behavior of gcc on other platforms or the behavior of other
@@ -804,8 +821,8 @@ DESCRIPTION: The default FPU precision used by gcc for Linux
 ISE:
   N/A
 HACT:
-  yes -> linux_fpu_double_precision (yes)
-  no -> linux_fpu_double_precision (no)
+  true -> linux_fpu_double_precision (yes)
+  false -> linux_fpu_double_precision (no)
 VE:
   N/A
 SE:
@@ -813,8 +830,8 @@ SE:
 -------------------------------------------------------------
 NAME: manifest_string_trace
 
-VALUES: yes | no
-DEFAULT: no
+VALUES: true | false
+DEFAULT: false
 DESCRIPTION: Print an information message each time a non-once
   manifest string is allocated at runtime.
 
@@ -825,13 +842,13 @@ HACT:
 VE:
   N/A
 SE:
-  yes -> manifest_string_trace (yes)
-  no -> manifest_string_trace (no)
+  true -> manifest_string_trace (yes)
+  false -> manifest_string_trace (no)
 -------------------------------------------------------------
 NAME: map
 
-VALUES: yes | no
-DEFAULT: no
+VALUES: true | false
+DEFAULT: false
 DESCRIPTION: Specify whether the map file is to be created.
 
 ISE:
@@ -839,31 +856,34 @@ ISE:
 HACT:
   N/A
 VE:
-  yes -> map on
-  no -> map off
+  true -> map on
+  false -> map off
 SE:
   N/A
 -------------------------------------------------------------
 NAME: multithreaded
 
-VALUES: yes | no
-DEFAULT: no
+VALUES: true | false
+DEFAULT: false
 DESCRIPTION: Enable generation of a multithreaded application.
 
 ISE:
-  yes -> multithreaded (yes)
-  no -> multithreaded (no)
+  true -> multithreaded (yes)
+  false -> multithreaded (no)
 HACT:
   N/A
 VE:
-  N/A
+  true -> multithreading on
+  false -> multithreading off
+  --
+  No effect on platforms other than Windows.
 SE:
   N/A
 -------------------------------------------------------------
 NAME: no_default_lib
 
-VALUES: yes | no
-DEFAULT: no
+VALUES: true | false
+DEFAULT: false
 DESCRIPTION: Specify that default library should not be linked
   in (works only with Object Tools linker)
 
@@ -872,8 +892,8 @@ ISE:
 HACT:
   N/A
 VE:
-  yes -> no_default_lib on
-  no -> no_default_lib off
+  true -> no_default_lib on
+  false -> no_default_lib off
 SE:
   N/A
 -------------------------------------------------------------
@@ -895,15 +915,15 @@ SE:
 -------------------------------------------------------------
 NAME: portable_code_generation
 
-VALUES: yes | no
-DEFAULT: no
+VALUES: true | false
+DEFAULT: false
 DESCRIPTION: Should generated C code be portable?
 
 ISE:
   N/A
 HACT:
-  yes -> portable_code_generation (yes)
-  no -> portable_code_generation (no)
+  true -> portable_code_generation (yes)
+  false -> portable_code_generation (no)
 VE:
   N/A
 SE:
@@ -926,13 +946,13 @@ SE:
 -------------------------------------------------------------
 NAME: profile
 
-VALUES: yes | no
-DEFAULT: no
+VALUES: true | false
+DEFAULT: false
 DESCRIPTION: Enable Eiffel profiling.
 
 ISE:
-  yes -> profile (yes)
-  no -> profile (no)
+  true -> profile (yes)
+  false -> profile (no)
 HACT:
   N/A
 VE:
@@ -942,8 +962,8 @@ SE:
 -------------------------------------------------------------
 NAME: reloads_optimization
 
-VALUES: yes | no
-DEFAULT: no
+VALUES: true | false
+DEFAULT: false
 DESCRIPTION: Specify whether register reloads optimizations
   will be enabled. This option activates lowlevel code
   optimization: the value will not be loaded in a register
@@ -954,24 +974,8 @@ ISE:
 HACT:
   N/A
 VE:
-  yes -> optimize reloads on
-  no -> optimize reloads off
-SE:
-  N/A
--------------------------------------------------------------
-NAME: safe_import
-
-VALUES: yes | no
-DEFAULT: no
-DESCRIPTION: Activate garbage collector support for callbacks.
-
-ISE:
-  N/A
-HACT:
-  N/A
-VE:
-  yes -> safe_import on
-  no -> safe_import off
+  true -> optimize reloads on
+  false -> optimize reloads off
 SE:
   N/A
 -------------------------------------------------------------
@@ -994,8 +998,8 @@ SE:
 -------------------------------------------------------------
 NAME: split
 
-VALUES: yes | no
-DEFAULT: no
+VALUES: true | false
+DEFAULT: false
 DESCRIPTION: Generate several C files instead of one big
   single C file for the complete system.
 
@@ -1006,8 +1010,8 @@ HACT:
 VE:
   N/A
 SE
-  yes -> no_split (no)
-  no -> no_split (yes)
+  true -> no_split (no)
+  false -> no_split (yes)
 -------------------------------------------------------------
 NAME: stack_size
 
@@ -1046,8 +1050,8 @@ SE:
 -------------------------------------------------------------
 NAME: strip
 
-VALUES: yes | no
-DEFAULT: yes
+VALUES: true | false
+DEFAULT: true
 DESCRIPTION: Enable 'strip' to be run on the generated executable.
 
 ISE:
@@ -1057,8 +1061,8 @@ HACT:
 VE:
   N/A
 SE
-  yes -> no_strip (no)
-  no -> no_strip (yes)
+  true -> no_strip (no)
+  false -> no_strip (yes)
 -------------------------------------------------------------
 NAME: target
 
@@ -1083,25 +1087,25 @@ SE:
 -------------------------------------------------------------
 NAME: trace
 
-VALUES: yes | no
-DEFAULT: no
+VALUES: true | false
+DEFAULT: false
 DESCRIPTION: Enable trace mode
 
 ISE:
-  yes -> trace (yes)
-  no -> trace (no)
+  true -> trace (yes)
+  false -> trace (no)
 HACT:
   N/A
 VE:
   N/A
 SE:
-  yes -> trace (yes)
-  no -> trace (no)
+  true -> trace (yes)
+  false -> trace (no)
 -------------------------------------------------------------
 NAME: verbose
 
-VALUES: yes | no
-DEFAULT: no
+VALUES: true | false
+DEFAULT: false
 DESCRIPTION: Run compiler in verbose mode.
 
 ISE:
@@ -1111,8 +1115,8 @@ HACT:
 VE:
   N/A
 SE:
-  yes -> verbose (yes)
-  no -> verbose (no)
+  true -> verbose (yes)
+  false -> verbose (no)
 -------------------------------------------------------------
 NAME: visible_filename
 
@@ -1132,9 +1136,9 @@ VE:
 SE:
   N/A
 -------------------------------------------------------------
-NAME: warning_level
+NAME: warning
 
-VALUES: no style default all
+VALUES: none style default all
 DEFAULT: default
 DESCRIPTION: Specify warning level. 'style' means that Eiffel
   style warnings (e.g. having feature names in all upper-case)
@@ -1145,14 +1149,14 @@ DESCRIPTION: Specify warning level. 'style' means that Eiffel
 ISE:
   N/A
 HACT:
-  no -> warning_level (no)
+  none -> warning_level (no)
   style -> warning_level (no)
   default -> warning_level ("default")
   all -> warning_level (all)
 VE:
   N/A
 SE:
-  no ->
+  none ->
       no_style_warning (yes)
       no_warning (yes)
   style ->
@@ -1167,8 +1171,8 @@ SE:
 -------------------------------------------------------------
 NAME: wedit
 
-VALUES: yes | no
-DEFAULT: no
+VALUES: true | false
+DEFAULT: false
 DESCRIPTION: Enable support for the Wedit debugger.
 
 ISE:
@@ -1178,17 +1182,19 @@ HACT:
 VE:
   N/A
 SE:
-  yes -> wedit (yes)
-  no -> wedit (no)
+  true -> wedit (yes)
+  false -> wedit (no)
 -------------------------------------------------------------
 
+Note: When precompiling with Visual Eiffel, only the
+following options are supported by the compiler:
 
+. assertions on/off
+. debug on/off
 
-Not supported yet (wait for explanation from ISE):
+Note2: the following ISE Eiffel options are not supported
+yet by 'gexace' (wait for explanation from ISE):
 
-
-ISE Eiffel:
-
-. disabled_debug (...).
+. disabled_debug (...)
 . il_verifiable (yes)
 . msil_generation_type ("exe")
