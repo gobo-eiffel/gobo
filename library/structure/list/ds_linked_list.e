@@ -286,7 +286,7 @@ feature -- Element change
 					first_cell := linked_other.first_cell
 					last_cell := linked_other.last_cell
 					count := other.count
-				else	
+				else
 					linked_other.last_cell.put_right (first_cell)
 					first_cell := linked_other.first_cell
 					count := count + other.count
