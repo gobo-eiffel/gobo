@@ -14,9 +14,9 @@ class GEANT_TASK
 
 inherit
 
-	GEANT_ELEMENT
+	GEANT_INTERPRETING_ELEMENT
 		rename
-			make as element_make
+			make as interpreting_element_make
 		end
 
 	KL_SHARED_FILE_SYSTEM
@@ -33,7 +33,7 @@ feature {NONE} -- Initialization
 			a_xml_element_not_void: a_xml_element /= Void
 		do
 			set_command (a_command)
-			element_make (a_command.project, a_xml_element)
+			interpreting_element_make (a_command.project, a_xml_element)
 		end
 
 feature -- Access
