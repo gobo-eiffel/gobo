@@ -571,7 +571,7 @@ feature {NONE} -- Implementation
 			xml_catalog_files: STRING
 			a_splitter: ST_SPLITTER
 			a_list: DS_LIST [STRING]
-			a_base_URI: UT_URI
+			a_base_uri: UT_URI
 			a_cursor: DS_LIST_CURSOR [STRING]
 		do
 			xml_catalog_files := Execution_environment.variable_value ("XML_CATALOG_FILES")

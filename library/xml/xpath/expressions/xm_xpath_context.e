@@ -80,7 +80,7 @@ feature -- Access
 			-- Security manager
 		deferred
 		ensure
-			security_namager_not_void: Result /= Void
+			security_manager_not_void: Result /= Void
 		end
 
 	current_date_time: DT_DATE_TIME is
