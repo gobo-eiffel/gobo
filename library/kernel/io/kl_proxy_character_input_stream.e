@@ -10,14 +10,16 @@ indexing
 	date: "$Date$"
 	revision: "$Revision$"
 
-deferred class KL_PROXY_INPUT_STREAM
+class KL_PROXY_CHARACTER_INPUT_STREAM
 
 inherit
 
 	KI_CHARACTER_INPUT_STREAM
 		redefine
-			is_rewindable, is_closable, rewind, close
+			is_rewindable, is_closable, rewind, close, valid_unread_character
 		end
+
+	KL_IMPORTED_STRING_ROUTINES
 
 feature {NONE} -- Initialization
 
@@ -31,6 +33,31 @@ feature {NONE} -- Initialization
 			base_stream_set: base_stream = an_underlying_stream
 		end
 
+feature -- Input
+
+	read_string (nb: INTEGER) is
+			-- Read at most `nb' characters from input stream.
+			-- Make the characters that have actually been read
+			-- available in `last_string'.
+		do
+			base_stream.read_string (nb)
+		end
+		
+	read_character is
+			-- Read the next item in input stream.
+			-- Make the result available in `last_character'.
+		do
+			base_stream.read_character
+		end
+
+	unread_character (an_item: CHARACTER) is
+			-- Put `an_item' back in input stream.
+			-- This item will be read first by the next
+			-- call to a read routine.
+		do
+			base_stream.unread_character (an_item)
+		end
+
 feature -- Access
 
 	base_stream: KI_CHARACTER_INPUT_STREAM
@@ -40,6 +67,18 @@ feature -- Access
 			-- Name of input stream
 		do
 			Result := base_stream.name
+		end
+
+	last_string: STRING is
+			-- Last string read
+		do
+			Result := base_stream.last_string
+		end
+
+	last_character: CHARACTER is
+			-- Last item read
+		do
+			Result := base_stream.last_character
 		end
 
 feature -- Status report
@@ -67,6 +106,12 @@ feature -- Status report
 			-- the beginning of the stream?
 		do
 			Result := base_stream.is_rewindable
+		end
+
+	valid_unread_character (a_character: CHARACTER): BOOLEAN is
+			-- Can `a_character' be put back in input stream?
+		do
+			Result := base_stream.valid_unread_character (a_character)
 		end
 
 feature -- Basic operations

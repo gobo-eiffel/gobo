@@ -14,12 +14,12 @@ class UT_BASE64_DECODING_INPUT_STREAM
 
 inherit
 	
-	KL_PROXY_INPUT_STREAM
+	KL_PROXY_CHARACTER_INPUT_STREAM
 		redefine
-			make, end_of_input, valid_unread_character
+			make, end_of_input, read_string,
+			read_character, unread_character, last_character,
+			last_string, valid_unread_character
 		end
-
-	KL_IMPORTED_STRING_ROUTINES
 
 creation
 

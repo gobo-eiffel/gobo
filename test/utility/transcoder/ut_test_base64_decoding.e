@@ -29,7 +29,6 @@ feature -- Tests
 			create a_decoder.make (a_string_stream)
 			assert ("Open for reading", a_decoder.is_open_read)
 			a_decoder.read_string (1024)
-			print (a_decoder.last_string)
 			assert ("Decoded", a_decoder.last_string.count = 273)
 		end
 	
