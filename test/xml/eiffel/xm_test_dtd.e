@@ -52,6 +52,9 @@ feature
 			assert_parsed (
 				"<!DOCTYPE doc [ <!ELEMENT doc EMPTY><!ATTLIST doc a NMTOKEN #IMPLIED>]><doc/>",
 				"<!ELEMENT doc EMPTY>%N<!ATTLIST doc a NMTOKEN #IMPLIED>%N<!DOCTYPE doc>%N")
+			assert_parsed (
+				"<!DOCTYPE doc [ <!ELEMENT doc EMPTY><!ATTLIST doc a (x | y|z) #IMPLIED>]><doc/>",
+				"<!ELEMENT doc EMPTY>%N<!ATTLIST doc a (x|y|z) #IMPLIED>%N<!DOCTYPE doc>%N")
 		end
 	
 	test_element_repetition is
