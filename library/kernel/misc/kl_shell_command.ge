@@ -101,6 +101,12 @@ feature -- Execution
 #ifdef ISE
 				system (command)
 				exit_code := return_code
+					-- Under Linux `system' seems to
+					-- always return 256*exit_code instead of
+					-- just exit_code.
+				if (exit_code \\ 256) = 0 then
+					exit_code := exit_code // 256
+				end
 #endif
 #ifdef HACT
 				old_execute
