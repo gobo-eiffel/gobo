@@ -489,7 +489,7 @@ xmltest_valid_sa_100: STRING is "<!DOCTYPE doc [%R%N<!ENTITY e PUBLIC %";!*#@$_%
 xmltest_valid_sa_101: STRING is "<!DOCTYPE doc [%R%N<!ELEMENT doc (#PCDATA)>%R%N<!ENTITY e %"&#34;%">%R%N]>%R%N<doc></doc>%R%N"
 xmltest_valid_sa_102: STRING is "<!DOCTYPE doc [%R%N<!ELEMENT doc (#PCDATA)>%R%N<!ATTLIST doc a CDATA #IMPLIED>%R%N]>%R%N<doc a=%"&#34;%"></doc>%R%N"
 xmltest_valid_sa_103: STRING is "<!DOCTYPE doc [%R%N<!ELEMENT doc (#PCDATA)>%R%N]>%R%N<doc>&#60;doc></doc>%R%N"
-xmltest_valid_sa_104: STRING is "<!DOCTYPE doc [%R%N<!ELEMENT doc (#PCDATA)>%R%N<!ATTLIST doc a CDATA #IMPLIED>%R%N]>%R%N<doc a=%"x%T y%"></doc>%R%N"
+xmltest_valid_sa_104: STRING is "<!DOCTYPE doc [%R%N<!ELEMENT doc (#PCDATA)>%R%N<!ATTLIST doc a CDATA #IMPLIED>%R%N]>%R%N<doc a=%"x%Ty%"></doc>%R%N"
 xmltest_valid_sa_105: STRING is "<!DOCTYPE doc [%R%N<!ELEMENT doc (#PCDATA)>%R%N<!ATTLIST doc a CDATA #IMPLIED>%R%N]>%R%N<doc a=%"x&#9;y%"></doc>%R%N"
 xmltest_valid_sa_106: STRING is "<!DOCTYPE doc [%R%N<!ELEMENT doc (#PCDATA)>%R%N<!ATTLIST doc a CDATA #IMPLIED>%R%N]>%R%N<doc a=%"x&#10;y%"></doc>%R%N"
 xmltest_valid_sa_107: STRING is "<!DOCTYPE doc [%R%N<!ELEMENT doc (#PCDATA)>%R%N<!ATTLIST doc a CDATA #IMPLIED>%R%N]>%R%N<doc a=%"x&#13;y%"></doc>%R%N"
