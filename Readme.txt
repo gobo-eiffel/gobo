@@ -1,4 +1,4 @@
-Gobo Eiffel, version 3.0
+Gobo Eiffel, version 3.1
 
 One of the main concerns of Gobo Eiffel is to provide you with Eiffel
 libraries and tools that are portable across various Eiffel compilers
@@ -39,17 +39,17 @@ This package consists of ten Eiffel libraries:
 
 and seven utilities:
 
-    . Gobo Eiffel Ant, version 3.0 (geant)
-    . Gobo Eiffel Xace, version 3.0 (gexace)
-    . Gobo Eiffel Lex, version 3.0 (gelex)
-    . Gobo Eiffel Yacc, version 3.0 (geyacc)
-    . Gobo Eiffel Test, version 3.0 (getest)
-    . Gobo Eiffel Preprocessor, version 3.0 (gepp)
-    . Gobo Eiffel XML Splitter, version 3.0 (gexmlsplit)
+    . Gobo Eiffel Ant, version 3.1 (geant)
+    . Gobo Eiffel Xace, version 3.1 (gexace)
+    . Gobo Eiffel Lex, version 3.1 (gelex)
+    . Gobo Eiffel Yacc, version 3.1 (geyacc)
+    . Gobo Eiffel Test, version 3.1 (getest)
+    . Gobo Eiffel Preprocessor, version 3.1 (gepp)
+    . Gobo Eiffel XML Splitter, version 3.1 (gexmlsplit)
 
 The software provided in this distribution should work on any platform
 where supported Eiffel compilers are available. However this software
-has only been tested under Windows NT, Linux RedHat 7.1 and Solaris 2.8.
+has only been tested under Windows NT, Linux RedHat 7.1.
 Since most Eiffel compilers use the notation $NAME for environment variables
 in their Ace files (or equivalent), this convention has been used instead
 of the Windowish %NAME%. Likewise, the directory separator used through
@@ -60,7 +60,7 @@ To install this package, please follow the instructions below:
 
 Under Windows:
 
-    . download the package gobo30.zip
+    . download the package gobo31.zip
     . copy the files to a directory of your choice on your disk and
       set the environment variable %GOBO% to that directory, known as
       the distribution directory. Also put the directory %GOBO%\bin
@@ -68,7 +68,7 @@ Under Windows:
 
 Under Linux:
 
-    . download the package gobo30.tar.gz
+    . download the package gobo31.tar.gz
     . copy the files to a directory of your choice on your disk and
       set the environment variable $GOBO to that directory, known as
       the distribution directory. Also put the directory $GOBO/bin
@@ -76,7 +76,7 @@ Under Linux:
 
 For other platforms:
 
-    . download the package gobo30.tar.gz
+    . download the package gobo31.tar.gz
     . copy the files to a directory of your choice on your disk and
       set the environment variable $GOBO to that directory, known as
       the distribution directory. Also put the directory $GOBO/bin
@@ -90,12 +90,12 @@ Note that if you downloaded this package from CVS on SourceForge, you
 will need to bootstrap it. Please read $GOBO/work/bootstrap/Readme.txt.
 
 The supported Eiffel compilers, in alphabetical order, are: Halstenbach
-4.0.1, ISE Eiffel 5.2.1027 (Classic and .NET) and 5.1.014, SmallEiffel -0.74,
-Visual Eiffel 4.0 (Build 4001) and 4.1 beta (Build 2402). For more details
-about the supported Eiffel compilers, please see the file "Release_notes.txt".
-This software might work with other Eiffel compilers and/or other compiler
-versions, however no test has been done. To have a better understanding of
-the way this software has been designed and implemented, you can also have
+4.0.1, ISE Eiffel 5.2.1123 (Classic and .NET), SmartEiffel 1.0,
+Visual Eiffel 4.1 (Build 4802). For more details about the supported
+Eiffel compilers, please see the file "Release_notes.txt". This software
+might work with other Eiffel compilers and/or other compiler versions,
+however no test has been done. To have a better understanding of the
+way this software has been designed and implemented, you can also have
 a look at "$GOBO/doc/portability".
 
 In this distribution:
@@ -178,4 +178,4 @@ for your specific needs. Thank you in advance.
 
 --
 Copyright (c) 1997-2002, Eric Bezault and others
-1 September 2002
+18 December 2002
