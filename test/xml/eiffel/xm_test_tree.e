@@ -42,7 +42,8 @@ feature
 			parser.parse_from_string ("<!-- pre -->"
 				+"<doc>"
 				+"  <a b='foo'></a><b/><!--inline--><c>zoo</c>"
-				+"</doc>")
+				+"</doc>"
+				+"<!-- post -->")
 		
 			go_root
 			assert_first
@@ -73,6 +74,8 @@ feature
 			go_up
 			assert_last 
 			go_up
+			go_next
+			assert_comment (" post ")
 			assert_last
 		end
 		
