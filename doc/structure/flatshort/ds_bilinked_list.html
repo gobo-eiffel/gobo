@@ -327,11 +327,7 @@ href="ds_traversable.html#valid_cursor"><font color="#008000"><em>DS_TRAVERSABLE
 color="#008000">.)</font><em>
     </em><font color="#000080"><em><strong>require</strong></em></font><em>
         a_cursor_not_void</em>:<em> a_cursor </em>/=<em> </em><font
-color="#008080"><em>Void</em></font><em>
-    </em><font color="#000080"><em><strong>ensure</strong></em></font><em>
-        definition</em>:<em> </em><font color="#008080"><em>Result</em></font><em> </em>= (<em>a_cursor</em>.<a
-href="ds_cursor.html#container"><em>container</em></a><em> </em>=<em> </em><font
-color="#008080"><em>Current</em></font>)</pre>
+color="#008080"><em>Void</em></font></pre>
     <pre><a name="valid_index"><em>valid_index</em></a><em> </em>(<em>i</em>:<em> </em><a
 href="http://www.gobosoft.com/eiffel/nice/elks95/integer.html"><em>INTEGER</em></a>):<em> </em><a
 href="http://www.gobosoft.com/eiffel/nice/elks95/boolean.html"><em>BOOLEAN</em></a><em>
@@ -369,6 +365,29 @@ color="#008000"><em>DS_SORTABLE</em></font></a><font
 color="#008000">.)</font><em>
     </em><font color="#000080"><em><strong>require</strong></em></font><em>
         a_sorter_not_void</em>:<em> a_sorter </em>/= <font
+color="#008080"><em>Void</em></font></pre>
+    <pre><a name="same_items"><em>same_items</em></a><em> </em>(<em>v</em>,<em> u</em>:<em> G</em>):<em> </em><a
+href="http://www.gobosoft.com/eiffel/nice/elks95/boolean.html"><em>BOOLEAN</em></a><em>
+       </em><font color="#008000"> -- Are </font><em>v</em><font
+color="#008000"> and </font><em>u</em><font color="#008000"> considered equal?
+        -- (Use </font><a href="#equality_tester"><em>equality_tester</em></a><font
+color="#008000">'s comparison criterion
+        -- if not void, use `=' criterion otherwise.)
+</font><em>        </em><font color="#008000">-- (From </font><a
+href="ds_searchable.html#same_items"><font color="#008000"><em>DS_SEARCHABLE</em></font></a><font
+color="#008000">.)</font></pre>
+    <pre><a name="same_equality_tester"><em>same_equality_tester</em></a><em> </em>(<em>other</em>:<em> </em><a
+href="ds_searchable.html"><em>DS_SEARCHABLE</em></a><em> </em>[<em>G</em>]):<em> </em><a
+href="http://www.gobosoft.com/eiffel/nice/elks95/boolean.html"><em>BOOLEAN</em></a><em>
+       </em><font color="#008000"> -- Does container use the same comparison
+        -- criterion as </font><em>other</em><font
+color="#008000">?</font><em>
+        </em><font color="#008000">-- (From </font><a
+href="ds_searchable.html#same_equality_tester"><font
+color="#008000"><em>DS_SEARCHABLE</em></font></a><font
+color="#008000">.)</font><em>
+    </em><font color="#000080"><em><strong>require</strong></em></font><em>
+        other_not_void</em>:<em> other </em>/=<em> </em><font
 color="#008080"><em>Void</em></font></pre>
 </blockquote>
 
