@@ -83,19 +83,21 @@ feature -- XML asserts
 			assert (STRING_.concat ("Output: ", a_name), STRING_.same_string (new_unicode_string_from_utf8 (an_out), output))
 		end
 	
-	assert_valid_external (a_name: STRING; in: STRING; a_resolver: XM_EXTERNAL_RESOLVER) is
+	assert_valid_external (a_name: STRING; in: STRING; a_resolver: XM_TEST_STRING_EXTERNAL_RESOLVER) is
 			-- Assert valid with external entities.
 		require
 			name_not_void: a_name /= Void
 			in_not_void: in /= Void
 		do
 			reset_parser
+			a_resolver.initialize
 			parser.set_dtd_resolver (a_resolver)
 			parser.set_entity_resolver (a_resolver)
 			parser.parse_from_string (new_unicode_string_from_utf8 (in))
 			debug ("xml_parser") print_parser_error end
 			
 			assert (a_name, not error.has_error)
+			assert ("resolver_depth", a_resolver.depth = 0)
 		end
 		
 	assert_invalid_external (a_name: STRING; in: STRING; a_resolver: XM_EXTERNAL_RESOLVER) is

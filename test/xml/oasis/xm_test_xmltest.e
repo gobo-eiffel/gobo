@@ -495,7 +495,7 @@ feature -- Test
 
 feature {NONE} -- External entities
 
-	valid_not_sa_externals: XM_STRING_EXTERNAL_RESOLVER is
+	valid_not_sa_externals: XM_TEST_STRING_EXTERNAL_RESOLVER is
 			-- valid not stand alone entities.
 		once
 			create Result.make
@@ -536,7 +536,7 @@ feature {NONE} -- External entities
 			Result.strings.force (xmltest_valid_not_sa_031_2_ent, "031-2.ent")		
 		end
 		
-	valid_ext_sa_externals: XM_STRING_EXTERNAL_RESOLVER is
+	valid_ext_sa_externals: XM_TEST_STRING_EXTERNAL_RESOLVER is
 			-- valid ext sa stand alone entities.
 		once
 			create Result.make
@@ -556,7 +556,7 @@ feature {NONE} -- External entities
 			Result.strings.force (xmltest_valid_ext_sa_014_ent, "014.ent")
 		end
 
-	not_wf_ext_sa_externals: XM_STRING_EXTERNAL_RESOLVER is
+	not_wf_ext_sa_externals: XM_TEST_STRING_EXTERNAL_RESOLVER is
 		once
 			create Result.make
 			Result.strings.force (xmltest_not_wf_ext_sa_001_ent, "001.ent")
@@ -564,7 +564,7 @@ feature {NONE} -- External entities
 			Result.strings.force (xmltest_not_wf_ext_sa_003_ent, "003.ent")
 		end
 		
-	not_wf_not_sa_externals: XM_STRING_EXTERNAL_RESOLVER is
+	not_wf_not_sa_externals: XM_TEST_STRING_EXTERNAL_RESOLVER is
 		once
 			create Result.make
 			Result.strings.force (xmltest_not_wf_not_sa_001_ent, "001.ent")
@@ -576,7 +576,7 @@ feature {NONE} -- External entities
 			Result.strings.force (xmltest_not_wf_not_sa_008_ent, "008.ent")
 		end
 		
-	invalid_externals: XM_STRING_EXTERNAL_RESOLVER is
+	invalid_externals: XM_TEST_STRING_EXTERNAL_RESOLVER is
 		once
 			create Result.make
 			Result.strings.force (xmltest_invalid_001_ent, "001.ent")
@@ -587,7 +587,7 @@ feature {NONE} -- External entities
 			Result.strings.force (xmltest_invalid_006_ent, "006.ent")
 		end
 
-	sa_externals: XM_STRING_EXTERNAL_RESOLVER is
+	sa_externals: XM_TEST_STRING_EXTERNAL_RESOLVER is
 		once
 			create Result.make
 			Result.strings.force (xmltest_valid_sa_097_ent, "097.ent")
