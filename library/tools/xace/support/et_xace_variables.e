@@ -14,7 +14,7 @@ class ET_XACE_VARIABLES
 
 inherit
 
-	ANY -- Export ANY's features
+	KL_VALUES [STRING, STRING]
 
 	UC_SHARED_STRING_EQUALITY_TESTER
 	
@@ -46,7 +46,7 @@ feature -- Status report
 
 feature -- Access
 
-	value (a_name: STRING): STRING is
+	item (a_name: STRING): STRING is
 			-- Value associated with `a_name'
 		require
 			a_name_not_void: a_name/= Void
@@ -55,6 +55,15 @@ feature -- Access
 			Result := defined_values.item (a_name)
 		ensure
 			value_not_void: Result /= Void
+		end
+
+	value (a_name: STRING): STRING is
+			-- Value associated with `a_name';
+			-- Return Void if no such value
+		do
+			if is_defined (a_name) then
+				Result := defined_values.item (a_name)
+			end
 		end
 
 feature -- Element change
