@@ -308,8 +308,6 @@ feature
 			assert ("Document element not void", document_element /= Void)
 			a_name := document_element.node_name
 			assert("root name", STRING_.same_string (a_name, "xsl:transform"))
-
-			document.diagnostic_dump
 		end
 	
 feature {NONE} -- Implementation

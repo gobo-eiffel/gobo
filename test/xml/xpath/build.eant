@@ -13,6 +13,7 @@
 	<inherit>
 		<parent location="${GOBO}/misc/test.eant">
 			<redefine target="init_system"/>
+			<redefine target="other_clobber"/>
 		</parent>
 	</inherit>
 
@@ -22,5 +23,15 @@
 	<target name="init_system">
 		<set name="system" value="xpath"/>
 		<set name="system_dir" value="${GOBO}/test/xml/xpath"/>
+	</target>
+
+	<target name="other_clobber" depend="init">
+		<description>
+			Remove other generated files.
+		</description>
+
+		<delete file="${system_dir}/listing"/>
+		<delete directory="${system_dir}/eCluster"/>
+		<delete directory="${system_dir}/eProject"/>
 	</target>
 </project>
