@@ -47,6 +47,14 @@ feature -- Filters
 			pretty_print_not_void: Result /= Void
 		end
 
+	new_indent_pretty_print: XM_INDENT_PRETTY_PRINT_FILTER is
+			-- Indenting pretty print filter
+		do
+			create Result.make_null
+		ensure
+			indent_pretty_print_not_void: Result /= Void
+		end
+		
 	new_end_tag_checker: XM_END_TAG_CHECKER is
 			-- New end tag checker filter
 		obsolete "End tag checking is built into parser"
@@ -72,6 +80,14 @@ feature -- Filters
 			namespace_resolver_not_void: Result /= Void
 		end
 
+	new_xmlns_generator: XM_XMLNS_GENERATOR is
+			-- New xmlns: generator (opposite of namespace resolver)
+		do
+			create Result.make_null
+		ensure
+			xmlns_generator_not_void: Result /= Void
+		end
+		
 	new_stop_on_error: XM_STOP_ON_ERROR_FILTER is
 			-- New stop-on-error filter
 		do
@@ -86,6 +102,14 @@ feature -- Filters
 			create Result.make_null
 		ensure
 			content_concatenator_not_void: Result /= Void
+		end
+		
+	new_whitespace_normalizer: XM_WHITESPACE_NORMALIZER is
+			-- New whitespace normalizer.
+		do
+			create Result.make_null
+		ensure
+			whitespace_normalizer_not_void: Result /= Void
 		end
 
 	new_shared_strings: XM_SHARED_STRINGS_FILTER is
