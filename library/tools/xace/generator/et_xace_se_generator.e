@@ -58,7 +58,7 @@ feature -- Output
 
 feature {NONE} -- Output
 
-	print_ace_file (a_system: ET_XACE_UNIVERSE; a_file: KL_TEXT_OUTPUT_FILE) is
+	print_ace_file (a_system: ET_XACE_UNIVERSE; a_file: KI_TEXT_OUTPUT_STREAM) is
 			-- Print Ace `a_system' to `a_file'.
 		require
 			a_system_not_void: a_system /= Void
@@ -141,7 +141,7 @@ feature {NONE} -- Output
 			a_file.put_new_line
 		end
 
-	print_options (an_option: ET_XACE_OPTIONS; indent: INTEGER; a_file: KL_TEXT_OUTPUT_FILE) is
+	print_options (an_option: ET_XACE_OPTIONS; indent: INTEGER; a_file: KI_TEXT_OUTPUT_STREAM) is
 			-- Print `an_option' to `a_file'.
 		require
 			an_option_not_void: an_option /= Void
@@ -180,7 +180,7 @@ feature {NONE} -- Output
 			end
 		end
 
-	print_clusters (a_clusters: ET_XACE_CLUSTERS; a_file: KL_TEXT_OUTPUT_FILE) is
+	print_clusters (a_clusters: ET_XACE_CLUSTERS; a_file: KI_TEXT_OUTPUT_STREAM) is
 			-- Print `a_clusters' to `a_file'.
 		require
 			a_clusters_not_void: a_clusters /= Void
@@ -198,7 +198,7 @@ feature {NONE} -- Output
 			end
 		end
 
-	print_cluster (a_cluster: ET_XACE_CLUSTER; a_file: KL_TEXT_OUTPUT_FILE) is
+	print_cluster (a_cluster: ET_XACE_CLUSTER; a_file: KI_TEXT_OUTPUT_STREAM) is
 			-- Print `a_cluster' to `a_file'.
 		require
 			a_cluster_not_void: a_cluster /= Void
@@ -237,7 +237,7 @@ feature {NONE} -- Output
 			end
 		end
 
-	print_exported_classes (a_classes: DS_LINKED_LIST [ET_XACE_EXPORTED_CLASS]; a_file: KL_TEXT_OUTPUT_FILE) is
+	print_exported_classes (a_classes: DS_LINKED_LIST [ET_XACE_EXPORTED_CLASS]; a_file: KI_TEXT_OUTPUT_STREAM) is
 			-- Print `a_classes' to `a_file'.
 		require
 			a_classes_not_void: a_classes /= Void
@@ -254,7 +254,7 @@ feature {NONE} -- Output
 			end
 		end
 
-	print_exported_class (a_class: ET_XACE_EXPORTED_CLASS; a_file: KL_TEXT_OUTPUT_FILE) is
+	print_exported_class (a_class: ET_XACE_EXPORTED_CLASS; a_file: KI_TEXT_OUTPUT_STREAM) is
 			-- Print `a_class' to `a_file'.
 		require
 			a_class_not_void: a_class /= Void
@@ -275,7 +275,7 @@ feature {NONE} -- Output
 			end
 		end
 
-	print_include_directories (a_directories: DS_LINKED_LIST [STRING]; a_file: KL_TEXT_OUTPUT_FILE) is
+	print_include_directories (a_directories: DS_LINKED_LIST [STRING]; a_file: KI_TEXT_OUTPUT_STREAM) is
 			-- Print `a_directories' to `a_file'.
 		require
 			a_directories_not_void: a_directories /= Void
@@ -307,7 +307,7 @@ feature {NONE} -- Output
 			end
 		end
 
-	print_link_libraries (a_libraries: DS_LINKED_LIST [STRING]; a_file: KL_TEXT_OUTPUT_FILE) is
+	print_link_libraries (a_libraries: DS_LINKED_LIST [STRING]; a_file: KI_TEXT_OUTPUT_STREAM) is
 			-- Print `a_libraries' to `a_file'.
 		require
 			a_libraries_not_void: a_libraries /= Void

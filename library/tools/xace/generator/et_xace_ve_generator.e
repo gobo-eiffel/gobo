@@ -55,7 +55,7 @@ feature -- Output
 
 feature {NONE} -- Output
 
-	print_esd_file (a_system: ET_XACE_UNIVERSE; a_file: KL_TEXT_OUTPUT_FILE) is
+	print_esd_file (a_system: ET_XACE_UNIVERSE; a_file: KI_TEXT_OUTPUT_STREAM) is
 			-- Print ESD `a_system' to `a_file'.
 		require
 			a_system_not_void: a_system /= Void
@@ -107,7 +107,7 @@ feature {NONE} -- Output
 			a_file.put_new_line
 		end
 
-	print_clusters (a_clusters: ET_XACE_CLUSTERS; a_file: KL_TEXT_OUTPUT_FILE) is
+	print_clusters (a_clusters: ET_XACE_CLUSTERS; a_file: KI_TEXT_OUTPUT_STREAM) is
 			-- Print `a_clusters' to `a_file'.
 		require
 			a_clusters_not_void: a_clusters /= Void
@@ -125,7 +125,7 @@ feature {NONE} -- Output
 			end
 		end
 
-	print_cluster (a_cluster: ET_XACE_CLUSTER; a_file: KL_TEXT_OUTPUT_FILE) is
+	print_cluster (a_cluster: ET_XACE_CLUSTER; a_file: KI_TEXT_OUTPUT_STREAM) is
 			-- Print `a_cluster' to `a_file'.
 		require
 			a_cluster_not_void: a_cluster /= Void
