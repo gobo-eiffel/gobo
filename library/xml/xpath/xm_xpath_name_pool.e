@@ -50,19 +50,18 @@ inherit
 
 	XM_XPATH_STANDARD_NAMESPACES
 
-	EXCEPTIONS
+	KL_SHARED_EXCEPTIONS
+
+	KL_SHARED_STANDARD_FILES
 
 creation
 	make
 
 feature -- Initialization
 
-	make (shared_pool: XM_XPATH_SHARED_NAME_POOL) is
+	make is
 			-- Establish invariant
-		require
-			shared_pool_not_void: shared_pool /= Void
 		do
-			default_pool := shared_pool
 			create document_number_map.make_map (10)
 			create hash_slots.make (0, 1023)
 			
@@ -88,64 +87,58 @@ feature -- Initialization
 	
 feature -- Access
 
+	bits_31: INTEGER is 2147483647 -- 0x7fffffff
+			-- As VE does not support hex constants
+
+	bits_16: INTEGER is 65535 -- 0x0000ffff
+			-- As VE does not support hex constants
+
 	namespace_code (xml_prefix: STRING; uri: STRING): INTEGER is
-			-- Return existing namespace code for a namespace prefix/URI pair, or -1 if not present
+			-- Return existing namespace code for a namespace prefix/URI pair
 		require
-			uri_not_void: uri /= Void
+			uri_allocated: uri /= Void
+			prefix_allocated: xml_prefix /= Void
+			code_allocated: is_namespace_code_allocated (xml_prefix, uri)
 		local
 			prefix_code, uri_code: INTEGER -- should be INTEGER_16
 			key: STRING
 		do
 			debug ("name pool")
-				io.error.put_string ("namespace_code: prefix is ")
-				io.error.put_string (xml_prefix)
-				io.error.put_new_line
+				std.error.put_string ("namespace_code: prefix is ")
+				std.error.put_string (xml_prefix)
+				std.error.put_string (", uri is ")
+				std.error.put_string (uri)
+				std.error.put_new_line
 			end
 			prefix_code := code_for_prefix (xml_prefix)
-			if prefix_code < 0 then
-				debug ("name pool")
-					io.error.put_string ("namespace_code: Negative prefix code%N")
-				end
-				Result := -1
-			else
-				uri_code := code_for_uri (uri)
-				if uri_code < 0 then
-					debug ("name pool")
-						io.error.put_string ("namespace_code: Negative URI code%N")
-					end
-					Result := -1
-				else
-					Result := (prefix_code |<< 16) + uri_code
-						check
-							positive_result: Result >= 0
-						end
-					if prefix_code /= 0 then
-						-- Ensure the prefix is in the list of prefixes used with this URI
-						create key.make_from_string (xml_prefix)
-						key.extend (' ')						
-						if prefixes_for_uri.item (uri_code + 1).substring_index (key, 1) = 0 then
-							-- prefix is not in the list
-							debug ("name pool")
-								io.error.put_string ("namespace_code: Prefix not in list%N")
-							end							
-							Result := -1
-						end
-					end
-				end
+			uri_code := code_for_uri (uri)
+
+			debug ("name pool")
+				std.error.put_string ("namespace_code: code for prefix is ")
+				std.error.put_string (prefix_code.out)
+				std.error.put_string (", code for uri is ")
+				std.error.put_string (uri_code.out)
+				std.error.put_new_line
 			end
+			Result := (prefix_code |<< 16) + uri_code
 		ensure
-			valid_result: Result > -2
+			valid_result: Result >= 0
 		end
 
 	code_for_uri (uri: STRING): INTEGER is -- should be INTEGER_16
 			-- Uri code for a given `uri';
-			-- -1 if not present in the name pool
 		require
 			uri_not_void: uri /= Void
+			code_allocated: is_code_for_uri_allocated (uri)
 		local
 			counter: INTEGER
 			found: BOOLEAN
 		do
+			debug ("name pool")
+				std.error.put_string ("code_for_uri: uri is ")
+				std.error.put_string (uri)
+				std.error.put_new_line
+			end	
 			from
 				counter := 1
 			variant
@@ -159,9 +152,12 @@ feature -- Access
 				end
 				counter := counter + 1
 			end
-			if not found then Result := -1 end
+				check
+					code_found: found = True
+					-- Because of pre-conditions
+				end
 		ensure
-			valid_result: Result = -1 or Result > 0
+			valid_result: Result >= 0
 		end
 
 	code_for_prefix (xml_prefix: STRING): INTEGER is -- should be INTEGER_16
@@ -169,14 +165,15 @@ feature -- Access
 			-- -1 if not found
 		require
 			xml_prefix_not_void: xml_prefix /= Void
+			code_allocated: is_code_for_prefix_allocated (xml_prefix)
 		local
 			counter: INTEGER
 			found: BOOLEAN
 		do
-		debug ("name pool")
-				io.error.put_string ("code_for_prefix: prefix is ")
-				io.error.put_string (xml_prefix)
-				io.error.put_new_line
+			debug ("name pool")
+				std.error.put_string ("code_for_prefix: prefix is ")
+				std.error.put_string (xml_prefix)
+				std.error.put_new_line
 			end			
 			from
 				counter := 1
@@ -186,9 +183,9 @@ feature -- Access
 				counter > prefixes_used or found = True
 			loop
 				debug ("name pool")
-					io.error.put_string ("code_for_prefix: current prefix is ")
-					io.error.put_string (prefixes.item (counter))
-					io.error.put_new_line
+					std.error.put_string ("code_for_prefix: current prefix is ")
+					std.error.put_string (prefixes.item (counter))
+					std.error.put_new_line
 				end				
 				if prefixes.item (counter).is_equal (xml_prefix) then
 					Result := counter - 1
@@ -196,9 +193,12 @@ feature -- Access
 				end
 				counter := counter + 1
 			end
-			if not found then Result := -1 end
+			check
+				prefix_found: found = True
+				-- Because of pre-condition
+			end
 		ensure
-			valid_result: Result = -1 or Result > 0
+			valid_result: Result >= 0
 		end
 
 	suggest_prefix_for_uri (uri: STRING): STRING is
@@ -243,9 +243,9 @@ feature -- Access
 				Result := ""
 			else
 				debug ("name pool")
-					io.error.put_string ("prefix_with_index: searching for index ")
-					io.error.put_string (index.out)
-					io.error.put_new_line
+					std.error.put_string ("prefix_with_index: searching for index ")
+					std.error.put_string (index.out)
+					std.error.put_new_line
 				end
 				from
 					the_prefixes := prefixes_for_uri.item (uri_code + 1)
@@ -262,41 +262,40 @@ feature -- Access
 					blank := the_prefixes.index_of (' ', last_blank)
 					if blank = 0 then
 						found := True -- no more prefixes
-						counter := counter - 1
 							check
 								void_result: Result = Void
 							end
 					else
 						this_prefix := the_prefixes.substring (last_blank, blank - 1)
 						debug ("name pool")
-							io.error.put_string ("prefix_with_index: found prefix ")
-							io.error.put_string (this_prefix)
-							io.error.put_string (" when searching on iteration ")
-							io.error.put_string (counter.out)
-							io.error.put_new_line
-							io.error.put_string ("prefix_with_index: searching from position ")
-							io.error.put_string (last_blank.out)
-							io.error.put_string (" to position ")
-							io.error.put_string ((blank - 1).out)
-							io.error.put_new_line
+							std.error.put_string ("prefix_with_index: found prefix ")
+							std.error.put_string (this_prefix)
+							std.error.put_string (" when searching on iteration ")
+							std.error.put_string (counter.out)
+							std.error.put_new_line
+							std.error.put_string ("prefix_with_index: searching from position ")
+							std.error.put_string (last_blank.out)
+							std.error.put_string (" to position ")
+							std.error.put_string ((blank - 1).out)
+							std.error.put_new_line
 						end	
 						last_blank := blank + 1 -- position AFTER the last blank
 						if last_blank > length_of_prefixes then found := True end
 						if counter = index then
 							found := True
 							Result := this_prefix
-							counter := counter + 1
 						end
 					end
+					counter := counter + 1
 				end
 			end
 			debug ("name pool")
 				if Result /= Void then
-					io.error.put_string ("prefix_with_index: Found prefix ")
-					io.error.put_string (Result)
-					io.error.put_new_line
+					std.error.put_string ("prefix_with_index: Found prefix ")
+					std.error.put_string (Result)
+					std.error.put_new_line
 				else
-					io.error.put_string ("prefix_with_index: prefix not found%N")
+					std.error.put_string ("prefix_with_index: prefix not found%N")
 				end
 			end
 		end
@@ -332,7 +331,7 @@ feature -- Access
 			if uri_code = -1 then
 				Result := -1
 			else
-				hash_code := (local_name.hash_code & 0x7fffffff) \\ 1023
+				hash_code := (local_name.hash_code & bits_31) \\ 1023
 
 				if hash_slots.item (hash_code) = Void then
 					Result := -1
@@ -373,19 +372,173 @@ feature -- Access
 		do
 			if expanded_name.item (1).is_equal ('{') then
 				closing_brace := expanded_name.index_of ('}', 1)
-				if closing_brace = 0 then raise ("No closing '}' in parameter name") end
-				if closing_brace = expanded_name.count then raise ("Missing local part in parameter name") end
+				if closing_brace = 0 then Exceptions.raise ("No closing '}' in parameter name") end
+				if closing_brace = expanded_name.count then Exceptions.raise ("Missing local part in parameter name") end
 				namespace := expanded_name.substring (2, closing_brace - 1)
 				local_name := expanded_name.substring (closing_brace + 1, expanded_name.count)
 			else
 				namespace := ""
 				local_name := expanded_name
 			end
-			Result := allocate_name ("", namespace, local_name)
+			Result := fingerprint (namespace, local_name)
 		ensure
 			valid_name_code: Result > 0 and Result <= 0x0fffffff -- 28 bits = 8-bit prefix-index + 20-bit fingerprint
 		end
 
+	is_document_allocated (doc: XM_XPATH_TINY_DOCUMENT): BOOLEAN is
+			--	Is a document number associated with `doc'
+		require
+			document_not_void: doc /= Void
+		do
+			Result := document_number_map.has (doc)
+		end
+
+	document_number (doc: XM_XPATH_TINY_DOCUMENT): INTEGER is
+			--	Document number associated with `doc'
+		require
+			document_not_void: doc /= Void
+			document_is_allocated: is_document_allocated (doc)
+		do
+				Result := document_number_map.item (doc)
+		end
+
+	is_code_for_uri_allocated (uri: STRING): BOOLEAN is
+			-- Has a code been allocated for `uri'?
+		require
+			uri_not_void: uri /= Void
+		local
+			counter: INTEGER
+		do
+			from
+				counter := 1
+			variant
+				uris_used - counter + 1
+			until
+				counter > uris_used or Result = True
+			loop
+				if uris.item (counter).is_equal (uri) then
+					Result := True
+				end
+				counter := counter + 1
+			end
+		end
+
+	is_code_for_prefix_allocated (xml_prefix: STRING): BOOLEAN is
+			-- Has a code been allocated for `xml_prefix'?
+		require
+			prefix_not_void: xml_prefix /= Void
+		local
+			counter: INTEGER
+			do
+			from
+				counter := 1
+			variant
+				prefixes_used - counter + 1
+			until
+				counter > prefixes_used or Result = True
+			loop
+				debug ("name pool")
+					std.error.put_string ("code_for_prefix: current prefix is ")
+					std.error.put_string (prefixes.item (counter))
+					std.error.put_new_line
+				end				
+				if prefixes.item (counter).is_equal (xml_prefix) then
+					Result := True
+				end
+				counter := counter + 1
+			end
+		end
+
+	is_namespace_code_allocated (xml_prefix: STRING; uri: STRING): BOOLEAN is
+			-- Has a namespace code been allocated for `xml_prefix' with `uri'?
+		require
+			prefix_not_void: xml_prefix /= Void
+			uri_not_void: uri /= Void
+		local
+			uri_code: INTEGER -- should be INTEGER_16
+		do
+			if is_code_for_prefix_allocated (xml_prefix) = False then Result := False
+			elseif is_code_for_uri_allocated (uri) = False then Result := False
+			else
+				uri_code := code_for_uri (uri)
+				if prefix_index (uri_code, xml_prefix) > -1 then Result := True end
+			end
+		end
+
+	is_name_code_allocated (xml_prefix: STRING; uri: STRING; local_name: STRING): BOOLEAN is
+			-- Has a name code been allocated for `xml_prefix' with `uri' and `local_name'?
+		require
+			prefix_not_void: xml_prefix /= Void
+			uri_not_void: uri /= Void
+			local_name_not_void: local_name /= Void
+		local
+			uri_code: INTEGER -- should be INTEGER_16			
+		do
+			if is_code_for_uri_allocated (uri) = False then Result := False
+			else
+				uri_code := code_for_uri (uri)
+				Result := is_name_code_allocated_using_uri_code (xml_prefix, uri_code, local_name)
+			end
+		end
+
+	is_name_code_allocated_using_uri_code (xml_prefix: STRING; uri_code: INTEGER; local_name: STRING): BOOLEAN is
+			-- Has a name code been allocated for `xml_prefix' with `uri_code' and `local_name'?
+		require
+			prefix_not_void: xml_prefix /= Void
+			local_name_not_void: local_name /= Void
+		local
+			hash_code, depth, the_prefix_index: INTEGER
+			the_name_entry, next: XM_XPATH_NAME_ENTRY
+			finished: BOOLEAN
+		do
+			if uris.count < uri_code + 1 then Result := False
+			elseif is_code_for_prefix_allocated (xml_prefix) = False then Result := False
+			else
+				the_prefix_index := prefix_index(uri_code, xml_prefix)
+				if the_prefix_index = -1 then Result := False
+				else
+					depth := 0
+					hash_code := (local_name.hash_code & bits_31) \\ 1023
+					the_name_entry := hash_slots.item (hash_code)
+					if the_name_entry = Void then
+						Result := False
+					else
+						from
+						variant
+							1023 - depth
+						until
+							finished = True
+						loop
+							if the_name_entry.local_name.is_equal (local_name) and the_name_entry.uri_code = uri_code then
+								finished := True
+								Result := True
+							else
+								next := the_name_entry.next
+								depth := depth + 1
+								if depth > 1023 or next = Void then
+									finished := True
+								else
+									the_name_entry := next
+								end
+							end
+						end
+					end
+				end
+			end
+		end
+	
+	last_name_code: INTEGER
+			-- The last name code allocated by `allocate_name_using_uri_code' or `allocate_name'
+
+	last_uri_code: INTEGER -- should be INTEGER_16
+			-- The last URI code allocated by `allocate_code_for_uri'
+
+	last_prefix_code: INTEGER -- should be INTEGER_16
+			-- The last prefix code allocated by `allocate_code_for_prefix'
+
+	last_namespace_code: INTEGER
+			-- The last namespace code allocated by `allocate_namespace_code'
+	
 feature -- Status report
 
 	diagnostic_dump is
@@ -394,9 +547,9 @@ feature -- Status report
 			hash_code, depth, prefix_count, uri_count: INTEGER
 			entry, next: XM_XPATH_NAME_ENTRY
 		do
-			io.error.put_string ("Contents of NamePool ")
-			io.error.put_string (out)
-			io.error.put_new_line
+			std.error.put_string ("Contents of NamePool ")
+			std.error.put_string (out)
+			std.error.put_new_line
 			from
 				hash_code := 0
 			variant
@@ -412,16 +565,16 @@ feature -- Status report
 				until
 					entry = Void
 				loop
-					io.error.put_string ("Fingerprint ")
-					io.error.put_string (depth.out)
-					io.error.put_string ("/")
-					io.error.put_string (hash_code.out)
-					io.error.put_new_line
-					io.error.put_string ("  local name = ")
-					io.error.put_string (entry.local_name)
-					io.error.put_string (" uri code = ")
-					io.error.put_string (entry.uri_code.out)
-					io.error.put_new_line
+					std.error.put_string ("Fingerprint ")
+					std.error.put_string (depth.out)
+					std.error.put_string ("/")
+					std.error.put_string (hash_code.out)
+					std.error.put_new_line
+					std.error.put_string ("  local name = ")
+					std.error.put_string (entry.local_name)
+					std.error.put_string (" uri code = ")
+					std.error.put_string (entry.uri_code.out)
+					std.error.put_new_line
 
 					entry := entry.next
 					depth := depth + 1
@@ -435,11 +588,11 @@ feature -- Status report
 			until
 				prefix_count > prefixes_used
 			loop
-				io.error.put_string ("Prefix ")
-				io.error.put_string (prefix_count.out)
-				io.error.put_string (" = ")
-				io.error.put_string (prefixes.item (prefix_count))
-				io.error.put_new_line
+				std.error.put_string ("Prefix ")
+				std.error.put_string (prefix_count.out)
+				std.error.put_string (" = ")
+				std.error.put_string (prefixes.item (prefix_count))
+				std.error.put_new_line
 
 				prefix_count := prefix_count + 1
 			end
@@ -450,16 +603,16 @@ feature -- Status report
 			until
 				uri_count > uris_used
 			loop
-				io.error.put_string ("URI ")
-				io.error.put_string (uri_count.out)
-				io.error.put_string (" = ")
-				io.error.put_string (uris.item (uri_count))
-				io.error.put_new_line
-				io.error.put_string ("Prefixes for URI ")
-				io.error.put_string (uri_count.out)
-				io.error.put_string (" = ")
-				io.error.put_string (prefixes_for_uri.item (uri_count))
-				io.error.put_new_line
+				std.error.put_string ("URI ")
+				std.error.put_string (uri_count.out)
+				std.error.put_string (" = ")
+				std.error.put_string (uris.item (uri_count))
+				std.error.put_new_line
+				std.error.put_string ("Prefixes for URI ")
+				std.error.put_string (uri_count.out)
+				std.error.put_string (" = ")
+				std.error.put_string (prefixes_for_uri.item (uri_count))
+				std.error.put_new_line
 
 				uri_count := uri_count + 1
 			end
@@ -467,150 +620,147 @@ feature -- Status report
 	
 feature -- Element change
 
-	allocate_document_number (doc: XM_XPATH_TINY_DOCUMENT): INTEGER is
-			--	Add a document to the pool, and allocate a document number
+	allocate_document_number (doc: XM_XPATH_TINY_DOCUMENT) is
+			--	Add a document to the pool, and allocate a document number;
 			-- WARNING - this code is not thread safe
 		require
 			document_not_void: doc /= Void
+			document_not_allocated: not is_document_allocated (doc)
 		do
-			if document_number_map.has (doc) then
-				Result := document_number_map.item (doc)
-			else
-				Result := document_number_map.count + 1
-				document_number_map.put (Result, doc)
-			end
+			document_number_map.put (document_number_map.count + 1, doc)
 		ensure
-			positive_result: Result > 0
+			document_allocated: is_document_allocated (doc)
 		end
 
-	allocate_namespace_code (xml_prefix: STRING; uri: STRING): INTEGER is
-			--	Allocate the namespace code for a namespace prefix/URI pair
+	allocate_namespace_code (xml_prefix: STRING; uri: STRING) is
+			--	Allocate the namespace code for a namespace prefix/URI pair;
 			-- WARNING - this code is not thread safe
 		require
 			prefix_not_void: xml_prefix /= Void
 			uri_not_void: uri /= Void
+			namespace_code_not_allocated: not is_namespace_code_allocated (xml_prefix, uri)
 		local
 			prefix_code, uri_code: INTEGER -- should be INTEGER_16
 			key: STRING
 		do
-			prefix_code := allocate_code_for_prefix (xml_prefix)
-			uri_code := allocate_code_for_uri (uri)
-
-			if prefix_code /= 0 then -- i.e. a non-null prefix
-				-- Ensure the prefix is in the list of prefixes used with this URI
-				create key.make_from_string (xml_prefix)
-				key.extend (' ')
-				if prefixes_for_uri.item (uri_code + 1).substring_index (key, 1) = 0 then
-					-- prefix is not in the list
-					prefixes_for_uri.item (uri_code + 1).append (key)
-				end
+			debug ("name pool")
+				std.error.put_string ("allocate_namespace_code: prefix is ")
+				std.error.put_string (xml_prefix)
+				std.error.put_string (", uri is ")
+				std.error.put_string (uri)
+				std.error.put_new_line
 			end
-			Result := (prefix_code |<< 16) + uri_code
+			if is_code_for_uri_allocated (uri) then
+				uri_code := code_for_uri (uri)
+			else
+				allocate_code_for_uri (uri)
+				uri_code := last_uri_code
+			end
+
+
+			if is_code_for_prefix_allocated (xml_prefix) then
+				prefix_code := code_for_prefix (xml_prefix)
+			else
+				allocate_code_for_prefix (xml_prefix)
+				prefix_code := last_prefix_code
+			end
+
+			-- Ensure the prefix is in the list of prefixes used with this URI
+			create key.make_from_string (xml_prefix)
+			key.append_character (' ')
+			prefixes_for_uri.item (uri_code + 1).append_string (key)
+
+			debug ("name pool")
+				std.error.put_string ("allocate_namespace_code: code for prefix is ")
+				std.error.put_string (prefix_code.out)
+				std.error.put_string (", code for uri is ")
+				std.error.put_string (uri_code.out)
+				std.error.put_new_line
+			end
+			last_namespace_code := (prefix_code |<< 16 ) + uri_code
+		ensure
+			namespace_code_allocated: is_namespace_code_allocated (xml_prefix, uri)
 		end
 
-	allocate_code_for_uri (uri: STRING): INTEGER is -- should be INTEGER_16
-			-- Allocate the uri code for a given URI
+	allocate_code_for_uri (uri: STRING) is
+			-- Allocate the uri code for a given URI;
 			-- WARNING - this code is not thread safe
 		require
 			uri_not_void: uri /= Void
-		local
-			counter: INTEGER
-			found: BOOLEAN
+			code_not_allocated: not is_code_for_uri_allocated (uri)
 		do
-			from
-				counter := 1
-			variant
-				uris_used - counter + 1
-			until
-				counter = uris_used or found = True
-			loop
-				if uris.item (counter).is_equal (uri) then
-					Result := counter - 1
-					found := True
-				end
-				counter := counter + 1
+			if uris_used >= 32000 then
+				Exceptions.raise ("Too many namespace URIs")
 			end
-			if not found then
-				if uris_used >= 32000 then
-					raise ("Too many namespace URIs")
-				end
-				if uris.capacity = uris_used then
-					uris.resize (2 * uris_used)
-					prefixes_for_uri.resize (2 * uris_used)
-				end
-				uris.put (uri, uris_used + 1)
-				prefixes_for_uri.put ("", uris_used + 1)
-				Result := uris_used
-				uris_used := uris_used + 1
+			if uris.capacity = uris_used then
+				uris.resize (2 * uris_used)
+				prefixes_for_uri.resize (2 * uris_used)
 			end
+			last_uri_code := uris_used
+			uris.put (uri, uris_used + 1)
+			prefixes_for_uri.put ("", uris_used + 1)
+			uris_used := uris_used + 1
 		ensure
-			valid_uri_code: Result >= 0 and Result <= 32000
+			code_allocated: is_code_for_uri_allocated (uri)
 		end
 
-	allocate_code_for_prefix (xml_prefix: STRING): INTEGER is -- should be INTEGER_16
-			-- Allocate the uri code for a given `xml_prefix'
+	allocate_code_for_prefix (xml_prefix: STRING) is
+			-- Allocate the uri code for a given `xml_prefix';
 			-- WARNING - this code is not thread safe
 		require
 			prefix_not_void: xml_prefix /= Void
+			code_not_allocated: not is_code_for_prefix_allocated (xml_prefix)
 		local
 			counter: INTEGER
 			found: BOOLEAN
 		do
-			from
-				counter := 1
-			variant
-				prefixes_used - counter	+ 1			
-			until
-				counter > prefixes_used or found = True
-			loop
-				if prefixes.item (counter).is_equal (xml_prefix) then
-					Result := counter - 1
-					found := True
-				end
-				counter := counter + 1				
+			if prefixes_used >= 32000 then
+				Exceptions.raise ("Too many namespace prefixes")
 			end
-			if not found then
-				if prefixes_used >= 32000 then
-					raise ("Too many namespace prefixes")
-				end
-				if prefixes.capacity = prefixes_used then prefixes.resize (2 * prefixes_used) end
-				debug ("name pool")
-					io.error.put_string ("allocate_code_for_prefix: Adding prefix ")
-					io.error.put_string (xml_prefix)
-					io.error.put_new_line
-				end	
-				prefixes.put (xml_prefix, prefixes_used + 1)
-				Result := prefixes_used
-				prefixes_used := prefixes_used + 1
+			if prefixes.capacity = prefixes_used then prefixes.resize (2 * prefixes_used) end
+			debug ("name pool")
+				std.error.put_string ("allocate_code_for_prefix: Adding prefix ")
+				std.error.put_string (xml_prefix)
+				std.error.put_new_line
 			end
+			last_prefix_code := prefixes_used
+			prefixes.put (xml_prefix, prefixes_used + 1)
+			prefixes_used := prefixes_used + 1
 		ensure
-			valid_prefix_code: Result >= 0 and Result <= 32000
+			code_allocated: is_code_for_prefix_allocated (xml_prefix)
 		end
 
-	allocate_name (xml_prefix: STRING; uri: STRING; local_name: STRING): INTEGER is
-			-- Allocate a name from the pool, or a new Name if there is not a matching one there
+	allocate_name (xml_prefix: STRING; uri: STRING; local_name: STRING) is
+			-- Allocate a new name
 		require
 			prefix_not_void: xml_prefix /= Void
 			uri_not_void: uri /= Void
 			local_name_not_void: local_name /= Void
+			name_not_allocated: not is_name_code_allocated (xml_prefix, uri, local_name)
 		local
 			uri_code: INTEGER -- should be INTEGER_16
 		do
-			uri_code := allocate_code_for_uri (uri)
+			if is_code_for_uri_allocated (uri) then
+				uri_code := code_for_uri (uri)
+				else
+					allocate_code_for_uri (uri)
+					uri_code := last_uri_code
+			end
 				check
 					valid_uri_code:  uri_code >= 0 and uri_code <= 32000
 				end
-			Result := allocate_name_using_uri_code (xml_prefix, uri_code, local_name)
+			allocate_name_using_uri_code (xml_prefix, uri_code, local_name)
 		ensure
-			valid_name_code: Result > 0 and Result <= 0x0fffffff -- 28 bits = 8-bit prefix-index + 20-bit fingerprint
+			name_allocated: is_name_code_allocated (xml_prefix, uri, local_name)			
 		end
 
-	allocate_name_using_uri_code (xml_prefix: STRING; uri_code: INTEGER; local_name: STRING): INTEGER is
+	allocate_name_using_uri_code (xml_prefix: STRING; uri_code: INTEGER; local_name: STRING) is
 			-- Allocate a name from the pool, or a new Name if there is not a matching one there
 		require
 			prefix_not_void: xml_prefix /= Void
 			valid_uri_code:  uri_code >= 0 and uri_code <= 32000
 			local_name_not_void: local_name /= Void
+			name_not_allocated: not is_name_code_allocated_using_uri_code (xml_prefix, uri_code, local_name)			
 		local
 			hash_code, depth, the_prefix_index: INTEGER
 			prefix_code: INTEGER -- should be INTEGER_16
@@ -619,14 +769,14 @@ feature -- Element change
 			finished: BOOLEAN
 		do
 			depth := 0
-			hash_code := (local_name.hash_code & 0x7fffffff) \\ 1023
+			hash_code := (local_name.hash_code & bits_31) \\ 1023
 				check
 					valid_hash_code: hash_code >= 0 and hash_code < 1024
 				end
 			debug ("name pool")
-				io.error.put_string ("allocate_name_using_name_code: uri_code is ")
-				io.error.put_string (uri_code.out)
-				io.error.put_new_line
+				std.error.put_string ("allocate_name_using_name_code: uri_code is ")
+				std.error.put_string (uri_code.out)
+				std.error.put_new_line
 			end
 			the_prefix_index := prefix_index (uri_code, xml_prefix)
 				check
@@ -634,22 +784,22 @@ feature -- Element change
 				end
 			if the_prefix_index < 0 then
 				debug ("name pool")
-					io.error.put_string ("allocate_name_using_name_code: Allocating an index for prefix ")
-					io.error.put_string (xml_prefix)
-					io.error.put_new_line
+					std.error.put_string ("allocate_name_using_name_code: Allocating an index for prefix ")
+					std.error.put_string (xml_prefix)
+					std.error.put_new_line
 				end
-				prefix_code := allocate_code_for_prefix (xml_prefix)
+				allocate_code_for_prefix (xml_prefix)
 				create key.make_from_string (xml_prefix)
-				key.extend (' ')
-				prefixes_for_uri.item (uri_code + 1).append (key)
+				key.append_character (' ')
+				prefixes_for_uri.item (uri_code + 1).append_string (key)
 				the_prefix_index := prefix_index (uri_code, xml_prefix)
 					check
 						valid_prefix_index2: the_prefix_index > 0 and the_prefix_index < 255
 					end
 				debug ("name pool")
-					io.error.put_string ("allocate_name_using_name_code: New prefix index is ")
-					io.error.put_string (the_prefix_index.out)
-					io.error.put_new_line				
+					std.error.put_string ("allocate_name_using_name_code: New prefix index is ")
+					std.error.put_string (the_prefix_index.out)
+					std.error.put_new_line				
 				end
 			end
 			if hash_slots.item (hash_code) = Void then
@@ -669,7 +819,7 @@ feature -- Element change
 						next := the_name_entry.next
 						depth := depth + 1
 						if depth > 1023 then
-							raise ("The XPath name pool is full")
+							Exceptions.raise ("The XPath name pool is full")
 						end
 						if next = Void then
 							create new_entry.make (uri_code, local_name)
@@ -681,9 +831,9 @@ feature -- Element change
 					end
 				end
 			end
-			Result := (the_prefix_index |<< 20) + (depth |<< 10) + hash_code
+			last_name_code := (the_prefix_index |<< 20) + (depth |<< 10) + hash_code
 		ensure
-			valid_name_code: Result > 0 and Result <= 0x0fffffff -- 28 bits = 8-bit prefix-index + 20-bit fingerprint
+			name_allocated: is_name_code_allocated_using_uri_code (xml_prefix, uri_code, local_name)
 		end
 
 feature -- Conversion
@@ -697,7 +847,7 @@ feature -- Conversion
 		do
 			entry := name_entry (name_code)
 			if entry = Void then
-				unknown_name_code (name_code) -- raises an exception
+				unknown_name_code (name_code) -- Exceptions.raises an exception
 			else
 				Result := uris.item (entry.uri_code + 1)
 			end
@@ -714,7 +864,7 @@ feature -- Conversion
 		do
 			entry := name_entry (name_code)
 			if entry = Void then
-				unknown_name_code (name_code) -- raises an exception
+				unknown_name_code (name_code) -- Exceptions.raises an exception
 			else
 				Result := entry.uri_code
 			end	
@@ -729,7 +879,7 @@ feature -- Conversion
 		do
 			entry := name_entry (name_code)
 			if entry = Void then
-				unknown_name_code (name_code) -- raises an exception
+				unknown_name_code (name_code) -- Exceptions.raises an exception
 			else
 				Result := entry.local_name
 			end
@@ -748,9 +898,9 @@ feature -- Conversion
 			uri_code := uri_code_from_name_code (name_code)
 			the_prefix_index := (name_code |>> 20) & 0x000000ff
 			debug ("name pool")
-					io.error.put_string ("prefix_from_name_code: Calculated prefix index is ")
-					io.error.put_string (the_prefix_index.out)
-					io.error.put_new_line
+					std.error.put_string ("prefix_from_name_code: Calculated prefix index is ")
+					std.error.put_string (the_prefix_index.out)
+					std.error.put_new_line
 			end
 			Result := prefix_with_index (uri_code, the_prefix_index)
 		ensure
@@ -767,7 +917,7 @@ feature -- Conversion
 		do
 			entry := name_entry (name_code)
 			if entry = Void then
-				unknown_name_code (name_code) -- raises an exception
+				unknown_name_code (name_code) -- Exceptions.raises an exception
 			else
 				the_prefix_index := (name_code |>> 20) & 0x000000ff
 				if the_prefix_index = 0 then
@@ -786,14 +936,14 @@ feature -- Conversion
 			-- Namespace URI from `namespace_code'
 		do
 			debug ("name pool")
-					io.error.put_string ("uri_from_namespace_code: Namespace code is ")
-					io.error.put_string (a_namespace_code.out)
-					io.error.put_new_line
-					io.error.put_string ("uri_from_namespace_code: masked Namespace code is ")
-					io.error.put_string ((a_namespace_code & 0x0000ffff).out)
-					io.error.put_new_line					
+					std.error.put_string ("uri_from_namespace_code: Namespace code is ")
+					std.error.put_string (a_namespace_code.out)
+					std.error.put_new_line
+					std.error.put_string ("uri_from_namespace_code: masked Namespace code is ")
+					std.error.put_string ((a_namespace_code & bits_16).out)
+					std.error.put_new_line					
 			end
-			Result := uris.item ((a_namespace_code & 0x0000ffff) + 1)
+			Result := uris.item ((a_namespace_code & bits_16) + 1)
 		end
 		
 	uri_from_uri_code (uri_code: INTEGER): STRING is
@@ -848,43 +998,43 @@ feature {NONE} -- Implementation
 			prefix_not_void: xml_prefix /= Void
 			valid_uri_code:  uri_code >= 0 and uri_code <= 32000
 		local
-			the_prefixes: STRING
+			the_prefixes, this_prefix: STRING
 			count, counter, blank, last_blank: INTEGER
 			found: BOOLEAN
 		do
 			debug ("name pool")
-				io.error.put_string ("prefix_index: prefix is ")
-				io.error.put_string (xml_prefix)
-				io.error.put_string (":")
-				io.error.put_new_line
+				std.error.put_string ("prefix_index: prefix is ")
+				std.error.put_string (xml_prefix)
+				std.error.put_string (":")
+				std.error.put_new_line
 			end
 			-- look for quick wins
 			if xml_prefix.is_equal ("") then
 				debug ("name pool")
-					io.error.put_string ("prefix_index: xml - code 0%N")
+					std.error.put_string ("prefix_index: xml - code 0%N")
 				end
 				Result := 0
 			else
 				debug ("name pool")
-					io.error.put_string ("prefix_index: uri_code is ")
-					io.error.put_string (uri_code.out)
-					io.error.put_new_line
+					std.error.put_string ("prefix_index: uri_code is ")
+					std.error.put_string (uri_code.out)
+					std.error.put_new_line
 				end
 				the_prefixes := prefixes_for_uri.item (uri_code + 1)
 				debug ("name pool")
-					io.error.put_string ("prefix_index: available prefixes are ")
-					io.error.put_string (the_prefixes)
-					io.error.put_new_line
+					std.error.put_string ("prefix_index: available prefixes are ")
+					std.error.put_string (the_prefixes)
+					std.error.put_new_line
 				end				
 				count := the_prefixes.count
 				if count = xml_prefix.count + 1 and then the_prefixes.item (count).is_equal (' ') and then the_prefixes.substring (1, count - 1).is_equal (xml_prefix) then -- sole prefix
 					debug ("name pool")
-						io.error.put_string ("prefix_index: sole prefix - code 1%N")
+						std.error.put_string ("prefix_index: sole prefix - code 1%N")
 					end
 					Result := 1
 				else
 					debug ("name pool")
-						io.error.put_string ("prefix_index: searching...%N")
+						std.error.put_string ("prefix_index: searching...%N")
 					end
 					from
 						counter := 1
@@ -896,27 +1046,40 @@ feature {NONE} -- Implementation
 						found = True
 					loop
 						debug ("name pool")
-							io.error.put_string ("prefix_index: iteration%N")
+							std.error.put_string ("prefix_index: iteration%N")
 						end
 						blank := the_prefixes.index_of (' ', last_blank)
 						if blank = 0 then
 							debug ("name pool")
-								io.error.put_string ("prefix_index: prefix not found%N")
+								std.error.put_string ("prefix_index: prefix not found%N")
 							end
 							Result := -1
 							found := True
 							counter := counter + 1
-						elseif the_prefixes.substring (last_blank, blank + 1).is_equal (xml_prefix) then
-							debug ("name pool")
-								io.error.put_string ("prefix_index: prefix found%N")
-							end
-							Result := counter
-							found := True
-							counter := counter + 1
-						elseif counter = 255 then
-							raise ("Too many prefixes for one namespace URI")
 						else
-							counter := counter + 1
+							this_prefix := the_prefixes.substring (last_blank, blank - 1)
+							debug ("name pool")
+								std.error.put_string ("prefix_index: Looking at prefix ")
+								std.error.put_string (this_prefix)
+								std.error.put_string (" from positon ")
+								std.error.put_string (last_blank.out)
+								std.error.put_string (" to positon ")
+								std.error.put_string ((blank - 1).out)
+								std.error.put_new_line
+							end
+							if this_prefix.is_equal (xml_prefix) then
+								debug ("name pool")
+									std.error.put_string ("prefix_index: prefix found%N")
+								end
+								Result := counter
+								found := True
+								counter := counter + 1
+							else
+								counter := counter + 1
+							end
+						end
+						if not found and counter = 255 then
+							Exceptions.raise ("Too many prefixes for one namespace URI")
 						end
 						last_blank := blank + 1 -- position AFTER the last blank
 					end
@@ -927,23 +1090,19 @@ feature {NONE} -- Implementation
 		end
 
 	unknown_name_code (name_code: INTEGER) is
-		-- Raise an exception
+		-- Exceptions.Raise an exception
 		require
 			always_valid: True
 		local
 			result_string: STRING
 		do
 			create result_string.make_from_string ("Unknown name code ")
-			result_string.append (name_code.out)
-			raise (result_string)
+			result_string.append_string (name_code.out)
+			Exceptions.raise (result_string)
 		ensure
 			impossible: False
 		end
 	
-	default_pool: XM_XPATH_SHARED_NAME_POOL
-			-- The default shared instance of an `XM_XPATH_NAME_POOL';
-			--  used unless the user deliberately wants to manage name pools himself
-
 	document_number_map: DS_HASH_TABLE [INTEGER, XM_XPATH_TINY_DOCUMENT] -- TODO - ought to be DS_WEAK_HASH_TABLE, if/when one exists
 			-- Maps documents to document numbers
 	
@@ -967,9 +1126,8 @@ feature {NONE} -- Implementation
 	
 invariant
 
-	default_pool_not_void: default_pool /= Void	
 	document_map_not_void: document_number_map /= Void
-	fixed_hash_slots: hash_slots /= Void and then hash_slots.capacity = 1024
+	fixed_hash_slots: hash_slots /= Void and then hash_slots.count = 1024
 	prefixes_not_void: prefixes /= Void
 	prefixes_used: prefixes_used >= 3
 	uris_not_void: uris /= Void

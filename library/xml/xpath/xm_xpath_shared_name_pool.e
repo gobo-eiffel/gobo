@@ -14,20 +14,14 @@ class XM_XPATH_SHARED_NAME_POOL
 
 creation
 
-	make, make_rebuild
+	make
 	
 feature -- Initialization
 
 	make is
 			-- Establish invariant
-		once
-			create default_pool.make (Current)
-		end
-
-	make_rebuild is
-			-- Establish invariant
 		do
-			create default_pool.make (Current)
+			create default_pool.make
 		end
 	
 feature -- Access
@@ -49,7 +43,7 @@ feature -- Element change
 
 invariant
 
-	default_pool_not_void: default_pool /= Void
+	default_pool: default_pool /= Void
 	
 end
 	

@@ -23,8 +23,11 @@ inherit
 	
 feature -- Access
 
-	shared_pool: XM_XPATH_SHARED_NAME_POOL
+	shared_pool: XM_XPATH_SHARED_NAME_POOL is
 			-- The shared name pool
+		once
+			create Result.make
+		end
 
 	default_pool: XM_XPATH_NAME_POOL
 			-- The default name pool
@@ -48,18 +51,29 @@ feature -- Test
 			loop
 				create uri.make_from_string ("a")
 				uri.append_string (counter.out)
-				uri_code := default_pool.code_for_uri (uri)
-				assert ("URI code", uri_code = -1)
-				uri_code := default_pool.allocate_code_for_uri (uri)
+				assert ("URI code not allocated", not default_pool.is_code_for_uri_allocated (uri))
+
+				default_pool.allocate_code_for_uri (uri)
+				uri_code := default_pool.last_uri_code
 				assert ("URI code 2", uri_code = 3 + counter)
+		
 				uri_code := default_pool.code_for_uri (uri)
-				assert ("URI code 3", uri_code = 3 + counter)				
+				assert ("URI code 3", uri_code = 3 + counter)
+				
 				counter:= counter + 1
 			end
-			namespace_code := default_pool.allocate_namespace_code ("test", testing_namespace)
+			
+			default_pool.allocate_namespace_code ("test", testing_namespace)
+			namespace_code := default_pool.last_namespace_code
 			assert ("Namespace code", namespace_code = 196716)
-			prefix_code := default_pool.allocate_code_for_prefix ("xml")
-			assert ("Prefix code", prefix_code = 1)
+			namespace_code := default_pool.namespace_code ("test", testing_namespace)
+			assert ("Namespace code 2", namespace_code = 196716)
+
+			default_pool.allocate_code_for_prefix ("test2")
+			prefix_code := default_pool.last_prefix_code
+			assert ("Prefix code", prefix_code = 4)
+			prefix_code := default_pool.code_for_prefix ("test2")
+			assert ("Prefix code", prefix_code = 4)
 		end
 	
 	test_conversions is
@@ -67,44 +81,44 @@ feature -- Test
 			name_code, namespace_code, uri_code, prefix_code: INTEGER
 			xml_prefix, namespace_uri, local_name, display_name: STRING
 		do
-			prefix_code := default_pool.code_for_prefix ("test")
-			assert ("Prefix code", prefix_code = -1)
-			name_code := default_pool.allocate_name ("test", testing_namespace, "test")
+			assert ("Prefix code", not default_pool.is_code_for_prefix_allocated("test3"))
+			default_pool.allocate_name ("test3", testing_namespace, "test3")
+			name_code := default_pool.last_name_code
 			assert ("Positive name code", name_code > 0)
 			xml_prefix := default_pool.prefix_from_name_code (name_code)
-			assert ("Prefix", xml_prefix /= Void and then xml_prefix.is_equal ("test"))
-			prefix_code := default_pool.code_for_prefix ("test")
-			assert ("Prefix code 2", prefix_code = 3)			
-			namespace_code := default_pool.namespace_code ("test", testing_namespace)
+			assert ("Prefix", xml_prefix /= Void and then xml_prefix.is_equal ("test3"))
+			prefix_code := default_pool.code_for_prefix ("test3")
+			assert ("Prefix code 2", prefix_code > 0)			
+			namespace_code := default_pool.namespace_code ("test3", testing_namespace)
 			assert ("Non-negative namespace code", namespace_code >= 0)
 			uri_code := default_pool.uri_code_from_name_code (name_code)
-			assert ("URI code", uri_code = 3)
+			assert ("URI code", uri_code > 0)
 			namespace_uri := default_pool.namespace_uri_from_name_code (name_code)
 			assert ("Namespace URI", namespace_uri /= Void and then namespace_uri.is_equal (testing_namespace))
 			local_name := default_pool.local_name_from_name_code (name_code)
-			assert ("Local name", local_name /= Void and then local_name.is_equal ("test"))
+			assert ("Local name", local_name /= Void and then local_name.is_equal ("test3"))
 			display_name := default_pool.display_name_from_name_code (name_code)
-			assert ("Display name", display_name /= Void and then display_name.is_equal ("test:test"))
+			assert ("Display name", display_name /= Void and then display_name.is_equal ("test3:test3"))
 			namespace_uri := default_pool.uri_from_namespace_code (namespace_code)
 			assert ("Namespace URI 2", namespace_uri /= Void and then namespace_uri.is_equal (testing_namespace))
 			namespace_uri := default_pool.uri_from_uri_code (uri_code)
 			assert ("Namespace URI 3", namespace_uri.is_equal (testing_namespace))						
 			xml_prefix := default_pool.prefix_from_namespace_code (namespace_code)
-			assert ("Prefix 2",  xml_prefix /= Void and then xml_prefix.is_equal ("test"))
+			assert ("Prefix 2",  xml_prefix /= Void and then xml_prefix.is_equal ("test3"))
 		end
 
 	test_miscellaneous is
 		local
 			suggestion: STRING
-			name_code, fingerprint: INTEGER
+			name_code, fingerprint, fingerprint2: INTEGER
 		do
-			name_code := default_pool.allocate_name ("test", testing_namespace, "test")
 			suggestion := default_pool.suggest_prefix_for_uri (Xslt_uri)
 			assert ("Suggestion", suggestion.is_equal ("xsl"))
-			fingerprint := default_pool.fingerprint (testing_namespace, "test")
-			assert ("Fingerprint", fingerprint = 1049)
-			fingerprint := default_pool.fingerprint_from_expanded_name ("{http://colina.demon.co.uk/gobo/xml/xpath/tests}test")
-			assert ("Fingerprint from expanded name", fingerprint = 1049)
+			default_pool.allocate_name ("test4", testing_namespace, "test4")
+			fingerprint := default_pool.fingerprint (testing_namespace, "test4")
+			assert ("Fingerprint", fingerprint > 0) -- calculation depends upon {STRING}.hash_code, and so differs between compilers
+			fingerprint2 := default_pool.fingerprint_from_expanded_name ("{http://colina.demon.co.uk/gobo/xml/xpath/tests}test4")
+			assert ("Fingerprint from expanded name", fingerprint2 = fingerprint)
 		end
 
 	-- still to test:
@@ -115,7 +129,6 @@ feature -- Setting
 	set_up is
 		local
 		do
-			create shared_pool.make_rebuild
 			default_pool := shared_pool.default_pool
 		end
 
