@@ -46,6 +46,11 @@ feature -- Access
 	file: like INPUT_STREAM_TYPE
 			-- Input file
 
+feature -- Status report
+
+	end_of_file: BOOLEAN
+			-- Has end-of-file been reached?
+
 feature -- Element change
 
 	refill is
@@ -54,6 +59,7 @@ feature -- Element change
 			if not INPUT_STREAM_.end_of_input (file) then
 				content := INPUT_STREAM_.read_string (file, 16384)
 			else
+				end_of_file := True
 				content := ""
 			end
 			position := 1
@@ -62,6 +68,6 @@ feature -- Element change
 invariant
 
 	file_not_void: file /= Void
-	file_open_read: INPUT_STREAM_.is_open_read (file)
+	file_open_read: not end_of_file implies INPUT_STREAM_.is_open_read (file)
 
 end -- class LX_FILE_BUFFER
