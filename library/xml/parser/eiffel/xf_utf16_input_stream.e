@@ -93,7 +93,7 @@ feature -- Input
 			-- This item will be read first by the next
 			-- call to a read routine.
 		do
-			impl.unread_character (an_item)
+			utf_queue.force (an_item)
 		end
 
 feature -- Status report
@@ -119,7 +119,7 @@ feature -- Access
 		end
 
 	last_character: CHARACTER is
-			-- Last item read
+			-- Last character read.
 		do 
 			if utf_queue.count > 0 then
 				Result := utf_queue.item
@@ -127,7 +127,7 @@ feature -- Access
 				Result := impl.last_character
 			end
 		end
-
+			
 feature -- Input
 
 	read_string (nb: INTEGER) is
@@ -137,29 +137,22 @@ feature -- Input
 		local
 			i: INTEGER
 		do
-			check 
-				last_not_void: last_string /= Void 
-			end
-			
-			if is_utf16 then
-				-- canonical naive implementation
-				from
-					-- once we are in utf_16 mode we stay that way so 
-					-- we should never wipe out impl.last_string.
-					last_string.wipe_out
-					i := 1
-				until	
-					i > nb or end_of_input
-				loop
-					read_character
-					last_string.append_character (last_character)
-					i := i + 1
-				end
-			else
-				-- use client's possibly faster routines
-				-- this means we do change last_string's pointer.
-				impl.read_string (nb)
-				last_string := impl.last_string
+			-- naive implementation.
+			-- When the file is not UTF16 we could use
+			-- impl.read_string; last_string := impl.last_string but 
+			-- that would break the fact that last_string must 
+			-- remain the same object. It would also require 
+			-- to duplicate some of the detection handling.
+			from
+				last_string.wipe_out
+				i := nb
+				read_character
+			until	
+				i = 0 or end_of_input
+			loop
+				last_string.append_character (last_character)
+				read_character
+				i := i - 1
 			end
 		end
 		
@@ -180,11 +173,11 @@ feature {NONE} -- Implementation
 			first_char, second_char: CHARACTER
 		do
 			impl.read_character
-			first_char := impl.last_character
 			if not impl.end_of_input then
+				first_char := impl.last_character
 				impl.read_character
-				second_char := impl.last_character
 				if not impl.end_of_input then
+					second_char := impl.last_character
 					-- check byte ordering character
 					-- if found, set found and do not forward as input
 					if (first_char.code = 254 and second_char.code = 255) then
@@ -221,11 +214,11 @@ feature {NONE} -- Implementation
 			first_char, second_char: CHARACTER
 		do
 			impl.read_character
-			first_char := impl.last_character
 			if not impl.end_of_input then
+				first_char := impl.last_character
 				impl.read_character
-				second_char := impl.last_character
 				if not impl.end_of_input then
+					second_char := impl.last_character
 					if is_msb_first then
 						append_character (first_char.code * 256 + second_char.code)
 					else
