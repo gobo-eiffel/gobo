@@ -40,8 +40,27 @@ feature {NONE} -- Initialization
 			a_element: GEANT_DEFINE_ELEMENT
 		do
 			precursor (a_project, a_xml_element)
+				-- Exit geant in case of conflicting task formats:
+			if (has_attribute (Concat_attribute_name) or else has_attribute (Directory_attribute_name))
+				and then (has_attribute (Filename_directory_attribute_name) or else
+				has_attribute (Mapped_filename_directory_attribute_name)) then
+				exit_application (1, <<"%NLOAD ERROR in project '", project.name, "%':%N",
+					"  Remove obsolete format of element 'fileset'.",
+					" Use new format of element 'fileset' as described in the documentation.">>)
+			end
+				-- Assign attribute/element values to `fileset':
 			create fileset.make (project)
+			if has_attribute (Dir_attribute_name) then
+				a_value := attribute_value (Dir_attribute_name)
+				if a_value.count > 0 then
+					fileset.set_dir_name (a_value)
+				end
+			end
 			if has_attribute (Directory_attribute_name) then
+				project.trace (<<"Project '", project.name,
+					"': WARNING: Obsolete attribute '", Directory_attribute_name,
+					"' in element 'fileset' found.%N",
+					"Use new format of element 'fileset' as described in the documentation.">>)
 				a_value := attribute_value (Directory_attribute_name)
 				if a_value.count > 0 then
 					fileset.set_directory_name (a_value)
@@ -62,16 +81,23 @@ feature {NONE} -- Initialization
 			if has_attribute (Force_attribute_name) then
 				fileset.set_force (boolean_value (Force_attribute_name))
 			end
-			if has_attribute (Concat_attribute_name) and then
-				has_attribute (Mapped_filename_directory_attribute_name) then
-				exit_application (1, <<"%NLOAD ERROR in project '", project.name, "%':%N",
-					"  Remove obsolete attribute '", Concat_attribute_name, "' from element 'fileset'">>)
-			end
 			if has_attribute (Concat_attribute_name) then
 				project.trace (<<"Project '", project.name,
 					"': WARNING: Obsolete attribute 'concat' in element 'fileset' found.%N",
-					"Use new attribute '", Mapped_filename_directory_attribute_name, "' instead.">>)
+					"Use new format of element 'fileset' as described in the documentation.">>)
 				fileset.set_concat (boolean_value (Concat_attribute_name))
+			end
+			if has_attribute (Filename_variable_name_attribute_name) then
+				a_value := attribute_value (Filename_variable_name_attribute_name)
+				if a_value.count > 0 then
+					fileset.set_filename_variable_name (a_value)
+				end
+			end
+			if has_attribute (Mapped_filename_variable_name_attribute_name) then
+				a_value := attribute_value (Mapped_filename_variable_name_attribute_name)
+				if a_value.count > 0 then
+					fileset.set_mapped_filename_variable_name (a_value)
+				end
 			end
 			if has_attribute (Filename_directory_attribute_name) then
 				a_value := attribute_value (Filename_directory_attribute_name)
@@ -159,6 +185,24 @@ feature {NONE} -- Constants
 			-- Name of xml attribute for concat
 		once
 			Result := "concat"
+		ensure
+			attribute_name_not_void: Result /= Void
+			atribute_name_not_empty: Result.count > 0
+		end
+
+	Filename_variable_name_attribute_name: STRING is
+			-- Name of xml attribute for filename_variable_name
+		once
+			Result := "filename_variable"
+		ensure
+			attribute_name_not_void: Result /= Void
+			atribute_name_not_empty: Result.count > 0
+		end
+
+	Mapped_filename_variable_name_attribute_name: STRING is
+			-- Name of xml attribute for mapped_filename_variable_name
+		once
+			Result := "mapped_filename_variable"
 		ensure
 			attribute_name_not_void: Result /= Void
 			atribute_name_not_empty: Result.count > 0
