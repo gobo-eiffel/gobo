@@ -63,7 +63,7 @@ among other things should have the two following features:</p>
 
 <p>However these two features are missing in class <font
 color="#008080"><em><tt>PLATFORM</tt></em></font> provided with
-ISE Eiffel 4.1 and Halstenbach 1.6. The solution to this problem
+ISE Eiffel 4.2 and Halstenbach 2.0. The solution to this problem
 is to use class <font color="#008080"><em><tt>KL_PLATFORM</tt></em></font>
 in the client code, where <font color="#008080"><em><tt>KL_PLATFORM</tt></em></font>
 will have the following form in the clusters associated with ISE
@@ -104,7 +104,7 @@ wouldn't be true for clients of <font color="#008080"><em><tt>PLATFORM</tt></em>
 
 <p>This technique can also be used to supply missing classes. For
 example the class <font color="#008080"><em><tt>EXCEPTIONS</tt></em></font>
-is not provided in SmallEiffel -0.83. However this class is
+is not provided in SmallEiffel -0.81. However this class is
 useful when a system has to be terminated using feature <font
 color="#008080"><em><tt>die</tt></em></font>. This routine can
 easily be implemented using SmallEiffel's built-in <font
@@ -145,7 +145,7 @@ under another feature name or with an inefficient implementation.
 Once again one can in these situations inherit from the
 corresponding classes and rename or redefine the proper features.
 This is for example the case in class <font color="#008080"><em><tt>EXCEPTIONS</tt></em></font>
-from Halstenbach 1.6 where feature <font color="#008080"><em><tt>die</tt></em></font>
+from Halstenbach 2.0 where feature <font color="#008080"><em><tt>die</tt></em></font>
 is obsolete and feature <font color="#008080"><em><tt>new_die</tt></em></font>
 should be used instead:</p>
 
@@ -241,7 +241,7 @@ the client relationship, gets around these problems.</p>
 <table border="0" width="100%">
     <tr>
         <td><address>
-            <font size="2"><b>Copyright © 1997</b></font><font
+            <font size="2"><b>Copyright © 1998</b></font><font
             size="1"><b>, </b></font><font size="2"><strong>Eric
             Bezault</strong></font><strong> </strong><font
             size="2"><br>
@@ -251,7 +251,7 @@ the client relationship, gets around these problems.</p>
             </font><a href="http://www.gobo.demon.co.uk"><font
             size="2">http://www.gobo.demon.co.uk</font></a><font
             size="2"><br>
-            <strong>Last Updated:</strong> 4 October 1997</font><br>
+            <strong>Last Updated:</strong> 23 May 1998</font><br>
             <!--webbot bot="PurpleText"
             preview="
 $Date$ 
@@ -271,10 +271,5 @@ $Revision$"
         height="40"></a></td>
     </tr>
 </table>
-<div align="left">
-
-<address>
-</address>
-</div>
 </body>
 </html>
