@@ -1,0 +1,7 @@
+Version 1.1 - 29 October 1997
+
+	* Bug fixed wrt variable trailing context in gelex.
+
+Version 1.0 - 14 October 1997
+
+    * First public release.
