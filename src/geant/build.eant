@@ -2,10 +2,10 @@
 
 	<target name="compile" description="compiles GEANT">
 
-		<xace
+		<gexace
 			command="build"
 			command_options="se"
-			xace_filename="geant.xace"
+			xace_filename="system.xace"
 			compile="true"
 		/>
 
