@@ -69,6 +69,9 @@ feature -- Access
 
 feature -- Status report
 
+	is_useful: BOOLEAN
+			-- Can `pattern' be matched?
+
 	has_trail_context: BOOLEAN
 			-- Does rule have a trailing context?
 
@@ -116,6 +119,14 @@ feature -- Setting
 			line_nb := nb
 		ensure
 			line_nb_set: line_nb = nb
+		end
+
+	set_useful (b: BOOLEAN) is
+			-- Set `is_useful' to `b'.
+		do
+			is_useful := b
+		ensure
+			is_useful: is_useful = b
 		end
 
 	set_trail_context (variable: BOOLEAN; h, t: INTEGER) is
