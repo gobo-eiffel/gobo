@@ -52,6 +52,7 @@ feature {NONE} -- Initialization
 		require
 			a_parent_not_void: a_parent /= Void
 			a_name_not_void: a_name /= Void
+			a_ns_not_void: a_ns /= Void
 		do
 			parent := a_parent
 			name := a_name
@@ -68,6 +69,7 @@ feature {NONE} -- Initialization
 		require
 			a_parent_not_void: a_parent /= Void
 			a_name_not_void: a_name /= Void
+			a_ns_not_void: a_ns /= Void
 		do
 			name := a_name
 			namespace := a_ns
@@ -85,6 +87,7 @@ feature {NONE} -- Initialization
 		require
 			a_parent_not_void: a_parent /= Void
 			a_name_not_void: a_name /= Void
+			a_ns_not_void: a_ns /= Void
 		do
 			name := a_name
 			namespace := a_ns
@@ -104,6 +107,7 @@ feature {NONE} -- Initialization
 		require
 			a_parent_not_void: a_parent /= Void
 			a_name_not_void: a_name /= Void
+			a_ns_not_void: a_ns /= Void
 		do
 			make (a_parent, a_name, a_ns)
 		end
