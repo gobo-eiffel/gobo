@@ -175,7 +175,7 @@ feature -- Setting
 feature {NONE} -- Implementation
 
 #ifdef SE
-	basic_time: BASIC_TIME
+	basic_time: TIME
 			-- System time
 
 #endif
