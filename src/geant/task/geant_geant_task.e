@@ -17,8 +17,10 @@ class GEANT_GEANT_TASK
 inherit
 
 	GEANT_TASK
-		redefine make_from_element
-	end
+		redefine
+			make_from_element
+		end
+
 	GEANT_GEANT_COMMAND
 
 creation

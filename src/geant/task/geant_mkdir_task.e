@@ -17,8 +17,10 @@ class GEANT_MKDIR_TASK
 inherit
 
 	GEANT_TASK
-		redefine make_from_element
-	end
+		redefine
+			make_from_element
+		end
+
 	GEANT_MKDIR_COMMAND
 
 creation

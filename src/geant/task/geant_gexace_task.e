@@ -17,8 +17,10 @@ class GEANT_GEXACE_TASK
 inherit
 
 	GEANT_TASK
-		redefine make_from_element
-	end
+		redefine
+			make_from_element
+		end
+
 	GEANT_GEXACE_COMMAND
 
 creation

@@ -16,8 +16,10 @@ class GEANT_LCC_TASK
 inherit
 
 	GEANT_TASK
-		redefine make_from_element
-	end
+		redefine
+			make_from_element
+		end
+
 	GEANT_LCC_COMMAND
 
 creation
