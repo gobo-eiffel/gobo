@@ -3,7 +3,7 @@ Gobo Eiffel Time Library
 The Gobo Eiffel Time Library is a portable Eiffel class library
 covering date and time handling. When this library has been
 developed, there was no date and time library standard, and
-no portable library supporting the four main Eiffel compilers
+no portable library supporting the main Eiffel compilers
 was publicly available. Each Eiffel compiler provides its own
 date and time library, but none of them is fully portable.
 Furthermore the existing date and time libraries only covered
@@ -19,6 +19,8 @@ clock
     Clocks, system clock, customizable clocks.
 date
     Date, time and duration classes.
+format
+    Formatting and parsing.
 time_zone
     Time zones, date/time conversions. (STILL UNDER DEVELOPMENT.)
 
