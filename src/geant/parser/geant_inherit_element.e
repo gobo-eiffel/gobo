@@ -1,0 +1,112 @@
+indexing
+
+	description:
+
+		"Inherit Elements"
+
+	library: "Gobo Eiffel Ant"
+	copyright: "Copyright (c) 2001, Sven Ehrke and others"
+	license: "Eiffel Forum License v1 (see forum.txt)"
+	date: "$Date$"
+	revision: "$Revision$"
+
+class GEANT_INHERIT_ELEMENT
+
+inherit
+
+	GEANT_INTERPRETING_ELEMENT
+		rename
+			make as interpreting_element_make
+		end
+
+	GEANT_SHARED_PROPERTIES
+		export
+			{NONE} all
+		end
+
+creation
+
+	make, make_old
+
+feature {NONE} -- Initialization
+
+	make (a_project: GEANT_PROJECT; a_xml_element: GEANT_XML_ELEMENT) is
+			-- Create new inherit element with information held in `a_xml_element'.
+		local
+			a_parent_elements: DS_ARRAYED_LIST [GEANT_XML_ELEMENT]
+			a_parent_element: GEANT_PARENT_ELEMENT
+			i: INTEGER
+			nbi: INTEGER
+		do
+			interpreting_element_make (a_project, a_xml_element)
+			create geant_inherit.make (project)
+
+			a_parent_elements := xml_element.children_by_name (Parent_element_name)
+			nbi := a_parent_elements.count
+			from i := 1 until i > nbi loop
+				create a_parent_element.make (project, a_parent_elements.item (i))
+
+					-- Check that no two projects have the same name and different locations:
+					-- TODO: do not check `is_executable' in elements (like here):
+				if a_parent_element.parent.is_executable then
+
+-- TODO: prevent that projects with the same name but different locations can be loaded (name clashes of projects)
+--					if not has_system_parent (a_parent_element.parent) then
+--						if has_system_parent_with_different_location (a_parent_element.parent) then
+--							exit_application (1,
+--								"%NLOAD ERROR:%N  There exists more than one project named '" +
+--								a_parent_element.parent.project.name + "' in the system.%N")
+--						end
+--						system_parents.force_last (a_parent_element.parent)
+--					end
+					geant_inherit.parents.force_last (a_parent_element.parent)
+				else
+					exit_application (1, "ERROR in 'parent' clause%N")
+				end
+
+				
+				i := i + 1
+			end
+
+		end
+
+	make_old (a_project: GEANT_PROJECT; a_xml_element: GEANT_XML_ELEMENT) is
+			-- Create new element with information held in `a_xml_element'.
+			-- (Only to suppport old form of inheritance)
+			-- TODO: remove after obsolete period
+		require
+			a_project_not_void: a_project /= Void
+			a_xml_element_not_void: a_xml_element /= Void
+			project_in_old_inherit_form: a_project.old_inherit
+		local
+			a_parent_element: GEANT_PARENT_ELEMENT
+		do
+			interpreting_element_make (a_project, a_xml_element)
+			create geant_inherit.make (project)
+
+			create a_parent_element.make_old (project, a_xml_element)
+				-- TODO: do not check `is_executable' in elements (like here):
+			if not a_parent_element.parent.is_executable then
+				exit_application (1, "ERROR in 'parent' clause%N")
+			end
+			geant_inherit.parents.force_last (a_parent_element.parent)
+		end
+
+
+feature -- Access
+
+	geant_inherit: GEANT_INHERIT
+		-- Inherit clause
+
+feature {NONE} -- Constants
+
+	Parent_element_name: UC_STRING is
+			-- "parent" element name
+		once
+			Result := new_unicode_string ("parent")
+		ensure
+			element_name_not_void: Result /= Void
+			element_name_not_empty: Result.count > 0
+		end
+
+end

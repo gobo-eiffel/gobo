@@ -1,0 +1,198 @@
+indexing
+
+	description:
+
+		"Parent Elements"
+
+	library: "Gobo Eiffel Ant"
+	copyright: "Copyright (c) 2001, Sven Ehrke and others"
+	license: "Eiffel Forum License v1 (see forum.txt)"
+	date: "$Date$"
+	revision: "$Revision$"
+
+class GEANT_PARENT_ELEMENT
+
+inherit
+
+	GEANT_INTERPRETING_ELEMENT
+		rename
+			make as interpreting_element_make
+		end
+
+	GEANT_SHARED_PROPERTIES
+		export
+			{NONE} all
+		end
+
+creation
+
+	make, make_old
+
+feature -- Initialization
+
+	make (a_project: GEANT_PROJECT; a_xml_element: GEANT_XML_ELEMENT) is
+			-- Create new parent element with information held in `a_xml_element'.
+		require
+			a_project_not_void: a_project /= Void
+			a_xml_element_not_void: a_xml_element /= Void
+		local
+			i: INTEGER
+			nb: INTEGER
+			s: STRING
+			xml_elements: DS_ARRAYED_LIST [GEANT_XML_ELEMENT]
+			a_rename_element: GEANT_RENAME_ELEMENT
+			a_redefine_element: GEANT_REDEFINE_ELEMENT
+			a_select_element: GEANT_SELECT_ELEMENT
+			ucs: UC_STRING
+			msg: STRING
+			a_project_loader: GEANT_PROJECT_LOADER
+			a_parent_project: GEANT_PROJECT
+		do
+			interpreting_element_make (a_project, a_xml_element)
+
+			create parent.make (a_project)
+
+			if has_uc_attribute (Location_attribute_name) then
+				ucs := uc_attribute_value (Location_attribute_name)
+				if ucs.count > 0 then
+					create a_project_loader.make (ucs)
+					a_project_loader.load (a_project.variables, a_project.options)
+					a_parent_project := a_project_loader.project_element.project
+					parent.set_parent_project (a_parent_project)
+					a_parent_project.merge_in_parent_projects
+				end
+			end
+
+				-- Handle renames:
+			xml_elements := a_xml_element.children_by_name (Rename_element_name)
+			nb := xml_elements.count
+			from i := 1 until i > nb loop
+				create a_rename_element.make (project, xml_elements.item (i))
+				s := a_rename_element.rename_clause.original_name
+				if parent.renames.has (s) then
+					msg := clone ("%NLOAD ERROR:%N")
+					msg.append_string ("  Project '")
+					msg.append_string (project.name)
+					msg.append_string ("': VHRC-2: old_name `")
+					msg.append_string (s)
+					msg.append_string ("' appears more than once as the first element")
+					msg.append_string (" of a Rename_pair in the same Rename subclause of parent '")
+					msg.append_string (parent.parent_project.name)
+					msg.append_string ("'%N")
+					exit_application (1, msg)
+				end
+				parent.renames.force_last (a_rename_element.rename_clause, s)
+				i := i + 1
+			end
+
+				-- Handle redefines:
+			xml_elements := a_xml_element.children_by_name (Redefine_element_name)
+			nb := xml_elements.count
+			from i := 1 until i > nb loop
+				create a_redefine_element.make (project, xml_elements.item (i))
+				s := a_redefine_element.redefine_clause.name
+				parent.redefines.force_last (a_redefine_element.redefine_clause, s)
+				i := i + 1
+			end
+
+				-- Handle selects:
+			xml_elements := a_xml_element.children_by_name (Select_element_name)
+			nb := xml_elements.count
+			from i := 1 until i > nb loop
+				create a_select_element.make (project, xml_elements.item (i))
+				s := a_select_element.select_clause.name
+				parent.selects.force_last (a_select_element.select_clause, s)
+				i := i + 1
+			end
+
+		end
+
+	make_old (a_project: GEANT_PROJECT; a_xml_element: GEANT_XML_ELEMENT) is
+			-- Create new parent element with information held in `a_xml_element'.
+			-- (Only to suppport old form of inheritance)
+			-- TODO: remove after obsolete period
+		require
+			a_project_not_void: a_project /= Void
+			a_xml_element_not_void: a_xml_element /= Void
+--			has_inherit_attribute: has_uc_attribute (Inherit_attribute_name)
+			project_in_old_inherit_form: a_project.old_inherit
+		local
+			ucs: UC_STRING
+			a_project_loader: GEANT_PROJECT_LOADER
+			a_parent_project: GEANT_PROJECT
+			msg: STRING
+		do
+			interpreting_element_make (a_project, a_xml_element)
+
+			create parent.make (a_project)
+			ucs := uc_attribute_value (Inherit_attribute_name)
+			if ucs.count > 0 then
+				create a_project_loader.make (ucs)
+				a_project_loader.load (a_project.variables, a_project.options)
+				a_parent_project := a_project_loader.project_element.project
+				parent.set_parent_project (a_parent_project)
+				a_parent_project.merge_in_parent_projects
+			else
+				msg := clone ("%NLOAD ERROR:%N")
+				msg.append_string ("  project '")
+				msg.append_string (project.name)
+				msg.append_string ("' invalid inherit clause.%N")
+				exit_application (1, msg)
+			end
+
+		end
+
+feature -- Access
+
+	parent: GEANT_PARENT
+			-- Parent clause
+
+feature {NONE} -- Constants
+
+	Location_attribute_name: UC_STRING is
+			-- "location" attribute name
+		once
+			Result := new_unicode_string ("location")
+		ensure
+			attribute_name_not_void: Result /= Void
+			attribute_name_not_empty: Result.count > 0
+		end
+
+	Inherit_attribute_name: UC_STRING is
+			-- "inherit" attribute name (only to suppport old form of inheritance)
+			-- TODO: remove after obsolete period
+		once
+			Result := new_unicode_string ("inherit")
+		ensure
+			attribute_name_not_void: Result /= Void
+			attribute_name_not_empty: Result.count > 0
+		end
+
+	Rename_element_name: UC_STRING is
+			-- "rename" element name
+		once
+			Result := new_unicode_string ("rename")
+		ensure
+			element_name_not_void: Result /= Void
+			element_name_not_empty: Result.count > 0
+		end
+
+	Redefine_element_name: UC_STRING is
+			-- "redefine" element name
+		once
+			Result := new_unicode_string ("redefine")
+		ensure
+			element_name_not_void: Result /= Void
+			element_name_not_empty: Result.count > 0
+		end
+
+	Select_element_name: UC_STRING is
+			-- "select" element name
+		once
+			Result := new_unicode_string ("select")
+		ensure
+			element_name_not_void: Result /= Void
+			element_name_not_empty: Result.count > 0
+		end
+
+end
