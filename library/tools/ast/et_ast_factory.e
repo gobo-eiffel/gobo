@@ -166,14 +166,13 @@ feature -- AST factory
 		end
 
 	new_class_type (a_name: ET_IDENTIFIER;
-		a_generics: like new_actual_generics;
 		a_class: ET_CLASS): ET_CLASS_TYPE is
 			-- New Eiffel class type
 		require
 			a_name_not_void: a_name /= Void
 			a_class_not_void: a_class /= Void
 		do
-			!! Result.make (a_name, a_generics, a_class)
+			!! Result.make (a_name, a_class)
 		ensure
 			class_type_not_void: Result /= Void
 		end
@@ -315,11 +314,8 @@ feature -- AST factory
 			a_class_not_void: a_class /= Void
 			an_id_positive: an_id >= 0
 		do
--- TODO: stripped
---			!! Result.make (a_name, args, a_type, an_obsolete, a_preconditions,
---				a_locals, a_compound, a_postconditions, a_rescue, a_clients, a_class, an_id)
 			!! Result.make (a_name, args, a_type, an_obsolete, a_preconditions,
-				Void, Void, a_postconditions, Void, a_clients, a_class, an_id)
+				a_locals, a_compound, a_postconditions, a_rescue, a_clients, a_class, an_id)
 		ensure
 			do_function_not_void: Result /= Void
 		end
@@ -336,11 +332,8 @@ feature -- AST factory
 			a_class_not_void: a_class /= Void
 			an_id_positive: an_id >= 0
 		do
--- TODO: stripped
---			!! Result.make (a_name, args, an_obsolete, a_preconditions,
---				a_locals, a_compound, a_postconditions, a_rescue, a_clients, a_class, an_id)
 			!! Result.make (a_name, args, an_obsolete, a_preconditions,
-				Void, Void, a_postconditions, Void, a_clients, a_class, an_id)
+				a_locals, a_compound, a_postconditions, a_rescue, a_clients, a_class, an_id)
 		ensure
 			do_procedure_not_void: Result /= Void
 		end
@@ -486,6 +479,32 @@ feature -- AST factory
 			!! Result.make (a_parameter)
 		ensure
 			formal_generics_not_void: Result /= Void
+		end
+
+	new_generic_class_type (a_name: ET_IDENTIFIER;
+		a_generics: like new_actual_generics;
+		a_class: ET_CLASS): ET_GENERIC_CLASS_TYPE is
+			-- New Eiffel generic class type
+		require
+			a_name_not_void: a_name /= Void
+			a_generics_not_void: a_generics /= Void
+			a_class_not_void: a_class /= Void
+		do
+			!! Result.make (a_name, a_generics, a_class)
+		ensure
+			class_type_not_void: Result /= Void
+		end
+
+	new_generic_named_type (a_name: ET_IDENTIFIER;
+		a_generics: like new_actual_generics): ET_GENERIC_NAMED_TYPE is
+			-- New Eiffel generic named type
+		require
+			a_name_not_void: a_name /= Void
+			a_generics_not_void: a_generics /= Void
+		do
+			!! Result.make (a_name, a_generics)
+		ensure
+			named_type_not_void: Result /= Void
 		end
 
 	new_if_instruction (a_condition: ET_EXPRESSION; a_compound: ET_COMPOUND): ET_IF_INSTRUCTION is
@@ -749,6 +768,16 @@ feature -- AST factory
 			manifest_array_not_void: Result /= Void
 		end
 
+	new_named_type (a_name: ET_IDENTIFIER): ET_NAMED_TYPE is
+			-- New Eiffel named type
+		require
+			a_name_not_void: a_name /= Void
+		do
+			!! Result.make (a_name)
+		ensure
+			named_type_not_void: Result /= Void
+		end
+
 	new_none_clients: ET_CLIENTS is
 			-- New client list with only one client: NONE
 		do
@@ -791,11 +820,8 @@ feature -- AST factory
 			a_class_not_void: a_class /= Void
 			an_id_positive: an_id >= 0
 		do
--- TODO
---			Result.make (a_name, args, a_type, an_obsolete, a_preconditions,
---				a_locals, a_compound, a_postconditions, a_rescue, a_clients, a_class, an_id)
 			!! Result.make (a_name, args, a_type, an_obsolete, a_preconditions,
-				Void, Void, a_postconditions, Void, a_clients, a_class, an_id)
+				a_locals, a_compound, a_postconditions, a_rescue, a_clients, a_class, an_id)
 		ensure
 			once_function_not_void: Result /= Void
 		end
@@ -812,11 +838,8 @@ feature -- AST factory
 			a_class_not_void: a_class /= Void
 			an_id_positive: an_id >= 0
 		do
--- TODO: stripped
---			!! Result.make (a_name, args, an_obsolete, a_preconditions,
---				a_locals, a_compound, a_postconditions, a_rescue, a_clients, a_class, an_id)
 			!! Result.make (a_name, args, an_obsolete, a_preconditions,
-				Void, Void, a_postconditions, Void, a_clients, a_class, an_id)
+				a_locals, a_compound, a_postconditions, a_rescue, a_clients, a_class, an_id)
 		ensure
 			once_procedure_not_void: Result /= Void
 		end
