@@ -27,6 +27,9 @@ inherit
 			make as make_lace_scanner
 		end
 
+	UT_IMPORTED_FORMATTERS
+		export {NONE} all end
+
 feature {NONE} -- Initialization
 
 	make (an_error_handler: like error_handler) is
@@ -233,18 +236,22 @@ feature -- Error handling
 			-- Print error message.
 		local
 			f_buffer: YY_FILE_BUFFER
+			a_lined_message: STRING
+			an_error: UT_MESSAGE
 		do
+			a_lined_message := STRING_.make (30)
 			f_buffer ?= input_buffer
 			if f_buffer /= Void then
-				std.error.put_string (f_buffer.file.name)
-				std.error.put_string (", line ")
+				a_lined_message.append_string (f_buffer.file.name)
+				a_lined_message.append_string (", line ")
 			else
-				std.error.put_string ("line ")
+				a_lined_message.append_string ("line ")
 			end
-			std.error.put_integer (eif_lineno)
-			std.error.put_string (": ")
-			std.error.put_string (a_message)
-			std.error.put_character ('%N')
+			INTEGER_FORMATTER_.append_decimal_integer (a_lined_message, eif_lineno)
+			a_lined_message.append_string (": ")
+			a_lined_message.append_string (a_message)
+			create an_error.make (a_lined_message)
+			error_handler.report_error (an_error)
 		end
 
 invariant
