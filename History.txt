@@ -48,6 +48,7 @@ Version ?
 	Gobo Eiffel Kernel Library
 
 	* KL_DOUBLE_ROUTINES.log2: new feature.
+	* KL_INTEGER_ROUTINES.power: new feature.
 
 	Gobo Eiffel String Library
 
@@ -62,6 +63,11 @@ Version ?
 	* Support clocks with precision to the millisecond. However
 	  note that with SmartEiffel under Windows the millisecond part
 	  may be stuck to zero.
+
+	Gobo Eiffel Utility Library
+
+	* UT_URI path is parsed into components: path_items.
+	* UT_HOST_PORT: new class for TCP hostname and port number.
 
 Version 3.3 - 2 November 2003
 
