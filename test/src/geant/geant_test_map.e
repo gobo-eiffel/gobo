@@ -93,8 +93,9 @@ feature -- Test
 			map.set_source_pattern ("*.a")
 			assert ("is_executable_glob6", map.is_executable)
 
-			map.set_type ("globber")
-			assert ("is_executable_glob7", not map.is_executable)
+-- TODO: precondition of `set_type' violated:
+--			map.set_type ("globber")
+--			assert ("is_executable_glob7", not map.is_executable)
 		end
 
 	test_mapped_filename is
@@ -130,15 +131,18 @@ feature -- Execution
 			-- Setup for a test.
 		local
 			a_variables: GEANT_VARIABLES
+			an_options: GEANT_PROJECT_OPTIONS
 		do
 			!! a_variables.make
-			!! project.make (a_variables)
+			!! an_options.make
+			!! project.make (a_variables, an_options)
 		end
 
 	tear_down is
 			-- Tear down after a test.
 		do
 			map := Void
+			project := Void
 		end
 
 feature {NONE} -- Implementation

@@ -22,7 +22,7 @@
 	<target name="init_system">
 		<set name="system" value="xexpat"/>
 		<set name="library" value="xml"/>
-		<set name="system_dir" value="${GOBO}/test/${library}/expat/"/>
+		<set name="system_dir" value="${GOBO}/test/${library}/expat"/>
 		<set name="GOBO_XML_EXPAT" value="true"/>
 	</target>
 

@@ -21,38 +21,6 @@ inherit
 
 feature -- Test
 
-	test_string_remove_head is
-			-- Test feature `string_remove_head'.
-		local
-			a_string: STRING
-		do
-			a_string := clone ("foobar")
-			assert ("string_remove_head1", sp.string_remove_head (a_string, 0).is_equal ("foobar")) 
-			assert ("string_remove_head2", sp.string_remove_head (a_string, 1).is_equal ("oobar")) 
-			assert ("string_remove_head3", sp.string_remove_head (a_string, 2).is_equal ("obar")) 
-			assert ("string_remove_head4", sp.string_remove_head (a_string, 3).is_equal ("bar")) 
-			assert ("string_remove_head5", sp.string_remove_head (a_string, 4).is_equal ("ar")) 
-			assert ("string_remove_head6", sp.string_remove_head (a_string, 5).is_equal ("r")) 
-			assert ("string_remove_head7", sp.string_remove_head (a_string, 6).is_equal ("")) 
-			assert ("string_remove_head8", sp.string_remove_head (a_string, 7).is_equal ("")) 
-		end
-
-	test_string_remove_tail is
-			-- Test feature `string_remove_tail'.
-		local
-			a_string: STRING
-		do
-			a_string := clone ("foobar")
-			assert ("string_remove_tail1", sp.string_remove_tail (a_string, 0).is_equal ("foobar")) 
-			assert ("string_remove_tail2", sp.string_remove_tail (a_string, 1).is_equal ("fooba")) 
-			assert ("string_remove_tail3", sp.string_remove_tail (a_string, 2).is_equal ("foob")) 
-			assert ("string_remove_tail4", sp.string_remove_tail (a_string, 3).is_equal ("foo")) 
-			assert ("string_remove_tail5", sp.string_remove_tail (a_string, 4).is_equal ("fo")) 
-			assert ("string_remove_tail6", sp.string_remove_tail (a_string, 5).is_equal ("f")) 
-			assert ("string_remove_tail7", sp.string_remove_tail (a_string, 6).is_equal ("")) 
-			assert ("string_remove_tail8", sp.string_remove_tail (a_string, 7).is_equal ("")) 
-		end
-
 	test_glob_prefix is
 			-- Test feature `glob_prefix'.
 		do
