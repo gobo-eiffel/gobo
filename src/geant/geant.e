@@ -66,8 +66,7 @@ feature {NONE} -- Initialization
 			if a_project.targets /= Void then
 				a_project.build
 				if not a_project.build_successful then
-					print ("%NBUILD FAILED !%N")
-					Exceptions.die (1)
+					exit_application (1, Void)
 				end
 			end
 		end
@@ -152,15 +151,14 @@ feature {NONE} -- Error handling
 			-- with exit status 1.
 		do
 			error_handler.report_error (Usage_message)
-			print ("%NBUILD FAILED !%N")
-			Exceptions.die (1)
+			exit_application (1, Void)
 		end
 
 	report_usage_message is
 			-- Report usage message and exit.
 		do
 			error_handler.report_message (Usage_message)
-			Exceptions.die (0)
+			exit_application (0, Void)
 		end
 
 	report_version_number is
@@ -170,7 +168,7 @@ feature {NONE} -- Error handling
 		do
 			!! a_message.make (Version_number)
 			error_handler.report_message (a_message)
-			Exceptions.die (0)
+			exit_application (0, Void)
 		end
 
 	Usage_message: UT_USAGE_MESSAGE is
