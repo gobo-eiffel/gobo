@@ -7,7 +7,9 @@ Bindings=Gobo.Bindings
 [Gobo.Sources]
 Gobo.Sources.kernel=
 Gobo.Sources.kernel.io=
+Gobo.Sources.kernel.misc=
 Gobo.Sources.kernel.unicode=
+Gobo.Sources.kernel.OS=
 Gobo.Sources.kernel.VE=
 Gobo.Sources.lexical=
 Gobo.Sources.parse=
@@ -32,6 +34,12 @@ Mask=kernel/unicode/*.e
 
 [Gobo.Sources.kernel.io]
 Mask=kernel/io/*.e
+
+[Gobo.Sources.kernel.misc]
+Mask=kernel/misc/*.e
+
+[Gobo.Sources.kernel.OS]
+Mask=kernel/spec/$GOBO_OS/*.e
 
 [Gobo.Sources.kernel.VE]
 Mask=kernel/spec/ve/*.e
