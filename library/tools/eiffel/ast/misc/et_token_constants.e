@@ -58,6 +58,22 @@ feature -- Class names
 			bit_class_name_not_void: Result /= Void
 		end
 
+	string_class_name: ET_CLASS_NAME is
+			-- "STRING" class name
+		once
+			create {ET_IDENTIFIER} Result.make ("STRING")
+		ensure
+			string_class_name_not_void: Result /= Void
+		end
+
+	array_class_name: ET_CLASS_NAME is
+			-- "ARRAY" class name
+		once
+			create {ET_IDENTIFIER} Result.make ("ARRAY")
+		ensure
+			array_class_name_not_void: Result /= Void
+		end
+
 	boolean_class_name: ET_CLASS_NAME is
 			-- "BOOLEAN" class name
 		once
@@ -264,6 +280,14 @@ feature -- Symbols
 			-- ')' symbol
 		once
 			create Result.make_right_parenthesis
+		ensure
+			symbol_not_void: Result /= Void
+		end
+
+	semicolon_symbol: ET_SEMICOLON_SYMBOL is
+			-- ';' symbol
+		do
+			create Result.make
 		ensure
 			symbol_not_void: Result /= Void
 		end
