@@ -45,7 +45,7 @@ feature -- Access
 		do
 			start := document.alpha_value (node_number)
 			length := document.beta_value (node_number)
-			Result := document.character_buffer.substring (start, start + length)
+			Result := document.character_buffer.substring (start + 1, start + length)
 		end
 
 

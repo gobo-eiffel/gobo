@@ -142,12 +142,20 @@ feature  -- Conversion
 			an_iterator: XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_ITEM]
 		do
 			an_iterator := iterator (a_context)
-			an_iterator.start
-			if an_iterator.after then
-				Result := Void
+			if not an_iterator.is_error then
+				an_iterator.start
+				if an_iterator.is_error or else an_iterator.after then
+					create {XM_XPATH_INVALID_ITEM} Result.make (an_iterator.last_error)
+				else
+					an_iterator.forth
+					if not an_iterator.is_error then
+						Result := an_iterator.item
+					else
+						create {XM_XPATH_INVALID_ITEM} Result.make (an_iterator.last_error)
+					end
+				end
 			else
-				an_iterator.forth
-				Result := an_iterator.item
+				create {XM_XPATH_INVALID_ITEM} Result.make (an_iterator.last_error)
 			end		
 		end
 

@@ -24,7 +24,7 @@ creation
 
 feature {NONE} -- Initialization
 
-	make (an_item: XM_XPATH_ITEM; an_error_code: INTEGER; an_error_type: INTEGER) is
+	make (an_item: XM_XPATH_ITEM; an_error_code, an_error_type: INTEGER) is
 			-- Create a non-empty error value.
 		require
 			item_not_void: an_item /= Void
@@ -41,7 +41,7 @@ feature {NONE} -- Initialization
 			no_empty_sequence: empty_sequence = Void
 		end
 
-	make_empty (an_error_code: INTEGER; an_error_type: INTEGER) is
+	make_empty (an_error_code, an_error_type: INTEGER) is
 			-- Create an empty-sequence error value
 		require
 			valid_error_code: is_valid_error_code (an_error_code)
@@ -57,7 +57,7 @@ feature {NONE} -- Initialization
 			empty_sequence: empty_sequence /= Void
 		end
 
-	make_from_string (a_string: STRING; an_error_code: INTEGER; an_error_type: INTEGER) is
+	make_from_string (a_string: STRING; an_error_code, an_error_type: INTEGER) is
 			-- Create from `a_string'.
 		require
 			valid_error_code: is_valid_error_code (an_error_code)

@@ -79,16 +79,23 @@ feature -- Creation
 			result_not_void: Result /= Void
 		end
 
-	make_item_position_iterator (a_base_sequence: XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_ITEM]; min, max: INTEGER): XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_ITEM] is
+	make_item_position_iterator (a_base_iterator: XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_ITEM]; a_min, a_max: INTEGER): XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_ITEM] is
 			-- Create a position iterator;
 			--  unless `a_base_sequence' is an array iterator, in which case
 			--  Create an array iterator directly over underlying array.
 			-- This optimization is important when doing recursion over a node-set using
 			--  repeated calls of $nodes[position()>1]
 		require
-			base_sequence_not_void: a_base_sequence /= Void
+			base_iterator_not_void: a_base_iterator /= Void
+		local
+			an_array_iterator: XM_XPATH_ARRAY_ITERATOR [XM_XPATH_ITEM]
 		do
-			-- TODO
+			an_array_iterator ?= a_base_iterator
+			if an_array_iterator /= Void then
+				Result := an_array_iterator.make_slice_iterator (a_min, a_max)
+			else
+				create {XM_XPATH_POSITION_ITERATOR} Result.make (a_base_iterator, a_min, a_max)
+			end
 		end
 
 	make_closure (an_expression: XM_XPATH_EXPRESSION; a_context: XM_XPATH_CONTEXT): XM_XPATH_VALUE is

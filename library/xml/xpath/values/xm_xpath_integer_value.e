@@ -125,6 +125,31 @@ feature -- Status report
 			end
 		end
 
+	is_whole_number: BOOLEAN is
+			-- Is value integral?
+		do
+			Result := True
+		end
+
+	is_nan: BOOLEAN is
+			-- Is value Not-a-number?
+		do
+			do_nothing
+		end
+
+	is_zero: BOOLEAN is
+			-- Is value zero?
+		do
+			Result := value = 0
+		end
+
+	
+	is_infinite: BOOLEAN is
+			-- Is value infinite?
+		do
+			do_nothing
+		end
+	
 feature -- Conversions
 	
 	convert_to_type (a_required_type: INTEGER): XM_XPATH_ATOMIC_VALUE is
@@ -157,4 +182,56 @@ feature -- Conversions
 			end
 		end
 
+feature -- Basic operations
+
+	arithmetic (an_operator: INTEGER; other: XM_XPATH_NUMERIC_VALUE): XM_XPATH_NUMERIC_VALUE is
+			-- Arithmetic calculation
+		local
+			an_integer_value: XM_XPATH_INTEGER_VALUE
+			a_numeric_value: XM_XPATH_NUMERIC_VALUE
+			a_quotient: INTEGER
+			a_decimal_value, another_decimal_value: XM_XPATH_DECIMAL_VALUE
+		do
+
+			-- TODO handle overflow
+
+			todo ("arithmetic - overflow not handled", True)
+
+			an_integer_value ?= other
+			if other /= void then
+				inspect
+					an_operator
+				when Plus_token then
+					create {XM_XPATH_INTEGER_VALUE} Result.make (value + an_integer_value.value)
+				when Minus_token then
+					create {XM_XPATH_INTEGER_VALUE} Result.make (value - an_integer_value.value)
+				when Multiply_token then
+					create {XM_XPATH_INTEGER_VALUE} Result.make (value * an_integer_value.value)
+				when Integer_division_token then
+
+					-- TODO: handle division by zero
+
+					create {XM_XPATH_INTEGER_VALUE} Result.make (value // an_integer_value.value)
+				when Division_token then
+
+					-- The result of dividing two integers is a decimal; but if
+					-- one divides exactly by the other, we implement it as an integer
+
+					a_quotient := an_integer_value.value
+					if a_quotient /= 0 and then value \\ a_quotient = 0 then
+						create {XM_XPATH_INTEGER_VALUE} Result.make (value // a_quotient)
+					else
+						create a_decimal_value.make (value)
+						create another_decimal_value.make (an_integer_value.value)
+						Result := a_decimal_value.arithmetic ( Division_token, another_decimal_value)
+					end
+				when Modulus_token then
+					create {XM_XPATH_INTEGER_VALUE} Result.make (value \\ an_integer_value.value)
+				end
+			else
+				a_numeric_value ?= convert_to_type (other.item_type)
+				Result := a_numeric_value.arithmetic (an_operator, other)
+			end
+		end
+	
 end

@@ -109,26 +109,6 @@ feature {NONE} -- Implementation
 	filter_context: XM_XPATH_CONTEXT
 			-- Evaluation context for the filter
 
-	is_error: BOOLEAN
-			-- Did an error occur?
-
-	last_error: XM_XPATH_ERROR_VALUE
-			-- Last error value
-	
-	set_error (an_error_value: XM_XPATH_ERROR_VALUE) is
-			-- Set error value.
-		require
-			not_in_error: not is_error
-			error_value_not_void: an_error_value /= Void
-		do
-			is_error := True
-			last_error := an_error_value
-			is_error := True
-		ensure
-			is_error: is_error
-			error_value_set: last_error = an_error_value
-		end
-	
 	advance is
 			-- Move to next matching node.
 		local
@@ -172,7 +152,7 @@ feature {NONE} -- Implementation
 			if non_numeric then
 				a_boolean_value := filter.effective_boolean_value (filter_context)
 				if a_boolean_value.is_error then
-					set_error (a_boolean_value.last_error)
+					set_last_error (a_boolean_value.last_error)
 				else
 					Result := a_boolean_value.value
 				end
@@ -182,7 +162,7 @@ feature {NONE} -- Implementation
 				-- iteration of the filter expression than are absolutely essential.
 			
 				an_iterator := filter.iterator (filter_context)
-				if an_iterator /= Void then
+				if not an_iterator.is_error then
 					an_iterator.start
 					if not an_iterator.after then
 						an_item := an_iterator.item
@@ -221,7 +201,7 @@ feature {NONE} -- Implementation
 					-- We are in error
 
 					Result := False
-					set_error (filter.last_error)
+					set_last_error (an_iterator.last_error)
 				end
 			end
 		end

@@ -16,6 +16,8 @@ inherit
 
 	XM_XPATH_ATOMIC_VALUE
 
+	XM_XPATH_TOKENS
+
 feature -- Access
 
 	as_integer: INTEGER is -- TODO should be INTEGER_64, or EDA_INTEGER or something
@@ -85,15 +87,44 @@ feature -- Status_report
 
 	is_nan: BOOLEAN is
 			-- Is value Not-a-number?
-		do
-			Result := False
+		deferred
+		end
+
+	is_zero: BOOLEAN is
+			-- Is value zero?
+		deferred
+		end
+
+	is_infinite: BOOLEAN is
+			-- Is value infinite?
+		deferred
 		end
 
 	is_whole_number: BOOLEAN is
 			-- Is value integral?
-		do
-			-- TODO
-			todo ("is-whole-number" ,False)
+		deferred
 		end
-	
+
+	is_valid_arithmetic_operator (an_operator: INTEGER): BOOLEAN is
+			-- Is `an_operator' valid for arithmetic?
+		do
+			inspect
+				an_operator
+			when Plus_token, Minus_token, Multiply_token, Division_token, Integer_division_token, Modulus_token then
+				Result := True
+			else
+				Result := false
+			end
+		end
+
+feature -- Basic operations
+
+	arithmetic (an_operator: INTEGER; other: XM_XPATH_NUMERIC_VALUE): XM_XPATH_NUMERIC_VALUE is
+			-- Arithmetic calculation
+		require
+			other_value_not_void: other /= Void
+			valid_operator: is_valid_arithmetic_operator (an_operator)
+		deferred
+		end
+
 end

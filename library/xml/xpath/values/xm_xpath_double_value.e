@@ -21,7 +21,7 @@ inherit
 
 creation
 
-	make, make_from_string
+	make, make_from_string, make_nan
 
 feature {NONE} -- Initialization
 
@@ -42,7 +42,13 @@ feature {NONE} -- Initialization
 		ensure
 			value_set: value = a_value.to_double
 		end
-			
+
+	make_nan is
+			-- create NaN.
+		do
+			todo ("make-NaN", False)
+		end
+
 feature -- Access
 
 	value: DOUBLE -- TODO - insufficient??
@@ -104,6 +110,31 @@ feature -- Status report
 			end
 		end
 
+	is_whole_number: BOOLEAN is
+			-- Is value integral?
+		do
+			Result := value = value.truncated_to_integer
+		end
+
+	is_nan: BOOLEAN is
+			-- Is value Not-a-number?
+		do
+			todo ("is-nan", False)
+		end
+
+	is_zero: BOOLEAN is
+			-- Is value zero?
+		do
+			Result := value = 0.0 or else value = -0.0
+		end
+
+
+	is_infinite: BOOLEAN is
+			-- Is value infinite?
+		do
+			todo ("is-infinite", False)
+		end	
+
 feature -- Conversion
 	
 	convert_to_type (a_required_type: INTEGER): XM_XPATH_ATOMIC_VALUE is
@@ -133,6 +164,45 @@ feature -- Conversion
 
 			when String_type then
 				create {XM_XPATH_STRING_VALUE} Result.make (string_value)
+			end
+		end
+
+feature -- Basic operations
+
+	arithmetic (an_operator: INTEGER; other: XM_XPATH_NUMERIC_VALUE): XM_XPATH_NUMERIC_VALUE is
+			-- Arithmetic calculation
+		local
+			a_double, another_double: DOUBLE
+			an_integer, another_integer: INTEGER
+		do
+			inspect
+				an_operator
+			when Plus_token then
+				create {XM_XPATH_DOUBLE_VALUE} Result.make (value + other.as_double)
+			when Minus_token then
+				create {XM_XPATH_DOUBLE_VALUE} Result.make (value - other.as_double)
+			when Multiply_token then
+				create {XM_XPATH_DOUBLE_VALUE} Result.make (value * other.as_double)
+			when Division_token then
+				create {XM_XPATH_DOUBLE_VALUE} Result.make (value / other.as_double)
+			when Modulus_token then
+				a_double := other.as_double
+				if is_whole_number and then other.is_whole_number then
+					an_integer := as_integer
+					another_integer := other.as_integer
+					create {XM_XPATH_INTEGER_VALUE} Result.make (an_integer \\ another_integer)
+				else
+					if is_nan or else other.is_nan or else other.is_zero or else is_infinite then
+						create {XM_XPATH_DOUBLE_VALUE} Result.make_nan
+					elseif other.is_infinite then
+						Result := Current
+					elseif is_zero then
+						Result := Current
+					else
+						another_double := (value / a_double).floor
+						create {XM_XPATH_DOUBLE_VALUE} Result.make (value - another_double)
+					end
+				end
 			end
 		end
 

@@ -110,7 +110,7 @@ feature -- Status report
 			-- Did last call to `bind_function' succeed?
 
 	is_backwards_compatible_mode: BOOLEAN is
-			-- Is Backwards Compatible Mode used?
+			-- Is XPath 1.0 Backwards Compatible Mode used?
 		deferred
 		end
 

@@ -151,7 +151,7 @@ feature -- Evaluation
 		do
 			an_iterator := iterator (a_context)
 
-			if an_iterator /= Void then
+			if not an_iterator.is_error then
 				an_iterator.start
 				an_item := an_iterator.item
 					check
@@ -194,11 +194,11 @@ feature -- Evaluation
 				if Result = Void then create Result.make (False) end			
 			else
 
-				-- We are in error - mark the result as in error both as an expression and as an item
+				-- Mark the result as in error both as an expression and as an item
 
 				create Result.make (False)
-				Result.set_last_error (last_error)
-				Result.set_evaluation_error (last_error)
+				Result.set_last_error (an_iterator.last_error)
+				Result.set_evaluation_error (an_iterator.last_error)
 			end
 		end
 

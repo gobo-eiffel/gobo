@@ -60,7 +60,7 @@ feature -- Access
 		iterator (a_context: XM_XPATH_CONTEXT): XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_ITEM] is
 			-- Iterator over the values of a sequence
 		do
-			Result := Void -- TODO
+			create {XM_XPATH_INVALID_ITERATOR} Result.make_from_string ("TODO", Static_error, 1) -- TODO
 		end
 
 feature -- Status report

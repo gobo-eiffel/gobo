@@ -71,6 +71,7 @@
 	<li>Resizing</li>
 	<li>Conversion</li>
 	<li>Duplication</li>
+	<li>Basic operations</li>
 	<li>Output</li>
 	<li>Restricted (features exported to other classes)</li>
 	<li>Local (features exported only to this class)</li>
@@ -90,13 +91,9 @@
 	<li>EXPRESSION.display should check the error status</li>
 	<li>Document procedures such as analyze, that cause side effects on the context.</li>
 	<li>Promotion in path and filter expressions commented out as it causes an infinite recursion inside let-action analyze - this may now be fixed - try again.</li>
-	<li>
-	  <p><em>Change all returns from {XM_XPATH_EXPRESSION}.iterator of Void to an iterator in error. Test all such
-	  returns. Strengthen EXPRESSION, VALUE and node routines like ITEM, so they cannot be used when in the error state.</em></p>
-	</li>
-	<li>Review sequence iterators. Look at Saxon 7.9.1.</li>
-	<li>Break up large analyze (etc.) routines into more manageable chunks.</li>
+	<li>Break up large analyze (etc.) routines into more manageable chunks (ongoing).</li>
 	<li>Make use of UT_URI for base URI etc.</li>
+	<li>CAST_EXPRESSION needs fixing</li>
       </ul>
     </div>
     <div>
@@ -104,7 +101,16 @@
       <p>This section should be ignored. It consists solely of my notes
       with which to form the comments for the next cvs check-in operation.</p>
       <pre>
-
+	Changing error signalling from iterators etc.
+	Added error routines to SEQUENCE_ITERATOR (and not is_error as a precondition to all routines), and created INVALID_ITERATOR for
+	{EXPRESION}.iterator to return. Changed post-condition of latter routine.
+	Created INVALID_ITEM for routines that need to return an ITEM in error.
+	Added similar pre-conditions to NODE.
+	Test for err:XP0051
+	Worked on CAST_EXPRESSION, CAST_AS_QNAME_EXPRESSION
+	Started implementing tests for every example expression in Draft ecommendation.
+	Fix to tokenizer.
+	Work on RANGE_EXPRESSION and ARITHMETIC_EXPRESSION.
       </pre>
     </div>
     <div >

@@ -413,7 +413,7 @@ feature -- Evaluation
 			an_iterator: XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_ITEM]		
 		do
 			an_iterator := step.iterator (a_context)
-			if an_iterator = Void then
+			if an_iterator.is_error then
 				Result := Void
 				
 				-- Error occured
@@ -524,33 +524,27 @@ feature {NONE} -- Implementation
 			any_node_test: XM_XPATH_ANY_NODE_TEST
 			a_filter: XM_XPATH_FILTER_EXPRESSION
 			any_positional_filter: BOOLEAN
-			a_new_step: XM_XPATH_COMPUTED_EXPRESSION
-			a_node_kind_test: XM_XPATH_NODE_KIND_TEST
 		do
 			st := start
 
 			-- Detect .//x as a special case; this will appear as descendant-or-self::node()/x
 
-			an_axis ?= st
-			if an_axis /= Void and then an_axis.axis /= Descendant_or_self_axis then
+			an_axis ?= st;	if an_axis /= Void and then an_axis.axis /= Descendant_or_self_axis then
 				Result := Void
 			else
 				if an_axis /= Void then
 					create a_context_item_expression.make -- TODO copy location information
 					create {XM_XPATH_PATH_EXPRESSION} st.make (a_context_item_expression, an_axis)	-- TODO copy location information
 				end
-				a_path ?= st
-				if a_path = Void then
+				a_path ?= st; if a_path = Void then
 					Result := Void
 				else
-					an_axis ?= a_path.step
-					if an_axis = Void then
+					an_axis ?= a_path.step; if an_axis = Void then
 						Result := Void
 					elseif an_axis.axis /= Descendant_or_self_axis then
 						Result := Void
 					else
-						a_test := an_axis.node_test
-						any_node_test ?= a_test
+						a_test := an_axis.node_test; any_node_test ?= a_test
 						if a_test = Void or else any_node_test /= Void then
 							Result := Void
 						else
@@ -569,36 +563,7 @@ feature {NONE} -- Implementation
 								end
 							end
 							if not any_positional_filter then
-								if an_axis = Void then
-									Result := Void
-								else
-									if an_axis.axis = Child_axis then
-										create {XM_XPATH_AXIS_EXPRESSION} a_new_step.make (Descendant_axis, an_axis.node_test )	-- TODO copy location information
-										from
-											a_filter ?= step
-										until
-											a_filter = Void
-										loop
-
-											-- Add any filters to the new expression. We know they aren't
-											-- positional, so the order of the filters doesn't matter.
-
-											create {XM_XPATH_FILTER_EXPRESSION} a_new_step.make (a_new_step, a_filter.filter)	-- TODO copy location information
-											a_filter ?= a_filter.base_expression
-										end
-										create a_path.make (a_path.start, a_new_step)	-- TODO copy location information
-										Result := a_path
-									elseif an_axis.axis = Attribute_axis then
-
-										-- turn the expression a//@b into a/descendant-or-self::*/@b
-
-										create a_node_kind_test.make (Element_node)
-										create {XM_XPATH_AXIS_EXPRESSION} a_new_step.make (Descendant_or_self_axis, a_node_kind_test )	-- TODO copy location information
-										create a_path.make (a_path.start, a_new_step)
-										create a_path.make (a_path, step)	-- TODO copy location information
-										Result := a_path
-									end
-								end
+								Result := non_positional_filter_path (an_axis)
 							end
 						end
 					end
@@ -606,6 +571,44 @@ feature {NONE} -- Implementation
 			end
 		ensure
 			result_may_be_void: True
+		end
+
+	non_positional_filter_path (an_axis: XM_XPATH_AXIS_EXPRESSION): XM_XPATH_PATH_EXPRESSION is
+			-- Simplified descendat path without any positional filters
+		local
+			a_new_step: XM_XPATH_COMPUTED_EXPRESSION
+			a_filter: XM_XPATH_FILTER_EXPRESSION
+			a_path: XM_XPATH_PATH_EXPRESSION
+			a_node_kind_test: XM_XPATH_NODE_KIND_TEST
+		do
+			if an_axis = Void then
+				Result := Void
+			elseif an_axis.axis = Child_axis then
+				create {XM_XPATH_AXIS_EXPRESSION} a_new_step.make (Descendant_axis, an_axis.node_test )	-- TODO copy location information
+				from
+					a_filter ?= step
+				until
+					a_filter = Void
+				loop
+					
+					-- Add any filters to the new expression. We know they aren't
+					-- positional, so the order of the filters doesn't matter.
+					
+					create {XM_XPATH_FILTER_EXPRESSION} a_new_step.make (a_new_step, a_filter.filter)	-- TODO copy location information
+					a_filter ?= a_filter.base_expression
+				end
+				create a_path.make (a_path.start, a_new_step)	-- TODO copy location information
+				Result := a_path
+			elseif an_axis.axis = Attribute_axis then
+				
+				-- turn the expression a//@b into a/descendant-or-self::*/@b
+				
+				create a_node_kind_test.make (Element_node)
+				create {XM_XPATH_AXIS_EXPRESSION} a_new_step.make (Descendant_or_self_axis, a_node_kind_test )	-- TODO copy location information
+				create a_path.make (a_path.start, a_new_step)
+				create a_path.make (a_path, step)	-- TODO copy location information
+				Result := a_path
+			end
 		end
 
 	compute_special_properties is

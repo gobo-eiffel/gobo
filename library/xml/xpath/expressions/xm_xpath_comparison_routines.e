@@ -47,7 +47,7 @@ feature -- Conversion
 	singleton_value_operator (an_operator: INTEGER): INTEGER is
 			-- Singleton form of the general comparison operator, e.g. Fortran_equal_token for Equals_token, etc
 		require
-			valid_general_operator: is_general_comparison_operator (an_operator)
+			valid_general_operator: is_general_comparison_operator (an_operator) or else is_value_comparison_operator (an_operator)
 		do
 			inspect
 				an_operator
@@ -63,6 +63,11 @@ feature -- Conversion
 				Result := Fortran_less_than_token
 			when Less_equal_token then
 				Result := Fortran_less_equal_token
+			else
+
+				-- Must already be a value comparsion operator
+
+				Result := an_operator
 			end
 		end
 

@@ -154,7 +154,7 @@ feature -- Evaluation
 			a_sequence_value: XM_XPATH_SEQUENCE_VALUE
 		do
 			a_node ?= an_item
-			if a_node /= void then
+			if a_node /= Void then
 				an_atomic_value ?= a_node.typed_value
 				if an_atomic_value /= Void then
 					create Result.make_item (an_atomic_value)

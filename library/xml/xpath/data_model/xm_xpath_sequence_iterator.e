@@ -17,6 +17,7 @@ feature -- Access
 	item: G is
 			-- Value or node at the current position
 		require
+			not_in_error: not is_error
 			not_off: not off
 		deferred
 		end
@@ -29,6 +30,8 @@ feature -- Status report
 
 	before: BOOLEAN is
 			-- Has `forth' been called yet on this sequence?
+		require
+			not_in_error: not is_error
 		do
 			Result := index = 0
 		ensure
@@ -37,13 +40,37 @@ feature -- Status report
 
 	after: BOOLEAN is
 			-- Are there any more items in the sequence?
+		require
+			not_in_error: not is_error
 		deferred
 		end
 
 	off: BOOLEAN is
 			-- Is there an `item' to be retrieved?
+		require
+			not_in_error: not is_error
 		do
 			Result := before or else after
+		end
+
+	is_error: BOOLEAN
+			-- Is `Current' in error?
+
+	last_error: XM_XPATH_ERROR_VALUE
+			-- Last error
+
+feature -- Status_setting
+
+	set_last_error (an_error: XM_XPATH_ERROR_VALUE) is
+			-- Set last error value.
+		require
+			error_value_not_void: an_error /= void
+		do
+			is_error := True
+			last_error := an_error
+		ensure
+			in_error: is_error
+			error_set: last_error = an_error
 		end
 
 feature -- Cursor movement
@@ -51,16 +78,18 @@ feature -- Cursor movement
 	start is
 			-- Move to first position
 		require
+			not_in_error: not is_error
 			before: before
 		do
 			forth
 		ensure
-			not_before: not before
+			not_before: not is_error implies not before
 		end
 			
 	forth is
 			-- Move to next position
 		require
+			not_in_error: not is_error
 			not_after: before or else not after
 		deferred
 		ensure
@@ -72,12 +101,17 @@ feature -- Duplication
 	another: like Current is
 			-- Another iterator that iterates over the same items as the original;
 			-- The new iterator will be repositioned at the start of the sequence
+		require
+			not_in_error: not is_error
 		deferred
 		end
 
 invariant
+
+	last_error_not_void_if_error: is_error implies last_error /= Void
+	last_error_void_if_not_error: not is_error implies last_error = Void
 	positive_index: index >= 0
-	off_or_valid_item: not off implies item /= Void
+	off_or_valid_item: not is_error and then not off implies item /= Void
 
 end
 	

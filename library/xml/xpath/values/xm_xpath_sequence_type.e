@@ -22,7 +22,7 @@ inherit
 
 creation
 
-	make, make_any_sequence, make_single_item, make_optional_item, make_optional_atomic,
+	make, make_any_sequence, make_single_item, make_optional_item, make_optional_atomic, make_optional_integer,
 	make_single_string, make_single_integer, make_single_node, make_node_sequence, make_numeric_sequence
 
 feature {NONE} -- Initialization
@@ -99,6 +99,17 @@ feature {NONE} -- Initialization
 			primary_type := Integer_type
 			create cardinalities.make (1, 3)
 			are_cardinalities_computed := True
+			cardinalities.put (True, 2)
+		end
+
+	make_optional_integer is
+			-- Create a sequence that allows zero or one integer
+		do
+			content_type := Any_item
+			primary_type := Integer_type
+			create cardinalities.make (1, 3)
+			are_cardinalities_computed := True
+			cardinalities.put (True, 1)
 			cardinalities.put (True, 2)
 		end
 

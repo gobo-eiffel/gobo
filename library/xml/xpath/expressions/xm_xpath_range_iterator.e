@@ -2,7 +2,7 @@ indexing
 
 	description:
 
-		"Objects that select a sub-sequence."
+		"Objects that select a monotonically increasing integer sequence."
 
 	library: "Gobo Eiffel XPath Library"
 	copyright: "Copyright (c) 2004, Colin Adams and others"
@@ -10,14 +10,11 @@ indexing
 	date: "$Date$"
 	revision: "$Revision$"
 
-class XM_XPATH_POSITION_ITERATOR
+class XM_XPATH_RANGE_ITERATOR
 
 inherit
 
 	XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_ITEM]
-		redefine
-			before, start
-		end
 
 creation
 
@@ -25,20 +22,16 @@ creation
 
 feature {NONE} -- Initialization
 
-	make (a_base_iterator: XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_ITEM]; a_min, a_max: INTEGER) is
+	make (a_min, a_max: INTEGER) is
 			-- Establish invariant.
 		require
-			base_iterator_not_void: a_base_iterator /= Void
-			valid_minimum: a_min > 0
 			valid_maximum: a_max >= minimum
 		local
 			counter: INTEGER
 		do
-			base_iterator := a_base_iterator
 			minimum := a_min
 			maximum := a_max
 		ensure
-			base_iterator_set:base_iterator = a_base_iterator
 			minimum_set: minimum = a_min
 			maximum_set: maximum = a_max
 		end
@@ -48,44 +41,23 @@ feature -- Access
 	item: XM_XPATH_ITEM is
 			-- Value or node at the current position
 		do
-			Result := base_iterator.item
+			create {XM_XPATH_INTEGER_VALUE} Result.make (index + minimum)
 		end
 
 feature -- Status report
 
-	before: BOOLEAN is
-			-- Are there any more items in the sequence?
-		do
-			Result := index < minimum
-		end
-
 	after: BOOLEAN is
 			-- Are there any more items in the sequence?
 		do
-			Result := index > maximum or else base_iterator.after
+			Result := not before and then index > maximum - minimum
 		end
 
 feature -- Cursor movement
-
-	start is
-			-- Move to first position
-		do
-			from
-				base_iterator.start
-				index :=  1
-			until
-				index = minimum or else base_iterator.after
-			loop
-				index := index + 1
-				if not base_iterator.after then base_iterator.forth end
-			end
-		end
 
 	forth is
 			-- Move to next position
 		do
 			index := index + 1
-			if not base_iterator.after then base_iterator.forth end
 		end
 
 feature -- Duplication
@@ -93,20 +65,15 @@ feature -- Duplication
 	another: like Current is
 			-- Another iterator that iterates over the same items as the original
 		do
-			create Result.make (base_iterator, minimum, maximum)
+			create Result.make (minimum, maximum)
 		end
 
 feature {NONE} -- Implementation
-
-	base_iterator: XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_ITEM]
-			-- Underlying sequence
 
 	minimum, maximum: INTEGER
 
 invariant
 
-	base_iterator_not_void: base_iterator /= Void
-	valid_minimum: minimum > 0
 	valid_maximum: maximum >= minimum
 
 end

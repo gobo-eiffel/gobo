@@ -49,9 +49,7 @@ feature -- Access
 	context_item: XM_XPATH_ITEM is
 			-- The context item (".")
 		do
-			if current_iterator = Void then
-				Result := Void
-			else
+			if current_iterator /= Void and then not current_iterator.is_error then
 				Result := current_iterator.item
 			end
 		end
@@ -62,9 +60,9 @@ feature -- Access
 		require
 			context_position_set: is_context_position_set
 		do
-			Result := current_iterator.index
+			 if not current_iterator.is_error then Result := current_iterator.index end
 		ensure
-			strictly_positive_result: Result > 0
+			positive_result: Result >= 0 -- But it is a Dynamic error, XP0002, if Result = 0
 		end
 
 	last: INTEGER is

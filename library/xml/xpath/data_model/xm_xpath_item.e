@@ -71,6 +71,22 @@ feature -- Status setting
 			value_set: evaluation_error_value = an_error_value
 		end
 
+	set_evaluation_error_from_string (a_message: STRING; a_code, an_error_type: INTEGER) is
+			-- Set `evaluation_error_value'.
+		require
+			item_not_in_error: not is_item_in_error
+			valid_error_type: an_error_type = Static_error or an_error_type = Type_error or an_error_type = Dynamic_error
+			message_not_void: a_message /= Void and then a_message.count > 0
+			valid_code: is_valid_error_code (a_code)
+		do
+			is_item_in_error := True
+			create evaluation_error_value.make_from_string (a_message, a_code, an_error_type)
+		ensure
+			item_in_error: is_item_in_error
+			valid_error: evaluation_error_value /= Void and then STRING_.same_string (evaluation_error_value.error_message, a_message)
+				and then evaluation_error_value.code = a_code
+		end
+
 feature -- Conversion
 	
 	as_value: XM_XPATH_VALUE is

@@ -73,12 +73,12 @@ feature -- Evaluation
 			a_comparison_checker: XM_XPATH_COMPARISON_CHECKER
 		do
 			first_operand.evaluate_item (a_context)
-			an_atomic_value ?= last_evaluated_item
+			an_atomic_value ?= first_operand.last_evaluated_item
 			if an_atomic_value = Void then
 				create Result.make (False)
 			else
 				second_operand.evaluate_item (a_context)
-				another_atomic_value ?= last_evaluated_item
+				another_atomic_value ?= second_operand.last_evaluated_item
 				if another_atomic_value = Void then
 					create Result.make (False)
 				else

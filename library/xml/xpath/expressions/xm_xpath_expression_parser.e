@@ -243,17 +243,77 @@ feature {NONE} -- Implementation
 			tokenizer_usable: tokenizer /= Void and then tokenizer.input /= Void and not tokenizer.is_lexical_error
 			no_previous_parse_error: not is_parse_error
 		local
-			a_primary_type: INTEGER
-			a_message: STRING
+			a_primary_type, an_occurrence_flag: INTEGER
+			a_message, a_local_name, a_uri: STRING
+			a_splitter: ST_SPLITTER
+			qname_parts: DS_LIST [STRING]
 		do
 			a_primary_type := Any_item
 			if tokenizer.last_token = Name_token then
-				-- TODO
+				if is_qname (tokenizer.last_token_value) then
+					create a_splitter.make
+					a_splitter.set_separators (":")
+					qname_parts := a_splitter.split (tokenizer.last_token_value)
+						check
+							one_or_two_parts: qname_parts.count = 1 or else qname_parts.count = 2
+							-- because of is_qname
+						end
+					if qname_parts.count = 1 then
+						a_uri := ""
+						a_local_name := qname_parts.item (1)
+					else
+						a_uri := environment.uri_for_prefix (qname_parts.item (1))
+						a_local_name := qname_parts.item (2)
+					end
+					if is_qname_valid_type (a_uri, a_local_name) then
+						a_primary_type := named_type (a_uri, a_local_name)
+						tokenizer.next
+						if tokenizer.is_lexical_error then
+							report_parse_error (tokenizer.last_lexical_error, 3)
+						end
+					else
+						report_parse_error (STRING_.appended_string ("Named type can not be found in the static context. Found ", tokenizer.last_token_value), 51)
+					end
+				else
+					report_parse_error (STRING_.appended_string ("Token is not a QName. Found ", tokenizer.last_token_value), 3)
+				end
 			elseif tokenizer.last_token = Node_kind_token then
-				-- TODO
+
+				-- Covers element(N,T), comment(), text(), etc
+
+				parse_node_kind
+				if not is_parse_error then
+					a_primary_type := internal_last_parsed_node_kind.item (1)
+				end
 			else
 				a_message := STRING_.appended_string ("Expected type name in SequenceType, found ", display_current_token)
 				report_parse_error (a_message, 3)
+			end
+			if not is_parse_error then
+				inspect
+					tokenizer.last_token
+				when Star_token, Multiply_token then
+					an_occurrence_flag := Required_cardinality_zero_or_more
+					tokenizer.next
+					if tokenizer.is_lexical_error then
+						report_parse_error (tokenizer.last_lexical_error, 3)
+					end
+				when Plus_token then
+					an_occurrence_flag := Required_cardinality_one_or_more
+					tokenizer.next
+					if tokenizer.is_lexical_error then
+						report_parse_error (tokenizer.last_lexical_error, 3)
+					end
+				when Question_mark_token then
+					an_occurrence_flag := Required_cardinality_optional
+					tokenizer.next
+					if tokenizer.is_lexical_error then
+						report_parse_error (tokenizer.last_lexical_error, 3)
+					end
+				else
+					an_occurrence_flag := Required_cardinality_exactly_one
+				end
+					create internal_last_parsed_sequence.make (a_primary_type, an_occurrence_flag)
 			end
 		ensure
 			expression_not_void_unless_error: not is_parse_error implies internal_last_parsed_sequence /= Void

@@ -712,6 +712,9 @@ feature -- Element change
 			document_not_void: a_doc /= Void
 			document_not_allocated: not is_document_allocated (a_doc)
 		do
+			if document_number_map.is_full then
+				document_number_map.resize (2 * document_number_map.count)
+			end
 			document_number_map.put (document_number_map.count + 1, a_doc)
 		ensure
 			document_allocated: is_document_allocated (a_doc)

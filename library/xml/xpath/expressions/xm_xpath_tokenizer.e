@@ -349,8 +349,9 @@ feature --Element change
 										next_token_value := qname
 									end
 								end
+							end
 
-								if not finished then
+							if not finished then
 									composite := clone (current_token_value)
 									composite := STRING_.appended_string (composite, " ")
 									composite := STRING_.appended_string (composite, next_token_value)
@@ -361,25 +362,23 @@ feature --Element change
 										look_ahead
 									end
 								end
+							else
+								do_nothing
 							end
-							
-						else
-							do_nothing
 						end
 					end
+					debug ("XPath tokens")
+						std.error.put_string ("Current token on exit from next is set to ")
+						if is_valid_token (current_token) then
+							std.error.put_string (token_name (current_token))
+						else
+							std.error.put_string (current_token.out)
+						end
+						std.error.put_string (", value is ")
+						std.error.put_string (current_token_value)
+						std.error.put_new_line
+					end
 				end
-			end
-			debug ("XPath tokens")
-				std.error.put_string ("Current token on exit from next is set to ")
-				if is_valid_token (current_token) then
-					std.error.put_string (token_name (current_token))
-				else
-					std.error.put_string (current_token.out)
-				end
-				std.error.put_string (", value is ")
-				std.error.put_string (current_token_value)
-				std.error.put_new_line
-			end
 		ensure
 			tokens_set_if_no_error: not is_lexical_error implies last_token_value /= Void
 		end
@@ -422,7 +421,7 @@ feature {NONE} -- Status setting
 						c
 						
 					when ':' then
-						if input_index < input.count then
+						if input_index <= input.count then
 							if input.item (input_index) = ':' then
 								input_index := input_index + 1
 								next_token := Colon_colon_token
@@ -468,7 +467,7 @@ feature {NONE} -- Status setting
 						finished := True
 						
 					when '(' then
-						if input_index < input.count and then input.item (input_index) = ':' then
+						if input_index <= input.count and then input.item (input_index) = ':' then
 
 							-- XPath comment syntax is (: .... :)
 							-- Comments may be nested
@@ -520,7 +519,7 @@ feature {NONE} -- Status setting
 						finished := True
 						
 					when '!' then
-						if input_index < input.count and then input.item (input_index) = '=' then
+						if input_index <= input.count and then input.item (input_index) = '=' then
 							input_index := input_index + 1
 							next_token := Not_equal_token
 						else
@@ -530,14 +529,14 @@ feature {NONE} -- Status setting
 						finished := True
 						
 					when '*' then
-						if input_index < input.count and then input.item (input_index) = ':' then
+						if input_index <= input.count and then input.item (input_index) = ':' then
 							input_index := input_index + 1
 							next_token := Suffix_token
 
 							-- we leave the parser to get the following name as a separate
 							-- token, but first check there's no intervening white space
 
-							if input_index < input.count then
+							if input_index <= input.count then
 								ahead := input.item (input_index)
 								if whitespace.has(ahead) then
 									is_lexical_error := True
@@ -562,10 +561,10 @@ feature {NONE} -- Status setting
 						finished := True
 						
 					when '<' then
-						if input_index < input.count and then input.item (input_index) = '=' then
+						if input_index <= input.count and then input.item (input_index) = '=' then
 							input_index := input_index + 1
 							next_token := Less_equal_token
-						elseif input_index < input.count and then input.item (input_index) = '<' then
+						elseif input_index <= input.count and then input.item (input_index) = '<' then
 							input_index := input_index + 1
 							next_token := Precedes_token
 						else
@@ -574,10 +573,10 @@ feature {NONE} -- Status setting
 						finished := True
 
 					when '>' then
-						if input_index < input.count and then input.item (input_index) = '=' then
+						if input_index <= input.count and then input.item (input_index) = '=' then
 							input_index := input_index + 1
 							next_token := Greater_equal_token
-						elseif input_index < input.count and then input.item (input_index) = '>' then
+						elseif input_index <= input.count and then input.item (input_index) = '>' then
 							input_index := input_index + 1
 							next_token := Follows_token
 						else
@@ -586,7 +585,7 @@ feature {NONE} -- Status setting
 						finished := True
 
 					when '/' then
-						if input_index < input.count and then input.item (input_index) = '/' then
+						if input_index <= input.count and then input.item (input_index) = '/' then
 							input_index := input_index + 1
 							next_token := Slash_slash_token
 							finished := True
@@ -603,7 +602,7 @@ feature {NONE} -- Status setting
 						-- These errors will be caught by the numeric creation procedure.
 
 						if c = '.' then
-							if input_index < input.count and then input.item (input_index) = '.' then
+							if input_index <= input.count and then input.item (input_index) = '.' then
 								input_index := input_index + 1
 								next_token := Dot_dot_token
 								finished := True
@@ -681,8 +680,10 @@ feature {NONE} -- Status setting
 							end
 							next_token_value := input.substring (next_token_start_index, input_index - 1)
 						end
-						next_token := Number_token
-						finished := True
+						if not finished then
+							next_token := Number_token
+							finished := True
+						end
 						
 					when '"', '%'' then
 						next_token_value := ""
@@ -704,7 +705,7 @@ feature {NONE} -- Status setting
 
 								-- look for doubled delimiters
 
-								if input_index < input.count and then input.item (input_index) = c then
+								if input_index <= input.count and then input.item (input_index) = c then
 									next_token_value := STRING_.appended_string (next_token_value, c.out)
 									next_token_start_index := input_index
 									input_index := input_index + 1

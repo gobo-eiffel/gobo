@@ -45,7 +45,7 @@ feature {NONE} -- Initialization
 	
 feature -- Access
 
-	value: DOUBLE -- A poor compromise???
+	value: DOUBLE -- TODO
 
 	as_integer: INTEGER is -- TODO should be INTEGER_64, or EDA_INTEGER or something
 		do
@@ -134,6 +134,30 @@ feature -- Status report
 			end
 		end
 
+	is_whole_number: BOOLEAN is
+			-- Is value integral?
+		do
+			todo ("is-whole-number", False)
+		end
+
+	is_nan: BOOLEAN is
+			-- Is value Not-a-number?
+		do
+			todo ("is-nan", False)
+		end
+
+	is_zero: BOOLEAN is
+			-- Is value zero?
+		do
+			todo ("is-zero", False)
+		end
+
+	is_infinite: BOOLEAN is
+			-- Is value infinite?
+		do
+			todo ("is-infinite", False)
+		end
+	
 feature -- Evaluation
 
 		effective_boolean_value (a_context: XM_XPATH_CONTEXT): XM_XPATH_BOOLEAN_VALUE is
@@ -174,6 +198,14 @@ feature -- Conversion
 			when String_type then
 				create {XM_XPATH_STRING_VALUE} Result.make (string_value)
 			end
+		end
+
+feature -- Basic operations
+
+	arithmetic (an_operator: INTEGER; other: XM_XPATH_NUMERIC_VALUE): XM_XPATH_NUMERIC_VALUE is
+			-- Arithmetic calculation
+		do
+			todo ("aritmetic", False)
 		end
 
 end

@@ -53,6 +53,12 @@ feature {NONE} -- Initialization
 	
 feature -- Access
 
+	first_item: INTEGER
+			-- First item in slice
+
+	last_item: INTEGER
+			-- Last item in slice
+
 	item: G is
 			-- Value or node at the current position
 		do
@@ -105,16 +111,21 @@ feature -- Duplication
 			create Result.make (items, first_item, last_item)
 		end
 
+	make_slice_iterator (a_min, a_max: INTEGER): XM_XPATH_ARRAY_ITERATOR [G] is
+			-- Create a new ArrayIterator over the same items, with a different start point and end point
+		require
+			valid_minimum: a_min >= first_item and then a_min <= last_item
+			valid_maximum: a_max >= a_min and then a_min <= last_item
+		do
+			create Result.make (items, a_min, a_max)
+		ensure
+			result_not_void: Result /= Void
+		end
+
 feature {NONE} -- Implementation
 
 	items: ARRAY [G]
 			-- Underlying array
-
-	first_item: INTEGER
-			-- First item in slice
-
-	last_item: INTEGER
-			-- Last item in slice
 
 	todo (a_routine_name: STRING; is_partially_done: BOOLEAN) is
 			-- Write a TODO message.

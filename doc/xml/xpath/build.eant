@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
 
-<project name="xml" default="help">
+<project name="xpath" default="help">
 
 	<description>
 		description: "Eiffel Ant file for Gobo Eiffel XPath Library Documentation"
@@ -23,7 +23,8 @@
 			Install the Gobo Eiffel XPath Library Documentation.
 		</description>
 
-		<xslt input="invoking.xml" output="invoking.html" stylesheet="${GOBO}/doc/misc/gobo2html.xsl"/>
+		<xslt processor="xsltproc" input="invoking.xml" output="invoking.html" stylesheet="${GOBO}/doc/misc/gobo2html.xsl"/>
+		<xslt processor="xsltproc"  input="implemented_functions.xml" output="implemented_functions.html" stylesheet="${GOBO}/doc/misc/gobo2html.xsl"/>
 	</target>
 
 	<target name="clean">

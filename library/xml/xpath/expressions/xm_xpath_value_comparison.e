@@ -360,7 +360,8 @@ feature -- Optimization
 					if a_value /= Void and then another_value /= Void then
 						
 						-- Evaluate the expression now if both arguments are constant
-						
+
+						set_analyzed
 						evaluate_item (Void)
 						a_boolean_value ?= last_evaluated_item
 							check
@@ -368,11 +369,12 @@ feature -- Optimization
 								-- That's what evaluated_item returns for this class.
 							end
 						replacement_expression := a_boolean_value
+						replacement_expression.set_analyzed
 						was_expression_replaced := True
 					end
 				end
 			end
-			set_analyzed
+			if not analyzed then set_analyzed end
 		end
 
 feature -- Evaluation
@@ -385,13 +387,18 @@ feature -- Evaluation
 			a_comparison_checker: XM_XPATH_COMPARISON_CHECKER
 		do
 			first_operand.evaluate_item (a_context)
-			an_item := last_evaluated_item
-			if an_item.is_item_in_error then
+			an_item := first_operand.last_evaluated_item
+			if an_item = Void then
+
+				-- empty sequence
+
+				create Result.make (False)
+			elseif an_item.is_item_in_error then
 				create Result.make (False)
 				Result.set_evaluation_error (an_item.evaluation_error_value)
 			else
 				second_operand.evaluate_item (a_context)
-				another_item := last_evaluated_item
+				another_item := second_operand.last_evaluated_item
 				if another_item.is_item_in_error then
 				create Result.make (False)
 				Result.set_evaluation_error (another_item.evaluation_error_value)

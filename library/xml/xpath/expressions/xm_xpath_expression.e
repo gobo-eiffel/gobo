@@ -129,7 +129,7 @@ feature -- Status setting
 			in_error: is_error
 		end
 	
-	set_last_error_from_string (a_message: STRING; a_code: INTEGER; an_error_type: INTEGER) is
+	set_last_error_from_string (a_message: STRING; a_code, an_error_type: INTEGER) is
 			-- Set result of `last_error'.
 		require
 			valid_error_type: an_error_type = Static_error or an_error_type = Type_error or an_error_type = Dynamic_error
@@ -245,8 +245,8 @@ feature -- Evaluation
 			not_in_error: not is_error
 		deferred
 		ensure
-			iterator_not_void_or_dynamic_error: Result = Void implies is_error and then (last_error.type = Dynamic_error or else last_error.type = Type_error)
-			iterator_before: Result /= Void implies Result.before
+			iterator_not_void_but_may_be_error: Result /= Void -- and then (Result.is_error or else not Result.is_error)
+			iterator_before: Result /= Void and then not Result.is_error implies Result.before
 		end
 
 	eagerly_evaluate (a_context: XM_XPATH_CONTEXT) is

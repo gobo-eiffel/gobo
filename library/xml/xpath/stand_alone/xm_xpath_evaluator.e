@@ -162,19 +162,19 @@ feature -- Evaluation
 						end
 						a_sequence_iterator := an_expression.iterator (a_context)
 							
-						if a_sequence_iterator = Void then
-								check
-									expression_in_error: an_expression.is_error
-									-- Because of post-condition to {XM_XPATH_EXPRESSION}.iterator
-								end
+						if a_sequence_iterator.is_error then
 							is_evaluation_in_error := True
-							internal_error_value := an_expression.last_error
+							internal_error_value := a_sequence_iterator.last_error
 						else
 							from
 								a_sequence_iterator.start
+								if a_sequence_iterator.is_error then -- can happen due to mapping iterators
+									is_evaluation_in_error := True
+									internal_error_value := a_sequence_iterator.last_error
+								end
 								create evaluated_items.make
 							until
-								is_evaluation_in_error or else a_sequence_iterator.after
+								is_evaluation_in_error or else a_sequence_iterator.is_error or else a_sequence_iterator.after
 							loop
 									check
 										item_not_void: a_sequence_iterator.item /= Void
@@ -189,6 +189,10 @@ feature -- Evaluation
 								end
 
 								a_sequence_iterator.forth
+								if a_sequence_iterator.is_error then -- can happen due to mapping iterators
+									is_evaluation_in_error := True
+									internal_error_value := a_sequence_iterator.last_error
+								end
 							end
 						end
 					else

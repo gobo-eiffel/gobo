@@ -21,7 +21,7 @@ feature -- Evaluation
 			-- Map `an_item' to a sequence
 		require
 			item_not_void: an_item /= Void
-			context_item: a_context /= Void implies an_item.is_equal (a_context.context_item)
+--			context_item: a_context /= Void implies an_item.is_equal (a_context.context_item)
 			information: True -- /= Void implies must be immutable and read-only for the duration of the iteration
 		deferred
 		end

@@ -149,9 +149,10 @@ feature {NONE} -- Implementation
 					check
 						before: an_iterator.before
 					end
-				if not an_iterator.after then
+				if not an_iterator.is_error and then not an_iterator.after then
 					an_iterator.forth
-					Result ?= an_iterator.item
+					
+					if not an_iterator.is_error then Result ?= an_iterator.item end
 				end
 			end
 		end

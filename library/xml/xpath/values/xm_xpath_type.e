@@ -74,7 +74,7 @@ feature -- Initialization
 				define_builtin_type (Any_uri_type, "xs:anyURI")
 				define_builtin_type (Qname_type, "xs:QName")
 				if not conformance.basic_xslt_processor then
-					define_builtin_type (Notation_type, "xs:NOTAETION")
+					define_builtin_type (Notation_type, "xs:NOTATION")
 				end
 				define_builtin_type (Integer_type, "xs:integer")
 				if not conformance.basic_xslt_processor then

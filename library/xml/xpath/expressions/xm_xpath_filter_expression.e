@@ -403,11 +403,10 @@ feature -- Evaluation
 		local
 			an_item: XM_XPATH_ITEM
 			a_value: XM_XPATH_VALUE
-			a_boolean_value: XM_XPATH_BOOLEAN_VALUE
 			a_number: XM_XPATH_NUMERIC_VALUE
 			an_integer_value: XM_XPATH_INTEGER_VALUE
 			a_sequence_value: XM_XPATH_SEQUENCE_VALUE
-			a_position: INTEGER -- TODO
+			a_position: INTEGER
 			finished: BOOLEAN
 			a_position_range: XM_XPATH_POSITION_RANGE
 			a_base_iterator: XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_ITEM]
@@ -440,37 +439,7 @@ feature -- Evaluation
 					if a_value /= Void then
 						finished := True
 						a_number ?= a_value
-						if a_number /= Void then
-							if a_number.is_whole_number then
-								a_position := a_number.as_integer
-								if a_position >= 1 then
-									Result := make_item_position_iterator (a_base_iterator, a_position, a_position)
-								else
-
-									-- Index is less than one, no items will be selected
-
-									create {XM_XPATH_EMPTY_ITERATOR [XM_XPATH_ITEM]} Result.make
-								end
-							else
-
-								-- A non-integer value will never be equal to position()
-								
-								create {XM_XPATH_EMPTY_ITERATOR [XM_XPATH_ITEM]} Result.make
-							end
-						else
-
-							-- Filter is a constant that we can treat as boolean
-
-							a_boolean_value := filter.effective_boolean_value (a_context)
-							if a_boolean_value.is_item_in_error then
-								Result := Void
-								set_last_error (a_boolean_value.last_error)
-							elseif a_boolean_value.value then
-								Result := a_base_iterator
-							else
-								create {XM_XPATH_EMPTY_ITERATOR [XM_XPATH_ITEM]} Result.make
-							end
-						end
+						Result := constant_value_iterator (a_number, a_base_iterator, a_context)
 					end
 					
 					-- Construct the FilterIterator to do the actual filtering
@@ -492,7 +461,7 @@ feature -- Evaluation
 				end
 			end
 		end
-
+	
 feature -- Element change
 
 	set_base_expression (a_base_expression: XM_XPATH_EXPRESSION) is
@@ -604,6 +573,48 @@ feature {NONE} -- Implementation
 			set_special_properties (base_expression.special_properties)
 		end
 
+
+	constant_value_iterator (a_number: XM_XPATH_NUMERIC_VALUE; a_base_iterator: XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_ITEM];
+									 a_context: XM_XPATH_CONTEXT): XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_ITEM] is
+			-- Iterator over a constant numeric value
+		require
+			base_iterator_not_void: a_base_iterator /= void
+		local
+			a_position: INTEGER
+			a_boolean_value: XM_XPATH_BOOLEAN_VALUE
+		do
+			if a_number /= Void then
+				if a_number.is_whole_number then
+					a_position := a_number.as_integer
+					if a_position >= 1 then
+						Result := make_item_position_iterator (a_base_iterator, a_position, a_position)
+					else
+					
+						-- Index is less than one, no items will be selected
+					
+						create {XM_XPATH_EMPTY_ITERATOR [XM_XPATH_ITEM]} Result.make
+					end
+				else
+					
+					-- A non-integer value will never be equal to position()
+					
+					create {XM_XPATH_EMPTY_ITERATOR [XM_XPATH_ITEM]} Result.make
+				end
+			else
+				
+				-- Filter is a constant that we can treat as boolean
+				
+				a_boolean_value := filter.effective_boolean_value (a_context)
+				if a_boolean_value.is_item_in_error then
+					create {XM_XPATH_INVALID_ITERATOR} Result.make (a_boolean_value.evaluation_error_value)
+				elseif a_boolean_value.value then
+					Result := a_base_iterator
+				else
+					create {XM_XPATH_EMPTY_ITERATOR [XM_XPATH_ITEM]} Result.make
+				end
+			end
+		end
+	
 invariant
 
 	base_expression_not_void: base_expression /= Void
