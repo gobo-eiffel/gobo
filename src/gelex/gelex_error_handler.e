@@ -36,7 +36,7 @@ feature -- Access
 		%%T[-a size] [-o filename] [--] filename"
 			-- Command line Usage
 
-	version: STRING is "gelex version 1.0b"
+	version: STRING is "gelex version 1.1"
 			-- Version number
 
 end -- class GELEX_ERROR_HANDLER
