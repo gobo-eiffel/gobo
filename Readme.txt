@@ -101,4 +101,4 @@ for your specific needs. Thank you in advance.
 Copyright (c) 1998, Eric Bezault
 mailto:ericb@gobo.demon.co.uk
 http://www.gobo.demon.co.uk
-23 May 1998
+15 August 1998
