@@ -159,7 +159,7 @@ feature -- Processing
 				print("Loading Project's configuration from " + build_filename.out + "%N")
 			end
 				-- Create xml parser:
-			!! xml_parser.make_from_imp (Parser_factory.new_eiffel_event_parser_imp)
+			!! xml_parser.make_from_implementation (Parser_factory.new_eiffel_event_parser_imp)
 			xml_parser.parse_from_file_name (build_filename)
 				-- Setup project's root element:
 			root_element := xml_parser.root_element

@@ -216,119 +216,6 @@ cluster
 		option
 	;
 
-
-
-	xml: "${GOBO}/library/xml"
-		default
-			assertion (no)
-		option
-	;
-	xml_factory: "${GOBO}/library/xml/factory"
-		default
-			assertion (no)
-		option
-	;
-
-	xml_position: "${GOBO}/library/xml/position"
-		default
-			assertion (no)
-		option
-	;
-
-	xml_source: "${GOBO}/library/xml/source"
-		default
-			assertion (no)
-		option
-	;
-
-	xml_general: "${GOBO}/library/xml/general"
-		default
-			assertion (no)
-		option
-	;
-
-	xml_event: "${GOBO}/library/xml/event"
-		default
-			assertion (no)
-		option
-	;
-
-	xml_tree: "${GOBO}/library/xml/tree"
-		default
-			assertion (no)
-		option
-	;
-
-	xml_formatter: "${GOBO}/library/xml/formatter"
-		default
-			assertion (no)
-		option
-	;
-
-	xml_impl: "${GOBO}/library/xml/impl"
-		default
-			assertion (no)
-		option
-	;
-	xml_impl_interface: "${GOBO}/library/xml/impl/interface"
-		default
-			assertion (no)
-		option
-	;
-	xml_impl_interface_general: "${GOBO}/library/xml/impl/interface/general"
-		default
-			assertion (no)
-		option
-	;
-
-	xml_impl_interface_event: "${GOBO}/library/xml/impl/interface/event"
-		default
-			assertion (no)
-		option
-	;
-
-	xml_impl_interface_tree: "${GOBO}/library/xml/impl/interface/tree"
-		default
-			assertion (no)
-		option
-	;
-
-
-	xml_impl_eiffel: "${GOBO}/library/xml/impl/eiffel"
-		default
-			assertion (no)
-		option
-	;
-	xml_impl_eiffel_event: "${GOBO}/library/xml/impl/eiffel/event"
-		default
-			assertion (no)
-		option
-	;
-
-
-	xml_impl_tree_on_event: "${GOBO}/library/xml/impl/tree_on_event"
-		default
-			assertion (no)
-		option
-	;
-	xml_impl_tree_on_event_tree: "${GOBO}/library/xml/impl/tree_on_event/tree"
-		default
-			assertion (no)
-		option
-	;
-
-
-	xml_impl_no_expat: "${GOBO}/library/xml/impl/no_expat"
-		default
-			assertion (no)
-		option
-	;
-	xml_impl_no_expat_event: "${GOBO}/library/xml/impl/no_expat/event"
-		default
-			assertion (no)
-		option
-	;
-
 	gobo: "${GOBO}/library"
 		default
 			assertion (no)
@@ -522,6 +409,17 @@ cluster
 		option
 	;
 
+	gobo_pattern: "${GOBO}/library/pattern"
+		default
+			assertion (no)
+		option
+	;
+
+	gobo_pattern_bridge: "${GOBO}/library/pattern/bridge"
+		default
+			assertion (no)
+		option
+	;
 
 	gobo_utility: "${GOBO}/library/utility"
 		default

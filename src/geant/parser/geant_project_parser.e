@@ -24,7 +24,7 @@ inherit
 
 creation
 
-	make_from_imp
+	make_from_implementation
 
 feature -- Access
 
