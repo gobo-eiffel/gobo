@@ -162,7 +162,12 @@ feature -- Execution
 					until
 						fileset.after or else exit_code /= 0
 					loop
-						a_from_file := unix_file_system.pathname (fileset.directory_name, fileset.item_filename)
+						if fileset.is_in_gobo_32_format then
+							a_from_file := unix_file_system.pathname (
+								fileset.directory_name, fileset.item_filename)
+						else
+							a_from_file := fileset.item_filename
+						end
 						a_to_file := unix_file_system.pathname (to_directory, fileset.item_mapped_filename)
 							-- Create target directory if necessary:
 						create_directory_for_pathname (a_to_file)
