@@ -2,7 +2,7 @@ indexing
 
 	description:
 
-		"gepp command"
+		"Gepp commands"
 
 	library:    "Gobo Eiffel Ant"
 	author:     "Sven Ehrke <sven.ehrke@sven-ehrke.de>"
@@ -13,90 +13,103 @@ indexing
 
 
 class GEANT_GEPP_COMMAND
-	inherit
-		GEANT_COMMAND
-		end
-		KL_IMPORTED_STRING_ROUTINES
-		end
 
-	
+inherit
+
+	GEANT_COMMAND
+
 creation
+
 	make
 
+feature {NONE} -- Initialization
 
-feature
 	make is
+			-- Create a new 'gepp' command.
 		do
-			inputfile := ""
-			outputfile := ""
-			!!defines.make(10)
+			input_filename := ""
+			output_filename := ""
+			!! defines.make (10)
 		end
 
-	execute is
-		local
-			cmd	: STRING
-			i	: INTEGER
+feature -- Status report
+
+	is_executable : BOOLEAN is
+			-- Can commandbe executed?
 		do
-			cmd := "gepp"
+			Result := (input_filename /= Void and then input_filename.count > 0) and
+				(output_filename /= Void and then output_filename.count > 0)
+		ensure then
+			input_filename_not_void : Result implies input_filename /= Void
+			input_filename_not_empty: Result implies input_filename.count > 0
+			output_filename_not_void : Result implies output_filename /= Void
+			output_filename_not_empty: Result implies output_filename.count > 0
+		end
 
-			-- add defines
-			from i := 1 until i > defines.count loop
-				cmd.append_string(" -D")
-				cmd.append_string(defines.item(i))
+feature -- Access
 
+	input_filename: STRING
+			-- Input filename
+
+	output_filename: STRING
+			-- Output filename
+
+	defines: DS_ARRAYED_LIST [STRING]
+			-- Defined values from the commandline (-D options)
+
+feature -- Setting
+
+	set_input_filename (a_filename: like input_filename) is
+			-- Set `input_filename' to `a_filename'.
+		require
+			a_filename_not_void : a_filename /= Void
+			a_filename_not_empty: a_filename.count > 0
+		do
+			input_filename := a_filename
+		ensure
+			input_filename_set: input_filename = a_filename
+		end
+
+	set_output_filename (a_filename: like output_filename) is
+			-- Set `output_filename' to `a_filename'.
+		require
+			a_filename_not_void : a_filename /= Void
+			a_filename_not_empty: a_filename.count > 0
+		do
+			output_filename := a_filename
+		ensure
+			output_filename_set: output_filename = a_filename
+		end
+
+feature -- Execution
+
+	execute is
+			-- Execute command.
+		local
+			cmd: STRING
+			i, nb: INTEGER
+		do
+			cmd := clone ("gepp")
+				-- Add defines:
+			nb := defines.count
+			from i := 1 until i > nb loop
+				cmd.append_string (" -D")
+				cmd.append_string (defines.item (i))
 				i := i + 1
 			end
 
-			cmd.append_string(" ")
-			cmd.append_string(inputfile)
-			cmd.append_string(" ")
-			cmd.append_string(outputfile)
+			cmd.append_string (" ")
+			cmd.append_string (input_filename)
+			cmd.append_string (" ")
+			cmd.append_string (output_filename)
 
-			log("  [gepp] " + cmd + "%N")
-			execute_command(cmd)
+			log ("  [gepp] " + cmd + "%N")
+			execute_shell (cmd)
 		end
 
-	is_executable : BOOLEAN is
-		do
-			Result := inputfile /= Void and then not inputfile.is_empty
-					and then outputfile /= Void and then not outputfile.is_empty
-		ensure then
-			inputfile_not_void : Result implies inputfile /= Void
-			inputfile_not_empty: Result implies not inputfile.is_empty
+invariant
 
-			outputfile_not_void : Result implies outputfile /= Void
-			outputfile_not_empty: Result implies not outputfile.is_empty
-		end
+	defines_not_void: defines /= Void
+	no_void_define: not defines.has (Void)
 
-	feature -- gepp commandline options setters
-
-	set_inputfile(a_inputfile : STRING) is
-		-- required
-		require
-			inputfile_not_void : a_inputfile /= Void
-			inputfile_not_empty: not a_inputfile.is_empty
-		do
-			inputfile := a_inputfile
-		end
-
-	set_outputfile(a_outputfile : STRING) is
-		-- required
-		require
-			outputfile_not_void : a_outputfile /= Void
-			outputfile_not_empty: not a_outputfile.is_empty
-		do
-			outputfile := a_outputfile
-		end
-
-	feature -- gepp commandline options
-
-	inputfile : STRING
-		-- required
-
-	outputfile : STRING
-		-- required
-
-	defines		: DS_ARRAYED_LIST [STRING]
-		-- contains all the defines from the commandline (-D options)
-
-end
+end -- class GEANT_GEPP_COMMAND

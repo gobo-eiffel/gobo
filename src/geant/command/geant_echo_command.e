@@ -2,7 +2,7 @@ indexing
 
 	description:
 
-		"echo command"
+		"Echo commands"
 
 	library:    "Gobo Eiffel Ant"
 	author:     "Sven Ehrke <sven.ehrke@sven-ehrke.de>"
@@ -17,41 +17,51 @@ class GEANT_ECHO_COMMAND
 inherit
 
 	GEANT_COMMAND
-	
+
 creation
 
 	make
-	
-feature	-- Initialization
+
+feature {NONE} -- Initialization
 
 	make is
+			-- Create a new 'echo' command.
 		do
 		end
 
-	execute is
-		do
-			log("  [echo] " + interpreted_string(message) + "%N")
-		end
+feature -- Status report
 
 	is_executable : BOOLEAN is
+			-- Can command be executed?
 		do
 			Result := message /= Void
 		ensure then
-			message_not_void : Result implies message /= Void
+			message_not_void: Result implies message /= Void
 		end
 
-	set_message(a_message : STRING) is
+feature -- Access
+
+	message: STRING
+			-- Message to be echoed
+
+feature -- Setting
+
+	set_message (a_message: like message) is
+			-- Set `message' to `a_message'.
 		require
-			message_not_void : a_message /= Void
+			a_message_not_void: a_message /= Void
 		do
 			message := a_message
 		ensure
-			message_set : message = a_message
+			message_set: message = a_message
 		end
 
+feature -- Execution
 
-feature {NONE}
-	message			: STRING
-		-- Message to be echoed
+	execute is
+			-- Execute command.
+		do
+			log("  [echo] " + interpreted_string (message) + "%N")
+		end
 
-end
+end -- class GEANT_ECHO_COMMAND

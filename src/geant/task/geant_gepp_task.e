@@ -2,7 +2,7 @@ indexing
 
 	description:
 
-		"gepp task"
+		"Gepp tasks"
 
 	library:    "Gobo Eiffel Ant"
 	author:     "Sven Ehrke <sven.ehrke@sven-ehrke.de>"
@@ -13,58 +13,78 @@ indexing
 
 
 class GEANT_GEPP_TASK
-	inherit
-		GEANT_GEPP_COMMAND
-		GEANT_TASK
-		end
 
-	
+inherit
+
+	GEANT_TASK
+	GEANT_GEPP_COMMAND
+
 creation
-	make, load_from_element
 
-	
-	
-feature
-	load_from_element(a_el : GEANT_ELEMENT) is
+	make, make_from_element
+
+feature {NONE} -- Initialization
+
+	make_from_element (an_element: GEANT_ELEMENT) is
+			-- Create a new task with information held in `an_element'.
 		local
-			s			: UC_STRING
-			defines_el	: DS_ARRAYED_LIST [GEANT_ELEMENT]
-			define_el	: GEANT_ELEMENT
-			i			: INTEGER
+			a_value: STRING
+			define_elements: DS_ARRAYED_LIST [GEANT_ELEMENT]
+			define_element: GEANT_ELEMENT
+			i, nb: INTEGER
 		do
 			make
-			s := a_el.get_attributevalue_by_name(Attribute_name_inputfile)
-			set_inputfile(s.out)
-
-			s := a_el.get_attributevalue_by_name(Attribute_name_outputfile)
-			set_outputfile(s.out)
-
-			defines_el := a_el.get_children_by_name(Element_name_define)
-			from i := 1 until i > defines_el.count loop
-				define_el := defines_el.item(i)
-				s := define_el.get_attributevalue_by_name(Attribute_name_name)
-				defines.force_last(s.out)
-
+			if has_uc_attribute (an_element, Input_filename_attribute_name) then
+				a_value := uc_attribute_value (an_element, Input_filename_attribute_name).out
+				if a_value.count > 0 then
+					set_input_filename (a_value)
+				end
+			end
+			if has_uc_attribute (an_element, Output_filename_attribute_name) then
+				a_value := uc_attribute_value (an_element, Output_filename_attribute_name).out
+				if a_value.count > 0 then
+					set_output_filename (a_value)
+				end
+			end
+			define_elements := an_element.children_by_name (Define_element_name)
+			nb := define_elements.count
+			from i := 1 until i > nb loop
+				define_element := define_elements.item (i)
+				if has_uc_attribute (define_element, Name_attribute_name) then
+					a_value := uc_attribute_value (define_element, Name_attribute_name).out
+					defines.force_last(a_value)
+				end
 				i := i + 1
 			end
 		end
 
-	Attribute_name_inputfile : UC_STRING is
-			-- Name of xml attribute for inputfile
+feature {NONE} -- Constants
+
+	Input_filename_attribute_name: UC_STRING is
+			-- Name of xml attribute for input_filename
 		once
-			!!Result.make_from_string("inputfile")
+			!! Result.make_from_string ("inputfile")
+		ensure
+			attribute_name_not_void: Result /= Void
+			atribute_name_not_empty: not Result.empty
 		end
 
-	Attribute_name_outputfile : UC_STRING is
-			-- Name of xml attribute for outputfile
+	Output_filename_attribute_name: UC_STRING is
+			-- Name of xml attribute for output_filename
 		once
-			!!Result.make_from_string("outputfile")
+			!! Result.make_from_string ("outputfile")
+		ensure
+			attribute_name_not_void: Result /= Void
+			atribute_name_not_empty: not Result.empty
 		end
 
-	Element_name_define : UC_STRING is
+	Define_element_name: UC_STRING is
 			-- Name of xml subelement for defines
 		once
-			!!Result.make_from_string("define")
+			!! Result.make_from_string ("define")
+		ensure
+			attribute_name_not_void: Result /= Void
+			atribute_name_not_empty: not Result.empty
 		end
 
-end
+end -- class GEANT_GEPP_TASK

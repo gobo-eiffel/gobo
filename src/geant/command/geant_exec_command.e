@@ -2,7 +2,7 @@ indexing
 
 	description:
 
-		"exec command"
+		"Exec commands"
 
 	library:    "Gobo Eiffel Ant"
 	author:     "Sven Ehrke <sven.ehrke@sven-ehrke.de>"
@@ -13,47 +13,58 @@ indexing
 
 
 class GEANT_EXEC_COMMAND
-	inherit
-		GEANT_COMMAND
 
-	
+inherit
+
+	GEANT_COMMAND
+
 creation
+
 	make
 
-	
-	
-feature
+feature {NONE} -- Initialization
+
 	make is
+			-- Create a new 'exec' command.
 		do
 		end
 
-	execute is
-		local
-			sc : UT_SHELL_COMMAND
-		do
-			log("  [exec] " + cmd + "%N")
-			!!sc.make(cmd)
-			sc.execute
-		end
+feature -- Status report
 
 	is_executable : BOOLEAN is
+			-- Can command be executed?
 		do
-			Result := cmd /= Void and then not cmd.is_empty
+			Result := command_line /= Void and then command_line.count > 0
 		ensure then
-			cmd_not_void : Result implies cmd /= Void
-			cmd_not_empty : Result implies not cmd.is_empty
+			command_line_not_void: Result implies command_line /= Void
+			command_line_not_empty: Result implies command_line.count > 0
 		end
 
-	set_cmd(a_cmd : STRING) is
+feature -- Access
+
+	command_line: STRING
+			-- Command-line
+
+feature -- Setting
+
+	set_command_line (a_command_line: like command_line) is
+			-- Set `command_line' to `a_command_line'.
 		require
-			cmd_not_void : a_cmd /= Void
-			cmd_not_empty : not a_cmd.is_empty
+			a_command_line_not_void: a_command_line /= Void
+			a_command_line_not_empty: a_command_line.count > 0
 		do
-			cmd := a_cmd
+			command_line := a_command_line
+		ensure
+			command_list_set: command_line = a_command_line
 		end
 
+feature -- Execution
 
---feature {NONE}
-cmd			: STRING
+	execute is
+			-- Execute command.
+		do
+			log ("  [exec] " + command_line + "%N")
+			execute_shell (command_line)
+		end
 
-end
+end -- class GEANT_EXEC_COMMAND

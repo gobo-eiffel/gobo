@@ -2,7 +2,7 @@ indexing
 
 	description:
 
-		"exec task"
+		"Exec tasks"
 
 	library:    "Gobo Eiffel Ant"
 	author:     "Sven Ehrke <sven.ehrke@sven-ehrke.de>"
@@ -13,31 +13,40 @@ indexing
 
 
 class GEANT_EXEC_TASK
-	inherit
-		GEANT_EXEC_COMMAND
-		GEANT_TASK
-		end
 
-	
+inherit
+
+	GEANT_TASK
+	GEANT_EXEC_COMMAND
+
 creation
-	make, load_from_element
 
-	
-	
-feature
-	load_from_element(a_el : GEANT_ELEMENT) is
+	make, make_from_element
+
+feature {NONE} -- Initialization
+
+	make_from_element (an_element: GEANT_ELEMENT) is
+			-- Create a new task with information held in `an_element'.
 		local
-			s	: UC_STRING
+			a_value: STRING
 		do
-			s := a_el.get_attributevalue_by_name(Attribute_name_executable)
-			set_cmd(s.out)
+			if an_element.has_attribute (Executable_attribute_name) then
+				a_value := an_element.attribute_value_by_name (Executable_attribute_name).out
+				if a_value.count > 0 then
+					set_command_line (a_value.out)
+				end
+			end
 		end
 
+feature {NONE} -- Constants
 
-	Attribute_name_executable : UC_STRING is
+	Executable_attribute_name: UC_STRING is
 			-- Name of xml attribute executable.
 		once
-			!!Result.make_from_string("executable")
+			!! Result.make_from_string ("executable")
+		ensure
+			attribute_name_not_void: Result /= Void
+			atribute_name_not_empty: not Result.empty
 		end
 
-end
+end -- class GEANT_EXEC_TASK

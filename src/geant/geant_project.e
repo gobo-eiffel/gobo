@@ -2,7 +2,7 @@ indexing
 
 	description:
 
-		"Represents a geant project file"
+		"Contents of geant project files"
 
 	library:    "Gobo Eiffel Ant"
 	author:     "Sven Ehrke <sven.ehrke@sven-ehrke.de>"
@@ -17,97 +17,191 @@ class GEANT_PROJECT
 inherit
 
 	GEANT_ELEMENT_NAMES
+		export {NONE} all end
 
 	KL_SHARED_ARGUMENTS
 
-
 creation
-	make, make_with_filename
-	
-feature
-	make_with_filename(a_filename : UC_STRING) is
-		do
-			Arguments.set_program_name ("geant")
-			build_filename := a_filename
-		end
 
+	make, make_with_filename
+
+feature {NONE} -- Initialization
 
 	make is
-		-- create the project with the default filename `build.eant'
+			-- Create a new project using file `build.eant'.
 		do
-			make_with_filename(Default_build_filename)
+			make_with_filename (Default_build_filename)
 		end
+
+	make_with_filename (a_filename: UC_STRING) is
+			-- Create a new project using file `a_filename'.
+		require
+			a_filename_not_void: a_filename /= Void
+			a_filename_not_empty: not a_filename.empty
+		do
+			build_filename := a_filename
+		ensure
+			build_filename_set: build_filename = a_filename
+		end
+
+feature -- Access
+
+	build_filename: UC_STRING
+			-- Name of the file containing the configuration
+			-- information to build current project
+
+	targets: DS_ARRAYED_LIST [GEANT_ELEMENT]
+			-- Target elements found in current project
+
+	start_target_name: UC_STRING
+			-- Name of the target the build process starts with
+
+	current_target_name: UC_STRING
+			-- Name of current target
+
+feature -- Processing
 
 	load is
-	    -- read the project configuration from `build_filename' and convert it into a 'GEANT_DOM'
-	    require
-			build_filename_not_void : build_filename /= Void
-			build_filename_not_empty: build_filename.count > 0
-	    local
-	        xml_parser  : GEANT_PROJECT_PARSER
-	
+			-- Read current project's configuration from `build_filename'
+			-- and convert it into a 'GEANT_DOM'.
+		local
+			xml_parser: GEANT_PROJECT_PARSER
 	    do
-			-- reset current state and create a parser
+				-- Reset current project's state:
 			reset
-	        !! xml_parser.make_from_imp (factory.new_eiffel_event_parser_imp)
-	        xml_parser.parse_from_file_name (build_filename)
-	
-			-- setup the prject element
-	        project_element := xml_parser.root_element
-
-			-- determine all the targets of the project
-			targets := project_element.get_children_by_name(Element_name_target)
-
-			-- determine start target
-			if Arguments.argument_count > 0 then
-				!!start_target_name.make_from_string(Arguments.argument(1))
+				-- Create xml parser:
+			!! xml_parser.make_from_imp (Parser_factory.new_eiffel_event_parser_imp)
+			xml_parser.parse_from_file_name (build_filename)
+				-- Setup project's root element:
+			root_element := xml_parser.root_element
+			if root_element /= Void then
+					-- Find all the targets of current project:
+				targets := root_element.children_by_name (Target_element_name)
+					-- Find start target:
+				if Arguments.argument_count > 0 then
+					!! start_target_name.make_from_string (Arguments.argument(1))
+				elseif root_element.has_attribute (Default_attribute_name) then
+					start_target_name := root_element.attribute_value_by_name (Default_attribute_name)
+				end
+				if start_target_name = Void then
+					reset
+					print ("geant error: unknown target%N")
+				elseif start_target_name.empty then
+					reset
+					print ("geant error: unknown target%N")
+				else
+					current_target_name := start_target_name
+				end
 			else
-				start_target_name := project_element.get_attributevalue_by_name(Default_attribute_name)
+				reset
+				print ("Parsing error in file %"" + build_filename.out + "%"%N")
 			end
-
-			current_target_name := start_target_name
-
-	    ensure
-	        valid_project_element : project_element /= void
-	        valid_start_target : start_target_name /= void and then start_target_name.count > 0
 	    end
 
+	build is
+			-- Build project: execute project's tasks.
+		require
+			loaded: targets /= Void
+		local
+			i, nb: INTEGER
+			j, nb2: INTEGER
+			a_target: GEANT_ELEMENT
+			an_element: GEANT_ELEMENT
+			children: DS_ARRAYED_LIST [GEANT_ELEMENT]
+			a_task: GEANT_TASK
+		do
+			nb := targets.count
+			from i := 1 until i > nb loop
+				a_target := targets.item (i)
+				if
+					a_target.has_attribute (Name_attribute_name) and then
+					a_target.attribute_value_by_name (Name_attribute_name).is_equal (current_target_name)
+				then
+
+					print (current_target_name.out + ":%N")
+
+					children := a_target.children
+					nb2 := children.count
+					from j := 1 until j > nb2 loop
+						an_element := children.item (j)
+							-- Dispatch tasks:
+						if an_element.name.is_equal (Compile_se_task_name) then
+								-- compile_se: SmallEiffel compilation
+							!GEANT_COMPILE_SE_TASK! a_task.make_from_element (an_element)
+						elseif an_element.name.is_equal (Exec_task_name) then
+								-- exec
+							!GEANT_EXEC_TASK! a_task.make_from_element (an_element)
+						elseif an_element.name.is_equal (Lcc_task_name) then
+								-- lcc
+							!GEANT_LCC_TASK! a_task.make_from_element (an_element)
+						elseif an_element.name.is_equal (Var_task_name) then
+								-- var
+							!GEANT_VAR_TASK! a_task.make_from_element (an_element)
+						elseif an_element.name.is_equal (Xace_task_name) then
+								-- xace
+							!GEANT_XACE_TASK! a_task.make_from_element (an_element)
+						elseif an_element.name.is_equal (Gelex_task_name) then
+								-- gelex
+							!GEANT_GELEX_TASK! a_task.make_from_element (an_element)
+						elseif an_element.name.is_equal (Geyacc_task_name) then
+								-- geyacc
+							!GEANT_GEYACC_TASK! a_task.make_from_element (an_element)
+						elseif an_element.name.is_equal (Gepp_task_name) then
+								-- gepp
+							!GEANT_GEPP_TASK! a_task.make_from_element (an_element)
+						elseif an_element.name.is_equal (Getest_task_name) then
+								-- getest
+							!GEANT_GETEST_TASK! a_task.make_from_element (an_element)
+						elseif an_element.name.is_equal (Echo_task_name) then
+								-- echo
+							!GEANT_ECHO_TASK! a_task.make_from_element (an_element)
+						else
+								-- Default:
+							a_task := Void
+						end
+							-- Execute task:
+						if a_task = Void then
+							print ("WARNING: unknown task : " + an_element.name.out + "%N")
+						elseif not a_task.is_executable then
+							print ("WARNING: cannot execute task : " + an_element.name.out + "%N")
+						else
+							a_task.execute
+						end
+						j := j + 1
+					end
+				end
+				i := i + 1
+			end
+		end
 
 	reset is
-		-- resets the current state of the project
+			-- Reset current state of project.
 		do
-			project_element := void
-			targets := void
+			root_element := Void
+			targets := Void
+			start_target_name := Void
+			current_target_name := Void
 		end
 
-	project_element				: GEANT_ELEMENT
-		-- the project element read
+feature {NONE} -- Implementation
 
-	targets				: DS_ARRAYED_LIST [GEANT_ELEMENT]
-		-- contains all the target elements of a project file
+	root_element: GEANT_ELEMENT
+			-- Root element of project
 
-	start_target_name	: UC_STRING
-		-- the name of the target the build process starts with
-
-	current_target_name	: UC_STRING
-		-- while processing the targets this changes
-
-	build_filename	: UC_STRING
-		-- the name of the file containing the configuration information to build a eiffel project
-
-	factory: expanded XM_PARSER_FACTORY
-		-- the factory to create the parser
-
-	Default_attribute_name : UC_STRING is
-			-- Name of xml attribute for project default target.
+	Parser_factory: XM_PARSER_FACTORY is
+			-- Factory to create xml parsers
 		once
-			!!Result.make_from_string("default")
+			!! Result.make
+		ensure
+			parser_factory_not_void: Result /= Void
 		end
 
-	Element_name_project : UC_STRING is
-			-- Name of xml element for geant project
-		once
-			!!Result.make_from_string("project")
-		end
+invariant
 
-end
+	build_filename_not_void: build_filename /= Void
+	build_filename_not_empty: not build_filename.empty
+	no_void_target: targets /= Void implies not targets.has (Void)
+	current_target_name_not_void: targets /= Void implies current_target_name /= Void
+	current_target_name_not_empty: targets /= Void implies not current_target_name.empty
+
+end -- class GEANT_PROJECT

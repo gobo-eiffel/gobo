@@ -2,7 +2,7 @@ indexing
 
 	description:
 
-		"exec task"
+		"Echo tasks"
 
 	library:    "Gobo Eiffel Ant"
 	author:     "Sven Ehrke <sven.ehrke@sven-ehrke.de>"
@@ -16,27 +16,35 @@ class GEANT_ECHO_TASK
 
 inherit
 
-	GEANT_ECHO_COMMAND
 	GEANT_TASK
-	
+	GEANT_ECHO_COMMAND
+
 creation
 
-	make, load_from_element
-	
-feature
-	load_from_element(a_el : GEANT_ELEMENT) is
+	make, make_from_element
+
+feature {NONE} -- Initialization
+
+	make_from_element (an_element: GEANT_ELEMENT) is
+			-- Create a new task with information held in `an_element'.
 		local
-			s	: UC_STRING
+			a_value: UC_STRING
 		do
-			s := a_el.get_attributevalue_by_name(Attribute_name_message)
-			set_message(s.out)
+			if an_element.has_attribute (Message_attribute_name) then
+				a_value := an_element.attribute_value_by_name (Message_attribute_name)
+				set_message (a_value.out)
+			end
 		end
 
+feature {NONE} -- Constants
 
-	Attribute_name_message : UC_STRING is
+	Message_attribute_name: UC_STRING is
 			-- Name of xml attribute message.
 		once
-			!!Result.make_from_string("message")
+			!! Result.make_from_string ("message")
+		ensure
+			attribute_name_not_void: Result /= Void
+			atribute_name_not_empty: not Result.empty
 		end
 
-end
+end -- class GEANT_ECHO_TASK

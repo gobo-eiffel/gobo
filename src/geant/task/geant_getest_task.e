@@ -2,7 +2,7 @@ indexing
 
 	description:
 
-		"getest task"
+		"Getest tasks"
 
 	library:    "Gobo Eiffel Ant"
 	author:     "Sven Ehrke <sven.ehrke@sven-ehrke.de>"
@@ -13,31 +13,40 @@ indexing
 
 
 class GEANT_GETEST_TASK
-	inherit
-		GEANT_GETEST_COMMAND
-		GEANT_TASK
-		end
 
-	
+inherit
+
+	GEANT_TASK
+	GEANT_GETEST_COMMAND
+
 creation
-	make, load_from_element
 
-feature -- Initialization
+	make, make_from_element
 
-	load_from_element(a_el : GEANT_ELEMENT) is
-			-- Initialize from a_el.
+feature {NONE} -- Initialization
+
+	make_from_element (an_element: GEANT_ELEMENT) is
+			-- Create a new task with information held in `an_element'.
 		local
-			s	: UC_STRING
+			a_value: STRING
 		do
-			s := a_el.get_attributevalue_by_name(Configfile_attribute_name)
-			set_configfile(s.out)
+			if has_uc_attribute (an_element, Config_filename_attribute_name) then
+				a_value := uc_attribute_value (an_element, Config_filename_attribute_name).out
+				if a_value.count > 0 then
+					set_config_filename (a_value)
+				end
+			end
 		end
 
+feature {NONE} -- Constants
 
-	Configfile_attribute_name : UC_STRING is
-			-- Name of xml attribute for getest configfile.
+	Config_filename_attribute_name : UC_STRING is
+			-- Name of xml attribute for getest config_filename
 		once
-			!!Result.make_from_string("configfile")
+			!! Result.make_from_string ("configfile")
+		ensure
+			attribute_name_not_void: Result /= Void
+			atribute_name_not_empty: not Result.empty
 		end
 
-end
+end -- class GEANT_GETEST_TASK

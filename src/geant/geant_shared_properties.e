@@ -1,14 +1,14 @@
 indexing
 
-  description:
+	description:
 
-        "common properties for GEANT"
+		"Common properties for GEANT"
 
-    author:     "Sven Ehrke (sven.ehrke@sven-ehrke.de)"
-    copyright:  "Sven Ehrke and others"
-    license:    "Eiffel Forum Freeware License v1 (see forum.txt)"
-    date:       "$Date$"
-    revision:   "$Revision$"
+	author:     "Sven Ehrke (sven.ehrke@sven-ehrke.de)"
+	copyright:  "Sven Ehrke and others"
+	license:    "Eiffel Forum Freeware License v1 (see forum.txt)"
+	date:       "$Date$"
+	revision:   "$Revision$"
 
 
 class GEANT_SHARED_PROPERTIES
@@ -19,14 +19,17 @@ inherit
 
 	KL_SHARED_EXECUTION_ENVIRONMENT
 
-feature
+feature -- Access
 
 	Variables : DS_HASH_TABLE [STRING, STRING] is
-		-- global variables (called 'properties' in ant)
+			-- Global variables (called 'properties' in ant)
 		once
-			!!Result.make(10)
+			!! Result.make (10)
+		ensure
+			variables_not_void: Result /= Void
+			no_void_variable_name: not Result.has (Void)
+			no_void_variable_value: not Result.has_item (Void)
 		end
-
 
 	variable_value (a_name: STRING): STRING is
 			-- Value of global variable `a_name';
@@ -34,56 +37,50 @@ feature
 		require
 			a_name_not_void: a_name /= Void
 		do
-			-- check for environment variables defined names beginning with '.env'
+				-- Check for environment variables defined names beginning with 'env.'
 			if a_name.count > 4 and then a_name.substring(1, 4).is_equal("env.") then
-					-- cut off the beginning 'env.'
-					-- The rest of a_name is the environment variable name
-					Result := a_name.substring(5, a_name.count)
-					Result := Execution_environment.variable_value(Result)
-					if Result = Void then
-						Result := ""
-					end
-				end
-
-			if Result = Void then
-				-- Determine value from the project variables
-				Result := Variables.item(a_name)
+					-- Cut off the beginning 'env.'.
+					-- The rest of a_name is the environment variable name.
+				Result := a_name.substring (5, a_name.count)
+				Result := Execution_environment.variable_value (Result)
 				if Result = Void then
+					Result := ""
+				end
+			else
+					-- Search value from the project variables:
+				Variables.search (a_name)
+				if Variables.found then
+					Result := Variables.found_item
+				else
 					Result := a_name
 				end
 			end
-
-			if Result = Void then
-				Result := ""
-			end
 		ensure
-			Result_not_void	: Result /= Void 
+			variable_value_not_void: Result /= Void 
 		end
 
 	set_variable_value (a_name, a_value : STRING) is
-			-- set value of variable `a_name' to `a_value'
+			-- Set value of variable `a_name' to `a_value'.
 			-- Expand all variable references in `a_value' first.
 		require
-			a_name_not_void  : a_name /= Void
-			a_name_not_empty : a_name.count > 0
-			a_value_not_void : a_value /= Void
+			a_name_not_void: a_name /= Void
+			a_name_not_empty: a_name.count > 0
+			a_value_not_void: a_value /= Void
 		local
-			source		: STRING
-			transformed	: STRING
+			source: STRING
+			transformed: STRING
 		do
 			from
-				source := clone(a_value)
-				transformed := interpreted_string(source)
+				source := a_value
+				transformed := interpreted_string (source)
 			until
-				transformed.is_equal(source)
+				transformed.is_equal (source)
 			loop
 				source := transformed
-				transformed := interpreted_string(source)
+				transformed := interpreted_string (source)
 			end
-
-			Variables.force(transformed, a_name)
+			Variables.force (transformed, a_name)
 		end
-
 
 	interpreted_string (a_string: STRING): STRING is
 			-- String where the environment variables have been
@@ -173,4 +170,4 @@ feature
 			interpreted_string_not_void: Result /= Void
 		end
 
-end
+end -- class GEANT_SHARED_PROPERTIES

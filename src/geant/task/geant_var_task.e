@@ -2,7 +2,7 @@ indexing
 
 	description:
 
-		"var task"
+		"Var tasks"
 
 	library:    "Gobo Eiffel Ant"
 	author:     "Sven Ehrke <sven.ehrke@sven-ehrke.de>"
@@ -16,49 +16,43 @@ class GEANT_VAR_TASK
 
 inherit
 
-		GEANT_VAR_COMMAND
-		GEANT_TASK
+	GEANT_TASK
+	GEANT_VAR_COMMAND
 
-		KL_SHARED_EXECUTION_ENVIRONMENT
-		end
-
-	
 creation
-	make, load_from_element
 
-	
-	
-feature
-	load_from_element(a_el : GEANT_ELEMENT) is
+	make, make_from_element
+
+feature {NONE} -- Initialization
+
+	make_from_element (an_element: GEANT_ELEMENT) is
+			-- Create a new task with information held in `an_element'.
 		local
-			s	: STRING
+			a_value: STRING
 		do
-			-- name
-			set_name(get_attribute_value(a_el, Attribute_name_name.out))
-
-
-			-- value
-			s := get_attribute_value(a_el, Attribute_name_value.out)
-
-			-- support for environment variables
---			if s.item(1) = '$' and then s.count > 1 then
---				s := s.substring(2, s.count)
---				s := Execution_environment.variable_value(s)
---			end
-
---			if s = Void then
---				s := ""
---			end
-
-			set_value(s)
-
+				-- name:
+			if has_uc_attribute (an_element, Name_attribute_name) then
+				a_value := uc_attribute_value (an_element, Name_attribute_name).out
+				if a_value.count > 0 then
+					set_name (a_value)
+				end
+			end
+				-- value:
+			if has_uc_attribute (an_element, Value_attribute_name) then
+				a_value := uc_attribute_value (an_element, Value_attribute_name).out
+				set_value (a_value)
+			end
 		end
 
-	Attribute_name_value : UC_STRING is
+feature {NONE} -- Constants
+
+	Value_attribute_name: UC_STRING is
 			-- Name of xml attribute for value
 		once
-			!!Result.make_from_string("value")
+			!! Result.make_from_string ("value")
+		ensure
+			attribute_name_not_void: Result /= Void
+			atribute_name_not_empty: not Result.empty
 		end
 
-
-end
+end -- class GEANT_VAR_TASK

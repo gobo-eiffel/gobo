@@ -2,7 +2,7 @@ indexing
 
 	description:
 
-		"deferred task which supports creation of the object using a XML definition"
+		"Geant Tasks using a XML definitions"
 
 	library:    "Gobo Eiffel Ant"
 	author:     "Sven Ehrke <sven.ehrke@sven-ehrke.de>"
@@ -13,123 +13,180 @@ indexing
 
 
 deferred class GEANT_TASK
-	inherit
-		GEANT_COMMAND
-		GEANT_ELEMENT_NAMES
 
-feature
-	load_from_element(a_el : GEANT_ELEMENT) is
-			-- Initialize from a_el.
+inherit
+
+	GEANT_COMMAND
+
+	GEANT_ELEMENT_NAMES
+		export {NONE} all end
+
+feature {NONE} -- Initialization
+
+	make_from_element (an_element: GEANT_ELEMENT) is
+			-- Create a new task with information held in `an_element'.
 		require
-			element_not_void : a_el /= Void
+			an_element_not_void: an_element /= Void
 		deferred
 		end
 
-feature -- auxiliar
---------------
+feature {NONE} -- Implementation
 
-	get_attribute_value_with_default(a_el : GEANT_ELEMENT; a_attr_name, a_default_attr_value : STRING) : STRING is
-		local
-			uc_name		: UC_STRING
-			uc_value	: UC_STRING
-		do
-			!!uc_name.make_from_string(a_attr_name)
-			!!uc_value.make_from_string(a_default_attr_value)
-			if a_el.has_attribute(uc_name) then
-				uc_value := a_el.get_attributevalue_by_name(uc_name)
-			end
-
-			Result := get_attribute_value_with_default_uc(a_el, uc_name, uc_value).out
-			
-		end
-
-	get_attribute_value(a_el : GEANT_ELEMENT; a_attr_name : STRING) : STRING is
-		local
-			ucs	: UC_STRING
-
-		do
-			!!ucs.make_from_string(a_attr_name)
-			Result := a_el.get_attributevalue_by_name(ucs).out
-		end
-
-	get_boolean_value_with_default(a_el : GEANT_ELEMENT; a_attr_name : STRING; a_default_value : BOOLEAN) : BOOLEAN is
-		local
-			ucs_attr_name	: UC_STRING
-		do
-			!!ucs_attr_name.make_from_string(a_attr_name)
-			Result := get_boolean_value_with_default_uc(a_el, ucs_attr_name, a_default_value)
-		end
-
-	get_boolean_value(a_el : GEANT_ELEMENT; a_attr_name : STRING) : BOOLEAN is
-		local
-			ucs_attr_name	: UC_STRING
-		do
-			!!ucs_attr_name.make_from_string(a_attr_name)
-			Result := get_boolean_value_uc(a_el, ucs_attr_name)
-		end
-
-
-	has_attribute(a_el : GEANT_ELEMENT; a_attr_name : STRING) : BOOLEAN is
-		local
-			ucs	: UC_STRING
-		do
-			!!ucs.make_from_string(a_attr_name)
-			Result := has_attribute_uc(a_el, ucs)
-		end
-
-
-	feature -- unicode versions
-
-	get_attribute_value_with_default_uc(a_el : GEANT_ELEMENT; a_attr_name, a_default_attr_value : UC_STRING) : UC_STRING is
-		do
-			Result := a_default_attr_value
-			if a_el.has_attribute(a_attr_name) then
-				Result := a_el.get_attributevalue_by_name(a_attr_name)
-			end
-		
-		end
-
-	get_attribute_value_uc(a_el : GEANT_ELEMENT; a_attr_name : UC_STRING) : UC_STRING is
+	attribute_value_or_default (an_element: GEANT_ELEMENT;
+		an_attr_name: STRING; a_default_value: STRING): STRING is
+			-- Value of attribue `an_attr_name' in element `an_element',
+			-- or `a_default_value' of no such attribute
 		require
-			attribute_exists : a_el.has_attribute(a_attr_name)
+			an_element_not_void: an_element /= Void
+			an_attr_name_not_void: an_attr_name /= Void
+			an_attr_name_not_empty: an_attr_name.count > 0
+			a_default_value_not_void: a_default_value /= Void
+		local
+			uc_name: UC_STRING
+			uc_value: UC_STRING
 		do
-			Result := a_el.get_attributevalue_by_name(a_attr_name)
+			!! uc_name.make_from_string(an_attr_name)
+			!! uc_value.make_from_string(a_default_value)
+			Result := uc_attribute_value_or_default (an_element, uc_name, uc_value).out
 		end
 
-
-	get_boolean_value_with_default_uc(a_el : GEANT_ELEMENT; a_attr_name : UC_STRING; a_default_value : BOOLEAN) : BOOLEAN is
+	attribute_value (an_element: GEANT_ELEMENT; an_attr_name: STRING): STRING is
+			-- Value of attribue `an_attr_name' in element `an_element'
+		require
+			an_element_not_void: an_element /= Void
+			an_attr_name_not_void: an_attr_name /= Void
+			an_attr_name_not_empty: an_attr_name.count > 0
+			an_attr_name_not_empty: not an_attr_name.empty
+			has_attribute: has_attribute (an_element, an_attr_name)
+		local
+			uc_name: UC_STRING
 		do
-			if not a_el.has_attribute(a_attr_name) then
+			!! uc_name.make_from_string(an_attr_name)
+			Result := an_element.attribute_value_by_name (uc_name).out
+		end
+
+	boolean_value_or_default (an_element: GEANT_ELEMENT;
+		an_attr_name: STRING; a_default_value: BOOLEAN): BOOLEAN is
+			-- Value of attribue `an_attr_name' in element `an_element',
+			-- or `a_default_value' of no such attribute
+		require
+			an_element_not_void: an_element /= Void
+			an_attr_name_not_void: an_attr_name /= Void
+			an_attr_name_not_empty: an_attr_name.count > 0
+		local
+			uc_name: UC_STRING
+		do
+			!! uc_name.make_from_string (an_attr_name)
+			Result := uc_boolean_value_or_default (an_element, uc_name, a_default_value)
+		end
+
+	boolean_value (an_element: GEANT_ELEMENT; an_attr_name: STRING): BOOLEAN is
+			-- Value of attribue `an_attr_name' in element `an_element'
+		require
+			an_element_not_void: an_element /= Void
+			an_attr_name_not_void: an_attr_name /= Void
+			an_attr_name_not_empty: an_attr_name.count > 0
+			an_attr_name_not_empty: not an_attr_name.empty
+			has_attribute: has_attribute (an_element, an_attr_name)
+		local
+			uc_name: UC_STRING
+		do
+			!! uc_name.make_from_string (an_attr_name)
+			Result := uc_boolean_value (an_element, uc_name)
+		end
+
+	has_attribute (an_element: GEANT_ELEMENT; an_attr_name: STRING): BOOLEAN is
+			-- Is `an_attr_name' an atttribute of `an_element'?
+		require
+			an_element_not_void: an_element /= Void
+			an_attr_name_not_void: an_attr_name /= Void
+			an_attr_name_not_empty: an_attr_name.count > 0
+		local
+			uc_name: UC_STRING
+		do
+			!! uc_name.make_from_string (an_attr_name)
+			Result := has_uc_attribute (an_element, uc_name)
+		end
+
+feature {NONE} -- Unicode implementation
+
+	uc_attribute_value_or_default (an_element: GEANT_ELEMENT;
+		an_attr_name: UC_STRING; a_default_value: UC_STRING): UC_STRING is
+			-- Value of attribue `an_attr_name' in element `an_element',
+			-- or `a_default_value' of no such attribute
+		require
+			an_element_not_void: an_element /= Void
+			an_attr_name_not_void: an_attr_name /= Void
+			an_attr_name_not_empty: not an_attr_name.empty
+			a_default_value_not_void: a_default_value /= Void
+		do
+			if an_element.has_attribute (an_attr_name) then
+				Result := an_element.attribute_value_by_name (an_attr_name)
+			else
 				Result := a_default_value
-			else
-				Result := get_boolean_value_uc(a_el, a_attr_name)
 			end
+		ensure
+			value_not_void: Result /= Void
 		end
 
-
-	get_boolean_value_uc(a_el : GEANT_ELEMENT; a_attr_name : UC_STRING) : BOOLEAN is
+	uc_attribute_value (an_element: GEANT_ELEMENT; an_attr_name: UC_STRING): UC_STRING is
+			-- Value of attribue `an_attr_name' in element `an_element'
 		require
-			attribute_exists : a_el.has_attribute(a_attr_name)
-		local
-			ucs	: UC_STRING
+			an_element_not_void: an_element /= Void
+			an_attr_name_not_void: an_attr_name /= Void
+			an_attr_name_not_empty: not an_attr_name.empty
+			has_attribute: has_uc_attribute (an_element, an_attr_name)
 		do
-			ucs := get_attribute_value_uc(a_el, a_attr_name)
-			check ucs /= void and then ucs.count > 0 end
+			Result := an_element.attribute_value_by_name (an_attr_name)
+		ensure
+			value_not_void: Result /= Void
+		end
 
-			if Attribute_value_true.is_equal(ucs) then
-				Result := true
-			elseif Attribute_value_false.is_equal(ucs) then
-				Result := false
+	uc_boolean_value_or_default (an_element: GEANT_ELEMENT;
+		an_attr_name: UC_STRING; a_default_value: BOOLEAN): BOOLEAN is
+			-- Value of attribue `an_attr_name' in element `an_element',
+			-- or `a_default_value' of no such attribute
+		require
+			an_element_not_void: an_element /= Void
+			an_attr_name_not_void: an_attr_name /= Void
+			an_attr_name_not_empty: not an_attr_name.empty
+		do
+			if an_element.has_attribute (an_attr_name) then
+				Result := uc_boolean_value (an_element, an_attr_name)
 			else
-				print("WARNING: wrong value (" + ucs.out + ") for attribute " + a_attr_name.out + " Valid values are `true' and `false'. Using to `false' now.")
-				Result := false
+				Result := a_default_value
 			end
-
 		end
 
-	has_attribute_uc(a_el : GEANT_ELEMENT; a_attr_name : UC_STRING) : BOOLEAN is
+	uc_boolean_value (an_element: GEANT_ELEMENT; an_attr_name: UC_STRING): BOOLEAN is
+			-- Value of attribue `an_attr_name' in element `an_element'
+		require
+			an_element_not_void: an_element /= Void
+			an_attr_name_not_void: an_attr_name /= Void
+			an_attr_name_not_empty: not an_attr_name.empty
+			has_attribute: has_uc_attribute (an_element, an_attr_name)
+		local
+			uc_value: UC_STRING
 		do
-			Result := a_el.has_attribute(a_attr_name)
+			uc_value := uc_attribute_value (an_element, an_attr_name)
+			if True_attribute_value.is_equal (uc_value) then
+				Result := True
+			elseif False_attribute_value.is_equal (uc_value) then
+				Result := False
+			else
+				print ("WARNING: wrong value (" + uc_value.out + ") for attribute " + an_attr_name.out + " Valid values are `true' and `false'. Using to `false' now.%N")
+				Result := False
+			end
 		end
 
-end
+	has_uc_attribute (an_element: GEANT_ELEMENT; an_attr_name: UC_STRING): BOOLEAN is
+			-- Is `an_attr_name' an atttribute of `an_element'?
+		require
+			an_element_not_void: an_element /= Void
+			an_attr_name_not_void: an_attr_name /= Void
+			an_attr_name_not_empty: not an_attr_name.empty
+		do
+			Result := an_element.has_attribute (an_attr_name)
+		end
+
+end -- class GEANT_TASK

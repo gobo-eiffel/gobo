@@ -2,7 +2,7 @@ indexing
 
 	description:
 
-		"element name constants for GEANT"
+		"Element name constants for GEANT"
 
 	library:    "Gobo Eiffel Ant"
 	author:     "Sven Ehrke <sven.ehrke@sven-ehrke.de>"
@@ -14,109 +14,200 @@ indexing
 
 class GEANT_ELEMENT_NAMES
 
-	
-feature
+feature -- Filenames
 
-	Default_build_filename : UC_STRING is
-			-- Default Name of build file.
+	Default_build_filename: UC_STRING is
+			-- Default Name of build file
 		once
-			!!Result.make_from_string("build.eant")
+			!! Result.make_from_string ("build.eant")
+		ensure
+			filename_not_void: Result /= Void
+			filename_not_empty: not Result.empty
 		end
 
+feature -- Element names
 
-	Element_name_target : UC_STRING is
-			-- Name of xml element target
+	Target_element_name: UC_STRING is
+			-- "target" element name
 		once
-			!!Result.make_from_string("target")
+			!! Result.make_from_string ("target")
+		ensure
+			element_name_not_void: Result /= Void
+			element_name_not_empty: not Result.empty
 		end
 
-
-	feature -- target attribute names and values
-
-	Attribute_name_name : UC_STRING is
-			-- Name of xml attribute name which is used in many xml elements.
+	Project_element_name: UC_STRING is
+			-- "project" element name
 		once
-			!!Result.make_from_string("name")
+			!!Result.make_from_string ("project")
+		ensure
+			element_name_not_void: Result /= Void
+			element_name_not_empty: not Result.empty
 		end
 
-	Attribute_value_true : UC_STRING is
-			-- Name of xml attribute true which is used in many xml elements.
+feature -- Attribute names and values
+
+	Id_attribute_name: UC_STRING is
+			-- "ID" attribute name
 		once
-			!!Result.make_from_string("true")
+			!! Result.make_from_string ("ID")
+		ensure
+			attribute_name_not_void: Result /= Void
+			attribute_name_not_empty: not Result.empty
 		end
 
-	Attribute_value_false : UC_STRING is
-			-- Name of xml attribute false which is used in many xml elements.
+	Idref_attribute_name: UC_STRING is
+			-- "IDREF" attribute name
 		once
-			!!Result.make_from_string("false")
+			!! Result.make_from_string ("IDREF")
+		ensure
+			attribute_name_not_void: Result /= Void
+			attribute_name_not_empty: not Result.empty
 		end
 
-	Attribute_value_empty : UC_STRING is
-			-- Name of xml attribute false which is used in many xml elements.
+	Name_attribute_name: UC_STRING is
+			-- "name" attribute name
 		once
-			!!Result.make_from_string("")
+			!! Result.make_from_string ("name")
+		ensure
+			attribute_name_not_void: Result /= Void
+			attribute_name_not_empty: not Result.empty
 		end
 
-
-
-	feature -- task names
-	Compile_se_task_name : UC_STRING is
-			-- Name of xml element for compile_se task.
+	Default_attribute_name: UC_STRING is
+			-- "default" attribute name
 		once
-			!!Result.make_from_string("compile_se")
+			!! Result.make_from_string ("default")
+		ensure
+			attribute_name_not_void: Result /= Void
+			attribute_name_not_empty: not Result.empty
 		end
 
-	Exec_task_name : UC_STRING is
-			-- Name of xml element for exec task.
+	True_attribute_value: UC_STRING is
+			-- "true" attribute value
 		once
-			!!Result.make_from_string("exec")
+			!! Result.make_from_string ("true")
+		ensure
+			attribute_value_not_void: Result /= Void
 		end
 
-	Lcc_task_name : UC_STRING is
-			-- Name of xml element for lcc task.
+	False_attribute_value: UC_STRING is
+			-- "false" attribute value
 		once
-			!!Result.make_from_string("lcc")
+			!! Result.make_from_string ("false")
+		ensure
+			attribute_value_not_void: Result /= Void
 		end
 
-	Var_task_name : UC_STRING is
-			-- Name of xml element for var task.
+	Empty_attribute_value: UC_STRING is
+			-- "" attribute value
 		once
-			!!Result.make_from_string("var")
-		end
-	Xace_task_name : UC_STRING is
-			-- Name of xml element for Xace task.
-		once
-			!!Result.make_from_string("xace")
+			!! Result.make_from_string ("")
+		ensure
+			attribute_value_not_void: Result /= Void
 		end
 
-	Gelex_task_name : UC_STRING is
-			-- Name of xml element for Gelex task.
+feature -- Task names
+
+	Compile_se_task_name: UC_STRING is
+			-- "compiler_se" task name
 		once
-			!!Result.make_from_string("gelex")
+			!! Result.make_from_string ("compile_se")
+		ensure
+			task_name_not_void: Result /= Void
+			task_name_not_empty: not Result.empty
 		end
 
-	Geyacc_task_name : UC_STRING is
-			-- Name of xml element for Geyacc task.
+	Exec_task_name: UC_STRING is
+			-- "exec" task name
 		once
-			!!Result.make_from_string("geyacc")
+			!! Result.make_from_string ("exec")
+		ensure
+			task_name_not_void: Result /= Void
+			task_name_not_empty: not Result.empty
 		end
 
-	Gepp_task_name : UC_STRING is
-			-- Name of xml element for Gepp task.
+	Lcc_task_name: UC_STRING is
+			-- "lcc" task name
 		once
-			!!Result.make_from_string("gepp")
+			!! Result.make_from_string ("lcc")
+		ensure
+			task_name_not_void: Result /= Void
+			task_name_not_empty: not Result.empty
 		end
 
-	Getest_task_name : UC_STRING is
+	Var_task_name: UC_STRING is
+			-- "var" task name
 		once
-			!!Result.make_from_string("getest")
+			!! Result.make_from_string ("var")
+		ensure
+			task_name_not_void: Result /= Void
+			task_name_not_empty: not Result.empty
 		end
 
-	Echo_task_name : UC_STRING is
+	Xace_task_name: UC_STRING is
+			-- "xace" task name
 		once
-			!!Result.make_from_string("echo")
+			!! Result.make_from_string ("xace")
+		ensure
+			task_name_not_void: Result /= Void
+			task_name_not_empty: not Result.empty
 		end
 
+	Gelex_task_name: UC_STRING is
+			-- "gelex" task name
+		once
+			!! Result.make_from_string ("gelex")
+		ensure
+			task_name_not_void: Result /= Void
+			task_name_not_empty: not Result.empty
+		end
 
+	Geyacc_task_name: UC_STRING is
+			-- "geyacc" task name
+		once
+			!! Result.make_from_string ("geyacc")
+		ensure
+			task_name_not_void: Result /= Void
+			task_name_not_empty: not Result.empty
+		end
 
-end
+	Gepp_task_name: UC_STRING is
+			-- "gepp" task name
+		once
+			!! Result.make_from_string ("gepp")
+		ensure
+			task_name_not_void: Result /= Void
+			task_name_not_empty: not Result.empty
+		end
+
+	Getest_task_name: UC_STRING is
+			-- "getest" task name
+		once
+			!! Result.make_from_string ("getest")
+		ensure
+			task_name_not_void: Result /= Void
+			task_name_not_empty: not Result.empty
+		end
+
+	Echo_task_name: UC_STRING is
+			-- "echo" task name
+		once
+			!! Result.make_from_string ("echo")
+		ensure
+			task_name_not_void: Result /= Void
+			task_name_not_empty: not Result.empty
+		end
+
+feature -- Miscellaneous
+
+	Empty_string: UC_STRING is
+			-- Empty string
+		once
+			!! Result.make_from_string ("")
+		ensure
+			string_not_void: Result /= Void
+			string_empty: Result.empty
+		end
+
+end -- class GEANT_ELEMENT_NAMES

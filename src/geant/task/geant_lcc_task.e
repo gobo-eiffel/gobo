@@ -2,7 +2,7 @@ indexing
 
 	description:
 
-		"lcc C-Compiler task"
+		"Lcc C-Compiler tasks"
 
 	library:    "Gobo Eiffel Ant"
 	author:     "Sven Ehrke <sven.ehrke@sven-ehrke.de>"
@@ -12,38 +12,57 @@ indexing
 	revision:   "$Revision$"
 
 class GEANT_LCC_TASK
-	inherit
-		GEANT_LCC_COMMAND
-		GEANT_TASK
-		end
 
-	
+inherit
+
+	GEANT_TASK
+	GEANT_LCC_COMMAND
+
 creation
-	make, load_from_element
 
-	
-	
-feature
-	load_from_element(a_el : GEANT_ELEMENT) is
+	make, make_from_element
+
+feature {NONE} -- Initialization
+
+	make_from_element (an_element: GEANT_ELEMENT) is
+			-- Create a new task with information held in `an_element'.
+		local
+			a_value: STRING
 		do
-			-- -Fo
-			set_executable(get_attribute_value(a_el, Attribute_name_executable.out))
-
-			-- -sourcefilename
-			set_sourcefilename(get_attribute_value(a_el, Attribute_name_sourcefilename.out))
-
+				-- -Fo:
+			if has_uc_attribute (an_element, Executable_attribute_name) then
+				a_value := uc_attribute_value (an_element, Executable_attribute_name).out
+				if a_value.count > 0 then
+					set_executable (a_value)
+				end
+			end
+				-- source_filename
+			if has_uc_attribute (an_element, Source_filename_attribute_name) then
+				a_value := uc_attribute_value (an_element, Source_filename_attribute_name).out
+				if a_value.count > 0 then
+					set_source_filename (a_value)
+				end
+			end
 		end
 
-	Attribute_name_executable : UC_STRING is
+feature {NONE} -- Constants
+
+	Executable_attribute_name: UC_STRING is
 			-- Name of xml attribute for executable
 		once
-			!!Result.make_from_string("executable")
+			!! Result.make_from_string ("executable")
+		ensure
+			attribute_name_not_void: Result /= Void
+			atribute_name_not_empty: not Result.empty
 		end
 
-	Attribute_name_sourcefilename : UC_STRING is
-			-- Name of xml attribute for sourcefilename
+	Source_filename_attribute_name: UC_STRING is
+			-- Name of xml attribute for source_filename
 		once
-			!!Result.make_from_string("sourcefilename")
+			!! Result.make_from_string ("sourcefilename")
+		ensure
+			attribute_name_not_void: Result /= Void
+			atribute_name_not_empty: not Result.empty
 		end
 
-end
+end -- class GEANT_LCC_TASK

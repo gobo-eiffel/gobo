@@ -2,7 +2,7 @@ indexing
 
 	description:
 
-		"geyacc task"
+		"Geyacc tasks"
 
 	library:    "Gobo Eiffel Ant"
 	author:     "Sven Ehrke <sven.ehrke@sven-ehrke.de>"
@@ -13,74 +13,102 @@ indexing
 
 
 class GEANT_GEYACC_TASK
-	inherit
-		GEANT_GEYACC_COMMAND
-		GEANT_TASK
-		end
 
-	
+inherit
+
+	GEANT_TASK
+	GEANT_GEYACC_COMMAND
+
 creation
-	make, load_from_element
 
+	make, make_from_element
 
-	
-feature
-	load_from_element(a_el : GEANT_ELEMENT) is
+feature {NONE} -- Initialization
+
+	make_from_element (an_element: GEANT_ELEMENT) is
+			-- Create a new task with information held in `an_element'.
+		local
+			a_value: STRING
 		do
-			-- separate_actions
-			if has_attribute_uc(a_el, Attribute_name_separate_actions) then
-				set_separate_actions(get_boolean_value(a_el, Attribute_name_separate_actions.out))
+				-- separate_actions:
+			if has_uc_attribute (an_element, Separate_actions_attribute_name) then
+				set_separate_actions (uc_boolean_value(an_element, Separate_actions_attribute_name))
 			end
-
-			-- verbose_filename
-			if has_attribute_uc(a_el, Attribute_name_verbose_filename) then
-				set_verbose_filename(get_attribute_value(a_el, Attribute_name_verbose_filename.out))
+				-- verbose_filename:
+			if has_uc_attribute (an_element, Verbose_filename_attribute_name) then
+				a_value := uc_attribute_value (an_element, Verbose_filename_attribute_name).out
+				if a_value.count > 0 then
+					set_verbose_filename (a_value)
+				end
 			end
-
-			-- eiffel_tokens_classname
-			if has_attribute_uc(a_el, Attribute_name_eiffel_tokens_classname) then
-				set_eiffel_tokens_classname(get_attribute_value(a_el, Attribute_name_eiffel_tokens_classname.out))
+				-- tokens_classname:
+			if has_uc_attribute (an_element, Tokens_classname_attribute_name) then
+				a_value := uc_attribute_value (an_element, Tokens_classname_attribute_name).out
+				if a_value.count > 0 then
+					set_tokens_classname (a_value)
+				end
 			end
-
-			-- eiffel_parser_filename
-			if has_attribute_uc(a_el, Attribute_name_eiffel_parser_filename) then
-				set_eiffel_parser_filename(get_attribute_value(a_el, Attribute_name_eiffel_parser_filename.out))
+				-- output_filename:
+			if has_uc_attribute (an_element, Output_filename_attribute_name) then
+				a_value := uc_attribute_value (an_element, Output_filename_attribute_name).out
+				if a_value.count > 0 then
+					set_output_filename (a_value)
+				end
 			end
-
-			-- grammar_filename
-			set_grammar_filename(get_attribute_value(a_el, Attribute_name_grammar_filename.out))
-
+				-- input_filename:
+			if has_uc_attribute (an_element, Input_filename_attribute_name) then
+				a_value := uc_attribute_value (an_element, Input_filename_attribute_name).out
+				if a_value.count > 0 then
+					set_input_filename (a_value)
+				end
+			end
 		end
 
-feature -- Xml attributes
-	Attribute_name_separate_actions : UC_STRING is
+feature {NONE} -- Constants
+
+	Separate_actions_attribute_name: UC_STRING is
 			-- Name of xml attribute for separate_actions
 		once
-			!!Result.make_from_string("separate_actions")
+			!! Result.make_from_string ("separate_actions")
+		ensure
+			attribute_name_not_void: Result /= Void
+			atribute_name_not_empty: not Result.empty
 		end
 
-	Attribute_name_verbose_filename : UC_STRING is
+	Verbose_filename_attribute_name: UC_STRING is
 			-- Name of xml attribute for verbose_filename
 		once
-			!!Result.make_from_string("verbose_filename")
+			!! Result.make_from_string ("verbose_filename")
+		ensure
+			attribute_name_not_void: Result /= Void
+			atribute_name_not_empty: not Result.empty
 		end
 
-	Attribute_name_eiffel_tokens_classname : UC_STRING is
-			-- Name of xml attribute for eiffel_tokens_classname
+	Tokens_classname_attribute_name: UC_STRING is
+			-- Name of xml attribute for tokens_classname
 		once
-			!!Result.make_from_string("eiffel_tokens_classname")
+			!! Result.make_from_string ("eiffel_tokens_classname")
+		ensure
+			attribute_name_not_void: Result /= Void
+			atribute_name_not_empty: not Result.empty
 		end
 
-	Attribute_name_eiffel_parser_filename : UC_STRING is
-			-- Name of xml attribute for eiffel_parser_filename
+	Output_filename_attribute_name: UC_STRING is
+			-- Name of xml attribute for output_filename
 		once
-			!!Result.make_from_string("eiffel_parser_filename")
+			!! Result.make_from_string ("eiffel_parser_filename")
+		ensure
+			attribute_name_not_void: Result /= Void
+			atribute_name_not_empty: not Result.empty
 		end
 
-	Attribute_name_grammar_filename : UC_STRING is
-			-- Name of xml attribute for grammar_filename
+	Input_filename_attribute_name: UC_STRING is
+			-- Name of xml attribute for input_filename
 		once
-			!!Result.make_from_string("eiffel_grammar_filename")
+			!! Result.make_from_string ("eiffel_grammar_filename")
+		ensure
+			attribute_name_not_void: Result /= Void
+			atribute_name_not_empty: not Result.empty
 		end
 
-end
+end -- class GEANT_GEYACC_TASK

@@ -2,7 +2,7 @@ indexing
 
 	description:
 
-		"lcc C-compiler command"
+		"Lcc C-compiler commands"
 
 	library:    "Gobo Eiffel Ant"
 	author:     "Sven Ehrke <sven.ehrke@sven-ehrke.de>"
@@ -13,62 +13,82 @@ indexing
 
 
 class GEANT_LCC_COMMAND
-	inherit
-		GEANT_COMMAND
 
-	
+inherit
+
+	GEANT_COMMAND
+
 creation
+
 	make
 
-	
-	
-feature
+feature {NONE} -- Initialization
+
 	make is
+			-- Create a new 'lcc' command.
 		do
 		end
+
+feature -- Status report
+
+	is_executable: BOOLEAN is
+			-- Can command be executed?
+		do
+			Result := (executable /= Void and then executable.count > 0) and
+				(source_filename /= Void and then source_filename.count > 0)
+		ensure then
+			executable_not_void: Result implies executable /= Void
+			executable_not_empty: Result implies executable.count > 0
+			source_filename_not_void: Result implies source_filename /= Void
+			source_filename_not_empty: Result implies source_filename.count > 0
+		end
+
+feature -- Access
+
+	executable: STRING
+			-- Option -Fo
+
+	source_filename: STRING
+			-- C source filename
+
+feature -- Setting
+
+	set_executable (an_executable: like executable) is
+			-- Set `executable' to `an_executable'.
+		require
+			an_executable_not_void: an_executable /= Void
+			an_executable_not_empty: an_executable.count > 0
+		do
+			executable := an_executable
+		ensure
+			executable_set: executable = an_executable
+		end
+
+	set_source_filename (a_filename: like source_filename) is
+			-- Set `source_filename' to `a_filename'.
+		require
+			a_filename_not_void: a_filename /= Void
+			a_filename_not_empty: a_filename.count > 0
+		do
+			source_filename := a_filename
+		ensure
+			source_filename_set: source_filename = a_filename
+		end
+
+feature -- Execution
 
 	execute is
+			-- Execute command.
 		local
-			cmd	: STRING
+			cmd: STRING
 		do
-			cmd := "lcc"
-			cmd.append_string(" -Fo"); cmd.append_string(executable)
-			cmd.append_string(" "); cmd.append_string(sourcefilename)
-			log("  [lcc] " + cmd + "%N")
-			execute_command(cmd)
+			cmd := clone ("lcc")
+			cmd.append_string (" -Fo")
+			cmd.append_string (executable)
+			cmd.append_string (" ")
+			cmd.append_string (source_filename)
+			log ("  [lcc] " + cmd + "%N")
+			execute_shell (cmd)
 		end
 
-	is_executable : BOOLEAN is
-		do
-			Result := executable /= Void and then not executable.is_empty
-						and then sourcefilename /= Void and then not sourcefilename.is_empty
-		ensure then
-			executable_not_void : Result implies executable /= Void
-			executable_not_empty: Result implies not executable.is_empty
-
-			sourcefilename_not_void : Result implies sourcefilename /= Void
-			sourcefilename_not_empty: Result implies not sourcefilename.is_empty
-		end
-
-	set_executable(a_executable : STRING) is
-		require
-			executable_not_void : a_executable /= Void
-			executable_not_empty: not a_executable.is_empty
-		do
-			executable := a_executable
-		end
-
-	set_sourcefilename(a_sourcefilename : STRING) is
-		require
-			sourcefilename_not_void : a_sourcefilename /= Void
-			sourcefilename_not_empty: not a_sourcefilename.is_empty
-		do
-			sourcefilename := a_sourcefilename
-		end
-
-
---feature {NONE}
-executable			: STRING		-- -Fo
-sourcefilename		: STRING		--
-
-end
+end -- class GEANT_LCC_COMMAND

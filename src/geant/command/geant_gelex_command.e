@@ -2,7 +2,7 @@ indexing
 
 	description:
 
-		"gelex command"
+		"Gelex commands"
 
 	library:    "Gobo Eiffel Ant"
 	author:     "Sven Ehrke <sven.ehrke@sven-ehrke.de>"
@@ -13,218 +13,234 @@ indexing
 
 
 class GEANT_GELEX_COMMAND
-	inherit
-		GEANT_COMMAND
-		end
-		KL_IMPORTED_STRING_ROUTINES
-		end
 
-	
+inherit
+
+	GEANT_COMMAND
+
+	KL_IMPORTED_STRING_ROUTINES
+
 creation
+
 	make
 
+feature {NONE} -- Initialization
 
--- ?? how do I set options which are true by default to false ?
-	
-feature
 	make is
+			-- Create a new 'gelex' command
 		do
 			size := ""
-			outfile := ""
-			gelex_input_filename := ""
+			output_filename := ""
+			input_filename := ""
 		end
 
-	execute is
-		local
-			cmd	: STRING
-		do
-			cmd := "gelex "
-
-			-- -a
-			if size /= void and then not size.is_empty then
-				cmd.append_string("-a ")
-				cmd.append_string(size.out)
-			end
-
-			-- -b
-			if backup then
-				cmd.append_string("-b ")
-			end
-
-			-- -e
-			--!! ecs is the default. there seems no way to set it to false
-			if ecs then
-				cmd.append_string("-e ")
-			end
-
-			-- -f
-			if full then
-				cmd.append_string("-f ")
-			end
-
-			-- -i
-			if case_insensitive then
-				cmd.append_string("-i ")	--?? how do I set it to false ?
-			end
-
-			-- -m
-			if meta_ecs then
-				cmd.append_string("-m ")	--?? how do I set it to false ?
-			end
-
-			-- -s
-			if no_default then
-				cmd.append_string("-s ")
-			end
-
-			-- -w
-			if no_warn then
-				cmd.append_string("-w ")
-			end
-
-			-- -x
-			if separate_actions then
-				cmd.append_string("-x ")
-			end
-
-			-- -o
-			if outfile /= void and then not outfile.is_empty then
-				cmd.append_string("-o ")
-				cmd.append_string(outfile)
-				cmd.append_string(" ")
-			end
-
-			cmd.append_string(gelex_input_filename)
-
-			log("  [gelex] " + cmd + "%N")
-			execute_command(cmd)
-		end
+feature -- Status report
 
 	is_executable : BOOLEAN is
+			-- Can command be executed?
 		do
-			Result := gelex_input_filename /= Void and then not gelex_input_filename.is_empty
-						and ((meta_ecs and not full) or (full and not meta_ecs))
+			Result := input_filename /= Void and then input_filename.count > 0 and
+				(full implies not meta_ecs)
 		ensure then
-			gelex_input_filename_not_void : Result implies gelex_input_filename /= Void
-			gelex_input_filename_not_empty : Result implies not gelex_input_filename.is_empty
-			meta_ecs implies not full
-			full implies not meta_ecs
+			input_filename_not_void: Result implies input_filename /= Void
+			input_filename_not_empty: Result implies input_filename.count > 0
+			not_meta_ecs_when_full: full implies not meta_ecs
 		end
 
-	feature -- gelex commandline options setters
-	set_size(a_size : STRING) is
-		-- -a option, default: 3000
+feature -- Access
+
+	size: STRING
+			-- -a option, default: 3000
+
+	backup: BOOLEAN
+			-- -b option, default: false
+
+	ecs: BOOLEAN
+			-- -e option, default: true
+			--?? how can one set it to false ?
+
+	full: BOOLEAN
+			-- -f option, default: false
+
+	case_insensitive: BOOLEAN
+			-- -i option, default: true
+
+	meta_ecs: BOOLEAN
+			-- -m option, default: true
+			-- (check that full is false, since this option does not make sense together with full)
+
+	no_default: BOOLEAN
+			-- -s option, default: false
+
+	no_warn: BOOLEAN
+			-- -w option, default: false
+
+	separate_actions: BOOLEAN
+			-- -x option, default: false
+
+	output_filename: STRING
+			-- -o option;
+			-- if omitted output goes to stdout
+
+	input_filename: STRING
+			-- Input filename
+
+feature -- Setting
+
+	set_size (a_size: STRING) is
+			-- Set `size' to `a_size'.
 		require
-			STRING_.is_integer(a_size)
+			a_size_not_void: a_size /= Void
+			a_size_is_integer: STRING_.is_integer (a_size)
 		do
 			size := a_size
+		ensure
+			size_set: size = a_size
 		end
 
-	set_backup(a_backup : BOOLEAN) is
-		-- -b option, default: false
+	set_backup (b: BOOLEAN) is
+			-- Set `backup' to `b'.
 		do
-			backup := a_backup
+			backup := b
+		ensure
+			backup_set: backup = b
 		end
 
-	set_ecs(a_ecs : BOOLEAN) is
-		-- -e option, default: true
-		--?? how can one set it to false ?
+	set_ecs (b : BOOLEAN) is
+			-- Set `ecs' to `b'.
 		do
-			ecs := a_ecs
+			ecs := b
+		ensure
+			ecs_set: ecs = b
 		end
 
-	set_full(a_full : BOOLEAN) is
-		-- -f option, default: false
+	set_full (b: BOOLEAN) is
+			-- Set `full' to `b'.
 		do
-			full := a_full
+			full := b
+		ensure
+			full_set: full = b
 		end
 
-	set_case_insensitive(a_case_insensitive : BOOLEAN) is
-		-- -i option, default: true
+	set_case_insensitive (b: BOOLEAN) is
+			-- Set `case_insensitive' to `b'.
 		do
-			case_insensitive := a_case_insensitive
+			case_insensitive := b
+		ensure
+			case_insensitive_set: case_insensitive = b
 		end
 
-	set_meta_ecs(a_meta_ecs : BOOLEAN) is
-		-- -m option, default: true
-		--!! check that full is false, since this option does not make sense together with full
+	set_meta_ecs (b: BOOLEAN) is
+			-- Set `meta_ecs' to `b'.
 		do
-			meta_ecs := a_meta_ecs
+			meta_ecs := b
+		ensure
+			meta_ecs_set: meta_ecs = b
 		end
 
-	set_no_default(a_no_default : BOOLEAN) is
-		-- -s option, default: false
+	set_no_default (b: BOOLEAN) is
+			-- Set `no_default' to `b'.
 		do
-			no_default := a_no_default
+			no_default := b
+		ensure
+			no_default_set: no_default = b
 		end
 
-	set_no_warn(a_no_warn : BOOLEAN) is
-		-- -w option, default: false
+	set_no_warn (b: BOOLEAN) is
+			-- Set `no_warn' to `b'.
 		do
-			no_warn := a_no_warn
+			no_warn := b
+		ensure
+			no_warn_set: no_warn = b
 		end
 
-	set_separate_actions(a_separate_actions : BOOLEAN) is
-		-- -x option, default: false
+	set_separate_actions (b: BOOLEAN) is
+			-- Set `separate_actions' to `b'.
 		do
-			separate_actions := a_separate_actions
+			separate_actions := b
+		ensure
+			separate_actions_set: separate_actions = b
 		end
 
-	set_outfile(a_outfile : STRING) is
-		-- -o option
-		-- if omitted output goes to stdout
+	set_output_filename (a_filename: like output_filename ) is
+			-- Set `output_filename' to `a_filename'.
 		require
-			outfile_not_void : a_outfile /= Void
-			outfile_not_empty : not a_outfile.is_empty
+			a_filename_not_void: a_filename /= Void
+			a_filename_not_empty: a_filename.count > 0
 		do
-			outfile := a_outfile
+			output_filename := a_filename
+		ensure
+			output_filename_set: output_filename = a_filename
 		end
 
-	set_gelex_input_filename(a_gelex_input_filename : STRING) is
-		-- required
+	set_input_filename (a_filename: like input_filename) is
+			-- Set `input_filename' to `a_filename'.
 		require
-			gelex_input_filename_not_void : a_gelex_input_filename /= Void
-			gelex_input_filename_not_empty : not a_gelex_input_filename.is_empty
+			a_filename_not_void: a_filename /= Void
+			a_filename_not_empty: a_filename.count > 0
 		do
-			gelex_input_filename := a_gelex_input_filename
+			input_filename := a_filename
+		ensure
+			input_filename_set: input_filename = a_filename
 		end
 
-	feature -- gelex commandline options
-	size : STRING
-		-- -a option, default: 3000
+feature -- Execution
 
-	backup : BOOLEAN
-		-- -b option, default: false
+	execute is
+			-- Execute command.
+		local
+			cmd: STRING
+		do
+			cmd := clone ("gelex ")
+				-- Option -a
+			if size /= Void and then size.count > 0 then
+				cmd.append_string ("-a ")
+				cmd.append_string (size.out)
+			end
+				-- Option -b
+			if backup then
+				cmd.append_string ("-b ")
+			end
+				-- Option -e
+				--!! ecs is the default. there seems no way to set it to false
+			if ecs then
+				cmd.append_string ("-e ")
+			end
+				-- Option -f
+			if full then
+				cmd.append_string ("-f ")
+			end
+				-- Option -i
+			if case_insensitive then
+				cmd.append_string ("-i ")	--?? how do I set it to false ?
+			end
+				-- Option -m
+			if meta_ecs then
+				cmd.append_string ("-m ")	--?? how do I set it to false ?
+			end
+				-- Option -s
+			if no_default then
+				cmd.append_string ("-s ")
+			end
+				-- Option -w
+			if no_warn then
+				cmd.append_string ("-w ")
+			end
+				-- Option -x
+			if separate_actions then
+				cmd.append_string ("-x ")
+			end
+				-- Option -o
+			if output_filename /= Void and then output_filename.count > 0 then
+				cmd.append_string ("-o ")
+				cmd.append_string (output_filename)
+				cmd.append_string (" ")
+			end
 
-	ecs : BOOLEAN
-		-- -e option, default: true
-		--?? how can one set it to false ?
+			cmd.append_string (input_filename)
 
-	full : BOOLEAN
-		-- -f option, default: false
+			log ("  [gelex] " + cmd + "%N")
+			execute_shell (cmd)
+		end
 
-	case_insensitive : BOOLEAN
-		-- -i option, default: true
-
-	meta_ecs : BOOLEAN
-		-- -m option, default: true
-		--!! check that full is false, since this option does not make sense together with full
-
-	no_default : BOOLEAN
-		-- -s option, default: false
-
-	no_warn : BOOLEAN
-		-- -w option, default: false
-
-	separate_actions : BOOLEAN
-		-- -x option, default: false
-
-	outfile : STRING
-		-- -o option
-		-- if omitted output goes to stdout
-
-
-	gelex_input_filename : STRING
-		-- required
-
-end
+end -- class GEANT_GELEX_COMMAND

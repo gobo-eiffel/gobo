@@ -2,7 +2,7 @@ indexing
 
 	description:
 
-		"compilation task for SmallEiffel"
+		"Compilation tasks for SmallEiffel"
 
 	library:    "Gobo Eiffel Ant"
 	author:     "Sven Ehrke <sven.ehrke@sven-ehrke.de>"
@@ -13,90 +13,116 @@ indexing
 
 
 class GEANT_COMPILE_SE_TASK
-	inherit
-		GEANT_COMPILE_SE_COMMAND
-		GEANT_TASK
-		end
 
-	
+inherit
+
+	GEANT_TASK
+	GEANT_COMPILE_SE_COMMAND
+
 creation
-	make, load_from_element
 
-	
-	
-feature
-	load_from_element(a_el : GEANT_ELEMENT) is
+	make, make_from_element
+
+feature {NONE} -- Initialization
+
+	make_from_element (an_element: GEANT_ELEMENT) is
+			-- Create a new task with information held in `an_element'.
 		local
-			s	: STRING
+			a_value: STRING
 		do
-			-- ace_file (optional)
-			if has_attribute_uc(a_el, Attribute_name_ace_file) then
-				s := get_attribute_value_with_default(a_el, Attribute_name_ace_file.out, "")
-				set_ace_file(s)
+				-- ace_filename (optional)
+			if has_uc_attribute (an_element, Ace_file_attribute_name) then
+				a_value := attribute_value_or_default (an_element, Ace_file_attribute_name.out, "")
+				if a_value.count > 0 then
+					set_ace_filename (a_value)
+				end
 			else
-				-- root_class
-				s := get_attribute_value(a_el, Attribute_name_root_class.out)
-				set_root_class(s)
-
-				-- creation_procedure
-				s := get_attribute_value(a_el, Attribute_name_creation_procedure.out)
-				set_creation_procedure(s)
-	
-				-- executable
-				s := get_attribute_value(a_el, Attribute_name_executable.out)
-				set_executable(s)
-	
-				-- case_insensitive
-				if has_attribute_uc(a_el, Attribute_case_insensitive) then
-					set_case_insensitive(get_boolean_value(a_el, Attribute_case_insensitive.out))
+					-- root_class:
+				if has_uc_attribute (an_element, Root_class_attribute_name) then
+					a_value := uc_attribute_value (an_element, Root_class_attribute_name).out
+					if a_value.count > 0 then
+						set_root_class (a_value)
+					end
 				end
-	
-				-- no_style_warning
-				if has_attribute_uc(a_el, Attribute_no_style_warning) then
-					set_no_style_warning(get_boolean_value(a_el, Attribute_no_style_warning.out))
+					-- creation_procedure:
+				if has_uc_attribute (an_element, Creation_procedure_attribute_name) then
+					a_value := uc_attribute_value (an_element, Creation_procedure_attribute_name).out
+					if a_value.count > 0 then
+						set_creation_procedure (a_value)
+					end
 				end
-	
+					-- executable:
+				if has_uc_attribute (an_element, Executable_attribute_name) then
+					a_value := uc_attribute_value (an_element, Executable_attribute_name).out
+					if a_value.count > 0 then
+						set_executable (a_value)
+					end
+				end
+					-- case_insensitive:
+				if has_uc_attribute (an_element, Case_insensitive_attribute_name) then
+					set_case_insensitive (uc_boolean_value (an_element, Case_insensitive_attribute_name))
+				end
+					-- no_style_warning:
+				if has_uc_attribute (an_element, No_style_warning_attribute_name) then
+					set_no_style_warning (uc_boolean_value (an_element, No_style_warning_attribute_name))
+				end
 			end
-
-
-	
 		end
 
-	Attribute_name_ace_file: UC_STRING is
+feature {NONE} -- Constants
+
+	Ace_file_attribute_name: UC_STRING is
 			-- Name of xml attribute for ace_file
 		once
-			!!Result.make_from_string("ace_file")
+			!! Result.make_from_string ("ace_file")
+		ensure
+			attribute_name_not_void: Result /= Void
+			atribute_name_not_empty: not Result.empty
 		end
 
-	Attribute_name_root_class: UC_STRING is
+	Root_class_attribute_name: UC_STRING is
 			-- Name of xml attribute for root_class
 		once
-			!!Result.make_from_string("root_class")
+			!! Result.make_from_string ("root_class")
+		ensure
+			attribute_name_not_void: Result /= Void
+			atribute_name_not_empty: not Result.empty
 		end
 
-	Attribute_name_creation_procedure: UC_STRING is
+	Creation_procedure_attribute_name: UC_STRING is
 			-- Name of xml attribute for creation_procedure
 		once
-			!!Result.make_from_string("creation_procedure")
+			!! Result.make_from_string ("creation_procedure")
+		ensure
+			attribute_name_not_void: Result /= Void
+			atribute_name_not_empty: not Result.empty
 		end
 
-	Attribute_name_executable: UC_STRING is
+	Executable_attribute_name: UC_STRING is
 			-- Name of xml attribute for executable
 		once
-			!!Result.make_from_string("executable")
+			!! Result.make_from_string ("executable")
+		ensure
+			attribute_name_not_void: Result /= Void
+			atribute_name_not_empty: not Result.empty
 		end
 
-	Attribute_case_insensitive: UC_STRING is
+	Case_insensitive_attribute_name: UC_STRING is
 			-- Name of xml attribute for case_insensitive
 		once
-			!!Result.make_from_string("case_insensitive")
+			!! Result.make_from_string ("case_insensitive")
+		ensure
+			attribute_name_not_void: Result /= Void
+			atribute_name_not_empty: not Result.empty
 		end
 
-	Attribute_no_style_warning: UC_STRING is
+	No_style_warning_attribute_name: UC_STRING is
 			-- Name of xml attribute for no_style_warning
 		once
-			!!Result.make_from_string("no_style_warning")
+			!! Result.make_from_string ("no_style_warning")
+		ensure
+			attribute_name_not_void: Result /= Void
+			atribute_name_not_empty: not Result.empty
 		end
 
-
-end
+end -- class GEANT_COMPILE_SE_TASK

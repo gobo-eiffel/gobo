@@ -2,7 +2,7 @@ indexing
 
 	description:
 
-		"represents a XML element"
+		"XML elements"
 
 	library:    "Gobo Eiffel Ant"
 	author:     "Sven Ehrke <sven.ehrke@sven-ehrke.de>"
@@ -12,115 +12,125 @@ indexing
 	revision:   "$Revision$"
 
 class GEANT_ELEMENT
-	inherit
-		GEANT_COMPOSITE [GEANT_ELEMENT]
-			rename make as geant_composite_make
+
+inherit
+
+	GEANT_COMPOSITE [GEANT_ELEMENT]
+		rename
+			make as make_composite,
+			add as add_child,
+			has as has_child,
+			remove as remove_child
 		end
 
-		KL_IMPORTED_STRING_ROUTINES
+	GEANT_ATTRIBUTE_HANDLER
+		rename
+			make as make_attribute_handler
 		end
-		
-		GEANT_ATTRIBUTE_HANDLER
-			rename make as am_make
-		end
-	creation
+
+creation
+
 	make
 
-feature -- creation
-make(a_name : UC_STRING) is
-    require
-        valid_name : a_name /= void and then a_name.count > 0
-	do
-	geant_composite_make
-	set_name(a_name)
-	am_make
-	set_content(ucs_empty)
-	end
+feature {NONE} -- Initialization
 
-feature -- DOM manipulation
-add_child(a_child : like Current) is
-	require
-		valid_child : a_child /= void
-	do
-	children.force_last(a_child)
-	end
+	make (a_name: like name) is
+			-- Create a new element named `a_name'.
+		require
+			a_name_not_void: a_name /= Void
+			a_name_not_empty: not a_name.empty
+		do
+			make_composite
+			set_name (a_name)
+			make_attribute_handler
+			set_content (Empty_string)
+		ensure
+			name_set: name = a_name
+		end
 
-feature -- queries
+feature -- Access
 
-get_child(a_name : UC_STRING) : GEANT_ELEMENT is
-	-- returns the first child element within this element with the given local name
-	-- and belonging to no namespace.
-	require
-		valid_name : a_name /= void and then a_name.count > 0
---		existing_child : -- has_child(a_name)
-	local
-		i		: INTEGER
-		el		: GEANT_ELEMENT
-		found	: BOOLEAN
-	do
-		from i := 1 until i > children.count or found loop
-			el := children.item(i)
-			if el.name.is_equal(a_name) then
-				found := true
+	name: UC_STRING
+			-- Element name
+
+	content: UC_STRING
+			-- Content of element
+
+	child_by_name (a_name: UC_STRING): GEANT_ELEMENT is
+			-- First child element with the local name
+			-- `a_name' and belonging to no namespace;
+			-- Void if not found
+		require
+			a_name_not_void: a_name /= Void
+			a_name_not_empty: not a_name.empty
+		local
+			i, nb: INTEGER
+			a_child: GEANT_ELEMENT
+		do
+			nb := children.count
+			from i := 1 until i > nb loop
+				a_child := children.item (i)
+				if a_child.name.is_equal (a_name) then
+					Result := a_child
+					i := nb + 1 -- Jump out of the loop.
+				else
+					i := i + 1
+				end
 			end
-
-       		i := i + 1
+		ensure
+			not_void_if_exists: not children_by_name (a_name).is_empty implies Result /= Void
 		end
 
-		if found then
-			Result := el
-		end
-	end
-
-get_children_by_name(a_name : UC_STRING) : DS_ARRAYED_LIST [GEANT_ELEMENT] is
-	-- return all direct child nodes which have the name 'a_name'
-	require
-		valid_name : a_name /= void and then a_name.count > 0
-
-	local
-		i	: INTEGER
-		c	: INTEGER
-		el	: GEANT_ELEMENT
-	do
-		!!Result.make(children.count)
-		c := 1
-		from i := 1 until i > children.count loop
-			el := children.item(i)
-			if el.name.is_equal(a_name) then
-				Result.put(el, c)
-				c := c + 1
+	children_by_name (a_name: UC_STRING): DS_ARRAYED_LIST [GEANT_ELEMENT] is
+			-- All direct children named `a_name'
+		require
+			a_name_not_void: a_name /= Void
+			a_name_not_empty: not a_name.empty
+		local
+			i, nb: INTEGER
+			a_child: GEANT_ELEMENT
+		do
+			nb := children.count
+			!!Result.make (nb)
+			from i := 1 until i > nb loop
+				a_child := children.item (i)
+				if a_child.name.is_equal (a_name) then
+					Result.put_last (a_child)
+				end
+				i := i + 1
 			end
-
-       		i := i + 1
+		ensure
+			children_not_void: Result /= Void
+			no_void_children: not Result.has (Void)
 		end
-	end
 
-feature -- attributes and setters
-name		: UC_STRING
-set_name(a_name : UC_STRING) is
-    -- assigns 'a_name' to 'name'
-    -- the client is responsible to clone 'a_name' before
-    -- calling this routine if that's what he likes
-    require
-        valid_name : a_name /= void and then a_name.count > 0
-    do
-        name := a_name
-    end
+feature -- Setting
 
-content	: UC_STRING
-set_content(a_content : UC_STRING) is
-    -- assigns 'a_content' to 'content'
-    -- the client is responsible to clone 'a_content' before
-    -- calling this routine if that's what he likes
-    require
-        valid_content : a_content /= void
-    do
-        content := a_content
-    end
+	set_name (a_name: like name) is
+			-- Set `name' to `a_name'.
+		require
+			a_name_not_void: a_name /= Void
+			a_name_not_empty: not a_name.empty
+		do
+			name := a_name
+		ensure
+			name_set: name = a_name
+		end
 
+	set_content (a_content: like content) is
+			-- Set `content' to `a_content'.
+		require
+			a_content_not_void: a_content /= Void
+		do
+			content := a_content
+		ensure
+			content_set: content = a_content
+		end
 
-feature {NONE} -- internal
-ucs_empty			: UC_STRING is once !!Result.make_from_string("") end
+invariant
 
-end
+	name_not_void: name /= Void
+	name_not_empty: not name.empty
+	content_not_void: content /= Void
 
+end -- class GEANT_ELEMENT

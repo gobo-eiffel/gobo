@@ -2,7 +2,7 @@ indexing
 
 	description:
 
-		"supports handling of list of attributes"
+		"Lists of XML attributes"
 
 	library:    "Gobo Eiffel Ant"
 	author:     "Sven Ehrke <sven.ehrke@sven-ehrke.de>"
@@ -12,70 +12,78 @@ indexing
 	revision:   "$Revision$"
 
 class GEANT_ATTRIBUTE_LIST
-	inherit DS_ARRAYED_LIST [GEANT_ATTRIBUTE]
-	rename make as ds_arrayed_list_make
-	end
+
+inherit
+
+	DS_ARRAYED_LIST [GEANT_ATTRIBUTE]
+		rename
+			make as ds_arrayed_list_make
+		end
 
 creation
-	make_from_hashtable, make_from_ds_bilinear
 
-feature -- creation
-make_from_hashtable(a_attributes : DS_HASH_TABLE[UC_STRING, UC_STRING]) is
-  local
-    cursor  : DS_HASH_TABLE_CURSOR[UC_STRING, UC_STRING]
-    attr    : GEANT_ATTRIBUTE
+	make_from_hash_table, make_from_bilinear
 
-  do
-	ds_arrayed_list_make(10)
-    from
-      cursor := a_attributes.new_cursor
-      cursor.start
-    until
-      cursor.after
-    loop
-      !!attr.make(cursor.key, cursor.item)
-      force_last(attr)
-      cursor.forth
-    end
-  cursor.finish
+feature {NONE} -- Initialization
 
-  end
+	make_from_hash_table (some_attributes: DS_HASH_TABLE [UC_STRING, UC_STRING]) is
+			-- Create a new list of attributes and fill it
+			-- with values in `some_attributes' (attributes
+			-- values indexed by names).
+		require
+			some_attributes_not_void: some_attributes /= Void
+			no_void_name: not some_attributes.has (Void)
+			-- no_empty_name: forall key in some_attributes, not key.empty
+			no_void_value: not some_attributes.has_item (Void)
+		local
+			a_cursor: DS_HASH_TABLE_CURSOR [UC_STRING, UC_STRING]
+			an_attribute: GEANT_ATTRIBUTE
+		do
+			ds_arrayed_list_make (some_attributes.count)
+			a_cursor := some_attributes.new_cursor
+			from a_cursor.start until a_cursor.after loop
+				!! an_attribute.make (a_cursor.key, a_cursor.item)
+				put_last (an_attribute)
+				a_cursor.forth
+			end
+		end
 
-make_from_ds_bilinear(a_attributes : DS_BILINEAR [DS_PAIR [DS_PAIR [UC_STRING, UC_STRING], UC_STRING]]) is
-	local
-	    cs: DS_BILINEAR_CURSOR [DS_PAIR [DS_PAIR [UC_STRING, UC_STRING], UC_STRING]]
-	    attr    : GEANT_ATTRIBUTE
-	do
-	ds_arrayed_list_make(10)
-  	 from
-	    cs := a_attributes.new_cursor
-  	    cs.start
-  	 until
-  	    cs.off
-	 loop
-		!!attr.make(cs.item.first.first, cs.item.second)
-		force_last(attr)
+	make_from_bilinear (some_attributes: DS_BILINEAR [DS_PAIR [DS_PAIR [UC_STRING, UC_STRING], UC_STRING]]) is
+			-- Create a new list of attributes and fill it
+			-- with values in `some_attributes'.
+		require
+			some_attributes_not_void: some_attributes /= Void
+		local
+			a_cursor: DS_BILINEAR_CURSOR [DS_PAIR [DS_PAIR [UC_STRING, UC_STRING], UC_STRING]]
+			an_attribute: GEANT_ATTRIBUTE
+		do
+			ds_arrayed_list_make (some_attributes.count)
+			a_cursor := some_attributes.new_cursor
+			from a_cursor.start until a_cursor.after loop
+				!! an_attribute.make (a_cursor.item.first.first, a_cursor.item.second)
+				put_last (an_attribute)
+				a_cursor.forth
+			end
+		end
 
-  	    cs.forth
-  	 end
-	end
+feature -- Output
 
+	print_attributes is
+			-- Write attributes to standard output.
+		local
+			an_attribute: GEANT_ATTRIBUTE
+			i, nb: INTEGER
+		do
+			nb := count
+			from i := 1 until i > nb loop
+				an_attribute := item (i)
+				print (an_attribute.name.out + "=%"" + an_attribute.value.out + "%"%N")
+				i := i + 1
+			end
+		end
 
+invariant
 
-feature -- development
-show is
-  local
-    attr    : GEANT_ATTRIBUTE
-    i       : INTEGER
-  do
-   	 from i := 1 until i > count loop
-        attr := item(i)
-        print(attr.name.out + "=" + "%"" + attr.value.out + "%"%N")
-        i := i + 1
-   	  end
-	end
-
-ucs_empty			: UC_STRING is once !!Result.make_from_string("") end
+	no_void_attribute: not has (Void)
 
 end -- class GEANT_ATTRIBUTE_LIST
-

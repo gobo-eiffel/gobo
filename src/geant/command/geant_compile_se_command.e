@@ -2,7 +2,7 @@ indexing
 
 	description:
 
-		"compilation command for SmallEiffel"
+		"Compilation commands for SmallEiffel"
 
 	library:    "Gobo Eiffel Ant"
 	author:     "Sven Ehrke <sven.ehrke@sven-ehrke.de>"
@@ -18,147 +18,175 @@ inherit
 
 	GEANT_COMMAND
 
-	
 creation
 
 	make
 
-feature -- Initialization
+feature {NONE} -- Initialization
 
 	make is
+			-- Create a new SmallEiffel compilation command.
 		do
 		end
+
+feature -- Status report
+
+	is_executable: BOOLEAN is
+			-- Can command be executed?
+		do
+			Result := is_ace_configuration or is_traditional_configuration
+		ensure then
+			definition: Result = (is_ace_configuration or is_traditional_configuration)
+		end
+
+	is_ace_configuration: BOOLEAN is
+			-- Does ace file configuration apply?
+		do
+			Result := (ace_filename /= Void and then ace_filename.count > 0)
+		ensure
+			definition: Result = (ace_filename /= Void and then ace_filename.count > 0)
+		end
+
+	is_traditional_configuration: BOOLEAN is
+			-- Does traditional configuration apply?
+		do
+			Result :=
+				(root_class /= Void and then root_class.count > 0) and
+				(executable /= Void and then executable.count > 0)
+		ensure
+			definition: Result =
+				(root_class /= Void and then root_class.count > 0) and
+				(executable /= Void and then executable.count > 0)
+		end
+
+feature -- Access
+
+	case_insensitive: BOOLEAN
+	no_style_warning: BOOLEAN
+	executable: STRING
+	root_class: STRING
+	creation_procedure: STRING
+			-- Command-line options
+
+	ace_filename: STRING
+			-- Ace filename
+
+feature -- Setting
+
+	set_case_insensitive (b: BOOLEAN) is
+			-- Set `case_sensitive' to `b'.
+		do
+			case_insensitive := b
+		ensure
+			case_insensitive_set: case_insensitive = b
+		end
+
+	set_no_style_warning (b: BOOLEAN) is
+			-- Set `no_style_warning' to `b'.
+		do
+			no_style_warning := b
+		ensure
+			no_style_warning_set: no_style_warning = b
+		end
+
+	set_executable (an_executable: like executable) is
+			-- Set `executable' to `an_executable'
+		require
+			an_executable_not_void: an_executable /= Void
+			an_executable_not_empty: an_executable.count > 0
+		do
+			executable := an_executable
+		ensure
+			executable_set: executable = an_executable
+		end
+
+	set_root_class (a_root_class: like root_class) is
+			-- Set `root_class' to `a_root_class'.
+		require
+			a_root_class_not_void: a_root_class /= Void
+			a_root_class_not_empty: a_root_class.count > 0
+		do
+			root_class := a_root_class
+		ensure
+			root_class_set: root_class = a_root_class
+		end
+
+	set_creation_procedure (a_creation_procedure: like creation_procedure) is
+			-- Set `creation_procedure' to `a_creation_procedure'.
+		require
+			a_creation_procedure_not_void: a_creation_procedure /= Void
+			a_creation_procedure_not_empty: a_creation_procedure.count > 0
+		do
+			creation_procedure := a_creation_procedure
+		ensure
+			creation_procedure_set: creation_procedure = a_creation_procedure
+		end
+
+	set_ace_filename (a_filename: like ace_filename) is
+			-- Set `ace_filename' to `a_filename'.
+		require
+			a_filename_not_void: a_filename /= Void
+			a_filename_not_empty: a_filename.count > 0
+		do
+			ace_filename := a_filename
+		ensure
+			ace_filename_set: ace_filename = a_filename
+		end
+
+feature -- Execution
 
 	execute is
 			-- Execute command.
 		local
-			cmd	: STRING
+			cmd: STRING
 		do
 			if is_ace_configuration then
-				cmd := create_ace_cmdline
+				cmd := new_ace_cmdline
 			else
-				cmd := create_traditional_cmdline
+				cmd := new_traditional_cmdline
 			end
 
-			log("  [compile_se] " + cmd + "%N")
-			execute_command(cmd)
+			log ("  [compile_se] " + cmd + "%N")
+			execute_shell (cmd)
 		end
 
-	is_executable : BOOLEAN is
-			-- Is command ready to execute ?
-		do
-			Result := is_ace_configuration or else is_traditional_configuration
-		ensure then
-			valid_configuration : Result implies is_ace_configuration
-									or else is_traditional_configuration
-		end
+feature -- Command-line
 
-	is_ace_configuration : BOOLEAN is
-			-- Does ace file configuration apply ?
-		do
-			Result := (ace_file /= void and then ace_file.count > 0) and not is_traditional_configuration
-		ensure
-			Result implies (ace_file /= void and then ace_file.count > 0) and not is_traditional_configuration
-		end
-
-	is_traditional_configuration : BOOLEAN is
-			-- Does traditional configuration apply ?
-		do
-			Result :=
-				(root_class /= void and then root_class.count > 0) and
-				(executable /= void and then executable.count > 0) and not is_ace_configuration
-		ensure
-			Result implies
-				(root_class /= void and then root_class.count > 0) and
-				(executable /= void and then executable.count > 0) and not is_ace_configuration
-		end
-
-
-	create_ace_cmdline : STRING is
-			-- Execution commandline for Ace configuration.
+	new_ace_cmdline: STRING is
+			-- Execution commandline for Ace configuration
 		require
-			is_ace_configuration : is_ace_configuration
+			is_ace_configuration: is_ace_configuration
 		do
-			!!Result.make_from_string("compile ")
-			Result.append_string(ace_file)
+			Result := clone ("compile ")
+			Result.append_string (ace_filename)
 		end
 
-	create_traditional_cmdline : STRING is
-			-- Execution commandline for traditional configuration.
+	new_traditional_cmdline: STRING is
+			-- Execution commandline for traditional configuration
 		require
-			is_traditional_configuration : is_traditional_configuration
+			is_traditional_configuration: is_traditional_configuration
 		do
-			!!Result.make_from_string("compile")
+			Result := clone ("compile")
 
-			Result.append_string(" -o "); Result.append_string(executable)
-
+			Result.append_string (" -o ")
+			Result.append_string (executable)
 
 			if case_insensitive then
-				Result.append_string(" -case_insensitive")
+				Result.append_string (" -case_insensitive")
 			end
 
 			if no_style_warning then
-				Result.append_string(" -no_style_warning")
+				Result.append_string (" -no_style_warning")
 			end
 
-			Result.append_string(" "); Result.append_string(root_class)
-			Result.append_string(" ")
-			if creation_procedure /= void and then not creation_procedure.is_empty then
-				Result.append_string(creation_procedure)
+			Result.append_string (" ")
+			Result.append_string (root_class)
+			Result.append_string (" ")
+			if creation_procedure /= Void and then creation_procedure.count > 0 then
+				Result.append_string (creation_procedure)
 			else
-				Result.append_string("make")
+				Result.append_string ("make")
 			end
 		end
 
-	set_case_insensitive(a_case_insensitive : BOOLEAN) is
-		do
-			case_insensitive := a_case_insensitive
-		end
-
-	set_no_style_warning(a_no_style_warning : BOOLEAN) is
-		do
-			no_style_warning := a_no_style_warning
-		end
-
-	set_executable(a_executable : STRING) is
-		require
-			executable_not_void : a_executable /= Void
-			executable_not_empty : not a_executable.is_empty
-			-- if platform = windows ends with ".exe"
-		do
-			executable := a_executable
-		end
-
-	set_root_class(a_root_class : STRING) is
-		require
-			root_class_not_void : a_root_class /= Void
-			root_class_not_empty : not a_root_class.is_empty
-		do
-			root_class := a_root_class
-		end
-
-	set_creation_procedure(a_creation_procedure : STRING) is
-		require
-			creation_procedure_not_void : a_creation_procedure /= Void
-			creation_procedure_not_empty : not a_creation_procedure.is_empty
-		do
-			creation_procedure := a_creation_procedure
-		end
-
-	set_ace_file(a_ace_file : STRING) is
-		require
-			ace_file_not_void : a_ace_file /= Void
-			ace_file_not_empty : not a_ace_file.is_empty
-		do
-			ace_file := a_ace_file
-		end
-
-case_insensitive	: BOOLEAN
-no_style_warning	: BOOLEAN
-executable			: STRING
-root_class			: STRING
-creation_procedure	: STRING
-
-ace_file			: STRING
-
-end
+end -- class GEANT_COMPILE_SE_COMMAND

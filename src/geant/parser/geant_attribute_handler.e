@@ -2,7 +2,7 @@ indexing
 
 	description:
 
-		"handles GEANT_ATTRIBUTEs. This class is used by GEANT_ELEMENT"
+		"XML attribute handlers"
 
 	library:    "Gobo Eiffel Ant"
 	author:     "Sven Ehrke <sven.ehrke@sven-ehrke.de>"
@@ -12,130 +12,175 @@ indexing
 	revision:   "$Revision$"
 
 class GEANT_ATTRIBUTE_HANDLER
-feature -- creation
-make is
-	do
-		!!attributes.make(0)
-	end
 
-feature -- attributes
-set_attribute(a_attribute : GEANT_ATTRIBUTE) is
-	-- appends a_attribute to the internal list if it is not part of the list yet
-	--!!WRONG otherwise a_attribute replaces the old GEANT_ATTRIBUTE assigned to
-	-- a_attribute.name
-	require
-		valid_attribute : a_attribute /= void
-		-- unique_attribute: not attributes.has(a_attribute)
-	do
-		attributes.force_last(a_attribute)
-	end
+inherit
 
-add_attributes(a_attributes : GEANT_ATTRIBUTE_LIST) is
-	-- adds all attributes to the current element
-	local
-		i	: INTEGER
-		attr: GEANT_ATTRIBUTE
-	do
-		from i := 1 until i > a_attributes.count loop
-	        attr := a_attributes.item(i)
-			set_attribute(attr)
+	GEANT_ELEMENT_NAMES
+		export {NONE} all end
 
-       		i := i + 1
+creation
+
+	make
+
+feature {NONE} -- Initialization
+
+	make is
+			-- Create a new attribute handler.
+		do
+			!! attributes.make (0)
 		end
-	end
 
+feature -- Access
 
-get_attributevalue_by_name(a_attribute_name : UC_STRING) : UC_STRING is
-	require
-		valid_attribute_name :	a_attribute_name /= void and then
-								a_attribute_name.count > 0
-	local
-		attr	: GEANT_ATTRIBUTE
-	do
-		attr := get_attribute_by_name(a_attribute_name)
-		Result := attr.value
-	ensure
-		valid_result	: Result /= void
-	end
+	attributes: DS_ARRAYED_LIST [GEANT_ATTRIBUTE]
+			-- Attributes
 
-get_attribute_by_name(a_attribute_name : UC_STRING) : GEANT_ATTRIBUTE is
-    require
-        valid_attribute_name :	a_attribute_name /= void and then
-								a_attribute_name.count > 0
-	do
-		Result := try_to_get_attribute_by_name(a_attribute_name)
-
-	ensure
-		attribute_found : Result /= void
-	end
-
-try_to_get_attribute_by_name(a_attribute_name : UC_STRING) : GEANT_ATTRIBUTE is
-    require
-        valid_attribute_name : a_attribute_name /= void and then a_attribute_name.count > 0
-	local
-		i		: INTEGER
-		attr	: GEANT_ATTRIBUTE
-		found	: BOOLEAN
-	do
-	-- implementation notes:
-	-- loop over all attributes to find the right one.
-	-- usually a hashtable is used for these kind of things and
-	-- actually the attributes have been in one in the XML_HANDLER
-	-- But: since an element usually just has a few attributes looping
-	-- does not matter here.
-
-		from i := 1 until found or else i > attributes.count loop
-			attr := attributes.item(i)
-
-			if attr.name.is_equal(a_attribute_name) then
-				Result := attr
-				found := true
+	attribute_by_name (a_name: UC_STRING): GEANT_ATTRIBUTE is
+			-- Attribute of name `a_name'
+		require
+			a_name_not_void: a_name /= Void
+			a_name_not_empty: not a_name.empty
+			has_attribute: has_attribute (a_name)
+		local
+			i, nb: INTEGER
+			an_attribute: GEANT_ATTRIBUTE
+		do
+			nb := attributes.count
+			from i := 1 until i > nb loop
+				an_attribute := attributes.item (i)
+				if an_attribute.name.is_equal (a_name) then
+					Result := an_attribute
+					i := nb + 1 -- Jump out of the loop.
+				else
+					i := i + 1
+				end
 			end
-			i := i + 1
-		end	-- loop
+		ensure
+			attribute_not_void: Result /= Void
+		end
 
-	end
+	attribute_value_by_name (a_name: UC_STRING): UC_STRING is
+			-- Value of attribute named `a_name'
+		require
+			a_name_not_void: a_name /= Void
+			a_name_not_empty: not a_name.empty
+			has_attribute: has_attribute (a_name)
+		local
+			i, nb: INTEGER
+			an_attribute: GEANT_ATTRIBUTE
+		do
+			nb := attributes.count
+			from i := 1 until i > nb loop
+				an_attribute := attributes.item (i)
+				if an_attribute.name.is_equal (a_name) then
+					Result := an_attribute.value
+					i := nb + 1 -- Jump out of the loop.
+				else
+					i := i + 1
+				end
+			end
+		ensure
+			attribute_value_not_void: Result /= Void
+		end
 
-has_attribute(a_attribute_name : UC_STRING) : BOOLEAN is
-	do
-	Result := try_to_get_attribute_by_name(a_attribute_name) /= void
-	end
+	id_attribute_value: UC_STRING is
+			-- Value of attribute named ID
+		require
+			has_id_attribute: has_id_attribute
+		do
+			Result := attribute_value_by_name (Id_attribute_name)
+		ensure
+			attribute_value_not_void: Result /= Void
+		end
 
-feature -- ID
-has_ID : BOOLEAN is
-	do
-		Result := try_to_get_attribute_by_name(C_ID) /= void
-	end
+	idref_attribute_value: UC_STRING is
+			-- Value of attribute named IDREF
+		require
+			has_idref_attribute: has_idref_attribute
+		do
+			Result := attribute_value_by_name (Idref_attribute_name)
+		ensure
+			attribute_value_not_void: Result /= Void
+		end
 
-get_ID : UC_STRING is
-	require
-		has_ID
-	do
-		Result := get_attributevalue_by_name(C_ID)
-	end
+feature -- Status report
 
-feature -- IDREF
-has_IDREF : BOOLEAN is
-	do
-		Result := try_to_get_attribute_by_name(C_IDREF) /= void
-	end
+	has_attribute (a_name: UC_STRING): BOOLEAN is
+			-- Is there an attribute named `a_name'
+			-- in `attributes'?
+		require
+			a_name_not_void: a_name /= Void
+			a_name_not_empty: not a_name.empty
+		local
+			i, nb: INTEGER
+			an_attribute: GEANT_ATTRIBUTE
+		do
+				-- Implementation notes:
+				-- loop over all attributes to find the right one.
+				-- usually a hash table is used for these kind of things and
+				-- actually the attributes have been in one in the XML_HANDLER
+				-- But: since an element usually just has a few attributes looping
+				-- does not matter here.
+			nb := attributes.count
+			from i := 1 until i > nb loop
+				an_attribute := attributes.item (i)
+				if an_attribute.name.is_equal (a_name) then
+					Result := True
+					i := nb + 1 -- Jump out of the loop.
+				else
+					i := i + 1
+				end
+			end
+		end
 
-get_IDREF : UC_STRING is
-	require
-		has_IDREF
-	do
-		Result := get_attributevalue_by_name(C_IDREF)
-	end
+	has_id_attribute: BOOLEAN is
+			-- Is there an attribute named ID
+			-- in `attributes'?
+		do
+			Result := has_attribute (Id_attribute_name)
+		end
 
-attributes	: DS_ARRAYED_LIST [GEANT_ATTRIBUTE]
+	has_idref_attribute: BOOLEAN is
+			-- Is there an attribute named IDREF
+			-- in `attributes'?
+		do
+			Result := has_attribute (Idref_attribute_name)
+		end
 
+feature -- Element change
 
-feature -- attributes and setters
+	add_attribute (an_attribute: GEANT_ATTRIBUTE) is
+			-- Add `an_attribute' to `attributes'.
+		require
+			an_attribute_not_void: an_attribute /= Void
+			not_has_attribute: not has_attribute (an_attribute.name)
+		do
+			attributes.force_last (an_attribute)
+		ensure
+			attribute_added: has_attribute (an_attribute.name)
+		end
 
-feature {NONE} -- internal
-C_ID			: UC_STRING is once !!Result.make_from_string("ID") end
-C_IDREF			: UC_STRING is once !!Result.make_from_string("IDREF") end
+	add_attributes (some_attributes: GEANT_ATTRIBUTE_LIST) is
+			-- Add all attributes to `attributes'.
+		require
+			some_attributes_not_void: some_attributes /= Void
+			no_void_attribute: not some_attributes.has (Void)
+			-- not_has_attributes: forall item in some_attributes, not has_attribute (item)
+		local
+			i, nb: INTEGER
+			an_attribute: GEANT_ATTRIBUTE
+		do
+			nb := some_attributes.count
+			from i := 1 until i > nb loop
+				an_attribute := some_attributes.item (i)
+				add_attribute (an_attribute)
+				i := i + 1
+			end
+		end
 
-end
+invariant
 
+	attributes_not_void: attributes /= Void
+	no_void_attribute: not attributes.has (Void)
 
+end -- class GEANT_ATTRIBUTE_HANDLER
