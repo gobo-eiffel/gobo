@@ -157,8 +157,6 @@ feature {NONE} -- Processing
 			else
 				a_universe.set_cat_enabled (False)
 			end
-			if is_flat then
-			end
 			a_universe.compile (is_flat)
 		end
 
