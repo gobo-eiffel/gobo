@@ -58,7 +58,7 @@ feature -- Element change
 		require
 			a_uri_not_void: a_uri /= Void
 		do
-			clear_uri_start
+			clear_uri_stack
 			push_uri (a_uri)
 		end
 
