@@ -38,14 +38,14 @@ creation
 	
 feature -- Actions (redirected)
 
-	on_comment (a_content: UC_STRING) is
+	on_comment (a_content: STRING) is
 			-- Comment
 		do
 			validate (a_content)
 			Precursor (a_content)
 		end
 	
-	on_processing_instruction (a_name: UC_STRING; a_content: UC_STRING) is
+	on_processing_instruction (a_name: STRING; a_content: STRING) is
 			-- Processing instruction.
 		do
 			validate_name (a_name)
@@ -54,7 +54,7 @@ feature -- Actions (redirected)
 		end
 	
 
-	on_start_tag (a_namespace, a_prefix, a_local_part: UC_STRING) is
+	on_start_tag (a_namespace, a_prefix, a_local_part: STRING) is
 			-- Start tag.
 		do
 			if has_prefix (a_prefix) then
@@ -64,7 +64,7 @@ feature -- Actions (redirected)
 			Precursor (a_namespace, a_prefix, a_local_part)
 		end
 		
-	on_attribute (a_namespace, a_prefix, a_local_part: UC_STRING; a_value: UC_STRING) is
+	on_attribute (a_namespace, a_prefix, a_local_part: STRING; a_value: STRING) is
 			-- Start of attribute.
 		do
 			if has_prefix (a_prefix) then
@@ -75,7 +75,7 @@ feature -- Actions (redirected)
 			Precursor (a_namespace, a_prefix, a_local_part, a_value)
 		end
 		
-	on_content (a_content: UC_STRING) is
+	on_content (a_content: STRING) is
 			-- Text content.
 		do
 			validate (a_content)
@@ -85,7 +85,7 @@ feature -- Actions (redirected)
 
 feature {NONE}
 
-	validate (a:UC_STRING) is
+	validate (a:STRING) is
 			-- Validate a string.
 		do	
 			if not valid_string (a) then	
@@ -93,7 +93,7 @@ feature {NONE}
 			end
 		end
 		
-	validate_name (a:UC_STRING) is
+	validate_name (a:STRING) is
 			-- Validate name in astring
 		do
 			if not valid_name (a) then	
@@ -105,7 +105,7 @@ feature {NONE}
 		
 feature {NONE} -- String
 
-	valid_string (a: UC_STRING): BOOLEAN is
+	valid_string (a: STRING): BOOLEAN is
 			-- Is this a UTF8 string with no invalid character?
 		require
 			not_void: a /= Void
@@ -125,7 +125,7 @@ feature {NONE} -- String
 			empty: (a.count = 0) implies Result
 		end
 		
-	valid_name (a: UC_STRING): BOOLEAN is
+	valid_name (a: STRING): BOOLEAN is
 			-- Is this a UTF8 string with a valid name?
 		require
 			not_void: a /= Void

@@ -48,12 +48,12 @@ feature -- Errors
 
 feature -- Meta
 
-	on_processing_instruction (a_name: UC_STRING; a_content: UC_STRING) is
+	on_processing_instruction (a_name: STRING; a_content: STRING) is
 			-- Processing instruction.
 		do
 		end
 
-	on_comment (a_content: UC_STRING) is
+	on_comment (a_content: STRING) is
 			-- Comment
 			-- Atomic: single comment produces single event
 		do
@@ -61,12 +61,12 @@ feature -- Meta
 
 feature -- Tag
 
-	on_start_tag (a_namespace: UC_STRING; a_prefix: UC_STRING; a_local_part: UC_STRING) is
+	on_start_tag (a_namespace: STRING; a_prefix: STRING; a_local_part: STRING) is
 			-- Start of start tag.
 		do
 		end
 
-	on_attribute (a_namespace: UC_STRING; a_prefix: UC_STRING; a_local_part: UC_STRING; a_value: UC_STRING) is
+	on_attribute (a_namespace: STRING; a_prefix: STRING; a_local_part: STRING; a_value: STRING) is
 			-- Start of start tag.
 		do
 		end
@@ -76,14 +76,14 @@ feature -- Tag
 		do
 		end
 
-	on_end_tag (a_namespace: UC_STRING; a_prefix: UC_STRING; a_local_part: UC_STRING) is
+	on_end_tag (a_namespace: STRING; a_prefix: STRING; a_local_part: STRING) is
 			-- End tag.
 		do
 		end
 
 feature -- Content
 
-	on_content (a_content: UC_STRING) is
+	on_content (a_content: STRING) is
 			-- Text content.
 		do
 		end

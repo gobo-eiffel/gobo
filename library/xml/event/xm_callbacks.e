@@ -35,7 +35,7 @@ feature -- Errors
 
 feature -- Meta
 
-	on_processing_instruction (a_name: UC_STRING; a_content: UC_STRING) is
+	on_processing_instruction (a_name: STRING; a_content: STRING) is
 			-- Processing instruction.
 		require
 			name_not_void: a_name /= Void
@@ -43,7 +43,7 @@ feature -- Meta
 		deferred
 		end
 
-	on_comment (a_content: UC_STRING) is
+	on_comment (a_content: STRING) is
 			-- Comment
 			-- Atomic: single comment produces single event
 		deferred
@@ -51,7 +51,7 @@ feature -- Meta
 
 feature -- Tag
 
-	on_start_tag (a_namespace: UC_STRING; a_prefix: UC_STRING; a_local_part: UC_STRING) is
+	on_start_tag (a_namespace: STRING; a_prefix: STRING; a_local_part: STRING) is
 			-- Start of start tag.
 		require
 			--unresolved_namespace_is_void: a_namespace may be void
@@ -59,7 +59,7 @@ feature -- Tag
 		deferred
 		end
 
-	on_attribute (a_namespace: UC_STRING; a_prefix: UC_STRING; a_local_part: UC_STRING; a_value: UC_STRING) is
+	on_attribute (a_namespace: STRING; a_prefix: STRING; a_local_part: STRING; a_value: STRING) is
 			-- Start of attribute.
 		require
 			--unresolved_namespace_is_void: a_namespace may be void
@@ -72,7 +72,7 @@ feature -- Tag
 		deferred
 		end
 
-	on_end_tag (a_namespace: UC_STRING; a_prefix: UC_STRING; a_local_part: UC_STRING) is
+	on_end_tag (a_namespace: STRING; a_prefix: STRING; a_local_part: STRING) is
 			-- End tag.
 		require
 			--unresolved_namespace_is_void: a_namespace may be void
@@ -82,7 +82,7 @@ feature -- Tag
 
 feature -- Content
 
-	on_content (a_content: UC_STRING) is
+	on_content (a_content: STRING) is
 			-- Text content.
 			-- NOT atomic: successive content may be different.
 		require
@@ -93,19 +93,19 @@ feature -- Content
 
 feature -- Support
 
-	has_prefix (a: UC_STRING): BOOLEAN is
+	has_prefix (a: STRING): BOOLEAN is
 			-- Is prefix in use?
 		do
 			Result := a /= Void
 		end
 
-	has_namespace (a: UC_STRING): BOOLEAN is
+	has_namespace (a: STRING): BOOLEAN is
 			-- Is namespace resolved?
 		do
 			Result := a /= Void
 		end
 
-	is_local_part (a: UC_STRING): BOOLEAN is
+	is_local_part (a: STRING): BOOLEAN is
 			-- Is this a valid local part string?
 		do
 			Result := a /= Void and then a.count > 0

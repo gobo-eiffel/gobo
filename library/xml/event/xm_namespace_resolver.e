@@ -24,7 +24,10 @@ inherit
 		end
 
 	XM_MARKUP_CONSTANTS
-
+	
+	XM_UNICODE_STRUCTURE_FACTORY
+		export {NONE} all end
+		
 feature -- Document
 
 	on_start is
@@ -36,7 +39,7 @@ feature -- Document
 
 feature -- Element
 
-	on_start_tag (a_namespace: UC_STRING; a_prefix: UC_STRING; a_local_part: UC_STRING) is
+	on_start_tag (a_namespace: STRING; a_prefix: STRING; a_local_part: STRING) is
 			-- Print start of start tag.
 		do
 			context.push
@@ -47,7 +50,7 @@ feature -- Element
 			element_local_part := a_local_part
 		end
 
-	on_attribute (a_namespace: UC_STRING; a_prefix: UC_STRING; a_local_part: UC_STRING; a_value: UC_STRING) is
+	on_attribute (a_namespace: STRING; a_prefix: STRING; a_local_part: STRING; a_value: STRING) is
 			-- Print attribute.
 		do
 			if not has_prefix (a_prefix) and is_xmlns (a_local_part) then
@@ -71,8 +74,8 @@ feature -- Element
 	on_start_tag_finish is
 			-- Print end of start tag.
 		local
-			an_element_namespace: UC_STRING
-			a_namespace: UC_STRING
+			an_element_namespace: STRING
+			a_namespace: STRING
 		do
 			-- resolve element
 			if has_prefix (element_prefix) then
@@ -112,7 +115,7 @@ feature -- Element
 			Precursor
 		end
 
-	on_end_tag (a_namespace: UC_STRING; a_prefix: UC_STRING; a_local_part: UC_STRING) is
+	on_end_tag (a_namespace: STRING; a_prefix: STRING; a_local_part: STRING) is
 			-- Print end tag.
 		do
 			if has_prefix (a_prefix) then
@@ -134,16 +137,16 @@ feature {NONE} -- Context
 
 feature {NONE} -- Context
 
-	is_xmlns (a: UC_STRING): BOOLEAN is
+	is_xmlns (a: STRING): BOOLEAN is
 			-- Is this an xmlns declaration?
 		do
-			Result := a /= Void and then Xmlns.is_equal (a.to_utf8)
+			Result := a /= Void and then same_string (Xmlns, a)
 		end
 
 feature {NONE} -- Element
 
-	element_prefix: UC_STRING
-	element_local_part: UC_STRING
+	element_prefix: STRING
+	element_local_part: STRING
 
 feature {NONE} -- Attributes
 
@@ -153,12 +156,12 @@ feature {NONE} -- Attributes
 	attributes_make is
 			-- Intialise queue.
 		do
-			!! attributes_prefix.make
-			!! attributes_local_part.make
-			!! attributes_value.make
+			attributes_prefix := new_string_queue
+			attributes_local_part := new_string_queue
+			attributes_value := new_string_queue
 		end
 
-	attributes_force (a_prefix: UC_STRING; a_local_part: UC_STRING; a_value: UC_STRING) is
+	attributes_force (a_prefix: STRING; a_local_part: STRING; a_value: STRING) is
 			-- Like attributes.force
 		do
 			attributes_prefix.force (a_prefix)
@@ -182,8 +185,8 @@ feature {NONE} -- Attributes
 			Result := attributes_prefix.is_empty
 		end
 
-	attributes_prefix: DS_LINKED_QUEUE[UC_STRING]
-	attributes_local_part: DS_LINKED_QUEUE[UC_STRING]
-	attributes_value: DS_LINKED_QUEUE[UC_STRING]
+	attributes_prefix: DS_QUEUE[STRING]
+	attributes_local_part: DS_QUEUE[STRING]
+	attributes_value: DS_QUEUE[STRING]
 
 end

@@ -73,7 +73,7 @@ feature -- Document
 
 feature -- Element
 
-	on_start_tag (namespace, ns_prefix, name: UC_STRING) is
+	on_start_tag (namespace, ns_prefix, name: STRING) is
 			-- called whenever the parser findes a start element
 		do			
 			check
@@ -101,7 +101,7 @@ feature -- Element
 			current_open_composite := current_element
 		end
 
-	on_attribute (namespace, a_prefix, a_name: UC_STRING; a_value: UC_STRING) is
+	on_attribute (namespace, a_prefix, a_name: STRING; a_value: STRING) is
 			-- Add attribute.
 		local
 			xml: XM_ATTRIBUTE
@@ -115,7 +115,7 @@ feature -- Element
 			current_open_composite.force_last (xml)
 		end
 
-	on_content (a_data: UC_STRING) is
+	on_content (a_data: STRING) is
 			-- Character data
 		local
 			xml: XM_CHARACTER_DATA
@@ -131,7 +131,7 @@ feature -- Element
 			current_node := xml
 		end
 
-	on_end_tag (a_namespace, a_ns_prefix, a_local_part: UC_STRING) is
+	on_end_tag (a_namespace, a_ns_prefix, a_local_part: STRING) is
 			-- End tag
 		do
 			check
@@ -141,7 +141,7 @@ feature -- Element
 			current_node := current_node.parent
 		end
 
-	on_processing_instruction (target, data: UC_STRING) is
+	on_processing_instruction (target, data: STRING) is
 			-- Processing instruction.
 		local
 			xml: XM_PROCESSING_INSTRUCTION
@@ -158,7 +158,7 @@ feature -- Element
 			current_node := xml
 		end
 
-	on_comment (com: UC_STRING) is
+	on_comment (com: STRING) is
 			-- Comment.
 		local
 			xml: XM_COMMENT

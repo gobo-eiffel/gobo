@@ -14,14 +14,14 @@ deferred class XM_DTD_CALLBACKS
 
 feature -- Document type definuition callbacks
 
-	on_doctype (name: UC_STRING; an_id: XM_DTD_EXTERNAL_ID; has_internal_subset: BOOLEAN) is
+	on_doctype (name: STRING; an_id: XM_DTD_EXTERNAL_ID; has_internal_subset: BOOLEAN) is
 			-- Document type declaration.
 		require
 			name_not_void: name /= Void
 		deferred
 		end
 
-	on_element_declaration (a_name: UC_STRING; a_model: XM_DTD_ELEMENT_CONTENT) is
+	on_element_declaration (a_name: STRING; a_model: XM_DTD_ELEMENT_CONTENT) is
 			-- Element declaration.
 		require
 			name_not_void: a_name /= Void
@@ -29,7 +29,7 @@ feature -- Document type definuition callbacks
 		deferred
 		end
 
-	on_attribute_declaration (an_element_name, a_name: UC_STRING; a_model: XM_DTD_ATTRIBUTE_CONTENT) is
+	on_attribute_declaration (an_element_name, a_name: STRING; a_model: XM_DTD_ATTRIBUTE_CONTENT) is
 			-- Attribute declaration, one event per attribute.
 		require
 			element_name_not_void: an_element_name /= Void
@@ -38,8 +38,8 @@ feature -- Document type definuition callbacks
 		deferred
 		end
 
-	on_entity_declaration (entity_name: UC_STRING; is_parameter: BOOLEAN; value: UC_STRING; 
-			an_id: XM_DTD_EXTERNAL_ID; notation_name: UC_STRING) is
+	on_entity_declaration (entity_name: STRING; is_parameter: BOOLEAN; value: STRING; 
+			an_id: XM_DTD_EXTERNAL_ID; notation_name: STRING) is
 			 -- Entity declaration.
 		require
 			entity_name_not_void: entity_name /= Void
@@ -49,7 +49,7 @@ feature -- Document type definuition callbacks
 		deferred
 		end
 
-	on_notation_declaration (notation_name: UC_STRING; an_id: XM_DTD_EXTERNAL_ID) is
+	on_notation_declaration (notation_name: STRING; an_id: XM_DTD_EXTERNAL_ID) is
 			-- Notation declaration.
 		require
 			notation_name_not_void: notation_name /= Void

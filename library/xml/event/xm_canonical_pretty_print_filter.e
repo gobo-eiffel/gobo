@@ -27,7 +27,7 @@ creation
 
 feature -- Meta
 
-	on_comment (a_content: UC_STRING) is
+	on_comment (a_content: STRING) is
 			-- Do not print comment.
 		do
 			next.on_comment (a_content)

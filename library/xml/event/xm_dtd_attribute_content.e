@@ -19,6 +19,20 @@ inherit
 			out
 		end
 
+	UC_UNICODE_FACTORY
+		export
+			{NONE} all
+		undefine
+			out
+		end
+	
+	KL_IMPORTED_STRING_ROUTINES
+		export
+			{NONE} all
+		undefine
+			out
+		end
+
 creation
 
 	make
@@ -44,50 +58,49 @@ feature -- From ANY
 		do
 			-- name
 			if has_name then
-				Result := clone (name.to_utf8)
+				Result := name
 			else
-				Result := clone ("?")
+				Result := "?"
 			end
 			
 			-- type
-			Result.append_character (' ')
+			Result := STRING_.concat (Result, " ")
 			if is_data then
-				Result.append_string ("CDATA")
+				Result := STRING_.concat (Result, "CDATA")
 			elseif is_id then
-				Result.append_string ("ID")
+				Result := STRING_.concat (Result, "ID")
 			elseif is_id_ref then
-				Result.append_string ("IDREF")
+				Result := STRING_.concat (Result, "IDREF")
 			elseif is_entity then
-				Result.append_string ("ENTITY")
+				Result := STRING_.concat (Result, "ENTITY")
 			elseif is_token then
-				Result.append_string ("NMTOKEN")
+				Result := STRING_.concat (Result, "NMTOKEN")
 			elseif is_notation then
-				Result.append_string ("NOTATION")
+				Result := STRING_.concat (Result, "NOTATION")
 			end
 			if is_list_type then
-				Result.append_character ('S')
+				Result := STRING_.concat (Result, "S")
 			end
-			Result.append_character (' ')
+			Result := STRING_.concat (Result, " ")
 			
 			-- default
 			if is_value_required then
-				Result.append_string ("#REQUIRED")
+				Result := STRING_.concat (Result, "#REQUIRED")
 			elseif is_value_implied then
-				Result.append_string ("#IMPLIED")
+				Result := STRING_.concat (Result, "#IMPLIED")
 			elseif is_value_fixed then
-				Result.append_string ("#FIXED ")
+				Result := STRING_.concat (Result, "#FIXED ")
 			end
 			if has_default_value then
-				Result.append_character (' ')
-				Result.append_character ('%"')	
-				Result.append_string (default_value.to_utf8)
-				Result.append_character ('%"')	
+				Result := STRING_.concat (Result, " %"")	
+				Result := STRING_.concat (Result, default_value)
+				Result := STRING_.concat (Result, "%"")  
 			end
 		end
 
 feature -- Name content type
 
-	name: UC_STRING
+	name: STRING
 			-- Attribute name.
 
 	set_name (a: like name) is
@@ -116,7 +129,7 @@ feature {NONE} -- Implementation
 
 feature -- Default value
 
-	default_value: UC_STRING
+	default_value: STRING
 			-- require has_default_value
 			-- ensure Result /= Void
 

@@ -19,6 +19,9 @@ inherit
 	UC_UNICODE_FACTORY
 		export {NONE} all end
 
+	XM_UNICODE_STRUCTURE_FACTORY
+		export {NONE} all end
+	
 creation
 
 	make
@@ -33,13 +36,13 @@ feature {NONE} -- Creation
 
 feature {NONE} -- Implementation
 
-	context: DS_BILINKED_LIST [DS_HASH_TABLE [UC_STRING, UC_STRING]]
+	context: DS_BILINKED_LIST [DS_HASH_TABLE [STRING, STRING]]
 			-- Really a DS_STACK but we need to see 
 			-- the content.
 
 feature -- Add
 
-	add_default (a_namespace: UC_STRING) is
+	add_default (a_namespace: STRING) is
 			-- Add default namespace to context.
 		require
 			not_void: a_namespace /= Void
@@ -47,7 +50,7 @@ feature -- Add
 			add (a_namespace, Default_pseudo_prefix)
 		end
 
-	add (a_namespace: UC_STRING; a_prefix: UC_STRING) is
+	add (a_namespace: STRING; a_prefix: STRING) is
 			-- Add namespace to context.
 		require
 			not_void: a_namespace /= Void
@@ -59,7 +62,7 @@ feature -- Add
 
 feature -- Query
 
-	shallow_has (a_prefix: UC_STRING): BOOLEAN is
+	shallow_has (a_prefix: STRING): BOOLEAN is
 			-- Is this prefix known at the current level?
 			-- (for duplicate declaration checks)
 		require
@@ -68,12 +71,12 @@ feature -- Query
 			Result := context.count > 0 and then context.last.has (a_prefix)
 		end
 
-	has (a_prefix: UC_STRING): BOOLEAN is
+	has (a_prefix: STRING): BOOLEAN is
 			-- Is this prefix known
 		require
 			not_void: a_prefix /= Void
 		local
-			a_cursor: DS_BILINEAR_CURSOR[DS_HASH_TABLE[UC_STRING, UC_STRING]]
+			a_cursor: DS_BILINEAR_CURSOR[DS_HASH_TABLE[STRING, STRING]]
 		do
 			from
 				a_cursor := context.new_cursor
@@ -90,18 +93,18 @@ feature -- Query
 			end
 		end
 
-	resolve_default: UC_STRING is
+	resolve_default: STRING is
 			-- Resolve default namespace.
 		do
 			Result := resolve (Default_pseudo_prefix)
 		end
 
-	resolve (a_prefix: UC_STRING): UC_STRING is
+	resolve (a_prefix: STRING): STRING is
 			-- Resolve a prefix.
 		require
 			not_void: a_prefix /= Void
 		local
-			a_cursor: DS_BILINEAR_CURSOR[DS_HASH_TABLE[UC_STRING, UC_STRING]]
+			a_cursor: DS_BILINEAR_CURSOR[DS_HASH_TABLE[STRING, STRING]]
 		do
 			Result := Default_namespace
 			from
@@ -125,11 +128,8 @@ feature -- Stack
 
 	push is
 			-- Push element context.
-		local
-			a_table: DS_HASH_TABLE [UC_STRING, UC_STRING]
 		do
-			!! a_table.make (0)
-			context.force_last (a_table)
+			context.force_last (new_string_string_table)
 		end
 
 	pop is
@@ -142,16 +142,16 @@ feature -- Stack
 
 feature {NONE} -- Constants
 
-	Default_pseudo_prefix: UC_STRING is
+	Default_pseudo_prefix: STRING is
 			-- Default pseudo prefix
 		once
-			Result := new_unicode_string ("")
+			!! Result.make (0)
 		end
 
-	Default_namespace: UC_STRING is
+	Default_namespace: STRING is
 			-- Default namespace (empty)
 		once
-			Result := new_unicode_string ("")
+			!! Result.make (0)
 		end
 
 end

@@ -62,13 +62,13 @@ feature {NONE} -- Errors
 
 feature {NONE} -- Meta
 
-	on_processing_instruction (a_name, a_content: UC_STRING) is
+	on_processing_instruction (a_name, a_content: STRING) is
 			-- Forward PI.
 		do
 			callbacks.on_processing_instruction (a_name, a_content)
 		end
 
-	on_comment (a_content: UC_STRING) is
+	on_comment (a_content: STRING) is
 			-- Forward comment.
 		do
 			callbacks.on_comment (a_content)
@@ -76,13 +76,13 @@ feature {NONE} -- Meta
 
 feature {NONE} -- Tag
 
-	on_start_tag (a_namespace: UC_STRING; a_prefix: UC_STRING; a_local_part: UC_STRING) is
+	on_start_tag (a_namespace: STRING; a_prefix: STRING; a_local_part: STRING) is
 			-- Start of start tag.
 		do
 			callbacks.on_start_tag (a_namespace, a_prefix, a_local_part)
 		end
 
-	on_attribute (a_namespace: UC_STRING; a_prefix: UC_STRING; a_local_part: UC_STRING; a_value: UC_STRING) is
+	on_attribute (a_namespace: STRING; a_prefix: STRING; a_local_part: STRING; a_value: STRING) is
 			-- Start of start tag.
 		do
 			callbacks.on_attribute (a_namespace, a_prefix, a_local_part, a_value)
@@ -94,7 +94,7 @@ feature {NONE} -- Tag
 			callbacks.on_start_tag_finish
 		end
 
-	on_end_tag (a_namespace: UC_STRING; a_prefix: UC_STRING; a_local_part: UC_STRING) is
+	on_end_tag (a_namespace: STRING; a_prefix: STRING; a_local_part: STRING) is
 			-- End tag.
 		do
 			callbacks.on_end_tag (a_namespace, a_prefix, a_local_part)
@@ -102,7 +102,7 @@ feature {NONE} -- Tag
 
 feature {NONE} -- Content
 
-	on_content (a_content: UC_STRING) is
+	on_content (a_content: STRING) is
 			-- Forward content.
 		do
 			callbacks.on_content (a_content)

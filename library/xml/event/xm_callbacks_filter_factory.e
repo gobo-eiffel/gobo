@@ -30,7 +30,7 @@ feature -- Filters
 			new: Result /= Void
 		end
 
-	new_pretty_print_string (an_output: UC_STRING): XM_PRETTY_PRINT_FILTER is
+	new_pretty_print_string (an_output: STRING): XM_PRETTY_PRINT_FILTER is	
 			-- New pretty printer output to string.
 		do
 			Result := new_pretty_print

@@ -24,6 +24,9 @@ inherit
 			on_end_tag,
 			on_content
 		end
+	
+	XM_UNICODE_STRUCTURE_FACTORY
+		export {NONE} all end
 
 creation
 
@@ -32,10 +35,10 @@ creation
 
 feature {NONE} -- Share
 
-	strings: DS_HASH_SET [UC_STRING]
+	strings: DS_HASH_SET [STRING]
 			-- Strings to be shared.
 
-	shared_string (a: UC_STRING): UC_STRING is
+	shared_string (a: STRING): STRING is
 			-- If string known return the previous occurence.
 		require
 			not_void: a /= Void
@@ -53,19 +56,19 @@ feature -- Document events
 	on_start is
 			-- Called when parsing starts.
 		do
-			!! strings.make_equal (0)
+			strings := new_string_set
 			Precursor
 		end
 
 feature -- Meta information
 
-	on_processing_instruction (a_name: UC_STRING; a_content: UC_STRING) is
+	on_processing_instruction (a_name: STRING; a_content: STRING) is
 			-- Processing instruction.
 		do
 			next.on_processing_instruction (shared_string (a_name), shared_string (a_content))
 		end
 
-	on_comment (a_content: UC_STRING) is
+	on_comment (a_content: STRING) is
 			-- Comment
 			-- Atomic: single comment produces single event
 		do
@@ -74,7 +77,7 @@ feature -- Meta information
 
 feature -- Tag
 
-	on_start_tag (a_namespace: UC_STRING; a_prefix: UC_STRING; a_local_part: UC_STRING) is
+	on_start_tag (a_namespace: STRING; a_prefix: STRING; a_local_part: STRING) is
 			-- Start of start tag.
 		do
 			next.on_start_tag (shared_string (a_namespace), 
@@ -82,7 +85,7 @@ feature -- Tag
 					shared_string (a_local_part))
 		end
 
-	on_attribute (a_namespace: UC_STRING; a_prefix: UC_STRING; a_local_part: UC_STRING; a_value: UC_STRING) is
+	on_attribute (a_namespace: STRING; a_prefix: STRING; a_local_part: STRING; a_value: STRING) is
 			-- Start of start tag.
 		do
 			next.on_attribute (shared_string (a_namespace), 
@@ -91,7 +94,7 @@ feature -- Tag
 					shared_string (a_value))
 		end
 
-	on_end_tag (a_namespace: UC_STRING; a_prefix: UC_STRING; a_local_part: UC_STRING) is
+	on_end_tag (a_namespace: STRING; a_prefix: STRING; a_local_part: STRING) is
 			-- End tag.
 		do
 			next.on_end_tag (shared_string (a_namespace), 
@@ -101,7 +104,7 @@ feature -- Tag
 
 feature -- Content
 
-	on_content (a_content: UC_STRING) is
+	on_content (a_content: STRING) is
 			-- Text content.
 			-- NOT atomic: successive content may be different.
 			-- Default: forward event to 'next'.

@@ -23,7 +23,7 @@ inherit
 
 feature -- Tag
 
-	on_start_tag (a_namespace: UC_STRING; a_prefix: UC_STRING; a_local_part: UC_STRING) is
+	on_start_tag (a_namespace: STRING; a_prefix: STRING; a_local_part: STRING) is
 			-- Print start of start tag.
 		do
 			namespace := a_namespace
@@ -31,7 +31,7 @@ feature -- Tag
 			namespace := Void
 		end
 
-	on_attribute (a_namespace: UC_STRING; a_prefix: UC_STRING; a_local_part: UC_STRING; a_value: UC_STRING) is
+	on_attribute (a_namespace: STRING; a_prefix: STRING; a_local_part: STRING; a_value: STRING) is
 			-- Print attribute.
 		do
 			namespace := a_namespace
@@ -41,10 +41,10 @@ feature -- Tag
 
 feature {NONE} -- Name output
 
-	namespace: UC_STRING
+	namespace: STRING
 			-- Namespace stored for output.
 
-	output_name (a_prefix: UC_STRING; a_local_part: UC_STRING) is
+	output_name (a_prefix: STRING; a_local_part: STRING) is
 			-- Output prefix:name, with namespace annotation.
 		do
 			if namespace /= Void then

@@ -25,13 +25,13 @@ feature {NONE} -- Creation
 
 feature -- Access
 
-	base: UC_STRING
+	base: STRING
 			-- Base URI
 
-	system_id: UC_STRING
+	system_id: STRING
 			-- SYSTEM
 
-	public_id: UC_STRING
+	public_id: STRING
 			-- PUBLIC
 
 feature -- Set

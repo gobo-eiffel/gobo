@@ -73,14 +73,14 @@ feature -- Errors
 
 feature -- Meta
 
-	on_processing_instruction (a_name: UC_STRING; a_content: UC_STRING) is
+	on_processing_instruction (a_name: STRING; a_content: STRING) is
 			-- Processing instruction.
 			-- Default: forward event to 'next'.
 		do
 			next.on_processing_instruction (a_name, a_content)
 		end
 
-	on_comment (a_content: UC_STRING) is
+	on_comment (a_content: STRING) is
 			-- Comment
 			-- Atomic: single comment produces single event
 			-- Default: forward event to 'next'.
@@ -90,14 +90,14 @@ feature -- Meta
 
 feature -- Tag
 
-	on_start_tag (a_namespace: UC_STRING; a_prefix: UC_STRING; a_local_part: UC_STRING) is
+	on_start_tag (a_namespace: STRING; a_prefix: STRING; a_local_part: STRING) is
 			-- Start of start tag.
 			-- Default: forward event to 'next'.
 		do
 			next.on_start_tag (a_namespace, a_prefix, a_local_part)
 		end
 
-	on_attribute (a_namespace: UC_STRING; a_prefix: UC_STRING; a_local_part: UC_STRING; a_value: UC_STRING) is
+	on_attribute (a_namespace: STRING; a_prefix: STRING; a_local_part: STRING; a_value: STRING) is
 			-- Attribute.
 			-- Default: forward event to 'next'.
 		do
@@ -111,7 +111,7 @@ feature -- Tag
 			next.on_start_tag_finish
 		end
 
-	on_end_tag (a_namespace: UC_STRING; a_prefix: UC_STRING; a_local_part: UC_STRING) is
+	on_end_tag (a_namespace: STRING; a_prefix: STRING; a_local_part: STRING) is
 			-- End tag.
 			-- Default: forward event to 'next'.
 		do
@@ -120,7 +120,7 @@ feature -- Tag
 
 feature -- Content
 
-	on_content (a_content: UC_STRING) is
+	on_content (a_content: STRING) is
 			-- Text content.
 			-- NOT atomic: successive content may be different.
 			-- Default: forward event to 'next'.

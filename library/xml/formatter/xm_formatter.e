@@ -28,6 +28,8 @@ inherit
 	UC_UNICODE_FACTORY
 		export {NONE} all end
 
+	XM_MARKUP_CONSTANTS
+	
 creation
 
 	make
@@ -36,10 +38,10 @@ feature
 
 	make is
 		do
-			last_string := new_unicode_string ("")
+			!! last_string.make (0)
 		end
 
-	last_string: UC_STRING
+	last_string: STRING
 
 	wipe_out is
 			-- clear `last_string'
@@ -87,17 +89,17 @@ feature {ANY} -- Standard processor routines
 	process_character_data (c: XM_CHARACTER_DATA) is
 		do
 			try_process_position (c)
-			ucappend (c.content)
+			append (c.content)
 		end
 
 	process_processing_instruction (a_pi: XM_PROCESSING_INSTRUCTION) is
 		do
 			try_process_position (a_pi)
-			append ("<? ")
-			ucappend (a_pi.target)
-			append (" ")
-			ucappend (a_pi.data)
-			append (" ?>")
+			append (Pi_start)
+			append (a_pi.target)
+			append (Space_s)
+			append (a_pi.data)
+			append (Pi_end)
 		end
 
 	process_document (doc: XM_DOCUMENT) is
@@ -109,9 +111,9 @@ feature {ANY} -- Standard processor routines
 	process_comment (com: XM_COMMENT) is
 		do
 			try_process_position (com)
-			append ("<!--")
-			ucappend (com.data)
-			append ("-->")
+			append (Comment_start)
+			append (com.data)
+			append (Comment_end)
 		end
 
 	process_attributes (e: XM_ELEMENT) is
@@ -126,7 +128,7 @@ feature {ANY} -- Standard processor routines
 			loop
 				process_attribute_in_start_tag (cs.item)
 				if not cs.is_last then
-					append (" ")
+					append (Space_s)
 				end
 				cs.forth
 			end
@@ -135,9 +137,10 @@ feature {ANY} -- Standard processor routines
 	process_attribute_in_start_tag (att: XM_ATTRIBUTE) is
 		do
 			process_named (att)
-			append ("=%"")
-			ucappend (att.value)
-			append ("%"")
+			append (Eq_s)
+			append (Quot_s)
+			append (att.value)
+			append (Quot_s)
 		end
 
 	process_attribute (att: XM_ATTRIBUTE) is
@@ -167,11 +170,11 @@ feature {ANY} -- Non standard processor routines
 		require
 			el_not_void: el /= Void
 		do
-			append ("<")
+			append (Stag_start)
 			process_named (el)
-			append (" ")
+			append (Space_s)
 			process_attributes (el)
-			append (">")
+			append (Stag_end)
 		end
 
 	try_process_position (node: XM_NODE) is
@@ -194,24 +197,24 @@ feature {ANY} -- Non standard processor routines
 				pos := position_table.item (node)
 			end
 
-			append ("<!--")
+			append (Comment_start)
 			if pos /= Void then
 				append (pos.out)
 			else
 				append ("No position info available")
 			end
-			append ("-->%N")
+			append (Comment_end)
 		end
 
 	process_empty_element (el: XM_ELEMENT) is
 		require
 			el_not_void: el /= Void
 		do
-			append ("<")
+			append (Etag_start)
 			process_named (el)
-			append (" ")
+			append (Space_s)
 			process_attributes (el)
-			append ("/>")
+			append (Etag_end)
 		end
 
 	process_end_tag (el: XM_ELEMENT) is
@@ -227,34 +230,23 @@ feature {ANY} -- Non standard processor routines
 		require
 			n_not_void: n /= Void
 		do
---	if
---		n.has_prefix
---	then
---		ucappend (n.ns_prefix)
---		append (":")
---	end
 			if n.has_namespace then
-				ucappend (n.namespace)
-				append ("=")
+				append (n.namespace)
+				append (Eq_s)
 			end
-			ucappend (n.name)
+			append (n.name)
 		end
 
 feature {NONE} -- Implementation
-
-	ucappend (str: UC_STRING) is
-		require
-			str_not_void: str /= Void
-			last_string_not_void: last_string /= Void
-		do
-			last_string.append_string (str)
-		end
 
 	append (str: STRING) is
 		require
 			str_not_void: str /= Void
 			last_string_not_void: last_string /= Void
 		do
+			if not is_unicode_string (last_string) and then is_unicode_string (str) then
+				last_string := forced_unicode_string (last_string)
+			end
 			last_string.append_string (str)
 		end
 
