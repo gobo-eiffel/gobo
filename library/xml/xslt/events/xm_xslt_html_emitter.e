@@ -148,7 +148,10 @@ feature {NONE} -- Implementation
 	escape_uri_attributes: BOOLEAN
 			-- Should the html and xhtml methods escape non-ASCII charaters in URI attribute values?
 
-	Native_representation, Entity_representation, Decimal_representation, Hexadecimal_representation: INTEGER is unique
+	Native_representation: INTEGER is 1
+	Entity_representation: INTEGER is 2
+	Decimal_representation: INTEGER is 3
+	Hexadecimal_representation: INTEGER is 4
 			-- Character representation methods
 	
 	non_ascii_representation: INTEGER

@@ -493,11 +493,11 @@ feature {NONE} -- Implementation
 		end
 
 	control: INTEGER
-	Inserted_constant: INTEGER is unique
-	Replaced_constant: INTEGER is unique
-	Removed_constant: INTEGER is unique
-	Conflict_constant: INTEGER is unique
-	Unknown_constant: INTEGER is unique
+	Inserted_constant: INTEGER is 1
+	Replaced_constant: INTEGER is 2
+	Removed_constant: INTEGER is 3
+	Conflict_constant: INTEGER is 4
+	Unknown_constant: INTEGER is 5
 
 feature {NONE} -- Inapplicable
 

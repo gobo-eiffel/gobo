@@ -74,9 +74,9 @@ feature -- Alignment
 			-- Padding character;
 			-- default is to pad with blanks.
 
-	align_left,
-	align_right,
-	align_center: INTEGER is unique
+	align_left: INTEGER is 1
+	align_right: INTEGER is 2
+	align_center: INTEGER is 3
 			-- Possible `alignment' values
 
 

@@ -1708,7 +1708,10 @@ feature {XM_XSLT_STYLE_ELEMENT} -- Local
 
 feature {NONE} -- Implementation
 
-	Fixed_component, Left_double_curly_brace_component, Right_double_curly_brace_component, Avt_component: INTEGER is unique
+	Fixed_component: INTEGER is 1
+	Left_double_curly_brace_component: INTEGER is 2
+	Right_double_curly_brace_component: INTEGER is 3
+	Avt_component: INTEGER is 4
 			-- Constants used by `generate_attribute_value_template'
 	
 	common_child_item_type: XM_XPATH_ITEM_TYPE is

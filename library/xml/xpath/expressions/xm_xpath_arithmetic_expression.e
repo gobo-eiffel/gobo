@@ -177,7 +177,12 @@ feature {XM_XPATH_ARITHMETIC_EXPRESSION} -- Local
 	is_backwards_compatible_mode: BOOLEAN
 			-- Is XPath 1.0 Backwards Compatible Mode used?
 
-	Unknown_action, Numeric_arithmetic_action, Date_and_duration_action, Date_difference_action, Duration_addition_action, Duration_multiplication_action: INTEGER is unique
+	Unknown_action: INTEGER is 1
+	Numeric_arithmetic_action: INTEGER is 2
+	Date_and_duration_action: INTEGER is 3
+	Date_difference_action: INTEGER is 4
+	Duration_addition_action: INTEGER is 5
+	Duration_multiplication_action: INTEGER is 6
 			-- Arithmetic action need on operands
 	
 		analyze_arithmetic_expression  (a_context: XM_XPATH_STATIC_CONTEXT) is

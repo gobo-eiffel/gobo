@@ -2182,7 +2182,9 @@ feature {MA_DECIMAL} -- Basic operations
 			end
 		end
 
-	division_standard, division_integer, division_remainder: INTEGER is unique
+	division_standard: INTEGER is 1
+	division_integer: INTEGER is 2
+	division_remainder: INTEGER is 3
 			-- Division types
 
 	do_divide (other: like Current; ctx: MA_DECIMAL_CONTEXT; division_type: INTEGER): like Current is

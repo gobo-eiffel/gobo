@@ -631,11 +631,11 @@ feature {NONE} -- Constants
 	yyNb_rules: INTEGER is deferred end
 			-- Number of rules
 
-	yyNext_token: INTEGER is unique
-	yyMatch: INTEGER is unique
-	yyFind_action: INTEGER is unique
-	yyDo_action: INTEGER is unique
-	yyFind_rule: INTEGER is unique
+	yyNext_token: INTEGER is 1
+	yyMatch: INTEGER is 2
+	yyFind_action: INTEGER is 3
+	yyDo_action: INTEGER is 4
+	yyFind_rule: INTEGER is 5
 
 invariant
 

@@ -154,9 +154,13 @@ feature {NONE} -- Implementation
 	instruction_type: INTEGER
 			-- Type of block
 
-	General_purpose_block, Otherwise_block, Fallback_block,
-	Matching_substring_block, Non_matching_substring_block,
-	If_block, When_block: INTEGER is unique
+	General_purpose_block: INTEGER is 1
+	Otherwise_block: INTEGER is 2
+	Fallback_block: INTEGER is 3
+	Matching_substring_block: INTEGER is 4
+	Non_matching_substring_block: INTEGER is 5
+	If_block: INTEGER is 6
+	When_block: INTEGER is 7
 			-- Types of block
 
 invariant

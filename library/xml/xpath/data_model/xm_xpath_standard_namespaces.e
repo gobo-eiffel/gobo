@@ -17,10 +17,12 @@ inherit
 		KL_IMPORTED_STRING_ROUTINES
 
 	-- all INTEGERs should be INTEGER_16
-	
+
 feature -- Access
 
-	No_namespaces, Local_namespaces, All_namespaces: INTEGER is unique
+	No_namespaces: INTEGER is 1
+	Local_namespaces: INTEGER is 2
+	All_namespaces: INTEGER is 3
 
 	Null_prefix_index: INTEGER is 1
 			-- The numeric code representing the null namespace

@@ -14,8 +14,11 @@ class XM_XPATH_CARDINALITY
 
 feature -- Access
 
-	Required_cardinality_empty, Required_cardinality_optional, Required_cardinality_exactly_one,
-	Required_cardinality_one_or_more, Required_cardinality_zero_or_more: INTEGER is unique
+	Required_cardinality_empty: INTEGER is 1
+	Required_cardinality_optional: INTEGER is 2
+	Required_cardinality_exactly_one: INTEGER is 3
+	Required_cardinality_one_or_more: INTEGER is 4
+	Required_cardinality_zero_or_more: INTEGER is 5
 
 	multiply_cardinality (c1, c2: INTEGER): INTEGER is
 			-- Multiply cardinalities

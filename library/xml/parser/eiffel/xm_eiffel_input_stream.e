@@ -275,7 +275,12 @@ feature {NONE} -- State
 	encoding: INTEGER
 			-- Input encoding, one of:
 
-	Utf_8, Utf_8_or_compatible, Latin_1, Utf16_msb_first, Utf16_msb_last, Undetected: INTEGER is unique
+	Utf_8: INTEGER is 1
+	Utf_8_or_compatible: INTEGER is 2
+	Latin_1: INTEGER is 3
+	Utf16_msb_first: INTEGER is 4
+	Utf16_msb_last: INTEGER is 5
+	Undetected: INTEGER is 6
 			-- Utf_8_or_compatible: probably UTF-8 but charset may be changed
 			-- Utf_8: input already in UTF-8, will remain so
 			-- Latin_1: input in ISO 8859-1 (Latin-1)

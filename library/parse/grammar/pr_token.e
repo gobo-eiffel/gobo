@@ -192,7 +192,9 @@ feature {NONE} -- Implementation
 	associativity: INTEGER
 			-- Associativity of current token
 
-	Left_assoc, Right_assoc, Non_assoc: INTEGER is unique
+	Left_assoc: INTEGER is 1
+	Right_assoc: INTEGER is 2
+	Non_assoc: INTEGER is 3
 			-- Valid values for `associativity'
 
 invariant

@@ -180,7 +180,9 @@ feature {XM_XPATH_CLOSURE} -- Local
 	state: INTEGER
 			-- Information on items read
 
-	Unread_state, Maybe_more_state, All_read_state: INTEGER is unique
+	Unread_state: INTEGER is 1
+	Maybe_more_state: INTEGER is 2
+	All_read_state: INTEGER is 3
 
 	input_iterator: XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_ITEM]
 			-- Underlying iterator 

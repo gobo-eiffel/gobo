@@ -294,11 +294,11 @@ feature {NONE} -- Constants
 	yyNb_rows: INTEGER is deferred end
 			-- Number of rows in `yy_nxt'
 
-	yyNext_token: INTEGER is unique
-	yyMatch: INTEGER is unique
-	yyFind_action: INTEGER is unique
-	yyDo_action: INTEGER is unique
-	yyFind_rule: INTEGER is unique
+	yyNext_token: INTEGER is 1
+	yyMatch: INTEGER is 2
+	yyFind_action: INTEGER is 3
+	yyDo_action: INTEGER is 4
+	yyFind_rule: INTEGER is 5
 
 invariant
 

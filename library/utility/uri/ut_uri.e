@@ -435,11 +435,11 @@ feature {NONE} -- Update cached attributes
 
 feature {NONE} -- URI parsing
 
-	State_scheme,
-	State_authority,
-	State_path,
-	State_query,
-	State_fragment: INTEGER is unique
+	State_scheme: INTEGER is 1
+	State_authority: INTEGER is 2
+	State_path: INTEGER is 3
+	State_query: INTEGER is 4
+	State_fragment: INTEGER is 5
 			-- States uses in parsing the URI
 
 	clear_url_parts is

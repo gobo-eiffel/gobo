@@ -557,10 +557,19 @@ feature {NONE} -- Breaks
 			-- Kind of break being parsed when reading the
 			-- following break or comment
 
-	identifier_break, freeop_break, character_break, integer_break,
-	uinteger_break, hinteger_break, real_break, ureal_break,
-	bit_break, string_break, str_freeop_break, str_special_break,
-	str_verbatim_break: INTEGER is unique
+	identifier_break: INTEGER is 1
+	freeop_break: INTEGER is 2
+	character_break: INTEGER is 3
+	integer_break: INTEGER is 4
+	uinteger_break: INTEGER is 5
+	hinteger_break: INTEGER is 6
+	real_break: INTEGER is 7
+	ureal_break: INTEGER is 8
+	bit_break: INTEGER is 9
+	string_break: INTEGER is 10
+	str_freeop_break: INTEGER is 11
+	str_special_break: INTEGER is 12
+	str_verbatim_break: INTEGER is 13
 			-- Various kinds of breaks being parsed when
 			-- reading the following break or comment
 

@@ -18,7 +18,10 @@ inherit
 
 feature -- Access
 
-	Single_level, Multiple_levels, Any_level, Simple_numbering: INTEGER is unique
+	Single_level: INTEGER is 1
+	Multiple_levels: INTEGER is 2
+	Any_level: INTEGER is 3
+	Simple_numbering: INTEGER is 4
 			-- Level-numbering values
 
 	selected_numberer (a_language: STRING): XM_XSLT_NUMBERER is

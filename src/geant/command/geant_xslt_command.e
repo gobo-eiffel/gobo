@@ -400,16 +400,16 @@ feature -- Execution
 
 feature -- Constants
 
-	Processor_xalan_cpp: INTEGER is unique
+	Processor_xalan_cpp: INTEGER is 1
 			-- Identifier for Xalan C++ processor
 
-	Processor_xalan_java: INTEGER is unique
+	Processor_xalan_java: INTEGER is 2
 			-- Identifier for Xalan Java processor
 
-	Processor_xsltproc: INTEGER is unique
+	Processor_xsltproc: INTEGER is 3
 			-- Identifier for libxslt processor
 
-	Processor_gexslt: INTEGER is unique
+	Processor_gexslt: INTEGER is 4
 			-- Identifier for Gobo Eiffel xslt processor
 
 end

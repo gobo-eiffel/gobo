@@ -44,7 +44,11 @@ feature -- Access
 
 	Any_item_fingerprint: INTEGER is 88
 
-	Same_item_type, Subsuming_type, Subsumed_type, Overlapping_types, Disjoint_types: INTEGER is unique
+	Same_item_type: INTEGER is 1
+	Subsuming_type: INTEGER is 2
+	Subsumed_type: INTEGER is 3
+	Overlapping_types: INTEGER is 4
+	Disjoint_types: INTEGER is 5
 			-- Type realtionships
 
 	common_super_type (t1, t2: XM_XPATH_ITEM_TYPE): XM_XPATH_ITEM_TYPE is

@@ -18,7 +18,9 @@ inherit
 
 feature -- Access
 
-	Static_error, Type_error, Dynamic_error: INTEGER is unique
+	Static_error: INTEGER is 1
+	Type_error: INTEGER is 2
+	Dynamic_error: INTEGER is 3
 
 feature -- Status report
 

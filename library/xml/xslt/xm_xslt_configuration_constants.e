@@ -14,7 +14,9 @@ class XM_XSLT_CONFIGURATION_CONSTANTS
 
 feature -- Access
 
-	Recover_silently, Recover_with_warnings, Do_not_recover: INTEGER is unique
+	Recover_silently: INTEGER is 1
+	Recover_with_warnings: INTEGER is 2
+	Do_not_recover: INTEGER is 3
 			-- Recovery policies
 
 end

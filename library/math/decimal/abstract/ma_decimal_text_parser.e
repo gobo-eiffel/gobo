@@ -534,26 +534,29 @@ feature {MA_DECIMAL} -- Basic operations
 
 feature -- Constants
 
-	State_start,
-	State_nan,
-	State_snan,
-	State_starting_point,
-	State_infinity,
-	State_integer_part,
-	State_point,
-	State_fractional_part,
-	State_exponent,
-	State_sign,
-	State_comma,
-	State_start_exponent,
-	State_exponent_sign, State_error: INTEGER is unique
+	State_start: INTEGER is 1
+	State_nan: INTEGER is 2
+	State_snan: INTEGER is 3
+	State_starting_point: INTEGER is 4
+	State_infinity: INTEGER is 5
+	State_integer_part: INTEGER is 6
+	State_point: INTEGER is 7
+	State_fractional_part: INTEGER is 8
+	State_exponent: INTEGER is 9
+	State_sign: INTEGER is 10
+	State_comma: INTEGER is 11
+	State_start_exponent: INTEGER is 12
+	State_exponent_sign: INTEGER is 13
+	State_error: INTEGER is 14
 
 feature {NONE} -- Implementation
 
-	Error_invalid_value, Error_invalid_character, Error_invalid_character_in_integer_part,
-	Error_invalid_character_in_decimal_part,
-	Error_invalid_character_in_exponent,
-	Error_invalid_state: INTEGER is unique
+	Error_invalid_value: INTEGER is 101
+	Error_invalid_character: INTEGER is 102
+	Error_invalid_character_in_integer_part: INTEGER is 103
+	Error_invalid_character_in_decimal_part: INTEGER is 104
+	Error_invalid_character_in_exponent: INTEGER is 105
+	Error_invalid_state: INTEGER is 106
 
 invariant
 

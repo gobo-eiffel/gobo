@@ -14,8 +14,13 @@ class XM_XPATH_ROLE
 
 feature -- Access
 
-	Function_role, Binary_expression_role, Type_operation_role,
-	Variable_role, Instruction_role, Function_result_role, Order_by_role: INTEGER is unique
+	Function_role: INTEGER is 1
+	Binary_expression_role: INTEGER is 2
+	Type_operation_role: INTEGER is 3
+	Variable_role: INTEGER is 4
+	Instruction_role: INTEGER is 5
+	Function_result_role: INTEGER is 6
+	Order_by_role: INTEGER is 7
 	
 end
 
