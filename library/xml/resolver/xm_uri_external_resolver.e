@@ -2,7 +2,7 @@ indexing
 	
 	description:
 
-		"External URI resolver interface, actual resolving left to descendant"
+		"URI resolver: handles relative URI resolution, delegates scheme specific URL resolution"
 
 	library: "Gobo Eiffel XML Library"
 	copyright: "Copyright (c) 2004, Eric Bezault and others"
@@ -10,7 +10,7 @@ indexing
 	date: "$Date$"
 	revision: "$Revision$"
 
-deferred class XM_URI_EXTERNAL_RESOLVER
+class XM_URI_EXTERNAL_RESOLVER
 
 inherit
 
@@ -18,7 +18,31 @@ inherit
 		redefine
 			resolve_finish
 		end
+
+creation
+
+	make,
+	make_with_base
 	
+feature {NONE} -- Creation
+
+	make is
+			-- Create `uris'.
+			-- (Useful to descendant to establish invariant.)
+		do
+			create {DS_LINKED_STACK [UT_URI]} uris.make	
+			create schemes.make_default
+		end
+		
+	make_with_base (a_uri: XM_URI) is
+			-- Create resolver with specified base URI.
+		require
+			a_uri_not_void: a_uri /= Void
+		do
+			make
+			uris.put (a_uri)
+		end
+
 feature -- Status report
 
 	uris: DS_STACK [UT_URI]
@@ -26,26 +50,30 @@ feature -- Status report
 			-- (A client or descendant may be entitled to put in and remove 
 			-- intermediate values directly.)
 	
-	make_uris is
-			-- Create `uris'.
-			-- (Useful to descendant to establish invariant.)
-		do
-			create {DS_LINKED_STACK [UT_URI]} uris.make	
-		end
-
-feature -- Base
-
 	uri: UT_URI is
 			-- Current URI.
 		require
-			has_stack: uris.count > 0
+			has_stack: not uris.is_empty
 		do
 			Result := uris.item
 		ensure
 			result_not_void: Result /= Void
 			
 		end
-		
+
+	schemes: DS_HASH_TABLE [XM_URI_RESOLVER, STRING]
+			-- Registered scheme resolvers.
+			
+feature -- Setting
+
+	register_scheme (a_scheme: XM_URI_RESOLVER) is
+			-- Register scheme.
+		require
+			a_scheme_not_void: a_scheme /= Void
+		do
+			schemes.force (a_scheme, a_scheme.scheme)
+		end
+					
 feature -- Operation(s)
 
 	resolve (a_string_uri: STRING) is
@@ -78,9 +106,51 @@ feature -- URI
 			-- Resolve an absolute URI.
 		require
 			an_uri_not_void: an_uri /= Void
-		deferred
+		do
+			last_resolver := Void
+			if schemes.has (an_uri.scheme) then
+				last_resolver := schemes.item (an_uri.scheme)
+				last_resolver.resolve (an_uri)
+			end
+		end
+
+feature {NONE} -- Implementation
+
+	last_resolver: XM_URI_RESOLVER
+			-- Last resolver used.
+
+feature -- Result
+
+	last_stream: KI_CHARACTER_INPUT_STREAM is
+			-- Last stream initialised from external entity.
+		do
+			Result := last_resolver.last_stream
+		end
+
+	has_error: BOOLEAN is
+			-- Did the last resolution attempt succeed?
+		do
+			if last_resolver /= Void then
+				Result := last_resolver.has_error
+			else
+				Result := True
+			end
+		end
+	
+	last_error: STRING is
+			-- Last error message.
+		do
+			if last_resolver /= Void then
+				Result := last_resolver.last_error
+			else
+				Result := Unknown_scheme_error
+			end
 		end
 		
+feature {NONE} -- Errors
+
+	Unknown_scheme_error: STRING is "No handler for URL scheme"
+
 invariant
 
 	uris_not_void: uris /= Void
