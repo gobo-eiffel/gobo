@@ -3,12 +3,12 @@ indexing
 	description:
 
 		"Equivalence classes of integer symbols; some of them %
-		%possibly belonging to none of the equivalence classes";
+		%possibly belonging to none of the equivalence classes"
 
-	library:    "Gobo Eiffel Lexical Library";
-	author:     "Eric Bezault <ericb@gobo.demon.co.uk>";
-	copyright:  "Copyright (c) 1997, Eric Bezault";
-	date:       "$Date$";
+	library:    "Gobo Eiffel Lexical Library"
+	author:     "Eric Bezault <ericb@gobo.demon.co.uk>"
+	copyright:  "Copyright (c) 1997, Eric Bezault"
+	date:       "$Date$"
 	revision:   "$Revision$"
 
 class LX_SYMBOL_PARTITIONS
@@ -46,11 +46,11 @@ feature {NONE} -- Initialization
 			cell: DS_BILINKABLE [INTEGER]
 			i: INTEGER
 		do
-			make_array (min, max)
+			!! storage.make (min, max)
 			!! symbols.make (min, max)
 			from i := min until i > max loop
 				!! cell.make (i)
-				array_put (cell, i)
+				storage.put (cell, i)
 				i := i + 1
 			end
 			equiv_initialize

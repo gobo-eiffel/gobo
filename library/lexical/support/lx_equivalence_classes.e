@@ -2,28 +2,15 @@ indexing
 
 	description:
 
-		"Equivalence classes of integer symbols";
+		"Equivalence classes of integer symbols"
 
-	library:    "Gobo Eiffel Lexical Library";
-	author:     "Eric Bezault <ericb@gobo.demon.co.uk>";
-	copyright:  "Copyright (c) 1997, Eric Bezault";
-	date:       "$Date$";
+	library:    "Gobo Eiffel Lexical Library"
+	author:     "Eric Bezault <ericb@gobo.demon.co.uk>"
+	copyright:  "Copyright (c) 1997, Eric Bezault"
+	date:       "$Date$"
 	revision:   "$Revision$"
 
 class LX_EQUIVALENCE_CLASSES
-
-inherit
-
-	DS_ARRAYED [DS_BILINKABLE [INTEGER]]
-		rename
-			make as make_array,
-			count as capacity,
-			put as array_put,
-			valid_index as valid_symbol
-		export
-			{NONE} all
-			{ANY} valid_symbol, lower, upper, capacity
-		end
 
 creation
 
@@ -41,10 +28,10 @@ feature {NONE} -- Initialization
 			cell: DS_BILINKABLE [INTEGER]
 			i: INTEGER
 		do
-			make_array (min, max)
+			!! storage.make (min, max)
 			from i := min until i > max loop
 				!! cell.make (i)
-				array_put (cell, i)
+				storage.put (cell, i)
 				i := i + 1
 			end
 			initialize
@@ -67,10 +54,10 @@ feature -- Initialization
 			cell: DS_BILINKABLE [INTEGER]
 		do
 			nb := upper
-			item (lower).put (lower)
+			storage.item (lower).put (lower)
 			from i := lower + 1 until i > nb loop
-				cell := item (i)
-				cell.put_left (item (i - 1))
+				cell := storage.item (i)
+				cell.put_left (storage.item (i - 1))
 				cell.put (i)
 				i := i + 1
 			end
@@ -87,7 +74,7 @@ feature -- Access
 			valid_symbol: valid_symbol (symbol)
 			built: built
 		do
-			Result := item (symbol).item
+			Result := storage.item (symbol).item
 		end
 
 	previous_symbol (symbol: INTEGER): INTEGER is
@@ -98,11 +85,29 @@ feature -- Access
 			not_representative: not is_representative (symbol)
 			not_built: not built
 		do
-			Result := item (symbol).left.item
+			Result := storage.item (symbol).left.item
 		end
 
 	count: INTEGER
 			-- Number of equivalence classes
+
+	capacity: INTEGER is
+			-- Maximum number of equivalence classes
+		do
+			Result := storage.count
+		end
+
+	lower: INTEGER is
+			-- Smallest allowed symbol
+		do
+			Result := storage.lower
+		end
+
+	upper: INTEGER is
+			-- Largest allowed symbol
+		do
+			Result := storage.upper
+		end
 
 feature -- Status report
 
@@ -112,7 +117,13 @@ feature -- Status report
 		require
 			valid_symbol: valid_symbol (symbol)
 		do
-			Result := item (symbol).left = Void
+			Result := storage.item (symbol).left = Void
+		end
+
+	valid_symbol (a_symbol: INTEGER): BOOLEAN is
+			-- Is `a_symbol' a valid symbol?
+		do
+			Result := storage.valid_index (a_symbol)
 		end
 
 	valid_symbol_class (symbol_class: LX_SYMBOL_CLASS): BOOLEAN is
@@ -137,11 +148,11 @@ feature -- Element change
 			-- Build equivalence class numbers.
 		local
 			i, j, nb: INTEGER
-			cell: like item
+			cell: DS_BILINKABLE [INTEGER]
 		do
 			nb := upper
 			from i := lower until i > nb loop
-				cell := item (i)
+				cell := storage.item (i)
 				if cell.left = Void then
 					from
 						j := j + 1
@@ -167,9 +178,9 @@ feature -- Element change
 			not_built: not built
 			valid_symbol: valid_symbol (symbol)
 		local
-			cell, left, right: like item
+			cell, left, right: DS_BILINKABLE [INTEGER]
 		do
-			cell := item (symbol)
+			cell := storage.item (symbol)
 			left := cell.left
 			right := cell.right
 			if left /= Void and right /= Void then
@@ -193,8 +204,8 @@ feature -- Element change
 			symbols_sorted: not symbol_class.sort_needed
 			valid_symbols: valid_symbol_class (symbol_class)
 		local
-			cell, right: like item
-			old_cell, new_cell: like item
+			cell, right: DS_BILINKABLE [INTEGER]
+			old_cell, new_cell: DS_BILINKABLE [INTEGER]
 			i, j, k, nb: INTEGER
 			stop, next_ec: BOOLEAN
 			symbol: INTEGER
@@ -206,7 +217,7 @@ feature -- Element change
 			nb := symbol_class.count
 			!! flags.make (lower, upper)
 			from k := 1 until k > nb loop
-				cell := item (symbol_class.item (k))
+				cell := storage.item (symbol_class.item (k))
 				old_cell := cell.left
 				new_cell := cell
 				j := k + 1
@@ -277,7 +288,7 @@ feature -- Conversion
 			!! Result.make (lower, upper)
 			nb := upper
 			from i := lower until i > nb loop
-				Result.put (item (i).item, i)
+				Result.put (storage.item (i).item, i)
 				i := i + 1
 			end
 		ensure
@@ -300,7 +311,7 @@ feature -- Conversion
 			!! Result.make (l, u)
 			nb := upper.min (u)
 			from i := lower.max (l) until i > nb loop
-				Result.put (item (i).item, i)
+				Result.put (storage.item (i).item, i)
 				i := i + 1
 			end
 		ensure
@@ -312,8 +323,14 @@ feature -- Conversion
 			-- forall i in l..lower-1 or upper+1..u, Result.item (i) = 0
 		end
 
+feature {NONE} -- Implementation
+
+	storage: ARRAY [DS_BILINKABLE [INTEGER]]
+			-- Equivalence class numbers indexed by symbol
+
 invariant
 
+	storage_not_void: storage /= Void
 	valid_bounds: lower <= upper
 	positive_count: count >= 0
 	built_definition: built = (count /= 0)
