@@ -1,3 +1,10 @@
-${GOBO}/library/tools/ast/
+${GOBO}/library/tools/ast/assertion/
+${GOBO}/library/tools/ast/class/
+${GOBO}/library/tools/ast/constant/
+${GOBO}/library/tools/ast/expression/
+${GOBO}/library/tools/ast/feature/
+${GOBO}/library/tools/ast/instruction/
+${GOBO}/library/tools/ast/name/
+${GOBO}/library/tools/ast/type/
 ${GOBO}/library/tools/error/
 ${GOBO}/library/tools/parser/
