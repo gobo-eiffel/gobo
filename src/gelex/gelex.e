@@ -5,7 +5,7 @@ indexing
 		"Gobo Eiffel Lex: lexical analyzer generator"
 
 	author:     "Eric Bezault <ericb@gobosoft.com>"
-	copyright:  "Copyright (c) 1999, Eric Bezault and others"
+	copyright:  "Copyright (c) 1999-2001, Eric Bezault and others"
 	license:    "Eiffel Forum Freeware License v1 (see forum.txt)"
 	date:       "$Date$"
 	revision:   "$Revision$"
@@ -13,6 +13,8 @@ indexing
 class GELEX
 
 inherit
+
+	LX_DESCRIPTION_OVERRIDER
 
 	KL_IMPORTED_INPUT_STREAM_ROUTINES
 	KL_IMPORTED_OUTPUT_STREAM_ROUTINES
@@ -53,6 +55,7 @@ feature -- Processing
 			cannot_read: UT_CANNOT_READ_FILE_ERROR
 		do
 			!! parser.make_from_description (description, error_handler)
+			parser.set_options_overrider (Current)
 			filename := description.input_filename
 			if filename /= Void then
 				a_file := INPUT_STREAM_.make_file_open_read (filename)
@@ -69,9 +72,17 @@ feature -- Processing
 			end
 			if not parser.successful then
 				Exceptions.die (1)
-			else
-				description := parser.to_description
 			end
+		end
+
+	override_description (a_description: LX_DESCRIPTION) is
+			-- Override options specified in the input file
+			-- by options specified on the command-line.
+		local
+			command_line: GELEX_COMMAND_LINE
+		do
+			!! command_line.make (error_handler)
+			command_line.read_options (a_description)
 		end
 
 	build_dfa is
