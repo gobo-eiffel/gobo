@@ -53,7 +53,7 @@ feature {NONE} -- Initialization
 			make (STRING_.make_empty, STRING_.make_empty)
 		ensure
 			no_prefix: not has_prefix
-			default_namespace: is_default_namespace
+			default_namespace: uri.count = 0
 		end
 		
 feature -- Access
@@ -72,7 +72,7 @@ feature -- Status report
 			Result := (uri = other.uri) or else 
 				(uri /= Void and then STRING_.same_string (uri, other.uri))
 		ensure then
-			definition: Result implies (uri = other.uri or else STRING_.same_string (uri, other.uri))
+			definition: Result = STRING_.same_string (uri, other.uri)
 		end
 		
 	hash_code: INTEGER is

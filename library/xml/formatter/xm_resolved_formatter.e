@@ -45,7 +45,7 @@ feature {NONE} -- Implementation
 		require
 			a_node_not_void: a_node /= Void
 		do
-			if not a_node.namespace.is_default_namespace then
+			if a_node.namespace.uri.count > 0 then
 				append (a_node.namespace.uri)
 				append (Prefix_separator)
 			end

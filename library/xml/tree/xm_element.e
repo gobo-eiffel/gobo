@@ -109,10 +109,10 @@ feature {NONE} -- Name comparison with namespace.
 		require
 			named_not_void: a_named /= Void
 		do
-			Result := same_string (a_named.name, a_name) and a_named.namespace.is_default_namespace
+			Result := same_string (a_named.name, a_name) and (a_named.namespace.uri.count = 0)
 		ensure
 			same_name: Result implies same_string (a_named.name, a_name)
-			default_ns: a_named.namespace.is_default_namespace implies (Result = same_string (a_named.name, a_name))
+			default_ns: (a_named.namespace.uri.count = 0) implies (Result = same_string (a_named.name, a_name))
 		end
 		
 	named_same_name (a_named: XM_NAMED_NODE; a_name: STRING): BOOLEAN is
