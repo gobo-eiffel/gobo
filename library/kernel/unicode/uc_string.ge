@@ -4,7 +4,7 @@ indexing
 
 		"Unicode strings"
 
-	note:
+	remark:
 
 		"Unless specified otherwise, STRING and CHARACTER are %
 		%supposed to contain characters whose code follows the %
@@ -12,7 +12,7 @@ indexing
 		%code is between 128 and 255 should follow the ISO 8859-1 %
 		%Latin-1 character set."
 
-	note:
+	remark2:
 
 		"By default UC_STRING is implemented using the UTF-8 encoding. %
 		%Use UC_UTF*_STRING to specify the encoding explicitly."

@@ -4,7 +4,7 @@ indexing
 
 		"Objects that may be compared according to a partial order relation"
 
-	note:
+	remark:
 	
 		"The basic operation is < (less than); others %
 		%are defined in terms of this operation and is_equal."

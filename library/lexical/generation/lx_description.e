@@ -94,7 +94,7 @@ feature -- User-defined options
 	characters_count: INTEGER
 			-- Number of characters in character set handled by the
 			-- generated scanner
-			-- [Note: the character set is always assumed to start from 0.]
+			-- (Note: the character set is always assumed to start from 0.)
 
 	debug_mode: BOOLEAN
 			-- Should a debug-mode scanner be generated?

@@ -4,7 +4,7 @@ indexing
 
 		"Routines that ought to be in class STRING"
 
-	note:
+	remark:
 
 		"Unless otherwise specified in their preconditions, %
 		%the features of this class can deal with UC_STRING %

@@ -4,7 +4,7 @@ indexing
 
 		"Unicode strings with UTF-8 encoding"
 
-	note:
+	remark:
 
 		"Unless specified otherwise, STRING and CHARACTER are %
 		%supposed to contain characters whose code follows the %
