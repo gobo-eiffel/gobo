@@ -499,7 +499,6 @@ end
 			from a_cursor.start until a_cursor.after loop
 				a_class := a_cursor.item
 				if a_class.features_flattened then
-					nb := nb + 1
 					a_class.process (qualified_signature_resolver)
 				end
 				a_cursor.forth
@@ -530,6 +529,7 @@ end
 			a_cursor: DS_HASH_TABLE_CURSOR [ET_CLASS, ET_CLASS_NAME]
 			a_class: ET_CLASS
 			nb: INTEGER
+			a_signature_viewer: ET_SIGNATURE_VIEWER
 		do
 			activate_processors
 			preparse_single
@@ -577,7 +577,6 @@ end
 			from a_cursor.start until a_cursor.after loop
 				a_class := a_cursor.item
 				if a_class.qualified_signatures_resolved then
-					nb := nb + 1
 					a_class.process (interface_checker)
 				end
 				a_cursor.forth
@@ -589,6 +588,8 @@ debug ("ericb")
 	print ("Done.%N")
 	print (features.count)
 	print (" features%N")
+	create a_signature_viewer.make (Current)
+	a_signature_viewer.execute
 end
 		end
 
