@@ -32,7 +32,8 @@ feature -- Access
 			if not is_root_node then
 				Result := parent.root_node
 			end
-			-- is_root_node case dealt by descendant
+			-- is_root_node case dealt by descendant because
+			-- we cannot do Result := Current here.
 		ensure
 			result_not_void: Result /= Void
 		end
