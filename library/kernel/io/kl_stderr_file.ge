@@ -6,12 +6,11 @@ indexing
 		%converted to the line separtor of the underlying %
 		%file system when written to the standard error file."
 
-	library:    "Gobo Eiffel Kernel Library"
-	author:     "Eric Bezault <ericb@gobosoft.com>"
-	copyright:  "Copyright (c) 2001, Eric Bezault and others"
-	license:    "Eiffel Forum Freeware License v1 (see forum.txt)"
-	date:       "$Date$"
-	revision:   "$Revision$"
+	library: "Gobo Eiffel Kernel Library"
+	copyright: "Copyright (c) 2001, Eric Bezault and others"
+	license: "Eiffel Forum License v1 (see forum.txt)"
+	date: "$Date$"
+	revision: "$Revision$"
 
 class KL_STDERR_FILE
 

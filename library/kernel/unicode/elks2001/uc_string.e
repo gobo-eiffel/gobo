@@ -16,7 +16,7 @@ indexing
 
    copyright:  "Copyright (c) 2001, michael kretschmar and others"
 
-   license:    "Eiffel Forum Freeware License v1 (see forum.txt)"
+   license:    "Eiffel Forum License v1 (see forum.txt)"
 
    date:       "$Date$"
 

@@ -7,7 +7,7 @@ indexing
    library:    "Gobo Eiffel Unicode Library"
    author:     "michael kretschmar <majkel.kretschmar@epost.de>"
    copyright:  "Copyright (c) 2001, michael kretschmar and others"
-   license:    "Eiffel Forum Freeware License v1 (see forum.txt)"
+   license:    "Eiffel Forum License v1 (see forum.txt)"
    date:       "$Date$"
    revision:   "$Revision$"
 

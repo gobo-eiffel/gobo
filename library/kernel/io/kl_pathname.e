@@ -4,12 +4,11 @@ indexing
 
 		"Pathnames"
 
-	library:    "Gobo Eiffel Kernel Library"
-	author:     "Eric Bezault <ericb@gobosoft.com>"
-	copyright:  "Copyright (c) 2001, Eric Bezault and others"
-	license:    "Eiffel Forum Freeware License v1 (see forum.txt)"
-	date:       "$Date$"
-	revision:   "$Revision$"
+	library: "Gobo Eiffel Kernel Library"
+	copyright: "Copyright (c) 2001, Eric Bezault and others"
+	license: "Eiffel Forum License v1 (see forum.txt)"
+	date: "$Date$"
+	revision: "$Revision$"
 
 class KL_PATHNAME
 
@@ -118,7 +117,7 @@ feature -- Element change
 			-- Append components `a_names' to pathname.
 		require
 			a_names_not_void: a_names /= Void
---			no_void_name: not a_names.has (Void)
+			-- no_void_name: not a_names.has (Void)
 		local
 			i, nb: INTEGER
 		do

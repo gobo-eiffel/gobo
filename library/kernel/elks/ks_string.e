@@ -4,12 +4,11 @@ indexing
 
 		"Portable interface for class STRING"
 
-	library:    "Gobo Eiffel Kernel Library"
-	author:     "Eric Bezault <ericb@gobosoft.com>"
-	copyright:  "Copyright (c) 2001, Eric Bezault and others"
-	license:    "Eiffel Forum Freeware License v1 (see forum.txt)"
-	date:       "$Date$"
-	revision:   "$Revision$"
+	library: "Gobo Eiffel Kernel Library"
+	copyright: "Copyright (c) 2001, Eric Bezault and others"
+	license: "Eiffel Forum License v1 (see forum.txt)"
+	date: "$Date$"
+	revision: "$Revision$"
 
 deferred class KS_STRING
 
@@ -63,7 +62,7 @@ feature -- Initialization
 --			initialized: same_string (s)
 --		end
 
--- TO DO:
+-- TODO:
 --    from_c (c_string: POINTER)
 --       -- Set the current STRING from a copy of the
 --       -- zero-byte-terminated memory starting at `c_string'.
@@ -290,7 +289,7 @@ feature -- Status report
 --			definition: Result = (count = 0)
 --		end
 
--- TO DO:
+-- TODO:
 --	is_boolean: BOOLEAN is
 --			-- Does `Current' represent a BOOLEAN?
 --			-- (ELKS 2001 STRING)
@@ -299,7 +298,7 @@ feature -- Status report
 --			is_boolean: Result = (same_string("true") or same_string("false"))
 --		end
 
--- TO DO:
+-- TODO:
 --	is_integer: BOOLEAN is
 --			-- Does `Current' represent an INTEGER?
 --			-- (ELKS 2001 STRING)
@@ -324,7 +323,7 @@ feature -- Status report
 --				--    are the constants defined in class PLATFORM.
 --		end
 
--- TO DO:
+-- TODO:
 --	is_real: BOOLEAN is
 --			-- Does `Current' represent a REAL?
 --			-- (ELKS 2001 STRING)
@@ -353,7 +352,7 @@ feature -- Status report
 --				--    by an instance of type REAL.
 --		end
 
--- TO DO:
+-- TODO:
 --	is_double: BOOLEAN is
 --			-- Does `Current' represent a DOUBLE?
 --			-- (ELKS 2001 STRING)
@@ -687,7 +686,7 @@ feature -- Conversion
 			--length_and_content: is_equal (old as_upper)
 		end
 
--- TO DO:
+-- TODO:
 --	to_boolean: BOOLEAN is
 --			-- Boolean value;
 --			-- "true" yields true, "false" yields false
@@ -698,7 +697,7 @@ feature -- Conversion
 --			to_boolean: Result = same_string("true")
 --		end
 
--- TO DO:
+-- TODO:
 --	to_integer: INTEGER is
 --			-- Integer value;
 --			-- for example, when applied to "123", will yield 123
@@ -713,7 +712,7 @@ feature -- Conversion
 --				Result // 10 = substring (1, count - 1).to_integer and (Result \\ 10).abs = substring (count, count).to_integer
 --		end
 
--- TO DO:
+-- TODO:
 --	to_real: REAL is
 --			-- Real value;
 --			-- for example, when applied to "123.0", will yield 123.0
@@ -722,7 +721,7 @@ feature -- Conversion
 --		deferred
 --		end
 
--- TO DO:
+-- TODO:
 --	to_double: DOUBLE is
 --			-- "Double" value; for example, when applied to "123.0",
 --			-- will yield 123.0 (double)

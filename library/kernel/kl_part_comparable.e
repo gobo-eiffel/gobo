@@ -4,14 +4,16 @@ indexing
 
 		"Objects that may be compared according to a partial order relation"
 
-	note:      "The basic operation is < (less than); others %
-	            %are defined in terms of this operation and is_equal."
-	library:    "Gobo Eiffel Kernel Library"
-	author:     "Eric Bezault <ericb@gobosoft.com>"
-	copyright:  "Copyright (c) 2000, Eric Bezault and others"
-	license:    "Eiffel Forum Freeware License v1 (see forum.txt)"
-	date:       "$Date$"
-	revision:   "$Revision$"
+	note:
+	
+		"The basic operation is < (less than); others %
+		%are defined in terms of this operation and is_equal."
+
+	library: "Gobo Eiffel Kernel Library"
+	copyright: "Copyright (c) 2000, Eric Bezault and others"
+	license: "Eiffel Forum License v1 (see forum.txt)"
+	date: "$Date$"
+	revision: "$Revision$"
 
 deferred class KL_PART_COMPARABLE
 

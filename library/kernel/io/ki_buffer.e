@@ -4,12 +4,11 @@ indexing
 
 		"Interface for buffers"
 
-	library:    "Gobo Eiffel Kernel Library"
-	author:     "Eric Bezault <ericb@gobosoft.com>"
-	copyright:  "Copyright (c) 2001, Eric Bezault and others"
-	license:    "Eiffel Forum Freeware License v1 (see forum.txt)"
-	date:       "$Date$"
-	revision:   "$Revision$"
+	library: "Gobo Eiffel Kernel Library"
+	copyright: "Copyright (c) 2001, Eric Bezault and others"
+	license: "Eiffel Forum License v1 (see forum.txt)"
+	date: "$Date$"
+	revision: "$Revision$"
 
 deferred class KI_BUFFER [G]
 
@@ -40,7 +39,7 @@ feature -- Element change
 			i_large_enough: i >= 1
 			i_small_enough: i <= count
 		do
-			-- This routine should be deferred, but there is
+			-- TODO: This routine should be deferred, but there is
 			-- a bug with ISE Eiffel 5.1.5 in the generated
 			-- C code in finalized mode, and having this
 			-- routine effective is a workaround.

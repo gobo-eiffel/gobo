@@ -4,12 +4,11 @@
 
 	<description>
 		description: "Xace file for the Gobo Eiffel Kernel Library"
-		library:     "Gobo Eiffel Kernel Library"
-		author:      "Eric Bezault [ericb@gobosoft.com]"
-		copyright:   "Copyright (c) 2001, Eric Bezault and others"
-		license:     "Eiffel Forum Freeware License v1 (see forum.txt)"
-		date:        "$Date$"
-		revision:    "$Revision$"
+		library: "Gobo Eiffel Kernel Library"
+		copyright: "Copyright (c) 2001, Eric Bezault and others"
+		license: "Eiffel Forum License v1 (see forum.txt)"
+		date: "$Date$"
+		revision: "$Revision$"
 	</description>
 
 	<cluster name="elks"/>
@@ -17,8 +16,8 @@
 	<cluster name="misc"/>
 	<cluster name="unicode"/>
 	<cluster name="support"/>
-	<cluster name="spec" abstract="True">
-		<cluster name="compiler" location="${GOBO}/library/kernel/spec/${GOBO_EIFFEL}"/>
+	<cluster name="spec" abstract="true">
+		<cluster name="${GOBO_EIFFEL}"/>
 	</cluster>
 
 </cluster>

@@ -6,12 +6,11 @@ indexing
 		%A fixed array is a zero-based indexed sequence of values, %
 		%equipped with features `put', `item' and `count'."
 
-	library:    "Gobo Eiffel Kernel Library"
-	author:     "Eric Bezault <ericb@gobosoft.com>"
-	copyright:  "Copyright (c) 1999, Eric Bezault and others"
-	license:    "Eiffel Forum Freeware License v1 (see forum.txt)"
-	date:       "$Date$"
-	revision:   "$Revision$"
+	library: "Gobo Eiffel Kernel Library"
+	copyright: "Copyright (c) 1999, Eric Bezault and others"
+	license: "Eiffel Forum License v1 (see forum.txt)"
+	date: "$Date$"
+	revision: "$Revision$"
 
 class KL_FIXED_ARRAY_ROUTINES [G]
 
@@ -68,8 +67,8 @@ feature -- Initialization
 			fixed_array_not_void: Result /= Void
 			valid_fixed_array: valid_fixed_array (Result)
 			count_set: Result.count = an_array.count
---			same_items: forall i in 0.. (Result.count - 1),
---				Result.item (i) = an_array.item (an_array.lower + i)
+			-- same_items: forall i in 0.. (Result.count - 1),
+			--	Result.item (i) = an_array.item (an_array.lower + i)
 		end
 
 feature -- Conversion
@@ -98,8 +97,8 @@ feature -- Conversion
 			fixed_array_not_void: Result /= Void
 			valid_fixed_array: valid_fixed_array (Result)
 			count_set: Result.count >= an_array.count
---			same_items: forall i in 0.. (an_array.count - 1),
---				Result.item (i) = an_array.item (an_array.lower + i)
+			-- same_items: forall i in 0.. (an_array.count - 1),
+			--	Result.item (i) = an_array.item (an_array.lower + i)
 		end
 
 feature -- Status report

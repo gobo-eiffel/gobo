@@ -4,11 +4,11 @@ indexing
 
 		"Character input streams based on strings"
 
-	library:    "Gobo Eiffel Kernel Library"
-	copyright:  "Copyright (c) 2002, Eric Bezault and others"
-	license:    "Eiffel Forum Freeware License v1 (see forum.txt)"
-	date:       "$Date$"
-	revision:   "$Revision$"
+	library: "Gobo Eiffel Kernel Library"
+	copyright: "Copyright (c) 2002, Eric Bezault and others"
+	license: "Eiffel Forum License v1 (see forum.txt)"
+	date: "$Date$"
+	revision: "$Revision$"
 
 class KL_STRING_INPUT_STREAM
 

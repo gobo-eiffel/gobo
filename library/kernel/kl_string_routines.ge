@@ -4,12 +4,11 @@ indexing
 
 		"Routines that ought to be in class STRING"
 
-	library:    "Gobo Eiffel Kernel Library"
-	author:     "Eric Bezault <ericb@gobosoft.com>"
-	copyright:  "Copyright (c) 1999, Eric Bezault and others"
-	license:    "Eiffel Forum Freeware License v1 (see forum.txt)"
-	date:       "$Date$"
-	revision:   "$Revision$"
+	library: "Gobo Eiffel Kernel Library"
+	copyright: "Copyright (c) 1999, Eric Bezault and others"
+	license: "Eiffel Forum License v1 (see forum.txt)"
+	date: "$Date$"
+	revision: "$Revision$"
 
 class KL_STRING_ROUTINES
 
@@ -204,8 +203,8 @@ feature -- Conversion
 		ensure
 			lower_string_not_void: Result /= Void
 			same_count: Result.count = a_string.count
---			definition: forall i in 1..a_string.count,
---				Result.item (i) = a_string.item (i).to_lower
+			-- definition: forall i in 1..a_string.count,
+			--	Result.item (i) = a_string.item (i).to_lower
 		end
 
 	to_upper (a_string: STRING): STRING is
@@ -219,8 +218,8 @@ feature -- Conversion
 		ensure
 			lower_string_not_void: Result /= Void
 			same_count: Result.count = a_string.count
---			definition: forall i in 1..a_string.count,
---				Result.item (i) = a_string.item (i).to_upper
+			-- definition: forall i in 1..a_string.count,
+			--	Result.item (i) = a_string.item (i).to_upper
 		end
 
 	hexadecimal_to_integer (a_string: STRING): INTEGER is

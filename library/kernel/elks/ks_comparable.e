@@ -4,12 +4,11 @@ indexing
 
 		"Portable interface for class COMPARABLE"
 
-	library:    "Gobo Eiffel Kernel Library"
-	author:     "Eric Bezault <ericb@gobosoft.com>"
-	copyright:  "Copyright (c) 2001, Eric Bezault and others"
-	license:    "Eiffel Forum Freeware License v1 (see forum.txt)"
-	date:       "$Date$"
-	revision:   "$Revision$"
+	library: "Gobo Eiffel Kernel Library"
+	copyright: "Copyright (c) 2001, Eric Bezault and others"
+	license: "Eiffel Forum License v1 (see forum.txt)"
+	date: "$Date$"
+	revision: "$Revision$"
 
 deferred class KS_COMPARABLE
 
@@ -113,6 +112,6 @@ feature -- Comparison
 invariant
 
 	-- Note: Too memory consumming with SmallEiffel:
-	--irreflexive_comparison: not (Current < Current)
+	-- irreflexive_comparison: not (Current < Current)
 
 end -- class KS_COMPARABLE

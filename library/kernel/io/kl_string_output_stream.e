@@ -4,11 +4,11 @@ indexing
 
 		"Character output streams based on strings"
 
-	library:    "Gobo Eiffel Kernel Library"
-	copyright:  "Copyright (c) 2002, Eric Bezault and others"
-	license:    "Eiffel Forum Freeware License v1 (see forum.txt)"
-	date:       "$Date$"
-	revision:   "$Revision$"
+	library: "Gobo Eiffel Kernel Library"
+	copyright: "Copyright (c) 2002, Eric Bezault and others"
+	license: "Eiffel Forum License v1 (see forum.txt)"
+	date: "$Date$"
+	revision: "$Revision$"
 
 class KL_STRING_OUTPUT_STREAM
 
@@ -20,7 +20,7 @@ creation
 
 	make,
 	make_string
-	
+
 feature {NONE} -- Creation
 
 	make is
@@ -36,7 +36,7 @@ feature {NONE} -- Creation
 		do
 			string := a_string
 		end
-		
+
 feature -- Access
 
 	string: STRING
@@ -49,7 +49,7 @@ feature -- Access
 		do
 			Result := "STRING"
 		end
-		
+
 feature -- Status report
 
 	is_open_write: BOOLEAN is
@@ -71,14 +71,13 @@ feature -- Output
 		do
 			string.append_string (a_string)
 		end
-		
+
 feature -- Basic operations
 
 	flush is
 			-- Do nothing (operation does not apply to string).
 		do
 		end
-		
 
 invariant
 
