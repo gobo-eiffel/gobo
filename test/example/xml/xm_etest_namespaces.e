@@ -32,7 +32,10 @@ feature -- Test
 	test_namespaces is
 			-- Test 'tree/namespaces' example.
 		do
-			compile_program
+			if not eiffel_compiler.is_se then
+					-- SE -0.74 crahses when compiling this example.
+				compile_program
+			end
 		end
 
 feature {NONE} -- Implementation
