@@ -458,12 +458,83 @@ feature -- Parsing parameter entities including the external dtd subset
 			exml_XML_SetExternalEntityRefHandler (item, $on_external_entity_reference_procedure)
 		end
 
+feature  {NONE} -- Turn Expat DTD description into XM_DTD_ELEMENT_CONTENT
+
+	create_children (parent: XM_DTD_ELEMENT_CONTENT; model_ptr: POINTER) is
+			-- Create the children by calling `create_element_content'
+			-- and put them in the parent items list.
+		require
+			have_parent: parent /= Void
+			have_model_ptr: model_ptr /= default_pointer
+			have_children: exml_XML_cp_numchildren (model_ptr) > 0
+		local
+			i: INTEGER
+		do
+			from
+				i := 0
+			until
+				i >= exml_XML_cp_numchildren (model_ptr)
+			loop
+				parent.items.put_last (create_element_content (exml_XML_cp_children (model_ptr, i)))
+				i := i + 1
+			end
+		ensure
+			children_created: parent.items.count > 0
+		end
+
+	create_element_content (model_ptr: POINTER): XM_DTD_ELEMENT_CONTENT is
+			-- Recursively walk Expat XML_Content struct and copy it to
+			-- XM_DTD_ELEMENT_CONTENT cells.
+		require
+			have_model_ptr: model_ptr /= default_pointer
+		local
+			type,
+			quant: INTEGER
+		do
+			-- Set type and children.
+			type := exml_XML_cp_type (model_ptr)
+			if type = XML_CTYPE_EMPTY then
+				create Result.make_empty
+			elseif type = XML_CTYPE_ANY then
+				create Result.make_any
+			elseif type = XML_CTYPE_MIXED then
+				create Result.make_mixed
+				create_children (Result, model_ptr)
+			elseif type = XML_CTYPE_NAME then
+				create Result.make_name (new_uc_string_from_c_utf8_zero_terminated_string (exml_XML_cp_name (model_ptr)))
+			elseif type = XML_CTYPE_CHOICE then
+				create Result.make_choice
+				create_children (Result, model_ptr)
+			elseif type = XML_CTYPE_SEQ then
+				create Result.make_sequence
+				create_children (Result, model_ptr)
+			end
+			-- Set repetition.
+			quant := exml_XML_cp_quant (model_ptr)
+			if quant = XML_CQUANT_OPT then
+				Result.set_zero_or_one
+			elseif quant = XML_CQUANT_REP then
+				Result.set_zero_or_more
+			elseif quant = XML_CQUANT_PLUS then
+				Result.set_one_or_more
+			end
+		ensure
+			content_returned: Result /= Void
+		end
+
 feature {NONE} -- (low level) frozen callbacks (called from exml clib)
 
 	frozen on_element_declaration_procedure (name_ptr: POINTER; model_ptr: POINTER) is
 		do
-			-- TODO: must convert model ptr to XM_DTD_ELEMENT_ATTRIBUTE
-			on_element_declaration (new_uc_string_from_c_utf8_zero_terminated_string (name_ptr), Void)
+			on_element_declaration (new_uc_string_from_c_utf8_zero_terminated_string (name_ptr), create_element_content (model_ptr))
+			-- It is the caller's responsibility to free model when
+			-- finished with it. So we do that. Because of that, it is
+			-- probably not a good idea to run Expat with your own memory
+			-- management unit...
+			exml_XML_cp_free (model_ptr)
+			-- BdB: does this recursively free everything??
+			-- BdB: I don't know if we have to free names as well??
+			-- BdB: will look into it.
 		end
 
 	frozen on_attribute_declaration_procedure (elname_ptr, attname_ptr, att_type_ptr, dflt_ptr: POINTER; is_required: BOOLEAN) is

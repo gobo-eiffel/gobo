@@ -1694,6 +1694,27 @@ feature -- XML_cp members
 			valid_struct: Result /= default_pointer
 		end
 
+feature -- XML_Content freeing
+
+	exml_XML_cp_free (cp: POINTER) is
+			-- Free the Expat allocated XML_Content struct by assuming it
+			-- has been allocated by malloc so free likes it.
+		require
+			cp_points_to_something: cp /= default_pointer
+		external
+#ifdef SE || ISE
+			"C use <stdlib.h>"
+#endif
+#ifdef HACT
+			"C | <stdlib.h>"
+#endif
+#ifdef VE
+			"C"
+#endif
+		alias
+			"free"
+		end
+
 feature -- Conversion
 
 	new_attribute_list_from_c (attr_spec_ptr: POINTER): DS_BILINKED_LIST [DS_PAIR [DS_PAIR [STRING, STRING], STRING]] is
