@@ -94,6 +94,8 @@ feature -- Copy
 			copied: same_string_mode (other)
 		end
 
+feature -- Status report
+
 	same_string_mode (other: XM_STRING_MODE): BOOLEAN is
 			-- Is `other' with the same string mode?
 		require
