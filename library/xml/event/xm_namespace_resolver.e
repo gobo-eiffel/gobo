@@ -86,22 +86,25 @@ feature -- Element
 
 	on_start_tag_finish is
 			-- Process end of start tag.
+		local
+			error_msg: STRING
 		do
 			if has_prefix (element_prefix) then
 				if context.has (element_prefix) then
-					next.on_start_tag (context.resolve (element_prefix), 
+					next.on_start_tag (context.resolve (element_prefix),
 							element_prefix, element_local_part)
 					on_delayed_attributes
 				else
-					on_error (Undeclared_namespace_error)
+					error_msg :=  Undeclared_namespace_error + " in tag <" + element_prefix + ":" + element_local_part + ">"
+					on_error (error_msg)
 				end
 			else
-				next.on_start_tag (context.resolve_default, 
+				next.on_start_tag (context.resolve_default,
 						element_prefix, element_local_part)
 				on_delayed_attributes
 			end
 			Precursor
-		end	
+		end
 
 	on_end_tag (a_namespace: STRING; a_prefix: STRING; a_local_part: STRING) is
 			-- Process end tag.
@@ -156,7 +159,7 @@ feature {NONE} -- Context
 		end
 
 	Unprefixed_attribute_namespace: STRING is ""
-	
+
 feature {NONE} -- Element
 
 	element_prefix: STRING
@@ -205,7 +208,7 @@ feature {NONE} -- Attributes
 
 feature {NONE} -- Error
 
-	Undeclared_namespace_error: STRING is "Undeclare namespace error"
+	Undeclared_namespace_error: STRING is "Undeclared namespace error"
 	Duplicate_namespace_declaration_error: STRING is "Namespace declared twice"
 			-- Error messages
 
