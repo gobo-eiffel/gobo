@@ -49,6 +49,42 @@ feature -- Status report
 		deferred
 		end
 
+feature -- Access
+
+	eol: STRING is
+			-- Line separator in current file system
+		deferred
+		ensure
+			eol_not_void: Result /= Void
+			eol_not_empty: Result.count > 0
+		end
+
+feature -- File factory
+
+	new_input_file (a_name: STRING): KI_INPUT_FILE is
+			-- New input text file in current file system
+		require
+			a_name_not_void: a_name /= Void
+			a_name_not_empty: a_name.count > 0
+		deferred
+		ensure
+			input_file_not_void: Result /= Void
+			name_set: Result.name = a_name
+			is_closed: Result.is_closed
+		end
+
+	new_output_file (a_name: STRING): KI_OUTPUT_FILE is
+			-- New output text file in current file system
+		require
+			a_name_not_void: a_name /= Void
+			a_name_not_empty: a_name.count > 0
+		deferred
+		ensure
+			output_file_not_void: Result /= Void
+			name_set: Result.name = a_name
+			is_closed: Result.is_closed
+		end
+
 feature -- File operations
 
 	rename_file (old_name, new_name: STRING) is
