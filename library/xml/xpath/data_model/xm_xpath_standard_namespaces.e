@@ -274,6 +274,7 @@ feature -- Access
 	Group_starting_with_attribute: STRING is "group-starting-with"
 	Grouping_separator_attribute: STRING is "grouping-separator"
 	Grouping_size_attribute: STRING is "grouping-size"
+	Href_attribute: STRING is "href"
 	Id_attribute: STRING is "id"
 	Include_content_type_attribute: STRING is "include-content-type"
 	Indent_attribute: STRING is "indent"

@@ -519,9 +519,9 @@ feature {NONE} -- Implementation
 		require
 			file_name_not_void: a_filename /= Void
 		local
-			a_file: KI_TEXT_OUTPUT_STREAM
+			a_file: KI_TEXT_OUTPUT_FILE
 		do
-			a_file := file_system.new_output_file
+			a_file := file_system.new_output_file (a_filename)
 			a_file.open_write
 			error_handler.set_warning_file (a_file)
 		end
@@ -531,9 +531,9 @@ feature {NONE} -- Implementation
 		require
 			file_name_not_void: a_filename /= Void
 		local
-			a_file: KI_TEXT_OUTPUT_STREAM
+			a_file: KI_TEXT_OUTPUT_FILE
 		do
-			a_file := file_system.new_output_file
+			a_file := file_system.new_output_file (a_filename)
 			a_file.open_write
 			error_handler.set_error_file (a_file)
 		end
@@ -543,9 +543,9 @@ feature {NONE} -- Implementation
 		require
 			file_name_not_void: a_filename /= Void
 		local
-			a_file: KI_TEXT_OUTPUT_STREAM
+			a_file: KI_TEXT_OUTPUT_FILE
 		do
-			a_file := file_system.new_output_file
+			a_file := file_system.new_output_file (a_filename)
 			a_file.open_write
 			error_handler.set_error_file (a_file)
 			error_handler.set_warning_file (a_file)
@@ -557,9 +557,9 @@ feature {NONE} -- Implementation
 		require
 			file_name_not_void: a_filename /= Void
 		local
-			a_file: KI_TEXT_OUTPUT_STREAM
+			a_file: KI_TEXT_OUTPUT_FILE
 		do
-			a_file := file_system.new_output_file
+			a_file := file_system.new_output_file (a_filename)
 			a_file.open_write
 			error_handler.set_info_file (a_file)
 		end

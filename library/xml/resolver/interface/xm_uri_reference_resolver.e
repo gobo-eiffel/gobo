@@ -31,7 +31,16 @@ feature -- Result
 		ensure
 			not_void: Result /= Void
 		end
-	
+
+	last_system_id: UT_URI is
+			-- System id used to actually open `last_uri_reference_stream'
+		require
+			not_error: not has_uri_reference_error
+		deferred
+		ensure
+			not_void: Result /= Void
+		end
+
 	has_uri_reference_error: BOOLEAN is
 			-- Did the last resolution attempt succeed?
 		deferred

@@ -28,9 +28,12 @@ feature -- Access
 			-- Resolver for "file:" scheme
 		local
 			a_file: XM_FILE_URI_RESOLVER
+			a_simple_uri_resolver: XM_SIMPLE_URI_EXTERNAL_RESOLVER
 		do
+			create a_simple_uri_resolver.make
 			create a_file.make
-			Result.register_scheme (a_file)
+			a_simple_uri_resolver.register_scheme (a_file)
+			Result := a_simple_uri_resolver
 		ensure
 			result_not_void: Result /= Void
 		end
@@ -41,10 +44,12 @@ feature -- Access
 			a_uri_not_void: a_uri /= Void
 		local
 			a_file: XM_FILE_URI_RESOLVER
+			a_simple_uri_resolver: XM_SIMPLE_URI_EXTERNAL_RESOLVER
 		do
-			create Result.make_with_base (a_uri)
+			create a_simple_uri_resolver.make_with_base (a_uri)
 			create a_file.make
-			Result.register_scheme (a_file)
+			a_simple_uri_resolver.register_scheme (a_file)
+			Result := a_simple_uri_resolver
 		ensure
 			result_not_void: Result /= Void
 		end

@@ -2,7 +2,7 @@ indexing
 	
 	description:
 
-		"URI resolver: handles relative URI resolution, delegates scheme specific URL resolution"
+		"URI resolver:handles relative URI resolution, delegates scheme specific URL resolution"
 
 	library: "Gobo Eiffel XML Library"
 	copyright: "Copyright (c) 2004, Eric Bezault and others"
@@ -10,11 +10,13 @@ indexing
 	date: "$Date$"
 	revision: "$Revision$"
 
-class XM_URI_EXTERNAL_RESOLVER
+class XM_SIMPLE_URI_EXTERNAL_RESOLVER
 
 inherit
 
-	XM_EXTERNAL_RESOLVER
+	XM_URI_REFERENCE_RESOLVER
+
+	XM_URI_EXTERNAL_RESOLVER
 		redefine
 			resolve_finish
 		end
@@ -53,16 +55,17 @@ feature -- Status report
 			-- Base URI stack.
 			-- (A client or descendant may be entitled to put in and remove 
 			-- intermediate values directly.)
-	
+
+	is_stack_empty: BOOLEAN is
+			-- Is URI stack empty?
+		do
+			Result := uris.is_empty 
+		end
+
 	uri: UT_URI is
 			-- Current URI.
-		require
-			has_stack: not uris.is_empty
 		do
 			Result := uris.item
-		ensure
-			result_not_void: Result /= Void
-			
 		end
 
 	schemes: DS_HASH_TABLE [XM_URI_RESOLVER, STRING]
@@ -77,7 +80,15 @@ feature -- Setting
 		do
 			schemes.force (a_scheme, a_scheme.scheme)
 		end
-					
+
+feature -- Element change
+
+	push_uri (a_uri: UT_URI ) is
+			-- Push `a_uri' onto the stack.
+		do
+			uris.put (a_uri)
+		end
+	
 feature -- Operation(s)
 
 	resolve (a_string_uri: STRING) is
@@ -93,9 +104,15 @@ feature -- Operation(s)
 			end
 			uris.put (a_uri)
 				-- Apply current URI.
-			resolve_uri (uri)
+			resolve_absolute_uri (uri)
 		end
-	
+
+	resolve_uri (a_uri_reference: STRING) is
+			-- Resolve `a_uri_reference' on behalf of an application.
+		do
+			resolve (a_uri_reference)
+		end
+
 	resolve_finish is
 			-- Get out of current URI scope.
 		do
@@ -105,7 +122,7 @@ feature -- Operation(s)
 		
 feature -- URI
 
-	resolve_uri (an_uri: UT_URI) is
+	resolve_absolute_uri (an_uri: UT_URI) is
 			-- Resolve an absolute URI.
 		require
 			an_uri_not_void: an_uri /= Void
@@ -149,7 +166,31 @@ feature -- Result
 				Result := Unknown_scheme_error
 			end
 		end
+
+	last_uri_reference_stream: KI_CHARACTER_INPUT_STREAM is
+			-- Last stream initialised from URI reference.
+		do
+			Result := last_stream
+		end
+
+	last_system_id: UT_URI is
+			-- System id used to actually open `last_uri_reference_stream'
+		do
+			Result := uri
+		end
+
+	has_uri_reference_error: BOOLEAN is
+			-- Did the last resolution attempt succeed?
+		do
+			Result := has_error
+		end
 		
+	last_uri_reference_error: STRING is
+			-- Last error message.
+		do
+			Result := last_error
+		end
+	
 feature {NONE} -- Errors
 
 	Unknown_scheme_error: STRING is "No handler for URL scheme"

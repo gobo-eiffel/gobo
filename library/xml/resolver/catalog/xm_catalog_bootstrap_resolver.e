@@ -598,6 +598,7 @@ feature -- Action(s)
 				last_uri_reference_stream := uri_scheme_resolver.last_stream
 				resolve_finish
 			end
+			create last_system_id.make (a_system_id)
 		end
 
 feature -- Result
@@ -619,7 +620,10 @@ feature -- Result
 
 	last_uri_reference_stream: KI_CHARACTER_INPUT_STREAM
 			-- Last stream initialised from URI reference.
-	
+
+	last_system_id: UT_URI
+			-- System id used to actually open `last_uri_reference_stream'
+
 	has_uri_reference_error: BOOLEAN is
 			-- Did the last resolution attempt succeed?
 		do

@@ -141,6 +141,10 @@ feature {NONE} -- Implementation
 				create {XM_XSLT_FOR_EACH_GROUP} Result.make_style_element (error_listener, a_document, Void, an_attribute_collection, a_namespace_list, a_name_code, a_sequence_number)
 			when Xslt_if_type_code then
 				create {XM_XSLT_IF} Result.make_style_element (error_listener, a_document, Void, an_attribute_collection, a_namespace_list, a_name_code, a_sequence_number)
+			when Xslt_import_type_code then
+				create {XM_XSLT_IMPORT} Result.make_style_element (error_listener, a_document, Void, an_attribute_collection, a_namespace_list, a_name_code, a_sequence_number)
+			when Xslt_include_type_code then
+				create {XM_XSLT_INCLUDE} Result.make_style_element (error_listener, a_document, Void, an_attribute_collection, a_namespace_list, a_name_code, a_sequence_number)								
 			when Xslt_key_type_code then
 				create {XM_XSLT_KEY} Result.make_style_element (error_listener, a_document, Void, an_attribute_collection, a_namespace_list, a_name_code, a_sequence_number)				
 			when Xslt_number_type_code then

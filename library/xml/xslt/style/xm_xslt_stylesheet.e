@@ -16,7 +16,8 @@ inherit
 
 	XM_XSLT_STYLE_ELEMENT
 		redefine
-			make_style_element, precedence, process_all_attributes, validate, is_global_variable_declared, any_compile_errors
+			make_style_element, precedence, process_all_attributes, validate, is_global_variable_declared,
+			any_compile_errors, prepared_stylesheet
 		end
 
 	XM_XSLT_PROCEDURE
@@ -64,7 +65,7 @@ feature -- Access
 	prepared_stylesheet: XM_XSLT_PREPARED_STYLESHEET
 			-- Prepared stylesheet object used to load `Current'
 
-	top_level_elements: DS_ARRAYED_LIST [XM_XSLT_STYLE_ELEMENT]
+	top_level_elements: DS_LINKED_LIST [XM_XSLT_STYLE_ELEMENT]
 			-- Top-level elements in this logical stylesheet (after include/import processing)
 
 	import_precedence: INTEGER
@@ -158,7 +159,7 @@ feature -- Access
 			output_properties_defined_somewhere: a_fingerprint > -1 implies True -- Can't actually test this easily (?)
 		local
 			found: BOOLEAN
-			a_cursor: DS_ARRAYED_LIST_CURSOR [XM_XSLT_STYLE_ELEMENT]
+			a_cursor: DS_LINKED_LIST_CURSOR [XM_XSLT_STYLE_ELEMENT]
 			an_output: XM_XSLT_OUTPUT
 		do
 			if a_fingerprint = -1 then found := True end
@@ -243,7 +244,7 @@ feature -- Status report
 	strips_whitespace: BOOLEAN is
 			-- Does this stysheet do any whitespace stripping?
 		local
-			a_cursor: DS_ARRAYED_LIST_CURSOR [XM_XSLT_STYLE_ELEMENT]
+			a_cursor: DS_LINKED_LIST_CURSOR [XM_XSLT_STYLE_ELEMENT]
 		do
 			from
 				a_cursor := top_level_elements.new_cursor; a_cursor.start
@@ -273,7 +274,41 @@ feature -- Status setting
 
 feature -- Element change
 
-		set_stripper_rules (a_stripper_rules_set: XM_XSLT_MODE) is
+	set_import_precedence (a_precedence: INTEGER) is
+			-- Set import precedence for top-level elements
+		do
+			import_precedence := a_precedence
+		ensure
+			import_precedence_set: import_precedence = a_precedence
+		end
+
+	set_minimum_import_precedence (a_precedence: INTEGER) is
+			-- Set minimum import precedence for top-level elements
+		do
+			minimum_import_precedence := a_precedence
+		ensure
+			minimum_import_precedence_set: minimum_import_precedence = a_precedence
+		end
+
+	set_importer (an_importer: like Current) is
+			-- Set stylesheet that imported or included `Current'
+		require
+			importer_not_void: an_importer /= Void
+		do
+			importer := an_importer
+		ensure
+			importer_set: importer = an_importer
+		end
+
+	set_was_included is
+			-- Mark `Current' as pulled in by xsl:include.
+		do
+			was_included := True
+		ensure
+			included: was_included = True
+		end
+
+	set_stripper_rules (a_stripper_rules_set: XM_XSLT_MODE) is
 			-- Set strip/preserve whitespace rules
 		do
 			stripper_rules := a_stripper_rules_set
@@ -394,7 +429,7 @@ feature -- Element change
 		require
 			indices_not_built: not indices_built
 		local
-			a_cursor: DS_ARRAYED_LIST_CURSOR [XM_XSLT_STYLE_ELEMENT]
+			a_cursor: DS_LINKED_LIST_CURSOR [XM_XSLT_STYLE_ELEMENT]
 			a_style_element: XM_XSLT_STYLE_ELEMENT
 		do
 
@@ -466,8 +501,9 @@ feature -- Element change
 			a_data_element: XM_XSLT_DATA_ELEMENT
 			a_module: XM_XSLT_MODULE
 			found_non_import: BOOLEAN
+			an_included_stylesheet: XM_XSLT_STYLESHEET
 		do
-			create top_level_elements.make (children.count)
+			create top_level_elements.make
 			minimum_import_precedence := import_precedence
 			a_previous_style_element := Current
 			register_module (system_id)
@@ -497,13 +533,32 @@ feature -- Element change
 						end
 						a_module ?= a_child
 						if a_module /= Void then
-							todo ("splice_includes", True)
+							a_module.process_attributes
+							if a_module.is_import then
+								if found_non_import then
+									a_module.report_compile_error ("xsl:import elements must come first")
+								end
+							else
+								found_non_import := True
+							end
+							an_included_stylesheet := a_module.included_stylesheet (Current, import_precedence)
+							if an_included_stylesheet /= Void then
+
+								-- After processing the imported stylesheet and any others it brought in,
+								--  adjust the import precedence of this stylesheet if necessary.
+
+								if a_module.is_import then
+									import_precedence := an_included_stylesheet.precedence + 1
+								else
+									import_precedence := an_included_stylesheet.precedence
+									an_included_stylesheet.set_minimum_import_precedence (minimum_import_precedence)
+									an_included_stylesheet.set_was_included
+								end
+								copy_top_level_elements (an_included_stylesheet)
+							end
 						else
 							found_non_import := True
-							if not top_level_elements.extendible (1) then
-								top_level_elements.resize (2 * top_level_elements.count)
-							end
-							top_level_elements.put_last (a_previous_style_element)
+							top_level_elements.force_last (a_previous_style_element)
 						end
 					end
 				end
@@ -514,7 +569,7 @@ feature -- Element change
 	process_all_attributes is
 			-- Process the attributes of every node in the stylesheet.
 		local
-			a_cursor: DS_ARRAYED_LIST_CURSOR [XM_XSLT_STYLE_ELEMENT]
+			a_cursor: DS_LINKED_LIST_CURSOR [XM_XSLT_STYLE_ELEMENT]
 			a_style_element: XM_XSLT_STYLE_ELEMENT
 		do
 			create static_context.make (Current)
@@ -568,7 +623,7 @@ feature -- Element change
 			configuration_not_void: a_configuration /= Void
 			no_compile_errors_so_far: not any_compile_errors
 		local
-			a_cursor: DS_ARRAYED_LIST_CURSOR [XM_XSLT_STYLE_ELEMENT]
+			a_cursor: DS_LINKED_LIST_CURSOR [XM_XSLT_STYLE_ELEMENT]
 			an_instruction: XM_XSLT_INSTRUCTION
 			a_compiled_templates_index: DS_HASH_TABLE [XM_XSLT_COMPILED_TEMPLATE, INTEGER]
 			another_cursor: DS_HASH_TABLE_CURSOR [XM_XSLT_TEMPLATE, INTEGER]
@@ -689,7 +744,7 @@ feature {NONE} -- Implementation
 			a_template: XM_XSLT_TEMPLATE
 			a_variable_declaration: XM_XSLT_VARIABLE_DECLARATION
 			a_namespace_alias: XM_XSLT_NAMESPACE_ALIAS
-			a_cursor: DS_ARRAYED_LIST_CURSOR [XM_XSLT_STYLE_ELEMENT]
+			a_cursor: DS_LINKED_LIST_CURSOR [XM_XSLT_STYLE_ELEMENT]
 		do
 			from
 				a_cursor := top_level_elements.new_cursor
@@ -874,6 +929,48 @@ feature {NONE} -- Implementation
 			namespace_alias_list := Void -- Now it can be garbage-collected
 		ensure
 			namespaces_alias_list_void: namespace_alias_list = Void
+		end
+
+	copy_top_level_elements (an_included_stylesheet: XM_XSLT_STYLESHEET) is
+			-- Copy the top-level elements of the included stylesheet into the top level of `Current'.
+			--  Normally we add these elements at the end, in order, but if the precedence
+			--  of an element is less than the precedence of the previous element, we promote it.
+			-- This implements the requirement in the spec that when xsl:include is used to
+			--  include a stylesheet, any xsl:import elements in the included document are moved
+			--  up in the including document to after any xsl:import elements in the including document.
+		require
+			included_stylesheet: an_included_stylesheet /= Void
+		local
+			a_top_level_list: DS_LINKED_LIST [XM_XSLT_STYLE_ELEMENT]
+			a_cursor: DS_LINKED_LIST_CURSOR [XM_XSLT_STYLE_ELEMENT]
+			a_style_element: XM_XSLT_STYLE_ELEMENT
+			a_count: INTEGER
+		do
+			a_top_level_list := an_included_stylesheet.top_level_elements
+			from
+				a_cursor := a_top_level_list.new_cursor; a_cursor.start
+			variant
+				a_top_level_list.count + 1 - a_cursor.index
+			until
+				a_cursor.after
+			loop
+				a_style_element := a_cursor.item
+				a_count := top_level_elements.count
+				if a_count = 0 or else a_style_element.precedence >= top_level_elements.item (a_count).precedence then
+					top_level_elements.force_last (a_style_element)
+				else
+					from
+					variant
+						a_count
+					until
+						a_count = 0 or else a_style_element.precedence >= top_level_elements.item (a_count).precedence
+					loop
+						a_count := a_count - 1
+					end
+					top_level_elements.force (a_style_element, a_count + 1)
+				end
+				a_cursor.forth
+			end
 		end
 
 invariant

@@ -69,6 +69,7 @@ feature -- Access
 		require
 			public_id_not_void: a_public_id /= Void
 			system_id_not_void: a_system_id /= Void
+			catalogs_not_disabled: not are_catalogs_disabled
 		local
 			an_fpi, another_fpi, a_debug_string: STRING
 		do
@@ -121,6 +122,7 @@ feature -- Access
 			-- Resolved URI reference for `a_uri_reference'
 		require
 			uri_reference_not_void: a_uri_reference /= Void
+			catalogs_not_disabled: not are_catalogs_disabled
 		local
 			an_fpi: STRING
 		do
@@ -153,8 +155,6 @@ feature -- Status report
 
 	are_catalogs_disabled: BOOLEAN
 			-- Is all usage of catalog files disabled?
-			-- This flag is for consultation by external software (such as XM_CATALOG_RESOLVER);
-			-- It is not used internally.
 
 	is_system_default_catalog_suppressed: BOOLEAN
 			-- Should use of `System_default_catalog' be suppressed?

@@ -14,7 +14,7 @@ class  XM_CATALOG_RESOLVER
 
 inherit
 
-	XM_EXTERNAL_RESOLVER
+	XM_URI_EXTERNAL_RESOLVER
 		redefine
 			resolve_public, resolve_finish
 		end
@@ -28,6 +28,28 @@ inherit
 		
 	XM_SHARED_CATALOG_MANAGER
 
+feature -- Status report
+	
+	is_stack_empty: BOOLEAN is
+			-- Is URI stack empty?
+		do
+			Result := shared_catalog_manager.bootstrap_resolver.uri_scheme_resolver.is_stack_empty 
+		end
+
+	uri: UT_URI is
+			-- Current URI.
+		do
+			Result := shared_catalog_manager.bootstrap_resolver.uri_scheme_resolver.uri
+		end
+
+feature -- Element change
+
+	push_uri (a_uri: UT_URI ) is
+			-- Push `a_uri' onto the stack.
+		do
+			shared_catalog_manager.bootstrap_resolver.uri_scheme_resolver.push_uri (a_uri)
+		end
+
 feature -- Actions
 
 	resolve_uri (a_uri_reference: STRING) is
@@ -37,7 +59,8 @@ feature -- Actions
 			a_uri: UT_URI
 		do
 			if shared_catalog_manager.are_catalogs_disabled then
-				shared_catalog_manager.bootstrap_resolver.uri_scheme_resolver.resolve (a_resolved_uri)
+				shared_catalog_manager.bootstrap_resolver.uri_scheme_resolver.resolve (a_uri_reference)
+				create last_system_id.make (a_uri_reference)
 			else
 				a_resolved_uri := shared_catalog_manager.resolved_uri_reference (a_uri_reference)
 				if STRING_.same_string (a_resolved_uri, a_uri_reference) then
@@ -51,6 +74,7 @@ feature -- Actions
 					end
 				end
 				shared_catalog_manager.bootstrap_resolver.uri_scheme_resolver.resolve (a_resolved_uri)
+				last_system_id := shared_catalog_manager.bootstrap_resolver.uri_scheme_resolver.uri
 			end
 		end
 
@@ -99,7 +123,10 @@ feature -- Result
 		do
 			Result := shared_catalog_manager.bootstrap_resolver.uri_scheme_resolver.last_stream
 		end
-		
+
+	last_system_id: UT_URI
+			-- System id used to actually open `last_uri_reference_stream'
+
 	has_uri_reference_error: BOOLEAN is
 			-- Did the last resolution attempt succeed?
 		do

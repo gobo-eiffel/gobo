@@ -36,13 +36,15 @@ creation
 
 feature {NONE} -- Initialization
 
-	make (an_entity_resolver: XM_EXTERNAL_RESOLVER;
+	make (an_entity_resolver: like entity_resolver;
+			a_uri_resolver: like uri_resolver;
 			an_error_listener: XM_XSLT_ERROR_LISTENER;
 			a_system_function_factory: XM_XSLT_SYSTEM_FUNCTION_FACTORY;
 			an_encoder_factory: XM_XSLT_ENCODER_FACTORY) is
 			-- Establish invariant.
 		require
 			entity_resolver_not_void: an_entity_resolver /= Void
+			uri_resolver_not_void: a_uri_resolver /= Void
 			error_listener_not_void: an_error_listener /= Void
 			system_function_factory: a_system_function_factory /= Void
 			encoder_factory_not_void: 	an_encoder_factory /= Void
@@ -52,6 +54,7 @@ feature {NONE} -- Initialization
 			set_string_mode_mixed
 			recovery_policy := Recover_with_warnings
 			entity_resolver := an_entity_resolver
+			uri_resolver := a_uri_resolver
 			error_listener := an_error_listener
 			if error_listener.is_impure then
 				error_listener.set_recovery_policy (Recover_with_warnings)
@@ -59,6 +62,7 @@ feature {NONE} -- Initialization
 			shared_decimal_context.set_digits (18)
 		ensure
 			entity_resolver_set: entity_resolver = an_entity_resolver
+			uri_resolver_set: uri_resolver = a_uri_resolver
 			error_listener_set: error_listener = an_error_listener
 			encoder_factory_set: encoder_factory = an_encoder_factory
 		end
@@ -76,7 +80,7 @@ feature {NONE} -- Initialization
 			create a_system_function_factory
 			create error_reporter.make_standard
 			create an_error_listener.make (Recover_with_warnings, error_reporter)
-			make (a_catalog_resolver, an_error_listener, a_system_function_factory, an_encoder_factory)
+			make (a_catalog_resolver, a_catalog_resolver, an_error_listener, a_system_function_factory, an_encoder_factory)
 		end
 
 feature -- Access
@@ -90,8 +94,11 @@ feature -- Access
 	error_reporter: UT_ERROR_HANDLER
 			-- Error reporter for standard error and trace listeners
 
-	entity_resolver: XM_EXTERNAL_RESOLVER
+	entity_resolver: XM_URI_EXTERNAL_RESOLVER
 			-- Entity resolver
+
+	uri_resolver: XM_URI_REFERENCE_RESOLVER
+			-- URI resolver
 
 	encoder_factory: XM_XSLT_ENCODER_FACTORY
 			-- Encoder factory
@@ -162,7 +169,7 @@ feature -- Element change
 			set: is_line_numbering = on_or_off
 		end
 
-	set_entity_resolver (an_entity_resolver: XM_EXTERNAL_RESOLVER) is
+	set_entity_resolver (an_entity_resolver: like entity_resolver) is
 			-- Set `entity_resolver'.
 		require
 			entity_resolver_not_void: an_entity_resolver /= Void

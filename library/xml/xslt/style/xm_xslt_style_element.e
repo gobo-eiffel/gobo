@@ -149,6 +149,12 @@ feature -- Access
 			prinicpal_stylesheet_not_void: Result /= Void
 		end
 
+	prepared_stylesheet: XM_XSLT_PREPARED_STYLESHEET is
+			-- Prepared stylesheet
+		do
+			Result := principal_stylesheet.prepared_stylesheet
+		end
+
 	owning_procedure: XM_XSLT_PROCEDURE is
 			-- Owning Procedure definition, if this is a local variable
 		local

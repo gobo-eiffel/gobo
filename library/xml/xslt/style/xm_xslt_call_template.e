@@ -224,8 +224,8 @@ feature {NONE} -- Implementation
 			attributes_prepared: attributes_prepared
 		local
 			a_stylesheet: XM_XSLT_STYLESHEET
-			an_element_list: DS_ARRAYED_LIST [XM_XSLT_STYLE_ELEMENT]
-			a_cursor: DS_ARRAYED_LIST_CURSOR [XM_XSLT_STYLE_ELEMENT]
+			an_element_list: DS_LINKED_LIST [XM_XSLT_STYLE_ELEMENT]
+			a_cursor: DS_LINKED_LIST_CURSOR [XM_XSLT_STYLE_ELEMENT]
 			a_template: XM_XSLT_TEMPLATE
 		do
 			a_stylesheet := principal_stylesheet
