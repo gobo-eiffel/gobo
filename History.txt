@@ -1,3 +1,27 @@
+Version 2.0 - 
+
+	Gobo Eiffel Structure Library:
+
+	* Added argumentless creation routine `make_default' to
+	  most containers. In resizable containers `make_default'
+	  is equivalent to `make (default_capacity)' where
+	  `default_capacity' is a constant (10) defined in class
+	  DS_RESIZABLE (suggested by Franck Arnaud).
+	* DS_SORTER and descendant classes now use DS_COMPARATOR
+	  as comparison criterion (suggested by members of the
+	  SmallEiffel mailing list).
+	* Added class DS_TOPOLOGICAL_SORTER to sort partially
+	  ordered items.
+	* Added DS_SET and descendant classes such as DS_HASH_SET.
+	* Moved $GOBO/library/structure/base to $GOBO/library/
+	  structure/other/EiffelBase.
+
+	Miscellaneous:
+
+	* Removed comments in 'loadpath.se' files which caused
+	  problems on AmigaDOS (suggested by Thomas Aglassinger).
+	* Added Makefiles in various directories.
+
 Version 1.6 - 20 August 2000
 
 	geyacc:
