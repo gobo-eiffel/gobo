@@ -157,7 +157,6 @@ feature {NONE} -- Implementation
 				if
 					an_attribute /= Void
 				then
-					v := clone (an_attribute.value)
 					!! an_uc_string.make_from_utf8 (variables.expanded_variables (an_attribute.value.to_utf8))
 					an_attribute.set_value (an_uc_string)
 				end
