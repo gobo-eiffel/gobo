@@ -94,6 +94,9 @@ feature
 			assert_document
 			go_down
 			assert_ns_element ("uri1", "doc")
+			assert_element_has_qualified ("uri1", "a")
+			assert_element_has_qualified ("uri2", "b")
+			assert_element_has_qualified ("uri3", "c")
 			go_down
 			assert_ns_element ("uri1", "a")
 			go_next
@@ -219,6 +222,17 @@ feature {NONE} -- Walk assertions
 			assert_equal ("element name", a_name, typer.element.name)
 		end
 	
+	assert_element_has_qualified (a_uri: STRING; a_name: STRING) is
+			-- Child node of an element.
+		require
+			a_uri_not_void: a_uri /= Void
+			a_name_not_void: a_name /= Void
+		do
+			node.process (typer)
+			assert ("element expected", typer.is_element)
+			assert_has_element_qualified (typer.element, a_uri, a_name)
+		end
+	
 	assert_ns_element (a_ns: STRING; a_name: STRING) is
 			-- Node is an element (with namespace).
 		require
@@ -227,6 +241,7 @@ feature {NONE} -- Walk assertions
 		do
 			assert_element (a_name)
 			node.process (typer)
+			assert ("has_qualified_name", typer.element.has_qualified_name (a_ns, a_name))
 			assert_equal ("element namespace", a_ns, typer.element.namespace.uri)
 		end
 		
@@ -278,6 +293,7 @@ feature {NONE} -- Walk assertions
 		do
 			assert_attribute (a_name, a_value)
 			node.process (typer)
+			assert ("has_qualified_name", typer.attribute.has_qualified_name (a_ns, a_name))
 			assert_equal ("attribute namespace", a_ns, typer.attribute.namespace.uri)
 		end
 		
@@ -342,6 +358,19 @@ feature {NONE} -- Implementation
 			assert ("has element", a.has_element_by_name (a_name))
 			if a.has_element_by_name (a_name) then
 				assert_equal ("element name", a.element_by_name (a_name).name, a_name)
+			end
+		end
+
+	assert_has_element_qualified (a: XM_COMPOSITE; a_uri: STRING; a_name: STRING) is
+			-- Test element_by_name.
+		require
+			a_not_void: a /= Void
+			a_name_not_void: a_name /= Void
+		do
+			assert ("has element", a.has_element_by_qualified_name (a_uri, a_name))
+			if a.has_element_by_name (a_name) then
+				assert_equal ("element namespace", a.element_by_qualified_name (a_uri, a_name).namespace.uri, a_uri)
+				assert_equal ("element name", a.element_by_qualified_name (a_uri, a_name).name, a_name)
 			end
 		end
 
