@@ -1,0 +1,37 @@
+<system name="xmloasis">
+	<root class="XMLOASIS" creation="make"/>
+	<cluster>
+		<option unless="${DEBUG}">
+			<require enable="False"/>
+			<ensure enable="False"/>
+			<invariant enable="False"/>
+			<loop enable="False"/>
+			<check enable="False"/>
+			<optimize enable="True"/>
+		</option>
+		<option if="${DEBUG}">
+			<require enable="True"/>
+			<ensure enable="True"/>
+			<invariant enable="True"/>
+			<loop enable="True"/>
+			<check enable="True"/>
+			<optimize enable="False"/>
+		</option>
+
+		<cluster name="xmloasis" location="${GOBO}/test/xml/oasis">
+			<cluster name="testgen" location="TESTGEN"/>
+		</cluster>
+
+		<mount location="${GOBO}/library/test/cluster.xace"/>
+		<mount location="${GOBO}/library/kernel/cluster.xace"/>
+		<mount location="${GOBO}/library/structure/cluster.xace"/>
+		<mount location="${GOBO}/library/utility/cluster.xace"/>
+		<mount location="${GOBO}/library/pattern/cluster.xace"/>
+		<mount location="${GOBO}/library/parse/cluster.xace"/>
+		<mount location="${GOBO}/library/lexical/cluster.xace"/>
+		<mount location="${GOBO}/library/xml/cluster.xace"/>
+		<mount location="${GOBO}/library/kernel.xace" />
+	</cluster>
+</system>
+
+
