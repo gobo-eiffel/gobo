@@ -137,7 +137,9 @@ feature -- Execution
 			cmd.append_string (options)
 			cmd.append_string (" --" + command)
 			cmd.append_string (" --" + command_options)
-			cmd.append_string (" " + xace_filename)
+			if xace_filename /= Void then
+				cmd.append_string (" " + xace_filename)
+			end
 			log ("  [gexace] " + cmd + "%N")
 			execute_shell (cmd)
 
