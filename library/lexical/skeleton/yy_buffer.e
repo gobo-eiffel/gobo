@@ -6,7 +6,7 @@ indexing
 
 	library:    "Gobo Eiffel Lexical Library"
 	author:     "Eric Bezault <ericb@gobo.demon.co.uk>"
-	copyright:  "Copyright (c) 1997, Eric Bezault"
+	copyright:  "Copyright (c) 1999, Eric Bezault"
 	date:       "$Date$"
 	revision:   "$Revision$"
 
@@ -14,13 +14,13 @@ class YY_BUFFER
 
 inherit
 
-	KL_IMPORTED_STRING_ROUTINES
+	KL_IMPORTED_STRING_BUFFER_ROUTINES
 
 creation
 
 	make, make_from_buffer
 
-feature -- Initialization
+feature {NONE} -- Initialization
 
 	make (str: STRING) is
 			-- Create a new buffer with characters from `str'.
@@ -28,12 +28,15 @@ feature -- Initialization
 		require
 			str_not_void: str /= Void
 		local
-			buff: STRING
+			buff: like content
+			nb: INTEGER
 		do
-			buff := STRING_.make (str.count + 2)
-			buff.append_string (str)
-			buff.append_character (End_of_buffer_character)
-			buff.append_character (End_of_buffer_character)
+			nb := str.count + 2
+			buff := STRING_BUFFER_.make (nb)
+			STRING_BUFFER_.copy_from_string (buff, 0, str)
+			nb := nb + (Lower - 1)
+			buff.put (End_of_buffer_character, nb - 1)
+			buff.put (End_of_buffer_character, nb)
 			make_from_buffer (buff)
 		ensure
 			capacity_set: capacity = str.count
@@ -41,20 +44,23 @@ feature -- Initialization
 			beginning_of_line: beginning_of_line
 		end
 
-	make_from_buffer (buff: STRING) is
+	make_from_buffer (buff: like content) is
 			-- Create a new buffer using `buff'.
 			-- `buff' might be altered during the scanning process.
 			-- Use `make' if this behavior is not desired.
 		require
 			buff_not_void: buff /= Void
 			valid_buff: buff.count >= 2 and then
-				buff.item (buff.count - 1) = '%U' and
-				buff.item (buff.count) = '%U'
+				buff.item (buff.count + (Lower - 1) - 1) = '%U' and
+				buff.item (buff.count + (Lower - 1)) = '%U'
+		local
+			l: INTEGER
 		do
+			l := Lower
 			capacity := buff.count - 2
+			upper := capacity + (l - 1)
 			content := buff
-			position := 1
-			count := capacity
+			position := l
 			beginning_of_line := True
 		ensure
 			content_set: content = buff
@@ -65,12 +71,17 @@ feature -- Initialization
 
 feature -- Access
 
-	content: STRING
+	content: like STRING_BUFFER_TYPE
 			-- Input buffer characters
 
-	count: INTEGER
+	count: INTEGER is
 			-- Number of characters in buffer,
 			-- not including EOB characters
+		do
+			Result := upper - Lower + 1
+		ensure
+			definition: Result = upper - Lower + 1
+		end
 
 	capacity: INTEGER
 			-- Maximum number of characters in buffer,
@@ -79,38 +90,48 @@ feature -- Access
 	position: INTEGER
 			-- Current position in buffer
 
+	Lower: INTEGER is
+			-- Lower value for `position'
+		once
+			Result := STRING_BUFFER_.lower
+		end
+
+	upper: INTEGER
+			-- Upper value for `position', not
+			-- including room for EOB characters
+
 	beginning_of_line: BOOLEAN
 			-- Is current position at the beginning of a line?
 
 feature -- Setting
 
-	set_capacity (nb: INTEGER) is
-			-- Set `capacity' to `nb'.
-		require
-			nb_small_enough: nb + 2 <= content.count
-			nb_large_enough: nb >= count
-		do
-			capacity := nb
-		ensure
-			capacity_set: capacity = nb
-		end
+--	set_capacity (nb: INTEGER) is
+--			-- Set `capacity' to `nb'.
+--		require
+--			nb_small_enough: nb + 2 <= content.count
+--			nb_large_enough: nb >= count
+--		do
+--			capacity := nb
+--		ensure
+--			capacity_set: capacity = nb
+--		end
 
-	set_count (nb: INTEGER) is
-			-- Set `count' to `nb'.
-		require
-			nb_small_enough: nb <= capacity
-			nb_large_enough: nb >= 0
-		do
-			count := nb
-		ensure
-			count_set: count = nb
-		end
+--	set_count (nb: INTEGER) is
+--			-- Set `count' to `nb'.
+--		require
+--			nb_small_enough: nb <= capacity
+--			nb_large_enough: nb >= 0
+--		do
+--			upper := Lower + nb - 1
+--		ensure
+--			count_set: count = nb
+--		end
 
 	set_position (pos: INTEGER) is
 			-- Set `position' to `pos'.
 		require
-			pos_small_enough: pos <= count + 2
-			pos_large_enough: pos >= 1
+			pos_small_enough: pos <= upper + 2
+			pos_large_enough: pos >= Lower
 		do
 			position := pos
 		ensure
@@ -156,19 +177,92 @@ feature -- Element change
 
 	flush is
 			-- Flush buffer.
+		local
+			l: INTEGER
 		do
-			count := 0
+			l := Lower
 				-- We always need two end-of-file characters.
 				-- The first causes a transition to the end-of-buffer
 				-- state. The second causes a jam in that state.
-			content.put (End_of_buffer_character, 1)
-			content.put (End_of_buffer_character, 2)
-			position := 1
+			content.put (End_of_buffer_character, l)
+			content.put (End_of_buffer_character, l + 1)
+			upper := l - 1
+			position := l
 			beginning_of_line := True
 			filled := True
 		ensure
 			flushed: count = 0
 			beginning_of_line: beginning_of_line
+		end
+
+	compact_left is
+			-- Move unconsumed characters to the start of buffer
+			-- and make sure there is still available space at
+			-- the end of buffer.
+		local
+			new_position: INTEGER
+			nb: INTEGER
+		do
+			nb := upper - position + 1
+			if nb >= capacity then
+					-- Buffer is full. Resize it.
+				resize
+			end
+			new_position := Lower
+			if position /= new_position then
+					-- Move the 2 EOB characters as well.
+				STRING_BUFFER_.move_left (content, position, new_position, nb + 2)
+				position := new_position
+				upper := new_position + nb - 1
+			end
+		ensure
+			compacted_left: position = Lower
+			not_full: capacity > count
+		end
+
+	compact_right is
+			-- Move unconsumed characters to the end of buffer
+			-- and make sure there is still available space at
+			-- the start of buffer.
+		local
+			new_position: INTEGER
+			nb: INTEGER
+		do
+			nb := upper - position + 1
+			if nb >= capacity then
+					-- Buffer is full. Resize it.
+				resize
+			end
+			new_position := position + capacity - count
+			if position /= new_position then
+					-- Move the 2 EOB characters as well.
+				STRING_BUFFER_.move_right (content, position, new_position, nb + 2)
+				position := new_position
+				upper := new_position + nb - 1
+			end
+		ensure
+			compacted_right: count = capacity
+			not_full: position > Lower
+		end
+
+feature {NONE} -- Implementation
+
+	resize is
+			-- Increase `capacity'.
+		do
+			if capacity = 0 then
+				capacity := Default_capacity
+			else
+				capacity := capacity * 2
+			end
+				-- Make sure `content.count' is big enough.
+				-- Include room for 2 EOB characters.
+			if capacity + 2 > content.count then
+					-- Set `content.count' to `capacity' + 2.
+				content := STRING_BUFFER_.resize (content, capacity + 2)
+			end
+		ensure
+			resized: capacity > old capacity
 		end
 
 feature {NONE} -- Constants
@@ -185,8 +279,8 @@ invariant
 	content_count: content.count >= capacity + 2
 	positive_capacity: capacity >= 0
 	valid_count: count >= 0 and count <= capacity
-	end_of_buffer: content.item (count + 1) = End_of_buffer_character and
-		content.item (count + 2) = End_of_buffer_character
-	valid_position: position >= 1 and position <= count + 2
+	end_of_buffer: content.item (upper + 1) = End_of_buffer_character and
+		content.item (upper + 2) = End_of_buffer_character
+	valid_position: position >= lower and position <= upper + 2
 
 end -- class YY_BUFFER
