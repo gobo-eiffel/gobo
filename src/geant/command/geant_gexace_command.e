@@ -39,45 +39,40 @@ feature -- Status report
 	is_executable: BOOLEAN is
 			-- Can command be executed?
 		do
-			Result := (is_validate_executable or is_system_executable or is_cluster_executable)
+			Result := (is_validate_executable and not (is_system_executable or is_cluster_executable)) or
+				(is_system_executable and not (is_validate_executable or is_cluster_executable)) or
+				(is_cluster_executable and not (is_validate_executable or is_system_executable))
 		ensure then
-			definition: Result = (is_validate_executable or is_system_executable or is_cluster_executable)
+			definition: Result = ((is_validate_executable and not (is_system_executable or is_cluster_executable)) or
+				(is_system_executable and not (is_validate_executable or is_cluster_executable)) or
+				(is_cluster_executable and not (is_validate_executable or is_system_executable)))
 		end
 
 	is_validate_executable: BOOLEAN is
 			-- Can 'validate' command be execute?
 		do
-			Result := (validate_command and output_filename = Void) and
-				(system_command = Void and cluster_command = Void)
+			Result := (validate_command and output_filename = Void)
 		ensure
 			validate_command: Result implies validate_command
 			output_filename_void: Result implies output_filename = Void
-			not_system_command: Result implies not is_system_executable
-			not_cluster_command: Result implies not is_cluster_executable
 		end
 
 	is_system_executable: BOOLEAN is
 			-- Can 'system' command be executed?
 		do
-			Result := (system_command /= Void and then system_command.count > 0) and
-				(not validate_command and cluster_command = Void)
+			Result := (system_command /= Void and then system_command.count > 0)
 		ensure
 			system_command_not_void: Result implies system_command /= Void
 			system_command_not_empty: Result implies system_command.count > 0
-			not_validate_command: Result implies not is_validate_executable
-			not_cluster_command: Result implies not is_cluster_executable
 		end
 
 	is_cluster_executable: BOOLEAN is
 			-- Can 'cluster' command be executed?
 		do
-			Result := (cluster_command /= Void and then cluster_command.count > 0) and
-				(not validate_command and system_command = Void)
+			Result := (cluster_command /= Void and then cluster_command.count > 0)
 		ensure
 			cluster_command_not_void: Result implies cluster_command /= Void
 			cluster_command_not_empty: Result implies cluster_command.count > 0
-			not_validate_command: Result implies not is_validate_executable
-			not_system_command: Result implies not is_system_executable
 		end
 
 feature -- Access
