@@ -56,11 +56,11 @@ feature {NONE} -- Initialization
 			init_api
 			is_correct := True
 			last_error := Xml_err_none
-			
+
 			!XM_STRING_SOURCE! source
-			
+
 			!XM_CALLBACKS_NULL! callbacks.make
-			
+
 			!XM_NULL_EXTERNAL_RESOLVER! dtd_resolver
 			entity_resolver := dtd_resolver
 		end
@@ -197,7 +197,7 @@ feature -- Incremental parsing
 			-- has been completely parsed and no input is coming anymore.
 		do
 			if is_parser_created then
-				parse_string_and_set_error ("", True)
+				parse_string_and_set_error (once_empty_string, True)
 			end
 		end
 
@@ -866,5 +866,10 @@ feature {NONE} -- Constants
 
 	read_block_size: INTEGER is 10240
 			-- 10 kB
+
+feature {NONE} -- Once strings
+
+	once_empty_string: STRING is ""
+			-- The empty string
 
 end
