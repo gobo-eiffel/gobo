@@ -280,7 +280,7 @@ feature -- Access/XML attribute values (unicode)
 			elseif False_attribute_value.is_equal (uc_value) then
 				Result := False
 			else
-				print ("WARNING: wrong value '" + uc_value.out + "' for attribute " + an_attr_name.out + " Valid values are `true' and `false'. Using `false'.%N")
+				print ("WARNING: wrong value '" + uc_value.out + "' for attribute '" + an_attr_name.out + "'. Valid values are `true' and `false'. Using `false'.%N")
 				Result := False
 			end
 		end
