@@ -129,21 +129,25 @@ feature -- Execution
 			cmd: STRING
 			old_cwd: STRING
 			project_dir, eifgen: STRING
+			a_project_filename: STRING
 			a_filename: STRING
 		do
 			cmd := clone ("ibcomp -executable")
 			if finalize_mode then
 				cmd.append_string (" -finalize")
 			end
-			cmd.append_string (" -new -stop")
+			a_project_filename := system_name + ".eif"
+			if not file_system.file_exists (a_project_filename) then
+				cmd.append_string (" -new")
+			end
+			cmd.append_string (" -stop")
 			if ace_filename /= Void and then ace_filename.count > 0 then
 				cmd.append_string (" -ace ")
 				a_filename := file_system.pathname_from_file_system (ace_filename, unix_file_system)
 				cmd := STRING_.appended_string (cmd, a_filename)
 			end
 			cmd.append_string (" -project ")
-			cmd := STRING_.appended_string (cmd, system_name)
-			cmd.append_string (".eif")
+			cmd := STRING_.appended_string (cmd, a_project_filename)
 			project.trace (<<"  [hact] ", cmd>>)
 			execute_shell (cmd)
 			if exit_code = 0 and then fish then
