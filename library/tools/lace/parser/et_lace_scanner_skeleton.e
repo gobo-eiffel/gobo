@@ -95,7 +95,8 @@ feature -- AST factory
 			a_text_not_void: a_text /= Void
 			a_text_not_empty: a_text.count > 0
 		do
-			!! Result.make_with_position (a_text, eif_lineno, 1)
+			!! Result.make (a_text)
+			Result.set_position (eif_lineno, 1)
 		ensure
 			identifier_not_void: Result /= Void
 		end
