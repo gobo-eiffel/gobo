@@ -170,7 +170,7 @@ feature -- Error handling
 			error_handler.report_error (an_error)
 		end
 
-	report_cannot_wirte_error (a_filename: STRING) is
+	report_cannot_write_error (a_filename: STRING) is
 			-- Report that `a_filename' cannot be
 			-- opened in write mode.
 		require
