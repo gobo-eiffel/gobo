@@ -21,7 +21,7 @@ inherit
 
 creation
 
-	make, make_pull, make_push
+	make
 
 feature {NONE} -- Initialization
 
@@ -34,39 +34,8 @@ feature {NONE} -- Initialization
 		do
 			universe := a_universe
 			nb := a_universe.classes.capacity
-			create dynamic_type_set_builder.make (Current)
-			create dynamic_types.make (nb)
-			make_basic_types
-		ensure
-			universe_set: universe = a_universe
-		end
-
-	make_pull (a_universe: like universe) is
-			-- Create a new system.
-		require
-			a_universe_not_void: a_universe /= Void
-		local
-			nb: INTEGER
-		do
-			universe := a_universe
-			nb := a_universe.classes.capacity
-			create {ET_DYNAMIC_PULL_TYPE_SET_BUILDER} dynamic_type_set_builder.make (Current)
-			create dynamic_types.make (nb)
-			make_basic_types
-		ensure
-			universe_set: universe = a_universe
-		end
-
-	make_push (a_universe: like universe) is
-			-- Create a new system.
-		require
-			a_universe_not_void: a_universe /= Void
-		local
-			nb: INTEGER
-		do
-			universe := a_universe
-			nb := a_universe.classes.capacity
-			create {ET_DYNAMIC_PUSH_TYPE_SET_BUILDER} dynamic_type_set_builder.make (Current)
+			create null_dynamic_type_set_builder.make (Current)
+			dynamic_type_set_builder := null_dynamic_type_set_builder
 			create dynamic_types.make (nb)
 			make_basic_types
 		ensure
@@ -120,6 +89,32 @@ feature -- Access
 
 	universe: ET_UNIVERSE
 			-- Surrounding universe
+
+feature -- Status report
+
+	c_code_generation: BOOLEAN
+			-- Should C code be generated when compiling current system?
+
+	c_code_compilation: BOOLEAN
+			-- Should generated C code be compiled when compiling current system?
+
+feature -- Status report
+
+	set_c_code_generation (b: BOOLEAN) is
+			-- Set `c_code_generation' to `b'.
+		do
+			c_code_generation := b
+		ensure
+			c_code_generation_set: c_code_generation = b
+		end
+
+	set_c_code_compilation (b: BOOLEAN) is
+			-- Set `c_code_compilation' to `b'.
+		do
+			c_code_compilation := b
+		ensure
+			c_code_compilation_set: c_code_compilation = b
+		end
 
 feature -- Types
 
@@ -326,12 +321,26 @@ feature -- Compilation
 			-- Set `has_fatal_error' if a fatal error occurred.
 		local
 			l_class: ET_CLASS
+			l_command: KL_SHELL_COMMAND
 		do
 			l_class := universe.root_class
 			if l_class = universe.none_class then
 				compile_all
 			elseif l_class /= Void then
 				compile_system
+				if not has_fatal_error then
+					if c_code_generation then
+						generate_c_code
+						if c_code_compilation then
+							if universe.system_name /= Void then
+								create l_command.make ("cl " + universe.system_name + ".c")
+							else
+								create l_command.make ("cl " + l_class.name.name + ".c")
+							end
+							l_command.execute
+						end
+					end
+				end
 			end
 		end
 
@@ -340,14 +349,14 @@ feature -- Compilation
 			-- Set `has_fatal_error' if a fatal error occurred.
 		local
 			l_class: ET_CLASS
-			l_name: ET_IDENTIFIER
+			l_name: ET_FEATURE_NAME
 			l_feature: ET_FEATURE
-			l_command: KL_SHELL_COMMAND
 			l_clock: DT_SHARED_SYSTEM_CLOCK
 			dt1: DT_DATE_TIME
 		do
 			has_fatal_error := False
 			universe.activate_processors
+			activate_dynamic_type_set_builder
 			debug ("ericb")
 				create l_clock
 				dt1 := l_clock.system_clock.date_time_now
@@ -358,33 +367,68 @@ feature -- Compilation
 			end
 			compile_kernel
 			l_class := universe.root_class
-			if l_class /= Void then
-				root_type := dynamic_type (l_class, l_class)
-				universe.set_feature_seeds
-				if universe.root_creation /= Void then
-					l_feature := l_class.named_feature (universe.root_creation)
-				elseif universe.default_create_seed /= 0 then
-					l_feature := l_class.seeded_feature (universe.default_create_seed)
-				else
-					create l_name.make ("default_create")
-					l_feature := l_class.named_feature (l_name)
+			if l_class = Void then
+					-- Error: missing root class.
+				set_fatal_error
+				error_handler.report_gvsrc3a_error
+			elseif l_class = universe.none_class then
+					-- Error: the root creation feature is not declared as a
+					-- publicly available creation procedure in the root class.
+				l_name := universe.root_creation
+				if l_name = Void then
+					l_name := tokens.default_create_feature_name
 				end
-				if l_feature = Void then
--- TODO
-				elseif not l_feature.is_procedure then
--- TODO.
+				set_fatal_error
+				error_handler.report_gvsrc6a_error (l_class, l_name)
+			elseif not l_class.is_preparsed then
+					-- Error: unknown root class.
+				set_fatal_error
+				error_handler.report_gvsrc4a_error (l_class)
+			else
+				l_class.process (universe.eiffel_parser)
+				if l_class.has_syntax_error then
+						-- Error already reported.
+					set_fatal_error
+				elseif l_class.is_generic then
+						-- Error: the root class should not be generic.
+					set_fatal_error
+					error_handler.report_vsrc1a_error (l_class)
 				else
-					root_creation_procedure := root_type.dynamic_feature (l_feature, Current)
-					root_creation_procedure.set_creation (True)
-					root_type.set_alive
-					build_dynamic_type_sets
-					generate_c_code
-					if universe.system_name /= Void then
-						create l_command.make ("cl " + universe.system_name + ".c")
+					root_type := dynamic_type (l_class, l_class)
+					if l_class.has_interface_error then
+							-- Error already reported.
+						set_fatal_error
 					else
-						create l_command.make ("cl " + l_class.name.name + ".c")
+						universe.set_feature_seeds
+						l_name := universe.root_creation
+						if l_name /= Void then
+							l_feature := l_class.named_feature (l_name)
+						elseif universe.default_create_seed /= 0 then
+							l_feature := l_class.seeded_feature (universe.default_create_seed)
+							l_name := tokens.default_create_feature_name
+						else
+							l_name := tokens.default_create_feature_name
+							l_feature := l_class.named_feature (l_name)
+						end
+						if l_feature = Void then
+								-- Error: the root creation procedure is not
+								-- a feature of the root class.
+							set_fatal_error
+							error_handler.report_gvsrc5a_error (l_class, l_name)
+						elseif not l_class.is_creation_directly_exported_to (l_feature.name, universe.any_class) then
+							set_fatal_error
+							error_handler.report_gvsrc6a_error (l_class, l_feature.name)
+						elseif not l_feature.is_procedure then
+								-- Internal error: the root creation feature is not a procedure.
+							set_fatal_error
+							error_handler.report_gibbn_error
+						else
+							root_creation_procedure := root_type.dynamic_feature (l_feature, Current)
+							root_creation_procedure.set_creation (True)
+							root_type.set_alive
+							build_dynamic_type_sets
+						end
 					end
-					l_command.execute
 				end
 			end
 		end
@@ -405,6 +449,7 @@ feature -- Compilation
 		do
 			has_fatal_error := False
 			universe.activate_processors
+			activate_dynamic_type_set_builder
 			debug ("ericb")
 				create l_clock
 				dt1 := l_clock.system_clock.date_time_now
@@ -644,6 +689,27 @@ feature -- Processors
 	dynamic_type_set_builder: ET_DYNAMIC_TYPE_SET_BUILDER
 			-- Builder of dynamic type sets
 
+	null_dynamic_type_set_builder: ET_DYNAMIC_NULL_TYPE_SET_BUILDER
+			-- Null builder of dynamic type sets
+
+	activate_dynamic_type_set_builder is
+			-- Activate dynamic type set builder.
+		do
+			if dynamic_type_set_builder = null_dynamic_type_set_builder then
+				create {ET_DYNAMIC_PUSH_TYPE_SET_BUILDER} dynamic_type_set_builder.make (Current)
+			end
+		end
+
+	set_dynamic_type_set_builder (a_builder: like dynamic_type_set_builder) is
+			-- Set `dynamic_type_set_builder' to `a_builder'.
+		require
+			a_builder_not_void: a_builder /= Void
+		do
+			dynamic_type_set_builder := a_builder
+		ensure
+			dynamic_type_set_builder_set: dynamic_type_set_builder = a_builder
+		end
+
 feature {NONE} -- Features
 
 	array_area_feature: ET_FEATURE
@@ -682,5 +748,6 @@ invariant
 	special_character_type_not_void: special_character_type /= Void
 	root_creation_procedure: root_creation_procedure /= Void implies root_creation_procedure.is_procedure
 	dynamic_type_set_builder_not_void: dynamic_type_set_builder /= Void
+	null_dynamic_type_set_builder_not_void: null_dynamic_type_set_builder /= Void
 
 end
