@@ -1,3 +1,9 @@
+Version 1.2 - 8 November 1997
+
+	* New implementation for variable trailing context
+	  in gelex, with warnings for dangerous trailing
+	  contexts of form such as x+/xz.
+
 Version 1.1 - 29 October 1997
 
 	* Bug fixed wrt variable trailing context in gelex.
