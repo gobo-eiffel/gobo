@@ -16,7 +16,7 @@ inherit
 
 	XM_XPATH_ASSIGNATION
 		redefine
-			evaluate_item, effective_boolean_value, is_repeated_sub_expression 
+			evaluate_item, effective_boolean_value, is_repeated_sub_expression, compute_special_properties
 		end
 
 	XM_XPATH_PROMOTION_ACTIONS
@@ -43,7 +43,7 @@ feature {NONE} -- Initialization
 				declaration_not_void: declaration /= Void
 			end
 			sequence := a_sequence_expression
-			action := an_action
+			set_action (an_action)
 			compute_static_properties
 			initialize
 		ensure
@@ -51,11 +51,11 @@ feature {NONE} -- Initialization
 			operator_set: operator = an_operator
 			range_variable_set: declaration = a_range_variable
 			sequence_set: sequence = a_sequence_expression
-			action_set: action = an_action
+			action_set: action_expression = an_action
 		end
 
 feature -- Access
-	
+
 	item_type: XM_XPATH_ITEM_TYPE is
 			--Determine the data type of the expression, if possible
 		do
@@ -75,7 +75,7 @@ feature -- Access
 	is_repeated_sub_expression (a_child: XM_XPATH_EXPRESSION): BOOLEAN is
 			-- Is `a_child' a repeatedly-evaluated sub-expression?
 		do
-			Result := a_child = action
+			Result := a_child = action_expression
 		end
 
 feature -- Status report
@@ -102,7 +102,7 @@ feature -- Status report
 				a_string := STRING_.appended_string (indentation (a_level), "satisfies")
 				std.error.put_string (a_string)
 				std.error.put_new_line
-				action.display (a_level + 1)
+				action_expression.display (a_level + 1)
 			end
 		end
 
@@ -150,12 +150,12 @@ feature -- Optimization
 						actual_item_type := sequence.item_type
 						declaration.refine_type_information (actual_item_type, sequence.cardinalities, Void, sequence.dependencies, sequence.special_properties)
 						set_declaration_void -- Now the GC can reclaim it, and analysis cannot be performed again.
-						action.analyze (a_context)
-						if action.was_expression_replaced then
-							replace_action (action.replacement_expression)
+						action_expression.analyze (a_context)
+						if action_expression.was_expression_replaced then
+							replace_action (action_expression.replacement_expression)
 						end
-						if action.is_error then
-							set_last_error (action.error_value)
+						if action_expression.is_error then
+							set_last_error (action_expression.error_value)
 						end
 						promote_subexpressions (a_context)
 					end
@@ -207,7 +207,7 @@ feature -- Evaluation
 								value_not_void: a_value /= Void
 								-- From post-condition of `as_value'.
 							end
-						a_context.set_local_variable (slot_number, a_value)
+						a_context.set_local_variable (a_value, slot_number)
 						a_boolean_value := action.effective_boolean_value (a_context)
 						if a_boolean_value.is_error then
 							Result := a_boolean_value
@@ -240,6 +240,13 @@ feature {NONE} -- Implementation
 			set_cardinality_exactly_one
 		end
 
+	compute_special_properties is
+			-- Compute special properties.
+		do
+			Precursor
+			set_non_creating
+		end
+
 	promote_subexpressions (a_context: XM_XPATH_STATIC_CONTEXT) is
 			-- Extract subexpressions that don't depend on the range variable.
 		local
@@ -247,9 +254,9 @@ feature {NONE} -- Implementation
 			a_let_expression: XM_XPATH_LET_EXPRESSION
 		do
 			create an_offer.make (Range_independent, Current, Current, False, False)
-			action.mark_unreplaced
-			action.promote (an_offer)
-			if action.was_expression_replaced then replace_action (action.replacement_expression) end
+			action_expression.mark_unreplaced
+			action_expression.promote (an_offer)
+			if action_expression.was_expression_replaced then replace_action (action_expression.replacement_expression) end
 			a_let_expression ?= an_offer.containing_expression; if a_let_expression /= Void then
 				a_let_expression.analyze (a_context)
 				if a_let_expression.is_error then

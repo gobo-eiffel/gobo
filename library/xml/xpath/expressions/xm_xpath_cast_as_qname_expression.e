@@ -16,7 +16,7 @@ inherit
 
 	XM_XPATH_COMPUTED_EXPRESSION
 		redefine
-			sub_expressions, evaluate_item
+			sub_expressions, evaluate_item, compute_special_properties
 		end
 
 creation
@@ -147,6 +147,13 @@ feature {NONE} -- Implementation
 			-- Compute cardinality.
 		do
 			set_cardinality_exactly_one
+		end
+
+	compute_special_properties is
+			-- Compute special properties.
+		do
+			Precursor
+			set_non_creating
 		end
 
 invariant

@@ -32,6 +32,18 @@ feature -- Access
 			may_be_void: True
 		end
 
+	uri_reference: STRING is
+			-- Full URI reference
+		do
+			if fragment_identifier = Void then
+				Result := system_id
+			else
+				Result := system_id + "#" + fragment_identifier
+			end
+		ensure
+			result_not_void: Result /= Void
+		end
+
 feature -- Events
 
 	send (a_parser: XM_PARSER; a_receiver: XM_XPATH_RECEIVER; is_stylesheet: BOOLEAN) is

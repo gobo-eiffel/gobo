@@ -181,6 +181,7 @@ feature -- Evaluation
 			context_item_not_void: context_item /= Void
 		local
 			an_expression: XM_XPATH_EXPRESSION
+			a_slot_manager: XM_XPATH_SLOT_MANAGER
 		do
 			expression_factory.make_expression (an_expression_text, static_context, 1, Eof_token)
 			if expression_factory.is_parse_error then
@@ -195,6 +196,9 @@ feature -- Evaluation
 				else
 					if an_expression.was_expression_replaced then
 						an_expression := an_expression.replacement_expression
+						check
+							not_replaced: not an_expression.was_expression_replaced
+						end
 					end
 					if an_expression.is_error then
 						is_error := True
@@ -203,8 +207,9 @@ feature -- Evaluation
 						debug ("XPath evaluator")
 							an_expression.display (1)
 						end
-						an_expression.allocate_slots (1)
-						evaluate_post_analysis (an_expression)
+						create a_slot_manager.make
+						an_expression.allocate_slots (1, a_slot_manager)
+						evaluate_post_analysis (an_expression, a_slot_manager)
 					end
 				end
 			end
@@ -257,10 +262,11 @@ feature {NONE} -- Implementation
 	tree_pipe: XM_XPATH_TREE_CALLBACKS_PIPE
 		-- Tree builder
 
-	evaluate_post_analysis (an_expression: XM_XPATH_EXPRESSION) is
+	evaluate_post_analysis (an_expression: XM_XPATH_EXPRESSION; a_slot_manager: XM_XPATH_SLOT_MANAGER) is
 			-- perform evaluation on `an_expression'.
 		require
 			expression_analyzed_without_error: an_expression /= Void and then not an_expression.is_error
+			slot_manager_not_void: a_slot_manager /= Void
 		local
 			a_document_pool: XM_XPATH_DOCUMENT_POOL
 			a_context: XM_XPATH_STAND_ALONE_DYNAMIC_CONTEXT
@@ -272,6 +278,7 @@ feature {NONE} -- Implementation
 			a_document_pool.add (document, media_type, source_uri)
 			create a_context.make (context_item, a_document_pool, function_library)
 			a_context.copy_string_mode (Current)
+			a_context.open_stack_frame (a_slot_manager)
 			a_sequence_iterator := an_expression.iterator (a_context)
 			
 			if a_sequence_iterator.is_error then

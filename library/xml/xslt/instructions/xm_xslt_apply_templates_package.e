@@ -16,6 +16,8 @@ inherit
 
 	XM_XSLT_TAIL_CALL
 
+	XM_XSLT_TEMPLATE_ROUTINES
+	
 	XM_XPATH_DEBUGGING_ROUTINES
 
 creation
@@ -24,12 +26,12 @@ creation
 
 feature {NONE} -- Initialization
 
-	make (a_value: XM_XPATH_VALUE; a_mode: XM_XSLT_MODE; some_parameters, some_tunnel_parameters: XM_XSLT_PARAMETER_SET; a_saved_context: XM_XSLT_SAVED_TRANSFORMER_CONTEXT) is
+	make (a_value: XM_XPATH_VALUE; a_mode: XM_XSLT_MODE; some_parameters, some_tunnel_parameters: XM_XSLT_PARAMETER_SET; a_context: XM_XSLT_EVALUATION_CONTEXT) is
 			-- Establish invariant.
  		require
 			selected_nodes_not_void: a_value /= Void
 			mode_not_void: a_mode /= Void
-			saved_context_not_void: a_saved_context /= Void
+			major_context_not_void: a_context /= Void and then not a_context.is_minor
 			some_parameters_not_void: some_parameters /= Void
 			some_tunnel_parameters_not_void: some_tunnel_parameters /= Void
 		do
@@ -37,32 +39,43 @@ feature {NONE} -- Initialization
 			mode := a_mode
 			actual_parameters := some_parameters
 			tunnel_parameters := some_tunnel_parameters
-			execution_context := a_saved_context
+			execution_context := a_context
 		ensure
 			mode_set: mode = a_mode
 			selected_nodes_set: selected_nodes = a_value
 			actual_parameters_set: actual_parameters = some_parameters
 			tunnel_parameters_set: tunnel_parameters = some_tunnel_parameters
-			execution_context_saved: execution_context = a_saved_context
+			execution_context_saved: execution_context = a_context
+		end
+
+feature -- Status report
+
+	last_set_tail_call: XM_XSLT_TAIL_CALL is
+			-- Last tail call set by `set_last_tail_call'
+		do
+			Result := last_tail_call
+		end
+
+feature -- Status setting
+
+	set_last_tail_call (a_tail_call: XM_XSLT_TAIL_CALL) is
+			-- Set residue from `apply_templates'
+		do
+			last_tail_call := a_tail_call
 		end
 
 feature -- Evaluation
 
-	process_leaving_tail (a_transformer: XM_XSLT_TRANSFORMER) is
+	process_leaving_tail (a_context: XM_XSLT_EVALUATION_CONTEXT) is
 			-- Execute `Current', writing results to the current `XM_XPATH_RECEIVER'.
-		local
-			a_saved_context: XM_XSLT_SAVED_TRANSFORMER_CONTEXT
 		do
-			a_saved_context := a_transformer.saved_context
-			a_transformer.restore_context (execution_context)
 			last_tail_call := Void
-			a_transformer.apply_templates (selected_nodes.iterator (Void),
-													 mode,
-													 actual_parameters,
-													 tunnel_parameters
-													 )
-			a_transformer.restore_context (a_saved_context)
-			last_tail_call := a_transformer.last_tail_call
+			apply_templates (selected_nodes.iterator (Void),
+								  mode,
+								  actual_parameters,
+								  tunnel_parameters,
+								  execution_context
+								  )
 		end
 
 feature {NONE} -- Implementation
@@ -79,7 +92,7 @@ feature {NONE} -- Implementation
 	tunnel_parameters: XM_XSLT_PARAMETER_SET
 			-- Tunnel parameters
 
-	execution_context: XM_XSLT_SAVED_TRANSFORMER_CONTEXT
+	execution_context: XM_XSLT_EVALUATION_CONTEXT
 			-- Saved execution context
 
 invariant

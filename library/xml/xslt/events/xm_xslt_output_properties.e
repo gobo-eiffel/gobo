@@ -36,6 +36,7 @@ feature {NONE} -- Initialization
 			initialize
 			set_xml_defaults (an_import_precedence)
 			method := ""
+			precedence_property_map.remove (Method_attribute)
 		end
 
 	initialize is

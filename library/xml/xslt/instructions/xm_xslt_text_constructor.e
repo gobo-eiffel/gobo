@@ -14,73 +14,42 @@ deferred class XM_XSLT_TEXT_CONSTRUCTOR
 
 inherit
 
-	XM_XSLT_EXPRESSION_INSTRUCTION
+	XM_XSLT_INSTRUCTION
 		redefine
-			analyze, evaluate_item
+			evaluate_item, compute_special_properties, creates_new_nodes, sub_expressions, promote_instruction
 		end
 
 	XM_XPATH_ROLE
 
 feature -- Access
 
-	expanded_string_value (a_context: XM_XSLT_EVALUATION_CONTEXT): STRING is
-			-- String value of subordinates
-		require
-			context_not_void: a_context /= Void
-			no_error: not a_context.transformer.is_error
-		local
-			a_separator: STRING
-			a_string_value: XM_XPATH_STRING_VALUE
-			a_transformer: XM_XSLT_TRANSFORMER
-			a_sequence_receiver: XM_XSLT_SEQUENCE_RECEIVER
-			a_sequence_outputter: XM_XSLT_SEQUENCE_OUTPUTTER
-		do
-			a_separator := " "
-			if separator_expression /= Void then
-				separator_expression.evaluate_as_string (a_context)
-				a_separator := separator_expression.last_evaluated_string.string_value
-			end
-			a_transformer := a_context.transformer
-			if select_expression /= Void then
-				a_string_value ?= select_expression
-				if a_string_value /= Void then
-					if a_string_value.is_error then
-						if not a_transformer.is_error then
-							a_transformer.report_fatal_error (a_string_value.error_value, Current)
-						end
-					else
-						Result := a_string_value.string_value
-					end
-				else
-					Result := flattened_sequence (select_expression.iterator (a_context), a_separator, a_transformer)
-				end
-			else
-				a_sequence_receiver := a_transformer.current_receiver
-				create a_sequence_outputter.make
-				a_transformer.change_to_sequence_output_destination (a_sequence_outputter)
-				process_children (a_context)
-				a_transformer.reset_output_destination (a_sequence_receiver)
-				Result := flattened_sequence (a_sequence_outputter.sequence.iterator (a_context), a_separator, a_transformer)
-			end
-		ensure
-			string_value_not_void: Result /= Void
-		end
+	select_expression: XM_XPATH_EXPRESSION
+			-- Select expression
 
+	last_string_value: STRING
+			-- Result from `expand_children' or `check_content'
+
+	sub_expressions: DS_ARRAYED_LIST [XM_XPATH_EXPRESSION] is
+			-- Immediate sub-expressions of `Current'
+		do
+			create Result.make (1)
+			Result.set_equality_tester (expression_tester)
+			if select_expression /= Void then Result.put (select_expression, 1) end
+		end
+	
 feature -- Status report
+
+	creates_new_nodes: BOOLEAN is
+			-- Can `Current' create new nodes?
+		do
+			Result := True
+		end
 
 	display (a_level: INTEGER) is
 			-- Diagnostic print of expression structure to `std.error'
-		local
-			a_string: STRING
 		do
 			if select_expression /= Void then
 				select_expression.display (a_level)
-			elseif children.count = 0 then
-				a_string := STRING_.appended_string (indentation (a_level), "empty content")
-				std.error.put_string (a_string)
-				std.error.put_new_line
-			else
-				display_children (a_level + 1)
 			end
 		end
 
@@ -93,65 +62,36 @@ feature -- Optimization
 		deferred
 		end
 
+	simplify is
+			-- Preform context-independent static optimizations
+		do
+			if select_expression /= Void then
+				select_expression.simplify
+				if select_expression.was_expression_replaced then
+					set_select_expression (select_expression.replacement_expression)
+				end
+			end
+		end
+
 	analyze (a_context: XM_XPATH_STATIC_CONTEXT) is
 			-- Perform static analysis of `Current' and its subexpressions.
 		local
-			a_type_checker: XM_XPATH_TYPE_CHECKER
-			a_role: XM_XPATH_ROLE_LOCATOR
-			a_name: STRING
-			a_single_string: XM_XPATH_SEQUENCE_TYPE
-			an_expression: XM_XSLT_EXPRESSION_INSTRUCTION
-			a_cursor: DS_ARRAYED_LIST_CURSOR [XM_XSLT_INSTRUCTION]	
+			an_atomizer: XM_XPATH_ATOMIZER_EXPRESSION
+			an_atomic_converter: XM_XPATH_ATOMIC_SEQUENCE_CONVERTER
 		do
 			type_check (a_context)
-			if separator_expression /= Void then
-				separator_expression.analyze (a_context)
-				if separator_expression.was_expression_replaced then
-					separator_expression := separator_expression.replacement_expression
-				end
-				create a_type_checker
-				a_name := STRING_.concat ("xsl:", instruction_name)
-				create a_role.make (Instruction_role, STRING_.appended_string (a_name, "/separator"), 1)
-				create a_single_string.make_single_string
-				a_type_checker.static_type_check (a_context, separator_expression, a_single_string, False, a_role)
-				if a_type_checker.is_static_type_check_error then
-					set_last_error_from_string (a_type_checker.static_type_check_error_message, "", "XT0320", Type_error)
-				else
-					set_separator_expression (a_type_checker.checked_expression)
-				end				
-			end
 			if select_expression /= Void then
 				select_expression.analyze (a_context)
 				if select_expression.was_expression_replaced then
-					select_expression := select_expression.replacement_expression
+					set_select_expression (select_expression.replacement_expression)
 				end
-				create a_type_checker
-				a_name := STRING_.concat ("xsl:", instruction_name)
-				create a_role.make (Instruction_role, STRING_.appended_string (a_name, "/select"), 1)
-				create a_single_string.make_single_string
-				a_type_checker.static_type_check (a_context, select_expression, a_single_string, False, a_role)
-				if a_type_checker.is_static_type_check_error then
-					set_last_error_from_string (a_type_checker.static_type_check_error_message, "", "XT0320", Type_error)
-				else
-					set_select_expression (a_type_checker.checked_expression)
+				if not is_sub_type (select_expression.item_type, type_factory.any_atomic_type) then
+					create an_atomizer.make (select_expression)
+					set_select_expression (an_atomizer)
 				end
-			elseif children.count > 0 then
-				from
-					a_cursor := children.new_cursor
-					a_cursor.start
-				variant
-					children.count + 1 - a_cursor.index
-				until
-					a_cursor.after
-				loop
-					an_expression ?= a_cursor.item
-					if an_expression /= Void then
-						an_expression.analyze (a_context)
-						a_cursor.replace (an_expression)
-					else
-						set_last_error_from_string ("BUG: Children of an XM_XSLT_EXPRESSION_INSTRUCTION must themselves be Expressions", Xpath_errors_uri, "FOER0000", Type_error)
-					end
-					a_cursor.forth
+				if not is_sub_type (select_expression.item_type, type_factory.string_type) then
+					create an_atomic_converter.make (select_expression, type_factory.string_type)
+					set_select_expression (an_atomic_converter)
 				end
 			end
 		end
@@ -159,7 +99,13 @@ feature -- Optimization
 	promote_instruction (an_offer: XM_XPATH_PROMOTION_OFFER) is
 			-- Promote this instruction.
 		do
-			todo ("promote_instruction", False)
+			if select_expression /= void then
+				select_expression.promote (an_offer)
+				if select_expression.was_expression_replaced then
+					set_select_expression (select_expression.replacement_expression)
+				end
+			end
+			Precursor (an_offer)
 		end
 
 feature -- Evaluation
@@ -167,9 +113,51 @@ feature -- Evaluation
 	evaluate_item (a_context: XM_XPATH_CONTEXT) is
 			-- Evaluate as a single item.
 		local
-	
+			a_content: STRING
+			an_orphan: XM_XPATH_ORPHAN
 		do
-			todo ("evaluate_item", False)	
+			last_evaluated_item := Void
+			if select_expression = Void then
+				a_content := ""
+			else
+				select_expression.evaluate_as_string (a_context)
+				if select_expression.last_evaluated_string.is_error then
+					last_evaluated_item := select_expression.last_evaluated_string
+				else
+					a_content := select_expression.last_evaluated_string.string_value
+				end
+			end
+			if last_evaluated_item = Void then
+				check_content (a_content, a_context)
+				if not is_error then
+					evaluate_name_code (a_context)
+					if not is_error then
+						create an_orphan.make (item_type.primitive_type, last_string_value)
+						an_orphan.set_name_code (last_name_code)
+						last_evaluated_item := an_orphan
+					end
+				end
+			end
+		end
+
+	expand_children (a_context: XM_XSLT_EVALUATION_CONTEXT) is
+			-- Calculate string value of subordinates.
+		require
+			context_not_void: a_context /= Void
+			select_expression_not_void: select_expression /= Void
+			no_error: not a_context.transformer.is_error
+		do
+			select_expression.evaluate_item (a_context)
+			if select_expression.last_evaluated_item = Void then
+				last_string_value := ""
+			elseif select_expression.last_evaluated_item.is_error then
+				last_string_value := Void
+				set_last_error (select_expression.last_evaluated_item.error_value)
+			else
+				last_string_value := select_expression.last_evaluated_item.string_value
+			end
+		ensure
+			error_or_string_value_not_void: is_error or else last_string_value /= Void
 		end
 
 feature -- Element change
@@ -180,91 +168,41 @@ feature -- Element change
 			select_expression_not_void: a_select_expression /= Void
 		do
 			select_expression := a_select_expression
+			adopt_child_expression (select_expression)
 		ensure
 			set: select_expression = a_select_expression
 		end
 
-	set_separator_expression (a_separator_expression: XM_XPATH_EXPRESSION) is
-			-- Set `separator_expression'.
-		require
-			separator_expression_not_void: a_separator_expression /= Void
-		do
-			separator_expression := a_separator_expression
-		ensure
-			set: separator_expression = a_separator_expression
-		end
+feature {XM_XSLT_EXPRESSION} -- Restricted
 
-feature {XM_XSLT_EXPRESSION_INSTRUCTION} -- Local
-
-	xpath_expressions (an_instruction_list: DS_ARRAYED_LIST [XM_XSLT_EXPRESSION_INSTRUCTION]): DS_ARRAYED_LIST [XM_XPATH_EXPRESSION] is
-			-- All the XPath expressions associated with this instruction
-		local
-			n: INTEGER
-			a_string_value: XM_XPATH_STRING_VALUE
+	compute_special_properties is
+			-- Compute special properties.
 		do
-			if select_expression /= Void then n := n + 1 end
-			if separator_expression /= Void then
-				a_string_value ?= separator_expression
-				if a_string_value /= Void then
-					n := n + 1
-				end
-			end
-			create Result.make (n)
-			Result.set_equality_tester (expression_tester)
-			if select_expression /= Void then
-				Result.put_last (select_expression)
-			end
-			if separator_expression /= Void then
-				a_string_value ?= separator_expression
-				if a_string_value /= Void then
-					Result.put_last (separator_expression)
-				end
-			end
+			Precursor
+			set_single_document_nodeset
 		end
 
 feature {NONE} -- Implementation
 
-	select_expression: XM_XPATH_EXPRESSION
-			-- Select expression
+	last_name_code: INTEGER
+			-- Result from `evaluate_name_code'
 
-	separator_expression: XM_XPATH_EXPRESSION
-			-- Seperator expression
-
-	flattened_sequence (an_iterator: XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_ITEM]; a_separator: STRING; a_transformer: XM_XSLT_TRANSFORMER): STRING is
-			-- Flattened sequence
+	check_content (a_content: STRING; a_context: XM_XPATH_CONTEXT) is
+			-- Check and possibly modify `a_content' for conformance to node kind.
 		require
-			iterator_not_void: an_iterator /= Void
-			separator_not_void: a_separator /= Void
-			transformer_not_void: a_transformer /= Void
-		local
-			first: BOOLEAN
+			content_not_void: a_content /= Void
 		do
-			first := True
-			create Result.make (0)
-			if an_iterator.is_error then
-				if not a_transformer.is_error then
-					a_transformer.report_fatal_error (an_iterator.error_value, Current)
-				end
-			else
-				from
-					an_iterator.start
-				until
-					an_iterator.is_error or else an_iterator.after
-				loop
-					if first then
-						first := False
-					else
-						Result := STRING_.appended_string (Result, a_separator)
-					end
-					Result := STRING_.appended_string (Result, an_iterator.item.string_value)
-					an_iterator.forth
-				end
-			end
-			if an_iterator.is_error and then not a_transformer.is_error then
-				a_transformer.report_fatal_error (an_iterator.error_value, Current)
-			end
+			last_string_value := a_content
 		ensure
-			flattened_sequence_not_void: Result /= Void
+			error_or_string_value_not_void: is_error or else last_string_value /= Void
+		end
+
+	evaluate_name_code (a_context: XM_XPATH_CONTEXT) is
+			-- Evaluate name code.
+		do
+			last_name_code := -1
+		ensure
+			error_or_name_code_set: is_error or else last_name_code >= -1
 		end
 
 end

@@ -195,7 +195,7 @@ feature -- Element change
 		do
 			a_target := template.compiled_template
 			create a_call.make (an_executable, a_target, with_param_instructions (an_executable, False), with_param_instructions (an_executable, True), use_tail_recursion)
-			last_generated_instruction := a_call
+			last_generated_expression := a_call
 		end
 
 	set_additional_trace_properties (a_trace_instruction: XM_XSLT_TRACE_INSTRUCTION) is

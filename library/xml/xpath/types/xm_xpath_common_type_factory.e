@@ -72,23 +72,6 @@ feature -- Access
 			Result := local_names.item (a_fingerprint)
 		end
 
-	expanded_standard_name (a_fingerprint: INTEGER): STRING is
-			-- Expanded name of `a_fingerprint'
-		require
-			standard_fingerprint: a_fingerprint < 1024
-		local
-			a_uri: STRING
-		do
-			a_uri := standard_uri (a_fingerprint)
-			if a_uri.count = 0 then
-				Result := standard_local_name (a_fingerprint)
-			else
-			end
-		ensure
-			expanded_name_not_void: Result /= Void
-		end
-			
-
 	any_simple_type: XM_XPATH_ANY_SIMPLE_TYPE is
 			-- xs:anySimpleType
 		once
@@ -662,6 +645,7 @@ feature {NONE} -- Implementation
 			bind_xslt_name (Xslt_import_type_code, "import")
 			bind_xslt_name (Xslt_import_schema_type_code, "import-schema")
 			bind_xslt_name (Xslt_include_type_code, "include")
+			bind_xslt_name (Xslt_inherit_namespaces_type_code, "inherit-namespaces")
 			bind_xslt_name (Xslt_key_type_code, "key")
 			bind_xslt_name (Xslt_matching_substring_type_code, "matching-substring")
 			bind_xslt_name (Xslt_message_type_code, "message")

@@ -64,7 +64,7 @@ feature -- Element change
 	validate is
 			-- Check that the stylesheet element is valid.
 		do
-			check_top_level
+			check_top_level (Void)
 			validated := True
 		end
 
@@ -79,10 +79,6 @@ feature -- Element change
 			a_token: STRING
 		do
 			is_preserving := fingerprint = Xslt_preserve_space_type_code
-			debug ("XSLT stripper")
-				std.error.put_string ("Is preserving? " + is_preserving.out)
-				std.error.put_new_line
-			end
 			principal_stylesheet.ensure_stripper_rules
 			stripper_rules := principal_stylesheet.stripper_rules
 
@@ -101,7 +97,7 @@ feature -- Element change
 				compile_stripper_rules (a_token, is_preserving, stripper_rules)
 				a_cursor.forth
 			end
-			last_generated_instruction := Void
+			last_generated_expression := Void
 		end
 
 feature {NONE} -- Implementation
@@ -137,9 +133,6 @@ feature {NONE} -- Implementation
 		do
 			create a_boolean_rule.make_boolean (is_preserving)
 			if STRING_.same_string (a_token, "*") then
-				debug ("XSLT stripper")
-					std.error.put_string ("* found%N")
-				end
 				a_pattern := any_xslt_node_test
 				stripper_rules.add_rule (a_pattern, a_boolean_rule, precedence, minus_one_half)
 			elseif a_token.count > 1 and then a_token.substring_index (":*", a_token.count - 1) = a_token.count - 1 then

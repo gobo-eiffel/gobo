@@ -16,8 +16,10 @@ inherit
 
 	XM_XSLT_STYLE_ELEMENT
 		redefine
-			validate
+			make_style_element, validate, may_contain_sequence_constructor
 		end
+
+	XM_XSLT_PROCEDURE
 
 	XM_XPATH_ROLE
 
@@ -26,6 +28,25 @@ inherit
 creation {XM_XSLT_NODE_FACTORY}
 
 	make_style_element
+
+feature {NONE} -- Initialization
+		
+	make_style_element (an_error_listener: XM_XSLT_ERROR_LISTENER; a_document: XM_XPATH_TREE_DOCUMENT;  a_parent: XM_XPATH_TREE_COMPOSITE_NODE;
+		an_attribute_collection: XM_XPATH_ATTRIBUTE_COLLECTION; a_namespace_list:  DS_ARRAYED_LIST [INTEGER];
+		a_name_code: INTEGER; a_sequence_number: INTEGER) is
+			-- Establish invariant.
+		do
+			create slot_manager.make
+			Precursor (an_error_listener, a_document, a_parent, an_attribute_collection, a_namespace_list, a_name_code, a_sequence_number)
+		end
+
+feature -- Status report
+
+	may_contain_sequence_constructor: BOOLEAN is
+			-- Is `Current' allowed to contain a sequence constructor?
+		do
+			Result := True
+		end
 
 feature -- Element change
 
@@ -89,8 +110,6 @@ feature -- Element change
 
 	validate is
 			-- Check that the stylesheet element is valid.
-			-- This is called once for each element, after the entire tree has been built.
-			-- As well as validation, it can perform first-time initialisation.
 		local
 			a_key_manager: XM_XSLT_KEY_MANAGER
 			a_type_checker: XM_XPATH_TYPE_CHECKER
@@ -99,14 +118,13 @@ feature -- Element change
 			a_collation_name: STRING
 			an_error: XM_XPATH_ERROR_VALUE
 		do
-			check_top_level
+			check_top_level (Void)
 			if use /= Void then
-				check_empty_with_attribute ("use")
+				check_empty_with_attribute ("use", "XT1205")
 			else
-				check_not_empty_missing_attribute ("use")
-				todo ("validate - sequence constructor is not yet supported", True)
+				check_not_empty_missing_attribute ("use", "XT1205")
 			end
-			if not any_compile_errors then
+			if not any_compile_errors and then use /= Void then
 				create a_type_checker
 				create a_role.make (Instruction_role, "xsl:key/use", 1)
 				create an_atomic_type.make (type_factory.any_atomic_type, Required_cardinality_zero_or_more)
@@ -150,8 +168,10 @@ feature -- Element change
 			a_collator: ST_COLLATOR
 			a_message: STRING
 			an_error: XM_XPATH_ERROR_VALUE
+			a_type_checker: XM_XPATH_TYPE_CHECKER
+			a_role: XM_XPATH_ROLE_LOCATOR
+			an_atomic_type: XM_XPATH_SEQUENCE_TYPE
 		do
-			last_generated_instruction := Void
 			if not principal_stylesheet.is_collator_defined (collation_uri) then
 				a_message := STRING_.concat ("The collation named '", collation_uri)
 				a_message := STRING_.appended_string (a_message, "' has not been defined")
@@ -160,9 +180,34 @@ feature -- Element change
 			else
 				a_collator := principal_stylesheet.find_collator (collation_uri)
 			end
-			a_key_manager := principal_stylesheet.key_manager
-			create a_key_definition.make (match, use, a_collator, collation_uri)
-			a_key_manager.add_key_definition (a_key_definition, key_fingerprint)
+			if use = Void then
+				compile_sequence_constructor (an_executable, new_axis_iterator (Child_axis), True)
+				if last_generated_expression = Void then
+
+					-- This really shouldn't occur
+
+					create an_error.make_from_string ("BUG: Sequence constructor must be present for xsl:key when use attribute is absent.", "", "XT1205", Static_error)
+					report_compile_error (an_error)
+				else
+					create {XM_XPATH_ATOMIZER_EXPRESSION} use.make (last_generated_expression)
+					create a_type_checker
+					create a_role.make (Instruction_role, "xsl:key/use", 1)
+					create an_atomic_type.make (type_factory.any_atomic_type, Required_cardinality_zero_or_more)
+					a_type_checker.static_type_check (static_context, use, an_atomic_type, False, a_role)
+					if a_type_checker.is_static_type_check_error	then
+						create an_error.make_from_string(a_type_checker.static_type_check_error_message, Xpath_errors_uri, "XP0004", Type_error)
+						report_compile_error (an_error)
+					else
+						use := a_type_checker.checked_expression
+					end
+				end
+			end
+			if not any_compile_errors then
+				a_key_manager := principal_stylesheet.key_manager
+				create a_key_definition.make (an_executable, match, use, a_collator, collation_uri, line_number, system_id, slot_manager)
+				a_key_manager.add_key_definition (a_key_definition, key_fingerprint)
+			end
+			last_generated_expression := Void
 		end
 
 feature {NONE} -- Implementation

@@ -25,7 +25,7 @@ feature {NONE} -- Initialization
 	make (an_input: STRING; a_regexp_cache_entry: XM_XPATH_REGEXP_CACHE_ENTRY) is
 			-- Establish invariant.
 		require
-				input_string: an_input /= Void and then an_input.count > 0
+				input_string: an_input /= Void
 				regular_expression_not_in_error: a_regexp_cache_entry /= Void and then not a_regexp_cache_entry.is_error
 		local
 			a_match_record: XM_XPATH_REGEXP_MATCH_RECORD
@@ -110,7 +110,7 @@ feature {NONE} -- Implementation
 
 invariant
 
-	input_string: input /= Void and then input.count > 0
+	input_string: input /= Void
 	regular_expression_not_void: regexp /= Void
 
 end

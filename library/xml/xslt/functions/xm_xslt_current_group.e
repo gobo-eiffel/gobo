@@ -77,7 +77,7 @@ feature -- Evaluation
 				evaluation_context: an_evaluation_context /= Void
 				-- as this is an XSLT function
 			end
-			a_group_iterator := an_evaluation_context.transformer.current_group_iterator
+			a_group_iterator := an_evaluation_context.current_group_iterator
 			if a_group_iterator = Void then
 				create {XM_XPATH_EMPTY_ITERATOR [XM_XPATH_ITEM]} Result.make
 			else
@@ -94,7 +94,6 @@ feature -- Evaluation
 	pre_evaluate (a_context: XM_XPATH_STATIC_CONTEXT) is
 			-- Pre-evaluate `Current' at compile time.
 		do
-			--	set_replacement (Current)
 		end
 
 feature {XM_XPATH_EXPRESSION} -- Restricted

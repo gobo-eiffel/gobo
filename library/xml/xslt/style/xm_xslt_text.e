@@ -64,34 +64,28 @@ feature -- Element change
 			-- Check that the stylesheet element is valid.
 		local
 			an_error: XM_XPATH_ERROR_VALUE
+			an_iterator: XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_NODE]
 		do
 			check_within_template
-			if children.count > 1 then
-				create an_error.make_from_string ("xsl:text may contain at most one child - a text node", "", "XT0010", Static_error)
+			an_iterator := new_axis_iterator (Child_axis); an_iterator.start
+			if an_iterator.after then
+				create value.make ("")
+			elseif an_iterator.item.node_type = Element_node then
+				create an_error.make_from_string ("xsl:text must not contain any child elements.", "", "XT0010", Static_error)
 				report_compile_error (an_error)
-			elseif children.count = 1 then
-				if first_child.node_type /= Text_node then
-					create an_error.make_from_string ("Child of xsl:text must be a text node", "", "XT0010", Static_error)
+			elseif an_iterator.item.node_type = Text_node then
+				create value.make (an_iterator.item.string_value)
+			else
+				create an_error.make_from_string ("xsl:text must only contain a single text node.", "", "XT0010", Static_error)
 				report_compile_error (an_error)
-				end
 			end
 			Precursor
 		end
 			
 	compile (an_executable: XM_XSLT_EXECUTABLE) is
 			-- Compile `Current' to an excutable instruction.
-		local
-			a_string_value: XM_XPATH_STRING_VALUE
-			a_text: XM_XSLT_COMPILED_TEXT
 		do
-			a_string_value ?= select_expression
-			if a_string_value /= Void and then a_string_value.string_value.count = 0 then
-				last_generated_instruction := Void -- empty xsl:text element is a no-op
-			else
-				create  a_text.make (an_executable, False)
-				compile_content (an_executable, a_text)
-				last_generated_instruction := a_text
-			end
+			create {XM_XSLT_COMPILED_VALUE_OF} last_generated_expression.make (an_executable, value, False)
 		end
 
 feature {XM_XSLT_STYLE_ELEMENT} -- Restricted
@@ -103,5 +97,8 @@ feature {XM_XSLT_STYLE_ELEMENT} -- Restricted
 		end
 
 feature {NONE} -- Implementation
+
+	value: XM_XPATH_STRING_VALUE
+			-- String value of text node
 
 end

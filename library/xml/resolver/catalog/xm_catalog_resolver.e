@@ -68,7 +68,7 @@ feature -- Element change
 		end
 
 	clear_uri_stack is
-			-- Empty the stack then push `a_uri' onto the stack.
+			-- Empty the stack.
 		do
 			shared_catalog_manager.bootstrap_resolver.uri_scheme_resolver.clear_uri_stack
 		end

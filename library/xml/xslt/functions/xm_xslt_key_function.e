@@ -114,9 +114,6 @@ feature -- Evaluation
 			a_local_order_comparer: XM_XPATH_LOCAL_ORDER_COMPARER
 			an_error: XM_XPATH_ERROR_VALUE
 		do
-			debug ("XSLT key function")
-					std.error.put_string("Key iterator%N")
-			end
 			an_evaluation_context ?= a_context
 			check
 				evaluation_context_not_void: an_evaluation_context /= Void
@@ -151,7 +148,7 @@ feature -- Evaluation
 						an_expression.evaluate_item (an_evaluation_context)
 						an_atomic_value ?= an_expression.last_evaluated_item
 						if an_atomic_value /= Void then
-							a_transformer.key_manager.generate_keyed_sequence (a_fingerprint, a_context_document, an_atomic_value, a_transformer)
+							a_transformer.key_manager.generate_keyed_sequence (a_fingerprint, a_context_document, an_atomic_value, an_evaluation_context)
 							if a_transformer.is_error then
 								create {XM_XPATH_INVALID_ITERATOR} Result.make_from_string ("Non-recoverable error already reported",  Xpath_errors_uri, "FOER0000", Dynamic_error)
 							else
@@ -161,15 +158,8 @@ feature -- Evaluation
 							create {XM_XPATH_EMPTY_ITERATOR [XM_XPATH_ITEM]} Result.make
 						end
 					else
-						debug ("XSLT key function")
-							std.error.put_string ("key result may be plural%N")
-						end
-						create a_key_context_information.make (a_context_document, a_transformer, a_fingerprint)
+						create a_key_context_information.make (a_context_document, an_evaluation_context, a_fingerprint)
 						a_key_iterator := an_expression.iterator (a_context)
-						debug ("XSLT key function")
-							an_expression.display (1)
-							std.error.put_string (a_key_iterator.out);std.error.put_new_line
-						end
 						create all_values_iterator.make (a_key_iterator, Current, Void, a_key_context_information)
 						create a_local_order_comparer
 						create {XM_XPATH_DOCUMENT_ORDER_ITERATOR} Result.make (all_values_iterator, a_local_order_comparer)
@@ -183,7 +173,6 @@ feature -- Evaluation
 	pre_evaluate (a_context: XM_XPATH_STATIC_CONTEXT) is
 			-- Pre-evaluate `Current' at compile time.
 		do
-			-- set_replacement (Current)
 		end
 
 	map (an_item: XM_XPATH_ITEM; a_context: XM_XPATH_CONTEXT; an_information_object: ANY): XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_NODE] is
@@ -202,7 +191,7 @@ feature -- Evaluation
 				key_context_information: a_key_context_information /= Void
 				-- See `iterator'.
 			end
-			a_key_manager := a_key_context_information.transformer.key_manager
+			a_key_manager := a_key_context_information.context.transformer.key_manager
 			a_key_value ?= an_item
 			if a_key_value = Void then
 				debug ("XSLT key function")
@@ -217,8 +206,8 @@ feature -- Evaluation
 			end
 			a_key_manager.generate_keyed_sequence  (a_key_context_information.key_fingerprint,
 																 a_key_context_information.document, a_key_value,
-																 a_key_context_information.transformer)
-			if a_key_context_information.transformer.is_error then
+																 a_key_context_information.context)
+			if a_key_context_information.context.transformer.is_error then
 				create {XM_XPATH_EMPTY_ITERATOR[XM_XPATH_NODE]} Result.make -- error has already been reported 
 			else
 				Result := a_key_manager.last_key_sequence
@@ -273,7 +262,8 @@ feature {XM_XPATH_EXPRESSION} -- Restricted
 		do
 			initialize_special_properties
 			set_ordered_nodeset
-			set_context_document_nodeset
+			set_single_document_nodeset
+			set_non_creating
 		end
 
 feature {NONE} -- Implementation

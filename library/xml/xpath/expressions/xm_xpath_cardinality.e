@@ -21,7 +21,7 @@ feature -- Access
 	Required_cardinality_zero_or_more: INTEGER is 5
 
 	multiply_cardinality (c1, c2: INTEGER): INTEGER is
-			-- Multiply cardinalities
+			-- Multiply two cardinalities
 		do
 			if c1 = Required_cardinality_empty or else c2 = Required_cardinality_empty then
 				Result := Required_cardinality_empty
@@ -33,6 +33,27 @@ feature -- Access
 				Result := Required_cardinality_optional
 			else
 				Result := Required_cardinality_zero_or_more
+			end
+		ensure
+			valid_cardinality: is_valid_required_cardinality (Result)
+		end
+
+	add_cardinality (c1, c2: INTEGER): INTEGER is
+			-- Add two cardinalities
+		local
+			allows_zero: BOOLEAN
+		do
+			if c1 = Required_cardinality_empty then
+				Result := c2
+			elseif c2 = Required_cardinality_empty then
+				Result := c1
+			else
+				allows_zero := is_cardinality_allows_zero (c1) and then is_cardinality_allows_zero (c2)
+				if allows_zero then
+					Result := Required_cardinality_zero_or_more
+				else
+					Result := Required_cardinality_one_or_more
+				end
 			end
 		ensure
 			valid_cardinality: is_valid_required_cardinality (Result)

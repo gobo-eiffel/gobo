@@ -113,14 +113,11 @@ feature -- Element change
 		local
 			a_value: XM_XPATH_VALUE
 			a_boolean_value: XM_XPATH_BOOLEAN_VALUE
-			a_block: XM_XSLT_BLOCK
-			a_module_number: INTEGER
-			an_action: XM_XSLT_INSTRUCTION
+			an_action: XM_XPATH_EXPRESSION
 			some_conditions: DS_ARRAYED_LIST [XM_XPATH_EXPRESSION]
-			some_actions: DS_ARRAYED_LIST [XM_XSLT_INSTRUCTION]
+			some_actions: DS_ARRAYED_LIST [XM_XPATH_EXPRESSION]
 		do
-			top_stylesheet := principal_stylesheet
-			last_generated_instruction := Void
+			last_generated_expression := Void
 			a_value ?= condition
 			if a_value /= Void then
 
@@ -132,36 +129,19 @@ feature -- Element change
 					report_compile_error (a_boolean_value.error_value)
 				else
 					if a_boolean_value.value then
-						create a_block.make_if (an_executable)
-						check
-							module_registered: top_stylesheet.is_module_registered (system_id)
-							-- TODO: Why? Maybe this isn't so - review
-						end
-						a_module_number := top_stylesheet.module_number (system_id)
-						a_block.set_source_location (a_module_number, line_number)
-						compile_children (an_executable, a_block)
-						last_generated_instruction := a_block
+						compile_sequence_constructor (an_executable, new_axis_iterator (Child_axis), True)
 					end
 				end
-			end
-			if last_generated_instruction = Void then
-				create a_block.make_if (an_executable)
-				check
-					module_registered: top_stylesheet.is_module_registered (system_id)
-					-- TODO: Why? Maybe this isn't so - review
+			else
+				compile_sequence_constructor (an_executable, new_axis_iterator (Child_axis), True)
+				if last_generated_expression /= Void then
+					an_action := last_generated_expression
+					create some_conditions.make (1)
+					some_conditions.put (condition, 1)
+					create some_actions.make (1)
+					some_actions.put (an_action, 1)
+					create {XM_XSLT_COMPILED_CHOOSE} last_generated_expression.make (an_executable, some_conditions, some_actions)
 				end
-				a_module_number := top_stylesheet.module_number (system_id)
-				a_block.set_source_location (a_module_number, line_number)
-				an_action := a_block
-				compile_children (an_executable, a_block)
-				if last_generated_instruction_list.count = 1 then
-					an_action := last_generated_instruction_list.item (1)
-				end
-				create some_conditions.make (1)
-				some_conditions.put (condition, 1)
-				create some_actions.make (1)
-				some_actions.put (an_action, 1)
-				create {XM_XSLT_COMPILED_CHOOSE} last_generated_instruction.make (an_executable, some_conditions, some_actions)
 			end
 		end
 
@@ -172,10 +152,5 @@ feature {XM_XSLT_STYLE_ELEMENT} -- Restricted
 		do
 			Result := common_child_item_type
 		end
-
-feature {NONE} -- Implementation
-
-	top_stylesheet:XM_XSLT_STYLESHEET
-			-- Prinicpal stylesheet
 
 end

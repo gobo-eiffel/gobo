@@ -115,9 +115,7 @@ feature -- Element change
 					end
 				end
 			else
-				if has_child_nodes then
-					todo ("validate - sequence constructor content", True)
-				else
+				if not has_child_nodes then
 					create {XM_XPATH_CONTEXT_ITEM_EXPRESSION} select_expression.make
 				end
 			end
@@ -129,8 +127,22 @@ feature -- Element change
 
 	compile (an_executable: XM_XSLT_EXECUTABLE) is
 			-- Compile `Current' to an excutable instruction.
+		local
+			a_content: XM_XPATH_EXPRESSION
 		do
-			last_generated_instruction := Void
+			if select_expression = Void then
+				compile_sequence_constructor (an_executable, new_axis_iterator (Child_axis), True)
+				if last_generated_expression = Void then
+					create {XM_XPATH_EMPTY_SEQUENCE} a_content.make
+				else
+					a_content := last_generated_expression
+				end
+				a_content.simplify
+				if a_content.was_expression_replaced then a_content := a_content.replacement_expression end
+				create sort_key_definition.make (a_content, order, case_order, language, data_type, collation_name)
+			end
+			-- TODO: simplify sort key definition
+			last_generated_expression := Void
 		end
 
 feature {NONE} -- Implementation

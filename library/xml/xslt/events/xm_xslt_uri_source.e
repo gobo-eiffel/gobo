@@ -18,7 +18,13 @@ inherit
 
 	XM_SHARED_CATALOG_MANAGER
 
+	KL_SHARED_FILE_SYSTEM
+		export {NONE} all end
+		
 	KL_IMPORTED_STRING_ROUTINES
+		
+	UT_SHARED_FILE_URI_ROUTINES
+		export {NONE} all end
 
 creation
 
@@ -32,15 +38,16 @@ feature {NONE} -- Initialization
 			system_id_not_void: a_system_id /= Void
 		local
 			a_uri: UT_URI
+			a_cwd: KI_PATHNAME
 		do
 			create default_media_type.make ("application", "xslt+xml")
-			create a_uri.make (a_system_id)
+			a_cwd := file_system.string_to_pathname (file_system.current_working_directory)
+			a_uri := File_uri.pathname_to_uri (a_cwd)
+			create a_uri.make_resolve (a_uri, a_system_id)
 			system_id := a_uri.full_uri
 			if a_uri.has_fragment then
 				fragment_identifier := a_uri.fragment_item.decoded_utf8
 			end
-		ensure
-			system_id_set: fragment_identifier = Void implies STRING_.same_string (system_id, a_system_id)
 		end
 
 feature -- Access
@@ -78,6 +85,7 @@ feature -- Events
 			create start.set_next (xpointer_filter)
 			create a_locator.make (a_parser)
 			a_receiver.set_document_locator (a_locator)
+			a_receiver.set_system_id (uri_reference)
 			a_parser.set_callbacks (start)
 			a_parser.set_dtd_callbacks (xpointer_filter)
 			a_parser.parse_from_system (system_id)
@@ -112,6 +120,7 @@ feature -- Events
 			create start.set_next (xpointer_filter)
 			create a_locator.make (a_parser)
 			a_receiver.set_document_locator (a_locator)
+			a_receiver.set_system_id (uri_reference)
 			a_parser.set_callbacks (start)
 			a_parser.set_dtd_callbacks (oasis_xml_catalog_filter)
 			an_entity_resolver ?= a_parser.entity_resolver

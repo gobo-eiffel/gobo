@@ -266,7 +266,7 @@ feature {NONE} -- Implementation
 		end
 
 	report_type_check_error (a_role_locator: XM_XPATH_ROLE_LOCATOR) is
-			-- Report failure od static type checking
+			-- Report failure of static type checking
 		do
 			is_static_type_check_error := True
 			static_type_check_error_message := STRING_.appended_string ("Required type of ", a_role_locator.message)

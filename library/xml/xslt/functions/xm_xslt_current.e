@@ -77,8 +77,11 @@ feature -- Evaluation
 				evaluation_context: an_evaluation_context /= Void
 				-- as this is an XSLT function
 			end
+
+			-- This relies on current() being statically promoted to the top level
+
 			if an_evaluation_context.is_current_item_available then
-				last_evaluated_item := an_evaluation_context.current_stylesheet_item
+				last_evaluated_item := an_evaluation_context.context_item
 			else
 				create an_error.make_from_string ("Context item is undefined when calling current().", "",  "XT1360", Dynamic_error)
 				an_evaluation_context.transformer.report_fatal_error (an_error, Void)
@@ -105,6 +108,8 @@ feature {XM_XPATH_EXPRESSION} -- Restricted
 			initialize_special_properties
 			set_ordered_nodeset
 			set_context_document_nodeset
+			set_single_document_nodeset
+			set_non_creating
 		end
 
 end

@@ -54,7 +54,9 @@ feature -- Optimization
 			if a_boolean_expression /= Void and then not a_boolean_expression.is_error then
 				first_operand.set_unsorted (False)
 				second_operand.set_unsorted (False)
-				set_replacement (a_boolean_expression)
+				if a_boolean_expression /= Current then
+					set_replacement (a_boolean_expression)
+				end
 			end
 		end
 

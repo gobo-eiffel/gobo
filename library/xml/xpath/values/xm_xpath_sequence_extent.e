@@ -308,5 +308,13 @@ feature {XM_XPATH_SEQUENCE_EXTENT} -- Implementation
 	cached_item_type: XM_XPATH_ITEM_TYPE
 			-- Cached result for `item_type'
 
+feature {XM_XPATH_EXPRESSION} -- Restricted
+
+	native_implementations: INTEGER is
+			-- Natively-supported evaluation routines
+		do
+			Result := Supports_iterator
+		end
+
 end
 	

@@ -90,7 +90,11 @@ feature -- Access
 		local
 			a_prefix_code: INTEGER
 		do
-			a_prefix_code := shared_name_pool.code_for_prefix (an_xml_prefix)
+			if shared_name_pool.is_code_for_prefix_allocated (an_xml_prefix) then
+				a_prefix_code := shared_name_pool.code_for_prefix (an_xml_prefix)
+			else
+				a_prefix_code := -1
+			end
 			if a_prefix_code = -1 then
 				Result := -1
 			else

@@ -14,9 +14,10 @@ class XM_XSLT_COMPILED_DOCUMENT
 
 inherit
 
-	XM_XSLT_EXPRESSION_INSTRUCTION
+	XM_XSLT_INSTRUCTION
 		redefine
-			analyze, evaluate_item, item_type
+			promote_instruction, evaluate_item, item_type, sub_expressions,
+			creates_new_nodes, compute_cardinality
 		end
 
 	XM_XSLT_VALIDATION
@@ -29,25 +30,28 @@ creation
 
 feature {NONE} -- Initialization
 
-	make (an_executable: XM_XSLT_EXECUTABLE; text_only: BOOLEAN;  a_constant_text: STRING; a_base_uri: STRING) is
+	make (an_executable: XM_XSLT_EXECUTABLE; text_only: BOOLEAN;  a_constant_text: STRING; a_base_uri: STRING; a_content: XM_XPATH_EXPRESSION) is
 			-- Establish invariant.
 		require
 			executable_not_void: an_executable /= Void
 			base_uri: a_base_uri /= Void
+			content_not_void: not text_only implies a_content /= Void and then a_constant_text = Void
 		do
 			executable := an_executable
-			instruction_name := "document"
-			create children.make (0)
-			make_expression_instruction
-			set_cardinality_exactly_one
+			instruction_name := "xsl:document"
 			is_text_only := text_only
 			constant_text := a_constant_text
 			base_uri := a_base_uri
+			content := a_content
+			adopt_child_expression (content)
+			compute_static_properties
+			initialize
 		ensure
 			executable_set: executable = an_executable
 			is_text_only: is_text_only = text_only
 			constant_text_set: constant_text = a_constant_text
 			base_uri_set: base_uri = a_base_uri
+			content_set: content = a_content
 		end
 
 feature -- Access
@@ -60,14 +64,13 @@ feature -- Access
 		do
 			Result := document_node_kind_test
 		end
-	
-feature -- Comparison
 
-	same_expression (other: XM_XPATH_EXPRESSION): BOOLEAN is
-			-- Are `Current' and `other' the same expression?
+	sub_expressions: DS_ARRAYED_LIST [XM_XPATH_EXPRESSION] is
+			-- Immediate sub-expressions of `Current'
 		do
-			Result := False
-			todo ("same_expression", True)
+			create Result.make (1)
+			Result.set_equality_tester (expression_tester)
+			Result.put (content, 1)
 		end
 
 feature -- Status report
@@ -75,11 +78,11 @@ feature -- Status report
 	is_text_only: BOOLEAN
 			-- Is content only constant text?
 
-	constant_text: STRING
-			-- Constant text content
-
-	base_uri: STRING
-			-- Base URI
+	creates_new_nodes: BOOLEAN is
+			-- Can `Current' create new nodes?
+		do
+			Result := True
+		end
 
 	display (a_level: INTEGER) is
 			-- Diagnostic print of expression structure to `std.error'
@@ -89,83 +92,46 @@ feature -- Status report
 			a_string := STRING_.appended_string (indentation (a_level), "document-constructor")
 			std.error.put_string (a_string)
 			std.error.put_new_line
-			if children.count = 0 then
-				a_string := STRING_.appended_string (indentation (a_level + 1), "empty content")
-				std.error.put_string (a_string)
-				std.error.put_new_line
-			else
-				display_children (a_level + 1)
-			end
+			todo ("display", True)
+			--if children.count = 0 then
+			--	a_string := STRING_.appended_string (indentation (a_level + 1), "empty content")
+			--	std.error.put_string (a_string)
+			--	std.error.put_new_line
+			--else
+			--	display_children (a_level + 1)
+			--end
 		end
-
 	
 feature -- Optimization
 
+	simplify is
+			-- Perform context-independent static optimizations.
+		do
+			content.simplify
+			if content.was_expression_replaced then
+				content := content.replacement_expression
+				adopt_child_expression (content)
+			end
+		end
+
 	analyze (a_context: XM_XPATH_STATIC_CONTEXT) is
 			-- Perform static analysis of `Current' and its subexpressions.
-		local
-			an_expression: XM_XSLT_EXPRESSION_INSTRUCTION
-			a_cursor: DS_ARRAYED_LIST_CURSOR [XM_XSLT_INSTRUCTION]	
 		do
-			from
-				a_cursor := children.new_cursor
-				a_cursor.start
-			variant
-				children.count + 1 - a_cursor.index
-			until
-				a_cursor.after
-			loop
-				an_expression ?= a_cursor.item
-				if an_expression /= Void then
-					an_expression.analyze (a_context)
-					a_cursor.replace (an_expression)
-				else
-					set_last_error_from_string ("BUG: Children of an XM_XSLT_EXPRESSION_INSTRUCTION must themselves be Expressions", Xpath_errors_uri, "FOER0000", Type_error)
-				end
-				a_cursor.forth
+			content.analyze (a_context)
+			if content.was_expression_replaced then
+				content := content.replacement_expression
+				adopt_child_expression (content)
 			end
 		end
 
 	promote_instruction (an_offer: XM_XPATH_PROMOTION_OFFER) is
 			-- Promote this instruction.
-		local
-			a_cursor: DS_ARRAYED_LIST_CURSOR [XM_XSLT_INSTRUCTION]
-			an_expression: XM_XPATH_EXPRESSION
-			an_instruction: XM_XSLT_EXPRESSION_INSTRUCTION
-			a_sequence_instruction: XM_XSLT_SEQUENCE_INSTRUCTION	
 		do
-			from
-				a_cursor := children.new_cursor
-				a_cursor.start
-			variant
-				children.count + 1 - a_cursor.index
-			until
-				a_cursor.after
-			loop
-				an_instruction ?= a_cursor.item
-				if an_instruction = Void then
-					a_cursor.go_after
-					set_last_error_from_string ("BUG: Children of an XM_XSLT_EXPRESSION_INSTRUCTION must themselves be Expressions", Xpath_errors_uri, "FOER0000", Type_error)
-				else
-					an_instruction.promote (an_offer)
-					if an_instruction.was_expression_replaced then
-						an_expression := an_instruction.replacement_expression
-					else
-						an_expression := an_instruction
-					end
-					an_instruction ?= an_expression
-					if an_instruction /= Void then
-						a_cursor.replace (an_instruction)
-					else
-						check
-							cant_happen: False
-						end
-						create a_sequence_instruction.make (executable, an_expression, Void)
-						a_cursor.replace (a_sequence_instruction)
-					end
-				end
-				a_cursor.forth
-			end					
+			content.promote (an_offer)
+			if content.was_expression_replaced then
+				content := content.replacement_expression
+				adopt_child_expression (content)
+			end
 		end
 
 feature -- Evaluation
@@ -173,51 +139,40 @@ feature -- Evaluation
 	evaluate_item (a_context: XM_XPATH_CONTEXT) is
 			-- Evaluate as a single item.
 		local
-			an_evaluation_context: XM_XSLT_EVALUATION_CONTEXT
-			a_transformer: XM_XSLT_TRANSFORMER
 			a_text_value: STRING
-			a_saved_receiver: XM_XSLT_SEQUENCE_RECEIVER
 			a_builder: XM_XPATH_TREE_BUILDER
 			a_node_factory: XM_XPATH_NODE_FACTORY
 			a_result: XM_XSLT_TRANSFORMATION_RESULT
+			an_iterator: XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_ITEM]
+			a_new_context: XM_XSLT_EVALUATION_CONTEXT
+			a_receiver: XM_XPATH_RECEIVER
 		do
-			an_evaluation_context ?= a_context
-			check
-				evaluation_context: an_evaluation_context /= Void
-				-- as it is the only supported form of dynamic context for XSLT in the library
-			end
-			a_transformer := an_evaluation_context.transformer
 			if is_text_only then
 				if constant_text /= Void then
 					a_text_value := constant_text
 				else
-					a_saved_receiver := a_transformer.current_receiver
-					create a_text_value.make (80) -- arbitrary intial size - TODO?
-					a_transformer.change_to_text_output_destination (a_text_value)
-					process_children (an_evaluation_context)
-					a_transformer.reset_output_destination (a_saved_receiver)
+					a_text_value := ""
+					from
+						an_iterator := content.iterator (a_context); an_iterator.start
+					until
+						an_iterator.after
+					loop
+						a_text_value := STRING_.appended_string (a_text_value, an_iterator.item.string_value)
+						an_iterator.forth
+					end
 				end
 				create {XM_XPATH_TEXT_FRAGMENT_VALUE} last_evaluated_item.make (a_text_value, base_uri)
 			else
-				a_saved_receiver := a_transformer.current_receiver
-
-				-- TODO: delayed evaluation of temporary trees, in the same way as
-				--  node-sets. This requires saving the controller, including values of local variables
-				--  and any assignable global variables (ouch).
-
-				-- TODO: use an Outputter that delayes the decision whether to build a
-				--  TextFragment or a Tree until the first element is encountered, to
-				--  avoid the overhead of using a Tree for text-only trees. This would
-				--  make the static analysis superfluous.
-
+				a_new_context ?= a_context.new_minor_context
 				create a_node_factory
 				create a_builder.make (a_node_factory)
 				a_builder.set_system_id (base_uri)
 				create a_result.make_receiver (a_builder)
-				a_transformer.change_output_destination (Void, a_result, False, Validation_strip, Void) -- TODO for schema-awareness
-				process_children (an_evaluation_context)
-				a_transformer.reset_output_destination (a_saved_receiver)
-				a_builder.end_document
+				a_new_context.change_output_destination (Void, a_result, False, Validation_strip, Void)
+				a_receiver := a_new_context.current_receiver
+				if not a_receiver.is_document_started then a_receiver.start_document end
+				content.process (a_new_context)
+				a_receiver.end_document
 				if a_builder.has_error then
 					create {XM_XPATH_INVALID_ITEM} last_evaluated_item.make_from_string (a_builder.last_error, Xpath_errors_uri, "FOER0000", Dynamic_error)
 					set_last_error (last_evaluated_item.error_value)
@@ -230,23 +185,36 @@ feature -- Evaluation
 	process_leaving_tail (a_context: XM_XSLT_EVALUATION_CONTEXT) is
 			-- Execute `Current', writing results to the current `XM_XPATH_RECEIVER'.
 		do
-			todo ("process_leaving_tail", False)
+			evaluate_item (a_context)
+			if last_evaluated_item /= Void then
+				a_context.current_receiver.append_item (last_evaluated_item)
+			end
+			last_tail_call := Void			
 		end
 
-feature {XM_XSLT_EXPRESSION_INSTRUCTION} -- Local
+feature {XM_XSLT_EXPRESSION} -- Restricted
 
-	xpath_expressions (an_instruction_list: DS_ARRAYED_LIST [XM_XSLT_EXPRESSION_INSTRUCTION]): DS_ARRAYED_LIST [XM_XPATH_EXPRESSION] is
-			-- All the XPath expressions associated with this instruction;
-			--  (in XSLT terms, the expressions present on attributes of the instruction,
-			--  as distinct from the child instructions in a sequence construction)
+	compute_cardinality is
+			-- Compute cardinality.
 		do
-			create Result.make (0)
-			Result.set_equality_tester (expression_tester)
+			set_cardinality_exactly_one
 		end
+
+feature {NONE} -- Implementation
+
+	content: XM_XPATH_EXPRESSION
+			-- Content (unless `is_text_only')
+
+	constant_text: STRING
+			-- Constant text content
+
+	base_uri: STRING
+			-- Base URI
 
 invariant
 
 	base_uri: base_uri /= Void
-	
+	content_not_void: content /= Void
+
 end
 

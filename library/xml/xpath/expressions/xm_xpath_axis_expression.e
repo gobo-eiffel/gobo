@@ -190,6 +190,8 @@ feature {XM_XPATH_EXPRESSION} -- Restricted
 		do
 			initialize_special_properties
 			set_context_document_nodeset
+			set_single_document_nodeset
+			set_non_creating
 			if is_forward_axis (axis) then
 				set_ordered_nodeset
 			else

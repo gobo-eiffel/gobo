@@ -24,42 +24,39 @@ creation
 
 feature {NONE} -- Initialization
 
-	make (a_target: XM_XSLT_COMPILED_TEMPLATE; some_parameters, some_tunnel_parameters: XM_XSLT_PARAMETER_SET; a_saved_context: XM_XSLT_SAVED_TRANSFORMER_CONTEXT) is
+	make (a_target: XM_XSLT_COMPILED_TEMPLATE; some_parameters, some_tunnel_parameters: XM_XSLT_PARAMETER_SET; a_context: XM_XSLT_EVALUATION_CONTEXT) is
 			-- Establish invariant.
 		require
 			target_not_void: a_target /= Void
-			saved_context_not_void: a_saved_context /= Void
+			saved_context_not_void: a_context /= Void
 			some_parameters_not_void: some_parameters /= Void
 			some_tunnel_parameters_not_void: some_tunnel_parameters /= Void
 		do
 			target := a_target
 			actual_parameters := some_parameters
 			tunnel_parameters := some_tunnel_parameters
-			execution_context := a_saved_context
+			execution_context := a_context
 		ensure
 			target_set: target = a_target
 			actual_parameters_set: actual_parameters = some_parameters
 			tunnel_parameters_set: tunnel_parameters = some_tunnel_parameters
-			execution_context_saved: execution_context = a_saved_context
+			execution_context_saved: execution_context = a_context
 		end
 
 feature -- Evaluation
 
-	process_leaving_tail (a_transformer: XM_XSLT_TRANSFORMER) is
+	process_leaving_tail (a_context: XM_XSLT_EVALUATION_CONTEXT) is
 			-- Execute `Current', writing results to the current `XM_XPATH_RECEIVER'.
 		local
-			a_saved_context: XM_XSLT_SAVED_TRANSFORMER_CONTEXT
-			a_bindery: XM_XSLT_BINDERY
+			a_new_context: XM_XSLT_EVALUATION_CONTEXT
 		do
-			a_saved_context := a_transformer.saved_context
-			a_transformer.restore_context (execution_context)
-			a_bindery := a_transformer.bindery
-			a_bindery.open_stack_frame (actual_parameters, tunnel_parameters)
+			a_new_context := a_context.new_context
+			a_new_context.set_local_parameters (actual_parameters)
+			a_new_context.set_tunnel_parameters (tunnel_parameters)
+			a_new_context.open_stack_frame (target.slot_manager)
 			last_tail_call := Void
-			target.expand (a_transformer)
+			target.expand (a_new_context)
 			last_tail_call := target.last_tail_call
-			a_bindery.close_stack_frame
-			a_transformer.restore_context (a_saved_context)
 		end
 
 feature {NONE} -- Implementation
@@ -73,7 +70,7 @@ feature {NONE} -- Implementation
 	tunnel_parameters: XM_XSLT_PARAMETER_SET
 			-- Tunnel parameters
 
-	execution_context: XM_XSLT_SAVED_TRANSFORMER_CONTEXT
+	execution_context: XM_XSLT_EVALUATION_CONTEXT
 			-- Saved execution context
 
 invariant

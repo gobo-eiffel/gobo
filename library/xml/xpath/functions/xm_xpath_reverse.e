@@ -63,6 +63,7 @@ feature -- Optimization
 		local
 			a_reverser: XM_XPATH_REVERSER
 		do
+			Precursor
 			create a_reverser.make (arguments.item (1))
 			set_replacement (a_reverser)
 		end

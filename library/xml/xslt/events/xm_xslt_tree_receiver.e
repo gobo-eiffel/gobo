@@ -21,7 +21,7 @@ inherit
 			notify_processing_instruction, notify_comment
 		end
 
-	XM_XSLT_SEQUENCE_RECEIVER
+	XM_XPATH_SEQUENCE_RECEIVER
 
 	XM_XPATH_AXIS
 

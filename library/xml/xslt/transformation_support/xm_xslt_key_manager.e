@@ -62,13 +62,13 @@ feature -- Access
 		-- Result from `generate_keyed_sequence'
 	
 	generate_keyed_sequence (a_key_fingerprint: INTEGER; a_document: XM_XPATH_DOCUMENT; a_key_value: XM_XPATH_ATOMIC_VALUE;
-						  a_transformer: XM_XSLT_TRANSFORMER) is
+						  a_context: XM_XSLT_EVALUATION_CONTEXT) is
 			-- Generate a sequence of nodes for a particular key value
 		require
 			strictly_positive_key_fingerprint: a_key_fingerprint > 0
 			document_not_void: a_document /= Void
 			key_value_not_void: a_key_value /= Void
-			transformer_not_void: a_transformer /= Void
+			context_not_void: a_context /= Void
 		local
 			an_item_type: INTEGER
 			a_value: XM_XPATH_ATOMIC_VALUE
@@ -78,9 +78,6 @@ feature -- Access
 			--a_collator: ST_COLLATOR
 			an_error: XM_XPATH_ERROR_VALUE
 		do
-			debug ("XSLT key manager")
-				std.error.put_string ("Generate keyed sequence%N")
-			end
 			last_key_sequence := Void 
 			an_item_type := a_key_value.item_type.primitive_type
 			if an_item_type = Integer_type_code or else
@@ -95,21 +92,18 @@ feature -- Access
 				an_index := index (a_document, a_key_fingerprint, an_item_type)
 				if an_index.is_under_construction then
 					create an_error.make_from_string ("Key definition is circular", "", "XT0640", Dynamic_error)
-					a_transformer.report_fatal_error (an_error, Void)
+					a_context.transformer.report_fatal_error (an_error, Void)
 				end
 			else
-				debug ("XSLT key manager")
-					std.error.put_string ("Need to build an index%N")
-				end
 				create an_index.make_under_construction
 				put_index (a_document, a_key_fingerprint, an_item_type, an_index)
-				build_index (a_key_fingerprint, an_item_type, a_document, a_transformer)
-				if not a_transformer.is_error then
+				build_index (a_key_fingerprint, an_item_type, a_document, a_context)
+				if not a_context.transformer.is_error then
 					an_index := last_built_index
 					put_index (a_document, a_key_fingerprint, an_item_type, an_index)
 				end
 			end
-			if not a_transformer.is_error then
+			if not a_context.transformer.is_error then
 				a_key_definition := key_definitions (a_key_fingerprint).item (1)
 				-- a_collator := a_key_definition.collator TODO - collation keys
 				if an_index.has (a_key_value) then
@@ -120,8 +114,8 @@ feature -- Access
 				end
 			end
 		ensure
-			possible_error: a_transformer.is_error implies last_key_sequence = Void 
-			iterator_not_void: not a_transformer.is_error implies last_key_sequence /= Void -- of course, the iteration may well yield zero nodes
+			possible_error: a_context.transformer.is_error implies last_key_sequence = Void 
+			iterator_not_void: not a_context.transformer.is_error implies last_key_sequence /= Void -- of course, the iteration may well yield zero nodes
 		end
 
 	collation_uri (a_key_fingerprint: INTEGER): STRING is
@@ -208,11 +202,12 @@ feature {NONE} -- Implementation
 	last_built_index: XM_XSLT_KEY_INDEX
 			-- Result from `build_index'
 
-	build_index (a_key_fingerprint, an_item_type: INTEGER; a_document: XM_XPATH_DOCUMENT; a_transformer: XM_XSLT_TRANSFORMER) is 
+	build_index (a_key_fingerprint, an_item_type: INTEGER; a_document: XM_XPATH_DOCUMENT; a_context: XM_XSLT_EVALUATION_CONTEXT) is 
 			-- Build index for `a_document' for a named key.
 		require
 			document_not_void: a_document /= Void
-			transformer_not_in_error: a_transformer /= Void and then not a_transformer.is_error
+			context_not_void: a_context /= Void
+			transformer_not_in_error: a_context.transformer /= Void and then not a_context.transformer.is_error
 		local
 			some_key_definitions: DS_ARRAYED_LIST [XM_XSLT_KEY_DEFINITION]
 			a_cursor: DS_ARRAYED_LIST_CURSOR [XM_XSLT_KEY_DEFINITION]
@@ -234,120 +229,98 @@ feature {NONE} -- Implementation
 				until
 					a_cursor.after
 				loop
-					construct_index (a_document, a_map, a_cursor.item, an_item_type, a_transformer, a_cursor.index = 1)
+					construct_index (a_document, a_map, a_cursor.item, an_item_type, a_context, a_cursor.index = 1)
 					a_cursor.forth
 				end
-				if not a_transformer.is_error then create last_built_index.make (a_map) end
+				if not a_context.transformer.is_error then create last_built_index.make (a_map) end
 			else
 				a_message := STRING_.concat ("Key ", shared_name_pool.display_name_from_name_code (a_key_fingerprint))
 				a_message := STRING_.appended_string (a_message, " has not been defined")
 				create an_error.make_from_string (a_message, "", "XT1260", Dynamic_error)
-				a_transformer.report_fatal_error (an_error, Void)
+				a_context.transformer.report_fatal_error (an_error, Void)
 			end
 		ensure
-			error_or_index_built: not a_transformer.is_error implies last_built_index /= Void
+			error_or_index_built: not a_context.transformer.is_error implies last_built_index /= Void
 		end
 	
 	construct_index (a_document: XM_XPATH_DOCUMENT; a_map: DS_HASH_TABLE [DS_ARRAYED_LIST [XM_XPATH_NODE], XM_XPATH_ATOMIC_VALUE];
-		a_key: XM_XSLT_KEY_DEFINITION; a_sought_item_type: INTEGER; a_transformer: XM_XSLT_TRANSFORMER;
-		is_first: BOOLEAN) is
+		a_key: XM_XSLT_KEY_DEFINITION; a_sought_item_type: INTEGER; a_context: XM_XSLT_EVALUATION_CONTEXT; is_first: BOOLEAN) is
 			-- Fill in `a_map' for `a_key'.
 		require
 			document_not_void: a_document /= Void
-			transformer_not_in_error: a_transformer /= Void and then not a_transformer.is_error
+			context_not_void: a_context /= Void
+			transformer_not_in_error: a_context.transformer /= Void and then not a_context.transformer.is_error
 			empty_map: a_map /= Void and then a_map.count = 0
 			key_not_void: a_key /= Void
 		local
 			use: XM_XPATH_EXPRESSION
 			match: XM_XSLT_PATTERN
-			a_primitive_use_type: INTEGER
 			a_node_type: INTEGER
 			all_nodes_iterator, an_attribute_iterator: XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_NODE]
 			a_node, another_node: XM_XPATH_NODE
-			a_saved_iterator: XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_ITEM]
-			a_saved_context: XM_XSLT_SAVED_TRANSFORMER_CONTEXT
 			a_collator: ST_COLLATOR
-			a_context: XM_XSLT_EVALUATION_CONTEXT
 			a_node_test: XM_XSLT_NODE_TEST
+			a_new_context: XM_XSLT_EVALUATION_CONTEXT
+			a_slot_manager: XM_XPATH_SLOT_MANAGER
 		do
-			a_saved_iterator := a_transformer.current_iterator
-			a_saved_context := a_transformer.saved_context
-			use := a_key.use
-			debug ("XSLT key manager")
-				std.error.put_string ("Building key for use=")
-				std.error.put_string (use.out);std.error.put_new_line
+			use := a_key.body
+			match := a_key.match
+			a_collator := a_key.collator
+			a_new_context := a_context.new_context
+			a_slot_manager := a_key.slot_manager
+			if a_slot_manager.number_of_variables > 0 then
+				a_new_context.open_stack_frame (a_slot_manager)
 			end
-			a_primitive_use_type := use.item_type.atomized_item_type.primitive_type
-			if are_types_comparable (a_primitive_use_type, a_sought_item_type) then
-				a_context := a_transformer.new_xpath_context
-				a_collator := a_key.collator
-				match := a_key.match
-				a_node_type := match.node_kind
-				if a_node_type = Attribute_node or else
-					a_node_type = Any_node or else
-					a_node_type = Document_node then
-
-					-- If the match pattern allows attributes to appear, we must visit them.
-					-- We also take this path in the ridiculous event that the pattern can match document nodes.
-
-					from
-						all_nodes_iterator := a_document.new_axis_iterator (Descendant_or_self_axis); all_nodes_iterator.start
-					until
-						all_nodes_iterator.after
-					loop
-						a_node := all_nodes_iterator.item
-						if a_node.node_type = Element_node then
-							debug ("XSLT key manager")
-								std.error.put_string ("Examining ")
-								std.error.put_string (a_node.node_name);std.error.put_new_line
+			a_node_type := match.node_kind
+			if a_node_type = Attribute_node or else a_node_type = Any_node or else a_node_type = Document_node then
+				-- If the match pattern allows attributes to appear, we must visit them.
+				-- We also take this path in the ridiculous event that the pattern can match document nodes.
+				from
+					all_nodes_iterator := a_document.new_axis_iterator (Descendant_or_self_axis); all_nodes_iterator.start
+				until
+					all_nodes_iterator.after
+				loop
+					a_node := all_nodes_iterator.item
+					if a_node.node_type = Element_node then
+						from
+							an_attribute_iterator := a_node.new_axis_iterator (Attribute_axis); an_attribute_iterator.start
+						until
+							an_attribute_iterator.after
+						loop
+							another_node := an_attribute_iterator.item
+							if match.matches (another_node, a_new_context) then
+								process_key_node (another_node, use, a_sought_item_type, a_collator, a_map, a_new_context, is_first)
 							end
-							from
-								an_attribute_iterator := a_node.new_axis_iterator (Attribute_axis); an_attribute_iterator.start
-							until
-								an_attribute_iterator.after
-							loop
-								another_node := an_attribute_iterator.item
-								if match.matches (another_node, a_transformer) then
-									process_key_node (another_node, use, a_sought_item_type, a_collator, a_map, a_context, is_first)
-								end
-								an_attribute_iterator.forth
-							end
-							if a_node_type = Any_node then
-
-								-- Index the element as well as it's attributes
-
-								if match.matches (a_node, a_transformer) then
-									
-									process_key_node (a_node, use, a_sought_item_type, a_collator, a_map, a_context, is_first)
-								end
-							end
-						else
-							if match.matches (a_node, a_transformer) then
-								debug ("XSLT key manager")
-									std.error.put_string ("Adding node%N")
-								end
-								process_key_node (a_node, use, a_sought_item_type, a_collator, a_map, a_context, is_first)
+							an_attribute_iterator.forth
+						end
+						if a_node_type = Any_node then
+							-- Index the element as well as it's attributes							
+							if match.matches (a_node, a_new_context) then
+								
+								process_key_node (a_node, use, a_sought_item_type, a_collator, a_map, a_new_context, is_first)
 							end
 						end
-						all_nodes_iterator.forth
-					end
-				else
-					from
-						all_nodes_iterator := a_document.new_axis_iterator (Descendant_axis); all_nodes_iterator.start
-					until
-						all_nodes_iterator.after
-					loop
-						a_node := all_nodes_iterator.item
-						a_node_test ?= match
-						if a_node_test /= Void or else match.matches (a_node, a_transformer) then
-							process_key_node (a_node, use, a_sought_item_type, a_collator, a_map, a_context, is_first)
+					else
+						if match.matches (a_node, a_new_context) then
+							process_key_node (a_node, use, a_sought_item_type, a_collator, a_map, a_new_context, is_first)
 						end
-						all_nodes_iterator.forth
 					end
+					all_nodes_iterator.forth
+				end
+			else
+				from
+					all_nodes_iterator := a_document.new_axis_iterator (Descendant_axis); all_nodes_iterator.start
+				until
+					all_nodes_iterator.after
+				loop
+					a_node := all_nodes_iterator.item
+					a_node_test ?= match
+					if a_node_test /= Void or else match.matches (a_node, a_new_context) then
+						process_key_node (a_node, use, a_sought_item_type, a_collator, a_map, a_new_context, is_first)
+					end
+					all_nodes_iterator.forth
 				end
 			end
-			a_transformer.set_current_iterator (a_saved_iterator)
-			a_transformer.restore_context (a_saved_context)
 		end
 
 	process_key_node (a_node: XM_XPATH_NODE; use: XM_XPATH_EXPRESSION; a_sought_item_type: INTEGER;
@@ -374,7 +347,6 @@ feature {NONE} -- Implementation
 			create a_singleton_iterator.make (a_node)
 			a_singleton_iterator.start
 			a_context.set_current_iterator (a_singleton_iterator)
-			a_context.transformer.set_current_iterator (a_singleton_iterator)
 
 			-- Evaluate the "use" expression against this context node
 
@@ -414,12 +386,12 @@ feature {NONE} -- Implementation
 							end
 						end
 					end
-
 					add_node_to_index (a_node, a_map, a_value, is_first)
 				end
 				an_iterator.forth
 			end
 		end
+
 	add_node_to_index (a_node: XM_XPATH_NODE; a_map: DS_HASH_TABLE [DS_ARRAYED_LIST [XM_XPATH_NODE], XM_XPATH_ATOMIC_VALUE];
 							 a_value: XM_XPATH_ATOMIC_VALUE; is_first: BOOLEAN) is
 			-- Add `a_node' to `a_map'.
@@ -507,7 +479,6 @@ feature {NONE} -- Implementation
 			else
 				create an_index_map.make_with_equality_testers (10, Void, long_equality_tester)
 				document_map.put (an_index_map, a_document)
-				-- TODO a_transformer.put_user_data when an_index_map becomes a weak reference
 			end
 			create a_long.make (a_key_fingerprint, an_item_type)
 			if an_index_map.has (a_long) then

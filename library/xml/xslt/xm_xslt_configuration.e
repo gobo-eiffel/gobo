@@ -273,7 +273,7 @@ feature -- Element change
 feature {XM_XSLT_TRANSFORMER, XM_XSLT_INSTRUCTION} -- Transformation
 
 	element_validator (a_receiver: XM_XPATH_RECEIVER; a_name_code: INTEGER; a_schema_type: XM_XPATH_SCHEMA_TYPE;
-							 a_validation_action: INTEGER; a_validation_context: ANY): XM_XPATH_RECEIVER is
+							 a_validation_action: INTEGER): XM_XPATH_RECEIVER is
 			-- A receiver that can be used to validate an element,
 			--  and that passes the validated element on to a target receiver.
 			-- If validation is not supported, the returned receiver

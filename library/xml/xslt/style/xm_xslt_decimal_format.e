@@ -110,7 +110,7 @@ feature -- Element change
 	validate is
 			-- Check that the stylesheet element is valid.
 		do
-			check_top_level
+			check_top_level (Void)
 			check_empty
 			validate_decimal_separator
 			validate_grouping_separator
@@ -204,6 +204,7 @@ feature -- Element change
 					a_format_manager.set_named_format (a_decimal_format)
 				end
 			end
+			last_generated_expression := Void
 		end
 
 feature {NONE} -- Implementation

@@ -31,6 +31,7 @@ feature {NONE} -- Initialization
 			set_cardinality_empty
 			set_ordered_nodeset
 			set_context_document_nodeset
+			set_single_document_nodeset
 		end
 
 feature -- Access
@@ -83,7 +84,7 @@ feature -- Status report
 
 feature -- Evaluation
 
-	effective_boolean_value (context: XM_XPATH_CONTEXT): XM_XPATH_BOOLEAN_VALUE is
+	effective_boolean_value (a_context: XM_XPATH_CONTEXT): XM_XPATH_BOOLEAN_VALUE is
 			-- Effective boolean value of the expression
 		do
 			create Result.make (False)
@@ -93,6 +94,14 @@ feature -- Evaluation
 			-- Evaluate `Current' as a String
 		do
 			create last_evaluated_string.make ("")
+		end
+
+feature {XM_XPATH_EXPRESSION} -- Restricted
+
+	native_implementations: INTEGER is
+			-- Natively-supported evaluation routines
+		do
+			Result := Supports_evaluate_item
 		end
 
 end

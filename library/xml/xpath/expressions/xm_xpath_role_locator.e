@@ -74,6 +74,8 @@ feature  -- Access
 				Result := STRING_.appended_string (a_string, instruction_name)
 			when Function_result_role then
 				Result := STRING_.appended_string ("result of function ", container)
+			when Template_result_role then
+				Result := STRING_.appended_string ("result of template ", container)
 			when Order_by_role then
 				Result := STRING_.appended_string (ordinal (operand), " sort key")
 			end

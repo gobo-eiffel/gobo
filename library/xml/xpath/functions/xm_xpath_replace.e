@@ -73,7 +73,7 @@ feature -- Optimization
 		local
 			n: INTEGER
 		do
-			simplify_arguments
+			Precursor
 			if arguments.count = 4 then n := 4 end
 			try_to_compile (n, arguments)
 			if regexp_error_value /= Void then set_last_error (regexp_error_value) end

@@ -179,8 +179,7 @@ feature -- Status setting
 			if not are_intrinsic_dependencies_computed then compute_intrinsic_dependencies end
 			dependencies := clone (start.dependencies)
 			if step.depends_upon_xslt_context then
-				set_depends_upon_current_item
-				set_depends_upon_current_group
+				set_depends_upon_xslt_context
 			end
 			are_dependencies_computed := True
 		end
@@ -258,6 +257,7 @@ feature -- Optimization
 			a_type_checker: XM_XPATH_TYPE_CHECKER
 			a_homogeneous_checker: XM_XPATH_HOMOGENEOUS_ITEM_CHECKER
 		do
+			-- TODO - review all of this
 			mark_unreplaced
 			create a_type_checker
 			start.analyze (a_context)
@@ -578,46 +578,51 @@ feature {NONE} -- Implementation
 			-- Compute special properties.
 		local
 			an_expression: XM_XPATH_COMPUTED_EXPRESSION
+			is_start_ordered, is_start_peer: BOOLEAN
+			is_step_ordered, is_step_peer: BOOLEAN
 		do
 			initialize_special_properties
 
 			if not are_cardinalities_computed then compute_cardinality end
 			if not start.are_special_properties_computed then
 				an_expression ?= start
-					check
-						start_is_computed: an_expression /= Void
-						-- as it can't be a value
-					end
+				check
+					start_is_computed: an_expression /= Void
+					-- as it can't be a value
+				end
 				an_expression.compute_special_properties
 			end
 			if not step.are_special_properties_computed then
 				an_expression ?= step
-					check
-						step_is_computed: an_expression /= Void
-						-- as it can't be a value
-					end
+				check
+					step_is_computed: an_expression /= Void
+					-- as it can't be a value
+				end
 				an_expression.compute_special_properties
 			end
+			is_start_peer := start.peer_nodeset; is_start_ordered := start.ordered_nodeset
 			if not start.cardinality_allows_many then
-				start.set_ordered_nodeset
-				start.set_peer_nodeset
+				is_start_peer := True; is_start_ordered := True
 			end
+			is_step_peer := step.peer_nodeset; is_step_ordered := step.ordered_nodeset
 			if not step.cardinality_allows_many then
-				step.set_ordered_nodeset
-				step.set_peer_nodeset
+				is_step_peer := True; is_step_ordered := True
 			end
 
 			if start.context_document_nodeset and then step.context_document_nodeset then
 				set_context_document_nodeset
 			end
-			if start.peer_nodeset and then step.peer_nodeset then
+			if start.single_document_nodeset and then step.context_document_nodeset then
+				set_single_document_nodeset
+			end
+			if is_start_peer and then is_step_peer then
 				set_peer_nodeset
 			end
 			if start.subtree_nodeset and then step.subtree_nodeset then
 				set_subtree_nodeset
 			end
 
-			if is_naturally_sorted then
+			if is_naturally_sorted (is_start_ordered, is_step_ordered, is_start_peer) then
 				set_ordered_nodeset
 			end
 
@@ -625,9 +630,12 @@ feature {NONE} -- Implementation
 				set_reverse_document_order
 			end
 
+			if start.non_creating and then step.non_creating then
+				set_non_creating
+			end
 		end
 
-	is_naturally_sorted: BOOLEAN is
+	is_naturally_sorted (is_start_ordered, is_step_ordered, is_start_peer: BOOLEAN): BOOLEAN is
 			-- Are nodes guarenteed to be delivered in document order?
 
 			-- This is true if the start nodes are sorted peer nodes
@@ -637,24 +645,26 @@ feature {NONE} -- Implementation
 			start_special_properties_computed: start.are_special_properties_computed
 			step_special_properties_computed: step.are_special_properties_computed
 		do
-			if start.ordered_nodeset and then step.ordered_nodeset then
-
-				-- We know now that both the start and the step are sorted. But this does
-				-- not necessarily mean that the combination is sorted
-
-				-- The result is sorted if the start is sorted and the step selects attributes
-				-- or namespaces
+			if is_step_ordered then
+				if not start.cardinality_allows_many or else is_start_ordered then
 					
-				if step.attribute_ns_nodeset then
-					Result := True
-				else
+					-- We know now that both the start and the step are sorted. But this does
+					-- not necessarily mean that the combination is sorted
 
-					-- The result is sorted if the start selects "peer nodes" (that is, a node-set in which
-					-- no node is an ancestor of another) and the step selects within the subtree rooted
-					-- at the context node
-
-					if start.peer_nodeset and then step.subtree_nodeset then
+					-- The result is sorted if the start is sorted and the step selects attributes
+					-- or namespaces
+					
+					if step.attribute_ns_nodeset then
 						Result := True
+					else
+
+						-- The result is sorted if the start selects "peer nodes" (that is, a node-set in which
+						-- no node is an ancestor of another) and the step selects within the subtree rooted
+						-- at the context node
+						
+						if is_start_peer and then step.subtree_nodeset then
+							Result := True
+						end
 					end
 				end
 			end
@@ -678,21 +688,10 @@ feature {NONE} -- Implementation
 			step_special_properties_computed: step.are_special_properties_computed
 		local
 			an_axis: XM_XPATH_AXIS_EXPRESSION
-			--an_attribute_reference: XM_XPATH_ATTRIBUTE_REFERENCE_EXPRESSION
 		do
 			an_axis ?= step
 			if not start.cardinality_allows_many and then an_axis /= Void then
 				Result := not is_forward_axis (an_axis.axis)
-			--else
-			--	an_axis ?= start
-			--	if an_axis /= Void then
-			--		if is_forward_axis (an_axis.axis) then
-			--			Result := False
-			--		else
-			--			an_attribute_reference ?= step
-			--			Result := an_attribute_reference /= Void
-			--		end
-			--	end
 			end
 		end
 
@@ -767,7 +766,8 @@ feature {NONE} -- Implementation
 				-- Decide whether the result needs to be wrapped in a sorting
 				-- expression to deliver the results in document order
 
-				a_path ?= an_offer.containing_expression;	if a_path /= Void then
+				a_path ?= an_offer.containing_expression
+				if a_path /= Void then
 					if a_path.ordered_nodeset then
 						set_replacement (a_path)
 					elseif a_path.reverse_document_order then

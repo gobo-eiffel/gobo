@@ -68,7 +68,6 @@ feature -- Optimization
 			end
 			Precursor
 			add_context_document_argument (0, "root+")
-			simplify_arguments
 		end
 
 feature -- Evaluation
@@ -109,6 +108,8 @@ feature {XM_XPATH_EXPRESSION} -- Restricted
 		do
 			initialize_special_properties
 			set_ordered_nodeset
+			set_single_document_nodeset
+			set_non_creating
 		end
 
 end

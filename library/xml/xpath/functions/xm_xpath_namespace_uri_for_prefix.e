@@ -78,10 +78,14 @@ feature -- Evaluation
 				an_element ?= arguments.item (2).last_evaluated_item
 				if an_element /= Void then
 					arguments.item (1).evaluate_item (a_context)
-					an_xml_prefix := arguments.item (1).last_evaluated_item.string_value
-					a_uri_code := an_element.uri_code_for_prefix (an_xml_prefix)
-					if shared_name_pool.is_valid_uri_code (a_uri_code) then
-						create {XM_XPATH_STRING_VALUE} last_evaluated_item.make (shared_name_pool.uri_from_uri_code (a_uri_code))
+					if arguments.item (1).last_evaluated_item.is_error then
+						last_evaluated_item := arguments.item (1).last_evaluated_item
+					else
+						an_xml_prefix := arguments.item (1).last_evaluated_item.string_value
+						a_uri_code := an_element.uri_code_for_prefix (an_xml_prefix)
+						if shared_name_pool.is_valid_uri_code (a_uri_code) then
+							create {XM_XPATH_STRING_VALUE} last_evaluated_item.make (shared_name_pool.uri_from_uri_code (a_uri_code))
+						end
 					end
 				else
 					create {XM_XPATH_INVALID_ITEM} last_evaluated_item.make_from_string ("Second argument is not an element", Xpath_errors_uri, "FORG0006", Dynamic_error)

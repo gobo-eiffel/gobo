@@ -174,13 +174,13 @@ feature -- Element change
 			a_cursor: DS_HASH_TABLE_CURSOR [XM_XPATH_EXPRESSION, INTEGER]
 			another_cursor: DS_ARRAYED_LIST_CURSOR [INTEGER]
 			a_fingerprint: INTEGER
-			an_expression: XM_XPATH_EXPRESSION
+			an_expression,a_content: XM_XPATH_EXPRESSION
 			a_string_value: XM_XPATH_STRING_VALUE
 			a_namespace_resolver: XM_XPATH_NAMESPACE_RESOLVER
 			a_local_name, a_message: STRING
 			an_error: XM_XPATH_ERROR_VALUE
 		do
-			last_generated_instruction := Void
+			last_generated_expression := Void
 			a_stylesheet := principal_stylesheet
 			if output_fingerprint = -1 or else a_stylesheet.is_named_output_property_defined (output_fingerprint) then
 				a_property_set := a_stylesheet.gathered_output_properties (output_fingerprint)
@@ -232,8 +232,11 @@ feature -- Element change
 						another_cursor.forth
 					end
 					if not namespace_context_needed then a_namespace_resolver := Void end
-					create {XM_XSLT_COMPILED_RESULT_DOCUMENT} last_generated_instruction.make (an_executable, a_property_set, href, base_uri, validation_action, Void, formatting_attributes, a_namespace_resolver)
-					compile_children (an_executable, last_generated_instruction)
+					compile_sequence_constructor (an_executable, new_axis_iterator (Child_axis), True)
+					a_content := last_generated_expression
+					if a_content = Void then create {XM_XPATH_EMPTY_SEQUENCE} a_content.make end
+					create {XM_XSLT_COMPILED_RESULT_DOCUMENT} last_generated_expression.make (an_executable, a_property_set, href, base_uri, validation_action,
+																													  Void, formatting_attributes, a_namespace_resolver, a_content)
 				end
 			else
 				a_message := STRING_.concat ("Output definition named '", shared_name_pool.display_name_from_name_code (output_fingerprint))

@@ -75,6 +75,16 @@ feature -- Element change
 			references.put_last (a_reference)
 		end
 
+	set_reference_list (a_reference_list: like references) is
+			-- Set references.
+		require
+			reference_list_not_void: a_reference_list /= Void
+		do
+			references := a_reference_list
+		ensure
+			set: references = a_reference_list
+		end
+
 	set_required_type (a_required_type: XM_XPATH_SEQUENCE_TYPE) is
 			-- Set `required_type.
 		require

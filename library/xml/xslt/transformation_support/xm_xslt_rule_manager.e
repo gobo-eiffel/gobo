@@ -56,11 +56,11 @@ feature -- Access
 			mode_not_void: Result /= Void
 		end
 
-	template_rule (a_node: XM_XPATH_NODE; a_mode: XM_XSLT_MODE; a_transformer: XM_XSLT_TRANSFORMER): XM_XSLT_COMPILED_TEMPLATE is
+	template_rule (a_node: XM_XPATH_NODE; a_mode: XM_XSLT_MODE; a_context: XM_XSLT_EVALUATION_CONTEXT): XM_XSLT_COMPILED_TEMPLATE is
 			-- Template rule registered for a particular node in a specific mode.
 		require
 			node_not_void: a_node /= Void
-			transformer_not_in_error: a_transformer /= Void and then not a_transformer.is_error
+			context_not_void: a_context /= Void
 		local
 			mode_to_use: XM_XSLT_MODE
 			a_rule_value: XM_XSLT_RULE_VALUE
@@ -84,7 +84,7 @@ feature -- Access
 				std.error.put_string (a_node.fingerprint.out)
 				std.error.put_new_line
 			end
-			a_rule_value := mode_to_use.rule (a_node, a_transformer)
+			a_rule_value := mode_to_use.rule (a_node, a_context)
 			if a_rule_value /= Void then
 				debug ("XSLT template rules")
 					std.error.put_string ("Found a match%N")
@@ -97,12 +97,12 @@ feature -- Access
 			end
 		end
 
-	imported_template_rule (a_node: XM_XPATH_NODE; a_mode: XM_XSLT_MODE; a_minimum_precedence, a_maximum_precedence: INTEGER; a_transformer: XM_XSLT_TRANSFORMER): XM_XSLT_COMPILED_TEMPLATE is
+	imported_template_rule (a_node: XM_XPATH_NODE; a_mode: XM_XSLT_MODE; a_minimum_precedence, a_maximum_precedence: INTEGER;  a_context: XM_XSLT_EVALUATION_CONTEXT): XM_XSLT_COMPILED_TEMPLATE is
 			-- Template rule registered for a particular node in a specific mode, within a given precedence range.
 			-- (Used to support xsl:apply-imports.)
 		require
 			node_not_void: a_node /= Void
-			transformer_not_in_error: a_transformer /= Void and then not a_transformer.is_error
+			context_not_void: a_context /= Void
 		local
 			mode_to_use: XM_XSLT_MODE
 			a_rule_value: XM_XSLT_RULE_VALUE
@@ -112,7 +112,7 @@ feature -- Access
 			else
 				mode_to_use := a_mode
 			end
-			a_rule_value := mode_to_use.imported_rule (a_node, a_minimum_precedence, a_maximum_precedence, a_transformer)
+			a_rule_value := mode_to_use.imported_rule (a_node, a_minimum_precedence, a_maximum_precedence, a_context)
 			check
 				template_rule: a_rule_value.is_template
 				-- Rule manager is only used with template rules
@@ -120,11 +120,11 @@ feature -- Access
 			Result := a_rule_value.as_template
 		end
 
-	next_match_handler (a_node: XM_XPATH_NODE; a_mode: XM_XSLT_MODE; a_current_template: XM_XSLT_COMPILED_TEMPLATE; a_transformer: XM_XSLT_TRANSFORMER): XM_XSLT_COMPILED_TEMPLATE is
+	next_match_handler (a_node: XM_XPATH_NODE; a_mode: XM_XSLT_MODE; a_current_template: XM_XSLT_COMPILED_TEMPLATE; a_context: XM_XSLT_EVALUATION_CONTEXT): XM_XSLT_COMPILED_TEMPLATE is
 			-- Next template rule registered for a particular node in a specific mode, following `a_current_template'
 		require
 			node_not_void: a_node /= Void
-			transformer_not_in_error: a_transformer /= Void and then not a_transformer.is_error
+			context_not_void: a_context /= Void
 			current_template_not_void: a_current_template /= Void
 		local
 			mode_to_use: XM_XSLT_MODE
@@ -135,7 +135,7 @@ feature -- Access
 			else
 				mode_to_use := a_mode
 			end
-			a_rule_value := mode_to_use.next_matching_rule (a_node, a_current_template, a_transformer)
+			a_rule_value := mode_to_use.next_matching_rule (a_node, a_current_template, a_context)
 			check
 				template_rule: a_rule_value.is_template
 				-- Rule manager is only used with template rules

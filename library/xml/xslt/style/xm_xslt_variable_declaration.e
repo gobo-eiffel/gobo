@@ -71,7 +71,34 @@ feature -- Element change
 			a_constant_value: XM_XPATH_VALUE
 			a_variable: XM_XSLT_VARIABLE
 			a_binding_reference: XM_XPATH_BINDING_REFERENCE
+			a_relationship: INTEGER
 		do
+			a_variable ?= Current
+			a_constant_value := Void
+			a_dependencies_set := Void
+			a_cardinalities_set := Void
+			a_special_properties_set := Void
+			if a_variable /= Void then
+				a_constant_value ?= select_expression
+				if a_constant_value /= Void then
+					
+					-- We can't rely on the constant value, as it hasn't been type-checked yet
+					--  (e.g. numeric promotion might change it).
+					-- So we do a quick check for now:
+					
+					a_relationship := type_relationship (select_expression.item_type, required_type.primary_type)
+					if a_relationship = Same_item_type or else a_relationship = Subsumed_type then
+						-- OK
+					else
+						a_constant_value := Void
+					end
+				end
+				if select_expression /= Void then
+					a_special_properties_set := select_expression.special_properties
+					a_cardinalities_set := select_expression.cardinalities
+					a_dependencies_set := select_expression.dependencies
+				end
+			end
 			from
 				a_cursor := references.new_cursor
 				a_cursor.start
@@ -80,19 +107,6 @@ feature -- Element change
 			until
 				a_cursor.after
 			loop
-				a_constant_value := Void
-				a_dependencies_set := Void
-				a_cardinalities_set := Void
-				a_special_properties_set := Void
-				a_variable ?= Current
-				if a_variable /= Void then
-					a_constant_value ?= select_expression
-					if select_expression /= Void then
-						a_special_properties_set := select_expression.special_properties
-						a_cardinalities_set := select_expression.cardinalities
-						a_dependencies_set := select_expression.dependencies
-					end
-				end
 				a_binding_reference := a_cursor.item
 				a_binding_reference.set_static_type (required_type, a_constant_value, a_dependencies_set, a_cardinalities_set, a_special_properties_set) 
 				a_cursor.forth
@@ -105,24 +119,27 @@ feature -- Element change
 			-- This is called once for each element, after the entire tree has been built.
 			-- As well as validation, it can perform first-time initialisation.
 		local
-			a_procedure: XM_XSLT_PROCEDURE
 			an_error: XM_XPATH_ERROR_VALUE
+			a_slot_manager: like slot_manager
 		do
 			Precursor
 			if not any_compile_errors then
 				if is_global_variable then
 					if not is_redundant_variable then
-						principal_stylesheet.allocate_slot_number
-						internal_slot_number := principal_stylesheet.number_of_variables
+						principal_stylesheet.allocate_global_slot (variable_name)
+						internal_slot_number := principal_stylesheet.executable.global_slot_manager.number_of_variables
 					end
 				else
-					a_procedure := owning_procedure
-					if a_procedure = Void then
+					check_within_template
+					a_slot_manager := slot_manager -- saved, so we can restore the invariant if necessary
+					slot_manager := containing_slot_manager
+					if slot_manager = Void then
+						slot_manager := a_slot_manager -- to restore the invariant
 						create an_error.make_from_string ("Local variable must be declared within a template or function", "", "XT0010", Static_error)
 						report_compile_error (an_error)
 					else
-						a_procedure.allocate_slot_number
-						internal_slot_number := a_procedure.number_of_variables
+						slot_manager.allocate_slot_number (variable_name)
+						internal_slot_number := slot_manager.number_of_variables
 					end
 				end
 			end
@@ -160,6 +177,7 @@ feature {NONE} -- Implementation
 invariant
 
 	references: references /= Void
+	instruction: is_instruction
 
 end
 

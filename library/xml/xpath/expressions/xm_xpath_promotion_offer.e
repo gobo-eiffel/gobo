@@ -46,10 +46,10 @@ feature {NONE} -- Initialization
 			binding_expression := a_binding
 			containing_expression := containing
 			must_eliminate_duplicates := eliminate
-			promote_document_dependent := dependent
+			may_promote_document_dependent := dependent
 		ensure
 			eliminate_duplicates_set: must_eliminate_duplicates = eliminate
-			promote_document_dependent_set: promote_document_dependent = dependent
+			may_promote_document_dependent_set: may_promote_document_dependent = dependent
 			action_set: action = a_requested_action
 			binding_set: binding_expression = a_binding
 			containing_set: containing_expression = containing
@@ -73,7 +73,7 @@ feature -- Access
 	
 feature -- Status report
 
-	promote_document_dependent: BOOLEAN
+	may_promote_document_dependent: BOOLEAN
 			-- In the case of `Focus_indpendent', is it safe to promote a subexpression
 			--  that depends on the context document but not on other aspects of the focus?
 			-- This is the case, for example, in a filter expression when it is known that
@@ -86,6 +86,20 @@ feature -- Status report
 			-- For example, as required by the count() function. If `False', the
 			--  nodes can be delivered in any order and duplicates are allowed (for example, as
 			--  required by the boolean() function).
+
+	may_promote_xslt_functions: BOOLEAN
+			-- Is it OK to promote XSLT functions such as current()?
+
+
+feature -- Status setting
+
+	allow_promoting_xslt_functions: BOOLEAN is
+			-- Allow promotion of XSLT functions such as current().
+		do
+			may_promote_xslt_functions := True
+		ensure
+			may_promote_xslt_functions: may_promote_xslt_functions
+		end
 
 feature -- Optimization
 
@@ -101,17 +115,19 @@ feature -- Optimization
 			inspect
 				action
 			when Range_independent then
-				if depends_upon_variable (a_child_expression, binding_expression) then
+				if not a_child_expression.non_creating or else depends_upon_variable (a_child_expression, binding_expression) then
 					accepted_expression := Void
 				else
 					promote (a_child_expression)
 					accepted_expression := promoted_expression
 				end
-			when Focus_independent then
-				if not a_child_expression.depends_upon_focus then
+			when Focus_independent then 
+				if not may_promote_xslt_functions and then a_child_expression.depends_upon_xslt_context then
+					accepted_expression := Void
+				elseif not a_child_expression.depends_upon_focus and then a_child_expression.non_creating then
 					promote (a_child_expression)
 					accepted_expression := promoted_expression
-				elseif promote_document_dependent and not a_child_expression.depends_upon_non_document_focus then
+				elseif may_promote_document_dependent and not a_child_expression.depends_upon_non_document_focus and then a_child_expression.non_creating then
 					promote (a_child_expression)
 					accepted_expression := promoted_expression
 				else

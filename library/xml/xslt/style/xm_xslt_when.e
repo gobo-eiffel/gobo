@@ -111,7 +111,7 @@ feature -- Element change
 	compile (an_executable: XM_XSLT_EXECUTABLE) is
 			-- Compile `Current' to an excutable instruction.
 		do
-			last_generated_instruction := Void
+			last_generated_expression := Void
 		end
 
 feature {XM_XSLT_STYLE_ELEMENT} -- Restricted

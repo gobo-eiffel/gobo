@@ -16,7 +16,7 @@ inherit
 
 	XM_XSLT_STYLE_ELEMENT
 		redefine
-			make_style_element, validate, returned_item_type, may_contain_sequence_constructor
+			make_style_element, validate, returned_item_type, may_contain_sequence_constructor, is_permitted_child
 		end
 
 creation {XM_XSLT_NODE_FACTORY}
@@ -42,6 +42,15 @@ feature -- Status report
 			Result := True
 		end
 
+	is_permitted_child (a_style_element: XM_XSLT_STYLE_ELEMENT): BOOLEAN is
+			-- Is `a_style_element' a permitted child of `Current'?
+		local
+			a_sort: XM_XSLT_SORT
+		do
+			a_sort ?= a_style_element
+			Result := a_sort /= Void
+		end
+		
 feature -- Element change
 
 	prepare_attributes is
@@ -83,6 +92,7 @@ feature -- Element change
 			-- Check that the stylesheet element is valid.
 		do
 			check_within_template
+			check_sort_comes_first (False)
 			if select_expression.is_error then
 				report_compile_error (select_expression.error_value)
 			else
@@ -99,14 +109,17 @@ feature -- Element change
 		local
 			a_sort_key_list: DS_ARRAYED_LIST [XM_XSLT_SORT_KEY_DEFINITION]
 			a_sorted_sequence: XM_XPATH_EXPRESSION
+			a_content: XM_XPATH_EXPRESSION
 		do
 			a_sorted_sequence := select_expression
 			a_sort_key_list := sort_keys
 			if a_sort_key_list.count > 0 then
 				create {XM_XSLT_SORT_EXPRESSION} a_sorted_sequence.make (select_expression, a_sort_key_list)
-			end			
-			create {XM_XSLT_COMPILED_FOR_EACH} last_generated_instruction.make (an_executable, a_sorted_sequence)
-			compile_children (an_executable, last_generated_instruction)
+			end
+			compile_sequence_constructor (an_executable, new_axis_iterator (Child_axis), True)
+			a_content := last_generated_expression
+			if a_content = Void then create {XM_XPATH_EMPTY_SEQUENCE} a_content.make end 
+			create {XM_XSLT_COMPILED_FOR_EACH} last_generated_expression.make (an_executable, a_sorted_sequence, a_content)
 		end
 
 feature {XM_XSLT_STYLE_ELEMENT} -- Restricted

@@ -21,6 +21,7 @@ feature -- Access
 	Instruction_role: INTEGER is 5
 	Function_result_role: INTEGER is 6
 	Order_by_role: INTEGER is 7
-	
+	Template_result_role: INTEGER is 8
+
 end
 

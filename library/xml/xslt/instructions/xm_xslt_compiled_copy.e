@@ -17,7 +17,7 @@ inherit
 
 	XM_XSLT_ELEMENT_CONSTRUCTOR
 		redefine
-			xpath_expressions, process_leaving_tail
+			evaluate_item, process_leaving_tail
 		end
 
 creation
@@ -26,24 +26,31 @@ creation
 
 feature {NONE} -- Initialization
 
-	make (an_executable: XM_XSLT_EXECUTABLE; some_attribute_sets: DS_ARRAYED_LIST [XM_XSLT_COMPILED_ATTRIBUTE_SET]; a_copy_namespaces: BOOLEAN; a_simple_type: XM_XPATH_SCHEMA_TYPE; a_validation_action: INTEGER) is
+	make (an_executable: XM_XSLT_EXECUTABLE; a_content: XM_XPATH_EXPRESSION; some_attribute_sets: DS_ARRAYED_LIST [XM_XSLT_COMPILED_ATTRIBUTE_SET];
+			a_copy_namespaces: BOOLEAN; an_inherit_namespaces: BOOLEAN; a_schema_type: XM_XPATH_SCHEMA_TYPE; a_validation_action: INTEGER) is
 			-- Establish invariant.
 		require
 			executable_not_void: an_executable /= Void
+			content_not_void: a_content /= Void
 		do
 			executable := an_executable
-			create children.make (0)
-			make_expression_instruction
+			content := a_content
+			adopt_child_expression (content)
 			attribute_sets := some_attribute_sets
 			validation_action := a_validation_action
-			type := a_simple_type
+			type := a_schema_type
 			is_copy_namespaces := a_copy_namespaces
+			is_inherit_namespaces := an_inherit_namespaces
+			compute_static_properties
+			initialize
 		ensure
 			executable_set: executable = an_executable
+			content_set: content = a_content
 			attribute_sets_set: attribute_sets = some_attribute_sets
 			validation_action_set: validation_action = a_validation_action
-			type_set: type = a_simple_type
+			type_set: type = a_schema_type
 			is_copy_namespaces_set: is_copy_namespaces = a_copy_namespaces
+			is_inherit_namespaces_set: is_inherit_namespaces = an_inherit_namespaces
 		end
 
 feature -- Access
@@ -51,7 +58,7 @@ feature -- Access
 	instruction_name: STRING is
 			-- Name of instruction, for diagnostics
 		do
-			Result := "copy"
+			Result := "xsl:copy"
 		end
 
 	name_code (a_context: XM_XSLT_EVALUATION_CONTEXT): INTEGER is
@@ -71,24 +78,42 @@ feature -- Status report
 	display (a_level: INTEGER) is
 			-- Diagnostic print of expression structure to `std.error'
 		do
-			-- not used
+			std.error.put_string ("copy%N")
 		end
 
 feature -- Evaluation
-	
+
+	evaluate_item (a_context: XM_XPATH_CONTEXT) is
+			-- Evaluate as a single item.
+		local
+			a_new_context: XM_XPATH_CONTEXT
+			an_outputter: XM_XSLT_SEQUENCE_OUTPUTTER
+		do
+			a_new_context := a_context.new_minor_context
+			create an_outputter.make_with_size (1)
+			a_new_context.change_to_sequence_output_destination (an_outputter)
+			an_outputter.start_document
+			an_outputter.start_document
+			process (a_new_context)
+			an_outputter.end_document
+			last_evaluated_item := an_outputter.first_item
+		end
+
 	process_leaving_tail (a_context: XM_XSLT_EVALUATION_CONTEXT) is
 			-- Execute `Current', writing results to the current `XM_XPATH_RECEIVER'.
 		local
 			a_transformer: XM_XSLT_TRANSFORMER
-			a_receiver: XM_XSLT_SEQUENCE_RECEIVER
+			a_receiver: XM_XPATH_SEQUENCE_RECEIVER
 			an_item: XM_XPATH_ITEM
 			a_node: XM_XPATH_NODE
 			a_document: XM_XPATH_DOCUMENT
+			a_new_context: XM_XSLT_EVALUATION_CONTEXT
 		do
 			last_tail_call := Void
 			a_transformer := a_context.transformer
-			a_receiver := a_transformer.current_receiver
-			an_item := a_transformer.current_item
+			a_new_context := a_context.new_minor_context
+			a_receiver := a_new_context.current_receiver
+			an_item := a_new_context.context_item
 			a_node ?= an_item
 			if a_node = Void then
 				a_receiver.append_item (an_item)
@@ -96,9 +121,9 @@ feature -- Evaluation
 				inspect
 					a_node.node_type
 				when Element_node then
-					Precursor (a_context)
+					Precursor (a_new_context)
 				when Attribute_node then
-					copy_attribute (a_node, a_transformer, Void, Validation_strip)
+					copy_attribute (a_node, a_new_context, Void, Validation_strip)
 				when Text_node then
 					a_receiver.notify_characters (a_node.string_value, 0)
 				when Processing_instruction_node then
@@ -109,7 +134,7 @@ feature -- Evaluation
 					a_node.copy_node (a_receiver, No_namespaces, False)
 				when Document_node then
 					a_document ?= a_node
-					copy_document (a_document, a_context, a_transformer, a_receiver)
+					copy_document (a_document, a_new_context, a_transformer, a_receiver)
 				end
 			end
 		end
@@ -130,28 +155,18 @@ feature {XM_XSLT_ELEMENT_CREATOR} -- Local
 			end
 		end
 
-feature {XM_XSLT_EXPRESSION_INSTRUCTION} -- Local
-
-	xpath_expressions (an_instruction_list: DS_ARRAYED_LIST [XM_XSLT_EXPRESSION_INSTRUCTION]): DS_ARRAYED_LIST [XM_XPATH_EXPRESSION] is
-			-- All the XPath expressions associated with this instruction
-		do
-			create Result.make (0)
-			Result.set_equality_tester (expression_tester)
-		end
-
 feature {NONE} -- Implementation
 	
 	is_copy_namespaces: BOOLEAN
 			-- Are namespaces to be copied to the output?
 
-	copy_document (a_document: XM_XPATH_DOCUMENT; a_context: XM_XSLT_EVALUATION_CONTEXT; a_transformer: XM_XSLT_TRANSFORMER; a_receiver: XM_XSLT_SEQUENCE_RECEIVER) is
+	copy_document (a_document: XM_XPATH_DOCUMENT; a_context: XM_XSLT_EVALUATION_CONTEXT; a_transformer: XM_XSLT_TRANSFORMER; a_receiver: XM_XPATH_SEQUENCE_RECEIVER) is
 			-- Copy an entire document.
 		require
 			document_node: a_document /= Void
 			transformer_not_void: a_transformer /= Void
 			receiver_not_void: a_receiver /= Void
 		local
-			a_saved_receiver: XM_XSLT_SEQUENCE_RECEIVER
 			a_validator: XM_XPATH_RECEIVER
 		do
 
@@ -163,10 +178,9 @@ feature {NONE} -- Implementation
 			if a_validator /= a_receiver then
 				todo ("copy_document (validation)", True)
 			end
-			process_children (a_context)
-			if a_saved_receiver /= Void then
-				a_transformer.set_receiver (a_saved_receiver)
-			end
+			a_receiver.start_document
+			content.process (a_context)
+			a_receiver.end_document
 		end
 
 end

@@ -63,6 +63,14 @@ feature -- Access
 			Result := -1
 		end
 
+feature -- Status report
+
+		is_global: BOOLEAN is
+			-- Is binding global or local?
+		do
+			Result := True
+		end
+
 feature -- Evaluation
 
 		evaluate_variable (a_context: XM_XPATH_CONTEXT) is

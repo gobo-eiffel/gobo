@@ -18,13 +18,12 @@ creation
 
 feature {NONE} -- Initialization
 
-	make (a_configuration: XM_XSLT_CONFIGURATION; a_rule_manager: XM_XSLT_RULE_MANAGER; a_key_manager: XM_XSLT_KEY_MANAGER;
+	make (a_rule_manager: XM_XSLT_RULE_MANAGER; a_key_manager: XM_XSLT_KEY_MANAGER;
 			a_decimal_format_manager: XM_XSLT_DECIMAL_FORMAT_MANAGER;
-			a_collation_map: DS_HASH_TABLE [ST_COLLATOR, STRING]; strips_whitespace: BOOLEAN;
+			a_collation_map: DS_HASH_TABLE [ST_COLLATOR, STRING];
 			a_module_list: DS_ARRAYED_LIST [STRING]; a_function_library: XM_XPATH_FUNCTION_LIBRARY_MANAGER) is
 			-- Establish invariant.
 		require
-			configuration_not_void: a_configuration /= Void
 			rule_manager_not_void: a_rule_manager /= Void
 			key_manager_not_void: a_key_manager /= Void
 			decimal_format_manager: a_decimal_format_manager /= Void
@@ -32,22 +31,19 @@ feature {NONE} -- Initialization
 			module_list_not_void: a_module_list /= Void
 			function_library_not_void: a_function_library /= Void
 		do
-			configuration := a_configuration
 			rule_manager := a_rule_manager
 			key_manager := a_key_manager
 			decimal_format_manager := a_decimal_format_manager
 			collation_map := a_collation_map
-			is_strips_whitespace := strips_whitespace
 			module_list := a_module_list
 			function_library := a_function_library
 			create character_map_index.make_default
+			create global_slot_manager.make
 		ensure
-			configuration_set: configuration = a_configuration
 			rule_manager_set: rule_manager = a_rule_manager
 			key_manager_set: key_manager = a_key_manager
 			decimal_format_manager_set: decimal_format_manager = a_decimal_format_manager
 			collation_map_set: collation_map = a_collation_map
-			strips_whitespace_set: is_strips_whitespace = strips_whitespace
 			module_list_set: module_list = a_module_list
 			function_library_set: function_library = a_function_library
 			slots_not_yet_allocated: not are_slots_allocated
@@ -55,8 +51,8 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	configuration: XM_XSLT_CONFIGURATION
-			-- User configuration options
+	global_slot_manager: XM_XPATH_SLOT_MANAGER
+			-- Slot manager for global variables
 
 	function_library: XM_XPATH_FUNCTION_LIBRARY_MANAGER
 			-- Function library
@@ -82,6 +78,9 @@ feature -- Access
 	static_context: XM_XSLT_EXPRESSION_CONTEXT
 			-- Static context of principal stylesheet
 
+	largest_pattern_stack_frame: INTEGER
+			-- Maximum local variable count within a pattern
+
 	system_id (a_module_number: INTEGER): STRING is
 			-- SYSTEM id for stylesheet module `a_module_number'
 		require
@@ -106,6 +105,16 @@ feature -- Status report
 	are_slots_allocated: BOOLEAN
 			-- Have variable slots been allocated yet?
 
+feature -- Status setting
+
+	set_whitespace_stripping (a_status: BOOLEAN) is
+			-- Set whitespace stripping status.
+		do
+			is_strips_whitespace := a_status
+		ensure
+			set: is_strips_whitespace = a_status
+		end
+			
 feature -- Creation
 
 	new_stripper (a_transformer: XM_XSLT_TRANSFORMER; a_builder: XM_XPATH_BUILDER): XM_XSLT_STRIPPER is
@@ -124,7 +133,7 @@ feature -- Creation
 		require
 			slots_allocated: are_slots_allocated
 		do
-			create Result.make (number_of_global_variables, largest_stack_frame)
+			create Result.make (global_slot_manager.number_of_variables)
 		ensure
 			bindery_not_void: Result /= Void
 		end
@@ -151,18 +160,16 @@ feature -- Element change
 			map_set: compiled_templates_index = a_compiled_templates_index
 		end
 
-	set_slot_space (a_global_slot_count, a_local_slot_count: INTEGER) is
-			-- Set space requirements for variables
+	set_pattern_slot_space (a_pattern_slot_count: INTEGER) is
+			-- Set space requirements for pattern variables
 		require
-			positive_global_slot_count: a_global_slot_count >= 0
-			positive_local_slot_count: a_local_slot_count >= 0
+			positive_pattern_slot_count: a_pattern_slot_count >= 0
 			slots_not_yet_allocated: not are_slots_allocated
 		do
-			number_of_global_variables := a_global_slot_count
-			largest_stack_frame := a_local_slot_count
+			largest_pattern_stack_frame := a_pattern_slot_count
 			are_slots_allocated := True
 		ensure
-			slots_allocated: are_slots_allocated
+			slots_allocated: are_slots_allocated and then largest_pattern_stack_frame = a_pattern_slot_count
 		end
 
 	set_default_output_properties (a_property_set: XM_XSLT_OUTPUT_PROPERTIES) is
@@ -204,18 +211,11 @@ feature {NONE} -- Implementation
 	stripper_rules: XM_XSLT_MODE
 			-- Whitespace stripping rules
 
-	number_of_global_variables: INTEGER
-			-- Global variable count
-
-	largest_stack_frame: INTEGER
-			-- Maximum local variable count
-
 	module_list: DS_ARRAYED_LIST [STRING]
 			-- SYSTEM ids indexed by module number
 
 invariant
 
-	configuration_not_void: configuration /= Void
 	rule_manager_not_void: rule_manager /= Void
 	key_manager_not_void: key_manager /= Void
 	decimal_format_manager: decimal_format_manager /= Void

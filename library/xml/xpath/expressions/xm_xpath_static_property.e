@@ -85,19 +85,36 @@ feature -- Dependencies
 		end
 
 	depends_upon_current_group: BOOLEAN is
-		-- Expression depends upon current-group() and/or current-grouping-key() and/or regex-group() 
+		-- Expression depends upon current-group() and/or current-grouping-key()
 		require
 			dependencies_computed: are_dependencies_computed
 		do
 			Result := dependencies.item (6)
 		end
 	
+	depends_upon_regexp_group: BOOLEAN is
+		-- Expression depends upon regexp-group() 
+		require
+			dependencies_computed: are_dependencies_computed
+		do
+			Result := dependencies.item (7)
+		end
+
+	depends_upon_local_variables: BOOLEAN is
+		-- Expression depends upon local variables
+		require
+			dependencies_computed: are_dependencies_computed
+		do
+			Result := dependencies.item (8)
+		end
+	
+
 	depends_upon_xslt_context: BOOLEAN is
 			-- Expression depends upon the XSLT context
 		require
 			dependencies_computed: are_dependencies_computed
 		do
-			Result := depends_upon_current_item or else depends_upon_current_group
+			Result := depends_upon_current_item or else depends_upon_current_group or else depends_upon_regexp_group
 		end
 
 	depends_upon_focus: BOOLEAN is
@@ -121,38 +138,6 @@ feature -- Dependencies
 				or else depends_upon_last
 		end
 
-	print_dependencies is
-			-- Debugging routtine.
-		do
-			std.error.put_string ("Dependencies:%N")
-			if	depends_upon_current_item then
-				std.error.put_string ("Expression dependes upon current item.%N")
-			end
-			if	depends_upon_context_item then
-				std.error.put_string ("Expression dependes upon context item.%N")
-			end
-			if	depends_upon_position then
-				std.error.put_string ("Expression dependes upon position.%N")
-			end
-			if	depends_upon_last then
-				std.error.put_string ("Expression dependes upon last.%N")
-			end
-			if	depends_upon_context_document then
-				std.error.put_string ("Expression dependes upon context document.%N")
-			end
-			if	depends_upon_current_group then
-				std.error.put_string ("Expression dependes upon current group.%N")
-			end
-			if	depends_upon_xslt_context then
-				std.error.put_string ("Expression dependes upon XSLT context.%N")
-			end
-			if	depends_upon_focus then
-				std.error.put_string ("Expression dependes upon focus.%N")
-			end
-			if	depends_upon_non_document_focus then
-				std.error.put_string ("Expression dependes upon non-document focus.%N")
-			end
-		end
 feature -- Setting dependencies
 
 	initialize_dependencies is
@@ -161,7 +146,7 @@ feature -- Setting dependencies
 			dependencies_not_computed: not are_dependencies_computed
 		do
 			are_dependencies_computed := True
-			create dependencies.make (1,6)
+			create dependencies.make (1, 8)
 		ensure
 			dependencies_computed: are_dependencies_computed
 		end
@@ -172,7 +157,7 @@ feature -- Setting dependencies
 			intrinsic_dependencies_not_computed: not are_intrinsic_dependencies_computed
 		do
 			are_intrinsic_dependencies_computed := True
-			create intrinsic_dependencies.make (1,6)
+			create intrinsic_dependencies.make (1,8)
 		ensure
 			intrinsic_dependencies_computed: are_intrinsic_dependencies_computed
 		end
@@ -180,7 +165,7 @@ feature -- Setting dependencies
 	set_dependencies (a_dep: ARRAY [BOOLEAN]) is
 			-- Set all dependencies from `a_dep'.
 		require
-			dependencies_not_void: a_dep /= Void and then a_dep.count = 6
+			dependencies_not_void: a_dep /= Void and then a_dep.count = 8
 		do
 			dependencies := a_dep
 			are_dependencies_computed := True
@@ -192,7 +177,7 @@ feature -- Setting dependencies
 	merge_dependencies (a_dep: ARRAY [BOOLEAN]) is
 		-- Merge all dependencies from `a_dep' into current.
 		require
-			dependencies_not_void: a_dep /= Void and then a_dep.count = 6
+			dependencies_not_void: a_dep /= Void and then a_dep.count = 8
 			dependencies_computed: are_dependencies_computed
 		local
 			an_index: INTEGER
@@ -200,9 +185,9 @@ feature -- Setting dependencies
 			from
 				an_index := 1
 			variant
-				7 - an_index
+				9 - an_index
 			until
-				an_index > 6
+				an_index > 8
 			loop
 				if a_dep.item (an_index) then
 					dependencies.put (True, an_index)
@@ -216,7 +201,7 @@ feature -- Setting dependencies
 		do
 			if not are_dependencies_computed then
 				are_dependencies_computed := True
-				create dependencies.make (1,6)
+				create dependencies.make (1, 8)
 			end
 			dependencies.put (True, 1)
 		ensure
@@ -228,7 +213,7 @@ feature -- Setting dependencies
 		do
 			if not are_intrinsic_dependencies_computed then
 				are_intrinsic_dependencies_computed := True
-				create intrinsic_dependencies.make (1,6)
+				create intrinsic_dependencies.make (1, 8)
 			end
 			intrinsic_dependencies.put (True, 1)
 		ensure
@@ -240,11 +225,21 @@ feature -- Setting dependencies
 		do
 			if not are_dependencies_computed then
 				are_dependencies_computed := True
-				create dependencies.make (1,6)
+				create dependencies.make (1, 8)
 			end
 			dependencies.put (True, 2)
 		ensure
 			dependencies_computed: are_dependencies_computed
+		end
+
+	set_context_item_independent is
+			-- Set expression to be independent of context item.
+		require
+			dependencies_computed: are_dependencies_computed
+		do
+			dependencies.put (False, 2)
+		ensure
+			context_item_independent: not depends_upon_context_item
 		end
 
 	set_intrinsically_depends_upon_context_item is
@@ -252,7 +247,7 @@ feature -- Setting dependencies
 		do
 			if not are_intrinsic_dependencies_computed then
 				are_intrinsic_dependencies_computed := True
-				create intrinsic_dependencies.make (1,6)
+				create intrinsic_dependencies.make (1, 8)
 			end
 			intrinsic_dependencies.put (True, 2)
 		ensure
@@ -264,19 +259,29 @@ feature -- Setting dependencies
 		do
 			if not are_dependencies_computed then
 				are_dependencies_computed := True
-				create dependencies.make (1,6)
+				create dependencies.make (1, 8)
 			end
 			dependencies.put (True, 3)
 		ensure
 			dependencies_computed: are_dependencies_computed
 		end
 
+	set_position_independent is
+			-- Set expression to be independent of context position.
+		require
+			dependencies_computed: are_dependencies_computed
+		do
+			dependencies.put (False, 3)
+		ensure
+			context_item_independent: not depends_upon_position
+		end
+	
 	set_intrinsically_depends_upon_position is
 			-- Set expression to depend upon context position.
 		do
 			if not are_intrinsic_dependencies_computed then
 				are_intrinsic_dependencies_computed := True
-				create intrinsic_dependencies.make (1,6)
+				create intrinsic_dependencies.make (1, 8)
 			end
 			intrinsic_dependencies.put (True, 3)
 		ensure
@@ -288,7 +293,7 @@ feature -- Setting dependencies
 		do
 			if not are_dependencies_computed then
 				are_dependencies_computed := True
-				create dependencies.make (1,6)
+				create dependencies.make (1, 8)
 			end
 			dependencies.put (True, 4)
 		ensure
@@ -300,11 +305,21 @@ feature -- Setting dependencies
 		do
 			if not are_intrinsic_dependencies_computed then
 				are_intrinsic_dependencies_computed := True
-				create intrinsic_dependencies.make (1,6)
+				create intrinsic_dependencies.make (1, 8)
 			end
 			intrinsic_dependencies.put (True, 4)
 		ensure
 			intrinsic_dependencies_computed: are_intrinsic_dependencies_computed
+		end
+
+	set_last_independent is
+			-- Set expression to be independent of last.
+		require
+			dependencies_computed: are_dependencies_computed
+		do
+			dependencies.put (False, 4)
+		ensure
+			context_item_independent: not depends_upon_last
 		end
 
 	set_depends_upon_context_document is
@@ -312,7 +327,7 @@ feature -- Setting dependencies
 		do
 			if not are_dependencies_computed then
 				are_dependencies_computed := True
-				create dependencies.make (1,6)
+				create dependencies.make (1, 8)
 			end
 			dependencies.put (True, 5)
 		ensure
@@ -324,19 +339,29 @@ feature -- Setting dependencies
 		do
 			if not are_intrinsic_dependencies_computed then
 				are_intrinsic_dependencies_computed := True
-				create intrinsic_dependencies.make (1,6)
+				create intrinsic_dependencies.make (1, 8)
 			end
 			intrinsic_dependencies.put (True, 5)
 		ensure
 			intrinsic_dependencies_computed: are_intrinsic_dependencies_computed
 		end
 
+	set_context_document_independent is
+			-- Set expression to be independent of context document.
+		require
+			dependencies_computed: are_dependencies_computed
+		do
+			dependencies.put (False, 5)
+		ensure
+			context_item_independent: not depends_upon_context_document
+		end
+			
 	set_depends_upon_current_group is
 			-- Set expression to depend upon current-group() and/or current-grouping-key() and/or regex-group().
 		do
 			if not are_dependencies_computed then
 				are_dependencies_computed := True
-				create dependencies.make (1,6)
+				create dependencies.make (1, 8)
 			end
 			dependencies.put (True, 6)
 		ensure
@@ -348,11 +373,77 @@ feature -- Setting dependencies
 		do
 			if not are_intrinsic_dependencies_computed then
 				are_intrinsic_dependencies_computed := True
-				create intrinsic_dependencies.make (1,6)
+				create intrinsic_dependencies.make (1, 8)
 			end
 			intrinsic_dependencies.put (True, 6)
 		ensure
 			intrinsic_dependencies_computed: are_intrinsic_dependencies_computed
+		end
+
+	set_current_group_independent is
+			-- Set expression to be independent of current_group.
+		require
+			dependencies_computed: are_dependencies_computed
+		do
+			dependencies.put (False, 6)
+		ensure
+			context_item_independent: not depends_upon_current_group
+		end
+
+	set_depends_upon_regexp_group is
+			-- Set expression to depend upon regexp-group().
+		do
+			if not are_dependencies_computed then
+				are_dependencies_computed := True
+				create dependencies.make (1, 8)
+			end
+			dependencies.put (True, 7)
+		ensure
+			dependencies_computed: are_dependencies_computed
+		end
+
+	set_intrinsically_depends_upon_expression_group is
+			-- Set expression to depend upon regexp-group().
+		do
+			if not are_intrinsic_dependencies_computed then
+				are_intrinsic_dependencies_computed := True
+				create intrinsic_dependencies.make (1, 8)
+			end
+			intrinsic_dependencies.put (True, 7)
+		ensure
+			intrinsic_dependencies_computed: are_intrinsic_dependencies_computed
+		end
+
+	set_depends_upon_local_variables is
+			-- Set expression to depend upon local variables.
+		do
+			if not are_dependencies_computed then
+				are_dependencies_computed := True
+				create dependencies.make (1, 8)
+			end
+			dependencies.put (True, 8)
+		ensure
+			dependencies_computed: are_dependencies_computed
+		end
+
+	set_intrinsically_depends_upon_local_variables is
+			-- Set expression to depend upon local variables.
+		do
+			if not are_intrinsic_dependencies_computed then
+				are_intrinsic_dependencies_computed := True
+				create intrinsic_dependencies.make (1, 8)
+			end
+			intrinsic_dependencies.put (True, 8)
+		ensure
+			intrinsic_dependencies_computed: are_intrinsic_dependencies_computed
+		end
+
+	set_depends_upon_xslt_context is
+			-- Set expression to depend upon XSLT context.
+		do
+				set_depends_upon_current_group
+				set_depends_upon_current_group
+				set_depends_upon_regexp_group
 		end
 
 feature -- Cardinality
@@ -697,18 +788,29 @@ feature -- Special properties
 			Result := special_properties.item (6)
 		end
 
-	creates_nodes: BOOLEAN is
-			-- Expression property: this is 1True' in the case of an expression that
-			--  may return newly created nodes, or a value that depends on the identity
-			--  of newly created nodes (for example generate-id(new-node())).
-			-- Such expressions cannot be moved out of loops unless they are used in a context where the
-			--  identity of the nodes is known to be immaterial, e.g. if the nodes are
-			--  immediately atomized.
+	non_creating: BOOLEAN is
+			-- Expression property: this is `True' in the case of an expression that
+			--  will never return newly created nodes, nor a value that depends on the identity
+			--  of newly created nodes (for example generate-id(new-node())). Expressions
+			--  that do create new nodes cannot be moved out of loops as this could cause
+			--  too few nodes to be created: for example if f() creates a new node, then
+			--  count(for $i in 1 to 5 return f()) must be 5.
 		require
 			special_properties_computed: are_special_properties_computed
 		do
-			Result := special_properties.item (6)
+			Result := special_properties.item (7)
 		end
+
+	single_document_nodeset: BOOLEAN is
+			-- Expression property: this is `True' in the case of an expression that delivers
+			--  a set of nodes that are all in the same document (not necessarily the same
+			--  document as the context node).
+		require
+			special_properties_computed: are_special_properties_computed
+		do
+			Result := special_properties.item (8)
+		end
+
 
 feature -- Setting special properties
 
@@ -717,7 +819,7 @@ feature -- Setting special properties
 		require
 			special_properties_not_computed: not are_special_properties_computed
 		do
-			create special_properties.make (1, 7)
+			create special_properties.make (1, 8)
 			are_special_properties_computed := True
 		ensure
 			special_properties_computed: are_special_properties_computed
@@ -757,7 +859,7 @@ feature -- Setting special properties
 
 	set_special_properties (properties: ARRAY [BOOLEAN]) is
 		require
-			properties_not_void: properties /= Void and then properties.count = 7
+			properties_not_void: properties /= Void and then properties.count = 8
 		do
 			special_properties := properties
 			are_special_properties_computed := True
@@ -850,21 +952,41 @@ feature -- Setting special properties
 			attribute_ns_nodeset: attribute_ns_nodeset
 		end
 
-	set_creates_nodes is
-			-- Mark `Current' as creating new nodes.
+	set_non_creating is
+			-- Mark `Current' as never creating new nodes.
 		require
 			special_properties_computed: are_special_properties_computed
 		do
 			special_properties.put (True, 7)
 		ensure
-			creates_nodes: creates_nodes
+			non_creating: non_creating
 		end
-	
+
+	set_creating is
+			-- Re-mark `Current' as possibly creating new nodes.
+		require
+			special_properties_computed: are_special_properties_computed
+		do
+			special_properties.put (False, 7)
+		ensure
+			creating: not non_creating
+		end
+
+	set_single_document_nodeset is
+			-- Mark `Current' as a nodeset all contained by a single document.
+		require
+			special_properties_computed: are_special_properties_computed
+		do
+			special_properties.put (True, 8)
+		ensure
+			single_document_nodeset: single_document_nodeset
+		end
+
 invariant
 
-	special_properties: are_special_properties_computed implies special_properties /= Void and then special_properties.count = 7
-	intrinsic_dependencies: are_intrinsic_dependencies_computed implies intrinsic_dependencies /= Void and then intrinsic_dependencies.count = 6
-	dependencies: are_dependencies_computed implies dependencies /= Void and then dependencies.count = 6
+	special_properties: are_special_properties_computed implies special_properties /= Void and then special_properties.count = 8
+	intrinsic_dependencies: are_intrinsic_dependencies_computed implies intrinsic_dependencies /= Void and then intrinsic_dependencies.count = 8
+	dependencies: are_dependencies_computed implies dependencies /= Void and then dependencies.count = 8
 	cardinalities: are_cardinalities_computed implies cardinalities /= Void and then cardinalities.count = 3
 	
 end

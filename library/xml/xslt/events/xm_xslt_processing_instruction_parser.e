@@ -32,6 +32,11 @@ inherit
 
 	UC_SHARED_STRING_EQUALITY_TESTER
 
+		-- This filter is designed to extract xml-stylesheet PI's from an XML source file.
+		-- When the document element is found, parsing is terminated early. The document
+		--  will have to be parsed again, later, without this filter, once the
+		--  stylesheet has been compiled.
+
 creation
 
 	make

@@ -92,14 +92,14 @@ feature -- Element change
 	validate is
 			-- Check that the stylesheet element is valid.
 		do
-			check_top_level
+			check_top_level (Void)
 			validated := True
 		end
 
 	compile (an_executable: XM_XSLT_EXECUTABLE) is
 			-- Compile `Current' to an excutable instruction.
 		do
-			last_generated_instruction := Void
+			last_generated_expression := Void
 		end
 
 end

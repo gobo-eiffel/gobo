@@ -11,7 +11,7 @@
 <xsl:template name="first">
   <saxon:call-template name="{$fred}">
     <xsl:fallback>
-  <xsl:value-of select="'OK'" />
+      <xsl:value-of select="'OK'" />
     </xsl:fallback>
   </saxon:call-template>
 </xsl:template>

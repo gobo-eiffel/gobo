@@ -30,15 +30,12 @@ feature {NONE} -- Initialization
 		require
 			context_item_not_void: a_context_item /= Void
 		do
-			reserved_slot_count := 0
 			create internal_date_time.make_from_epoch (0)
 			utc_system_clock.set_date_time_to_now (internal_date_time)
 			cached_last := -1
 			create {XM_XPATH_SINGLETON_ITERATOR [XM_XPATH_ITEM]} current_iterator.make (a_context_item)
 			current_iterator.start
-			create local_variable_frame.make (1, 50)
 		ensure
-			reserved_slot_count_zero: reserved_slot_count = 0
 			context_item_set: current_iterator /= Void and then current_iterator.item = a_context_item
 		end
 
@@ -47,16 +44,20 @@ feature -- Access
 	current_iterator: XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_ITEM]
 			-- Current iterator
 
-	local_variable_frame: ARRAY [XM_XSLT_STACK_FRAME_ENTRY]
-			-- Local variables in scope
+	current_receiver: XM_XPATH_SEQUENCE_RECEIVER
+			-- Receiver to which output is currently being written.
 
-	reserved_slot_count: INTEGER
-			-- Slots reserved by host language
+	local_variable_frame: XM_XPATH_STACK_FRAME is
+			-- Local variables in scope
+		deferred
+		end
 
 	next_available_slot: INTEGER is
 			-- Next available local variable slot
+		require
+			local_variables_frame_not_void: local_variable_frame /= Void
 		do
-			Result := local_variable_frame.count - reserved_slot_count + 1
+			Result := local_variable_frame.slot_manager.number_of_variables + 1
 		ensure
 			strictly_positive_result: Result > 0
 		end
@@ -177,6 +178,19 @@ feature -- Status report
 	is_restricted: BOOLEAN
 			-- Is this a restricted context (for use with xsl:use-when)?
 
+	is_temporary_destination: BOOLEAN
+			-- Is `current_receiver' a temporary tree?
+
+	has_push_processing: BOOLEAN is
+			-- Is push-processing to a sequence receiver implemented?
+		deferred
+		end
+
+	is_minor: BOOLEAN is
+			-- Is `Current' limited in what it may change?
+		deferred
+		end
+
 	is_known_collation (a_collation_name: STRING): BOOLEAN is
 			-- Is `a_collation_name' a statically know collation?
 		require
@@ -195,8 +209,10 @@ feature -- Status report
 
 	is_valid_local_variable (a_slot_number: INTEGER): BOOLEAN is
 			-- Is a_slot_number a valid local variable index?
+		require
+			local_variables_frame_not_void: local_variable_frame /= Void
 		do
-			Result := a_slot_number > 0 and then a_slot_number <= local_variable_frame.count - reserved_slot_count
+			Result := a_slot_number > 0 and then a_slot_number <= local_variable_frame.variables.count
 		end
 
 	is_at_last: BOOLEAN is
@@ -220,9 +236,30 @@ feature -- Status report
 feature -- Creation
 
 	new_context: like Current is
-			-- Create a copy of `Current'
+			-- Created copy of `Current'.
 		do
+
+			-- Default implementation for non-minor contexts
+
 			Result := clone (Current)
+		ensure
+			major_context: Result /= Void and then not Result.is_minor
+		end
+
+	new_minor_context: like Current is
+			-- Created minor copy of `Current'
+		deferred
+		ensure
+			minor_context: Result /= Void and then Result.is_minor
+		end
+
+	new_clean_context: like Current is
+			-- Created clean context (for XSLT function calls)
+		require
+			push_processing_available: has_push_processing
+		deferred
+		ensure
+			major_context: Result /= Void and then not Result.is_minor
 		end
 
 feature -- Evaluation
@@ -230,15 +267,10 @@ feature -- Evaluation
 	evaluated_local_variable (a_slot_number: INTEGER): XM_XPATH_VALUE is
 			-- Value of a local variable, identified by its slot number
 		require
+			local_variables_frame_not_void: local_variable_frame /= Void
 			valid_local_variable: is_valid_local_variable (a_slot_number)
-		local
-			a_stack_entry: XM_XSLT_STACK_FRAME_ENTRY
 		do
-			a_stack_entry := local_variable_frame.item (a_slot_number + reserved_slot_count)
-			check
-				stack_entry_not_void: a_stack_entry /= Void
-			end
-			Result := a_stack_entry.value
+			Result := local_variable_frame.variables.item (a_slot_number)
 		ensure
 			evaluation_not_void: Result /= Void
 		end
@@ -254,29 +286,73 @@ feature 	-- Element change
 			set: current_iterator = an_iterator
 		end
 
-	set_local_variable (a_slot_number: INTEGER; a_value: XM_XPATH_VALUE) is
-			-- Set the value of a local variable.
-		require
-			valid_local_variable: a_slot_number > 0
-		local
-			a_stack_entry: XM_XSLT_STACK_FRAME_ENTRY
+	set_current_receiver (a_receiver: like current_receiver) is
+			-- Set `current_receiver'.
 		do
-			if local_variable_frame.count < a_slot_number + reserved_slot_count then
-				local_variable_frame.resize (1, 2 * local_variable_frame.count)
-			end
-			create a_stack_entry.make (a_value)
-			local_variable_frame.put (a_stack_entry, a_slot_number + reserved_slot_count)
+			current_receiver := a_receiver
+		ensure
+			set: current_receiver = a_receiver
 		end
 
-	set_local_variable_frame (a_local_variable_frame: ARRAY [XM_XSLT_STACK_FRAME_ENTRY]) is
+	set_temporary_destination (a_status: BOOLEAN) is
+			-- Set `is_temporary_destination'.
+		do
+			is_temporary_destination := a_status
+		ensure
+			set: is_temporary_destination = a_status
+		end
+
+	set_local_variable (a_value: XM_XPATH_VALUE; a_slot_number: INTEGER) is
+			-- Set the value of a local variable.
+		require
+			local_variables_frame_not_void: local_variable_frame /= Void
+			valid_local_variable: a_slot_number > 0
+		do
+			local_variable_frame.set_variable (a_value, a_slot_number)
+		end
+
+	set_stack_frame (a_local_variable_frame: like local_variable_frame) is
 			-- Set stack frame.
 		require
 			local_variable_frame_not_void: a_local_variable_frame /= Void
-		do
-			local_variable_frame := a_local_variable_frame
+			major_context: not is_minor
+		deferred
 		ensure
 			local_variable_frame_set: local_variable_frame = a_local_variable_frame
+			local_variables_frame_not_void: local_variable_frame /= Void
 		end
+
+	open_stack_frame (a_slot_manager: XM_XPATH_SLOT_MANAGER) is
+			-- Set stack frame.
+		require
+			slot_manager_not_void: a_slot_manager /= Void
+			major_context: not is_minor
+		deferred
+		ensure
+			local_variables_frame_not_void: local_variable_frame /= Void
+		end
+
+
+	open_sized_stack_frame (a_slot_count: INTEGER) is
+			-- Set stack frame.
+		require
+			strictly_positive_slot_count: a_slot_count > 0
+		deferred
+		ensure
+			local_variables_frame_not_void: local_variable_frame /= Void
+		end
+
+	set_receiver (a_receiver: XM_XPATH_SEQUENCE_RECEIVER) is
+			-- Set receiver to which output is currently being written.
+		require
+			receiver_not_void: a_receiver /= Void
+			push_processing: 	has_push_processing
+		do
+			current_receiver := a_receiver
+		ensure
+			receiver_set: current_receiver = a_receiver
+		end
+
 
 	build_document (a_uri_reference: STRING) is
 			-- Build a document.
@@ -289,23 +365,44 @@ feature 	-- Element change
 			document_built: not is_build_document_error implies last_parsed_document /= Void
 		end
 
-feature {NONE} -- Implementation
+	change_to_sequence_output_destination (a_receiver: XM_XPATH_SEQUENCE_RECEIVER) is
+			-- Change to a temporary destination
+		require
+			receiver_not_void: a_receiver /= Void
+			push_processing: has_push_processing
+		deferred
+		ensure
+			receiver_set: current_receiver = a_receiver
+			temporary_destination: is_temporary_destination
+		end
+	
+	report_fatal_error (an_error: XM_XPATH_ERROR_VALUE) is
+			-- Report a fatal error.
+		require
+			push_processing: has_push_processing
+		deferred
+		end
 
-	cached_last: INTEGER
+feature {XM_XPATH_CONTEXT} -- Local
+
+		cached_last: INTEGER
 			-- Used by `last'
+
+feature {NONE} -- Implementation
 
 	internal_date_time: like current_date_time
 			-- Used by stand-alone XPath and restricted contexts
 
-		collation_map: DS_HASH_TABLE [ST_COLLATOR, STRING]
+	collation_map: DS_HASH_TABLE [ST_COLLATOR, STRING]
 			-- Collations index by URI
 
 invariant
 
-	reserved_slots: reserved_slot_count >= 0
-	local_variables_frame: local_variable_frame /= Void and then local_variable_frame.count - reserved_slot_count >= 0
 	no_context_position_for_restricted_contexts: is_restricted implies current_iterator = Void
 	collation_map_not_void: collation_map /= Void
+	minor_context: is_minor implies has_push_processing
+	current_receiver: not has_push_processing implies current_receiver = Void
+	temporary_destination:  not has_push_processing implies not is_temporary_destination
 
 end
 

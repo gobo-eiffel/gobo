@@ -14,7 +14,7 @@ deferred class XM_XSLT_OUTPUTTER
 
 inherit
 	
-	XM_XSLT_SEQUENCE_RECEIVER
+	XM_XPATH_SEQUENCE_RECEIVER
 
 feature -- Access
 
@@ -35,7 +35,7 @@ feature -- Events
 		do
 			do_nothing
 		end
-
+	
 feature {NONE} -- Implementation
 
 	previous_atomic: BOOLEAN

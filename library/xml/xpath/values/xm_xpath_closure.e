@@ -16,7 +16,7 @@ inherit
 	
 	XM_XPATH_SEQUENCE_VALUE
 		redefine
-			evaluate_item, display, item_type, is_convertible_to_item, as_item
+			evaluate_item, display, item_type, is_convertible_to_item, as_item, process
 		end
 
 creation {XM_XPATH_EXPRESSION_FACTORY}
@@ -136,6 +136,12 @@ feature -- Evaluation
 			end
 		end
 
+	process (a_context: XM_XPATH_CONTEXT) is
+			-- Execute `Current' completely, writing results to the current `XM_XPATH_RECEIVER'.
+		do
+			todo ("process", False)
+		end
+	
 feature  -- Conversion
 
 	as_item (a_context: XM_XPATH_CONTEXT): XM_XPATH_ITEM is
@@ -164,57 +170,59 @@ feature {NONE} -- Implementation
 	Maximum_closure_nesting_depth: INTEGER is 10
 			-- Maximum depth for nesting closures
 
+	native_implementations: INTEGER is
+			-- Natively-supported evaluation routines
+		do
+			Result := INTEGER_.bit_or (Supports_iterator, Supports_process)
+		end
+
 	save_local_variables (a_context: XM_XPATH_CONTEXT) is			
 			-- Make a copy of all local variables.
 		require
 			context_not_void: a_context /= Void
 		local
-			a_local_variable_frame, a_saved_local_variable_frame: ARRAY [XM_XSLT_STACK_FRAME_ENTRY]
+			a_local_variable_frame, a_saved_local_variable_frame: XM_XPATH_STACK_FRAME
 			an_index, a_depth: INTEGER
 			a_value: XM_XPATH_VALUE
 			a_closure: XM_XPATH_CLOSURE
-			a_value_entry: XM_XSLT_STACK_FRAME_ENTRY
 		do
 			
 			--If the value of any local variable is a closure whose depth
 			--  exceeds a certain threshold, we evaluate the closure eagerly to avoid
 			--  creating deeply nested lists of closures, which consume memory unnecessarily.
 
-			a_local_variable_frame := a_context.local_variable_frame
-			if a_local_variable_frame.count > 0 then
-				from
-					create a_saved_local_variable_frame.make (1, a_local_variable_frame.count)
-					an_index := 1
-				variant
-					a_local_variable_frame.count + 1 - an_index
-				until
-					an_index > a_local_variable_frame.count
-				loop
-					if a_local_variable_frame.item (an_index) /= Void and then a_local_variable_frame.item (an_index).is_value then
-						a_value := a_local_variable_frame.item (an_index).value
+			if base_expression.depends_upon_local_variables then
+				a_local_variable_frame := a_context.local_variable_frame
+				if a_local_variable_frame.variables.count > 0 then
+					from
+						create a_saved_local_variable_frame.make_fixed_size (a_local_variable_frame.variables.count)
+						an_index := 1
+					variant
+						a_local_variable_frame.variables.count + 1 - an_index
+					until
+						an_index > a_local_variable_frame.variables.count
+					loop
+						a_value := a_local_variable_frame.variables.item (an_index)
 						a_closure ?= a_value
 						if a_closure /= Void then
 							a_depth := a_closure.depth
 							if a_depth >= Maximum_closure_nesting_depth then
 								a_closure.eagerly_evaluate (a_context)
 								a_value := a_closure.last_evaluation
-								create a_value_entry.make (a_value)
-								a_saved_local_variable_frame.put (a_value_entry, an_index)
+								a_saved_local_variable_frame.set_variable (a_value, an_index)
 							else
 								if a_depth + 1 > depth then
 									depth := a_depth + 1
 								end
-								a_saved_local_variable_frame.put (a_local_variable_frame.item (an_index), an_index)
+								a_saved_local_variable_frame.set_variable (a_local_variable_frame.variables.item (an_index), an_index)
 							end
 						else
-							a_saved_local_variable_frame.put (a_local_variable_frame.item (an_index), an_index)
+							a_saved_local_variable_frame.set_variable (a_local_variable_frame.variables.item (an_index), an_index)
 						end
-					else
-						a_saved_local_variable_frame.put (a_local_variable_frame.item (an_index), an_index)
+						an_index := an_index + 1
 					end
-					an_index := an_index + 1
+					saved_xpath_context.set_stack_frame (a_saved_local_variable_frame)
 				end
-				saved_xpath_context.set_local_variable_frame (a_saved_local_variable_frame)
 			end
 		end
 

@@ -30,7 +30,7 @@ feature {NONE} -- Initialization
 		a_name_code: INTEGER; a_sequence_number: INTEGER) is
 			-- Establish invariant.
 		do
-			is_instruction := True
+			is_instruction := True; is_copy_namespaces := True; is_inherit_namespaces := True
 			Precursor (an_error_listener, a_document, a_parent, an_attribute_collection, a_namespace_list, a_name_code, a_sequence_number)
 		end
 
@@ -50,7 +50,7 @@ feature -- Element change
 			a_cursor: DS_ARRAYED_LIST_CURSOR [INTEGER]
 			a_name_code: INTEGER
 			an_expanded_name: STRING
-			a_copy_namespaces_attribute, a_validation_attribute, a_type_attribute: STRING
+			a_copy_namespaces_attribute, an_inherit_namespaces_attribute, a_validation_attribute, a_type_attribute: STRING
 			an_error: XM_XPATH_ERROR_VALUE
 		do
 			validation := Validation_strip
@@ -65,11 +65,13 @@ feature -- Element change
 				a_name_code := a_cursor.item
 				an_expanded_name := shared_name_pool.expanded_name_from_name_code (a_name_code)
 				if STRING_.same_string (an_expanded_name, Copy_namespaces_attribute) then
-					a_copy_namespaces_attribute:= attribute_value_by_index (a_cursor.index)
+					a_copy_namespaces_attribute := attribute_value_by_index (a_cursor.index)
+				elseif STRING_.same_string (an_expanded_name, Inherit_namespaces_attribute) then
+					an_inherit_namespaces_attribute := attribute_value_by_index (a_cursor.index)
 				elseif STRING_.same_string (an_expanded_name, Validation_attribute) then
-					a_validation_attribute:= attribute_value_by_index (a_cursor.index)
+					a_validation_attribute := attribute_value_by_index (a_cursor.index)
 				elseif STRING_.same_string (an_expanded_name, Type_attribute) then
-					a_type_attribute:= attribute_value_by_index (a_cursor.index)
+					a_type_attribute := attribute_value_by_index (a_cursor.index)
 				elseif STRING_.same_string (an_expanded_name, Use_attribute_sets_attribute) then
 					use := attribute_value_by_index (a_cursor.index)
 				else
@@ -78,17 +80,29 @@ feature -- Element change
 				a_cursor.forth
 			end
 			if a_copy_namespaces_attribute = Void then
-				copy_namespaces := True
+				is_copy_namespaces := True
 			else
 				if STRING_.same_string (a_copy_namespaces_attribute, "no") then
-					copy_namespaces := False
+					is_copy_namespaces := False
 				elseif STRING_.same_string (a_copy_namespaces_attribute, "yes") then
-					copy_namespaces := True
+					is_copy_namespaces := True
 				else
 					create an_error.make_from_string ("Value of copy-namespaces must be 'yes' or 'no'", "", "XT0020", Static_error)
 					report_compile_error (an_error)
 				end
 			end
+			if an_inherit_namespaces_attribute = Void then
+				is_inherit_namespaces := True
+			else
+				if STRING_.same_string (an_inherit_namespaces_attribute, "no") then
+					is_inherit_namespaces := False
+				elseif STRING_.same_string (an_inherit_namespaces_attribute, "yes") then
+					is_inherit_namespaces := True
+				else
+					create an_error.make_from_string ("Value of inherit-namespaces must be 'yes' or 'no'", "", "XT0020", Static_error)
+					report_compile_error (an_error)
+				end
+			end			
 			if a_validation_attribute /= Void then
 				validation := validation_code (a_validation_attribute)
 				if validation /= Validation_strip then
@@ -122,12 +136,20 @@ feature -- Element change
 
 	compile (an_executable: XM_XSLT_EXECUTABLE) is
 			-- Compile `Current' to an excutable instruction.
+		local
+			a_content: XM_XPATH_EXPRESSION
 		do
-			create {XM_XSLT_COMPILED_COPY} last_generated_instruction.make (an_executable,
-																								 used_attribute_sets,
-																								 copy_namespaces,
-																								 Void, validation)
-			compile_children (an_executable, last_generated_instruction)																								 
+			compile_sequence_constructor (an_executable, new_axis_iterator (Child_axis), True)
+			if last_generated_expression = Void then
+				create {XM_XPATH_EMPTY_SEQUENCE} a_content.make
+			else
+				a_content := last_generated_expression
+			end
+			create {XM_XSLT_COMPILED_COPY} last_generated_expression.make (an_executable, a_content,
+																								used_attribute_sets,
+																								is_copy_namespaces,
+																								is_inherit_namespaces,
+																								Void, validation)
 		end
 
 feature {NONE} -- Implementation
@@ -138,8 +160,11 @@ feature {NONE} -- Implementation
 	use: STRING
 			-- Value of use-attribute-sets attribute
 
-	copy_namespaces: BOOLEAN
+	is_copy_namespaces: BOOLEAN
 			-- Do we copy namespaces?
+
+	is_inherit_namespaces: BOOLEAN
+			-- Do we inherit namespaces?
 
 invariant
 

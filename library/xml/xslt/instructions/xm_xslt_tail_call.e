@@ -20,10 +20,10 @@ feature -- Status report
 	
 feature -- Evaluation
 
-	process_leaving_tail (a_transformer: XM_XSLT_TRANSFORMER) is
+	process_leaving_tail (a_context: XM_XSLT_EVALUATION_CONTEXT) is
 			-- Execute `Current', writing results to the current `XM_XPATH_RECEIVER'.
 		require
-			transformer_not_void: a_transformer /= Void
+			context_not_void: a_context /= Void
 		deferred
 		ensure
 			possible_tail_call: last_tail_call = Void or else last_tail_call /= Void

@@ -16,7 +16,7 @@ inherit
 
 	XM_XPATH_COMPUTED_EXPRESSION
 		redefine
-			iterator, evaluate_item, effective_boolean_value, compute_intrinsic_dependencies
+			iterator, evaluate_item, effective_boolean_value, compute_intrinsic_dependencies, compute_special_properties
 		end
 
 	-- N.B. This class is supposed to have intrinsic dependency on the context item
@@ -105,6 +105,16 @@ feature {NONE} -- Implementation
 			-- Compute cardinality.
 		do
 			set_cardinality_optional
+		end
+	
+	compute_special_properties is
+			-- Compute special properties.
+		do
+			initialize_special_properties
+			set_context_document_nodeset
+			set_single_document_nodeset
+			set_ordered_nodeset
+			set_non_creating
 		end
 
 	dynamic_error_value (a_context: XM_XPATH_CONTEXT): XM_XPATH_ERROR_VALUE is

@@ -16,7 +16,8 @@ inherit
 
 	XM_XPATH_COMPUTED_EXPRESSION
 		redefine
-			same_expression, promote, iterator, evaluate_item, lazily_evaluate
+			same_expression, promote, iterator, evaluate_item, lazily_evaluate,
+			native_implementations, compute_special_properties, compute_intrinsic_dependencies
 		end
 
 	XM_XPATH_BINDING_REFERENCE
@@ -87,7 +88,7 @@ feature -- Comparison
 feature -- Status report
 
 	last_evaluated_binding: XM_XPATH_VALUE
-			-- Value from calling evaluated_binding
+			-- Value from calling `evaluate_variable'
 
 	display (a_level: INTEGER) is
 			-- Diagnostic print of expression structure to `std.error'
@@ -111,6 +112,18 @@ feature -- Status report
 				else
 					std.error.put_new_line
 				end
+			end
+		end
+
+feature -- Status setting
+
+	compute_intrinsic_dependencies is
+			-- Determine the intrinsic dependencies of an expression.
+		do
+			if binding = Void or else not binding.is_global then
+				set_intrinsically_depends_upon_local_variables
+			else
+				initialize_intrinsic_dependencies
 			end
 		end
 
@@ -178,7 +191,8 @@ feature -- Evaluation
 	lazily_evaluate (a_context: XM_XPATH_CONTEXT; save_values: BOOLEAN) is
 			-- Lazily evaluate `Current'.
 		do
-			eagerly_evaluate (a_context)
+			evaluate_variable (a_context)
+			last_evaluation := last_evaluated_binding
 		end
 
 feature -- Element change
@@ -216,6 +230,12 @@ feature {NONE} -- Implementation
 	display_name: STRING
 			-- For diagnostics
 
+	native_implementations: INTEGER is
+			-- Natively-supported evaluation routines
+		do
+				Result := INTEGER_.bit_or (Supports_process, INTEGER_.bit_or (Supports_evaluate_item, Supports_iterator))
+		end
+
 	compute_cardinality is
 			-- Compute cardinality.
 		do
@@ -224,6 +244,13 @@ feature {NONE} -- Implementation
 			else
 				set_cardinality (static_type.cardinality)
 			end
+		end
+
+	compute_special_properties is
+			-- Compute special properties.
+		do
+			Precursor
+			set_non_creating
 		end
 
 end

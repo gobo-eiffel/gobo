@@ -16,7 +16,7 @@ inherit
 
 	XM_XPATH_COMPUTED_EXPRESSION
 		redefine
-			promote, simplify, sub_expressions, same_expression
+			promote, simplify, sub_expressions, same_expression, compute_special_properties
 		end
 
 	XM_XPATH_TOKENS
@@ -110,13 +110,9 @@ feature -- Status report
 			a_string := STRING_.appended_string (indentation (a_level), "operator ")
 			a_string := STRING_.appended_string (a_string, display_operator)
 			std.error.put_string (a_string)
-			if is_error then
-				std.error.put_string (" in error%N")
-			else
-				std.error.put_new_line
-				first_operand.display (a_level + 1)
-				second_operand.display (a_level + 1)
-			end
+			std.error.put_new_line
+			first_operand.display (a_level + 1)
+			second_operand.display (a_level + 1)
 		end
 
 feature -- Optimization	
@@ -197,28 +193,24 @@ feature -- Element change
 	set_first_operand (an_operand: XM_XPATH_EXPRESSION) is
 			-- Set `first_operand'.
 		require
-			operand_not_void: an_operand /= Void
+			operand_not_marked_for_replacement: an_operand /= Void and then not an_operand.was_expression_replaced
 		do
 			first_operand := an_operand
-			if first_operand.was_expression_replaced then first_operand.mark_unreplaced end
 		ensure
 			first_operand_set: first_operand = an_operand
-			first_operand_not_marked_for_replacement: not first_operand.was_expression_replaced
 		end
 
 	set_second_operand (an_operand: XM_XPATH_EXPRESSION) is
 			-- Set `second_operand'.
 		require
-			operand_not_void: an_operand /= Void
+			operand_not_marked_for_replacement: an_operand /= Void and then not an_operand.was_expression_replaced
 		do
 			second_operand := an_operand
-			if second_operand.was_expression_replaced then second_operand.mark_unreplaced end
 		ensure
 			second_operand_set: second_operand = an_operand
-			second_operand_not_marked_for_replacement: not second_operand.was_expression_replaced
 		end
 
-feature {NONE} -- Implementation
+feature {XM_XSLT_EXPRESSION} -- Restricted
 
 	compute_cardinality is
 			-- Compute cardinality.
@@ -237,6 +229,13 @@ feature {NONE} -- Implementation
 			Result := token_name (operator)
 		ensure
 			display_operator_not_void: Result /= Void
+		end
+
+	compute_special_properties is
+			-- Compute special properties.
+		do
+			Precursor
+			set_non_creating
 		end
 
 invariant

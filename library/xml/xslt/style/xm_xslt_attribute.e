@@ -117,7 +117,13 @@ feature -- Element change
 
 	validate is
 			-- Check that the stylesheet element is valid.
+		local
+			an_attribute_set: XM_XSLT_ATTRIBUTE_SET
 		do
+			an_attribute_set ?= parent
+			if an_attribute_set = Void then
+				check_within_template
+			end
 			type_check_expression ("name", attribute_name)
 			if attribute_name.was_expression_replaced then
 				attribute_name := attribute_name.replacement_expression
@@ -151,8 +157,7 @@ feature -- Element change
 			a_namespace_context: XM_XSLT_NAMESPACE_CONTEXT
 			an_attribute: XM_XSLT_COMPILED_ATTRIBUTE
 		do
-			
-			last_generated_instruction := Void
+			last_generated_expression := Void
 			
 			-- Deal specially with the case where the attribute name is known statically.
 			
@@ -187,7 +192,7 @@ feature -- Element change
 				end
 			end
 			
-			if last_generated_instruction = Void then
+			if last_generated_expression = Void then
 				
 				-- If the namespace URI must be deduced at run-time from the attribute name prefix,
 				--  we need to save the namespace context of the instruction.
@@ -197,9 +202,8 @@ feature -- Element change
 				end
 
 				create an_attribute.make (an_executable, attribute_name, namespace, a_namespace_context, validation_action, Void, -1)
-				last_generated_instruction := an_attribute
-				compile_children (an_executable, last_generated_instruction)
-				an_attribute.set_separator_expression (separator_expression)
+				compile_content (an_executable, an_attribute, separator_expression)
+				last_generated_expression := an_attribute
 			end
 		end
 
@@ -255,6 +259,9 @@ feature {NONE} -- Implementation
 			qname_parts: DS_LIST [STRING]
 			an_error: XM_XPATH_ERROR_VALUE
 		do
+			namespace_uri := ""
+			xml_prefix := Void
+			local_name := Void
 			qname := a_string_value.string_value
 			STRING_.left_adjust (qname)
 			STRING_.right_adjust (qname)
@@ -290,6 +297,8 @@ feature {NONE} -- Implementation
 					namespace_uri := uri_for_prefix (xml_prefix, False)
 				end
 			end
+		ensure
+			parts_set_or_error: not any_compile_errors implies xml_prefix /= Void and then local_name /= Void and then namespace_uri /= Void
 		end
 
 	compile_fixed_attribute (an_executable: XM_XSLT_EXECUTABLE; a_name_code: INTEGER) is
@@ -300,9 +309,8 @@ feature {NONE} -- Implementation
 			a_fixed_attribute: XM_XSLT_FIXED_ATTRIBUTE
 		do
 			create a_fixed_attribute.make (an_executable, a_name_code, validation_action, Void, -1)
-			last_generated_instruction := a_fixed_attribute
-			compile_children (an_executable, last_generated_instruction)
-			a_fixed_attribute.set_separator_expression (separator_expression)
+			compile_content (an_executable, a_fixed_attribute, separator_expression)
+			last_generated_expression := a_fixed_attribute
 		end
 
 	choose_arbitrary_xml_prefix is

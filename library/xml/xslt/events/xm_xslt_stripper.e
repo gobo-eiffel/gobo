@@ -38,6 +38,7 @@ feature {NONE} -- Initialization
 			receiver_not_void: an_underlying_receiver /= Void
 		do
 			transformer := a_transformer
+			context := transformer.new_xpath_context
 			stripper_mode := a_stripper_mode
 			strip_all := False
 			preserve_all := stripper_mode = Void
@@ -94,7 +95,7 @@ feature -- Access
 				Result := Strip_default
 			else
 				orphan.set_name_code (a_name_code)
-				a_rule := stripper_mode.rule (orphan, transformer)
+				a_rule := stripper_mode.rule (orphan, context)
 				if a_rule = Void then
 					Result := Always_preserve
 				else
@@ -309,6 +310,9 @@ feature {NONE} -- Implementation
 
 	orphan: XM_XPATH_ORPHAN
 			-- Dummy element for `{XM_XSLT_MODE}.rule'
+
+	context: XM_XSLT_EVALUATION_CONTEXT
+			-- Dynamic context
 
 invariant
 

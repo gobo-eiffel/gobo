@@ -72,6 +72,9 @@ feature -- Optimization
 	simplify is
 			-- Perform context-independent static optimizations
 		do
+			if supplied_argument_count = 1 or else arguments.item (1).context_document_nodeset then
+				set_context_document_nodeset
+			end
 			Precursor
 			add_context_document_argument (1, "id+")
 			merge_dependencies (arguments.item (2).dependencies)
@@ -129,7 +132,6 @@ feature -- Evaluation
 	pre_evaluate (a_context: XM_XPATH_STATIC_CONTEXT) is
 			-- Pre-evaluate `Current' at compile time.
 		do
-			-- set_replacement (Current)
 		end
 
 	map (an_item: XM_XPATH_ITEM; a_context: XM_XPATH_CONTEXT; an_information_object: ANY): XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_NODE] is
@@ -179,8 +181,9 @@ feature {XM_XPATH_EXPRESSION} -- Restricted
 			-- Compute special properties.
 		do
 			initialize_special_properties
-			set_context_document_nodeset
+			set_single_document_nodeset
 			set_ordered_nodeset
+			set_non_creating
 		end
 
 feature {NONE} -- Implementation

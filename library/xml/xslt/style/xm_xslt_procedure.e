@@ -15,29 +15,11 @@ class XM_XSLT_PROCEDURE
 
 feature -- Access
 
-	number_of_variables: INTEGER
-			-- Number of variables (size of stack frame)
-
-feature -- Element change
-
-	set_number_of_variables (a_number: INTEGER) is
-			-- Set the number of variables.
-		require
-			strictly_positive_number: a_number > 0
-		do
-			number_of_variables := a_number
-		end
-
-	allocate_slot_number is
-			-- Allocate a slot number for a variable.
-		do
-			number_of_variables := number_of_variables + 1
-		ensure
-			one_more_variable_allocated: number_of_variables = old number_of_variables + 1
-		end
+	slot_manager: XM_XPATH_SLOT_MANAGER
+			-- Slot manager
 
 invariant
 
-	positive_number_of_variables: number_of_variables >= 0
+	slot_manager_not_void: slot_manager /= Void
 
 end

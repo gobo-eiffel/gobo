@@ -37,6 +37,8 @@ feature {NONE} -- Initialization
 			cached_variable_fingerprint := -1
 			create references.make (5)
 			allows_tunnel := True
+			create slot_manager.make
+			is_instruction := True
 			Precursor (an_error_listener, a_document, a_parent, an_attribute_collection, a_namespace_list, a_name_code, a_sequence_number)
 		end
 
@@ -77,7 +79,6 @@ feature -- Element change
 		local
 			is_local: BOOLEAN
 			a_style_element: XM_XSLT_STYLE_ELEMENT
-			a_stylesheet: XM_XSLT_STYLESHEET
 			a_template: XM_XSLT_TEMPLATE
 			a_function: XM_XSLT_FUNCTION
 			a_parameter: XM_XSLT_PARAM
@@ -85,9 +86,8 @@ feature -- Element change
 			a_node: XM_XPATH_NODE
 			an_error: XM_XPATH_ERROR_VALUE
 		do
-			a_stylesheet ?= parent; a_template ?= parent; a_function ?= parent
+			a_template ?= parent; a_function ?= parent
 			is_local := a_template /= Void or else a_function /= Void
-			is_global_variable := a_stylesheet /= Void
 			if not is_local and then not is_global_variable then
 				create an_error.make_from_string ("xsl:param must be immediately within a template, function or stylesheet", "", "XT0010", Static_error)
 				report_compile_error (an_error)
@@ -154,12 +154,12 @@ feature -- Element change
 			a_type_checker: XM_XPATH_TYPE_CHECKER
 			a_role: XM_XPATH_ROLE_LOCATOR
 			a_supplied_parameter_reference: XM_XSLT_SUPPLIED_PARAMETER_REFERENCE
-			a_param: XM_XSLT_COMPILED_PARAM
+			a_param: XM_XSLT_COMPILED_GENERAL_VARIABLE
+			a_global_param: XM_XSLT_GLOBAL_PARAM
+			a_local_param: XM_XSLT_LOCAL_PARAM
+			a_computed_expression: XM_XPATH_COMPUTED_EXPRESSION
 		do
-			last_generated_instruction := Void
-			if is_global_variable and then not is_redundant_variable then
-				principal_stylesheet.allocate_local_slots (number_of_variables)
-			end
+			last_generated_expression := Void
 			a_function ?= parent
 			if a_function /= Void then
 				
@@ -167,7 +167,7 @@ feature -- Element change
             --  the general-purpose XM_XSLT_COMPILED_PARAM object, and this has been compiled
 				--  when compiling the parent xsl:function
 
-				last_generated_instruction := Void
+				last_generated_expression := Void
 			elseif not is_redundant_variable then
 				check
 					strictly_positive_slot_number: slot_number > 0
@@ -187,12 +187,20 @@ feature -- Element change
 				if is_error then
 					report_compile_error (error_value)
 				else
-					create a_param.make (an_executable, variable_name, a_slot_number)
+					if is_global_variable then
+						create a_global_param.make_global_variable (an_executable, variable_name, a_slot_number, slot_manager)
+						a_computed_expression ?= select_expression
+						if a_computed_expression /= Void then a_computed_expression.set_parent (a_global_param) end
+						a_param := a_global_param
+					else
+						create a_local_param.make (an_executable, variable_name, a_slot_number)
+						a_local_param.set_conversion (a_conversion)
+						a_param := a_local_param
+					end
 					initialize_instruction (an_executable, a_param)
 					a_param.set_required_type (required_type)
-					a_param.set_conversion (a_conversion)
 					fixup_binding (a_param)
-					last_generated_instruction := a_param
+					last_generated_expression := a_param
 				end
 			end
 		end

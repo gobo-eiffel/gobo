@@ -16,7 +16,7 @@ inherit
 
 	XM_XPATH_COMPUTED_EXPRESSION
 		redefine
-			evaluate_item, compute_intrinsic_dependencies
+			evaluate_item, compute_intrinsic_dependencies, compute_special_properties
 		end
 
 creation
@@ -92,13 +92,20 @@ feature -- Evaluation
 				create {XM_XPATH_INVALID_ITEM} last_evaluated_item.make_from_string ("Context position is not set", Xpath_errors_uri, "XP0002", Dynamic_error)
 			end
 		end
-
-feature {NONE} -- Implementation
+	
+feature {XM_XSLT_EXPRESSION} -- Restricted
 	
 	compute_cardinality is
 			-- Compute cardinality.
 		do
 			set_cardinality_exactly_one
+		end
+
+	compute_special_properties is
+			-- Compute special properties.
+		do
+			Precursor
+			set_non_creating
 		end
 	
 end

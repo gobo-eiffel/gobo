@@ -14,6 +14,8 @@ class XM_XSLT_KEY_DEFINITION
 
 inherit
 
+	XM_XSLT_COMPILED_PROCEDURE
+
 	KL_IMPORTED_STRING_ROUTINES
 
 creation
@@ -22,32 +24,38 @@ creation
 
 feature {NONE} -- Initialization
 
-	make (a_match: XM_XSLT_PATTERN; a_usage_expression: XM_XPATH_EXPRESSION; a_collator: ST_COLLATOR; a_collation_uri: STRING) is
+	make (an_executable: like executable; a_match: XM_XSLT_PATTERN; a_usage_expression: like body;
+			a_collator: ST_COLLATOR; a_collation_uri: STRING; a_line_number: like line_number;
+			a_system_id: like system_id; a_slot_manager: like slot_manager) is
 			-- Establish invariant.
 		require
+			executable_not_void: an_executable /= Void
 			match_not_void: a_match /= Void
 			usage_expression_not_void: a_usage_expression /= Void
 			collation_uri: a_collation_uri /= Void
 			collator: a_collator /= Void
+			system_id_not_void: a_system_id /= Void
+			slot_manager_not_void: a_slot_manager /= Void
 		do
+			make_procedure (an_executable, a_usage_expression, a_line_number, a_system_id, a_slot_manager)
 			match := a_match
-			use := a_usage_expression
 			collator := a_collator
 			collation_uri := a_collation_uri
 		ensure
 			match_set: match = a_match
-			use_set: use = a_usage_expression
 			collator_set: collator = a_collator
 			uri_set: STRING_.same_string (collation_uri, a_collation_uri)
+			executable_set: executable = an_executable
+			use_set: body = a_usage_expression
+			system_id_set: system_id = a_system_id
+			line_number_set: line_number = a_line_number
+			slot_manager_set: slot_manager = a_slot_manager
 		end
 
 feature -- Access
 
 	match: XM_XSLT_PATTERN
 			-- Match pattern
-
-	use: XM_XPATH_EXPRESSION
-			-- Usage expression
 
 	collator: ST_COLLATOR
 			-- Collator for string comparisons
@@ -58,7 +66,6 @@ feature -- Access
 invariant
 
 	match: match /= Void
-	use: use /= Void
 	collation_uri: collation_uri /= Void
 	collator: collator /= Void
 

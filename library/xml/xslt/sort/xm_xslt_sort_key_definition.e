@@ -17,9 +17,7 @@ class XM_XSLT_SORT_KEY_DEFINITION
 	-- soon as they are all known (which in general is only at run-time), the XM_XSLT_SORT_KEY_DEFINITION
 	-- is replaced by a XM_XSLT_FIXED_SORT_KEY_DEFINITION in which all these values are fixed.
 
-	-- TODO - optimizations (Review - see comments in Saxon 8.0 code for details)
-
-	-- TODO Sequence constructor - in the mean time, a select expression is assumed to be the sort key
+	-- TODO - optimizations
 
 creation
 
@@ -51,6 +49,36 @@ feature -- Access
 
 	sort_key: XM_XPATH_EXPRESSION
 			-- Sort key
+
+	order_expression: XM_XPATH_EXPRESSION
+			-- Order (ascending or descending)
+
+	case_order_expression: XM_XPATH_EXPRESSION
+			-- Case order (upper-first or lower-first)
+
+	language_expression: XM_XPATH_EXPRESSION
+			-- Language
+
+	data_type_expression: XM_XPATH_EXPRESSION
+			-- Data type to which sort-key-values will be coerced (text, number or QName (but not NCName)
+
+	collation_name_expression: XM_XPATH_EXPRESSION
+			-- Name of collation (a URI) as an AVT
+
+	collation_name: STRING
+			-- Name of collation (a URI)
+
+	order: STRING
+			-- Value of order attribute (ascending or descending)
+
+	language: STRING
+			--  Value of language attribute
+
+	case_order: STRING
+			-- Value of case-order attribute ("lower-first" or "upper-first")
+
+	data_type: STRING
+			-- Value of data-type attribute ("text" or "number" or a QName)
 
 	reduced_definition (a_context: XM_XSLT_EVALUATION_CONTEXT):  XM_XSLT_FIXED_SORT_KEY_DEFINITION is
 			-- Sort key definition without any dependencies on the context except for the sort key itself;
@@ -100,36 +128,6 @@ feature -- Element change
 		end
 
 feature {NONE} -- Implementation
-
-	order_expression: XM_XPATH_EXPRESSION
-			-- Order (ascending or descending)
-
-	case_order_expression: XM_XPATH_EXPRESSION
-			-- Case order (upper-first or lower-first)
-
-	language_expression: XM_XPATH_EXPRESSION
-			-- Language
-
-	data_type_expression: XM_XPATH_EXPRESSION
-			-- Data type to which sort-key-values will be coerced (text, number or QName (but not NCName)
-
-	collation_name_expression: XM_XPATH_EXPRESSION
-			-- Name of collation (a URI) as an AVT
-
-	collation_name: STRING
-			-- Name of collation (a URI)
-
-	order: STRING
-			-- Value of order attribute (ascending or descending)
-
-	language: STRING
-			--  Value of language attribute
-
-	case_order: STRING
-			-- Value of case-order attribute ("lower-first" or "upper-first")
-
-	data_type: STRING
-			-- Value of data-type attribute ("text" or "number" or a QName)
 
 	evaluate_collation_name (a_context: XM_XSLT_EVALUATION_CONTEXT) is
 			-- Evaluate `collation_name_expression'

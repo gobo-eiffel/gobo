@@ -14,6 +14,8 @@ class XM_XSLT_COMPILED_ATTRIBUTE_SET
 
 inherit
 
+	XM_XSLT_COMPILED_PROCEDURE
+
 	XM_XSLT_ATTRIBUTE_SET_ROUTINES
 
 creation
@@ -22,63 +24,71 @@ creation
 
 feature {NONE} -- Initialization
 
-	make (some_used_attribute_sets: like used_attribute_sets; a_body: like body; needs_stack_frame: BOOLEAN) is
+	make (a_name_code: like name_code; some_used_attribute_sets: like used_attribute_sets; an_executable: XM_XSLT_EXECUTABLE; a_body: XM_XPATH_EXPRESSION;
+			a_line_number: INTEGER; a_system_id: STRING; a_slot_manager: like slot_manager) is
 			-- Establish invariant.
 		require
 			used_attribute_sets_not_void: some_used_attribute_sets /= Void
+			executable_not_void: an_executable /= Void
 			body_not_void: a_body /= Void
+			system_id_not_void: a_system_id /= Void
+			slot_manager_not_void: a_slot_manager /= Void
 		do
-			is_stack_frame_needed := needs_stack_frame
+			make_procedure (an_executable, a_body, a_line_number, a_system_id, a_slot_manager)
 			used_attribute_sets := some_used_attribute_sets
-			body := a_body
+			name_code := a_name_code
 		ensure
-			is_stack_frame_needed_set: is_stack_frame_needed = needs_stack_frame
+			name_code_set: name_code = a_name_code
 			used_attribute_sets_set: used_attribute_sets = some_used_attribute_sets
+			executable_set: executable = an_executable
 			body_set: body = a_body
+			system_id_set: system_id = a_system_id
+			line_number_set: line_number = a_line_number
+			slot_manager_set: slot_manager = a_slot_manager
 		end
+
+feature -- Access
+
+	name_code: INTEGER
+			-- Name code
 
 feature -- Evaluation
 
 	
-	expand (a_transformer: XM_XSLT_TRANSFORMER) is
+	expand (a_context: XM_XPATH_CONTEXT) is
 			-- Expand `Current' to it's constituents.
 		require
-			transformer_not_void: a_transformer /= Void
+			context_not_void: a_context /= Void
 		local
-			a_bindery: XM_XSLT_BINDERY
-			a_parameter_set, another_parameter_set: XM_XSLT_PARAMETER_SET
+			a_new_context: XM_XPATH_CONTEXT
 		do
-			if used_attribute_sets /= Void then expand_attribute_sets (used_attribute_sets, a_transformer) end
+			if used_attribute_sets /= Void then expand_attribute_sets (used_attribute_sets, a_context) end
 
 			-- Note, we can ignore the result of process_leaving_tail since an attribute set can't contain a tail call
 
 			if is_stack_frame_needed then
-				a_bindery := a_transformer.bindery
-				create a_parameter_set.make_empty
-				create another_parameter_set.make_empty
-				a_bindery.open_stack_frame (a_parameter_set, another_parameter_set)
-				body.process_leaving_tail (a_transformer.new_xpath_context)
-				a_bindery.close_stack_frame
+				a_new_context := a_context.new_context
+				a_new_context.open_stack_frame (slot_manager)
+				body.process (a_new_context)
 			else
-				body.process_leaving_tail (a_transformer.new_xpath_context)
+				body.process (a_context)
 			end
 		end
 
 feature {NONE} -- Initialization
 
-	is_stack_frame_needed: BOOLEAN
-			-- Is a stack frame needed?
-
 	used_attribute_sets: DS_ARRAYED_LIST [XM_XSLT_COMPILED_ATTRIBUTE_SET]
 			-- Attribute sets used by `Current'
 
-	body: XM_XSLT_BLOCK
-			-- Body (xsl:atrtributes)
+	is_stack_frame_needed: BOOLEAN is
+			-- Is a stack frame needed?
+		do
+			Result := slot_manager.number_of_variables > 0
+		end
 
 invariant
 	
 	used_attribute_sets_not_void: used_attribute_sets /= Void
-	body_not_void: body /= Void
 
 end
 

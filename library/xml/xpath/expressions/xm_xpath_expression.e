@@ -42,8 +42,10 @@ inherit
 
 	KL_IMPORTED_STRING_ROUTINES
 
+	KL_IMPORTED_INTEGER_ROUTINES
+
 feature -- Access
-	
+
 	item_type: XM_XPATH_ITEM_TYPE is
 			-- Data type of the expression, when known;
 			-- All expression return sequences, in general;
@@ -52,6 +54,7 @@ feature -- Access
 			-- and (b) it is the same for all items in the sequence.
 		require
 			not_in_error: not is_error
+			not_replaced: not was_expression_replaced
 		deferred
 		ensure
 			item_type_not_void: Result /= Void
@@ -61,7 +64,11 @@ feature -- Access
 			-- Immediate sub-expressions of `Current'
 		require
 			not_in_error: not is_error
+			not_replaced: not was_expression_replaced
 		deferred
+			-- TODO: consider changing this to return a sequence iterator, as now that
+			--       XSLT compiles to expressions, there could be a lot of array
+			--       copying going on
 		ensure
 			expression_tester: Result /= Void and then Result.equality_tester /= Void and then Result.equality_tester.is_equal (expression_tester)
 		end
@@ -79,6 +86,7 @@ feature -- Comparison
 			-- Are `Current' and `other' the same expression?
 		require
 			other_not_void: other /= Void
+			not_replaced: not was_expression_replaced
 		deferred
 		end
 
@@ -88,6 +96,30 @@ feature -- Status report
 			-- Is `Current' in error?
 		do
 			Result := error_value /= Void
+		end
+
+	is_evaluate_item_supported: BOOLEAN is
+			-- Is `evaluate_item' supported natively?
+		require
+			not_replaced: not was_expression_replaced
+		do
+			Result := INTEGER_.bit_and (native_implementations, Supports_evaluate_item) /= 0
+		end
+
+	is_iterator_supported: BOOLEAN is
+			-- Is `iterator' supported natively?
+		require
+			not_replaced: not was_expression_replaced
+		do
+			Result := INTEGER_.bit_and (native_implementations, Supports_iterator) /= 0
+		end
+
+	is_process_supported: BOOLEAN is
+			-- Is `process' supported natively?
+		require
+			not_replaced: not was_expression_replaced
+		do
+			Result := INTEGER_.bit_and (native_implementations, Supports_process) /= 0
 		end
 	
 	error_value: XM_XPATH_ERROR_VALUE
@@ -115,6 +147,7 @@ feature -- Status report
 			-- Diagnostic print of expression structure to `std.error'
 		require
 			no_error: not is_error
+			not_replaced: not was_expression_replaced
 		deferred
 		end
 
@@ -150,6 +183,8 @@ feature -- Status setting
 
 	mark_tail_function_calls is
 			-- Mark tail-recursive calls on stylesheet functions.
+		require
+			not_replaced: not was_expression_replaced
 		do
 			-- do_nothing by default.
 		end
@@ -173,14 +208,16 @@ feature -- Status setting
 				a_cursor.forth
 			end
 		ensure
-			no_longer_marked_as_replaced: not was_expression_replaced and then replacement_expression = Void
+			no_longer_marked_as_replaced: not was_expression_replaced
 		end
 
 	set_replacement (an_expression: XM_XPATH_EXPRESSION) is
 			-- Set replacement for `Current'.
 		require
 			not_in_error: not is_error
-			replacement_expression_not_void: an_expression /= Void
+			not_replaced: not was_expression_replaced
+			replacement_expression_not_replaced: an_expression /= Void and then not an_expression.was_expression_replaced
+			no_circularity: an_expression /= Current
 		do
 			debug ("XPath expression replacement")
 				std.error.put_string ("An " + an_expression.generating_type + " is about to be set as a replacement for an " + generating_type + "%N")
@@ -198,6 +235,7 @@ feature -- Optimization
 			-- Perform context-independent static optimizations
 		require
 			no_previous_error: not is_error
+			not_replaced: not was_expression_replaced
 		deferred
 		ensure
 			simplified_expression_not_void: was_expression_replaced implies replacement_expression /= Void
@@ -215,6 +253,7 @@ feature -- Optimization
 		require
 			context_not_void: a_context /= Void
 			no_previous_error: not is_error
+			not_replaced: not was_expression_replaced
 		deferred
 		ensure
 			expression_may_be_replaced: was_expression_replaced implies replacement_expression /= Void
@@ -230,10 +269,14 @@ feature -- Optimization
 		require
 			offer_not_void: an_offer /= Void
 			no_previous_error: not is_error
+			not_replaced: not was_expression_replaced
 		deferred
 		end
 
 feature -- Evaluation
+
+	-- TODO: Problem: many of the implementations call evaluate_item or iterator
+	--        and so violate CQS
 
 	effective_boolean_value (a_context: XM_XPATH_CONTEXT): XM_XPATH_BOOLEAN_VALUE is
 			-- Effective boolean value;
@@ -243,6 +286,7 @@ feature -- Evaluation
 		require
 			context_may_be_void: True
 			not_in_error: not is_error
+			not_replaced: not was_expression_replaced
 		deferred
 		ensure
 			value_not_void_but_may_be_in_error: Result /= Void
@@ -258,6 +302,7 @@ feature -- Evaluation
 		require
 			context_may_be_void: True
 			expression_not_in_error: not is_error
+			not_replaced: not was_expression_replaced
 		deferred
 		ensure
 			item_evaluated_but_may_be_void: True
@@ -274,20 +319,36 @@ feature -- Evaluation
 			-- TODO - check the above and turn it into pre-conditions.if possible
 			context_may_be_void: True
 			expression_not_in_error: not is_error
+			not_replaced: not was_expression_replaced
 		deferred
 		ensure
 			string_not_void_but_may_be_in_error: last_evaluated_string /= Void
 		end
+
+	-- TODO: Problem: many of the implementations call evaluate_item or evaluate_variable,
+	--        and so violate CQS
 
 	iterator (a_context: XM_XPATH_CONTEXT): XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_ITEM] is
 			-- An iterator over the values of a sequence
 		require
 			not_in_error: not is_error
 			context_may_be_void: True
+			not_replaced: not was_expression_replaced
 		deferred
 		ensure
 			iterator_not_void_but_may_be_error: Result /= Void -- and then (Result.is_error or else not Result.is_error)
 			iterator_before: not Result.is_error implies Result.before
+		end
+	
+	process (a_context: XM_XPATH_CONTEXT) is
+			-- Execute `Current' completely, writing results to the current `XM_XPATH_RECEIVER'.
+		require
+			evaluation_context_not_void: a_context /= Void
+			push_processing: a_context.has_push_processing
+			not_replaced: not was_expression_replaced
+		deferred
+		ensure
+			no_tail_calls: True -- this will be refined within XSLT
 		end
 
 	eagerly_evaluate (a_context: XM_XPATH_CONTEXT) is
@@ -295,6 +356,7 @@ feature -- Evaluation
 		require
 			expression_not_in_error: not is_error
 			context_may_be_void: True
+			not_replaced: not was_expression_replaced
 		local
 			a_length: INTEGER
 			an_item: XM_XPATH_ITEM
@@ -304,101 +366,133 @@ feature -- Evaluation
 			an_iterator: XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_ITEM]
 			an_empty_iterator: XM_XPATH_EMPTY_ITERATOR [XM_XPATH_ITEM]
 			a_singleton_iterator: XM_XPATH_SINGLETON_ITERATOR [XM_XPATH_ITEM]
+			a_variable_reference: XM_XPATH_VARIABLE_REFERENCE
 		do
+			last_evaluation := Void
 			a_result_value ?= Current
 			a_closure ?= Current
 			if a_result_value /= Void and then a_closure = Void then
 				last_evaluation := a_result_value
 			else
-				an_iterator := iterator (a_context)
-				if not an_iterator.is_error then
-					an_empty_iterator ?= an_iterator; if an_empty_iterator /= Void then
-						create {XM_XPATH_EMPTY_SEQUENCE} last_evaluation.make
+				a_variable_reference ?= Current
+				if a_variable_reference /= Void then
+					a_variable_reference.evaluate_variable (a_context)
+					a_closure ?= a_variable_reference.last_evaluated_binding
+					if a_closure /= Void then
+						create an_extent.make (a_closure.iterator (Void))
+						last_evaluation := an_extent
 					else
-						a_singleton_iterator ?= an_iterator; if a_singleton_iterator /= Void then
-							a_singleton_iterator.forth
-							if not a_singleton_iterator.off then an_item := a_singleton_iterator.item end
-							if an_item = Void then
-								create {XM_XPATH_EMPTY_SEQUENCE} last_evaluation.make
-							elseif an_item.is_error then
-								create {XM_XPATH_INVALID_VALUE} last_evaluation.make (an_item.error_value)
-							else
-								last_evaluation := an_item.as_value -- May still be `Void'
-							end
-						else
-							create an_extent.make (an_iterator)
-							a_length := an_extent.count
-							if a_length = 0 then
-								create {XM_XPATH_EMPTY_SEQUENCE} last_evaluation.make
-							elseif a_length = 1 then
-								an_item := an_extent.item_at (1)
-								if an_item.is_error then
-									create {XM_XPATH_INVALID_VALUE} last_evaluation.make (an_item.error_value)
-								else
-									last_evaluation := an_item.as_value
-								end
-							else
-								last_evaluation := an_extent
-							end
+						a_result_value ?= a_variable_reference.last_evaluated_binding
+						if a_result_value /= Void then
+							last_evaluation := a_result_value
+						-- else NODE?
 						end
 					end
-				else
-					create {XM_XPATH_INVALID_VALUE} last_evaluation.make (an_iterator.error_value)
 				end
-			end
-			if last_evaluation = Void then
-				create {XM_XPATH_EMPTY_SEQUENCE} last_evaluation.make
+				if last_evaluation = Void then
+					if is_iterator_supported then
+						an_iterator := iterator (a_context)
+						if not an_iterator.is_error then
+							an_empty_iterator ?= an_iterator
+							if an_empty_iterator /= Void then
+								create {XM_XPATH_EMPTY_SEQUENCE} last_evaluation.make
+							else
+								a_singleton_iterator ?= an_iterator
+								if a_singleton_iterator /= Void then
+									a_singleton_iterator.forth
+									if not a_singleton_iterator.off then an_item := a_singleton_iterator.item end
+									if an_item = Void then
+										create {XM_XPATH_EMPTY_SEQUENCE} last_evaluation.make
+									elseif an_item.is_error then
+										create {XM_XPATH_INVALID_VALUE} last_evaluation.make (an_item.error_value)
+									else
+										last_evaluation := an_item.as_value -- May still be `Void'
+									end
+								else
+									create an_extent.make (an_iterator)
+									a_length := an_extent.count
+									if a_length = 0 then
+										create {XM_XPATH_EMPTY_SEQUENCE} last_evaluation.make
+									elseif a_length = 1 then
+										an_item := an_extent.item_at (1)
+										if an_item.is_error then
+											create {XM_XPATH_INVALID_VALUE} last_evaluation.make (an_item.error_value)
+										else
+											last_evaluation := an_item.as_value
+										end
+									else
+										last_evaluation := an_extent
+									end
+								end
+							end
+						else
+							create {XM_XPATH_INVALID_VALUE} last_evaluation.make (an_iterator.error_value)
+						end
+					elseif is_evaluate_item_supported then
+						evaluate_item (a_context)
+						if last_evaluated_item /= Void then
+							if last_evaluated_item.is_error then
+								create {XM_XPATH_INVALID_VALUE} last_evaluation.make (last_evaluated_item.error_value)
+							else
+								last_evaluation := last_evaluated_item.as_value
+							end
+						end
+					else
+						check
+							process_supported: is_process_supported
+						end
+						last_evaluation := processed_eager_evaluation (a_context)
+					end
+				end
+				if last_evaluation = Void then
+					create {XM_XPATH_EMPTY_SEQUENCE} last_evaluation.make
+				end
 			end
 		ensure
 			evaluated: last_evaluation /= Void
+		end
+
+	processed_eager_evaluation (a_context: XM_XPATH_CONTEXT): XM_XPATH_VALUE is
+			-- Eager evaluation via `process'
+		require
+			expression_not_in_error: not is_error
+			context_may_be_void: True
+			process_supported: is_process_supported
+			not_replaced: not was_expression_replaced
+		deferred
 		end
 
 	lazily_evaluate (a_context: XM_XPATH_CONTEXT; save_values: BOOLEAN) is
 			-- Lazily evaluate `Current'.
 			-- This will set a value, which may optionally be an XM_XPATH_CLOSURE,
 			--  which is a wrapper around an iterator over the value of the expression.
+			-- This routine is redefined for values and variable references.
 		require
 			expression_not_in_error: not is_error
-		local
-			a_value: XM_XPATH_VALUE
-			a_variable_reference: XM_XPATH_VARIABLE_REFERENCE
+			not_replaced: not was_expression_replaced
 		do
-			a_value ?= Current
-			if a_value /= Void then
-				last_evaluation := a_value
+			check
+				context_not_void: a_context /= Void
+				-- We are not evaluating a value, as XM_XPATH_VALUE redefines this routine
+			end
+			if not cardinality_allows_many then
+				
+				-- Singletons are always evaluated eagerly
+				
+				eagerly_evaluate (a_context)
+			elseif depends_upon_position or else depends_upon_last
+				or else depends_upon_current_item or else depends_upon_current_group then
+				-- TODO when implemented or else depends_upon_regexp_group then
+				
+				-- We can't save these values in the closure, so we evaluate
+				-- the expression now if they are needed
+				
+				eagerly_evaluate (a_context)
 			else
-				a_variable_reference ?= Current
-				if a_variable_reference /= Void then
-
-					-- We always dereference the variable reference; this will often
-					-- do lazy evaluation of the expression to which the variable is bound
-					
-					a_variable_reference.eagerly_evaluate (a_context)
-				else
-					check
-						context_not_void: a_context /= Void
-						-- as we are not evaluating a variable
-					end
-					if not cardinality_allows_many then
 				
-						-- Singletons are always evaluated eagerly
+				-- Create a Closure, a wrapper for the expression and its context
 				
-						eagerly_evaluate (a_context)
-					elseif depends_upon_position or else depends_upon_last
-						or else depends_upon_current_item or else depends_upon_current_group then
-						-- TODO when implemented or else depends_upon_regexp_group then
-				
-						-- We can't save these values in the closure, so we evaluate
-						-- the expression now if they are needed
-						
-						eagerly_evaluate (a_context)
-					else
-				
-						-- Create a Closure, a wrapper for the expression and its context
-				
-						last_evaluation := expression_factory.created_closure (Current, a_context, save_values)
-					end
-				end
+				last_evaluation := expression_factory.created_closure (Current, a_context, save_values)
 			end
 		ensure
 			evaluated: last_evaluation /= Void
@@ -406,10 +500,13 @@ feature -- Evaluation
 
 feature -- Element change
 	
-	allocate_slots (next_free_slot: INTEGER) is
+	allocate_slots (next_free_slot: INTEGER; a_slot_manager: XM_XPATH_SLOT_MANAGER) is
 			-- Allocate slot numbers for all range variable in `Current' and it's sub-expresions.
 		require
 			strictly_positive_slot_number: next_free_slot > 0
+			slot_manager_may_be_void: True
+			not_in_error: not is_error -- should really be all sub-expressions not in error - think about this
+			not_replaced: not was_expression_replaced
 		local
 			a_cursor: DS_ARRAYED_LIST_CURSOR [XM_XPATH_EXPRESSION]
 		do
@@ -427,8 +524,10 @@ feature -- Element change
 			until
 				a_cursor.after
 			loop
-				a_cursor.item.allocate_slots (last_slot_number)
-				last_slot_number := a_cursor.item.last_slot_number
+				if not a_cursor.item.is_error then
+					a_cursor.item.allocate_slots (last_slot_number, a_slot_manager)
+					last_slot_number := a_cursor.item.last_slot_number
+				end
 				a_cursor.forth
 			end
 		ensure
@@ -437,8 +536,27 @@ feature -- Element change
 
 feature {XM_XPATH_EXPRESSION} -- Local
 
+	Supports_evaluate_item: INTEGER is 1
+			-- `Current natively supports `evaluate_item'
+	
+	Supports_iterator: INTEGER is 2
+			-- `Current natively supports `iterator'
+
+	Supports_process: INTEGER is 4
+			-- `Current natively supports `process'
+	
+	native_implementations: INTEGER is
+			-- Natively-supported evaluation routines
+		deferred
+		ensure
+			bit_set: Result < 8 and then Result > 0 and then INTEGER_.bit_and (Result, INTEGER_.bit_or (INTEGER_.bit_or (Supports_evaluate_item, Supports_iterator), Supports_process)) /= 0
+		end
+
 	set_unsorted (eliminate_duplicates: BOOLEAN) is
 			-- Remove unwanted sorting from an expression, at compile time
+		require
+			not_in_error: not is_error
+			not_replaced: not was_expression_replaced
 		local
 			an_offer: XM_XPATH_PROMOTION_OFFER
 		do
@@ -465,6 +583,11 @@ feature {XM_XPATH_EXPRESSION} -- Local
 				counter := counter + 1
 			end
 		end
+
+invariant
+
+	replacement_expression: was_expression_replaced implies replacement_expression /= Void
+	no_replacement: not was_expression_replaced implies replacement_expression = Void
 
 end
 	

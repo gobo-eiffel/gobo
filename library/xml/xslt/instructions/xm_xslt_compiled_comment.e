@@ -16,7 +16,7 @@ inherit
 
 	XM_XSLT_TEXT_CONSTRUCTOR
 		redefine
-			display, item_type
+			display, item_type, compute_cardinality
 		end
 		
 	XM_XPATH_SHARED_NODE_KIND_TESTS
@@ -33,10 +33,9 @@ feature {NONE} -- Initialization
 			executable_not_void: an_executable /= Void
 		do
 			executable := an_executable
-			instruction_name := "comment"
-			create children.make (0)
-			make_expression_instruction
-			set_cardinality_exactly_one
+			instruction_name := "xsl:comment"
+			compute_static_properties
+			initialize
 		ensure
 			executable_set: executable = an_executable
 		end
@@ -59,19 +58,10 @@ feature -- Status report
 		local
 			a_string: STRING
 		do
-			a_string := STRING_.appended_string (indentation (a_level), "comment")
+			a_string := STRING_.appended_string (indentation (a_level), "xsl:comment")
 			std.error.put_string (a_string)
 			std.error.put_new_line
 			Precursor (a_level + 1)
-		end
-
-feature -- Comparison
-
-	same_expression (other: XM_XPATH_EXPRESSION): BOOLEAN is
-			-- Are `Current' and `other' the same expression?
-		do
-			Result := False
-			todo ("same_expression", True)
 		end
 
 feature -- Optimization
@@ -93,33 +83,46 @@ feature -- Evaluation
 			an_error: XM_XPATH_ERROR_VALUE
 		do
 			a_transformer := a_context.transformer
-			a_comment := expanded_string_value (a_context)
-			from
+			expand_children (a_context)
+			if last_string_value = Void then
+				a_transformer.report_fatal_error (select_expression.last_evaluated_item.error_value, Current)
+			else
+				a_comment := last_string_value
+				from
 				a_comment_marker_index := 1
-			until
-				a_comment_marker_index = 0
-			loop
-				a_comment_marker_index := a_comment.substring_index ("--", 1)
-				if a_comment_marker_index /= 0 then
-					create an_error.make_from_string ("Invalid characters (--) in comment", "", "XT0950", Dynamic_error)
+				until
+					a_comment_marker_index = 0
+				loop
+					a_comment_marker_index := a_comment.substring_index ("--", 1)
+					if a_comment_marker_index /= 0 then
+						create an_error.make_from_string ("Invalid characters (--) in comment", "", "XT0950", Dynamic_error)
+						a_transformer.report_recoverable_error (an_error, Current)
+						if not a_transformer.is_error then -- recovery action
+							a_string := STRING_.concat (a_comment.substring (1, a_comment_marker_index), " ")
+							a_comment := STRING_.appended_string (a_string, a_comment.substring (a_comment_marker_index + 1, a_comment.count))
+						end
+					end
+				end
+				if a_comment.count > 0 and then a_comment.item (a_comment.count).is_equal ('-') then
+					create an_error.make_from_string ("Invalid characters (-) at end of comment", "", "XT0950", Dynamic_error)
 					a_transformer.report_recoverable_error (an_error, Current)
 					if not a_transformer.is_error then -- recovery action
-						a_string := STRING_.concat (a_comment.substring (1, a_comment_marker_index), " ")
-						a_comment := STRING_.appended_string (a_string, a_comment.substring (a_comment_marker_index + 1, a_comment.count))
+						a_comment := STRING_.appended_string (a_comment, " ")
 					end
 				end
 			end
-			if a_comment.count > 0 and then a_comment.item (a_comment.count).is_equal ('-') then
-				create an_error.make_from_string ("Invalid characters (-) at end of comment", "", "XT0950", Dynamic_error)
-				a_transformer.report_recoverable_error (an_error, Current)
-				if not a_transformer.is_error then -- recovery action
-					a_comment := STRING_.appended_string (a_comment, " ")
-				end
-			end
 			if not a_transformer.is_error then
-				a_transformer.current_receiver.notify_comment (a_comment, 0)
+				a_context.current_receiver.notify_comment (a_comment, 0)
 			end
 			last_tail_call := Void
+		end
+
+feature {XM_XPATH_EXPRESSION} -- Restricted
+
+	compute_cardinality is
+			-- Compute cardinality.
+		do
+			set_cardinality_exactly_one
 		end
 
 end

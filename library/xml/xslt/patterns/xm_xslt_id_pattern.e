@@ -16,7 +16,7 @@ inherit
 
 	XM_XSLT_PATTERN
 		redefine
-			type_check, node_kind
+			type_check, node_kind, sub_expressions
 		end
 
 creation
@@ -65,6 +65,14 @@ feature -- Access
 			create {XM_XSLT_NODE_KIND_TEST} Result.make (static_context, Element_node)
 		end
 
+	sub_expressions: DS_ARRAYED_LIST [XM_XPATH_EXPRESSION] is
+			-- Immediate sub-expressions of `Current'
+		do
+			create Result.make (1)
+			Result.set_equality_tester (expression_tester)
+			Result.put (id_expression, 1)
+		end
+
 feature -- Optimization
 
 	type_check (a_context: XM_XPATH_STATIC_CONTEXT) is
@@ -81,7 +89,7 @@ feature -- Optimization
 
 feature -- Matching
 
-	matches (a_node: XM_XPATH_NODE; a_transformer: XM_XSLT_TRANSFORMER): BOOLEAN is
+	matches (a_node: XM_XPATH_NODE; a_context: XM_XSLT_EVALUATION_CONTEXT): BOOLEAN is
 			-- Determine whether this Pattern matches the given Node;
 		local
 			a_doc: XM_XPATH_DOCUMENT
@@ -97,7 +105,7 @@ feature -- Matching
 				if a_doc = Void then
 					Result := False
 				else
-					id_expression.evaluate_item (a_transformer.new_xpath_context)
+					id_expression.evaluate_item (a_context)
 					an_id_value ?= id_expression.last_evaluated_item
 					if an_id_value = Void then
 						Result := False						

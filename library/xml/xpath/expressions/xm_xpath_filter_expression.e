@@ -194,6 +194,9 @@ feature -- Status setting
 			if filter_dependencies.item (6) then
 				set_depends_upon_current_group
 			end
+			if filter_dependencies.item (7) then
+				set_depends_upon_regexp_group
+			end
 			are_dependencies_computed := True
 		end
 

@@ -56,6 +56,10 @@ feature {NONE} -- Initialization
 			module_list.set_equality_tester (string_equality_tester)
 			default_validation := Validation_strip
 			function_library := shared_function_library
+			create rule_manager.make
+			create slot_manager.make
+			create executable.make (rule_manager, key_manager, decimal_format_manager,
+											collation_map, module_list, function_library)
 			Precursor (an_error_listener, a_document, a_parent, an_attribute_collection, a_namespace_list, a_name_code, a_sequence_number)
 		end
 
@@ -241,6 +245,10 @@ feature -- Status report
 	indices_built: BOOLEAN
 			-- Have the indices been built?
 
+	is_all_explaining: BOOLEAN
+			-- Should compiled instructions explain themsleves?
+			-- (Only significant for the principal stylesheet)
+
 	is_named_output_property_defined (a_fingerprint: INTEGER): BOOLEAN is
 			-- Is there an xsl:output statement for `a_fingerprint'?
 		require
@@ -329,7 +337,7 @@ feature -- Status report
 			end
 		end
 
-	last_compiled_executable: XM_XSLT_EXECUTABLE
+	executable: XM_XSLT_EXECUTABLE
 			-- Result of successfull call to `compile_stylesheet'
 
 feature -- Status setting
@@ -426,16 +434,26 @@ feature -- Element change
 			collator_declared: is_collator_defined (a_name)
 		end
 
-	allocate_local_slots (a_variable_count: INTEGER) is
-			-- Ensure there is enough space for local variables or parameters in any template.
+	allocate_global_slot (a_variable_name: STRING) is
+			-- Allocate a slot for a global variable or parameter.
+		require
+			variable_name_not_empty: a_variable_name /= Void and then a_variable_name.count > 0
+		do
+			executable.global_slot_manager.allocate_slot_number (a_variable_name)
+		ensure
+			global_slot_allocated: executable.global_slot_manager.number_of_variables = old executable.global_slot_manager.number_of_variables + 1
+		end																						 
+		
+	allocate_pattern_slots (a_variable_count: INTEGER) is
+			-- Ensure there is enough space for local variables or parameters within match patterns in any template.
 		require
 			positive_variable_count: a_variable_count >= 0
 		do
-			if a_variable_count > largest_stack_frame then
-				largest_stack_frame := a_variable_count
+			if a_variable_count > largest_pattern_stack_frame then
+				largest_pattern_stack_frame := a_variable_count
 			end
 		ensure
-			no_smaller: largest_stack_frame >= old largest_stack_frame
+			no_smaller: largest_pattern_stack_frame >= old largest_pattern_stack_frame
 		end
 
 	prepare_attributes is
@@ -471,6 +489,8 @@ feature -- Element change
 						create an_error.make_from_string ("Invalid value for default-validation attribute. Only 'strip' is permitted for a basic XSLT processor)", "", "XT1660", Static_error)
 						report_compile_error (an_error)
 					end
+				elseif STRING_.same_string (an_expanded_name, Gexslt_explain_attribute) then
+					is_all_explaining := STRING_.same_string (attribute_value_by_index (a_cursor.index), "all")
 				else
 					check_unknown_attribute (a_name_code)
 				end
@@ -491,9 +511,9 @@ feature -- Element change
 			a_function_library: XM_XPATH_FUNCTION_LIBRARY
 			a_cursor: DS_ARRAYED_LIST_CURSOR [XM_XPATH_FUNCTION_LIBRARY]
 		do
-			stylesheet_compiler := a_stylesheet_compiler
-			create rule_manager.make
 			create function_library.make
+			executable.set_function_library (function_library)
+			stylesheet_compiler := a_stylesheet_compiler
 			create {XM_XSLT_SYSTEM_FUNCTION_LIBRARY} a_function_library.make
 			function_library.add_function_library (a_function_library)
 			create {XM_XPATH_CONSTRUCTOR_FUNCTION_LIBRARY} a_function_library.make
@@ -712,7 +732,7 @@ feature -- Element change
 	compile (an_executable: XM_XSLT_EXECUTABLE) is
 			-- Compile `Current' to an excutable instruction.
 		do
-			do_nothing -- `compile_stylesheet' is used instead
+			last_generated_expression := Void -- `compile_stylesheet' is used instead
 		end
 
 	compile_stylesheet (a_configuration: XM_XSLT_CONFIGURATION) is
@@ -725,7 +745,7 @@ feature -- Element change
 			a_cursor: DS_BILINKED_LIST_CURSOR [XM_XSLT_STYLE_ELEMENT]
 			another_cursor: DS_HASH_TABLE_CURSOR [XM_XSLT_TEMPLATE, INTEGER]
 			a_third_cursor: DS_ARRAYED_LIST_CURSOR [XM_XPATH_FUNCTION_LIBRARY]
-			an_instruction: XM_XSLT_INSTRUCTION
+			a_computed_expression: XM_XPATH_COMPUTED_EXPRESSION
 			a_compiled_templates_index: DS_HASH_TABLE [XM_XSLT_COMPILED_TEMPLATE, INTEGER]
 			a_property_set: XM_XSLT_OUTPUT_PROPERTIES
 			a_message, a_system_id: STRING
@@ -736,13 +756,12 @@ feature -- Element change
 			a_function: XM_XSLT_FUNCTION
 			a_function_library: XM_XPATH_FUNCTION_LIBRARY
 			an_error: XM_XPATH_ERROR_VALUE
+			explaining: BOOLEAN
 		do
 						
-			create last_compiled_executable.make (a_configuration, rule_manager, key_manager, decimal_format_manager,
-			collation_map, strips_whitespace, module_list, function_library)
-
 			-- Call compile method for each top-level object in the stylesheet
 
+			explaining := is_all_explaining
 			from
 				a_cursor := top_level_elements.new_cursor
 				a_cursor.start
@@ -754,17 +773,20 @@ feature -- Element change
 				if not a_cursor.item.is_excluded then
 					a_system_id := a_cursor.item.system_id
 					if not is_module_registered (a_system_id) then register_module (a_system_id) end
-					a_cursor.item.compile (last_compiled_executable)
-					an_instruction := a_cursor.item.last_generated_instruction						
-					if an_instruction /= Void then
-						an_instruction.set_source_location (module_number (a_system_id), a_cursor.item.line_number)
+					a_cursor.item.compile (executable)
+					a_computed_expression ?= a_cursor.item.last_generated_expression
+					if a_computed_expression /= Void then
+						a_computed_expression.set_source_location (module_number (a_system_id), a_cursor.item.line_number)
+					end
+					if explaining and then a_cursor.item.last_generated_expression /= Void then
+						a_cursor.item.last_generated_expression.display (1)
 					end
 				end
 				a_cursor.forth
 			end
 			if not any_compile_errors then
 				decimal_format_manager.fixup_default_default
-				last_compiled_executable.set_slot_space (number_of_variables, largest_stack_frame)
+				executable.set_pattern_slot_space (largest_pattern_stack_frame)
 				a_property_set := gathered_output_properties (-1)
 				if a_property_set.is_error then
 					if a_property_set.is_duplication_error then
@@ -776,7 +798,7 @@ feature -- Element change
 					end
 					report_compile_error (an_error)
 				else
-					last_compiled_executable.set_default_output_properties (a_property_set)
+					executable.set_default_output_properties (a_property_set)
 					create a_compiled_templates_index.make_map (named_templates_index.count)
 					from
 						another_cursor := named_templates_index.new_cursor; another_cursor.start
@@ -786,12 +808,12 @@ feature -- Element change
 						a_compiled_templates_index.put (another_cursor.item.compiled_template, another_cursor.key)
 						another_cursor.forth
 					end
-					last_compiled_executable.set_named_template_table (a_compiled_templates_index)
+					executable.set_named_template_table (a_compiled_templates_index)
 				end
 
 				-- Build the index of named character maps.
 
-				a_character_map_index := last_compiled_executable.character_map_index
+				a_character_map_index := executable.character_map_index
 				from
 					a_cursor := top_level_elements.new_cursor
 					a_cursor.start
@@ -849,9 +871,9 @@ feature -- Element change
 					end
 					a_cursor.forth
 				end
-				last_compiled_executable.set_function_library (function_library)
+				executable.set_function_library (function_library)
 				if stripper_rules /= Void then
-					last_compiled_executable.set_stripper_rules (stripper_rules)
+					executable.set_stripper_rules (stripper_rules)
 				end
 			end
 		end
@@ -906,8 +928,8 @@ feature {NONE} -- Implementation
 	namespace_alias_namespace_codes: ARRAY [INTEGER]
 			-- Namespace codes for each namespace alias
 
-	largest_stack_frame: INTEGER
-			-- Maximum number of local variables in any template
+	largest_pattern_stack_frame: INTEGER
+			-- Maximum number of local variables within match attribute of any template
 
 	stylesheet_module_map: DS_HASH_TABLE [INTEGER, STRING]
 			-- Map of SYSTEM IDs to module numbers
@@ -1165,10 +1187,12 @@ invariant
 
 	named_templates_index_not_void: named_templates_index /= Void
 	variables_index_not_void: variables_index /= Void
-	positive_largest_stack_frame: largest_stack_frame >= 0
+	positive_largest_stack_frame: largest_pattern_stack_frame >= 0
 	key_manager_not_void: key_manager /= Void
 	decimal_format_manager_not_void: decimal_format_manager /= Void
 	stylesheet_module_map_not_void: stylesheet_module_map /= Void
 	module_list_not_void: module_list /= Void
 	function_library_not_void:  function_library /= Void
+	executable_not_void: executable /= Void
+
 end

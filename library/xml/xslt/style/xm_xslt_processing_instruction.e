@@ -26,7 +26,7 @@ creation {XM_XSLT_NODE_FACTORY}
 feature -- Access
 
 	name: XM_XPATH_EXPRESSION
-			-- Naem of processing-instruction
+			-- Name of processing-instruction
 
 feature -- Element change
 
@@ -104,10 +104,9 @@ feature -- Element change
 			else
 				a_separator := ""
 			end
-			compile_content (an_executable, a_pi)
 			create a_string_value.make (a_separator)
-			a_pi.set_separator_expression (a_string_value)
-			last_generated_instruction := a_pi
+			compile_content (an_executable, a_pi, a_string_value)
+			last_generated_expression := a_pi
 		end
 
 end

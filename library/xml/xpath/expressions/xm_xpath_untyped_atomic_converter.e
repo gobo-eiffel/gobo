@@ -17,7 +17,7 @@ inherit
 
 	XM_XPATH_UNARY_EXPRESSION
 		redefine
-			item_type, analyze, evaluate_item, iterator
+			item_type, analyze, evaluate_item, iterator, compute_special_properties
 		end
 
 	XM_XPATH_MAPPING_FUNCTION
@@ -156,6 +156,13 @@ feature {XM_XPATH_EXPRESSION} -- Restricted
 			-- Format `operator' for display
 		do
 			Result := "convert untyped atomic items to " + target_type.conventional_name
+		end
+
+	compute_special_properties is
+			-- Compute special properties.
+		do
+			Precursor
+			set_non_creating
 		end
 
 invariant

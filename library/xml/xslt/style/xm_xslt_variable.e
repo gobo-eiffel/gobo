@@ -35,6 +35,7 @@ feature {NONE} -- Initialization
 			cached_variable_fingerprint := -1
 			is_instruction := True
 			create references.make (5)
+			create slot_manager.make
 			Precursor (an_error_listener, a_document, a_parent, an_attribute_collection, a_namespace_list, a_name_code, a_sequence_number)
 		end
 
@@ -94,28 +95,29 @@ feature -- Element change
 	compile (an_executable: XM_XSLT_EXECUTABLE) is
 			-- Compile `Current' to an excutable instruction.
 		local
-			a_variable: XM_XSLT_COMPILED_VARIABLE
+			a_local_variable: XM_XSLT_LOCAL_VARIABLE
+			a_global_variable: XM_XSLT_GLOBAL_VARIABLE
 		do
+			last_generated_expression := Void
 			if references.count = 0 then
 				is_redundant_variable := True
-			end
-			if is_global_variable and not is_redundant_variable then
-				principal_stylesheet.allocate_local_slots (number_of_variables)
 			end
 			if not is_redundant_variable then
 				check
 					strictly_positive_slot_number: slot_number > 0
 				end
-				create a_variable.make (an_executable, variable_name, slot_number)
-				initialize_instruction (an_executable, a_variable)
-				a_variable.set_required_type (required_type)
-				fixup_binding (a_variable)
-				last_generated_instruction := a_variable
+				if is_global_variable then
+					create a_global_variable.make_global_variable (an_executable, variable_name, slot_number, slot_manager)
+					initialize_instruction (an_executable, a_global_variable)
+					fixup_binding (a_global_variable)					
+					last_generated_expression := a_global_variable
+				else
+					create a_local_variable.make (an_executable, variable_name, slot_number)
+					initialize_instruction (an_executable, a_local_variable)
+					-- fixup_binding omitted, as that is done by `compile_variable'
+					last_generated_expression := a_local_variable
+				end
 			end
 		end
-
-invariant
-
-	instruction: is_instruction = True -- Well, it can be.
 
 end

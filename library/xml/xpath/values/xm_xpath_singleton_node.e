@@ -15,6 +15,9 @@ class XM_XPATH_SINGLETON_NODE
 inherit
 	
 	XM_XPATH_VALUE
+		redefine
+			process
+		end
 
 	XM_XPATH_SHARED_ANY_NODE_TEST
 
@@ -125,12 +128,28 @@ feature -- Evaluation
 			end
 		end
 
+	process (a_context: XM_XPATH_CONTEXT) is
+			-- Execute `Current' completely, writing results to the current `XM_XPATH_RECEIVER'.
+		do
+			if node /= Void then
+				a_context.current_receiver.append_item (node)
+			end
+		end
+
 feature -- Conversion
 
 	as_item (a_context: XM_XPATH_CONTEXT): XM_XPATH_ITEM is
 			-- Convert to an item
 		do
 			Result := node
+		end
+
+feature {XM_XPATH_EXPRESSION} -- Restricted
+
+	native_implementations: INTEGER is
+			-- Natively-supported evaluation routines
+		do
+			Result := Supports_evaluate_item
 		end
 	
 end

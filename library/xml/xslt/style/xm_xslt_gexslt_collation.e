@@ -74,7 +74,7 @@ feature -- Element change
 	validate is
 			-- Check that the stylesheet element is valid.
 		do
-			check_top_level
+			check_top_level (Void)
 			check_empty
 			validated := True
 		end

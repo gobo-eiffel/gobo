@@ -13,6 +13,14 @@ class XM_XSLT_COMPILED_FOR_EACH
 inherit
 	
 	XM_XSLT_INSTRUCTION
+		redefine
+			item_type, creates_new_nodes, compute_dependencies, promote_instruction,
+			sub_expressions, native_implementations, iterator
+		end
+
+	XM_XPATH_PROMOTION_ACTIONS
+
+	XM_XPATH_MAPPING_FUNCTION
 
 creation
 
@@ -20,19 +28,25 @@ creation
 
 feature {NONE} -- Initialization
 
-	make (an_executable: XM_XSLT_EXECUTABLE; a_select_expression: XM_XPATH_EXPRESSION) is
+	make (an_executable: XM_XSLT_EXECUTABLE; a_select_expression, an_action: XM_XPATH_EXPRESSION) is
 			-- Establish invariant.
 		require
 			executable_not_void: an_executable /= Void
 			select_expression_not_void: a_select_expression /= Void
+			action_not_void: an_action /= Void
 		do
 			executable := an_executable
 			select_expression := a_select_expression
-			instruction_name := "for-each"
-			create children.make (0)
+			adopt_child_expression (select_expression)
+			action := an_action
+			adopt_child_expression (action)
+			instruction_name := "xsl:for-each"
+			compute_static_properties
+			initialize
 		ensure
 			executable_set: executable = an_executable
 			select_expression_set: select_expression = a_select_expression
+			action_set: action = an_action
 		end
 
 feature -- Access
@@ -40,23 +54,164 @@ feature -- Access
 	instruction_name: STRING
 			-- Name of instruction, for diagnostics
 
+	action: XM_XPATH_EXPRESSION
+			-- Action to be performed within the loop
+	
+	item_type: XM_XPATH_ITEM_TYPE is
+			-- Data type of the expression, when known
+		do
+			Result := action.item_type
+		end
+
+	sub_expressions: DS_ARRAYED_LIST [XM_XPATH_EXPRESSION] is
+			-- Immediate sub-expressions of `Current'
+		do
+			create Result.make (2)
+			Result.set_equality_tester (expression_tester)
+			Result.Put (select_expression, 1)
+			Result.Put (action, 2)
+		end
+
+feature -- Status report
+
+	creates_new_nodes: BOOLEAN is
+			-- Can `Current' create new nodes?
+		do
+			Result := not action.non_creating
+		end
+
+	display (a_level: INTEGER) is
+			-- Diagnostic print of expression structure to `std.error'
+		local
+			a_string: STRING
+		do
+			a_string := STRING_.appended_string (indentation (a_level), "for-each")
+			std.error.put_string (a_string); std.error.put_new_line
+			select_expression.display (a_level + 1)
+			a_string := STRING_.appended_string (indentation (a_level), "return")
+			std.error.put_string (a_string); std.error.put_new_line
+			action.display (a_level + 1)
+		end
+	
+feature -- Status setting
+
+	compute_dependencies is
+			-- Compute dependencies on context.
+		do
+			if not are_intrinsic_dependencies_computed then compute_intrinsic_dependencies end
+			set_dependencies (select_expression.dependencies)
+			merge_dependencies (action.dependencies)
+			if not select_expression.depends_upon_context_item then
+				set_context_item_independent
+			end
+			if not select_expression.depends_upon_position then
+				set_position_independent
+			end
+			if not select_expression.depends_upon_last then
+				set_last_independent
+			end
+			if not select_expression.depends_upon_context_document then
+				set_context_document_independent
+			end
+		end
+
+feature -- Optimization
+
+	simplify is
+			-- Perform context-independent static optimizations.
+		do
+			select_expression.simplify
+			if select_expression.was_expression_replaced then
+				select_expression := select_expression.replacement_expression
+				adopt_child_expression (select_expression)
+			end
+			action.simplify
+			if action.was_expression_replaced then
+				action := action.replacement_expression
+				adopt_child_expression (action)
+			end			
+		end
+
+	analyze (a_context: XM_XPATH_STATIC_CONTEXT) is
+			-- Perform static analysis of `Current' and its subexpressions.
+		local
+			an_empty_sequence: XM_XPATH_EMPTY_SEQUENCE
+			a_promotion_offer: XM_XPATH_PROMOTION_OFFER
+			a_let_expression: XM_XPATH_LET_EXPRESSION
+		do
+			select_expression.analyze (a_context)
+			if select_expression.was_expression_replaced then
+				select_expression := select_expression.replacement_expression
+				adopt_child_expression (select_expression)
+			end
+			an_empty_sequence ?= select_expression
+			if an_empty_sequence /= Void then
+				set_replacement (an_empty_sequence) -- NOP
+			else
+				action.analyze (a_context)
+				if action.was_expression_replaced then
+					action := action.replacement_expression
+					adopt_child_expression (action)
+				end
+				an_empty_sequence ?= action
+				if an_empty_sequence /= Void then
+					set_replacement (an_empty_sequence) -- NOP
+				else
+
+					-- If any subexpressions within the body of the for-each are not dependent on the focus,
+					--  promote them: this causes them to be evaluated once, outside the for-each loop
+
+					create a_promotion_offer.make (Focus_independent, Void, Current, False, select_expression.context_document_nodeset)
+					action.promote (a_promotion_offer)
+					if action.was_expression_replaced then
+						action := action.replacement_expression
+						adopt_child_expression (action)
+					end
+					a_let_expression ?= a_promotion_offer.containing_expression
+					if a_let_expression /= Void then
+						a_let_expression.analyze (a_context)
+						if a_let_expression.was_expression_replaced then
+							a_promotion_offer.set_containing_expression (a_let_expression.replacement_expression)
+						end
+					end
+					if a_promotion_offer.containing_expression /= Current then
+						if a_promotion_offer.containing_expression.was_expression_replaced then
+							set_replacement (a_promotion_offer.containing_expression.replacement_expression)
+						else
+							set_replacement (a_promotion_offer.containing_expression)
+						end
+					end
+				end
+			end
+		end
+
+	promote_instruction (an_offer: XM_XPATH_PROMOTION_OFFER) is
+			-- Promote this instruction.
+		do
+			select_expression.promote (an_offer)
+			if select_expression.was_expression_replaced then
+				select_expression := select_expression.replacement_expression
+				adopt_child_expression (select_expression)
+			end
+			action.promote (an_offer)
+			if action.was_expression_replaced then
+				action := action.replacement_expression
+				adopt_child_expression (action)
+			end
+		end	
+
 feature -- Evaluation
 
 	process_leaving_tail (a_context: XM_XSLT_EVALUATION_CONTEXT) is
 			-- Execute `Current', writing results to the current `XM_XPATH_RECEIVER'.
 		local
 			a_transformer: XM_XSLT_TRANSFORMER
-			a_saved_iterator, an_iterator: XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_ITEM]
+			an_iterator: XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_ITEM]
 			an_inner_context: XM_XSLT_EVALUATION_CONTEXT
-			a_saved_template: XM_XSLT_COMPILED_TEMPLATE
 			a_trace_listener: XM_XSLT_TRACE_LISTENER
 		do
 			a_transformer := a_context.transformer
-			a_saved_template := a_transformer.current_template
-			a_saved_iterator := a_transformer.current_iterator
 			an_iterator := select_expression.iterator (a_context)
-			a_transformer.set_current_template (Void)
-			a_transformer.set_current_iterator (an_iterator)
 			an_inner_context := a_context.new_context
 			an_inner_context.set_current_iterator (an_iterator)
 			if a_transformer.is_tracing then
@@ -70,14 +225,34 @@ feature -- Evaluation
 				if a_transformer.is_tracing then
 					a_trace_listener.trace_current_item_start (an_iterator.item)
 				end
-				process_children (an_inner_context)
+				action.process (an_inner_context)
 				if a_transformer.is_tracing then
 					a_trace_listener.trace_current_item_finish (an_iterator.item)
 				end
 				an_iterator.forth
 			end
-			a_transformer.set_current_iterator (a_saved_iterator)
-			a_transformer.set_current_template (a_saved_template)
+		end
+
+	iterator (a_context: XM_XPATH_CONTEXT): XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_ITEM] is
+			-- Iterate over the values of a sequence
+		local
+			a_new_context: XM_XSLT_EVALUATION_CONTEXT
+		do
+			Result := select_expression.iterator (a_context)
+			a_new_context ?= a_context.new_context
+			check
+				evaluation_context: a_new_context /= Void
+				-- This is XSLT
+			end
+			a_new_context.set_current_template (Void)
+			a_new_context.set_current_iterator (Result)
+			create {XM_XPATH_MAPPING_ITERATOR} Result.make (Result, Current, a_new_context, Void)
+		end
+	
+	map (an_item: XM_XPATH_ITEM; a_context: XM_XPATH_CONTEXT; an_information_object: ANY): XM_XPATH_MAPPED_ITEM is
+			-- Map `an_item' to a sequence
+		do
+			create Result.make_sequence (action.iterator (a_context))
 		end
 
 feature {NONE} -- Implementation
@@ -85,9 +260,16 @@ feature {NONE} -- Implementation
 	select_expression: XM_XPATH_EXPRESSION
 			-- Nodes to be selected
 
+	native_implementations: INTEGER is
+			-- Natively-supported evaluation routines
+		do
+				Result := Supports_process + Supports_iterator
+		end
+
 invariant
 
 	select_expression_not_void: select_expression /= Void
+	action_not_void: action /= Void
 
 end
 	

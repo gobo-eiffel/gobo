@@ -668,6 +668,8 @@ feature -- Status report
 				if a_prefix_index = -1 then Result := False
 				elseif a_uri_code > Default_uri_code and then a_uri_code <= Xpath_standard_functions_uri_code then
 					Result := True -- TODO: This isn't exactly true, but it is probably illegitimate to test for a non-standard local name in a standard namespace
+					-- TODO: it may be illegitimate, but still we should return False.
+					-- TODO: fix awaiting single type factory (necessary since Febraury 2005 working drafts) - new mechanism needed. 
 				else
 					a_depth := 1
 					a_hash_code := a_local_name.hash_code \\ 1024

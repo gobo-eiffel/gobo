@@ -32,7 +32,7 @@ feature -- Access
 		do
 			Result := internal_parsed_expression
 		ensure
-			parsed_expression_not_void: Result /= Void
+			parsed_expression_not_replaced: Result /= Void and then not Result.was_expression_replaced
 		end
 
 feature -- Status report

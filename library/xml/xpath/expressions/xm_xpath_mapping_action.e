@@ -45,7 +45,7 @@ feature -- Evaluation
 	map (an_item: XM_XPATH_ITEM; a_context: XM_XPATH_CONTEXT; an_information_object: ANY): XM_XPATH_MAPPED_ITEM is
 			-- Map `an_item' to a sequence
 		do
-			context.set_local_variable (slot_number, an_item.as_value)
+			context.set_local_variable (an_item.as_value, slot_number)
 			create Result.make_sequence (action.iterator (context))
 		end
 

@@ -13,6 +13,10 @@ class XM_XSLT_COMPILED_NUMBER
 inherit
 	
 	XM_XSLT_INSTRUCTION
+		redefine
+			sub_expressions, compute_intrinsic_dependencies, item_type,
+			compute_cardinality, promote
+		end
 
 	XM_XPATH_TYPE
 
@@ -40,17 +44,17 @@ feature {NONE} -- Initialization
 			formatter: a_formatter = Void implies a_format /= Void
 		do
 			executable := an_executable
-			select_expression := a_select_expression
+			select_expression := a_select_expression;	if select_expression /= Void then adopt_child_expression (select_expression) end
 			level := a_level
 			count_pattern := a_count_pattern
 			from_pattern := a_from_pattern
-			value_expression := a_value_expression
-			format := a_format
-			grouping_size := a_grouping_size
-			grouping_separator := a_grouping_separator
-			letter_value := a_letter_value
-			ordinal := an_ordinal
-			language := a_language
+			value_expression := a_value_expression; if value_expression /= Void then adopt_child_expression (value_expression) end
+			format := a_format; if format /= Void then adopt_child_expression (format) end
+			grouping_size := a_grouping_size; if grouping_size /= Void then adopt_child_expression (grouping_size) end
+			grouping_separator := a_grouping_separator; if grouping_separator /= Void then adopt_child_expression (grouping_separator) end
+			letter_value := a_letter_value; if letter_value /= Void then adopt_child_expression (letter_value) end
+			ordinal := an_ordinal; if ordinal /= Void then adopt_child_expression (ordinal) end
+			language := a_language; if language /= Void then adopt_child_expression (language) end
 			formatter := a_formatter
 			numberer := a_numberer
 			has_variables_in_patterns := variables_in_patterns
@@ -58,8 +62,9 @@ feature {NONE} -- Initialization
 			if value_expression /= Void and then is_sub_type (value_expression.item_type, type_factory.any_atomic_type) then
 				create {XM_XPATH_ATOMIZER_EXPRESSION} value_expression.make (value_expression)
 			end
-			instruction_name := "number"
-			create children.make (0)
+			instruction_name := "xsl:number"
+			compute_static_properties
+			initialize
 		ensure
 			executable_set: executable = an_executable
 			select_expression_set: select_expression = a_select_expression
@@ -82,13 +87,226 @@ feature -- Access
 	
 	instruction_name: STRING
 			-- Name of instruction, for diagnostics
+		
+	item_type: XM_XPATH_ITEM_TYPE is
+			-- Data type of the expression, when known
+		do
+			Result := type_factory.string_type
+		end
+
+	sub_expressions: DS_ARRAYED_LIST [XM_XPATH_EXPRESSION] is
+			-- Immediate sub-expressions of `Current'
+		do
+			create Result.make (10)
+			Result.set_equality_tester (expression_tester)
+			if select_expression /= Void then Result.put_last (select_expression) end
+			if value_expression /= Void then Result.put_last (value_expression) end
+			if format /= Void then Result.put_last (format) end
+			if grouping_size /= Void then Result.put_last (grouping_size) end
+			if grouping_separator /= Void then Result.put_last (grouping_separator) end
+			if letter_value /= Void then Result.put_last (letter_value) end
+			if ordinal /= Void then Result.put_last (ordinal) end
+			if language /= Void then Result.put_last (language) end
+			-- TODO: add pattern expressions for count_pattern and from_pattern
+		end
+
+feature -- Status report
+
+	display (a_level: INTEGER) is
+			-- Diagnostic print of expression structure to `std.error'
+		do
+			todo ("display", False)
+		end
+
+feature -- Status setting
+
+		compute_intrinsic_dependencies is
+			-- Determine the intrinsic dependencies of an expression.
+		do
+			initialize_intrinsic_dependencies
+			if select_expression = Void then
+				set_intrinsically_depends_upon_current_item
+			end
+		end
+
+feature -- Optimization
+	
+	simplify is
+			-- Perform context-independent static optimizations.
+		do
+			if select_expression /= Void then
+				select_expression.simplify
+				if select_expression.was_expression_replaced then
+					select_expression := select_expression.replacement_expression;	adopt_child_expression (select_expression)
+				end
+			end
+			if value_expression /= Void then
+				value_expression.simplify
+				if value_expression.was_expression_replaced then
+					value_expression := value_expression.replacement_expression;	adopt_child_expression (value_expression)
+				end
+			end
+			if format /= Void then
+				format.simplify
+				if format.was_expression_replaced then
+					format := format.replacement_expression;	adopt_child_expression (format)
+				end
+			end
+			if grouping_size /= Void then
+				grouping_size.simplify
+				if grouping_size.was_expression_replaced then
+					grouping_size := grouping_size.replacement_expression;	adopt_child_expression (grouping_size)
+				end
+			end
+			if grouping_separator /= Void then
+				grouping_separator.simplify
+				if grouping_separator.was_expression_replaced then
+					grouping_separator := grouping_separator.replacement_expression;	adopt_child_expression (grouping_separator)
+				end
+			end
+			if letter_value /= Void then
+				letter_value.simplify
+				if letter_value.was_expression_replaced then
+					letter_value := letter_value.replacement_expression;	adopt_child_expression (letter_value)
+				end
+			end
+			if ordinal /= Void then
+				ordinal.simplify
+				if ordinal.was_expression_replaced then
+					ordinal := ordinal.replacement_expression;	adopt_child_expression (ordinal)
+				end
+			end
+			if language /= Void then
+				language.simplify
+				if language.was_expression_replaced then
+					language := language.replacement_expression;	adopt_child_expression (language)
+				end
+			end
+			-- TODO: simplify count_pattern and from_pattern
+		end
+
+	analyze (a_context: XM_XPATH_STATIC_CONTEXT) is
+			-- Perform static analysis of `Current' and its subexpressions.
+		do
+			if select_expression /= Void then
+				select_expression.analyze (a_context)
+				if select_expression.was_expression_replaced then
+					select_expression := select_expression.replacement_expression;	adopt_child_expression (select_expression)
+				end
+			end
+			if value_expression /= Void then
+				value_expression.analyze (a_context)
+				if value_expression.was_expression_replaced then
+					value_expression := value_expression.replacement_expression;	adopt_child_expression (value_expression)
+				end
+			end
+			if format /= Void then
+				format.analyze (a_context)
+				if format.was_expression_replaced then
+					format := format.replacement_expression;	adopt_child_expression (format)
+				end
+			end
+			if grouping_size /= Void then
+				grouping_size.analyze (a_context)
+				if grouping_size.was_expression_replaced then
+					grouping_size := grouping_size.replacement_expression;	adopt_child_expression (grouping_size)
+				end
+			end
+			if grouping_separator /= Void then
+				grouping_separator.analyze (a_context)
+				if grouping_separator.was_expression_replaced then
+					grouping_separator := grouping_separator.replacement_expression;	adopt_child_expression (grouping_separator)
+				end
+			end
+			if letter_value /= Void then
+				letter_value.analyze (a_context)
+				if letter_value.was_expression_replaced then
+					letter_value := letter_value.replacement_expression;	adopt_child_expression (letter_value)
+				end
+			end
+			if ordinal /= Void then
+				ordinal.analyze (a_context)
+				if ordinal.was_expression_replaced then
+					ordinal := ordinal.replacement_expression;	adopt_child_expression (ordinal)
+				end
+			end
+			if language /= Void then
+				language.analyze (a_context)
+				if language.was_expression_replaced then
+					language := language.replacement_expression;	adopt_child_expression (language)
+				end
+			end
+			-- TODO: analyze count_pattern and from_pattern
+		end
+
+	promote (an_offer: XM_XPATH_PROMOTION_OFFER) is
+			-- Promote this subexpression.
+		local
+			a_promotion: XM_XPATH_EXPRESSION
+		do
+			an_offer.accept (Current)
+			a_promotion := an_offer.accepted_expression
+			if a_promotion /= Void then
+				set_replacement (a_promotion)
+			else
+				if select_expression /= Void then
+					select_expression.promote (an_offer)
+					if select_expression.was_expression_replaced then
+						select_expression := select_expression.replacement_expression;	adopt_child_expression (select_expression)
+					end
+				end
+				if value_expression /= Void then
+					value_expression.promote (an_offer)
+					if value_expression.was_expression_replaced then
+						value_expression := value_expression.replacement_expression;	adopt_child_expression (value_expression)
+					end
+				end
+				if format /= Void then
+					format.promote (an_offer)
+					if format.was_expression_replaced then
+						format := format.replacement_expression;	adopt_child_expression (format)
+					end
+				end
+				if grouping_size /= Void then
+					grouping_size.promote (an_offer)
+					if grouping_size.was_expression_replaced then
+						grouping_size := grouping_size.replacement_expression;	adopt_child_expression (grouping_size)
+					end
+				end
+				if grouping_separator /= Void then
+					grouping_separator.promote (an_offer)
+					if grouping_separator.was_expression_replaced then
+						grouping_separator := grouping_separator.replacement_expression;	adopt_child_expression (grouping_separator)
+					end
+				end
+				if letter_value /= Void then
+					letter_value.promote (an_offer)
+					if letter_value.was_expression_replaced then
+						letter_value := letter_value.replacement_expression;	adopt_child_expression (letter_value)
+					end
+				end
+				if ordinal /= Void then
+					ordinal.promote (an_offer)
+					if ordinal.was_expression_replaced then
+						ordinal := ordinal.replacement_expression;	adopt_child_expression (ordinal)
+					end
+				end
+				if language /= Void then
+					language.promote (an_offer)
+					if language.was_expression_replaced then
+						language := language.replacement_expression;	adopt_child_expression (language)
+					end
+				end
+				-- TODO: promote count_pattern and from_pattern
+			end
+		end
 
 feature -- Evaluation
 
 	process_leaving_tail (a_context: XM_XSLT_EVALUATION_CONTEXT) is
-			-- Execute `Current', writing results to the current `XM_XPATH_RECEIVER'.
-		local
-			a_receiver: XM_XSLT_SEQUENCE_RECEIVER
+			-- Execute `Current', writing results to the current `XM_XPATH_RECEIVER'.	
+	local
+			a_receiver: XM_XPATH_SEQUENCE_RECEIVER
 			a_group_size: INTEGER
 			a_group_separator, an_ordinal_value, a_letter, a_string: STRING
 			an_integer_value: XM_XPATH_INTEGER_VALUE
@@ -96,7 +314,7 @@ feature -- Evaluation
 			an_error: XM_XPATH_ERROR_VALUE
 		do
 			transformer := a_context.transformer
-			a_receiver := transformer.current_receiver
+			a_receiver := a_context.current_receiver
 			last_tail_call := Void
 			calculate_value (a_context)
 			if not transformer.is_error then
@@ -127,7 +345,7 @@ feature -- Evaluation
 				if grouping_separator /= Void then
 					grouping_separator.evaluate_as_string (a_context)
 					check
-						grouping_serparator: not grouping_separator.last_evaluated_string.is_error
+						grouping_separator: not grouping_separator.last_evaluated_string.is_error
 					end
 					a_group_separator := grouping_separator.last_evaluated_string.string_value
 					if a_group_separator.count > 1 then
@@ -188,6 +406,15 @@ feature -- Evaluation
 				a_receiver.notify_characters (a_number_formatter.formatted_string (integer_vector, a_group_size, a_group_separator, a_letter, an_ordinal_value, numberer), 0)
 			end
 			last_tail_call := Void
+		end
+
+
+feature {XM_XSLT_EXPRESSION} -- Restricted
+
+	compute_cardinality is
+			-- Compute cardinality.
+		do
+			set_cardinality_exactly_one
 		end
 
 feature {NONE} -- Implementation
@@ -301,7 +528,7 @@ feature {NONE} -- Implementation
 					select_expression.evaluate_item (a_context)
 					a_source ?= select_expression.last_evaluated_item
 				else
-					a_source  ?= transformer.current_item
+					a_source  ?= a_context.context_item
 					if a_source = Void then
 						create an_error.make_from_string ("Context item for xsl:number must be a node", "", "XT0990", Dynamic_error)
 						transformer.report_recoverable_error (an_error, Current)

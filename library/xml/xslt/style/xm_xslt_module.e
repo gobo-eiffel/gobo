@@ -40,12 +40,16 @@ feature -- Access
 			a_uri, a_base_uri: UT_URI
 			a_uri_resolver: XM_URI_REFERENCE_RESOLVER
 			a_node_factory: XM_XSLT_NODE_FACTORY
-			a_message: STRING
+			a_message, an_error_code: STRING
 			an_error: XM_XPATH_ERROR_VALUE
 		do
 			check_empty
-			check_top_level
-
+			if is_import then
+				an_error_code := "XT0190"
+			else
+				an_error_code := "XT0170"
+			end
+			check_top_level (an_error_code)
 			if not any_compile_errors then
 				a_stylesheet ?= parent_node
 				check
@@ -63,31 +67,34 @@ feature -- Access
 					report_compile_error (an_error)
 				else
 					create a_source.make (a_uri_resolver.last_system_id.full_reference)
-					create a_node_factory.make (a_configuration.error_listener, a_configuration.are_external_functions_allowed)
-					a_stylesheet_compiler.load_stylesheet_module (a_source, a_uri_resolver.last_uri_reference_stream, a_uri_resolver.last_system_id)
-					if a_stylesheet_compiler.load_stylesheet_module_failed then
-						create an_error.make_from_string (a_stylesheet_compiler.load_stylesheet_module_error, "", "XT0165", Static_error)
-						report_compile_error (an_error)
-					else
-						included_document := a_stylesheet_compiler.last_loaded_module
-						-- TODO: allow "Literal Result Element as Stylesheet" syntax, and validation errors
-						Result ?= included_document.document_element
-						if Result = Void then
-							a_message := STRING_.concat ("Included document ", href)
-							a_message := STRING_.appended_string (a_message, " is not a stylesheet")
-							create an_error.make_from_string (a_message, "", "XT0165", Static_error)
+					check_recursion (a_source, a_stylesheet)
+					if not any_compile_errors then
+						create a_node_factory.make (a_configuration.error_listener, a_configuration.are_external_functions_allowed)
+						a_stylesheet_compiler.load_stylesheet_module (a_source, a_uri_resolver.last_uri_reference_stream, a_uri_resolver.last_system_id)
+						if a_stylesheet_compiler.load_stylesheet_module_failed then
+							create an_error.make_from_string (a_stylesheet_compiler.load_stylesheet_module_error, "", "XT0165", Static_error)
 							report_compile_error (an_error)
 						else
-							if Result.validation_error /= Void then
-								if reporting_circumstances = Report_always then
-									Result.report_compile_error (Result.validation_error)
-								elseif reporting_circumstances = Report_unless_forwards_comptible and then not Result.is_forwards_compatible_processing_enabled then
-									Result.report_compile_error (Result.validation_error)
+							included_document := a_stylesheet_compiler.last_loaded_module
+							-- TODO: allow "Literal Result Element as Stylesheet" syntax, and validation errors
+							Result ?= included_document.document_element
+							if Result = Void then
+								a_message := STRING_.concat ("Included document ", href)
+								a_message := STRING_.appended_string (a_message, " is not a stylesheet")
+								create an_error.make_from_string (a_message, "", "XT0165", Static_error)
+								report_compile_error (an_error)
+							else
+								if Result.validation_error /= Void then
+									if reporting_circumstances = Report_always then
+										Result.report_compile_error (Result.validation_error)
+									elseif reporting_circumstances = Report_unless_forwards_comptible and then not Result.is_forwards_compatible_processing_enabled then
+										Result.report_compile_error (Result.validation_error)
+									end
 								end
+								Result.set_import_precedence (a_precedence)
+								Result.set_importer (an_importer)
+								Result.splice_includes
 							end
-							Result.set_import_precedence (a_precedence)
-							Result.set_importer (an_importer)
-							Result.splice_includes
 						end
 					end
 				end
@@ -153,9 +160,9 @@ feature -- Element change
 	validate is
 			-- Check that the stylesheet element is valid.
 		do
-			check_empty
-			check_top_level
-			validated := True
+
+			-- Will never be called
+
 		end
 
 	compile (an_executable: XM_XSLT_EXECUTABLE) is
@@ -164,7 +171,7 @@ feature -- Element change
 			check
 				never_compiled: False
 			end
-			last_generated_instruction := Void
+			last_generated_expression := Void
 		end
 
 feature {NONE} -- Implementation
@@ -177,5 +184,36 @@ feature {NONE} -- Implementation
 			uri_encoding_not_void: Result /= Void
 		end
 
+	check_recursion (a_source: XM_XSLT_URI_SOURCE; a_stylesheet: XM_XSLT_STYLESHEET) is
+			-- Check for recursive import.
+		require
+			source_not_void: a_source /= Void
+			stylesheet_not_void: a_stylesheet /= Void
+		local
+			an_ancestor: XM_XSLT_STYLESHEET
+			an_error: XM_XPATH_ERROR_VALUE
+			a_message, an_error_code: STRING
+		do
+			from
+				an_ancestor := a_stylesheet
+			until
+				an_ancestor = Void or else any_compile_errors
+			loop
+				if STRING_.same_string (a_source.uri_reference, an_ancestor.system_id) then
+					if is_import then
+						an_error_code := "XT0210"
+						a_message := "A stylesheet may not import itself"
+					else
+						an_error_code := "XT0180"
+						a_message := "A stylesheet may not import include"
+					end
+					create an_error.make_from_string (a_message, "", an_error_code, Static_error)
+					report_compile_error (an_error)
+				else
+					an_ancestor := an_ancestor.importer
+				end
+			end
+		end
+	
 end
 	

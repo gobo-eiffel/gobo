@@ -16,8 +16,7 @@ inherit
 
 	XM_XPATH_FUNCTION_CALL
 		redefine
-			pre_evaluate, simplify,
-			evaluate_item, iterator, display, mark_tail_function_calls
+			pre_evaluate, evaluate_item, iterator, display, mark_tail_function_calls
 		end
 
 	XM_XPATH_ROLE
@@ -111,13 +110,6 @@ feature -- Status setting
 			is_tail_recursive := True
 		end
 
-feature -- Optimization
-
-	simplify is
-			-- Perform context-independent static optimizations
-		do
-			simplify_arguments
-		end	
 feature -- Evaluation
 
 	iterator (a_context: XM_XPATH_CONTEXT): XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_ITEM] is
@@ -180,11 +172,11 @@ feature -- Element change
 			static_type_set: static_type = a_static_type
 		end
 
-	set_function (a_source_function: XM_XSLT_FUNCTION; a_compiled_function: XM_XSLT_CALLABLE_FUNCTION) is
+	set_function (a_source_function: XM_XSLT_FUNCTION; a_compiled_function: XM_XSLT_COMPILED_USER_FUNCTION) is
 			-- Create reference to callable function, and validate consitency.
 		require
 			source_function_not_void: a_source_function /= Void
-			compiled_function_nit_void: a_compiled_function /= Void
+			compiled_function_not_void: a_compiled_function /= Void
 		local
 			an_argument_count, an_index: INTEGER
 			a_role: XM_XPATH_ROLE_LOCATOR
@@ -218,7 +210,7 @@ feature {XM_XPATH_FUNCTION_CALL} -- Local
 	check_arguments (a_context: XM_XPATH_STATIC_CONTEXT) is
 			-- Check arguments during parsing, when all the argument expressions have been read.
 		do
-			-- These checks are now done in set_function, at the time when the function
+			-- These checks are in set_function, at the time when the function
 			-- call is bound to an actual function.
 		end
 
@@ -242,7 +234,7 @@ feature {NONE} -- Implementation
 	static_type: XM_XPATH_SEQUENCE_TYPE
 			-- Static type of returned result
 
-	function: XM_XSLT_CALLABLE_FUNCTION
+	function: XM_XSLT_COMPILED_USER_FUNCTION
 			-- Compiled function
 
 	name: STRING is
@@ -261,16 +253,23 @@ feature {NONE} -- Implementation
 			context_not_void: a_context /= Void
 			fixed_up: function /= Void
 		local
-			some_actual_arguments: DS_ARRAYED_LIST [XM_XPATH_VALUE]
+			some_actual_arguments: ARRAY [XM_XPATH_VALUE]
 			a_cursor: DS_ARRAYED_LIST_CURSOR [XM_XPATH_EXPRESSION]
-			a_transformer: XM_XSLT_TRANSFORMER
-			a_saved_context: XM_XSLT_SAVED_TRANSFORMER_CONTEXT
 			a_function_call: XM_XSLT_FUNCTION_CALL_PACKAGE
 			an_expression: XM_XPATH_EXPRESSION
 			a_value: XM_XPATH_VALUE
+			a_reference_count, a_parameter_count: INTEGER
+			an_empty_sequence: XM_XPATH_EMPTY_SEQUENCE
+			keep_value: BOOLEAN
+			a_clean_context: XM_XSLT_EVALUATION_CONTEXT
 		do
-			create some_actual_arguments.make (arguments.count)
+			create some_actual_arguments.make (1, arguments.count)
 			from
+				a_parameter_count := function.parameter_definitions.count
+				check
+					corect_number_of_parameters: a_parameter_count = arguments.count
+					-- static_typing
+				end
 				a_cursor := arguments.new_cursor; a_cursor.start
 			variant
 				arguments.count + 1 - a_cursor.index
@@ -282,8 +281,18 @@ feature {NONE} -- Implementation
 				if a_value /= Void then
 					some_actual_arguments.put (a_value, a_cursor.index)
 				else
-					an_expression.lazily_evaluate (a_context, False)
-					some_actual_arguments.put (an_expression.last_evaluation, a_cursor.index)
+
+					-- determine which kind of lazy evaluation to use
+
+					a_reference_count := function.parameter_definitions.item (a_cursor.index).reference_count
+					if a_reference_count = 0 then
+						create an_empty_sequence.make -- TODO: ALL empty sequences should be able to share an object throughout the xpath/xslt libraries
+						some_actual_arguments.put (an_empty_sequence, a_cursor.index)
+					else
+						keep_value := a_reference_count > 1
+						an_expression.lazily_evaluate (a_context, keep_value)
+						some_actual_arguments.put (an_expression.last_evaluation, a_cursor.index)
+					end
 				end
 				a_cursor.forth
 			end
@@ -291,13 +300,9 @@ feature {NONE} -- Implementation
 				create a_function_call.make (function, some_actual_arguments, a_context)
 				create {XM_XPATH_OBJECT_VALUE} last_called_value.make (a_function_call)
 			else
-				a_transformer := a_context.transformer
-				a_saved_context := a_transformer.saved_context
-				a_transformer.reset_global_context
-				a_transformer.set_current_iterator (Void)
-				function.call (some_actual_arguments, a_transformer, True)
+				a_clean_context := a_context.new_clean_context
+				function.call (some_actual_arguments, a_clean_context, True)
 				last_called_value := function.last_called_value
-				a_transformer.restore_context (a_saved_context)
 			end
 		ensure
 			last_called_value: last_called_value /= Void -- but may be in error

@@ -39,7 +39,7 @@ inherit
 
 creation
 
-	make
+	make, make_with_size
 
 feature {NONE} -- Initialization
 
@@ -47,6 +47,15 @@ feature {NONE} -- Initialization
 			-- Establish invariant.
 		do
 			create output_list.make_default
+			system_id := ""
+		end
+
+	make_with_size (a_size: INTEGER) is
+			-- Establish invariant.
+		require
+			strictly_positive_size: a_size > 0
+		do
+			create output_list.make (a_size)
 			system_id := ""
 		end
 
@@ -75,7 +84,22 @@ feature -- Access
 				Result := output_list.item (1)
 			end
 		end
-			
+
+	iterator (a_context: XM_XPATH_CONTEXT): XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_ITEM] is
+			-- An iterator over the values of a sequence
+		require
+			context_not_void: a_context /= Void
+		do
+			if output_list.count = 0 then
+				create {XM_XPATH_EMPTY_ITERATOR [XM_XPATH_ITEM]} Result.make
+			else
+				create {XM_XPATH_ARRAY_LIST_ITERATOR [XM_XPATH_ITEM]} Result.make (output_list)
+			end
+		ensure
+			iterator_not_void_but_may_be_error: Result /= Void -- and then (Result.is_error or else not Result.is_error)
+			iterator_before: not Result.is_error implies Result.before
+		end
+
 feature -- Events
 
 	on_error (a_message: STRING) is

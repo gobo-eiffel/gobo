@@ -15,7 +15,12 @@ inherit
 	XM_XSLT_COPY_ROUTINES
 
 	XM_XSLT_INSTRUCTION
-
+		redefine
+			creates_new_nodes, native_implementations, item_type,
+			compute_cardinality, compute_dependencies, promote_instruction,
+			sub_expressions, iterator
+		end
+			
 	XM_XSLT_VALIDATION
 
 creation
@@ -32,9 +37,11 @@ feature {NONE} -- Initialization
 		do
 			executable := an_executable
 			select_expression := a_select_expression
+			adopt_child_expression (select_expression)
 			copy_namespaces := copy_ns
-			instruction_name := "copy-of"
-			create children.make (0)
+			instruction_name := "xsl:copy-of"
+			compute_static_properties
+			initialize
 		ensure
 			executable_set: executable = an_executable
 			select_expression_set: select_expression = a_select_expression
@@ -46,21 +53,106 @@ feature -- Access
 	instruction_name: STRING
 			-- Name of instruction, for diagnostics
 
+	item_type: XM_XPATH_ITEM_TYPE is
+			-- Data type of the expression, when known
+		do
+			Result := select_expression.item_type
+		end
+
+	sub_expressions: DS_ARRAYED_LIST [XM_XPATH_EXPRESSION] is
+			-- Immediate sub-expressions of `Current'
+		do
+			create Result.make (1)
+			Result.set_equality_tester (expression_tester)
+			Result.put (select_expression, 1)
+		end
+
+feature -- Status report
+
+	creates_new_nodes: BOOLEAN is
+			-- Can `Current' create new nodes?
+		do
+			Result := not is_sub_type (select_expression.item_type, type_factory.any_atomic_type)
+		end
+
+	display (a_level: INTEGER) is
+			-- Diagnostic print of expression structure to `std.error'
+		local
+			a_string: STRING
+		do
+			a_string := STRING_.appended_string (indentation (a_level), "copy of ")
+			std.error.put_string (a_string);
+			std.error.put_new_line
+			select_expression.display (a_level + 1)
+		end
+
+feature -- Status setting
+
+	compute_dependencies is
+			-- Compute dependencies on context.
+		do
+			if not are_intrinsic_dependencies_computed then compute_intrinsic_dependencies end
+			set_dependencies (select_expression.dependencies)
+		end
+
+feature -- Optimization
+
+	simplify is
+			-- Perform context-independent static optimizations.
+		do
+			select_expression.simplify
+			if select_expression.was_expression_replaced then
+				select_expression := select_expression.replacement_expression
+				adopt_child_expression (select_expression)
+			end
+		end
+
+	analyze (a_context: XM_XPATH_STATIC_CONTEXT) is
+			-- Perform static analysis of `Current' and its subexpressions.
+		do
+			select_expression.analyze (a_context)
+			if select_expression.was_expression_replaced then
+				select_expression := select_expression.replacement_expression
+				adopt_child_expression (select_expression)
+			end
+		end
+
+	promote_instruction (an_offer: XM_XPATH_PROMOTION_OFFER) is
+			-- Promote this instruction.
+		do
+			select_expression.promote (an_offer)
+			if select_expression.was_expression_replaced then
+				select_expression := select_expression.replacement_expression
+				adopt_child_expression (select_expression)
+			end
+		end
+
 feature -- Evaluation
+
+	iterator (a_context: XM_XPATH_CONTEXT): XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_ITEM] is
+			-- Iterator over the values of a sequence
+		local
+			a_new_context: XM_XPATH_CONTEXT
+			a_receiver: XM_XSLT_SEQUENCE_OUTPUTTER
+		do
+			a_new_context := a_context.new_minor_context
+			create a_receiver.make
+			a_new_context.set_current_receiver (a_receiver)
+			process (a_new_context)
+			Result := a_receiver.sequence.iterator (Void)
+		end
 
 	process_leaving_tail (a_context: XM_XSLT_EVALUATION_CONTEXT) is
 			-- Execute `Current', writing results to the current `XM_XPATH_RECEIVER'.
 		local
-			a_transformer: XM_XSLT_TRANSFORMER
-			a_receiver: XM_XSLT_SEQUENCE_RECEIVER
+			a_receiver: XM_XPATH_SEQUENCE_RECEIVER
 			which_namespaces: INTEGER
 			a_sequence_iterator: XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_ITEM]
 			an_item: XM_XPATH_ITEM
 			a_node: XM_XPATH_NODE
 		do
 			last_tail_call := Void
-			a_transformer := a_context.transformer
-			a_receiver := a_transformer.current_receiver
+			a_receiver := a_context.current_receiver
 			if copy_namespaces then
 				which_namespaces := All_namespaces
 			else
@@ -79,12 +171,27 @@ feature -- Evaluation
 				an_item := a_sequence_iterator.item
 				a_node ?= an_item
 				if a_node /= Void then
-					process_node (a_node, a_receiver, which_namespaces, a_transformer)
+					process_node (a_node, a_receiver, which_namespaces, a_context)
 				else
 					a_receiver.append_item (an_item)
 				end
 				a_sequence_iterator.forth
 			end
+		end
+
+	
+feature {XM_XPATH_EXPRESSION} -- Restricted
+
+	native_implementations: INTEGER is
+			-- Natively-supported evaluation routines
+		do
+			Result := Supports_process + Supports_iterator
+		end
+
+	compute_cardinality is
+			-- Compute cardinality.
+		do
+			clone_cardinality (select_expression)
 		end
 
 feature {NONE} -- Implementation
@@ -95,22 +202,22 @@ feature {NONE} -- Implementation
 	copy_namespaces: BOOLEAN
 			-- Do we copy namespaces?
 
-	process_node (a_node: XM_XPATH_NODE; a_receiver: XM_XSLT_SEQUENCE_RECEIVER; which_namespaces: INTEGER; a_transformer: XM_XSLT_TRANSFORMER) is
+	process_node (a_node: XM_XPATH_NODE; a_receiver: XM_XPATH_SEQUENCE_RECEIVER; which_namespaces: INTEGER; a_context: XM_XSLT_EVALUATION_CONTEXT) is
 			-- Process a node.
 		require
 			node_not_void: a_node /= Void
 			receiver_not_void: a_receiver /= Void
-			transformer_not_void: a_transformer /= Void
+			context_not_void: a_context /= Void
 		local
 			a_validator: XM_XPATH_RECEIVER
 		do
 			inspect
 				a_node.node_type
 			when Element_node then
-				a_validator := a_transformer.configuration.element_validator (a_receiver, a_node.name_code, Void, Validation_strip, Void)
+				a_validator := a_context.transformer.configuration.element_validator (a_receiver, a_node.name_code, Void, Validation_strip)
 				a_node.copy_node (a_validator, which_namespaces, True)
 			when Attribute_node then
-				copy_attribute (a_node, a_transformer, Void, Validation_strip)
+				copy_attribute (a_node, a_context, Void, Validation_strip)
 			when Text_node then
 				a_receiver.notify_characters (a_node.string_value, 0)
 			when Processing_instruction_node then
@@ -120,12 +227,10 @@ feature {NONE} -- Implementation
 			when Namespace_node then
 				a_node.copy_node (a_receiver, No_namespaces, False)
 			when Document_node then
-
-				-- TODO: if we are building a sequence rather than a tree, we
-            --  need to add a document node to the constructed sequence
-
-				a_validator := a_transformer.configuration.document_validator (a_receiver, a_node.base_uri, Validation_strip)
+				a_validator := a_context.transformer.configuration.document_validator (a_receiver, a_node.base_uri, Validation_strip)
+				if not a_validator.is_document_started then a_validator.start_document end
 				a_node.copy_node (a_validator, which_namespaces, True)
+				a_validator.end_document
 			end
 		end
 

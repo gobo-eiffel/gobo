@@ -16,7 +16,8 @@ inherit
 
 	XM_XSLT_TEXT_CONSTRUCTOR
 		redefine
-			display, promote_instruction, evaluate_item, item_type
+			display, evaluate_item, item_type,
+			compute_cardinality
 		end
 
 	XM_XPATH_RECEIVER_OPTIONS
@@ -34,16 +35,22 @@ feature {NONE} -- Initialization
 		require
 			executable_not_void: an_executable /= Void
 			select_expression_not_void: a_select_expression /= Void
+		local
+			a_string_value: XM_XPATH_STRING_VALUE
 		do
 			executable := an_executable
-			instruction_name := "value-of"
-			create children.make (0)
-			make_expression_instruction
-			set_cardinality_exactly_one
-			select_expression := a_select_expression
+			select_expression := a_select_expression; adopt_child_expression (select_expression)
+			a_string_value ?= select_expression
+			if a_string_value /= Void then
+				instruction_name := "xsl:text"
+			else
+				instruction_name := "xsl:value-of"
+			end
 			if disabled then
 				receiver_options := Disable_escaping
 			end
+			compute_static_properties
+			initialize
 		ensure
 			executable_set: executable = an_executable
 			select_set: select_expression = a_select_expression
@@ -67,19 +74,10 @@ feature -- Status report
 		local
 			a_string: STRING
 		do
-			a_string := STRING_.appended_string (indentation (a_level), "value-of")
+			a_string := STRING_.appended_string (indentation (a_level), instruction_name)
 			std.error.put_string (a_string)
 			std.error.put_new_line
 			select_expression.display (a_level + 1)
-		end
-
-feature -- Comparison
-
-	same_expression (other: XM_XPATH_EXPRESSION): BOOLEAN is
-			-- Are `Current' and `other' the same expression?
-		do
-			Result := False
-			todo ("same_expression", True)
 		end
 
 feature -- Optimization
@@ -90,29 +88,47 @@ feature -- Optimization
 			do_nothing
 		end
 
-	promote_instruction (an_offer: XM_XPATH_PROMOTION_OFFER) is
-			-- Promote this instruction.
-		do
-			todo ("promote_instruction", False)
-		end
-
 feature -- Evaluation
 
 	evaluate_item (a_context: XM_XPATH_CONTEXT) is
 			-- Evaluate as a single item.
 		local
-	
+			an_orphan: XM_XPATH_ORPHAN
+			an_evaluation_context: XM_XSLT_EVALUATION_CONTEXT
 		do
-			todo ("evaluate_item", False)	
+			an_evaluation_context ?= a_context
+			check
+				evaluation_context: an_evaluation_context /= Void
+				-- This is XSLT
+			end
+			expand_children (an_evaluation_context)
+			if not is_error then
+				create an_orphan.make (Text_node, last_string_value)
+				last_evaluated_item := an_orphan
+			else
+				create {XM_XPATH_INVALID_ITEM} last_evaluated_item.make (error_value)
+			end
 		end
 
 	process_leaving_tail (a_context: XM_XSLT_EVALUATION_CONTEXT) is
 			-- Execute `Current', writing results to the current `XM_XPATH_RECEIVER'.
 		do
-			a_context.transformer.current_receiver.notify_characters (expanded_string_value (a_context), receiver_options)
+			expand_children (a_context)
+			if is_error then
+				a_context.current_receiver.on_error (error_value.error_message)
+			else
+				a_context.current_receiver.notify_characters (last_string_value, receiver_options)
+			end
 			last_tail_call := Void
 		end
 
+feature {XM_XSLT_EXPRESSION} -- Restricted
+
+	compute_cardinality is
+			-- Compute cardinality.
+		do
+			set_cardinality_exactly_one
+		end
 
 feature {NONE} -- Implementation
 

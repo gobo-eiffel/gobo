@@ -74,26 +74,20 @@ feature {NONE} -- Implementation
 	build_array is
 			-- Build `node_keys'.
 		local
-			a_saved_iterator, another_saved_iterator: XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_ITEM]
-			a_group_iterator: XM_XSLT_GROUP_ITERATOR
-			a_transformer: XM_XSLT_TRANSFORMER
 			a_cursor: DS_ARRAYED_LIST_CURSOR [XM_XSLT_FIXED_SORT_KEY_DEFINITION]
 			a_sort_record: XM_XSLT_GROUP_SORT_RECORD
 			a_key_list: DS_ARRAYED_LIST [XM_XPATH_ATOMIC_VALUE]
 			a_sort_key: XM_XPATH_ATOMIC_VALUE
+			a_new_context: like context
 		do
 			create node_keys.make_default
 
 			-- This provides the context for evaluating the sort key:
 			-- Note that current() must return the node being sorted.
 
-			a_saved_iterator := context.current_iterator
-			context.set_current_iterator (base_iterator)
-			a_transformer := context.transformer
-			another_saved_iterator := a_transformer.current_iterator
-			a_transformer.set_current_iterator (base_iterator)
-			a_group_iterator := a_transformer.current_group_iterator
-			a_transformer.set_current_group_iterator (group_iterator)
+			a_new_context := context.new_context
+			a_new_context.set_current_iterator (base_iterator)
+			a_new_context.set_current_group_iterator (group_iterator)
 			
 			-- Initialize the array with data.
 
@@ -134,9 +128,6 @@ feature {NONE} -- Implementation
 				node_keys.put_last (a_sort_record)
 				group_iterator.forth
 			end
-			context.set_current_iterator (a_saved_iterator)
-			a_transformer.set_current_iterator (another_saved_iterator)
-			a_transformer.set_current_group_iterator (a_group_iterator)
 			count_determined := True
 		end
 

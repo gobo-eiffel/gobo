@@ -15,6 +15,9 @@ deferred class XM_XPATH_ATOMIC_VALUE
 inherit
 
 	XM_XPATH_VALUE
+		redefine
+			process
+		end
 
 	XM_XPATH_ITEM
 		redefine
@@ -120,6 +123,15 @@ feature -- Evaluation
 			create {XM_XPATH_SINGLETON_ITERATOR [XM_XPATH_ITEM]} Result.make (Current)
 		end
 
+	process (a_context: XM_XPATH_CONTEXT) is
+			-- Execute `Current' completely, writing results to the current `XM_XPATH_RECEIVER'.
+		do
+			evaluate_item (a_context)
+			if last_evaluated_item /= Void then
+				a_context.current_receiver.append_item (last_evaluated_item)
+			end
+		end
+
 feature -- Conversion
 	
 	convert_to_type (a_required_type: XM_XPATH_ITEM_TYPE): XM_XPATH_ATOMIC_VALUE is
@@ -140,6 +152,14 @@ feature -- Conversion
 			-- Convert to a value
 		do
 				Result := Current
+		end
+
+feature {XM_XPATH_EXPRESSION} -- Restricted
+
+	native_implementations: INTEGER is
+			-- Natively-supported evaluation routines
+		do
+			Result := Supports_evaluate_item
 		end
 
 end

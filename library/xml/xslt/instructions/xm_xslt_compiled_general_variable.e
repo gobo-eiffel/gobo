@@ -15,6 +15,16 @@ deferred class XM_XSLT_COMPILED_GENERAL_VARIABLE
 inherit
 
 	XM_XSLT_INSTRUCTION
+		redefine
+			item_type, compute_cardinality,
+			sub_expressions, promote_instruction
+		end
+
+	XM_XPATH_BINDING
+
+	XM_XPATH_SHARED_NO_NODE_TEST
+
+	XM_XPATH_ROLE
 
 feature -- Access
 
@@ -29,11 +39,27 @@ feature -- Access
 
 	instruction_name: STRING
 			-- Name of instruction, for diagnostics
-	
-feature -- Status report
 
-	is_global_variable: BOOLEAN
-			-- Is `Current' a global variable?
+	slot_number: INTEGER
+			-- Slot number within local stack frame or all global variables
+
+	item_type: XM_XPATH_ITEM_TYPE is
+			-- Type of items yielded
+		do
+			Result := empty_item
+		end
+
+	sub_expressions: DS_ARRAYED_LIST [XM_XPATH_EXPRESSION] is
+			-- Immediate sub-expressions of `Current'
+		do
+			create Result.make (1)
+			Result.set_equality_tester (expression_tester)
+			if select_expression /= Void then
+				Result.put (select_expression, 1)
+			end
+		end
+
+feature -- Status report
 
 	is_required_parameter: BOOLEAN
 			-- Is `Current' a required paramter?
@@ -41,27 +67,23 @@ feature -- Status report
 	is_tunnel_parameter: BOOLEAN
 			-- Is `Current' a tunnel paramter?
 
-	contains_local_variables: BOOLEAN
-			-- Does `Current' contain any local variables?
-	
+	is_global: BOOLEAN is
+			-- Is binding global or local?
+		do
+			Result := False
+		end
+
 feature -- Status setting
 
 	set_selector (a_select_expression: XM_XPATH_EXPRESSION) is
 			-- Set `select_expression'.
-		require
-			select_expression_not_void: a_select_expression /= Void
 		do
 			select_expression := a_select_expression
+			if select_expression /= Void then
+				adopt_child_expression (select_expression)
+			end
 		ensure
 			set: select_expression = a_select_expression
-		end
-
-	set_global_variable (is_global: BOOLEAN) is
-			-- Set global/local variable
-		do
-			is_global_variable := is_global
-		ensure
-			set: is_global_variable = is_global
 		end
 
 	set_required_parameter (is_required: BOOLEAN) is
@@ -79,106 +101,66 @@ feature -- Status setting
 		ensure
 			set: is_tunnel_parameter = is_tunnel
 		end
-	
-	set_contains_locals (any_locals: BOOLEAN) is
-			-- Set `contains_local_variables'.
+
+feature -- Optimization
+
+	simplify is
+			-- Preform context-independent static optimizations
 		do
-			contains_local_variables := any_locals
-		ensure
-			set: contains_local_variables = any_locals
+			if select_expression /= Void then
+				select_expression.simplify
+				if select_expression.was_expression_replaced then
+					set_selector (select_expression.replacement_expression)
+				end
+				if select_expression.is_error then set_last_error (select_expression.error_value) end
+			end
+		end
+
+	analyze (a_context: XM_XPATH_STATIC_CONTEXT) is
+			-- Perform static analysis of `Current' and its subexpressions.
+		do
+			if select_expression /= Void then
+				select_expression.analyze (a_context)
+				if select_expression.was_expression_replaced then
+					set_selector (select_expression.replacement_expression)
+				end
+			end
+			if select_expression.is_error then set_last_error (select_expression.error_value) end
+			if not is_error then check_against_required_type (a_context) end
+		end
+
+	promote_instruction (an_offer: XM_XPATH_PROMOTION_OFFER) is
+			-- Promote this instruction.
+		do
+			if select_expression /= Void then
+				select_expression.promote (an_offer)
+				if select_expression.was_expression_replaced then
+					set_selector (select_expression.replacement_expression)
+				end
+			end
+			if select_expression.is_error then set_last_error (select_expression.error_value) end
 		end
 
 feature -- Evaluation
 
-	value (a_context: XM_XSLT_EVALUATION_CONTEXT): XM_XPATH_VALUE is
-			-- Value
+	select_value (a_context: XM_XSLT_EVALUATION_CONTEXT): XM_XPATH_VALUE is
+			-- Value of `select_expression'
 		require
 			context_not_void: a_context /= Void
-		local
-			a_transformer: XM_XSLT_TRANSFORMER
-			a_saved_receiver, a_sequence_receiver: XM_XSLT_SEQUENCE_RECEIVER
-			a_receiver: XM_XSLT_SEQUENCE_OUTPUTTER
-			a_sequence_checker: XM_XSLT_SEQUENCE_CHECKER
-			a_bindery: XM_XSLT_BINDERY
-			an_empty_parameter_set: XM_XSLT_PARAMETER_SET
+			select_expression_not_void: select_expression /= Void
 		do
-			a_transformer := a_context.transformer
-			if select_expression = Void then
-				a_saved_receiver := a_transformer.current_receiver
-				create a_receiver.make
-				a_sequence_receiver := a_receiver
-				a_transformer.change_to_sequence_output_destination (a_receiver)
-				if required_type /= Void then
-					create a_sequence_checker.make (required_type, a_receiver)
-					a_sequence_receiver := a_sequence_checker
-					a_transformer.set_receiver (a_sequence_checker)
-				end
-				if is_global_variable and then contains_local_variables then
-					a_bindery := a_transformer.bindery
-					create an_empty_parameter_set.make_empty
-					a_bindery.open_stack_frame (an_empty_parameter_set, Void)
-					--		process_children (a_transformer.new_xpath_context)
-					process_children (a_context)
-					a_bindery.close_stack_frame
-				else
-					-- process_children (a_transformer.new_xpath_context)
-					process_children (a_context)
-				end
-				a_transformer.reset_output_destination (a_saved_receiver)
-				if required_type /= Void then
-					a_sequence_checker.final_check
-				end
-				Result := a_receiver.sequence
-			else
-
-				-- There is a select attribute: do a lazy evaluation of the expression,
-            --   which will already contain any code to force conversion to the required type.
-
-            --  But with global variables, we have already delayed evaluating the expression
-            --   until the first reference to the variable is encountered, and there's not
-            --  much point delaying it any further.
-
-				if is_global_variable then
-					if contains_local_variables then
-						a_bindery := a_transformer.bindery
-						create an_empty_parameter_set.make_empty
-						a_bindery.open_stack_frame (an_empty_parameter_set, Void)
-						if select_expression.is_error then
-							create {XM_XPATH_INVALID_VALUE} Result.make (select_expression.error_value)
-						else
-							select_expression.eagerly_evaluate (a_transformer.new_xpath_context)
-							Result := select_expression.last_evaluation
-						end
-						a_bindery.close_stack_frame
-					else
-						--select_expression.eagerly_evaluate (a_transformer.new_xpath_context)
-						if select_expression.is_error then
-							create {XM_XPATH_INVALID_VALUE} Result.make (select_expression.error_value)
-						else
-							select_expression.eagerly_evaluate (a_context)
-							Result := select_expression.last_evaluation
-						end
-					end
-				else
-					--select_expression.lazily_evaluate (a_transformer.new_xpath_context)
-					if select_expression.is_error then
-						create {XM_XPATH_INVALID_VALUE} Result.make (select_expression.error_value)
-					else
-						select_expression.lazily_evaluate (a_context, True)
-						Result := select_expression.last_evaluation
-					end
-				end
-			end
+			select_expression.lazily_evaluate (a_context, True)
+			Result := select_expression.last_evaluation
 		ensure
 			variable_value_not_void: Result /= Void
 		end
 
 feature -- Element change
 
-	initialize (a_select_expression: XM_XPATH_EXPRESSION; a_required_type: XM_XPATH_SEQUENCE_TYPE; a_fingerprint: INTEGER) is
+	initialize_variable (a_select_expression: XM_XPATH_EXPRESSION; a_required_type: XM_XPATH_SEQUENCE_TYPE; a_fingerprint: INTEGER) is
 			-- Set initial values.
 		do
-			select_expression := a_select_expression
+			set_selector (a_select_expression)
 			required_type := a_required_type
 			variable_fingerprint := a_fingerprint
 		ensure
@@ -194,12 +176,49 @@ feature -- Element change
 		ensure
 			set: required_type = a_required_type
 		end
+
+feature {XM_XPATH_EXPRESSION} -- Restricted
+
+	compute_cardinality is
+			-- Compute cardinality.
+		do
+
+			-- an xsl:variable instruction generates no items
+
+			set_cardinality_empty
+		end
+
+feature {NONE} -- Implementation
+	
+	check_against_required_type (a_context: XM_XPATH_STATIC_CONTEXT) is
+			-- Check conformity against `required_type'.
+		require
+			static_context_not_void: a_context /= Void
+			not_in_error: not is_error
+		local
+			a_role: XM_XPATH_ROLE_LOCATOR
+			a_type_checker: XM_XPATH_TYPE_CHECKER
+		do
 			
+			-- N.B. Sometimes this check gets performed more than once
+			
+			if required_type /= Void and then select_expression /= Void then
+				create a_role.make (Variable_role, variable_name, 1)
+				create a_type_checker
+				a_type_checker.static_type_check (a_context, select_expression, required_type, False, a_role)
+				if a_type_checker.is_static_type_check_error	then
+					set_last_error_from_string(a_type_checker.static_type_check_error_message, "", "XT0570", Type_error)
+				else
+					set_selector (a_type_checker.checked_expression)
+				end
+			end
+		end
+
 invariant
 
-	required_parameter: not (is_required_parameter and then (is_global_variable or else is_tunnel_parameter))
-	tunnel_parameter: not (is_tunnel_parameter and then (is_global_variable or else is_required_parameter))
-	global_variable: not (is_global_variable and then (is_required_parameter or else is_tunnel_parameter))
+	required_parameter: not (is_required_parameter and then (is_global or else is_tunnel_parameter))
+	tunnel_parameter: not (is_tunnel_parameter and then (is_global or else is_required_parameter))
+	global_variable: not (is_global and then (is_required_parameter or else is_tunnel_parameter))
 
 end
 

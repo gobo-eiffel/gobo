@@ -15,6 +15,9 @@ deferred class XM_XPATH_SYSTEM_FUNCTION
 inherit
 
 	XM_XPATH_FUNCTION_CALL
+		redefine
+			simplify
+		end
 
 	XM_XPATH_ROLE
 
@@ -32,6 +35,15 @@ feature -- Status report
 		deferred
 		ensure
 			required_type_not_void: Result /= Void
+		end
+
+feature -- Optimization
+
+	simplify is
+			-- Perform context-independent static optimizations.
+		do
+			Precursor
+			check_non_creating
 		end
 
 feature -- Element change
@@ -88,7 +100,35 @@ feature -- Element change
 			error_code_set: argument_error_code = an_error_code
 		end
 
-feature {XM_XPATH_FUNCTION_CALL} -- Local
+feature {XM_XPATH_SYSTEM_FUNCTION} -- Local
+
+	check_non_creating is
+			-- Check non-creating special property.
+		require
+			special_properties_computed: are_special_properties_computed
+			-- Cannot be called in creation procedure, as arguments are not yet initialized.
+			-- Therefore, must call in `simplify'.
+		local
+			an_atomic_type: XM_XPATH_ATOMIC_TYPE
+			a_cursor: DS_ARRAYED_LIST_CURSOR [XM_XPATH_EXPRESSION]
+			is_creating: BOOLEAN
+		do
+			if an_atomic_type /= Void then
+				set_non_creating
+			else
+				from
+					a_cursor := arguments.new_cursor; a_cursor.start
+				until
+					is_creating or else a_cursor.after
+				loop
+					is_creating := not a_cursor.item.non_creating
+					a_cursor.forth
+				end
+				if not is_creating then set_non_creating end
+			end
+		end
+
+feature {XM_XPATH_FUNCTION_CALL} -- Restricted
 
 	argument_error_code: STRING
 			-- Error code set by `check_argument'

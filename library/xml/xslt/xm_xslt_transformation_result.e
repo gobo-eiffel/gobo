@@ -120,7 +120,6 @@ feature -- Element change
 	set_principal_receiver (a_receiver: XM_XPATH_RECEIVER) is
 			-- Set `principal_receiver'.
 		require
-			principal_receiver_is_void: principal_receiver = Void
 			new_receiver_not_void: a_receiver /= Void
 		do
 			principal_receiver := a_receiver

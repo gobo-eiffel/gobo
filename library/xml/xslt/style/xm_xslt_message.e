@@ -133,8 +133,19 @@ feature -- Element change
 	compile (an_executable: XM_XSLT_EXECUTABLE) is
 			-- Compile `Current' to an excutable instruction.
 		do
-			create {XM_XSLT_COMPILED_MESSAGE} last_generated_instruction.make (an_executable, select_expression, terminate)
-			compile_children (an_executable, last_generated_instruction)
+			last_generated_expression := Void
+			compile_sequence_constructor (an_executable, new_axis_iterator (Child_axis), true)
+			if last_generated_expression /= Void then
+				if select_expression = Void then
+					select_expression := last_generated_expression
+				else
+					create {XM_XSLT_BLOCK} select_expression.make (an_executable, select_expression, last_generated_expression)
+				end
+			end
+			if select_expression = Void then
+				create {XM_XPATH_EMPTY_SEQUENCE} select_expression.make
+			end
+			create {XM_XSLT_COMPILED_MESSAGE} last_generated_expression.make (an_executable, select_expression, terminate)
 		end
 
 feature {NONE} -- Implementation

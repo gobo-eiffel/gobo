@@ -196,11 +196,12 @@ feature -- Compilation
 					load_stylesheet_module_failed := True
 					load_stylesheet_module_error := "There were error compiling the stylesheet"
 				else
-					executable ?= a_stylesheet.last_compiled_executable
+					executable ?= a_stylesheet.executable
 					check
 						executable: executable /= Void
 						-- as {XM_XSLT_STYLESHEET}.compile produces an executable if no error.
 					end
+					executable.set_whitespace_stripping (a_stylesheet.strips_whitespace)
 					executable.save_static_context (a_stylesheet.static_context)
 				end
 			end

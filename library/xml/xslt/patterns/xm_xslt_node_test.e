@@ -31,7 +31,7 @@ feature -- Access
 
 feature -- Matching
 
-	matches (a_node: XM_XPATH_NODE;  a_transformer: XM_XSLT_TRANSFORMER): BOOLEAN is
+	matches (a_node: XM_XPATH_NODE; a_context: XM_XSLT_EVALUATION_CONTEXT): BOOLEAN is
 			-- Determine whether this Pattern matches the given Node;
 		do
 			Result := matches_node (a_node.node_type, a_node.fingerprint, a_node.type_annotation) 

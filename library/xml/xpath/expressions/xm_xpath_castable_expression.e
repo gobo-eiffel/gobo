@@ -17,7 +17,7 @@ inherit
 	XM_XPATH_UNARY_EXPRESSION
 		redefine
 			simplify, item_type, analyze, same_expression, evaluate_item,
-			effective_boolean_value, compute_cardinality
+			effective_boolean_value, compute_cardinality, compute_special_properties
 		end
 
 	XM_XPATH_TYPE
@@ -170,6 +170,13 @@ feature {NONE} -- Implementation
 			-- Compute cardinality.
 		do
 			set_cardinality_exactly_one
+		end
+
+	compute_special_properties is
+			-- Compute special properties.
+		do
+			Precursor
+			set_non_creating
 		end
 
 end

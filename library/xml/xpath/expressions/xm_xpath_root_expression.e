@@ -16,7 +16,7 @@ inherit
 
 	XM_XPATH_SINGLE_NODE_EXPRESSION
 		redefine
-			same_expression, compute_cardinality, item_type
+			same_expression, compute_cardinality, item_type, compute_intrinsic_dependencies
 		end
 
 	XM_XPATH_SHARED_NODE_KIND_TESTS
@@ -30,8 +30,6 @@ feature {NONE} -- Initialization
 	make is
 			-- Create intrinsic dependencies.
 		do
-			create intrinsic_dependencies.make (1, 6)
-			intrinsic_dependencies.put (True, 5) -- depends_upon_context_document
 			compute_static_properties
 			initialize
 		ensure
@@ -109,6 +107,15 @@ feature -- Status report
 			else
 				std.error.put_new_line
 			end
+		end
+
+feature -- Status setting
+
+	compute_intrinsic_dependencies is
+			-- Determine the intrinsic dependencies of an expression.
+		do
+			set_intrinsically_depends_upon_context_item
+			set_intrinsically_depends_upon_context_document
 		end
 
 feature {XM_XPATH_EXPRESSION} -- Restricted

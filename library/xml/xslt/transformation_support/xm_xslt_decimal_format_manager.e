@@ -171,6 +171,7 @@ feature -- Element change
 
 					-- it's another forward reference
 
+					create a_list.make_default
 					a_list.force_last (a_callback)
 				else
 

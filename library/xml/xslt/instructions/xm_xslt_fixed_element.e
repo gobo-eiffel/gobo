@@ -22,28 +22,34 @@ creation
 feature {NONE} -- Initialization
 
 	make (an_executable: XM_XSLT_EXECUTABLE; a_name_code: INTEGER; a_namespace_code_list: DS_ARRAYED_LIST [INTEGER]; some_attribute_sets: DS_ARRAYED_LIST [XM_XSLT_COMPILED_ATTRIBUTE_SET];
-			a_simple_type: XM_XPATH_SCHEMA_TYPE; a_validation_action: INTEGER) is
+			a_schema_type: XM_XPATH_SCHEMA_TYPE; a_validation_action: INTEGER; inherit_namespaces: BOOLEAN; a_content: XM_XPATH_EXPRESSION) is
 			-- Establish invariant.
 		require
 			executable_not_void: an_executable /= Void
 			namespace_codes_not_void: a_namespace_code_list /= Void
 			validation: a_validation_action >= Validation_strict  and then Validation_strip >= a_validation_action
+			content_not_void: a_content /= Void
 		do
 			executable := an_executable
-			create children.make (0)
-			make_expression_instruction
 			fixed_name_code := a_name_code
 			attribute_sets := some_attribute_sets
 			validation_action := a_validation_action
-			type := a_simple_type
+			type := a_schema_type
 			namespace_code_list := a_namespace_code_list
+			is_inherit_namespaces := inherit_namespaces
+			content := a_content
+			adopt_child_expression (content)
+			compute_static_properties
+			initialize
 		ensure
 			executable_set: executable = an_executable
 			name_code_set: fixed_name_code = a_name_code
 			attribute_sets_set: attribute_sets = some_attribute_sets
 			validation_action_set: validation_action = a_validation_action
-			type_set: type = a_simple_type
+			type_set: type = a_schema_type
 			namespace_codes_set: namespace_code_list = a_namespace_code_list
+			is_inherit_namespaces_set: is_inherit_namespaces = inherit_namespaces
+			content_set: content = a_content
 		end
 
 feature -- Access
@@ -74,13 +80,10 @@ feature -- Status report
 			a_string := STRING_.appended_string (a_string, shared_name_pool.display_name_from_name_code (fixed_name_code))
 			std.error.put_string (a_string)
 			std.error.put_new_line			
-			if children.count = 0 then
-				a_string := STRING_.appended_string (indentation (a_level + 1), "empty content")
-				std.error.put_string (a_string)
-				std.error.put_new_line
-			else
-				display_children (a_level + 1)
-			end
+			a_string := STRING_.appended_string (indentation (a_level + 1), "content ")
+			std.error.put_string (a_string)
+			std.error.put_new_line			
+			content.display (a_level + 2)
 		end
 
 feature {XM_XSLT_ELEMENT_CREATOR} -- Local

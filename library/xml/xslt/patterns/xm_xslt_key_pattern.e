@@ -16,7 +16,7 @@ inherit
 
 	XM_XSLT_PATTERN
 		redefine
-			type_check
+			type_check, sub_expressions
 		end
 
 	XM_XPATH_NAME_UTILITIES
@@ -63,6 +63,14 @@ feature -- Access
 			create {XM_XSLT_ANY_NODE_TEST} Result.make
 		end
 
+	sub_expressions: DS_ARRAYED_LIST [XM_XPATH_EXPRESSION] is
+			-- Immediate sub-expressions of `Current'
+		do
+			create Result.make (1)
+			Result.set_equality_tester (expression_tester)
+			Result.put (key_expression, 1)
+		end
+
 feature -- Optimization
 
 	type_check (a_context: XM_XPATH_STATIC_CONTEXT) is
@@ -79,7 +87,7 @@ feature -- Optimization
 
 feature -- Matching
 
-	matches (a_node: XM_XPATH_NODE; a_transformer: XM_XSLT_TRANSFORMER): BOOLEAN is
+	matches (a_node: XM_XPATH_NODE; a_context: XM_XSLT_EVALUATION_CONTEXT): BOOLEAN is
 			-- Determine whether this Pattern matches the given Node;
 			-- N.B. This function is not 100% pure, as it may cause
 			--  an index to be built for a key, but this is only a 
@@ -97,12 +105,8 @@ feature -- Matching
 			if a_doc = Void then
 				Result := False
 			else
-				a_km := a_transformer.key_manager
-
-				-- TODO: allow keys of any data type; atomize the supplied value
-
-				an_iter := key_expression.iterator (a_transformer.new_xpath_context)
-
+				a_km := a_context.transformer.key_manager
+				an_iter := key_expression.iterator (a_context)
 				from
 					check
 						before: an_iter.before
@@ -113,8 +117,8 @@ feature -- Matching
 				loop
 					a_key := an_iter.item.string_value
 					create a_key_value.make (a_key)
-					a_km.generate_keyed_sequence (key_fingerprint, a_doc, a_key_value, a_transformer)
-					if not a_transformer.is_error then
+					a_km.generate_keyed_sequence (key_fingerprint, a_doc, a_key_value, a_context)
+					if not a_context.transformer.is_error then
 						nodes := a_km.last_key_sequence
 						from
 							check

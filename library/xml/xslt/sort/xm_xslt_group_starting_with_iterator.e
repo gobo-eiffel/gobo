@@ -24,22 +24,24 @@ feature {NONE} -- Initialization
 
 	make (a_population: XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_ITEM];
 			a_key: XM_XSLT_PATTERN;
-			a_transformer: XM_XSLT_TRANSFORMER;
+			a_context: XM_XSLT_EVALUATION_CONTEXT;
 			a_locator: XM_XPATH_LOCATOR) is
 			-- Establish invariant.
 		require
 			population_not_void: a_population /= Void
 			key_not_void: a_key /= Void
-			transformer_not_void: a_transformer /= Void
+			context_not_void: a_context /= Void
 		do
 			population := a_population
 			key_pattern := a_key
-			transformer := a_transformer
+			base_context := a_context
+			running_context := a_context.new_minor_context
+			running_context.set_current_iterator (population)
 			locator := a_locator
 		ensure
 			population_set: population = a_population
 			key_set: key_pattern = a_key
-			transformer_set: transformer = a_transformer
+			base_context_set: base_context = a_context
 			locator_set: locator = a_locator
 		end
 
@@ -80,7 +82,7 @@ feature -- Cursor movement
 					a_node ?= item
 					if a_node = Void then
 						create an_error.make_from_string ("Member of group-starting-with population is not a node.", "", "XT1120", Dynamic_error)
-						transformer.report_fatal_error (an_error, locator)
+						running_context.transformer.report_fatal_error (an_error, locator)
 					end
 				end
 			else
@@ -99,9 +101,9 @@ feature -- Cursor movement
 					a_node ?= next_candidate
 					if a_node = Void then
 						create an_error.make_from_string ("Member of group-starting-with population is not a node.", "", "XT1120", Dynamic_error)
-						transformer.report_fatal_error (an_error, locator)
+						running_context.transformer.report_fatal_error (an_error, locator)
 					else
-						if key_pattern.matches (a_node, transformer) then
+						if key_pattern.matches (a_node, running_context) then
 							next_group_reached := True
 						else
 							current_members.force_last (next_candidate)
@@ -124,7 +126,7 @@ feature -- Duplication
 	another: like Current is
 			-- Another iterator that iterates over the same items as the original
 		do
-			create Result.make (population, key_pattern, transformer, locator)
+			create Result.make (population, key_pattern, base_context, locator)
 		end
 	
 feature {NONE} -- Implementation
@@ -135,8 +137,11 @@ feature {NONE} -- Implementation
 	key_pattern: XM_XSLT_PATTERN
 			-- Grouping key
 
-	transformer: XM_XSLT_TRANSFORMER
-			-- Transformer
+	base_context: XM_XSLT_EVALUATION_CONTEXT
+			-- Original context
+	
+	running_context: XM_XSLT_EVALUATION_CONTEXT
+			-- Context used
 
 	next_candidate: like item
 			-- Next item in population
@@ -151,7 +156,8 @@ invariant
 
 	population_not_void: population /= Void
 	key_pattern_not_void: key_pattern /= Void
-	transformer_not_void: transformer /= Void
+	base_context_not_void: base_context /= Void
+	running_context_not_void: running_context /= Void
 
 end
 	

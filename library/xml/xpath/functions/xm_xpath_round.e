@@ -66,7 +66,7 @@ feature -- Evaluation
 		do
 			arguments.item (1).evaluate_item (a_context)
 			last_evaluated_item := arguments.item (1).last_evaluated_item
-			if last_evaluated_item /= Void then
+			if last_evaluated_item /= Void and then not last_evaluated_item.is_error then
 				an_atomic_value ?= last_evaluated_item
 				check
 					is_atomic: an_atomic_value /= Void

@@ -16,7 +16,9 @@ inherit
 
 	XM_XSLT_TEXT_CONSTRUCTOR
 		redefine
-			xpath_expressions, promote_instruction, display, item_type
+			promote_instruction, display, item_type, compute_cardinality,
+			compute_dependencies, sub_expressions, check_content,
+			evaluate_name_code, simplify
 		end
 
 	XM_XPATH_SHARED_NODE_KIND_TESTS
@@ -36,12 +38,10 @@ feature {NONE} -- Initialization
 			name_not_void: a_name /= Void
 		do
 			executable := an_executable
-			instruction_name := "processing-instruction"
-			create children.make (0)
-			make_expression_instruction
-			set_cardinality_exactly_one
-			name := a_name
-			merge_dependencies (name.dependencies)
+			instruction_name := "xsl:processing-instruction"
+			name := a_name;  adopt_child_expression (name)
+			compute_static_properties
+			initialize
 		ensure
 			executable_set: executable = an_executable
 			name_set: name = a_name
@@ -58,13 +58,14 @@ feature -- Access
 			Result := processing_instruction_node_kind_test
 		end
 
-feature -- Comparison
-
-	same_expression (other: XM_XPATH_EXPRESSION): BOOLEAN is
-			-- Are `Current' and `other' the same expression?
+	
+	sub_expressions: DS_ARRAYED_LIST [XM_XPATH_EXPRESSION] is
+			-- Immediate sub-expressions of `Current'
 		do
-			Result := False
-			todo ("same_expression", True)
+			create Result.make (2)
+			Result.set_equality_tester (expression_tester)
+			if select_expression /= Void then Result.put_last (select_expression) end
+			Result.put_last (name)
 		end
 
 feature -- Status report
@@ -76,6 +77,15 @@ feature -- Status report
 			std.error.put_new_line
 			name.display (a_level + 1)
 			Precursor (a_level + 1)
+		end
+	
+feature -- Status setting
+
+	compute_dependencies is
+			-- Compute dependencies on context.
+		do
+			Precursor
+			merge_dependencies (name.dependencies)
 		end
 
 feature -- Optimization
@@ -98,14 +108,28 @@ feature -- Optimization
 			if a_type_checker.is_static_type_check_error then
 				name. set_last_error_from_string (a_type_checker.static_type_check_error_message, "", "XT0320", Type_error)
 			else
-				name := a_type_checker.checked_expression
+				name := a_type_checker.checked_expression; adopt_child_expression (name)
 			end			
+		end
+
+	simplify is
+			-- Perform context-independent static optimizations
+		do
+			name.simplify
+			if name.was_expression_replaced then
+				name := name.replacement_expression;  adopt_child_expression (name)
+			end
+			Precursor
 		end
 
 	promote_instruction (an_offer: XM_XPATH_PROMOTION_OFFER) is
 			-- Promote this instruction.
 		do
-			todo ("promote_instruction", False)
+			name.promote (an_offer)
+			if name.was_expression_replaced then
+				name := name.replacement_expression;  adopt_child_expression (name)
+			end
+			Precursor (an_offer)
 		end
 
 feature -- Evaluation
@@ -114,24 +138,35 @@ feature -- Evaluation
 			-- Execute `Current', writing results to the current `XM_XPATH_RECEIVER'.
 		do
 			todo ("process_leaving_tail", False)
+			-- TODOevaluate_name (a_context)
 			last_tail_call := Void
 		end
 
-feature {XM_XSLT_EXPRESSION_INSTRUCTION} -- Local
-
-	xpath_expressions (an_instruction_list: DS_ARRAYED_LIST [XM_XSLT_EXPRESSION_INSTRUCTION]): DS_ARRAYED_LIST [XM_XPATH_EXPRESSION] is
-			-- All the XPath expressions associated with this instruction
-		do
-			Result := Precursor (an_instruction_list)
-			Result.force_last (name)
-		end
-	
 feature {NONE} -- Implementation
 
 	name: XM_XPATH_EXPRESSION
 			-- Name
 
-	-- TODO evaluate_name_code needs (re-)defining
+	check_content (a_content: STRING; a_context: XM_XPATH_CONTEXT) is
+			-- Check and possibly modify `a_content' for conformance to node kind.
+		do
+			todo ("check_content", False)
+		end
+
+	evaluate_name_code (a_context: XM_XPATH_CONTEXT) is
+			-- Evaluate name code.
+		do
+			todo ("evaluate_name_code", False)
+		end
+
+feature {XM_XSLT_EXPRESSION} -- Restricted
+
+	compute_cardinality is
+			-- Compute cardinality.
+		do
+			set_cardinality_exactly_one
+		end
+
 invariant
 
 	name_not_void: name /= Void

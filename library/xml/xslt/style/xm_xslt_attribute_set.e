@@ -16,7 +16,7 @@ inherit
 
 	XM_XSLT_STYLE_ELEMENT
 		redefine
-			validate
+			make_style_element, validate
 		end
 
 	XM_XSLT_PROCEDURE
@@ -27,9 +27,20 @@ creation {XM_XSLT_NODE_FACTORY}
 
 	make_style_element
 
+feature {NONE} -- Initialization
+		
+	make_style_element (an_error_listener: XM_XSLT_ERROR_LISTENER; a_document: XM_XPATH_TREE_DOCUMENT;  a_parent: XM_XPATH_TREE_COMPOSITE_NODE;
+		an_attribute_collection: XM_XPATH_ATTRIBUTE_COLLECTION; a_namespace_list:  DS_ARRAYED_LIST [INTEGER];
+		a_name_code: INTEGER; a_sequence_number: INTEGER) is
+			-- Establish invariant.
+		do
+			create slot_manager.make
+			Precursor (an_error_listener, a_document, a_parent, an_attribute_collection, a_namespace_list, a_name_code, a_sequence_number)
+		end
+
 feature -- Access
 
-	qname_fingerprint: INTEGER
+	attribute_set_name_code: INTEGER
 			-- Fingerprint of QName
 
 	use: STRING
@@ -89,7 +100,7 @@ feature -- Element change
 				if last_generated_name_code = -1 then
 					report_compile_error (name_code_error_value)
 				else
-					qname_fingerprint := fingerprint_from_name_code (last_generated_name_code)
+					attribute_set_name_code := last_generated_name_code
 				end
 			end
 			attributes_prepared := True
@@ -105,7 +116,7 @@ feature -- Element change
 			a_cursor: DS_ARRAYED_LIST_CURSOR [XM_XSLT_ATTRIBUTE_SET]
 			an_error: XM_XPATH_ERROR_VALUE
 		do
-			check_top_level
+			check_top_level (Void)
 			an_iterator := new_axis_iterator (Child_axis)
 			from
 				an_iterator.start
@@ -178,17 +189,25 @@ feature -- Element change
 	compile (an_executable: XM_XSLT_EXECUTABLE) is
 			-- Compile `Current' to an excutable instruction.
 		local
-			needs_stack_frame: BOOLEAN
-			a_body: XM_XSLT_BLOCK
+			a_body: XM_XPATH_EXPRESSION
 		do
-			last_generated_instruction := Void
+			last_generated_expression := Void
 			if reference_count > 0 then
-				principal_stylesheet.allocate_local_slots (number_of_variables)
-				needs_stack_frame :=  number_of_variables > 0
-				create a_body.make (an_executable)
-				compile_children  (an_executable, a_body)
-				create instruction.make (used_attribute_sets, a_body, needs_stack_frame)
+				compile_sequence_constructor (an_executable, new_axis_iterator (Child_axis), True)
+				a_body := last_generated_expression
+				if a_body /= Void then
+					a_body.simplify
+					if a_body.was_expression_replaced then a_body := a_body.replacement_expression end
+					create {XM_XSLT_COMPILED_ATTRIBUTE_SET} instruction.make (attribute_set_name_code,
+																								 used_attribute_sets,
+																								 an_executable,
+																								 a_body,
+																								 line_number,
+																								 system_id,
+																								 slot_manager)
+				end
 			end
+			last_generated_expression := Void
 		end
 
 end

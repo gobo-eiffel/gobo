@@ -76,7 +76,7 @@ feature -- Optimization
 			-- Perform context-independent static optimizations.
 		do
 			use_context_item_as_default
-			simplify_arguments
+			Precursor
 		end
 
 feature -- Evaluation

@@ -16,7 +16,7 @@ inherit
 
 	XM_XPATH_ASSIGNATION
 		redefine
-			iterator, is_repeated_sub_expression
+			iterator, is_repeated_sub_expression, native_implementations
 		end
 
 	XM_XPATH_ROLE
@@ -46,15 +46,15 @@ feature {NONE} -- Initialization
 			static_properties_computed: are_static_properties_computed
 			range_variable_set: declaration = a_range_variable
 			sequence_set: sequence = a_sequence_expression
-			action_set: action = an_action
+			action_set: action_expression = an_action
 		end
 	
 feature -- Access
-	
+
 	item_type: XM_XPATH_ITEM_TYPE is
 			--Determine the data type of the expression, if possible
 		do
-			Result := action.item_type
+			Result := action_expression.item_type
 			if Result /= Void then
 				-- Bug in SE 1.0 and 1.1: Make sure that
 				-- that `Result' is not optimized away.
@@ -70,7 +70,7 @@ feature -- Access
 	is_repeated_sub_expression (a_child: XM_XPATH_EXPRESSION): BOOLEAN is
 			-- Is `a_child' a repeatedly-evaluated sub-expression?
 		do
-			Result := a_child = action
+			Result := a_child = action_expression
 		end
 
 feature -- Status report
@@ -90,7 +90,7 @@ feature -- Status report
 				sequence.display (a_level + 1)
 				std.error.put_string (STRING_.appended_string (indentation (a_level), "return"))
 				std.error.put_new_line
-				action.display (a_level + 1)
+				action_expression.display (a_level + 1)
 			end
 		end
 
@@ -104,37 +104,38 @@ feature -- Optimization
 			a_type_checker: XM_XPATH_TYPE_CHECKER
 			a_cardinality_set: ARRAY [BOOLEAN] 
 		do
-			mark_unreplaced
-
-			-- The order of events is critical here. First we ensure that the type of the
-			--  sequence expression is established. This is used to establish the type of the variable,
-			--  which in turn is required when type-checking the action part.
-
-			sequence.analyze (a_context)
-			if sequence.was_expression_replaced then
-				set_sequence (sequence.replacement_expression)
-			end
-			if sequence.is_error then
-				set_replacement (sequence)
-			else
-				create a_sequence_type.make (declaration.required_type.primary_type, Required_cardinality_zero_or_more)
-				create a_role.make (Variable_role, variable_name, 1)
-				create a_type_checker
-				a_type_checker.static_type_check (a_context, sequence, a_sequence_type, False, a_role)
-				if a_type_checker.is_static_type_check_error then
-					set_last_error_from_string (a_type_checker.static_type_check_error_message, Xpath_errors_uri, "XP0004", Type_error)
+			if declaration /= Void then
+				mark_unreplaced
+				
+				-- The order of events is critical here. First we ensure that the type of the
+				--  sequence expression is established. This is used to establish the type of the variable,
+				--  which in turn is required when type-checking the action part.
+				sequence.analyze (a_context)
+				if sequence.was_expression_replaced then
+					set_sequence (sequence.replacement_expression)
+				end
+				if sequence.is_error then
+					set_replacement (sequence)
 				else
-					create a_cardinality_set.make (1, 3)
-					a_cardinality_set.put (True, 2) -- Exactly One
-					set_sequence (a_type_checker.checked_expression)
-					declaration.refine_type_information (sequence.item_type, a_cardinality_set, Void, sequence.dependencies, sequence.special_properties)
-					set_declaration_void
-					action.analyze (a_context)
-					if action.was_expression_replaced then
-						replace_action (action.replacement_expression)
-					end
-					if action.is_error then
-						set_replacement (action)
+					create a_sequence_type.make (declaration.required_type.primary_type, Required_cardinality_zero_or_more)
+					create a_role.make (Variable_role, variable_name, 1)
+					create a_type_checker
+					a_type_checker.static_type_check (a_context, sequence, a_sequence_type, False, a_role)
+					if a_type_checker.is_static_type_check_error then
+						set_last_error_from_string (a_type_checker.static_type_check_error_message, Xpath_errors_uri, "XP0004", Type_error)
+					else
+						create a_cardinality_set.make (1, 3)
+						a_cardinality_set.put (True, 2) -- Exactly One
+						set_sequence (a_type_checker.checked_expression)
+						declaration.refine_type_information (sequence.item_type, a_cardinality_set, Void, sequence.dependencies, sequence.special_properties)
+						set_declaration_void
+						action_expression.analyze (a_context)
+						if action.was_expression_replaced then
+							replace_action (action_expression.replacement_expression)
+						end
+						if action_expression.is_error then
+							set_replacement (action_expression)
+						end
 					end
 				end
 			end
@@ -160,7 +161,7 @@ feature -- Evaluation
 				-- Then create a mapping iterator which applies a mapping function to each
 				--  item in the base sequence. The mapping function is essentially the "return"
 				--  expression, wrapped in a mapping action object that is responsible also for
-				--  setting the range variable at each step.
+				--  setting the range variable at each step. TODO: mapping_action?
 
 				create a_mapping_function.make (a_context, slot_number, action)
 				create {XM_XPATH_MAPPING_ITERATOR} Result.make (a_base_iterator,a_mapping_function , Void, Void)
@@ -169,10 +170,16 @@ feature -- Evaluation
 
 feature {NONE} -- Implementation
 
+	native_implementations: INTEGER is
+			-- Natively-supported evaluation routines
+		do
+			Result := Supports_iterator
+		end
+
 	compute_cardinality is
 			-- Compute cardinality.
 		do
-			set_cardinality (multiply_cardinality (sequence.cardinality, action.cardinality))
+			set_cardinality (multiply_cardinality (sequence.cardinality, action_expression.cardinality))
 		end
 
 invariant

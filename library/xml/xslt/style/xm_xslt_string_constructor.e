@@ -80,17 +80,27 @@ feature -- Element change
 			validated := True
 		end	
 
-	compile_content (an_executable: XM_XSLT_EXECUTABLE; a_string_constructor: XM_XSLT_TEXT_CONSTRUCTOR) is
+	compile_content (an_executable: XM_XSLT_EXECUTABLE; a_string_constructor: XM_XSLT_TEXT_CONSTRUCTOR; a_separator_expression: XM_XPATH_EXPRESSION) is
 			-- Compile content.
 		require
 			executable_not_void: an_executable /= Void
 			string_constructor_not_void: a_string_constructor /= Void
+		local
+			a_separator, a_content: XM_XPATH_EXPRESSION
+			a_content_contructor: XM_XSLT_CONTENT_CONSTRUCTOR
 		do
-			if select_expression /= Void then
-				a_string_constructor.set_select_expression (select_expression)
-			else
-				compile_children (an_executable, a_string_constructor)
+			a_separator := a_separator_expression
+			if a_separator = Void then
+				create {XM_XPATH_STRING_VALUE} a_separator.make ("")
 			end
+			if select_expression /= Void then
+				a_content := select_expression
+			else
+				compile_sequence_constructor (an_executable, new_axis_iterator (Child_axis), True)
+				a_content := last_generated_expression
+			end
+			create a_content_contructor.make (a_content, a_separator)
+			a_string_constructor.set_select_expression (a_content_contructor)
 		end
 
 feature {NONE} -- Implementation

@@ -62,6 +62,10 @@ feature -- Optimization
 			-- Perform context-independent static optimizations
 		do
 			use_context_item_as_default
+
+			-- rather than call `Precursor', we avoid having generate-id marked as non-creating
+			-- TODO: come back and review this
+
 			simplify_arguments
 		end
 

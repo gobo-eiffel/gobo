@@ -51,7 +51,6 @@ feature {NONE} -- Initialization
 			population := a_population
 			key_expression := a_key
 			key_context := a_context
-			transformer := key_context.transformer
 			create comparer.make (a_collator)
 			create groups.make_default
 			create group_keys.make_default
@@ -122,9 +121,6 @@ feature {NONE} -- Implementation
 	key_context: XM_XSLT_EVALUATION_CONTEXT
 			-- Execution context
 
-	transformer: XM_XSLT_TRANSFORMER
-			-- Transformer
-
 	comparer: XM_XPATH_ATOMIC_SORT_COMPARER
 			-- Comparer
 
@@ -150,7 +146,6 @@ feature {NONE} -- Implementation
 			not_already_built: not indexed_groups_built
 		local
 			a_map: DS_HASH_TABLE [DS_ARRAYED_LIST [XM_XPATH_ITEM], XM_XPATH_COMPARISON_KEY]
-			a_saved_iterator: XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_ITEM]
 			a_context: XM_XSLT_EVALUATION_CONTEXT
 			an_item: XM_XPATH_ITEM
 			a_keys_iterator: XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_ITEM]
@@ -160,9 +155,9 @@ feature {NONE} -- Implementation
 			a_group: DS_ARRAYED_LIST [XM_XPATH_ITEM]
 		do
 			create a_map.make_with_equality_testers (20, Void, comparison_key_tester)
-			a_saved_iterator := transformer.current_iterator
-			transformer.set_current_iterator (population)
-			a_context := transformer.new_xpath_context			
+			a_context := key_context.new_minor_context			
+			a_context.set_current_iterator (population)
+
 			from
 				population.start
 			until
@@ -207,7 +202,6 @@ feature {NONE} -- Implementation
 				end
 				population.forth
 			end
-			transformer.set_current_iterator (a_saved_iterator)
 			indexed_groups_built := True
 		ensure
 			indexed_groups_built: indexed_groups_built
@@ -218,7 +212,6 @@ invariant
 	population_not_void: population /= Void
 	key_expression_not_void: key_expression /= Void
 	key_context_not_void: key_context /= Void
-	transformer_not_void: transformer /= Void
 	comparer_not_void: comparer /= Void
 	groups_not_void: groups /= Void
 	group_keys_not_void: group_keys /= Void

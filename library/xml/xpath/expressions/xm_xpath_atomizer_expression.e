@@ -16,7 +16,7 @@ inherit
 
 	XM_XPATH_UNARY_EXPRESSION
 		redefine
-			item_type, simplify, analyze, iterator, evaluate_item, compute_cardinality
+			item_type, simplify, analyze, iterator, evaluate_item, compute_cardinality, compute_special_properties
 		end
 
 	XM_XPATH_MAPPING_FUNCTION
@@ -189,6 +189,13 @@ feature {XM_XPATH_EXPRESSION} -- Restricted
 			-- Compute cardinality.
 		do
 			set_cardinality_zero_or_more -- TODO: we can do better than this
+		end
+
+	compute_special_properties is
+			-- Compute special properties.
+		do
+			Precursor
+			set_non_creating
 		end
 
 end

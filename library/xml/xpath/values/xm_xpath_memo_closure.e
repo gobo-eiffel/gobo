@@ -16,7 +16,7 @@ inherit
 	
 	XM_XPATH_CLOSURE
 		redefine
-			make, iterator, same_expression
+			make, iterator, same_expression, process
 		end
 
 creation {XM_XPATH_EXPRESSION_FACTORY}
@@ -105,6 +105,12 @@ feature -- Evaluation
 			end
 		end
 
+	process (a_context: XM_XPATH_CONTEXT) is
+			-- Execute `Current' completely, writing results to the current `XM_XPATH_RECEIVER'.
+		do
+			todo ("process", False)
+		end
+	
 feature {XM_XPATH_MEMO_CLOSURE} -- Local
 
 	state: INTEGER

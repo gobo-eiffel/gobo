@@ -195,10 +195,14 @@ feature {XM_XPATH_EXPRESSION} -- Restricted
 		do
 			initialize_special_properties
 			set_ordered_nodeset
-			set_peer_nodeset
 
 			-- Declaring it as a peer node-set expression avoids sorting of expressions such as document(XXX)/a/b/c
 
+			set_peer_nodeset
+
+			-- Multiple calls with same argument yield same nodes, so not creative
+
+			set_non_creating 
 		end
 	
 feature {XM_XPATH_FUNCTION_CALL} -- Local

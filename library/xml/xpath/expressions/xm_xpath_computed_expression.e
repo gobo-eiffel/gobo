@@ -41,7 +41,7 @@ feature {NONE} -- Initialization
 feature -- Access
 
 	line_number: INTEGER
-			-- Line number of the expression
+			-- Line number of the expression within a module
 
 	sub_expressions: DS_ARRAYED_LIST [XM_XPATH_EXPRESSION] is
 			-- Immediate sub-expressions of `Current'
@@ -303,6 +303,46 @@ feature -- Evaluation
 			end
 		end
 
+	process (a_context: XM_XPATH_CONTEXT) is
+			-- Execute `Current' completely, writing results to the current `XM_XPATH_RECEIVER'.
+		local
+			an_iterator: XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_ITEM]
+		do
+			if is_evaluate_item_supported then
+				evaluate_item (a_context)
+				if last_evaluated_item /= Void then
+					a_context.current_receiver.append_item (last_evaluated_item)
+				end
+			elseif is_iterator_supported then
+				an_iterator := iterator (a_context)
+				if an_iterator.is_error then
+					a_context.report_fatal_error (an_iterator.error_value)
+				else
+					from
+						an_iterator.start
+					until
+						an_iterator.is_error or else an_iterator.after
+					loop
+						a_context.current_receiver.append_item (an_iterator.item)
+						an_iterator.forth
+					end
+					if an_iterator.is_error then
+						a_context.report_fatal_error (an_iterator.error_value)
+					end
+				end
+			else
+				check
+					not_supported: False
+				end
+			end
+		end
+
+	processed_eager_evaluation (a_context: XM_XPATH_CONTEXT): XM_XPATH_VALUE is
+			-- Eager evaluation via `process'
+		do
+			-- pre-condition will not be met for this implementation
+		end
+
 feature -- Element change
 
 	set_line_number (a_line_number: INTEGER) is
@@ -313,6 +353,16 @@ feature -- Element change
 			line_number := a_line_number
 		ensure
 			set: line_number = a_line_number
+		end
+	
+	set_source_location (a_module_number, a_line_number: INTEGER) is
+			-- Set source location information.
+		do
+			module_number := a_module_number
+			line_number := a_line_number
+		ensure
+			line_number_set: line_number = a_line_number
+			system_id_set: module_number = a_module_number
 		end
 
 	set_parent (a_container: XM_XPATH_EXPRESSION_CONTAINER) is
@@ -344,6 +394,16 @@ feature -- Element change
 		end
 	
 feature {XM_XPATH_EXPRESSION} -- Restricted
+
+	native_implementations: INTEGER is
+			-- Natively-supported evaluation routines
+		do
+			if cardinality_allows_many then
+				Result := Supports_iterator
+			else
+				Result := Supports_evaluate_item
+			end
+		end
 
 	compute_cardinality is
 			-- Compute cardinality.
@@ -377,6 +437,13 @@ feature {NONE} -- Implementation
 			create Result.make (False)
 			Result.set_last_error_from_string ("Effective boolean value is not defined for a " + a_reason, Gexslt_eiffel_type_uri, "EFFECTIVE_BOOLEAN_VALUE", Type_error)
 		end
+
+	module_number: INTEGER
+			-- Index into SYSTEM ID array
+	
+invariant
+
+		positive_module_number: module_number >= 0
 
 end
 	

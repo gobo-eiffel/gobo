@@ -103,7 +103,7 @@ feature -- Element change
 			an_error: XM_XPATH_ERROR_VALUE
 		do
 			if not validated then
-				check_top_level
+				check_top_level (Void)
 				from
 					a_child_iterator := new_axis_iterator (Child_axis)
 					a_child_iterator.start
@@ -215,7 +215,7 @@ feature -- Element change
 	compile (an_executable: XM_XSLT_EXECUTABLE) is
 			-- Compile `Current' to an excutable instruction.
 		do
-			last_generated_instruction := Void
+			last_generated_expression := Void
 		end
 
 	assemble (a_map: DS_HASH_TABLE [STRING, INTEGER]) is

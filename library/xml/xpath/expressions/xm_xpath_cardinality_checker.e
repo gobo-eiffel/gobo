@@ -87,7 +87,7 @@ feature -- Evaluation
 			an_item: XM_XPATH_ITEM
 		do
 			last_evaluated_item := Void
-			an_iterator := iterator (a_context)
+			an_iterator := base_expression.iterator (a_context)
 			if not an_iterator.is_error then
 				from
 					an_iterator.start

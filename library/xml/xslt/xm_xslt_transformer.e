@@ -38,6 +38,8 @@ inherit
 
 	XM_XSLT_SHARED_EMITTER_FACTORY
 
+	XM_XSLT_TEMPLATE_ROUTINES
+
 creation
 
 	make
@@ -60,7 +62,7 @@ feature {NONE} -- Initialization
 			initial_mode := -1
 			recovery_policy := Recover_with_warnings
 			create parser_factory
-			create user_data_table.make_with_equality_testers (10, Void, string_equality_tester)
+			create user_data_table.make_default
 			create current_date_time.make_from_epoch (0)
 			create transformer_factory.make (configuration)
 		ensure
@@ -91,14 +93,8 @@ feature -- Access
 			key_manager_not_void: Result /= Void
 		end
 
-	current_iterator: XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_ITEM]
-			-- Current iterator
-
-	current_mode: XM_XSLT_MODE
-			-- Current mode
-
-	current_template: XM_XSLT_COMPILED_TEMPLATE
-			-- Current template
+	bindery: XM_XSLT_BINDERY
+			-- Global parameter/variable bindings
 
 	initial_template: XM_XSLT_COMPILED_TEMPLATE
 			-- Initial template
@@ -112,16 +108,6 @@ feature -- Access
 	principal_result_uri: STRING
 		-- System id of unamed output definition
 
-	current_item: XM_XPATH_ITEM is
-			-- Current item
-		require
-			current_iterator_not_off: current_iterator /= Void and then not current_iterator.off
-		do
-			Result := current_iterator.item
-		ensure
-			current_item_not_void: Result /= Void
-		end
-
 	document_pool: XM_XPATH_DOCUMENT_POOL
 			-- Document pool
 
@@ -131,26 +117,14 @@ feature -- Access
 	decimal_format_manager: XM_XSLT_DECIMAL_FORMAT_MANAGER
 			-- Manager of decimal formats
 
-	bindery: XM_XSLT_BINDERY
-			-- Bound variables
-
 	recovery_policy: INTEGER
 			-- Recovery policy when warnings or errors are encountered
-
-	current_receiver: XM_XSLT_SEQUENCE_RECEIVER
-			-- Receiver to which output is currently being written.
 
 	trace_listener: XM_XSLT_TRACE_LISTENER
 			-- Trace listener
 
 	error_listener: XM_XSLT_ERROR_LISTENER
 			-- Error listener
-
-	current_group_iterator: XM_XSLT_GROUP_ITERATOR
-			-- Current group iterator
-
-	current_regexp_iterator: XM_XSLT_REGEXP_ITERATOR
-			-- Current regular expression iterator
 
 	last_remembered_number: MA_DECIMAL
 			--	Last remembered number
@@ -172,18 +146,13 @@ feature -- Access
 			positive_result: Result.is_positive
 		end
 
-	user_data (an_object: HASHABLE; a_name_key: STRING): ANY is
-			-- User data associated with `an_object'
+	function_results_cache (a_function: XM_XSLT_COMPILED_USER_FUNCTION): DS_HASH_TABLE [XM_XPATH_VALUE, STRING] is
+			-- Value associated with `an_object'
 		require
-			object_not_void: an_object /= Void
-			name_key_meaningful: a_name_key /= Void and then a_name_key.count > 0
-		local
-			a_key: STRING
+			function_not_void: a_function /= Void
 		do
-			a_key := STRING_.concat (an_object.hash_code.out, " ")
-			a_key := STRING_.appended_string (a_key, a_name_key)
-			if user_data_table.has (a_key) then
-				Result := user_data_table.item (a_key)
+			if user_data_table.has (a_function) then
+				Result := user_data_table.item (a_function)
 			end
 		end
 	
@@ -196,14 +165,20 @@ feature -- Status report
 		end
 
 	is_error: BOOLEAN
-			-- Has an error occured?
+			-- Has an error occured
 
-	saved_context: XM_XSLT_SAVED_TRANSFORMER_CONTEXT is
-			-- Current state
+	last_set_tail_call: XM_XSLT_TAIL_CALL is
+			-- Last tail call set by `set_last_tail_call'
 		do
-			create Result.make (current_iterator, current_mode, current_template, current_group_iterator, current_regexp_iterator)
-		ensure
-			saved_context_not_void: Result /= Void
+			Result := last_tail_call
+		end
+
+feature -- Status setting
+
+	set_last_tail_call (a_tail_call: XM_XSLT_TAIL_CALL) is
+			-- Set residue from `apply_templates'
+		do
+			last_tail_call := a_tail_call
 		end
 
 feature -- Status setting
@@ -236,18 +211,6 @@ feature -- Status setting
 			is_error := True
 		end
 
-	restore_context (a_saved_context: XM_XSLT_SAVED_TRANSFORMER_CONTEXT) is
-			-- Restore state.
-		require
-			saved_context_not_void: a_saved_context /= Void
-		do
-			current_iterator := a_saved_context.iterator
-			current_mode := a_saved_context.mode
-			current_template := a_saved_context.template
-			current_group_iterator := a_saved_context.group_iterator
-			current_regexp_iterator := a_saved_context.regexp_iterator
-		end
-
 	set_remembered_number (a_number: MA_DECIMAL; a_node: XM_XPATH_NODE) is
 			-- Set remembered number.
 		require
@@ -264,11 +227,11 @@ feature -- Status setting
 feature -- Creation
 
 	new_xpath_context: XM_XSLT_EVALUATION_CONTEXT is
-			-- Created evaluation context
-		require
-			bindery_not_void: bindery /= Void
+			-- New dynamic context
 		do
 			create Result.make (Current)
+		ensure
+			Major_context_created: Result /= Void and then not Result.is_minor
 		end
 
 	new_stripper (a_builder: XM_XPATH_BUILDER): XM_XSLT_STRIPPER is
@@ -314,41 +277,20 @@ feature -- Creation
 
 feature -- Element change
 	
-	put_user_data (an_object: HASHABLE; a_name_key: STRING; some_user_data: ANY) is
+	save_function_results (a_result_table: DS_HASH_TABLE [XM_XPATH_VALUE, STRING]; a_function: XM_XSLT_COMPILED_USER_FUNCTION) is
 			-- User data associated with `an_object'
 		require
-			object_not_void: an_object /= Void
-			name_key_meaningful: a_name_key /= Void and then a_name_key.count > 0
-		local
-			a_key: STRING
+			function_not_void: a_function /= Void
 		do
-			a_key := STRING_.concat (an_object.hash_code.out, " ")
-			a_key := STRING_.appended_string (a_key, a_name_key)
-			if user_data_table.has (a_key) then
-				if some_user_data = Void then
-					user_data_table.remove (a_key)
+			if user_data_table.has (a_function) then
+				if a_result_table = Void then
+					user_data_table.remove (a_function)
 				else
-					user_data_table.put (some_user_data, a_key)
+					user_data_table.put (a_result_table, a_function)
 				end
-			elseif some_user_data /= Void then
-				user_data_table.put (some_user_data, a_key)
+			elseif a_result_table /= Void then
+				user_data_table.put (a_result_table, a_function)
 			end
-		end
-
-	set_current_iterator (an_iterator: XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_ITEM]) is
-			-- Set `current_iterator'.
-		do
-			current_iterator := an_iterator
-		ensure
-			iterator_set: current_iterator = an_iterator
-		end
-
-	set_current_group_iterator (a_group_iterator: XM_XSLT_GROUP_ITERATOR) is
-			-- Set `current_group_iterator'.
-		do
-			current_group_iterator := a_group_iterator
-		ensure
-			group_iterator_set: current_group_iterator = a_group_iterator
 		end
 
 	set_initial_template (a_template_name: STRING) is
@@ -385,36 +327,6 @@ feature -- Element change
 				shared_name_pool.allocate_expanded_name (a_mode_name)
 			end
 			initial_mode := shared_name_pool.fingerprint_from_expanded_name (a_mode_name)
-		end
-
-	set_current_mode (a_mode: XM_XSLT_MODE) is
-			-- Set `current_mode'
-		do
-			current_mode := a_mode
-		ensure
-			mode_set: current_mode = a_mode
-		end
-
-	set_current_template (a_template: XM_XSLT_COMPILED_TEMPLATE) is
-			-- Set `current_template'
-		do
-			current_template := a_template
-		ensure
-			template_set: current_template = a_template
-		end
-
-	create_new_context (an_item: XM_XPATH_ITEM) is
-			-- Create new context with `an_item' as the context item and the only node in the current node list.
-		require
-			context_item_not_void: an_item /= Void
-		local
-			a_singleton_iterator: XM_XPATH_SINGLETON_ITERATOR [XM_XPATH_ITEM]
-		do
-			create a_singleton_iterator.make (an_item)
-			set_current_iterator (a_singleton_iterator)
-			current_iterator.start
-		ensure
-			context_item: current_iterator.item = an_item
 		end
 			
 	clear_document_pool is
@@ -492,104 +404,6 @@ feature -- Element change
 			document_allocated: shared_name_pool.is_document_allocated (a_document)
 		end
 
-	set_receiver (a_receiver: XM_XSLT_SEQUENCE_RECEIVER) is
-			-- Set receiver to which output is currently being written.
-		require
-			receiver_not_void: a_receiver /= Void
-		do
-			current_receiver := a_receiver
-		ensure
-			receiver_set: current_receiver = a_receiver
-		end
-
-	reset_output_destination (a_receiver: XM_XSLT_SEQUENCE_RECEIVER) is
-			-- Close the current receiver, and revert to a previous receiver.
-		require
-			current_receiver_not_void: current_receiver /= Void
-		do
-			if temporary_destination_depth > 0 then temporary_destination_depth := temporary_destination_depth - 1 end
-			current_receiver.end_document
-			current_receiver := a_receiver
-		ensure
-			receiver_set: current_receiver = a_receiver
-		end
-	
-	change_to_sequence_output_destination (a_receiver: XM_XSLT_SEQUENCE_RECEIVER) is
-			-- Set the output destination to write to a sequence.
-		require
-			receiver_not_void: a_receiver /= Void
-		do
-			temporary_destination_depth := temporary_destination_depth + 1
-			current_receiver := a_receiver
-		ensure
-			receiver_set: current_receiver = a_receiver
-			temporary_destination_depth_increased_by_one: temporary_destination_depth = old temporary_destination_depth + 1
-		end
-
-	change_to_text_output_destination (a_buffer: STRING) is
-			-- Set the output destination to write to a string.
-		require
-			buffer_not_void: a_buffer /= Void
-		do
-			temporary_destination_depth := temporary_destination_depth + 1
-			create {XM_XSLT_SIMPLE_CONTENT_OUTPUTTER} current_receiver.make (a_buffer, Current)
-		ensure
-			temporary_destination_depth_increased_by_one: temporary_destination_depth = old temporary_destination_depth + 1
-		end
-
-	change_output_destination (properties: XM_XSLT_OUTPUT_PROPERTIES; a_result: XM_XSLT_TRANSFORMATION_RESULT
-										is_final: BOOLEAN; validation: INTEGER; a_schema_type: XM_XPATH_SCHEMA_TYPE) is
-			-- Set a new output destination, supplying the output format details.
-		require
-			result_not_void: a_result /= void
-			schema_type_not_yet_supported: a_schema_type = Void
-		local
-			a_complex_outputter: XM_XSLT_COMPLEX_CONTENT_OUTPUTTER
-			some_properties: XM_XSLT_OUTPUT_PROPERTIES
-			a_receiver: XM_XPATH_RECEIVER
-			a_namespace_reducer: XM_XSLT_NAMESPACE_REDUCER
-			an_error: XM_XPATH_ERROR_VALUE
-		do
-			if is_final and then temporary_destination_depth > 0 then
-				create an_error.make_from_string ("Cannot switch to a final result destination while writing a temporary tree", "", "XT1480", Dynamic_error)
-				report_fatal_error (an_error, Void)
-			else
-				if not is_final then temporary_destination_depth := temporary_destination_depth + 1 end
-				if properties = Void then
-					create some_properties.make (0)
-				else
-					some_properties := properties
-				end
-				-- set_output_properties TODO
-				a_receiver := selected_receiver (a_result, some_properties)
-
-				if not is_error then
-					-- TODO: add a validator to the pipeline if required
-					
-					-- Add a filter to remove duplicate namespaces
-					
-					create a_namespace_reducer.make (a_receiver)
-					create a_complex_outputter.make (a_namespace_reducer)
-					a_complex_outputter.start_document
-					current_receiver := a_complex_outputter
-				end
-			end
-		end
-
-	reset_global_context is
-			-- Reset the context to point to the root of the principal source document as the singleton focus.
-		local
-			a_singleton_iterator: XM_XPATH_SINGLETON_ITERATOR [XM_XPATH_ITEM]
-		do
-			create a_singleton_iterator.make (principal_source_document)
-			set_current_iterator (a_singleton_iterator)
-			current_iterator.start
-			current_mode := Void
-			current_template := Void
-			current_group_iterator := Void
-			current_regexp_iterator := Void
-		end
-	
 	resolve_next_destination (a_system_id, a_base_uri: STRING; a_result: XM_XSLT_TRANSFORMATION_RESULT) is
 			-- Resolve destination for transforming `a_result' via stylesheet `a_system_id'
 		require
@@ -718,157 +532,6 @@ feature -- Transformation
 			configuration.reset_entity_resolver
 		end
 
-	apply_templates (a_sequence_iterator: XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_ITEM]; a_mode: XM_XSLT_MODE; some_parameters, some_tunnel_parameters: XM_XSLT_PARAMETER_SET) is
-			-- Process selected nodes using the handlers registered for `a_mode'
-		require
-			sequence_iterator_not_void: a_sequence_iterator /= Void
-			no_error: not is_error
-		local
-			a_saved_iterator: XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_ITEM]
-			a_saved_mode: XM_XSLT_MODE
-			a_node: XM_XPATH_NODE
-			a_node_handler: XM_XSLT_COMPILED_TEMPLATE
-			a_last_tail_call: like last_tail_call
-		do
-			a_saved_iterator := current_iterator
-			a_saved_mode := current_mode
-			set_current_iterator (a_sequence_iterator)
-			set_current_mode (a_mode)
-			from
-				a_sequence_iterator.start
-			until
-				is_error or else a_sequence_iterator.after
-			loop
-
-				-- process any tail calls returned from previous nodes
-
-				from
-				until
-					is_error or else a_last_tail_call = Void
-				loop
-					a_last_tail_call.process_leaving_tail (Current)
-					a_last_tail_call := a_last_tail_call.last_tail_call
-				end
-				if not is_error then
-					a_node ?= a_sequence_iterator.item
-					check
-						item_is_a_node: a_node /= Void
-						-- guarenteed by static type checking
-					end
-					
-					-- find the node handler [i.e., the template rule] for this node
-					
-					a_node_handler := rule_manager.template_rule (a_node, a_mode, Current)
-					if not is_error then
-						if a_node_handler = Void then
-							
-							-- Use the default action for the node. No need to open a new stack frame!
-							
-							perform_default_action (a_node, some_parameters, some_tunnel_parameters)
-						else
-							if some_tunnel_parameters /= Void and then some_tunnel_parameters.count > 0
-								or else a_node_handler.is_stack_frame_needed then
-								bindery.open_stack_frame (some_parameters, some_tunnel_parameters)
-								if is_tracing then
-									trace_listener.trace_current_item_start (a_node)
-								end
-								a_node_handler.process_leaving_tail (Current)
-								a_last_tail_call := a_node_handler.last_tail_call
-								if is_tracing then
-									trace_listener.trace_current_item_finish (a_node)
-								end
-								bindery.close_stack_frame
-							else
-								if is_tracing then
-									trace_listener.trace_current_item_start (a_node)
-								end
-								a_node_handler.process_leaving_tail (Current)
-								a_last_tail_call := a_node_handler.last_tail_call
-								if is_tracing then
-									trace_listener.trace_current_item_finish (a_node)
-								end
-							end
-						end
-					end
-				end
-				a_sequence_iterator.forth
-			end
-			set_current_mode (a_saved_mode)
-			set_current_iterator (a_saved_iterator)
-			last_tail_call := a_last_tail_call
-		end
-
-	apply_imports (a_minimum_precedence, a_maximum_precedence: INTEGER; some_parameters, some_tunnel_parameters: XM_XSLT_PARAMETER_SET) is
-			-- Apply a template imported from the stylesheet containing the current template.
-		require
-			no_error: not is_error
-		local
-			a_mode: XM_XSLT_MODE
-			a_context_node: XM_XPATH_NODE
-			a_node_handler: XM_XSLT_COMPILED_TEMPLATE
-			an_error: XM_XPATH_ERROR_VALUE
-		do
-			a_mode := current_mode
-			if current_iterator = Void or else current_iterator.off then
-				create an_error.make_from_string ("Context item is not set whilst applying imports.", "", "XT0565", Dynamic_error)
-				report_fatal_error (an_error, Void)
-			else
-				a_context_node ?= current_iterator.item
-				if a_context_node = Void then
-					create an_error.make_from_string ("Context item is not a node whilst applying imports.", "", "XT0565", Dynamic_error)
-					report_fatal_error (an_error, Void)
-				else
-					a_node_handler := rule_manager.imported_template_rule (a_context_node, a_mode, a_minimum_precedence, a_maximum_precedence, Current)
-					if a_node_handler = Void then
-
-						-- Use the default action for the node.
-
-						perform_default_action (a_context_node, some_parameters, some_tunnel_parameters)
-					else
-						bindery.open_stack_frame (some_parameters, some_tunnel_parameters)
-						a_node_handler.process (Current)
-						bindery.close_stack_frame
-					end
-				end
-			end
-		end
-
-	find_next_match (some_parameters, some_tunnel_parameters: XM_XSLT_PARAMETER_SET) is
-			-- Find and apply next matching template.
-		require
-			no_error: not is_error
-			current_template_not_void: current_template /= Void
-		local
-			a_mode: XM_XSLT_MODE
-			a_context_node: XM_XPATH_NODE
-			a_node_handler: XM_XSLT_COMPILED_TEMPLATE
-			an_error: XM_XPATH_ERROR_VALUE
-		do
-			a_mode := current_mode
-			if current_iterator = Void or else current_iterator.off then
-				create an_error.make_from_string ("Context item is not set whilst searching for next match.", "", "XT0565", Dynamic_error)
-				report_fatal_error (an_error, Void)
-			else
-				a_context_node ?= current_iterator.item
-				if a_context_node = Void then
-					create an_error.make_from_string ("Context item is not a node whilst searching for next match.", "", "XT0565", Dynamic_error)
-					report_fatal_error (an_error, Void)
-				else
-					a_node_handler := rule_manager.next_match_handler (a_context_node, a_mode, current_template, Current)
-					if a_node_handler = Void then
-
-						-- Use the default action for the node.
-
-						perform_default_action (a_context_node, some_parameters, some_tunnel_parameters)
-					else
-						bindery.open_stack_frame (some_parameters, some_tunnel_parameters)
-						a_node_handler.process (Current)
-						bindery.close_stack_frame
-					end
-				end
-			end
-		end
-
 feature {XM_XSLT_TRANSFORMER, XM_XSLT_TRANSFORMER_RECEIVER} -- Transformation internals
 
 	transform_document (a_start_node: XM_XPATH_NODE; a_result: XM_XSLT_TRANSFORMATION_RESULT) is
@@ -882,6 +545,8 @@ feature {XM_XSLT_TRANSFORMER, XM_XSLT_TRANSFORMER_RECEIVER} -- Transformation in
 			properties: XM_XSLT_OUTPUT_PROPERTIES
 			a_next_uri: STRING
 			a_transformation_result: XM_XSLT_TRANSFORMATION_RESULT
+			a_context: XM_XSLT_EVALUATION_CONTEXT
+			a_parameter_set: XM_XSLT_PARAMETER_SET
 		do
 			principal_result := a_result
 			principal_result_uri := a_result.system_id
@@ -899,21 +564,27 @@ feature {XM_XSLT_TRANSFORMER, XM_XSLT_TRANSFORMER_RECEIVER} -- Transformation in
 					if not is_error then a_transformation_result := next_resolved_destination end
 				end
 				if not is_error then
-					change_output_destination (properties, a_transformation_result, True, Validation_preserve, Void)
+					initial_context.change_output_destination (properties, a_transformation_result, True, Validation_preserve, Void)
 					
 					-- Process the source document using the handlers that have been set up.
 					
 					if initial_template = Void then
 						perform_transformation (a_start_node)
 					else
-						initial_template.process (Current)
+						a_context := initial_context.new_context
+						a_context.open_stack_frame (initial_template.slot_manager)
+						create a_parameter_set.make_empty
+						a_context.set_local_parameters (a_parameter_set)
+						create a_parameter_set.make_empty
+						a_context.set_tunnel_parameters (a_parameter_set)						
+						initial_template.process (a_context)
 					end
 					
 					if is_tracing then
 						trace_listener.stop_tracing
 					end
 					
-					reset_output_destination (Void)
+					initial_context.current_receiver.end_document
 					std.output.flush
 				end
 			end
@@ -929,19 +600,20 @@ feature {XM_XSLT_TRANSFORMER} -- Transformation internals
 		local
 			a_sequence_iterator: XM_XPATH_SINGLETON_ITERATOR [XM_XPATH_ITEM]
 			finished: BOOLEAN
-			a_last_tail_call: like last_tail_call
+			some_local_parameters, some_tunnel_parameters: XM_XSLT_PARAMETER_SET
 		do
 			if not is_error then
 				create a_sequence_iterator.make (a_start_node)
 				from
-					apply_templates (a_sequence_iterator, rule_manager.mode (initial_mode), Void, Void)
-					a_last_tail_call := last_tail_call
+					create some_local_parameters.make_empty
+					create some_tunnel_parameters.make_empty
+					apply_templates (a_sequence_iterator, rule_manager.mode (initial_mode), some_local_parameters, some_tunnel_parameters, initial_context)
 				until
 					is_error or else finished
 				loop
-					if a_last_tail_call /= Void then
-						a_last_tail_call.process_leaving_tail (Current)
-						a_last_tail_call := a_last_tail_call.last_tail_call
+					if last_tail_call /= Void then
+						last_tail_call.process_leaving_tail (initial_context)
+						last_tail_call := last_tail_call.last_tail_call
 					else
 						finished := True
 					end
@@ -960,6 +632,9 @@ feature -- Implementation
 	initial_mode: INTEGER
 			-- Fingerprint of initial mode
 
+	initial_context: XM_XSLT_EVALUATION_CONTEXT
+			-- Initial dynamic context for a transformation
+
 	last_tail_call: XM_XSLT_TAIL_CALL
 			-- Residue from `apply_templates'
 
@@ -969,7 +644,7 @@ feature -- Implementation
 	parameters: XM_XSLT_PARAMETER_SET
 			-- Global parameters supplied to the transformer
 
-	user_data_table: DS_HASH_TABLE [ANY, STRING]
+	user_data_table: DS_HASH_TABLE [DS_HASH_TABLE [XM_XPATH_VALUE, STRING], XM_XSLT_COMPILED_USER_FUNCTION]
 			-- User data map
 
 	xpath_parameters: DS_HASH_TABLE [XM_XPATH_EXPRESSION, INTEGER]
@@ -995,36 +670,6 @@ feature -- Implementation
 		ensure
 			result_not_void: Result /= Void
 			cached: cached_static_context /= Void
-		end
-
-	perform_default_action (a_node: XM_XPATH_NODE; some_parameters, some_tunnel_parameters: XM_XSLT_PARAMETER_SET) is
-			-- Perform default action for `a_node'.
-		require
-			node_not_void: a_node /= Void
-		local
-			a_sequence_iterator: XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_ITEM]
-			a_last_tail_call: like last_tail_call
-		do
-			inspect
-				a_node.node_type
-			when Document_node, Element_node then
-				a_sequence_iterator := a_node.new_axis_iterator (Child_axis)
-				from
-					apply_templates (a_sequence_iterator, current_mode, some_parameters, some_tunnel_parameters)
-					a_last_tail_call := last_tail_call
-				until
-					a_last_tail_call = Void
-				loop
-					a_last_tail_call.process_leaving_tail (Current)
-					a_last_tail_call := a_last_tail_call.last_tail_call
-				end
-			when Text_node, Attribute_node then
-				current_receiver.notify_characters (a_node.string_value, 0)
-			when Comment_node, Processing_instruction_node, Namespace_node then
-
-				-- No action
-
-			end
 		end
 
 	selected_receiver (a_result: XM_XSLT_TRANSFORMATION_RESULT; some_properties: XM_XSLT_OUTPUT_PROPERTIES): XM_XPATH_RECEIVER is
@@ -1091,6 +736,7 @@ feature -- Implementation
 			executable_not_void: executable /= Void
 		local
 			an_error: XM_XPATH_ERROR_VALUE
+			a_singleton_iterator: XM_XPATH_SINGLETON_ITERATOR [XM_XPATH_ITEM]
 		do
 			trace_listener := configuration.trace_listener
 			if is_tracing then
@@ -1101,10 +747,12 @@ feature -- Implementation
 			-- Create a new bindery, to clear out any variables from previous runs
 			
 			bindery := executable.new_bindery
-
+			initial_context := new_xpath_context
 			if a_start_node /= Void then
 				principal_source_document := a_start_node.document_root
-				create_new_context (a_start_node)
+				create a_singleton_iterator.make (principal_source_document)
+				initial_context.set_current_iterator (a_singleton_iterator)
+				initial_context.current_iterator.start
 
 				-- If XPath parameters were supplied, set them up
 				

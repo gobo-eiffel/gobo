@@ -71,6 +71,7 @@ feature
 				a_test_string := STRING_.appended_string (a_test_string, a_test_file.last_string)
 			end
 			a_test_file.close
+--			print (an_output.last_output)
 			assert ("Results same as test file", STRING_.same_string (a_test_string, an_output.last_output))
 		end
 
@@ -121,6 +122,7 @@ feature
 			--print (hexadecimal_string (a_test_string))
 			--print ("%NResults are:%N")
 			--print (hexadecimal_string (an_output.last_output))
+			--print (an_output.last_output)
 			assert ("Results same as test file", STRING_.same_string (a_test_string, an_output.last_output))
 		end
 
@@ -171,6 +173,7 @@ feature
 			--print (hexadecimal_string (a_test_string))
 			--print ("%NResults are:%N")
 			--print (hexadecimal_string (an_output.last_output))
+--			print (an_output.last_output)
 			assert ("Results same as test file", STRING_.same_string (a_test_string, an_output.last_output))
 		end
 

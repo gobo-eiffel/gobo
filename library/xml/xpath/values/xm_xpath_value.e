@@ -18,6 +18,9 @@ deferred class XM_XPATH_VALUE
 inherit
 
 	XM_XPATH_EXPRESSION
+		redefine
+			lazily_evaluate
+		end
 
 feature {NONE} -- Initialization
 
@@ -28,6 +31,7 @@ feature {NONE} -- Initialization
 			initialize_dependencies
 			initialize_intrinsic_dependencies 
 			set_cardinality_zero_or_more
+			set_non_creating
 		end
 	
 feature -- Access
@@ -71,6 +75,38 @@ feature -- Optimization
 			-- Promote this subexpression.
 		do
 			do_nothing
+		end
+
+feature -- Evaluation
+
+	lazily_evaluate (a_context: XM_XPATH_CONTEXT; save_values: BOOLEAN) is
+			-- Lazily evaluate `Current'.
+		do
+				last_evaluation := Current
+		end
+			
+	process (a_context: XM_XPATH_CONTEXT) is
+			-- Execute `Current' completely, writing results to the current `XM_XPATH_RECEIVER'.
+		local
+			an_iterator: XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_ITEM]
+			a_receiver: XM_XPATH_SEQUENCE_RECEIVER
+		do
+			an_iterator := iterator (a_context)
+			a_receiver := a_context.current_receiver
+			from
+				an_iterator.start
+			until
+				an_iterator.after
+			loop
+				a_receiver.append_item (an_iterator.item)
+				an_iterator.forth
+			end
+		end
+
+	processed_eager_evaluation (a_context: XM_XPATH_CONTEXT): XM_XPATH_VALUE is
+			-- Eager evaluation via `process'
+		do
+			Result := Current
 		end
 
 feature -- Conversion

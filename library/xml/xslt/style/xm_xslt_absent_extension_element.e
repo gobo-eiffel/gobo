@@ -17,12 +17,24 @@ inherit
 
 	XM_XSLT_STYLE_ELEMENT
 		redefine
-			may_contain_sequence_constructor, validate
+			may_contain_sequence_constructor, validate, make_style_element
 		end
 
 creation {XM_XSLT_NODE_FACTORY}
 
 	make_style_element
+
+
+feature {NONE} -- Initialization
+	
+	make_style_element (an_error_listener: XM_XSLT_ERROR_LISTENER;  a_document: XM_XPATH_TREE_DOCUMENT;  a_parent: XM_XPATH_TREE_COMPOSITE_NODE;
+		an_attribute_collection: XM_XPATH_ATTRIBUTE_COLLECTION; a_namespace_list:  DS_ARRAYED_LIST [INTEGER];
+		a_name_code: INTEGER; a_sequence_number: INTEGER) is
+			-- Establish invariant.
+		do
+			is_instruction := True
+			Precursor (an_error_listener, a_document, a_parent, an_attribute_collection, a_namespace_list, a_name_code, a_sequence_number)
+		end
 
 feature -- Status report
 
@@ -44,39 +56,20 @@ feature -- Element change
 		do
 			validated := True
 		end
-
+	
 	compile (an_executable: XM_XSLT_EXECUTABLE) is
 			-- Compile `Current' to an excutable instruction.
-		local
-			an_instruction_list: DS_LINKED_LIST [XM_XSLT_INSTRUCTION]
-			a_block: XM_XSLT_BLOCK
-			a_child_list: DS_ARRAYED_LIST [XM_XSLT_INSTRUCTION]
 		do
+			last_generated_expression := Void
 			if not is_top_level then
-
+				
 				-- if there are fallback children, compile the code for the fallback elements
-
+				
 				if validation_error = Void then
 					create validation_error.make_from_string ("Unknown extension instruction: ", Gexslt_eiffel_type_uri, "UNKNOWN_EXTENSION_INSTRUCTION", Static_error)
 				end
-				create an_instruction_list.make
-				fallback_processing (an_executable, Current, an_instruction_list)
-				if an_instruction_list.count > 0 then
-					if an_instruction_list.count = 1 then
-						last_generated_instruction := an_instruction_list.item (1)
-					else
-
-						-- We are getting back one block for each xsl:fallback element,
-						--  then we are wrapping these blocks in another block. This
-						--  is clumsy, but it's not a commonly-used operation...
-
-						create a_block.make (an_executable)
-						create a_child_list.make_from_linear (an_instruction_list)
-						a_block.set_children (a_child_list)
-						last_generated_instruction := a_block
-					end
-				end
+				fallback_processing (an_executable, Current)
 			end
 		end
-
+	
 end

@@ -15,7 +15,9 @@ deferred class XM_XSLT_PATTERN
 inherit
 
 	XM_XPATH_TYPE
-	
+
+	XM_XPATH_SHARED_EXPRESSION_TESTER
+
 	KL_IMPORTED_STRING_ROUTINES
 	
 feature -- Access
@@ -46,7 +48,18 @@ feature -- Access
 		do
 			create Result.make_from_string ("0.5")
 		end
-	
+
+	sub_expressions: DS_ARRAYED_LIST [XM_XPATH_EXPRESSION] is
+			-- Immediate sub-expressions of `Current'
+		do
+			
+			-- Default implementation returns an empty list;
+			-- Suitable for a pattern without sub-expressions.
+			
+			create Result.make_default
+			Result.set_equality_tester (expression_tester)
+		end
+
 feature -- Status report
 	
 	system_id: STRING
@@ -122,28 +135,30 @@ feature -- Optimization
 
 feature -- Matching
 
-	matches (a_node: XM_XPATH_NODE; a_transformer: XM_XSLT_TRANSFORMER): BOOLEAN is
+	matches (a_node: XM_XPATH_NODE; a_context: XM_XSLT_EVALUATION_CONTEXT): BOOLEAN is
 			-- Determine whether this Pattern matches the given Node;
 			-- This is the main external interface for matching patterns;
 			--  it sets the result of current() to `a_node'.
-			-- The transformer is only relevant if the pattern
+			-- The context is only relevant if the pattern
 			--  uses variables, or contains calls on functions such as document() or key().
 		require
 			valid_node: a_node /= Void
+			context_not_void: a_context /= Void
 		deferred
 		end
 
 feature {XM_XSLT_PATTERN} -- Local
 
-	internal_matches (a_node: XM_XPATH_NODE;  a_transformer: XM_XSLT_TRANSFORMER): BOOLEAN is
+	internal_matches (a_node: XM_XPATH_NODE; a_context: XM_XSLT_EVALUATION_CONTEXT): BOOLEAN is
 			-- Determine whether this Pattern matches the given Node;
 			-- This is an internal interface used for matching sub-patterns;
 			--  it does not alter current().
 			-- The default implementation is identical to matches().
 		require
 			valid_node: a_node /= Void
+			context_not_void: a_context /= Void
 		do
-			Result := matches (a_node, a_transformer)
+			Result := matches (a_node, a_context)
 		end
 
 invariant

@@ -16,12 +16,23 @@ inherit
 
 	XM_XSLT_STYLE_ELEMENT
 		redefine
-			validate, validate_children, may_contain_sequence_constructor
+			make_style_element, validate, validate_children, may_contain_sequence_constructor
 		end
 
 creation {XM_XSLT_NODE_FACTORY}
 
 	make_style_element
+
+feature {NONE} -- Initialization
+		
+	make_style_element (an_error_listener: XM_XSLT_ERROR_LISTENER; a_document: XM_XPATH_TREE_DOCUMENT;  a_parent: XM_XPATH_TREE_COMPOSITE_NODE;
+		an_attribute_collection: XM_XPATH_ATTRIBUTE_COLLECTION; a_namespace_list:  DS_ARRAYED_LIST [INTEGER];
+		a_name_code: INTEGER; a_sequence_number: INTEGER) is
+			-- Establish invariant.
+		do
+			is_instruction := True
+			Precursor (an_error_listener, a_document, a_parent, an_attribute_collection, a_namespace_list, a_name_code, a_sequence_number)
+		end
 
 feature -- Status report
 
@@ -37,6 +48,7 @@ feature -- Element change
 			-- Set the attribute list for the element.
 		local
 			an_index, a_name_code, a_uri_code, a_fingerprint: INTEGER
+			an_inherit_namespaces_attribute: STRING
 			an_error: XM_XPATH_ERROR_VALUE
 		do
 			create attribute_name_codes.make (number_of_attributes)
@@ -63,7 +75,19 @@ feature -- Element change
 						elseif a_fingerprint = Xslt_xpath_default_namespace_type_code then -- already dealt with
 						elseif a_fingerprint = Xslt_default_collation_type_code then -- already dealt with
 						elseif a_fingerprint = Xslt_type_type_code then -- deal with this later
-						elseif a_fingerprint = Xslt_validation_type_code then -- deal with this later			
+						elseif a_fingerprint = Xslt_validation_type_code then -- deal with this later
+						elseif a_fingerprint = Xslt_inherit_namespaces_type_code then
+							an_inherit_namespaces_attribute := attribute_value_by_index (an_index)
+							STRING_.left_adjust (an_inherit_namespaces_attribute)
+							STRING_.right_adjust (an_inherit_namespaces_attribute)		
+							if STRING_.same_string (an_inherit_namespaces_attribute, "no") then
+								is_inherit_namespaces := False
+							elseif STRING_.same_string (an_inherit_namespaces_attribute, "yes") then
+								is_inherit_namespaces := True
+							else
+								create an_error.make_from_string ("Value of xsl:inherit-namespaces must be 'yes' or 'no'", "", "XT0020", Static_error)
+								report_compile_error (an_error)
+							end
 						else
 							create an_error.make_from_string (STRING_.concat ("Unknown XSL attribute ", shared_name_pool.display_name_from_name_code (a_name_code)), "", "XT0090", Static_error)
 							report_compile_error (an_error)
@@ -143,32 +167,33 @@ feature -- Element change
 			-- Compile `Current' to an excutable instruction.
 		local
 			a_fixed_element: XM_XSLT_FIXED_ELEMENT
-			direct_children, attributes: DS_ARRAYED_LIST [XM_XSLT_INSTRUCTION]
 			a_stylesheet: XM_XSLT_STYLESHEET
 			a_cursor: DS_ARRAYED_LIST_CURSOR [INTEGER]
 			a_fixed_attribute: XM_XSLT_FIXED_ATTRIBUTE
+			a_content: XM_XPATH_EXPRESSION
 		do
-			if is_top_level then
-				last_generated_instruction := Void
-			else
-				--translate (result_name_code)
-				create a_fixed_element.make (an_executable, result_name_code, namespace_codes, Void, Void, validation)
-				compile_children (an_executable, a_fixed_element) 
-				direct_children := last_generated_instruction_list
+			last_generated_expression := Void
+			if not is_top_level then
+				compile_sequence_constructor (an_executable, new_axis_iterator (Child_axis), True)
+				a_content := last_generated_expression
 				if attribute_name_codes.count > 0 then
-					create attributes.make (attribute_name_codes.count)
+
+					-- Since we cannot output an attribute once we have seen child content,
+					--  we must place the attributes in the content block prior to any existing
+					--  content. So we process the attributes back-to-front so they come out
+					--  in FIFO order.
+
 					a_stylesheet := principal_stylesheet
 					from
 						a_cursor := attribute_name_codes.new_cursor
-						a_cursor.start
+						a_cursor.finish
 					variant
-						attribute_name_codes.count + 1 - a_cursor.index
+						a_cursor.index
 					until
-						a_cursor.after
+						a_cursor.before
 					loop
 						create a_fixed_attribute.make (an_executable, a_cursor.item, Validation_strip, Void, -1)
 						a_fixed_attribute.set_select_expression (attribute_values.item (a_cursor.index))
-						a_fixed_attribute.set_executable (an_executable)
 						check
 							module_registered: a_stylesheet.is_module_registered (system_id)
 						end
@@ -176,16 +201,17 @@ feature -- Element change
 						if attribute_clean_flags.item (a_cursor.index) then
 							a_fixed_attribute.set_no_special_characters
 						end
-						attributes.put_last (a_fixed_attribute)
-						a_cursor.forth
+						if a_content = Void then
+							a_content := a_fixed_attribute
+						else
+							create {XM_XSLT_BLOCK} a_content.make (an_executable, a_fixed_attribute, a_content)
+						end
+						a_cursor.back
 					end
-					if not direct_children.extendible (attributes.count) then
-						direct_children.resize (direct_children.count + attributes.count)
-					end
-					direct_children.extend_first (attributes) -- TODO this is inefficient, but as it is only during compilation, hardly matters
 				end
-
-				last_generated_instruction := a_fixed_element
+				if a_content = Void then create {XM_XPATH_EMPTY_SEQUENCE} a_content.make end
+				create a_fixed_element.make (an_executable, result_name_code, namespace_codes, Void, Void, validation, is_inherit_namespaces, a_content)
+				last_generated_expression := a_fixed_element
 			end
 		end
 
@@ -210,6 +236,9 @@ feature {NONE} -- Implementation
 	validation: INTEGER
 			-- Validation level
 
+	is_inherit_namespaces: BOOLEAN
+		-- Do we inherit namespaces?
+		
 	is_attribute_checked_clean (an_expression: XM_XPATH_EXPRESSION): BOOLEAN is
 			-- Is `an_expression' guarenteed free of special characters?
 		require
@@ -462,6 +491,9 @@ feature {NONE} -- Implementation
 				a_cursor.forth
 			end
 		end
+
+	-- TODO transform_to_stylesheet is
+	-- Implement "Literal Result Element As Stylesheet" facility.
 
 invariant
 

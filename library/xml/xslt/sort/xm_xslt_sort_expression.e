@@ -35,7 +35,7 @@ feature {NONE} -- Initialization
 			a_cursor: DS_ARRAYED_LIST_CURSOR [XM_XSLT_SORT_KEY_DEFINITION]
 			a_fixed_sort_key: XM_XSLT_FIXED_SORT_KEY_DEFINITION
 		do
-			select_expression := a_select_expression
+			set_select_expression (a_select_expression)
 			sort_key_list := a_sort_key_list
 			from
 				fixed := True
@@ -203,6 +203,7 @@ feature {XM_XSLT_SORT_EXPRESSION} -- Local
 		do
 			select_expression := a_select_expression
 			if select_expression.was_expression_replaced then select_expression.mark_unreplaced end
+			adopt_child_expression (select_expression)
 		ensure
 			select_expression_set: select_expression = a_select_expression
 			select_expression_not_marked_for_replacement: not select_expression.was_expression_replaced
@@ -222,6 +223,12 @@ feature {XM_XPATH_EXPRESSION} -- Restricted
 			initialize_special_properties
 			if select_expression.context_document_nodeset then
 				set_context_document_nodeset
+			end
+			if select_expression.single_document_nodeset then
+				set_single_document_nodeset
+			end
+			if select_expression.non_creating then
+				set_non_creating
 			end
 		end
 

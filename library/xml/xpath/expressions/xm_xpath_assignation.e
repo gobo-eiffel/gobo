@@ -35,8 +35,11 @@ feature -- Access
 	sequence: XM_XPATH_EXPRESSION
 			-- Sequence expression
 
-	action: XM_XPATH_EXPRESSION
+	action: XM_XPATH_EXPRESSION is
 			-- Action expression
+		do
+			Result := action_expression -- See XM_XPATH_LET_EXPRESSION for an explanation
+		end
 
 	declaration: XM_XPATH_RANGE_VARIABLE_DECLARATION
 			-- Range variable
@@ -48,6 +51,14 @@ feature -- Access
 			Result.set_equality_tester (expression_tester)
 			Result.put (sequence, 1)
 			Result.put (action, 2)
+		end
+
+feature -- Status report
+
+		is_global: BOOLEAN is
+			-- Is binding global or local?
+		do
+			Result := False
 		end
 
 feature -- Optimization
@@ -64,13 +75,13 @@ feature -- Optimization
 					if sequence.was_expression_replaced then
 						set_sequence (sequence.replacement_expression)
 					end
-					action.simplify
-					if action.is_error then
-						set_last_error (action.error_value)
-					elseif action.was_expression_replaced then
-						set_action (action.replacement_expression)
+					action_expression.simplify
+					if action_expression.is_error then
+						set_last_error (action_expression.error_value)
+					elseif action_expression.was_expression_replaced then
+						set_action (action_expression.replacement_expression)
 					else
-						set_action (action) -- this fixes up references on the declaration
+						set_action (action_expression) -- this fixes up references on the declaration
 					end
 				end
 			end
@@ -94,8 +105,8 @@ feature -- Optimization
 					-- them to say we are interested in subexpressions that don't depend on either the
 					-- outer context or the inner context.
 					
-					action.promote (an_offer)
-					if action.was_expression_replaced then replace_action (action.replacement_expression) end
+					action_expression.promote (an_offer)
+					if action_expression.was_expression_replaced then replace_action (action_expression.replacement_expression) end
 				end
 			end
 		end
@@ -105,19 +116,19 @@ feature -- Evaluation
 	evaluate_variable (a_context: XM_XPATH_CONTEXT) is
 			-- Evaluate variable
 		do
-				check
-					valid_slot_number: a_context.is_valid_local_variable (slot_number)
-				end
 			last_evaluated_binding := a_context.evaluated_local_variable (slot_number)
 		end
 
 feature -- Element change
 
-	allocate_slots (next_free_slot: INTEGER) is
+	allocate_slots (next_free_slot: INTEGER; a_slot_manager: XM_XPATH_SLOT_MANAGER) is
 			-- Allocate slot numbers for all range variable in `Current' and it's sub-expresions.
 		do
 			set_slot_number (next_free_slot)
-			Precursor (next_free_slot + 1)
+			if a_slot_manager /= Void then
+				a_slot_manager.allocate_slot_number (variable_name)
+			end
+			Precursor (next_free_slot + 1, a_slot_manager)
 		end
 
 	set_sequence (a_sequence: XM_XPATH_EXPRESSION) is
@@ -138,12 +149,11 @@ feature -- Element change
 		require
 			action_not_void: an_action /= Void
 		do
-			action := an_action
-			if action.was_expression_replaced then action.mark_unreplaced end
-			adopt_child_expression (action)
+			action_expression := an_action
+			adopt_child_expression (action_expression)
 		ensure
-			action_set: action = an_action
-			action_not_marked_for_replacement: not action.was_expression_replaced
+			action_set: action_expression = an_action
+			action_not_marked_for_replacement: not action_expression.was_expression_replaced
 		end
 
 	set_action (an_action: XM_XPATH_EXPRESSION) is
@@ -155,7 +165,7 @@ feature -- Element change
 			replace_action (an_action)
 			declaration.fix_up_references (Current)
 		ensure
-			action_set: action = an_action
+			action_set: action_expression = an_action
 		end
 
 	set_declaration (a_declaration: XM_XPATH_RANGE_VARIABLE_DECLARATION) is
@@ -198,6 +208,9 @@ feature {XM_XPATH_ASSIGNATION} -- Local
 
 	simplified: BOOLEAN
 			-- Has simplify been run?
+
+	action_expression: XM_XPATH_EXPRESSION
+			-- Underlying action
 
 invariant
 

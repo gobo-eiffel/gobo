@@ -76,9 +76,9 @@ feature -- Element change
 	compile (an_executable: XM_XSLT_EXECUTABLE) is
 			-- Compile `Current' to an excutable instruction.
 		do
-			create {XM_XSLT_COMPILED_NEXT_MATCH} last_generated_instruction.make (an_executable,
-																											 with_param_instructions (an_executable, False),
-																											 with_param_instructions (an_executable, True))
+			create {XM_XSLT_COMPILED_NEXT_MATCH} last_generated_expression.make (an_executable,
+																										with_param_instructions (an_executable, False),
+																										with_param_instructions (an_executable, True))
 		end
 
 end

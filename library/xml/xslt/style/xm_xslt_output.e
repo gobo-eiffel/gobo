@@ -126,7 +126,7 @@ feature -- Element change
 		local
 			an_error: XM_XPATH_ERROR_VALUE
 		do
-			check_top_level
+			check_top_level (Void)
 			check_empty
 			if output_version /= Void and then not is_nmtoken (output_version) then
 					create an_error.make_from_string ("xsl:output 'version' attribute must be an 'nmtoken'", "", "XT0110", Static_error)
@@ -223,7 +223,7 @@ feature -- Element change
 	compile (an_executable: XM_XSLT_EXECUTABLE) is
 			-- Compile `Current' to an excutable instruction.
 		do
-			last_generated_instruction := Void
+			last_generated_expression := Void
 		end
 
 	gather_output_properties (a_property_set: XM_XSLT_OUTPUT_PROPERTIES) is

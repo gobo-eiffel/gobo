@@ -84,14 +84,9 @@ feature -- Element change
 			a_string_value: XM_XPATH_STRING_VALUE
 		do
 			create a_comment.make (an_executable)
-			compile_content (an_executable, a_comment)
-			if select_expression = Void then
-				create a_string_value.make ("")
-			else
-				create a_string_value.make (" ")
-			end
-			a_comment.set_separator_expression (a_string_value)
-			last_generated_instruction := a_comment
+			create a_string_value.make (" ")
+			compile_content (an_executable, a_comment, a_string_value)
+			last_generated_expression := a_comment
 		end
 
 end

@@ -16,6 +16,8 @@ inherit
 
 	XM_XSLT_TAIL_CALL
 
+	XM_XSLT_COMPILED_PROCEDURE
+
 	XM_XSLT_SHARED_EMPTY_PROPERTIES
 
 	XM_XPATH_DEBUGGING_ROUTINES
@@ -27,43 +29,43 @@ creation
 feature {NONE} -- Initialization
 
 	make is
-			-- Create un-initialized
+			-- Create un-initialized so compiling xsl:call-template instructions can forward-reference `Current'.
 		do
 			do_nothing
 		end
 
 feature -- Initialization
 
-	initialize (a_sequence_instruction: XM_XSLT_SEQUENCE_INSTRUCTION; stack_frame_needed: BOOLEAN; a_precedence, a_minimum_import_precedence: INTEGER;
-		a_system_id: STRING; a_line_number: INTEGER) is
+	initialize (an_executable: like executable; a_body: like body; a_fingerprint, a_precedence, a_minimum_import_precedence: INTEGER;
+					a_system_id: STRING; a_line_number: INTEGER; a_slot_manager: like slot_manager) is
 			-- Initialize.
 		require
 			not_yet_initialized: not initialized
+			executable_not_void: an_executable /= Void
+			body_not_void: a_body /= Void
+			system_id_not_void: a_system_id /= Void
+			slot_manager_not_void: a_slot_manager /= Void
 		do
-			body := a_sequence_instruction
-			is_stack_frame_needed := stack_frame_needed
+			make_procedure (an_executable, a_body, a_line_number, a_system_id, a_slot_manager)
 			precedence := a_precedence
 			minimum_import_precedence := a_minimum_import_precedence
-			system_id := a_system_id
-			line_number := a_line_number
-			initialized := True
+			template_fingerprint := a_fingerprint
 		ensure
 			initialized: initialized
-			body_set: body = a_sequence_instruction
-			stack_frame_necessity_set: is_stack_frame_needed = stack_frame_needed
+			executable_set: executable = an_executable
+			body_set: body = a_body
+			system_id_set: system_id = a_system_id
+			line_number_set: line_number = a_line_number
+			slot_manager_set: slot_manager = a_slot_manager
 			precedence_set: precedence = a_precedence
 			minimum_import_precedence_set: minimum_import_precedence = a_minimum_import_precedence
-			system_id_set: system_id = a_system_id
-			line_number_set: line_number = a_line_number					 
+			template_fingerprint_set: template_fingerprint = a_fingerprint
 		end
 
 feature -- Access
 
-	system_id: STRING
-			-- System id
-	
-	line_number: INTEGER
-			-- Line number
+	template_fingerprint: INTEGER
+			-- Fingerprint of template name (-1 for unnamed templates)
 
 	precedence: INTEGER
 			-- Import precedence
@@ -73,73 +75,71 @@ feature -- Access
 
 feature -- Status report
 
-	initialized: BOOLEAN
-			-- Hae `inititialize' been called yet?
-
-	is_stack_frame_needed: BOOLEAN
+	is_stack_frame_needed: BOOLEAN is
 			-- Does `Current' need a stack frame?
+		do
+			Result := slot_manager.number_of_variables > 0
+		end
 
 feature -- Evaluation
 
-	process (a_transformer: XM_XSLT_TRANSFORMER) is
+	process (a_context: XM_XSLT_EVALUATION_CONTEXT) is
 			-- process `Current', without returning any tail calls
 		require
-			transformer_not_void: a_transformer /= Void
+			context_not_void: a_context /= Void
 		do
 			from
-				process_leaving_tail (a_transformer)
+				process_leaving_tail (a_context)
 			until
 				last_tail_call = Void
 			loop
-				last_tail_call.process_leaving_tail (a_transformer)
+				last_tail_call.process_leaving_tail (a_context)
 				last_tail_call := last_tail_call.last_tail_call
 			end
 		end
 
-	process_leaving_tail (a_transformer: XM_XSLT_TRANSFORMER) is
+	process_leaving_tail (a_context: XM_XSLT_EVALUATION_CONTEXT) is
 			-- Execute `Current', writing results to the current `XM_XPATH_RECEIVER'.
 		local
-			saved_template: XM_XSLT_COMPILED_TEMPLATE
+			a_new_context: XM_XSLT_EVALUATION_CONTEXT
 		do
-			last_tail_call := Void
-			if body /= Void then
-				saved_template := a_transformer.current_template
-				a_transformer.set_current_template (Current)
-				expand (a_transformer)
-			end
-			a_transformer.set_current_template (saved_template)
+			a_new_context := a_context.new_context
+			a_new_context.set_current_template (Current)
+			expand (a_new_context)
 		end
 
-	expand (a_transformer: XM_XSLT_TRANSFORMER) is
+	expand (a_context: XM_XSLT_EVALUATION_CONTEXT) is
 			-- Expand the template.
 			-- Called when the template is invoked using xsl:call-template or xsl:apply-templates.
 		require
-			transformer_not_void: a_transformer /= Void
+			context_not_void: a_context /= Void
+		local
+			a_transformer: XM_XSLT_TRANSFORMER
+			an_instruction: XM_XSLT_INSTRUCTION
 		do
-			last_tail_call := Void
-			if body /= Void then
-				if a_transformer.is_tracing then
-					if details = Void then
-						create details.make ("template", system_id, line_number, empty_property_set)
-					end
-					a_transformer.trace_listener.trace_instruction_entry (details)
+			a_transformer := a_context.transformer
+			if a_transformer.is_tracing then
+				if details = Void then
+					create details.make ("template", system_id, line_number, empty_property_set)
 				end
-				body.process_leaving_tail (a_transformer.new_xpath_context)
-				last_tail_call := body.last_tail_call
-				if a_transformer.is_tracing then
-					a_transformer.trace_listener.trace_instruction_exit (details)
-				end
+				a_transformer.trace_listener.trace_instruction_entry (details)
+			end
+			an_instruction ?= body
+			if an_instruction /= Void then
+				an_instruction.process_leaving_tail (a_context)
+				last_tail_call := an_instruction.last_tail_call
+			else
+				body.process (a_context)
+				last_tail_call := Void
+			end
+			if a_transformer.is_tracing then
+				a_transformer.trace_listener.trace_instruction_exit (details)
 			end
 		end
 
 feature {NONE} -- Implementation
 
-	body: XM_XSLT_SEQUENCE_INSTRUCTION
-			-- Optional template body
-
 	details:  XM_XSLT_TRACE_DETAILS
 			-- Trace details
-
-	first_processed: BOOLEAN
 
 end

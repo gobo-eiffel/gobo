@@ -2291,7 +2291,7 @@ feature {NONE} -- Implementation
 		local
 			s: STRING
 		do
-			if tokenizer.last_token = Name_token then
+			if tokenizer.last_token = Name_token or else  tokenizer.last_token = Axis_token then
 				s := STRING_.appended_string ("name %"", tokenizer.last_token_value)
 				Result := STRING_.appended_string (s, "%"")
 			elseif tokenizer.last_token = Unknown_token then

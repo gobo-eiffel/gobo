@@ -48,7 +48,7 @@ feature -- Access
 
 feature -- Matching
 
-	frozen matches (a_node: XM_XPATH_NODE;  a_transformer: XM_XSLT_TRANSFORMER): BOOLEAN is
+	frozen matches (a_node: XM_XPATH_NODE; a_context: XM_XSLT_EVALUATION_CONTEXT): BOOLEAN is
 			-- Determine whether this Pattern matches the given Node;
 		do
 			Result := False

@@ -30,7 +30,7 @@ feature {NONE} -- Initialization
 			expression_not_void: an_expression /= Void and then an_expression.are_static_properties_computed
 		do
 			make_unary (an_expression)
-			if base_expression.context_document_nodeset then
+			if base_expression.context_document_nodeset or else base_expression.single_document_nodeset then
 				create {XM_XPATH_LOCAL_ORDER_COMPARER} comparer
 			else
 				create {XM_XPATH_GLOBAL_ORDER_COMPARER} comparer
@@ -52,6 +52,9 @@ feature -- Optimization
 			base_expression.simplify
 			if base_expression.was_expression_replaced then
 				set_base_expression (base_expression.replacement_expression)
+			end
+			if base_expression.is_error then
+				set_last_error (base_expression.error_value)
 			elseif base_expression.ordered_nodeset then
 				set_replacement (base_expression)
 			end

@@ -16,7 +16,7 @@ inherit
 
 	XM_XSLT_TEXT_CONSTRUCTOR
 		redefine
-			item_type
+			item_type, evaluate_name_code, compute_cardinality, display
 		end
 
 	XM_XPATH_RECEIVER_OPTIONS
@@ -31,23 +31,21 @@ creation
 
 feature {NONE} -- Initialization
 
-	make (an_executable: XM_XSLT_EXECUTABLE; a_name_code: INTEGER; a_validation_action: INTEGER; a_simple_type: XM_XPATH_SCHEMA_TYPE; a_type_annotation: INTEGER) is
+	make (an_executable: XM_XSLT_EXECUTABLE; a_name_code: INTEGER; a_validation_action: INTEGER; a_simple_type: XM_XPATH_SIMPLE_TYPE; a_type_annotation: INTEGER) is
 			-- Establish invariant.
 		require
 			executable_not_void: an_executable /= Void
 			validation: a_validation_action >= Validation_strict  and then Validation_strip >= a_validation_action
 		do
 			executable := an_executable
-			instruction_name := "attribute"
-			create children.make (0)
-			make_expression_instruction
-			set_cardinality_exactly_one
+			instruction_name := "xsl:attribute"
 			name_code := a_name_code
 			validation_action := a_validation_action
 			type := a_simple_type
 			type_annotation := a_type_annotation
 			options := 0
-			set_cardinality_exactly_one
+			compute_static_properties
+			initialize
 		ensure
 			executable_set: executable = an_executable
 			name_code_set: name_code = a_name_code
@@ -68,15 +66,20 @@ feature -- Access
 			Result := attribute_node_kind_test
 		end
 
-feature -- Comparison
+feature -- Status_report
 
-	same_expression (other: XM_XPATH_EXPRESSION): BOOLEAN is
-			-- Are `Current' and `other' the same expression?
+	display (a_level: INTEGER) is
+			-- Diagnostic print of expression structure to `std.error'
+		local
+			a_string: STRING
 		do
-			Result := False
-			todo ("same_expression", True)
+			a_string := STRING_.appended_string (indentation (a_level), "attribute")
+			std.error.put_string (a_string); std.error.put_new_line
+			a_string := STRING_.appended_string (indentation (a_level + 1), "name ")
+			std.error.put_string (a_string)
+			std.error.put_string (shared_name_pool.display_name_from_name_code (name_code)); std.error.put_new_line
 		end
-
+	
 feature -- Status_setting
 
 	set_no_special_characters is
@@ -102,13 +105,10 @@ feature -- Evaluation
 	process_leaving_tail (a_context: XM_XSLT_EVALUATION_CONTEXT) is
 			-- Execute `Current', writing results to the current `XM_XPATH_RECEIVER'.
 		local
-			a_transformer: XM_XSLT_TRANSFORMER
 			a_receiver: XM_XPATH_RECEIVER
 			some_receiver_options, an_annotation: INTEGER
-			a_value: STRING
 		do
-			a_transformer := a_context.transformer
-			a_receiver := a_transformer.current_receiver
+			a_receiver := a_context.current_receiver
 			some_receiver_options := options
 			an_annotation := type_annotation
 
@@ -116,14 +116,26 @@ feature -- Evaluation
 			--  already in use with a different namespace URI. 
 			-- This is done behind the scenes by the Outputter
 
-			a_value := expanded_string_value (a_context)
-			if type /= Void then
-				todo ("process_leaving_tail", True)
-			elseif validation_action = Validation_strict or else validation_action = Validation_lax then
-				todo ("process_leaving_tail", True)
+			expand_children (a_context)
+			if is_error then
+				a_context.transformer.report_recoverable_error (error_value, Current)
+			else
+				if type /= Void then
+					todo ("process_leaving_tail - validation by type", True)
+				elseif validation_action = Validation_strict or else validation_action = Validation_lax then
+					todo ("process_leaving_tail - validation", True)
+				end
+				a_receiver.notify_attribute (name_code, an_annotation, last_string_value, some_receiver_options)
+				last_tail_call := Void
 			end
-			a_receiver.notify_attribute (name_code, an_annotation, a_value, some_receiver_options)
-			last_tail_call := Void
+		end
+	
+feature {XM_XPATH_EXPRESSION} -- Restricted
+
+	compute_cardinality is
+			-- Compute cardinality.
+		do
+			set_cardinality_exactly_one
 		end
 
 feature {NONE} -- Implementation
@@ -142,6 +154,12 @@ feature {NONE} -- Implementation
 
 	options: INTEGER
 			-- Receiver options
+
+	evaluate_name_code (a_context: XM_XPATH_CONTEXT) is
+			-- Evaluate name code.
+		do
+			last_name_code := name_code
+		end
 
 invariant
 

@@ -134,9 +134,8 @@ feature -- Element change
 				end
 			end
 			create a_value_of.make (an_executable, select_expression, False)
-			compile_content (an_executable, a_value_of)
-			a_value_of.set_separator_expression (separator_expression)
-			last_generated_instruction := a_value_of
+			compile_content (an_executable, a_value_of, separator_expression)
+			last_generated_expression := a_value_of
 		end
 
 feature {XM_XSLT_STYLE_ELEMENT} -- Restricted

@@ -96,6 +96,8 @@ feature -- Element change
 			if a_select_attribute /= Void then
 				generate_expression (a_select_attribute)
 				select_expression := last_generated_expression
+			else
+				report_absence ("select")
 			end
 			attributes_prepared := True
 		end
@@ -105,11 +107,9 @@ feature -- Element change
 		do
 			check_within_template
 			check_empty
-			if select_expression /= Void then
-				type_check_expression ("select", select_expression)
-				if select_expression.was_expression_replaced then
-					select_expression := select_expression.replacement_expression
-				end
+			type_check_expression ("select", select_expression)
+			if select_expression.was_expression_replaced then
+				select_expression := select_expression.replacement_expression
 			end
 			validated := True
 		end
@@ -117,8 +117,7 @@ feature -- Element change
 	compile (an_executable: XM_XSLT_EXECUTABLE) is
 			-- Compile `Current' to an excutable instruction.
 		do
-			create {XM_XSLT_SEQUENCE_INSTRUCTION} last_generated_instruction.make (an_executable, select_expression, Void)
-			-- TODO - needed for fallback compile_children (an_executable, last_generated_instruction)
+			last_generated_expression := select_expression
 		end
 
 feature {XM_XSLT_STYLE_ELEMENT} -- Restricted

@@ -98,9 +98,12 @@ feature -- Status report
 	is_redundant_variable: BOOLEAN
 			-- Is `Current' a redundant variable?
 
-	is_global_variable: BOOLEAN
+	is_global_variable: BOOLEAN is
 			-- Is `Current' a global variable?
-
+		do
+			Result := is_top_level
+		end
+	
 	is_required_parameter: BOOLEAN
 			-- Is this a required parameter?
 
@@ -117,16 +120,6 @@ feature -- Status setting
 			is_redundant_variable := True
 		ensure
 			redundant_variable_set:	is_redundant_variable = True
-		end
-
-	set_global_variable is
-			-- Mark as a global variable
-		require
-			not_yet_validated: not validated
-		do
-			is_global_variable := True
-		ensure
-			global_variable_set:	is_global_variable = True
 		end
 
 	prepare_attributes is
@@ -187,45 +180,19 @@ feature -- Status setting
 					end
 				end
 			end
-			if a_required_attribute /= Void then
-				if STRING_.same_string (a_required_attribute, "yes") then
-					is_required_parameter := True
-				elseif STRING_.same_string (a_required_attribute, "no") then
-					is_required_parameter := False
-				else
-					create an_error.make_from_string ("The attribute 'required' must be set to 'yes' or 'no'", "", "XT0020", Static_error)
-					report_compile_error (an_error)
-				end
-			end
-			if a_tunnel_attribute /= Void then
-				if STRING_.same_string (a_tunnel_attribute, "yes") then
-					is_tunnel_parameter := True
-				elseif STRING_.same_string (a_tunnel_attribute, "no") then
-					is_tunnel_parameter := False
-				else
-					create an_error.make_from_string ("The attribute 'tunnel' must be set to 'yes' or 'no'", "", "XT0020", Static_error)
-					report_compile_error (an_error)
-				end
-			end
-			if an_as_attribute /= Void then
-				generate_sequence_type (an_as_attribute)
-				as_type := last_generated_sequence_type
-			end
+			prepare_attributes_2 (a_required_attribute, a_tunnel_attribute, an_as_attribute)
 			attributes_prepared := True
 		end
 
 	validate is
 			-- Check that the stylesheet element is valid.
 		local
-			a_stylesheet: XM_XSLT_STYLESHEET
 			a_message: STRING
 			a_child_iterator: XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_NODE]
 			a_first_node: XM_XPATH_NODE
 			a_parameter: XM_XSLT_PARAM
 			an_error: XM_XPATH_ERROR_VALUE
 		do
-			a_stylesheet ?= parent
-			is_global_variable := a_stylesheet /= Void
 			if select_expression /= Void and then has_child_nodes then
 				a_message := STRING_.concat ("An ", node_name)
 				a_message := STRING_.appended_string (a_message, " element with a select attribute must be empty")
@@ -248,7 +215,11 @@ feature -- Status setting
 										if as_type.cardinality_allows_zero then
 											create {XM_XPATH_EMPTY_SEQUENCE} select_expression.make
 										else
-											is_required_parameter := True
+
+											-- The implicit default value () is not valid for the required type,
+											--  so we treat it as if there is no default
+
+											is_required_parameter := True 
 										end
 									end
 								else -- not an xsl:param
@@ -302,7 +273,7 @@ feature -- Status setting
 				create a_type_checker
 				a_type_checker.static_type_check (static_context, select_expression, a_required_type, False, a_role)
 				if a_type_checker.is_static_type_check_error	then
-					create an_error.make_from_string(a_type_checker.static_type_check_error_message, Xpath_errors_uri, "XP0004", Type_error)
+					create an_error.make_from_string(a_type_checker.static_type_check_error_message, "", "XT0570", Type_error)
 					report_compile_error (an_error)
 				else
 					select_expression := a_type_checker.checked_expression
@@ -346,22 +317,123 @@ feature {NONE} -- Implementation
 			variable_not_void: a_variable /= Void
 		local
 			a_document: XM_XSLT_COMPILED_DOCUMENT
+			a_role: XM_XPATH_ROLE_LOCATOR
+			a_type_checker: XM_XPATH_TYPE_CHECKER
+			an_error: XM_XPATH_ERROR_VALUE
+			a_global_variable: XM_XSLT_GLOBAL_VARIABLE
 		do
-			a_variable.initialize (select_expression, as_type, variable_fingerprint)
-			a_variable.set_global_variable (is_global_variable)
+			a_variable.initialize_variable (select_expression, as_type, variable_fingerprint)
 			a_variable.set_required_parameter (is_required_parameter)
 			a_variable.set_tunnel_parameter (is_tunnel_parameter)
-			a_variable.set_contains_locals (is_global_variable and then number_of_variables > 0)
 
 			-- Handle the "temporary tree" case by creating a Document sub-instruction
 			-- to construct and return a document node.
 
-			if has_child_nodes and then as_type = Void then
-				create a_document.make (an_executable, is_text_only, constant_text, base_uri)
-				compile_children (an_executable, a_document)
-				a_variable.set_selector (a_document)
-			else
-				compile_children (an_executable, a_variable)
+			if has_child_nodes then
+				if as_type = Void then
+					compile_sequence_constructor (an_executable, new_axis_iterator (Child_axis), True)
+					if last_generated_expression = Void then create {XM_XPATH_EMPTY_SEQUENCE} last_generated_expression.make end
+					create a_document.make (an_executable, is_text_only, constant_text, base_uri, last_generated_expression)
+					select_expression := a_document
+					a_variable.set_selector (a_document)
+				else
+					compile_sequence_constructor (an_executable, new_axis_iterator (Child_axis), True)
+					if last_generated_expression = Void then
+						create {XM_XPATH_EMPTY_SEQUENCE} select_expression.make
+					else
+						select_expression := last_generated_expression
+					end
+					if as_type /= Void then
+						select_expression.simplify
+						if select_expression.was_expression_replaced then select_expression := select_expression.replacement_expression end
+						if select_expression.is_error then
+							report_compile_error (select_expression.error_value)
+						else
+							create a_role.make (Variable_role, variable_name, 1)
+							create a_type_checker
+							a_type_checker.static_type_check (static_context, select_expression, as_type, False, a_role)
+							if a_type_checker.is_static_type_check_error	then
+								create an_error.make_from_string(a_type_checker.static_type_check_error_message, "", "XT0570", Type_error)
+								report_compile_error (an_error)
+							else
+								a_variable.set_selector (a_type_checker.checked_expression)
+							end
+						end
+					end
+				end
+			end
+			if is_global_variable then
+				a_global_variable ?= a_variable
+				check
+					global_variable: a_global_variable /= Void
+					-- from `compile'
+				end
+				initialize_global_variable (an_executable, a_global_variable)
+			end
+		end
+
+	initialize_global_variable (an_executable: XM_XSLT_EXECUTABLE; a_global_variable: XM_XSLT_GLOBAL_VARIABLE) is
+			-- Initialize global variable.
+		require
+			global_variable: is_global_variable and then a_global_variable /= Void
+			executable_not_void: an_executable /= Void
+		local
+			an_expression: XM_XPATH_EXPRESSION
+		do
+			
+			if select_expression /= Void then
+				select_expression.simplify
+				if select_expression.was_expression_replaced then
+					an_expression := select_expression.replacement_expression
+				else
+					an_expression := select_expression
+				end
+				if an_expression.is_error then
+					report_compile_error (an_expression.error_value)
+				else
+					an_expression.analyze (static_context)
+					if an_expression.was_expression_replaced then
+						an_expression := an_expression.replacement_expression
+					end
+					if an_expression.is_error then
+						report_compile_error (an_expression.error_value)
+					else
+						allocate_slots (an_expression, slot_manager)
+						a_global_variable.set_slot_manager (slot_manager)
+					end
+				end
+			end
+			a_global_variable.set_selector (an_expression)
+		end
+
+	prepare_attributes_2 (a_required_attribute, a_tunnel_attribute, an_as_attribute: STRING) is
+			-- Prepare attributes - stage 2.
+		local
+			an_error: XM_XPATH_ERROR_VALUE
+		do
+			if a_required_attribute /= Void then
+				if STRING_.same_string (a_required_attribute, "yes") then
+					is_required_parameter := True
+				elseif STRING_.same_string (a_required_attribute, "no") then
+					is_required_parameter := False
+				else
+					create an_error.make_from_string ("The attribute 'required' must be set to 'yes' or 'no'", "", "XT0020", Static_error)
+					report_compile_error (an_error)
+				end
+			end
+			if a_tunnel_attribute /= Void then
+				if STRING_.same_string (a_tunnel_attribute, "yes") then
+					is_tunnel_parameter := True
+				elseif STRING_.same_string (a_tunnel_attribute, "no") then
+					is_tunnel_parameter := False
+				else
+					create an_error.make_from_string ("The attribute 'tunnel' must be set to 'yes' or 'no'", "", "XT0020", Static_error)
+					report_compile_error (an_error)
+				end
+			end
+			if an_as_attribute /= Void then
+				generate_sequence_type (an_as_attribute)
+				as_type := last_generated_sequence_type
 			end
 		end
 

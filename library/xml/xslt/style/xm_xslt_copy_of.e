@@ -77,11 +77,9 @@ feature -- Element change
 		do
 			check_within_template
 			check_empty
-			if select_expression /= Void then
-				type_check_expression ("select", select_expression)
-				if select_expression.was_expression_replaced then
-					select_expression := select_expression.replacement_expression
-				end
+			type_check_expression ("select", select_expression)
+			if select_expression.was_expression_replaced then
+				select_expression := select_expression.replacement_expression
 			end
 			validated := True
 		end
@@ -89,7 +87,7 @@ feature -- Element change
 	compile (an_executable: XM_XSLT_EXECUTABLE) is
 			-- Compile `Current' to an excutable instruction.
 		do
-			create {XM_XSLT_COMPILED_COPY_OF} last_generated_instruction.make (an_executable,
+			create {XM_XSLT_COMPILED_COPY_OF} last_generated_expression.make (an_executable,
 																									 select_expression,
 																									 copy_namespaces)
 		end

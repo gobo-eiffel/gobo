@@ -251,23 +251,12 @@ feature {NONE} -- Implementation
 		require
 			not_yet_sorted: not count_determined
 		local
-			a_saved_iterator, another_saved_iterator: XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_ITEM]
-			a_transformer: XM_XSLT_TRANSFORMER
 			a_cursor: DS_ARRAYED_LIST_CURSOR [XM_XSLT_FIXED_SORT_KEY_DEFINITION]
 			a_sort_record: XM_XSLT_SORT_RECORD
 			a_key_list: DS_ARRAYED_LIST [XM_XPATH_ATOMIC_VALUE]
 			a_sort_key: XM_XPATH_ATOMIC_VALUE
 		do
 			create node_keys.make_default
-
-			-- This provides the context for evaluating the sort key:
-			-- Note that current() must return the node being sorted.
-
-			a_saved_iterator := context.current_iterator
-			context.set_current_iterator (base_iterator)
-			a_transformer := context.transformer
-			another_saved_iterator := a_transformer.current_iterator
-			a_transformer.set_current_iterator (base_iterator)
 			
 			-- Initialize the array with data.
 
@@ -304,8 +293,6 @@ feature {NONE} -- Implementation
 					base_iterator.forth
 				end
 			end
-			context.set_current_iterator (a_saved_iterator)
-			a_transformer.set_current_iterator (another_saved_iterator)
 			count_determined := True
 		ensure
 			count_determined: count_determined

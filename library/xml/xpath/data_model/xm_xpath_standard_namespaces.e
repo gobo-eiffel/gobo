@@ -273,6 +273,7 @@ feature -- Access
 	Xslt_validation_type_code: INTEGER is 695
 	Xslt_version_type_code: INTEGER is 696
 	Xslt_default_collation_type_code: INTEGER is 697
+	Xslt_inherit_namespaces_type_code: INTEGER is 698
 
 			-- Codes in XML Schema Instance namespace (`Xml_schema_instance_uri_code' * 128 + 1..n)
 
@@ -447,6 +448,7 @@ feature -- Access
 	Include_content_type_attribute: STRING is "include-content-type"
 	Indent_attribute: STRING is "indent"
 	Infinity_attribute: STRING is "infinity"
+	Inherit_namespaces_attribute: STRING is "inherit-namespaces"
 	Lang_attribute: STRING is "lang"
 	Letter_value_attribute: STRING is "letter-value"
 	Level_attribute: STRING is "level"
@@ -523,6 +525,11 @@ feature -- Access
 	Xslt_xpath_default_namespace_attribute: STRING is
 		once
 			Result := "{" + Xslt_uri + "}" + Xpath_default_namespace_attribute
+		end
+
+	Xslt_inherit_namespaces_attribute: STRING is
+		once
+			Result := "{" + Xslt_uri + "}" + Xslt_inherit_namespaces_attribute
 		end
 
 	Gexslt_expanded_namespace: STRING is

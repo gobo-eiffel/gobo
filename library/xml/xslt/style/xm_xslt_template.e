@@ -16,10 +16,13 @@ inherit
 
 	XM_XSLT_STYLE_ELEMENT
 		redefine
-			make_style_element, validate, returned_item_type, mark_tail_calls, may_contain_sequence_constructor
+			make_style_element, validate, returned_item_type, mark_tail_calls,
+			may_contain_sequence_constructor, is_permitted_child, allocate_slots
 		end
 
 	XM_XSLT_PROCEDURE
+
+	XM_XPATH_ROLE
 
 	XM_XSLT_MODE_CONSTANTS
 
@@ -35,6 +38,7 @@ feature {NONE} -- Initialization
 			-- Establish invariant.
 		do
 			internal_fingerprint := -1 -- Not yet calculated, or not a named template
+			create slot_manager.make
 			Precursor (an_error_listener, a_document, a_parent, an_attribute_collection, a_namespace_list, a_name_code, a_sequence_number)
 		end
 
@@ -83,6 +87,15 @@ feature -- Status report
 		do
 			Result := True
 		end
+	
+	is_permitted_child (a_style_element: XM_XSLT_STYLE_ELEMENT): BOOLEAN is
+			-- Is `a_style_element' a permitted child of `Current'?
+		local
+			a_param: XM_XSLT_PARAM
+		do
+			a_param ?= a_style_element
+			Result := a_param /= Void
+		end
 
 feature -- Status setting
 
@@ -104,6 +117,13 @@ feature -- Status setting
 
 feature -- Element change
 
+	allocate_slots (an_expression: XM_XPATH_EXPRESSION; a_slot_manager: XM_XPATH_SLOT_MANAGER) is
+			-- Allocate slots in the stack frame for local variables contained in `an_expression', which will include a match pattern.
+		do
+			an_expression.allocate_slots (1, a_slot_manager)
+			containing_stylesheet.allocate_pattern_slots (an_expression.last_slot_number)
+		end
+	
 	prepare_attributes is
 			-- Set the attribute list for the element.
 		local
@@ -153,6 +173,8 @@ feature -- Element change
 				generate_pattern (a_match_attribute)
 				if not any_compile_errors then
 					match := last_generated_pattern
+					role_identifier := STRING_.concat ("match='", a_match_attribute)
+					role_identifier := STRING_.appended_string (role_identifier, "'")
 				end
 			end
 			if not any_compile_errors and then a_match_attribute = Void and then a_name_attribute = Void then
@@ -181,7 +203,7 @@ feature -- Element change
 			-- This is called once for each element, after the entire tree has been built.
 			-- As well as validation, it can perform first-time initialisation.
 		do
-			check_top_level
+			check_top_level (Void)
 			if match /= Void then
 				type_check_pattern ("match", match)
 			end
@@ -193,60 +215,89 @@ feature -- Element change
 	compile (an_executable: XM_XSLT_EXECUTABLE) is
 			-- Compile `Current' to an excutable instruction.
 		local
-			a_sequence_instruction: XM_XSLT_SEQUENCE_INSTRUCTION
 			a_rule_manager: XM_XSLT_RULE_MANAGER
 			a_cursor: DS_ARRAYED_LIST_CURSOR [INTEGER]
 			a_mode: XM_XSLT_MODE
 			a_name_code: INTEGER
 			a_rule_value: XM_XSLT_RULE_VALUE
+			a_content: XM_XPATH_EXPRESSION
+			a_type_checker: XM_XPATH_TYPE_CHECKER
+			a_role: XM_XPATH_ROLE_LOCATOR
+			an_error: XM_XPATH_ERROR_VALUE
 		do
-			create a_sequence_instruction.make (an_executable, Void, required_type)
-			compile_children (an_executable, a_sequence_instruction)
-			is_stack_frame_needed := number_of_variables > 0
-			compiled_template.initialize (a_sequence_instruction, is_stack_frame_needed, precedence, minimum_import_precedence, system_id, line_number)
-			if match /= Void then
-				a_rule_manager := principal_stylesheet.rule_manager
-				from
-					a_cursor := mode_name_codes.new_cursor
-					a_cursor.start
-				variant
-					mode_name_codes.count + 1 - a_cursor.index
-				until
-					a_cursor.after
-				loop
-					a_name_code := a_cursor.item
-					if not a_rule_manager.is_mode_registered (a_name_code) then
-						a_rule_manager.register_mode (a_name_code)
-					end
-					a_mode := a_rule_manager.mode (a_name_code)
-					create a_rule_value.make (compiled_template)
-					debug ("XSLT template rules")
-						std.error.put_string ("Adding a template rule for pattern ")
-						std.error.put_string (match.original_text)
-						std.error.put_string (" with precedence " + precedence.out)
-						if is_priority_specified then
-							std.error.put_string (" and priority " + priority.to_scientific_string)
-						else
-							std.error.put_string (" and priority " + match.default_priority.to_scientific_string)
-						end
-						if a_name_code = Default_mode then
-							std.error.put_string (" for default mode.")
-						elseif a_name_code = All_modes then
-							std.error.put_string (" for all modes.")
-						else
-							std.error.put_string (" for mode " + shared_name_pool.display_name_from_name_code (a_name_code) + ".")
-						end
-						std.error.put_new_line
-					end
-					if is_priority_specified then
-						a_rule_manager.set_handler (match, a_rule_value, a_mode, precedence, priority)
+			compile_sequence_constructor (an_executable, new_axis_iterator (Child_axis), True)
+			if last_generated_expression = Void then
+				create {XM_XPATH_EMPTY_SEQUENCE} a_content.make
+			else
+				a_content := last_generated_expression
+			end
+			a_content.simplify
+			if a_content.is_error then
+				report_compile_error (a_content.error_value)
+			else
+				if a_content.was_expression_replaced then a_content := a_content.replacement_expression end
+				if required_type /= Void then
+					create a_role.make (Template_result_role, role_identifier, 1)
+					create a_type_checker
+					a_type_checker.static_type_check (static_context, a_content, required_type, False, a_role)
+					if a_type_checker.is_static_type_check_error	then
+						create an_error.make_from_string(a_type_checker.static_type_check_error_message, Xpath_errors_uri, "XP0004", Type_error)
+						report_compile_error (an_error)
 					else
-						a_rule_manager.set_handler_with_default_priority (match, a_rule_value, a_mode, precedence)
-					end
-					a_cursor.forth
+						a_content := a_type_checker.checked_expression
+					end	
 				end
 			end
-			principal_stylesheet.allocate_local_slots (number_of_variables)
+			if not any_compile_errors then
+				a_content.analyze (static_context)
+				if a_content.is_error then
+					report_compile_error (a_content.error_value)
+				else
+					if a_content.was_expression_replaced then a_content := a_content.replacement_expression end
+					compiled_template.initialize (an_executable, a_content, template_fingerprint, precedence, minimum_import_precedence, system_id, line_number, slot_manager)
+					style_element_allocate_slots (a_content, slot_manager)
+					if match /= Void then
+						a_rule_manager := principal_stylesheet.rule_manager
+						from
+							a_cursor := mode_name_codes.new_cursor
+							a_cursor.start
+						variant
+							mode_name_codes.count + 1 - a_cursor.index
+						until
+							a_cursor.after
+						loop
+							a_name_code := a_cursor.item
+							if not a_rule_manager.is_mode_registered (a_name_code) then
+								a_rule_manager.register_mode (a_name_code)
+							end
+							a_mode := a_rule_manager.mode (a_name_code)
+							create a_rule_value.make (compiled_template)
+							if is_priority_specified then
+								a_rule_manager.set_handler (match, a_rule_value, a_mode, precedence, priority)
+							else
+								a_rule_manager.set_handler_with_default_priority (match, a_rule_value, a_mode, precedence)
+							end
+							a_cursor.forth
+						end
+					end
+					if principal_stylesheet.is_all_explaining then
+						std.error.put_string ("Compiled template ")
+						if template_fingerprint /= -1 then
+							std.error.put_string (" name=")
+							std.error.put_string (shared_name_pool.display_name_from_name_code (template_fingerprint))
+						end
+						if match /= Void then
+							std.error.put_string (" match=")
+							std.error.put_string (match.original_text)
+						end
+						std.error.put_new_line
+						-- TODO - add mode names
+						std.error.put_string (" Optimized template body:%N")
+					end
+
+				end
+			end
+			last_generated_expression := Void
 		end
 
 feature {XM_XSLT_STYLE_ELEMENT} -- Restricted
@@ -269,11 +320,11 @@ feature {NONE} -- Implementation
 	mode_name_codes: DS_ARRAYED_LIST [INTEGER]
 			-- Name codes for the modes applicable to this template
 
-	is_stack_frame_needed: BOOLEAN
-			-- Is a stack fram needed?
-
 	is_priority_specified: BOOLEAN
 			-- has the priority been specified?
+
+	role_identifier: STRING
+			-- Role identificaton
 
 	minimum_import_precedence: INTEGER is
 			-- Lowest import pecedence
@@ -366,6 +417,7 @@ feature {NONE} -- Implementation
 					else
 						internal_fingerprint := fingerprint_from_name_code (last_generated_name_code)
 					end
+					role_identifier := a_name_attribute
 				else
 					create an_error.make_from_string ("Template 'name' attribute must be a QName", "", "XT0020", Static_error)
 					report_compile_error (an_error)

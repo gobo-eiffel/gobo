@@ -66,12 +66,17 @@ feature -- Optimization
 
 	analyze (a_context: XM_XPATH_STATIC_CONTEXT) is
 			-- Perform static analysis of an expression and its subexpressions
+		local
+			an_expression: XM_XPATH_EXPRESSION 
 		do
 			mark_unreplaced
 			Precursor (a_context)
 			if not is_error then
 				if not was_expression_replaced then
-					set_replacement (simplified_singleton)
+					an_expression := simplified_singleton
+					if an_expression /= Current then
+						set_replacement (an_expression)
+					end
 				end
 			end
 		end
@@ -140,6 +145,8 @@ feature {NONE} -- Implementation
 			else
 				Result := arguments.item (1)
 			end
+		ensure
+			result_not_void: Result /= Void
 		end
 
 end

@@ -18,7 +18,7 @@ inherit
 	XM_XPATH_ASSIGNATION
 		redefine
 			promote, iterator, evaluate_item, compute_special_properties,
-			mark_tail_function_calls
+			mark_tail_function_calls, action
 		end
 
 	XM_XPATH_ROLE
@@ -46,16 +46,26 @@ feature {NONE} -- Initialization
 		ensure
 			static_properties_computed: are_static_properties_computed
 			declaration_set: declaration = a_range_variable
-			action_set: action = an_action
+			action_set: action_expression = an_action
 			sequence_set: sequence = a_sequence_expression
 		end
 
 feature -- Access
+	
+	action: XM_XPATH_EXPRESSION is
+			-- Action expression;
+			-- Not 100% pure.
+		do
+			-- See `Note on action' at end of file.
+
+			action_expression.mark_unreplaced
+			Result := action_expression 
+		end
 
 	item_type: XM_XPATH_ITEM_TYPE is
 			-- Determine the data type of the expression, if possible
 		do
-			Result := action.item_type
+			Result := action_expression.item_type
 			if Result /= Void then
 				-- Bug in SE 1.0 and 1.1: Make sure that
 				-- that `Result' is not optimized away.
@@ -90,7 +100,7 @@ feature -- Status report
 				a_string := STRING_.appended_string (indentation (a_level), "return")
 				std.error.put_string (a_string)
 				std.error.put_new_line
-				action.display (a_level + 1)
+				action_expression.display (a_level + 1)
 			end
 		end
 
@@ -99,7 +109,7 @@ feature -- Status setting
 	mark_tail_function_calls is
 			-- Mark tail-recursive calls on stylesheet functions.
 		do
-			action.mark_tail_function_calls
+			action_expression.mark_tail_function_calls
 		end
 
 	  
@@ -144,35 +154,35 @@ feature -- Optimization
 						set_sequence (a_type_checker.checked_expression)
 					end
 				end
-			end
 			
-			if not is_error then
-				a_type := sequence.item_type
-				a_value ?= sequence
-
-				-- Now set the static type of the binding reference, more accurately:
-				
-				declaration.refine_type_information (a_type, sequence.cardinalities, a_value, sequence.dependencies, sequence.special_properties)
-				
-				action.analyze (a_context)
-				if action.was_expression_replaced then
-					replace_action (action.replacement_expression)
+				if not is_error then
+					a_type := sequence.item_type
+					a_value ?= sequence
+					
+					-- Now set the static type of the binding reference, more accurately:
+					
+					declaration.refine_type_information (a_type, sequence.cardinalities, a_value, sequence.dependencies, sequence.special_properties)
+					
+					action_expression.analyze (a_context)
+					if action_expression.was_expression_replaced then
+						replace_action (action_expression.replacement_expression)
+					end
+					if action_expression.is_error then
+						set_last_error (action_expression.error_value)
+					end
+					a_reference_count := declaration.reference_count (Current)
+					if a_reference_count = 0 then
+						
+						-- variable is not used - no need to evaluate it
+						
+						set_replacement (action_expression)
+					elseif a_reference_count = 1 then
+						keep_value := False
+					else
+						keep_value := True
+					end
+					set_declaration_void 
 				end
-				if action.is_error then
-					set_last_error (action.error_value)
-				end
-				a_reference_count := declaration.reference_count (Current)
-				if a_reference_count = 0 then
-
-					-- variable is not used - no need to evaluate it
-
-					set_replacement (action)
-				elseif a_reference_count = 1 then
-					keep_value := False
-				else
-					keep_value := True
-				end
-				set_declaration_void 
 			end
 		end
 
@@ -201,9 +211,9 @@ feature -- Optimization
 					--  them to say we are interested in subexpressions that don't depend on either the
 					--  outer context or the inner context.
 
-					action.mark_unreplaced
-					action.promote (an_offer)
-					if action.was_expression_replaced then replace_action (action.replacement_expression) end
+					action_expression.mark_unreplaced
+					action_expression.promote (an_offer)
+					if action_expression.was_expression_replaced then replace_action (action_expression.replacement_expression) end
 				end
 
 				-- If this results in the expression (let $x := $y return Z), replace all references to
@@ -213,11 +223,11 @@ feature -- Optimization
 				a_variable_reference ?= sequence
 				if a_variable_reference /= Void then
 					create another_offer.make (Inline_variable_references, Current, a_variable_reference, False, False)
-					action.promote (another_offer)
-					if action.was_expression_replaced then
-						set_replacement (action.replacement_expression)
+					action_expression.promote (another_offer)
+					if action_expression.was_expression_replaced then
+						set_replacement (action_expression.replacement_expression)
 					else
-						set_replacement (action)
+						set_replacement (action_expression)
 					end
 				end
 			end
@@ -232,11 +242,11 @@ feature -- Evaluation
 			a_value: XM_XPATH_VALUE
 		do
 			sequence.lazily_evaluate (a_context, keep_value)
-			a_value := last_evaluation
+			a_value := sequence.last_evaluation
 			if slot_number = 0 then
 				set_slot_number (a_context.next_available_slot)
 			end
-			a_context.set_local_variable (slot_number, a_value)
+			a_context.set_local_variable (a_value, slot_number)
 			action.evaluate_item (a_context)
 		end
 
@@ -250,7 +260,7 @@ feature -- Evaluation
 			if slot_number = 0 then
 				set_slot_number (a_context.next_available_slot)
 			end
-			a_context.set_local_variable (slot_number, a_value)
+			a_context.set_local_variable (a_value, slot_number)
 			Result := action.iterator (a_context)
 		end
 
@@ -259,7 +269,7 @@ feature {XM_XPATH_EXPRESSION} -- Restricted
 	compute_special_properties is
 			-- Compute special properties.
 		do
-			clone_special_properties (action)
+			clone_special_properties (action_expression)
 		end
 
 feature {NONE} -- Implementation
@@ -267,7 +277,7 @@ feature {NONE} -- Implementation
 	compute_cardinality is
 			-- Compute cardinality.
 		do
-			set_cardinality (action.cardinality)
+			set_cardinality (action_expression.cardinality)
 		end
 
 	keep_value: BOOLEAN
@@ -278,3 +288,26 @@ invariant
 	operator_is_let: operator = Let_token
 
 end
+
+
+-- Note on action:
+--
+-- The indirect reference to `action_expression' via `action' is there to get round
+--  a problem with the expression replacement mechanism.
+-- In order to keep to CQS, the `XM_XPATH_EXPRESSION' routines `simplify', `analyze'
+--  and `promote' set a `replacement_expression' via `set_replacement'. The callers
+--  of these routines are supposed to test `was_expression_replaced', and take appropriate
+--  action.
+-- In order to check that replacements don't get lost (by callers forgetting to check for
+--  `was_expression_replaced'), most of the routines within `XM_XPATH_EXPRESSION' specifically
+--  require that `was_expression_replaced' is `False'.
+-- In addition, the class `XM_XPATH_PROMOTION_ACTION' uses this mechanism to promote
+--  expressions by replacing them with an `XM_XPATH_LET_EXPRESSION'. As part of the promotion,
+--  the class to be replaced becomes the `action_expression' of the `XM_XPATH_LET_EXPRESSION'.
+-- Now if this were to directly become an `action' attribute, then the `action' routine would
+--  always be marked as replaced, and so the pre-condition in the routines of `XM_XPATH_EXPRESSION'
+--  would fail. So instead, `action_expression' is wrapped in `action', which turns off the
+--  replacement marker.
+-- So when the `action' of a `XM_XPATH_LET_EXPRESSION' is referred to, the replacement status
+--  is always off. But it remains on until this happens, so that calling routines have a chance
+--  to see it.

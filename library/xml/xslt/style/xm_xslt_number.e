@@ -174,15 +174,16 @@ feature -- Element change
 	compile (an_executable: XM_XSLT_EXECUTABLE) is
 			-- Compile `Current' to an excutable instruction.
 		do
-			create {XM_XSLT_COMPILED_NUMBER} last_generated_instruction.make (an_executable, select_expression,
-																									level, count_pattern,
-																									from_pattern,
-																									value_expression, format,
-																									grouping_size,
-																									grouping_separator,
-																									letter_value, ordinal,
-																									language, formatter,
-																									numberer, has_variables_in_patterns)
+			create {XM_XSLT_COMPILED_NUMBER} last_generated_expression.make (an_executable, select_expression,
+																								  level, count_pattern,
+																								  from_pattern,
+																								  value_expression, format,
+																								  grouping_size,
+																								  grouping_separator,
+																								  letter_value, ordinal,
+																								  language, formatter,
+																								  numberer, has_variables_in_patterns)
+			-- TODO: consider wrapping this in a value-of
 		end
 
 feature {XM_XSLT_STYLE_ELEMENT} -- Restricted

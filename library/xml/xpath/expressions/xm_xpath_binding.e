@@ -27,6 +27,11 @@ feature -- Status report
 	last_evaluated_binding: XM_XPATH_VALUE
 			-- Value from calling evaluated_binding
 
+	is_global: BOOLEAN is
+			-- Is binding global or local?
+		deferred
+		end
+
 feature -- Evaluation
 
 	evaluate_variable (a_context: XM_XPATH_CONTEXT) is 

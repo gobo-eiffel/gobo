@@ -16,11 +16,14 @@ inherit
 
 	XM_XSLT_ATTRIBUTE_SET_ROUTINES
 
-	XM_XSLT_EXPRESSION_INSTRUCTION
+	XM_XSLT_INSTRUCTION
 		redefine
-			analyze, evaluate_item, item_type
+			sub_expressions, evaluate_item, item_type, compute_cardinality, compute_special_properties,
+			creates_new_nodes, native_implementations, promote_instruction
 		end
-		
+
+	XM_XPATH_RECEIVER_OPTIONS
+
 	XM_XPATH_SHARED_NODE_KIND_TESTS
 
 	XM_XSLT_VALIDATION
@@ -33,6 +36,14 @@ feature -- Access
 			Result := element_node_kind_test
 		end
 
+	sub_expressions: DS_ARRAYED_LIST [XM_XPATH_EXPRESSION] is
+			-- Immediate sub-expressions
+		do
+			create Result.make (1)
+			Result.set_equality_tester (expression_tester)
+			Result.put (content, 1)
+		end
+
 	validation_action: INTEGER
 			-- Validation action
 
@@ -43,43 +54,92 @@ feature -- Access
 		deferred
 		end
 
-feature -- Comparison
+feature -- Status report
 
-	same_expression (other: XM_XPATH_EXPRESSION): BOOLEAN is
-			-- Are `Current' and `other' the same expression?
+	creates_new_nodes: BOOLEAN is
+			-- Can `Current' create new nodes?
 		do
-			Result := False
-			todo ("same_expression", True)
+			Result := True
 		end
 
 feature -- Optimization
 
+	simplify is
+			-- Perform context-free optimizations.
+		do
+			content.simplify
+			if content.was_expression_replaced then
+				content := content.replacement_expression
+				adopt_child_expression (content)
+			end
+		end
+
 	analyze (a_context: XM_XPATH_STATIC_CONTEXT) is
 			-- Perform static analysis of `Current' and its subexpressions.
 		do
-			todo ("analyze", False)
+			content.analyze (a_context)
+			if content.was_expression_replaced then
+				content := content.replacement_expression
+				adopt_child_expression (content)
+			end
 		end
 
 	promote_instruction (an_offer: XM_XPATH_PROMOTION_OFFER) is
 			-- Promote this instruction.
 		do
-			todo ("promote_instruction", False)
+			content.promote (an_offer)
+			if content.was_expression_replaced then
+				content := content.replacement_expression
+				adopt_child_expression (content)
+			end
 		end
 
 feature -- Evaluation
 
 	evaluate_item (a_context: XM_XPATH_CONTEXT) is
 			-- Evaluate as a single item.
+		local
+			a_transformer: XM_XSLT_TRANSFORMER
+			a_receiver: XM_XPATH_SEQUENCE_RECEIVER
+			a_validator: XM_XPATH_RECEIVER
+			a_new_context: XM_XSLT_EVALUATION_CONTEXT
+			an_outputter: XM_XSLT_SEQUENCE_OUTPUTTER
+			a_name_code, some_properties: INTEGER
 		do
-			todo ("evaluate_item", False)
+			a_new_context ?= a_context.new_minor_context
+			check
+				evaluation_context: a_new_context /= Void
+				-- This is XSLT
+			end
+			a_transformer := a_new_context.transformer
+			create an_outputter.make_with_size (1)
+			a_receiver := an_outputter
+			a_name_code := name_code (a_new_context)
+			a_validator := a_transformer.configuration.element_validator (a_receiver, a_name_code, Void, validation_action)
+			if a_validator = a_receiver then
+				a_new_context.change_to_sequence_output_destination (a_receiver)
+			else
+				check
+					schema_aware: False
+					-- Only Basic XSLT processor is supported now
+				end
+			end
+			a_receiver.start_document
+			if not is_inherit_namespaces then some_properties := Disinherit_namespaces  end
+			a_receiver.start_element (a_name_code, -1, some_properties)
+			output_namespace_nodes (a_new_context, a_receiver)
+			content.process (a_new_context)
+			a_receiver.end_element
+			a_receiver.end_document
+			last_evaluated_item := an_outputter.first_item
 		end
 
 	process_leaving_tail (a_context: XM_XSLT_EVALUATION_CONTEXT) is
 			-- Execute `Current', writing results to the current `XM_XPATH_RECEIVER'.
 		local
-			a_name_code: INTEGER
+			a_name_code, some_properties: INTEGER
 			a_transformer: XM_XSLT_TRANSFORMER
-			a_receiver, a_saved_receiver: XM_XSLT_SEQUENCE_RECEIVER
+			a_receiver: XM_XPATH_SEQUENCE_RECEIVER
 			a_validator: XM_XPATH_RECEIVER
 		do
 			a_name_code := name_code (a_context)
@@ -91,25 +151,26 @@ feature -- Evaluation
 				last_tail_call := Void
 			else
 				a_transformer := a_context.transformer
-				a_receiver := a_transformer.current_receiver
-				a_validator := a_transformer.configuration.element_validator (a_receiver, a_name_code, Void, validation_action, Void)
+				a_receiver := a_context.current_receiver
+				a_validator := a_transformer.configuration.element_validator (a_receiver, a_name_code, Void, validation_action)
 				if a_validator /= a_receiver then
 					check
 						schema_aware: False
 						-- Only Basic XSLT processor is supported now
 					end
 				end
-				a_receiver.start_element (a_name_code, -1, 0)
+				if not is_inherit_namespaces then some_properties := Disinherit_namespaces  end
+				a_receiver.start_element (a_name_code, -1, some_properties)
 
 				-- Output the required namespace nodes via a call-back
 
-				output_namespace_nodes (a_context, a_validator)
+				output_namespace_nodes (a_context, a_receiver)
 				if not a_transformer.is_error then
 
 					-- Apply the content of any attribute sets mentioned in use-attribute-sets.
 
-					if attribute_sets /= Void then expand_attribute_sets (attribute_sets, a_transformer) end
-					process_children (a_context)
+					if attribute_sets /= Void then expand_attribute_sets (attribute_sets, a_context) end
+					content.process (a_context)
 
 					if not a_transformer.is_error then
 						
@@ -117,9 +178,6 @@ feature -- Evaluation
 
 						a_receiver.end_element
 					end
-				end
-				if a_saved_receiver /= Void then
-					todo ("process_leaving_tail - saved receiver", True)
 				end
 			end
 			last_tail_call := Void
@@ -136,8 +194,8 @@ feature -- Evaluation
 			-- Sending a namecode of -10 to the receiver is a special signal to ignore
 			--  this element and the attributes that follow it
 
-			a_context.transformer.current_receiver.start_element (-10, 0, 0)
-			process_children (a_context)
+			a_context.current_receiver.start_element (-10, 0, 0)
+			content.process (a_context)
 
 			-- Note, we don't bother with an end_element call.
 			
@@ -153,13 +211,26 @@ feature {XM_XSLT_ELEMENT_CREATOR} -- Local
 		deferred
 		end
 
-feature {XM_XSLT_EXPRESSION_INSTRUCTION} -- Local
+	
+feature {XM_XPATH_EXPRESSION} -- Restricted
 
-	xpath_expressions (an_instruction_list: DS_ARRAYED_LIST [XM_XSLT_EXPRESSION_INSTRUCTION]): DS_ARRAYED_LIST [XM_XPATH_EXPRESSION] is
-			-- All the XPath expressions associated with this instruction
+	compute_cardinality is
+			-- Compute cardinality.
 		do
-			create Result.make (0)
-			Result.set_equality_tester (expression_tester)
+			set_cardinality_exactly_one
+		end
+
+	compute_special_properties is
+			-- Compute special properties.
+		do
+			Precursor
+			set_single_document_nodeset
+		end
+
+	native_implementations: INTEGER is
+			-- Natively-supported evaluation routines
+		do
+			Result := INTEGER_.bit_or (Supports_process, Supports_evaluate_item)
 		end
 
 feature {NONE} -- Implementation
@@ -169,8 +240,16 @@ feature {NONE} -- Implementation
 	attribute_sets: DS_ARRAYED_LIST [XM_XSLT_COMPILED_ATTRIBUTE_SET]
 			-- Used attribute sets
 
+	is_inherit_namespaces: BOOLEAN
+			-- Are namespaces inherited
+
+	content: XM_XPATH_EXPRESSION
+			-- Element content
+
 invariant
 
 	validation_action: validation_action >= Validation_strict  and then Validation_strip >= validation_action
+	content_not_void: content /= Void
+
 end
 	

@@ -16,7 +16,7 @@ inherit
 
 	XM_XSLT_STYLE_ELEMENT
 		redefine
-			make_style_element, validate, may_contain_sequence_constructor
+			make_style_element, validate, may_contain_sequence_constructor, is_permitted_child
 		end
 
 	XM_XSLT_FOR_EACH_GROUP_CONSTANTS
@@ -44,6 +44,15 @@ feature -- Status report
 			-- Is `Current' allowed to contain a sequence constructor?
 		do
 			Result := True
+		end
+
+	is_permitted_child (a_style_element: XM_XSLT_STYLE_ELEMENT): BOOLEAN is
+			-- Is `a_style_element' a permitted child of `Current'?
+		local
+			a_sort: XM_XSLT_SORT
+		do
+			a_sort ?= a_style_element
+			Result := a_sort /= Void
 		end
 
 feature -- Element change
@@ -105,10 +114,11 @@ feature -- Element change
 		local
 			a_role: XM_XPATH_ROLE_LOCATOR
 			a_type_checker: XM_XPATH_TYPE_CHECKER
-			an_atomic_sequence: XM_XPATH_SEQUENCE_TYPE
+			an_atomic_sequence, a_node_sequence: XM_XPATH_SEQUENCE_TYPE
 			an_error: XM_XPATH_ERROR_VALUE
 		do
 			check_within_template
+			check_sort_comes_first (False)
 			type_check_expression ("select", select_expression)
 			if select_expression.was_expression_replaced then
 				select_expression := select_expression.replacement_expression
@@ -155,6 +165,16 @@ feature -- Element change
 			if group_ending_with /= Void then
 				type_check_pattern ("group-ending-with", group_ending_with)
 			end
+			if group_starting_with /= Void or else group_ending_with /= Void then
+				create a_type_checker
+				create a_role.make (Instruction_role, "xsl:for-each-group/select", 1)
+				create a_node_sequence.make_node_sequence
+				a_type_checker.static_type_check (static_context, select_expression, a_node_sequence, False, a_role)
+				if a_type_checker.is_static_type_check_error	then
+					create an_error.make_from_string(a_type_checker.static_type_check_error_message, "", "XT1120", Type_error)
+					report_compile_error (an_error)
+				end					
+			end
 			validated := True
 		end
 
@@ -162,31 +182,36 @@ feature -- Element change
 			-- Compile `Current' to an excutable instruction.
 		local
 			algorithm: INTEGER
-			key_expression: XM_XPATH_EXPRESSION
-			key_pattern: XM_XSLT_PATTERN
+			a_key, an_action: XM_XPATH_EXPRESSION
+			-- TODO: a_key_pattern: XM_XSLT_PATTERN_EXPRESSION
+			a_key_pattern: XM_XSLT_PATTERN
 			is_pattern: BOOLEAN
 		do
 			if group_by /= Void then
 				algorithm := Group_by_algorithm
-				key_expression := group_by
+				a_key := group_by
 			elseif group_adjacent /= Void then
 				algorithm := Group_adjacent_algorithm
-				key_expression := group_adjacent
+				a_key := group_adjacent
 			elseif group_starting_with /= Void then
 				algorithm := Group_starting_with_algorithm
-				key_pattern := group_starting_with
+				-- TODO: create a_key_pattern.make (group_starting_with)
+				a_key_pattern := group_starting_with
 				is_pattern := True
 			elseif group_ending_with /= Void then
 				algorithm := Group_ending_with_algorithm
-				key_pattern := group_ending_with
+				-- TODO: create a_key_pattern.make (group_ending_with)
+				a_key_pattern := group_ending_with
 				is_pattern := True
 			end
+			compile_sequence_constructor (an_executable, new_axis_iterator (Child_axis), True)
+			an_action := last_generated_expression
+			if an_action = Void then create {XM_XPATH_EMPTY_SEQUENCE} an_action.make end
 			if is_pattern then
-				create {XM_XSLT_COMPILED_FOR_EACH_GROUP} last_generated_instruction.make_with_pattern (an_executable, select_expression, key_pattern, algorithm, sort_keys, default_collation_name)
+				create {XM_XSLT_COMPILED_FOR_EACH_GROUP} last_generated_expression.make_pattern (an_executable, select_expression, an_action, a_key_pattern, algorithm, sort_keys, collation_name, default_collation_name)
 			else
-				create {XM_XSLT_COMPILED_FOR_EACH_GROUP} last_generated_instruction.make (an_executable, select_expression, key_expression, algorithm, sort_keys, collation_name, default_collation_name)
+				create {XM_XSLT_COMPILED_FOR_EACH_GROUP} last_generated_expression.make (an_executable, select_expression, an_action, a_key, algorithm, sort_keys, collation_name, default_collation_name)
 			end
-			compile_children (an_executable, last_generated_instruction)
 		end
 
 feature {NONE} -- Implementation

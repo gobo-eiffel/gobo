@@ -44,9 +44,11 @@
 	      The tree structure is represented by indentation.
 	    </para>
 	    <para>
-	      When the value is "all", instructions and literal result elements that are descendants of the element,
+	      The value of "all" only takes effect on xsl:stylesheet and xsl:transform elements. In this case, instructions and literal result elements that are descendants of the element,
 	      as well as the element itself, are treated as if "yes" was coded, until a descendant is encountered 
-	      that has "no" coded.
+	      that has "no" coded. Additionally, if this is the prinicpal stylesheet, then the instructions themselves, when compiled to an expression,
+	      have their compiled form displayed. 
+	      <warning>This can produce a lot of output.</warning>
 	    </para>
 	  </listitem>
 	</varlistentry>

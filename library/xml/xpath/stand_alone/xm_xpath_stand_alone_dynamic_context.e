@@ -48,13 +48,15 @@ feature {NONE} -- Initialization
 			create a_collator
 			collation_map.put (a_collator, Unicode_codepoint_collation_uri)
 		ensure
-			reserved_slot_count_zero: reserved_slot_count = 0
 			context_item_set: current_iterator /= Void and then current_iterator.item = a_context_item
 			available_documents_set: available_documents = a_document_pool
 			available_functions_set: available_functions = a_function_library
 		end
 
 feature -- Access
+
+	local_variable_frame: XM_XPATH_STACK_FRAME
+			-- Local variables in scope
 
 	available_functions: XM_XPATH_FUNCTION_LIBRARY
 			-- Available functions
@@ -73,11 +75,59 @@ feature -- Access
 
 feature -- Status report
 
+	has_push_processing: BOOLEAN
+			-- Is push-processing to a receiver implemented?
+
+	is_minor: BOOLEAN
+			-- Is `Current' limited in what can change?
+
 	last_build_error: STRING
 			-- Error message from last call to `build_document'
 
-feature 	-- Element change
+feature -- Creation
 
+	new_minor_context: like Current is
+			-- Create a minor copy of `Current'
+		do
+			-- pre-condition is never met
+		end
+
+	new_clean_context: like Current is
+			-- Created clean context (for XSLT function calls)
+		do
+			-- pre-condition is never met
+		end
+
+feature 	-- Element change
+	
+	set_stack_frame (a_local_variable_frame: like local_variable_frame) is
+			-- Set stack frame.
+		do
+			local_variable_frame := a_local_variable_frame
+		end
+
+	open_stack_frame (a_slot_manager: XM_XPATH_SLOT_MANAGER) is
+			-- Set stack frame.
+		local
+			an_array: ARRAY [XM_XPATH_VALUE]
+		do
+			create an_array.make (1, a_slot_manager.number_of_variables)
+			create local_variable_frame.make (a_slot_manager, an_array)
+		end
+
+
+	open_sized_stack_frame (a_slot_count: INTEGER) is
+			-- Set stack frame.
+		local
+			an_array: ARRAY [XM_XPATH_VALUE]
+			a_slot_manager: XM_XPATH_SLOT_MANAGER
+		do
+			create an_array.make (1, a_slot_count)
+			create a_slot_manager.make
+			a_slot_manager.set_number_of_variables (a_slot_count)
+			create local_variable_frame.make (a_slot_manager, an_array)
+		end
+	
 	build_document (a_uri_reference: STRING) is
 			-- Build a document.
 		local
@@ -111,6 +161,20 @@ feature 	-- Element change
 			end
 		end
 
+	-- The following routines are only for contexts capable of push-processing
+
+	change_to_sequence_output_destination (a_destination: XM_XPATH_SEQUENCE_RECEIVER) is
+			-- Change to a temporary destination
+		do
+			-- pre-condition is never met
+		end
+
+	report_fatal_error (an_error: XM_XPATH_ERROR_VALUE) is
+			-- Report a fatal error.
+		do
+			-- pre-condition is never met
+		end
+	
 feature {NONE} -- Implementation
 
 	uri_resolver: XM_SIMPLE_URI_EXTERNAL_RESOLVER
@@ -131,5 +195,6 @@ feature {NONE} -- Implementation
 invariant
 
 	not_restricted: not is_restricted
+	no_push_processing: not has_push_processing
 
 end

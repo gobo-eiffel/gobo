@@ -226,7 +226,10 @@ feature {XM_XPATH_EXPRESSION} -- Restricted
 			end
 			if test_subtree_nodeset then
 				set_subtree_nodeset
-			end			
+			end
+			if first_operand.non_creating and then second_operand.non_creating then
+				set_non_creating
+			end
 		end
 
 feature {XM_XPATH_VENN_EXPRESSION} -- Local

@@ -72,6 +72,7 @@ feature -- Element change
 			a_static_context: XM_XPATH_STAND_ALONE_CONTEXT
 			an_expression: XM_XPATH_EXPRESSION
 			a_cursor: DS_HASH_TABLE_CURSOR [STRING, STRING]
+			a_slot_manager: XM_XPATH_SLOT_MANAGER
 		do
 			evaluated := True
 			create a_base_uri.make (a_resource.base_uri)
@@ -104,7 +105,8 @@ feature -- Element change
 						is_error := True
 						create {XM_XPATH_INVALID_VALUE} value.make (an_expression.error_value)
 					else
-						an_expression.allocate_slots (1)
+						create a_slot_manager.make
+						an_expression.allocate_slots (1, a_slot_manager)
 						evaluate_post_analysis (an_expression, a_resource)
 					end
 				end

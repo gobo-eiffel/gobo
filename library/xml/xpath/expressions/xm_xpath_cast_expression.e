@@ -16,7 +16,7 @@ inherit
 
 	XM_XPATH_UNARY_EXPRESSION
 		redefine
-			item_type, analyze, evaluate_item, compute_cardinality, same_expression
+			item_type, analyze, evaluate_item, compute_cardinality, same_expression, compute_special_properties
 		end
 
 	XM_XPATH_ROLE
@@ -182,6 +182,13 @@ feature {NONE} -- Implementation
 			else
 				set_cardinality_exactly_one
 			end
+		end
+
+	compute_special_properties is
+			-- Compute special properties.
+		do
+			Precursor
+			set_non_creating
 		end
 
 invariant

@@ -51,7 +51,7 @@ feature -- Element change
 			a_cursor: DS_ARRAYED_LIST_CURSOR [INTEGER]
 			a_name_code: INTEGER
 			an_expanded_name, a_name_attribute, a_namespace_attribute,
-			a_type_attribute, a_validation_attribute: STRING
+			a_type_attribute, a_validation_attribute, an_inherit_namespaces_attribute: STRING
 			a_string_value: XM_XPATH_STRING_VALUE
 			an_error: XM_XPATH_ERROR_VALUE
 		do
@@ -81,6 +81,10 @@ feature -- Element change
 					a_validation_attribute := attribute_value_by_index (a_cursor.index)
 					STRING_.left_adjust (a_validation_attribute)
 					STRING_.right_adjust (a_validation_attribute)
+				elseif STRING_.same_string (an_expanded_name, Inherit_namespaces_attribute) then
+					an_inherit_namespaces_attribute := attribute_value_by_index (a_cursor.index)
+					STRING_.left_adjust (an_inherit_namespaces_attribute)
+					STRING_.right_adjust (an_inherit_namespaces_attribute)					
 				elseif STRING_.same_string (an_expanded_name, Use_attribute_sets_attribute) then
 					use_attribute_sets := attribute_value_by_index (a_cursor.index)
 					STRING_.left_adjust (use_attribute_sets)
@@ -119,7 +123,7 @@ feature -- Element change
 					report_compile_error (namespace.error_value)
 				end
 			end
-			prepare_attributes_2 (a_validation_attribute, a_type_attribute)
+			prepare_attributes_2 (a_validation_attribute, a_type_attribute, an_inherit_namespaces_attribute)
 			attributes_prepared := True
 		end
 
@@ -150,9 +154,10 @@ feature -- Element change
 			a_name_code: INTEGER
 			a_namespace_context: XM_XSLT_NAMESPACE_CONTEXT
 			an_element: XM_XSLT_COMPILED_ELEMENT
+			a_content: XM_XPATH_EXPRESSION
 		do
 			
-			last_generated_instruction := Void
+			last_generated_expression := Void
 			
 			-- Deal specially with the case where the element name is known statically.
 			
@@ -184,7 +189,7 @@ feature -- Element change
 				end
 			end
 			
-			if last_generated_instruction = Void then
+			if last_generated_expression = Void then
 				
 				-- If the namespace URI must be deduced at run-time from the element name prefix,
 				--  we need to save the namespace context of the instruction.
@@ -192,10 +197,13 @@ feature -- Element change
 				if namespace = Void then
 					a_namespace_context := namespace_context
 				end
-
-				create an_element.make (an_executable, element_name, namespace, a_namespace_context, used_attribute_sets, Void, validation_action)
-				last_generated_instruction := an_element
-				compile_children (an_executable, last_generated_instruction)
+				compile_sequence_constructor (an_executable, new_axis_iterator (Child_axis), True)
+				a_content := last_generated_expression
+				if a_content = Void then
+					create {XM_XPATH_EMPTY_SEQUENCE} a_content.make
+				end
+				create an_element.make (an_executable, element_name, namespace, a_namespace_context, used_attribute_sets, Void, validation_action, is_inherit_namespaces, a_content)
+				last_generated_expression := an_element
 			end
 		end
 
@@ -215,11 +223,26 @@ feature {NONE} -- Implementation
 
 	validation_action: INTEGER
 
-	prepare_attributes_2 (a_validation_attribute, a_type_attribute: STRING) is
+	is_inherit_namespaces: BOOLEAN
+		-- Do we inherit namespaces?
+	
+	prepare_attributes_2 (a_validation_attribute, a_type_attribute, an_inherit_namespaces_attribute: STRING) is
 			-- Continue prparing attributes.
 		local
 			an_error: XM_XPATH_ERROR_VALUE
 		do
+			if an_inherit_namespaces_attribute = Void then
+				is_inherit_namespaces := True
+			else
+				if STRING_.same_string (an_inherit_namespaces_attribute, "no") then
+					is_inherit_namespaces := False
+				elseif STRING_.same_string (an_inherit_namespaces_attribute, "yes") then
+					is_inherit_namespaces := True
+				else
+					create an_error.make_from_string ("Value of inherit-namespaces must be 'yes' or 'no'", "", "XT0020", Static_error)
+					report_compile_error (an_error)
+				end
+			end	
 			if a_validation_attribute /= Void then
 				validation_action := validation_code (a_validation_attribute)
 				if validation_action /= Validation_strip then
@@ -284,11 +307,17 @@ feature {NONE} -- Implementation
 		local
 			a_fixed_element: XM_XSLT_FIXED_ELEMENT
 			some_namespace_codes: DS_ARRAYED_LIST [INTEGER]
+			a_content: XM_XPATH_EXPRESSION
 		do
 			create some_namespace_codes.make (0)
-			create a_fixed_element.make (an_executable, a_name_code, some_namespace_codes, used_attribute_sets, Void, validation_action)
-			last_generated_instruction := a_fixed_element
-			compile_children (an_executable, last_generated_instruction)
+			compile_sequence_constructor (an_executable, new_axis_iterator (Child_axis), True)
+			a_content := last_generated_expression
+			if a_content = Void then
+				create {XM_XPATH_EMPTY_SEQUENCE} a_content.make
+			end
+			a_content.display (1)
+			create a_fixed_element.make (an_executable, a_name_code, some_namespace_codes, used_attribute_sets, Void, validation_action, is_inherit_namespaces, a_content)
+			last_generated_expression := a_fixed_element
 		end
 
 invariant

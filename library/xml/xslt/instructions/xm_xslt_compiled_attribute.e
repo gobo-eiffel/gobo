@@ -16,7 +16,8 @@ inherit
 
 	XM_XSLT_TEXT_CONSTRUCTOR
 		redefine
-			simplify, xpath_expressions, promote_instruction, display, item_type
+			sub_expressions, simplify, compute_cardinality, promote_instruction, display,
+			item_type, evaluate_name_code
 		end
 
 	XM_XPATH_RECEIVER_OPTIONS
@@ -40,22 +41,16 @@ feature {NONE} -- Initialization
 			validation: a_validation_action >= Validation_strict  and then Validation_strip <= a_validation_action
 		do
 			executable := an_executable
-			attribute_name := an_attribute_name
-			namespace := a_namespace
-			instruction_name := "attribute"
-			create children.make (0)
-			make_expression_instruction
-			set_cardinality_exactly_one
+			set_attribute_name (an_attribute_name)
+			set_namespace (a_namespace)
+			instruction_name := "xsl:attribute"
 			validation_action := a_validation_action
 			type := a_simple_type
 			type_annotation := a_type_annotation
 			namespace_context := a_namespace_context
 			options := 0
-			set_cardinality_exactly_one
-			merge_dependencies (attribute_name.dependencies)
-			if namespace /= Void then
-				merge_dependencies (namespace.dependencies)
-			end
+			compute_static_properties
+			initialize
 		ensure
 			executable_set: executable = an_executable
 			name_set: attribute_name = an_attribute_name
@@ -78,13 +73,23 @@ feature -- Access
 			Result := attribute_node_kind_test
 		end
 
-feature -- Comparison
-
-	same_expression (other: XM_XPATH_EXPRESSION): BOOLEAN is
-			-- Are `Current' and `other' the same expression?
+	sub_expressions: DS_ARRAYED_LIST [XM_XPATH_EXPRESSION] is
+			-- Immediate sub-expressions of `Current'
+		local
+			an_index: INTEGER
 		do
-			Result := False
-			todo ("same_expression", True)
+			create Result.make (3)
+			an_index := 1
+			if select_expression /= Void then
+				Result.put (select_expression, an_index)
+				an_index := an_index + 1
+			end
+			Result.put (attribute_name, an_index)
+			an_index := an_index + 1
+			if namespace /= Void then
+				Result.put (namespace, an_index)
+			end
+			Result.set_equality_tester (expression_tester)
 		end
 
 feature -- Status report
@@ -97,14 +102,26 @@ feature -- Status report
 
 feature -- Status_setting
 
-	set_no_special_characters is
-			-- Certify free of special characters.
+	set_attribute_name (a_name: like attribute_name) is
+			-- Set attribute name.
+		require
+			attribute_name_not_void: a_name /= Void
 		do
-			if not are_no_special_characters (options) then
-				options := options + No_special_characters
+			attribute_name := a_name
+			adopt_child_expression (attribute_name)
+		ensure
+			set: attribute_name = a_name
+		end
+
+	set_namespace (a_namespace: like namespace) is
+			-- Set attribute name.
+		do
+			namespace := a_namespace
+			if namespace /= Void then
+				adopt_child_expression (namespace)
 			end
 		ensure
-			no_special_characters: are_no_special_characters (options)
+			set: namespace = a_namespace
 		end
 
 feature -- Optimization
@@ -112,7 +129,13 @@ feature -- Optimization
 	simplify is
 			-- Perform context-independent static optimizations.
 		do
-			todo ("simplify", False)
+			attribute_name.simplify
+			if attribute_name.was_expression_replaced then set_attribute_name (attribute_name.replacement_expression) end
+			if namespace /= Void then
+				namespace.simplify
+				if namespace.was_expression_replaced then set_namespace  (namespace.replacement_expression) end
+			end
+			Precursor
 		end
 
 	type_check (a_context: XM_XPATH_STATIC_CONTEXT) is
@@ -134,24 +157,15 @@ feature -- Evaluation
 		do
 			todo ("process_leaving_tale", False)
 		end
+	
+feature {XM_XPATH_EXPRESSION} -- Restricted
 
-feature {XM_XSLT_EXPRESSION_INSTRUCTION} -- Local
-
-	xpath_expressions (an_instruction_list: DS_ARRAYED_LIST [XM_XSLT_EXPRESSION_INSTRUCTION]): DS_ARRAYED_LIST [XM_XPATH_EXPRESSION] is
-			-- All the XPath expressions associated with this instruction
+	compute_cardinality is
+			-- Compute cardinality.
 		do
-			if namespace /= Void then
-				create Result.make (2)
-			else
-				create Result.make (1)
-			end
-			Result.put_last (attribute_name)
-			if namespace /= Void then
-				Result.put_last (namespace)
-			end
-			Result.set_equality_tester (expression_tester)
+			set_cardinality_exactly_one
 		end
-		
+
 feature {NONE} -- Implementation
 
 	attribute_name: XM_XPATH_EXPRESSION
@@ -174,6 +188,12 @@ feature {NONE} -- Implementation
 
 	namespace_context: XM_XSLT_NAMESPACE_CONTEXT
 			-- namespace context
+
+	evaluate_name_code (a_context: XM_XPATH_CONTEXT) is
+			-- Evaluate name code.
+		do
+			todo ("evaluate_name_code", False)
+		end
 
 invariant
 

@@ -33,8 +33,6 @@ feature -- Test
 
 	test_xpath_reverse is
 			-- Transform using reverse.xsl and initial template.
-			-- This uses the simpler version of xsl:function,
-			--  which is compiled to a single XPath Expression
 		local
 			a_stylesheet_compiler: XM_XSLT_STYLESHEET_COMPILER
 			a_configuration: XM_XSLT_CONFIGURATION
@@ -66,8 +64,6 @@ feature -- Test
 
 	test_xslt_reverse is
 			-- Transform using reverse2.xsl and initial template.
-			-- This uses the full version of xsl:function,
-			--  which is compiled to a template
 		local
 			a_stylesheet_compiler: XM_XSLT_STYLESHEET_COMPILER
 			a_configuration: XM_XSLT_CONFIGURATION

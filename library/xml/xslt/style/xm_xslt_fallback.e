@@ -88,7 +88,7 @@ feature -- Element change
 
 			-- If we get here, then the parent instruction is OK, so the fallback is not activated
 			
-			last_generated_instruction := Void
+			last_generated_expression := Void
 		end
 	
 end
