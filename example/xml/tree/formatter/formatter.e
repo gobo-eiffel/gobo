@@ -100,10 +100,10 @@ feature -- Basic operations
 				else
 					error_handler.report_info_message ("- printing document...")
 					create formatter.make
-					formatter.process_document (tree_pipe.document)
+					
 					if use_stdout then
-						std.output.put_string (formatter.last_string)
-						std.output.put_new_line
+						formatter.set_output (std.output)
+						formatter.process_document (tree_pipe.document)
 					else
 						create os.make (out_filename)
 						os.open_write
@@ -112,7 +112,8 @@ feature -- Basic operations
 							error_handler.report_error (cannot_write)
 							has_error := True
 						else
-							os.put_string (formatter.last_string)
+							formatter.set_output (os)
+							formatter.process_document (tree_pipe.document)
 							os.close
 						end
 					end
