@@ -19,38 +19,38 @@ creation
 		
 cluster
 
-	"." end
-	"$GOBO\src\gelex" end
+	[gelex_project "."] end
+	[gelex "$GOBO\src\gelex"] end
+	[spec "$GOBO\spec\ve"] end
 
 		-- Gobo Eiffel Lexical Library
-	"$GOBO\library\lexical\automaton" end
-	"$GOBO\library\lexical\lex" end
-	"$GOBO\library\lexical\generation" end
-	"$GOBO\library\lexical\scanner" end
-	"$GOBO\library\lexical\skeleton" end
-	"$GOBO\library\lexical\support" end
-
+	[lx_automaton "$GOBO\library\lexical\automaton"] end
+	[lx_lex "$GOBO\library\lexical\lex"] end
+	[lx_generation "$GOBO\library\lexical\generation"] end
+	[lx_scanner "$GOBO\library\lexical\scanner"] end
+	[lx_skeleton "$GOBO\library\lexical\skeleton"] end
+	[lx_support "$GOBO\library\lexical\support"] end
 
 		-- Gobo Eiffel Parse Library
-	"$GOBO\library\parse\skeleton" end
+	[pr_skeleton "$GOBO\library\parse\skeleton"] end
 
 		-- Gobo Eiffel Utility Library
-	"$GOBO\library\utility\command" end
-	"$GOBO\library\utility\factory" end
-	"$GOBO\library\utility\support" end
+	[ut_command "$GOBO\library\utility\command"] end
+	[ut_factory "$GOBO\library\utility\factory"] end
+	[ut_support "$GOBO\library\utility\support"] end
 
 		-- Gobo Eiffel Structure Library
-	"$GOBO\library\structure\container" end
-	"$GOBO\library\structure\cursor" end
-	"$GOBO\library\structure\list" end
-	"$GOBO\library\structure\search" end
-	"$GOBO\library\structure\sort" end
-	"$GOBO\library\structure\support" end
-	"$GOBO\library\structure\table" end
-	"$GOBO\library\structure\stack" end
+	[ds_container "$GOBO\library\structure\container"] end
+	[ds_cursor "$GOBO\library\structure\cursor"] end
+	[ds_list "$GOBO\library\structure\list"] end
+	[ds_search "$GOBO\library\structure\search"] end
+	[ds_sort "$GOBO\library\structure\sort"] end
+	[ds_support "$GOBO\library\structure\support"] end
+	[ds_table "$GOBO\library\structure\table"] end
+	[ds_stack "$GOBO\library\structure\stack"] end
 
 		-- Kernel
-	"$VE_LIB\kernel" end
+	[Kernel "$VE_LIB\kernel"] end
 
 option
 
