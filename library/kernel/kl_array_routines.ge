@@ -6,7 +6,7 @@ indexing
 
 	library:    "Gobo Eiffel Kernel Library"
 	author:     "Eric Bezault <ericb@gobo.demon.co.uk>"
-	copyright:  "Copyright (c) 1997, Eric Bezault"
+	copyright:  "Copyright (c) 1998, Eric Bezault"
 	date:       "$Date$"
 	revision:   "$Revision$"
 
@@ -19,21 +19,9 @@ feature -- Initialization
 			-- with items from `an_array'.
 		require
 			an_array_not_void: an_array /= Void
-		local
-			i, j, nb: INTEGER
 		do
 			!! Result.make (min_index, min_index + an_array.count - 1)
-			from
-				nb := an_array.upper
-				i := an_array.lower
-				j := min_index
-			until
-				i > nb
-			loop
-				Result.put (an_array.item (i), j)
-				i := i + 1
-				j := j + 1
-			end
+			subcopy (Result, an_array, an_array.lower, an_array.upper, min_index)
 		ensure
 			array_not_void: Result /= Void
 			lower_set: Result.lower = min_index
