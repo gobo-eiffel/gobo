@@ -8,5 +8,9 @@
 
 		<set name="who" value="you" />
 		<echo message="Hello ${who}" />
+
+		<unset name="who"/>
+		<echo message="Hello ${who}" />
+
 	</target>
 </project>
