@@ -21,6 +21,7 @@ inherit
 			new_all_keyword,
 			new_and_keyword,
 			new_as_keyword,
+			new_assign_keyword,
 			new_attribute_keyword,
 			new_check_keyword,
 			new_class_keyword,
@@ -155,6 +156,11 @@ inherit
 			new_constraint_actual_parameters,
 			new_constraint_creator,
 			new_constraint_type_comma,
+			new_convert_feature_comma,
+			new_convert_features,
+			new_convert_function,
+			new_convert_procedure,
+			new_convert_types,
 			new_create_expression,
 			new_create_instruction,
 			new_creator,
@@ -330,6 +336,15 @@ feature -- Eiffel keywords
 			-- New 'as' keyword
 		do
 			create Result.make_as
+			Result.set_text (a_scanner.last_literal)
+			Result.set_position (a_scanner.line, a_scanner.column)
+			Result.set_break (last_break (False, a_scanner))
+		end
+
+	new_assign_keyword (a_scanner: ET_EIFFEL_SCANNER_SKELETON): ET_KEYWORD is
+			-- New 'assign' keyword
+		do
+			create Result.make_assign
 			Result.set_text (a_scanner.last_literal)
 			Result.set_position (a_scanner.line, a_scanner.column)
 			Result.set_break (last_break (False, a_scanner))
@@ -1547,6 +1562,65 @@ feature -- AST nodes
 				Result := a_type
 			elseif a_type /= Void then
 				create {ET_CONSTRAINT_TYPE_COMMA} Result.make (a_type, a_comma)
+			end
+		end
+
+	new_convert_feature_comma (a_convert_feature: ET_CONVERT_FEATURE; a_comma: ET_SYMBOL): ET_CONVERT_FEATURE_ITEM is
+			-- New convert_feature-comma
+		do
+			if a_comma = Void then
+				Result := a_convert_feature
+			elseif a_convert_feature /= Void then
+				create {ET_CONVERT_FEATURE_COMMA} Result.make (a_convert_feature, a_comma)
+			end
+		end
+
+	new_convert_features (a_convert: ET_KEYWORD; nb: INTEGER): ET_CONVERT_FEATURE_LIST is
+			-- New convert clause with given capacity
+		do
+			create Result.make_with_capacity (nb)
+			if a_convert /= Void then
+				Result.set_convert_keyword (a_convert)
+			end
+		end
+
+	new_convert_function (a_name: ET_FEATURE_NAME; a_colon: ET_SYMBOL; a_types: ET_TYPE_LIST): ET_CONVERT_FUNCTION is
+			-- New convert function
+		do
+			if a_name /= Void and a_types /= Void then
+				create Result.make (a_name, a_types)
+				if a_colon /= Void then
+					Result.set_colon (a_colon)
+				end
+			end
+		end
+
+	new_convert_procedure (a_name: ET_FEATURE_NAME; a_left_parenthesis: ET_SYMBOL; a_types: ET_TYPE_LIST; a_right_parenthesis: ET_SYMBOL): ET_CONVERT_PROCEDURE is
+			-- New convert procedure
+		do
+			if a_name /= Void and a_types /= Void then
+				create Result.make (a_name, a_types)
+				if a_left_parenthesis /= Void then
+					Result.set_left_parenthesis (a_left_parenthesis)
+				end
+				if a_right_parenthesis /= Void then
+					Result.set_right_parenthesis (a_right_parenthesis)
+				end
+			end
+		end
+
+	new_convert_types (a_left, a_right: ET_SYMBOL; nb: INTEGER): ET_TYPE_LIST is
+			-- New convert type list with given capacity
+		local
+			a_braced_types: ET_BRACED_TYPE_LIST
+		do
+			create a_braced_types.make_with_capacity (nb)
+			Result := a_braced_types
+			if a_left /= Void then
+				a_braced_types.set_left_brace (a_left)
+			end
+			if a_right /= Void then
+				a_braced_types.set_right_brace (a_right)
 			end
 		end
 

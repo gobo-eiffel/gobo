@@ -79,6 +79,16 @@ feature -- Eiffel keywords
 			Result.set_position (a_scanner.line, a_scanner.column)
 		end
 
+	new_assign_keyword (a_scanner: ET_EIFFEL_SCANNER_SKELETON): ET_KEYWORD is
+			-- New 'assign' keyword
+		require
+			a_scanner_not_void: a_scanner /= Void
+			last_literal_not_empty: a_scanner.last_literal_count > 0
+		do
+			create Result.make_assign
+			Result.set_position (a_scanner.line, a_scanner.column)
+		end
+
 	new_attribute_keyword (a_scanner: ET_EIFFEL_SCANNER_SKELETON): ET_KEYWORD is
 			-- New 'attribute' keyword
 		require
@@ -1431,6 +1441,52 @@ feature -- AST nodes
 			-- New constraint_type-comma
 		do
 			Result := a_type
+		end
+
+	new_convert_feature_comma (a_convert_feature: ET_CONVERT_FEATURE; a_comma: ET_SYMBOL): ET_CONVERT_FEATURE_ITEM is
+			-- New convert_feature-comma
+		do
+			Result := a_convert_feature
+		end
+
+	new_convert_features (a_convert: ET_KEYWORD; nb: INTEGER): ET_CONVERT_FEATURE_LIST is
+			-- New convert clause with given capacity
+		require
+			nb_positive: nb >= 0
+		do
+			create Result.make_with_capacity (nb)
+		end
+
+	new_convert_function (a_name: ET_FEATURE_NAME; a_colon: ET_SYMBOL; a_types: ET_TYPE_LIST): ET_CONVERT_FUNCTION is
+			-- New convert function
+		do
+			if a_name /= Void and a_types /= Void then
+				create Result.make (a_name, a_types)
+			end
+		end
+
+	new_convert_procedure (a_name: ET_FEATURE_NAME; a_left_parenthesis: ET_SYMBOL; a_types: ET_TYPE_LIST; a_right_parenthesis: ET_SYMBOL): ET_CONVERT_PROCEDURE is
+			-- New convert procedure
+		do
+			if a_name /= Void and a_types /= Void then
+				create Result.make (a_name, a_types)
+			end
+		end
+
+	new_convert_types (a_left, a_right: ET_SYMBOL; nb: INTEGER): ET_TYPE_LIST is
+			-- New convert type list with given capacity
+		require
+			nb_positive: nb >= 0
+		local
+			a_braced_types: ET_BRACED_TYPE_LIST
+		do
+			if nb > 0 then
+				create a_braced_types.make_with_capacity (nb)
+				Result := a_braced_types
+				if a_left /= Void and then not a_left.position.is_null then
+					a_braced_types.set_left_brace (a_left)
+				end
+			end
 		end
 
 	new_create_expression (a_create: ET_KEYWORD; a_type: ET_TARGET_TYPE; a_call: ET_QUALIFIED_CALL): ET_CREATE_EXPRESSION is
