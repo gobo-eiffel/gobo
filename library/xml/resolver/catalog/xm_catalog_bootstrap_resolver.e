@@ -16,7 +16,7 @@ inherit
 
 	XM_EXTERNAL_RESOLVER
 		redefine
-			resolve_public, resolve_finish
+			resolve_public
 		end
 
 	XM_URI_REFERENCE_RESOLVER
@@ -553,7 +553,7 @@ feature -- Action(s)
 				a_system_id := a_system -- best effort
 				uri_scheme_resolver.resolve (a_system_id)
 				last_stream := uri_scheme_resolver.last_stream
-				resolve_finish
+				uri_scheme_resolver.resolve_finish
 			end
 		end
 		
@@ -561,7 +561,7 @@ feature -- Action(s)
 			-- Resolve a public/system identified pair to an input stream.
 			-- (Default implementation: resolve using system ID only.)
 		local
-			a_public_id, a_system_id: STRING		
+			a_public_id, a_system_id: STRING
 		do
 			if well_known_system_ids.has (a_system) then
 				a_system_id := well_known_system_ids.item (a_system)
@@ -572,18 +572,10 @@ feature -- Action(s)
 			else
 				uri_scheme_resolver.resolve_public (a_public, a_system) -- best effort
 				last_stream := uri_scheme_resolver.last_stream
-				resolve_finish
+				uri_scheme_resolver.resolve_finish
 			end
 		end
 		
-	resolve_finish is
-			-- The parser has finished with the last resolved entity.
-			-- The previously resolved entity becomes the last resolved one.
-			-- Note: `last_stream' is not required to be restored accordingly.
-		do
-			uri_scheme_resolver.resolve_finish
-		end
-
 	resolve_uri (a_uri_reference: STRING) is
 			-- Resolve `a_uri_reference' on behalf of an application.
 		local
@@ -596,7 +588,7 @@ feature -- Action(s)
 				a_system_id := a_uri_reference
 				uri_scheme_resolver.resolve (a_uri_reference)
 				last_uri_reference_stream := uri_scheme_resolver.last_stream
-				resolve_finish
+				uri_scheme_resolver.resolve_finish
 			end
 			create last_system_id.make (a_system_id)
 		end
