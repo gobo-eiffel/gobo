@@ -21,289 +21,289 @@ inherit
 
 feature -- Constants
 
-	uc_system: UC_STRING is
+	uc_system: STRING is
 			-- "system" element name
 		once
-			Result := new_unicode_string ("system")
+			Result := "system"
 		ensure
 			uc_system_not_void: Result /= Void
 			uc_system_not_empty: Result.count > 0
 		end
 
-	uc_root: UC_STRING is
+	uc_root: STRING is
 			-- "root" element name
 		once
-			Result := new_unicode_string ("root")
+			Result := "root"
 		ensure
 			uc_root_not_void: Result /= Void
 			uc_root_not_empty: Result.count > 0
 		end
 
-	uc_class: UC_STRING is
+	uc_class: STRING is
 			-- "class" element/attribute name
 		once
-			Result := new_unicode_string ("class")
+			Result := "class"
 		ensure
 			uc_class_not_void: Result /= Void
 			uc_class_not_empty: Result.count > 0
 		end
 
-	uc_creation: UC_STRING is
+	uc_creation: STRING is
 			-- "creation" attribute name
 		once
-			Result := new_unicode_string ("creation")
+			Result := "creation"
 		ensure
 			uc_creation_not_void: Result /= Void
 			uc_creation_not_empty: Result.count > 0
 		end
 
-	uc_library: UC_STRING is
+	uc_library: STRING is
 			-- "library" element name
 		once
-			Result := new_unicode_string ("library")
+			Result := "library"
 		ensure
 			uc_library_not_void: Result /= Void
 			uc_library_not_empty: Result.count > 0
 		end
 
-	uc_cluster: UC_STRING is
+	uc_cluster: STRING is
 			-- "cluster" element name
 		once
-			Result := new_unicode_string ("cluster")
+			Result := "cluster"
 		ensure
 			uc_cluster_not_void: Result /= Void
 			uc_cluster_not_empty: Result.count > 0
 		end
 
-	uc_name: UC_STRING is
+	uc_name: STRING is
 			-- "name" attribute name
 		once
-			Result := new_unicode_string ("name")
+			Result := "name"
 		ensure
 			uc_name_not_void: Result /= Void
 			uc_name_not_empty: Result.count > 0
 		end
 
-	uc_value: UC_STRING is
+	uc_value: STRING is
 			-- "value" attribute name
 		once
-			Result := new_unicode_string ("value")
+			Result := "value"
 		ensure
 			uc_value_not_void: Result /= Void
 			uc_value_not_empty: Result.count > 0
 		end
 
-	uc_abstract: UC_STRING is
+	uc_abstract: STRING is
 			-- "abstract" attribute name
 		once
-			Result := new_unicode_string ("abstract")
+			Result := "abstract"
 		ensure
 			uc_abstract_not_void: Result /= Void
 			uc_abstract_not_empty: Result.count > 0
 		end
 
-	uc_relative: UC_STRING is
+	uc_relative: STRING is
 			-- "relative" attribute name
 		once
-			Result := new_unicode_string ("relative")
+			Result := "relative"
 		ensure
 			uc_relative_not_void: Result /= Void
 			uc_relative_not_empty: Result.count > 0
 		end
 
-	uc_mount: UC_STRING is
+	uc_mount: STRING is
 			-- "mount" element name
 		once
-			Result := new_unicode_string ("mount")
+			Result := "mount"
 		ensure
 			uc_mount_not_void: Result /= Void
 			uc_mount_not_empty: Result.count > 0
 		end
 
-	uc_location: UC_STRING is
+	uc_location: STRING is
 			-- "location" attribute name
 		once
-			Result := new_unicode_string ("location")
+			Result := "location"
 		ensure
 			uc_location_not_void: Result /= Void
 			uc_location_not_empty: Result.count > 0
 		end
 
-	uc_prefix: UC_STRING is
+	uc_prefix: STRING is
 			-- "prefix" attribute name
 		once
-			Result := new_unicode_string ("prefix")
+			Result := "prefix"
 		ensure
 			uc_prefix_not_void: Result /= Void
 			uc_prefix_not_empty: Result.count > 0
 		end
 
-	uc_description: UC_STRING is
+	uc_description: STRING is
 			-- "description" element name
 		once
-			Result := new_unicode_string ("description")
+			Result := "description"
 		ensure
 			uc_description_not_void: Result /= Void
 			uc_description_not_empty: Result.count > 0
 		end
 
-	uc_option: UC_STRING is
+	uc_option: STRING is
 			-- "option" element name
 		once
-			Result := new_unicode_string ("option")
+			Result := "option"
 		ensure
 			uc_option_not_void: Result /= Void
 			uc_option_not_empty: Result.count > 0
 		end
 
-	uc_external: UC_STRING is
+	uc_external: STRING is
 			-- "external" element name
 		once
-			Result := new_unicode_string ("external")
+			Result := "external"
 		ensure
 			uc_external_not_void: Result /= Void
 			uc_external_not_empty: Result.count > 0
 		end
 
-	uc_enable: UC_STRING is
+	uc_enable: STRING is
 			-- "enable" attribute name
 		once
-			Result := new_unicode_string ("enable")
+			Result := "enable"
 		ensure
 			uc_enable_not_void: Result /= Void
 			uc_enable_not_empty: Result.count > 0
 		end
 
-	uc_require: UC_STRING is
+	uc_require: STRING is
 			-- "require" element name
 		once
-			Result := new_unicode_string ("require")
+			Result := "require"
 		ensure
 			uc_require_not_void: Result /= Void
 			uc_require_not_empty: Result.count > 0
 		end
 
-	uc_ensure: UC_STRING is
+	uc_ensure: STRING is
 			-- "ensure" element name
 		once
-			Result := new_unicode_string ("ensure")
+			Result := "ensure"
 		ensure
 			uc_ensure_not_void: Result /= Void
 			uc_ensure_not_empty: Result.count > 0
 		end
 
-	uc_invariant: UC_STRING is
+	uc_invariant: STRING is
 			-- "invariant" element name
 		once
-			Result := new_unicode_string ("invariant")
+			Result := "invariant"
 		ensure
 			uc_invariant_not_void: Result /= Void
 			uc_invariant_not_empty: Result.count > 0
 		end
 
-	uc_loop: UC_STRING is
+	uc_loop: STRING is
 			-- "loop" element name
 		once
-			Result := new_unicode_string ("loop")
+			Result := "loop"
 		ensure
 			uc_loop_not_void: Result /= Void
 			uc_loop_not_empty: Result.count > 0
 		end
 
-	uc_check: UC_STRING is
+	uc_check: STRING is
 			-- "check" element name
 		once
-			Result := new_unicode_string ("check")
+			Result := "check"
 		ensure
 			uc_check_not_void: Result /= Void
 			uc_check_not_empty: Result.count > 0
 		end
 
-	uc_debug: UC_STRING is
+	uc_debug: STRING is
 			-- "debug" element name
 		once
-			Result := new_unicode_string ("debug")
+			Result := "debug"
 		ensure
 			uc_debug_not_void: Result /= Void
 			uc_debug_not_empty: Result.count > 0
 		end
 
-	uc_optimize: UC_STRING is
+	uc_optimize: STRING is
 			-- "optimize" element name
 		once
-			Result := new_unicode_string ("optimize")
+			Result := "optimize"
 		ensure
 			uc_optimize_not_void: Result /= Void
 			uc_optimize_not_empty: Result.count > 0
 		end
 
-	uc_include_dir: UC_STRING is
+	uc_include_dir: STRING is
 			-- "include_dir" element name
 		once
-			Result := new_unicode_string ("include_dir")
+			Result := "include_dir"
 		ensure
 			uc_include_dir_not_void: Result /= Void
 			uc_include_dir_not_empty: Result.count > 0
 		end
 
-	uc_export: UC_STRING is
+	uc_export: STRING is
 			-- "export" element name
 		once
-			Result := new_unicode_string ("export")
+			Result := "export"
 		ensure
 			uc_export_not_void: Result /= Void
 			uc_export_not_empty: Result.count > 0
 		end
 
-	uc_alias: UC_STRING is
+	uc_alias: STRING is
 			-- "alias" attribute name
 		once
-			Result := new_unicode_string ("alias")
+			Result := "alias"
 		ensure
 			uc_alias_not_void: Result /= Void
 			uc_alias_not_empty: Result.count > 0
 		end
 
-	uc_feature: UC_STRING is
+	uc_feature: STRING is
 			-- "feature" element name
 		once
-			Result := new_unicode_string ("feature")
+			Result := "feature"
 		ensure
 			uc_feature_not_void: Result /= Void
 			uc_feature_not_empty: Result.count > 0
 		end
 
-	uc_link_library: UC_STRING is
+	uc_link_library: STRING is
 			-- "link_library" element name
 		once
-			Result := new_unicode_string ("link_library")
+			Result := "link_library"
 		ensure
 			uc_link_library_not_void: Result /= Void
 			uc_link_library_not_empty: Result.count > 0
 		end
 
-	uc_exclude: UC_STRING is
+	uc_exclude: STRING is
 			-- "exclude" element name
 		once
-			Result := new_unicode_string ("exclude")
+			Result := "exclude"
 		ensure
 			uc_exclude_not_void: Result /= Void
 			uc_exclude_not_empty: Result.count > 0
 		end
 
-	uc_if: UC_STRING is
+	uc_if: STRING is
 			-- "if" attribute name
 		once
-			Result := new_unicode_string ("if")
+			Result := "if"
 		ensure
 			uc_if_not_void: Result /= Void
 			uc_if_not_empty: Result.count > 0
 		end
 
-	uc_unless: UC_STRING is
+	uc_unless: STRING is
 			-- "unless" attribute name
 		once
-			Result := new_unicode_string ("unless")
+			Result := "unless"
 		ensure
 			uc_unless_not_void: Result /= Void
 			uc_unless_not_empty: Result.count > 0
