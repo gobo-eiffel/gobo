@@ -29,7 +29,7 @@ cluster
 	dt_testgen:			"TESTGEN";
 	dt_tester:			"$GOBO/test/time";
 
-#include "$GOBO/library/date/hact.ace"
+#include "$GOBO/library/time/hact.ace"
 
 #include "$GOBO/library/test/hact-skl.ace"
 

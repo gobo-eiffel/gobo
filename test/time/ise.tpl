@@ -30,7 +30,7 @@ cluster
 	dt_testgen:			"TESTGEN";
 	dt_tester:			"$GOBO/test/time";
 
-#include "$GOBO/library/date/ise.ace"
+#include "$GOBO/library/time/ise.ace"
 
 #include "$GOBO/library/test/ise-skl.ace"
 
