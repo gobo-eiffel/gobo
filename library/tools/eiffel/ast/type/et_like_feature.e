@@ -86,9 +86,10 @@ feature -- Access
 		require
 			is_like_argument: is_like_argument
 		do
-			Result := -name.seed
+			Result := name.seed
 		ensure
-			definition: Result = -name.seed
+			definition: Result = name.seed
+			index_positive: Result >= 1
 		end
 
 	base_class (a_context: ET_TYPE_CONTEXT; a_universe: ET_UNIVERSE): ET_CLASS is
@@ -306,9 +307,9 @@ feature -- Status report
 	is_like_argument: BOOLEAN is
 			-- Is this type a 'like argument' (rather than a 'like feature')?
 		do
-			Result := name.seed < 0
+			Result := name.is_argument
 		ensure then
-			definition: Result = (name.seed < 0)
+			definition: Result = name.is_argument
 		end
 
 	is_formal_type (a_context: ET_TYPE_CONTEXT; a_universe: ET_UNIVERSE): BOOLEAN is
@@ -1550,23 +1551,33 @@ feature -- Resolving
 			-- Resolve current 'like feature' type with `a_seed'.
 		require
 			a_seed_positive: a_seed > 0
+		local
+			an_identifier: ET_IDENTIFIER
 		do
 			seed := a_seed
 			name.set_seed (a_seed)
+			if is_like_argument then
+				an_identifier ?= name
+				if an_identifier /= Void then
+					an_identifier.set_argument (False)
+				end
+			end
 		ensure
 			seed_set: seed = a_seed
 			is_like_feature: not is_like_argument
 		end
 
-	resolve_like_argument (a_seed, an_index: INTEGER) is
+	resolve_like_argument (a_seed, an_index: INTEGER; an_argument_name: ET_IDENTIFIER) is
 			-- Resolve current 'like argument' type with
 			-- `a_seed' and `an_index'.
 		require
 			a_seed_positive: a_seed > 0
 			an_index_positive: an_index >= 1
+			valid_argument_name: an_argument_name = name
 		do
 			seed := a_seed
-			name.set_seed (-an_index)
+			name.set_seed (an_index)
+			an_argument_name.set_argument (True)
 		ensure
 			seed_set: seed = a_seed
 			is_like_argument: is_like_argument
