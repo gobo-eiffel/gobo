@@ -36,6 +36,6 @@ A more detailed documentation for this library will be provided in
 future releases.
 
 --
-Copyright (c) 1999, Eric Bezault
+Copyright (c) 1997-2000, Eric Bezault
 mailto:ericb@gobosoft.com
 http://www.gobosoft.com

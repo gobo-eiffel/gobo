@@ -48,6 +48,6 @@ library available at the time of writing and the solution adopted
 was deemed satisfactory for the purpose of this example. 
 
 --
-Copyright (c) 1999, Eric Bezault
+Copyright (c) 1997-2000, Eric Bezault
 mailto:ericb@gobosoft.com
 http://www.gobosoft.com

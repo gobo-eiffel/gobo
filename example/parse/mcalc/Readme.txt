@@ -15,6 +15,6 @@ To compile this example:
    memory storage operations), one per line.
 
 --
-Copyright (c) 1999, Eric Bezault
+Copyright (c) 1997-2000, Eric Bezault
 mailto:ericb@gobosoft.com
 http://www.gobosoft.com

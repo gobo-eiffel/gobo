@@ -25,6 +25,6 @@ to make the classes from this package compilable with any Eiffel compiler.
 See "$GOBO\doc\portability" for details on portability issues.
 
 --
-Copyright (c) 1999, Eric Bezault
+Copyright (c) 1997-2000, Eric Bezault
 mailto:ericb@gobosoft.com
 http://www.gobosoft.com

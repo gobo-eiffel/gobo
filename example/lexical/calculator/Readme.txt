@@ -13,6 +13,6 @@ To compile this example:
    and enter infix notation expressions to be evaluated, one per line.
 
 --
-Copyright (c) 1999, Eric Bezault
+Copyright (c) 1997-2000, Eric Bezault
 mailto:ericb@gobosoft.com
 http://www.gobosoft.com
