@@ -37,6 +37,7 @@ inherit
 			remove as ds_remove,
 			make as ds_make,
 			item as ds_item,
+			key as ds_key,
 			infix "@" as ds_item_at
 		redefine
 			unset_found_item, search,
