@@ -116,12 +116,12 @@ feature -- Access
 			end
 		end
 
-	new_axis_iterator_with_node_test (axis_type: INTEGER; test: XM_XSLT_NODE_TEST): XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_NODE] is
+	new_axis_iterator_with_node_test (axis_type: INTEGER; test: XM_XPATH_NODE_TEST): XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_NODE] is
 			-- An enumeration over the nodes reachable by `axis_type' from this node;
 			-- Only nodes that match the pattern specified by `test' will be selected.
 		local
 			the_item_type: INTEGER
-			name_test: XM_XSLT_NAME_TEST
+			name_test: XM_XPATH_NAME_TEST
 			parent_node: XM_XPATH_TINY_NODE
 			the_document: XM_XPATH_TINY_DOCUMENT
 		do
@@ -288,7 +288,7 @@ feature {NONE} -- Implementation
 			create Result.make
 		end
 
-	any_node_test: XM_XSLT_ANY_NODE_TEST is
+	any_node_test: XM_XPATH_ANY_NODE_TEST is
 			-- share any_node test
 		once
 			create Result.make

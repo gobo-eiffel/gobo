@@ -19,6 +19,11 @@ inherit
 			default_priority
 		end
 
+	XM_XPATH_ANY_NODE_TEST
+		undefine
+			make
+		end
+
 creation
 
 	make
@@ -38,21 +43,5 @@ feature -- Access
 			Result := -0.5
 		end
 	
-feature -- Status report
-
-	allows_text_nodes: BOOLEAN is
-			-- Does this node test allow text nodes?
-		do
-			Result := True
-		end
-
-feature -- Matching
-
-	matches_node (a_node_kind: INTEGER; a_fingerprint: INTEGER; a_node_type: INTEGER): BOOLEAN is
-			-- Is this node test satisfied by a given node?
-		do
-			Result := True
-		end	
-
 end
 	

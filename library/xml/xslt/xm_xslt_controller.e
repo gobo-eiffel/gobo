@@ -12,33 +12,16 @@ indexing
 
 class XM_XSLT_CONTROLLER
 
-feature -- Access
+inherit
 
-	new_xpath_context: XM_XPATH_CONTEXT is
-			-- Create a new XPath context for expression evaluation
-		do
-			create Result.make (Current)
-		ensure
-			new_context_not_void: Result /= Void
-		end
+	XM_XPATH_CONTROLLER
+
+feature -- Access
 
 	key_manager: XM_XSLT_KEY_MANAGER is
 			-- Key manager
 		do
 			-- TODO
-		end
-
-	current_iterator: XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_ITEM]
-			-- Current iterator
-	
-feature 	-- Element change
-
-	set_current_iterator (it: XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_ITEM]) is
-			-- Set `current_iterator'.
-		do
-			current_iterator := it
-		ensure
-			set: current_iterator = it
 		end
 
 end

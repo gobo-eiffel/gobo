@@ -18,7 +18,7 @@ creation
 
 feature {NONE} -- Initialization
 
-	make (a_controller: XM_XSLT_CONTROLLER) is
+	make (a_controller: XM_XPATH_CONTROLLER) is
 			-- Establish invariant.
 		require
 			controller_not_void: a_controller /= Void
@@ -56,8 +56,8 @@ feature 	-- Element change
 
 feature {NONE} -- Implementation
 
-	controller: XM_XSLT_CONTROLLER
-			-- XSLT controller
+	controller: XM_XPATH_CONTROLLER
+			-- XPATH controller
 
 invariant
 

@@ -28,7 +28,7 @@ feature -- Access
 			-- The last variablew bound by `bind_variable'
 
 	bind_variable (fingerprint: INTEGER) is
-			-- Bind variable in this element to the XM_XSLT_XSL_VARIABLE in which it is declared.#
+			-- Bind variable in this element to the XM_XSLT_XSL_VARIABLE in which it is declared.
 		deferred
 		ensure
 			variable_bound: last_bound_variable /= Void

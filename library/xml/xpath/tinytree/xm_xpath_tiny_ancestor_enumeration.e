@@ -22,7 +22,7 @@ creation
 	
 feature -- Initialization
 
-	make (doc: XM_XPATH_TINY_DOCUMENT; start: XM_XPATH_TINY_NODE; test: XM_XSLT_NODE_TEST; self: BOOLEAN) is
+	make (doc: XM_XPATH_TINY_DOCUMENT; start: XM_XPATH_TINY_NODE; test: XM_XPATH_NODE_TEST; self: BOOLEAN) is
 			-- Establish invariant
 		require
 			document_not_void: doc /= Void
@@ -90,7 +90,7 @@ feature {NONE} -- Implemnentation
 	starting_node: XM_XPATH_TINY_NODE
 			-- The starting node for the enumeration
 
-	node_test: XM_XSLT_NODE_TEST
+	node_test: XM_XPATH_NODE_TEST
 			-- The node test to apply when selecting nodes
 
 	include_self: BOOLEAN

@@ -15,20 +15,18 @@ deferred class XM_XSLT_NODE_TEST
 inherit
 
 	XM_XSLT_PATTERN
-
+		undefine
+			item_type, fingerprint
+		end
+	
+	XM_XPATH_NODE_TEST
+	
 feature -- Access
 
 	node_test: XM_XSLT_NODE_TEST is
 			-- Retrieve an `XM_XSLT_NODE_TEST' that all nodes matching this pattern must satisfy
 		do
 			Result := Current
-		end
-
-feature -- Status report
-
-	allows_text_nodes: BOOLEAN is
-			-- Does this node test allow text nodes?
-		deferred
 		end
 
 feature -- Matching
@@ -38,10 +36,6 @@ feature -- Matching
 		do
 			Result := matches_node (a_node.item_type, a_node.fingerprint, a_node.type_annotation) 
 		end
-	
-	matches_node (a_node_kind: INTEGER; a_fingerprint: INTEGER; a_node_type: INTEGER): BOOLEAN is
-			-- Is this node test satisfied by a given node?
-		deferred
-		end
+
 end
 	
