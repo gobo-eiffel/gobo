@@ -9,12 +9,12 @@
 		date:        "$Date$"
 	</description>
 
-	<cluster name="decimal" location="${GOBO}/library/math/decimal" prefix="ma_">
+	<cluster name="decimal" location="${GOBO}/library/math/decimal">
 		<cluster name="abstract"/>
 		<cluster name="implementation"/>
 		<cluster name="spec">
 			<option name="abstract" value="true"/>
-			<cluster name="${GOBO_EIFFEL}"/>
+			<cluster name="${GOBO_EIFFEL}" prefix="spec_"/>
 		</cluster>
 	</cluster>
 
