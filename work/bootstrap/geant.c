@@ -22345,6 +22345,23 @@ r7append_string(((T7*)R),((T0*)ms97_125));
 return R;
 }
 
+T0* r97file_system(void){
+if(fBC29file_system==0){fBC29file_system=1;{
+/*[IF*/
+if(X88is_windows(oBC30operating_system)){
+oBC29file_system=oBC29windows_file_system;
+}
+ else if(X88is_unix(oBC30operating_system)){
+oBC29file_system=oBC29unix_file_system;
+}
+else{
+oBC29file_system=oBC29unix_file_system;
+}
+/*FI]*/
+}}
+return oBC29file_system;
+}
+
 T6 r97se_assigned_from(T0* a1){
 T6 R=0;
 T0* _x=NULL;
@@ -22395,6 +22412,42 @@ void r97make(T97* C){
 r105make(n,10);
 (/*SFN*/C->_variables/*4*/)=((T0*)n);
 }
+/*[IF*/
+if(X88is_windows(oBC30operating_system)){
+/*[IF*/
+if(!(r97has_variable(C,((T0*)ms97_1410228)))){
+/*[IRF3.5set_variable_value*/r105force(((T105*)((/*RF2*/(C)->_variables/*4*/))),((T0*)ms97_2272235),((T0*)ms97_1410228a));
+/*]*/
+}
+/*FI]*/
+/*[IF*/
+if(!(r97has_variable(C,((T0*)ms97_259694110)))){
+/*[IRF3.5set_variable_value*/r105force(((T105*)((/*RF2*/(C)->_variables/*4*/))),((T0*)ms97_18036),((T0*)ms97_259694110a));
+/*]*/
+}
+/*FI]*/
+}
+ else if(X88is_unix(oBC30operating_system)){
+/*[IF*/
+if(!(r97has_variable(C,((T0*)ms97_1410228aa)))){
+/*[IRF3.5set_variable_value*/r105force(((T105*)((/*RF2*/(C)->_variables/*4*/))),((T0*)ms97_18020),((T0*)ms97_1410228aaa));
+/*]*/
+}
+/*FI]*/
+/*[IF*/
+if(!(r97has_variable(C,((T0*)ms97_2077395)))){
+/*[IRF3.5set_variable_value*/r105force(((T105*)((/*RF2*/(C)->_variables/*4*/))),((T0*)ms97_18036a),((T0*)ms97_2077395a));
+/*]*/
+}
+/*FI]*/
+}
+/*FI]*/
+/*[IF*/
+if(!(r97has_variable(C,((T0*)ms97_3226)))){
+/*[IRF3.5set_variable_value*/r105force(((T105*)((/*RF2*/(C)->_variables/*4*/))),X86exe_extension(r97file_system()),((T0*)ms97_3226a));
+/*]*/
+}
+/*FI]*/
 }
 T0*oBC20Commandline_variables=NULL;
 int fBC20Commandline_variables=0;
@@ -26645,6 +26698,7 @@ T7*ms42_10aaa;
 T7*ms344_336971577;
 T7*ms194_16818147a;
 T7*ms173_84117997;
+T7*ms97_259694110a;
 T7*ms174_1801319434;
 T7*ms42_205aaa;
 T7*ms74_14150;
@@ -26655,6 +26709,7 @@ T7*ms16_343;
 T7*ms196_16849647a;
 T7*ms42_1198723604;
 T7*ms139_90108711;
+T7*ms97_18036a;
 T7*ms321_1515383187;
 T7*ms42_118887899;
 T7*ms139_10a;
@@ -26678,6 +26733,7 @@ T7*ms19_3496;
 T7*ms136_0a;
 T7*ms42_1784507747;
 T7*ms172_2142980;
+T7*ms97_1410228aa;
 T7*ms200_140577;
 T7*ms186_319419904a;
 T7*ms58_689092889;
@@ -26706,7 +26762,9 @@ T7*ms42_3139;
 T7*ms142_254031466;
 T7*ms95_2020550321;
 T7*ms6_79251;
+T7*ms97_18020;
 T7*ms42_256a;
+T7*ms97_18036;
 T7*ms139_10;
 T7*ms141_9366019;
 T7*ms137_661958208;
@@ -26754,6 +26812,7 @@ T7*ms150_1979141;
 T7*ms150_1978575;
 T7*ms139_2102912007;
 T7*ms42_451090;
+T7*ms97_3226a;
 T7*ms172_3135;
 T7*ms139_60094111;
 T7*ms19_79251;
@@ -26762,6 +26821,7 @@ T7*ms151_115260364;
 T7*ms172_267582581;
 T7*ms151_10a;
 T7*ms137_47904999;
+T7*ms97_2077395;
 T7*ms19_84639;
 T7*ms139_1955941869;
 T7*ms151_32a;
@@ -26772,6 +26832,7 @@ T7*ms176_82876;
 T7*ms190_84225847;
 T7*ms19_0;
 T7*ms146_89261;
+T7*ms97_1410228aaa;
 T7*ms42_1784507747a;
 T7*ms139_179802;
 T7*ms199_82876;
@@ -26787,11 +26848,13 @@ T7*ms145_3367222;
 T7*ms175_2015752;
 T7*ms197_89261;
 T7*ms195_1606898500;
+T7*ms97_259694110;
 T7*ms139_1081376;
 T7*ms95_3021;
 T7*ms187_2108041;
 T7*ms137_272198;
 T7*ms184_2013612;
+T7*ms97_2272235;
 T7*ms19_676;
 T7*ms42_112110024;
 T7*ms19_691;
@@ -26799,10 +26862,12 @@ T7*ms139_91038212;
 T7*ms74_4763922;
 T7*ms7_1983847;
 T7*ms391_276;
+T7*ms97_3226;
 T7*ms42_837540926;
 T7*ms186_1569122284;
 T7*ms137_10aaaa;
 T7*ms172_388005040;
+T7*ms97_2077395a;
 T7*ms136_1890742889;
 T7*ms193_16016;
 T7*ms192_10a;
@@ -26873,6 +26938,7 @@ T7*ms141_2110593349;
 T7*ms19_440571;
 T7*ms172_10531885;
 T7*ms185_199275083;
+T7*ms97_1410228;
 T7*ms23_1479;
 T7*ms95_0a;
 T7*ms138_10030586;
@@ -26964,6 +27030,7 @@ T7*ms198_61;
 T7*ms173_1667;
 T7*ms173_1682;
 T7*ms173_1732;
+T7*ms97_1410228a;
 T7*ms173_1752;
 T7*ms173_1757;
 T7*ms177_1093;
@@ -27083,6 +27150,7 @@ ms42_10aaa=se_ms(1,"\n");
 ms344_336971577=se_ms(14,"Malformed UTF8");
 ms194_16818147a=se_ms(9,"  [copy] ");
 ms173_84117997=se_ms(10,"  [gelex] ");
+ms97_259694110a=se_ms(10,"is_windows");
 ms174_1801319434=se_ms(16,"separate_actions");
 ms42_205aaa=se_ms(2,"\'\n");
 ms74_14150=se_ms(4,"Void");
@@ -27093,6 +27161,7 @@ ms16_343=se_ms(2,"-v");
 ms196_16849647a=se_ms(9,"  [move] ");
 ms42_1198723604=se_ms(18,"=================\n");
 ms139_90108711=se_ms(10," -finalize");
+ms97_18036a=se_ms(4,"true");
 ms321_1515383187=se_ms(12,"usage: $0 $1");
 ms42_118887899=se_ms(10," unless: \'");
 ms139_10a=se_ms(1,"\n");
@@ -27104,12 +27173,12 @@ ms19_247356966=se_ms(10,"build.eant");
 ms200_141612=se_ms(6," -XSL ");
 ms137_1086847256=se_ms(15,"  [ise] delete ");
 ms195_2234766=se_ms(7,"to_file");
-ms19_3301=se_ms(3,"ise");
-ms28_1510=se_ms(3,":\n\n");
 se_msi2();
 }
 
 void se_msi2(void){
+ms19_3301=se_ms(3,"ise");
+ms28_1510=se_ms(3,":\n\n");
 ms42_837540926aa=se_ms(16,"\nBUILD FAILED !\n");
 ms19_3294=se_ms(3,"lcc");
 ms141_10=se_ms(1,"\n");
@@ -27120,6 +27189,7 @@ ms19_3496=se_ms(3,"set");
 ms136_0a=se_ms(0,"");
 ms42_1784507747=se_ms(25," changing to directory: \'");
 ms172_2142980=se_ms(7,"no_warn");
+ms97_1410228aa=se_ms(7,"GOBO_OS");
 ms200_140577=se_ms(6," -OUT ");
 ms186_319419904a=se_ms(13,"BUILD FAILED\n");
 ms58_689092889=se_ms(60," Valid values are `true\' and `false\'. Using to `false\' now.\n");
@@ -27148,22 +27218,24 @@ ms42_3139=se_ms(3,"dir");
 ms142_254031466=se_ms(10,"executable");
 ms95_2020550321=se_ms(16,"no_style_warning");
 ms6_79251=se_ms(5,"false");
+ms97_18020=se_ms(4,"unix");
 ms42_256a=se_ms(2,"\'=");
+ms97_18036=se_ms(4,"true");
 ms139_10=se_ms(1,"\n");
 ms141_9366019=se_ms(8,"eCluster");
 ms137_661958208=se_ms(25,"  [ise] cd EIFGEN/W_code\n");
 ms139_32=se_ms(1," ");
 ms137_143262=se_ms(6," -ace ");
 ms42_205=se_ms(2,"\'\n");
+se_msi3();
+}
+
+void se_msi3(void){
 ms19_403021=se_ms(6,"gexace");
 ms177_16072=se_ms(4,"gepp");
 ms42_10a=se_ms(1,"\n");
 ms145_3294=se_ms(3,"lcc");
 ms144_1544179189=se_ms(14,"sourcefilename");
-se_msi3();
-}
-
-void se_msi3(void){
 ms42_256=se_ms(2,"\'=");
 ms28_1299730420=se_ms(23,"Parsing error in file \"");
 ms199_53496769=se_ms(9,"parameter");
@@ -27200,6 +27272,7 @@ ms150_1979141=se_ms(7,"compile");
 ms150_1978575=se_ms(7,"command");
 ms139_2102912007=se_ms(12,"  [hact] cd ");
 ms42_451090=se_ms(6,"unless");
+ms97_3226a=se_ms(3,"exe");
 ms172_3135=se_ms(3,"ecs");
 ms139_60094111=se_ms(16,"  [hact] delete ");
 ms19_79251=se_ms(5,"false");
@@ -27208,20 +27281,22 @@ ms151_115260364=se_ms(10,"--define=\"");
 ms172_267582581=se_ms(10,"no_default");
 ms151_10a=se_ms(1,"\n");
 ms137_47904999=se_ms(9,"ec -batch");
+se_msi4();
+}
+
+void se_msi4(void){
+ms97_2077395=se_ms(7,"is_unix");
 ms19_84639=se_ms(5,"mkdir");
 ms139_1955941869=se_ms(18,"ibcomp -executable");
 ms151_32a=se_ms(1," ");
 ms141_210841101a=se_ms(10,"Result.out");
 ms198_421552197=se_ms(11,"  [setenv] ");
 ms19_90371=se_ms(5,"unset");
-se_msi4();
-}
-
-void se_msi4(void){
 ms176_82876=se_ms(5,"input");
 ms190_84225847=se_ms(10,"  [mkdir] ");
 ms19_0=se_ms(0,"");
 ms146_89261=se_ms(5,"value");
+ms97_1410228aaa=se_ms(7,"GOBO_OS");
 ms42_1784507747a=se_ms(25," changing to directory: \'");
 ms139_179802=se_ms(6,"../../");
 ms199_82876=se_ms(5,"input");
@@ -27237,11 +27312,13 @@ ms145_3367222=se_ms(8,"  [lcc] ");
 ms175_2015752=se_ms(7,"geyacc ");
 ms197_89261=se_ms(5,"value");
 ms195_1606898500=se_ms(12,"to_directory");
+ms97_259694110=se_ms(10,"is_windows");
 ms139_1081376=se_ms(7,"/W_code");
 ms95_3021=se_ms(3,"ace");
 ms187_2108041=se_ms(7,"message");
 ms137_272198=se_ms(6,"EIFGEN");
 ms184_2013612=se_ms(7,"getest ");
+ms97_2272235=se_ms(7,"windows");
 ms19_676=se_ms(2,"se");
 ms42_112110024=se_ms(10," if    : \'");
 ms19_691=se_ms(2,"ve");
@@ -27249,13 +27326,19 @@ ms139_91038212=se_ms(10," -project ");
 ms74_4763922=se_ms(8," upper: ");
 ms7_1983847=se_ms(7,"count: ");
 ms391_276=se_ms(2,"..");
+ms97_3226=se_ms(3,"exe");
 ms42_837540926=se_ms(16,"\nBUILD FAILED !\n");
 ms186_1569122284=se_ms(29,"geant error: unknown target: ");
 ms137_10aaaa=se_ms(1,"\n");
 ms172_388005040=se_ms(16,"case_insensitive");
+ms97_2077395a=se_ms(7,"is_unix");
 ms136_1890742889=se_ms(15,"finish_freezing");
 ms193_16016=se_ms(4,"file");
 ms192_10a=se_ms(1,"\n");
+se_msi5();
+}
+
+void se_msi5(void){
 ms16_184927=se_ms(6,"--help");
 ms137_1086847256a=se_ms(15,"  [ise] delete ");
 ms137_208286353=se_ms(13,"EIFGEN/W_code");
@@ -27268,10 +27351,6 @@ ms151_1070a=se_ms(3," --");
 ms91_0=se_ms(0,"");
 ms173_10=se_ms(1,"\n");
 ms173_32=se_ms(1," ");
-se_msi5();
-}
-
-void se_msi5(void){
 ms200_55455187=se_ms(9,"testxslt ");
 ms144_254031466=se_ms(10,"executable");
 ms139_16054=se_ms(4,"fish");
@@ -27310,6 +27389,10 @@ ms136_78495=se_ms(5,"clean");
 ms136_10030586=se_ms(8,"finalize");
 ms90_276=se_ms(2,"..");
 ms139_10aaaaaaa=se_ms(1,"\n");
+se_msi6();
+}
+
+void se_msi6(void){
 ms172_17711=se_ms(4,"size");
 ms6_18036=se_ms(4,"true");
 ms96_392507=se_ms(6,"clean ");
@@ -27322,15 +27405,12 @@ ms177_0a=se_ms(0,"");
 ms174_2246326=se_ms(7,"verbose");
 ms173_0aa=se_ms(0,"");
 ms16_1316598903=se_ms(16,"--buildfilename=");
-se_msi6();
-}
-
-void se_msi6(void){
 ms200_16885647=se_ms(9,"  [xslt] ");
 ms141_2110593349=se_ms(14,"vec -dc -y -no");
 ms19_440571=se_ms(6,"target");
 ms172_10531885=se_ms(8,"meta_ecs");
 ms185_199275083=se_ms(15,"reuse_variables");
+ms97_1410228=se_ms(7,"GOBO_OS");
 ms23_1479=se_ms(3,"0.1");
 ms95_0a=se_ms(0,"");
 ms138_10030586=se_ms(8,"finalize");
@@ -27363,6 +27443,10 @@ ms137_3367397a=se_ms(8,"  [ise] ");
 ms19_15731=se_ms(4,"echo");
 ms19_16229=se_ms(4,"exec");
 ms19_15831=se_ms(4,"copy");
+se_msi7();
+}
+
+void se_msi7(void){
 ms137_1933260220a=se_ms(13,"  [ise] copy ");
 ms96_16686=se_ms(4,"make");
 ms186_10=se_ms(1,"\n");
@@ -27376,10 +27460,6 @@ ms175_420625972=se_ms(11,"  [geyacc] ");
 ms19_16821=se_ms(4,"name");
 ms391_46=se_ms(1,".");
 ms192_10=se_ms(1,"\n");
-se_msi7();
-}
-
-void se_msi7(void){
 ms140_3200=se_ms(3,"esd");
 ms150_884663453=se_ms(13,"xace_filename");
 ms137_1819=se_ms(3,".rc");
@@ -27417,6 +27497,10 @@ ms1_14150=se_ms(4,"Void");
 ms198_10=se_ms(1,"\n");
 ms58_915611166=se_ms(22,"WARNING: wrong value (");
 ms173_1642=se_ms(3,"-a ");
+se_msi8();
+}
+
+void se_msi8(void){
 ms173_1647=se_ms(3,"-b ");
 ms173_1652=se_ms(3,"-c ");
 ms173_1702=se_ms(3,"-m ");
@@ -27426,14 +27510,11 @@ ms198_61=se_ms(1,"=");
 ms173_1667=se_ms(3,"-f ");
 ms173_1682=se_ms(3,"-i ");
 ms173_1732=se_ms(3,"-s ");
+ms97_1410228a=se_ms(7,"GOBO_OS");
 ms173_1752=se_ms(3,"-w ");
 ms173_1757=se_ms(3,"-x ");
 ms177_1093=se_ms(3," -D");
 ms139_143262=se_ms(6," -ace ");
-se_msi8();
-}
-
-void se_msi8(void){
 ms28_180=se_ms(2,"\"\n");
 ms28_10a=se_ms(1,"\n");
 ms175_1712=se_ms(3,"-o ");
@@ -27470,6 +27551,10 @@ ms193_1606898500=se_ms(12,"to_directory");
 ms139_1028251=se_ms(7,"/F_code");
 ms141_2230607=se_ms(7,"vec.xcp");
 ms173_401657=se_ms(6,"gelex ");
+se_msi9();
+}
+
+void se_msi9(void){
 ms139_16823272a=se_ms(9,"  [hact] ");
 ms137_3367397=se_ms(8,"  [ise] ");
 ms137_272198a=se_ms(6,"EIFGEN");
@@ -27484,10 +27569,6 @@ ms137_32a=se_ms(1," ");
 ms141_1546380197=se_ms(25,"  [ve] delete Result.out\n");
 ms177_16824172=se_ms(9,"  [gepp] ");
 ms28_10=se_ms(1,"\n");
-se_msi9();
-}
-
-void se_msi9(void){
 ms28_39=se_ms(1,"\'");
 ms74_251=se_ms(2," [");
 ms16_23342040=se_ms(9,"--version");
