@@ -6,7 +6,7 @@ indexing
 
 	library:    "Gobo Eiffel Structure Library"
 	author:     "Eric Bezault <ericb@gobosoft.com>"
-	copyright:  "Copyright (c) 1999, Eric Bezault and others"
+	copyright:  "Copyright (c) 1999-2001, Eric Bezault and others"
 	license:    "Eiffel Forum Freeware License v1 (see forum.txt)"
 	date:       "$Date$"
 	revision:   "$Revision$"
@@ -49,6 +49,14 @@ feature -- Status report
 			Result := equal (equality_tester, other.equality_tester)
 		end
 
+	equality_tester_settable (a_tester: like equality_tester): BOOLEAN is
+			-- Can `set_equality_tester' be called with `a_tester'
+			-- as argument in current state of container?
+			-- (Default answer: True.)
+		do
+			Result := True
+		end
+
 feature -- Measurement
 
 	occurrences (v: G): INTEGER is
@@ -74,6 +82,8 @@ feature -- Setting
 			-- Set `equality_tester' to `a_tester'.
 			-- A void equality tester means that `='
 			-- will be used as comparison criterion.
+		require
+			equality_tester_settable: equality_tester_settable (a_tester)
 		do
 			equality_tester := a_tester
 		ensure
