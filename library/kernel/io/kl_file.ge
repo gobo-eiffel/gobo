@@ -147,6 +147,10 @@ feature -- Access
 			rescued: BOOLEAN
 #ifdef SE
 			basic_time: BASIC_TIME
+			utc_time: BASIC_TIME
+			y, m, d: INTEGER
+			h, mi, s: INTEGER
+			b: BOOLEAN
 #endif
 #ifdef VE
 			dos_datetime: INTEGER
@@ -161,7 +165,23 @@ feature -- Access
 #ifdef SE
 					if file_exists (name) then
 						basic_time := last_change_of (name)
-						Result := epoch_time.elapsed_seconds (basic_time)
+						if operating_system.is_windows then
+							Result := epoch_time.elapsed_seconds (basic_time)
+						else
+							basic_time.set_universal_time
+							y := basic_time.year
+							m := basic_time.month
+							d := basic_time.day
+							h := basic_time.hour
+							mi := basic_time.minute
+							s := basic_time.second
+								-- Bug in postcondition of BASIC_TIME.set
+								-- in SE -0.74b11. Workaround: call
+								-- `set_local_time' before.
+							utc_time.set_local_time
+							b := utc_time.set (y, m, d, h, mi, s)
+							Result := epoch_time.elapsed_seconds (utc_time)
+						end
 						if Result < 0 then
 							Result := -1
 						end
@@ -196,6 +216,14 @@ feature -- Access
 					date_impl.set_date (y, m, d)
 					d := date_impl.absolute_days - epoch_absolute_days
 					Result := (((d * 24) + h) * 60 + mi) * 60 + s
+					if not operating_system.is_windows then
+							-- Convert to UTC time.
+						local_timestamp.set_local_time
+						utc_timestamp.set_to_now
+						Result := Result +
+							(utc_timestamp.milliseconds - local_timestamp.milliseconds) // 1000 +
+							(utc_timestamp.absolute_days - local_timestamp.absolute_days) * 86400
+					end
 					if Result < 0 then
 						Result := -1
 					end
@@ -571,6 +599,10 @@ feature {NONE} -- Implementation
 		local
 			b: BOOLEAN
 		once
+				-- Bug in postcondition of BASIC_TIME.set
+				-- in SE -0.74b11. Workaround: call
+				-- `set_local_time' before.
+			Result.set_local_time
 			b := Result.set (1970, 1, 1, 0, 0, 0)
 		end
 
@@ -601,6 +633,22 @@ feature {NONE} -- Implementation
 			!! Result.set_date (1970, 1, 1)
 		ensure
 			date_impl_not_void: Result /= Void
+		end
+
+	local_timestamp: TIMESTAMP is
+			-- Local timestamp
+		once
+			!! Result.set (1970, 1, 1, 0, 0, 0.0)
+		ensure
+			timestamp_not_void: Result /= Void
+		end
+
+	utc_timestamp: TIMESTAMP is
+			-- UTC timestamp
+		once
+			!! Result.set (1970, 1, 1, 0, 0, 0.0)
+		ensure
+			timestamp_not_void: Result /= Void
 		end
 
 	epoch_absolute_days: INTEGER is
