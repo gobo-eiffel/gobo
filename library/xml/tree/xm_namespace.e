@@ -126,6 +126,8 @@ feature -- Status report
 		
 	is_default_namespace: BOOLEAN is
 			-- Is `Current' the default namespace (empty URI).
+		obsolete
+			"use clearer `uri.is_empty', or `not has_prefix' for other view of 'default'"
 		do
 			Result := uri.count = 0
 		ensure
