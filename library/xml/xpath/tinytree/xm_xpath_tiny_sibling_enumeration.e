@@ -33,6 +33,11 @@ feature {NONE} -- Initialization
 			document := a_document
 			starting_node := a_starting_node
 			node_test := a_node_test
+			debug ("XPath tiny sibling enumeration")
+				std.error.put_string ("Node test fingerprint is ")
+				std.error.put_string (node_test.fingerprint.out)
+				std.error.put_new_line
+			end
 			get_children := children
 
 			if get_children then -- child:: axis
@@ -86,26 +91,6 @@ feature {NONE} -- Initialization
 			get_children: get_children = children
 		end
 
-feature -- Status report
-	
-	after: BOOLEAN is
-			-- Are there any more items in the sequence?
-		do
-			if need_to_advance then
-				advance
-				if next_node_number < this_node then -- We have found an owner pointer
-					next_node_number := -1
-					Result := True
-				else
-					Result := False
-				end
-			else
-				Result := next_node_number <= 0
-			end
-		ensure then
-			no_need_to_advance: need_to_advance = False
-		end
-
 feature -- Cursor movement
 
 	forth is
@@ -113,7 +98,16 @@ feature -- Cursor movement
 		do
 			if need_to_advance then advance end
 			index := index + 1
-			current_item := document.retrieve_node (next_node_number)
+			debug ("XPath tiny sibling enumeration")
+				std.error.put_string ("{XM_XPATH_TINY_SIBLING_ENUMERATION}.forth: next node number is ")
+				std.error.put_string (next_node_number.out)
+				std.error.put_new_line
+			end			
+			if document.is_node_number_valid (next_node_number) then
+				current_item := document.retrieve_node (next_node_number)
+			else
+				current_item := Void
+			end
 			need_to_advance := True
 		end
 
@@ -148,16 +142,14 @@ feature {NONE} -- Implementation
 	
 	next_node_number: INTEGER
 			-- The next node to be returned by the enumeration
-
-	this_node: INTEGER
-			-- used for communication between `advance' and `after'
 	
 	advance is
 			-- Adjust internal pointers
-		require
+		require else
 			need_to_advance: need_to_advance
 		local
 			finished: BOOLEAN
+			this_node: INTEGER
 		do
 			this_node := next_node_number
 			if node_test = Void then
@@ -175,7 +167,10 @@ feature {NONE} -- Implementation
 				end
 			end
 			need_to_advance := False
-		ensure
+			if next_node_number < this_node then -- We have found an owner pointer
+				next_node_number := -1
+			end
+		ensure then
 			no_need_to_advance: need_to_advance = False
 		end
 	

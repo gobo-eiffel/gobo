@@ -86,6 +86,7 @@ feature -- Access
 			-- An iterator over the values of a sequence
 		do
 			-- TODO
+			todo ("iterator" ,False)
 		end
 
 feature -- Comparison

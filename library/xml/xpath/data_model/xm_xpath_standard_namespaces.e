@@ -29,6 +29,16 @@ feature -- Access
 	Xslt_prefix_index: INTEGER is 3
 			-- Numeric code representing the XSLT namespace
 
+	namespace_index_to_uri_code (a_name_space_index: INTEGER): INTEGER is
+			-- Convert `a_name_space_index' to a uri code
+		require
+			valid_name_space: a_name_space_index > 0
+		do
+			Result := a_name_space_index - 1
+		ensure
+			valid_uri_code: Result = a_name_space_index - 1
+		end
+
 	Null_uri: STRING is ""
 			-- The null namespace
 	

@@ -39,11 +39,6 @@ feature -- Access
 			May_be_an_empty_node_set: True
 		end
 
-	iterator (a_context: XM_XPATH_CONTEXT): XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_ITEM] is
-			-- Iterator over the values of a sequence
-		do
-			create {XM_XPATH_SINGLETON_ITERATOR [XM_XPATH_ITEM]} Result.make (node (a_context)) 
-		end
 
 feature -- Optimization
 
@@ -67,6 +62,12 @@ feature -- Evaluation
 			an_iterator: XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_ITEM]
 		do
 			last_evaluated_item := node (a_context)
+		end
+
+	iterator (a_context: XM_XPATH_CONTEXT): XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_ITEM] is
+			-- Iterator over the values of a sequence
+		do
+			create {XM_XPATH_SINGLETON_ITERATOR [XM_XPATH_ITEM]} Result.make (node (a_context)) 
 		end
 
 feature {NONE} -- Implementation

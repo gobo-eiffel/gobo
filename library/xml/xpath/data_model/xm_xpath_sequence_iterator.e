@@ -17,7 +17,7 @@ feature -- Access
 	item: G is
 			-- Value or node at the current position
 		require
-			not_before: not before
+			not_off: not off
 		deferred
 		end
 
@@ -52,15 +52,16 @@ feature -- Cursor movement
 			-- Move to first position
 		require
 			before: before
-			not_after: not after
 		do
 			forth
+		ensure
+			not_before: not before
 		end
 			
 	forth is
 			-- Move to next position
 		require
-			not_after: not after
+			not_after: before or else not after
 		deferred
 		ensure
 			one_more: index = old index + 1
@@ -76,6 +77,7 @@ feature -- Duplication
 
 invariant
 	positive_index: index >= 0
+	off_or_valid_item: not off implies item /= Void
 
 end
 	

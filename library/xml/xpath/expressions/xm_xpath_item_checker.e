@@ -78,22 +78,6 @@ feature -- Access
 			Result.put_last (sequence)
 		end
 
-	iterator (a_context: XM_XPATH_CONTEXT): XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_ITEM] is
-			-- Iterator over the values of a sequence
-		local
-			an_iterator: XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_ITEM]
-		do
-			an_iterator := sequence.iterator (a_context)
-			create {XM_XPATH_MAPPING_ITERATOR} Result.make (an_iterator, Current, Void, Void)
-		end
-
-	map (an_item: XM_XPATH_ITEM; a_context: XM_XPATH_CONTEXT; an_information_object: ANY): XM_XPATH_MAPPED_ITEM is
-			-- Map `an_item' to a sequence
-		do
-			-- TODO
-			todo ("map", False)
-		end
-
 feature -- Status report
 
 	display (a_level: INTEGER; a_pool: XM_XPATH_NAME_POOL) is
@@ -101,7 +85,7 @@ feature -- Status report
 		local
 			a_string: STRING
 		do
-			a_string := STRING_.appended_string (indent (a_level), "treat as")
+			a_string := STRING_.appended_string (indent (a_level), "treat as ")
 			a_string := STRING_.appended_string (a_string, type_name (required_item_type))
 			std.error.put_string (a_string)
 			std.error.put_new_line
@@ -163,8 +147,24 @@ feature -- Evaluation
 			elseif last_evaluated_item = Void then
 				do_nothing -- can this occur?
 			else
-				test_conformance
+				test_conformance (last_evaluated_item)
 			end
+		end
+
+	iterator (a_context: XM_XPATH_CONTEXT): XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_ITEM] is
+			-- Iterator over the values of a sequence
+		local
+			an_iterator: XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_ITEM]
+		do
+			an_iterator := sequence.iterator (a_context)
+			create {XM_XPATH_MAPPING_ITERATOR} Result.make (an_iterator, Current, Void, Void)
+		end
+
+	map (an_item: XM_XPATH_ITEM; a_context: XM_XPATH_CONTEXT; an_information_object: ANY): XM_XPATH_MAPPED_ITEM is
+			-- Map `an_item' to a sequence
+		do
+			test_conformance (an_item)
+			if not is_error then create Result.make_item (an_item) end
 		end
 
 feature {XM_XPATH_ITEM_CHECKER} -- Local
@@ -195,15 +195,15 @@ feature {XM_XPATH_EXPRESSION} -- Restricted
 
 feature {NONE} -- Implementation
 
-	test_conformance is
+	test_conformance (an_item: XM_XPATH_ITEM) is
 			-- Test conformance to `required_item_type' and `required_content_type'.
 		require
-			no_evaluated_item: last_evaluated_item /= Void
+			item_not_void: an_item /= Void
 		local
 			a_type, a_content_type: INTEGER
 			a_message: STRING
 		do
-			a_type := item_type
+			a_type := an_item.item_type
 			if not is_sub_type (a_type, required_item_type) then
 				a_message := STRING_.appended_string ("Required type of ", role_locator.message)
 				a_message := STRING_.appended_string (a_message, " is ")

@@ -72,36 +72,6 @@ feature -- Access
 			Result.put_last (sequence)
 		end
 
-	iterator (a_context: XM_XPATH_CONTEXT): XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_ITEM] is
-			-- Iterator over the values of a sequence
-		local
-			an_iterator: XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_ITEM]
-		do
-			an_iterator := sequence.iterator (a_context)
-			an_iterator.start
-			if an_iterator.after then
-				if not is_cardinality_allows_zero (required_cardinality) then
-					Result := Void
-					set_last_error_from_string (STRING_.appended_string ("An empty sequence is not allowed as the ", role_locator.message), 6, Type_error)
-				end
-			end
-			if not is_error then
-				if not is_cardinality_allows_zero (required_cardinality) then
-					todo ("iterator", True)
-					-- TODO need mapping iterator for this
-				else
-					Result := an_iterator
-				end
-			end
-		end
-
-	map (an_item: XM_XPATH_ITEM; a_context: XM_XPATH_CONTEXT; an_information_object: ANY): XM_XPATH_MAPPED_ITEM is
-			-- Map `an_item' to a sequence
-		do
-			-- TODO
-			todo ("map", False)
-		end
-
 feature -- Status report
 
 	display (a_level: INTEGER; a_pool: XM_XPATH_NAME_POOL) is
@@ -185,6 +155,36 @@ feature -- Evaluation
 					end
 				end
 			end
+		end
+
+	iterator (a_context: XM_XPATH_CONTEXT): XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_ITEM] is
+			-- Iterator over the values of a sequence
+		local
+			an_iterator: XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_ITEM]
+		do
+			an_iterator := sequence.iterator (a_context)
+			an_iterator.start
+			if an_iterator.after then
+				if not is_cardinality_allows_zero (required_cardinality) then
+					Result := Void
+					set_last_error_from_string (STRING_.appended_string ("An empty sequence is not allowed as the ", role_locator.message), 6, Type_error)
+				end
+			end
+			if not is_error then
+				if not is_cardinality_allows_zero (required_cardinality) then
+					todo ("iterator", True)
+					-- TODO need mapping iterator for this
+				else
+					Result := an_iterator
+				end
+			end
+		end
+
+	map (an_item: XM_XPATH_ITEM; a_context: XM_XPATH_CONTEXT; an_information_object: ANY): XM_XPATH_MAPPED_ITEM is
+			-- Map `an_item' to a sequence
+		do
+			-- TODO
+			todo ("map", False)
 		end
 
 feature {XM_XPATH_CARDINALITY_CHECKER} -- Local

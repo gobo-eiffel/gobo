@@ -69,14 +69,6 @@ feature {NONE} -- Initialization
 			include_descendants: include_descendants = descendants
 		end
 
-feature -- Status report
-
-	
-	after: BOOLEAN is
-			-- Are there any more items in the sequence?
-		do
-			Result := next_node_number <= 0
-		end
 
 feature -- Cursor movement
 
@@ -84,8 +76,12 @@ feature -- Cursor movement
 			-- Move to next position
 		do
 			index := index + 1
-			current_item := document.retrieve_node (next_node_number)
 			advance
+			if document.is_node_number_valid (next_node_number) then
+				current_item := document.retrieve_node (next_node_number)
+			else
+				current_item := Void
+			end
 		end
 
 feature -- Duplication

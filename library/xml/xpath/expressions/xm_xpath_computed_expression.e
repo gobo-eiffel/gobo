@@ -50,26 +50,6 @@ feature -- Access
 			Result.set_equality_tester (expression_tester)
 		end
 
-	iterator (a_context: XM_XPATH_CONTEXT): XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_ITEM] is
-			-- Iterator over the values of a sequence
-		do
-			-- The value of every expression can be regarded as a sequence, s
-			--  so this routine is supported for all expressions.
-			-- This default implementation handles iteration for expressions that
-			--  return singleton values: for non-singleton expressions, the subclass must
-			--  provide its own implementation.
-				check
-					singleton_expression: not cardinality_allows_many
-					-- Not a prefect check, as cardinality may not have been set!
-				end
-			evaluate_item (a_context)
-			if last_evaluated_item = Void then
-				Result := empty_abstract_item_iterator
-			else
-				create {XM_XPATH_SINGLETON_ITERATOR [XM_XPATH_ITEM]} Result.make (last_evaluated_item) 
-			end
-		end
-
 feature -- Comparison
 
 	same_expression (other: XM_XPATH_EXPRESSION): BOOLEAN is
@@ -255,6 +235,26 @@ feature -- Evaluation
 				else
 					last_evaluated_string := a_string
 				end
+			end
+		end
+
+	iterator (a_context: XM_XPATH_CONTEXT): XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_ITEM] is
+			-- Iterator over the values of a sequence
+		do
+			-- The value of every expression can be regarded as a sequence, s
+			--  so this routine is supported for all expressions.
+			-- This default implementation handles iteration for expressions that
+			--  return singleton values: for non-singleton expressions, the subclass must
+			--  provide its own implementation.
+				check
+					singleton_expression: not cardinality_allows_many
+					-- Not a prefect check, as cardinality may not have been set!
+				end
+			evaluate_item (a_context)
+			if last_evaluated_item = Void then
+				Result := empty_abstract_item_iterator
+			else
+				create {XM_XPATH_SINGLETON_ITERATOR [XM_XPATH_ITEM]} Result.make (last_evaluated_item) 
 			end
 		end
 

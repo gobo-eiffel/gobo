@@ -24,10 +24,23 @@ feature -- Access
 			Result := current_item
 		end
 
+feature -- Status report
+	
+	after: BOOLEAN is
+			-- Are there any more items in the sequence?
+		do
+			Result := not before and then current_item = Void
+		end
+
 feature {NONE} -- Implementation
 
 	current_item: like item
 			-- The item that the iterator is currently pointing to
+
+	advance is
+			-- Move to the next position
+		deferred
+		end
 
 end
 	

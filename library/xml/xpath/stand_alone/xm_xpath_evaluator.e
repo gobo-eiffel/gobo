@@ -59,7 +59,7 @@ feature -- Status report
 
 feature -- Element change
 	
-	build_context (a_source_uri: STRING; warnings, xpath_one_compatibility: BOOLEAN) is
+	build_static_context (a_source_uri: STRING; warnings, xpath_one_compatibility: BOOLEAN) is
 			-- Create a new static_context by parsing `a_source_uri'
 		require
 			valid_uri: a_source_uri /= Void -- and then ... for now - is a relative file uri - TODO
@@ -130,8 +130,15 @@ feature -- Evaluation
 				else
 					if an_expression.was_expression_replaced then an_expression := an_expression.replacement_expression end
 					if not an_expression.is_error then
-						create a_controller
+						create a_controller.make (context_node)
 						a_context := a_controller.new_xpath_context
+						a_context.set_current_iterator (a_controller.current_iterator)
+							check
+								context_set: a_context.context_item /= Void
+							end
+						debug ("XPath evaluator")
+							an_expression.display (1, static_context.name_pool)
+						end
 						a_sequence_iterator := an_expression.iterator (a_context)
 							
 						if a_sequence_iterator = Void then
@@ -146,10 +153,14 @@ feature -- Evaluation
 								a_sequence_iterator.start
 								create evaluated_items.make
 							until
-								a_sequence_iterator.after
+								is_evaluation_in_error or else a_sequence_iterator.after
 							loop
+									check
+										item_not_void: a_sequence_iterator.item /= Void
+										-- Because start ensures not before and until clause ensures not after
+									end
 								evaluated_items.put_last (a_sequence_iterator.item)
-								-- TODO: add check for evaluation error
+								-- TODO - what about error?
 								a_sequence_iterator.forth
 							end
 						end

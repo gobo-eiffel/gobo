@@ -15,14 +15,14 @@ indexing
 
 deferred class XM_XPATH_MAPPING_FUNCTION
 
-feature -- Access
+feature -- Evaluation
 
 	map (an_item: XM_XPATH_ITEM; a_context: XM_XPATH_CONTEXT; an_information_object: ANY): XM_XPATH_MAPPED_ITEM is
 			-- Map `an_item' to a sequence
 		require
 			item_not_void: an_item /= Void
 			context_item: a_context /= Void implies an_item.is_equal (a_context.context_item)
-			information: an_information_object /= Void -- and must be immutable and read-only for the duration of the iteration
+			information: True -- /= Void implies must be immutable and read-only for the duration of the iteration
 		deferred
 		end
 

@@ -60,7 +60,7 @@ feature -- Access
 	default_element_namespace: INTEGER is
 			-- Default XPath namespace, as a namespace code that can be looked up in `name_pool'
 		do
-			Result := Null_prefix_index
+			Result := namespace_index_to_uri_code (Null_prefix_index)
 		end
 
 	namespaces: DS_HASH_TABLE [STRING, STRING]

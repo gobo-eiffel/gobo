@@ -60,23 +60,18 @@ feature {NONE} -- Initialization
 			include_ancestors: include_ancestors = ancestors
 		end
 
-feature -- Status report
-
-	
-	after: BOOLEAN is
-			-- Are there any more items in the sequence?
-		do
-			Result := next_node_number <= 0
-		end
-
 feature -- Cursor movement
 
 	forth is
 			-- Move to next position
 		do
 			index := index + 1
-			current_item := document.retrieve_node (next_node_number)
 			advance
+			if document.is_node_number_valid (next_node_number) then
+				current_item := document.retrieve_node (next_node_number)
+			else
+				current_item := Void
+			end
 		end
 
 feature -- Duplication
@@ -126,7 +121,7 @@ feature {NONE} -- Implementation
 				-- skip over ancestors
 					from
 					until
-						next_node_number <= 1 or else document.depth_of (next_node_number) /= next_ancestor_depth
+						not document.is_node_number_valid (next_node_number) or else document.depth_of (next_node_number) /= next_ancestor_depth
 					loop
 						debug ("XPath preceding enumeration")
 							std.error.put_string ("Next node depth is now ")
@@ -140,7 +135,7 @@ feature {NONE} -- Implementation
 						next_node_number := next_node_number - 1
 					end
 				end
-				if next_node_number <= 1
+				if not document.is_node_number_valid (next_node_number)
 					or else node_test.matches_node (document.retrieve_node_kind (next_node_number), document.name_code_for_node (next_node_number), document.element_annotation (next_node_number)) then
 					finished := True
 				end

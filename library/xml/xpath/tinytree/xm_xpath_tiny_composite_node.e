@@ -48,11 +48,12 @@ feature -- Access
 			loop
 				if document.retrieve_node_kind (a_next_node) = Text_node then
 					if a_buffer = Void then
-						create {UC_UTF8_STRING} a_buffer.make_empty
+						-- create {UC_UTF8_STRING} a_buffer.make_empty
+						create {STRING} a_buffer.make_empty
 					end
 					a_length := document.beta_value (a_next_node)
 					a_start_position := document.alpha_value (a_next_node)
-					a_buffer := STRING_.appended_string (a_buffer, document.character_buffer.substring (a_start_position, a_start_position + a_length))
+					a_buffer := STRING_.appended_string (a_buffer, document.character_buffer.substring (a_start_position + 1, a_start_position + a_length))
 				end
 				a_next_node := a_next_node + 1
 			end

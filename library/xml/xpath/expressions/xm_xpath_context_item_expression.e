@@ -38,19 +38,6 @@ feature -- Access
 			Result := Any_item
 		end
 
-	iterator (a_context: XM_XPATH_CONTEXT): XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_ITEM] is
-			-- Iterator over the values of a sequence
-		local
-			an_item: XM_XPATH_ITEM
-		do
-			an_item := a_context.context_item
-			if an_item = Void then
-				set_last_error_from_string ("The context item is not set", 2, Dynamic_error)				
-			else
-				create {XM_XPATH_SINGLETON_ITERATOR [XM_XPATH_ITEM]} Result.make (an_item)
-			end
-		end
-
 feature -- Comparison
 
 	same_expression (other: XM_XPATH_EXPRESSION): BOOLEAN is
@@ -101,6 +88,19 @@ feature -- Evaluation
 			last_evaluated_item := a_context.context_item
 			if last_evaluated_item = Void then
 				set_last_error_from_string ("The context item is not set", 2, Dynamic_error)				
+			end
+		end
+
+	iterator (a_context: XM_XPATH_CONTEXT): XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_ITEM] is
+			-- Iterator over the values of a sequence
+		local
+			an_item: XM_XPATH_ITEM
+		do
+			an_item := a_context.context_item
+			if an_item = Void then
+				set_last_error_from_string ("The context item is not set", 2, Dynamic_error)				
+			else
+				create {XM_XPATH_SINGLETON_ITERATOR [XM_XPATH_ITEM]} Result.make (an_item)
 			end
 		end
 	

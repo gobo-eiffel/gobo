@@ -58,19 +58,6 @@ feature -- Access
 			Result.put_last (base_expression)
 		end
 
-	iterator (a_context: XM_XPATH_CONTEXT): XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_ITEM] is
-			-- Iterator over the values of a sequence
-		do
-			todo ("iterator", False)
-		end
-
-	map (an_item: XM_XPATH_ITEM; a_context: XM_XPATH_CONTEXT; an_information_object: ANY): XM_XPATH_MAPPED_ITEM is
-			-- Map `an_item' to a sequence
-		do
-			-- TODO
-			todo ("map", False)
-		end
-
 feature -- Status report
 
 	display (a_level: INTEGER; a_pool: XM_XPATH_NAME_POOL) is
@@ -78,6 +65,7 @@ feature -- Status report
 		do
 			std.error.put_string (STRING_.appended_string (indent (a_level), "atomize"))
 			std.error.put_new_line
+			base_expression.display (a_level + 1, a_pool)
 		end
 
 feature -- Optimization
@@ -86,6 +74,7 @@ feature -- Optimization
 			-- Simplify `Current';
 			-- This default implementation does nothing.
 		do
+			-- TODO
 			todo ("simplify", False)
 		end
 
@@ -127,7 +116,45 @@ feature -- Evaluation
 	evaluate_item (a_context: XM_XPATH_CONTEXT) is
 			-- Evaluate `Current' as a single item
 		do
+			-- TODO
 			todo ("evaluate_item", False)
+		end
+
+	iterator (a_context: XM_XPATH_CONTEXT): XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_ITEM] is
+			-- Iterator over the values of a sequence
+		local
+			an_iterator: XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_ITEM]
+		do
+			an_iterator := base_expression.iterator (a_context)
+			create {XM_XPATH_MAPPING_ITERATOR} Result.make (an_iterator, Current, Void, Void)
+		end
+
+	map (an_item: XM_XPATH_ITEM; a_context: XM_XPATH_CONTEXT; an_information_object: ANY): XM_XPATH_MAPPED_ITEM is
+			-- Map `an_item' to a sequence
+		local
+			a_node: XM_XPATH_NODE
+			an_atomic_value: XM_XPATH_ATOMIC_VALUE
+			a_sequence_value: XM_XPATH_SEQUENCE_VALUE
+		do
+			a_node ?= an_item
+			if a_node /= void then
+				an_atomic_value ?= a_node.typed_value
+				if an_atomic_value /= Void then
+					create Result.make_item (an_atomic_value)
+				else
+					a_sequence_value ?= a_node.typed_value
+					if a_sequence_value /= void then
+						create Result.make_sequence (a_sequence_value.iterator (a_context))
+					else
+						Result := Void -- but I don't think this can happen, so
+							check
+								result_not_void: Result /= Void
+							end
+					end
+				end
+			else
+				create Result.make_item (an_item)
+			end
 		end
 
 feature -- Element change

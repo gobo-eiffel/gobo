@@ -15,6 +15,9 @@ class XM_XPATH_EMPTY_ITERATOR [G -> XM_XPATH_ITEM]
 	-- This class has no state, and so a single
 	-- instance can be used. This is available
 	-- in XM_PATH_SHARED_EMPTY_ITERATOR
+
+	-- The previous comment is wrong in every respect.
+	-- TDOD: don't change the comment - make it be true
 	
 inherit
 
@@ -65,7 +68,9 @@ feature -- Cursor movement
 	forth is
 			-- Move to next position
 		do
-			do_nothing
+			index := index + 1
+		ensure then
+			after: after
 		end
 
 feature -- Duplication

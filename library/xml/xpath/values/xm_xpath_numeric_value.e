@@ -33,6 +33,7 @@ feature -- Comparison
 			-- Are `Current' and `other' the same expression?
 		do
 			-- TODO - awaiting final decision on numeric structure
+			todo ("same-expression" ,False)
 		end
 
 	three_way_comparison (other: XM_XPATH_ATOMIC_VALUE): INTEGER is
@@ -83,6 +84,7 @@ feature -- Status_report
 			-- Is value integral?
 		do
 			-- TODO
+			todo ("is-whole-number" ,False)
 		end
 	
 end

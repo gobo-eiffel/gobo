@@ -108,7 +108,7 @@ feature -- Evaluation
 	evaluated_binding (a_context: XM_XPATH_CONTEXT): XM_XPATH_VALUE is
 			-- Evaluate variable
 		do
-			Result := a_context.evaluated_local_variable (slot_number)
+			 Result := a_context.evaluated_local_variable (slot_number)
 		end
 
 feature -- Element change

@@ -62,29 +62,6 @@ feature -- Access
 			end
 		end
 
-	iterator (a_context: XM_XPATH_CONTEXT): XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_ITEM] is
-			-- Iterator over the values of a sequence
-		local
-			a_node: XM_XPATH_NODE
-			an_item: XM_XPATH_ITEM
-		do
-			an_item := a_context.context_item
-			if an_item = Void then
-				Result := Void
-				set_last_error_from_string ("The context item for an axis step is not set.", 2, Dynamic_error)
-			else
-				a_node ?= an_item
-				if a_node = Void then
-					Result := Void
-					set_last_error_from_string ("The context item for an axis is not a node.", 20, Type_error)
-				elseif node_test = Void then
-					Result := a_node.new_axis_iterator (axis)
-				else
-					Result := a_node.new_axis_iterator_with_node_test (axis, node_test)
-				end
-			end
-		end
-
 feature -- Comparison
 
 	same_expression (other: XM_XPATH_EXPRESSION): BOOLEAN is
@@ -167,6 +144,31 @@ feature -- Optimization
 			-- Perform static analysis of an expression and its subexpressions
 		do
 			set_analyzed
+		end
+
+feature -- Evaluation
+
+	iterator (a_context: XM_XPATH_CONTEXT): XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_ITEM] is
+			-- Iterator over the values of a sequence
+		local
+			a_node: XM_XPATH_NODE
+			an_item: XM_XPATH_ITEM
+		do
+			an_item := a_context.context_item
+			if an_item = Void then
+				Result := Void
+				set_last_error_from_string ("The context item for an axis step is not set.", 2, Dynamic_error)
+			else
+				a_node ?= an_item
+				if a_node = Void then
+					Result := Void
+					set_last_error_from_string ("The context item for an axis is not a node.", 20, Type_error)
+				elseif node_test = Void then
+					Result := a_node.new_axis_iterator (axis)
+				else
+					Result := a_node.new_axis_iterator_with_node_test (axis, node_test)
+				end
+			end
 		end
 
 feature {XM_XPATH_EXPRESSION} -- Restricted

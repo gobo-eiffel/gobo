@@ -130,10 +130,8 @@ feature -- Access
 			an_iterator: XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_NODE]
 		do
 			an_iterator := new_axis_iterator (Child_axis)
-			if an_iterator.before and then not an_iterator.after then
-				an_iterator.forth
-			end
-			if not an_iterator.before then Result := an_iterator.item end
+			an_iterator.start
+			if not an_iterator.after then Result := an_iterator.item end
 		end
 
 	last_child: XM_XPATH_NODE is
@@ -144,14 +142,17 @@ feature -- Access
 		do
 			an_iterator := new_axis_iterator (Child_axis)
 			from
+				an_iterator.start
 			until
 				an_iterator.after
 			loop
-				if not an_iterator.after then
-					an_iterator.forth
-				end
+				Result := an_iterator.item
+					check
+						result_not_void: Result /= Void
+						-- Because not before (due to start) and not after (due to until)
+					end
+				an_iterator.forth
 			end
-			if not an_iterator.before then Result := an_iterator.item end
 		end
 
 	previous_sibling: XM_XPATH_NODE is
@@ -161,10 +162,8 @@ feature -- Access
 			an_iterator: XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_NODE]
 		do
 			an_iterator := new_axis_iterator (Preceding_sibling_axis)
-			if an_iterator.before and not an_iterator.after then
-				an_iterator.forth
-			end
-			if not an_iterator.before then Result := an_iterator.item end
+			an_iterator.start
+			if not an_iterator.after then Result := an_iterator.item end
 		end
 	
 	next_sibling: XM_XPATH_NODE is
@@ -174,10 +173,8 @@ feature -- Access
 			an_iterator: XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_NODE]
 		do
 			an_iterator := new_axis_iterator (Following_sibling_axis)
-			if an_iterator.before and not an_iterator.after then
-				an_iterator.forth
-			end
-			if not an_iterator.before then Result := an_iterator.item end
+			an_iterator.start
+			if not an_iterator.after then Result := an_iterator.item end
 		end
 	
 	document_element: XM_XPATH_ELEMENT is
@@ -204,14 +201,15 @@ feature -- Access
 					std.error.put_string (an_iterator.after.out)
 					std.error.put_new_line
 				end
-				if an_iterator.before and then not an_iterator.after then
-					an_iterator.forth
-					Result ?= an_iterator.item
-						check
-							node_is_element: Result /= Void
-						end
-				end
+				an_iterator.start
+				Result ?= an_iterator.item
+					check
+						node_is_element: Result /= Void
+						-- All documents must have a document element (?? I this true?)
+					end
 			end
+		ensure
+			document_element_present: Result /= Void
 		end
 	
 	typed_value: XM_XPATH_VALUE is

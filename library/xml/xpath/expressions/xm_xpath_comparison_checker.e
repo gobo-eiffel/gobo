@@ -32,7 +32,7 @@ feature -- Comparison
 		require
 			first_value_not_void: an_atomic_value /= Void
 			second_value_not: another_atomic_value /= Void
-			valid_general_operator: is_general_comparison_operator (an_operator)
+			valid_value_operator: is_value_comparison_operator (an_operator)
 			comparer_not_void: an_atomic_comparer /= Void
 		local
 			an_atomic_value_one, an_atomic_value_two: XM_XPATH_ATOMIC_VALUE
@@ -101,7 +101,7 @@ feature -- Comparison
 		end
 
 	check_correct_value_relation (an_atomic_value: XM_XPATH_ATOMIC_VALUE; an_operator: INTEGER;
-										  an_atomic_comparer: XM_XPATH_ATOMIC_COMPARER; another_atomic_value: XM_XPATH_ATOMIC_VALUE) is
+											an_atomic_comparer: XM_XPATH_ATOMIC_COMPARER; another_atomic_value: XM_XPATH_ATOMIC_VALUE) is
 			-- Compare two atomic values
 		require
 			first_value_not_void: an_atomic_value /= Void

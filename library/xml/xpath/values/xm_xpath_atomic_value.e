@@ -35,12 +35,6 @@ feature -- Access
 			Result := Current
 		end
 
-	iterator (a_context: XM_XPATH_CONTEXT): XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_ITEM] is
-			-- Iterator over the values of a sequence
-		do
-			create {XM_XPATH_SINGLETON_ITERATOR [XM_XPATH_ITEM]} Result.make (Current)
-		end
-
 feature -- Comparison
 
 	three_way_comparison (other: XM_XPATH_ATOMIC_VALUE): INTEGER is
@@ -81,6 +75,12 @@ feature -- Evaluation
 			-- Evaluate `Current' as a String
 		do
 			create last_evaluated_string.make (string_value)
+		end
+
+	iterator (a_context: XM_XPATH_CONTEXT): XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_ITEM] is
+			-- Iterator over the values of a sequence
+		do
+			create {XM_XPATH_SINGLETON_ITERATOR [XM_XPATH_ITEM]} Result.make (Current)
 		end
 
 feature -- Conversion

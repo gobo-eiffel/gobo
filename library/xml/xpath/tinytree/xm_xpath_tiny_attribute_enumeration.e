@@ -15,7 +15,7 @@ class XM_XPATH_TINY_ATTRIBUTE_ENUMERATION
 inherit
 
 	XM_XPATH_AXIS_ITERATOR [XM_XPATH_TINY_ATTRIBUTE]
-
+			
 	XM_XPATH_TYPE
 
 creation
@@ -37,20 +37,10 @@ feature {NONE} -- Initialization
 
 			attribute_index := a_document.alpha_value (an_element) -- first_attribute
 			index := 0
-			advance
 		ensure
 			document_set: document = a_document
 			element_set: parent_element = an_element
 			test_set: node_test = a_node_test
-		end
-
-feature -- Status report
-
-	
-	after: BOOLEAN is
-			-- Are there any more items in the sequence?
-		do
-			Result := attribute_index <= 0
 		end
 
 feature -- Cursor movement
@@ -61,16 +51,15 @@ feature -- Cursor movement
 			a_node: INTEGER
 			a_name_test: XM_XPATH_NAME_TEST
 		do
+			advance
 			index := index + 1
 			a_node := attribute_index
 			attribute_index := attribute_index + 1
 			a_name_test ?= node_test
 			if a_name_test /= Void then
 				attribute_index := -1 -- there can only be one match, so abandon further searching
-			else
-				advance
 			end
-			current_item := document.retrieve_attribute_node (a_node) 
+			if document.is_attribute_number_valid (a_node) then current_item := document.retrieve_attribute_node (a_node) end
 		end
 	
 feature -- Duplication
@@ -106,13 +95,14 @@ feature {NONE} -- Implementation
 			until
 				finished
 			loop
-				if attribute_index > document.number_of_attributes or else document.attribute_parent (attribute_index) /= parent_element then
+				if not document.is_attribute_number_valid (attribute_index) or else document.attribute_parent (attribute_index) /= parent_element then
 					attribute_index := -1
 					finished := True
-				elseif node_test.matches_node (Attribute_node, document.attribute_name_code (attribute_index), document.attribute_annotation (attribute_index)) then
+				elseif  document.is_attribute_number_valid (attribute_index) and then node_test.matches_node (Attribute_node, document.attribute_name_code (attribute_index), document.attribute_annotation (attribute_index)) then
 					finished := True
 				else
 					attribute_index := attribute_index + 1
+					if not document.is_attribute_number_valid (attribute_index) then finished := True end
 				end
 			end
 		end

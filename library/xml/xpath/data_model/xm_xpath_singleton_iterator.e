@@ -32,7 +32,6 @@ feature {NONE} -- Initialization
 		ensure
 			before: before
 			value_set: value = a_value
-			gone_implies_value_void: gone implies value = Void and then not gone implies value /= Void
 		end
 
 feature -- Access
@@ -42,10 +41,7 @@ feature -- Access
 		do
 			if index = 1 then
 				Result := value
-				index := 2
-				gone := True
-			end
-			
+			end			
 		end
 	
 	last_position: INTEGER is
@@ -76,8 +72,8 @@ feature -- Cursor movement
 	forth is
 			-- Move to next position
 		do
-			gone := True
 			index := index + 1
+			if index > 1 then gone := True end
 		end
 
 feature -- Duplication
@@ -96,4 +92,9 @@ feature {NONE} -- Implementation
 
 	gone: BOOLEAN
 			-- No item available
+
+invariant
+
+	gone_implies_value_void: gone implies value = Void and then not gone implies value /= Void
+
 end

@@ -396,16 +396,17 @@ feature -- Access
 						a_depth := a_depth + 1
 					end
 					Result := ((a_depth - 1) * bits_10) + a_hash_code
-			debug ("XPath name pool")
-				std.error.put_string ("Fingerprint: depth is ")
-				std.error.put_string ((a_depth - 1).out)
-				std.error.put_string (", hash_code is ")
-				std.error.put_string (a_hash_code.out)
-				std.error.put_string (", result is ")
-				std.error.put_string (result.out)
-				std.error.put_new_line
-			end					
 				end
+			end
+			debug ("XPath name pool allocation")
+				std.error.put_string ("fingerprint: searching for uri ")
+				std.error.put_string (a_uri)
+				std.error.put_string (", local-name: ")
+				std.error.put_string (a_local_name)
+				std.error.put_new_line
+				std.error.put_string (" result is: ")
+				std.error.put_string (Result.out)
+				std.error.put_new_line
 			end
 		ensure
 			correct_range: Result > -2 and Result <= bits_16
@@ -464,6 +465,11 @@ feature -- Status report
 		local
 			a_counter: INTEGER
 		do
+			debug ("XPath name pool allocation")
+				std.error.put_string ("is_code_for_uri_allocated: searching for ")
+				std.error.put_string (a_uri)
+				std.error.put_new_line
+			end	
 			from
 				a_counter := 1
 			variant
@@ -471,11 +477,21 @@ feature -- Status report
 			until
 				a_counter > uris_used or Result = True
 			loop
+				debug ("XPath name pool allocation")
+					std.error.put_string ("looking at ")
+					std.error.put_string (uris.item (a_counter))
+					std.error.put_new_line
+				end	
 				if STRING_.same_string (uris.item (a_counter), a_uri) then
 					Result := True
 				end
 				a_counter := a_counter + 1
 			end
+			debug ("XPath name pool allocation")
+				std.error.put_string ("Found uri? ")
+				std.error.put_string (Result.out)
+				std.error.put_new_line
+			end	
 		end
 
 	is_code_for_prefix_allocated (an_xml_prefix: STRING): BOOLEAN is
@@ -546,6 +562,15 @@ feature -- Status report
 			a_name_entry, next_entry: XM_XPATH_NAME_ENTRY
 			finished: BOOLEAN
 		do
+			debug ("XPath name pool allocation")
+				std.error.put_string ("is_name_code_allocated_using_uricode: searching for prefix ")
+				std.error.put_string (an_xml_prefix)
+				std.error.put_string (", local-name ")
+				std.error.put_string (a_local_name)
+				std.error.put_string (" and uri code ")
+				std.error.put_string (a_uri_code.out)
+				std.error.put_new_line
+			end	
 			if uris.count < a_uri_code + 1 then Result := False
 			elseif is_code_for_prefix_allocated (an_xml_prefix) = False then Result := False
 			else
@@ -586,6 +611,11 @@ feature -- Status report
 					end
 				end
 			end
+			debug ("XPath name pool allocation")
+				std.error.put_string ("is_name_code_allocated_using_uricode: result is ")
+				std.error.put_string (Result.out)
+				std.error.put_new_line
+			end				
 		end
 
 	is_document_allocated (a_doc: XM_XPATH_TINY_DOCUMENT): BOOLEAN is
@@ -810,6 +840,18 @@ feature -- Element change
 					valid_uri_code:  a_uri_code >= 0 and a_uri_code <= 32000
 				end
 			allocate_name_using_uri_code (an_xml_prefix, a_uri_code, a_local_name)
+			debug ("XPath name pool allocation")
+				std.error.put_string ("allocate name: prefix is: ")
+				std.error.put_string (an_xml_prefix)
+				std.error.put_string (", uri: ")
+				std.error.put_string (a_uri)
+				std.error.put_string (", local-name: ")
+				std.error.put_string (a_local_name)				
+				std.error.put_new_line
+				std.error.put_string (" name code is: ")
+				std.error.put_string (last_name_code.out)				
+				std.error.put_new_line				
+			end
 		ensure
 			name_allocated: is_name_code_allocated (an_xml_prefix, a_uri, a_local_name)			
 		end
@@ -895,17 +937,19 @@ feature -- Element change
 				end
 			end
 			last_name_code := (a_prefix_index * bits_20) + (a_depth * bits_10) + a_hash_code
-			debug ("XPath name pool")
+			debug ("XPath name pool allocation")
 				std.error.put_string ("Allocate_name: prefix index is ")
 				std.error.put_string (a_prefix_index.out)
+				std.error.put_string (", local-name is ")
+				std.error.put_string (a_local_name)
+				std.error.put_string (", uri code is ")
+				std.error.put_string (a_uri_code.out)
 				std.error.put_string (", depth is ")
 				std.error.put_string (a_depth.out)
 				std.error.put_string (", hash_code is ")
 				std.error.put_string (a_hash_code.out)
 				std.error.put_string (", equivalent fingerprint is ")
 				std.error.put_string (((a_depth * bits_10) + a_hash_code).out)
-				std.error.put_string (", result is ")
-				std.error.put_string (last_name_code.out)
 				std.error.put_new_line
 			end	
 		ensure

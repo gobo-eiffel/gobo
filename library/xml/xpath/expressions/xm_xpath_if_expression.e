@@ -73,18 +73,6 @@ feature -- Access
 			Result.put (else_expression, 3)
 		end
 
-	iterator (a_context: XM_XPATH_CONTEXT): XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_ITEM] is
-			-- Iterates over the values of a sequence
-		local
-			a_boolean_value: XM_XPATH_BOOLEAN_VALUE
-		do
-			a_boolean_value := condition.effective_boolean_value (a_context)
-			if not a_boolean_value.is_item_in_error and then a_boolean_value.value then
-				Result := then_expression.iterator (a_context)
-			else
-				Result := else_expression.iterator (a_context)
-			end
-		end
 
 feature -- Status report
 
@@ -216,6 +204,19 @@ feature -- Evaluation
 				then_expression.evaluate_item (a_context)
 			else
 				else_expression.evaluate_item (a_context)
+			end
+		end
+
+	iterator (a_context: XM_XPATH_CONTEXT): XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_ITEM] is
+			-- Iterates over the values of a sequence
+		local
+			a_boolean_value: XM_XPATH_BOOLEAN_VALUE
+		do
+			a_boolean_value := condition.effective_boolean_value (a_context)
+			if not a_boolean_value.is_item_in_error and then a_boolean_value.value then
+				Result := then_expression.iterator (a_context)
+			else
+				Result := else_expression.iterator (a_context)
 			end
 		end
 

@@ -52,16 +52,6 @@ feature -- Access
 			expression_tester: Result /= Void  and then Result.equality_tester.is_equal (expression_tester)
 		end
 
-	iterator (a_context: XM_XPATH_CONTEXT): XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_ITEM] is
-			-- An iterator over the values of a sequence
-		require
-			not_in_error: not is_error
-			context_not_void: a_context /= Void
-		deferred
-		ensure
-			iterator_not_void_or_dynamic_error: Result = Void implies is_error and then (last_error.type = Dynamic_error or else last_error.type = Type_error)
-		end
-
 feature -- Comparison
 
 	same_expression (other: XM_XPATH_EXPRESSION): BOOLEAN is
@@ -245,6 +235,16 @@ feature -- Evaluation
 		deferred
 		ensure
 			string_not_void_but_may_be_in_error: last_evaluated_string /= Void
+		end
+
+	iterator (a_context: XM_XPATH_CONTEXT): XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_ITEM] is
+			-- An iterator over the values of a sequence
+		require
+			not_in_error: not is_error
+		deferred
+		ensure
+			iterator_not_void_or_dynamic_error: Result = Void implies is_error and then (last_error.type = Dynamic_error or else last_error.type = Type_error)
+			iterator_before: Result /= Void implies Result.before
 		end
 
 	eagerly_evaluate (a_context: XM_XPATH_CONTEXT) is

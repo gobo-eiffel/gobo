@@ -48,16 +48,33 @@ feature -- Comparison
 		local
 			an_untyped_atomic_value: XM_XPATH_UNTYPED_ATOMIC_VALUE
 			a_string_value, another_string_value: XM_XPATH_STRING_VALUE
+			compared: BOOLEAN
 		do
 			an_untyped_atomic_value ?= an_atomic_value
-			if an_untyped_atomic_value /= void then
+			if an_untyped_atomic_value /= Void then
 				Result := an_untyped_atomic_value.three_way_comparison_using_collator (another_atomic_value, collator)
+				compared := True
 			else
 				an_untyped_atomic_value ?= another_atomic_value
-				if an_untyped_atomic_value /= void then
+				if an_untyped_atomic_value /= Void then
 					Result := - an_untyped_atomic_value.three_way_comparison_using_collator (an_atomic_value, collator)
+					compared := True
+				end
+			end
+			if not compared then
+
+				-- Neither operand is xdt:untypedAtomic
+
+				a_string_value ?= an_atomic_value
+				another_string_value ?= another_atomic_value
+				
+				if a_string_value = Void or else another_string_value = Void then
+					Result := an_atomic_value.three_way_comparison (another_atomic_value)
 				else
-					-- TODO
+
+					-- Both operands are string, so use the collator to do the comparison
+
+					Result := collator.three_way_comparison (an_atomic_value.string_value, another_atomic_value.string_value)
 				end
 			end
 		ensure

@@ -110,8 +110,40 @@ feature -- Status report
 
 	is_convertible (a_required_type: INTEGER): BOOLEAN is
 			-- Is `Current' convertible to `a_required_type'?
+		local
+			a_string: STRING
 		do
-			-- TODO
+			inspect
+				a_required_type
+			when Boolean_type then
+				a_string := trim_white_space (value)
+				if STRING_.same_string (a_string, "0") or else STRING_.same_string (a_string, "false") 
+					or else STRING_.same_string (a_string, "1") or else STRING_.same_string (a_string, "true") then
+					Result := True
+				end
+			when Number_type then
+				a_string := trim_white_space (value)
+				if a_string.index_of ('e', 1) > 0 or else a_string.index_of ('E', 1) > 0 then
+					Result := a_string.is_double
+				elseif  a_string.index_of ('.', 1) > 0 then
+					Result := a_string.is_double -- TODO
+					todo ("is-convertible", True)
+				else
+					Result := a_string.is_integer
+				end
+			when Double_type then
+				Result := a_string.is_double
+			when Integer_type then
+				Result := a_string.is_integer
+			when Decimal_type then
+				Result := a_string.is_double	-- TODO
+				todo ("is-convertible", True)
+			when Untyped_atomic_type, String_type, Atomic_type, Any_item then
+				Result := True
+			else
+				Result := False -- TODO Any_uri, qname, dtd type, dates and times
+				todo ("is-convertible", True)
+			end
 		end
 
 feature -- Evaluation
@@ -128,6 +160,7 @@ feature -- Conversion
 			-- Convert `Current' to `a_required_type'
 		do
 			-- TODO
+			todo ("convert-to-type" ,False)
 		end
 
 feature {NONE} -- Implementation

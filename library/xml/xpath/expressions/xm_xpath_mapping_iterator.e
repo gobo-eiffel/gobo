@@ -16,6 +16,7 @@ inherit
 
 	XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_ITEM]
 
+	KL_SHARED_STANDARD_FILES
 
 		-- This class is not used where the filter is a constant number.
 		-- Instead, use XM_XPATH_POSITION_FILTER, as this class does not
@@ -38,13 +39,11 @@ feature {NONE} -- Initialization
 			mapping_function := a_mapping_function
 			context := a_context
 			information_object := an_information_object
-			pending := True
 		ensure
 			base_set: base_iterator = a_base_iterator
 			mapping_function_set: mapping_function = a_mapping_function
 			context_set: context = a_context
 			information_object_set: information_object = an_information_object
-			pending: pending
 		end
 
 feature -- Access
@@ -57,11 +56,7 @@ feature -- Status report
 	after: BOOLEAN is
 			-- Are there any more items in the sequence?
 		do
-			if pending then
-				advance
-				pending := False
-			end
-			Result := item /= Void
+			Result := not before and then item = Void
 		end
 
 feature -- Cursor movement
@@ -70,7 +65,7 @@ feature -- Cursor movement
 			-- Move to next position
 		do
 			index := index + 1
-			pending := True
+			advance
 		end
 
 feature -- Duplication
@@ -107,9 +102,6 @@ feature {NONE} -- Implementation
 	information_object: ANY
 			-- Optional object to be passed to `mapping_function' whenever it is called
 
-	pending: BOOLEAN
-			-- Must `advance' be called?
-
 	advance is
 			-- Move to the next matching node
 		local
@@ -122,8 +114,12 @@ feature {NONE} -- Implementation
 				finished
 			loop
 				if results /= Void then
-					if not results.after then
+					if results.before then
+						results.start
+					elseif not results.after then
 						results.forth
+					end
+					if not results.after then
 						item := results.item
 						finished := True
 					else
@@ -134,8 +130,12 @@ feature {NONE} -- Implementation
 						check
 							no_results_yet: results = Void
 						end
-					if not base_iterator.after then
+					if base_iterator.before then
+						base_iterator.start
+					elseif not base_iterator.after then
 						base_iterator.forth
+					end
+					if not base_iterator.after then
 						next_source := base_iterator.item
 
 						-- Call the supplied mapping function
@@ -149,8 +149,12 @@ feature {NONE} -- Implementation
 								item := a_mapped_item.item
 							else
 								results := a_mapped_item.sequence
-								if not results.after then
+								if results.before then
+									results.start
+								elseif not results.after then
 									results.forth
+								end
+								if not results.after then
 									item := results.item
 									finished := True
 								end
@@ -164,6 +168,16 @@ feature {NONE} -- Implementation
 						item := Void
 						finished := True
 					end
+				end
+			end
+			debug ("XPath mapping iterator")
+				std.error.put_string ("Advance: generating class of base iterator is ")
+				std.error.put_string (base_iterator.generating_type); std.error.put_new_line
+				std.error.put_string ("Item value is ")
+				if item = void then
+					std.error.put_string ("Void%N")
+				else
+					std.error.put_string (item.string_value); std.error.put_new_line
 				end
 			end
 		end

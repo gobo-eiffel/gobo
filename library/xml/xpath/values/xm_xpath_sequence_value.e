@@ -87,6 +87,7 @@ feature -- Evaluation
 			-- Effective boolean value
 		do
 			-- TODO
+			todo ("effective-boolean-value" ,False)
 		end
 
 	evaluate_item (a_context: XM_XPATH_CONTEXT) is

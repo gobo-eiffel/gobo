@@ -55,18 +55,6 @@ feature -- Access
 				Result := action.item_type
 		end
 
-	iterator (a_context: XM_XPATH_CONTEXT): XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_ITEM] is
-			-- Iterator over the values of a sequence
-		local
-			a_value: XM_XPATH_VALUE
-		do
-			sequence.lazily_evaluate (a_context)
-			a_value ?= sequence.last_evaluation
-			
-			a_context.set_local_variable (slot_number, a_value)
-			Result := action.iterator (a_context)
-		end
-
 	required_type: XM_XPATH_SEQUENCE_TYPE is
 			-- Static type of variable
 		do
@@ -205,6 +193,18 @@ feature -- Evaluation
 			a_context.set_local_variable (slot_number, a_value)
 			action.evaluate_item (a_context)
 		end
+
+	iterator (a_context: XM_XPATH_CONTEXT): XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_ITEM] is
+			-- Iterator over the values of a sequence
+		local
+			a_value: XM_XPATH_VALUE
+		do
+			sequence.lazily_evaluate (a_context)
+			a_value ?= sequence.last_evaluation
+			
+			a_context.set_local_variable (slot_number, a_value)
+			Result := action.iterator (a_context)
+			end
 
 feature {XM_XPATH_EXPRESSION} -- Restricted
 

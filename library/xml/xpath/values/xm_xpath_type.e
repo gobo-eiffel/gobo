@@ -444,7 +444,7 @@ feature -- Status report
 		do
 			if is_sub_type (a_source_type, Decimal_type) then
 				Result := a_target_type = Float_type or else a_target_type = Double_type
-			elseif is_sub_type (a_source_type, Float_type) then
+			elseif not conformance.basic_xslt_processor and then is_sub_type (a_source_type, Float_type) then
 				Result := a_target_type = Double_type
 			end
 		end

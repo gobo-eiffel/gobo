@@ -35,20 +35,10 @@ feature {NONE} -- Initialization
 			node_test := a_node_test
 			next_node_number := a_starting_node.node_number
 			parent_node := starting_node.parent
-			advance
 		ensure
 			document_set: document = a_document
 			starting_node_set: starting_node = a_starting_node
 			test_set: node_test = a_node_test
-		end
-
-feature -- Status report
-
-	
-	after: BOOLEAN is
-			-- Are there any more items in the sequence?
-		do
-			Result := next_node_number <= 0
 		end
 
 feature -- Cursor movement
@@ -57,9 +47,13 @@ feature -- Cursor movement
 			-- Move to next position
 		do
 			index := index + 1
-			current_item := document.retrieve_node (next_node_number)
-			current_item.set_parent_node (parent_node) -- caching the parent node, so a future search need not be done
 			advance
+			if document.is_node_number_valid (next_node_number) then
+				current_item := document.retrieve_node (next_node_number)
+				current_item.set_parent_node (parent_node) -- caching the parent node, so a future search need not be done
+			else
+				current_item := Void
+			end
 		end
 
 feature -- Duplication

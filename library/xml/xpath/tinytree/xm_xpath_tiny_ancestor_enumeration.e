@@ -52,11 +52,11 @@ feature {NONE} -- Initialization
 feature -- Status report
 
 	
-	after: BOOLEAN is
-			-- Are there any more items in the sequence?
-		do
-			Result := first_node = Void and then next_node = Void
-		end
+--	after: BOOLEAN is
+--			-- Are there any more items in the sequence?
+--		do
+--			Result := first_node = Void and then next_node = Void
+--		end
 
 feature -- Cursor movement
 

@@ -39,13 +39,6 @@ feature -- Access
 			-- TODO
 			todo ("item-type", False)
 		end
-
-	map (an_item: XM_XPATH_ITEM; a_context: XM_XPATH_CONTEXT; an_information_object: ANY): XM_XPATH_MAPPED_ITEM is
-			-- Map `an_item' to a sequence
-		do
-			-- TODO
-			todo ("map", False)
-		end
 	
 feature -- Status report
 
@@ -70,6 +63,14 @@ feature -- Optimization
 			todo ("analyze", False)
 		end
 
+feature -- Evaluation
+
+	map (an_item: XM_XPATH_ITEM; a_context: XM_XPATH_CONTEXT; an_information_object: ANY): XM_XPATH_MAPPED_ITEM is
+			-- Map `an_item' to a sequence
+		do
+			-- TODO
+			todo ("map", False)
+		end
 feature {NONE} -- Implementation
 	
 	compute_cardinality is
