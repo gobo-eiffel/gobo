@@ -133,7 +133,7 @@ feature {XM_XPATH_ASSIGNATION} -- Local
 
 invariant
 
-	valid_operator: operator = For_token or Operator = Some_token or operator = Every_token
+	valid_operator: operator = For_token or operator = Some_token or operator = Every_token
 	sequence_not_void: sequence /= Void
 	action_not_void: action /= Void
 	declaration_not_void_until_analysis: not analyzed implies declaration /= Void

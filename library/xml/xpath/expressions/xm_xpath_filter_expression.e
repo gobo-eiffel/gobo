@@ -413,7 +413,7 @@ feature -- Optimization
 								-- promote them: this causes them to be evaluated once, outside the filter
 								-- expression.
 
-								create an_offer.make (Focus_independent, Void, a_result_expression, False, a_result_expression.base_expression.Context_document_nodeset)
+								create an_offer.make (Focus_independent, Void, a_result_expression, False, a_result_expression.base_expression.context_document_nodeset)
 								a_result_expression.set_filter (a_result_expression.filter.promote (an_offer))
 								a_let_expression ?= an_offer.containing_expression
 								if a_let_expression /= Void then

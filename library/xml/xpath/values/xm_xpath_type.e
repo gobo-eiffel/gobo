@@ -49,7 +49,7 @@ feature -- Initialization
 				define_builtin_type (Untyped_type, "xdt:untyped")
 				define_builtin_type (Atomic_type, "xdt:anyAtomicType")
 				define_builtin_type (Year_month_duration_type, "xdt:yearMonthDuration")
-				define_builtin_type (Day_Time_duration_type, "xdt:dayTimeDuration")
+				define_builtin_type (Day_time_duration_type, "xdt:dayTimeDuration")
 
 				define_builtin_type (String_type, "xs:string")
 				define_builtin_type (Boolean_type, "xs:boolean")
@@ -503,7 +503,7 @@ feature -- XPath types
 	Year_month_duration_type: INTEGER is 240
 			-- xdt:yearMonthDuration
 
-	Day_Time_duration_type: INTEGER is 241
+	Day_time_duration_type: INTEGER is 241
 			-- xdt:dayTimeDuration
 	
 feature -- XML Schema (part 2) types

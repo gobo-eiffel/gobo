@@ -595,7 +595,7 @@ feature {NONE} -- Implementation
 
 			-- process the action ("return"/"satisfies" expression)
 
-			if an_operator = For_Token then
+			if an_operator = For_token then
 				if tokenizer.last_token /= Return_token then
 					a_message := "expected %"return%", found "
 					a_message := STRING_.appended_string (a_message, display_current_token)
@@ -1772,7 +1772,7 @@ feature {NONE} -- Implementation
 					a_message := STRING_.appended_string (a_message, "%' must be empty")
 					report_parse_error (a_message)
 					
-				when processing_instruction_node then
+				when Processing_instruction_node then
 					if tokenizer.last_token = String_literal_token or else tokenizer.last_token = Name_token then
 						if not is_ncname (tokenizer.last_token_value) then
 							report_parse_error ("Processing instruction name must not contain a colon")

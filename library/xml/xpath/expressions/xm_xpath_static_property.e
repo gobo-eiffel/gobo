@@ -90,7 +90,7 @@ feature -- Dependencies
 		require
 			dependencies_computed: are_dependencies_computed
 		do
-			Result := Depends_upon_current_item or else Depends_upon_current_group
+			Result := depends_upon_current_item or else depends_upon_current_group
 		end
 
 	depends_upon_focus: BOOLEAN is
@@ -98,10 +98,10 @@ feature -- Dependencies
 		require
 			dependencies_computed: are_dependencies_computed
 		do
-			Result := Depends_upon_context_item
-				or else Depends_upon_position
-				or else Depends_upon_last
-				or else Depends_upon_context_document
+			Result := depends_upon_context_item
+				or else depends_upon_position
+				or else depends_upon_last
+				or else depends_upon_context_document
 		end
 
 	depends_upon_non_document_focus: BOOLEAN is
@@ -109,9 +109,9 @@ feature -- Dependencies
 		require
 			dependencies_computed: are_dependencies_computed
 		do
-			Result := Depends_upon_context_item
-				or else Depends_upon_position
-				or else Depends_upon_last
+			Result := depends_upon_context_item
+				or else depends_upon_position
+				or else depends_upon_last
 		end
 
 feature -- Setting dependencies

@@ -263,7 +263,7 @@ feature --Element change
 						when Colon_star_token then
 							if not is_lexical_error then
 								look_ahead
-								current_token := prefix_token
+								current_token := Prefix_token
 							end
 							
 						when Dollar_token then

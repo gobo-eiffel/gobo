@@ -129,7 +129,7 @@ feature -- Status setting
 			create dependencies.make (1, 6)
 
 			dependencies := start.dependencies
-			if step.Depends_upon_xslt_context then
+			if step.depends_upon_xslt_context then
 				dependencies.put (True, 1)
 				dependencies.put (True, 6)
 			end
@@ -170,12 +170,12 @@ feature -- Optimization
 						
 						a_context_item ?= a_result_expression.start
 						a_step_path ?= a_result_expression.step
-						if a_context_item /= Void and then a_step_path /= Void and then a_step_path.Ordered_nodeset then
+						if a_context_item /= Void and then a_step_path /= Void and then a_step_path.ordered_nodeset then
 							a_result_expression := a_step_path
 						else
 							a_context_item ?= a_result_expression.step
 							a_start_path ?= a_result_expression.start
-							if a_context_item /= Void and then a_start_path /= Void and then a_start_path.Ordered_nodeset then
+							if a_context_item /= Void and then a_start_path /= Void and then a_start_path.ordered_nodeset then
 								a_result_expression := a_start_path
 							else
 								
@@ -265,7 +265,7 @@ feature -- Optimization
 									-- If any subexpressions within the step are not dependent on the focus, promote them:
 									-- this causes them to be evaluated once, outside the path  expression.
 
-									create an_offer.make (Focus_independent, Void, a_result_expression, False, a_result_expression.start.Context_document_nodeset)
+									create an_offer.make (Focus_independent, Void, a_result_expression, False, a_result_expression.start.context_document_nodeset)
 									an_expression := a_result_expression.step.promote (an_offer)
 									a_result_expression.set_step (an_expression)
 									a_let_expression ?= an_offer.containing_expression
@@ -284,9 +284,9 @@ feature -- Optimization
 										if not is_static_type_error then
 											a_path ?= an_offer.containing_expression
 											if a_path = Void then
-												if a_path.Ordered_nodeset then
+												if a_path.ordered_nodeset then
 													Result := a_path
-												elseif a_path.Reverse_document_order then
+												elseif a_path.reverse_document_order then
 													create {XM_XPATH_REVERSER} Result.make (a_path)
 												else
 													create {XM_XPATH_DOCUMENT_SORTER} Result.make (a_path)
@@ -582,7 +582,7 @@ feature {NONE} -- Implementation
 			start_special_properties_computed: start.are_special_properties_computed
 			step_special_properties_computed: step.are_special_properties_computed
 		do
-			if start.Ordered_nodeset and then step.Ordered_nodeset then
+			if start.ordered_nodeset and then step.ordered_nodeset then
 
 				-- We know now that both the start and the step are sorted. But this does
 				-- not necessarily mean that the combination is sorted
@@ -590,7 +590,7 @@ feature {NONE} -- Implementation
 				-- The result is sorted if the start is sorted and the step selects attributes
 				-- or namespaces
 					
-				if step.Attribute_ns_nodeset then
+				if step.attribute_ns_nodeset then
 					Result := True
 				else
 

@@ -61,7 +61,7 @@ feature -- Access
 			--  return singleton values: for non-singleton expressions, the subclass must
 			--  provide its own implementation.
 				check
-					singleton_expression: not Cardinality_allows_many
+					singleton_expression: not cardinality_allows_many
 					-- Not a prefect check, as cardinality may not have been set!
 				end
 			an_item := evaluate_item (a_context)
@@ -248,7 +248,7 @@ feature -- Evaluation
 			an_iterator: XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_ITEM]
 		do
 				check
-					singleton_expression: not Cardinality_allows_many
+					singleton_expression: not cardinality_allows_many
 				end
 			an_iterator := iterator (a_context)
 			if an_iterator.after then
