@@ -54,6 +54,10 @@ feature {NONE} -- Initialization
 			precursor (a_project, a_xml_element)
 
 				-- name:
+			if not a_xml_element.has_attribute_by_name (Name_attribute_name) then
+				exit_application (1, <<"Element 'target' without attribute 'name' found.",
+					" Make sure each target has an associated attribute 'name'.">>)
+			end
 			set_name (xml_element.attribute_by_name (Name_attribute_name).value)
 				-- obsolete:
 			a_obsolete_element := a_xml_element.element_by_name (Obsolete_element_name)
