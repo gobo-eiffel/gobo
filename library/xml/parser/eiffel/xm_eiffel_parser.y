@@ -171,12 +171,12 @@ tagname_first: TAG_NAME_FIRST { $$ := onstring_ascii ($1) }
 tagname_atom: TAG_NAME_ATOM { $$ := onstring_ascii ($1) }
 	| TAG_NAME_ATOM_UTF8 { $$ := onstring_utf8 ($1) }
 	;
-	
+
 nm_token: doctype_name { $$ := $1 }
 	| NMTOKEN { $$ := onstring_ascii ($1) }
 	| NMTOKEN_UTF8 { $$ := onstring_utf8 ($1) }
 	;
-	
+
 name_token: NAME { $$ := onstring_ascii ($1) }
 	| NAME_UTF8 { $$ := onstring_utf8 ($1) }
 	;
@@ -184,11 +184,11 @@ name_token: NAME { $$ := onstring_ascii ($1) }
 pi_target_token: PI_TARGET { $$ := onstring_ascii ($1) }
 	| PI_TARGET_UTF8 { $$ := onstring_utf8 ($1) }
 	;
-	
+
 doctype_pe_reference: DOCTYPE_PEREFERENCE { $$ := onstring_ascii ($1) }
 	| DOCTYPE_PEREFERENCE_UTF8 { $$ := onstring_utf8 ($1) }
 	;
-	
+
 entityvalue_pe_reference: ENTITYVALUE_PEREFERENCE { $$ := onstring_ascii ($1) }
 	| ENTITYVALUE_PEREFERENCE_UTF8 { $$ := onstring_utf8 ($1) }
 	;
@@ -196,7 +196,7 @@ entityvalue_pe_reference: ENTITYVALUE_PEREFERENCE { $$ := onstring_ascii ($1) }
 doctype_system_token: DOCTYPE_SYSTEM { $$ := onstring_ascii ($1) }
 	| DOCTYPE_SYSTEM_UTF8 { $$ := onstring_utf8 ($1) }
 	;
-	
+
 -- Within the DTD name = keywords + ordinary words
 -- This is not handled within the scanner because the position 
 -- of a word determines whether it is a keyword or not.
@@ -343,14 +343,14 @@ cdata_body: char_data
 -- 2.8 Prolog and DTD
 
 prolog: xml_decl_misc doctype_decl_misc
-		{			
+		{
 			if scanner.is_valid_encoding ($1.encoding) then
 				scanner.set_encoding ($1.encoding)
 			else
 				force_error (Error_unsupported_encoding)
 			end
 			$1.process (Current) -- event
- 		}
+		}
 	;
 
 xml_decl_misc: misc_maybe
@@ -374,7 +374,7 @@ misc_trail: misc
 	| misc_trail misc
 	;
 
-xml_decl:XMLDECLARATION_START version_info xml_decl_opt XMLDECLARATION_END
+xml_decl: XMLDECLARATION_START version_info xml_decl_opt XMLDECLARATION_END
 		{ 
 			$3.set_version ($2)
 			$$ := $3
@@ -422,14 +422,14 @@ doctype_decl_internal: DOCTYPE_START req_space doctype_name maybe_space doctype_
 	;
 
 doctype_decl_external: DOCTYPE_START req_space doctype_name req_space external_id maybe_space doctype_decl_declaration DOCTYPE_END
-	 {
-		on_doctype ($3, $5, False)
-		debug ("xml_parser")
-			std.error.put_string ("[dtd: in]")
-		end
-		in_external_dtd := True
-		when_external_dtd ($5) 
-	}
+		{
+			on_doctype ($3, $5, False)
+			debug ("xml_parser")
+				std.error.put_string ("[dtd: in]")
+			end
+			in_external_dtd := True
+			when_external_dtd ($5) 
+		}
 	;
 
 -- External DTD
@@ -908,6 +908,12 @@ public_id: DOCTYPE_PUBLIC
 feature -- Parsing
 
 	parse is
+			-- (NOTE: THIS IS THE COPY/PASTE VERSION OF THE CODE IN
+			-- THE YY_PARSER_SKELETON CLASS, FOR OPTIMISATION WITH
+			-- ISE EIFFEL (ALLOW INLINING NOT POSSIBLE IN
+			-- YY_PARSER_SKELETON).)
+
+			-- SOME INLINING HERE WHICH WAS NOT POSSIBLE IN THE
 			-- Parse input stream.
 			-- Set `syntax_error' to True if
 			-- parsing has not been successful.

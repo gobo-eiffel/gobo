@@ -120,9 +120,9 @@ NOQUOTSYSLITCHAR [\r\n\t\x20-!#-\x7F]
 %%
 
 -- Useless rule for avoiding SmallEiffel empty-when bug.
--- obsolete Gobo 2.0 and new smalleiffel
+-- obsolete Gobo 2.0 and new SmallEiffel
 --<*><<EOF>> { terminate }
-	
+
 -- Comment
 
 <initial,doctype>
@@ -792,7 +792,7 @@ NOQUOTSYSLITCHAR [\r\n\t\x20-!#-\x7F]
 		}
 		{SPACECHAR} {
 			set_last_token (CHARDATA)
-			last_value := text			
+			last_value := text
 		}
 		({ENTITYCHAR})+ {
 			set_last_token (CHARDATA)
@@ -801,7 +801,7 @@ NOQUOTSYSLITCHAR [\r\n\t\x20-!#-\x7F]
 		({ENTITYCHAR}|{UTF8CHAR})+ {
 			set_last_token (CHARDATA_UTF8)
 			last_value := text
-		}		
+		}
 	}
 
 <attribute_value_single, entity_value_single>
@@ -884,6 +884,11 @@ NOQUOTSYSLITCHAR [\r\n\t\x20-!#-\x7F]
 feature -- Scanning
 
 	read_token is
+			-- (NOTE: THIS IS THE COPY/PASTE VERSION OF THE CODE IN
+			-- THE YY_COMPRESSED_SCANNER_SKELETON CLASS, FOR OPTIMISATION
+			-- WITH ISE EIFFEL (ALLOW INLINING NOT POSSIBLE IN
+			-- YY_COMPRESSED_SCANNER_SKELETON).)
+
 			-- Read a token from `input_buffer'.
 			-- Make result available in `last_token'.
 		local

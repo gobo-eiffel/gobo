@@ -78,7 +78,7 @@ feature -- Encoding
 					or lower_encoding.is_equal (Encoding_utf_16)
 			end
 		end
-		
+
 	is_applicable_encoding (an_encoding: STRING): BOOLEAN is
 			-- Can the current encoding be switched to `an_encoding'?
 		require
@@ -90,8 +90,9 @@ feature -- Encoding
 				Result := True
 			else
 				lower_encoding := STRING_.as_lower (an_encoding)
-				if lower_encoding.is_equal (Encoding_latin_1) 
-					or lower_encoding.is_equal (Encoding_us_ascii)
+				if
+					lower_encoding.is_equal (Encoding_latin_1) or
+					lower_encoding.is_equal (Encoding_us_ascii)
 				then
 					Result := encoding = Utf_8_or_compatible 
 						or encoding = Utf_8 or encoding = Latin_1
@@ -103,7 +104,7 @@ feature -- Encoding
 				end
 			end
 		end
-		
+
 	set_encoding (an_encoding: STRING) is
 			-- Set encoding.
 		require
@@ -111,9 +112,9 @@ feature -- Encoding
 			applicable_encoding: is_applicable_encoding (an_encoding)
 		do
 			debug ("xml_input_stream")
-				io.put_string ("set_encoding to ")
-				io.put_string (an_encoding)
-				io.put_new_line
+				std.output.put_string ("set_encoding to ")
+				std.output.put_string (an_encoding)
+				std.output.put_new_line
 			end 
 			if STRING_.as_lower (an_encoding).is_equal (Encoding_latin_1) then
 				encoding := Latin_1
@@ -131,42 +132,42 @@ feature {NONE} -- Encodings
 	Encoding_latin_1: STRING is "iso-8859-1" 
 	Encoding_utf_8: STRING is "utf-8"
 	Encoding_utf_16: STRING is "utf-16"
-		
+
 feature -- Input
 
 	read_character is
 			-- Read the next item in input stream.
 			-- Make the result available in `last_character'.
 		do
-			-- see 'last_character': it chooses from impl or the queue
-			
+				-- See 'last_character': it chooses from impl or the queue.
+
 			if encoding = Undetected then
 				utf16_detect_read_character
-				
-				-- If detection has not put back read character in queue, 
-				-- read from upstream, which may be empty if the stream 
-				-- contains only the byte order character.
+
+					-- If detection has not put back read character in queue, 
+					-- read from upstream, which may be empty if the stream 
+					-- contains only the byte order character.
 				if utf_queue.count = 0 and not impl.end_of_input then
 					noqueue_read_character
 				end
 			else
 				if utf_queue.count > 0 then
-					-- Last character was read from queue, remove it.
+						-- Last character was read from queue, remove it.
 					utf_queue.remove
-					-- Next character may or may not be from queue.
+						-- Next character may or may not be from queue.
 					if utf_queue.count = 0 and not impl.end_of_input then
 						noqueue_read_character
 					end
 				else
-					-- Straightforward case.
+						-- Straightforward case.
 					noqueue_read_character
 				end
 			end
 
 			debug ("xml_input_stream")
 				if not end_of_input then
-					io.put_string ("read_character: "+last_character.code.out+" "+last_character.out)
-					io.put_new_line
+					std.output.put_string ("read_character: " + last_character.code.out + " " + last_character.out)
+					std.output.put_new_line
 				end
 			end 
 		end
@@ -178,12 +179,12 @@ feature -- Input
 		local
 			i: INTEGER
 		do
-			-- naive implementation.
-			-- When the file is not UTF16 we could use
-			-- impl.read_string; last_string := impl.last_string but 
-			-- that would break the fact that `last_string' must 
-			-- remain the same object. It would also require 
-			-- to duplicate some of the detection handling.
+				-- Naive implementation.
+				-- When the file is not UTF16 we could use
+				-- impl.read_string; last_string := impl.last_string but 
+				-- that would break the fact that `last_string' must 
+				-- remain the same object. It would also require 
+				-- to duplicate some of the detection handling.
 			from
 				last_string.wipe_out
 				read_character
@@ -203,10 +204,10 @@ feature -- Input
 			-- Return the number of characters actually read.
 		do
 			if encoding = Undetected or encoding = Utf_8_or_compatible or else utf_queue.count > 0 then
-				-- read one by one, 
-				-- if Undetected because detection operates on the first few characters,
-				-- if Utf_8_or_compatible because the actual encoding may be set soon 
-				-- and we should not read too much with the wrong encoding.
+					-- Read one by one, 
+					-- if Undetected because detection operates on the first few characters,
+					-- if Utf_8_or_compatible because the actual encoding may be set soon 
+					-- and we should not read too much with the wrong encoding.
 				read_character
 				if not end_of_input then
 					a_string.put (last_character, pos)
@@ -220,8 +221,8 @@ feature -- Input
 				Result := Precursor (a_string, pos, nb)
 			end
 			debug ("xml_input_stream")
-				io.put_string ("read_to_string: "+Result.out+" chars read")
-				io.put_new_line
+				std.output.put_string ("read_to_string: " + Result.out + " chars read")
+				std.output.put_new_line
 			end 
 		end
 
@@ -293,7 +294,7 @@ feature {NONE} -- Input
 
 	noqueue_read_character is
 			-- Read character after detection and when detection queue has 
-			-- been flushed..
+			-- been flushed.
 		require
 			open_read: is_open_read
 			not_end: not end_of_input
@@ -309,9 +310,9 @@ feature {NONE} -- Input
 					utf_16: encoding = Utf16_msb_first or encoding = Utf16_msb_last
 				end
 				utf16_read_character
-			end	
+			end
 		end
-		
+
 feature {NONE} -- UTF16 implementation
 
 	utf16_detect_read_character is
@@ -367,9 +368,9 @@ feature {NONE} -- UTF16 implementation
 			a_most, a_least: INTEGER
 			a_high_surrogate: INTEGER
 		do
-			-- warning: error conditions not handled on premature end of input,
-			-- partial characters do not produce output
-			
+				-- Warning: error conditions not handled on premature end of input,
+				-- partial characters do not produce output
+
 			impl.read_character
 			if not impl.end_of_input then
 				first_char := impl.last_character
@@ -379,14 +380,14 @@ feature {NONE} -- UTF16 implementation
 					a_most := most_significant (first_char, second_char)
 					a_least := least_significant (first_char, second_char)
 
-					-- UTF16 surrogate?
+						-- UTF16 surrogate?
 					if utf16.is_surrogate (a_most) then
-						-- the character is in the surrogate range
+							-- The character is in the surrogate range.
 						if utf16.is_high_surrogate (a_most) then
-							-- first value of a surrogate pair
+								-- First value of a surrogate pair.
 							a_high_surrogate := utf16.least_10_bits (a_most, a_least)
-							
-							-- now get second part of surrogate pair
+
+								-- Now get second part of surrogate pair.
 							impl.read_character
 							if not impl.end_of_input then
 								first_char := impl.last_character
@@ -398,23 +399,23 @@ feature {NONE} -- UTF16 implementation
 									if utf16.is_low_surrogate (a_most) then
 										append_character (utf16.surrogate (a_high_surrogate, utf16.least_10_bits (a_most, a_least)))
 									else
-										-- error condition: unexpected second byte of a 
-										-- surrogate pair
+										-- Error condition: unexpected second byte of a 
+										-- surrogate pair.
 									end
 								end
 							end
 						else
-							-- error condition: unexpected second byte of a 
+							-- Error condition: unexpected second byte of a 
 							-- surrogate pair.
 						end
 					else
-						-- ordinary UTF16 character.
+							-- Ordinary UTF16 character.
 						append_character (a_most * 256 + a_least)
 					end
 				end
 			end
 		end
-		
+
 feature {NONE} -- Latin-1 implementation
 
 	latin1_read_character is
@@ -430,7 +431,7 @@ feature {NONE} -- Latin-1 implementation
 				end
 			end
 		end
-		
+
 feature {NONE} -- Implementation
 
 	append_character (a_char: INTEGER) is
@@ -443,11 +444,11 @@ feature {NONE} -- Implementation
 			a_buffer: STRING
 		do
 			debug ("xml_parser")
-				std.error.put_string ("[")
+				std.error.put_character ('[')
 				std.error.put_string (a_char.out)
-				std.error.put_string ("]")
+				std.error.put_character (']')
 			end
-				-- Convert to UTF8
+				-- Convert to UTF8.
 			a_buffer := utf8_buffer
 			STRING_.wipe_out (a_buffer)
 			utf8.append_code_to_utf8 (a_buffer, a_char)
@@ -461,7 +462,7 @@ feature {NONE} -- Implementation
 feature {NONE} -- Implementation
 
 	most_significant (first, second: CHARACTER): INTEGER is
-			-- Most significant byte from incoming bytes.
+			-- Most significant byte from incoming bytes
 		do
 			if encoding = Utf16_msb_first then
 				Result := first.code
@@ -474,7 +475,7 @@ feature {NONE} -- Implementation
 		end
 
 	least_significant (first, second: CHARACTER): INTEGER is
-			-- Least significant byte from incoming bytes.
+			-- Least significant byte from incoming bytes
 		do
 			if encoding = Utf16_msb_first then
 				Result := second.code
@@ -504,5 +505,5 @@ invariant
 	last_string: last_string /= Void
 	impl_not_void: impl /= Void
 	queue_not_void: utf_queue /= Void
-	
+
 end

@@ -78,7 +78,7 @@ feature -- Input
 			input_stream := a_stream
 
 			create input_filter.make_from_stream (a_stream)
-			set_input_buffer (new_file_buffer (input_filter))			
+			set_input_buffer (new_file_buffer (input_filter))
 		end
 
 	close_input is
@@ -90,15 +90,15 @@ feature -- Input
 				end
 			end
 		end
-		
+
 feature {NONE} -- Input
 
 	input_stream: KI_CHARACTER_INPUT_STREAM
-			-- Saved stream for closing on end of stream.
-			 
+			-- Saved stream for closing on end of stream
+
 	input_filter: XM_EIFFEL_INPUT_STREAM
-			-- Saved filter for encoding changes. 
-			 
+			-- Saved filter for encoding changes
+
 feature -- Encoding
 
 	is_valid_encoding (an_encoding: STRING): BOOLEAN is
@@ -107,7 +107,7 @@ feature -- Encoding
 			check filter_set: input_filter /= Void end
 			Result := input_filter.is_valid_encoding (an_encoding)
 		end
-		
+
 	set_encoding (an_encoding: STRING) is
 			-- Set encoding.
 		require
@@ -123,7 +123,7 @@ feature {NONE} -- Encodings
 	Encoding_latin_1: STRING is "iso-8859-1" 
 	Encoding_utf_8: STRING is "utf-8"
 	Encoding_utf_16: STRING is "utf-16"
-	
+
 feature -- Error reporting
 
 	has_error: BOOLEAN is
