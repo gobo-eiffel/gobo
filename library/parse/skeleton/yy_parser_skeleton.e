@@ -358,6 +358,117 @@ feature {YY_PARSER_ACTION} -- Status report
 			Result := yyerrstatus /= 0
 		end
 
+	is_expected_token (a_token: INTEGER): BOOLEAN is
+			-- Is `a_token' a possible input at this
+			-- stage of parsing? (This routine can be
+			-- called from `report_error' in order to
+			-- find out what were the expected tokens
+			-- when the error occurred.)
+		require
+			a_token_positive: a_token >= 0
+		local
+			yystate: INTEGER
+			yyn: INTEGER
+			yychar1: INTEGER
+		do
+			if yyssp >= 0 then
+				yystate := yyss.item (yyssp)
+				yyn := yypact.item (yystate)
+				if yyn = yyFlag then
+						-- Do the default action for the current state.
+					yyn := yydefact.item (yystate)
+					if yyn /= 0 then
+							-- Reduce.
+						Result := True
+					else
+							-- Error.
+						-- Result := False
+					end
+				else
+					if a_token = yyEof then
+						yychar1 := 0
+					else
+						yychar1 := yy_translate (a_token)
+						yyn := yyn + yychar1
+					end
+					if
+						(yyn < 0 or yyn > yyLast) or else
+						yycheck.item (yyn) /= yychar1
+					then
+							-- Do the default action for the current state.
+						yyn := yydefact.item (yystate)
+						if yyn /= 0 then
+								-- Reduce.
+							Result := True
+						else
+								-- Error.
+							-- Result := False
+						end
+					else
+						yyn := yytable.item (yyn)
+							-- `yyn' is what to do for this token type in
+							-- this state:
+							-- Negative => reduce, -`yyn' is rule number.
+							-- Positive => shift, `yyn' is new state.
+							-- New state is final state => don't bother to
+							--		shift, just return success.
+							-- 0, or most negative number => error.
+						if yyn < 0 then
+							if yyn /= yyFlag then
+									-- Reduce.
+								Result := True
+							else
+									-- Error.
+								-- Result := False
+							end
+						elseif yyn = yyFinal then
+								-- Accept.
+							Result := True
+						elseif yyn /= 0 then
+								-- Shift.
+							Result := True
+						else
+								-- Error.
+							-- Result := False
+						end
+					end
+				end
+			else
+					-- Unknown state.
+				-- Result := False
+			end
+		end
+
+feature {YY_PARSER_ACTION} -- Access
+
+	expected_tokens: ARRAY [INTEGER] is
+			-- List of token codes that are a possible input
+			-- at this stage of parsing. (This routine can be
+			-- called from `report_error' in order to build a
+			-- meaningful error message.)
+		local
+			i, nb: INTEGER
+			t: ARRAY [INTEGER]
+			j: INTEGER
+		do
+			nb := yyMax_token
+			!! t.make (1, nb + 1)
+			from until i > nb loop
+				if is_expected_token (i) then
+					j := j + 1
+					t.put (i, j)
+				end
+				i := i + 1
+			end
+			!! Result.make (1, j)
+			from i := 1 until i > j loop
+				Result.put (t.item (i), i)
+				i := i + 1
+			end
+		ensure
+			expected_tokens_not_void: Result /= Void
+		end
+
 feature {YY_PARSER_ACTION} -- Element change
 
 	accept is
