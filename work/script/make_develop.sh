@@ -42,6 +42,9 @@ make depend spec
 echo ''; echo "#### Generate files in \$GOBO/library/test/generation"
 cd $GOBO/library/test/generation
 make parser scanner
+echo ''; echo "#### Generate files in \$GOBO/library/time"
+cd $GOBO/library/time
+make depend spec
 echo ''; echo "#### Generate files in \$GOBO/library/tools/parser"
 cd $GOBO/library/tools/parser
 make parser scanner
@@ -102,6 +105,9 @@ echo ''; echo "#### Generate files in \$GOBO/example/parse/rpcalc"
 cd $GOBO/example/parse/rpcalc
 make depend ise.ace hact.ace
 make parser
+echo ''; echo "#### Generate files in \$GOBO/example/time/system_clock"
+cd $GOBO/example/time/system_clock
+make depend ise.ace hact.ace
 
 # Generate files in $GOBO/test.
 echo ''; echo "#### Generate files in \$GOBO/test/structure"
