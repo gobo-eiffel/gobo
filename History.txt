@@ -1,5 +1,10 @@
 Version 3.2 - ?
 
+	geant:
+
+	* The task <hact> now takes advantage of Halstenbach incremental
+	  compiler.
+
 	getest:
 
 	* Added command-line options --class and --feature to pass
