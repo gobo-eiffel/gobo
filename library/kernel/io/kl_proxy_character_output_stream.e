@@ -2,7 +2,15 @@ indexing
 
 	description:
 
-		"Proxy character input streams"
+		"Proxy character output streams"
+
+	remark:
+
+		"`append', `put_integer' and `put_boolean' are NOT redefined, %
+		%as they are defined entirely in terms of `put_character' %
+		%and `put_string' - template pattern. This is most probably %
+		%what descendants will want."
+
 
 	library: "Gobo Eiffel Kernel Library"
 	copyright: "Copyright (c) 2005, Colin Adams and others"
@@ -19,11 +27,6 @@ inherit
 			is_closable, close
 		end
 
-	-- N.B. `append', `put_integer' and `put_boolean' are NOT redefined,
-	--      as they are defined entirely in terms of `put_character'
-	--      and `put_string' - template pattern. This is most probably
-	--      what descendatns will want.
-
 creation
 
 	make
@@ -31,9 +34,9 @@ creation
 feature {NONE} -- Initialization
 
 	make (a_stream: like base_stream) is
-			-- Establish invariant.
+			-- Create a new proxy output stream.
 		require
-			base_stream_not_void: a_stream /= Void
+			a_stream_not_void: a_stream /= Void
 		do
 			base_stream := a_stream
 		ensure
@@ -58,7 +61,7 @@ feature -- Access
 
 	base_stream: KI_CHARACTER_OUTPUT_STREAM
 			-- Underlying stream
-		
+
 	name: STRING is
 			-- Name of output stream
 		do
@@ -68,7 +71,7 @@ feature -- Access
 feature -- Status report
 
 	is_open_write: BOOLEAN is
-			-- Can items be written to output stream?
+			-- Can characters be written to output stream?
 		do
 			Result := base_stream.is_open_write
 		end
@@ -93,7 +96,7 @@ feature -- Basic operations
 		do
 			base_stream.close
 		end
-	
+
 invariant
 
 	base_stream_not_void: base_stream /= Void
