@@ -2,14 +2,13 @@ indexing
 
 	description:
 
-		"Test features of class KS_STRING"
+		"Test features of class STRING listed in KS_STRING"
 
-	library:    "Gobo Eiffel Kernel Library"
-	author:     "Eric Bezault <ericb@gobosoft.com>"
-	copyright:  "Copyright (c) 2001, Eric Bezault and others"
-	license:    "Eiffel Forum Freeware License v1 (see forum.txt)"
-	date:       "$Date$"
-	revision:   "$Revision$"
+	library: "Gobo Eiffel Kernel Library"
+	copyright: "Copyright (c) 2001, Eric Bezault and others"
+	license: "Eiffel Forum License v1 (see forum.txt)"
+	date: "$Date$"
+	revision: "$Revision$"
 
 deferred class KS_TEST_STRING
 
@@ -113,10 +112,10 @@ feature -- Test
 			assert_equal ("substring1", "bar", a_string.substring (1, 3)) 
 			assert_equal ("substring2", "ba", a_string.substring (1, 2)) 
 			assert_equal ("substring3", "a", a_string.substring (2, 2)) 
-			-- Note: HACT 4.0.1 does not support empty substrings (from ELKS 2001) yet:
+			-- TODO: Note: HACT 4.0.1 does not support empty substrings (from ELKS 2001) yet:
 			-- assert_equal ("substring4", "", a_string.substring (2, 1)) 
 			a_string := clone ("")
-			-- Note: HACT 4.0.1 does not support empty substrings (from ELKS 2001) yet:
+			-- TODO: Note: HACT 4.0.1 does not support empty substrings (from ELKS 2001) yet:
 			-- assert_equal ("substring5", "", a_string.substring (1, 0)) 
 		end
 
@@ -161,7 +160,7 @@ feature -- Test
 			a_string.copy ("")
 			assert_equal ("copy3", "", a_string) 
 			if not eiffel_compiler.is_hact then
-					-- HACT 4.0.1 has a bug when copying a string on itself.
+					-- TODO: HACT 4.0.1 has a bug when copying a string on itself.
 				a_string := clone ("toto")
 				a_string.copy (a_string)
 				assert_equal ("copy4", "toto", a_string) 
@@ -363,11 +362,11 @@ feature -- Test
 			a_string2 := clone ("")
 			a_string.replace_substring (a_string2, 2, 4)
 			assert_equal ("replaced4", "far", a_string) 
-			-- Note: ISE 5.1 and HACT 4.0.1 do not support replacing
+			-- TODO: Note: ISE 5.1 and HACT 4.0.1 do not support replacing
 			-- a substring by itself:
-			--a_string := clone ("foobar")
-			--a_string.replace_substring (a_string, 4, 6)
-			--assert_equal ("replaced5", "foofoobar", a_string) 
+			-- a_string := clone ("foobar")
+			-- a_string.replace_substring (a_string, 4, 6)
+			-- assert_equal ("replaced5", "foofoobar", a_string) 
 		end
 
 	test_wipe_out is

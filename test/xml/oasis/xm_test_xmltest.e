@@ -1,7 +1,7 @@
 indexing
 
 	description:
-		
+
 		"Tests from James Clark's xmltest suite from the OASIS xml test suite"
 
 	library: "Gobo Eiffel XML Library test"
@@ -9,27 +9,27 @@ indexing
 	license: "Eiffel Forum License v1 (see forum.txt)"
 	date: "$Date$"
 	revision: "$Revision$"
-		
+
 deferred class XM_TEST_XMLTEST
 
 inherit
 
 	XM_TEST_CASE
-	
+
 	XMLCONF_XMLTEST_FILES
 		export
 			{NONE} all
 		end
-		
+
 feature -- Test
-	
+
 	test_extra is
 			-- Tests not categorized.
 		do
 			-- inverted validity as per 		
 			--assert_invalid ("xmltest, not well formed, stand alone, 094", xmltest_valid_sa_094)
 		end
-		
+
 	test_not_wf_sa is
 			-- Tests not well formed stand alone documents.
 		do
@@ -358,6 +358,5 @@ feature -- Test
 			assert_output ("xmltest, valid, stand alone, 118", xmltest_valid_sa_118, xmltest_valid_sa_out_118)
 			assert_output ("xmltest, valid, stand alone, 119", xmltest_valid_sa_119, xmltest_valid_sa_out_119)
 		end
-		
-end
 
+end

@@ -1,7 +1,7 @@
 indexing
 
 	description:
-		
+
 		"Base class for XML parser test cases"
 
 	library: "Gobo Eiffel XML Library test"
@@ -15,11 +15,11 @@ deferred class XM_TEST_CASE
 inherit
 
 	TS_TEST_CASE
-	
+
 	XM_CALLBACKS_FILTER_FACTORY
-	
+
 	UC_UNICODE_FACTORY
-			
+
 feature -- XML asserts
 
 	assert_valid (a_name: STRING; in: STRING) is
@@ -32,7 +32,7 @@ feature -- XML asserts
 			parser.parse_from_string (in)
 			assert (a_name, parser.is_correct)
 		end
-		
+
 	assert_invalid (a_name: STRING; in: STRING) is
 			-- Assert invalid.
 		require
@@ -43,7 +43,7 @@ feature -- XML asserts
 			parser.parse_from_string (in)
 			assert (a_name, not parser.is_correct)
 		end
-		
+
 	assert_output (a_name: STRING; in: STRING; an_out: STRING) is
 			-- Assert valid and compare output with expected.
 		require
@@ -62,22 +62,21 @@ feature -- XML asserts
 			assert ("Valid: " + a_name, parser.is_correct)
 			assert_equal ("Output: " + a_name, an_out, output.to_utf8)
 		end
-		
-		
+
 feature {NONE} -- Parser
-	
+
 	parser: XM_PARSER
 			-- Parser.
-			
+
 	output: UC_STRING
 			-- Output.
-			
+
 	new_parser: XM_PARSER is
 			-- New parser, can be redefined to test another parser.
 		do
 			!XM_EIFFEL_PARSER! Result.make
 		end
-		
+
 	reset_parser is
 			-- Reset parser.
 		local

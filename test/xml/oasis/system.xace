@@ -2,20 +2,20 @@
 	<root class="XMLOASIS" creation="make"/>
 	<cluster>
 		<option unless="${DEBUG}">
-			<require enable="False"/>
-			<ensure enable="False"/>
-			<invariant enable="False"/>
-			<loop enable="False"/>
-			<check enable="False"/>
-			<optimize enable="True"/>
+			<require enable="false"/>
+			<ensure enable="false"/>
+			<invariant enable="false"/>
+			<loop enable="false"/>
+			<check enable="false"/>
+			<optimize enable="true"/>
 		</option>
 		<option if="${DEBUG}">
-			<require enable="True"/>
-			<ensure enable="True"/>
-			<invariant enable="True"/>
-			<loop enable="True"/>
-			<check enable="True"/>
-			<optimize enable="False"/>
+			<require enable="true"/>
+			<ensure enable="true"/>
+			<invariant enable="true"/>
+			<loop enable="true"/>
+			<check enable="true"/>
+			<optimize enable="false"/>
 		</option>
 
 		<cluster name="xmloasis" location="${GOBO}/test/xml/oasis">
@@ -33,5 +33,3 @@
 		<mount location="${GOBO}/library/kernel.xace" />
 	</cluster>
 </system>
-
-

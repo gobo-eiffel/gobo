@@ -4,12 +4,11 @@ indexing
 
 		"Test features of class UC_UTF8_STRING"
 
-	library:    "Gobo Eiffel Kernel Library"
-	author:     "Eric Bezault <ericb@gobosoft.com>"
-	copyright:  "Copyright (c) 2001, Eric Bezault and others"
-	license:    "Eiffel Forum Freeware License v1 (see forum.txt)"
-	date:       "$Date$"
-	revision:   "$Revision$"
+	library: "Gobo Eiffel Kernel Library"
+	copyright: "Copyright (c) 2001, Eric Bezault and others"
+	license: "Eiffel Forum License v1 (see forum.txt)"
+	date: "$Date$"
+	revision: "$Revision$"
 
 deferred class UC_TEST_UTF8_STRING
 
@@ -2646,11 +2645,11 @@ feature -- Test
 			!! a_string2.make_from_string ("")
 			a_string.replace_substring (a_string2, 2, 4)
 			assert_equal ("replaced4", "far", a_string.out) 
-			-- Note: The postcondition inherited from ISE 5.1 and HACT 4.0.1
-			-- does not allow replacing a substring by itself:
-			--!! a_string.make_from_string ("foobar")
-			--a_string.replace_substring (a_string, 4, 6)
-			--assert_equal ("replaced5", "foofoobar", a_string.out) 
+			-- TODO: Note: The postcondition inherited from ISE 5.1 and
+			-- HACT 4.0.1 does not allow replacing a substring by itself:
+			-- !! a_string.make_from_string ("foobar")
+			-- a_string.replace_substring (a_string, 4, 6)
+			-- assert_equal ("replaced5", "foofoobar", a_string.out) 
 			!! a_string.make_from_string ("foobar")
 			!! a_string2.make_from_string ("toto")
 			a_string.replace_substring (a_string2, 4, 3)
@@ -2678,11 +2677,11 @@ feature -- Test
 			!UC_UTF8_STRING! a_string2.make_from_string ("")
 			a_string.replace_substring (a_string2, 2, 4)
 			assert_equal ("replaced4", "far", a_string.out) 
-			-- Note: The postcondition inherited from ISE 5.1 and HACT 4.0.1
-			-- does not allow replacing a substring by itself:
-			--!UC_UTF8_STRING! a_string.make_from_string ("foobar")
-			--a_string.replace_substring (a_string, 4, 6)
-			--assert_equal ("replaced5", "foofoobar", a_string.out) 
+			-- TODO: Note: The postcondition inherited from ISE 5.1 and
+			-- HACT 4.0.1 does not allow replacing a substring by itself:
+			-- !UC_UTF8_STRING! a_string.make_from_string ("foobar")
+			-- a_string.replace_substring (a_string, 4, 6)
+			-- assert_equal ("replaced5", "foofoobar", a_string.out) 
 			!UC_UTF8_STRING! a_string.make_from_string ("foobar")
 			!UC_UTF8_STRING! a_string2.make_from_string ("toto")
 			a_string.replace_substring (a_string2, 4, 3)
@@ -2710,11 +2709,11 @@ feature -- Test
 			!UC_UTF8_STRING! a_string2.make_from_string ("")
 			a_string.replace_substring (a_string2, 2, 4)
 			assert_equal ("replaced4", "far", a_string.out) 
-			-- Note: The postcondition inherited from ISE 5.1 and HACT 4.0.1
-			-- does not allow replacing a substring by itself:
-			--!UC_UTF8_STRING! a_string.make_from_string ("foobar")
-			--a_string.replace_substring (a_string, 4, 6)
-			--assert_equal ("replaced5", "foofoobar", a_string.out) 
+			-- TODO: Note: The postcondition inherited from ISE 5.1 and
+			-- HACT 4.0.1 does not allow replacing a substring by itself:
+			-- !UC_UTF8_STRING! a_string.make_from_string ("foobar")
+			-- a_string.replace_substring (a_string, 4, 6)
+			-- assert_equal ("replaced5", "foofoobar", a_string.out) 
 			!UC_UTF8_STRING! a_string.make_from_string ("foobar")
 			!UC_UTF8_STRING! a_string2.make_from_string ("toto")
 			a_string.replace_substring (a_string2, 4, 3)

@@ -4,11 +4,10 @@ indexing
 
 		"Test features of class GEANT_MAP"
 
-	author:     "Sven Ehrke (sven.ehrke@sven-ehrke.de)"
-	copyright:  "Sven Ehrke and others"
-	license:    "Eiffel Forum Freeware License v1 (see forum.txt)"
-	date:       "$Date$"
-	revision:   "$Revision$"
+	copyright: "Copyright (c) 2002, Sven Ehrke and others"
+	license: "Eiffel Forum License v1 (see forum.txt)"
+	date: "$Date$"
+	revision: "$Revision$"
 
 deferred class GEANT_TEST_MAP
 
@@ -114,6 +113,6 @@ feature -- Execution
 feature {NONE} -- Implementation
 
 	map: GEANT_MAP
-		-- Map under test
+			-- Map under test
 
 end -- class GEANT_TEST_MAP

@@ -4,12 +4,11 @@ indexing
 
 		"Test features of class regexp library"
 
-	library:		"Gobo Eiffel Regexp Library"
-	author:		"Harald Erdbrügger <he@he-me.de>"
-	copyright:	"Copyright (c) 2002, Harald Erdbrügger and others"
-	license:		"Eiffel Forum Freeware License v1 (see forum.txt)"
-	date:			"$Date$"
-	revision:	"$Revision$"
+	library: "Gobo Eiffel Regexp Library"
+	copyright: "Copyright (c) 2002, Harald Erdbrügger and others"
+	license: "Eiffel Forum License v1 (see forum.txt)"
+	date: "$Date$"
+	revision: "$Revision$"
 
 
 class
