@@ -30,7 +30,8 @@ inherit
 		
 creation
 
-	make
+	make,
+	make_default
 
 feature {NONE} -- Initialization
 
@@ -46,6 +47,15 @@ feature {NONE} -- Initialization
 			uri_set: uri = a_uri
 		end
 
+	make_default is
+			-- Make default namespace (empty URI)
+		do
+			make (STRING_.make_empty, STRING_.make_empty)
+		ensure
+			no_prefix: not has_prefix
+			default_namespace: is_default_namespace
+		end
+		
 feature -- Access
 
 	ns_prefix: STRING
