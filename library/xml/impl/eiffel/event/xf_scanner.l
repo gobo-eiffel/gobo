@@ -57,7 +57,7 @@ S_END_COMMENT "-->"
 
 -- missing in S_TEXT:
 --   ",<, *,)
-S_WORD        [+\-a-zA-Z0-9()_]*
+S_WORD        [.+\-a-zA-Z0-9()_]*
 S_NS_WORD     {S_WORD}:{S_WORD}
 
 %s B_IN_TAG B_IN_CONTENT B_IN_PI B_IN_XML_DECL
