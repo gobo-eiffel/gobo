@@ -55,7 +55,7 @@ feature -- Status report
 feature -- Access
 
 	project: GEANT_PROJECT
-			-- Project to which this target belongs
+			-- Project to which this command belongs to
 
 feature -- Setting
 
