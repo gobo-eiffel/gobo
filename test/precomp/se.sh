@@ -9,7 +9,7 @@
 # revision:   "$Revision$"
 
 echo ${GOBO}/library/loadpath.se>			loadpath.se
-echo ${GOBO}/library/structure/base/>>		loadpath.se
+echo ${GOBO}/library/other/EiffelBase/>>	loadpath.se
 echo ${GOBO}/library/other/EiffelTime/>>	loadpath.se
 
 export geoptions="-no_style_warning"

@@ -48,7 +48,6 @@ cluster
 	kl_kernel_spec:		"$GOBO/library/kernel/spec/ise";
 
 		-- Gobo Eiffel Structure Library
-	ds_base:			"$GOBO/library/structure/base";
 	ds_container:		"$GOBO/library/structure/container";
 	ds_cursor:			"$GOBO/library/structure/cursor";
 	ds_dispenser:		"$GOBO/library/structure/dispenser";
@@ -60,6 +59,8 @@ cluster
 		-- EiffelBase
 	kernel:				"$EIFFEL4/library/base/kernel";
 	support:			"$EIFFEL4/library/base/support";
+
+	ds_base:			"$GOBO/library/other/EiffelBase";
 
 external
 
