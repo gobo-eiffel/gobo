@@ -30,12 +30,6 @@ skeleton
 support
     Support classes.
 
-Clusters of the form "<cluster_name>\spec\<compiler_name>", where
-<cluster_name> is one of the clusters listed above and <compiler_name> 
-is either "hact", "ise", "se", "tower" or "ve", contain classes adapted
-from non-portable classes in <cluster_name> (filenames suffixed by ".ge").
-See "$GOBO\doc\portability" for details.
-
 A more detailed documentation for this library will be provided in
 future releases.
 
