@@ -27,13 +27,15 @@ content="text/html; charset=iso-8859-1">
 has the following general form:</p>
 
 <blockquote>
-    <pre>RESULT<font color="#0000FF">:</font> COMPONENTS...
+    <pre><font color="#800080">RESULT</font><font color="#0000FF">:</font> <font
+color="#800080">COMPONENTS</font>...
     <font color="#0000FF">;</font></pre>
 </blockquote>
 
-<p>where <tt>RESULT</tt> is the nonterminal symbol that this rule
-describes and <tt>COMPONENTS</tt> are various terminal and
-nonterminal <a href="symbols.html">symbols</a> that are put
+<p>where <font color="#800080"><tt>RESULT</tt></font> is the
+nonterminal symbol that this rule describes and <font
+color="#800080"><tt>COMPONENTS</tt></font> are various terminal
+and nonterminal <a href="symbols.html">symbols</a> that are put
 together by this rule. For example,</p>
 
 <blockquote>
@@ -66,13 +68,14 @@ components. </p>
 
 <h2>Multiple Rules</h2>
 
-<p>Multiple rules for the same <tt>RESULT</tt> can be written
-separately or can be joined with the vertical-bar character <font
-color="#0000FF"><tt>|</tt></font> as follows:</p>
+<p>Multiple rules for the same <font color="#800080"><tt>RESULT</tt></font>
+can be written separately or can be joined with the vertical-bar
+character <font color="#0000FF"><tt>|</tt></font> as follows:</p>
 
 <blockquote>
-    <pre>RESULT<font color="#0000FF">:</font> RULE1-COMPONENTS...
-    <font color="#0000FF">|</font> RULE2-COMPONENTS...
+    <pre><font color="#800080">RESULT</font><font color="#0000FF">:</font> <font
+color="#800080">RULE1-COMPONENTS</font>...
+    <font color="#0000FF">|</font> <font color="#800080">RULE2-COMPONENTS</font>...
     ...
     <font color="#0000FF">;</font></pre>
 </blockquote>
@@ -80,9 +83,16 @@ color="#0000FF"><tt>|</tt></font> as follows:</p>
 <p>They are still considered distinct rules even when joined in
 this way.</p>
 
+<p>In order to avoid mistakes such as giving the same <font
+color="#800080"><tt>RESULT</tt></font> name to two unrelated
+rules in the grammar, <em>geyacc</em> generates a warning
+whenever rules for the same <font color="#800080"><tt>RESULT</tt></font>
+have not been joined.</p>
+
 <h2>Empty Rules</h2>
 
-<p>If <tt>COMPONENTS</tt> in a rule is empty, it means that <tt>RESULT</tt>
+<p>If <font color="#800080"><tt>COMPONENTS</tt></font> in a rule
+is empty, it means that <font color="#800080"><tt>RESULT</tt></font>
 can match the empty string. For example, here is how to define a
 comma-separated sequence of zero or more <font color="#800080"><tt>exp</tt></font>
 groupings:</p>
@@ -105,12 +115,13 @@ color="#FF0000">','</font> <font color="#800080">exp</font>
 
 <h2><a name="recursive">Recursive Rules</a></h2>
 
-<p>A rule is called &quot;recursive&quot; when its <font size="2"
-face="Courier New">RESULT</font> nonterminal appears also on its
-right hand side. Nearly all <em>geyacc</em> grammars need to use
-recursion, because that is the only way to define a sequence of
-any number of somethings. Consider this recursive definition of a
-comma-separated sequence of one or more expressions:</p>
+<p>A rule is called &quot;recursive&quot; when its <font
+color="#800080" size="2" face="Courier New">RESULT</font>
+nonterminal appears also on its right hand side. Nearly all <em>geyacc</em>
+grammars need to use recursion, because that is the only way to
+define a sequence of any number of somethings. Consider this
+recursive definition of a comma-separated sequence of one or more
+expressions:</p>
 
 <blockquote>
     <pre><font color="#800080">expseq1</font><font
@@ -121,9 +132,9 @@ color="#FF0000">','</font> <font color="#800080">exp</font>
 </blockquote>
 
 <p>Since the recursive use of <font color="#800080"><tt>expseq1</tt></font>
-is the leftmost symbol in the right hand side, we call this <em>left
-recursion</em>. By contrast, here the same construct is defined
-using <em>right recursion</em>:</p>
+is the leftmost symbol in the right hand side, we call this <em><strong>left
+recursion</strong></em>. By contrast, here the same construct is
+defined using <em><strong>right recursion</strong></em>:</p>
 
 <blockquote>
     <pre><font color="#800080">expseq1</font><font
@@ -134,19 +145,20 @@ color="#FF0000">','</font> <font color="#800080">expseq1</font>
 </blockquote>
 
 <p>Any kind of sequence can be defined using either left
-recursion or right recursion, but you should always use left
-recursion, because it can parse a sequence of any number of
-elements with bounded stack space. Right recursion uses up space
-on the <em>geyacc</em> stack in proportion to the number of
-elements in the sequence, because all the elements must be
+recursion or right recursion, but <strong>you should always use
+left recursion</strong>, because it can parse a sequence of any
+number of elements with bounded stack space. Right recursion uses
+up space on the <em>geyacc</em> stack in proportion to the number
+of elements in the sequence, because all the elements must be
 shifted onto the stack before the rule can be applied even once.
 See the <a href="algorithm.html">parser algorithm</a> for further
 explanation of this.</p>
 
-<p><em>Indirect</em> or <em>mutual</em> recursion occurs when the
-result of the rule does not appear directly on its right hand
-side, but does appear in rules for other nonterminals which do
-appear on its right hand side. For example:</p>
+<p><em><strong>Indirect</strong></em> or <em><strong>mutual</strong></em>
+recursion occurs when the result of the rule does not appear
+directly on its right hand side, but does appear in rules for
+other nonterminals which do appear on its right hand side. For
+example:</p>
 
 <blockquote>
     <pre><font color="#800080">expr</font><font color="#0000FF">:</font> <font
@@ -170,17 +182,17 @@ to the other.</p>
 <table border="0" width="100%">
     <tr>
         <td><address>
-            <font size="2"><b>Copyright © 1997</b></font><font
+            <font size="2"><b>Copyright © 1998</b></font><font
             size="1"><b>, </b></font><font size="2"><strong>Eric
             Bezault</strong></font><strong> </strong><font
             size="2"><br>
-            </font><a href="mailto:ericb@gobo.demon.co.uk"><font
-            size="2">ericb@gobo.demon.co.uk</font></a><font
+            <strong>mailto:</strong></font><a
+            href="mailto:ericb@gobo.demon.co.uk"><font size="2">ericb@gobo.demon.co.uk</font></a><font
             size="2"> <br>
-            </font><a href="http://www.gobo.demon.co.uk"><font
-            size="2">http://www.gobo.demon.co.uk</font></a><font
+            <strong>http:</strong></font><a
+            href="http://www.gobo.demon.co.uk"><font size="2">//www.gobo.demon.co.uk</font></a><font
             size="2"><br>
-            <strong>Last Updated:</strong> 7 September 1997</font><br>
+            <strong>Last Updated:</strong> 9 August 1998</font><br>
             <!--webbot bot="PurpleText"
             preview="
 $Date$ 
