@@ -323,8 +323,9 @@ feature -- Status report
 				if a_cursor.item.fingerprint = Xslt_strip_space_type_code then
 					Result := True
 					a_cursor.go_after
+				else
+					a_cursor.forth
 				end
-				a_cursor.forth
 			end
 		end
 

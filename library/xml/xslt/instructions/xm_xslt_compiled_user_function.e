@@ -45,7 +45,6 @@ feature -- Access
 	details: XM_XSLT_TRACE_DETAILS
 			-- Trace details
 
-
 feature -- Evaluation
 
 	call (some_actual_arguments: DS_LIST [XM_XPATH_VALUE]; a_transformer: XM_XSLT_TRANSFORMER; evaluate_tail_calls: BOOLEAN) is
@@ -56,9 +55,6 @@ feature -- Evaluation
 			a_function_package: XM_XSLT_FUNCTION_CALL_PACKAGE
 		do
 			last_called_value := Void
-			if is_memo_function then
-				last_called_value := cached_value (a_transformer, some_actual_arguments)
-			end
 			if last_called_value = Void then
 				if a_transformer.is_tracing then
 					a_transformer.trace_listener.trace_instruction_entry (details)

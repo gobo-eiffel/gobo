@@ -159,8 +159,6 @@ feature -- Evaluation
 						if a_boolean /= Void then
 							if a_boolean.value then
 								create Result.make (True)
-							elseif an_iterator.after then
-								create Result.make (False)
 							else
 								an_iterator.forth
 								create Result.make (not an_iterator.after)
@@ -170,8 +168,6 @@ feature -- Evaluation
 							if a_string /= Void then
 								if a_string.string_value.count /= 0 then
 									create Result.make (True)
-								elseif an_iterator.after then
-									create Result.make (False)
 								else
 									an_iterator.forth
 									create Result.make (not an_iterator.after)								
@@ -179,19 +175,11 @@ feature -- Evaluation
 							else
 								a_number ?= an_item
 								if a_number /= Void then
-									if an_iterator.after then
-										create Result.make (False)
+									an_iterator.forth
+									if not an_iterator.after then
+										create Result.make (True)
 									else
-										a_double ?=	a_number.convert_to_type (type_factory.double_type)
-										check
-											double_result_not_void: a_double /= Void
-											-- This conversion always suceeds
-										end
-										if a_double.value = 0.0 then
-											create Result.make (False)
-										else
-											create Result.make (a_number.is_nan)
-										end
+										Result := a_number.effective_boolean_value (a_context)
 									end
 								else
 									create Result.make (True)
@@ -215,9 +203,7 @@ feature -- Evaluation
 			last_evaluated_item := Void
 			an_iterator := iterator (a_context)
 			if an_iterator.is_error then
-				create {XM_XPATH_INVALID_ITEM} last_evaluated_item.make (an_iterator.error_value) 
-			elseif an_iterator.after then
-				last_evaluated_item := Void
+				create {XM_XPATH_INVALID_ITEM} last_evaluated_item.make (an_iterator.error_value)
 			else
 				an_iterator.start
 				if an_iterator.is_error then

@@ -58,6 +58,7 @@ feature -- Evaluation
 			-- Execute `Current', writing results to the current `XM_XPATH_RECEIVER'.
 		local
 			a_cursor: DS_ARRAYED_LIST_CURSOR [XM_XPATH_EXPRESSION]
+			a_boolean_value: XM_XPATH_BOOLEAN_VALUE
 		do
 			last_tail_call := Void
 			from
@@ -67,7 +68,11 @@ feature -- Evaluation
 			until
 				a_cursor.after
 			loop
-				if a_cursor.item.effective_boolean_value (a_context).value then
+				a_boolean_value := a_cursor.item.effective_boolean_value (a_context)
+				if a_boolean_value.is_error then
+					a_context.transformer.report_fatal_error (a_boolean_value.error_value, Current)
+					a_cursor.go_after
+				elseif a_boolean_value.value then
 					actions.item (a_cursor.index).process_leaving_tail (a_context)
 					last_tail_call := actions.item (a_cursor.index).last_tail_call
 					a_cursor.go_after

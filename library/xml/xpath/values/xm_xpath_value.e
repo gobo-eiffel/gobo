@@ -78,7 +78,7 @@ feature -- Conversion
 
 feature {NONE} -- Implementation
 
-	trim_white_space (a_string: STRING): STRING is
+	trimmed_white_space (a_string: STRING): STRING is
 			-- Remove all leading and trailing characters below character code 33;
 			-- Only usable for values that do not permit internal white space
 		require
@@ -107,10 +107,12 @@ feature {NONE} -- Implementation
 			end
 			if not finished then finish_position := counter - 1 end
 			if start_position > 0 then
-					check
-						finish_position: finish_position >= start_position
-					end
+				check
+					finish_position: finish_position >= start_position
+				end
 				Result := a_string.substring (start_position, finish_position)
+			else
+				Result := ""
 			end
 		ensure
 			trimmed_string_not_void: Result /= Void

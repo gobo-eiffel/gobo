@@ -24,6 +24,8 @@ inherit
 
 	XM_XPATH_ROLE
 
+		-- A gexslt-specific extension attribute is implemented - gexslt:memo-function=yes|no
+
 creation
 
 	make_style_element
@@ -163,7 +165,7 @@ feature -- Element change
 		local
 			a_cursor: DS_ARRAYED_LIST_CURSOR [INTEGER]
 			a_name_code: INTEGER
-			an_expanded_name, an_as_attribute, an_override_attribute: STRING
+			an_expanded_name, an_as_attribute, an_override_attribute, a_memo_function_attribute: STRING
 			an_error: XM_XPATH_ERROR_VALUE
 		do
 			from
@@ -199,6 +201,21 @@ feature -- Element change
 						is_overriding := False
 					else
 						create an_error.make_from_string ("Xsl:function override attribute must be 'yes' or 'no'", "", "XT0020", Static_error)
+						report_compile_error (an_error)
+					end
+				elseif STRING_.same_string (an_expanded_name, Gexslt_memo_function_attribute) then
+					debug ("XSLT memo function")
+						std.error.put_string ("gexslt:memo-function found%N")
+					end
+					a_memo_function_attribute := attribute_value_by_index (a_cursor.index)
+					STRING_.left_adjust (a_memo_function_attribute)
+					STRING_.right_adjust (a_memo_function_attribute)
+					if STRING_.same_string (a_memo_function_attribute, "yes") then
+						is_memo_function := True
+					elseif STRING_.same_string (a_memo_function_attribute, "no") then
+						is_memo_function := False
+					else
+						create an_error.make_from_string ("Xsl:function memo-function extension attribute must be 'yes' or 'no'", "", "XT0020", Static_error)
 						report_compile_error (an_error)
 					end
 				else
@@ -255,6 +272,13 @@ feature -- Element change
 					a_cursor.back
 				end
 			end
+			debug ("XSLT memo function")
+				if is_memo_function then
+					std.error.put_string ("Memo function:")
+					std.error.put_string (function_name)
+					std.error.put_new_line
+				end
+			end
 			validated := True
 		end
 
@@ -284,9 +308,13 @@ feature {NONE} -- Implementation
 	result_type: XM_XPATH_SEQUENCE_TYPE
 			-- Type of result
 
+	is_memo_function: BOOLEAN
+			-- Is this function a memo function?
+
 	is_compilable_as_expression: BOOLEAN is
 			-- Is `Current' compilable as a single expression?
-			-- This is true if the body consists (after the xsl:param elements) of a sequence
+			-- This is true if it is not a memo function, and
+			--  the body consists (after the xsl:param elements) of a sequence
 			--  of xsl:variable instructions followed by an xsl:sequence instruction, all
 			--  satisfying certain conditions.
 		local
@@ -297,40 +325,42 @@ feature {NONE} -- Implementation
 			a_param: XM_XSLT_PARAM
 			a_sequence: XM_XSLT_SEQUENCE
 		do
-			from
-				Result := True
-				an_iterator := new_axis_iterator (Child_axis); an_iterator.start
-			until
-				Result = False or else an_iterator.after
-			loop
-				a_node := an_iterator.item
-				if a_node.node_type = Text_node then
-					Result := False
-				else
-					a_param ?= a_node
-					if a_param /= Void and then a_state = 0 then
-						-- OK
+			if not is_memo_function then
+				from
+					Result := True
+					an_iterator := new_axis_iterator (Child_axis); an_iterator.start
+				until
+					Result = False or else an_iterator.after
+				loop
+					a_node := an_iterator.item
+					if a_node.node_type = Text_node then
+						Result := False
 					else
-						a_variable ?= a_node
-						if a_variable /= Void and then a_state < 2 then
-							if a_node.has_child_nodes then
-								Result := False
-							end
-							a_state := 1
+						a_param ?= a_node
+						if a_param /= Void and then a_state = 0 then
+							-- OK
 						else
-							a_sequence ?= a_node
-							if a_sequence /= Void and then a_state < 2 then
+							a_variable ?= a_node
+							if a_variable /= Void and then a_state < 2 then
 								if a_node.has_child_nodes then
 									Result := False
 								end
-								a_state := 2
+								a_state := 1
 							else
-								Result := False
+								a_sequence ?= a_node
+								if a_sequence /= Void and then a_state < 2 then
+									if a_node.has_child_nodes then
+										Result := False
+									end
+									a_state := 2
+								else
+									Result := False
+								end
 							end
 						end
 					end
+					an_iterator.forth
 				end
-				an_iterator.forth
 			end
 		end
 
@@ -357,6 +387,11 @@ feature {NONE} -- Implementation
 			a_param: XM_XSLT_COMPILED_PARAM
 			an_error: XM_XPATH_ERROR_VALUE
 		do
+			debug ("XSLT memo function")
+				if is_memo_function then
+					std.error.put_string ("ATTENTION! BUG! memo function compiled as expression%N")
+				end
+			end
 			create a_body.make (an_executable, Void, result_type)
 			compile_children (an_executable, a_body)
 			create some_children.make (last_generated_instruction_list.count)
@@ -456,6 +491,11 @@ feature {NONE} -- Implementation
 			a_function: XM_XSLT_FUNCTION_INSTRUCTION
 			a_param: XM_XSLT_COMPILED_PARAM
 		do
+			debug ("XSLT memo function")
+				if is_memo_function then
+					std.error.put_string ("Compiling as memo function%N")
+				end
+			end
 			create a_body.make (an_executable, Void, result_type)
 			compile_children (an_executable, a_body)
 			create some_children.make (last_generated_instruction_list.count)
@@ -473,7 +513,7 @@ feature {NONE} -- Implementation
 				a_cursor.forth
 			end
 			a_body.set_children (some_children)
-			create a_function.make (a_body, function_name, base_uri, line_number)
+			create a_function.make (a_body, function_name, base_uri, line_number, is_memo_function)
 			fixup_instruction (a_function)
 		end
 

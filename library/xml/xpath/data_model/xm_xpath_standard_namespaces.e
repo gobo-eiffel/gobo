@@ -106,6 +106,9 @@ feature -- Access
 	Exslt_date_uri: STRING is "http://exslt.org/dates-and-times"
 			-- EXSLT dates
 
+	Exslt_environment_uri: STRING is "http://exslt.org/environment-variables"
+			-- EXSLT environment variables
+
 	Unicode_codepoint_collation_uri: STRING is "http://www.w3.org/2004/10/xpath-functions/collation/codepoint"
 			-- Unicode codepoint collation
 
@@ -203,6 +206,7 @@ feature -- Access
 	Character_representation_type_code: INTEGER is 517
 	Byte_order_mark_type_code: INTEGER is 518
 	Gexslt_collation_type_code: INTEGER is 519
+	Memo_function_type_code: INTEGER is 520
 	
 			-- Codes in XSLT namespace (`Xslt_uri_code' * 128 + 0..n)
 
@@ -525,6 +529,11 @@ feature -- Access
 	Gexslt_character_representation_attribute: STRING is
 		once
 				Result := "{" + Gexslt_eiffel_type_uri + "}" + Gexslt_character_representation_name
+		end
+
+	Gexslt_memo_function_attribute: STRING is
+		once
+			Result := "{" + Gexslt_eiffel_type_uri + "}memo-function"
 		end
 
 	Gexslt_explain_attribute: STRING is

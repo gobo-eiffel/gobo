@@ -53,6 +53,7 @@ feature -- Element change
 			a_copy_namespaces_attribute, a_validation_attribute, a_type_attribute: STRING
 			an_error: XM_XPATH_ERROR_VALUE
 		do
+			validation := Validation_strip
 			from
 				a_cursor := attribute_collection.name_code_cursor
 				a_cursor.start
@@ -115,7 +116,7 @@ feature -- Element change
 			-- Check that the stylesheet element is valid.
 		do
 			check_within_template
-			accumulate_attribute_sets (use, Void)			
+			if use /= Void then accumulate_attribute_sets (use, Void) end
 			validated := True
 		end
 
@@ -125,8 +126,8 @@ feature -- Element change
 			create {XM_XSLT_COMPILED_COPY} last_generated_instruction.make (an_executable,
 																								 used_attribute_sets,
 																								 copy_namespaces,
-																								 Void, validation
-																								 )
+																								 Void, validation)
+			compile_children (an_executable, last_generated_instruction)																								 
 		end
 
 feature {NONE} -- Implementation

@@ -452,8 +452,9 @@ feature {NONE} -- Implementation
 				create another_role.make (Binary_expression_role, token_name (operator), 2)
 				if is_backwards_compatible_mode then
 					todo ("analyze-inequalities - need atomic sequence converter - BUG!", True)
-					else
-						a_type_checker.static_type_check (a_context, second_operand, a_numeric_type, False, another_role)
+				else
+					create a_numeric_type.make_numeric_sequence
+					a_type_checker.static_type_check (a_context, second_operand, a_numeric_type, False, another_role)
 					if a_type_checker.is_static_type_check_error then
 						set_last_error_from_string (a_type_checker.static_type_check_error_message, Xpath_errors_uri, "XP0004", Type_error)
 					else

@@ -135,7 +135,8 @@ feature {XM_XSLT_EXPRESSION_INSTRUCTION} -- Local
 	xpath_expressions (an_instruction_list: DS_ARRAYED_LIST [XM_XSLT_EXPRESSION_INSTRUCTION]): DS_ARRAYED_LIST [XM_XPATH_EXPRESSION] is
 			-- All the XPath expressions associated with this instruction
 		do
-			-- not used
+			create Result.make (0)
+			Result.set_equality_tester (expression_tester)
 		end
 
 feature {NONE} -- Implementation

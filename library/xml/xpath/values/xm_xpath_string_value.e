@@ -122,13 +122,13 @@ feature -- Status report
 			a_string: STRING
 		do
 			if a_required_type = type_factory.boolean_type then
-				a_string := trim_white_space (value)
+				a_string := trimmed_white_space (value)
 				if STRING_.same_string (a_string, "0") or else STRING_.same_string (a_string, "false") 
 					or else STRING_.same_string (a_string, "1") or else STRING_.same_string (a_string, "true") then
 					Result := True
 				end
 			elseif a_required_type = type_factory.numeric_type then
-				a_string := trim_white_space (value)
+				a_string := trimmed_white_space (value)
 				if a_string.index_of ('e', 1) > 0 or else a_string.index_of ('E', 1) > 0 then
 					Result := a_string.is_double
 				elseif  a_string.index_of ('.', 1) > 0 then
@@ -138,13 +138,13 @@ feature -- Status report
 					Result := a_string.is_integer
 				end
 			elseif a_required_type = type_factory.double_type or else a_required_type = type_factory.numeric_type then
-				a_string := trim_white_space (value)
+				a_string := trimmed_white_space (value)
 				Result := a_string.is_double
 			elseif a_required_type = type_factory.integer_type then
-				a_string := trim_white_space (value)
+				a_string := trimmed_white_space (value)
 				Result := a_string.is_integer
 			elseif a_required_type = type_factory.decimal_type then
-				a_string := trim_white_space (value)
+				a_string := trimmed_white_space (value)
 				create last_decimal.make_from_string (a_string)
 				Result := not (last_decimal.is_nan)
 			elseif a_required_type = type_factory.untyped_atomic_type

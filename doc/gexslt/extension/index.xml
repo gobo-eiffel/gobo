@@ -51,6 +51,28 @@
 	  </listitem>
 	</varlistentry>
 	<varlistentry>
+	  <term><exmlsyntax>memo-function</exmlsyntax></term>
+	  <listitem>
+	    <para>
+	      This attribute may be set on any xsl:function declaration in the stylesheet. The permitted values are "yes" and "no". 
+	      If the value is "yes", then the result of calling the function with a given set of parameters is cached.
+	    </para>
+	    <para>
+	      <warning>
+		This should not be set to "yes" if the function has any side effects (which can only occur if it uses
+		user-written extension functions with side-effects), or if it access context information, such as position(),
+		last() or the context item.
+	      </warning>
+	    </para>
+	    <para>
+	      <warning>
+		If the function constructs and returns a temporary tree, the same tree will be rteurned each time. The only consequence
+		of this is if you compare node identities on that tree. 
+	      </warning>
+	    </para>
+	  </listitem>
+	</varlistentry>
+	<varlistentry>
 	  <term><exmlsyntax>character-representation</exmlsyntax></term>
 	  <listitem>
 	    <para>

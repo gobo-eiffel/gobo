@@ -173,9 +173,6 @@ feature -- Access
 			positive_result: Result.is_positive
 		end
 
-	message_emitter: XM_XSLT_MESSAGE_EMITTER
-			-- Emitter for writing xsl:messages
-
 	user_data (an_object: HASHABLE; a_name_key: STRING): ANY is
 			-- User data associated with `an_object'
 		require
@@ -337,16 +334,6 @@ feature -- Element change
 			elseif some_user_data /= Void then
 				user_data_table.put (some_user_data, a_key)
 			end
-		end
-
-	set_message_emitter (a_message_emitter: like message_emitter) is
-			-- Set `message_emitter'.
-		require
-			message_emitter_not_void: a_message_emitter /= Void
-		do
-			message_emitter := a_message_emitter
-		ensure
-			message_emitter_set: message_emitter = a_message_emitter
 		end
 
 	set_current_iterator (an_iterator: XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_ITEM]) is
@@ -651,14 +638,14 @@ feature -- Transformation
 			sequence_iterator_not_void: a_sequence_iterator /= Void
 			no_error: not is_error
 		local
-			saved_iterator: XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_ITEM]
-			saved_mode: XM_XSLT_MODE
+			a_saved_iterator: XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_ITEM]
+			a_saved_mode: XM_XSLT_MODE
 			a_node: XM_XPATH_NODE
 			a_node_handler: XM_XSLT_COMPILED_TEMPLATE
 			a_last_tail_call: like last_tail_call
 		do
-			saved_iterator := current_iterator
-			saved_mode := current_mode
+			a_saved_iterator := current_iterator
+			a_saved_mode := current_mode
 			set_current_iterator (a_sequence_iterator)
 			set_current_mode (a_mode)
 			from
@@ -720,8 +707,8 @@ feature -- Transformation
 				end
 				a_sequence_iterator.forth
 			end
-			set_current_mode (saved_mode)
-			set_current_iterator (saved_iterator)
+			set_current_mode (a_saved_mode)
+			set_current_iterator (a_saved_iterator)
 			last_tail_call := a_last_tail_call
 		end
 

@@ -73,7 +73,9 @@ feature -- Access
 			elseif a_fingerprint = Local_name_function_type_code then
 				Result := an_arity = -1 or else an_arity = 0 or else an_arity = 1
 			elseif a_fingerprint = Lower_case_function_type_code then
-				Result := an_arity = -1 or else an_arity = 1				
+				Result := an_arity = -1 or else an_arity = 1
+			elseif a_fingerprint = Max_function_type_code then
+				Result := an_arity = -1 or else an_arity = 1	or else an_arity = 2
 			elseif a_fingerprint = Name_function_type_code then
 				Result := an_arity = -1 or else an_arity = 0 or else an_arity = 1
 			elseif a_fingerprint = Namespace_uri_function_type_code then
@@ -88,6 +90,8 @@ feature -- Access
 				Result := an_arity = -1 or else an_arity = 0 or else an_arity = 1
 			elseif a_fingerprint = Position_function_type_code then
 				Result := an_arity = -1 or else an_arity = 0
+			elseif a_fingerprint = Round_function_type_code then
+				Result := an_arity = -1 or else an_arity = 1
 			elseif a_fingerprint = Starts_with_function_type_code then
 				Result := an_arity = -1 or else an_arity = 2  or else an_arity = 3
 			elseif a_fingerprint = String_length_function_type_code then
@@ -163,7 +167,9 @@ feature -- Element change
 			elseif a_fingerprint = Local_name_function_type_code then
 				create {XM_XPATH_LOCAL_NAME} a_function_call.make
 			elseif a_fingerprint = Lower_case_function_type_code then
-				create {XM_XPATH_LOWER_CASE} a_function_call.make								
+				create {XM_XPATH_LOWER_CASE} a_function_call.make
+			elseif a_fingerprint = Max_function_type_code then
+				create {XM_XPATH_MAX} a_function_call.make												
 			elseif a_fingerprint = Name_function_type_code then
 				create {XM_XPATH_NAME} a_function_call.make
 			elseif a_fingerprint = Namespace_uri_function_type_code then
@@ -178,6 +184,8 @@ feature -- Element change
 				create {XM_XPATH_NUMBER} a_function_call.make
 			elseif a_fingerprint = Position_function_type_code then
 				create {XM_XPATH_POSITION} a_function_call.make								
+			elseif a_fingerprint = Round_function_type_code then
+				create {XM_XPATH_ROUND} a_function_call.make
 			elseif a_fingerprint = Starts_with_function_type_code then
 				create {XM_XPATH_STARTS_WITH} a_function_call.make								
 			elseif a_fingerprint = String_length_function_type_code then

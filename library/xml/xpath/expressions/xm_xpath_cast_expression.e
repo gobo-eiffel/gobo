@@ -180,7 +180,7 @@ feature -- Evaluation
 			an_atomic_value: XM_XPATH_ATOMIC_VALUE
 		do
 			source.evaluate_item (a_context)
-			if source.last_evaluated_item.is_error then
+			if source.last_evaluated_item = Void or else source.last_evaluated_item.is_error then
 				last_evaluated_item := source.last_evaluated_item
 			else
 				an_atomic_value ?= source.last_evaluated_item

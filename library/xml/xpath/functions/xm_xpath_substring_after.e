@@ -77,7 +77,7 @@ feature -- Evaluation
 			an_atomic_value, another_atomic_value: XM_XPATH_ATOMIC_VALUE
 			s1, s2: STRING
 		do
-			a_collator := collator (3, a_context, False)
+			a_collator := collator (3, a_context, True)
 			if a_collator = Void then
 				create {XM_XPATH_INVALID_ITEM} last_evaluated_item.make_from_string ("Unsupported collation", Xpath_errors_uri, "FOCH0002", Dynamic_error)
 			else

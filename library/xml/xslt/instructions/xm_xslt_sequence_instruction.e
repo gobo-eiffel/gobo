@@ -350,14 +350,36 @@ feature {NONE} -- Implementation
 		local
 			an_object_value: XM_XPATH_OBJECT_VALUE
 			a_function_package: XM_XSLT_FUNCTION_CALL_PACKAGE
+			a_value: XM_XPATH_VALUE
+			an_iterator: XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_ITEM]
+			another_item: XM_XPATH_ITEM
 		do
 			an_object_value ?= an_item
 			if an_object_value /= Void then
 				a_function_package ?= an_object_value.value
-				if a_function_package /= Void then
-					todo ("append_item (function call package)", True)
+				check
+					function_package: a_function_package /= Void
+					-- We don't have any other object values yet
+				end
+				a_function_package.call
+				a_value := a_function_package.last_called_value
+				if a_value.is_error then
+					a_receiver.on_error (a_value.error_value.error_message)
 				else
-					todo ("append_item (Don't know how to deal with unknown object value)", True)
+					from
+						an_iterator := a_value.iterator (a_context); an_iterator.start
+					until
+						an_iterator.after
+					loop
+						another_item := an_iterator.item
+						an_object_value ?= another_item
+						if an_object_value /= Void then
+							append_item (another_item, a_context, a_receiver)
+						else
+							a_receiver.append_item (another_item)
+						end
+						an_iterator.forth
+					end
 				end
 			else
 				a_receiver.append_item (an_item)

@@ -57,6 +57,7 @@ feature -- Evaluation
 			a_bindery.open_stack_frame (actual_parameters, tunnel_parameters)
 			last_tail_call := Void
 			target.expand (a_transformer)
+			last_tail_call := target.last_tail_call
 			a_bindery.close_stack_frame
 			a_transformer.restore_context (a_saved_context)
 		end

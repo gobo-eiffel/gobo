@@ -159,10 +159,11 @@ feature -- Evaluation
 			-- Evaluate `Current' as a single item
 		do
 			evaluate_variable (a_context)
-				check
-					is_convertible_to_item: last_evaluated_binding.is_convertible_to_item (a_context)
-				end
+			if last_evaluated_binding.is_convertible_to_item (a_context) then
 				last_evaluated_item := last_evaluated_binding.as_item (a_context)
+			else
+				last_evaluated_item := Void
+			end
 		end
 
 	evaluate_variable (a_context: XM_XPATH_CONTEXT) is

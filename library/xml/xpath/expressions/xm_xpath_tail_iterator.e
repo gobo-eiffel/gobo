@@ -51,7 +51,7 @@ feature -- Status report
 	before: BOOLEAN is
 			-- Are there any more items in the sequence?
 		do
-			Result := index < start_position
+			Result := index = 0
 		end
 
 	after: BOOLEAN is
@@ -74,14 +74,18 @@ feature -- Cursor movement
 				index := index + 1
 				if not base_iterator.after then base_iterator.forth end
 			end
-			if index < start_position then index := start_position end
+			index := 1
 		end
 
 	forth is
 			-- Move to next position
 		do
 			index := index + 1
-			if not base_iterator.after then base_iterator.forth end
+			if base_iterator.before then
+				base_iterator.start
+			elseif not base_iterator.after then
+				base_iterator.forth
+			end
 		end
 
 feature -- Duplication

@@ -73,7 +73,7 @@ feature {NONE} -- Implementation
 				a_transformer.put_user_data (Current, "memo-function-cache", a_function_cache)
 			end
 			a_key := combined_key (some_actual_arguments)
-			a_function_cache.put (a_cached_result, a_key)
+			a_function_cache.force (a_cached_result, a_key)
 		end
 
 	cached_value (a_transformer: XM_XSLT_TRANSFORMER; some_actual_arguments: DS_LIST [XM_XPATH_VALUE]): XM_XPATH_VALUE is
@@ -116,7 +116,7 @@ feature {NONE} -- Implementation
 			loop
 				a_value := a_cursor.item
 				from
-					an_iterator := a_value.iterator (Void)
+					an_iterator := a_value.iterator (Void);an_iterator.start
 				until
 					an_iterator.after
 				loop

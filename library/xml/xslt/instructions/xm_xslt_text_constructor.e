@@ -44,7 +44,13 @@ feature -- Access
 			if select_expression /= Void then
 				a_string_value ?= select_expression
 				if a_string_value /= Void then
-					Result := a_string_value.string_value
+					if a_string_value.is_error then
+						if not a_transformer.is_error then
+							a_transformer.report_fatal_error (a_string_value.error_value, Current)
+						end
+					else
+						Result := a_string_value.string_value
+					end
 				else
 					Result := flattened_sequence (select_expression.iterator (a_context), a_separator, a_transformer)
 				end
@@ -235,7 +241,11 @@ feature {NONE} -- Implementation
 		do
 			first := True
 			create Result.make (0)
-			if not an_iterator.is_error then
+			if an_iterator.is_error then
+				if not a_transformer.is_error then
+					a_transformer.report_fatal_error (an_iterator.error_value, Current)
+				end
+			else
 				from
 					an_iterator.start
 				until

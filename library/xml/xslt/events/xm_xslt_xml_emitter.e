@@ -72,7 +72,7 @@ feature -- Events
 	end_document is
 			-- Notify the end of the document
 		do
-			-- Nothing to do
+			is_document_started := False
 		end
 
 	start_element (a_name_code: INTEGER; a_type_code: INTEGER; properties: INTEGER) is
@@ -450,8 +450,8 @@ feature {NONE} -- Implementation
 	output (a_character_string: STRING) is
 			-- Output `a_character_string'.
 		require
-			valid_string: outputter.is_valid_string (a_character_string)
 			document_opened: is_open
+			valid_string: outputter.is_valid_string (a_character_string)
 		do
 			if not is_error then
 				outputter.output (a_character_string)

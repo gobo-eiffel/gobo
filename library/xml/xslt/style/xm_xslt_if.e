@@ -123,7 +123,7 @@ feature -- Element change
 			last_generated_instruction := Void
 			a_value ?= condition
 			if a_value /= Void then
-				
+
 				-- Condition known statically, so we only need compile the code if true.
             -- This can happen with expressions such as test="function-available('abc')".
 				

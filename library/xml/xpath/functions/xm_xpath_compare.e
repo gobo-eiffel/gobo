@@ -74,7 +74,7 @@ feature -- Evaluation
 			s1, s2: STRING
 			a_comparison_result: INTEGER
 		do
-			a_collator := collator (3, a_context, False)
+			a_collator := collator (3, a_context, True)
 			if a_collator = Void then
 				create {XM_XPATH_INVALID_ITEM} last_evaluated_item.make_from_string ("Unsupported collation", Xpath_errors_uri, "FOCH0002", Dynamic_error)
 			else

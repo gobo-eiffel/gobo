@@ -30,7 +30,7 @@ feature {NONE} -- Initialization
 			value_not_void: a_value /= Void
 		do
 			make_atomic_value
-			value := trim_white_space (a_value)
+			value := trimmed_white_space (a_value)
 		ensure
 			value_set: STRING_.same_string (value, a_value)
 			static_properties_computed: are_static_properties_computed

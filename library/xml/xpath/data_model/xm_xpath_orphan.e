@@ -50,7 +50,7 @@ feature -- Access
 	item_type: XM_XPATH_ITEM_TYPE is
 			-- Type
 		do
-			-- TODO
+			create {XM_XPATH_NODE_KIND_TEST} Result.make (node_type)
 		end
 
 	document: XM_XPATH_DOCUMENT

@@ -77,7 +77,7 @@ feature -- Evaluation
 			else
 				a_string := arguments.item (1).last_evaluated_item.string_value
 				arguments.item (2).evaluate_item (a_context)
-				if arguments.item (2).last_evaluated_item.is_error then
+				if arguments.item (2).last_evaluated_item /= Void and then arguments.item (2).last_evaluated_item.is_error then
 					last_evaluated_item := arguments.item (2).last_evaluated_item
 				else
 					an_atomic_value ?= arguments.item (2).last_evaluated_item

@@ -180,7 +180,7 @@ feature {NONE} -- Implementation
 			if STRING_.same_string (order, "ascending") then
 				Result := a_base_comparer
 			elseif STRING_.same_string (order, "descending") then
-				create {XM_XSLT_DESCENDING_COMPARER} Result.make (a_base_comparer)
+				create {XM_XPATH_DESCENDING_COMPARER} Result.make (a_base_comparer)
 			else
 				create an_error.make_from_string ("order must be 'ascending' or 'descending'", Gexslt_eiffel_type_uri, "INVALID_ORDER", Static_error)
 				a_context.transformer.report_fatal_error (an_error, Void)

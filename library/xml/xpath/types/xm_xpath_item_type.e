@@ -39,7 +39,7 @@ feature -- Access
 			-- fingerprint of primitive type corresponding to this item type;
 			-- For item(), this is Any_item. For node(), it is Any_node.
 			-- For specific node kinds, it is the value representing the node kind, for example Element_node.
-			-- For xdt:anyAtomicType it is Atomic_type. For numeric it is Number_type.
+			-- For xdt:anyAtomicType it is atomic_type. For numeric it is number_type.
 			-- For other atomic types it is the primitive type as defined in XML Schema:
 		deferred
 		ensure

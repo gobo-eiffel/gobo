@@ -114,7 +114,7 @@ feature -- Evaluation
 					create {XM_XPATH_EMPTY_ITERATOR [XM_XPATH_ITEM]} Result.make
 				else
 					second_operand.evaluate_item (a_context)
-					if second_operand.last_evaluated_item.is_error then
+					if second_operand.last_evaluated_item /= Void and then second_operand.last_evaluated_item.is_error then
 						create {XM_XPATH_INVALID_ITERATOR} Result.make (second_operand.last_evaluated_item.error_value)
 					else
 						another_integer_value ?= second_operand.last_evaluated_item

@@ -554,6 +554,44 @@ feature
 			assert ("Five evaluated items", evaluated_items /= Void and then evaluated_items.count = 40)
 		end
 
+	test_zero_is_false is
+			-- Test zero evaluates to boolean false.
+		local
+			an_evaluator: XM_XPATH_EVALUATOR
+			evaluated_items: DS_LINKED_LIST [XM_XPATH_ITEM]
+			a_boolean_value: XM_XPATH_BOOLEAN_VALUE
+		do
+			create an_evaluator.make (18, False)
+			an_evaluator.set_string_mode_ascii
+			an_evaluator.build_static_context ("./data/books.xml", False, False, True, True)
+			assert ("Build successfull", not an_evaluator.was_build_error)
+			an_evaluator.evaluate ("boolean(0)")
+			assert ("No evaluation error", not an_evaluator.is_error)
+			evaluated_items := an_evaluator.evaluated_items
+			assert ("One evaluated item", evaluated_items /= Void and then evaluated_items.count = 1)
+			a_boolean_value ?= evaluated_items.item (1)
+			assert ("Boolean false", a_boolean_value /= Void and then a_boolean_value.value = False)
+		end
+
+	test_one_is_true is
+			-- Test one evaluates to boolean true.
+		local
+			an_evaluator: XM_XPATH_EVALUATOR
+			evaluated_items: DS_LINKED_LIST [XM_XPATH_ITEM]
+			a_boolean_value: XM_XPATH_BOOLEAN_VALUE
+		do
+			create an_evaluator.make (18, False)
+			an_evaluator.set_string_mode_ascii
+			an_evaluator.build_static_context ("./data/books.xml", False, False, True, True)
+			assert ("Build successfull", not an_evaluator.was_build_error)
+			an_evaluator.evaluate ("boolean(1)")
+			assert ("No evaluation error", not an_evaluator.is_error)
+			evaluated_items := an_evaluator.evaluated_items
+			assert ("One evaluated item", evaluated_items /= Void and then evaluated_items.count = 1)
+			a_boolean_value ?= evaluated_items.item (1)
+			assert ("Boolean false", a_boolean_value /= Void and then a_boolean_value.value = True)
+		end
+
 	-- Eventually, all errors should be tested here
 
 	-- We can't test for XP0002 with the stand-alone evaluator, because it is proof against it. (NO - not if we can put the current iterator into error, or before )

@@ -411,19 +411,36 @@ feature -- Access
 						until
 							finished = True
 						loop
+							debug ("XPath name pool - URIs")
+								std.error.put_string ("Looking for fingerprint ")
+								std.error.put_string (a_uri)
+								std.error.put_string (":")
+								std.error.put_string (a_local_name)
+								std.error.put_string (" with URI code of ")
+								std.error.put_string (a_uri_code.out)
+								std.error.put_new_line
+							end
 							if STRING_.same_string (an_entry.local_name, a_local_name) and an_entry.uri_code = a_uri_code then
 								finished := True
+								debug ("XPath name pool - URIs")
+									std.error.put_string ("Found it%N")
+								end
 							else
 								next_entry := an_entry.next
 								if next_entry = Void then
-									Result := -1
+									Result := -1; finished := True
+									debug ("XPath name pool - URIs")
+										std.error.put_string ("Not found%N")
+									end
 								else
 									an_entry := next_entry
 								end
 							end
 							a_depth := a_depth + 1
 						end
-						Result := ((a_depth - 1) * bits_10) + a_hash_code
+						if Result /= -1 then
+							Result := ((a_depth - 1) * bits_10) + a_hash_code
+						end
 					end
 				end
 			end
@@ -928,7 +945,7 @@ feature -- Element change
 			a_prefix_code, a_uri_code: INTEGER -- should be INTEGER_16
 			a_key, a_key2: STRING
 		do
-			debug ("XPath name pool")
+			debug ("XPath name pool - namespaces")
 				std.error.put_string ("allocate_namespace_code: prefix is ")
 				std.error.put_string (an_xml_prefix)
 				std.error.put_string (", uri is ")
@@ -958,7 +975,7 @@ feature -- Element change
 			a_key := STRING_.appended_string (a_key, a_key2)
 			prefixes_for_uri.replace (a_key, a_uri_code + 1)
 
-			debug ("XPath name pool")
+			debug ("XPath name pool - namespaces")
 				std.error.put_string ("allocate_namespace_code: code for prefix is ")
 				std.error.put_string (a_prefix_code.out)
 				std.error.put_string (", code for uri is ")
@@ -992,15 +1009,56 @@ feature -- Element change
 			uri_not_void: a_uri /= Void
 			code_not_allocated: not is_code_for_uri_allocated (a_uri)
 			uris_not_all_used: not are_uris_all_used
+		local
+			an_index: INTEGER
 		do
+			debug ("XPath name pool - URIs")
+				std.error.put_string ("Before resize:%N")
+				from
+					an_index := 1
+				until
+					an_index > uris.count
+				loop
+					std.error.put_string (uris.item (an_index))
+					std.error.put_new_line
+					an_index := an_index + 1
+				end
+				std.error.put_new_line
+			end
 			if uris.capacity = uris_used then
 				uris.resize (2 * uris_used)
 				prefixes_for_uri.resize (2 * uris_used)
+			end
+			debug ("XPath name pool - URIs")
+				std.error.put_string ("After resize:%N")
+				from
+					an_index := 1
+				until
+					an_index > uris.count
+				loop
+					std.error.put_string (uris.item (an_index))
+					std.error.put_new_line
+					an_index := an_index + 1
+				end
+				std.error.put_new_line
 			end
 			last_uri_code := uris_used
 			uris.put (a_uri, uris_used + 1)
 			prefixes_for_uri.put ("", uris_used + 1)
 			uris_used := uris_used + 1
+			debug ("XPath name pool - URIs")
+				std.error.put_string ("After addition:%N")
+				from
+					an_index := 1
+				until
+					an_index > uris.count
+				loop
+					std.error.put_string (uris.item (an_index))
+					std.error.put_new_line
+					an_index := an_index + 1
+				end
+				std.error.put_new_line
+			end
 		ensure
 			code_allocated: is_code_for_uri_allocated (a_uri)
 		end
@@ -1335,7 +1393,9 @@ feature -- Conversion
 		do
 			a_fingerprint := fingerprint_from_name_code (a_name_code)
 			if a_fingerprint < 1024 then
-				Result := type_factory.display_name (a_fingerprint)
+				Result := STRING_.concat ("{", type_factory.standard_uri (a_fingerprint))
+				Result := STRING_.appended_string (Result, "}")
+				Result := STRING_.appended_string (Result, type_factory.standard_local_name (a_fingerprint))
 			else
 				a_name_entry := name_entry (a_name_code)
 				if a_name_entry = Void then
@@ -1343,7 +1403,7 @@ feature -- Conversion
 				elseif a_name_entry.uri_code = 0 then
 					Result := a_name_entry.local_name
 				else
-					Result := STRING_.appended_string ("{", uri_from_uri_code (a_name_entry.uri_code))
+					Result := STRING_.concat ("{", uri_from_uri_code (a_name_entry.uri_code))
 					Result := STRING_.appended_string (Result, "}")
 					Result := STRING_.appended_string (Result, a_name_entry.local_name)
 				end

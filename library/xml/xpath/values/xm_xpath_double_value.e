@@ -15,9 +15,8 @@ class XM_XPATH_DOUBLE_VALUE
 inherit
 
 	XM_XPATH_NUMERIC_VALUE
-		redefine
-			effective_boolean_value
-		end
+
+	MA_SHARED_DECIMAL_CONTEXT
 
 	MA_DECIMAL_CONSTANTS
 
@@ -79,12 +78,6 @@ feature -- Access
 				-- Bug in SE 1.0 and 1.1: Make sure that
 				-- that `Result' is not optimized away.
 			end
-		end
-
-	effective_boolean_value (a_context: XM_XPATH_CONTEXT): XM_XPATH_BOOLEAN_VALUE is
-			-- Effective boolean value
-		do
-			create Result.make (value /= 0.0)
 		end
 
 	string_value: STRING is
@@ -255,6 +248,8 @@ feature -- Basic operations
 				create {XM_XPATH_DOUBLE_VALUE} Result.make (value * other.as_double)
 			when Division_token then
 				create {XM_XPATH_DOUBLE_VALUE} Result.make (value / other.as_double)
+			when Integer_division_token then
+				create {XM_XPATH_INTEGER_VALUE} Result.make_from_integer ((value / other.as_double).truncated_to_integer)
 			when Modulus_token then
 				a_double := other.as_double
 				if is_whole_number and then other.is_whole_number then
@@ -305,13 +300,13 @@ feature {NONE} -- Implementation
 	shared_round_context: MA_DECIMAL_CONTEXT is
 			-- Decimal context for use by round
 		once
-			create Result.make (0, Round_ceiling)
+			create Result.make (shared_decimal_context.digits, Round_half_up)
 		end
 
 	shared_floor_context: MA_DECIMAL_CONTEXT is
 			-- Decimal context for use by floor
 		once
-			create Result.make (0, Round_floor)
+			create Result.make (shared_decimal_context.digits, Round_floor)
 		end
 
 end

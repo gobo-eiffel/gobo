@@ -65,7 +65,7 @@ feature -- Status report
 			an_iterator := iterator (a_context)
 			an_iterator.start
 			if an_iterator.after then
-				Result := True
+				Result := False
 			else
 				an_iterator.forth
 				if an_iterator.after then
@@ -206,7 +206,7 @@ feature  -- Conversion
 			an_iterator := iterator (a_context)
 			if not an_iterator.is_error then
 				an_iterator.start
-				if an_iterator.is_error or else an_iterator.after then
+				if an_iterator.is_error then
 					create {XM_XPATH_INVALID_ITEM} Result.make (an_iterator.error_value)
 				else
 				--	an_iterator.forth

@@ -16,7 +16,7 @@ inherit
 
 	XM_XPATH_NUMERIC_VALUE
 		redefine
-			three_way_comparison, effective_boolean_value
+			three_way_comparison
 		end
 
 	MA_SHARED_DECIMAL_CONTEXT
@@ -77,12 +77,6 @@ feature -- Access
 				-- Bug in SE 1.0 and 1.1: Make sure that
 				-- that `Result' is not optimized away.
 			end
-		end
-
-	effective_boolean_value (a_context: XM_XPATH_CONTEXT): XM_XPATH_BOOLEAN_VALUE is
-			-- Effective boolean value
-		do
-			create Result.make (not value.is_zero)
 		end
 
 	string_value: STRING is

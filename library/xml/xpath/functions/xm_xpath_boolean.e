@@ -61,7 +61,7 @@ feature -- Evaluation
 	effective_boolean_value (a_context: XM_XPATH_CONTEXT): XM_XPATH_BOOLEAN_VALUE is
 			-- Effective boolean value
 		do
-			create Result.make (arguments.item (1).effective_boolean_value (a_context).value)
+			Result := arguments.item (1).effective_boolean_value (a_context)
 		end
 
 	evaluate_item (a_context: XM_XPATH_CONTEXT) is

@@ -132,7 +132,7 @@
 	 </row>	
 	 <row>
 	   <entry>fn:round</entry>
-	   <entry>No</entry>
+	   <entry>Yes</entry>
 	   <entry>No</entry>
 	   <entry>No</entry>
 	 </row>	
@@ -570,13 +570,13 @@
 	 </row>	
 	 <row>
 	   <entry>fn:max</entry>
-	   <entry>No</entry>
+	   <entry>Yes</entry>
 	   <entry>No</entry>
 	   <entry>No</entry>
 	 </row>	
 	 <row>
 	   <entry>fn:min</entry>
-	   <entry>No</entry>
+	   <entry>Yes</entry>
 	   <entry>No</entry>
 	   <entry>No</entry>
 	 </row>	

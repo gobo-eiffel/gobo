@@ -26,7 +26,7 @@ creation
 
 feature {NONE} -- Initialization
 
-	make (a_body: XM_XSLT_SEQUENCE_INSTRUCTION; a_function_name: STRING; a_base_uri: STRING; a_line_number: INTEGER) is
+	make (a_body: XM_XSLT_SEQUENCE_INSTRUCTION; a_function_name: STRING; a_base_uri: STRING; a_line_number: INTEGER; is_a_memo_function: BOOLEAN) is
 			-- Establish invariant
 		require
 			body_not_void: a_body /= Void
@@ -35,10 +35,12 @@ feature {NONE} -- Initialization
 		do
 			body := a_body
 			function_name := a_function_name
+			is_memo_function := is_a_memo_function
 			create details.make ("xsl:function", a_base_uri, a_line_number, empty_property_set)
 		ensure
 			body_set: body = a_body
 			function_name_set: function_name = a_function_name
+			memo_function_status_set: is_memo_function = is_a_memo_function
 		end
 
 
@@ -60,6 +62,11 @@ feature -- Evaluation
 		do
 			last_called_value := Void
 			if is_memo_function then
+				debug ("XSLT memo function")
+					std.error.put_string ("Memo function ")
+					std.error.put_string (function_name)
+					std.error.put_string (" retrieving value%N")
+				end
 				last_called_value := cached_value (a_transformer, some_actual_arguments)
 			end
 			if last_called_value = Void then
@@ -98,6 +105,12 @@ feature -- Evaluation
 				end
 				if is_memo_function then
 					put_cached_value (a_transformer, some_actual_arguments, last_called_value)
+				end
+			else
+				debug ("XSLT memo function")
+					std.error.put_string ("Memo function ")
+					std.error.put_string (function_name)
+					std.error.put_string (" retrieved value%N")
 				end
 			end
 		end

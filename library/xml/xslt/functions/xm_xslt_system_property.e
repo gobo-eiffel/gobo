@@ -21,6 +21,8 @@ inherit
 
 	KL_GOBO_VERSION
 
+	KL_SHARED_EXECUTION_ENVIRONMENT
+
 creation
 
 	make
@@ -188,6 +190,9 @@ feature {NONE} -- Implementation
 				else
 					Result := ""
 				end
+			elseif STRING_.same_string (a_namespace_uri, Exslt_environment_uri) then
+				Result := Execution_environment.variable_value (a_local_name)
+				if Result = Void then Result := "" end
 			else
 				Result := ""
 			end

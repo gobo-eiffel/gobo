@@ -2,7 +2,7 @@ indexing
 
 	description:
 
-		"Objects that implement the XPath not() function"
+		"Objects that implement the XPath round() function"
 
 	library: "Gobo Eiffel XPath Library"
 	copyright: "Copyright (c) 2004, Colin Adams and others"
@@ -10,13 +10,13 @@ indexing
 	date: "$Date$"
 	revision: "$Revision$"
 
-class XM_XPATH_NOT
+class XM_XPATH_ROUND
 
 inherit
 
 	XM_XPATH_SYSTEM_FUNCTION
 		redefine
-			check_arguments, evaluate_item, effective_boolean_value
+			evaluate_item
 		end
 
 creation
@@ -28,7 +28,7 @@ feature {NONE} -- Initialization
 	make is
 			-- Establish invariant
 		do
-			name := "not"
+			name := "round"
 			minimum_argument_count := 1
 			maximum_argument_count := 1
 			create arguments.make (1)
@@ -41,7 +41,7 @@ feature -- Access
 	item_type: XM_XPATH_ITEM_TYPE is
 			-- Data type of the expression, where known
 		do
-			Result := type_factory.boolean_type
+			Result := arguments.item (1).item_type
 			if Result /= Void then
 				-- Bug in SE 1.0 and 1.1: Make sure that
 				-- that `Result' is not optimized away.
@@ -53,28 +53,32 @@ feature -- Status report
 	required_type (argument_number: INTEGER): XM_XPATH_SEQUENCE_TYPE is
 			-- Type of argument number `argument_number'
 		do
-			create Result.make (any_item, Required_cardinality_zero_or_more)
+			create Result.make_optional_number
 		end
 
 feature -- Evaluation
 
-	effective_boolean_value (a_context: XM_XPATH_CONTEXT): XM_XPATH_BOOLEAN_VALUE is
-			-- Effective boolean value
-		local
-			a_boolean_value: XM_XPATH_BOOLEAN_VALUE
-		do
-			a_boolean_value := arguments.item (1).effective_boolean_value (a_context)
-			if a_boolean_value.is_error then
-				Result := a_boolean_value
-			else
-				create Result.make (not a_boolean_value.value)
-			end
-		end
-
 	evaluate_item (a_context: XM_XPATH_CONTEXT) is
 			-- Evaluate as a single item
+		local
+			an_atomic_value: XM_XPATH_ATOMIC_VALUE
+			a_numeric_value: XM_XPATH_NUMERIC_VALUE
 		do
-			last_evaluated_item := effective_boolean_value (a_context)
+			arguments.item (1).evaluate_item (a_context)
+			last_evaluated_item := arguments.item (1).last_evaluated_item
+			if last_evaluated_item /= Void then
+				an_atomic_value ?= last_evaluated_item
+				check
+					is_atomic: an_atomic_value /= Void
+					-- static typing
+				end
+				a_numeric_value ?= an_atomic_value.primitive_value
+				check
+					is_numeric: a_numeric_value /= Void
+					-- static typing
+				end
+				last_evaluated_item := a_numeric_value.rounded_value
+			end
 		end
 
 feature {XM_XPATH_EXPRESSION} -- Restricted
@@ -82,17 +86,8 @@ feature {XM_XPATH_EXPRESSION} -- Restricted
 	compute_cardinality is
 			-- Compute cardinality.
 		do
-			set_cardinality_exactly_one
+			set_cardinality_optional
 		end
 
-feature {XM_XPATH_FUNCTION_CALL} -- Local
-
-	check_arguments (a_context: XM_XPATH_STATIC_CONTEXT) is
-			-- Check arguments during parsing, when all the argument expressions have been read.
-			-- Prevent sorting of the argument
-		do
-			Precursor (a_context)
-			arguments.item (1).set_unsorted (False)
-		end
 end
 	

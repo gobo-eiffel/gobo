@@ -4,13 +4,13 @@ indexing
 
 		"Objects that compare in descending order"
 
-	library: "Gobo Eiffel XSLT Library"
+	library: "Gobo Eiffel XPath Library"
 	copyright: "Copyright (c) 2004, Colin Adams and others"
 	license: "Eiffel Forum License v2 (see forum.txt)"
 	date: "$Date$"
 	revision: "$Revision$"
 
-class XM_XSLT_DESCENDING_COMPARER
+class XM_XPATH_DESCENDING_COMPARER
 
 inherit
 	

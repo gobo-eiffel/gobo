@@ -16,7 +16,7 @@ inherit
 
 	XM_XPATH_NUMERIC_VALUE
 		redefine
-			three_way_comparison, effective_boolean_value
+			three_way_comparison
 		end
 
 	MA_SHARED_DECIMAL_CONTEXT
@@ -224,14 +224,6 @@ feature -- Status report
 			end
 		end
 	
-feature -- Evaluation
-
-		effective_boolean_value (a_context: XM_XPATH_CONTEXT): XM_XPATH_BOOLEAN_VALUE is
-			-- Effective boolean value
-		do
-			create Result.make (not value.is_zero)
-		end
-
 feature -- Conversion
 	
 	convert_to_type (a_required_type: XM_XPATH_ITEM_TYPE): XM_XPATH_ATOMIC_VALUE is
@@ -249,7 +241,11 @@ feature -- Conversion
 			elseif  a_required_type = type_factory.integer_type then
 				create {XM_XPATH_INTEGER_VALUE} Result.make (value)
 			elseif  a_required_type = type_factory.double_type then
-				create {XM_XPATH_DOUBLE_VALUE} Result.make (value.to_double)
+				if is_nan then
+					create {XM_XPATH_DOUBLE_VALUE} Result.make_nan
+				else
+					create {XM_XPATH_DOUBLE_VALUE} Result.make (value.to_double)
+				end
 			elseif  a_required_type = type_factory.decimal_type then
 				Result := Current
 			elseif  a_required_type = type_factory.string_type then
@@ -306,22 +302,22 @@ feature -- Basic operations
 					end
 				when Modulus_token then
 					create {XM_XPATH_DECIMAL_VALUE} Result.make (value \\ another_decimal.value)
+				end
+			else
+				an_integer_value ?= other
+				if an_integer_value /= Void then
+					another_decimal ?= other.convert_to_type (type_factory.decimal_type)
+					check
+						converted_to_decimal: another_decimal /= Void
+						-- as integers will always convert to decimals
+					end
+					Result := arithmetic (an_operator, another_decimal)
 				else
-					an_integer_value ?= other
-					if an_integer_value /= Void then
-						another_decimal ?= other.convert_to_type (type_factory.decimal_type)
-						check
-							converted_to_decimal: another_decimal /= Void
-							-- as integers will always convert to decimals
-						end
-						Result := arithmetic (an_operator, another_decimal)
+					a_numeric_value ?= convert_to_type (other.item_type)
+					if a_numeric_value /= Void then
+						Result := a_numeric_value.arithmetic (an_operator, other)
 					else
-						a_numeric_value ?= convert_to_type (other.item_type)
-						if an_integer_value /= Void then
-							Result := a_numeric_value.arithmetic (an_operator, other)
-						else
-							create {XM_XPATH_DECIMAL_VALUE} Result.make (value.nan)
-						end
+						create {XM_XPATH_DECIMAL_VALUE} Result.make (value.nan)
 					end
 				end
 			end

@@ -109,7 +109,6 @@ feature -- Evaluation
 					-- Apply the content of any attribute sets mentioned in use-attribute-sets.
 
 					if attribute_sets /= Void then expand_attribute_sets (attribute_sets, a_transformer) end
-
 					process_children (a_context)
 
 					if not a_transformer.is_error then

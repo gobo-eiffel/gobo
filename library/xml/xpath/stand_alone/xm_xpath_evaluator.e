@@ -35,7 +35,7 @@ feature {NONE} -- Initializtion
 	make (digits: INTEGER; on_or_off: BOOLEAN) is
 			-- Set precision for decimal arithmetic, and line numbering status.
 		require
-			sufficient_precision: digits = 0 or else digits >= 18
+			sufficient_precision: digits >= 18
 		do
 			shared_decimal_context.set_digits (digits)
 			is_line_numbering := on_or_off

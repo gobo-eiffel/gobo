@@ -157,7 +157,7 @@ feature -- Element change
 	set_digits (digits: INTEGER) is
 			-- Set the preceision for decimal and integer arithmetic.
 		require
-			sufficient_precision: digits = 0 or else digits >= 18
+			sufficient_precision: digits >= 18
 		do
 			shared_decimal_context.set_digits (digits)
 		ensure

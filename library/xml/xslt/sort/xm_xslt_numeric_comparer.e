@@ -67,6 +67,4 @@ feature -- Comparison
 			end
 		end
 
-feature {NONE} -- Implementation
-	
 end

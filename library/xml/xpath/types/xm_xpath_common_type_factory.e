@@ -477,6 +477,7 @@ feature {NONE} -- Implementation
 			bind_gexslt_name (Character_representation_type_code, "character-representation")
 			bind_gexslt_name (Byte_order_mark_type_code, "byte-order-mark")
 			bind_gexslt_name (Gexslt_collation_type_code, "collation")
+			bind_gexslt_name (Memo_function_type_code, "memo-function")
 		end
 	
 	bind_xdt_names is
@@ -692,6 +693,7 @@ feature {NONE} -- Implementation
 			bind_xslt_name (Xslt_extension_element_prefixes_type_code, "extension-element-prefixes")
 			bind_xslt_name (Xslt_type_type_code, "type")
 			bind_xslt_name (Xslt_use_attribute_sets_type_code, "use-attribute-sets")
+			bind_xslt_name (Xslt_use_when_type_code, "use-when")
 			bind_xslt_name (Xslt_validation_type_code, "validation")
 			bind_xslt_name (Xslt_version_type_code, "version")
 		end

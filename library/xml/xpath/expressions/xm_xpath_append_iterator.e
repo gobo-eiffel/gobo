@@ -54,7 +54,7 @@ feature -- Status report
 	after: BOOLEAN is
 			-- Are there any more items in the sequence?
 		do
-			Result := current_iterator.after
+			Result := not current_iterator.before and then current_iterator.after
 			if Result and then current_iterator = base_iterator then
 				current_iterator := second_expression.iterator (context)
 				current_iterator.start
@@ -71,7 +71,11 @@ feature -- Cursor movement
 			if current_iterator = base_iterator and then not current_iterator.before and then current_iterator.after then
 				current_iterator := second_expression.iterator (context)
 			end
-			current_iterator.forth
+			if current_iterator.before then
+				current_iterator.start
+			else
+				current_iterator.forth
+			end
 		end
 
 feature -- Duplication

@@ -1411,11 +1411,13 @@ feature -- Element change
 				if a_version.index_of ('e', 1) > 0 or else a_version.index_of ('E', 1) > 0 then
 					create an_error.make_from_string ("The version attribute must be a decimal literal", "", "XT0110", Static_error)
 					set_validation_error (an_error, a_condition)
+					create version.make_from_string ("2.0") -- to satisfy invariant
 				else
 					create version.make_from_string (a_version)
 					if version.is_special then
 						create an_error.make_from_string ("The version attribute must be a decimal literal", "", "XT0110", Static_error)
 						set_validation_error (an_error, a_condition)
+						create version.make_from_string ("2.0") -- to satisfy invariant
 					end
 				end
 			else
@@ -2109,7 +2111,7 @@ feature {NONE} -- Implementation
 
 invariant
 
-	inherited_verion: version_attribute_processed implies version /= Void
+	inherited_version: version_attribute_processed implies version /= Void
 	validation_reporting: Report_always <= reporting_circumstances and then reporting_circumstances <= Report_if_instantiated
 	error_listener_not_void: error_listener /= Void
 	default_collation_name_not_void: default_collation_name /= Void

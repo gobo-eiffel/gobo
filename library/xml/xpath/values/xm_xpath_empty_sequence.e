@@ -67,7 +67,7 @@ feature -- Status report
 	is_convertible_to_item (a_context: XM_XPATH_CONTEXT): BOOLEAN is
 			-- Can `Current' be converted to an `XM_XPATH_ITEM'?
 		do
-			Result := True
+			Result := False
 		end
 
 	display (a_level: INTEGER) is
