@@ -13,21 +13,18 @@
 -->
 
 <chapter id="echo_task">
-<title>echo</title>
+	<title>echo</title>
 
-<sect1 id="echo_description">
-<title>Description</title>
-<para>
-Echo a message to stdout.
-</para>
-</sect1>
+	<sect1 id="echo_description">
+		<title>Description</title>
+		<para>
+			Echo a message to stdout.
+		</para>
+	</sect1>
 
-<sect1 id="echo_parameters">
-	<title>Parameters</title>
-
-	<sect1 id="copy_parameters">
+	<sect1 id="echo_parameters">
 		<title>Parameters</title>
-	
+
 		<variablelist>
 			<varlistentry>
 				<term>message</term>
@@ -67,5 +64,4 @@ Echo a message to stdout.
 		</programlisting>
 	</sect1>
 
-</sect1>
 </chapter>
