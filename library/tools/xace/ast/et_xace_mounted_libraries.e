@@ -162,10 +162,24 @@ feature -- Basic operations
 			an_externals_not_void: an_externals /= Void
 		local
 			i, nb: INTEGER
+			a_cursor: DS_HASH_SET_CURSOR [STRING]
+			an_options: ET_XACE_OPTIONS
 		do
 			nb := libraries.count
 			from i := 1 until i > nb loop
-				libraries.item (i).library.merge_externals (an_externals)
+				an_options := libraries.item (i).library.options
+				if an_options /= Void then
+					a_cursor := an_options.header.new_cursor
+					from a_cursor.start until a_cursor.after loop
+						an_externals.put_include_directory (a_cursor.item)
+						a_cursor.forth
+					end
+					a_cursor := an_options.link.new_cursor
+					from a_cursor.start until a_cursor.after loop
+						an_externals.put_link_library (a_cursor.item)
+						a_cursor.forth
+					end
+				end
 				i := i + 1
 			end
 		end

@@ -230,10 +230,10 @@ feature {NONE} -- AST factory
 									Result.put_class_option (a_class)
 								end
 							elseif a_child.name.is_equal (uc_external) then
-								if an_option /= Void then
+								if an_option = Void then
 									an_option := ast_factory.new_options
-									fill_externals (an_option, Result, a_child, a_position_table)
 								end
+								fill_externals (an_option, Result, a_child, a_position_table)
 							end
 						end
 						a_cursor.forth
@@ -553,10 +553,10 @@ feature {NONE} -- Element change
 											an_option := new_options (a_child, a_position_table)
 										end
 									elseif a_child.name.is_equal (uc_external) then
-										if an_option /= Void then
+										if an_option = Void then
 											an_option := ast_factory.new_options
-											fill_externals (an_option, Void, a_child, a_position_table)
 										end
+										fill_externals (an_option, Void, a_child, a_position_table)
 									end
 								end
 								old_cursor.forth
@@ -577,10 +577,10 @@ feature {NONE} -- Element change
 							an_option := new_options (a_child, a_position_table)
 						end
 					elseif a_child.name.is_equal (uc_external) then
-						if an_option /= Void then
+						if an_option = Void then
 							an_option := ast_factory.new_options
-							fill_externals (an_option, Void, a_child, a_position_table)
 						end
+						fill_externals (an_option, Void, a_child, a_position_table)
 					end
 				end
 				a_cursor.forth
@@ -695,10 +695,10 @@ feature {NONE} -- Element change
 								an_option := new_options (a_child, a_position_table)
 							end
 						elseif a_child.name.is_equal (uc_external) then
-							if an_option /= Void then
+							if an_option = Void then
 								an_option := ast_factory.new_options
-								fill_externals (an_option, Void, a_child, a_position_table)
 							end
+							fill_externals (an_option, Void, a_child, a_position_table)
 						end
 					end
 					a_cursor.forth
