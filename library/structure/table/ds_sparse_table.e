@@ -498,6 +498,42 @@ feature -- Element change
 			inserted: has (k) and then item (k) = v
 		end
 
+	put_last (v: G; k: K) is
+			-- Associate `v' with key `k'. Put `v' at the end of table
+			-- if no item was already associated with `k', or replace
+			-- existing item otherwise.
+			-- Do not move cursors.
+		require
+			not_full: not is_full
+			valid_key: valid_key (k)
+		local
+			i, h: INTEGER
+		do
+			unset_found_item
+			search_position (k)
+			if position /= No_position then
+				items_put (v, position)
+			else
+				i := last_position + 1
+				if i > capacity then
+					compress
+					i := last_position + 1
+				end
+				h := slots_position
+				clashes_put (slots_item (h), i)
+				slots_put (i, h)
+				items_put (v, i)
+				keys_put (k, i)
+				last_position := i
+				count := count + 1
+			end
+		ensure
+			same_count: (old has (k)) implies (count = old count)
+			one_more: (not old has (k)) implies (count = old count + 1)
+			inserted: has (k) and then item (k) = v
+			last: (not old has (k)) implies last = v
+		end
+
 	force (v: G; k: K) is
 			-- Associate `v' with key `k'.
 			-- Resize table if necessary.
@@ -563,6 +599,8 @@ feature -- Element change
 			-- existing item otherwise.
 			-- Resize table if necessary.
 			-- Do not move cursors.
+		require
+			valid_key: valid_key (k)
 		local
 			i, h: INTEGER
 		do
@@ -666,6 +704,54 @@ feature -- Resizing
 			clashes_resize (n + 1)
 			capacity := n
 			position := No_position
+		end
+
+feature -- Optimization
+
+	compress is
+			-- Remove holes between stored items. May avoid
+			-- resizing when calling `force_last' for example.
+			-- Do not lose any item. Do not move cursors.
+		local
+			i, j, nb, h: INTEGER
+			dead_item: G
+			dead_key: K
+		do
+			if last_position /= count then
+				unset_found_item
+				nb := last_position
+				from i := 1 until i > nb loop
+					if clashes_item (i) > Free_watermark then
+						j := j + 1
+						if j /= i then
+							items_put (items_item (i), j)
+							keys_put (keys_item (i), j)
+							move_all_cursors (i, j)
+						end
+					end
+					i := i + 1
+				end
+				from j := j + 1 until j > nb loop
+					items_put (dead_item, j)
+					keys_put (dead_key, j)
+					j := j + 1
+				end
+				nb := count
+				from i := 1 until i > nb loop
+					h := hash_position (keys_item (i))
+					clashes_put (slots_item (h), i)
+					slots_put (i, h)
+					i := i + 1
+				end
+				clashes_wipe_out
+				slots_wipe_out
+				last_position := nb
+				position := No_position
+			end
+		ensure
+			same_count: count = old count
+			compressed: last_position = count
+			not_reszied: capacity = old capacity
 		end
 
 feature {DS_SPARSE_TABLE_CURSOR} -- Implementation
