@@ -48,6 +48,7 @@
 			</cluster>
 			<cluster name="no_expat" unless="${GOBO_XML_EXPAT}"/>
 		</cluster>
+		<cluster name="xpointer" unless="${VE_4_1}" />
 		<cluster name="xpath" unless="${VE_4_1}">
 			<cluster name="data_model"/>
 			<cluster name="tinytree"/>

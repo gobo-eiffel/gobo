@@ -41,7 +41,7 @@ feature {NONE} -- Initialization
 			a_resolver_factory: XM_RESOLVER_FACTORY
 		do
 			create a_resolver_factory
-			uri_scheme_resolver := a_resolver_factory.new_file_resolver_current_directory
+			uri_scheme_resolver := a_resolver_factory.new_resolver_current_directory
 			create well_known_system_ids.make_with_equality_testers (1, string_equality_tester, string_equality_tester)
 			well_known_system_ids.put (Xml_catalog_dtd, Xml_catalog_system_id)
 			create well_known_public_ids.make_with_equality_testers (1, string_equality_tester, string_equality_tester)

@@ -28,8 +28,18 @@ inherit
 		
 	XM_SHARED_CATALOG_MANAGER
 
-feature -- Status report
-	
+creation
+
+	make
+
+feature {NONE} -- Initialization
+
+	make is
+		-- Nothing to do
+		do
+		end
+
+feature -- Status report	
 	
 	supports_registering_schemes: BOOLEAN is
 			-- Does `Current' support resgitering scheme resolvers?
