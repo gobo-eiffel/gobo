@@ -52,8 +52,6 @@ inherit
 
 	EXCEPTIONS
 
-	STD_FILES
-	
 creation
 	make
 
@@ -65,9 +63,9 @@ feature -- Initialization
 			create document_number_map.make_map (10)
 			create hash_slots.make (0, 1023)
 			
-			create prefixes.make (0, 99)
-			create uris.make (0, 99)
-			create prefixes_for_uri.make (0, 99)
+			create prefixes.make_equal (100)
+			create uris.make_equal (100)
+			create prefixes_for_uri.make_equal (100)
 
 			prefixes.put ("", Null_prefix_index)
 			uris.put (Null_uri, Null_prefix_index)
@@ -95,12 +93,23 @@ feature -- Access
 			prefix_code, uri_code: INTEGER -- should be INTEGER_16
 			key: STRING
 		do
+			debug ("name pool")
+				io.error.put_string ("namespace_code: prefix is ")
+				io.error.put_string (xml_prefix)
+				io.error.put_new_line
+			end
 			prefix_code := code_for_prefix (xml_prefix)
 			if prefix_code < 0 then
+				debug ("name pool")
+					io.error.put_string ("namespace_code: Negative prefix code%N")
+				end
 				Result := -1
 			else
 				uri_code := code_for_uri (uri)
 				if uri_code < 0 then
+					debug ("name pool")
+						io.error.put_string ("namespace_code: Negative URI code%N")
+					end
 					Result := -1
 				else
 					Result := (prefix_code |<< 16) + uri_code
@@ -111,8 +120,11 @@ feature -- Access
 						-- Ensure the prefix is in the list of prefixes used with this URI
 						create key.make_from_string (xml_prefix)
 						key.extend (' ')						
-						if prefixes_for_uri.item (uri_code).substring_index (key, 1) = 0 then
+						if prefixes_for_uri.item (uri_code + 1).substring_index (key, 1) = 0 then
 							-- prefix is not in the list
+							debug ("name pool")
+								io.error.put_string ("namespace_code: Prefix not in list%N")
+							end							
 							Result := -1
 						end
 					end
@@ -132,18 +144,21 @@ feature -- Access
 			found: BOOLEAN
 		do
 			from
-				counter := 0
+				counter := 1
+			variant
+				uris_used - counter + 1
 			until
-				counter = uris_used or found = True
+				counter > uris_used or found = True
 			loop
 				if uris.item (counter).is_equal (uri) then
-					Result := counter
+					Result := counter - 1
 					found := True
 				end
+				counter := counter + 1
 			end
 			if not found then Result := -1 end
 		ensure
-			valid_result: Result > -2
+			valid_result: Result = -1 or Result > 0
 		end
 
 	code_for_prefix (xml_prefix: STRING): INTEGER is -- should be INTEGER_16
@@ -155,19 +170,32 @@ feature -- Access
 			counter: INTEGER
 			found: BOOLEAN
 		do
+		debug ("name pool")
+				io.error.put_string ("code_for_prefix: prefix is ")
+				io.error.put_string (xml_prefix)
+				io.error.put_new_line
+			end			
 			from
-				counter := 0
+				counter := 1
+			variant
+				prefixes_used - counter + 1
 			until
-				counter = prefixes_used or found = True
+				counter > prefixes_used or found = True
 			loop
+				debug ("name pool")
+					io.error.put_string ("code_for_prefix: current prefix is ")
+					io.error.put_string (prefixes.item (counter))
+					io.error.put_new_line
+				end				
 				if prefixes.item (counter).is_equal (xml_prefix) then
-					Result := counter
+					Result := counter - 1
 					found := True
 				end
+				counter := counter + 1
 			end
 			if not found then Result := -1 end
 		ensure
-			valid_result: Result > -2
+			valid_result: Result = -1 or Result > 0
 		end
 
 	suggest_prefix_for_uri (uri: STRING): STRING is
@@ -185,7 +213,7 @@ feature -- Access
 			if uri_code = -1 then
 				Result := Void
 			else
-				possible_prefixes := prefixes_for_uri.item (uri_code)
+				possible_prefixes := prefixes_for_uri.item (uri_code + 1)
 				index := possible_prefixes.index_of (' ', 1)
 				if index = 0 then
 					Result := Void
@@ -212,7 +240,7 @@ feature -- Access
 				Result := ""
 			else
 				from
-					the_prefixes := prefixes_for_uri.item (uri_code)
+					the_prefixes := prefixes_for_uri.item (uri_code + 1)
 					counter := 1
 					last_blank := 1
 					length_of_prefixes := the_prefixes.count
@@ -259,13 +287,17 @@ feature -- Access
 		do
 			from
 				uri_code := -1
+				counter := 1
+			variant
+				uris_used - counter + 1
 			until
-				counter >= uris_used or found = True
+				counter > uris_used or found = True
 			loop
 				if uris.item (counter).is_equal (uri) then
-					uri_code := counter
+					uri_code := counter - 1
 					found := True
 				end
+				counter := counter + 1
 			end
 			if uri_code = -1 then
 				Result := -1
@@ -277,6 +309,8 @@ feature -- Access
 				else
 					entry :=	hash_slots.item (hash_code)
 					from
+					variant
+						1023 - depth
 					until
 						finished = True
 					loop
@@ -330,9 +364,9 @@ feature -- Status report
 			hash_code, depth, prefix_count, uri_count: INTEGER
 			entry, next: XM_XPATH_NAME_ENTRY
 		do
-			error.put_string ("Contents of NamePool ")
-			error.put_string (out)
-			error.put_new_line
+			io.error.put_string ("Contents of NamePool ")
+			io.error.put_string (out)
+			io.error.put_new_line
 			from
 				hash_code := 0
 			variant
@@ -343,53 +377,60 @@ feature -- Status report
 				entry := hash_slots.item (hash_code)
 				depth := 0
 				from
+				variant
+					1023 - depth
 				until
 					entry = Void
 				loop
-					error.put_string ("Fingerprint ")
-					error.put_string (depth.out)
-					error.put_string ("/")
-					error.put_string (hash_code.out)
-					error.put_new_line
-					error.put_string ("  local name = ")
-					error.put_string (entry.local_name)
-					error.put_string (" uri code = ")
-					error.put_string (entry.uri_code.out)
-					error.put_new_line
+					io.error.put_string ("Fingerprint ")
+					io.error.put_string (depth.out)
+					io.error.put_string ("/")
+					io.error.put_string (hash_code.out)
+					io.error.put_new_line
+					io.error.put_string ("  local name = ")
+					io.error.put_string (entry.local_name)
+					io.error.put_string (" uri code = ")
+					io.error.put_string (entry.uri_code.out)
+					io.error.put_new_line
 
 					entry := entry.next
 					depth := depth + 1
 				end
+				hash_code := hash_code + 1
 			end
 			from
-				prefix_count := 0
+				prefix_count := 1
+			variant
+				prefixes_used - prefix_count + 1
 			until
-				prefix_count = prefixes_used
+				prefix_count > prefixes_used
 			loop
-				error.put_string ("Prefix ")
-				error.put_string (prefix_count.out)
-				error.put_string (" = ")
-				error.put_string (prefixes.item (prefix_count))
-				error.put_new_line
+				io.error.put_string ("Prefix ")
+				io.error.put_string (prefix_count.out)
+				io.error.put_string (" = ")
+				io.error.put_string (prefixes.item (prefix_count))
+				io.error.put_new_line
 
 				prefix_count := prefix_count + 1
 			end
 			from
-				uri_count := 0
+				uri_count := 1
+			variant
+				uris_used - uri_count + 1
 			until
-				uri_count = uris_used
+				uri_count > uris_used
 			loop
-				error.put_string ("URI ")
-				error.put_string (uri_count.out)
-				error.put_string (" = ")
-				error.put_string (uris.item (uri_count))
-				error.put_new_line
-				error.put_string ("Prefixes for URI ")
-				error.put_string (uri_count.out)
-				error.put_string (" = ")
-				error.put_string (prefixes_for_uri.item (uri_count))
-				error.put_new_line
-				
+				io.error.put_string ("URI ")
+				io.error.put_string (uri_count.out)
+				io.error.put_string (" = ")
+				io.error.put_string (uris.item (uri_count))
+				io.error.put_new_line
+				io.error.put_string ("Prefixes for URI ")
+				io.error.put_string (uri_count.out)
+				io.error.put_string (" = ")
+				io.error.put_string (prefixes_for_uri.item (uri_count))
+				io.error.put_new_line
+
 				uri_count := uri_count + 1
 			end
 		end
@@ -429,9 +470,9 @@ feature -- Element change
 				-- Ensure the prefix is in the list of prefixes used with this URI
 				create key.make_from_string (xml_prefix)
 				key.extend (' ')
-				if prefixes_for_uri.item (uri_code).substring_index (key, 1) = 0 then
+				if prefixes_for_uri.item (uri_code + 1).substring_index (key, 1) = 0 then
 					-- prefix is not in the list
-					prefixes_for_uri.item (uri_code).append (key)
+					prefixes_for_uri.item (uri_code + 1).append (key)
 				end
 			end
 			Result := (prefix_code |<< 16) + uri_code
@@ -447,22 +488,30 @@ feature -- Element change
 			found: BOOLEAN
 		do
 			from
-				counter := 0
+				counter := 1
+			variant
+				uris_used - counter + 1
 			until
 				counter = uris_used or found = True
 			loop
 				if uris.item (counter).is_equal (uri) then
-					Result := counter
+					Result := counter - 1
 					found := True
 				end
+				counter := counter + 1
 			end
 			if not found then
 				if uris_used >= 32000 then
 					raise ("Too many namespace URIs")
 				end
-				uris.enter (uri, uris_used)
-				uris_used := uris_used + 1 -- not sure about all this - does ARRAY grow automatically?
+				if uris.capacity = uris_used then
+					uris.resize (2 * uris_used)
+					prefixes_for_uri.resize (2 * uris_used)
+				end
+				uris.put (uri, uris_used + 1)
+				prefixes_for_uri.put ("", uris_used + 1)
 				Result := uris_used
+				uris_used := uris_used + 1
 			end
 		ensure
 			valid_uri_code: Result >= 0 and Result <= 32000
@@ -478,22 +527,31 @@ feature -- Element change
 			found: BOOLEAN
 		do
 			from
-				counter := 0
+				counter := 1
+			variant
+				prefixes_used - counter	+ 1			
 			until
-				counter = prefixes_used or found = True
+				counter > prefixes_used or found = True
 			loop
 				if prefixes.item (counter).is_equal (xml_prefix) then
-					Result := counter
+					Result := counter - 1
 					found := True
 				end
+				counter := counter + 1				
 			end
 			if not found then
 				if prefixes_used >= 32000 then
 					raise ("Too many namespace prefixes")
 				end
-				prefixes.enter (xml_prefix, prefixes_used)
-				prefixes_used := prefixes_used + 1 -- not sure about all this - does ARRAY grow automatically?
+				if prefixes.capacity = prefixes_used then prefixes.resize (2 * prefixes_used) end
+				debug ("name pool")
+					io.error.put_string ("allocate_code_for_prefix: Adding prefix ")
+					io.error.put_string (xml_prefix)
+					io.error.put_new_line
+				end	
+				prefixes.put (xml_prefix, prefixes_used + 1)
 				Result := prefixes_used
+				prefixes_used := prefixes_used + 1
 			end
 		ensure
 			valid_prefix_code: Result >= 0 and Result <= 32000
@@ -534,6 +592,11 @@ feature -- Element change
 				check
 					valid_hash_code: hash_code >= 0 and hash_code < 1024
 				end
+			debug ("name pool")
+				io.error.put_string ("allocate_name_using_name_code: uri_code is ")
+				io.error.put_string (uri_code.out)
+				io.error.put_new_line
+			end
 			the_prefix_index := prefix_index (uri_code, xml_prefix)
 				check
 					valid_prefix_index: the_prefix_index > -2 and the_prefix_index < 255
@@ -541,8 +604,8 @@ feature -- Element change
 			if the_prefix_index < 0 then
 				create key.make_from_string (xml_prefix)
 				key.extend (' ')
-				prefixes_for_uri.item (uri_code).append (key)
-				the_prefix_index := prefix_index (uri_code, xml_prefix)
+				prefixes_for_uri.item (uri_code + 1).append (key)
+				the_prefix_index := allocate_code_for_prefix (xml_prefix)
 					check
 						valid_prefix_index2: the_prefix_index > 0 and the_prefix_index < 255
 					end		
@@ -553,6 +616,8 @@ feature -- Element change
 			else
 				the_name_entry := hash_slots.item (hash_code)
 				from
+				variant
+					1023 - depth
 				until
 					finished = True
 				loop
@@ -592,7 +657,7 @@ feature -- Conversion
 			if entry = Void then
 				unknown_name_code (name_code) -- raises an exception
 			else
-				Result := uris.item (entry.uri_code)
+				Result := uris.item (entry.uri_code + 1)
 			end
 		ensure
 			result_not_void: Result /= Void
@@ -672,7 +737,7 @@ feature -- Conversion
 	uri_from_namespace_code (a_namespace_code: INTEGER): STRING is
 			-- Namespace URI from `namespace_code'
 		do
-			Result := uris.item (a_namespace_code & 0xffff)
+			Result := uris.item ((a_namespace_code & 0xffff) + 1)
 		end
 		
 	uri_from_uri_code (uri_code: INTEGER): STRING is
@@ -680,13 +745,13 @@ feature -- Conversion
 		require
 			valid_code: uri_code >= 0 and uri_code <= 32000
 		do
-			Result := uris.item (uri_code)
+			Result := uris.item (uri_code + 1)
 		end
 
 	prefix_from_namespace_code (a_namespace_code: INTEGER): STRING is
 			-- Namespace prefix from `namespace_code'
 		do
-			Result := prefixes.item (a_namespace_code |>> 16)
+			Result := prefixes.item ((a_namespace_code |>> 16) + 1)
 		end
 		
 
@@ -715,6 +780,7 @@ feature {NONE} -- Implementation
 					found := True
 				else
 					entry := entry.next
+					counter := counter + 1
 				end
 			end
 			Result := entry
@@ -730,30 +796,67 @@ feature {NONE} -- Implementation
 			count, counter, blank, last_blank: INTEGER
 			found: BOOLEAN
 		do
+			debug ("name pool")
+				io.error.put_string ("prefix_index: prefix is ")
+				io.error.put_string (xml_prefix)
+				io.error.put_string (":")
+				io.error.put_new_line
+			end
 			-- look for quick wins
 			if xml_prefix.is_equal ("") then
+				debug ("name pool")
+					io.error.put_string ("prefix_index: xml - code 0%N")
+				end
 				Result := 0
 			else
-				the_prefixes := prefixes_for_uri.item (uri_code)
+				debug ("name pool")
+					io.error.put_string ("prefix_index: uri_code is ")
+					io.error.put_string (uri_code.out)
+					io.error.put_new_line
+				end
+				the_prefixes := prefixes_for_uri.item (uri_code + 1)
+				debug ("name pool")
+					io.error.put_string ("prefix_index: available prefixes are ")
+					io.error.put_string (the_prefixes)
+					io.error.put_new_line
+				end				
 				count := the_prefixes.count
-				if count = xml_prefix.count + 1 and then the_prefixes.item (count).is_equal (' ')
-					and then the_prefixes.substring (1, count).is_equal (xml_prefix) then -- sole prefix
+				if count = xml_prefix.count + 1 and then the_prefixes.item (count).is_equal (' ') and then the_prefixes.substring (1, count - 1).is_equal (xml_prefix) then -- sole prefix
+					debug ("name pool")
+						io.error.put_string ("prefix_index: sole prefix - code 1%N")
+					end
 					Result := 1
 				else
+					debug ("name pool")
+						io.error.put_string ("prefix_index: searching...%N")
+					end
 					from
 						counter := 1
 						Result := -1 -- Not found
 						last_blank := 1
+					variant
+						255 - counter
 					until
 						found = True
 					loop
+						debug ("name pool")
+							io.error.put_string ("prefix_index: iteration%N")
+						end
 						blank := the_prefixes.index_of (' ', last_blank)
 						if blank = 0 then
+							debug ("name pool")
+								io.error.put_string ("prefix_index: prefix not found%N")
+							end
 							Result := -1
 							found := True
+							counter := counter + 1
 						elseif the_prefixes.substring (last_blank, blank + 1).is_equal (xml_prefix) then
+							debug ("name pool")
+								io.error.put_string ("prefix_index: prefix found%N")
+							end
 							Result := counter
 							found := True
+							counter := counter + 1
 						elseif counter = 255 then
 							raise ("Too many prefixes for one namespace URI")
 						else
@@ -784,7 +887,7 @@ feature {NONE} -- Implementation
 	default_pool: XM_XPATH_SHARED_NAME_POOL is
 			-- The default singular instance of an `XM_XPATH_NAME_POOL';
 			--  used unless the user deliberately wants to manage name pools himself
-		once
+		do
 			create Result.make
 		ensure
 			default_pool_not_void: Result /= Void
@@ -796,16 +899,16 @@ feature {NONE} -- Implementation
 	hash_slots: ARRAY [XM_XPATH_NAME_ENTRY]
 			-- Fixed size hash table
 	
-	prefixes: ARRAY [STRING]
+	prefixes: DS_ARRAYED_LIST [STRING]
 			-- The XML prefixes in use
 	
 	prefixes_used: INTEGER
 			-- Highest number XML prefix in use
 
-	uris: ARRAY [STRING]
+	uris: DS_ARRAYED_LIST [STRING]
 			-- The URIs in use
 	
-	prefixes_for_uri: ARRAY [STRING]
+	prefixes_for_uri: DS_ARRAYED_LIST [STRING]
 			-- The XML prefixes in use for a given URI
 	
 	uris_used: INTEGER

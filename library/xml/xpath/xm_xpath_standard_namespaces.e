@@ -16,13 +16,13 @@ class XM_XPATH_STANDARD_NAMESPACES
 	
 feature -- Access
 
-	Null_prefix_index: INTEGER is 0
+	Null_prefix_index: INTEGER is 1
 			-- The numeric code representing the null namespace
 
-	Xml_prefix_index: INTEGER is 1
+	Xml_prefix_index: INTEGER is 2
 			-- Numeric code representing the XML namespace
 
-	Xslt_prefix_index: INTEGER is 2
+	Xslt_prefix_index: INTEGER is 3
 			-- Numeric code representing the XSLT namespace
 
 	Null_uri: STRING is ""

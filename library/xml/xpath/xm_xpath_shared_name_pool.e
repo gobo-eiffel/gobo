@@ -27,7 +27,8 @@ feature -- Initialization
 feature -- Access
 
 	default_pool: XM_XPATH_NAME_POOL
-
+			-- The default pool
+	
 feature -- Element change
 
 	set_default_pool (new_pool: XM_XPATH_NAME_POOL) is -- used when loading a compiled stylesheet
@@ -42,7 +43,7 @@ feature -- Element change
 
 invariant
 
-	default_pool_not_void: default_pool /= Void
+	--default_pool_not_void: default_pool /= Void
 	
 end
 	
