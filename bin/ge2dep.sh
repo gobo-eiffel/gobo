@@ -19,18 +19,18 @@ if [ ! -d spec/se ]; then mkdir spec/se ; fi
 for file in `find | grep \.ge$` ; do
 	echo spec: spec/ise/`basename $file .ge`.e
 	echo spec/ise/`basename $file .ge`.e: $file
-	echo "	gepp -DISE $file spec/ise/`basename $file .ge`.e"
+	echo "	\$(GEPP) -DISE $file spec/ise/`basename $file .ge`.e"
 	echo ""
 	echo spec: spec/hact/`basename $file .ge`.e
 	echo spec/hact/`basename $file .ge`.e: $file
-	echo "	gepp -DHACT $file spec/hact/`basename $file .ge`.e"
+	echo "	\$(GEPP) -DHACT $file spec/hact/`basename $file .ge`.e"
 	echo ""
 	echo spec: spec/se/`basename $file .ge`.e
 	echo spec/se/`basename $file .ge`.e: $file
-	echo "	gepp -DSE $file spec/se/`basename $file .ge`.e"
+	echo "	\$(GEPP) -DSE $file spec/se/`basename $file .ge`.e"
 	echo ""
 	echo spec: spec/ve/`basename $file .ge`.e
 	echo spec/ve/`basename $file .ge`.e: $file
-	echo "	gepp -DVE $file spec/ve/`basename $file .ge`.e"
+	echo "	\$(GEPP) -DVE $file spec/ve/`basename $file .ge`.e"
 	echo ""
 done
