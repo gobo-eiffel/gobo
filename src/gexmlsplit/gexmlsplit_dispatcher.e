@@ -59,6 +59,7 @@ feature -- Element change
 				error_handler.report_error (cannot_write)
 			end
 			output_files.put (a_file)
+			a_file.put_string ("<?xml version=%"1.0%" encoding=%"UTF-8%"?>%N")
 		ensure
 			one_more: output_files.count = old output_files.count + 1
 		end
@@ -87,7 +88,7 @@ feature -- Output
 			if not output_files.is_empty then
 				a_file := output_files.item
 				if a_file.is_open_write then
-					output_files.item.put_string (s)
+					output_files.item.put_string (s.to_utf8)
 				end
 			end
 		end
