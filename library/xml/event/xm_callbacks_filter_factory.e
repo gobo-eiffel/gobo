@@ -55,6 +55,14 @@ feature -- Filters
 			new: Result /= Void
 		end
 
+	new_unicode_validation: XM_UNICODE_VALIDATION_FILTER is
+			-- New unicode validation filter.
+		do
+			!! Result.make_null
+		ensure
+			new: Result /= Void
+		end
+			
 	new_namespace_resolver: XM_END_TAG_CHECKER is
 			-- New namespace resolver.
 		do
