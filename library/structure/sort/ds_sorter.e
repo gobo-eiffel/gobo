@@ -28,7 +28,7 @@ feature -- Status report
 		deferred
 		end
 
-	sorted_with_comparator (a_container: DS_SORTABLE [G]; a_comparator: DS_PART_COMPARATOR [G]): BOOLEAN is
+	sorted_with_comparator (a_container: DS_SORTABLE [G]; a_comparator: KL_PART_COMPARATOR [G]): BOOLEAN is
 			-- Is `a_container' sorted according to
 			-- `a_comparator''s comparison criterion?
 		require
@@ -57,7 +57,7 @@ feature -- Sort
 			sorted: reverse_sorted (a_container)
 		end
 
-	sort_with_comparator (a_container: DS_SORTABLE [G]; a_comparator: DS_PART_COMPARATOR [G]) is
+	sort_with_comparator (a_container: DS_SORTABLE [G]; a_comparator: KL_PART_COMPARATOR [G]) is
 			-- Sort `a_container' according to
 			-- `a_comparator''s comparison criterion?
 		require

@@ -744,7 +744,7 @@ feature {NONE} -- Constants
 	Position_sorter: DS_BUBBLE_SORTER [PR_POSITION] is
 			-- Position sorter
 		local
-			a_comparator: DS_COMPARABLE_COMPARATOR [PR_POSITION]
+			a_comparator: KL_COMPARABLE_COMPARATOR [PR_POSITION]
 		once
 			!! a_comparator.make
 			!! Result.make (a_comparator)

@@ -70,7 +70,7 @@ feature -- Measurement
 
 feature -- Access
 
-	equality_tester: DS_EQUALITY_TESTER [G]
+	equality_tester: KL_EQUALITY_TESTER [G]
 			-- Equality tester;
 			-- A void equality tester means that `='
 			-- will be used as comparison criterion.

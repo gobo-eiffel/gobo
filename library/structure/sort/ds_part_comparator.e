@@ -12,27 +12,12 @@ indexing
 
 deferred class DS_PART_COMPARATOR [G]
 
-feature -- Status report
+obsolete
 
-	less_than (u, v: G): BOOLEAN is
-			-- Is `u' considered less than `v'?
-		require
-			u_not_void: u /= Void
-			v_not_void: v /= Void
-		deferred
-		ensure
-			asymmetric: Result implies not less_than (v, u)
-		end
+	"[020707] Use KL_PART_COMPARATOR instead."
 
-	greater_than (u, v: G): BOOLEAN is
-			-- Is `u' considered greater than `v'?
-		require
-			u_not_void: u /= Void
-			v_not_void: v /= Void
-		do
-			Result := less_than (v, u)
-		ensure
-			definition: Result = less_than (v, u)
-		end
+inherit
+
+	KL_PART_COMPARATOR [G]
 
 end

@@ -1003,7 +1003,7 @@ feature {NONE} -- Constants
 	Integer_sorter: DS_BUBBLE_SORTER [INTEGER] is
 			-- Integer sorter
 		local
-			a_comparator: DS_COMPARABLE_COMPARATOR [INTEGER]
+			a_comparator: KL_COMPARABLE_COMPARATOR [INTEGER]
 		once
 			!! a_comparator.make
 			!! Result.make (a_comparator)

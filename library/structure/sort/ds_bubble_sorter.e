@@ -22,7 +22,7 @@ creation
 
 feature -- Sort
 
-	subsort_with_comparator (a_container: DS_INDEXABLE [G]; a_comparator: DS_PART_COMPARATOR [G]; lower, upper: INTEGER) is
+	subsort_with_comparator (a_container: DS_INDEXABLE [G]; a_comparator: KL_PART_COMPARATOR [G]; lower, upper: INTEGER) is
 			-- Sort `a_container' according to `a_comparator''s
 			-- comparison criterion within bounds `lower'..`upper'?
 		local

@@ -1049,7 +1049,7 @@ feature {NONE} -- Constants
 	Portion_sorter: DS_BUBBLE_SORTER [PR_PORTION] is
 			-- Table portion sorter
 		local
-			a_comparator: DS_COMPARABLE_COMPARATOR [PR_PORTION]
+			a_comparator: KL_COMPARABLE_COMPARATOR [PR_PORTION]
 		once
 			!! a_comparator.make
 			!! Result.make (a_comparator)

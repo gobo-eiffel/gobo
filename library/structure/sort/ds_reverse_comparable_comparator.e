@@ -12,23 +12,21 @@ indexing
 
 class DS_REVERSE_COMPARABLE_COMPARATOR [G -> COMPARABLE]
 
+obsolete
+
+	"[020707] Use KL_REVERSE_COMPARABLE_COMPARATOR instead."
+
 inherit
 
+	KL_REVERSE_COMPARABLE_COMPARATOR [G]
+
 	DS_COMPARABLE_COMPARATOR [G]
-		redefine
+		undefine
 			less_than
 		end
 
 creation
 
 	make
-
-feature -- Status report
-
-	less_than (u, v: G): BOOLEAN is
-			-- Is `u' considered less than `v'?
-		do
-			Result := (v < u)
-		end
 
 end

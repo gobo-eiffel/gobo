@@ -12,7 +12,16 @@ indexing
 
 class DS_REVERSE_COMPARATOR [G]
 
+obsolete
+
+	"[020707] Use KL_REVERSE_COMPARATOR instead."
+
 inherit
+
+	KL_REVERSE_COMPARATOR [G]
+		redefine
+			comparator
+		end
 
 	DS_REVERSE_PART_COMPARATOR [G]
 		redefine
@@ -27,7 +36,7 @@ creation
 
 feature -- Access
 
-	comparator: DS_COMPARATOR [G]
+	comparator: KL_COMPARATOR [G]
 			-- Base comparator
 
 end

@@ -233,7 +233,7 @@ feature -- Access
 			!! Result.make (Current)
 		end
 
-	key_equality_tester: DS_EQUALITY_TESTER [K]
+	key_equality_tester: KL_EQUALITY_TESTER [K]
 			-- Equality tester for keys;
 			-- A void equality tester means that `='
 			-- will be used as comparison criterion.

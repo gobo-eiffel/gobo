@@ -14,7 +14,7 @@ class ET_FEATURE_NAME_TESTER
 
 inherit
 
-	DS_EQUALITY_TESTER [ET_FEATURE_NAME]
+	KL_EQUALITY_TESTER [ET_FEATURE_NAME]
 		redefine
 			test
 		end

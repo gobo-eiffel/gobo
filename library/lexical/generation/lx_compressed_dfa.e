@@ -1013,7 +1013,7 @@ feature {NONE} -- Constants
 	Rule_sorter: DS_BUBBLE_SORTER [LX_RULE] is
 			-- Rule sorter
 		local
-			a_comparator: DS_COMPARABLE_COMPARATOR [LX_RULE]
+			a_comparator: KL_COMPARABLE_COMPARATOR [LX_RULE]
 		once
 			!! a_comparator.make
 			!! Result.make (a_comparator)

@@ -152,7 +152,7 @@ feature -- Sort
 	sorter: DS_SHELL_SORTER [INTEGER] is
 			-- Shell sorter
 		local
-			a_comparator: DS_COMPARABLE_COMPARATOR [INTEGER]
+			a_comparator: KL_COMPARABLE_COMPARATOR [INTEGER]
 		once
 			!! a_comparator.make
 			!! Result.make (a_comparator)

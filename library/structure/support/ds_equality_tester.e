@@ -12,19 +12,12 @@ indexing
 
 class DS_EQUALITY_TESTER [G]
 
-feature -- Status report
+obsolete
 
-	test (v, u: G): BOOLEAN is
-			-- Are `v' and `u' considered equal?
-			-- (Use `equal' by default.)
-		do
-			if v = Void then
-				Result := (u = Void)
-			elseif u = Void then
-				Result := False
-			else
-				Result := v.is_equal (u)
-			end
-		end
+	"[020707] Use KL_EQUALITY_TESTER instead."
+
+inherit
+
+	KL_EQUALITY_TESTER [G]
 
 end
