@@ -19,7 +19,9 @@ inherit
 	KL_SHARED_EXCEPTIONS
 
 	UC_UNICODE_FACTORY
-		export {NONE} all end
+		export
+			{NONE} all
+		end
 
 feature -- Access
 
@@ -85,8 +87,6 @@ feature -- Processing
 				until
 					stop
 				loop
---!! the following inspect gives smalleiffel a problem with 'assertion (all)' (not in boost)
---!!					inspect a_string.item (j).code
 					a_uc_char := a_string.item (j)
 					inspect a_uc_char.code
 					-- when ' ', '%T', '%R', '%N' then
@@ -137,7 +137,6 @@ feature -- Processing
 				until
 					i > nb or stop
 				loop
---!!					inspect s.item (i).code
 					a_uc_char := s.item (i)
 					inspect a_uc_char.code
 					-- when ' ', '%T', '%R', '%N' then
@@ -156,7 +155,6 @@ feature -- Processing
 					until
 						stop
 					loop
---!!						inspect s.item (j).code
 					a_uc_char := s.item (j)
 					inspect a_uc_char.code
 						-- when ' ', '%T', '%R', '%N' then
@@ -187,7 +185,6 @@ feature -- Processing
 				until
 					i > nb or stop
 				loop
---!!					inspect s.item (i).code
 					a_uc_char := s.item (i)
 					inspect a_uc_char.code
 					-- when ' ', '%T', '%R', '%N' then
@@ -206,7 +203,6 @@ feature -- Processing
 					until
 						stop
 					loop
---!!						inspect s.item (j).code
 						a_uc_char := s.item (j)
 						inspect a_uc_char.code
 						-- when ' ', '%T', '%R', '%N' then
@@ -224,6 +220,102 @@ feature -- Processing
 			end
 		ensure
 			string_tokens_not_void: Result /= Void
+		end
+
+	string_remove_head (a_string: STRING; n: INTEGER): STRING is
+			-- Remove the first `n' characters of `a_string';
+			-- if `n' > `a_string.count', remove all.
+			-- Workaround for STRING.remove_head which is not supported in HACT 4.0.1 and ISE 5.1
+		require
+			n_non_negative: n >= 0
+		local
+			p: INTEGER
+		do
+			p := n.min (a_string.count) + 1
+			if p > a_string.count then
+				Result := clone ("")
+			else
+				Result := a_string.substring (p, a_string.count)
+			end
+		ensure
+			removed_a: (n.min (a_string.count) + 1 > a_string.count) implies
+				Result.is_equal ("")
+			removed_b: (n.min (a_string.count) + 1 <= a_string.count) implies
+				Result.is_equal (a_string.substring (n.min (a_string.count) + 1, a_string.count))
+		end
+
+	string_remove_tail (a_string: STRING; n: INTEGER): STRING is
+			-- Remove the last `n' characters of `a_string';
+			-- if `n' > `a_string.count', remove all.
+			-- Workaround for STRING.remove_tail which is not supported in HACT 4.0.1 and ISE 5.1
+		require
+			n_non_negative: n >= 0
+		local
+			p: INTEGER
+		do
+			p := a_string.count - n.min (a_string.count)
+			if p = 0 then
+				Result := clone ("")
+			else
+				Result := a_string.substring (1, p)
+			end
+		ensure
+			removed_a: (a_string.count - n.min (a_string.count) = 0) implies
+				Result.is_equal ("")
+			removed_a: (a_string.count - n.min (a_string.count) > 0) implies
+				Result.is_equal (a_string.substring (1, a_string.count - n.min (a_string.count)))
+		end
+
+	glob_prefix (a_star_string: STRING): STRING is
+			-- Substring of `a_star_string' before first '*' if any
+			-- otherwise `a_star_string'
+		require
+			a_star_string_not_void: a_star_string /= Void
+			a_star_string_not_empty: a_star_string.count > 0
+		local
+			i1: INTEGER
+		do
+			i1 := a_star_string.index_of ('*', 1)
+			if i1 = 0 then
+				Result := clone (a_star_string)
+			else
+				Result := clone (a_star_string.substring (1, i1 - 1))
+			end
+		ensure
+			definition:
+				(a_star_string.index_of ('*', 1) > 0) implies
+						Result.is_equal (a_star_string.substring (1, a_star_string.index_of ('*', 1) - 1))
+				and
+				(a_star_string.index_of ('*', 1) = 0) implies Result.is_equal (a_star_string)
+
+		end
+
+	glob_postfix (a_star_string: STRING): STRING is
+			-- Substring of `a_star_string' after first '*' if any
+			-- otherwise `a_star_string'
+		require
+			a_star_string_not_void: a_star_string /= Void
+			a_star_string_not_empty: a_star_string.count > 0
+		local
+			i1: INTEGER
+		do
+			i1 := a_star_string.index_of ('*', 1)
+			if i1 = 0 then
+				Result := clone (a_star_string)
+			else
+				if i1 = a_star_string.count then
+					Result := clone ("")
+				else
+					Result := clone (a_star_string.substring (i1 + 1, a_star_string.count))
+				end
+			end
+		ensure
+			definition: (a_star_string.index_of ('*', 1) > 0) implies
+				Result.is_equal (a_star_string.substring (
+					a_star_string.index_of ('*', 1) + 1, a_star_string.count))
+				and
+					(a_star_string.index_of ('*', 1) = 0) implies Result.is_equal (a_star_string)
+
 		end
 
 end -- class GEANT_SHARED_PROPERTIES
