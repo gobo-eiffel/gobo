@@ -34,6 +34,8 @@ feature {NONE} -- Initialization
 			is_impure := True
 			recovery_policy := a_recovery_policy
 			error_reporter := an_error_reporter
+			warning_threshold := 25
+			recoverable_error_threshold := 25
 		ensure
 			recovery_policy_set: recovery_policy = a_recovery_policy
 			error_reporter_set: error_reporter = an_error_reporter
@@ -54,19 +56,23 @@ feature -- Status report
 
 	recovered: BOOLEAN
 			-- Did `Current' recover from the last recoverable error?
-	
+
+	warnings_are_recoverable_errors: BOOLEAN
+			-- Are warnings treated as recoverable errors?
+
 feature -- Events
 
 	warning (a_message: STRING; a_locator: XM_XPATH_LOCATOR) is
 			-- Receive notification of a warning.
 		do
-			if recovery_policy /= Recover_silently then
+			if warnings_are_recoverable_errors then
+				error (a_message, a_locator)
+			elseif warning_threshold >= 0 and then warnings <= warning_threshold then
 				display_location_information (a_locator, False)
 				error_reporter.report_warning_message (STRING_.concat ("Warning: ", a_message))
 				warnings := warnings + 1
-				if warnings > 25 then
+				if warnings > warning_threshold then
 					error_reporter.report_warning_message ("No more warnings will be displayed")
-					recovery_policy := Recover_silently
 				end
 			end
 		end
@@ -77,17 +83,23 @@ feature -- Events
 			a_msg: STRING
 		do
 			if recovery_policy /= Recover_silently then
-				display_location_information (a_locator, True)
-			end				
+					display_location_information (a_locator, True)
+			end
+			recovered := True
 			if recovery_policy = Recover_with_warnings then
-				recovered := True
 				a_msg := "Recoverable error: "
-			else
+			elseif recovery_policy = Do_not_recover then
 				recovered := False
 				a_msg := "Error: "
 			end
-			error_reporter.report_error_message (STRING_.concat (a_msg, a_message))
+			if recovery_policy /= Recover_silently then
+				error_reporter.report_error_message (STRING_.concat (a_msg, a_message))
+			end
 			errors := errors + 1
+			if recovery_policy = Recover_with_warnings and then recoverable_error_threshold >=0 and then errors >= recoverable_error_threshold then
+				recovery_policy := Recover_silently
+				error_reporter.report_error_message ("No more recoverable errors will be displayed")
+			end
 		end
 
 	fatal_error (a_message: STRING; a_locator: XM_XPATH_LOCATOR) is
@@ -100,10 +112,28 @@ feature -- Events
 
 feature -- Element change
 
-	set_recovery_policy (a_recovery_policy: INTEGER) is
+	set_recovery_policy (a_recovery_policy: like recovery_policy) is
 			-- Set recovery policy.
 		do
 			recovery_policy := a_recovery_policy
+		end
+
+	set_warning_threshold (a_warning_threshold: like warning_threshold) is
+			-- Set `warning_threshold'.
+		do
+			warning_threshold := a_warning_threshold
+		end
+
+	set_recoverable_error_threshold (a_recoverable_error_threshold: like recoverable_error_threshold) is
+			-- Set `recoverable_error_threshold'.
+		do
+			recoverable_error_threshold := a_recoverable_error_threshold
+		end
+
+	treat_warnings_as_recoverable_errors is
+			-- Treat warnings as recoverable errors.
+		do
+			warnings_are_recoverable_errors := True
 		end
 
 feature -- Duplication

@@ -29,7 +29,7 @@
   <sect1>
     <title>How to invoke gexslt</title>
     <para>
-      Geant is invoked from the command line. The general form is:
+      Gexslt is invoked from the command line. The general form is:
     <itemizedlist>
       <listitem><para>gexslt --help</para></listitem>
       <listitem><para>gexslt --version</para></listitem>
@@ -76,213 +76,319 @@
     </para>
     <para>
       If you wish to pass general XPath expressions to the stylesheet, you have to use the --xpath-param option.
-      <warning>XPath expression parameters are not yet implemented.</warning>
     </para>
   </sect1>
   <sect1>
     <title>Options</title>
-    <para>The following is a list of the options that can be given on the command-line:
-    <variablelist>
-      <varlistentry>
-	<term>--use-pi</term>
-	<listitem>
-	  <para>
-	    Interpret the first file or URI argument as a source document, rather than a stylesheet.
-	    Search for an xml-stylesheet processing instruction within that source document, and use that to find
-	    the stylesheet.
-	    <warning>Use of the xml-stylesheet processing instruction is not yet implemented</warning>
-	  </para>
-	  <para>
-	    Gexslt has to parse the source document twice. Once to find the processing instructiuon, and again, 
-	    after the stylesheet has been compiled (as it may contain xsl:preserve-space or xsl:strip-space commands).
-	    Although the first parse is quick (as the processing instruction must occur in the prolog of the XML document), 
-	    this does mean that a stream that can only be read once may not be used with this option.
-	  </para>
-	</listitem>
-      </varlistentry>
-      <varlistentry>
-	<term>--output=&lt;local-file-name&gt;</term>
-	<listitem>
-	  <para>
-	    Names the destination for the transformation results. If omitted, the results are written
-	    to the standard output stream.
-	  </para>
-	</listitem>
-      </varlistentry>
-      <varlistentry>
-	<term>--no-line-numbers</term>
-	<listitem>
-	  <para>
-	    By default, diagnostics will include the line number where the
-	    error was detected. This option turns off this facility.
-	  </para>
-	</listitem>
-      </varlistentry>
-      <varlistentry>
-	<term>--no-gc</term>
-	<listitem>
-	  <para>
-	    Disables garbage collection.
-	  </para>
-	</listitem>
-      </varlistentry>
-      <varlistentry>
-	<term>--no-catalogs</term>
-	<listitem>
-	  <para>
-	    Do not use OASIS ERTC XML Catalogs for entity resolution or
-	    URI reference resolution.
-	  </para>
-	</listitem>
-      </varlistentry>
-      <varlistentry>
-	<term>--no-default-catalog</term>
-	<listitem>
-	  <para>
-	    Do not use the system default catalog.
-	  </para>
-	  <para>
-	    In this case, only catalogs specified in <featurename>XM_CATALOG_FILES</featurename>,
-	    plus any per-document-catalogs named in <featurename>oasis-xml-catalog</featurename> 
-	    processing instructions, are searched.
-	  </para>
-	</listitem>
-      </varlistentry>
-      <varlistentry>
-	<term>--prefer-system</term>
-	<listitem>
-	  <para>
-	    Prefer <featurename>SYSTEM</featurename> ids to <featurename>PUBLIC</featurename> ids when both are given.
-	    The catalog resolver only attempts to match on <featurename>PUBLIC</featurename> ids
-	    when there is either no <featurename>SYSTEM</featurename> id given, or else the catalog resolver
-	    fails to find a match for the <featurename>SYSTEM</featurename> id.
-	  </para>
-	  <para>
-	    In the latter case, when this option is given,
-	    <featurename>PUBLIC</featurename> entries are only considered for a match if
-	    they were defined when <featurename>prefer="system"</featurename> was in effect.
-	  </para>
-	  <para>
-	    The default is to always consider <featurename>PUBLIC</featurename> ids, when no
-	    match is found for the <featurename>SYSTEM</featurename> id.
-	  </para>
-	  <para>
-	    If no <featurename>SYSTEM</featurename> id is given, then this option has no effect.
-	  </para>
-	</listitem>
-      </varlistentry>
-      <varlistentry>
-	<term>--no-catalog-pi</term>
-	<listitem>
-	  <para>
-	    Ignore any <featurename>oasis-xml-catalog</featurename> processing instructions in source
-	    documents and stylesheets.
-	  </para>
-	</listitem>
-      </varlistentry>
-      <varlistentry>
-	<term>--catalog-debug-level=&lt;0-10&gt;</term>
-	<listitem>
-	  <para>
-	    Set the level of debugging messages produced by the catalog resolver.
-	    0 means no messages. 10 Means maximum verbosity.
-	  </para>
-	</listitem>
-      </varlistentry>
-      <varlistentry>
-	<term>--warnings=[&lt;warning-file&gt;]</term>
-	<listitem>
-	  <para>
-	    Set the destination for warnings to be "warning-file". If "warning-file"
-	    is omitted, then all warning messages are ignored.
-	  </para>
-	  <para>
-	    If this parameter is not given, then warnings are sent to the standard error
-	    stream.
-	  </para>
-	</listitem>
-      </varlistentry>
-      <varlistentry>
-	<term>--errors=[&lt;error-file&gt;]</term>
-	<listitem>
-	  <para>
-	    Set the destination for error messages to be "error-file". If "error-file"
-	    is omitted, then all error messages are ignored.
-	  </para>
-	  <para>
-	    If this parameter is not given, then error messages are sent to the standard error
-	    stream.
-	  </para>
-	</listitem>
-      </varlistentry>
-      <varlistentry>
-	<term>--errors-and-warnings=[&lt;error-file&gt;]</term>
-	<listitem>
-	  <para>
-	    Set the destination for both error and warning messages to be "error-file". If "error-file"
-	    is omitted, then all such messages are ignored.
-	  </para>
-	</listitem>
-      </varlistentry>
-      <varlistentry>
-	<term>--trace=[&lt;trace-file&gt;]</term>
-	<listitem>
-	  <para>
-	    Set the destination for trace output to be "trace-file". If "trace-file"
-	    is omitted, then trace output is sent to the standard output stream.
-	  </para>
-	  <para>
-	    If this parameter is not given, then no trace output is produced.
-	    <warning>Tracing is not implemented yet.</warning>
-	  </para>
-	</listitem>
-      </varlistentry>
-      <varlistentry>
-	<term>--tiny-tree</term>
-	<listitem>
-	  <para>
-	    The source document is built using the tiny-tree model, rather than
-	    the standard tree model. This saves on memory, but will usually result
-	    in slower execution, except for very simple tranformations, such as the 
-	    identity transform, where it may actually improve execution speed.
-	  </para>
-	</listitem>
-      </varlistentry>
-      <varlistentry>
-	<term>--template=[{&lt;namespace-uri&gt;}]&lt;local-name&gt;</term>
-	<listitem>
-	  <para>
-	    Specifies a named template to be invoked. If the name is not in the
-	    default namespace, then enclose the namespace URI in curly brackets, preceding the local name.
-	  </para>
-	  <para>
-	    If this parameter is omitted (the usual situation), then the initial template is the one
-	    that matches the document node of the source document. If this parameter is supplied,
-	    then the source document may be omitted.
-	  </para>
-	</listitem>
-      </varlistentry>
-      <varlistentry>
-	<term>--param=&lt;name&gt;=&lt;string-value&gt;</term>
-	<listitem>
-	  <para>
-	    Sets a string-valued global parameter on the stylesheet.
-	    Enclose the value in single quotes if it includes embedded blanks.
-	  </para>
-	</listitem>
-      </varlistentry>
-      <varlistentry>
-	<term>--xpath-param=&lt;name&gt;=&lt;XPath expression&gt;</term>
-	<listitem>
-	  <para>
-	    Sets a global parameter on the stylesheet, passing an XPath expression
-	    as the value.
-	    Enclose the value in single quotes if it includes embedded blanks.
-	    <warning>XPath expression parameters are not yet implemented.</warning>
-	  </para>
-	</listitem>
-      </varlistentry>
-    </variablelist>
-    </para>
+    <para>The following is a list of the options that can be given on the command-line:</para>
+    <sect2>
+      <title>Stylesheet control</title>
+      <para>The following options control stylesheet execution:
+      <variablelist>
+	<varlistentry>
+	  <term>--use-pi</term>
+	  <listitem>
+	    <para>
+	      Interpret the first file or URI argument as a source document, rather than a stylesheet.
+	      Search for an xml-stylesheet processing instruction within that source document, and use that to find
+	      the stylesheet.
+	      <warning>Use of the xml-stylesheet processing instruction is not yet implemented</warning>
+	    </para>
+	    <para>
+	      Gexslt has to parse the source document twice. Once to find the processing instructiuon, and again, 
+	      after the stylesheet has been compiled (as it may contain xsl:preserve-space or xsl:strip-space commands).
+	      Although the first parse is quick (as the processing instruction must occur in the prolog of the XML document), 
+	      this does mean that a stream that can only be read once may not be used with this option.
+	    </para>
+	  </listitem>
+	</varlistentry>
+	<varlistentry>
+	  <term>--output=&lt;local-file-name&gt;</term>
+	  <listitem>
+	    <para>
+	      Names the destination for the transformation results. If omitted, the results are written
+	      to the standard output stream.
+	    </para>
+	  </listitem>
+	</varlistentry>
+	<varlistentry>
+	  <term>--mode=[{&lt;namespace-uri&gt;}]&lt;local-name&gt;</term>
+	  <listitem>
+	    <para>
+	      Specifies an initial mode. If the name is not in the
+	      default namespace, then enclose the namespace URI in curly brackets, preceding the local name.
+	    </para>
+	    <para>
+	      If this parameter is omitted (the usual situation), then the default mode is used.
+	    </para>
+	  </listitem>
+	</varlistentry>
+	<varlistentry>
+	  <term>--template=[{&lt;namespace-uri&gt;}]&lt;local-name&gt;</term>
+	  <listitem>
+	    <para>
+	      Specifies a named template to be invoked. If the name is not in the
+	      default namespace, then enclose the namespace URI in curly brackets, preceding the local name.
+	    </para>
+	    <para>
+	      If this parameter is omitted (the usual situation), then the initial template is the one
+	      that matches the document node of the source document. If this parameter is supplied,
+	      then the source document may be omitted.
+	    </para>
+	  </listitem>
+	</varlistentry>
+	<varlistentry>
+	  <term>--param=&lt;name&gt;=&lt;string-value&gt;</term>
+	  <listitem>
+	    <para>
+	      Sets a string-valued global parameter on the stylesheet.
+	      Enclose the value in single quotes if it includes embedded blanks.
+	    </para>
+	  </listitem>
+	</varlistentry>
+	<varlistentry>
+	  <term>--xpath-param=&lt;name&gt;=&lt;XPath expression&gt;</term>
+	  <listitem>
+	    <para>
+	      Sets a global parameter on the stylesheet, passing an XPath expression
+	      as the value.
+	      Enclose the value in single quotes if it includes embedded blanks.
+	    </para>
+	    <para>
+	      You cannot use this option if you also supply the --template=&lt;initial-template-name&gt; option,
+	      and omit the source document, as then the XPath expression will have no context.
+	    </para>
+	  </listitem>
+	</varlistentry>
+      </variablelist>
+      </para>
+    </sect2>
+    <sect2>
+      <title>Tracing</title>
+      <para>The following options control stylesheet execution tracing:
+      <variablelist>
+	<varlistentry>
+	  <term>--trace=[&lt;trace-file&gt;]</term>
+	  <listitem>
+	    <para>
+	      Set the destination for trace output to be "trace-file". If "trace-file"
+	      is omitted, then trace output is sent to the standard output stream.
+	    </para>
+	    <para>
+	      If this parameter is not given, then no trace output is produced.
+	      <warning>Tracing is not implemented yet.</warning>
+	    </para>
+	  </listitem>
+      </varlistentry>      </variablelist>
+      </para>
+    </sect2>
+    <sect2>
+      <title>Errors and warnings</title>
+      <para>The following options control issuing of error and warning messages:
+      <variablelist>
+	<varlistentry>
+	  <term>--warnings=[&lt;warning-file&gt;]</term>
+	  <listitem>
+	    <para>
+	      Set the destination for warnings to be "warning-file". If "warning-file"
+	      is omitted, then all warning messages are ignored.
+	    </para>
+	    <para>
+	      If this parameter is not given, then warnings are sent to the standard error
+	      stream.
+	    </para>
+	  </listitem>
+	</varlistentry>
+	<varlistentry>
+	  <term>--errors=[&lt;error-file&gt;]</term>
+	  <listitem>
+	    <para>
+	      Set the destination for error messages to be "error-file". If "error-file"
+	      is omitted, then all error messages are ignored.
+	    </para>
+	    <para>
+	      If this parameter is not given, then error messages are sent to the standard error
+	      stream.
+	    </para>
+	  </listitem>
+	</varlistentry>
+	<varlistentry>
+	  <term>--errors-and-warnings=[&lt;error-file&gt;]</term>
+	  <listitem>
+	    <para>
+	      Set the destination for both error and warning messages to be "error-file". If "error-file"
+	      is omitted, then all such messages are ignored.
+	    </para>
+	  </listitem>
+	</varlistentry>
+	<varlistentry>
+	  <term>--no-line-numbers</term>
+	  <listitem>
+	    <para>
+	      By default, diagnostics will include the line number where the
+	      error was detected. This option turns off this facility.
+	    </para>
+	  </listitem>
+	</varlistentry>
+	<varlistentry>
+	  <term>--warning-threshold=&lt;number&gt;</term>
+	  <listitem>
+	    <para>
+	      Do not display any warning messages once more than &lt;number&gt;
+	      warnings have been displayed. The default value is 25.
+	    </para>
+	    <para>
+	      Setting this value to a negative number means that <emphasis>all</emphasis>
+	      warning messages will be displayed. Setting it to zero means that
+	      no warning messages will ever be displayed.
+	    </para>
+	  </listitem>
+	</varlistentry>
+	<varlistentry>
+	  <term>--treat-warnings-as-errors</term>
+	  <listitem>
+	    <para>
+	      Treat warnings as if they were recoverable errors.
+	    </para>
+	  </listitem>
+	</varlistentry>
+	<varlistentry>
+	  <term>--recover-silently</term>
+	  <listitem>
+	    <para>
+	      When a recoverable error occurs, take the appropriate recovery action,
+	      but do not issue any diagnostic message.
+	    </para>
+	    <para>
+	      The default is to take the appropriate recovery action and 
+	      issue a diagnostic message.
+	    </para>
+	  </listitem>
+	</varlistentry>
+	<varlistentry>
+	  <term>--do-not-recover</term>
+	  <listitem>
+	    <para>
+	      Treat all recoverable errors as fatal errors.
+	    </para>
+	    <para>
+	      The default is to take the appropriate recovery action and 
+	      issue a diagnostic message.
+	    </para>
+	  </listitem>
+	</varlistentry>
+	<varlistentry>
+	  <term>--error-threshold=&lt;number&gt;</term>
+	  <listitem>
+	    <para>
+	      Do not display any  messages for recoverable errors once more than &lt;number&gt;
+	      recoverable errors have been displayed. The default value is 25.
+	    </para>
+	    <para>
+	      Setting this value to a negative number means that <emphasis>all</emphasis>
+	      recoverable error messages will be displayed.
+	    </para>
+	  </listitem>
+	</varlistentry>
+      </variablelist>
+      </para>
+    </sect2>
+    <sect2>
+      <title>OASIS Entity Resolution Technical Committee XML catalogs</title>
+      <para>The following options control the use of OASIS ETRC XML catalogs
+      <variablelist>
+	<varlistentry>
+	  <term>--no-catalogs</term>
+	  <listitem>
+	    <para>
+	      Do not use OASIS ERTC XML catalogs for entity resolution or
+	      URI reference resolution.
+	    </para>
+	  </listitem>
+	</varlistentry>
+	<varlistentry>
+	  <term>--no-default-catalog</term>
+	  <listitem>
+	    <para>
+	      Do not use the system default catalog.
+	    </para>
+	    <para>
+	      In this case, only catalogs specified in <featurename>XM_CATALOG_FILES</featurename>,
+	      plus any per-document-catalogs named in <featurename>oasis-xml-catalog</featurename> 
+	      processing instructions, are searched.
+	    </para>
+	  </listitem>
+	</varlistentry>
+	<varlistentry>
+	  <term>--prefer-system</term>
+	  <listitem>
+	    <para>
+	      Prefer <featurename>SYSTEM</featurename> ids to <featurename>PUBLIC</featurename> ids when both are given.
+	      The catalog resolver only attempts to match on <featurename>PUBLIC</featurename> ids
+	      when there is either no <featurename>SYSTEM</featurename> id given, or else the catalog resolver
+	      fails to find a match for the <featurename>SYSTEM</featurename> id.
+	    </para>
+	    <para>
+	      In the latter case, when this option is given,
+	      <featurename>PUBLIC</featurename> entries are only considered for a match if
+	      they were defined when <featurename>prefer="system"</featurename> was in effect.
+	    </para>
+	    <para>
+	      The default is to always consider <featurename>PUBLIC</featurename> ids, when no
+	      match is found for the <featurename>SYSTEM</featurename> id.
+	    </para>
+	    <para>
+	      If no <featurename>SYSTEM</featurename> id is given, then this option has no effect.
+	    </para>
+	  </listitem>
+	</varlistentry>
+	<varlistentry>
+	  <term>--no-catalog-pi</term>
+	  <listitem>
+	    <para>
+	      Ignore any <featurename>oasis-xml-catalog</featurename> processing instructions in source
+	      documents and stylesheets.
+	    </para>
+	  </listitem>
+	</varlistentry>
+	<varlistentry>
+	  <term>--catalog-debug-level=&lt;0-10&gt;</term>
+	  <listitem>
+	    <para>
+	      Set the level of debugging messages produced by the catalog resolver.
+	      0 means no messages. 10 Means maximum verbosity.
+	    </para>
+	  </listitem>
+	</varlistentry>
+      </variablelist>
+      </para>
+    </sect2>
+    <sect2>
+      <title>Performance</title>
+      <para>The following options are available for performance tuning:
+      <variablelist>
+	<varlistentry>
+	  <term>--no-gc</term>
+	  <listitem>
+	    <para>
+	      Disables garbage collection. This might improve performance under some circumstances.
+	      Or it might make it worse.
+	    </para>
+	  </listitem>
+	</varlistentry>
+	<varlistentry>
+	  <term>--tiny-tree</term>
+	  <listitem>
+	    <para>
+	      The source document is built using the tiny-tree model, rather than
+	      the standard tree model. This saves on memory, but will usually result
+	      in slower execution, except for very simple tranformations, such as the 
+	      identity transform, where it may actually improve execution speed.
+	    </para>
+	  </listitem>
+	</varlistentry>
+      </variablelist>
+      </para>
+    </sect2>
   </sect1>
 </chapter>

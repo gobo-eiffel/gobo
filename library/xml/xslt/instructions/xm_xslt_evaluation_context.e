@@ -31,6 +31,7 @@ feature {NONE} -- Initialization
 			-- Establish invariant
 		require
 			transformer_not_void: a_transformer /= Void
+			bindery_not_void: a_transformer.bindery /= Void
 		do
 			transformer := a_transformer
 			current_iterator := transformer.current_iterator

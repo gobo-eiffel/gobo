@@ -76,6 +76,9 @@ feature -- Access
 	
 	compiled_templates_index: DS_HASH_TABLE [XM_XSLT_COMPILED_TEMPLATE, INTEGER]
 			-- Index of named templates by `template_fingerprint'
+	
+	static_context: XM_XSLT_EXPRESSION_CONTEXT
+			-- Static context of principal stylesheet
 
 	system_id (a_module_number: INTEGER): STRING is
 			-- SYSTEM id for stylesheet module `a_module_number'
@@ -158,6 +161,17 @@ feature -- Element change
 			default_output_properties := a_property_set
 		ensure
 			default_output_properties_set: default_output_properties = a_property_set
+		end
+
+	save_static_context (a_static_context: XM_XSLT_EXPRESSION_CONTEXT) is
+			-- Save static context of principal stylesheet.
+			-- For XPath-valued global parameter setting
+		require
+			static_context_not_void: a_static_context /= Void
+		do
+			static_context := a_static_context
+		ensure
+			static_context_saved: static_context = a_static_context
 		end
 
 feature {NONE} -- Implementation

@@ -30,6 +30,14 @@ feature -- Status report
 			-- Did `Current' recover from the last recoverable error?
 		deferred
 		end
+
+	warning_threshold: INTEGER
+			-- Limit on number of warnings to be displayed;
+			-- Descendants may choose to ignore this.
+
+	recoverable_error_threshold: INTEGER
+			-- Limit on number of recoverable errors to be displayed;
+			-- Descendants may choose to ignore this.
 	
 feature -- Events
 
@@ -56,7 +64,7 @@ feature -- Events
 
 feature -- Element change
 
-	set_recovery_policy (a_recovery_policy: INTEGER) is
+	set_recovery_policy (a_recovery_policy: like recovery_policy) is
 			-- Set recovery policy.
 		require
 			valid_recovery_policy: a_recovery_policy >= Recover_silently and then a_recovery_policy <= Do_not_recover
@@ -66,13 +74,37 @@ feature -- Element change
 			recovery_policy_set: recovery_policy = a_recovery_policy
 		end
 
+	set_warning_threshold (a_warning_threshold: like warning_threshold) is
+			-- Set `warning_threshold'.
+		require
+			impure_handler: is_impure
+		deferred
+		ensure
+			threshold_set: warning_threshold = a_warning_threshold
+		end
+
+	set_recoverable_error_threshold (a_recoverable_error_threshold: like recoverable_error_threshold) is
+			-- Set `recoverable_error_threshold'.
+		require
+			impure_handler: is_impure
+		deferred
+		ensure
+			threshold_set: recoverable_error_threshold = a_recoverable_error_threshold
+		end
+
+	treat_warnings_as_recoverable_errors is
+			-- Treat warnings as recoverable errors.
+		require
+			impure_handler: is_impure
+		deferred
+		end
 
 feature -- Duplication
 
 	new_instance: like Current is
 			-- Pristine instance of `Current'
 		require
-			impure: is_impure
+			impure_handler: is_impure
 		deferred
 		ensure
 			instance_not_void: Result /= Void

@@ -202,6 +202,7 @@ feature -- Compilation
 						executable: executable /= Void
 						-- as {XM_XSLT_STYLESHEET}.compile produces an executable if no error.
 					end
+					executable.save_static_context (a_stylesheet.static_context)
 				end
 			end
 		ensure

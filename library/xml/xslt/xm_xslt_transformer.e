@@ -32,6 +32,8 @@ inherit
 
 	UC_SHARED_STRING_EQUALITY_TESTER
 
+	XM_XPATH_SHARED_EXPRESSION_TESTER
+
 creation
 
 	make
@@ -241,6 +243,8 @@ feature -- Creation
 
 	new_xpath_context: XM_XSLT_EVALUATION_CONTEXT is
 			-- Created evaluation context
+		require
+			bindery_not_void: bindery /= Void
 		do
 			create Result.make (Current)
 		end
@@ -344,7 +348,7 @@ feature -- Element change
 	set_initial_template (a_template_name: STRING) is
 			-- Set initial template.
 		require
-			template_not_void: a_template_name /= Void
+			template_name_not_void: a_template_name /= Void
 			expanded_name: is_valid_expanded_name (a_template_name)
 		local
 			a_fingerprint: INTEGER
@@ -359,8 +363,22 @@ feature -- Element change
 				initial_template := a_compiled_templates_index.item (a_fingerprint)
 			else
 				initial_template := Void
-				error_listener.fatal_error ("Unable to locate a template named " + a_template_name, Void)
+				report_fatal_error ("Unable to locate a template named " + a_template_name, Void)
 			end
+		end
+
+	set_initial_mode (a_mode_name: STRING) is
+			-- Set initial mode.
+		require
+			mode_name_not_void: a_mode_name /= Void
+			expanded_name: is_valid_expanded_name (a_mode_name)
+		local
+			a_fingerprint: INTEGER
+		do
+			if not shared_name_pool.is_expanded_name_allocated (a_mode_name) then
+				shared_name_pool.allocate_expanded_name (a_mode_name)
+			end
+			initial_mode := shared_name_pool.fingerprint_from_expanded_name (a_mode_name)
 		end
 
 	set_current_mode (a_mode: XM_XSLT_MODE) is
@@ -423,6 +441,32 @@ feature -- Element change
 			a_fingerprint := shared_name_pool.fingerprint_from_expanded_name (a_parameter_name)
 			create a_string_value.make (a_parameter_value)
 			parameters.put (a_string_value, a_fingerprint) -- this does a replace of an existing parameter of the same name
+		end
+
+	set_xpath_parameter (a_parameter_value, a_parameter_name: STRING) is
+			-- Set a global xpath-valued parameter on the stylesheet.
+		require
+			parameter_name_not_void: a_parameter_name /= Void and then is_valid_expanded_name (a_parameter_name)
+			parameter_value_not_void: a_parameter_value /= Void
+		local
+			a_fingerprint: INTEGER
+			an_expression: XM_XPATH_EXPRESSION
+			an_expression_factory: XM_XPATH_EXPRESSION_FACTORY
+		do
+			if xpath_parameters = Void then
+				create xpath_parameters.make_map_default
+			end
+			if not shared_name_pool.is_expanded_name_allocated (a_parameter_name) then
+				shared_name_pool.allocate_expanded_name (a_parameter_name)
+			end
+			a_fingerprint := shared_name_pool.fingerprint_from_expanded_name (a_parameter_name)
+			create an_expression_factory
+			an_expression_factory.make_expression (a_parameter_value, executable.static_context, 1, 0)
+			if an_expression_factory.is_parse_error then
+				report_recoverable_error (an_expression_factory.parsed_error_value.error_message, Void)
+			else
+				xpath_parameters.force (an_expression_factory.parsed_expression, a_fingerprint)
+			end
 		end
 
 	register_document (a_document: XM_XPATH_DOCUMENT; a_uri: STRING) is
@@ -543,6 +587,7 @@ feature -- Transformation
 			executable_not_void: executable /= Void
 			initial_template_or_source_not_void: a_source = Void implies initial_template /= Void
 			result_not_void: a_result /= Void
+			no_error_yet: not is_error
 		local
 			a_start_node: XM_XPATH_NODE
 			a_builder: XM_XPATH_BUILDER
@@ -578,10 +623,11 @@ feature -- Transformation
 			executable_not_void: executable /= Void
 			initial_template_or_start_node_not_void: a_start_node = Void implies initial_template /= Void
 			destination_result_not_void: a_result /= Void
+			no_error_yet: not is_error
 		local
 			properties: XM_XSLT_OUTPUT_PROPERTIES
 		do
-			initialize_transformer
+			initialize_transformer (a_start_node)
 			properties := executable.default_output_properties
 
 			-- TODO: overlay properties defined by API
@@ -604,24 +650,24 @@ feature -- Transformation
 			--  Perform transformation.
 		require
 			start_node_in_document: a_start_node /= Void and then a_start_node.document_root /= Void
-			no_error: not is_error
+			no_error_yet: not is_error
 		local
 			a_sequence_iterator: XM_XPATH_SINGLETON_ITERATOR [XM_XPATH_ITEM]
 			finished: BOOLEAN
 		do
-			principal_source_document := a_start_node.document_root
-			create_new_context (a_start_node)
-			create a_sequence_iterator.make (a_start_node)
-			from
-				apply_templates (a_sequence_iterator, rule_manager.mode (initial_mode), Void, Void)
-			until
-				is_error or else finished
-			loop
-				if last_tail_call /= Void then
-					last_tail_call.process_leaving_tail (Current)
-					last_tail_call := last_tail_call.last_tail_call
-				else
-					finished := True
+			if not is_error then
+				create a_sequence_iterator.make (a_start_node)
+				from
+					apply_templates (a_sequence_iterator, rule_manager.mode (initial_mode), Void, Void)
+				until
+					is_error or else finished
+				loop
+					if last_tail_call /= Void then
+						last_tail_call.process_leaving_tail (Current)
+						last_tail_call := last_tail_call.last_tail_call
+					else
+						finished := True
+					end
 				end
 			end
 		end
@@ -717,6 +763,9 @@ feature -- Implementation
 
 	user_data_table: DS_HASH_TABLE [ANY, STRING]
 			-- User data map
+
+	xpath_parameters: DS_HASH_TABLE [XM_XPATH_EXPRESSION, INTEGER]
+			-- XPath-valued global parameters
 
 	perform_default_action (a_node: XM_XPATH_NODE; some_parameters, some_tunnel_parameters: XM_XSLT_PARAMETER_SET) is
 			-- Perform default action for `a_node'.
@@ -824,7 +873,7 @@ feature -- Implementation
 			selected_receiver_not_void: Result /= Void			
 		end
 
-	initialize_transformer is
+	initialize_transformer (a_start_node: XM_XPATH_NODE) is
 			-- Initialize inpreparation for a transformation.
 		require
 			executable_not_void: executable /= Void
@@ -835,10 +884,50 @@ feature -- Implementation
 			
 			bindery := executable.new_bindery
 
+			if a_start_node /= Void then
+				principal_source_document := a_start_node.document_root
+				create_new_context (a_start_node)
+
+				-- If XPath parameters were supplied, set them up
+				
+				if xpath_parameters /= Void then
+					if parameters = Void then
+						create parameters.make_empty
+					end
+					apply_xpath_parameters (new_xpath_context)
+				end
+			elseif xpath_parameters /= Void then
+				report_recoverable_error ("XPath parameters cannot be specified without a source document", Void)
+			end
+
 			-- If parameters were supplied, set them up
 
 			if parameters /= Void then
 				bindery.define_global_parameters (parameters)
+			end
+		end
+
+	apply_xpath_parameters (a_context: XM_XSLT_EVALUATION_CONTEXT) is
+			-- Set XPath values on global parameters.
+		require
+			context_not_void: a_context /= Void
+		local
+			a_cursor: DS_HASH_TABLE_CURSOR [XM_XPATH_EXPRESSION, INTEGER]
+			a_fingerprint: INTEGER
+			a_message: STRING
+			an_expression_factory: XM_XPATH_EXPRESSION_FACTORY
+			a_value: XM_XPATH_VALUE
+		do
+			create an_expression_factory
+			from
+				a_cursor := xpath_parameters.new_cursor; a_cursor.start
+			until
+				a_cursor.after
+			loop
+				a_fingerprint := a_cursor.key
+				a_value := an_expression_factory.created_closure (a_cursor.item, a_context)
+				parameters.put (a_value, a_fingerprint) -- replaces existing value
+				a_cursor.forth
 			end
 		end
 

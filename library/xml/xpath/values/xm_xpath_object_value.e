@@ -65,7 +65,7 @@ feature -- Comparison
 			other_object ?= other
 			if other_object /= Void then
 				if value /= Void then
-					Result := value.is_equal (other_object.value)
+					Result := value = other_object.value
 				else
 					Result := other_object.value = Void
 				end

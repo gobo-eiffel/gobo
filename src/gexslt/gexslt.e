@@ -34,6 +34,8 @@ inherit
 
 	KL_IMPORTED_STRING_ROUTINES
 
+	XM_XSLT_CONFIGURATION_CONSTANTS
+
 	MEMORY
 
 creation
@@ -50,6 +52,7 @@ feature -- Execution
 		do
 			create configuration.make_with_defaults
 			error_handler := configuration.error_reporter
+			error_listener := configuration.error_listener
 			Arguments.set_program_name ("gexslt")
 			nb := Arguments.argument_count
 			if nb = 0 then
@@ -57,6 +60,7 @@ feature -- Execution
 				Exceptions.die (0)
 			end
 			initial_template_name := Void
+			initial_mode_name := Void
 			create uris.make (nb)
 			uris.set_equality_tester (string_equality_tester)
 			is_line_numbering := True
@@ -122,6 +126,9 @@ feature -- Status report
 	initial_template_name: STRING
 			-- Name of initial template to be invoked
 
+	initial_mode_name: STRING
+			-- Name of initial mode
+
 feature -- Setting
 
 	set_string_parameter (a_string_parameter_option: STRING) is
@@ -166,16 +173,56 @@ feature -- Setting
 			end
 		end
 
+	set_xpath_parameter (a_string_parameter_option: STRING) is
+			-- Set an XPath-valued parameter on the stylesheet.
+		require
+			non_zero_length_parameter: a_string_parameter_option /= Void and then a_string_parameter_option.count > 0
+		local
+			a_string_splitter: ST_SPLITTER
+			a_component_list: DS_LIST [STRING]
+			a_parameter_name, a_parameter_value: STRING
+		do
+			create a_string_splitter.make
+			a_string_splitter.set_separators ("=")
+			a_component_list := a_string_splitter.split (a_string_parameter_option)
+			if a_component_list.count /= 2 then
+				report_xpath_parameter_option_syntax_message (a_string_parameter_option)
+				Exceptions.die (1)
+			end
+			a_parameter_name := a_component_list.item (1)
+			if not is_valid_expanded_name (a_parameter_name) then
+				report_parameter_name_syntax_message (a_parameter_name)
+				Exceptions.die (1)
+			end
+			a_parameter_value := a_component_list.item (2)
+
+			if xpath_parameters = Void then
+				create xpath_parameters.make_with_equality_testers (3, string_equality_tester, string_equality_tester)
+			end
+			if xpath_parameters.has (a_parameter_name) then
+				report_duplicate_parameter_name (a_parameter_name)
+				Exceptions.die (1)
+			else
+				xpath_parameters.put (a_parameter_value, a_parameter_name)
+			end
+		end
+
 feature -- Access
 
 	error_handler: UT_ERROR_HANDLER
 			-- Error handler
+
+	error_listener: XM_XSLT_ERROR_LISTENER
+			-- Error listenmer
 
 	uris: DS_ARRAYED_LIST [STRING]
 			-- Stylesheet and source document URIs
 
 	parameters: DS_HASH_TABLE [STRING, STRING]
 			-- String parameter values indexed by expanded name
+
+	xpath_parameters: DS_HASH_TABLE [STRING, STRING]
+			-- XPath parameter values indexed by expanded name
 
 	output_destination: STRING
 			-- Output destination URL (if `Void' use standard output)
@@ -245,6 +292,20 @@ feature -- Error handling
 			error_handler.report_error (an_error)
 		end
 
+	report_xpath_parameter_option_syntax_message (a_parameter_option: STRING) is
+			-- Report a syntax error with an XPath parameter option.
+		require
+			parameter_option_not_void: a_parameter_option /= Void
+		local
+			an_error: UT_MESSAGE
+			a_message_string: STRING
+		do
+			a_message_string := STRING_.concat ("Bad syntax for XPath parameter: ", a_parameter_option)
+			a_message_string := STRING_.appended_string (a_message_string, ".%NSyntax is [--][{namespace-uri}]local-name=value%N")
+			create an_error.make (a_message_string)
+			error_handler.report_error (an_error)
+		end
+
 	report_parameter_name_syntax_message (a_parameter_name: STRING) is
 			-- Report a syntax error with a parameter name.
 		require
@@ -309,6 +370,11 @@ feature -- Error handling
 									  "       --errors=[local-file-name]%N" +
 									  "       --warnings=[local-file-name]%N" +
 									  "       --errors-and-warnings=[local-file-name]%N" +
+									  "       --warning-threshold=number%N" +
+									  "       --error-threshold=number%N" +									  
+									  "       --treat-warnings-as-errors%N" +
+									  "       --recover-silently%N" +
+									  "       --do-not-recover%N" +
 									  "       --no-line-numbers%N" +
 									  "       --no-gc%N" +
 									  "       --no-catalogs%N" +
@@ -318,6 +384,7 @@ feature -- Error handling
 									  "       --catalog-debug-level=[0-10]%N" +
 									  "       --output=local-file-name%N" +
 									  "       --tiny-tree%N" +
+									  "       --mode=[{namespace-uri}]local-name%N" +
 									  "       --template=[{namespace-uri}]local-name%N" +									  
 									  "       --param=name=string-value%N" +
 									  "       --xpath-param=name=xpath-expression%N")
@@ -353,12 +420,22 @@ feature {NONE} -- Implementation
 				report_not_yet_implemented ("Xml-stylesheet processing instruction")					
 			elseif an_option.substring_index ("template=", 1) = 1 and then an_option.count > 9 then
 				initial_template_name := an_option.substring (10, an_option.count)
-			elseif an_option.substring_index ("mode", 1) = 1 then
-				report_not_yet_implemented ("Initial mode")					
+			elseif an_option.substring_index ("mode=", 1) = 1 and then an_option.count > 5 then
+				initial_mode_name := an_option.substring (6, an_option.count)
 			elseif an_option.is_equal ("no-gc") then
 				collection_off
-			elseif an_option.substring_index ("xpath-param=", 1) = 1 then
-				report_not_yet_implemented ("XPath expressions in parameters")
+			elseif an_option.is_equal ("treat-warnings-as-errors") then
+				error_listener.treat_warnings_as_recoverable_errors
+			elseif an_option.is_equal ("do-not-recover") then
+				error_listener.set_recovery_policy (Do_not_recover)
+			elseif an_option.is_equal ("recover-silently") then
+				error_listener.set_recovery_policy (Recover_silently)				
+			elseif an_option.substring_index ("warning-threshold=", 1) = 1 and then an_option.count > 18 then
+				set_warning_threshold (an_option.substring (19, an_option.count))
+			elseif an_option.substring_index ("error-threshold=", 1) = 1 and then an_option.count > 16 then
+				set_error_threshold (an_option.substring (17, an_option.count))				
+			elseif an_option.substring_index ("xpath-param=", 1) = 1 and then an_option.count > 12 then
+				set_xpath_parameter (an_option.substring (13, an_option.count))
 			elseif an_option.substring_index ("param=", 1) = 1 and then an_option.count > 6 then
 				set_string_parameter (an_option.substring (7, an_option.count))
 			elseif an_option.substring_index ("file=", 1) = 1 and then an_option.count > 5 then
@@ -485,6 +562,9 @@ feature {NONE} -- Implementation
 				if initial_template_name /= Void then
 					a_transformer.set_initial_template (initial_template_name)
 				end
+				if initial_mode_name /= Void then
+					a_transformer.set_initial_mode (initial_mode_name)
+				end
 				create a_destination -- To standard output
 				if output_destination /= Void then
 					create a_stream.make (output_destination)
@@ -492,7 +572,9 @@ feature {NONE} -- Implementation
 					a_destination.set_output_stream (a_stream)
 				end
 				create a_result.make (a_destination)
-				a_transformer.transform (a_source_uri, a_result)
+				if not a_transformer.is_error then
+					a_transformer.transform (a_source_uri, a_result)
+				end
 				if a_stream /= Void then
 					a_stream.close
 				end
@@ -527,6 +609,17 @@ feature {NONE} -- Implementation
 					a_cursor.forth
 				end
 			end
+			if xpath_parameters /= Void then
+				from
+					a_cursor := xpath_parameters.new_cursor; a_cursor.start
+				until
+					a_cursor.after
+				loop
+					a_string := a_cursor.item
+					a_transformer.set_xpath_parameter (a_string, a_cursor.key)
+					a_cursor.forth
+				end
+			end			
 		end
 
 	set_warning_file (a_filename: STRING) is
@@ -565,7 +658,6 @@ feature {NONE} -- Implementation
 			error_handler.set_error_file (a_file)
 			error_handler.set_warning_file (a_file)
 		end
-			
 
 	set_trace_file (a_filename: STRING) is
 			-- Set trace output to `a_filename'.
@@ -578,9 +670,36 @@ feature {NONE} -- Implementation
 			a_file.open_write
 			error_handler.set_info_file (a_file)
 		end
-			
+
+	set_warning_threshold (a_warning_threshold: STRING) is
+			-- Set warning threhold.
+		require
+			warning_threshold_not_void: a_warning_threshold /= Void and then a_warning_threshold.count > 0
+		do
+			if a_warning_threshold.is_integer then
+				error_listener.set_warning_threshold (a_warning_threshold.to_integer)
+			else
+				report_general_message ("Warning threshold must be an integer")
+				Exceptions.die (1)				
+			end
+		end
+
+	set_error_threshold (a_error_threshold: STRING) is
+			-- Set recoverable error threhold.
+		require
+			error_threshold_not_void: a_error_threshold /= Void and then a_error_threshold.count > 0
+		do
+			if a_error_threshold.is_integer then
+				error_listener.set_recoverable_error_threshold (a_error_threshold.to_integer)
+			else
+				report_general_message ("Error threshold must be an integer")
+				Exceptions.die (1)				
+			end
+		end
+
 invariant
 
 	error_handler_not_void: error_handler /= Void
+	error_listener_not_void: error_listener /= Void
 
 end
