@@ -24,7 +24,6 @@ feature {NONE} -- Initialization
 			a_cluster_name_not_void: a_cluster_name /= Void
 			a_cluster_name_not_empty: a_cluster_name.count > 0
 			a_pathname_not_void: a_pathname /= Void
-			a_pathname_not_empty: a_pathname.count > 0
 		do
 			cluster_name := a_cluster_name
 			pathname := a_pathname
@@ -46,6 +45,5 @@ invariant
 	cluster_name_not_void: cluster_name /= Void
 	cluster_name_not_empty: cluster_name.count > 0
 	pathname_not_void: pathname /= Void
-	pathname_not_empty: pathname.count > 0
 
 end
