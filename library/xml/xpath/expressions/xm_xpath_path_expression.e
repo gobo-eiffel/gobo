@@ -61,6 +61,7 @@ feature {NONE} -- Initialization
 					step := a_step_path.step
 				end
 			end
+			compute_static_properties
 		end
 
 feature -- Access
@@ -210,12 +211,18 @@ feature -- Optimization
 		do
 			create a_type_checker
 			a_result_expression := clone (Current)
-			an_expression := start.analyze (a_context)
-			an_expression.set_analyzed
+			if start.may_analyze then
+				an_expression := start.analyze (a_context)
+			else
+				an_expression := start
+			end
 			if not an_expression.is_error then
 				a_result_expression.set_start (an_expression)
-				an_expression := step.analyze (a_context)
-				an_expression.set_analyzed
+				if step.may_analyze then
+					an_expression := step.analyze (a_context)
+				else
+					an_expression := step
+				end
 				if not an_expression.is_error then
 					a_result_expression.set_step (an_expression)
 
@@ -261,8 +268,11 @@ feature -- Optimization
 										check
 											path_not_void: a_path /= Void
 										end
-									another_expression := a_path.analyze (a_context)
-									another_expression.set_analyzed
+									if a_path.may_analyze then
+										another_expression := a_path.analyze (a_context)
+									else
+										another_expression := a_path
+									end
 									if another_expression.is_error then
 										a_result_expression.set_last_error (another_expression.last_error)
 									else
@@ -276,44 +286,51 @@ feature -- Optimization
 									a_result_expression.set_last_error (a_path.last_error)
 								end
 							else
-
 								-- Failed to simplify expressions such as a//b
-														
+
 								-- If any subexpressions within the step are not dependent on the focus, promote them:
 								-- this causes them to be evaluated once, outside the path  expression.
 
-								create an_offer.make (Focus_independent, Void, a_result_expression, False, a_result_expression.start.Context_document_nodeset)
-								an_expression := a_result_expression.step.promote (an_offer)
-								a_result_expression.set_step (an_expression)
-								a_let_expression ?= an_offer.containing_expression
-								if a_let_expression /= Void then
-									another_expression := a_let_expression.analyze (a_context)
-									another_expression.set_analyzed
-									if a_let_expression.is_error then
-											a_result_expression.set_last_error (a_let_expression.last_error)
-									else
-										an_offer.set_containing_expression (another_expression)
-									end
-								end
+								-- This lot produces an infitinite loop in let expression analysis
 
-								if not a_result_expression.is_error then
-
-									-- Decide whether the result needs to be wrapped in a sorting
-									-- expression to deliver the results in document order
-										
-									a_path ?= an_offer.containing_expression
-									if a_path = Void then
-										if a_path.ordered_nodeset then
-											Result := a_path
-										elseif a_path.Reverse_document_order then
-											create {XM_XPATH_REVERSER} Result.make (a_path)
-										else
-											create {XM_XPATH_DOCUMENT_SORTER} Result.make (a_path)
-										end
-									else
-										Result := an_offer.containing_expression
-									end
-								end
+--								create an_offer.make (Focus_independent, Void, a_result_expression, False, a_result_expression.start.context_document_nodeset)
+--								an_expression := a_result_expression.step.promote (an_offer)
+--								a_result_expression.set_step (an_expression)
+--								a_let_expression ?= an_offer.containing_expression
+--								if a_let_expression /= Void then
+--									if a_let_expression.may_analyze then
+--										another_expression := a_let_expression.analyze (a_context)
+--											check
+--												another_expression.analyzed
+--											end
+--									else
+--										another_expression := a_let_expression
+--									end
+--									if a_let_expression.is_error then
+--											a_result_expression.set_last_error (a_let_expression.last_error)
+--									else
+--										an_offer.set_containing_expression (another_expression)
+--									end
+--								end
+-- 
+--								if not a_result_expression.is_error then
+-- 
+--									-- Decide whether the result needs to be wrapped in a sorting
+--									-- expression to deliver the results in document order
+--										
+--									a_path ?= an_offer.containing_expression
+--									if a_path /= Void then
+--										if a_path.ordered_nodeset then
+--											Result := a_path
+--										elseif a_path.reverse_document_order then
+--											create {XM_XPATH_REVERSER} Result.make (a_path)
+--										else
+--											create {XM_XPATH_DOCUMENT_SORTER} Result.make (a_path)
+--										end
+--									else
+--										Result := an_offer.containing_expression
+--									end
+--								end
 							end
 						end
 					end
@@ -323,7 +340,8 @@ feature -- Optimization
 			else
 				a_result_expression.set_last_error (an_expression.last_error)
 			end
-			Result := a_result_expression
+			if Result = Void then Result := a_result_expression end
+			Result.set_analyzed
 		end
 
 	promote (an_offer: XM_XPATH_PROMOTION_OFFER): XM_XPATH_EXPRESSION is
@@ -473,8 +491,8 @@ feature {NONE} -- Implementation
 					elseif an_axis.axis /= Descendant_or_self_axis then
 						Result := Void
 					else
-						a_test ?= an_axis
-						any_node_test ?= an_axis
+						a_test := an_axis.node_test
+						any_node_test ?= a_test
 						if a_test = Void or else any_node_test /= Void then
 							Result := Void
 						else
@@ -606,7 +624,7 @@ feature {NONE} -- Implementation
 				-- The result is sorted if the start is sorted and the step selects attributes
 				-- or namespaces
 					
-				if step.Attribute_ns_nodeset then
+				if step.attribute_ns_nodeset then
 					Result := True
 				else
 
@@ -646,7 +664,7 @@ feature {NONE} -- Implementation
 				Result := not is_forward_axis (an_axis.axis)
 			else
 				an_axis ?= start
-				if start /= void then
+				if an_axis /= Void then
 					if is_forward_axis (an_axis.axis) then
 						Result := False
 					else

@@ -58,6 +58,8 @@ feature -- Optimization
 			-- Perform static analysis of `Current' and its subexpressions
 		do
 			-- TODO
+			Result := Current
+			Result.set_analyzed			
 		end
 
 feature {NONE} -- Implementation

@@ -36,6 +36,7 @@ feature {NONE} -- Initialization
 			create name_test.make (Attribute_node, a_fingerprint) 
 			create intrinsic_dependencies.make (1, 6)
 			intrinsic_dependencies.put (True, 2) -- depends_upon_context_item
+			compute_static_properties
 		ensure
 			fingerprint_set: fingerprint = a_fingerprint
 		end

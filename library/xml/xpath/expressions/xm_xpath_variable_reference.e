@@ -39,6 +39,7 @@ feature {NONE} -- Initialization
 		do
 			a_declaration.register_reference (Current)
 			display_name := a_declaration.name
+			compute_static_properties
 		end
 
 feature -- Access
@@ -82,7 +83,13 @@ feature -- Status report
 	may_analyze: BOOLEAN is
 			-- OK to call `analyze'?
 		do
-			Result := constant_value /= Void or else static_type /= Void
+			if not analyzed then
+				if constant_value /= Void then
+					Result := True
+				elseif static_type /= Void then
+					Result := True
+				end
+			end
 		end
 
 	display (a_level: INTEGER; a_pool: XM_XPATH_NAME_POOL) is
@@ -113,6 +120,7 @@ feature -- Optimization
 			else
 				Result := Current
 			end
+			Result.set_analyzed
 		end
 
 feature -- Element change

@@ -29,7 +29,12 @@ feature -- Status report
 
 	are_special_properties_computed: BOOLEAN
 			-- Have `special_properties' been computed yet?
-		
+
+	are_static_properties_computed: BOOLEAN is
+			-- Have all static properties been computed?
+		do
+			Result := are_dependencies_computed and then are_cardinalities_computed and then are_special_properties_computed
+		end
 
 feature -- Dependencies
 
@@ -274,6 +279,18 @@ feature -- Cardinality
 
 feature -- Setting cardinality
 
+	clone_cardinality (other: XM_XPATH_STATIC_PROPERTY) is
+			-- Set `cardinalities' from `other'.
+		require
+			other_cardinalities: other /= Void and then other.are_cardinalities_computed
+		do
+			cardinalities := clone (other.cardinalities)
+			are_cardinalities_computed := True
+		ensure
+			-- TODO - check equality set: cardinalities = other.cardinalities
+			cardinalities_computed: are_cardinalities_computed
+		end
+
 	set_cardinality (requested_cardinality: INTEGER) is
 			-- Set cardinality to `requested_cardinality'.
 		require
@@ -427,6 +444,18 @@ feature -- Special properties
 		end
 
 feature -- Setting special properties
+
+	clone_special_properties (other: XM_XPATH_STATIC_PROPERTY) is
+			-- Set `special_properties' from `other'.
+		require
+			other_special_properties: other /= Void and then other.are_special_properties_computed
+		do
+			special_properties := clone (other.special_properties)
+			are_special_properties_computed := True
+		ensure
+			-- TODO - equality check set: special_properties = other.special_properties
+			special_properties_computed: are_special_properties_computed
+		end
 
 	set_special_properties (properties: ARRAY [BOOLEAN]) is
 		require

@@ -31,6 +31,7 @@ feature {NONE} -- Initialization
 			-- Create a specific sequence
 		require
 			valid_cardinality: is_valid_required_cardinality (a_cardinality)
+			valid_primary_type: is_valid_type (a_type)
 		do
 			primary_type := a_type
 			content_type := Any_item
@@ -143,4 +144,9 @@ feature -- Access
 	content_type: INTEGER
 			-- Type of contents (for Elements)
 
+invariant
+
+	valid_primary_type: is_valid_type (primary_type)
+	valid_content_type: is_valid_type (content_type)
+	
 end

@@ -26,7 +26,6 @@ feature -- Status setting
 	register_system_function_factory (a_system_function_factory: XM_XPATH_SYSTEM_FUNCTION_FACTORY) is
 			-- Register an XM_XPATH_SYSTEM_FUNCTION_FACTORY
 		require
-			no_previous_factory: not is_system_function_factory_registered
 			factory_not_void: a_system_function_factory /= Void
 		do
 			system_function_factory := a_system_function_factory

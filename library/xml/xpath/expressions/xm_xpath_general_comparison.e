@@ -79,7 +79,6 @@ feature -- Optimization
 			create a_type_checker
 			is_backwards_compatible_mode := a_context.is_backwards_compatible_mode
 			a_result_expression := clone (Current)
-			a_result_expression.set_analyzed
 				check
 					first_operand_may_be_analyzed: operands.item (1).may_analyze and then not operands.item (1).analyzed
 					second_operand_may_be_analyzed: operands.item (2).may_analyze and then not operands.item (2).analyzed
@@ -87,14 +86,20 @@ feature -- Optimization
 					-- Analysis proceeds top-down through the sub-expressions
 
 				end
-			
-			an_expression := operands.item (1).analyze (a_context)
-			an_expression.set_analyzed
+
+			if operands.item (1).may_analyze then
+				an_expression := operands.item (1).analyze (a_context)
+			else
+				an_expression := operands.item (1)
+			end
 			if not an_expression.is_error then
 				a_result_expression.operands.put (an_expression.unsorted (False), 1)
 				
-				an_expression := operands.item (2).analyze (a_context)
-				an_expression.set_analyzed
+				if operands.item (2).may_analyze then
+					an_expression := operands.item (2).analyze (a_context)
+				else
+					an_expression := operands.item (2)
+				end
 				if not an_expression.is_error then
 					a_result_expression.operands.put (an_expression.unsorted (False), 2)
 
@@ -167,9 +172,8 @@ feature -- Optimization
 
 									create {XM_XPATH_VALUE_COMPARISON} an_expression.make (first_operand, singleton_value_operator (operator), second_operand, atomic_comparer.collator)
 									an_expression := an_expression.simplify
-									if not an_expression.is_error then
+									if not an_expression.is_error and an_expression.may_analyze then
 										an_expression := an_expression.analyze (a_context)
-										an_expression.set_analyzed
 										Result := an_expression
 									else
 										Result := an_expression
@@ -183,7 +187,6 @@ feature -- Optimization
 
 										create a_singleton_comparison.make (first_operand, singleton_value_operator (operator), second_operand, atomic_comparer.collator)
 										Result := a_singleton_comparison.analyze (a_context)
-										Result.set_analyzed
 										
 									elseif not first_operand.cardinality_allows_many then
 
@@ -191,7 +194,6 @@ feature -- Optimization
 
 										create a_general_comparison.make (second_operand, inverse_operator (operator), first_operand, atomic_comparer.collator)
 										Result := a_general_comparison.analyze (a_context)
-										Result.set_analyzed
 
 									else
 
@@ -245,7 +247,6 @@ feature -- Optimization
 															else
 																create a_minimax_comparison.make (first_operand, operator, second_operand)
 																Result := a_minimax_comparison.analyze (a_context)
-																Result.set_analyzed
 															end
 														end
 													end
@@ -275,6 +276,7 @@ feature -- Optimization
 				a_result_expression.set_last_error (an_expression.last_error)
 			end
 			if Result = Void then Result := a_result_expression end
+			if not Result.analyzed then Result.set_analyzed end
 		end
 
 feature -- Evaluation

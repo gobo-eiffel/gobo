@@ -51,6 +51,7 @@ feature -- Optimization
 			-- Perform static analysis of `Current' and its subexpressions
 		do
 			Result := Current
+			Result.set_analyzed			
 		end
 
 feature -- Evaluation

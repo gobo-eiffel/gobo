@@ -33,6 +33,7 @@ feature {NONE} -- Initialization
 			declaration := a_range_variable
 			sequence := a_sequence_expression
 			action := an_action
+			compute_static_properties
 		ensure
 			range_variable_set: declaration = a_range_variable
 			sequence_set: sequence = a_sequence_expression
@@ -80,6 +81,8 @@ feature -- Optimization
 			-- Perform static analysis of an expression and its subexpressions
 		do
 			-- TODO
+			Result := Current
+			Result.set_analyzed			
 		end
 
 

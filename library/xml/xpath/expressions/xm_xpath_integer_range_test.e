@@ -32,6 +32,7 @@ feature {NONE} -- Initialization
 			value := a_value
 			minimum_bound := a_min
 			maximum_bound := a_max
+			compute_static_properties
 		ensure
 			value_set: value = a_value
 			minimum_bound_set: minimum_bound = a_min
@@ -74,6 +75,8 @@ feature -- Optimization
 			-- Perform static analysis of `Current' and its subexpressions
 		do
 			-- TODO
+			Result := Current
+			Result.set_analyzed			
 		end
 
 feature {XM_XPATH_EXPRESSION} -- Restricted

@@ -34,6 +34,7 @@ feature {NONE} -- Initialization
 			create operands.make (1,2)
 			operands.put (an_operand_one, 1)
 			operands.put (an_operand_two, 2)
+			compute_static_properties
 		ensure
 			operator_set: operator = a_token
 			operand_1_set: operands /= Void and then operands.item (1).same_expression (an_operand_one)
@@ -120,15 +121,21 @@ feature -- Optimization
 			an_expression: XM_XPATH_EXPRESSION
 		do
 			a_binary_expression := clone (Current)
-			an_expression := operands.item (1).simplify
-			a_binary_expression.operands.put (an_expression, 1)
-			if an_expression.is_error then
-				a_binary_expression.set_last_error (an_expression.last_error)
-			else
-				an_expression := operands.item (2).simplify
-				a_binary_expression.operands.put (an_expression, 2)
+			if operands.item (1).may_analyze then
+				an_expression := operands.item (1).simplify
+				a_binary_expression.operands.put (an_expression, 1)
 				if an_expression.is_error then
 					a_binary_expression.set_last_error (an_expression.last_error)
+				end
+			end
+
+			if not a_binary_expression.is_error then
+				if operands.item (2).may_analyze then
+					an_expression := operands.item (2).simplify
+					a_binary_expression.operands.put (an_expression, 2)
+					if an_expression.is_error then
+						a_binary_expression.set_last_error (an_expression.last_error)
+					end
 				end
 			end
 			Result := a_binary_expression
@@ -136,8 +143,39 @@ feature -- Optimization
 
 	analyze (a_context: XM_XPATH_STATIC_CONTEXT): XM_XPATH_EXPRESSION is
 			-- Perform static analysis of an expression and its subexpressions
+		local
+			a_result_expression: XM_XPATH_BINARY_EXPRESSION
+			first_operand, second_operand: XM_XPATH_EXPRESSION
+			a_value, another_value: XM_XPATH_VALUE
 		do
-			-- TODO
+			a_result_expression := clone (Current)
+			first_operand := operands.item (1)
+			second_operand := operands.item (2)
+			if first_operand.may_analyze then
+				first_operand := first_operand.analyze (a_context)
+			end
+			if first_operand.is_error then
+				a_result_expression.set_last_error (first_operand.last_error)
+			else
+				a_result_expression.operands.put (first_operand, 1)
+				if second_operand.may_analyze then
+					second_operand := second_operand.analyze (a_context)
+				end
+				if second_operand.is_error then
+				a_result_expression.set_last_error (second_operand.last_error)
+				else
+
+					-- If both operands are known, [[and result is a singleton??]], pre-evaluate the expression
+
+					a_value ?= first_operand; another_value ?= second_operand
+					if a_value /= Void and then another_value /= Void then
+						a_result_expression.set_analyzed
+						Result := a_result_expression.eagerly_evaluate (Void)
+					end
+				end
+			end
+			if Result = Void then Result := a_result_expression end
+			Result.set_analyzed
 		end
 	
 	promote (an_offer: XM_XPATH_PROMOTION_OFFER): XM_XPATH_EXPRESSION is
@@ -154,6 +192,7 @@ feature {NONE} -- Implementation
 			create cardinalities.make (1, 3) -- All False
 			cardinalities.put (True, 1)
 			cardinalities.put (True, 2)
+			are_cardinalities_computed := True
 		end
 
 	display_operator: STRING is

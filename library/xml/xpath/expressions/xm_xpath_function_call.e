@@ -126,8 +126,11 @@ feature -- Optimization
 			until
 				arguments_cursor.after
 			loop
-				an_argument := arguments_cursor.item.analyze (a_context)
-				an_argument.set_analyzed
+				if arguments_cursor.item.may_analyze then
+					an_argument := arguments_cursor.item.analyze (a_context)
+				else
+					an_argument := arguments_cursor.item
+				end
 				result_arguments.put_last (an_argument)
 				a_value ?= an_argument
 				if a_value = Void then fixed_values := False end
@@ -147,6 +150,7 @@ feature -- Optimization
 			else
 				Result := a_result_expression -- No error, but needs run-time evaluation
 			end
+			Result.set_analyzed
 		end
 
 	promote (an_offer: XM_XPATH_PROMOTION_OFFER): XM_XPATH_EXPRESSION is

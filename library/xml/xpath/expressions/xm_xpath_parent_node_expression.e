@@ -30,6 +30,7 @@ feature {NONE} -- Initialization
 		do
 			create intrinsic_dependencies.make (1, 6)
 			intrinsic_dependencies.put (True, 2) -- depends_upon_context_item												
+			compute_static_properties
 		end
 
 feature -- Access

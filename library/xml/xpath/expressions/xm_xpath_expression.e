@@ -85,7 +85,9 @@ feature -- Status report
 	may_analyze: BOOLEAN is
 			-- OK to call `analyze'?
 		do
-			Result := True
+			if not analyzed then Result := True end
+		ensure
+			not_analyzed_if_true: Result implies not analyzed
 		end
 
 	display (a_level: INTEGER; a_pool: XM_XPATH_NAME_POOL) is
@@ -158,15 +160,14 @@ feature -- Optimization
 			-- is, if a run-time type error is inevitable. The call may return a modified form of the expression;
 			-- This routine is called after all references to functions and variables have been resolved
 			-- to the declaration of the function or variable. However, the types of such functions and
-			-- variables will only be accurately known if they have been explicitly declared
-			-- After calling `analyze', you must then call `set_analyze'.
+			-- variables will only be accurately known if they have been explicitly declared.
 		require
 			context_not_void: a_context /= Void
-			ok_to_analyze: not analyzed and then may_analyze
+			ok_to_analyze: may_analyze
 			no_previous_error: not is_error
 		deferred
 		ensure
-			expression_not_void: Result /= Void
+			analyzed : Result /= Void and then Result.analyzed
 		end
 
 	promote (an_offer: XM_XPATH_PROMOTION_OFFER): XM_XPATH_EXPRESSION is

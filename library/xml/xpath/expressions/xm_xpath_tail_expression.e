@@ -30,6 +30,7 @@ feature {NONE} -- Initialization
 		do
 			base_expression := a_base_expression
 			start := a_start
+			compute_static_properties
 		ensure
 			base_expression_set: base_expression = a_base_expression
 			start_set: start = a_start
@@ -69,6 +70,8 @@ feature -- Optimization
 			-- Perform static analysis of `Current' and its subexpressions
 		do
 			-- TODO
+			Result := Current
+			Result.set_analyzed			
 		end
 
 feature {NONE} -- Implementation

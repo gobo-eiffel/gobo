@@ -35,6 +35,7 @@ feature {NONE} -- Initialization
 			set_condition (a_condition)
 			set_else_expression (an_else_expression)
 			set_then_expression (a_then_expression)
+			compute_static_properties
 		ensure
 				condition_set: condition = a_condition
 				else_set: else_expression = an_else_expression
@@ -153,20 +154,29 @@ feature -- Optimization
 			an_expression: XM_XPATH_EXPRESSION
 		do
 			an_if_expression := clone (Current)
-			an_expression := condition.analyze (a_context)
-			an_expression.set_analyzed
+			if condition.may_analyze then
+				an_expression := condition.analyze (a_context)
+			else
+				an_expression := condition
+			end
 			an_if_expression.set_condition (an_expression)
 			if an_expression.is_error then
 				an_if_expression.set_last_error (an_expression.last_error)
 			else
-				an_expression := then_expression.analyze (a_context)
-				an_expression.set_analyzed
+				if then_expression.may_analyze then
+					an_expression := then_expression.analyze (a_context)
+				else
+					an_expression := then_expression
+				end
 				an_if_expression.set_then_expression (an_expression)
 				if an_expression.is_error then
 					an_if_expression.set_last_error (an_expression.last_error)
 				else
-					an_expression := else_expression.analyze (a_context)
-					an_expression.set_analyzed
+					if else_expression.may_analyze then
+						an_expression := else_expression.analyze (a_context)
+					else
+						an_expression := else_expression
+					end
 					an_if_expression.set_else_expression (an_expression)
 					if an_expression.is_error then
 						an_if_expression.set_last_error (an_expression.last_error)
@@ -178,6 +188,7 @@ feature -- Optimization
 			else
 				Result := an_if_expression.simplify
 			end
+			Result.set_analyzed
 		end
 
 	promote (an_offer: XM_XPATH_PROMOTION_OFFER): XM_XPATH_EXPRESSION is

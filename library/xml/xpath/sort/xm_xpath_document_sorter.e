@@ -15,6 +15,9 @@ class XM_XPATH_DOCUMENT_SORTER
 inherit
 
 		XM_XPATH_COMPUTED_EXPRESSION
+		redefine
+			simplify, compute_special_properties, sub_expressions, promote, iterator, effective_boolean_value
+		end
 
 creation
 
@@ -23,9 +26,16 @@ creation
 feature {NONE} -- Initialization
 
 	make (an_expression: XM_XPATH_EXPRESSION) is
-			-- TODO
+		require
+			expression_not_void: an_expression /= Void and then an_expression.are_static_properties_computed
 		do
 			base_expression := an_expression
+			if base_expression.context_document_nodeset then
+				-- TODO - comparer
+			else
+				-- TODO - comparer
+			end
+			compute_static_properties
 		end
 
 feature -- Access
@@ -36,7 +46,21 @@ feature -- Access
 	item_type: INTEGER is
 			-- Determine the data type of the expression, if possible
 		do
-			-- TODO
+			Result := base_expression.item_type
+		end
+
+	sub_expressions: DS_ARRAYED_LIST [XM_XPATH_EXPRESSION] is
+			-- Immediate sub-expressions of `Current'
+		do
+			create Result.make (1)
+			Result.set_equality_tester (expression_tester)
+			Result.put (base_expression, 1)
+		end
+
+		iterator (a_context: XM_XPATH_CONTEXT): XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_ITEM] is
+			-- Iterator over the values of a sequence
+		do
+			Result := Void -- TODO
 		end
 
 feature -- Status report
@@ -54,10 +78,87 @@ feature -- Status report
 
 feature -- Optimization
 
+		simplify: XM_XPATH_EXPRESSION is
+			-- Simplify `Current'
+	local
+		a_result_expression: XM_XPATH_DOCUMENT_SORTER
+		an_expression: XM_XPATH_EXPRESSION
+		do
+			a_result_expression := clone (Current)
+			an_expression := base_expression.simplify
+			if not an_expression.is_error then
+				a_result_expression.set_base_expression (an_expression)
+			else
+				a_result_expression.set_last_error (an_expression.last_error)
+			end			
+			
+			Result := a_result_expression
+			Result.set_analyzed			
+		end
+
 	analyze (a_context: XM_XPATH_STATIC_CONTEXT): XM_XPATH_EXPRESSION is
 			-- Perform static analysis of `Current' and its subexpressions
+		local
+			a_result_expression: XM_XPATH_DOCUMENT_SORTER
+			an_expression: XM_XPATH_EXPRESSION
 		do
-			-- TODO
+			a_result_expression := clone (Current)
+			if base_expression.may_analyze then
+				an_expression := base_expression.analyze (a_context)
+				if not an_expression.is_error then
+					a_result_expression.set_base_expression (an_expression)
+				else
+					a_result_expression.set_last_error (an_expression.last_error)
+				end
+			end
+			Result := a_result_expression
+			Result.set_analyzed
+		end
+
+	promote (an_offer: XM_XPATH_PROMOTION_OFFER): XM_XPATH_EXPRESSION is
+			-- Offer promotion for `Current'
+		local
+			a_result_expression: XM_XPATH_DOCUMENT_SORTER
+			an_expression: XM_XPATH_EXPRESSION		
+		do
+			an_expression := an_offer.accept (Current)
+			if an_expression = Void then
+				a_result_expression := clone (Current)
+				an_expression := base_expression.promote (an_offer)
+				a_result_expression.set_base_expression (an_expression)
+				Result := a_result_expression
+			else
+				Result := an_expression
+			end
+		end
+
+feature -- Evaluation
+
+	effective_boolean_value (a_context: XM_XPATH_CONTEXT): XM_XPATH_BOOLEAN_VALUE is
+			-- Effective boolean value
+		do
+			Result := base_expression.effective_boolean_value (a_context)
+		end
+
+feature {XM_XPATH_EXPRESSION} -- Restricted
+
+	compute_special_properties is
+			-- Compute special properties.
+		do
+			clone_special_properties (base_expression)
+			set_ordered_nodeset
+		end
+	
+feature {XM_XPATH_DOCUMENT_SORTER} -- Local
+
+	set_base_expression (an_expression: XM_XPATH_EXPRESSION) is
+			-- Set `base_expression'.
+		require
+			expression_not_void: an_expression /= Void
+		do
+			base_expression := an_expression
+		ensure
+			set: base_expression = an_expression
 		end
 
 feature {NONE} -- Implementation
@@ -65,8 +166,12 @@ feature {NONE} -- Implementation
 	compute_cardinality is
 			-- Compute cardinality.
 		do
-			-- TODO
+			clone_cardinality (base_expression)
 		end
+
+invariant
+
+	base_expression_not_void: base_expression /= Void
 
 end
 	

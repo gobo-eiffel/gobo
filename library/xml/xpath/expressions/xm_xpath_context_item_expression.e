@@ -24,7 +24,7 @@ feature {NONE} -- Initialization
 
 	make is
 		do
-			do_nothing
+			compute_static_properties
 		end
 
 feature -- Access
@@ -53,6 +53,8 @@ feature -- Optimization
 			-- Perform static analysis of an expression and its subexpressions
 		do
 			-- TODO
+			Result := Current
+			Result.set_analyzed			
 		end
 
 feature {NONE} -- Implementation

@@ -32,6 +32,7 @@ feature {NONE} -- Initialization
 		do
 			axis := an_axis_type
 			node_test := a_node_test
+			compute_static_properties
 		ensure
 			axis_set: axis = an_axis_type
 			node_test_set: node_test = a_node_test
@@ -41,8 +42,17 @@ feature -- Access
 	
 	item_type: INTEGER is
 			--Determine the data type of the expression, if possible
+		local
+			principal_axis: INTEGER
 		do
-			-- TODO
+			principal_axis := axis_principal_node_type (axis)
+			if principal_axis = Attribute_node then
+				Result := principal_axis
+			elseif node_test = Void then
+				Result := Any_node
+			else
+				Result := node_test.item_type
+			end
 		end
 
 	axis: INTEGER
@@ -85,7 +95,8 @@ feature -- Optimization
 	analyze (a_context: XM_XPATH_STATIC_CONTEXT): XM_XPATH_EXPRESSION is
 			-- Perform static analysis of an expression and its subexpressions
 		do
-			-- TODO
+			Result := Current
+			Result.set_analyzed
 		end
 
 feature {NONE} -- Implementation
@@ -93,7 +104,7 @@ feature {NONE} -- Implementation
 	compute_cardinality is
 			-- Compute cardinality.
 		do
-			-- TODO
+			set_cardinality_zero_or_more
 		end
 	
 end

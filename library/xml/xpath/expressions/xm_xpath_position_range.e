@@ -30,6 +30,7 @@ feature {NONE} -- Initialization
 		do
 			minimum_position := an_integer
 			maximum_position := another_integer
+			compute_static_properties
 		ensure
 			minumum_set: minimum_position = an_integer
 			maxumum_set: maximum_position = another_integer
@@ -72,6 +73,7 @@ feature -- Optimization
 			-- Perform static analysis of `Current' and its subexpressions
 		do
 			Result := Current
+			Result.set_analyzed
 		end
 
 feature {NONE} -- Implementation

@@ -27,7 +27,7 @@ inherit
 
 	XM_XPATH_ROLE
 
-	KL_PLATFORM
+	KL_SHARED_PLATFORM
 
 creation
 
@@ -85,13 +85,19 @@ feature -- Optimization
 		do
 			a_result_expression := clone (Current)
 			create a_type_checker
-			first_operand := a_result_expression.operands.item(1).analyze (a_context)
-			first_operand.set_analyzed
+			if a_result_expression.operands.item(1).may_analyze then
+				first_operand := a_result_expression.operands.item(1).analyze (a_context)
+			else
+				first_operand := a_result_expression.operands.item(1)
+			end
 			if first_operand.is_error then
 				a_result_expression.set_last_error (first_operand.last_error)
 			else
-				second_operand := a_result_expression.operands.item(2).analyze (a_context)
-				second_operand.set_analyzed
+				if a_result_expression.operands.item(2).may_analyze then
+					second_operand := a_result_expression.operands.item(2).analyze (a_context)
+				else
+					second_operand := a_result_expression.operands.item(2)
+				end
 				if second_operand.is_error then
 					a_result_expression.set_last_error (second_operand.last_error)
 				else
@@ -238,21 +244,21 @@ feature -- Optimization
 										if a_position_function /= Void and then an_integer_value /= Void then
 											an_integer := an_integer_value.value
 											if an_integer < 0 then an_integer := 0 end
-											if an_integer < maximum_integer then
+											if an_integer < Platform.Maximum_integer then
 												inspect
 													operator
 												when Fortran_equal_token then
 													create {XM_XPATH_POSITION_RANGE} Result.make (an_integer, an_integer)
 												when Fortran_greater_equal_token then
-													create {XM_XPATH_POSITION_RANGE} Result.make (an_integer, Maximum_integer)
+													create {XM_XPATH_POSITION_RANGE} Result.make (an_integer, Platform.Maximum_integer)
 												when Fortran_not_equal_token then
 													if an_integer = 1 then
-														create {XM_XPATH_POSITION_RANGE} Result.make (2, Maximum_integer)
+														create {XM_XPATH_POSITION_RANGE} Result.make (2, Platform.Maximum_integer)
 													end
 												when Fortran_less_than_token then
 													create {XM_XPATH_POSITION_RANGE} Result.make (1, an_integer - 1)
 												when Fortran_greater_than_token then
-													create {XM_XPATH_POSITION_RANGE} Result.make (an_integer + 1, Maximum_integer)
+													create {XM_XPATH_POSITION_RANGE} Result.make (an_integer + 1, Platform.Maximum_integer)
 												when Fortran_less_equal_token then
 													create {XM_XPATH_POSITION_RANGE} Result.make (1, an_integer)													
 												end
@@ -263,21 +269,21 @@ feature -- Optimization
 											if a_position_function /= Void and then an_integer_value /= Void then
 												an_integer := an_integer_value.value
 												if an_integer < 0 then an_integer := 0 end
-												if an_integer < maximum_integer then
+												if an_integer < Platform.Maximum_integer then
 													inspect
 														operator
 													when Fortran_equal_token then
 														create {XM_XPATH_POSITION_RANGE} Result.make (an_integer, an_integer)
 													when Fortran_less_equal_token then
-														create {XM_XPATH_POSITION_RANGE} Result.make (an_integer, Maximum_integer)
+														create {XM_XPATH_POSITION_RANGE} Result.make (an_integer, Platform.Maximum_integer)
 													when Fortran_not_equal_token then
 														if an_integer = 1 then
-															create {XM_XPATH_POSITION_RANGE} Result.make (2, Maximum_integer)
+															create {XM_XPATH_POSITION_RANGE} Result.make (2, Platform.Maximum_integer)
 														end
 													when Fortran_greater_than_token then
 														create {XM_XPATH_POSITION_RANGE} Result.make (1, an_integer - 1)
 													when Fortran_less_than_token then
-														create {XM_XPATH_POSITION_RANGE} Result.make (an_integer + 1, Maximum_integer)
+														create {XM_XPATH_POSITION_RANGE} Result.make (an_integer + 1, Platform.Maximum_integer)
 													when Fortran_greater_equal_token then
 														create {XM_XPATH_POSITION_RANGE} Result.make (1, an_integer)													
 													end
@@ -364,6 +370,7 @@ feature -- Optimization
 				end
 				if Result = Void then Result := a_result_expression end
 			end
+			Result.set_analyzed
 		end
 
 feature -- Evaluation

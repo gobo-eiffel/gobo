@@ -15,7 +15,10 @@ class XM_XPATH_IS_LAST_EXPRESSION
 inherit
 
 	XM_XPATH_COMPUTED_EXPRESSION
--- TODO redefine simplify (et.al?)
+		redefine
+			evaluate_item, compute_intrinsic_dependencies
+		end
+
 creation
 
 	make
@@ -26,6 +29,7 @@ feature {NONE} -- Initialization
 			-- Set condition.
 		do
 			condition := a_condition
+			compute_static_properties
 		ensure
 			condition_set: condition = a_condition
 		end
@@ -35,11 +39,24 @@ feature -- Access
 	item_type: INTEGER is
 			--Determine the data type of the expression, if possible
 		do
-			-- TODO
+			Result := Boolean_type
 		end
 
 	condition: BOOLEAN
 			-- Is position() eq last()?
+
+feature -- Status setting
+
+	
+	compute_intrinsic_dependencies is
+			-- Determine the intrinsic dependencies of an expression.
+		do
+			create intrinsic_dependencies.make (1, 6)
+			-- Now all are `False', but we want depends_upon_last and depends_upon_position so:
+			intrinsic_dependencies.put (True, 3)
+			intrinsic_dependencies.put (True, 4)
+			are_intrinsic_dependencies_computed := True
+		end
 
 feature -- Status report
 
@@ -59,6 +76,15 @@ feature -- Optimization
 			-- Perform static analysis of `Current' and its subexpressions
 		do
 			Result := Current
+			Result.set_analyzed
+		end
+
+feature -- Evaluation
+	
+		evaluate_item (a_context: XM_XPATH_CONTEXT): XM_XPATH_ITEM is
+			-- Evaluate `Current' as a single item
+		do
+			-- TODO
 		end
 
 feature {NONE} -- Implementation
@@ -66,7 +92,7 @@ feature {NONE} -- Implementation
 	compute_cardinality is
 			-- Compute cardinality.
 		do
-			-- TODO
+			set_cardinality_exactly_one
 		end
 	
 end

@@ -34,6 +34,7 @@ feature {NONE} -- Initialization
 			declaration := a_range_variable
 			sequence := a_sequence_expression
 			action := an_action
+			compute_static_properties
 		ensure
 			operator_set: operator = an_operator
 			range_variable_set: declaration = a_range_variable
@@ -94,9 +95,8 @@ feature -- Optimization
 			-- which in turn is required when type-checking the action part.
 
 			an_analyzed_expression := clone (Current)
-			if not sequence.analyzed and then sequence.may_analyze then
+			if sequence.may_analyze then
 				an_expression := sequence.analyze (a_context)
-				an_expression.set_analyzed
 				an_analyzed_expression.set_sequence (an_expression)
 				if an_expression.is_error then
 					an_analyzed_expression.set_last_error (an_expression.last_error)
@@ -116,6 +116,7 @@ feature -- Optimization
 			end
 			
 			Result := an_analyzed_expression
+			Result.set_analyzed
 			declaration := Void -- Now the GC can reclaim it, and analysis cannot be performed again
 		end
 

@@ -675,10 +675,11 @@ feature {NONE} -- Implementation
 
 	define_builtin_type (a_type: INTEGER; a_name: STRING) is
 			-- Add a type to the table of built-in types
-			-- TODO changes needed for user-defined types
+			-- N.B. changes would be needed for user-defined types
 		require
 			valid_name: a_name /= Void and then (a_name.substring_index ("xs:", 1) > 0 or else  a_name.substring_index ("xdt:", 1) > 0 or else  a_name.substring_index ("eiffel:", 1) > 0)
 			type_in_range: a_type > 0 and a_type <= 255
+			slot_free: type_names.item (a_type) = Void
 		do
 			type_names.put (a_name, a_type)
 			type_table.put (a_type, a_name)
@@ -692,6 +693,7 @@ feature {NONE} -- Implementation
 		require
 			valid_name: a_name /= Void and then a_name.substring_index ("xs:", 1) = 0 and  a_name.substring_index ("xdt:", 1) = 0 and  a_name.substring_index ("eiffel:", 1) = 0
 			type_in_range: a_type > 0 and a_type <= 255
+			slot_free: type_names.item (a_type) = Void
 		do
 			type_names.put (a_name, a_type)
 			type_table.put (a_type, a_name)

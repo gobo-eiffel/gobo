@@ -80,16 +80,6 @@ feature -- Comparison
 			Result := Current = other
 		end
 
-feature -- Status report
-
-	are_static_properties_computed: BOOLEAN is
-			-- Have the static properties been computed yet?
-		do
-			Result := are_dependencies_computed and then
-			are_cardinalities_computed and then
-			are_special_properties_computed
-		end
-
 feature -- Status setting
 
 	frozen compute_static_properties is

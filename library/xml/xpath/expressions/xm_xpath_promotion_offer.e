@@ -2,7 +2,7 @@ indexing
 
 	description:
 
-		"Promotion offer"
+		"Promotion offers"
 
 	library: "Gobo Eiffel XPath Library"
 	copyright: "Copyright (c) 2004, Colin Adams and others"
@@ -163,6 +163,7 @@ feature {NONE} -- Implementation
 			create a_clock.make
 			a_variable_name := a_clock.time_now.out
 			a_variable_name := STRING_.appended_string ("zz:",a_variable_name)
+			a_variable_name := STRING_.appended_string (a_variable_name, a_child_expression.out)
 			create a_range_variable.make (a_variable_name, -1, a_type)
 
 			create a_variable.make (a_range_variable)

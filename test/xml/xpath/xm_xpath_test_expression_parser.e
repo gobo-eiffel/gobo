@@ -190,6 +190,7 @@ feature -- Setting
 
 	set_up is
 		do
+			initialize_type_tables
 			default_pool := shared_pool.default_pool
 		end
 

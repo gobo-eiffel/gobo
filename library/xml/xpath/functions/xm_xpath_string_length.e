@@ -32,7 +32,7 @@ feature {NONE} -- Initialization
 			minimum_argument_count := 0
 			maximum_argument_count := 1
 			create arguments.make (1)
-			compute_cardinality
+			compute_static_properties
 		end
 
 feature -- Access

@@ -32,6 +32,15 @@ feature -- Access
 	operator: INTEGER
 			-- "for", "some" or "every" operator
 
+	sequence: XM_XPATH_EXPRESSION
+			-- Sequence expression
+
+	action: XM_XPATH_EXPRESSION
+			-- Action expression
+
+	declaration: XM_XPATH_RANGE_VARIABLE_DECLARATION
+			-- Range variable
+
 	sub_expressions: DS_ARRAYED_LIST [XM_XPATH_EXPRESSION] is
 			-- Immediate sub-expressions of `Current'
 		do
@@ -46,7 +55,7 @@ feature -- Status report
 		may_analyze: BOOLEAN is
 			-- OK to call `analyze'?
 		do
-			Result := declaration /= Void
+			if not analyzed then Result := declaration /= Void end
 		end	
 			
 feature -- Optimization
@@ -124,23 +133,26 @@ feature -- Element change
 			action_set: action = an_action
 		end
 
+	set_declaration_void is
+			-- Set `declaration' to `Void'.
+		require
+			declaration_not_void: declaration /= Void
+		do
+			declaration := Void
+			analyzed := True
+		ensure
+			declaration_void: declaration = Void
+			analyzed: analyzed
+		end
+
 feature {XM_XPATH_ASSIGNATION} -- Local
-
-	sequence: XM_XPATH_EXPRESSION
-			-- Sequence expression
-
-	action: XM_XPATH_EXPRESSION
-			-- Action expression
-
-	declaration: XM_XPATH_RANGE_VARIABLE_DECLARATION
-			-- Range variable
 
 	slot_number: INTEGER
 			-- Slot number for range variable
 
 invariant
 
-	valid_operator: operator = For_token or operator = Some_token or operator = Every_token
+	valid_operator: operator = For_token or operator = Some_token or operator = Every_token or operator = Let_token
 	sequence_not_void: sequence /= Void
 	action_not_void: action /= Void
 	declaration_not_void_until_analysis: not analyzed implies declaration /= Void

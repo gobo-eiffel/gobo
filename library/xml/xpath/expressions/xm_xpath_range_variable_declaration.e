@@ -19,6 +19,8 @@ inherit
 
 	XM_XPATH_VARIABLE_DECLARATION
 
+	XM_XPATH_TYPE
+
 creation
 
 	make
@@ -69,6 +71,52 @@ feature -- Element change
 			required_type := a_required_type
 		ensure
 			required_type_set: required_type = a_required_type
+		end
+
+	fix_up_references (a_binding: XM_XPATH_BINDING) is
+			-- Fix up binding references.
+		require
+			binding_not_void: a_binding /= Void
+			-- analyzed??
+		do
+			-- TODO
+		ensure
+			-- ?
+		end
+
+	refine_type_information (a_type: INTEGER; a_cardinality_set: ARRAY [BOOLEAN]; a_constant_value: XM_XPATH_VALUE; a_special_properties_set: ARRAY [BOOLEAN]) is
+			-- Set static type in the binding reference more accurately.
+		require
+			valid_type: is_valid_type (a_type)
+			cardinalities_not_void: a_cardinality_set /= Void
+			possible_constant_value: True
+			special_properties_not_void: a_special_properties_set /= Void
+		local
+			a_cursor: DS_ARRAYED_LIST_CURSOR [XM_XPATH_BINDING_REFERENCE]
+			a_binding_reference: XM_XPATH_BINDING_REFERENCE
+			a_variable_reference: XM_XPATH_VARIABLE_REFERENCE
+			old_item_type, new_item_type: INTEGER
+		do
+			a_cursor := references.new_cursor
+			from
+				a_cursor.start
+			variant
+				references.count + 1 - a_cursor.index
+			until
+				a_cursor.after
+			loop
+				a_binding_reference := a_cursor.item
+				a_variable_reference ?= a_binding_reference
+				if a_variable_reference /= Void then
+					old_item_type := a_variable_reference.item_type
+					new_item_type := old_item_type
+					if is_sub_type (a_type, old_item_type) then
+						new_item_type := a_type
+					end
+					-- TODO
+				end
+				a_cursor.forth
+			end
 		end
 
 feature {NONE} -- Implementation

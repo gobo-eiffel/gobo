@@ -25,7 +25,7 @@ inherit
 
 	XM_XPATH_SHARED_FUNCTION_FACTORY
 
-	KL_PLATFORM
+	KL_SHARED_PLATFORM
 
 creation
 
@@ -82,6 +82,7 @@ feature {NONE} -- Initialization
 					std.error.put_new_line
 				end
 			end
+			compute_static_properties
 		ensure
 			base_expression_set: base_expression = a_start
 			filter_set: filter = a_filter
@@ -240,8 +241,18 @@ feature -- Status setting
 
 	compute_dependencies is
 			-- Compute dependencies on context.
+		local
+			a_computed_expression: XM_XPATH_COMPUTED_EXPRESSION
 		do
 			if not are_intrinsic_dependencies_computed then compute_intrinsic_dependencies end
+
+			if not base_expression.are_dependencies_computed then
+				a_computed_expression ?= base_expression
+				if a_computed_expression /= Void then
+					a_computed_expression.compute_dependencies
+				end
+			end
+
 			set_dependencies (base_expression.dependencies)
 
 			-- If filter depends upon XSLT context then so does `Current'.
@@ -253,7 +264,8 @@ feature -- Status setting
 			end
 			if filter_dependencies.item (6) then
 				set_depends_upon_current_group
-			end			
+			end
+			are_dependencies_computed := True
 		end
 
 	set_base_expression (a_base_expression: XM_XPATH_EXPRESSION) is
@@ -351,17 +363,23 @@ feature -- Optimization
 			finished, filter_is_positionl: BOOLEAN
 		do
 			a_result_expression := clone (Current)
-			an_expression := base_expression.analyze (a_context)
-			an_expression.set_analyzed
-			a_result_expression.set_base_expression (an_expression)
+			if base_expression.may_analyze then
+				an_expression := base_expression.analyze (a_context)
+				a_result_expression.set_base_expression (an_expression)
+			else
+				a_result_expression.set_base_expression (base_expression)
+			end
 			if a_result_expression.base_expression.is_error then
 				a_result_expression.set_last_error (a_result_expression.base_expression.last_error)
 			else
 			
 				--	The filter expression never needs to be sorted.
 
-				an_expression := filter.analyze (a_context).unsorted (False)
-				an_expression.set_analyzed
+				if filter.may_analyze then
+					an_expression := filter.analyze (a_context).unsorted (False)
+				else
+					an_expression := filter.unsorted (False)
+				end
 				a_result_expression.set_filter (an_expression)
 				if a_result_expression.filter.is_error then
 					a_result_expression.set_last_error (a_result_expression.filter.last_error)
@@ -381,7 +399,7 @@ feature -- Optimization
 							if min = 1 and then max = 1 then
 								create {XM_XPATH_FIRST_ITEM_EXPRESSION} Result.make (a_result_expression.base_expression)
 								finished := True
-							elseif max = Maximum_integer then
+							elseif max = Platform.Maximum_integer then
 								create {XM_XPATH_TAIL_EXPRESSION} Result.make (a_result_expression.base_expression, min)
 								finished := True
 							end
@@ -404,7 +422,6 @@ feature -- Optimization
 									create a_filter.make (base_expression, another_expression)
 									create another_filter.make (a_filter, a_third_expression)
 									Result := another_filter.analyze (a_context)
-									Result.set_analyzed
 									finished := True
 								elseif is_explicitly_positional_filter (a_boolean_filter.operands.item (2))
 									and then not is_explicitly_positional_filter (a_boolean_filter.operands.item (1)) then
@@ -413,7 +430,6 @@ feature -- Optimization
 									create a_filter.make (base_expression, a_third_expression)
 									create another_filter.make (a_filter, another_expression)
 									Result := another_filter.analyze (a_context)
-									Result.set_analyzed
 									finished := True
 								end
 							end
@@ -427,8 +443,11 @@ feature -- Optimization
 								a_result_expression.set_filter (a_result_expression.filter.promote (an_offer))
 								a_let_expression ?= an_offer.containing_expression
 								if a_let_expression /= Void then
-									an_expression := a_let_expression.analyze (a_context)
-									an_expression.set_analyzed
+									if a_let_expression.may_analyze then
+										an_expression := a_let_expression.analyze (a_context)
+									else
+										an_expression := a_let_expression
+									end
 									if a_let_expression.is_error then
 											an_expression.set_last_error (a_let_expression.last_error)
 									else
@@ -441,6 +460,7 @@ feature -- Optimization
 					end
 				end
 			end
+			Result.set_analyzed
 		end
 
 	promote (an_offer: XM_XPATH_PROMOTION_OFFER): XM_XPATH_EXPRESSION is
@@ -451,8 +471,9 @@ feature -- Optimization
 			a_result_expression ?= an_offer.accept (Current)
 			if a_result_expression = Void then
 				a_result_expression := clone (Current)
+			else
 				if not (an_offer.action = Unordered and then filter_is_positional) then
-					a_result_expression.set_base_expression (a_result_expression.promote (an_offer))
+					a_result_expression.set_base_expression (a_result_expression.base_expression.promote (an_offer))
 				end
 
 				if an_offer.action = Inline_variable_references then
@@ -485,19 +506,20 @@ feature {NONE} -- Implementation
 				a_position_range ?= filter
 				if a_position_range /= Void then
 					if a_position_range.minimum_position = a_position_range.maximum_position then
-					set_cardinality_optional
-					else
-						an_is_last_expression ?= filter
-						if an_is_last_expression /= Void then
-							set_cardinality_optional
-						elseif base_expression.cardinality_allows_one_or_more then
-							set_cardinality_zero_or_more
-						elseif base_expression.cardinality_exactly_one then
-							set_cardinality_optional
-						else
-							set_cardinality (base_expression.cardinality)
-						end
+						set_cardinality_optional
 					end
+				end
+			end
+			if not are_cardinalities_computed then
+				an_is_last_expression ?= filter
+				if an_is_last_expression /= Void then
+					set_cardinality_optional
+				elseif base_expression.cardinality_allows_one_or_more then
+					set_cardinality_zero_or_more
+				elseif base_expression.cardinality_exactly_one then
+					set_cardinality_optional
+				else
+					set_cardinality (base_expression.cardinality)
 				end
 			end
 		end

@@ -29,7 +29,8 @@ feature {NONE} -- Initialization
 			-- Create intrinsic dependencies.
 		do
 			create intrinsic_dependencies.make (1, 6)
-			intrinsic_dependencies.put (True, 5) -- depends_upon_context_document												
+			intrinsic_dependencies.put (True, 5) -- depends_upon_context_document
+			compute_static_properties
 		end
 
 feature -- Access
