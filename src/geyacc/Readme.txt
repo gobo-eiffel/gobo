@@ -30,4 +30,4 @@ ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
 FOR A PARTICULAR PURPOSE.
 
 --
-Eric Bezault <eric@gobo.demon.co.uk>
+Eric Bezault <ericb@gobo.demon.co.uk>
