@@ -326,7 +326,7 @@ feature {NONE} -- UTF16 implementation
 			not_detected: encoding = Undetected
 			not_end: not impl.end_of_input
 		local
-			first_char, second_char: CHARACTER
+			first_char, second_char, third_char: CHARACTER
 		do
 			encoding := Utf_8_or_compatible
 			impl.read_character
@@ -348,8 +348,27 @@ feature {NONE} -- UTF16 implementation
 					elseif (first_char = Lt_char and second_char.code = 0) then
 						encoding := Utf16_msb_last
 						utf_queue.force (Lt_char)
+					elseif utf8.is_endian_detection_character_start (first_char, second_char) then
+							-- Check UTF8 BOM.
+						impl.read_character
+						if not impl.end_of_input then
+							third_char := impl.last_character
+							if utf8.is_endian_detection_character (first_char, second_char, third_char) then
+								check utf_8: encoding = Utf_8_or_compatible end
+									-- BOM is not forwarded
+							else
+									-- Not a BOM
+								utf_queue.force (first_char)
+								utf_queue.force (second_char)
+								utf_queue.force (third_char)
+							end
+						else
+								-- Nothing detected
+							utf_queue.force (first_char)
+							utf_queue.force (second_char)
+						end
 					else
-							-- Not UTF16
+							-- Nothing detected
 						utf_queue.force (first_char)
 						utf_queue.force (second_char)
 					end

@@ -44,6 +44,7 @@ Version ?
 	* Parser leaves XML resolver in correct state.
 	* XM_PARSER.positions contains full info to locate errors 
 	  in external entities.
+	* Eiffel parser accepts UTF8 files that start with a BOM.
 	
 	Gobo Eiffel Kernel Library
 
