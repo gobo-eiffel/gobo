@@ -6,7 +6,7 @@ indexing
 
 	library:    "Gobo Eiffel Tools Library"
 	author:     "Eric Bezault <ericb@gobosoft.com>"
-	copyright:  "Copyright (c) 1999, Eric Bezault and others"
+	copyright:  "Copyright (c) 1999-2001, Eric Bezault and others"
 	license:    "Eiffel Forum Freeware License v1 (see forum.txt)"
 	date:       "$Date$"
 	revision:   "$Revision$"
@@ -28,7 +28,7 @@ feature {NONE} -- Initialization
 		an_obsolete: like obsolete_message; a_preconditions: like preconditions;
 		a_language: like language; an_alias: like alias_clause;
 		a_postconditions: like postconditions; a_clients: like clients;
-		a_class: like base_class) is
+		a_class: like implementation_class; an_id: INTEGER) is
 			-- Create a new external function.
 		require
 			a_name_not_void: a_name /= Void
@@ -36,10 +36,12 @@ feature {NONE} -- Initialization
 			a_language_not_void: a_language /= Void
 			a_clients_not_void: a_clients /= Void
 			a_class_not_void: a_class /= Void
+			an_id_positive: an_id >= 0
 		do
+			!! seeds.make (an_id)
 			make_with_seeds (a_name, args, a_type, an_obsolete,
 				a_preconditions, a_language, an_alias, a_postconditions,
-				a_clients, a_class, new_seeds)
+				a_clients, a_class, seeds, an_id)
 		ensure
 			name_set: name = a_name
 			arguments_set: arguments = args
@@ -50,16 +52,16 @@ feature {NONE} -- Initialization
 			alias_clause_set: alias_clause = an_alias
 			postconditions_set: postconditions = a_postconditions
 			clients_set: clients = a_clients
-			version_set: version = Current
-			base_class_set: base_class = a_class
+			version_set: version = an_id
 			implementation_class_set: implementation_class = a_class
+			id_set: id = an_id
 		end
 
 	make_with_seeds (a_name: like name; args: like arguments; a_type: like type;
 		an_obsolete: like obsolete_message; a_preconditions: like preconditions;
 		a_language: like language; an_alias: like alias_clause;
 		a_postconditions: like postconditions; a_clients: like clients;
-		a_class: like base_class; a_seeds: like seeds) is
+		a_class: like implementation_class; a_seeds: like seeds; an_id: INTEGER) is
 			-- Create a new external function.
 		require
 			a_name_not_void: a_name /= Void
@@ -68,9 +70,10 @@ feature {NONE} -- Initialization
 			a_clients_not_void: a_clients /= Void
 			a_class_not_void: a_class /= Void
 			a_seeds_not_void: a_seeds /= Void
-			a_seeds_valid: valid_seeds (a_seeds)
+			an_id_positive: an_id >= 0
 		do
 			name := a_name
+			id := an_id
 			arguments := args
 			type := a_type
 			obsolete_message := an_obsolete
@@ -79,8 +82,7 @@ feature {NONE} -- Initialization
 			alias_clause := an_alias
 			postconditions := a_postconditions
 			clients := a_clients
-			version := Current
-			base_class := a_class
+			version := an_id
 			implementation_class := a_class
 			seeds := a_seeds
 		ensure
@@ -93,30 +95,29 @@ feature {NONE} -- Initialization
 			alias_clause_set: alias_clause = an_alias
 			postconditions_set: postconditions = a_postconditions
 			clients_set: clients = a_clients
-			version_set: version = Current
-			base_class_set: base_class = a_class
+			version_set: version = an_id
 			implementation_class_set: implementation_class = a_class
 			seeds_set: seeds = a_seeds
+			id_set: id = an_id
 		end
 
 feature -- Duplication
 
-	synonym (a_name: like name): like Current is
+	synonym (a_name: like name; an_id: INTEGER): like Current is
 			-- Synonym feature
 		do
 			!! Result.make (a_name, arguments, type, obsolete_message, preconditions,
-				language, alias_clause, postconditions, clients, base_class)
+				language, alias_clause, postconditions, clients, implementation_class, an_id)
 		end
 
 feature -- Conversion
 
-	renamed_feature (a_name: like name; a_class: like base_class): like Current is
+	renamed_feature (a_name: like name; an_id: INTEGER): like Current is
 			-- Renamed version of current feature
 		do
 			!! Result.make_with_seeds (a_name, arguments, type, obsolete_message, preconditions,
-				language, alias_clause, postconditions, clients, a_class, seeds)
+				language, alias_clause, postconditions, clients, implementation_class, seeds, an_id)
 			Result.set_version (version)
-			Result.set_implementation_class (implementation_class)
 		end
 
 end -- class ET_EXTERNAL_FUNCTION
