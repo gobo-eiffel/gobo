@@ -133,7 +133,7 @@ feature -- Execution
 	set_up is
 			-- Setup for a test.
 		local
-			a_variables: GEANT_VARIABLES
+			a_variables: GEANT_PROJECT_VARIABLES
 			an_options: GEANT_PROJECT_OPTIONS
 		do
 			create a_variables.make
