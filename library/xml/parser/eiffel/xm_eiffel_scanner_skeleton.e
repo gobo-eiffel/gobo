@@ -101,10 +101,13 @@ feature -- Input
 			-- Close input buffer if needed.
 		do
 			if input_stream /= Void then
-				if input_stream.is_closable then
-					input_stream.close
-				end
 				if input_resolver /= Void then
+						-- Close a stream if it comes from a resolver,
+						-- otherwise the client owns it and is in charge
+						-- of closing it.
+					if input_stream.is_closable then
+						input_stream.close
+					end
 					input_resolver.resolve_finish
 				end
 				input_stream := Void
