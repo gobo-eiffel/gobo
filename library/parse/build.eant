@@ -19,7 +19,7 @@
 		<echo message="   geant clobber"/>
 	</target>
 
-	<target name="install" dir="${GOBO}/library/parse">
+	<target name="install">
 		<description>
 			Install the Gobo Eiffel Parse Library.
 			Generate scanner and parser files.
@@ -29,7 +29,7 @@
 		<geant target="yacc_parser"/>
 	</target>
 
-	<target name="clean" dir="${GOBO}/library/parse">
+	<target name="clean">
 		<description>
 			Remove intermediary generated files.
 		</description>
@@ -37,7 +37,7 @@
 		<ve clean="parse" recursive="true"/>
 	</target>
 
-	<target name="clobber" dir="${GOBO}/library/parse">
+	<target name="clobber">
 		<description>
 			Remove all generated files.
 		</description>
