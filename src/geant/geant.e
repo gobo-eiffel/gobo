@@ -1,0 +1,113 @@
+indexing
+
+  description:
+        "GEANT is a build tool for Eiffel%
+		%main features:%
+		%- platform independend%
+		%- vendor independant%
+		%- configuration in XML%
+		%based on the concepts of Jakarta Ant (the build tool for Java)"
+
+    author:     "Sven Ehrke (sven.ehrke@sven-ehrke.de)"
+    copyright:  "Sven Ehrke and others"
+    license:    "Eiffel Forum Freeware License v1 (see forum.txt)"
+    date:       "$Date$"
+    revision:   "$Revision$"
+
+
+class GEANT
+	inherit
+		GEANT_SHARED_PROPERTIES
+		GEANT_ELEMENT_NAMES
+	
+creation
+	make
+	
+feature
+	make is
+		do
+			!!project.make
+			project.load
+			launch_build
+		end
+
+
+	launch_build is
+		local
+			i		: INTEGER
+			ii		: INTEGER
+
+			target	: GEANT_ELEMENT
+			task_el	: GEANT_ELEMENT
+
+			task	: GEANT_TASK
+		do
+			from i := 1 until i > project.targets.count loop
+				target := project.targets.item(i)
+				if target.get_attributevalue_by_name(ucs_name).is_equal(project.current_target_name) then
+
+					print(project.current_target_name.out + ":%N")
+
+					from ii := 1 until ii > target.children.count loop
+						task_el := target.children.item(ii)
+	
+						------- task dispatching ------
+						-- compile_se --
+						if task_el.name.is_equal(ucs_compile_se) then
+							-- SmallEiffel compilation
+							!GEANT_COMPILE_SE_TASK!task.load_from_element(task_el)
+
+						-- exec --
+						elseif task_el.name.is_equal(ucs_exec) then
+							!GEANT_EXEC_TASK!task.load_from_element(task_el)
+
+						-- var --
+						elseif task_el.name.is_equal(ucs_var) then
+							!GEANT_VAR_TASK!task.load_from_element(task_el)
+
+						-- lcc --
+						elseif task_el.name.is_equal(ucs_lcc) then
+							!GEANT_LCC_TASK!task.load_from_element(task_el)
+
+						-- xace --
+						elseif task_el.name.is_equal(ucs_xace) then
+							!GEANT_XACE_TASK!task.load_from_element(task_el)
+
+						-- gelex --
+						elseif task_el.name.is_equal(ucs_gelex) then
+							!GEANT_GELEX_TASK!task.load_from_element(task_el)
+
+						-- geyacc --
+						elseif task_el.name.is_equal(ucs_geyacc) then
+							!GEANT_GEYACC_TASK!task.load_from_element(task_el)
+
+						-- DEFAULT --
+						else
+							task := void
+						end
+
+						------- task execution ------
+						if task /= void then
+							task.execute
+						else
+							print("WARNING: unknown task : " + task_el.name.out + "%N")
+						end
+	
+		       			ii := ii + 1
+					end
+				end
+		
+	       		i := i + 1
+			end
+
+--		print("BUILD SUCCESSFUL")
+		--!! handle not successful cases
+
+		end
+
+	current_target_name	: UC_STRING
+
+	project	: GEANT_PROJECT
+
+
+end

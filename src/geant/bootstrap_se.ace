@@ -1,0 +1,446 @@
+system
+
+	geant
+
+root
+
+	GEANT: make
+
+default
+	no_style_warning (yes)
+			assertion (ensure)
+cluster
+	geant: "${BONBON}/tools/geant"
+		default
+			assertion (no)
+		option
+	;
+	geant_command: "${BONBON}/tools/geant/command"
+		default
+			assertion (no)
+		option
+	;
+
+	geant_task: "${BONBON}/tools/geant/task"
+		default
+			assertion (no)
+		option
+	;
+
+	geant_parser: "${BONBON}/tools/geant/parser"
+		default
+			assertion (no)
+		option
+	;
+
+
+
+	exml: "${EXML}/library"
+		default
+			assertion (no)
+		option
+	;
+	exml_factory: "${EXML}/library/factory"
+		default
+			assertion (no)
+		option
+	;
+
+	exml_position: "${EXML}/library/position"
+		default
+			assertion (no)
+		option
+	;
+
+	exml_source: "${EXML}/library/source"
+		default
+			assertion (no)
+		option
+	;
+
+	exml_general: "${EXML}/library/general"
+		default
+			assertion (no)
+		option
+	;
+
+	exml_event: "${EXML}/library/event"
+		default
+			assertion (no)
+		option
+	;
+
+	exml_tree: "${EXML}/library/tree"
+		default
+			assertion (no)
+		option
+	;
+
+	exml_formater: "${EXML}/library/formater"
+		default
+			assertion (no)
+		option
+	;
+
+	exml_xace: "${EXML}/library/xace"
+		default
+			assertion (no)
+		option
+	;
+	exml_xace_support: "${EXML}/library/xace/support"
+		default
+			assertion (no)
+		option
+	;
+
+	exml_xace_ast: "${EXML}/library/xace/ast"
+		default
+			assertion (no)
+		option
+	;
+
+	exml_xace_generator: "${EXML}/library/xace/generator"
+		default
+			assertion (no)
+		option
+	;
+
+	exml_xace_parse: "${EXML}/library/xace/parse"
+		default
+			assertion (no)
+		option
+	;
+
+	exml_xace_error: "${EXML}/library/xace/error"
+		default
+			assertion (no)
+		option
+	;
+
+
+	exml_impl: "${EXML}/library/impl"
+		default
+			assertion (no)
+		option
+	;
+	exml_impl_interface: "${EXML}/library/impl/interface"
+		default
+			assertion (no)
+		option
+	;
+	exml_impl_interface_general: "${EXML}/library/impl/interface/general"
+		default
+			assertion (no)
+		option
+	;
+
+	exml_impl_interface_event: "${EXML}/library/impl/interface/event"
+		default
+			assertion (no)
+		option
+	;
+
+	exml_impl_interface_tree: "${EXML}/library/impl/interface/tree"
+		default
+			assertion (no)
+		option
+	;
+
+
+	exml_impl_eiffel: "${EXML}/library/impl/eiffel"
+		default
+			assertion (no)
+		option
+	;
+	exml_impl_eiffel_event: "${EXML}/library/impl/eiffel/event"
+		default
+			assertion (no)
+		option
+	;
+
+
+	exml_impl_tree_on_event: "${EXML}/library/impl/tree_on_event"
+		default
+			assertion (no)
+		option
+	;
+	exml_impl_tree_on_event_tree: "${EXML}/library/impl/tree_on_event/tree"
+		default
+			assertion (no)
+		option
+	;
+
+
+	exml_impl_no_expat: "${EXML}/library/impl/no_expat"
+		default
+			assertion (no)
+		option
+	;
+	exml_impl_no_expat_event: "${EXML}/library/impl/no_expat/event"
+		default
+			assertion (no)
+		option
+	;
+
+
+	gobo: "${GOBO}/library"
+		default
+			assertion (no)
+		option
+	;
+	gobo_kernel: "${GOBO}/library/kernel"
+		default
+			assertion (no)
+		option
+	;
+	gobo_kernel_spec: "${GOBO}/library/kernel/spec"
+		default
+			assertion (no)
+		option
+	;
+	gobo_kernel_spec_se: "${GOBO}/library/kernel/spec/se"
+		default
+			assertion (no)
+		option
+	;
+	gobo_kernel_unicode: "${GOBO}/library/kernel/unicode"
+		default
+			assertion (no)
+		option
+	;
+
+
+
+	gobo_structure: "${GOBO}/library/structure"
+		default
+			assertion (no)
+		option
+	;
+	gobo_structure_container: "${GOBO}/library/structure/container"
+		default
+			assertion (no)
+		option
+	;
+
+	gobo_structure_dispenser: "${GOBO}/library/structure/dispenser"
+		default
+			assertion (no)
+		option
+	;
+
+	gobo_structure_list: "${GOBO}/library/structure/list"
+		default
+			assertion (no)
+		option
+	;
+
+	gobo_structure_set: "${GOBO}/library/structure/set"
+		default
+			assertion (no)
+		option
+	;
+
+	gobo_structure_sort: "${GOBO}/library/structure/sort"
+		default
+			assertion (no)
+		option
+	;
+
+	gobo_structure_support: "${GOBO}/library/structure/support"
+		default
+			assertion (no)
+		option
+	;
+
+	gobo_structure_table: "${GOBO}/library/structure/table"
+		default
+			assertion (no)
+		option
+	;
+
+
+	gobo_lexical: "${GOBO}/library/lexical"
+		default
+			assertion (no)
+		option
+	;
+	gobo_lexical_automaton: "${GOBO}/library/lexical/automaton"
+		default
+			assertion (no)
+		option
+	;
+
+	gobo_lexical_error: "${GOBO}/library/lexical/error"
+		default
+			assertion (no)
+		option
+	;
+
+	gobo_lexical_lex: "${GOBO}/library/lexical/lex"
+		default
+			assertion (no)
+		option
+	;
+
+	gobo_lexical_generation: "${GOBO}/library/lexical/generation"
+		default
+			assertion (no)
+		option
+	;
+
+	gobo_lexical_regexp: "${GOBO}/library/lexical/regexp"
+		default
+			assertion (no)
+		option
+	;
+
+	gobo_lexical_scanner: "${GOBO}/library/lexical/scanner"
+		default
+			assertion (no)
+		option
+	;
+
+	gobo_lexical_skeleton: "${GOBO}/library/lexical/skeleton"
+		default
+			assertion (no)
+		option
+	;
+
+	gobo_lexical_support: "${GOBO}/library/lexical/support"
+		default
+			assertion (no)
+		option
+	;
+
+
+	gobo_parse: "${GOBO}/library/parse"
+		default
+			assertion (no)
+		option
+	;
+	gobo_parse_error: "${GOBO}/library/parse/error"
+		default
+			assertion (no)
+		option
+	;
+
+	gobo_parse_fsm: "${GOBO}/library/parse/fsm"
+		default
+			assertion (no)
+		option
+	;
+
+	gobo_parse_generation: "${GOBO}/library/parse/generation"
+		default
+			assertion (no)
+		option
+	;
+
+	gobo_parse_grammar: "${GOBO}/library/parse/grammar"
+		default
+			assertion (no)
+		option
+	;
+
+	gobo_parse_parser: "${GOBO}/library/parse/parser"
+		default
+			assertion (no)
+		option
+	;
+
+	gobo_parse_skeleton: "${GOBO}/library/parse/skeleton"
+		default
+			assertion (no)
+		option
+	;
+
+	gobo_parse_support: "${GOBO}/library/parse/support"
+		default
+			assertion (no)
+		option
+	;
+
+	gobo_parse_yacc: "${GOBO}/library/parse/yacc"
+		default
+			assertion (no)
+		option
+	;
+
+
+	gobo_utility: "${GOBO}/library/utility"
+		default
+			assertion (no)
+		option
+	;
+	gobo_utility_error: "${GOBO}/library/utility/error"
+		default
+			assertion (no)
+		option
+	;
+
+	gobo_utility_formatter: "${GOBO}/library/utility/formatter"
+		default
+			assertion (no)
+		option
+	;
+
+	gobo_utility_command: "${GOBO}/library/utility/command"
+		default
+			assertion (no)
+		option
+	;
+
+	gobo_utility_spec: "${GOBO}/library/utility/spec"
+		default
+			assertion (no)
+		option
+	;
+	gobo_utility_spec_se: "${GOBO}/library/utility/spec/se"
+		default
+			assertion (no)
+		option
+	;
+
+
+	gobo_utility_support: "${GOBO}/library/utility/support"
+		default
+			assertion (no)
+		option
+	;
+
+
+
+	ucstring: "${UCSTRING}/lib"
+		default
+			assertion (no)
+		option
+	;
+	ucstring_spec: "${UCSTRING}/lib/spec"
+		default
+			assertion (no)
+		option
+	;
+	ucstring_spec_se: "${UCSTRING}/lib/spec/se"
+		default
+			assertion (no)
+		option
+	;
+
+
+
+	se_kernel_se: "${SmallEiffelDirectory}/lib_std"
+		default
+			assertion (no)
+		option
+	;
+
+
+external
+
+
+generate
+
+	c_compiler_options: "-I${GOBO}/library/kernel/include "
+
+
+end

@@ -1,0 +1,68 @@
+indexing
+
+    description:
+
+        "a generic composite class%
+%taken from the eiffel design patterns book with small modifications"
+
+    library:    "geant/xml"
+    author:     "mostly by the authors of the eiffel design patterns book, Sven Ehrke"
+    copyright:  "others, Sven Ehrke"
+    license:    "Eiffel Forum Freeware License v1 (see forum.txt)"
+    date:       "$Date$"
+    revision:   "$Revision$"
+
+
+class GEANT_COMPOSITE [T]
+creation
+	make
+
+feature {ANY} -- Creation
+---------------------------------------------------------------
+make is
+	do
+	!!children.make(10)
+	end
+
+feature {ANY} -- Queries
+---------------------------------------------------------------
+parent : GEANT_COMPOSITE [T] is do end
+	 -- optional parent, default to Void. If an explicit reference
+	 -- to the parent is needed, redefine as an attribute.
+
+---------------------------------------------------------------
+has (child : T) : BOOLEAN is
+	 -- does 'child' belong to the composite?
+	require
+		child_not_void: child /= Void
+	do
+	Result := children.has(child) -- identity comparison, see 'make'
+	end -- has
+
+feature {ANY} -- Commands
+---------------------------------------------------------------
+add (new_child : T) is
+	-- add `new_child' to the composite
+	require new_child_not_void: new_child /= Void
+	do
+	children.add(new_child)
+	end
+---------------------------------------------------------------
+remove (child : T) is
+	-- remove T from the composite
+	require child_not_void: child /= Void
+	local
+	i, cnt	: INTEGER
+	found	: BOOLEAN
+	do
+	children.remove(child)
+	end -- remove
+
+	children	: DS_ARRAYED_LIST [T]
+
+feature {NONE} -- Private
+---------------------------------------------------------------
+invariant
+	children_not_void		: children /= Void
+end
+

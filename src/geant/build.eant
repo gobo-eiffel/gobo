@@ -1,0 +1,24 @@
+<project name="geant" default="compile">
+
+	<target name="compile" description="compiles GEANT">
+
+		<xace
+			command="build"
+			command_options="se"
+			xace_filename="geant.xace"
+			compile="true"
+		/>
+		<exec executable="mv geant.exe g.exe" />
+
+	</target>
+
+	<target name="clean" description="deletes generated files which can be rebuild using the compile target">
+		<exec executable="clean geant" />
+	</target>
+
+
+	<target name="test" description="tests the tasks">
+		<exec executable="dir" />
+	</target>
+
+</project>

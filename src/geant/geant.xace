@@ -1,0 +1,26 @@
+<?xml version="1.0"?>
+<system name="geant">
+	<root class="GEANT" creation="make"/>
+	<cluster>
+		<option>
+			<require enable="True"/>
+			<ensure enable="True"/>
+		</option>
+
+		<cluster name="geant" location="${BONBON}/tools/geant" >
+			<cluster name="command" />
+			<cluster name="task" />
+			<cluster name="parser" />
+		</cluster>
+
+		<mount location="${EXML}/library/gobo.xace" />
+		<mount location="${EXML}/library/kernel.xace" />
+
+		<mount location="${EXML}/library/exml.xace" >
+			<exclude cluster="exml.impl.expat"/>
+			<exclude cluster="exml.impl.no_eiffel"/>
+			<exclude cluster="exml.impl.no_tree_on_event"/>
+		</mount>
+
+	</cluster>
+</system>
