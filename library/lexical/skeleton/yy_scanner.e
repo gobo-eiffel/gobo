@@ -45,7 +45,7 @@ feature {NONE} -- Initialization
 		require
 			a_buffer_not_void: a_buffer /= Void
 		do
-			output_file := io.output
+			output_file := std.output
 			input_buffer := a_buffer
 		ensure
 			input_buffer_set: input_buffer = a_buffer
@@ -96,7 +96,7 @@ feature -- Access
 			-- (Create a new string at each call.)
 		require
 			meaningful_start: 1 <= s
-			meaningful_interval: s + 1 <= e
+			meaningful_interval: s <= e + 1
 			meaningful_end: e <= text_count
 		deferred
 		ensure
