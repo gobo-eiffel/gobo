@@ -113,12 +113,16 @@ feature {NONE} -- Initialization
 			uris.put (Xml_schema_instance_uri, Xml_schema_instance_prefix_index)			
 			prefixes_for_uri.put ("xsi ", Xml_schema_instance_prefix_index)
 
+			prefixes.put ("fn", Xpath_standard_functions_prefix_index)
+			uris.put (Xpath_standard_functions_uri, Xpath_standard_functions_prefix_index)			
+			prefixes_for_uri.put ("fn ", Xpath_standard_functions_prefix_index)
+
 			prefixes.put ("xhtml", Xhtml_prefix_index)
 			uris.put (Xhtml_uri, Xhtml_prefix_index)			
 			prefixes_for_uri.put ("xhtml ", Xhtml_prefix_index)
 
-			prefixes_used := 8
-			uris_used := 8
+			prefixes_used := 9
+			uris_used := 9
 
 		end
 	
@@ -643,7 +647,7 @@ feature -- Status report
 			else
 				a_prefix_index := prefix_index(a_uri_code, an_xml_prefix)
 				if a_prefix_index = -1 then Result := False
-				elseif a_uri_code > Default_uri_code and then a_uri_code <= Xml_schema_instance_uri_code then
+				elseif a_uri_code > Default_uri_code and then a_uri_code <= Xpath_standard_functions_uri_code then
 					Result := True -- TODO: This isn't exactly true, but it is probably illegitimate to test for a non-standard local name in a standard namespace
 				else
 					a_depth := 1
@@ -1038,12 +1042,14 @@ feature -- Element change
 			if is_reserved_namespace (a_uri) or else STRING_.same_string (a_uri, Gexslt_eiffel_type_uri) then
 				a_fingerprint := type_factory.standard_fingerprint (a_uri, a_local_name)
 				a_uri_code := type_factory.standard_uri_code (a_fingerprint)
-				check
-					prefix_not_allocated: prefix_index (a_uri_code, an_xml_prefix) < 0
-					-- because of pre-conditions (and we have a standard name)
-				end
-				allocate_prefix (a_uri_code, an_xml_prefix)
 				a_prefix_index := prefix_index (a_uri_code, an_xml_prefix)
+				if a_prefix_index < 0 then
+					allocate_prefix (a_uri_code, an_xml_prefix)
+					a_prefix_index := prefix_index (a_uri_code, an_xml_prefix)
+				end
+				check
+					prefix_allocated: a_prefix_index >= 0
+				end
 				last_name_code :=  (a_prefix_index * bits_20) + a_fingerprint
 			else
 				if is_code_for_uri_allocated (a_uri) then

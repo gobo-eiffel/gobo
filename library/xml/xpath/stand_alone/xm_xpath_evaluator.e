@@ -16,8 +16,6 @@ inherit
 
 	XM_XPATH_SHARED_EXPRESSION_FACTORY
 
-	XM_XPATH_SHARED_FUNCTION_FACTORY
-
 	XM_STRING_MODE
 
 	XM_XPATH_TOKENS
@@ -53,6 +51,9 @@ feature -- Access
 
 	context_item: XM_XPATH_ITEM
 			-- Initial context item, normally a node
+
+	function_library: XM_XPATH_FUNCTION_LIBRARY_MANAGER
+			-- Function library
 
 	evaluated_items: DS_LINKED_LIST [XM_XPATH_ITEM]
 			-- Results from `evaluate'
@@ -99,6 +100,8 @@ feature -- Element change
 			a_context_node: XM_XPATH_NODE
 			has_error: BOOLEAN
 			a_base_uri: UT_URI
+			a_core_function_library: XM_XPATH_CORE_FUNCTION_LIBRARY
+			a_constructor_function_library: XM_XPATH_CONSTRUCTOR_FUNCTION_LIBRARY
 		do
 			make_parser (use_tiny_tree_model)
 			source_uri := a_source_uri
@@ -128,7 +131,12 @@ feature -- Element change
 				end
 				document := a_context_node.document_root
 				create a_base_uri.make (document.base_uri)
-				create {XM_XPATH_STAND_ALONE_CONTEXT} static_context.make (warnings, xpath_one_compatibility, a_base_uri)
+				create function_library.make
+				create a_core_function_library.make
+				create a_constructor_function_library.make
+				function_library.add_function_library (a_core_function_library)
+				function_library.add_function_library (a_constructor_function_library)
+				create {XM_XPATH_STAND_ALONE_CONTEXT} static_context.make (warnings, xpath_one_compatibility, a_base_uri, function_library)
 			end
 		ensure
 			built: not was_build_error implies static_context /= Void and then document /= Void and then context_item /= Void
@@ -170,10 +178,7 @@ feature -- Evaluation
 			context_item_not_void: context_item /= Void
 		local
 			an_expression: XM_XPATH_EXPRESSION
-			a_system_function_factory: XM_XPATH_SYSTEM_FUNCTION_FACTORY
 		do
-			create a_system_function_factory
-			function_factory.register_system_function_factory (a_system_function_factory)
 			expression_factory.make_expression (an_expression_text, static_context, 1, Eof_token)
 			if expression_factory.is_parse_error then
 				is_error := True
@@ -261,7 +266,7 @@ feature {NONE} -- Implementation
 		do
 			create a_document_pool.make
 			a_document_pool.add (document, source_uri)
-			create a_context.make (context_item, a_document_pool)
+			create a_context.make (context_item, a_document_pool, function_library)
 			a_context.copy_string_mode (Current)
 			a_sequence_iterator := an_expression.iterator (a_context)
 			

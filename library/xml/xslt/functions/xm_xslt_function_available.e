@@ -19,8 +19,6 @@ inherit
 			pre_evaluate, evaluate_item, check_arguments
 		end
 
-	XM_XPATH_SHARED_FUNCTION_FACTORY
-
 creation
 
 	make
@@ -69,7 +67,7 @@ feature -- Evaluation
 	evaluate_item (a_context: XM_XPATH_CONTEXT) is
 			-- Evaluate `Current' as a single item
 		local
-			an_arity: INTEGER
+			an_arity, a_fingerprint: INTEGER
 			an_atomic_value: XM_XPATH_ATOMIC_VALUE
 			an_integer_value: XM_XPATH_INTEGER_VALUE
 			a_qname, a_uri, a_local_name, an_xml_prefix: STRING
@@ -109,8 +107,9 @@ feature -- Evaluation
 							create {XM_XPATH_INVALID_ITEM} last_evaluated_item.make_from_string ("First argument to 'function-available' is not a lexical QName", "XT1400", Dynamic_error)
 						else
 							if qname_parts.count = 1 then
-								a_uri := Xpath_functions_uri
+								a_uri := Xpath_standard_functions_uri
 								a_local_name := qname_parts.item (1)
+								an_xml_prefix := ""
 							else
 								an_xml_prefix := qname_parts.item (1)
 								a_uri := namespace_context.uri_for_defaulted_prefix (an_xml_prefix, False)
@@ -119,7 +118,11 @@ feature -- Evaluation
 							if a_uri = Void then
 								create {XM_XPATH_INVALID_ITEM} last_evaluated_item.make_from_string ("QName prefix in first argument to 'function-available' has not been declared.", "XT1400", Dynamic_error)
 							else
-								a_boolean := function_factory.is_function_available (a_uri, a_local_name, an_arity)
+								if not shared_name_pool.is_name_code_allocated (an_xml_prefix, a_uri, a_local_name) then
+									shared_name_pool.allocate_name (an_xml_prefix, a_uri, a_local_name)
+								end
+								a_fingerprint := shared_name_pool.fingerprint (a_uri, a_local_name)
+								a_boolean := a_context.available_functions.is_function_available (a_fingerprint, an_arity, a_context.is_restricted)
 								create a_boolean_value.make (a_boolean)
 								last_evaluated_item := a_boolean_value
 							end
@@ -133,7 +136,7 @@ feature -- Evaluation
 	pre_evaluate (a_context: XM_XPATH_STATIC_CONTEXT) is
 			-- Pre-evaluate `Current' at compile time.
 		local
-			an_arity: INTEGER
+			an_arity, a_fingerprint: INTEGER
 			a_string_value: XM_XPATH_STRING_VALUE
 			an_integer_value: XM_XPATH_INTEGER_VALUE
 			a_qname, a_uri, a_local_name, an_xml_prefix: STRING
@@ -170,14 +173,19 @@ feature -- Evaluation
 					set_last_error_from_string ("First argument to 'function-available' is not a lexical QName", "XT1400", Static_error)
 				else
 					if qname_parts.count = 1 then
-						a_uri := Xpath_functions_uri
+						a_uri := Xpath_standard_functions_uri
 						a_local_name := qname_parts.item (1)
+						an_xml_prefix := ""
 					else
 						an_xml_prefix := qname_parts.item (1)
 						a_uri := a_context.uri_for_prefix (an_xml_prefix)
 						a_local_name := qname_parts.item (2)
 					end
-					a_boolean := function_factory.is_function_available (a_uri, a_local_name, an_arity)
+					if not shared_name_pool.is_name_code_allocated (an_xml_prefix, a_uri, a_local_name) then
+						shared_name_pool.allocate_name (an_xml_prefix, a_uri, a_local_name)
+					end
+					a_fingerprint := shared_name_pool.fingerprint (a_uri, a_local_name)
+					a_boolean := a_context.available_functions.is_function_available (a_fingerprint, an_arity, a_context.is_restricted)
 					create a_boolean_value.make (a_boolean)
 					set_replacement (a_boolean_value)
 				end

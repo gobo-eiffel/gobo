@@ -18,11 +18,13 @@ inherit
 
 	XM_XPATH_CARDINALITY
 
-	XM_XPATH_SHARED_FUNCTION_FACTORY
-
 	KL_IMPORTED_STRING_ROUTINES
 
 	XM_XPATH_SHARED_CONFORMANCE
+
+	XM_XPATH_SHARED_NAME_POOL
+
+	XM_XPATH_NAME_UTILITIES
 
 	XM_XPATH_SHARED_ANY_ITEM_TYPE
 
@@ -75,6 +77,7 @@ feature -- Optimization
 			a_relationship: INTEGER
 			a_required_cardinality: INTEGER
 		do
+			if a_context /= Void then function_library := a_context.available_functions end
 			a_required_cardinality := a_required_type.cardinality
 			initialize (a_supplied_expression, a_required_type)
 
@@ -291,23 +294,31 @@ feature {NONE} -- Implementation
 					-- only if the supplied value doesn't match the expected type. We're currently
 					-- returning different results for round(()) depending on whether the arg value
 					-- is known statically or not.
-					
-					a_number_function ?= function_factory.system_function ("number")
-					check
-						number_function: a_number_function /= Void
+
+					if function_library /= Void then
+						create new_arguments.make (1)
+						new_arguments.put_last (checked_expression)
+						function_library.bind_function (Number_function_type_code, new_arguments, False)
+						a_number_function ?= function_library.last_bound_function
+						check
+							number_function: a_number_function /= Void
+						end
+						checked_expression := a_number_function
+						-- TODO copy location info
+						a_value ?= checked_expression
+						if a_value /= Void then
+							checked_expression.eagerly_evaluate (Void)
+							checked_expression := a_value.last_evaluation
+						end
+						supplied_item_type := type_factory.double_type
+						supplied_cardinality := Required_cardinality_exactly_one
+					else
+						check
+							False
+							-- We must have a static context to detect XPath 1.0 compatibility, and therefore
+							--  `function_library' cannot be Void
+						end
 					end
-					create new_arguments.make (1)
-					new_arguments.put_last (checked_expression)
-					a_number_function.set_arguments (new_arguments)
-					checked_expression := a_number_function
-					-- TODO copy location info
-					a_value ?= checked_expression
-					if a_value /= Void then
-						checked_expression.eagerly_evaluate (Void)
-						checked_expression := a_value.last_evaluation
-					end
-					supplied_item_type := type_factory.double_type
-					supplied_cardinality := Required_cardinality_exactly_one
 				elseif required_item_type = any_node_test or else required_item_type = any_item or else required_item_type = type_factory.any_atomic_type then
 					-- TODO:this last condition isn't in the rules for function calls,
 					-- but is needed for arithmetic expressions
@@ -380,6 +391,9 @@ feature {NONE} -- Implementation
 
 			checked_expression := Void
 		end
+
+	function_library: XM_XPATH_FUNCTION_LIBRARY
+			-- Function library
 
 invariant
 

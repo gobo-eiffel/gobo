@@ -179,7 +179,7 @@ feature -- Compilation
 
 				-- Preprocess the stylesheet, performing validation and preparing template  definitions
 				
-				a_stylesheet.set_stylesheet_compiler (Current)
+				a_stylesheet.set_stylesheet_compiler (Current, configuration)
 				a_stylesheet.preprocess
 
 				-- Compile the stylesheet, retaining the resulting  executable

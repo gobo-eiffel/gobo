@@ -15,19 +15,47 @@ class XM_XPATH_VENN_EXPRESSION
 inherit
 
 	XM_XPATH_BINARY_EXPRESSION
+		rename
+			make as make_binary
 		redefine
 			compute_cardinality, compute_special_properties, simplify, analyze, iterator, effective_boolean_value
 		end
-
-	XM_XPATH_SHARED_FUNCTION_FACTORY
 
 	XM_XPATH_SHARED_GLOBAL_ORDER_COMPARER
 
 	XM_XPATH_ROLE
 
+	XM_XPATH_NAME_UTILITIES
+
 creation
 
 	make
+
+feature {NONE} -- Initialization
+
+	make (an_operand_one: XM_XPATH_EXPRESSION; a_token: INTEGER; an_operand_two: XM_XPATH_EXPRESSION; a_function_library: XM_XPATH_FUNCTION_LIBRARY) is
+			-- Establish invariant
+		require
+			operand_1_not_void: an_operand_one /= Void
+			operand_2_not_void: an_operand_two /= Void
+			-- TODO: is_binary_op?
+			function_library_not_void: a_function_library /= Void
+		do
+			make_binary (an_operand_one, a_token, an_operand_two)
+			if shared_name_pool.is_name_code_allocated ("", Xpath_standard_functions_uri, "not") then
+				not_function_fingerprint := shared_name_pool.fingerprint (Xpath_standard_functions_uri, "not")
+			else
+				shared_name_pool.allocate_name ("", Xpath_standard_functions_uri, "not")
+				not_function_fingerprint := fingerprint_from_name_code (shared_name_pool.last_name_code)
+			end
+			function_library := a_function_library
+		ensure
+			operator_set: operator = a_token
+			operand_1_set: first_operand /= Void and then first_operand.same_expression (an_operand_one)
+			operand_2_set: second_operand /= Void and then second_operand.same_expression (an_operand_two)
+			static_properties_computed: are_static_properties_computed
+			function_library_set: function_library = a_function_library
+		end
 
 feature -- Access
 
@@ -381,7 +409,7 @@ feature {NONE} -- Implementation
 			a_path_expression ?= first_operand; another_path_expression ?= second_operand
 			if a_path_expression /= Void and then another_path_expression /= Void and then
 				a_path_expression.first_step.same_expression (another_path_expression.first_step) then
-				create a_venn_expression.make (a_path_expression.remaining_steps, operator, another_path_expression.remaining_steps)
+				create a_venn_expression.make (a_path_expression.remaining_steps, operator, another_path_expression.remaining_steps, function_library)
 				create another_path_expression.make (a_path_expression.first_step, a_venn_expression)
 				another_path_expression.simplify
 				if another_path_expression.was_expression_replaced then
@@ -414,10 +442,10 @@ feature {NONE} -- Implementation
 				when Intersect_token then
 					create {XM_XPATH_BOOLEAN_EXPRESSION} an_expression.make (a_filter_expression.filter, And_token, another_filter_expression.filter)
 				when Except_token then
-					a_not_function ?= function_factory.system_function ("not")
 					create arguments.make (1)
 					arguments.put (another_filter_expression.filter, 1)
-					a_not_function.set_arguments (arguments)
+					function_library.bind_function (not_function_fingerprint, arguments, False)
+					a_not_function ?= function_library.last_bound_function
 					create {XM_XPATH_BOOLEAN_EXPRESSION} an_expression.make (a_filter_expression.filter, And_token, a_not_function)
 				end
 				create another_filter_expression.make (a_filter_expression.base_expression, an_expression)
@@ -426,9 +454,17 @@ feature {NONE} -- Implementation
 			end
 		end
 
+	function_library: XM_XPATH_FUNCTION_LIBRARY
+			-- Function library
+
+	not_function_fingerprint: INTEGER
+			-- Fingerprint of "not" function
+
 invariant
 
 	venn_operator: operator = Union_token or else operator = Intersect_token or else operator = Except_token
+	strictly_positive_not_function_fingerprint: not_function_fingerprint > 0
+	function_library_not_void: function_library /= Void
 
 end
 	

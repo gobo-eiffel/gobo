@@ -22,8 +22,8 @@ inherit
 	XM_XPATH_TOKENS
 
 	XM_XPATH_SHARED_EXPRESSION_FACTORY
-
-	XM_XPATH_SHARED_FUNCTION_FACTORY
+	
+	XM_XPATH_NAME_UTILITIES
 
 	KL_SHARED_PLATFORM
 
@@ -462,23 +462,20 @@ feature {NONE} -- Implementation
 				or else an_expression.depends_upon_last
 		end
 
-	force_to_boolean (an_expression: XM_XPATH_EXPRESSION): XM_XPATH_EXPRESSION is
+	force_to_boolean (an_expression: XM_XPATH_EXPRESSION; a_context: XM_XPATH_STATIC_CONTEXT): XM_XPATH_EXPRESSION is
 			-- A warpping of the boolean() function around `an_expression'.
-			require
+		require
 			expression_not_void: an_expression /= Void
+			static_context_not_void: a_context /= Void
 		local
-			a_function_call: XM_XPATH_FUNCTION_CALL
+			a_function_library: XM_XPATH_FUNCTION_LIBRARY
 			args: DS_ARRAYED_LIST [XM_XPATH_EXPRESSION]
 		do
 			create args.make (1)
 			args.put (an_expression, 1)
-			a_function_call := function_factory.system_function ("boolean")
-				check
-					function_call_not_void: a_function_call /= Void
-					-- as boolean must exist
-				end
-			a_function_call.set_arguments (args)
-			Result := a_function_call
+			a_function_library := a_context.available_functions
+			a_function_library.bind_function (Boolean_function_type_code, args, False)
+			Result := a_function_library.last_bound_function
 		end
 	
 	compute_special_properties is
@@ -582,12 +579,12 @@ feature {NONE} -- Implementation
 			
 			-- If the filter is positional, try changing f[a and b] to f[a][b] to increase
 			-- the chances of finishing early.
-			
+
 			a_boolean_filter ?= filter; if filter_is_positional and then a_boolean_filter /= Void and then a_boolean_filter.operator = And_token then
 				if is_explicitly_positional_filter (a_boolean_filter.first_operand)
 					and then not is_explicitly_positional_filter (a_boolean_filter.second_operand) then
-					another_expression := force_to_boolean (a_boolean_filter.first_operand)
-					a_third_expression := force_to_boolean (a_boolean_filter.second_operand)
+					another_expression := force_to_boolean (a_boolean_filter.first_operand, a_context)
+					a_third_expression := force_to_boolean (a_boolean_filter.second_operand, a_context)
 					create a_filter.make (base_expression, another_expression)
 					create another_filter.make (a_filter, a_third_expression)
 					another_filter.analyze (a_context)
@@ -598,8 +595,8 @@ feature {NONE} -- Implementation
 					end
 				elseif is_explicitly_positional_filter (a_boolean_filter.second_operand)
 					and then not is_explicitly_positional_filter (a_boolean_filter.first_operand) then
-					another_expression := force_to_boolean (a_boolean_filter.first_operand)
-					a_third_expression := force_to_boolean (a_boolean_filter.second_operand)
+					another_expression := force_to_boolean (a_boolean_filter.first_operand, a_context)
+					a_third_expression := force_to_boolean (a_boolean_filter.second_operand, a_context)
 					create a_filter.make (base_expression, a_third_expression)
 					create another_filter.make (a_filter, another_expression)
 					another_filter.analyze (a_context)

@@ -48,25 +48,25 @@ feature -- Test
 
 				shared_name_pool.allocate_code_for_uri (uri)
 				uri_code := shared_name_pool.last_uri_code
-				assert ("URI code 2", uri_code = 8 + counter)
+				assert ("URI code 2", uri_code = 9 + counter)
 		
 				uri_code := shared_name_pool.code_for_uri (uri)
-				assert ("URI code 3", uri_code = 8 + counter)
+				assert ("URI code 3", uri_code = 9 + counter)
 				
 				counter:= counter + 1
 			end
 			
 			shared_name_pool.allocate_namespace_code ("test", testing_namespace)
 			namespace_code := shared_name_pool.last_namespace_code
-			assert ("Namespace code", namespace_code = 524401)
+			assert ("Namespace code", namespace_code = 589938)
 			namespace_code := shared_name_pool.namespace_code ("test", testing_namespace)
-			assert ("Namespace code 2", namespace_code = 524401)
+			assert ("Namespace code 2", namespace_code = 589938)
 
 			shared_name_pool.allocate_code_for_prefix ("test2")
 			prefix_code := shared_name_pool.last_prefix_code
-			assert ("Prefix code", prefix_code = 9)
+			assert ("Prefix code", prefix_code = 10)
 			prefix_code := shared_name_pool.code_for_prefix ("test2")
-			assert ("Prefix code", prefix_code = 9)
+			assert ("Prefix code", prefix_code = 10)
 		end
 	
 	test_conversions is

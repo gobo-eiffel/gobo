@@ -22,8 +22,6 @@ inherit
 
 	XM_XPATH_TOKENS
 
-	XM_XPATH_SHARED_FUNCTION_FACTORY
-
 	KL_SHARED_STANDARD_FILES
 
 	XM_XPATH_SHARED_NAME_POOL
@@ -44,10 +42,12 @@ feature -- Test
 			a_string: STRING
 			a_string_value: XM_XPATH_STRING_VALUE
 			a_base_uri: UT_URI
+			a_function_library: XM_XPATH_CORE_FUNCTION_LIBRARY
 		do
 			a_string := "//fred[@son='Jim']"
 			create a_base_uri.make ("test:/test-path")
-			create a_context.make (True, True, a_base_uri)
+			create a_function_library.make
+			create a_context.make (True, True, a_base_uri, a_function_library)
 			expression_factory.make_expression (a_string, a_context, 1, Eof_token)
 			if expression_factory.is_parse_error then
 				-- Shouldn't happen
@@ -120,14 +120,13 @@ feature -- Test
 			tokenizer: XM_XPATH_TOKENIZER
 			a_string: STRING
 			a_string_value: XM_XPATH_STRING_VALUE
-			a_system_function_factory: XM_XPATH_SYSTEM_FUNCTION_FACTORY
+			a_function_library: XM_XPATH_CORE_FUNCTION_LIBRARY
 			a_base_uri: UT_URI
 		do
-			create a_system_function_factory
-			function_factory.register_system_function_factory (a_system_function_factory)
 			a_string := "//fred[position() = last()]"
 			create a_base_uri.make ("test:/test-path")
-			create a_context.make (False, False, a_base_uri)
+			create a_function_library.make
+			create a_context.make (False, False, a_base_uri, a_function_library)
 			expression_factory.make_expression (a_string, a_context, 1, Eof_token)
 			if expression_factory.is_parse_error then
 				-- Shouldn't happen
@@ -186,17 +185,16 @@ feature -- Test
 	test_parse_error is
 			-- Test detection of parse errors
 		local
-			a_system_function_factory: XM_XPATH_SYSTEM_FUNCTION_FACTORY
 			a_context: XM_XPATH_STAND_ALONE_CONTEXT
 			a_string: STRING
 			an_expression: XM_XPATH_EXPRESSION
 			a_base_uri: UT_URI
+			a_function_library: XM_XPATH_CORE_FUNCTION_LIBRARY
 		do
-			create a_system_function_factory
-			function_factory.register_system_function_factory (a_system_function_factory)
 			a_string := "//fred[position()) = last()]"
 			create a_base_uri.make ("test:/test-path")
-			create a_context.make (False, False, a_base_uri)
+			create a_function_library.make
+			create a_context.make (False, False, a_base_uri, a_function_library)
 			expression_factory.make_expression (a_string, a_context, 1, Eof_token)
 			assert ("Parse failed", expression_factory.is_parse_error)
 			assert ("Error text length", expression_factory.parsed_error_value.error_message.count = 82)

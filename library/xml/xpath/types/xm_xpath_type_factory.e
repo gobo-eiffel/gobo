@@ -42,7 +42,7 @@ feature -- Access
 		do
 			Result := a_fingerprint // bits_7
 		ensure
-			result_in_range: Default_uri_code <= Result and then Result <= Xml_schema_instance_uri_code
+			result_in_range: Default_uri_code <= Result and then Result <= Xpath_standard_functions_uri_code
 		end
 
 	standard_local_name (a_fingerprint: INTEGER): STRING is

@@ -95,6 +95,7 @@ feature -- Parsers
 		do
 			internal_last_parse_error := Void
 			environment := a_context
+			function_library := environment.available_functions
 			create tokenizer.make
 			tokenizer.tokenize (an_expression_string, a_start, -1)
 			is_parse_error := False
@@ -206,7 +207,7 @@ feature -- Creation
 			valid_node_type: is_node_type (a_node_type)
 			valid_prefix: an_xml_prefix /= Void and then is_ncname (an_xml_prefix)
 		do
-			create Result.make (a_node_type, environment.uri_for_prefix (an_xml_prefix), STRING_.appended_string (an_xml_prefix, ":*"))
+			create Result.make (a_node_type, environment.uri_for_prefix (an_xml_prefix), STRING_.concat (an_xml_prefix, ":*"))
 		ensure
 			namespace_test_not_void: Result /= Void
 		end
@@ -1208,7 +1209,7 @@ feature {NONE} -- Implementation
 					else
 						parse_intersect_expression
 						if not is_parse_error then
-							create another_expression.make (an_expression, Union_token, internal_last_parsed_expression)
+							create another_expression.make (an_expression, Union_token, internal_last_parsed_expression, function_library)
 							an_expression := another_expression
 						end
 					end
@@ -1250,7 +1251,7 @@ feature {NONE} -- Implementation
 					else
 						parse_instance_of_expression
 						if not is_parse_error then
-							create another_expression.make (an_expression, an_operator, internal_last_parsed_expression)
+							create another_expression.make (an_expression, an_operator, internal_last_parsed_expression, function_library)
 							an_expression := another_expression
 						end
 					end
@@ -1804,6 +1805,10 @@ feature {NONE} -- Implementation
 			a_function_name, a_message: STRING
 			arguments: DS_ARRAYED_LIST [XM_XPATH_EXPRESSION]
 			an_argument: XM_XPATH_EXPRESSION
+			a_fingerprint: INTEGER
+			a_splitter: ST_SPLITTER
+			qname_parts: DS_LIST [STRING]
+			a_uri, an_xml_prefix, a_local_name: STRING
 		do
 			debug ("XPath Expression Parser")
 				std.error.put_string ("Entered parse_function_call%N")
@@ -1852,17 +1857,32 @@ feature {NONE} -- Implementation
 					if tokenizer.is_lexical_error then
 						report_parse_error (tokenizer.last_lexical_error, "XP0003")
 					else
-						environment.bind_function (a_function_name, arguments)
-						if environment.was_last_function_bound then
-							internal_last_parsed_expression := environment.last_bound_function
-							debug ("XPath Expression Parser")
-								std.error.put_string ("Bound a function%N")
-							end
+						create a_splitter.make
+						a_splitter.set_separators (":")
+						qname_parts := a_splitter.split (a_function_name)
+						if qname_parts.count = 1 then
+							a_uri := Xpath_standard_functions_uri
+							a_local_name := qname_parts.item (1)
 						else
-							debug ("XPath Expression Parser")
-								std.error.put_string ("Failed to bind a function%N")
+							an_xml_prefix := qname_parts.item (1)
+							a_local_name := qname_parts.item (2)
+							if environment.is_prefix_declared (an_xml_prefix) then
+								a_uri := environment.uri_for_prefix (an_xml_prefix)
+							else
+								a_message := STRING_.concat ("Prefix ", an_xml_prefix)
+								a_message := STRING_.appended_string (a_message, " has not been declared as an in-scope namespace.")
+								report_parse_error (a_message, "XP0003")
 							end
-							report_parse_error (environment.last_function_binding_failure_message, "XP0003")
+						end
+						if not is_parse_error then
+							a_fingerprint := shared_name_pool.fingerprint (a_uri, a_local_name)
+							if a_fingerprint = -1 or else not function_library.is_function_available (a_fingerprint, arguments.count, environment.is_restricted) then
+								a_message := STRING_.concat ("Unknown function: ", a_function_name)
+								report_parse_error (a_message, "XP0017")
+							else
+								function_library.bind_function (a_fingerprint, arguments, environment.is_restricted)
+								internal_last_parsed_expression := function_library.last_bound_function
+							end
 						end
 					end
 				end
@@ -2152,6 +2172,9 @@ feature {NONE} -- Implementation
 	
 	environment: XM_XPATH_STATIC_CONTEXT
 			-- Current static context
+
+	function_library: XM_XPATH_FUNCTION_LIBRARY
+			-- Current function library
 
 	internal_last_parse_error: STRING
 			-- Text of last parse error encountered

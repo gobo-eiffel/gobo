@@ -226,7 +226,7 @@ feature -- Access
 		local
 			a_uri_code: INTEGER
 		do
-			if not use_default_namespace and then STRING_.same_string (an_xml_prefix, "") then
+			if not use_default_namespace and then an_xml_prefix.count = 0 then
 				Result := ""
 			else
 				a_uri_code := uri_code_for_prefix (an_xml_prefix)
@@ -657,6 +657,7 @@ feature -- Status setting
 					STRING_.same_string (an_attribute_uri, Xslt_uri) and then
 					not STRING_.same_string (an_element_uri, Xslt_uri) and then
 					(
+					 -- TODO use-when
 					 STRING_.same_string (a_local_name, Xpath_default_namespace_attribute) or else
 					 STRING_.same_string (a_local_name, Extension_element_prefixes_attribute) or else
 					 STRING_.same_string (a_local_name, Exclude_result_prefixes_attribute) or else
@@ -669,6 +670,7 @@ feature -- Status setting
 				elseif STRING_.same_string (an_element_uri, Xslt_uri) and then
 					STRING_.same_string (an_attribute_uri, "") and then
 					(
+					 -- TODO use-when
 					 STRING_.same_string (a_local_name, Xpath_default_namespace_attribute) or else
 					 STRING_.same_string (a_local_name, Extension_element_prefixes_attribute) or else
 					 STRING_.same_string (a_local_name, Exclude_result_prefixes_attribute) or else

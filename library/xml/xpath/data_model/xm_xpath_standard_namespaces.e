@@ -45,7 +45,10 @@ feature -- Access
 	Xml_schema_instance_prefix_index: INTEGER is 7
 			-- Numeric code representing the XML Schema instance namespace
 
-	Xhtml_prefix_index: INTEGER is 8
+	Xpath_standard_functions_prefix_index: INTEGER is 8
+			-- Numeric code the XPath standard functions namespace
+	
+	Xhtml_prefix_index: INTEGER is 9
 			-- Numeric code representing the XHTML namespace
 
 	namespace_index_to_uri_code (a_name_space_index: INTEGER): INTEGER is
@@ -76,11 +79,11 @@ feature -- Access
 	Xml_schema_instance_uri: STRING is "http://www.w3.org/2001/XMLSchema-instance"
 			-- The XML Schema instance document namespace (xsi)
 
-	Xpath_defined_datatypes_uri: STRING is "http://www.w3.org/2004/07/xpath-datatypes"
+	Xpath_defined_datatypes_uri: STRING is "http://www.w3.org/2004/10/xpath-datatypes"
 			-- Namespace for additional XPath-defined data types (xdt)
 
-	Xpath_functions_uri: STRING is "http://www.w3.org/2004/07/xpath-functions"
-			-- XPath functions and operators (fn)
+	Xpath_standard_functions_uri: STRING is "http://www.w3.org/2004/10/xpath-functions"
+			-- XPath standard functions and operators (fn)
 
 	Microsoft_uri: STRING is "http://www.w3.org/TR/WD-xsl"
 			-- Recognize the Microsoft namespace so we can give a suitably sarcastic error message
@@ -97,6 +100,9 @@ feature -- Access
 	Exslt_date_uri: STRING is "http://exslt.org/dates-and-times"
 			-- EXSLT dates
 
+	Unicode_codepoint_collation_uri: STRING is "http://www.w3.org/2004/10/xpath-functions/collation/codepoint"
+			-- Unicode codepoint collation
+
 			-- The following codes are 3-bit values for building a fingerprint
 
 	Default_uri_code: INTEGER is 0
@@ -106,7 +112,11 @@ feature -- Access
 	Gexslt_uri_code: INTEGER is 4
 	Xslt_uri_code: INTEGER is 5
 	Xml_schema_instance_uri_code: INTEGER is 6
-	Xhtml_uri_code: INTEGER is 7
+	Xpath_standard_functions_uri_code: INTEGER is 7
+
+			-- The remaining ones aren't
+
+	Xhtml_uri_code: INTEGER is 8
 
 			-- The following codes are fingerprints
 
@@ -253,6 +263,136 @@ feature -- Access
 	Xsi_schema_location_type_code: INTEGER is 771
 	Xsi_no_namespace_schema_location_type_code: INTEGER is 772
 
+			-- Codes in XPath functions namespace (`Xpath_standard_functions_uri_code' * 128 + 1..n)
+
+	Abs_function_type_code: INTEGER is 897
+	Adjust_date_to_timezone_function_type_code: INTEGER is 898
+	Adjust_datetime_to_timezone_function_type_code: INTEGER is 899
+	Adjust_time_to_timezone_function_type_code: INTEGER is 900
+	Avg_function_type_code: INTEGER is 901
+	Base_uri_function_type_code: INTEGER is 902
+	Boolean_function_type_code: INTEGER is 903
+	Ceiling_function_type_code: INTEGER is 904
+	Codepoints_to_string_function_type_code: INTEGER is 905
+	Collection_function_type_code: INTEGER is 906
+	Compare_function_type_code: INTEGER is 907
+	Concat_function_type_code: INTEGER is 908
+	Contains_function_type_code: INTEGER is 909
+	Count_function_type_code: INTEGER is 910
+	Current_date_function_type_code: INTEGER is 911
+	Current_datetime_function_type_code: INTEGER is 912
+	Current_time_function_type_code: INTEGER is 913
+	Data_function_type_code: INTEGER is 914
+	Datetime_function_type_code: INTEGER is 915
+	Day_from_date_function_type_code: INTEGER is 916
+	Day_from_datetime_function_type_code: INTEGER is 917
+	Days_from_duration_function_type_code: INTEGER is 918
+	Deep_equal_function_type_code: INTEGER is 919
+	Default_collation_function_type_code: INTEGER is 920
+	Distinct_values_function_type_code: INTEGER is 921
+	Doc_function_type_code: INTEGER is 922
+	Document_uri_function_type_code: INTEGER is 923
+	Empty_function_type_code: INTEGER is 924
+	Ends_with_function_type_code: INTEGER is 925
+	Error_function_type_code: INTEGER is 926
+	Escape_uri_function_type_code: INTEGER is 927
+	Exactly_one_function_type_code: INTEGER is 928
+	Exists_function_type_code: INTEGER is 929
+	False_function_type_code: INTEGER is 930
+	Floor_function_type_code: INTEGER is 931
+	Hours_from_datetime_function_type_code: INTEGER is 932
+	Hours_from_time_function_type_code: INTEGER is 933
+	Hours_from_duration_function_type_code: INTEGER is 934
+	Id_function_type_code: INTEGER is 935
+	Idref_function_type_code: INTEGER is 936
+	Implicit_timezone_function_type_code: INTEGER is 937
+	In_scope_prefixes_function_type_code: INTEGER is 938
+	Index_of_function_type_code: INTEGER is 939
+	Insert_before_function_type_code: INTEGER is 940
+	Lang_function_type_code: INTEGER is 941
+	Last_function_type_code: INTEGER is 942
+	Local_name_function_type_code: INTEGER is 943
+	Local_name_from_qname_function_type_code: INTEGER is 944
+	Lower_case_function_type_code: INTEGER is 945
+	Matches_function_type_code: INTEGER is 946
+	Max_function_type_code: INTEGER is 947
+	Min_function_type_code: INTEGER is 948
+	Minutes_from_datetime_function_type_code: INTEGER is 949
+	Minutes_from_duration_function_type_code: INTEGER is 950
+	Minutes_from_time_function_type_code: INTEGER is 951
+	Month_from_date_function_type_code: INTEGER is 952
+	Month_from_datetime_function_type_code: INTEGER is 953
+	Month_from_duration_function_type_code: INTEGER is 954
+	Name_function_type_code: INTEGER is 955
+	Namespace_uri_function_type_code: INTEGER is 956
+	Namespace_uri_for_prefix_function_type_code: INTEGER is 957
+	Namespace_uri_from_qname_function_type_code: INTEGER is 958
+	Nilled_function_type_code: INTEGER is 959
+	Node_name_function_type_code: INTEGER is 960
+	Normalize_space_function_type_code: INTEGER is 961
+	Normalize_unicode_function_type_code: INTEGER is 962
+	Not_function_type_code: INTEGER is 963
+	Number_function_type_code: INTEGER is 964
+	One_or_more_function_type_code: INTEGER is 965
+	Position_function_type_code: INTEGER is 966
+	Qname_function_type_code: INTEGER is 967
+	Remove_function_type_code: INTEGER is 968
+	Replace_function_type_code: INTEGER is 969
+	Resolve_qname_function_type_code: INTEGER is 970
+	Resolve_uri_function_type_code: INTEGER is 971
+	Reverse_function_type_code: INTEGER is 972
+	Root_function_type_code: INTEGER is 973
+	Round_function_type_code: INTEGER is 974
+	Round_half_to_even_function_type_code: INTEGER is 975
+	Seconds_from_datetime_function_type_code: INTEGER is 976
+	Seconds_from_duration_function_type_code: INTEGER is 977
+	Seconds_from_time_function_type_code: INTEGER is 978
+	Starts_with_function_type_code: INTEGER is 979
+	Static_base_uri_function_type_code: INTEGER is 980
+	String_function_type_code: INTEGER is 981
+	String_join_function_type_code: INTEGER is 982
+	String_length_function_type_code: INTEGER is 983
+	String_to_codepoints_function_type_code: INTEGER is 984
+	Subsequence_function_type_code: INTEGER is 985
+	Substring_function_type_code: INTEGER is 986
+	Substring_after_function_type_code: INTEGER is 987
+	Substring_before_function_type_code: INTEGER is 988
+	Sum_function_type_code: INTEGER is 989
+	Timezone_from_date_function_type_code: INTEGER is 990
+	Timezone_from_datetime_function_type_code: INTEGER is 991
+	Timezone_from_time_function_type_code: INTEGER is 992
+	Tokenize_function_type_code: INTEGER is 993
+	Trace_function_type_code: INTEGER is 994
+	Translate_function_type_code: INTEGER is 995
+	True_function_type_code: INTEGER is 996
+	Unordered_function_type_code: INTEGER is 997
+	Upper_case_function_type_code: INTEGER is 998
+	Year_from_date_function_type_code: INTEGER is 999
+	Year_from_datetime_function_type_code: INTEGER is 1000
+	Years_from_duration_function_type_code: INTEGER is 1001
+	Zero_or_one_function_type_code: INTEGER is 1002
+
+			-- Functions provided by XSLT
+
+	Current_function_type_code: INTEGER is 1003
+	Current_group_function_type_code: INTEGER is 1004
+	Current_grouping_key_function_type_code: INTEGER is 1005
+	Document_function_type_code: INTEGER is 1006
+	Element_available_function_type_code: INTEGER is 1007
+	Format_date_function_type_code: INTEGER is 1008
+	Format_datetime_function_type_code: INTEGER is 1009
+	Format_time_function_type_code: INTEGER is 1010
+	Format_number_function_type_code: INTEGER is 1011
+	Function_available_function_type_code: INTEGER is 1012
+	Generate_id_function_type_code: INTEGER is 1013
+	Key_function_type_code: INTEGER is 1014
+	Regex_group_function_type_code: INTEGER is 1015
+	System_property_function_type_code: INTEGER is 1016
+	Unparsed_entity_public_id_function_type_code: INTEGER is 1017
+	Unparsed_entity_uri_function_type_code: INTEGER is 1018
+	Unparsed_text_function_type_code: INTEGER is 1019
+
+	
 			-- XSLT Attribute names
 
 	As_attribute: STRING is "as"
@@ -385,7 +525,7 @@ feature -- Status report
 			uri_not_void: a_uri /= Void
 		do
 			Result := STRING_.same_string (a_uri, Xslt_uri)
-				or else STRING_.same_string (a_uri, Xpath_functions_uri)
+				or else STRING_.same_string (a_uri, Xpath_standard_functions_uri)
 				or else STRING_.same_string (a_uri, Xml_uri)
 				or else STRING_.same_string (a_uri, Xml_schema_uri)
 				or else STRING_.same_string (a_uri, Xml_schema_datatypes_uri)

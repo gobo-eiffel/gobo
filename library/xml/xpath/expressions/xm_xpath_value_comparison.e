@@ -23,7 +23,7 @@ inherit
 
 	XM_XPATH_COMPARISON_ROUTINES
 
-	XM_XPATH_SHARED_FUNCTION_FACTORY
+	XM_XPATH_NAME_UTILITIES
 
 	XM_XPATH_ROLE
 
@@ -48,6 +48,18 @@ feature {NONE} -- Initialization
 		do
 			make_binary_expression (an_operand_one, a_token, an_operand_two)
 			create atomic_comparer.make (a_collator)
+			if shared_name_pool.is_name_code_allocated ("", Xpath_standard_functions_uri, "empty") then
+				empty_function_fingerprint := shared_name_pool.fingerprint (Xpath_standard_functions_uri, "empty")
+			else
+				shared_name_pool.allocate_name ("", Xpath_standard_functions_uri, "empty")
+				empty_function_fingerprint := fingerprint_from_name_code (shared_name_pool.last_name_code)
+			end
+			if shared_name_pool.is_name_code_allocated ("", Xpath_standard_functions_uri, "exists") then
+				exists_function_fingerprint := shared_name_pool.fingerprint (Xpath_standard_functions_uri, "exists")
+			else
+				shared_name_pool.allocate_name ("", Xpath_standard_functions_uri, "empty")
+				exists_function_fingerprint := fingerprint_from_name_code (shared_name_pool.last_name_code)
+			end			
 		ensure
 			static_properties_computed: are_static_properties_computed
 			operator_set: operator = a_token
@@ -271,23 +283,25 @@ feature {NONE} -- Implementation
 			an_integer: MA_DECIMAL
 			a_filter_expression: XM_XPATH_FILTER_EXPRESSION
 			an_expression: XM_XPATH_EXPRESSION
+			a_function_library: XM_XPATH_FUNCTION_LIBRARY
 		do
 			a_count_function ?= first_operand; an_atomic_value ?= second_operand
 			if a_count_function /= Void and then an_atomic_value /= Void and then a_count_function.arguments.count = 1 then
+				a_function_library := a_context.available_functions
 				if is_zero (an_atomic_value) then
 					if operator = Fortran_equal_token or else operator = Fortran_less_equal_token then
 						
 						-- Rewrite count(x)=0 as empty(x).
-						
-						an_empty_function ?= function_factory.system_function ("empty")
-						an_empty_function.set_arguments (a_count_function.arguments)
+
+						a_function_library.bind_function (empty_function_fingerprint, a_count_function.arguments, False)
+						an_empty_function ?= a_function_library.last_bound_function
 						an_expression := an_empty_function
 					elseif operator = Fortran_not_equal_token or else operator = Fortran_greater_than_token then
 						
 						-- Rewrite count(x)!=0, count(x)>0 as exists(x)
-						
-						an_exists_function ?= function_factory.system_function ("exists")
-						an_exists_function.set_arguments (a_count_function.arguments)
+
+						a_function_library.bind_function (exists_function_fingerprint, a_count_function.arguments, False)
+						an_exists_function ?= a_function_library.last_bound_function
 						an_expression := an_exists_function
 					elseif operator = Fortran_greater_equal_token then
 						
@@ -313,12 +327,12 @@ feature {NONE} -- Implementation
 						
 						an_integer := an_integer_value.value
 						if operator = Fortran_greater_than_token then an_integer := an_integer + one	end
-						an_exists_function ?= function_factory.system_function ("exists")
 						create new_arguments.make (1)
 						create an_integer_value.make (an_integer)
 						create a_filter_expression.make (a_count_function.arguments.item(1), an_integer_value)
 						new_arguments.put (a_filter_expression, 1)
-						an_exists_function.set_arguments (new_arguments)
+						a_function_library.bind_function (exists_function_fingerprint, new_arguments, False)
+						an_exists_function ?= a_function_library.last_bound_function
 						an_expression := an_exists_function
 						
 					end
@@ -471,6 +485,14 @@ feature {NONE} -- Implementation
 				set_replacement (a_boolean_value)
 			end
 		end
+
+	exists_function_fingerprint, empty_function_fingerprint: INTEGER
+			-- Function fingerprints
+
+invariant
+
+	strictly_positive_exists_function_fingerprint: exists_function_fingerprint > 0
+	strictly_positive_empty_function_fingerprint: empty_function_fingerprint > 0
 
 end
 	

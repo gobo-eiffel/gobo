@@ -26,8 +26,6 @@ inherit
 
 	XM_XPATH_TYPE
 
-	XM_XPATH_SHARED_FUNCTION_FACTORY
-
 	KL_SHARED_STANDARD_FILES
 
 	KL_IMPORTED_STRING_ROUTINES
@@ -38,26 +36,29 @@ creation
 
 feature {NONE} -- Initialization
 
-	make (warnings: BOOLEAN; backwards: BOOLEAN; a_base_uri: UT_URI) is
+	make (warnings: BOOLEAN; backwards: BOOLEAN; a_base_uri: UT_URI; a_function_library: XM_XPATH_FUNCTION_LIBRARY) is
 			-- Establish invariant.
 		require
 			warnings_implies_backwards_compatibility: warnings implies backwards
 			absolute_base_uri: a_base_uri /= Void and then a_base_uri.is_absolute
+			function_library_not_void: a_function_library /= Void
 		local
 			a_code_point_collator: ST_COLLATOR
 		do
 			create collations.make_with_equality_testers (10, Void, string_equality_tester)
 			create variables.make (10)
 			create a_code_point_collator
-			declare_collation ("http://www.w3.org/2003/11/xpath-functions/collation/codepoint", a_code_point_collator, True)
+			declare_collation (Unicode_codepoint_collation_uri, a_code_point_collator, True)
 			clear_namespaces
 			warnings_to_std_error := warnings
 			is_backwards_compatible_mode := backwards
 			base_uri := a_base_uri
+			available_functions := a_function_library
 		ensure
 			warnings_set: warnings_to_std_error = warnings
 			backward_compatibility: is_backwards_compatible_mode = backwards
 			base_uri_set: base_uri = a_base_uri
+			function_library_set: available_functions = a_function_library
 		end
 
 	make_upon_node is
@@ -81,6 +82,8 @@ feature -- Access
 			end
 		end
 
+	available_functions: XM_XPATH_FUNCTION_LIBRARY
+			-- Available functions
 	
 	base_uri: UT_URI
 			-- Base URI
@@ -91,6 +94,13 @@ feature -- Access
 			Result := namespace_index_to_uri_code (Null_prefix_index)
 		end
 
+	
+	default_function_namespace_uri: STRING is
+			-- Namespace for non-prefixed XPath functions
+		do
+			Result := Xpath_standard_functions_uri
+		end
+	
 	namespaces: DS_HASH_TABLE [STRING, STRING]
 			-- Maps prefixes to URIs
 
@@ -268,95 +278,6 @@ feature -- Element change
 			--  along with `is_variable_declared' in a descendant class.
 		end
 
-	bind_function (a_qname: STRING; arguments: DS_ARRAYED_LIST [XM_XPATH_EXPRESSION]) is
-			-- Identify a function appearing in an expression.
-		local
-			an_xml_prefix, a_uri, a_local_name, a_message: STRING
-			a_fingerprint, a_name_code: INTEGER
-			a_splitter: ST_SPLITTER
-			name_parts: DS_LIST [STRING]
-			an_atomic_type: XM_XPATH_ATOMIC_TYPE
-			a_cast_expression: XM_XPATH_CAST_EXPRESSION
-		do
-			debug ("XPath stand-alone context")
-				std.error.put_string ("Binding function: ")
-				std.error.put_string (a_qname)
-				std.error.put_new_line
-			end
-			if is_ncname (a_qname) then
-				bind_system_function (a_qname, arguments)
-			else
-
-				-- The function QName is prefixed, but it still may be a system-function
-
-				create a_splitter.make
-				a_splitter.set_separators (":")
-				name_parts := a_splitter.split (a_qname)
-					check
-						two_name_components: name_parts.count = 2
-					end
-				an_xml_prefix := name_parts.item (1)
-				a_local_name := name_parts.item (2)
-				if is_prefix_declared (an_xml_prefix) then
-					a_uri := uri_for_prefix (an_xml_prefix)
-					if shared_name_pool.is_name_code_allocated (an_xml_prefix, a_uri, a_local_name) then
-						a_name_code := shared_name_pool.name_code (an_xml_prefix, a_uri, a_local_name)
-					else
-						if not shared_name_pool.is_name_pool_full (a_uri, a_local_name) then
-							shared_name_pool.allocate_name (an_xml_prefix, a_uri, a_local_name)
-							a_name_code := shared_name_pool.last_name_code
-						else
-							was_last_function_bound := False
-							set_bind_function_failure_message (STRING_.appended_string ("Name pool has no room to allocate ", a_qname))
-						end
-					end
-					a_fingerprint := a_name_code // bits_20
-					if STRING_.same_string (a_uri, Xpath_functions_uri) then
-						bind_system_function (a_local_name, arguments)
-					else
-
-						-- Look for a constructor function for a built-in type
-						
-						if STRING_.same_string (a_uri, Xml_schema_uri) or else
-							STRING_.same_string (a_uri, Xml_schema_datatypes_uri) or else
-							STRING_.same_string (a_uri, Xpath_defined_datatypes_uri) then
-							
-							-- it's a constructor function: treat it as shorthand for a cast expression
-
-							if arguments.count /= 1 then
-								set_bind_function_failure_message ("A constructor function must have exactly one argument")
-							else
-								an_atomic_type ?= built_in_item_type (a_uri, a_local_name)
-								if an_atomic_type = Void then
-									a_message := STRING_.concat ("Unknown constructor function: ", a_qname)
-									set_bind_function_failure_message (a_message)
-								else
-									create a_cast_expression.make (arguments.item (1), an_atomic_type, False)
-									set_last_bound_function (a_cast_expression)
-								end
-							end
-						end
-						
-						if not was_last_function_bound then
-
-							-- maybe it's a linked-in extension function
-							
-							if function_factory.is_extension_function (a_uri, a_local_name, arguments.count) then
-								set_last_bound_function (function_factory.extension_function (a_uri, a_local_name, arguments.count))
-							else
-								was_last_function_bound := False
-								set_bind_function_failure_message (STRING_.concat ("Could not find a binding for ", a_qname))
-							end
-						end
-					end
-				else
-					was_last_function_bound := False
-					set_bind_function_failure_message (STRING_.appended_string (an_xml_prefix, " is not an in-scope XML prefix."))
-				end
-			end
-		end
-
-
 feature -- Output
 
 	issue_warning (a_warning: STRING) is
@@ -375,27 +296,6 @@ feature {NONE} -- Implementation
 
 	collations: DS_HASH_TABLE [ST_COLLATOR, STRING]
 			-- Named collations
-
-	bind_system_function (a_name: STRING; arguments: DS_ARRAYED_LIST [XM_XPATH_EXPRESSION]) is
-			-- Identify a system function appearing in an expression.
-		require
-			valid_local_name: a_name /= Void and then is_ncname (a_name)
-			arguments_not_void: arguments /= Void
-		local
-			a_function_call: XM_XPATH_FUNCTION_CALL
-		do
-			a_function_call := function_factory.system_function (a_name)
-			if a_function_call = Void then
-				was_last_function_bound := False
-				set_bind_function_failure_message (STRING_.appended_string ("Unknown system function: ", a_name))
-			else
-				was_last_function_bound := True
-				a_function_call.set_arguments (arguments)
-				set_last_bound_function (a_function_call)
-			end
-		ensure
-			function_bound: was_last_function_bound implies last_bound_function /= Void
-		end
 
 	bits_20: INTEGER is 1048576 
 			-- 0x0fffff
@@ -443,5 +343,6 @@ invariant
 	collations: collations /= Void
 	variables: variables /= Void
 	warnings_implies_backwards_compatibility: warnings_to_std_error implies is_backwards_compatible_mode
+	not_restricted: not is_restricted
 
 end

@@ -18,6 +18,8 @@ inherit
 
 	XM_UNICODE_CHARACTERS_1_1
 
+	XM_XPATH_STANDARD_NAMESPACES
+
 	KL_IMPORTED_STRING_ROUTINES
 
 	KL_SHARED_STANDARD_FILES
@@ -48,26 +50,6 @@ feature -- Access
 		ensure
 			variable_not_void: Result /= Void
 		end
-
-	last_bound_function: XM_XPATH_EXPRESSION is
-			-- The last function bound by `bind_function'
-		require
-			bind_function_suceeeded: was_last_function_bound
-		do
-			Result := internal_last_bound_function
-		ensure
-			function_not_void: Result /= Void
-		end
-
-	last_function_binding_failure_message: STRING is
-			-- Error message from `bind_function'
-		require
-			function_not_bound: not was_last_function_bound
-		do
-			Result := internal_last_function_binding_failure_message
-		ensure
-			last_function_binding_failure_message_not_void: Result /= Void
-		end
 		
 	default_element_namespace: INTEGER is
 			-- Default XPath namespace, as a namespace code that can be looked up in `shared_name_pool'
@@ -76,11 +58,22 @@ feature -- Access
 			positive_namespace_code: Result >= 0
 		end
 
+	default_function_namespace_uri: STRING is
+			-- Namespace for non-prefixed XPath functions
+		deferred
+		ensure
+			default_function_namespace_uri_not_void: Result /= Void
+			restricted_means_standard_function_namespace: is_restricted implies
+				String_.same_string (Result, Xpath_standard_functions_uri)
+		end
+	
 	default_collation_name: STRING is
 			-- URI naming the default collation
 		deferred
 		ensure
 			default_collation_name_not_void: Result /= Void
+			restricted_means_unicode_code_point_collation: is_restricted implies
+			String_.same_string (Result, Unicode_codepoint_collation_uri)	
 		end
 
 	collator (a_collation_name: STRING): ST_COLLATOR is
@@ -100,6 +93,12 @@ feature -- Access
 			uri_not_void: Result /= Void
 		end
 
+	available_functions: XM_XPATH_FUNCTION_LIBRARY is
+			-- Available functions
+		deferred
+		ensure
+				available_functions_not_void: Result /= Void
+		end
 	namespace_resolver: XM_XPATH_NAMESPACE_RESOLVER is
 			-- Resolver for lexical QNames
 		deferred
@@ -112,6 +111,9 @@ feature -- Access
 
 feature -- Status report
 
+	is_restricted: BOOLEAN
+			-- Is this a restricted context (for use with xsl:use-when)?
+	
 	is_prefix_declared (an_xml_prefix: STRING): BOOLEAN is
 			-- Is `an_xml_prefix' allocated to a namespace?
 		require
@@ -124,43 +126,22 @@ feature -- Status report
 		require
 			positive_fingerprint: a_fingerprint >= 0
 		deferred
+		ensure
+			not_when_restricted: is_restricted implies Result = False 
 		end
-
-	was_last_function_bound: BOOLEAN
-			-- Did last call to `bind_function' succeed?
 
 	is_backwards_compatible_mode: BOOLEAN is
 			-- Is XPath 1.0 Backwards Compatible Mode used?
 		deferred
+		ensure
+			not_when_restricted: is_restricted implies Result = False 
 		end
 
 	is_data_type_valid (a_fingerprint: INTEGER): BOOLEAN is
 			-- Does `a_fingerprint' represent a data-type in `Current'?
 		deferred
-		end
-
-feature -- Status setting
-
-	set_bind_function_failure_message (a_message: STRING) is
-			-- Set failure message from `bind_function'.
-		require
-			message_not_void: a_message /= Void
-			function_not_bound: not was_last_function_bound
-		do
-			internal_last_function_binding_failure_message := a_message
 		ensure
-			message_set: STRING_.same_string (last_function_binding_failure_message, a_message)
-		end
-
-	set_last_bound_function (an_expression: XM_XPATH_EXPRESSION) is
-			-- Set `last_bound_function'.
-		require
-			expression_not_void: an_expression /= Void
-		do
-			internal_last_bound_function := an_expression
-			was_last_function_bound := True
-		ensure
-			set: last_bound_function = an_expression
+			no_schema_types_when_restricted: is_restricted implies True -- TODO for schema-awareness
 		end
 		
 feature -- Element change
@@ -172,16 +153,6 @@ feature -- Element change
 		deferred
 		ensure
 			variable_bound: last_bound_variable /= Void
-		end
-
-	bind_function (a_qname: STRING; arguments: DS_ARRAYED_LIST [XM_XPATH_EXPRESSION]) is
-			-- Identify a function appearing in an expression.
-		require
-			valid_qname: a_qname /= Void and then is_qname (a_qname)
-			arguments_not_void: arguments /= Void
-		deferred
-		ensure
-			function_bound: was_last_function_bound implies last_bound_function /= Void
 		end
 
 feature -- Output
@@ -197,12 +168,6 @@ feature {NONE} -- Implementation
 
 	internal_last_bound_variable: XM_XPATH_VARIABLE_DECLARATION
 			-- Result of last sucessfull call to  `bind_variable'
-
-	internal_last_bound_function: XM_XPATH_EXPRESSION
-			-- Result of last sucessfull call to  `bind_function'
-
-	internal_last_function_binding_failure_message: STRING
-			-- Failure message from `bind_function'
 
 
 end

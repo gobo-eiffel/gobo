@@ -21,7 +21,7 @@ feature {NONE} -- Initialization
 	make (a_configuration: XM_XSLT_CONFIGURATION; a_rule_manager: XM_XSLT_RULE_MANAGER; a_key_manager: XM_XSLT_KEY_MANAGER;
 			a_decimal_format_manager: XM_XSLT_DECIMAL_FORMAT_MANAGER; a_default_collation_name: STRING;
 			a_collation_map: DS_HASH_TABLE [ST_COLLATOR, STRING]; a_mode: XM_XSLT_MODE; strips_whitespace: BOOLEAN;
-			a_module_list: DS_ARRAYED_LIST [STRING]) is
+			a_module_list: DS_ARRAYED_LIST [STRING]; a_function_library: XM_XPATH_FUNCTION_LIBRARY_MANAGER) is
 			-- Establish invariant.
 		require
 			configuration_not_void: a_configuration /= Void
@@ -31,6 +31,7 @@ feature {NONE} -- Initialization
 			default_collation_name: a_default_collation_name /= Void
 			collation_map: a_collation_map /= Void
 			module_list_not_void: a_module_list /= Void
+			function_library_not_void: a_function_library /= Void
 		do
 			configuration := a_configuration
 			rule_manager := a_rule_manager
@@ -41,6 +42,7 @@ feature {NONE} -- Initialization
 			stripper_rules := a_mode
 			is_strips_whitespace := strips_whitespace
 			module_list := a_module_list
+			function_library := a_function_library
 			create character_map_index.make_default
 		ensure
 			configuration_set: configuration = a_configuration
@@ -52,6 +54,7 @@ feature {NONE} -- Initialization
 			stripper_rules_set: stripper_rules = a_mode
 			strips_whitespace_set: is_strips_whitespace = strips_whitespace
 			module_list_set: module_list = a_module_list
+			function_library_set: function_library = a_function_library
 			slots_not_yet_allocated: not are_slots_allocated
 		end
 
@@ -59,6 +62,9 @@ feature -- Access
 
 	configuration: XM_XSLT_CONFIGURATION
 			-- User configuration options
+
+	function_library: XM_XPATH_FUNCTION_LIBRARY_MANAGER
+			-- Function library
 
 	rule_manager: XM_XSLT_RULE_MANAGER
 			-- Manager of template-matching rules
@@ -133,6 +139,16 @@ feature -- Creation
 		
 feature -- Element change
 
+	set_function_library (a_function_library: XM_XPATH_FUNCTION_LIBRARY_MANAGER) is
+			-- Set the function library.
+		require
+			function_library_not_void: a_function_library /= Void
+		do
+			function_library := a_function_library
+		ensure
+			function_library_set: function_library = a_function_library
+		end
+
 	set_named_template_table (a_compiled_templates_index: DS_HASH_TABLE [XM_XSLT_COMPILED_TEMPLATE, INTEGER]) is
 			-- Set map of compiled templates.
 		require
@@ -205,6 +221,7 @@ invariant
 	collation_map: collation_map /= Void
 	module_list_not_void: module_list /= Void
 	character_map_index_not_void: character_map_index /= Void
+	function_library_not_void: function_library /= Void
 
 end
 	

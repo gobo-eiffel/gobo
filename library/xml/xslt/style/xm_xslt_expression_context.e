@@ -23,8 +23,6 @@ inherit
 
 	XM_XPATH_TYPE
 
-	XM_XPATH_SHARED_FUNCTION_FACTORY
-
 	XM_XPATH_NAME_UTILITIES
 
 	XM_XPATH_ERROR_TYPES
@@ -63,6 +61,12 @@ feature -- Access
 			style_sheet_not_void: Result /= Void
 		end
 
+	available_functions: XM_XPATH_FUNCTION_LIBRARY is
+			-- Available functions
+		do
+			Result := style_sheet.function_library
+		end
+
 	host_language: STRING is
 			-- Name of host language
 		do
@@ -78,6 +82,15 @@ feature -- Access
 			Result := style_element.default_xpath_namespace_code
 		end
 
+	
+	default_function_namespace_uri: STRING is
+			-- Namespace for non-prefixed XPath functions
+		do
+			--if is_restricted then
+			Result := Xpath_standard_functions_uri
+			--			end
+		end
+	
 	default_collation_name: STRING
 			-- URI naming the default collation
 
@@ -184,119 +197,6 @@ feature -- Element change
 			style_element.bind_variable (a_fingerprint)
 		end
 
-	bind_function (a_qname: STRING; arguments: DS_ARRAYED_LIST [XM_XPATH_EXPRESSION]) is
-			-- Identify a function appearing in an expression.
-			-- Following XSLT rules, this routine doesn't throw a static error
-			--  if no function with the given name exists, unless the name is unprefixed.
-			-- Rather, it returns an error expression that will fail at run-time if
-			--  the function is actually called.
-		local
-			an_xml_prefix, a_uri, a_local_name, a_message: STRING
-			a_splitter: ST_SPLITTER
-			name_parts: DS_LIST [STRING]
-			is_debugging: BOOLEAN
-			a_stylesheet_function: XM_XSLT_FUNCTION
-			a_fingerprint: INTEGER
-			an_error_expression: XM_XPATH_INVALID_VALUE
-			an_error_value: XM_XPATH_ERROR_VALUE
-			a_user_function: XM_XSLT_USER_FUNCTION_CALL
-			an_atomic_type: XM_XPATH_ATOMIC_TYPE
-			a_cast_expression: XM_XPATH_CAST_EXPRESSION
-		do
-			was_last_function_bound := False
-			create a_splitter.make
-			a_splitter.set_separators (":")
-			name_parts := a_splitter.split (a_qname)
-			if name_parts.count = 2 then
-				an_xml_prefix := name_parts.item (1)
-				a_local_name := name_parts.item (2)
-			else
-				an_xml_prefix := ""
-				a_local_name := name_parts.item (1)
-			end
-			if STRING_.same_string (an_xml_prefix, "") then
-				a_uri :=  Xpath_functions_uri
-			else
-				a_uri := uri_for_prefix (an_xml_prefix)
-			end
-			if STRING_.same_string (a_uri, Xpath_functions_uri) then
-				bind_system_function (a_local_name, arguments)
-			else
-				is_debugging := style_element.stylesheet_compiler.configuration.is_trace_external_functions
-				if is_debugging then
-					std.error.put_string ("Resolving external function call to " + a_qname + "%N")
-				end
-				if not shared_name_pool.is_name_code_allocated (an_xml_prefix, a_uri, a_local_name) then
-					shared_name_pool.allocate_name (an_xml_prefix, a_uri, a_local_name)
-					a_fingerprint := fingerprint_from_name_code (shared_name_pool.last_name_code)
-				else
-					a_fingerprint := fingerprint_from_name_code (shared_name_pool.name_code (an_xml_prefix, a_uri, a_local_name))
-				end
-
-				-- First see if there is a stylesheet function with override=yes
-
-				a_stylesheet_function := style_element.stylesheet_function (a_fingerprint, arguments.count)
-				if a_stylesheet_function /= Void and then a_stylesheet_function.is_overriding then
-					if is_debugging then
-						std.error.put_string ("Found a stylesheet function with override='yes'%N")
-					end
-					create a_user_function.make (a_fingerprint, arguments)
-					set_last_bound_function (a_user_function)
-					a_stylesheet_function.register_reference (a_user_function)
-				else
-
-					-- Look for a constructor function for a built-in type
-
-					if STRING_.same_string (a_uri, Xml_schema_uri) or else
-						STRING_.same_string (a_uri, Xml_schema_datatypes_uri) or else
-						STRING_.same_string (a_uri, Xpath_defined_datatypes_uri) then
-						
-						-- it's a constructor function: treat it as shorthand for a cast expression
-
-						if arguments.count /= 1 then
-							set_bind_function_failure_message ("A constructor function must have exactly one argument")
-						else
-							an_atomic_type ?= built_in_item_type (a_uri, a_local_name)
-							if an_atomic_type = Void then
-								a_message := STRING_.concat ("Unknown constructor function: ", a_qname)
-								set_bind_function_failure_message (a_message)
-							else
-								create a_cast_expression.make (arguments.item (1), an_atomic_type, False)
-								set_last_bound_function (a_cast_expression)
-							end
-						end
-					end
-
-					if not was_last_function_bound then
-
-						-- maybe it's a linked-in extension function
-
-						if function_factory.is_extension_function (a_uri, a_local_name, arguments.count) then
-							set_last_bound_function (function_factory.extension_function (a_uri, a_local_name, arguments.count))
-						end
-					end
-					if not  was_last_function_bound then
-						
-						-- Finally, see if there is a stylesheet function with override=no
-
-						if a_stylesheet_function /= Void then
-							if is_debugging then
-								std.error.put_string ("Found a stylesheet function with override='no'%N")
-							end
-							create a_user_function.make (a_fingerprint, arguments)
-							set_last_bound_function (a_user_function)
-							a_stylesheet_function.register_reference (a_user_function)
-						else
-							a_message := STRING_.concat ("No function found matching ", a_qname)
-							a_message := STRING_.appended_string (a_message, " with ")
-							a_message := STRING_.appended_string (a_message, displayed_argument_count (arguments.count))
-							set_bind_function_failure_message (a_message)
-						end
-					end
-				end
-			end
-		end
-
 feature -- Output
 
 	issue_warning (a_warning: STRING) is
@@ -306,32 +206,14 @@ feature -- Output
 		end
 
 feature {NONE} -- Implementation
-	
+
+	internal_default_function_namespace_uri: STRING
+			-- Namespace for non-prefixed XPath functions
+
 	code_point_collator: ST_COLLATOR is
 			-- Unicode code-point collator
 		once
 			create Result
-		end
-
-	bind_system_function (a_name: STRING; arguments: DS_ARRAYED_LIST [XM_XPATH_EXPRESSION]) is
-			-- Identify a system function appearing in an expression.
-		require
-			valid_local_name: a_name /= Void and then is_ncname (a_name)
-			arguments_not_void: arguments /= Void
-		local
-			a_function_call: XM_XPATH_FUNCTION_CALL
-		do
-			a_function_call := function_factory.system_function (a_name)
-			if a_function_call = Void then
-				was_last_function_bound := False
-				set_bind_function_failure_message (STRING_.appended_string ("Unknown system function: ", a_name))
-			else
-				was_last_function_bound := True
-				a_function_call.set_arguments (arguments)
-				set_last_bound_function (a_function_call)
-			end
-		ensure
-			function_bound: was_last_function_bound implies last_bound_function /= Void
 		end
 
 	displayed_argument_count (a_count: INTEGER): STRING is

@@ -94,7 +94,10 @@ feature -- Access
 
 	stripper_rules: XM_XSLT_MODE
 			-- Strip/preserve whitespace rules
-	
+
+	function_library: XM_XPATH_FUNCTION_LIBRARY_MANAGER
+			-- Function libraries in use (only if this is the principal stylesheet module)
+
 	precedence: INTEGER is
 			-- Import precedence of `Current'
 		do
@@ -475,15 +478,39 @@ feature -- Element change
 			attributes_prepared := True
 		end
 
-	set_stylesheet_compiler (a_stylesheet_compiler: like stylesheet_compiler) is
+	set_stylesheet_compiler (a_stylesheet_compiler: like stylesheet_compiler; a_configuration: XM_XSLT_CONFIGURATION) is
 			-- Set `stylesheet_compiler'.
 		require
 			stylesheet_compiler_not_void: a_stylesheet_compiler /= Void
+			configuration_not_void: a_configuration /= Void
+		local
+			a_function_library: XM_XPATH_FUNCTION_LIBRARY
+			a_cursor: DS_ARRAYED_LIST_CURSOR [XM_XPATH_FUNCTION_LIBRARY]
 		do
 			stylesheet_compiler := a_stylesheet_compiler
 			create rule_manager.make
+			create function_library.make
+			create {XM_XSLT_SYSTEM_FUNCTION_LIBRARY} a_function_library.make
+			function_library.add_function_library (a_function_library)
+			create {XM_XPATH_CONSTRUCTOR_FUNCTION_LIBRARY} a_function_library.make
+			function_library.add_function_library (a_function_library)
+			create {XM_XSLT_STYLESHEET_FUNCTION_LIBRARY} a_function_library.make (Current, True)
+			function_library.add_function_library (a_function_library)
+			from
+				a_cursor := a_configuration.extension_functions.new_cursor; a_cursor.start
+			variant
+				a_configuration.extension_functions.count + 1 - a_cursor.index
+			until
+				a_cursor.after
+			loop
+				function_library.add_function_library (a_cursor.item)
+				a_cursor.forth
+			end
+			create {XM_XSLT_STYLESHEET_FUNCTION_LIBRARY} a_function_library.make (Current, False)
+			function_library.add_function_library (a_function_library)
 		ensure
 			stylesheet_compiler_set: stylesheet_compiler = a_stylesheet_compiler
+			function_library_not_void: function_library /= Void
 		end
 
 	preprocess is
@@ -689,17 +716,22 @@ feature -- Element change
 			post_validate: post_validated
 		local
 			a_cursor: DS_BILINKED_LIST_CURSOR [XM_XSLT_STYLE_ELEMENT]
+			another_cursor: DS_HASH_TABLE_CURSOR [XM_XSLT_TEMPLATE, INTEGER]
+			a_third_cursor: DS_ARRAYED_LIST_CURSOR [XM_XPATH_FUNCTION_LIBRARY]
 			an_instruction: XM_XSLT_INSTRUCTION
 			a_compiled_templates_index: DS_HASH_TABLE [XM_XSLT_COMPILED_TEMPLATE, INTEGER]
-			another_cursor: DS_HASH_TABLE_CURSOR [XM_XSLT_TEMPLATE, INTEGER]
 			a_property_set: XM_XSLT_OUTPUT_PROPERTIES
 			a_message, a_system_id: STRING
 			a_character_map_index: DS_HASH_TABLE [DS_HASH_TABLE [STRING, INTEGER], INTEGER]
 			a_character_map: XM_XSLT_CHARACTER_MAP
 			a_character_code_map: DS_HASH_TABLE [STRING, INTEGER]
 			a_fingerprint: INTEGER
+			a_function: XM_XSLT_FUNCTION
+			a_function_library: XM_XPATH_FUNCTION_LIBRARY
 		do
-			create last_compiled_executable.make (a_configuration, rule_manager, key_manager, decimal_format_manager, default_collation_name, collation_map, stripper_rules, strips_whitespace, module_list)
+						
+			create last_compiled_executable.make (a_configuration, rule_manager, key_manager, decimal_format_manager, default_collation_name,
+			collation_map, stripper_rules, strips_whitespace, module_list, function_library)
 
 			-- Call compile method for each top-level object in the stylesheet
 
@@ -766,6 +798,47 @@ feature -- Element change
 					end
 					a_cursor.forth
 				end
+
+				-- Build the run-time function library
+
+				create function_library.make
+				create {XM_XSLT_SYSTEM_FUNCTION_LIBRARY} a_function_library.make
+				function_library.add_function_library (a_function_library)
+				create {XM_XPATH_CONSTRUCTOR_FUNCTION_LIBRARY} a_function_library.make
+				function_library.add_function_library (a_function_library)
+				create overriding_runtime_library.make
+				function_library.add_function_library (overriding_runtime_library)
+				from
+					a_third_cursor := a_configuration.extension_functions.new_cursor; a_third_cursor.start
+				variant
+					a_configuration.extension_functions.count + 1 - a_third_cursor.index
+				until
+					a_third_cursor.after
+				loop
+					function_library.add_function_library (a_third_cursor.item)
+					a_third_cursor.forth
+				end
+				create non_overriding_runtime_library.make
+				function_library.add_function_library (non_overriding_runtime_library)
+
+				from
+					a_cursor := top_level_elements.new_cursor; a_cursor.start
+				variant
+					top_level_elements.count + 1 - a_cursor.index
+				until
+					a_cursor.after
+				loop
+					a_function ?= a_cursor.item
+					if a_function /= Void then
+						if a_function.is_overriding then
+							overriding_runtime_library.add_function (a_function)
+						else
+							non_overriding_runtime_library.add_function (a_function)
+						end
+					end
+					a_cursor.forth
+				end
+				last_compiled_executable.set_function_library (function_library)
 			end
 		end
 
@@ -795,6 +868,12 @@ feature {XM_XSLT_STYLE_ELEMENT} -- Local
 		end
 	
 feature {NONE} -- Implementation
+
+	overriding_runtime_library: XM_XSLT_RUNTIME_FUNCTION_LIBRARY
+			-- Compiled xsl:functions with override="yes" (or omitted)
+
+	non_overriding_runtime_library: XM_XSLT_RUNTIME_FUNCTION_LIBRARY
+			-- Compiled xsl:functions with override="no"
 
 	named_templates_index: DS_HASH_TABLE [XM_XSLT_TEMPLATE, INTEGER]
 			-- Index of named templates by `template_fingerprint'

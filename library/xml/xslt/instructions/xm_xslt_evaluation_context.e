@@ -48,6 +48,12 @@ feature -- Access
 	last_parsed_document: XM_XPATH_DOCUMENT
 			-- Result from last call to `build_document'
 
+	available_functions: XM_XPATH_FUNCTION_LIBRARY is
+			-- Available functions
+		do
+			Result := transformer.executable.function_library
+		end
+
 	available_documents: XM_XPATH_DOCUMENT_POOL is
 			-- Available documents
 		do

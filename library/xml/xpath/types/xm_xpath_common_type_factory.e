@@ -363,6 +363,21 @@ feature {NONE} -- Implementation
 			local_name: local_names.has (a_fingerprint) and then STRING_.same_string (local_names.item (a_fingerprint), a_local_name)
 		end
 
+	bind_fn_name (a_fingerprint: INTEGER; a_local_name: STRING) is
+			-- Bind `a_local_name' to `a_fingerprint' in the XPath functionss namespace.
+		require
+			local_name_not_void: a_local_name /= void and then a_local_name.count > 0
+			system_fingerprint: is_built_in_fingerprint (a_fingerprint)
+			name_not_bound: not fingerprint_map.has (expanded_qname (Xpath_standard_functions_uri, a_local_name))
+			local_name_not_mapped: not local_names.has (a_fingerprint)
+		do
+			fingerprint_map.put (a_fingerprint, expanded_qname (Xpath_standard_functions_uri, a_local_name))
+			local_names.put (a_local_name, a_fingerprint)
+		ensure
+			name_bound: fingerprint_map.has (expanded_qname (Xpath_standard_functions_uri, a_local_name)) and then fingerprint_map.item (expanded_qname (Xpath_standard_functions_uri, a_local_name)) = a_fingerprint
+			local_name: local_names.has (a_fingerprint) and then STRING_.same_string (local_names.item (a_fingerprint), a_local_name)
+		end
+
 	bind_gexslt_name (a_fingerprint: INTEGER; a_local_name: STRING) is
 			-- Bind `a_local_name' to `a_fingerprint' in the gexslt extensions namespace.
 		require
@@ -448,6 +463,7 @@ feature {NONE} -- Implementation
 			bind_xml_names
 			bind_xsi_names
 			bind_xdt_names
+			bind_fn_names
 			bind_gexslt_names
 			bind_xml_schema_names
 		end
@@ -472,6 +488,134 @@ feature {NONE} -- Implementation
 			bind_xdt_name (Day_time_duration_type_code, "dayTimeDuration")
 		end
 
+	bind_fn_names is
+			-- Bind names in the XPath functions namespace to their fingerprints.
+		do
+			bind_fn_name (Abs_function_type_code, "abs")
+			bind_fn_name (Adjust_date_to_timezone_function_type_code, "adjust-date-to-timezone")
+			bind_fn_name (Adjust_datetime_to_timezone_function_type_code, "adjust-dateTime-to-timezone")
+			bind_fn_name (Adjust_time_to_timezone_function_type_code, "adjust-time-to-timezone")
+			bind_fn_name (Avg_function_type_code, "avg")
+			bind_fn_name (Base_uri_function_type_code, "base-uri")
+			bind_fn_name (Boolean_function_type_code, "boolean")
+			bind_fn_name (Ceiling_function_type_code, "ceiling")
+			bind_fn_name (Codepoints_to_string_function_type_code, "codepoints-to-string")
+			bind_fn_name (Collection_function_type_code, "collection")
+			bind_fn_name (Compare_function_type_code, "compare")
+			bind_fn_name (Concat_function_type_code, "concat")
+			bind_fn_name (Contains_function_type_code, "contains")
+			bind_fn_name (Count_function_type_code, "count")
+			bind_fn_name (Current_date_function_type_code, "current-date")
+			bind_fn_name (Current_datetime_function_type_code, "current-dateTime")
+			bind_fn_name (Current_time_function_type_code, "current-time")
+			bind_fn_name (Data_function_type_code, "data")
+			bind_fn_name (Datetime_function_type_code, "dateTime")
+			bind_fn_name (Day_from_date_function_type_code, "day-from-date")
+			bind_fn_name (Day_from_datetime_function_type_code, "day-from-dateTime")
+			bind_fn_name (Days_from_duration_function_type_code, "days-from-duration")
+			bind_fn_name (Deep_equal_function_type_code, "deep-equal")
+			bind_fn_name (Default_collation_function_type_code, "default-collation")
+			bind_fn_name (Distinct_values_function_type_code, "distinct-values")
+			bind_fn_name (Doc_function_type_code, "doc")
+			bind_fn_name (Document_uri_function_type_code, "document-uri")
+			bind_fn_name (Empty_function_type_code, "empty")
+			bind_fn_name (Ends_with_function_type_code, "ends-with")
+			bind_fn_name (Error_function_type_code, "error")
+			bind_fn_name (Escape_uri_function_type_code, "escape-uri")
+			bind_fn_name (Exactly_one_function_type_code, "exactly-one")
+			bind_fn_name (Exists_function_type_code, "exists")
+			bind_fn_name (False_function_type_code, "false")
+			bind_fn_name (Floor_function_type_code, "floor")
+			bind_fn_name (Hours_from_datetime_function_type_code, "hours-from-dateTime")
+			bind_fn_name (Hours_from_time_function_type_code, "hours-from-time")
+			bind_fn_name (Hours_from_duration_function_type_code, "hours-from-duration")
+			bind_fn_name (Id_function_type_code, "id")
+			bind_fn_name (Idref_function_type_code, "idref")
+			bind_fn_name (Implicit_timezone_function_type_code, "implicit-timezone")
+			bind_fn_name (In_scope_prefixes_function_type_code, "in-scope-prefixes")
+			bind_fn_name (Index_of_function_type_code, "index-of")
+			bind_fn_name (Insert_before_function_type_code, "insert-before")
+			bind_fn_name (Lang_function_type_code, "lang")
+			bind_fn_name (Last_function_type_code, "last")
+			bind_fn_name (Local_name_function_type_code, "local-name")
+			bind_fn_name (Local_name_from_qname_function_type_code, "local-name-from-QName")
+			bind_fn_name (Lower_case_function_type_code, "lower-case")
+			bind_fn_name (Matches_function_type_code, "matches")
+			bind_fn_name (Max_function_type_code, "max")
+			bind_fn_name (Min_function_type_code, "min")
+			bind_fn_name (Minutes_from_datetime_function_type_code, "minutes-from-dateTime")
+			bind_fn_name (Minutes_from_duration_function_type_code, "minutes-from-duration")
+			bind_fn_name (Minutes_from_time_function_type_code, "minutes-from-time")
+			bind_fn_name (Month_from_date_function_type_code, "month-from-date")
+			bind_fn_name (Month_from_datetime_function_type_code, "month-from-dateTime")
+			bind_fn_name (Month_from_duration_function_type_code, "month-from-duration")
+			bind_fn_name (Name_function_type_code, "name")
+			bind_fn_name (Namespace_uri_function_type_code, "namespace-uri")
+			bind_fn_name (Namespace_uri_for_prefix_function_type_code, "namespace-uri-for-prefix")
+			bind_fn_name (Namespace_uri_from_qname_function_type_code, "namespace-uri-from-QName")
+			bind_fn_name (Nilled_function_type_code, "nilled")
+			bind_fn_name (Node_name_function_type_code, "node-name")
+			bind_fn_name (Normalize_space_function_type_code, "normalize-space")
+			bind_fn_name (Normalize_unicode_function_type_code, "normalize-unicode")
+			bind_fn_name (Not_function_type_code, "not")
+			bind_fn_name (Number_function_type_code, "number")
+			bind_fn_name (One_or_more_function_type_code, "one-or-more")
+			bind_fn_name (Position_function_type_code, "position")
+			bind_fn_name (Qname_function_type_code, "QName")
+			bind_fn_name (Remove_function_type_code, "remove")
+			bind_fn_name (Replace_function_type_code, "replace")
+			bind_fn_name (Resolve_qname_function_type_code, "resolve-QName")
+			bind_fn_name (Resolve_uri_function_type_code, "resolve-uri")
+			bind_fn_name (Reverse_function_type_code, "reverse")
+			bind_fn_name (Root_function_type_code, "root")
+			bind_fn_name (Round_function_type_code, "round")
+			bind_fn_name (Round_half_to_even_function_type_code, "round-half-to-even")
+			bind_fn_name (Seconds_from_datetime_function_type_code, "seconds-from-dateTime")
+			bind_fn_name (Seconds_from_duration_function_type_code, "seconds-from-duration")
+			bind_fn_name (Seconds_from_time_function_type_code, "seconds-from-time")
+			bind_fn_name (Starts_with_function_type_code, "starts-with")
+			bind_fn_name (Static_base_uri_function_type_code, "static-base-uri")
+			bind_fn_name (String_function_type_code, "string")
+			bind_fn_name (String_join_function_type_code, "string-join")
+			bind_fn_name (String_length_function_type_code, "string-length")
+			bind_fn_name (String_to_codepoints_function_type_code, "string-to-codepoints")
+			bind_fn_name (Subsequence_function_type_code, "subsequence")
+			bind_fn_name (Substring_function_type_code, "substring")
+			bind_fn_name (Substring_after_function_type_code, "substring-after")
+			bind_fn_name (Substring_before_function_type_code, "substring-before")
+			bind_fn_name (Sum_function_type_code, "sum")
+			bind_fn_name (Timezone_from_date_function_type_code, "timezone-from-date")
+			bind_fn_name (Timezone_from_datetime_function_type_code, "timezone-from-dateTime")
+			bind_fn_name (Timezone_from_time_function_type_code, "timezone-from-time")
+			bind_fn_name (Tokenize_function_type_code, "tokenize")
+			bind_fn_name (Trace_function_type_code, "trace")
+			bind_fn_name (Translate_function_type_code, "translate")
+			bind_fn_name (True_function_type_code, "true")
+			bind_fn_name (Unordered_function_type_code, "unordered")
+			bind_fn_name (Upper_case_function_type_code, "upper-case")
+			bind_fn_name (Year_from_date_function_type_code, "year-from-date")
+			bind_fn_name (Year_from_datetime_function_type_code, "year-from-dateTime")
+			bind_fn_name (Years_from_duration_function_type_code, "years-from-duration")
+			bind_fn_name (Zero_or_one_function_type_code, "zero-or-one")
+			bind_fn_name (Current_function_type_code, "current")
+			bind_fn_name (Current_group_function_type_code, "current-group")
+			bind_fn_name (Current_grouping_key_function_type_code, "current-grouping-key")
+			bind_fn_name (Document_function_type_code, "document")
+			bind_fn_name (Element_available_function_type_code, "element-available")
+			bind_fn_name (Format_date_function_type_code, "format-date")
+			bind_fn_name (Format_datetime_function_type_code, "format-dateTime")
+			bind_fn_name (Format_time_function_type_code, "format-time")
+			bind_fn_name (Format_number_function_type_code, "format-number")
+			bind_fn_name (Function_available_function_type_code, "function-available")
+			bind_fn_name (Generate_id_function_type_code, "generate-id")
+			bind_fn_name (Key_function_type_code, "key")
+			bind_fn_name (Regex_group_function_type_code, "regex-group")
+			bind_fn_name (System_property_function_type_code, "system-property")
+			bind_fn_name (Unparsed_entity_public_id_function_type_code, "unparsed-enitiy-public-id")
+			bind_fn_name (Unparsed_entity_uri_function_type_code, "unparsed-entity-uri")
+			bind_fn_name (Unparsed_text_function_type_code, "unparsed-text")
+		end
+	
 	bind_xsi_names is
 			-- Bind names in the XML Shcema Instance namespace to their fingerprints.
 		do

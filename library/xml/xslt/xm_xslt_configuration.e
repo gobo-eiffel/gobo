@@ -28,8 +28,6 @@ inherit
 
 	MA_DECIMAL_CONSTANTS
 
-	XM_XPATH_SHARED_FUNCTION_FACTORY
-
 creation
 
 	make, make_with_defaults
@@ -48,11 +46,7 @@ feature {NONE} -- Initialization
 			output_resolver_not_void: an_output_resolver /= Void
 			error_listener_not_void: an_error_listener /= Void
 			encoder_factory_not_void: 	an_encoder_factory /= Void
-		local
-			a_system_function_factory: XM_XSLT_SYSTEM_FUNCTION_FACTORY
 		do
-			create a_system_function_factory
-			function_factory.register_system_function_factory (a_system_function_factory)
 			encoder_factory := an_encoder_factory
 			set_string_mode_mixed
 			recovery_policy := Recover_with_warnings
@@ -65,6 +59,7 @@ feature {NONE} -- Initialization
 			end
 			shared_decimal_context.set_digits (18)
 			saved_base_uri := entity_resolver.uri
+			create extension_functions.make_default
 		ensure
 			entity_resolver_set: entity_resolver = an_entity_resolver
 			uri_resolver_set: uri_resolver = a_uri_resolver
@@ -120,6 +115,9 @@ feature -- Access
 	recovery_policy: INTEGER
 			-- Recovery policy when warnings or errors are encountered
 
+	extension_functions: DS_ARRAYED_LIST [XM_XPATH_FUNCTION_LIBRARY]
+			-- Libraries of extension functions
+
 	is_tracing: BOOLEAN is
 			-- Is tracing enabled?
 		do
@@ -139,6 +137,16 @@ feature -- Access
 		end
 
 feature -- Element change
+
+	add_extension_function_library (a_function_library: XM_XPATH_FUNCTION_LIBRARY) is
+			-- Add an extension-function library.
+		require
+			function_library_not_void: a_function_library /= Void
+		do
+			extension_functions.force_last (a_function_library)
+		ensure
+			library_added: extension_functions.last = a_function_library
+		end
 
 	reset_entity_resolver is
 			-- Reset `entity_resolver' stack to initial condition.
@@ -285,5 +293,6 @@ invariant
 	error_reporter_not_void: error_reporter /= Void
 	encoder_factory_not_void: encoder_factory /= Void
 	recovery_policy: recovery_policy >= Recover_silently and then recovery_policy <= Do_not_recover
+	extension_functions_not_void: extension_functions /= Void
 
 end

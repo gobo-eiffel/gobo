@@ -49,11 +49,19 @@ feature -- Access
 	reserved_slot_count: INTEGER
 			-- Slots reserved by host language
 
+	available_functions: XM_XPATH_FUNCTION_LIBRARY is
+			-- Available functions
+		deferred
+		ensure
+			available_functions_not_void: Result /= Void
+		end
+
 	available_documents: XM_XPATH_DOCUMENT_POOL is
 			-- Available documents
 		deferred
 		ensure
-			available_documents_not_void: available_documents /= Void
+			available_documents_not_void: not is_restricted implies Result /= Void
+			restricted_implies_none_available: is_restricted implies Result = Void
 		end
 			
 	current_date_time: DT_DATE_TIME is
@@ -69,6 +77,8 @@ feature -- Access
 				if current_iterator.before then current_iterator.start end
 				Result := current_iterator.item
 			end
+		ensure
+			restricted_implies_undefined: is_restricted implies Result = Void
 		end
 
 	context_position: INTEGER is
@@ -80,6 +90,7 @@ feature -- Access
 			 if not current_iterator.is_error then Result := current_iterator.index end
 		ensure
 			positive_result: Result >= 0 -- But it is a Dynamic error, XP0002, if Result = 0
+			restricted_implies_undefined: is_restricted implies Result = Void
 		end
 
 	last: INTEGER is
@@ -105,6 +116,7 @@ feature -- Access
 			Result := cached_last
 		ensure
 			positive_size: Result >= 0
+			restricted_implies_undefined: is_restricted implies Result = Void
 		end
 
 	default_collation: ST_COLLATOR is
@@ -144,10 +156,15 @@ feature -- Access
 	
 feature -- Status report
 
+	is_restricted: BOOLEAN
+			-- Is this a restricted context (for use with xsl:use-when)?
+	
 	is_context_position_set: BOOLEAN is
 			-- Is the context position available?
 		do
 			Result := current_iterator /= Void
+		ensure
+			restricted_implies_false: is_restricted implies Result = False
 		end
 
 	is_valid_local_variable (a_slot_number: INTEGER): BOOLEAN is
@@ -241,6 +258,7 @@ invariant
 
 	reserved_slots: reserved_slot_count >= 0
 	local_variables_frame: local_variable_frame /= Void and then local_variable_frame.count - reserved_slot_count >= 0
+	no_context_position_for_restricted_contexts: is_restricted implies current_iterator = Void
 
 end
 

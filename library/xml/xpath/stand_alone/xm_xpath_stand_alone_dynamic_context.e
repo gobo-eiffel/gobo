@@ -26,7 +26,7 @@ creation
 
 feature {NONE} -- Initialization
 
-	make (a_context_item: XM_XPATH_ITEM; a_document_pool: like available_documents) is
+	make (a_context_item: XM_XPATH_ITEM; a_document_pool: like available_documents; a_function_library: like available_functions) is
 			-- Establish invariant.
 		require
 			context_item_not_void: a_context_item /= Void
@@ -36,6 +36,7 @@ feature {NONE} -- Initialization
 		do
 			make_dynamic_context (a_context_item)
 			available_documents := a_document_pool
+			available_functions := a_function_library
 			create uri_resolver.make
 			create a_file_resolver.make
 			uri_resolver.register_scheme (a_file_resolver)
@@ -43,9 +44,13 @@ feature {NONE} -- Initialization
 			reserved_slot_count_zero: reserved_slot_count = 0
 			context_item_set: current_iterator /= Void and then current_iterator.item = a_context_item
 			available_documents_set: available_documents = a_document_pool
+			available_functions_set: available_functions = a_function_library
 		end
 
 feature -- Access
+
+	available_functions: XM_XPATH_FUNCTION_LIBRARY
+			-- Available functions
 
 	available_documents: XM_XPATH_DOCUMENT_POOL
 			-- Available documents
@@ -108,5 +113,9 @@ feature {NONE} -- Implementation
 			error_set: last_build_error = a_message
 			is_build_document_error: is_build_document_error
 		end
+
+invariant
+
+	not_restricted: not is_restricted
 
 end
