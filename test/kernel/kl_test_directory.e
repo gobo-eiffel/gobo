@@ -16,6 +16,7 @@ inherit
 
 	KL_TEST_CASE
 	KL_SHARED_EXECUTION_ENVIRONMENT
+	KL_IMPORTED_STRING_ROUTINES
 
 feature -- Test
 
@@ -227,9 +228,9 @@ feature -- Test
 					if not a_directory.end_of_input then
 						an_entry := a_directory.last_entry
 						if
-							not an_entry.is_equal (cvs_dir) and
-							not an_entry.is_equal (file_system.relative_current_directory) and
-							not an_entry.is_equal (file_system.relative_parent_directory)
+							not STRING_.same_string (an_entry, cvs_dir) and
+							not STRING_.same_string (an_entry, file_system.relative_current_directory) and
+							not STRING_.same_string (an_entry, file_system.relative_parent_directory)
 						then
 							filenames.force_last (an_entry)
 						end
@@ -276,9 +277,9 @@ feature -- Test
 					if not a_directory.end_of_input then
 						an_entry := a_directory.last_entry
 						if
-							not an_entry.is_equal (cvs_dir) and
-							not an_entry.is_equal (file_system.relative_current_directory) and
-							not an_entry.is_equal (file_system.relative_parent_directory)
+							not STRING_.same_string (an_entry, cvs_dir) and
+							not STRING_.same_string (an_entry, file_system.relative_current_directory) and
+							not STRING_.same_string (an_entry, file_system.relative_parent_directory)
 						then
 							filenames.force_last (an_entry)
 						end
