@@ -21,7 +21,7 @@ Version ?
 	gexace:
 
 	* Removed support for 'hact'.
-	* Added support VE 5.0: 've' now generates Xace files for VE 5.0.
+	* Added support for VE 5.0: 've' now generates Xace files for VE 5.0.
 	  In order to generate ESD for VE 4.1 use 've41' instead.
 
 	gelex:
@@ -44,7 +44,7 @@ Version ?
 	* Added command-line options '--verbose' and '-v' to run 
 	  getest in verbose mode.
 	* In verbose mode getest prints the number of test cases
-	  that have been generated,
+	  that have been generated.
 
 	Gobo Eiffel XML Library:
 
