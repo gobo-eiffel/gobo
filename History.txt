@@ -2,6 +2,8 @@ Version 3.2 - ?
 
 	geant:
 
+	* Element <fileset> uses a new format. The old format is
+	  still working but an obsolete-message will be shown when applied.
 	* Added optional attribute 'export' which takes a comma separated
 	  list of project names to which the given target is exported.
 	* Added new command-line option -t (--targets) to list targets
