@@ -12,6 +12,13 @@ indexing
 
 class XM_NAMESPACE_RESOLVER_CONTEXT
 
+inherit
+
+	ANY
+
+	UC_UNICODE_FACTORY
+		export {NONE} all end
+
 creation
 
 	make
@@ -136,15 +143,15 @@ feature -- Stack
 feature {NONE} -- Constants
 
 	Default_pseudo_prefix: UC_STRING is
-			-- Default pseduo prefix
+			-- Default pseudo prefix
 		once
-			!! Result.make (0)
+			Result := new_unicode_string ("")
 		end
 
 	Default_namespace: UC_STRING is
 			-- Default namespace (empty)
 		once
-			!! Result.make (0)
+			Result := new_unicode_string ("")
 		end
 
 end

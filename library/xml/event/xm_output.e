@@ -12,13 +12,20 @@ indexing
 
 class XM_OUTPUT
 
+inherit
+
+	KL_SHARED_STANDARD_FILES
+
+	UC_UNICODE_FACTORY
+		export {NONE} all end
+
 feature -- Output
 
 	set_output_to_string is
 			-- Set output to new string.
 		do
 			-- UC_STRING because of concatenation
-			!UC_STRING! last_output.make (0)
+			last_output := new_unicode_string ("")
 		ensure
 			last_output: last_output /= Void
 			last_output_empty: last_output.count = 0
@@ -33,7 +40,7 @@ feature -- Output
 	set_output_string (a: like last_output) is
 			-- Set output to given string.
 		require
-			not_void: a /= Void
+			a_not_void: a /= Void
 		do
 			last_output := a
 		ensure
@@ -42,7 +49,7 @@ feature -- Output
 
 	last_output: UC_STRING
 			-- Last output.
-			-- may be void if standard output used.
+			-- May be void if standard output used.
 
 feature -- Output, interface to descendants
 
@@ -51,12 +58,12 @@ feature -- Output, interface to descendants
 			-- All output from descendants should go through this for 
 			-- convenient redefinition.
 		require
-			not_void: s /= Void
+			s_not_void: s /= Void
 		do
-			if last_output /= Void then	
+			if last_output /= Void then
 				last_output.append_uc_string (s)
 			else
-				io.put_string (s.to_utf8)
+				std.output.put_string (s.to_utf8)
 			end
 		end
 

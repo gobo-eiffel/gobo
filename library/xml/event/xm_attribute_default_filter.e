@@ -27,13 +27,13 @@ inherit
 		end
 
 	UC_UNICODE_FACTORY
+		export {NONE} all end
 	
 	XM_MARKUP_CONSTANTS
-		export
-			{NONE} all
-		end
+		export {NONE} all end
 	
 creation
+
 	make_null,
 	set_next
 	
@@ -249,7 +249,7 @@ feature {NONE} -- Content implementation
 	dtd_name (a_prefix, a_local: UC_STRING): UC_STRING is
 			-- Name for DTD (without namespaces).
 		require
-			local_not_void: a_local /= Void
+			a_local_not_void: a_local /= Void
 		do
 			if has_prefix (a_prefix) then
 				Result := new_unicode_string ("")
@@ -267,7 +267,7 @@ feature {NONE} -- Content implementation
 	dtd_prefix (a: UC_STRING): UC_STRING is
 			-- Prefix from a DTD name.
 		require
-			not_void: a /= Void
+			a_not_void: a /= Void
 		do
 			if a.index_of (Colon_char, 1) > 0 then
 				Result := a.substring (1, a.index_of (Colon_char,1) - 1)
@@ -277,7 +277,7 @@ feature {NONE} -- Content implementation
 	dtd_local (a: UC_STRING): UC_STRING is
 			-- Local part from a DTD name.
 		require
-			not_void: a /= Void
+			a_not_void: a /= Void
 		do
 			if a.index_of (Colon_char, 1) > 0 then
 				Result := a.substring (a.index_of (Colon_char,1) + 1, a.count)

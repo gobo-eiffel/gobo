@@ -145,11 +145,11 @@ feature {NONE} -- Output
 	output_constant (s: STRING) is
 			-- Output constant string.
 		require
-			not_void: s /= Void
+			s_not_void: s /= Void
 		local
 			a_string: UC_STRING
 		do
-			!! a_string.make_from_utf8 (s)
+			a_string := new_unicode_string (s)
 			output (a_string)
 		end
 
@@ -191,7 +191,7 @@ feature {NONE} -- Output
 	output_escaped (s: UC_STRING) is
 			-- Escape and output content string.
 		require
-			not_void: s /= Void
+			s_not_void: s /= Void
 		local
 			last_escaped: INTEGER
 			i: INTEGER
@@ -229,7 +229,7 @@ feature {NONE} -- Output
 	output_name (a_prefix: UC_STRING; a_local_part: UC_STRING) is
 			-- Output prefix:name.
 		require
-			not_void: a_local_part /= Void
+			s_not_void: a_local_part /= Void
 		do
 			if has_prefix (a_prefix) then
 				output (a_prefix)

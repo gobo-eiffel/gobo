@@ -19,6 +19,13 @@ inherit
 			out
 		end
 
+	UC_UNICODE_FACTORY
+		export
+			{NONE} all
+		undefine
+			out
+		end
+
 creation
 
 	make
@@ -43,7 +50,7 @@ feature -- Access
 	uri: UC_STRING is
 			-- File URI.
 		do
-			!!Result.make_from_utf8("file:"+file_name)
+			Result := new_unicode_string ("file:" + file_name)
 		end
 
 feature -- Out

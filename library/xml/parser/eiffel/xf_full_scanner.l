@@ -627,8 +627,8 @@ SYSTEMLITERAL ((['][\r\n\t\x20-&(-\xFF]*['])|(["][\r\n\t\x20-!#-\xFF]*["]))
 
 <initial,attribute_value_single,attribute_value_double,entity_value_single,entity_value_double>
 	{
-		"&#"[0-9]+; { 
-			character_entity.from_decimal (text_substring (3, text_count -	1))
+		"&#"[0-9]+";" { 
+			character_entity.from_decimal (text_substring (3, text_count - 1))
 			if character_entity.is_valid then
 				set_last_token (CHARDATA)
 				last_value := character_entity.as_string
@@ -638,7 +638,7 @@ SYSTEMLITERAL ((['][\r\n\t\x20-&(-\xFF]*['])|(["][\r\n\t\x20-!#-\xFF]*["]))
 		}
 
 		"&#x"[0-9a-fA-F]+";" {
-			character_entity.from_hexadecimal (text_substring (4, text_count -	1))
+			character_entity.from_hexadecimal (text_substring (4, text_count - 1))
 			if character_entity.is_valid then
 				set_last_token (CHARDATA)
 				last_value := character_entity.as_string
