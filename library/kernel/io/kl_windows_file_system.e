@@ -26,6 +26,9 @@ feature -- Access
 	eol: STRING is "%R%N"
 			-- Line separator in current file system
 
+	exe_file_extension: STRING is ".exe"
+			-- Executable file extension in current file system
+
 feature -- File factory
 
 	new_input_file (a_name: STRING): KL_WINDOWS_INPUT_FILE is
