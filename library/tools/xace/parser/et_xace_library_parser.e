@@ -42,7 +42,7 @@ feature -- Parsing
 					a_position_table := tree_pipe.tree.last_position_table
 					xml_validator.validate_library_doc (a_document, a_position_table)
 					if not xml_validator.has_error then
-						xml_preprocessor.preprocess_composite (a_document, a_position_table)
+						xml_preprocessor.preprocess_element (a_root_element, a_position_table)
 						last_library := new_library (a_root_element, a_position_table)
 						parsed_libraries.wipe_out
 					end
@@ -74,7 +74,7 @@ feature -- Parsing
 					a_position_table := tree_pipe.tree.last_position_table
 					xml_validator.validate_library_doc (a_document, a_position_table)
 					if not xml_validator.has_error then
-						xml_preprocessor.preprocess_composite (a_document, a_position_table)
+						xml_preprocessor.preprocess_element (a_root_element, a_position_table)
 						fill_library (a_library, a_root_element, a_position_table)
 					end
 				else

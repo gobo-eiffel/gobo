@@ -54,29 +54,6 @@ feature -- Access
 
 feature -- Preprocessing
 
-	preprocess_composite (a_composite: XM_COMPOSITE; a_position_table: XM_POSITION_TABLE) is
-			-- Expand variables in all attributes from `a_composite' and strip
-			-- elements if they have "if" or "unless" attributes which do not
-			-- evaluate to `True'.
-		require
-			a_composite_not_void: a_composite /= Void
-			a_position_table_not_void: a_position_table /= Void
-		local
-			typer: XM_NODE_TYPER
-		do
-			create typer
-			a_composite.process (typer)
-			if typer.is_document then
-				preprocess_element (typer.document.root_element, a_position_table)
-			elseif typer.is_element then
-				preprocess_element (typer.element, a_position_table)
-			else
-				check unknowm_composite_type: false end
-			end
-		end
-		
-feature {NONE} -- Preprocessing
-
 	preprocess_element (a_composite: XM_ELEMENT; a_position_table: XM_POSITION_TABLE) is
 			-- Expand variables in all attributes from `a_composite' and strip
 			-- elements if they have "if" or "unless" attributes which do not

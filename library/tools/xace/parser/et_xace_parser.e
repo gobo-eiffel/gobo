@@ -138,7 +138,7 @@ feature -- Parsing
 					if STRING_.same_string (a_root_name, uc_system) then
 						xml_validator.validate_system_doc (a_document, a_position_table)
 						if not xml_validator.has_error then
-							xml_preprocessor.preprocess_composite (a_document, a_position_table)
+							xml_preprocessor.preprocess_element (a_root_element, a_position_table)
 							a_system := new_system (a_root_element, a_position_table)
 							parsed_libraries.wipe_out
 						end
@@ -148,7 +148,7 @@ feature -- Parsing
 					then
 						xml_validator.validate_library_doc (a_document, a_position_table)
 						if not xml_validator.has_error then
-							xml_preprocessor.preprocess_composite (a_document, a_position_table)
+							xml_preprocessor.preprocess_element (a_root_element, a_position_table)
 							a_library := new_library (a_root_element, a_position_table)
 							parsed_libraries.wipe_out
 						end

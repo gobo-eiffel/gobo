@@ -44,7 +44,7 @@ feature -- Parsing
 					a_position_table := tree_pipe.tree.last_position_table
 					xml_validator.validate_system_doc (a_document, a_position_table)
 					if not xml_validator.has_error then
-						xml_preprocessor.preprocess_composite (a_document, a_position_table)
+						xml_preprocessor.preprocess_element (a_root_element, a_position_table)
 						last_universe := new_universe (a_root_element, a_position_table)
 					end
 				else
