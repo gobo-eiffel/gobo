@@ -23,6 +23,7 @@ inherit
 	KL_SHARED_PLATFORM
 
 	KL_IMPORTED_CHARACTER_ROUTINES
+	KL_IMPORTED_ANY_ROUTINES
 	UC_IMPORTED_UNICODE_ROUTINES
 
 feature -- Initialization
@@ -39,7 +40,7 @@ feature -- Initialization
 			create Result.make (n)
 		ensure
 			string_not_void: Result /= Void
-			string_type: Result.same_type ("")
+			string_type: ANY_.same_types (Result, "")
 			empty_string: Result.count = 0
 		end
 
@@ -59,7 +60,7 @@ feature -- Initialization
 			i, j, nb: INTEGER
 			uc_string: UC_STRING
 		do
-			if s.same_type (dummy_string) then
+			if ANY_.same_types (s, dummy_string) then
 				create Result.make_from_string (s)
 			else
 				nb := s.count
@@ -100,7 +101,7 @@ feature -- Initialization
 		ensure
 			string_not_void: Result /= Void
 			new_string: Result /= s
-			string_type: Result.same_type ("")
+			string_type: ANY_.same_types (Result, "")
 			initialized: elks_same_string (Result, s)
 		end
 
@@ -113,7 +114,7 @@ feature -- Initialization
 			create Result.make_empty
 		ensure
 			string_not_void: Result /= Void
-			string_type: Result.same_type ("")
+			string_type: ANY_.same_types (Result, "")
 			empty: Result.count = 0
 		end
 
@@ -128,7 +129,7 @@ feature -- Initialization
 			create Result.make_filled (c, n)
 		ensure
 			string_not_void: Result /= Void
-			string_type: Result.same_type ("")
+			string_type: ANY_.same_types (Result, "")
 			count_set: Result.count = n
 			filled: Result.occurrences (c) = Result.count
 		end
@@ -142,7 +143,7 @@ feature -- Initialization
 			create Result.make_filled ('%U', n)
 		ensure
 			string_not_void: Result /= Void
-			string_type: Result.same_type ("")
+			string_type: ANY_.same_types (Result, "")
 			count_set: Result.count = n
 		end
 
@@ -240,7 +241,7 @@ feature -- Access
 		local
 			uc_string: UC_STRING
 		do
-			if a_string.same_type (dummy_string) then
+			if ANY_.same_types (a_string, dummy_string) then
 				create Result.make (n)
 			else
 				uc_string ?= a_string
@@ -253,7 +254,7 @@ feature -- Access
 			end
 		ensure
 			new_string_not_void: Result /= Void
-			same_type: Result.same_type (a_string)
+			same_type: ANY_.same_types (Result, a_string)
 			new_string_empty: Result.count = 0
 		end
 
@@ -270,7 +271,7 @@ feature -- Access
 			Result := a_string.string
 		ensure
 			string_not_void: Result /= Void
-			string_type: Result.same_type ("")
+			string_type: ANY_.same_types (Result, "")
 			first_item: a_string.count > 0 implies Result.item (1) = a_string.item (1)
 			recurse: a_string.count > 1 implies Result.substring (2, a_string.count).is_equal (a_string.substring (2, a_string.count).string)
 		end
@@ -290,7 +291,7 @@ feature -- Access
 			Result := a_string.substring (start_index, end_index)
 		ensure
 			substring_not_void: Result /= Void
-			substring_same_type: Result.same_type (a_string)
+			substring_same_type: ANY_.same_types (Result, a_string)
 			substring_count: Result.count = end_index - start_index + 1
 			first_item: Result.count > 0 implies Result.item (1) = a_string.item (start_index)
 			-- Note: Too time and memory consuming with SE -0.74:
@@ -332,8 +333,8 @@ feature -- Access
 				else
 					end_index := a_string.count - other_count + 1
 					if start_index <= end_index then
-						if a_string.same_type (dummy_string) then
-							if other.same_type (dummy_string) then
+						if ANY_.same_types (a_string, dummy_string) then
+							if ANY_.same_types (other, dummy_string) then
 								Result := a_string.substring_index (other, start_index)
 							else
 								other_unicode ?= other
@@ -503,7 +504,7 @@ feature -- Comparison
 			if other = a_string then
 				Result := True
 			elseif other.count = a_string.count then
-				if other.same_type (dummy_string) then
+				if ANY_.same_types (other, dummy_string) then
 					Result := a_string.same_string (other)
 				else
 					Result := other.same_string (a_string)
@@ -537,7 +538,7 @@ feature -- Comparison
 					uc_string ?= other
 					if uc_string /= Void then
 						Result := uc_string.same_unicode_string (a_string)
-					elseif a_string.same_type (dummy_string) and other.same_type (dummy_string) then
+					elseif ANY_.same_types (a_string, dummy_string) and ANY_.same_types (other, dummy_string) then
 						Result := elks_same_string (a_string, other)
 					else
 						Result := True
@@ -597,7 +598,7 @@ feature -- Comparison
 			elseif s1.count = s2.count then
 				nb := s1.count
 				Result := True
-				if not (s1.same_type (dummy_string) and s2.same_type (dummy_string)) then
+				if not (ANY_.same_types (s1, dummy_string) and ANY_.same_types (s2, dummy_string)) then
 					from i := 1 until i > nb loop
 						a_code1 := s1.item_code (i)
 						a_code2 := s2.item_code (i)
@@ -664,7 +665,7 @@ feature -- Comparison
 		do
 			if other = a_string then
 				Result := 0
-			elseif a_string.same_type (dummy_string) and other.same_string (dummy_string) then
+			elseif ANY_.same_types (a_string, dummy_string) and ANY_.same_types (other, dummy_string) then
 				Result := a_string.three_way_comparison (other)
 			else
 				uc_string ?= a_string
@@ -728,7 +729,7 @@ feature -- Comparison
 		do
 			if other = a_string then
 				Result := 0
-			elseif a_string.same_type (dummy_string) and other.same_string (dummy_string) then
+			elseif ANY_.same_types (a_string, dummy_string) and ANY_.same_types (other, dummy_string) then
 				nb1 := a_string.count
 				nb2 := other.count
 				if nb1 < nb2 then
@@ -849,7 +850,7 @@ feature -- Element change
 			end
 		ensure
 			append_not_void: Result /= Void
-			type_if_not_aliased: Result /= a_string implies Result.same_type (other)
+			type_if_not_aliased: Result /= a_string implies ANY_.same_types (Result, other)
 			new_count: Result.count = old a_string.count + old other.count
 			initial: same_string (Result.substring (1, old a_string.count), old clone (a_string))
 			final: same_string (Result.substring (old a_string.count + 1, Result.count), old clone (other))
@@ -901,7 +902,7 @@ feature -- Element change
 			end
 		ensure
 			append_not_void: Result /= Void
-			type_if_not_aliased: Result /= a_string implies Result.same_type (other)
+			type_if_not_aliased: Result /= a_string implies ANY_.same_types (Result, other)
 			new_count: Result.count = old a_string.count + e - s + 1
 			initial: same_string (Result.substring (1, old a_string.count), old clone (a_string))
 			final: same_string (Result.substring (old a_string.count + 1, Result.count), old other.substring (s, e))
@@ -931,7 +932,7 @@ feature -- Element change
 		local
 			uc_string: UC_STRING
 		do
-			if a_string.same_type (other) then
+			if ANY_.same_types (a_string, other) then
 				a_string.replace_substring (other, start_index, end_index)
 				Result := a_string
 			else
@@ -954,7 +955,7 @@ feature -- Element change
 		require
 			a_string_not_void: a_string /= Void
 			other_not_void: other /= Void
-			same_type: other.same_type (a_string)
+			same_type: ANY_.same_types (other, a_string)
 			s_large_enough: s >= 1
 			e_small_enough: e <= other.count
 			valid_interval: s <= e + 1
@@ -1019,7 +1020,7 @@ feature -- Conversion
 		local
 			uc_string: UC_STRING
 		do
-			if a_string.same_type (dummy_string) then
+			if ANY_.same_types (a_string, dummy_string) then
 				Result := a_string
 			else
 				uc_string ?= a_string
@@ -1031,8 +1032,8 @@ feature -- Conversion
 			end
 		ensure
 			as_string_not_void: Result /= Void
-			string_type: Result.same_type ("")
-			aliasing: a_string.same_type ("") implies Result = a_string
+			string_type: ANY_.same_types (Result, "")
+			aliasing: ANY_.same_types (a_string, "") implies Result = a_string
 		end
 
 	to_lower (a_string: STRING): STRING is
@@ -1046,7 +1047,7 @@ feature -- Conversion
 			Result := a_string.as_lower
 		ensure
 			lower_string_not_void: Result /= Void
-			lower_string_same_type: Result.same_type (a_string)
+			lower_string_same_type: ANY_.same_types (Result, a_string)
 			same_count: Result.count = a_string.count
 			anchor: a_string.count > 0 implies Result.item (1) = CHARACTER_.as_lower (a_string.item (1))
 			recurse: a_string.count > 1 implies Result.substring (2, a_string.count).is_equal (a_string.substring (2, a_string.count).as_lower)
@@ -1063,7 +1064,7 @@ feature -- Conversion
 			Result := a_string.as_upper
 		ensure
 			upper_string_not_void: Result /= Void
-			upper_string_same_type: Result.same_type (a_string)
+			upper_string_same_type: ANY_.same_types (Result, a_string)
 			same_count: Result.count = a_string.count
 			anchor: a_string.count > 0 implies Result.item (1) = CHARACTER_.as_upper (a_string.item (1))
 			recurse: a_string.count > 1 implies Result.substring (2, a_string.count).is_equal (a_string.substring (2, a_string.count).as_upper)
@@ -1080,7 +1081,7 @@ feature -- Conversion
 			Result := a_string.as_lower
 		ensure
 			as_lower_not_void: Result /= Void
-			as_lower_same_type: Result.same_type (a_string)
+			as_lower_same_type: ANY_.same_types (Result, a_string)
 			length: Result.count = a_string.count
 			anchor: a_string.count > 0 implies Result.item (1) = CHARACTER_.as_lower (a_string.item (1))
 			recurse: a_string.count > 1 implies Result.substring (2, a_string.count).is_equal (a_string.substring (2, a_string.count).as_lower)
@@ -1097,7 +1098,7 @@ feature -- Conversion
 			Result := a_string.as_upper
 		ensure
 			as_upper_not_void: Result /= Void
-			as_upper_same_type: Result.same_type (a_string)
+			as_upper_same_type: ANY_.same_types (Result, a_string)
 			length: Result.count = a_string.count
 			anchor: a_string.count > 0 implies Result.item (1) = CHARACTER_.as_upper (a_string.item (1))
 			recurse: a_string.count > 1 implies Result.substring (2, a_string.count).is_equal (a_string.substring (2, a_string.count).as_upper)
@@ -1320,7 +1321,7 @@ feature -- Resizing
 			-- Do not lose any previously entered characters.
 		require
 			a_string_not_void: a_string /= Void
-			a_string_is_string: a_string.same_type ("")
+			a_string_is_string: ANY_.same_types (a_string, "")
 			n_large_enough: n >= a_string.count
 #ifndef VE
 		local

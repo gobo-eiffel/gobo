@@ -22,6 +22,7 @@ inherit
 
 	KL_IMPORTED_STRING_BUFFER_ROUTINES
 	KL_IMPORTED_INPUT_STREAM_ROUTINES
+	KL_IMPORTED_ANY_ROUTINES
 #ifdef ISE
 	STRING_HANDLER
 #endif
@@ -55,7 +56,7 @@ feature -- Initialization
 			-- Create a new string buffer with characters from `a_string'.
 		require
 			a_string_not_void: a_string /= Void
-			is_string: a_string.same_type ("")
+			is_string: ANY_.same_types (a_string, "")
 		do
 			Result := make (a_string.count)
 			copy_from_string (Result, lower, a_string)
@@ -73,7 +74,7 @@ feature -- Conversion
 			-- data. Use `make_from_string' if this is a concern.
 		require
 			a_string_not_void: a_string /= Void
-			is_string: a_string.same_type ("")
+			is_string: ANY_.same_types (a_string, "")
 		do
 			Result := a_string
 		ensure
@@ -105,7 +106,7 @@ feature -- Access
 			end
 		ensure
 			substring_not_void: Result /= Void
-			is_string: Result.same_type ("")
+			is_string: ANY_.same_types (Result, "")
 			count_set: Result.count = e - s + 1
 		end
 
@@ -132,7 +133,7 @@ feature -- Element change
 		require
 			a_buffer_not_void: a_buffer /= Void
 			a_string_not_void: a_string /= Void
-			is_string: a_string.same_type ("")
+			is_string: ANY_.same_types (a_string, "")
 			not_same: to_string_buffer (a_string) /= a_buffer
 			s_large_enough: s >= lower
 			e_small_enough: e <= upper (a_buffer)
@@ -152,7 +153,7 @@ feature -- Element change
 		require
 			a_buffer_not_void: a_buffer /= Void
 			a_string_not_void: a_string /= Void
-			is_string: a_string.same_type ("")
+			is_string: ANY_.same_types (a_string, "")
 			not_same: to_string_buffer (a_string) /= a_buffer
 			pos_large_enough: pos >= lower
 			enough_space: (pos + a_string.count - 1) <= upper (a_buffer)

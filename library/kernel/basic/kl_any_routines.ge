@@ -12,6 +12,34 @@ indexing
 
 class KL_ANY_ROUTINES
 
+feature -- Status report
+
+	same_types (obj1, obj2: ANY): BOOLEAN is
+			-- Is type of `obj1' identical to type of `obj2'?
+		require
+			obj1_not_void: obj1 /= Void
+			obj2_not_void: obj2 /= Void
+		do
+#ifdef (SE && SE_2_0)
+			Result := obj1.generating_type = obj2.generating_type
+#else
+			Result := obj1.same_type (obj2)
+#endif
+		end
+
+	same_objects (obj1, obj2: ANY): BOOLEAN is
+			-- Are `obj1' and `obj2' the same object?
+			-- Useful as a way to workaround VWEQ validity rule
+			-- (when running flat Degree 3 for example):
+			--    my_hashable := my_string
+			--    my_comparable := my_string
+			--    ANY_.same_objects (my_hashable, my_comparable)
+		do
+			Result := obj1 = obj2
+		ensure
+			definition: Result = (obj1 = obj2)
+		end
+
 feature -- Conversion
 
 	to_any (an_any: ANY): ANY is

@@ -16,6 +16,7 @@ inherit
 
 	KL_SHARED_PLATFORM
 	KL_IMPORTED_STRING_ROUTINES
+	KL_IMPORTED_ANY_ROUTINES
 
 feature -- Conversion
 
@@ -45,7 +46,7 @@ feature -- Conversion
 			append_hexadecimal_integer (an_int, Result, uppercase)
 		ensure
 			hexadecimal_not_void: Result /= Void
-			is_string: Result.same_type ("")
+			is_string: ANY_.same_types (Result, "")
 			-- regexp_uppercase: uppercase implies (0|[1-9A-F][0-9A-F]*).recognizes (Result)
 			-- regexp_lowercase: not uppercase implies (0|[1-9a-f][0-9a-f]*).recognizes (Result)
 		end
@@ -58,7 +59,7 @@ feature -- Conversion
 			append_decimal_integer (an_int, Result)
 		ensure
 			decimal_not_void: Result /= Void
-			is_string: Result.same_type ("")
+			is_string: ANY_.same_types (Result, "")
 			-- regexp: (0|(-?[1-9][0-9]*)).recognizes (Result)
 		end
 
@@ -72,7 +73,7 @@ feature -- Conversion
 			append_octal_integer (an_int, Result)
 		ensure
 			octal_not_void: Result /= Void
-			is_string: Result.same_type ("")
+			is_string: ANY_.same_types (Result, "")
 			-- regexp: (0|[1-7][0-7]*).recognizes (Result)
 		end
 
