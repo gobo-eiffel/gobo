@@ -40,7 +40,7 @@ input: -- Empty
 	;
 
 line: '\n'
-	| exp '\n'		{ print ($1); print ('%N') }
+	| exp '\n'		{ print ($1.out); print ("%N") }
 	| error '\n'	{ recover }
 	;
 
