@@ -1,0 +1,280 @@
+indexing
+
+	description:
+
+		"Skeletons of scanners implemented with full tables";
+
+	library:    "Gobo Eiffel Lexical Library";
+	author:     "Eric Bezault <ericb@gobo.demon.co.uk>";
+	copyright:  "Copyright (c) 1997, Eric Bezault";
+	date:       "$Date$";
+	revision:   "$Revision$"
+
+deferred class YY_FULL_SCANNER_SKELETON
+
+inherit
+
+	YY_SCANNER_SKELETON
+		redefine
+			yy_build_tables
+		end
+
+feature -- Scanning
+
+	read_token is
+			-- Read a token from `input_buffer'.
+			-- Make result available in `last_token'.
+		local
+			yy_cp, yy_bp: INTEGER
+			yy_current_state: INTEGER
+			yy_next_state: INTEGER
+			yy_matched_count: INTEGER
+			yy_act: INTEGER
+			yy_goto: INTEGER
+			yy_c: INTEGER
+		do
+			from
+				last_token := -1
+				yy_goto := yyNext_token
+			until
+				last_token /= -1
+			loop
+				inspect yy_goto
+				when yyNext_token then
+					if yy_more_flag then
+						yy_more_len := text_count
+						yy_more_flag := False
+					else
+						yy_more_len := 0
+					end
+					yy_cp := yy_position
+						-- `yy_bp' is the position of the first
+						-- character of the current token.
+					yy_bp := yy_cp
+						-- Find the start state.
+					yy_current_state := yy_start_state + yy_at_beginning_of_line
+					yy_goto := yyMatch
+				when yyMatch then
+						-- Find the next match.
+					from
+						if yy_ec /= Void then
+							yy_c := yy_ec.item (yy_content.item (yy_cp).code)
+						else
+							yy_c := yy_content.item (yy_cp).code
+						end
+						yy_current_state := yy_nxt.item
+							(yy_current_state * yyNb_rows + yy_c)
+					until
+						yy_current_state <= 0
+					loop
+						if
+							yyBacking_up and then
+							yy_accept.item (yy_current_state) /= 0
+						then
+							yy_last_accepting_state := yy_current_state
+							yy_last_accepting_cpos := yy_cp
+						end
+						yy_cp := yy_cp + 1
+						if yy_ec /= Void then
+							yy_c := yy_ec.item (yy_content.item (yy_cp).code)
+						else
+							yy_c := yy_content.item (yy_cp).code
+						end
+						yy_current_state := yy_nxt.item
+							(yy_current_state * yyNb_rows + yy_c)
+					end
+					yy_current_state := - yy_current_state
+					yy_goto := yyFind_action
+				when yyFind_action then
+						-- Find the action number.
+					yy_act := yy_accept.item (yy_current_state)
+						-- Set up `text' before action.
+					yy_bp := yy_bp - yy_more_len
+					yy_start_position := yy_bp
+					yy_position := yy_cp
+					debug ("GELEX")
+					end
+					yy_goto := yyNext_token
+						-- Semantic actions.
+					if yy_act = 0 then
+						if yyBacking_up then
+								-- Must back up.
+							yy_cp := yy_last_accepting_cpos + 1
+							yy_bp := yy_bp + yy_more_len
+							yy_current_state := yy_last_accepting_state
+							yy_goto := yyFind_action
+						else
+				fatal_error ("fatal scanner internal error: no action found")
+						end
+					elseif yy_act = yyEnd_of_buffer then
+							-- Amount of text matched not including
+							-- the EOB character.
+						yy_matched_count := yy_cp - yy_bp - 1
+							-- Note that here we test for `yy_position' "<="
+							-- to the position of the first EOB in the buffer,
+							-- since `yy_position' will already have been 
+							-- incremented past the NULL character (since all
+							-- states make transitions on EOB to the 
+							-- end-of-buffer state). Contrast this with the
+							-- test in `yyinput'.
+						if yy_position <= input_buffer.count + 1 then
+								-- This was really a NULL character.
+							yy_position := yy_bp + yy_matched_count
+							yy_current_state := yy_previous_state
+								-- We're now positioned to make the NULL
+								-- transition. We couldn't have
+								-- `yy_previous_state' go ahead and do it
+								-- for us because it doesn't know how to deal
+								-- with the possibility of jamming (and we
+								-- don't want to build jamming into it because
+								-- then it will run more slowly).
+							yy_next_state :=
+								yy_null_trans_state (yy_current_state)
+							yy_bp := yy_bp + yy_more_len
+							if yy_next_state /= 0 then
+									-- Consume the NULL character.
+								yy_cp := yy_position + 1
+								yy_position := yy_cp
+								yy_current_state := yy_next_state
+								yy_goto := yyMatch
+							else
+								yy_cp := yy_position
+								yy_goto := yyFind_action
+							end
+						else
+								-- Do not take the EOB character
+								-- into account.
+							yy_position := yy_position - 1
+							yy_refill_input_buffer
+							if input_buffer.filled then
+								yy_current_state := yy_previous_state
+								yy_cp := yy_position
+								yy_bp := yy_start_position + yy_more_len
+								yy_goto := yyMatch
+							elseif
+								yy_position - yy_start_position
+									- yy_more_len /= 0
+							then
+									-- Some text has been matched prior to
+									-- the EOB. First process it.
+								yy_current_state := yy_previous_state
+								yy_cp := yy_position
+								yy_bp := yy_start_position + yy_more_len
+								yy_goto := yyFind_action
+							else
+									-- Only the EOB character has been matched, 
+									-- so treat this as a final EOF.
+								if wrap then
+									yy_bp := yy_start_position
+									yy_cp := yy_position
+									yy_do_eof_action ((yy_start_state - 1) // 2)
+								end
+							end
+						end
+					else
+						yy_do_action (yy_act)
+					end
+				end
+			end
+		rescue
+			fatal_error ("fatal scanner internal error")
+		end
+
+feature {NONE} -- Tables
+
+	yy_nxt: ARRAY [INTEGER]
+			-- States to enter upon reading symbol;
+			-- indexed by (current_state_id * yyNb_rows + symbol)
+
+feature {NONE} -- Implementation
+
+	yy_build_tables is
+			-- Build scanner tables.
+		deferred
+		ensure then
+			yy_nxt_not_void: yy_nxt /= Void
+			yy_accept_not_void: yy_accept /= Void
+		end
+
+	yy_previous_state: INTEGER is
+			-- State just before EOB character was reached
+		local
+			yy_cp, yy_nb: INTEGER
+			yy_c: INTEGER
+		do
+				-- Find the start state.
+			Result := yy_start_state + yy_at_beginning_of_line
+			from
+				yy_cp := yy_start_position + yy_more_len
+				yy_nb := yy_position
+			until
+				yy_cp >= yy_nb
+			loop
+					-- Find the next state.
+--				if yy_null_trans /= Void then
+--					if yy_ec /= Void then
+--						yy_c := yy_ec.item (yy_content.item (yy_cp).code)
+--					else
+--						yy_c := yy_content.item (yy_cp).code
+--					end
+--					if yy_content.item (yy_cp) /= '%U' then
+--						Result := yy_nxt.item (Result * yyNb_rows + yy_c)
+--					else
+--						Result := yy_null_trans.item (Result)
+--					end
+--				else
+					yy_c := yy_content.item (yy_cp).code
+					if yy_c = 0 then
+						yy_c := yyNull_equiv_class
+					elseif yy_ec /= Void then
+						yy_c := yy_ec.item (yy_c)
+					end
+					Result := yy_nxt.item (Result * yyNb_rows + yy_c)
+--				end
+				if yyBacking_up and then yy_accept.item (Result) /= 0 then
+					yy_last_accepting_state := Result
+					yy_last_accepting_cpos := yy_cp
+				end
+				yy_cp := yy_cp + 1
+			end
+		end
+
+	yy_null_trans_state (yy_current_state: INTEGER): INTEGER is
+			-- State reachable from `yy_current_state' through
+			-- a transition on NULL character; 0 if jammed
+		local
+			yy_c: INTEGER
+			yy_is_jam: BOOLEAN
+		do
+--			if yy_null_trans /= Void then
+--				Result := yy_null_trans.item (yy_current_state)
+--				yy_is_jam := (Result = 0)
+--			else
+				Result := yy_nxt.item
+					(yy_current_state * yyNb_rows + yyNull_equiv_class)
+				yy_is_jam := (Result <= 0)
+--			end
+			if yy_is_jam then
+				Result := 0
+			elseif yyBacking_up and then yy_accept.item (Result) /= 0 then
+				yy_last_accepting_state := Result
+				yy_last_accepting_cpos := yy_position
+			end
+		end
+
+feature {NONE} -- Constants
+
+	yyNb_rows: INTEGER is deferred end
+			-- Number of rows in `yy_nxt'
+
+	yyNext_token: INTEGER is Unique
+	yyMatch: INTEGER is Unique
+	yyFind_action: INTEGER is Unique
+	yyDo_action: INTEGER is Unique
+	yyFind_rule: INTEGER is Unique
+
+invariant
+
+	yy_nxt_not_void: yy_nxt /= Void
+
+end -- class YY_FULL_SCANNER_SKELETON

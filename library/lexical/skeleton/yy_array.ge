@@ -1,0 +1,51 @@
+indexing
+
+	description:
+
+		"Arrays";
+
+	library:    "Gobo Eiffel Lexical Library";
+	author:     "Eric Bezault <ericb@gobo.demon.co.uk>";
+	copyright:  "Copyright (c) 1997, Eric Bezault";
+	date:       "$Date$";
+	revision:   "$Revision$"
+
+class YY_ARRAY [G]
+
+inherit
+
+	ARRAY [G]
+		rename
+			make_from_array as array_make_from_array
+		end
+
+creation
+
+	make, make_from_array
+
+feature {NONE} -- Initialization
+
+	make_from_array (an_array: ARRAY [G]; min_index: INTEGER) is
+			-- Initialize from the items of `an_array'.
+#ifdef ISE || HACT
+			-- (Share representation.)
+#endif
+		require
+			an_array_not_void: an_array /= Void
+		do
+#ifdef ISE || HACT
+			area := an_array.area
+			lower := min_index
+			upper := min_index + an_array.count - 1
+#else
+#ifdef VE
+			c_array_make (an_array.count, min_index)
+			c_og_move (to_c, min_index, an_array.to_c, count * size_item)
+#endif
+#endif
+		ensure
+			lower_set: lower = min_index
+			count_set: count = an_array.count
+		end
+
+end -- class YY_ARRAY

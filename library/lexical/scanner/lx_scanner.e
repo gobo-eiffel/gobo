@@ -1,0 +1,156 @@
+indexing
+
+	description:
+
+		"scanners";
+
+	library:    "Gobo Eiffel Lexical Library";
+	author:     "Eric Bezault <ericb@gobo.demon.co.uk>";
+	copyright:  "Copyright (c) 1997, Eric Bezault";
+	date:       "$Date$";
+	revision:   "$Revision$"
+
+deferred class LX_SCANNER
+
+inherit
+
+	YY_SCANNER_SKELETON
+		rename
+			make as make_scanner_skeleton,
+			make_with_file as make_scanner_with_file_skeleton,
+			make_with_buffer as make_scanner_with_buffer_skeleton
+		redefine
+			yy_accept, yy_ec --, yy_null_trans
+		end
+
+	LX_TABLES
+		export
+			{LX_TABLES} all
+			{ANY} to_tables, from_tables
+		redefine
+			yy_accept, yy_ec --, yy_null_trans
+		end
+
+feature {NONE} -- Initialization
+
+	make (tables: like to_tables) is
+			-- Create a new scanner with standard input as input file.
+			-- Build the scanner with information contained in `tables'.
+		require
+			tables_not_void: tables /= Void
+		do
+			make_from_tables (tables)
+			make_scanner_skeleton
+		end
+
+#ifndef ISE || HACT
+	make_with_file (a_file: FILE; tables: like to_tables) is
+#else
+	make_with_file (a_file: IO_MEDIUM; tables: like to_tables) is
+#endif
+			-- Create a new scanner with `a_file' as input file.
+			-- Build the scanner with information contained in `tables'.
+		require
+			a_file_not_void: a_file /= Void
+			a_file_open_read: a_file.is_open_read
+			tables_not_void: tables /= Void
+		do
+			make_from_tables (tables)
+			make_scanner_with_file_skeleton (a_file)
+		end
+
+	make_with_buffer (a_buffer: like input_buffer; tables: like to_tables) is
+			-- Create a new scanner with `a_buffer' as input buffer.
+			-- Build the scanner with information contained in `tables'.
+		require
+			a_buffer_not_void: a_buffer /= Void
+			tables_not_void: tables /= Void
+		do
+			make_from_tables (tables)
+			make_scanner_with_buffer_skeleton (a_buffer)
+		ensure
+			input_buffer_set: input_buffer = a_buffer
+		end
+
+feature {NONE} -- Tables
+
+	yy_ec: ARRAY [INTEGER]
+			-- Equivalence classes;
+			-- Void if equivalence classes are not used
+
+	yy_accept: ARRAY [INTEGER]
+			-- Accepting ids indexed by state ids
+
+--	yy_null_trans: ARRAY [INTEGER]
+--			-- Null transition table
+--			--| Note: this table is not used in the current implementation.
+
+feature {NONE} -- Implementation
+
+	yy_do_action (yy_act: INTEGER) is
+			-- Execute semantic action.
+		local
+			yy_rule: LX_RULE
+			yy_action: UT_COMMAND
+		do
+			if yy_rules.valid_index (yy_act) then
+				yy_rule := yy_rules.item (yy_act)
+				if yy_rule.has_trail_context then
+					if yy_rule.trail_count > 0 then
+						yy_position := yy_position - yy_rule.trail_count
+					elseif yy_rule.head_count > 0 then
+						yy_position := yy_position + yy_rule.head_count
+					else
+							-- The rule has trailing context and both
+							-- the head and trail have variable size.
+							-- The work is done using another mechanism
+							-- (varaible_trail_context) (implies
+							-- performance degradation.)
+					end
+				end
+				if yy_position > yy_start_position then
+					input_buffer.set_beginning_of_line
+						(yy_content.item (yy_position - 1) = '%N')
+				end
+				yy_action := yy_rule.action
+				if yy_action.executable (Void) then
+					yy_rule.action.execute (Void)
+				else
+					fatal_error ("fatal scanner error: cannot execute action")
+				end
+			else
+				fatal_error ("fatal scanner internal error: no action found")
+			end
+		end
+
+	yy_do_eof_action (yy_sc: INTEGER) is
+			-- Execute EOF semantic action.
+		local
+			yy_rule: LX_RULE
+			yy_action: UT_COMMAND
+		do
+			if yy_eof_rules.valid_index (yy_sc) then
+				yy_rule := yy_eof_rules.item (yy_sc)
+				if yy_rule /= Void then
+					yy_action := yy_rule.action
+					if yy_action.executable (Void) then
+						yy_rule.action.execute (Void)
+					else
+						fatal_error
+							("fatal scanner error: cannot execute action")
+					end
+				else
+					terminate
+				end
+			else
+				terminate
+			end
+		end
+
+	yy_build_tables is
+			-- Build scanner tables.
+		do
+			-- Tables are already built.
+		end
+
+end -- class LX_SCANNER

@@ -1,0 +1,856 @@
+indexing
+
+	description:
+
+		"DFA equipped with lexical analyzer generator";
+
+	library:    "Gobo Eiffel Lexical Library";
+	author:     "Eric Bezault <ericb@gobo.demon.co.uk>";
+	copyright:  "Copyright (c) 1997, Eric Bezault";
+	date:       "$Date$";
+	revision:   "$Revision$"
+
+deferred class LX_GENERATABLE_DFA
+
+inherit
+
+	LX_DFA
+		rename
+			initialize as initialize_dfa
+		end
+
+	LX_TABLES
+		export
+			{LX_TABLES} all
+			{ANY} to_tables
+		undefine
+#ifdef ISE || HACT
+			consistent, setup,
+#endif
+			is_equal, copy
+		end
+
+	UT_CHARACTER_CODES
+		export
+			{NONE} all
+		undefine
+#ifdef ISE || HACT
+			consistent, setup,
+#endif
+			is_equal, copy
+		end
+
+feature {NONE} -- Initialization
+
+	initialize (a_description: LX_DESCRIPTION) is
+			-- Initialize DFA with information found in `a_description'.
+		require
+			a_description_not_void: a_description /= Void
+		local
+			max: INTEGER
+			equiv_classes: LX_EQUIVALENCE_CLASSES
+		do
+			characters_count := a_description.characters_count
+			eiffel_code := a_description.eiffel_code
+			eiffel_header := a_description.eiffel_header
+			bol_needed := a_description.bol_needed
+			user_action_used := a_description.user_action_used
+			yy_start_conditions := a_description.start_conditions.names
+			build_rules (a_description.rules)
+			build_eof_rules
+				(a_description.eof_rules, 0, yy_start_conditions.count - 1)
+			max := characters_count
+			equiv_classes := a_description.equiv_classes
+			if equiv_classes /= Void and then equiv_classes.built then
+				yy_ec := equiv_classes.to_array (0, max)
+				yyNull_equiv_class := yy_ec.item (max)
+				max := equiv_classes.count
+			else
+				yyNull_equiv_class := max
+			end
+			yyEnd_of_buffer := yy_rules.upper + 1
+				-- Symbols start at 1 and NULL transitions
+				-- are indexed by `maximum_symbol'.
+			initialize_dfa (a_description.start_conditions, 1, max)
+		end
+
+	put_eob_state is
+			-- Create an end-of-buffer state and insert it to current DFA.
+		require
+			not_built: count = start_states_count
+			not_full: not is_full
+		local
+			eob_state: LX_DFA_STATE
+			accepting_ids: DS_ARRAYED_LIST [INTEGER]
+			nfa_states: DS_ARRAYED_LIST [LX_NFA_STATE]
+		do
+			!! nfa_states.make (0)
+			!! eob_state.make (nfa_states, minimum_symbol, maximum_symbol)
+			!! accepting_ids.make (1)
+			accepting_ids.put_first (yy_rules.upper + 1)
+			eob_state.set_accepting_ids (accepting_ids)
+			put_last (eob_state)
+			eob_state.set_id (count)
+		end
+
+feature -- Generation
+
+	new_scanner: YY_SCANNER is
+			-- New scanner corresponding to current DFA
+		deferred
+		ensure
+			scanner_not_void: Result /= Void
+		end
+
+#ifndef ISE || HACT
+	print_scanner (a_file: FILE) is
+#else
+	print_scanner (a_file: IO_MEDIUM) is
+#endif
+			-- Print code for corresponding scanner to `a_file'.
+		require
+			a_file_not_void: a_file /= Void
+			a_file_open: a_file.is_open_write
+		do
+			print_eiffel_header (a_file)
+			a_file.put_string ("%Nfeature {NONE} -- Implementation%N%N")
+			print_build_tables (a_file)
+			a_file.new_line
+			print_actions (a_file)
+			a_file.new_line
+			print_eof_actions (a_file)
+			a_file.put_string ("%Nfeature {NONE} -- Tables%N%N")
+			print_eiffel_tables (a_file)
+			a_file.put_string ("%Nfeature {NONE} -- Constants%N%N")
+			print_constants (a_file)
+			a_file.put_string ("%Nfeature -- User-defined features%N%N")
+			print_eiffel_code (a_file)
+		end
+
+#ifndef ISE || HACT
+	print_backing_up_report (a_file: FILE) is
+#else
+	print_backing_up_report (a_file: IO_MEDIUM) is
+#endif
+			-- Print a backing-up report to `a_file'.
+		require
+			a_file_not_void: a_file /= Void
+			a_file_open_write: a_file.is_open_write
+		local
+			i, nb: INTEGER
+			a_state: LX_DFA_STATE
+		do
+			from
+				i := start_states_count + 1
+				nb := count
+			until
+				i > nb
+			loop
+				a_state := item (i)
+				if not a_state.is_accepting then
+					a_file.put_string ("State #")
+					a_file.put_integer (a_state.id)
+					a_file.put_string (" is non-accepting -%N")
+						-- Identify the state
+					print_rule_line_numbers (a_state, a_file)
+						-- Identify it further using the
+						-- out- and jam-transitions.
+					print_transitions (a_state, a_file)
+					a_file.put_character ('%N')
+				end
+				i := i + 1
+			end
+		end
+
+feature {NONE} -- Generation
+
+#ifndef ISE || HACT
+	print_eiffel_header (a_file: FILE) is
+#else
+	print_eiffel_header (a_file: IO_MEDIUM) is
+#endif
+			-- Print user-defined eiffel header to `a_file'.
+		require
+			a_file_not_void: a_file /= Void
+			a_file_open_write: a_file.is_open_write
+		local
+			i, nb: INTEGER
+		do
+			if eiffel_header /= Void then
+				nb := eiffel_header.count
+				from i := 1 until i > nb loop
+					a_file.put_string (eiffel_header.item (i))
+					i := i + 1
+				end
+			end
+		end
+
+#ifndef ISE || HACT
+	print_build_tables (a_file: FILE) is
+#else
+	print_build_tables (a_file: IO_MEDIUM) is
+#endif
+			-- Print code for `yy_build_tables' to `a_file'.
+		require
+			a_file_not_void: a_file /= Void
+			a_file_open_write: a_file.is_open_write
+		deferred
+		end
+
+#ifndef ISE || HACT
+	print_actions (a_file: FILE) is
+#else
+	print_actions (a_file: IO_MEDIUM) is
+#endif
+			-- Print code for actions to `a_file'.
+		require
+			a_file_not_void: a_file /= Void
+			a_file_open: a_file.is_open_write
+		local
+			i, nb: INTEGER
+			rule, next_rule: LX_RULE
+			action: UT_PRINTABLE_COMMAND
+			not_shared: BOOLEAN
+		do
+			a_file.put_string ("%Tyy_do_action (yy_act: INTEGER) is%N%
+				%%T%T%T-- Execute semantic action.%N%
+				%%T%Tdo%N%
+				%%T%T%Tinspect yy_act%N")
+			nb := yy_rules.upper
+			from i := yy_rules.lower until i > nb loop
+				rule := yy_rules.item (i)
+				a_file.put_string ("when ")
+				a_file.put_integer (rule.id)
+				if not rule.has_trail_context then
+					from
+						i := i + 1
+						not_shared := False
+					until
+						not_shared or i > nb
+					loop
+						next_rule := yy_rules.item (i)
+						if
+							rule.action = next_rule.action and
+							not next_rule.has_trail_context
+						then
+							a_file.put_string (", ")
+							a_file.put_integer (next_rule.id)
+							i := i + 1
+						elseif next_rule.has_trail_context then
+			-- Warning: ("action duplicated due to trailing context")
+							not_shared := True
+						else
+							not_shared := True
+						end
+					end
+					a_file.put_string (" then%N")
+				else
+						-- `rule' has trailing context.
+					i := i + 1
+					if i <= nb then
+						next_rule := yy_rules.item (i)
+						if next_rule.action = rule.action then
+			-- Warning: ("action duplicated due to trailing context")
+						end
+					end
+					a_file.put_string (" then%N")
+					if rule.trail_count > 0 then
+							-- The trail has a fixed size.
+						a_file.put_string ("%Tyy_position := yy_position - ")
+						a_file.put_integer (rule.trail_count)
+						a_file.put_character ('%N')
+					elseif rule.head_count > 0 then
+							-- The head has a fixed size.
+						a_file.put_string
+							("%Tyy_position := yy_start_position + ")
+						a_file.put_integer (rule.head_count)
+						a_file.put_character ('%N')
+					else
+							-- The rule has trailing context and both
+							-- the head and trail have variable size.
+							-- The work is done using another mechanism
+							-- (variable_trail_context).
+						-- (report performance degradation)
+					end
+				end
+				if bol_needed then
+					a_file.put_string
+						("%Tif yy_position > yy_start_position then%N%
+						%%T%Tinput_buffer.set_beginning_of_line %
+						%(yy_content.item (yy_position - 1) = '%%N')%N%
+						%%Tend%N")
+				end
+				if user_action_used then
+					a_file.put_string ("%Tuser_action%N")
+				end
+				a_file.put_string ("--|#line ")
+				a_file.put_integer (rule.line_nb)
+				a_file.put_character ('%N')
+				action ?= rule.action
+				if action /= Void then
+					action.print_to_file (a_file)
+					a_file.put_character ('%N')
+				end
+			end
+			a_file.put_string ("%T%T%Telse%N%T%T%T%Tfatal_error %
+				%(%"fatal scanner internal error: no action found%")%N%
+				%%T%T%Tend%N%
+				%%T%Tend%N")
+		end
+
+#ifndef ISE || HACT
+	print_eof_actions (a_file: FILE) is
+#else
+	print_eof_actions (a_file: IO_MEDIUM) is
+#endif
+			-- Print code for end-of-file actions to `a_file'.
+		require
+			a_file_not_void: a_file /= Void
+			a_file_open: a_file.is_open_write
+		local
+			i, nb: INTEGER
+			rule: LX_RULE
+			printable_action: UT_PRINTABLE_COMMAND
+			actions: DS_ARRAYED_LIST
+				[DS_PAIR [UT_COMMAND, DS_LINKED_LIST [LX_RULE]]]
+			action: UT_COMMAND
+			j, nb_actions: INTEGER
+			a_pair: DS_PAIR [UT_COMMAND, DS_LINKED_LIST [LX_RULE]]
+			rule_list: DS_LINKED_LIST [LX_RULE]
+			rule_cursor: DS_LINKED_LIST_CURSOR [LX_RULE]
+		do
+			a_file.put_string ("%Tyy_do_eof_action (yy_sc: INTEGER) is%N%
+				%%T%T%T-- Execute EOF semantic action.%N%
+				%%T%Tdo%N%
+				%%T%T%Tinspect yy_sc%N")
+			from
+				i := yy_eof_rules.lower
+				nb := yy_eof_rules.upper
+				!! actions.make (yy_eof_rules.count)
+			until
+				i > nb
+			loop
+				rule := yy_eof_rules.item (i)
+				if rule /= Void then
+					action := rule.action
+					from
+						j := 1
+						nb_actions := actions.count
+					until
+						j > nb_actions or else actions.item (j).first = action
+					loop
+						j := j + 1
+					end
+					if j <= nb_actions then
+						rule_list := actions.item (j).second
+					else
+						!! rule_list.make
+						!! a_pair.make (action, rule_list)
+						actions.put_last (a_pair)
+					end
+					rule_list.put_last (rule)
+				end
+				i := i + 1
+			end
+			from 
+				j := 1
+				nb_actions := actions.count
+			until
+				j > nb_actions
+			loop
+				rule_list := actions.item (j).second
+				from 
+					rule_cursor := rule_list.new_cursor
+					rule_cursor.start
+					rule := rule_cursor.item
+					a_file.put_string ("when ")
+					a_file.put_integer (rule.id)
+					rule_cursor.forth
+				until
+					rule_cursor.after
+				loop
+					a_file.put_string (", ")
+					a_file.put_integer (rule_cursor.item.id)
+					rule_cursor.forth
+				end
+				a_file.put_string (" then%N")
+				a_file.put_string ("--|#line ")
+				a_file.put_integer (rule.line_nb)
+				a_file.put_character ('%N')
+				printable_action ?= rule.action
+				if printable_action /= Void then
+					printable_action.print_to_file (a_file)
+					a_file.put_character ('%N')
+				end
+				j := j + 1
+			end
+			a_file.put_string ("%T%T%Telse%N%
+				%%T%T%T%Tterminate%N%
+				%%T%T%Tend%N%
+				%%T%Tend%N")
+		end
+
+#ifndef ISE || HACT
+	print_eiffel_tables (a_file: FILE) is
+#else
+	print_eiffel_tables (a_file: IO_MEDIUM) is
+#endif
+			-- Print Eiffel code for DFA tables to `a_file'.
+		require
+			a_file_not_void: a_file /= Void
+			a_file_open_write: a_file.is_open_write
+		deferred
+		end
+
+#ifndef ISE || HACT
+	print_constants (a_file: FILE) is
+#else
+	print_constants (a_file: IO_MEDIUM) is
+#endif
+			-- Print code for constants to `a_file'.
+		require
+			a_file_not_void: a_file /= Void
+			a_file_open: a_file.is_open_write
+		local
+			i, nb: INTEGER
+		do
+			a_file.put_string ("%TyyEnd_of_buffer: INTEGER is ")
+			a_file.put_integer (yy_rules.upper + 1)
+			a_file.put_character ('%N')
+			a_file.put_string ("%T%T%T-- End of buffer rule code%N%N")
+			nb := yy_start_conditions.upper
+			from i := yy_start_conditions.lower until i > nb loop
+				a_file.put_character ('%T')
+				a_file.put_string (yy_start_conditions.item (i))
+				a_file.put_string (": INTEGER is ")
+				a_file.put_integer (i)
+				a_file.put_character ('%N')
+				i := i + 1
+			end
+			a_file.put_string ("%T%T%T-- Start condition codes%N")
+		end
+
+#ifndef ISE || HACT
+	print_eiffel_code (a_file: FILE) is
+#else
+	print_eiffel_code (a_file: IO_MEDIUM) is
+#endif
+			-- Print user-defined eiffel code to `a_file'.
+		require
+			a_file_not_void: a_file /= Void
+			a_file_open_write: a_file.is_open_write
+		do
+			if eiffel_code /= Void then
+				a_file.put_string (eiffel_code)
+			end
+		end
+
+#ifndef ISE || HACT
+	print_array (a_table: ARRAY [INTEGER]; a_file: FILE) is
+#else
+	print_array (a_table: ARRAY [INTEGER]; a_file: IO_MEDIUM) is
+#endif
+			-- Print code for `a_table''s items to `a_file'.
+		require
+			a_table_not_void: a_table /= Void
+			a_file_not_void: a_file /= Void
+			a_file_open_write: a_file.is_open_write
+		local
+			i, nb, an_item: INTEGER
+			nb_line, nb_colon: INTEGER
+		do
+			a_file.put_string (Indentation)
+			nb_line := 1
+			nb := a_table.upper
+			from i := a_table.lower until i > nb loop
+				nb_colon := nb_colon + 1
+				if nb_colon > Max_nb_colon then
+					a_file.put_character ('%N')
+					nb_colon := 1
+					nb_line := nb_line + 1
+					if nb_line > Max_nb_line then
+						a_file.put_character ('%N')
+						nb_line := 1
+					end
+					a_file.put_string (Indentation)
+				end
+				an_item := a_table.item (i)
+				inspect an_item.out.count
+				when 1 then
+					a_file.put_string (Four_spaces)
+				when 2 then
+					a_file.put_string (Three_spaces)
+				when 3 then
+					a_file.put_string (Two_spaces)
+				else
+					a_file.put_character (' ')
+				end
+				a_file.put_integer (an_item)
+				if i < nb then
+					a_file.put_character (',')
+				end
+				i := i + 1
+			end
+		end
+
+#ifndef ISE || HACT
+	print_eiffel_array
+		(a_name: STRING; a_table: ARRAY [INTEGER]; a_file: FILE) is
+#else
+	print_eiffel_array
+		(a_name: STRING; a_table: ARRAY [INTEGER]; a_file: IO_MEDIUM) is
+#endif
+			-- Print Eiffel code for `a_table' named `a_name' to `a_file'.
+		require
+			a_name_not_void: a_name /= Void
+			a_table_not_void: a_table /= Void
+			a_file_not_void: a_file /= Void
+			a_file_open_write: a_file.is_open_write
+		local
+			i, j, k, nb: INTEGER
+			a_table_upper: INTEGER
+		do
+			a_file.put_character ('%T')
+			a_file.put_string (a_name)
+			a_file.put_string (": ARRAY [INTEGER] is%N%
+				%%T%Tonce%N")
+			nb := a_table.count // 3000 + 1
+			if nb = 1 then
+				a_file.put_string
+					("%T%T%T!YY_ARRAY [INTEGER]! Result.make_from_array (<<%N")
+				print_array (a_table, a_file)
+				a_file.put_string (">>, ")
+				a_file.put_integer (a_table.lower)
+				a_file.put_string (")%N%T%Tend%N")
+			else
+				a_file.put_string ("%T%T%T!! Result.make (")
+				a_file.put_integer (a_table.lower)
+				a_file.put_string (", ")
+				a_file.put_integer (a_table.upper)
+				a_file.put_string (")%N")
+				from j := 1 until j > nb loop
+					a_file.put_string (Indentation)
+					a_file.put_string (a_name)
+					a_file.put_character ('_')
+					a_file.put_integer (j)
+					a_file.put_string (" (Result)%N")
+					j := j + 1
+				end	
+				a_file.put_string ("%T%Tend%N")
+				from
+					j := 1
+					i := a_table.lower
+					a_table_upper := a_table.upper
+				until
+					j > nb
+				loop
+					a_file.put_character ('%N')
+					a_file.put_character ('%T')
+					a_file.put_string (a_name)
+					a_file.put_character ('_')
+					a_file.put_integer (j)
+					a_file.put_string (" (an_array: ARRAY [INTEGER]) is%N%
+						%%T%Tdo%N")
+					from
+						k := a_table_upper.min (i + 3000 - 1)
+					until
+						i > k
+					loop
+						a_file.put_string (Indentation)
+						a_file.put_string ("an_array.put (")
+						a_file.put_integer (a_table.item (i))
+						a_file.put_string (", ")
+						a_file.put_integer (i)
+						a_file.put_string (")%N")
+						i := i + 1
+					end
+					a_file.put_string ("%T%Tend%N")
+					j := j + 1
+				end
+			end
+		end
+
+#ifndef ISE || HACT
+	print_rule_line_numbers (a_state: LX_DFA_STATE; a_file: FILE) is
+#else
+	print_rule_line_numbers (a_state: LX_DFA_STATE; a_file: IO_MEDIUM) is
+#endif
+			-- Print the (sorted) list of the line numbers of 
+			-- the rules associated to the NFA states making up
+			-- `a_state' to `a_file'.
+		require
+			a_state_not_void: a_state /= Void
+			a_file_not_void: a_file /= Void
+			a_file_open_write: a_file.is_open_write
+		local
+			i, nb: INTEGER
+			line_numbers: DS_ARRAYED_LIST [INTEGER]
+			line_nb: INTEGER
+			bubble_sorter: DS_BUBBLE_SORTER [INTEGER]
+			a_rule: LX_RULE
+		do
+			nb := a_state.count
+			!! line_numbers.make (nb)
+			from i := 1 until i > nb loop
+				a_rule := a_state.item (i).rule
+				line_nb := a_rule.line_nb
+				if not line_numbers.has (line_nb) then
+					line_numbers.put_last (line_nb)
+				end
+				i := i + 1
+			end
+			!! bubble_sorter
+			line_numbers.sort (bubble_sorter)
+			a_file.put_string (" associated rule line numbers:")
+			nb := line_numbers.count
+			from i := 1 until i > nb loop
+				if i \\ 8 = 1 then
+					a_file.put_character ('%N')
+				end
+				a_file.put_character ('%T')
+				a_file.put_integer (line_numbers.item (i))
+				i := i + 1
+			end
+			a_file.put_character ('%N')
+		end
+
+#ifndef ISE || HACT
+	print_transitions (a_state: LX_DFA_STATE; a_file: FILE) is
+#else
+	print_transitions (a_state: LX_DFA_STATE; a_file: IO_MEDIUM) is
+#endif
+			-- Print out- and jam-transitions from `a_state'
+			-- in a human-readable form (i.e. not using
+			-- equivalence classes) to `a_file'.
+		require
+			a_state_not_void: a_state /= Void
+			a_file_not_void: a_file /= Void
+			a_file_open_write: a_file.is_open_write
+		local
+			i, j, nb: INTEGER
+			transitions: LX_TRANSITION_TABLE [LX_DFA_STATE]
+			has_transition: ARRAY [BOOLEAN]
+		do
+			nb := characters_count
+			transitions := a_state.transitions
+			!! has_transition.make (0, nb - 1)
+			if yy_ec /= Void then
+					-- Equivalence classes are used.
+				from i := 1 until i >= nb loop
+					j := yy_ec.item (i)
+					if transitions.valid_label (j) then
+						has_transition.put (transitions.target (j) /= Void , i)
+					end
+					i := i + 1
+				end
+					-- Null transition.
+				j := yy_ec.item (nb)
+				if transitions.valid_label (j) then
+					has_transition.put (transitions.target (j) /= Void , 0)
+				end
+			else
+				from i := 1 until i >= nb loop
+					if transitions.valid_label (i) then
+						has_transition.put (transitions.target (i) /= Void, i)
+					end
+					i := i + 1
+				end
+					-- Null transition.
+				if transitions.valid_label (i) then
+					has_transition.put (transitions.target (nb) /= Void, 0)
+				end
+			end
+			a_file.put_string (" out-transitions: [")
+			from i := 0 until i >= nb loop
+				if has_transition.item (i) then
+					a_file.put_character (' ')
+					print_readable_character (i, a_file)
+					from
+						j := i
+						i := i + 1
+					until
+						i >= nb or not has_transition.item (i)
+					loop
+						i := i + 1
+					end
+					if i - 1 > j then
+							-- This was a character set.
+						a_file.put_character ('-')
+						print_readable_character (i - 1, a_file)
+					end
+					a_file.put_character (' ')
+				end
+				i := i + 1
+			end
+			a_file.put_string ("]%N jam-transitions: EOF [")
+			from i := 0 until i >= nb loop
+				if not has_transition.item (i) then
+					a_file.put_character (' ')
+					print_readable_character (i, a_file)
+					from
+						j := i
+						i := i + 1
+					until
+						i >= nb or has_transition.item (i)
+					loop
+						i := i + 1
+					end
+					if i - 1 > j then
+							-- This was a character set.
+						a_file.put_character ('-')
+						print_readable_character (i - 1, a_file)
+					end
+					a_file.put_character (' ')
+				end
+				i := i + 1
+			end
+			a_file.put_string ("]%N")
+		end
+
+#ifndef ISE || HACT
+	print_readable_character (i: INTEGER; a_file: FILE) is
+#else
+	print_readable_character (i: INTEGER; a_file: IO_MEDIUM) is
+#endif
+			-- Print a human-readable form of the character
+			-- of ASCII code `i' to `a_file'. Print octal value
+			-- if the corresponding character is not printable.
+		require
+			a_file_not_void: a_file /= Void
+			a_file_open_write: a_file.is_open_write
+		local
+			octal, tmp: STRING
+			j: INTEGER
+		do
+			if i < 32 or i >= 127 then
+				inspect i
+				when Back_space_code then
+					a_file.put_string ("\b")
+				when Form_feed_code then
+					a_file.put_string ("\f")
+				when New_line_code then
+					a_file.put_string ("\n")
+				when Carriage_return_code then
+					a_file.put_string ("\r")
+				when Tabulation_code then
+					a_file.put_string ("\t")
+				else
+					a_file.put_character ('\')
+						-- Convert ASCII code into octal value.
+					from
+						j := i
+						if j < 0 then
+							a_file.put_character ('-')
+							j := -j
+						end
+						octal := ""
+					until
+						j = 0
+					loop
+						tmp := clone ((j \\ 8).out)
+						tmp.append_string (octal)
+						octal := tmp
+						j := j // 8
+					end
+					inspect octal.count
+					when 0 then
+						a_file.put_string ("000")
+					when 1 then
+						a_file.put_string ("00")
+					when 2 then
+						a_file.put_character ('0')
+					else
+					end
+					a_file.put_string (octal)
+				end
+			elseif i = Space_code then
+				a_file.put_string ("' '")
+			else
+				a_file.put_character ('%U' + i)
+			end
+		end
+
+feature {NONE} -- Building
+
+	build_rules (rules: DS_ARRAYED_LIST [LX_RULE]) is
+			-- Build `yy_rules'.
+		require
+			rules_not_void: rules /= Void
+			no_void_rule: not rules.has (Void)
+		local
+			i, nb: INTEGER
+		do
+			nb := rules.count
+			!! yy_rules.make (1, nb)
+			from i := 1 until i > nb loop
+				yy_rules.put (rules.item (i), i)
+				i := i + 1
+			end
+		ensure
+			yy_rules_not_void: yy_rules /= Void
+		end
+
+	build_eof_rules (rules: DS_ARRAYED_LIST [LX_RULE]; l, u: INTEGER) is
+			-- Build `yy_eof_rules'.
+			-- Rules are indexed by rule ids.
+		require
+			rules_not_void: rules /= Void
+			no_void_rule: not rules.has (Void)
+			-- valid_rules: forall rule in rules, rule.id >= l and rule.id <= u
+		local
+			i, nb: INTEGER
+			rule: LX_RULE
+		do
+			!! yy_eof_rules.make (l, u)
+			nb := rules.count
+			from i := 1 until i > nb loop
+				rule := rules.item (i)
+				yy_eof_rules.put (rule, rule.id)
+				i := i + 1
+			end
+		ensure
+			yy_eof_rules_not_void: yy_eof_rules /= Void
+		end
+
+feature {NONE} -- Access
+
+	eiffel_code: STRING
+			-- User-defined Eiffel code
+
+	eiffel_header: DS_ARRAYED_LIST [STRING]
+			-- User-defined Eiffel header
+
+	bol_needed: BOOLEAN
+			-- Does the generated scanners need
+			-- "beginning of line" recognition?
+
+	user_action_used: BOOLEAN
+			-- Should routine `user_action' be called before
+			-- each semantic action?
+
+	characters_count: INTEGER
+			-- Number of characters in character set
+			-- handled by the generated scanners
+			-- (The character set is always assumed to start from 0.)
+
+feature {NONE} -- Constants
+
+	Two_spaces: STRING is "  "
+	Three_spaces: STRING is "   "
+	Four_spaces: STRING is "    "
+	Indentation: STRING is "%T%T%T"
+
+	Max_nb_line: INTEGER is 10
+			-- Maximum number of lines before one is skipped
+
+	Max_nb_colon: INTEGER is 10
+			-- Maximum number of entries per line
+
+invariant
+
+	minimum_symbol: minimum_symbol = 1
+	no_void_eiffel_header: eiffel_header /= Void implies
+		not eiffel_header.has (Void)
+	characters_count_positive: characters_count > 0
+
+end -- class LX_GENERATABLE_DFA

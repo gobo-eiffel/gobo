@@ -1,0 +1,47 @@
+indexing
+
+	description:
+
+		"String handlers";
+
+	library:    "Gobo Eiffel Utility Library";
+	author:     "Eric Bezault <ericb@gobo.demon.co.uk>";
+	copyright:  "Copyright (c) 1997, Eric Bezault";
+	date:       "$Date$";
+	revision:   "$Revision$"
+
+class UT_STRING_HANDLER
+
+feature -- Conversion
+
+	lower_name (a_name: STRING): STRING is
+			-- Lower case name of `a_name'
+			-- (Do not alter `a_name'.)
+		require
+			a_name_not_void: a_name /= Void
+		do
+			Result := clone (a_name)
+			Result.to_lower
+		ensure
+			lower_name_not_void: Result /= Void
+			same_count: Result.count = a_name.count
+--			definition: forall i in 1..a_name.count,
+--				Result.item (i) = a_name.item (i).to_lower
+		end
+
+	upper_name (a_name: STRING): STRING is
+			-- Upper case name of `a_name'
+			-- (Do not alter `a_name'.)
+		require
+			a_name_not_void: a_name /= Void
+		do
+			Result := clone (a_name)
+			Result.to_upper
+		ensure
+			upper_name_not_void: Result /= Void
+			same_count: Result.count = a_name.count
+--			definition: forall i in 1..a_name.count,
+--				Result.item (i) = a_name.item (i).to_upper
+		end
+
+end -- class UT_STRING_HANDLER
