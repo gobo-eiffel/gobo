@@ -22,4 +22,12 @@ feature -- Access
 			string_equality_tester_not_void: Result /= Void
 		end
 
+	case_insensitive_string_equality_tester: KL_CASE_INSENSITIVE_STRING_EQUALITY_TESTER is
+			-- Case-insensitive string equality tester
+		once
+			create Result
+		ensure
+			case_insensitive_string_equality_tester_not_void: Result /= Void
+		end
+
 end
