@@ -18,7 +18,7 @@ inherit
 
 	DS_LINKED_LIST_REFERENCE_SEARCHER [G]
 		undefine
-			container, cursor
+			container, cursor, cell
 		redefine
 			search_back
 		end
@@ -30,16 +30,16 @@ feature -- Search
 			-- position where `item' and `v' are equal.
 			-- Move `before' if not found.
 		local
-			cell: DS_BILINKABLE [G]
+			a_cell: like cell
 		do
 			from
-				cell := a_cursor.current_cell
+				a_cell := a_cursor.current_cell
 			until
-				cell = Void or else cell.item = v
+				a_cell = Void or else a_cell.item = v
 			loop
-				cell := cell.left
+				a_cell := a_cell.left
 			end
-			a_cursor.set (cell, cell = Void, False)
+			a_cursor.set (a_cell, a_cell = Void, False)
 		end
 
 end -- class DS_BILINKED_LIST_REFERENCE_SEARCHER

@@ -16,13 +16,14 @@ inherit
 
 	DS_LINKED_LIST_SEARCHER [G]
 		redefine
-			container, cursor
+			container, cursor, cell
 		end
 
 feature {NONE} -- Anchor types
 
 	container: DS_BILINKED_LIST [G] is do end
 	cursor: DS_BILINKED_LIST_CURSOR [G] is do end
+	cell: DS_BILINKABLE [G] is do end
 			-- Anchor types
 
 end -- class DS_BILINKED_LIST_SEARCHER

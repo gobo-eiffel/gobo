@@ -22,16 +22,16 @@ feature -- Search
 			-- position where `item' and `v' are equal.
 			-- Move `after' if not found.
 		local
-			cell: DS_LINKABLE [G]
+			a_cell: like cell
 		do
 			from
-				cell := a_cursor.current_cell
+				a_cell := a_cursor.current_cell
 			until
-				cell = Void or else equal (cell.item, v)
+				a_cell = Void or else equal (a_cell.item, v)
 			loop
-				cell := cell.right
+				a_cell := a_cell.right
 			end
-			a_cursor.set (cell, False, cell = Void)
+			a_cursor.set (a_cell, False, a_cell = Void)
 		ensure then
 			found: not a_cursor.after implies equal (a_cursor.item, v)
 		end
@@ -41,19 +41,19 @@ feature -- Search
 			-- position where `item' and `v' are equal.
 			-- Move `before' if not found.
 		local
-			cell, cursor_cell, new_cell: DS_LINKABLE [G]
+			a_cell, cursor_cell, new_cell: like cell
 		do
 			cursor_cell := a_cursor.current_cell
 			if cursor_cell /= Void and not equal (cursor_cell.item, v) then
 				from
-					cell := a_cursor.container.first_cell
+					a_cell := a_cursor.container.first_cell
 				until
-					cell = cursor_cell
+					a_cell = cursor_cell
 				loop
-					if equal (cell.item, v) then
-						new_cell := cell
+					if equal (a_cell.item, v) then
+						new_cell := a_cell
 					end
-					cell := cell.right
+					a_cell := a_cell.right
 				end
 				a_cursor.set (new_cell, new_cell = Void, False)
 			end
