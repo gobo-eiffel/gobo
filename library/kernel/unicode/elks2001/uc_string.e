@@ -410,6 +410,70 @@ feature -- Status report
 
    
 
+   -- has
+
+   
+
+   -- has_substring
+
+   
+
+   is_boolean: BOOLEAN is
+
+         -- Does `Current' represent a `BOOLEAN'?
+
+      do
+
+         Result := same_string(Constant_true) 
+
+            or else same_string(Constant_false)
+
+      ensure
+
+         is_boolean: Result = (same_string(Constant_true) or 
+
+                               same_string(Constant_false))
+
+      end
+
+   
+
+   -- is_double
+
+   
+
+   is_empty: BOOLEAN is
+
+         -- Is string empty?
+
+      do
+
+         Result := count = 0
+
+      ensure
+
+         definition: Result = (count = 0)
+
+      end
+
+   
+
+   -- is_integer
+
+   
+
+   -- is_real
+
+   
+
+   -- same_string
+
+   
+
+   -- valid_index
+
+   
+
 feature -- Element change
 
    
@@ -612,7 +676,137 @@ feature -- Duplication
 
    
 
+   copy (other: like Current) is
+
+      do
+
+	 -- we can't wipe_out representation, if available, for it is 
+
+	 -- the same as other.i_reprresentation for VE. have to 
+
+	 -- reread the clone semantics
+
+
+
+	 i_representation := i_settings.create_representation
+
+
+
+	 if not other.is_empty then
+
+	    i_representation.insert(1, other.i_representation, 1, other.count)
+
+	 end
+
+      end
+
+   
+
+   infix "+" (other: UC_STRING): like Current is
+
+         -- New object which is a clone of `Current' extended by the 
+
+         -- characters of `other'.
+
+      require
+
+         other_exists: other /= Void
+
+      do
+
+         !!Result.make(count + other.count)
+
+         Result.append_string(Current)
+
+         Result.append_string(other)
+
+      ensure
+
+         result_not_void: Result /= Void;
+
+         result_count: Result.count = count + other.count;
+
+         initial: Result.substring(1, count).is_equal(Current);
+
+         final: Result.substring(count + 1, count + other.count)
+
+                .same_string(other)
+
+                     
+
 feature -- Output
+
+   
+
+feature -- Some Constants
+
+   
+
+   Constant_true: UC_STRING is
+
+      once
+
+         !!Result.make_empty
+
+         Result.append_ascii_string("true")
+
+      end
+
+   
+
+   Constant_false: UC_STRING is
+
+      once
+
+         !!Result.make_empty
+
+         Result.append_ascii_string("false")
+
+      end
+
+   
+
+feature {UC_STRING} -- Helpers
+
+   
+
+   append_ascii_string (s: STRING) is
+
+         -- append ascii string to `Current'
+
+      require
+
+         not_void: s /= void
+
+      local
+
+         i: INTEGER
+
+         ucc: UC_CHARACTER
+
+      do
+
+         from
+
+            i := 1
+
+         until
+
+            not s.valid_index(i)
+
+         loop
+
+            ucc.make_from_code(s.item(i).code)
+
+            append_character(ucc)
+
+            
+
+            i := i + 1
+
+         end
+
+      end
 
    
 
