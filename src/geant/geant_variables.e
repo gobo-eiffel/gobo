@@ -34,6 +34,12 @@ inherit
 		export
 			{NONE} all
 		end
+
+	KL_SHARED_FILE_SYSTEM
+		export
+			{NONE} all
+		end
+
 creation
 
 	make
@@ -53,9 +59,6 @@ feature {NONE} -- Initialization
 				if not has_variable ("is_windows") then
 					set_variable_value ("is_windows", "true")
 				end
-				if not has_variable ("exe") then
-					set_variable_value ("exe", "exe")
-				end
 			elseif operating_system.is_unix then
 				if not has_variable ("GOBO_OS") then
 					set_variable_value ("GOBO_OS", "unix")
@@ -63,9 +66,10 @@ feature {NONE} -- Initialization
 				if not has_variable ("is_unix") then
 					set_variable_value ("is_unix", "true")
 				end
-				if not has_variable ("exe") then
-					set_variable_value ("exe", "")
-				end
+			end
+
+			if not has_variable ("exe") then
+				set_variable_value ("exe", file_system.exe_extension)
 			end
 
 		end
