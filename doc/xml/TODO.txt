@@ -10,8 +10,8 @@ EXPAT:
 
 EIFFEL:
 
-- xml declaration for entities event and parsing (rm special scanner?)
 - Better error message when failing to resolve DTD
+- xml declaration for entities event and parsing (rm special scanner?)
 - Check that stand alone handling makes some sense
 - Parse ":" name in pedantic XML 1.0 mode for tests
 - enhancement: Do CRLF normalisation before parser instead of downstream mess?
@@ -19,26 +19,24 @@ EIFFEL:
 
 GENERAL:
 
-- Tree attribute make require not duplicate attribute, or invariant
-- Tree pipe to include concatenation and comment filters
 - check XM_FORMATTER handling of namespaces
-- DTD model should contain attribute enumeration decls
+- Tree pipe to include concatenation and comment filters
+- Tree attribute make require not duplicate attribute, or invariant
 - actually checking tree nodes's parent /= Void (creation issue)
-- where does the end tag checker belong (filter or parser)?
 - enhancement: XM_DOCUMENT.make_root obsolete as before
-- enhancement: Add some generic DTD filters, eg pretty print
-- enhancement: XM_EIFFEL_DECLARATION -> XM_DECLARATION
+- enhancement: XM_EIFFEL_DECLARATION -> XM_DECLARATION, add to tree
 - enhancement: Obsolete/hide nodes' `set_parent', ordinary `make'?
 - enhancement: Tree clipboard
 - enhancement: Cache queries by name in tree?
 - enhancement: XM_ELEMENT.is_root_element
+- enhancement: move DTD classes to own cluster
+- enhancement: tree, use DS_LIST is_addable
 
 TESTS:
 
-- more latin-1 tests
 - more extensive tree tests
 - full OASIS test suite to integrate
-- DTD events testing
+- more DTD events testing (entities, notation)
 - XM_FORMATTER tests
 
 DOC:
