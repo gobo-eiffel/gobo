@@ -119,10 +119,11 @@ href="../gelex/index.html"><em>gelex</em></a> utility can be used
 without change as the definition of <font color="#008080"><em><tt>read_token</tt></em></font>.</p>
 
 <p><font color="#008080"><em><tt>YY_PARSER</tt></em></font> is
-actually a generic class whose generic parameter specifies the
-type of the <a href="introduction.html#semantic_values">semantic
-values</a> associated with each token. When scanning the input
-stream for a new token, <font color="#008080"><em><tt>read_token</tt></em></font>
+actually a generic class whose generic parameter specifies the <a
+href="actions.html#value_types">type</a> of the <a
+href="introduction.html#semantic_values">semantic values</a>
+associated with each token. When scanning the input stream for a
+new token, <font color="#008080"><em><tt>read_token</tt></em></font>
 must update the semantic value of the token being read in feature
 <a href="actions.html#last_value"><font color="#008080"><em><tt>last_value</tt></em></font></a>.
 As for <font color="#008080"><em><tt>read_token</tt></em></font>

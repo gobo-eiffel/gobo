@@ -87,21 +87,56 @@ just recognized by the rule. If there were a useful semantic
 value associated with the <font color="#FF0000"><tt>'+'</tt></font>
 token, it could be referred to as <font color="#0000FF"><tt>$2</tt></font>.</p>
 
-<p>If you don't specify an action for a rule, <em>geyacc</em>
-supplies a default: `<font color="#0000FF"><tt>$$</tt></font><tt>
-</tt><font color="#008080"><tt>:=</tt></font><tt> </tt><font
-color="#0000FF"><tt>$1</tt></font>'. Thus, the value of the first
-symbol in the rule becomes the value of the whole rule. There is
-no meaningful default action for an empty rule; every empty rule
-must have an explicit action unless the rule's value does not
-matter.</p>
+<p>Like entities in Eiffel, <font color="#0000FF"><tt>$$</tt></font>
+is initialized to its default value at the begining of the
+semantic action. This default value is the same as in Eiffel: <font
+color="#808000"><tt>0</tt></font> for <font color="#008080"><em><tt>INTEGER</tt></em></font>,
+<font color="#808000"><tt>False</tt></font> for <font
+color="#008080"><em><tt>BOOLEAN</tt></em></font>, <font
+color="#808000"><tt>Void</tt></font> for reference types, etc.
+Specifying no action for a rule is equivalent to specifying an
+empty action <font color="#0000FF">{}</font>. Therefore the
+semantic value of such rules is set to its corresponding default
+value.</p>
+
+<blockquote>
+    <p><font size="2">Note that this is a departure from <em>yacc</em>
+    and <em>Bison</em> behavior: If you don't specify an action
+    for a rule, <em>yacc</em> and <em>Bison</em> would supply a
+    default: </font><font color="#0000FF" size="2"><tt>{ $$</tt></font><font
+    size="2"><tt> </tt></font><font color="#008080" size="2"><tt>:=</tt></font><font
+    size="2"><tt> </tt></font><font color="#0000FF" size="2"><tt>$1
+    }</tt></font><font size="2">. Thus, the value of the first
+    symbol in the rule would become the value of the whole rule.
+    Furthermore, there is no meaningful default action for an
+    empty rule in <em>yacc</em> and <em>Bison</em>; every empty
+    rule must have an explicit action unless the rule's value
+    does not matter</font>.</p>
+    <p><font size="2">The current behavior of <em>geyacc</em> was
+    deemed more appropriate in the Eiffel context. In Eiffel ,
+    all entities are initialized to its default value. </font><font
+    color="#0000FF" size="2"><tt>$$ </tt></font><font size="2">could
+    be considered as the </font><font color="#008080" size="2"><em><tt>Result</tt></em></font><font
+    size="2"> entity of the semantic action, therefore it is
+    initialized to its default value at the beginning of the
+    action as well. Furthermore, in a typed system such as
+    Eiffel, it is meaningless to use </font><font color="#0000FF"
+    size="2"><tt>{ $$</tt></font><font size="2"><tt> </tt></font><font
+    color="#008080" size="2"><tt>:=</tt></font><font size="2"><tt>
+    </tt></font><font color="#0000FF" size="2"><tt>$1 }</tt></font><font
+    size="2"> as a default action since there is no guarantee
+    that </font><font color="#0000FF" size="2"><tt>$$ </tt></font><font
+    size="2">and </font><font color="#0000FF" size="2"><tt>$1 </tt></font><font
+    size="2">will have conforming types.</font></p>
+</blockquote>
 
 <p><font color="#0000FF"><tt>$N</tt></font> with <tt>N</tt> zero
 or negative is allowed for reference to tokens and groupings on
 the stack <em>before</em> those that match the current rule. This
-is a very risky practice, and to use it reliably you must be
-certain of the context in which the rule is applied. Here is a
-case in which you can use this reliably:</p>
+is a very risky practice (<em>geyacc</em> generates a warning in
+such cases), and to use it reliably you must be certain of the
+context in which the rule is applied. Here is a case in which you
+can use this reliably:</p>
 
 <blockquote>
     <pre><font color="#800080">foo</font><font color="#0000FF">:</font> <font
@@ -155,7 +190,8 @@ be used in actions:</p>
     <dd>Clear temporary objects so that they can be collected by
         the garbage collector. This routine is called by <font
         color="#008080"><em><tt>parse</tt></em></font> before
-        exiting. It can be redefined in descendants.</dd>
+        exiting. It can be redefined in descendants. Clear
+        internal stacks by default (call to <font color="#008080"><em><tt>clear_stacks</tt></em></font>).</dd>
     <dt><a href="skeleton.html#error_count" name="error_count"><font
         color="#008080"><em><tt>error_count</tt></em></font></a><font
         color="#008080"><tt>:</tt><em><tt> INTEGER</tt></em></font></dt>
@@ -246,6 +282,76 @@ be used in actions:</p>
         will be set to true.</dd>
 </dl>
 
+<h2><a name="value_types">Types of Semantic Values in Actions</a></h2>
+
+<p>In a simple program it may be sufficient to use the same
+Eiffel type for the semantic values of all constructs. This was
+true in the RPN and infix <a href="examples.html">calculator
+examples</a>. This Eiffel type is the actual generic parameter
+given to the generic skeleton class <font color="#008080"><em><tt>YY_PARSER_SKELETON</tt></em></font>.
+However, in most programs, there will be a need for different
+Eiffel types for different kinds of tokens and groupings. For
+example, a numeric constant my need type <font color="#008080"><em><tt>INTEGER</tt></em></font>
+or <font color="#008080"><em><tt>DOUBLE</tt></em></font>, while a
+string constant needs type <font color="#008080"><em><tt>STRING</tt></em></font>,
+and a list of identifiers might need type <font color="#008080"><em><tt>LINKED_LIST
+</tt></em><tt>[</tt><em><tt>STRING</tt></em><tt>]</tt></font>. To
+use more than one Eiffel type for semantic values in one parser, <em>geyacc</em>
+requires two things to be done:</p>
+
+<ul>
+    <li>Specify as the actual generic parameter of class <font
+        color="#008080"><em><tt>YY_PARSER_SKELETON </tt></em></font>one
+        common ancestor of all possible types of semantic values.
+        Note that an obvious candidate is class <font
+        color="#008080"><em><tt>ANY </tt></em></font>since by
+        definition this class is an ancestor of all Eiffel
+        classes in a system.</li>
+    <li>Choose one of the types for each symbol (terminal or
+        nonterminal) for which semantic values are used. This is
+        done for tokens with the <a
+        href="declarations.html#token"><font color="#0000FF"><tt>%token</tt></font></a>
+        <em>geyacc</em> declaration, and for groupings with the <a
+        href="declarations.html#type"><font color="#0000FF"><tt>%type</tt></font></a>
+        <em>geyacc</em> declaration. If the type of a semantic
+        value has not been specified that way, it will by default
+        be the actual generic parameter that has been chosen for <font
+        color="#008080"><em><tt>YY_PARSER_SKELETON</tt></em></font>.</li>
+</ul>
+
+<p>If a single Eiffel type has been chosen for semantic values,
+the <font color="#0000FF"><tt>$$</tt></font> and <font
+color="#0000FF"><tt>$N</tt></font> constructs always have that
+type. However, in case of multiple types for semantic values,
+each time <font color="#0000FF"><tt>$$</tt></font> or <font
+color="#0000FF"><tt>$N </tt></font>is used, its Eiffel type is
+determined by which symbol it referes to in the rule. In this
+example:</p>
+
+<blockquote>
+    <pre><font color="#800080">exp</font><font color="#0000FF">:</font> ...
+   <font color="#0000FF">|</font> <font color="#800080">exp</font> <font
+color="#FF0000">'+'</font> <font color="#800080">exp</font>
+       <font color="#0000FF">{ $$ </font><font color="#008080">:=</font><font
+color="#0000FF"> $1 </font><font color="#008080">+</font><font
+color="#0000FF"> $3 }</font></pre>
+</blockquote>
+
+<p><font color="#0000FF"><tt>$1</tt></font> and <font
+color="#0000FF"><tt>$3</tt></font> refer to instances of <font
+color="#800080"><tt>exp</tt></font>, so they all have the Eiffel
+type declared for the nonterminal symbol <font color="#800080"><tt>exp</tt></font>.
+If <font color="#0000FF"><tt>$2 </tt></font>were used, it would
+have the type declared for the terminal symbol <font
+color="#FF0000"><tt>'+'</tt></font>.</p>
+
+<p>Note that in case of multiple types for semantic values, <em>geyacc</em>
+does not support user-defined expanded types properly. Reference
+types, generic or not, and basic expanded types such as <font
+color="#008080"><em><tt>INTEGER</tt></em></font> or <font
+color="#008080"><em><tt>CHARACTER</tt></em></font> are properly
+handled though.</p>
+
 <h2><a name="midrule_actions">Actions in Mid-Rule</a></h2>
 
 <p>Occasionally it is useful to put an action in the middle of a
@@ -266,11 +372,15 @@ color="#0000FF"><tt>$N</tt></font>.</p>
 <p>The mid-rule action can also have a semantic value. The action
 can set its value with an assignment to <font color="#0000FF"><tt>$$</tt></font>,
 and actions later in the rule can refer to the value using <font
-color="#0000FF"><tt>$N</tt></font>. There is no way to set the
-value of the entire rule with a mid-rule action, because
-assignments to <font color="#0000FF"><tt>$$</tt></font> do not
-have that effect. The only way to set the value for the entire
-rule is with an ordinary action at the end of the rule.</p>
+color="#0000FF"><tt>$N</tt></font>. Since there is no symbol to
+name the action, there is no way to declare the Eiffel type for
+the value. Therefore it will have by default the type used as
+actual generic parameter for <font color="#008080"><em><tt>YY_PARSER_SKELETON</tt></em></font>.</p>
+
+<p>There is no way to set the value of the entire rule with a
+mid-rule action, because assignments to <font color="#0000FF"><tt>$$</tt></font>
+do not have that effect. The only way to set the value for the
+entire rule is with an ordinary action at the end of the rule.</p>
 
 <p>Here is an example from a hypothetical compiler, handling a <font
 color="#808000"><tt>let</tt></font> statement that looks like <font
@@ -399,7 +509,7 @@ nonterminal symbol which serves as a subroutine:</p>
 
 <blockquote>
     <pre><font color="#800080">subroutine</font><font
-color="#0000FF">:</font><font color="#008080"> -- /* empty */</font>
+color="#0000FF">:</font><font color="#008080"> -- Empty</font>
         <font color="#0000FF">{</font> <font color="#008080"><em>prepare_for_local_variables</em></font> <font
 color="#0000FF">}</font>
     <font color="#0000FF">;</font>
@@ -427,7 +537,7 @@ does to implement mid-rule actions.</p>
 <table border="0" width="100%">
     <tr>
         <td><address>
-            <font size="2"><b>Copyright © 1998</b></font><font
+            <font size="2"><b>Copyright © 1999</b></font><font
             size="1"><b>, </b></font><font size="2"><strong>Eric
             Bezault</strong></font><strong> </strong><font
             size="2"><br>
@@ -437,7 +547,7 @@ does to implement mid-rule actions.</p>
             <strong>http:</strong></font><a
             href="http://www.gobo.demon.co.uk"><font size="2">//www.gobo.demon.co.uk</font></a><font
             size="2"><br>
-            <strong>Last Updated:</strong> 21 May 1998</font><br>
+            <strong>Last Updated:</strong> 27 March 1999</font><br>
             <!--webbot bot="PurpleText"
             preview="
 $Date$ 

@@ -30,13 +30,14 @@ formulating the grammar.</p>
 <p>All token type names (but not single-character literal tokens
 such as<font color="#FF0000" size="2" face="Courier New"> </font><font
 color="#FF0000"><tt>'+'</tt></font> and <font color="#FF0000"><tt>'*'</tt></font>)
-must be declared. On the other hand, nonterminal symbols do not
-need be declared. The first rule in the file also specifies the <a
-href="introduction.html#start_symbol"><em>start symbol</em></a>,
-by default. If you want some other symbol to be the start symbol,
-you must declare it explicitly.</p>
+must be declared. Nonterminal symbols must be declared if the
+Eiffel <a href="actions.html#value_types">type</a> used for the
+semantic value needs to be specified. The first rule in the file
+also specifies the <a href="introduction.html#start_symbol"><em>start
+symbol</em></a>, by default. If you want some other symbol to be
+the start symbol, you must declare it explicitly.</p>
 
-<h2><a name="token">Token Type Names</a></h2>
+<h2><a name="token">Tokens</a></h2>
 
 <p>The basic way to declare a token type name (terminal symbol)
 is as follows:</p>
@@ -50,7 +51,9 @@ color="#FF0000">NAME</font></pre>
 feature in the parser, so that the routine <font color="#008080"><em><tt>read_token</tt></em></font>
 (if it is define in this class) can use the name <font
 color="#FF0000"><tt>NAME</tt></font> to stand for this token
-type's code.</p>
+type's code. Any number of terminal symbols can be specified in
+the same <font color="#0000FF"><tt>%token</tt></font>
+declaration. Use spaces to separate the symbol names.</p>
 
 <p>Alternatively, you can use <font color="#0000FF"><tt>%left</tt></font>,
 <font color="#0000FF"><tt>%right</tt></font>, or <font
@@ -72,6 +75,27 @@ the numeric codes for all token types. <em>Geyacc</em> will
 automatically select codes that don't conflict with each other or
 with <font size="2">ASCII</font> characters.</p>
 
+<p>In the event of <a href="actions.html#value_types">multiple
+types</a> for semantic values, the syntax of <font
+color="#0000FF"><tt>%token </tt></font>may be extended to include
+the Eiffel type alternative delimited by angle-brackets:</p>
+
+<blockquote>
+    <pre><font color="#0000FF">%token</font> <font
+color="#0000FF">&lt;</font><font color="#008080"><em>INTEGER</em></font><font
+color="#0000FF">&gt;</font><font color="#FF0000"> NUM  </font><font
+color="#008080">-- Define token </font><font color="#FF0000">NUM</font><font
+color="#008080"> and its type <em>INTEGER</em></font><font
+color="#FF0000">
+</font><font color="#0000FF">%token</font> <font color="#0000FF">&lt;</font><font
+color="#008080"><em>STRING</em></font><font color="#0000FF">&gt;</font><font
+color="#FF0000"> NAME  </font><font color="#008080">-- Define token </font><font
+color="#FF0000">NAME</font><font color="#008080"> of type <em>STRING</em></font></pre>
+</blockquote>
+
+<p>All tokens specified in the same <font color="#0000FF"><tt>%token
+</tt></font>declaration will have the same value type.</p>
+
 <h2><a name="precedence">Operator Precedence</a></h2>
 
 <p>Use the <font color="#0000FF"><tt>%left</tt></font>, <font
@@ -84,7 +108,7 @@ once. These are called <em><strong>precedence declarations</strong></em>.</p>
 color="#0000FF"><tt>%token</tt></font>:</p>
 
 <blockquote>
-    <pre><font color="#0000FF">%left</font> SYMBOLS...</pre>
+    <pre><font color="#0000FF">%left</font> SYMBOLS ...</pre>
 </blockquote>
 
 <p>And indeed any of these declarations serves the purposes of <font
@@ -116,6 +140,26 @@ specify the associativity and relative precedence for all the <tt>SYMBOLS</tt>:<
         associate, the one declared later has the higher
         precedence and is grouped first.</li>
 </ul>
+
+<h2><a name="type">Nonterminal Symbols</a></h2>
+
+<p>When you want to specify <a href="actions.html#value_types">multiple
+value types</a>, you can declare the value type of each
+nonterminal symbol for which values are used. This is done with a
+<font color="#0000FF"><tt>%type</tt></font> declaration, like
+this:</p>
+
+<blockquote>
+    <pre><font color="#0000FF">%type &lt;</font><font
+color="#008080"><em>TYPE</em></font><font color="#0000FF">&gt;</font> NONTERMINAL ...</pre>
+</blockquote>
+
+<p>Here <tt>NONTERMINAL</tt> is the name of a nonterminal symbol,
+and <font color="#008080"><em><tt>TYPE</tt></em></font> is the
+name of the Eiffel type associated with this symbol. Any number
+of nonterminal symbols can be specified in the same <font
+color="#0000FF"><tt>%type</tt></font> declaration, if they have
+the same value type. Use spaces to separate the symbol names.</p>
 
 <h2><a name="expect">Suppressing Conflict Warnings</a></h2>
 
@@ -186,6 +230,9 @@ declaration as follows:</p>
     <dd>Declare a terminal symbol (token type name) that is
         nonassociative (using it in a way that would be
         associative is a syntax error).</dd>
+    <dt><a href="#type"><font color="#0000FF"><tt>%type</tt></font></a></dt>
+    <dd>Declare the type of semantic values for a nonterminal
+        symbol.</dd>
     <dt><a href="#start"><font color="#0000FF"><tt>%start</tt></font></a></dt>
     <dd>Specify the grammar's start symbol.</dd>
     <dt><a href="#expect"><font color="#0000FF"><tt>%expect</tt></font></a></dt>
@@ -197,7 +244,7 @@ declaration as follows:</p>
 <table border="0" width="100%">
     <tr>
         <td><address>
-            <font size="2"><b>Copyright © 1997</b></font><font
+            <font size="2"><b>Copyright © 1999</b></font><font
             size="1"><b>, </b></font><font size="2"><strong>Eric
             Bezault</strong></font><strong> </strong><font
             size="2"><br>
@@ -207,7 +254,7 @@ declaration as follows:</p>
             <strong>http:</strong></font><a
             href="http://www.gobo.demon.co.uk"><font size="2">//www.gobo.demon.co.uk</font></a><font
             size="2"><br>
-            <strong>Last Updated:</strong> 7 September 1997</font><br>
+            <strong>Last Updated:</strong> 27 March 1999</font><br>
             <!--webbot bot="PurpleText"
             preview="
 $Date$ 
