@@ -53,6 +53,9 @@ feature -- Access
 	project: GEANT_PROJECT
 			-- Project to which Current belongs to
 
+	dir_name: STRING
+			-- Current working directory for execution
+
 	directory_name: STRING
 			-- Name of directory serving as root for recursive scanning
 
@@ -139,9 +142,13 @@ feature -- Status report
 	is_executable: BOOLEAN is
 			-- Can element be executed?
 		do
-			Result := (directory_name /= Void and then directory_name.count > 0)
-			if not Result then
-				project.log (<<"  [fileset] error: attribute 'directory' is mandatory">>)
+			if is_in_gobo_32_format then
+				Result := (directory_name /= Void and then directory_name.count > 0)
+				if not Result then
+					project.log (<<"  [fileset] error: attribute 'directory' is mandatory">>)
+				end
+			else
+				Result := True
 			end
 			if Result then
 				Result := include_wildcard = Void or else include_wildcard.is_compiled
@@ -162,11 +169,30 @@ feature -- Status report
 				end
 			end
 		ensure
-			directory_name_not_void: Result implies directory_name /= Void
-			directory_name_not_empty: Result implies directory_name.count > 0
+			directory_name_not_void: (Result and is_in_gobo_32_format) implies directory_name /= Void
+			directory_name_not_empty: (Result and is_in_gobo_32_format) implies directory_name.count > 0
 			include_wildcard_compiled: Result implies (include_wildcard = Void or else include_wildcard.is_compiled)
 			exclude_wildcard_compiled: Result implies (exclude_wildcard = Void or else exclude_wildcard.is_compiled)
 			map_executable: Result implies (map = Void or else map.is_executable)
+		end
+
+	is_in_gobo_32_format: BOOLEAN is
+			-- Is fileset setup for obsolete GOBO 3.2 format?
+		do
+			Result := directory_name /= Void and then filename_directory_name = Void and then
+				mapped_filename_directory_name = Void and then dir_name = Void
+		ensure
+			definition: Result implies directory_name /= Void and then
+				filename_directory_name = Void and then mapped_filename_directory_name = Void and then
+				dir_name = Void
+		end
+
+	is_in_gobo_33_format: BOOLEAN is
+			-- Is fileset setup for GOBO 3.3 format?
+		do
+			Result := directory_name = Void and then not concat
+		ensure
+			definition: Result implies directory_name = Void and then not concat
 		end
 
 	are_project_variables_up_to_date: BOOLEAN is
@@ -218,6 +244,16 @@ feature -- Status report
 		end
 
 feature -- Element change
+
+	set_dir_name (a_dir_name: STRING) is
+			-- Set `dir_name' to `a_dir_name'.
+		require
+			dir_name_not_void: a_dir_name /= Void
+		do
+			dir_name := a_dir_name
+		ensure
+			dir_name_set: dir_name.is_equal (a_dir_name)
+		end
 
 	set_directory_name (a_directory_name: STRING) is
 			-- Set `directory_name' to `a_directory_name'.
@@ -341,6 +377,8 @@ feature -- Element change
 			mapped_filename_variable_name_set: mapped_filename_variable_name = a_mapped_filename_variable_name
 		end
 
+feature -- Element change
+
 	add_fileset_entry_if_necessary (a_filename: STRING) is
 			-- Add new GEANT_FILESET_ENTRY created from `a_filename'
 			-- to `filenames'.
@@ -363,10 +401,7 @@ feature -- Element change
 			else
 				an_mapped_filename := an_filename
 			end
-				-- Remove support for `concat' after obsolete period:
-			check not_concat_and_mapped_filename_directory_name:
-				not (concat and mapped_filename_directory_name /= Void)
-			end
+				-- Remove support for 'gobo32_format' after obsolete period:
 			if concat then
 				an_mapped_filename := unix_file_system.pathname (directory_name, an_mapped_filename)
 			end
@@ -416,7 +451,11 @@ feature -- Cursor movement
 			-- Move cursor to first position.
 		do
 			filenames.start
-			update_project_variables
+			if off then
+				remove_project_variables
+			else
+				update_project_variables
+			end
 		ensure
 			empty_behavior: is_empty implies after
 			project_variables_up_to_date: are_project_variables_up_to_date
@@ -428,7 +467,11 @@ feature -- Cursor movement
 			not_after: not after
 		do
 			filenames.forth
-			update_project_variables
+			if off then
+				remove_project_variables
+			else
+				update_project_variables
+			end
 		ensure
 			project_variables_up_to_date: are_project_variables_up_to_date
 		end
@@ -440,9 +483,20 @@ feature -- Execution
 		local
 			al_directory_name: STRING
 			cs: DS_SET_CURSOR [STRING]
+			a_old_cwd: STRING
 		do
 			remove_project_variables
-			project.trace_debug (<<"  [*fileset] directory_name: ", directory_name>>)
+
+			a_old_cwd := file_system.current_working_directory
+				-- Change to directory `dir_name' if specified:
+			if dir_name /= Void then
+				project.trace_debug (<<"  [*fileset] dir: '", dir_name, "%'">>)
+				project.trace_debug (<<"  [*fileset] changing to directory: '", dir_name, "%'">>)
+				file_system.set_current_working_directory (dir_name)
+			end
+			if directory_name /= Void then
+				project.trace_debug (<<"  [*fileset] directory_name: ", directory_name>>)
+			end
 			if include_wc_string /= Void then
 				project.trace_debug (<<"  [*fileset] include_wc_string: ", include_wc_string>>)
 			end
@@ -452,7 +506,11 @@ feature -- Execution
 			if mapped_filename_directory_name /= Void then
 				project.trace_debug (<<"  [*fileset] mapped_filename_directory: ", mapped_filename_directory_name>>)
 			end
-			al_directory_name := unix_file_system.canonical_pathname (directory_name)
+			if directory_name /= Void then
+				al_directory_name := unix_file_system.canonical_pathname (directory_name)
+			else
+				create al_directory_name.make_from_string (".")
+			end
 				-- Add entries from filesystem scan:
 			scan_internal (al_directory_name)
 				-- Add single includes:
@@ -473,6 +531,9 @@ feature -- Execution
 					forth
 				end
 			end
+				-- Change back to previous directory:
+			project.trace_debug (<<"  [*fileset] changing to directory: '", a_old_cwd, "%'">>)
+			file_system.set_current_working_directory (a_old_cwd)
 		end
 
 	include_wildcard: LX_WILDCARD
@@ -484,7 +545,8 @@ feature -- Execution
 feature {NONE} -- Implementation/Access
 
 	filenames: DS_SET [GEANT_FILESET_ENTRY]
-			-- Files underneath directory named `directory_name'
+			-- Files underneath directory named `directory_name' (if `is_in_gobo_32_format')
+			-- Files underneath current working directory (if `is_in_gobo_33_format')
 			-- matching expressions in `include_wc_string' and not matching
 			-- expressions in `exclude_wc_string' with their corresponding
 			-- mapped filename if `has_map';
@@ -499,7 +561,7 @@ feature {NONE} -- Implementation/Access
 feature {NONE} -- Implementation/Processing
 
 	scan_internal (a_directory_name: STRING) is
-			-- Scan directory named `directory_name' recursivley;
+			-- Scan directory named `a_directory_name' recursivley;
 			-- put filenames found matching `include_wildcard' and not matching `exclude_wildcard'
 			-- into `filenames';
 		local
@@ -524,7 +586,11 @@ feature {NONE} -- Implementation/Processing
 						else
 								-- Handle files:
 --!!							project.trace_debug (<<"filename: ", s, "%N">>)
-							smatch := s.substring (directory_name.count + 2, s.count)	-- 2 because of '/'
+							if is_in_gobo_32_format then
+								smatch := s.substring (directory_name.count + 2, s.count)	-- 2 because of '/'
+							else
+								smatch := s.substring (3, s.count)	-- 3 because of './'
+							end
 --!!							project.trace_debug (<<"  trying to match: ", smatch, "%N">>)
 							if include_wildcard /= Void and then include_wildcard.recognizes (smatch) then
 								add_fileset_entry_if_necessary (smatch)
@@ -566,12 +632,8 @@ feature {NONE} -- Implementation/Processing
 		require
 			not_off: not off
 		do
-			if filenames.off then
-				remove_project_variables
-			else
-				project.variables.set_variable_value (filename_variable_name, item_filename)
-				project.variables.set_variable_value (mapped_filename_variable_name, item_mapped_filename)
-			end
+			project.variables.set_variable_value (filename_variable_name, item_filename)
+			project.variables.set_variable_value (mapped_filename_variable_name, item_mapped_filename)
 		ensure
 			project_variables_set: are_project_variables_up_to_date
 		end
@@ -585,8 +647,8 @@ feature {NONE} -- Implementation/Processing
 			project.variables.remove_variable (filename_variable_name)
 			project.variables.remove_variable (mapped_filename_variable_name)
 		ensure
-			project_variables_removed: not project.variables.has (filename_variable_name) and
-				not project.variables.has (mapped_filename_variable_name)
+			project_variables_removed: not project.variables.variables.has (filename_variable_name) and
+				not project.variables.variables.has (mapped_filename_variable_name)
 		end
 
 invariant
@@ -595,5 +657,6 @@ invariant
 	filename_variable_name_not_empty: filename_variable_name.count > 0
 	mapped_filename_variable_name_not_void: mapped_filename_variable_name /= Void
 	mapped_filename_variable_name_not_empty: mapped_filename_variable_name.count > 0
+	correct_format: is_in_gobo_32_format or else is_in_gobo_33_format
 
 end
