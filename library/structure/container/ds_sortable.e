@@ -2,11 +2,12 @@ indexing
 
 	description:
 
-		"Structures that can be sorted"
+		"Data structures that can be sorted"
 
 	library:    "Gobo Eiffel Structure Library"
-	author:     "Eric Bezault <ericb@gobo.demon.co.uk>"
-	copyright:  "Copyright (c) 1997, Eric Bezault"
+	author:     "Eric Bezault <ericb@gobosoft.com>"
+	copyright:  "Copyright (c) 1999, Eric Bezault and others"
+	license:    "Eiffel Forum Freeware License v1 (see forum.txt)"
 	date:       "$Date$"
 	revision:   "$Revision$"
 
@@ -18,24 +19,24 @@ inherit
 
 feature -- Status report
 
-	sorted (sorter: DS_SORTER [G]): BOOLEAN is
-			-- Is structure sorted according to `sorter''s criterion?
+	sorted (a_sorter: DS_SORTER [G]): BOOLEAN is
+			-- Is container sorted according to `a_sorter''s criterion?
 		require
-			sorter_not_void: sorter /= Void
+			a_sorter_not_void: a_sorter /= Void
 		do
-			Result := sorter.sorted (Current)
+			Result := a_sorter.sorted (Current)
 		end
 
 feature -- Sort
 
-	sort (sorter: DS_SORTER [G]) is
-			-- Sort structure using `sorter''s algorithm.
+	sort (a_sorter: DS_SORTER [G]) is
+			-- Sort container using `a_sorter''s algorithm.
 		require
-			sorter_not_void: sorter /= Void
+			a_sorter_not_void: a_sorter /= Void
 		do
-			sorter.sort (Current)
+			a_sorter.sort (Current)
 		ensure
-			sorted: sorted (sorter)
+			sorted: sorted (a_sorter)
 		end
 
 end -- class DS_SORTABLE
