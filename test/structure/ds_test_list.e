@@ -5,7 +5,7 @@ indexing
 		"Test features of class DS_LIST"
 
 	library: "Gobo Eiffel Structure Library"
-	copyright: "Copyright (c) 2000, Eric Bezault and others"
+	copyright: "Copyright (c) 2000-2004, Eric Bezault and others"
 	license: "Eiffel Forum License v2 (see forum.txt)"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -141,6 +141,7 @@ feature {NONE} -- Implementation
 			assert_iarrays_same ("items11", <<1, 2, 4, 44, 66, 77, 88, 99, 6, 7, 8, 9, 10>>, a_list.to_array)
 			assert_equal ("index10", 5, a_list.index)
 			assert_equal ("item9", 66, a_list.item_for_iteration)
+			assert_iarrays_same ("cloned_items1", <<1, 2, 4, 44, 66, 77, 88, 99, 6, 7, 8, 9, 10>>, clone (a_list).to_array)
 
 			a_list.wipe_out
 			assert ("is_empty1", a_list.is_empty)

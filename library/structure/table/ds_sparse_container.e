@@ -5,7 +5,7 @@ indexing
 		"Sparse containers. Used for implementation of sparse tables and sparse sets."
 
 	library: "Gobo Eiffel Structure Library"
-	copyright: "Copyright (c) 2003, Eric Bezault and others"
+	copyright: "Copyright (c) 2003-2004, Eric Bezault and others"
 	license: "Eiffel Forum License v2 (see forum.txt)"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -208,7 +208,7 @@ feature -- Duplication
 				old_cursor := internal_cursor
 				move_all_cursors_after
 				standard_copy (other)
-				if old_cursor /= Void then
+				if old_cursor /= Void and then valid_cursor (old_cursor) then
 					internal_cursor := old_cursor
 				else
 						-- Set `internal_cursor' to Void before calling
