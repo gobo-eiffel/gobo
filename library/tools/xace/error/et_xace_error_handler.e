@@ -16,8 +16,12 @@ inherit
 
 	UT_ERROR_HANDLER
 		redefine
-			report_error_message
+			report_error_message,
+			is_verbose
 		end
+
+	KL_IMPORTED_STRING_ROUTINES
+	ET_XACE_ELEMENT_NAMES
 
 creation
 
@@ -32,9 +36,10 @@ feature {NONE} -- Initialization
 		do
 			make_standard
 			set_info_null
+			set_warning_null
 		ensure
 			error_file_set: error_file = std.error
-			warning_file_set: warning_file = std.error
+			warning_file_set: warning_file = null_output_stream
 			info_file_set: info_file = null_output_stream
 		end
 
@@ -46,11 +51,23 @@ feature -- Status report
 			Result := (error_count > 0)
 		end
 
+	is_verbose: BOOLEAN is
+			-- Is `info_file' set to something other than
+			-- the null output stream?
+		do
+			Result := (info_file /= null_output_stream) and
+				(warning_file /= null_output_stream)
+		ensure
+			definition: Result = (info_file /= null_output_stream) and
+						(warning_file /= null_output_stream)
+		end
+
 feature -- Status setting
 
 	enable_verbose is
 			-- Set `is_verbose' to True.
 		do
+			warning_file := std.error
 			info_file := std.output
 		ensure
 			verbose: is_verbose
@@ -59,6 +76,7 @@ feature -- Status setting
 	disable_verbose is
 			-- Set `is_verbose' to False.
 		do
+			warning_file := null_output_stream
 			info_file := null_output_stream
 		ensure
 			not_verbose: not is_verbose
@@ -278,5 +296,27 @@ feature -- Reporting errors
 			error_count := error_count + 1
 			precursor (an_error)
 		end
+
+feature -- Reporting warnings
+
+	report_unknown_option_warning (an_element: XM_ELEMENT; a_position: XM_POSITION) is
+			-- Report that  the value of the attribute "name"
+			-- in the "option" elment `an_element' is unknown.
+		require
+			an_element_not_void: an_element /= Void
+			an_element_has_option_as_name: STRING_.same_string (an_element.name, uc_option)
+			an_element_has_name_attribute: an_element.has_attribute_by_name (uc_name)
+			a_name_attribute_not_empty: an_element.attribute_by_name (uc_name).value.count > 0
+			a_position_not_void: a_position /= Void
+		local
+			a_warning: ET_XACE_UNKNOWN_OPTION_NAME_WARNING
+		do
+			create a_warning.make (an_element, a_position)
+			report_warning (a_warning)
+		end
+
+invariant
+
+	warning_and_info_file_are_consistent: (info_file = null_output_stream) = (warning_file = null_output_stream)
 
 end
