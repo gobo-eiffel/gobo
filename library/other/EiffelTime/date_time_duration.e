@@ -102,9 +102,11 @@ feature {NONE} -- Initialization
 	make_fine (y, mo, d, h, mi: INTEGER; s: DOUBLE) is
 			-- set `year', `month', `day' to `y', `mo', `d'.
 			-- set `hour', `minute', `second' to `h', `mi', `s'.
+		local
+			s_int: INTEGER
 		do
-			make_precise (y, mo, d, h, mi, s.truncated_to_integer,
-				((s - second) * 1000).truncated_to_integer)
+			s_int := s.truncated_to_integer
+			make_precise (y, mo, d, h, mi, s_int, ((s - s_int) * 1000).truncated_to_integer)
 		ensure
 			year_set: year = y
 			month_set: month = mo
