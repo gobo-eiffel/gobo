@@ -67,9 +67,8 @@
 			
 			(Tip: call 'geant' with the '-d' option to see the contents of the fileset)
 		</description>
-
-		<copy to_directory="${GOBO}/example/geant/tmp" dir="${GOBO}/library">
-			<fileset directory="kernel" include="@(**/*.ge|**/*.?ace)"/>
+		<copy to_directory="${GOBO}/example/geant/tmp" dir="${GOBO}/library/kernel">
+			<fileset include="@(**/*.ge|**/*.?ace)"/>
 		</copy>
 	</target>
 	
@@ -87,10 +86,35 @@
 		</description>
 
 		<copy to_directory="${GOBO}/example/geant/tmp" dir="${GOBO}/library">
-			<fileset directory="kernel" include="@(**/*.ge|**/*.?ace)" mapped_filename_directory="kernel"/>
+			<fileset
+				dir="kernel"
+				include="@(**/*.ge|**/*.?ace)"
+				filename_directory="kernel"
+				mapped_filename_directory="kernel"
+			/>
 		</copy>
 	</target>
-	
+
+	<target name="copy_fs1c">
+		<description>
+			Like target 'copy_fs1b' with attribute dir='${GOBO}/library/kernel' on task 'copy'.
+		</description>
+
+		<copy to_directory="${GOBO}/example/geant/tmp" dir="${GOBO}/library/kernel">
+			<fileset include="@(**/*.ge|**/*.?ace)" mapped_filename_directory="kernel"/>
+		</copy>
+	</target>
+
+	<target name="copy_fs1d">
+		<description>
+			Like target 'copy_fs1b' using 'kernel' inside of 'include' attribute.
+		</description>
+
+		<copy to_directory="${GOBO}/example/geant/tmp" dir="${GOBO}/library">
+			<fileset include="@(kernel/**/*.ge|kernel/**/*.?ace)"/>
+		</copy>
+	</target>
+
 	<!-- copy filesets with maps -->	
 	<target name="copy_fs2a">
 		<description>
@@ -98,8 +122,8 @@
 			to '*.e' files underneath '${GOBO}/example/geant/tmp'.
 		</description>
 
-		<copy to_directory="${GOBO}/example/geant/tmp" dir="${GOBO}/library">
-			<fileset directory="kernel" include="@(**/*.ge)">
+		<copy to_directory="${GOBO}/example/geant/tmp" dir="${GOBO}/library/kernel">
+			<fileset include="@(**/*.ge)">
 				<map type="glob" from="*.ge" to="*.e"/>
 			</fileset>
 		</copy>
@@ -110,8 +134,20 @@
 			Like target 'copy_fs2a' but using the 'mapped_filename_directory' attribute.
 		</description>
 
-		<copy to_directory="${GOBO}/example/geant/tmp">
-			<fileset directory="kernel" include="@(**/*.ge)" mapped_filename_directory="kernel">
+		<copy to_directory="${GOBO}/example/geant/tmp" dir="${GOBO}/library/kernel">
+			<fileset include="@(**/*.ge)" mapped_filename_directory="kernel">
+				<map type="glob" from="*.ge" to="*.e"/>
+			</fileset>
+		</copy>
+	</target>
+
+	<target name="copy_fs2c" dir="${GOBO}/library">
+		<description>
+			Like target 'copy_fs2a' but using 'kernel' inside of 'include' attribute.
+		</description>
+
+		<copy to_directory="${GOBO}/example/geant/tmp" dir="${GOBO}/library">
+			<fileset include="@(kernel/**/*.ge)">
 				<map type="glob" from="*.ge" to="*.e"/>
 			</fileset>
 		</copy>
@@ -136,7 +172,7 @@
 			  attribute since they usually append paths to the filenames delivered by filesets.
 			  'copy' is doing this with the 'to_directory' attribute.
 
-			By setting 'force' to 'false' the fileset itself determines whether files
+			By setting 'force' to 'false' the fileset itself checks whether files
 			are 'outofdate' or not. This means of course that the fileset must have the complete
 			paths to the files and not only parts of them.
 
@@ -146,8 +182,8 @@
 			which files to include and which not.
 		</description>
 
-		<exec executable="${cp} ${fs.filename} ${fs.mapped_filename}" dir="${GOBO}/library/kernel">
-			<fileset directory="." include="@(*.ge)" force="false">
+		<exec executable="${cp} ${fs.filename} ${fs.mapped_filename}" dir="${GOBO}/library/kernel/basic">
+			<fileset include="@(*.ge)" force="false">
 				<map type="glob" from="*.ge" to="${GOBO}/example/geant/tmp/*.e"/>
 			</fileset>
 		</exec>
@@ -163,7 +199,7 @@
 		</description>
 
 		<exec executable="${cp} ${fs.filename} ${fs.mapped_filename}" dir="${GOBO}/library/kernel">
-			<fileset directory="." include="@(**/*.ge)" force="false">
+			<fileset include="@(**/*.ge)" force="false">
 				<map type="glob" from="*.ge" to="${GOBO}/example/geant/tmp/*.e">
 					<map type="flat"/>
 				</map>
@@ -175,47 +211,35 @@
 		<description>
 			Demonstrate the usage of attributes
 			'filename_directory' and 'mapped_filename_directory
-			Note: task 'outofdate' is used here to use a fileset. Invoke
+			Note: task 'outofdate' is only used here to have a container
+			for a fileset since filesets cannot be used alone. Invoke
 			geant with the '-d' option to see the content of the fileset.
 		</description>
 
 		<outofdate variable="ood" dir="${GOBO}/library">
-			<fileset
-				directory="kernel"
-				include="@(**/*.xace)"
-			>
-			</fileset>
+			<fileset dir="kernel" include="@(**/*.xace)"/>
 		</outofdate>
 
 		<outofdate variable="ood" dir="${GOBO}/library/kernel">
-			<fileset
-				directory="."
-				include="@(**/*.xace)"
-			>
-			</fileset>
+			<fileset include="@(**/*.xace)"/>
 		</outofdate>
 
 		<outofdate variable="ood" dir="${GOBO}/library/kernel">
-			<fileset
-				directory="."
-				include="@(**/*.xace)"
-				force="true"
-			>
-			</fileset>
+			<fileset include="@(**/*.xace)" force="false"/>
 		</outofdate>
 
 		<outofdate variable="ood" dir="${GOBO}/library">
 			<fileset
-				directory="kernel"
+				dir="kernel"
 				include="@(**/*.xace)"
-				mapped_filename_directory="D:/some_other_directory"
+				mapped_filename_directory="${GOBO}/example/geant/tmp/some_other_directory"
 			>
 			</fileset>
 		</outofdate>
 
 		<outofdate variable="ood" dir="${GOBO}/test">
 			<fileset
-				directory="${GOBO}/library/kernel"
+				dir="${GOBO}/library/kernel"
 				include="@(**/*.xace)"
 				filename_directory="${GOBO}/library/kernel"
 			>
@@ -224,37 +248,18 @@
 
 		<outofdate variable="ood" dir="${GOBO}/test">
 			<fileset
-				directory="${GOBO}/library/kernel"
+				dir="${GOBO}/library/kernel"
 				include="@(**/*.xace)"
 				filename_directory="${GOBO}/library/kernel"
 				mapped_filename_directory="D:/some_other_directory"
 			>
 			</fileset>
 		</outofdate>
-	</target>
 
-	<target name="test_fs2">
-		<description>
-			Demonstrate the usage of attributes
-			'filename_directory' and 'mapped_filename_directory
-			Note: task 'outofdate' is used here to use a fileset. Invoke
-			geant with the '-d' option to see the content of the fileset.
-		</description>
-
-		<outofdate variable="ood" dir="${GOBO}/library">
-			<fileset
-				directory="kernel"
-				include="@(**/*.xace)"
-			>
-			</fileset>
-		</outofdate>
 		<exec executable="echo ${fs.filename} ${fs.mapped_filename}" dir="${GOBO}/library">
-			<fileset
-				directory="kernel"
-				include="@(**/*.ge)"
-			>
-			</fileset>
+			<fileset dir="kernel" include="@(**/*.ge)"/>
 		</exec>
+
 	</target>
 
 	<!-- move -->	
@@ -295,7 +300,7 @@
 
 		<delete>
 			<fileset
-				directory="${GOBO}/example/geant/tmp"
+				dir="${GOBO}/example/geant/tmp"
 				include="@(**/*.ge|**/*.?ace)"
 				mapped_filename_directory="${GOBO}/example/geant/tmp"/>
 		</delete>
@@ -307,7 +312,7 @@
 		</description>
 
 		<delete>
-			<fileset directory="${GOBO}/library/kernel" include="@(**/io/**/*.ge)">
+			<fileset dir="${GOBO}/library/kernel" include="@(**/io/**/*.ge)">
 				<map type="glob" from="*.ge" to="${GOBO}/example/geant/tmp/*.e"/>
 			</fileset>
 		</delete>
@@ -326,6 +331,14 @@
 		<delete>
 			<directoryset directory="${GOBO}/example/geant/tmp" include="@(**/a1)" concat="true"/>
 		</delete>
+	</target>
+	
+	<target name="clean">
+		<description>
+			Remove '${GOBO}/example/geant/tmp/'.
+		</description>
+
+		<delete directory="${GOBO}/example/geant/tmp/"/>
 	</target>
 	
 </project>
