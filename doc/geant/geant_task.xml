@@ -100,6 +100,9 @@
               -->
             </attribute>
           </optional>
+          <optional>
+            <ref name="fileset"/>
+          </optional>
         </group>
         <group>
           <attribute name="file"/>
@@ -113,6 +116,9 @@
               </choice>
               -->
             </attribute>
+          </optional>
+          <optional>
+            <ref name="fileset"/>
           </optional>
         </group>
       <ref name="fileset"/>
