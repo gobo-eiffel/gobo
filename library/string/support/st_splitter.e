@@ -256,7 +256,7 @@ feature -- Operation(s)
 		ensure
 			result_not_void: Result /= Void
 			same_count: split (Result).count = a_linear.count
-			stable_reversible: join (split (Result)).is_equal (Result)
+			stable_reversible: STRING_.same_string (join (split (Result)), Result)
 		end
 		
 	join_unescaped (a_linear: DS_LINEAR [STRING]): STRING is

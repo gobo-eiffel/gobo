@@ -94,25 +94,35 @@ feature -- String handling
 				when ' ', '!', '#', '$', '&', '('..'~' then
 					a_target.append_character (c)
 				when '%B' then
-					a_target.append_string ("%%B")
+					a_target.append_character ('%%')
+					a_target.append_character ('B')
 				when '%F' then
-					a_target.append_string ("%%F")
+					a_target.append_character ('%%')
+					a_target.append_character ('F')
 				when '%N' then
-					a_target.append_string ("%%N")
+					a_target.append_character ('%%')
+					a_target.append_character ('N')
 				when '%R' then
-					a_target.append_string ("%%R")
+					a_target.append_character ('%%')
+					a_target.append_character ('R')
 				when '%T' then
-					a_target.append_string ("%%T")
+					a_target.append_character ('%%')
+					a_target.append_character ('T')
 				when '%U' then
-					a_target.append_string ("%%U")
+					a_target.append_character ('%%')
+					a_target.append_character ('U')
 				when '%%' then
-					a_target.append_string ("%%%%")
+					a_target.append_character ('%%')
+					a_target.append_character ('%%')
 				when '%'' then
-					a_target.append_string ("%%%'")
+					a_target.append_character ('%%')
+					a_target.append_character ('%'')
 				when '%"' then
-					a_target.append_string ("%%%"")
+					a_target.append_character ('%%')
+					a_target.append_character ('%"')
 				else
-					a_target.append_string ("%%/")
+					a_target.append_character ('%%')
+					a_target.append_character ('/')
 					INTEGER_FORMATTER_.append_decimal_integer (a_target, a_string.item_code (i))
 					a_target.append_character ('/')
 				end
