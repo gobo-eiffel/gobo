@@ -6,7 +6,7 @@ indexing
 
 	library:    "Gobo Eiffel Parse Library"
 	author:     "Eric Bezault <ericb@gobo.demon.co.uk>"
-	copyright:  "Copyright (c) 1997, Eric Bezault"
+	copyright:  "Copyright (c) 1999, Eric Bezault"
 	date:       "$Date$"
 	revision:   "$Revision$"
 
@@ -18,6 +18,8 @@ inherit
 
 	KL_SHARED_STANDARD_FILES
 
+	KL_IMPORTED_FIXED_ARRAY_ROUTINES
+	KL_IMPORTED_FIXED_ARRAY_TYPE [G]
 	KL_IMPORTED_ARRAY_ROUTINES
 
 feature {NONE} -- Initialization
@@ -25,8 +27,9 @@ feature {NONE} -- Initialization
 	make is
 			-- Create a new parser.
 		do
-			!! yyvs.make (1, yyInitial_stack_size)
-			!! yyss.make (1, yyInitial_stack_size)
+			!! FIXED_ARRAY_
+			yyvs := FIXED_ARRAY_.make (yyInitial_stack_size)
+			yyss := FIXED_INTEGER_ARRAY_.make (yyInitial_stack_size)
 			yy_build_parser_tables
 		end
 
@@ -65,8 +68,8 @@ feature -- Parsing
 				error_count := 0
 				yy_lookahead_needed := True
 				yyerrstatus := 0
-				yyvsp := 0
-				yyssp := 0
+				yyvsp := -1
+				yyssp := -1
 				yystacksize := yyss.count
 				yy_parsing_status := yyContinue
 				yy_goto := yyNewstate
@@ -76,10 +79,10 @@ feature -- Parsing
 				inspect yy_goto
 				when yyNewstate then
 					yyssp := yyssp + 1
-					if yyssp > yystacksize then
+					if yyssp >= yystacksize then
 						yystacksize := yystacksize + yyInitial_stack_size
-						yyvs.resize (1, yystacksize)
-						yyss.resize (1, yystacksize)
+						yyvs := FIXED_ARRAY_.resize (yyvs, yystacksize)
+						yyss := FIXED_INTEGER_ARRAY_.resize (yyss, yystacksize)
 						debug ("GEYACC")
 							std.error.put_string ("Stack size increased to ")
 							std.error.put_integer (yystacksize)
@@ -290,7 +293,7 @@ feature -- Parsing
 				when yyErrpop then
 						-- Pop the current state because it cannot handle
 						-- the error token.
-					if yyssp = 1 then
+					if yyssp = 0 then
 						abort
 					else
 						yyvsp := yyvsp - 1
@@ -375,32 +378,32 @@ feature {YY_PARSER_ACTION} -- Element change
 
 feature {NONE} -- Tables
 
-	yytranslate: ARRAY [INTEGER]
+	yytranslate: like FIXED_INTEGER_ARRAY_TYPE
 			-- Mapping between lex token numbers and
 			-- yacc internal token numbers
 
-	yyr1: ARRAY [INTEGER]
+	yyr1: like FIXED_INTEGER_ARRAY_TYPE
 			-- Symbol number of symbol that each rule derives
 			-- (i.e. left-hand-side of the rule), indexed by
 			-- rule id
 
-	yyr2: ARRAY [INTEGER]
+	yyr2: like FIXED_INTEGER_ARRAY_TYPE
 			-- Number of symbols in the right-hand-side
 			-- of each rule, indexed by rule id
 
-	yydefact: ARRAY [INTEGER]
+	yydefact: like FIXED_INTEGER_ARRAY_TYPE
 			-- Default rule to reduce in each state,
 			-- when `yytable' doesn't specify something
 			-- else to do. 0 means the default is an
 			-- error. Indexed by state id
 
-	yydefgoto: ARRAY [INTEGER]
+	yydefgoto: like FIXED_INTEGER_ARRAY_TYPE
 			-- Default state to go to after a reduction
 			-- of a rule that generates a variable,
 			-- except when `yytable' specifies something
 			-- else to do. Indexed by variable id - nb_tokens
 
-	yypact: ARRAY [INTEGER]
+	yypact: like FIXED_INTEGER_ARRAY_TYPE
 			-- Index in `yytable' of the portion describing
 			-- a state, indexed by state id. The lookahead
 			-- token's type is used to index that portion
@@ -411,7 +414,7 @@ feature {NONE} -- Tables
 			-- zero, the default action from `yydefact' for
 			-- that state is used.
 
-	yypgoto: ARRAY [INTEGER]
+	yypgoto: like FIXED_INTEGER_ARRAY_TYPE
 			-- Index in `yytable' of the portion describing
 			-- what to do after reducing a rule that derives
 			-- a variable, indexed by variable id - nb_tokens.
@@ -421,11 +424,11 @@ feature {NONE} -- Tables
 			-- is the state to go to if the corresponding
 			-- value in `yycheck' is `s'.
 
-	yytable: ARRAY [INTEGER]
+	yytable: like FIXED_INTEGER_ARRAY_TYPE
 			-- Filled with portions for different uses, found
 			-- via `yypact' and `yypgoto'
 
-	yycheck: ARRAY [INTEGER]
+	yycheck: like FIXED_INTEGER_ARRAY_TYPE
 			-- Array indexed in parallel with `yytable'. It
 			-- indicates, in a roundabout way, the bounds of
 			-- the portion you are tryng to examine. Suppose
@@ -472,10 +475,23 @@ feature {NONE} -- Implementation
 			yycheck_not_void: yycheck /= Void
 		end
 
-	yyvs: ARRAY [G]
+	yyfixed_array (an_array: ARRAY [INTEGER]): like FIXED_INTEGER_ARRAY_TYPE is
+			-- Zero-based array containing items of `an_array'
+		require
+			an_array_not_void: an_array /= Void
+		do
+			Result := FIXED_INTEGER_ARRAY_.to_fixed_array (an_array)
+		ensure
+			array_not_void: Result /= Void
+			count_set: Result.count = an_array.count
+--			same_items: forall i in 0 .. (an_array.count - 1),
+--				Result.item (i) = an_array.item (an_array.lower + i)
+		end
+
+	yyvs: like FIXED_ARRAY_TYPE				-- FIXED_ARRAY [G]
 			-- Semantic value stack
 
-	yyss: ARRAY [INTEGER]
+	yyss: like FIXED_INTEGER_ARRAY_TYPE		-- FIXED_ARRAY [INTEGER]
 			-- State stack
 
 	yyvsp: INTEGER
@@ -503,12 +519,10 @@ feature {NONE} -- Implementation
 			-- `parse' before exiting.
 		local
 			default_value: G
-			array_routines: KL_ARRAY_ROUTINES [G]
 		do
 			clear_all
 			yyval := default_value
-			!! array_routines
-			array_routines.clear_all (yyvs)
+			FIXED_ARRAY_.clear_all (yyvs)
 		end
 
 feature {NONE} -- Constants
@@ -554,6 +568,9 @@ feature {NONE} -- Constants
 	yyInitial_stack_size: INTEGER is 200
 			-- Initial size of parser's stacks
 
+	FIXED_ARRAY_: KL_FIXED_ARRAY_ROUTINES [G]
+			-- Routines that ought to be in FIXED_ARRAY
+
 invariant
 
 	yyvs_not_void: yyvs /= Void
@@ -567,5 +584,6 @@ invariant
 	yypgoto_not_void: yypgoto /= Void
 	yytable_not_void: yytable /= Void
 	yycheck_not_void: yycheck /= Void
+	fixed_array_routines_not_void: FIXED_ARRAY_ /= Void
 
 end -- class YY_PARSER_SKELETON
