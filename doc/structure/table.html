@@ -82,41 +82,17 @@ usually more efficient than linked implementations since access
 time in an array is bounded by a constant regardless of the
 number of items in the container. However the hash code
 associated with the keys is not necessarily unique, and therefore
-collisions may happen and hence slow down the process. No
-optimization effort has been made when writing <font
-color="#008080"><em><tt>DS_HASH_TABLE</tt></em></font> in order
-to take care of collisions. In particular it doesn't take
-advantage of the well known algorithms using prime numbers when
-collisions occur. The implementation used here is very simple and
-was deemed satisfactory enough for its usage in the rest if the <em>Gobo
-Eiffel </em>libraries. In particular, some benchmarks have proven
-that <font color="#008080"><em><tt>DS_HASH_TABLE </tt></em></font>behaved
-better than class <font color="#008080"><em><tt>HASH_TABLE</tt></em></font>
-from <a href="see_also.html#EiffelBase"><em>EiffelBase</em></a>
-which uses a collision-resolution algorithm based on prime
-numbers. It is not clear to me whether this difference of
-performance comes from the algorithm itself or from other
-differences between the implementation of both hash tables, but
-it is unlikely that the implementation of <font color="#008080"><em><tt>DS_HASH_TABLE
-</tt></em></font>will use more sophisticated algorithms in the
-future based on these observations.</p>
-
-<p>Another interesting remark about efficiency is that the
-performance of hash tables depends on the number of collisions
-that may occur in the table. Therefore the implementation for the
-<font color="#008080"><em><tt>hash_code</tt></em></font> of the
-keys is very important since returning often the same value for
-different keys will trigger too many collisions and yield
-performance degradations. If the hash table appears to be slow
-and the type of the keys is one of the basic Eiffel types such as
-<font color="#008080"><em><tt>STRING</tt></em></font>, it is
-recommended to try with another Eiffel compiler whose
-implementation of <font color="#008080"><em><tt>hash_code </tt></em></font>may
-be better in order to see if it makes a difference. Finally, if
-the default implementation of <font color="#008080"><em><tt>hash_code
-</tt></em></font>is not optimal for a given set of keys, one can
-inherit from <font color="#008080"><em><tt>DS_HASH_TABLE </tt></em></font>and
-redefine its feature <font color="#008080"><em><tt>hash_code </tt></em></font>to
+collisions may happen and hence slow down the process. The
+efficiency of hash tables hence depends on the number of
+collisions that may occur in the table. Therefore the
+implementation for the <font color="#008080"><em><tt>hash_code</tt></em></font>
+of the keys is very important since returning often the same
+value for different keys will trigger too many collisions and
+yield performance degradations. If the default implementation of <font
+color="#008080"><em><tt>hash_code </tt></em></font>is not optimal
+for a given set of keys, one can inherit from <font
+color="#008080"><em><tt>DS_HASH_TABLE </tt></em></font>and
+redefine its feature <font color="#008080"><em><tt>hash_position </tt></em></font>to
 provide a better implementation. For example, consider a school
 which keeps track of project assignments in a table indexed by
 students. The obvious solution is to declare:</p>
@@ -135,7 +111,7 @@ valid in most cases, but it is clear that when dealing with
 students in the same classroom it is likely that they will all
 have more or less the same age and hence the same hash code. In
 this particular case it is better to provide a better
-implementation for <font color="#008080"><em><tt>hash_code </tt></em></font>in
+implementation for <font color="#008080"><em><tt>hash_position </tt></em></font>in
 <font color="#008080"><em><tt>DS_HASH_TABLE </tt></em></font>to
 avoid the numerous collisions:</p>
 
@@ -144,17 +120,24 @@ avoid the numerous collisions:</p>
 </em><font color="#000080"><em><strong>inherit</strong></em></font><em>
     DS_HASH_TABLE </em>[<em>PROJECT</em>,<em> STUDENT</em>]<em>
         </em><font color="#000080"><em><strong>redefine</strong></em></font><em>
-            hash_code
+            hash_position
         </em><font color="#000080"><em><strong>end
 creation</strong></em></font><em>
     make
 </em><font color="#000080"><em><strong>feature</strong></em></font><em> </em>{<em>NONE</em>} <font
 color="#008000">-- Implementation</font><em>
-    hash_code </em>(<em>s</em>:<em> STUDENT</em>):<em> INTEGER </em><font
+    hash_position </em>(<em>s</em>:<em> STUDENT</em>):<em> INTEGER </em><font
 color="#000080"><em><strong>is</strong></em></font><em>
-            </em><font color="#008000">-- Hash code of student</font> <em>s
+            </em><font color="#008000">-- Hash position of student</font> <em>s</em><font
+color="#008000"> in internal array</font><em>
         </em><font color="#000080"><em><strong>do</strong></em></font><em>
-            </em><font color="#008080"><em>Result</em></font><em> </em>:=<em> s</em>.<em>name</em>.<em>hash_code
+            </em><font color="#000080"><em><strong>if</strong></em></font><em> s </em>/=<em> </em><font
+color="#008080"><em>Void</em></font><em> </em><font
+color="#000080"><em><strong>then</strong></em></font><em>
+                </em><font color="#008080"><em>Result</em></font><em> </em>:=<em> s</em>.<em>name</em>.<em>hash_code </em>\\<em> modulus
+            </em><font color="#000080"><em><strong>else</strong></em></font><em>
+                </em><font color="#008080"><em>Result</em></font><em> </em>:=<em> modulus
+            </em><font color="#000080"><em><strong>end</strong></em></font><em>
         </em><font color="#000080"><em><strong>end
 end</strong></em></font><em> </em><font color="#008000">-- class ASSIGNMENTS</font></pre>
 </blockquote>
@@ -221,9 +204,9 @@ the hash code of <font color="#008080"><em><tt>k</tt></em></font>
 and deal with possible collisions in the hash table. In other
 words we do twice the same thing. The solution adopted in the
 current implementation of <font color="#008080"><em><tt>DS_HASH_TABLE
-</tt></em></font>is to keep track of the result of last hashing
-operation in the hash table in a cache. Therefore, in the code
-above, most of the work of accessing the item at key <font
+</tt></em></font>is to keep track of the result of the last
+hashing operation in the hash table in a cache. Therefore, in the
+code above, most of the work of accessing the item at key <font
 color="#008080"><em><tt>k</tt></em></font> will be done only once
 in the routine <font color="#008080"><em><tt>has</tt></em></font>,
 and <font color="#008080"><em><tt>item </tt></em></font>will
@@ -264,7 +247,7 @@ of taste. I personally prefer the first pattern.</p>
 <table border="0" width="100%">
     <tr>
         <td><address>
-            <font size="2"><b>Copyright © 1999</b></font><font
+            <font size="2"><b>Copyright © 2000</b></font><font
             size="1"><b>, </b></font><font size="2"><strong>Eric
             Bezault</strong></font><strong> </strong><font
             size="2"><br>
@@ -274,7 +257,7 @@ of taste. I personally prefer the first pattern.</p>
             <strong>http:</strong></font><a
             href="http://www.gobosoft.com"><font size="2">//www.gobosoft.com</font></a><font
             size="2"><br>
-            <strong>Last Updated:</strong> 25 September 1999</font><br>
+            <strong>Last Updated:</strong> 16 April 2000</font><br>
             <!--webbot bot="PurpleText"
             preview="
 $Date$ 
