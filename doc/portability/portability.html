@@ -120,7 +120,7 @@ color="#800080">SE</font><font color="#008080">
 
     <em>DS_TABLE</em> [<em>G</em>, <em>K</em>]
 ...
-<em><strong>end</strong></em> -- class DS_HASH_TABLE</font></pre>
+<em><strong>end</strong></em></font></pre>
 </blockquote>
 
 <p>or as in:</p>
@@ -148,7 +148,7 @@ feature</strong></em> -- Access
     <em>hash_code</em>: <em>INTEGER</em>
             -- Hash code value
 ...
-<em><strong>end</strong></em> -- class FOO</font></pre>
+<em><strong>end</strong></em></font></pre>
 </blockquote>
 
 <hr size="1">
@@ -240,7 +240,7 @@ anchor technique.</p>
     <em>INPUT_STREAM_</em>: <em>KL_INPUT_STREAM_ROUTINES</em> <em><strong>is</strong></em>
             -- Routines that ought to be in class INPUT_STREAM
         <em><strong>once</strong></em>
-            !! <em>Result</em>
+            <em><strong>create</strong> Result</em>
         </font><font color="#008080" size="3"><em><strong>ensure</strong></em></font><font
 color="#008080"><em>
             input_stream_routines_not_void</em>: <em>Result</em> /= <em>Void</em>
@@ -266,7 +266,7 @@ color="#008080">
 #endif</font><font color="#008080">
             -- Anchor type
 
-<em><strong>end</strong></em> -- class KL_IMPORTED_INPUT_STREAM_ROUTINES</font></pre>
+<em><strong>end</strong></em></font></pre>
 </blockquote>
 
 <p>Note that the name convention used for the once function is
@@ -314,7 +314,7 @@ color="#008080">
             if not</strong></em> <em>rescued</em> <em><strong>then</strong></em>
 </font><font color="#0000FF">#ifdef </font><font color="#800080">ISE</font><font
 color="#008080">
-                !! <em>a_file</em>.<em>make</em> (<em>a_filename</em>)
+                <em><strong>create</strong> a_file</em>.<em>make</em> (<em>a_filename</em>)
                 <em>Result</em> := <em>a_file</em>
                 <em>a_file</em>.<em>open_read</em>
             <em><strong>elseif not</strong></em> <em>a_file</em>.<em>is_closed</em> <em><strong>then</strong></em>
@@ -322,13 +322,13 @@ color="#008080">
 </font><font color="#0000FF">#else
 #ifdef</font><font color="#008080"> </font><font color="#800080">SE</font><font
 color="#008080">
-                !! <em>a_file</em>.<em>make</em>
+                <em><strong>create</strong> a_file</em>.<em>make</em>
                 <em>Result</em> := <em>a_file</em>
                 <em>a_file</em>.<em>connect_to</em> (<em>a_filename</em>)
             <em><strong>elseif</strong></em> <em>a_file</em>.<em>is_connected</em> <em><strong>then</strong></em>
                 <em>a_file</em>.<em>disconnect</em>
 </font><font color="#0000FF">#else</font><font color="#008080">
-                !! <em>Result</em>.<em>make</em> (<em>a_filename</em>)
+                <em><strong>create</strong> Result</em>.<em>make</em> (<em>a_filename</em>)
                 <em>Result</em>.<em>open_read</em>
             <em><strong>elseif</strong></em> <em><strong>not</strong></em> <em>Result</em>.<em>is_closed</em> <em><strong>then</strong></em>
                 <em>Result</em>.<em>close</em>
@@ -359,7 +359,7 @@ color="#800080">SE</font><font color="#008080">
 </font><font color="#0000FF">#endif</font><font color="#008080">
         <em><strong>end
 ...
-end</strong></em> -- class KL_INPUT_STREAM_ROUTINES</font></pre>
+end</strong></em></font></pre>
 </blockquote>
 
 <p>Following is an example using portable file access:</p>
@@ -383,6 +383,7 @@ end</strong></em> -- class KL_INPUT_STREAM_ROUTINES</font></pre>
         <em><strong>end</strong></em>
 
     <em>execute</em> <em><strong>is</strong></em>
+            -- Ask for a file name and parse it.
         <em><strong>local</strong></em>
             <em>a_file</em>: <em><strong>like</strong></em> <em>INPUT_STREAM</em>_TYPE
         <em><strong>do</strong></em>
@@ -396,7 +397,7 @@ end</strong></em> -- class KL_INPUT_STREAM_ROUTINES</font></pre>
             <em><strong>end</strong></em>
         <em><strong>end</strong></em>
 
-<em><strong>end</strong></em> -- class FOO</font></pre>
+<em><strong>end</strong></em></font></pre>
 </blockquote>
 
 <hr size="1">
@@ -465,7 +466,7 @@ color="#800080">SE</font><font color="#008080">
 </font>... Same thing for <font color="#008080"><em>output</em></font> and <font
 color="#008080"><em>error</em></font> ...<font color="#008080">
 
-<em><strong>end</strong></em> -- class KL_STANDARD_FILES</font></pre>
+<em><strong>end</strong></em></font></pre>
 </blockquote>
 
 <p>Note that <font color="#008080"><em><tt>input</tt></em></font>
@@ -484,12 +485,12 @@ color="#008080"><em><tt>GENERAL</tt></em></font>:</p>
     <em>std</em>: <em>KL_STANDARD_FILES</em> <em><strong>is</strong></em>
             -- Standard files
         <em><strong>once</strong></em>
-            !! Result
+            <em><strong>create</strong></em> Result
         <em><strong>ensure</strong></em>
             <em>std_not_void</em>: <em>Result</em> /= <em>Void</em>
         <em><strong>end</strong></em>
 
-<em><strong>end</strong></em> -- class KL_SHARED_STANDARD_FILES</font></pre>
+<em><strong>end</strong></em></font></pre>
 </blockquote>
 
 <p>Now, wherever one would have used <font color="#008080"><em><tt>io.input</tt></em></font>,
@@ -519,6 +520,7 @@ way as in the following example:</p>
         <em><strong>end</strong></em>
 
     <em>execute</em> <em><strong>is</strong></em>
+            -- Ask for a file name and parse it.
         <em><strong>local</strong></em>
             <em>a_file</em>: <em><strong>like</strong></em> <em>INPUT_STREAM_TYPE</em>
             <em>a_name</em>: <em>STRING</em>
@@ -544,7 +546,7 @@ way as in the following example:</p>
             <em><strong>end</strong></em>
         <em><strong>end</strong></em>
 
-<em><strong>end</strong></em> -- class FOO</font></pre>
+<em><strong>end</strong></em></font></pre>
 </blockquote>
 
 <hr size="1">
@@ -634,9 +636,9 @@ hence have the following function:</p>
         <em><strong>do</strong></em>
 </font><font color="#0000FF">#ifdef </font><font color="#800080">VE</font><font
 color="#008080">
-            !! <em>Result</em>.<em>make</em> (<em>0</em>)
+            <em><strong>create</strong> Result</em>.<em>make</em> (<em>0</em>)
 </font><font color="#0000FF">#else</font><font color="#008080">
-            !! <em>Result</em>.<em>make</em> (<em>n</em>)
+            <em><strong>create</strong> Result</em>.<em>make</em> (<em>n</em>)
 </font><font color="#0000FF">#endif</font><font color="#008080">
         <em><strong>ensure</strong></em>
             <em>string_not_void</em>: <em>Result</em> /= <em>Void</em>
@@ -644,11 +646,11 @@ color="#008080">
         <em><strong>end</strong></em></font></pre>
 </blockquote>
 
-<p>and the usual string creation using !!:</p>
+<p>and the usual string creation using <font color="#008080"><em><tt><strong>create</strong></tt></em></font>:</p>
 
 <blockquote>
     <pre><font color="#008080"><em>str</em>: <em>STRING</em>
-!! <em>str</em>.<em>make</em> (<em>10</em>)</font></pre>
+<em><strong>create</strong> str</em>.<em>make</em> (<em>10</em>)</font></pre>
 </blockquote>
 
 <p>is replaced in portable code by:</p>
@@ -663,7 +665,7 @@ color="#008080">
 <table border="0" width="100%">
     <tr>
         <td><address>
-            <font size="2"><b>Copyright © 1997-2000</b></font><font
+            <font size="2"><b>Copyright © 1997-2005</b></font><font
             size="1"><b>, </b></font><font size="2"><strong>Eric
             Bezault</strong></font><strong> </strong><font
             size="2"><br>
@@ -673,7 +675,7 @@ color="#008080">
             <strong>http:</strong></font><a
             href="http://www.gobosoft.com"><font size="2">//www.gobosoft.com</font></a><font
             size="2"><br>
-            <strong>Last Updated:</strong> 20 August 2000</font><br>
+            <strong>Last Updated:</strong> 21 February 2005</font><br>
             <!--webbot bot="PurpleText"
             preview="
 $Date$ 
