@@ -925,6 +925,20 @@ feature -- Access
 			end
 		end
 
+	new_empty_string (suggested_capacity: INTEGER): like Current is
+			-- New empty string with same dynamic type as `Current'
+		require
+			non_negative_suggested_capacity: suggested_capacity >= 0
+		do
+			!! Result.make (suggested_capacity)
+		ensure
+			new_string_not_void: Result /= Void
+			same_type: Result.same_type (Current)
+			new_string_empty: Result.count = 0
+			byte_count_set: Result.byte_count = 0
+			byte_capacity_set: Result.byte_capacity >= suggested_capacity
+		end
+
 feature -- Measurement
 
 	unicode_occurrences (c: UC_CHARACTER): INTEGER is
@@ -1369,29 +1383,43 @@ feature -- Element change
 	append_string (a_string: STRING) is
 			-- Append a copy of `a_string' at end.
 			-- (ELKS 2001 STRING)
+		do
+			append_substring (a_string, 1, a_string.count)
+		end
+
+	append_substring (a_string: STRING; s, e: INTEGER) is
+			-- Append substring of `a_string' between indexes
+			-- `s' and `e' at end of current string.
+		require
+			a_string_not_void: a_string /= Void
+			s_large_enough: s >= 1
+			e_small_enough: e <= a_string.count
+			valid_interval: s <= e + 1
 		local
-			a_string_count: INTEGER
+			a_substring_count: INTEGER
 			k, nb: INTEGER
 			new_byte_count: INTEGER
 			str: STRING
 		do
-			a_string_count := a_string.count
-			if a_string_count /= 0 then
+			a_substring_count := e - s + 1
+			if a_substring_count /= 0 then
 				if a_string = Current then
 					str := clone (a_string)
 				else
 					str := a_string
 				end
-				nb := utf8.substring_byte_count (str, 1, a_string_count)
+				nb := utf8.substring_byte_count (str, s, e)
 				k := byte_count + 1
 				new_byte_count := byte_count + nb
 				if new_byte_count > byte_capacity then
 					resize_byte_storage (new_byte_count)
 				end
 				byte_count := new_byte_count
-				set_count (count + a_string_count)
-				put_substring_at_byte_index (str, 1, a_string_count, nb, k)
+				set_count (count + a_substring_count)
+				put_substring_at_byte_index (str, s, e, nb, k)
 			end
+		ensure
+			appended: is_equal (old clone (Current) + old STRING_.substring (a_string, s, e))
 		end
 
 	fill_with_unicode (c: UC_CHARACTER) is
