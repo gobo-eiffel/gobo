@@ -84,7 +84,7 @@ feature -- Test
 feature {NONE} -- Implementation
 
 	assert_namespace (a_name: STRING; a_in: STRING; a_ns: ARRAY[STRING]) is
-			-- Test that an XML document sequence of namespace 
+			-- Test that an XML document sequence of namespace
 			-- events (excluding xmlns, flattened) is correct.
 		require
 			a_name_not_void: a_name /= Void

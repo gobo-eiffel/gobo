@@ -20,7 +20,7 @@ feature
 	test_simple is
 			-- Simple tree.
 		local
-			a_root: XM_ELEMENT 
+			a_root: XM_ELEMENT
 		do
 			make_parser
 			parser.parse_from_string ("<doc><a/><b/></doc>")
@@ -73,7 +73,7 @@ feature
 			assert_text ("zoo")
 			assert_single
 			go_up
-			assert_last 
+			assert_last
 			go_up
 			go_next
 			assert_comment (" post ")
@@ -146,7 +146,7 @@ feature
 			create a_doc.make
 			create an_element.make (a_doc, "doc", a_namespace)
 			a_doc.set_root_element (an_element)
-			an_element.add_unqualified_attribute ("attr1", "v1") 
+			an_element.add_unqualified_attribute ("attr1", "v1")
 			create a_namespace.make ("p2", "uri2")
 			an_element.add_attribute ("attr2", a_namespace, "v2")
 			
@@ -205,12 +205,12 @@ feature {NONE} -- Walk navigation
 		end
 		
 	go_next is
-			-- Move to next sibling, or don't 
+			-- Move to next sibling, or don't
 			-- move if last sibling.
 		local
 			it: DS_LINEAR_CURSOR [XM_NODE]
 		do
-			from 
+			from
 				it := node.parent.new_cursor
 				it.start
 			invariant

@@ -48,7 +48,7 @@ feature
 			"<RESERVATION>"+
 			"<NAME {http://www.w3.org/TR/REC-html40}CLASS=%"largeSansSerif%">Layman, A</NAME>"+
 			"<SEAT CLASS=%"Y%" {http://www.w3.org/TR/REC-html40}CLASS=%"largeMonotype%">33B</SEAT>"+
- 			"<{http://www.w3.org/TR/REC-html40}A HREF=%"/cgi-bin/ResStatus%">Check Status</{http://www.w3.org/TR/REC-html40}A>"+
+			"<{http://www.w3.org/TR/REC-html40}A HREF=%"/cgi-bin/ResStatus%">Check Status</{http://www.w3.org/TR/REC-html40}A>"+
 			"<DEPARTURE>1997-05-24T07:55:00+1</DEPARTURE></RESERVATION>")
 		end
 		
@@ -59,12 +59,12 @@ feature
 				"	<title>Book-Signing Event</title>"+
 				"	<signing>"+
 				"		<author title=%"Mr%" name=%"Vikram Seth%" />"+
-     			"		<book title=%"A Suitable Boy%" price=%"$22.95%" />"+
+	   			"		<book title=%"A Suitable Boy%" price=%"$22.95%" />"+
 				"	</signing>"+
 				"</section>"
 				,
 				"<{urn:com:books-r-us}section>"+
-   				"	<{urn:com:books-r-us}title>Book-Signing Event</{urn:com:books-r-us}title>"+
+  				"	<{urn:com:books-r-us}title>Book-Signing Event</{urn:com:books-r-us}title>"+
 				"	<{urn:com:books-r-us}signing>"+
 			    "		<{urn:com:books-r-us}author title=%"Mr%" name=%"Vikram Seth%"></{urn:com:books-r-us}author>"+
 			    "		<{urn:com:books-r-us}book title=%"A Suitable Boy%" price=%"$22.95%"></{urn:com:books-r-us}book>"+

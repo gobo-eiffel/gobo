@@ -21,9 +21,9 @@ feature
 	test_simple is
 			-- Simple DTDs.
 		do
-			-- DOCTYPE at the end in result because on_doctype is after end 
+			-- DOCTYPE at the end in result because on_doctype is after end
 			-- of prolog declaration, so after the DTD body for internal DTDs.
-			assert_parsed ("<!DOCTYPE doc [ <!ELEMENT  doc  EMPTY> ]><doc/>", 
+			assert_parsed ("<!DOCTYPE doc [ <!ELEMENT  doc  EMPTY> ]><doc/>",
 				"<!ELEMENT doc EMPTY>%N<!DOCTYPE doc>%N")
 			assert_parsed ("<!DOCTYPE doc [ <!--comment --> <!ELEMENT  doc  EMPTY> ]><doc/>",
 				"<!ELEMENT doc EMPTY>%N<!DOCTYPE doc>%N")

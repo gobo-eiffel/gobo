@@ -21,11 +21,11 @@ inherit
 
 feature -- Deviant tests
 
-	-- this section includes tests which do not behave as expected 
+	-- this section includes tests which do not behave as expected
 	-- in the test suite with for each test a justification why.
 
 	test_deviant_entity_limits is
-			-- Test that elements do not span entity boundaries, that 
+			-- Test that elements do not span entity boundaries, that
 			-- is do not start outside the entity and ends in it.
 			-- (parser tolerates more than the standard allows)
 		do
@@ -39,23 +39,23 @@ feature -- Deviant tests
 
 	test_deviant_bad_unicode_in_unused_entity is
 			-- Incorrect unicode within declaration of unused entity.
-			-- (could check earlier than on the event flow, or 
+			-- (could check earlier than on the event flow, or
 			-- should provide an interface to entities)
 		do
-			assert_output ("xmltest, not well formed, stand alone, 175", 
+			assert_output ("xmltest, not well formed, stand alone, 175",
 				xmltest_not_wf_sa_175,
 				"<doc></doc>")
 		end
 
 
 	test_deviant_attribute_default_value_order is
-			-- Expansion of default attribute values in different 
-			-- order when one in external and other in internal part 
+			-- Expansion of default attribute values in different
+			-- order when one in external and other in internal part
 			-- of DTD. semantics unchanged.
 		do
-			assert_output_external ("xmltest, valid, not stand alone, 009", 
-					xmltest_valid_not_sa_009, 
-					"<doc a2=%"v2%" a1=%"v1%"></doc>", -- a1 a2 swapped 
+			assert_output_external ("xmltest, valid, not stand alone, 009",
+					xmltest_valid_not_sa_009,
+					"<doc a2=%"v2%" a1=%"v1%"></doc>", -- a1 a2 swapped
 					valid_not_sa_externals)
 		end
 	
@@ -68,7 +68,7 @@ feature -- Deviant tests
 		end
 		
 	test_deviant_invalid is
-			-- Detection of invalid fragmentation with PE entities, 
+			-- Detection of invalid fragmentation with PE entities,
 			-- when not strictly necessary for a non validating parser.
 		do
 			assert_invalid_external ("xmltest, invalid but well formed, 001", xmltest_invalid_001, invalid_externals)
@@ -79,8 +79,8 @@ feature -- Deviant tests
 feature -- Deviant tests due to limitation of test framework
 
 	test_deviant_notation is
-			-- This are output tests in XMLCONF with a DTD including the 
-			-- notation declaration. Proper tests should check output 
+			-- This are output tests in XMLCONF with a DTD including the
+			-- notation declaration. Proper tests should check output
 			-- of DTD notation event in some way.
 			-- (limitation of test framework)
 		do
@@ -177,7 +177,7 @@ feature -- Test
 		end
 		
 	test_not_wf_sa is
-			-- Tests not well formed stand alone documents are correctly 
+			-- Tests not well formed stand alone documents are correctly
 			-- detected.
 		do
 			assert_invalid ("xmltest, not well formed, stand alone, 002", xmltest_not_wf_sa_002)

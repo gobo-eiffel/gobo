@@ -51,7 +51,7 @@ feature -- Test
 	test_concatenator is
 			-- Test XM_CONTENT_CONCATENATOR
 		local
-			pretty: XM_PRETTY_PRINT_FILTER 
+			pretty: XM_PRETTY_PRINT_FILTER
 			concat: XM_CONTENT_CONCATENATOR
 			counter: XM_EVENT_COUNT_FILTER
 		do
@@ -107,4 +107,3 @@ feature -- Test
 			assert_equal ("no comment", counter.comments, 0)
 		end
 end
- 

@@ -55,7 +55,7 @@ feature -- Test
 feature {NONE} -- Implementation
 
 	assert_name (a_name: STRING; a_in: STRING; a_ns: ARRAY[STRING]) is
-			-- Test that an XML document sequence of local part 
+			-- Test that an XML document sequence of local part
 			-- events (excluding xmlns, flattened) is correct when
 			-- namespace parsing is disabled.
 		require

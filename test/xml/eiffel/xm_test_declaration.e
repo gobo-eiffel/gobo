@@ -33,9 +33,9 @@ feature -- Test
 		
 	test_valid_standalone is
 		do
-			assert_declaration ("<?xml version='1.0' encoding='utf-8' standalone='no'?><doc/>", 
+			assert_declaration ("<?xml version='1.0' encoding='utf-8' standalone='no'?><doc/>",
 					"utf-8", False)
-			assert_declaration ("<?xml version='1.0' encoding='utf-8' standalone='yes'?><doc/>", 
+			assert_declaration ("<?xml version='1.0' encoding='utf-8' standalone='yes'?><doc/>",
 					"utf-8", True)
 		end
 		

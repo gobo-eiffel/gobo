@@ -135,7 +135,7 @@ feature {NONE} -- Debug
 			-- Debug: print error
 		do
 			if not parser.is_correct then
-				std.output.put_string (parser.last_error_description) 
+				std.output.put_string (parser.last_error_description)
 				std.output.put_new_line
 			end
 		end
@@ -175,7 +175,7 @@ feature {NONE} -- Parser
 			a_printer.set_output_string (output)
 			create an_attribute.make_null
 			parser.set_dtd_callbacks (an_attribute)
-			parser.set_callbacks (callbacks_pipe (<<  
+			parser.set_callbacks (callbacks_pipe (<<
 				new_unicode_validation,
 				an_attribute,
 				error,
