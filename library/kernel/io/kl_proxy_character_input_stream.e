@@ -21,16 +21,20 @@ inherit
 
 	KL_IMPORTED_STRING_ROUTINES
 
+creation
+
+	make
+
 feature {NONE} -- Initialization
 
-	make (an_underlying_stream: like base_stream) is
-			-- Establish invariant.
+	make (a_stream: like base_stream) is
+			-- Create a new proxy for `a_stream'.
 		require
-			base_stream_not_void: an_underlying_stream /= Void
+			base_stream_not_void: a_stream /= Void
 		do
-			base_stream := an_underlying_stream
+			base_stream := a_stream
 		ensure
-			base_stream_set: base_stream = an_underlying_stream
+			base_stream_set: base_stream = a_stream
 		end
 
 feature -- Input
@@ -42,9 +46,9 @@ feature -- Input
 		do
 			base_stream.read_string (nb)
 		end
-		
+
 	read_character is
-			-- Read the next item in input stream.
+			-- Read the next character in input stream.
 			-- Make the result available in `last_character'.
 		do
 			base_stream.read_character
@@ -52,7 +56,7 @@ feature -- Input
 
 	unread_character (an_item: CHARACTER) is
 			-- Put `an_item' back in input stream.
-			-- This item will be read first by the next
+			-- This character will be read first by the next
 			-- call to a read routine.
 		do
 			base_stream.unread_character (an_item)
@@ -62,7 +66,7 @@ feature -- Access
 
 	base_stream: KI_CHARACTER_INPUT_STREAM
 			-- Underlying stream
-		
+
 	name: STRING is
 			-- Name of input stream
 		do
@@ -76,7 +80,7 @@ feature -- Access
 		end
 
 	last_character: CHARACTER is
-			-- Last item read
+			-- Last character read
 		do
 			Result := base_stream.last_character
 		end
@@ -90,11 +94,11 @@ feature -- Status report
 		end
 
 	is_open_read: BOOLEAN is
-			-- Can items be read from input stream?
+			-- Can characters be read from input stream?
 		do
 			Result := base_stream.is_open_read
 		end
-	
+
 	is_closable: BOOLEAN is
 			-- Can current input stream be closed?
 		do
