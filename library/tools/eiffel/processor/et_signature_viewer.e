@@ -54,7 +54,6 @@ feature -- Execution
 			-- Execute signature viewer.
 		local
 			a_name: STRING
-			an_identifier: ET_IDENTIFIER
 			stop: BOOLEAN
 			a_class: ET_CLASS
 			a_class_type: ET_CLASS_TYPE
@@ -67,17 +66,6 @@ feature -- Execution
 					if a_name.is_empty then
 						stop := True
 					else
---						create an_identifier.make (a_name)
---						if universe.has_class (an_identifier) then
---							a_class := universe.eiffel_class (an_identifier)
---							current_context := a_class
---							process_class (a_class)
---						else
---							output_file.put_string ("No class ")
---							output_file.put_string (a_name)
---							output_file.put_string (" in universe.")
---							output_file.put_new_line
---						end
 						a_class_type := class_type (a_name)
 						if a_class_type /= Void then
 							current_context := a_class_type
