@@ -15,6 +15,11 @@ class DS_ARRAYED_STACK [G]
 inherit
 
 	DS_STACK [G]
+		redefine
+			searcher
+		end
+
+	DS_RESIZABLE [G]
 
 	DS_ARRAYED_LIST [G]
 		rename
@@ -36,6 +41,8 @@ inherit
 			prune as prune_i_th
 		export
 			{NONE} all
+		redefine
+			searcher
 		select
 			item, put, force, extend,
 			append, remove, prune
@@ -52,5 +59,10 @@ feature -- Element change
 		do
 			replace_i_th (v, count)
 		end
+
+feature -- Access
+
+	searcher: DS_ARRAYED_LIST_SEARCHER [G]
+			-- Stack searcher
 
 end -- class DS_ARRAYED_STACK
