@@ -48,10 +48,10 @@ feature -- Access
 	name: ET_IDENTIFIER
 			-- Class name
 
-	generic_parameters: ET_FORMAL_GENERIC_TYPES
+	generic_parameters: ET_FORMAL_GENERIC_PARAMETERS
 			-- Formal generic parameters
 
-	generic_parameter (a_name: ET_IDENTIFIER): ET_FORMAL_GENERIC_TYPE is
+	generic_parameter (a_name: ET_IDENTIFIER): ET_FORMAL_GENERIC_PARAMETER is
 			-- Generic parameter with name `a_name';
 			-- Void if no such generic parameter
 		require
@@ -68,8 +68,8 @@ feature -- Access
 	parents: ET_PARENTS
 			-- Parents
 
-	ancestors: DS_HASH_SET [ET_CLASS]
-			-- Proper ancestors
+	ancestors: DS_HASH_TABLE [ET_CLASS_TYPE, ET_CLASS]
+			-- Proper ancestors, indexed by base class
 
 	features: DS_HASH_TABLE [ET_FEATURE, ET_FEATURE_NAME]
 			-- Features indexed by name
@@ -91,6 +91,14 @@ feature -- Access
 
 	universe: ET_UNIVERSE
 			-- Universe to which current class belongs
+
+	error_handler: ET_ERROR_HANDLER is
+			-- Error handler
+		do
+			Result := universe.error_handler
+		ensure
+			error_handler_not_void: Result /= Void
+		end
 
 feature -- Status report
 
@@ -131,43 +139,26 @@ feature -- Status report
 		do
 			if a_class = Current then
 				Result := True
-			else
-				compute_ancestors
+			elseif is_parsed and not has_syntax_error then
+				search_ancestors
 				Result := ancestors.has (a_class)
 			end
 		end
 
-feature -- Compilation status
+feature -- Parsing status
 
-	syntax_error: BOOLEAN
+	is_parsed: BOOLEAN is
+			-- Has current class been parsed?
+		do
+			Result := (filename /= Void)
+		ensure
+			definition: Result = (filename /= Void)
+		end
+
+	has_syntax_error: BOOLEAN
 			-- Has a fatal syntax error been detected?
 
-	ancestors_computed: BOOLEAN is
-			-- Has `ancestors' been computed?
-		do
-			Result := ancestors /= Void
-		ensure
-			definition: Result = (ancestors /= Void)
-		end
-
-	has_cycle: BOOLEAN
-			-- Is there any cycle in inheritance graph of
-			-- current class? (In other words, does current
-			-- class have an ancestor which violates VHPR-1?)
-
-	is_flattened: BOOLEAN is
-			-- Have features been flattened?
-		do
-			Result := seeds /= Void
-		ensure
-			definition: Result = (seeds /= Void)
-		end
-
-	flatten_error: BOOLEAN
-			-- Has a fatal error occurred during
-			-- feature flattening?
-
-feature -- Parsing
+feature {ET_EIFFEL_SCANNER_SKELETON} -- Parsing
 
 	set_filename (a_name: STRING) is
 			-- Set `filename' to `a_name'.
@@ -233,35 +224,96 @@ feature -- Parsing
 			end
 		end
 
-feature -- Inheritance
+	set_syntax_error (b: BOOLEAN) is
+			-- Set `has_syntax_error' to `b'.
+		do
+			has_syntax_error := b
+		ensure
+			syntax_error_set: has_syntax_error = b
+		end
 
-	compute_ancestors is
-			-- Compute ancestors of current class.
+feature -- System
+
+	in_system: BOOLEAN
+			-- Is current class reachable from the
+			-- root class?
+
+	add_to_system is
+			-- Recursively add current class to system.
+		local
+			a_cursor: DS_HASH_TABLE_CURSOR [ET_FEATURE, ET_FEATURE_NAME]
+		do
+			if not in_system then
+				in_system := True
+				if parents /= Void then
+					parents.add_to_system
+				else
+					universe.any_class.add_to_system
+				end
+				a_cursor := features.new_cursor
+				from a_cursor.start until a_cursor.after loop
+					a_cursor.item.add_to_system
+					a_cursor.forth
+				end
+			end
+		ensure
+			is_in_system: in_system
+		end
+
+feature -- Genealogy status
+
+	ancestors_searched: BOOLEAN is
+			-- Have `ancestors' been searched?
+		do
+			Result := ancestors /= Void
+		ensure
+			definition: Result = (ancestors /= Void)
+		end
+
+	has_ancestors_error: BOOLEAN
+			-- Has a fatal error occurred during
+			-- ancestors searching?
+
+feature -- Genealogy
+
+	search_ancestors is
+			-- Search ancestors of current class.
 			-- Detect possible inheritance graph cycles.
+		require
+			is_parsed: is_parsed
+			no_syntax_error: not has_syntax_error
 		local
 			anc: DS_HASH_SET [ET_CLASS]
-			a_class, any_class: ET_CLASS
-			a_parents: like parents
+			cycle: DS_LINKED_LIST [ET_CLASS]
+			a_class, any_class, cycle_root: ET_CLASS
+			a_parents, any_parents: like parents
+			a_parent: ET_PARENT
 			nb, old_nb: INTEGER
 		do
-			if not ancestors_computed then
-				any_class := universe.any_class
+			if not ancestors_searched then
 				!! anc.make (10)
-				add_to_ancestors (anc)
+					-- Give dummy values to the first two arguments of
+					-- `add_to_ancestors'. These two arguments are only
+					-- used `for error reporting and there will not be
+					-- any error here thanks to the preconditions
+					-- "is_parsed" and "no_syntax_error".
+				add_to_ancestors (universe.any_type, Current, anc)
+				any_class := universe.any_class
+				any_parents := universe.any_parents
 				nb := anc.count
 				from until nb = 0 or nb = old_nb loop
 					from anc.start until anc.after loop
 						a_class := anc.item_for_iteration
 						a_parents := a_class.parents
 						if a_parents /= Void then
-							if a_parents.ancestors_computed then
-								a_class.set_ancestors (a_parents.ancestors)
+							if a_parents.ancestors_searched then
+								a_parents.set_ancestors (a_class)
 								anc.remove (a_class)
 							else
 								anc.forth
 							end
-						elseif any_class.ancestors_computed then
-							a_class.set_ancestors (any_class.ancestors)
+						elseif any_class.ancestors_searched then
+							any_parents.set_ancestors (a_class)
 							anc.remove (a_class)
 						else
 							anc.forth
@@ -271,184 +323,106 @@ feature -- Inheritance
 					nb := anc.count
 				end
 				if nb /= 0 then
-					-- cycles!
-					io.put_string ("Cycle in ")
-					io.put_string (name.name)
-					io.new_line
+						-- There is a cycle in the inheritance graph.
+					!! cycle.make
+					a_class := anc.first
+					from until cycle.has (a_class) loop
+						cycle.put_last (a_class)
+							-- Look for first parent of `a_class' whose
+							-- ancestors have not been searched yet. This
+							-- parent exists otherwise `a_class' would not
+							-- be in `anc' in the first place.
+						a_parents := a_class.parents
+						if a_parents = Void then
+							a_parents := universe.any_parents
+						end
+						a_parent := a_parents.first_unsearched_parent
+						a_class := a_parent.type.base_class
+					end
+					cycle_root := a_class
+					cycle.put_last (cycle_root)
+					from until cycle.first = cycle_root loop
+						cycle.remove_first
+					end
+						-- Make sure that all classes evolved in the
+						-- cycle and their descendants are marked
+						-- with `has_ancestors_error'.
+					!! ancestors.make (0)
+					from anc.start until anc.after loop
+						a_class := anc.item_for_iteration
+						a_class.set_ancestors_error (True)
+						a_class.set_ancestors (ancestors)
+						anc.forth
+					end
+						-- Report the validity error VHPR-1.
+					error_handler.report_vhpr1_error (cycle_root, cycle)
 				end
 			end
+		ensure
+			ancestors_searched: ancestors_searched
 		end
 		
-	add_to_ancestors (anc: DS_HASH_SET [ET_CLASS]) is
-		do
-			if not ancestors_computed then
-				if Current = universe.general_class then
-					!! ancestors.make (0)
-					if parents /= Void then
-						-- Error
-						--parents.add_to_ancestors (anc)
-					end
-				elseif parents /= Void then
-					anc.force (Current)
-					parents.add_to_ancestors (anc)
-				else
-					anc.force (Current)
-					universe.any_class.add_to_ancestors (anc)
-				end
-			end
-		end
+feature {ET_PARENTS, ET_PARENT, ET_CLASS} -- Genealogy
 
-	old_compute_ancestors is
-		do
-			if ancestors = Void then
-				computing_ancestors := True
-				if Current = universe.general_class then
-					!! ancestors.make (0)
-					if parents /= Void then
-						-- Error
-						parents.add_ancestors (Current)
-					end
-				elseif parents /= Void then
-					!! ancestors.make (10)
-					parents.add_ancestors (Current)
-				else
-					!! ancestors.make (3)
-					universe.any_class.add_ancestors (Current)
-				end
-				computing_ancestors := False
-			end
-		ensure
-			ancestors_not_void: ancestors /= Void
-		end
-
-	flatten is
-			-- Flatten feature table.
-		local
-			a_flattener: ET_FEATURE_FLATTENER
-			any_parent: ET_PARENT
-		do
-			if not is_flattened then
-				compute_ancestors
-				if not has_cycle then
-					a_flattener := Shared_feature_flattener
-					if parents /= Void then
-						parents.flatten
-						if parents.flatten_error then
-							!! seeds.make (0)
-							flatten_error := True
-						else
-							a_flattener.set_current_class (Current)
-							parents.add_inherited_features (a_flattener)
-						end
-					elseif Current /= universe.general_class then
-						any_parent := universe.any_parent
-						any_parent.flatten
-						if any_parent.flatten_error then
-							!! seeds.make (0)
-							flatten_error := True
-						else
-							a_flattener.set_current_class (Current)
-							a_flattener.add_inherited_features (any_parent)
-						end
-					else
-						a_flattener.set_current_class (Current)
-					end
-					a_flattener.flatten
-				else
-					!! seeds.make (0)
-					flatten_error := True
-				end
-			end
-		ensure
-			ancestors_not_void: ancestors /= Void
-			flattened: is_flattened
-		end
-
-feature {ET_PARENTS, ET_CLASS} -- Inheritance
-
-	add_ancestors (a_class: ET_CLASS) is
-			-- Add current class and its ancestors to ancestors of `a_class'.
-			-- Detect possible inheritance graph cycles.
+	add_to_ancestors (a_type: ET_CLASS_TYPE; an_heir: ET_CLASS; anc: DS_HASH_SET [ET_CLASS]) is
+			-- Add current class and recursively its ancestors
+			-- to `anc' if not already done and if `ancestors'
+			-- have not been searched yet. `an_heir' is the class
+			-- where `a_type', whose base class is current class,
+			-- appears as a parent. (`a_type' and `an_heir' are
+			-- only needed for error reporting and may have dummy
+			-- values starting the ancestors search process (call
+			-- to feature `search_ancestors').)
 		require
-			a_class_not_void: a_class /= Void
-			a_class_ancestors_not_void: a_class.ancestors /= Void
+			a_type_not_void: a_type /= Void
+			an_heir_not_void: an_heir /= Void
+			anc_not_void: anc /= Void
 		local
-			a_cursor: DS_HASH_SET_CURSOR [ET_CLASS]
-			a_class_ancestors: like ancestors
+			any_class: ET_CLASS
 		do
-			a_class_ancestors := a_class.ancestors
-			if Current = universe.none_class then
-					-- Error.
-				a_class.set_has_cycle
-			else
-				if not a_class_ancestors.has (Current) then
-						-- Optimization: Do not add ancestors of current
-						-- class if it is already known to be an ancestor
-						-- of `a_class' since its ancestors would have
-						-- already been added to `an_ancestors'.
-					a_class_ancestors.force (Current)
-					if ancestors = Void then
-						compute_ancestors
-					elseif computing_ancestors then
-							-- Inheritance graph cycle detected.
-						compute_cyclic_ancestors
-					end
-					a_cursor := ancestors.new_cursor
-					from a_cursor.start until a_cursor.after loop
-						a_class_ancestors.force (a_cursor.item)
-						a_cursor.forth
-					end
-					if has_cycle then
-							-- There is a cycle in the inheritance graph
-							-- of current class. Propagate the information
-							-- to `a_class'.
-						a_class.set_has_cycle
-					end
-				end
-			end
-		end
-
-feature {ET_CLASS, ET_ANCESTORS} -- Inheritance
-
-	add_cyclic_ancestors (ancestor_table: DS_HASH_TABLE [ET_ANCESTORS, ET_CLASS]) is
-			-- Add current class and its ancestors to `ancestor_table'.
-		require
-			ancestor_table_not_void: ancestor_table /= Void
-			no_void_ancestors: not ancestor_table.has_item (Void)
-		local
-			anc: ET_ANCESTORS
-		do
-			if not ancestor_table.has (Current) then
-				if computing_ancestors then
-					computing_ancestors := False
-					ancestors := Void
-				end
-				!! anc.make (Current, ancestor_table)
-				ancestor_table.force (anc, Current)
-				if ancestors = Void then
+			if not ancestors_searched then
+				has_ancestors_error := False
+				if not is_parsed then
+						-- Error: class not in universe
+						-- (VTCT, ETL2 p.199).
+					error_handler.report_vtct_error (an_heir, a_type)
+					!! ancestors.make (0)
+					has_ancestors_error := True
+				elseif has_syntax_error then
+						-- This error has already been reported
+						-- somewhere else.
+					!! ancestors.make (0)
+					has_ancestors_error := True
+				elseif parents = Void then
 					if Current = universe.general_class then
-						if parents /= Void then
-							-- Error
-							parents.add_cyclic_ancestors (anc)
+						!! ancestors.make (0)
+					elseif Current = universe.any_class then
+							-- ISE Eiffel has no GENERAL class anymore.
+							-- Use ANY has class root now.
+						!! ancestors.make (0)
+					elseif not anc.has (Current) then
+						any_class := universe.any_class
+						if not any_class.is_parsed then
+								-- Error: class ANY not in universe
+								-- (VTCT, ETL2 p.199).
+							error_handler.report_vtct_any_error (Current)
+							!! ancestors.make (0)
+							has_ancestors_error := True
+						elseif any_class.has_syntax_error then
+								-- This error has already been reported
+								-- somewhere else.
+							!! ancestors.make (0)
+							has_ancestors_error := True
+						else
+							anc.force (Current)
+							universe.any_parents.add_to_ancestors (Current, anc)
 						end
-					elseif parents /= Void then
-						parents.add_cyclic_ancestors (anc)
-					else
-						anc.add_parent (universe.any_class)
 					end
+				elseif not anc.has (Current) then
+					anc.force (Current)
+					parents.add_to_ancestors (Current, anc)
 				end
 			end
-		ensure
-			ancestors_added: ancestor_table.has (Current)
-			no_void_ancestors: not ancestor_table.has_item (Void)
-		end
-
-	set_has_cycle is
-			-- Set `has_cycle' to True.
-		do
-			has_cycle := True
-		ensure
-			has_cycle: has_cycle
 		end
 
 	set_ancestors (an_ancestors: like ancestors) is
@@ -461,7 +435,91 @@ feature {ET_CLASS, ET_ANCESTORS} -- Inheritance
 			ancestors_set: ancestors = an_ancestors
 		end
 
-feature {ET_FEATURE_FLATTENER} -- Inheritance
+	set_ancestors_error (b: BOOLEAN) is
+			-- Set `has_ancestors_error' to `b'.
+		do
+			has_ancestors_error := b
+		ensure
+			has_ancestors_error_set: has_ancestors_error = b
+		end
+
+feature -- Flattening status
+
+	is_flattened: BOOLEAN is
+			-- Have features been flattened?
+		do
+			Result := seeds /= Void
+		ensure
+			definition: Result = (seeds /= Void)
+		end
+
+	has_flatten_error: BOOLEAN
+			-- Has a fatal error occurred during
+			-- feature flattening?
+
+feature -- Feature flattening
+
+	flatten is
+			-- Flatten feature table.
+		require
+			is_parsed: is_parsed
+			no_syntax_error: not has_syntax_error
+		local
+			a_flattener: ET_FEATURE_FLATTENER
+			any_parents: ET_PARENTS
+			has_error: BOOLEAN
+		do
+			if not is_flattened then
+				search_ancestors
+				has_error := has_ancestors_error
+				if not has_error and then generic_parameters /= Void then
+					has_error := not generic_parameters.check_validity (Current)
+				end
+				if not has_error and then parents /= Void then
+					has_error := not parents.check_generic_derivation (Current)
+				end
+				if not has_error then
+					a_flattener := Shared_feature_flattener
+					if parents = Void then
+						if Current = universe.general_class then
+							a_flattener.set_current_class (Current)
+						elseif Current = universe.any_class then
+								-- ISE Eiffel has no GENERAL class anymore.
+								-- Use ANY has class root now.
+							a_flattener.set_current_class (Current)
+						else
+							any_parents := universe.any_parents
+							any_parents.flatten
+							if any_parents.has_flatten_error then
+								!! seeds.make (0)
+								has_flatten_error := True
+							else
+								a_flattener.set_current_class (Current)
+								any_parents.add_inherited_features (a_flattener)
+							end
+						end
+					else
+						parents.flatten
+						if parents.has_flatten_error then
+							!! seeds.make (0)
+							has_flatten_error := True
+						else
+							a_flattener.set_current_class (Current)
+							parents.add_inherited_features (a_flattener)
+						end
+					end
+					a_flattener.flatten
+				else
+					!! seeds.make (0)
+					has_flatten_error := True
+				end
+			end
+		ensure
+			ancestors_not_void: ancestors /= Void
+			flattened: is_flattened
+		end
+
+feature {ET_FEATURE_FLATTENER} -- Feature flattening
 
 	set_seeds (a_seeds: like seeds) is
 			-- Set `seeds' to `a_seeds'.
@@ -474,35 +532,7 @@ feature {ET_FEATURE_FLATTENER} -- Inheritance
 			seeds_set: seeds = a_seeds
 		end
 
-feature {NONE} -- Inheritance
-
-	compute_cyclic_ancestors is
-			-- Compute ancestors of current class and of its
-			-- ancestors when current class is involved in
-			-- an inheritance graph cycles.
-		local
-			ancestor_table: DS_HASH_TABLE [ET_ANCESTORS, ET_CLASS]
-			a_cursor: DS_HASH_TABLE_CURSOR [ET_ANCESTORS, ET_CLASS]
-			flattener: DS_NESTED_LIST_FLATTENER [ET_CLASS]
-		do
-			!! ancestor_table.make (10)
-			add_cyclic_ancestors (ancestor_table)
-			!! flattener.make
-			flattener.flatten (ancestor_table)
-			a_cursor := ancestor_table.new_cursor
-			from a_cursor.start until a_cursor.after loop
-				a_cursor.item.set_ancestors
-				a_cursor.forth
-			end
-			from a_cursor.start until a_cursor.after loop
-				a_cursor.item.set_has_cycle
-				a_cursor.forth
-			end
-		end
-
-	computing_ancestors: BOOLEAN
-			-- Has current class already been visited
-			-- while computing `ancestors'?
+feature {NONE} -- Implementation
 
 	Shared_feature_flattener: ET_FEATURE_FLATTENER is
 			-- Shared feature flattener
@@ -520,5 +550,6 @@ invariant
 	features_not_void: features /= Void
 	no_void_feature: not features.has_item (Void)
 	no_void_seeded_feature: seeds /= Void implies not seeds.has_item (Void)
+	no_void_ancestor: ancestors /= Void implies not ancestors.has_item (Void)
 
 end -- class ET_CLASS
