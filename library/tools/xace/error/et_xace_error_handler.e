@@ -57,7 +57,7 @@ feature -- Status report
 		do
 			Result := (info_file /= null_output_stream) and
 				(warning_file /= null_output_stream)
-		ensure
+		ensure then
 			definition: Result = (info_file /= null_output_stream) and
 						(warning_file /= null_output_stream)
 		end
