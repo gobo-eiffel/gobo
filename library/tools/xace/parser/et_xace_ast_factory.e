@@ -86,28 +86,6 @@ feature -- AST factory
 			library_not_void: Result /= Void
 		end
 
-	new_mounted_cluster (a_pathname: STRING; a_clusters: ET_XACE_CLUSTERS): ET_XACE_MOUNTED_CLUSTER is
-			-- New mounted cluster
-		require
-			a_pathname_not_void: a_pathname /= Void
-			a_pathname_not_empty: a_pathname.count > 0
-			a_clusters_not_void: a_clusters /= Void
-		do
-			!! Result.make (a_pathname, a_clusters)
-		ensure
-			mounted_cluster_not_void: Result /= Void
-		end
-
-	new_mounted_clusters (a_cluster: ET_XACE_MOUNTED_CLUSTER): ET_XACE_MOUNTED_CLUSTERS is
-			-- New mounted cluster list
-		require
-			a_cluster_not_void: a_cluster /= Void
-		do
-			!! Result.make (a_cluster)
-		ensure
-			mounted_clusters_not_void: Result /= Void
-		end
-
 	new_mounted_library (a_pathname: STRING; a_library: ET_XACE_LIBRARY; a_position: XM_POSITION): ET_XACE_MOUNTED_LIBRARY is
 			-- New mounted library
 		require

@@ -46,9 +46,6 @@ feature -- Access
 	libraries: ET_XACE_MOUNTED_LIBRARIES
 			-- Mounted libraries
 
-	mounted_clusters: ET_XACE_MOUNTED_CLUSTERS
-			-- Mounted clusters
-
 	externals: ET_XACE_EXTERNALS
 			-- External clause
 
@@ -100,20 +97,6 @@ feature -- Setting
 			libraries := a_libraries
 		ensure
 			libraries_set: libraries = a_libraries
-		end
-
-	set_mounted_clusters (a_clusters: like mounted_clusters) is
-			-- Set `mounted_clusters' to `a_clusters'.
-		do
-			if mounted_clusters /= Void then
-				mounted_clusters.unmount_root (Current)
-			end
-			mounted_clusters := a_clusters
-			if mounted_clusters /= Void then
-				mounted_clusters.mount_root (Current)
-			end
-		ensure
-			mounted_clusters_set: mounted_clusters = a_clusters
 		end
 
 	set_externals (an_externals: like externals) is
