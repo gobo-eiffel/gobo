@@ -13,7 +13,7 @@
 	revision:   "$Revision$"
 -->
 
-<chapter id="structure.index.top">
+<chapter id="structure/index">
 <chapterinfo>
 	<copyright>
 		<year>1999-2001</year>
@@ -35,9 +35,9 @@ and algorithms</emphasis>. When this library has been developed,
 there was no data structure library standard, and no portable
 library was publicly available. Each Eiffel compiler provides its
 own data structure library, but none of them is portable (see
-<link linkend="portability.index.top">portability issues</link>). This
+<link linkend="../portability/index">portability issues</link>). This
 library has hence been developed as a foundation for other
-portable libraries provided in the <link linkend="index.top">
+portable libraries provided in the <link linkend="../index">
 <projectname>Gobo Eiffel Project</projectname></link>.
 The <libraryname>Gobo Eiffel Structure Library</libraryname>
 contains the classic containers needed in everyday
@@ -56,7 +56,7 @@ This documentation is structured as follows:
 <variablelist>
 	<varlistentry>
 		<term>
-			<link linkend="structure.terminology.top">Terminology</link>
+			<link linkend="terminology">Terminology</link>
 		</term>
 		<listitem><para>
 			Naming conventions followed throughout this library.
@@ -64,7 +64,7 @@ This documentation is structured as follows:
 	</varlistentry>
 	<varlistentry>
 		<term>
-			<link linkend="structure.container.top">General Abstractions</link>
+			<link linkend="container">General Abstractions</link>
 		</term>
 		<listitem><para>
 			Abstract properties of data structures [cluster 
@@ -73,7 +73,7 @@ This documentation is structured as follows:
 	</varlistentry>
 	<varlistentry>
 		<term>
-			<link linkend="structure.traversal.top">Traversable Containers</link>
+			<link linkend="traversal">Traversable Containers</link>
 		</term>
 		<listitem><para>
 			Data structure traversal mechanism [cluster
@@ -82,7 +82,7 @@ This documentation is structured as follows:
 	</varlistentry>
 	<varlistentry>
 		<term>
-			<link linkend="structure.sort.top">Sortable Containers</link>
+			<link linkend="sort">Sortable Containers</link>
 		</term>
 		<listitem><para>
 			Algorithms for sorting items in containers [cluster
@@ -91,7 +91,7 @@ This documentation is structured as follows:
 	</varlistentry>
 	<varlistentry>
 		<term>
-			<link linkend="structure.list.top">Lists</link>
+			<link linkend="list">Lists</link>
 		</term>
 		<listitem><para>
 			Various implementations of lists [cluster
@@ -100,7 +100,7 @@ This documentation is structured as follows:
 	</varlistentry>
 	<varlistentry>
 		<term>
-			<link linkend="structure.table.top">Tables</link>
+			<link linkend="table">Tables</link>
 		</term>
 		<listitem><para>
 			Containers whose items are accessed by keys [cluster
@@ -109,7 +109,7 @@ This documentation is structured as follows:
 	</varlistentry>
 	<varlistentry>
 		<term>
-			<link linkend="structure.set.top">Sets</link>
+			<link linkend="set">Sets</link>
 		</term>
 		<listitem><para>
 			Containers containing at most one occurrence of each
@@ -118,7 +118,7 @@ This documentation is structured as follows:
 	</varlistentry>
 	<varlistentry>
 		<term>
-			<link linkend="structure.dispenser.top">Dispensers</link>
+			<link linkend="dispenser">Dispensers</link>
 		</term>
 		<listitem><para>
 			Stacks (LIFO) and queues (FIFO) [cluster
@@ -127,7 +127,7 @@ This documentation is structured as follows:
 	</varlistentry>
 	<varlistentry>
 		<term>
-			<link linkend="structure.base.top">EiffelBase Containers</link>
+			<link linkend="base">EiffelBase Containers</link>
 		</term>
 		<listitem><para>
 			Main <libraryname>EiffelBase</libraryname> containers
@@ -137,7 +137,7 @@ This documentation is structured as follows:
 	</varlistentry>
 	<varlistentry>
 		<term>
-			<link linkend="structure.flatshort.index.top">Flat-short Forms</link>
+			<link linkend="flatshort/index">Flat-short Forms</link>
 		</term>
 		<listitem><para>
 			Flat-short forms of the <libraryname>Gobo Eiffel Structure
@@ -146,7 +146,7 @@ This documentation is structured as follows:
 	</varlistentry>
 	<varlistentry>
 		<term>
-			<link linkend="structure.see_also.top">See Also</link>
+			<link linkend="see_also">See Also</link>
 		</term>
 		<listitem><para>
 			Bibliographical references, related resources and

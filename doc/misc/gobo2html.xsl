@@ -1,5 +1,5 @@
 <?xml version="1.0"?> 
-<xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform" xmlns:eif="eiffel" version="1.0">
+<xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform" version="1.0">
 
 <xsl:param name="previous"/>
 <xsl:param name="next"/>
@@ -9,7 +9,11 @@
 
 
 <xsl:template match="anchor">
-	<xsl:apply-templates select="@id" mode="anchor"/>
+	<a>
+		<xsl:attribute name="name">
+			<xsl:value-of select="@id"/>
+		</xsl:attribute>
+	</a>
 	<xsl:apply-templates/>
 </xsl:template>
 
@@ -190,16 +194,69 @@
 
 <xsl:template match="classname">
 	<xsl:choose>
-		<xsl:when test="ancestor::programlisting">
-			<xsl:apply-templates select="." mode="listing"/>
+		<xsl:when test="@linkend">
+			<a>
+				<xsl:attribute name="href">
+					<xsl:call-template name="linkend-to-url">
+						<xsl:with-param name="linkend">
+							<xsl:value-of select="@linkend"/>
+						</xsl:with-param>
+					</xsl:call-template>
+				</xsl:attribute>
+				<xsl:choose>
+					<xsl:when test="ancestor::programlisting">
+						<xsl:apply-templates select="." mode="listing"/>
+					</xsl:when>
+					<xsl:when test="ancestor::title">
+						<xsl:apply-templates select="." mode="inline"/>
+					</xsl:when>
+					<xsl:otherwise>
+						<font color="#008080">
+							<xsl:apply-templates select="." mode="inline"/>
+						</font>
+					</xsl:otherwise>
+				</xsl:choose>
+			</a>
 		</xsl:when>
-		<xsl:when test="ancestor::title">
-			<xsl:apply-templates select="." mode="inline"/>
+		<xsl:when test="@flatshort='true'">
+			<a>
+				<xsl:attribute name="href">
+					<xsl:call-template name="linkend-to-url">
+						<xsl:with-param name="linkend">
+							<xsl:text>flatshort/</xsl:text>
+							<xsl:value-of select="translate(.,'ABCDEFGHIJKLMNOPQRSTUVWXYZ','abcdefghijklmnopqrstuvwxyz')"/>
+						</xsl:with-param>
+					</xsl:call-template>
+				</xsl:attribute>
+				<xsl:choose>
+					<xsl:when test="ancestor::programlisting">
+						<xsl:apply-templates select="." mode="listing"/>
+					</xsl:when>
+					<xsl:when test="ancestor::title">
+						<xsl:apply-templates select="." mode="inline"/>
+					</xsl:when>
+					<xsl:otherwise>
+						<font color="#008080">
+							<xsl:apply-templates select="." mode="inline"/>
+						</font>
+					</xsl:otherwise>
+				</xsl:choose>
+			</a>
 		</xsl:when>
 		<xsl:otherwise>
-			<font color="#008080">
-				<xsl:apply-templates select="." mode="inline"/>
-			</font>
+			<xsl:choose>
+				<xsl:when test="ancestor::programlisting">
+					<xsl:apply-templates select="." mode="listing"/>
+				</xsl:when>
+				<xsl:when test="ancestor::title">
+					<xsl:apply-templates select="." mode="inline"/>
+				</xsl:when>
+				<xsl:otherwise>
+					<font color="#008080">
+						<xsl:apply-templates select="." mode="inline"/>
+					</font>
+				</xsl:otherwise>
+			</xsl:choose>
 		</xsl:otherwise>
 	</xsl:choose>
 </xsl:template>
@@ -424,13 +481,62 @@
 
 <xsl:template match="featurename">
 	<xsl:choose>
-		<xsl:when test="ancestor::programlisting">
-			<xsl:apply-templates select="." mode="listing"/>
+		<xsl:when test="@linkend">
+			<a>
+				<xsl:attribute name="href">
+					<xsl:call-template name="linkend-to-url">
+						<xsl:with-param name="linkend">
+							<xsl:value-of select="@linkend"/>
+						</xsl:with-param>
+					</xsl:call-template>
+				</xsl:attribute>
+				<xsl:choose>
+					<xsl:when test="ancestor::programlisting">
+						<xsl:apply-templates select="." mode="listing"/>
+					</xsl:when>
+					<xsl:otherwise>
+						<font color="#008080">
+							<xsl:apply-templates select="." mode="inline"/>
+						</font>
+					</xsl:otherwise>
+				</xsl:choose>
+			</a>
+		</xsl:when>
+		<xsl:when test="@flatshort">
+			<a>
+				<xsl:attribute name="href">
+					<xsl:call-template name="linkend-to-url">
+						<xsl:with-param name="linkend">
+							<xsl:text>flatshort/</xsl:text>
+							<xsl:value-of select="translate(@flatshort,'ABCDEFGHIJKLMNOPQRSTUVWXYZ','abcdefghijklmnopqrstuvwxyz')"/>
+							<xsl:text>#</xsl:text>
+							<xsl:value-of select="translate(.,'ABCDEFGHIJKLMNOPQRSTUVWXYZ','abcdefghijklmnopqrstuvwxyz')"/>
+						</xsl:with-param>
+					</xsl:call-template>
+				</xsl:attribute>
+				<xsl:choose>
+					<xsl:when test="ancestor::programlisting">
+						<xsl:apply-templates select="." mode="listing"/>
+					</xsl:when>
+					<xsl:otherwise>
+						<font color="#008080">
+							<xsl:apply-templates select="." mode="inline"/>
+						</font>
+					</xsl:otherwise>
+				</xsl:choose>
+			</a>
 		</xsl:when>
 		<xsl:otherwise>
-			<font color="#008080">
-				<xsl:apply-templates select="." mode="inline"/>
-			</font>
+			<xsl:choose>
+				<xsl:when test="ancestor::programlisting">
+					<xsl:apply-templates select="." mode="listing"/>
+				</xsl:when>
+				<xsl:otherwise>
+					<font color="#008080">
+						<xsl:apply-templates select="." mode="inline"/>
+					</font>
+				</xsl:otherwise>
+			</xsl:choose>
 		</xsl:otherwise>
 	</xsl:choose>
 </xsl:template>
@@ -806,7 +912,13 @@
 </xsl:template>
 
 <xsl:template match="sect1">
-	<xsl:apply-templates select="@id" mode="anchor"/>
+	<xsl:if test="@id">
+		<a>
+			<xsl:attribute name="name">
+				<xsl:value-of select="@id"/>
+			</xsl:attribute>
+		</a>
+	</xsl:if>
 	<xsl:apply-templates/>
 </xsl:template>
 
@@ -936,168 +1048,23 @@
 </xsl:template>
 
 
-
-
-<xsl:template match="@id" mode="anchor">
-	<a>
-		<xsl:attribute name="name">
-			<xsl:call-template name="last-subid">
-				<xsl:with-param name="id">
-					<xsl:value-of select="."/>
-				</xsl:with-param>
-			</xsl:call-template>
-		</xsl:attribute>
-	</a>
-</xsl:template>
-
 <xsl:template name="linkend-to-url">
 		<!--
 			Replace id by URL.
 			For example:
-				linkend: xxx.yyy.zzz
-				chapter-id: xxx/aaa.top
-				result: yyy.html#zzz
+				linkend: xxx/yyy
+				result: xxx/yyy.html
 			Another example:
-				linkend: yyy.zzz.top
-				chapter-id: xxx/aaa.top
-				result: ../yyy/zzz.html
-		-->
-	<xsl:param name="linkend"/>
-
-	<xsl:variable name="linkend-variable">
-		<xsl:call-template name="url-with-extension">
-			<xsl:with-param name="linkend">
-				<xsl:value-of select="translate($linkend,'.','/')"/>
-			</xsl:with-param>
-		</xsl:call-template>
-	</xsl:variable>
-	<xsl:variable name="chapter-id-variable">
-		<xsl:call-template name="url-with-extension">
-			<xsl:with-param name="linkend">
-				<xsl:value-of select="translate(ancestor-or-self::chapter/@id,'.','/')"/>
-			</xsl:with-param>
-		</xsl:call-template>
-	</xsl:variable>
-
-	<xsl:call-template name="relative-url">
-		<xsl:with-param name="chapter-id">
-			<xsl:value-of select="$chapter-id-variable"/>
-		</xsl:with-param>
-		<xsl:with-param name="linkend">
-			<xsl:value-of select="$linkend-variable"/>
-		</xsl:with-param>
-	</xsl:call-template>
-</xsl:template>
-
-<xsl:template name="url-with-extension">
-		<!--
-			Replace 'xxx/yyy/zzz/top' by 'xxx/yyy/zzz.html'
-			and 'xxx/yyy/zzz' by 'xxx/yyy.html#zzz'.
+				linkend: xxx/yyy#zzz
+				result: xxx/yyy.html#zzz
 		-->
 	<xsl:param name="linkend"/>
 	<xsl:choose>
-		<xsl:when test="contains(concat($linkend,'#'),'/top#')">
-			<xsl:value-of select="concat(substring-before(concat($linkend,'#'),'/top#'),'.html')"/>
+		<xsl:when test="contains($linkend,'#')">
+			<xsl:value-of select="concat(substring-before($linkend,'#'),'.html#',substring-after($linkend,'#'))"/>
 		</xsl:when>
 		<xsl:otherwise>
-			<xsl:choose>
-				<xsl:when test="contains($linkend,'/')">
-					<xsl:value-of select="substring-before($linkend,'/')"/>
-					<xsl:choose>
-						<xsl:when test="contains(substring-after($linkend,'/'),'/')">
-							<xsl:text>/</xsl:text>
-							<xsl:call-template name="url-with-extension">
-								<xsl:with-param name="linkend">
-									<xsl:value-of select="substring-after($linkend,'/')"/>
-								</xsl:with-param>
-							</xsl:call-template>
-						</xsl:when>
-						<xsl:otherwise>
-							<xsl:text>.html#</xsl:text>
-							<xsl:value-of select="substring-after($linkend,'/')"/>
-						</xsl:otherwise>
-					</xsl:choose>
-				</xsl:when>
-				<xsl:otherwise>
-					<xsl:text>#</xsl:text><xsl:value-of select="$linkend"/>
-				</xsl:otherwise>
-			</xsl:choose>
-		</xsl:otherwise>
-	</xsl:choose>
-</xsl:template>
-
-<xsl:template name="relative-url">
-		<!--
-			Make path 'linkend' relative to path 'chapter-id'.
-			For example:
-				chapter-id: structure/container.html
-				linkend: structure/traversal.html#foo
-				result: traversal.html#foo
-			Another example:
-				chapter-id: structure/container.html
-				linkend: time/date.html
-				result: ../date.html
-		-->
-	<xsl:param name="chapter-id"/>
-	<xsl:param name="linkend"/>
-	<xsl:choose>
-		<xsl:when test="contains($chapter-id,'/') and contains($linkend,'/') and substring-before($chapter-id,'/')=substring-before($linkend,'/')">
-			<xsl:call-template name="relative-url">
-				<xsl:with-param name="chapter-id">
-					<xsl:value-of select="substring-after($chapter-id,'/')"/>
-				</xsl:with-param>
-				<xsl:with-param name="linkend">
-					<xsl:value-of select="substring-after($linkend,'/')"/>
-				</xsl:with-param>
-			</xsl:call-template>
-		</xsl:when>
-		<xsl:otherwise>
-			<xsl:call-template name="dotdot-url">
-				<xsl:with-param name="chapter-id">
-					<xsl:value-of select="$chapter-id"/>
-				</xsl:with-param>
-			</xsl:call-template>
-			<xsl:value-of select="$linkend"/>
-		</xsl:otherwise>
-	</xsl:choose>
-</xsl:template>
-
-<xsl:template name="dotdot-url">
-		<!--
-			For each '/' in 'chapter-id', print '../'.
-			For example:
-				chapter-id: xxx/yyy/zzz.html
-				result: ../../
-		-->
-	<xsl:param name="chapter-id"/>
-	<xsl:if test="contains($chapter-id,'/')">
-		<xsl:text>../</xsl:text>
-		<xsl:call-template name="dotdot-url">
-			<xsl:with-param name="chapter-id">
-				<xsl:value-of select="substring-after($chapter-id,'/')"/>
-			</xsl:with-param>
-		</xsl:call-template>
-	</xsl:if>
-</xsl:template>
-
-<xsl:template name="last-subid">
-		<!--
-			Keep only last sub-id in dotted ids.
-			For example:
-				id: xxx.yyy.zzz
-				result: zzz
-		-->
-	<xsl:param name="id"/>
-	<xsl:choose>
-		<xsl:when test="contains($id,'.')">
-			<xsl:call-template name="last-subid">
-				<xsl:with-param name="id">
-					<xsl:value-of select="substring-after($id,'.')"/>
-				</xsl:with-param>
-			</xsl:call-template>
-		</xsl:when>
-		<xsl:otherwise>
-			<xsl:value-of select="$id"/>
+			<xsl:value-of select="concat($linkend,'.html')"/>
 		</xsl:otherwise>
 	</xsl:choose>
 </xsl:template>

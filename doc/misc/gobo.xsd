@@ -81,6 +81,11 @@
 	<xsd:attribute name="pubwork" type="xsd:string" use="optional"/>
 </xsd:complexType>
 
+<xsd:complexType name="classname-type" mixed="true">
+	<xsd:attribute name="flatshort" type="xsd:string" use="optional"/>
+	<xsd:attribute name="linkend" type="xsd:string" use="optional"/>
+</xsd:complexType>
+
 <xsd:complexType name="compound-type">
 	<xsd:choice maxOccurs="unbounded">
 		<xsd:element name="assign" type="assign-type"/>
@@ -118,9 +123,14 @@
 <xsd:complexType name="featurecall-type">
 	<xsd:sequence>
 		<xsd:element name="target" type="target-type" minOccurs="0"/>
-		<xsd:element name="featurename" type="xsd:string"/>
+		<xsd:element name="featurename" type="featurename-type"/>
 		<xsd:element name="arguments" type="arguments-type minOccurs="0"/>
 	</xsd:sequence>
+</xsd:complexType>
+
+<xsd:complexType name="featurename-type" mixed="true">
+	<xsd:attribute name="flatshort" type="xsd:string" use="optional"/>
+	<xsd:attribute name="linkend" type="xsd:string" use="optional"/>
 </xsd:complexType>
 
 <xsd:complexType name="filename-type" mixed="true">
@@ -169,8 +179,8 @@
 <xsd:complexType name="link-type" mixed="true">
 	<xsd:choice minOccurs="0" maxOccurs="unbounded">
 		<xsd:element name="citetitle" type="citetitle-type"/>
-		<xsd:element name="classname" type="xsd:string"/>
-		<xsd:element name="featurename" type="xsd:string"/>
+		<xsd:element name="classname" type="classname-type"/>
+		<xsd:element name="featurename" type="featurename-type"/>
 		<xsd:element name="infixname" type="xsd:string"/>
 		<xsd:element name="libraryname" type="xsd:string"/>
 		<xsd:element name="projectname" type="xsd:string"/>
@@ -203,11 +213,11 @@
 	<xsd:choice minOccurs="0" maxOccurs="unbounded">
 		<xsd:element name="blockquote" type="blockquote-type"/>
 		<xsd:element name="citetitle" type="citetitle-type"/>
-		<xsd:element name="classname" type="xsd:string"/>
+		<xsd:element name="classname" type="classname-type"/>
 		<xsd:element name="constructname" type="xsd:string"/>
 		<xsd:element name="emphasis" type="xsd:string"/>
 		<xsd:element name="featurecall" type="featurecall-type"/>
-		<xsd:element name="featurename" type="xsd:string"/>
+		<xsd:element name="featurename" type="featurename-type"/>
 		<xsd:element name="filename" type="filename-type"/>
 		<xsd:element name="imageobjectco" type="imageobjectco-type"/>
 		<xsd:element name="infixname" type="xsd:string"/>
@@ -261,7 +271,7 @@
 <xsd:complexType name="title-type" mixed="true">
 	<xsd:choice minOccurs="0" maxOccurs="unbounded">
 		<xsd:element name="anchor" type="anchor-type"/>
-		<xsd:element name="classname" type="xsd:string"/>
+		<xsd:element name="classname" type="classname-type"/>
 	</xsd:choice>
 </xsd:complexType>
 
@@ -273,8 +283,8 @@
 <xsd:complexType name="ulink-type" mixed="true">
 	<xsd:choice minOccurs="0" maxOccurs="unbounded">
 		<xsd:element name="citetitle" type="citetitle-type"/>
-		<xsd:element name="classname" type="xsd:string"/>
-		<xsd:element name="featurename" type="xsd:string"/>
+		<xsd:element name="classname" type="classname-type"/>
+		<xsd:element name="featurename" type="featurename-type"/>
 		<xsd:element name="infixname" type="xsd:string"/>
 		<xsd:element name="libraryname" type="xsd:string"/>
 		<xsd:element name="projectname" type="xsd:string"/>
@@ -298,7 +308,7 @@
 <xsd:complexType name="warning-type" mixed="true">
 	<xsd:choice maxOccurs="unbounded">
 		<xsd:element name="emphasis" type="xsd:string"/>
-		<xsd:element name="featurename" type="xsd:string"/>
+		<xsd:element name="featurename" type="featurename-type"/>
 	</xsd:choice>
 </xsd:complexType>
 

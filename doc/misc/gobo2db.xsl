@@ -6,7 +6,7 @@
 <xsl:template match="anchor">
 	<anchor>
 		<xsl:attribute name="id">
-			<xsl:value-of select="@id"/>
+			<xsl:value-of select="translate(concat(ancestor-or-self::chapter/@id,'.',@id),'_/','-.')"/>
 		</xsl:attribute>
 		<xsl:apply-templates/>
 	</anchor>
@@ -18,7 +18,14 @@
 			<xsl:value-of select="@coords"/>
 		</xsl:attribute>
 		<xsl:attribute name="linkends">
-			<xsl:value-of select="translate(@linkend,'_','-')"/>
+			<xsl:call-template name="linked-to-id">
+				<xsl:with-param name="linkend">
+					<xsl:value-of select="@linkend"/>
+				</xsl:with-param>
+				<xsl:with-param name="chapter-id">
+					<xsl:value-of select="ancestor-or-self::chapter/@id"/>
+				</xsl:with-param>
+			</xsl:call-template>
 		</xsl:attribute>
 		<xsl:apply-templates/>
 	</area>
@@ -85,7 +92,7 @@
 <xsl:template match="chapter">
 	<chapter>
 		<xsl:attribute name="id">
-			<xsl:value-of select="translate(@id,'_','-')"/>
+			<xsl:value-of select="translate(concat(@id,'.top'),'_/','-.')"/>
 		</xsl:attribute>
 		<xsl:apply-templates/>
 	</chapter>
@@ -107,7 +114,42 @@
 </xsl:template>
 
 <xsl:template match="classname">
-	<classname><xsl:apply-templates/></classname>
+	<xsl:choose>
+		<xsl:when test="@linkend">
+			<link>
+				<xsl:attribute name="linkend">
+					<xsl:call-template name="linked-to-id">
+						<xsl:with-param name="linkend">
+							<xsl:value-of select="@linkend"/>
+						</xsl:with-param>
+						<xsl:with-param name="chapter-id">
+							<xsl:value-of select="ancestor-or-self::chapter/@id"/>
+						</xsl:with-param>
+					</xsl:call-template>
+				</xsl:attribute>
+				<classname><xsl:apply-templates/></classname>
+			</link>
+		</xsl:when>
+		<xsl:when test="@flatshort='true'">
+			<link>
+				<xsl:attribute name="linkend">
+					<xsl:call-template name="linked-to-id">
+						<xsl:with-param name="linkend">
+							<xsl:text>flatshort/</xsl:text>
+							<xsl:value-of select="translate(.,'ABCDEFGHIJKLMNOPQRSTUVWXYZ','abcdefghijklmnopqrstuvwxyz')"/>
+						</xsl:with-param>
+						<xsl:with-param name="chapter-id">
+							<xsl:value-of select="ancestor-or-self::chapter/@id"/>
+						</xsl:with-param>
+					</xsl:call-template>
+				</xsl:attribute>
+				<classname><xsl:apply-templates/></classname>
+			</link>
+		</xsl:when>
+		<xsl:otherwise>
+			<classname><xsl:apply-templates/></classname>
+		</xsl:otherwise>
+	</xsl:choose>
 </xsl:template>
 
 <xsl:template match="comment">
@@ -289,7 +331,7 @@
 	<xsl:if test="arguments">
 		<xsl:text> (</xsl:text>
 		<xsl:for-each select="arguments/*">
-			<xsl:apply-templates mode="listing"/>
+			<xsl:apply-templates select="." mode="listing"/>
 			<xsl:if test="position()!=last()">
 				<xsl:text>, </xsl:text>
 			</xsl:if>
@@ -307,7 +349,7 @@
 	<xsl:if test="arguments">
 		<xsl:text> (</xsl:text>
 		<xsl:for-each select="arguments/*">
-			<xsl:apply-templates mode="inline"/>
+			<xsl:apply-templates select="." mode="inline"/>
 			<xsl:if test="position()!=last()">
 				<xsl:text>, </xsl:text>
 			</xsl:if>
@@ -318,16 +360,77 @@
 
 <xsl:template match="featurename">
 	<xsl:choose>
-		<xsl:when test="ancestor::programlisting">
-			<xsl:apply-templates select="." mode="listing"/>
+		<xsl:when test="@linkend">
+			<link>
+				<xsl:attribute name="linkend">
+					<xsl:call-template name="linked-to-id">
+						<xsl:with-param name="linkend">
+							<xsl:value-of select="@linkend"/>
+						</xsl:with-param>
+						<xsl:with-param name="chapter-id">
+							<xsl:value-of select="ancestor-or-self::chapter/@id"/>
+						</xsl:with-param>
+					</xsl:call-template>
+				</xsl:attribute>
+				<xsl:choose>
+					<xsl:when test="ancestor::programlisting">
+						<xsl:apply-templates select="." mode="listing"/>
+					</xsl:when>
+					<xsl:when test="ancestor::warning">
+						<xsl:apply-templates select="." mode="inline"/>
+					</xsl:when>
+					<xsl:otherwise>
+						<function>
+							<xsl:apply-templates select="." mode="inline"/>
+						</function>
+					</xsl:otherwise>
+				</xsl:choose>
+			</link>
 		</xsl:when>
-		<xsl:when test="ancestor::warning">
-			<xsl:apply-templates select="." mode="inline"/>
+		<xsl:when test="@flatshort">
+			<link>
+				<xsl:attribute name="linkend">
+					<xsl:call-template name="linked-to-id">
+						<xsl:with-param name="linkend">
+							<xsl:text>flatshort/</xsl:text>
+							<xsl:value-of select="translate(@flatshort,'ABCDEFGHIJKLMNOPQRSTUVWXYZ','abcdefghijklmnopqrstuvwxyz')"/>
+							<xsl:text>#</xsl:text>
+							<xsl:value-of select="translate(.,'ABCDEFGHIJKLMNOPQRSTUVWXYZ','abcdefghijklmnopqrstuvwxyz')"/>
+						</xsl:with-param>
+						<xsl:with-param name="chapter-id">
+							<xsl:value-of select="ancestor-or-self::chapter/@id"/>
+						</xsl:with-param>
+					</xsl:call-template>
+				</xsl:attribute>
+				<xsl:choose>
+					<xsl:when test="ancestor::programlisting">
+						<xsl:apply-templates select="." mode="listing"/>
+					</xsl:when>
+					<xsl:when test="ancestor::warning">
+						<xsl:apply-templates select="." mode="inline"/>
+					</xsl:when>
+					<xsl:otherwise>
+						<function>
+							<xsl:apply-templates select="." mode="inline"/>
+						</function>
+					</xsl:otherwise>
+				</xsl:choose>
+			</link>
 		</xsl:when>
 		<xsl:otherwise>
-			<function>
-				<xsl:apply-templates select="." mode="inline"/>
-			</function>
+			<xsl:choose>
+				<xsl:when test="ancestor::programlisting">
+					<xsl:apply-templates select="." mode="listing"/>
+				</xsl:when>
+				<xsl:when test="ancestor::warning">
+					<xsl:apply-templates select="." mode="inline"/>
+				</xsl:when>
+				<xsl:otherwise>
+					<function>
+						<xsl:apply-templates select="." mode="inline"/>
+					</function>
+				</xsl:otherwise>
+			</xsl:choose>
 		</xsl:otherwise>
 	</xsl:choose>
 </xsl:template>
@@ -505,7 +608,14 @@
 <xsl:template match="link">
 	<link>
 		<xsl:attribute name="linkend">
-			<xsl:value-of select="translate(@linkend,'_','-')"/>
+			<xsl:call-template name="linked-to-id">
+				<xsl:with-param name="linkend">
+					<xsl:value-of select="@linkend"/>
+				</xsl:with-param>
+				<xsl:with-param name="chapter-id">
+					<xsl:value-of select="ancestor-or-self::chapter/@id"/>
+				</xsl:with-param>
+			</xsl:call-template>
 		</xsl:attribute>
 		<xsl:apply-templates/>
 	</link>
@@ -679,7 +789,7 @@
 	<sect1>
 		<xsl:if test="@id">
 			<xsl:attribute name="id">
-				<xsl:value-of select="translate(@id,'_','-')"/>
+				<xsl:value-of select="translate(concat(concat(ancestor-or-self::chapter/@id,'.'),@id),'_/','-.')"/>
 			</xsl:attribute>
 		</xsl:if>
 		<xsl:apply-templates/>
@@ -801,6 +911,99 @@
 			<xsl:call-template name="indent"/>
 		</xsl:if>
 	</xsl:for-each>
+</xsl:template>
+
+
+
+
+
+<xsl:template name="linked-to-id">
+		<!--
+			Replace linkend by id.
+			For example:
+				linkend: xxx/yyy
+				chapter-id: aaa/bbb
+				result: aaa.xxx.yyy.top
+			Another example:
+				linkend: ../xxx/yyy#zzz
+				chapter-id: aaa/bbb/ccc
+				result: aaa.xxx.yyy.zzz
+		-->
+	<xsl:param name="linkend"/>
+	<xsl:param name="chapter-id"/>
+	<xsl:choose>
+		<xsl:when test="starts-with($linkend,'../')">
+			<xsl:variable name="new-linkend">
+				<xsl:value-of select="substring-after($linkend,'../')"/>
+			</xsl:variable>
+			<xsl:variable name="new-chapter-id">
+				<xsl:call-template name="dirname">
+					<xsl:with-param name="file">
+						<xsl:value-of select="$chapter-id"/>
+					</xsl:with-param>
+				</xsl:call-template>
+			</xsl:variable>
+			<xsl:call-template name="linked-to-id">
+				<xsl:with-param name="linkend">
+					<xsl:value-of select="$new-linkend"/>
+				</xsl:with-param>
+				<xsl:with-param name="chapter-id">
+					<xsl:value-of select="$new-chapter-id"/>
+				</xsl:with-param>
+			</xsl:call-template>
+		</xsl:when>
+		<xsl:otherwise>
+			<xsl:variable name="chapter-dirname">
+				<xsl:call-template name="dirname">
+					<xsl:with-param name="file">
+						<xsl:value-of select="$chapter-id"/>
+					</xsl:with-param>
+				</xsl:call-template>
+			</xsl:variable>
+			<xsl:variable name="full-linkend">
+				<xsl:choose>
+					<xsl:when test="$chapter-dirname=''">
+						<xsl:value-of select="$linkend"/>
+					</xsl:when>
+					<xsl:otherwise>
+						<xsl:value-of select="concat($chapter-dirname,'/',$linkend)"/>
+					</xsl:otherwise>
+				</xsl:choose>
+			</xsl:variable>
+			<xsl:choose>
+				<xsl:when test="contains($full-linkend,'#')">
+					<xsl:value-of select="translate($full-linkend,'#/_','..-')"/>
+				</xsl:when>
+				<xsl:otherwise>
+					<xsl:value-of select="translate(concat($full-linkend,'.top'),'/_','.-')"/>
+				</xsl:otherwise>
+			</xsl:choose>
+		</xsl:otherwise>
+	</xsl:choose>
+</xsl:template>
+
+<xsl:template name="dirname">
+		<!--
+			Dirname of a file.
+			For example:
+				file: xxx/yyy
+				result: xxx
+			Another example:
+				file: xxx
+				result: 
+		-->
+	<xsl:param name="file"/>
+	<xsl:if test="contains($file,'/')">
+		<xsl:value-of select="substring-before($file,'/')"/>
+		<xsl:if test="contains(substring-after($file,'/'),'/')">
+			<xsl:text>/</xsl:text>
+			<xsl:call-template name="dirname">
+				<xsl:with-param name="file">
+					<xsl:value-of select="substring-after($file,'/')"/>
+				</xsl:with-param>
+			</xsl:call-template>
+		</xsl:if>
+	</xsl:if>
 </xsl:template>
 
 </xsl:stylesheet>

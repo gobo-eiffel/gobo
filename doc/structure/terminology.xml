@@ -13,7 +13,7 @@
 	revision:   "$Revision$"
 -->
 
-<chapter id="structure.terminology.top">
+<chapter id="structure/terminology">
 <chapterinfo>
 	<copyright>
 		<year>1999-2001</year>
@@ -36,7 +36,7 @@ libraries, some Eiffel compilers support class renaming in the
 Ace file or equivalent. But some don't. Since it is a priority
 for the library to be portable across all Eiffel compilers
 available on the market today, the name of the classes of the
-<application>Gobo Eiffel Structure Library</application> have
+<libraryname>Gobo Eiffel Structure Library</libraryname> have
 been systematically prefixed with the two-letter library-code
 <classname>DS</classname>, which stands for <classname>D</classname>ata
 <classname>S</classname>tructures. For example the class name
@@ -47,7 +47,7 @@ for lists implemented with linkable cells will be
 <para>
 Apart from this library-code prefix, class names generally
 follow the same convention as those adopted in
-<link linkend="structure.see_also.eiffelbase"><libraryname>EiffelBase</libraryname></link>,
+<link linkend="see_also#eiffelbase"><libraryname>EiffelBase</libraryname></link>,
 with some exceptions mainly for consistency reasons. Names of classes
 which describe an abstract property are typically adjectives,
 such as <classname>DS_TRAVERSABLE</classname> or
@@ -74,15 +74,15 @@ being an example of such class naming.
 </para>
 </sect1>
 
-<sect1 id="structure.terminology.feature_names"><title>Feature names</title>
+<sect1 id="feature_names"><title>Feature names</title>
 
 <para>
 The <libraryname>Gobo Eiffel Structure Library</libraryname> follows the
 conventions specified in Dr Meyer's book:
-<citetitle pubwork="book"><link linkend="structure.see_also.reusable_software">Reusable
+<citetitle pubwork="book"><link linkend="see_also#reusable_software">Reusable
 Software</link>, the base object-oriented component libraries</citetitle>.
 Apart from the Eiffel
-<link linkend="structure.see_also.style_guidelines">style guidelines</link>,
+<link linkend="see_also#style_guidelines">style guidelines</link>,
 which are enforced in all <projectname>Gobo Eiffel</projectname> libraries, this
 book also describes the <emphasis role="strong">principle of naming
 consistency</emphasis> and explains why it is so important
@@ -131,7 +131,7 @@ compounded over the practice of large-scale component reuse
 it can defeat the best intentions. As a result of these
 observations, we went to a set of completely systematic
 naming conventions, which I detailed in
-<link linkend="structure.see_also.reusable_software"><citetitle>Reusable Software</citetitle></link>:
+<link linkend="see_also#reusable_software"><citetitle>Reusable Software</citetitle></link>:
 <itemizedlist>
 	<listitem><para>
 		The basic replacement or addition operation is always
@@ -158,7 +158,7 @@ Of course this may look unusual for programmers used to
 this principle has been well accepted by the Eiffel community.
 This is mainly because it is much more important when considering
 a class library as a whole to emphasize the commonalities rather
-than the differences. The <application>Gobo Eiffel Structure Library</application>
+than the differences. The <libraryname>Gobo Eiffel Structure Library</libraryname>
 follows the principle of naming consistency and the standardized
 feature names used throughout the library classes are described
 in the table below:
