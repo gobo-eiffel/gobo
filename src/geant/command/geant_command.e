@@ -11,7 +11,6 @@ indexing
 	date:       "$Date$"
 	revision:   "$Revision$"
 
-
 deferred class GEANT_COMMAND
 
 inherit
@@ -19,6 +18,11 @@ inherit
 	ANY
 	GEANT_SHARED_PROPERTIES
 		export {NONE} all end
+	
+	KL_SHARED_EXCEPTIONS
+		export
+			{NONE} all
+		end
 
 feature {NONE} -- Initialization
 
@@ -54,6 +58,26 @@ feature -- Setting
 			project_set: project = a_project
 		end
 
+feature -- Output
+
+	trace (a_message: STRING) is
+			-- Write `a_message' to standard output unless `project.verbose' = False.
+		require
+			message_not_void: a_message /= Void
+		do
+			if project.verbose then
+				print (a_message)
+			end
+		end
+
+	log (a_message: STRING) is
+			-- Write `a_message' to standard output.
+		require
+			message_not_void: a_message /= Void
+		do
+			print (a_message)
+		end
+
 feature -- Execution
 
 	execute is
@@ -61,16 +85,6 @@ feature -- Execution
 		require
 			is_executable: is_executable
 		deferred
-		end
-
-feature -- Output
-
-	log (a_msg: STRING) is
-			-- Write `a_msg' to standard output.
-		require
-			a_msg_not_void: a_msg /= Void
-		do
-			print (a_msg)
 		end
 
 feature {NONE} -- Implementation
@@ -85,6 +99,10 @@ feature {NONE} -- Implementation
 		do
 			!! shell_command.make (a_command)
 			shell_command.execute
+			if shell_command.exit_code /= 0 then
+				exit_application (shell_command.exit_code, Void)
+			end
 		end
 
 end -- class GEANT_COMMAND
+
