@@ -47,7 +47,8 @@ S_EQUAL         "="
 S_DOUBLE_QUOTES         "\""
 --S_TEXT        [a-zA-Z0-9()\ \t\r_!#$%&'\(+\-]*
 S_TEXT        [a-zA-Z0-9\t\r_\x20-\x2f\x3a\x3b\x3d\x3f\x40\x5a-\x60\x7a-\x7e]*
-S_ATTR_TEXT   [a-zA-Z0-9\t\r_\x20\x21\x23-\x2f\x3a\x3b\x3d\x3f\x40\x5a-\x60\x7a-\x7e]*
+--S_ATTR_TEXT   [a-zA-Z0-9\t\r_\x20\x21\x23-\x2f\x3a\x3b\x3d\x3f\x40\x5a-\x60\x7a-\x7e]*
+S_ATTR_TEXT   [^\n"]*
 S_XML	      [x|X][m|M][l|L]
 S_START_COMMENT "<!--"
 S_END_COMMENT "-->"
