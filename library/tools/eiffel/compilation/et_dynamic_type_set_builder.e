@@ -99,6 +99,7 @@ feature {NONE} -- Initialization
 				current_class := universe.unknown_class
 				current_type := current_class
 				current_feature := dummy_feature
+				feature_impl := dummy_feature
 				create actual_context.make_with_capacity (current_type, 10)
 				create formal_context.make_with_capacity (current_type, 10)
 				create instruction_context.make_with_capacity (current_type, 10)
@@ -687,7 +688,7 @@ feature {NONE} -- Event handling
 			l_dynamic_type_set: ET_NESTED_DYNAMIC_TYPE_SET
 		do
 			if current_type = current_dynamic_type.base_type then
-				l_resolved_type := resolved_formal_parameters (a_local.type)
+				l_resolved_type := resolved_formal_parameters (a_local.type, feature_impl, current_type)
 				if not has_fatal_error then
 					l_dynamic_type := current_system.dynamic_type (l_resolved_type, current_type)
 					create l_dynamic_type_set.make (l_dynamic_type)

@@ -110,6 +110,7 @@ feature {NONE} -- Initialization
 			current_class := a_universe.unknown_class
 			current_type := current_class
 			current_feature := dummy_feature
+			feature_impl := dummy_feature
 			create actual_context.make_with_capacity (current_type, 10)
 			create formal_context.make_with_capacity (current_type, 10)
 			create instruction_context.make_with_capacity (current_type, 10)
@@ -129,6 +130,7 @@ feature {NONE} -- Initialization
 				current_class := universe.unknown_class
 				current_type := current_class
 				current_feature := dummy_feature
+				feature_impl := dummy_feature
 				create actual_context.make_with_capacity (current_type, 10)
 				create formal_context.make_with_capacity (current_type, 10)
 				create instruction_context.make_with_capacity (current_type, 10)
@@ -183,6 +185,7 @@ feature -- Validity checking
 			a_current_type_valid: a_current_type.is_valid_context
 		local
 			old_feature: ET_FEATURE
+			old_feature_impl: ET_FEATURE
 			old_class: ET_CLASS
 			old_type: ET_BASE_TYPE
 			a_current_class: ET_CLASS
@@ -208,6 +211,8 @@ feature -- Validity checking
 					end
 				end
 				if not has_fatal_error then
+					old_feature_impl := feature_impl
+					feature_impl := a_feature
 					old_feature := current_feature
 					current_feature := a_feature
 					old_class := current_class
@@ -223,37 +228,40 @@ feature -- Validity checking
 						error_handler.report_giabr_error
 					end
 					if current_class = a_class_impl then
-						current_feature.set_implementation_checked
+						a_feature.set_implementation_checked
 						if has_fatal_error then
-							current_feature.set_implementation_error
+							a_feature.set_implementation_error
 						end
 					end
 					current_class := old_class
 					current_type := old_type
 					current_feature := old_feature
+					feature_impl := old_feature_impl
 				end
 			end
 		end
 
-	check_instructions_validity (a_compound: ET_COMPOUND; a_current_feature: ET_FEATURE; a_current_type: ET_BASE_TYPE) is
+	check_instructions_validity (a_compound: ET_COMPOUND; a_feature_impl, a_current_feature: ET_FEATURE; a_current_type: ET_BASE_TYPE) is
 			-- Check validity of `a_coumpound' in `a_current_feature' of `a_current_type'.
 			-- Set `has_fatal_error' if a fatal error occurred.
 		require
 			a_compound_not_void: a_compound /= Void
+			a_feature_impl_not_void: a_feature_impl /= Void
 			a_current_feature_not_void: a_current_feature /= Void
 			a_current_type_not_void: a_current_type /= Void
 			a_current_type_valid: a_current_type.is_valid_context
-			implementation_checked:
-				a_current_type.direct_base_class (universe) /= a_current_feature.implementation_class
-					implies implementation_checked (a_current_feature)
+			-- implementation_checked: if inherited, then `a_compound' has already been checked in implementation class of `a_feature_impl'
 		local
 			old_feature: ET_FEATURE
+			old_feature_impl: ET_FEATURE
 			old_class: ET_CLASS
 			old_type: ET_BASE_TYPE
 			i, nb: INTEGER
 			had_error: BOOLEAN
 		do
 			has_fatal_error := False
+			old_feature_impl := feature_impl
+			feature_impl := a_feature_impl
 			old_feature := current_feature
 			current_feature := a_current_feature
 			old_type := current_type
@@ -287,27 +295,27 @@ feature -- Validity checking
 			current_class := old_class
 			current_type := old_type
 			current_feature := old_feature
+			feature_impl := old_feature_impl
 		end
 
-	check_rescue_validity (a_compound: ET_COMPOUND; a_current_feature: ET_FEATURE; a_current_type: ET_BASE_TYPE) is
+	check_rescue_validity (a_compound: ET_COMPOUND; a_feature_impl, a_current_feature: ET_FEATURE; a_current_type: ET_BASE_TYPE) is
 			-- Check validity of `a_coumpound' in rescue clause of `a_current_feature' of `a_current_type'.
 			-- Set `has_fatal_error' if a fatal error occurred.
 		require
 			a_compound_not_void: a_compound /= Void
+			a_feature_impl_not_void: a_feature_impl /= Void
 			a_current_feature_not_void: a_current_feature /= Void
 			a_current_type_not_void: a_current_type /= Void
 			a_current_type_valid: a_current_type.is_valid_context
-			implementation_checked:
-				a_current_type.direct_base_class (universe) /= a_current_feature.implementation_class
-					implies implementation_checked (a_current_feature)
+			-- implementation_checked: if inherited, then `a_compound' has already been checked in implementation class of `a_feature_impl'
 		do
 			in_rescue := True
-			check_instructions_validity (a_compound, a_current_feature, a_current_type)
+			check_instructions_validity (a_compound, a_feature_impl, a_current_feature, a_current_type)
 			in_rescue := False
 		end
 
 	check_expression_validity (an_expression: ET_EXPRESSION; a_context: ET_NESTED_TYPE_CONTEXT;
-		a_target_type: ET_TYPE_CONTEXT; a_current_feature: ET_FEATURE; a_current_type: ET_BASE_TYPE) is
+		a_target_type: ET_TYPE_CONTEXT; a_feature_impl, a_current_feature: ET_FEATURE; a_current_type: ET_BASE_TYPE) is
 			-- Check validity of `an_expression' (whose target is of type
 			-- `a_target_type') in `a_current_feature' of `a_current_type'.
 			-- Set `has_fatal_error' if a fatal error occurred. Otherwise
@@ -317,20 +325,22 @@ feature -- Validity checking
 			a_context_not_void: a_context /= Void
 			a_target_type_not_void: a_target_type /= Void
 			valid_target_context: a_target_type.is_valid_context
+			a_feature_impl_not_void: a_feature_impl /= Void
 			a_current_feature_not_void: a_current_feature /= Void
 			a_current_type_not_void: a_current_type /= Void
 			a_current_type_valid: a_current_type.is_valid_context
-			implementation_checked:
-				a_current_type.direct_base_class (universe) /= a_current_feature.implementation_class
-					implies implementation_checked (a_current_feature)
+			-- implementation_checked: if inherited, then `an_expression' has already been checked in implementation class of `a_feature_impl'
 		local
 			old_feature: ET_FEATURE
+			old_feature_impl: ET_FEATURE
 			old_class: ET_CLASS
 			old_type: ET_BASE_TYPE
 			old_context: ET_NESTED_TYPE_CONTEXT
 			old_target_type: ET_TYPE_CONTEXT
 		do
 			has_fatal_error := False
+			old_feature_impl := feature_impl
+			feature_impl := a_feature_impl
 			old_feature := current_feature
 			current_feature := a_current_feature
 			old_type := current_type
@@ -354,14 +364,15 @@ feature -- Validity checking
 			end
 			current_class := old_class
 			current_type := old_type
+			feature_impl := old_feature_impl
 			current_feature := old_feature
 			current_context := old_context
 			current_target_type := old_target_type
 		end
 
-	check_actual_arguments_validity (an_actuals: ET_ACTUAL_ARGUMENTS;
-		a_context: ET_NESTED_TYPE_CONTEXT; a_name: ET_FEATURE_NAME; a_feature: ET_FEATURE;
-		a_class: ET_CLASS; a_current_feature: ET_FEATURE; a_current_type: ET_BASE_TYPE) is
+	check_actual_arguments_validity (an_actuals: ET_ACTUAL_ARGUMENTS; a_context: ET_NESTED_TYPE_CONTEXT;
+		a_name: ET_FEATURE_NAME; a_feature: ET_FEATURE; a_class: ET_CLASS;
+		a_feature_impl, a_current_feature: ET_FEATURE; a_current_type: ET_BASE_TYPE) is
 			-- Check actual arguments validity when calling `a_feature' named `a_name'
 			-- in context of its target `a_context'. `a_class' is the base class of the
 			-- target, or void in case of an unqualified call.
@@ -370,14 +381,14 @@ feature -- Validity checking
 			a_context_not_void: a_context /= Void
 			a_name_not_void: a_name /= Void
 			a_feature_not_void: a_feature /= Void
+			a_feature_impl_not_void: a_feature_impl /= Void
 			a_current_feature_not_void: a_current_feature /= Void
 			a_current_type_not_void: a_current_type /= Void
 			a_current_type_valid: a_current_type.is_valid_context
-			implementation_checked:
-				a_current_type.direct_base_class (universe) /= a_current_feature.implementation_class
-					implies implementation_checked (a_current_feature)
+			-- implementation_checked: if inherited, then `an_actuals' have already been checked in implementation class of `a_feature_impl'
 		local
 			old_feature: ET_FEATURE
+			old_feature_impl: ET_FEATURE
 			old_class: ET_CLASS
 			old_type: ET_BASE_TYPE
 			a_class_impl: ET_CLASS
@@ -400,6 +411,8 @@ feature -- Validity checking
 			had_error: BOOLEAN
 		do
 			has_fatal_error := False
+			old_feature_impl := feature_impl
+			feature_impl := a_feature_impl
 			old_feature := current_feature
 			current_feature := a_current_feature
 			old_type := current_type
@@ -410,7 +423,7 @@ feature -- Validity checking
 			if an_actuals = Void or else an_actuals.is_empty then
 				if a_formals /= Void and then not a_formals.is_empty then
 					set_fatal_error
-					a_class_impl := current_feature.implementation_class
+					a_class_impl := feature_impl.implementation_class
 					if current_class = a_class_impl then
 						if a_class /= Void then
 							if a_name.is_precursor then
@@ -421,9 +434,9 @@ feature -- Validity checking
 						else
 							error_handler.report_vuar1c_error (current_class, a_name, a_feature)
 						end
-					elseif not has_implementation_error (current_feature) then
+					elseif not has_implementation_error (feature_impl) then
 							-- Internal error: this error should have been reported when
-							-- processing the implementation of `current_feature' or in
+							-- processing the implementation of `feature_impl' or in
 							-- the feature flattener when redeclaring `a_feature' in an
 							-- ancestor of `a_class' or `current_class'.
 						error_handler.report_giaco_error
@@ -431,7 +444,7 @@ feature -- Validity checking
 				end
 			elseif a_formals = Void or else a_formals.count /= an_actuals.count then
 				set_fatal_error
-				a_class_impl := current_feature.implementation_class
+				a_class_impl := feature_impl.implementation_class
 				if current_class = a_class_impl then
 					if a_class /= Void then
 						if a_name.is_precursor then
@@ -442,9 +455,9 @@ feature -- Validity checking
 					else
 						error_handler.report_vuar1c_error (current_class, a_name, a_feature)
 					end
-				elseif not has_implementation_error (current_feature) then
+				elseif not has_implementation_error (feature_impl) then
 						-- Internal error: this error should have been reported when
-						-- processing the implementation of `current_feature' or in
+						-- processing the implementation of `feature_impl' or in
 						-- the feature flattener when redeclaring `a_feature' in an
 						-- ancestor of `a_class' or `current_class'.
 					error_handler.report_giacp_error
@@ -458,12 +471,11 @@ feature -- Validity checking
 					an_actual := an_actuals.actual_argument (i)
 					a_formal := a_formals.formal_argument (i)
 					l_formal_context.force_first (a_formal.type)
-					has_fatal_error := False
-					check_expression_validity (an_actual, actual_context, l_formal_context, current_feature, current_type)
+					check_expression_validity (an_actual, actual_context, l_formal_context, feature_impl, current_feature, current_type)
 					if has_fatal_error then
 						had_error := True
 					elseif not actual_context.conforms_to_type (l_formal_type, l_formal_context, universe) then
-						a_class_impl := current_feature.implementation_class
+						a_class_impl := feature_impl.implementation_class
 						if current_class /= a_class_impl then
 								-- Convertibility should be resolved in the implementation class.
 							a_convert_feature := Void
@@ -569,26 +581,27 @@ feature -- Validity checking
 			current_class := old_class
 			current_type := old_type
 			current_feature := old_feature
+			feature_impl := old_feature_impl
 		end
 
-	check_preconditions_validity (a_preconditions: ET_PRECONDITIONS; a_current_feature: ET_FEATURE; a_current_type: ET_BASE_TYPE) is
+	check_preconditions_validity (a_preconditions: ET_PRECONDITIONS;
+		a_feature_impl, a_current_feature: ET_FEATURE; a_current_type: ET_BASE_TYPE) is
 			-- Check validity of `a_preconditions' of `a_current_feature' in `a_current_type'.
 			-- Set `has_fatal_error' if a fatal error occurred.
 		require
 			a_preconditions_not_void: a_preconditions /= Void
+			a_feature_impl_not_void: a_feature_impl /= Void
 			a_current_feature_not_void: a_current_feature /= Void
 			a_current_type_not_void: a_current_type /= Void
 			a_current_type_valid: a_current_type.is_valid_context
-			implementation_checked:
-				a_current_type.direct_base_class (universe) /= a_current_feature.implementation_class
-					implies implementation_checked (a_current_feature)
 		local
 			old_feature: ET_FEATURE
+			old_feature_impl: ET_FEATURE
 			old_class: ET_CLASS
 			old_type: ET_BASE_TYPE
 			a_current_class: ET_CLASS
 			a_class_impl: ET_CLASS
-			a_feature_impl: ET_FEATURE
+			a_feature: ET_FEATURE
 			i, nb: INTEGER
 			an_expression: ET_EXPRESSION
 			boolean_type: ET_CLASS_TYPE
@@ -602,18 +615,20 @@ feature -- Validity checking
 			if a_current_class.has_interface_error then
 				set_fatal_error
 			else
-				a_class_impl := a_current_feature.implementation_class
+				a_class_impl := a_feature_impl.implementation_class
 				if a_class_impl /= a_current_class then
-					a_feature_impl := a_current_feature.implementation_feature
-					if a_feature_impl.assertions_checked then
-						if a_feature_impl.has_assertions_error then
+					a_feature := a_feature_impl.implementation_feature
+					if a_feature.assertions_checked then
+						if a_feature.has_assertions_error then
 							set_fatal_error
 						end
 					else
-						check_preconditions_validity (a_preconditions, a_feature_impl, a_class_impl)
+						check_preconditions_validity (a_preconditions, a_feature, a_feature, a_class_impl)
 					end
 				end
 				if not has_fatal_error then
+					old_feature_impl := feature_impl
+					feature_impl := a_feature_impl
 					old_feature := current_feature
 					current_feature := a_current_feature
 					old_type := current_type
@@ -628,14 +643,14 @@ feature -- Validity checking
 					from i := 1 until i > nb loop
 						an_expression := a_preconditions.assertion (i).expression
 						if an_expression /= Void then
-							check_expression_validity (an_expression, assertion_context, boolean_type, current_feature, current_type)
+							check_expression_validity (an_expression, assertion_context, boolean_type, feature_impl, current_feature, current_type)
 							if has_fatal_error then
 								had_error := True
 							elseif not assertion_context.same_named_type (boolean_type, current_type, universe) then
 								had_error := True
 								set_fatal_error
 								a_named_type := assertion_context.named_type (universe)
-								a_class_impl := current_feature.implementation_class
+								a_class_impl := feature_impl.implementation_class
 								if current_class = a_class_impl then
 									error_handler.report_vwbe0a_error (current_class, an_expression, a_named_type)
 								else
@@ -654,28 +669,29 @@ feature -- Validity checking
 					current_class := old_class
 					current_type := old_type
 					current_feature := old_feature
+					feature_impl := old_feature_impl
 				end
 			end
 		end
 
-	check_postconditions_validity (a_postconditions: ET_POSTCONDITIONS; a_current_feature: ET_FEATURE; a_current_type: ET_BASE_TYPE) is
+	check_postconditions_validity (a_postconditions: ET_POSTCONDITIONS;
+		a_feature_impl, a_current_feature: ET_FEATURE; a_current_type: ET_BASE_TYPE) is
 			-- Check validity of `a_postconditions' of `a_current_feature' in `a_current_type'.
 			-- Set `has_fatal_error' if a fatal error occurred.
 		require
 			a_postconditions_not_void: a_postconditions /= Void
+			a_feature_impl_not_void: a_feature_impl /= Void
 			a_current_feature_not_void: a_current_feature /= Void
 			a_current_type_not_void: a_current_type /= Void
 			a_current_type_valid: a_current_type.is_valid_context
-			implementation_checked:
-				a_current_type.direct_base_class (universe) /= a_current_feature.implementation_class
-					implies implementation_checked (a_current_feature)
 		local
 			old_feature: ET_FEATURE
+			old_feature_impl: ET_FEATURE
 			old_class: ET_CLASS
 			old_type: ET_BASE_TYPE
 			a_current_class: ET_CLASS
 			a_class_impl: ET_CLASS
-			a_feature_impl: ET_FEATURE
+			a_feature: ET_FEATURE
 			i, nb: INTEGER
 			an_expression: ET_EXPRESSION
 			boolean_type: ET_CLASS_TYPE
@@ -689,18 +705,20 @@ feature -- Validity checking
 			if a_current_class.has_interface_error then
 				set_fatal_error
 			else
-				a_class_impl := a_current_feature.implementation_class
+				a_class_impl := a_feature_impl.implementation_class
 				if a_class_impl /= a_current_class then
-					a_feature_impl := a_current_feature.implementation_feature
-					if a_feature_impl.assertions_checked then
-						if a_feature_impl.has_assertions_error then
+					a_feature := a_feature_impl.implementation_feature
+					if a_feature.assertions_checked then
+						if a_feature.has_assertions_error then
 							set_fatal_error
 						end
 					else
-						check_postconditions_validity (a_postconditions, a_feature_impl, a_class_impl)
+						check_postconditions_validity (a_postconditions, a_feature, a_feature, a_class_impl)
 					end
 				end
 				if not has_fatal_error then
+					old_feature_impl := feature_impl
+					feature_impl := a_feature_impl
 					old_feature := current_feature
 					current_feature := a_current_feature
 					old_type := current_type
@@ -715,14 +733,14 @@ feature -- Validity checking
 					from i := 1 until i > nb loop
 						an_expression := a_postconditions.assertion (i).expression
 						if an_expression /= Void then
-							check_expression_validity (an_expression, assertion_context, boolean_type, current_feature, current_type)
+							check_expression_validity (an_expression, assertion_context, boolean_type, feature_impl, current_feature, current_type)
 							if has_fatal_error then
 								had_error := True
 							elseif not assertion_context.same_named_type (boolean_type, current_type, universe) then
 								had_error := True
 								set_fatal_error
 								a_named_type := assertion_context.named_type (universe)
-								a_class_impl := current_feature.implementation_class
+								a_class_impl := feature_impl.implementation_class
 								if current_class = a_class_impl then
 									error_handler.report_vwbe0a_error (current_class, an_expression, a_named_type)
 								else
@@ -741,6 +759,7 @@ feature -- Validity checking
 					current_class := old_class
 					current_type := old_type
 					current_feature := old_feature
+					feature_impl := old_feature_impl
 				end
 			end
 		end
@@ -752,11 +771,9 @@ feature -- Validity checking
 			an_invariants_not_void: an_invariants /= Void
 			a_current_type_not_void: a_current_type /= Void
 			a_current_type_valid: a_current_type.is_valid_context
-			implementation_checked:
-				a_current_type.direct_base_class (universe) /= an_invariants.implementation_class
-					implies implementation_checked (an_invariants)
 		local
 			old_feature: ET_FEATURE
+			old_feature_impl: ET_FEATURE
 			old_class: ET_CLASS
 			old_type: ET_BASE_TYPE
 			a_current_class: ET_CLASS
@@ -785,6 +802,8 @@ feature -- Validity checking
 					end
 				end
 				if not has_fatal_error then
+					old_feature_impl := feature_impl
+					feature_impl := an_invariants
 					old_feature := current_feature
 					current_feature := an_invariants
 					old_type := current_type
@@ -799,14 +818,14 @@ feature -- Validity checking
 					from i := 1 until i > nb loop
 						an_expression := an_invariants.assertion (i).expression
 						if an_expression /= Void then
-							check_expression_validity (an_expression, assertion_context, boolean_type, current_feature, current_type)
+							check_expression_validity (an_expression, assertion_context, boolean_type, feature_impl, current_feature, current_type)
 							if has_fatal_error then
 								had_error := True
 							elseif not assertion_context.same_named_type (boolean_type, current_type, universe) then
 								had_error := True
 								set_fatal_error
 								a_named_type := assertion_context.named_type (universe)
-								a_class_impl := current_feature.implementation_class
+								a_class_impl := feature_impl.implementation_class
 								if current_class = a_class_impl then
 									error_handler.report_vwbe0a_error (current_class, an_expression, a_named_type)
 								else
@@ -831,6 +850,7 @@ feature -- Validity checking
 					current_class := old_class
 					current_type := old_type
 					current_feature := old_feature
+					feature_impl := old_feature_impl
 				end
 			end
 		end
@@ -873,7 +893,7 @@ feature {NONE} -- Feature validity
 				if a_constant.is_boolean_constant then
 					if not a_type.same_named_type (universe.boolean_class, current_type, current_type, universe) then
 						set_fatal_error
-						a_class_impl := current_feature.implementation_class
+						a_class_impl := a_feature.implementation_class
 						if current_class = a_class_impl then
 							error_handler.report_vqmc1a_error (current_class, a_feature)
 						else
@@ -883,7 +903,7 @@ feature {NONE} -- Feature validity
 				elseif a_constant.is_character_constant then
 					if not a_type.same_named_type (universe.character_class, current_type, current_type, universe) then
 						set_fatal_error
-						a_class_impl := current_feature.implementation_class
+						a_class_impl := a_feature.implementation_class
 						if current_class = a_class_impl then
 							error_handler.report_vqmc2a_error (current_class, a_feature)
 						else
@@ -901,7 +921,7 @@ feature {NONE} -- Feature validity
 						-- Valid with ISE Eiffel. To be checked with other compilers.
 					else
 						set_fatal_error
-						a_class_impl := current_feature.implementation_class
+						a_class_impl := a_feature.implementation_class
 						if current_class = a_class_impl then
 							error_handler.report_vqmc3a_error (current_class, a_feature)
 						else
@@ -915,7 +935,7 @@ feature {NONE} -- Feature validity
 						-- OK.
 					else
 						set_fatal_error
-						a_class_impl := current_feature.implementation_class
+						a_class_impl := a_feature.implementation_class
 						if current_class = a_class_impl then
 							error_handler.report_vqmc4a_error (current_class, a_feature)
 						else
@@ -928,7 +948,7 @@ feature {NONE} -- Feature validity
 						not a_type.same_named_type (universe.string_class, current_type, current_type, universe)
 					then
 						set_fatal_error
-						a_class_impl := current_feature.implementation_class
+						a_class_impl := a_feature.implementation_class
 						if current_class = a_class_impl then
 							error_handler.report_vqmc5a_error (current_class, a_feature)
 						else
@@ -941,7 +961,7 @@ feature {NONE} -- Feature validity
 -- TODO: check bit size.
 					else
 						set_fatal_error
-						a_class_impl := current_feature.implementation_class
+						a_class_impl := a_feature.implementation_class
 						if current_class = a_class_impl then
 							error_handler.report_vqmc6a_error (current_class, a_feature)
 						else
@@ -1031,12 +1051,12 @@ feature {NONE} -- Feature validity
 			if not had_error then
 				a_compound := a_feature.compound
 				if a_compound /= Void then
-					check_instructions_validity (a_compound, current_feature, current_type)
+					check_instructions_validity (a_compound, a_feature, a_feature, current_type)
 					had_error := had_error or has_fatal_error
 				end
 				a_compound := a_feature.rescue_clause
 				if a_compound /= Void then
-					check_rescue_validity (a_compound, current_feature, current_type)
+					check_rescue_validity (a_compound, a_feature, a_feature, current_type)
 				end
 			end
 			if had_error then
@@ -1069,12 +1089,12 @@ feature {NONE} -- Feature validity
 			if not had_error then
 				a_compound := a_feature.compound
 				if a_compound /= Void then
-					check_instructions_validity (a_compound, current_feature, current_type)
+					check_instructions_validity (a_compound, a_feature, a_feature, current_type)
 					had_error := had_error or has_fatal_error
 				end
 				a_compound := a_feature.rescue_clause
 				if a_compound /= Void then
-					check_rescue_validity (a_compound, current_feature, current_type)
+					check_rescue_validity (a_compound, a_feature, a_feature, current_type)
 				end
 			end
 			if had_error then
@@ -1157,12 +1177,12 @@ feature {NONE} -- Feature validity
 			if not had_error then
 				a_compound := a_feature.compound
 				if a_compound /= Void then
-					check_instructions_validity (a_compound, current_feature, current_type)
+					check_instructions_validity (a_compound, a_feature, a_feature, current_type)
 					had_error := had_error or has_fatal_error
 				end
 				a_compound := a_feature.rescue_clause
 				if a_compound /= Void then
-					check_rescue_validity (a_compound, current_feature, current_type)
+					check_rescue_validity (a_compound, a_feature, a_feature, current_type)
 				end
 			end
 			if had_error then
@@ -1195,12 +1215,12 @@ feature {NONE} -- Feature validity
 			if not had_error then
 				a_compound := a_feature.compound
 				if a_compound /= Void then
-					check_instructions_validity (a_compound, current_feature, current_type)
+					check_instructions_validity (a_compound, a_feature, a_feature, current_type)
 					had_error := had_error or has_fatal_error
 				end
 				a_compound := a_feature.rescue_clause
 				if a_compound /= Void then
-					check_rescue_validity (a_compound, current_feature, current_type)
+					check_rescue_validity (a_compound, a_feature, a_feature, current_type)
 				end
 			end
 			if had_error then
@@ -1232,7 +1252,7 @@ feature {NONE} -- Feature validity
 					-- Valid with ISE Eiffel. To be checked with other compilers.
 				else
 					set_fatal_error
-					a_class_impl := current_feature.implementation_class
+					a_class_impl := a_feature.implementation_class
 					if current_class = a_class_impl then
 						error_handler.report_vqui0a_error (current_class, a_feature)
 					else
@@ -1291,7 +1311,7 @@ feature {NONE} -- Locals/Formal arguments validity
 			had_error: BOOLEAN
 		do
 			has_fatal_error := False
-			a_class_impl := current_feature.implementation_class
+			a_class_impl := feature_impl.implementation_class
 			if current_class = a_class_impl then
 				nb := a_locals.count
 				from i := 1 until i > nb loop
@@ -1305,19 +1325,19 @@ feature {NONE} -- Locals/Formal arguments validity
 								-- Two local variables with the same name.
 							had_error := True
 							set_fatal_error
-							error_handler.report_vreg0b_error (current_class, other_local, a_local, current_feature)
+							error_handler.report_vreg0b_error (current_class, other_local, a_local, feature_impl)
 						end
 						j := j + 1
 					end
-					args := current_feature.arguments
+					args := feature_impl.arguments
 					if args /= Void then
 						k := args.index_of (a_name)
 						if k /= 0 then
 								-- This local variable has the same name as a formal
-								-- argument of `current_feature' in `current_class'.
+								-- argument of `feature_impl' in `current_class'.
 							had_error := True
 							set_fatal_error
-							error_handler.report_vrle2a_error (current_class, a_local, current_feature, args.formal_argument (k))
+							error_handler.report_vrle2a_error (current_class, a_local, feature_impl, args.formal_argument (k))
 						end
 					end
 					a_feature := current_class.named_feature (a_name)
@@ -1326,7 +1346,7 @@ feature {NONE} -- Locals/Formal arguments validity
 							-- final name of a feature in `current_class'.
 						had_error := True
 						set_fatal_error
-						error_handler.report_vrle1a_error (current_class, a_local, current_feature, a_feature)
+						error_handler.report_vrle1a_error (current_class, a_local, feature_impl, a_feature)
 					end
 					a_type := a_local.type
 					check_local_type_validity (a_type)
@@ -1369,14 +1389,14 @@ feature {NONE} -- Type checking
 			a_class_type: ET_CLASS_TYPE
 		do
 			has_fatal_error := False
-			type_checker.check_type_validity (a_type, current_feature, current_type)
+			type_checker.check_type_validity (a_type, feature_impl, current_type)
 			if type_checker.has_fatal_error then
 				set_fatal_error
 			else
 				if a_type.is_type_expanded (current_type, universe) then
 					a_class_type ?= a_type.named_type (current_type, universe)
 					if a_class_type /= Void then
-						type_checker.check_creation_type_validity (a_class_type, current_feature, current_type, a_type.position)
+						type_checker.check_creation_type_validity (a_class_type, feature_impl, current_type, a_type.position)
 						if type_checker.has_fatal_error then
 							set_fatal_error
 						end
@@ -1400,14 +1420,14 @@ feature {NONE} -- Type checking
 				-- signature types, they have not been resolved (i.e. if they
 				-- contain formal generic parameter, these parameters may
 				-- need to be resolved in the `current_class').
-			type_checker.check_type_validity (a_type, current_feature.implementation_feature, current_feature.implementation_class)
+			type_checker.check_type_validity (a_type, feature_impl.implementation_feature, feature_impl.implementation_class)
 			if type_checker.has_fatal_error then
 				set_fatal_error
 			else
 				if a_type.is_type_expanded (current_type, universe) then
 					a_class_type ?= a_type.named_type (current_type, universe)
 					if a_class_type /= Void then
-						type_checker.check_creation_type_validity (a_class_type, current_feature.implementation_feature, current_feature.implementation_class, a_type.position)
+						type_checker.check_creation_type_validity (a_class_type, feature_impl.implementation_feature, feature_impl.implementation_class, a_type.position)
 						if type_checker.has_fatal_error then
 							set_fatal_error
 						end
@@ -1424,7 +1444,7 @@ feature {NONE} -- Type checking
 			a_type_not_void: a_type /= Void
 		do
 			has_fatal_error := False
-			type_checker.check_type_validity (a_type, current_feature.implementation_feature, current_feature.implementation_class)
+			type_checker.check_type_validity (a_type, feature_impl.implementation_feature, feature_impl.implementation_class)
 			if type_checker.has_fatal_error then
 				set_fatal_error
 			end
@@ -1441,22 +1461,24 @@ feature {NONE} -- Type checking
 			a_position_not_void: a_position /= Void
 		do
 			has_fatal_error := False
-			type_checker.check_creation_type_validity (a_type, current_feature, current_type, a_position)
+			type_checker.check_creation_type_validity (a_type, feature_impl, current_type, a_position)
 			if type_checker.has_fatal_error then
 				set_fatal_error
 			end
 		end
 
-	resolved_formal_parameters (a_type: ET_TYPE): ET_TYPE is
+	resolved_formal_parameters (a_type: ET_TYPE; a_feature_impl: ET_FEATURE; a_current_type: ET_BASE_TYPE): ET_TYPE is
 			-- Replace formal generic parameters in `a_type' by their
 			-- corresponding actual parameters if the class where
-			-- `a_type' appears is generic and is not `current_type'.
+			-- `a_type' appears is generic and is not `a_current_type'.
 			-- Set `has_fatal_error' if a fatal error occurred.
 		require
 			a_type_not_void: a_type /= Void
+			a_feature_impl_not_void: a_feature_impl /= Void
+			a_current_type_not_void: a_current_type /= Void
 		do
 			has_fatal_error := False
-			Result := type_checker.resolved_formal_parameters (a_type, current_feature, current_type)
+			Result := type_checker.resolved_formal_parameters (a_type, a_feature_impl, a_current_type)
 			if type_checker.has_fatal_error then
 				set_fatal_error
 			end
@@ -1511,7 +1533,7 @@ feature {NONE} -- Instruction validity
 			if not has_fatal_error then
 				a_target_type := tokens.like_current
 				if not a_source_context.conforms_to_type (a_target_type, a_target_context, universe) then
-					a_class_impl := current_feature.implementation_class
+					a_class_impl := feature_impl.implementation_class
 					if current_class = a_class_impl then
 						a_convert_feature := type_checker.convert_feature (a_source_context, a_target_context)
 					else
@@ -1572,7 +1594,6 @@ feature {NONE} -- Instruction validity
 						set_fatal_error
 						a_source_named_type := a_source_context.named_type (universe)
 						a_target_named_type := a_target_context.named_type (universe)
-						a_class_impl := current_feature.implementation_class
 						if current_class = a_class_impl then
 							error_handler.report_vjar0a_error (current_class, an_instruction, a_source_named_type, a_target_named_type)
 						else
@@ -1613,7 +1634,7 @@ feature {NONE} -- Instruction validity
 			elseif not a_target_context.is_type_reference (universe) then
 				set_fatal_error
 				a_target_named_type := a_target_context.named_type (universe)
-				a_class_impl := current_feature.implementation_class
+				a_class_impl := feature_impl.implementation_class
 				if current_class = a_class_impl then
 					error_handler.report_vjrv0a_error (current_class, a_target, a_target_named_type)
 				else
@@ -1679,7 +1700,7 @@ feature {NONE} -- Instruction validity
 					set_fatal_error
 					had_error := True
 					a_named_type := actual_context.named_type (universe)
-					a_class_impl := current_feature.implementation_class
+					a_class_impl := feature_impl.implementation_class
 					if current_class = a_class_impl then
 						error_handler.report_vwbe0a_error (current_class, an_expression, a_named_type)
 					else
@@ -1750,11 +1771,11 @@ feature {NONE} -- Instruction validity
 					a_seed := a_name.seed
 					if a_seed = 0 then
 							-- We need to resolve `a_name' in the implementation
-							-- class of `current_feature' first.
-						a_class_impl := current_feature.implementation_class
+							-- class of `feature_impl' first.
+						a_class_impl := feature_impl.implementation_class
 						if a_class_impl /= current_class then
 							set_fatal_error
-							if not has_implementation_error (current_feature) then
+							if not has_implementation_error (feature_impl) then
 									-- Internal error: `a_name' should have been resolved in
 									-- the implementation feature.
 								error_handler.report_giacq_error
@@ -1799,7 +1820,7 @@ feature {NONE} -- Instruction validity
 					if not has_fatal_error then
 						a_target_type := tokens.like_current
 						if a_creation_type /= Void then
-							a_creation_type := resolved_formal_parameters (a_creation_type)
+							a_creation_type := resolved_formal_parameters (a_creation_type, feature_impl, current_type)
 							if not has_fatal_error then
 								a_creation_context.force_first (a_creation_type)
 								a_context := a_creation_context
@@ -1835,7 +1856,7 @@ feature {NONE} -- Instruction validity
 						set_fatal_error
 						a_creation_named_type := a_creation_context.named_type (universe)
 						a_target_named_type := a_target_context.named_type (universe)
-						a_class_impl := current_feature.implementation_class
+						a_class_impl := feature_impl.implementation_class
 						if current_class = a_class_impl then
 							error_handler.report_vgcc3a_error (current_class, an_instruction, a_creation_named_type, a_target_named_type)
 						else
@@ -1863,7 +1884,7 @@ feature {NONE} -- Instruction validity
 					end
 					if a_class.creators /= Void then
 						set_fatal_error
-						a_class_impl := current_feature.implementation_class
+						a_class_impl := feature_impl.implementation_class
 						if current_class = a_class_impl then
 							error_handler.report_vgcc5c_error (current_class, an_instruction, a_class)
 						else
@@ -1874,12 +1895,12 @@ feature {NONE} -- Instruction validity
 					if a_feature.type /= Void then
 							-- This is not a procedure.
 						set_fatal_error
-						a_class_impl := current_feature.implementation_class
+						a_class_impl := feature_impl.implementation_class
 						if current_class = a_class_impl then
 							error_handler.report_vgcc6f_error (current_class, a_name, a_feature, a_class)
-						elseif not has_implementation_error (current_feature) then
+						elseif not has_implementation_error (feature_impl) then
 								-- Internal error: this error should have been reported when
-								-- processing the implementation of `current_feature' or in
+								-- processing the implementation of `feature_impl' or in
 								-- the feature flattener when redeclaring procedure `a_feature'
 								-- to a function in an ancestor of `a_class'.
 							error_handler.report_giacr_error
@@ -1899,7 +1920,7 @@ feature {NONE} -- Instruction validity
 							a_creator := a_formal_parameter.creation_procedures
 							if a_creator = Void or else not a_creator.has_feature (a_feature) then
 								set_fatal_error
-								a_class_impl := current_feature.implementation_class
+								a_class_impl := feature_impl.implementation_class
 								if current_class = a_class_impl then
 									error_handler.report_vgcc8c_error (current_class, a_name, a_feature, a_class, a_formal_parameter)
 								else
@@ -1911,7 +1932,7 @@ feature {NONE} -- Instruction validity
 						if a_class.creators /= Void or else not a_feature.has_seed (universe.default_create_seed) then
 								-- The procedure is not a creation procedure exported to `current_class'.
 							set_fatal_error
-							a_class_impl := current_feature.implementation_class
+							a_class_impl := feature_impl.implementation_class
 							if current_class = a_class_impl then
 								error_handler.report_vgcc6h_error (current_class, a_name, a_feature, a_class)
 							else
@@ -1945,7 +1966,7 @@ feature {NONE} -- Instruction validity
 		do
 			a_compound := an_instruction.compound
 			if a_compound /= Void then
-				check_instructions_validity (a_compound, current_feature, current_type)
+				check_instructions_validity (a_compound, feature_impl, current_feature, current_type)
 			else
 				has_fatal_error := False
 			end
@@ -1978,7 +1999,7 @@ feature {NONE} -- Instruction validity
 				had_error := True
 				set_fatal_error
 				a_named_type := actual_context.named_type (universe)
-				a_class_impl := current_feature.implementation_class
+				a_class_impl := feature_impl.implementation_class
 				if current_class = a_class_impl then
 					error_handler.report_vwbe0a_error (current_class, a_conditional, a_named_type)
 				else
@@ -1987,7 +2008,7 @@ feature {NONE} -- Instruction validity
 			end
 			a_compound := an_instruction.then_compound
 			if a_compound /= Void then
-				check_instructions_validity (a_compound, current_feature, current_type)
+				check_instructions_validity (a_compound, feature_impl, current_feature, current_type)
 				if has_fatal_error then
 					had_error := True
 				end
@@ -2006,7 +2027,7 @@ feature {NONE} -- Instruction validity
 						had_error := True
 						set_fatal_error
 						a_named_type := actual_context.named_type (universe)
-						a_class_impl := current_feature.implementation_class
+						a_class_impl := feature_impl.implementation_class
 						if current_class = a_class_impl then
 							error_handler.report_vwbe0a_error (current_class, a_conditional, a_named_type)
 						else
@@ -2015,7 +2036,7 @@ feature {NONE} -- Instruction validity
 					end
 					a_compound := an_elseif.then_compound
 					if a_compound /= Void then
-						check_instructions_validity (a_compound, current_feature, current_type)
+						check_instructions_validity (a_compound, feature_impl, current_feature, current_type)
 						if has_fatal_error then
 							had_error := True
 						end
@@ -2025,7 +2046,7 @@ feature {NONE} -- Instruction validity
 			end
 			a_compound := an_instruction.else_compound
 			if a_compound /= Void then
-				check_instructions_validity (a_compound, current_feature, current_type)
+				check_instructions_validity (a_compound, feature_impl, current_feature, current_type)
 				if has_fatal_error then
 					had_error := True
 				end
@@ -2084,7 +2105,7 @@ feature {NONE} -- Instruction validity
 				had_error := True
 				set_fatal_error
 				a_value_named_type := a_value_context.named_type (universe)
-				a_class_impl := current_feature.implementation_class
+				a_class_impl := feature_impl.implementation_class
 				if current_class = a_class_impl then
 					error_handler.report_vomb1a_error (current_class, an_expression, a_value_named_type)
 				else
@@ -2138,7 +2159,7 @@ feature {NONE} -- Instruction validity
 									set_fatal_error
 									a_value_named_type := a_value_context.named_type (universe)
 									a_choice_named_type := a_choice_context.named_type (universe)
-									a_class_impl := current_feature.implementation_class
+									a_class_impl := feature_impl.implementation_class
 									if current_class = a_class_impl then
 										error_handler.report_vomb2a_error (current_class, a_choice_constant, a_choice_named_type, a_value_named_type)
 									else
@@ -2183,7 +2204,7 @@ feature {NONE} -- Instruction validity
 										set_fatal_error
 										a_value_named_type := a_value_context.named_type (universe)
 										a_choice_named_type := a_choice_context.named_type (universe)
-										a_class_impl := current_feature.implementation_class
+										a_class_impl := feature_impl.implementation_class
 										if current_class = a_class_impl then
 											error_handler.report_vomb2a_error (current_class, a_choice_constant, a_choice_named_type, a_value_named_type)
 										else
@@ -2207,7 +2228,7 @@ feature {NONE} -- Instruction validity
 					a_when_part := a_when_parts.item (i)
 					a_compound := a_when_part.then_compound
 					if a_compound /= Void then
-						check_instructions_validity (a_compound, current_feature, current_type)
+						check_instructions_validity (a_compound, feature_impl, current_feature, current_type)
 						if has_fatal_error then
 							had_error := True
 						end
@@ -2217,7 +2238,7 @@ feature {NONE} -- Instruction validity
 			end
 			a_compound := an_instruction.else_compound
 			if a_compound /= Void then
-				check_instructions_validity (a_compound, current_feature, current_type)
+				check_instructions_validity (a_compound, feature_impl, current_feature, current_type)
 				if has_fatal_error then
 					had_error := True
 				end
@@ -2245,7 +2266,7 @@ feature {NONE} -- Instruction validity
 			has_fatal_error := False
 			a_compound := an_instruction.from_compound
 			if a_compound /= Void then
-				check_instructions_validity (a_compound, current_feature, current_type)
+				check_instructions_validity (a_compound, feature_impl, current_feature, current_type)
 				if has_fatal_error then
 					had_error := True
 				end
@@ -2274,7 +2295,7 @@ feature {NONE} -- Instruction validity
 				had_error := True
 				set_fatal_error
 				a_named_type := actual_context.named_type (universe)
-				a_class_impl := current_feature.implementation_class
+				a_class_impl := feature_impl.implementation_class
 				if current_class = a_class_impl then
 					error_handler.report_vwbe0a_error (current_class, an_expression, a_named_type)
 				else
@@ -2283,7 +2304,7 @@ feature {NONE} -- Instruction validity
 			end
 			a_compound := an_instruction.loop_compound
 			if a_compound /= Void then
-				check_instructions_validity (a_compound, current_feature, current_type)
+				check_instructions_validity (a_compound, feature_impl, current_feature, current_type)
 				if has_fatal_error then
 					had_error := True
 				end
@@ -2319,7 +2340,7 @@ feature {NONE} -- Instruction validity
 					had_error := True
 					set_fatal_error
 					a_named_type := actual_context.named_type (universe)
-					a_class_impl := current_feature.implementation_class
+					a_class_impl := feature_impl.implementation_class
 					if current_class = a_class_impl then
 						error_handler.report_vwbe0a_error (current_class, an_expression, a_named_type)
 					else
@@ -2358,7 +2379,7 @@ feature {NONE} -- Instruction validity
 					had_error := True
 					set_fatal_error
 					a_named_type := actual_context.named_type (universe)
-					a_class_impl := current_feature.implementation_class
+					a_class_impl := feature_impl.implementation_class
 					if current_class = a_class_impl then
 						error_handler.report_vave0a_error (current_class, an_expression, a_named_type)
 					else
@@ -2385,10 +2406,10 @@ feature {NONE} -- Instruction validity
 			if in_rescue then
 					-- The Precursor instruction does not appear in a Routine_body.
 				set_fatal_error
-				a_class_impl := current_feature.implementation_class
+				a_class_impl := feature_impl.implementation_class
 				if current_class = a_class_impl then
 					error_handler.report_vdpr1a_error (current_class, an_instruction)
-				elseif not has_implementation_error (current_feature) then
+				elseif not has_implementation_error (feature_impl) then
 						-- Internal error: the VDPR-1 error should have been
 						-- reported in the implementation feature.
 					error_handler.report_giadj_error
@@ -2410,9 +2431,9 @@ feature {NONE} -- Instruction validity
 			if not in_rescue then
 					-- The Retry instruction does not appear in a Rescue clause.
 				set_fatal_error
-				a_class_impl := current_feature.implementation_class
+				a_class_impl := feature_impl.implementation_class
 				if a_class_impl /= current_class then
-					if not has_implementation_error (current_feature) then
+					if not has_implementation_error (feature_impl) then
 							-- Internal error: the VXRT error should have been
 							-- reported in the implementation feature.
 						error_handler.report_giacs_error
@@ -2456,22 +2477,28 @@ feature {NONE} -- Instruction validity
 			has_fatal_error := False
 			a_result ?= a_writable
 			if a_result /= Void then
-				a_type := current_feature.type
+					-- Use type of implementation feature because the types of the signature
+					-- of `current_feature' might not have been resolved for `current_class'
+					-- (when processing precursors in the context of current class).
+				a_type := current_feature.implementation_feature.type
 				if a_type = Void then
 					set_fatal_error
-					a_class_impl := current_feature.implementation_class
+					a_class_impl := feature_impl.implementation_class
 					if a_class_impl = current_class then
-						error_handler.report_veen2a_error (current_class, a_result, current_feature)
+						error_handler.report_veen2a_error (current_class, a_result, feature_impl)
 					else
-						if not has_implementation_error (current_feature) then
+						if not has_implementation_error (feature_impl) then
 								-- Internal error: the VEEN-2 error should have been
 								-- reported in the implementation feature.
 							error_handler.report_giadq_error
 						end
 					end
 				else
-					a_context.force_first (a_type)
-					report_result_assignment_target (a_result)
+					a_type := resolved_formal_parameters (a_type, current_feature, current_type)
+					if not has_fatal_error then
+						a_context.force_first (a_type)
+						report_result_assignment_target (a_result)
+					end
 				end
 			else
 				an_identifier ?= a_writable
@@ -2479,7 +2506,7 @@ feature {NONE} -- Instruction validity
 					a_seed := an_identifier.seed
 					if a_seed /= 0 then
 						if an_identifier.is_local then
-							a_locals := current_feature.locals
+							a_locals := feature_impl.locals
 							if a_locals = Void then
 									-- Internal error.
 								set_fatal_error
@@ -2489,8 +2516,12 @@ feature {NONE} -- Instruction validity
 								set_fatal_error
 								error_handler.report_giabl_error
 							else
+									-- Contrary to the types appearing in the signatures, types of
+									-- local variables in the AST are those found in the implementation
+									-- class of `feature_impl', and hence need to be resolved in
+									-- `current_type'.
 								a_local := a_locals.local_variable (a_seed)
-								a_type := resolved_formal_parameters (a_local.type)
+								a_type := resolved_formal_parameters (a_local.type, feature_impl, current_type)
 								if not has_fatal_error then
 									a_context.force_first (a_type)
 									report_local_assignment_target (an_identifier, a_local)
@@ -2505,12 +2536,12 @@ feature {NONE} -- Instruction validity
 								error_handler.report_giabm_error
 							elseif not an_attribute.is_attribute then
 								set_fatal_error
-								a_class_impl := current_feature.implementation_class
+								a_class_impl := feature_impl.implementation_class
 								if current_class = a_class_impl then
 									error_handler.report_vjaw0a_error (current_class, an_identifier, an_attribute)
-								elseif not has_implementation_error (current_feature) then
+								elseif not has_implementation_error (feature_impl) then
 										-- Internal error: this error should have been reported when
-										-- processing the implementation `current_feature' or in the
+										-- processing the implementation `feature_impl' or in the
 										-- feature flattener when redeclaring attribute `a_feature'
 										-- to a non-attribute in an ancestor of `current_class'.
 									error_handler.report_giabn_error
@@ -2523,17 +2554,17 @@ feature {NONE} -- Instruction validity
 						end
 					else
 							-- We need to resolve `an_identifier' in the implementation
-							-- class of `current_feature' first.
-						a_class_impl := current_feature.implementation_class
+							-- class of `feature_impl' first.
+						a_class_impl := feature_impl.implementation_class
 						if a_class_impl /= current_class then
 							set_fatal_error
-							if not has_implementation_error (current_feature) then
+							if not has_implementation_error (feature_impl) then
 									-- Internal error: `an_identifier' should have been resolved in
 									-- the implementation feature.
 								error_handler.report_giadr_error
 							end
 						else
-							a_locals := current_feature.locals
+							a_locals := feature_impl.locals
 							if a_locals /= Void then
 								a_seed := a_locals.index_of (an_identifier)
 								if a_seed /= 0 then
@@ -2541,11 +2572,8 @@ feature {NONE} -- Instruction validity
 									an_identifier.set_local (True)
 									a_local := a_locals.local_variable (a_seed)
 									a_local.set_used (True)
-									a_type := resolved_formal_parameters (a_local.type)
-									if not has_fatal_error then
-										a_context.force_first (a_type)
-										report_local_assignment_target (an_identifier, a_local)
-									end
+									a_context.force_first (a_local.type)
+									report_local_assignment_target (an_identifier, a_local)
 								end
 							end
 							if a_seed = 0 then
@@ -2567,11 +2595,11 @@ feature {NONE} -- Instruction validity
 										end
 									else
 										set_fatal_error
-										an_arguments := current_feature.arguments
+										an_arguments := feature_impl.arguments
 										if an_arguments /= Void and then an_arguments.index_of (an_identifier) /= 0 then
-											error_handler.report_vjaw0c_error (current_class, an_identifier, current_feature)
+											error_handler.report_vjaw0c_error (current_class, an_identifier, feature_impl)
 										else
-											error_handler.report_veen0a_error (current_class, an_identifier, current_feature)
+											error_handler.report_veen0a_error (current_class, an_identifier, feature_impl)
 										end
 									end
 								end
@@ -2697,7 +2725,7 @@ feature {NONE} -- Expression validity
 				check_creation_expression_validity (an_expression, current_target_type.named_type (universe),
 					a_convert_feature.name, an_actuals, an_expression.position, a_context)
 			else
-				check_expression_validity (an_expression.expression, a_context, current_target_type, current_feature, current_type)
+				check_expression_validity (an_expression.expression, a_context, current_target_type, feature_impl, current_feature, current_type)
 				an_expression.set_index (an_expression.expression.index)
 				a_context.force_first (current_target_type.named_type (universe))
 			end
@@ -2767,11 +2795,11 @@ feature {NONE} -- Expression validity
 					a_seed := l_name.seed
 					if a_seed = 0 then
 							-- We need to resolve `l_name' in the implementation
-							-- class of `current_feature' first.
-						a_class_impl := current_feature.implementation_class
+							-- class of `feature_impl' first.
+						a_class_impl := feature_impl.implementation_class
 						if a_class_impl /= current_class then
 							set_fatal_error
-							if not has_implementation_error (current_feature) then
+							if not has_implementation_error (feature_impl) then
 									-- Internal error: `l_name' should have been resolved in
 									-- the implementation feature.
 								error_handler.report_giacy_error
@@ -2803,7 +2831,7 @@ feature {NONE} -- Expression validity
 			end
 			if not has_fatal_error then
 				if a_feature = Void then
-					l_type := resolved_formal_parameters (l_type)
+					l_type := resolved_formal_parameters (l_type, feature_impl, current_type)
 					if not has_fatal_error then
 						a_context.force_first (l_type)
 						a_class := a_context.base_class (universe)
@@ -2841,7 +2869,7 @@ feature {NONE} -- Expression validity
 					end
 					if a_class.creators /= Void then
 						set_fatal_error
-						a_class_impl := current_feature.implementation_class
+						a_class_impl := feature_impl.implementation_class
 						if current_class = a_class_impl then
 							error_handler.report_vgcc5a_error (current_class, a_type_position, a_class)
 						else
@@ -2852,12 +2880,12 @@ feature {NONE} -- Expression validity
 					if a_feature.type /= Void then
 							-- This is not a procedure.
 						set_fatal_error
-						a_class_impl := current_feature.implementation_class
+						a_class_impl := feature_impl.implementation_class
 						if current_class = a_class_impl then
 							error_handler.report_vgcc6b_error (current_class, l_name, a_feature, a_class)
-						elseif not has_implementation_error (current_feature) then
+						elseif not has_implementation_error (feature_impl) then
 								-- Internal error: this error should have been reported when
-								-- processing the implementation of `current_feature' or in
+								-- processing the implementation of `feature_impl' or in
 								-- the feature flattener when redeclaring procedure `a_feature'
 								-- to a function in an ancestor of `a_class'.
 							error_handler.report_giacz_error
@@ -2877,7 +2905,7 @@ feature {NONE} -- Expression validity
 							a_creator := a_formal_parameter.creation_procedures
 							if a_creator = Void or else not a_creator.has_feature (a_feature) then
 								set_fatal_error
-								a_class_impl := current_feature.implementation_class
+								a_class_impl := feature_impl.implementation_class
 								if current_class = a_class_impl then
 									error_handler.report_vgcc8a_error (current_class, l_name, a_feature, a_class, a_formal_parameter)
 								else
@@ -2889,7 +2917,7 @@ feature {NONE} -- Expression validity
 						if a_class.creators /= Void or else not a_feature.has_seed (universe.default_create_seed) then
 								-- The procedure is not a creation procedure exported to `current_class'.
 							set_fatal_error
-							a_class_impl := current_feature.implementation_class
+							a_class_impl := feature_impl.implementation_class
 							if current_class = a_class_impl then
 								error_handler.report_vgcc6d_error (current_class, l_name, a_feature, a_class)
 							else
@@ -3000,7 +3028,7 @@ feature {NONE} -- Expression validity
 							set_fatal_error
 							left_named_type := left_context.named_type (universe)
 							right_named_type := right_context.named_type (universe)
-							a_class_impl := current_feature.implementation_class
+							a_class_impl := feature_impl.implementation_class
 							if a_class_impl = current_class then
 								error_handler.report_vweq0a_error (current_class, an_expression, left_named_type, right_named_type)
 							else
@@ -3036,7 +3064,7 @@ feature {NONE} -- Expression validity
 			if a_typed_pointer_class.is_preparsed then
 					-- Class TYPED_POINTER has been found in the universe.
 					-- Use ISE's implementation.
-				check_expression_validity (an_expression.expression, a_context, any_type, current_feature, current_type)
+				check_expression_validity (an_expression.expression, a_context, any_type, feature_impl, current_feature, current_type)
 				if not has_fatal_error then
 					if not a_context.is_empty then
 						create an_actuals.make_with_capacity (1)
@@ -3085,7 +3113,6 @@ feature {NONE} -- Expression validity
 		local
 			a_class_impl: ET_CLASS
 			a_feature: ET_FEATURE
-			a_feature_impl: ET_FEATURE
 			a_name: ET_FEATURE_NAME
 			a_seed: INTEGER
 			already_checked: BOOLEAN
@@ -3104,11 +3131,11 @@ feature {NONE} -- Expression validity
 			a_seed := a_name.seed
 			if a_seed = 0 then
 					-- We need to resolve `a_name' in the implementation
-					-- class of `current_feature' first.
-				a_class_impl := current_feature.implementation_class
+					-- class of `feature_impl' first.
+				a_class_impl := feature_impl.implementation_class
 				if a_class_impl /= current_class then
 					set_fatal_error
-					if not has_implementation_error (current_feature) then
+					if not has_implementation_error (feature_impl) then
 							-- Internal error: `a_name' should have been resolved in
 							-- the implementation feature.
 						error_handler.report_giada_error
@@ -3116,7 +3143,7 @@ feature {NONE} -- Expression validity
 				else
 					an_identifier ?= a_name
 					if an_identifier /= Void then
-						an_arguments := current_feature.arguments
+						an_arguments := feature_impl.arguments
 						if an_arguments /= Void then
 							a_seed := an_arguments.index_of (an_identifier)
 							if a_seed /= 0 then
@@ -3150,7 +3177,7 @@ feature {NONE} -- Expression validity
 							end
 						end
 						if a_seed = 0 then
-							a_locals := current_feature.locals
+							a_locals := feature_impl.locals
 							if a_locals /= Void then
 								a_seed := a_locals.index_of (an_identifier)
 								if a_seed /= 0 then
@@ -3161,7 +3188,7 @@ feature {NONE} -- Expression validity
 									if in_precondition or in_postcondition then
 											-- The local entity appears in a pre- or postcondition.
 										set_fatal_error
-										error_handler.report_veen2c_error (current_class, an_identifier, current_feature)
+										error_handler.report_veen2c_error (current_class, an_identifier, feature_impl)
 									elseif in_invariant then
 											-- VEEN-2: the local entity appears in an invariant.
 											-- Internal error: the invariant has no local entity.
@@ -3239,12 +3266,34 @@ feature {NONE} -- Expression validity
 						set_fatal_error
 						error_handler.report_giaea_error
 					else
+							-- Use arguments of `current_feature' instead of `feature_impl'
+							-- because when processing inherited assertions the types of signature
+							-- should be those of the version of the feature in the current class.
+							-- For example:
+							--    deferred class A
+							--    feature
+							--       f (a: ANY) is
+							--           require
+							--               pre: g ($a)
+							--           deferred
+							--           end
+							--      g (a: TYPED_POINTER [ANY]): BOOLEAN is deferred end
+							--    end
+							--    class B
+							--    inherit
+							--        A
+							--    feature
+							--        f (a: STRING) is do ... end
+							--        g (a: TYPED_POINTER [STRING]): BOOLEAN is do ... end
+							--    end
+							-- `a' in the inherited precondition "pre" should be considered
+							-- of type STRING (and not ANY) is class B.
+							--
 							-- Use arguments of implementation feature because the types
 							-- of the signature of `current_feature' might not have been
 							-- resolved for `current_class' (when processing precursors
 							-- in the context of current class).
-						a_feature_impl := current_feature.implementation_feature
-						an_arguments := a_feature_impl.arguments
+						an_arguments := current_feature.implementation_feature.arguments
 						if an_arguments = Void then
 								-- Internal error.
 							set_fatal_error
@@ -3258,7 +3307,7 @@ feature {NONE} -- Expression validity
 							if a_typed_pointer_class.is_preparsed then
 									-- Class TYPED_POINTER has been found in the universe.
 									-- Use ISE's implementation.
-								a_type := resolved_formal_parameters (an_arguments.formal_argument (a_seed).type)
+								a_type := resolved_formal_parameters (an_arguments.formal_argument (a_seed).type, current_feature, current_type)
 								if not has_fatal_error then
 									create an_actuals.make_with_capacity (1)
 									an_actuals.put_first (a_type)
@@ -3276,11 +3325,11 @@ feature {NONE} -- Expression validity
 					if in_precondition or in_postcondition then
 							-- The local entity appears in a pre- or postcondition.
 						set_fatal_error
-						a_class_impl := current_feature.implementation_class
+						a_class_impl := feature_impl.implementation_class
 						if a_class_impl = current_class then
-							error_handler.report_veen2c_error (current_class, a_name, current_feature)
+							error_handler.report_veen2c_error (current_class, a_name, feature_impl)
 						else
-							if not has_implementation_error (current_feature) then
+							if not has_implementation_error (feature_impl) then
 									-- Internal error: the VEEN-2 error should have been
 									-- reported in the implementation feature.
 								error_handler.report_gibak_error
@@ -3292,7 +3341,7 @@ feature {NONE} -- Expression validity
 						set_fatal_error
 						error_handler.report_gibal_error
 					else
-						a_locals := current_feature.locals
+						a_locals := feature_impl.locals
 						if a_locals = Void then
 								-- Internal error.
 							set_fatal_error
@@ -3310,7 +3359,7 @@ feature {NONE} -- Expression validity
 									-- local variables in the AST are those found in the implementation
 									-- class of `current_feature', and hence need to be resolved in
 									-- `current_type'.
-								a_type := resolved_formal_parameters (a_locals.local_variable (a_seed).type)
+								a_type := resolved_formal_parameters (a_locals.local_variable (a_seed).type, feature_impl, current_type)
 								if not has_fatal_error then
 									create an_actuals.make_with_capacity (1)
 									an_actuals.put_first (a_type)
@@ -3373,7 +3422,6 @@ feature {NONE} -- Expression validity
 			a_seed: INTEGER
 			an_arguments: ET_FORMAL_ARGUMENT_LIST
 			a_formal: ET_FORMAL_ARGUMENT
-			a_feature_impl: ET_FEATURE
 			a_type: ET_TYPE
 		do
 			has_fatal_error := False
@@ -3383,12 +3431,34 @@ feature {NONE} -- Expression validity
 				set_fatal_error
 				error_handler.report_giads_error
 			else
+					-- Use arguments of `current_feature' instead of `feature_impl'
+					-- because when processing inherited assertions the types of signature
+					-- should be those of the version of the feature in the current class.
+					-- For example:
+					--    deferred class A
+					--    feature
+					--       f (a: ANY) is
+					--           require
+					--               pre: g (a)
+					--           deferred
+					--           end
+					--      g (a: ANY): BOOLEAN is deferred end
+					--    end
+					--    class B
+					--    inherit
+					--        A
+					--    feature
+					--        f (a: STRING) is do ... end
+					--        g (a: STRING): BOOLEAN is do ... end
+					--    end
+					-- `a' in the inherited precondition "pre" should be considered
+					-- of type STRING (and not ANY) is class B.
+					--
 					-- Use arguments of implementation feature because the types
 					-- of the signature of `current_feature' might not have been
 					-- resolved for `current_class' (when processing precursors
 					-- in the context of current class).
-				a_feature_impl := current_feature.implementation_feature
-				an_arguments := a_feature_impl.arguments
+				an_arguments := current_feature.implementation_feature.arguments
 				a_seed := a_name.seed
 				if an_arguments = Void then
 						-- Internal error.
@@ -3400,7 +3470,7 @@ feature {NONE} -- Expression validity
 					error_handler.report_giaam_error
 				else
 					a_formal := an_arguments.formal_argument (a_seed)
-					a_type := resolved_formal_parameters (a_formal.type)
+					a_type := resolved_formal_parameters (a_formal.type, current_feature, current_type)
 					if not has_fatal_error then
 						a_context.force_first (a_type)
 						report_formal_argument (a_name, a_formal)
@@ -3511,17 +3581,17 @@ feature {NONE} -- Expression validity
 			a_seed := a_name.seed
 			if a_seed = 0 then
 					-- We need to resolve `a_name' in the implementation
-					-- class of `current_feature' first.
-				a_class_impl := current_feature.implementation_class
+					-- class of `feature_impl' first.
+				a_class_impl := feature_impl.implementation_class
 				if a_class_impl /= current_class then
 					set_fatal_error
-					if not has_implementation_error (current_feature) then
+					if not has_implementation_error (feature_impl) then
 							-- Internal error: `a_name' should have been resolved in
 							-- the implementation feature.
 						error_handler.report_giadb_error
 					end
 				else
-					check_expression_validity (a_target, a_context, any_type, current_feature, current_type)
+					check_expression_validity (a_target, a_context, any_type, feature_impl, current_feature, current_type)
 					if not has_fatal_error then
 						if not a_context.is_empty and then a_context.first = universe.string_type then
 								-- When a manifest string is the target of a call,
@@ -3549,7 +3619,7 @@ feature {NONE} -- Expression validity
 			end
 			if not has_fatal_error then
 				if a_feature = Void then
-					check_expression_validity (a_target, a_context, any_type, current_feature, current_type)
+					check_expression_validity (a_target, a_context, any_type, feature_impl, current_feature, current_type)
 					if not has_fatal_error then
 						if not a_context.is_empty and then a_context.first = universe.string_type then
 								-- When a manifest string is the target of a call,
@@ -3578,7 +3648,7 @@ feature {NONE} -- Expression validity
 					if not a_feature.is_exported_to (current_class, universe.ancestor_builder) then
 							-- The feature is not exported to `current_class'.
 						set_fatal_error
-						a_class_impl := current_feature.implementation_class
+						a_class_impl := feature_impl.implementation_class
 						if current_class = a_class_impl then
 							error_handler.report_vuex2b_error (current_class, a_name, a_feature, a_class)
 						else
@@ -3594,12 +3664,12 @@ feature {NONE} -- Expression validity
 					a_formals := a_feature.arguments
 					if a_formals = Void or else a_formals.count /= 1 then
 						set_fatal_error
-						a_class_impl := current_feature.implementation_class
+						a_class_impl := feature_impl.implementation_class
 						if current_class = a_class_impl then
 							error_handler.report_vuar1a_error (current_class, a_name, a_feature, a_class)
-						elseif not has_implementation_error (current_feature) then
+						elseif not has_implementation_error (feature_impl) then
 								-- Internal error: this error should have been reported when
-								-- processing the implementation of `current_feature' or in
+								-- processing the implementation of `feature_impl' or in
 								-- the feature flattener when redeclaring `a_feature' in an
 								-- ancestor of `a_class' or `current_class'.
 							error_handler.report_giadc_error
@@ -3625,7 +3695,7 @@ feature {NONE} -- Expression validity
 						l_formal_context.remove_first
 						if not has_fatal_error then
 							if not l_actual_context.conforms_to_type (l_formal_type, l_formal_context, universe) then
-								a_class_impl := current_feature.implementation_class
+								a_class_impl := feature_impl.implementation_class
 								if current_class = a_class_impl then
 									l_formal_context.force_first (l_formal_type)
 									a_convert_feature := type_checker.convert_feature (l_actual_context, l_formal_context)
@@ -3815,12 +3885,12 @@ feature {NONE} -- Expression validity
 					if a_type = Void then
 							-- In a call expression, `a_feature' has to be a query.
 						set_fatal_error
-						a_class_impl := current_feature.implementation_class
+						a_class_impl := feature_impl.implementation_class
 						if current_class = a_class_impl then
 							error_handler.report_vkcn2a_error (current_class, a_name, a_feature, a_class)
-						elseif not has_implementation_error (current_feature) then
+						elseif not has_implementation_error (feature_impl) then
 								-- Internal error: this error should have been reported when
-								-- processing the implementation of `current_feature' or in
+								-- processing the implementation of `feature_impl' or in
 								-- the feature flattener when redeclaring function `a_feature'
 								-- to a procedure in an ancestor of `a_class'.
 							error_handler.report_giadd_error
@@ -3865,11 +3935,11 @@ feature {NONE} -- Expression validity
 			if in_precondition or in_postcondition then
 					-- The local entity appears in a pre- or postcondition.
 				set_fatal_error
-				a_class_impl := current_feature.implementation_class
+				a_class_impl := feature_impl.implementation_class
 				if a_class_impl = current_class then
-					error_handler.report_veen2c_error (current_class, a_name, current_feature)
+					error_handler.report_veen2c_error (current_class, a_name, feature_impl)
 				else
-					if not has_implementation_error (current_feature) then
+					if not has_implementation_error (feature_impl) then
 							-- Internal error: the VEEN-2 error should have been
 							-- reported in the implementation feature.
 						error_handler.report_giado_error
@@ -3881,7 +3951,7 @@ feature {NONE} -- Expression validity
 				set_fatal_error
 				error_handler.report_giadt_error
 			else
-				a_locals := current_feature.locals
+				a_locals := feature_impl.locals
 				a_seed := a_name.seed
 				if a_locals = Void then
 						-- Internal error.
@@ -3897,7 +3967,7 @@ feature {NONE} -- Expression validity
 						-- class of `current_feature', and hence need to be resolved in
 						-- `current_type'.
 					a_local := a_locals.local_variable (a_seed)
-					a_type := resolved_formal_parameters (a_local.type)
+					a_type := resolved_formal_parameters (a_local.type, feature_impl, current_type)
 					if not has_fatal_error then
 						a_context.force_first (a_type)
 						report_local_variable (a_name, a_local)
@@ -4070,16 +4140,16 @@ feature {NONE} -- Expression validity
 		do
 				-- Check VAOL-2 (ETL2 p.124).
 			l_expression := an_expression.expression
-			check_expression_validity (l_expression, a_context, current_target_type, current_feature, current_type)
+			check_expression_validity (l_expression, a_context, current_target_type, feature_impl, current_feature, current_type)
 			an_expression.set_index (l_expression.index)
 			if not in_postcondition then
 					-- Check VAOL-1 (ETL2 p.124).
 				set_fatal_error
-				a_class_impl := current_feature.implementation_class
+				a_class_impl := feature_impl.implementation_class
 				if a_class_impl = current_class then
 					error_handler.report_vaol1a_error (current_class, an_expression)
 				else
-					if not has_implementation_error (current_feature) then
+					if not has_implementation_error (feature_impl) then
 							-- Internal error: the VAOL-1 error should have been
 							-- reported in the implementation feature.
 						error_handler.report_giade_error
@@ -4098,7 +4168,7 @@ feature {NONE} -- Expression validity
 			l_string: ET_MANIFEST_STRING
 		do
 			l_string := an_expression.manifest_string
-			check_expression_validity (l_string, a_context, current_target_type, current_feature, current_type)
+			check_expression_validity (l_string, a_context, current_target_type, feature_impl, current_feature, current_type)
 			an_expression.set_index (l_string.index)
 		end
 
@@ -4112,7 +4182,7 @@ feature {NONE} -- Expression validity
 			l_expression: ET_EXPRESSION
 		do
 			l_expression := an_expression.expression
-			check_expression_validity (l_expression, a_context, current_target_type, current_feature, current_type)
+			check_expression_validity (l_expression, a_context, current_target_type, feature_impl, current_feature, current_type)
 			an_expression.set_index (l_expression.index)
 		end
 
@@ -4128,10 +4198,10 @@ feature {NONE} -- Expression validity
 			if in_assertion then
 					-- The Precursor expression does not appear in a Routine_body.
 				set_fatal_error
-				a_class_impl := current_feature.implementation_class
+				a_class_impl := feature_impl.implementation_class
 				if current_class = a_class_impl then
 					error_handler.report_vdpr1b_error (current_class, an_expression)
-				elseif not has_implementation_error (current_feature) then
+				elseif not has_implementation_error (feature_impl) then
 						-- Internal error: the VDPR-1 error should have been
 						-- reported in the implementation feature.
 					error_handler.report_giadk_error
@@ -4157,18 +4227,18 @@ feature {NONE} -- Expression validity
 			an_actuals: ET_ACTUAL_ARGUMENT_LIST
 		do
 			has_fatal_error := False
-			a_class_impl := current_feature.implementation_class
+			a_class_impl := feature_impl.implementation_class
 			if current_feature.first_precursor = Void then
 					-- Immediate features cannot have Precursor.
 				set_fatal_error
 				if a_class_impl /= current_class then
-					if not has_implementation_error (current_feature) then
+					if not has_implementation_error (feature_impl) then
 							-- Internal error: Precursor should have been resolved in
 							-- the implementation feature.
 						error_handler.report_giadx_error
 					end
 				else
-					error_handler.report_vdpr3d_error (current_class, a_precursor, current_feature)
+					error_handler.report_vdpr3d_error (current_class, a_precursor, feature_impl)
 				end
 			else
 					-- Make sure that `a_precursor' has been resolved.
@@ -4257,8 +4327,7 @@ feature {NONE} -- Expression validity
 		require
 			a_call_not_void: a_call /= Void
 			qualified_call: a_call.is_qualified_call
-			-- Violation of VWEQ:
-			-- is_expression: an_expression /= Void implies a_call = an_expression
+			is_expression: an_expression /= Void implies same_objects (a_call, an_expression)
 			a_context_not_void: a_context /= Void
 		local
 			a_target: ET_EXPRESSION
@@ -4281,17 +4350,17 @@ feature {NONE} -- Expression validity
 			a_seed := a_name.seed
 			if a_seed = 0 then
 					-- We need to resolve `a_name' in the implementation
-					-- class of `current_feature' first.
-				a_class_impl := current_feature.implementation_class
+					-- class of `feature_impl' first.
+				a_class_impl := feature_impl.implementation_class
 				if a_class_impl /= current_class then
 					set_fatal_error
-					if not has_implementation_error (current_feature) then
+					if not has_implementation_error (feature_impl) then
 							-- Internal error: `a_name' should have been resolved in
 							-- the implementation feature.
 						error_handler.report_giacf_error
 					end
 				else
-					check_expression_validity (a_target, a_context, any_type, current_feature, current_type)
+					check_expression_validity (a_target, a_context, any_type, feature_impl, current_feature, current_type)
 					if not has_fatal_error then
 						if not a_context.is_empty and then a_context.first = universe.string_type then
 								-- When a manifest string is the target of a call,
@@ -4319,7 +4388,7 @@ feature {NONE} -- Expression validity
 			end
 			if not has_fatal_error then
 				if a_feature = Void then
-					check_expression_validity (a_target, a_context, any_type, current_feature, current_type)
+					check_expression_validity (a_target, a_context, any_type, feature_impl, current_feature, current_type)
 					if not has_fatal_error then
 						if not a_context.is_empty and then a_context.first = universe.string_type then
 								-- When a manifest string is the target of a call,
@@ -4348,7 +4417,7 @@ feature {NONE} -- Expression validity
 					if not a_feature.is_exported_to (current_class, universe.ancestor_builder) then
 							-- The feature is not exported to `current_class'.
 						set_fatal_error
-						a_class_impl := current_feature.implementation_class
+						a_class_impl := feature_impl.implementation_class
 						if current_class = a_class_impl then
 							error_handler.report_vuex2b_error (current_class, a_name, a_feature, a_class)
 						else
@@ -4382,12 +4451,12 @@ feature {NONE} -- Expression validity
 						if a_type = Void then
 								-- In a call expression, `a_feature' has to be a query.
 							set_fatal_error
-							a_class_impl := current_feature.implementation_class
+							a_class_impl := feature_impl.implementation_class
 							if current_class = a_class_impl then
 								error_handler.report_vkcn2a_error (current_class, a_name, a_feature, a_class)
-							elseif not has_implementation_error (current_feature) then
+							elseif not has_implementation_error (feature_impl) then
 									-- Internal error: this error should have been reported when
-									-- processing the implementation of `current_feature' or in
+									-- processing the implementation of `feature_impl' or in
 									-- the feature flattener when redeclaring function `a_feature'
 									-- to a procedure in an ancestor of `a_class'.
 								error_handler.report_giacg_error
@@ -4419,12 +4488,12 @@ feature {NONE} -- Expression validity
 						if a_type /= Void then
 								-- In a call instruction, `a_feature' has to be a procedure.
 							set_fatal_error
-							a_class_impl := current_feature.implementation_class
+							a_class_impl := feature_impl.implementation_class
 							if current_class = a_class_impl then
 								error_handler.report_vkcn1a_error (current_class, a_name, a_feature, a_class)
-							elseif not has_implementation_error (current_feature) then
+							elseif not has_implementation_error (feature_impl) then
 									-- Internal error: this error should have been reported when
-									-- processing the implementation of `current_feature' or in
+									-- processing the implementation of `feature_impl' or in
 									-- the feature flattener when redeclaring procedure `a_feature'
 									-- to a function in an ancestor of `a_class'.
 								error_handler.report_giach_error
@@ -4510,17 +4579,16 @@ feature {NONE} -- Expression validity
 		local
 			a_type: ET_TYPE
 			a_class_impl: ET_CLASS
-			a_feature_impl: ET_FEATURE
 		do
 			has_fatal_error := False
 			if in_precondition then
 					-- The entity Result appears in a precondition.
 				set_fatal_error
-				a_class_impl := current_feature.implementation_class
+				a_class_impl := feature_impl.implementation_class
 				if a_class_impl = current_class then
-					error_handler.report_veen2b_error (current_class, an_expression, current_feature)
+					error_handler.report_veen2b_error (current_class, an_expression, feature_impl)
 				else
-					if not has_implementation_error (current_feature) then
+					if not has_implementation_error (feature_impl) then
 							-- Internal error: the VEEN-2 error should have been
 							-- reported in the implementation feature.
 						error_handler.report_giadm_error
@@ -4529,39 +4597,62 @@ feature {NONE} -- Expression validity
 			elseif in_invariant then
 					-- The entity Result appears in an invariant.
 				set_fatal_error
-				a_class_impl := current_feature.implementation_class
+				a_class_impl := feature_impl.implementation_class
 				if a_class_impl = current_class then
 					error_handler.report_veen2d_error (current_class, an_expression)
 				else
-					if not has_implementation_error (current_feature) then
+					if not has_implementation_error (feature_impl) then
 							-- Internal error: the VEEN-2 error should have been
 							-- reported in the implementation feature.
 						error_handler.report_giadv_error
 					end
 				end
 			else
-					-- Use type of implementation feature because the types
-					-- of the signature of `current_feature' might not have been
-					-- resolved for `current_class' (when processing precursors
-					-- in context of current class).
-				a_feature_impl := current_feature.implementation_feature
-				a_type := a_feature_impl.type
+					-- Use type of `current_feature' instead of `feature_impl'
+					-- because when processing inherited assertions the types of signature
+					-- should be those of the version of the feature in the current class.
+					-- For example:
+					--    deferred class A
+					--    feature
+					--       f: ANY is
+					--           deferred
+					--           ensure
+					--              post: g (Result)
+					--           end
+					--      g (a: ANY): BOOLEAN is deferred end
+					--    end
+					--    class B
+					--    inherit
+					--        A
+					--    feature
+					--        f: STRING is do ... end
+					--        g (a: STRING): BOOLEAN is do ... end
+					--    end
+					-- 'Result' in the inherited postcondition "post" should be considered
+					-- of type STRING (and not ANY) is class B.
+					--
+					-- Use type of implementation feature because the types of the signature
+					-- of `current_feature' might not have been resolved for `current_class'
+					-- (when processing precursors in the context of current class).
+				a_type := current_feature.implementation_feature.type
 				if a_type = Void then
 					set_fatal_error
-					a_class_impl := current_feature.implementation_class
+					a_class_impl := feature_impl.implementation_class
 					if a_class_impl = current_class then
-						error_handler.report_veen2a_error (current_class, an_expression, current_feature)
+						error_handler.report_veen2a_error (current_class, an_expression, feature_impl)
 					else
-						if not has_implementation_error (current_feature) then
+						if not has_implementation_error (feature_impl) then
 								-- Internal error: the VEEN-2 error should have been
 								-- reported in the implementation feature.
 							error_handler.report_giadf_error
 						end
 					end
 				else
-					a_type := resolved_formal_parameters (a_type)
-					a_context.force_first (a_type)
-					report_result (an_expression)
+					a_type := resolved_formal_parameters (a_type, current_feature, current_type)
+					if not has_fatal_error then
+						a_context.force_first (a_type)
+						report_result (an_expression)
+					end
 				end
 			end
 		end
@@ -4578,17 +4669,16 @@ feature {NONE} -- Expression validity
 			a_typed_pointer_type: ET_GENERIC_CLASS_TYPE
 			an_actuals: ET_ACTUAL_PARAMETER_LIST
 			a_class_impl: ET_CLASS
-			a_feature_impl: ET_FEATURE
 		do
 			has_fatal_error := False
 			if in_precondition then
 					-- The entity Result appears in a precondition.
 				set_fatal_error
-				a_class_impl := current_feature.implementation_class
+				a_class_impl := feature_impl.implementation_class
 				if a_class_impl = current_class then
-					error_handler.report_veen2b_error (current_class, an_expression.result_keyword, current_feature)
+					error_handler.report_veen2b_error (current_class, an_expression.result_keyword, feature_impl)
 				else
-					if not has_implementation_error (current_feature) then
+					if not has_implementation_error (feature_impl) then
 							-- Internal error: the VEEN-2 error should have been
 							-- reported in the implementation feature.
 						error_handler.report_giadn_error
@@ -4597,30 +4687,51 @@ feature {NONE} -- Expression validity
 			elseif in_invariant then
 					-- The entity Result appears in an invariant.
 				set_fatal_error
-				a_class_impl := current_feature.implementation_class
+				a_class_impl := feature_impl.implementation_class
 				if a_class_impl = current_class then
 					error_handler.report_veen2d_error (current_class, an_expression.result_keyword)
 				else
-					if not has_implementation_error (current_feature) then
+					if not has_implementation_error (feature_impl) then
 							-- Internal error: the VEEN-2 error should have been
 							-- reported in the implementation feature.
 						error_handler.report_giadw_error
 					end
 				end
 			else
-					-- Use type of implementation feature because the types
-					-- of the signature of `current_feature' might not have been
-					-- resolved for `current_class' (when processing precursors
-					-- in context of current class).
-				a_feature_impl := current_feature.implementation_feature
-				a_type := a_feature_impl.type
+					-- Use type of `current_feature' instead of `feature_impl'
+					-- because when processing inherited assertions the types of signature
+					-- should be those of the version of the feature in the current class.
+					-- For example:
+					--    deferred class A
+					--    feature
+					--       f: ANY is
+					--           deferred
+					--           ensure
+					--              post: g ($Result)
+					--           end
+					--      g (a: TYPED_POINTER [ANY]): BOOLEAN is deferred end
+					--    end
+					--    class B
+					--    inherit
+					--        A
+					--    feature
+					--        f: STRING is do ... end
+					--        g (a: TYPED_POINTER [STRING]): BOOLEAN is do ... end
+					--    end
+					-- 'Result' in the inherited postcondition "post" should be considered
+					-- of type STRING (and not ANY) is class B.
+					--
+					-- Use type of implementation feature because the types of the signature
+					-- of `current_feature' might not have been resolved for `current_class'
+					-- (when processing precursors in the context of current class).
+				a_type := current_feature.implementation_feature.type
 				if a_type = Void then
 					set_fatal_error
-					a_class_impl := current_feature.implementation_class
+					a_class_impl := feature_impl.implementation_class
 					if a_class_impl = current_class then
-						error_handler.report_veen2a_error (current_class, an_expression.result_keyword, current_feature)
+						error_handler.report_veen2a_error (current_class, an_expression.result_keyword, feature_impl)
 					else
-						if not has_implementation_error (current_feature) then
+						if not has_implementation_error (feature_impl) then
 								-- Internal error: the VEEN-2 error should have been
 								-- reported in the implementation feature.
 							error_handler.report_giadg_error
@@ -4631,7 +4742,7 @@ feature {NONE} -- Expression validity
 					if a_typed_pointer_class.is_preparsed then
 							-- Class TYPED_POINTER has been found in the universe.
 							-- Use ISE's implementation.
-						a_type := resolved_formal_parameters (a_type)
+						a_type := resolved_formal_parameters (a_type, current_feature, current_type)
 						if not has_fatal_error then
 							create an_actuals.make_with_capacity (1)
 							an_actuals.put_first (a_type)
@@ -4694,11 +4805,11 @@ feature {NONE} -- Expression validity
 				a_seed := a_name.seed
 				if a_seed = 0 then
 						-- We need to resolve `a_name' in the implementation
-						-- class of `current_feature' first.
-					a_class_impl := current_feature.implementation_class
+						-- class of `feature_impl' first.
+					a_class_impl := feature_impl.implementation_class
 					if a_class_impl /= current_class then
 						set_fatal_error
-						if not has_implementation_error (current_feature) then
+						if not has_implementation_error (feature_impl) then
 								-- Internal error: `a_name' should have been resolved in
 								-- the implementation feature.
 							error_handler.report_giacl_error
@@ -4725,7 +4836,7 @@ feature {NONE} -- Expression validity
 				end
 				if not has_fatal_error then
 					if a_feature = Void then
-						a_type := resolved_formal_parameters (a_type)
+						a_type := resolved_formal_parameters (a_type, feature_impl, current_type)
 						if not has_fatal_error then
 							a_context.force_first (a_type)
 							a_class := a_context.base_class (universe)
@@ -4751,7 +4862,7 @@ feature {NONE} -- Expression validity
 						if not a_feature.is_exported_to (current_class, universe.ancestor_builder) then
 								-- The feature is not exported to `current_class'.
 							set_fatal_error
-							a_class_impl := current_feature.implementation_class
+							a_class_impl := feature_impl.implementation_class
 							if current_class = a_class_impl then
 								error_handler.report_vuex2b_error (current_class, a_name, a_feature, a_class)
 							else
@@ -4773,12 +4884,12 @@ feature {NONE} -- Expression validity
 							if a_result_type = Void then
 									-- In a call expression, `a_feature' has to be a query.
 								set_fatal_error
-								a_class_impl := current_feature.implementation_class
+								a_class_impl := feature_impl.implementation_class
 								if current_class = a_class_impl then
 									error_handler.report_vkcn2a_error (current_class, a_name, a_feature, a_class)
-								elseif not has_implementation_error (current_feature) then
+								elseif not has_implementation_error (feature_impl) then
 										-- Internal error: this error should have been reported when
-										-- processing the implementation of `current_feature' or in
+										-- processing the implementation of `feature_impl' or in
 										-- the feature flattener when redeclaring function `a_feature'
 										-- to a procedure in an ancestor of `a_class'.
 									error_handler.report_giacm_error
@@ -4793,12 +4904,12 @@ feature {NONE} -- Expression validity
 							if a_result_type /= Void then
 									-- In a call instruction, `a_feature' has to be a procedure.
 								set_fatal_error
-								a_class_impl := current_feature.implementation_class
+								a_class_impl := feature_impl.implementation_class
 								if current_class = a_class_impl then
 									error_handler.report_vkcn1a_error (current_class, a_name, a_feature, a_class)
-								elseif not has_implementation_error (current_feature) then
+								elseif not has_implementation_error (feature_impl) then
 										-- Internal error: this error should have been reported when
-										-- processing the implementation of `current_feature' or in
+										-- processing the implementation of `feature_impl' or in
 										-- the feature flattener when redeclaring procedure `a_feature'
 										-- to a function in an ancestor of `a_class'.
 									error_handler.report_giacn_error
@@ -4837,11 +4948,11 @@ feature {NONE} -- Expression validity
 				if a_seed = 0 then
 					had_error := True
 						-- We need to resolve `a_name' in the implementation
-						-- class of `current_feature' first.
-					a_class_impl := current_feature.implementation_class
+						-- class of `feature_impl' first.
+					a_class_impl := feature_impl.implementation_class
 					if a_class_impl /= current_class then
 						set_fatal_error
-						if not has_implementation_error (current_feature) then
+						if not has_implementation_error (feature_impl) then
 								-- Internal error: `a_name' should have been resolved in
 								-- the implementation feature.
 							error_handler.report_giadh_error
@@ -4891,12 +5002,12 @@ feature {NONE} -- Expression validity
 						else
 							if not a_feature.is_attribute then
 								set_fatal_error
-								a_class_impl := current_feature.implementation_class
+								a_class_impl := feature_impl.implementation_class
 								if current_class = a_class_impl then
 									error_handler.report_vwst1b_error (current_class, a_name, a_feature)
-								elseif not has_implementation_error (current_feature) then
+								elseif not has_implementation_error (feature_impl) then
 										-- Internal error: this error should have been reported when
-										-- processing the implementation of `current_feature' or in
+										-- processing the implementation of `feature_impl' or in
 										-- the feature flattener when redeclaring attribute `a_feature'
 										-- to a non-attribute in an ancestor of `current_class'.
 									error_handler.report_giadi_error
@@ -4983,8 +5094,7 @@ feature {NONE} -- Expression validity
 		require
 			a_call_not_void: a_call /= Void
 			unqualified_call: not a_call.is_qualified_call
-			-- Violation of VWEQ:
-			-- is_expression: an_expression /= Void implies a_call = an_expression
+			is_expression: an_expression /= Void implies same_objects (a_call, an_expression)
 			a_context_not_void: a_context /= Void
 		local
 			a_name: ET_FEATURE_NAME
@@ -5005,11 +5115,11 @@ feature {NONE} -- Expression validity
 			a_seed := a_name.seed
 			if a_seed = 0 then
 					-- We need to resolve `a_name' in the implementation
-					-- class of `current_feature' first.
-				a_class_impl := current_feature.implementation_class
+					-- class of `feature_impl' first.
+				a_class_impl := feature_impl.implementation_class
 				if a_class_impl /= current_class then
 					set_fatal_error
-					if not has_implementation_error (current_feature) then
+					if not has_implementation_error (feature_impl) then
 							-- Internal error: `a_name' should have been resolved in
 							-- the implementation feature.
 						error_handler.report_giaci_error
@@ -5027,7 +5137,7 @@ feature {NONE} -- Expression validity
 								-- Check whether it is a formal argument or a local variable.
 							an_identifier ?= a_name
 							if an_identifier /= Void then
-								an_arguments := current_feature.arguments
+								an_arguments := feature_impl.arguments
 								if an_arguments /= Void then
 									a_seed := an_arguments.index_of (an_identifier)
 									if a_seed /= 0 then
@@ -5035,7 +5145,7 @@ feature {NONE} -- Expression validity
 										if an_actuals /= Void then
 												-- Syntax error: a formal argument cannot have arguments.
 											set_fatal_error
-											error_handler.report_gvuaa0a_error (current_class, an_identifier, current_feature)
+											error_handler.report_gvuaa0a_error (current_class, an_identifier, feature_impl)
 										end
 											-- Do not set the seed of `an_identifier' so that we report
 											-- this error again when checked in a descendant class.
@@ -5045,13 +5155,13 @@ feature {NONE} -- Expression validity
 											set_fatal_error
 												-- Note: ISE 5.4 reports a VKCN-1 here. However
 												-- `a_name' is not a function nor an attribute name.
-											error_handler.report_gvuia0a_error (current_class, an_identifier, current_feature)
+											error_handler.report_gvuia0a_error (current_class, an_identifier, feature_impl)
 										else
 											if not has_fatal_error then
 													-- Make sure that we report the correct error when
 													-- it appears in an invariant.
 												an_identifier.set_seed (a_seed)
-												check_expression_validity (an_identifier, a_context, universe.any_type, current_feature, current_type)
+												check_expression_validity (an_identifier, a_context, universe.any_type, feature_impl, current_feature, current_type)
 												an_identifier.set_seed (0)
 											end
 											if not has_fatal_error then
@@ -5064,7 +5174,7 @@ feature {NONE} -- Expression validity
 									end
 								end
 								if a_seed = 0 then
-									a_locals := current_feature.locals
+									a_locals := feature_impl.locals
 									if a_locals /= Void then
 										a_seed := a_locals.index_of (an_identifier)
 										if a_seed /= 0 then
@@ -5072,7 +5182,7 @@ feature {NONE} -- Expression validity
 											if an_actuals /= Void then
 													-- Syntax error: a local variable cannot have arguments.
 												set_fatal_error
-												error_handler.report_gvual0a_error (current_class, an_identifier, current_feature)
+												error_handler.report_gvual0a_error (current_class, an_identifier, feature_impl)
 											end
 												-- Do not set the seed of `an_identifier' so that we report
 												-- this error again when checked in a descendant class.
@@ -5082,13 +5192,13 @@ feature {NONE} -- Expression validity
 												set_fatal_error
 													-- Note: ISE 5.4 reports a VKCN-1 here. However
 													-- `a_name' is not a function nor an attribute name.
-												error_handler.report_gvuil0a_error (current_class, an_identifier, current_feature)
+												error_handler.report_gvuil0a_error (current_class, an_identifier, feature_impl)
 											else
 												if not has_fatal_error then
 														-- Make sure that we report the correct error when
 														-- it appears in a precondition or invariant.
 													an_identifier.set_seed (a_seed)
-													check_expression_validity (an_identifier, a_context, universe.any_type, current_feature, current_type)
+													check_expression_validity (an_identifier, a_context, universe.any_type, feature_impl, current_feature, current_type)
 													an_identifier.set_seed (0)
 												end
 												if not has_fatal_error then
@@ -5142,12 +5252,12 @@ feature {NONE} -- Expression validity
 						if a_type = Void then
 								-- In a call expression, `a_feature' has to be a query.
 							set_fatal_error
-							a_class_impl := current_feature.implementation_class
+							a_class_impl := feature_impl.implementation_class
 							if current_class = a_class_impl then
 								error_handler.report_vkcn2c_error (current_class, a_name, a_feature)
-							elseif not has_implementation_error (current_feature) then
+							elseif not has_implementation_error (feature_impl) then
 									-- Internal error: this error should have been reported when
-									-- processing the implementation of `current_feature' or in
+									-- processing the implementation of `feature_impl' or in
 									-- the feature flattener when redeclaring function `a_feature'
 									-- to a procedure in an ancestor of `current_class'.
 								error_handler.report_giacj_error
@@ -5174,12 +5284,12 @@ feature {NONE} -- Expression validity
 						if a_type /= Void then
 								-- In a call instruction, `a_feature' has to be a procedure.
 							set_fatal_error
-							a_class_impl := current_feature.implementation_class
+							a_class_impl := feature_impl.implementation_class
 							if current_class = a_class_impl then
 								error_handler.report_vkcn1c_error (current_class, a_name, a_feature)
-							elseif not has_implementation_error (current_feature) then
+							elseif not has_implementation_error (feature_impl) then
 									-- Internal error: this error should have been reported when
-									-- processing the implementation of `current_feature' or in
+									-- processing the implementation of `feature_impl' or in
 									-- the feature flattener when redeclaring procedure `a_feature'
 									-- to a function in an ancestor of `current_class'.
 								error_handler.report_giack_error
@@ -5258,7 +5368,7 @@ feature {NONE} -- Expression validity
 							if not a_feature.is_exported_to (l_client, universe.ancestor_builder) then
 									-- The feature is not exported to `l_client'.
 								set_fatal_error
-								a_class_impl := current_feature.implementation_class
+								a_class_impl := feature_impl.implementation_class
 								if current_class = a_class_impl then
 									if a_class = Void then
 										error_handler.report_vape0a_error (current_class, a_name, a_feature, current_feature, l_client)
@@ -5280,7 +5390,7 @@ feature {NONE} -- Expression validity
 								-- listed in the client list of `a_feature' or that `a_feature'
 								-- be exported to ANY.
 							set_fatal_error
-							a_class_impl := current_feature.implementation_class
+							a_class_impl := feature_impl.implementation_class
 							if current_class = a_class_impl then
 								if a_class = Void then
 									error_handler.report_vape0e_error (current_class, a_name, a_feature, current_feature, l_client_name)
@@ -5392,7 +5502,7 @@ feature {NONE} -- Expression validity
 				expression_checker := new_expression_checker
 			end
 			expression_checker.set_state (Current)
-			expression_checker.check_expression_validity (an_expression, a_context, a_target_type, current_feature, current_type)
+			expression_checker.check_expression_validity (an_expression, a_context, a_target_type, feature_impl, current_feature, current_type)
 			if expression_checker.has_fatal_error then
 				set_fatal_error
 			else
@@ -5415,7 +5525,7 @@ feature {NONE} -- Expression validity
 				expression_checker := new_expression_checker
 			end
 			expression_checker.set_state (Current)
-			expression_checker.check_actual_arguments_validity (an_actuals, a_context, a_name, a_feature, a_class, current_feature, current_type)
+			expression_checker.check_actual_arguments_validity (an_actuals, a_context, a_name, a_feature, a_class, feature_impl, current_feature, current_type)
 			if expression_checker.has_fatal_error then
 				set_fatal_error
 			else
@@ -5494,11 +5604,11 @@ feature {NONE} -- Agent validity
 			a_seed := a_name.seed
 			if a_seed = 0 then
 					-- We need to resolve `a_name' in the implementation
-					-- class of `current_feature' first.
-				a_class_impl := current_feature.implementation_class
+					-- class of `feature_impl' first.
+				a_class_impl := feature_impl.implementation_class
 				if a_class_impl /= current_class then
 					set_fatal_error
-					if not has_implementation_error (current_feature) then
+					if not has_implementation_error (feature_impl) then
 							-- Internal error: `a_name' should have been resolved in
 							-- the implementation feature.
 						error_handler.report_giact_error
@@ -5621,11 +5731,11 @@ feature {NONE} -- Agent validity
 			a_seed := a_name.seed
 			if a_seed = 0 then
 					-- We need to resolve `a_name' in the implementation
-					-- class of `current_feature' first.
-				a_class_impl := current_feature.implementation_class
+					-- class of `feature_impl' first.
+				a_class_impl := feature_impl.implementation_class
 				if a_class_impl /= current_class then
 					set_fatal_error
-					if not has_implementation_error (current_feature) then
+					if not has_implementation_error (feature_impl) then
 							-- Internal error: `a_name' should have been resolved in
 							-- the implementation feature.
 						error_handler.report_giacu_error
@@ -5633,7 +5743,7 @@ feature {NONE} -- Agent validity
 				else
 -- TODO: when `a_target' is an identifier, check whether it is either
 -- a local variable, a formal argument or the name of an attribute.
-					check_expression_validity (a_target, a_context, any_type, current_feature, current_type)
+					check_expression_validity (a_target, a_context, any_type, feature_impl, current_feature, current_type)
 					if not has_fatal_error then
 						if not a_context.is_empty and then a_context.first = universe.string_type then
 								-- When a manifest string is the target of a call,
@@ -5663,7 +5773,7 @@ feature {NONE} -- Agent validity
 				if a_feature = Void then
 -- TODO: when `a_target' is an identifier, check whether it is either
 -- a local variable, a formal argument or the name of an attribute.
-					check_expression_validity (a_target, a_context, any_type, current_feature, current_type)
+					check_expression_validity (a_target, a_context, any_type, feature_impl, current_feature, current_type)
 					if not has_fatal_error then
 						if not a_context.is_empty and then a_context.first = universe.string_type then
 								-- When a manifest string is the target of a call,
@@ -5692,7 +5802,7 @@ feature {NONE} -- Agent validity
 					if not a_feature.is_exported_to (current_class, universe.ancestor_builder) then
 							-- The feature is not exported to `current_class'.
 						set_fatal_error
-						a_class_impl := current_feature.implementation_class
+						a_class_impl := feature_impl.implementation_class
 						if current_class = a_class_impl then
 							error_handler.report_vpca2a_error (current_class, a_name, a_feature, a_class)
 						else
@@ -5796,11 +5906,11 @@ feature {NONE} -- Agent validity
 				a_seed := a_name.seed
 				if a_seed = 0 then
 						-- We need to resolve `a_name' in the implementation
-						-- class of `current_feature' first.
-					a_class_impl := current_feature.implementation_class
+						-- class of `feature_impl' first.
+					a_class_impl := feature_impl.implementation_class
 					if a_class_impl /= current_class then
 						set_fatal_error
-						if not has_implementation_error (current_feature) then
+						if not has_implementation_error (feature_impl) then
 								-- Internal error: `a_name' should have been resolved in
 								-- the implementation feature.
 							error_handler.report_giacv_error
@@ -5828,7 +5938,7 @@ feature {NONE} -- Agent validity
 				end
 				if not has_fatal_error then
 					if a_feature = Void then
-						a_target_type := resolved_formal_parameters (a_target_type)
+						a_target_type := resolved_formal_parameters (a_target_type, feature_impl, current_type)
 						if not has_fatal_error then
 							report_agent_open_operand (a_target_type, a_context)
 							a_context.force_first (a_target_type)
@@ -5854,7 +5964,7 @@ feature {NONE} -- Agent validity
 						if not a_feature.is_exported_to (current_class, universe.ancestor_builder) then
 								-- The feature is not exported to `current_class'.
 							set_fatal_error
-							a_class_impl := current_feature.implementation_class
+							a_class_impl := feature_impl.implementation_class
 							if current_class = a_class_impl then
 								error_handler.report_vpca2a_error (current_class, a_name, a_feature, a_class)
 							else
@@ -5980,20 +6090,19 @@ feature {NONE} -- Agent validity
 					end
 				end
 			else
-				a_class_impl := current_feature.implementation_class
+				a_class_impl := feature_impl.implementation_class
 				if an_actuals.is_empty then
 					if a_formals /= Void and then not a_formals.is_empty then
 						set_fatal_error
-						a_class_impl := current_feature.implementation_class
 						if current_class = a_class_impl then
 							if a_class /= Void then
 								error_handler.report_vpca3a_error (current_class, a_name, a_feature, a_class)
 							else
 								error_handler.report_vpca3c_error (current_class, a_name, a_feature)
 							end
-						elseif not has_implementation_error (current_feature) then
+						elseif not has_implementation_error (feature_impl) then
 								-- Internal error: this error should have been reported when
-								-- processing the implementation of `current_feature' or in
+								-- processing the implementation of `feature_impl' or in
 								-- the feature flattener when redeclaring `a_feature' in an
 								-- ancestor of `a_class' or `current_class'.
 							error_handler.report_giacw_error
@@ -6001,16 +6110,15 @@ feature {NONE} -- Agent validity
 					end
 				elseif a_formals = Void or else a_formals.count /= an_actuals.count then
 					set_fatal_error
-					a_class_impl := current_feature.implementation_class
 					if current_class = a_class_impl then
 						if a_class /= Void then
 							error_handler.report_vpca3a_error (current_class, a_name, a_feature, a_class)
 						else
 							error_handler.report_vpca3c_error (current_class, a_name, a_feature)
 						end
-					elseif not has_implementation_error (current_feature) then
+					elseif not has_implementation_error (feature_impl) then
 							-- Internal error: this error should have been reported when
-							-- processing the implementation of `current_feature' or in
+							-- processing the implementation of `feature_impl' or in
 							-- the feature flattener when redeclaring `a_feature' in an
 							-- ancestor of `a_class' or `current_class'.
 						error_handler.report_giacx_error
@@ -6035,7 +6143,7 @@ feature {NONE} -- Agent validity
 							if has_fatal_error then
 								had_error := True
 							elseif not l_actual_context.conforms_to_type (l_formal_type, l_formal_context, universe) then
-								a_class_impl := current_feature.implementation_class
+								a_class_impl := feature_impl.implementation_class
 								if current_class = a_class_impl then
 									a_convert_feature := type_checker.convert_feature (l_actual_context, l_formal_context)
 								else
@@ -6127,7 +6235,7 @@ feature {NONE} -- Agent validity
 								if has_fatal_error then
 									had_error := True
 								else
-									an_actual_type := resolved_formal_parameters (an_actual_type)
+									an_actual_type := resolved_formal_parameters (an_actual_type, feature_impl, current_type)
 									if has_fatal_error then
 										had_error := True
 									elseif not an_actual_type.conforms_to_type (a_formal.type, l_formal_context, current_type, universe) then
@@ -6136,7 +6244,6 @@ feature {NONE} -- Agent validity
 										set_fatal_error
 										an_actual_named_type := an_actual_type.named_type (current_type, universe)
 										a_formal_named_type := a_formal.type.named_type (l_formal_context, universe)
-										a_class_impl := current_feature.implementation_class
 										if a_class /= Void then
 											if current_class = a_class_impl then
 												error_handler.report_vpca5a_error (current_class, a_name, a_feature, a_class, i, an_actual_named_type, a_formal_named_type)
@@ -6461,8 +6568,7 @@ feature {NONE} -- Event handling
 			no_error: not has_fatal_error
 			an_expression_not_void: an_expression /= Void
 			a_call_not_void: a_call /= Void
-			-- Violation of VWEQ:
-			-- a_call_expression: a_call = an_expression
+			a_call_expression: same_objects (a_call, an_expression)
 			qualified_call: a_call.is_qualified_call
 			a_target_type_not_void: a_target_type /= Void
 			a_feature_not_void: a_feature /= Void
@@ -6582,8 +6688,7 @@ feature {NONE} -- Event handling
 			no_error: not has_fatal_error
 			an_expression_not_void: an_expression /= Void
 			a_call_not_void: a_call /= Void
-			-- Violation of VWEQ:
-			-- a_call_expression: a_call = an_expression
+			a_call_expression: same_objects (a_call, an_expression)
 			unqualified_call: not a_call.is_qualified_call
 			a_feature_not_void: a_feature /= Void
 			a_feature_query: not a_feature.is_procedure
@@ -7223,11 +7328,19 @@ feature {NONE} -- Error handling
 
 feature {NONE} -- Access
 
+	feature_impl: ET_FEATURE
+			-- Feature where the code being processed comes from
+			-- (It might be different from `current_feature' when 
+			-- processing inherited assertions.)
+
 	current_feature: ET_FEATURE
 			-- Feature being processed
 
 	current_type: ET_BASE_TYPE
 			-- Type from which `current_feature' is processed
+			-- (It may not be the type to which `current_feature'
+			-- belong when processing a precursor of a feature
+			-- of `current_type'.)
 
 	current_class: ET_CLASS
 			-- Base class of `current_type'
@@ -7309,14 +7422,23 @@ feature {NONE} -- Implementation
 			dummy_feature_not_void: Result /= Void
 		end
 
+	same_objects (obj1, obj2: ANY): BOOLEAN is
+			-- Workaround for VWEQ when running Degree 3 in flat mode.
+		do
+			Result := (obj1 = obj2)
+		ensure
+			definition: Result = (obj1 = obj2)
+		end
+
 invariant
 
+	feature_impl_not_void: feature_impl /= Void
 	current_feature_not_void: current_feature /= Void
 	current_type_not_void: current_type /= Void
 	current_type_valid: current_type.is_valid_context
 	current_class_not_void: current_class /= Void
 	current_class_definition: current_class = current_type.direct_base_class (universe)
-	implementation_checked: current_class /= current_feature.implementation_class implies implementation_checked (current_feature)
+	-- implementation_checked: if inherited, then the code being analyzed has already been checked in implementation class of `feature_impl'
 	type_checker_not_void: type_checker /= Void
 	actual_context_not_void: actual_context /= Void
 	formal_context_not_void: formal_context /= Void

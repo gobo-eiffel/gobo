@@ -201,7 +201,7 @@ feature {NONE} -- Feature validity
 				if feature_checker.has_fatal_error then
 --					set_fatal_error (current_class)
 				end
-				check_assertions_validity (a_feature)
+				check_assertions_validity (a_feature, a_feature)
 				i := i + 1
 			end
 		end
@@ -211,9 +211,12 @@ feature {NONE} -- Feature validity
 
 feature {NONE} -- Assertion validity
 
-	check_assertions_validity (a_feature: ET_FEATURE) is
-			-- Check validity of pre- and postconditions of `a_feature' in `current_class'.
+	check_assertions_validity (a_feature_impl, a_feature: ET_FEATURE) is
+			-- Check validity of pre- and postconditions of `a_feature_impl' in `current_class'.
+			-- `a_feature' is the version of `a_feature_impl' in `current_class' (useful
+			-- when processing inherited assertions).
 		require
+			a_feature_impl_not_void: a_feature_impl /= Void
 			a_feature_not_void: a_feature /= Void
 		local
 			a_preconditions: ET_PRECONDITIONS
@@ -224,23 +227,23 @@ feature {NONE} -- Assertion validity
 			l_other_precursors: ET_FEATURE_LIST
 			i, nb: INTEGER
 		do
-			a_preconditions := a_feature.preconditions
+			a_preconditions := a_feature_impl.preconditions
 			if a_preconditions /= Void then
-				feature_checker.check_preconditions_validity (a_preconditions, a_feature, current_class)
+				feature_checker.check_preconditions_validity (a_preconditions, a_feature_impl, a_feature, current_class)
 				if feature_checker.has_fatal_error then
 					had_error := True
 --					set_fatal_error (current_class)
 				end
 			end
-			a_postconditions := a_feature.postconditions
+			a_postconditions := a_feature_impl.postconditions
 			if a_postconditions /= Void then
-				feature_checker.check_postconditions_validity (a_postconditions, a_feature, current_class)
+				feature_checker.check_postconditions_validity (a_postconditions, a_feature_impl, a_feature, current_class)
 				if feature_checker.has_fatal_error then
 					had_error := True
 --					set_fatal_error (current_class)
 				end
 			end
-			a_class_impl := a_feature.implementation_class
+			a_class_impl := a_feature_impl.implementation_class
 			if current_class = a_class_impl then
 				a_feature.set_assertions_checked
 				if had_error then
@@ -248,14 +251,14 @@ feature {NONE} -- Assertion validity
 				end
 			end
 			if flat_mode then
-				l_first_precursor := a_feature.first_precursor
+				l_first_precursor := a_feature_impl.first_precursor
 				if l_first_precursor /= Void then
-					check_assertions_validity (l_first_precursor)
-					l_other_precursors := a_feature.other_precursors
+					check_assertions_validity (l_first_precursor, a_feature)
+					l_other_precursors := a_feature_impl.other_precursors
 					if l_other_precursors /= Void then
 						nb := l_other_precursors.count
 						from i := 1 until i > nb loop
-							check_assertions_validity (l_other_precursors.item (i))
+							check_assertions_validity (l_other_precursors.item (i), a_feature)
 							i := i + 1
 						end
 					end
