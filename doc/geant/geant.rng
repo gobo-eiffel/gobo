@@ -313,17 +313,31 @@
 					</choice>
 					-->
 				</attribute>
-				<attribute name="cluster">
-					<!-- runtime evaluation
-					<choice>
-						<value>ise</value>
-						<value>hact</value>
-						<value>se</value>
-						<value>ve</value>
-						<value>xml</value>
-					</choice>
-					-->
-				</attribute>
+				<choice>
+					<attribute name="cluster">
+						<!-- NOTE: this attribute is obsolete. Use attribute 'library' instead -->
+						<!-- runtime evaluation
+						<choice>
+							<value>ise</value>
+							<value>hact</value>
+							<value>se</value>
+							<value>ve</value>
+							<value>xml</value>
+						</choice>
+						-->
+					</attribute>
+					<attribute name="library">
+						<!-- runtime evaluation
+						<choice>
+							<value>ise</value>
+							<value>hact</value>
+							<value>se</value>
+							<value>ve</value>
+							<value>xml</value>
+						</choice>
+						-->
+					</attribute>
+				<choice>
 			</choice>
 			<optional>
 				<attribute name="verbose"/>
