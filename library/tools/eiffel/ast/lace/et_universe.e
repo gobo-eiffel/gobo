@@ -71,6 +71,7 @@ feature {NONE} -- Initialization
 			any_parent: ET_PARENT
 			a_parameters: ET_ACTUAL_PARAMETER_LIST
 		do
+				-- Basic classes.
 			any_class := eiffel_class (tokens.any_class_name)
 			any_class.set_in_system (True)
 			general_class := eiffel_class (tokens.general_class_name)
@@ -91,11 +92,19 @@ feature {NONE} -- Initialization
 			real_class := eiffel_class (tokens.real_class_name)
 			double_class := eiffel_class (tokens.double_class_name)
 			pointer_class := eiffel_class (tokens.pointer_class_name)
+				-- Unknown class.
 			create unknown_class.make_unknown (tokens.unknown_class_name)
+				-- Type "ANY".
 			create any_type.make (Void, any_class.name, any_class)
+				-- Type "ARRAY [ANY]".
 			create a_parameters.make_with_capacity (1)
 			a_parameters.put_first (any_type)
 			create array_any_type.make (Void, array_class.name, a_parameters, array_class)
+				-- Type "ARRAY [NONE]".
+			create a_parameters.make_with_capacity (1)
+			a_parameters.put_first (none_class)
+			create array_none_type.make (Void, array_class.name, a_parameters, array_class)
+				-- Implicit parent "ANY".
 			create any_parent.make (any_type, Void, Void, Void, Void, Void)
 			create any_parents.make_with_capacity (1)
 			any_parents.put_first (any_parent)
@@ -103,7 +112,24 @@ feature {NONE} -- Initialization
 			any_class_not_void: any_class /= Void
 			general_class_not_void: general_class /= Void
 			none_class_not_void: none_class /= Void
+			tuple_class_not_void: tuple_class /= Void
+			bit_class_not_void: bit_class /= Void
+			string_class_not_void: string_class /= Void
+			array_class_not_void: array_class /= Void
+			boolean_class_not_void: boolean_class /= Void
+			character_class_not_void: character_class /= Void
+			wide_character_class_not_void: wide_character_class /= Void
+			integer_class_not_void: integer_class /= Void
+			integer_8_class_not_void: integer_8_class /= Void
+			integer_16_class_not_void: integer_16_class /= Void
+			integer_64_class_not_void: integer_64_class /= Void
+			real_class_not_void: real_class /= Void
+			double_class_not_void: double_class /= Void
+			pointer_class_not_void: pointer_class /= Void
+			unknown_class_not_void: unknown_class /= Void
 			any_type_not_void: any_type /= Void
+			array_any_type_not_void: array_any_type /= Void
+			array_none_type_not_void: array_none_type /= Void
 			any_parents_not_void: any_parents /= Void
 		end
 
@@ -220,6 +246,9 @@ feature -- Basic classes
 
 	array_any_type: ET_GENERIC_CLASS_TYPE
 			-- Class type "ARRAY [ANY]"
+
+	array_none_type: ET_GENERIC_CLASS_TYPE
+			-- Class type "ARRAY [NONE]"
 
 	any_parents: ET_PARENT_LIST
 			-- Default parents
@@ -804,6 +833,7 @@ invariant
 	unknown_class_not_void: unknown_class /= Void
 	any_type_not_void: any_type /= Void
 	array_any_type_not_void: array_any_type /= Void
+	array_none_type_not_void: array_none_type /= Void
 	any_parents_not_void: any_parents /= Void
 	qualified_signature_resolver_not_void: qualified_signature_resolver /= Void
 	null_processor_not_void: null_processor /= Void
