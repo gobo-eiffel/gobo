@@ -210,7 +210,7 @@ feature {NONE} -- Precompilation
 							a_filename := a_dir.last_entry
 							if file_system.has_extension (a_filename, ".e") then
 								a_filename := file_system.pathname (a_dirname, a_filename)
-								assert_execute ("short -plain -no_style_warning " + a_filename + output_log)
+								assert_execute ("short -plain -no_style_warning -no_warning " + a_filename + output_log)
 								assert_equal ("no_error_log", 0, file_system.file_count (error_log_filename))
 							end
 							a_dir.read_entry
