@@ -161,6 +161,10 @@ goto exit
 	%MV% geant%EXE% geant1%EXE%
 	cd %GOBO%
 	geant1 %VERBOSE% bootstrap1
+	if %ERRORLEVEL% == 0 goto bootstrap2
+	goto exit
+
+:bootstrap2
 	cd %BIN_DIR%
 	%RM% geant1%EXE%
 	cd %GOBO%
