@@ -78,7 +78,9 @@ feature -- Resizing
 			-- or a newly created native array where items from
 			-- `an_array' have been copied to.
 		require
+#ifndef SE
 			an_array_not_void: an_array /= Void
+#endif
 			valid_native_array: valid_native_array (an_array)
 			old_size_positive: old_size >= 0
 			new_size_large_enough: new_size > old_size
