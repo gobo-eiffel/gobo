@@ -9,7 +9,10 @@ The procedure is quite simple:
 
 . Check out the source code from the Gobo CVS repository.
 . Set the environment variable $GOBO.
-. Add $GOBO/bin to your $PATH.
+. Add $GOBO/bin to your $PATH. Some Eiffel distributions
+  such as Visual Eiffel provides older versions of the Gobo
+  tools in their installation directories. Make sure that
+  $GOBO/bin is listed before these directories in your $PATH.
 . Depending on your platform, run either:
 
      bootstrap.bat [-v] <c_compiler> <eiffel_compiler>
@@ -41,7 +44,7 @@ in the file 'build.eant'. In order to know the possible
 command-line arguments provided by a given build file,
 type:
 
-   geant -h
+   geant help
 
 Finally, note that the version of the Gobo package in CVS
 is a development version and not an official release. The
@@ -52,6 +55,6 @@ willing to do code/design review, to beta-test and/or to
 submit patches/suggestions are welcome.
 
 -- 
-Copyright (c) 2001, Eric Bezault and others
+Copyright (c) 2001-2002, Eric Bezault and others
 mailto:ericb@gobosoft.com
 http://www.gobosoft.com
