@@ -350,3 +350,150 @@ Example:
 ***) add test-suite
 ***) think about renaming "inlcude_dir" into "include"
 ***) refacture code generation
+
+
+=====================================================
+Subject: Re: [gobo-eiffel-develop] Xace: attribute "prefix" in <cluster>
+Date: Sat, 27 Apr 2002 00:09:00 +0200
+From: Eric Bezault <gobosoft@ifrance.com>
+Reply-To: ericb@gobosoft.com
+Organization: Gobo
+To: gobodev <gobo-eiffel-develop@lists.sourceforge.net>
+
+I have implemented the new Xace syntax in 'gexace' and
+it is now available in CVS (you would have to run the
+bootstrap again). The old syntax will still be accepted
+for some time, although you may get a lot of warning
+messages and you may get some cluster name clashes in
+the generated Ace files (because of the new way we
+handle possible name clashes, with "prefix" in <mount>
+and "relative" in <cluster>).
+
+What's new?
+
+. Files 'cluster.xace' have been renamed as 'library.xace'.
+. The top element in 'library.xace' is <library> instead
+  of <cluster>.
+. The element <library> has a compulsary attribute "name".
+. Elements <cluster> and <mount> (and possibly <option>
+  and <external>) are possible subelements of <library>.
+. There is no empty <cluster> element in <system> anymore.
+  Elements <option>, <cluster> and <mount> (and possibly
+  <external>) are directly under <system>.
+. There is a new attribute "relative" in <cluster> as
+  explained in my previous message in this thread:
+
+> So, now we can have:
+>
+>    <cluster name="foo" location="bar"/>
+>      -- cluster named "foo" with pathname "bar" which is
+>      -- not relative to the parent cluster's pathname.
+>      -- Examples:
+>      --      <cluster name="list" location="/a/b/c/list"/>
+>      --      <cluster name="list" location="${GOBO}/list"/>
+>      --      <cluster name="root_cluster" location="."/>
+>      -- Note that even though the pathname is not relative
+>      -- to the parent cluster's pathname, this pathname is
+>      -- not necessarily an absolute pathname in the underlying
+>      -- filesystem.
+>
+>   <cluster name="foo" location="bar" relative="true"/>
+>      -- cluster named "foo" with pathname "bar" which is
+>      -- relative to the parent cluster's pathname.
+>      -- Examples:
+>      --   <cluster name="my_list" location="my-list" relative="true"/>
+>      --   <cluster name="ds_list" location="list" relative="true"/>
+>      --   <cluster name="list" location="../list" relative="true"/>
+>      -- If I recall correctly, the first example addresses a request
+>      -- that Glenn had a few months ago when one of his directory
+>      -- names was not a valid cluster name. The second example is a
+>      -- better way to solve name clashes than my initial "prefix"
+>      -- suggestion. The third example will produce the following
+>      -- pathname: "parent-full-pathname/../list" ("$/../list" in
+>      -- ISE's syntax).
+>
+> Finally, the following construct:
+>
+>   <cluster name="foo"/>
+>
+> is equivalent to:
+>
+>   <cluster name="foo" location="foo" relative="true"/>
+
+. There is a new attribute "prefix" in <mount>. All clusters
+  declared in the mounted library will have their names
+  prefixed by the corresponding value.
+. The clusters of the mounted libraries with the same pathname
+  (i.e. the same value for the attribute "location" in <mount>)
+  will appear only once in the generated Ace file.
+. If there are two mounted libraries with the same pathname
+  but different prefixes, then the clash can be resolved in
+  either <library> or <system> by repeating the <mount> element
+  but with the chosen prefix (which will overwrite the others).
+  Note that this is slightly different from my initial suggestion
+  where I only mentioned <system>. The advantage of allowing
+  clash resolution in <library> as well is that it allows to
+  solve these clashes once and for all in a file 'library.xace'
+  and mount this file in the 'system.xace' files instead of
+  having to repeat again and again this name clash resolution
+  in each and every 'system.xace'. See for example:
+
+     $GOBO/library/library.xace
+
+  which contains the prefix declarations and:
+
+     $GOBO/library/src/gexace/system.xace
+
+  where there is not need to declare these prefixes individually
+  again.
+  If there is still a prefix name clash, there 'gexace' emits
+  an error message.
+. In the generated Ace file, the cluster names are those declared
+  in the Xace files with the possible prefixes specified in <mount>.
+  There is no cluster name concatenation anymorw behind the scene
+  in 'gexace'.
+. The command-line option --cluster in 'gexace' has been renamed
+  as --library and the corresponding default input filename is
+  'library.xace' instead of 'cluster.xace'.
+
+I think that I will nevertheless add the attribute "prefix"
+in <cluster>, but in a recursive meaning contrary to my
+initial proposal. The reason why I think that we need "prefix"
+despite the availability of "relative" in <cluster> comes from
+this observation (in file $GOBO/library/xml/library.xace):
+
+------------
+<cluster name="impl_interface" location="interface" relative="true" abstract="true">
+    <cluster name="impl_interface_general" location="general" relative="true"/>
+    <cluster name="impl_interface_event" location="event" relative="true"/>
+    <cluster name="impl_interface_tree" location="tree" relative="true"/>
+</cluster>
+<cluster name="impl_expat" location="expat" relative="true" abstract="true" if="${GOBO_XML_EXPAT}">
+    <cluster name="impl_expat_api" location="api" relative="true"/>
+    <cluster name="impl_expat_general" location="general" relative="true"/>
+    <cluster name="impl_expat_event" location="event" relative="true"/>
+</cluster>
+------------
+
+There are similar things in $GOBO/library/tools/library.xace.
+Wouldn't it look nicer to have:
+
+------------
+<cluster name="interface" prefix="impl_interface" abstract="true">
+    <cluster name="general"/>
+    <cluster name="event"/>
+    <cluster name="tree"/>
+</cluster>
+<cluster name="expat" prefix="impl_expat" abstract="true" if="${GOBO_XML_EXPAT}">
+    <cluster name="api"/>
+    <cluster name="general"/>
+    <cluster name="event"/>
+</cluster>
+------------
+
+and have the prefix applied recursively to the subclusters?
+
+--
+Eric Bezault
+mailto:ericb@gobosoft.com
+http://www.gobosoft.com
