@@ -5,20 +5,29 @@ indexing
 		"Assertion routines"
 
 	library: "Gobo Eiffel Test Library"
-	copyright: "Copyright (c) 2000, Eric Bezault and others"
+	copyright: "Copyright (c) 2000-2005, Eric Bezault and others"
 	license: "Eiffel Forum License v2 (see forum.txt)"
 	date: "$Date$"
 	revision: "$Revision$"
 
-class TS_ASSERTION_ROUTINES
+deferred class TS_ASSERTION_ROUTINES
 
 inherit
 
-	TS_SHARED_ASSERTIONS
-	KL_SHARED_EXCEPTIONS
+	ANY
+
 	KL_SHARED_EXECUTION_ENVIRONMENT
 	KL_IMPORTED_STRING_ROUTINES
 	KL_IMPORTED_INTEGER_ROUTINES
+
+feature -- Access
+
+	assertions: TS_ASSERTIONS is
+			-- Assertions
+		deferred
+		ensure
+			assertions_not_void: Result /= Void
+		end
 
 feature -- Basic operations
 
@@ -27,10 +36,9 @@ feature -- Basic operations
 		require
 			a_tag_not_void: a_tag /= Void
 		do
-			Assertions.add_assertion
+			assertions.add_assertion
 			if not a_condition then
-				Assertions.set_error_message (a_tag)
-				Exceptions.raise (Assertion_failure)
+				assertions.report_error (a_tag)
 			end
 		end
 
@@ -43,11 +51,10 @@ feature -- Equality
 		local
 			a_message: STRING
 		do
-			Assertions.add_assertion
+			assertions.add_assertion
 			if not equal (expected, actual) then
 				a_message := assert_equal_message (a_tag, expected, actual)
-				Assertions.set_error_message (a_message)
-				Exceptions.raise (Assertion_failure)
+				assertions.report_error (a_message)
 			end
 		end
 
@@ -58,11 +65,10 @@ feature -- Equality
 		local
 			a_message: STRING
 		do
-			Assertions.add_assertion
+			assertions.add_assertion
 			if equal (expected, actual) then
 				a_message := assert_not_equal_message (a_tag, expected, actual)
-				Assertions.set_error_message (a_message)
-				Exceptions.raise (Assertion_failure)
+				assertions.report_error (a_message)
 			end
 		end
 
@@ -73,11 +79,10 @@ feature -- Equality
 		local
 			a_message: STRING
 		do
-			Assertions.add_assertion
+			assertions.add_assertion
 			if expected /= actual then
 				a_message := assert_equal_message (a_tag, expected, actual)
-				Assertions.set_error_message (a_message)
-				Exceptions.raise (Assertion_failure)
+				assertions.report_error (a_message)
 			end
 		end
 
@@ -88,11 +93,10 @@ feature -- Equality
 		local
 			a_message: STRING
 		do
-			Assertions.add_assertion
+			assertions.add_assertion
 			if expected /= actual then
 				a_message := assert_integers_equal_message (a_tag, expected, actual)
-				Assertions.set_error_message (a_message)
-				Exceptions.raise (Assertion_failure)
+				assertions.report_error (a_message)
 			end
 		end
 
@@ -103,11 +107,10 @@ feature -- Equality
 		local
 			a_message: STRING
 		do
-			Assertions.add_assertion
+			assertions.add_assertion
 			if expected = actual then
 				a_message := assert_integers_not_equal_message (a_tag, expected, actual)
-				Assertions.set_error_message (a_message)
-				Exceptions.raise (Assertion_failure)
+				assertions.report_error (a_message)
 			end
 		end
 
@@ -118,11 +121,10 @@ feature -- Equality
 		local
 			a_message: STRING
 		do
-			Assertions.add_assertion
+			assertions.add_assertion
 			if not STRING_.same_string (expected, actual) then
 				a_message := assert_strings_equal_message (a_tag, expected, actual)
-				Assertions.set_error_message (a_message)
-				Exceptions.raise (Assertion_failure)
+				assertions.report_error (a_message)
 			end
 		end
 
@@ -133,11 +135,10 @@ feature -- Equality
 		local
 			a_message: STRING
 		do
-			Assertions.add_assertion
+			assertions.add_assertion
 			if STRING_.same_string (expected, actual) then
 				a_message := assert_strings_not_equal_message (a_tag, expected, actual)
-				Assertions.set_error_message (a_message)
-				Exceptions.raise (Assertion_failure)
+				assertions.report_error (a_message)
 			end
 		end
 
@@ -148,11 +149,10 @@ feature -- Equality
 		local
 			a_message: STRING
 		do
-			Assertions.add_assertion
+			assertions.add_assertion
 			if expected /= actual then
 				a_message := assert_strings_equal_message (a_tag, expected.out, actual.out)
-				Assertions.set_error_message (a_message)
-				Exceptions.raise (Assertion_failure)
+				assertions.report_error (a_message)
 			end
 		end
 
@@ -174,7 +174,7 @@ feature -- Files
 			done: BOOLEAN
 			i: INTEGER
 		do
-			Assertions.add_assertion
+			assertions.add_assertion
 			create a_file1.make (Execution_environment.interpreted_string (a_filename1))
 			a_file1.open_read
 			if a_file1.is_open_read then
@@ -198,8 +198,7 @@ feature -- Files
 								a_message.append_string (")")
 								a_file1.close
 								a_file2.close
-								Assertions.set_error_message (a_message)
-								Exceptions.raise (Assertion_failure)
+								assertions.report_error (a_message)
 							else
 								a_file1.close
 								a_file2.close
@@ -217,8 +216,7 @@ feature -- Files
 							a_message.append_string (")")
 							a_file1.close
 							a_file2.close
-							Assertions.set_error_message (a_message)
-							Exceptions.raise (Assertion_failure)
+							assertions.report_error (a_message)
 						elseif not a_file1.last_string.is_equal (a_file2.last_string) then
 							create a_message.make (50)
 							a_message.append_string (a_tag)
@@ -231,8 +229,7 @@ feature -- Files
 							a_message.append_string (")")
 							a_file1.close
 							a_file2.close
-							Assertions.set_error_message (a_message)
-							Exceptions.raise (Assertion_failure)
+							assertions.report_error (a_message)
 						end
 					end
 				else
@@ -242,8 +239,7 @@ feature -- Files
 					a_message.append_string (a_filename2)
 					a_message.append_string ("')")
 					a_file1.close
-					Assertions.set_error_message (a_message)
-					Exceptions.raise (Assertion_failure)
+					assertions.report_error (a_message)
 				end
 			else
 				create a_message.make (50)
@@ -251,8 +247,7 @@ feature -- Files
 				a_message.append_string (" (cannot read file '")
 				a_message.append_string (a_filename1)
 				a_message.append_string ("')")
-				Assertions.set_error_message (a_message)
-				Exceptions.raise (Assertion_failure)
+				assertions.report_error (a_message)
 			end
 		end
 
@@ -269,7 +264,7 @@ feature -- Files
 			c1, c2: CHARACTER
 			a_message: STRING
 		do
-			Assertions.add_assertion
+			assertions.add_assertion
 			nb := a_filename1.count
 			if a_filename2.count = nb then
 				a_name1 := a_filename1.as_lower
@@ -286,8 +281,7 @@ feature -- Files
 						a_message.append_string ("' and '")
 						a_message.append_string (a_filename2)
 						a_message.append_string ("' are not equal)")
-						Assertions.set_error_message (a_message)
-						Exceptions.raise (Assertion_failure)
+						assertions.report_error (a_message)
 					end
 					i := i + 1
 				end
@@ -299,8 +293,7 @@ feature -- Files
 				a_message.append_string ("' and '")
 				a_message.append_string (a_filename2)
 				a_message.append_string ("' are not equal)")
-				Assertions.set_error_message (a_message)
-				Exceptions.raise (Assertion_failure)
+				assertions.report_error (a_message)
 			end
 		end
 
@@ -332,14 +325,13 @@ feature -- Containers
 			new_tag, a_message: STRING
 			expected_item, actual_item: ANY
 		do
-			Assertions.add_assertion
+			assertions.add_assertion
 			if expected.count /= actual.count then
 				create new_tag.make (15)
 				new_tag.append_string (a_tag)
 				new_tag.append_string ("-count")
 				a_message := assert_integers_equal_message (new_tag, expected.count, actual.count)
-				Assertions.set_error_message (a_message)
-				Exceptions.raise (Assertion_failure)
+				assertions.report_error (a_message)
 			else
 				i1 := expected.lower
 				i2 := actual.lower
@@ -353,8 +345,7 @@ feature -- Containers
 						new_tag.append_string ("-item #")
 						INTEGER_.append_decimal_integer (i, new_tag)
 						a_message := assert_equal_message (new_tag, expected_item, actual_item)
-						Assertions.set_error_message (a_message)
-						Exceptions.raise (Assertion_failure)
+						assertions.report_error (a_message)
 					else
 						i1 := i1 + 1
 						i2 := i2 + 1
@@ -377,14 +368,13 @@ feature -- Containers
 			new_tag, a_message: STRING
 			expected_item, actual_item: ANY
 		do
-			Assertions.add_assertion
+			assertions.add_assertion
 			if expected.count /= actual.count then
 				create new_tag.make (15)
 				new_tag.append_string (a_tag)
 				new_tag.append_string ("-count")
 				a_message := assert_integers_equal_message (new_tag, expected.count, actual.count)
-				Assertions.set_error_message (a_message)
-				Exceptions.raise (Assertion_failure)
+				assertions.report_error (a_message)
 			else
 				i1 := expected.lower
 				i2 := actual.lower
@@ -398,8 +388,7 @@ feature -- Containers
 						new_tag.append_string ("-item #")
 						INTEGER_.append_decimal_integer (i, new_tag)
 						a_message := assert_equal_message (new_tag, expected_item, actual_item)
-						Assertions.set_error_message (a_message)
-						Exceptions.raise (Assertion_failure)
+						assertions.report_error (a_message)
 					else
 						i1 := i1 + 1
 						i2 := i2 + 1
@@ -435,14 +424,13 @@ feature -- Containers
 			new_tag, a_message: STRING
 			expected_item, actual_item: INTEGER
 		do
-			Assertions.add_assertion
+			assertions.add_assertion
 			if expected.count /= actual.count then
 				create new_tag.make (15)
 				new_tag.append_string (a_tag)
 				new_tag.append_string ("-count")
 				a_message := assert_integers_equal_message (new_tag, expected.count, actual.count)
-				Assertions.set_error_message (a_message)
-				Exceptions.raise (Assertion_failure)
+				assertions.report_error (a_message)
 			else
 				i1 := expected.lower
 				i2 := actual.lower
@@ -456,8 +444,7 @@ feature -- Containers
 						new_tag.append_string ("-item #")
 						INTEGER_.append_decimal_integer (i, new_tag)
 						a_message := assert_integers_equal_message (new_tag, expected_item, actual_item)
-						Assertions.set_error_message (a_message)
-						Exceptions.raise (Assertion_failure)
+						assertions.report_error (a_message)
 					else
 						i1 := i1 + 1
 						i2 := i2 + 1
@@ -595,10 +582,5 @@ feature {NONE} -- Messages
 		ensure
 			message_not_void: Result /= Void
 		end
-
-feature {NONE} -- Constants
-
-	Assertion_failure: STRING is "Gobo_assertion"
-			-- Developer exception message
 
 end

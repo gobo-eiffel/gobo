@@ -118,7 +118,7 @@ feature -- Generation
 				a_file.put_new_line
 				a_file.put_line ("creation")
 				a_file.put_new_line
-				a_file.put_line ("%Tmake")
+				a_file.put_line ("%Tmake_test")
 				a_file.put_new_line
 				a_file.put_line ("feature {NONE} -- Execution")
 				a_file.put_new_line
@@ -249,7 +249,7 @@ feature -- Generation
 						a_file.put_string ("%T%T%Tcreate {")
 						a_file.put_string (a_pair.second)
 						a_file.put_string (test_name)
-						a_file.put_string ("} a_test.make (")
+						a_file.put_string ("} a_test.make_test (")
 						a_file.put_integer (i)
 						a_file.put_line (", variables)")
 						a_file.put_line ("%T%T%TResult.put_test (a_test)")

@@ -120,14 +120,12 @@ feature -- Element change
 		require
 			a_test_not_void: a_test /= Void
 		do
-			-- empty
+			-- Do nothing.
 		end
-	
+
 	end_test (a_test: TS_TEST; asserts: INTEGER) is
 			-- Inform Current that a test was completed with 
 			-- `asserts' assertions run.
-		require
-			a_test_not_void: a_test /= Void
 		do
 			assertion_count := assertion_count + asserts
 		end

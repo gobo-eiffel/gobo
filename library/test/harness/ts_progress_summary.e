@@ -79,7 +79,7 @@ feature -- Element change
 			output_file.put_line (a_test.name)
 			output_file.flush
 		end
-	
+
 invariant
 
 	output_file_not_void: output_file /= Void

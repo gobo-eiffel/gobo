@@ -18,7 +18,7 @@ inherit
 		rename
 			name as test_name
 		redefine
-			make, set_up
+			make_test, set_up
 		end
 
 	XM_EXPAT_PARSER 
@@ -49,7 +49,7 @@ inherit
 
 feature {NONE} -- Initialization
 
-	make (an_id: INTEGER; a_variables: like variables) is
+	make_test (an_id: INTEGER; a_variables: like variables) is
 			-- Create a new test case with id `an_id'.
 		do
 			precursor (an_id, a_variables)

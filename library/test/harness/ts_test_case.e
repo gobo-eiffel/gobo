@@ -5,7 +5,7 @@ indexing
 		"Test cases"
 
 	library: "Gobo Eiffel Test Library"
-	copyright: "Copyright (c) 2000-2001, Eric Bezault and others"
+	copyright: "Copyright (c) 2000-2005, Eric Bezault and others"
 	license: "Eiffel Forum License v2 (see forum.txt)"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -15,21 +15,34 @@ deferred class TS_TEST_CASE
 inherit
 
 	TS_TEST
+
 	TS_ASSERTION_ROUTINES
+		export {NONE} all end
 
 feature {NONE} -- Initialization
 
-	make (an_id: INTEGER; a_variables: like variables) is
+	make_test (an_id: INTEGER; a_variables: like variables) is
 			-- Create a new test case with id `an_id'.
 		require
 			a_variables_not_void: a_variables /= Void
 		do
 			id := an_id
 			variables := a_variables
+			create assertions.make
 			initialize
 		ensure
 			id_set: id = an_id
 			variables_set: variables = a_variables
+		end
+
+	make_default is
+			-- Default initialization.
+		do
+			create variables.make
+			create assertions.make
+		ensure
+			variables_not_void: variables /= Void
+			assertions_not_void: assertions /= Void
 		end
 
 feature -- Initialization
@@ -52,6 +65,9 @@ feature -- Access
 	id: INTEGER
 			-- Test case id
 
+	assertions: TS_ASSERTIONS
+			-- Assertions
+
 feature -- Measurement
 
 	count: INTEGER is 1
@@ -62,14 +78,15 @@ feature -- Execution
 	execute (a_summary: TS_SUMMARY) is
 			-- Run test and put results in `a_summary'.
 		do
-			Assertions.reset
+			assertions.reset
 			a_summary.start_test (Current)
 			if a_summary.fail_on_rescue then
 				execute_without_rescue (a_summary)
 			else
 				execute_with_rescue (a_summary)
 			end
-			a_summary.end_test (Current, Assertions.count)
+			a_summary.end_test (Current, assertions.count)
+			assertions.reset
 		end
 
 	set_up is
@@ -90,11 +107,23 @@ feature {NONE} -- Execution
 			-- Run test and put results in `a_summary'.
 		require
 			a_summary_not_void: a_summary /= Void
+		local
+			i, nb: INTEGER
+			an_error_messages: DS_ARRAYED_LIST [STRING]
 		do
 			set_up
 			execute_i_th (id)
 			tear_down
-			a_summary.put_success (Current)
+			an_error_messages := assertions.error_messages
+			nb := an_error_messages.count
+			if nb = 0 then
+				a_summary.put_success (Current)
+			else
+				from i := 1 until i > nb loop
+					a_summary.put_failure (Current, an_error_messages.item (i))
+					i := i + 1
+				end
+			end
 		end
 
 	execute_with_rescue (a_summary: TS_SUMMARY) is
@@ -103,13 +132,27 @@ feature {NONE} -- Execution
 			a_summary_not_void: a_summary /= Void
 		local
 			retried: BOOLEAN
+			i, nb: INTEGER
+			an_error_messages: DS_ARRAYED_LIST [STRING]
 		do
 			if not retried then
 				execute_without_rescue (a_summary)
 			else
 				tear_down
-				if Assertions.failed then
-					a_summary.put_failure (Current, Assertions.error_message)
+				if assertions.exception_raised then
+					assertions.catch_exception
+					an_error_messages := assertions.error_messages
+					nb := an_error_messages.count
+					if nb = 0 then
+							-- This should not happen: if an exception has
+							-- been raised, there must be a reported error.
+						a_summary.put_success (Current)
+					else
+						from i := 1 until i > nb loop
+							a_summary.put_failure (Current, an_error_messages.item (i))
+							i := i + 1
+						end
+					end
 				else
 					a_summary.put_abort (Current, "Eiffel exception")
 				end
