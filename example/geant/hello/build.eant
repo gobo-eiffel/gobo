@@ -4,6 +4,14 @@
 
 	<target name="hi">
 		<echo message="Hello world"/>
+		<echo message="Hello world" to_file="bla.txt"/>
+		<echo message="Hello world 2" to_file="bla.txt" append="true"/>
+		<echo>This is the content
+		dd</echo>
+		<echo to_file="content_to_file.txt">This is the content
+		dd</echo>
+		<echo to_file="content_to_file.txt" append="true">This is the content
+		dd</echo>
 	</target>
 
 </project>

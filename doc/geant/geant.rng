@@ -174,7 +174,10 @@
 	<define name="echo">
 		<element name="echo">
 			<ref name="dir_if_unless"/>
-			<attribute name="message"/>
+			<choice>
+				<text/>
+				<attribute name="message"/>
+			</choice>
 			<optional>
 				<attribute name="to_file"/>
 				<optional>

@@ -74,7 +74,10 @@
 <define name="echo">
   <element name="echo">
     <ref name="dir_if_unless"/>
-    <attribute name="message"/>
+    <choice>
+      <text/>
+      <attribute name="message"/>
+    </choice>
     <optional>
       <attribute name="to_file"/>
       <optional>
@@ -94,6 +97,9 @@
   <echo message="Hello world!"/>
   <echo message="Hello world!" to_file="messages.txt"/>
   <echo message="Hello world again!" to_file="messages.txt" append="true"/>
+  <echo>Hello from inside 'echo'</echo>
+  <echo>Hello from inside 'echo'
+  using more than one line</echo>
 ]]>
 		</programlisting>
 	</section>
