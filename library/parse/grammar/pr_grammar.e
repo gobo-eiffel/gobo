@@ -465,7 +465,6 @@ feature {NONE} -- Processing
 			-- nonterminals).
 		local
 			rhs: DS_ARRAYED_LIST [PR_SYMBOL]
-			r: DS_ARRAYED_LIST [PR_RULE]
 			a_variable: PR_VARIABLE
 			a_symbol: PR_SYMBOL
 			a_rule: PR_RULE

@@ -578,7 +578,6 @@ feature {NONE} -- Building
 			variables: DS_ARRAYED_LIST [PR_VARIABLE]
 			portions: DS_ARRAYED_LIST [PR_PORTION]
 			froms, tos: DS_ARRAYED_LIST [INTEGER]
-			prev_froms, prev_tos: DS_ARRAYED_LIST [INTEGER]
 			count, width, lowzero: INTEGER
 			a_portion, prev: PR_PORTION
 			i, j, k, nb: INTEGER

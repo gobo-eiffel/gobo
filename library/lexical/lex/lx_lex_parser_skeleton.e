@@ -659,8 +659,6 @@ feature {NONE} -- Implementation
 		require
 			a_nfa_not_void: a_nfa /= Void
 			rule_not_void: rule /= Void
-		local
-			a_state: LX_NFA_STATE
 		do
 			a_nfa.set_accepted_rule (rule)
 			rule.set_pattern (a_nfa)

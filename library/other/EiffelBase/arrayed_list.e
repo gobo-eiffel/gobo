@@ -123,7 +123,6 @@ feature -- Status report
 			-- Can the cursor be moved to position `p'?
 		local
 			a_cursor: ARRAYED_LIST_CURSOR
-			i: INTEGER
 		do
 			a_cursor ?= p
 			if a_cursor /= Void then
@@ -180,8 +179,6 @@ feature -- Element change
 	append (s: LINEAR [G]) is
 			-- Append a copy of `s'.
 		local
-			l: like s
-			al: ARRAYED_LIST [G]
 			i, nb: INTEGER
 		do
 			nb := s.ds_count

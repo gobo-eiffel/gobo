@@ -711,7 +711,6 @@ feature {NONE} -- Generation
 			a_nfa_state: LX_NFA_STATE
 			line_numbers: DS_ARRAYED_LIST [INTEGER]
 			line_nb: INTEGER
-			a_rule: LX_RULE
 		do
 			nb := a_state.count
 			!! line_numbers.make (nb)

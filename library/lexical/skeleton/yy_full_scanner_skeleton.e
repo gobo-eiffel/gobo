@@ -254,7 +254,6 @@ feature {NONE} -- Implementation
 			-- State reachable from `yy_current_state' through
 			-- a transition on NULL character; 0 if jammed
 		local
-			yy_c: INTEGER
 			yy_is_jam: BOOLEAN
 		do
 			Result := yy_nxt.item

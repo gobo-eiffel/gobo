@@ -282,7 +282,6 @@ feature {NONE} -- Processing (nondeterministic)
 			a_state_not_void: a_state /= Void
 			a_variable_not_void: a_variable /= Void
 		local
-			derive_list: DS_LINKED_LIST [PR_RULE]
 			a_cursor: DS_LINKED_LIST_CURSOR [PR_RULE]
 			a_rule: PR_RULE
 			a_position: PR_POSITION

@@ -27,7 +27,7 @@ feature -- Sort
 			-- Sort `a_container' according to `a_comparator''s
 			-- comparison criterion within bounds `lower'..`upper'?
 		local
-			i, j, nb: INTEGER
+			i, j: INTEGER
 			flipped: BOOLEAN
 			v1, v2: G
 		do

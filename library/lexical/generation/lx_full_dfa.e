@@ -176,7 +176,6 @@ feature {NONE} -- Building
 		local
 			yy_nxt_: ARRAY [INTEGER]
 			i, j, k, nb: INTEGER
-			max: INTEGER
 			a_state, target: LX_DFA_STATE
 			transitions: LX_TRANSITION_TABLE [LX_DFA_STATE]
 			eob_state_id: INTEGER
