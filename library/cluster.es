@@ -97,16 +97,16 @@ Path=$VE_Lib/Kernel
 
 [VE.Pool]
 Name=Pool
-Path=$VE_LIB/Misc/Pool
+Path=$VE_Lib/Misc/Pool
 
 [VE.gArgs]
 Name=gArgs
-Path=$VE_LIB/Tools/gArgs
+Path=$VE_Lib/Tools/gArgs
 
 [VE.WinLib]
 Name=WinLib
-Path=$VE_LIB/WinLibs/WinLib
+Path=$VE_Lib/WinLibs/WinLib
 
 [VE.TimeDate]
 Name=TimeDate
-Path=$VE_LIB/TimeDate
+Path=$VE_Lib/TimeDate
