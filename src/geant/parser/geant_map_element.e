@@ -36,21 +36,21 @@ feature {NONE} -- Initialization
 			!! map.make (project)
 
 			if has_attribute (Type_attribute_name) then
-				a_value := uc_attribute_value (Type_attribute_name).out
+				a_value := attribute_value (Type_attribute_name)
 				if a_value.count > 0 then
 					map.set_type (a_value)
 				end
 			end
 
 			if has_attribute (From_attribute_name) then
-				a_value := uc_attribute_value (From_attribute_name).out
+				a_value := attribute_value (From_attribute_name)
 				if a_value.count > 0 then
 					map.set_source_pattern (a_value)
 				end
 			end
 
 			if has_attribute (To_attribute_name) then
-				a_value := uc_attribute_value (To_attribute_name).out
+				a_value := attribute_value (To_attribute_name)
 				if a_value.count > 0 then
 					map.set_target_pattern (a_value)
 				end

@@ -40,19 +40,19 @@ feature {NONE} -- Initialization
 			!! command.make (a_project)
 			task_make (command, an_xml_element)
 			if has_attribute (Input_filename_attribute_name) then
-				a_value := uc_attribute_value (Input_filename_attribute_name).out
+				a_value := attribute_value (Input_filename_attribute_name)
 				if a_value.count > 0 then
 					command.set_input_filename (a_value)
 				end
 			end
 			if has_attribute (Output_filename_attribute_name) then
-				a_value := uc_attribute_value (Output_filename_attribute_name).out
+				a_value := attribute_value (Output_filename_attribute_name)
 				if a_value.count > 0 then
 					command.set_output_filename (a_value)
 				end
 			end
 			if has_attribute (Stylesheet_filename_attribute_name) then
-				a_value := uc_attribute_value (Stylesheet_filename_attribute_name).out
+				a_value := attribute_value (Stylesheet_filename_attribute_name)
 				if a_value.count > 0 then
 					command.set_stylesheet_filename (a_value)
 				end

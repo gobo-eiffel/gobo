@@ -48,28 +48,28 @@ feature {NONE} -- Initialization
 			end
 				-- system:
 			if has_attribute (System_attribute_name) then
-				a_value := uc_attribute_value (System_attribute_name).out
+				a_value := attribute_value (System_attribute_name)
 				if a_value.count > 0 then
 					command.set_system_command (a_value)
 				end
 			end
 				-- cluster:
 			if has_attribute (Cluster_attribute_name) then
-				a_value := uc_attribute_value (Cluster_attribute_name).out
+				a_value := attribute_value (Cluster_attribute_name)
 				if a_value.count > 0 then
 					command.set_cluster_command (a_value)
 				end
 			end
 				-- xace_filename:
 			if has_attribute (Xace_filename_attribute_name) then
-				a_value := uc_attribute_value (Xace_filename_attribute_name).out
+				a_value := attribute_value (Xace_filename_attribute_name)
 				if a_value.count > 0 then
 					command.set_xace_filename (a_value)
 				end
 			end
 				-- output_filename:
 			if has_attribute (Output_filename_attribute_name) then
-				a_value := uc_attribute_value (Output_filename_attribute_name).out
+				a_value := attribute_value (Output_filename_attribute_name)
 				if a_value.count > 0 then
 					command.set_output_filename (a_value)
 				end

@@ -36,14 +36,14 @@ feature {NONE} -- Initialization
 			task_make (command, an_xml_element)
 				-- -Fo:
 			if has_attribute (Executable_attribute_name) then
-				a_value := uc_attribute_value (Executable_attribute_name).out
+				a_value := attribute_value (Executable_attribute_name)
 				if a_value.count > 0 then
 					command.set_executable (a_value)
 				end
 			end
 				-- source_filename
 			if has_attribute (Source_filename_attribute_name) then
-				a_value := uc_attribute_value (Source_filename_attribute_name).out
+				a_value := attribute_value (Source_filename_attribute_name)
 				if a_value.count > 0 then
 					command.set_source_filename (a_value)
 				end

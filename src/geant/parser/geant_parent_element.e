@@ -50,7 +50,7 @@ feature -- Initialization
 			create parent.make (a_project)
 
 			if has_attribute (Location_attribute_name) then
-				a_string := uc_attribute_value (Location_attribute_name)
+				a_string := attribute_value (Location_attribute_name)
 				if a_string.count > 0 then
 					create a_project_loader.make (a_string)
 					a_project_loader.load (a_project.variables, a_project.options)
@@ -137,7 +137,7 @@ feature -- Initialization
 			interpreting_element_make (a_project, a_xml_element)
 
 			create parent.make (a_project)
-			a_string := uc_attribute_value (Inherit_attribute_name)
+			a_string := attribute_value (Inherit_attribute_name)
 			if a_string.count > 0 then
 				create a_project_loader.make (a_string)
 				a_project_loader.load (a_project.variables, a_project.options)

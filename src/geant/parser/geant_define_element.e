@@ -39,7 +39,7 @@ feature -- Access
 		require
 			has_name: has_name
 		do
-			Result := uc_attribute_value (Name_attribute_name).out
+			Result := attribute_value (Name_attribute_name)
 		ensure
 			name_not_void: name /= Void
 		end
@@ -49,7 +49,7 @@ feature -- Access
 		require
 			has_value: has_value
 		do
-			Result := uc_attribute_value (Value_attribute_name).out
+			Result := attribute_value (Value_attribute_name)
 		ensure
 			value_not_void: Result /= Void
 		end

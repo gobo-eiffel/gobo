@@ -38,13 +38,13 @@ feature {NONE} -- Initialization
 			!! command.make (a_project)
 			task_make (command, an_xml_element)
 			if has_attribute (Config_filename_attribute_name) then
-				a_value := uc_attribute_value (Config_filename_attribute_name).out
+				a_value := attribute_value (Config_filename_attribute_name)
 				if a_value.count > 0 then
 					command.set_config_filename (a_value)
 				end
 			end
 			if has_attribute (Compile_attribute_name) then
-				a_value := uc_attribute_value (Compile_attribute_name).out
+				a_value := attribute_value (Compile_attribute_name)
 				command.set_compile (a_value)
 			end
 				-- define:

@@ -40,35 +40,35 @@ feature {NONE} -- Initialization
 			end
 				-- verbose_filename:
 			if has_attribute (Verbose_filename_attribute_name) then
-				a_value := uc_attribute_value (Verbose_filename_attribute_name).out
+				a_value := attribute_value (Verbose_filename_attribute_name)
 				if a_value.count > 0 then
 					command.set_verbose_filename (a_value)
 				end
 			end
 				-- tokens_classname:
 			if has_attribute (Tokens_classname_attribute_name) then
-				a_value := uc_attribute_value (Tokens_classname_attribute_name).out
+				a_value := attribute_value (Tokens_classname_attribute_name)
 				if a_value.count > 0 then
 					command.set_tokens_classname (a_value)
 				end
 			end
 				-- tokens_filename:
 			if has_attribute (Tokens_filename_attribute_name) then
-				a_value := uc_attribute_value (Tokens_filename_attribute_name).out
+				a_value := attribute_value (Tokens_filename_attribute_name)
 				if a_value.count > 0 then
 					command.set_tokens_filename (a_value)
 				end
 			end
 				-- output_filename:
 			if has_attribute (Output_filename_attribute_name) then
-				a_value := uc_attribute_value (Output_filename_attribute_name).out
+				a_value := attribute_value (Output_filename_attribute_name)
 				if a_value.count > 0 then
 					command.set_output_filename (a_value)
 				end
 			end
 				-- input_filename:
 			if has_attribute (Input_filename_attribute_name) then
-				a_value := uc_attribute_value (Input_filename_attribute_name).out
+				a_value := attribute_value (Input_filename_attribute_name)
 				if a_value.count > 0 then
 					command.set_input_filename (a_value)
 				end

@@ -35,7 +35,7 @@ feature -- Initialization
 			create select_clause.make
 
 			if has_attribute (Target_attribute_name) then
-				a_value := uc_attribute_value (Target_attribute_name).out
+				a_value := attribute_value (Target_attribute_name)
 				if a_value.count > 0 then
 					select_clause.set_name (a_value)
 				end

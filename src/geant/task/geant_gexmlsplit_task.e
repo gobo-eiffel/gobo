@@ -36,7 +36,7 @@ feature {NONE} -- Initialization
 			task_make (command, an_xml_element)
 				-- input_filename:
 			if has_attribute (Input_filename_attribute_name) then
-				a_value := uc_attribute_value (Input_filename_attribute_name).out
+				a_value := attribute_value (Input_filename_attribute_name)
 				if a_value.count > 0 then
 					command.set_input_filename (a_value)
 				end

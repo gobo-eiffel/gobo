@@ -35,14 +35,14 @@ feature -- Initialization
 			create rename_clause.make
 
 			if has_attribute (Target_attribute_name) then
-				a_value := uc_attribute_value (Target_attribute_name).out
+				a_value := attribute_value (Target_attribute_name)
 				if a_value.count > 0 then
 					rename_clause.set_original_name (a_value)
 				end
 			end
 
 			if has_attribute (As_attribute_name) then
-				a_value := uc_attribute_value (As_attribute_name).out
+				a_value := attribute_value (As_attribute_name)
 				if a_value.count > 0 then
 					rename_clause.set_new_name (a_value)
 				end

@@ -38,7 +38,7 @@ feature {NONE} -- Initialization
 			task_make (command, an_xml_element)
 				-- size:
 			if has_attribute (Size_attribute_name) then
-				a_value := uc_attribute_value (Size_attribute_name).out
+				a_value := attribute_value (Size_attribute_name)
 				if STRING_.is_integer (a_value) then
 					command.set_size (a_value)
 				end
@@ -77,14 +77,14 @@ feature {NONE} -- Initialization
 			end
 				-- output_filename:
 			if has_attribute (Output_filename_attribute_name) then
-				a_value := uc_attribute_value (Output_filename_attribute_name).out
+				a_value := attribute_value (Output_filename_attribute_name)
 				if a_value.count > 0 then
 					command.set_output_filename (a_value)
 				end
 			end
 				-- input_filename:
 			if has_attribute (Input_filename_attribute_name) then
-				a_value := uc_attribute_value (Input_filename_attribute_name).out
+				a_value := attribute_value (Input_filename_attribute_name)
 				if a_value.count > 0 then
 					command.set_input_filename (a_value)
 				end

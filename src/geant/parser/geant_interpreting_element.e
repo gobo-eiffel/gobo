@@ -19,8 +19,7 @@ inherit
 			make as element_make
 		redefine
 			attribute_value,
-			uc_attribute_value_or_default,
-			uc_attribute_value
+			attribute_value_or_default
 		end
 
 creation
@@ -105,25 +104,16 @@ feature -- Access/XML attribute values
 			Result := project.variables.interpreted_string (Result)
 		end
 
-feature -- Access/XML attribute values (unicode)
-
-	uc_attribute_value_or_default (an_attr_name: STRING; a_default_value: STRING): STRING is
+	attribute_value_or_default (an_attr_name: STRING; a_default_value: STRING): STRING is
 			-- Value of attribue `an_attr_name',
 			-- or `a_default_value' of no such attribute
 		do
 			if xml_element.has_attribute_by_name (an_attr_name) then
 				Result := project.variables.interpreted_string (
-					xml_element.attribute_by_name (an_attr_name).value.out)
+					xml_element.attribute_by_name (an_attr_name).value)
 			else
 				Result := a_default_value
 			end
-		end
-
-	uc_attribute_value (an_attr_name: STRING): STRING is
-			-- Value of attribue `an_attr_name'
-		do
-			Result := xml_element.attribute_by_name (an_attr_name).value
-			Result := project.variables.interpreted_string (Result)
 		end
 
 feature {NONE} -- Constants

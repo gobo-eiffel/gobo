@@ -36,7 +36,7 @@ feature {NONE} -- Initialization
 			task_make (command, an_xml_element)
 				-- name:
 			if has_attribute (Name_attribute_name) then
-				a_value := uc_attribute_value (Name_attribute_name).out
+				a_value := attribute_value (Name_attribute_name)
 				if a_value.count > 0 then
 					command.set_name (a_value)
 				end

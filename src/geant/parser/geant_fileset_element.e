@@ -41,21 +41,21 @@ feature {NONE} -- Initialization
 			!! fileset.make (project)
 
 			if has_attribute (Directory_attribute_name) then
-				a_value := uc_attribute_value (Directory_attribute_name).out
+				a_value := attribute_value (Directory_attribute_name)
 				if a_value.count > 0 then
 					fileset.set_directory_name (a_value)
 				end
 			end
 
 			if has_attribute (Include_attribute_name) then
-				a_value := uc_attribute_value (Include_attribute_name).out
+				a_value := attribute_value (Include_attribute_name)
 				if a_value.count > 0 then
 					fileset.set_include_wc_string (a_value)
 				end
 			end
 
 			if has_attribute (Exclude_attribute_name) then
-				a_value := uc_attribute_value (Exclude_attribute_name).out
+				a_value := attribute_value (Exclude_attribute_name)
 				if a_value.count > 0 then
 					fileset.set_exclude_wc_string (a_value)
 				end
