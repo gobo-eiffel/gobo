@@ -106,9 +106,14 @@ feature -- Access
 				elseif arg.count > 1 and then arg.item (1) = '-' and then arg.item (2) = 'D' then
 					p := arg.index_of('=', 1)
 					if p > 3 and p < arg.count then
+							-- define commandline variable with value:
 						a_variable_name := clone(arg.substring (3, p - 1))
 						a_variable_value := clone(arg.substring (p + 1, arg.count))
 						Commandline_variables.force (a_variable_value, a_variable_name)
+					elseif arg.count > 2 and then p = 0 then
+							-- define commandline variable:
+						a_variable_name := clone(arg.substring (3, arg.count))
+						Commandline_variables.force ("True", a_variable_name)
 					end
 				elseif i = nb then
 					start_target_name := arg

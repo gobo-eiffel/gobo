@@ -304,7 +304,8 @@ feature -- Processing
 			-- Is `condition' True?;
 			-- used for "if" and "unless" attributes;
 			-- possible forms:
-			-- "foo": True if variable `foo' is defined
+			-- "$foo": True if variable `foo' is defined
+			-- "${foo}": True if variable `foo' is defined
 			-- "$foo=bar" | "${foo}=bar" | "bar=$foo" | "bar=${foo}":
 			--             True if variable `foo' is defined and its value is "bar"
 			-- if `a_condition' is not in either form Result is `False'
@@ -322,7 +323,21 @@ feature -- Processing
 					-- a_condition should be in form "$foo";
 					-- check if $foo is defined
 				s := a_tokens.item (1).out
-				Result := project.variables.has_variable (s)
+				if s.count > 3 and then
+					s.item (1) = '$' and then s.item (2) = '{' and then
+					s.item (s.count) = '}' then
+						-- handle "${bar}" form:
+					s := s.substring (3, s.count - 1)
+					Result := project.variables.has_variable (s)
+				elseif s.count > 1 and then s.item (1) = '$' and then s.item (2) /= '{' then
+						-- handle "$bar" form:
+					s.tail (s.count - 1)
+					Result := project.variables.has_variable (s)
+				else
+					print ("geant: incorrect conditional: '" + a_condition + "'%N")
+					print ("%NBUILD FAILED !%N")
+					Exceptions.die (1)
+				end
 			elseif a_tokens.count = 2 then
 					-- a_condition should be in form "$foo=bar";
 					-- check if $foo equals "bar"
