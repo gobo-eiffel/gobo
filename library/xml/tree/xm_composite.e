@@ -22,8 +22,8 @@ feature {NONE} -- Access
    
 	make_from_implementation (imp: like implementation) is
 		do
-			Precursor (imp)
 			!! namespaces.make (10)
+			Precursor (imp)
 		end
 
 feature {ANY} -- Access
