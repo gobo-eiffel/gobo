@@ -75,7 +75,7 @@ feature -- Test
 			!! td1.make_precise (12, 4, 31, 876)
 			!! t2.make_precise (2, 7, 56, 308)
 			assert_equal ("infix_plus", t2, t1 + td1)
-			assert_equal ("infix_&t|", t2, t1 &t| td1)
+			assert_equal ("infix_&|", t2, t1 &| td1)
 			t1.add_duration (td1)
 			assert_equal ("add_duration", t2, t1)
 		end
@@ -90,7 +90,7 @@ feature -- Test
 			!! td1.make_precise (-4, -2, -12, 678)
 			!! t2.make_precise (10, 1, 13, 110)
 			assert_equal ("infix_plus", t2, t1 + td1)
-			assert_equal ("infix_&t|", t2, t1 &t| td1)
+			assert_equal ("infix_&|", t2, t1 &| td1)
 			t1.add_duration (td1)
 			assert_equal ("add_duration", t2, t1)
 			!! t1.make_precise (14, 3, 24, 432)

@@ -23,16 +23,17 @@ Version 3.1 - ?
 
 	Gobo Eiffel Lexical Library:
 
-	* LX_NFA: Renamed `infix "|{n,}|"' as `infix "|{ni}|" because the
-	  former free operator is not valid in ETL3 anymore (and SE 1.0b6
-	  already supports the new syntax).
+	* LX_NFA: Renamed `infix "|{n,}|"' as `infix "|{*}|" and `infix "|{n}|"'
+	  as `infix "|{}|"' because the former free operator is not valid in ETL3
+	  anymore (and SE 1.0b6 already supports the new syntax). All the free
+	  operators of this class have been made obsolete.
 
 	Gobo Eiffel Time Library:
 
-	* DT_DATE: Renamed `infix "&d"' as `infix "&d|" because the former
+	* DT_DATE: Renamed `infix "&d"' as `infix "&@" because the former
 	  free operator is not valid in ETL3 anymore (and SE 1.0b6 already
 	  supports the new syntax).
-	* DT_TIME: Renamed `infix "&t"' as `infix "&t|" because the former
+	* DT_TIME: Renamed `infix "&t"' as `infix "&|" because the former
 	  free operator is not valid in ETL3 anymore (and SE 1.0b6 already
 	  supports the new syntax).
 

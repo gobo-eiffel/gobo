@@ -575,7 +575,7 @@ feature -- Obsolete
 			automaton: Result = Current
 		end
 
-	infix "|{n}|" (nb: INTEGER): like Current is
+	infix "|{}|" (nb: INTEGER): like Current is
 			-- Automaton that matches whatever current
 			-- NFA matched `nb' number of times
 			-- Regexp: Current {nb}
@@ -589,7 +589,7 @@ feature -- Obsolete
 			automaton: Result = Current
 		end
 
-	infix "|{ni}|" (nb: INTEGER): like Current is
+	infix "|{*}|" (nb: INTEGER): like Current is
 			-- Automaton which matches `nb' or more
 			-- occurrences of current automaton
 			-- Regexp: Current {nb,}

@@ -167,7 +167,7 @@ feature -- Access
 		ensure
 			date_duration_not_void: Result /= Void
 			definite_duration: Result.is_definite
-			definition: (other &d| Result).is_equal (Current)
+			definition: (other &@ Result).is_equal (Current)
 		end
 
 	day_count: INTEGER is
@@ -202,7 +202,7 @@ feature -- Access
 			max_days_in_month: Result <= Max_days_in_month
 		end
 
-	infix "&d|" (a_duration: like date_duration): like Current is
+	infix "&@" (a_duration: like date_duration): like Current is
 			-- Addition of `a_duration' to current date
 			-- (Create a new object at each call.)
 		require
