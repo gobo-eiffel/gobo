@@ -147,7 +147,7 @@ feature -- Pipes
 	standard_callbacks_pipe (a: ARRAY [XM_CALLBACKS_FILTER]): XM_CALLBACKS is
 			-- Add elements to standard validation pipe, which
 			-- begins with:
-			--  tag check -> namespace resolver -> stop on error
+			--  namespace resolver -> stop on error
 		require
 			a_not_void: a /= Void
 		local
