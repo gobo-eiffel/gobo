@@ -138,14 +138,14 @@ feature -- Comparison
 					is_relative = a_pathname.is_relative and
 					((drive = Void and a_pathname.drive = Void) or else
 					((drive /= Void and a_pathname.drive /= Void) and then
-					STRING_.same_unicode_string (drive, a_pathname.drive))) and
+					STRING_.same_string (drive, a_pathname.drive))) and
 					((hostname = Void and a_pathname.hostname = Void) or else
 					((hostname /= Void and a_pathname.hostname /= Void) and then
-					STRING_.same_unicode_string (hostname, a_pathname.hostname)))
+					STRING_.same_string (hostname, a_pathname.hostname)))
 				then
 					Result := True
 					from i := 1 until i > nb loop
-						if not STRING_.same_unicode_string (item (i), a_pathname.item (i)) then
+						if not STRING_.same_string (item (i), a_pathname.item (i)) then
 							Result := False
 							i := nb + 1 -- Jump out of the loop.
 						end

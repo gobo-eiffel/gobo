@@ -134,8 +134,8 @@ feature -- Access
 					from read_entry until end_of_input loop
 						a_name := last_entry
 						if
-							not STRING_.same_unicode_string (a_name, file_system.relative_current_directory) and then
-							not STRING_.same_unicode_string (a_name, file_system.relative_parent_directory)
+							not STRING_.same_string (a_name, file_system.relative_current_directory) and then
+							not STRING_.same_string (a_name, file_system.relative_parent_directory)
 						then
 							tmp_directory.reset (file_system.pathname (string_name, a_name))
 							if tmp_directory.is_readable then
@@ -358,7 +358,7 @@ feature -- Basic operations
 			if not exists then
 				a_pathname := file_system.canonical_pathname (string_name)
 				a_dirname := file_system.dirname (a_pathname)
-				if not STRING_.same_unicode_string (a_dirname, a_pathname) then
+				if not STRING_.same_string (a_dirname, a_pathname) then
 					!! a_dir.make (a_dirname)
 					if not a_dir.exists then
 						a_dir.recursive_create_directory
@@ -428,8 +428,8 @@ feature -- Basic operations
 						from read_entry until end_of_input loop
 							a_name := last_entry
 							if
-								not STRING_.same_unicode_string (a_name, file_system.relative_current_directory) and then
-								not STRING_.same_unicode_string (a_name, file_system.relative_parent_directory)
+								not STRING_.same_string (a_name, file_system.relative_current_directory) and then
+								not STRING_.same_string (a_name, file_system.relative_parent_directory)
 							then
 								a_pathname := file_system.pathname (string_name, a_name)
 								if file_system.is_file_readable (a_pathname) then

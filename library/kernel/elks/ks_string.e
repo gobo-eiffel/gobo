@@ -259,7 +259,7 @@ feature -- Access
 				-- Note: HACT 4.0.1 does not support empty substrings (from ELKS 2001) yet:
 			zero_if_absent: (Result = 0) = not STRING_.has_substring (STRING_.substring (current_string, start_index, count), other)
 				-- Note: Feature `same_string' (from ELKS 2001) is not supported by all compilers yet:
-			at_this_index: Result >= start_index implies STRING_.same_string (other, STRING_.substring (current_string, Result, Result + other.count - 1))
+			at_this_index: Result >= start_index implies STRING_.elks_same_string (other, STRING_.substring (current_string, Result, Result + other.count - 1))
 				-- Note: ISE Eiffel 5.1 and 5.2-dotnet do not support feature `has_substring':
 				-- Note: HACT 4.0.1 does not support empty substrings (from ELKS 2001) yet:
 			none_before: Result > start_index implies not STRING_.has_substring (STRING_.substring (current_string, start_index, Result + other.count - 2), other)
@@ -284,7 +284,7 @@ feature -- Access
 				-- Note: HACT 4.0.1 does not support empty substrings (from ELKS 2001) yet:
 			initial: STRING_.substring (Result.current_string, 1, count).is_equal (current_string)
 				-- Note: Feature `same_string' (from ELKS 2001) is not supported by all compilers yet:
-			final: STRING_.same_string (STRING_.substring (Result.current_string, count + 1, count + other.count), other)
+			final: STRING_.elks_same_string (STRING_.substring (Result.current_string, count + 1, count + other.count), other)
 		end
 
 feature -- Measurement
@@ -341,8 +341,8 @@ feature -- Status report
 		ensure
 			false_if_too_small: count < other.count implies not Result
 				-- Note: Feature `same_string' (from ELKS 2001) is not supported by all compilers yet:
-			true_if_initial: (count >= other.count and then STRING_.same_string (other, STRING_.substring (current_string, 1, other.count))) implies Result
-			recurse: (count >= other.count and then not STRING_.same_string (other, STRING_.substring (current_string, 1, other.count))) implies (Result = STRING_.has_substring (STRING_.substring (current_string, 2, count), other))
+			true_if_initial: (count >= other.count and then STRING_.elks_same_string (other, STRING_.substring (current_string, 1, other.count))) implies Result
+			recurse: (count >= other.count and then not STRING_.elks_same_string (other, STRING_.substring (current_string, 1, other.count))) implies (Result = STRING_.has_substring (STRING_.substring (current_string, 2, count), other))
 		end
 
 	valid_index (i: INTEGER): BOOLEAN is
@@ -864,7 +864,7 @@ feature -- Output
 		ensure then
 			out_not_void: Result /= Void
 				-- Note: Feature `same_string' (from ELKS 2001) is not supported by all compilers yet:
-			same_items: same_type ("") implies STRING_.same_string (Result, current_string)
+			same_items: same_type ("") implies STRING_.elks_same_string (Result, current_string)
 		end
 
 feature -- Implementation

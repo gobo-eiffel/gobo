@@ -265,9 +265,9 @@ feature -- Pathname handling
 				stop
 			loop
 				a_basename := basename (an_absolute_pathname)
-				if STRING_.same_unicode_string (a_basename, relative_current_directory) then
+				if STRING_.same_string (a_basename, relative_current_directory) then
 					an_absolute_pathname := dirname (an_absolute_pathname)
-				elseif STRING_.same_unicode_string (a_basename, relative_parent_directory) then
+				elseif STRING_.same_string (a_basename, relative_parent_directory) then
 					an_absolute_pathname := absolute_parent_directory (dirname (an_absolute_pathname))
 				else
 					stop := True
@@ -326,9 +326,9 @@ feature -- Pathname handling
 					end
 					k := i - 1
 					str := a_pathname.substring (j, k)
-					if STRING_.same_unicode_string (str, relative_current_directory) then
+					if STRING_.same_string (str, relative_current_directory) then
 						Result.append_current
-					elseif STRING_.same_unicode_string (str, relative_parent_directory) then
+					elseif STRING_.same_string (str, relative_parent_directory) then
 						Result.append_parent
 					else
 						Result.append_name (str)
@@ -384,7 +384,7 @@ feature -- Pathname handling
 			else
 				nb2 := a_filename.count
 				if nb2 >= nb then
-					Result := STRING_.same_unicode_string (a_filename.substring (nb2 - nb + 1, nb2), an_extension)
+					Result := STRING_.same_string (a_filename.substring (nb2 - nb + 1, nb2), an_extension)
 				end
 			end
 		end

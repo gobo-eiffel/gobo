@@ -34,7 +34,7 @@ feature -- Status report
 			elseif u = Void then
 				Result := False
 			else
-				Result := STRING_.same_unicode_string (v, u)
+				Result := STRING_.same_string (v, u)
 			end
 		end
 end

@@ -95,7 +95,7 @@ feature -- Element change
 			end
 		ensure
 			count_set: a_string.count = old (a_string.count) + (e - s + 1)
-			characters_set: s <= e implies STRING_.same_unicode_string (a_string.substring (old (a_string.count) + 1, a_string.count), substring (s, e))
+			characters_set: s <= e implies STRING_.same_string (a_string.substring (old (a_string.count) + 1, a_string.count), substring (s, e))
 		end
 
 	fill_from_string (a_string: STRING; pos: INTEGER) is
