@@ -421,7 +421,7 @@ feature -- Access
 
 	cluster_by_name (a_names: ARRAY [STRING]): ET_CLUSTER is
 			-- Cluster named `a_names' in universe;
-			-- Added missing implicit subclusters if needed;
+			-- Add missing implicit subclusters if needed;
 			-- Void if not such cluster
 		require
 			a_names_not_void: a_names /= Void
