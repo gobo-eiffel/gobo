@@ -18,6 +18,15 @@ inherit
 	
 feature
 
+	test_declaration is
+			-- DTD declaration.
+		do
+			assert_parsed ("<!DOCTYPE doc SYSTEM %"abc%"><doc/>", 
+				"<!DOCTYPE doc SYSTEM abc >%N")
+			assert_parsed ("<!DOCTYPE doc PUBLIC 'uri' 'abc'><doc/>",
+				"<!DOCTYPE doc PUBLIC uri abc >%N")
+		end
+
 	test_simple is
 			-- Simple DTDs.
 		do
@@ -88,6 +97,15 @@ feature
 
 feature {NONE} -- Assertions
 
+	new_resolver: XM_STRING_EXTERNAL_RESOLVER is
+			-- Dummy resolver for external DTD test.
+		do
+			create Result.make
+			Result.strings.force ("", "abc")
+		ensure
+			not_void: Result /= Void
+		end
+		
 	assert_parsed (a_in: STRING; a_out: STRING) is
 		local
 			a_printer: XM_DTD_PRETTY_PRINT_FILTER
@@ -97,6 +115,7 @@ feature {NONE} -- Assertions
 			a_printer.set_output_to_string
 			
 			create a_parser.make
+			a_parser.set_dtd_resolver (new_resolver)
 			a_parser.set_dtd_callbacks (a_printer)
 			a_parser.parse_from_string (a_in)
 
