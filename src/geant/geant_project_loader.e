@@ -63,6 +63,7 @@ feature -- Processing
 		local
 			a_file: KL_TEXT_INPUT_FILE
 			a_project_parser: GEANT_PROJECT_PARSER
+			s: STRING
 	    do
 			project_element := Void
 			create a_file.make (build_filename.out)
@@ -79,7 +80,9 @@ feature -- Processing
 				std.error.put_new_line
 			end
 			if project_element = Void then
-				exit_application (1, <<"Parsing error in file '", build_filename, "%'">>)
+				s := file_system.absolute_pathname (file_system.pathname_from_file_system (
+					build_filename, unix_file_system))
+				exit_application (1, <<"Parsing error in file '", s, "%'">>)
 			end
 	    end
 
