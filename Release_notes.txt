@@ -47,7 +47,7 @@ SE 1.0 (SmartEiffel)
 	    geant clobber
 	    geant install
 
-VE 5.0a (Visual Eiffel)
+VE 5.0b (Visual Eiffel)
 
 	* Some Eiffel distributions such as Visual Eiffel may provide older
 	  versions of the Gobo tools in their installation directories.
@@ -68,11 +68,21 @@ VE 5.0a (Visual Eiffel)
 
 	  where <app_name> stands for the name of your application.
 
-	* Running 'geant test_debug_ve' in $GOBO/test/kernel makes the test
-	  crash. It seems to be a bug in the compiler or its runtime/GC.
+	* Running 'geant test_debug_ve' in $GOBO/test/kernel under Windows
+	  makes the test crash. In order to fix this problem, you have to
+	  use the version of class DIRECTORY which can be found in:
+
+	    http://cvs.sourceforge.net/viewcvs.py/visualeiffel/visualeiffel/lib/misc/pool/io/
 
 	* There is a linking error when trying to compile the test in
-	  $GOBO/test/xml/expat.
+	  $GOBO/test/xml/expat under Windows. In order to work around this
+	  problem you have to convert the format of 'libexpat.lib' to the
+	  old lib format using the following command:
+
+	    lib /convert libexpat.lib
+
+	  Note that you have to use 'lib.exe' provided with MSVC 6.0,
+	  the version in MSVC 7.1 does not support the option /convert.
 
 VE 4.1 (Visual Eiffel)
 
