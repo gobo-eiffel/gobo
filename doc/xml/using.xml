@@ -1,0 +1,130 @@
+<chapter id="using_xml_parser">
+<title>Using the XML parser</title>
+
+<sect1 id="xml_event_interfaces">
+<title>Event interfaces</title>
+
+<para>
+Event interfaces are the lowest level of communication with an XML parser. An event interface is a deferred class containing callback calls. Sources of events, like a parser, have routines to attach a descendant of the event interface.
+</para>
+
+<para>
+For each event interface, there is a purely deferred class with the callbacks, of which clients inherit, and a 'source' class, which events sources, like the parser, inherit. For the main XML content events, the event interface is <classname>XM_CALLBACKS</classname>, and the source is <classname>XM_CALLBACKS_SOURCE</classname>. It provides a <featurename>set_callbacks</featurename> feature, and the parser inherits from it.
+</para>
+
+<para>
+DTD events are covered separately, for parsers that support them, using <classname>XM_DTD_CALLBACKS</classname> and <classname>XM_DTD_CALLBACKS_SOURCE</classname> (with <featurename>set_dtd_callbacks</featurename>).
+</para>
+</sect1>
+
+<sect1 id="xml_parsers">
+<title>XML parser</title>
+
+<para>
+The public interface of XML parsers is represented in the deferred class <classname>XM_PARSER</classname>. Parsers are event sources, inheriting from the event sources classes to provide <featurename>set_callbacks</featurename> and <featurename>set_dtd_callbacks</featurename>. The input document is set using <featurename>parse_from_stream</featurename> and similar features. Incremental parsing routines are available to parse a document a chunk at a time, if the parser supports it, which can be checked with <featurename>is_incremental</featurename>. 
+</para>
+
+<para>
+Errors can be collected but are also forwarded to the event interface. Because an event filter stream as described below can produce its own errors, not reflected in the event source that is the parser, it may be more sensible in most cases to collect errors downstream.
+</para>
+
+<para>
+Several concrete parsers are available, which are descendants of this interface. The pure Eiffel parser is <classname>XM_EIFFEL_PARSER</classname>. The parser making use of the Expat C library is <classname>XM_EXPAT_PARSER</classname>. These classes can be created directly.
+</para>
+
+<para>
+Because Expat introduces external dependencies in the library, a factory class is available: <classname>XM_EXPAT_PARSER_FACTORY</classname>. The value of <featurename>is_expat_available</featurename> depends on whether Expat has been compiled in or not, and code may portably act accordingly, for instance falling back to the Eiffel parser.
+</para>
+
+</sect1>
+
+<sect1 id="xml_event_filters">
+<title>Event filters and streams</title>
+
+<para>
+On top of the event interface, the XML library provides a set of filters and a framework for using filters. The filters are arranged in a stream, in a manner similar to the Unix command shell.
+</para>
+
+<para>
+Each component of a filter pipe is a descendant of a filter base class, <classname>XM_CALLBACKS_FILTER</classname> for content events, which has a <featurename>next</featurename> attribute. The default implementation of each event is simply to forward the event to the next filter. A filter that uses only a few events can redefine only the required routines. Redefinition of routines are expected to do their processing and then forward the event to the next filter, for instance using <featurename>Precursor</featurename>. The class provides two routines that can be used as creation procedures: <featurename>make_null</featurename> sets <featurename>next</featurename> to a filter that does nothing on each event. This null filter, <classname>XM_CALLBACKS_NULL</classname> for content events, allows each component of a pipe to be used at any position in the pipe, including at the end, and the next filter to be set when convenient, while maintaining an invariant that <featurename>next</featurename> is not Void. The feature <featurename>set_next</featurename> can also be used as a creation procedure.
+</para>
+
+<para>
+From an Eiffel typing viewpoint, the whole stream has the same type: each filter can be at any position in the pipe. It maybe that some filters have extra dependencies (one must be before the other) that are not captured by the static type system. This seems acceptable given the flexibility of the system, and that many practical filters can indeed be placed anywhere on a pipe. A good point for encapsulation is that each filter is a small component with a clear interface, providing much better encapsulation than some other event filter patterns (like each stage inheriting from the previous one, with high coupling between each component).
+</para>
+
+</sect1>
+
+<sect1>
+<title>Content events</title>
+
+<para>
+The content events are the core of the XML parser interface. They cover elements and attributes, in addition to less fundamental feature like comments and processing instructions. There are also events called on startup and at the end of parsing.
+</para>
+
+<para>
+All events of <classname>XM_CALLBACKS</classname> that take names of tags or attributes, follow the same convention. The signature includes the namespace (a string representing the namespace URI), name prefix and local part. The parser is not expected to provide to resolve namespaces, with a filter introduced below resolving the namespaces and replacing the non-resolved namespaces (Void) downstream of the filter pipe. Whether a namespace is set can be checked with <featurename>has_namespace</featurename>.
+</para>
+
+<para>
+To make the interface consistently simple, it has only atomic events whose parameters are only strings and not data structures. Data structures are build downstream, or as intermediary internal structures of a specific filter. In particular, this means there is one event per attribute.
+</para>
+
+</sect1>
+
+<sect1>
+<title>Content event filters</title>
+
+<para>
+A set of standard content event filters is available in the library. There is a factory class <classname>XM_CALLBACKS_FILTER_FACTORY</classname> with creation routines and convenience routines to build pipes and bind the filters to each other. The filters can be created directly, the factory is only there for convenience.
+</para>
+
+<para>
+<classname>XM_PRETTY_PRINT_FILTER</classname> is a filter that prints out the event stream as an XML document, to the standard output, or a string. It can be placed anywhere in the stream, which may be convenient for debugging.
+</para>
+
+<para>
+Validation and namespace resolving filters will be in most standard pipes: <classname>XM_END_TAG_CHECKER</classname> generates an error event if an end tag does not match the start tag, and <classname>XM_NAMESPACE_RESOLVER</classname> reads XML namespace declaration attributes (these events are not forwarded downstream) and adds a resolved namespace URI to all outgoing names.
+</para>
+
+<para>
+Without <classname>XM_STOP_ON_ERROR_FILTER</classname> the event flow may continue after an error. This filter stops all event forwarding from the first error, which it remembers for later use (<featurename>has_error</featurename> and <featurename>last_error</featurename>). It is useful for most standard pipes, indeed an error condition is better collected here, including errors within the preceding filters, than in the parser itself.
+</para>
+
+<para>
+To produce the output in a tree structure (descendants from <classname>XM_NODE</classname>), the filter <classname>XM_CALLBACKS_TO_TREE_FILTER</classname> is used. It expects resolved namespaces.
+</para>
+
+<para>
+<classname>XM_SHARED_STRINGS_FILTER</classname> saves memory and possibly comparison time by making all equal strings point to a single instance. The downstream events must then consider strings immutable. This sharing is across event categories (if a content happens to be the same as an element name, it will be the same string for instance).
+</para>
+
+<para>
+To finish this section, here is an example of a filter pipe, using the factory class convenience routines <featurename>callbacks_pipe</featurename> that simply binds the next pipe of each filter in an array and returns the first element:
+</para>
+
+<programlisting>
+...
+inherit
+	XM_CALLBACKS_FILTER_FACTORY
+...
+
+a_parser: XM_PARSER
+...
+
+a_parser.set_callbacks (callabacks_pipe (
+		&lt;&lt;	new_end_tag_checker,
+			new_namespace_resolver,
+			new_stop_on_error,
+			new_tree_builder >>)
+...
+</programlisting>
+
+<para>
+In a real program, references may be kept to individual filters, to recover the result or check their state after processing. <classname>XM_TREE_CALLBACKS_PIPE</classname> provides a standard pipe with attributes for the interesting component filters.
+</para>
+
+</sect1>
+<!-- sect1 DTD events -->
+
+</chapter>
