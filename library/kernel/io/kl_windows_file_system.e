@@ -213,8 +213,8 @@ feature -- Pathname handling
 		local
 			i, nb: INTEGER
 		do
--- TODO: Try to re-implement this routine with a forward traversal to
--- have better performances when `a_pathname' is a UC_STRING. (ericb)
+				-- TODO: Try to re-implement this routine with a forward traversal to
+				-- have better performances when `a_pathname' is a UC_STRING. (ericb)
 			if is_root_directory (a_pathname) then
 				Result := root_directory
 			else
@@ -254,8 +254,8 @@ feature -- Pathname handling
 		local
 			i: INTEGER
 		do
--- TODO: Try to re-implement this routine with a forward traversal to
--- have better performances when `a_pathname' is a UC_STRING. (ericb)
+				-- TODO: Try to re-implement this routine with a forward traversal to
+				-- have better performances when `a_pathname' is a UC_STRING. (ericb)
 			if is_root_directory (a_pathname) then
 				Result := a_pathname
 			else
@@ -569,8 +569,8 @@ feature -- Pathname handling
 			c: CHARACTER
 			found, stop: BOOLEAN
 		do
--- TODO: Try to re-implement this routine with a forward traversal to
--- have better performances when `a_filename' is a UC_STRING. (ericb)
+				-- TODO: Try to re-implement this routine with a forward traversal to
+				-- have better performances when `a_filename' is a UC_STRING. (ericb)
 			from
 				i := a_filename.count
 			until

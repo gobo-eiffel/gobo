@@ -14,6 +14,10 @@ indexing
 
 class KL_IMPORTED_FIXED_ARRAY_TYPE [G]
 
+obsolete
+
+	"[041219] Use SPECIAL and KL_SPECIAL_ROUTINES instead."
+
 feature -- Type anchors
 
 #ifdef ISE

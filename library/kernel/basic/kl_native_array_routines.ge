@@ -15,6 +15,10 @@ indexing
 
 class KL_NATIVE_ARRAY_ROUTINES [G]
 
+obsolete
+
+	"[041219] Use SPECIAL and KL_SPECIAL_ROUTINES instead."
+
 inherit
 
 	KL_IMPORTED_NATIVE_ARRAY_TYPE [G]
@@ -33,14 +37,14 @@ feature -- Initialization
 #ifdef ISE
 			create to_special.make_area (n)
 			Result := to_special.area
-#else
+#endif
 #ifdef SE
 			if n > 0 then
 				Result := Result.calloc (n)
 			end
-#else
-			create Result.make (0, n - 1)
 #endif
+#ifdef VE
+			create Result.make (0, n - 1)
 #endif
 		ensure
 #ifndef SE
