@@ -739,10 +739,10 @@ feature {NONE} -- String mode: shared empty string implementation
 			string_type: Result.same_type ("")
 		end
 		
-	shared_empty_string_uc: UC_STRING is
+	shared_empty_string_uc: STRING is
 			-- Empty string of type UC_STRING
 		once
-			create Result.make (0)
+			Result := new_unicode_string_empty
 		end
 
 invariant
