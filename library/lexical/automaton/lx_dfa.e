@@ -64,6 +64,7 @@ feature {NONE} -- Initialization
 				-- Make room for start states and
 				-- an eventual end-of-buffer state.
 			make_arrayed_list ((2 * nb + 1).max (Initial_max_dfas))
+			set_nfa_state_ids (start_conditions)
 			from i := 1 until i > nb loop
 				put_start_condition (start_conditions.item (i))
 				i := i + 1
@@ -140,18 +141,93 @@ feature {NONE} -- Implementation
 	partitions: LX_SYMBOL_PARTITIONS
 			-- Partitions of symbols with same out-transitions
 
+	set_nfa_state_ids (start_conditions: LX_START_CONDITIONS) is
+			-- Give unique ids to each NFA state of each pattern
+			-- in each start condition of `start_conditions'.
+			-- (This is for optimization purposes in features
+			-- `make' and `is_equal' from LX_DFA_STATE.)
+		require
+			start_conditions_not_void: start_conditions /= Void
+		local
+			start_condition: LX_START_CONDITION
+			patterns: DS_ARRAYED_LIST [LX_NFA]
+			nfa: LX_NFA
+			states: DS_ARRAYED_LIST [LX_NFA_STATE]
+			visited: DS_HASH_TABLE [LX_NFA, INTEGER]
+			i, nb, j, nb2, k, nb3: INTEGER
+			key, new_id: INTEGER
+		do
+			new_id := 1
+			!! visited.make (100)
+			nb := start_conditions.count
+			from i := 1 until i > nb loop
+				start_condition := start_conditions.item (i)
+				patterns := start_condition.patterns
+				nb2 := patterns.count
+				from j := 1 until j > nb2 loop
+					nfa := patterns.item (j)
+					key := nfa.start_state.id
+					if not visited.has (key) or else visited.item (key) /= nfa then
+						visited.force (nfa, new_id)
+						states := nfa.states
+						nb3 := states.count
+						from k := 1 until k > nb3 loop
+							states.item (k).set_id (new_id)
+							new_id := new_id + 1
+							k := k + 1
+						end
+					end
+					j := j + 1
+				end
+				patterns := start_condition.bol_patterns
+				nb2 := patterns.count
+				from j := 1 until j > nb2 loop
+					nfa := patterns.item (j)
+					key := nfa.start_state.id
+					if not visited.has (key) or else visited.item (key) /= nfa then
+						visited.force (nfa, new_id)
+						states := nfa.states
+						nb3 := states.count
+						from k := 1 until k > nb3 loop
+							states.item (k).set_id (new_id)
+							new_id := new_id + 1
+							k := k + 1
+						end
+					end
+					j := j + 1
+				end
+				i := i + 1
+			end
+		end
+
 	put_start_condition (start_condition: LX_START_CONDITION) is
 			-- Add start states associated with `start_condition'.
 		require
 			not_full: count + 2 <= capacity
 			start_condition_not_void: start_condition /= Void
 		local
+			patterns, bol_patterns: DS_ARRAYED_LIST [LX_NFA]
 			nfa_states, nfa_bol_states: DS_ARRAYED_LIST [LX_NFA_STATE]
+			nfa_state: LX_NFA_STATE
 			state: LX_DFA_STATE
+			i, nb: INTEGER
 		do
-			nfa_states := start_condition.start_states
-			nfa_bol_states := start_condition.bol_start_states
-			nfa_bol_states.append_last (nfa_states)
+			patterns := start_condition.patterns
+			bol_patterns := start_condition.bol_patterns
+			nb := patterns.count
+			!! nfa_states.make (nb)
+			!! nfa_bol_states.make (nb + bol_patterns.count)
+			from i := 1 until i > nb loop
+				nfa_state := patterns.item (i).start_state
+				nfa_states.put_last (nfa_state)
+				nfa_bol_states.put_last (nfa_state)
+				i := i + 1
+			end
+			nb := bol_patterns.count
+			from i := 1 until i > nb loop
+				nfa_bol_states.put_last (bol_patterns.item (i).start_state)
+				i := i + 1
+			end
 			!! state.make (nfa_states, minimum_symbol, maximum_symbol)
 			put_last (state)
 			state.set_id (count)

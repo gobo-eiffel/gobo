@@ -386,8 +386,6 @@ feature {NONE} -- Implementation
 		require
 			a_nfa_not_void: a_nfa /= Void
 			rule_not_void: rule /= Void
-		local
-			a_state: LX_NFA_STATE
 		do
 			a_nfa.set_accepted_rule (rule)
 			rule.set_pattern (a_nfa)
@@ -398,13 +396,12 @@ feature {NONE} -- Implementation
 			if variable_trail_rule then
 				variable_trail_context := True
 			end
-			a_state := a_nfa.start_state
 			if start_condition_stack.is_empty then
-					-- Add `a_state' to all non-exclusive start condition,
+					-- Add `a_nfa' to all non-exclusive start condition,
 					-- including the default (INITIAL) start condition.
-				start_conditions.add_state_to_non_exclusive (a_state)
+				start_conditions.add_nfa_to_non_exclusive (a_nfa)
 			else
-				start_condition_stack.add_state_to_all (a_state)
+				start_condition_stack.add_nfa_to_all (a_nfa)
 			end
 		end
 
@@ -426,13 +423,12 @@ feature {NONE} -- Implementation
 			if variable_trail_rule then
 				variable_trail_context := True
 			end
-			a_state := a_nfa.start_state
 			if start_condition_stack.is_empty then
-					-- Add `a_state' to all non-exclusive start condition,
+					-- Add `a_nfa' to all non-exclusive start condition,
 					-- including the default (INITIAL) start condition.
-				start_conditions.add_bol_state_to_non_exclusive (a_state)
+				start_conditions.add_bol_nfa_to_non_exclusive (a_nfa)
 			else
-				start_condition_stack.add_bol_state_to_all (a_state)
+				start_condition_stack.add_bol_nfa_to_all (a_nfa)
 			end
 		end
 
@@ -492,7 +488,6 @@ feature {NONE} -- Implementation
 		local
 			a_character_class: LX_SYMBOL_CLASS
 			a_nfa: LX_NFA
-			a_state: LX_NFA_STATE
 		do
 			!! a_character_class.make (0)
 			a_character_class.set_negated (True)
@@ -503,8 +498,7 @@ feature {NONE} -- Implementation
 			pending_rules.force_last (rule)
 			rule.set_line_nb (0)
 			rule.set_trail_context (False, 0, 0)
-			a_state := a_nfa.start_state
-			start_conditions.add_state_to_all (a_state)
+			start_conditions.add_nfa_to_all (a_nfa)
 			if no_default_rule then
 				set_action ("fatal_error (%"scanner jammed%")")
 			else

@@ -8,7 +8,6 @@ releases.
 
 8 June 1997
 
-. Review the ID counter in NFA states.
 . Resize input buffer if a call to `unread_character' results in too much text being
   pushed back (it presently raise an run-time error).
 

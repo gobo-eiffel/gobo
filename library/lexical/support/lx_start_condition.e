@@ -27,8 +27,8 @@ feature {NONE} -- Initialization
 			name := nm
 			id := i
 			is_exclusive := excl
-			!! start_states.make (50)
-			!! bol_start_states.make (50)
+			!! patterns.make (50)
+			!! bol_patterns.make (50)
 		ensure
 			name_set: name = nm
 			id_set: id = i
@@ -43,12 +43,12 @@ feature -- Access
 	name: STRING
 			-- Name of the start condition
 
-	start_states: DS_ARRAYED_LIST [LX_NFA_STATE]
-			-- NFA start states (or corresponding DFA start state)
+	patterns: DS_ARRAYED_LIST [LX_NFA]
+			-- NFAs active in current start condition
 
-	bol_start_states: DS_ARRAYED_LIST [LX_NFA_STATE]
-			-- NFA start states (or corresponding DFA start state)
-			-- only active at beginning of line
+	bol_patterns: DS_ARRAYED_LIST [LX_NFA]
+			-- NFAs active in current start condition
+			-- only when at beginning of line
 
 feature -- Status report
 
@@ -70,32 +70,29 @@ feature -- Status setting
 
 feature -- Element change
 
-	put_state (state: LX_NFA_STATE) is
-			-- Add `state' to NFA start states associated
-			-- with current start condition.
+	put_nfa (a_nfa: LX_NFA) is
+			-- Add `a_nfa' to `patterns'.
 		require
-			state_not_void: state /= Void
+			a_nfa_not_void: a_nfa /= Void
 		do
-			start_states.force_last (state)
+			patterns.force_last (a_nfa)
 		end
 
-	put_bol_state (state: LX_NFA_STATE) is
-			-- Add `state' to NFA start states only active
-			-- at beginning of line, associated with current
-			-- start condition.
+	put_bol_nfa (a_nfa: LX_NFA) is
+			-- Add `a_nfa' to `bol_patterns'.
 		require
-			state_not_void: state /= Void
+			a_nfa_not_void: a_nfa /= Void
 		do
-			bol_start_states.force_last (state)
+			bol_patterns.force_last (a_nfa)
 		end
 
 invariant
 
 	name_not_void: name /= Void
 	positive_id: id >= 0
-	start_states_not_void: start_states /= Void
-	no_void_start_state: not start_states.has (Void)
-	bol_start_states_not_void: bol_start_states /= Void
-	no_void_bol_start_state: not bol_start_states.has (Void)
+	patterns_not_void: patterns /= Void
+	no_void_pattern: not patterns.has (Void)
+	bol_patterns_not_void: bol_patterns /= Void
+	no_void_bol_pattern: not bol_patterns.has (Void)
 
 end -- class LX_START_CONDITION

@@ -178,26 +178,26 @@ feature -- Element change
 
 feature -- Traversal
 
-	add_state_to_all (a_state: LX_NFA_STATE) is
-			-- Add `a_state' to NFA start states associated with 
-			-- all start conditions in current list.
+	add_nfa_to_all (a_nfa: LX_NFA) is
+			-- Add `a_nfa' to `patterns' of all start
+			-- conditions in current list.
 		require
-			a_state_not_void: a_state /= Void
+			a_nfa_not_void: a_nfa /= Void
 		local
 			i, nb: INTEGER
 		do
 			nb := count
 			from i := 1 until i > nb loop
-				item (i).put_state (a_state)
+				item (i).put_nfa (a_nfa)
 				i := i + 1
 			end
 		end
 
-	add_state_to_non_exclusive (a_state: LX_NFA_STATE) is
-			-- Add `a_state' to NFA start states associated with
-			-- all non-exclusive start conditions in current list.
+	add_nfa_to_non_exclusive (a_nfa: LX_NFA) is
+			-- Add `a_nfa' to `patterns' of all non-exclusive
+			-- start conditions in current list.
 		require
-			a_state_not_void: a_state /= Void
+			a_nfa_not_void: a_nfa /= Void
 		local
 			i, nb: INTEGER
 			a_start_condition: LX_START_CONDITION
@@ -206,34 +206,32 @@ feature -- Traversal
 			from i := 1 until i > nb loop
 				a_start_condition := item (i)
 				if not a_start_condition.is_exclusive then
-					a_start_condition.put_state (a_state)
+					a_start_condition.put_nfa (a_nfa)
 				end
 				i := i + 1
 			end
 		end
 
-	add_bol_state_to_all (a_state: LX_NFA_STATE) is
-			-- Add `a_state' to NFA start states only active
-			-- at beginning of line, associated with all 
-			-- start conditions in current list.
+	add_bol_nfa_to_all (a_nfa: LX_NFA) is
+			-- Add `a_nfa' to `bol_patterns' of all start
+			-- conditions in current list.
 		require
-			a_state_not_void: a_state /= Void
+			a_nfa_not_void: a_nfa /= Void
 		local
 			i, nb: INTEGER
 		do
 			nb := count
 			from i := 1 until i > nb loop
-				item (i).put_bol_state (a_state)
+				item (i).put_bol_nfa (a_nfa)
 				i := i + 1
 			end
 		end
 
-	add_bol_state_to_non_exclusive (a_state: LX_NFA_STATE) is
-			-- Add `a_state' to NFA start states only active at 
-			-- beginning of line, associated with all non-exclusive
+	add_bol_nfa_to_non_exclusive (a_nfa: LX_NFA) is
+			-- Add `a_nfa' to `bol_patterns' of all non-exclusive
 			-- start conditions in current list.
 		require
-			a_state_not_void: a_state /= Void
+			a_nfa_not_void: a_nfa /= Void
 		local
 			i, nb: INTEGER
 			a_start_condition: LX_START_CONDITION
@@ -242,7 +240,7 @@ feature -- Traversal
 			from i := 1 until i > nb loop
 				a_start_condition := item (i)
 				if not a_start_condition.is_exclusive then
-					a_start_condition.put_bol_state (a_state)
+					a_start_condition.put_bol_nfa (a_nfa)
 				end
 				i := i + 1
 			end

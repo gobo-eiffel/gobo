@@ -6,7 +6,7 @@ indexing
 
 	library:    "Gobo Eiffel Lexical Library"
 	author:     "Eric Bezault <ericb@gobo.demon.co.uk>"
-	copyright:  "Copyright (c) 1997, Eric Bezault"
+	copyright:  "Copyright (c) 1998, Eric Bezault"
 	date:       "$Date$"
 	revision:   "$Revision$"
 
@@ -33,18 +33,12 @@ feature {NONE} -- Initialization
 	make (in_context: like in_trail_context) is
 			-- Create a new NFA state.
 		do
-			id := new_id
 			in_trail_context := in_context
 		ensure
 			in_trail_context_set: in_trail_context = in_context
 		end
 
 feature -- Access
-
-	id: INTEGER
-			-- State identifier
-			--| This should definitely be implemented by `object_id'.
-			--| (ISE Eiffel does not support this feature yet.)
 
 	transition: LX_TRANSITION [LX_NFA_STATE]
 			-- Out-transition
@@ -55,6 +49,11 @@ feature -- Access
 	accepted_rule: LX_RULE
 			-- Rule that current state is accepting,
 			-- Void otherwise
+
+	id: INTEGER
+			-- State identifier
+			-- (This is used for optimization purposes in routines
+			-- `copy' from LX_NFA and `make' from LX_DFA_STATE.)
 
 feature -- Status report
 
@@ -100,60 +99,21 @@ feature -- Status report
 			has_transition: Result implies has_transition
 		end
 
-	connected (other: like Current): BOOLEAN is
-			-- Is current state connected to `other'
-			-- through one or more transitions?
-		require
-			other_not_void: other /= Void
-		local
-			i, nb: INTEGER
-			marked_states: DS_ARRAYED_LIST [LX_NFA_STATE]
-			state, cursor_state: LX_NFA_STATE
-		do
-			from
-				!! marked_states.make (50)
-				marked_states.put_first (Current)
-				nb := 1
-				i := 1
-			until
-				Result or i > nb
-			loop
-				cursor_state := marked_states.item (i)
-				if cursor_state.transition /= Void then
-					state := cursor_state.transition.target
-					if state = other then
-						Result := True
-					elseif not marked_states.has (state) then
-						marked_states.force_last (state)
-						nb := nb + 1
-					end
-				end
-				if not Result and cursor_state.epsilon_transition /= Void then
-					state := cursor_state.epsilon_transition.target
-					if state = other then
-						Result := True
-					elseif not marked_states.has (state) then
-						marked_states.force_last (state)
-						nb := nb + 1
-					end
-				end
-				i := i + 1
-			end
-		ensure
-			has_transition: Result implies has_transition
-		end
-	
 feature -- Comparison
 
 	is_equal (other: like Current): BOOLEAN is
 			-- Is current state equal to `other'?
 		do
+				-- This routine has been redefined to follow
+				-- the redefinition of `infix "<"' (for details,
+				-- see postconditions in class COMPARABLE.)
 			Result := id = other.id
 		end
 
 	infix "<" (other: like Current): BOOLEAN is
 			-- Is current state less than `other'?
-			-- (`id' comparison)
+			-- (This is used for optimization purposes
+			-- in routine `make' from LX_DFA_STATE.)
 		do
 			Result := id < other.id
 		end
@@ -176,10 +136,14 @@ feature -- Setting
 			epsilon_transition_set: epsilon_transition = xtion
 		end
 
-	reset_id is
-			-- Give a new id to current state.
+	set_id (an_id: INTEGER) is
+			-- Set `id' to `an_id'.
+			-- (This is used for optimization purposes in routines
+			-- `copy' from LX_NFA and `make' from LX_DFA_STATE.)
 		do
-			id := new_id
+			id := an_id
+		ensure
+			id_set: id = an_id
 		end
 
 feature -- Status setting
@@ -210,23 +174,6 @@ feature -- Status setting
 			end
 		ensure
 			not_in_trail_context: not in_trail_context
-		end
-
-feature {NONE} -- Implementation
-
-	new_id: INTEGER is
-			-- New NFA state id
-		do
-			Result := Counter.item + 1
-			Counter.put (Result)
-		end
-
-	Counter: DS_CELL [INTEGER] is
-			-- NFA state id counter
-		once
-			!! Result.make (0)
-		ensure
-			counter_not_void: Result /= Void
 		end
 
 end -- class LX_NFA_STATE
