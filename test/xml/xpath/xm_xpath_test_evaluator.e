@@ -42,7 +42,7 @@ feature
 			an_evaluator.evaluate ("BOOKLIST//ITEM[child::TITLE = 'When We Were Very Young']/attribute::CAT") -- should evaluate to "F"
 			assert ("No evaluation error", not an_evaluator.is_error)
 			evaluated_items := an_evaluator.evaluated_items
-			assert ("One evaluated_item", evaluated_items /= Void and then evaluated_items.count = 1)
+			assert ("One evaluated item", evaluated_items /= Void and then evaluated_items.count = 1)
 		end
 
 	-- The following tests are of examples from the draft standard
@@ -60,7 +60,7 @@ feature
 			an_evaluator.evaluate ("/BOOKLIST/BOOKS/child::ITEM[2]")
 			assert ("No evaluation error", not an_evaluator.is_error)
 			evaluated_items := an_evaluator.evaluated_items
-			assert ("One evaluated_item", evaluated_items /= Void and then evaluated_items.count = 1)
+			assert ("One evaluated item", evaluated_items /= Void and then evaluated_items.count = 1)
 			a_node ?= evaluated_items.item (1)
 			assert ("Node not void", a_node /= Void)
 			assert ("Title", check_title (a_node, "Tales of Grandpa Cat"))
@@ -79,7 +79,7 @@ feature
 			an_evaluator.evaluate ("descendant::ITEM[attribute::CAT = 'X']")
 			assert ("No evaluation error", not an_evaluator.is_error)
 			evaluated_items := an_evaluator.evaluated_items
-			assert ("One evaluated_item", evaluated_items /= Void and then evaluated_items.count = 1)
+			assert ("One evaluated item", evaluated_items /= Void and then evaluated_items.count = 1)
 			a_node ?= evaluated_items.item (1)
 			assert ("Node not void", a_node /= Void)
 			assert ("Title", check_title (a_node, "Patterns of Crime in Animal Culture"))
@@ -98,7 +98,7 @@ feature
 			an_evaluator.evaluate ("child::BOOKLIST[BOOKS]")
 			assert ("No evaluation error", not an_evaluator.is_error)
 			evaluated_items := an_evaluator.evaluated_items
-			assert ("One evaluated_item", evaluated_items /= Void and then evaluated_items.count = 1)
+			assert ("One evaluated item", evaluated_items /= Void and then evaluated_items.count = 1)
 			a_node ?= evaluated_items.item (1)
 			assert ("Node not void", a_node /= Void)
 		end
@@ -116,7 +116,7 @@ feature
 			an_evaluator.evaluate ("(1 to 100)[. mod 5 eq 0]")
 			assert ("No evaluation error", not an_evaluator.is_error)
 			evaluated_items := an_evaluator.evaluated_items
-			assert ("Twenty evaluated_items", evaluated_items /= Void and then evaluated_items.count = 20)
+			assert ("Twenty evaluated items", evaluated_items /= Void and then evaluated_items.count = 20)
 			an_integer_value ?= evaluated_items.item (19)
 			assert ("Ninteenth number is 95", an_integer_value /= Void and then an_integer_value.value = 95)
 		end
@@ -134,7 +134,7 @@ feature
 			an_evaluator.evaluate ("(21 to 29)[5]")
 			assert ("No evaluation error", not an_evaluator.is_error)
 			evaluated_items := an_evaluator.evaluated_items
-			assert ("One evaluated_item", evaluated_items /= Void and then evaluated_items.count = 1)
+			assert ("One evaluated item", evaluated_items /= Void and then evaluated_items.count = 1)
 			an_integer_value ?= evaluated_items.item (1)
 			assert ("Fifth number is 25", an_integer_value /= Void and then an_integer_value.value = 25)
 		end
@@ -152,7 +152,7 @@ feature
 			an_evaluator.evaluate ("BOOKLIST/BOOKS/ITEM[4]/AUTHOR eq 'Bonner'")
 			assert ("No evaluation error", not an_evaluator.is_error)
 			evaluated_items := an_evaluator.evaluated_items
-			assert ("One evaluated_item", evaluated_items /= Void and then evaluated_items.count = 1)
+			assert ("One evaluated item", evaluated_items /= Void and then evaluated_items.count = 1)
 			a_boolean_value ?= evaluated_items.item (1)
 			assert ("Boolean true", a_boolean_value /= Void and then a_boolean_value.value = True)
 		end
@@ -170,7 +170,7 @@ feature
 			an_evaluator.evaluate ("//ITEM/AUTHOR = 'Bonner'")
 			assert ("No evaluation error", not an_evaluator.is_error)
 			evaluated_items := an_evaluator.evaluated_items
-			assert ("One evaluated_item", evaluated_items /= Void and then evaluated_items.count = 1)
+			assert ("One evaluated item", evaluated_items /= Void and then evaluated_items.count = 1)
 			a_boolean_value ?= evaluated_items.item (1)
 			assert ("Boolean true", a_boolean_value /= Void and then a_boolean_value.value = True)
 		end
@@ -188,7 +188,7 @@ feature
 			an_evaluator.evaluate ("//ITEM[child::AUTHOR = 'Milne, A. A.'] is //ITEM[child::TITLE = 'When We Were Very Young']")
 			assert ("No evaluation error", not an_evaluator.is_error)
 			evaluated_items := an_evaluator.evaluated_items
-			assert ("One evaluated_item", evaluated_items /= Void and then evaluated_items.count = 1)
+			assert ("One evaluated item", evaluated_items /= Void and then evaluated_items.count = 1)
 			a_boolean_value ?= evaluated_items.item (1)
 			assert ("Boolean true", a_boolean_value /= Void and then a_boolean_value.value = True)
 		end
@@ -206,7 +206,7 @@ feature
 			an_evaluator.evaluate ("//ITEM[child::AUTHOR = 'Milne, A. A.'] << /BOOKLIST/CATEGORIES")
 			assert ("No evaluation error", not an_evaluator.is_error)
 			evaluated_items := an_evaluator.evaluated_items
-			assert ("One evaluated_item", evaluated_items /= Void and then evaluated_items.count = 1)
+			assert ("One evaluated item", evaluated_items /= Void and then evaluated_items.count = 1)
 			a_boolean_value ?= evaluated_items.item (1)
 			assert ("Boolean true", a_boolean_value /= Void and then a_boolean_value.value = True)
 		end
@@ -224,7 +224,7 @@ feature
 			an_evaluator.evaluate ("//ITEM[child::AUTHOR = 'Milne, A. A.'] >> /BOOKLIST/CATEGORIES")
 			assert ("No evaluation error", not an_evaluator.is_error)
 			evaluated_items := an_evaluator.evaluated_items
-			assert ("One evaluated_item", evaluated_items /= Void and then evaluated_items.count = 1)
+			assert ("One evaluated item", evaluated_items /= Void and then evaluated_items.count = 1)
 			a_boolean_value ?= evaluated_items.item (1)
 			assert ("Boolean true", a_boolean_value /= Void and then a_boolean_value.value = False)
 		end
@@ -242,7 +242,7 @@ feature
 			an_evaluator.evaluate ("1 eq 1 and 2 eq 2")
 			assert ("No evaluation error", not an_evaluator.is_error)
 			evaluated_items := an_evaluator.evaluated_items
-			assert ("One evaluated_item", evaluated_items /= Void and then evaluated_items.count = 1)
+			assert ("One evaluated item", evaluated_items /= Void and then evaluated_items.count = 1)
 			a_boolean_value ?= evaluated_items.item (1)
 			assert ("Boolean true", a_boolean_value /= Void and then a_boolean_value.value = True)
 		end
@@ -317,7 +317,7 @@ feature
 			an_evaluator.evaluate ("for $i in //* return name($i)")
 			assert ("No evaluation error", not an_evaluator.is_error)
 			evaluated_items := an_evaluator.evaluated_items
-			assert ("Fifty evaluated_items", evaluated_items /= Void and then evaluated_items.count = 50)			
+			assert ("Fifty evaluated items", evaluated_items /= Void and then evaluated_items.count = 50)			
 		end
 	
 	test_nested_for_expression is
@@ -332,7 +332,7 @@ feature
 			an_evaluator.evaluate ("for $i in (10, 20), $j in (1, 2) return ($i + $j)")
 			assert ("No evaluation error", not an_evaluator.is_error)
 			evaluated_items := an_evaluator.evaluated_items
-			assert ("Four evaluated_items", evaluated_items /= Void and then evaluated_items.count = 4)			
+			assert ("Four evaluated items", evaluated_items /= Void and then evaluated_items.count = 4)			
 		end
 
 	test_union_expression is
@@ -347,7 +347,7 @@ feature
 			an_evaluator.evaluate ("//ITEM[AUTHOR = 'Bonner'] union //ITEM[@CAT = 'S']")
 			assert ("No evaluation error", not an_evaluator.is_error)
 			evaluated_items := an_evaluator.evaluated_items
-			assert ("Four evaluated_items", evaluated_items /= Void and then evaluated_items.count = 4)			
+			assert ("Four evaluated items", evaluated_items /= Void and then evaluated_items.count = 4)			
 		end
 	
 	test_intersection_expression is
@@ -362,7 +362,7 @@ feature
 			an_evaluator.evaluate ("//ITEM[AUTHOR = 'Bonner'] intersect //ITEM[@CAT = 'S']")
 			assert ("No evaluation error", not an_evaluator.is_error)
 			evaluated_items := an_evaluator.evaluated_items
-			assert ("One evaluated_item", evaluated_items /= Void and then evaluated_items.count = 1)			
+			assert ("One evaluated item", evaluated_items /= Void and then evaluated_items.count = 1)			
 		end
 
 	test_difference_expression is
@@ -377,7 +377,7 @@ feature
 			an_evaluator.evaluate ("//ITEM except //ITEM[@CAT = 'S']")
 			assert ("No evaluation error", not an_evaluator.is_error)
 			evaluated_items := an_evaluator.evaluated_items
-			assert ("Five evaluated_items", evaluated_items /= Void and then evaluated_items.count = 5)			
+			assert ("Five evaluated items", evaluated_items /= Void and then evaluated_items.count = 5)			
 		end
 	
 	test_conditional_expression is
@@ -392,9 +392,81 @@ feature
 			an_evaluator.evaluate ("//ITEM[if ( @CAT eq 'S' ) then true() else false() ]")
 			assert ("No evaluation error", not an_evaluator.is_error)
 			evaluated_items := an_evaluator.evaluated_items
-			assert ("Three evaluated_items", evaluated_items /= Void and then evaluated_items.count = 3)			
+			assert ("Three evaluated items", evaluated_items /= Void and then evaluated_items.count = 3)			
 		end
 	
+	test_every is
+			-- Test every - quantified expression
+		local
+			an_evaluator: XM_XPATH_EVALUATOR
+			evaluated_items: DS_LINKED_LIST [XM_XPATH_ITEM]
+			a_boolean_value: XM_XPATH_BOOLEAN_VALUE
+		do
+			create an_evaluator
+			an_evaluator.build_static_context ("./books.xml", False, False)
+			assert ("Build successfull", not an_evaluator.was_build_error)
+			an_evaluator.evaluate ("every $item in //ITEM satisfies $item/@CAT")
+			assert ("No evaluation error", not an_evaluator.is_error)
+			evaluated_items := an_evaluator.evaluated_items
+			assert ("One evaluated item", evaluated_items /= Void and then evaluated_items.count = 1)			
+			a_boolean_value ?= evaluated_items.item (1)
+			assert ("Boolean true", a_boolean_value /= Void and then a_boolean_value.value = True)
+		end
+	
+	
+	test_every_false is
+			-- Test every - quantified expression
+		local
+			an_evaluator: XM_XPATH_EVALUATOR
+			evaluated_items: DS_LINKED_LIST [XM_XPATH_ITEM]
+			a_boolean_value: XM_XPATH_BOOLEAN_VALUE
+		do
+			create an_evaluator
+			an_evaluator.build_static_context ("./books.xml", False, False)
+			assert ("Build successfull", not an_evaluator.was_build_error)
+			an_evaluator.evaluate ("every $item in //ITEM satisfies $item/@CAT eq 'X'")
+			assert ("No evaluation error", not an_evaluator.is_error)
+			evaluated_items := an_evaluator.evaluated_items
+			assert ("One evaluated item", evaluated_items /= Void and then evaluated_items.count = 1)			
+			a_boolean_value ?= evaluated_items.item (1)
+			assert ("Boolean false", a_boolean_value /= Void and then a_boolean_value.value = False)
+		end
+	
+	test_some is
+			-- Test some - quantified expression
+		local
+			an_evaluator: XM_XPATH_EVALUATOR
+			evaluated_items: DS_LINKED_LIST [XM_XPATH_ITEM]
+			a_boolean_value: XM_XPATH_BOOLEAN_VALUE
+		do
+			create an_evaluator
+			an_evaluator.build_static_context ("./books.xml", False, False)
+			assert ("Build successfull", not an_evaluator.was_build_error)
+			an_evaluator.evaluate ("some $item in //ITEM satisfies $item/@CAT eq 'F'")
+			assert ("No evaluation error", not an_evaluator.is_error)
+			evaluated_items := an_evaluator.evaluated_items
+			assert ("One evaluated item", evaluated_items /= Void and then evaluated_items.count = 1)			
+			a_boolean_value ?= evaluated_items.item (1)
+			assert ("Boolean true", a_boolean_value /= Void and then a_boolean_value.value = True)
+		end
+	
+	test_some_false is
+			-- Test some - quantified expression
+		local
+			an_evaluator: XM_XPATH_EVALUATOR
+			evaluated_items: DS_LINKED_LIST [XM_XPATH_ITEM]
+			a_boolean_value: XM_XPATH_BOOLEAN_VALUE
+		do
+			create an_evaluator
+			an_evaluator.build_static_context ("./books.xml", False, False)
+			assert ("Build successfull", not an_evaluator.was_build_error)
+			an_evaluator.evaluate ("some $item in //ITEM satisfies $item/@CAT eq 'G'")
+			assert ("No evaluation error", not an_evaluator.is_error)
+			evaluated_items := an_evaluator.evaluated_items
+			assert ("One evaluated item", evaluated_items /= Void and then evaluated_items.count = 1)			
+			a_boolean_value ?= evaluated_items.item (1)
+			assert ("Boolean false", a_boolean_value /= Void and then a_boolean_value.value = False)
+		end	
 
 	
 	-- Eventually, all errors should be tested here

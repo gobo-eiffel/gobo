@@ -78,7 +78,11 @@ feature -- Status report
 		do
 			a_string := STRING_.appended_string (indentation (a_level), token_name (operator))
 			a_string := STRING_.appended_string (a_string, " $")
-			a_string := STRING_.appended_string (a_string, declaration.name)
+			if declaration = Void then
+				a_string := STRING_.appended_string (a_string, "<range variable>")
+			else
+				a_string := STRING_.appended_string (a_string, declaration.name)
+			end
 			a_string := STRING_.appended_string (a_string, " in")
 			std.error.put_string (a_string)
 			if is_error then
@@ -131,7 +135,7 @@ feature -- Optimization
 				create a_sequence_type.make (a_declaration_type.primary_type, Required_cardinality_zero_or_more)
 				create a_role.make (Variable_role, declaration.name, 1)
 				create a_type_checker
-				a_type_checker.static_type_check (sequence, declaration.required_type, False, a_role)
+				a_type_checker.static_type_check (sequence, a_sequence_type, False, a_role)
 				if a_type_checker.is_static_type_check_error then
 					set_last_error_from_string (a_type_checker.static_type_check_error_message, 4, Type_error)
 				else
@@ -160,10 +164,11 @@ feature -- Evaluation
 			-- Effective boolean value
 		local
 			a_base_iterator: XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_ITEM]
-			an_atomic_value: XM_XPATH_ATOMIC_VALUE
+			a_value: XM_XPATH_VALUE
 			a_boolean_value: XM_XPATH_BOOLEAN_VALUE
 			some: BOOLEAN
 			found_a_match, finished: BOOLEAN
+			an_item: XM_XPATH_ITEM
 		do
 
 			-- First create an iteration of the base sequence.
@@ -184,21 +189,34 @@ feature -- Evaluation
 				until
 					finished or else a_base_iterator.after
 				loop
-					an_atomic_value ?= a_base_iterator.item.as_value
-					-- set_local_variable omitted, as slot_number can only be -1
-					a_boolean_value := action.effective_boolean_value (a_context)
-					if a_boolean_value.is_error then
-						Result := a_boolean_value
+					an_item := a_base_iterator.item
+					if an_item = Void then
+						finished := True
+					elseif an_item.is_error then
+						create Result.make (False)
+						Result.set_last_error (an_item.error_value)
 						finished := True
 					else
-						if some = a_boolean_value.value then
-							create Result.make (some); found_a_match := True
+						a_value ?= an_item.as_value
+							check
+								value_not_void: a_value /= Void
+								-- From post-condition of `as_value'.
+							end
+						a_context.set_local_variable (slot_number, a_value)
+						a_boolean_value := action.effective_boolean_value (a_context)
+						if a_boolean_value.is_error then
+							Result := a_boolean_value
+							finished := True
+						else
+							if some = a_boolean_value.value then
+								create Result.make (some); found_a_match := True
+							end
 						end
+						
+						a_base_iterator.forth
 					end
-					
-					a_base_iterator.forth
 				end
-				
+					
 				if not (finished or else found_a_match) then create Result.make (not some) end
 			end
 		end

@@ -35,7 +35,7 @@ feature -- Evaluation
 			context_not_void: a_context /= Void
 		deferred
 		ensure
-			evaluation: last_evaluated_binding /= void
+			evaluation: last_evaluated_binding /= Void
 		end
 
 invariant
