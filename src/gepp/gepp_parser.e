@@ -271,7 +271,7 @@ feature {NONE} -- Initialization
 			make_gepp_scanner
 			make_parser_skeleton
 			!! defined_values.make (10)
---			!! include_stack.make (Max_include_depth)
+			!! include_stack.make (Max_include_depth)
 		end
 
 feature -- Initialization
@@ -283,7 +283,7 @@ feature -- Initialization
 			if_level := 0
 			ignored_level := 0
 			defined_values.wipe_out
---			include_stack.wipe_out
+			include_stack.wipe_out
 		end
 
 feature -- Parsing
@@ -318,19 +318,23 @@ feature -- Processing
 		local
 			a_file: like INPUT_STREAM_TYPE
 		do
--- Bug in SmallEiffel -0.83
---			if include_stack.count < Max_include_depth then
---				a_file := input_stream_.make_file_open_read (a_filename)
---				if input_stream_.is_open_read (a_file) then
---					include_stack.put (input_buffer)
---					set_input_buffer (new_file_buffer (a_file))
---				else
---					std.error.put_string ("gepp: cannot open %'")
---					std.error.put_string (a_filename)
---					std.error.put_string ("%'%N")
---					exceptions_.die (1)
---				end
---			end
+			if include_stack.count < Max_include_depth then
+				a_file := input_stream_.make_file_open_read (a_filename)
+				if input_stream_.is_open_read (a_file) then
+					include_stack.put (input_buffer)
+					set_input_buffer (new_file_buffer (a_file))
+				else
+					std.error.put_string ("gepp: cannot open %'")
+					std.error.put_string (a_filename)
+					std.error.put_string ("%'%N")
+					exceptions_.die (1)
+				end
+			else
+				std.error.put_string ("gepp: too many (i.e. ")
+				std.error.put_integer (include_stack.count + 1)
+				std.error.put_string (") nested include files")
+				exceptions_.die (1)
+			end
 		end
 
 feature -- Status report
@@ -400,8 +404,8 @@ feature {NONE} -- Implementation
 			-- that subsequent lines should be ignored;
 			-- 0 if lines should not be ignored
 
---	include_stack: DS_ARRAYED_STACK [YY_BUFFER]
---			-- Input buffers not completely parsed yet
+	include_stack: DS_ARRAYED_STACK [YY_BUFFER]
+			-- Input buffers not completely parsed yet
 
 	Max_include_depth: INTEGER is 10
 			-- Maximum number of nested include files
