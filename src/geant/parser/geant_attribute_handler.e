@@ -1,15 +1,15 @@
 indexing
 
-    description:
+	description:
 
-        "manages GEANT_ATTRIBUTEs. This class is used by GEANT_ELEMENT"
+		"handles GEANT_ATTRIBUTEs. This class is used by GEANT_ELEMENT"
 
-    library:    "geant/xml"
-    author:     "Sven Ehrke"
-    copyright:  "Copyright (c) 2000, Sven Ehrke and others"
-    license:    "Eiffel Forum Freeware License v1 (see forum.txt)"
-    date:       "$Date$"
-    revision:   "$Revision$"
+	library:    "Gobo Eiffel Ant"
+	author:     "Sven Ehrke <sven.ehrke@sven-ehrke.de>"
+	copyright:  "Copyright (c) 2001, Sven Ehrke and others"
+	license:    "Eiffel Forum Freeware License v1 (see forum.txt)"
+	date:       "$Date$"
+	revision:   "$Revision$"
 
 class GEANT_ATTRIBUTE_HANDLER
 feature -- creation

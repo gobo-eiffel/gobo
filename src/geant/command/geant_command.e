@@ -1,15 +1,15 @@
 indexing
 
-  description:
-        "the general command class from which all other commands inherit from"
+	description:
 
-    library:    "gobo/geant"
-    author:     "Sven Ehrke"
-    id:         "$Id$"
-    copyright:  ""
-    license:    "Eiffel Forum Freeware License v1 (see forum.txt)"
-    date:       "$Date$"
-    revision:   "$Revision$"
+		"the general command class from which all other commands inherit from"
+
+	library:    "Gobo Eiffel Ant"
+	author:     "Sven Ehrke <sven.ehrke@sven-ehrke.de>"
+	copyright:  "Copyright (c) 2001, Sven Ehrke and others"
+	license:    "Eiffel Forum Freeware License v1 (see forum.txt)"
+	date:       "$Date$"
+	revision:   "$Revision$"
 
 
 deferred class GEANT_COMMAND

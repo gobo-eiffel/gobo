@@ -1,18 +1,15 @@
 indexing
 
-  description:
-        "GEANT is a build tool for Eiffel%
-		%main features:%
-		%- platform independend%
-		%- vendor independant%
-		%- configuration in XML%
-		%based on the concepts of Jakarta Ant (the build tool for Java)"
+	description:
 
-    author:     "Sven Ehrke (sven.ehrke@sven-ehrke.de)"
-    copyright:  "Sven Ehrke and others"
-    license:    "Eiffel Forum Freeware License v1 (see forum.txt)"
-    date:       "$Date$"
-    revision:   "$Revision$"
+		"Gobo Eiffel Ant: build tool for Eiffel, based on the concepts of Jakarta Ant"
+
+	library:    "Gobo Eiffel Ant"
+	author:     "Sven Ehrke <sven.ehrke@sven-ehrke.de>"
+	copyright:  "Copyright (c) 2001, Sven Ehrke and others"
+	license:    "Eiffel Forum Freeware License v1 (see forum.txt)"
+	date:       "$Date$"
+	revision:   "$Revision$"
 
 
 class GEANT
@@ -21,6 +18,7 @@ class GEANT
 		GEANT_ELEMENT_NAMES
 	
 creation
+
 	make
 	
 feature

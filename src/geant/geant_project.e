@@ -1,18 +1,15 @@
 indexing
 
-  description:
-        "Represents a geant project file%
-		%main features:%
-		%- platform independend%
-		%- vendor independant%
-		%- configuration in XML%
-		%based on the concepts of Jakarta Ant (the build tool for Java)"
+	description:
 
-    author:     "Sven Ehrke (sven.ehrke@sven-ehrke.de)"
-    copyright:  "Sven Ehrke and others"
-    license:    "Eiffel Forum Freeware License v1 (see forum.txt)"
-    date:       "$Date$"
-    revision:   "$Revision$"
+		"Represents a geant project file"
+
+	library:    "Gobo Eiffel Ant"
+	author:     "Sven Ehrke <sven.ehrke@sven-ehrke.de>"
+	copyright:  "Copyright (c) 2001, Sven Ehrke and others"
+	license:    "Eiffel Forum Freeware License v1 (see forum.txt)"
+	date:       "$Date$"
+	revision:   "$Revision$"
 
 
 class GEANT_PROJECT

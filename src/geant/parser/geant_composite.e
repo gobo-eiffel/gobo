@@ -1,17 +1,15 @@
 indexing
 
-    description:
+	description:
 
-        "a generic composite class%
-%taken from the eiffel design patterns book with small modifications"
+		"a generic composite class taken from the eiffel design patterns book with small modifications"
 
-    library:    "geant/xml"
+	library:    "Gobo Eiffel Ant"
     author:     "mostly by the authors of the eiffel design patterns book, Sven Ehrke"
-    copyright:  "others, Sven Ehrke"
-    license:    "Eiffel Forum Freeware License v1 (see forum.txt)"
-    date:       "$Date$"
-    revision:   "$Revision$"
-
+	copyright:  "Copyright (c) 2001, Sven Ehrke and others"
+	license:    "Eiffel Forum Freeware License v1 (see forum.txt)"
+	date:       "$Date$"
+	revision:   "$Revision$"
 
 class GEANT_COMPOSITE [T]
 creation

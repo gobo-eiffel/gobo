@@ -1,15 +1,15 @@
 indexing
 
-  description:
-        "geyacc task"
+	description:
 
-    library:    "gobo/geant"
-    author:     "Sven Ehrke"
-    id:         "$Id$"
-    copyright:  "Sven Ehrke and others"
-    license:    "Eiffel Forum Freeware License v1 (see forum.txt)"
-    date:       "$Date$"
-    revision:   "$Revision$"
+		"geyacc task"
+
+	library:    "Gobo Eiffel Ant"
+	author:     "Sven Ehrke <sven.ehrke@sven-ehrke.de>"
+	copyright:  "Copyright (c) 2001, Sven Ehrke and others"
+	license:    "Eiffel Forum Freeware License v1 (see forum.txt)"
+	date:       "$Date$"
+	revision:   "$Revision$"
 
 
 class GEANT_GEYACC_TASK

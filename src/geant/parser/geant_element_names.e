@@ -1,13 +1,15 @@
 indexing
 
-  description:
-        "element name constants for GEANT"
+	description:
 
-    author:     "Sven Ehrke (sven.ehrke@sven-ehrke.de)"
-    copyright:  "Sven Ehrke and others"
-    license:    "Eiffel Forum Freeware License v1 (see forum.txt)"
-    date:       "$Date$"
-    revision:   "$Revision$"
+		"element name constants for GEANT"
+
+	library:    "Gobo Eiffel Ant"
+	author:     "Sven Ehrke <sven.ehrke@sven-ehrke.de>"
+	copyright:  "Copyright (c) 2001, Sven Ehrke and others"
+	license:    "Eiffel Forum Freeware License v1 (see forum.txt)"
+	date:       "$Date$"
+	revision:   "$Revision$"
 
 
 class GEANT_ELEMENT_NAMES

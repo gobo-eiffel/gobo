@@ -1,15 +1,15 @@
 indexing
 
-    description:
+	description:
 
-        "represents an XML attribute"
+		"represents an XML attribute"
 
-    library:    "geant/xml"
-    author:     "Sven Ehrke"
-    copyright:  "Copyright (c) 2000, Sven Ehrke and others"
-    license:    "Eiffel Forum Freeware License v1 (see forum.txt)"
-    date:       "$Date$"
-    revision:   "$Revision$"
+	library:    "Gobo Eiffel Ant"
+	author:     "Sven Ehrke <sven.ehrke@sven-ehrke.de>"
+	copyright:  "Copyright (c) 2001, Sven Ehrke and others"
+	license:    "Eiffel Forum Freeware License v1 (see forum.txt)"
+	date:       "$Date$"
+	revision:   "$Revision$"
 
 class GEANT_ATTRIBUTE
 	inherit

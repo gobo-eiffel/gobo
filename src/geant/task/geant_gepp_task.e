@@ -1,21 +1,15 @@
 indexing
 
-  description:
-        "gepp task%
-		%  example usage:%
-		%  <gepp inputfile='main.ge' outputfile='main.e'>%
-		%    <define name='SE' />%
-		%  </gepp>%
-		%%
-		% which is equivalent to the commandline call: gepp -DSE main.ge main.e"
+	description:
 
-    library:    "gobo/geant"
-    author:     "Sven Ehrke"
-    id:         "$Id$"
-    copyright:  ""
-    license:    "Eiffel Forum Freeware License v1 (see forum.txt)"
-    date:       "$Date$"
-    revision:   "$Revision$"
+		"gepp task"
+
+	library:    "Gobo Eiffel Ant"
+	author:     "Sven Ehrke <sven.ehrke@sven-ehrke.de>"
+	copyright:  "Copyright (c) 2001, Sven Ehrke and others"
+	license:    "Eiffel Forum Freeware License v1 (see forum.txt)"
+	date:       "$Date$"
+	revision:   "$Revision$"
 
 
 class GEANT_GEPP_TASK
