@@ -12,6 +12,22 @@ indexing
 
 class XM_NAMESPACE
 
+inherit
+
+	HASHABLE
+		redefine
+			out,
+			is_equal
+		end
+		
+	KL_IMPORTED_STRING_ROUTINES
+		export
+			{NONE} all
+		undefine
+			out, 
+			is_equal
+		end
+		
 creation
 
 	make
@@ -40,6 +56,47 @@ feature -- Access
 
 feature -- Status report
 
+	is_equal (other: like Current): BOOLEAN is
+			-- Are the two namespaces equal?
+		do
+			Result := (uri = other.uri) or else 
+				(uri /= Void and then STRING_.same_string (uri, other.uri))
+		ensure then
+			definition: Result implies (uri = other.uri or else STRING_.same_string (uri, other.uri))
+		end
+		
+	hash_code: INTEGER is
+			-- Hash code of URI.
+		do
+			if uri /= Void then
+				Result := uri.hash_code
+			end
+		end
+		
+	out: STRING is
+			-- Out.
+		do
+			if uri = Void then
+				Result := ""
+			else
+				Result := uri
+			end
+		end
+		 
+feature -- Status report
+
+	same_prefix (other: XM_NAMESPACE): BOOLEAN is
+			-- Same
+		do
+			Result := is_equal (other) and then
+				((ns_prefix = other.ns_prefix) or else
+					((ns_prefix /= Void and other.ns_prefix /= Void) and then STRING_.same_string (ns_prefix, other.ns_prefix)))
+		ensure
+			equal: Result implies is_equal (other)
+			same_prefix: Result implies 
+				(ns_prefix = other.ns_prefix or else STRING_.same_string (ns_prefix, other.ns_prefix))
+		end
+		
 	is_default: BOOLEAN is
 			-- Is `Current' a default namespace declaration?
 		do
