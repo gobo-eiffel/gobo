@@ -6,7 +6,7 @@ indexing
 		"Scanners for Eiffel parsers"
 
 	author:     "Eric Bezault <ericb@gobo.demon.co.uk>"
-	copyright:  "Copyright (c) 1997, Eric Bezault"
+	copyright:  "Copyright (c) 1998, Eric Bezault"
 	date:       "$Date$"
 	revision:   "$Revision$"
 
@@ -46,66 +46,65 @@ creation
 
 %%
 
-		--/** Separators **/
+----------/** Separators **/----------------------------------------------------
 
+[ \t\r]+			-- Ignore separators
 \n+					eif_lineno := eif_lineno + text_count
-[ \t\r]+			;
 
 
+----------/** Eiffel comments **/-----------------------------------------------
 
-		--/** Eiffel comments **/
-
+"--".*				-- Ignore comments
 "--".*\n[ \t\r]*	eif_lineno := eif_lineno + 1
-"--".*				;
 
 
+----------/** Eiffel symbols **/------------------------------------------------
 
-		--/**	Eiffel symbols **/
-
-"+"			last_token := Plus_code
-"-"			last_token := Minus_code
-"*"			last_token := Star_code
-"/"			last_token := Slash_code
-"^"			last_token := Caret_code
-"//"		last_token := E_DIV
-"\\\\"		last_token := E_MOD
-"="			last_token := Equal_code
-"/="		last_token := E_NE
-">"			last_token := Greater_than_code
-">="		last_token := E_GE
-"<"			last_token := Less_than_code
-"<="		last_token := E_LE
-"."			last_token := Dot_code
-";"			last_token := Semicolon_code
-","			last_token := Comma_code
-":"			last_token := Colon_code
-"!"			last_token := Exclamation_code
-"!!"		last_token := E_BANGBANG
-"->"		last_token := E_ARROW
-".."		last_token := E_DOTDOT
-"("			last_token := Left_parenthesis_code
-")"			last_token := Right_parenthesis_code
-"["			last_token := Left_bracket_code
-"]"			last_token := Right_bracket_code
-"{"			last_token := Left_brace_code
-"}"			last_token := Right_brace_code
-"<<"		last_token := E_LARRAY
-">>"		last_token := E_RARRAY
-":="		last_token := E_ASSIGN
-"?="		last_token := E_REVERSE
-"$"			last_token := Dollar_code
-
+"-"					last_token := Minus_code
+"+"					last_token := Plus_code
+"*"					last_token := Star_code
+"/"					last_token := Slash_code
+"^"					last_token := Caret_code
+"="					last_token := Equal_code
+">"					last_token := Greater_than_code
+"<"					last_token := Less_than_code
+"."					last_token := Dot_code
+";"					last_token := Semicolon_code
+","					last_token := Comma_code
+":"					last_token := Colon_code
+"!"					last_token := Exclamation_code
+"("					last_token := Left_parenthesis_code
+")"					last_token := Right_parenthesis_code
+"{"					last_token := Left_brace_code
+"}"					last_token := Right_brace_code
+"["					last_token := Left_bracket_code
+"]"					last_token := Right_bracket_code
+"$"					last_token := Dollar_code
+"//"				last_token := E_DIV
+"\\\\"				last_token := E_MOD
+"/="				last_token := E_NE
+">="				last_token := E_GE
+"<="				last_token := E_LE
+"!!"				last_token := E_BANGBANG
+"->"				last_token := E_ARROW
+".."				last_token := E_DOTDOT
+"<<"				last_token := E_LARRAY
+">>"				last_token := E_RARRAY
+":="				last_token := E_ASSIGN
+"?="				last_token := E_REVERSE
 
 
-		--/** Reserved words **/
+----------/** Reserved words **/------------------------------------------------
 
 [aA][lL][iI][aA][sS]					last_token := E_ALIAS
 [aA][lL][lL]							last_token := E_ALL
 [aA][nN][dD]							last_token := E_AND
 [aA][sS]								last_token := E_AS
+[bB][iI][tT]							last_token := E_BITTYPE
 [cC][hH][eE][cC][kK]					last_token := E_CHECK
 [cC][lL][aA][sS][sS]					last_token := E_CLASS
 [cC][rR][eE][aA][tT][iI][oO][nN]		last_token := E_CREATION
+[cC][uU][rR][rR][eE][nN][tT]			last_token := E_CURRENT
 [dD][eE][bB][uU][gG]					last_token := E_DEBUG
 [dD][eE][fF][eE][rR][rR][eE][dD]		last_token := E_DEFERRED
 [dD][oO]								last_token := E_DO
@@ -139,6 +138,7 @@ creation
 [oO][lL][dD]							last_token := E_OLD
 [oO][nN][cC][eE]						last_token := E_ONCE
 [oO][rR]								last_token := E_OR
+[pP][rR][eE][cC][uU][rR][sS][oO][rR]	last_token := E_PRECURSOR
 [pP][rR][eE][fF][iI][xX]			{
 										is_operator := True
 										last_token := E_PREFIX
@@ -147,6 +147,7 @@ creation
 [rR][eE][nN][aA][mM][eE]				last_token := E_RENAME
 [rR][eE][qQ][uU][iI][rR][eE]			last_token := E_REQUIRE
 [rR][eE][sS][cC][uU][eE]				last_token := E_RESCUE
+[rR][eE][sS][uU][lL][tT]				last_token := E_RESULT
 [rR][eE][tT][rR][yY]					last_token := E_RETRY
 [sS][eE][lL][eE][cC][tT]				last_token := E_SELECT
 [sS][eE][pP][aA][rR][aA][tT][eE]		last_token := E_SEPARATE
@@ -159,30 +160,33 @@ creation
 [vV][aA][rR][iI][aA][nN][tT]			last_token := E_VARIANT
 [wW][hH][eE][nN]						last_token := E_WHEN
 [xX][oO][rR]							last_token := E_XOR
-[cC][uU][rR][rR][eE][nN][tT]			last_token := E_CURRENT
-[rR][eE][sS][uU][lL][tT]				last_token := E_RESULT
 
 
-
-		--/** Eiffel identifiers **/
+----------/** Eiffel identifiers **/--------------------------------------------
 
 [a-zA-Z][a-zA-Z0-9_]*	{
-							last_token := E_IDENTIFIER
-							last_value := text
-						}
+				last_token := E_IDENTIFIER
+				last_value := text
+			}
 
 
-		--/** Eiffel free operators **/
+----------/** Eiffel free operators **/-----------------------------------------
 
-[@#|&][^%" \t\r\n]*		{
-							last_token := E_FREEOP
-							last_value := text
-						}
+[@#|&][^%" \t\r\n]*	{
+				last_token := E_FREEOP
+				last_value := text
+			}
+
+		-- Note: Accepts non-printable characters as well,
+		-- provided that they are not break characters.
 
 
-		--/** Eiffel characters **/
+----------/** Eiffel characters **/---------------------------------------------
 
 \'[^%\n']\'			last_token := E_CHARACTER; last_value := text_item (2)
+	-- The following line is not correct Eiffel but
+	-- it appears in some Halstenbach Eiffel libraries.
+\'\'\'				last_token := E_CHARACTER; last_value := '%''
 \'%A\'				last_token := E_CHARACTER; last_value := '%A'
 \'%B\'				last_token := E_CHARACTER; last_value := '%B'
 \'%C\'				last_token := E_CHARACTER; last_value := '%C'
@@ -213,12 +217,15 @@ creation
 							last_value := INTEGER_.to_character (code_)
 						end
 					}
+	-- The following line is not correct Eiffel but
+	-- it appears in some Visual Eiffel libraries.
+\'%.\'				last_token := E_CHARACTER; last_value := text_item (3)
+
 \'.{1,2}			|
 \'%\/[0-9]+(\/)?	last_token := E_CHARERR	-- Catch-all rules (no backing up)
 
 
-
-		--/** Eiffel strings **/
+----------/** Eiffel strings **/------------------------------------------------
 
 \"\+\"								last_token := process_operator (E_STRPLUS)
 \"-\"								last_token := process_operator (E_STRMINUS)
@@ -288,7 +295,11 @@ creation
 				eif_buffer.append_character (INTEGER_.to_character (code_))
 			end
 		}
-<IN_STR>%\n[ \t\r]*%	eif_lineno := eif_lineno + 1
+-- The following line should be:
+--		<IN_STR>%\n[ \t\r]*%	eif_lineno := eif_lineno + 1
+-- but some Eiffel classes in Halstenbach libraries
+-- have a space after the % character!
+<IN_STR>%[ \t\r]*\n[ \t\r]*%	eif_lineno := eif_lineno + 1
 <IN_STR>[^%\n"]*\"		{
 			last_token := E_STRING
 			if text_count > 1 then
@@ -300,8 +311,12 @@ creation
 			last_value := str_
 			set_start_condition (INITIAL)
 		}
+	-- The following line is not correct Eiffel
+	-- but is used in Visual Eiffel.
+<IN_STR>%.			eif_buffer.append_character (text_item (2))
+
 <IN_STR>.					|
-<IN_STR>%\n[ \t\r]*			|
+<IN_STR>%[ \t\r]*\n[ \t\r]*	|
 <IN_STR>%\/([0-9]+(\/)?)?	|
 <IN_STR><<EOF>>			{	-- Catch-all rules (no backing up)
 							last_token := E_STRERR
@@ -309,19 +324,12 @@ creation
 						}
 
 
+----------/** Eiffel bits **/---------------------------------------------------
 
-		--/** Eiffel bits **/
-
-[0-1]+[bB]					last_token := E_BIT; last_value := text
-[bB][iI][tT][ \t]+[0-9]+	last_token := E_BITTYPE; last_value := text
-[bB][iI][tT][ \t]+			{
-								last_token := E_IDENTIFIER
-								last_value := text_substring (1, 3)
-							}
+[0-1]+[bB]			last_token := E_BIT; last_value := text
 
 
-
-		--/** Eiffel integers **/
+----------/** Eiffel integers **/-----------------------------------------------
 
 [0-9]+				{
 						last_token := E_INTEGER
@@ -344,8 +352,7 @@ creation
 [0-9_]+				last_token := E_INTERR	-- Catch-all rule (no backing up)
 
 
-
-		--/** Eiffel reals **/
+---------/** Eiffel reals **/---------------------------------------------------
 
 [0-9]+\./[^.0-9]					|
 [0-9]+\.[0-9]*[eE][+-]?[0-9]+		|
@@ -353,7 +360,7 @@ creation
 						last_token := E_REAL
 						last_value := text.to_double
 					}
-[0-9]{1,3}(_[0-9]{3})+\./[^.0-9]									|
+[0-9]{1,3}(_[0-9]{3})+\./[^.0-9]	|
 [0-9]{1,3}(_[0-9]{3})*\.([0-9]{1,3}(_[0-9]{3})*)?[eE][+-]?[0-9]{1,3}(_[0-9]{3})*	|
 ([0-9]{1,3}(_[0-9]{3})*)?\.[0-9]{1,3}(_[0-9]{3})*([eE][+-]?[0-9]{1,3}(_[0-9]{3})*)?	{
 						last_token := E_REAL
@@ -369,17 +376,17 @@ creation
 						last_value := eif_buffer.to_double
 						eif_buffer.wipe_out
 					}
-[0-9_]+/\.								|
-[0-9_]+\.[0-9_]*[eE][+-]?[0-9_]*		|
-[0-9_]*\.[0-9_]+([eE][+-]?[0-9_]*)?	{	-- Catch-all rules (no backing up)
-						last_token := E_REALERR
-					}
 
+		-- The first and fourth expressions use a trailing context
+		-- to make sure that an integer followed by two dots is
+		-- not recognized as a real followed by a dot.
 
+--------------------------------------------------------------------------------
 
 <<EOF>>			terminate
-.				last_token := E_UNKNOWN
+.				last_token := text_item (1).code
 
+--------------------------------------------------------------------------------
 %%
 
 feature {NONE} -- Local variables
