@@ -184,15 +184,27 @@ ESC					\\(.|[0-7]{1,3}|x[0-9a-f]{1,2})
 					action_buffer.append_string (text)
 				}
 	"$$"		{
-					process_dollar_dollar (rule)
+					if rule /= Void then
+						process_dollar_dollar (rule)
+					else
+						action_buffer.append_string ("$$")
+					end
 				}
 	\$[0-9]+	{
 					check is_integer: STRING_.is_integer (text_substring (2, text_count)) end
-					process_dollar_n (text_substring (2, text_count).to_integer, rule)
+					if rule /= Void then
+						process_dollar_n (text_substring (2, text_count).to_integer, rule)
+					else
+						action_buffer.append_string (text)
+					end
 				}
 	\$\-[0-9]+	{
 					check is_integer: STRING_.is_integer (text_substring (3, text_count)) end
-					process_dollar_n (- text_substring (3, text_count).to_integer, rule)
+					if rule /= Void then
+						process_dollar_n (- text_substring (3, text_count).to_integer, rule)
+					else
+						action_buffer.append_string (text)
+					end
 				}
 	"{"			{
 					action_buffer.append_character ('{')
