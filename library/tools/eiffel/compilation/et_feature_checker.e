@@ -562,6 +562,27 @@ feature -- Validity checking
 									an_actual_list.put (a_convert_expression, i)
 								end
 							end
+						elseif
+							current_class /= a_class_impl and
+							(current_class = universe.boolean_class or
+							current_class = universe.character_class or
+							current_class = universe.wide_character_class or
+							current_class = universe.integer_class or
+							current_class = universe.integer_8_class or
+							current_class = universe.integer_16_class or
+							current_class = universe.integer_32_class or
+							current_class = universe.integer_64_class or
+							current_class = universe.natural_class or
+							current_class = universe.natural_8_class or
+							current_class = universe.natural_16_class or
+							current_class = universe.natural_32_class or
+							current_class = universe.natural_64_class or
+							current_class = universe.real_class or
+							current_class = universe.double_class or
+							current_class = universe.pointer_class or
+							current_class = universe.typed_pointer_class)
+						then
+							-- Compatibility with ISE 5.6.0610.
 						else
 							had_error := True
 							set_fatal_error
@@ -1636,6 +1657,26 @@ feature {NONE} -- Instruction validity
 							an_instruction.set_source (a_convert_expression)
 							report_assignment (an_instruction)
 						end
+					elseif
+						current_class /= a_class_impl and
+						(current_class = universe.boolean_class or
+						current_class = universe.character_class or
+						current_class = universe.wide_character_class or
+						current_class = universe.integer_class or
+						current_class = universe.integer_8_class or
+						current_class = universe.integer_16_class or
+						current_class = universe.integer_32_class or
+						current_class = universe.integer_64_class or
+						current_class = universe.natural_class or
+						current_class = universe.natural_8_class or
+						current_class = universe.natural_16_class or
+						current_class = universe.natural_32_class or
+						current_class = universe.natural_64_class or
+						current_class = universe.real_class or
+						current_class = universe.double_class or
+						current_class = universe.pointer_class)
+					then
+						-- Compatibility with ISE 5.6.0610.
 					else
 						set_fatal_error
 						a_source_named_type := a_source_context.named_type (universe)
@@ -2778,7 +2819,6 @@ feature {NONE} -- Expression validity
 		local
 			a_convert_feature: ET_CONVERT_FEATURE
 			an_actuals: ET_ACTUAL_ARGUMENTS
-			a_builtin: ET_BUILTIN_CONVERT_FEATURE
 		do
 			a_convert_feature := an_expression.convert_feature
 			if a_convert_feature.is_convert_from then
@@ -2789,16 +2829,7 @@ feature {NONE} -- Expression validity
 				check_expression_validity (an_expression.expression, a_context, current_target_type, feature_impl, current_feature, current_type)
 				an_expression.set_index (an_expression.expression.index)
 				a_context.reset (current_type)
-				a_builtin ?= an_expression.convert_feature
-				if a_builtin /= Void then
-						-- Needed for compatibility with ISE 5.6.0610:
-						-- a formal generic parameter either conforms or converts to its constraint,
-						-- then the converted version can still be chained with a conformance to
-						-- `current_target_type'.
-					a_context.force_last (a_builtin.type)
-				else
-					a_context.force_last (current_target_type.named_type (universe))
-				end
+				a_context.force_last (current_target_type.named_type (universe))
 			end
 		end
 
@@ -3643,6 +3674,7 @@ feature {NONE} -- Expression validity
 			l_formal_type: ET_TYPE
 			any_type: ET_CLASS_TYPE
 			a_cast_expression: ET_INFIX_CAST_EXPRESSION
+			a_builtin: ET_BUILTIN_CONVERT_FEATURE
 		do
 			has_fatal_error := False
 			a_name := an_expression.name
@@ -3957,8 +3989,21 @@ feature {NONE} -- Expression validity
 							formal_context.copy_type_context (a_context)
 							formal_context.force_last (a_feature.arguments.formal_argument (1).type)
 							a_context.wipe_out
-							check_subexpression_validity (an_expression.right, a_context, formal_context)
+							an_actual := an_expression.right
+							check_subexpression_validity (an_actual, a_context, formal_context)
 							if not has_fatal_error then
+								a_convert_expression ?= an_actual
+								if a_convert_expression /= Void then
+									a_builtin ?= a_convert_expression.convert_feature
+									if a_builtin /= Void then
+											-- Needed for compatibility with ISE 5.6.0610:
+											-- a formal generic parameter either conforms or converts to its constraint,
+											-- then the converted version can still be chained with a conformance to
+											-- `current_target_type'.
+										a_context.reset (current_type)
+										a_context.force_last (a_builtin.type)
+									end
+								end
 								formal_context.remove_last
 								report_qualified_call_expression (an_expression, an_expression, formal_context, a_feature)
 							end
@@ -4414,6 +4459,9 @@ feature {NONE} -- Expression validity
 			a_like: ET_LIKE_FEATURE
 			any_type: ET_CLASS_TYPE
 			had_error: BOOLEAN
+			an_actual: ET_EXPRESSION
+			a_convert_expression: ET_CONVERT_EXPRESSION
+			a_builtin: ET_BUILTIN_CONVERT_FEATURE
 		do
 			has_fatal_error := False
 			a_target := a_call.target
@@ -4520,8 +4568,21 @@ feature {NONE} -- Expression validity
 									formal_context.copy_type_context (a_context)
 									formal_context.force_last (a_feature.arguments.formal_argument (1).type)
 									a_context.wipe_out
-									check_subexpression_validity (an_actuals.actual_argument (1), a_context, formal_context)
+									an_actual := an_actuals.actual_argument (1)
+									check_subexpression_validity (an_actual, a_context, formal_context)
 									if not has_fatal_error then
+										a_convert_expression ?= an_actual
+										if a_convert_expression /= Void then
+											a_builtin ?= a_convert_expression.convert_feature
+											if a_builtin /= Void then
+													-- Needed for compatibility with ISE 5.6.0610:
+													-- a formal generic parameter either conforms or converts to its constraint,
+													-- then the converted version can still be chained with a conformance to
+													-- `current_target_type'.
+												a_context.reset (current_type)
+												a_context.force_last (a_builtin.type)
+											end
+										end
 										formal_context.remove_last
 										report_qualified_call_expression (an_expression, a_call, formal_context, a_feature)
 									end
@@ -5313,6 +5374,9 @@ feature {NONE} -- Expression validity
 			a_locals: ET_LOCAL_VARIABLE_LIST
 			a_like: ET_LIKE_FEATURE
 			had_error: BOOLEAN
+			an_actual: ET_EXPRESSION
+			a_convert_expression: ET_CONVERT_EXPRESSION
+			a_builtin: ET_BUILTIN_CONVERT_FEATURE
 		do
 			has_fatal_error := False
 			a_name := a_call.name
@@ -5476,7 +5540,20 @@ feature {NONE} -- Expression validity
 									formal_context.reset (current_type)
 									formal_context.force_last (a_feature.arguments.formal_argument (1).type)
 									a_context.wipe_out
-									check_subexpression_validity (an_actuals.actual_argument (1), a_context, formal_context)
+									an_actual := an_actuals.actual_argument (1)
+									check_subexpression_validity (an_actual, a_context, formal_context)
+									a_convert_expression ?= an_actual
+									if a_convert_expression /= Void then
+										a_builtin ?= a_convert_expression.convert_feature
+										if a_builtin /= Void then
+												-- Needed for compatibility with ISE 5.6.0610:
+												-- a formal generic parameter either conforms or converts to its constraint,
+												-- then the converted version can still be chained with a conformance to
+												-- `current_target_type'.
+											a_context.reset (current_type)
+											a_context.force_last (a_builtin.type)
+										end
+									end
 								else
 									a_context.force_last (a_type)
 								end
