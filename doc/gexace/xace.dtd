@@ -19,7 +19,7 @@
 
 <!-- Definition for <system/> follows -->
 
-<!ELEMENT system (description,root,(systemOption|cluster|mount)+)>
+<!ELEMENT system (description,root,(option|cluster|mount)+)>
 <!ATTLIST system
   name CDATA #REQUIRED>
 
@@ -33,18 +33,18 @@
   if CDATA #IMPLIED
   unless CDATA #IMPLIED">
 
-<!ELEMENT cluster (clusterOption|class)*>
+<!ELEMENT cluster (option|cluster|class)*>
 <!ATTLIST cluster
   name CDATA #REQUIRED
   location CDATA #IMPLIED
   %ifUnless;>
 
-<!ELEMENT class (classOption|feature)*>
+<!ELEMENT class (option|feature)*>
 <!ATTLIST class
   name CDATA #REQUIRED
   %ifUnless;>
 
-<!ELEMENT feature (featureOption)*>
+<!ELEMENT feature (option)*>
 <!ATTLIST feature
   name CDATA #REQUIRED
   %ifUnless;>
@@ -54,50 +54,8 @@
   location CDATA #REQUIRED
   %ifUnless;>
 
-<!-- system options -->
-
-<!ELEMENT systemOption (systemOption)*>
-<!ATTLIST systemOption
-  name (address_expression|arguments|array_optimization|assertion
-        |case_insensitive|check_vape|clean|cls_compliant
-        |console_application|create_keyword_extension|dead_code_removal
-        |debug|debug_tag|debugger|document|dotnet_naming_convention
-        |dynamic_runtime|exception_trace|finalize|flat_fst_optimization
-        |fst_expansion_factor|fst_optimization|garbage_collector|gc_info
-        |header|heap_size|high_memory_compiler|il_verifiable|inlining
-        |inlining_size|jumps_optimization|layout_optimization
-        |leaves_optimization|line_generation|link|linker
-        |linux_fpu_double_precision|manifest_string_trace|map
-        |msil_generation|multithreaded|no_default_lib|override_cluster
-        |portable_code_generation|precompiled|profile
-        |reloads_optimization|shared_library_definition|split|stack_size
-        |storable_filename|strip|target|trace|verbose|visible_filename
-        |warning|wedit) #IMPLIED
+<!ELEMENT option (option)*>
+<!ATTLIST option
+  name CDATA #IMPLIED
   value CDATA #IMPLIED
-  %ifUnless;>
-
-<!-- cluster options -->
-
-<!ELEMENT clusterOption (clusterOption)*>
-<!ATTLIST clusterOption
-  name (abstract|assembly|assertion|component|culture|debug|debug_tag
-        |document|exclude|header|include|link|prefix|profile
-        |public_key_token|recursive|storable|trace|version) #IMPLIED
-  value CDATA #REQUIRED
-  %ifUnless;>
-
-<!-- class options -->
-
-<!ELEMENT classOption (classOption)*>
-<!ATTLIST classOption
-  name (assertion|debug|debug_tag|export|storable|trace) #IMPLIED
-  value CDATA #REQUIRED
-  %ifUnless;>
-
-<!-- feature options -->
-
-<!ELEMENT featureOption (featureOption)*>
-<!ATTLIST featureOption
-  name (export) #IMPLIED
-  value CDATA #REQUIRED
   %ifUnless;>

@@ -47,7 +47,7 @@
       </element>
 			<oneOrMore>
 				<choice>
-					<ref name="systemOptions"/>
+					<ref name="option"/>
 					<ref name="cluster"/>
 					<ref name="mount"/>
 				</choice>
@@ -72,7 +72,7 @@
 			<ref name="ifUnless"/>
 			<zeroOrMore>
 				<choice>
-					<ref name="clusterOptions"/>
+					<ref name="option"/>
 					<ref name="cluster"/>
 					<ref name="class"/>
 				</choice>
@@ -86,7 +86,7 @@
 			<ref name="ifUnless"/>
 			<zeroOrMore>
 				<choice>
-					<ref name="classOptions"/>
+					<ref name="option"/>
 					<ref name="feature"/>
 				</choice>
 			</zeroOrMore>
@@ -98,7 +98,7 @@
 			<attribute name="name"/>
 			<ref name="ifUnless"/>
 			<zeroOrMore>
-				<ref name="featureOptions"/>
+				<ref name="option"/>
 			</zeroOrMore>
 		</element>
 	</define>
@@ -110,161 +110,18 @@
     </element>
   </define>
 
-	<!-- system options -->
-	<define name="systemOptions">
-		<element name="systemOption">
+	<define name="option">
+		<element name="option">
 			<optional>
-				<attribute name="name">
-					<choice>
-						<value>address_expression</value>
-						<value>arguments</value>
-						<value>array_optimization</value>
-						<value>assertion</value>
-						<value>case_insensitive</value>
-						<value>check_vape</value>
-						<value>clean</value>
-						<value>cls_compliant</value>
-						<value>console_application</value>
-						<value>create_keyword_extension</value>
-						<value>dead_code_removal</value>
-						<value>debug</value>
-						<value>debug_tag</value>
-						<value>debugger</value>
-						<value>document</value>
-						<value>dotnet_naming_convention</value>
-						<value>dynamic_runtime</value>
-						<value>exception_trace</value>
-						<value>finalize</value>
-						<value>flat_fst_optimization</value>
-						<value>fst_expansion_factor</value>
-						<value>fst_optimization</value>
-						<value>garbage_collector</value>
-						<value>gc_info</value>
-						<value>header</value>
-						<value>heap_size</value>
-						<value>high_memory_compiler</value>
-						<value>il_verifiable</value>
-						<value>inlining</value>
-						<value>inlining_size</value>
-						<value>jumps_optimization</value>
-						<value>layout_optimization</value>
-						<value>leaves_optimization</value>
-						<value>line_generation</value>
-						<value>link</value>
-						<value>linker</value>
-						<value>linux_fpu_double_precision</value>
-						<value>manifest_string_trace</value>
-						<value>map</value>
-						<value>msil_generation</value>
-						<value>multithreaded</value>
-						<value>no_default_lib</value>
-						<value>override_cluster</value>
-						<value>portable_code_generation</value>
-						<value>precompiled</value>
-						<value>profile</value>
-						<value>reloads_optimization</value>
-						<value>shared_library_definition</value>
-						<value>split</value>
-						<value>stack_size</value>
-						<value>storable_filename</value>
-						<value>strip</value>
-						<value>target</value>
-						<value>trace</value>
-						<value>verbose</value>
-						<value>visible_filename</value>
-						<value>warning</value>
-						<value>wedit</value>
-					</choice>
-				</attribute>
+				<attribute name="name"/>
 				<attribute name="value"/>
 			</optional>
 			<ref name="ifUnless"/>
       <zeroOrMore>
-        <ref name="systemOptions"/>
+        <ref name="option"/>
       </zeroOrMore>
 		</element>
 	</define>
-
-
-	<!-- cluster options -->
-	<define name="clusterOptions">
-		<element name="clusterOption">
-			<optional>
-				<attribute name="name">
-					<choice>
-						<value>abstract</value>
-						<value>assembly</value>
-						<value>assertion</value>
-						<value>component</value>
-						<value>culture</value>
-						<value>debug</value>
-						<value>debug_tag</value>
-						<value>document</value>
-						<value>exclude</value>
-						<value>header</value>
-						<value>include</value>
-						<value>link</value>
-						<value>prefix</value>
-						<value>profile</value>
-						<value>public_key_token</value>
-						<value>recursive</value>
-						<value>storable</value>
-						<value>trace</value>
-						<value>version</value>
-					</choice>
-				</attribute>
-			</optional>
-			<attribute name="value"/>
-			<ref name="ifUnless"/>
-      <zeroOrMore>
-        <ref name="clusterOptions"/>
-      </zeroOrMore>
-		</element>
-	</define>
-
-
-	<!-- class options -->
-	<define name="classOptions">
-		<element name="classOption">
-			<optional>
-				<attribute name="name">
-					<choice>
-						<value>assertion</value>
-						<value>debug</value>
-						<value>debug_tag</value>
-						<value>export</value>
-						<value>storable</value>
-						<value>trace</value>
-					</choice>
-				</attribute>
-			</optional>
-			<attribute name="value"/>
-			<ref name="ifUnless"/>
-      <zeroOrMore>
-        <ref name="classOptions"/>
-      </zeroOrMore>
-		</element>
-	</define>
-
-
-	<!-- feature options -->
-	<define name="featureOptions">
-		<element name="featureOption">
-			<optional>
-				<attribute name="name">
-					<choice>
-						<value>export</value>
-					</choice>
-				</attribute>
-			</optional>
-			<attribute name="value"/>
-			<ref name="ifUnless"/>
-      <zeroOrMore>
-        <ref name="featureOptions"/>
-      </zeroOrMore>
-		</element>
-	</define>
-
 
 	<!-- if and unless attributes can be used on most elements -->
 	<define name="ifUnless">
