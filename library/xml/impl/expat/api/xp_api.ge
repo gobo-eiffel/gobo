@@ -300,11 +300,11 @@ feature {NONE} -- various
 #endif
 		do
 #ifdef ISE
-			c_str := str.to_c
+			c_str := base.to_c
 			Result := ext_exml_XML_SetBase (parser_handle, $c_str)
 #endif
 #ifdef SE
-			Result := ext_exml_XML_SetBase (parser_handle, str.to_external)
+			Result := ext_exml_XML_SetBase (parser_handle, base.to_external)
 #endif
 		end
 
