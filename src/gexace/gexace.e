@@ -263,17 +263,12 @@ feature {NONE} -- Command-line processing
 			a_command_not_void: a_command /= Void
 		local
 			a_filename: STRING
-			a_cursor: DS_LINEAR_CURSOR [ET_XACE_GENERATOR]
 		do
 			if match_long_option ("output") then
 				if is_next_option_long_option and then has_next_option_value then
 					a_filename := next_option_value
 					consume_option
-					a_cursor := a_command.generators.new_cursor
-					from a_cursor.start until a_cursor.after loop
-						a_cursor.item.set_output_filename (a_filename)
-						a_cursor.forth
-					end
+					a_command.set_output_filename (a_filename)
 				else
 						-- No filename specified.
 					report_usage_error

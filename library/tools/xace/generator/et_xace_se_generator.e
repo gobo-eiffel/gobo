@@ -25,60 +25,31 @@ creation
 
 feature -- Access
 
-	ace_filename: STRING is "se.ace"
+	default_system_output_filename: STRING is "se.ace"
 			-- Name of generated Ace file
+
+	default_library_output_filename: STRING is "loadpath.se"
+			-- Name of generated loadpath file
 
 	cecil_filename: STRING is "cecil.se"
 			-- Name of generated cecil file
 
-	loadpath_filename: STRING is "loadpath.se"
-			-- Name of generated loadpath file
-
 feature -- Output
 
-	generate_system (a_system: ET_XACE_SYSTEM) is
+	generate_system (a_system: ET_XACE_SYSTEM; a_file: KI_TEXT_OUTPUT_STREAM) is
 			-- Generate a new Ace file from `a_system'.
-		local
-			a_filename: STRING
-			a_file: KL_TEXT_OUTPUT_FILE
 		do
-			if output_filename /= Void then
-				a_filename := output_filename
-			else
-				a_filename := ace_filename
-			end
-			create a_file.make (a_filename)
-			a_file.open_write
-			if a_file.is_open_write then
-				print_ace_file (a_system, a_file)
-				a_file.close
-			else
-				error_handler.report_cannot_write_file_error (a_filename)
-			end
+			print_ace_file (a_system, a_file)
 		end
 
-	generate_library (a_library: ET_XACE_LIBRARY) is
+	generate_library (a_library: ET_XACE_LIBRARY; a_file: KI_TEXT_OUTPUT_STREAM) is
 			-- Generate a new Ace file from `a_library'.
 		local
-			a_filename: STRING
-			a_file: KL_TEXT_OUTPUT_FILE
 			a_clusters: ET_XACE_CLUSTERS
 		do
-			if output_filename /= Void then
-				a_filename := output_filename
-			else
-				a_filename := loadpath_filename
-			end
-			create a_file.make (a_filename)
-			a_file.open_write
-			if a_file.is_open_write then
-				a_clusters := a_library.clusters
-				if a_clusters /= Void then
-					print_loadpath_clusters (a_clusters, a_file)
-				end
-				a_file.close
-			else
-				error_handler.report_cannot_write_file_error (a_filename)
+			a_clusters := a_library.clusters
+			if a_clusters /= Void then
+				print_loadpath_clusters (a_clusters, a_file)
 			end
 		end
 

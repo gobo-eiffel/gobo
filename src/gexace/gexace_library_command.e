@@ -73,10 +73,26 @@ feature -- Execution
 			a_library_name_not_empty: a_library.name.count > 0
 		local
 			a_cursor: DS_LINKED_LIST_CURSOR [ET_XACE_GENERATOR]
+			a_generator: ET_XACE_GENERATOR
+			a_filename: STRING
+			a_file: KL_TEXT_OUTPUT_FILE
 		do
 			a_cursor := generators.new_cursor
 			from a_cursor.start until a_cursor.after loop
-				a_cursor.item.generate_library (a_library)
+				a_generator := a_cursor.item
+				if output_filename /= Void then
+					a_filename := output_filename
+				else
+					a_filename := a_generator.default_library_output_filename
+				end
+				create a_file.make (a_filename)
+				a_file.open_write
+				if a_file.is_open_write then
+					a_generator.generate_library (a_library, a_file)
+					a_file.close
+				else
+					error_handler.report_cannot_write_file_error (a_filename)
+				end
 				a_cursor.forth
 			end
 		end

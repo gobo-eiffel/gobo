@@ -36,8 +36,19 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	output_filename: STRING
-			-- Output filename
+	default_system_output_filename: STRING is
+			-- Default system output filename
+		deferred
+		ensure
+			default_system_output_filename_not_void: Result /= Void
+		end
+
+	default_library_output_filename: STRING is
+			-- Default library output filename
+		deferred
+		ensure
+			default_library_output_filename_not_void: Result /= Void
+		end
 
 	variables: KL_VALUES [STRING, STRING]
 			-- Defined variables
@@ -45,19 +56,9 @@ feature -- Access
 	error_handler: ET_XACE_ERROR_HANDLER
 			-- Error handler
 
-feature -- Setting
-
-	set_output_filename (a_filename: like output_filename) is
-			-- Set `output_filename' to `a_filename'.
-		do
-			output_filename := a_filename
-		ensure
-			output_filename_set: output_filename = a_filename
-		end
-
 feature -- Output
 
-	generate_system (a_system: ET_XACE_SYSTEM) is
+	generate_system (a_system: ET_XACE_SYSTEM; a_file: KI_TEXT_OUTPUT_STREAM) is
 			-- Generate a new Ace file from `a_system'.
 		require
 			a_system_not_void: a_system /= Void
@@ -67,15 +68,19 @@ feature -- Output
 			root_class_name_not_empty: a_system.root_class_name.count > 0
 			creation_procedure_name_not_void: a_system.creation_procedure_name /= Void
 			creation_procedure_name_not_empty: a_system.creation_procedure_name.count > 0
+			a_file_not_void: a_file /= Void
+			a_file_open_write: a_file.is_open_write
 		deferred
 		end
 
-	generate_library (a_library: ET_XACE_LIBRARY) is
+	generate_library (a_library: ET_XACE_LIBRARY; a_file: KI_TEXT_OUTPUT_STREAM) is
 			-- Generate a new Ace file from `a_library'.
 		require
 			a_library_not_void: a_library /= Void
 			a_library_name_not_void: a_library.name /= Void
 			a_library_name_not_empty: a_library.name.count > 0
+			a_file_not_void: a_file /= Void
+			a_file_open_write: a_file.is_open_write
 		deferred
 		end
 

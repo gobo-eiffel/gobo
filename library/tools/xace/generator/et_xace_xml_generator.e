@@ -25,8 +25,11 @@ creation
 
 feature -- Access
 
-	xml_filename: STRING is "xace.xml"
+	default_system_output_filename: STRING is "xace.xml"
 			-- Name of generated XML file
+
+	default_library_output_filename: STRING is "xace.xml"
+			-- Name of generated library XML file
 
 feature -- Status report
 
@@ -45,46 +48,16 @@ feature -- Status setting
 
 feature -- Output
 
-	generate_system (a_system: ET_XACE_SYSTEM) is
+	generate_system (a_system: ET_XACE_SYSTEM; a_file: KI_TEXT_OUTPUT_STREAM) is
 			-- Generate a new XML file from `a_system'.
-		local
-			a_filename: STRING
-			a_file: KL_TEXT_OUTPUT_FILE
 		do
-			if output_filename /= Void then
-				a_filename := output_filename
-			else
-				a_filename := xml_filename
-			end
-			create a_file.make (a_filename)
-			a_file.open_write
-			if a_file.is_open_write then
-				print_xml_system_file (a_system, a_file)
-				a_file.close
-			else
-				error_handler.report_cannot_write_file_error (a_filename)
-			end
+			print_xml_system_file (a_system, a_file)
 		end
 
-	generate_library (a_library: ET_XACE_LIBRARY) is
+	generate_library (a_library: ET_XACE_LIBRARY; a_file: KI_TEXT_OUTPUT_STREAM) is
 			-- Generate a new Ace file from `a_library'.
-		local
-			a_filename: STRING
-			a_file: KL_TEXT_OUTPUT_FILE
 		do
-			if output_filename /= Void then
-				a_filename := output_filename
-			else
-				a_filename := xml_filename
-			end
-			create a_file.make (a_filename)
-			a_file.open_write
-			if a_file.is_open_write then
-				print_xml_library_file (a_library, a_file)
-				a_file.close
-			else
-				error_handler.report_cannot_write_file_error (a_filename)
-			end
+			print_xml_library_file (a_library, a_file)
 		end
 
 feature {NONE} -- Output
