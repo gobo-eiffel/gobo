@@ -16,7 +16,7 @@ Version ?
 	* Added command-line option  --pragma=[no]line  in order for
 	  the code generated for the semantic actions to contain or
 	  not indication about the line number where it originally
-	  appeared in the input description file. 
+	  appeared in the input description file.
 	* Fixed bug in '%option line'.
 
 	geyacc:
@@ -24,7 +24,7 @@ Version ?
 	* Added command-line option  --pragma=[no]line  in order for
 	  the code generated for the semantic actions to contain or
 	  not indication about the line number where it originally
-	  appeared in the input description file. 
+	  appeared in the input description file.
 
 	Gobo Eiffel XML Library:
 
@@ -42,10 +42,11 @@ Version ?
 	* Parser defaults to new STRING-only latin-1 mode.
 	* Parser correctly outputs PUBLIC identifier in DOCTYPE.
 	* Parser leaves XML resolver in correct state.
-	* XM_PARSER.positions contains full info to locate errors 
+	* XM_PARSER.positions contains full info to locate errors
 	  in external entities.
 	* Eiffel parser accepts UTF8 files that start with a BOM.
-	
+  * Expat parser accepts genuine UC_STRINGs as input.
+
 	Gobo Eiffel Kernel Library
 
 	* KL_DOUBLE_ROUTINES.log2: new feature.
@@ -54,8 +55,8 @@ Version ?
 	Gobo Eiffel String Library
 
 	* New library.
-	* Contains the Formatter Library (note that unlike the imported 
-	  library, the array-based formatter requires DS_CELL items for 
+	* Contains the Formatter Library (note that unlike the imported
+	  library, the array-based formatter requires DS_CELL items for
 	  basic types, rather than accepting the _REF types).
 	* ST_SPLITTER: parse a string to and from lists of tokens.
 
