@@ -345,6 +345,14 @@ feature -- Status report
 			definition: Result = (declared_jumps_optimization /= Void and then not declared_jumps_optimization.is_undefined)
 		end
 
+	is_layout_declared: BOOLEAN is
+			-- Has 'layout' option been declared?
+		do
+			Result := declared_layout /= Void and then not declared_layout.is_empty
+		ensure
+			definition: Result = (declared_layout /= Void and then not declared_layout.is_empty)
+		end
+
 	is_layout_optimization_declared: BOOLEAN is
 			-- Has 'layout_optimization' option been declared?
 		do
@@ -1032,6 +1040,19 @@ feature -- Option values
 			else
 				Result := default_jumps_optimization
 			end
+		end
+
+	layout: STRING is
+			-- 'layout' option
+		do
+			if is_layout_declared then
+				Result := declared_layout
+			else
+				Result := default_layout
+			end
+		ensure
+			layout_not_void: Result /= Void
+			valid_layout: valid_layout.has (Result)
 		end
 
 	layout_optimization: BOOLEAN is
@@ -1946,6 +1967,17 @@ feature -- Status setting
 			jumps_optimization_set: jumps_optimization = b
 		end
 
+	set_layout (a_value: STRING) is
+			-- Set `layout' to `a_value'.
+		require
+			a_value_valid: valid_layout.has (a_value)
+		do
+			declared_layout := a_value
+		ensure
+			layout_declared: is_layout_declared
+			layout_set: layout = a_value
+		end
+
 	set_layout_optimization (b: BOOLEAN) is
 			-- Set `layout_optimization' to `b'.
 		do
@@ -2485,6 +2517,20 @@ feature -- Valid values
 			-- all_lower: forall v in Result, v.is_lower
 		end
 
+	valid_layout: DS_HASH_SET [STRING] is
+			-- Valid values for 'layout' option
+		once
+			create Result.make (2)
+			Result.set_equality_tester (string_equality_tester)
+			Result.put_last (options.auto_value)
+			Result.put_last (options.sequential_value)
+		ensure
+			valid_layout_not_void: Result /= Void
+			valid_layout_not_empty: not Result.is_empty
+			no_void_value: not Result.has (Void)
+			-- all_lower: forall v in Result, v.is_lower
+		end
+
 	valid_linker: DS_HASH_SET [STRING] is
 			-- Valid values for 'linker' option
 		once
@@ -2649,6 +2695,9 @@ feature -- Declared values
 
 	declared_jumps_optimization: UT_TRISTATE
 			-- Declared value for 'jumps_optimization' option
+
+	declared_layout: STRING
+			-- Declared value for 'layout' option
 
 	declared_layout_optimization: UT_TRISTATE
 			-- Declared value for 'layout_optimization' option
@@ -2953,6 +3002,14 @@ feature -- Default values
 
 	default_jumps_optimization: BOOLEAN is False
 			-- Default value for 'jumps_optimization' option
+
+	default_layout: STRING is
+			-- Default value for 'layout' option
+		once
+			Result := options.auto_value
+		ensure
+			valid_default_layout: valid_layout.has (Result)
+		end
 
 	default_layout_optimization: BOOLEAN is False
 			-- Default value for 'layout_optimization' option

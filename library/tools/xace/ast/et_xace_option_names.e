@@ -53,6 +53,7 @@ feature -- Option names
 	inlining_name: STRING is "inlining"
 	inlining_size_name: STRING is "inlining_size"
 	jumps_optimization_name: STRING is "jumps_optimization"
+	layout_name: STRING is "layout"
 	layout_optimization_name: STRING is "layout_optimization"
 	leaves_optimization_name: STRING is "leaves_optimization"
 	line_generation_name: STRING is "line_generation"
@@ -128,6 +129,7 @@ feature -- Option codes
 	inlining_code: INTEGER is unique
 	inlining_size_code: INTEGER is unique
 	jumps_optimization_code: INTEGER is unique
+	layout_code: INTEGER is unique
 	layout_optimization_code: INTEGER is unique
 	leaves_optimization_code: INTEGER is unique
 	line_generation_code: INTEGER is unique
@@ -167,7 +169,7 @@ feature -- Option codes
 		local
 			a_tester: UC_EQUALITY_TESTER
 		once
-			create Result.make (72)
+			create Result.make (73)
 			create a_tester
 			Result.set_key_equality_tester (a_tester)
 			Result.put_new (abstract_code, abstract_name)
@@ -209,6 +211,7 @@ feature -- Option codes
 			Result.put_new (inlining_code, inlining_name)
 			Result.put_new (inlining_size_code, inlining_size_name)
 			Result.put_new (jumps_optimization_code, jumps_optimization_name)
+			Result.put_new (layout_code, layout_name)
 			Result.put_new (layout_optimization_code, layout_optimization_name)
 			Result.put_new (leaves_optimization_code, leaves_optimization_name)
 			Result.put_new (line_generation_code, line_generation_name)
@@ -251,6 +254,7 @@ feature -- Option values
 
 	all_value: STRING is "all"
 	array_value: STRING is "array"
+	auto_value: STRING is "auto"
 	boehm_value: STRING is "boehm"
 	check_value: STRING is "check"
 	class_value: STRING is "class"
@@ -272,6 +276,7 @@ feature -- Option values
 	none_value: STRING is "none"
 	once_value: STRING is "once"
 	require_value: STRING is "require"
+	sequential_value: STRING is "sequential"
 	style_value: STRING is "style"
 
 end
