@@ -120,7 +120,7 @@ feature -- Parsing
 			a_file_not_void: a_file /= Void
 			a_file_open_read: a_file.is_open_read
 		local
-			a_root_name: UC_STRING
+			a_root_name: STRING
 			a_system: ET_XACE_SYSTEM
 			a_library: ET_XACE_LIBRARY
 			a_document: XM_DOCUMENT
@@ -134,7 +134,7 @@ feature -- Parsing
 					a_root_element := a_document.root_element
 					a_root_name := a_root_element.name
 					a_position_table := tree_pipe.tree.last_position_table
-					if a_root_name.is_equal (uc_system) then
+					if STRING_.same_unicode_string (a_root_name, uc_system) then
 						xml_validator.validate_system_doc (a_document, a_position_table)
 						if not xml_validator.has_error then
 							xml_preprocessor.preprocess_composite (a_document, a_position_table)
@@ -142,8 +142,8 @@ feature -- Parsing
 							parsed_libraries.wipe_out
 						end
 					elseif
-						a_root_name.is_equal (uc_library) or
-						a_root_name.is_equal (uc_cluster)
+						STRING_.same_unicode_string (a_root_name, uc_library) or
+						STRING_.same_unicode_string (a_root_name, uc_cluster)
 					then
 						xml_validator.validate_library_doc (a_document, a_position_table)
 						if not xml_validator.has_error then

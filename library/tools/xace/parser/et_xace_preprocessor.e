@@ -19,6 +19,9 @@ inherit
 	ET_XACE_ELEMENT_NAMES
 		export {NONE} all end
 
+	KL_IMPORTED_STRING_ROUTINES
+		export {NONE} all end
+	
 creation
 
 	make
@@ -102,7 +105,7 @@ feature {NONE} -- Implementation
 			an_element_not_void: an_element /= Void
 			a_position_table_not_void: a_position_table /= Void
 		local
-			an_expression: UC_STRING
+			an_expression: STRING
 			is_if: BOOLEAN
 		do
 			if
@@ -129,7 +132,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	is_valid_expression (a_string: UC_STRING): BOOLEAN is
+	is_valid_expression (a_string: STRING): BOOLEAN is
 			-- Is expression `a_string' valid according to the syntax
 			-- rules of expressions in "if" and "unless" expresssions?
 		require
@@ -172,7 +175,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	is_expression_true (a_string: UC_STRING): BOOLEAN is
+	is_expression_true (a_string: STRING): BOOLEAN is
 			-- Does the expression `a_string' evaluate to `True'?
 			-- Use `variables' to look up the values of variables
 			-- occurring in `a_string'.
@@ -180,9 +183,9 @@ feature {NONE} -- Implementation
 			a_string_not_void: a_string /= Void
 			is_valid_expression: is_valid_expression (a_string)
 		local
-			a_left_side: UC_STRING
-			a_right_side: UC_STRING
-			a_variable_name: UC_STRING
+			a_left_side: STRING
+			a_right_side: STRING
+			a_variable_name: STRING
 			equal_index: INTEGER
 		do
 			if
@@ -190,13 +193,13 @@ feature {NONE} -- Implementation
 			then
 				-- expression is a comparsion of two constants or variables
 				equal_index := a_string.index_of ('=', 1)
-				a_left_side := new_unicode_string_from_utf8 (variables.expanded_variables (a_string.substring (1, equal_index - 1).to_utf8))
+				a_left_side := variables.expanded_variables (a_string.substring (1, equal_index - 1))
 				if a_string.count > equal_index then
-					a_right_side := new_unicode_string_from_utf8 (variables.expanded_variables ((a_string.substring (equal_index + 1, a_string.count).to_utf8)))
+					a_right_side := variables.expanded_variables (a_string.substring (equal_index + 1, a_string.count))
 				else
-					a_right_side := new_unicode_string ("")
+					a_right_side := clone ("")
 				end
-				Result := a_right_side.is_equal (a_left_side)
+				Result := STRING_.same_unicode_string (a_right_side, a_left_side)
 			else
 				-- expression is a variable
 				if
@@ -219,7 +222,7 @@ feature {NONE} -- Implementation
 				check
 					a_variable_name_not_void: a_variable_name /= Void
 				end
-				Result := variables.is_defined (a_variable_name.to_utf8)
+				Result := variables.is_defined (a_variable_name)
 			end
 		end
 
@@ -233,7 +236,7 @@ feature {NONE} -- Implementation
 		local
 			an_attribute: XM_ATTRIBUTE
 			a_cursor: DS_BILINEAR_CURSOR [XM_NODE]
-			an_uc_string: UC_STRING
+			a_string: STRING
 		do
 			a_cursor := a_composite.new_cursor
 			from
@@ -245,8 +248,8 @@ feature {NONE} -- Implementation
 				if
 					an_attribute /= Void
 				then
-					an_uc_string := new_unicode_string_from_utf8 (variables.expanded_variables (an_attribute.value.to_utf8))
-					an_attribute.set_value (an_uc_string)
+					a_string := variables.expanded_variables (an_attribute.value)
+					an_attribute.set_value (a_string)
 				end
 				a_cursor.forth
 			end

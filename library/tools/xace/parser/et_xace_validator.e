@@ -19,6 +19,9 @@ inherit
 	ET_XACE_ELEMENT_NAMES
 		export {NONE} all end
 
+	KL_IMPORTED_STRING_ROUTINES
+		export {NONE} all end
+	
 creation
 
 	make
@@ -379,7 +382,7 @@ feature {NONE} -- Validation
 			has_value: BOOLEAN
 			a_cursor: DS_BILINEAR_CURSOR [XM_NODE]
 			a_child: XM_ELEMENT
-			a_child_name: UC_STRING
+			a_child_name: STRING
 		do
 			has_name := an_option.has_attribute_by_name (uc_name)
 			if has_name and then an_option.attribute_by_name (uc_name) = Void then
@@ -407,19 +410,19 @@ feature {NONE} -- Validation
 					else
 						a_child_name := a_child.name
 						if
-							a_child_name.is_equal (uc_option) or
-							a_child_name.is_equal (uc_require) or
-							a_child_name.is_equal (uc_ensure) or
-							a_child_name.is_equal (uc_invariant) or
-							a_child_name.is_equal (uc_loop) or
-							a_child_name.is_equal (uc_check) or
-							a_child_name.is_equal (uc_debug) or
-							a_child_name.is_equal (uc_optimize)
+							STRING_.same_unicode_string (a_child_name, uc_option) or
+							STRING_.same_unicode_string (a_child_name, uc_require) or
+							STRING_.same_unicode_string (a_child_name, uc_ensure) or
+							STRING_.same_unicode_string (a_child_name, uc_invariant) or
+							STRING_.same_unicode_string (a_child_name, uc_loop) or
+							STRING_.same_unicode_string (a_child_name, uc_check) or
+							STRING_.same_unicode_string (a_child_name, uc_debug) or
+							STRING_.same_unicode_string (a_child_name, uc_optimize)
 						then
 							if has_name then
 								has_error := True
 								error_handler.report_unknown_element_error (an_option, a_child, a_position_table.item (a_child))
-							elseif a_child_name.is_equal (uc_option) then
+							elseif STRING_.same_unicode_string (a_child_name, uc_option) then
 								validate_option (a_child, a_position_table)
 							end
 						else
