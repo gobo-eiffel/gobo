@@ -1,4 +1,5 @@
 		-- Gobo Eiffel Kernel Library
 	kl_kernel:			"$GOBO/library/kernel";
+	kl_io:				"$GOBO/library/kernel/io";
 	kl_unicode:			"$GOBO/library/kernel/unicode";
 	kl_kernel_spec:		"$GOBO/library/kernel/spec/hact";
