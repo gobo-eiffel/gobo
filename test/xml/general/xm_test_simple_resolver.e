@@ -56,6 +56,20 @@ feature
 			parser.parse_from_system (Relative_data)
 			assert ("parsed second time", parser.is_correct)
 		end
+
+	test_non_existing is
+			-- Test non existing.
+		do
+			create parser.make
+			parser.set_resolver (new_file_resolver_current_directory)
+
+			parser.parse_from_system ("data/not.xml")
+			assert ("fails", not parser.is_correct)
+
+				--Second time to check resolver left in a good state.
+			parser.parse_from_system (Relative_data)
+			assert ("parsed second time", parser.is_correct)
+		end
 	
 	test_file_error is
 			-- Test file error resolver.
