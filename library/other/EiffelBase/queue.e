@@ -76,7 +76,6 @@ feature -- Element change
 		ensure
 			item_inserted: has (v)
 			one_more_occurrence: occurrences (v) = old (occurrences (v)) + 1
-			item_pushed: item = v
 		end
 
 	put (v: G) is
@@ -84,7 +83,6 @@ feature -- Element change
 		deferred
 		ensure then
 			one_more_occurrence: occurrences (v) = old (occurrences (v)) + 1
-			item_pushed: item = v
 		end
 
 	append (s: LINEAR [G]) is
