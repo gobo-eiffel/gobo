@@ -1048,7 +1048,7 @@ feature {NONE} -- Implementation
 				std.error.put_new_line
 			end
 			-- look for quick wins
-			if xml_prefix.is_equal ("") then
+			if xml_prefix.is_empty then
 				debug ("name pool")
 					std.error.put_string ("prefix_index: xml - code 0%N")
 				end
