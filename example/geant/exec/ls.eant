@@ -1,6 +1,6 @@
 <?xml version="1.0" ?>
 
-<project name="le" default="ls" >
+<project name="ls" default="ls" >
 	<target name="ls" description="executes a ls -l command under unix">
 		<var name="directory" value="." />
 		<exec executable="ls -l ${directory}" />
