@@ -420,6 +420,7 @@ feature {NONE} -- Output
 		local
 			a_cursor: DS_LINKED_LIST_CURSOR [STRING]
 			may_close_statement: BOOLEAN
+			lib_contains_path: BOOLEAN
 		do
 			if
 				not link_libraries.is_empty or else
@@ -431,7 +432,10 @@ feature {NONE} -- Output
 				a_cursor := link_libraries.new_cursor
 				from a_cursor.start until a_cursor.after loop
 					print_indentation (2, a_file)
-					a_file.put_string ("%"-l")
+					lib_contains_path := a_cursor.item.has ('/') or a_cursor.item.has ('\')
+					if not lib_contains_path then
+						a_file.put_string ("%"-l")
+					end
 					a_file.put_string (a_cursor.item)
 					if a_cursor.is_last and may_close_statement then
 						a_file.put_line ("%";")
