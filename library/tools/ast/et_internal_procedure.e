@@ -16,6 +16,10 @@ deferred class ET_INTERNAL_PROCEDURE
 inherit
 
 	ET_PROCEDURE
+		redefine
+			add_to_system
+		end
+
 	ET_INTERNAL_ROUTINE
 
 feature {NONE} -- Initialization
@@ -91,6 +95,20 @@ feature {NONE} -- Initialization
 			implementation_class_set: implementation_class = a_class
 			seeds_set: seeds = a_seeds
 			id_set: id = an_id
+		end
+
+feature -- System
+
+	add_to_system is
+			-- Recursively add to system classes that
+			-- appear in current feature.
+		do
+			if arguments /= Void then
+				arguments.add_to_system
+			end
+			if locals /= Void then
+				locals.add_to_system
+			end
 		end
 
 end -- class ET_INTERNAL_PROCEDURE

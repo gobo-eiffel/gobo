@@ -76,6 +76,20 @@ feature -- Element change
 			type_set: variables.type = (old variables).type
 		end
 
+feature -- System
+
+	add_to_system is
+			-- Recursively add to system classes that
+			-- appear in current local declarations.
+		local
+			a_local: like variables
+		do
+			from a_local := variables until a_local = Void loop
+				a_local.type.add_to_system
+				a_local := a_local.next
+			end
+		end
+
 invariant
 
 	variables_not_void: variables /= Void
