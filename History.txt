@@ -35,6 +35,7 @@ Version 3.2 - ?
 	  (XML Names says unprefixed attributes have no namespace.)
 	* XM_ELEMENT.*attribute_by_name only look for unprefixed 
 	  attributes, for the same reason as above.
+	* XM_FORMATTER.last_string replaced by .last_output stream.
 
 Version 3.1 - 18 December 2002
 
