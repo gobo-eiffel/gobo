@@ -10,14 +10,11 @@ indexing
 	date: "$Date$"
 	revision: "$Revision$"
 
-class	XM_XSLT_GROUP_STARTING_WITH_ITERATOR
+class XM_XSLT_GROUP_STARTING_WITH_ITERATOR
 
 inherit
 
 	XM_XSLT_GROUP_ITERATOR
-		redefine
-			item
-		end
 
 creation
 

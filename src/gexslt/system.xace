@@ -10,6 +10,7 @@
 	</description>
 
 	<root class="GEXSLT" creation="execute"/>
+	<option name="console_application" value="true"/>
 	<option unless="${DEBUG}">
 		<option name="assertion" value="none"/>
 		<option name="garbage_collector" value="internal"/>
@@ -34,6 +35,7 @@
 	<!-- <option name="debug_tag" value="XSLT template rules"/> -->
 	<!--<option name="debug_tag" value="XSLT pattern parsing"/>-->
 
+	<cluster name="gexslt_ve" location="." if="${GOBO_EIFFEL}=ve"/>
 	<cluster name="gexslt" location="${GOBO}/src/gexslt"/>
 	<mount location="${GOBO}/library/xml/library.xace"/>
 	<mount location="${GOBO}/library/math/decimal/library.xace"/>

@@ -17,7 +17,7 @@ inherit
 
 	XM_XSLT_STYLE_ELEMENT
 		redefine
-			may_contain_sequence_constructor, validate, compile
+			may_contain_sequence_constructor, validate
 		end
 
 creation {XM_XSLT_NODE_FACTORY}
