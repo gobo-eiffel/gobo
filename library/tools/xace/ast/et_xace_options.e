@@ -1416,7 +1416,7 @@ feature -- Option values
 			end
 		end
 
-feature -- Status setting
+feature -- Modification
 
 	set_abstract (b: BOOLEAN) is
 			-- Set `abstract' to `b'.
@@ -2477,6 +2477,600 @@ feature -- Status setting
 		ensure
 			wedit_declared: is_wedit_declared
 			wedit_set: wedit = b
+		end
+
+feature -- Status setting
+
+	unset_abstract is
+			-- Unset `abstract'.
+		do
+			declared_abstract := Void
+		ensure
+			abstract_not_declared: not is_abstract_declared
+		end
+
+	unset_address_expression is
+			-- Unset `address_expression'.
+		do
+			declared_address_expression := Void
+		ensure
+			address_expression_not_declared: not is_address_expression_declared
+		end
+
+	unset_arguments is
+			-- Unset `arguments'.
+		do
+			declared_arguments := Void
+		ensure
+			arguments_not_declared: not is_arguments_declared
+		end
+
+	unset_array_optimization is
+			-- Unset `array_optimization'.
+		do
+			declared_array_optimization := Void
+		ensure
+			array_optimization_not_declared: not is_array_optimization_declared
+		end
+
+	unset_assembly is
+			-- Unset `assembly'.
+		do
+			declared_assembly := Void
+		ensure
+			assembly_not_declared: not is_assembly_declared
+		end
+
+	unset_assertion is
+			-- Unset `assertion'.
+		do
+			declared_assertion := Void
+		ensure
+			assertion_not_declared: not is_assertion_declared
+		end
+
+	unset_callback is
+			-- Unset `callback'.
+		do
+			declared_callback := Void
+		ensure
+			callback_not_declared: not is_callback_declared
+		end
+
+	unset_case_insensitive is
+			-- Unset `case_insensitive'.
+		do
+			declared_case_insensitive := Void
+		ensure
+			case_insensitive_not_declared: not is_case_insensitive_declared
+		end
+
+	unset_check_vape is
+			-- Unset `check_vape'.
+		do
+			declared_check_vape := Void
+		ensure
+			check_vape_not_declared: not is_check_vape_declared
+		end
+
+	unset_clean is
+			-- Unset `clean'.
+		do
+			declared_clean := Void
+		ensure
+			clean_not_declared: not is_clean_declared
+		end
+
+	unset_cls_compliant is
+			-- Unset `cls_compliant'.
+		do
+			declared_cls_compliant := Void
+		ensure
+			cls_compliant_not_declared: not is_cls_compliant_declared
+		end
+
+	unset_component is
+			-- Unset `component'.
+		do
+			declared_component := Void
+		ensure
+			component_not_declared: not is_component_declared
+		end
+
+	unset_console_application is
+			-- Unset `console_application'.
+		do
+			declared_console_application := Void
+		ensure
+			console_application_not_declared: not is_console_application_declared
+		end
+
+	unset_create_keyword_extension is
+			-- Unset `create_keyword_extension'.
+		do
+			declared_create_keyword_extension := Void
+		ensure
+			create_keyword_extension_not_declared: not is_create_keyword_extension_declared
+		end
+
+	unset_culture is
+			-- Unset `culture'.
+		do
+			declared_culture := Void
+		ensure
+			culture_not_declared: not is_culture_declared
+		end
+
+	unset_c_compiler_options is
+			-- Unset `c_compiler_options'.
+		do
+			declared_c_compiler_options := Void
+		ensure
+			c_compiler_options_not_declared: not is_c_compiler_options_declared
+		end
+
+	unset_dead_code_removal is
+			-- Unset `dead_code_removal'.
+		do
+			declared_dead_code_removal := Void
+		ensure
+			dead_code_removal_not_declared: not is_dead_code_removal_declared
+		end
+
+	unset_debug_option is
+			-- Unset `debug_option'.
+		do
+			declared_debug_option := Void
+		ensure
+			debug_option_not_declared: not is_debug_option_declared
+		end
+
+	unset_debug_tag is
+			-- Unset `debug_tag'.
+		do
+			declared_debug_tag := Void
+		ensure
+			debug_tag_not_declared: not is_debug_tag_declared
+		end
+
+	unset_debugger is
+			-- Unset `debugger'.
+		do
+			declared_debugger := Void
+		ensure
+			debugger_not_declared: not is_debugger_declared
+		end
+
+	unset_document is
+			-- Unset `document'.
+		do
+			declared_document := Void
+		ensure
+			document_not_declared: not is_document_declared
+		end
+
+	unset_dotnet_naming_convention is
+			-- Unset `dotnet_naming_convention'.
+		do
+			declared_dotnet_naming_convention := Void
+		ensure
+			dotnet_naming_convention_not_declared: not is_dotnet_naming_convention_declared
+		end
+
+	unset_dynamic_runtime is
+			-- Unset `dynamic_runtime'.
+		do
+			declared_dynamic_runtime := Void
+		ensure
+			dynamic_runtime_not_declared: not is_dynamic_runtime_declared
+		end
+
+	unset_exception_trace is
+			-- Unset `exception_trace'.
+		do
+			declared_exception_trace := Void
+		ensure
+			exception_trace_not_declared: not is_exception_trace_declared
+		end
+
+	unset_exclude is
+			-- Unset `exclude'.
+		do
+			declared_exclude := Void
+		ensure
+			exclude_not_declared: not is_exclude_declared
+		end
+
+	unset_export_option is
+			-- Unset `export_option'.
+		do
+			declared_export_option := Void
+		ensure
+			export_option_not_declared: not is_export_option_declared
+		end
+
+	unset_finalize_option is
+			-- Unset `finalize_option'.
+		do
+			declared_finalize_option := Void
+		ensure
+			finalize_option_not_declared: not is_finalize_option_declared
+		end
+
+	unset_flat_fst_optimization is
+			-- Unset `flat_fst_optimization'.
+		do
+			declared_flat_fst_optimization := Void
+		ensure
+			flat_fst_optimization_not_declared: not is_flat_fst_optimization_declared
+		end
+
+	unset_fst_expansion_factor is
+			-- Unset `fst_expansion_factor'.
+		do
+			declared_fst_expansion_factor := -1
+		ensure
+			fst_expansion_factor_not_declared: not is_fst_expansion_factor_declared
+		end
+
+	unset_fst_optimization is
+			-- Unset `fst_optimization'.
+		do
+			declared_fst_optimization := Void
+		ensure
+			fst_optimization_not_declared: not is_fst_optimization_declared
+		end
+
+	unset_garbage_collector is
+			-- Unset `garbage_collector'.
+		do
+			declared_garbage_collector := Void
+		ensure
+			garbage_collector_not_declared: not is_garbage_collector_declared
+		end
+
+	unset_gc_info is
+			-- Unset `gc_info'.
+		do
+			declared_gc_info := Void
+		ensure
+			gc_info_not_declared: not is_gc_info_declared
+		end
+
+	unset_heap_size is
+			-- Unset `heap_size'.
+		do
+			declared_heap_size := -1
+		ensure
+			heap_size_not_declared: not is_heap_size_declared
+		end
+
+	unset_header is
+			-- Unset `header'.
+		do
+			declared_header := Void
+		ensure
+			header_not_declared: not is_header_declared
+		end
+
+	unset_high_memory_compiler is
+			-- Unset `high_memory_compiler'.
+		do
+			declared_high_memory_compiler := Void
+		ensure
+			high_memory_compiler_not_declared: not is_high_memory_compiler_declared
+		end
+
+	unset_il_verifiable is
+			-- Unset `il_verifiable'.
+		do
+			declared_il_verifiable := Void
+		ensure
+			il_verifiable_not_declared: not is_il_verifiable_declared
+		end
+
+	unset_include is
+			-- Unset `include'.
+		do
+			declared_include := Void
+		ensure
+			include_not_declared: not is_include_declared
+		end
+
+	unset_inlining is
+			-- Unset `inlining'.
+		do
+			declared_inlining := Void
+		ensure
+			inlining_not_declared: not is_inlining_declared
+		end
+
+	unset_inlining_size is
+			-- Unset `inlining_size'.
+		do
+			declared_inlining_size := -1
+		ensure
+			inlining_size_not_declared: not is_inlining_size_declared
+		end
+
+	unset_jumps_optimization is
+			-- Unset `jumps_optimization'.
+		do
+			declared_jumps_optimization := Void
+		ensure
+			jumps_optimization_not_declared: not is_jumps_optimization_declared
+		end
+
+	unset_layout is
+			-- Unset `layout'.
+		do
+			declared_layout := Void
+		ensure
+			layout_not_declared: not is_layout_declared
+		end
+
+	unset_layout_optimization is
+			-- Unset `layout_optimization'.
+		do
+			declared_layout_optimization := Void
+		ensure
+			layout_optimization_not_declared: not is_layout_optimization_declared
+		end
+
+	unset_leaves_optimization is
+			-- Unset `leaves_optimization'.
+		do
+			declared_leaves_optimization := Void
+		ensure
+			leaves_optimization_not_declared: not is_leaves_optimization_declared
+		end
+
+	unset_line_generation is
+			-- Unset `line_generation'.
+		do
+			declared_line_generation := Void
+		ensure
+			line_generation_not_declared: not is_line_generation_declared
+		end
+
+	unset_link is
+			-- Unset `link'.
+		do
+			declared_link := Void
+		ensure
+			link_not_declared: not is_link_declared
+		end
+
+	unset_linker is
+			-- Unset `linker'.
+		do
+			declared_linker := Void
+		ensure
+			linker_not_declared: not is_linker_declared
+		end
+
+	unset_linux_fpu_double_precision is
+			-- Unset `linux_fpu_double_precision'.
+		do
+			declared_linux_fpu_double_precision := Void
+		ensure
+			linux_fpu_double_precision_not_declared: not is_linux_fpu_double_precision_declared
+		end
+
+	unset_manifest_string_trace is
+			-- Unset `manifest_string_trace'.
+		do
+			declared_manifest_string_trace := Void
+		ensure
+			manifest_string_trace_not_declared: not is_manifest_string_trace_declared
+		end
+
+	unset_map is
+			-- Unset `map'.
+		do
+			declared_map := Void
+		ensure
+			map_not_declared: not is_map_declared
+		end
+
+	unset_msil_generation is
+			-- Unset `msil_generation'.
+		do
+			declared_msil_generation := Void
+		ensure
+			msil_generation_not_declared: not is_msil_generation_declared
+		end
+
+	unset_multithreaded is
+			-- Unset `multithreaded'.
+		do
+			declared_multithreaded := Void
+		ensure
+			multithreaded_not_declared: not is_multithreaded_declared
+		end
+
+	unset_no_default_lib is
+			-- Unset `no_default_lib'.
+		do
+			declared_no_default_lib := Void
+		ensure
+			no_default_lib_not_declared: not is_no_default_lib_declared
+		end
+
+	unset_override_cluster is
+			-- Unset `override_cluster'.
+		do
+			declared_override_cluster := Void
+		ensure
+			override_cluster_not_declared: not is_override_cluster_declared
+		end
+
+	unset_portable_code_generation is
+			-- Unset `portable_code_generation'.
+		do
+			declared_portable_code_generation := Void
+		ensure
+			portable_code_generation_not_declared: not is_portable_code_generation_declared
+		end
+
+	unset_precompiled is
+			-- Unset `precompiled'.
+		do
+			declared_precompiled := Void
+		ensure
+			precompiled_not_declared: not is_precompiled_declared
+		end
+
+	unset_prefix_option is
+			-- Unset `prefix_option'.
+		do
+			declared_prefix_option := Void
+		ensure
+			prefix_option_not_declared: not is_prefix_option_declared
+		end
+
+	unset_profile is
+			-- Unset `profile'.
+		do
+			declared_profile := Void
+		ensure
+			profile_not_declared: not is_profile_declared
+		end
+
+	unset_public_key_token is
+			-- Unset `public_key_token'.
+		do
+			declared_public_key_token := Void
+		ensure
+			public_key_token_not_declared: not is_public_key_token_declared
+		end
+
+	unset_read_only is
+			-- Unset `read_only'.
+		do
+			declared_read_only := Void
+		ensure
+			read_only_not_declared: not is_read_only_declared
+		end
+
+	unset_recursive is
+			-- Unset `recursive'.
+		do
+			declared_recursive := Void
+		ensure
+			recursive_not_declared: not is_recursive_declared
+		end
+
+	unset_reloads_optimization is
+			-- Unset `reloads_optimization'.
+		do
+			declared_reloads_optimization := Void
+		ensure
+			reloads_optimization_not_declared: not is_reloads_optimization_declared
+		end
+
+	unset_shared_library_definition is
+			-- Unset `shared_library_definition'.
+		do
+			declared_shared_library_definition := Void
+		ensure
+			shared_library_definition_not_declared: not is_shared_library_definition_declared
+		end
+
+	unset_split is
+			-- Unset `split'.
+		do
+			declared_split := Void
+		ensure
+			split_not_declared: not is_split_declared
+		end
+
+	unset_stack_size is
+			-- Unset `stack_size'.
+		do
+			declared_stack_size := -1
+		ensure
+			stack_size_not_declared: not is_stack_size_declared
+		end
+
+	unset_storable is
+			-- Unset `storable'.
+		do
+			declared_storable := Void
+		ensure
+			storable_not_declared: not is_storable_declared
+		end
+
+	unset_storable_filename is
+			-- Unset `storable_filename'.
+		do
+			declared_storable_filename := Void
+		ensure
+			storable_filename_not_declared: not is_storable_filename_declared
+		end
+
+	unset_strip_option is
+			-- Unset `strip_option'.
+		do
+			declared_strip_option := Void
+		ensure
+			strip_option_not_declared: not is_strip_option_declared
+		end
+
+	unset_target is
+			-- Unset `target'.
+		do
+			declared_target := Void
+		ensure
+			target_not_declared: not is_target_declared
+		end
+
+	unset_trace is
+			-- Unset `trace'.
+		do
+			declared_trace := Void
+		ensure
+			trace_not_declared: not is_trace_declared
+		end
+
+	unset_verbose is
+			-- Unset `verbose'.
+		do
+			declared_verbose := Void
+		ensure
+			verbose_not_declared: not is_verbose_declared
+		end
+
+	unset_version is
+			-- Unset `version'.
+		do
+			declared_version := Void
+		ensure
+			version_not_declared: not is_version_declared
+		end
+
+	unset_visible_filename is
+			-- Unset `visible_filename'.
+		do
+			declared_visible_filename := Void
+		ensure
+			visible_filename_not_declared: not is_visible_filename_declared
+		end
+
+	unset_warning is
+			-- Unset `warning'.
+		do
+			declared_warning := Void
+		ensure
+			warning_not_declared: not is_warning_declared
+		end
+
+	unset_wedit is
+			-- Unset `wedit'.
+		do
+			declared_wedit := Void
+		ensure
+			wedit_not_declared: not is_wedit_declared
 		end
 
 feature -- Valid values
