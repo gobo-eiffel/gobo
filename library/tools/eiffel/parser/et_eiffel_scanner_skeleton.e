@@ -341,8 +341,12 @@ feature {NONE} -- String handler
 	strings: DS_HASH_TABLE [INTEGER, STRING] is
 			-- Strings known by the current scanner, and the associated
 			-- hash codes when they are used as identifier
+		local
+			l_string_equality_tester: KL_STRING_EQUALITY_TESTER
 		once
-			create Result.make_equal (100000)
+			create Result.make_map (100000)
+			create l_string_equality_tester
+			Result.set_key_equality_tester (l_string_equality_tester)
 				-- Insert basic strings in `strings'.
 			Result.force_new (-1, tokens.capitalized_any_name)
 			Result.force_new (-1, tokens.capitalized_array_name)
@@ -368,9 +372,15 @@ feature {NONE} -- String handler
 			Result.force_new (-1, tokens.capitalized_typed_pointer_name)
 			Result.force_new (-1, tokens.capitalized_wide_character_name)
 			Result.force_new (-1, tokens.capitalized_unknown_name)
+			Result.force_new (-1, tokens.area_name)
+			Result.force_new (-1, tokens.count_name)
 			Result.force_new (-1, tokens.default_create_name)
 			Result.force_new (-1, tokens.item_name)
+			Result.force_new (-1, tokens.lower_name)
 			Result.force_new (-1, tokens.put_name)
+			Result.force_new (-1, tokens.put_reference_name)
+			Result.force_new (-1, tokens.reference_item_name)
+			Result.force_new (-1, tokens.upper_name)
 			Result.force_new (-1, tokens.capitalized_current_keyword_name)
 			Result.force_new (-1, tokens.capitalized_false_keyword_name)
 			Result.force_new (-1, tokens.capitalized_precursor_keyword_name)
