@@ -65,6 +65,6 @@ cluster
 
 external
 
-	include_path: "$(GOBO)\library\kernel\include"
+	include_path: "$GOBO\library\kernel\include"
 
 end
