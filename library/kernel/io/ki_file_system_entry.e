@@ -68,9 +68,18 @@ feature -- Status report
 			definition: Result = not is_open
 		end
 
+	exists: BOOLEAN is
+			-- Does file system entry physically exist on disk?
+			-- (Note that with SmallEiffel this routine actually
+			-- returns `is_readable'.)
+		deferred
+		end
+
 	is_readable: BOOLEAN is
 			-- Can file system entry be opened in read mode?
 		deferred
+		ensure
+			exists: Result implies exists
 		end
 
 feature -- Basic operations
