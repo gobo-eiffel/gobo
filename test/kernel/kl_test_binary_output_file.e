@@ -342,9 +342,21 @@ feature -- Test
 			if a_file.is_open_write then
 				a_file.put_integer (0)
 				a_file.put_string (file_system.eol)
+				a_file.put_integer (1)
+				a_file.put_string (file_system.eol)
+				a_file.put_integer (-1)
+				a_file.put_string (file_system.eol)
 				a_file.put_integer (-123)
 				a_file.put_string (file_system.eol)
 				a_file.put_integer (5674)
+				a_file.put_string (file_system.eol)
+					-- Minimum integer value.
+					-- Note: ISE 5.4 does not like having directly -2147483648 because
+					-- it considers it as an INTEGER_64 instead of an INTEGER.
+				a_file.put_integer (-2147483647 - 1)
+				a_file.put_string (file_system.eol)
+					-- Maximum integer value.
+				a_file.put_integer (2147483647)
 				a_file.put_string (file_system.eol)
 				a_file.close
 				assert ("is_closed", a_file.is_closed)

@@ -45,13 +45,63 @@ feature -- Output
 		do
 			if i = 0 then
 				put_character ('0')
-			else
-				if i < 0 then
-					put_character ('-')
-					k := -i
-				else
-					k := i
+			elseif i < 0 then
+				put_character ('-')
+					-- Avoid overflow.
+				k := -(i + 1)
+				j := k // 10
+				inspect k \\ 10
+				when 0 then
+					if j /= 0 then
+						put_integer (j)
+					end
+					put_character ('1')
+				when 1 then
+					if j /= 0 then
+						put_integer (j)
+					end
+					put_character ('2')
+				when 2 then
+					if j /= 0 then
+						put_integer (j)
+					end
+					put_character ('3')
+				when 3 then
+					if j /= 0 then
+						put_integer (j)
+					end
+					put_character ('4')
+				when 4 then
+					if j /= 0 then
+						put_integer (j)
+					end
+					put_character ('5')
+				when 5 then
+					if j /= 0 then
+						put_integer (j)
+					end
+					put_character ('6')
+				when 6 then
+					if j /= 0 then
+						put_integer (j)
+					end
+					put_character ('7')
+				when 7 then
+					if j /= 0 then
+						put_integer (j)
+					end
+					put_character ('8')
+				when 8 then
+					if j /= 0 then
+						put_integer (j)
+					end
+					put_character ('9')
+				when 9 then
+					put_integer (j + 1)
+					put_character ('0')
 				end
+			else
+				k := i
 				j := k // 10
 				if j /= 0 then
 					put_integer (j)

@@ -69,13 +69,63 @@ feature -- String handling
 		do
 			if an_int = 0 then
 				a_string.append_character ('0')
-			else
-				if an_int < 0 then
-					a_string.append_character ('-')
-					k := -an_int
-				else
-					k := an_int
+			elseif an_int < 0 then
+				a_string.append_character ('-')
+					-- Avoid overflow.
+				k := -(an_int + 1)
+				i := k // 10
+				inspect k \\ 10
+				when 0 then
+					if i /= 0 then
+						append_decimal_integer (a_string, i)
+					end
+					a_string.append_character ('1')
+				when 1 then
+					if i /= 0 then
+						append_decimal_integer (a_string, i)
+					end
+					a_string.append_character ('2')
+				when 2 then
+					if i /= 0 then
+						append_decimal_integer (a_string, i)
+					end
+					a_string.append_character ('3')
+				when 3 then
+					if i /= 0 then
+						append_decimal_integer (a_string, i)
+					end
+					a_string.append_character ('4')
+				when 4 then
+					if i /= 0 then
+						append_decimal_integer (a_string, i)
+					end
+					a_string.append_character ('5')
+				when 5 then
+					if i /= 0 then
+						append_decimal_integer (a_string, i)
+					end
+					a_string.append_character ('6')
+				when 6 then
+					if i /= 0 then
+						append_decimal_integer (a_string, i)
+					end
+					a_string.append_character ('7')
+				when 7 then
+					if i /= 0 then
+						append_decimal_integer (a_string, i)
+					end
+					a_string.append_character ('8')
+				when 8 then
+					if i /= 0 then
+						append_decimal_integer (a_string, i)
+					end
+					a_string.append_character ('9')
+				when 9 then
+					append_decimal_integer (a_string, i + 1)
+					a_string.append_character ('0')
 				end
+			else
+				k := an_int
 				i := k // 10
 				if i /= 0 then
 					append_decimal_integer (a_string, i)
@@ -167,13 +217,63 @@ feature -- File handling
 		do
 			if an_int = 0 then
 				a_file.put_character ('0')
-			else
-				if an_int < 0 then
-					a_file.put_character ('-')
-					k := -an_int
-				else
-					k := an_int
+			elseif an_int < 0 then
+				a_file.put_character ('-')
+					-- Avoid overflow.
+				k := -(an_int + 1)
+				i := k // 10
+				inspect k \\ 10
+				when 0 then
+					if i /= 0 then
+						put_decimal_integer (a_file, i)
+					end
+					a_file.put_character ('1')
+				when 1 then
+					if i /= 0 then
+						put_decimal_integer (a_file, i)
+					end
+					a_file.put_character ('2')
+				when 2 then
+					if i /= 0 then
+						put_decimal_integer (a_file, i)
+					end
+					a_file.put_character ('3')
+				when 3 then
+					if i /= 0 then
+						put_decimal_integer (a_file, i)
+					end
+					a_file.put_character ('4')
+				when 4 then
+					if i /= 0 then
+						put_decimal_integer (a_file, i)
+					end
+					a_file.put_character ('5')
+				when 5 then
+					if i /= 0 then
+						put_decimal_integer (a_file, i)
+					end
+					a_file.put_character ('6')
+				when 6 then
+					if i /= 0 then
+						put_decimal_integer (a_file, i)
+					end
+					a_file.put_character ('7')
+				when 7 then
+					if i /= 0 then
+						put_decimal_integer (a_file, i)
+					end
+					a_file.put_character ('8')
+				when 8 then
+					if i /= 0 then
+						put_decimal_integer (a_file, i)
+					end
+					a_file.put_character ('9')
+				when 9 then
+					put_decimal_integer (a_file, i + 1)
+					a_file.put_character ('0')
 				end
+			else
+				k := an_int
 				i := k // 10
 				if i /= 0 then
 					put_decimal_integer (a_file, i)
