@@ -14,15 +14,17 @@ class XM_DEFAULT_POSITION
 
 inherit
 
-	XM_STREAM_POSITION
-
+	XM_POSITION
+	
+	XM_STREAM_POSITION -- obsolete
+		
 creation
 
 	make
 
 feature {NONE} -- Initialization
 
-	make (a_source: XM_SOURCE; a_byte_index, a_column, a_row: INTEGER) is
+	make (a_source: like source_name; a_byte_index, a_column, a_row: INTEGER) is
 			-- Create a new position.
 		require
 			a_source_not_void: a_source /= Void
@@ -30,12 +32,12 @@ feature {NONE} -- Initialization
 			a_column_positive: a_column >= 0
 			a_row_positive: a_row >= 0
 		do
-			source := a_source
+			source_name := a_source
 			byte_index := a_byte_index
 			column := a_column
 			row := a_row
 		ensure
-			source_set: source = a_source
+			source_set: source_name = a_source
 			byte_index_set: byte_index = a_byte_index
 			column_set: column = a_column
 			row_set: row = a_row
@@ -43,8 +45,8 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	source: XM_SOURCE
-			-- Source file
+	source_name: STRING
+			-- Name of source.
 
 	byte_index: INTEGER
 			-- Byte position of token in file
