@@ -14,6 +14,12 @@ class NULL_SINGLETON
 
 inherit
 
+	ANY
+		export
+				-- `do_nothing' is exported to NONE in SE 2.1rc1.
+			{ANY} do_nothing
+		end
+
 	SHARED_NULL_SINGLETON
 
 creation
