@@ -27,7 +27,7 @@ feature -- Access
 
 feature -- Setting
 
-	set_dtd_callbacks (a_callbacks: XM_DTD_CALLBACKS) is
+	set_dtd_callbacks (a_callbacks: like dtd_callbacks) is
 			-- Set `dtd_callbacks' to `a_callbacks'.
 		do
 			dtd_callbacks := a_callbacks
