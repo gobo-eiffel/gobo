@@ -1,0 +1,41 @@
+indexing
+
+	description:
+
+		"Interface in the Bridge Pattern"
+
+	library:    "Gobo Eiffel Pattern Library"
+	author:     "Andreas Leitner <nozone@sbox.tugraz.at>"
+	copyright:  "Copyright (c) 2001, Andreas Leitner and others"
+	license:    "Eiffel Forum Freeware License v1 (see forum.txt)"
+	date:       "$Date$"
+	revision:   "$Revision$"
+
+class DP_INTERFACE
+
+feature {NONE} -- Initialization
+
+	make_from_implementation (an_implementation: like implementation) is
+			-- Create a new interface using
+			-- `an_implementation' as implementation.
+		require
+			an_implementation_not_void: an_implementation /= Void
+			valid_implementation: an_implementation.can_implement (Current)
+		do
+			implementation := an_implementation
+			implementation.implement (Current)
+		ensure
+			implementation_set: implementation = an_implementation
+		end
+
+feature {DP_IMPLEMENTATION} -- Implementation
+
+	implementation: DP_IMPLEMENTATION
+			-- Implementation
+
+invariant
+
+	implementation_not_void: implementation /= Void
+	valid_implementation: implementation.can_implement (Current)
+
+end -- class DP_INTERFACE
