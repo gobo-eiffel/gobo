@@ -1,3 +1,11 @@
+Version 1.3 -
+
+	* Added warnings in gelex when a rule cannot be
+	  matched and when the default rule can be matched
+	  despite the %option nodefault or -s option.
+	* Renamed classes KL_SHARED_*_ROUTINES as 
+	  KL_IMPORTED_*_ROUTINES.
+
 Version 1.2 - 17 December 1997
 
 	* New implementation for variable trailing context
