@@ -814,14 +814,10 @@ feature -- Test
 					assert ("readable2", file_system.is_file_readable (new_name))
 					!! a_file.make (old_name)
 					a_file.change_name (new_name)
-					assert_same ("not_renamed", old_name, a_file.name)
-					assert ("readable3", file_system.is_file_readable (old_name))
-					assert ("readable4", file_system.is_file_readable (new_name))
-					assert_files_equal ("diff1", gobo_filename, old_name)
-					assert_files_equal ("diff2", hello_filename, new_name)
-					a_file.delete
+					assert_same ("renamed", new_name, a_file.name)
 					assert ("not_readable2", not file_system.is_file_readable (old_name))
-					!! a_file.make (new_name)
+					assert ("readable3", file_system.is_file_readable (new_name))
+					assert_files_equal ("diff1", gobo_filename, new_name)
 					a_file.delete
 					assert ("not_readable3", not file_system.is_file_readable (new_name))
 				else

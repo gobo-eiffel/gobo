@@ -212,15 +212,12 @@ feature -- File handling
 					assert ("readable2", a_file_system.is_file_readable (new_name))
 						-- Try to rename file.
 					a_file_system.rename_file (old_name, new_name)
-						-- Old file and new file still exist and their
-						-- contents have not been altered.
-					assert ("readable3", a_file_system.is_file_readable (old_name))
-					assert ("readable4", a_file_system.is_file_readable (new_name))
-					assert_files_equal ("diff1", gobo_filename, old_name)
-					assert_files_equal ("diff2", hello_filename, new_name)
-						-- Remove temporary files.
-					a_file_system.delete_file (old_name)
+						-- Old file does not exist anymore and new file
+						-- now contains the old content of old file.
 					assert ("not_readable1", not a_file_system.is_file_readable (old_name))
+					assert ("readable3", a_file_system.is_file_readable (new_name))
+					assert_files_equal ("diff1", gobo_filename, new_name)
+						-- Remove temporary files.
 					a_file_system.delete_file (new_name)
 					assert ("not_readable2", not a_file_system.is_file_readable (new_name))
 				else
@@ -445,7 +442,7 @@ feature -- File handling
 				assert ("not_readable1", not a_file_system.is_file_readable (new_name))
 					-- Copy file.
 				a_file_system.copy_file (old_name, new_name)
-					-- Old file still exists anymore and new file
+					-- Old file still exists and new file
 					-- has the same contents as old file.
 				assert ("readable2", a_file_system.is_file_readable (old_name))
 				assert ("readable3", a_file_system.is_file_readable (new_name))
@@ -549,14 +546,14 @@ feature -- File handling
 						-- Old file and new file exist.
 					assert ("readable1", a_file_system.is_file_readable (old_name))
 					assert ("readable2", a_file_system.is_file_readable (new_name))
-						-- Try to copy file.
+						-- Copy file.
 					a_file_system.copy_file (old_name, new_name)
-						-- Old file and new file still exist and their
-						-- contents have not been altered.
+						-- Old file still exists and has the same contents as before.
+						-- New file still exists but has the same contents as old file.
 					assert ("readable3", a_file_system.is_file_readable (old_name))
 					assert ("readable4", a_file_system.is_file_readable (new_name))
 					assert_files_equal ("diff1", gobo_filename, old_name)
-					assert_files_equal ("diff2", hello_filename, new_name)
+					assert_files_equal ("diff2", old_name, new_name)
 						-- Remove temporary files.
 					a_file_system.delete_file (old_name)
 					assert ("not_readable1", not a_file_system.is_file_readable (old_name))
