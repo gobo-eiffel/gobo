@@ -67,62 +67,6 @@ feature -- Fixture
 
 feature -- Test
 
--- Testable features of DS_LIST_CURSOR
-
--- From Class DS_CURSOR [G]:
--- 
--- 	copy (other: [like Current] DS_LIST_CURSOR [G])
--- 	go_to (other: [like Current] DS_LIST_CURSOR [G])
--- 	is_equal (other: [like Current] DS_LIST_CURSOR [G]): BOOLEAN
--- 	is_valid: BOOLEAN
--- 	item: G
--- 	off: BOOLEAN
--- 	same_position (other: [like Current] DS_LIST_CURSOR [G]): BOOLEAN
--- 	valid_cursor (other: [like Current] DS_LIST_CURSOR [G]): BOOLEAN
--- 
--- From Class DS_LINEAR_CURSOR [G]:
--- 
--- 	after: BOOLEAN
--- 	forth
--- 	go_after
--- 	is_first: BOOLEAN
--- 	search_forth (v: G)
--- 	start
--- 
--- From Class DS_BILINEAR_CURSOR [G]:
--- 
--- 	back
--- 	before: BOOLEAN
--- 	finish
--- 	go_before
--- 	is_last: BOOLEAN
--- 	search_back (v: G)
--- 
--- From Class DS_DYNAMIC_CURSOR [G]:
--- 
--- 	replace (v: G)
--- 	swap (other: DS_DYNAMIC_CURSOR [G])
--- 
--- From Class DS_LIST_CURSOR [G]:
--- 
--- 	append_left (other: DS_LINEAR [G])
--- 	append_right (other: DS_LINEAR [G])
--- 	container: DS_LIST [G]
--- 	extend_left (other: DS_LINEAR [G])
--- 	extend_right (other: DS_LINEAR [G])
--- 	force_left (v: G)
--- 	force_right (v: G)
--- 	go_i_th (i: INTEGER)
--- 	index: INTEGER
--- 	prune_left (n: INTEGER)
--- 	prune_right (n: INTEGER)
--- 	put_left (v: G)
--- 	put_right (v: G)
--- 	remove
--- 	remove_left
--- 	remove_right
--- 	valid_index (i: INTEGER): BOOLEAN
-
 	test_for_defect_in_linked_list is
 			-- Demonstrate defect in DS_LINKED_LIST.cursor_back
 			-- by call back on a cursor for which is_first is true.
@@ -206,7 +150,7 @@ feature -- Test
 
 feature {NONE} -- Implementation
 
-	check_is_first_on_list (a_list: DS_LIST[INTEGER]) is
+	check_is_first_on_list (a_list: DS_LIST [INTEGER]) is
 			-- Test feature `is_first'.
 		require
 			a_list_not_void: a_list /= Void
@@ -215,15 +159,15 @@ feature {NONE} -- Implementation
 		do
 			a_cursor := a_list.new_cursor
 			assert ("before", a_cursor.before)
-			assert ("not first", not a_cursor.is_first)
+			assert ("not_first", not a_cursor.is_first)
 			a_cursor.forth
-			assert ("after xor first", a_cursor.after /= a_cursor.is_first)
+			assert ("after_xor_first", a_cursor.after /= a_cursor.is_first)
 			if not a_cursor.after then
 				a_cursor.forth
-				assert ("not first", not a_cursor.is_first)
+				assert ("not_first", not a_cursor.is_first)
 			end
 			a_cursor.start
-			assert ("start: after xor first", a_cursor.after /= a_cursor.is_first)
+			assert ("start_after_xor_first", a_cursor.after /= a_cursor.is_first)
 		end
 
 	check_back_on_list (a_list: DS_LIST [INTEGER]) is
@@ -266,16 +210,19 @@ feature {NONE} -- Implementation
 				old_item := a_cursor.item
 			end
 			a_cursor.back
-			assert ("not after", not a_cursor.after)
-			assert ("non-empty list: was after equivalent last", size > 0 implies was_after = a_cursor.is_last)
-			assert ("non-empty list: was first equivalent before", size > 0 implies was_first = a_cursor.before)
-			assert ("empty list: before", size = 0 implies was_after and a_cursor.before)
-			assert ("index reduced by one", a_cursor.index = old_index - 1)
+			assert ("not_after", not a_cursor.after)
+				-- Non-empty list: was after equivalent last.
+			assert ("was_after", size > 0 implies was_after = a_cursor.is_last)
+				-- Non-empty list: was first equivalent before.
+			assert ("was_first", size > 0 implies was_first = a_cursor.before)
+				-- Empty list: before.
+			assert ("before", size = 0 implies was_after and a_cursor.before)
+			assert ("index_reduced_by_one", a_cursor.index = old_index - 1)
 			a_cursor.forth
-			assert ("same index", a_cursor.index = old_index)
-			assert ("same item", not a_cursor.after implies a_cursor.item = old_item)
-			assert ("same after", a_cursor.after = was_after)
-			assert ("same first", a_cursor.is_first = was_first)
+			assert ("same_index", a_cursor.index = old_index)
+			assert ("same_item", not a_cursor.after implies a_cursor.item = old_item)
+			assert ("same_after", a_cursor.after = was_after)
+			assert ("same_first", a_cursor.is_first = was_first)
 		end
 
 end

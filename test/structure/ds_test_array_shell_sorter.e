@@ -74,23 +74,23 @@ feature -- Test
 			create empty.make (1, 0)
 			create a_comparator.make
 			create a_sorter.make (a_comparator)
-				-- Sort empty array:
+				-- Sort empty array.
 			assert ("sorted1", a_sorter.sorted (empty))
 			a_sorter.sort (empty)
 			assert ("sorted2", a_sorter.sorted (empty))
-				-- Sort already sorted array:
+				-- Sort already sorted array.
 			an_array := <<INTEGER_.to_integer (1), 2, 3, 4, 5, 6>>
 			assert ("sorted3", a_sorter.sorted (an_array))
 			a_sorter.sort (an_array)
 			assert ("sorted4", a_sorter.sorted (an_array))
 			assert_iarrays_same ("items1", <<INTEGER_.to_integer (1), 2, 3, 4, 5, 6>>, an_array)
-				-- Sort unsorted array:
+				-- Sort unsorted array.
 			an_array := <<INTEGER_.to_integer (1), 3, 5, 4, 2>>
 			assert ("not_sorted1", not a_sorter.sorted (an_array))
 			a_sorter.sort (an_array)
 			assert ("sorted5", a_sorter.sorted (an_array))
 			assert_iarrays_same ("items2", <<INTEGER_.to_integer (1), 2, 3, 4, 5>>, an_array)
-				-- Sort reverse sorted array:
+				-- Sort reverse sorted array.
 			an_array := <<INTEGER_.to_integer (4), 3, 2, 1>>
 			assert ("not_sorted2", not a_sorter.sorted (an_array))
 			a_sorter.sort (an_array)
@@ -109,23 +109,23 @@ feature -- Test
 			create empty.make (1, 0)
 			create a_comparator.make
 			create a_sorter.make (a_comparator)
-				-- Reverse sort empty array:
+				-- Reverse sort empty array.
 			assert ("reverse_sorted1", a_sorter.reverse_sorted (empty))
 			a_sorter.reverse_sort (empty)
 			assert ("reverse_sorted2", a_sorter.reverse_sorted (empty))
-				-- Reverse sort sorted array:
+				-- Reverse sort sorted array.
 			an_array := <<INTEGER_.to_integer (1), 2, 3, 4, 5, 6>>
 			assert ("not_reverse_sorted1", not a_sorter.reverse_sorted (an_array))
 			a_sorter.reverse_sort (an_array)
 			assert ("reverse_sorted3", a_sorter.reverse_sorted (an_array))
 			assert_iarrays_same ("items1", <<INTEGER_.to_integer (6), 5, 4, 3, 2, 1>>, an_array)
-				-- Reverse sort unsorted array:
+				-- Reverse sort unsorted array.
 			an_array := <<INTEGER_.to_integer (1), 3, 5, 4, 2>>
 			assert ("not_reverse_sorted2", not a_sorter.reverse_sorted (an_array))
 			a_sorter.reverse_sort (an_array)
 			assert ("reverse_sorted4", a_sorter.reverse_sorted (an_array))
 			assert_iarrays_same ("items2", <<INTEGER_.to_integer (5), 4, 3, 2, 1>>, an_array)
-				-- Reverse sort already reverse sorted array:
+				-- Reverse sort already reverse sorted array.
 			an_array := <<INTEGER_.to_integer (4), 3, 2, 1>>
 			assert ("reverse_sorted5", a_sorter.reverse_sorted (an_array))
 			a_sorter.reverse_sort (an_array)
