@@ -30,6 +30,7 @@ feature {NONE} -- Initialization
 			a_universe_not_void: a_universe /= Void
 		do
 			universe := a_universe
+			current_class := a_universe.unknown_class
 			create rename_table.make (10)
 			rename_table.set_key_equality_tester (feature_name_tester)
 			create export_table.make (10)
