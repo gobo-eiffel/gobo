@@ -11,8 +11,6 @@ indexing
 	revision: "$Revision$"
 
 deferred class XP_PARSER
-	-- TODO: FIXME: this is a duplicate of XP_EVENT_PARSER which
-	-- it should replace.
 	
 inherit
 
@@ -58,7 +56,7 @@ feature {NONE} -- Gc
 		end
 
 feature {NONE} -- Orphan expat events
-	-- FIXME: should be in a separate class?
+	-- TODO: should be in a separate class?
 	
 	on_xml_declaration (a_version: UC_STRING; an_encoding: UC_STRING; a_standalone: BOOLEAN) is
 			-- XML declaration.
@@ -66,7 +64,7 @@ feature {NONE} -- Orphan expat events
 		end
 		
 	on_not_standalone: BOOLEAN is
-			-- FIXME: routine!
+			-- TODO: routine with side-effect!
 		do
 		end
 		
@@ -488,7 +486,7 @@ feature {NONE} -- (low level) frozen callbacks (called from exml clib)
 			name: UC_STRING
 		do
 			name := new_uc_string_from_c_utf8_zero_terminated_string (name_ptr)
-			-- FIXME must convert model ptr to XM_DTD_ELEMENT_ATTRIBUTE
+			-- TODO: must convert model ptr to XM_DTD_ELEMENT_ATTRIBUTE
 			on_element_declaration (name, Void)
 		end
 

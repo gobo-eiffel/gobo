@@ -84,7 +84,7 @@ feature {ANY}
 		end
 
 feature {NONE} -- Call backs
-		-- FIXME: Set current_element to Current before first callback is
+		-- TODO: Set current_element to Current before first callback is
 		-- beeing called (creation procedure?)
 
 	on_start_tag (name, ns_prefix: UC_STRING; attributes: DS_BILINEAR [DS_PAIR [DS_PAIR [UC_STRING, UC_STRING], UC_STRING]]) is

@@ -925,7 +925,7 @@ feature {NONE} -- DTD
 			until
 				a_cursor.after
 			loop
-				--FIXME missing part
+				-- TODO: missing part
 				on_attribute_declaration (onstring (ele_name), a_cursor.item.name, a_cursor.item)
 				a_cursor.forth
 			end
