@@ -181,13 +181,10 @@ feature -- Building
 			i: INTEGER
 			a_state: LX_DFA_STATE
 			singleton: LX_SINGLETON
---			null_code: INTEGER
---			transitions: LX_TRANSITION_TABLE [LX_DFA_STATE]
 		do
 			first_free := 1
 			table_end := 0
 			templates_count := 0
---			null_code := yyNull_equiv_class
 			!! protos.make
 			!! singletons.make (Singletons_capacity)
 			if meta_equiv_classes_used then
@@ -209,36 +206,18 @@ feature -- Building
 			from i := 1 until i > start_states_count loop
 				a_state := item (i)
 				build_transitions (a_state)
---				if yy_null_trans /= Void then
---					transitions := a_state.transitions
---					yy_null_trans.put
---						(transitions.target (null_code).id, a_state.id)
---					transitions.remove (null_code)
---				end
 				put_state (a_state)
 				i := i + 1
 			end
 				-- Process end-of-buffer state.
 			a_state := item (i)
 			build_transitions (a_state)
---			if yy_null_trans /= Void then
---				transitions := a_state.transitions
---				yy_null_trans.put
---					(transitions.target (null_code).id, a_state.id)
---				transitions.remove (null_code)
---			end
 				-- Make sure it jams on end of buffer.
 			!! singleton.make (a_state.id, Jam_id, 0, 0)
 			singletons.put_last (singleton)
 			from i := i + 1 until i > count loop
 				a_state := item (i)
 				build_transitions (a_state)
---				if yy_null_trans /= Void then
---					transitions := a_state.transitions
---					yy_null_trans.put
---						(transitions.target (null_code).id, a_state.id)
---					transitions.remove (null_code)
---				end
 				if not a_state.is_accepting then
 					backing_up_count := backing_up_count + 1
 				end
