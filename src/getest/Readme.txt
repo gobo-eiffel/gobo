@@ -23,6 +23,4 @@ A "User's Manual" documentation for getest, in HTML format, is provided
 in "$GOBO/doc/getest".
 
 --
-Copyright (c) 2000-2001, Eric Bezault
-mailto:ericb@gobosoft.com
-http://www.gobosoft.com
+Copyright (c) 2000-2001, Eric Bezault and others

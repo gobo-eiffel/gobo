@@ -4,11 +4,10 @@ indexing
 
 		"Gobo Eiffel Lint"
 
-	author:     "Eric Bezault <ericb@gobosoft.com>"
-	copyright:  "Copyright (c) 1999-2001, Eric Bezault and others"
-	license:    "Eiffel Forum Freeware License v1 (see forum.txt)"
-	date:       "$Date$"
-	revision:   "$Revision$"
+	copyright: "Copyright (c) 1999-2001, Eric Bezault and others"
+	license: "Eiffel Forum License v1 (see forum.txt)"
+	date: "$Date$"
+	revision: "$Revision$"
 
 class GELINT
 
@@ -81,6 +80,7 @@ feature -- Processing
 					std.error.put_string ("%'%N")
 				end
 			end
+io.read_line
 		end
 
 	process_universe (a_universe: ET_UNIVERSE) is
@@ -89,11 +89,14 @@ feature -- Processing
 			a_universe_not_void: a_universe /= Void
 		do
 			a_universe.parse_all
+--			a_universe.preparse_single
+--			a_universe.parse_system
 print ("Parsed ")
 print (a_universe.classes.count)
 print (" classes%N")
 print (a_universe.features.count)
 print (" features%N")
+io.read_line
 			a_universe.compute_ancestors
 print ("Done.%N")
 print (a_universe.features.count)

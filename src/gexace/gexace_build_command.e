@@ -4,12 +4,11 @@ indexing
 
 		"Build commands for 'gexace'"
 
-	system:     "Gobo Eiffel Xace"
-	author:     "Andreas Leitner <nozone@sbox.tugraz.at>"
-	copyright:  "Copyright (c) 2001, Andreas Leitner and others"
-	license:    "Eiffel Forum Freeware License v1 (see forum.txt)"
-	date:       "$Date$"
-	revision:   "$Revision$"
+	system: "Gobo Eiffel Xace"
+	copyright: "Copyright (c) 2001, Andreas Leitner and others"
+	license: "Eiffel Forum License v1 (see forum.txt)"
+	date: "$Date$"
+	revision: "$Revision$"
 
 deferred class GEXACE_BUILD_COMMAND
 

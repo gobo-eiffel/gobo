@@ -21,6 +21,4 @@ A "User's Manual" documentation for Geyacc, in HTML format, is provided
 in "$GOBO/doc/geyacc".
 
 --
-Copyright (c) 1997-2001, Eric Bezault
-mailto:ericb@gobosoft.com
-http://www.gobosoft.com
+Copyright (c) 1997-2001, Eric Bezault and others

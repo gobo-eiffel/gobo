@@ -4,11 +4,10 @@ indexing
 
 		"Gobo Eiffel Lex command lines"
 
-	author:     "Eric Bezault <ericb@gobosoft.com>"
-	copyright:  "Copyright (c) 1999-2001, Eric Bezault and others"
-	license:    "Eiffel Forum Freeware License v1 (see forum.txt)"
-	date:       "$Date$"
-	revision:   "$Revision$"
+	copyright: "Copyright (c) 1999-2001, Eric Bezault and others"
+	license: "Eiffel Forum License v1 (see forum.txt)"
+	date: "$Date$"
+	revision: "$Revision$"
 
 class GELEX_COMMAND_LINE
 
@@ -140,16 +139,6 @@ feature -- Parsing
 								options.set_actions_separated (True)
 							when 'z' then
 								options.set_inspect_used (True)
---							when 'F' then
---								options.set_equiv_classes_used (False)
---								options.set_meta_equiv_classes_used (False)
---								options.set_full_speed (True)
---							when 'p' then
---								-- TO DO (performance)
---							when 'T' then
---								options.set_trace_mode (True)
---							when 'v' then
---								options.set_print_stats (True)
 							else
 								report_unknown_flag_error (arg.item (j).out)
 							end

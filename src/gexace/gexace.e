@@ -4,12 +4,11 @@ indexing
 
 		"Gobo Eiffel Xace"
 
-	system:     "Gobo Eiffel Xace"
-	author:     "Andreas Leitner <nozone@sbox.tugraz.at>"
-	copyright:  "Copyright (c) 2001-2002, Andreas Leitner and others"
-	license:    "Eiffel Forum Freeware License v1 (see forum.txt)"
-	date:       "$Date$"
-	revision:   "$Revision$"
+	system: "Gobo Eiffel Xace"
+	copyright: "Copyright (c) 2001-2002, Andreas Leitner and others"
+	license: "Eiffel Forum License v1 (see forum.txt)"
+	date: "$Date$"
+	revision: "$Revision$"
 
 class GEXACE
 

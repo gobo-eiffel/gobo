@@ -27,6 +27,4 @@ A more detailed documentation for gelint will be provided in
 future releases.
 
 --
-Copyright (c) 2000-2001, Eric Bezault
-mailto:ericb@gobosoft.com
-http://www.gobosoft.com
+Copyright (c) 2000-2001, Eric Bezault and others

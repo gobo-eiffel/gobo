@@ -4,19 +4,18 @@ indexing
 
 		"Map"
 
-	library:    "Gobo Eiffel Ant"
-	author:     "Sven Ehrke <sven.ehrke@sven-ehrke.de>"
-	copyright:  "Copyright (c) 2001, Sven Ehrke and others"
-	license:    "Eiffel Forum Freeware License v1 (see forum.txt)"
-	date:       "$Date$"
-	revision:   "$Revision$"
-
+	library: "Gobo Eiffel Ant"
+	copyright: "Copyright (c) 2001, Sven Ehrke and others"
+	license: "Eiffel Forum License v1 (see forum.txt)"
+	date: "$Date$"
+	revision: "$Revision$"
 
 class GEANT_MAP
 
 inherit
 
 	ANY
+
 	GEANT_SHARED_PROPERTIES
 		export
 			{NONE} all
@@ -303,4 +302,3 @@ feature -- Constants
 --		end
 
 end -- class GEANT_MAP
-

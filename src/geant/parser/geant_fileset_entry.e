@@ -4,12 +4,11 @@ indexing
 
 		"Fileset entries"
 
-	library:    "Gobo Eiffel Ant"
-	author:     "Sven Ehrke <sven.ehrke@sven-ehrke.de>"
-	copyright:  "Copyright (c) 2002, Sven Ehrke and others"
-	license:    "Eiffel Forum Freeware License v1 (see forum.txt)"
-	date:       "$Date$"
-	revision:   "$Revision$"
+	library: "Gobo Eiffel Ant"
+	copyright: "Copyright (c) 2002, Sven Ehrke and others"
+	license: "Eiffel Forum License v1 (see forum.txt)"
+	date: "$Date$"
+	revision: "$Revision$"
 
 class GEANT_FILESET_ENTRY
 
@@ -26,7 +25,7 @@ creation
 
 	make
 
-feature -- Initialization
+feature {NONE} -- Initialization
 
 	make (a_filename, a_mapped_filename: STRING) is
 			-- Initialize fileset entry by setting `filename' to `a_filename'

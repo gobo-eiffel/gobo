@@ -20,6 +20,4 @@ A "User's Manual" documentation for Gelex, in HTML format, is provided
 in "$GOBO/doc/gelex".
 
 --
-Copyright (c) 1997-2001, Eric Bezault
-mailto:ericb@gobosoft.com
-http://www.gobosoft.com
+Copyright (c) 1997-2001, Eric Bezault and others

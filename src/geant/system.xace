@@ -2,31 +2,30 @@
 
 <system name="geant">
 	<description>
-		system:     "Gobo Eiffel Ant"
-		author:     "Eric Bezault [ericb@gobosoft.com]"
-		copyright:  "Copyright (c) 2001, Eric Bezault and others"
-		license:    "Eiffel Forum Freeware License v1 (see forum.txt)"
-		date:       "$Date$"
-		revision:   "$Revision$"
+		system: "Gobo Eiffel Ant"
+		copyright: "Copyright (c) 2001, Eric Bezault and others"
+		license: "Eiffel Forum License v1 (see forum.txt)"
+		date: "$Date$"
+		revision: "$Revision$"
 	</description>
 
 	<root class="GEANT" creation="make"/>
 	<cluster>
 		<option unless="${DEBUG}">
-			<require enable="False"/>
-			<ensure enable="False"/>
-			<invariant enable="False"/>
-			<loop enable="False"/>
-			<check enable="False"/>
-			<optimize enable="True"/>
+			<require enable="false"/>
+			<ensure enable="false"/>
+			<invariant enable="false"/>
+			<loop enable="false"/>
+			<check enable="false"/>
+			<optimize enable="true"/>
 		</option>
 		<option if="${DEBUG}">
-			<require enable="True"/>
-			<ensure enable="True"/>
-			<invariant enable="True"/>
-			<loop enable="True"/>
-			<check enable="True"/>
-			<optimize enable="False"/>
+			<require enable="true"/>
+			<ensure enable="true"/>
+			<invariant enable="true"/>
+			<loop enable="true"/>
+			<check enable="true"/>
+			<optimize enable="false"/>
 		</option>
 
 		<mount location="${GOBO}/src/geant/cluster.xace"/>

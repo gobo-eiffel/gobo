@@ -4,13 +4,11 @@ indexing
 
 		"Compilation tasks for Visual Eiffel"
 
-	library:    "Gobo Eiffel Ant"
-	author:     "Eric Bezault <ericb@gobosoft.com>"
-	copyright:  "Copyright (c) 2001, Eric Bezault and others"
-	license:    "Eiffel Forum Freeware License v1 (see forum.txt)"
-	date:       "$Date$"
-	revision:   "$Revision$"
-
+	library: "Gobo Eiffel Ant"
+	copyright: "Copyright (c) 2001, Eric Bezault and others"
+	license: "Eiffel Forum License v1 (see forum.txt)"
+	date: "$Date$"
+	revision: "$Revision$"
 
 class GEANT_VE_TASK
 

@@ -4,12 +4,11 @@ indexing
 
 		"Out of date commands"
 
-	library:    "Gobo Eiffel Ant"
-	author:     "Sven Ehrke <sven.ehrke@sven-ehrke.de>"
-	copyright:  "Copyright (c) 2001, Sven Ehrke and others"
-	license:    "Eiffel Forum Freeware License v1 (see forum.txt)"
-	date:       "$Date$"
-	revision:   "$Revision$"
+	library: "Gobo Eiffel Ant"
+	copyright: "Copyright (c) 2001, Sven Ehrke and others"
+	license: "Eiffel Forum License v1 (see forum.txt)"
+	date: "$Date$"
+	revision: "$Revision$"
 
 class GEANT_OUTOFDATE_COMMAND
 
@@ -86,7 +85,6 @@ feature -- Access
 		-- Fileset for current command
 
 feature -- Setting
-
 
 	set_source_filename (a_source_filename: like source_filename) is
 			-- Set `source_filename' to `a_source_filename'.
@@ -211,4 +209,3 @@ feature -- Execution
 		end
 
 end -- class GEANT_OUTOFDATE_COMMAND
-

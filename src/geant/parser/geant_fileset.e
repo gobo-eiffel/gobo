@@ -4,19 +4,18 @@ indexing
 
 		"Fileset"
 
-	library:    "Gobo Eiffel Ant"
-	author:     "Sven Ehrke <sven.ehrke@sven-ehrke.de>"
-	copyright:  "Copyright (c) 2001, Sven Ehrke and others"
-	license:    "Eiffel Forum Freeware License v1 (see forum.txt)"
-	date:       "$Date$"
-	revision:   "$Revision$"
-
+	library: "Gobo Eiffel Ant"
+	copyright: "Copyright (c) 2001, Sven Ehrke and others"
+	license: "Eiffel Forum License v1 (see forum.txt)"
+	date: "$Date$"
+	revision: "$Revision$"
 
 class GEANT_FILESET
 
 inherit
 
 	ANY
+
 	KL_SHARED_FILE_SYSTEM
 		export
 			{NONE} all
@@ -214,6 +213,7 @@ feature -- Access
 				after implies
 					(Result implies not project.variables.has_variable (mapped_filename_variable_name))
 		end
+
 feature -- Setting
 
 	set_directory_name (a_directory_name: STRING) is
@@ -490,10 +490,10 @@ feature {NONE} -- Implementation/Processing
 		end
 
 invariant
+
 	filename_variable_name_not_void: filename_variable_name /= Void
 	filename_variable_name_not_empty: filename_variable_name.count > 0
 	mapped_filename_variable_name_not_void: mapped_filename_variable_name /= Void
 	mapped_filename_variable_name_not_empty: mapped_filename_variable_name.count > 0
 
 end -- class GEANT_FILESET
-

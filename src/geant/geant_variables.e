@@ -4,11 +4,11 @@ indexing
 
 		"Variables for GEANT"
 
-	author:    "Sven Ehrke (sven.ehrke@sven-ehrke.de)"
-	copyright: "Sven Ehrke and others"
-	license:   "Eiffel Forum Freeware License v1 (see forum.txt)"
-	date:      "$Date$"
-	revision:  "$Revision$"
+	library: "Gobo Eiffel Ant"
+	copyright:"Sven Ehrke and others"
+	license:"Eiffel Forum License v1 (see forum.txt)"
+	date: "$Date$"
+	revision:"$Revision$"
 
 
 class GEANT_VARIABLES
@@ -16,6 +16,7 @@ class GEANT_VARIABLES
 inherit
 
 	ANY
+
 	KL_IMPORTED_STRING_ROUTINES
 		export
 			{NONE} all

@@ -4,13 +4,11 @@ indexing
 
 		"XSLT commands"
 
-	library:    "Gobo Eiffel Ant"
-	author:     "Sven Ehrke <sven.ehrke@sven-ehrke.de>"
-	copyright:  "Copyright (c) 2001, Sven Ehrke and others"
-	license:    "Eiffel Forum Freeware License v1 (see forum.txt)"
-	date:       "$Date$"
-	revision:   "$Revision$"
-
+	library: "Gobo Eiffel Ant"
+	copyright: "Copyright (c) 2001, Sven Ehrke and others"
+	license: "Eiffel Forum License v1 (see forum.txt)"
+	date: "$Date$"
+	revision: "$Revision$"
 
 class GEANT_XSLT_COMMAND
 
@@ -30,7 +28,7 @@ creation
 feature {NONE} -- Initialization
 
 	make (a_project: GEANT_PROJECT) is
-			-- Create a new 'gepp' command.
+			-- Create a new 'xslt' command.
 		do
 			precursor (a_project)
 			input_filename := ""
