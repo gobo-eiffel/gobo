@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="iso-8859-1"?>
+<?xml version="1.0" encoding="iso-8859-1"?><!-- -*- mode: nxml -*- -->
 <!--
 	description:
 	
@@ -85,13 +85,15 @@
 	<li>Review commenting style - this has been done to some extent.</li>
 	<li>Review unsafe string features.</li>
 	<li>Change remaining data model infoset properties into implementation stuff.</li>
-	<li>Change loops to use extrenal cursors (ongoing)</li>
+	<li>Change loops to use external cursors (ongoing)</li>
 	<li>TINY_BUILDER throws exceptions to report errors. Re-design.</li>
 	<li>EXPRESSION.display should check the error status</li>
 	<li>Document procedures such as analyze, that cause side effects on the context.</li>
 	<li>Promotion in path and filter expressions commented out as it causes an infinite recursion inside let-action analyze</li>
 	<li>Need to test all returns from {XM_XPATH_EXPRESSION}.iterator for Void, or equivalently for a Dynamic or Type Error.</li>
-	<li>Review sequence iterators. Look at Saxon 7.9.1. Also consider descendants of DS_CURSOR.</li>
+	<li>Review sequence iterators. Look at Saxon 7.9.1.</li>
+	<li>Break up large analyze routines into more manageable chunks.</li>
+	<li>Review assignment attempts</li>
       </ul>
     </div>
     <div>

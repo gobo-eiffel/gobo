@@ -44,7 +44,7 @@ feature -- Access
 		do
 			an_item := a_context.context_item
 			if an_item = Void then
-				set_last_error_from_string ("Evaluating '/': the context item is not set", 2, Type_error)
+				set_last_error_from_string ("Evaluating '/': the context item is not set", 2, Dynamic_error)
 			else
 				a_node ?= an_item
 				if a_node = Void then

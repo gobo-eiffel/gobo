@@ -116,7 +116,7 @@ feature -- Access
 				Result := Element_node
 			end
 		ensure
-			axis_number_in_range: Ancestor_axis >= Result and then Result <= Preceding_or_ancestor_axis			
+			axis_number_in_range: Result = Attribute_node or else Result = Element_node			
 		end
 
 feature -- Status report

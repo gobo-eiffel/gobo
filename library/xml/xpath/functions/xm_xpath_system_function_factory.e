@@ -37,6 +37,8 @@ feature -- Creation
 				create {XM_XPATH_EXISTS} Result.make				
 			elseif STRING_.same_string (a_function_name, "normalize-space") then
 				create {XM_XPATH_NORMALIZE_SPACE} Result.make
+			elseif STRING_.same_string (a_function_name, "number") then
+				create {XM_XPATH_NORMALIZE_SPACE} Result.make				
 			elseif STRING_.same_string (a_function_name, "string-length") then
 				create {XM_XPATH_STRING_LENGTH} Result.make				
 			end

@@ -71,8 +71,6 @@ feature -- Test
 		create tokenizer.make
 			tokenizer.tokenize (a_string)
 			assert ("No lexical error 1", not tokenizer.is_lexical_error)
---			print (display_current_token (tokenizer))
---			print ("%N")
 			assert ("Ancestor token", tokenizer.last_token = Slash_slash_token)
 			
 			tokenizer.next
@@ -87,6 +85,55 @@ feature -- Test
 			tokenizer.next
 			assert ("No lexical error 4", not tokenizer.is_lexical_error)
 			assert ("At token", tokenizer.last_token = At_token)
+
+			tokenizer.next
+			assert ("No lexical error 5", not tokenizer.is_lexical_error)
+			assert ("Name token 2", tokenizer.last_token = Name_token)
+			assert ("Name is son", STRING_.same_string (tokenizer.last_token_value, "son"))
+			
+			tokenizer.next
+			assert ("No lexical error 6", not tokenizer.is_lexical_error)
+			assert ("Equals token", tokenizer.last_token = Equals_token)
+
+			tokenizer.next
+			assert ("No lexical error 7", not tokenizer.is_lexical_error)
+			assert ("String literal token", tokenizer.last_token = String_literal_token)
+			assert ("String value", STRING_.same_string (tokenizer.last_token_value, "Jim"))
+
+			tokenizer.next
+			assert ("No lexical error 8", not tokenizer.is_lexical_error)
+			assert ("RSQB token", tokenizer.last_token = Right_square_bracket_token)
+					
+			tokenizer.next
+			assert ("EOF", tokenizer.last_token = Eof_token)
+			assert ("Input stream exhausted", tokenizer.is_input_stream_exhausted)
+		end
+
+	test_path_with_predicate_including_axis is
+		local
+			tokenizer: XM_XPATH_TOKENIZER
+			a_string: STRING
+		do
+			a_string := "//fred[attribute::son='Jim']"
+
+		create tokenizer.make
+			tokenizer.tokenize (a_string)
+			assert ("No lexical error 1", not tokenizer.is_lexical_error)
+			assert ("Ancestor token", tokenizer.last_token = Slash_slash_token)
+			
+			tokenizer.next
+			assert ("No lexical error 2", not tokenizer.is_lexical_error)
+			assert ("Name token", tokenizer.last_token = Name_token)
+			assert ("Name is fred", STRING_.same_string (tokenizer.last_token_value, "fred"))
+
+			tokenizer.next
+			assert ("No lexical error 3", not tokenizer.is_lexical_error)
+			assert ("LSQB token", tokenizer.last_token = Left_square_bracket_token)
+
+			tokenizer.next
+			assert ("No lexical error 4", not tokenizer.is_lexical_error)
+			assert ("Axis token", tokenizer.last_token = Axis_token)
+			assert ("Attribute axis", STRING_.same_string (tokenizer.last_token_value, "attribute"))
 
 			tokenizer.next
 			assert ("No lexical error 5", not tokenizer.is_lexical_error)

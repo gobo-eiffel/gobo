@@ -29,8 +29,8 @@ feature {NONE} -- Initialization
 		do
 			controller := a_controller
 			cached_last := -1
-			-- TODO more code
-			todo ("make", True)
+			current_iterator := a_controller.current_iterator
+			local_variable_frame := a_controller.local_variable_frame
 		ensure
 			controller_set: controller = a_controller
 		end
@@ -40,13 +40,16 @@ feature -- Access
 	current_iterator: XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_ITEM]
 			-- Current iterator
 
+	local_variable_frame: ARRAY [XM_XPATH_VALUE]
+			-- Local variables in scope
+	
 	context_item: XM_XPATH_ITEM is
 			-- The context item (".")
 		do
 			if current_iterator = Void then
 				Result := Void
 			else
-				Result := current_iterator.item_for_iteration
+				Result := current_iterator.item
 			end
 		end
 

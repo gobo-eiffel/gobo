@@ -16,6 +16,8 @@ inherit
 
 	XM_XPATH_ASSIGNATION
 
+	XM_XPATH_MAPPING_FUNCTION
+
 creation
 
 	make
@@ -61,6 +63,13 @@ feature -- Access
 			create result.make_single_integer
 		end
 	
+	map (an_item: XM_XPATH_ITEM; a_context: XM_XPATH_CONTEXT; an_information_object: ANY): XM_XPATH_MAPPED_ITEM is
+			-- Map `an_item' to a sequence
+		do
+			-- TODO
+			todo ("map", False)
+		end
+
 feature -- Status report
 
 	display (a_level: INTEGER; a_pool: XM_XPATH_NAME_POOL) is

@@ -35,7 +35,7 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	item_for_iteration: G is
+	item: G is
 			-- Value or node at the current position
 		do
 				Result := Void

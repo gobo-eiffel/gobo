@@ -149,7 +149,7 @@ feature {NONE} -- Implementation
 					end
 				if not an_iterator.after then
 					an_iterator.forth
-					Result ?= an_iterator.item_for_iteration
+					Result ?= an_iterator.item
 				end
 			end
 		end

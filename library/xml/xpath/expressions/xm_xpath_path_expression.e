@@ -16,10 +16,10 @@ inherit
 
 	XM_XPATH_COMPUTED_EXPRESSION
 		redefine
-			simplify, promote, compute_dependencies, compute_special_properties, sub_expressions, same_expression
+			simplify, promote, compute_dependencies, compute_special_properties, sub_expressions, same_expression, iterator
 		end
 
-	-- TODO: XM_XPATH_MAPPING_FUNCTION
+	XM_XPATH_MAPPING_FUNCTION
 
 	XM_XPATH_ROLE
 
@@ -92,6 +92,39 @@ feature -- Access
 			Result.put (step, 2)
 		end
 
+
+	iterator (a_context: XM_XPATH_CONTEXT): XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_ITEM] is
+			-- Iterator over the values of a sequence;
+			-- Delivers the result of the path expression in unsorted order,
+			--  without removal of duplicates.
+			-- If sorting and deduplication are needed,
+			--  this is achieved by wrapping the path expression in an XM_XPATH_DOCUMENT_SORTER.
+		local
+			an_iterator: XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_ITEM]
+			another_context: XM_XPATH_CONTEXT
+		do
+			an_iterator := start.iterator (a_context)
+			if an_iterator = Void then
+					check
+						start_in_error: start.is_error
+						-- By post-condition of iterator
+					end
+				set_last_error (start.last_error)
+			else
+				another_context := a_context.new_context
+				another_context.set_current_iterator (an_iterator)
+
+				create {XM_XPATH_MAPPING_ITERATOR} Result.make (an_iterator, Current, another_context, Void)
+			end
+		end
+
+	map (an_item: XM_XPATH_ITEM; a_context: XM_XPATH_CONTEXT; an_information_object: ANY): XM_XPATH_MAPPED_ITEM is
+			-- Map `an_item' to a sequence
+		do
+			-- TODO
+			todo ("map", False)
+		end
+	
 feature -- Comparison
 
 	same_expression (other: XM_XPATH_EXPRESSION): BOOLEAN is

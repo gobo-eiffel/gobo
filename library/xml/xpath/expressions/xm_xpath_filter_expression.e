@@ -268,26 +268,6 @@ feature -- Status setting
 			are_dependencies_computed := True
 		end
 
-	set_base_expression (a_base_expression: XM_XPATH_EXPRESSION) is
-			-- Set `base_expression.
-		require
-			base_expression_not_void: a_base_expression /= Void
-		do
-			base_expression := a_base_expression
-		ensure
-			base_expression_set: base_expression = a_base_expression
-		end
-
-	set_filter (a_filter: XM_XPATH_EXPRESSION) is
-			-- Set `filter'.
-		require
-			filter_not_void: a_filter /= Void
-		do
-			filter := a_filter
-		ensure
-			filter_set: filter = a_filter
-		end
-
 feature -- Optimization
 
 	simplify: XM_XPATH_EXPRESSION is
@@ -502,6 +482,28 @@ feature -- Optimization
 				end
 			end
 			Result := a_result_expression
+		end
+
+feature -- Element change
+
+	set_base_expression (a_base_expression: XM_XPATH_EXPRESSION) is
+			-- Set `base_expression.
+		require
+			base_expression_not_void: a_base_expression /= Void
+		do
+			base_expression := a_base_expression
+		ensure
+			base_expression_set: base_expression = a_base_expression
+		end
+
+	set_filter (a_filter: XM_XPATH_EXPRESSION) is
+			-- Set `filter'.
+		require
+			filter_not_void: a_filter /= Void
+		do
+			filter := a_filter
+		ensure
+			filter_set: filter = a_filter
 		end
 
 feature {NONE} -- Implementation

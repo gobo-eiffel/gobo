@@ -19,6 +19,8 @@ inherit
 	
 	KL_IMPORTED_STRING_ROUTINES
 
+	KL_SHARED_STANDARD_FILES
+
 creation
 
 	make
@@ -52,7 +54,7 @@ feature -- Tokenizer states
 	Operator_state: INTEGER is 2
 			-- State in which the next thing to be read is an operator
 			--  review -  these last two are the same - I think that is because
-			-- Saxon supports XQuery as well as XSLT.
+			-- Saxon supports XQuery as well as XSLT. NO. States don't appear to be used any more
 
 feature -- Access
 
@@ -205,13 +207,32 @@ feature --Element change
 			current_token := next_token
 			current_token_value := next_token_value
 			line_number := next_line_number
-			
+
+			debug ("XPath tokens")
+				std.error.put_string ("Current token is now ")
+				if is_valid_token (current_token) then
+					std.error.put_string (token_name (current_token))
+				else
+					std.error.put_string (current_token.out)
+				end
+				std.error.put_new_line
+			end
+
 			-- disambiguate the current token based on the tokenizer state
 				
 			inspect
 				current_token
 			when Name_token then
 				operator_type := binary_operator (current_token_value)
+				debug ("XPath tokens")
+					std.error.put_string ("Operator type is ")
+					if is_valid_token (operator_type) then
+						std.error.put_string (token_name (operator_type))
+					else
+						std.error.put_string (operator_type.out)
+					end
+				std.error.put_new_line
+			end
 				if operator_type /= Unknown_token and then not is_operator then
 					current_token := operator_type
 				end
@@ -258,6 +279,10 @@ feature --Element change
 							if not is_lexical_error then 
 								look_ahead
 								current_token := Axis_token
+								debug ("XPath tokens")
+									std.error.put_string ("Current token is Axis_token")
+									std.error.put_new_line
+								end
 							end
 							
 						when Colon_star_token then
@@ -338,6 +363,17 @@ feature --Element change
 						end
 					end
 				end
+			end
+			debug ("XPath tokens")
+				std.error.put_string ("Current token on exit from next is set to ")
+				if is_valid_token (current_token) then
+					std.error.put_string (token_name (current_token))
+				else
+					std.error.put_string (current_token.out)
+				end
+				std.error.put_string (", value is ")
+				std.error.put_string (current_token_value)
+				std.error.put_new_line
 			end
 		ensure
 			tokens_set_if_no_error: not is_lexical_error implies last_token_value /= Void
@@ -442,9 +478,9 @@ feature {NONE} -- Status setting
 							loop
 								if input.item (input_index) = '%N' then
 									next_line_number := next_line_number + 1
-								elseif input.item (input_index) = ':'  and then input.item (input_index + 1) = ')'  then
-						nesting_depth := nesting_depth - 1
-						input_index := input_index + 1
+								elseif input.item (input_index) = ':'  and then input.item (input_index + 1) = '%)'  then
+									nesting_depth := nesting_depth - 1
+									input_index := input_index + 1
 								elseif input.item (input_index) = '('  and then input.item (input_index + 1) = ':'  then
 									nesting_depth := nesting_depth + 1
 									input_index := input_index + 1
@@ -648,7 +684,7 @@ feature {NONE} -- Status setting
 						from
 							finished_inner := False
 						until
-							finished_inner
+							finished or else finished_inner
 						loop
 							input_index := input.index_of (c, input_index + 1)
 							if input_index = 0 then
@@ -713,7 +749,7 @@ feature {NONE} -- Status setting
 						from
 							finished_other := False
 						until
-							finished_other or else input_index > input.count
+							finished or else finished_other or else input_index > input.count
 						loop
 							c := input.item (input_index)
 							inspect
@@ -724,12 +760,13 @@ feature {NONE} -- Status setting
 									if nc = ':' then
 										next_token_value := input.substring (next_token_start_index, input_index - 1)
 										next_token := Axis_token
-										input_index := input_index + 2
+										--input_index := input_index + 2
 										finished := True
+										finished_other := True
 									elseif nc = '*' then
 										next_token_value := input.substring (next_token_start_index, input_index - 1)
 										next_token := Prefix_token
-										input_index := input_index + 2
+										--input_index := input_index + 2
 										finished := True
 									elseif nc = '=' then
 
@@ -756,6 +793,17 @@ feature {NONE} -- Status setting
 						finished := True
 					end
 				end
+			end
+			debug ("XPath tokens")
+				std.error.put_string ("Next token on exit from look-ahead is set to ")
+				if is_valid_token (next_token) then
+					std.error.put_string (token_name (next_token))
+				else
+					std.error.put_string (next_token.out)
+				end
+				std.error.put_string (", value is ")
+				std.error.put_string (next_token_value)
+				std.error.put_new_line
 			end
 		end
 

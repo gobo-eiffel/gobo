@@ -40,7 +40,7 @@ feature -- Access
 				a_counter > p or else an_iterator.after
 			loop
 				an_iterator.forth
-				an_item := an_iterator.item_for_iteration
+				an_item := an_iterator.item
 				if a_counter = p then
 					Result := an_item
 				else
@@ -72,7 +72,7 @@ feature -- Status report
 				an_iterator.after
 			loop
 				std.error.put_string (indent (a_level + 1))
-				std.error.put_string (an_iterator.item_for_iteration.string_value)
+				std.error.put_string (an_iterator.item.string_value)
 				std.error.put_new_line
 				an_iterator.forth				
 			end
@@ -96,7 +96,7 @@ feature -- Evaluation
 		do
 			an_iterator := iterator (a_context)
 			if not an_iterator.before then
-				last_evaluated_item := an_iterator.item_for_iteration
+				last_evaluated_item := an_iterator.item
 			end
 		end
 

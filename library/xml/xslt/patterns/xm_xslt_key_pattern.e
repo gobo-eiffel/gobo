@@ -96,7 +96,7 @@ feature -- Matching
 				until
 					finished or else an_iter.after
 				loop
-					a_key := an_iter.item_for_iteration.string_value
+					a_key := an_iter.item.string_value
 					create a_key_value.make (a_key)
 					nodes := a_km.select_by_key (key_fingerprint, a_doc, a_key_value, a_controller)
 					from
@@ -107,7 +107,7 @@ feature -- Matching
 					until
 						finished or else nodes.after
 					loop
-						if nodes.item_for_iteration.is_same_node (a_node) then
+						if nodes.item.is_same_node (a_node) then
 							Result := True
 							finished := True
 						end

@@ -1930,20 +1930,22 @@ feature {NONE} -- Implementation
 			positive_fingerprint: a_fingerprint >= 0
 		local
 			a_range_variable: XM_XPATH_RANGE_VARIABLE_DECLARATION
+			a_cursor: DS_ARRAYED_LIST_CURSOR [XM_XPATH_RANGE_VARIABLE_DECLARATION] 
 		do
 			if range_variable_stack /= Void then
+				a_cursor := range_variable_stack.new_cursor
 				from
-					range_variable_stack.finish
+					a_cursor.finish
 				variant
-					range_variable_stack.index
+					a_cursor.index
 				until
-					Result /= Void or else range_variable_stack.before
+					Result /= Void or else a_cursor.before
 				loop
-					a_range_variable := range_variable_stack.item_for_iteration
+					a_range_variable := a_cursor.item
 					if a_range_variable.fingerprint = a_fingerprint then
 						Result := a_range_variable
 					end
-					range_variable_stack.forth
+					a_cursor.forth
 				end
 			end
 		ensure

@@ -37,7 +37,7 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	item_for_iteration: G is
+	item: G is
 			-- Value or node at the current position
 		do
 			if index = 1 then
@@ -91,7 +91,7 @@ feature -- Duplication
 
 feature {NONE} -- Implementation
 
-	value: G
+	value: like item
 			-- Possibly void item
 
 	gone: BOOLEAN

@@ -23,9 +23,10 @@
     <option name="finalize" value="false"/>
     <!-- <option name="debug_tag" value="XPath expressions"/> -->
     <!-- <option name="debug_tag" value="XPath Axis Expression"/> -->
-    <option name="debug_tag" value="XPath expression factory"/>
+    <!-- <option name="debug_tag" value="XPath expression factory"/> -->
     <!-- <option name="debug_tag" value="XPath Expression Parser"/> -->
     <!-- <option name="debug_tag" value="XPath Expression Parser - tokens"/> -->
+    <!-- <option name="debug_tag" value="XPath tokens"/> -->
     <!-- <option name="debug_tag" value="XPath stand-alone context"/> -->
     <!-- <option name="debug_tag" value="XPath content emitter"/>  -->
     <!-- <option name="debug_tag" value="XPath descendants enumeration"/> -->

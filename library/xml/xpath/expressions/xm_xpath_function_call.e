@@ -49,20 +49,23 @@ feature -- Status report
 
 	display (a_level: INTEGER; a_pool: XM_XPATH_NAME_POOL) is
 			-- Diagnostic print of expression structure to `std.error'
+		local
+			a_cursor: DS_ARRAYED_LIST_CURSOR [XM_XPATH_EXPRESSION]
 		do
 			std.error.put_string (indent (a_level))
 			std.error.put_string ("function ")
 			std.error.put_string (name)
 			std.error.put_new_line
+			a_cursor := arguments.new_cursor
 			from
-				arguments.start
+				a_cursor.start
 			variant
-				arguments.count + 1 - arguments.index				
+				arguments.count + 1 - a_cursor.index				
 			until
-				arguments.after
+				a_cursor.after
 			loop
-				arguments.item_for_iteration.display (a_level + 1, a_pool)
-				arguments.forth
+				a_cursor.item.display (a_level + 1, a_pool)
+				a_cursor.forth
 			end
 		end
 
@@ -153,6 +156,7 @@ feature -- Optimization
 			result_arguments: DS_ARRAYED_LIST [XM_XPATH_EXPRESSION]
 			an_argument: XM_XPATH_EXPRESSION
 			a_result_expression: XM_XPATH_FUNCTION_CALL
+			a_cursor: DS_ARRAYED_LIST_CURSOR [XM_XPATH_EXPRESSION]
 		do
 			an_expression := an_offer.accept (Current)
 			if an_expression = Void then
@@ -160,16 +164,17 @@ feature -- Optimization
 					Result := Current					
 				else
 					result_arguments := clone (arguments)
+					a_cursor := result_arguments.new_cursor
 					from
-						result_arguments.start
+						a_cursor.start
 					variant
-						result_arguments.count + 1 - result_arguments.index
+						result_arguments.count + 1 - a_cursor.index
 					until
 						result_arguments.after
 					loop
-						an_argument := result_arguments.item_for_iteration.promote (an_offer)
-						result_arguments.replace_at (an_argument)
-						result_arguments.forth
+						an_argument := a_cursor.item.promote (an_offer)
+						a_cursor.replace (an_argument)
+						a_cursor.forth
 					end
 					a_result_expression ?= an_expression
 						check
@@ -300,6 +305,6 @@ feature {NONE} -- Implementation
 
 invariant
 
-	arguments_not_void: arguments /= Void
+	arguments: arguments /= Void and then arguments.equality_tester.is_equal (expression_tester)
 
 end

@@ -308,13 +308,21 @@ feature	-- Access
 	token_name (a_token: INTEGER): STRING is
 			-- Name of `a_token'
 		require
-			valid_token: a_token > Eof_token and a_token <= Unary_minus_token
+			valid_token: is_valid_token(a_token)
 		do
 			Result := tokens.item (a_token)
 		ensure
 			may_be_void: True -- as valid_token pre-condition is only sufficient to index the array
 		end
 
+feature -- Status report
+
+	is_valid_token (a_token: INTEGER): BOOLEAN is
+			-- Is `a_token' a valid token?
+		do
+			Result := a_token > Eof_token and a_token <= Unary_minus_token
+		end
+	
 feature {NONE} -- Implementation
 
 	tokens: ARRAY [STRING] is

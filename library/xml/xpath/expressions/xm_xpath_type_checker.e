@@ -18,6 +18,8 @@ inherit
 
 	XM_XPATH_CARDINALITY
 
+	XM_XPATH_SHARED_FUNCTION_FACTORY
+
 	-- This class provides a single feature to perform static type-checking of an expression.
 	-- The routine takes a `supplied' expression,  and checks to see whether it is
 	--  known statically to conform to the `required' type.
@@ -59,6 +61,9 @@ feature -- Optimization
 			a_required_item_type, a_supplied_cardinality, a_supplied_item_type: INTEGER
 			allows_many, cardinality_ok, item_type_ok: BOOLEAN
 			a_message: STRING
+			a_number_function: XM_XPATH_NUMBER
+			new_arguments: DS_ARRAYED_LIST [XM_XPATH_EXPRESSION]
+			a_value: XM_XPATH_VALUE
 		do
 			an_expression := a_supplied_expression
 			a_required_item_type := a_required_type.primary_type
@@ -132,9 +137,31 @@ feature -- Optimization
 							a_supplied_item_type := String_type
 							a_supplied_cardinality := Required_cardinality_exactly_one
 						elseif a_required_item_type = Number_type or else is_sub_type (a_required_item_type, Double_type) then
-							-- TODO
+
+							-- TODO: in the Nov 2003 draft, the rules have changed so that number() is called
+							-- only if the supplied value doesn't match the expected type. We're currently
+							-- returning different results for round(()) depending on whether the arg value
+							-- is known statically or not.
+
+							a_number_function ?= Function_factory.make_system_function ("number")
+								check
+									number_function: a_number_function /= Void
+								end
+							create new_arguments.make (1)
+							new_arguments.put_last (an_expression)
+							a_number_function.set_arguments (new_arguments)
+							an_expression := a_number_function
+							-- TODO copy location info
+							a_supplied_item_type := Double_type
+							a_supplied_cardinality := Required_cardinality_exactly_one
 						elseif a_required_item_type = Any_node or else a_required_item_type = Any_item or else a_required_item_type = Atomic_type then
-							-- TODO
+							-- TODO:this last condition isn't in the rules for function calls,
+							-- but is needed for arithmetic expressions
+							if is_cardinality_allows_many (a_supplied_cardinality) then
+								create {XM_XPATH_FIRST_ITEM_EXPRESSION} an_expression.make (an_expression)
+								-- TODO copy location info
+							end
+							a_supplied_cardinality := Required_cardinality_optional
 						end
 						
 					end
@@ -153,8 +180,48 @@ feature -- Optimization
 				-- If the required type is a subtype of Atomic_type, and the supplied type is
 				-- capable of producing untyped atomic values, add an Untyped Atomic Converter
 
-				-- TODO
+				if a_required_item_type /= Atomic_type and then is_sub_type (a_required_item_type, Atomic_type)
+					and then (a_supplied_item_type = Atomic_type or else is_sub_type (a_supplied_item_type, Untyped_atomic_type)) then
+					create {XM_XPATH_UNTYPED_ATOMIC_CONVERTER} an_expression.make (an_expression, a_required_item_type)
+					-- TODO need to copy location information
+					a_supplied_item_type := an_expression.item_type
+					a_supplied_cardinality := an_expression.cardinality
+				end
+
+				-- Try a static type check. We only throw it out if the call cannot possibly succeed.
+				
+				if not is_sub_type (a_supplied_item_type, a_required_item_type) then
+
+					-- with pessimistic type checking we could output an error now, but we
+					-- give the user another chance to get it right at run-time
+				
+					a_value ?= an_expression
+					if a_value /= void or else not is_sub_type (a_required_item_type, a_supplied_item_type)  then
+						is_static_type_check_error := True
+						static_type_check_error_message := STRING_.appended_string ("Required type of ", a_role_locator.message)
+						static_type_check_error_message := STRING_.appended_string (static_type_check_error_message, " is ")
+						static_type_check_error_message := STRING_.appended_string (static_type_check_error_message, type_name (a_required_item_type))
+						static_type_check_error_message := STRING_.appended_string (static_type_check_error_message, "; supplied value has type ")
+						static_type_check_error_message := STRING_.appended_string (static_type_check_error_message, type_name (a_supplied_item_type))
+						-- TODO add location info
+					end
+				end
+
+				if not is_static_type_check_error then
+				
+					-- Unless the type is guaranteed to match, add a dynamic type check
+
+					if not item_type_ok then
+						create {XM_XPATH_ITEM_CHECKER} an_expression.make (an_expression, a_required_item_type, a_required_type.content_type, a_role_locator)
+						-- TODO need to copy location information
+					end
+					if not cardinality_ok then
+						create {XM_XPATH_CARDINALITY_CHECKER} an_expression.make (an_expression, a_required_type.cardinality, a_role_locator)
+						-- TODO need to copy location information
+					end
+				end
 			end
+			if Result = Void then Result := an_expression end
 		ensure
 			static_error_or_non_void_result: not is_static_type_check_error implies Result /= Void
 		end	

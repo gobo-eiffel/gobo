@@ -47,6 +47,18 @@ feature -- Status report
 				or else a_request = Required_cardinality_zero_or_more
 		end
 
+	is_cardinality_allows_many (a_request: INTEGER): BOOLEAN is
+			-- Does `a_request' subsume allows many?
+		do
+			Result := a_request = Required_cardinality_one_or_more or else a_request = Required_cardinality_zero_or_more
+		end
+
+	is_cardinality_allows_zero (a_request: INTEGER): BOOLEAN is
+			-- Does `a_request' subsume allow zero?
+		do
+			Result := a_request = Required_cardinality_empty or else a_request = Required_cardinality_optional or else a_request = Required_cardinality_zero_or_more
+		end
+
 feature -- Conversion
 
 	cardinalities_to_integer (a_cardinality_set:  ARRAY [BOOLEAN]): INTEGER is

@@ -67,7 +67,7 @@ feature {NONE} -- Initialization
 			saved_xpath_context := a_context.new_context
 			state := Unread_state
 			if saved_xpath_context.current_iterator /= Void then
-				create new_singleton_iterator.make (saved_xpath_context.current_iterator.item_for_iteration)
+				create new_singleton_iterator.make (saved_xpath_context.current_iterator.item)
 				saved_xpath_context.set_current_iterator (new_singleton_iterator)
 			end
 		ensure

@@ -179,7 +179,7 @@ feature
 			create ancestors.make (document, item_element, element_test, False)
 
 			if ancestors.before then ancestors.forth	end
-			a_node := ancestors.item_for_iteration
+			a_node := ancestors.item
 				check
 					ancestor_node_not_void: a_node /= Void
 				end
@@ -213,7 +213,7 @@ feature
 			until
 				preceding.after
 			loop
-				a_node := preceding.item_for_iteration
+				a_node := preceding.item
 					check
 						preceding_node_not_void: a_node /= Void
 					end
@@ -239,7 +239,7 @@ feature
 			until
 				following.after
 			loop
-				a_node := following.item_for_iteration
+				a_node := following.item
 					check
 						following_node_not_void: a_node /= Void
 					end
@@ -263,7 +263,7 @@ feature
 					attributes_before: attributes.before
 				end
 			attributes.forth
-			a_node := attributes.item_for_iteration
+			a_node := attributes.item
 				check
 					attribute_node_not_void: a_node /= Void
 				end

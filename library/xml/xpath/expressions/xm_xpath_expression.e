@@ -48,6 +48,8 @@ feature -- Access
 		require
 			not_in_error: not is_error
 		deferred
+		ensure
+			expression_tester: Result /= Void  and then Result.equality_tester.is_equal (expression_tester)
 		end
 
 	iterator (a_context: XM_XPATH_CONTEXT): XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_ITEM] is
@@ -140,7 +142,6 @@ feature -- Status setting
 	set_last_error_from_string (a_message: STRING; a_code: INTEGER; an_error_type: INTEGER) is
 			-- Set result of `last_error'.
 		require
-			error: is_error
 			valid_error_type: an_error_type = Static_error or an_error_type = Type_error or an_error_type = Dynamic_error
 			message_not_void: a_message /= Void and then a_message.count > 0
 			valid_code: is_valid_error_code (a_code)
@@ -273,7 +274,7 @@ feature -- Evaluation
 					a_singleton_iterator ?= an_iterator
 					if a_singleton_iterator /= Void then
 						a_singleton_iterator.forth
-						an_item := a_singleton_iterator.item_for_iteration
+						an_item := a_singleton_iterator.item
 						if an_item = Void then
 							create {XM_XPATH_EMPTY_SEQUENCE} last_evaluation.make
 						else

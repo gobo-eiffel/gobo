@@ -79,8 +79,8 @@ feature -- Matching
 			an_id, ids: STRING
 			a_splitter: ST_SPLITTER
 			strings:  DS_LIST [STRING]
+			a_cursor: DS_LIST_CURSOR [STRING]
 			an_element: XM_XPATH_ELEMENT
-			finished: BOOLEAN
 		do
 			if a_node.item_type = Element_node then
 				a_doc := a_node.document_root
@@ -107,20 +107,20 @@ feature -- Matching
 							end
 						else
 							from
-								finished := False
-								strings.start
+								a_cursor := strings.new_cursor
+								a_cursor.start
 							variant
-								strings.count + 1 - strings.index
+								strings.count + 1 - a_cursor.index
 							until
-								finished or else strings.after
+								a_cursor.after
 							loop
-								an_id := strings.item_for_iteration
+								an_id := a_cursor.item
 								an_element := a_doc.select_id (an_id)
 								if an_element /= Void and then an_element.is_same_node (a_node) then
 									Result := True
-									finished := True
+									a_cursor.go_after
 								end
-								strings.forth
+								a_cursor.forth
 							end
 						end
 					end

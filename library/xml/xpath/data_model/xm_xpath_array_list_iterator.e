@@ -27,16 +27,17 @@ feature {NONE} -- Initialization
 			list_not_void: a_list /= Void
 		do
 			list := a_list
+			cursor := list.new_cursor
 		ensure
 			list_set: list = a_list
 		end
 	
 feature -- Access
 
-	item_for_iteration: G is
+	item: G is
 			-- Value or node at the current position
 		do
-			Result := list.item_for_iteration
+			Result := cursor.item
 		end
 
 feature -- Status report
@@ -44,7 +45,7 @@ feature -- Status report
 	after: BOOLEAN is
 			-- Are there any more items in the sequence?
 		do
-			Result := index > list.count
+			Result := cursor.after
 		end
 
 feature -- Cursor movement
@@ -53,7 +54,7 @@ feature -- Cursor movement
 			-- Move to next position
 		do
 			index := index + 1
-			list.forth
+			cursor.forth
 		end
 
 feature -- Duplication
@@ -69,7 +70,10 @@ feature {NONE} -- Implementation
 
 	list: DS_ARRAYED_LIST [G]
 			-- The list
-	
+
+	cursor: DS_ARRAYED_LIST_CURSOR [G]
+			-- Cursor for `list'
+
 invariant
 	positive_index: index >= 0
 	list_not_void: list /= Void

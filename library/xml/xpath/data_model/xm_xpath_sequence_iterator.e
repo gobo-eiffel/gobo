@@ -14,7 +14,7 @@ deferred class XM_XPATH_SEQUENCE_ITERATOR [G -> XM_XPATH_ITEM]
 
 feature -- Access
 
-	item_for_iteration: G is
+	item: G is
 			-- Value or node at the current position
 		require
 			not_before: not before
@@ -41,7 +41,7 @@ feature -- Status report
 		end
 
 	off: BOOLEAN is
-			-- Is there an `item_for_iteration' to be retrieved?
+			-- Is there an `item' to be retrieved?
 		do
 			Result := before or else after
 		end
@@ -63,7 +63,6 @@ feature -- Cursor movement
 			not_after: not after
 		deferred
 		ensure
-			not_before: before = False
 			one_more: index = old index + 1
 		end
 

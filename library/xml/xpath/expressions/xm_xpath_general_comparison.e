@@ -323,7 +323,7 @@ feature -- Evaluation
 				until
 					finished or else is_error or else an_iterator.after
 				loop
-					an_atomic_value ?= an_iterator.item_for_iteration
+					an_atomic_value ?= an_iterator.item
 					if an_atomic_value = Void then
 						set_last_error_from_string ("Atomization failed for first operand of general comparison", 6, Type_error)
 					else
@@ -344,7 +344,7 @@ feature -- Evaluation
 				until
 					finished or else is_error or else an_iterator.after
 				loop
-					an_atomic_value ?= an_iterator.item_for_iteration
+					an_atomic_value ?= an_iterator.item
 					if an_atomic_value = Void then
 						set_last_error_from_string ("Atomization failed for first operand of general comparison", 6, Type_error)
 					else
@@ -354,7 +354,7 @@ feature -- Evaluation
 						until
 							finished or else a_third_iterator.after
 						loop
-							another_atomic_value ?= a_third_iterator.item_for_iteration
+							another_atomic_value ?= a_third_iterator.item
 							if another_atomic_value = Void then
 								set_last_error_from_string ("Atomization failed for second operand of general comparison", 6, Type_error)
 							else

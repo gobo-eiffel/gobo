@@ -69,6 +69,7 @@ feature -- Element change
 			create input_stream.make (a_source_uri)
 			input_stream.open_read
 			if input_stream.is_open_read then
+				make_parser
 				parser.parse_from_stream (input_stream)
 				if tree_pipe.error.has_error then
 					was_build_error := True
@@ -128,18 +129,33 @@ feature -- Evaluation
 					internal_error_value := an_expression.last_error
 				else
 					if an_expression.was_expression_replaced then an_expression := an_expression.replacement_expression end
-					create a_controller
-					a_context := a_controller.new_xpath_context
-					a_sequence_iterator := an_expression.iterator (a_context)
-					from
-						a_sequence_iterator.start
-						create evaluated_items.make
-					until
-						a_sequence_iterator.after
-					loop
-						evaluated_items.put_last (a_sequence_iterator.item_for_iteration)
-						-- TODO: add check for evaluation error
-						a_sequence_iterator.forth
+					if not an_expression.is_error then
+						create a_controller
+						a_context := a_controller.new_xpath_context
+						a_sequence_iterator := an_expression.iterator (a_context)
+							
+						if a_sequence_iterator = Void then
+								check
+									expression_in_error: an_expression.is_error
+									-- Because of post-condition to {XM_XPATH_EXPRESSION}.iterator
+								end
+							is_evaluation_in_error := True
+							internal_error_value := an_expression.last_error
+						else
+							from
+								a_sequence_iterator.start
+								create evaluated_items.make
+							until
+								a_sequence_iterator.after
+							loop
+								evaluated_items.put_last (a_sequence_iterator.item)
+								-- TODO: add check for evaluation error
+								a_sequence_iterator.forth
+							end
+						end
+					else
+						is_evaluation_in_error := True
+						internal_error_value := Expression_factory.error_value
 					end
 				end
 			end

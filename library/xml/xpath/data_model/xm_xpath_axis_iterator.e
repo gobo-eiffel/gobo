@@ -18,7 +18,7 @@ inherit
 
 feature -- Access
 
-	item_for_iteration: G is
+	item: G is
 			-- Value or node at the current position
 		do
 			Result := current_item
@@ -26,7 +26,7 @@ feature -- Access
 
 feature {NONE} -- Implementation
 
-	current_item: G
+	current_item: like item
 			-- The item that the iterator is currently pointing to
 
 end

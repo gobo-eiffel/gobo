@@ -24,6 +24,10 @@ feature -- Access
 
 	current_iterator: XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_ITEM]
 			-- Current iterator
+
+	local_variable_frame: ARRAY [XM_XPATH_VALUE] -- This might need shifting elsewhere
+			-- Local variables in scope
+
 	
 feature 	-- Element change
 

@@ -2,7 +2,7 @@ indexing
 
 	description:
 
-		"Objects that implement the XPath last() function"
+		"Objects that implement the XPath number() function"
 
 	library: "Gobo Eiffel XPath Library"
 	copyright: "Copyright (c) 2004, Colin Adams and others"
@@ -10,13 +10,13 @@ indexing
 	date: "$Date$"
 	revision: "$Revision$"
 
-class XM_XPATH_LAST
+class XM_XPATH_NUMBER
 
 inherit
 
 	XM_XPATH_SYSTEM_FUNCTION
 		redefine
-			pre_evaluate, evaluate_item, compute_intrinsic_dependencies
+			simplify, evaluate_item
 		end
 
 creation
@@ -28,10 +28,10 @@ feature {NONE} -- Initialization
 	make is
 			-- Establish invariant
 		do
-			name := "last"
+			name := "number"
 			minimum_argument_count := 0
-			maximum_argument_count := 0
-			create arguments.make (0)
+			maximum_argument_count := 1
+			create arguments.make (1)
 			arguments.set_equality_tester (expression_tester)
 			compute_static_properties
 		end
@@ -41,7 +41,7 @@ feature -- Access
 	item_type: INTEGER is
 			-- Determine the data type of the expression, if possible
 		do
-			Result := Integer_type
+			Result := Double_type
 		end
 
 feature -- Status report
@@ -49,22 +49,20 @@ feature -- Status report
 	required_type (argument_number: INTEGER): XM_XPATH_SEQUENCE_TYPE is
 			-- Type of argument number `argument_number'
 		do
-			-- This cannot be called for `Current', as it has no arguments.
-			-- Therefore the pre-condition cannot be met, so we will not
-			--  attempt to meet the post-condition.
-
-			do_nothing
+			create Result.make (Any_item, Required_cardinality_optional)
 		end
 
-feature -- Status setting
+feature -- Optimization
 
-	compute_intrinsic_dependencies is
-			-- Determine the intrinsic dependencies of an expression.
+	simplify: XM_XPATH_EXPRESSION is
+			-- Simplify `Current'
+		local
+			result_expression: XM_XPATH_NUMBER
 		do
-			create intrinsic_dependencies.make (1, 6)
-			-- Now all are `False'
-			intrinsic_dependencies.put (True, 4) -- Depends_upon_last
-			are_intrinsic_dependencies_computed := True
+			result_expression := clone (Current)
+			result_expression.use_context_item_as_default
+			result_expression.set_arguments (simplify_arguments)
+			Result := result_expression
 		end
 
 feature -- Evaluation
@@ -72,16 +70,10 @@ feature -- Evaluation
 	evaluate_item (a_context: XM_XPATH_CONTEXT) is
 			-- Evaluate as a single item
 		do
-			create {XM_XPATH_INTEGER_VALUE} last_evaluated_item.make (a_context.last)
+			-- TODO
+			todo ("evaluate-item", False)
 		end
 
-	pre_evaluate (a_context: XM_XPATH_STATIC_CONTEXT) is
-			-- Pre-evaluate `Current' at compile time.
-		do
-			replacement_expression := Current
-			was_expression_replaced := True			
-		end
-	
 feature {XM_XPATH_EXPRESSION} -- Restricted
 
 	compute_cardinality is
@@ -91,4 +83,3 @@ feature {XM_XPATH_EXPRESSION} -- Restricted
 		end
 
 end
-	

@@ -133,7 +133,7 @@ feature -- Access
 			if an_iterator.before and then not an_iterator.after then
 				an_iterator.forth
 			end
-			if not an_iterator.before then Result := an_iterator.item_for_iteration end
+			if not an_iterator.before then Result := an_iterator.item end
 		end
 
 	last_child: XM_XPATH_NODE is
@@ -151,7 +151,7 @@ feature -- Access
 					an_iterator.forth
 				end
 			end
-			if not an_iterator.before then Result := an_iterator.item_for_iteration end
+			if not an_iterator.before then Result := an_iterator.item end
 		end
 
 	previous_sibling: XM_XPATH_NODE is
@@ -164,7 +164,7 @@ feature -- Access
 			if an_iterator.before and not an_iterator.after then
 				an_iterator.forth
 			end
-			if not an_iterator.before then Result := an_iterator.item_for_iteration end
+			if not an_iterator.before then Result := an_iterator.item end
 		end
 	
 	next_sibling: XM_XPATH_NODE is
@@ -177,7 +177,7 @@ feature -- Access
 			if an_iterator.before and not an_iterator.after then
 				an_iterator.forth
 			end
-			if not an_iterator.before then Result := an_iterator.item_for_iteration end
+			if not an_iterator.before then Result := an_iterator.item end
 		end
 	
 	document_element: XM_XPATH_ELEMENT is
@@ -206,7 +206,7 @@ feature -- Access
 				end
 				if an_iterator.before and then not an_iterator.after then
 					an_iterator.forth
-					Result ?= an_iterator.item_for_iteration
+					Result ?= an_iterator.item
 						check
 							node_is_element: Result /= Void
 						end

@@ -77,6 +77,7 @@ feature -- Optimization
 		local
 			a_location_pattern, a_result_pattern: XM_XSLT_LOCATION_PATH_PATTERN
 			a_filter_expression: XM_XPATH_EXPRESSION
+			a_cursor: DS_ARRAYED_LIST_CURSOR [XM_XPATH_EXPRESSION]
 		do
 
 			-- Detect the simple cases: no parent or ancestor pattern, no predicates
@@ -106,18 +107,19 @@ feature -- Optimization
 				
 				if filters /= Void then
 					from
-						a_result_pattern.filters.start
+						a_cursor := a_result_pattern.filters.new_cursor
+						a_cursor.start
 					variant
-						a_result_pattern.filters.count + 1 - a_result_pattern.filters.index
+						a_result_pattern.filters.count + 1 - a_cursor.index
 					until
-						a_result_pattern.filters.after
+						a_cursor.after
 					loop
-						a_filter_expression := a_result_pattern.filters.item_for_iteration.simplify
-						a_result_pattern.filters.put (a_filter_expression, a_result_pattern.filters.index)
+						a_filter_expression := a_cursor.item.simplify
+						a_cursor.replace (a_filter_expression)
 						if a_filter_expression.depends_upon_current_item then
 							a_result_pattern.set_uses_current (True)
 						end
-						a_result_pattern.filters.forth
+						a_cursor.forth
 					end
 				end
 				Result := a_result_pattern
@@ -136,6 +138,7 @@ feature -- Optimization
 			an_expression_context: XM_XSLT_EXPRESSION_CONTEXT
 			a_result_pattern: XM_XSLT_LOCATION_PATH_PATTERN
 			a_filter_expression, an_expression: XM_XPATH_EXPRESSION
+			a_cursor: DS_ARRAYED_LIST_CURSOR [XM_XPATH_EXPRESSION]
 		do
 			a_result_pattern := clone (Current)
 
@@ -149,17 +152,18 @@ feature -- Optimization
 
 			if filters /= Void then
 				from
-					a_result_pattern.filters.start
+					a_cursor := a_result_pattern.filters.new_cursor
+					a_cursor.start
 				variant
-					a_result_pattern.filters.count + 1 - a_result_pattern.filters.index
+					a_result_pattern.filters.count + 1 - a_cursor.index
 				until
-					a_result_pattern.filters.after
+					a_cursor.after
 				loop
-					a_result_pattern.filters.item_for_iteration.analyze (a_context)
-					if a_result_pattern.filters.item_for_iteration.was_expression_replaced then
-						a_filter_expression := a_result_pattern.filters.item_for_iteration.replacement_expression
+					a_cursor.item.analyze (a_context)
+					if a_cursor.item.was_expression_replaced then
+						a_filter_expression := a_cursor.item.replacement_expression
 					else
-						a_filter_expression := a_result_pattern.filters.item_for_iteration
+						a_filter_expression := a_cursor.item
 					end
 					
 					-- If the last filter is constant true, remove it.
@@ -168,7 +172,7 @@ feature -- Optimization
 					if a_boolean /= Void and then a_boolean.value then
 						do_nothing
 					else
-						a_result_pattern.filters.put (a_filter_expression, a_result_pattern.filters.index)
+						a_cursor.replace (a_filter_expression)
 					end
 					an_expression_context ?= a_context
 						check
@@ -176,7 +180,7 @@ feature -- Optimization
 						end
 					an_expression_context.style_element.allocate_slots (a_filter_expression)
 					
-					a_result_pattern.filters.forth
+					a_cursor.forth
 				end
 			end
 
@@ -339,6 +343,7 @@ feature {XM_XSLT_LOCATION_PATH_PATTERN} -- Local
 			axis: INTEGER
 			step: XM_XPATH_COMPUTED_EXPRESSION
 			parent_node: XM_XPATH_PARENT_NODE_EXPRESSION
+			a_cursor: DS_ARRAYED_LIST_CURSOR [XM_XPATH_EXPRESSION]
 		do
 			if node_test.item_type = Attribute_node then
 				axis := Attribute_axis
@@ -347,14 +352,15 @@ feature {XM_XSLT_LOCATION_PATH_PATTERN} -- Local
 			end
 			create {XM_XPATH_AXIS_EXPRESSION} step.make (axis, node_test)
 			from
-				filters.start
+				a_cursor := filters.new_cursor
+				a_cursor.start
 			variant
-				filters.count + 1 - filters.index
+				filters.count + 1 - a_cursor.index
 			until
-				filters.after
+				a_cursor.after
 			loop
-				create {XM_XPATH_FILTER_EXPRESSION} step.make (step, filters.item_for_iteration)
-				filters.forth
+				create {XM_XPATH_FILTER_EXPRESSION} step.make (step, a_cursor.item)
+				a_cursor.forth
 			end
 			create parent_node.make
 			create Result.make (parent_node, step) 
@@ -365,16 +371,18 @@ feature {XM_XSLT_LOCATION_PATH_PATTERN} -- Local
 		local
 			type: INTEGER
 			a_filter_expression: XM_XPATH_EXPRESSION
+			a_cursor: DS_ARRAYED_LIST_CURSOR [XM_XPATH_EXPRESSION]
 		do
 			if filters /= Void then
 				from
-					filters.start
+					a_cursor := filters.new_cursor
+					a_cursor.start
 				variant
-					filters.count + 1 - filters.index
+					filters.count + 1 - a_cursor.index
 				until
-					filters.after
+					a_cursor.after
 				loop
-					a_filter_expression := filters.item_for_iteration
+					a_filter_expression := a_cursor.item
 					type := a_filter_expression.item_type
 					if type = Double_type or else type = Decimal_type
 						or else type = Integer_type or else type = Float_type
@@ -383,7 +391,7 @@ feature {XM_XSLT_LOCATION_PATH_PATTERN} -- Local
 					elseif a_filter_expression.depends_upon_position or else a_filter_expression.depends_upon_last then
 						Result := True
 					end
-					filters.forth
+					a_cursor.forth
 				end
 			end
 		end
@@ -418,6 +426,7 @@ feature {XM_XSLT_PATTERN} -- Implementation
 			a_new_context: XM_XPATH_CONTEXT
 			a_boolean_value: XM_XPATH_BOOLEAN_VALUE
 			finished: BOOLEAN
+			a_cursor: DS_ARRAYED_LIST_CURSOR [XM_XPATH_EXPRESSION]
 		do
 			if node_test.matches_node (a_node.item_type, a_node.fingerprint, Any_item) then
 				if parent_pattern /= Void then
@@ -460,7 +469,7 @@ feature {XM_XSLT_PATTERN} -- Implementation
 											until
 												finished or else a_nsv.after
 											loop
-												another_node ?= a_nsv.item_for_iteration
+												another_node ?= a_nsv.item
 												if another_node /= Void and then another_node.is_same_node (a_node) then
 													Result := True
 													finished := True
@@ -476,19 +485,18 @@ feature {XM_XSLT_PATTERN} -- Implementation
 										-- It's a non-positional filter, so we can handle each node separately
 
 										from
-											finished := False
-											filters.start
+											a_cursor := filters.new_cursor
+											a_cursor.start
 										variant
-											filters.count + 1 - filters.index
+											filters.count + 1 - a_cursor.index
 										until
-											finished or else filters.after
+											a_cursor.after
 										loop
-											a_boolean_value :=  filters.item_for_iteration.effective_boolean_value (a_new_context)
+											a_boolean_value :=  a_cursor.item.effective_boolean_value (a_new_context)
 											if a_boolean_value = Void or else not a_boolean_value.value  then
-												finished := True
 												Result := False
 											end
-											filters.forth
+											a_cursor.forth
 										end
 									else
 										Result := True

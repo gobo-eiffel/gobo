@@ -49,10 +49,11 @@ feature -- Access
 		local
 			tokenizer: ST_SPLITTER
 			tokens: DS_LIST [STRING]
+			zero: INTEGER
 		do
 			create tokenizer.make
 			tokens := tokenizer.split (a_string)
-			Result := tokenizer.join (tokens)
+			Result := tokenizer.join_unescaped (tokens)
 		ensure
 			result_not_void: Result /= Void
 		end

@@ -177,7 +177,7 @@ feature -- Evaluation
 						before: an_iterator.before
 					end
 				an_iterator.forth
-				an_item := an_iterator.item_for_iteration
+				an_item := an_iterator.item
 					check
 						item_not_void: an_item /= Void
 					end
@@ -236,7 +236,7 @@ feature -- Evaluation
 						before: an_iterator.before
 					end
 				an_iterator.forth
-				last_evaluated_item := an_iterator.item_for_iteration
+				last_evaluated_item := an_iterator.item
 			end
 		end
 
