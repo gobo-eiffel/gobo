@@ -35,8 +35,11 @@ feature
 %}
 
 %token P_IFDEF P_IFNDEF P_INCLUDE P_DEFINE P_UNDEF
-%token P_NAME P_DEF_VALUE P_ELSE P_ENDIF P_EOL
-%token P_STRING
+%token P_DEF_VALUE P_ELSE P_ENDIF P_EOL
+
+%token <STRING>		P_NAME P_STRING
+%type <BOOLEAN>		Condition
+
 %left P_OR
 %left P_AND
 %right '!'
@@ -49,7 +52,7 @@ feature
 File: Instructions
 	;
 
-Instructions: -- /* empty */
+Instructions: -- Empty
 	| Instruction
 	| Instructions Instruction
 	;
@@ -60,19 +63,19 @@ Instruction: If_condition Instructions Endif
 	| P_DEFINE P_NAME P_EOL
 		{
 			if not ignored then
-				define_value ("", dollar_to_string ($2))
+				define_value ("", $2)
 			end
 		}
 	| P_UNDEF P_NAME P_EOL
 		{
 			if not ignored then
-				undefine_value (dollar_to_string ($2))
+				undefine_value ($2)
 			end
 		}
 	| P_INCLUDE P_STRING P_EOL
 		{
 			if not ignored then
-				process_include (dollar_to_string ($2))
+				process_include ($2)
 			end
 		}
 	;
@@ -80,14 +83,14 @@ Instruction: If_condition Instructions Endif
 If_condition: P_IFDEF Condition P_EOL
 		{
 			if_level := if_level + 1
-			if not ignored and not dollar_to_boolean ($2) then
+			if not ignored and not $2 then
 				ignored_level := if_level
 			end
 		}
 	| P_IFNDEF Condition P_EOL
 		{
 			if_level := if_level + 1
-			if not ignored and dollar_to_boolean ($2) then
+			if not ignored and $2 then
 				ignored_level := if_level
 			end
 		}
@@ -95,7 +98,7 @@ If_condition: P_IFDEF Condition P_EOL
 
 Condition: P_NAME
 		{
-			$$ := is_defined (dollar_to_string ($1))
+			$$ := is_defined ($1)
 		}
 	| '(' Condition ')'
 		{
@@ -103,15 +106,15 @@ Condition: P_NAME
 		}
 	| Condition P_AND Condition
 		{
-			$$ := dollar_to_boolean ($1) and dollar_to_boolean ($3)
+			$$ := $1 and $3
 		}
 	| Condition P_OR Condition
 		{
-			$$ := dollar_to_boolean ($1) or dollar_to_boolean ($3)
+			$$ := $1 or $3
 		}
 	| '!' Condition
 		{
-			$$ := not dollar_to_boolean ($2)
+			$$ := not $2
 		}
 	;
 
@@ -274,21 +277,6 @@ feature -- Element change
 			defined_values.remove (a_name)
 		ensure
 			a_name_undefined: not is_defined (a_name)
-		end
-
-feature {NONE} -- Conversion
-
-	dollar_to_string (a: ANY): STRING is
-		do
-			Result ?= a
-		end
-
-	dollar_to_boolean (a: ANY): BOOLEAN is
-		local
-			bool_ref: BOOLEAN_REF
-		do
-			bool_ref ?= a
-			Result := bool_ref.item
 		end
 
 feature {NONE} -- Implementation
