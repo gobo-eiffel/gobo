@@ -35,75 +35,9 @@ feature -- Access
 
 feature {NONE} -- Implementation
 
-	search_position (v: G) is
-			-- Search for position where item is equal to `v'
-			-- or to possible insertion position otherwise.
-			-- (Use `equality_tester''s comparison criterion
-			-- if not void, use `=' criterion otherwise.)
-			-- Use `v.hash_code' as hashing function.
-		local
-			i: INTEGER
-			prev: INTEGER
-			a_tester: like equality_tester
-		do
-			if v = Void then
-				position := slots.item (modulus)
-				slots_position := modulus
-				clashes_previous_position := No_position
-			else
-				a_tester := equality_tester
-				if a_tester /= Void then
-					if
-						position = No_position or else
-						not a_tester.test (v, items.item (position))
-					then
-						from
-							slots_position := hash_position (v)
-							i := slots.item (slots_position)
-							position := No_position
-							prev := No_position
-						until
-							i = No_position
-						loop
-							if a_tester.test (v, items.item (i)) then
-								position := i
-								i := No_position -- Jump out of the loop.
-							else
-								prev := i
-								i := clashes.item (i)
-							end
-						end
-						clashes_previous_position := prev
-					end
-				else
-					if
-						position = No_position or else
-						v /= items.item (position)
-					then
-						from
-							slots_position := hash_position (v)
-							i := slots.item (slots_position)
-							position := No_position
-							prev := No_position
-						until
-							i = No_position
-						loop
-							if v = items.item (i) then
-								position := i
-								i := No_position -- Jump out of the loop.
-							else
-								prev := i
-								i := clashes.item (i)
-							end
-						end
-						clashes_previous_position := prev
-					end
-				end
-			end
-		end
-
 	hash_position (v: G): INTEGER is
 			-- Hash position of `v' in `slots'
+			-- Use `v.hash_code' as hashing function.
 		do
 			if v /= Void then
 				Result := v.hash_code \\ modulus
