@@ -150,12 +150,10 @@ feature -- Output
 
 feature -- Tests
 
-	even (an_int: INTEGER): BOOLEAN is
+	is_even (an_int: INTEGER): BOOLEAN is
+			-- Is `an_int' an even integer?
 		do
-#ifdef SE
-			Result := an_int.even
 			Result := an_int \\ 2 = 0
-#endif
 		end
 
 end -- class KL_INTEGER_ROUTINES

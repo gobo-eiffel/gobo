@@ -2461,7 +2461,7 @@ feature {NONE} -- Character classes
 			if class_charcount = 1 then
 				if class_lastchar < 0 then
 					if negate_class then
-						if even (-class_lastchar) then
+						if is_even (-class_lastchar) then
 							emit_opcode (-class_lastchar + 1)
 						else
 							emit_opcode (-class_lastchar - 1)
