@@ -43,7 +43,7 @@ creation
 
 	make, make_fine, make_by_fine_seconds,
 	make_precise, make_from_second_count,
-	make_from_millisecond_count
+	make_from_millisecond_count, make_by_seconds
 
 creation {DATE_TIME}
 
@@ -71,6 +71,17 @@ feature {NONE} -- Initialization
 			minute_set: minute = m
 			second_set: second = s.truncated_to_integer
 			millisecond_set: milli_second = ((s - s.truncated_to_integer) * 1000).truncated_to_integer
+		end
+
+	make_by_seconds (s: INTEGER) is
+			-- Set the object by the number of seconds `s' from midnight.
+		require
+			s_large_enough: s >= 0
+			s_small_enough: s < Seconds_in_day
+		do
+			make_from_second_count (s)
+		ensure
+			seconds_set: seconds = s
 		end
 
 	make_by_fine_seconds (s: DOUBLE) is
