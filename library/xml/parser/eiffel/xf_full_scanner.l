@@ -230,6 +230,11 @@ SYSTEMLITERAL ((['][\r\n\t\x20-&(-\xFF]*['])|(["][\r\n\t\x20-!#-\xFF]*["]))
 			set_last_token (CDATA_END) 
 			pop_start_condition
 		}
+		("\r\n"|"\r"|"\n") {
+	 		-- end of line handling XML1.0:2.11
+			set_last_token (CHARDATA)
+			last_value := normalized_newline
+		}
 		{CONTENTCHAR}+ {
 			-- big chunks in last_value
 			set_last_token (CHARDATA)
@@ -685,20 +690,20 @@ SYSTEMLITERAL ((['][\r\n\t\x20-&(-\xFF]*['])|(["][\r\n\t\x20-!#-\xFF]*["]))
 \r\n {
 	 -- end of line handling XML1.0:2.11
 	set_last_token (SPACE)
-	last_value := Normalized_newline
+	last_value := normalized_newline
 }
 
 \r { 
 	set_last_token (SPACE) 
-	last_value := Normalized_newline
+	last_value := normalized_newline
 }
 
 \n {
 	set_last_token (SPACE) 
-	last_value := Normalized_newline
+	last_value := normalized_newline
 }
 
-{SPACECHAR}+ {
+[ \t]++ {
 	-- space not matched by newline normalization
 	set_last_token (SPACE)
 	last_value := text
@@ -864,8 +869,12 @@ feature {NONE} -- System literal
 
 feature {NONE} -- Constants
 
-	Normalized_newline: STRING is once Result := "%N" end
-	Normalized_space: STRING is once Result := " " end
+	normalized_newline: STRING is
+			-- Newline normalised text (2.11)
+		once Result := "%N" end
+		
+	Normalized_space: STRING is
+		once Result := " " end
 
 invariant
 
