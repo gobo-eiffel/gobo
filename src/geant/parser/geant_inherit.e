@@ -20,6 +20,7 @@ inherit
 		export {NONE} all end
 
 	KL_IMPORTED_STRING_ROUTINES
+		export {NONE} all end
 
 creation
 
@@ -342,5 +343,9 @@ feature -- Status report
 				a_unchanged_cursor.forth
 			end
 		end
+
+invariant
+
+	parents_not_void: parents /= Void
 
 end
