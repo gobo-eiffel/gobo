@@ -66,6 +66,15 @@ feature -- Access
 			name_not_empty: Result.count > 0
 		end
 
+	prefixed_name: STRING is
+			-- Cluster name with possible prefixes
+		do
+			Result := name
+		ensure
+			prefixed_name_not_void: Result /= Void
+			prefixed_name_not_empty: Result.count > 0
+		end
+
 	pathname: STRING is
 			-- Directory pathname (may be Void)
 		deferred
