@@ -21,6 +21,7 @@ inherit
 	KL_SHARED_EXCEPTIONS
 	GEANT_SHARED_PROPERTIES
 		export {NONE} all end
+	KL_SHARED_FILE_SYSTEM
 
 creation
 
@@ -88,7 +89,6 @@ feature -- Processing
 			ucs: UC_STRING
 			if_condition: BOOLEAN
 			unless_condition: BOOLEAN
-			a_file_system: KL_FILE_SYSTEM
 			old_cwd: STRING
 			new_cwd: STRING
 		do
@@ -123,9 +123,8 @@ feature -- Processing
 					if project.verbose then
 						print (" changing to directory: '" + new_cwd + "'%N")
 					end
-					!! a_file_system.make
-					old_cwd := a_file_system.current_working_directory
-					a_file_system.set_current_working_directory (new_cwd)
+					old_cwd := file_system.current_working_directory
+					file_system.set_current_working_directory (new_cwd)
 				end
 
 
@@ -184,7 +183,7 @@ feature -- Processing
 					if project.verbose then
 						print (" changing to directory: '" + old_cwd + "'%N")
 					end
-					a_file_system.set_current_working_directory (old_cwd)
+					file_system.set_current_working_directory (old_cwd)
 
 				end
 			end	-- if
