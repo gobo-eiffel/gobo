@@ -20,7 +20,7 @@
 				<attribute name="default"/>
 			</optional>
 
-			<ref name="description"/>	
+			<ref name="description"/>
 			<choice>
 				<optional>
 					<attribute name="inherit"/>
@@ -51,7 +51,7 @@
 					</element>
 				</optional>
 			</choice>
-	
+
 			<oneOrMore>
 				<ref name="target"/>
 			</oneOrMore>
@@ -62,7 +62,7 @@
 
 	<define name="target">
 		<element name="target">
-			<ref name="description"/>	
+			<ref name="description"/>
 			<attribute name="name"/>
 			<optional>
 				<attribute name="depend"/>
@@ -352,7 +352,7 @@
 						</choice>
 						-->
 					</attribute>
-				<choice>
+				</choice>
 			</choice>
 			<optional>
 				<attribute name="verbose"/>
