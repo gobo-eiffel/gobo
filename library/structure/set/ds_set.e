@@ -6,7 +6,7 @@ indexing
 
 	library:    "Gobo Eiffel Structure Library"
 	author:     "Eric Bezault <ericb@gobosoft.com>"
-	copyright:  "Copyright (c) 1999, Eric Bezault and others"
+	copyright:  "Copyright (c) 2001, Eric Bezault and others"
 	license:    "Eiffel Forum Freeware License v1 (see forum.txt)"
 	date:       "$Date$"
 	revision:   "$Revision$"
@@ -17,7 +17,8 @@ inherit
 
 	DS_LINEAR [G]
 		redefine
-			new_cursor, occurrences
+			new_cursor, occurrences,
+			equality_tester_settable
 		end
 
 feature -- Access
@@ -73,6 +74,14 @@ feature -- Status report
 		deferred
 		end
 
+	equality_tester_settable (a_tester: like equality_tester): BOOLEAN is
+			-- Can `set_equality_tester' be called with `a_tester'
+			-- as argument in current state of container?
+			-- (Answer: the set has to be empty.)
+		do
+			Result := is_empty
+		end
+
 feature -- Measurement
 
 	occurrences (v: G): INTEGER is
@@ -84,8 +93,8 @@ feature -- Measurement
 				Result := 1
 			end
 		ensure then
-			has: has (v) implies (Result = 1)
-			not_has: not has (v) implies (Result = 0)
+			has_v: has (v) implies (Result = 1)
+			not_has_v: not has (v) implies (Result = 0)
 		end
 
 feature -- Element change
@@ -116,7 +125,7 @@ feature -- Removal
 
 feature -- Basic operations
 
-	union (other: DS_SET [G]) is
+	append (other: DS_SET [G]) is
 			-- Add all items of `other' to current set.
 			-- (Use `equality_tester''s comparison criterion
 			-- if not void, use `=' criterion otherwise.)
