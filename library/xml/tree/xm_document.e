@@ -218,6 +218,18 @@ feature -- Processing
 		do
 			a_processor.process_document (Current)
 		end
+		
+	process_to_events (a_filter: XM_CALLBACKS) is
+			-- Traverse the document and issue events 
+			-- on event consumer.
+		require
+			a_filter_not_void: a_filter /= Void
+		local
+			a_source: XM_TREE_TO_EVENTS
+		do
+			create a_source.make (a_filter)
+			process (a_source)
+		end
 
 invariant
 	
