@@ -1173,7 +1173,7 @@ feature -- Comparison
 		ensure
 			definition: Result = (count = other.count and then
 				(count > 0 implies (item_code (1) = other.item_code (1) and 
-				substring (2, count).same_unicode_string (other.substring (2, count)))))
+				(count >= 2 implies substring (2, count).same_unicode_string (other.substring (2, count))))))
 			same_string: Result implies same_string (other)
 		end
 
