@@ -138,7 +138,7 @@ feature -- Processing
 		do
 			children := target_element.children
 			nb := children.count
-			if is_element_enabled (target_element) then
+			if is_element_enabled (project, target_element) then
 					-- change to the specified directory if "dir" attribue is provided:
 				if target_element.has_attribute (Dir_attribute_name) then
 					a_new_target_cwd := project.variables.interpreted_string (
@@ -157,7 +157,7 @@ feature -- Processing
 						i := 1
 					end
 				until
-					i > nb or not is_element_enabled (target_element)
+					i > nb or not is_element_enabled (project, target_element)
 				loop
 					an_element := children.item (i)
 						-- Dispatch tasks:
@@ -237,7 +237,7 @@ feature -- Processing
 					elseif not a_task.is_executable then
 						print ("WARNING: cannot execute task : " + an_element.name.out + "%N")
 					else
-						if is_element_enabled (a_task.element) then
+						if is_element_enabled (project, a_task.element) then
 								-- change to task directory if "dir" attribute is provided:
 							if a_task.element.has_attribute (a_task.Dir_attribute_name) then
 								a_new_task_cwd := project.variables.interpreted_string (

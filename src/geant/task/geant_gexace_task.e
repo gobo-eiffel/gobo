@@ -79,7 +79,7 @@ feature {NONE} -- Initialization
 			nb := define_elements.count
 			from i := 1 until i > nb loop
 				define_element := define_elements.item (i)
-				if is_element_enabled (define_element) and then
+				if is_element_enabled (project, define_element) and then
 					has_uc_attribute (define_element, Name_attribute_name) and then
 					has_uc_attribute (define_element, Value_attribute_name)
 				then
