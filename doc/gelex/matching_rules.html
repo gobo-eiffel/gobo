@@ -84,23 +84,22 @@ color="#008080"><em>default_action</em></font></pre>
 
 <h2><a name="eof_rules">End-of-file Rules</a></h2>
 
-<p><font size="3">When the scanner receives an end-of-file
-indication from its input buffer, it then checks the </font><a
-href="skeleton.html#wrap"><font color="#008080"><em><tt>wrap</tt></em></font></a><font
-size="3"> function. If </font><font color="#008080"><em><tt>wrap</tt></em></font><font
-size="3"> returns false, then it is assumed that the function has
-gone ahead and set up the scanner to point to another input
-buffer using </font><a href="actions.html#set_input_buffer"><font
-color="#008080"><em><tt>set_input_buffer</tt></em></font></a><font
-size="3">, and scanning continues. If it returns true, then there
-is no further files to process. By default, </font><font
-color="#008080"><em><tt>wrap</tt></em></font><font size="3">
-returns true, but this routine can be redefined as in the
-following example:</font></p>
+<p>When the scanner receives an end-of-file indication from its 
+input buffer, it then checks the <a href="skeleton.html#wrap"><font 
+color="#008080"><em><tt>wrap</tt></em></font></a> function. If 
+<font color="#008080"><em><tt>wrap</tt></em></font> returns false, 
+then it is assumed that the function has gone ahead and set up the 
+scanner to point to another input buffer using <a 
+href="actions.html#set_input_buffer"><font 
+color="#008080"><em><tt>set_input_buffer</tt></em></font></a>, 
+and scanning continues. If it returns true, then there is no further 
+files to process. By default, <font color="#008080"><em><tt>wrap</tt></em></font>
+returns true, but this routine can be redefined as in the following 
+example:</p>
 
 <blockquote>
-    <pre><font color="#0000FF" size="3">%{</font><font size="3">
-</font><font color="#008080" size="3"><em><strong>class</strong></em><em> MY_SCANNER
+    <pre><font color="#0000FF">%{</font>
+<font color="#008080"><em><strong>class</strong></em><em> MY_SCANNER
 
 </em><em><strong>inherit</strong></em><em>
 
@@ -113,14 +112,14 @@ following example:</font></p>
 
 </em><em><strong>creation</strong></em><em>
 
-    make</em></font><font size="3">
-</font><font color="#0000FF" size="3">%}</font><font size="3">
+    make</em></font>
+<font color="#0000FF">%}</font>
 ...
-</font><font color="#0000FF" size="3">%%</font><font size="3">
+<font color="#0000FF">%%</font>
 ...
-</font><font color="#0000FF" size="3">%%</font><font size="3">
+<font color="#0000FF">%%</font>
 
-    </font><font color="#008080" size="3"><em>wrap</em>:<em> BOOLEAN </em><em><strong>is</strong></em><em>
+    <font color="#008080"><em>wrap</em>:<em> BOOLEAN </em><em><strong>is</strong></em><em>
             </em>-- Should current scanner terminate when end of file is reached?<em>
         </em><em><strong>do</strong></em><em>
             </em><em><strong>if </strong></em><em>other_file_available </em><em><strong>then</strong></em><em>
@@ -132,77 +131,65 @@ following example:</font></p>
 
     ...
 
-</em><em><strong>end</strong></em><em> </em>-- class MY_SCANNER</font></pre>
+</em><em><strong>end</strong></em><em> </em></font></pre>
 </blockquote>
 
-<p><font size="3">Note that in either case, the </font><a
-href="start_conditions.html"><font size="3">start condition</font></a><font
-size="3"> remains unchanged; it does not revert to </font><font
-color="#800000"><tt>INITIAL</tt></font><font size="3">.</font></p>
+<p>Note that in either case, the <a href="start_conditions.html">start condition</a> 
+remains unchanged; it does not revert to <font color="#800000"><tt>INITIAL</tt></font>.</p>
 
-<p><font size="3">The special rule </font><font color="#FF0000"><tt>&lt;&lt;EOF&gt;&gt;</tt></font><font
-size="3"> indicates actions which are to be taken when an
-end-of-file is encountered and </font><font color="#008080"><em><tt>wrap</tt></em></font><font
-size="3"> returns true. The action must finish by doing one of
-three things:</font></p>
+<p>The special rule <font color="#FF0000"><tt>&lt;&lt;EOF&gt;&gt;</tt></font> 
+indicates actions which are to be taken when an end-of-file is encountered and 
+<font color="#008080"><em><tt>wrap</tt></em></font> returns true. The action 
+must finish by doing one of three things:</p>
 
 <ul>
-    <li><font size="3">setting </font><a
-        href="actions.html#last_token"><font color="#008080"><em><tt>last_token</tt></em></font></a><font
-        size="3"> to a non-negative value</font></li>
-    <li><font size="3">calling the special action </font><a
+    <li>setting <a 
+        href="actions.html#last_token"><font color="#008080"><em><tt>last_token</tt></em></font></a> 
+        to a non-negative value</font></li>
+    <li>calling the special action <a
         href="actions.html#terminate"><font color="#008080"><em><tt>terminate</tt></em></font></a></li>
-    <li><font size="3">switching to a new buffer using </font><font
-        color="#008080"><em><tt>set_input_buffer</tt></em></font><font
-        size="3">.</font></li>
+    <li>switching to a new buffer using <font color="#008080"><em><tt>set_input_buffer</tt></em></font>.</li>
 </ul>
 
-<p><font color="#FF0000"><tt>&lt;&lt;EOF&gt;&gt;</tt></font><font
-size="3"> rules may not be used with other patterns; they may
-only be qualified with a list of start conditions. If an
-unqualified </font><font color="#FF0000"><tt>&lt;&lt;EOF&gt;&gt;</tt></font><font
-size="3"> rule is given, it applies to all start conditions which
-do not already have </font><font color="#FF0000"><tt>&lt;&lt;EOF&gt;&gt;</tt></font><font
-size="3"> actions. If a start condition has no </font><font
-color="#FF0000"><tt>&lt;&lt;EOF&gt;&gt;</tt></font><font size="3">
-action associated with it, it will by default execute the </font><font
-color="#008080"><em><tt>terminate</tt></em></font><font size="3">
-action. To specify an </font><font color="#FF0000"><tt>&lt;&lt;EOF&gt;&gt;</tt></font><font
-size="3"> rule for only the initial start condition, use:</font></p>
+<p><font color="#FF0000"><tt>&lt;&lt;EOF&gt;&gt;</tt></font> rules may 
+not be used with other patterns; they may only be qualified with a list 
+of start conditions. If an unqualified <font color="#FF0000"><tt>&lt;&lt;EOF&gt;&gt;</tt></font> 
+rule is given, it applies to all start conditions which do not already have 
+<font color="#FF0000"><tt>&lt;&lt;EOF&gt;&gt;</tt></font> actions. 
+If a start condition has no <font color="#FF0000"><tt>&lt;&lt;EOF&gt;&gt;</tt></font>
+action associated with it, it will by default execute the <font 
+color="#008080"><em><tt>terminate</tt></em></font> action. To specify an 
+<font color="#FF0000"><tt>&lt;&lt;EOF&gt;&gt;</tt></font> rule for only 
+the initial start condition, use:</p>
 
 <blockquote>
-    <pre><font color="#800000" size="3">&lt;INITIAL&gt;</font><font
-color="#FF0000" size="3">&lt;&lt;EOF&gt;&gt;</font></pre>
+    <pre><font color="#800000">&lt;INITIAL&gt;</font><font
+color="#FF0000">&lt;&lt;EOF&gt;&gt;</font></pre>
 </blockquote>
 
-<p><font size="3">These rules are useful for catching things like
-unclosed comments. An example:</font></p>
+<p>These rules are useful for catching things like
+unclosed comments. An example:</p>
 
 <blockquote>
-    <pre><font color="#0000FF" size="3">%x</font><font size="3"> </font><font
-color="#800000" size="3">quote</font><font size="3"
-face="Times New Roman">
-</font><font color="#0000FF" size="3">%%</font><font size="3"
-face="Times New Roman">
-</font><font size="3">...other rules for dealing with quotes...
-</font><font color="#800000" size="3">&lt;quote&gt;</font><font
-color="#FF0000" size="3">&lt;&lt;EOF&gt;&gt;</font><font size="3"> </font><font
-color="#0000FF" size="3">{</font><font size="3"
-face="Times New Roman">
-                   </font><font color="#008080" size="3"><em>io.error.put_string</em> (<em>&quot;unterminated quote%N&quot;</em>)<em>
-       terminate</em></font><font size="3" face="Times New Roman">
-            </font><font color="#0000FF" size="3">}</font><font
-size="3" face="Times New Roman">
-</font><font color="#FF0000" size="3">&lt;&lt;EOF&gt;&gt;</font><font
-size="3"> </font><font color="#0000FF" size="3">{</font><font
-size="3">
-       </font><font color="#008080" size="3"><em><strong>if</strong></em><em> </em><em><strong>not</strong></em><em> file_list.after </em><em><strong>then</strong></em><em>
+    <pre><font color="#0000FF">%x</font> <font
+color="#800000">quote</font><font face="Times New Roman">
+</font><font color="#0000FF">%%</font><font face="Times New Roman">
+</font>...other rules for dealing with quotes...
+<font color="#800000">&lt;quote&gt;</font><font
+color="#FF0000">&lt;&lt;EOF&gt;&gt;</font> <font
+color="#0000FF">{</font><font face="Times New Roman">
+                   </font><font color="#008080"><em>io.error.put_string</em> (<em>&quot;unterminated quote%N&quot;</em>)<em>
+       terminate</em></font><font face="Times New Roman">
+            </font><font color="#0000FF">}</font><font face="Times New Roman">
+</font><font color="#FF0000">&lt;&lt;EOF&gt;&gt;</font> <font 
+color="#0000FF">{</font>
+       <font color="#008080"><em><strong>if</strong></em><em> </em><em><strong>not</strong></em><em> file_list.after </em><em><strong>then</strong></em><em>
            set_input_buffer </em>(<em>new_file_buffer </em>(<em>file_list.item</em>))<em>
            file_list.forth
        </em><em><strong>else</strong></em><em>
            terminate
-       </em><em><strong>end</strong></em></font><font size="3">
-     </font><font color="#0000FF" size="3">}</font>
+       </em><em><strong>end</strong></em></font>
+     <font color="#0000FF">}</font>
 <font color="#0000FF">%%</font></pre>
 </blockquote>
 
@@ -211,7 +198,7 @@ size="3">
 <table border="0" width="100%">
     <tr>
         <td><address>
-            <font size="2"><b>Copyright © 2000</b></font><font
+            <font size="2"><b>Copyright © 2000-2005</b></font><font
             size="1"><b>, </b></font><font size="2"><strong>Eric
             Bezault</strong></font><strong> </strong><font
             size="2"><br>
@@ -221,7 +208,7 @@ size="3">
             <strong>http:</strong></font><a
             href="http://www.gobosoft.com"><font size="2">//www.gobosoft.com</font></a><font
             size="2"><br>
-            <strong>Last Updated:</strong> 2 February 2000</font><br>
+            <strong>Last Updated:</strong> 16 February 2005</font><br>
             <!--webbot bot="PurpleText"
             preview="
 $Date$ 
