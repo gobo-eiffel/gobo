@@ -1,15 +1,14 @@
 <?xml version="1.0"?>
 
-<cluster name="parse" location="${GOBO}/library/parse" abstract="True">
+<cluster name="parse" location="${GOBO}/library/parse" abstract="true">
 
 	<description>
 		description: "Xace file for the Gobo Eiffel Parse Library"
-		library:     "Gobo Eiffel Parse Library"
-		author:      "Eric Bezault [ericb@gobosoft.com]"
-		copyright:   "Copyright (c) 2001, Eric Bezault and others"
-		license:     "Eiffel Forum Freeware License v1 (see forum.txt)"
-		date:        "$Date$"
-		revision:    "$Revision$"
+		library: "Gobo Eiffel Parse Library"
+		copyright: "Copyright (c) 2001, Eric Bezault and others"
+		license: "Eiffel Forum License v1 (see forum.txt)"
+		date: "$Date$"
+		revision: "$Revision$"
 	</description>
 
 	<cluster name="error"/>

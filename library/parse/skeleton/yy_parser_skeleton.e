@@ -4,12 +4,11 @@ indexing
 
 		"Skeletons for parsers implemented with tables"
 
-	library:    "Gobo Eiffel Parse Library"
-	author:     "Eric Bezault <ericb@gobosoft.com>"
-	copyright:  "Copyright (c) 2001, Eric Bezault and others"
-	license:    "Eiffel Forum Freeware License v1 (see forum.txt)"
-	date:       "$Date$"
-	revision:   "$Revision$"
+	library: "Gobo Eiffel Parse Library"
+	copyright: "Copyright (c) 2001, Eric Bezault and others"
+	license: "Eiffel Forum License v1 (see forum.txt)"
+	date: "$Date$"
+	revision: "$Revision$"
 
 deferred class YY_PARSER_SKELETON [G]
 
@@ -626,14 +625,16 @@ feature {NONE} -- Implementation
 		ensure
 			array_not_void: Result /= Void
 			count_set: Result.count = an_array.count
---			same_items: forall i in 0 .. (an_array.count - 1),
---				Result.item (i) = an_array.item (an_array.lower + i)
+			-- same_items: forall i in 0 .. (an_array.count - 1),
+			--   Result.item (i) = an_array.item (an_array.lower + i)
 		end
 
-	yyvs: like FIXED_ARRAY_TYPE				-- FIXED_ARRAY [G]
+	yyvs: like FIXED_ARRAY_TYPE
+			-- FIXED_ARRAY [G]
 			-- Semantic value stack
 
-	yyss: like FIXED_INTEGER_ARRAY_TYPE		-- FIXED_ARRAY [INTEGER]
+	yyss: like FIXED_INTEGER_ARRAY_TYPE
+			-- FIXED_ARRAY [INTEGER]
 			-- State stack
 
 	yyvsp: INTEGER

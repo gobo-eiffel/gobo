@@ -5,12 +5,11 @@ indexing
 		"Non-terminal symbols. For details about %
 		%symbols, see $GOBO\doc\geyacc\symbols.html"
 
-	library:    "Gobo Eiffel Parse Library"
-	author:     "Eric Bezault <ericb@gobosoft.com>"
-	copyright:  "Copyright (c) 1999, Eric Bezault and others"
-	license:    "Eiffel Forum Freeware License v1 (see forum.txt)"
-	date:       "$Date$"
-	revision:   "$Revision$"
+	library: "Gobo Eiffel Parse Library"
+	copyright: "Copyright (c) 1999, Eric Bezault and others"
+	license: "Eiffel Forum License v1 (see forum.txt)"
+	date: "$Date$"
+	revision: "$Revision$"
 
 class PR_VARIABLE
 
@@ -235,10 +234,10 @@ invariant
 	non_terminal: not is_terminal
 	rules_not_void: rules /= Void
 	no_void_rule: not rules.has (Void)
---	derivable_rules: forall rule in rules, rule.lhs = Current
+	-- derivable_rules: forall rule in rules, rule.lhs = Current
 	transitions_not_void: transitions /= Void
 	no_void_transition: not transitions.has (Void)
---	valid_transitions: forall t in transitions, t.symbol = Current
+	-- valid_transitions: forall t in transitions, t.symbol = Current
 	no_void_first: not firsts.has (Void)
 	no_void_derive: not derives.has (Void)
 

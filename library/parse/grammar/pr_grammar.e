@@ -4,12 +4,11 @@ indexing
 
 		"Grammars for LALR(1) context-free languages."
 
-	library:    "Gobo Eiffel Parse Library"
-	author:     "Eric Bezault <ericb@gobosoft.com>"
-	copyright:  "Copyright (c) 1999, Eric Bezault and others"
-	license:    "Eiffel Forum Freeware License v1 (see forum.txt)"
-	date:       "$Date$"
-	revision:   "$Revision$"
+	library: "Gobo Eiffel Parse Library"
+	copyright: "Copyright (c) 1999, Eric Bezault and others"
+	license: "Eiffel Forum License v1 (see forum.txt)"
+	date: "$Date$"
+	revision: "$Revision$"
 
 class PR_GRAMMAR
 
@@ -69,8 +68,8 @@ feature -- Access
 			end
 		ensure
 			max_rhs_positive: Result >= 0
---			definition: forall rule in rules, Result >= rule.rhs.count
---				and there_exists rule in rules, rule.rhs.count = Result
+			-- definition: forall rule in rules, Result >= rule.rhs.count
+			--   and there_exists rule in rules, rule.rhs.count = Result
 		end
 
 feature -- User-defined Eiffel code

@@ -4,12 +4,11 @@ indexing
 
 		"Finite State Machines"
 
-	library:    "Gobo Eiffel Parse Library"
-	author:     "Eric Bezault <ericb@gobosoft.com>"
-	copyright:  "Copyright (c) 1999, Eric Bezault and others"
-	license:    "Eiffel Forum Freeware License v1 (see forum.txt)"
-	date:       "$Date$"
-	revision:   "$Revision$"
+	library: "Gobo Eiffel Parse Library"
+	copyright: "Copyright (c) 1999, Eric Bezault and others"
+	license: "Eiffel Forum License v1 (see forum.txt)"
+	date: "$Date$"
+	revision: "$Revision$"
 
 class PR_FSM
 
@@ -597,9 +596,9 @@ invariant
 	no_void_state: not states.has (Void)
 	grammar_not_void: grammar /= Void
 	valid_grammar: grammar.start_symbol /= Void
---	positions_sorted: forall state in states, state.positions_sorted
+	-- positions_sorted: forall state in states, state.positions_sorted
 	cached_states_not_void: cached_states /= Void
 	no_void_state_list: not cached_states.has_item (Void)
---	no_void_cached_state: forall state_list in cached_states, forall state in state_list, state /= Void
+	-- no_void_cached_state: forall state_list in cached_states, forall state in state_list, state /= Void
 
 end -- class PR_FSM

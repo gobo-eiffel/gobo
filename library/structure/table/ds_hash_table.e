@@ -5,12 +5,11 @@ indexing
 		"Hash tables, implemented with single arrays. %
 		%Keys are hashed using `hash_code' from HASHABLE."
 
-	library:    "Gobo Eiffel Structure Library"
-	author:     "Eric Bezault <ericb@gobosoft.com>"
-	copyright:  "Copyright (c) 2000-2001, Eric Bezault and others"
-	license:    "Eiffel Forum Freeware License v1 (see forum.txt)"
-	date:       "$Date$"
-	revision:   "$Revision$"
+	library: "Gobo Eiffel Structure Library"
+	copyright: "Copyright (c) 2000-2001, Eric Bezault and others"
+	license: "Eiffel Forum License v1 (see forum.txt)"
+	date: "$Date$"
+	revision: "$Revision$"
 
 class DS_HASH_TABLE [G, K -> HASHABLE]
 

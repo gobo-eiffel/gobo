@@ -4,12 +4,11 @@ indexing
 
 		"Data structures that can hold zero or more items"
 
-	library:    "Gobo Eiffel Structure Library"
-	author:     "Eric Bezault <ericb@gobosoft.com>"
-	copyright:  "Copyright (c) 1999, Eric Bezault and others"
-	license:    "Eiffel Forum Freeware License v1 (see forum.txt)"
-	date:       "$Date$"
-	revision:   "$Revision$"
+	library: "Gobo Eiffel Structure Library"
+	copyright: "Copyright (c) 1999, Eric Bezault and others"
+	license: "Eiffel Forum License v1 (see forum.txt)"
+	date: "$Date$"
+	revision: "$Revision$"
 
 deferred class DS_CONTAINER [G]
 
@@ -52,11 +51,11 @@ feature -- Comparison
 			-- Is current container equal to `other'?
 		deferred
 		ensure then
-				-- The following assertion has been commented out
+				-- TODO: The following assertion has been commented out
 				-- because of a bug in SmallEiffel -0.77b2 (implicit
 				-- feature renaming in ACTIVE, COUNTABLE and LINEAR
 				-- in cluster $GOBO/library/structure/base).
---			same_count: Result implies count = other.count
+			-- same_count: Result implies count = other.count
 		end
 
 feature -- Removal

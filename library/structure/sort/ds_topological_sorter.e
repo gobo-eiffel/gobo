@@ -10,12 +10,11 @@ indexing
 		%Computer Programming', Vol.1 3rd ed. p.265. The detection %
 		%of cycles is described in exercise 23 p.271 and p.548."
 
-	library:    "Gobo Eiffel Structure Library"
-	author:     "Eric Bezault <ericb@gobosoft.com>"
-	copyright:  "Copyright (c) 2001, Eric Bezault and others"
-	license:    "Eiffel Forum Freeware License v1 (see forum.txt)"
-	date:       "$Date$"
-	revision:   "$Revision$"
+	library: "Gobo Eiffel Structure Library"
+	copyright: "Copyright (c) 2001, Eric Bezault and others"
+	license: "Eiffel Forum License v1 (see forum.txt)"
+	date: "$Date$"
+	revision: "$Revision$"
 
 class DS_TOPOLOGICAL_SORTER [G]
 

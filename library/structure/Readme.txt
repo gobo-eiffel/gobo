@@ -39,6 +39,4 @@ A more detailed documentation for this library, in HTML format, is
 provided in "$GOBO/doc/structure".
 
 --
-Copyright (c) 1997-2001, Eric Bezault
-mailto:ericb@gobosoft.com
-http://www.gobosoft.com
+Copyright (c) 1997-2001, Eric Bezault and others

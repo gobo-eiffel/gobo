@@ -1,15 +1,14 @@
 <?xml version="1.0"?>
 
-<cluster name="pattern" location="${GOBO}/library/pattern" abstract="True">
+<cluster name="pattern" location="${GOBO}/library/pattern" abstract="true">
 
 	<description>
 		description: "Xace file for the Gobo Eiffel Pattern Library"
-		library:     "Gobo Eiffel Pattern Library"
-		author:      "Eric Bezault [ericb@gobosoft.com]"
-		copyright:   "Copyright (c) 2001, Eric Bezault and others"
-		license:     "Eiffel Forum Freeware License v1 (see forum.txt)"
-		date:        "$Date$"
-		revision:    "$Revision$"
+		library: "Gobo Eiffel Pattern Library"
+		copyright: "Copyright (c) 2001, Eric Bezault and others"
+		license: "Eiffel Forum License v1 (see forum.txt)"
+		date: "$Date$"
+		revision: "$Revision$"
 	</description>
 
 	<cluster name="command"/>

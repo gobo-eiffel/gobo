@@ -4,12 +4,11 @@ indexing
 
 		"Symbol types"
 
-	library:    "Gobo Eiffel Parse Library"
-	author:     "Eric Bezault <ericb@gobosoft.com>"
-	copyright:  "Copyright (c) 1999-2001, Eric Bezault and others"
-	license:    "Eiffel Forum Freeware License v1 (see forum.txt)"
-	date:       "$Date$"
-	revision:   "$Revision$"
+	library: "Gobo Eiffel Parse Library"
+	copyright: "Copyright (c) 1999-2001, Eric Bezault and others"
+	license: "Eiffel Forum License v1 (see forum.txt)"
+	date: "$Date$"
+	revision: "$Revision$"
 
 class PR_TYPE
 
@@ -170,23 +169,6 @@ feature -- Output
 				%%T%T%Tu ?= v%N%
 				%%T%T%TResult := (u = v)%N%
 				%%T%Tend%N")
-		
-
---			a_file.put_string ("%Tyytype")
---			a_file.put_integer (id)
---			a_file.put_string (" (v: ANY): ")
---			a_file.put_string (name)
---			a_file.put_string (" is%N%
---				%%T%Tdo%N%T%T%TResult := yyrtid")
---			a_file.put_integer (id)
---			a_file.put_string (" ($v)%N%T%Tend%N")
---			a_file.put_string ("%N%Tyyrtid")
---			a_file.put_integer (id)
---			a_file.put_string (" (v: POINTER): ")
---			a_file.put_string (name)
---			a_file.put_string (" is%N%T%Texternal%N%
---				%%T%T%T%"C [macro <eif_macros.h>]%"%N%T%Talias%N%
---				%%T%T%T%"RTID%"%N%T%Tend%N")
 		end
 
 	print_dollar_dollar_declaration (a_file: KI_TEXT_OUTPUT_STREAM) is

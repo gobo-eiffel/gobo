@@ -4,12 +4,11 @@ indexing
 
 		"Interface in the Bridge Pattern"
 
-	library:    "Gobo Eiffel Pattern Library"
-	author:     "Andreas Leitner <nozone@sbox.tugraz.at>"
-	copyright:  "Copyright (c) 2001, Andreas Leitner and others"
-	license:    "Eiffel Forum Freeware License v1 (see forum.txt)"
-	date:       "$Date$"
-	revision:   "$Revision$"
+	library: "Gobo Eiffel Pattern Library"
+	copyright: "Copyright (c) 2001, Andreas Leitner and others"
+	license: "Eiffel Forum License v1 (see forum.txt)"
+	date: "$Date$"
+	revision: "$Revision$"
 
 class DP_INTERFACE
 

@@ -9,12 +9,11 @@ indexing
 		%accessible remotely are also kept locally, using %
 		%a DS_NESTED_LIST_FLATTENER."
 
-	library:    "Gobo Eiffel Structure Library"
-	author:     "Eric Bezault <ericb@gobosoft.com>"
-	copyright:  "Copyright (c) 1998, Eric Bezault and others"
-	license:    "Eiffel Forum Freeware License v1 (see forum.txt)"
-	date:       "$Date$"
-	revision:   "$Revision$"
+	library: "Gobo Eiffel Structure Library"
+	copyright: "Copyright (c) 1998, Eric Bezault and others"
+	license: "Eiffel Forum License v1 (see forum.txt)"
+	date: "$Date$"
+	revision: "$Revision$"
 
 deferred class DS_NESTED_LIST [G]
 
