@@ -187,7 +187,7 @@ feature -- Types
 				l_type := dynamic_types.item (i)
 				if l_type.base_class /= l_base_class then
 					-- Wrong index.
-				elseif not l_base_class.is_generic then
+				elseif not l_base_class.is_generic and l_base_class /= universe.tuple_class then
 					Result := l_type
 				else
 						-- Traverse all dynamic types with the same base class.
