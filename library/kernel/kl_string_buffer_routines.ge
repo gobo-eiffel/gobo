@@ -7,8 +7,9 @@ indexing
 		%with features `put', `item' and `count'."
 
 	library:    "Gobo Eiffel Kernel Library"
-	author:     "Eric Bezault <ericb@gobo.demon.co.uk>"
-	copyright:  "Copyright (c) 1999, Eric Bezault"
+	author:     "Eric Bezault <ericb@gobosoft.com>"
+	copyright:  "Copyright (c) 1999, Eric Bezault and others"
+	license:    "Eiffel Forum Freeware License v1 (see forum.txt)"
 	date:       "$Date$"
 	revision:   "$Revision$"
 
@@ -115,7 +116,7 @@ feature -- Access
 				nb := e - s + 1
 				!! Result.make (nb)
 				a := Result.area
-				c_bcopy (c_offset_pointer ($a_buffer, s), $a, nb)
+				c_memcpy ($a, c_offset_pointer ($a_buffer, s), nb)
 				c_str_set_count ($Result, nb)
 #else
 				Result := a_buffer.substring (s, e)
@@ -173,7 +174,7 @@ feature -- Element change
 					a_string.resize (new_count + a_string.additional_space)
 				end
 				a := a_string.area
-				c_safe_bcopy (c_offset_pointer ($a_buffer, s), c_offset_pointer ($a, old_count), nb)
+				c_memmove (c_offset_pointer ($a, old_count), c_offset_pointer ($a_buffer, s), nb)
 				c_str_set_count ($a_string, new_count)
 #else
 				a_string.append_string (a_buffer.substring (s, e))
@@ -205,7 +206,7 @@ feature -- Element change
 			if nb > 0 then
 #ifdef ISE
 				a := a_string.area
-				c_bcopy ($a, c_offset_pointer ($a_buffer, pos), nb)
+				c_memcpy (c_offset_pointer ($a_buffer, pos), $a, nb)
 #else
 				j := pos
 				from i := 1 until i > nb loop
@@ -278,7 +279,7 @@ feature -- Element change
 		do
 			if nb > 0 then
 #ifdef ISE
-				c_safe_bcopy (c_offset_pointer ($a_buffer, old_pos), c_offset_pointer ($a_buffer, new_pos), nb)
+				c_memmove (c_offset_pointer ($a_buffer, new_pos), c_offset_pointer ($a_buffer, old_pos), nb)
 #else
 				j := new_pos
 				nb2 := old_pos + nb - 1
@@ -309,7 +310,7 @@ feature -- Element change
 		do
 			if nb > 0 then
 #ifdef ISE
-				c_safe_bcopy (c_offset_pointer ($a_buffer, old_pos), c_offset_pointer ($a_buffer, new_pos), nb)
+				c_memmove (c_offset_pointer ($a_buffer, new_pos), c_offset_pointer ($a_buffer, old_pos), nb)
 #else
 				j := new_pos + nb - 1
 				from i := old_pos + nb - 1 until i < old_pos loop
@@ -404,22 +405,22 @@ feature {NONE} -- Externals
 			"console_readstream"
 		end
 
-	c_bcopy (source, target: POINTER; size: INTEGER) is
+	c_memcpy (target, source: POINTER; size: INTEGER) is
 			-- Copy `size' characters from `source' to `target'.
 			-- `source' and `target' should not overlap.
 		external
-			"C [macro <eif_eiffel.h>]"
+			"C (void *, void *, size_t) | <string.h>"
 		alias
-			"bcopy"
+			"memcpy"
 		end
 
-	c_safe_bcopy (source, target: POINTER; size: INTEGER) is
+	c_memmove (target, source: POINTER; size: INTEGER) is
 			-- Copy `size' characters from `source' to `target'.
 			-- `source' and `target' can overlap.
 		external
-			"C [macro <eif_eiffel.h>]"
+			"C (void *, void *, size_t) | <string.h>"
 		alias
-			"safe_bcopy"
+			"memmove"
 		end
 
 	c_offset_pointer (p: POINTER; offset: INTEGER): POINTER is
