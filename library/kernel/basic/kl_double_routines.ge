@@ -16,11 +16,11 @@ class KL_DOUBLE_ROUTINES
 inherit
 	DOUBLE_MATH
 		rename
-			exp,
 			log as old_log,
 			log10 as old_log10
 		export
-			{NONE} all
+			{NONE} all;
+			{ANY} exp
 		end
 
 #endif
@@ -28,10 +28,10 @@ inherit
 inherit
 	MATH
 		rename
-			epx,
 			log as old_log
 		export
-			{NONE} all
+			{NONE} all;
+			{ANY} exp
 		end
 
 #endif
