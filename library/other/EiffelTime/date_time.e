@@ -6,7 +6,7 @@ indexing
 
 	library:    "Gobo Eiffel Time Library"
 	author:     "Eric Bezault <ericb@gobosoft.com>"
-	copyright:  "Copyright (c) 2000, Eric Bezault and others"
+	copyright:  "Copyright (c) 2000-2001, Eric Bezault and others"
 	license:    "Eiffel Forum Freeware License v1 (see forum.txt)"
 	date:       "$Date$"
 	revision:   "$Revision$"
@@ -32,6 +32,7 @@ inherit
 			make_from_storage as make_from_date_storage,
 			make_from_day_count as make_date_from_day_count,
 			storage as date_storage,
+			set_storage as set_date_storage,
 			make as make_date
 		undefine
 			hash_code, add,
@@ -52,7 +53,8 @@ inherit
 			make as make_time,
 			make_from_second_count as make_time_from_second_count,
 			make_from_millisecond_count as make_time_from_millisecond_count,
-			storage as time_storage
+			storage as time_storage,
+			set_storage as set_time_storage
 		undefine
 			origin, hash_code,
 			infix "<",
@@ -155,13 +157,23 @@ feature -- Access
 	date: DATE is
 			-- Date part
 		do
-			Result := Current
+			if date_impl /= Void then
+				date_impl.set_storage (date_storage)
+			else
+				!! date_impl.make_from_storage (date_storage)
+			end
+			Result := date_impl
 		end
 
 	time: TIME is
 			-- Time part
 		do
-			Result := Current
+			if time_impl /= Void then
+				time_impl.set_storage (time_storage)
+			else
+				!! time_impl.make_from_storage (time_storage)
+			end
+			Result := time_impl
 		end
 
 	relative_duration (other: like Current): DATE_TIME_DURATION is
@@ -204,5 +216,13 @@ feature -- Access
 		do
 			!! Result.make_precise (0, 0, 0, millisecond_count - other.millisecond_count)
 		end
+
+feature {NONE} -- Implementation
+
+	date_impl: DATE
+			-- Implementation of `date'
+
+	time_impl: TIME
+			-- Implementation of `time'
 
 end -- class DATE_TIME

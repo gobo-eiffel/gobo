@@ -6,7 +6,7 @@ indexing
 
 	library:    "Gobo Eiffel Time Library"
 	author:     "Eric Bezault <ericb@gobosoft.com>"
-	copyright:  "Copyright (c) 2000, Eric Bezault and others"
+	copyright:  "Copyright (c) 2000-2001, Eric Bezault and others"
 	license:    "Eiffel Forum Freeware License v1 (see forum.txt)"
 	date:       "$Date$"
 	revision:   "$Revision$"
@@ -128,13 +128,23 @@ feature -- Access
 	date: DATE_DURATION is
 			-- Date duration part
 		do
-			Result := Current
+			if date_impl /= Void then
+				date_impl.set_year_month_day (year, month, day)
+			else
+				!! date_impl.make (year, month, day)
+			end
+			Result := date_impl
 		end
 
 	time: TIME_DURATION is
 			-- Time duration part
 		do
-			Result := Current
+			if time_impl /= Void then
+				time_impl.set_precise_hour_minute_second (hour, minute, second, millisecond)
+			else
+				!! time_impl.make_precise (hour, minute, second, millisecond)
+			end
+			Result := time_impl
 		end
 
 	zero: DATE_TIME_DURATION is
@@ -157,5 +167,11 @@ feature {NONE} -- Implementation
 		once
 			!! Result.make (1, 1, 1, 0, 0, 0)
 		end
+
+	date_impl: DATE_DURATION
+			-- Implementation of `date'
+
+	time_impl: TIME_DURATION
+			-- Implementation of `time'
 
 end -- class DATE_TIME_DURATION
