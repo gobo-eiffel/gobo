@@ -22,7 +22,7 @@ feature -- Test
 			-- Test feature `date_time_to_utc' class DT_FIXED_OFFSET_TIME_ZONE.
 		local
 			l_time_zone: DT_FIXED_OFFSET_TIME_ZONE
-			dt1, dt2, dt3: DT_DATE_TIME
+			dt1, dt2: DT_DATE_TIME
 		do
 				-- Positive offset.
 			create l_time_zone.make_hours_minutes (5, 0)
@@ -46,7 +46,7 @@ feature -- Test
 			-- Test feature `date_time_from_utc' class DT_FIXED_OFFSET_TIME_ZONE.
 		local
 			l_time_zone: DT_FIXED_OFFSET_TIME_ZONE
-			dt1, dt2, dt3: DT_DATE_TIME
+			dt1, dt2: DT_DATE_TIME
 		do
 				-- Positive offset.
 			create l_time_zone.make_hours_minutes (3, 30)

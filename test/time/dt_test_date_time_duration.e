@@ -376,8 +376,6 @@ feature -- Test
 			-- Test features of DT_DATE_TIME_DURATION.
 		local
 			d1, d2: DT_DATE_TIME_DURATION
-			dd1: DT_DATE_DURATION
-			td1: DT_TIME_DURATION
 		do
 			create d1.make (2, 0, 30, 20, 2, 12)
 			create d2.make (1, 12, 30, 20, 2, 12)
