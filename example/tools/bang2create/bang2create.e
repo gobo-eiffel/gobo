@@ -35,6 +35,7 @@ feature -- Execution
 			a_cursor: DS_HASH_TABLE_CURSOR [ET_CLASS, ET_CLASS_NAME]
 			a_printer: CREATE_PRINTER
 			a_class: ET_CLASS
+			a_time_stamp: INTEGER
 		do
 			Arguments.set_program_name ("bang2create")
 			create error_handler.make_standard
@@ -45,12 +46,13 @@ feature -- Execution
 			create a_universe.make_with_factory (Void, an_ast_factory, an_error_handler)
 			create a_cluster.make ("cluster_name", ".")
 			if in_filename.is_equal ("-") then
-				a_universe.parse_file (std.input, "stdin", a_cluster)
+				a_universe.parse_file (std.input, "stdin", a_time_stamp, a_cluster)
 			else
 				create in_file.make (in_filename)
+				a_time_stamp := in_file.time_stamp
 				in_file.open_read
 				if in_file.is_open_read then
-					a_universe.parse_file (in_file, in_filename, a_cluster)
+					a_universe.parse_file (in_file, in_filename, a_time_stamp, a_cluster)
 					in_file.close
 				else
 					report_cannot_read_error (in_filename)
