@@ -70,7 +70,7 @@ feature -- Access
 			end
 			Result.set_variable_value ("exe", file_system.exe_extension)
 		ensure
-			Empty_variables_not_void: Result /= Void
+			default_builtin_variables_not_void: Result /= Void
 		end
 
 	Arguments_string_splitter: ST_SPLITTER is
