@@ -19,8 +19,7 @@ inherit
 	ET_AST_LIST [ET_FORMAL_GENERIC_PARAMETER_ITEM]
 		rename
 			make as make_ast_list,
-			make_with_capacity as make_ast_list_with_capacity,
-			item as formal_generic_parameter_item
+			make_with_capacity as make_ast_list_with_capacity
 		redefine
 			put_first
 		end
@@ -72,15 +71,15 @@ feature -- Access
 	right_bracket: ET_SYMBOL
 			-- Right bracket
 
-	item (i: INTEGER): ET_FORMAL_GENERIC_PARAMETER is
+	formal_generic_parameter (i: INTEGER): ET_FORMAL_GENERIC_PARAMETER is
 			-- Type of `i'-th formal generic parameter
 		require
 			i_large_enough: i >= 1
 			i_small_enough: i <= count
 		do
-			Result := formal_generic_parameter_item (i).formal_generic_parameter
+			Result := item (i).formal_generic_parameter
 		ensure
-			item_not_void: Result /= Void
+			formal_generic_parameter_not_void: Result /= Void
 		end
 
 	position: ET_POSITION is
@@ -107,7 +106,7 @@ feature -- Access
 		do
 			nb := count
 			from i := 1 until i > nb loop
-				a_parameter :=  item (i)
+				a_parameter :=  formal_generic_parameter (i)
 				if a_parameter.name.same_identifier (a_name) then
 					Result := a_parameter
 					i := nb + 1  -- Jump out of the loop.
@@ -131,7 +130,7 @@ feature -- Status report
 		do
 			nb := count
 			from i := 1 until i > nb loop
-				if item (i).name.same_identifier (a_name) then
+				if formal_generic_parameter (i).name.same_identifier (a_name) then
 					Result := True
 					i := nb + 1 -- Jump out of the loop.
 				else
@@ -150,7 +149,7 @@ feature -- Validity
 			a_class_not_void: a_class /= Void
 		local
 			i, j, nb: INTEGER
-			a_formal: like item
+			a_formal: like formal_generic_parameter
 			a_name: ET_IDENTIFIER
 			a_universe: ET_UNIVERSE
 			other_class: ET_CLASS
@@ -166,7 +165,7 @@ feature -- Validity
 			a_sorter.wipe_out
 			nb := count
 			from i := 1 until i > nb loop
-				a_formal := item (i)
+				a_formal := formal_generic_parameter (i)
 				a_name := a_formal.name
 				if a_universe.has_class (a_name) then
 					other_class := a_universe.eiffel_class (a_name)
@@ -174,8 +173,8 @@ feature -- Validity
 					Result := False
 				else
 					from j := 1 until j >= i loop
-						if item (j).name.same_identifier (a_name) then
-							a_class.error_handler.report_vcfg2_error (a_class, item (j), a_formal)
+						if formal_generic_parameter (j).name.same_identifier (a_name) then
+							a_class.error_handler.report_vcfg2_error (a_class, formal_generic_parameter (j), a_formal)
 							Result := False
 							j := nb + 1 -- Jump out of the inner loop.
 						end
@@ -191,10 +190,10 @@ feature -- Validity
 								a_class.error_handler.report_vcfg3a_error (a_class, a_formal, a_formal_constraint)
 								Result := False
 							elseif an_index < i then
-								a_sorter.force_relation (item (an_index), a_formal)
+								a_sorter.force_relation (formal_generic_parameter (an_index), a_formal)
 								a_class.error_handler.report_vcfg3b_error (a_class, a_formal, a_formal_constraint)
 							elseif an_index > i then
-								a_sorter.force_relation (item (an_index), a_formal)
+								a_sorter.force_relation (formal_generic_parameter (an_index), a_formal)
 								a_class.error_handler.report_vcfg3c_error (a_class, a_formal, a_formal_constraint)
 							end
 						end
@@ -220,7 +219,7 @@ feature -- Validity
 					!DS_HASH_TOPOLOGICAL_SORTER [ET_FORMAL_GENERIC_PARAMETER]! a_sorter.make (nb)
 				end
 				from i := 1 until i > nb loop
-					a_formal := item (i)
+					a_formal := formal_generic_parameter (i)
 					a_constraint := a_formal.constraint
 					if a_constraint /= Void then
 						a_formal_constraint ?= a_constraint
@@ -267,7 +266,7 @@ feature -- Type processing
 		do
 			nb := count
 			from i := 1 until i > nb loop
-				a_constrained_formal ?= item (i)
+				a_constrained_formal ?= formal_generic_parameter (i)
 				if a_constrained_formal /= Void then
 					a_constraint := a_constrained_formal.constraint
 					a_constrained_formal.set_constraint (a_constraint.resolved_named_types (a_class, ast_factory))
@@ -286,7 +285,7 @@ feature -- System
 		do
 			nb := count
 			from i := 1 until i > nb loop
-				item (i).add_to_system
+				formal_generic_parameter (i).add_to_system
 				i := i + 1
 			end
 		end
@@ -315,7 +314,7 @@ feature -- Setting
 
 feature -- Element change
 
-	put_first (an_item: like formal_generic_parameter_item) is
+	put_first (an_item: like item) is
 			-- Put `an_item' at first position in list.
 		do
 			precursor (an_item)
