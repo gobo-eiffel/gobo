@@ -12,8 +12,8 @@ content="text/html; charset=iso-8859-1">
 
 <h1>The Generated Scanner</h1>
 
-<p>For each scanner description file given as input, gelex will
-generate an Eiffel class as output. By default <em>gelex</em>
+<p>For each scanner description file given as input, <em>gelex</em>
+will generate an Eiffel class as output. By default <em>gelex</em>
 sends its output to the standard output but this can easily be
 overridden with option <a href="options.html#outfile"><font
 color="#800000" size="2" face="Courier New">-o filename</font></a>.</p>
@@ -32,14 +32,13 @@ reaches an end-of-file or <a href="actions.html#last_token"><font
 color="#008080" size="2" face="Courier New"><em>last_token</em></font></a>
 is given an non-negative value. Each time <font color="#008080"
 size="2" face="Courier New"><em>read_token</em></font> is called
-again it<br>
-continues processing tokens from where it last left off until it
-either reaches the end of the file or <font color="#008080"
-size="2" face="Courier New"><em>last_token</em></font> is given a
-non-negative value again. On the other hand, the routine <a
-href="skeleton.html#scan" name="scan"><font color="#008080"
-size="2" face="Courier New"><em>scan</em></font></a> scans the
-input buffer until it reaches the end-of-file, ignoring
+again it continues processing tokens from where it last left off
+until it either reaches the end of the file or <font
+color="#008080" size="2" face="Courier New"><em>last_token</em></font>
+is given a non-negative value again. On the other hand, the
+routine <a href="skeleton.html#scan" name="scan"><font
+color="#008080" size="2" face="Courier New"><em>scan</em></font></a>
+scans the input buffer until it reaches the end-of-file, ignoring
 successive values of <font color="#008080" size="2"
 face="Courier New"><em>last_token</em></font>. Class <font
 color="#008080" size="2" face="Courier New"><em>YY_SCANNER</em></font>
