@@ -2,10 +2,10 @@ indexing
 	
 	description:
 	
-		"External resolver that opens files on the local filesystem"
+		"External resolver using strings for entity content"
 	
 	library: "Gobo Eiffel XML Library"
-	copyright: "Copyright (c) 2001, Andreas Leitner and others"
+	copyright: "Copyright (c) 2004, Andreas Leitner and others"
 	license: "Eiffel Forum License v2 (see forum.txt)"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -17,6 +17,9 @@ inherit
 	XM_EXTERNAL_RESOLVER
 
 	KL_IMPORTED_STRING_ROUTINES
+		export {NONE} all end
+
+	UC_SHARED_STRING_EQUALITY_TESTER
 		export {NONE} all end
 
 creation
