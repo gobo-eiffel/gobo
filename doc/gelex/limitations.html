@@ -35,13 +35,6 @@ color="#FF0000"><tt>x</tt></font> at the beginning of the
 trailing context. (Note that the POSIX draft for <em>lex</em>
 states that the text matched by such patterns is undefined.)</p>
 
-<p>For some trailing context rules, parts which are actually
-fixed-length are not recognized as such, leading to the above
-mentioned performance loss. In particular, parts using<font
-color="#FF0000"><tt> | </tt></font>or <font color="#FF0000"><tt>{n}</tt></font>
-(such as <font color="#FF0000"><tt>foo{3}</tt></font>) are always
-considered variable-length.</p>
-
 <h2>Matching Null characters</h2>
 
 <p>Pattern-matching of Null characters is substantially slower
@@ -66,7 +59,7 @@ cannot be used with the <font color="#800000"><tt>-f</tt></font>
 <table border="0" width="100%">
     <tr>
         <td><address>
-            <font size="2"><b>Copyright © 1999</b></font><font
+            <font size="2"><b>Copyright © 2000</b></font><font
             size="1"><b>, </b></font><font size="2"><strong>Eric
             Bezault</strong></font><strong> </strong><font
             size="2"><br>
@@ -76,7 +69,7 @@ cannot be used with the <font color="#800000"><tt>-f</tt></font>
             <strong>http:</strong></font><a
             href="http://www.gobosoft.com"><font size="2">//www.gobosoft.com</font></a><font
             size="2"><br>
-            <strong>Last Updated:</strong> 22 March 1999</font><br>
+            <strong>Last Updated:</strong> 20 February 2000</font><br>
             <!--webbot bot="PurpleText"
             preview="
 $Date$ 
