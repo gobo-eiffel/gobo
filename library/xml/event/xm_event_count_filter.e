@@ -10,7 +10,7 @@ indexing
 	date: "$Date$"
 	revision: "$Revision$"
 		
-class XM_EVENT_COUNTER
+class XM_EVENT_COUNT_FILTER
 
 inherit
 	
