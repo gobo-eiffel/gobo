@@ -5,7 +5,7 @@ indexing
 		"Errors, warnings and other kind of messages"
 
 	library: "Gobo Eiffel Utility Library"
-	copyright: "Copyright (c) 1999, Eric Bezault and others"
+	copyright: "Copyright (c) 1999-2002, Eric Bezault and others"
 	license: "Eiffel Forum License v1 (see forum.txt)"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -15,9 +15,7 @@ deferred class UT_ERROR
 inherit
 
 	KL_SHARED_ARGUMENTS
-
 	KL_IMPORTED_STRING_ROUTINES
-
 	KL_IMPORTED_ARRAY_ROUTINES
 
 feature -- Access
@@ -42,14 +40,18 @@ feature -- Access
 			from
 				i := 1
 				nb := a_template.count
-				Result := STRING_.make (nb)
+				Result := STRING_.new_empty_string (a_template, nb)
 			until
 				i > nb
 			loop
 				c := a_template.item (i)
 				i := i + 1
 				if c /= '$' then
-					Result.append_character (c)
+					if c /= '%U' then
+						Result.append_character (c)
+					else
+						Result := STRING_.appended_substring (Result, a_template, i - 1, i - 1)
+					end
 				elseif i > nb then
 						-- Dollar at the end of `a_template'.
 						-- Leave it as it is.
@@ -63,7 +65,7 @@ feature -- Access
 					else
 							-- Found beginning of a placeholder.
 							-- It is either ${N} or $N.
-						str := STRING_.make (5)
+						str := STRING_.new_empty_string (a_template, 5)
 						if c = '{' then
 								-- Looking for a right brace.
 							lb := True
@@ -76,8 +78,11 @@ feature -- Access
 								c := a_template.item (i)
 								if c = '}' then
 									rb := True
-								else
+								elseif c /= '%U' then
 									str.append_character (c)
+								else
+									check same_type: str.same_type (a_template) end
+									STRING_.append_substring_to_string (str, a_template, i, i)
 								end
 								i := i + 1
 							end
@@ -104,22 +109,30 @@ feature -- Access
 						if STRING_.is_integer (str) then
 							j := str.to_integer
 							if parameters.valid_index (j) then
-								Result.append_string (parameters.item (j))
+								Result := STRING_.appended_string (Result, parameters.item (j))
 							elseif j = 0 then
-								Result.append_string (Arguments.program_name)
+								Result := STRING_.appended_string (Result, Arguments.program_name)
 							else
 									-- Leave $N or ${N} unchanged.
 								Result.append_character ('$')
-								if lb then Result.append_character ('{') end
-								Result.append_string (str)
-								if rb then Result.append_character ('}') end
+								if lb then
+									Result.append_character ('{')
+								end
+								Result := STRING_.appended_string (Result, str)
+								if rb then
+									Result.append_character ('}')
+								end
 							end
 						else
 								-- Leave $N or ${N} unchanged.
 							Result.append_character ('$')
-							if lb then Result.append_character ('{') end
-							Result.append_string (str)
-							if rb then Result.append_character ('}') end
+							if lb then
+								Result.append_character ('{')
+							end
+							Result := STRING_.appended_string (Result, str)
+							if rb then
+								Result.append_character ('}')
+							end
 						end
 					end
 				end

@@ -53,9 +53,8 @@ feature -- Access
 		end
 
 	left_padded_string_out (a_string: STRING; a_length: INTEGER; c: CHARACTER): STRING is
-			-- Clone of `a_string', padded on the left with
-			-- `c' characters if `a_string' is less than 
-			-- `a_length' character long;
+			-- Clone of `a_string', padded on the left with `c' characters
+			-- if `a_string' is less than `a_length' characters long;
 			-- Return a new string at each call.
 			-- Regexp: `c'{`(a_length-a_string.count).max (0)'}`a_string'
 		require
@@ -68,7 +67,7 @@ feature -- Access
 			if a_length >= nb then
 				nb := a_length
 			end
-			Result := STRING_.make (nb)
+			Result := STRING_.new_empty_string (a_string, nb)
 			append_left_padded_string (Result, a_string, a_length, c)
 		ensure
 			left_padded_string_out_not_void: Result /= Void
@@ -114,7 +113,7 @@ feature -- String handling
 					a_target.append_string ("%%%"")
 				else
 					a_target.append_string ("%%/")
-					INTEGER_FORMATTER_.append_decimal_integer (a_target, c.code)
+					INTEGER_FORMATTER_.append_decimal_integer (a_target, a_string.item_code (i))
 					a_target.append_character ('/')
 				end
 				i := i + 1
@@ -142,6 +141,7 @@ feature -- String handling
 		require
 			a_target_not_void: a_target /= Void
 			a_string_not_void: a_string /= Void
+			same_type: a_string.same_type (a_target)
 			a_length_positive: a_length >= 0
 		local
 			i, nb: INTEGER
@@ -195,7 +195,7 @@ feature -- File handling
 					a_file.put_string ("%%%"")
 				else
 					a_file.put_string ("%%/")
-					INTEGER_FORMATTER_.put_decimal_integer (a_file, c.code)
+					INTEGER_FORMATTER_.put_decimal_integer (a_file, a_string.item_code (i))
 					a_file.put_character ('/')
 				end
 				i := i + 1
@@ -218,9 +218,11 @@ feature -- File handling
 		end
 
 	put_left_padded_string (a_file: KI_CHARACTER_OUTPUT_STREAM; a_string: STRING; a_length: INTEGER; c: CHARACTER) is
-			-- Write `a_string' to `a_file', padded on the
-			-- left with `c' characters if `a_string' is less
-			-- than `a_length' character long.
+			-- Write `a_string' to `a_file', padded on the left with `c'
+			-- characters if `a_string' is less than `a_length' characters long.
+			-- Note: If `a_string' is a UC_STRING or descendant, then
+			-- write the bytes of its associated UTF unicode encoding,
+			-- and pad them on the left with `c' characters.
 		require
 			a_file_not_void: a_file /= Void
 			a_file_is_open_write: a_file.is_open_write
@@ -228,13 +230,15 @@ feature -- File handling
 			a_length_positive: a_length >= 0
 		local
 			i, nb: INTEGER
+			a_string_string: STRING
 		do
-			nb := a_length - a_string.count
+			a_string_string := STRING_.as_string (a_string)
+			nb := a_length - a_string_string.count
 			from i := 1 until i > nb loop
 				a_file.put_character (c)
 				i := i + 1
 			end
-			a_file.put_string (a_string)
+			a_file.put_string (a_string_string)
 		end
 
 end

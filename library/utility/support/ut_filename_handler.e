@@ -38,11 +38,18 @@ feature -- Access
 		require
 			a_dirname_not_void: a_dirname /= Void
 			a_filename_not_void: a_filename /= Void
+		local
+			c: CHARACTER
 		do
-			Result := STRING_.make (a_dirname.count + a_filename.count + 1)
+			Result := STRING_.new_empty_string (a_dirname, a_dirname.count + a_filename.count + 1)
 			Result.append_string (a_dirname)
-			Result.append_character (directory_separators.item (1))
-			Result.append_string (a_filename)
+			c := directory_separators.item (1)
+			if c /= '%U' then
+				Result.append_character (c)
+			else
+				Result := STRING_.appended_substring (Result, directory_separators, 1, 1)
+			end
+			Result := STRING_.appended_string (Result, a_filename)
 		ensure
 			pathname_not_void: Result /= Void
 		end

@@ -65,8 +65,7 @@ feature -- String handling
 		require
 			a_string_not_void: a_string /= Void
 		local
-			j, k, i, nb: INTEGER
-			c: CHARACTER
+			i, k: INTEGER
 		do
 			if an_int = 0 then
 				a_string.append_character ('0')
@@ -77,43 +76,31 @@ feature -- String handling
 				else
 					k := an_int
 				end
-				from until k = 0 loop
-					inspect k \\ 10
-					when 0 then
-						a_string.append_character ('0')
-					when 1 then
-						a_string.append_character ('1')
-					when 2 then
-						a_string.append_character ('2')
-					when 3 then
-						a_string.append_character ('3')
-					when 4 then
-						a_string.append_character ('4')
-					when 5 then
-						a_string.append_character ('5')
-					when 6 then
-						a_string.append_character ('6')
-					when 7 then
-						a_string.append_character ('7')
-					when 8 then
-						a_string.append_character ('8')
-					when 9 then
-						a_string.append_character ('9')
-					end
-					k := k // 10
-					nb := nb + 1
+				i := k // 10
+				if i /= 0 then
+					append_decimal_integer (a_string, i)
 				end
-				from
-					j := a_string.count
-					i := j - nb + 1
-				until
-					i >= j
-				loop
-					c := a_string.item (i)
-					a_string.put (a_string.item (j), i)
-					a_string.put (c, j)
-					i := i + 1
-					j := j - 1
+				inspect k \\ 10
+				when 0 then
+					a_string.append_character ('0')
+				when 1 then
+					a_string.append_character ('1')
+				when 2 then
+					a_string.append_character ('2')
+				when 3 then
+					a_string.append_character ('3')
+				when 4 then
+					a_string.append_character ('4')
+				when 5 then
+					a_string.append_character ('5')
+				when 6 then
+					a_string.append_character ('6')
+				when 7 then
+					a_string.append_character ('7')
+				when 8 then
+					a_string.append_character ('8')
+				when 9 then
+					a_string.append_character ('9')
 				end
 			end
 		end
@@ -125,45 +112,32 @@ feature -- String handling
 			a_string_not_void: a_string /= Void
 			an_int_positive: an_int >= 0
 		local
-			j, k, i, nb: INTEGER
-			c: CHARACTER
+			k: INTEGER
 		do
 			if an_int = 0 then
 				a_string.append_character ('0')
 			else
-				from k := an_int until k = 0 loop
-					inspect k \\ 8
-					when 0 then
-						a_string.append_character ('0')
-					when 1 then
-						a_string.append_character ('1')
-					when 2 then
-						a_string.append_character ('2')
-					when 3 then
-						a_string.append_character ('3')
-					when 4 then
-						a_string.append_character ('4')
-					when 5 then
-						a_string.append_character ('5')
-					when 6 then
-						a_string.append_character ('6')
-					when 7 then
-						a_string.append_character ('7')
-					end
-					k := k // 8
-					nb := nb + 1
+				k := an_int // 8
+				if k /= 0 then
+					append_octal_integer (a_string, k)
 				end
-				from
-					j := a_string.count
-					i := j - nb + 1
-				until
-					i >= j
-				loop
-					c := a_string.item (i)
-					a_string.put (a_string.item (j), i)
-					a_string.put (c, j)
-					i := i + 1
-					j := j - 1
+				inspect an_int \\ 8
+				when 0 then
+					a_string.append_character ('0')
+				when 1 then
+					a_string.append_character ('1')
+				when 2 then
+					a_string.append_character ('2')
+				when 3 then
+					a_string.append_character ('3')
+				when 4 then
+					a_string.append_character ('4')
+				when 5 then
+					a_string.append_character ('5')
+				when 6 then
+					a_string.append_character ('6')
+				when 7 then
+					a_string.append_character ('7')
 				end
 			end
 		end
@@ -188,8 +162,45 @@ feature -- File handling
 		require
 			a_file_not_void: a_file /= Void
 			a_file_is_open_write: a_file.is_open_write
+		local
+			i, k: INTEGER
 		do
-			a_file.put_string (decimal_integer_out (an_int))
+			if an_int = 0 then
+				a_file.put_character ('0')
+			else
+				if an_int < 0 then
+					a_file.put_character ('-')
+					k := -an_int
+				else
+					k := an_int
+				end
+				i := k // 10
+				if i /= 0 then
+					put_decimal_integer (a_file, i)
+				end
+				inspect k \\ 10
+				when 0 then
+					a_file.put_character ('0')
+				when 1 then
+					a_file.put_character ('1')
+				when 2 then
+					a_file.put_character ('2')
+				when 3 then
+					a_file.put_character ('3')
+				when 4 then
+					a_file.put_character ('4')
+				when 5 then
+					a_file.put_character ('5')
+				when 6 then
+					a_file.put_character ('6')
+				when 7 then
+					a_file.put_character ('7')
+				when 8 then
+					a_file.put_character ('8')
+				when 9 then
+					a_file.put_character ('9')
+				end
+			end
 		end
 
 	put_octal_integer (a_file: KI_CHARACTER_OUTPUT_STREAM; an_int: INTEGER) is
@@ -199,8 +210,35 @@ feature -- File handling
 			a_file_not_void: a_file /= Void
 			a_file_is_open_write: a_file.is_open_write
 			an_int_positive: an_int >= 0
+		local
+			k: INTEGER
 		do
-			a_file.put_string (octal_integer_out (an_int))
+			if an_int = 0 then
+				a_file.put_character ('0')
+			else
+				k := an_int // 8
+				if k /= 0 then
+					put_octal_integer (a_file, k)
+				end
+				inspect an_int \\ 8
+				when 0 then
+					a_file.put_character ('0')
+				when 1 then
+					a_file.put_character ('1')
+				when 2 then
+					a_file.put_character ('2')
+				when 3 then
+					a_file.put_character ('3')
+				when 4 then
+					a_file.put_character ('4')
+				when 5 then
+					a_file.put_character ('5')
+				when 6 then
+					a_file.put_character ('6')
+				when 7 then
+					a_file.put_character ('7')
+				end
+			end
 		end
 
 	put_hexadecimal_integer (a_file: KI_CHARACTER_OUTPUT_STREAM; an_int: INTEGER; uppercase: BOOLEAN) is
@@ -212,8 +250,75 @@ feature -- File handling
 			a_file_not_void: a_file /= Void
 			a_file_is_open_write: a_file.is_open_write
 			an_int_positive: an_int >= 0
+		local
+			k: INTEGER
 		do
-			a_file.put_string (hexadecimal_integer_out (an_int, uppercase))
+			if an_int = 0 then
+				a_file.put_character ('0')
+			else
+				k := an_int // 16
+				if k /= 0 then
+					put_hexadecimal_integer (a_file, k, uppercase)
+				end
+				inspect an_int \\ 16
+				when 0 then
+					a_file.put_character ('0')
+				when 1 then
+					a_file.put_character ('1')
+				when 2 then
+					a_file.put_character ('2')
+				when 3 then
+					a_file.put_character ('3')
+				when 4 then
+					a_file.put_character ('4')
+				when 5 then
+					a_file.put_character ('5')
+				when 6 then
+					a_file.put_character ('6')
+				when 7 then
+					a_file.put_character ('7')
+				when 8 then
+					a_file.put_character ('8')
+				when 9 then
+					a_file.put_character ('9')
+				when 10 then
+					if uppercase then
+						a_file.put_character ('A')
+					else
+						a_file.put_character ('a')
+					end
+				when 11 then
+					if uppercase then
+						a_file.put_character ('B')
+					else
+						a_file.put_character ('b')
+					end
+				when 12 then
+					if uppercase then
+						a_file.put_character ('C')
+					else
+						a_file.put_character ('c')
+					end
+				when 13 then
+					if uppercase then
+						a_file.put_character ('D')
+					else
+						a_file.put_character ('d')
+					end
+				when 14 then
+					if uppercase then
+						a_file.put_character ('E')
+					else
+						a_file.put_character ('e')
+					end
+				when 15 then
+					if uppercase then
+						a_file.put_character ('F')
+					else
+						a_file.put_character ('f')
+					end
+				end
+			end
 		end
 
 end
