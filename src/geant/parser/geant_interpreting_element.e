@@ -5,7 +5,7 @@ indexing
 		"Geant interpreting elements"
 
 	library: "Gobo Eiffel Ant"
-	copyright: "Copyright (c) 2002, Sven Ehrke and others"
+	copyright: "Copyright (c) 2002-2004, Sven Ehrke and others"
 	license: "Eiffel Forum License v2 (see forum.txt)"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -65,19 +65,22 @@ feature -- Status report
 			unless_condition: BOOLEAN
 			a_string: STRING
 		do
+				-- TODO: improve efficiency:
+			Project_variables_resolver.set_variables (project.variables)
 				-- Set default execution conditions:
 			if_condition := true
 			unless_condition := false
 				-- Look for an 'if' XML attribute
 			if has_attribute (If_attribute_name) then
 				a_string := xml_element.attribute_by_name (If_attribute_name).value
-				if_condition := project.variables.boolean_condition_value (a_string)
+				if_condition := Project_variables_resolver.boolean_condition_value (a_string)
 				project.trace_debug (<<" if: '", a_string, "': ", if_condition.out>>)
 			end
 				-- Look for an 'unless' XML attribute
 			if has_attribute (Unless_attribute_name) then
 				a_string := xml_element.attribute_by_name (Unless_attribute_name).value
-				unless_condition := project.variables.boolean_condition_value (a_string)
+				unless_condition := Project_variables_resolver.boolean_condition_value (a_string)
+
 				project.trace_debug (<<" unless: '", a_string, "'=", unless_condition.out>>)
 			end
 			Result := if_condition and not unless_condition
@@ -101,25 +104,35 @@ feature -- Access/XML attribute values
 			-- Value of attribue `an_attr_name'
 		local
 			a_string_interpreter: GEANT_STRING_INTERPRETER
+			a_variable_resolver: GEANT_VARIABLES_VARIABLE_RESOLVER
 		do
 			Result := xml_element.attribute_by_name (an_attr_name).value
 			if Result.count > 0 then
-					-- Search variable in arguments:
+					-- Search variable in arguments (TODO: make this more efficient):
 				create a_string_interpreter.make
-				a_string_interpreter.set_source_string (Result)
-				a_string_interpreter.set_variables (target_arguments_stack.item)
-				Result := a_string_interpreter.interpreted_source_string
+				create a_variable_resolver.make
+				a_string_interpreter.set_variable_resolver (a_variable_resolver)
+				a_variable_resolver.set_variables (target_arguments_stack.item)
+				Result := a_string_interpreter.interpreted_string (Result)
+
 					-- Search variable in project variables:
-				Result := project.variables.interpreted_string (Result)
+				Project_variables_resolver.set_variables (project.variables)
+				a_string_interpreter.set_variable_resolver (Project_variables_resolver)
+				Result := a_string_interpreter.interpreted_string (Result)
 			end
 		end
 
 	attribute_value_or_default (an_attr_name: STRING; a_default_value: STRING): STRING is
 			-- Value of attribue `an_attr_name',
 			-- or `a_default_value' of no such attribute
+		local
+			a_string_interpreter: GEANT_STRING_INTERPRETER
 		do
 			if xml_element.has_attribute_by_name (an_attr_name) then
-				Result := project.variables.interpreted_string (xml_element.attribute_by_name (an_attr_name).value)
+				create a_string_interpreter.make
+				Project_variables_resolver.set_variables (project.variables)
+				a_string_interpreter.set_variable_resolver (Project_variables_resolver)
+				Result := a_string_interpreter.interpreted_string (xml_element.attribute_by_name (an_attr_name).value)
 			else
 				Result := a_default_value
 			end

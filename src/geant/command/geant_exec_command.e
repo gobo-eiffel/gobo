@@ -121,6 +121,7 @@ feature -- Execution
 			-- Execute command.
 		local
 			s: STRING
+			a_string_interpreter: GEANT_STRING_INTERPRETER
 		do
 			if is_commandline_executable then
 				project.trace (<<"  [exec] ", command_line>>)
@@ -146,13 +147,17 @@ feature -- Execution
 				end
 
 				if exit_code = 0 then
+					create a_string_interpreter.make
+					Project_variables_resolver.set_variables (project.variables)
+					a_string_interpreter.set_variable_resolver (Project_variables_resolver)
+
 					fileset.execute
 					from
 						fileset.start
 					until
 						fileset.after or else exit_code /= 0
 					loop
-						s := project.variables.interpreted_string (command_line)
+						s := a_string_interpreter.interpreted_string (command_line)
 						project.trace (<<"  [exec] ", s>>)
 						execute_shell (s)
 						if accept_errors then

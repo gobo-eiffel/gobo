@@ -5,7 +5,7 @@ indexing
 		"Variables for GEANT"
 
 	library: "Gobo Eiffel Ant"
-	copyright:"Sven Ehrke and others"
+	copyright:"Copyright (c) 2004, Sven Ehrke and others"
 	license:"Eiffel Forum License v2 (see forum.txt)"
 	date: "$Date$"
 	revision:"$Revision$"
@@ -68,6 +68,19 @@ feature -- Status report
 					cs.forth
 				end
 			end
+		end
+
+feature -- Setting
+
+	set_variable_value (a_name, a_value : STRING) is
+			-- Set value of variable `a_name' to `a_value'.
+			-- Ignored when `a_name' is already defined.
+		require
+			a_name_not_void: a_name /= Void
+			a_name_not_empty: a_name.count > 0
+			a_value_not_void: a_value /= Void
+		do
+			force (a_value, a_name)
 		end
 
 end

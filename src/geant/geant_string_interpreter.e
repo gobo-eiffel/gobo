@@ -2,10 +2,10 @@ indexing
 
 	description:
 
-		"Interpreters for Strings containing KL_VALUE references"
+		"Interpreters for Strings using variable resolvers"
 
 	library: "Gobo Eiffel Ant"
-	copyright:"Sven Ehrke and others"
+	copyright:"Copyright (c) 2004, Sven Ehrke and others"
 	license:"Eiffel Forum License v2 (see forum.txt)"
 	date: "$Date$"
 	revision:"$Revision$"
@@ -39,8 +39,8 @@ feature -- Access
 	source_string: STRING
 			-- Source string to be interpreted
 
-	variables: GEANT_VARIABLES
-			-- Variables used for interpretation of `source_string'
+	variable_resolver: GEANT_VARIABLE_RESOLVER
+			-- Variable resolver used for interpretation of `source_string'
 
 	interpreted_source_string: STRING is
 			-- `interpreted_string(source_string)'
@@ -156,14 +156,14 @@ feature -- Setting
 			source_string_set: source_string = a_source_string
 		end
 
-	set_variables (a_variables: like variables) is
-			-- Set `variables' to `a_variables'.
+	set_variable_resolver (a_variable_resolver: like variable_resolver) is
+			-- Set `variable_resolver' to `a_variable_resolver'.
 		require
-			a_variables_not_void: a_variables /= Void
+			a_variable_resolver_not_void: a_variable_resolver /= Void
 		do
-			variables := a_variables
+			variable_resolver := a_variable_resolver
 		ensure
-			variables_set: variables = a_variables
+			variable_resolver_set: variable_resolver = a_variable_resolver
 		end
 
 feature {NONE} -- Implementation
@@ -171,22 +171,22 @@ feature {NONE} -- Implementation
 	variable_value (a_name: STRING): STRING is
 			-- Value of variable `a_name';
 			-- `${a_name}' if `a_name' has not been set.
-			--TODO: dynamic search order
-			--TODO: move this to GEANT_VARIABLES
 		require
 			a_name_not_void: a_name /= Void
-			a_name_not_empty: a_name.count > 0
 		do
-			if variables.has (a_name) then
-				Result := variables.item (a_name)
-				Result := expanded_variable_value (Result)
+			if a_name.is_empty then
+				Result := default_variable_value (a_name)
 			end
-
 			if Result = Void then
-				Result := STRING_.new_empty_string (a_name, a_name.count + 3)
-				Result.append_string ("${")
-				Result.append_string (a_name)
-				Result.append_string ("}")
+				if variable_resolver.has (a_name) then
+					Result := variable_resolver.value (a_name)
+					if Result /= Void then
+						Result := expanded_variable_value (Result)
+					end
+				end
+			end
+			if Result = Void then
+				Result := default_variable_value (a_name)
 			end
 		ensure
 			variable_value_not_void: Result /= Void
@@ -215,6 +215,17 @@ feature {NONE} -- Implementation
 			end
 		ensure
 			expanded_variable_value_not_void : Result /= Void
+		end
+
+	default_variable_value (a_name: STRING): STRING is
+			-- `${`a_name'}'
+		require
+			a_name_not_void: a_name /= Void
+		do
+				Result := STRING_.new_empty_string (a_name, a_name.count + 3)
+				Result.append_string ("${")
+				Result.append_string (a_name)
+				Result.append_string ("}")
 		end
 
 end

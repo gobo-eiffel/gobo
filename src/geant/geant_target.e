@@ -472,6 +472,7 @@ feature -- Processing
 			a_old_target_cwd: STRING
 			a_new_target_cwd: STRING
 			cs: DS_LINKED_LIST_CURSOR [XM_NODE]
+			a_string_interpreter: GEANT_STRING_INTERPRETER
 		do
 			if not execute_once or else not is_executed then
 				if is_enabled then
@@ -485,8 +486,12 @@ feature -- Processing
 					end
 						-- Change to the specified directory if "dir" attribute is provided:
 					if xml_element.has_attribute_by_name (Dir_attribute_name) then
-						a_new_target_cwd := project.variables.interpreted_string (
+						create a_string_interpreter.make
+						Project_variables_resolver.set_variables (project.variables)
+						a_string_interpreter.set_variable_resolver (Project_variables_resolver)
+						a_new_target_cwd := a_string_interpreter.interpreted_string (
 							xml_element.attribute_by_name (Dir_attribute_name).value.out)
+
 						project.trace_debug (<<"changing to directory: '", a_new_target_cwd, "%'">>)
 						a_old_target_cwd := file_system.current_working_directory
 						file_system.set_current_working_directory (a_new_target_cwd)

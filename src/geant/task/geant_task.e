@@ -72,12 +72,15 @@ feature -- Execution
 		local
 			a_old_task_cwd: STRING
 			a_new_task_cwd: STRING
+			a_string_interpreter: GEANT_STRING_INTERPRETER
 		do
 			a_old_task_cwd := file_system.current_working_directory
 				-- Change to task directory if "dir" attribute is provided:
 			if xml_element.has_attribute_by_name (Dir_attribute_name) then
 				a_new_task_cwd := xml_element.attribute_by_name (Dir_attribute_name).value
-				a_new_task_cwd := project.variables.interpreted_string (a_new_task_cwd)
+				create a_string_interpreter.make
+				a_string_interpreter.set_variable_resolver (Project_variables_resolver)
+				a_new_task_cwd := a_string_interpreter.interpreted_string (a_new_task_cwd)
 				project.trace_debug (<<"changing to directory: '", a_new_task_cwd, "%'">>)
 				file_system.set_current_working_directory (a_new_task_cwd)
 			end

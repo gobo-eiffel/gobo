@@ -204,27 +204,27 @@ feature -- Status report
 			-- `mapped_filename_variable_name' not existing?
 		do
 			if not off then
-				Result := project.variables.has_variable (filename_variable_name) and then
-					STRING_.same_string (project.variables.variable_value (filename_variable_name), item_filename) and then
-					project.variables.has_variable (mapped_filename_variable_name) and then
-					STRING_.same_string (project.variables.variable_value (mapped_filename_variable_name), item_mapped_filename)
+				Result := project.variables.has (filename_variable_name) and then
+					STRING_.same_string (project.variables.value (filename_variable_name), item_filename) and then
+					project.variables.has (mapped_filename_variable_name) and then
+					STRING_.same_string (project.variables.value (mapped_filename_variable_name), item_mapped_filename)
 			else
-				Result := not (project.variables.has_variable (filename_variable_name) or
-					project.variables.has_variable (mapped_filename_variable_name))
+				Result := not (project.variables.has (filename_variable_name) or
+					project.variables.has (mapped_filename_variable_name))
 			end
 		ensure
 			filename_variable_name_exists: not off implies
-				(Result implies project.variables.has_variable (filename_variable_name))
+				(Result implies project.variables.has (filename_variable_name))
 			filename_variable_name_set: not off implies (Result implies
-				STRING_.same_string (project.variables.variable_value (filename_variable_name), item_filename))
+				STRING_.same_string (project.variables.value (filename_variable_name), item_filename))
 			mapped_filename_variable_name_exists: not off implies
-				(Result implies project.variables.has_variable (mapped_filename_variable_name))
+				(Result implies project.variables.has (mapped_filename_variable_name))
 			mapped_filename_variable_name_set: not off implies (Result implies
-				STRING_.same_string (project.variables.variable_value (mapped_filename_variable_name), item_mapped_filename))
+				STRING_.same_string (project.variables.value (mapped_filename_variable_name), item_mapped_filename))
 			filename_variable_name_not_exists: off implies
-				(Result implies not project.variables.has_variable (filename_variable_name))
+				(Result implies not project.variables.has (filename_variable_name))
 			mapped_filename_variable_name_not_exists: off implies
-				(Result implies not project.variables.has_variable (mapped_filename_variable_name))
+				(Result implies not project.variables.has (mapped_filename_variable_name))
 		end
 
 	is_empty: BOOLEAN is
@@ -644,11 +644,11 @@ feature {NONE} -- Implementation/Processing
 		do
 			project.trace_debug (<<"  [*fileset] removing project variables '",
 				filename_variable_name, "' and '", mapped_filename_variable_name, "'">>)
-			project.variables.remove_variable (filename_variable_name)
-			project.variables.remove_variable (mapped_filename_variable_name)
+			project.variables.remove (filename_variable_name)
+			project.variables.remove (mapped_filename_variable_name)
 		ensure
-			project_variables_removed: not project.variables.variables.has (filename_variable_name) and
-				not project.variables.variables.has (mapped_filename_variable_name)
+			project_variables_removed: not project.variables.has (filename_variable_name) and
+				not project.variables.has (mapped_filename_variable_name)
 		end
 
 invariant

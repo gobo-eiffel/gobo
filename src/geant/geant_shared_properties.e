@@ -5,7 +5,7 @@ indexing
 		"Common properties for GEANT"
 
 	library: "Gobo Eiffel Ant"
-	copyright: "Sven Ehrke and others"
+	copyright:"Copyright (c) 2001-2004, Sven Ehrke and others"
 	license: "Eiffel Forum License v2 (see forum.txt)"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -14,10 +14,26 @@ class GEANT_SHARED_PROPERTIES
 
 inherit
 
+	ANY
+
 	KL_IMPORTED_STRING_ROUTINES
+		export {NONE} all end
+
 	KL_SHARED_EXECUTION_ENVIRONMENT
+		export {NONE} all end
+
 	KL_SHARED_EXCEPTIONS
+		export {NONE} all end
+
 	KL_SHARED_STANDARD_FILES
+		export {NONE} all end
+
+	KL_SHARED_EXECUTION_ENVIRONMENT
+		export {NONE} all end
+
+	KL_SHARED_FILE_SYSTEM
+		export {NONE} all end
+		
 
 feature -- Access
 
@@ -38,6 +54,25 @@ feature -- Access
 			Empty_variables_not_void: Result /= Void
 		end
 
+	Default_builtin_variables: GEANT_VARIABLES is
+			-- Default built-in variables
+		once
+			create Result.make
+				-- Create built-in variables $GOBO_OS, $is_windows/$is_unix, $exe
+			if operating_system.is_windows then
+				Result.set_variable_value ("GOBO_OS", "windows")
+				Result.set_variable_value ("is_windows", "true")
+				Result.set_variable_value ("path_separator", "\")
+			elseif operating_system.is_unix then
+				Result.set_variable_value ("GOBO_OS", "unix")
+				Result.set_variable_value ("is_unix", "true")
+				Result.set_variable_value ("path_separator", "/")
+			end
+			Result.set_variable_value ("exe", file_system.exe_extension)
+		ensure
+			Empty_variables_not_void: Result /= Void
+		end
+
 	Arguments_string_splitter: ST_SPLITTER is
 			-- String splitter for terse arguments
 		once
@@ -51,6 +86,15 @@ feature -- Access
 			-- Projects of system
 		once
 			create Result.make (5)
+		end
+
+
+	Project_variables_resolver: GEANT_PROJECT_VARIABLE_RESOLVER is
+			-- Project variables resolver
+		once
+			create Result.make
+		ensure
+			Project_variables_resolver_not_void: Result /= Void
 		end
 
 feature {GEANT_INTERPRETING_ELEMENT} -- Access

@@ -132,19 +132,19 @@ feature -- Access
 			-- If `after' is project variables named `directory_name_variable_name' not existing?
 		do
 			if not after then
-				Result := project.variables.has_variable (directory_name_variable_name) and then
-					STRING_.same_string (project.variables.variable_value (directory_name_variable_name),
+				Result := project.variables.has (directory_name_variable_name) and then
+					STRING_.same_string (project.variables.value (directory_name_variable_name),
 						item_directory_name)
 			else
-				Result := not project.variables.has_variable (directory_name_variable_name)
+				Result := not project.variables.has (directory_name_variable_name)
 			end
 		ensure
 			directory_name_variable_name_exists: not after implies
-				(Result implies project.variables.has_variable (directory_name_variable_name))
+				(Result implies project.variables.has (directory_name_variable_name))
 			directory_name_variable_name_set: not after implies (Result implies
-				STRING_.same_string (project.variables.variable_value (directory_name_variable_name), item_directory_name))
+				STRING_.same_string (project.variables.value (directory_name_variable_name), item_directory_name))
 			directory_name_variable_name_not_exists: after implies
-				(Result implies not project.variables.has_variable (directory_name_variable_name))
+				(Result implies not project.variables.has (directory_name_variable_name))
 		end
 
 feature -- Setting
@@ -399,7 +399,7 @@ feature {NONE} -- Implementation/Processing
 			if not after then
 				project.variables.set_variable_value (directory_name_variable_name, item_directory_name)
 			else
-				project.variables.remove_variable (directory_name_variable_name)
+				project.variables.remove (directory_name_variable_name)
 			end
 		ensure
 			project_variables_set: are_project_variables_up_to_date
