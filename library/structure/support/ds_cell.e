@@ -2,12 +2,12 @@ indexing
 
 	description:
 
-		"Cells containing an item";
+		"Cells containing an item"
 
-	library:    "Gobo Eiffel Structure Library";
-	author:     "Eric Bezault <ericb@gobo.demon.co.uk>";
-	copyright:  "Copyright (c) 1997, Eric Bezault";
-	date:       "$Date$";
+	library:    "Gobo Eiffel Structure Library"
+	author:     "Eric Bezault <ericb@gobo.demon.co.uk>"
+	copyright:  "Copyright (c) 1997, Eric Bezault"
+	date:       "$Date$"
 	revision:   "$Revision$"
 
 class DS_CELL [G]

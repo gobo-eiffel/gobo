@@ -2,12 +2,12 @@ indexing
 
 	description:
 
-		"Skeletons of scanners implemented with full tables";
+		"Skeletons of scanners implemented with full tables"
 
-	library:    "Gobo Eiffel Lexical Library";
-	author:     "Eric Bezault <ericb@gobo.demon.co.uk>";
-	copyright:  "Copyright (c) 1997, Eric Bezault";
-	date:       "$Date$";
+	library:    "Gobo Eiffel Lexical Library"
+	author:     "Eric Bezault <ericb@gobo.demon.co.uk>"
+	copyright:  "Copyright (c) 1997, Eric Bezault"
+	date:       "$Date$"
 	revision:   "$Revision$"
 
 deferred class YY_FULL_SCANNER_SKELETON
@@ -152,8 +152,7 @@ feature -- Scanning
 								yy_bp := yy_start_position + yy_more_len
 								yy_goto := yyMatch
 							elseif
-								yy_position - yy_start_position
-									- yy_more_len /= 0
+								yy_position - yy_start_position - yy_more_len /= 0
 							then
 									-- Some text has been matched prior to
 									-- the EOB. First process it.

@@ -2,12 +2,12 @@ indexing
 
 	description:
 
-		"Cursors for linked list traversals";
+		"Cursors for linked list traversals"
 
-	library:    "Gobo Eiffel Structure Library";
-	author:     "Eric Bezault <ericb@gobo.demon.co.uk>";
-	copyright:  "Copyright (c) 1997, Eric Bezault";
-	date:       "$Date$";
+	library:    "Gobo Eiffel Structure Library"
+	author:     "Eric Bezault <ericb@gobo.demon.co.uk>"
+	copyright:  "Copyright (c) 1997, Eric Bezault"
+	date:       "$Date$"
 	revision:   "$Revision$"
 
 class DS_LINKED_LIST_CURSOR [G]

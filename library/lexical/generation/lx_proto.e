@@ -5,12 +5,12 @@ indexing
 		"Protos are DFA states with transition tables that have a high %
 		%probability of either being redundant (a state processed later %
 		%will have an identical transition table) or nearly redundant (a %
-		%state processed later will have many of the same out-transitions)";
+		%state processed later will have many of the same out-transitions)"
 
-	library:    "Gobo Eiffel Lexical Library";
-	author:     "Eric Bezault <ericb@gobo.demon.co.uk>";
-	copyright:  "Copyright (c) 1997, Eric Bezault";
-	date:       "$Date$";
+	library:    "Gobo Eiffel Lexical Library"
+	author:     "Eric Bezault <ericb@gobo.demon.co.uk>"
+	copyright:  "Copyright (c) 1997, Eric Bezault"
+	date:       "$Date$"
 	revision:   "$Revision$"
 
 class LX_PROTO

@@ -2,12 +2,12 @@ indexing
 
 	description:
 
-		"Linkable cells with a reference to their left and right neighbors";
+		"Linkable cells with a reference to their left and right neighbors"
 
-	library:    "Gobo Eiffel Structure Library";
-	author:     "Eric Bezault <ericb@gobo.demon.co.uk>";
-	copyright:  "Copyright (c) 1997, Eric Bezault";
-	date:       "$Date$";
+	library:    "Gobo Eiffel Structure Library"
+	author:     "Eric Bezault <ericb@gobo.demon.co.uk>"
+	copyright:  "Copyright (c) 1997, Eric Bezault"
+	date:       "$Date$"
 	revision:   "$Revision$"
 
 class DS_BILINKABLE [G]

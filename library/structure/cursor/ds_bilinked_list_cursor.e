@@ -2,12 +2,12 @@ indexing
 
 	description:
 
-		"Cursors for bilinked list traversals";
+		"Cursors for bilinked list traversals"
 
-	library:    "Gobo Eiffel Structures Library";
-	author:     "Eric Bezault <ericb@gobo.demon.co.uk>";
-	copyright:  "Copyright (c) 1997, Eric Bezault";
-	date:       "$Date$";
+	library:    "Gobo Eiffel Structures Library"
+	author:     "Eric Bezault <ericb@gobo.demon.co.uk>"
+	copyright:  "Copyright (c) 1997, Eric Bezault"
+	date:       "$Date$"
 	revision:   "$Revision$"
 
 class DS_BILINKED_LIST_CURSOR [G]

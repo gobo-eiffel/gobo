@@ -2,12 +2,12 @@ indexing
 
 	description:
 
-		"Indexable structure sorters using quick sort algorithm";
+		"Indexable structure sorters using quick sort algorithm"
 
-	library:    "Gobo Eiffel Structure Library";
-	author:     "Eric Bezault <ericb@gobo.demon.co.uk>";
-	copyright:  "Copyright (c) 1997, Eric Bezault";
-	date:       "$Date$";
+	library:    "Gobo Eiffel Structure Library"
+	author:     "Eric Bezault <ericb@gobo.demon.co.uk>"
+	copyright:  "Copyright (c) 1997, Eric Bezault"
+	date:       "$Date$"
 	revision:   "$Revision$"
 
 class DS_QUICK_SORTER [G -> COMPARABLE]

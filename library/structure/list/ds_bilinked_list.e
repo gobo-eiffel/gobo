@@ -2,12 +2,12 @@ indexing
 
 	description:
 
-		"Lists implemented with bilinked cells";
+		"Lists implemented with bilinked cells"
 
-	library:    "Gobo Eiffel Structure Library";
-	author:     "Eric Bezault <ericb@gobo.demon.co.uk>";
-	copyright:  "Copyright (c) 1997, Eric Bezault";
-	date:       "$Date$";
+	library:    "Gobo Eiffel Structure Library"
+	author:     "Eric Bezault <ericb@gobo.demon.co.uk>"
+	copyright:  "Copyright (c) 1997, Eric Bezault"
+	date:       "$Date$"
 	revision:   "$Revision$"
 
 class DS_BILINKED_LIST [G]
@@ -83,8 +83,7 @@ feature -- Element change
 			end
 		end
 
-	extend_left,
-	append_left (other: DS_LINEAR [G]; a_cursor: like new_cursor) is
+	extend_left, append_left (other: DS_LINEAR [G]; a_cursor: like new_cursor) is
 			-- Add items of `other' to left of `a_cursor' position.
 		local
 			linked_other: like Current
@@ -247,7 +246,7 @@ feature -- Removal
 			end
 		end
  
-feature {DS_BILINKED_LIST, DS_BILINKED_LIST_CURSOR} -- Implementation
+feature {DS_LINKED_LIST, DS_LINKED_LIST_CURSOR} -- Implementation
 
 	first_cell: DS_BILINKABLE [G]
 			-- First cell in list

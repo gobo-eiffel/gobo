@@ -2,12 +2,12 @@ indexing
 
 	description:
 
-		"Bilinked list searchers using value comparison criterion";
+		"Bilinked list searchers using value comparison criterion"
 
-	library:    "Gobo Eiffel Structure Library";
-	author:     "Eric Bezault <ericb@gobo.demon.co.uk>";
-	copyright:  "Copyright (c) 1997, Eric Bezault";
-	date:       "$Date$";
+	library:    "Gobo Eiffel Structure Library"
+	author:     "Eric Bezault <ericb@gobo.demon.co.uk>"
+	copyright:  "Copyright (c) 1997, Eric Bezault"
+	date:       "$Date$"
 	revision:   "$Revision$"
 
 class DS_BILINKED_LIST_VALUE_SEARCHER [G]

@@ -2,12 +2,12 @@ indexing
 
 	description:
 
-		"Transitions to automaton states";
+		"Transitions to automaton states"
 
-	library:    "Gobo Eiffel Lexical Library";
-	author:     "Eric Bezault <ericb@gobo.demon.co.uk>";
-	copyright:  "Copyright (c) 1997, Eric Bezault";
-	date:       "$Date$";
+	library:    "Gobo Eiffel Lexical Library"
+	author:     "Eric Bezault <ericb@gobo.demon.co.uk>"
+	copyright:  "Copyright (c) 1997, Eric Bezault"
+	date:       "$Date$"
 	revision:   "$Revision$"
 
 class LX_TRANSITION [G -> LX_STATE]

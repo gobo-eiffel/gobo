@@ -2,12 +2,12 @@ indexing
 
 	description:
 
-		"Skeletons of interactive scanners implemented with compressed tables";
+		"Skeletons of interactive scanners implemented with compressed tables"
 
-	library:    "Gobo Eiffel Lexical Library";
-	author:     "Eric Bezault <ericb@gobo.demon.co.uk>";
-	copyright:  "Copyright (c) 1997, Eric Bezault";
-	date:       "$Date$";
+	library:    "Gobo Eiffel Lexical Library"
+	author:     "Eric Bezault <ericb@gobo.demon.co.uk>"
+	copyright:  "Copyright (c) 1997, Eric Bezault"
+	date:       "$Date$"
 	revision:   "$Revision$"
 
 deferred class YY_INTERACTIVE_SCANNER_SKELETON

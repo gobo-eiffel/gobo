@@ -2,12 +2,12 @@ indexing
 
 	description:
 
-		"Error handlers for regular expression compilers";
+		"Error handlers for regular expression compilers"
 
-	library:    "Gobo Eiffel Lexical Library";
-	author:     "Eric Bezault <ericb@gobo.demon.co.uk>";
-	copyright:  "Copyright (c) 1997, Eric Bezault";
-	date:       "$Date$";
+	library:    "Gobo Eiffel Lexical Library"
+	author:     "Eric Bezault <ericb@gobo.demon.co.uk>"
+	copyright:  "Copyright (c) 1997, Eric Bezault"
+	date:       "$Date$"
 	revision:   "$Revision$"
 
 class LX_REGEXP_ERROR_HANDLER
@@ -82,8 +82,7 @@ feature -- Error handling
 		do
 		end
 
-	parsing_message (filename: STRING; line: INTEGER;
-		message: ARRAY [STRING]) is
+	parsing_message (filename: STRING; line: INTEGER; message: ARRAY [STRING]) is
 			-- Report a parsing error message with location information.
 		do
 		end

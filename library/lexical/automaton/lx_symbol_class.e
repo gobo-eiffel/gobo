@@ -2,12 +2,12 @@ indexing
 
 	description:
 
-		"Classes of integer symbols, kept in increasing order";
+		"Classes of integer symbols, kept in increasing order"
 
-	library:    "Gobo Eiffel Lexical Library";
-	author:     "Eric Bezault <ericb@gobo.demon.co.uk>";
-	copyright:  "Copyright (c) 1997, Eric Bezault";
-	date:       "$Date$";
+	library:    "Gobo Eiffel Lexical Library"
+	author:     "Eric Bezault <ericb@gobo.demon.co.uk>"
+	copyright:  "Copyright (c) 1997, Eric Bezault"
+	date:       "$Date$"
 	revision:   "$Revision$"
 	
 class LX_SYMBOL_CLASS
@@ -162,7 +162,7 @@ feature -- Sort
 		ensure
 			sorter_not_void: Result /= Void
 		end
-			
+
 invariant
 
 	sorted: not sort_needed implies sorted (sorter)

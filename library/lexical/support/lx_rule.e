@@ -4,12 +4,12 @@ indexing
 
 		"Rules associated with regular expressions, %
 		%with semantic actions to be executed %
-		%whenever an accepting state is reached";
+		%whenever an accepting state is reached"
 
-	library:    "Gobo Eiffel Lexical Library";
-	author:     "Eric Bezault <ericb@gobo.demon.co.uk>";
-	copyright:  "Copyright (c) 1996, Eric Bezault";
-	date:       "$Date$";
+	library:    "Gobo Eiffel Lexical Library"
+	author:     "Eric Bezault <ericb@gobo.demon.co.uk>"
+	copyright:  "Copyright (c) 1996, Eric Bezault"
+	date:       "$Date$"
 	revision:   "$Revision$"
 
 class LX_RULE

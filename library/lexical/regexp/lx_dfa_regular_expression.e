@@ -2,12 +2,12 @@ indexing
 
 	description:
 
-		"Regular expressions implemented with DFA engines";
+		"Regular expressions implemented with DFA engines"
 
-	library:    "Gobo Eiffel Lexical Library";
-	author:     "Eric Bezault <ericb@gobo.demon.co.uk>";
-	copyright:  "Copyright (c) 1997, Eric Bezault";
-	date:       "$Date$";
+	library:    "Gobo Eiffel Lexical Library"
+	author:     "Eric Bezault <ericb@gobo.demon.co.uk>"
+	copyright:  "Copyright (c) 1997, Eric Bezault"
+	date:       "$Date$"
 	revision:   "$Revision$"
 
 class LX_DFA_REGULAR_EXPRESSION
@@ -51,8 +51,7 @@ feature -- Element change
 			else
 				has_caret := False
 			end
-			if nb > 0 and then a_string.item (nb) = '$'
-			then
+			if nb > 0 and then a_string.item (nb) = '$' then
 				has_dollar := True
 				a_string.head (nb - 1)
 			else

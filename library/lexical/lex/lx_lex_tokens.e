@@ -2,12 +2,12 @@ indexing
 
 	description:
 
-		"Parser tokens for lexical analyzer generators such as 'gelex'";
+		"Parser tokens for lexical analyzer generators such as 'gelex'"
 
-	library:    "Gobo Eiffel Lexical Library";
-	author:     "Eric Bezault <ericb@gobo.demon.co.uk>";
-	copyright:  "Copyright (c) 1997, Eric Bezault";
-	date:       "$Date$";
+	library:    "Gobo Eiffel Lexical Library"
+	author:     "Eric Bezault <ericb@gobo.demon.co.uk>"
+	copyright:  "Copyright (c) 1997, Eric Bezault"
+	date:       "$Date$"
 	revision:   "$Revision$"
 
 class LX_LEX_TOKENS
