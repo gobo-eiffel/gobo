@@ -49,11 +49,7 @@ feature -- Processing
 					create verbose_file.make (verbose_filename)
 					verbose_file.open_write
 					if verbose_file.is_open_write then
-						grammar.reduce_verbose (error_handler, verbose_file)
-						grammar.set_nullable
-						create fsm.make (grammar)
-						fsm.resolve_conflicts_verbose (error_handler, verbose_file)
-						fsm.print_machine (verbose_file)
+						create fsm.make_verbose (grammar, error_handler, verbose_file)
 						verbose_file.close
 					else
 						create cannot_write.make (verbose_filename)
@@ -61,10 +57,7 @@ feature -- Processing
 						Exceptions.die (1)
 					end
 				else
-					grammar.reduce (error_handler)
-					grammar.set_nullable
-					create fsm.make (grammar)
-					fsm.resolve_conflicts (error_handler)
+					create fsm.make (grammar, error_handler)
 				end
 				create parser_generator.make (fsm)
 				if input_filename /= Void then

@@ -36,6 +36,7 @@ feature {NONE} -- Initialization
 			lhs := a_lhs
 			action := an_action
 			create rhs.make (Initial_max_nb_rhs)
+			create error_actions.make (Initial_max_nb_rhs)
 		ensure
 			id_set: id = an_id
 			lhs_set: lhs = a_lhs
@@ -53,6 +54,10 @@ feature -- Access
 
 	rhs: DS_ARRAYED_LIST [PR_SYMBOL]
 			-- Right-hand-side of current rule
+
+	error_actions: DS_ARRAYED_LIST [PR_ERROR_ACTION]
+			-- Action to be executed if a syntax error occurs
+			-- before the i-th symbol of `rhs'
 
 	action: DP_COMMAND
 			-- Associated semantic action
@@ -74,6 +79,17 @@ feature -- Setting
 			action := an_action
 		ensure
 			action_set: action = an_action
+		end
+
+	set_error_action (an_action: PR_ERROR_ACTION; i: INTEGER) is
+			-- Set error action associated with `i'-th symbol to `an_action'.
+		require
+			i_large_enough: i >= 1
+			i_small_enough: i <= error_actions.count
+		do
+			error_actions.replace (an_action, i)
+		ensure
+			error_action_set: error_actions.item (i) = an_action
 		end
 
 	set_precedence (p: INTEGER) is
@@ -114,9 +130,15 @@ feature -- Element change
 				rhs.resize (rhs.count + Max_nb_rhs_increment)
 			end
 			rhs.put_last (a_symbol)
+			if error_actions.is_full then
+				error_actions.resize (error_actions.count + Max_nb_rhs_increment)
+			end
+			error_actions.put_last (Void)
 		ensure
-			one_more: rhs.count = old (rhs.count) + 1
-			inserted: rhs.last = a_symbol
+			one_more_symbol: rhs.count = old (rhs.count) + 1
+			symbol_inserted: rhs.last = a_symbol
+			one_more_error_action: error_actions.count = old (error_actions.count) + 1
+			no_error_action: error_actions.last = Void
 		end
 
 feature -- Status report
@@ -251,5 +273,7 @@ invariant
 	rhs_not_void: rhs /= Void
 	no_void_rhs: not rhs.has (Void)
 	action_not_void: action /= Void
+	error_actions_not_void: error_actions /= Void
+	error_actions_count: error_actions.count = rhs.count
 
 end

@@ -226,8 +226,11 @@ be used in actions:</p>
         color="#008080"><em><tt>raise_error</tt></em></font></a></dt>
     <dd>Cause an immediate syntax error. This routine initiates <a
         href="error.html">error recovery</a> just as if the
-        parser itself had detected an error; it also calls <font
-        color="#008080"><em><tt>report_error</tt></em></font>.</dd>
+        parser itself had detected an error; it also calls the
+        error action <font color="#0000FF"><tt>%error</tt></font>
+        associated with current parsing state or <font
+        color="#008080"><em><tt>report_error</tt></em></font> by
+        default.</dd>
     <dt><a href="skeleton.html#read_token" name="read_token"><font
         color="#008080"><em><tt>read_token</tt></em></font></a></dt>
     <dd>The <a href="parser.html#lexical_analyzer">lexical
@@ -255,15 +258,18 @@ be used in actions:</p>
         can also explicitly proclaim an error by calling feature <font
         color="#008080"><em><tt>raise_error</tt></em></font>. The
         <em>geyacc</em> parser expects to report the error by
-        calling the error reporting routine <font color="#008080"><em><tt>report_error</tt></em></font>.
-        For a parse error, the message is normally &quot;parse
-        error&quot;. The default behavior is to print this
-        message on the screen, but <font color="#008080"><em><tt>report_error</tt></em></font><font
+        calling the error action <font color="#0000FF"><tt>%error</tt></font>
+        associated with current parsing state or the error
+        reporting routine <font color="#008080"><em><tt>report_error</tt></em></font>
+        by default. For a parse error, the message is normally
+        &quot;parse error&quot;. The default behavior is to print
+        this message on the screen, but <font color="#008080"><em><tt>report_error</tt></em></font><font
         color="#008080" size="2" face="Courier New"><em> </em></font>can
         easily be redefined to suit your needs. </dd>
     <dd>After <font color="#008080"><em><tt>report_error</tt></em></font><font
-        color="#008080" size="2" face="Courier New"><em> </em></font>returns
-        to <font color="#008080"><em><tt>parse</tt></em></font>,
+        color="#008080" size="2" face="Courier New"><em> </em></font>or
+        the error action <font color="#0000FF"><tt>%error</tt></font>
+        returns to <font color="#008080"><em><tt>parse</tt></em></font>,
         the latter will attempt <a href="error.html">error
         recovery</a> if you have written suitable error recovery
         grammar rules. If recovery is impossible, <font
@@ -531,7 +537,7 @@ does to implement mid-rule actions.</p>
 <table border="0" width="100%">
     <tr>
         <td><address>
-            <font size="2"><b>Copyright © 1999</b></font><font
+            <font size="2"><b>Copyright © 1999-2003</b></font><font
             size="1"><b>, </b></font><font size="2"><strong>Eric
             Bezault</strong></font><strong> </strong><font
             size="2"><br>
@@ -541,7 +547,7 @@ does to implement mid-rule actions.</p>
             <strong>http:</strong></font><a
             href="http://www.gobosoft.com"><font size="2">//www.gobosoft.com</font></a><font
             size="2"><br>
-            <strong>Last Updated:</strong> 27 March 1999</font><br>
+            <strong>Last Updated:</strong> 9 March 2003</font><br>
             <!--webbot bot="PurpleText"
             preview="
 $Date$ 

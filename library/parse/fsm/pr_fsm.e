@@ -5,7 +5,7 @@ indexing
 		"Finite State Machines"
 
 	library: "Gobo Eiffel Parse Library"
-	copyright: "Copyright (c) 1999, Eric Bezault and others"
+	copyright: "Copyright (c) 1999-2003, Eric Bezault and others"
 	license: "Eiffel Forum License v2 (see forum.txt)"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -19,11 +19,46 @@ inherit
 
 creation
 
-	make
+	make, make_verbose, make_default
 
 feature {NONE} -- Initialization
 
-	make (a_grammar: PR_GRAMMAR) is
+	make (a_grammar: PR_GRAMMAR; error_handler: UT_ERROR_HANDLER) is
+			-- Create a new finite state machine.
+			-- Reduce the grammar and resolve conflicts.
+			-- Report results to `error_handler'.
+		require
+			a_grammar_not_void: a_grammar /= Void
+			valid_grammar: a_grammar.start_symbol /= Void
+			error_handler_not_void: error_handler /= Void
+		do
+			a_grammar.reduce (error_handler)
+			a_grammar.set_nullable
+			make_default (a_grammar)
+			resolve_conflicts (error_handler)
+			set_error_actions (error_handler)
+		end
+
+	make_verbose (a_grammar: PR_GRAMMAR; error_handler: UT_ERROR_HANDLER; a_file: KI_TEXT_OUTPUT_STREAM) is
+			-- Create a new finite state machine.
+			-- Reduce the grammar and resolve conflicts.
+			-- Report results to `error_handler' and `a_file'.
+		require
+			a_grammar_not_void: a_grammar /= Void
+			valid_grammar: a_grammar.start_symbol /= Void
+			error_handler_not_void: error_handler /= Void
+			a_file_not_void: a_file /= Void
+			a_file_open_write: a_file.is_open_write
+		do
+			a_grammar.reduce_verbose (error_handler, a_file)
+			a_grammar.set_nullable
+			make_default (a_grammar)
+			resolve_conflicts_verbose (error_handler, a_file)
+			set_error_actions_verbose (error_handler, a_file)
+			print_machine (a_file)
+		end
+
+	make_default (a_grammar: PR_GRAMMAR) is
 			-- Create a new finite state machine.
 		require
 			a_grammar_not_void: a_grammar /= Void
@@ -149,10 +184,14 @@ feature -- Conflicts
 							a_file.put_integer (rr)
 							a_file.put_string (" reduce/reduce conflicts")
 						end
-						a_file.put_string (".%N")
+						a_file.put_character ('.')
+						a_file.put_new_line
 					end
 				end
 				i := i + 1
+			end
+			if sr_total > 0 or rr_total > 0 then
+				a_file.put_new_line
 			end
 			if (sr_total > 0 and sr_total /= grammar.expected_conflicts) or rr_total > 0 then
 				message := STRING_.make (128)
@@ -173,6 +212,281 @@ feature -- Conflicts
 					message.append_string (" reduce/reduce conflicts")
 				end
 				message.append_string (".%N")
+				create warning.make (message)
+				error_handler.report_warning (warning)
+			end
+		end
+
+feature -- Setting
+
+	set_error_actions (error_handler: UT_ERROR_HANDLER) is
+			-- Try to set states' error actions.
+			-- Report conflicts to `error_handler'.
+		require
+			error_handler_not_void: error_handler /= Void
+		local
+			i, nb: INTEGER
+			j, nb2: INTEGER
+			a_state: PR_STATE
+			positions: DS_ARRAYED_LIST [PR_POSITION]
+			a_position, action_position: PR_POSITION
+			all_before, has_conflict: BOOLEAN
+			an_action, other_action: PR_ERROR_ACTION
+			start_rules: DS_ARRAYED_LIST [PR_RULE]
+			start_positions: DS_ARRAYED_LIST [PR_POSITION]
+			line1, line2: INTEGER
+			nb_conflicts: INTEGER
+			message: STRING
+			warning: UT_MESSAGE
+		do
+			nb := states.count
+			from i := 1 until i > nb loop
+				a_state := states.item (i)
+				all_before := True
+				positions := a_state.positions
+				nb2 := positions.count
+				from j := 1 until j > nb2 loop
+					a_position := positions.item (j)
+					if not a_position.before then
+						all_before := False
+						if not a_position.after then
+							if action_position /= Void then
+								an_action := a_position.error_action
+								other_action := action_position.error_action
+								if not equal (an_action, other_action) then
+									has_conflict := True
+								end
+								if an_action /= Void then
+									line1 := an_action.line_nb
+								else
+									line1 := a_position.rule.line_nb
+								end
+								if other_action /= Void then
+									line2 := other_action.line_nb
+								else
+									line2 := action_position.rule.line_nb
+								end
+								if line1 < line2 then
+									action_position := a_position
+								end
+							else
+								action_position := a_position
+							end
+						else
+								-- There won't be any syntax error at this state
+								-- because we can reduce at least one rule.
+							action_position := Void
+							j := nb2 + 1 -- Jump out of the loop.
+						end
+					end
+					j := j + 1
+				end
+				if all_before then
+						-- Try to find the start symbols/rules.
+					start_rules := grammar.start_symbol.rules
+					create start_positions.make (nb2)
+					from j := 1 until j > nb2 loop
+						a_position := positions.item (j)
+						if start_rules.has (a_position.rule) then
+							start_positions.put_last (a_position)
+						end
+						j := j + 1
+					end
+					nb2 := start_positions.count
+					from j := 1 until j > nb2 loop
+						a_position := start_positions.item (j)
+						if action_position /= Void then
+							an_action := a_position.error_action
+							other_action := action_position.error_action
+							if not equal (an_action, other_action) then
+								has_conflict := True
+							end
+							if an_action /= Void then
+								line1 := an_action.line_nb
+							else
+								line1 := a_position.rule.line_nb
+							end
+							if other_action /= Void then
+								line2 := other_action.line_nb
+							else
+								line2 := action_position.rule.line_nb
+							end
+							if line1 < line2 then
+								action_position := a_position
+							end
+						else
+							action_position := a_position
+						end
+						j := j + 1
+					end
+				end
+				if has_conflict then
+					nb_conflicts := nb_conflicts + 1
+					has_conflict := False
+				end
+				if action_position /= Void then
+					a_state.set_error_action (action_position.error_action)
+					action_position := Void
+				end
+				i := i + 1
+			end
+			if nb_conflicts >= 1 then
+				message := STRING_.make (128)
+				message.append_string ("Parser contains ")
+				if nb_conflicts = 1 then
+					message.append_string ("1 error action conflict.%N")
+				else
+					INTEGER_FORMATTER_.append_decimal_integer (message, nb_conflicts)
+					message.append_string (" error action conflicts.%N")
+				end
+				create warning.make (message)
+				error_handler.report_warning (warning)
+			end
+		end
+
+	set_error_actions_verbose (error_handler: UT_ERROR_HANDLER; a_file: KI_TEXT_OUTPUT_STREAM) is
+			-- Try to set states' error actions.
+			-- Report conflicts to `error_handler' and `a_file'.
+		require
+			error_handler_not_void: error_handler /= Void
+			a_file_not_void: a_file /= Void
+			a_file_open_write: a_file.is_open_write
+		local
+			i, nb: INTEGER
+			j, nb2: INTEGER
+			k, nb3: INTEGER
+			a_state: PR_STATE
+			positions: DS_ARRAYED_LIST [PR_POSITION]
+			conflicts: DS_ARRAYED_LIST [PR_POSITION]
+			a_position, action_position: PR_POSITION
+			all_before: BOOLEAN
+			an_action, other_action: PR_ERROR_ACTION
+			start_rules: DS_ARRAYED_LIST [PR_RULE]
+			start_positions: DS_ARRAYED_LIST [PR_POSITION]
+			line1, line2: INTEGER
+			nb_conflicts: INTEGER
+			message: STRING
+			warning: UT_MESSAGE
+		do
+			nb := states.count
+			from i := 1 until i > nb loop
+				a_state := states.item (i)
+				all_before := True
+				positions := a_state.positions
+				nb2 := positions.count
+				from j := 1 until j > nb2 loop
+					a_position := positions.item (j)
+					if not a_position.before then
+						all_before := False
+						if not a_position.after then
+							if action_position /= Void then
+								an_action := a_position.error_action
+								other_action := action_position.error_action
+								if not equal (an_action, other_action) then
+									if conflicts = Void then
+										create conflicts.make (nb2)
+										conflicts.put_last (action_position)
+									end
+									conflicts.put_last (a_position)
+								end
+								if an_action /= Void then
+									line1 := an_action.line_nb
+								else
+									line1 := a_position.rule.line_nb
+								end
+								if other_action /= Void then
+									line2 := other_action.line_nb
+								else
+									line2 := action_position.rule.line_nb
+								end
+								if line1 < line2 then
+									action_position := a_position
+								end
+							else
+								action_position := a_position
+							end
+						else
+								-- There won't be any syntax error at this state
+								-- because we can reduce at least one rule.
+							action_position := Void
+							j := nb2 + 1 -- Jump out of the loop.
+						end
+					end
+					j := j + 1
+				end
+				if all_before then
+						-- Try to find the start symbols/rules.
+					start_rules := grammar.start_symbol.rules
+					create start_positions.make (nb2)
+					from j := 1 until j > nb2 loop
+						a_position := positions.item (j)
+						if start_rules.has (a_position.rule) then
+							start_positions.put_last (a_position)
+						end
+						j := j + 1
+					end
+					nb2 := start_positions.count
+					from j := 1 until j > nb2 loop
+						a_position := start_positions.item (j)
+						if action_position /= Void then
+							an_action := a_position.error_action
+							other_action := action_position.error_action
+							if not equal (an_action, other_action) then
+								if conflicts = Void then
+									create conflicts.make (nb2)
+									conflicts.put_last (action_position)
+								end
+								conflicts.put_last (a_position)
+							end
+							if an_action /= Void then
+								line1 := an_action.line_nb
+							else
+								line1 := a_position.rule.line_nb
+							end
+							if other_action /= Void then
+								line2 := other_action.line_nb
+							else
+								line2 := action_position.rule.line_nb
+							end
+							if line1 < line2 then
+								action_position := a_position
+							end
+						else
+							action_position := a_position
+						end
+						j := j + 1
+					end
+				end
+				if conflicts /= Void then
+					a_file.put_string ("State ")
+					a_file.put_integer (a_state.id)
+					a_file.put_line (" contains 1 error action conflict:")
+					nb3 := conflicts.count
+					from k := 1 until k > nb3 loop
+						a_file.put_character ('%T')
+						conflicts.item (k).print_position (a_file)
+						a_file.put_new_line
+						k := k + 1
+					end
+					nb_conflicts := nb_conflicts + 1
+					conflicts := Void
+				end
+				if action_position /= Void then
+					a_state.set_error_action (action_position.error_action)
+					action_position := Void
+				end
+				i := i + 1
+			end
+			if nb_conflicts >= 1 then
+				a_file.put_new_line
+				message := STRING_.make (128)
+				message.append_string ("Parser contains ")
+				if nb_conflicts = 1 then
+					message.append_string ("1 error action conflict.%N")
+				else
+					INTEGER_FORMATTER_.append_decimal_integer (message, nb_conflicts)
+					message.append_string (" error action conflicts.%N")
+				end
 				create warning.make (message)
 				error_handler.report_warning (warning)
 			end

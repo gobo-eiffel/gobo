@@ -27,7 +27,7 @@ content="text/html; charset=iso-8859-1">
 
     <em>description</em>: <em>&quot;General parsers&quot;</em>
     <em>library</em>: <em>&quot;Gobo Eiffel Parse Library&quot;</em>
-    <em>copyright</em>:<em> &quot;Copyright (c) 1999, Eric Bezault and others&quot;
+    <em>copyright</em>:<em> &quot;Copyright (c) 1999-2003, Eric Bezault and others&quot;
     license</em>:<em> &quot;Eiffel Forum License v2 (see forum.txt)&quot;</em>
 
 <em><strong>deferred class</strong></em> <em>YY_PARSER</em> [<em>G</em>]
@@ -87,16 +87,18 @@ content="text/html; charset=iso-8859-1">
 
     <a href="actions.html#raise_error" name="raise_error"><em>raise_error</em></a>
             -- Raise a syntax error.
-            -- Report error using <em>report_error</em> and
-            -- perform normal error recovery if possible.
+            -- Report error using the error action %error associated
+            -- with current parsing state or <em>report_error</em> by default,
+            -- and perform normal error recovery if possible.
 
     <a href="actions.html#recover" name="recover"><em>recover</em></a>
             -- Recover immediately after a parse error.
 
     <a href="actions.html#report_error" name="report_error"><em>report_error</em></a> (<em>a_message</em>: <em>STRING</em>)
             -- Print error message.
-            -- (This routine is called by <em>parse</em> when it detects
-            -- a syntax error. It can be redefined in descendants.)
+            -- (This routine is called by default by <em>parse</em> when it
+            -- detects a syntax error and there is no error action
+            -- %error available. It can be redefined in descendants.)
         <em><strong>require</strong></em>
             <em>a_message_not_void</em>: <em>a_message</em> /= <em>Void</em>
 
@@ -118,14 +120,14 @@ content="text/html; charset=iso-8859-1">
     <a href="actions.html#last_value" name="last_value"><em>last_value</em></a>: <em>G</em>
             -- Semantic value of last token read
 
-<em><strong>end</strong></em> -- class YY_PARSER</pre>
+<em><strong>end</strong></em></pre>
 
 <hr size="1">
 
 <table border="0" width="100%">
     <tr>
         <td><address>
-            <font size="2"><b>Copyright © 1999-2002</b></font><font
+            <font size="2"><b>Copyright © 1999-2003</b></font><font
             size="1"><b>, </b></font><font size="2"><strong>Eric
             Bezault and others</strong><br>
             <strong>mailto:</strong></font><a
@@ -134,7 +136,7 @@ content="text/html; charset=iso-8859-1">
             <strong>http:</strong></font><a
             href="http://www.gobosoft.com"><font size="2">//www.gobosoft.com</font></a><font
             size="2"><br>
-            <strong>Last Updated:</strong> 3 April 2002</font><br>
+            <strong>Last Updated:</strong> 9 March 2003</font><br>
             <!--webbot bot="PurpleText"
             preview="
 $Date$ 

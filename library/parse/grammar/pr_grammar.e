@@ -183,7 +183,7 @@ feature -- Output
 		local
 			i, nb: INTEGER
 		do
-			a_file.put_string ("%NGrammar%N%N")
+			a_file.put_string ("Grammar%N%N")
 			nb := rules.count
 			from i := 1 until i > nb loop
 				rules.item (i).print_rule (a_file)

@@ -86,6 +86,12 @@ feature -- Generation
 			else
 				print_actions (a_file)
 			end
+			a_file.put_new_line
+			if actions_separated then
+				print_separated_error_actions (a_file)
+			else
+				print_error_actions (a_file)
+			end
 			a_file.put_string ("%Nfeature {NONE} -- Table templates%N%N")
 			print_eiffel_tables (a_file)
 			print_conversion_routines (a_file)
@@ -347,8 +353,8 @@ feature {NONE} -- Generation
 			a_type: PR_TYPE
 			no_type: PR_NO_TYPE
 		do
-			a_file.put_string ("%Tyy_do_action (yy_act: INTEGER) is%N%
-				%%T%T%T-- Execute semantic action.%N")
+			a_file.put_line ("%Tyy_do_action (yy_act: INTEGER) is")
+			a_file.put_line ("%T%T%T-- Execute semantic action.")
 			nb_types := machine.grammar.types.count
 			create types.make (nb_types)
 			rules := machine.grammar.rules
@@ -372,26 +378,27 @@ feature {NONE} -- Generation
 				end
 			end
 			if not types.is_empty then
-				a_file.put_string ("%T%Tlocal%N")
+				a_file.put_line ("%T%Tlocal")
 				a_cursor := types.new_cursor
 				from a_cursor.start until a_cursor.after loop
 					a_cursor.item.print_dollar_dollar_declaration (a_file)
-					a_file.put_character ('%N')
+					a_file.put_new_line
 					a_cursor.forth
 				end
 			end
-			a_file.put_string ("%T%Tdo%N%T%T%Tinspect yy_act%N")
+			a_file.put_line ("%T%Tdo")
+			a_file.put_line ("%T%T%Tinspect yy_act")
 			from i := 1 until i > nb loop
 				a_rule := rules.item (i)
 				an_action := a_rule.action.out
 				a_file.put_string ("when ")
 				a_file.put_integer (a_rule.id)
-				a_file.put_string (" then%N--|#line ")
+				a_file.put_line (" then")
+				a_file.put_string ("--|#line ")
 				a_file.put_integer (a_rule.line_nb)
 				a_file.put_string (" %"")
 				a_file.put_string (input_filename)
-				a_file.put_character ('%"')
-				a_file.put_new_line
+				a_file.put_line ("%"")
 				a_file.put_line ("debug (%"GEYACC%")")
 				a_file.put_string ("%Tstd.error.put_line (%"Executing parser user-code from file '")
 				a_file.put_string (input_filename)
@@ -401,16 +408,18 @@ feature {NONE} -- Generation
 				a_file.put_line ("end")
 				a_type := a_rule.lhs.type
 				a_type.print_dollar_dollar_initialization (a_file)
-				a_file.put_character ('%N')
+				a_file.put_new_line
 				a_file.put_string (an_action)
-				a_file.put_character ('%N')
+				a_file.put_new_line
 				a_type.print_dollar_dollar_finalization (a_file)
-				a_file.put_character ('%N')
+				a_file.put_new_line
 				i := i + 1
 			end
-			a_file.put_string ("%T%T%Telse%N%T%T%T%T%T-- No action%N%
-				%%T%T%T%Tyyval := yyval_default%N%
-				%%T%T%Tend%N%T%Tend%N")
+			a_file.put_line ("%T%T%Telse")
+			a_file.put_line ("%T%T%T%T%T-- Default action.")
+			a_file.put_line ("%T%T%T%Tyyval := yyval_default")
+			a_file.put_line ("%T%T%Tend")
+			a_file.put_line ("%T%Tend")
 		end
 
 	print_separated_actions (a_file: KI_TEXT_OUTPUT_STREAM) is
@@ -435,106 +444,331 @@ feature {NONE} -- Generation
 				-- several chunks which each have less than
 				-- `inspect_size' branches.
 			inspect_size := 200
-			a_file.put_string ("%Tyy_do_action (yy_act: INTEGER) is%N%
-				%%T%T%T-- Execute semantic action.%N%
-				%%T%Tdo%N%T%T%T")
+			a_file.put_line ("%Tyy_do_action (yy_act: INTEGER) is")
+			a_file.put_line ("%T%T%T-- Execute semantic action.")
+			a_file.put_line ("%T%Tdo")
 			rules := machine.grammar.rules
 			nb := rules.count
 			nb2 := nb // inspect_size + 1
 			if nb2 = 1 then
-				a_file.put_string ("inspect yy_act%N")
+				a_file.put_line ("%T%T%Tinspect yy_act")
 				from i := 1 until i > nb loop
 					a_rule := rules.item (i)
-					a_file.put_string ("when ")
+					a_file.put_string ("%T%T%Twhen ")
 					a_file.put_integer (a_rule.id)
-					a_file.put_string (" then%N--|#line ")
+					a_file.put_line (" then")
+					a_file.put_string ("%T%T%T%T%T--|#line ")
 					a_file.put_integer (a_rule.line_nb)
 					a_file.put_string (" %"")
 					a_file.put_string (input_filename)
-					a_file.put_string ("%"%N%T")
-					a_file.put_string ("yy_do_action_")
+					a_file.put_line ("%"")
+					a_file.put_string ("%T%T%T%Tyy_do_action_")
 					a_file.put_integer (i)
-					a_file.put_character ('%N')
+					a_file.put_new_line
 					i := i + 1
 				end
-				a_file.put_string ("%T%T%Telse%N%T%T%T%T%T-- No action%N%
-					%%T%T%T%Tyyval := yyval_default%N%
-					%%T%T%Tend%N%T%Tend%N")
+				a_file.put_line ("%T%T%Telse")
+				a_file.put_line ("%T%T%T%T%T-- Default action.")
+				a_file.put_line ("%T%T%T%Tyyval := yyval_default")
+				a_file.put_line ("%T%T%Tend")
+				a_file.put_line ("%T%Tend")
 			else
+				a_file.put_string ("%T%T%T")
 				from i := 1 until i > nb2 loop
 					j := inspect_size * (i - 1) + 1
 					k := inspect_size * i
 					a_file.put_string ("if yy_act <= ")
 					a_file.put_integer (k)
-					a_file.put_string (" then%N%T%T%T%Tyy_do_action_")
+					a_file.put_line (" then")
+					a_file.put_string ("%T%T%T%Tyy_do_action_")
 					a_file.put_integer (j)
 					a_file.put_character ('_')
 					a_file.put_integer (k)
-					a_file.put_string (" (yy_act)%N%T%T%Telse")
+					a_file.put_line (" (yy_act)")
+					a_file.put_string ("%T%T%Telse")
 					i := i + 1
 				end
-				a_file.put_string ("%N%T%T%T%T%T-- No action%N%
-					%%T%T%T%Tyyval := yyval_default%N%
-					%%T%T%Tend%N%T%Tend%N")
+				a_file.put_new_line
+				a_file.put_line ("%T%T%T%T%T-- Default action.")
+				a_file.put_line ("%T%T%T%Tyyval := yyval_default")
+				a_file.put_line ("%T%T%Tend")
+				a_file.put_line ("%T%Tend")
 				from i := 1 until i > nb2 loop
 					j := inspect_size * (i - 1) + 1
 					k := inspect_size * i
-					a_file.put_string ("%N%Tyy_do_action_")
+					a_file.put_new_line
+					a_file.put_string ("%Tyy_do_action_")
 					a_file.put_integer (j)
 					a_file.put_character ('_')
 					a_file.put_integer (k)
-					a_file.put_string (" (yy_act: INTEGER) is%N%
-						%%T%T%T-- Execute semantic action.%N%
-						%%T%Tdo%N")
-					a_file.put_string ("%T%T%Tinspect yy_act%N")
+					a_file.put_line (" (yy_act: INTEGER) is")
+					a_file.put_line ("%T%T%T-- Execute semantic action.")
+					a_file.put_line ("%T%Tdo")
+					a_file.put_line ("%T%T%Tinspect yy_act")
 					k := k.min (nb)
 					from until j > k loop
 						a_rule := rules.item (j)
-						a_file.put_string ("when ")
+						a_file.put_string ("%T%T%Twhen ")
 						a_file.put_integer (a_rule.id)
-						a_file.put_string (" then%N--|#line ")
+						a_file.put_line (" then")
+						a_file.put_string ("%T%T%T%T%T--|#line ")
 						a_file.put_integer (a_rule.line_nb)
 						a_file.put_string (" %"")
 						a_file.put_string (input_filename)
-						a_file.put_string ("%"%N%T")
-						a_file.put_string ("yy_do_action_")
+						a_file.put_line ("%"")
+						a_file.put_string ("%T%T%T%Tyy_do_action_")
 						a_file.put_integer (j)
-						a_file.put_character ('%N')
+						a_file.put_new_line
 						j := j + 1
 					end
-					a_file.put_string ("%T%T%Telse%N%T%T%T%T%T-- No action%N%
-						%%T%T%T%Tyyval := yyval_default%N%
-						%%T%T%Tend%N%T%Tend%N")
+					a_file.put_line ("%T%T%Telse")
+					a_file.put_line ("%T%T%T%T%T-- Default action.")
+					a_file.put_line ("%T%T%T%Tyyval := yyval_default")
+					a_file.put_line ("%T%T%Tend")
+					a_file.put_line ("%T%Tend")
 					i := i + 1
 				end
 			end
 			from i := 1 until i > nb loop
 				a_rule := rules.item (i)
 				an_action := a_rule.action.out
-				a_file.put_string ("%N%Tyy_do_action_")
+				a_file.put_new_line
+				a_file.put_string ("%Tyy_do_action_")
 				a_file.put_integer (i)
-				a_file.put_string (" is%N%T%T%T--|#line ")
+				a_file.put_line (" is")
+				a_file.put_string ("%T%T%T--|#line ")
 				a_file.put_integer (a_rule.line_nb)
 				a_file.put_string (" %"")
 				a_file.put_string (input_filename)
-				a_file.put_character ('%"')
+				a_file.put_line ("%"")
 				a_type := a_rule.lhs.type
-				a_file.put_string ("%N%T%Tlocal%N")
+				a_file.put_line ("%T%Tlocal")
 				a_type.print_dollar_dollar_declaration (a_file)
-				a_file.put_string ("%N%T%Tdo%N")
-				a_file.put_line ("debug (%"GEYACC%")")
-				a_file.put_string ("%Tstd.error.put_line (%"Executing parser user-code from file '")
+				a_file.put_new_line
+				a_file.put_line ("%T%Tdo")
+				a_file.put_line ("%T%T%Tdebug (%"GEYACC%")")
+				a_file.put_string ("%T%T%T%Tstd.error.put_line (%"Executing parser user-code from file '")
 				a_file.put_string (input_filename)
 				a_file.put_string ("' at line ")
 				a_file.put_integer (a_rule.line_nb)
 				a_file.put_line ("%")")
-				a_file.put_line ("end")
+				a_file.put_line ("%T%T%Tend")
 				a_type.print_dollar_dollar_initialization (a_file)
-				a_file.put_character ('%N')
+				a_file.put_new_line
 				a_file.put_string (an_action)
-				a_file.put_character ('%N')
+				a_file.put_new_line
 				a_type.print_dollar_dollar_finalization (a_file)
-				a_file.put_string ("%N%T%Tend%N")
+				a_file.put_new_line
+				a_file.put_line ("%T%Tend")
+				i := i + 1
+			end
+		end
+
+	print_error_actions (a_file: KI_TEXT_OUTPUT_STREAM) is
+			-- Print code for actions to `a_file'.
+			-- Print all actions in one routine.
+		require
+			a_file_not_void: a_file /= Void
+			a_file_open_write: a_file.is_open_write
+		local
+			i, nb: INTEGER
+			states: DS_ARRAYED_LIST [PR_STATE]
+			a_state: PR_STATE
+			an_action: PR_ERROR_ACTION
+		do
+			a_file.put_line ("%Tyy_do_error_action (yy_act: INTEGER) is")
+			a_file.put_line ("%T%T%T-- Execute error action.")
+			a_file.put_line ("%T%Tdo")
+			a_file.put_line ("%T%T%Tinspect yy_act")
+			states := machine.states
+			nb := states.count
+			from i := 1 until i > nb loop
+				a_state := states.item (i)
+				an_action := a_state.error_action
+				if an_action /= Void then
+					a_file.put_string ("when ")
+					a_file.put_integer (a_state.id)
+					a_file.put_line (" then")
+					a_file.put_string ("--|#line ")
+					a_file.put_integer (an_action.line_nb)
+					a_file.put_string (" %"")
+					a_file.put_string (input_filename)
+					a_file.put_line ("%"")
+					a_file.put_line ("debug (%"GEYACC%")")
+					a_file.put_string ("%Tstd.error.put_line (%"Executing parser error-code from file '")
+					a_file.put_string (input_filename)
+					a_file.put_string ("' at line ")
+					a_file.put_integer (an_action.line_nb)
+					a_file.put_line ("%")")
+					a_file.put_line ("end")
+					a_file.put_line (an_action.action.out)
+				elseif i = nb - 2 then
+						-- End of file expected.
+					a_file.put_string ("%T%T%Twhen ")
+					a_file.put_integer (a_state.id)
+					a_file.put_line (" then")
+					a_file.put_line ("%T%T%T%T%T-- End-of-file expected action.")
+					a_file.put_line ("%T%T%T%Treport_eof_expected_error")
+				end
+				i := i + 1
+			end
+			a_file.put_line ("%T%T%Telse")
+			a_file.put_line ("%T%T%T%T%T-- Default action.")
+			a_file.put_line ("%T%T%T%Treport_error (%"parse error%")")
+			a_file.put_line ("%T%T%Tend")
+			a_file.put_line ("%T%Tend")
+		end
+
+	print_separated_error_actions (a_file: KI_TEXT_OUTPUT_STREAM) is
+			-- Print code for error actions to `a_file'.
+			-- Print each action into an individual routine.
+		require
+			a_file_not_void: a_file /= Void
+			a_file_open_write: a_file.is_open_write
+		local
+			i, nb: INTEGER
+			j, k, nb2: INTEGER
+			inspect_size: INTEGER
+			states: DS_ARRAYED_LIST [PR_STATE]
+			a_state: PR_STATE
+			an_action: PR_ERROR_ACTION
+		do
+				-- SmallEiffel generates C code which trigger a
+				-- stack overflow of the C compiler if there are
+				-- too many branches in an inspect instruction.
+				-- Therefore, split the inspect instruction into
+				-- several chunks which each have less than
+				-- `inspect_size' branches.
+			inspect_size := 200
+			a_file.put_line ("%Tyy_do_error_action (yy_act: INTEGER) is")
+			a_file.put_line ("%T%T%T-- Execute error action.")
+			a_file.put_line ("%T%Tdo")
+			states := machine.states
+			nb := states.count
+			nb2 := nb // inspect_size + 1
+			if nb2 = 1 then
+				a_file.put_line ("%T%T%Tinspect yy_act")
+				from i := 1 until i > nb loop
+					a_state := states.item (i)
+					an_action := a_state.error_action
+					if an_action /= Void then
+						a_file.put_string ("%T%T%Twhen ")
+						a_file.put_integer (a_state.id)
+						a_file.put_line (" then")
+						a_file.put_string ("%T%T%T%T%T--|#line ")
+						a_file.put_integer (an_action.line_nb)
+						a_file.put_string (" %"")
+						a_file.put_string (input_filename)
+						a_file.put_line ("%"")
+						a_file.put_string ("%T%T%T%Tyy_do_error_action_")
+						a_file.put_integer (a_state.id)
+						a_file.put_new_line
+					elseif i = nb - 2 then
+							-- End of file expected.
+						a_file.put_string ("%T%T%Twhen ")
+						a_file.put_integer (a_state.id)
+						a_file.put_line (" then")
+						a_file.put_line ("%T%T%T%T%T-- End-of-file expected action.")
+						a_file.put_line ("%T%T%T%Treport_eof_expected_error")
+					end
+					i := i + 1
+				end
+				a_file.put_line ("%T%T%Telse")
+				a_file.put_line ("%T%T%T%T%T-- Default action.")
+				a_file.put_line ("%T%T%T%Treport_error (%"parse error%")")
+				a_file.put_line ("%T%T%Tend")
+				a_file.put_line ("%T%Tend")
+			else
+				a_file.put_string ("%T%T%T")
+				from i := 1 until i > nb2 loop
+					j := inspect_size * (i - 1)
+					k := inspect_size * i - 1
+					a_file.put_string ("if yy_act <= ")
+					a_file.put_integer (k)
+					a_file.put_line (" then")
+					a_file.put_string ("%T%T%T%Tyy_do_error_action_")
+					a_file.put_integer (j)
+					a_file.put_character ('_')
+					a_file.put_integer (k)
+					a_file.put_line (" (yy_act)")
+					a_file.put_string ("%T%T%Telse")
+					i := i + 1
+				end
+				a_file.put_new_line
+				a_file.put_line ("%T%T%T%T%T-- Default action.")
+				a_file.put_line ("%T%T%T%Treport_error (%"parse error%")")
+				a_file.put_line ("%T%T%Tend")
+				a_file.put_line ("%T%Tend")
+				from i := 1 until i > nb2 loop
+					j := inspect_size * (i - 1)
+					k := inspect_size * i - 1
+					a_file.put_new_line
+					a_file.put_string ("%Tyy_do_error_action_")
+					a_file.put_integer (j)
+					a_file.put_character ('_')
+					a_file.put_integer (k)
+					a_file.put_line (" (yy_act: INTEGER) is")
+					a_file.put_line ("%T%T%T-- Execute error action.")
+					a_file.put_line ("%T%Tdo")
+					a_file.put_line ("%T%T%Tinspect yy_act")
+					k := k.min (nb - 1)
+					from until j > k loop
+						a_state := states.item (j + 1)
+						an_action := a_state.error_action
+						if an_action /= Void then
+							a_file.put_string ("%T%T%Twhen ")
+							a_file.put_integer (a_state.id)
+							a_file.put_line (" then")
+							a_file.put_string ("%T%T%T%T%T--|#line ")
+							a_file.put_integer (an_action.line_nb)
+							a_file.put_string (" %"")
+							a_file.put_string (input_filename)
+							a_file.put_line ("%"")
+							a_file.put_string ("%T%T%T%Tyy_do_error_action_")
+							a_file.put_integer (a_state.id)
+							a_file.put_new_line
+						elseif j = nb - 3 then
+								-- End of file expected.
+							a_file.put_string ("%T%T%Twhen ")
+							a_file.put_integer (a_state.id)
+							a_file.put_line (" then")
+							a_file.put_line ("%T%T%T%T%T-- End-of-file expected action.")
+							a_file.put_line ("%T%T%T%Treport_eof_expected_error")
+						end
+						j := j + 1
+					end
+					a_file.put_line ("%T%T%Telse")
+					a_file.put_line ("%T%T%T%T%T-- Default action.")
+					a_file.put_line ("%T%T%T%Treport_error (%"parse error%")")
+					a_file.put_line ("%T%T%Tend")
+					a_file.put_line ("%T%Tend")
+					i := i + 1
+				end
+			end
+			from i := 1 until i > nb loop
+				a_state := states.item (i)
+				an_action := a_state.error_action
+				if an_action /= Void then
+					a_file.put_new_line
+					a_file.put_string ("%Tyy_do_error_action_")
+					a_file.put_integer (a_state.id)
+					a_file.put_line (" is")
+					a_file.put_string ("%T%T%T--|#line ")
+					a_file.put_integer (an_action.line_nb)
+					a_file.put_string (" %"")
+					a_file.put_string (input_filename)
+					a_file.put_line ("%"")
+					a_file.put_line ("%T%Tdo")
+					a_file.put_line ("%T%T%Tdebug (%"GEYACC%")")
+					a_file.put_string ("%T%T%T%Tstd.error.put_line (%"Executing parser error-code from file '")
+					a_file.put_string (input_filename)
+					a_file.put_string ("' at line ")
+					a_file.put_integer (an_action.line_nb)
+					a_file.put_line ("%")")
+					a_file.put_line ("%T%T%Tend")
+					a_file.put_line (an_action.action.out)
+					a_file.put_line ("%T%Tend")
+				end
 				i := i + 1
 			end
 		end

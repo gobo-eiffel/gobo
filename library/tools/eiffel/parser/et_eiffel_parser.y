@@ -1928,6 +1928,11 @@ Compound: Instruction
 				$$.put_first ($1)
 			end
 		}
+		%error (3)
+			{
+				print ("Instruction expected%N")
+				report_error ("")
+			}
 	;
 
 Instruction: Creation_instruction
@@ -1945,7 +1950,11 @@ Instruction: Creation_instruction
 	| Multi_branch
 		{ $$ := $1 }
 	| From_compound Invariant_clause_opt Variant_clause_opt E_UNTIL Expression Loop_compound E_END
-		{ $$ := ast_factory.new_loop_instruction ($1, $2, $3, ast_factory.new_conditional ($4, $5), $6, $7) }
+			{ $$ := ast_factory.new_loop_instruction ($1, $2, $3, ast_factory.new_conditional ($4, $5), $6, $7) }
+		%error(7)
+			{
+				print ("End expected")
+			}
 	| Debug_instruction
 		{ $$ := $1 }
 	| E_CHECK E_END

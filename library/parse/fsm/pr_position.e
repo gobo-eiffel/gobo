@@ -72,6 +72,15 @@ feature -- Access
 			next_position: Result.index = index + 1
 		end
 
+	error_action: PR_ERROR_ACTION is
+			-- Action to be executed when a syntax error
+			-- occurs at current position; Void is none
+		do
+			if index <= rule.error_actions.count then
+				Result := rule.error_actions.item (index)
+			end
+		end
+
 	hash_code: INTEGER is
 			-- Hash value
 		do
@@ -79,6 +88,13 @@ feature -- Access
 		end
 
 feature -- Status report
+
+	before: BOOLEAN is
+			-- Is current position before the first
+			-- symbol of the right-hand-side of `rule'?
+		do
+			Result := index = 1
+		end
 
 	after: BOOLEAN is
 			-- Is current position after the last symbol

@@ -97,6 +97,10 @@ feature -- Access
 			accessing_symbol: Result.accessing_symbol = a_symbol
 		end
 
+	error_action: PR_ERROR_ACTION
+			-- Action to be executed when a syntax error
+			-- occurs at current state; Void if none
+
 	hash_code: INTEGER
 			-- Hash value
 
@@ -286,10 +290,18 @@ feature -- Setting
 			id_set: id = an_id
 		end
 
+	set_error_action (an_action: like error_action) is
+			-- Set `error_action' to `an_action'.
+		do
+			error_action := an_action
+		ensure
+			error_action_set: error_action = an_action
+		end
+
 feature -- Conflicts
 
 	resolve_conflicts: DS_LINKED_LIST [PR_CONFLICT] is
-			-- Try to any resolve shift/reduce conflicts
+			-- Try to resolve any shift/reduce conflicts
 			-- using precedence levels. Set `has_conflict'
 			-- to true if a conflict could not be resolved.
 			-- Return the list of shift/reduced conflicts

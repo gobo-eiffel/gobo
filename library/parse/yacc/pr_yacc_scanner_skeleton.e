@@ -108,30 +108,32 @@ feature {NONE} -- Implementation
 			-- Number of characters { not-yet-balanced
 			-- in semantic actions
 
+	last_error: INTEGER
+			-- Index of last %error read
+
 	rule: PR_RULE
 			-- Rule being parsed
 
-	process_dollar_n (n: INTEGER; a_rule: PR_RULE) is
-			-- Process $`n' in semantic actions.
+	process_dollar_n (n: INTEGER; max: INTEGER; a_rule: PR_RULE) is
+			-- Process $`n' in semantic actions where at most
+			-- `max' symbols on the right-hand-side can be accessed.
 		require
 			a_rule_not_void: a_rule /= Void
 		local
 			rhs: DS_ARRAYED_LIST [PR_SYMBOL]
-			nb_rhs: INTEGER
 			a_type: PR_TYPE
 		do
 			rhs := a_rule.rhs
-			nb_rhs := rhs.count
 			if n <= 0 then
 				report_dangerous_dollar_n_warning (n)
 				a_type := Unknown_type
-			elseif n > nb_rhs then
+			elseif n > max then
 				report_invalid_dollar_n_error (n)
 				a_type := Unknown_type
 			else
 				a_type := rhs.item (n).type
 			end
-			a_type.append_dollar_n_to_string (n, nb_rhs, action_buffer)
+			a_type.append_dollar_n_to_string (n, max, action_buffer)
 			a_type.set_used (True)
 		end
 
@@ -196,6 +198,18 @@ feature {NONE} -- Error handling
 			an_error: PR_INVALID_DOLLAR_N_ERROR
 		do
 			create an_error.make (filename, line_nb, n)
+			error_handler.report_error (an_error)
+			successful := False
+		ensure
+			not_successful: not successful
+		end
+
+	report_invalid_dollar_dollar_error is
+			-- Report that $$ has been used in an error action.
+		local
+			an_error: PR_INVALID_DOLLAR_DOLLAR_ERROR
+		do
+			create an_error.make (filename, line_nb)
 			error_handler.report_error (an_error)
 			successful := False
 		ensure

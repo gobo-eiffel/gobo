@@ -139,7 +139,7 @@ feature -- Parsing
 								std.error.put_string ("Error in scanner.%N")
 							end
 							error_count := error_count + 1
-							report_error ("parse error")
+							yy_do_error_action (yystate)
 							abort
 								-- Skip next conditional instruction:
 							yyn := -1
@@ -264,7 +264,7 @@ feature -- Parsing
 								-- If not already recovering from an error,
 								-- report this error.
 							error_count := error_count + 1
-							report_error ("parse error")
+							yy_do_error_action (yystate)
 						end
 						yyerrstatus := 3
 						yy_goto := yyErrhandle
@@ -364,11 +364,10 @@ feature {YY_PARSER_ACTION} -- Status report
 		end
 
 	is_expected_token (a_token: INTEGER): BOOLEAN is
-			-- Is `a_token' a possible input at this
-			-- stage of parsing? (This routine can be
-			-- called from `report_error' in order to
-			-- find out what were the expected tokens
-			-- when the error occurred.)
+			-- Is `a_token' a possible input at this stage of parsing?
+			-- (This routine can be called from one of the error actions
+			-- %error or from `report_error' in order to find out what
+			-- were the expected tokens when the error occurred.)
 		require
 			a_token_positive: a_token >= 0
 		local
@@ -447,10 +446,10 @@ feature {YY_PARSER_ACTION} -- Status report
 feature {YY_PARSER_ACTION} -- Access
 
 	expected_tokens: ARRAY [INTEGER] is
-			-- List of token codes that are a possible input
-			-- at this stage of parsing. (This routine can be
-			-- called from `report_error' in order to build a
-			-- meaningful error message.)
+			-- List of token codes that are a possible input at this stage
+			-- of parsing. (This routine can be called from the error actions
+			-- %error or from `report_error' in order to build a meaningful
+			-- error message.)
 		local
 			i, nb: INTEGER
 			t: ARRAY [INTEGER]
@@ -491,8 +490,9 @@ feature {YY_PARSER_ACTION} -- Element change
 
 	raise_error is
 			-- Raise a syntax error.
-			-- Report error using `report_error' and
-			-- perform normal error recovery if possible.
+			-- Report error using the error action %error associated
+			-- with current parsing state or `report_error' by default,
+			-- and perform normal error recovery if possible.
 		do
 			yy_parsing_status := yyError_raised
 		end
@@ -506,11 +506,20 @@ feature {YY_PARSER_ACTION} -- Element change
 
 	report_error (a_message: STRING) is
 			-- Print error message.
-			-- (This routine is called by `parse' when it detects
-			-- a syntax error. It can be redefined in descendants.)
+			-- (This routine is called by default by `parse' when it
+			-- detects a syntax error and there is no error action
+			-- %error available. It can be redefined in descendants.)
 		do
 			std.error.put_string (a_message)
-			std.error.put_character ('%N')
+			std.error.put_new_line
+		end
+
+	report_eof_expected_error is
+			-- Report that an end-of-file is expected.
+			-- (This routine is called by default by `parse' when it detects
+			-- such syntax error and can be redefined in descendants.)
+		do
+			report_error ("parse error")
 		end
 
 	clear_token is
@@ -601,6 +610,11 @@ feature {NONE} -- Implementation
 
 	yy_do_action (yy_act: INTEGER) is
 			-- Execute semantic action.
+		deferred
+		end
+
+	yy_do_error_action (yy_act: INTEGER) is
+			-- Execute error action.
 		deferred
 		end
 

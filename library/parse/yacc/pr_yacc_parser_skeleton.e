@@ -622,11 +622,21 @@ feature {NONE} -- Factory
 		end
 
 	new_action (a_text: STRING): DP_COMMAND is
-			-- Action associated with `a_text'.
+			-- Action associated with `a_text'
 		require
 			a_text_not_void: a_text /= Void
 		do
 			Result := action_factory.new_action (a_text)
+		ensure
+			action_not_void: Result /= Void
+		end
+
+	new_error_action (a_text: STRING; a_line: INTEGER): PR_ERROR_ACTION is
+			-- Error action associated with `a_text'
+		require
+			a_text_not_void: a_text /= Void
+		do
+			create Result.make (action_factory.new_action (a_text), a_line)
 		ensure
 			action_not_void: Result /= Void
 		end
@@ -703,6 +713,19 @@ feature {NONE} -- Implementation
 			a_rule.set_action (an_action)
 		ensure
 			inserted: a_rule.action = an_action
+		end
+
+	put_error_action (an_action: PR_ERROR_ACTION; i: INTEGER; a_rule: PR_RULE) is
+			-- Set syntax error action associated with `i'-th
+			-- symbol in `a_rule' to `an_action'.
+		require
+			a_rule_not_void: a_rule /= Void
+			i_large_enough: i >= 1
+			i_small_enough: i <= a_rule.error_actions.count
+		do
+			a_rule.set_error_action (an_action, i)
+		ensure
+			inserted: a_rule.error_actions.item (i) = an_action
 		end
 
 	set_start_symbol is
@@ -1032,6 +1055,19 @@ feature {NONE} -- Error handling
 			an_error: PR_PREC_NOT_TOKEN_ERROR
 		do
 			create an_error.make (filename, line_nb, a_name)
+			error_handler.report_error (an_error)
+			successful := False
+		ensure
+			not_successful: not successful
+		end
+
+	report_invalid_error_n_error (n: INTEGER) is
+			-- Report that %error(`n') has been used in a rule but `n'
+			-- is not a valid index for the rhs of the corresponding rule.
+		local
+			an_error: PR_INVALID_ERROR_N_ERROR
+		do
+			create an_error.make (filename, line_nb, n)
 			error_handler.report_error (an_error)
 			successful := False
 		ensure

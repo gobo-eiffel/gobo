@@ -32,15 +32,15 @@ creation
 %token T_TOKEN T_LEFT T_RIGHT T_NONASSOC T_EXPECT T_PREC T_START T_TYPE
 %token T_2PERCENTS T_UNKNOWN
 
-%token <STRING>		T_EIFFEL T_IDENTIFIER T_ACTION T_USER_CODE T_CHAR T_STR
-%token <STRING>		T_INTEGER T_BOOLEAN T_CHARACTER T_REAL T_DOUBLE T_POINTER
-%token <STRING>		T_LIKE
-%token <INTEGER>	T_NUMBER '|' ':'
+%token <STRING> T_EIFFEL T_IDENTIFIER T_ACTION T_USER_CODE T_CHAR T_STR
+%token <STRING> T_INTEGER T_BOOLEAN T_CHARACTER T_REAL T_DOUBLE T_POINTER
+%token <STRING> T_LIKE
+%token <INTEGER> T_NUMBER T_ERROR '|' ':'
 
-%type <STRING>		Identifier
-%type <PR_TOKEN>	Terminal Token_declaration Left_declaration Right_declaration Nonassoc_declaration
-%type <PR_TYPE>		Eiffel_type
-%type <DS_ARRAYED_LIST [PR_TYPE]>	Eiffel_type_list Eiffel_generics
+%type <STRING> Identifier
+%type <PR_TOKEN> Terminal Token_declaration Left_declaration Right_declaration Nonassoc_declaration
+%type <PR_TYPE> Eiffel_type
+%type <DS_ARRAYED_LIST [PR_TYPE]> Eiffel_type_list Eiffel_generics
 
 %expect 8
 
@@ -349,8 +349,19 @@ Colon: ':'
 		}
 	;
 
-Rhs_list: Rhs
-	| Rhs_list Bar Rhs
+Rhs_list: Rhs_errors
+	| Rhs_list Bar Rhs_errors
+	;
+
+Rhs_errors: Rhs
+	| Rhs_errors T_ERROR '(' T_NUMBER ')' T_ACTION
+		{
+			if $4 < 1 or $4 > rule.error_actions.count then
+				report_invalid_error_n_error ($4)
+			else
+				put_error_action (new_error_action ($6, $2), $4, rule)
+			end
+		}
 	;
 
 Rhs: -- Empty

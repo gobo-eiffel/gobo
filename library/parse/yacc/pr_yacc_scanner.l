@@ -26,6 +26,7 @@ creation
 %option outfile="pr_yacc_scanner.e"
 
 %x SECTION2 SECTION3 EIFFEL_CODE EIFFEL_ACTION
+%x ERROR_SECTION ERROR_ACTION
 
 C					"--".*
 WS					[ \t\r]+
@@ -119,6 +120,11 @@ ESC					\\(.|[0-7]{1,3}|x[0-9a-f]{1,2})
 
 <SECTION2>{
 	"%prec"				last_token := T_PREC
+	"%error"		{
+						last_token := T_ERROR
+						last_value := line_nb
+						set_start_condition (ERROR_SECTION)
+					}
 	":"				{
 						last_token := Colon_code
 						last_value := line_nb
@@ -148,6 +154,26 @@ ESC					\\(.|[0-7]{1,3}|x[0-9a-f]{1,2})
 					}
 }
 
+<ERROR_SECTION>{
+	{WS}|{C}			 -- Separator or comment.
+	{NL}				line_nb := line_nb + 1
+
+	"("					last_token := Left_parenthesis_code
+	")"					last_token := Right_parenthesis_code
+	[0-9]+			{
+						last_token := T_NUMBER
+						last_error := text.to_integer
+						last_value := last_error
+					}
+	"{"{WS}?{NL}	{
+						line_nb := line_nb + 1
+						set_start_condition (ERROR_ACTION)
+					}
+	"{"{WS}?		{
+						set_start_condition (ERROR_ACTION)
+					}
+}
+
 <EIFFEL_CODE>{
 	[^"'%\n-]*										more
 	["%]([^"%\n]|%([^/\n\r]|("/"[0-9]+"/")))*["%]	more
@@ -171,7 +197,7 @@ ESC					\\(.|[0-7]{1,3}|x[0-9a-f]{1,2})
 				}
 }
 
-<EIFFEL_ACTION>{
+<EIFFEL_ACTION,ERROR_ACTION>{
 	[^$"'%{}\n-]*									|
 	["%]([^"%\n]|%([^/\n\r]|("/"[0-9]+"/")))*["%]	|
 	\'([^'%\n]|%([^/\n]|("/"[0-9]+"/")))\'			|
@@ -184,7 +210,10 @@ ESC					\\(.|[0-7]{1,3}|x[0-9a-f]{1,2})
 					action_buffer.append_string (text)
 				}
 	"$$"		{
-					if rule /= Void then
+					if start_condition = ERROR_ACTION then
+						report_invalid_dollar_dollar_error
+						action_buffer.append_string ("$$")
+					elseif rule /= Void then
 						process_dollar_dollar (rule)
 					else
 						action_buffer.append_string ("$$")
@@ -193,7 +222,11 @@ ESC					\\(.|[0-7]{1,3}|x[0-9a-f]{1,2})
 	\$[0-9]+	{
 					check is_integer: STRING_.is_integer (text_substring (2, text_count)) end
 					if rule /= Void then
-						process_dollar_n (text_substring (2, text_count).to_integer, rule)
+						if start_condition = ERROR_ACTION then
+							process_dollar_n (text_substring (2, text_count).to_integer, last_error - 1, rule)
+						else
+							process_dollar_n (text_substring (2, text_count).to_integer, rule.rhs.count, rule)
+						end
 					else
 						action_buffer.append_string (text)
 					end
@@ -201,7 +234,11 @@ ESC					\\(.|[0-7]{1,3}|x[0-9a-f]{1,2})
 	\$\-[0-9]+	{
 					check is_integer: STRING_.is_integer (text_substring (3, text_count)) end
 					if rule /= Void then
-						process_dollar_n (- text_substring (3, text_count).to_integer, rule)
+						if start_condition = ERROR_ACTION then
+							process_dollar_n (- text_substring (3, text_count).to_integer, last_error - 1, rule)
+						else
+							process_dollar_n (- text_substring (3, text_count).to_integer, rule.rhs.count, rule)
+						end
 					else
 						action_buffer.append_string (text)
 					end

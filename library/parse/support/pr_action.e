@@ -16,7 +16,7 @@ inherit
 
 	DP_COMMAND
 		redefine
-			out
+			out, is_equal
 		end
 
 creation
@@ -57,6 +57,16 @@ feature -- Setting
 			text := a_text
 		ensure
 			text_set: text = a_text
+		end
+
+feature -- Comparison
+
+	is_equal (other: like Current): BOOLEAN is
+			-- Are `Current' and `other' considered equal?
+		do
+			if same_type (other) then
+				Result := text.is_equal (other.text)
+			end
 		end
 
 feature -- Output
