@@ -79,6 +79,14 @@ feature -- Filters
 			stop_on_error_not_void: Result /= Void
 		end
 
+	new_content_concatenator: XM_CONTENT_CONCATENATOR is
+			-- New content concatenation filter.
+		do
+			create Result.make_null
+		ensure
+			content_concatenator_not_void: Result /= Void
+		end
+
 	new_shared_strings: XM_SHARED_STRINGS_FILTER is
 			-- New shared strings filter
 		do
