@@ -31,6 +31,7 @@ feature
 		local
 			document: XM_XPATH_TINY_DOCUMENT
 			document_element, an_element: XM_XPATH_TINY_ELEMENT
+			a_node: XM_XPATH_NODE
 			a_name: STRING
 		do
 			make_parser
@@ -59,7 +60,7 @@ feature
 			assert ("First child not void", an_element /= Void)
 			a_name := an_element.node_name
 			assert("First child name", STRING_.same_string (a_name, "a"))
-
+			
 			-- Test next_sibling
 
 			an_element ?= an_element.next_sibling
@@ -159,17 +160,15 @@ feature
 			create descendants.make (document, document_element, element_test, False)
 
 			from
-				if descendants.before then
-					counter := 0
-				else
-					counter := 1
-				end
+				descendants.start
+				counter := 1
 			until
 				descendants.after
 			loop
-				descendants.forth
 				counter := counter + 1
+				descendants.forth
 			end
+
 			assert ("Eight descendants", counter = 8)
 			
 			-- Test ancestor axis - look for "BOOKLIST" ancestor of "ITEM"
@@ -205,11 +204,11 @@ feature
 			create any_pi_test.make (Processing_instruction_node)
 			create preceding.make (document, categories_element, any_pi_test, False)
 				check
-					preceding_before: preceding.before and not preceding.after
+					preceding_before: preceding.before
 				end	
 			from
-				counter := 0
-				preceding.forth
+				counter := 1
+				preceding.start
 			until
 				preceding.after
 			loop
@@ -262,7 +261,7 @@ feature
 				check
 					attributes_before: attributes.before
 				end
-			attributes.forth
+			attributes.start
 			a_node := attributes.item
 				check
 					attribute_node_not_void: a_node /= Void

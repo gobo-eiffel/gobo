@@ -29,10 +29,9 @@ feature
 			evaluated_items: DS_LINKED_LIST [XM_XPATH_ITEM]
 		do
 			create an_evaluator
-			an_evaluator.build_context ("./books.xml", True, False)
+			an_evaluator.build_static_context ("./books.xml", True, False)
 			assert ("Build successfull", not an_evaluator.was_build_error)
 			an_evaluator.evaluate ("BOOKLIST//ITEM[child::TITLE = 'When We Were Very Young']/attribute::CAT") -- should evaluate to "F"
-			print (an_evaluator.error_value.error_message)
 			assert ("No evaluation error", not an_evaluator.is_evaluation_in_error)
 			evaluated_items := an_evaluator.evaluated_items
 			assert ("One evaluated_item", evaluated_items /= Void and then evaluated_items.count = 1)
