@@ -138,7 +138,6 @@ feature -- Processing
 				-- Look for an 'if' XML attribute
 			if target_element.has_attribute (If_attribute_name) then
 				ucs := target_element.attribute_value_by_name (If_attribute_name)
---!!				if_condition := project.variables.has_variable (ucs.out)
 				if_condition := boolean_condition_value (ucs.out)
 				if project.verbose then
 					print (" if    : '" + ucs.out + "'=" + if_condition.out + "%N")
@@ -148,7 +147,6 @@ feature -- Processing
 				-- Look for an 'unless' XML attribute
 			if target_element.has_attribute (Unless_attribute_name) then
 				ucs := target_element.attribute_value_by_name (Unless_attribute_name)
---!!				unless_condition := project.variables.has_variable (ucs.out)
 				unless_condition := boolean_condition_value (ucs.out)
 				if project.verbose then
 					print (" unless: '" + ucs.out + "'=" + unless_condition.out + "%N")
@@ -294,9 +292,9 @@ feature -- Processing
 			-- Is `condition' True?;
 			-- used for "if" and "unless" attributes;
 			-- possible forms:
-			-- "$foo": True if variable $foo is defined
-			-- "$foo=bar": True if variable $foo is defined and its value is "bar"
-			--             bar can contain variable evaluation expressions like "bar${xyz}abc"
+			-- "foo": True if variable `foo' is defined
+			-- "$foo=bar" | "${foo}=bar" | "bar=$foo" | "bar=${foo}":
+			--             True if variable `foo' is defined and its value is "bar"
 			-- if `a_condition' is not in either form Result is `False'
 		require
 			condition_not_void: a_condition /= Void
@@ -312,14 +310,7 @@ feature -- Processing
 					-- a_condition should be in form "$foo";
 					-- check if $foo is defined
 				s := a_tokens.item (1).out
-				if s.item (1) = '$' then
-					s.tail (s.count - 1)
-					Result := project.variables.has_variable (s)
-				else
-					print ("geant: incorrect conditional: '" + a_condition + "'%N")
-					print ("%NBUILD FAILED !%N")
-					Exceptions.die (1)
-				end
+				Result := project.variables.has_variable (s)
 			elseif a_tokens.count = 2 then
 					-- a_condition should be in form "$foo=bar";
 					-- check if $foo equals "bar"
