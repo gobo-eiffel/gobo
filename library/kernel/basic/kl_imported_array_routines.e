@@ -30,6 +30,14 @@ feature -- Access
 			integer_array_routines_not_void: Result /= Void
 		end
 
+	BOOLEAN_ARRAY_: KL_ARRAY_ROUTINES [BOOLEAN] is
+			-- Routines that ought to be in class ARRAY
+		once
+			!! Result
+		ensure
+			boolean_array_routines_not_void: Result /= Void
+		end
+
 	STRING_ARRAY_: KL_ARRAY_ROUTINES [STRING] is
 			-- Routines that ought to be in class ARRAY
 		once
