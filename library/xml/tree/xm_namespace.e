@@ -98,11 +98,28 @@ feature -- Status report
 		end
 		
 	is_default: BOOLEAN is
-			-- Is `Current' a default namespace declaration?
+			-- `is_default_declaration'.
+		obsolete
+			"use clearer `not has_prefix'"
 		do
-			Result := (ns_prefix = Void or else ns_prefix.count = 0)
+			Result := not has_prefix
+		end
+		
+	has_prefix: BOOLEAN is
+			-- Is there an explicit prefix?
+			-- (not a default namespace declaration)
+		do
+			Result := (ns_prefix /= Void and then ns_prefix.count >= 0)
 		ensure
-			definition: Result = (ns_prefix = Void or else ns_prefix.count = 0)
+			definition: Result = (ns_prefix /= Void and then ns_prefix.count >= 0)
+		end
+		
+	is_default_namespace: BOOLEAN is
+			-- Is `Current' the default namespace (empty URI).
+		do
+			Result := (uri = Void or else uri.count = 0)
+		ensure
+			definition: Result = (uri = Void or else uri.count = 0)
 		end
 
 invariant
