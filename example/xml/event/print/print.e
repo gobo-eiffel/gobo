@@ -79,10 +79,11 @@ feature -- Processing
 		local
 			parser_switch: STRING
 		do
-			if Arguments.argument_count /= 2 then
-				error_handler.report_error (Usage_message)
-				has_error := True
-			else
+			if Arguments.argument_count = 1 then
+				filename := Arguments.argument (1)
+				error_handler.report_info_message ("Defaulting to eiffel parser")
+				create {XM_EIFFEL_PARSER} event_parser.make
+			elseif Arguments.argument_count = 2 then
 				parser_switch := Arguments.argument (1)
 				filename := Arguments.argument (2)
 				if parser_switch.is_equal ("--expat") then
@@ -100,6 +101,9 @@ feature -- Processing
 					error_handler.report_error (Usage_message)
 					has_error := True
 				end
+			else
+				error_handler.report_error (Usage_message)
+				has_error := True
 			end
 		ensure
 			filename_not_void: (not has_error) implies filename /= Void
