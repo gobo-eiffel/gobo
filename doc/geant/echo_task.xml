@@ -1,3 +1,16 @@
+<?xml version="1.0"?> 
+
+<!--
+	description:
+	
+		"Echo Tasks"
+
+	library: "Gobo Eiffel Ant"
+	copyright: "Copyright (c) 2002, Sven Ehrke and others"
+	license: "Eiffel Forum License v1 (see forum.txt)"
+	date: "$Date$"
+	revision: "$Revision$"
+-->
 
 <chapter id="echo_task">
 <title>echo</title>
