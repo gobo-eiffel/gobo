@@ -9,8 +9,9 @@
 # revision:   "$Revision$"
 
 
-echo ${GOBO}/src/gepp/>					loadpath.se
-echo ${GOBO}/library/loadpath.se>>		loadpath.se
+if [ ! -f loadpath.se ]; then
+	cp $GOBO/src/gepp/loadpath.se .
+fi
 
 export geoptions="-boost -no_split -no_style_warning -no_gc"
-compile $geoptions GEPP execute
+compile $geoptions -o gepp GEPP execute
