@@ -37,6 +37,15 @@ feature -- Test
 			assert_integers_equal ("negative_even", 5764801,  INTEGER_.power (-7, 8))
 		end
 
+	test_bit_operations is
+			-- Test bit operations.
+		do
+			assert_integers_equal ("one or four", 5, INTEGER_.bit_or (1, 4))
+			assert_integers_equal ("two and  four", 2, INTEGER_.bit_and (2, 6))
+			assert_integers_equal ("one shift left 4", 16, INTEGER_.bit_shift_left (1, 4))
+			assert_integers_equal ("16 shift right 4", 1, INTEGER_.bit_shift_right (16, 4)) 
+		end
+
 	test_is_even is
 			-- Test `is_even'.
 		do
