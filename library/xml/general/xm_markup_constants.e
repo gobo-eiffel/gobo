@@ -44,6 +44,9 @@ feature -- Constants
 	Amp_entity: STRING is once Result := "&amp;" end
 	Quot_entity: STRING is once Result := "&quot;" end
 
+	Char_entity_prefix: STRING is once Result := "&#" end
+	Entity_suffix: STRING is once Result := ";" end
+	
 	Comment_start: STRING is once Result := "<!--" end
 	Comment_end: STRING is once Result := "-->" end
 
