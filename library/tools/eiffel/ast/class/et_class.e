@@ -19,16 +19,21 @@ inherit
 			make as make_type,
 			type_mark as class_mark,
 			actual_parameters as formal_parameters
+		export
+			{ET_CLASS} eiffel_class
 		redefine
 			class_mark, process,
 			formal_parameters,
 			is_expanded, is_separate,
 			position, break, append_to_string,
 			is_named_type, is_valid_context,
-			debug_output
+			debug_output, copy, is_equal
 		end
 
 	HASHABLE
+		undefine
+			copy, is_equal
+		end
 
 creation
 
@@ -72,6 +77,26 @@ feature {NONE} -- Initialization
 			id_set: id = 0
 		end
 
+feature -- Initialization
+
+	reset_all is
+			-- 	Reset current class.
+		do
+			reset_interface_checked
+			reset_implementation_checked
+			reset_qualified_signatures_resolved
+			reset_features_flattened
+			reset_ancestors_built
+			reset_parsed
+			reset_preparsed
+			has_deferred_features := False
+			in_system := False
+			overridden_class := Void
+		ensure
+			same_name: name = old name
+			same_id: id = old id
+		end
+		
 feature -- Status report
 
 	is_named_type: BOOLEAN is True
@@ -199,6 +224,10 @@ feature -- Parsing
 	cluster: ET_CLUSTER
 			-- Cluster to which current class belongs
 
+	overridden_class: ET_CLASS
+			-- Class that has been overridden by current class
+			-- (when current class is in an override_cluster)
+
 	set_filename (a_name: STRING) is
 			-- Set `filename' to `a_name'.
 		require
@@ -217,6 +246,14 @@ feature -- Parsing
 			cluster := a_cluster
 		ensure
 			cluster_set: cluster = a_cluster
+		end
+
+	set_overridden_class (a_class: like overridden_class) is
+			-- Set `overridden_class' to `a_class'.
+		do
+			overridden_class := a_class
+		ensure
+			overridden_class_set: overridden_class = a_class
 		end
 
 feature -- Parsing status
@@ -254,6 +291,44 @@ feature -- Parsing status
 			syntax_error_set: has_syntax_error
 		end
 
+	reset_preparsed is
+			-- Set `is_preparsed' to False.
+		do
+			filename := Void
+			cluster := Void
+		ensure
+			not_preparsed: not is_preparsed
+		end
+
+	reset_parsed is
+			-- Set `is_parsed' to False.
+		do
+			has_syntax_error := False
+			is_parsed := False
+			class_keyword := tokens.class_keyword
+			end_keyword := tokens.end_keyword
+			external_keyword := Void
+			frozen_keyword := Void
+			cat_keyword := Void
+			class_mark := Void
+			creators := Void
+			convert_features := Void
+			feature_clauses := Void
+			first_indexing := Void
+			second_indexing := Void
+			formal_parameters := Void
+			invariants := Void
+			obsolete_message := Void
+			parents := Void
+			declared_feature_count := 0
+			features := tokens.empty_features
+			leading_break := Void
+			forget_features := Void
+		ensure
+			not_parsed: not is_parsed
+			no_syntax_error: not has_syntax_error
+		end
+		
 feature -- Class header
 
 	is_deferred: BOOLEAN is
@@ -292,7 +367,7 @@ feature -- Class header
 		do
 			Result := has_frozen_mark
 		ensure
-			definition: Result = has_external_mark
+			definition: Result = has_frozen_mark
 		end
 
 	is_external: BOOLEAN is
@@ -575,6 +650,7 @@ feature -- Ancestor building status
 		do
 			has_ancestors_error := False
 			ancestors_built := False
+			ancestors := tokens.empty_ancestors
 		ensure
 			ancestors_not_built: not ancestors_built
 			no_ancestors_error: not has_ancestors_error
@@ -937,6 +1013,34 @@ feature -- Type context
 			-- formal parameters are themselves in current context
 		do
 			Result := True
+		end
+
+feature -- Duplication
+
+	copy (other: like Current) is
+			-- Copy `other' to current class.
+		do
+			if other /= Current then
+				standard_copy (other)
+				eiffel_class := Current
+			end
+		end
+
+feature -- Comparison
+
+	is_equal (other: like Current): BOOLEAN is
+			-- Is current class equal to `other'?
+		local
+			l_class: ET_CLASS
+		do
+			if other = Current then
+				Result := True
+			else
+				l_class := eiffel_class
+				eiffel_class := other.eiffel_class
+				Result := standard_is_equal (other)
+				eiffel_class := l_class
+			end
 		end
 
 feature -- Output
