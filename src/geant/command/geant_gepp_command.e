@@ -84,12 +84,12 @@ feature -- Access
 			-- Name of destination directory
 
 	fileset: GEANT_FILESET
-		-- Fileset for current command
+			-- Fileset for current command
 
 	force: BOOLEAN
-		-- Should target files be regenerated,
-		-- provided the target files exist, even when target files
-		-- are newer than their corresponding source files?
+			-- Should target files be regenerated,
+			-- provided the target files exist, even when target files
+			-- are newer than their corresponding source files?
 
 feature -- Setting
 
@@ -168,7 +168,7 @@ feature -- Execution
 			nb := defines.count
 			from i := 1 until i > nb loop
 				cmd_template.append_string (" -D")
-				cmd_template.append_string (defines.item (i))
+				cmd_template := STRING_.appended_string (cmd_template, defines.item (i))
 				i := i + 1
 			end
 			if empty_lines then
@@ -183,12 +183,12 @@ feature -- Execution
 				cmd.append_string (" ")
 				a_from_file := file_system.pathname_from_file_system (input_filename, unix_file_system)
 				if not file_system.file_exists (a_from_file) then
-					project.log ("  [gepp] error: cannot find input file '" + a_from_file + "'%N")
+					project.log (<<"  [gepp] error: cannot find input file '", a_from_file, "%'">>)
 					exit_code := 1
 				end
 
 				if exit_code = 0 then
-					cmd.append_string (a_from_file)
+					cmd := STRING_.appended_string (cmd, a_from_file)
 					cmd.append_string (" ")
 					if to_directory /= Void and then to_directory.count > 0 then
 						a_to_file := unix_file_system.pathname (to_directory, output_filename)
@@ -197,9 +197,9 @@ feature -- Execution
 					end
 					a_to_file := file_system.pathname_from_file_system (a_to_file, unix_file_system)
 					if force or else is_file_outofdate (a_from_file, a_to_file) then
-						cmd.append_string (a_to_file)
+						cmd := STRING_.appended_string (cmd, a_to_file)
 						
-						project.trace ("  [gepp] " + cmd + "%N")
+						project.trace (<<"  [gepp] ", cmd>>)
 						execute_shell (cmd)
 					end
 				end
@@ -207,7 +207,7 @@ feature -- Execution
 				check is_fileset_executable: is_fileset_executable end
 
 				if not fileset.is_executable then
-					project.log ("  [gepp] error: fileset definition wrong%N")
+					project.log (<<"  [gepp] error: fileset definition wrong">>)
 					exit_code := 1
 				end
 				if exit_code = 0 then
@@ -226,7 +226,7 @@ feature -- Execution
 						end
 						a_from_file := file_system.pathname_from_file_system (a_from_file, unix_file_system)
 						if not file_system.file_exists (a_from_file) then
-							project.log ("  [gepp] error: cannot find input file '" + a_from_file + "'%N")
+							project.log (<<"  [gepp] error: cannot find input file '", a_from_file, "%'">>)
 							exit_code := 1
 						end
 						if exit_code = 0 then
@@ -234,18 +234,18 @@ feature -- Execution
 							if force or else is_file_outofdate (a_from_file, a_to_file) then
 								cmd := clone (cmd_template)
 								cmd.append_string (" ")
-								cmd.append_string (a_from_file)
+								cmd := STRING_.appended_string (cmd, a_from_file)
 								cmd.append_string (" ")
-								cmd.append_string (a_to_file)
+								cmd := STRING_.appended_string (cmd, a_to_file)
 								
-								project.trace ("  [gepp] " + cmd + "%N")
+								project.trace (<<"  [gepp] ", cmd>>)
 								execute_shell (cmd)
 							end
 						end
 					end
 
 					if exit_code /= 0 then
-						project.log ("  [gepp] error: cannot gepp%N")
+						project.log (<<"  [gepp] error: cannot gepp">>)
 					end
 
 					fileset.forth

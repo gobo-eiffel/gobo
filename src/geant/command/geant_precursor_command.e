@@ -28,10 +28,10 @@ feature -- Status report
 			check current_target_not_void: project.current_target /= Void end
 			Result := project.current_target.precursor_target /= Void
 			if not Result then
-				std.error.put_string ("  [precursor] error: precursor does not exist.%N")
+				project.log (<<"  [precursor] error: precursor does not exist.">>)
 			end
 		ensure then
-			precursor_exists: Result implies project.current_target.precursor_target /= Void
+			precursor_not_void: Result implies project.current_target.precursor_target /= Void
 		end
 
 feature -- Access

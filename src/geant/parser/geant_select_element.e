@@ -31,22 +31,19 @@ feature -- Initialization
 			a_value: STRING
 		do
 			interpreting_element_make (a_project, a_xml_element)
-
 			create select_clause.make
-
 			if has_attribute (Target_attribute_name) then
 				a_value := attribute_value (Target_attribute_name)
 				if a_value.count > 0 then
 					select_clause.set_name (a_value)
 				end
 			end
-
 		end
 
 feature -- Access
 
 	select_clause: GEANT_SELECT
-		-- Select clause
+			-- Select clause
 
 feature {NONE} -- Constants
 

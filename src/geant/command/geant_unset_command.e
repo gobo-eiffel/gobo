@@ -54,7 +54,7 @@ feature -- Execution
 	execute is
 			-- Remove variable from project variables pool.
 		do
-			project.trace ("  [unset] " + name + "%N")
+			project.trace (<<"  [unset] ", name>>)
 			project.variables.remove_variable (name)
 			exit_code := 0
 		end

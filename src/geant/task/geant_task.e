@@ -20,7 +20,7 @@ inherit
 		end
 
 	KL_SHARED_FILE_SYSTEM
-		export{NONE} all end
+		export {NONE} all end
 
 feature {NONE} -- Initialization
 
@@ -74,20 +74,18 @@ feature -- Execution
 			a_new_task_cwd: STRING
 		do
 			a_old_task_cwd := file_system.current_working_directory
-				-- change to task directory if "dir" attribute is provided:
+				-- Change to task directory if "dir" attribute is provided:
 			if xml_element.has_attribute_by_name (Dir_attribute_name) then
-				a_new_task_cwd := project.variables.interpreted_string (
-					xml_element.attribute_by_name (Dir_attribute_name).value.out)
-				project.trace_debug ("changing to directory: '" + a_new_task_cwd + "'%N")
+				a_new_task_cwd := xml_element.attribute_by_name (Dir_attribute_name).value
+				a_new_task_cwd := project.variables.interpreted_string (a_new_task_cwd)
+				project.trace_debug (<<"changing to directory: '", a_new_task_cwd, "%'">>)
 				file_system.set_current_working_directory (a_new_task_cwd)
 			end
-
 			command.execute
-
-				-- change back to previous directory even if "dir" attribute
+				-- Change back to previous directory even if "dir" attribute
 				-- was not provided since the command itself might have changed
 				-- the current working directory:
-			project.trace_debug ("changing to directory: '" + a_old_task_cwd + "'%N")
+			project.trace_debug (<<"changing to directory: '", a_old_task_cwd, "%'">>)
 			file_system.set_current_working_directory (a_old_task_cwd)
 		end
 

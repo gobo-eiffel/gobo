@@ -19,8 +19,6 @@ inherit
 			make
 		end
 
-	KL_IMPORTED_STRING_ROUTINES
-
 creation
 
 	make
@@ -200,7 +198,7 @@ feature -- Execution
 				-- Option -a
 			if size /= Void and then size.count > 0 then
 				cmd.append_string ("-a ")
-				cmd.append_string (size.out)
+				cmd := STRING_.appended_string (cmd, size.out)
 			end
 				-- Option -b
 			if backup then
@@ -240,13 +238,13 @@ feature -- Execution
 			if output_filename /= Void and then output_filename.count > 0 then
 				cmd.append_string ("-o ")
 				a_filename := file_system.pathname_from_file_system (output_filename, unix_file_system)
-				cmd.append_string (a_filename)
+				cmd := STRING_.appended_string (cmd, a_filename)
 				cmd.append_string (" ")
 			end
 			a_filename := file_system.pathname_from_file_system (input_filename, unix_file_system)
-			cmd.append_string (a_filename)
+			cmd := STRING_.appended_string (cmd, a_filename)
 
-			project.trace ("  [gelex] " + cmd + "%N")
+			project.trace (<<"  [gelex] ", cmd>>)
 			execute_shell (cmd)
 		end
 

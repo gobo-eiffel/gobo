@@ -17,7 +17,9 @@ inherit
 	ANY
 
 	GEANT_SHARED_PROPERTIES
-		export{NONE} all end
+		export {NONE} all end
+
+	KL_IMPORTED_STRING_ROUTINES
 
 creation
 
@@ -56,23 +58,12 @@ feature -- Status report
 
 	apply_selects is
 			-- Apply selects of all parents to current project.
-		local
-			msg: STRING
 		do
-			msg := clone ("%NProject '")
-			msg.append_string (project.name)
-			msg.append_string ("': --> application of select clause:%N")
-			project.trace_debug (msg)
-
+			project.trace_debug (<<"%NProject '", project.name, "': --> application of select clause:">>)
 			validate_parent_selects
 			sort_out_selected_targets
 			check_targets_for_conflicts
-
-			msg := clone ("Project '")
-			msg.append_string (project.name)
-			msg.append_string ("': <-- application of select clause done.%N")
-			project.trace_debug (msg)
-
+			project.trace_debug (<<"Project '", project.name, "': <-- application of select clause done.">>)
 		end
 
 	validate_parent_selects is
@@ -88,69 +79,37 @@ feature -- Status report
 			a_selected_cursor2: DS_HASH_TABLE_CURSOR [GEANT_TARGET, STRING]
 			a_selected_target2: GEANT_TARGET
 			a_selected_target_name: STRING
-			msg: STRING
 		do
 				-- Make sure there are no conflicting selects:
-			msg := clone ("Project '")
-			msg.append_string (project.name)
-			msg.append_string ("': making sure there are no conflicting selects%N")
-			project.trace_debug (msg)
-			from
-				a_parent_cursor := project.inherit_clause.parents.new_cursor
-				a_parent_cursor.start
-			until
-				a_parent_cursor.after
-			loop
+			project.trace_debug (<<"Project '", project.name, "': making sure there are no conflicting selects">>)
+			a_parent_cursor := project.inherit_clause.parents.new_cursor
+			from a_parent_cursor.start until a_parent_cursor.after loop
 				a_parent := a_parent_cursor.item
-				from
-					a_selected_cursor := a_parent.parent_project.selected_targets.new_cursor
-					a_selected_cursor.start
-				until
-					a_selected_cursor.after
-				loop
+				a_selected_cursor := a_parent.parent_project.selected_targets.new_cursor
+				from a_selected_cursor.start until a_selected_cursor.after loop
 					a_selected_target := a_selected_cursor.item
 					a_selected_target_name := a_selected_cursor.key
-
-					from
-						a_parent_cursor2 := parents.new_cursor
-						a_parent_cursor2.start
-					until
-						a_parent_cursor2.after
-					loop
+					a_parent_cursor2 := parents.new_cursor
+					from a_parent_cursor2.start until a_parent_cursor2.after loop
 						a_parent2 := a_parent_cursor2.item
 						if a_parent /= a_parent2 then
-							from
-								a_selected_cursor2 := a_parent2.parent_project.selected_targets.new_cursor
-								a_selected_cursor2.start
-							until
-								a_selected_cursor2.after
-							loop
+							a_selected_cursor2 := a_parent2.parent_project.selected_targets.new_cursor
+							from a_selected_cursor2.start until a_selected_cursor2.after loop
 								a_selected_target2 := a_selected_cursor2.item
-	
 								if a_selected_target.conflicts_with (a_selected_target2) then
-									msg := clone ("Project '")
-									msg.append_string (project.name)
-									msg.append_string ("': conflicting selects: `")
-									msg.append_string (a_selected_target.full_name)
-									msg.append_string ("' and `")
-									msg.append_string (a_selected_target2.full_name)
-									msg.append_string ("'.%N")
-									exit_application (1, msg)
+									exit_application (1, <<"Project '", project.name,
+										"': conflicting selects: `", a_selected_target.full_name,
+										"' and `", a_selected_target2.full_name, "'.">>)
 								end
-	
 								a_selected_cursor2.forth
 							end
 						end
-
 						a_parent_cursor2.forth
 					end
-
 					a_selected_cursor.forth
 				end
-
 				a_parent_cursor.forth
 			end
-
 		end
 
 	sort_out_selected_targets is
@@ -166,38 +125,19 @@ feature -- Status report
 			a_target_name: STRING
 			a_conflict_found: BOOLEAN
 			a_conflict_counter: INTEGER
-			msg: STRING
 		do
-			msg := clone ("Project '")
-			msg.append_string (project.name)
-			msg.append_string ("': removing targets conflicting with selected targets%N")
-			project.trace_debug (msg)
-
-			from
-				a_parent_cursor := project.inherit_clause.parents.new_cursor
-				a_parent_cursor.start
-			until
-				a_parent_cursor.after
-			loop
+			project.trace_debug (<<"Project '", project.name, "': removing targets conflicting with selected targets">>)
+			a_parent_cursor := project.inherit_clause.parents.new_cursor
+			from a_parent_cursor.start until a_parent_cursor.after loop
 				a_parent := a_parent_cursor.item
-				from
-					a_selected_cursor := a_parent.parent_project.selected_targets.new_cursor
-					a_selected_cursor.start
-				until
-					a_selected_cursor.after
-				loop
+				a_selected_cursor := a_parent.parent_project.selected_targets.new_cursor
+				from a_selected_cursor.start until a_selected_cursor.after loop
 					a_selected_target_name := a_selected_cursor.key
 					if not project.targets.has (a_selected_target_name) then
-						msg := clone ("%NLOAD ERROR:%N")
-						msg.append_string ("  project '")
-						msg.append_string (project.name)
-						msg.append_string ("' selected target `")
-						msg.append_string (a_selected_target_name)
-						msg.append_string ("' does not exist.")
-						exit_application (1, msg)
+						exit_application (1, <<"%NLOAD ERROR:%N", "  project '", project.name,
+							"' selected target `", a_selected_target_name, "' does not exist.">>)
 					end
 					a_selected_target := project.targets.item (a_selected_target_name)
-
 						-- Loop over targets as long as conflicts found for select `a_selected_target':
 					from
 						a_conflict_found := True
@@ -207,28 +147,19 @@ feature -- Status report
 						-- Loop over targets:
 					loop
 						a_conflict_found := False
-						from
-							a_target_cursor := project.targets.new_cursor
-							a_target_cursor.finish
-						until
-							a_target_cursor.before
-						loop
+						a_target_cursor := project.targets.new_cursor
+						from a_target_cursor.finish until a_target_cursor.before loop
 							a_target := a_target_cursor.item
 							a_target_name := project.target_name (a_target)
 								-- Do not try to solve conflicts in the same target:
 							if a_target /= a_selected_target then
 								if a_selected_target.conflicts_with (a_target) then
-									msg := clone ("Project '")
-									msg.append_string (project.name)
-									msg.append_string ("': conflict found! Replacing target `")
-									msg.append_string ("(" + a_target.full_name + ")")
-									msg.append_string ("' with selected target `")
-									msg.append_string ("(" + a_selected_target.full_name + ")")
-									msg.append_string ("'.%N")
-									project.trace_debug (msg)
-									project.trace_debug ("a_target: ")
+									project.trace_debug (<<"Project '", project.name,
+										"': conflict found! Replacing target `(", a_target.full_name,
+										")' with selected target `(", a_selected_target.full_name, ")'.">>)
+									project.trace_debug (<<"a_target: ">>)
 									a_target.show_precursors
-									project.trace_debug ("a_selected_target: ")
+									project.trace_debug (<<"a_selected_target: ">>)
 									a_selected_target.show_precursors
 									a_conflict_found := True
 									a_conflict_counter := a_conflict_counter + 1
@@ -236,22 +167,15 @@ feature -- Status report
 									project.targets.remove (a_target_name)
 								end
 							end
-	
 							a_target_cursor.back
 						end
 					end
 					if a_conflict_counter = 0 then
-						msg := clone ("Project '")
-						msg.append_string (project.name)
-						msg.append_string ("': There is no need to select target `")
-						msg.append_string (a_selected_target_name)
-						msg.append_string ("' since there are no other conflicting targets.%N")
-						exit_application (1, msg)
+						exit_application (1, <<"Project '", project.name, "': There is no need to select target `",
+							a_selected_target_name, "' since there are no other conflicting targets.">>)
 					end
-
 					a_selected_cursor.forth
 				end
-
 				a_parent_cursor.forth
 			end
 		end
@@ -266,39 +190,22 @@ feature -- Status report
 			a_target_cursor2: DS_HASH_TABLE_CURSOR [GEANT_TARGET, STRING]
 			a_target2: GEANT_TARGET
 			a_target_name2: STRING
-			msg: STRING
 		do
-			from
-				a_target_cursor := project.targets.new_cursor
-				a_target_cursor.finish
-			until
-				a_target_cursor.before
-			loop
+			a_target_cursor := project.targets.new_cursor
+			from a_target_cursor.finish until a_target_cursor.before loop
 				a_target := a_target_cursor.item
 				a_target_name := a_target_cursor.key
-
-				from
-					a_target_cursor2 := project.targets.new_cursor
-					a_target_cursor2.finish
-				until
-					a_target_cursor2.before
-				loop
+				a_target_cursor2 := project.targets.new_cursor
+				from a_target_cursor2.finish until a_target_cursor2.before loop
 					a_target2 := a_target_cursor2.item
 					a_target_name2 := a_target_cursor2.key
 					if a_target2 /= a_target then
 						if a_target2.conflicts_with (a_target) then
-							msg := clone ("%NLOAD ERROR:%N")
-							msg.append_string ("Project '")
-							msg.append_string (project.name)
-							msg.append_string ("' contains target `")
-							msg.append_string (a_target_name)
-							msg.append_string ("' which conflicts with target `")
-							msg.append_string (a_target_name2)
-							msg.append_string ("'.%NUse a select clause to resolve the conflict.")
-							exit_application (1, msg)
+							exit_application (1, <<"%NLOAD ERROR:%N", "Project '", project.name,
+								"' contains target `", a_target_name, "' which conflicts with target `",
+								a_target_name2, "'.%NUse a select clause to resolve the conflict.">>)
 						end
 					end
-
 					a_target_cursor2.back
 				end
 				a_target_cursor.back
@@ -309,27 +216,14 @@ feature -- Status report
 			-- Load parent project defined in file named `a_filename'.
 		require
 			a_parent_not_void: a_parent /= Void
-		local
-			msg: STRING
 		do
-			msg := clone ("%NProject '")
-			msg.append_string (project.name)
-			msg.append_string ("': --> merging in parent '")
-			msg.append_string (a_parent.parent_project.name)
-			msg.append_string ("':%N")
-			project.trace_debug (msg)
-
+			project.trace_debug (<<"%NProject '", project.name, "': --> merging in parent '",
+				a_parent.parent_project.name, "':">>)
 			merge_in_redefined_targets (a_parent)
 			merge_in_renamed_targets (a_parent)
 			merge_in_unchanged_targets (a_parent)
-
-			msg := clone ("Project '")
-			msg.append_string (project.name)
-			msg.append_string ("': <-- merging in of parent `")
-			msg.append_string (a_parent.parent_project.name)
-			msg.append_string ("' done.%N%N")
-			project.trace_debug (msg)
-
+			project.trace_debug (<<"Project '", project.name, "': <-- merging in of parent `",
+				a_parent.parent_project.name, "' done.%N">>)
 		end
 
 	merge_in_renamed_targets (a_parent: GEANT_PARENT) is
@@ -341,60 +235,37 @@ feature -- Status report
 			a_target: GEANT_TARGET
 			a_rename_target: GEANT_TARGET
 			a_rename_target_name: STRING
-			msg: STRING
 		do
-			from
-				a_rename_cursor := a_parent.renamed_targets.new_cursor
-				a_rename_cursor.finish
-			until
-				a_rename_cursor.before
-			loop
+			a_rename_cursor := a_parent.renamed_targets.new_cursor
+			from a_rename_cursor.finish until a_rename_cursor.before loop
 				a_rename_target := a_rename_cursor.item
 				a_rename_target_name := a_rename_cursor.key
-
-				msg := clone ("Project '")
-				msg.append_string (project.name)
-				msg.append_string ("': merging in renamed target `")
-				msg.append_string (a_rename_target_name)
-				msg.append_string ("' (" + a_rename_target.full_name + ")%N")
-				project.trace_debug (msg)
-
+				project.trace_debug (<<"Project '", project.name, "': merging in renamed target `",
+					a_rename_target_name, "' (", a_rename_target.full_name, ")">>)
 				if project.targets.has (a_rename_target_name) then
 						-- There is already a target named `a_rename_target_name'.
 					a_target := project.targets.item (a_rename_target_name)
-					if a_target.full_name.is_equal (a_rename_target.full_name) then
+					if STRING_.same_string (a_target.full_name, a_rename_target.full_name) then
 							-- It is the same target so we can share it:
-						msg := clone ("Project '")
-						msg.append_string (project.name)
-						msg.append_string ("': sharing target `" + a_rename_target_name + "'")
-						msg.append_string (" since name and full_name ('" + a_rename_target.full_name + "') is equal to the existing target.%N")
-						project.trace_debug (msg)
+						project.trace_debug (<<"Project '", project.name, "': sharing target `",
+							a_rename_target_name, "' since name and full_name ('",
+							a_rename_target.full_name, "') is equal to the existing target.">>)
 					else
 							-- The targets are different, causing a name clash:
-						msg := clone ("%NLOAD ERROR:%N")
-						msg.append_string ("Project '")
-						msg.append_string (project.name)
-						msg.append_string ("': contains target `")
-						msg.append_string (a_target.full_name)
-						msg.append_string ("' named `")
-						msg.append_string (a_rename_target_name)
-						msg.append_string ("' which causes a name clash with%N  target ")
-						msg.append_string ("`" + a_rename_target.full_name + "' named ")
-						msg.append_string ("`" + a_rename_target_name + "'")
-						msg.append_string (" inherited from project '" + a_parent.parent_project.name + "'.%N")
-
+						exit_application (1, <<"%NLOAD ERROR:%N", "Project '", project.name,
+							"': contains target `", a_target.full_name, "' named `",
+							a_rename_target_name, "' which causes a name clash with%N  target `",
+							a_rename_target.full_name, "' named `", a_rename_target_name,
+							"' inherited from project '", a_parent.parent_project.name, "'.%N",
 -- TODO: support undefine first:
---						msg.append_string ("  Use a rename, redefine or undefine clause to resolve the name clash.")
-						msg.append_string ("  Use a rename or redefine clause to resolve the name clash.")
-						exit_application (1, msg)
+--							"  Use a rename, redefine or undefine clause to resolve the name clash.">>)
+							"  Use a rename or redefine clause to resolve the name clash.">>)
 					end
 				else
 					project.targets.force_last (a_rename_target, a_rename_target_name)
 				end
-
 				a_rename_cursor.back
 			end
-
 		end
 
 	merge_in_redefined_targets (a_parent: GEANT_PARENT) is
@@ -406,52 +277,28 @@ feature -- Status report
 			a_target: GEANT_TARGET
 			a_redefine_target: GEANT_TARGET
 			a_redefine_target_name: STRING
-			msg: STRING
 		do
 				-- Merge redefined targets:
-			from
-				a_redefine_cursor := a_parent.redefined_targets.new_cursor
-				a_redefine_cursor.finish
-			until
-				a_redefine_cursor.before
-			loop
+			a_redefine_cursor := a_parent.redefined_targets.new_cursor
+			from a_redefine_cursor.finish until a_redefine_cursor.before loop
 				a_redefine_target := a_redefine_cursor.item
 				a_redefine_target_name := a_redefine_cursor.key
-
-				msg := clone ("Project '")
-				msg.append_string (project.name)
-				msg.append_string ("': merging in redefined target `")
-				msg.append_string (a_redefine_target_name)
-				msg.append_string ("' (")
-				msg.append_string (a_redefine_target.full_name)
-				msg.append_string (") from parent '")
-				msg.append_string (a_parent.parent_project.name)
-				msg.append_string ("'%N")
-				project.trace_debug (msg)
-
+				project.trace_debug (<<"Project '", project.name, "': merging in redefined target `",
+					a_redefine_target_name, "' (", a_redefine_target.full_name,
+					") from parent '", a_parent.parent_project.name, "%'">>)
 				if not project.targets.has (a_redefine_target_name) then
-					msg := clone ("%NLOAD ERROR:%N")
-					msg.append_string ("Project '")
-					msg.append_string (project.name)
-					msg.append_string ("' does not redefine parent target `")
-					msg.append_string (a_redefine_target_name)
-					msg.append_string ("' as declared.")
-					exit_application (1, msg)
+					exit_application (1, <<"%NLOAD ERROR:%N", "Project '", project.name,
+						"' does not redefine parent target `", a_redefine_target_name,
+						"' as declared.">>)
 				end
 				a_target := project.targets.item (a_redefine_target_name)
-
 					-- Connect `a_target' and `a_redefine_target':
-				msg := clone ("Project '")
-				msg.append_string (project.name)
-				msg.append_string ("': connecting target `" + a_target.full_name + "'")
-				msg.append_string (" and target `" + a_redefine_target.full_name + "'%N")
-				project.trace_debug (msg)
+				project.trace_debug (<<"Project '", project.name, "': connecting target `",
+					a_target.full_name, "' and target `", a_redefine_target.full_name, "%'">>)
 				a_redefine_target.set_redefining_target (a_target)
 				a_target.set_precursor_target (a_redefine_target)
-
 				a_redefine_cursor.back
 			end
-
 		end
 
 	merge_in_unchanged_targets (a_parent: GEANT_PARENT) is
@@ -463,63 +310,37 @@ feature -- Status report
 			a_target: GEANT_TARGET
 			a_unchanged_target: GEANT_TARGET
 			a_unchanged_target_name: STRING
-			msg: STRING
 		do
-			from
-				a_unchanged_cursor := a_parent.unchanged_targets.new_cursor
-				a_unchanged_cursor.start
-			until
-				a_unchanged_cursor.after
-			loop
+			a_unchanged_cursor := a_parent.unchanged_targets.new_cursor
+			from a_unchanged_cursor.start until a_unchanged_cursor.after loop
 				a_unchanged_target := a_unchanged_cursor.item
 				a_unchanged_target_name := a_unchanged_cursor.key
-
-				msg := clone ("Project '")
-				msg.append_string (project.name)
-				msg.append_string ("': merging in unchanged parent target `")
-				msg.append_string (a_unchanged_target_name)
-				msg.append_string ("' (")
-				msg.append_string (a_unchanged_target.full_name)
-				msg.append_string (") from parent '")
-				msg.append_string (a_parent.parent_project.name)
-				msg.append_string ("'%N")
-				project.trace_debug (msg)
-
+				project.trace_debug (<<"Project '", project.name, "': merging in unchanged parent target `",
+					a_unchanged_target_name, "' (", a_unchanged_target.full_name,
+					") from parent '", a_parent.parent_project.name, "%'">>)
 				if project.targets.has (a_unchanged_target_name) then
 						-- There is already a target named `a_unchanged_target_name'.
 					a_target := project.targets.item (a_unchanged_target_name)
 					if a_target.full_name.is_equal (a_unchanged_target.full_name) then
 							-- It is the same target so we can safely share it:
-						msg := clone ("Project '")
-						msg.append_string (project.name)
-						msg.append_string ("': sharing target `" + a_unchanged_target_name + "'")
-						msg.append_string (" since name and full_name ('" + a_unchanged_target.full_name + "') is equal to the existing target.%N")
-						project.trace_debug (msg)
+						project.trace_debug (<<"Project '", project.name, "': sharing target `",
+						a_unchanged_target_name, "' since name and full_name ('",
+						a_unchanged_target.full_name, "') is equal to the existing target.">>)
 					else
 							-- The targets are different, causing a name clash:
-						msg := clone ("%NLOAD ERROR:%N")
-						msg.append_string ("Project '")
-						msg.append_string (project.name)
-						msg.append_string ("' contains target%N    `")
-						msg.append_string (project.targets.item (a_unchanged_target_name).full_name)
-						msg.append_string ("' named `")
-						msg.append_string (a_unchanged_target_name)
-						msg.append_string ("'%N  which causes a name clash with target ")
-						msg.append_string ("%N    `" + a_unchanged_target.full_name + "' named ")
-						msg.append_string ("`" + a_unchanged_target_name + "'%N")
-						msg.append_string ("  inherited from project '" + a_parent.parent_project.name + "'.%N")
-
+						exit_application (1, <<"%NLOAD ERROR:%N", "Project '", project.name,
+							"' contains target%N    `", project.targets.item (a_unchanged_target_name).full_name,
+							"' named `", a_unchanged_target_name, "'%N  which causes a name clash with target ",
+							"%N    `", a_unchanged_target.full_name, "' named `", a_unchanged_target_name,
+							"'%N  inherited from project '", a_parent.parent_project.name, "'.%N",
 -- TODO: support undefine first:
---						msg.append_string ("  Use a rename, redefine or undefine clause to resolve the name clash.")
-						msg.append_string ("  Use a rename or redefine clause to resolve the name clash.")
-						exit_application (1, msg)
+--							"  Use a rename, redefine or undefine clause to resolve the name clash.">>)
+							"  Use a rename or redefine clause to resolve the name clash.">>)
 					end
 				end
 				project.targets.force_last (a_unchanged_target, a_unchanged_target_name)
-
 				a_unchanged_cursor.forth
 			end
-
 		end
 
 end

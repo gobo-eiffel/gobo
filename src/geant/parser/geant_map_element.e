@@ -41,33 +41,29 @@ feature {NONE} -- Initialization
 					map.set_type (a_value)
 				end
 			end
-
 			if has_attribute (From_attribute_name) then
 				a_value := attribute_value (From_attribute_name)
 				if a_value.count > 0 then
 					map.set_source_pattern (a_value)
 				end
 			end
-
 			if has_attribute (To_attribute_name) then
 				a_value := attribute_value (To_attribute_name)
 				if a_value.count > 0 then
 					map.set_target_pattern (a_value)
 				end
 			end
-
 			a_xml_subelement := xml_element.element_by_name (Map_element_name)
 			if a_xml_subelement /= Void then
 				!! a_map_element.make (project, a_xml_subelement)
 				map.set_map (a_map_element.map)
 			end
-
 		end
 
 feature -- Access
 
 	map: GEANT_MAP
-		-- Map executing mappings for filenames
+			-- Map executing mappings for filenames
 
 feature {NONE} -- Constants
 

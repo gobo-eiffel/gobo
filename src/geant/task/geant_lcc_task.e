@@ -41,7 +41,7 @@ feature {NONE} -- Initialization
 					command.set_executable (a_value)
 				end
 			end
-				-- source_filename
+				-- source_filename:
 			if has_attribute (Source_filename_attribute_name) then
 				a_value := attribute_value (Source_filename_attribute_name)
 				if a_value.count > 0 then

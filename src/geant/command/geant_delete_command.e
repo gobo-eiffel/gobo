@@ -117,28 +117,28 @@ feature -- Execution
 			exit_code := 0
 			if is_directory_executable then
 				a_name := file_system.pathname_from_file_system (directory, unix_file_system)
-				project.trace ("  [delete] " + a_name + "%N")
+				project.trace (<<"  [delete] ", a_name>>)
 				if not project.options.no_exec then
 					file_system.recursive_delete_directory (a_name)
 					if file_system.directory_exists (a_name) then
-						project.log ("  [delete] error: cannot delete directory '" + a_name + "'%N")
+						project.log (<<"  [delete] error: cannot delete directory '", a_name, "%'">>)
 						exit_code := 1
 					end
 				end
 			elseif is_file_executable then
 				a_name := file_system.pathname_from_file_system (file, unix_file_system)
-				project.trace ("  [delete] " + a_name + "%N")
+				project.trace (<<"  [delete] ", a_name>>)
 				if not project.options.no_exec then
 					file_system.delete_file (a_name)
 					if file_system.file_exists (a_name) then
-						project.log ("geant error: cannot delete file '" + a_name + "'%N")
+						project.log (<<"geant error: cannot delete file '", a_name, "%'">>)
 						exit_code := 1
 					end
 				end
 			else
 				check is_fileset_executable: is_fileset_executable end
 				if not fileset.is_executable then
-					project.log ("  [delete] error: fileset definition wrong%N")
+					project.log (<<"  [delete] error: fileset definition wrong">>)
 					exit_code := 1
 				end
 				if exit_code = 0 then
@@ -156,15 +156,14 @@ feature -- Execution
 						fileset.after or else exit_code /= 0
 					loop
 						a_name := file_system.pathname_from_file_system (fileset.item_mapped_filename, unix_file_system)
-						project.trace ("  [delete] " + a_name + "%N")
+						project.trace (<<"  [delete] ", a_name>>)
 						if not project.options.no_exec then
 							file_system.delete_file (a_name)
 							if file_system.file_exists (a_name) then
-								project.log ("geant error: cannot delete file '" + a_name + "'%N")
+								project.log (<<"geant error: cannot delete file '", a_name, "%'">>)
 								exit_code := 1
 							end
 						end
-	
 						fileset.forth
 					end
 				end

@@ -20,7 +20,7 @@ inherit
 		end
 
 	GEANT_SHARED_PROPERTIES
-		export{NONE} all end
+		export {NONE} all end
 
 creation
 
@@ -28,12 +28,10 @@ creation
 
 feature {NONE} -- Initialization
 
-	make (
-		a_xml_element: XM_ELEMENT;
+	make (a_xml_element: XM_ELEMENT;
 		a_variables: GEANT_VARIABLES;
 		a_options: GEANT_PROJECT_OPTIONS;
-		a_build_filename: STRING
-		) is
+		a_build_filename: STRING) is
 			-- Create element with information held in `a_xml_element'.
 		require
 			a_xml_element_not_void: a_xml_element /= Void
@@ -47,71 +45,49 @@ feature {NONE} -- Initialization
 			cs: DS_LINKED_LIST_CURSOR [XM_ELEMENT]
 			a_targets: DS_HASH_TABLE [GEANT_TARGET, STRING]
 			a_target: GEANT_TARGET
-			msg: STRING
+			a_tester: UC_EQUALITY_TESTER
 		do
 			element_make (a_xml_element)
 			create project.make (a_variables, a_options)
-			project.trace ("Loading Project's configuration from " + a_build_filename.out + "%N")
-
+			project.trace (<<"Loading Project's configuration from ", a_build_filename>>)
 				-- Determine description if available:
 			if xml_element.has_element_by_name (Description_element_name) then
-				project.set_description (xml_element.element_by_name (Description_element_name).text.out)
+				project.set_description (xml_element.element_by_name (Description_element_name).text)
 			end
-
 				-- Handle project name:
 			if not has_attribute (Name_attribute_name) then
-				msg := clone ("%NLOAD ERROR:%N")
-				msg.append_string ("  Project in file '")
-				msg.append_string (a_build_filename)
-				msg.append_string ("' does not have a name.%N")
-				msg.append_string ("  Please specify a name for this project.")
-				exit_application (1, msg)
+				exit_application (1, <<"%NLOAD ERROR:%N", "  Project in file '", a_build_filename,
+					"' does not have a name.%N", "  Please specify a name for this project.">>)
 			end
 			project.set_name (attribute_value (Name_attribute_name))
-
 				-- Set default target name if present:
 			if has_attribute (Default_attribute_name) then
 				project.set_default_target_name (attribute_value (Default_attribute_name))
 			end
-
 				-- Create GEANT_TARGETs from the GEANT_ELEMENTs:
 			target_elements := elements_by_name (Target_element_name)
-			create a_targets.make (target_elements.count)
-
+			create a_targets.make_map (target_elements.count)
+			!! a_tester
+			a_targets.set_key_equality_tester (a_tester)
 				-- Find targets of current project:
-			project.trace_debug ("Project '" + project.name + "': loading " + target_elements.count.out + " immediate targets.%N")
-			from
-				cs := target_elements.new_cursor
-				cs.start
-			until
-				cs.off
-			loop
+			project.trace_debug (<<"Project '", project.name, "': loading ",
+				target_elements.count.out, " immediate targets.">>)
+			cs := target_elements.new_cursor
+			from cs.start until cs.after loop
 				create a_target.make (project, cs.item)
-				project.trace_debug ("Project '" + project.name + "': loading target `" + a_target.name + "'%N")
-
+				project.trace_debug (<<"Project '", project.name, "': loading target `", a_target.name, "%'">>)
 					-- Make sure there is no other target with this name:
 				if a_targets.has (a_target.name) then
-					msg := clone ("%NLOAD ERROR:%N")
-					msg.append_string ("  project '")
-					msg.append_string (project.name)
-					msg.append_string ("' contains a target named `")
-					msg.append_string (a_target.name)
-					msg.append_string ("' which conflicts with target `")
-					msg.append_string (a_target.name)
-					msg.append_string ("' from project '" + a_targets.item (a_target.name).project.name + "'.%N")
-					msg.append_string ("  Either use a different name, use the rename clause, or redefine this target.")
-					exit_application (1, msg)
+					exit_application (1, <<"%NLOAD ERROR:%N", "  project '", project.name,
+						"' contains a target named `", a_target.name, "' which conflicts with target `",
+						a_target.name, "' from project '", a_targets.item (a_target.name).project.name,
+						"%'.%N", "  Either use a different name, use the rename clause, or redefine this target.">>)
 				end
-
 				a_targets.force_last (a_target, a_target.name)
-
 				cs.forth
 			end
-
 			project.set_targets (a_targets)
-
 			load_parent_projects
-
 		ensure
 			project_set: project /= Void
 		end
@@ -119,34 +95,26 @@ feature {NONE} -- Initialization
 	load_parent_projects is
 			-- Load parent projects if present.
 		local
-			msg: STRING
 			a_inherit_element: GEANT_INHERIT_ELEMENT
 			a_xml_element: XM_ELEMENT
 		do
 				-- Check that not both, inherit_attribute and inherit_element have been specified:
 				-- TODO: modify after obsolete period
 			if has_attribute (Inherit_attribute_name) and has_inherit_element then
-				msg := clone ("%NLOAD ERROR in project '")
-				msg.append_string (project.name)
-				msg.append_string ("':%N")
-				msg.append_string ("  Remove obsolete attribute 'inherit' and use subelement 'inherit' instead.")
-				exit_application (1, msg)
+				exit_application (1, <<"%NLOAD ERROR in project '", project.name, "%':%N",
+					"  Remove obsolete attribute 'inherit' and use subelement 'inherit' instead.">>)
 			end
-
 				-- Handle obsolete inherit_attribute:
 				-- TODO: remove after obsolete period
 			if has_attribute (Inherit_attribute_name) then
-				msg := clone ("Project '")
-				msg.append_string (project.name)
-				msg.append_string ("': WARNING: Obsolete inheritance format using attribute 'inherit' found.%N  Use new inheritance format with subelement instead.%N")
-				project.trace (msg)
-
+				project.trace (<<"Project '", project.name,
+					"': WARNING: Obsolete inheritance format using attribute 'inherit' found.%N",
+					"Use new inheritance format with subelement instead.">>)
 				project.set_old_inherit (True)
 				check no_inherit_element: not has_inherit_element end
 				create a_inherit_element.make_old (project, xml_element)
 				project.set_inherit_clause (a_inherit_element.geant_inherit)
 			end
-
 				-- Handle inherit_element:
 			if has_inherit_element then
 				check no_inherit_attribute: not has_attribute (Inherit_attribute_name) end
@@ -159,7 +127,7 @@ feature {NONE} -- Initialization
 feature -- Access
 
 	has_inherit_element: BOOLEAN is
-			-- Does `xml_element' has a subelement named `Inherit_element_name'
+			-- Does `xml_element' has a subelement named `Inherit_element_name'?
 		local
 			a_xml_element: XM_ELEMENT
 		do
@@ -168,7 +136,7 @@ feature -- Access
 		end
 
 	has_parent: BOOLEAN is
-			-- Does `xml_element' has an attribute named `Inherit_attribute_name'
+			-- Does `xml_element' has an attribute named `Inherit_attribute_name'?
 		do
 			Result := has_attribute (Inherit_attribute_name)
 		end

@@ -65,21 +65,18 @@ feature -- Status report
 				-- Set default execution conditions:
 			if_condition := true
 			unless_condition := false
-
 				-- Look for an 'if' XML attribute
 			if has_attribute (If_attribute_name) then
 				a_string := xml_element.attribute_by_name (If_attribute_name).value
 				if_condition := project.variables.boolean_condition_value (a_string)
-				project.trace_debug (" if: '" + a_string + "': " + if_condition.out + "%N")
+				project.trace_debug (<<" if: '", a_string, "': ", if_condition.out>>)
 			end
-
 				-- Look for an 'unless' XML attribute
 			if has_attribute (Unless_attribute_name) then
 				a_string := xml_element.attribute_by_name (Unless_attribute_name).value
 				unless_condition := project.variables.boolean_condition_value (a_string)
-				project.trace_debug (" unless: '" + a_string + "'=" + unless_condition.out + "%N")
+				project.trace_debug (<<" unless: '", a_string, "'=", unless_condition.out>>)
 			end
-
 			Result := if_condition and not unless_condition
 		end
 
@@ -109,8 +106,7 @@ feature -- Access/XML attribute values
 			-- or `a_default_value' of no such attribute
 		do
 			if xml_element.has_attribute_by_name (an_attr_name) then
-				Result := project.variables.interpreted_string (
-					xml_element.attribute_by_name (an_attr_name).value)
+				Result := project.variables.interpreted_string (xml_element.attribute_by_name (an_attr_name).value)
 			else
 				Result := a_default_value
 			end

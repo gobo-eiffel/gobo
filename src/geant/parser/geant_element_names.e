@@ -12,10 +12,6 @@ indexing
 
 class GEANT_ELEMENT_NAMES
 
-inherit
-
-	ANY
-
 feature -- Attribute names and values
 
 	Id_attribute_name: STRING is

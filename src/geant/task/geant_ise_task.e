@@ -36,21 +36,21 @@ feature {NONE} -- Initialization
 			task_make (command, an_xml_element)
 				-- ace:
 			if has_attribute (Ace_attribute_name) then
-				a_value := attribute_value_or_default (Ace_attribute_name.out, "")
+				a_value := attribute_value_or_default (Ace_attribute_name, "")
 				if a_value.count > 0 then
 					command.set_ace_filename (a_value)
 				end
 			end
 				-- system:
 			if has_attribute (System_attribute_name) then
-				a_value := attribute_value_or_default (System_attribute_name.out, "")
+				a_value := attribute_value_or_default (System_attribute_name, "")
 				if a_value.count > 0 then
 					command.set_system_name (a_value)
 				end
 			end
 				-- clean:
 			if has_attribute (Clean_attribute_name) then
-				a_value := attribute_value_or_default (Clean_attribute_name.out, "")
+				a_value := attribute_value_or_default (Clean_attribute_name, "")
 				if a_value.count > 0 then
 					command.set_clean (a_value)
 				end

@@ -37,36 +37,31 @@ feature {NONE} -- Initialization
 			!! command.make (a_project)
 			task_make (command, a_xml_element)
 			if has_attribute (File_attribute_name) then
-				a_value := attribute_value (File_attribute_name.out)
+				a_value := attribute_value (File_attribute_name)
 				if a_value.count > 0 then
-					command.set_file (a_value.out)
+					command.set_file (a_value)
 				end
 			end
-
 			if has_attribute (To_file_attribute_name) then
-				a_value := attribute_value (To_file_attribute_name.out)
+				a_value := attribute_value (To_file_attribute_name)
 				if a_value.count > 0 then
-					command.set_to_file (a_value.out)
+					command.set_to_file (a_value)
 				end
 			end
-
 			if has_attribute (To_directory_attribute_name) then
-				a_value := attribute_value (To_directory_attribute_name.out)
+				a_value := attribute_value (To_directory_attribute_name)
 				if a_value.count > 0 then
-					command.set_to_directory (a_value.out)
+					command.set_to_directory (a_value)
 				end
 			end
-
 			if has_attribute (Force_attribute_name) then
 				command.set_force (boolean_value (Force_attribute_name))
 			end
-
 			a_xml_subelement := xml_element.element_by_name (Fileset_element_name)
 			if a_xml_subelement /= Void then
 				!! a_fs_element.make (project, a_xml_subelement)
 				command.set_fileset (a_fs_element.fileset)
 			end
-
 		end
 
 feature -- Access

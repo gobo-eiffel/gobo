@@ -15,11 +15,12 @@ class GEANT_PROJECT_LOADER
 inherit
 
 	ANY
+
 	GEANT_SHARED_PROPERTIES
-		export{NONE} all end
+		export {NONE} all end
 
 	KL_SHARED_FILE_SYSTEM
-		export{NONE} all end
+		export {NONE} all end
 
 creation
 
@@ -32,19 +33,12 @@ feature {NONE} -- Initialization
 		require
 			a_build_filename_not_void: a_build_filename /= Void
 			a_build_filename_not_empty: a_build_filename.count > 0
-		local
-			msg: STRING
 		do
 			build_filename := a_build_filename
-			if not file_system.is_file_readable (build_filename.out) then
-				msg := clone ("cannot read build file '")
-				msg.append_string (build_filename.out)
-				msg.append_string ("' (Current working directory: ")
-				msg.append_string (file_system.current_working_directory)
-				msg.append_string (")%N")
-				exit_application (1,  msg)
+			if not file_system.is_file_readable (build_filename) then
+				exit_application (1, <<"cannot read build file '", build_filename,
+					"' (Current working directory: ", file_system.current_working_directory, ")">>)
 			end
-
 		ensure
 			build_filename_set: build_filename = a_build_filename
 		end
@@ -79,13 +73,14 @@ feature -- Processing
 				a_file.close
 				project_element := a_project_parser.last_project_element
 			else
-				std.error.put_string ("cannot read file: '" + build_filename.out + "'")
+				std.error.put_string ("cannot read file: '")
+				std.error.put_string (build_filename)
+				std.error.put_character ('%'')
+				std.error.put_new_line
 			end
-
 			if project_element = Void then
-				exit_application (1, "Parsing error in file '" + build_filename.out + "'%N")
+				exit_application (1, <<"Parsing error in file '", build_filename, "%'">>)
 			end
-
 	    end
 
 invariant

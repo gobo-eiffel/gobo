@@ -19,8 +19,6 @@ inherit
 			make
 		end
 
-	KL_IMPORTED_STRING_ROUTINES
-
 creation
 
 	make
@@ -203,7 +201,7 @@ feature -- Execution
 			elseif processor = Processor_xalan_java then
 				execute_xalan_java
 			else
-				project.log ("  [xslt]: unknown processor%N")
+				project.log (<<"  [xslt]: unknown processor">>)
 				exit_code := 1
 			end
 		end
@@ -219,33 +217,33 @@ feature -- Execution
 
 			cmd.append_string (" -IN ")
 			a_filename := file_system.pathname_from_file_system (input_filename, unix_file_system)
-			cmd.append_string (a_filename)
+			cmd := STRING_.appended_string (cmd, a_filename)
 			cmd.append_string (" -XSL ")
 			a_filename := file_system.pathname_from_file_system (stylesheet_filename, unix_file_system)
-			cmd.append_string (a_filename)
+			cmd := STRING_.appended_string (cmd, a_filename)
 			cmd.append_string (" -OUT ")
 			a_filename := file_system.pathname_from_file_system (output_filename, unix_file_system)
-			cmd.append_string (a_filename)
+			cmd := STRING_.appended_string (cmd, a_filename)
 
 			cmd.append_string (" -INDENT ")
-			cmd.append_string (indent)
+			cmd := STRING_.appended_string (cmd, indent)
 
 			if format /= Void and then format.count > 0 then
 				cmd.append_string (" -")
-				cmd.append_string (format)
+				cmd := STRING_.appended_string (cmd, format)
 			end
 
 				-- Add parameters:
 			nb := parameters.count
 			from i := 1 until i > nb loop
 				cmd.append_string (" -PARAM ")
-				cmd.append_string (parameters.item (i).first)
+				cmd := STRING_.appended_string (cmd, parameters.item (i).first)
 				cmd.append_string (" ")
-				cmd.append_string (parameters.item (i).second)
+				cmd := STRING_.appended_string (cmd, parameters.item (i).second)
 				i := i + 1
 			end
 
-			project.trace ("  [xslt] " + cmd + "%N")
+			project.trace (<<"  [xslt] ", cmd>>)
 			execute_shell (cmd)
 		end
 
@@ -259,47 +257,47 @@ feature -- Execution
 			cmd := clone ("java")
 			if extdirs /= Void and then extdirs.count > 0 then
 				cmd.append_string (" -Djava.ext.dirs=")
-				cmd.append_string (extdirs)
+				cmd := STRING_.appended_string (cmd, extdirs)
 			end
 
 			if classpath /= Void and then classpath.count > 0 then
 				cmd.append_string (" -classpath=")
-				cmd.append_string (classpath)
+				cmd := STRING_.appended_string (cmd, classpath)
 			end
 
 			cmd.append_string (" org.apache.xalan.xslt.Process")
 
 			cmd.append_string (" -in ")
 			a_filename := file_system.pathname_from_file_system (input_filename, unix_file_system)
-			cmd.append_string (a_filename)
+			cmd := STRING_.appended_string (cmd, a_filename)
 
 			cmd.append_string (" -xsl ")
 			a_filename := file_system.pathname_from_file_system (stylesheet_filename, unix_file_system)
-			cmd.append_string (a_filename)
+			cmd := STRING_.appended_string (cmd, a_filename)
 
 			cmd.append_string (" -out ")
 			a_filename := file_system.pathname_from_file_system (output_filename, unix_file_system)
-			cmd.append_string (a_filename)
+			cmd := STRING_.appended_string (cmd, a_filename)
 
 			cmd.append_string (" -INDENT ")
-			cmd.append_string (indent)
+			cmd := STRING_.appended_string (cmd, indent)
 
 			if format /= Void and then format.count > 0 then
 				cmd.append_string (" -")
-				cmd.append_string (format)
+				cmd := STRING_.appended_string (cmd, format)
 			end
 
 				-- Add parameters:
 			nb := parameters.count
 			from i := 1 until i > nb loop
 				cmd.append_string (" -PARAM ")
-				cmd.append_string (parameters.item (i).first)
+				cmd := STRING_.appended_string (cmd, parameters.item (i).first)
 				cmd.append_string (" ")
-				cmd.append_string (parameters.item (i).second)
+				cmd := STRING_.appended_string (cmd, parameters.item (i).second)
 				i := i + 1
 			end
 
-			project.trace ("  [xslt] " + cmd + "%N")
+			project.trace (<<"  [xslt] ", cmd>>)
 			execute_shell (cmd)
 		end
 

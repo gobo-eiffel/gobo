@@ -17,7 +17,9 @@ inherit
 	ANY
 
 	KL_SHARED_FILE_SYSTEM
-		export{NONE} all end
+		export {NONE} all end
+
+	KL_IMPORTED_STRING_ROUTINES
 
 creation
 
@@ -27,20 +29,22 @@ feature {NONE} -- Initialization
 
 	make (a_project: GEANT_PROJECT) is
 			-- Create a new fileset.
+		local
+			a_tester: UC_EQUALITY_TESTER
 		do
 			project := a_project
 			!DS_HASH_SET [GEANT_FILESET_ENTRY]! filenames.make_equal (20)
-			!DS_HASH_SET [STRING]! single_includes.make_equal (20)
-			!DS_HASH_SET [STRING]! single_excludes.make_equal (20)
-
-			set_filename_variable_name (clone ("fs.filename"))
-			set_mapped_filename_variable_name (clone ("fs.mapped_filename"))
+			!DS_HASH_SET [STRING]! single_includes.make (20)
+			!! a_tester
+			single_includes.set_equality_tester (a_tester)
+			!DS_HASH_SET [STRING]! single_excludes.make (20)
+			single_excludes.set_equality_tester (a_tester)
+			set_filename_variable_name ("fs.filename")
+			set_mapped_filename_variable_name ("fs.mapped_filename")
 			force := True
 		ensure
-			filename_variable_name_set:
-				filename_variable_name.is_equal ("fs.filename")
-			mapped_filename_variable_name_set:
-				mapped_filename_variable_name.is_equal ("fs.mapped_filename")
+			filename_variable_name_set: filename_variable_name.is_equal ("fs.filename")
+			mapped_filename_variable_name_set: mapped_filename_variable_name.is_equal ("fs.mapped_filename")
 			force_is_true: force = True
 		end
 
@@ -56,34 +60,31 @@ feature -- Status report
 		do
 			Result := (directory_name /= Void and then directory_name.count > 0)
 			if not Result then
-				project.log ("  [fileset] error: attribute 'directory' is mandatory%N")
+				project.log (<<"  [fileset] error: attribute 'directory' is mandatory">>)
 			end
 			if Result then
 				Result := include_wildcard = Void or else include_wildcard.is_compiled
 				if not Result then
-					project.log ("  [fileset] error: attribute 'include' is not valid%N")
+					project.log (<<"  [fileset] error: attribute 'include' is not valid">>)
 				end
 			end
 			if Result then
 				Result := exclude_wildcard = Void or else exclude_wildcard.is_compiled
 				if not Result then
-					project.log ("  [fileset] error: attribute 'exclude' is not valid%N")
+					project.log (<<"  [fileset] error: attribute 'exclude' is not valid">>)
 				end
 			end
 			if Result then
 				Result := map = Void or else map.is_executable
 				if not Result then
-					project.log ("  [fileset] error: element 'map' is not defined correctly%N")
+					project.log (<<"  [fileset] error: element 'map' is not defined correctly">>)
 				end
 			end
-
 		ensure
 			directory_name_not_void: Result implies directory_name /= Void
 			directory_name_not_empty: Result implies directory_name.count > 0
-			include_wildcard_compiled: Result implies include_wildcard = Void or else
-				include_wildcard.is_compiled
-			exclude_wildcard_compiled: Result implies exclude_wildcard = Void or else
-				exclude_wildcard.is_compiled
+			include_wildcard_compiled: Result implies (include_wildcard = Void or else include_wildcard.is_compiled)
+			exclude_wildcard_compiled: Result implies (exclude_wildcard = Void or else exclude_wildcard.is_compiled)
 			map_executable: Result implies (map = Void or else map.is_executable)
 		end
 
@@ -95,12 +96,12 @@ feature -- Access
 	include_wc_string: STRING
 			-- Wildcard against which filenames are matched for inclusion
 
-	exclude_wc_string: like include_wc_string
+	exclude_wc_string: STRING
 			-- Wildcard against which filenames are matched for exclusion
 
 	convert_to_filesystem: BOOLEAN
-			-- Are `item_filename' and `item_mapped_filename' in the
-			-- format of the current filesystem? If not they are in unix format.
+			-- Are `item_filename' and `item_mapped_filename' in the format
+			-- of the current filesystem? If not they are in unix format.
 
 	map: GEANT_MAP
 			-- Map for filenames
@@ -115,11 +116,11 @@ feature -- Access
 
 	force: BOOLEAN
 			-- Should all selected files be included in `filenames' regardless of their timestamp?
-			-- True: all selected files are included in `filenames'
+			-- True: all selected files are included in `filenames'.
 			-- False: only those files are included in `filename' for which the timestamp is
-			--        newer than the timestamp of their corresponding files specified by `map'.
-			--        If `map' is Void the mapped filename and the source filename are the same
-			--        which means no file is included.
+			--   newer than the timestamp of their corresponding files specified by `map'.
+			--   If `map' is Void the mapped filename and the source filename are the same
+			--   which means no file is included.
 			-- default value: False
 
 	concat: BOOLEAN
@@ -127,12 +128,12 @@ feature -- Access
 
 	filename_variable_name: STRING
 			-- Name of project variable to which `item_filename' is assigned to
-			-- during iterations
+			-- during iterations;
 			-- default: 'fs.filename'
 
 	mapped_filename_variable_name: STRING
 			-- Name of project variable to which `item_mapped_filename' is assigned to
-			-- during iterations
+			-- during iterations;
 			-- default: 'fs.mapped_filename'
 
 	is_empty: BOOLEAN is
@@ -147,8 +148,8 @@ feature -- Access
 			Result := filenames.after
 		end
 
-	item_filename : STRING is
-			-- filename at current cursor
+	item_filename: STRING is
+			-- Filename at current cursor
 		require
 			not_after: not after
 		do
@@ -161,8 +162,8 @@ feature -- Access
 			item_filename_not_void: Result /= Void
 		end
 
-	item_mapped_filename : STRING is
-			-- filename at current cursor
+	item_mapped_filename: STRING is
+			-- Mapped filename at current cursor
 		require
 			not_after: not after
 		do
@@ -182,37 +183,27 @@ feature -- Access
 			-- `mapped_filename_variable_name' not existing?
 		do
 			if not after then
-				Result := project.variables.has_variable (filename_variable_name)
-				Result := Result and then
-					project.variables.variable_value (filename_variable_name).is_equal (item_filename)
-				Result := Result and then project.variables.has_variable (mapped_filename_variable_name)
-				Result := Result and then
-					project.variables.variable_value (mapped_filename_variable_name).is_equal (item_mapped_filename)
+				Result := project.variables.has_variable (filename_variable_name) and then
+					STRING_.same_string (project.variables.variable_value (filename_variable_name), item_filename) and then
+					project.variables.has_variable (mapped_filename_variable_name) and then
+					STRING_.same_string (project.variables.variable_value (mapped_filename_variable_name), item_mapped_filename)
 			else
-				Result := not (
-					project.variables.has_variable (filename_variable_name) or
-					project.variables.has_variable (mapped_filename_variable_name)
-					)
+				Result := not (project.variables.has_variable (filename_variable_name) or
+					project.variables.has_variable (mapped_filename_variable_name))
 			end
 		ensure
-			filename_variable_name_exists:
-				not after implies
-					(Result implies project.variables.has_variable (filename_variable_name))
-			filename_variable_name_set:
-				not after implies
-					(Result implies project.variables.variable_value (filename_variable_name).is_equal (item_filename))
-			mapped_filename_variable_name_exists:
-				not after implies
-					(Result implies project.variables.has_variable (mapped_filename_variable_name))
-			mapped_filename_variable_name_set:
-				not after implies
-					(Result implies project.variables.variable_value (mapped_filename_variable_name).is_equal (item_mapped_filename))
-			filename_variable_name_not_exists:
-				after implies
-					(Result implies not project.variables.has_variable (filename_variable_name))
-			mapped_filename_variable_name_not_exists:
-				after implies
-					(Result implies not project.variables.has_variable (mapped_filename_variable_name))
+			filename_variable_name_exists: not after implies
+				(Result implies project.variables.has_variable (filename_variable_name))
+			filename_variable_name_set: not after implies (Result implies
+				STRING_.same_string (project.variables.variable_value (filename_variable_name), item_filename))
+			mapped_filename_variable_name_exists: not after implies
+				(Result implies project.variables.has_variable (mapped_filename_variable_name))
+			mapped_filename_variable_name_set: not after implies (Result implies
+				STRING_.same_string (project.variables.variable_value (mapped_filename_variable_name), item_mapped_filename))
+			filename_variable_name_not_exists: after implies
+				(Result implies not project.variables.has_variable (filename_variable_name))
+			mapped_filename_variable_name_not_exists: after implies
+				(Result implies not project.variables.has_variable (mapped_filename_variable_name))
 		end
 
 feature -- Setting
@@ -235,13 +226,11 @@ feature -- Setting
 			a_include_wc_string_not_empty: a_include_wc_string.count > 0
 		do
 			include_wc_string := a_include_wc_string
-
 				-- Setup wildcard for include patterns:
 			!LX_DFA_WILDCARD! include_wildcard.compile (include_wc_string, True)
 			if not include_wildcard.is_compiled then
-				project.log ("  [fileset] error: invalid include wildcard: '" + include_wc_string + "'%N")
+				project.log (<<"  [fileset] error: invalid include wildcard: '", include_wc_string, "%'">>)
 			end
-
 		ensure
 			include_wc_string_set: include_wc_string = a_include_wc_string
 		end
@@ -254,21 +243,19 @@ feature -- Setting
 			a_exclude_wc_string_not_empty: a_exclude_wc_string.count > 0
 		do
 			exclude_wc_string := a_exclude_wc_string
-
 				-- Setup wildcard for exclude patterns:
 			!LX_DFA_WILDCARD! exclude_wildcard.compile (exclude_wc_string, True)
 			if not exclude_wildcard.is_compiled then
-				project.log ("  [fileset] error: invalid exclude wildcard: '" + exclude_wc_string + "'%N")
+				project.log (<<"  [fileset] error: invalid exclude wildcard: '", exclude_wc_string, "%'">>)
 			end
-
 		ensure
 			exclude_wc_string_set: exclude_wc_string = a_exclude_wc_string
 		end
 
 	set_convert_to_filesystem (b: BOOLEAN) is
 			-- Set `convert_to_filesystem' to `b'.
-			-- NOTE: `convert_to_filesystem' should be set only once.
-			--       Therefore this is a once command.
+			-- Note: `convert_to_filesystem' should be set only once.
+			-- Therefore this is a once command.
 		once
 			convert_to_filesystem := b
 		ensure
@@ -304,21 +291,23 @@ feature -- Setting
 	set_filename_variable_name (a_filename_variable_name: STRING) is
 			-- Set `filename_variable_name' to `a_filename_variable_name'.
 		require
-			filename_variable_name_not_void: a_filename_variable_name /= Void
+			a_filename_variable_name_not_void: a_filename_variable_name /= Void
+			a_filename_variable_name_not_empty: a_filename_variable_name.count > 0
 		do
 			filename_variable_name := a_filename_variable_name
 		ensure
-			filename_variable_name_set: filename_variable_name.is_equal (a_filename_variable_name)
+			filename_variable_name_set: filename_variable_name = a_filename_variable_name
 		end
 
 	set_mapped_filename_variable_name (a_mapped_filename_variable_name: STRING) is
 			-- Set `mapped_filename_variable_name' to `a_mapped_filename_variable_name'.
 		require
-			mapped_filename_variable_name_not_void: a_mapped_filename_variable_name /= Void
+			a_mapped_filename_variable_name_not_void: a_mapped_filename_variable_name /= Void
+			a_mapped_filename_variable_name_not_empty: a_mapped_filename_variable_name.count > 0
 		do
 			mapped_filename_variable_name := a_mapped_filename_variable_name
 		ensure
-			mapped_filename_variable_name_set: mapped_filename_variable_name.is_equal (a_mapped_filename_variable_name)
+			mapped_filename_variable_name_set: mapped_filename_variable_name = a_mapped_filename_variable_name
 		end
 
 feature -- Element change
@@ -338,12 +327,12 @@ feature -- Element change
 			an_filename: STRING
 			an_mapped_filename: STRING
 		do
-			project.trace_debug ("  [*fileset] trying to add: '" + a_filename + "'%N")
+			project.trace_debug (<<"  [*fileset] trying to add: '", a_filename, "%'">>)
 			an_filename := a_filename
 			if map /= Void then
 				an_mapped_filename := map.mapped_filename (an_filename)
 			else
-				an_mapped_filename := clone (an_filename)
+				an_mapped_filename := an_filename
 			end
 			if concat then
 				an_mapped_filename := unix_file_system.pathname (directory_name, an_mapped_filename)
@@ -355,17 +344,17 @@ feature -- Element change
 		end
 
 	remove_fileset_entry (a_filename: STRING) is
-			-- Remove entry with name equal to `a_filename' if existing
+			-- Remove entry with name equal to `a_filename' if existing.
 		local
 			a_entry: GEANT_FILESET_ENTRY
 		do
-			project.trace_debug ("  [*fileset] removing: '" + a_filename + "'%N")
+			project.trace_debug (<<"  [*fileset] removing: '", a_filename, "%'">>)
 			create a_entry.make (a_filename, a_filename)
 			filenames.remove (a_entry)
 		end
 
 	add_single_include (a_filename: STRING) is
-			-- Add `a_filename' to list of single filenames to include into fileset
+			-- Add `a_filename' to list of single filenames to include into fileset.
 		require
 			a_filename_not_void: a_filename /= Void
 		do
@@ -373,7 +362,7 @@ feature -- Element change
 		end
 
 	add_single_exclude (a_filename: STRING) is
-			-- Add `a_filename' to list of single filenames to exclude from fileset
+			-- Add `a_filename' to list of single filenames to exclude from fileset.
 		require
 			a_filename_not_void: a_filename /= Void
 		do
@@ -411,57 +400,38 @@ feature -- Execution
 			al_directory_name: STRING
 			cs: DS_SET_CURSOR [STRING]
 		do
-			project.trace_debug ("  [*fileset] directory_name: " + directory_name + "%N")
+			project.trace_debug (<<"  [*fileset] directory_name: ", directory_name>>)
 			if include_wc_string /= Void then
-				project.trace_debug ("  [*fileset] include_wc_string: " + include_wc_string + "%N")
+				project.trace_debug (<<"  [*fileset] include_wc_string: ", include_wc_string>>)
 			end
-
 			al_directory_name := unix_file_system.canonical_pathname (directory_name)
-
-				-- add entries from filesystem scan:
+				-- Add entries from filesystem scan:
 			scan_internal (al_directory_name)
-
-				-- add single includes:
-			from
-				cs := single_includes.new_cursor
-				cs.start
-			until
-				cs.off
-			loop
+				-- Add single includes:
+			cs := single_includes.new_cursor
+			from cs.start until cs.after loop
 				add_fileset_entry_if_necessary (cs.item)
 				cs.forth
 			end
-
-				-- remove single excludes:
-			from
-				cs := single_excludes.new_cursor
-				cs.start
-			until
-				cs.off
-			loop
+				-- Remove single excludes:
+			cs := single_excludes.new_cursor
+			from cs.start until cs.after loop
 				remove_fileset_entry (cs.item)
 				cs.forth
 			end
-
 			if project.options.debug_mode then
-				from
-					start
-				until
-					after
-				loop
-					project.trace_debug ("  [*fileset] entry: [" + item_filename + ", " + item_mapped_filename + "]%N")
-
+				from start until after loop
+					project.trace_debug (<<"  [*fileset] entry: [", item_filename, ", ", item_mapped_filename, "]">>)
 					forth
 				end
 			end
-
 		end
 
 	include_wildcard: LX_WILDCARD
-		-- Expression defining filenames for inclusion;
+			-- Expression defining filenames for inclusion
 
 	exclude_wildcard: LX_WILDCARD
-		-- Expression defining filenames for exclusion
+			-- Expression defining filenames for exclusion
 
 feature {NONE} -- Implementation/Access
 
@@ -473,10 +443,10 @@ feature {NONE} -- Implementation/Access
 			-- available after execute has been performed.
 
 	single_includes: DS_SET [STRING]
-			-- Filnames to be included in `filenames'
+			-- Filenames to be included in `filenames'
 
 	single_excludes: DS_SET [STRING]
-			-- Filnames to be excluded from `filenames'
+			-- Filenames to be excluded from `filenames'
 
 feature {NONE} -- Implementation/Processing
 
@@ -493,16 +463,14 @@ feature {NONE} -- Implementation/Processing
 			!! a_dir.make (a_directory_name)
 			a_dir.open_read
 			if a_dir.is_open_read then
-
 				from a_dir.read_entry until a_dir.end_of_input loop
 					a_name := a_dir.last_entry
 					if
-						not a_name.is_equal (file_system.relative_current_directory) and
-						not a_name.is_equal (file_system.relative_parent_directory)
+						not STRING_.same_string (a_name, file_system.relative_current_directory) and
+						not STRING_.same_string (a_name, file_system.relative_parent_directory)
 					then
 						s := unix_file_system.pathname (a_directory_name, a_name)
-
-							-- recurse for directories:
+							-- Recurse for directories:
 						if file_system.is_directory_readable (s) then
 							scan_internal (s)
 						else
@@ -510,14 +478,12 @@ feature {NONE} -- Implementation/Processing
 --!!							project.trace_debug ("filename: " + s + "%N")
 							smatch := s.substring (directory_name.count + 2, s.count)	-- 2 because of '/'
 --!!							project.trace_debug ("  trying to match: " + smatch + "%N")
-
 							if include_wildcard /= Void and then include_wildcard.recognizes (smatch) then
 								add_fileset_entry_if_necessary (smatch)
 							end
 							if exclude_wildcard /= Void and then exclude_wildcard.recognizes (smatch) then
 								remove_fileset_entry (smatch)
 							end
-
 						end
 					end
 					a_dir.read_entry
@@ -569,4 +535,3 @@ invariant
 	mapped_filename_variable_name_not_empty: mapped_filename_variable_name.count > 0
 
 end
-

@@ -12,8 +12,6 @@ indexing
 
 class GEANT_SELECT
 
-inherit
-
 creation
 
 	make
@@ -30,11 +28,7 @@ feature -- Status report
 	is_executable: BOOLEAN is
 			-- Can element be executed?
 		do
-			Result := name /= Void
-			if Result then
-				Result := name.count > 0
-			end
-
+			Result := name /= Void and then name.count > 0
 		ensure
 			name_not_void: Result implies name /= Void
 			name_not_empty: Result implies name.count > 0

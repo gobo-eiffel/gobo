@@ -137,7 +137,7 @@ feature -- Execution
 					a_target := a_target.final_target
 					a_target.project.build_target (a_target)
 				else
-					project.log ("  [geant] error: unknown target: `" + start_target_name + "'%N")
+					project.log (<<"  [geant] error: unknown target: `", start_target_name, "%'">>)
 					exit_code := 1
 				end
 			end

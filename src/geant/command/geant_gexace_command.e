@@ -27,9 +27,13 @@ feature {NONE} -- Initialization
 
 	make (a_project: GEANT_PROJECT) is
 			-- Create a new 'gexace' command.
+		local
+			a_tester: UC_EQUALITY_TESTER
 		do
 			precursor (a_project)
-			!! defines.make (10)
+			!! defines.make_map (10)
+			!! a_tester
+			defines.set_key_equality_tester (a_tester)
 		end
 
 feature -- Status report
@@ -173,9 +177,9 @@ feature -- Execution
 				cmd.append_string ("--define=%"")
 				a_cursor := defines.new_cursor
 				from a_cursor.start until a_cursor.after loop
-					cmd.append_string (a_cursor.key)
+					cmd := STRING_.appended_string (cmd, a_cursor.key)
 					cmd.append_string ("=")
-					cmd.append_string (a_cursor.item)
+					cmd := STRING_.appended_string (cmd, a_cursor.item)
 					a_cursor.forth
 					if not a_cursor.after then
 						cmd.append_string (" ")
@@ -190,22 +194,27 @@ feature -- Execution
 				cmd.append_string (" --validate")
 			else
 				if is_system_executable then
-					cmd.append_string (" --system=%"" + system_command + "%"")
+					cmd.append_string (" --system=%"")
+					cmd := STRING_.appended_string (cmd, system_command)
+					cmd.append_string ("%"")
 				elseif is_cluster_executable then
-					cmd.append_string (" --cluster=%"" + cluster_command + "%"")
+					cmd.append_string (" --cluster=%"")
+					cmd := STRING_.appended_string (cmd, cluster_command)
+					cmd.append_string ("%"")
 				end
 				if output_filename /= Void then
 					cmd.append_string (" --output=%"")
 					a_filename := file_system.pathname_from_file_system (output_filename, unix_file_system)
-					cmd.append_string (a_filename)
+					cmd := STRING_.appended_string (cmd, a_filename)
 					cmd.append_string ("%"")
 				end
 			end
 			if xace_filename /= Void then
 				a_filename := file_system.pathname_from_file_system (xace_filename, unix_file_system)
-				cmd.append_string (" " + a_filename)
+				cmd.append_string (" ")
+				cmd := STRING_.appended_string (cmd, a_filename)
 			end
-			project.trace ("  [gexace] " + cmd + "%N")
+			project.trace (<<"  [gexace] ", cmd>>)
 			execute_shell (cmd)
 		end
 

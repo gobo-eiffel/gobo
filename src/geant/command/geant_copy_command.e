@@ -83,12 +83,12 @@ feature -- Access
 			-- Name of destination directory
 
 	fileset: GEANT_FILESET
-		-- Fileset for current command
+			-- Fileset for current command
 
 	force: BOOLEAN
-		-- Should source files be copied over target files,
-		-- provided the target files exist, even when target files
-		-- are newer than their corresponding source files?
+			-- Should source files be copied over target files,
+			-- provided the target files exist, even when target files
+			-- are newer than their corresponding source files?
 
 feature -- Setting
 
@@ -169,7 +169,7 @@ feature -- Execution
 				check is_fileset_to_directory_executable: is_fileset_to_directory_executable end
 
 				if not fileset.is_executable then
-					project.log ("  [copy] error: fileset definition wrong%N")
+					project.log (<<"  [copy] error: fileset definition wrong">>)
 					exit_code := 1
 				end
 
@@ -210,17 +210,17 @@ feature {NONE} -- Implementation
 			new_name := file_system.pathname_from_file_system (a_target_file, unix_file_system)
 			if not file_system.file_exists (old_name) then
 					-- Check that source file exists:
-				project.trace ("  [copy] " + old_name + " to " + new_name + "%N")
-				project.log ("  [copy] error: cannot find file '" + old_name + "'%N")
+				project.trace (<<"  [copy] ", old_name, " to ", new_name>>)
+				project.log (<<"  [copy] error: cannot find file '", old_name, "%'">>)
 				exit_code := 1
 			else
 					-- Copy file if target is out of date:
 				if force or else is_file_outofdate (old_name, new_name) then
-					project.trace ("  [copy] " + old_name + " to " + new_name + "%N")
+					project.trace (<<"  [copy] ", old_name, " to ", new_name>>)
 					if not project.options.no_exec then
 						file_system.copy_file (old_name, new_name)
 						if not file_system.file_exists (new_name) then
-							project.log ("  [copy] error: cannot copy file '" + old_name + "' to file '" + new_name + "'%N")
+							project.log (<<"  [copy] error: cannot copy file '", old_name, "' to file '", new_name, "%'">>)
 							exit_code := 1
 						end
 					end

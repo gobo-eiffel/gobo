@@ -45,7 +45,7 @@ feature -- Access
 			-- XML Element defining current element
 
 	elements_by_name (a_name: STRING): DS_LINKED_LIST [XM_ELEMENT] is
-			-- Direct children elements with name `a_name'.
+			-- Direct children elements with name `a_name'
 		require
 			a_name_not_void: a_name /= Void
 			a_name_not_empty: a_name.count > 0
@@ -54,14 +54,10 @@ feature -- Access
 			e: XM_ELEMENT
 		do
 			create Result.make
-			from
-				cs := xml_element.new_cursor
-				cs.start
-			until
-				cs.off
-			loop
+			cs := xml_element.new_cursor
+			from cs.start until cs.after loop
 				e ?= cs.item
-				if e /= Void and then STRING_.same_unicode_string (e.name, a_name) then
+				if e /= Void and then STRING_.same_string (e.name, a_name) then
 					Result.force_last (e)
 				end
 				cs.forth
@@ -147,12 +143,16 @@ feature -- Access/XML attribute values
 			a_value: STRING
 		do
 			a_value := attribute_value (an_attr_name)
-			if STRING_.same_unicode_string (True_attribute_value, a_value) then
+			if STRING_.same_string (True_attribute_value, a_value) then
 				Result := True
-			elseif STRING_.same_unicode_string (False_attribute_value, a_value) then
+			elseif STRING_.same_string (False_attribute_value, a_value) then
 				Result := False
 			else
-				std.error.put_string ("WARNING: wrong value '" + a_value + "' for attribute '" + an_attr_name.out + "'. Valid values are 'true' and 'false'. Using 'false'.%N")
+				std.error.put_string ("WARNING: wrong value '")
+				std.error.put_string (a_value)
+				std.error.put_string ("' for attribute '")
+				std.error.put_string (an_attr_name)
+				std.error.put_line ("'. Valid values are 'true' and 'false'. Using 'false'.")
 				Result := False
 			end
 		end

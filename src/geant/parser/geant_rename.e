@@ -12,6 +12,10 @@ indexing
 
 class GEANT_RENAME
 
+inherit
+
+	KL_IMPORTED_STRING_ROUTINES
+
 creation
 
 	make
@@ -28,26 +32,15 @@ feature -- Status report
 	is_executable: BOOLEAN is
 			-- Can element be executed?
 		do
-			Result := original_name /= Void
-			if Result then
-				Result := original_name.count > 0
-			end
-			if Result then
-				Result := new_name /= Void
-			end
-			if Result then
-				Result := new_name.count > 0
-			end
-			if Result then
-				Result := not original_name.is_equal (new_name)
-			end
-
+			Result := original_name /= Void and then original_name.count > 0 and
+				new_name /= Void and then new_name.count > 0 and then
+				not STRING_.same_string (original_name, new_name)
 		ensure
 			original_name_not_void: Result implies original_name /= Void
 			original_name_not_empty: Result implies original_name.count > 0
 			new_name_not_void: Result implies new_name /= Void
 			new_name_not_empty: Result implies new_name.count > 0
-			original_name_and_new_name_not_equal: Result implies not original_name.is_equal (new_name)
+			original_name_and_new_name_not_equal: Result implies not STRING_.same_string (original_name, new_name)
 		end
 
 feature -- Access

@@ -61,9 +61,9 @@ feature {NONE} -- Initialization
 			end
 			if has_attribute (Processor_attribute_name) then
 				a_value := attribute_value (Processor_attribute_name)
-				if a_value.is_equal (Processor_attribute_value_xalan_cpp.out) then
+				if a_value.is_equal (Processor_attribute_value_xalan_cpp) then
 					command.set_processor_xalan_cpp
-				elseif a_value.is_equal (Processor_attribute_value_xalan_java.out) then
+				elseif a_value.is_equal (Processor_attribute_value_xalan_java) then
 					command.set_processor_xalan_java
 				end
 			end
@@ -73,49 +73,40 @@ feature {NONE} -- Initialization
 					command.set_format (a_value)
 				end
 			end
-
 			if has_attribute (Indent_attribute_name) then
 				a_value := attribute_value (Indent_attribute_name)
 				if STRING_.is_integer (a_value) then
 					command.set_indent (a_value)
 				end
 			end
-
 			if has_attribute (Extdirs_attribute_name) then
 				a_value := attribute_value (Extdirs_attribute_name)
 				if a_value.count > 0 then
 					command.set_extdirs (a_value)
 				end
 			end
-
 			if has_attribute (Classpath_attribute_name) then
 				a_value := attribute_value (Classpath_attribute_name)
 				if a_value.count > 0 then
 					command.set_classpath (a_value)
 				end
 			end
-
 			parameter_elements := elements_by_name (Parameter_element_name)
-			from
-				cs := parameter_elements.new_cursor
-				cs.start
-			until
-				cs.off
-			loop
+			cs := parameter_elements.new_cursor
+			from cs.start until cs.after loop
 				create parameter_element.make (project, cs.item)
-				if parameter_element.is_enabled and then
-					parameter_element.has_name and then parameter_element.has_value
+				if
+					parameter_element.is_enabled and then
+					parameter_element.has_name and then
+					parameter_element.has_value
 				then
 					a_name:= parameter_element.name
 					a_value := parameter_element.value
 					create a_pair.make (a_name, a_value)
 					command.parameters.force_last (a_pair)
 				end
-
 				cs.forth
 			end
-
-
 		end
 
 feature -- Access

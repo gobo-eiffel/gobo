@@ -58,11 +58,11 @@ feature -- Execution
 		do
 			exit_code := 0
 			a_name := file_system.pathname_from_file_system (directory, unix_file_system)
-			project.trace ("  [mkdir] " + a_name + "%N")
+			project.trace (<<"  [mkdir] ", a_name>>)
 			if not project.options.no_exec then
 				file_system.recursive_create_directory (a_name)
 				if not file_system.directory_exists (a_name) then
-					project.log ("  [mkdir] error: cannot create directory '" + a_name + "'%N")
+					project.log (<<"  [mkdir] error: cannot create directory '", a_name, "%'">>)
 					exit_code := 1
 				end
 			end

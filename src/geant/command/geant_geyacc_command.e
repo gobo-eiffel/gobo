@@ -142,7 +142,7 @@ feature -- Execution
 			if verbose_filename /= Void and then verbose_filename.count > 0 then
 				a_filename := file_system.pathname_from_file_system (verbose_filename, unix_file_system)
 				cmd.append_string ("-v ")
-				cmd.append_string (a_filename)
+				cmd := STRING_.appended_string (cmd, a_filename)
 				cmd.append_string (" ")
 			end
 				-- Option -x
@@ -152,26 +152,26 @@ feature -- Execution
 				-- Option -t
 			if tokens_classname /= Void and then tokens_classname.count > 0 then
 				cmd.append_string ("-t ")
-				cmd.append_string (tokens_classname)
+				cmd := STRING_.appended_string (cmd, tokens_classname)
 				cmd.append_string (" ")
 			end
 				-- Option -k
 			if tokens_filename /= Void and then tokens_filename.count > 0 then
 				cmd.append_string ("-k ")
-				cmd.append_string (tokens_filename)
+				cmd := STRING_.appended_string (cmd, tokens_filename)
 				cmd.append_string (" ")
 			end
 				-- Option -o
 			if output_filename /= Void and then output_filename.count > 0 then
 				a_filename := file_system.pathname_from_file_system (output_filename, unix_file_system)
 				cmd.append_string ("-o ")
-				cmd.append_string (a_filename)
+				cmd := STRING_.appended_string (cmd, a_filename)
 				cmd.append_string (" ")
 			end
 			a_filename := file_system.pathname_from_file_system (input_filename, unix_file_system)
-			cmd.append_string (a_filename)
+			cmd := STRING_.appended_string (cmd, a_filename)
 
-			project.trace ("  [geyacc] " + cmd + "%N")
+			project.trace (<<"  [geyacc] ", cmd>>)
 			execute_shell (cmd)
 		end
 

@@ -49,15 +49,13 @@ feature {NONE} -- Initialization
 			end
 				-- define:
 			define_elements := elements_by_name (Define_element_name)
-			from
-				cs := define_elements.new_cursor
-				cs.start
-			until
-				cs.off
-			loop
+			cs := define_elements.new_cursor
+			from cs.start until cs.after loop
 				create define_element.make (project, cs.item)
-				if define_element.is_enabled and then
-					define_element.has_name and then define_element.has_value
+				if
+					define_element.is_enabled and then
+					define_element.has_name and then
+					define_element.has_value
 				then
 					a_name := define_element.name
 					a_value := define_element.value
@@ -65,10 +63,8 @@ feature {NONE} -- Initialization
 						command.defines.force (a_value, a_name)
 					end
 				end
-
 				cs.forth
 			end
-
 		end
 
 feature -- Access

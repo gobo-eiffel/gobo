@@ -14,13 +14,14 @@ class GEANT_OUTOFDATE_TASK
 
 inherit
 
-	GEANT_SHARED_PROPERTIES
 	GEANT_TASK
 		rename
 			make as task_make
 		redefine
 			command
 		end
+
+	GEANT_SHARED_PROPERTIES
 
 creation
 
@@ -37,14 +38,12 @@ feature {NONE} -- Initialization
 		do
 			!! command.make (a_project)
 			task_make (command, a_xml_element)
-
 			if has_attribute (Source_attribute_name) then
 				a_value := attribute_value (Source_attribute_name)
 				if a_value.count > 0 then
 					command.set_source_filename (a_value)
 				end
 			end
-
 			if has_attribute (Target_attribute_name) then
 				a_value := attribute_value (Target_attribute_name)
 				if a_value.count > 0 then
@@ -58,7 +57,6 @@ feature {NONE} -- Initialization
 					command.set_true_value (a_value)
 				end
 			end
-
 			command.set_false_value ("false")
 			if has_attribute (False_value_attribute_name) then
 				a_value := attribute_value (False_value_attribute_name)
@@ -66,20 +64,17 @@ feature {NONE} -- Initialization
 					command.set_false_value (a_value)
 				end
 			end
-
 			if has_attribute (Variable_attribute_name) then
 				a_value := attribute_value (Variable_attribute_name)
 				if a_value.count > 0 then
 					command.set_variable_name (a_value)
 				end
 			end
-
 			a_xml_subelement := xml_element.element_by_name (Fileset_element_name)
 			if a_xml_subelement /= Void then
 				!! a_fs_element.make (project, a_xml_subelement)
 				command.set_fileset (a_fs_element.fileset)
 			end
-
 		end
 
 feature -- Access

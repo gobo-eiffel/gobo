@@ -18,13 +18,13 @@ inherit
 	ANY
 
 	KL_SHARED_ARGUMENTS
-		export{NONE} all end
+		export {NONE} all end
 
 	KL_SHARED_EXCEPTIONS
-		export{NONE} all end
+		export {NONE} all end
 
 	GEANT_SHARED_PROPERTIES
-		export{NONE} all end
+		export {NONE} all end
 
 creation
 
@@ -37,6 +37,8 @@ feature {NONE} -- Initialization
 		require
 			a_variables_not_void: a_variables /= Void
 			a_options_not_void: a_options /= Void
+		local
+			a_tester: UC_EQUALITY_TESTER
 		do
 			if a_variables = Void then
 				create variables.make
@@ -44,7 +46,9 @@ feature {NONE} -- Initialization
 				set_variables (a_variables)
 			end
 			set_options (a_options)
-			create selected_targets.make (5)
+			create selected_targets.make_map (5)
+			!! a_tester
+			selected_targets.set_key_equality_tester (a_tester)
 			build_successful := True
 		ensure
 			variables_set: a_variables /= Void implies variables = a_variables
@@ -80,7 +84,7 @@ feature -- Access
 			-- Was last build successful?
 
 	inherit_clause: GEANT_INHERIT
-		-- Inherit clause
+			-- Inherit clause
 
 	old_inherit: BOOLEAN
 			-- Was current defined via old inheritance mechanism?
@@ -90,21 +94,19 @@ feature -- Access
 			-- Name of target `a_target' within context of current project
 		require
 			a_target_not_void: a_target /= Void
+			targets_not_void: targets /= Void
 			has_target: targets.has_item (a_target)
 		local
 			a_cursor: DS_HASH_TABLE_CURSOR [GEANT_TARGET, STRING]
 		do
-			from
-				a_cursor := targets.new_cursor
-				a_cursor.start
-			until
-				a_cursor.after or else Result /= Void
-			loop
+			a_cursor := targets.new_cursor
+			from a_cursor.start until a_cursor.after loop
 				if a_target = a_cursor.item then
 					Result := a_cursor.key
+					a_cursor.go_after -- Jump out of the loop.
+				else
+					a_cursor.forth
 				end
-
-				a_cursor.forth
 			end
 		ensure
 			target_name_not_void: Result /= Void
@@ -222,52 +224,38 @@ feature -- Processing
 				-- Handle inherit_clause:
 			if inherit_clause /= Void then
 					-- Prepare parent projects:
-				from
-					a_parent_cursor := inherit_clause.parents.new_cursor
-					a_parent_cursor.start
-				until
-					a_parent_cursor.after
-				loop
+				a_parent_cursor := inherit_clause.parents.new_cursor
+				from a_parent_cursor.start until a_parent_cursor.after loop
 					a_parent := a_parent_cursor.item
 					a_parent.prepare_project
-
 					a_parent_cursor.forth
 				end
-
 					-- Merge parent projects:
-				from
-					a_parent_cursor := inherit_clause.parents.new_cursor
-					a_parent_cursor.start
-				until
-					a_parent_cursor.after
-				loop
+				a_parent_cursor := inherit_clause.parents.new_cursor
+				from a_parent_cursor.start until a_parent_cursor.after loop
 					a_parent := a_parent_cursor.item
 					inherit_clause.merge_in_parent_project (a_parent)
-
 					a_parent_cursor.forth
 				end
-
 				inherit_clause.apply_selects
-
 					-- List all targets:
 				from
 					a_target_cursor := targets.new_cursor
 					a_target_cursor.start
-					trace_debug ("Project '" + name + "': target list:%N")
+					trace_debug (<<"Project '", name, "': target list:">>)
 				until
 					a_target_cursor.after
 				loop
 					a_target := a_target_cursor.item
-					trace_debug ("  target `" + a_target_cursor.key  + "' (" + a_target.full_name + ")%N")
+					trace_debug (<<"  target `", a_target_cursor.key, "' (", a_target.full_name, ")">>)
 					a_target.show_precursors
-
 					a_target_cursor.forth
 				end
 			end
 		end
 
 	calculate_depend_order (a_depend_targets: DS_ARRAYED_STACK [GEANT_TARGET]) is
-			-- Setup `build_targets' according to target dependencies
+			-- Setup `build_targets' according to target dependencies.
 		require
 			loaded: targets /= Void
 			depend_targets_not_void: a_depend_targets /= Void
@@ -277,9 +265,8 @@ feature -- Processing
 		do
 				-- Get dependent targets:
 			a_target := a_depend_targets.item
-			trace_debug ("pushing target: " + a_target.name + "%N")
+			trace_debug (<<"pushing target: ", a_target.name>>)
 			a_tmp_dependent_targets := a_target.dependent_targets
-
 				-- Add all dependent targets to `build_targets':
 			from until a_tmp_dependent_targets.count = 0 loop
 				a_depend_targets.force (a_tmp_dependent_targets.item)
@@ -296,13 +283,13 @@ feature -- Processing
 		local
 			a_target: GEANT_TARGET
 		do
-			trace ("Building Project%N")
+			trace (<<"Building Project">>)
 
 			if start_target_name /= Void and then start_target_name.count > 0 then
 				if targets.has (start_target_name) then
 					a_target := targets.item (start_target_name)
 				else
-					exit_application (1, "Cannot determine start target `" + start_target_name + "'%N")
+					exit_application (1, <<"Cannot determine start target `", start_target_name + "%'">>)
 				end
 			end
 			if a_target = Void then
@@ -314,7 +301,7 @@ feature -- Processing
 				end
 			end
 			if a_target = Void then
-				exit_application (1, "Cannot determine start target.")
+				exit_application (1, <<"Cannot determine start target.">>)
 			end
 
 			build_target (a_target)
@@ -327,7 +314,7 @@ feature -- Processing
 		local
 			depend_targets: DS_ARRAYED_STACK [GEANT_TARGET]
 		do
-			-- Analyze dependencies of targets:
+				-- Analyze dependencies of targets:
 			create depend_targets.make (10)
 			depend_targets.force (a_target)
 			calculate_depend_order (depend_targets)
@@ -350,7 +337,7 @@ feature -- Processing
 			old_current_target: like current_target
 			a_execute_target: like current_target
 		do
-			trace_debug ("project '" + name + "': excuting target `" + a_target.full_name + "'%N")
+			trace_debug (<<"project '", name, "': excuting target `", a_target.full_name, "%'">>)
 			old_current_target := current_target
 			if a_force or else not a_target.is_executed then
 
@@ -373,33 +360,63 @@ feature -- Processing
 
 feature -- Output
 
-	trace (a_message: STRING) is
+	trace (a_message: ARRAY [STRING]) is
 			-- Write `a_message' to standard output unless `verbose' = False.
 		require
-			message_not_void: a_message /= Void
+			a_message_not_void: a_message /= Void
+			-- Note: ARRAY.has is not portable:
+			-- no_void_message: not a_message.has (Void)
+		local
+			i, nb: INTEGER
 		do
 			if options.verbose then
-				std.output.put_string (a_message)
+				i := a_message.lower
+				nb := a_message.upper
+				from until i > nb loop
+					std.output.put_string (a_message.item (i))
+					i := i + 1
+				end
+				std.output.put_new_line
 				std.output.flush
 			end
 		end
 
-	log (a_message: STRING) is
+	log (a_message: ARRAY [STRING]) is
 			-- Write `a_message' to standard output.
 		require
-			message_not_void: a_message /= Void
+			a_message_not_void: a_message /= Void
+			-- Note: ARRAY.has is not portable:
+			-- no_void_message: not a_message.has (Void)
+		local
+			i, nb: INTEGER
 		do
-			std.output.put_string (a_message)
+			i := a_message.lower
+			nb := a_message.upper
+			from until i > nb loop
+				std.output.put_string (a_message.item (i))
+				i := i + 1
+			end
+			std.output.put_new_line
 			std.output.flush
 		end
 
-	trace_debug (a_message: STRING) is
+	trace_debug (a_message: ARRAY [STRING]) is
 			-- Write `a_message' to standard output unless `debug_mode' = False.
 		require
-			message_not_void: a_message /= Void
+			a_message_not_void: a_message /= Void
+			-- Note: ARRAY.has is not portable:
+			-- no_void_message: not a_message.has (Void)
+		local
+			i, nb: INTEGER
 		do
 			if options.debug_mode then
-				std.output.put_string (a_message)
+				i := a_message.lower
+				nb := a_message.upper
+				from until i > nb loop
+					std.output.put_string (a_message.item (i))
+					i := i + 1
+				end
+				std.output.put_new_line
 				std.output.flush
 			end
 		end
@@ -407,8 +424,8 @@ feature -- Output
 feature {GEANT_COMMAND} -- Access GEANT_COMMAND
 
 	current_target: GEANT_TARGET
-		-- Currently executing target;
-		-- Set during processing `execute_target'
+			-- Currently executing target;
+			-- Set during processing `execute_target'
 
 invariant
 

@@ -15,8 +15,9 @@ class GEANT_PROJECT_PARSER
 inherit
 
 	ANY
+
 	KL_SHARED_STANDARD_FILES
-		export{NONE} all end
+		export {NONE} all end
 
 creation
 
@@ -44,12 +45,10 @@ feature {NONE} -- Initialization
 			else
 				create {XM_EIFFEL_PARSER} xml_parser.make
 			end
-
 				-- The parser will build a tree.
 			create tree_pipe.make
 			xml_parser.set_callbacks (tree_pipe.start)
 			tree_pipe.tree.enable_position_table (xml_parser)
-
 		end
 
 feature -- Access
@@ -75,7 +74,6 @@ feature -- Parsing
 				if not tree_pipe.error.has_error then
 					a_document := tree_pipe.document
 					a_root_element := a_document.root_element
-
 					create last_project_element.make (a_root_element, variables, options, build_filename)
 				else
 					std.error.put_string (tree_pipe.last_error)
@@ -107,6 +105,5 @@ invariant
 	build_filename_not_empty: build_filename.count > 0
 	xml_parser_not_void: xml_parser /= Void
 	tree_pipe_not_void: tree_pipe /= Void
-
 
 end

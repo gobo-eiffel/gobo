@@ -17,17 +17,19 @@ inherit
 	KL_IMPORTED_STRING_ROUTINES
 	KL_SHARED_EXECUTION_ENVIRONMENT
 	KL_SHARED_EXCEPTIONS
-
 	KL_SHARED_STANDARD_FILES
-		export{NONE} all end
 
 feature -- Access
 
 	Commandline_variables: DS_HASH_TABLE [STRING, STRING] is
 			-- Variables specified on the commandline using -D
 			-- example: -Dname=value
+		local
+			a_tester: UC_EQUALITY_TESTER
 		once
-			!! Result.make (10)
+			!! Result.make_map (10)
+			!! a_tester
+			Result.set_key_equality_tester (a_tester)
 		ensure
 			Commandline_variables_not_void: Result /= Void
 		end
@@ -95,15 +97,27 @@ feature -- Status report
 
 feature -- Processing
 
-	exit_application (a_code: INTEGER; a_message: STRING) is
+	exit_application (a_code: INTEGER; a_message: ARRAY [STRING]) is
 			-- Exit application with code `a_code';
 			-- if a_message /= Void log it.
+		require
+			-- Note: ARRAY.has is not portable:
+			-- no_void_message: a_message /= Void implies not a_message.has (Void)
+		local
+			i, nb: INTEGER
 		do
 			if a_message /= Void then
-				std.error.put_string (a_message)
+				i := a_message.lower
+				nb := a_message.upper
+				from until i > nb loop
+					std.error.put_string (a_message.item (i))
+					i := i + 1
+				end
+				std.error.put_new_line
 			end
 			if a_code /= 0 then
-				std.error.put_string ("%NBUILD FAILED!%N")
+				std.error.put_new_line
+				std.error.put_line ("BUILD FAILED!")
 			end
 			Exceptions.die (a_code)
 		end
@@ -128,9 +142,8 @@ feature -- Processing
 			until
 				i > nb or stop
 			loop
-				inspect a_string.item_code (i)
-				-- when ' ', '%T', '%R', '%N' then
-				when 32, 9, 13, 10 then
+				inspect a_string.item (i)
+				when ' ', '%T', '%R', '%N' then
 					i := i + 1
 				else
 					stop := True
@@ -145,9 +158,8 @@ feature -- Processing
 				until
 					stop
 				loop
-					inspect a_string.item_code (j)
-					-- when ' ', '%T', '%R', '%N' then
-					when 32, 9, 13, 10 then
+					inspect a_string.item (j)
+					when ' ', '%T', '%R', '%N' then
 						j := j - 1
 					else
 						stop := True
@@ -193,9 +205,8 @@ feature -- Processing
 				until
 					i > nb or stop
 				loop
-					inspect s.item_code (i)
-					-- when ' ', '%T', '%R', '%N' then
-					when 32, 9, 13, 10 then
+					inspect s.item (i)
+					when ' ', '%T', '%R', '%N' then
 						i := i + 1
 					else
 						stop := True
@@ -210,9 +221,8 @@ feature -- Processing
 					until
 						stop
 					loop
-					inspect s.item_code (j)
-						-- when ' ', '%T', '%R', '%N' then
-						when 32, 9, 13, 10 then
+						inspect s.item (j)
+						when ' ', '%T', '%R', '%N' then
 							j := j - 1
 						else
 							stop := True
@@ -239,9 +249,8 @@ feature -- Processing
 				until
 					i > nb or stop
 				loop
-					inspect s.item_code (i)
-					-- when ' ', '%T', '%R', '%N' then
-					when 32, 9, 13, 10 then
+					inspect s.item (i)
+					when ' ', '%T', '%R', '%N' then
 						i := i + 1
 					else
 						stop := True
@@ -256,9 +265,8 @@ feature -- Processing
 					until
 						stop
 					loop
-						inspect s.item_code (j)
-						-- when ' ', '%T', '%R', '%N' then
-						when 32, 9, 13, 10 then
+						inspect s.item (j)
+						when ' ', '%T', '%R', '%N' then
 							j := j - 1
 						else
 							stop := True
@@ -286,16 +294,15 @@ feature -- Processing
 			i1 := a_star_string.index_of ('*', 1)
 			if i1 = 0 then
 				Result := clone (a_star_string)
+			elseif i1 > 1 then
+				Result := a_star_string.substring (1, i1 - 1)
 			else
-				Result := clone (a_star_string.substring (1, i1 - 1))
+				Result := STRING_.new_empty_string (a_star_string, 0)
 			end
 		ensure
-			definition:
-				(a_star_string.index_of ('*', 1) > 0) implies
-						Result.is_equal (a_star_string.substring (1, a_star_string.index_of ('*', 1) - 1))
-				and
-				(a_star_string.index_of ('*', 1) = 0) implies Result.is_equal (a_star_string)
-
+			has_star: (a_star_string.index_of ('*', 1) > 0) implies
+				Result.is_equal (STRING_.substring (a_star_string, 1, a_star_string.index_of ('*', 1) - 1))
+			not_has_star: (a_star_string.index_of ('*', 1) = 0) implies Result.is_equal (a_star_string)
 		end
 
 	glob_postfix (a_star_string: STRING): STRING is
@@ -312,18 +319,15 @@ feature -- Processing
 				Result := clone (a_star_string)
 			else
 				if i1 = a_star_string.count then
-					Result := clone ("")
+					Result := STRING_.new_empty_string (a_star_string, 0)
 				else
 					Result := clone (a_star_string.substring (i1 + 1, a_star_string.count))
 				end
 			end
 		ensure
-			definition: (a_star_string.index_of ('*', 1) > 0) implies
-				Result.is_equal (a_star_string.substring (
-					a_star_string.index_of ('*', 1) + 1, a_star_string.count))
-				and
-					(a_star_string.index_of ('*', 1) = 0) implies Result.is_equal (a_star_string)
-
+			has_star: (a_star_string.index_of ('*', 1) > 0) implies
+				Result.is_equal (STRING_.substring (a_star_string, a_star_string.index_of ('*', 1) + 1, a_star_string.count))
+			not_has_start: (a_star_string.index_of ('*', 1) = 0) implies Result.is_equal (a_star_string)
 		end
 
 end

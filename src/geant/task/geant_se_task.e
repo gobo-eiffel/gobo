@@ -36,34 +36,34 @@ feature {NONE} -- Initialization
 			task_make (command, an_xml_element)
 			if has_attribute (Ace_attribute_name) then
 					-- ace_filename (optional)
-				a_value := attribute_value_or_default (Ace_attribute_name.out, "")
+				a_value := attribute_value_or_default (Ace_attribute_name, "")
 				if a_value.count > 0 then
 					command.set_ace_filename (a_value)
 				end
 			elseif has_attribute (Clean_attribute_name) then
 					-- clean:
-				a_value := attribute_value_or_default (Clean_attribute_name.out, "")
+				a_value := attribute_value_or_default (Clean_attribute_name, "")
 				if a_value.count > 0 then
 					command.set_clean (a_value)
 				end
 			else
 					-- root_class:
 				if has_attribute (Root_class_attribute_name) then
-					a_value := attribute_value (Root_class_attribute_name.out)
+					a_value := attribute_value (Root_class_attribute_name)
 					if a_value.count > 0 then
 						command.set_root_class (a_value)
 					end
 				end
 					-- creation_procedure:
 				if has_attribute (Creation_procedure_attribute_name) then
-					a_value := attribute_value (Creation_procedure_attribute_name.out)
+					a_value := attribute_value (Creation_procedure_attribute_name)
 					if a_value.count > 0 then
 						command.set_creation_procedure (a_value)
 					end
 				end
 					-- executable:
 				if has_attribute (Executable_attribute_name) then
-					a_value := attribute_value (Executable_attribute_name.out)
+					a_value := attribute_value (Executable_attribute_name)
 					if a_value.count > 0 then
 						command.set_executable (a_value)
 					end

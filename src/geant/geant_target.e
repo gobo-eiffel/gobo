@@ -10,7 +10,6 @@ indexing
 	date: "$Date$"
 	revision: "$Revision$"
 
-
 class GEANT_TARGET
 
 inherit
@@ -21,16 +20,16 @@ inherit
 		end
 
 	KL_SHARED_EXCEPTIONS
-		export{NONE} all end
+		export {NONE} all end
 
 	KL_SHARED_FILE_SYSTEM
-		export{NONE} all end
+		export {NONE} all end
 
 	GEANT_SHARED_PROPERTIES
-		export{NONE} all end
+		export {NONE} all end
 
 	GEANT_ELEMENT_NAMES
-		export{NONE} all end
+		export {NONE} all end
 
 creation
 
@@ -39,17 +38,17 @@ creation
 feature {NONE} -- Initialization
 
 	make (a_project: GEANT_PROJECT; a_xml_element: XM_ELEMENT) is
-			-- Create a new target
+			-- Create a new target.
 		do
 			precursor (a_project, a_xml_element)
-			set_name (xml_element.attribute_by_name (Name_attribute_name).value.out)
+			set_name (xml_element.attribute_by_name (Name_attribute_name).value)
 		end
 
 feature -- Access
 
 	dependencies: STRING is
 			-- STRING representation of dependencies
-		require	
+		require
 			has_dependencies: has_dependencies
 		do
 			Result := xml_element.attribute_by_name (Depend_attribute_name).value
@@ -73,10 +72,10 @@ feature -- Access
 		do
 			Result := clone (project.name)
 			Result.append_string (".")
-			Result.append_string (name)
+			Result := STRING_.appended_string (Result, name)
 		ensure
 			full_name_not_void: Result /= Void
-			definition: Result.is_equal (project.name + "." + name)
+			definition: STRING_.same_string (Result, STRING_.concat (STRING_.concat (project.name, "."), name))
 		end
 
 	precursor_target: like Current
@@ -88,7 +87,7 @@ feature -- Access
 			-- Used for polymorphic calls
 
 	seed: like Current is
-			-- The original version of this target in most remote ancestor
+			-- Original version of this target in most remote ancestor
 		do
 			from
 				Result := Current
@@ -138,10 +137,10 @@ feature -- Status report
 			-- Is `an_xml_element' a valid xml element?
 		do
 			Result := an_xml_element.has_attribute_by_name (Name_attribute_name) and then
-				an_xml_element.attribute_by_name (Name_attribute_name).value.out.count > 0
+				an_xml_element.attribute_by_name (Name_attribute_name).value.count > 0
 		ensure then
 			has_name_attribute: Result implies an_xml_element.has_attribute_by_name (Name_attribute_name)
-			has_non_empty_name_attribute: Result implies an_xml_element.attribute_by_name (Name_attribute_name).value.out.count > 0
+			has_non_empty_name_attribute: Result implies an_xml_element.attribute_by_name (Name_attribute_name).value.count > 0
 		end
 
 	conflicts_with (a_target: like Current): BOOLEAN is
@@ -151,7 +150,7 @@ feature -- Status report
 		require
 			a_target_not_void: a_target /= Void
 		do
-			Result := seed.full_name.is_equal (a_target.seed.full_name)
+			Result := STRING_.same_string (seed.full_name, a_target.seed.full_name)
 		end
 
 	has_precursor_target (a_target: like Current): BOOLEAN is
@@ -169,7 +168,6 @@ feature -- Status report
 				Result := a_precursor_target = a_target
 				a_precursor_target := a_precursor_target.precursor_target
 			end
-
 		end
 
 	has_redefining_target (a_target: like Current): BOOLEAN is
@@ -187,7 +185,6 @@ feature -- Status report
 				Result := a_redefining_target = a_target
 				a_redefining_target := a_redefining_target.redefining_target
 			end
-
 		end
 
 feature -- Setting
@@ -241,55 +238,53 @@ feature -- Processing
 			-- Show list of precursors.
 		local
 			a_precursor_target: like Current
+			a_message: ARRAY [STRING]
 		do
 			from
 				a_precursor_target := Current
-				project.trace_debug ("    precursor list: ")
+				!! a_message.make (1, 1)
+				a_message.put ("    precursor list: ", 1)
 			until
 				a_precursor_target = Void
 			loop
-				project.trace_debug ("'" + a_precursor_target.full_name + "'")
+				a_message.force ("'", a_message.count + 1)
+				a_message.force (a_precursor_target.full_name, a_message.count + 1)
+				a_message.force ("'", a_message.count + 1)
 				a_precursor_target := a_precursor_target.precursor_target
 				if a_precursor_target /= Void then
-					project.trace_debug (", ")
+					a_message.force (", ", a_message.count + 1)
 				end
 			end
-			project.trace_debug ("%N")
+			project.trace_debug (a_message)
 		end
 
 	execute is
-			-- Execute all tasks of `a_target' in sequential order
+			-- Execute all tasks of `a_target' in sequential order.
 		local
 			a_xml_element: XM_ELEMENT
 			a_old_target_cwd: STRING
 			a_new_target_cwd: STRING
-			a_msg: STRING
 			cs: DS_LINKED_LIST_CURSOR [XM_NODE]
 		do
 			if is_enabled then
 				if project.options.verbose then
-					a_msg := clone ("%N")
-					a_msg.append_string (project.name)
-					a_msg.append_string (".")
-					a_msg.append_string (project.target_name (Current))
-
-					a_msg.append_string (":%N%N")
-					project.trace (a_msg)
+					project.trace (<<"">>)
+					project.trace (<<project.name, ".", project.target_name (Current), ":">>)
+					project.trace (<<"">>)
 				end
-					-- change to the specified directory if "dir" attribute is provided:
+					-- Change to the specified directory if "dir" attribute is provided:
 				if xml_element.has_attribute_by_name (Dir_attribute_name) then
 					a_new_target_cwd := project.variables.interpreted_string (
 						xml_element.attribute_by_name (Dir_attribute_name).value.out)
-					project.trace_debug ("changing to directory: '" + a_new_target_cwd + "'%N")
+					project.trace_debug (<<"changing to directory: '", a_new_target_cwd, "%'">>)
 					a_old_target_cwd := file_system.current_working_directory
 					file_system.set_current_working_directory (a_new_target_cwd)
 				end
-
+				cs := xml_element.new_cursor
 				from
-					cs := xml_element.new_cursor
 					cs.start
 				until
-					cs.off or not is_enabled
+					cs.after or not is_enabled
 				loop
 					a_xml_element ?= cs.item
 					if a_xml_element /= Void then
@@ -299,18 +294,16 @@ feature -- Processing
 					end
 					cs.forth
 				end
-
 				if has_attribute (Dir_attribute_name) then
-					project.trace_debug ("changing to directory: '" + a_old_target_cwd + "'%N")
+					project.trace_debug (<<"changing to directory: '", a_old_target_cwd, "%'">>)
 					file_system.set_current_working_directory (a_old_target_cwd)
 				end
-		
 				set_executed (True)
 			end
 		end
 
 	execute_task (a_xml_element: XM_ELEMENT) is
-			-- Execute all task defined through `a_xml_element'
+			-- Execute all task defined through `a_xml_element'.
 		require
 			a_xml_element_not_void: a_xml_element /= Void
 		local
@@ -397,10 +390,10 @@ feature -- Processing
 			end
 				-- Execute task:
 			if a_task = Void then
-				exit_application (1, "unknown task : " + a_xml_element.name.out + "%N")
+				exit_application (1, <<"unknown task : ", a_xml_element.name>>)
 			end
 			if not a_task.is_executable then
-				exit_application (1, "cannot execute task : " + a_xml_element.name.out + "%N")
+				exit_application (1, <<"cannot execute task : ", a_xml_element.name>>)
 			end
 			if a_task.is_enabled then
 				a_task.execute
@@ -408,7 +401,7 @@ feature -- Processing
 					exit_application (a_task.exit_code, Void)
 				end
 			else
-				project.trace_debug ("task is disabled%N")
+				project.trace_debug (<<"task is disabled">>)
 			end
 
 		end
@@ -425,19 +418,17 @@ feature -- Processing
 			if has_dependencies then
 					-- Check for targets separated by commas:
 				a_dependent_targets := string_tokens (dependencies, ',')
-
 				if project.options.debug_mode then
 					show_dependent_targets (a_dependent_targets)
 				end
-
-					-- Find all targets
+					-- Find all targets.
 				from i := 1 until i > a_dependent_targets.count loop
 					a_value := a_dependent_targets.item (i)
 					if project.targets.has (a_value) then
 						a_dependent_target := project.targets.item (a_value)
 						Result.force (a_dependent_target)
 					else
-						exit_application (1, "geant error: unknown dependent target '" + a_value.out + "'%N")
+						exit_application (1, <<"geant error: unknown dependent target '", a_value, "%'">>)
 					end
 					i := i + 1
 				end
@@ -447,17 +438,17 @@ feature -- Processing
 		end
 
 	show_dependent_targets (a_dependent_targets: DS_ARRAYED_LIST [STRING]) is
+			-- Show dependent targets.
 		local
 			i: INTEGER
 		do
-			std.output.put_string ("======= DEPENDENCIES ==========%N")
+			std.output.put_line ("======= DEPENDENCIES ==========")
 			from i := 1 until i > a_dependent_targets.count loop
-				std.output.put_string (a_dependent_targets.item (i).out + "%N")
+				std.output.put_line (a_dependent_targets.item (i))
 				i := i + 1
 			end
-			std.output.put_string ("=================%N")
+			std.output.put_line ("=================")
 		end
-
 
 feature {NONE} -- Constants
 

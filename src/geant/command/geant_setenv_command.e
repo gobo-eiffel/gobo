@@ -71,7 +71,7 @@ feature -- Execution
 	execute is
 			-- Put variable in project variables pool.
 		do
-			project.trace ("  [setenv] " + name + "=" + value + "%N")
+			project.trace (<<"  [setenv] ", name, "=", value>>)
 			if not project.options.no_exec then
 				Execution_environment.set_variable_value (name, value)
 			end

@@ -82,7 +82,7 @@ feature -- Access
 			-- in case `is_out_of_date' is evaluated to `False'
 
 	fileset: GEANT_FILESET
-		-- Fileset for current command
+			-- Fileset for current command
 
 feature -- Setting
 
@@ -161,7 +161,7 @@ feature -- Execution
 			if is_file_executable then
 				a_from_file := file_system.pathname_from_file_system (source_filename, unix_file_system)
 				if not file_system.file_exists (a_from_file) then
-					project.log ("  [outofdate] error: cannot find source file '" + a_from_file + "'%N")
+					project.log (<<"  [outofdate] error: cannot find source file '", a_from_file, "%'">>)
 					exit_code := 1
 				end
 				if exit_code = 0 then
@@ -175,9 +175,8 @@ feature -- Execution
 				end
 			else
 				check is_fileset_executable: is_fileset_executable end
-	
 				if not fileset.is_executable then
-					project.log ("  [outofdate] error: fileset definition wrong%N")
+					project.log (<<"  [outofdate] error: fileset definition wrong">>)
 					exit_code := 1
 				end
 				if exit_code = 0 then
@@ -189,16 +188,15 @@ feature -- Execution
 					loop
 						a_from_file := file_system.pathname_from_file_system (fileset.item_filename, unix_file_system)
 						if not file_system.file_exists (a_from_file) then
-							project.log ("  [outofdate] error: cannot find source file '" + a_from_file + "'%N")
+							project.log (<<"  [outofdate] error: cannot find source file '", a_from_file, "%'">>)
 							exit_code := 1
 						end
 						if exit_code = 0 then
 							a_to_file := file_system.pathname_from_file_system (fileset.item_mapped_filename, unix_file_system)
 							is_out_of_date := is_file_outofdate (a_from_file, a_to_file)
 						end
-
 						fileset.forth
-					end -- loop
+					end
 					if is_out_of_date then
 						project.variables.set_variable_value (variable_name, true_value)
 					else

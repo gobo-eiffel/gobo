@@ -18,13 +18,13 @@ inherit
 	GEANT_VERSION
 
 	GEANT_SHARED_PROPERTIES
-		export{NONE} all end
+		export {NONE} all end
 
 	KL_SHARED_ARGUMENTS
-		export{NONE} all end
+		export {NONE} all end
 
 	KL_SHARED_EXCEPTIONS
-		export{NONE} all end
+		export {NONE} all end
 
 creation
 
@@ -85,7 +85,7 @@ feature -- Access
 			-- Print additional information during build process?
 
 	debug_mode: BOOLEAN
-		-- Print additional, internal information during build process?
+			-- Print additional, internal information during build process?
 
 	no_exec: BOOLEAN
 			-- Do not execute commands (only show what they would do)?
@@ -210,7 +210,7 @@ feature {NONE} -- Error handling
 			s.append_string ("  -D<variable> : Define variable named 'variable' with value 'True'%N")
 			s.append_string ("  -D<variable>=<value> : Define variable named 'variable' with value 'value'%N")
 			s.append_string ("  -d --debug : Show internal messages%N")
-			s.append_string ("  -? -h help : Print this help message%N")
+			s.append_string ("  -? -h help : Print this help message")
 
 			!! Result.make (s)
 		ensure

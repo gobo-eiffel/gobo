@@ -35,23 +35,21 @@ feature {NONE} -- Initialization
 			!! command.make (a_project)
 			task_make (command, an_xml_element)
 			if has_attribute (File_attribute_name) then
-				a_value := attribute_value (File_attribute_name.out)
+				a_value := attribute_value (File_attribute_name)
 				if a_value.count > 0 then
-					command.set_file (a_value.out)
+					command.set_file (a_value)
 				end
 			end
-
 			if has_attribute (To_file_attribute_name) then
-				a_value := attribute_value (To_file_attribute_name.out)
+				a_value := attribute_value (To_file_attribute_name)
 				if a_value.count > 0 then
-					command.set_to_file (a_value.out)
+					command.set_to_file (a_value)
 				end
 			end
-
 			if has_attribute (To_directory_attribute_name) then
-				a_value := attribute_value (To_directory_attribute_name.out)
+				a_value := attribute_value (To_directory_attribute_name)
 				if a_value.count > 0 then
-					command.set_to_directory (a_value.out)
+					command.set_to_directory (a_value)
 				end
 			end
 		end

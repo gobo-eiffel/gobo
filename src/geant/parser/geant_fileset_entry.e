@@ -51,8 +51,8 @@ feature {NONE} -- Initialization
 			filename := a_filename
 			mapped_filename := a_mapped_filename
 		ensure
-			filename_set: filename.is_equal (a_filename)
-			mapped_filename_set: mapped_filename.is_equal (a_mapped_filename)
+			filename_set: filename = a_filename
+			mapped_filename_set: mapped_filename = a_mapped_filename
 		end
 
 feature -- Access
@@ -91,7 +91,7 @@ feature -- Comparison
 			-- Is `other' attached to an object considered equal
 			-- to current object?
 		do
-			Result := STRING_.same_unicode_string (filename, other.filename)
+			Result := STRING_.same_string (filename, other.filename)
 		end
 
 feature -- Setting

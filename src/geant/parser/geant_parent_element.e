@@ -20,7 +20,7 @@ inherit
 		end
 
 	GEANT_SHARED_PROPERTIES
-		export{NONE} all end
+		export {NONE} all end
 
 creation
 
@@ -41,14 +41,12 @@ feature -- Initialization
 			a_redefine_element: GEANT_REDEFINE_ELEMENT
 			a_select_element: GEANT_SELECT_ELEMENT
 			a_string: STRING
-			msg: STRING
+			msg: ARRAY [STRING]
 			a_project_loader: GEANT_PROJECT_LOADER
 			a_parent_project: GEANT_PROJECT
 		do
 			interpreting_element_make (a_project, a_xml_element)
-
 			create parent.make (a_project)
-
 			if has_attribute (Location_attribute_name) then
 				a_string := attribute_value (Location_attribute_name)
 				if a_string.count > 0 then
@@ -59,64 +57,46 @@ feature -- Initialization
 					a_parent_project.merge_in_parent_projects
 				end
 			end
-
 				-- Handle renames:
 			xml_elements := elements_by_name (Rename_element_name)
-			from
-				cs := xml_elements.new_cursor
-				cs.start
-			until
-				cs.off
-			loop
+			cs := xml_elements.new_cursor
+			from cs.start until cs.after loop
 				create a_rename_element.make (project, cs.item)
 				s := a_rename_element.rename_clause.original_name
 				if parent.renames.has (s) then
-					msg := clone ("%NLOAD ERROR:%N")
-					msg.append_string ("  Project '")
-					msg.append_string (project.name)
-					msg.append_string ("': VHRC-2: old_name `")
-					msg.append_string (s)
-					msg.append_string ("' appears more than once as the first element")
-					msg.append_string (" of a Rename_pair in the same Rename subclause of parent '")
-					msg.append_string (parent.parent_project.name)
-					msg.append_string ("'%N")
+					!! msg.make (1, 9)
+					msg.put ("%NLOAD ERROR:%N", 1)
+					msg.put ("  Project '", 2)
+					msg.put (project.name, 3)
+					msg.put ("': VHRC-2: old_name `", 4)
+					msg.put (s, 5)
+					msg.put ("' appears more than once as the first element", 6)
+					msg.put (" of a Rename_pair in the same Rename subclause of parent '", 7)
+					msg.put (parent.parent_project.name, 8)
+					msg.put ("%'", 9)
 					exit_application (1, msg)
 				end
 				parent.renames.force_last (a_rename_element.rename_clause, s)
-
 				cs.forth
 			end
-
 				-- Handle redefines:
 			xml_elements := elements_by_name (Redefine_element_name)
-			from
-				cs := xml_elements.new_cursor
-				cs.start
-			until
-				cs.off
-			loop
+			cs := xml_elements.new_cursor
+			from cs.start until cs.after loop
 				create a_redefine_element.make (project, cs.item)
 				s := a_redefine_element.redefine_clause.name
 				parent.redefines.force_last (a_redefine_element.redefine_clause, s)
-
 				cs.forth
 			end
-
 				-- Handle selects:
 			xml_elements := elements_by_name (Select_element_name)
-			from
-				cs := xml_elements.new_cursor
-				cs.start
-			until
-				cs.off
-			loop
+			cs := xml_elements.new_cursor
+			from cs.start until cs.after loop
 				create a_select_element.make (project, cs.item)
 				s := a_select_element.select_clause.name
 				parent.selects.force_last (a_select_element.select_clause, s)
-
 				cs.forth
 			end
-
 		end
 
 	make_old (a_project: GEANT_PROJECT; a_xml_element: XM_ELEMENT) is
@@ -132,10 +112,8 @@ feature -- Initialization
 			a_string: STRING
 			a_project_loader: GEANT_PROJECT_LOADER
 			a_parent_project: GEANT_PROJECT
-			msg: STRING
 		do
 			interpreting_element_make (a_project, a_xml_element)
-
 			create parent.make (a_project)
 			a_string := attribute_value (Inherit_attribute_name)
 			if a_string.count > 0 then
@@ -145,13 +123,8 @@ feature -- Initialization
 				parent.set_parent_project (a_parent_project)
 				a_parent_project.merge_in_parent_projects
 			else
-				msg := clone ("%NLOAD ERROR:%N")
-				msg.append_string ("  project '")
-				msg.append_string (project.name)
-				msg.append_string ("' invalid inherit clause.%N")
-				exit_application (1, msg)
+				exit_application (1, <<"%NLOAD ERROR:%N", "  project '", project.name, "' invalid inherit clause.">>)
 			end
-
 		end
 
 feature -- Access

@@ -18,19 +18,19 @@ inherit
 	ANY
 
 	KL_IMPORTED_STRING_ROUTINES
-		export{NONE} all end
+		export {NONE} all end
 
 	KL_SHARED_EXECUTION_ENVIRONMENT
-		export{NONE} all end
+		export {NONE} all end
 
 	GEANT_SHARED_PROPERTIES
-		export{NONE} all end
+		export {NONE} all end
 
 	KL_SHARED_OPERATING_SYSTEM
-		export{NONE} all end
+		export {NONE} all end
 
 	KL_SHARED_FILE_SYSTEM
-		export{NONE} all end
+		export {NONE} all end
 
 creation
 
@@ -40,8 +40,13 @@ feature {NONE} -- Initialization
 
 	make is
 			-- Create a new variables object.
+		local
+			a_tester: UC_EQUALITY_TESTER
 		do
-			!! variables.make_equal (10)
+			!! variables.make_map (10)
+			!! a_tester
+			variables.set_equality_tester (a_tester)
+			variables.set_key_equality_tester (a_tester)
 
 				-- Create built-in variables $GOBO_OS, $is_windows/$is_unix, $exe
 			if operating_system.is_windows then
@@ -65,21 +70,19 @@ feature {NONE} -- Initialization
 					set_variable_value ("path_separator", "/")
 				end
 			end
-
 			if not has_variable ("exe") then
 				set_variable_value ("exe", file_system.exe_extension)
 			end
-
 		end
 
 feature -- Access
 
 	variables : DS_HASH_TABLE [STRING, STRING]
+			-- Defined variables
 
 	has_variable (a_name: STRING): BOOLEAN is
-			-- Is there a variable named `a_name'
-			-- in `variables'?
-			-- Search order: commandline variables, project variables, environment variables
+			-- Is there a variable named `a_name' in `variables'?
+			-- Search order: commandline variables, project variables, environment variables.
 		require
 			a_name_not_void: a_name /= Void
 			a_name_not_empty: a_name.count > 0
@@ -105,13 +108,14 @@ feature -- Access
 
 	variable_value (a_name: STRING): STRING is
 			-- Value of variable `a_name';
-			-- `${a_name}' if `a_name' has not been set
-			-- Search order: commandline variables, project variables, environment variables
+			-- `${a_name}' if `a_name' has not been set.
+			-- Search order: commandline variables, project variables, environment variables.
 		require
 			a_name_not_void: a_name /= Void
+			a_name_not_empty: a_name.count > 0
 		do
 				-- Check non overrridable variables:
-			if a_name.is_equal ("cwd") then
+			if STRING_.same_string (a_name, "cwd") then
 				Result := file_system.cwd
 			end
 
@@ -127,7 +131,7 @@ feature -- Access
 					-- Search project variables:
 				variables.search (a_name)
 				if variables.found then
-					Result := expanded_variable_value(variables.found_item)
+					Result := expanded_variable_value (variables.found_item)
 				end
 			end
 
@@ -139,11 +143,11 @@ feature -- Access
 			end
 
 			if Result = Void then
-				Result := clone("${")
-				Result.append_string(a_name)
-				Result.append_string("}")
+				Result := STRING_.new_empty_string (a_name, a_name.count + 3)
+				Result.append_string ("${")
+				Result.append_string (a_name)
+				Result.append_string ("}")
 			end
-
 		ensure
 			variable_value_not_void: Result /= Void
 		end
@@ -156,9 +160,10 @@ feature -- Access
 		do
 			Result := Execution_environment.variable_value (Result)
 			if Result = Void then
-				Result := clone("${")
-				Result.append_string(a_name)
-				Result.append_string("}")
+				Result := STRING_.new_empty_string (a_name, a_name.count + 3)
+				Result.append_string ("${")
+				Result.append_string (a_name)
+				Result.append_string ("}")
 			end
 		end
 
@@ -173,7 +178,7 @@ feature -- Access
 				source := a_value
 				Result := interpreted_string (source)
 			until
-				Result.is_equal (source)
+				STRING_.same_string (Result, source)
 			loop
 				source := Result
 				Result := interpreted_string (source)
@@ -214,14 +219,18 @@ feature -- Access
 			from
 				i := 1
 				nb := a_string.count
-				Result := STRING_.make (nb)
+				Result := STRING_.new_empty_string (a_string, nb)
 			until
 				i > nb
 			loop
 				c := a_string.item (i)
 				i := i + 1
 				if c /= '$' then
-					Result.append_character (c)
+					if c /= '%U' then
+						Result.append_character (c)
+					else
+						Result := STRING_.appended_substring (Result, a_string, i - 1, i - 1)
+					end
 				elseif i > nb then
 						-- Dollar at the end of `a_string'.
 						-- Leave it as it is.
@@ -235,7 +244,7 @@ feature -- Access
 					else
 							-- Found beginning of a environment variable
 							-- It is either ${VAR} or $VAR.
-						str := STRING_.make (5)
+						str := STRING_.new_empty_string (a_string, 5)
 						if c = '{' then
 								-- Looking for a right brace.
 							from
@@ -247,8 +256,11 @@ feature -- Access
 								c := a_string.item (i)
 								if c = '}' then
 									stop := True
-								else
+								elseif c /= '%U' then
 									str.append_character (c)
+								else
+									check same_type: str.same_type (a_string) end
+									STRING_.append_substring_to_string (str, a_string, i, i)
 								end
 								i := i + 1
 							end
@@ -272,7 +284,7 @@ feature -- Access
 						end
 						str := variable_value (str)
 						if str /= Void then
-							Result.append_string (str)
+							Result := STRING_.appended_string (Result, str)
 						end
 					end
 				end
@@ -288,7 +300,7 @@ feature -- Access
 			-- "$foo": True if variable `foo' is defined
 			-- "${foo}": True if variable `foo' is defined
 			-- "$foo=bar" | "${foo}=bar" | "bar=$foo" | "bar=${foo}":
-			--					True if variable `foo' is defined and its value is "bar"
+			--       True if variable `foo' is defined and its value is "bar"
 			-- if `a_condition' is not in either form Result is `False'
 		require
 			condition_not_void: a_condition /= Void
@@ -299,32 +311,30 @@ feature -- Access
 		do
 			a_tokens := string_tokens (a_condition, '=')
 			if a_tokens.count = 1 then
-					-- a_condition should be in form "$foo";
-					-- check if $foo is defined
-				s := a_tokens.item (1).out
-				if s.count > 3 and then
-					s.item (1) = '$' and then s.item (2) = '{' and then
-					s.item (s.count) = '}' then
-						-- handle "${bar}" form:
+					-- `a_condition' should be in form "$foo";
+					-- Check if $foo is defined.
+				s := a_tokens.item (1)
+				if s.count > 3 and then (s.item (1) = '$' and s.item (2) = '{' and s.item (s.count) = '}') then
+						-- Handle "${bar}" form:
 					s := s.substring (3, s.count - 1)
 					Result := has_variable (s)
-				elseif s.count > 1 and then s.item (1) = '$' and then s.item (2) /= '{' then
-						-- handle "$bar" form:
+				elseif s.count > 1 and then (s.item (1) = '$' and s.item (2) /= '{') then
+						-- Handle "$bar" form:
 					s := s.substring (2, s.count)
 					Result := has_variable (s)
 				else
-					exit_application (1, "geant: incorrect conditional: '" + a_condition + "'%N")
+					exit_application (1, <<"geant: incorrect conditional: '", a_condition, "%'">>)
 				end
 			elseif a_tokens.count = 2 then
-					-- a_condition should be in form "$foo=bar";
-					-- check if $foo equals "bar"
-				s := a_tokens.item (1).out
+					-- `a_condition' should be in form "$foo=bar";
+					-- Check if $foo equals "bar".
+				s := a_tokens.item (1)
 				s := interpreted_string (s)
-				s2 := a_tokens.item (2).out
+				s2 := a_tokens.item (2)
 				s2 := interpreted_string (s2)
 				Result := s.is_equal (s2)
 			else
-				exit_application (1, "geant: incorrect conditional: '" + a_condition + "'%N")
+				exit_application (1, <<"geant: incorrect conditional: '", a_condition, "%'">>)
 			end
 		end
 
@@ -332,7 +342,7 @@ feature -- Setting
 
 	set_variable_value (a_name, a_value : STRING) is
 			-- Set value of variable `a_name' to `a_value'.
-			-- Ignored when `a_name' is already defined
+			-- Ignored when `a_name' is already defined.
 		require
 			a_name_not_void: a_name /= Void
 			a_name_not_empty: a_name.count > 0

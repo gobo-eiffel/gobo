@@ -35,7 +35,7 @@ feature {NONE} -- Initialization
 			!! command.make (a_project)
 			task_make (command, an_xml_element)
 			if has_attribute (Message_attribute_name) then
-				a_value := attribute_value (Message_attribute_name.out)
+				a_value := attribute_value (Message_attribute_name)
 				command.set_message (a_value)
 			end
 		end

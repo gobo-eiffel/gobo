@@ -105,7 +105,7 @@ feature -- Execution
 			s: STRING
 		do
 			if is_commandline_executable then
-				project.trace ("  [exec] " + command_line + "%N")
+				project.trace (<<"  [exec] ", command_line>>)
 				execute_shell (command_line)
 				if accept_errors then
 					exit_code := 0
@@ -114,7 +114,7 @@ feature -- Execution
 				check is_fileset_executable: is_fileset_executable end
 
 				if not fileset.is_executable then
-					project.log ("  [exec] error: fileset definition wrong%N")
+					project.log (<<"  [exec] error: fileset definition wrong">>)
 					exit_code := 1
 				end
 
@@ -126,18 +126,15 @@ feature -- Execution
 						fileset.after or else exit_code /= 0
 					loop
 						s := project.variables.interpreted_string (command_line)
-						project.trace ("  [exec] " + s + "%N")
+						project.trace (<<"  [exec] ", s>>)
 						execute_shell (s)
 						if accept_errors then
 							exit_code := 0
 						end
-	
 						fileset.forth
 					end
 				end
-
 			end
-
 		end
 
 end

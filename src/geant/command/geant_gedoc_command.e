@@ -113,20 +113,20 @@ feature -- Execution
 			nb := parameters.count
 			from i := 1 until i > nb loop
 				cmd.append_string (" -PARAM ")
-				cmd.append_string (parameters.item (i).first)
+				cmd := STRING_.appended_string (cmd, parameters.item (i).first)
 				cmd.append_string (" ")
-				cmd.append_string (parameters.item (i).second)
+				cmd := STRING_.appended_string (cmd, parameters.item (i).second)
 				i := i + 1
 			end
 
 			cmd.append_string (" -in ")
-			cmd.append_string (input_filename)
+			cmd := STRING_.appended_string (cmd, input_filename)
 			cmd.append_string (" -xsl ")
-			cmd.append_string (stylesheet_filename)
+			cmd := STRING_.appended_string (cmd, stylesheet_filename)
 			cmd.append_string (" -out ")
-			cmd.append_string (output_filename)
+			cmd := STRING_.appended_string (cmd, output_filename)
 
-			project.trace ("  [gedoc] " + cmd + "%N")
+			project.trace (<<"  [gedoc] ", cmd>>)
 			execute_shell (cmd)
 		end
 

@@ -20,7 +20,7 @@ inherit
 		end
 
 	GEANT_SHARED_PROPERTIES
-		export{NONE} all end
+		export {NONE} all end
 
 creation
 
@@ -37,16 +37,10 @@ feature {NONE} -- Initialization
 		do
 			interpreting_element_make (a_project, a_xml_element)
 			create geant_inherit.make (project)
-
 			a_parent_elements := elements_by_name (Parent_element_name)
-			from
-				cs := a_parent_elements.new_cursor
-				cs.start
-			until
-				cs.off
-			loop
+			cs := a_parent_elements.new_cursor
+			from cs.start until cs.after loop
 				create a_parent_element.make (project, cs.item)
-
 					-- Check that no two projects have the same name and different locations:
 					-- TODO: do not check `is_executable' in elements (like here):
 				if a_parent_element.parent.is_executable then
@@ -55,19 +49,17 @@ feature {NONE} -- Initialization
 --					if not has_system_parent (a_parent_element.parent) then
 --						if has_system_parent_with_different_location (a_parent_element.parent) then
 --							exit_application (1,
---								"%NLOAD ERROR:%N  There exists more than one project named '" +
---								a_parent_element.parent.project.name + "' in the system.%N")
+--								<<"%NLOAD ERROR:%N  There exists more than one project named '",
+--								a_parent_element.parent.project.name, "' in the system.">>)
 --						end
 --						system_parents.force_last (a_parent_element.parent)
 --					end
 					geant_inherit.parents.force_last (a_parent_element.parent)
 				else
-					exit_application (1, "ERROR in 'parent' clause%N")
+					exit_application (1, <<"ERROR in 'parent' clause">>)
 				end
-
 				cs.forth
 			end
-
 		end
 
 	make_old (a_project: GEANT_PROJECT; a_xml_element: XM_ELEMENT) is
@@ -83,20 +75,18 @@ feature {NONE} -- Initialization
 		do
 			interpreting_element_make (a_project, a_xml_element)
 			create geant_inherit.make (project)
-
 			create a_parent_element.make_old (project, a_xml_element)
 				-- TODO: do not check `is_executable' in elements (like here):
 			if not a_parent_element.parent.is_executable then
-				exit_application (1, "ERROR in 'parent' clause%N")
+				exit_application (1, <<"ERROR in 'parent' clause">>)
 			end
 			geant_inherit.parents.force_last (a_parent_element.parent)
 		end
 
-
 feature -- Access
 
 	geant_inherit: GEANT_INHERIT
-		-- Inherit clause
+			-- Inherit clause
 
 feature {NONE} -- Constants
 

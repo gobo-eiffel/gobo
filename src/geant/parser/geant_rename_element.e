@@ -31,29 +31,25 @@ feature -- Initialization
 			a_value: STRING
 		do
 			interpreting_element_make (a_project, a_xml_element)
-
 			create rename_clause.make
-
 			if has_attribute (Target_attribute_name) then
 				a_value := attribute_value (Target_attribute_name)
 				if a_value.count > 0 then
 					rename_clause.set_original_name (a_value)
 				end
 			end
-
 			if has_attribute (As_attribute_name) then
 				a_value := attribute_value (As_attribute_name)
 				if a_value.count > 0 then
 					rename_clause.set_new_name (a_value)
 				end
 			end
-
 		end
 
 feature -- Access
 
 	rename_clause: GEANT_RENAME
-		-- Rename clause
+			-- Rename clause
 
 feature {NONE} -- Constants
 

@@ -35,9 +35,9 @@ feature {NONE} -- Initialization
 			!! command.make (a_project)
 			task_make (command, an_xml_element)
 			if has_attribute (Directory_attribute_name) then
-				a_value := attribute_value (Directory_attribute_name.out)
+				a_value := attribute_value (Directory_attribute_name)
 				if a_value.count > 0 then
-					command.set_directory (a_value.out)
+					command.set_directory (a_value)
 				end
 			end
 		end

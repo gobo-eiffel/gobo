@@ -58,38 +58,32 @@ feature {NONE} -- Initialization
 			end
 
 			define_elements := elements_by_name (Define_element_name)
-			from
-				cs := define_elements.new_cursor
-				cs.start
-			until
-				cs.off
-			loop
+			cs := define_elements.new_cursor
+			from cs.start until cs.after loop
 				create define_element.make (project, cs.item)
-				if define_element.is_enabled and then define_element.has_name and then
-					define_element.name.count > 0 then
-
+				if
+					define_element.is_enabled and then
+					define_element.has_name and then
+					define_element.name.count > 0
+				then
 					command.defines.force_last (define_element.name)
 				end
 				cs.forth
 			end
-
 			if has_attribute (To_directory_attribute_name) then
-				a_value := attribute_value (To_directory_attribute_name.out)
+				a_value := attribute_value (To_directory_attribute_name)
 				if a_value.count > 0 then
-					command.set_to_directory (a_value.out)
+					command.set_to_directory (a_value)
 				end
 			end
-
 			if has_attribute (Force_attribute_name) then
 				command.set_force (boolean_value (Force_attribute_name))
 			end
-
 			a_xml_subelement := xml_element.element_by_name (Fileset_element_name)
 			if a_xml_subelement /= Void then
 				!! a_fs_element.make (project, a_xml_subelement)
 				command.set_fileset (a_fs_element.fileset)
 			end
-
 		end
 
 feature -- Access

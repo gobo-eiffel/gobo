@@ -37,22 +37,19 @@ feature {NONE} -- Initialization
 			!! command.make (a_project)
 			task_make (command, an_xml_element)
 			if has_attribute (Executable_attribute_name) then
-				a_value := attribute_value (Executable_attribute_name.out)
+				a_value := attribute_value (Executable_attribute_name)
 				if a_value.count > 0 then
-					command.set_command_line (a_value.out)
+					command.set_command_line (a_value)
 				end
 			end
-
 			if has_attribute (Accept_errors_attribute_name) then
 				command.set_accept_errors (boolean_value (Accept_errors_attribute_name))
 			end
-
 			a_xml_subelement := xml_element.element_by_name (Fileset_element_name)
 			if a_xml_subelement /= Void then
 				!! a_fs_element.make (project, a_xml_subelement)
 				command.set_fileset (a_fs_element.fileset)
 			end
-
 		end
 
 feature -- Access

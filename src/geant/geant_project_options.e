@@ -26,10 +26,10 @@ feature {NONE} -- Initialization
 feature -- Access
 
 	verbose: BOOLEAN
-		-- Print additional information during build process?
+			-- Print additional information during build process?
 
 	debug_mode: BOOLEAN
-		-- Print additional, internal information during build process?
+			-- Print additional, internal information during build process?
 
 	no_exec: BOOLEAN
 			-- Do not execute commands (only show what they would do)?

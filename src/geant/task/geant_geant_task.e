@@ -36,21 +36,21 @@ feature {NONE} -- Initialization
 			task_make (command, an_xml_element)
 				-- filename:
 			if has_attribute (Filename_attribute_name) then
-				a_value := attribute_value (Filename_attribute_name.out)
+				a_value := attribute_value (Filename_attribute_name)
 				if a_value.count > 0 then
-					command.set_filename (a_value.out)
+					command.set_filename (a_value)
 				end
 			end
 				-- start target:
 			if has_attribute (Start_target_attribute_name) then
-				a_value := attribute_value (Start_target_attribute_name.out)
+				a_value := attribute_value (Start_target_attribute_name)
 				if a_value.count > 0 then
-					command.set_start_target_name (a_value.out)
+					command.set_start_target_name (a_value)
 				end
 			end
 				-- reuse_variables:
 			if has_attribute (Reuse_variables_attribute_name) then
-				command.set_reuse_variables (boolean_value(Reuse_variables_attribute_name))
+				command.set_reuse_variables (boolean_value (Reuse_variables_attribute_name))
 			end
 		end
 

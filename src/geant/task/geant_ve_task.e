@@ -36,14 +36,14 @@ feature {NONE} -- Initialization
 			task_make (command, an_xml_element)
 				-- ESD:
 			if has_attribute (Esd_attribute_name) then
-				a_value := attribute_value_or_default (Esd_attribute_name.out, "")
+				a_value := attribute_value_or_default (Esd_attribute_name, "")
 				if a_value.count > 0 then
 					command.set_esd_filename (a_value)
 				end
 			end
 				-- clean:
 			if has_attribute (Clean_attribute_name) then
-				a_value := attribute_value_or_default (Clean_attribute_name.out, "")
+				a_value := attribute_value_or_default (Clean_attribute_name, "")
 				if a_value.count > 0 then
 					command.set_clean (a_value)
 				end
@@ -54,13 +54,13 @@ feature {NONE} -- Initialization
 			end
 				-- tune:
 			if has_attribute (Tune_attribute_name) then
-				a_value := attribute_value_or_default (Tune_attribute_name.out, "")
+				a_value := attribute_value_or_default (Tune_attribute_name, "")
 				if a_value.count > 0 then
 					command.set_tuned_system (a_value)
 				end
 					-- level:
 				if has_attribute (Level_attribute_name) then
-					a_value := attribute_value_or_default (Level_attribute_name.out, "")
+					a_value := attribute_value_or_default (Level_attribute_name, "")
 					if a_value.count > 0 then
 						command.set_tuning_level (a_value)
 					end

@@ -161,7 +161,7 @@ feature -- Execution
 				if file_system.file_exists (a_name) then
 						-- Execute the command only if the SmallEiffel
 						-- compiler has been used to compile this system.
-					project.trace ("  [se] " + cmd + "%N")
+					project.trace (<<"  [se] ", cmd>>)
 					execute_shell (cmd)
 					exit_code := 0
 				end
@@ -171,7 +171,7 @@ feature -- Execution
 				else
 					cmd := new_traditional_cmdline
 				end
-				project.trace ("  [se] " + cmd + "%N")
+				project.trace (<<"  [se] ", cmd>>)
 				execute_shell (cmd)
 			end
 		end
@@ -190,7 +190,7 @@ feature -- Command-line
 				Result.append_string (" -verbose ")
 			end
 			a_filename := file_system.pathname_from_file_system (ace_filename, unix_file_system)
-			Result.append_string (a_filename)
+			Result := STRING_.appended_string (Result, a_filename)
 		ensure
 			command_line_not_void: Result /= Void
 			command_line_not_empty: Result.count > 0
@@ -204,24 +204,20 @@ feature -- Command-line
 			a_filename: STRING
 		do
 			Result := clone ("compile")
-
 			Result.append_string (" -o ")
 			a_filename := file_system.pathname_from_file_system (executable, unix_file_system)
-			Result.append_string (a_filename)
-
+			Result := STRING_.appended_string (Result, a_filename)
 			if case_insensitive then
 				Result.append_string (" -case_insensitive")
 			end
-
 			if no_style_warning then
 				Result.append_string (" -no_style_warning")
 			end
-
 			Result.append_string (" ")
-			Result.append_string (root_class)
+			Result := STRING_.appended_string (Result, root_class)
 			Result.append_string (" ")
 			if creation_procedure /= Void and then creation_procedure.count > 0 then
-				Result.append_string (creation_procedure)
+				Result := STRING_.appended_string (Result, creation_procedure)
 			else
 				Result.append_string ("make")
 			end
@@ -236,7 +232,7 @@ feature -- Command-line
 			is_cleanable: is_cleanable
 		do
 			Result := clone ("clean ")
-			Result.append_string (clean)
+			Result := STRING_.appended_string (Result, clean)
 		ensure
 			command_line_not_void: Result /= Void
 			command_line_not_empty: Result.count > 0

@@ -17,13 +17,12 @@ inherit
 	ANY
 
 	GEANT_SHARED_PROPERTIES
-		export{NONE} all end
+		export {NONE} all end
 
 	KL_SHARED_FILE_SYSTEM
-		export{NONE} all end
+		export {NONE} all end
 
 	KL_IMPORTED_STRING_ROUTINES
-		export {NONE} all end
 
 creation
 
@@ -37,12 +36,11 @@ feature {NONE} -- Initialization
 			project_not_void: a_project /= Void
 		do
 			project := a_project
-
 				-- Set default type:
 			set_type (Type_attribute_value_identity)
 		ensure
 			project_set: project = a_project
-			type_set_to_identity: type.is_equal (Type_attribute_value_identity)
+			type_set_to_identity: type = Type_attribute_value_identity
 		end
 
 feature -- Access
@@ -56,35 +54,35 @@ feature -- Status report
 			-- Can element be executed?
 		do
 			Result := type /= Void and then
-				(type.is_equal (Type_attribute_value_identity) or else
-				type.is_equal (Type_attribute_value_flat) or else
-				type.is_equal (Type_attribute_value_merge) or else
-				type.is_equal (Type_attribute_value_glob))
+				(STRING_.same_string (type, Type_attribute_value_identity) or else
+				STRING_.same_string (type, Type_attribute_value_flat) or else
+				STRING_.same_string (type, Type_attribute_value_merge) or else
+				STRING_.same_string (type, Type_attribute_value_glob))
 			if not Result then
-				project.log ("  [map] error: value of attribute 'type' incorrect. Valid: {'flat', 'glob', 'identity', 'merge'}%N")
+				project.log (<<"  [map] error: value of attribute 'type' incorrect. Valid: {'flat', 'glob', 'identity', 'merge'}">>)
 			end
 			if Result then
-				if type.is_equal (Type_attribute_value_identity) then
+				if STRING_.same_string (type, Type_attribute_value_identity) then
 					Result := source_pattern = Void
 					if not Result then
-						project.log ("  [map] error: attribute 'from' must not be set when 'type' is 'identity'%N")
+						project.log (<<"  [map] error: attribute 'from' must not be set when 'type' is 'identity'">>)
 					end
 					if Result then
 						Result := target_pattern = Void
 						if not Result then
-							project.log ("  [map] error: attribute 'to' must not be set when 'type' is 'identity'%N")
+							project.log (<<"  [map] error: attribute 'to' must not be set when 'type' is 'identity'">>)
 						end
 					end
 				end
-				if type.is_equal (Type_attribute_value_glob) then
+				if STRING_.same_string (type, Type_attribute_value_glob) then
 					Result := source_pattern /= Void and then source_pattern.index_of ('*', 1) > 0
 					if not Result then
-						project.log ("  [map] error: in mode 'glob' attribute 'from' must be set and contain a '*' character%N")
+						project.log (<<"  [map] error: in mode 'glob' attribute 'from' must be set and contain a '*' character">>)
 					end
 					if Result then
 						Result := target_pattern /= Void and then target_pattern.index_of ('*', 1) > 0
 						if not Result then
-							project.log ("  [map] error: in mode 'glob' attribute 'to' must be set and contain a '*' character%N")
+							project.log (<<"  [map] error: in mode 'glob' attribute 'to' must be set and contain a '*' character">>)
 						end
 					end
 				end
@@ -92,25 +90,21 @@ feature -- Status report
 			if Result and then map /= Void then
 				Result := map.is_executable
 				if not Result then
-					project.log ("  [map] error: nested element 'map' is not defined correctly%N")
+					project.log (<<"  [map] error: nested element 'map' is not defined correctly">>)
 				end
 			end
-
 		ensure
 			type_name_not_void: Result implies type /= Void
 			type_supported: Result implies
-				type.is_equal (Type_attribute_value_identity) or else
-				type.is_equal (Type_attribute_value_flat) or else
-				type.is_equal (Type_attribute_value_merge) or else
-				type.is_equal (Type_attribute_value_glob)
-
-			good_glob_source: Result implies type.is_equal (Type_attribute_value_glob) implies
-				source_pattern /= Void and then source_pattern.index_of ('*', 1) > 0
-
-			good_glob_target: Result implies type.is_equal (Type_attribute_value_glob) implies
-				target_pattern /= Void and then target_pattern.index_of ('*', 1) > 0
-
-			nested_map_executable: Result implies map /= Void implies map.is_executable
+				(STRING_.same_string (type, Type_attribute_value_identity) or else
+				STRING_.same_string (type, Type_attribute_value_flat) or else
+				STRING_.same_string (type, Type_attribute_value_merge) or else
+				STRING_.same_string (type, Type_attribute_value_glob))
+			good_glob_source: Result implies (STRING_.same_string (type, Type_attribute_value_glob) implies
+				(source_pattern /= Void and then source_pattern.index_of ('*', 1) > 0))
+			good_glob_target: Result implies (STRING_.same_string (type, Type_attribute_value_glob) implies
+				(target_pattern /= Void and then target_pattern.index_of ('*', 1) > 0))
+			nested_map_executable: Result implies (map /= Void implies map.is_executable)
 		end
 
 feature -- Access
@@ -151,56 +145,52 @@ feature -- Access
 				if map.is_executable then
 					a_map_filename := map.mapped_filename (a_filename)
 				else
-					project.log ("  [map] error: map definition wrong%N")
+					project.log (<<"  [map] error: map definition wrong">>)
 					a_exit_code := 1
 				end
 			else
-				a_map_filename := clone (a_filename)
+				a_map_filename := a_filename
 			end
 			if a_exit_code = 0 then
-				if type.is_equal (Type_attribute_value_identity) then
+				if STRING_.same_string (type, Type_attribute_value_identity) then
 						-- handle identity mapping:
-					Result := clone (a_map_filename)
-				elseif type.is_equal (Type_attribute_value_flat) then
+					Result := a_map_filename
+				elseif STRING_.same_string (type, Type_attribute_value_flat) then
 						-- handle flat mapping:
-					Result := clone (unix_file_system.basename (a_map_filename))
-				elseif type.is_equal (Type_attribute_value_merge) then
+					Result := unix_file_system.basename (a_map_filename)
+				elseif STRING_.same_string (type, Type_attribute_value_merge) then
 						-- handle merge mapping:
-					Result := clone (target_pattern)
+					Result := target_pattern
 				else
 						-- handle glob mapping:
-					check type_is_glob: type.is_equal (Type_attribute_value_glob) end
+					check type_is_glob: STRING_.same_string (type, Type_attribute_value_glob) end
 					source_prefix := glob_prefix (source_pattern)
 					source_postfix := glob_postfix (source_pattern)
 					target_prefix := glob_prefix (target_pattern)
 					target_postfix := glob_postfix (target_pattern)
-	
 					filename_prefix := clone (a_map_filename)
 					STRING_.keep_head (filename_prefix, source_prefix.count)
 					filename_postfix := clone (a_map_filename)
 					STRING_.keep_tail (filename_postfix, source_postfix.count)
-	
 					if
-						filename_prefix.is_equal (source_prefix) and
-						filename_postfix.is_equal (source_postfix)
+						STRING_.same_string (filename_prefix, source_prefix) and
+						STRING_.same_string (filename_postfix, source_postfix)
 					then
 						s := clone (a_map_filename)
-	
 						STRING_.remove_head (s, filename_prefix.count)
 						STRING_.remove_tail (s, filename_postfix.count)
-	
 						Result := clone (target_prefix)
-						Result.append_string (s)
-						Result.append_string (target_postfix)
+						Result := STRING_.appended_string (Result, s)
+						Result := STRING_.appended_string (Result, target_postfix)
 					else
-						project.trace_debug ("  [*map] no match for '" + a_map_filename + "'%N")
-						Result := clone (a_map_filename)
+						project.trace_debug (<<"  [*map] no match for '", a_map_filename, "%'">>)
+						Result := a_map_filename
 					end
 				end
-				project.trace_debug ("  [*map] mapping '" + a_map_filename + "' to '" + Result + "'%N")
+				project.trace_debug (<<"  [*map] mapping '", a_map_filename, "' to '", Result, "%'">>)
 			end
 		ensure
-			Result_not_void: Result /= Void
+			mapped_filename_not_void: Result /= Void
 		end
 
 feature -- Setting
@@ -210,14 +200,14 @@ feature -- Setting
 		require
 			type_not_void: a_type /= Void
 			type_supported:
-				a_type.is_equal (Type_attribute_value_identity) or else
-				a_type.is_equal (Type_attribute_value_flat) or else
-				a_type.is_equal (Type_attribute_value_merge) or else
-				a_type.is_equal (Type_attribute_value_glob)
+				STRING_.same_string (a_type, Type_attribute_value_identity) or else
+				STRING_.same_string (a_type, Type_attribute_value_flat) or else
+				STRING_.same_string (a_type, Type_attribute_value_merge) or else
+				STRING_.same_string (a_type, Type_attribute_value_glob)
 		do
 			type := a_type
 		ensure
-			type_set: type.is_equal (a_type)
+			type_set: type = a_type
 		end
 
 	set_source_pattern (a_source_pattern: like source_pattern) is

@@ -39,80 +39,61 @@ feature {NONE} -- Initialization
 		do
 			precursor (a_project, a_xml_element)
 			!! fileset.make (project)
-
 			if has_attribute (Directory_attribute_name) then
 				a_value := attribute_value (Directory_attribute_name)
 				if a_value.count > 0 then
 					fileset.set_directory_name (a_value)
 				end
 			end
-
 			if has_attribute (Include_attribute_name) then
 				a_value := attribute_value (Include_attribute_name)
 				if a_value.count > 0 then
 					fileset.set_include_wc_string (a_value)
 				end
 			end
-
 			if has_attribute (Exclude_attribute_name) then
 				a_value := attribute_value (Exclude_attribute_name)
 				if a_value.count > 0 then
 					fileset.set_exclude_wc_string (a_value)
 				end
 			end
-
 			if has_attribute (Force_attribute_name) then
 				fileset.set_force (boolean_value (Force_attribute_name))
 			end
-
 			if has_attribute (Concat_attribute_name) then
 				fileset.set_concat (boolean_value (Concat_attribute_name))
 			end
-
-				-- add 'include' elements to fileset:
+				-- Add 'include' elements to fileset:
 			a_elements := elements_by_name (Include_element_name)
-			from
-				cs := a_elements.new_cursor
-				cs.start
-			until
-				cs.off
-			loop
+			cs := a_elements.new_cursor
+			from cs.start until cs.after loop
 				create a_element.make (project, cs.item)
-				if a_element.is_enabled and then a_element.has_name and then
-					a_element.name.count > 0 then
+				if a_element.is_enabled and then a_element.has_name and then a_element.name.count > 0 then
 					fileset.add_single_include (a_element.name)
 				end
 				cs.forth
 			end
-
-				-- remove 'exclude' elements from fileset:
+				-- Remove 'exclude' elements from fileset:
 			a_elements := elements_by_name (Exclude_element_name)
-			from
-				cs := a_elements.new_cursor
-				cs.start
-			until
-				cs.off
-			loop
+			cs := a_elements.new_cursor
+			from cs.start until cs.after loop
 				create a_element.make (project, cs.item)
-				if a_element.is_enabled and then a_element.has_name and then
-					a_element.name.count > 0 then
+				if a_element.is_enabled and then a_element.has_name and then a_element.name.count > 0 then
 					fileset.add_single_exclude (a_element.name)
 				end
 				cs.forth
 			end
-
 			a_xml_subelement := xml_element.element_by_name (Map_element_name)
 			if a_xml_subelement /= Void then
 				!! a_map_element.make (project, a_xml_subelement)
 				fileset.set_map (a_map_element.map)
 			end
-
 		end
 
 feature -- Access
 
 	fileset: GEANT_FILESET
-		-- Fileset executing definitions of current fileset element
+			-- Fileset executing definitions of current fileset element
 
 feature {NONE} -- Constants
 

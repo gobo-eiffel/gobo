@@ -139,12 +139,12 @@ feature -- Execution
 			if ace_filename /= Void and then ace_filename.count > 0 then
 				cmd.append_string (" -ace ")
 				a_filename := file_system.pathname_from_file_system (ace_filename, unix_file_system)
-				cmd.append_string (a_filename)
+				cmd := STRING_.appended_string (cmd, a_filename)
 			end
 			cmd.append_string (" -project ")
-			cmd.append_string (system_name)
+			cmd := STRING_.appended_string (cmd, system_name)
 			cmd.append_string (".eif")
-			project.trace ("  [hact] " + cmd + "%N")
+			project.trace (<<"  [hact] ", cmd>>)
 			execute_shell (cmd)
 			if exit_code = 0 and then fish then
 				eifgen := system_name + "_gen"
@@ -153,11 +153,11 @@ feature -- Execution
 				else
 					project_dir := file_system.pathname (eifgen, "W_code")
 				end
-				project.trace ("  [hact] cd " + project_dir + "%N")
+				project.trace (<<"  [hact] cd ", project_dir>>)
 				old_cwd := file_system.cwd
 				file_system.cd (project_dir)
 				cmd := clone ("fish")
-				project.trace ("  [hact] " + cmd + "%N")
+				project.trace (<<"  [hact] ", cmd>>)
 				execute_shell (cmd)
 				if not project.options.no_exec then
 					if exit_code = 0 then
@@ -185,14 +185,14 @@ feature -- Execution
 		do
 			a_name := clean + "_gen"
 			if file_system.directory_exists (a_name) then
-				project.trace ("  [hact] delete " + a_name + "%N")
+				project.trace (<<"  [hact] delete ", a_name>>)
 				if not project.options.no_exec then
 					file_system.recursive_delete_directory (a_name)
 				end
 			end
 			a_name := clean + ".eif"
 			if file_system.file_exists (a_name) then
-				project.trace ("  [hact] delete " + a_name + "%N")
+				project.trace (<<"  [hact] delete ", a_name>>)
 				if not project.options.no_exec then
 					file_system.delete_file (a_name)
 				end

@@ -20,13 +20,15 @@ inherit
 		end
 
 	GEANT_SHARED_PROPERTIES
-		export{NONE} all end
+		export {NONE} all end
 	
 	KL_SHARED_FILE_SYSTEM
-		export{NONE} all end
+		export {NONE} all end
 
 	KL_SHARED_EXCEPTIONS
-		export{NONE} all end
+		export {NONE} all end
+
+	KL_IMPORTED_STRING_ROUTINES
 
 feature {NONE} -- Initialization
 
@@ -80,8 +82,8 @@ feature {NONE} -- Implementation
 		local
 			shell_command: DP_SHELL_COMMAND
 		do
-			!! shell_command.make (a_command)
 			if not project.options.no_exec then
+				!! shell_command.make (a_command)
 				shell_command.execute
 				exit_code := shell_command.exit_code
 			end

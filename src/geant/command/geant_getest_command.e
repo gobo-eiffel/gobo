@@ -27,9 +27,13 @@ feature {NONE} -- Initialization
 
 	make (a_project: GEANT_PROJECT) is
 			-- Create a new 'getest' command.
+		local
+			a_tester: UC_EQUALITY_TESTER
 		do
 			precursor (a_project)
-			!! defines.make (10)
+			!! defines.make_map (10)
+			!! a_tester
+			defines.set_key_equality_tester (a_tester)
 		end
 
 feature -- Status report
@@ -91,21 +95,21 @@ feature -- Execution
 				a_cursor := defines.new_cursor
 				from a_cursor.start until a_cursor.after loop
 					cmd.append_string ("--define=%"")
-					cmd.append_string (a_cursor.key)
+					cmd := STRING_.appended_string (cmd, a_cursor.key)
 					cmd.append_character ('=')
-					cmd.append_string (a_cursor.item)
+					cmd := STRING_.appended_string (cmd, a_cursor.item)
 					cmd.append_string ("%" ")
 					a_cursor.forth
 				end
 			end
 			if compile /= Void then
 				cmd.append_string ("--compile=%"")
-				cmd.append_string (compile)
+				cmd := STRING_.appended_string (cmd, compile)
 				cmd.append_string ("%" ")
 			end
 			a_filename := file_system.pathname_from_file_system (config_filename, unix_file_system)
-			cmd.append_string (a_filename)
-			project.trace ("  [getest] " + cmd + "%N")
+			cmd := STRING_.appended_string (cmd, a_filename)
+			project.trace (<<"  [getest] ", cmd>>)
 			execute_shell (cmd)
 		end
 

@@ -81,7 +81,7 @@ feature -- Access
 			-- Name of destination directory for copy
 
 	fileset: GEANT_FILESET
-		-- Fileset for current command
+			-- Fileset for current command
 
 feature -- Setting
 
@@ -141,7 +141,6 @@ feature -- Execution
 			if is_file_to_directory_executable then
 					-- Make sure directory named `to_directory' exists:
 				create_directory (to_directory)
-
 				if exit_code = 0 then
 					a_basename := unix_file_system.basename (file)
 					a_to_file := unix_file_system.pathname (to_directory, a_basename)
@@ -151,13 +150,11 @@ feature -- Execution
 				a_to_file := to_file
 				move_file (file, a_to_file)
 			else
-
 				check is_fileset_to_directory_executable: is_fileset_to_directory_executable end
 				if not fileset.is_executable then
-					project.log ("  [copy] error: fileset definition wrong%N")
+					project.log (<<"  [copy] error: fileset definition wrong">>)
 					exit_code := 1
 				end
-
 				if exit_code = 0 then
 					fileset.execute
 					from
@@ -170,7 +167,6 @@ feature -- Execution
 							-- Create target directory if necessary:
 						create_directory_for_pathname (a_to_file)
 						move_file (a_from_file, a_to_file)
-	
 						fileset.forth
 					end
 				end
@@ -191,22 +187,22 @@ feature -- Execution
 		do
 			old_name := file_system.pathname_from_file_system (a_source_file, unix_file_system)
 			new_name := file_system.pathname_from_file_system (a_target_file, unix_file_system)
-			project.trace ("  [move] " + old_name + " to " + new_name + "%N")
+			project.trace (<<"  [move] ", old_name, " to ", new_name>>)
 			if not project.options.no_exec then
 					-- Check that source file exists:
 				if not file_system.file_exists (old_name) then
-					project.log ("  [move] error: cannot find file '" + old_name + "'%N")
+					project.log (<<"  [move] error: cannot find file '", old_name, "%'">>)
 					exit_code := 1
 				else
 					file_system.rename_file (old_name, new_name)
 					if not file_system.file_exists (new_name) then
 							-- The new file has not been created.
-						project.log ("  [move] error: cannot move file '" + old_name + "' to file '" + new_name + "'%N")
+						project.log (<<"  [move] error: cannot move file '", old_name, "' to file '", new_name, "%'">>)
 						exit_code := 1
 					elseif file_system.file_exists (old_name) then
 						if not file_system.same_physical_file (old_name, new_name) then
 								-- The old file has not been removed.
-							project.log ("  [move] error: cannot remove file '" + old_name + "'%N")
+							project.log (<<"  [move] error: cannot remove file '", old_name, "%'">>)
 							exit_code := 1
 						end
 					end

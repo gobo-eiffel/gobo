@@ -51,7 +51,7 @@ feature -- Execution
 	execute is
 			-- Execute command.
 		do
-			project.trace ("  [exit] code: " + code.out + "%N")
+			project.trace (<<"  [exit] code: ", code.out>>)
 			exit_code := code
 		end
 

@@ -61,8 +61,10 @@ feature {NONE} -- Initialization
 			nb := parameter_elements.count
 			from i := 1 until i > nb loop
 				!! parameter_element.make (project, parameter_elements.item (i))
-				if parameter_element.is_enabled and then
-					paramter_element.has_name and then paramter_element.has_value
+				if
+					parameter_element.is_enabled and then
+					paramter_element.has_name and then
+					paramter_element.has_value
 				then
 					a_name := parameter_element.name
 					a_value := parameter_element.value

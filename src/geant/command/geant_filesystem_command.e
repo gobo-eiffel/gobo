@@ -30,11 +30,11 @@ feature {NONE} -- Implementation
 			if not project.options.no_exec then
 				al_dirname := file_system.pathname_from_file_system (a_directory, unix_file_system)
 				if not file_system.directory_exists (al_dirname) then
-					project.trace_debug ("  creating directory '" + al_dirname + "'%N")
+					project.trace_debug (<<"  creating directory '", al_dirname, "%'">>)
 					file_system.recursive_create_directory (al_dirname)
 				end
 				if not file_system.directory_exists (al_dirname) then
-					project.log ("  [copy] error: could not create directory '" + al_dirname + "'%N")
+					project.log (<<"  [copy] error: could not create directory '", al_dirname, "%'">>)
 					exit_code := 1
 				end
 			end
@@ -52,11 +52,11 @@ feature {NONE} -- Implementation
 				al_pathname := unix_file_system.dirname (a_pathname)
 				al_pathname := file_system.pathname_from_file_system (al_pathname, unix_file_system)
 				if not file_system.directory_exists (al_pathname) then
-					project.trace_debug ("  creating directory '" + al_pathname + "'%N")
+					project.trace_debug (<<"  creating directory '", al_pathname, "%'">>)
 					file_system.recursive_create_directory (al_pathname)
 				end
 				if not file_system.directory_exists (al_pathname) then
-					project.log ("  [copy] error: could not create directory '" + al_pathname + "'%N")
+					project.log (<<"  [copy] error: could not create directory '", al_pathname, "%'">>)
 					exit_code := 1
 				end
 			end

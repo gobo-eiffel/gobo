@@ -21,10 +21,7 @@ inherit
 			command
 		end
 
-	KL_STRING_ROUTINES
-		rename
-			make as kl_string_routines_make
-		export{NONE} all end
+	KL_IMPORTED_STRING_ROUTINES
 
 creation
 
@@ -40,9 +37,9 @@ feature {NONE} -- Initialization
 			!! command.make (a_project)
 			task_make (command, an_xml_element)
 			if has_attribute (Code_attribute_name) then
-				a_value := attribute_value (Code_attribute_name.out)
-				if not is_integer (a_value) then
-					a_project.log ("  [exit] warning: code '" + a_value + "' is not a valid integer value. Using value '1' instead.")
+				a_value := attribute_value (Code_attribute_name)
+				if not STRING_.is_integer (a_value) then
+					a_project.log (<<"  [exit] warning: code '", a_value, "' is not a valid integer value. Using value '1' instead.">>)
 					command.set_code (1)
 				else
 					command.set_code (a_value.to_integer)

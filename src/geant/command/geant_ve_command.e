@@ -137,8 +137,8 @@ feature -- Execution
 				end
 				cmd.append_string (" -a:")
 				a_filename := file_system.pathname_from_file_system (esd_filename, unix_file_system)
-				cmd.append_string (a_filename)
-				project.trace ("  [ve] " + cmd + "%N")
+				cmd := STRING_.appended_string (cmd, a_filename)
+				project.trace (<<"  [ve] ", cmd>>)
 				if not project.options.no_exec then
 					file_system.delete_file ("Result.out")
 					execute_shell (cmd)
@@ -160,8 +160,8 @@ feature -- Execution
 		do
 			if operating_system.is_windows then
 				if tuning_level /= Void then
-					if tuning_level.is_equal ("large") then
-						cmd := "vetuner -c -zone_1_reserved=67108864 %
+					if STRING_.same_string (tuning_level, "large") then
+						cmd := STRING_.concat ("vetuner -c -zone_1_reserved=67108864 %
 							%-zone_2_reserved=67108864 -zone_3_reserved=67108864 %
 							%-zone_4_reserved=67108864 -zone_5_reserved=67108864 %
 							%-zone_6_reserved=67108864 -zone_7_reserved=67108864 %
@@ -173,11 +173,11 @@ feature -- Execution
 							%-zone_6_committed=8192 -zone_7_committed=8192 %
 							%-zone_8_committed=8192 -zone_9_committed=8192 %
 							%-zone_10_committed=8192 -zone_11_committed=65536 %
-							%-zone_12_committed=8192 " + tuned_system
-						project.trace ("  [ve] " + cmd + "%N")
+							%-zone_12_committed=8192 ", tuned_system)
+						project.trace (<<"  [ve] ", cmd>>)
 						execute_shell (cmd)
-					elseif tuning_level.is_equal ("huge") then
-						cmd := "vetuner -c -zone_1_reserved=134217728 %
+					elseif STRING_.same_string (tuning_level, "huge") then
+						cmd := STRING_.concat ("vetuner -c -zone_1_reserved=134217728 %
 							%-zone_2_reserved=134217728 -zone_3_reserved=134217728 %
 							%-zone_4_reserved=134217728 -zone_5_reserved=134217728 %
 							%-zone_6_reserved=134217728 -zone_7_reserved=134217728 %
@@ -189,8 +189,8 @@ feature -- Execution
 							%-zone_6_committed=16384 -zone_7_committed=16384 %
 							%-zone_8_committed=16384 -zone_9_committed=16384 %
 							%-zone_10_committed=16384 -zone_11_committed=131072 %
-							%-zone_12_committed=16384 " + tuned_system
-						project.trace ("  [ve] " + cmd + "%N")
+							%-zone_12_committed=16384 ", tuned_system)
+						project.trace (<<"  [ve] ", cmd>>)
 						execute_shell (cmd)
 					else
 						exit_code := 1
@@ -215,18 +215,18 @@ feature -- Execution
 					-- compiler has been used to compile this system.
 				cmd := clone ("vec -dc -y -no")
 				if recursive_clean then
-					project.trace ("  [ve] [" + old_cwd + "] " + cmd + "%N")
+					project.trace (<<"  [ve] [", old_cwd, "] ", cmd>>)
 				else
-					project.trace ("  [ve] " + cmd + "%N")
+					project.trace (<<"  [ve] ", cmd>>)
 				end
 				execute_shell (cmd)
 				exit_code := 0
 			end
 			if file_system.file_exists ("Result.out") then
 				if recursive_clean then
-					project.trace ("  [ve] [" + old_cwd + "] delete Result.out%N")
+					project.trace (<<"  [ve] [", old_cwd, "] delete Result.out">>)
 				else
-					project.trace ("  [ve] delete Result.out%N")
+					project.trace (<<"  [ve] delete Result.out">>)
 				end
 				if not project.options.no_exec then
 					file_system.delete_file ("Result.out")
@@ -234,9 +234,9 @@ feature -- Execution
 			end
 			if file_system.file_exists ("vec.xcp") then
 				if recursive_clean then
-					project.trace ("  [ve] [" + old_cwd + "] delete vec.xcp%N")
+					project.trace (<<"  [ve] [", old_cwd, "] delete vec.xcp">>)
 				else
-					project.trace ("  [ve] delete vec.xcp%N")
+					project.trace (<<"  [ve] delete vec.xcp">>)
 				end
 				if not project.options.no_exec then
 					file_system.delete_file ("vec.xcp")
@@ -249,8 +249,8 @@ feature -- Execution
 					from a_dir.read_entry until a_dir.end_of_input loop
 						a_name := a_dir.last_entry
 						if
-							not a_name.is_equal (file_system.relative_current_directory) and
-							not a_name.is_equal (file_system.relative_parent_directory)
+							not STRING_.same_string (a_name, file_system.relative_current_directory) and
+							not STRING_.same_string (a_name, file_system.relative_parent_directory)
 						then
 							if file_system.directory_exists (a_name) then
 								file_system.cd (a_name)

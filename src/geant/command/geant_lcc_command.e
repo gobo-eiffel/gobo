@@ -77,11 +77,11 @@ feature -- Execution
 			cmd := clone ("lcc")
 			cmd.append_string (" -Fo")
 			a_filename := file_system.pathname_from_file_system (executable, unix_file_system)
-			cmd.append_string (a_filename)
+			cmd := STRING_.appended_string (cmd, a_filename)
 			cmd.append_string (" ")
 			a_filename := file_system.pathname_from_file_system (source_filename, unix_file_system)
-			cmd.append_string (a_filename)
-			project.trace ("  [lcc] " + cmd + "%N")
+			cmd := STRING_.appended_string (cmd, a_filename)
+			project.trace (<<"  [lcc] ", cmd>>)
 			execute_shell (cmd)
 		end
 

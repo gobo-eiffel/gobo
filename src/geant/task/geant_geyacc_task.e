@@ -36,7 +36,7 @@ feature {NONE} -- Initialization
 			task_make (command, an_xml_element)
 				-- separate_actions:
 			if has_attribute (Separate_actions_attribute_name) then
-				command.set_separate_actions (boolean_value(Separate_actions_attribute_name))
+				command.set_separate_actions (boolean_value (Separate_actions_attribute_name))
 			end
 				-- verbose_filename:
 			if has_attribute (Verbose_filename_attribute_name) then

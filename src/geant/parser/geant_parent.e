@@ -17,7 +17,7 @@ inherit
 	ANY
 
 	GEANT_SHARED_PROPERTIES
-		export{NONE} all end
+		export {NONE} all end
 
 creation
 
@@ -29,25 +29,25 @@ feature {NONE} -- Initialization
 			-- Create a new parent.
 		require
 			project_not_void: a_project /= Void
+		local
+			a_tester: UC_EQUALITY_TESTER
 		do
 			project := a_project
-
-			create renames.make_equal (10)
-			create redefines.make_equal (10)
-			create selects.make_equal (10)
-
-			create unchanged_targets.make (10)
-			create renamed_targets.make (5)
-			create redefined_targets.make (5)
-
+			!! a_tester
+			create renames.make_map_equal (10)
+			renames.set_key_equality_tester (a_tester)
+			create redefines.make_map_equal (10)
+			redefines.set_key_equality_tester (a_tester)
+			create selects.make_map_equal (10)
+			selects.set_key_equality_tester (a_tester)
+			create unchanged_targets.make_map (10)
+			unchanged_targets.set_key_equality_tester (a_tester)
+			create renamed_targets.make_map (5)
+			renamed_targets.set_key_equality_tester (a_tester)
+			create redefined_targets.make_map (5)
+			redefined_targets.set_key_equality_tester (a_tester)
 		ensure
 			project_set: project = a_project
-			renames_not_void: renames /= Void
-			redefines_not_void: redefines /= Void
-			selects_not_void: selects /= Void
-			unchanged_targets_not_void: unchanged_targets /= Void
-			renamed_targets_not_void: renamed_targets /= Void
-			redefined_targets_not_void: redefined_targets /= Void
 		end
 
 feature -- Access
@@ -126,33 +126,19 @@ feature -- Processing
 
 	prepare_project is
 			-- Prepare current parent for inheritance into `project'.
-		local
-			msg: STRING
 		do
-			msg := clone ("Project '")
-			msg.append_string (project.name)
-			msg.append_string ("': --> preparing parent '")
-			msg.append_string (parent_project.name)
-			msg.append_string ("' for inheritance:%N")
-			project.trace_debug (msg)
-
+			project.trace_debug (<<"Project '", project.name, "': --> preparing parent '",
+				parent_project.name, "' for inheritance:">>)
 			apply_renames
 			apply_redefines
 			apply_unchangeds
-
 				-- TODO: remove the following 3 lines after obsolete period
 			if project.old_inherit then
 				apply_undeclared_redefines
 			end
-
 			apply_selects
-
-			msg := clone ("Project '")
-			msg.append_string (project.name)
-			msg.append_string ("': <-- preparation of '")
-			msg.append_string (parent_project.name)
-			msg.append_string ("' for inheritance done.%N")
-			project.trace_debug (msg)
+			project.trace_debug (<<"Project '", project.name, "': <-- preparation of '",
+				parent_project.name, "' for inheritance done.">>)
 		end
 
 feature {NONE} -- Processing
@@ -163,58 +149,30 @@ feature {NONE} -- Processing
 			a_rename_cursor: DS_HASH_TABLE_CURSOR [GEANT_RENAME, STRING]
 			a_rename: GEANT_RENAME
 			a_target: GEANT_TARGET
-			msg: STRING
 		do
-			from
-				a_rename_cursor := renames.new_cursor
-				a_rename_cursor.finish
-			until
-				a_rename_cursor.before
-			loop
+			a_rename_cursor := renames.new_cursor
+			from a_rename_cursor.finish until a_rename_cursor.before loop
 				a_rename := a_rename_cursor.item
 				if not a_rename.is_executable then
-					exit_application (1, "invalid rename clause.")
+					exit_application (1, <<"invalid rename clause.">>)
 				end
 				if not parent_project.targets.has (a_rename.original_name) then
-					msg := clone ("%NLOAD ERROR:%N")
-					msg.append_string ("  Project '")
-					msg.append_string (project.name)
-					msg.append_string ("': VHRC-1: Inheritance clause contains inheritance operator")
-					msg.append_string (" 'rename'%Nfor a feature `")
-					msg.append_string (a_rename.original_name)
-					msg.append_string ("' which does not exist in parent '")
-					msg.append_string (parent_project.name)
-					msg.append_string ("'.%N")
-					exit_application (1, msg)
+					exit_application (1, <<"%NLOAD ERROR:%N", "  Project '", project.name,
+						"': VHRC-1: Inheritance clause contains inheritance operator",
+						" 'rename'%Nfor a feature `", a_rename.original_name,
+						"' which does not exist in parent '", parent_project.name, "%'.">>)
 				end
-	
 				if parent_project.targets.has (a_rename.new_name) then
-					msg := clone ("%NLOAD ERROR:%N")
-					msg.append_string ("  Project '")
-					msg.append_string (parent_project.name)
-					msg.append_string ("': cannot rename target: `")
-					msg.append_string (a_rename.original_name)
-					msg.append_string (" to `")
-					msg.append_string (a_rename.new_name)
-					msg.append_string ("' since it already exists.%N")
-					exit_application (1, msg)
+					exit_application (1, <<"%NLOAD ERROR:%N", "  Project '", parent_project.name,
+						"': cannot rename target: `", a_rename.original_name,
+						" to `", a_rename.new_name, "' since it already exists.">>)
 				end
-
 					-- Put `a_target' under new name in target list:
 				a_target := parent_project.targets.item (a_rename.original_name)
-				msg := clone ("Project '")
-				msg.append_string (project.name)
-				msg.append_string ("': renaming target: `")
-				msg.append_string (a_target.full_name)
-				msg.append_string ("' named `")
-				msg.append_string (a_rename.original_name)
-				msg.append_string ("' as: `")
-				msg.append_string (a_rename.new_name)
-				msg.append_string ("'%N")
-				project.trace_debug (msg)
-
+				project.trace_debug (<<"Project '", project.name, "': renaming target: `",
+					a_target.full_name, "' named `", a_rename.original_name,
+					"' as: `", a_rename.new_name, "%'">>)
 				renamed_targets.force_last (a_target, a_rename.new_name)
-
 				a_rename_cursor.back
 			end
 		end
@@ -225,19 +183,13 @@ feature {NONE} -- Processing
 			a_redefine_cursor: DS_LINEAR_CURSOR [GEANT_REDEFINE]
 			a_redefine: GEANT_REDEFINE
 			a_target: GEANT_TARGET
-			msg: STRING
 		do
-			from
-				a_redefine_cursor := redefines.new_cursor
-				a_redefine_cursor.start
-			until
-				a_redefine_cursor.after
-			loop
+			a_redefine_cursor := redefines.new_cursor
+			from a_redefine_cursor.start until a_redefine_cursor.after loop
 				a_redefine := a_redefine_cursor.item
 				if not a_redefine.is_executable then
-					exit_application (1, "invalid redefine clause.")
+					exit_application (1, <<"invalid redefine clause.">>)
 				end
-
 					-- Try to find target first in `renamed_targets';
 					-- if not found there, in `parent_project.targets':
 				if renamed_targets.has (a_redefine.name) then
@@ -245,25 +197,19 @@ feature {NONE} -- Processing
 				elseif parent_project.targets.has (a_redefine.name) then
 					a_target := parent_project.targets.item (a_redefine.name)
 				end
-
 				if a_target = Void then
-					msg := clone ("%NLOAD ERROR:%N")
-					msg.append_string ("  Project '")
-					msg.append_string (project.name)
-					msg.append_string ("': cannot redefine target: `")
-					msg.append_string (a_redefine.name)
-					msg.append_string ("' since it does not exist.%N")
-					exit_application (1, msg)
+					exit_application (1, <<"%NLOAD ERROR:%N", "  Project '", project.name,
+						"': cannot redefine target: `", a_redefine.name, "' since it does not exist.">>)
 				end
-
 				redefined_targets.force_last (a_target, a_redefine.name)
 				if renamed_targets.has (a_redefine.name) then
-					project.trace_debug ("Project '" + project.name + "': moving target '" + a_redefine.name + "' from list of renamed targets to list of redefined targets.%N")
+					project.trace_debug (<<"Project '", project.name, "': moving target '",
+						a_redefine.name, "' from list of renamed targets to list of redefined targets.">>)
 					renamed_targets.remove (a_redefine.name)
 				else
-					project.trace_debug ("Project '" + project.name + "': adding target '" + a_redefine.name + "' to list of redefined targets.%N")
+					project.trace_debug (<<"Project '", project.name, "': adding target '",
+						a_redefine.name, "' to list of redefined targets.">>)
 				end
-
 				a_redefine_cursor.forth
 			end
 		end
@@ -275,21 +221,16 @@ feature {NONE} -- Processing
 			a_target: GEANT_TARGET
 			a_target_name: STRING
 		do
-			from
-				a_target_cursor := parent_project.targets.new_cursor
-				a_target_cursor.finish
-			until
-				a_target_cursor.before
-			loop
+			a_target_cursor := parent_project.targets.new_cursor
+			from a_target_cursor.finish until a_target_cursor.before loop
 				a_target := a_target_cursor.item
 				a_target_name := a_target_cursor.key
 				if
-					not renamed_targets.has_item (a_target)
-					and not redefined_targets.has_item (a_target)
+					not renamed_targets.has_item (a_target) and
+					not redefined_targets.has_item (a_target)
 				then
 					unchanged_targets.force_last (a_target, a_target_name)
 				end
-
 				a_target_cursor.back
 			end
 		end
@@ -305,28 +246,18 @@ feature {NONE} -- Processing
 			a_target_cursor: DS_HASH_TABLE_CURSOR [GEANT_TARGET, STRING]
 			a_target: GEANT_TARGET
 			a_target_name: STRING
-			msg: STRING
 		do
-			from
-				a_target_cursor := project.targets.new_cursor
-				a_target_cursor.start
-			until
-				a_target_cursor.after
-			loop
+			a_target_cursor := project.targets.new_cursor
+			from a_target_cursor.start until a_target_cursor.after loop
 				a_target := a_target_cursor.item
 				a_target_name := a_target_cursor.key
 				if unchanged_targets.has (a_target_name) then
-					msg := clone ("Project '")
-					msg.append_string (project.name)
-					msg.append_string ("': WARNING: Applying implicit redefinition for target `")
-					msg.append_string (a_target_name)
-					msg.append_string ("' due to old inheritance format.%N")
-					project.trace (msg)
-
+					project.trace (<<"Project '", project.name,
+						"': WARNING: Applying implicit redefinition for target `",
+						a_target_name, "' due to old inheritance format.">>)
 					redefined_targets.force_last (unchanged_targets.item (a_target_name), a_target_name)
 					unchanged_targets.remove (a_target_name)
 				end
-
 				a_target_cursor.forth
 			end
 		end
@@ -337,19 +268,13 @@ feature {NONE} -- Processing
 			a_select_cursor: DS_LINEAR_CURSOR [GEANT_SELECT]
 			a_select: GEANT_SELECT
 			a_target: GEANT_TARGET
-			msg: STRING
 		do
-			from
-				a_select_cursor := selects.new_cursor
-				a_select_cursor.start
-			until
-				a_select_cursor.after
-			loop
+			a_select_cursor := selects.new_cursor
+			from a_select_cursor.start until a_select_cursor.after loop
 				a_select := a_select_cursor.item
 				if not a_select.is_executable then
-					exit_application (1, "invalid select clause.")
+					exit_application (1, <<"invalid select clause.">>)
 				end
-
 					-- Try to find target first in `redefined_targets';
 					-- if not found there, in `renamed_targets';
 					-- if not found there, in `unchanged_targets':
@@ -360,20 +285,13 @@ feature {NONE} -- Processing
 				elseif unchanged_targets.has (a_select.name) then
 					a_target := unchanged_targets.item (a_select.name)
 				end
-
 				if a_target = Void then
-					msg := clone ("%NLOAD ERROR:%N")
-					msg.append_string ("  Project '")
-					msg.append_string (project.name)
-					msg.append_string ("': selected target: `")
-					msg.append_string (a_select.name)
-					msg.append_string ("' does not exist.%N")
-					exit_application (1, msg)
+					exit_application (1, <<"%NLOAD ERROR:%N", "  Project '", project.name,
+						"': selected target: `", a_select.name, "' does not exist.">>)
 				end
-
-				project.trace_debug ("Project '" + project.name + "': moving target '" + a_select.name + "' to list of selected targets.%N")
+				project.trace_debug (<<"Project '", project.name, "': moving target '",
+					a_select.name, "' to list of selected targets.">>)
 				parent_project.selected_targets.force_last (a_target, a_select.name)
-
 				a_select_cursor.forth
 			end
 		end
@@ -383,5 +301,8 @@ invariant
 	renames_not_void: renames /= Void
 	redefines_not_void: redefines /= Void
 	selects_not_void: selects /= Void
+	unchanged_targets_not_void: unchanged_targets /= Void
+	renamed_targets_not_void: renamed_targets /= Void
+	redefined_targets_not_void: redefined_targets /= Void
 
 end
