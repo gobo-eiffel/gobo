@@ -2,10 +2,10 @@ indexing
 
 	description:
 
-		"System clocks (precision to the second)"
+		"System clocks (precision to the millisecond)"
 
 	library: "Gobo Eiffel Kernel Library"
-	copyright: "Copyright (c) 2001, Eric Bezault and others"
+	copyright: "Copyright (c) 2001-2004, Eric Bezault and others"
 	license: "Eiffel Forum License v2 (see forum.txt)"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -16,6 +16,15 @@ inherit
 
 	KI_SYSTEM_CLOCK
 
+#ifdef ISE
+	C_DATE
+		rename
+			millisecond_now as millisecond
+		undefine
+			default_create
+		end
+
+#endif
 #ifdef VE
 	TIMESTAMP
 		rename
@@ -62,16 +71,16 @@ feature -- Access
 	second: INTEGER
 			-- Second
 
+#ifndef ISE
+	millisecond: INTEGER
+			-- Millisecond
+
+#endif
 #endif
 feature -- Setting
 
 	set_local_time is
 			-- Set clock to current local time.
-#ifdef ISE
-		local
-			tm_struct: POINTER
-			time_t: INTEGER
-#endif
 #ifdef SE
 		local
 			old_is_local: BOOLEAN
@@ -87,6 +96,7 @@ feature -- Setting
 			hour := basic_time.hour
 			minute := basic_time.minute
 			second := basic_time.second
+			millisecond := basic_time.microsecond // 1000
 			if not old_is_local then
 				basic_time.set_universal_time
 			end
@@ -95,24 +105,19 @@ feature -- Setting
 			old_set_local_time
 #endif
 #ifdef ISE
-			time_t := c_time
-			tm_struct := tm_localtime ($time_t)
-			year := 1900 + tm_year (tm_struct)
-			month := tm_month (tm_struct) + 1
-			day := tm_day (tm_struct)
-			hour := tm_hour (tm_struct)
-			minute := tm_minute (tm_struct)
-			second := tm_second (tm_struct)
+			is_utc := False
+			update
+			year := year_now
+			month := month_now
+			day := day_now
+			hour := hour_now
+			minute := minute_now
+			second := second_now
 #endif
 		end
 
 	set_utc_time is
 			-- Set clock to current UTC time.
-#ifdef ISE
-		local
-			tm_struct: POINTER
-			time_t: INTEGER
-#endif
 #ifdef SE
 		local
 			old_is_local: BOOLEAN
@@ -128,6 +133,7 @@ feature -- Setting
 			hour := basic_time.hour
 			minute := basic_time.minute
 			second := basic_time.second
+			millisecond := basic_time.microsecond // 1000
 			if old_is_local then
 				basic_time.set_local_time
 			end
@@ -136,100 +142,22 @@ feature -- Setting
 			set_to_now
 #endif
 #ifdef ISE
-			time_t := c_time
-			tm_struct := tm_gmtime ($time_t)
-			year := 1900 + tm_year (tm_struct)
-			month := tm_month (tm_struct) + 1
-			day := tm_day (tm_struct)
-			hour := tm_hour (tm_struct)
-			minute := tm_minute (tm_struct)
-			second := tm_second (tm_struct)
+			is_utc := True
+			update
+			year := year_now
+			month := month_now
+			day := day_now
+			hour := hour_now
+			minute := minute_now
+			second := second_now
 #endif
 		end
-
-#ifdef SE || ISE
-feature {NONE} -- Implementation
 
 #ifdef SE
-	basic_time: TIME
+feature {NONE} -- Implementation
+
+	basic_time: MICROSECOND_TIME
 			-- System time
 
-#endif
-#ifdef ISE
-	c_time: INTEGER is
-			-- System time in seconds since 1 January 1970 at 00:00:00 UTC
-		external
-			"C [macro <time.h>]: EIF_INTEGER"
-		alias
-			"time(NULL)"
-		end
-
-	tm_localtime (t: POINTER): POINTER is
-			-- Convert `t' seconds since 1 January 1970 at 00:00:00 UTC
-			-- to local time 'struct tm*'
-		external
-			"C (const time_t*): EIF_POINTER | <time.h>"
-		alias
-			"localtime"
-		end
-
-	tm_gmtime (t: POINTER): POINTER is
-			-- Convert `t' seconds since 1 January 1970 at 00:00:00 UTC
-			-- to Coordinated Universal Time (UTC) 'struct tm*'
-		external
-			"C (const time_t*): EIF_POINTER | <time.h>"
-		alias
-			"gmtime"
-		end
-
-	tm_year (p: POINTER): INTEGER is
-			-- Years since 1900
-		external
-			"C [struct <time.h>] (struct tm): EIF_INTEGER"
-		alias
-			"tm_year"
-		end
-
-	tm_month (p: POINTER): INTEGER is
-			-- Months since January - [0,11]
-		external
-			"C [struct <time.h>] (struct tm): EIF_INTEGER"
-		alias
-			"tm_mon"
-		end
-
-	tm_day (p: POINTER): INTEGER is
-			-- Day of the month - [1,31]
-		external
-			"C [struct <time.h>] (struct tm): EIF_INTEGER"
-		alias
-			"tm_mday"
-		end
-
-	tm_hour (p: POINTER): INTEGER is
-			-- Hours since midnight - [0,23]
-		external
-			"C [struct <time.h>] (struct tm): EIF_INTEGER"
-		alias
-			"tm_hour"
-		end
-
-	tm_minute (p: POINTER): INTEGER is
-			-- Minutes after the hour - [0,59]
-		external
-			"C [struct <time.h>] (struct tm): EIF_INTEGER"
-		alias
-			"tm_min"
-		end
-
-	tm_second (p: POINTER): INTEGER is
-			-- Seconds after the minute - [0,61]
-		external
-			"C [struct <time.h>] (struct tm): EIF_INTEGER"
-		alias
-			"tm_sec"
-		end
-
-#endif
 #endif
 end

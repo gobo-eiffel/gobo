@@ -73,6 +73,11 @@
 			<option name="public_key_token" value="b77a5c561934e089"/>
 			<option name="prefix" value="XML_"/>
 		</cluster>
+		<cluster name="time">
+			<cluster name="format">
+				<cluster name="english"/>
+			</cluster>
+		</cluster>
 	</cluster>
 
 	<cluster name="se" if="${GOBO_EIFFEL}=se">

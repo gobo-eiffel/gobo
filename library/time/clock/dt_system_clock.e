@@ -2,10 +2,10 @@ indexing
 
 	description:
 
-		"Local system clocks (precision to the second)"
+		"Local system clocks (precision to the millisecond)"
 
 	library: "Gobo Eiffel Time Library"
-	copyright: "Copyright (c) 2001, Eric Bezault and others"
+	copyright: "Copyright (c) 2001-2004, Eric Bezault and others"
 	license: "Eiffel Forum License v2 (see forum.txt)"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -35,7 +35,7 @@ feature -- Setting
 			if second >= Seconds_in_minute then
 				second := Seconds_in_minute - 1
 			end
-			a_time.set_precise_hour_minute_second (hour, minute, second, 0)
+			a_time.set_precise_hour_minute_second (hour, minute, second, millisecond)
 		end
 
 	set_date_to_now (a_date: DT_DATE) is
@@ -53,7 +53,7 @@ feature -- Setting
 				second := Seconds_in_minute - 1
 			end
 			a_date_time.set_year_month_day (year, month, day)
-			a_date_time.set_precise_hour_minute_second (hour, minute, second, 0)
+			a_date_time.set_precise_hour_minute_second (hour, minute, second, millisecond)
 		end
 
 end

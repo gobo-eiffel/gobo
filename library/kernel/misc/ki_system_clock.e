@@ -2,10 +2,10 @@ indexing
 
 	description:
 
-		"Interface for system clocks (precision to the second)"
+		"Interface for system clocks (precision to the millisecond)"
 
 	library: "Gobo Eiffel Kernel Library"
-	copyright: "Copyright (c) 2001, Eric Bezault and others"
+	copyright: "Copyright (c) 2001-2004, Eric Bezault and others"
 	license: "Eiffel Forum License v2 (see forum.txt)"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -64,6 +64,14 @@ feature -- Access
 		ensure
 			second_large_enough: Result >= 0
 			second_small_enough: Result < 62
+		end
+
+	millisecond: INTEGER is
+			-- Millisecond
+		deferred
+		ensure
+			millisecond_large_enough: Result >= 0
+			millisecond_small_enough: Result < 999
 		end
 
 feature -- Setting

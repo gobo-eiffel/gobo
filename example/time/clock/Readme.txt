@@ -5,7 +5,7 @@ time as a DT_TIME, DT_DATE and DT_DATE_TIME.
 To compile this example:
 
 1. Use your favorite Eiffel compiler to compile the Eiffel system using
-   the provided Ace file (ISE Eiffel: ise.ace, SmallEiffel: se.ace) or
+   the provided Ace file (ISE Eiffel: ise.ace, SmartEiffel: se.ace) or
    ESD file (Visual Eiffel: ve.esd). Alternatively you can use 'geant'
    to launch the compilation:
    
@@ -20,12 +20,12 @@ To compile this example:
 
    It should display something like that on your console window:
 
-       Time Now: 14:36:54
-       Date Now: 2001/04/10
-       DateTime Now: 2001/04/10 14:36:54
-       UTC Time Now: 12:36:54
-       UTC Date Now: 2001/04/10
-       UTC DateTime Now: 2001/04/10 12:36:54
+       Time Now: 11:55:48.343
+       Date Now: 2004/10/16
+       DateTime Now: 2004/10/16 11:55:48.343
+       UTC Time Now: 09:55:48.343
+       UTC Date Now: 2004/10/16
+       UTC DateTime Now: 2004/10/16 09:55:48.343
 
 --
-Copyright (c) 2001, Eric Bezault and others
+Copyright (c) 2001-2004, Eric Bezault and others
