@@ -44,6 +44,26 @@ feature -- Access
 		deferred
 		ensure
 			last_entry_not_void: Result /= Void
+			last_entry_not_empty: Result.count > 0
+		end
+
+	filenames: ARRAY [STRING] is
+			-- Names of readable files in current directory;
+			-- Void if current directory could not be searched
+		deferred
+		ensure
+			-- no_void_filename: Result /= Void implies not Result.has (Void)
+			-- no_empty_filename: Result /= Void implies forall s in Result, s.count > 0
+		end
+
+	directory_names: ARRAY [STRING] is
+			-- Names of readable subdirectories in current directory;
+			-- Void if current directory could not be searched
+			-- (Do not include parent and current directory names.)
+		deferred
+		ensure
+			-- no_void_filename: Result /= Void implies not Result.has (Void)
+			-- no_empty_filename: Result /= Void implies forall s in Result, s.count > 0
 		end
 
 feature -- Status report
@@ -64,6 +84,11 @@ feature -- Status report
 			-- Have all entries been read?
 		require
 			is_open_read: is_open_read
+		deferred
+		end
+
+	is_readable: BOOLEAN is
+			-- Can directory be opened in read mode?
 		deferred
 		end
 

@@ -16,11 +16,17 @@ inherit
 
 	KI_DIRECTORY
 
+	KL_SHARED_FILE_SYSTEM
+		export
+			{NONE} all
+		end
+
 #ifdef ISE || HACT
 	DIRECTORY
 		rename
 			make as ise_make,
 			open_read as ise_open_read,
+			is_readable as se_is_readable,
 			close as do_close,
 			delete as do_delete
 		export
@@ -32,12 +38,6 @@ inherit
 		rename
 			make as ve_make,
 			close as do_close
-		export
-			{NONE} all
-		end
-#endif
-#ifdef SE
-	KL_SHARED_FILE_SYSTEM
 		export
 			{NONE} all
 		end
@@ -106,6 +106,63 @@ feature -- Access
 #endif
 		end
 
+	filenames: ARRAY [STRING] is
+			-- Names of readable files in current directory;
+			-- Void if current directory could not be searched
+		local
+			a_name: STRING
+			a_dir: KL_DIRECTORY
+		do
+			if is_closed then
+				open_read
+				if is_open_read then
+					!! Result.make (1, 0)
+					from read_entry until end_of_input loop
+						a_name := last_entry
+						if file_system.is_file_readable (name + "/" + a_name) then
+							Result.force (a_name, Result.count + 1)
+						end
+						read_entry
+					end
+					close
+				end
+			else
+				!! a_dir.make (name)
+				Result := a_dir.filenames
+			end
+		end
+
+	directory_names: ARRAY [STRING] is
+			-- Names of readable subdirectories in current directory;
+			-- Void if current directory could not be searched
+			-- (Do not include parent and current directory names.)
+		local
+			a_name: STRING
+			a_dir: KL_DIRECTORY
+		do
+			if is_closed then
+				open_read
+				if is_open_read then
+					!! Result.make (1, 0)
+					from read_entry until end_of_input loop
+						a_name := last_entry
+						if
+							not a_name.is_equal (".") and then
+							not a_name.is_equal ("..") and then
+							file_system.is_directory_readable (name + "/" + a_name)
+						then
+							Result.force (a_name, Result.count + 1)
+						end
+						read_entry
+					end
+					close
+				end
+			else
+				!! a_dir.make (name)
+				Result := a_dir.directory_names
+			end
+		end
+
 feature -- Status report
 
 	is_open_read: BOOLEAN is
@@ -139,6 +196,12 @@ feature -- Status report
 #ifdef VE
 			Result := is_exhausted
 #endif
+		end
+
+	is_readable: BOOLEAN is
+			-- Can directory be opened in read mode?
+		do
+			Result := file_system.is_directory_readable (name)
 		end
 
 feature -- Basic operations
