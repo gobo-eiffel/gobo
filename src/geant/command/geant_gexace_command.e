@@ -40,7 +40,6 @@ feature -- Status report
 	is_executable: BOOLEAN is
 			-- Can command be executed?
 		do
-print("gexace%N")
 			Result := (command /= Void and then command.count > 0) and
 				(command_options /= Void and then command_options.count > 0)
 		ensure then
