@@ -232,9 +232,15 @@ feature -- Element change
 			a_directory_name_not_empty: a_directory_name.count > 0
 		local
 			a_entry: GEANT_FILESET_ENTRY
+			an_directory_name: STRING
 		do
-			project.trace_debug (<<"  [*directoryset] adding: '", a_directory_name, "%'">>)
-			!! a_entry.make (a_directory_name, a_directory_name)
+			if concat then
+				an_directory_name := unix_file_system.pathname (directory_name, a_directory_name)
+			else
+				an_directory_name := a_directory_name
+			end
+			project.trace_debug (<<"  [*directoryset] adding: '", an_directory_name, "%'">>)
+			!! a_entry.make (an_directory_name, an_directory_name)
 			directory_names.force_last (a_entry)
 		end
 
