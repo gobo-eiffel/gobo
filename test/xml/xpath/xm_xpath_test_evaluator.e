@@ -467,6 +467,24 @@ feature
 			a_boolean_value ?= evaluated_items.item (1)
 			assert ("Boolean false", a_boolean_value /= Void and then a_boolean_value.value = False)
 		end	
+	
+	test_instance_of is
+			-- Test instance of
+		local
+			an_evaluator: XM_XPATH_EVALUATOR
+			evaluated_items: DS_LINKED_LIST [XM_XPATH_ITEM]
+			a_boolean_value: XM_XPATH_BOOLEAN_VALUE
+		do
+			create an_evaluator
+			an_evaluator.build_static_context ("./books.xml", False, False)
+			assert ("Build successfull", not an_evaluator.was_build_error)
+			an_evaluator.evaluate ("5 instance of xs:integer")
+			assert ("No evaluation error", not an_evaluator.is_error)
+			evaluated_items := an_evaluator.evaluated_items
+			assert ("One evaluated item", evaluated_items /= Void and then evaluated_items.count = 1)
+			a_boolean_value ?= evaluated_items.item (1)
+			assert ("Boolean true", a_boolean_value /= Void and then a_boolean_value.value = True)
+		end	
 
 	
 	-- Eventually, all errors should be tested here

@@ -144,9 +144,6 @@ feature -- Evaluation
 			else
 				an_expression := Expression_factory.parsed_expression
 				an_expression.analyze (static_context)
-				debug ("XPath evaluator")
-					an_expression.display (1, static_context.name_pool)
-				end				
 				if an_expression.is_error then
 					is_error := True
 					internal_error_value := an_expression.error_value
@@ -158,6 +155,9 @@ feature -- Evaluation
 						is_error := True
 						internal_error_value := an_expression.error_value
 					else
+						debug ("XPath evaluator")
+							an_expression.display (1, static_context.name_pool)
+						end
 						an_expression.allocate_slots (1)
 						debug ("XPath evaluator")
 							if not an_expression.analyzed then
