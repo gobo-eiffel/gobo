@@ -39,7 +39,7 @@ ${GOBO_SRCS}:
 	${CP} -f ${GOBO}/src/$@/Makefile $@
 	${ECHO} 'Compiling Test Cases'
 	cd $@ ; ${MAKE} ${COMPILER}${DEBUG} > tmp_compile.txt 2>&1
-	cd $@ ; ${GOBO}/test/all/common/test_exe.sh --version ${COMPILER} $@
+	cd $@ ; ${GOBO}/test/all/common/test_harness.sh --version ${COMPILER} $@
 
 ${GOBO_EXAMPLES}:
 	${ECHO} ''
@@ -49,4 +49,4 @@ ${GOBO_EXAMPLES}:
 	${CP} -f ${GOBO}/example/${EXAMPLE_DIR}/$@/Makefile $@-${EXAMPLE_DIR}
 	${ECHO} 'Compiling Test Cases'
 	cd $@-${EXAMPLE_DIR} ; ${MAKE} ${COMPILER}${DEBUG} > tmp_compile.txt 2>&1
-	cd $@-${EXAMPLE_DIR} ; ${GOBO}/test/all/common/test_exe.sh ${COMPILER} $@
+	cd $@-${EXAMPLE_DIR} ; ${GOBO}/test/all/common/test_harness.sh ${COMPILER} $@

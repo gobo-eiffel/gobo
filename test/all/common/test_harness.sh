@@ -1,89 +1,54 @@
 #!/bin/sh
 
-# usage: test_harness.sh [--getest] [--version] [--finalize] compiler exename dirname
+# usage: test_harness.sh [--version] compiler exename
 
-if [ "$1" = "--getest" ]; then
-	getest=$1
-	if [ "$2" = "--version" ]; then
-		version=$2
-		if [ "$3" = "--finalize" ]; then
-			finalize=$3
-			compiler=$4
-			exename=$5
-			dirname=$6
-		else
-			finalize=""
-			compiler=$3
-			exename=$4
-			dirname=$5
-		fi
-	else
-		version=""
-		if [ "$2" = "--finalize" ]; then
-			finalize=$2
-			compiler=$3
-			exename=$4
-			dirname=$5
-		else
-			finalize=""
-			compiler=$2
-			exename=$3
-			dirname=$4
-		fi
-	fi
+if [ "$1" = "--version" ]; then
+	version=$1
+	compiler=$2
+	exename=$3
 else
-	getest=""
-	if [ "$1" = "--version" ]; then
-		version=$1
-		if [ "$2" = "--finalize" ]; then
-			finalize=$2
-			compiler=$3
-			exename=$4
-			dirname=$5
-		else
-			finalize=""
-			compiler=$2
-			exename=$3
-			dirname=$4
-		fi
-	else
-		version=""
-		if [ "$1" = "--finalize" ]; then
-			finalize=$1
-			compiler=$2
-			exename=$3
-			dirname=$4
-		else
-			finalize=""
-			compiler=$1
-			exename=$2
-			dirname=$3
-		fi
-	fi
+	version=""
+	compiler=$1
+	exename=$2
 fi
 
-#$GOBO/test/all/$compiler/test_harness.sh $getest $version $finalize $exename $dirname
-if [ "$getest" = "--getest" ]; then
-	mkdir $exename
-	cd $exename
-	mkdir TESTGEN
-	cp $dirname/Makefile .
-	if [ "$finalize" = "--finalize" ]; then
-		sed "s/$compiler-debug/$compiler/g" $dirname/getest.$compiler > getest.$compiler
-	else
-		cp $dirname/getest.$compiler .
+echo "Running Test Cases"
+if [ -x $exename ]; then
+	if [ "$version" = "--version" ]; then
+		./$exename --version
 	fi
-	getest --$compiler
+	$GOBO/test/all/common/test_${exename}.sh $compiler > tmp_exe.txt 2>&1
+	if [ -s tmp_exe.txt ]; then
+		if [ "$verbose" = "--verbose" ]; then
+			cat tmp_exe.txt
+		fi
+		echo ""
+		echo "Test Summary for $exename"
+		echo ""
+		echo "# Passed:     0 test"
+		echo "# FAILED:     1 test"
+		echo "# Aborted:    0 test"
+		echo "# Total:      1 test (0 assertion)"
+	else
+		echo ""
+		echo "Test Summary for $exename"
+		echo ""
+		echo "# PASSED:     1 test"
+		echo "# Failed:     0 test"
+		echo "# Aborted:    0 test"
+		echo "# Total:      1 test (0 assertion)"
+	fi
 else
-	echo "Preparing Test Cases"
-	mkdir $exename
-	cd $exename
-	cp $dirname/Makefile .
-	echo "Compiling Test Cases"
-	if [ "$finalize" = "--finalize" ]; then
-		make $compiler > tmp_compile.txt 2>&1
-	else
-		make $compiler-debug > tmp_compile.txt 2>&1
+	if [ "$verbose" = "--verbose" ]; then
+		if [ -s tmp_compile.txt ]; then
+			cat tmp_compile.txt
+		fi
 	fi
-	$GOBO/test/all/common/test_exe.sh $version $compiler $exename
+	echo ""
+	echo "Test Summary for $exename"
+	echo ""
+	echo "# Passed:     0 test"
+	echo "# Failed:     0 test"
+	echo "# ABORTED:    1 test"
+	echo "# Total:      1 test (0 assertion)"
 fi
