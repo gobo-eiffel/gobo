@@ -26,7 +26,7 @@ feature -- Test
 			create a_parser.make
 			a_parser.parse_from_string ("")
 			assert ("not_correct", not a_parser.is_correct)
-			assert_strings_equal ("no_element", "parse error ( ln: 1 cl: 1 byte: 1 -> STRING)", a_parser.last_error_extended_description)
+			assert_strings_equal ("no_element", "STRING:1:1:parse error", a_parser.last_error_extended_description)
 		end
 
 	test_position is
