@@ -91,7 +91,8 @@ feature {NONE} -- Initialization
 		do
 			error_handler := an_error_handler
 			ast_factory := a_factory
-			create parsed_libraries.make (10)
+			create parsed_libraries.make_map (10)
+			parsed_libraries.set_key_equality_tester (string_equality_tester)
 				-- We must not create a new ET_XACE_LIBRARY_PARSER
 				-- object if `Current' is one already, or we will
 				-- recurse in this routine forever.
