@@ -6,7 +6,7 @@ indexing
 
 	library:    "Gobo Eiffel Tools Library"
 	author:     "Eric Bezault <ericb@gobosoft.com>"
-	copyright:  "Copyright (c) 1999, Eric Bezault and others"
+	copyright:  "Copyright (c) 1999-2001, Eric Bezault and others"
 	license:    "Eiffel Forum Freeware License v1 (see forum.txt)"
 	date:       "$Date$"
 	revision:   "$Revision$"
@@ -20,6 +20,28 @@ inherit
 creation
 
 	make_standard, make_null
+
+feature -- Status report
+
+	is_ise: BOOLEAN
+
+	is_hact: BOOLEAN
+
+	is_se: BOOLEAN
+
+	is_ve: BOOLEAN
+
+	is_gelint: BOOLEAN
+
+	is_pedantic: BOOLEAN
+
+	set_compilers is
+		do
+			is_ise := True
+			is_hact := True
+			is_se := True
+			is_gelint := True
+		end
 
 feature -- Syntax errors
 
@@ -219,6 +241,55 @@ feature -- Validity errors
 			end
 		end
 			
+	report_vcfg1_error (where: ET_CLASS;
+		a_formal: ET_FORMAL_GENERIC_PARAMETER; a_class: ET_CLASS) is
+			-- Report VCFG-1 error (ETL2 p.52, ETR p.16): the formal
+			-- generic parameter `a_formal' in class `where' has the
+			-- same name as class `a_class' in the surrounding universe.
+		require
+			where_not_void: where /= Void
+			where_parsed: where.is_parsed
+			no_syntax_error: not where.has_syntax_error
+			a_formal_not_void: a_formal /= Void
+			a_class_not_void: a_class /= Void
+			a_class_in_universe: a_class.is_parsed
+		do
+			print ("[VCFG-1] Class ")
+			print (where.name.name)
+			print (" (")
+			print (a_formal.name.position.line)
+			print (",")
+			print (a_formal.name.position.column)
+			print ("): formal generic parameter '")
+			print (a_formal.name.name)
+			print ("' has the same name as a class in the surrounding universe.%N")
+		end
+
+	report_vcfg2_error (where: ET_CLASS; formal1, formal2: ET_FORMAL_GENERIC_PARAMETER) is
+			-- Report VCFG-2 error (ETL2 p.52, ETR p.16): a formal
+			-- generic name is declared twice in generic class `where'.
+		require
+			where_not_void: where /= Void
+			where_parsed: where.is_parsed
+			no_syntax_error: not where.has_syntax_error
+			formal1_not_void: formal1 /= Void
+			formal2_not_void: formal2 /= Void
+		do
+			print ("[VCFG-2] Class ")
+			print (where.name.name)
+			print (" (")
+			print (formal1.name.position.line)
+			print (",")
+			print (formal1.name.position.column)
+			print ("): '")
+			print (formal1.name.name)
+			print ("' is the name of formal generic parameters #")
+			print (formal1.index)
+			print (" and #")
+			print (formal2.index)
+			print (".%N")
+		end
+
 	report_vcfg3_error (where: ET_CLASS; a_type: ET_TYPE) is
 			-- Report VCFG-3 error (ETR p.16): invalid
 			-- type `a_type' in constraint of formal
@@ -260,6 +331,254 @@ feature -- Validity errors
 				print ("): invalid type '")
 				print (a_type.to_string)
 				print ("' in constraint of formal generic parameter.%N")
+			end
+		end
+
+	report_vcfg3a_error (where: ET_CLASS;
+		a_formal: ET_FORMAL_GENERIC_PARAMETER;
+		a_constraint: ET_FORMAL_GENERIC_TYPE) is
+			-- Report VCFG-3 error (ETR p.16): the constraint of
+			-- `a_formal' in class `where' is the formal generic
+			-- parameter itself.
+		require
+			where_not_void: where /= Void
+			where_parsed: where.is_parsed
+			no_syntax_error: not where.has_syntax_error
+			a_formal_not_void: a_formal /= Void
+			a_constraint_not_void: a_constraint /= Void
+			valid_constraint: a_formal.constraint = a_constraint
+		local
+			old_ise, old_ve: BOOLEAN
+		do
+			if is_hact or is_se then
+				old_ise := is_ise
+				old_ve := is_ve
+				is_ise := False
+				is_ve := False
+				report_vtct_error (where, a_constraint)
+				is_ise := old_ise
+				is_ve := old_ve
+			end
+			if reportable_vcfg3_error (where) then
+				if is_ise or is_gelint then
+					print_compiler (is_ise, Question_tag, False, No_tag,
+						False, No_tag, False, No_tag)
+					print ("[VCFG-3] Class ")
+					print (where.name.name)
+					print (" (")
+					print (a_constraint.position.line)
+					print (",")
+					print (a_constraint.position.column)
+					print ("): constraint of formal generic parameter '")
+					print (a_formal.name.name)
+					print ("' is '")
+					print (a_formal.name.name)
+					print ("' itself.%N")
+				end
+			end
+		end
+
+	report_vcfg3b_error (where: ET_CLASS;
+		a_formal: ET_FORMAL_GENERIC_PARAMETER;
+		a_constraint: ET_FORMAL_GENERIC_TYPE) is
+			-- Report VCFG-3 error (ETR p.16): the constraint of
+			-- `a_formal' in class `where' is another formal generic
+			-- parameter appearing before `a_formal' in the list
+			-- of formal generic parameters.
+		require
+			where_not_void: where /= Void
+			where_parsed: where.is_parsed
+			no_syntax_error: not where.has_syntax_error
+			a_formal_not_void: a_formal /= Void
+			a_constraint_not_void: a_constraint /= Void
+			valid_constraint: a_formal.constraint = a_constraint
+		do
+			if reportable_vcfg3_error (where) then
+				if is_ise or is_hact then
+					print_compiler (is_ise, Question_tag,
+						is_hact, Question_tag,
+						False, No_tag, False, No_tag)
+					print ("[VCFG-3] Class ")
+					print (where.name.name)
+					print (" (")
+					print (a_constraint.position.line)
+					print (",")
+					print (a_constraint.position.column)
+					print ("): constraint of formal generic parameter '")
+					print (a_formal.name.name)
+					print ("' is another formal generic parameter '")
+					print (a_constraint.to_string)
+					print ("'.%N")
+				end
+			end
+		end
+
+	report_vcfg3c_error (where: ET_CLASS;
+		a_formal: ET_FORMAL_GENERIC_PARAMETER;
+		a_constraint: ET_FORMAL_GENERIC_TYPE) is
+			-- Report VCFG-3 error (ETR p.16): the constraint of
+			-- `a_formal' in class `where' is another formal generic
+			-- parameter appearing after `a_formal' in the list
+			-- of formal generic parameters.
+		require
+			where_not_void: where /= Void
+			where_parsed: where.is_parsed
+			no_syntax_error: not where.has_syntax_error
+			a_formal_not_void: a_formal /= Void
+			a_constraint_not_void: a_constraint /= Void
+			valid_constraint: a_formal.constraint = a_constraint
+		local
+			old_se, old_ve: BOOLEAN
+		do
+			if is_ise or is_hact then
+				old_se := is_se
+				old_ve := is_ve
+				is_se := False
+				is_ve := False
+				report_vtct_error (where, a_constraint)
+				is_se := old_se
+				is_ve := old_ve
+			end
+		end
+
+	report_vcfg3d_error (where: ET_CLASS; a_cycle: DS_LIST [ET_FORMAL_GENERIC_PARAMETER]) is
+			-- Report VCFG-3 error (ETR p.16): the constraints of
+			-- the formal generic parameters `a_cycle' of class
+			-- `where' are involved in a cycle.
+		require
+			where_not_void: where /= Void
+			where_parsed: where.is_parsed
+			no_syntax_error: not where.has_syntax_error
+			a_cyle_not_void: a_cycle /= Void
+			no_void_formal: not a_cycle.has (Void)
+			a_cycle_not_empty: not a_cycle.is_empty
+		local
+			a_cursor: DS_LIST_CURSOR [ET_FORMAL_GENERIC_PARAMETER]
+		do
+			if reportable_vcfg3_error (where) then
+				print_compiler (False, No_tag, False, No_tag,
+					is_se, Question_tag, False, No_tag)
+				if is_se or is_gelint then
+					print ("[VCFG-3] Class ")
+					print (where.name.name)
+					print (": formal generic constraint cycle ")
+					a_cursor := a_cycle.new_cursor
+					a_cursor.start
+					print (a_cursor.item.name.name)
+					a_cursor.forth
+					from until a_cursor.after loop
+						print (" -> ")
+						print (a_cursor.item.name.name)
+						a_cursor.forth
+					end
+					print (".%N")
+				end
+			end
+		end
+
+	report_vcfg3e_error (where: ET_CLASS;
+		a_formal: ET_FORMAL_GENERIC_PARAMETER;
+		a_type: ET_FORMAL_GENERIC_TYPE) is
+			-- Report VCFG-3 error (ETR p.16): the constraint of
+			-- `a_formal' in class `where' contains the formal
+			-- generic parameter itself.
+		require
+			where_not_void: where /= Void
+			where_parsed: where.is_parsed
+			no_syntax_error: not where.has_syntax_error
+			a_formal_not_void: a_formal /= Void
+			a_type_not_void: a_type /= Void
+		local
+			old_ise, old_ve: BOOLEAN
+		do
+			if is_hact or is_se then
+				old_ise := is_ise
+				old_ve := is_ve
+				is_ise := False
+				is_ve := False
+				report_vtct_error (where, a_type)
+				is_ise := old_ise
+				is_ve := old_ve
+			end
+			if reportable_vcfg3_error (where) then
+				if
+					not (is_ise or is_hact or is_se or is_ve) and
+					not is_gelint and is_pedantic
+				then
+					print ("[VCFG-3] Class ")
+					print (where.name.name)
+					print (" (")
+					print (a_type.position.line)
+					print (",")
+					print (a_type.position.column)
+					print ("): constraint of formal generic parameter '")
+					print (a_formal.name.name)
+					print ("' contains '")
+					print (a_type.to_string)
+					print ("' itself.%N")
+				end
+			end
+		end
+
+	report_vcfg3f_error (where: ET_CLASS;
+		a_formal: ET_FORMAL_GENERIC_PARAMETER;
+		a_type: ET_FORMAL_GENERIC_TYPE) is
+			-- Report VCFG-3 error (ETR p.16): the constraint of
+			-- `a_formal' in class `where' contains another formal
+			-- generic parameter appearing after `a_formal' in the
+			-- list of formal generic parameters.
+		require
+			where_not_void: where /= Void
+			where_parsed: where.is_parsed
+			no_syntax_error: not where.has_syntax_error
+			a_formal_not_void: a_formal /= Void
+			a_type_not_void: a_type /= Void
+		local
+			old_se, old_ve: BOOLEAN
+		do
+			if is_ise or is_hact then
+				old_se := is_se
+				old_ve := is_ve
+				is_se := False
+				is_ve := False
+				report_vtct_error (where, a_type)
+				is_se := old_se
+				is_ve := old_ve
+			end
+		end
+
+	report_vcfg3g_error (where: ET_CLASS; a_cycle: DS_LIST [ET_FORMAL_GENERIC_PARAMETER]) is
+			-- Report VCFG-3 error (ETR p.16): the constraints of
+			-- the formal generic parameters `a_cycle' of class
+			-- `where' are involved in a cycle.
+		require
+			where_not_void: where /= Void
+			where_parsed: where.is_parsed
+			no_syntax_error: not where.has_syntax_error
+			a_cyle_not_void: a_cycle /= Void
+			no_void_formal: not a_cycle.has (Void)
+			a_cycle_not_empty: not a_cycle.is_empty
+		local
+			a_cursor: DS_LIST_CURSOR [ET_FORMAL_GENERIC_PARAMETER]
+		do
+			if reportable_vcfg3_error (where) then
+				print_compiler (False, No_tag, False, No_tag,
+					is_se, Question_tag, False, No_tag)
+				if is_se then
+					print ("[VCFG-3] Class ")
+					print (where.name.name)
+					print (": formal generic constraint cycle ")
+					a_cursor := a_cycle.new_cursor
+					a_cursor.start
+					print (a_cursor.item.name.name)
+					a_cursor.forth
+					from until a_cursor.after loop
+						print (" -> ")
+						print (a_cursor.item.name.name)
+						a_cursor.forth
+					end
+					print (".%N")
+				end
 			end
 		end
 
@@ -320,6 +639,7 @@ feature -- Validity errors
 			no_syntax_error: not where.has_syntax_error
 			a_type_not_void: a_type /= Void
 		do
+				-- No compiler so far.
 			if False then
 				print ("[VHPR-3] Class ")
 				print (where.name.name)
@@ -353,40 +673,27 @@ feature -- Validity errors
 			print ("': bit size must be a positive integer constant.%N")
 		end
 
-	report_vtct_error (where: ET_CLASS; a_type: ET_CLASS_TYPE) is
-			-- Report VTCT error (ETL2 p.199): `a_type' based
-			-- on unknown class in class `where'.
+	report_vtbt_minus_zero_error (where: ET_CLASS; a_type: ET_BIT_TYPE) is
+			-- Report VTBT error (ETL2 p.210, ETR p.47): size
+			-- for Bit_type must be a positive integer constant
+			-- but it is actually equal to -0.
 		require
 			where_not_void: where /= Void
 			where_parsed: where.is_parsed
 			no_syntax_error: not where.has_syntax_error
 			a_type_not_void: a_type /= Void
 		do
-			if reportable_vtct_error (where) then
-				print ("[VTCT] Class ")
+				-- Only SmallEiffel.
+			if False then
+				print ("[VTBT] Class ")
 				print (where.name.name)
 				print (" (")
 				print (a_type.position.line)
 				print (",")
 				print (a_type.position.column)
-				print ("): type based on unknown class ")
-				print (a_type.class_name.name)
-				print (".%N")
-			end
-		end
-
-	report_vtct_any_error (where: ET_CLASS) is
-			-- Report VTCT error (ETL2 p.199): class `where'
-			-- implicitly inherit from unknown class ANY.
-		require
-			where_not_void: where /= Void
-			where_parsed: where.is_parsed
-			no_syntax_error: not where.has_syntax_error
-		do
-			if reportable_vtct_error (where) then
-				print ("[VTCT] Class ")
-				print (where.name.name)
-				print (": implicitly inherit from unknown class ANY.%N")
+				print ("): invalid type '")
+				print (a_type.to_string)
+				print ("': bit size must be a positive integer constant.%N")
 			end
 		end
 
@@ -413,6 +720,45 @@ feature -- Validity errors
 				print (" does not conform to constraint ")
 				print (a_constraint.to_string)
 				print (".%N")
+			end
+		end
+
+	report_vtct_error (where: ET_CLASS; a_type: ET_NAMED_TYPE) is
+			-- Report VTCT error (ETL2 p.199, ETR p.45): `a_type'
+			-- based on unknown class in class `where'.
+		require
+			where_not_void: where /= Void
+			where_parsed: where.is_parsed
+			no_syntax_error: not where.has_syntax_error
+			a_type_not_void: a_type /= Void
+		do
+			if reportable_vtct_error (where) then
+				print_compiler (is_ise, No_tag, is_hact, No_tag,
+					is_se, No_tag, False, No_tag)
+				print ("[VTCT] Class ")
+				print (where.name.name)
+				print (" (")
+				print (a_type.position.line)
+				print (",")
+				print (a_type.position.column)
+				print ("): type based on unknown class ")
+				print (a_type.name.name)
+				print (".%N")
+			end
+		end
+
+	report_vtct_any_error (where: ET_CLASS) is
+			-- Report VTCT error (ETL2 p.199, ETR p.45): class
+			-- `where' implicitly inherit from unknown class ANY.
+		require
+			where_not_void: where /= Void
+			where_parsed: where.is_parsed
+			no_syntax_error: not where.has_syntax_error
+		do
+			if reportable_vtct_error (where) then
+				print ("[VTCT] Class ")
+				print (where.name.name)
+				print (": implicitly inherit from unknown class ANY.%N")
 			end
 		end
 
@@ -465,10 +811,21 @@ feature -- Validity errors
 			end
 		end
 
-feature -- Status report
+feature -- Validity status report
 
 	reportable_gagp_error (where: ET_CLASS): BOOLEAN is
 			-- Can a GAGP error be reported when it
+			-- appears in class `where'?
+		require
+			where_not_void: where /= Void
+			where_parsed: where.is_parsed
+			no_syntax_error: not where.has_syntax_error
+		do
+			Result := in_system (where.name.name)
+		end
+
+	reportable_vcfg3_error (where: ET_CLASS): BOOLEAN is
+			-- Can a VCFG-3 error be reported when it
 			-- appears in class `where'?
 		require
 			where_not_void: where /= Void
@@ -524,9 +881,77 @@ feature -- Status report
 
 feature {NONE}
 
+	print_compiler (ise: BOOLEAN; ise_tag: INTEGER;
+		hact: BOOLEAN; hact_tag: INTEGER;
+		se: BOOLEAN; se_tag: INTEGER;
+		ve: BOOLEAN; ve_tag: INTEGER) is
+		local
+			not_first: BOOLEAN
+		do
+			if ise or hact or se or ve then
+				print ("[")
+				if ise then
+					inspect ise_tag
+					when No_tag then
+					when Question_tag then
+						print ("?")
+					when Bang_tag then
+						print ("!")
+					end
+					print ("ISE")
+					not_first := True
+				end
+				if hact then
+					if not_first then
+						print (",")
+					end
+					inspect hact_tag
+					when No_tag then
+					when Question_tag then
+						print ("?")
+					when Bang_tag then
+						print ("!")
+					end
+					print ("HACT")
+					not_first := True
+				end
+				if se then
+					if not_first then
+						print (",")
+					end
+					inspect se_tag
+					when No_tag then
+					when Question_tag then
+						print ("?")
+					when Bang_tag then
+						print ("!")
+					end
+					print ("SE")
+					not_first := True
+				end
+				if ve then
+					if not_first then
+						print (",")
+					end
+					inspect ve_tag
+					when No_tag then
+					when Question_tag then
+						print ("?")
+					when Bang_tag then
+						print ("!")
+					end
+					print ("VE")
+				end
+				print ("]")
+			end
+		end
+
+	No_tag, Question_tag, Bang_tag: INTEGER is unique
+
 	in_system (a_class: STRING): BOOLEAN is
 		do
-			Result := classes_in_system.has (a_class)
+			Result := True
+			--Result := classes_in_system.has (a_class)
 		end
 
 	classes_in_system: HASH_TABLE [ANY, STRING] is
