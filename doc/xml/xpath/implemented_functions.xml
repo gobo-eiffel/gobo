@@ -23,7 +23,7 @@
       <surname>Adams</surname>
     </author>
     <email>colin@colina.demon.co.uk</email>
-    <date>Sunday, April 13th, 2004</date>
+    <date>Tuesday, April 13th, 2004</date>
   </chapterinfo>
   <title>Core functions - implementation status</title>
   <para>This chapter lists all the core functions (functions provided by host languages such as XSLT are not listed here)
@@ -43,6 +43,6 @@
   </para>
   <para>The final column gives a link to the W3C draft or recommendation against which the tests have been checked, or &quot;None&quot;, if this has not been done. </para>
   <sect1>
-    <para>(Table omitted, as we have no markup for it)</para>
+    <para><ulink url="functions.html">Table of functions</ulink></para>
   </sect1>
 </chapter>

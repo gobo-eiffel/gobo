@@ -23,7 +23,7 @@
       <surname>Adams</surname>
     </author>
     <email>colin@colina.demon.co.uk</email>
-    <date>Sunday, April 13th, 2004</date>
+    <date>Tuesday, April 13th, 2004</date>
   </chapterinfo>
   <title>Invoking the stand-alone XPath evaluator</title>
   <para>To evaluate an XPath expression in a stand-alone environment 

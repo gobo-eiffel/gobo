@@ -113,7 +113,7 @@ feature -- Optimization
 		do
 			set_analyzed
 				check
-					sequence.may_analyze -- TODO - this certainly won't be the case
+					sequence.may_analyze
 				end
 			sequence.analyze (a_context)
 			if sequence.was_expression_replaced then
@@ -164,7 +164,7 @@ feature -- Evaluation
 			-- Map `an_item' to a sequence
 		do
 			test_conformance (an_item)
-			if not is_error then create Result.make_item (an_item) end
+			create Result.make_item (an_item)
 		end
 
 feature {XM_XPATH_ITEM_CHECKER} -- Local
@@ -197,6 +197,7 @@ feature {NONE} -- Implementation
 
 	test_conformance (an_item: XM_XPATH_ITEM) is
 			-- Test conformance to `required_item_type' and `required_content_type'.
+			-- Marks `an_item' as in error if check fails.
 		require
 			item_not_void: an_item /= Void
 		local
@@ -210,7 +211,7 @@ feature {NONE} -- Implementation
 				a_message := STRING_.appended_string (a_message, type_name (required_item_type))
 				a_message := STRING_.appended_string (a_message, "; supplied value is ")
 				a_message := STRING_.appended_string (a_message, type_name (a_type))
-				set_last_error_from_string (a_message, 6, Type_error)
+				an_item.set_evaluation_error_from_string (a_message, 6, Type_error)
 			elseif required_content_type /= Any_item then
 				--a_content_type := a_node.type_annotation
 				-- this is only needed for Schema-aware processors, so for now:

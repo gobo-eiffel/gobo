@@ -17,7 +17,7 @@ inherit
 
 	XM_XPATH_COMPUTED_EXPRESSION
 		redefine
-			sub_expressions, simplify, promote, evaluate_item
+			sub_expressions, simplify, promote, evaluate_item, iterator
 		end
 
 	XM_XPATH_MAPPING_FUNCTION
@@ -142,6 +142,12 @@ feature -- Evaluation
 					last_evaluated_item := sequence.last_evaluated_item
 				end
 			end
+		end
+
+	iterator (a_context: XM_XPATH_CONTEXT): XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_ITEM] is
+			-- An iterator over the values of a sequence
+		do
+			create {XM_XPATH_MAPPING_ITERATOR} Result.make (sequence.iterator (a_context), Current, Void, Void)
 		end
 	
 	map (an_item: XM_XPATH_ITEM; a_context: XM_XPATH_CONTEXT; an_information_object: ANY): XM_XPATH_MAPPED_ITEM is

@@ -25,6 +25,7 @@
 
 		<xslt processor="xsltproc" input="invoking.xml" output="invoking.html" stylesheet="${GOBO}/doc/misc/gobo2html.xsl"/>
 		<xslt processor="xsltproc"  input="implemented_functions.xml" output="implemented_functions.html" stylesheet="${GOBO}/doc/misc/gobo2html.xsl"/>
+		<xslt processor="xsltproc"  input="evaluation_process.xml" output="evaluation_process.html" stylesheet="${GOBO}/doc/misc/gobo2html.xsl"/>
 	</target>
 
 	<target name="clean">
@@ -41,6 +42,8 @@
 		</description>
 
 		<delete file="invoking.html"/>
+		<delete file="implemented_functions.html"/>
+		<delete file="evaluation_process.html"/>
 	</target>
 
 </project>

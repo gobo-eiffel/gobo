@@ -63,7 +63,6 @@ feature -- Comparison
 
 feature -- Status report
 
-
 	is_error: BOOLEAN is
 			-- Is `Current' in error?
 		do

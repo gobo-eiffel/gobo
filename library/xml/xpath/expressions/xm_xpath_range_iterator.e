@@ -41,7 +41,7 @@ feature -- Access
 	item: XM_XPATH_ITEM is
 			-- Value or node at the current position
 		do
-			create {XM_XPATH_INTEGER_VALUE} Result.make (index + minimum)
+			create {XM_XPATH_INTEGER_VALUE} Result.make (index + minimum - 1)
 		end
 
 feature -- Status report
@@ -49,7 +49,7 @@ feature -- Status report
 	after: BOOLEAN is
 			-- Are there any more items in the sequence?
 		do
-			Result := not before and then index > maximum - minimum
+			Result := not before and then index > maximum - minimum + 1
 		end
 
 feature -- Cursor movement

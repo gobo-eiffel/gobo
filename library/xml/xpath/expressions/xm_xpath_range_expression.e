@@ -111,18 +111,26 @@ feature -- Evaluation
 			an_integer_value, another_integer_value: XM_XPATH_INTEGER_VALUE 
 		do
 			first_operand.evaluate_item (a_context)
-			an_integer_value ?= first_operand.last_evaluated_item
-			if an_integer_value = Void then
-				create {XM_XPATH_EMPTY_ITERATOR [XM_XPATH_ITEM]} Result.make
+			if first_operand.last_evaluated_item.is_item_in_error then
+				create {XM_XPATH_INVALID_ITERATOR} Result.make (first_operand.last_evaluated_item.evaluation_error_value)
 			else
-				second_operand.evaluate_item (a_context)
-				another_integer_value ?= second_operand.last_evaluated_item
-				if another_integer_value = Void then
-					create {XM_XPATH_EMPTY_ITERATOR [XM_XPATH_ITEM]} Result.make
-				elseif an_integer_value.value > another_integer_value.value then
+				an_integer_value ?= first_operand.last_evaluated_item
+				if an_integer_value = Void then
 					create {XM_XPATH_EMPTY_ITERATOR [XM_XPATH_ITEM]} Result.make
 				else
-					create {XM_XPATH_RANGE_ITERATOR} Result.make (an_integer_value.value, another_integer_value.value)
+					second_operand.evaluate_item (a_context)
+					if second_operand.last_evaluated_item.is_item_in_error then
+						create {XM_XPATH_INVALID_ITERATOR} Result.make (second_operand.last_evaluated_item.evaluation_error_value)
+					else
+						another_integer_value ?= second_operand.last_evaluated_item
+						if another_integer_value = Void then
+							create {XM_XPATH_EMPTY_ITERATOR [XM_XPATH_ITEM]} Result.make
+						elseif an_integer_value.value > another_integer_value.value then
+							create {XM_XPATH_EMPTY_ITERATOR [XM_XPATH_ITEM]} Result.make
+						else
+							create {XM_XPATH_RANGE_ITERATOR} Result.make (an_integer_value.value, another_integer_value.value)
+						end
+					end
 				end
 			end
 		end
