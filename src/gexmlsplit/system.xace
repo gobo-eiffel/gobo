@@ -2,7 +2,7 @@
 
 <system name="gexmlsplit">
 	<description>
-		system: "Gobo XML Splitter: XML document splitterr"
+		system: "Gobo XML Splitter: XML document splitter"
 		copyright: "Copyright (c) 2001-2002, Eric Bezault and others"
 		license: "Eiffel Forum License v1 (see forum.txt)"
 		date: "$Date$"
