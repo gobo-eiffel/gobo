@@ -39,6 +39,7 @@ feature {NONE} -- Initialization
 			a_project_loader: GEANT_PROJECT_LOADER
 			a_project_options: GEANT_PROJECT_OPTIONS
 			a_variables: GEANT_VARIABLES
+			a_target: GEANT_TARGET
 		do
 			Arguments.set_program_name ("geant")
 			create error_handler.make_standard
@@ -59,6 +60,15 @@ feature {NONE} -- Initialization
 			a_project := a_project_loader.project_element.project
 			a_project.merge_in_parent_projects
 			if start_target_name /= Void and then start_target_name.count > 0 then
+				if not a_project.targets.has (start_target_name) then
+					exit_application (1, <<"Project '", a_project.name,
+						"' does not contain a target named `", start_target_name + "%'">>)
+				end
+				a_target := a_project.targets.item (start_target_name)
+					-- Check export status of `a_target':
+				if not a_target.is_exported_to_any then
+					exit_application (1, <<"target: `", a_target.full_name, "%' is not exported.">>)
+				end
 				a_project.set_start_target_name (start_target_name)
 			end
 

@@ -81,6 +81,26 @@ feature -- Access
 	selected_targets: DS_HASH_TABLE [GEANT_TARGET, STRING]
 			-- Targets selected in heir
 
+	start_target: GEANT_TARGET is
+			-- Target with which build will start
+		do
+			if start_target_name /= Void and then start_target_name.count > 0 then
+				if targets.has (start_target_name) then
+					Result := targets.item (start_target_name)
+				end
+			end
+		end
+
+	default_target: GEANT_TARGET is
+			-- Target with which build starts in case `start_target' is Void
+		do
+			if default_target_name /= Void and then default_target_name.count > 0 then
+				if targets.has (default_target_name) then
+					Result := targets.item (default_target_name)
+				end
+			end
+		end
+
 	build_successful: BOOLEAN
 			-- Was last build successful?
 
@@ -117,6 +137,27 @@ feature -- Access
 	default_target_name: STRING
 			-- Name of default target if set
 
+feature -- Status report
+
+	has_parent_with_name (a_name: STRING): BOOLEAN is
+			-- Does current project have a parent project named `a_name'?
+		local
+			i: INTEGER
+			a_parent_project: GEANT_PROJECT
+		do
+			if inherit_clause /= Void then
+				from i := 1 until Result or else i > inherit_clause.parents.count loop
+					a_parent_project := inherit_clause.parents.item (i).parent_project
+
+					Result := a_parent_project.name.is_equal (a_name)
+					if not Result then
+						Result := a_parent_project.has_parent_with_name (a_name)
+					end
+					i := i + 1
+				end
+			end
+		end
+
 feature -- Setting
 
 	set_description (a_description: STRING) is
@@ -146,6 +187,7 @@ feature -- Setting
 		require
 			a_start_target_name_not_void: a_start_target_name /= Void
 			a_start_target_name_not_empty: a_start_target_name.count > 0
+			targets_has_a_start_target_name: targets.has (a_start_target_name)
 		do
 			start_target_name := a_start_target_name
 		ensure
@@ -287,20 +329,17 @@ feature -- Processing
 		do
 			trace (<<"Building Project">>)
 
+				-- Determine start target:
 			if start_target_name /= Void and then start_target_name.count > 0 then
-				if targets.has (start_target_name) then
-					a_target := targets.item (start_target_name)
-				else
+				if start_target = Void then
 					exit_application (1, <<"Cannot determine start target `", start_target_name + "%'">>)
+				else
+					a_target := start_target
 				end
 			end
 			if a_target = Void then
 					-- Use default target as start target if exists:
-				if default_target_name /= Void and then default_target_name.count > 0 then
-					if targets.has (default_target_name) then
-						a_target := targets.item (default_target_name)
-					end
-				end
+				a_target := default_target
 			end
 			if a_target = Void then
 				exit_application (1, <<"Cannot determine start target.">>)
@@ -320,8 +359,10 @@ feature -- Processing
 			a_cursor := targets.new_cursor
 			from a_cursor.start until a_cursor.after loop
 				a_target := a_cursor.item
-				output_file.put_line (a_target.full_name)
-				output_file.put_line ("  " + a_target.description)
+				if a_target.is_exported_to_any then
+					output_file.put_line (a_target.full_name)
+					output_file.put_line ("  " + a_target.description)
+				end
 				a_cursor.forth
 			end
 		end

@@ -25,6 +25,9 @@ inherit
 	KL_SHARED_FILE_SYSTEM
 		export {NONE} all end
 
+	KL_IMPORTED_STRING_ROUTINES
+		export {NONE} all end
+
 	GEANT_SHARED_PROPERTIES
 		export {NONE} all end
 
@@ -40,7 +43,9 @@ feature {NONE} -- Initialization
 	make (a_project: GEANT_PROJECT; a_xml_element: XM_ELEMENT) is
 			-- Create a new target.
 		local
+			a_tester: UC_EQUALITY_TESTER
 			a_description_element: XM_ELEMENT
+			a_exports: DS_ARRAYED_LIST [STRING]
 		do
 			precursor (a_project, a_xml_element)
 			set_name (xml_element.attribute_by_name (Name_attribute_name).value)
@@ -50,6 +55,17 @@ feature {NONE} -- Initialization
 			else
 				set_description ("")
 			end
+			if a_xml_element.has_attribute_by_name (Export_attribute_name) and then
+				a_xml_element.attribute_by_name (Export_attribute_name).value.count > 0 then
+				a_exports := string_tokens (
+					a_xml_element.attribute_by_name (Export_attribute_name).value, ',')
+			else
+				create a_exports.make_equal (1)
+				a_exports.put (Project_name_any, 1)
+			end
+			create a_tester
+			a_exports.set_equality_tester (a_tester)
+			set_exports (a_exports)
 		end
 
 feature -- Access
@@ -69,6 +85,9 @@ feature -- Access
 
 	description: STRING
 			-- Description of target
+
+	exports: DS_ARRAYED_LIST [STRING]
+			-- Exports of target
 
 	origin: GEANT_PROJECT is
 			-- Origin of target (see ETL for definition)
@@ -135,6 +154,31 @@ feature -- Status report
 
 	is_executed: BOOLEAN
 			-- Was this target executed already?
+
+	is_exported_to_any: BOOLEAN is
+			-- Is this target exported to any project?
+		do
+			Result := exports.has (Project_name_any)
+		ensure
+			definition: Result implies exports.has (Project_name_any)
+		end
+
+	is_exported_to_project (a_project: GEANT_PROJECT): BOOLEAN is
+			-- Is this target exported to project named `a_project_name'?
+		require
+			a_project_not_void: a_project_name /= Void
+		local
+			i: INTEGER
+			a_project_name: STRING
+		do
+			from i := 1 until Result or else i > exports.count loop
+				a_project_name := exports.item (i)
+				Result := a_project.name.is_equal (a_project_name) or else
+					a_project.has_parent_with_name (a_project_name)
+
+				i := i + 1
+			end
+		end
 
 	has_dependencies: BOOLEAN is
 			-- Has current target dependent on other targets?
@@ -219,6 +263,16 @@ feature -- Setting
 			description := a_description
 		ensure
 			description_set: description = a_description
+		end
+
+	set_exports (a_exports: like exports) is
+			-- Set `exports' to `a_exports'.
+		require
+			a_exports_not_void: a_exports /= Void
+		do
+			exports := a_exports
+		ensure
+			exports_set: exports = a_exports
 		end
 
 	set_executed (a_is_executed: BOOLEAN) is
@@ -476,7 +530,7 @@ feature -- Processing
 
 feature {NONE} -- Constants
 
-	Name_attribute_name:  STRING is
+	Name_attribute_name: STRING is
 			-- "name" attribute name
 		once
 			Result := "name"
@@ -485,13 +539,31 @@ feature {NONE} -- Constants
 			attribute_name_not_empty: Result.count > 0
 		end
 
-	Depend_attribute_name:  STRING is
+	Depend_attribute_name: STRING is
 			-- "depend" attribute name
 		once
 			Result := "depend"
 		ensure
 			attribute_name_not_void: Result /= Void
 			attribute_name_not_empty: Result.count > 0
+		end
+
+	Export_attribute_name: STRING is
+			-- "export" attribute name
+		once
+			Result := "export"
+		ensure
+			export_name_not_void: Result /= Void
+			export_name_not_empty: Result.count > 0
+		end
+
+	Project_name_any: STRING is
+			-- Project name "ANY"
+		once
+			Result := "ANY"
+		ensure
+			Project_name_any_not_void: Result /= Void
+			Project_name_any_not_empty: Result.count > 0
 		end
 
 end
