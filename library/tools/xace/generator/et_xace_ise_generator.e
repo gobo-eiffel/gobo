@@ -1044,7 +1044,7 @@ feature {NONE} -- Output
 	print_escaped_name (a_name: STRING; a_file: KI_TEXT_OUTPUT_STREAM) is
 			-- Print escaped version of `a_name' to `a_file'.
 		do
-			if is_lace_keyword (a_name) then
+			if a_name.has ('.') or else is_lace_keyword (a_name) then
 				a_file.put_character ('%"')
 				a_file.put_string (a_name)
 				a_file.put_character ('%"')
