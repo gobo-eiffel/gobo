@@ -18,7 +18,9 @@ inherit
 	DS_NESTED_LIST [PR_TOKEN]
 		rename
 			local_items as following_tokens,
-			remote_items as included_tokens
+			remote_items as included_tokens,
+			set_local_items as set_following_tokens,
+			add_local_item as add_following_token
 		end
 
 creation
@@ -63,6 +65,20 @@ feature -- Access
 	included_tokens: DS_LINKED_LIST [PR_TRANSITION]
 			-- Transitions whose `following_tokens' may
 			-- also follow current transition
+
+feature {DS_NESTED_LIST_FLATTENER} -- Implementation
+
+	set_following_tokens (tokens: like following_tokens) is
+			-- Set `following_tokens' to `tokens'.
+		do
+			following_tokens := tokens
+		end
+
+	add_following_token (a_token: PR_TOKEN) is
+			-- Add `a_token' to `following_tokens'.
+		do
+			following_tokens.force_last (a_token)
+		end
 
 invariant
 
