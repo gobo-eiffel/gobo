@@ -14,6 +14,8 @@ deferred class YY_PARSER_TOKENS
 
 inherit
 
+	ANY
+
 	KL_SHARED_PLATFORM
 		export {NONE} all end
 		
