@@ -1495,57 +1495,61 @@ feature -- Element change
 			-- (ELKS 2001 STRING)
 #ifdef HACT || ISE || SE
 		local
-			old_count: INTEGER
-			old_a_string_count: INTEGER
 			nb: INTEGER
+			old_a_string_byte_count: INTEGER
+			old_a_string_count: INTEGER
 			new_byte_count: INTEGER
+			new_count: INTEGER
 			a_utf8_string: UC_UTF8_STRING
 			a_uc_string: UC_STRING
-			is_utf8_encoded_string: BOOLEAN
 #endif
 		do
 #ifdef HACT || ISE || SE
 			if a_string.same_type (dummy_string) then
-				-- Check if string does not contain high-ascii characters.
-				-- Unfortunately, this is a slow but necessary call.
+					-- Check if string does not contain non-ascii characters.
+					-- Unfortunately, this is a slow but necessary call.
 				nb := utf8.substring_byte_count (a_string, 1, a_string.count)
 				if nb = a_string.count then
-					-- If not, we may use the native
-					-- `append_string'. Hopefully this one has a fast move.
+						-- If not, we may use the native `append_string'.
+						-- Hopefully this one has a fast move.
 					new_byte_count := byte_count + nb
-					old_count := count
+					new_count := count + nb
 					set_count (byte_count)
 					precursor (a_string)
-					set_count (old_count + nb)
+					set_count (new_count)
 					byte_count := new_byte_count
 				else
-					-- If so, use proper UTF8 encoding.
+						-- If so, use proper UTF8 encoding.
 					append_substring (a_string, 1, a_string.count)
 				end
 			else
-				a_utf8_string ?= a_string
-				is_utf8_encoded_string :=
-					a_utf8_string /= Void or else
-					a_string.same_type (dummy_uc_string)
-				if is_utf8_encoded_string then
-					a_uc_string ?= a_string
-						check
-							uc_string_not_void: a_uc_string /= Void
+				a_uc_string ?= a_string
+				if a_uc_string /= Void then
+					a_utf8_string ?= a_string
+					if a_utf8_string /= Void or a_uc_string.same_type (dummy_uc_string) then
+							-- Because bytes are in linear order, we may move bytes.
+						if a_uc_string = Current then
+							new_byte_count := 2 * byte_count
+							new_count := 2 * count
+							set_count (byte_count)
+							precursor (a_string)
+							set_count (new_count)
+							byte_count := new_byte_count
+						else
+							old_a_string_count := a_uc_string.count
+							old_a_string_byte_count := a_uc_string.byte_count
+							new_byte_count := byte_count + old_a_string_byte_count
+							new_count := count + old_a_string_count
+							set_count (byte_count)
+							a_uc_string.set_count (old_a_string_byte_count)
+							precursor (a_string)
+							a_uc_string.set_count (old_a_string_count)
+							set_count (new_count)
+							byte_count := new_byte_count
 						end
-					-- Because bytes are in linear order, we may move bytes.
-					new_byte_count := byte_count + a_uc_string.byte_count
-					old_count := count
-					old_a_string_count := a_uc_string.count
-					set_count (byte_count)
-					if a_uc_string /= Current then
-						a_uc_string.set_count (a_uc_string.byte_count)
+					else
+						append_substring (a_string, 1, a_string.count)
 					end
-					precursor (a_string)
-					set_count (old_count + old_a_string_count)
-					if a_uc_string /= Current then
-						a_uc_string.set_count (old_a_string_count)
-					end
-					byte_count := new_byte_count
 				else
 					append_substring (a_string, 1, a_string.count)
 				end
