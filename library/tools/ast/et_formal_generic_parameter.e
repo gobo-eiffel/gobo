@@ -13,6 +13,10 @@ indexing
 
 class ET_FORMAL_GENERIC_PARAMETER
 
+inherit
+
+	HASHABLE
+
 creation
 
 	make
@@ -26,6 +30,7 @@ feature {NONE} -- Initialization
 		do
 			name := a_name
 			constraint := a_constraint
+			index := 1
 		ensure
 			name_set: name = a_name
 			constraint_set: constraint = a_constraint
@@ -42,10 +47,26 @@ feature -- Access
 	index: INTEGER
 			-- Position in list of generic parameters
 
+	hash_code: INTEGER is
+			-- Hash code value
+		do
+			Result := index
+		end
+
 feature -- Setting
+
+	set_constraint (a_constraint: like constraint) is
+			-- Set `a_constraint' to `constraint'.
+		do
+			constraint := a_constraint
+		ensure
+			constraint_set: constraint = a_constraint
+		end
 
 	set_index (an_index: INTEGER) is
 			-- Set `index' to `an_index'.
+		require
+			an_index_positive: an_index >= 1
 		do
 			index := an_index
 		ensure
@@ -55,5 +76,6 @@ feature -- Setting
 invariant
 
 	name_not_void: name /= Void
+	index_positive: index >= 1
 
 end -- class ET_FORMAL_GENERIC_PARAMETER
