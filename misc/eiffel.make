@@ -102,7 +102,7 @@ hact-debug.ace: $(ROOT_DIR)/hact.tpl
 	$(GEPP) -DASSERTION $(ROOT_DIR)/hact.tpl - >> hact-debug.ace
 
 hact.dep:
-	$(ECHO) "" > hact.dep
+	$(ECHO) "hact.ace: $(GOBO)/library/kernel/hact.ace" > hact.dep
 
 ve.esd: $(ROOT_DIR)/ve.esd
 	$(CP) $(ROOT_DIR)/ve.esd ve.esd
