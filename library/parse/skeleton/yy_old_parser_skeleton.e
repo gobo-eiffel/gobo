@@ -132,6 +132,16 @@ feature {NONE} -- Constants
 	yy_special_routines: KL_SPECIAL_ROUTINES [G]
 			-- Routines that ought to be in SPECIAL
 
+	FIXED_ARRAY_: KL_SPECIAL_ROUTINES [G] is
+			-- Routines that ought to be in FIXED_ARRAY
+		obsolete
+			"[050105] Use `yy_special_routines' instead."
+		do
+			Result := yy_special_routines
+		ensure
+			fixed_array_not_void: Result /= Void
+		end
+
 invariant
 
 	yyvs_not_void: yyvs /= Void
