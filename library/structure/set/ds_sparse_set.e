@@ -21,8 +21,6 @@ inherit
 			put as force
 		undefine
 			has
-		redefine
-			new_cursor
 		end
 
 	DS_BILINEAR [G]
@@ -30,7 +28,7 @@ inherit
 			occurrences,
 			equality_tester_settable
 		redefine
-			has, new_cursor
+			has
 		end
 
 	DS_RESIZABLE [G]
