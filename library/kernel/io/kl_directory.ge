@@ -186,6 +186,30 @@ feature -- Status report
 	end_of_input: BOOLEAN
 			-- Have all entries been read?
 
+	exists: BOOLEAN is
+			-- Does directory physically exist on disk?
+			-- (Note that with SmallEiffel this routine
+			-- actually returns `is_readable'.)
+		do
+			if name.count > 0 then
+#ifdef ISE || HACT
+				Result := old_exists
+#ifdef HACT
+				if Result then
+					tmp_file.reset (name)
+					Result := not tmp_file.exists
+				end
+#endif
+#endif
+#ifdef SE
+				Result := is_readable
+#endif
+#ifdef VE
+				Result := directory.exists
+#endif
+			end
+		end
+
 	is_readable: BOOLEAN is
 			-- Can directory be opened in read mode?
 		do
