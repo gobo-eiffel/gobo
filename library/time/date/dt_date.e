@@ -491,6 +491,14 @@ feature -- Comparison
 			Result := storage < other.storage
 		end
 
+	same_date (other: DT_DATE): BOOLEAN is
+			-- Is `Current' date equal to `other'?
+		require
+			other_not_void: other /= Void
+		do
+			Result := storage = other.storage
+		end
+
 feature -- Output
 
 	append_date_to_string (a_string: STRING) is
