@@ -16,6 +16,11 @@ inherit
 
 	COMPARABLE
 
+	KL_IMPORTED_OUTPUT_STREAM_ROUTINES
+		undefine
+			is_equal
+		end
+
 creation
 
 	make
@@ -103,6 +108,38 @@ feature -- Comparison
 		ensure
 			same_rule: Result implies rule = other.rule
 			same_index: Result implies index = other.index
+		end
+
+feature -- Output
+
+	print_position (a_file: like OUTPUT_STREAM_TYPE) is
+			-- Print textual representation of
+			-- current position to `a_file'.
+		require
+			a_file_not_void: a_file /= Void
+			a_file_open_write: OUTPUT_STREAM_.is_open_write (a_file)
+		local
+			rhs: DS_ARRAYED_LIST [PR_SYMBOL]
+			i, nb: INTEGER
+		do
+			a_file.put_string (rule.lhs.name)
+			a_file.put_string ("  ->  ")
+			rhs := rule.rhs
+			nb := rhs.count
+			from i := 1 until i = index loop
+				a_file.put_string (rhs.item (i).name)
+				a_file.put_character (' ')
+				i := i + 1
+			end
+			a_file.put_character ('.')
+			from until i > nb loop
+				a_file.put_character (' ')
+				a_file.put_string (rhs.item (i).name)
+				i := i + 1
+			end
+			a_file.put_string ("   (rule ")
+			a_file.put_integer (rule.id)
+			a_file.put_character (')')
 		end
 
 invariant
