@@ -92,7 +92,6 @@ feature -- Access
 			is_namespace_declaration: is_namespace_declaration
 		local
 			a_prefix: STRING
-			a_uri: STRING
 		do
 			if has_prefix then
 				a_prefix := name
