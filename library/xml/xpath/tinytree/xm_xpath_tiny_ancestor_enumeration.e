@@ -15,6 +15,9 @@ class XM_XPATH_TINY_ANCESTOR_ENUMERATION
 inherit
 
 	XM_XPATH_AXIS_ITERATOR [XM_XPATH_TINY_NODE]
+		redefine
+			start
+		end
 
 creation
 
@@ -40,7 +43,7 @@ feature {NONE} -- Initialization
 			-- Now catch the case where the first node is an attribute or namespace node
 
 			next_node := starting_node.parent 
-			if not node_test.matches_node (next_node.node_type, next_node.fingerprint, next_node.type_annotation) then
+			if next_node /= Void and then not node_test.matches_node (next_node.node_type, next_node.fingerprint, next_node.type_annotation) then
 				advance
 			end
 		ensure
@@ -51,16 +54,28 @@ feature {NONE} -- Initialization
 
 feature -- Cursor movement
 
-	forth is
+	start is
 			-- Move to next position
 		do
-			index := index + 1
+			index := 1
 			if first_node /= Void then
 				current_item := first_node
 				first_node := Void
 			else
 				current_item := next_node
-				advance
+			end
+		end
+
+	forth is
+			-- Move to next position
+		do
+			index := index + 1
+			advance
+			if first_node /= Void then
+				current_item := first_node
+				first_node := Void
+			else
+				current_item := next_node
 			end
 		end
 
@@ -97,7 +112,7 @@ feature {NONE} -- Implemnentation
 			-- Move to the next matching node
 		do
 			from
-			next_node := starting_node.parent
+				next_node := next_node.parent
 			until
 				next_node = Void or else node_test.matches_node (next_node.node_type, next_node.fingerprint, next_node.type_annotation)
 			loop

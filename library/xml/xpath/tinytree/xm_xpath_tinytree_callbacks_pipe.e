@@ -5,7 +5,7 @@ indexing
 		"Standard pipe of callbacks filter leading to construction of an XM_XPATH_TINY_DOCUMENT"
 	
 	library: "Gobo Eiffel XPath Library"
-	copyright: "Copyright (c) 2002, Colin Adams and others"
+	copyright: "Copyright (c) 2004, Colin Adams and others"
 	license: "Eiffel Forum License v2 (see forum.txt)"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -34,14 +34,17 @@ creation
 
 feature {NONE} -- Initialization
 
-	make is
+	make (a_system_id: STRING) is
 			-- Create a new pipe.
+		require
+			system_id_not_void: a_system_id /= Void
 		local
 			a_dummy: XM_CALLBACKS
 			namespace_resolver: XM_NAMESPACE_RESOLVER
 		do
 			shared_pool := default_pool.default_pool
-			create tree.make (shared_pool, True)
+			create tree.make (shared_pool)
+			tree.set_system_id (a_system_id)
 			create emitter.make (tree, shared_pool)
 			create error.set_next (emitter)
 			create namespace_resolver.set_next (error)

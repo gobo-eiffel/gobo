@@ -23,20 +23,22 @@ class XM_XPATH_TINY_DOCUMENT
 inherit
 
 	XM_XPATH_DOCUMENT
+		undefine
+			has_child_nodes, first_child
 		redefine
 			node_kind
 		end
 
 	XM_XPATH_TINY_COMPOSITE_NODE
 		undefine
-			document_number
+			document_number, base_uri, local_part
+		redefine
+			root, document_root
 		end
 	
 	XM_XPATH_STANDARD_NAMESPACES
 
 	XM_XPATH_TYPE
-
-	XM_STRING_MODE
 
 	KL_IMPORTED_STRING_ROUTINES
 
@@ -46,15 +48,13 @@ inherit
 
 	UC_SHARED_STRING_EQUALITY_TESTER
 
-	HASHABLE
-	
 creation
 
 	make, make_with_defaults
 
 feature {NONE} -- Initialization
 
-	make (an_estimated_node_count: INTEGER; an_estimated_attribute_count: INTEGER; an_estimated_namespace_count: INTEGER; an_estimated_character_count: INTEGER; a_name_pool: XM_XPATH_NAME_POOL) is
+	make (an_estimated_node_count: INTEGER; an_estimated_attribute_count: INTEGER; an_estimated_namespace_count: INTEGER; an_estimated_character_count: INTEGER; a_name_pool: XM_XPATH_NAME_POOL; a_system_id: STRING) is
 			-- Establish invariant
 		require
 			positive_node_count: an_estimated_node_count > 0
@@ -62,6 +62,7 @@ feature {NONE} -- Initialization
 			namespace_count: an_estimated_namespace_count >= 0
 			character_count: an_estimated_character_count >= 0
 			name_pool_not_void: a_name_pool /= Void
+			system_id_not_void: a_system_id /= Void
 		do
 			root_node := 1
 			node_number := 1
@@ -83,24 +84,24 @@ feature {NONE} -- Initialization
 			create namespace_parents.make (an_estimated_namespace_count)
 			create namespace_codes.make (an_estimated_namespace_count)
 
-			if is_string_mode_ascii then
-				create character_buffer.make (an_estimated_character_count)
-			else
-				create {UC_UTF8_STRING} character_buffer.make (an_estimated_character_count)
-			end
 			name_pool := a_name_pool
+			base_uri := a_system_id
+			name_pool.allocate_document_number (Current)
+			document_number := name_pool.document_number (Current)
 		ensure
 			name_pool_set: name_pool = a_name_pool
+			base_uri_set: STRING_.same_string (base_uri, a_system_id)
 		end
 
-	make_with_defaults (a_name_pool: XM_XPATH_NAME_POOL) is
+	make_with_defaults (a_name_pool: XM_XPATH_NAME_POOL; a_system_id: STRING) is
 			-- Create with default parameter settings
 		require
 			name_pool_not_void: a_name_pool /= Void
 		do
-			make (4000, 100, 20, 4000, a_name_pool)
+			make (4000, 100, 20, 4000, a_name_pool, a_system_id)
 		ensure
 			name_pool_set: name_pool = a_name_pool
+			base_uri_set: STRING_.same_string (base_uri, a_system_id)
 		end
 
 feature -- Access
@@ -124,7 +125,6 @@ feature -- Access
 			end
 		end		
 
-	
 	select_id (an_id: STRING): XM_XPATH_ELEMENT is
 			-- Element with ID value of `id'
 		do
@@ -145,7 +145,9 @@ feature -- Access
 	character_buffer_length: INTEGER is
 			-- Length of `character_buffer'
 		do
-			Result := character_buffer.count
+			if character_buffer /= Void then
+				Result := character_buffer.count
+			end
 		ensure
 			positive_result: Result >= 0
 		end
@@ -257,6 +259,18 @@ feature -- Access
 			attribute_number_is_valid: is_attribute_number_valid (an_attribute_number)
 		do
 			create Result.make (Current, an_attribute_number)
+		ensure
+			attribute_node_not_void: Result /= Void
+		end
+
+	retrieve_namespace_node (a_namespace_number: INTEGER): XM_XPATH_TINY_NAMESPACE is
+			-- Build a flyweight namespace node for `a_namespace_number'
+		require
+			namespace_number_is_valid: is_namespace_number_valid (a_namespace_number)
+		do
+			create Result.make (Current, a_namespace_number)
+		ensure
+			namespace_node_not_void: Result /= Void
 		end
 
 	retrieve_node_kind (a_node_number: INTEGER): INTEGER is
@@ -399,7 +413,35 @@ feature -- Access
 
 			Result := a_list
 		end
-	
+
+	root: XM_XPATH_NODE is
+			-- The root node for `Current';
+			-- This is not necessarily a Document node.
+		do
+			if root_node = node_number then
+				Result := Current
+			else
+				Result := retrieve_node (root_node)
+			end
+		end
+
+	document_root: XM_XPATH_DOCUMENT is
+			-- The document node for `Current';
+			-- If `Current' is in a document fragment, then return Void
+		do
+			if root_node = node_number then
+				Result := Current
+			end
+		end
+
+	system_id_for_node (a_node_number: INTEGER): STRING is
+			-- SYSTEM ID of element or processing-instruction referenced by `a_node_number'
+		require
+			valid_node_number: is_node_number_valid (a_node_number)
+		do
+			Result := system_id_map.system_id (a_node_number)
+		end
+		
 	last_node_added: INTEGER
 			-- Last node created with `add_node'
 
@@ -417,10 +459,22 @@ feature -- Status report
 			Result := an_attribute_number > 0 and then an_attribute_number <= number_of_attributes
 		end
 
+	is_namespace_number_valid (an_namespace_number: INTEGER): BOOLEAN is
+			-- Does `an_namespace_number' represent a valid namespace?
+		do
+			Result := an_namespace_number > 0 and then an_namespace_number <= number_of_namespaces
+		end
+
 	number_of_attributes: INTEGER is
 			-- How many attribute nodes are there in `Current'?
 		do
 			Result := attribute_values.count
+		end
+
+	number_of_namespaces: INTEGER is
+			-- How many namespace nodes are there in `Current'?
+		do
+			Result := namespace_codes.count
 		end
 
 	diagnostic_dump is
@@ -542,18 +596,6 @@ feature -- Status setting
 			a_prior_index_built: prior /= Void
 		end
 
-feature -- Creation
-
-	created_orphan_element: XM_XPATH_ELEMENT is
-			-- New orphan element;
-			-- Used by XM_XSLT_STRIPPER.
-		do
-			add_node (Element_node, 1, -1, -1, -1)
-			create {XM_XPATH_TINY_ELEMENT} Result.make (Current, last_node_added)
-		ensure then
-			one_more_node: number_of_nodes = old number_of_nodes + 1 and last_node_added = number_of_nodes
-		end
-
 feature -- Element change
 
 
@@ -634,7 +676,11 @@ feature -- Element change
 		require
 			characters_not_void: characters /= Void
 		do
-			character_buffer := STRING_.appended_string (character_buffer, characters)
+			if character_buffer = void then
+				character_buffer := clone (characters)
+			else
+				character_buffer := STRING_.appended_string (character_buffer, characters)
+			end
 		end
 
 	add_namespace (a_parent: INTEGER; a_namespace_code: INTEGER) is
@@ -734,13 +780,10 @@ feature -- Element change
 			data_not_void: a_comment_string /= Void
 		do
 			if comment_buffer = Void then
-				if is_string_mode_ascii then
-					create comment_buffer.make (a_comment_string.count)
-				else
-					create {UC_UTF8_STRING} comment_buffer.make (a_comment_string.count)
-				end
+				comment_buffer := clone (a_comment_string)
+			else
+				comment_buffer := STRING_.appended_string (comment_buffer, a_comment_string)
 			end
-			comment_buffer := STRING_.appended_string (comment_buffer, a_comment_string)
 		ensure
 			comment_buffer_created: comment_buffer /= Void
 		end
@@ -748,12 +791,12 @@ feature -- Element change
 	
 feature -- Conversion
 
-	namespace_code_for_node (a_node_number: INTEGER): INTEGER is
-			-- Namespace code for `a_node_number'
+	namespace_code_for_node (a_namespace_number: INTEGER): INTEGER is
+			-- Namespace code for `a_namespace_number'
 		require
-			node_number_in_range: is_node_number_valid (a_node_number)
+			node_number_in_range: is_namespace_number_valid (a_namespace_number)
 		do
-			Result := namespace_codes.item (a_node_number)
+			Result := namespace_codes.item (a_namespace_number)
 		end
 
 	name_code_for_node (a_node_number: INTEGER): INTEGER is
@@ -854,8 +897,6 @@ feature {NONE} -- Implementation
 
 			-- The following arrays contain one entry for each namespace declaration
 
-	number_of_namespaces: INTEGER
-
 	namespace_parents: DS_ARRAYED_LIST [INTEGER]
 			-- Index of the parent element node
 		
@@ -864,7 +905,7 @@ feature {NONE} -- Implementation
 			--  the top half is the prefix code, the bottom half the URI code
 
 	system_id_map: XM_XPATH_SYSTEM_ID_MAP
-			-- Maps element sequence numbers to system-ids
+			-- Maps element or processing-instruction sequence numbers to system-ids
 			
 invariant
 
@@ -881,6 +922,6 @@ invariant
 	namespace_codes_not_void: namespace_codes /= Void
 	positive_node_count: number_of_nodes >= 0
 	positive_attribute_count: number_of_attributes >= 0 and number_of_attributes = attribute_values.count
-	positive_namespace_count: number_of_namespaces >= 0
+	namespace_count: number_of_namespaces >= 0 and then number_of_namespaces < 32768
 
 end

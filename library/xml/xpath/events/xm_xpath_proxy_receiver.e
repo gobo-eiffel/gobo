@@ -24,12 +24,14 @@ feature -- Access
 	system_id: STRING
 			-- SYSTEM-id of the document
 
+	base_receiver: XM_XPATH_RECEIVER
+
 feature -- Events
 
-	start_document: XM_XPATH_DOCUMENT is
+	start_document is
 			-- New document
 		do
-			Result := base_receiver.start_document
+			base_receiver.start_document
 		end
 
 	set_unparsed_entity (a_name: STRING; a_system_id: STRING; a_public_id: STRING) is
@@ -112,10 +114,6 @@ feature -- Element change
 				base_receiver.set_system_id (system_id)
 			end
 		end
-
-feature {NONE} -- Implementation
-
-	base_receiver: XM_XPATH_RECEIVER
 
 invariant
 

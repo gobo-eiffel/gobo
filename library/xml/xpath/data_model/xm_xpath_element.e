@@ -14,19 +14,12 @@ deferred class XM_XPATH_ELEMENT
 
 inherit
 
-	XM_XPATH_NODE
-		redefine
-			type_annotation
-		end
-
 	XM_XPATH_COMPOSITE_NODE
-
-	XM_XPATH_NODE_WITH_BASE_URI_OR_FROM_PARENT
-		undefine 
-			type_annotation
+		redefine
+			type_annotation, is_nilled
 		end
 
-	KL_IMPORTED_STRING_ROUTINES
+	XM_UNICODE_CHARACTERS_1_1
 
 feature -- Access
 
@@ -53,12 +46,12 @@ feature -- Access
 			-- Value of named attribute
 		require
 			uri_not_void: a_uri /= Void
-			local_name_not_void: a_local_name /= Void
+			local_name_not_void: a_local_name /= Void and then is_ncname (a_local_name)
 		deferred
 		end
 
 	attribute_value (a_fingerprint: INTEGER): STRING is
-			-- Value ofattribute identified by `a_fingerprint'
+			-- Value of attribute identified by `a_fingerprint'
 		deferred
 		end
 

@@ -17,6 +17,9 @@ inherit
 	XM_XPATH_TEXT
 
 	XM_XPATH_TINY_NODE
+		undefine
+			local_part
+		end
 
 creation
 
@@ -48,7 +51,6 @@ feature -- Access
 			length := document.beta_value (node_number)
 			Result := document.character_buffer.substring (start + 1, start + length)
 		end
-
 
 feature {XM_XPATH_NODE} -- Restricted
 

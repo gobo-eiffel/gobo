@@ -14,29 +14,20 @@ deferred class XM_XPATH_DOCUMENT
 
 inherit
 
-	XM_XPATH_NODE
-	
 	XM_XPATH_COMPOSITE_NODE
+		redefine
+			base_uri
+		end
 
-	XM_XPATH_BASE_URI
-
-	XM_XPATH_TYPELESS_NODE
-
-	XM_XPATH_NODE_WITHOUT_ATTRIBUTES
+		HASHABLE
 
 feature -- Access
 
 	document_number: INTEGER
 			-- Uniquely identifies this document.
 
-	base_uri: STRING is
+	base_uri: STRING
 			-- Base URI
-		do
-			-- TODO - make this deferred
-			Result := base_uri_property
-		ensure then
-			base_uri_property: Result = base_uri_property
-		end
 
 	node_kind: STRING is
 			-- Kind of node
@@ -55,7 +46,14 @@ feature -- Access
 				-- that `Result' is not optimized away.
 			end
 		end
-	
+
+	all_elements (a_fingerprint: INTEGER): DS_ARRAYED_LIST [XM_XPATH_ELEMENT] is
+			-- An enumeration of all elements with a given name
+		deferred
+		ensure
+			element_list_not_void: Result /= Void
+		end
+
 	unparsed_entity_system_id (an_entity_name: STRING): STRING is
 			-- System identifier of an unparsed external entity
 		require
@@ -85,19 +83,9 @@ feature -- Access
 	name_pool: XM_XPATH_NAME_POOL
 			-- The name pool used to build `Current'
 
-feature -- Creation
-
-	created_orphan_element: XM_XPATH_ELEMENT is
-			-- New orphan element;
-			-- Used by XM_XSLT_STRIPPER.
-		deferred
-		ensure
-			created_element_not_void: Result /= Void
-			orphan: Result.parent = Void
-		end
-
 invariant
 
 	name_pool_not_void: name_pool /= Void
+	base_uri_not_void: base_uri /= Void
 
 end

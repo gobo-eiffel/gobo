@@ -14,11 +14,10 @@ deferred class XM_XPATH_NAMESPACE
 
 inherit
 
-	XM_XPATH_TYPELESS_NODE
-
-	XM_XPATH_NODE_WITHOUT_ATTRIBUTES
-
-	KL_IMPORTED_STRING_ROUTINES
+	XM_XPATH_NODE
+		redefine
+			base_uri, next_sibling, previous_sibling
+		end
 
 feature -- Access
 
@@ -48,33 +47,29 @@ feature -- Access
 			end
 		end
 
-
-	string_value: STRING is
-			-- String-value
-		do
-			-- TODO - change this
-			Result := clone (uri_property)
+	namespace_code: INTEGER is
+			-- Code for the namespace represented by `Current'
+		deferred
+		ensure
+			strictly_positive_namespace_code: Result > 0
 		end
 
---	typed_value: DS_ARRAYED_LIST [??] is
-			-- Typed value
---		do
---			create Result.make (1)
-			-- TODO: Result.put_first (create {???}.make_untyped (string_value))
---		end
-
-feature {NONE} -- Access
-
-	-- TODO scrap these
-
-	prefix_property: STRING
-			-- Prefix property from the infoset.
-
-	uri_property: STRING
-			-- Namespace name property from the infoset.
-
+	previous_sibling: XM_XPATH_NODE is
+			-- The previous sibling of this node;
+			-- If there is no such node, return `Void'
+		do
+			Result := Void
+		end
+	
+	next_sibling: XM_XPATH_NODE is
+			-- The next sibling of this node;
+			-- If there is no such node, return `Void'
+		do
+			Result := Void
+		end
 invariant
 
-	uri_not_void: uri_property /= Void
-	
+	parent_not_void: parent /= Void
+	void_siblings: previous_sibling = Void and then next_sibling = Void
+
 end

@@ -14,7 +14,7 @@ deferred class XM_XPATH_SEQUENCE_ITERATOR [G -> XM_XPATH_ITEM]
 
 inherit
 
-	KL_SHARED_STANDARD_FILES -- for todo
+	XM_XPATH_DEBUGGING_ROUTINES
 
 feature -- Access
 
@@ -108,25 +108,6 @@ feature -- Duplication
 		require
 			not_in_error: not is_error
 		deferred
-		end
-
-feature {NONE} -- Implementation
-
-	todo (a_routine_name: STRING; is_partially_done: BOOLEAN) is
-			-- Write a TODO message.
-		require
-			routine_name_not_void: a_routine_name /= Void and then a_routine_name.count > 2
-		do
-			std.error.put_string ("TODO: {")
-			std.error.put_string (generating_type)
-			std.error.put_string ("}.")
-			std.error.put_string (a_routine_name)
-			if is_partially_done then
-				std.error.put_string (" is only partly written")
-			else
-				std.error.put_string (" needs to be written")
-			end
-			std.error.put_new_line
 		end
 
 invariant

@@ -4,7 +4,7 @@ indexing
 
 		"Objects that enumerate the following:: Axis"
 
-	library: "Gobo Eiffel XPATH Library"
+	library: "Gobo Eiffel XPath Library"
 	copyright: "Copyright (c) 2004, Colin Adams and others"
 	license: "Eiffel Forum License v2 (see forum.txt)"
 	date: "$Date$"
@@ -15,6 +15,9 @@ class XM_XPATH_TINY_FOLLOWING_ENUMERATION
 inherit
 
 	XM_XPATH_AXIS_ITERATOR [XM_XPATH_TINY_NODE]
+		redefine
+			start
+		end
 
 creation
 
@@ -71,6 +74,17 @@ feature {NONE} -- Initialization
 
 
 feature -- Cursor movement
+
+		start is
+			-- Move to next position
+		do
+			index := 1
+			if document.is_node_number_valid (next_node_number) then
+				current_item := document.retrieve_node (next_node_number)
+			else
+				current_item := Void
+			end
+		end
 
 	forth is
 			-- Move to next position

@@ -427,7 +427,7 @@ feature -- Access
 				end
 			end
 		ensure
-			valid_name_code: is_valid_name_code (Result)
+			valid_name_code:  Result = -1 or else is_valid_name_code (Result)
 		end
 
 	fingerprint_from_expanded_name (an_expanded_name: STRING): INTEGER is
@@ -448,10 +448,10 @@ feature -- Access
 			end
 			Result := fingerprint (a_namespace, a_local_name)
 		ensure
-			valid_name_code: is_valid_name_code (Result)
+			valid_name_code: Result = -1 or else is_valid_name_code (Result)
 		end
 
-	document_number (a_doc: XM_XPATH_TINY_DOCUMENT): INTEGER is
+	document_number (a_doc: XM_XPATH_DOCUMENT): INTEGER is
 			--	Document number associated with `a_doc'
 		require
 			document_not_void: a_doc /= Void
@@ -626,7 +626,7 @@ feature -- Status report
 			end				
 		end
 
-	is_document_allocated (a_doc: XM_XPATH_TINY_DOCUMENT): BOOLEAN is
+	is_document_allocated (a_doc: XM_XPATH_DOCUMENT): BOOLEAN is
 			--	Is a document number associated with `a_doc'
 		require
 			document_not_void: a_doc /= Void
@@ -884,7 +884,7 @@ feature -- Status report
 	
 feature -- Element change
 
-	allocate_document_number (a_doc: XM_XPATH_TINY_DOCUMENT) is
+	allocate_document_number (a_doc: XM_XPATH_DOCUMENT) is
 			--	Add a document to the pool, and allocate a document number;
 			-- WARNING - this code is not thread safe
 		require
@@ -1431,7 +1431,7 @@ feature {NONE} -- Implementation
 			prefix_allocated: prefix_index (a_uri_code, an_xml_prefix) > -1
 		end
 
-	document_number_map: DS_HASH_TABLE [INTEGER, XM_XPATH_TINY_DOCUMENT] -- TODO - ought to be DS_WEAK_HASH_TABLE, if/when one exists
+	document_number_map: DS_HASH_TABLE [INTEGER, XM_XPATH_DOCUMENT] -- TODO - ought to be DS_WEAK_HASH_TABLE, if/when one exists
 			-- Maps documents to document numbers
 	
 	hash_slots: ARRAY [XM_XPATH_NAME_ENTRY]

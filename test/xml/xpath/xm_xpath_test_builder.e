@@ -20,6 +20,10 @@ inherit
 
 	KL_IMPORTED_STRING_ROUTINES
 
+	XM_XPATH_SHARED_CONFORMANCE
+
+	XM_XPATH_SHARED_ANY_NODE_TEST
+
 		-- These tests test the ability to build a tiny-tree,
 		-- and exercise the DOM-like navigation features,
 		-- and the XPath axes.
@@ -29,12 +33,13 @@ feature
 	test_simple is
 			-- Simple tree.
 		local
-			document: XM_XPATH_TINY_DOCUMENT
-			document_element, an_element: XM_XPATH_TINY_ELEMENT
+			document: XM_XPATH_TREE_DOCUMENT
+			document_element, an_element: XM_XPATH_TREE_ELEMENT
 			a_node: XM_XPATH_NODE
 			a_name: STRING
 		do
-			make_parser
+			conformance.set_basic_xslt_processor
+			make_parser ("")
 			parser.parse_from_string ("<doc><a/><b/></doc>")
 			assert ("No parsing error", not tree_pipe.error.has_error)
 			document := tree_pipe.document
@@ -80,24 +85,25 @@ feature
 			-- Read a file with a DTD
 		local
 			input_stream: KL_TEXT_INPUT_FILE
-			document: XM_XPATH_TINY_DOCUMENT
-			document_element, books_element, an_element, item_element, categories_element: XM_XPATH_TINY_ELEMENT
-			an_attribute: XM_XPATH_TINY_ATTRIBUTE
-			a_pi: XM_XPATH_TINY_PROCESSING_INSTRUCTION
+			document: XM_XPATH_TREE_DOCUMENT
+			document_element, books_element, an_element, item_element, categories_element: XM_XPATH_TREE_ELEMENT
+			an_attribute: XM_XPATH_TREE_ATTRIBUTE
+			a_pi: XM_XPATH_TREE_PROCESSING_INSTRUCTION
 			a_node: XM_XPATH_NODE
 			a_name: STRING
 			a_fingerprint, counter: INTEGER
-			element_list_1, element_list_2: DS_ARRAYED_LIST [XM_XPATH_TINY_ELEMENT]
-			descendants: XM_XPATH_TINY_DESCENDANT_ENUMERATION
-			ancestors: XM_XPATH_TINY_ANCESTOR_ENUMERATION
-			attributes: XM_XPATH_TINY_ATTRIBUTE_ENUMERATION
-			following: XM_XPATH_TINY_FOLLOWING_ENUMERATION
-			preceding: XM_XPATH_TINY_PRECEDING_ENUMERATION
+			element_list_1, element_list_2: DS_ARRAYED_LIST [XM_XPATH_TREE_ELEMENT]
+			descendants: XM_XPATH_TREE_DESCENDANT_ENUMERATION
+			ancestors: XM_XPATH_TREE_ANCESTOR_ENUMERATION
+			attributes: XM_XPATH_TREE_ATTRIBUTE_ENUMERATION
+			following: XM_XPATH_TREE_FOLLOWING_ENUMERATION
+			preceding: XM_XPATH_TREE_PRECEDING_ENUMERATION
 			element_test, attribute_test: XM_XPATH_NAME_TEST
 			any_pi_test, any_element_test: XM_XPATH_NODE_KIND_TEST
 			found: BOOLEAN
 		do
-			make_parser
+			conformance.set_basic_xslt_processor
+			make_parser ("./books.xml")
 			-- TODO: restore to this line, when resolver architecture sorted: create input_stream.make ("./data/books.xml")
 			create input_stream.make ("./books.xml")
 			input_stream.open_read
@@ -157,7 +163,7 @@ feature
 
 			a_fingerprint := document.name_pool.fingerprint ("", "ITEM")
 			create element_test.make (Element_node, a_fingerprint)
-			create descendants.make (document, document_element, element_test, False)
+			create descendants.make (document_element, element_test, False)
 
 			from
 				descendants.start
@@ -168,16 +174,14 @@ feature
 				counter := counter + 1
 				descendants.forth
 			end
-
-			assert ("Eight descendants", counter = 8)
+			assert ("Eight descendants", counter = 9)
 			
 			-- Test ancestor axis - look for "BOOKLIST" ancestor of "ITEM"
 
-			a_fingerprint := document.name_pool.fingerprint ("", "BOOKLIST")
-			create element_test.make (Element_node, a_fingerprint)
-			create ancestors.make (document, item_element, element_test, False)
+			create ancestors.make (item_element, any_node_test, False)
 
-			if ancestors.before then ancestors.forth	end
+			ancestors.start
+			ancestors.forth
 			a_node := ancestors.item
 				check
 					ancestor_node_not_void: a_node /= Void
@@ -193,7 +197,7 @@ feature
 			a_fingerprint := document.name_pool.fingerprint ("", "CATEGORY")
 			element_list_1 := document.all_elements (a_fingerprint)
 			assert ("Element list not void", element_list_1 /= Void)
-			assert ("Eight items 2", element_list_1.count = 5)
+			assert ("Five items", element_list_1.count = 5)
 
 			-- Test preceding axis - find all PI's prior to CATEGORIES element
 
@@ -202,7 +206,7 @@ feature
 					categories_element_not_void: categories_element /= Void
 				end
 			create any_pi_test.make (Processing_instruction_node)
-			create preceding.make (document, categories_element, any_pi_test, False)
+			create preceding.make (categories_element, any_pi_test)
 				check
 					preceding_before: preceding.before
 				end	
@@ -223,18 +227,18 @@ feature
 				preceding.forth
 				counter := counter + 1
 			end
-			assert ("Three preceding processing-instructions", counter = 3)
+			assert ("Three preceding processing-instructions", counter = 4)
 
-			-- Test following axis - look for elements following the BOOK element
+			-- Test following axis - look for elements following the BOOKS element
 
 			create any_element_test.make (Element_node)
-			create following.make (document, books_element, any_element_test, False)
+			create following.make (books_element, any_element_test)
 				check
 					following_before: following.before
 				end
 			from
-				counter := 0
-				following.forth
+				counter := 1
+				following.start
 			until
 				following.after
 			loop
@@ -249,7 +253,7 @@ feature
 				following.forth
 				counter := counter + 1
 			end
-			assert ("Five following elements", counter = 5)
+			assert ("Six following elements", counter = 7)
 			
 			-- Test attributes axis - look for NOTE attribute on CATEGORY element
 
@@ -257,7 +261,7 @@ feature
 			an_element := element_list_1.item (2)
 					
 			create attribute_test.make (Attribute_node, a_fingerprint)
-			create attributes.make (document, an_element.node_number, attribute_test)
+			create attributes.make (an_element, attribute_test)
 				check
 					attributes_before: attributes.before
 				end
@@ -287,11 +291,12 @@ feature
 			-- Read a file with namespaces
 		local
 			input_stream: KL_TEXT_INPUT_FILE
-			document: XM_XPATH_TINY_DOCUMENT
-			document_element: XM_XPATH_TINY_ELEMENT
+			document: XM_XPATH_TREE_DOCUMENT
+			document_element: XM_XPATH_TREE_ELEMENT
 			a_name: STRING
 		do
-			make_parser
+			conformance.set_basic_xslt_processor
+			make_parser ("./books.xsl")
 			-- TODO: move this file
 			create input_stream.make ("./books.xsl")
 			input_stream.open_read
@@ -312,27 +317,30 @@ feature
 	test_document_in_error is
 			-- Test production of error messages.
 		do
-			make_parser
+			conformance.set_basic_xslt_processor
+			make_parser ("")
 			parser.parse_from_string ("<doc><a><b/></doc>")
 			assert ("Parsing error", tree_pipe.error.has_error)
 		end
 
 feature {NONE} -- Implementation
 
-	make_parser is
+	make_parser (a_system_id: STRING) is
+		require
+			system_id_not_void: a_system_id /= Void
 		local
 			entity_resolver: XM_FILE_EXTERNAL_RESOLVER
 		do
 			create entity_resolver.make
 			create parser.make
 			parser.set_resolver (entity_resolver)
-			create tree_pipe.make
+			create tree_pipe.make (a_system_id)
 			parser.set_callbacks (tree_pipe.start)
 			parser.set_dtd_callbacks (tree_pipe.emitter)
 			parser.set_string_mode_unicode
 		end
 		
 	parser: XM_EIFFEL_PARSER
-	tree_pipe: XM_XPATH_TINYTREE_CALLBACKS_PIPE
+	tree_pipe: XM_XPATH_TREE_CALLBACKS_PIPE
 
 end

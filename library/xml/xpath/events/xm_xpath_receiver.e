@@ -29,11 +29,9 @@ feature -- Access
 
 feature -- Events
 
-	start_document: XM_XPATH_DOCUMENT is
+	start_document is
 			-- New document
 		deferred
-		ensure
-			document_not_void: Result /= Void
 		end
 
 	set_unparsed_entity (a_name: STRING; a_system_id: STRING; a_public_id: STRING) is

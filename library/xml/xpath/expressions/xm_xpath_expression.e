@@ -34,7 +34,7 @@ inherit
 
 	XM_XPATH_ERROR_TYPES
 
-	KL_SHARED_STANDARD_FILES -- TODO - remove when all uses of todo in this and descendant classes are gone
+	XM_XPATH_DEBUGGING_ROUTINES
 
 	KL_IMPORTED_STRING_ROUTINES
 
@@ -423,25 +423,6 @@ feature {XM_XPATH_EXPRESSION} -- Local
 				Result := STRING_.appended_string (Result, " ")
 				counter := counter + 1
 			end
-		end
-
-feature {NONE} -- Implementation
-
-	todo (a_routine_name: STRING; is_partially_done: BOOLEAN) is
-			-- Write a TODO message.
-		require
-			routine_name_not_void: a_routine_name /= Void and then a_routine_name.count > 2
-		do
-			std.error.put_string ("TODO: {")
-			std.error.put_string (generating_type)
-			std.error.put_string ("}.")
-			std.error.put_string (a_routine_name)
-			if is_partially_done then
-				std.error.put_string (" is only partly written")
-			else
-				std.error.put_string (" needs to be written")
-			end
-			std.error.put_new_line
 		end
 
 end

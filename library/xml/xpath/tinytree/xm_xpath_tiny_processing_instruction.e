@@ -15,8 +15,14 @@ class XM_XPATH_TINY_PROCESSING_INSTRUCTION
 inherit
 
 	XM_XPATH_PROCESSING_INSTRUCTION
+		undefine
+			base_uri
+		end
 
 	XM_XPATH_TINY_NODE
+		redefine
+			base_uri
+		end
 
 creation
 
@@ -47,7 +53,13 @@ feature -- Access
 		do
 			length := document.beta_value (node_number)
 			start := document.alpha_value (node_number)
-			create {UC_UTF8_STRING} Result.make_from_substring (document.comment_buffer, start, start + length)
+			Result := document.comment_buffer.substring (start, start + length)
+		end
+
+	base_uri: STRING is
+			-- Base URI
+		do
+			Result := document.system_id_for_node (node_number)
 		end
 
 feature {XM_XPATH_NODE} -- Restricted
@@ -57,4 +69,5 @@ feature {XM_XPATH_NODE} -- Restricted
 		do
 			Result := True
 		end
+
 end

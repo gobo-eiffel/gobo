@@ -17,8 +17,10 @@ inherit
 	XM_XPATH_ATTRIBUTE
 
 	XM_XPATH_TINY_NODE
+		undefine
+			local_part
 		redefine
-			name_code
+			name_code, sequence_number, parent
 		end
 	
 creation
@@ -38,6 +40,22 @@ feature {NONE} -- Initialization
 		end
 
 feature -- Access
+	
+	sequence_number: XM_XPATH_64BIT_NUMERIC_CODE is
+			-- Node sequence number (in document order)
+		do
+
+			-- Note - the offset is to allow room for namespace nodes
+			
+			create Result.make_with_offset (parent.sequence_number.high_word, node_number - document.alpha_value (document.attribute_parent (node_number)))
+		end
+
+	parent: XM_XPATH_TINY_COMPOSITE_NODE is
+			-- Parent of current node;
+			-- `Void' if current node is root, or for orphan nodes.
+		do
+			Result ?= document.retrieve_node (document.attribute_parent (node_number))
+		end
 
 	string_value: STRING is
 			--Value of the item as a string
@@ -51,7 +69,7 @@ feature -- Access
 			Result := document.attribute_code_for_node (node_number)
 		end
 	
-feature {XM_XPATH_NODE} -- Access
+feature {XM_XPATH_NODE} -- Restricted
 
 	is_possible_child: BOOLEAN is
 			-- Can this node be a child of a document or element node?

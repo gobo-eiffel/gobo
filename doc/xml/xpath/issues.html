@@ -80,7 +80,6 @@
 	<li>Investigate need for set_location. This may depend upon <a href="#entities">Entity resolution, location information and SYSTEM ids.</a></li>
 	<li>Review commenting style - this has been done to some extent.</li>
 	<li>Review unsafe string features (done?).</li>
-	<li>Change remaining data model infoset properties into implementation stuff.</li>
 	<li>Change loops to use external cursors (ongoing - done?)</li>
 	<li>Make use of UT_URI for base URI etc.</li>
 	<li>CAST_EXPRESSION needs fixing; CASTABLE, TREAT and constructor functions need implementing and testing.</li>
@@ -89,6 +88,8 @@
 	<li>How to get dynamic error messages out of declare_variable and (?can't remember?)?</li>
 	<li>Implement and use SHARED_EMPTY_ITERATOR</li>
 	<li>Review assignment attempts</li>
+	<li>Compacting the tree/tiny tree</li>
+	<li>System-id map - implement and check it works for PI/Elements via parent.</li>
       </ul>
     </div>
     <div>
@@ -96,10 +97,12 @@
       <p>This section should be ignored. It consists solely of my notes
       with which to form the comments for the next cvs check-in operation.</p>
       <pre>
-	Made default name pool into a settable singleton.
-	Worked round a bug in SE 1.0 and 1.1 optimization.
-	Implemented minimax_comparsion.
-	Corrected static proerties for Values.
+	Working on PREPARED_STYLESHEET.
+	Implemented (non-tiny) tree model, as it is necessary for stylesheets
+	(because of xsl:import/include)
+	Implemented sequence_number, using 64-bit quantity
+	Removed much of the structure fom XM_XPATH_NODE hierarchy (e.g. no more BASE_URI etc.)
+	Changed code to properly use XM_XPATH_STRING_MODE
       </pre>
     </div>
     <div >

@@ -22,21 +22,21 @@ inherit
 
 	XM_XPATH_STANDARD_NAMESPACES
 
+	KL_IMPORTED_STRING_ROUTINES
+
 creation
 
 	make
 
 feature {NONE} -- Initialization
 
-	make (a_name_pool: XM_XPATH_NAME_POOL; basic_conformance: BOOLEAN) is
+	make (a_name_pool: XM_XPATH_NAME_POOL) is
 			-- Set the name pool in which all name codes can be found
 		require
 			name_pool_not_void: a_name_pool /= Void
 		do
-			if basic_conformance then
-				conformance.set_basic_xslt_processor
-			end
 			name_pool := a_name_pool
+			system_id := ""
 		ensure
 			name_pool_set: name_pool = a_name_pool
 		end
@@ -46,16 +46,19 @@ feature -- Access
 	document: XM_XPATH_TINY_DOCUMENT
 			-- Resulting document
 
+	system_id: STRING
+			-- The SYSTEM id of the document being processed
+
 feature -- Events
 
-	start_document: XM_XPATH_DOCUMENT is
+	start_document is
 			-- Notify the start of the document
 		do
 			-- TODO add timing information
 			if defaults_overridden then
-				create document.make (estimated_node_count, estimated_attribute_count, estimated_namespace_count, estimated_character_count, name_pool)
+				create document.make (estimated_node_count, estimated_attribute_count, estimated_namespace_count, estimated_character_count, name_pool, system_id)
 			else
-				create document.make_with_defaults (name_pool)
+				create document.make_with_defaults (name_pool, system_id)
 			end
 			current_depth := 1
 			document.add_node (Document_node, current_depth, -1, -1, -1)
@@ -64,8 +67,6 @@ feature -- Events
 			previously_at_depth.put (0, 2) 
 			document.set_next_sibling (-1, 1) -- i.e. node one has next sibling 0 (no next sibling)
 			current_depth := current_depth + 1
-			Result := document
-			
 		end
 
 	set_unparsed_entity (a_name: STRING; a_system_id: STRING; a_public_id: STRING) is
@@ -211,9 +212,10 @@ feature -- Events
 	end_document is
 			-- Parsing finished.
 		do
-			-- previously_at_depth.put (-1, current_depth) -- i.e. depth has not been reached yet
 			previously_at_depth := Void
+
 			-- TODO add timing information
+
 		end
 
 feature -- Status setting
@@ -276,8 +278,6 @@ feature {NONE} -- Implementation
 	
 	current_depth: INTEGER
 			-- Depth within the tree;
-			-- The document node is level 0;
-			-- The document element is level 1.
 
 	node_number: INTEGER
 			-- The local sequence number for a node within this document
@@ -286,12 +286,9 @@ feature {NONE} -- Implementation
 			-- Scaffolding used whilst building the tree;
 			-- Values are node numbers
 
-	system_id: STRING
-			-- The SYSTEM id of the document being processed
-			-- TODO - set this in the document to the base-URI
-
 invariant
 	positive_depth: current_depth >= 0
 	name_pool_not_void: name_pool /= Void
+	system_id_not_void: system_id /= Void
 
 end

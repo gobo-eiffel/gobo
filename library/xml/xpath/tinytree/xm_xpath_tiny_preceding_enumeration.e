@@ -15,6 +15,9 @@ class XM_XPATH_TINY_PRECEDING_ENUMERATION
 inherit
 
 	XM_XPATH_AXIS_ITERATOR [XM_XPATH_TINY_NODE]
+		redefine
+			start
+		end
 
 	KL_SHARED_STANDARD_FILES
 
@@ -61,6 +64,16 @@ feature {NONE} -- Initialization
 		end
 
 feature -- Cursor movement
+	start is
+			-- Move to next position
+		do
+			index := 1
+			if document.is_node_number_valid (next_node_number) then
+				current_item := document.retrieve_node (next_node_number)
+			else
+				current_item := Void
+			end
+		end
 
 	forth is
 			-- Move to next position

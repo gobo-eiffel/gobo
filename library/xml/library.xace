@@ -44,6 +44,7 @@
 		<cluster name="xpath">
 		  <cluster name="data_model"/>
 		  <cluster name="tinytree"/>
+		  <cluster name="xpath_tree" location="tree" relative="true"/>
 		  <cluster name="values"/>
 		  <cluster name="expressions"/>
 		  <cluster name="events"/>

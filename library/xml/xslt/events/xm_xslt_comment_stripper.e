@@ -22,7 +22,23 @@ inherit
 	XM_STRING_MODE
 
 	-- This class also concatenates text nodes split by comments and processing instructions
-	
+
+creation
+
+	make
+
+feature {NONE} -- Initialization
+
+		make (an_underlying_receiver: XM_XPATH_RECEIVER) is
+			-- Establish invariant.
+		require
+			underlying_receiver_not_void: an_underlying_receiver /= Void
+		do
+			base_receiver := an_underlying_receiver
+		ensure
+			base_receiver_set: base_receiver = an_underlying_receiver
+		end
+
 feature -- Events
 
 

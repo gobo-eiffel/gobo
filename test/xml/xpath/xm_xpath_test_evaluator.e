@@ -23,7 +23,7 @@ inherit
 	
 	XM_XPATH_ERROR_TYPES
 
-	XM_STRING_MODE
+	XM_XPATH_SHARED_CONFORMANCE
 
 	KL_IMPORTED_STRING_ROUTINES
 
@@ -39,7 +39,8 @@ feature
 			evaluated_items: DS_LINKED_LIST [XM_XPATH_ITEM]
 		do
 			create an_evaluator
-			an_evaluator.build_static_context ("./books.xml", False, False)
+			an_evaluator.set_string_mode_unicode
+			an_evaluator.build_static_context ("./books.xml", False, False, False, True)
 			assert ("Build successfull", not an_evaluator.was_build_error)
 			an_evaluator.evaluate ("BOOKLIST//ITEM[child::TITLE = 'When We Were Very Young']/attribute::CAT") -- should evaluate to "F"
 			assert ("No evaluation error", not an_evaluator.is_error)
@@ -57,7 +58,8 @@ feature
 			a_node: XM_XPATH_NODE
 		do
 			create an_evaluator
-			an_evaluator.build_static_context ("./books.xml", False, False)
+			an_evaluator.set_string_mode_unicode
+			an_evaluator.build_static_context ("./books.xml", False, False, True, True)
 			assert ("Build successfull", not an_evaluator.was_build_error)
 			an_evaluator.evaluate ("/BOOKLIST/BOOKS/child::ITEM[2]")
 			assert ("No evaluation error", not an_evaluator.is_error)
@@ -76,7 +78,8 @@ feature
 			a_node: XM_XPATH_NODE
 		do
 			create an_evaluator
-			an_evaluator.build_static_context ("./books.xml", False, False)
+			an_evaluator.set_string_mode_unicode
+			an_evaluator.build_static_context ("./books.xml", False, False, False, True)
 			assert ("Build successfull", not an_evaluator.was_build_error)
 			an_evaluator.evaluate ("descendant::ITEM[attribute::CAT = 'X']")
 			assert ("No evaluation error", not an_evaluator.is_error)
@@ -95,7 +98,8 @@ feature
 			a_node: XM_XPATH_NODE
 		do
 			create an_evaluator
-			an_evaluator.build_static_context ("./books.xml", False, False)
+			an_evaluator.set_string_mode_unicode
+			an_evaluator.build_static_context ("./books.xml", False, False, True, True)
 			assert ("Build successfull", not an_evaluator.was_build_error)
 			an_evaluator.evaluate ("child::BOOKLIST[BOOKS]")
 			assert ("No evaluation error", not an_evaluator.is_error)
@@ -113,7 +117,8 @@ feature
 			an_integer_value: XM_XPATH_INTEGER_VALUE
 		do
 			create an_evaluator
-			an_evaluator.build_static_context ("./books.xml", False, False)
+			an_evaluator.set_string_mode_unicode
+			an_evaluator.build_static_context ("./books.xml", False, False, False, True)
 			assert ("Build successfull", not an_evaluator.was_build_error)
 			an_evaluator.evaluate ("(1 to 100)[. mod 5 eq 0]")
 			assert ("No evaluation error", not an_evaluator.is_error)
@@ -131,7 +136,8 @@ feature
 			an_integer_value: XM_XPATH_INTEGER_VALUE
 		do
 			create an_evaluator
-			an_evaluator.build_static_context ("./books.xml", False, False)
+			an_evaluator.set_string_mode_unicode
+			an_evaluator.build_static_context ("./books.xml", False, False, True, True)
 			assert ("Build successfull", not an_evaluator.was_build_error)
 			an_evaluator.evaluate ("(21 to 29)[5]")
 			assert ("No evaluation error", not an_evaluator.is_error)
@@ -149,7 +155,8 @@ feature
 			a_boolean_value: XM_XPATH_BOOLEAN_VALUE
 		do
 			create an_evaluator
-			an_evaluator.build_static_context ("./books.xml", False, False)
+			an_evaluator.set_string_mode_unicode
+			an_evaluator.build_static_context ("./books.xml", False, False, False, True)
 			assert ("Build successfull", not an_evaluator.was_build_error)
 			an_evaluator.evaluate ("BOOKLIST/BOOKS/ITEM[4]/AUTHOR eq 'Bonner'")
 			assert ("No evaluation error", not an_evaluator.is_error)
@@ -167,7 +174,8 @@ feature
 			a_boolean_value: XM_XPATH_BOOLEAN_VALUE
 		do
 			create an_evaluator
-			an_evaluator.build_static_context ("./books.xml", False, False)
+			an_evaluator.set_string_mode_unicode
+			an_evaluator.build_static_context ("./books.xml", False, False, True, True)
 			assert ("Build successfull", not an_evaluator.was_build_error)
 			an_evaluator.evaluate ("//ITEM/AUTHOR = 'Bonner'")
 			assert ("No evaluation error", not an_evaluator.is_error)
@@ -185,7 +193,8 @@ feature
 			a_boolean_value: XM_XPATH_BOOLEAN_VALUE
 		do
 			create an_evaluator
-			an_evaluator.build_static_context ("./books.xml", False, False)
+			an_evaluator.set_string_mode_unicode
+			an_evaluator.build_static_context ("./books.xml", False, False, False, True)
 			assert ("Build successfull", not an_evaluator.was_build_error)
 			an_evaluator.evaluate ("//ITEM[child::AUTHOR = 'Milne, A. A.'] is //ITEM[child::TITLE = 'When We Were Very Young']")
 			assert ("No evaluation error", not an_evaluator.is_error)
@@ -194,7 +203,7 @@ feature
 			a_boolean_value ?= evaluated_items.item (1)
 			assert ("Boolean true", a_boolean_value /= Void and then a_boolean_value.value = True)
 		end
-
+	
 	test_node_precedes is
 			-- Test one node precedes another.
 		local
@@ -203,7 +212,8 @@ feature
 			a_boolean_value: XM_XPATH_BOOLEAN_VALUE
 		do
 			create an_evaluator
-			an_evaluator.build_static_context ("./books.xml", False, False)
+			an_evaluator.set_string_mode_unicode
+			an_evaluator.build_static_context ("./books.xml", False, False, True, True)
 			assert ("Build successfull", not an_evaluator.was_build_error)
 			an_evaluator.evaluate ("//ITEM[child::AUTHOR = 'Milne, A. A.'] << /BOOKLIST/CATEGORIES")
 			assert ("No evaluation error", not an_evaluator.is_error)
@@ -221,7 +231,8 @@ feature
 			a_boolean_value: XM_XPATH_BOOLEAN_VALUE
 		do
 			create an_evaluator
-			an_evaluator.build_static_context ("./books.xml", False, False)
+			an_evaluator.set_string_mode_unicode
+			an_evaluator.build_static_context ("./books.xml", False, False, False, True)
 			assert ("Build successfull", not an_evaluator.was_build_error)
 			an_evaluator.evaluate ("//ITEM[child::AUTHOR = 'Milne, A. A.'] >> /BOOKLIST/CATEGORIES")
 			assert ("No evaluation error", not an_evaluator.is_error)
@@ -239,7 +250,8 @@ feature
 			a_boolean_value: XM_XPATH_BOOLEAN_VALUE
 		do
 			create an_evaluator
-			an_evaluator.build_static_context ("./books.xml", False, False)
+			an_evaluator.set_string_mode_unicode
+			an_evaluator.build_static_context ("./books.xml", False, False, True, True)
 			assert ("Build successfull", not an_evaluator.was_build_error)
 			an_evaluator.evaluate ("1 eq 1 and 2 eq 2")
 			assert ("No evaluation error", not an_evaluator.is_error)
@@ -258,7 +270,8 @@ feature
 			a_boolean_value: XM_XPATH_BOOLEAN_VALUE
 		do
 			create an_evaluator
-			an_evaluator.build_static_context ("./books.xml", False, False)
+			an_evaluator.set_string_mode_unicode
+			an_evaluator.build_static_context ("./books.xml", False, False, False, True)
 			assert ("Build successfull", not an_evaluator.was_build_error)
 			an_evaluator.evaluate ("1 eq 2 and 3 idiv 0 = 1")
 			assert ("Evaluation error", an_evaluator.is_error)
@@ -272,7 +285,8 @@ feature
 			a_boolean_value: XM_XPATH_BOOLEAN_VALUE
 		do
 			create an_evaluator
-			an_evaluator.build_static_context ("./books.xml", False, False)
+			an_evaluator.set_string_mode_unicode
+			an_evaluator.build_static_context ("./books.xml", False, False, True, True)
 			assert ("Build successfull", not an_evaluator.was_build_error)
 			an_evaluator.evaluate ("1 eq 1 or 2 eq 3")
 			assert ("No evaluation error", not an_evaluator.is_error)
@@ -289,7 +303,8 @@ feature
 			an_evaluator: XM_XPATH_EVALUATOR
 		do
 			create an_evaluator
-			an_evaluator.build_static_context ("./books.xml", False, False)
+			an_evaluator.set_string_mode_unicode
+			an_evaluator.build_static_context ("./books.xml", False, False, False, True)
 			assert ("Build successfull", not an_evaluator.was_build_error)
 			an_evaluator.evaluate ("1 eq 1 or 3 idiv 0 = 1")
 			assert ("Evaluation error", an_evaluator.is_error)
@@ -301,7 +316,8 @@ feature
 			an_evaluator: XM_XPATH_EVALUATOR
 		do
 			create an_evaluator
-			an_evaluator.build_static_context ("./books.xml", False, False)
+			an_evaluator.set_string_mode_unicode
+			an_evaluator.build_static_context ("./books.xml", False, False, True, True)
 			assert ("Build successfull", not an_evaluator.was_build_error)
 			an_evaluator.evaluate ("1 eq 1 and 3 idiv 0 = 1")
 			assert ("Evaluation error", an_evaluator.is_error)
@@ -314,12 +330,13 @@ feature
 			evaluated_items: DS_LINKED_LIST [XM_XPATH_ITEM]
 		do
 			create an_evaluator
-			an_evaluator.build_static_context ("./books.xml", False, False)
+			an_evaluator.set_string_mode_unicode
+			an_evaluator.build_static_context ("./books.xml", False, False, False, True)
 			assert ("Build successfull", not an_evaluator.was_build_error)
 			an_evaluator.evaluate ("for $i in //* return name($i)")
 			assert ("No evaluation error", not an_evaluator.is_error)
 			evaluated_items := an_evaluator.evaluated_items
-			assert ("Fifty evaluated items", evaluated_items /= Void and then evaluated_items.count = 50)			
+			assert ("Fifty-one evaluated items", evaluated_items /= Void and then evaluated_items.count = 51)			
 		end
 	
 	test_nested_for_expression is
@@ -329,7 +346,8 @@ feature
 			evaluated_items: DS_LINKED_LIST [XM_XPATH_ITEM]
 		do
 			create an_evaluator
-			an_evaluator.build_static_context ("./books.xml", False, False)
+			an_evaluator.set_string_mode_unicode
+			an_evaluator.build_static_context ("./books.xml", False, False, True, True)
 			assert ("Build successfull", not an_evaluator.was_build_error)
 			an_evaluator.evaluate ("for $i in (10, 20), $j in (1, 2) return ($i + $j)")
 			assert ("No evaluation error", not an_evaluator.is_error)
@@ -344,7 +362,8 @@ feature
 			evaluated_items: DS_LINKED_LIST [XM_XPATH_ITEM]
 		do
 			create an_evaluator
-			an_evaluator.build_static_context ("./books.xml", False, False)
+			an_evaluator.set_string_mode_unicode
+			an_evaluator.build_static_context ("./books.xml", False, False, False, True)
 			assert ("Build successfull", not an_evaluator.was_build_error)
 			an_evaluator.evaluate ("//ITEM[AUTHOR = 'Bonner'] union //ITEM[@CAT = 'S']")
 			assert ("No evaluation error", not an_evaluator.is_error)
@@ -359,7 +378,8 @@ feature
 			evaluated_items: DS_LINKED_LIST [XM_XPATH_ITEM]
 		do
 			create an_evaluator
-			an_evaluator.build_static_context ("./books.xml", False, False)
+			an_evaluator.set_string_mode_unicode
+			an_evaluator.build_static_context ("./books.xml", False, False, True, True)
 			assert ("Build successfull", not an_evaluator.was_build_error)
 			an_evaluator.evaluate ("//ITEM[AUTHOR = 'Bonner'] intersect //ITEM[@CAT = 'S']")
 			assert ("No evaluation error", not an_evaluator.is_error)
@@ -374,7 +394,8 @@ feature
 			evaluated_items: DS_LINKED_LIST [XM_XPATH_ITEM]
 		do
 			create an_evaluator
-			an_evaluator.build_static_context ("./books.xml", False, False)
+			an_evaluator.set_string_mode_unicode
+			an_evaluator.build_static_context ("./books.xml", False, False, False, True)
 			assert ("Build successfull", not an_evaluator.was_build_error)
 			an_evaluator.evaluate ("//ITEM except //ITEM[@CAT = 'S']")
 			assert ("No evaluation error", not an_evaluator.is_error)
@@ -389,7 +410,8 @@ feature
 			evaluated_items: DS_LINKED_LIST [XM_XPATH_ITEM]
 		do
 			create an_evaluator
-			an_evaluator.build_static_context ("./books.xml", False, False)
+			an_evaluator.set_string_mode_unicode
+			an_evaluator.build_static_context ("./books.xml", False, False, True, True)
 			assert ("Build successfull", not an_evaluator.was_build_error)
 			an_evaluator.evaluate ("//ITEM[if ( @CAT eq 'S' ) then true() else false() ]")
 			assert ("No evaluation error", not an_evaluator.is_error)
@@ -405,7 +427,8 @@ feature
 			a_boolean_value: XM_XPATH_BOOLEAN_VALUE
 		do
 			create an_evaluator
-			an_evaluator.build_static_context ("./books.xml", False, False)
+			an_evaluator.set_string_mode_unicode
+			an_evaluator.build_static_context ("./books.xml", False, False, False, True)
 			assert ("Build successfull", not an_evaluator.was_build_error)
 			an_evaluator.evaluate ("every $item in //ITEM satisfies $item/@CAT")
 			assert ("No evaluation error", not an_evaluator.is_error)
@@ -424,7 +447,8 @@ feature
 			a_boolean_value: XM_XPATH_BOOLEAN_VALUE
 		do
 			create an_evaluator
-			an_evaluator.build_static_context ("./books.xml", False, False)
+			an_evaluator.set_string_mode_unicode
+			an_evaluator.build_static_context ("./books.xml", False, False, True, True)
 			assert ("Build successfull", not an_evaluator.was_build_error)
 			an_evaluator.evaluate ("every $item in //ITEM satisfies $item/@CAT eq 'X'")
 			assert ("No evaluation error", not an_evaluator.is_error)
@@ -442,7 +466,8 @@ feature
 			a_boolean_value: XM_XPATH_BOOLEAN_VALUE
 		do
 			create an_evaluator
-			an_evaluator.build_static_context ("./books.xml", False, False)
+			an_evaluator.set_string_mode_unicode
+			an_evaluator.build_static_context ("./books.xml", False, False, False, True)
 			assert ("Build successfull", not an_evaluator.was_build_error)
 			an_evaluator.evaluate ("some $item in //ITEM satisfies $item/@CAT eq 'F'")
 			assert ("No evaluation error", not an_evaluator.is_error)
@@ -460,7 +485,8 @@ feature
 			a_boolean_value: XM_XPATH_BOOLEAN_VALUE
 		do
 			create an_evaluator
-			an_evaluator.build_static_context ("./books.xml", False, False)
+			an_evaluator.set_string_mode_unicode
+			an_evaluator.build_static_context ("./books.xml", False, False, True, True)
 			assert ("Build successfull", not an_evaluator.was_build_error)
 			an_evaluator.evaluate ("some $item in //ITEM satisfies $item/@CAT eq 'G'")
 			assert ("No evaluation error", not an_evaluator.is_error)
@@ -478,7 +504,8 @@ feature
 			a_boolean_value: XM_XPATH_BOOLEAN_VALUE
 		do
 			create an_evaluator
-			an_evaluator.build_static_context ("./books.xml", False, False)
+			an_evaluator.set_string_mode_unicode
+			an_evaluator.build_static_context ("./books.xml", False, False, False, True)
 			assert ("Build successfull", not an_evaluator.was_build_error)
 			an_evaluator.evaluate ("5 instance of xs:integer")
 			assert ("No evaluation error", not an_evaluator.is_error)
@@ -500,7 +527,8 @@ feature
 			an_integer_value: XM_XPATH_INTEGER_VALUE
 		do
 			create an_evaluator
-			an_evaluator.build_static_context ("./books.xml", False, False)
+			an_evaluator.set_string_mode_unicode
+			an_evaluator.build_static_context ("./books.xml", False, False, True, True)
 			assert ("Build successfull", not an_evaluator.was_build_error)
 			create an_integer_value.make (7)
 			an_evaluator.static_context.declare_variable ("fred", an_integer_value)
@@ -522,7 +550,8 @@ feature
 			an_evaluator: XM_XPATH_EVALUATOR			
 		do
 			create an_evaluator
-			an_evaluator.build_static_context ("./books.xml", False, False)
+			an_evaluator.set_string_mode_unicode
+			an_evaluator.build_static_context ("./books.xml", False, False, False, True)
 			assert ("Build successfull", not an_evaluator.was_build_error)
 			an_evaluator.evaluate ("//[position() = ()]")
 			assert ("Evaluation error", an_evaluator.is_error)
@@ -536,7 +565,8 @@ feature
 			an_evaluator: XM_XPATH_EVALUATOR			
 		do
 			create an_evaluator
-			an_evaluator.build_static_context ("./books.xml", False, False)
+			an_evaluator.set_string_mode_unicode
+			an_evaluator.build_static_context ("./books.xml", False, False, True, True)
 			assert ("Build successfull", not an_evaluator.was_build_error)
 			an_evaluator.evaluate ("/%"fred%"")
 			assert ("Evaluation error", an_evaluator.is_error)
@@ -550,7 +580,8 @@ feature
 			a_string_value: XM_XPATH_STRING_VALUE
 		do
 			create an_evaluator
-			an_evaluator.build_static_context ("./books.xml", False, False)
+			an_evaluator.set_string_mode_unicode
+			an_evaluator.build_static_context ("./books.xml", False, False, False, True)
 			assert ("Build successfull", not an_evaluator.was_build_error)
 			create a_string_value.make ("seven")
 			an_evaluator.static_context.declare_variable ("fred", a_string_value)
@@ -564,7 +595,8 @@ feature
 			an_evaluator: XM_XPATH_EVALUATOR			
 		do
 			create an_evaluator
-			an_evaluator.build_static_context ("./books.xml", False, False)
+			an_evaluator.set_string_mode_unicode
+			an_evaluator.build_static_context ("./books.xml", False, False, True, True)
 			assert ("Build successfull", not an_evaluator.was_build_error)
 			an_evaluator.evaluate ("//TITLE[position() = $fred]")
 			assert ("Evaluation error", an_evaluator.is_error)
@@ -577,7 +609,8 @@ feature
 			an_evaluator: XM_XPATH_EVALUATOR			
 		do
 			create an_evaluator
-			an_evaluator.build_static_context ("./books.xml", False, False)
+			an_evaluator.set_string_mode_unicode
+			an_evaluator.build_static_context ("./books.xml", False, False, False, True)
 			assert ("Build successfull", not an_evaluator.was_build_error)
 			an_evaluator.evaluate ("//TITLE[position(1,2,3)]")
 			assert ("Evaluation error", an_evaluator.is_error)
@@ -590,7 +623,8 @@ feature
 			an_evaluator: XM_XPATH_EVALUATOR			
 		do
 			create an_evaluator
-			an_evaluator.build_static_context ("./books.xml", False, False)
+			an_evaluator.set_string_mode_unicode
+			an_evaluator.build_static_context ("./books.xml", False, False, True, True)
 			assert ("Build successfull", not an_evaluator.was_build_error)
 			an_evaluator.evaluate ("'fred'[child::title]")
 			assert ("Evaluation error", an_evaluator.is_error)
@@ -604,7 +638,7 @@ feature
 --			evaluated_items: DS_LINKED_LIST [XM_XPATH_ITEM]
 --		do
 --			create an_evaluator
---			an_evaluator.build_static_context ("./books.xml", False, False)
+--			an_evaluator.build_static_context ("./books.xml", False, False, False, True)
 --			assert ("Build successfull", not an_evaluator.was_build_error)
 --			an_evaluator.evaluate ("'fred' eq 'jim' cast as xs:date")
 --			evaluated_items := an_evaluator.evaluated_items
@@ -619,7 +653,8 @@ feature
 			an_evaluator: XM_XPATH_EVALUATOR			
 		do
 			create an_evaluator
-			an_evaluator.build_static_context ("./books.xml", False, False)
+			an_evaluator.set_string_mode_unicode
+			an_evaluator.build_static_context ("./books.xml", False, False, True, True)
 			assert ("Build successfull", not an_evaluator.was_build_error)
 			an_evaluator.evaluate ("'fred' eq 'jim' cast as xs:Date")
 			assert ("Evaluation error", an_evaluator.is_error)
@@ -628,7 +663,7 @@ feature
 
 	set_up is
 		do
-			set_string_mode_mixed
+			conformance.set_basic_xslt_processor
 		end
 
 feature {NONE} -- Implementation

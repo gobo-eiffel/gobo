@@ -15,10 +15,15 @@ class XM_XPATH_TINY_NAMESPACE
 inherit
 
 	XM_XPATH_NAMESPACE
+		undefine
+			local_part
+		end
 
 	XM_XPATH_TINY_NODE
+		undefine
+			parent, base_uri, next_sibling, previous_sibling
 		redefine
-			local_part, name_code
+			local_part, name_code, sequence_number, is_same_node
 		end
 
 creation
@@ -51,15 +56,58 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
+	sequence_number: XM_XPATH_64BIT_NUMERIC_CODE is
+			-- Node sequence number (in document order)
+		do
+			create Result.make (0, 0)
+		end
+
 	local_part: STRING is
 			-- Local name for this node. i.e. Namespace prefix
 		do
 			Result := document.name_pool.prefix_from_namespace_code (document.namespace_code_for_node (node_number))
 		end
 
-		name_code: INTEGER
+	parent: XM_XPATH_TINY_COMPOSITE_NODE is
+			-- Parent of current node
+		do
+			Result := Void
+		end
+
+	name_code: INTEGER
 			-- Name code of this node - used in displaying names
 	
+	string_value: STRING is
+			-- String-value
+		do
+			Result := document.name_pool.uri_from_namespace_code (document.namespace_code_for_node (node_number))
+		end
+
+	namespace_code: INTEGER is
+			-- Code for the namespace represented by `Current'
+		do
+			Result := document.namespace_code_for_node (node_number)
+		end
+
+feature -- Comparison
+
+
+	is_same_node (other: XM_XPATH_TINY_NODE): BOOLEAN is
+			-- Does `Current' represent the same node in the tree as `other'?
+		local
+			another_namespace: XM_XPATH_TINY_NAMESPACE
+		do
+			if other = Current then
+				Result := True
+			else
+				another_namespace ?= other
+				if another_namespace /= Void then
+					Result := document = another_namespace.document and then
+					node_number = another_namespace.node_number
+				end
+			end
+		end
+
 feature {XM_XPATH_NODE} -- Restricted
 
 	is_possible_child: BOOLEAN is

@@ -21,7 +21,7 @@ inherit
 
 	XM_XPATH_LAST_POSITION_FINDER [G]
 		undefine
-			before, todo
+			before
 		end
 
 	KL_SHARED_STANDARD_FILES

@@ -15,20 +15,23 @@ class	XM_XSLT_STYLESHEET_STRIPPER
 inherit
 	
 	XM_XSLT_STRIPPER
+		rename
+			make as make_stripper
 		redefine
 			another, space_preserving_mode, is_local_invariant_met
 		end
 
 creation
 
-	make_first_time, make_another
+	make, make_another
 
 feature {NONE} -- Initialization
 
-	make_first_time (a_name_pool: XM_XPATH_NAME_POOL) is
+	make (a_name_pool: XM_XPATH_NAME_POOL; an_underlying_receiver: XM_XPATH_RECEIVER) is
 			-- Build stylesheet rules.
 		require
 			name_pool_not_void: a_name_pool /= Void
+			underlying_receiver_not_void: an_underlying_receiver /= Void
 		do
 			xsl_text_fingerprint := a_name_pool.fingerprint (Xslt_uri, "text")
 			create specials.make (1, 10)
@@ -42,6 +45,9 @@ feature {NONE} -- Initialization
 			specials.put (a_name_pool.fingerprint (Xslt_uri, "next-match"), 8)
 			specials.put (a_name_pool.fingerprint (Xslt_uri, "stylesheet"), 9)
 			specials.put (a_name_pool.fingerprint (Xslt_uri, "transform"), 10)
+			base_receiver := an_underlying_receiver
+		ensure
+			base_receiver_set: base_receiver = an_underlying_receiver
 		end
 
 	make_another (other: XM_XSLT_STYLESHEET_STRIPPER) is
@@ -51,9 +57,11 @@ feature {NONE} -- Initialization
 		do
 			xsl_text_fingerprint := other.xsl_text_fingerprint
 			specials := other.specials
+			base_receiver := other.base_receiver
 		ensure
 			fingerprint_set: xsl_text_fingerprint = other.xsl_text_fingerprint
 			specials_set: specials = other.specials
+			base_receiver_set: base_receiver = other.base_receiver
 		end
 
 feature -- Access

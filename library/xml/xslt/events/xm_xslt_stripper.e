@@ -45,6 +45,7 @@ feature {NONE} -- Initialization
 				transformer.name_pool.allocate_name ("xml", Xml_uri, "space")
 				xml_space_code := transformer.name_pool.last_name_code
 			end
+			create element.make_dummy
 		ensure
 			transformer_set: transformer = a_transformer
 			mode_set: stripper_mode = a_stripper_mode
@@ -109,12 +110,11 @@ feature -- Status setting
 
 feature -- Events
 
-	start_document: XM_XPATH_DOCUMENT is
+	start_document is
 			-- New document
 		do
 			strip_stack.put (Always_preserve)
-			Result := Precursor
-			element := Result.created_orphan_element
+			Precursor
 		end
 
 	start_element (a_name_code: INTEGER; a_type_code: INTEGER; properties: INTEGER) is
@@ -232,7 +232,7 @@ feature {NONE} -- Implementation
 	xml_space_code: INTEGER
 			-- Name code for xml:space attribute
 
-	element: XM_XPATH_ELEMENT
+	element: XM_XPATH_TREE_ELEMENT
 			-- Dummy element for `{XM_XSLT_MODE}.rule'
 	
 	is_all_whitespace (chars: STRING): BOOLEAN is

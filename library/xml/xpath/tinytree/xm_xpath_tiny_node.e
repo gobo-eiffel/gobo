@@ -20,44 +20,29 @@ inherit
 
 	XM_XPATH_SHARED_ANY_ITEM_TYPE
 
+	XM_XPATH_SHARED_ANY_NODE_TEST
+
 feature -- Access
+
+	node_number: INTEGER
+			-- Uniquely identifies this node within the document (when combined with `node_kind')
+
+	document: XM_XPATH_TINY_DOCUMENT
+			-- Document that owns this node
+	
+	sequence_number: XM_XPATH_64BIT_NUMERIC_CODE is
+			-- Node sequence number (in document order)
+			-- In this implementation, most nodes have a zero
+			--  least-significant word, while namespacesand attributes have
+			--  the top word the same as their owner and the bottom half reflecting their relative position.
+		do
+			create Result.make (node_number, 0)
+		end
 
 	document_number: INTEGER is
 			-- Uniquely identifies the owning document.
 		do
 			Result := document.document_number
-		end
-
-	node_name: STRING is
-			-- Qualified name
-		do
-			inspect
-				node_type
-			when Attribute_node then
-				Result := document.name_pool.display_name_from_name_code (name_code)
-			when Element_node then
-				Result := document.name_pool.display_name_from_name_code (name_code)
-			when Namespace_node then
-				Result := local_part
-			when Processing_instruction_node then
-				Result := local_part
-			else
-				Result := ""
-			end
-		end
-
-	local_part: STRING is
-			-- Local part of the name;
-			-- For nodeless names, return the empty string
-		local
-			a_code: INTEGER
-		do
-			a_code := document.name_code_for_node (node_number)
-			if a_code < 0 then
-				Result := ""
-			else
-				Result := document.name_pool.local_name_from_name_code (a_code)
-			end
 		end
 
 	name_code: INTEGER is
@@ -66,7 +51,7 @@ feature -- Access
 			Result := document.name_code_for_node (node_number)
 		end
 
-	parent: XM_XPATH_TINY_NODE is
+	parent: XM_XPATH_TINY_COMPOSITE_NODE is
 			-- Parent of current node;
 			-- `Void' if current node is root, or for orphan nodes.
 		local
@@ -88,30 +73,49 @@ feature -- Access
 				loop
 					p := document.retrieve_next_sibling (p)
 				end
-				cached_parent_node := document.retrieve_node (p)
+				cached_parent_node ?= document.retrieve_node (p)
 				Result := cached_parent_node
 			end
 		end
 
-	fingerprint: INTEGER is
-			-- Fingerprint of this node - used in matching names
-		local
-			a_name_code, top_bits: INTEGER
+	node_name: STRING is
+			-- Qualified name
 		do
-			a_name_code := name_code
-			if a_name_code = -1 then
-				Result := -1
+			inspect
+				node_type
+			when Attribute_node then
+				Result := document.name_pool.display_name_from_name_code (name_code)
+			when Element_node then
+				Result := document.name_pool.display_name_from_name_code (name_code)
+			when Namespace_node then
+				Result := local_part
+			when Processing_instruction_node then
+				Result := local_part
 			else
-				-- mask a_name_code with 0xfffff
-				top_bits := (a_name_code // bits_20) * bits_20
-				Result := a_name_code - top_bits
+				Result := ""
 			end
+		end
+
+	root: XM_XPATH_NODE is
+			-- The root node for `Current';
+			-- This is not necessarily a Document node.
+		do
+			Result := document.root
+		end
+
+	document_root: XM_XPATH_DOCUMENT is
+			-- The document node for `Current';
+			-- If `Current' is in a document fragment, then return Void
+		do
+			Result := document.document_root
 		end
 
 	new_axis_iterator (an_axis_type: INTEGER): XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_NODE] is
 			-- An enumeration over the nodes reachable by `an_axis_type' from this node
 		do
+
 			-- Fast path for child axis
+
 			if an_axis_type = Child_axis then
 				if has_child_nodes then
 					create  {XM_XPATH_TINY_SIBLING_ENUMERATION} Result.make (document, Current, Void, True)					
@@ -181,30 +185,9 @@ feature -- Comparison
 			end
 		end
 
-	three_way_comparison (other: XM_XPATH_NODE): INTEGER is
-			-- If current object equal to other, 0;
-			-- if smaller, -1; if greater, 1
-		do
-			if node_number	< other.node_number then
-				Result := -1
-			elseif node_number = other.node_number then
-				Result := 0
-			else
-				Result := 1
-			end
-		end
-	
-feature -- Status report
-
-	has_child_nodes: BOOLEAN is
-			-- Does `Current' have any children?
-		do
-			Result := False -- overriden in XM_XPATH_TINY_COMPOSITE_NODE
-		end
-	
 feature -- Element change
 
-	set_parent_node (a_node: XM_XPATH_TINY_NODE) is
+	set_parent_node (a_node: XM_XPATH_TINY_COMPOSITE_NODE) is
 			--
 		do
 			cached_parent_node := a_node
@@ -212,31 +195,17 @@ feature -- Element change
 			parent_node_set: cached_parent_node = a_node
 		end
 	
-
-feature {XM_XPATH_TINY_NODE} -- Local
-	
-	document: XM_XPATH_TINY_DOCUMENT
-			-- Document that owns this node
-	
 feature {NONE} -- Implementation
 	
-	cached_parent_node: XM_XPATH_TINY_NODE
+	cached_parent_node: XM_XPATH_TINY_COMPOSITE_NODE
 			-- Cached parent node
 	
-	bits_20: INTEGER is 1048576
-			-- Bit mask for 20-bit number
-		
 	empty_abstract_node_iterator: XM_XPATH_EMPTY_ITERATOR [XM_XPATH_NODE] is
 			-- Empty iterator
 		do
 			create Result.make
 		end
 
-	any_node_test: XM_XPATH_ANY_NODE_TEST is
-			-- share any_node test
-		once
-			create Result.make
-		end
 
 	created_ancestor_axis_iterator (a_node_test: XM_XPATH_NODE_TEST): XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_NODE] is
 			-- New ancestor axis iterator

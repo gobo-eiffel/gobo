@@ -30,10 +30,6 @@
    (or equivalently, from a host language of your own devising), follow the following steps:
    <itemizedlist>
      <listitem>
-       <para>Inherit from <classname>XM_STRING_MODE</classname> and set the string mode
-       according to your application requirements.</para>
-     </listitem>
-     <listitem>
        <para><ulink url="#xpath_stand_alone_invoke_create_evaluator">Create an instance of <classname>XM_XPATH_EVALUATOR</classname></ulink></para>
      </listitem>
      <listitem>
@@ -56,6 +52,9 @@
     <emphasis role="todo">(TODO)</emphasis>, so just call <featurecall><featurename>create</featurename></featurecall> on the object.
     <warning>This will probably change.</warning>
     </para>
+    <para><classname>XM_XPATH_EVALUATOR</classname> inherits from <classname>XM_STRING_MODE</classname>, so you should then
+    call one of the string-mode setting procedures from that class on the evaluator. It will in turn
+    call the same procedure on the Eiffel XML parser.</para>
   </sect1>
   <sect1 id="xpath_stand_alone_invoke_static_context">
     <title>Building a static context</title>
@@ -70,6 +69,8 @@
 		<argument>a_source_uri: STRING</argument>
 		<argument>xpath_one_compatibility: BOOLEAN</argument>
 		<argument>warnings: BOOLEAN</argument>
+		<argument>use_tiny_tree_model: BOOLEAN</argument>
+		<argument>compact_tree: BOOLEAN</argument>
 	      </arguments>
 	    </featurecall>
 	  </para>
@@ -78,8 +79,13 @@
 	  <para>The third argument requests warnings of differences between XPath 1.0 and  XPath 1.0 compatibility mode. 
 	   It is only meaningful if the second argument is True.
 	  </para>
+	  <para>The fourth argument specifies the tree model to use. If performace and/or memory usage
+	  are important to your application, then you should make measurements to see
+	  which tree model suits you best.</para>
+	  <para>The fifth argument specifies whether or not to compact the tree after parsing. it is not
+	  implemented at the time of writing.</para>
 	  <para>
-	    This feature parses <argument>a_source_uri</argument> as XML, and builds an instance of <classname flatshort="">XM_XPATH_TINY_DOCUMENT</classname>.
+	    This feature parses <argument>a_source_uri</argument> as XML, and builds an instance of <classname flatshort="">XM_XPATH_DOCUMENT</classname>.
 	    It sets <featurename>was_build_error</featurename> to true if any error was found, in which case <featurename>error_message</featurename>
 	    will contain the text of the parse error.
 	  </para>

@@ -23,6 +23,8 @@ inherit
 
 	XM_XPATH_AXIS
 
+	KL_IMPORTED_STRING_ROUTINES
+
 		-- This class represents a node in gexslt's object model.
 		-- It combines the features of the XPath data model, 
 		--  with some of the features from the W3C's dom::Node (for convenience),
@@ -30,9 +32,22 @@ inherit
 
 feature -- Access
 
-	node_number: INTEGER
-			-- Uniquely identifies this node within the document
+	document: XM_XPATH_DOCUMENT is
+			-- Document that owns this node
+		deferred
+		ensure
+			document_not_void: Result /= Void
+		end
 
+	sequence_number: XM_XPATH_64BIT_NUMERIC_CODE is
+			-- Node sequence number (in document order);
+			-- Sequence numbers are monotonic but not consecutive.
+			-- The sequence number must be unique within the document.
+		deferred
+		ensure
+			strictly_positive_sequence_number: Result /= Void and then Result.is_positive
+		end
+	
 	document_number: INTEGER is
 			-- Uniquely identifies the owning document.
 		deferred
@@ -44,9 +59,14 @@ feature -- Access
 			-- Base URI
 		require
 			not_in_error: not is_error
-		deferred
+		do
+			if parent /= Void then
+				Result := parent.base_uri
+			else
+				Result := ""
+			end
 		ensure
-			base_uri_may_be_void: True
+			base_uri_not_void: Result /= Void
 		end
 
 	node_type: INTEGER
@@ -74,12 +94,9 @@ feature -- Access
 			node_name_may_be_void: True
 		end
 
-	-- TODO add type:
-
-	parent: XM_XPATH_NODE is
-			-- Parent of current node
-			-- `Void' if current node is root,
-			-- or for orphan nodes.
+	parent: XM_XPATH_COMPOSITE_NODE is
+			-- Parent of current node;
+			-- `Void' if current node is root, or for orphan nodes or namespaces.
 		require
 			not_in_error: not is_error
 		deferred
@@ -92,18 +109,7 @@ feature -- Access
 			-- This is not necessarily a Document node.
 		require
 			not_in_error: not is_error
-		local
-			a_parent_node: XM_XPATH_NODE
-		do
-			from
-				Result := Current
-				a_parent_node := parent
-			until
-				a_parent_node = Void
-			loop
-				Result := a_parent_node
-				a_parent_node := a_parent_node.parent
-			end
+		deferred
 		ensure
 			root_node_not_void: Result /= Void
 		end
@@ -118,9 +124,17 @@ feature -- Access
 
 	fingerprint: INTEGER is
 			-- Fingerprint of this node - used in matching names
-		require
-			not_in_error: not is_error
-		deferred
+		local
+			a_name_code, top_bits: INTEGER
+		do
+			a_name_code := name_code
+			if a_name_code = -1 then
+				Result := -1
+			else
+				-- mask a_name_code with 0xfffff
+				top_bits := (a_name_code // bits_20) * bits_20
+				Result := a_name_code - top_bits
+			end
 		end
 	
 	name_code: INTEGER is
@@ -129,30 +143,25 @@ feature -- Access
 			not_in_error: not is_error
 		deferred
 		end
-	
+
+	local_part: STRING is
+			-- Local part of the name;
+			-- For nodeless names, return the empty string
+		do
+			if name_code < 0 then
+				Result := ""
+			else
+				Result := document.name_pool.local_name_from_name_code (name_code)
+			end
+		end
+
+
 	document_root: XM_XPATH_DOCUMENT is
 			-- The document node for `Current';
 			-- If `Current' is in a document fragment, then return Void
 		require
 			not_in_error: not is_error
-		local
-			a_root: XM_XPATH_DOCUMENT
-		do
-			a_root ?= root
-			if a_root = Void then
-				debug ("XPath abstract node")
-					std.error.put_string ("Document node is void%N")
-				end
-			else
-				debug ("XPath abstract node")
-					std.error.put_string ("Document node kind is ")
-					std.error.put_string (a_root.node_kind)
-					std.error.put_new_line
-				end
-			end
-			if a_root /= Void and then a_root.node_kind.is_equal ("document") then
-				Result := a_root
-			end
+		deferred
 		end
 
 	first_child: XM_XPATH_NODE is
@@ -160,12 +169,8 @@ feature -- Access
 			-- If there are no children, return `Void'
 		require
 			not_in_error: not is_error
-		local
-			an_iterator: XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_NODE]
 		do
-			an_iterator := new_axis_iterator (Child_axis)
-			an_iterator.start
-			if not an_iterator.after then Result := an_iterator.item end
+			Result := Void
 		end
 
 	last_child: XM_XPATH_NODE is
@@ -173,22 +178,8 @@ feature -- Access
 			-- If there are no children, return `Void'
 		require
 			not_in_error: not is_error
-		local
-			an_iterator: XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_NODE]
 		do
-			an_iterator := new_axis_iterator (Child_axis)
-			from
-				an_iterator.start
-			until
-				an_iterator.after
-			loop
-				Result := an_iterator.item
-					check
-						result_not_void: Result /= Void
-						-- Because not before (due to start) and not after (due to until)
-					end
-				an_iterator.forth
-			end
+			Result := Void
 		end
 
 	previous_sibling: XM_XPATH_NODE is
@@ -309,7 +300,14 @@ feature -- Comparison
 			-- if smaller, -1; if greater, 1
 		require
 			other_exists: other /= Void
-		deferred
+		do
+			if sequence_number < other.sequence_number then
+				Result := -1
+			elseif sequence_number > other.sequence_number then
+				Result := 1
+			else
+				Result := 0
+			end
 		ensure
 			valid_result: -1 <= Result and then Result <= 1
 		end
@@ -326,14 +324,24 @@ feature -- Status report
 			-- Is current node "nilled"? (i.e. xsi: nill="true")
 		require
 			not_in_error: not is_error
-		deferred
+		do
+			Result := False
+		end
+
+	has_attributes: BOOLEAN is
+			-- Does `Current' have any attributes?
+		require
+			not_in_error: not is_error
+		do
+			Result := False
 		end
 
 	has_child_nodes: BOOLEAN is
 			-- Does `Current' have any children?
 		require
 			not_in_error: not is_error
-		deferred
+		do
+			Result := False -- overriden for composite nodes
 		end
 
 feature -- Status setting
@@ -372,5 +380,8 @@ feature {XM_XPATH_NODE} -- Local
 			not_in_error: not is_error
 		deferred
 		end
+
+	bits_20: INTEGER is 1048576 -- 2^20
+			-- For extracting prefix index from name code
 
 end

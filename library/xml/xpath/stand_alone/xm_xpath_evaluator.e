@@ -18,6 +18,8 @@ inherit
 
 	XM_XPATH_SHARED_FUNCTION_FACTORY
 
+	XM_STRING_MODE
+
 	KL_SHARED_STANDARD_FILES
 	
 	-- TODO: need to add a white-space stripper
@@ -63,7 +65,7 @@ feature -- Status report
 
 feature -- Element change
 	
-	build_static_context (a_source_uri: STRING; xpath_one_compatibility, warnings: BOOLEAN) is
+	build_static_context (a_source_uri: STRING; xpath_one_compatibility, warnings, use_tiny_tree_model, compact_tree: BOOLEAN) is
 			-- Create a new static_context by parsing `a_source_uri'
 		require
 			valid_uri: a_source_uri /= Void -- and then ... for now - is a relative file uri - TODO
@@ -71,17 +73,31 @@ feature -- Element change
 		local
 			input_stream: KL_TEXT_INPUT_FILE
 			a_context_node: XM_XPATH_NODE
+			has_error: BOOLEAN
 		do
 			create input_stream.make (a_source_uri)
 			input_stream.open_read
 			if input_stream.is_open_read then
-				make_parser
+				make_parser (a_source_uri, use_tiny_tree_model)
 				parser.parse_from_stream (input_stream)
-				if tree_pipe.error.has_error then
-					was_build_error := True
-					internal_error_message := tree_pipe.error.last_error
+				if use_tiny_tree_model then
+					has_error := tiny_tree_pipe.error.has_error
 				else
-					context_item := tree_pipe.document
+					has_error := tree_pipe.error.has_error
+				end
+				if has_error then
+					was_build_error := True
+					if use_tiny_tree_model then
+						internal_error_message := tiny_tree_pipe.error.last_error
+					else
+						internal_error_message := tree_pipe.error.last_error
+					end
+				else
+					if use_tiny_tree_model then
+						context_item := tiny_tree_pipe.document
+					else
+						context_item := tree_pipe.document
+					end
 					a_context_node ?= context_item
 						check
 							context_item_is_node: a_context_node /= Void
@@ -175,16 +191,25 @@ feature {NONE} -- Implementation
 	is_space_stripped: BOOLEAN
 			-- Do we strip white space?
 
-	make_parser is
+	make_parser (a_system_id: STRING; use_tiny_tree_model: BOOLEAN) is
+		require
+			system_id_not_void: a_system_id /= Void
 		local
 			entity_resolver: XM_FILE_EXTERNAL_RESOLVER
 		do
 			create entity_resolver.make
 			create parser.make
+			parser.copy_string_mode (Current)
 			parser.set_resolver (entity_resolver)
-			create tree_pipe.make
-			parser.set_callbacks (tree_pipe.start)
-			parser.set_dtd_callbacks (tree_pipe.emitter)
+			if use_tiny_tree_model then
+				create tiny_tree_pipe.make (a_system_id)
+				parser.set_callbacks (tiny_tree_pipe.start)
+				parser.set_dtd_callbacks (tiny_tree_pipe.emitter)
+			else
+				create tree_pipe.make (a_system_id)
+				parser.set_callbacks (tree_pipe.start)
+				parser.set_dtd_callbacks (tree_pipe.emitter)
+			end
 		end
 
 	internal_error_message: STRING
@@ -196,8 +221,11 @@ feature {NONE} -- Implementation
 	parser: XM_EIFFEL_PARSER
 			-- Gobo XML parser
 
-	tree_pipe: XM_XPATH_TINYTREE_CALLBACKS_PIPE
-			-- Tree builder
+	tiny_tree_pipe: XM_XPATH_TINYTREE_CALLBACKS_PIPE
+			-- Tree builder for tiny tree model
+
+	tree_pipe: XM_XPATH_TREE_CALLBACKS_PIPE
+		-- Tree builder
 
 	evaluate_post_analysis (an_expression: XM_XPATH_EXPRESSION) is
 			-- perform evaluation on `an_expression'.

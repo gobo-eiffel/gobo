@@ -15,8 +15,13 @@ deferred class XM_XPATH_TINY_COMPOSITE_NODE
 inherit
 
 	XM_XPATH_COMPOSITE_NODE
+		undefine
+			has_child_nodes
+		end
 
 	XM_XPATH_TINY_NODE
+		undefine
+			first_child, last_child
 		redefine
 			has_child_nodes
 		end
@@ -46,14 +51,14 @@ feature -- Access
 			until
 				a_next_node >= document.last_node_added or else document.depth_of (a_next_node) <= a_level
 			loop
+				a_length := document.beta_value (a_next_node)
+				a_start_position := document.alpha_value (a_next_node)
 				if document.retrieve_node_kind (a_next_node) = Text_node then
 					if a_buffer = Void then
-						-- TODO - examine string mode
-						create {UC_UTF8_STRING} a_buffer.make_empty
+						a_buffer := document.character_buffer.substring (a_start_position + 1, a_start_position + a_length)
+					else
+						a_buffer := STRING_.appended_substring (a_buffer, document.character_buffer, a_start_position + 1,  a_start_position + a_length)
 					end
-					a_length := document.beta_value (a_next_node)
-					a_start_position := document.alpha_value (a_next_node)
-					a_buffer := STRING_.appended_string (a_buffer, document.character_buffer.substring (a_start_position + 1, a_start_position + a_length))
 				end
 				a_next_node := a_next_node + 1
 			end

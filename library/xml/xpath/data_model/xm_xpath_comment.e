@@ -14,13 +14,7 @@ deferred class XM_XPATH_COMMENT
 
 inherit
 
-	XM_XPATH_BASE_URI_FROM_PARENT
-	
-	XM_XPATH_TYPELESS_NODE
-
-	XM_XPATH_NODE_WITHOUT_ATTRIBUTES
-
-	KL_IMPORTED_STRING_ROUTINES
+	XM_XPATH_NODE
 
 feature -- Access
 
@@ -41,17 +35,5 @@ feature -- Access
 				-- that `Result' is not optimized away.
 			end
 		end
-	
-	string_value: STRING is
-			-- String-value
-		do
-			Result := clone (content_property)
-		end
 
-feature {NONE} -- Access
-
-	-- TODO scrap this
-
-	content_property: STRING
-			-- Content property from the infoset
 end

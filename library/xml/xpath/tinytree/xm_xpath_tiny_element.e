@@ -15,10 +15,15 @@ class XM_XPATH_TINY_ELEMENT
 inherit
 
 	XM_XPATH_ELEMENT
+		undefine
+			has_child_nodes, is_nilled, first_child
+		redefine
+			has_attributes
+		end
 
 	XM_XPATH_TINY_COMPOSITE_NODE
 		undefine
-			type_annotation
+			type_annotation, has_attributes, local_part
 		end
 
 creation
@@ -74,6 +79,14 @@ feature -- Access
 					an_alpha_value := an_alpha_value + 1
 				end
 			end
+		end
+
+feature -- Status report
+
+	has_attributes: BOOLEAN is
+			-- Does `Current' have any attributes?
+		do
+			Result := document.alpha_value (node_number) > 0
 		end
 
 feature -- Status setting

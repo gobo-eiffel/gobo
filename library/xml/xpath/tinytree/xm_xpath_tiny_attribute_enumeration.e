@@ -4,7 +4,7 @@ indexing
 
 		"Objects that enumerate the attribute:: Axis"
 
-	library: "Gobo Eiffel XPATH Library"
+	library: "Gobo Eiffel XPath Library"
 	copyright: "Copyright (c) 2004, Colin Adams and others"
 	license: "Eiffel Forum License v2 (see forum.txt)"
 	date: "$Date$"
@@ -51,15 +51,19 @@ feature -- Cursor movement
 			a_node: INTEGER
 			a_name_test: XM_XPATH_NAME_TEST
 		do
-			advance
-			index := index + 1
-			a_node := attribute_index
-			attribute_index := attribute_index + 1
-			a_name_test ?= node_test
-			if a_name_test /= Void then
-				attribute_index := -1 -- there can only be one match, so abandon further searching
+			if attribute_index = -1 then
+				current_item := Void
+			else
+				advance
+				index := index + 1
+				a_node := attribute_index
+				attribute_index := attribute_index + 1
+				a_name_test ?= node_test
+				if a_name_test /= Void then
+					attribute_index := -1 -- there can only be one match, so abandon further searching
+				end
+				if document.is_attribute_number_valid (a_node) then current_item := document.retrieve_attribute_node (a_node) end
 			end
-			if document.is_attribute_number_valid (a_node) then current_item := document.retrieve_attribute_node (a_node) end
 		end
 	
 feature -- Duplication
@@ -81,7 +85,6 @@ feature {NONE} -- Implementation
 
 	node_test: XM_XPATH_NODE_TEST
 			-- The node test to apply when selecting nodes
-			-- Do we include ourself in the enumeration
 
 	attribute_index: INTEGER
 			-- Index of an attribute within `document'

@@ -73,7 +73,7 @@ feature {NONE} -- Implementation
 	starting_node: XM_XPATH_TINY_NODE
 			-- The starting node for the enumeration
 
-	parent_node: XM_XPATH_TINY_NODE
+	parent_node: XM_XPATH_TINY_COMPOSITE_NODE
 			-- The parent node
 	
 	node_test: XM_XPATH_NODE_TEST

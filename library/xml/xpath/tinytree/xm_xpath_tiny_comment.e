@@ -17,6 +17,9 @@ inherit
 	XM_XPATH_COMMENT
 
 	XM_XPATH_TINY_NODE
+		undefine
+			local_part
+		end
 
 creation
 
@@ -36,12 +39,25 @@ feature {NONE} -- Initialization
 			document_set: document = a_document
 			node_number_set: node_number = a_node_number
 		end
-	
-feature {XM_XPATH_NODE} -- Access
+
+feature -- Access
+
+	string_value: STRING is
+			-- String-value
+		local
+			an_index, a_length: INTEGER
+		do
+			an_index := document.alpha_value (node_number)
+			a_length  := document.beta_value (node_number)
+			Result := document.comment_buffer.substring (an_index, an_index + a_length)
+		end
+
+feature {XM_XPATH_NODE} -- Resricted
 
 	is_possible_child: BOOLEAN is
 			-- Can this node be a child of a document or element node?
 		do
 			Result := True
 		end
+
 end

@@ -162,10 +162,8 @@ feature -- Document events
 
 	on_start is
 			-- Called when parsing starts.
-		local
-			a_document: XM_XPATH_DOCUMENT
 		do
-			a_document := receiver.start_document
+			receiver.start_document
 		end
 
 		on_finish is
@@ -215,6 +213,11 @@ feature -- Tag
 			a_name_code: INTEGER
 			an_element_qname, a_prefix, a_message: STRING
 		do
+			debug ("XPath content emitter")
+				std.error.put_string ("On_start_tag: local name is ")
+				std.error.put_string (a_local_part)
+				std.error.put_new_line
+			end
 			before_dtd := False
 			if a_namespace = Void then
 				on_error ("XM_XPATH_CONTENT_EMITTER requires namespace to be resolved")
@@ -261,6 +264,11 @@ feature -- Tag
 			a_name_code, a_namespace_code: INTEGER
 			a_prefix, a_namespace_prefix, a_message: STRING
 		do
+			debug ("XPath content emitter")
+				std.error.put_string ("On_attribute: local name is ")
+				std.error.put_string (a_local_part)
+				std.error.put_new_line
+			end
 			if a_namespace = Void then
 				on_error ("XM_XPATH_TINY_BUILDER requires namespace to be resolved")
 			end
@@ -284,13 +292,6 @@ feature -- Tag
 				a_name_code := name_pool.name_code (a_prefix, a_namespace, a_local_part) 
 			end
 
-			debug ("XPath content emitter")
-				std.error.put_string ("On_attribute: local name is ")
-				std.error.put_string (a_local_part)
-				std.error.put_string (", name code is ")
-				std.error.put_string (a_name_code.out)
-				std.error.put_new_line
-			end
 			if is_namespace_declaration (a_prefix, a_local_part) then
 
 				-- Notify a namespace declaration
@@ -321,6 +322,11 @@ feature -- Tag
 	on_end_tag (a_namespace: STRING; a_prefix: STRING; a_local_part: STRING) is
 			-- End tag.
 		do
+			debug ("XPath content emitter")
+				std.error.put_string ("On_end_tag: local name is ")
+				std.error.put_string (a_local_part)
+				std.error.put_new_line
+			end
 			receiver.end_element
 		end
 
