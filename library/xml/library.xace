@@ -18,6 +18,7 @@
 		<cluster name="event"/>
 		<cluster name="tree"/>
 		<cluster name="formatter"/>
+		<cluster name="resolver"/>
 		<cluster name="parser">
 			<option name="abstract" value="true"/>
 			<cluster name="interface"/>
@@ -42,25 +43,25 @@
 			<cluster name="no_expat" unless="${GOBO_XML_EXPAT}"/>
 		</cluster>
 		<cluster name="xpath">
-		  <cluster name="data_model"/>
-		  <cluster name="tinytree"/>
-		  <cluster name="xpath_tree" location="tree" relative="true"/>
-		  <cluster name="values"/>
-		  <cluster name="expressions"/>
-		  <cluster name="events"/>
-		  <cluster name="functions"/>
-		  <cluster name="sort"/>
-		  <cluster name="stand_alone"/>
-		  <cluster name="node_tests"/>
-		  <cluster name="types"/>
+			<cluster name="data_model"/>
+			<cluster name="tinytree"/>
+			<cluster name="xpath_tree" location="tree" relative="true"/>
+			<cluster name="values"/>
+			<cluster name="expressions"/>
+			<cluster name="events"/>
+			<cluster name="functions"/>
+			<cluster name="sort"/>
+			<cluster name="stand_alone"/>
+			<cluster name="node_tests"/>
+			<cluster name="types"/>
 		</cluster>
 		<cluster name="xslt">
-		  <cluster name="patterns"/>
-		  <cluster name="xslt_functions" location="functions" relative="true"/>
-		  <cluster name="instructions"/>
-		  <cluster name="style"/>
-		  <cluster name="xslt_events" location="events" relative="true"/>
-		  <cluster name="transformation_support"/>
+			<cluster name="patterns"/>
+			<cluster name="xslt_functions" location="functions" relative="true"/>
+			<cluster name="instructions"/>
+			<cluster name="style"/>
+			<cluster name="xslt_events" location="events" relative="true"/>
+			<cluster name="transformation_support"/>
 		</cluster>
 	</cluster>
 </library>
