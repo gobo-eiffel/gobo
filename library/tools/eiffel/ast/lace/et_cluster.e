@@ -16,6 +16,7 @@ inherit
 
 	KL_SHARED_EXECUTION_ENVIRONMENT
 	KL_SHARED_STANDARD_FILES
+	KL_SHARED_OPERATING_SYSTEM
 	KL_IMPORTED_STRING_ROUTINES
 
 feature -- Status report
@@ -453,14 +454,22 @@ feature {NONE} -- Implementation
 			a_filename_not_void: a_filename /= Void
 		local
 			nb: INTEGER
+			c: CHARACTER
 		do
 			nb := a_filename.count
-			Result := nb > 2 and then
-				(a_filename.item (nb) = 'e' and
-				a_filename.item (nb - 1) = '.')
+			if nb > 2 and then a_filename.item (nb - 1) = '.' then
+				c := a_filename.item (nb)
+				if c = 'e' then
+					Result := True
+				elseif operating_system.is_windows and then c = 'E' then
+					Result := True
+				end
+			end
 		ensure
 			definition: Result = (a_filename.count > 2 and then
-				(a_filename.item (a_filename.count) = 'e' and
+				((a_filename.item (a_filename.count) = 'e' or
+				(operating_system.is_windows and then
+				a_filename.item (a_filename.count) = 'E')) and
 				a_filename.item (a_filename.count - 1) = '.'))
 		end
 
