@@ -65,8 +65,10 @@ feature -- Output
 
 	put_string (a_string: STRING) is
 			-- Write `a_string' to output file.
+			-- Note: If `a_string' is a UC_STRING or descendant, then
+			-- write the bytes of its associated UTF unicode encoding.
 		do
-			old_put_string (a_string)
+			old_put_string (STRING_.as_string (a_string))
 		end
 
 feature -- Basic operations
@@ -81,7 +83,7 @@ feature -- Basic operations
 			rescued: BOOLEAN
 		do
 			if not rescued then
-				if name.count > 0 then
+				if string_name /= Empty_name then
 					old_open_write
 				end
 			elseif not is_closed then
@@ -105,7 +107,7 @@ feature -- Basic operations
 			rescued: BOOLEAN
 		do
 			if not rescued then
-				if name.count > 0 then
+				if string_name /= Empty_name then
 					old_open_append
 				end
 			elseif not is_closed then
@@ -181,24 +183,91 @@ feature -- Basic operations
 #endif
 		end
 
-#ifdef SE
+#ifdef SE || ISE
 feature {NONE} -- Implementation
 
+#ifdef SE
 	old_open_write is
 			-- Open file in write mode.
 		require
-			name_not_void: name /= Void
-			name_not_empty: name.count > 0
+			string_name_not_void: string_name /= Void
+			string_name_not_empty: string_name.count > 0
 		deferred
 		end
 
 	old_open_append is
 			-- Open file in append mode.
 		require
-			name_not_void: name /= Void
-			name_not_empty: name.count > 0
+			string_name_not_void: string_name /= Void
+			string_name_not_empty: string_name.count > 0
 		deferred
 		end
 
+#endif
+#ifdef ISE
+	old_flush is
+			-- Flush buffered data to disk.
+			-- Note that there is no guarantee that the operating
+			-- system will physically write the data to the disk.
+			-- At least it will end up in the buffer cache,
+			-- making the data visible to other processes.
+		require
+			is_open: not old_is_closed
+		deferred
+		end
+
+	old_put_character (c: CHARACTER) is
+			-- Write `c' at current position.
+		require
+			extendible: extendible
+		deferred
+		end
+
+	extendible: BOOLEAN is
+			-- May new items be added?
+		deferred
+		end
+
+	old_put_string (s: STRING) is
+			-- Write `s' at current position.
+		require
+			extendible: extendible
+			non_void: s /= void
+		deferred
+		end
+
+	old_is_open_write: BOOLEAN is
+			-- Is file open for writing?
+		deferred
+		end
+
+	old_open_write is
+			-- Open file in write-only mode;
+			-- create it if it does not exist.
+		require
+			is_closed: old_is_closed
+		deferred
+		ensure
+			exists: old_exists
+			open_write: old_is_open_write
+		end
+
+	old_open_append is
+			-- Open file in append-only mode;
+			-- create it if it does not exist.
+		require
+			is_closed: old_is_closed
+		deferred
+		ensure
+			exists: old_exists
+			open_append: is_open_append
+		end
+
+	is_open_append: BOOLEAN is
+			-- Is file open for appending?
+		deferred
+		end
+
+#endif
 #endif
 end

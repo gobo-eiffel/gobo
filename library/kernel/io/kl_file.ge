@@ -30,11 +30,20 @@ inherit
 #endif
 		end
 
-#ifdef ISE || HACT
+	KL_IMPORTED_STRING_ROUTINES
+		export
+			{NONE} all
+#ifdef VE
+		undefine
+			copy
+#endif
+		end
+
+#ifdef HACT
 	FILE
 		rename
 			make as old_make,
-			name as old_name,
+			name as string_name,
 			count as old_count,
 			exists as old_exists,
 			is_readable as old_is_readable,
@@ -77,7 +86,7 @@ inherit
 	FILE
 		rename
 			make as old_make,
-			name as old_name,
+			name as string_name,
 			count as old_count,
 			exists as old_exists,
 			is_open_read as old_is_open_read,
@@ -111,20 +120,25 @@ feature {NONE} -- Initialization
 			-- use KI_FILE_SYSTEM.pathname_from_file_system.)
 		do
 			name := a_name
-#ifdef ISE || HACT
+#ifdef HACT
 			if a_name.count > 0 then
-				old_name := a_name
+				string_name := STRING_.as_string (a_name)
 			else
-				old_name := Empty_name
+				string_name := Empty_name
 			end
 			mode := Closed_file
 #endif
 #ifdef SE
+			if a_name.count > 0 then
+				string_name := STRING_.as_string (a_name)
+			else
+				string_name := Empty_name
+			end
 			old_make
 #endif
-#ifdef VE
+#ifdef VE || ISE
 			if a_name.count > 0 then
-				old_make (a_name)
+				old_make (STRING_.as_string (a_name))
 			else
 				old_make (Empty_name)
 			end
@@ -134,7 +148,10 @@ feature {NONE} -- Initialization
 feature -- Access
 
 	name: STRING
-			-- File name
+			-- File name;
+			-- Note: If `name' is a UC_STRING or descendant, then
+			-- the bytes of its associated UTF unicode encoding will
+			-- be used.
 
 	time_stamp: INTEGER is
 			-- Time stamp (number of seconds since 1 January 1970
@@ -157,10 +174,10 @@ feature -- Access
 		do
 			Result := -1
 			if not rescued then
-				if name.count > 0 then
+				if string_name /= Empty_name then
 #ifdef SE
-					if file_exists (name) then
-						basic_time := last_change_of (name)
+					if file_exists (string_name) then
+						basic_time := last_change_of (string_name)
 						if operating_system.is_windows then
 							Result := epoch_time.elapsed_seconds (basic_time)
 						else
@@ -183,7 +200,7 @@ feature -- Access
 						--   0-4 Second divided by 2
 						--   5-10 Minute (0-59)
 						--   11-15 Hour (0-23 on a 24-hour clock)
-					dos_datetime := file_system_impl.file_time (name).truncated_to_integer
+					dos_datetime := file_system_impl.file_time (string_name).truncated_to_integer
 					dos_date := dos_datetime // 65536 -- 2^16
 					d := dos_date \\ 32 -- 2^5
 					dos_date := dos_date // 32 -- 2^5
@@ -240,10 +257,10 @@ feature -- Measurement
 		do
 			Result := -1
 			if not rescued then
-				if name.count > 0 then
+				if string_name /= Empty_name then
 #ifdef SE
-					if file_exists (name) then
-						Result := size_of (name)
+					if file_exists (string_name) then
+						Result := size_of (string_name)
 					end
 #else
 					if old_exists then
@@ -269,7 +286,7 @@ feature -- Status report
 			rescued: BOOLEAN
 		do
 			if not rescued then
-				if name.count > 0 then
+				if string_name /= Empty_name then
 #ifdef ISE || HACT
 					Result := old_exists and then is_plain
 #endif
@@ -293,16 +310,16 @@ feature -- Status report
 	is_readable: BOOLEAN is
 			-- Can file be opened in read mode?
 		do
-			if name.count > 0 then
+			if string_name /= Empty_name then
 #ifdef ISE || HACT
 				Result := old_exists and then (old_is_readable and is_plain)
 #endif
 #ifdef SE
-				tmp_file2.reset (name)
+				tmp_file2.reset (string_name)
 				Result := tmp_file2.is_readable
 #endif
 #ifdef VE
-				Result := old_exists and then file_system_impl.has_readperm (name)
+				Result := old_exists and then file_system_impl.has_readperm (string_name)
 #endif
 			end
 		end
@@ -329,7 +346,8 @@ feature -- Status report
 		local
 			absolute_name1, absolute_name2: STRING
 			canonical_name1, canonical_name2: STRING
-			a_name: STRING
+			a_name, saved_string_name: STRING
+			string_other_name: STRING
 			i: INTEGER
 			rescued: BOOLEAN
 #ifdef ISE || HACT
@@ -337,18 +355,20 @@ feature -- Status report
 #endif
 		do
 			if not rescued then
-				if name.count > 0 and other_name.count > 0 then
+				saved_string_name := string_name
+				string_other_name := STRING_.as_string (other_name)
+				if string_name /= Empty_name and string_other_name.count > 0 then
 					if exists then
-						tmp_file1.reset (other_name)
+						tmp_file1.reset (string_other_name)
 						if tmp_file1.exists then
-							if name.is_equal (other_name) then
+							if string_name.is_equal (string_other_name) then
 								Result := True
 #ifdef ISE || HACT
 							else
-								a_name := old_name
-								old_name := other_name
+								a_name := string_name
+								string_name := string_other_name
 								other_inode := inode
-								old_name := a_name
+								string_name := a_name
 								if inode /= other_inode then
 									-- Result := False
 #endif
@@ -379,20 +399,20 @@ feature -- Status report
 												tmp_file1.reset (a_name)
 											end
 #ifdef SE
-											rename_to (name, a_name)
+											rename_to (string_name, a_name)
 #else
 											old_change_name (a_name)
-											old_name := name
+											string_name := saved_string_name
 #endif
 											if not exists then
-												tmp_file1.reset (other_name)
+												tmp_file1.reset (string_other_name)
 												Result := not tmp_file1.exists
 #ifdef SE
-												rename_to (a_name, name)
+												rename_to (a_name, string_name)
 #else
-												old_name := a_name
-												old_change_name (name)
-												old_name := name
+												string_name := a_name
+												old_change_name (saved_string_name)
+												string_name := saved_string_name
 #endif
 											else
 													-- We don't know.
@@ -409,9 +429,7 @@ feature -- Status report
 					end
 				end
 			else
-#ifdef ISE || HACT || VE
-				old_name := name
-#endif
+				string_name := saved_string_name
 				Result := True
 			end
 		rescue
@@ -420,7 +438,6 @@ feature -- Status report
 				retry
 			end
 		end
-
 
 feature -- Basic operations
 
@@ -452,30 +469,30 @@ feature -- Basic operations
 			-- use KI_FILE_SYSTEM.pathname_from_file_system.)
 		local
 			rescued: BOOLEAN
+			string_new_name: STRING
+			saved_string_name: STRING
 		do
 			if not rescued then
-				if name.count > 0 and new_name.count > 0 then
+				saved_string_name := string_name
+				string_new_name := STRING_.as_string (new_name)
+				if string_name /= Empty_name and string_new_name.count > 0 then
 					if exists then
-						if not same_physical_file (new_name) then
+						if not same_physical_file (string_new_name) then
 #ifdef SE
-							rename_to (name, new_name)
+							rename_to (string_name, string_new_name)
 #else
-							old_change_name (new_name)
-							old_name := name
+							old_change_name (string_new_name)
+							string_name := saved_string_name
 #endif
 							if not exists then
 								name := new_name
-#ifdef ISE || HACT || VE
-								old_name := new_name
-#endif
+								string_name := string_new_name
 							end
 						end
 					end
 				end
 			else
-#ifdef ISE || HACT || VE
-				old_name := name
-#endif
+				string_name := saved_string_name
 			end
 		rescue
 			if not rescued then
@@ -496,14 +513,16 @@ feature -- Basic operations
 		local
 			old_file: KL_BINARY_INPUT_FILE
 			new_file: KL_BINARY_OUTPUT_FILE
+			string_new_name: STRING
 		do
-			if name.count > 0 and new_name.count > 0 then
+			string_new_name := STRING_.as_string (new_name)
+			if string_name /= Empty_name and string_new_name.count > 0 then
 				if exists then
-					if not same_physical_file (new_name) then
-						!! old_file.make (name)
+					if not same_physical_file (string_new_name) then
+						!! old_file.make (string_name)
 						old_file.open_read
 						if old_file.is_open_read then
-							!! new_file.make (new_name)
+							!! new_file.make (string_new_name)
 							new_file.open_write
 							if new_file.is_open_write then
 								from
@@ -537,15 +556,17 @@ feature -- Basic operations
 		local
 			a_source_file: KL_BINARY_INPUT_FILE
 			a_target_file: KL_BINARY_OUTPUT_FILE
+			a_string_filename: STRING
 			a_string: STRING
 			nb: INTEGER
 		do
-			if name.count > 0 and a_filename.count > 0 then
-				!! a_source_file.make (a_filename)
+			a_string_filename := STRING_.as_string (a_filename)
+			if string_name /= Empty_name and a_string_filename.count > 0 then
+				!! a_source_file.make (a_string_filename)
 				nb := a_source_file.count
 				a_source_file.open_read
 				if a_source_file.is_open_read then
-					!! a_target_file.make (name)
+					!! a_target_file.make (string_name)
 					a_target_file.open_append
 					if a_target_file.is_open_write then
 						from
@@ -583,9 +604,9 @@ feature -- Basic operations
 			rescued: BOOLEAN
 		do
 			if not rescued then
-				if name.count > 0 then
+				if string_name /= Empty_name then
 #ifdef SE
-					old_delete (name)
+					old_delete (string_name)
 #endif
 #ifdef ISE || HACT || VE
 					if old_exists then
@@ -603,6 +624,9 @@ feature -- Basic operations
 
 feature {NONE} -- Implementation
 
+	Empty_name: STRING is "empty_name"
+			-- Empty name place-holder
+
 	tmp_file1: KL_TEXT_INPUT_FILE is
 			-- Temporary file object
 		once
@@ -616,6 +640,9 @@ feature {NONE} -- Implementation
 			-- Dummy name
 
 #ifdef SE
+	string_name: STRING
+			-- Name of file (STRING version)
+
 	old_make is
 			-- The new created object is not connected.
 		deferred
@@ -718,9 +745,100 @@ feature {NONE} -- Implementation
 		end
 
 #endif
-#ifdef ISE || HACT || VE
-	Empty_name: STRING is "empty_name"
-			-- Empty name place-holder
+#ifdef ISE
+	old_make (fn: STRING) is
+			-- Create file object with `fn' as file name.
+		require
+			string_exists: fn /= Void
+			string_not_empty: not fn.is_empty
+		deferred
+		ensure
+			file_named: string_name.is_equal (fn)
+			file_closed: old_is_closed
+		end
+
+	string_name: STRING
+			-- Name of file (STRING version)
+
+	old_count: INTEGER is
+			-- Size in bytes (0 if no associated physical file)
+		deferred
+		end
+
+	old_exists: BOOLEAN is
+			-- Does physical file exist?
+		deferred
+		end
+
+	date: INTEGER is
+			-- Time stamp (time of last modification)
+		require
+			file_exists: old_exists
+		deferred
+		end
+
+	is_plain: BOOLEAN is
+			-- Is file a plain file?
+		require
+			file_exists: old_exists
+		deferred
+		end
+
+	old_is_readable: BOOLEAN is
+			-- Is file readable?
+		require
+			file_exists: old_exists
+		deferred
+		end
+
+	old_is_closed: BOOLEAN is
+			-- Is file closed?
+		deferred
+		end
+
+	inode: INTEGER is
+			-- I-node number
+		require
+			file_exists: old_exists
+		deferred
+		end
+
+	old_change_name (new_name: STRING) is
+			-- Change file name to `new_name'
+		require
+			new_name_not_void: new_name /= Void
+			file_exists: old_exists
+		deferred
+		ensure
+			name_changed: string_name.is_equal (new_name)
+		end
+
+	old_close is
+			-- Close file.
+		require
+			medium_is_open: not old_is_closed
+		deferred
+		ensure
+			is_closed: old_is_closed
+		end
+
+	old_delete is
+			-- Remove link with physical file.
+			-- File does not physically disappear from the disk
+			-- until no more processes reference it.
+			-- I/O operations on it are still possible.
+			-- A directory must be empty to be deleted.
+		require
+			exists: exists
+		deferred
+		end
 
 #endif
+invariant
+
+#ifdef SE
+	string_name_not_void: string_name /= Void
+#endif
+	string_name_is_string: string_name.same_type ("")
+
 end

@@ -23,14 +23,19 @@ inherit
 
 	KL_OUTPUT_FILE
 #ifdef ISE || HACT
+#ifdef HACT
 		rename
 			index as position
-#ifdef HACT
 		undefine
 			medium_table_type
 #endif
 		redefine
+#ifdef HACT
 			file_reopen, file_open, file_dopen
+#endif
+#ifdef ISE
+			string_name
+#endif
 		end
 #endif
 
@@ -38,7 +43,7 @@ inherit
 	RAW_FILE
 		rename
 			make as old_make,
-			name as old_name,
+			name as string_name,
 			count as old_count,
 			exists as old_exists,
 			is_readable as old_is_readable,
@@ -65,10 +70,17 @@ inherit
 			append as old_append
 		export
 			{NONE} all
+#ifdef HACT
 		undefine
 			file_readable
+#endif
 		redefine
+#ifdef HACT
 			file_reopen, file_open, file_dopen
+#endif
+#ifdef ISE
+			string_name
+#endif
 		end
 
 #endif
@@ -83,9 +95,11 @@ feature {NONE} -- Implementation
 	old_open_write is
 			-- Open file in write mode.
 		do
-			output_stream := basic_io_binary_file_write_open (name.to_external)
-			if output_stream.is_not_null then
-				path := name
+			if string_name /= Empty_name then
+				output_stream := basic_io_binary_file_write_open (string_name.to_external)
+				if output_stream.is_not_null then
+					path := string_name
+				end
 			end
 		end
 
@@ -98,9 +112,11 @@ feature {NONE} -- Implementation
 	old_open_append is
 			-- Open file in append mode.
 		do
-			output_stream := basic_io_binary_file_write_append (name.to_external)
-			if output_stream.is_not_null then
-				path := name
+			if string_name /= Empty_name then
+				output_stream := basic_io_binary_file_write_append (string_name.to_external)
+				if output_stream.is_not_null then
+					path := string_name
+				end
 			end
 		end
 
@@ -112,31 +128,8 @@ feature {NONE} -- Implementation
 
 #endif
 #ifdef ISE
-	file_open (f_name: POINTER; how: INTEGER): POINTER is
-			-- File pointer for file `f_name', in mode `how'.
-		external
-			"C | %"eif_file.h%""
-		alias
-			"file_binary_open"
-		end
-
-	file_dopen (fd, how: INTEGER): POINTER is
-			-- File pointer for file of descriptor `fd' in mode `how'
-			-- (which must fit the way `fd' was obtained).
-		external
-			"C | %"eif_file.h%""
-		alias
-			"file_binary_dopen"
-		end
-
-	file_reopen (f_name: POINTER; how: INTEGER; file: POINTER): POINTER is
-			-- File pointer to `file', reopened to have new name `f_name'
-			-- in a mode specified by `how'.
-		external
-			"C (char *, EIF_INTEGER, FILE *): EIF_POINTER | %"eif_file.h%""
-		alias
-			"file_binary_reopen"
-		end
+	string_name: STRING
+			-- Name of file (STRING version)
 
 #endif
 #ifdef HACT

@@ -70,9 +70,7 @@ feature -- Access
 			-- buffer between indexes `s' and `e'
 #ifdef ISE
 		local
-			a: ANY
 			nb: INTEGER
-			p: POINTER
 #endif
 #ifdef SE || VE
 		local
@@ -93,10 +91,8 @@ feature -- Access
 #ifdef ISE
 				nb := e - s + 1
 				!! Result.make (nb)
-				a := Result.area
-				p := c_rtid ($a)
-				p.memory_copy (c_rtid ($area) + s, nb)
 				Result.set_count (nb)
+				Result.subcopy (area_string, s + 1, e + 1, 1)
 #endif
 #ifdef SE
 				nb := e - s + 1
@@ -152,21 +148,25 @@ feature -- Element change
 			-- between indexes `s' and `e' to `a_string'.
 #ifdef ISE
 		local
-			nb, old_count, new_count: INTEGER
-			a: ANY
-			p: POINTER
+			i, nb: INTEGER
+			old_count, new_count: INTEGER
 		do
 			if s <= e then
 				nb := e - s + 1
 				old_count := a_string.count
 				new_count := old_count + nb
 				if new_count > a_string.capacity then
-					a_string.resize (new_count + a_string.additional_space)
+					a_string.resize (new_count)
 				end
-				a := a_string.area
-				p := c_rtid ($a) + old_count
-				p.memory_move (c_rtid ($area) + s, nb)
 				a_string.set_count (new_count)
+				if a_string.same_type (dummy_string) then
+					a_string.subcopy (area_string, s + 1, e + 1, old_count + 1)
+				else
+					from i := s until i > e loop
+						a_string.append_character (area.item (i))
+						i := i + 1
+					end
+				end
 			end
 #else
 		local
@@ -195,19 +195,14 @@ feature -- Element change
 			-- starting at position `pos'.
 		local
 			nb: INTEGER
-#ifdef ISE
-			a: ANY
-			p: POINTER
-#else
+#ifndef ISE
 			i, j: INTEGER
 #endif
 		do
 			nb := a_string.count
 			if nb > 0 then
 #ifdef ISE
-				a := a_string.area
-				p := c_rtid ($area) + pos
-				p.memory_copy ($a, nb)
+				area_string.subcopy (a_string, 1, nb, pos + 1)
 #else
 				j := pos
 				from i := 1 until i > nb loop
@@ -241,7 +236,7 @@ feature -- Element change
 		do
 			if nb > 0 then
 #ifdef ISE
-				(c_rtid ($area) + new_pos).memory_move (c_rtid ($area) + old_pos, nb)
+				area_string.subcopy (area_string, old_pos + 1, old_pos + nb, new_pos + 1)
 #else
 				j := new_pos
 				nb2 := old_pos + nb - 1
@@ -264,7 +259,7 @@ feature -- Element change
 		do
 			if nb > 0 then
 #ifdef ISE
-				(c_rtid ($area) + new_pos).memory_move (c_rtid ($area) + old_pos, nb)
+				area_string.subcopy (area_string, old_pos + 1, old_pos + nb, new_pos + 1)
 #else
 				j := new_pos + nb - 1
 				from i := old_pos + nb - 1 until i < old_pos loop
@@ -329,16 +324,6 @@ feature {NONE} -- Implementation
 #endif
 			-- Implementation
 
-#ifdef ISE
-	c_rtid (p: POINTER): POINTER is
-			-- Return `p'
-		external
-			"C [macro <eif_macros.h>]"
-		alias
-			"/**/"
-		end
-
-#endif
 invariant
 
 	area_not_void: area /= Void

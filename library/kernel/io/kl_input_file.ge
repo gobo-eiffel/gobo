@@ -34,7 +34,7 @@ inherit
 			open as open_read,
 			is_open as is_open_read
 		redefine
-#ifdef ISE || HACT
+#ifdef HACT
 			file_readable,
 #endif
 #ifdef SE
@@ -61,7 +61,11 @@ inherit
 		end
 
 #endif
-#ifdef SE
+#ifdef ISE
+	STRING_HANDLER
+
+#endif
+#ifdef SE || ISE
 feature -- Access
 
 	last_character: CHARACTER
@@ -89,7 +93,11 @@ feature -- Status report
 					Result := True
 					close
 					if operating_system.is_unix then
-						tmp_directory.reset (name)
+						if string_name /= Empty_name then
+							tmp_directory.reset (string_name)
+						else
+							tmp_directory.reset (name)
+						end
 						Result := not tmp_directory.is_readable
 					end
 				end
@@ -182,7 +190,7 @@ feature -- Input
 				if a_target.capacity < nb then
 					a_target.resize (nb)
 				end
-				a_target.clear
+				a_target.wipe_out
 			end
 			from i := nb until i < 1 loop
 				read_character
@@ -229,8 +237,9 @@ feature -- Input
 			a_memory: expanded MEMORY
 #endif
 #ifdef ISE
-			str_area: ANY
 			j: INTEGER
+			tmp_string: STRING
+			k, nb2: INTEGER
 #endif
 #ifdef SE
 			storage: NATIVE_ARRAY [CHARACTER]
@@ -271,7 +280,8 @@ feature -- Input
 					Result := Result + i - pos
 				end
 			end
-#else
+#endif
+#ifdef ISE || SE
 			from
 				j := pos
 			until
@@ -286,9 +296,22 @@ feature -- Input
 			if i < nb then
 				if not old_end_of_file then
 #ifdef ISE
-					str_area := a_string.area
-					i := i + file_gss (file_pointer, c_rtid ($str_area) + (j - 1), nb - i)
-#else
+					if a_string.same_type (dummy_string) then
+						i := i + old_read_to_string (a_string, j, nb - i)
+					else
+						nb2 := nb - i
+						!! tmp_string.make (nb2)
+						tmp_string.set_count (nb2)
+						nb2 := old_read_to_string (tmp_string, 1, nb2)
+						from k := 1 until k > nb2 loop
+							a_string.put (tmp_string.item (k), j)
+							j := j + 1
+							k := k + 1
+						end
+						i := i + nb2
+					end
+#endif
+#ifdef SE
 					from
 						storage := a_string.storage
 						m := basic_io_getc (input_stream)
@@ -342,7 +365,7 @@ feature -- Basic operations
 			rescued: BOOLEAN
 		do
 			if not rescued then
-				if name.count > 0 then
+				if string_name /= Empty_name then
 					character_buffer := Void
 					end_of_file := False
 #ifdef ISE || HACT
@@ -392,8 +415,8 @@ feature {NONE} -- Implementation
 	old_open_read is
 			-- Open file in read-only mode.
 		require
-			name_not_void: name /= Void
-			name_not_empty: name.count > 0
+			string_name_not_void: string_name /= Void
+			string_name_not_empty: string_name.count > 0
 		deferred
 		end
 
@@ -431,12 +454,64 @@ feature {NONE} -- Implementation
 
 #endif
 #ifdef ISE
-	c_rtid (p: POINTER): POINTER is
-			-- Return `p'
-		external
-			"C [macro <eif_macros.h>]"
-		alias
-			"/**/"
+	old_read_to_string (a_string: STRING; pos, nb: INTEGER): INTEGER is
+			-- Fill `a_string', starting at position `pos' with at
+			-- most `nb' characters read from current file.
+			-- Return the number of characters actually read.
+		require
+			is_readable: file_readable
+			not_end_of_file: not old_end_of_file
+			a_string_not_void: a_string /= Void
+			valid_position: a_string.valid_index (pos)
+			nb_large_enough: nb > 0
+			nb_small_enough: nb <= a_string.count - pos + 1
+		deferred
+		ensure
+			nb_char_read_large_enough: Result >= 0
+			nb_char_read_small_enough: Result <= nb
+			character_read: not old_end_of_file implies Result > 0
+		end
+
+	dummy_string: STRING is ""
+			-- Dummy string
+
+	old_end_of_file: BOOLEAN is
+			-- Has an EOF been detected?
+		require
+			opened: not old_is_closed
+		deferred
+		end
+
+	old_read_character is
+			-- Read a new character.
+			-- Make result available in `last_character'.
+		require
+			is_readable: file_readable
+		deferred
+		end
+
+	old_is_open_read: BOOLEAN is
+			-- Is file open for reading?
+		deferred
+		end
+
+	old_read_stream (nb_char: INTEGER) is
+			-- Read a string of at most `nb_char' bound characters
+			-- or until end of file.
+			-- Make result available in `last_string'.
+		require
+			is_readable: file_readable
+		deferred
+		end
+
+	old_open_read is
+			-- Open file in read-only mode.
+		require
+			is_closed: old_is_closed
+		deferred
+		ensure
+			exists: old_exists
+			open_read: old_is_open_read
 		end
 
 #endif
